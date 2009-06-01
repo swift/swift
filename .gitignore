@@ -28,4 +28,5 @@ UI/Qt/Makefile
 UI/Qt/swift
 UI/Qt/DefaultTheme.qrc
 UI/Qt/*/Makefile
+UI/Qt/Swiften.pri
 tools/coverage/results

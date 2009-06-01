@@ -1,6 +1,6 @@
 #!/usr/bin/env python
-# Run this from the toplevel with:
-# tools/qmakeish.py  src/Swift/Makefile > src/Swift/Swift.pri
+# Run this from the UI/Qt dir with:
+# ./qmakeish.py  ../../Makefile > Swiften.pri
 
 import sys, re, os.path
 
@@ -8,7 +8,7 @@ def processSourcesLine(line) :
   strippedLine = line.rstrip("\n")
   sourceFile = re.sub("\\\\$", "", strippedLine).strip()
   if len(sourceFile) > 0 :
-    print "SOURCES += $$PWD/" + sourceFile
+    print "SOURCES += $$PWD/../../" + sourceFile
   return strippedLine.endswith("\\")
 
 def processFlags(name, flags) :
@@ -17,7 +17,7 @@ def processFlags(name, flags) :
     if flag.startswith("-D") :
       print "DEFINES += " + flag[2:]
     elif flag.startswith("-I") :
-      print "INCLUDEPATH += $$PWD/" + flag[2:]
+      print "INCLUDEPATH += $$PWD/../../" + flag[2:]
     elif len(flag) > 0 :
       print name + " += " + flag
 

@@ -23,7 +23,7 @@ win32 {
 	LIBS += "F:/Expat 2.0.1/Bin/libexpat.lib"
 	LIBS += -LF:/OpenSSL/lib/VC -llibeay32MT -lssleay32MT
 
-	include(../../Swiften/Swift.pri)
+	include(Swiften.pri)
 	LIBS += -ldnsapi -lws2_32 -lwsock32
 	} else {
 	DEPENDPATH += . ../.. ../../3rdParty/Boost
