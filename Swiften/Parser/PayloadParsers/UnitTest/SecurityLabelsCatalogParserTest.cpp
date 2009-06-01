@@ -1,0 +1,46 @@
+#include <cppunit/extensions/HelperMacros.h>
+#include <cppunit/extensions/TestFactoryRegistry.h>
+
+#include "Swiften/Parser/PayloadParsers/SecurityLabelsCatalogParser.h"
+#include "Swiften/Parser/PayloadParsers/UnitTest/PayloadParserTester.h"
+
+using namespace Swift;
+
+class SecurityLabelsCatalogParserTest : public CppUnit::TestFixture
+{
+		CPPUNIT_TEST_SUITE(SecurityLabelsCatalogParserTest);
+		CPPUNIT_TEST(testParse);
+		CPPUNIT_TEST_SUITE_END();
+
+	public:
+		SecurityLabelsCatalogParserTest() {}
+
+		void testParse() {
+			SecurityLabelsCatalogParser testling;
+			PayloadParserTester parser(&testling);
+
+			CPPUNIT_ASSERT(parser.parse(
+				"<catalog desc=\"an example set of labels\" name=\"Default\" to=\"example.com\" xmlns=\"urn:xmpp:sec-label:catalog:0\">"
+					"<securitylabel xmlns=\"urn:xmpp:sec-label:0\">"
+						"<displaymarking bgcolor=\"red\" fgcolor=\"black\">SECRET</displaymarking>"
+						"<label><esssecuritylabel xmlns=\"urn:xmpp:sec-label:ess:0\">MQYCAQQGASk=</esssecuritylabel></label>"
+					"</securitylabel>"
+					"<securitylabel xmlns=\"urn:xmpp:sec-label:0\">"
+						"<displaymarking bgcolor=\"navy\" fgcolor=\"black\">CONFIDENTIAL</displaymarking>"
+						"<label><esssecuritylabel xmlns=\"urn:xmpp:sec-label:ess:0\">MQMGASk=</esssecuritylabel></label>"
+					"</securitylabel>"
+    		"</catalog>"));
+
+			SecurityLabelsCatalog* payload = dynamic_cast<SecurityLabelsCatalog*>(testling.getPayload().get());
+			CPPUNIT_ASSERT_EQUAL(String("Default"), payload->getName());
+			CPPUNIT_ASSERT_EQUAL(String("an example set of labels"), payload->getDescription());
+			CPPUNIT_ASSERT_EQUAL(JID("example.com"), payload->getTo());
+			CPPUNIT_ASSERT_EQUAL(2, static_cast<int>(payload->getLabels().size()));
+			CPPUNIT_ASSERT_EQUAL(String("SECRET"), payload->getLabels()[0].getDisplayMarking());
+			CPPUNIT_ASSERT_EQUAL(String("<esssecuritylabel xmlns=\"urn:xmpp:sec-label:ess:0\">MQYCAQQGASk=</esssecuritylabel>"), payload->getLabels()[0].getLabel());
+			CPPUNIT_ASSERT_EQUAL(String("CONFIDENTIAL"), payload->getLabels()[1].getDisplayMarking());
+			CPPUNIT_ASSERT_EQUAL(String("<esssecuritylabel xmlns=\"urn:xmpp:sec-label:ess:0\">MQMGASk=</esssecuritylabel>"), payload->getLabels()[1].getLabel());
+		}
+};
+
+CPPUNIT_TEST_SUITE_REGISTRATION(SecurityLabelsCatalogParserTest);

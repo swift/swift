@@ -1,0 +1,181 @@
+AC_PREREQ(2.57)
+AC_INIT(Swift,[],swift@swift.im)
+AC_CONFIG_SRCDIR([Swiften/Base/String.h])
+AC_CONFIG_AUX_DIR([autoconf])
+AC_CONFIG_HEADERS([Swiften/config.h])
+AC_CANONICAL_BUILD
+AC_CANONICAL_HOST
+
+################################################################################
+# Config.h templates
+################################################################################
+
+AH_TEMPLATE(HAVE_OPENSSL, [OpenSSL library available])
+AH_TEMPLATE(HAVE_LIBXML, [LibXML library available])
+AH_TEMPLATE(HAVE_EXPAT, [Expat library available])
+
+################################################################################
+# Default flags
+################################################################################
+
+# Following flags generate too much warnings (in boost etc.). Make
+# a configure option for these, and add a filter script
+# -Weff-c++ -Wshadow -Winline -Wunreachable-code 
+# -ansi: Gets us into problems on MingW
+CONFIG_CXXFLAGS="$CPPFLAGS -DHAVE_SWIFTEN_CONFIG_H $CXXFLAGS"
+CONFIG_CFLAGS="$CPPFLAGS -DHAVE_SWIFTEN_CONFIG_H $CFLAGS"
+CONFIG_LDFLAGS="$LDFLAGS"
+CONFIG_LIBS=""
+
+case $host in
+	*-*-cygwin*)
+		CONFIG_CFLAGS="$CONFIG_CFLAGS -mno-cygwin"
+		CONFIG_CXXFLAGS="$CONFIG_CXXFLAGS -mno-cygwin"
+		CONFIG_LIBS="$CONFIG_LIBS -ldnsapi -lws2_32 -lwsock32"
+		CONFIG_WIN32=1
+		;;
+	*-mingw32*)
+		CONFIG_LIBS="$CONFIG_LIBS -ldnsapi -lws2_32 -lwsock32"
+		CONFIG_WIN32=1
+		;;
+	*-*-darwin*)
+    CONFIG_LIBS="$CONFIG_LIBS -lstdc++ -framework AppKit"
+		CONFIG_MACOSX=1
+		;;
+	*)
+    CONFIG_LIBS="$CONFIG_LIBS -lstdc++"
+esac
+
+################################################################################
+# Configure options
+################################################################################
+
+AC_ARG_ENABLE(debug,
+	AC_HELP_STRING(--enable-debug, [Build with debugging information (default: no)]),
+		[if test "$enableval" = yes; then
+			CONFIG_CXXFLAGS="$CONFIG_CXXFLAGS -g"
+			CONFIG_CFLAGS="$CONFIG_CFLAGS -g"
+		 fi],
+		[])
+
+AC_ARG_ENABLE(optimize,
+	AC_HELP_STRING(--enable-optimize, [Optimize build (default: no)]),
+		[if test "$enableval" = yes; then
+			CONFIG_CXXFLAGS="$CONFIG_CXXFLAGS -O2"
+			CONFIG_CFLAGS="$CONFIG_CFLAGS -O2"
+		 fi],
+		[])
+
+AC_ARG_ENABLE(coverage,
+	AC_HELP_STRING(--enable-coverage, [Enable coverage (default: no)]),
+		[if test "$enableval" = yes; then
+			CONFIG_CXXFLAGS="$CONFIG_CXXFLAGS -fprofile-arcs -ftest-coverage"
+			CONFIG_LDFLAGS="$CONFIG_LDFLAGS -fprofile-arcs -ftest-coverage"
+		 fi],
+		[])
+
+AC_ARG_ENABLE(universal,
+	AC_HELP_STRING(--enable-universal, [Enable universal builds (default: no)]),
+		[if test "$enableval" = yes; then
+			CONFIG_CXXFLAGS="$CONFIG_CXXFLAGS -isysroot /Developer/SDKs/MacOSX10.4u.sdk -arch i386 -arch ppc"
+			CONFIG_CFLAGS="$CONFIG_CFLAGS -isysroot /Developer/SDKs/MacOSX10.4u.sdk -arch i386 -arch ppc"
+			CONFIG_LDFLAGS="$CONFIG_LDFLAGS -mmacosx-version-min=10.4 -Wl,-syslibroot,/Developer/SDKs/MacOSX10.4u.sdk -arch i386 -arch ppc"
+		 fi],
+		[])
+
+AC_ARG_ENABLE(gcc-warnings,
+	AC_HELP_STRING(--disable-gcc-warnings, [Disable GCC compiler warnings (default: no)]),
+	[enable_gcc_warnings="$enableval"],
+	[enable_gcc_warnings="yes"])
+
+if test "$enable_gcc_warnings" != "no"; then
+	#CONFIG_CFLAGS="$CONFIG_CFLAGS -W -Wall -Wredundant-decls -pedantic -Wno-long-long -Wundef -Wfloat-equal"
+	CONFIG_CXXFLAGS="$CONFIG_CXXFLAGS -W -Wall -Wredundant-decls -pedantic -Wno-long-long -Woverloaded-virtual -Wundef -Wfloat-equal -Wold-style-cast"
+	CONFIG_LDFLAGS="$CONFIG_LDFLAGS -W -Wall"
+fi
+
+################################################################################
+# Checks for programs and sets default compiler options.
+################################################################################
+
+AC_PROG_CC
+AC_PROG_CXX
+AC_GNU_SOURCE
+AC_PROG_MAKE_SET
+AC_PROG_INSTALL
+#AC_SYS_LARGEFILE
+CONFIG_CC="$CC"
+CONFIG_CXX="$CXX"
+
+# Expat
+AX_LIB_EXPAT()
+CONFIG_HAVE_EXPAT="$HAVE_EXPAT"
+if test "$HAVE_EXPAT" = yes; then
+	CONFIG_CXXFLAGS="$CONFIG_CXXFLAGS $EXPAT_CFLAGS"
+	CONFIG_LDFLAGS="$CONFIG_LDFLAGS $EXPAT_LDFLAGS"
+	CONFIG_LIBS="$EXPAT_LIBS $CONFIG_LIBS"
+	AC_DEFINE(HAVE_EXPAT)
+fi
+
+# LibXML
+AX_LIBXML()
+CONFIG_HAVE_LIBXML="$HAVE_LIBXML"
+if test "$HAVE_LIBXML" = yes; then
+	CONFIG_CXXFLAGS="$CONFIG_CXXFLAGS $LIBXML_CPPFLAGS"
+	CONFIG_LDFLAGS="$CONFIG_LDFLAGS $LIBXML_LDFLAGS"
+	CONFIG_LIBS="$LIBXML_LIBS $CONFIG_LIBS"
+	AC_DEFINE(HAVE_LIBXML)
+fi
+
+# Test whether we have *a* parser
+if test "$HAVE_EXPAT" != yes -a "$HAVE_LIBXML" != yes; then
+	AC_MSG_ERROR([Expat or LibXML XML Parser is required])
+fi
+
+# OpenSSL
+AX_OPENSSL()
+CONFIG_HAVE_OPENSSL="$HAVE_OPENSSL"
+if test "$HAVE_OPENSSL" = yes; then
+	CONFIG_CXXFLAGS="$CONFIG_CXXFLAGS $OPENSSL_CPPFLAGS"
+	CONFIG_CFLAGS="$CONFIG_CFLAGS $OPENSSL_CPPFLAGS"
+	CONFIG_LIBS="$CONFIG_LIBS $OPENSSL_LIBS"
+	AC_DEFINE(HAVE_OPENSSL)
+fi
+
+################################################################################
+# Build configuration summary
+################################################################################
+
+echo
+echo "    Build Configuration"
+echo "    -------------------"
+
+TEXT_XML_PARSERS=
+if test "$HAVE_LIBXML" == "yes"; then TEXT_XML_PARSERS="LibXML"; fi
+if test "$HAVE_EXPAT" == "yes"; then TEXT_XML_PARSERS="Expat $TEXT_XML_PARSERS"; fi
+echo "    XML Parser(s): $TEXT_XML_PARSERS"
+
+if test "$HAVE_OPENSSL" = yes; then TEXT_TLS_SUPPORT="OpenSSL"; fi
+if test "$HAVE_OPENSSL" != yes; then TEXT_TLS_SUPPORT="Disabled"; fi
+echo "    TLS support: $TEXT_TLS_SUPPORT"
+echo
+
+################################################################################
+# Generate files
+################################################################################
+
+AC_SUBST(SET_MAKE)
+AC_SUBST(CONFIG_CXX)
+AC_SUBST(CONFIG_CXXFLAGS)
+AC_SUBST(CONFIG_CC)
+AC_SUBST(CONFIG_CFLAGS)
+AC_SUBST(CONFIG_LDFLAGS)
+AC_SUBST(CONFIG_LIBS)
+AC_SUBST(CONFIG_WIN32)
+AC_SUBST(CONFIG_MACOSX)
+AC_SUBST(CONFIG_HAVE_OPENSSL)
+AC_SUBST(CONFIG_HAVE_EXPAT)
+AC_SUBST(CONFIG_HAVE_LIBXML)
+
+AC_CONFIG_FILES([Makefile.config])
+AC_OUTPUT

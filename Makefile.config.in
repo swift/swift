@@ -1,0 +1,18 @@
+################################################################################
+# Configuration Settings
+################################################################################
+
+@SET_MAKE@
+CXX=@CONFIG_CXX@
+CXXFLAGS=@CONFIG_CXXFLAGS@
+CC=@CONFIG_CC@
+CFLAGS=@CONFIG_CFLAGS@
+LDFLAGS=@CONFIG_LDFLAGS@
+LIBS=@CONFIG_LIBS@
+HAVE_EXPAT=@CONFIG_HAVE_EXPAT@
+HAVE_LIBXML=@CONFIG_HAVE_LIBXML@
+HAVE_OPENSSL=@CONFIG_HAVE_OPENSSL@
+WIN32=@CONFIG_WIN32@
+MACOSX=@CONFIG_MACOSX@
+# FIXME
+QMAKE=qmake

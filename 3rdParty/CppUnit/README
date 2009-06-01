@@ -1,0 +1,3 @@
+cppunit/conf-auto.h needs to be adapted for other platforms.
+Currently it works on all platforms, but I suspect breakage
+when dropping cygwin on Windows.

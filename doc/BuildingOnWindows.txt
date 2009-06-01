@@ -1,0 +1,34 @@
+Prerquisites
+------------
+- MinGW
+  * Install the self-extracting executable package from
+    http://mingw.org
+  * 
+- MSYS
+  * Install the self-extracting executable package
+    http://www.mingw.org/wiki/msys
+- autoconf/automake (Only required when building from the Git tree)
+  * These packages are included in msysDTK, but are too old.
+  * To compile autoconf/automake, first install either msysdtk, or the m4, crypt and perl packages for msys.
+  * Download & extract the latest packages from http://ftp.gnu.org/gnu/autoconf/
+    and http://ftp.gnu.org/gnu/automake
+  * Configure the packages with 
+      ./configure --prefix=/mingw
+  * Run 'make' and 'make install'
+- OpenSSL
+  * Download and extract the Windows binary version of OpenSSL from
+    http://www.slproweb.com/products/Win32OpenSSL.html
+  * TODO: Check whether the version from msysDTK works as well. If it does,
+    the Makefile and configure script should be adapted, because they assume
+    that --with-openssl is set (which may not be necessary)
+- Expat
+  * Download, configure, and install  the source from 
+    http://expat.sourceforge.net/
+    The binary package will not do.
+
+Building
+--------
+- Configure the build
+    ./configure --with-expat=/path/to/expat --with-openssl=/path/to/openssl
+- Run 'make', watch it fail (until this gets fixed)
+- go to src/Swift, run 'make'
