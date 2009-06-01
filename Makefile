@@ -55,7 +55,7 @@ coverage:
 	tools/coverage/GenerateCoverageResults.sh
 
 .PHONY: clean
-clean: clean-deps $(CLEANTARGETS)
+clean: clean-deps $(CLEAN_TARGETS)
 	-$(RM) $(CLEANFILES) \
 		$(SWIFTEN_SOURCES:.cpp=.gcda) \
 		$(SWIFTEN_SOURCES:.cpp=.gcno) \

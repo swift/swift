@@ -6,6 +6,7 @@ qt: UI/Qt/Makefile
 	$(MAKE) -C UI/Qt
 
 .PHONY: clean-qt
+clean-qt:
 	if [ -f "UI/Qt/Makefile" ]; then \
 		$(MAKE) -C UI/Qt clean; \
 	fi
