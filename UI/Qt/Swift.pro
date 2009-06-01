@@ -89,3 +89,5 @@ win32 {
 	DefaultThemeQRC.commands = ..\..\..\tools\ThemeQRC.py ../../../resources/themes/Default > DefaultTheme.qrc
 	QMAKE_EXTRA_TARGETS = DefaultThemeQRC
 }
+
+LIBS += -fprofile-arcs -ftest-coverage 

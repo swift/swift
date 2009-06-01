@@ -10,7 +10,7 @@ qt: UI/Qt/Makefile
 		$(MAKE) -C UI/Qt clean; \
 	fi
 
-UI/Qt/Makefile: UI/Qt/Swift.pro
+UI/Qt/Makefile:
 	cd UI/Qt && $(QMAKE) Swift.pro
 
 UI/Qt/Swift.pro: UI/Qt/DefaultTheme.qrc

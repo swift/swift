@@ -43,6 +43,7 @@ void QtChatView::addMessage(const ChatSnippet& snippet) {
 	//bool wasScrolledToBottom = isScrolledToBottom();
 	
 	QString content = snippet.getContent();
+	content.replace("\\", "\\\\");
 	content.replace("\"", "\\\"");
 	content.replace("\n", "\\n");
 	if (previousContinuationElementID_.isEmpty() || !snippet.getAppendToPrevious()) {
