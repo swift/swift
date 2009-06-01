@@ -15,6 +15,8 @@ for line in inputFile.readlines() :
     if line.startswith("SF:") and (line.find("/Swiften/") == -1 or line.find("/UnitTest/") != -1 or line.find("/QA/") != -1 or line.find("/3rdParty/") != -1):
       inIgnoredFile = True
     else :
+      if line.startswith("SF:") :
+        line = line.replace("/./Swiften/", "/Swiften/")
       output.append(line)
 inputFile.close()
 
