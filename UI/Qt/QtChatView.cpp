@@ -46,6 +46,7 @@ void QtChatView::addMessage(const ChatSnippet& snippet) {
 	content.replace("\\", "\\\\");
 	content.replace("\"", "\\\"");
 	content.replace("\n", "\\n");
+	content.replace("\r", "");
 	if (previousContinuationElementID_.isEmpty() || !snippet.getAppendToPrevious()) {
 		webPage_->mainFrame()->evaluateJavaScript("appendMessage(\"" + content + "\");");
 	}
