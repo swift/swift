@@ -86,8 +86,6 @@ RESOURCES += Swift.qrc DefaultTheme.qrc
 
 win32 {
 	DefaultThemeQRC.target = DefaultTheme.qrc
-	DefaultThemeQRC.commands = ..\..\..\tools\ThemeQRC.py ../../../resources/themes/Default > DefaultTheme.qrc
+	DefaultThemeQRC.commands = ..\..\tools\ThemeQRC.py ../../resources/themes/Default > DefaultTheme.qrc
 	QMAKE_EXTRA_TARGETS = DefaultThemeQRC
 }
-
-LIBS += -fprofile-arcs -ftest-coverage 
