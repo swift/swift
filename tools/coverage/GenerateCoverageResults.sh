@@ -3,6 +3,16 @@
 # This script assumes that it is run from the toplevel directory, that
 # the 'configure' script has been called with '--enable-coverage'
 
+if [ ! -f config.status ]; then
+	echo "Please configure your build with --enable-coverage and rebuild."
+	exit -1
+fi
+grep -q "\-\-enable-coverage" config.status
+if [ "$?" != 0 ]; then
+	echo "Please configure your build with --enable-coverage and rebuild."
+	exit -1
+fi
+
 SOURCE_DIR=.
 SCRIPT_DIR=tools/coverage
 LCOVDIR=3rdParty/LCov
@@ -21,7 +31,7 @@ $LCOVDIR/lcov --zerocounters --directory $SOURCE_DIR
 # All tests
 make -C $SOURCE_DIR test
 $LCOVDIR/lcov --capture --directory $SOURCE_DIR -b $SOURCE_DIR --output-file $OUTPUT_DIR/all.info --test-name all
-$SCRIPT_DIR/FilterLCovData.py $OUTPUT_DIR/all.info
+#$SCRIPT_DIR/FilterLCovData.py $OUTPUT_DIR/all.info
 
 # Generate HTML
 $LCOVDIR/gendesc -o $OUTPUT_DIR/descriptions $SCRIPT_DIR/descriptions.txt

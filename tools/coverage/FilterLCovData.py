@@ -12,7 +12,7 @@ for line in inputFile.readlines() :
     if line == "end_of_record\n" :
       inIgnoredFile = False
   else :
-    if line.startswith("SF:") and (line.find("/Swift/") == -1 or line.find("/UnitTest/") != -1 or line.find("/QA/") != -1 or line.find("/3rdParty/") != -1):
+    if line.startswith("SF:") and (line.find("/Swiften/") == -1 or line.find("/UnitTest/") != -1 or line.find("/QA/") != -1 or line.find("/3rdParty/") != -1):
       inIgnoredFile = True
     else :
       output.append(line)

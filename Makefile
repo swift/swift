@@ -50,6 +50,10 @@ include UI/Qt/Makefile.inc
 .PHONY: all
 all: $(TARGETS)
 
+.PHONY: coverage
+coverage:
+	tools/coverage/GenerateCoverageResults.sh
+
 .PHONY: clean
 clean: clean-deps $(CLEANTARGETS)
 	-$(RM) $(CLEANFILES) \
