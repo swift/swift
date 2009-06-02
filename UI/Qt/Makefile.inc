@@ -11,10 +11,8 @@ clean-qt:
 		$(MAKE) -C UI/Qt clean; \
 	fi
 
-UI/Qt/Makefile:
+UI/Qt/Makefile: UI/Qt/DefaultTheme.qrc
 	cd UI/Qt && $(QMAKE) Swift.pro
-
-UI/Qt/Swift.pro: UI/Qt/DefaultTheme.qrc
 
 UI/Qt/DefaultTheme.qrc:
 	cd UI/Qt && ../../tools/ThemeQRC.py ../../resources/themes/Default > DefaultTheme.qrc
