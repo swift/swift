@@ -17,7 +17,24 @@ BOOST_SOURCES += \
 	3rdParty/Boost/libs/filesystem/src/operations.cpp \
 	3rdParty/Boost/libs/filesystem/src/path.cpp \
 	3rdParty/Boost/libs/filesystem/src/portability.cpp \
-	3rdParty/Boost/libs/filesystem/src/utf8_codecvt_facet.cpp
+	3rdParty/Boost/libs/filesystem/src/utf8_codecvt_facet.cpp \
+	3rdParty/Boost/libs/regex/src/c_regex_traits.cpp \
+	3rdParty/Boost/libs/regex/src/cpp_regex_traits.cpp \
+	3rdParty/Boost/libs/regex/src/cregex.cpp \
+	3rdParty/Boost/libs/regex/src/fileiter.cpp \
+	3rdParty/Boost/libs/regex/src/icu.cpp \
+	3rdParty/Boost/libs/regex/src/instances.cpp \
+	3rdParty/Boost/libs/regex/src/posix_api.cpp \
+	3rdParty/Boost/libs/regex/src/regex.cpp \
+	3rdParty/Boost/libs/regex/src/regex_debug.cpp \
+	3rdParty/Boost/libs/regex/src/regex_raw_buffer.cpp \
+	3rdParty/Boost/libs/regex/src/regex_traits_defaults.cpp \
+	3rdParty/Boost/libs/regex/src/static_mutex.cpp \
+	3rdParty/Boost/libs/regex/src/w32_regex_traits.cpp \
+	3rdParty/Boost/libs/regex/src/wc_regex_traits.cpp \
+	3rdParty/Boost/libs/regex/src/wide_posix_api.cpp \
+	3rdParty/Boost/libs/regex/src/winstances.cpp  \
+	3rdParty/Boost/libs/regex/src/usinstances.cpp 
 
 ifeq ($(WIN32),1)
 # The WINNT flag is the boost default (Windows XP Target)

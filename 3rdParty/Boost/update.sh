@@ -14,7 +14,9 @@ bcp --boost="$1" \
 	shared_ptr.hpp \
   optional.hpp \
 	signals.hpp \
-	thread.hpp asio.hpp \
+	thread.hpp \
+	asio.hpp \
+	regex.hpp \
 	.
 
 rm -rf libs/config
@@ -24,6 +26,3 @@ LIBS="date_time regex system thread signals filesystem"
 for lib in $LIBS; do
 	rm -rf libs/$lib/build libs/$lib/*.doc libs/$lib/src/*.doc libs/$lib/src/CMakeLists.txt libs/$lib/test
 done
-
-# We don't use regex (yet)
-rm -rf libs/regex
