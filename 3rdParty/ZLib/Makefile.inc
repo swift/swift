@@ -19,6 +19,4 @@ ZLIB_OBJECTS = \
 	$(ZLIB_SOURCES:.c=.o)
 
 CLEANFILES += \
-	$(ZLIB_SOURCES:.c=.gcda) \
-	$(ZLIB_SOURCES:.c=.gcno) \
 	$(ZLIB_OBJECTS)

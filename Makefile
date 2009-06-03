@@ -40,6 +40,7 @@ include 3rdParty/Boost/Makefile.inc
 include 3rdParty/CppUnit/Makefile.inc
 include 3rdParty/LibIDN/Makefile.inc
 include 3rdParty/ZLib/Makefile.inc
+include 3rdParty/Expat/Makefile.inc
 include Swiften/Makefile.inc
 include UI/Qt/Makefile.inc
 
@@ -56,12 +57,9 @@ coverage:
 
 .PHONY: clean
 clean: clean-deps $(CLEAN_TARGETS)
-	-$(RM) $(CLEANFILES) \
-		$(SWIFTEN_SOURCES:.cpp=.gcda) \
-		$(SWIFTEN_SOURCES:.cpp=.gcno) \
-		$(UNITTEST_SOURCES:.cpp=.gcda) \
-		$(UNITTEST_SOURCES:.cpp=.gcno) \
-		*.gcov
+	-$(RM) $(CLEANFILES) *.gcov
+	-find . -name "*.gcda" -exec rm {} \;
+	-find . -name "*.gcno" -exec rm {} \;
 
 .PHONY: clean-deps
 clean-deps:

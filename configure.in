@@ -109,7 +109,6 @@ CONFIG_CXX="$CXX"
 
 # Expat
 AX_LIB_EXPAT()
-CONFIG_HAVE_EXPAT="$HAVE_EXPAT"
 if test "$HAVE_EXPAT" = yes; then
 	CONFIG_CXXFLAGS="$CONFIG_CXXFLAGS $EXPAT_CFLAGS"
 	CONFIG_LDFLAGS="$CONFIG_LDFLAGS $EXPAT_LDFLAGS"
@@ -127,9 +126,11 @@ if test "$HAVE_LIBXML" = yes; then
 	AC_DEFINE(HAVE_LIBXML)
 fi
 
-# Test whether we have *a* parser
+# Test whether we have *a* parser, and use bundled Expat if necessary
 if test "$HAVE_EXPAT" != yes -a "$HAVE_LIBXML" != yes; then
-	AC_MSG_ERROR([Expat or LibXML XML Parser is required])
+  AC_MSG_NOTICE([No installed XML parser found. Using bundled Expat])
+  HAVE_EXPAT=yes
+  USE_BUNDLED_EXPAT=yes
 fi
 
 # OpenSSL
@@ -152,6 +153,7 @@ echo "    -------------------"
 
 TEXT_XML_PARSERS=
 if test "$HAVE_LIBXML" == "yes"; then TEXT_XML_PARSERS="LibXML"; fi
+if test "$USE_BUNDLED_EXPAT" == "yes"; then TEXT_XML_PARSERS="(Bundled)"; fi
 if test "$HAVE_EXPAT" == "yes"; then TEXT_XML_PARSERS="Expat $TEXT_XML_PARSERS"; fi
 echo "    XML Parser(s): $TEXT_XML_PARSERS"
 
@@ -165,6 +167,7 @@ echo
 ################################################################################
 
 AC_SUBST(SET_MAKE)
+AC_SUBST(HAVE_EXPAT)
 AC_SUBST(CONFIG_CXX)
 AC_SUBST(CONFIG_CXXFLAGS)
 AC_SUBST(CONFIG_CC)
@@ -174,7 +177,7 @@ AC_SUBST(CONFIG_LIBS)
 AC_SUBST(CONFIG_WIN32)
 AC_SUBST(CONFIG_MACOSX)
 AC_SUBST(CONFIG_HAVE_OPENSSL)
-AC_SUBST(CONFIG_HAVE_EXPAT)
+AC_SUBST(USE_BUNDLED_EXPAT)
 AC_SUBST(CONFIG_HAVE_LIBXML)
 
 AC_CONFIG_FILES([Makefile.config])

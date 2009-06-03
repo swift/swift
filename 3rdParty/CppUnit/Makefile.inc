@@ -39,8 +39,6 @@ CPPUNIT_OBJECTS = \
 	$(CPPUNIT_SOURCES:.cpp=.o)
 
 CLEANFILES += \
-	$(CPPUNIT_SOURCES:.cpp=.gcda) \
-	$(CPPUNIT_SOURCES:.cpp=.gcno) \
 	$(CPPUNIT_OBJECTS) \
 	$(CPPUNIT_TARGET)
 

@@ -20,8 +20,6 @@ LIBIDN_OBJECTS = \
 	$(LIBIDN_SOURCES:.c=.o)
 
 CLEANFILES += \
-	$(LIBIDN_SOURCES:.c=.gcda) \
-	$(LIBIDN_SOURCES:.c=.gcno) \
 	$(LIBIDN_OBJECTS)
 
 

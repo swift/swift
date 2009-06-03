@@ -1,6 +1,7 @@
 #include "Swiften/EventLoop/MainEventLoop.h"
 
 #include <iostream>
+#include <typeinfo>
 
 namespace Swift {
 

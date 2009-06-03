@@ -42,6 +42,4 @@ BOOST_OBJECTS = \
 	$(BOOST_SOURCES:.cpp=.o)
 
 CLEANFILES += \
-	$(BOOST_SOURCES:.cpp=.gcda) \
-	$(BOOST_SOURCES:.cpp=.gcno) \
 	$(BOOST_OBJECTS)
