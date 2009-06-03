@@ -17,23 +17,21 @@ void Request::send() {
 }
 
 bool Request::handleIQ(boost::shared_ptr<IQ> iq) {
+	bool handled = false;
 	if (iq->getID() == id_) {
 		if (iq->getType() == IQ::Result) {
 			handleResponse(iq->getPayloadOfSameType(payload_), boost::optional<Error>());
-			if (autoDeleteBehavior_ == AutoDeleteAfterResponse) {
-				MainEventLoop::deleteLater(this);
-			}
-			return true;
 		}
 		else {
 			// FIXME: Get proper error
 			handleResponse(boost::shared_ptr<Payload>(), boost::optional<Error>(Error::UndefinedCondition));
-			return true;
 		}
+		if (autoDeleteBehavior_ == AutoDeleteAfterResponse) {
+			MainEventLoop::deleteLater(this);
+		}
+		handled = true;
 	}
-	else {
-		return false;
-	}
+	return handled;
 }
 
 }
