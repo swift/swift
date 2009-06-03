@@ -87,6 +87,7 @@ void MainController::handleConnected() {
 
 	delete xmppRosterController_;
 	xmppRosterController_ = new XMPPRosterController(client_, xmppRoster);
+	xmppRosterController_->requestRoster();
 
 	delete clientVersionResponder_;
 	clientVersionResponder_ = new SoftwareVersionResponder(CLIENT_NAME, CLIENT_VERSION, client_);
@@ -106,7 +107,7 @@ void MainController::handleConnected() {
 	
 	//Send presence last to catch all the incoming presences.
 	boost::shared_ptr<Presence> initialPresence(new Presence());
-  initialPresence->addPayload(capsInfo_);
+	initialPresence->addPayload(capsInfo_);
 	client_->sendPresence(initialPresence);
 }
 

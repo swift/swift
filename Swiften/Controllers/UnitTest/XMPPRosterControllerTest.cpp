@@ -22,9 +22,14 @@ class XMPPRosterControllerTest : public CppUnit::TestFixture
 		DummyIQChannel* channel_;
 		IQRouter* router_;
 	public:
-		XMPPRosterControllerTest() : channel_(new DummyIQChannel()), router_(new IQRouter(channel_)) {}
-		
-		~XMPPRosterControllerTest() {
+		XMPPRosterControllerTest() {}
+
+		void setUp() {
+			channel_ = new DummyIQChannel();
+			router_ = new IQRouter(channel_);
+		}
+
+		void tearDown() {
 			delete channel_;
 			delete router_;
 		}

@@ -17,10 +17,14 @@ namespace Swift {
 		public:
 			XMPPRosterController(IQRouter *iqRouter, boost::shared_ptr<XMPPRoster> xmppRoster);
 			~XMPPRosterController();
+
+			void requestRoster();
+
 			boost::shared_ptr<XMPPRoster> getXMPPRoster() {return xmppRoster_;};
 			bool handleIQ(boost::shared_ptr<IQ>);
 
 		private:
+			IQRouter* iqRouter_;
 			void handleRosterReceived(boost::shared_ptr<RosterPayload> rosterPayload);
 			boost::shared_ptr<XMPPRoster> xmppRoster_;
 	};
