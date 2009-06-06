@@ -16,6 +16,6 @@ $(EXPAT_TARGET): $(EXPAT_OBJECTS)
 	$(QUIET_AR)$(AR) $(ARFLAGS) $@ $(EXPAT_OBJECTS)
 
 ifeq ($(USE_BUNDLED_EXPAT),yes)
-CPPFLAGS += -isystem 3rdParty/Expat -isystem 3rdParty/Expat/src -DHAVE_EXPAT_CONFIG_H
+CPPFLAGS += -isystem 3rdParty/Expat -isystem 3rdParty/Expat/src -DHAVE_EXPAT_CONFIG_H -DXML_STATIC
 BUNDLED_LIBS += $(EXPAT_TARGET)
 endif
