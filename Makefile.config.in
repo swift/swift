@@ -3,6 +3,7 @@
 ################################################################################
 
 @SET_MAKE@
+MM=@MM@
 CXX=@CONFIG_CXX@
 CXXFLAGS=@CONFIG_CXXFLAGS@
 CC=@CONFIG_CC@

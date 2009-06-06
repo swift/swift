@@ -98,6 +98,22 @@ fi
 # Checks for programs and sets default compiler options.
 ################################################################################
 
+# On windows, use some smart defaults for the compiler
+case $host in
+	*-*-cygwin* | *-mingw32*)
+		if test -z "$CC"; then
+			CC="autoconf/cccl"
+		fi
+		if test -z "$CXX"; then
+			CXX="autoconf/cccl"
+		fi
+		if test -z "$MM"; then
+			MM="gcc"
+		fi
+		;;
+	*)
+esac
+
 AC_PROG_CC
 AC_PROG_CXX
 AC_GNU_SOURCE
@@ -106,6 +122,9 @@ AC_PROG_INSTALL
 #AC_SYS_LARGEFILE
 CONFIG_CC="$CC"
 CONFIG_CXX="$CXX"
+if test -z "$MM"; then
+	MM="$CC"
+fi
 
 # Expat
 AX_LIB_EXPAT()
@@ -171,6 +190,7 @@ AC_SUBST(HAVE_EXPAT)
 AC_SUBST(CONFIG_CXX)
 AC_SUBST(CONFIG_CXXFLAGS)
 AC_SUBST(CONFIG_CC)
+AC_SUBST(MM)
 AC_SUBST(CONFIG_CFLAGS)
 AC_SUBST(CONFIG_LDFLAGS)
 AC_SUBST(CONFIG_LIBS)

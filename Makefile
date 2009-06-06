@@ -79,13 +79,13 @@ endif
 endif
 
 %.dep: %.cpp
-	$(QUIET_MM)$(CXX) -MM -MG -MT $(basename $@).o $(filter-out -arch armv6 -arch i386 -arch ppc,$(CXXFLAGS)) $< > $@
+	$(QUIET_MM)$(MM) -MM -MG -MT $(basename $@).o $(CPPFLAGS) $(filter-out -arch armv6 -arch i386 -arch ppc,$(CXXFLAGS)) $< > $@
 
 %.dep: %.c
-	$(QUIET_MM)$(CC) -MM -MG -MT $(basename $@).o $(filter-out -arch armv6 -arch i386 -arch ppc,$(CFLAGS)) $< > $@
+	$(QUIET_MM)$(MM) -MM -MG -MT $(basename $@).o $(CPPFLAGS) $(filter-out -arch armv6 -arch i386 -arch ppc,$(CFLAGS)) $< > $@
 
 %.dep: %.mm
-	$(QUIET_MM)$(CC) -MM -MG -MT $(basename $@).o $(filter-out -arch armv6 -arch i386 -arch ppc,$(CXXFLAGS)) $< > $@
+	$(QUIET_MM)$(CC) -MM -MG -MT $(basename $@).o $(CPPFLAGS) $(filter-out -arch armv6 -arch i386 -arch ppc,$(CXXFLAGS)) $< > $@
 
 %.o: %.c
 	$(QUIET_CC)$(CC) -c $< -o $@ $(CPPFLAGS) $(CFLAGS)
