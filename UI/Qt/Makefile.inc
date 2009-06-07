@@ -9,7 +9,7 @@ endif
 
 
 .PHONY: qt
-qt: UI/Qt/Makefile
+qt: UI/Qt/Makefile Swiften/Swiften.a $(BUNDLED_LIBS)
 	cd UI/Qt && $(QT_MAKE)
 
 .PHONY: clean-qt
