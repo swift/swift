@@ -11,21 +11,20 @@ else {
 win32 {
 	CONFIG += console
 
-# Configuration
+	# Configuration
 	HAVE_EXPAT=yes
-	HAVE_LIBXML=
+	USE_BUNDLED_EXPAT=yes
+	DEFINES += HAVE_EXPAT
+
 	HAVE_OPENSSL=yes
 	DEFINES += HAVE_OPENSSL
-	DEFINES += HAVE_EXPAT
 	INCLUDEPATH += F:/OpenSSL/include
-	INCLUDEPATH += "F:/Expat 2.0.1/Source/lib"
-#LIBS += -L"F:/Expat 2.0.1/Bin"  -lexpat
-	LIBS += "F:/Expat 2.0.1/Bin/libexpat.lib"
 	LIBS += -LF:/OpenSSL/lib/VC -llibeay32MT -lssleay32MT
 
 	include(Swiften.pri)
 	LIBS += -ldnsapi -lws2_32 -lwsock32
-	} else {
+}
+else {
 	DEPENDPATH += . ../.. ../../3rdParty/Boost
 	INCLUDEPATH += . ../.. ../../3rdParty/Boost
 	LIBS += ../../Swiften/Swiften.a -lexpat -lssl -lcrypto
@@ -44,41 +43,43 @@ mac {
 
 DEFINES += BOOST_SIGNALS_NAMESPACE=bsignals BOOST_ALL_NO_LIB
 
-HEADERS += QtChatWindow.h \
-           QtChatWindowFactory.h \
-           QtJoinMUCDialog.h \
-           QtLoginWindow.h \
-           QtLoginWindowFactory.h \
-           QtMainEventLoop.h \
-           QtMainWindow.h \
-           QtMainWindowFactory.h \
-           QtSettingsProvider.h \
-           QtStatusWidget.h \
-           QtSwift.h \
-           QtTreeWidget.h \
-           QtTreeWidgetFactory.h \
-           QtTreeWidgetItem.h \
-					 QtChatView.h \
-					 ChatSnippet.h \
-					 MessageSnippet.h \
-					 SystemMessageSnippet.h
+HEADERS += \
+	QtChatWindow.h \
+	QtChatWindowFactory.h \
+	QtJoinMUCDialog.h \
+	QtLoginWindow.h \
+	QtLoginWindowFactory.h \
+	QtMainEventLoop.h \
+	QtMainWindow.h \
+	QtMainWindowFactory.h \
+	QtSettingsProvider.h \
+	QtStatusWidget.h \
+	QtSwift.h \
+	QtTreeWidget.h \
+	QtTreeWidgetFactory.h \
+	QtTreeWidgetItem.h \
+	QtChatView.h \
+	ChatSnippet.h \
+	MessageSnippet.h \
+	SystemMessageSnippet.h
 
-SOURCES += main.cpp \
-           QtChatWindow.cpp \
-           QtChatWindowFactory.cpp \
-           QtJoinMUCDialog.cpp \
-           QtLoginWindow.cpp \
-           QtLoginWindowFactory.cpp \
-           QtMainWindow.cpp \
-           QtMainWindowFactory.cpp \
-           QtSettingsProvider.cpp \
-           QtStatusWidget.cpp \
-           QtSwift.cpp \
-           QtTreeWidget.cpp \
-					 QtChatView.cpp  \
-					 ChatSnippet.cpp \
-					 MessageSnippet.cpp \
-					 SystemMessageSnippet.cpp
+SOURCES += \
+	main.cpp \
+	QtChatWindow.cpp \
+	QtChatWindowFactory.cpp \
+	QtJoinMUCDialog.cpp \
+	QtLoginWindow.cpp \
+	QtLoginWindowFactory.cpp \
+	QtMainWindow.cpp \
+	QtMainWindowFactory.cpp \
+	QtSettingsProvider.cpp \
+	QtStatusWidget.cpp \
+	QtSwift.cpp \
+	QtTreeWidget.cpp \
+	QtChatView.cpp  \
+	ChatSnippet.cpp \
+	MessageSnippet.cpp \
+	SystemMessageSnippet.cpp
 
 FORMS += QtJoinMUCDialog.ui
 

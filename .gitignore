@@ -4,10 +4,16 @@
 *.gcno
 *.app
 *.o
+*.obj
 *.a
+*.pdb
 *.swp
 *.exe
 *.dll
+*.lib
+*.exp
+*.ilk
+*.res
 *.moc
 *~
 *.manifest
@@ -26,6 +32,8 @@ Swiften/QA/ClientTest/ClientTest
 Swiften/config.h
 Swiften/config.h.in
 UI/Qt/Makefile
+UI/Qt/Makefile.Debug
+UI/Qt/Makefile.Release
 UI/Qt/swift
 UI/Qt/DefaultTheme.qrc
 UI/Qt/*/Makefile
