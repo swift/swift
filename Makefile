@@ -41,6 +41,7 @@ include 3rdParty/CppUnit/Makefile.inc
 include 3rdParty/LibIDN/Makefile.inc
 include 3rdParty/ZLib/Makefile.inc
 include 3rdParty/Expat/Makefile.inc
+include 3rdParty/SQLite/Makefile.inc
 include Swiften/Makefile.inc
 include UI/Qt/Makefile.inc
 
