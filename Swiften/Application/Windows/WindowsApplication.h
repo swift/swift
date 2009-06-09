@@ -1,8 +1,6 @@
 #ifndef SWIFTEN_WindowsApplication_H
 #define SWIFTEN_WindowsApplication_H
 
-#include <cassert>
-
 #include "Swiften/Application/Application.h"
 #include "Swiften/Application/NullApplicationMessageDisplay.h"
 
@@ -18,7 +16,6 @@ namespace Swift {
 			}
 
 			boost::filesystem::path getSettingsDir() const {
-				assert(false);
 				// FIXME: This is wrong
 				boost::filesystem::path result(getHomeDir() / ("." + getName().getUTF8String()));
 				boost::filesystem::create_directory(result);

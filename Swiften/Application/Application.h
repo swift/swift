@@ -16,6 +16,7 @@ namespace Swift {
 			boost::filesystem::path getSettingsFileName() const;
 			boost::filesystem::path getHomeDir() const;
 			virtual boost::filesystem::path getSettingsDir() const = 0;
+			boost::filesystem::path getProfileDir(const String& profile) const;
 
 			const String& getName() const {
 				return name_;

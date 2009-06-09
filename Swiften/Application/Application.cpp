@@ -24,4 +24,10 @@ boost::filesystem::path Application::getHomeDir() const {
 	return homeDir;
 }
 
+boost::filesystem::path Application::getProfileDir(const String& profile) const {
+	boost::filesystem::path result(getHomeDir() / profile.getUTF8String());
+	boost::filesystem::create_directory(result);
+	return result;
+}
+
 }
