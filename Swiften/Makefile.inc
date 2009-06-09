@@ -20,6 +20,9 @@ include Swiften/Roster/Makefile.inc
 include Swiften/Disco/Makefile.inc
 include Swiften/Presence/Makefile.inc
 include Swiften/Notifier/Makefile.inc
+include Swiften/History/Makefile.inc
+
+CPPFLAGS += $(SQLITE_CPPFLAGS)
 
 SWIFTEN_TARGET = Swiften/Swiften.a
 SWIFTEN_OBJECTS = \
@@ -27,7 +30,8 @@ SWIFTEN_OBJECTS = \
 	$(SWIFTEN_OBJECTIVE_SOURCES:.mm=.o) \
 	$(LIBIDN_OBJECTS) \
 	$(BOOST_OBJECTS) \
-	$(ZLIB_OBJECTS)
+	$(ZLIB_OBJECTS) \
+	$(SQLITE_OBJECTS)
 
 TARGETS += $(SWIFTEN_TARGET)
 CLEANFILES += $(SWIFTEN_TARGET) $(SWIFTEN_OBJECTS)
