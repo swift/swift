@@ -1,10 +1,10 @@
-#include "Swiften/Controllers/XMPPRosterController.h"
+#include "Swift/Controllers/XMPPRosterController.h"
 
 #include <boost/bind.hpp>
 
 #include "Swiften/Base/foreach.h"
-#include "Swiften/Controllers/MainWindow.h"
-#include "Swiften/Controllers/MainWindowFactory.h"
+#include "Swift/Controllers/MainWindow.h"
+#include "Swift/Controllers/MainWindowFactory.h"
 #include "Swiften/Elements/RosterItemPayload.h"
 #include "Swiften/Queries/IQRouter.h"
 #include "Swiften/Queries/Requests/GetRosterRequest.h"

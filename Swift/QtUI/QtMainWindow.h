@@ -3,7 +3,7 @@
 
 #include <QWidget>
 #include <QMenu>
-#include "Swiften/Controllers/MainWindow.h"
+#include "Swift/Controllers/MainWindow.h"
 
 #include <vector>
 

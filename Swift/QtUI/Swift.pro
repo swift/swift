@@ -27,7 +27,7 @@ win32 {
 else {
 	DEPENDPATH += . ../.. ../../3rdParty/Boost
 	INCLUDEPATH += . ../.. ../../3rdParty/Boost
-	LIBS += ../../Swiften/Swiften.a -lexpat -lssl -lcrypto
+	LIBS += ../Controllers/Controllers.a ../../Swiften/Swiften.a -lexpat -lssl -lcrypto
 	unix {
 		LIBS += -lresolv
 	}

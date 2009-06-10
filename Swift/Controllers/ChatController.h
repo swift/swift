@@ -1,7 +1,7 @@
 #ifndef SWIFTEN_ChatController_H
 #define SWIFTEN_ChatController_H
 
-#include "Swiften/Controllers/ChatControllerBase.h"
+#include "Swift/Controllers/ChatControllerBase.h"
 
 namespace Swift {
 	class NickResolver;

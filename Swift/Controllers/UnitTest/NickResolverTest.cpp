@@ -1,7 +1,7 @@
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/extensions/TestFactoryRegistry.h>
 
-#include "Swiften/Controllers/NickResolver.h"
+#include "Swift/Controllers/NickResolver.h"
 #include "Swiften/Roster/XMPPRoster.h"
 
 using namespace Swift;

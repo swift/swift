@@ -1,8 +1,8 @@
-#include "Swiften/Controllers/ChatController.h"
+#include "Swift/Controllers/ChatController.h"
 
-#include "Swiften/Controllers/ChatWindow.h"
-#include "Swiften/Controllers/ChatWindowFactory.h"
-#include "Swiften/Controllers/NickResolver.h"
+#include "Swift/Controllers/ChatWindow.h"
+#include "Swift/Controllers/ChatWindowFactory.h"
+#include "Swift/Controllers/NickResolver.h"
 
 namespace Swift {
 	

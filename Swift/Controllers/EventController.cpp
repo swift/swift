@@ -1,4 +1,4 @@
-#include "Swiften/Controllers/EventController.h"
+#include "Swift/Controllers/EventController.h"
 
 #include <boost/bind.hpp>
 #include <algorithm>

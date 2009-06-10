@@ -1,7 +1,7 @@
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/extensions/TestFactoryRegistry.h>
 
-#include "Swiften/Controllers/XMPPRosterController.h"
+#include "Swift/Controllers/XMPPRosterController.h"
 #include "Swiften/Elements/Payload.h"
 #include "Swiften/Elements/RosterItemPayload.h"
 #include "Swiften/Elements/RosterPayload.h"

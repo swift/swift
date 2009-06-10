@@ -1,12 +1,12 @@
-#include "Swiften/Controllers/ChatControllerBase.h"
+#include "Swift/Controllers/ChatControllerBase.h"
 
 #include <boost/bind.hpp>
 #include <boost/shared_ptr.hpp>
 
 #include "Swiften/Client/StanzaChannel.h"
 #include "Swiften/Base/foreach.h"
-#include "Swiften/Controllers/ChatWindow.h"
-#include "Swiften/Controllers/ChatWindowFactory.h"
+#include "Swift/Controllers/ChatWindow.h"
+#include "Swift/Controllers/ChatWindowFactory.h"
 #include "Swiften/Queries/Requests/GetSecurityLabelsCatalogRequest.h"
 
 namespace Swift {

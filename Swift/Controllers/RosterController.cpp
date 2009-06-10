@@ -1,10 +1,10 @@
-#include "Swiften/Controllers/RosterController.h"
+#include "Swift/Controllers/RosterController.h"
 
 #include <boost/bind.hpp>
 
 #include "Swiften/Base/foreach.h"
-#include "Swiften/Controllers/MainWindow.h"
-#include "Swiften/Controllers/MainWindowFactory.h"
+#include "Swift/Controllers/MainWindow.h"
+#include "Swift/Controllers/MainWindowFactory.h"
 #include "Swiften/Queries/Requests/GetRosterRequest.h"
 #include "Swiften/EventLoop/MainEventLoop.h"
 #include "Swiften/Roster/Roster.h"

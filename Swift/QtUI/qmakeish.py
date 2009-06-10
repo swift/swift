@@ -80,7 +80,7 @@ for line in makefile :
       continue
     
     match = re.match("(\w+)_SOURCES (\+?)= (.*)", line) 
-    if match and match.group(1) in ["SWIFTEN", "ZLIB", "LIBIDN", "BOOST", "EXPAT"] :
+    if match and match.group(1) in ["SWIFTEN", "ZLIB", "LIBIDN", "BOOST", "EXPAT", "SWIFT_CONTROLLERS"] :
       inSources = processSourcesLine(match.group(3))
       continue
 

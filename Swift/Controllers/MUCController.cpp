@@ -1,10 +1,10 @@
-#include "Swiften/Controllers/MUCController.h"
+#include "Swift/Controllers/MUCController.h"
 
 #include <boost/bind.hpp>
 
 #include "Swiften/Base/foreach.h"
-#include "Swiften/Controllers/ChatWindow.h"
-#include "Swiften/Controllers/ChatWindowFactory.h"
+#include "Swift/Controllers/ChatWindow.h"
+#include "Swift/Controllers/ChatWindowFactory.h"
 #include "Swiften/MUC/MUC.h"
 #include "Swiften/Client/StanzaChannel.h"
 #include "Swiften/Roster/Roster.h"

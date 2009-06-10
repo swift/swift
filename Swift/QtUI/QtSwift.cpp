@@ -12,8 +12,8 @@
 #include "Swiften/Base/String.h"
 #include "Swiften/Elements/Presence.h"
 #include "Swiften/Client/Client.h"
-#include "Swiften/Controllers/ChatController.h"
-#include "Swiften/Controllers/MainController.h"
+#include "Swift/Controllers/ChatController.h"
+#include "Swift/Controllers/MainController.h"
 
 namespace Swift{
 

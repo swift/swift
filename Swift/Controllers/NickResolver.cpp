@@ -1,4 +1,4 @@
-#include "Swiften/Controllers/NickResolver.h"
+#include "Swift/Controllers/NickResolver.h"
 
 #include <boost/shared_ptr.hpp>
 

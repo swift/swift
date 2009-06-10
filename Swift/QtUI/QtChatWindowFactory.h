@@ -1,7 +1,7 @@
 #ifndef SWIFT_QtChatWindowFactory_H
 #define SWIFT_QtChatWindowFactory_H
 
-#include "Swiften/Controllers/ChatWindowFactory.h"
+#include "Swift/Controllers/ChatWindowFactory.h"
 #include "Swiften/JID/JID.h"
 
 namespace Swift {

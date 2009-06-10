@@ -1,7 +1,7 @@
 #ifndef SWIFT_QtChatWindow_H
 #define SWIFT_QtChatWindow_H
 
-#include "Swiften/Controllers/ChatWindow.h"
+#include "Swift/Controllers/ChatWindow.h"
 
 #include <QWidget>
 

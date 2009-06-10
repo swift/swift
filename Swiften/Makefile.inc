@@ -15,7 +15,6 @@ include Swiften/TLS/Makefile.inc
 include Swiften/SASL/Makefile.inc
 include Swiften/Compress/Makefile.inc
 include Swiften/Queries/Makefile.inc
-include Swiften/Controllers/Makefile.inc
 include Swiften/Roster/Makefile.inc
 include Swiften/Disco/Makefile.inc
 include Swiften/Presence/Makefile.inc
@@ -34,6 +33,7 @@ SWIFTEN_OBJECTS = \
 	$(SQLITE_OBJECTS)
 
 TARGETS += $(SWIFTEN_TARGET)
+UNITTEST_LIBS += $(SWIFTEN_TARGET)
 CLEANFILES += $(SWIFTEN_TARGET) $(SWIFTEN_OBJECTS)
 
 .PHONY: lib
@@ -43,4 +43,3 @@ $(SWIFTEN_TARGET): $(SWIFTEN_OBJECTS)
 	$(QUIET_AR)$(AR) $(ARFLAGS) $@ $(SWIFTEN_OBJECTS)
 
 include Swiften/Examples/Makefile.inc
-include Swiften/QA/Makefile.inc

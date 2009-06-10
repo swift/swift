@@ -7,8 +7,8 @@
 #include <QCheckBox>
 #include <QStackedWidget>
 
-#include "Swiften/Controllers/LoginWindow.h"
-#include "Swiften/Controllers/MainWindow.h"
+#include "Swift/Controllers/LoginWindow.h"
+#include "Swift/Controllers/MainWindow.h"
 
 class QLabel;
 class QToolButton;
