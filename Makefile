@@ -43,7 +43,7 @@ include 3rdParty/ZLib/Makefile.inc
 include 3rdParty/Expat/Makefile.inc
 include 3rdParty/SQLite/Makefile.inc
 include Swiften/Makefile.inc
-include UI/Qt/Makefile.inc
+include Swift/QtUI/Makefile.inc
 
 ################################################################################
 # Main targets

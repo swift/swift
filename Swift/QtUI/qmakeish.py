@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# Run this from the UI/Qt dir with:
+# Run this from the Swift/QtUI dir with:
 # ./qmakeish.py  ../../Makefile > Swiften.pri
 
 import sys, re, os.path

@@ -7,9 +7,9 @@
 #include "Swiften/Roster/TreeWidgetFactory.h"
 #include "Swiften/Roster/TreeWidget.h"
 #include "Swiften/Roster/TreeWidgetItem.h"
-#include "UI/Qt/QtTreeWidgetItem.h"
-#include "UI/Qt/QtTreeWidget.h"
-#include "UI/Qt/QtSwiftUtil.h"
+#include "Swift/QtUI/QtTreeWidgetItem.h"
+#include "Swift/QtUI/QtTreeWidget.h"
+#include "Swift/QtUI/QtSwiftUtil.h"
 
 namespace Swift {
 
