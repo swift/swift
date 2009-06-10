@@ -44,7 +44,7 @@ include 3rdParty/Expat/Makefile.inc
 include 3rdParty/SQLite/Makefile.inc
 include Swiften/Makefile.inc
 include Swift/Makefile.inc
-include Swiften/QA/Makefile.inc
+include QA/Makefile.inc
 
 ################################################################################
 # Main targets

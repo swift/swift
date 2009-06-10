@@ -42,4 +42,5 @@ lib: $(SWIFTEN_TARGET)
 $(SWIFTEN_TARGET): $(SWIFTEN_OBJECTS)
 	$(QUIET_AR)$(AR) $(ARFLAGS) $@ $(SWIFTEN_OBJECTS)
 
+include Swiften/QA/Makefile.inc
 include Swiften/Examples/Makefile.inc

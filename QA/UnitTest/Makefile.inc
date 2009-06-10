@@ -1,6 +1,6 @@
-UNITTEST_TARGET = Swiften/QA/UnitTest/checker
+UNITTEST_TARGET = QA/UnitTest/checker
 UNITTEST_SOURCES += \
-	Swiften/QA/UnitTest/checker.cpp
+	QA/UnitTest/checker.cpp
 UNITTEST_OBJECTS = \
 	$(UNITTEST_SOURCES:.cpp=.o)
 
