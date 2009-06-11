@@ -40,6 +40,7 @@ namespace Swift {
 			boost::shared_ptr<Payload> payload_;
 			AutoDeleteBehavior autoDeleteBehavior_;
 			String id_;
+			bool sent_;
 	};
 }
 

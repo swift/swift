@@ -18,6 +18,7 @@ class RequestTest : public CppUnit::TestFixture
 		CPPUNIT_TEST(testHandleIQ);
 		CPPUNIT_TEST(testHandleIQ_InvalidID);
 		CPPUNIT_TEST(testHandleIQ_Error);
+		CPPUNIT_TEST(testHandleIQ_BeforeSend);
 		CPPUNIT_TEST_SUITE_END();
 
 	public:
@@ -99,6 +100,16 @@ class RequestTest : public CppUnit::TestFixture
 			CPPUNIT_ASSERT_EQUAL(0, responsesReceived_);
 			CPPUNIT_ASSERT_EQUAL(1, errorsReceived_);
 			CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(channel_->iqs_.size()));
+		}
+
+		void testHandleIQ_BeforeSend() {
+			MyRequest testling(IQ::Get, JID("foo@bar.com/baz"), payload_, router_);
+			testling.onResponse.connect(boost::bind(&RequestTest::handleResponse, this, _1, _2));
+			channel_->onIQReceived(createResponse("test-id"));
+
+			CPPUNIT_ASSERT_EQUAL(0, responsesReceived_);
+			CPPUNIT_ASSERT_EQUAL(0, errorsReceived_);
+			CPPUNIT_ASSERT_EQUAL(0, static_cast<int>(channel_->iqs_.size()));
 		}
 	
 	private:
