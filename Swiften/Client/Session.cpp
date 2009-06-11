@@ -112,139 +112,130 @@ void Session::handleElement(boost::shared_ptr<Element> element) {
 	if (getState() == SessionStarted) {
 		onElementReceived(element);
 	}
-	else {
-		StreamFeatures* streamFeatures = dynamic_cast<StreamFeatures*>(element.get());
-		if (streamFeatures) {
-			if (!checkState(Negotiating)) {
-				return;
-			}
+	else if (StreamFeatures* streamFeatures = dynamic_cast<StreamFeatures*>(element.get())) {
+		if (!checkState(Negotiating)) {
+			return;
+		}
 
-			if (streamFeatures->hasStartTLS() && tlsLayerFactory_->canCreate()) {
-				state_ = Encrypting;
-				xmppLayer_->writeElement(boost::shared_ptr<StartTLSRequest>(new StartTLSRequest()));
-			}
-			else if (streamFeatures->hasAuthenticationMechanisms()) {
-				if (!certificate_.isNull()) {
-					if (streamFeatures->hasAuthenticationMechanism("EXTERNAL")) {
-						state_ = Authenticating;
-						xmppLayer_->writeElement(boost::shared_ptr<Element>(new AuthRequest("EXTERNAL", "")));
-					}
-					else {
-						setError(ClientCertificateError);
-					}
-				}
-				else if (streamFeatures->hasAuthenticationMechanism("PLAIN")) {
-					state_ = WaitingForCredentials;
-					onNeedCredentials();
+		if (streamFeatures->hasStartTLS() && tlsLayerFactory_->canCreate()) {
+			state_ = Encrypting;
+			xmppLayer_->writeElement(boost::shared_ptr<StartTLSRequest>(new StartTLSRequest()));
+		}
+		else if (streamFeatures->hasAuthenticationMechanisms()) {
+			if (!certificate_.isNull()) {
+				if (streamFeatures->hasAuthenticationMechanism("EXTERNAL")) {
+					state_ = Authenticating;
+					xmppLayer_->writeElement(boost::shared_ptr<Element>(new AuthRequest("EXTERNAL", "")));
 				}
 				else {
-					setError(NoSupportedAuthMechanismsError);
+					setError(ClientCertificateError);
 				}
 			}
+			else if (streamFeatures->hasAuthenticationMechanism("PLAIN")) {
+				state_ = WaitingForCredentials;
+				onNeedCredentials();
+			}
 			else {
-				// Start the session
+				setError(NoSupportedAuthMechanismsError);
+			}
+		}
+		else {
+			// Start the session
 
-				// Add a whitespace ping layer
-				whitespacePingLayer_ = new WhitespacePingLayer();
-				streamStack_->addLayer(whitespacePingLayer_);
+			// Add a whitespace ping layer
+			whitespacePingLayer_ = new WhitespacePingLayer();
+			streamStack_->addLayer(whitespacePingLayer_);
 
-				if (streamFeatures->hasSession()) {
-					needSessionStart_ = true;
+			if (streamFeatures->hasSession()) {
+				needSessionStart_ = true;
+			}
+
+			if (streamFeatures->hasResourceBind()) {
+				state_ = BindingResource;
+				boost::shared_ptr<ResourceBind> resourceBind(new ResourceBind());
+				if (!jid_.getResource().isEmpty()) {
+					resourceBind->setResource(jid_.getResource());
 				}
-
-				if (streamFeatures->hasResourceBind()) {
-					state_ = BindingResource;
-					boost::shared_ptr<ResourceBind> resourceBind(new ResourceBind());
-					if (!jid_.getResource().isEmpty()) {
-						resourceBind->setResource(jid_.getResource());
-					}
-					xmppLayer_->writeElement(IQ::createRequest(IQ::Set, JID(), "session-bind", resourceBind));
+				xmppLayer_->writeElement(IQ::createRequest(IQ::Set, JID(), "session-bind", resourceBind));
+			}
+			else if (needSessionStart_) {
+				sendSessionStart();
+			}
+			else {
+				state_ = SessionStarted;
+				onSessionStarted();
+			}
+		}
+	}
+	else if (dynamic_cast<AuthSuccess*>(element.get())) {
+		checkState(Authenticating);
+		state_ = WaitingForStreamStart;
+		xmppLayer_->resetParser();
+		sendStreamHeader();
+	}
+	else if (dynamic_cast<AuthFailure*>(element.get())) {
+		setError(AuthenticationFailedError);
+	}
+	else if (dynamic_cast<TLSProceed*>(element.get())) {
+		tlsLayer_ = tlsLayerFactory_->createTLSLayer();
+		streamStack_->addLayer(tlsLayer_);
+		if (!certificate_.isNull() && !tlsLayer_->setClientCertificate(certificate_)) {
+			setError(ClientCertificateLoadError);
+		}
+		else {
+			tlsLayer_->onConnected.connect(boost::bind(&Session::handleTLSConnected, this));
+			tlsLayer_->onError.connect(boost::bind(&Session::handleTLSError, this));
+			tlsLayer_->connect();
+		}
+	}
+	else if (dynamic_cast<StartTLSFailure*>(element.get())) {
+		setError(TLSError);
+	}
+	else if (IQ* iq = dynamic_cast<IQ*>(element.get())) {
+		if (state_ == BindingResource) {
+			boost::shared_ptr<ResourceBind> resourceBind(iq->getPayload<ResourceBind>());
+			if (iq->getType() == IQ::Error && iq->getID() == "session-bind") {
+				setError(ResourceBindError);
+			}
+			else if (!resourceBind) {
+				setError(UnexpectedElementError);
+			}
+			else if (iq->getType() == IQ::Result) {
+				jid_ = resourceBind->getJID();
+				if (!jid_.isValid()) {
+					setError(ResourceBindError);
 				}
-				else if (needSessionStart_) {
+				if (needSessionStart_) {
 					sendSessionStart();
 				}
 				else {
 					state_ = SessionStarted;
-					onSessionStarted();
 				}
+			}
+			else {
+				setError(UnexpectedElementError);
+			}
+		}
+		else if (state_ == StartingSession) {
+			if (iq->getType() == IQ::Result) {
+				state_ = SessionStarted;
+				onSessionStarted();
+			}
+			else if (iq->getType() == IQ::Error) {
+				setError(SessionStartError);
+			}
+			else {
+				setError(UnexpectedElementError);
 			}
 		}
 		else {
-			AuthSuccess* authSuccess = dynamic_cast<AuthSuccess*>(element.get());
-			if (authSuccess) {
-				checkState(Authenticating);
-				state_ = WaitingForStreamStart;
-				xmppLayer_->resetParser();
-				sendStreamHeader();
-			}
-			else if (dynamic_cast<AuthFailure*>(element.get())) {
-				setError(AuthenticationFailedError);
-			}
-			else if (dynamic_cast<TLSProceed*>(element.get())) {
-				tlsLayer_ = tlsLayerFactory_->createTLSLayer();
-				streamStack_->addLayer(tlsLayer_);
-				if (!certificate_.isNull() && !tlsLayer_->setClientCertificate(certificate_)) {
-					setError(ClientCertificateLoadError);
-				}
-				else {
-					tlsLayer_->onConnected.connect(boost::bind(&Session::handleTLSConnected, this));
-					tlsLayer_->onError.connect(boost::bind(&Session::handleTLSError, this));
-					tlsLayer_->connect();
-				}
-			}
-			else if (dynamic_cast<StartTLSFailure*>(element.get())) {
-				setError(TLSError);
-			}
-			else {
-				IQ* iq = dynamic_cast<IQ*>(element.get());
-				if (iq) {
-					if (state_ == BindingResource) {
-						boost::shared_ptr<ResourceBind> resourceBind(iq->getPayload<ResourceBind>());
-						if (iq->getType() == IQ::Error && iq->getID() == "session-bind") {
-							setError(ResourceBindError);
-						}
-						else if (!resourceBind) {
-							setError(UnexpectedElementError);
-						}
-						else if (iq->getType() == IQ::Result) {
-							jid_ = resourceBind->getJID();
-							if (!jid_.isValid()) {
-								setError(ResourceBindError);
-							}
-							if (needSessionStart_) {
-								sendSessionStart();
-							}
-							else {
-								state_ = SessionStarted;
-							}
-						}
-						else {
-							setError(UnexpectedElementError);
-						}
-					}
-					else if (state_ == StartingSession) {
-						if (iq->getType() == IQ::Result) {
-							state_ = SessionStarted;
-							onSessionStarted();
-						}
-						else if (iq->getType() == IQ::Error) {
-							setError(SessionStartError);
-						}
-						else {
-							setError(UnexpectedElementError);
-						}
-					}
-					else {
-						setError(UnexpectedElementError);
-					}
-				}
-				else {
-					// FIXME Not correct?
-					state_ = SessionStarted;
-					onSessionStarted();
-				}
-			}
+			setError(UnexpectedElementError);
 		}
+	}
+	else {
+		// FIXME Not correct?
+		state_ = SessionStarted;
+		onSessionStarted();
 	}
 }
 
