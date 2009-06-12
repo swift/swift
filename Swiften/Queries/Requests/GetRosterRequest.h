@@ -7,8 +7,8 @@
 namespace Swift {
 	class GetRosterRequest : public GenericRequest<RosterPayload> {
 		public:
-			GetRosterRequest(IQRouter* router, AutoDeleteBehavior autoDeleteBehavior = DoNotAutoDelete) : 
-					GenericRequest<RosterPayload>(IQ::Get, JID(), boost::shared_ptr<Payload>(new RosterPayload()), router, autoDeleteBehavior) {
+			GetRosterRequest(IQRouter* router) :
+					GenericRequest<RosterPayload>(IQ::Get, JID(), boost::shared_ptr<Payload>(new RosterPayload()), router) {
 			}
 	};
 }

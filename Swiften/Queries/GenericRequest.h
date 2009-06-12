@@ -13,9 +13,8 @@ namespace Swift {
 					IQ::Type type, 
 					const JID& receiver, 
 					boost::shared_ptr<Payload> payload, 
-					IQRouter* router,
-					AutoDeleteBehavior autoDeleteBehavior = DoNotAutoDelete) : 
-						Request(type, receiver, payload, router, autoDeleteBehavior) {
+					IQRouter* router) :
+						Request(type, receiver, payload, router) {
 			}
 
 			virtual void handleResponse(boost::shared_ptr<Payload> payload, boost::optional<Error> error) {

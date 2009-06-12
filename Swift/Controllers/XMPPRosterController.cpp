@@ -26,7 +26,7 @@ XMPPRosterController::XMPPRosterController(IQRouter* iqRouter, boost::shared_ptr
 }
 
 void XMPPRosterController::requestRoster() {
-	GetRosterRequest* rosterRequest = new GetRosterRequest(iqRouter_, Request::AutoDeleteAfterResponse);
+	boost::shared_ptr<GetRosterRequest> rosterRequest(new GetRosterRequest(iqRouter_));
 	rosterRequest->onResponse.connect(boost::bind(&XMPPRosterController::handleRosterReceived, this, _1));
 	rosterRequest->send();
 }

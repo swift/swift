@@ -101,7 +101,7 @@ void MainController::handleConnected() {
 	discoResponder_->setDiscoInfo(capsInfo_->getNode() + "#" + capsInfo_->getVersion(), discoInfo);
 
 	serverDiscoInfo_ = boost::shared_ptr<DiscoInfo>(new DiscoInfo());
-	GetDiscoInfoRequest* discoInfoRequest = new GetDiscoInfoRequest(JID(), client_, Request::AutoDeleteAfterResponse);
+	boost::shared_ptr<GetDiscoInfoRequest> discoInfoRequest(new GetDiscoInfoRequest(JID(), client_));
 	discoInfoRequest->onResponse.connect(boost::bind(&MainController::handleServerDiscoInfoResponse, this, _1, _2));
 	discoInfoRequest->send();
 	

@@ -28,7 +28,7 @@ void handleRosterReceived(boost::shared_ptr<Payload>) {
 }
 
 void handleConnected() {
-	GetRosterRequest* rosterRequest = new GetRosterRequest(client, Request::AutoDeleteAfterResponse);
+	boost::shared_ptr<GetRosterRequest> rosterRequest(new GetRosterRequest(client));
 	rosterRequest->onResponse.connect(boost::bind(&handleRosterReceived, _1));
 	rosterRequest->send();
 }

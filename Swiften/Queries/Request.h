@@ -3,6 +3,7 @@
 
 #include <boost/shared_ptr.hpp>
 #include <boost/optional.hpp>
+#include <boost/enable_shared_from_this.hpp>
 
 #include "Swiften/Base/String.h"
 #include "Swiften/Queries/IQHandler.h"
@@ -12,19 +13,13 @@
 #include "Swiften/JID/JID.h"
 
 namespace Swift {
-	class Request : public IQHandler {
+	class Request : public IQHandler, public boost::enable_shared_from_this<Request> {
 		public:
-			enum AutoDeleteBehavior {
-				DoNotAutoDelete,
-				AutoDeleteAfterResponse
-			};
-
 			Request(
 					IQ::Type type, 
 					const JID& receiver, 
 					boost::shared_ptr<Payload> payload, 
-					IQRouter* router, 
-					AutoDeleteBehavior = DoNotAutoDelete);
+					IQRouter* router);
 
 			void send();
 
@@ -39,7 +34,6 @@ namespace Swift {
 			IQ::Type type_;
 			JID receiver_;
 			boost::shared_ptr<Payload> payload_;
-			AutoDeleteBehavior autoDeleteBehavior_;
 			String id_;
 			bool sent_;
 	};
