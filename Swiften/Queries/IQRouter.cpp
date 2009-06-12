@@ -10,13 +10,22 @@
 
 namespace Swift {
 
+namespace {
+	void noop(IQHandler*) {}
+	struct PointerEquals {
+		PointerEquals(IQHandler* handler) : handler_(handler) {}
+		bool operator()(boost::shared_ptr<IQHandler> o) { return handler_ == o.get(); }
+		IQHandler* handler_;
+	};
+}
+
 IQRouter::IQRouter(IQChannel* channel) : channel_(channel) {
 	channel->onIQReceived.connect(boost::bind(&IQRouter::handleIQ, this, _1));
 }
 
 void IQRouter::handleIQ(boost::shared_ptr<IQ> iq) {
 	bool handled = false;
-	foreach(IQHandler* handler, handlers_) {
+	foreach(boost::shared_ptr<IQHandler> handler, handlers_) {
 		handled |= handler->handleIQ(iq);
 		if (handled) {
 			break;
@@ -28,11 +37,19 @@ void IQRouter::handleIQ(boost::shared_ptr<IQ> iq) {
 }
 
 void IQRouter::addHandler(IQHandler* handler) {
+	handlers_.push_back(boost::shared_ptr<IQHandler>(handler, noop));
+}
+
+void IQRouter::addHandler(boost::shared_ptr<IQHandler> handler) {
 	handlers_.push_back(handler);
 }
 
 void IQRouter::removeHandler(IQHandler* handler) {
-	handlers_.erase(std::remove(handlers_.begin(), handlers_.end(), handler), handlers_.end());
+	handlers_.erase(std::remove_if(handlers_.begin(), handlers_.end(), PointerEquals(handler)), handlers_.end());
+}
+
+void IQRouter::removeHandler(boost::shared_ptr<IQHandler> handler) {
+	handlers_.erase(std::remove(handlers_.begin(), handlers_.end(), handler));
 }
 
 void IQRouter::sendIQ(boost::shared_ptr<IQ> iq) {

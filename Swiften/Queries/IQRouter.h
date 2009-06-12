@@ -16,7 +16,9 @@ namespace Swift {
 			IQRouter(IQChannel* channel);
 
 			void addHandler(IQHandler* handler);
+			void addHandler(boost::shared_ptr<IQHandler> handler);
 			void removeHandler(IQHandler* handler);
+			void removeHandler(boost::shared_ptr<IQHandler> handler);
 
 			void sendIQ(boost::shared_ptr<IQ> iq);
 			String getNewIQID();
@@ -26,7 +28,7 @@ namespace Swift {
 
 		private:
 			IQChannel* channel_;
-			std::vector<IQHandler*> handlers_;
+			std::vector< boost::shared_ptr<IQHandler> > handlers_;
 	};
 }
 
