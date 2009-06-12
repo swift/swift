@@ -21,13 +21,8 @@ namespace Swift {
 /**
  * The controller does not gain ownership of these parameters.
  */
-XMPPRosterController::XMPPRosterController(IQRouter* iqRouter, boost::shared_ptr<XMPPRoster> xmppRoster)
- : iqRouter_(iqRouter), xmppRoster_(xmppRoster) {
-	iqRouter_->addHandler(this);
-}
-
-XMPPRosterController::~XMPPRosterController() {
-	iqRouter_->removeHandler(this);
+XMPPRosterController::XMPPRosterController(IQRouter* iqRouter, boost::shared_ptr<XMPPRoster> xmppRoster) : iqRouter_(iqRouter), rosterPushResponder_(iqRouter), xmppRoster_(xmppRoster) {
+	rosterPushResponder_.onRosterReceived.connect(boost::bind(&XMPPRosterController::handleRosterReceived, this, _1));
 }
 
 void XMPPRosterController::requestRoster() {
@@ -46,13 +41,4 @@ void XMPPRosterController::handleRosterReceived(boost::shared_ptr<RosterPayload>
 	}
 }
 
-bool XMPPRosterController::handleIQ(boost::shared_ptr<IQ> iq) {
-	if (iq->getType() != IQ::Set || iq->getPayload<RosterPayload>().get() == NULL || iq->getFrom().isValid()) {
-		return false;
-	}
-	handleRosterReceived(iq->getPayload<RosterPayload>());
-	return true;
 }
-
-}
-
