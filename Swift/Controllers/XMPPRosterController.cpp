@@ -22,11 +22,12 @@ namespace Swift {
  * The controller does not gain ownership of these parameters.
  */
 XMPPRosterController::XMPPRosterController(IQRouter* iqRouter, boost::shared_ptr<XMPPRoster> xmppRoster)
- : IQHandler(iqRouter), iqRouter_(iqRouter), xmppRoster_(xmppRoster) {
+ : iqRouter_(iqRouter), xmppRoster_(xmppRoster) {
+	iqRouter_->addHandler(this);
 }
 
 XMPPRosterController::~XMPPRosterController() {
-
+	iqRouter_->removeHandler(this);
 }
 
 void XMPPRosterController::requestRoster() {

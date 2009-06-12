@@ -10,18 +10,9 @@ namespace Swift {
 
 	class IQHandler {
 		public:
-			IQHandler(IQRouter* router);
 			virtual ~IQHandler();
 
 			virtual bool handleIQ(boost::shared_ptr<IQ>) = 0;
-
-		protected:
-			IQRouter* getRouter() const {
-				return router_;
-			}
-	
-		private:
-			IQRouter* router_;
 	};
 }
 

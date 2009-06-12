@@ -35,6 +35,7 @@ namespace Swift {
 			bool handleIQ(boost::shared_ptr<IQ>);
 
 		private:
+			IQRouter* router_;
 			IQ::Type type_;
 			JID receiver_;
 			boost::shared_ptr<Payload> payload_;

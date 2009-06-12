@@ -2,13 +2,19 @@
 #define SWIFTEN_Responder_H
 
 #include "Swiften/Queries/IQHandler.h"
+#include "Swiften/Queries/IQRouter.h"
 #include "Swiften/Elements/Error.h"
 
 namespace Swift {
 	template<typename PAYLOAD_TYPE>
 	class Responder : public IQHandler {
 		public:
-			Responder(IQRouter* router) : IQHandler(router) {
+			Responder(IQRouter* router) : router_(router) {
+				router_->addHandler(this);
+			}
+
+			~Responder() {
+				router_->removeHandler(this);
 			}
 
 		protected:
@@ -16,11 +22,11 @@ namespace Swift {
 			virtual bool handleSetRequest(const JID& from, const String& id, boost::shared_ptr<PAYLOAD_TYPE> payload) = 0;
 
 			void sendResponse(const JID& to, const String& id, boost::shared_ptr<Payload> payload) {
-				getRouter()->sendIQ(IQ::createResult(to, id, payload));
+				router_->sendIQ(IQ::createResult(to, id, payload));
 			}
 
 			void sendError(const JID& to, const String& id, Error::Condition condition, Error::Type type) {
-				getRouter()->sendIQ(IQ::createError(to, id, condition, type));
+				router_->sendIQ(IQ::createError(to, id, condition, type));
 			}
 
 		private:
@@ -36,13 +42,16 @@ namespace Swift {
 							result = handleGetRequest(iq->getFrom(), iq->getID(), payload);
 						}
 						if (!result) {
-							getRouter()->sendIQ(IQ::createError(iq->getFrom(), iq->getID(), Error::NotAllowed, Error::Cancel));
+							router_->sendIQ(IQ::createError(iq->getFrom(), iq->getID(), Error::NotAllowed, Error::Cancel));
 						}
 						return true;
 					}
 				}
 				return false;
 			}
+		
+		private:
+			IQRouter* router_;
 	};
 }
 

@@ -4,17 +4,20 @@
 
 namespace Swift {
 
-Request::Request(IQ::Type type, const JID& receiver, boost::shared_ptr<Payload> payload, IQRouter* router, AutoDeleteBehavior autoDeleteBehavior) : IQHandler(router), type_(type), receiver_(receiver), payload_(payload), autoDeleteBehavior_(autoDeleteBehavior), sent_(false) {
-	id_ = getRouter()->getNewIQID();
+Request::Request(IQ::Type type, const JID& receiver, boost::shared_ptr<Payload> payload, IQRouter* router, AutoDeleteBehavior autoDeleteBehavior) : router_(router), type_(type), receiver_(receiver), payload_(payload), autoDeleteBehavior_(autoDeleteBehavior), sent_(false) {
 }
 
 void Request::send() {
+	assert(!sent_);
+	sent_ = true;
+
 	boost::shared_ptr<IQ> iq(new IQ(type_));
 	iq->setTo(receiver_);
 	iq->addPayload(payload_);
+	id_ = router_->getNewIQID();
 	iq->setID(id_);
-	sent_ = true;
-	getRouter()->sendIQ(iq);
+	router_->addHandler(this);
+	router_->sendIQ(iq);
 }
 
 bool Request::handleIQ(boost::shared_ptr<IQ> iq) {
@@ -27,6 +30,7 @@ bool Request::handleIQ(boost::shared_ptr<IQ> iq) {
 			// FIXME: Get proper error
 			handleResponse(boost::shared_ptr<Payload>(), boost::optional<Error>(Error::UndefinedCondition));
 		}
+		router_->removeHandler(this);
 		if (autoDeleteBehavior_ == AutoDeleteAfterResponse) {
 			MainEventLoop::deleteLater(this);
 		}
