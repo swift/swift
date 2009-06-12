@@ -4,7 +4,7 @@
 
 namespace Swift {
 
-DiscoInfoResponder::DiscoInfoResponder(IQRouter* router) : Responder<DiscoInfo>(router) {
+DiscoInfoResponder::DiscoInfoResponder(IQRouter* router) : GetResponder<DiscoInfo>(router) {
 }
 
 void DiscoInfoResponder::setDiscoInfo(const DiscoInfo& info) {
@@ -31,10 +31,6 @@ bool DiscoInfoResponder::handleGetRequest(const JID& from, const String& id, boo
 		}
 	}
 	return true;
-}
-
-bool DiscoInfoResponder::handleSetRequest(const JID&, const String&, boost::shared_ptr<DiscoInfo>) {
-	return false;
 }
 
 }

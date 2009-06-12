@@ -3,13 +3,13 @@
 
 #include <map>
 
-#include "Swiften/Queries/Responder.h"
+#include "Swiften/Queries/GetResponder.h"
 #include "Swiften/Elements/DiscoInfo.h"
 
 namespace Swift {
 	class IQRouter;
 
-	class DiscoInfoResponder : public Responder<DiscoInfo> {
+	class DiscoInfoResponder : public GetResponder<DiscoInfo> {
 		public:
 			DiscoInfoResponder(IQRouter* router);
 
@@ -18,7 +18,6 @@ namespace Swift {
 
 		private:
 			virtual bool handleGetRequest(const JID& from, const String& id, boost::shared_ptr<DiscoInfo> payload);
-			virtual bool handleSetRequest(const JID& from, const String& id, boost::shared_ptr<DiscoInfo> payload);
 
 		private:
 			DiscoInfo info_;
