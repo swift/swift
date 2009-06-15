@@ -17,7 +17,7 @@
 #include <QTime>
 
 namespace Swift {
-QtChatWindow::QtChatWindow(const QString &contact, QtTreeWidgetFactory *treeWidgetFactory) : QWidget(), contact_(contact), previousMessageWasSelf_(false), previousMessageWasSystem_(false) {
+QtChatWindow::QtChatWindow(const QString &contact, QtTreeWidgetFactory *treeWidgetFactory) : QtTabbable(), contact_(contact), previousMessageWasSelf_(false), previousMessageWasSystem_(false) {
 	unreadCount_ = 0;
 	updateTitleWithUnreadCount();
 
@@ -117,6 +117,7 @@ void QtChatWindow::setUnreadMessageCount(int count) {
 
 void QtChatWindow::updateTitleWithUnreadCount() {
 	setWindowTitle(unreadCount_ > 0 ? QString("(%1) %2)").arg(unreadCount_).arg(contact_) : contact_);
+	emit titleUpdated();
 }
 
 void QtChatWindow::addMessage(const String &message, const String &senderName, bool senderIsSelf, const boost::optional<SecurityLabel>& label) {

@@ -1,7 +1,7 @@
 #pragma once
 
+#include "QtTabbable.h"
 #include <QWidget>
-
 class QTabWidget;
 
 namespace Swift {
@@ -9,11 +9,11 @@ namespace Swift {
 		Q_OBJECT
 		public:
 			QtChatTabs();
-			void addTab(QWidget* tab);
+			void addTab(QtTabbable* tab);
 
 		private slots:
 			void tabClosing();
-
+			void tabTitleUpdated();
 		private:
 			QTabWidget* tabs_; 
 	};

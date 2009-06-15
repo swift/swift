@@ -60,6 +60,7 @@ HEADERS += \
 	QtTreeWidgetItem.h \
 	QtChatView.h \
 	QtChatTabs.h \
+	QtTabbable.h \
 	ChatSnippet.h \
 	MessageSnippet.h \
 	SystemMessageSnippet.h
