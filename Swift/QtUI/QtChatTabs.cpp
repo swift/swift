@@ -41,8 +41,7 @@ void QtChatTabs::handleTabClosing() {
 
 void QtChatTabs::handleTabCloseRequested(int index) {
 	QWidget* widget = tabs_->widget(index);
-	tabs_->removeTab(index);
-	widget->hide();
+	widget->close();
 }
 
 void QtChatTabs::handleTabTitleUpdated() {
