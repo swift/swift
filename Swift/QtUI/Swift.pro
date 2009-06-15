@@ -59,6 +59,7 @@ HEADERS += \
 	QtTreeWidgetFactory.h \
 	QtTreeWidgetItem.h \
 	QtChatView.h \
+	QtChatTabs.h \
 	ChatSnippet.h \
 	MessageSnippet.h \
 	SystemMessageSnippet.h
@@ -77,6 +78,7 @@ SOURCES += \
 	QtSwift.cpp \
 	QtTreeWidget.cpp \
 	QtChatView.cpp  \
+	QtChatTabs.cpp \
 	ChatSnippet.cpp \
 	MessageSnippet.cpp \
 	SystemMessageSnippet.cpp
