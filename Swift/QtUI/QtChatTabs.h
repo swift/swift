@@ -12,8 +12,9 @@ namespace Swift {
 			void addTab(QtTabbable* tab);
 
 		private slots:
-			void tabClosing();
-			void tabTitleUpdated();
+			void handleTabClosing();
+			void handleTabTitleUpdated();
+			void handleTabCloseRequested(int index);
 		private:
 			QTabWidget* tabs_; 
 	};

@@ -11,5 +11,6 @@ namespace Swift {
 
 		signals:
 			void titleUpdated();
+			void windowClosing();
 	};
 }
