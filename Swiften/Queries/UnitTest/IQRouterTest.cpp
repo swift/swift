@@ -12,6 +12,8 @@ using namespace Swift;
 class IQRouterTest : public CppUnit::TestFixture
 {
 		CPPUNIT_TEST_SUITE(IQRouterTest);
+		CPPUNIT_TEST(testRemoveHandler);
+		CPPUNIT_TEST(testRemoveHandler_AfterHandleIQ);
 		CPPUNIT_TEST(testHandleIQ_SuccesfulHandlerFirst);
 		CPPUNIT_TEST(testHandleIQ_SuccesfulHandlerLast);
 		CPPUNIT_TEST(testHandleIQ_NoSuccesfulHandler);
@@ -27,6 +29,31 @@ class IQRouterTest : public CppUnit::TestFixture
 
 		void tearDown() {
 			delete channel_;
+		}
+
+		void testRemoveHandler() {
+			IQRouter testling(channel_);
+			DummyIQHandler handler1(true, &testling);
+			DummyIQHandler handler2(true, &testling);
+			testling.removeHandler(&handler1);
+
+			channel_->onIQReceived(boost::shared_ptr<IQ>(new IQ()));
+
+			CPPUNIT_ASSERT_EQUAL(0, handler1.called);
+			CPPUNIT_ASSERT_EQUAL(1, handler2.called);
+		}
+
+		void testRemoveHandler_AfterHandleIQ() {
+			IQRouter testling(channel_);
+			DummyIQHandler handler1(true, &testling);
+			DummyIQHandler handler2(true, &testling);
+
+			channel_->onIQReceived(boost::shared_ptr<IQ>(new IQ()));
+			testling.removeHandler(&handler1);
+			channel_->onIQReceived(boost::shared_ptr<IQ>(new IQ()));
+
+			CPPUNIT_ASSERT_EQUAL(1, handler1.called);
+			CPPUNIT_ASSERT_EQUAL(1, handler2.called);
 		}
 
 		void testHandleIQ_SuccesfulHandlerFirst() {
@@ -75,7 +102,7 @@ class IQRouterTest : public CppUnit::TestFixture
 			CPPUNIT_ASSERT_EQUAL(1, handler1.called);
 			CPPUNIT_ASSERT_EQUAL(2, handler2.called);
 		}
-	
+
 	private:
 		struct DummyIQHandler : public IQHandler {
 			DummyIQHandler(bool handle, IQRouter* router) : handle(handle), router(router), called(0) {

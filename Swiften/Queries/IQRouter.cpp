@@ -10,20 +10,18 @@
 
 namespace Swift {
 
-namespace {
-	void noop(IQHandler*) {}
-	struct PointerEquals {
-		PointerEquals(IQHandler* handler) : handler_(handler) {}
-		bool operator()(boost::shared_ptr<IQHandler> o) { return handler_ == o.get(); }
-		IQHandler* handler_;
-	};
-}
+static void noop(IQHandler*) {}
 
-IQRouter::IQRouter(IQChannel* channel) : channel_(channel) {
+IQRouter::IQRouter(IQChannel* channel) : channel_(channel), queueRemoves_(false) {
 	channel->onIQReceived.connect(boost::bind(&IQRouter::handleIQ, this, _1));
 }
 
+IQRouter::~IQRouter() {
+}
+
 void IQRouter::handleIQ(boost::shared_ptr<IQ> iq) {
+	queueRemoves_ = true;
+
 	bool handled = false;
 	foreach(boost::shared_ptr<IQHandler> handler, handlers_) {
 		handled |= handler->handleIQ(iq);
@@ -34,22 +32,38 @@ void IQRouter::handleIQ(boost::shared_ptr<IQ> iq) {
 	if (!handled && (iq->getType() == IQ::Get || iq->getType() == IQ::Set) ) {
 		channel_->sendIQ(IQ::createError(iq->getFrom(), iq->getID(), Error::FeatureNotImplemented, Error::Cancel));
 	}
+
+	processPendingRemoves();
+
+	queueRemoves_ = false;
+}
+
+void IQRouter::processPendingRemoves() {
+	foreach(boost::shared_ptr<IQHandler> handler, queuedRemoves_) {
+		handlers_.erase(std::remove(handlers_.begin(), handlers_.end(), handler), handlers_.end());
+	}
+	queuedRemoves_.clear();
 }
 
 void IQRouter::addHandler(IQHandler* handler) {
-	handlers_.push_back(boost::shared_ptr<IQHandler>(handler, noop));
+	addHandler(boost::shared_ptr<IQHandler>(handler, noop));
+}
+
+void IQRouter::removeHandler(IQHandler* handler) {
+	removeHandler(boost::shared_ptr<IQHandler>(handler, noop));
 }
 
 void IQRouter::addHandler(boost::shared_ptr<IQHandler> handler) {
 	handlers_.push_back(handler);
 }
 
-void IQRouter::removeHandler(IQHandler* handler) {
-	handlers_.erase(std::remove_if(handlers_.begin(), handlers_.end(), PointerEquals(handler)), handlers_.end());
-}
-
 void IQRouter::removeHandler(boost::shared_ptr<IQHandler> handler) {
-	handlers_.erase(std::remove(handlers_.begin(), handlers_.end(), handler));
+	if (queueRemoves_) {
+		queuedRemoves_.push_back(handler);
+	}
+	else {
+		handlers_.erase(std::remove(handlers_.begin(), handlers_.end(), handler), handlers_.end());
+	}
 }
 
 void IQRouter::sendIQ(boost::shared_ptr<IQ> iq) {

@@ -28,13 +28,13 @@ class TuneBot {
 			discoResponder_->setDiscoInfo(discoInfo);
 			discoResponder_->setDiscoInfo(capsInfo_->getNode() + "#" + capsInfo_->getVersion(), discoInfo);
 
-			client_->onSessionStarted.connect(bind(&TuneBot::handleSessionStarted, this));
+			client_->onConnected.connect(bind(&TuneBot::handleSessionStarted, this));
 			client_->onMessageReceived.connect(bind(&TuneBot::handleMessage, this, _1));
 			client_->connect();
 		}
 
 		void handleSessionStarted() {
-			GetRosterRequest* rosterRequest = new GetRosterRequest(router_, Request::AutoDeleteAfterResponse);
+			boost::shared_ptr<GetRosterRequest> rosterRequest(new GetRosterRequest(router_));
 			rosterRequest->onResponse.connect(bind(&TuneBot::handleRosterReceived, this, _1));
 			rosterRequest->send();
 		}
@@ -43,7 +43,7 @@ class TuneBot {
 			boost::shared_ptr<Presence> presence(new Presence());
 			presence->addPayload(capsInfo_);
 			presence->setPriority(-1);
-			client_->send(presence);
+			client_->sendPresence(presence);
 		}
 
 		void handleMessage(shared_ptr<Message> message) {
@@ -58,8 +58,7 @@ class TuneBot {
 };
 
 
-int main(int argc, char* argv[])
-{
+int main(int argc, char* argv[]) {
 	if (argc != 3) {
 		std::cerr << "Usage: " << argv[0] << " <jid> <password>" << std::endl;
 		return -1;
@@ -67,6 +66,6 @@ int main(int argc, char* argv[])
 
 	SimpleEventLoop eventLoop;
 
-	TuneBot bot(argv[1], argv[2]);
+	TuneBot bot(JID(argv[1]), argv[2]);
 	eventLoop.run();
 }

@@ -14,10 +14,11 @@ namespace Swift {
 	class IQRouter {
 		public:
 			IQRouter(IQChannel* channel);
+			~IQRouter();
 
 			void addHandler(IQHandler* handler);
-			void addHandler(boost::shared_ptr<IQHandler> handler);
 			void removeHandler(IQHandler* handler);
+			void addHandler(boost::shared_ptr<IQHandler> handler);
 			void removeHandler(boost::shared_ptr<IQHandler> handler);
 
 			void sendIQ(boost::shared_ptr<IQ> iq);
@@ -25,10 +26,13 @@ namespace Swift {
 
 		private:
 			void handleIQ(boost::shared_ptr<IQ> iq);
+			void processPendingRemoves();
 
 		private:
 			IQChannel* channel_;
 			std::vector< boost::shared_ptr<IQHandler> > handlers_;
+			std::vector< boost::shared_ptr<IQHandler> > queuedRemoves_;
+			bool queueRemoves_;
 	};
 }
 
