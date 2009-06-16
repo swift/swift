@@ -6,12 +6,14 @@
 
 namespace Swift {
 	class QtTreeWidgetFactory;
+	class QtChatTabs;
 	class QtChatWindowFactory : public ChatWindowFactory {
 		public:
 			QtChatWindowFactory(QtTreeWidgetFactory *treeWidgetFactory);
 			ChatWindow* createChatWindow(const JID &contact);
 		private:
-			QtTreeWidgetFactory *treeWidgetFactory_;
+			QtTreeWidgetFactory* treeWidgetFactory_;
+			QtChatTabs* tabs_;
 	};
 }
 

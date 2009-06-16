@@ -3,7 +3,7 @@
 
 #include "Swift/Controllers/ChatWindow.h"
 
-#include <QWidget>
+#include "QtTabbable.h"
 
 class QTextEdit;
 class QLineEdit;
@@ -14,7 +14,7 @@ namespace Swift {
 	class QtTreeWidget;
 	class QtTreeWidgetFactory;
 	class TreeWidget;
-	class QtChatWindow : public QWidget, public ChatWindow {
+	class QtChatWindow : public QtTabbable, public ChatWindow {
 		Q_OBJECT
 		public:
 			QtChatWindow(const QString &contact, QtTreeWidgetFactory* treeWidgetFactory);
