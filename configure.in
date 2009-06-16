@@ -46,6 +46,8 @@ case $host in
     CONFIG_LIBS="$CONFIG_LIBS -lstdc++"
 esac
 
+AC_CHECK_FILE([Swift/Makefile.inc], [BUILD_SWIFT="yes"], [BUILD_SWIFT="no"])
+
 ################################################################################
 # Configure options
 ################################################################################
@@ -127,9 +129,11 @@ if test -z "$MM"; then
 fi
 
 # Qt
-AX_QT()
-if test "$HAVE_QT" != yes; then
-  AC_MSG_ERROR([Could not find Qt])
+if test "$BUILD_SWIFT" == "yes"; then
+  AX_QT()
+  if test "$HAVE_QT" != yes; then
+    AC_MSG_ERROR([Could not find Qt])
+  fi
 fi
 
 # Expat
@@ -206,6 +210,7 @@ AC_SUBST(CONFIG_HAVE_OPENSSL)
 AC_SUBST(USE_BUNDLED_EXPAT)
 AC_SUBST(CONFIG_HAVE_LIBXML)
 AC_SUBST(QMAKE)
+AC_SUBST(BUILD_SWIFT)
 
 AC_CONFIG_FILES([Makefile.config])
 AC_OUTPUT

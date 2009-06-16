@@ -43,7 +43,9 @@ include 3rdParty/ZLib/Makefile.inc
 include 3rdParty/Expat/Makefile.inc
 include 3rdParty/SQLite/Makefile.inc
 include Swiften/Makefile.inc
+ifeq ($(BUILD_SWIFT),yes)
 include Swift/Makefile.inc
+endif
 include QA/Makefile.inc
 
 ################################################################################
@@ -52,6 +54,13 @@ include QA/Makefile.inc
 
 .PHONY: all
 all: $(TARGETS)
+
+.PHONY: install
+install: install-dirs $(INSTALL_TARGETS)
+
+.PHONY: install-dirs
+install-dirs:
+	install -d $(includedir) $(libdir)
 
 .PHONY: coverage
 coverage:

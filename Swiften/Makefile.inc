@@ -31,8 +31,11 @@ SWIFTEN_OBJECTS = \
 	$(BOOST_OBJECTS) \
 	$(ZLIB_OBJECTS) \
 	$(SQLITE_OBJECTS)
+SWIFTEN_HEADERS += \
+	Swiften/config.h
 
 TARGETS += $(SWIFTEN_TARGET)
+INSTALL_TARGETS += install-swiften
 UNITTEST_LIBS += $(SWIFTEN_TARGET)
 CLEANFILES += $(SWIFTEN_TARGET) $(SWIFTEN_OBJECTS)
 
@@ -41,6 +44,13 @@ lib: $(SWIFTEN_TARGET)
 
 $(SWIFTEN_TARGET): $(SWIFTEN_OBJECTS)
 	$(QUIET_AR)$(AR) $(ARFLAGS) $@ $(SWIFTEN_OBJECTS)
+
+.PHONY: install-swiften
+install-swiften: $(SWIFTEN_TARGET) $(SWIFTEN_HEADERS)
+	install -d $(includedir)/Swiften/3rdParty
+	rsync -a 3rdParty/Boost/boost $(includedir)/Swiften/3rdParty/Boost
+	for header in $(SWIFTEN_HEADERS); do headerdir=$(includedir)/`dirname $$header`; echo $$header install -d $$headerdir; install $$header $$headerdir; done
+	install $(SWIFTEN_TARGET) $(libdir)
 
 include Swiften/QA/Makefile.inc
 include Swiften/Examples/Makefile.inc

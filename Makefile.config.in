@@ -1,6 +1,13 @@
 ################################################################################
 # Configuration Settings
+# These values are filled in by 'configure'
 ################################################################################
+
+prefix=@prefix@
+exec_prefix=@exec_prefix@
+bindir=@bindir@
+libdir=@libdir@
+includedir=@includedir@
 
 @SET_MAKE@
 MM=@MM@
@@ -16,4 +23,5 @@ HAVE_LIBXML=@CONFIG_HAVE_LIBXML@
 HAVE_OPENSSL=@CONFIG_HAVE_OPENSSL@
 WIN32=@CONFIG_WIN32@
 MACOSX=@CONFIG_MACOSX@
+BUILD_SWIFT=@BUILD_SWIFT@
 QMAKE=@QMAKE@
