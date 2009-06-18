@@ -11,6 +11,9 @@ namespace Swift {
 			QtChatTabs();
 			void addTab(QtTabbable* tab);
 
+		protected slots:
+			void closeEvent(QCloseEvent* event);
+
 		private slots:
 			void handleTabClosing();
 			void handleTabTitleUpdated();

@@ -182,6 +182,7 @@ void QtChatWindow::returnPressed() {
 
 void QtChatWindow::show() {
 	QWidget::show();
+	emit windowOpening();
 }
 
 }

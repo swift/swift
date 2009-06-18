@@ -1,5 +1,6 @@
 #include "QtChatTabs.h"
 
+#include <QCloseEvent>
 #include <QTabWidget>
 #include <QLayout>
 
@@ -21,6 +22,15 @@ QtChatTabs::QtChatTabs() : QWidget() {
 	resize(400, 300);
 }
 
+void QtChatTabs::closeEvent(QCloseEvent* event) {
+	//Hide first to prevent flickering as each tab is removed.
+	hide();
+	for (int i = tabs_->count() - 1; i >= 0; i--) {
+		tabs_->removeTab(i);
+	}
+	event->accept();
+}
+
 void QtChatTabs::addTab(QtTabbable* tab) {
 	tabs_->addTab(tab, tab->windowTitle());
 	connect(tab, SIGNAL(titleUpdated()), this, SLOT(handleTabTitleUpdated()));
@@ -37,6 +47,7 @@ void QtChatTabs::handleWidgetShown() {
 		return;
 	}
 	addTab(widget);
+	show();
 }
 
 void QtChatTabs::handleTabClosing() {
