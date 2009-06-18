@@ -8,6 +8,8 @@ else {
 	TARGET = Swift
 }
 
+DEPENDPATH += . ../.. ../../3rdParty/Boost
+INCLUDEPATH += . ../.. ../../3rdParty/Boost
 win32 {
 	CONFIG += console
 
@@ -25,8 +27,6 @@ win32 {
 	LIBS += -ldnsapi -lws2_32 -lwsock32
 }
 else {
-	DEPENDPATH += . ../.. ../../3rdParty/Boost
-	INCLUDEPATH += . ../.. ../../3rdParty/Boost
 	LIBS += ../Controllers/Controllers.a ../../Swiften/Swiften.a -lexpat -lssl -lcrypto
 	unix {
 		LIBS += -lresolv
