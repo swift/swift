@@ -11,7 +11,7 @@ AC_DEFUN([AX_OPENSSL],
 				OPENSSL_CPPFLAGS="-I$withval/include"
 				case $host in
 					*-*-cygwin*|*-mingw32*)
-						OPENSSL_LIBS="-L$withval/lib/MinGW -leay32 $withval/lib/MinGW/ssleay32.a"
+						OPENSSL_LIBS="-L$withval/lib/VC -leay32MT $withval/lib/VC/ssleay32MT.lib"
 						;;
 					*)
 						OPENSSL_LIBS="-L$withval/lib -lssl -lcrypto"
