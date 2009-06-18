@@ -550,6 +550,7 @@ class SessionTest : public CppUnit::TestFixture {
 						return serializer_.serializeFooter();
 				}
 				assert(false);
+				return "";
 			}
 
 			void assertNoMoreExpectations() {
