@@ -60,6 +60,7 @@ HEADERS += \
 	QtTreeWidgetItem.h \
 	QtChatView.h \
 	QtChatTabs.h \
+	QtSystemTray.h \
 	QtTabbable.h \
 	ChatSnippet.h \
 	MessageSnippet.h \
@@ -80,6 +81,7 @@ SOURCES += \
 	QtTreeWidget.cpp \
 	QtChatView.cpp  \
 	QtChatTabs.cpp \
+	QtSystemTray.cpp \
 	ChatSnippet.cpp \
 	MessageSnippet.cpp \
 	SystemMessageSnippet.cpp

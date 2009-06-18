@@ -4,6 +4,7 @@
 #include "QtChatWindowFactory.h"
 #include "QtMainWindowFactory.h"
 #include "QtTreeWidgetFactory.h"
+#include "QtSystemTray.h"
 
 #include <boost/bind.hpp>
 
@@ -22,12 +23,13 @@ QtSwift::QtSwift() :
 	chatWindowFactory_(new QtChatWindowFactory(treeWidgetFactory_)),
 	rosterWindowFactory_(new QtMainWindowFactory(treeWidgetFactory_)),
 	loginWindowFactory_(new QtLoginWindowFactory()) {
+	systemTray_ = new QtSystemTray();
 	QCoreApplication::setApplicationName("Swift");
 	QCoreApplication::setOrganizationName("Swift");
 	QCoreApplication::setOrganizationDomain("swift.im");
 	settings_ = new QtSettingsProvider();
 	application_ = new PlatformApplication("Swift");
-	mainController_ = new MainController(chatWindowFactory_, rosterWindowFactory_, loginWindowFactory_, treeWidgetFactory_, settings_, application_);
+	mainController_ = new MainController(chatWindowFactory_, rosterWindowFactory_, loginWindowFactory_, treeWidgetFactory_, settings_, application_, systemTray_);
 }
 
 QtSwift::~QtSwift() {
@@ -38,6 +40,7 @@ QtSwift::~QtSwift() {
 	delete mainController_;
 	delete settings_;
 	delete application_;
+	delete systemTray_;
 }
 
 }

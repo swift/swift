@@ -17,6 +17,8 @@
 #include "Swift/Controllers/MUCController.h"
 #include "Swift/Controllers/NickResolver.h"
 #include "Swift/Controllers/RosterController.h"
+#include "Swift/Controllers/SystemTray.h"
+#include "Swift/Controllers/SystemTrayController.h"
 #include "Swift/Controllers/XMPPRosterController.h"
 #include "Swiften/Base/foreach.h"
 #include "Swiften/Base/String.h"
@@ -40,13 +42,14 @@ static const String CLIENT_NODE = "http://swift.im";
 typedef std::pair<JID, ChatController*> JIDChatControllerPair;
 typedef std::pair<JID, MUCController*> JIDMUCControllerPair;
 
-MainController::MainController(ChatWindowFactory* chatWindowFactory, MainWindowFactory *mainWindowFactory, LoginWindowFactory *loginWindowFactory, TreeWidgetFactory *treeWidgetFactory, SettingsProvider *settings, Application* application)
+MainController::MainController(ChatWindowFactory* chatWindowFactory, MainWindowFactory *mainWindowFactory, LoginWindowFactory *loginWindowFactory, TreeWidgetFactory *treeWidgetFactory, SettingsProvider *settings, Application* application, SystemTray* systemTray)
 		: client_(NULL), chatWindowFactory_(chatWindowFactory), mainWindowFactory_(mainWindowFactory), loginWindowFactory_(loginWindowFactory), treeWidgetFactory_(treeWidgetFactory), settings_(settings),
 		xmppRosterController_(NULL), rosterController_(NULL), loginWindow_(NULL), clientVersionResponder_(NULL), nickResolver_(NULL), discoResponder_(NULL), 
 		serverDiscoInfo_(new DiscoInfo()), presenceOracle_(NULL) {
 	application_ = application;
 	eventController_ = new EventController();
 	eventController_->onEventQueueLengthChange.connect(boost::bind(&MainController::handleEventQueueLengthChange, this, _1));
+	systemTrayController_ = new SystemTrayController(eventController_, systemTray);
 	loginWindow_ = loginWindowFactory_->createLoginWindow(settings->getStringSetting("jid"), settings->getStringSetting("pass"), settings->getStringSetting("certificate"));
 	loginWindow_->onLoginRequest.connect(boost::bind(&MainController::handleLoginRequest, this, _1, _2, _3, _4));
 }
@@ -65,6 +68,7 @@ MainController::~MainController() {
 	delete presenceOracle_;
 	delete nickResolver_;
 	delete client_;
+	delete systemTrayController_;
 }
 
 void MainController::handleConnected() {

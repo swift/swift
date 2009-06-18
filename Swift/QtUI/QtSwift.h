@@ -15,7 +15,8 @@ namespace Swift {
 	class QtMainWindowFactory;
 	class QtLoginWindowFactory;
 	class QtTreeWidgetFactory;
-
+	class QtSystemTray;
+	
 	class QtSwift : public QObject {
 		Q_OBJECT
 		public:
@@ -29,6 +30,7 @@ namespace Swift {
 			QtLoginWindowFactory *loginWindowFactory_;
 			QtMainEventLoop clientMainThreadCaller_;
 			QtSettingsProvider *settings_;
+			QtSystemTray* systemTray_;
 			Application* application_;
 	};
 }

@@ -37,10 +37,12 @@ namespace Swift {
 	class TreeWidgetFactory;
 	class MUCController;
 	class PresenceOracle;
+	class SystemTray;
+	class SystemTrayController;
 
 	class MainController {
 		public:
-			MainController(ChatWindowFactory* chatWindowFactory, MainWindowFactory *mainWindowFactory, LoginWindowFactory *loginWindowFactory, TreeWidgetFactory* treeWidgetFactory, SettingsProvider *settings, Application* application);
+			MainController(ChatWindowFactory* chatWindowFactory, MainWindowFactory *mainWindowFactory, LoginWindowFactory *loginWindowFactory, TreeWidgetFactory* treeWidgetFactory, SettingsProvider *settings, Application* application, SystemTray* systemTray);
 			~MainController();
 
 
@@ -79,6 +81,7 @@ namespace Swift {
 			std::map<JID, ChatController*> chatControllers_;
 			boost::shared_ptr<DiscoInfo> serverDiscoInfo_;
 			PresenceOracle* presenceOracle_;
+			SystemTrayController* systemTrayController_;
 	};
 }
 #endif
