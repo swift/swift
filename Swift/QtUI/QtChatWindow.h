@@ -34,6 +34,8 @@ namespace Swift {
 			void qAppFocusChanged(QWidget* old, QWidget* now);
 			void closeEvent(QCloseEvent* event);
 
+		protected:
+			void showEvent(QShowEvent* event);
 		private slots:
 			void returnPressed();
 

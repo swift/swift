@@ -111,6 +111,11 @@ void QtChatWindow::qAppFocusChanged(QWidget *old, QWidget *now) {
 	
 }
 
+void QtChatWindow::showEvent(QShowEvent* event) {
+	emit windowOpening();
+	QWidget::showEvent(event);
+}
+
 void QtChatWindow::setUnreadMessageCount(int count) {
 	unreadCount_ = count;
 	updateTitleWithUnreadCount();

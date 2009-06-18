@@ -15,8 +15,9 @@ namespace Swift {
 			void handleTabClosing();
 			void handleTabTitleUpdated();
 			void handleTabCloseRequested(int index);
+			void handleWidgetShown();
 		private:
-			QTabWidget* tabs_; 
+			QTabWidget* tabs_;
 	};
 }
 

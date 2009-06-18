@@ -25,6 +25,18 @@ void QtChatTabs::addTab(QtTabbable* tab) {
 	tabs_->addTab(tab, tab->windowTitle());
 	connect(tab, SIGNAL(titleUpdated()), this, SLOT(handleTabTitleUpdated()));
 	connect(tab, SIGNAL(windowClosing()), this, SLOT(handleTabClosing()));
+	connect(tab, SIGNAL(windowOpening()), this, SLOT(handleWidgetShown()));
+}
+
+void QtChatTabs::handleWidgetShown() {
+	QtTabbable* widget = qobject_cast<QtTabbable*>(sender());
+	if (!widget) {
+		return;
+	}
+	if (tabs_->indexOf(widget) >= 0) {
+		return;
+	}
+	addTab(widget);
 }
 
 void QtChatTabs::handleTabClosing() {
