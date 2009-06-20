@@ -15,6 +15,7 @@
 #include "Swiften/Parser/PayloadParsers/SecurityLabelParserFactory.h"
 #include "Swiften/Parser/PayloadParsers/SecurityLabelsCatalogParserFactory.h"
 #include "Swiften/Parser/PayloadParsers/VCardUpdateParserFactory.h"
+#include "Swiften/Parser/PayloadParsers/VCardParserFactory.h"
 
 using namespace boost;
 
@@ -34,6 +35,7 @@ FullPayloadParserFactoryCollection::FullPayloadParserFactoryCollection() {
 	factories_.push_back(shared_ptr<PayloadParserFactory>(new SecurityLabelParserFactory()));
 	factories_.push_back(shared_ptr<PayloadParserFactory>(new SecurityLabelsCatalogParserFactory()));
 	factories_.push_back(shared_ptr<PayloadParserFactory>(new VCardUpdateParserFactory()));
+	factories_.push_back(shared_ptr<PayloadParserFactory>(new VCardParserFactory()));
 	foreach(shared_ptr<PayloadParserFactory> factory, factories_) {
 		addFactory(factory.get());
 	}
