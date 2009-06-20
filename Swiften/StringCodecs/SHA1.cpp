@@ -188,11 +188,12 @@ boost::uint8_t finalcount[8];
 namespace Swift {
 
 ByteArray SHA1::getBinaryHash(const ByteArray& input) {
+	ByteArray inputCopy(input);
 	ByteArray digest;
 	digest.resize(20);
 	SHA1_CTX context;
 	SHA1Init(&context);
-	SHA1Update(&context, (boost::uint8_t*) input.getData(), input.getSize());
+	SHA1Update(&context, (boost::uint8_t*) inputCopy.getData(), inputCopy.getSize());
 	SHA1Final((boost::uint8_t*) digest.getData(), &context);
 	return digest;
 }
