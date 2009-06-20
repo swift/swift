@@ -10,6 +10,7 @@ SWIFTEN_SOURCES += \
 	Swiften/Parser/PayloadParsers/ErrorParser.cpp \
 	Swiften/Parser/PayloadParsers/RosterParser.cpp \
 	Swiften/Parser/PayloadParsers/ResourceBindParser.cpp \
+	Swiften/Parser/PayloadParsers/VCardUpdateParser.cpp \
 	Swiften/Parser/PayloadParsers/FullPayloadParserFactoryCollection.cpp
 
 include Swiften/Parser/PayloadParsers/UnitTest/Makefile.inc

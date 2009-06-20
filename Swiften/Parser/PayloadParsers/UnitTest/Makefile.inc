@@ -9,4 +9,5 @@ UNITTEST_SOURCES += \
 	Swiften/Parser/PayloadParsers/UnitTest/DiscoInfoParserTest.cpp \
 	Swiften/Parser/PayloadParsers/UnitTest/ResourceBindParserTest.cpp \
 	Swiften/Parser/PayloadParsers/UnitTest/SecurityLabelParserTest.cpp \
-	Swiften/Parser/PayloadParsers/UnitTest/SecurityLabelsCatalogParserTest.cpp
+	Swiften/Parser/PayloadParsers/UnitTest/SecurityLabelsCatalogParserTest.cpp \
+	Swiften/Parser/PayloadParsers/UnitTest/VCardUpdateParserTest.cpp
