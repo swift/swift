@@ -19,6 +19,7 @@ namespace Swift {
 	class StanzaChannel;
 	class ChatWindow;
 	class ChatWindowFactory;
+	class AvatarManager;
 
 	class ChatControllerBase  {
 		public:
@@ -28,7 +29,8 @@ namespace Swift {
 			void handleIncomingMessage(boost::shared_ptr<MessageEvent> message);
 
 		protected:
-			ChatControllerBase(StanzaChannel* stanzaChannel, IQRouter* iqRouter, ChatWindowFactory* chatWindowFactory, const JID &toJID, PresenceOracle* presenceOracle);
+			ChatControllerBase(StanzaChannel* stanzaChannel, IQRouter* iqRouter, ChatWindowFactory* chatWindowFactory, const JID &toJID, PresenceOracle* presenceOracle, AvatarManager* avatarManager);
+
 			virtual void postSendMessage(const String&) {};
 			virtual String senderDisplayNameFromMessage(JID from);
 			void handlePresenceChange(boost::shared_ptr<Presence> newPresence, boost::shared_ptr<Presence> previousPresence);
@@ -36,6 +38,14 @@ namespace Swift {
 			virtual void preHandleIncomingMessage(boost::shared_ptr<Message>) {};
 			virtual void preSendMessageRequest(boost::shared_ptr<Message>) {};
 
+		private:
+			void handleSendMessageRequest(const String &body);
+			String getStatusChangeString(boost::shared_ptr<Presence> presence);
+			void handleAllMessagesRead();
+			void handleSecurityLabelsCatalogResponse(boost::shared_ptr<SecurityLabelsCatalog>, const boost::optional<Error>& error);
+			String getErrorMessage(boost::shared_ptr<Error>);
+
+		protected:
 			std::vector<boost::shared_ptr<MessageEvent> > unreadMessages_;
 			StanzaChannel* stanzaChannel_;
 			IQRouter* iqRouter_;
@@ -44,13 +54,7 @@ namespace Swift {
 			JID toJID_;
 			bool labelsEnabled_;
 			PresenceOracle* presenceOracle_;
-
-		private:
-			void handleSendMessageRequest(const String &body);
-			String getStatusChangeString(boost::shared_ptr<Presence> presence);
-			void handleAllMessagesRead();
-			void handleSecurityLabelsCatalogResponse(boost::shared_ptr<SecurityLabelsCatalog>, const boost::optional<Error>& error);
-			String getErrorMessage(boost::shared_ptr<Error>);
+			AvatarManager* avatarManager_;
 	};
 }
 

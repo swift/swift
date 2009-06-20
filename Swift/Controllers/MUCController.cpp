@@ -23,8 +23,9 @@ MUCController::MUCController (
 		IQRouter* iqRouter, 
 		ChatWindowFactory* chatWindowFactory, 
 		TreeWidgetFactory *treeWidgetFactory,
-		PresenceOracle* presenceOracle) : 
-			ChatControllerBase(stanzaChannel, iqRouter, chatWindowFactory, muc, presenceOracle),
+		PresenceOracle* presenceOracle,
+		AvatarManager* avatarManager) : 
+			ChatControllerBase(stanzaChannel, iqRouter, chatWindowFactory, muc, presenceOracle, avatarManager),
 			muc_(new MUC(stanzaChannel, muc)), 
 			nick_(nick), 
 			treeWidgetFactory_(treeWidgetFactory) { 

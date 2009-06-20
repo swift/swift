@@ -18,10 +18,11 @@ namespace Swift {
 	class ChatWindowFactory;
 	class Roster;
 	class TreeWidgetFactory;
+	class AvatarManager;
 
 	class MUCController : public ChatControllerBase {
 		public:
-			MUCController(const JID &muc, const String &nick, StanzaChannel* stanzaChannel, IQRouter* iqRouter, ChatWindowFactory* chatWindowFactory, TreeWidgetFactory *treeWidgetFactory, PresenceOracle* presenceOracle);
+			MUCController(const JID &muc, const String &nick, StanzaChannel* stanzaChannel, IQRouter* iqRouter, ChatWindowFactory* chatWindowFactory, TreeWidgetFactory *treeWidgetFactory, PresenceOracle* presenceOracle, AvatarManager* avatarManager);
 			~MUCController();
 		
 		protected:

@@ -15,6 +15,7 @@
 #include "Swiften/Serializer/PayloadSerializers/StartSessionSerializer.h"
 #include "Swiften/Serializer/PayloadSerializers/SecurityLabelSerializer.h"
 #include "Swiften/Serializer/PayloadSerializers/SecurityLabelsCatalogSerializer.h"
+#include "Swiften/Serializer/PayloadSerializers/VCardSerializer.h"
 
 namespace Swift {
 
@@ -33,6 +34,7 @@ FullPayloadSerializerCollection::FullPayloadSerializerCollection() {
 	serializers_.push_back(new StartSessionSerializer());
 	serializers_.push_back(new SecurityLabelSerializer());
 	serializers_.push_back(new SecurityLabelsCatalogSerializer());
+	serializers_.push_back(new VCardSerializer());
 	foreach(PayloadSerializer* serializer, serializers_) {
 		addSerializer(serializer);
 	}

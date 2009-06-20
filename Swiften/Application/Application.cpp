@@ -17,6 +17,10 @@ boost::filesystem::path Application::getSettingsFileName() const {
 	return getSettingsDir() / "settings";
 }
 
+boost::filesystem::path Application::getAvatarDir() const {
+	return getSettingsDir() / "avatars";
+}
+
 boost::filesystem::path Application::getHomeDir() const {
 	// FIXME: Does this work on windows?
 	char* homeDirRaw = getenv("HOME");

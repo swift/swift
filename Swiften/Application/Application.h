@@ -14,6 +14,7 @@ namespace Swift {
 			virtual ~Application();
 
 			boost::filesystem::path getSettingsFileName() const;
+			boost::filesystem::path getAvatarDir() const;
 			boost::filesystem::path getHomeDir() const;
 			virtual boost::filesystem::path getSettingsDir() const = 0;
 			boost::filesystem::path getProfileDir(const String& profile) const;

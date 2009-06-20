@@ -3,6 +3,7 @@
 #include <boost/bind.hpp>
 #include <boost/shared_ptr.hpp>
 
+#include "Swiften/Avatars/AvatarManager.h"
 #include "Swiften/Client/StanzaChannel.h"
 #include "Swiften/Base/foreach.h"
 #include "Swift/Controllers/ChatWindow.h"
@@ -11,7 +12,7 @@
 
 namespace Swift {
 
-ChatControllerBase::ChatControllerBase(StanzaChannel* stanzaChannel, IQRouter* iqRouter, ChatWindowFactory* chatWindowFactory, const JID &toJID, PresenceOracle* presenceOracle) : stanzaChannel_(stanzaChannel), iqRouter_(iqRouter), chatWindowFactory_(chatWindowFactory), toJID_(toJID), labelsEnabled_(false), presenceOracle_(presenceOracle) {
+ChatControllerBase::ChatControllerBase(StanzaChannel* stanzaChannel, IQRouter* iqRouter, ChatWindowFactory* chatWindowFactory, const JID &toJID, PresenceOracle* presenceOracle, AvatarManager* avatarManager) : stanzaChannel_(stanzaChannel), iqRouter_(iqRouter), chatWindowFactory_(chatWindowFactory), toJID_(toJID), labelsEnabled_(false), presenceOracle_(presenceOracle), avatarManager_(avatarManager) {
 	chatWindow_ = chatWindowFactory_->createChatWindow(toJID);
 	chatWindow_->onAllMessagesRead.connect(boost::bind(&ChatControllerBase::handleAllMessagesRead, this));
 	chatWindow_->onSendMessageRequest.connect(boost::bind(&ChatControllerBase::handleSendMessageRequest, this, _1));
@@ -130,7 +131,7 @@ void ChatControllerBase::handleIncomingMessage(boost::shared_ptr<MessageEvent> m
 		boost::shared_ptr<SecurityLabel> label = message->getPayload<SecurityLabel>();
 		boost::optional<SecurityLabel> maybeLabel = label ? boost::optional<SecurityLabel>(*label) : boost::optional<SecurityLabel>();
 		JID from = message->getFrom();
-		chatWindow_->addMessage(body, senderDisplayNameFromMessage(from), isIncomingMessageFromMe(message), maybeLabel);
+		chatWindow_->addMessage(body, senderDisplayNameFromMessage(from), isIncomingMessageFromMe(message), maybeLabel, String(avatarManager_->getAvatarPath(from).string()));
 	}
 }
 

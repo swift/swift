@@ -126,7 +126,7 @@ void QtChatWindow::updateTitleWithUnreadCount() {
 	emit titleUpdated();
 }
 
-void QtChatWindow::addMessage(const String &message, const String &senderName, bool senderIsSelf, const boost::optional<SecurityLabel>& label) {
+void QtChatWindow::addMessage(const String &message, const String &senderName, bool senderIsSelf, const boost::optional<SecurityLabel>& label, const String& avatarPath) {
 	if (isActiveWindow()) {
 		onAllMessagesRead();
 	}
@@ -141,7 +141,7 @@ void QtChatWindow::addMessage(const String &message, const String &senderName, b
 	htmlString += messageHTML;
 
 	bool appendToPrevious = !previousMessageWasSystem_ && ((senderIsSelf && previousMessageWasSelf_) || (!senderIsSelf && !previousMessageWasSelf_ && previousSenderName_ == P2QSTRING(senderName)));
-	messageLog_->addMessage(MessageSnippet(htmlString, Qt::escape(P2QSTRING(senderName)), QDateTime::currentDateTime(), "qrc:/icons/avatar.png", senderIsSelf, appendToPrevious));
+	messageLog_->addMessage(MessageSnippet(htmlString, Qt::escape(P2QSTRING(senderName)), QDateTime::currentDateTime(), (avatarPath.isEmpty() ? "qrc:/icons/avatar.png" : "file://" + P2QSTRING(avatarPath)), senderIsSelf, appendToPrevious));
 
 	previousMessageWasSelf_ = senderIsSelf;
 	previousSenderName_ = P2QSTRING(senderName);

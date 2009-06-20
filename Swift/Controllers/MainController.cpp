@@ -32,6 +32,8 @@
 #include "Swiften/Queries/Responders/DiscoInfoResponder.h"
 #include "Swiften/Disco/CapsInfoGenerator.h"
 #include "Swiften/Queries/Requests/GetDiscoInfoRequest.h"
+#include "Swiften/Avatars/AvatarFileStorage.h"
+#include "Swiften/Avatars/AvatarManager.h"
 
 namespace Swift {
 
@@ -45,8 +47,11 @@ typedef std::pair<JID, MUCController*> JIDMUCControllerPair;
 MainController::MainController(ChatWindowFactory* chatWindowFactory, MainWindowFactory *mainWindowFactory, LoginWindowFactory *loginWindowFactory, TreeWidgetFactory *treeWidgetFactory, SettingsProvider *settings, Application* application, SystemTray* systemTray)
 		: client_(NULL), chatWindowFactory_(chatWindowFactory), mainWindowFactory_(mainWindowFactory), loginWindowFactory_(loginWindowFactory), treeWidgetFactory_(treeWidgetFactory), settings_(settings),
 		xmppRosterController_(NULL), rosterController_(NULL), loginWindow_(NULL), clientVersionResponder_(NULL), nickResolver_(NULL), discoResponder_(NULL), 
-		serverDiscoInfo_(new DiscoInfo()), presenceOracle_(NULL) {
+		serverDiscoInfo_(new DiscoInfo()), presenceOracle_(NULL), avatarManager_(NULL) {
 	application_ = application;
+
+	avatarStorage_ = new AvatarFileStorage(application_->getAvatarDir());
+
 	eventController_ = new EventController();
 	eventController_->onEventQueueLengthChange.connect(boost::bind(&MainController::handleEventQueueLengthChange, this, _1));
 	systemTrayController_ = new SystemTrayController(eventController_, systemTray);
@@ -55,6 +60,7 @@ MainController::MainController(ChatWindowFactory* chatWindowFactory, MainWindowF
 }
 
 MainController::~MainController() {
+	delete avatarManager_;
 	delete discoResponder_;
 	delete clientVersionResponder_;
 	delete xmppRosterController_;
@@ -69,6 +75,7 @@ MainController::~MainController() {
 	delete nickResolver_;
 	delete client_;
 	delete systemTrayController_;
+	delete avatarStorage_;
 }
 
 void MainController::handleConnected() {
@@ -96,6 +103,9 @@ void MainController::handleConnected() {
 	delete clientVersionResponder_;
 	clientVersionResponder_ = new SoftwareVersionResponder(CLIENT_NAME, CLIENT_VERSION, client_);
 	loginWindow_->morphInto(rosterController_->getWindow());
+
+	delete avatarManager_;
+	avatarManager_ = new AvatarManager(client_, client_, avatarStorage_);
 
 	DiscoInfo discoInfo;
 	discoInfo.addIdentity(DiscoInfo::Identity(CLIENT_NAME, "client", "pc"));
@@ -206,7 +216,7 @@ ChatController* MainController::getChatController(const JID &contact) {
 		lookupContact = JID(contact.toBare());
 	}
 	if (chatControllers_.find(lookupContact) == chatControllers_.end()) {
-		chatControllers_[contact] = new ChatController(client_, client_, chatWindowFactory_, contact, nickResolver_, presenceOracle_);
+		chatControllers_[contact] = new ChatController(client_, client_, chatWindowFactory_, contact, nickResolver_, presenceOracle_, avatarManager_);
 		chatControllers_[contact]->setAvailableServerFeatures(serverDiscoInfo_);
 		lookupContact = contact;
 	}
@@ -219,7 +229,7 @@ void MainController::handleChatControllerJIDChanged(const JID& from, const JID& 
 }
 
 void MainController::handleJoinMUCRequest(const JID &muc, const String &nick) {
-	mucControllers_[muc] = new MUCController(muc, nick, client_, client_, chatWindowFactory_, treeWidgetFactory_, presenceOracle_);
+	mucControllers_[muc] = new MUCController(muc, nick, client_, client_, chatWindowFactory_, treeWidgetFactory_, presenceOracle_, avatarManager_);
 	mucControllers_[muc]->setAvailableServerFeatures(serverDiscoInfo_);
 }
 

@@ -20,6 +20,7 @@ include Swiften/Disco/Makefile.inc
 include Swiften/Presence/Makefile.inc
 include Swiften/Notifier/Makefile.inc
 include Swiften/History/Makefile.inc
+include Swiften/Avatars/Makefile.inc
 
 CPPFLAGS += $(SQLITE_CPPFLAGS)
 

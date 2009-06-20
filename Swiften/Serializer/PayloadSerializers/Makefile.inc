@@ -8,6 +8,7 @@ SWIFTEN_SOURCES += \
 	Swiften/Serializer/PayloadSerializers/CapsInfoSerializer.cpp \
 	Swiften/Serializer/PayloadSerializers/ResourceBindSerializer.cpp \
 	Swiften/Serializer/PayloadSerializers/SecurityLabelSerializer.cpp \
-	Swiften/Serializer/PayloadSerializers/SecurityLabelsCatalogSerializer.cpp
+	Swiften/Serializer/PayloadSerializers/SecurityLabelsCatalogSerializer.cpp \
+	Swiften/Serializer/PayloadSerializers/VCardSerializer.cpp
 
 include Swiften/Serializer/PayloadSerializers/UnitTest/Makefile.inc

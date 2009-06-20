@@ -10,12 +10,15 @@
 #include "Swiften/Elements/SecurityLabel.h"
 
 namespace Swift {
+	class AvatarManager;
 	class TreeWidget;
+
 	class ChatWindow {
 		public:
+			ChatWindow() {}
 			virtual ~ChatWindow() {};
 
-			virtual void addMessage(const String& message, const String& senderName, bool senderIsSelf, const boost::optional<SecurityLabel>& label) = 0;
+			virtual void addMessage(const String& message, const String& senderName, bool senderIsSelf, const boost::optional<SecurityLabel>& label, const String& avatarPath) = 0;
 			virtual void addSystemMessage(const String& message) = 0;
 			virtual void addErrorMessage(const String& message) = 0;
 

@@ -19,6 +19,7 @@
 #include <vector>
 
 namespace Swift {
+	class AvatarStorage;
 	class Application;
 	class Client;
 	class ChatWindowFactory;
@@ -30,6 +31,7 @@ namespace Swift {
 	class RosterController;
 	class XMPPRosterController;
 	class DiscoInfoResponder;
+	class AvatarManager;
 	class LoginWindow;
 	class EventLoop;
 	class SoftwareVersionResponder;
@@ -68,6 +70,7 @@ namespace Swift {
 			TreeWidgetFactory* treeWidgetFactory_;
 			SettingsProvider *settings_;
 			Application* application_;
+			AvatarStorage* avatarStorage_;
 			ChatController* chatController_;
 			XMPPRosterController* xmppRosterController_;
 			RosterController* rosterController_;
@@ -82,6 +85,7 @@ namespace Swift {
 			boost::shared_ptr<DiscoInfo> serverDiscoInfo_;
 			PresenceOracle* presenceOracle_;
 			SystemTrayController* systemTrayController_;
+			AvatarManager* avatarManager_;
 	};
 }
 #endif

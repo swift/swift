@@ -9,8 +9,8 @@ namespace Swift {
 /**
  * The controller does not gain ownership of the stanzaChannel, nor the factory.
  */
-ChatController::ChatController(StanzaChannel* stanzaChannel, IQRouter* iqRouter, ChatWindowFactory* chatWindowFactory, const JID &contact, NickResolver* nickResolver, PresenceOracle* presenceOracle)
- : ChatControllerBase(stanzaChannel, iqRouter, chatWindowFactory, contact, presenceOracle) {
+ChatController::ChatController(StanzaChannel* stanzaChannel, IQRouter* iqRouter, ChatWindowFactory* chatWindowFactory, const JID &contact, NickResolver* nickResolver, PresenceOracle* presenceOracle, AvatarManager* avatarManager)
+ : ChatControllerBase(stanzaChannel, iqRouter, chatWindowFactory, contact, presenceOracle, avatarManager) {
 	nickResolver_ = nickResolver;
 }
 
@@ -28,7 +28,7 @@ void ChatController::preHandleIncomingMessage(boost::shared_ptr<Message> message
 }
 
 void ChatController::postSendMessage(const String& body) {
-	chatWindow_->addMessage(body, "me", true, labelsEnabled_ ? chatWindow_->getSelectedSecurityLabel() : boost::optional<SecurityLabel>());
+	chatWindow_->addMessage(body, "me", true, labelsEnabled_ ? chatWindow_->getSelectedSecurityLabel() : boost::optional<SecurityLabel>(), "");
 }
 
 String ChatController::senderDisplayNameFromMessage(JID from) {
