@@ -7,6 +7,7 @@ namespace Swift {
 	class SHA1 {
 		public:
 			static ByteArray getBinaryHash(const ByteArray& data);
+			static String getHexHash(const ByteArray& data);
 		};
 }
 
