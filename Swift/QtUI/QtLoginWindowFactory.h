@@ -3,9 +3,15 @@
 
 #include "Swift/Controllers/LoginWindowFactory.h"
 
+#include <QSplitter>
+
 namespace Swift {
 	class QtLoginWindowFactory : public LoginWindowFactory{
-		LoginWindow* createLoginWindow(const String& defaultJID, const String& defaultPassword, const String& defaultCertificate);
+		public:
+			QtLoginWindowFactory(QSplitter* splitter);
+			LoginWindow* createLoginWindow(const String& defaultJID, const String& defaultPassword, const String& defaultCertificate);
+		private:
+			QSplitter* splitter_;
 	};
 }
 

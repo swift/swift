@@ -4,15 +4,12 @@
 
 namespace Swift {
 
-QtMainWindowFactory::QtMainWindowFactory(QtTreeWidgetFactory *treeWidgetFactory, QSplitter* splitter) : treeWidgetFactory_(treeWidgetFactory) {
-	splitter_ = splitter;
+QtMainWindowFactory::QtMainWindowFactory(QtTreeWidgetFactory *treeWidgetFactory) : treeWidgetFactory_(treeWidgetFactory) {
+
 }
 
 MainWindow* QtMainWindowFactory::createMainWindow() {
 	QtMainWindow* window = new QtMainWindow(treeWidgetFactory_);
-	if (splitter_) {
-		splitter_->addWidget(window);
-	}
 	return window;
 }
 

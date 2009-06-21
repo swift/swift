@@ -22,15 +22,16 @@ namespace Swift{
 QtSwift::QtSwift() {
 	QSplitter* splitter = new QSplitter();
 	treeWidgetFactory_ = new QtTreeWidgetFactory(); 
+	loginWindowFactory_ = new QtLoginWindowFactory(splitter);
+	rosterWindowFactory_ = new QtMainWindowFactory(treeWidgetFactory_);
 	chatWindowFactory_ = new QtChatWindowFactory(treeWidgetFactory_, splitter);
-	rosterWindowFactory_ = new QtMainWindowFactory(treeWidgetFactory_, splitter);
-	loginWindowFactory_ = new QtLoginWindowFactory();
 	systemTray_ = new QtSystemTray();
 	QCoreApplication::setApplicationName("Swift");
 	QCoreApplication::setOrganizationName("Swift");
 	QCoreApplication::setOrganizationDomain("swift.im");
 	settings_ = new QtSettingsProvider();
 	application_ = new PlatformApplication("Swift");
+	splitter->show();
 	mainController_ = new MainController(chatWindowFactory_, rosterWindowFactory_, loginWindowFactory_, treeWidgetFactory_, settings_, application_, systemTray_);
 }
 
