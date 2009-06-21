@@ -9,11 +9,6 @@ ARFLAGS = rcs
 # Echoing
 ################################################################################
 
-ifeq ($(shell echo -e),-e)
-ECHO_E=
-else
-ECHO_E=-e
-endif
 ifneq ($(findstring $(MAKEFLAGS),s),s)
 ifndef V
 ifeq ($(C),0)
@@ -23,11 +18,11 @@ QUIET_CXX  = @echo "    " "CXX " $@;
 QUIET_AR   = @echo "    " "AR  " $@;
 QUIET_LINK = @echo "    " "LINK" $@;
 else
-QUIET_MM   = @echo $(ECHO_E) "    \033[0;35;140m" "MM  " "\033[0m" $@;
-QUIET_CC   = @echo $(ECHO_E) "    \033[0;33;140m" "CC  " "\033[0m" $@;
-QUIET_CXX  = @echo $(ECHO_E) "    \033[0;32;140m" "CXX " "\033[0m" $@;
-QUIET_AR   = @echo $(ECHO_E) "    \033[0;31;140m" "AR  " "\033[0m" $@;
-QUIET_LINK = @echo $(ECHO_E) "    \033[0;36;140m" "LINK" "\033[0m" $@;
+QUIET_MM   = @echo "    $(shell tput setaf 5)MM$(shell tput sgr0)  " $@;
+QUIET_CC   = @echo "    $(shell tput setaf 3)CC$(shell tput sgr0)  " $@;
+QUIET_CXX  = @echo "    $(shell tput setaf 2)CXX$(shell tput sgr0) " $@;
+QUIET_AR   = @echo "    $(shell tput setaf 1)AR$(shell tput sgr0)  " $@;
+QUIET_LINK = @echo "    $(shell tput setaf 6)LINK$(shell tput sgr0)" $@;
 endif
 endif
 endif
