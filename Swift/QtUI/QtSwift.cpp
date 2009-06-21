@@ -19,19 +19,25 @@
 
 namespace Swift{
 
-QtSwift::QtSwift() {
-	QSplitter* splitter = new QSplitter();
+QtSwift::QtSwift(bool netbookMode) {
+	if (netbookMode) {
+		splitter_ = new QSplitter();
+	} else {
+		splitter_ = NULL;
+	}
 	treeWidgetFactory_ = new QtTreeWidgetFactory(); 
-	loginWindowFactory_ = new QtLoginWindowFactory(splitter);
+	loginWindowFactory_ = new QtLoginWindowFactory(splitter_);
 	rosterWindowFactory_ = new QtMainWindowFactory(treeWidgetFactory_);
-	chatWindowFactory_ = new QtChatWindowFactory(treeWidgetFactory_, splitter);
+	chatWindowFactory_ = new QtChatWindowFactory(treeWidgetFactory_, splitter_);
 	systemTray_ = new QtSystemTray();
 	QCoreApplication::setApplicationName("Swift");
 	QCoreApplication::setOrganizationName("Swift");
 	QCoreApplication::setOrganizationDomain("swift.im");
 	settings_ = new QtSettingsProvider();
 	application_ = new PlatformApplication("Swift");
-	splitter->show();
+	if (splitter_) {
+		splitter_->show();
+	}
 	mainController_ = new MainController(chatWindowFactory_, rosterWindowFactory_, loginWindowFactory_, treeWidgetFactory_, settings_, application_, systemTray_);
 }
 
@@ -44,6 +50,7 @@ QtSwift::~QtSwift() {
 	delete settings_;
 	delete application_;
 	delete systemTray_;
+	delete splitter_;
 }
 
 }

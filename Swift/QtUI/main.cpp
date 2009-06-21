@@ -5,6 +5,7 @@
 int main(int argc, char* argv[])
 {
 	QApplication app(argc, argv);
-	Swift::QtSwift swift;
+	bool netbookMode = argc > 1;
+	Swift::QtSwift swift(netbookMode);
 	return app.exec();
 }

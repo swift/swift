@@ -8,6 +8,8 @@
 #include "QtChatWindowFactory.h"
 #include "QtSettingsProvider.h"
 
+class QSplitter;
+
 namespace Swift {
 	class Application;
 	class MainController;
@@ -20,7 +22,7 @@ namespace Swift {
 	class QtSwift : public QObject {
 		Q_OBJECT
 		public:
-			QtSwift();
+			QtSwift(bool netbookMode);
 			~QtSwift();
 		private:
 			MainController *mainController_;
@@ -31,6 +33,7 @@ namespace Swift {
 			QtMainEventLoop clientMainThreadCaller_;
 			QtSettingsProvider *settings_;
 			QtSystemTray* systemTray_;
+			QSplitter* splitter_;
 			Application* application_;
 	};
 }
