@@ -7,6 +7,7 @@
 #include "QtSystemTray.h"
 
 #include <boost/bind.hpp>
+#include <QSplitter>
 
 #include "Swiften/Application/Application.h"
 #include "Swiften/Application/Platform/PlatformApplication.h"
@@ -18,11 +19,12 @@
 
 namespace Swift{
 
-QtSwift::QtSwift() : 
-	treeWidgetFactory_(new QtTreeWidgetFactory()), 
-	chatWindowFactory_(new QtChatWindowFactory(treeWidgetFactory_)),
-	rosterWindowFactory_(new QtMainWindowFactory(treeWidgetFactory_)),
-	loginWindowFactory_(new QtLoginWindowFactory()) {
+QtSwift::QtSwift() {
+	QSplitter* splitter = new QSplitter();
+	treeWidgetFactory_ = new QtTreeWidgetFactory(); 
+	chatWindowFactory_ = new QtChatWindowFactory(treeWidgetFactory_, splitter);
+	rosterWindowFactory_ = new QtMainWindowFactory(treeWidgetFactory_, splitter);
+	loginWindowFactory_ = new QtLoginWindowFactory();
 	systemTray_ = new QtSystemTray();
 	QCoreApplication::setApplicationName("Swift");
 	QCoreApplication::setOrganizationName("Swift");

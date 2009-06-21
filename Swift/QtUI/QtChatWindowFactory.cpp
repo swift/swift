@@ -7,8 +7,11 @@
 
 
 namespace Swift {
-QtChatWindowFactory::QtChatWindowFactory(QtTreeWidgetFactory *treeWidgetFactory) : treeWidgetFactory_(treeWidgetFactory) {
+QtChatWindowFactory::QtChatWindowFactory(QtTreeWidgetFactory *treeWidgetFactory, QSplitter* splitter) : treeWidgetFactory_(treeWidgetFactory) {
 	tabs_ = new QtChatTabs();
+	if (splitter) {
+		splitter->addWidget(tabs_);
+	}
 }
 
 ChatWindow* QtChatWindowFactory::createChatWindow(const JID &contact) {

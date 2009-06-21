@@ -4,12 +4,13 @@
 #include "Swift/Controllers/ChatWindowFactory.h"
 #include "Swiften/JID/JID.h"
 
+#include <QSplitter>
 namespace Swift {
 	class QtTreeWidgetFactory;
 	class QtChatTabs;
 	class QtChatWindowFactory : public ChatWindowFactory {
 		public:
-			QtChatWindowFactory(QtTreeWidgetFactory *treeWidgetFactory);
+			QtChatWindowFactory(QtTreeWidgetFactory *treeWidgetFactory, QSplitter* splitter);
 			ChatWindow* createChatWindow(const JID &contact);
 		private:
 			QtTreeWidgetFactory* treeWidgetFactory_;
