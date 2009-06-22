@@ -7,7 +7,3 @@ SWIFTEN_SOURCES += \
 	Swiften/Network/Timer.cpp
 
 include Swiften/Network/UnitTest/Makefile.inc
-
-ifneq ($(WIN32),1)
-LIBS += -lresolv
-endif
