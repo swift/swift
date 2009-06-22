@@ -89,5 +89,10 @@ void String::replaceAll(char c, const String& s) {
 	}
 }
 
+String String::getLowerCase() const {
+	std::string lower(data_);
+	std::transform(lower.begin(), lower.end(), lower.begin(), ::tolower);
+	return String(lower);
+}
 
 }
