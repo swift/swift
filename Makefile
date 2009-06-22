@@ -69,7 +69,7 @@ clean: clean-deps $(CLEAN_TARGETS)
 
 .PHONY: clean-deps
 clean-deps:
-		-$(RM) $(SWIFTEN_SOURCES:.cpp=.dep) $(SWIFTEN_OBJECTIVE_SOURCES:.mm=.dep) $(UNITTEST_SOURCES:.cpp=.dep)
+		-$(RM) $(DEPS)
 
 
 ################################################################################
@@ -78,9 +78,6 @@ clean-deps:
 
 ifeq (,$(findstring clean, $(MAKECMDGOALS)))
 ifeq (,$(findstring clean-deps, $(MAKECMDGOALS)))
--include $(SWIFTEN_SOURCES:.cpp=.dep)
--include $(SWIFTEN_OBJECTIVE_SOURCES:.mm=.dep)
--include $(UNITTEST_SOURCES:.cpp=.dep)
 -include $(DEPS)
 endif
 endif
