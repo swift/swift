@@ -17,6 +17,7 @@ namespace Swift {
  * The controller does not gain ownership of the stanzaChannel, nor the factory.
  */
 MUCController::MUCController (
+		const JID& self,
 		const JID &muc, 
 		const String &nick, 
 		StanzaChannel* stanzaChannel, 
@@ -25,7 +26,7 @@ MUCController::MUCController (
 		TreeWidgetFactory *treeWidgetFactory,
 		PresenceOracle* presenceOracle,
 		AvatarManager* avatarManager) : 
-			ChatControllerBase(stanzaChannel, iqRouter, chatWindowFactory, muc, presenceOracle, avatarManager),
+			ChatControllerBase(self, stanzaChannel, iqRouter, chatWindowFactory, muc, presenceOracle, avatarManager),
 			muc_(new MUC(stanzaChannel, muc)), 
 			nick_(nick), 
 			treeWidgetFactory_(treeWidgetFactory) { 

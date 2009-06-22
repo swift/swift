@@ -8,7 +8,7 @@ namespace Swift {
 	class NickResolver;
 	class ChatController : public ChatControllerBase {
 		public:
-			ChatController(StanzaChannel* stanzaChannel, IQRouter* iqRouter, ChatWindowFactory* chatWindowFactory, const JID &contact, NickResolver* nickResolver, PresenceOracle* presenceOracle, AvatarManager*);
+			ChatController(const JID& self, StanzaChannel* stanzaChannel, IQRouter* iqRouter, ChatWindowFactory* chatWindowFactory, const JID &contact, NickResolver* nickResolver, PresenceOracle* presenceOracle, AvatarManager*);
 
 			//boost::signal<void (const JID&, const JID&)> onJIDChanged;
 		

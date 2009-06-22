@@ -248,7 +248,7 @@ ChatController* MainController::getChatController(const JID &contact) {
 		lookupContact = JID(contact.toBare());
 	}
 	if (chatControllers_.find(lookupContact) == chatControllers_.end()) {
-		chatControllers_[contact] = new ChatController(client_, client_, chatWindowFactory_, contact, nickResolver_, presenceOracle_, avatarManager_);
+		chatControllers_[contact] = new ChatController(jid_, client_, client_, chatWindowFactory_, contact, nickResolver_, presenceOracle_, avatarManager_);
 		chatControllers_[contact]->setAvailableServerFeatures(serverDiscoInfo_);
 		lookupContact = contact;
 	}
@@ -261,7 +261,7 @@ void MainController::handleChatControllerJIDChanged(const JID& from, const JID& 
 }
 
 void MainController::handleJoinMUCRequest(const JID &muc, const String &nick) {
-	mucControllers_[muc] = new MUCController(muc, nick, client_, client_, chatWindowFactory_, treeWidgetFactory_, presenceOracle_, avatarManager_);
+	mucControllers_[muc] = new MUCController(jid_, muc, nick, client_, client_, chatWindowFactory_, treeWidgetFactory_, presenceOracle_, avatarManager_);
 	mucControllers_[muc]->setAvailableServerFeatures(serverDiscoInfo_);
 }
 

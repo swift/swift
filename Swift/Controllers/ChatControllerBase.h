@@ -30,7 +30,7 @@ namespace Swift {
 			void handleIncomingMessage(boost::shared_ptr<MessageEvent> message);
 
 		protected:
-			ChatControllerBase(StanzaChannel* stanzaChannel, IQRouter* iqRouter, ChatWindowFactory* chatWindowFactory, const JID &toJID, PresenceOracle* presenceOracle, AvatarManager* avatarManager);
+			ChatControllerBase(const JID& self, StanzaChannel* stanzaChannel, IQRouter* iqRouter, ChatWindowFactory* chatWindowFactory, const JID &toJID, PresenceOracle* presenceOracle, AvatarManager* avatarManager);
 
 			virtual void postSendMessage(const String&) {};
 			virtual String senderDisplayNameFromMessage(const JID& from) = 0;
@@ -47,6 +47,7 @@ namespace Swift {
 			String getErrorMessage(boost::shared_ptr<Error>);
 
 		protected:
+			JID selfJID_;
 			std::vector<boost::shared_ptr<MessageEvent> > unreadMessages_;
 			StanzaChannel* stanzaChannel_;
 			IQRouter* iqRouter_;
