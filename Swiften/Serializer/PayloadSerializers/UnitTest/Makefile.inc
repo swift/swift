@@ -9,4 +9,5 @@ UNITTEST_SOURCES += \
 	Swiften/Serializer/PayloadSerializers/UnitTest/StatusShowSerializerTest.cpp \
 	Swiften/Serializer/PayloadSerializers/UnitTest/SoftwareVersionSerializerTest.cpp \
 	Swiften/Serializer/PayloadSerializers/UnitTest/SecurityLabelSerializerTest.cpp \
-	Swiften/Serializer/PayloadSerializers/UnitTest/SecurityLabelsCatalogSerializerTest.cpp
+	Swiften/Serializer/PayloadSerializers/UnitTest/SecurityLabelsCatalogSerializerTest.cpp \
+	Swiften/Serializer/PayloadSerializers/UnitTest/VCardUpdateSerializerTest.cpp
