@@ -5,6 +5,7 @@
 #include <vector>
 #include <boost/shared_ptr.hpp>
 #include <boost/signals.hpp>
+#include <boost/filesystem.hpp>
 
 #include "Swiften/Base/String.h"
 #include "Swiften/Elements/DiscoInfo.h"
@@ -32,7 +33,7 @@ namespace Swift {
 			ChatControllerBase(StanzaChannel* stanzaChannel, IQRouter* iqRouter, ChatWindowFactory* chatWindowFactory, const JID &toJID, PresenceOracle* presenceOracle, AvatarManager* avatarManager);
 
 			virtual void postSendMessage(const String&) {};
-			virtual String senderDisplayNameFromMessage(JID from);
+			virtual String senderDisplayNameFromMessage(const JID& from) = 0;
 			void handlePresenceChange(boost::shared_ptr<Presence> newPresence, boost::shared_ptr<Presence> previousPresence);
 			virtual bool isIncomingMessageFromMe(boost::shared_ptr<Message>) = 0;
 			virtual void preHandleIncomingMessage(boost::shared_ptr<Message>) {};

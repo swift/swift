@@ -1,6 +1,9 @@
 #ifndef SWIFTEN_MainController_H
 #define SWIFTEN_MainController_H
 
+#include <boost/signals.hpp>
+#include <boost/shared_ptr.hpp>
+#include <vector>
 
 #include "Swiften/Base/String.h"
 #include "Swiften/Client/ClientError.h"
@@ -11,12 +14,7 @@
 #include "Swiften/Elements/Message.h"
 #include "Swiften/Settings/SettingsProvider.h"
 #include "Swiften/Elements/CapsInfo.h"
-
-
-#include <boost/signals.hpp>
-#include <boost/shared_ptr.hpp>
-
-#include <vector>
+#include "Swiften/MUC/MUCRegistry.h"
 
 namespace Swift {
 	class AvatarStorage;
@@ -42,7 +40,7 @@ namespace Swift {
 	class SystemTray;
 	class SystemTrayController;
 
-	class MainController {
+	class MainController : public MUCRegistry {
 		public:
 			MainController(ChatWindowFactory* chatWindowFactory, MainWindowFactory *mainWindowFactory, LoginWindowFactory *loginWindowFactory, TreeWidgetFactory* treeWidgetFactory, SettingsProvider *settings, Application* application, SystemTray* systemTray);
 			~MainController();
@@ -62,7 +60,10 @@ namespace Swift {
 			void handleEventQueueLengthChange(int count);
 			ChatController* getChatController(const JID &contact);
 			void logout();
-			
+
+			virtual bool isMUC(const JID& muc) const;
+	
+		private:	
 			Client* client_;
 			ChatWindowFactory* chatWindowFactory_;
 			MainWindowFactory* mainWindowFactory_;

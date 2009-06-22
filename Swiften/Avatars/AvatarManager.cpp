@@ -7,10 +7,11 @@
 #include "Swiften/Queries/Requests/GetVCardRequest.h"
 #include "Swiften/StringCodecs/SHA1.h"
 #include "Swiften/Avatars/AvatarStorage.h"
+#include "Swiften/MUC/MUCRegistry.h"
 
 namespace Swift {
 
-AvatarManager::AvatarManager(StanzaChannel* stanzaChannel, IQRouter* iqRouter, AvatarStorage* avatarStorage) : stanzaChannel_(stanzaChannel), iqRouter_(iqRouter), avatarStorage_(avatarStorage) {
+AvatarManager::AvatarManager(StanzaChannel* stanzaChannel, IQRouter* iqRouter, AvatarStorage* avatarStorage, MUCRegistry* mucRegistry) : stanzaChannel_(stanzaChannel), iqRouter_(iqRouter), avatarStorage_(avatarStorage), mucRegistry_(mucRegistry) {
 	stanzaChannel->onPresenceReceived.connect(boost::bind(&AvatarManager::handlePresenceReceived, this, _1));
 }
 
@@ -19,33 +20,42 @@ void AvatarManager::handlePresenceReceived(boost::shared_ptr<Presence> presence)
 	if (!update) {
 		return;
 	}
-	JID from = presence->getFrom().toBare();
+	JID from = getAvatarJID(presence->getFrom());
 	String& hash = avatarHashes_[from];
 	if (hash != update->getPhotoHash()) {
-		hash = update->getPhotoHash();
-		if (!avatarStorage_->hasAvatar(hash)) {
-			boost::shared_ptr<GetVCardRequest> request(new GetVCardRequest(from, iqRouter_));
-			request->onResponse.connect(boost::bind(&AvatarManager::handleVCardReceived, this, from, _1, _2));
-			request->send();
+		String newHash = update->getPhotoHash();
+		if (avatarStorage_->hasAvatar(newHash)) {
+			setAvatarHash(from, newHash);
 		}
 		else {
-			onAvatarChanged(from, hash);
+			boost::shared_ptr<GetVCardRequest> request(new GetVCardRequest(from, iqRouter_));
+			request->onResponse.connect(boost::bind(&AvatarManager::handleVCardReceived, this, from, newHash, _1, _2));
+			request->send();
 		}
 	}
 }
 
-void AvatarManager::handleVCardReceived(JID from, boost::shared_ptr<VCard> vCard, const boost::optional<Error>& error) {
+void AvatarManager::handleVCardReceived(const JID& from, const String& promisedHash, boost::shared_ptr<VCard> vCard, const boost::optional<Error>& error) {
 	if (error) {
 		// FIXME: What to do here?
+		std::cerr << "Warning: " << from << ": Could not get vCard" << std::endl;
 		return;
 	}
-	String hash = SHA1::getHexHash(vCard->getPhoto());
-	avatarStorage_->addAvatar(hash, vCard->getPhoto());
+	String realHash = SHA1::getHexHash(vCard->getPhoto());
+	if (promisedHash != realHash) {
+		std::cerr << "Warning: " << from << ": Got different vCard photo hash (" << promisedHash << " != " << realHash << ")" << std::endl;
+	}
+	avatarStorage_->addAvatar(realHash, vCard->getPhoto());
+	setAvatarHash(from, realHash);
+}
+
+void AvatarManager::setAvatarHash(const JID& from, const String& hash) {
+	avatarHashes_[from] = hash;
 	onAvatarChanged(from, hash);
 }
 
 String AvatarManager::getAvatarHash(const JID& jid) const {
-	std::map<JID, String>::const_iterator i = avatarHashes_.find(jid.toBare());
+	std::map<JID, String>::const_iterator i = avatarHashes_.find(getAvatarJID(jid));
 	if (i != avatarHashes_.end()) {
 		return i->second;
 	}
@@ -61,5 +71,11 @@ boost::filesystem::path AvatarManager::getAvatarPath(const JID& jid) const {
 	}
 	return boost::filesystem::path();
 }
+
+JID AvatarManager::getAvatarJID(const JID& jid) const {
+	JID bareFrom = jid.toBare();
+	return (mucRegistry_->isMUC(bareFrom) ? jid : bareFrom);
+}
+
 
 }

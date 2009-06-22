@@ -31,7 +31,7 @@ void ChatController::postSendMessage(const String& body) {
 	chatWindow_->addMessage(body, "me", true, labelsEnabled_ ? chatWindow_->getSelectedSecurityLabel() : boost::optional<SecurityLabel>(), "");
 }
 
-String ChatController::senderDisplayNameFromMessage(JID from) {
+String ChatController::senderDisplayNameFromMessage(const JID& from) {
 	return nickResolver_->jidToNick(from);
 }
 

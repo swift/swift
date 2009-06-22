@@ -66,7 +66,7 @@ bool MUCController::isIncomingMessageFromMe(boost::shared_ptr<Message> message) 
 	return nick_ == from.getResource();
 }
 
-String MUCController::senderDisplayNameFromMessage(JID from) {
+String MUCController::senderDisplayNameFromMessage(const JID& from) {
 	return from.getResource();
 }
 

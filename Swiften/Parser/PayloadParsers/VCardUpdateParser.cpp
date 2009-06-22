@@ -5,7 +5,7 @@ namespace Swift {
 VCardUpdateParser::VCardUpdateParser() : level_(TopLevel) {
 }
 
-void VCardUpdateParser::handleStartElement(const String& element, const String&, const AttributeMap& attributes) {
+void VCardUpdateParser::handleStartElement(const String&, const String&, const AttributeMap&) {
 	if (level_ == PayloadLevel) {
 		currentText_ = "";
 	}

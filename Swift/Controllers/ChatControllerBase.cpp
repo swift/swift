@@ -3,12 +3,12 @@
 #include <boost/bind.hpp>
 #include <boost/shared_ptr.hpp>
 
-#include "Swiften/Avatars/AvatarManager.h"
 #include "Swiften/Client/StanzaChannel.h"
 #include "Swiften/Base/foreach.h"
 #include "Swift/Controllers/ChatWindow.h"
 #include "Swift/Controllers/ChatWindowFactory.h"
 #include "Swiften/Queries/Requests/GetSecurityLabelsCatalogRequest.h"
+#include "Swiften/Avatars/AvatarManager.h"
 
 namespace Swift {
 
@@ -108,11 +108,6 @@ void ChatControllerBase::handleSecurityLabelsCatalogResponse(boost::shared_ptr<S
 void ChatControllerBase::showChatWindow() {
 	chatWindow_->show();
 }
-
-String ChatControllerBase::senderDisplayNameFromMessage(JID from) {
-	return from;
-}
-
 
 
 void ChatControllerBase::handleIncomingMessage(boost::shared_ptr<MessageEvent> messageEvent) {

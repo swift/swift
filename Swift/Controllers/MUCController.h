@@ -28,12 +28,15 @@ namespace Swift {
 		protected:
 			void preSendMessageRequest(boost::shared_ptr<Message> message);
 			bool isIncomingMessageFromMe(boost::shared_ptr<Message> message);
-			String senderDisplayNameFromMessage(JID from);
+			String senderDisplayNameFromMessage(const JID& from);
+
 		private:
 			void handleWindowClosed();
 			void handleOccupantJoined(const MUCOccupant& occupant);
 			void handleOccupantLeft(const MUCOccupant& occupant, MUC::LeavingType type, const String& reason);
 			void handleOccupantPresenceChange(boost::shared_ptr<Presence> presence);
+
+		private:
 			MUC *muc_;
 			String nick_;
 			TreeWidgetFactory *treeWidgetFactory_;

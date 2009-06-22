@@ -105,7 +105,7 @@ void MainController::handleConnected() {
 	loginWindow_->morphInto(rosterController_->getWindow());
 
 	delete avatarManager_;
-	avatarManager_ = new AvatarManager(client_, client_, avatarStorage_);
+	avatarManager_ = new AvatarManager(client_, client_, avatarStorage_, this);
 
 	DiscoInfo discoInfo;
 	discoInfo.addIdentity(DiscoInfo::Identity(CLIENT_NAME, "client", "pc"));
@@ -270,5 +270,10 @@ void MainController::handleServerDiscoInfoResponse(boost::shared_ptr<DiscoInfo> 
 		}
 	}
 }
+
+bool MainController::isMUC(const JID& jid) const {
+  return mucControllers_.find(jid.toBare()) != mucControllers_.end();
+}
+
 
 }

@@ -16,7 +16,7 @@ namespace Swift {
 			bool isIncomingMessageFromMe(boost::shared_ptr<Message> message);
 			void postSendMessage(const String &body);
 			void preHandleIncomingMessage(boost::shared_ptr<Message> message);
-			String senderDisplayNameFromMessage(JID from);
+			String senderDisplayNameFromMessage(const JID& from);
 
 		private:
 			NickResolver* nickResolver_;
