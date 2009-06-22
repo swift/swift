@@ -1,0 +1,1 @@
+LIBS += @CONFIG_LIBS@

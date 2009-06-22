@@ -213,4 +213,7 @@ AC_SUBST(QMAKE)
 AC_SUBST(BUILD_SWIFT)
 
 AC_CONFIG_FILES([Makefile.config])
+if test "$BUILD_SWIFT" == "yes"; then
+	AC_CONFIG_FILES([Swift/QtUI/config.pri])
+fi
 AC_OUTPUT

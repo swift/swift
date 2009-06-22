@@ -38,4 +38,5 @@ Swift/QtUI/swift
 Swift/QtUI/DefaultTheme.qrc
 Swift/QtUI/*/Makefile
 Swift/QtUI/Swiften.pri
+Swift/QtUI/config.pri
 tools/coverage/results

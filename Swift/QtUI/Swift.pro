@@ -10,10 +10,12 @@ else {
 
 DEPENDPATH += . ../.. ../../3rdParty/Boost
 INCLUDEPATH += . ../.. ../../3rdParty/Boost
-win32 {
-	CONFIG += console
-
-	# Configuration
+exists(config.pri) {
+	LIBS += ../Controllers/Controllers.a ../../Swiften/Swiften.a
+	include(config.pri)
+}
+else {
+	# Legacy build type
 	HAVE_EXPAT=yes
 	USE_BUNDLED_EXPAT=yes
 	DEFINES += HAVE_EXPAT
@@ -24,13 +26,10 @@ win32 {
 	LIBS += -LF:/OpenSSL/lib/VC -llibeay32MT -lssleay32MT
 
 	include(Swiften.pri)
-	LIBS += -ldnsapi -lws2_32 -lwsock32
 }
-else {
-	LIBS += ../Controllers/Controllers.a ../../Swiften/Swiften.a -lexpat -lssl -lcrypto
-	unix {
-		LIBS += -lresolv
-	}
+
+win32 {
+	CONFIG += console
 }
 
 # Resources
@@ -79,7 +78,7 @@ SOURCES += \
 	QtStatusWidget.cpp \
 	QtSwift.cpp \
 	QtTreeWidget.cpp \
-	QtChatView.cpp  \
+	QtChatView.cpp	\
 	QtChatTabs.cpp \
 	QtSystemTray.cpp \
 	ChatSnippet.cpp \
