@@ -81,6 +81,7 @@ ifeq (,$(findstring clean-deps, $(MAKECMDGOALS)))
 -include $(SWIFTEN_SOURCES:.cpp=.dep)
 -include $(SWIFTEN_OBJECTIVE_SOURCES:.mm=.dep)
 -include $(UNITTEST_SOURCES:.cpp=.dep)
+-include $(DEPS)
 endif
 endif
 
