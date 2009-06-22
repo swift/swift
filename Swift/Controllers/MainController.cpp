@@ -24,6 +24,7 @@
 #include "Swiften/Base/String.h"
 #include "Swiften/Client/Client.h"
 #include "Swiften/Elements/Presence.h"
+#include "Swiften/Elements/VCardUpdate.h"
 #include "Swiften/Roster/XMPPRoster.h"
 #include "Swiften/Queries/Responders/SoftwareVersionResponder.h"
 #include "Swiften/Roster/TreeWidgetFactory.h"
@@ -32,8 +33,20 @@
 #include "Swiften/Queries/Responders/DiscoInfoResponder.h"
 #include "Swiften/Disco/CapsInfoGenerator.h"
 #include "Swiften/Queries/Requests/GetDiscoInfoRequest.h"
+#include "Swiften/Queries/Requests/GetVCardRequest.h"
 #include "Swiften/Avatars/AvatarFileStorage.h"
 #include "Swiften/Avatars/AvatarManager.h"
+#include "Swiften/StringCodecs/SHA1.h"
+
+namespace {
+	void printIncomingData(const Swift::String& data) {
+		std::cout << "<- " << data << std::endl;
+	}
+
+	void printOutgoingData(const Swift::String& data) {
+		std::cout << "-> " << data << std::endl;
+	}
+}
 
 namespace Swift {
 
@@ -82,6 +95,8 @@ void MainController::handleConnected() {
 	delete presenceOracle_;
 	presenceOracle_ = new PresenceOracle(client_);
 
+	lastSentPresence_ = boost::shared_ptr<Presence>();
+
 	client_->onPresenceReceived.connect(boost::bind(&MainController::handleIncomingPresence, this, _1));
 
 	boost::shared_ptr<XMPPRoster> xmppRoster(new XMPPRoster());
@@ -118,11 +133,15 @@ void MainController::handleConnected() {
 	boost::shared_ptr<GetDiscoInfoRequest> discoInfoRequest(new GetDiscoInfoRequest(JID(), client_));
 	discoInfoRequest->onResponse.connect(boost::bind(&MainController::handleServerDiscoInfoResponse, this, _1, _2));
 	discoInfoRequest->send();
+
+	boost::shared_ptr<GetVCardRequest> vCardRequest(new GetVCardRequest(JID(), client_));
+	vCardRequest->onResponse.connect(boost::bind(&MainController::handleOwnVCardReceived, this, _1, _2));
+	vCardRequest->send();
 	
 	//Send presence last to catch all the incoming presences.
 	boost::shared_ptr<Presence> initialPresence(new Presence());
 	initialPresence->addPayload(capsInfo_);
-	client_->sendPresence(initialPresence);
+	sendPresence(initialPresence);
 }
 
 void MainController::handleEventQueueLengthChange(int count) {
@@ -132,12 +151,22 @@ void MainController::handleEventQueueLengthChange(int count) {
 void MainController::handleChangeStatusRequest(StatusShow::Type show, const String &statusText) {
 	boost::shared_ptr<Presence> presence(new Presence());
 	presence->addPayload(capsInfo_);
-	presence->setShow(show);
-	presence->setStatus(statusText);
-	// FIXME: This is wrong. None doesn't mean unavailable
 	if (show == StatusShow::None) {
+		// FIXME: This is wrong. None doesn't mean unavailable
 		presence->setType(Presence::Unavailable);
 	}
+	else {
+		presence->setShow(show);
+	}
+	presence->setStatus(statusText);
+	sendPresence(presence);
+}
+
+void MainController::sendPresence(boost::shared_ptr<Presence> presence) {
+	if (!vCardPhotoHash_.isEmpty()) {
+		presence->addPayload(boost::shared_ptr<VCardUpdate>(new VCardUpdate(vCardPhotoHash_)));
+	}
+	lastSentPresence_ = presence;
 	client_->sendPresence(presence);
 	if (presence->getType() == Presence::Unavailable) {
 		logout();
@@ -156,7 +185,10 @@ void MainController::handleLoginRequest(const String &username, const String &pa
 	settings_->storeString("pass", remember ? password : "");
 
 	delete client_;
-	client_ = new Swift::Client(JID(username), password);
+	jid_ = JID(username);
+	client_ = new Swift::Client(jid_, password);
+	//client_->onDataRead.connect(&printIncomingData);
+	//client_->onDataWritten.connect(&printOutgoingData);
 	if (!certificateFile.isEmpty()) {
 		client_->setCertificate(certificateFile);
 	}
@@ -275,5 +307,14 @@ bool MainController::isMUC(const JID& jid) const {
   return mucControllers_.find(jid.toBare()) != mucControllers_.end();
 }
 
+void MainController::handleOwnVCardReceived(boost::shared_ptr<VCard> vCard, const boost::optional<Error>& error) {
+	if (!error && !vCard->getPhoto().isEmpty()) {
+		vCardPhotoHash_ = SHA1::getHexHash(vCard->getPhoto());
+		if (lastSentPresence_) {
+			sendPresence(lastSentPresence_);
+		}
+		avatarManager_->setAvatar(jid_, vCard->getPhoto());
+	}
+}
 
 }

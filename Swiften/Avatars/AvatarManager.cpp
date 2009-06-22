@@ -49,6 +49,12 @@ void AvatarManager::handleVCardReceived(const JID& from, const String& promisedH
 	setAvatarHash(from, realHash);
 }
 
+void AvatarManager::setAvatar(const JID& jid, const ByteArray& avatar) {
+	String hash = SHA1::getHexHash(avatar);
+	avatarStorage_->addAvatar(hash, avatar);
+	setAvatarHash(getAvatarJID(jid), hash);
+}
+
 void AvatarManager::setAvatarHash(const JID& from, const String& hash) {
 	avatarHashes_[from] = hash;
 	onAvatarChanged(from, hash);

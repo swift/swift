@@ -8,6 +8,7 @@
 #include "Swiften/Base/String.h"
 #include "Swiften/Client/ClientError.h"
 #include "Swiften/JID/JID.h"
+#include "Swiften/Elements/VCard.h"
 #include "Swiften/Elements/DiscoInfo.h"
 #include "Swiften/Elements/Error.h"
 #include "Swiften/Elements/Presence.h"
@@ -58,7 +59,9 @@ namespace Swift {
 			void handleError(const ClientError& error);
 			void handleServerDiscoInfoResponse(boost::shared_ptr<DiscoInfo>, const boost::optional<Error>&);
 			void handleEventQueueLengthChange(int count);
+			void handleOwnVCardReceived(boost::shared_ptr<VCard> vCard, const boost::optional<Error>& error);
 			ChatController* getChatController(const JID &contact);
+			void sendPresence(boost::shared_ptr<Presence> presence);
 			void logout();
 
 			virtual bool isMUC(const JID& muc) const;
@@ -84,9 +87,12 @@ namespace Swift {
 			std::map<JID, MUCController*> mucControllers_;
 			std::map<JID, ChatController*> chatControllers_;
 			boost::shared_ptr<DiscoInfo> serverDiscoInfo_;
+			JID jid_;
 			PresenceOracle* presenceOracle_;
 			SystemTrayController* systemTrayController_;
 			AvatarManager* avatarManager_;
+			boost::shared_ptr<Presence> lastSentPresence_;
+			String vCardPhotoHash_;
 	};
 }
 #endif

@@ -23,6 +23,7 @@ namespace Swift {
 
 			String getAvatarHash(const JID&) const;
 			boost::filesystem::path getAvatarPath(const JID&) const;
+			void setAvatar(const JID&, const ByteArray& avatar);
 
 		public:
 			boost::signal<void (const JID&, const String&)> onAvatarChanged;
