@@ -1,4 +1,5 @@
 #include <cassert>
+#include <algorithm>
 
 #include "Swiften/Base/String.h"
 
