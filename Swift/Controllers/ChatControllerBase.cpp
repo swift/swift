@@ -16,7 +16,6 @@ ChatControllerBase::ChatControllerBase(const JID& self, StanzaChannel* stanzaCha
 	chatWindow_ = chatWindowFactory_->createChatWindow(toJID);
 	chatWindow_->onAllMessagesRead.connect(boost::bind(&ChatControllerBase::handleAllMessagesRead, this));
 	chatWindow_->onSendMessageRequest.connect(boost::bind(&ChatControllerBase::handleSendMessageRequest, this, _1));
-	presenceOracle_->onPresenceChange.connect(boost::bind(&ChatControllerBase::handlePresenceChange, this, _1, _2));
 }
 
 ChatControllerBase::~ChatControllerBase() {
@@ -34,34 +33,6 @@ void ChatControllerBase::setAvailableServerFeatures(boost::shared_ptr<DiscoInfo>
 	} else {
 		chatWindow_->setSecurityLabelsEnabled(false);
 		labelsEnabled_ = false;
-	}
-}
-
-String ChatControllerBase::getStatusChangeString(boost::shared_ptr<Presence> presence) {
-	String nick = senderDisplayNameFromMessage(presence->getFrom());
-	if (presence->getType() == Presence::Unavailable) {
-		return nick + " has gone offline.";
-	} else if (presence->getType() == Presence::Available) {
-		StatusShow::Type show = presence->getShow();
-		if (show == StatusShow::Online || show == StatusShow::FFC) {
-			return nick + " has become available.";
-		} else if (show == StatusShow::Away || show == StatusShow::XA) {
-			return nick + " has gone away.";
-		} else if (show == StatusShow::DND) {
-			return nick + " is now busy.";
-		} 
-	}
-
-	return "";
-}
-
-void ChatControllerBase::handlePresenceChange(boost::shared_ptr<Presence> newPresence, boost::shared_ptr<Presence> previousPresence) {
-	if (!(toJID_.isBare() && newPresence->getFrom().equals(toJID_, JID::WithoutResource)) && newPresence->getFrom() != toJID_) {
-		return;
-	}
-	String newStatusChangeString = getStatusChangeString(newPresence);
-	if (previousPresence.get() == NULL || newStatusChangeString != getStatusChangeString(previousPresence)) {
-		chatWindow_->addSystemMessage(newStatusChangeString);
 	}
 }
 

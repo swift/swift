@@ -1,5 +1,7 @@
 #include "Swift/Controllers/ChatController.h"
 
+#include <boost/bind.hpp>
+
 #include "Swiften/Avatars/AvatarManager.h"
 #include "Swift/Controllers/ChatWindow.h"
 #include "Swift/Controllers/ChatWindowFactory.h"
@@ -13,6 +15,7 @@ namespace Swift {
 ChatController::ChatController(const JID& self, StanzaChannel* stanzaChannel, IQRouter* iqRouter, ChatWindowFactory* chatWindowFactory, const JID &contact, NickResolver* nickResolver, PresenceOracle* presenceOracle, AvatarManager* avatarManager)
  : ChatControllerBase(self, stanzaChannel, iqRouter, chatWindowFactory, contact, presenceOracle, avatarManager) {
 	nickResolver_ = nickResolver;
+	presenceOracle_->onPresenceChange.connect(boost::bind(&ChatController::handlePresenceChange, this, _1, _2));
 }
 
 bool ChatController::isIncomingMessageFromMe(boost::shared_ptr<Message>) {
@@ -35,5 +38,34 @@ void ChatController::postSendMessage(const String& body) {
 String ChatController::senderDisplayNameFromMessage(const JID& from) {
 	return nickResolver_->jidToNick(from);
 }
+
+String ChatController::getStatusChangeString(boost::shared_ptr<Presence> presence) {
+	String nick = senderDisplayNameFromMessage(presence->getFrom());
+	if (presence->getType() == Presence::Unavailable) {
+		return nick + " has gone offline.";
+	} else if (presence->getType() == Presence::Available) {
+		StatusShow::Type show = presence->getShow();
+		if (show == StatusShow::Online || show == StatusShow::FFC) {
+			return nick + " has become available.";
+		} else if (show == StatusShow::Away || show == StatusShow::XA) {
+			return nick + " has gone away.";
+		} else if (show == StatusShow::DND) {
+			return nick + " is now busy.";
+		} 
+	}
+
+	return "";
+}
+
+void ChatController::handlePresenceChange(boost::shared_ptr<Presence> newPresence, boost::shared_ptr<Presence> previousPresence) {
+	if (!(toJID_.isBare() && newPresence->getFrom().equals(toJID_, JID::WithoutResource)) && newPresence->getFrom() != toJID_) {
+		return;
+	}
+	String newStatusChangeString = getStatusChangeString(newPresence);
+	if (!previousPresence || newStatusChangeString != getStatusChangeString(previousPresence)) {
+		chatWindow_->addSystemMessage(newStatusChangeString);
+	}
+}
+
 
 }

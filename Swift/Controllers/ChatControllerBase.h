@@ -34,14 +34,13 @@ namespace Swift {
 
 			virtual void postSendMessage(const String&) {};
 			virtual String senderDisplayNameFromMessage(const JID& from) = 0;
-			void handlePresenceChange(boost::shared_ptr<Presence> newPresence, boost::shared_ptr<Presence> previousPresence);
 			virtual bool isIncomingMessageFromMe(boost::shared_ptr<Message>) = 0;
 			virtual void preHandleIncomingMessage(boost::shared_ptr<Message>) {};
 			virtual void preSendMessageRequest(boost::shared_ptr<Message>) {};
 
+
 		private:
 			void handleSendMessageRequest(const String &body);
-			String getStatusChangeString(boost::shared_ptr<Presence> presence);
 			void handleAllMessagesRead();
 			void handleSecurityLabelsCatalogResponse(boost::shared_ptr<SecurityLabelsCatalog>, const boost::optional<Error>& error);
 			String getErrorMessage(boost::shared_ptr<Error>);
