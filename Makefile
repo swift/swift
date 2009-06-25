@@ -42,7 +42,6 @@ ifeq ($(BUILD_SWIFT),yes)
 include Swift/Makefile.inc
 endif
 include QA/Makefile.inc
-include Swift/Packaging/Debian/Makefile.inc
 ################################################################################
 # Main targets
 ################################################################################
