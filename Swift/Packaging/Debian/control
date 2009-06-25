@@ -1,0 +1,10 @@
+Package: swift
+Version: %VERSION%
+Section: network
+Priority: optional
+Architecture: %ARCH%
+Depends: libqt4-webkit, libqt4-core, libqt4-gui
+Installed-Size: %SIZE%
+Maintainer: Swift [http://swift.im]
+Provides: swift
+Description: XMPP Client
