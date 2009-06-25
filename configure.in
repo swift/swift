@@ -46,6 +46,17 @@ case $host in
     CONFIG_LIBS="$CONFIG_LIBS -lstdc++"
 esac
 
+case $host in
+	x86_64-*)
+		ARCH="amd64"
+		;;
+	i686-*)
+		ARCH="i686"
+		;;
+	*)
+		ARCH="i386"
+esac
+
 AC_CHECK_FILE([Swift/Makefile.inc], [BUILD_SWIFT="yes"], [BUILD_SWIFT="no"])
 
 ################################################################################
@@ -214,6 +225,7 @@ AC_SUBST(USE_BUNDLED_EXPAT)
 AC_SUBST(CONFIG_HAVE_LIBXML)
 AC_SUBST(QMAKE)
 AC_SUBST(BUILD_SWIFT)
+AC_SUBST(ARCH)
 
 AC_CONFIG_FILES([Makefile.config])
 if test "$BUILD_SWIFT" == "yes"; then

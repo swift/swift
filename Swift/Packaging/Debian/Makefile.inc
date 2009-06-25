@@ -1,7 +1,6 @@
 DATE=`date +%Y%m%d`
 SIZE=`du -s tmpusr/usr | awk '{print $1}'`
 VERSION=0.3.$(DATE)
-ARCH=amd64
 DEBPATH=Swift/Packaging/Debian
 DEBNAME=swift-preview_$(VERSION)-$(ARCH).deb
 $(DEBPATH)/$(DEBNAME): all
