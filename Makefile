@@ -50,11 +50,7 @@ include QA/Makefile.inc
 all: $(TARGETS)
 
 .PHONY: install
-install: install-dirs $(INSTALL_TARGETS)
-
-.PHONY: install-dirs
-install-dirs:
-	install -d $(includedir) $(libdir)
+install: $(INSTALL_TARGETS)
 
 .PHONY: coverage
 coverage:
@@ -62,6 +58,7 @@ coverage:
 
 .PHONY: clean
 clean: clean-deps $(CLEAN_TARGETS)
+
 	-$(RM) $(CLEANFILES) *.gcov
 	-find . -name "*.gcda" -exec rm {} \;
 	-find . -name "*.gcno" -exec rm {} \;

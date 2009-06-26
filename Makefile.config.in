@@ -8,6 +8,7 @@ exec_prefix=@exec_prefix@
 bindir=@bindir@
 libdir=@libdir@
 includedir=@includedir@
+datadir=@datadir@
 
 @SET_MAKE@
 MM=@MM@

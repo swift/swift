@@ -51,10 +51,11 @@ $(SWIFTEN_TARGET): $(SWIFTEN_OBJECTS)
 
 .PHONY: install-swiften
 install-swiften: $(SWIFTEN_TARGET) $(SWIFTEN_HEADERS)
-	install -d $(includedir)/Swiften/3rdParty
-	rsync -a 3rdParty/Boost/boost $(includedir)/Swiften/3rdParty/Boost
-	for header in $(SWIFTEN_HEADERS); do headerdir=$(includedir)/`dirname $$header`; echo $$header install -d $$headerdir; install $$header $$headerdir; done
-	install $(SWIFTEN_TARGET) $(libdir)
+	install -d $(DESTDIR)$(includedir) $(DESTDIR)$(libdir)
+	install -d $(DESTDIR)$(includedir)/Swiften/3rdParty
+	rsync -a 3rdParty/Boost/boost $(DESTDIR)$(includedir)/Swiften/3rdParty/Boost
+	for header in $(SWIFTEN_HEADERS); do headerdir=$(includedir)/`dirname $$header`; echo $$header install -d $(DESTDIR)$$headerdir; install $$header $(DESTDIR)$$headerdir; done
+	install $(SWIFTEN_TARGET) $(DESTDIR)$(libdir)
 
 include Swiften/QA/Makefile.inc
 include Swiften/Examples/Makefile.inc
