@@ -11,10 +11,11 @@ NickResolver::NickResolver(boost::shared_ptr<XMPPRoster> xmppRoster) {
 }
 
 String NickResolver::jidToNick(const JID& jid) {
-	if (xmppRoster_->containsJID(jid)) {
+	String nick;
+	if (xmppRoster_->containsJID(jid) && xmppRoster_->getNameForJID(jid) != "") {
 		return xmppRoster_->getNameForJID(jid);
 	}
-	std::map<JID, String>::iterator it = map_.find(jid);
+	std::map<JID, String>::const_iterator it = map_.find(jid);
 	return (it == map_.end()) ? jid.toBare() : it->second;
 }
 

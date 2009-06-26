@@ -16,6 +16,7 @@ ChatController::ChatController(const JID& self, StanzaChannel* stanzaChannel, IQ
  : ChatControllerBase(self, stanzaChannel, iqRouter, chatWindowFactory, contact, presenceOracle, avatarManager) {
 	nickResolver_ = nickResolver;
 	presenceOracle_->onPresenceChange.connect(boost::bind(&ChatController::handlePresenceChange, this, _1, _2));
+	chatWindow_->setName(nickResolver_->jidToNick(toJID_));
 }
 
 bool ChatController::isIncomingMessageFromMe(boost::shared_ptr<Message>) {

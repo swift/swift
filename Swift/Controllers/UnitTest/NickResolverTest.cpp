@@ -10,6 +10,7 @@ class NickResolverTest : public CppUnit::TestFixture
 {
 		CPPUNIT_TEST_SUITE(NickResolverTest);
 		CPPUNIT_TEST(testNoMatch);
+		CPPUNIT_TEST(testZeroLengthMatch);
 		CPPUNIT_TEST(testMatch);
 		CPPUNIT_TEST(testOverwrittenMatch);
 		CPPUNIT_TEST(testRemovedMatch);
@@ -23,37 +24,45 @@ class NickResolverTest : public CppUnit::TestFixture
 		void testNoMatch() {
 			boost::shared_ptr<XMPPRoster> xmppRoster(new XMPPRoster());
 			NickResolver resolver(xmppRoster);
-			JID testling("foo@bar/baz");
+			JID testJID("foo@bar/baz");
 
-			CPPUNIT_ASSERT_EQUAL(String("foo@bar"), resolver.jidToNick(testling));
+			CPPUNIT_ASSERT_EQUAL(String("foo@bar"), resolver.jidToNick(testJID));
+		}
+		
+		void testZeroLengthMatch() {
+			boost::shared_ptr<XMPPRoster> xmppRoster(new XMPPRoster());
+			NickResolver resolver(xmppRoster);
+			JID testJID("foo@bar/baz");
+			xmppRoster->addContact(testJID, "", groups_);
+			CPPUNIT_ASSERT_EQUAL(String("foo@bar"), resolver.jidToNick(testJID));
 		}
 
 		void testMatch() {
 			boost::shared_ptr<XMPPRoster> xmppRoster(new XMPPRoster());
 			NickResolver resolver(xmppRoster);
-			JID testling("foo@bar/baz");
-			xmppRoster->addContact(testling, "Test", groups_);
+			JID testJID("foo@bar/baz");
+			xmppRoster->addContact(testJID, "Test", groups_);
 
-			CPPUNIT_ASSERT_EQUAL(String("Test"), resolver.jidToNick(testling));
+			CPPUNIT_ASSERT_EQUAL(String("Test"), resolver.jidToNick(testJID));
 		}
 
 		void testOverwrittenMatch() {
 			boost::shared_ptr<XMPPRoster> xmppRoster(new XMPPRoster());
 			NickResolver resolver(xmppRoster);
-			JID testling("foo@bar/baz");
-			xmppRoster->addContact(testling, "FailTest", groups_);
-			xmppRoster->addContact(testling, "Test", groups_);
+			JID testJID("foo@bar/baz");
+			xmppRoster->addContact(testJID, "FailTest", groups_);
+			xmppRoster->addContact(testJID, "Test", groups_);
 
-			CPPUNIT_ASSERT_EQUAL(String("Test"), resolver.jidToNick(testling));
+			CPPUNIT_ASSERT_EQUAL(String("Test"), resolver.jidToNick(testJID));
 		}
 
 		void testRemovedMatch() {
 			boost::shared_ptr<XMPPRoster> xmppRoster(new XMPPRoster());
 			NickResolver resolver(xmppRoster);
-			JID testling("foo@bar/baz");
-			xmppRoster->addContact(testling, "FailTest", groups_);
-			xmppRoster->removeContact(testling);
-			CPPUNIT_ASSERT_EQUAL(String("foo@bar"), resolver.jidToNick(testling));
+			JID testJID("foo@bar/baz");
+			xmppRoster->addContact(testJID, "FailTest", groups_);
+			xmppRoster->removeContact(testJID);
+			CPPUNIT_ASSERT_EQUAL(String("foo@bar"), resolver.jidToNick(testJID));
 		}
 
 };

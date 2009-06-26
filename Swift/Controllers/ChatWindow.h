@@ -22,6 +22,7 @@ namespace Swift {
 			virtual void addSystemMessage(const String& message) = 0;
 			virtual void addErrorMessage(const String& message) = 0;
 
+			virtual void setName(const String& name) = 0;
 			virtual void show() = 0;
 			virtual void setAvailableSecurityLabels(const std::vector<SecurityLabel>& labels) = 0;
 			virtual void setSecurityLabelsEnabled(bool enabled) = 0;
