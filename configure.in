@@ -93,6 +93,9 @@ AC_ARG_ENABLE(universal,
 			CONFIG_CXXFLAGS="$CONFIG_CXXFLAGS -isysroot /Developer/SDKs/MacOSX10.4u.sdk -arch i386 -arch ppc"
 			CONFIG_CFLAGS="$CONFIG_CFLAGS -isysroot /Developer/SDKs/MacOSX10.4u.sdk -arch i386 -arch ppc"
 			CONFIG_LDFLAGS="$CONFIG_LDFLAGS -mmacosx-version-min=10.4 -Wl,-syslibroot,/Developer/SDKs/MacOSX10.4u.sdk -arch i386 -arch ppc"
+			CXXFLAGS="$CXXFLAGS -isysroot /Developer/SDKs/MacOSX10.4u.sdk -arch i386 -arch ppc"
+			CFLAGS="$CFLAGS -isysroot /Developer/SDKs/MacOSX10.4u.sdk -arch i386 -arch ppc"
+			LDFLAGS="$LDFLAGS -mmacosx-version-min=10.4 -Wl,-syslibroot,/Developer/SDKs/MacOSX10.4u.sdk -arch i386 -arch ppc"
 		 fi],
 		[])
 
