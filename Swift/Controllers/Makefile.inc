@@ -7,6 +7,7 @@ SWIFT_CONTROLLERS_SOURCES += \
 	Swift/Controllers/XMPPRosterController.cpp \
 	Swift/Controllers/MUCController.cpp \
 	Swift/Controllers/EventController.cpp \
+	Swift/Controllers/SoundEventController.cpp \
 	Swift/Controllers/SystemTrayController.cpp
 
 include Swift/Controllers/UnitTest/Makefile.inc

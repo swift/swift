@@ -13,6 +13,7 @@ namespace Swift {
 		public:
 			void handleIncomingEvent(boost::shared_ptr<MessageEvent> event);
 			boost::signal<void (int)> onEventQueueLengthChange;
+			boost::signal<void (boost::shared_ptr<MessageEvent>)> onEventQueueEventAdded;
 
 		private:
 			void handleEventRead(boost::shared_ptr<MessageEvent> event);

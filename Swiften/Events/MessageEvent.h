@@ -5,6 +5,7 @@
 
 #include "Swiften/Elements/Message.h"
 
+#include <boost/signals.hpp>
 #include <boost/shared_ptr.hpp>
 
 namespace Swift {

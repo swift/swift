@@ -5,6 +5,7 @@
 #include "QtMainWindowFactory.h"
 #include "QtTreeWidgetFactory.h"
 #include "QtSystemTray.h"
+#include "QtSoundPlayer.h"
 
 #include <boost/bind.hpp>
 #include <QSplitter>
@@ -30,6 +31,7 @@ QtSwift::QtSwift(bool netbookMode) {
 	rosterWindowFactory_ = new QtMainWindowFactory(treeWidgetFactory_);
 	chatWindowFactory_ = new QtChatWindowFactory(treeWidgetFactory_, splitter_);
 	systemTray_ = new QtSystemTray();
+	soundPlayer_ = new QtSoundPlayer();
 	QCoreApplication::setApplicationName("Swift");
 	QCoreApplication::setOrganizationName("Swift");
 	QCoreApplication::setOrganizationDomain("swift.im");
@@ -38,7 +40,7 @@ QtSwift::QtSwift(bool netbookMode) {
 	if (splitter_) {
 		splitter_->show();
 	}
-	mainController_ = new MainController(chatWindowFactory_, rosterWindowFactory_, loginWindowFactory_, treeWidgetFactory_, settings_, application_, systemTray_);
+	mainController_ = new MainController(chatWindowFactory_, rosterWindowFactory_, loginWindowFactory_, treeWidgetFactory_, settings_, application_, systemTray_, soundPlayer_);
 }
 
 QtSwift::~QtSwift() {
@@ -51,6 +53,7 @@ QtSwift::~QtSwift() {
 	delete application_;
 	delete systemTray_;
 	delete splitter_;
+	delete soundPlayer_;
 }
 
 }

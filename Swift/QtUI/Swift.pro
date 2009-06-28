@@ -1,5 +1,5 @@
 TEMPLATE = app
-QT += webkit
+QT += webkit phonon
 CONFIG += debug
 unix:!mac {
 	TARGET = swift
@@ -34,10 +34,10 @@ win32 {
 
 # Resources
 win32 {
-	RC_FILE = ../../resources/Windows/Swift.rc
+	RC_FILE = ../resources/Windows/Swift.rc
 }
 mac {
-	ICON = ../../resources/MacOSX/Swift.icns
+	ICON = ../resources/MacOSX/Swift.icns
 }
 
 DEFINES += BOOST_SIGNALS_NAMESPACE=bsignals BOOST_ALL_NO_LIB
@@ -59,6 +59,7 @@ HEADERS += \
 	QtTreeWidgetItem.h \
 	QtChatView.h \
 	QtChatTabs.h \
+	QtSoundPlayer.h \
 	QtSystemTray.h \
 	QtTabbable.h \
 	ChatSnippet.h \
@@ -80,6 +81,7 @@ SOURCES += \
 	QtTreeWidget.cpp \
 	QtChatView.cpp	\
 	QtChatTabs.cpp \
+	QtSoundPlayer.cpp \
 	QtSystemTray.cpp \
 	ChatSnippet.cpp \
 	MessageSnippet.cpp \
@@ -91,6 +93,6 @@ RESOURCES += Swift.qrc DefaultTheme.qrc
 
 win32 {
 	DefaultThemeQRC.target = DefaultTheme.qrc
-	DefaultThemeQRC.commands = ..\..\tools\ThemeQRC.py ../../resources/themes/Default > DefaultTheme.qrc
+	DefaultThemeQRC.commands = ..\..\tools\ThemeQRC.py ../resources/themes/Default > DefaultTheme.qrc
 	QMAKE_EXTRA_TARGETS = DefaultThemeQRC
 }

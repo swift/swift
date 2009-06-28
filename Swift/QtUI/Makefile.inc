@@ -25,4 +25,4 @@ Swift/QtUI/Swiften.pri:
 	cd Swift/QtUI && ./qmakeish.py ../../Makefile > Swiften.pri
 
 Swift/QtUI/DefaultTheme.qrc:
-	cd Swift/QtUI && ../../tools/ThemeQRC.py ../../resources/themes/Default > DefaultTheme.qrc
+	cd Swift/QtUI && ../../tools/ThemeQRC.py ../resources/themes/Default > DefaultTheme.qrc

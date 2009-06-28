@@ -18,6 +18,7 @@ namespace Swift {
 	class QtLoginWindowFactory;
 	class QtTreeWidgetFactory;
 	class QtSystemTray;
+	class QtSoundPlayer;
 	
 	class QtSwift : public QObject {
 		Q_OBJECT
@@ -34,6 +35,7 @@ namespace Swift {
 			QtSettingsProvider *settings_;
 			QtSystemTray* systemTray_;
 			QSplitter* splitter_;
+			QtSoundPlayer* soundPlayer_;
 			Application* application_;
 	};
 }

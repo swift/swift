@@ -10,6 +10,7 @@ void EventController::handleIncomingEvent(boost::shared_ptr<MessageEvent> event)
 		events_.push_back(event);
 		event->onRead.connect(boost::bind(&EventController::handleEventRead, this, event));
 		onEventQueueLengthChange(events_.size());
+		onEventQueueEventAdded(event);
 	}
 }
 

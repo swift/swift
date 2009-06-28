@@ -17,6 +17,8 @@
 #include "Swift/Controllers/MUCController.h"
 #include "Swift/Controllers/NickResolver.h"
 #include "Swift/Controllers/RosterController.h"
+#include "Swift/Controllers/SoundEventController.h"
+#include "Swift/Controllers/SoundPlayer.h"
 #include "Swift/Controllers/SystemTray.h"
 #include "Swift/Controllers/SystemTrayController.h"
 #include "Swift/Controllers/XMPPRosterController.h"
@@ -57,7 +59,7 @@ static const String CLIENT_NODE = "http://swift.im";
 typedef std::pair<JID, ChatController*> JIDChatControllerPair;
 typedef std::pair<JID, MUCController*> JIDMUCControllerPair;
 
-MainController::MainController(ChatWindowFactory* chatWindowFactory, MainWindowFactory *mainWindowFactory, LoginWindowFactory *loginWindowFactory, TreeWidgetFactory *treeWidgetFactory, SettingsProvider *settings, Application* application, SystemTray* systemTray)
+MainController::MainController(ChatWindowFactory* chatWindowFactory, MainWindowFactory *mainWindowFactory, LoginWindowFactory *loginWindowFactory, TreeWidgetFactory *treeWidgetFactory, SettingsProvider *settings, Application* application, SystemTray* systemTray, SoundPlayer* soundPlayer)
 		: client_(NULL), chatWindowFactory_(chatWindowFactory), mainWindowFactory_(mainWindowFactory), loginWindowFactory_(loginWindowFactory), treeWidgetFactory_(treeWidgetFactory), settings_(settings),
 		xmppRosterController_(NULL), rosterController_(NULL), loginWindow_(NULL), clientVersionResponder_(NULL), nickResolver_(NULL), discoResponder_(NULL), 
 		serverDiscoInfo_(new DiscoInfo()), presenceOracle_(NULL), avatarManager_(NULL) {
@@ -68,6 +70,7 @@ MainController::MainController(ChatWindowFactory* chatWindowFactory, MainWindowF
 	eventController_ = new EventController();
 	eventController_->onEventQueueLengthChange.connect(boost::bind(&MainController::handleEventQueueLengthChange, this, _1));
 	systemTrayController_ = new SystemTrayController(eventController_, systemTray);
+	soundEventController_ = new SoundEventController(eventController_, soundPlayer);
 	loginWindow_ = loginWindowFactory_->createLoginWindow(settings->getStringSetting("jid"), settings->getStringSetting("pass"), settings->getStringSetting("certificate"));
 	loginWindow_->onLoginRequest.connect(boost::bind(&MainController::handleLoginRequest, this, _1, _2, _3, _4));
 }
@@ -88,6 +91,7 @@ MainController::~MainController() {
 	delete nickResolver_;
 	delete client_;
 	delete systemTrayController_;
+	delete soundEventController_;
 	delete avatarStorage_;
 }
 

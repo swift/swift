@@ -40,10 +40,12 @@ namespace Swift {
 	class PresenceOracle;
 	class SystemTray;
 	class SystemTrayController;
+	class SoundEventController;
+	class SoundPlayer;
 
 	class MainController : public MUCRegistry {
 		public:
-			MainController(ChatWindowFactory* chatWindowFactory, MainWindowFactory *mainWindowFactory, LoginWindowFactory *loginWindowFactory, TreeWidgetFactory* treeWidgetFactory, SettingsProvider *settings, Application* application, SystemTray* systemTray);
+			MainController(ChatWindowFactory* chatWindowFactory, MainWindowFactory *mainWindowFactory, LoginWindowFactory *loginWindowFactory, TreeWidgetFactory* treeWidgetFactory, SettingsProvider *settings, Application* application, SystemTray* systemTray, SoundPlayer* soundPlayer);
 			~MainController();
 
 
@@ -90,6 +92,7 @@ namespace Swift {
 			JID jid_;
 			PresenceOracle* presenceOracle_;
 			SystemTrayController* systemTrayController_;
+			SoundEventController* soundEventController_;
 			AvatarManager* avatarManager_;
 			boost::shared_ptr<Presence> lastSentPresence_;
 			String vCardPhotoHash_;
