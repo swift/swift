@@ -11,6 +11,7 @@ namespace Swift {
 		public:
 			MacOSXApplication(const String& name);
 
+			virtual boost::filesystem::path getHomeDir() const;
 			virtual ApplicationMessageDisplay* getApplicationMessageDisplay();
 			boost::filesystem::path getSettingsDir() const;
 

@@ -22,6 +22,14 @@ namespace Swift {
 				return result;
 			}
 
+			boost::filesystem::path Application::getHomeDir() const {
+				char* homeDirRaw = getenv("APPDATA");
+				if (!homeDirRaw) {
+					homeDirRaw = getenv("USERPROFILE");
+				}
+				return boost::filesystem::path(homeDirRaw);
+			}
+
 		private:
 			NullApplicationMessageDisplay messageDisplay_;
 	};

@@ -15,4 +15,8 @@ boost::filesystem::path MacOSXApplication::getSettingsDir() const {
 	return result;
 }
 
+boost::filesystem::path MacOSXApplication::getHomeDir() const {
+	return boost::filesystem::path(getenv("HOME"));
+}
+
 }
