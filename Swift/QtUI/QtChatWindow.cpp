@@ -106,7 +106,7 @@ void QtChatWindow::convertToMUC() {
 
 void QtChatWindow::qAppFocusChanged(QWidget *old, QWidget *now) {
 	Q_UNUSED(old);
-	if (now == this || now == messageLog_ || now == input_) {
+	if (isWidgetSelected()) {
 		onAllMessagesRead();
 	}
 	
@@ -133,7 +133,7 @@ void QtChatWindow::updateTitleWithUnreadCount() {
 }
 
 void QtChatWindow::addMessage(const String &message, const String &senderName, bool senderIsSelf, const boost::optional<SecurityLabel>& label, const String& avatarPath) {
-	if (isActiveWindow()) {
+	if (isWidgetSelected()) {
 		onAllMessagesRead();
 	}
 
@@ -156,7 +156,7 @@ void QtChatWindow::addMessage(const String &message, const String &senderName, b
 }
 
 void QtChatWindow::addErrorMessage(const String& errorMessage) {
-	if (isActiveWindow()) {
+	if (isWidgetSelected()) {
 		onAllMessagesRead();
 	}
 
@@ -169,7 +169,7 @@ void QtChatWindow::addErrorMessage(const String& errorMessage) {
 }
 
 void QtChatWindow::addSystemMessage(const String& message) {
-	if (isActiveWindow()) {
+	if (isWidgetSelected()) {
 		onAllMessagesRead();
 	}
 

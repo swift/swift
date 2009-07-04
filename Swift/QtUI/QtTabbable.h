@@ -6,6 +6,8 @@
 namespace Swift {
 	class QtTabbable : public QWidget {
 		Q_OBJECT
+		public:
+			bool isWidgetSelected();
 		protected:
 			QtTabbable() : QWidget() {};
 

@@ -84,6 +84,7 @@ SOURCES += \
 	QtChatTabs.cpp \
 	QtSoundPlayer.cpp \
 	QtSystemTray.cpp \
+	QtTabbable.cpp \
 	ChatSnippet.cpp \
 	MessageSnippet.cpp \
 	SystemMessageSnippet.cpp
