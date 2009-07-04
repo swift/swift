@@ -16,16 +16,16 @@ namespace Swift {
 			}
 
 			boost::filesystem::path getSettingsDir() const {
-				boost::filesystem::path result(getHomeDir() / getName().getUTF8String());
+				char* homeDirRaw = getenv("APPDATA");
+				boost::filesystem::path result(boost::filesystem::path(getHomeDir()) / getName().getUTF8String());
 				boost::filesystem::create_directory(result);
 				return result;
 			}
 
 			boost::filesystem::path getHomeDir() const {
-				char* homeDirRaw = getenv("APPDATA");
-				if (!homeDirRaw) {
-					homeDirRaw = getenv("USERPROFILE");
-				}
+				//FIXME: This should be My Documents 
+				
+				char* homeDirRaw = getenv("USERPROFILE");
 				return boost::filesystem::path(homeDirRaw);
 			}
 
