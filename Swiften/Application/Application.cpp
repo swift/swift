@@ -23,7 +23,14 @@ boost::filesystem::path Application::getAvatarDir() const {
 
 boost::filesystem::path Application::getHomeDir() const {
 	// FIXME: Does this work on windows?
+	// No it doesn't, putting alternative paths in for the moment.
 	char* homeDirRaw = getenv("HOME");
+	if (!homeDirRaw) {
+		homeDirRaw = getenv("APPDATA");
+	}
+	if (!homeDirRaw) {
+		homeDirRaw = getenv("USERPROFILE");
+	}
 	boost::filesystem::path homeDir(homeDirRaw);
 	return homeDir;
 }
