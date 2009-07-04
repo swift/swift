@@ -493,7 +493,7 @@ namespace boost
 #include <boost/config/abi_suffix.hpp> // pops abi_prefix.hpp pragmas
 
 # ifdef BOOST_ERROR_CODE_HEADER_ONLY
-#   include <boost/../libs/system/src/error_code.cpp>
+//#   include <boost/../libs/system/src/error_code.cpp>
 # endif
 
 #endif // BOOST_ERROR_CODE_HPP

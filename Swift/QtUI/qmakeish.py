@@ -58,6 +58,8 @@ for line in makefile :
         conditional = "win32"
       elif conditional == "MACOSX" :
         conditional = "mac"
+      elif conditional == "BUILD_SWIFT" :
+	conditional = "true"
       elif match.group(2).startswith("HAVE_") or match.group(2).startswith("USE_") :
         conditional = "!isEmpty(" + match.group(2) + ")"
       else :
@@ -80,7 +82,7 @@ for line in makefile :
       continue
     
     match = re.match("(\w+)_SOURCES (\+?)= (.*)", line) 
-    if match and match.group(1) in ["SWIFTEN", "ZLIB", "LIBIDN", "BOOST", "EXPAT", "SWIFT_CONTROLLERS"] :
+    if match and match.group(1) in ["SWIFTEN", "ZLIB", "LIBIDN", "BOOST", "EXPAT", "SWIFT_CONTROLLERS", "SQLITE"] :
       inSources = processSourcesLine(match.group(3))
       continue
 
