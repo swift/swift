@@ -15,6 +15,7 @@
 #include <QString>
 #include <QTextEdit>
 #include <QTime>
+#include <QUrl>
 
 namespace Swift {
 QtChatWindow::QtChatWindow(const QString &contact, QtTreeWidgetFactory *treeWidgetFactory) : QtTabbable(), contact_(contact), previousMessageWasSelf_(false), previousMessageWasSystem_(false) {
@@ -146,7 +147,8 @@ void QtChatWindow::addMessage(const String &message, const String &senderName, b
 	htmlString += messageHTML;
 
 	bool appendToPrevious = !previousMessageWasSystem_ && ((senderIsSelf && previousMessageWasSelf_) || (!senderIsSelf && !previousMessageWasSelf_ && previousSenderName_ == P2QSTRING(senderName)));
-	messageLog_->addMessage(MessageSnippet(htmlString, Qt::escape(P2QSTRING(senderName)), QDateTime::currentDateTime(), (avatarPath.isEmpty() ? "qrc:/icons/avatar.png" : "file://" + P2QSTRING(avatarPath)), senderIsSelf, appendToPrevious));
+	QString qAvatarPath =  avatarPath.isEmpty() ? "qrc:/icons/avatar.png" : QUrl::fromLocalFile(P2QSTRING(avatarPath)).toEncoded();
+	messageLog_->addMessage(MessageSnippet(htmlString, Qt::escape(P2QSTRING(senderName)), QDateTime::currentDateTime(), qAvatarPath, senderIsSelf, appendToPrevious));
 
 	previousMessageWasSelf_ = senderIsSelf;
 	previousSenderName_ = P2QSTRING(senderName);
