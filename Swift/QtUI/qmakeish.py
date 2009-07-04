@@ -90,6 +90,10 @@ for line in makefile :
     if match : 
       processFlags(match.group(1), match.group(2))
 
+    match = re.match("SQLITE_CPPFLAGS \+= (.*)", line) 
+    if match : 
+      processFlags("CPPFLAGS", match.group(1))
+
     if line.startswith("## ") :
       print line
 

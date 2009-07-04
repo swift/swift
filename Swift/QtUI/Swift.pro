@@ -24,9 +24,9 @@ else {
 	DEFINES += HAVE_OPENSSL
 	INCLUDEPATH += C:/OpenSSL/include
 	LIBS += -LC:/OpenSSL/lib/VC -llibeay32MT -lssleay32MT
+	LIBS += -ldnsapi -lws2_32 -lwsock32
 
 	include(Swiften.pri)
-	include(fixwindows.pri)
 }
 
 win32 {
