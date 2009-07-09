@@ -1,6 +1,7 @@
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/extensions/TestFactoryRegistry.h>
 
+#include "Swiften/Elements/VCardUpdate.h"
 #include "Swiften/Avatars/AvatarManager.h"
 #include "Swiften/Avatars/AvatarStorage.h"
 #include "Swiften/MUC/MUCRegistry.h"
@@ -38,12 +39,13 @@ class AvatarManagerTest : public CppUnit::TestFixture {
 			delete stanzaChannel_;
 		}
 
-		void testUpdateNewHash() {
-			std::auto_ptr<AvatarManager> testling = createManager();
-		}
-
 		void testUpdate_UpdateNewHash() {
 			std::auto_ptr<AvatarManager> testling = createManager();
+			stanzaChannel_->onPresenceReceived(createPresenceWithPhotoHash());
+
+			CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(stanzaChannel_->sentStanzas_.size()));
+			IQ* 
+			CPPUNIT_ASSERT(stanzaChannel->isRequestAtIndex<VCardUpdate>(0, JID("foo@bar.com"), IQ::Get));
 		}
 
 		void testUpdate_UpdateNewHashAlreadyHaveAvatar() {
@@ -77,6 +79,13 @@ class AvatarManagerTest : public CppUnit::TestFixture {
 	private:
 		std::auto_ptr<AvatarManager> createManager() {
 			return std::auto_ptr<AvatarManager>(new AvatarManager(stanzaChannel_, iqRouter_, avatarStorage_, mucRegistry_));
+		}
+
+		boost::shared_ptr<Presence> createPresenceWithPhotoHash() {
+			boost::shared_ptr<Presence> presence(new Presence());
+			presence->setFrom(JID("foo@bar.com/baz"));
+			presence->addPayload(boost::shared_ptr<VCardUpdate>(new VCardUpdate("aef56135bcce35eb24a43fcd684005b4ca286497")));
+			return presence;
 		}
 
 	private:

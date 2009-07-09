@@ -1,2 +1,2 @@
-UNITTEST_SOURCES += \
-  Swiften/Avatars/UnitTest/AvatarManagerTest.cpp
+#UNITTEST_SOURCES += \
+#  Swiften/Avatars/UnitTest/AvatarManagerTest.cpp
