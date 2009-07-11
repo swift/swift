@@ -15,10 +15,13 @@ namespace Swift {
 
 			void addFactory(PayloadParserFactory* factory);
 			void removeFactory(PayloadParserFactory* factory);
+			void setDefaultFactory(PayloadParserFactory* factory);
+
 			PayloadParserFactory* getPayloadParserFactory(const String& element, const String& ns, const AttributeMap& attributes);
 
 		private:
 			std::vector<PayloadParserFactory*> factories_;
+			PayloadParserFactory* defaultFactory_;
 	};
 }
 

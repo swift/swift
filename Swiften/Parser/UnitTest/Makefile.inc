@@ -1,4 +1,5 @@
 UNITTEST_SOURCES += \
+	Swiften/Parser/UnitTest/PayloadParserFactoryCollectionTest.cpp \
 	Swiften/Parser/UnitTest/XMPPParserTest.cpp \
 	Swiften/Parser/UnitTest/StanzaParserTest.cpp \
 	Swiften/Parser/UnitTest/MessageParserTest.cpp \
