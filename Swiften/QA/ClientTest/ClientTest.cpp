@@ -6,6 +6,7 @@
 #include "Swiften/EventLoop/MainEventLoop.h"
 #include "Swiften/EventLoop/SimpleEventLoop.h"
 #include "Swiften/Queries/Requests/GetRosterRequest.h"
+#include "Swiften/Client/ClientXMLTracer.h"
 
 using namespace Swift;
 
@@ -13,14 +14,6 @@ SimpleEventLoop eventLoop;
 
 Client* client = 0;
 bool rosterReceived = false;
-
-void printIncomingData(const String& data) {
-	std::cout << "<- " << data << std::endl;
-}
-
-void printOutgoingData(const String& data) {
-	std::cout << "-> " << data << std::endl;
-}
 
 void handleRosterReceived(boost::shared_ptr<Payload>) {
 	rosterReceived = true;
@@ -46,9 +39,8 @@ int main(int, char**) {
 	}
 
 	client = new Swift::Client(JID(jid), String(pass));
+	ClientXMLTracer* tracer = new ClientXMLTracer(client);
 	client->onConnected.connect(&handleConnected);
-	client->onDataRead.connect(&printIncomingData);
-	client->onDataWritten.connect(&printOutgoingData);
 	client->connect();
 
 	{
@@ -58,6 +50,7 @@ int main(int, char**) {
 
 		eventLoop.run();
 	}
+	delete tracer;
 	delete client;
 	return !rosterReceived;
 }
