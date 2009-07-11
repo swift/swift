@@ -13,6 +13,9 @@ namespace Swift {
 			enum Type { Available, Error, Probe, Subscribe, Subscribed, Unavailable, Unsubscribe, Unsubscribed };
 
 			Presence() : type_(Available) /*, showType_(Online)*/ {}
+			Presence(const String& status) : type_(Available) {
+				setStatus(status);
+			}
 
 			Type getType() const { return type_; }
 			void setType(Type type) { type_ = type; }
