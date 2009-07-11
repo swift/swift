@@ -1,6 +1,7 @@
 #include <boost/bind.hpp>
 
 #include "Swiften/Client/Client.h"
+#include "Swiften/Client/ClientXMLTracer.h"
 #include "Swiften/EventLoop/SimpleEventLoop.h"
 #include "Swiften/Queries/Requests/GetRosterRequest.h"
 
@@ -9,15 +10,22 @@ using namespace boost;
 
 class EchoBot {
 	public:
-		EchoBot(const JID& jid, const String& pass) : client(new Client(jid, pass)) {
+		EchoBot(const JID& jid, const String& pass) : tracer(0) {
+			client = new Client(jid, pass);
+			tracer = new ClientXMLTracer(client);
 			client->onConnected.connect(bind(&EchoBot::handleConnected, this));
 			client->onMessageReceived.connect(bind(&EchoBot::handleMessageReceived, this, _1));
 			client->connect();
 		}
 
+		~EchoBot() {
+			delete tracer;
+			delete client;
+		}
+
 	private:
 		void handleConnected() {
-			shared_ptr<GetRosterRequest> rosterRequest(new GetRosterRequest(client.get()));
+			shared_ptr<GetRosterRequest> rosterRequest(new GetRosterRequest(client));
 			rosterRequest->onResponse.connect(bind(&EchoBot::handleRosterReceived, this, _2));
 			rosterRequest->send();
 		}
@@ -36,7 +44,8 @@ class EchoBot {
 		}
 
 	private:
-		std::auto_ptr<Client> client;
+		Client* client;
+		ClientXMLTracer* tracer;
 };
 
 int main(int, char**) {
