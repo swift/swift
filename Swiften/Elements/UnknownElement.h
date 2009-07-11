@@ -4,10 +4,9 @@
 #include "Swiften/Elements/Element.h"
 
 namespace Swift {
-	class UnknownElement : public Element
-	{
-	public:
-		UnknownElement() {}
+	class UnknownElement : public Element {
+		public:
+			UnknownElement() {}
 	};
 }
 

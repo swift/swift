@@ -1,5 +1,4 @@
-#ifndef SWIFTEN_FULLPAYLOADPARSERFACTORYCOLLECTION_H
-#define SWIFTEN_FULLPAYLOADPARSERFACTORYCOLLECTION_H
+#pragma once
 
 #include <boost/shared_ptr.hpp>
 #include <vector>
@@ -15,7 +14,6 @@ namespace Swift {
 
 		private:
 			std::vector< boost::shared_ptr<PayloadParserFactory> > factories_;
+			PayloadParserFactory* defaultFactory_;
 	};
 }
-
-#endif

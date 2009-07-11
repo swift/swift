@@ -11,4 +11,5 @@ UNITTEST_SOURCES += \
 	Swiften/Parser/PayloadParsers/UnitTest/SecurityLabelParserTest.cpp \
 	Swiften/Parser/PayloadParsers/UnitTest/SecurityLabelsCatalogParserTest.cpp \
 	Swiften/Parser/PayloadParsers/UnitTest/VCardUpdateParserTest.cpp \
-	Swiften/Parser/PayloadParsers/UnitTest/VCardParserTest.cpp
+	Swiften/Parser/PayloadParsers/UnitTest/VCardParserTest.cpp \
+	Swiften/Parser/PayloadParsers/UnitTest/RawXMLPayloadParserTest.cpp

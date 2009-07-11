@@ -17,6 +17,7 @@
 #include "Swiften/Serializer/PayloadSerializers/SecurityLabelsCatalogSerializer.h"
 #include "Swiften/Serializer/PayloadSerializers/VCardSerializer.h"
 #include "Swiften/Serializer/PayloadSerializers/VCardUpdateSerializer.h"
+#include "Swiften/Serializer/PayloadSerializers/RawXMLPayloadSerializer.h"
 
 namespace Swift {
 
@@ -37,6 +38,7 @@ FullPayloadSerializerCollection::FullPayloadSerializerCollection() {
 	serializers_.push_back(new SecurityLabelsCatalogSerializer());
 	serializers_.push_back(new VCardSerializer());
 	serializers_.push_back(new VCardUpdateSerializer());
+	serializers_.push_back(new RawXMLPayloadSerializer());
 	foreach(PayloadSerializer* serializer, serializers_) {
 		addSerializer(serializer);
 	}
