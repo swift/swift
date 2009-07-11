@@ -1,0 +1,15 @@
+LIMBER_TARGET = Limber/limber
+LIMBER_SOURCES = \
+	Limber/main.cpp
+LIMBER_OBJECTS = \
+	$(LIMBER_SOURCES:.cpp=.o) \
+
+.PHONY: limber
+limber: $(LIMBER_TARGET)
+
+$(LIMBER_TARGET): $(LIMBER_OBJECTS)
+
+TARGETS += $(LIMBER_TARGET)
+CLEANFILES += $(LIMBER_OBJECTS)
+DEPS += \
+	$(LIMBER_SOURCES:.cpp=.dep) \

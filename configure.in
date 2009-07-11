@@ -58,6 +58,7 @@ case $host in
 esac
 
 AC_CHECK_FILE([Swift/Makefile.inc], [BUILD_SWIFT="yes"], [BUILD_SWIFT="no"])
+AC_CHECK_FILE([Limber/Makefile.inc], [BUILD_LIMBER="yes"], [BUILD_LIMBER="no"])
 
 ################################################################################
 # Configure options
@@ -228,6 +229,7 @@ AC_SUBST(USE_BUNDLED_EXPAT)
 AC_SUBST(CONFIG_HAVE_LIBXML)
 AC_SUBST(QMAKE)
 AC_SUBST(BUILD_SWIFT)
+AC_SUBST(BUILD_LIMBER)
 AC_SUBST(ARCH)
 
 AC_CONFIG_FILES([Makefile.config])

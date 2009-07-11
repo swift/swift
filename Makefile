@@ -41,6 +41,9 @@ include Swiften/Makefile.inc
 ifeq ($(BUILD_SWIFT),yes)
 include Swift/Makefile.inc
 endif
+ifeq ($(BUILD_LIMBER),yes)
+include Limber/Makefile.inc
+endif
 include QA/Makefile.inc
 ################################################################################
 # Main targets
