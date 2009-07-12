@@ -14,12 +14,20 @@
 #include "Swiften/Network/IncomingConnection.h"
 #include "Swiften/Network/ConnectionServer.h"
 #include "Swiften/Network/BoostIOServiceThread.h"
+#include "Swiften/Parser/PayloadParsers/FullPayloadParserFactoryCollection.h"
+#include "Swiften/Serializer/PayloadSerializers/FullPayloadSerializerCollection.h"
 
 using namespace Swift;
 
 class ServerFromClientSession {
 	public:
-		ServerFromClientSession(boost::shared_ptr<IncomingConnection> connection) : connection_(connection) {
+		ServerFromClientSession(
+				boost::shared_ptr<IncomingConnection> connection, 
+				PayloadParserFactoryCollection* payloadParserFactories, 
+				PayloadSerializerCollection* payloadSerializers) : 
+					connection_(connection), 
+					payloadParserFactories_(payloadParserFactories), 
+					payloadSerializers_(payloadSerializers) {
 		}
 
 		void start() {
@@ -31,6 +39,8 @@ class ServerFromClientSession {
 
 	private:
 		boost::shared_ptr<IncomingConnection> connection_;
+		PayloadParserFactoryCollection* payloadParserFactories_;
+		PayloadSerializerCollection* payloadSerializers_;
 };
 
 // A reference-counted non-modifiable buffer class.
@@ -121,7 +131,7 @@ class Server {
 
 	private:
 		void handleNewConnection(boost::shared_ptr<IncomingConnection> c) {
-			ServerFromClientSession* session = new ServerFromClientSession(c);
+			ServerFromClientSession* session = new ServerFromClientSession(c, &payloadParserFactories_, &payloadSerializers_);
 			serverFromClientSessions_.push_back(session);
 			session->onSessionFinished.connect(boost::bind(&Server::handleSessionFinished, this, session));
 			session->start();
@@ -136,6 +146,8 @@ class Server {
 		BoostIOServiceThread boostIOServiceThread_;
 		BoostConnectionServer* serverFromClientConnectionServer_;
 		std::vector<ServerFromClientSession*> serverFromClientSessions_;
+		FullPayloadParserFactoryCollection payloadParserFactories_;
+		FullPayloadSerializerCollection payloadSerializers_;
 };
 
 int main() {
