@@ -6,12 +6,13 @@
 #include "Swiften/Elements/Element.h"
 
 namespace Swift {
-	class XMPPParserClient
-	{
+	class String;
+
+	class XMPPParserClient {
 		public:
 			virtual ~XMPPParserClient();
 
-			virtual void handleStreamStart() = 0;
+			virtual void handleStreamStart(const String& header) = 0;
 			virtual void handleElement(boost::shared_ptr<Element>) = 0;
 			virtual void handleStreamEnd() = 0;
 	};

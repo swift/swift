@@ -56,8 +56,8 @@ void XMPPLayer::doResetParser() {
 	resetParserAfterParse_ = false;
 }
 
-void XMPPLayer::handleStreamStart() {
-	onStreamStart();
+void XMPPLayer::handleStreamStart(const String& domain) {
+	onStreamStart(domain);
 }
 
 void XMPPLayer::handleElement(boost::shared_ptr<Element> stanza) {

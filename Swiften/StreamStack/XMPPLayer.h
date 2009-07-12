@@ -31,14 +31,14 @@ namespace Swift {
 			void resetParser();
 
 		public:
-			boost::signal<void ()> onStreamStart;
+			boost::signal<void (const String& domain)> onStreamStart;
 			boost::signal<void (boost::shared_ptr<Element>)> onElement;
 			boost::signal<void (const ByteArray&)> onWriteData;
 			boost::signal<void (const ByteArray&)> onDataRead;
 			boost::signal<void ()> onError;
 
 		private:
-			void handleStreamStart();
+			void handleStreamStart(const String&);
 			void handleElement(boost::shared_ptr<Element>);
 			void handleStreamEnd();
 

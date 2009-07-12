@@ -11,37 +11,13 @@
 #include "Swiften/Base/ByteArray.h"
 #include "Swiften/EventLoop/MainEventLoop.h"
 #include "Swiften/EventLoop/SimpleEventLoop.h"
-#include "Swiften/Network/IncomingConnection.h"
 #include "Swiften/Network/ConnectionServer.h"
 #include "Swiften/Network/BoostIOServiceThread.h"
+#include "Swiften/Server/ServerFromClientSession.h"
 #include "Swiften/Parser/PayloadParsers/FullPayloadParserFactoryCollection.h"
 #include "Swiften/Serializer/PayloadSerializers/FullPayloadSerializerCollection.h"
 
 using namespace Swift;
-
-class ServerFromClientSession {
-	public:
-		ServerFromClientSession(
-				boost::shared_ptr<IncomingConnection> connection, 
-				PayloadParserFactoryCollection* payloadParserFactories, 
-				PayloadSerializerCollection* payloadSerializers) : 
-					connection_(connection), 
-					payloadParserFactories_(payloadParserFactories), 
-					payloadSerializers_(payloadSerializers) {
-		}
-
-		void start() {
-			connection_->write("Hello\n");
-			onSessionFinished();
-		}
-	
-		boost::signal<void()> onSessionFinished;
-
-	private:
-		boost::shared_ptr<IncomingConnection> connection_;
-		PayloadParserFactoryCollection* payloadParserFactories_;
-		PayloadSerializerCollection* payloadSerializers_;
-};
 
 // A reference-counted non-modifiable buffer class.
 class SharedBuffer {
@@ -134,7 +110,6 @@ class Server {
 			ServerFromClientSession* session = new ServerFromClientSession(c, &payloadParserFactories_, &payloadSerializers_);
 			serverFromClientSessions_.push_back(session);
 			session->onSessionFinished.connect(boost::bind(&Server::handleSessionFinished, this, session));
-			session->start();
 		}
 
 		void handleSessionFinished(ServerFromClientSession* session) {
