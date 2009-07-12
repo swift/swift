@@ -4,6 +4,8 @@ SWIFTEN_SOURCES += \
 	Swiften/Network/ConnectionFactory.cpp \
 	Swiften/Network/BoostConnection.cpp \
 	Swiften/Network/BoostConnectionFactory.cpp \
+	Swiften/Network/ConnectionServer.cpp \
+	Swiften/Network/IncomingConnection.cpp \
 	Swiften/Network/Timer.cpp
 
 include Swiften/Network/UnitTest/Makefile.inc

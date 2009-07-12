@@ -11,6 +11,8 @@
 #include "Swiften/Base/ByteArray.h"
 #include "Swiften/EventLoop/MainEventLoop.h"
 #include "Swiften/EventLoop/SimpleEventLoop.h"
+#include "Swiften/Network/IncomingConnection.h"
+#include "Swiften/Network/ConnectionServer.h"
 
 using namespace Swift;
 
@@ -33,7 +35,7 @@ class SharedBuffer {
 		boost::asio::const_buffer buffer_;
 };
 
-class IncomingBoostConnection : public boost::enable_shared_from_this<IncomingBoostConnection> {
+class IncomingBoostConnection : public IncomingConnection, public boost::enable_shared_from_this<IncomingBoostConnection> {
 	public:
 		typedef boost::shared_ptr<IncomingBoostConnection> pointer;
 
@@ -64,7 +66,6 @@ class IncomingBoostConnection : public boost::enable_shared_from_this<IncomingBo
 		}
 
 		boost::asio::ip::tcp::socket socket_;
-		std::string message_;
 };
 
 class BoostIOServiceThread {
@@ -92,13 +93,11 @@ class BoostIOServiceThread {
 		boost::thread thread_;
 };
 
-class BoostConnectionServer {
+class BoostConnectionServer : public ConnectionServer {
 	public:
 		BoostConnectionServer(int port, boost::asio::io_service& ioService) : acceptor_(ioService, boost::asio::ip::tcp::endpoint(boost::asio::ip::tcp::v4(), port)) {
 			acceptNextConnection();
 		}
-
-		boost::signal<void (IncomingBoostConnection::pointer)> onNewConnection;
 
 	private:
 		// Called from Asio thread
@@ -119,7 +118,7 @@ class BoostConnectionServer {
 		boost::asio::ip::tcp::acceptor acceptor_;
 };
 
-void doSomething(IncomingBoostConnection::pointer c) {
+void doSomething(boost::shared_ptr<IncomingConnection> c) {
 	c->write("Hello\n");
 }
 
