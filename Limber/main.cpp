@@ -13,8 +13,25 @@
 #include "Swiften/EventLoop/SimpleEventLoop.h"
 #include "Swiften/Network/IncomingConnection.h"
 #include "Swiften/Network/ConnectionServer.h"
+#include "Swiften/Network/BoostIOServiceThread.h"
 
 using namespace Swift;
+
+class ServerFromClientSession {
+	public:
+		ServerFromClientSession(boost::shared_ptr<IncomingConnection> connection) : connection_(connection) {
+		}
+
+		void start() {
+			connection_->write("Hello\n");
+			onSessionFinished();
+		}
+	
+		boost::signal<void()> onSessionFinished;
+
+	private:
+		boost::shared_ptr<IncomingConnection> connection_;
+};
 
 // A reference-counted non-modifiable buffer class.
 class SharedBuffer {
@@ -68,31 +85,6 @@ class IncomingBoostConnection : public IncomingConnection, public boost::enable_
 		boost::asio::ip::tcp::socket socket_;
 };
 
-class BoostIOServiceThread {
-	public:
-		BoostIOServiceThread() : thread_(boost::bind(&BoostIOServiceThread::doRun, this)) {
-		}
-
-		~BoostIOServiceThread() {
-			ioService_.stop();
-			thread_.join();
-		}
-
-		boost::asio::io_service& getIOService() {
-			return ioService_;
-		}
-
-	private:
-		void doRun() {
-			boost::asio::io_service::work work(ioService_);
-			ioService_.run();
-		}
-
-	private:
-		boost::asio::io_service ioService_;
-		boost::thread thread_;
-};
-
 class BoostConnectionServer : public ConnectionServer {
 	public:
 		BoostConnectionServer(int port, boost::asio::io_service& ioService) : acceptor_(ioService, boost::asio::ip::tcp::endpoint(boost::asio::ip::tcp::v4(), port)) {
@@ -100,14 +92,12 @@ class BoostConnectionServer : public ConnectionServer {
 		}
 
 	private:
-		// Called from Asio thread
 		void acceptNextConnection() {
 			IncomingBoostConnection::pointer newConnection = IncomingBoostConnection::create(acceptor_.io_service());
 			acceptor_.async_accept(newConnection->getSocket(), 
 				boost::bind(&BoostConnectionServer::handleAccept, this, newConnection, boost::asio::placeholders::error));
 		}
 
-		// Called from Asio thread
 		void handleAccept(IncomingBoostConnection::pointer newConnection, const boost::system::error_code& error) {
 			if (!error) {
 				MainEventLoop::postEvent(boost::bind(boost::ref(onNewConnection), newConnection), this);
@@ -118,15 +108,39 @@ class BoostConnectionServer : public ConnectionServer {
 		boost::asio::ip::tcp::acceptor acceptor_;
 };
 
-void doSomething(boost::shared_ptr<IncomingConnection> c) {
-	c->write("Hello\n");
-}
+class Server {
+	public:
+		Server() {
+			serverFromClientConnectionServer_ = new BoostConnectionServer(5222, boostIOServiceThread_.getIOService());
+			serverFromClientConnectionServer_->onNewConnection.connect(boost::bind(&Server::handleNewConnection, this, _1));
+		}
+
+		~Server() {
+			delete serverFromClientConnectionServer_;
+		}
+
+	private:
+		void handleNewConnection(boost::shared_ptr<IncomingConnection> c) {
+			ServerFromClientSession* session = new ServerFromClientSession(c);
+			serverFromClientSessions_.push_back(session);
+			session->onSessionFinished.connect(boost::bind(&Server::handleSessionFinished, this, session));
+			session->start();
+		}
+
+		void handleSessionFinished(ServerFromClientSession* session) {
+			serverFromClientSessions_.erase(std::remove(serverFromClientSessions_.begin(), serverFromClientSessions_.end(), session), serverFromClientSessions_.end());
+			delete session;
+		}
+
+	private:
+		BoostIOServiceThread boostIOServiceThread_;
+		BoostConnectionServer* serverFromClientConnectionServer_;
+		std::vector<ServerFromClientSession*> serverFromClientSessions_;
+};
 
 int main() {
 	SimpleEventLoop eventLoop;
-	BoostIOServiceThread boostIOServiceThread;
-  BoostConnectionServer server(5222, boostIOServiceThread.getIOService());
-	server.onNewConnection.connect(boost::bind(doSomething, _1));
+	Server server;
 	eventLoop.run();
   return 0;
 }
