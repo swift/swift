@@ -509,7 +509,8 @@ class SessionTest : public CppUnit::TestFixture {
 				parser_ = new XMPPParser(this, &payloadParserFactories_);
 			}
 
-			void handleStreamStart() {
+			void handleStreamStart(const String&, const String& to, const String&) {
+				CPPUNIT_ASSERT_EQUAL(getDomain(), to);
 				handleEvent(Event::StreamStartEvent);
 			}
 
@@ -543,7 +544,7 @@ class SessionTest : public CppUnit::TestFixture {
 			String serializeEvent(const Event& event) {
 				switch (event.type) {
 					case Event::StreamStartEvent: 
-						return serializer_.serializeHeader(getDomain());
+						return serializer_.serializeHeader("", getDomain(), "");
 					case Event::ElementEvent:
 						return serializer_.serializeElement(event.element);
 					case Event::StreamEndEvent:

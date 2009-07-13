@@ -54,7 +54,7 @@ bool XMPPParser::parse(const String& data) {
 void XMPPParser::handleStartElement(const String& element, const String& ns, const AttributeMap& attributes) {
 	if (!inStream()) {
 		if (element == "stream" && ns == "http://etherx.jabber.org/streams") {
-			client_->handleStreamStart(attributes.getAttribute("to"));
+			client_->handleStreamStart(attributes.getAttribute("from"), attributes.getAttribute("to"), attributes.getAttribute("id"));
 		}
 		else {
 			parseErrorOccurred_ = true;

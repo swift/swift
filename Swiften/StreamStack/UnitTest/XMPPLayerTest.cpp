@@ -48,9 +48,9 @@ class XMPPLayerTest : public CppUnit::TestFixture
 			testling_->onElement.connect(boost::bind(&XMPPLayerTest::handleElement, this, _1));
 			testling_->onError.connect(boost::bind(&XMPPLayerTest::handleError, this));
 
-			testling_->parseData("<stream:stream to='example.com' xmlns='jabber:client' xmlns:stream='http://etherx.jabber.org/streams' >");
+			testling_->parseData("<stream:stream to=\"example.com\" xmlns=\"jabber:client\" xmlns:stream=\"http://etherx.jabber.org/streams\" >");
 			testling_->resetParser();
-			testling_->parseData("<stream:stream to='example.com' xmlns='jabber:client' xmlns:stream='http://etherx.jabber.org/streams' >");
+			testling_->parseData("<stream:stream to=\"example.com\" xmlns=\"jabber:client\" xmlns:stream=\"http://etherx.jabber.org/streams\" >");
 			testling_->parseData("<presence/>");
 
 			CPPUNIT_ASSERT_EQUAL(1, elementsReceived_);
@@ -59,8 +59,8 @@ class XMPPLayerTest : public CppUnit::TestFixture
 
 		void testResetParser_FromSlot() {
 			testling_->onElement.connect(boost::bind(&XMPPLayerTest::handleElementAndReset, this, _1));
-			testling_->parseData("<stream:stream to='example.com' xmlns='jabber:client' xmlns:stream='http://etherx.jabber.org/streams' ><presence/>");
-			testling_->parseData("<stream:stream to='example.com' xmlns='jabber:client' xmlns:stream='http://etherx.jabber.org/streams' ><presence/>");
+			testling_->parseData("<stream:stream to=\"example.com\" xmlns=\"jabber:client\" xmlns:stream=\"http://etherx.jabber.org/streams\" ><presence/>");
+			testling_->parseData("<stream:stream to=\"example.com\" xmlns=\"jabber:client\" xmlns:stream=\"http://etherx.jabber.org/streams\" ><presence/>");
 
 			CPPUNIT_ASSERT_EQUAL(2, elementsReceived_);
 			CPPUNIT_ASSERT_EQUAL(0, errorReceived_);
@@ -70,7 +70,7 @@ class XMPPLayerTest : public CppUnit::TestFixture
 			testling_->onWriteData.connect(boost::bind(&XMPPLayerTest::handleWriteData, this, _1));
 			testling_->writeHeader("example.com");
 
-			CPPUNIT_ASSERT_EQUAL(String("<?xml version='1.0'?><stream:stream to='example.com' xmlns='jabber:client' xmlns:stream='http://etherx.jabber.org/streams' version='1.0' >"), dataReceived_);
+			CPPUNIT_ASSERT_EQUAL(String("<?xml version=\"1.0\"?><stream:stream xmlns=\"jabber:client\" xmlns:stream=\"http://etherx.jabber.org/streams\" version=\"1.0\" to=\"example.com\">"), dataReceived_);
 		}
 
 		void testWriteElement() {

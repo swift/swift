@@ -20,8 +20,12 @@ XMPPLayer::~XMPPLayer() {
 	delete xmppParser_;
 }
 
-void XMPPLayer::writeHeader(const String& domain) {
-	onWriteData(ByteArray(xmppSerializer_->serializeHeader(domain)));
+void XMPPLayer::writeHeader(const String& to) {
+	onWriteData(ByteArray(xmppSerializer_->serializeHeader("", to)));
+}
+
+void XMPPLayer::writeHeader(const String& from, const String& id) {
+	onWriteData(ByteArray(xmppSerializer_->serializeHeader(from, "", id)));
 }
 
 void XMPPLayer::writeFooter() {
@@ -56,8 +60,8 @@ void XMPPLayer::doResetParser() {
 	resetParserAfterParse_ = false;
 }
 
-void XMPPLayer::handleStreamStart(const String& domain) {
-	onStreamStart(domain);
+void XMPPLayer::handleStreamStart(const String& from, const String& to, const String& id) {
+	onStreamStart(from, to, id);
 }
 
 void XMPPLayer::handleElement(boost::shared_ptr<Element> stanza) {

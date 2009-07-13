@@ -12,7 +12,7 @@ namespace Swift {
 		public:
 			virtual ~XMPPParserClient();
 
-			virtual void handleStreamStart(const String& header) = 0;
+			virtual void handleStreamStart(const String& from, const String& to, const String& id) = 0;
 			virtual void handleElement(boost::shared_ptr<Element>) = 0;
 			virtual void handleStreamEnd() = 0;
 	};

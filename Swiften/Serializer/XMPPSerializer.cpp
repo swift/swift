@@ -34,8 +34,19 @@ XMPPSerializer::XMPPSerializer(PayloadSerializerCollection* payloadSerializers) 
 	serializers_.push_back(boost::shared_ptr<ElementSerializer>(new StreamFeaturesSerializer()));
 }
 
-String XMPPSerializer::serializeHeader(const String& domain) const {
-	return "<?xml version='1.0'?><stream:stream to='" + domain + "' xmlns='jabber:client' xmlns:stream='http://etherx.jabber.org/streams' version='1.0' >";
+String XMPPSerializer::serializeHeader(const String& from, const String& to, const String& id) const {
+	String result = "<?xml version=\"1.0\"?><stream:stream xmlns=\"jabber:client\" xmlns:stream=\"http://etherx.jabber.org/streams\" version=\"1.0\"";
+	if (!from.isEmpty()) {
+		result += " from=\"" + from + "\"";
+	}
+	if (!to.isEmpty()) {
+		result += " to=\"" + to + "\"";
+	}
+	if (!id.isEmpty()) {
+		result += " id=\"" + id + "\"";
+	}
+	result += ">";
+	return result;
 }
 
 String XMPPSerializer::serializeElement(boost::shared_ptr<Element> element) const {

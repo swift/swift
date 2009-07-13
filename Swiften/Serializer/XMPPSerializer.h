@@ -16,7 +16,7 @@ namespace Swift {
 		public:
 			XMPPSerializer(PayloadSerializerCollection*);
 
-			String serializeHeader(const String& domain) const;
+			String serializeHeader(const String& from, const String& to, const String& id = "") const;
 			String serializeElement(boost::shared_ptr<Element> stanza) const;
 			String serializeFooter() const;
 		

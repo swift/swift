@@ -3,6 +3,8 @@
 #include <boost/shared_ptr.hpp>
 #include <boost/signal.hpp>
 
+#include "Swiften/Base/String.h"
+
 namespace Swift {
 	class Element;
 	class PayloadParserFactoryCollection;
@@ -12,11 +14,11 @@ namespace Swift {
 	class IncomingConnectionLayer;
 	class IncomingConnection;
 	class ByteArray;
-	class String;
 
 	class ServerFromClientSession {
 		public:
 			ServerFromClientSession(
+					const String& id,
 					boost::shared_ptr<IncomingConnection> connection, 
 					PayloadParserFactoryCollection* payloadParserFactories, 
 					PayloadSerializerCollection* payloadSerializers);
@@ -31,11 +33,13 @@ namespace Swift {
 			void handleStreamStart(const String& domain);
 
 		private:
+			String id_;
 			boost::shared_ptr<IncomingConnection> connection_;
 			PayloadParserFactoryCollection* payloadParserFactories_;
 			PayloadSerializerCollection* payloadSerializers_;
 			IncomingConnectionLayer* connectionLayer_;
 			StreamStack* streamStack_;
 			XMPPLayer* xmppLayer_;
+			String domain_;
 	};
 }

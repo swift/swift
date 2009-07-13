@@ -19,6 +19,7 @@ class XMPPParserTest : public CppUnit::TestFixture
 {
 		CPPUNIT_TEST_SUITE(XMPPParserTest);
 		CPPUNIT_TEST(testParse_SimpleSession);
+		CPPUNIT_TEST(testParse_SimpleClientFromServerSession);
 		CPPUNIT_TEST(testParse_Presence);
 		CPPUNIT_TEST(testParse_IQ);
 		CPPUNIT_TEST(testParse_Message);
@@ -43,11 +44,25 @@ class XMPPParserTest : public CppUnit::TestFixture
 
 			CPPUNIT_ASSERT_EQUAL(5, static_cast<int>(client_.events.size()));
 			CPPUNIT_ASSERT_EQUAL(Client::StreamStart, client_.events[0].type);
+			CPPUNIT_ASSERT_EQUAL(String("example.com"), client_.events[0].to); 
 			CPPUNIT_ASSERT_EQUAL(Client::ElementEvent, client_.events[1].type);
 			CPPUNIT_ASSERT_EQUAL(Client::ElementEvent, client_.events[2].type);
 			CPPUNIT_ASSERT_EQUAL(Client::ElementEvent, client_.events[3].type);
 			CPPUNIT_ASSERT_EQUAL(Client::StreamEnd, client_.events[4].type);
 		}
+
+		void testParse_SimpleClientFromServerSession() {
+			XMPPParser testling(&client_, &factories_);
+
+			CPPUNIT_ASSERT(testling.parse("<?xml version='1.0'?>"));
+			CPPUNIT_ASSERT(testling.parse("<stream:stream from='example.com' xmlns='jabber:client' xmlns:stream='http://etherx.jabber.org/streams' id='aeab'>"));
+
+			CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(client_.events.size()));
+			CPPUNIT_ASSERT_EQUAL(Client::StreamStart, client_.events[0].type);
+			CPPUNIT_ASSERT_EQUAL(String("example.com"), client_.events[0].from); 
+			CPPUNIT_ASSERT_EQUAL(String("aeab"), client_.events[0].id); 
+		}
+
 
 		void testParse_Presence() {
 			XMPPParser testling(&client_, &factories_);
@@ -137,17 +152,21 @@ class XMPPParserTest : public CppUnit::TestFixture
 				struct Event {
 					Event(Type type, boost::shared_ptr<Element> element) 
 						: type(type), element(element) {}
+					Event(Type type, const String& from, const String& to, const String& id) : type(type), from(from), to(to), id(id) {}
 
 					Event(Type type) : type(type) {}
 
 					Type type;
+					String from;
+					String to;
+					String id;
 					boost::shared_ptr<Element> element;
 				};
 
 				Client() {}
 
-				void handleStreamStart() {
-					events.push_back(Event(StreamStart));
+				void handleStreamStart(const String& from, const String& to, const String& id) {
+					events.push_back(Event(StreamStart, from, to, id));
 				}
 
 				void handleElement(boost::shared_ptr<Element> element) {

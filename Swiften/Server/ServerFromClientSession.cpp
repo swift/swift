@@ -10,15 +10,17 @@
 namespace Swift {
 
 ServerFromClientSession::ServerFromClientSession(
+		const String& id,
 		boost::shared_ptr<IncomingConnection> connection, 
 		PayloadParserFactoryCollection* payloadParserFactories, 
 		PayloadSerializerCollection* payloadSerializers) : 
+			id_(id),
 			connection_(connection), 
 			payloadParserFactories_(payloadParserFactories), 
 			payloadSerializers_(payloadSerializers) {
 	xmppLayer_ = new XMPPLayer(payloadParserFactories_, payloadSerializers_);
 	xmppLayer_->onStreamStart.connect(
-			boost::bind(&ServerFromClientSession::handleStreamStart, this, _1));
+			boost::bind(&ServerFromClientSession::handleStreamStart, this, _2));
 	xmppLayer_->onElement.connect(
 			boost::bind(&ServerFromClientSession::handleElement, this, _1));
 	//xmppLayer_->onError.connect(
@@ -41,7 +43,8 @@ void ServerFromClientSession::handleElement(boost::shared_ptr<Element>) {
 }
 
 void ServerFromClientSession::handleStreamStart(const String& domain) {
-	xmppLayer_->writeHeader(domain);
+	domain_ = domain;
+	xmppLayer_->writeHeader(domain_, id_);
 }
 
 }

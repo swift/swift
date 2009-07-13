@@ -9,6 +9,7 @@
 #include <boost/thread.hpp>
 
 #include "Swiften/Base/ByteArray.h"
+#include "Swiften/Base/IDGenerator.h"
 #include "Swiften/EventLoop/MainEventLoop.h"
 #include "Swiften/EventLoop/SimpleEventLoop.h"
 #include "Swiften/Network/ConnectionServer.h"
@@ -18,6 +19,8 @@
 #include "Swiften/Serializer/PayloadSerializers/FullPayloadSerializerCollection.h"
 
 using namespace Swift;
+
+static const size_t BUFFER_SIZE = 4096;
 
 // A reference-counted non-modifiable buffer class.
 class SharedBuffer {
@@ -58,17 +61,39 @@ class IncomingBoostConnection : public IncomingConnection, public boost::enable_
 						boost::asio::placeholders::error));
 		}
 
+		void start() {
+			read();
+		}
+
 	private:
-		IncomingBoostConnection(boost::asio::io_service& ioService) : socket_(ioService) {
+		IncomingBoostConnection(boost::asio::io_service& ioService) : socket_(ioService), readBuffer_(BUFFER_SIZE) {
+		}
+
+		void read() {
+			socket_.async_read_some(
+					boost::asio::buffer(readBuffer_),
+					boost::bind(&IncomingBoostConnection::handleDataRead, this, boost::asio::placeholders::error, boost::asio::placeholders::bytes_transferred));
+		}
+
+		void handleDataRead(const boost::system::error_code& error, size_t bytesTransferred) {
+			if (!error) {
+				MainEventLoop::postEvent(boost::bind(boost::ref(onDataRead), ByteArray(&readBuffer_[0], bytesTransferred)), this);
+				read();
+			}
+			else if (error != boost::asio::error::operation_aborted) {
+				//MainEventLoop::postEvent(boost::bind(boost::ref(onError), ReadError), this);
+			}
 		}
 
 		void handleDataWritten(const boost::system::error_code& error) {
-			if (error) {
-				std::cerr << "ERROR: Unable to write data to socket" << std::endl;
+			if (error && error != boost::asio::error::operation_aborted) {
+				//std::cerr << "ERROR: Unable to write data to socket" << std::endl;
+				//MainEventLoop::postEvent(boost::bind(boost::ref(onError), ReadError), this);
 			}
 		}
 
 		boost::asio::ip::tcp::socket socket_;
+		std::vector<char> readBuffer_;
 };
 
 class BoostConnectionServer : public ConnectionServer {
@@ -87,6 +112,7 @@ class BoostConnectionServer : public ConnectionServer {
 		void handleAccept(IncomingBoostConnection::pointer newConnection, const boost::system::error_code& error) {
 			if (!error) {
 				MainEventLoop::postEvent(boost::bind(boost::ref(onNewConnection), newConnection), this);
+				newConnection->start();
 				acceptNextConnection();
 			}
 		}
@@ -107,7 +133,7 @@ class Server {
 
 	private:
 		void handleNewConnection(boost::shared_ptr<IncomingConnection> c) {
-			ServerFromClientSession* session = new ServerFromClientSession(c, &payloadParserFactories_, &payloadSerializers_);
+			ServerFromClientSession* session = new ServerFromClientSession(idGenerator_.generateID(), c, &payloadParserFactories_, &payloadSerializers_);
 			serverFromClientSessions_.push_back(session);
 			session->onSessionFinished.connect(boost::bind(&Server::handleSessionFinished, this, session));
 		}
@@ -118,6 +144,7 @@ class Server {
 		}
 
 	private:
+		IDGenerator idGenerator_;
 		BoostIOServiceThread boostIOServiceThread_;
 		BoostConnectionServer* serverFromClientConnectionServer_;
 		std::vector<ServerFromClientSession*> serverFromClientSessions_;
