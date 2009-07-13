@@ -10,6 +10,7 @@ class VCardParserTest : public CppUnit::TestFixture
 {
 		CPPUNIT_TEST_SUITE(VCardParserTest);
 		CPPUNIT_TEST(testParse_Photo);
+		CPPUNIT_TEST(testParse_Nickname);
 		CPPUNIT_TEST_SUITE_END();
 
 	public:
@@ -33,6 +34,19 @@ class VCardParserTest : public CppUnit::TestFixture
 			VCard* payload = dynamic_cast<VCard*>(testling.getPayload().get());
 			CPPUNIT_ASSERT_EQUAL(String("image/jpeg"), payload->getPhotoType());
 			CPPUNIT_ASSERT_EQUAL(ByteArray("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890"), payload->getPhoto());
+		}
+
+		void testParse_Nickname() {
+			VCardParser testling;
+			PayloadParserTester parser(&testling);
+
+			CPPUNIT_ASSERT(parser.parse(
+				"<vCard xmlns='vcard-temp'>"
+					"<NICKNAME>mynick</NICKNAME>"
+				"</vCard>"));
+
+			VCard* payload = dynamic_cast<VCard*>(testling.getPayload().get());
+			CPPUNIT_ASSERT_EQUAL(String("mynick"), payload->getNickname());
 		}
 };
 

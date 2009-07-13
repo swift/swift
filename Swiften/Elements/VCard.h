@@ -9,6 +9,9 @@ namespace Swift {
 		public:
 			VCard() {}
 
+			void setNickname(const String& nick) { nick_ = nick; }
+			const String& getNickname() const { return nick_; }
+
 			void setPhoto(const ByteArray& photo) { photo_ = photo; }
 			const ByteArray& getPhoto() { return photo_; }
 
@@ -18,5 +21,6 @@ namespace Swift {
 		private:
 			ByteArray photo_;
 			String photoType_;
+			String nick_;
 	};
 }

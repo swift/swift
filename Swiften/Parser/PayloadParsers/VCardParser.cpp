@@ -20,6 +20,9 @@ void VCardParser::handleEndElement(const String&, const String&) {
 	else if (elementHierarchy == "/vCard/PHOTO/BINVAL") {
 		getPayloadInternal()->setPhoto(Base64::decode(currentText_));
 	}
+	else if (elementHierarchy == "/vCard/NICKNAME") {
+		getPayloadInternal()->setNickname(currentText_);
+	}
 	elementStack_.pop_back();
 }
 

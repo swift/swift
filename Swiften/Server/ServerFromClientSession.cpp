@@ -54,7 +54,12 @@ ServerFromClientSession::~ServerFromClientSession() {
 
 void ServerFromClientSession::handleElement(boost::shared_ptr<Element> element) {
 	if (initialized_) {
-		onElementReceived(element);
+		if (boost::shared_ptr<Stanza> stanza = boost::dynamic_pointer_cast<Stanza>(element)) {
+			onStanzaReceived(stanza);
+		}
+		else {
+			std::cerr << "Received unexpected element" << std::endl;
+		}
 	}
 	else {
 		if (AuthRequest* authRequest = dynamic_cast<AuthRequest*>(element.get())) {
@@ -64,8 +69,9 @@ void ServerFromClientSession::handleElement(boost::shared_ptr<Element> element) 
 			}
 			else {
 				PLAINMessage plainMessage(authRequest->getMessage());
-				if (userRegistry_->isValidUserPassword(JID(plainMessage.getAuthenticationID(), domain_), plainMessage.getPassword())) {
+				if (userRegistry_->isValidUserPassword(JID(plainMessage.getAuthenticationID(), domain_.getDomain()), plainMessage.getPassword())) {
 					xmppLayer_->writeElement(boost::shared_ptr<AuthSuccess>(new AuthSuccess()));
+					user_ = plainMessage.getAuthenticationID();
 					authenticated_ = true;
 					xmppLayer_->resetParser();
 				}
@@ -77,7 +83,7 @@ void ServerFromClientSession::handleElement(boost::shared_ptr<Element> element) 
 		}
 		else if (IQ* iq = dynamic_cast<IQ*>(element.get())) {
 			if (boost::shared_ptr<ResourceBind> resourceBind = iq->getPayload<ResourceBind>()) {
-				jid_ = JID(user_, domain_, resourceBind->getResource());
+				jid_ = JID(user_, domain_.getDomain(), resourceBind->getResource());
 				boost::shared_ptr<ResourceBind> resultResourceBind(new ResourceBind());
 				resultResourceBind->setJID(jid_);
 				xmppLayer_->writeElement(IQ::createResult(JID(), iq->getID(), resultResourceBind));
@@ -91,8 +97,8 @@ void ServerFromClientSession::handleElement(boost::shared_ptr<Element> element) 
 }
 
 void ServerFromClientSession::handleStreamStart(const String& domain) {
-	domain_ = domain;
-	xmppLayer_->writeHeader(domain_, id_);
+	domain_ = JID("", domain);
+	xmppLayer_->writeHeader(domain, id_);
 
 	boost::shared_ptr<StreamFeatures> features(new StreamFeatures());
 	if (!authenticated_) {
@@ -104,5 +110,10 @@ void ServerFromClientSession::handleStreamStart(const String& domain) {
 	}
 	xmppLayer_->writeElement(features);
 }
+
+void ServerFromClientSession::sendStanza(boost::shared_ptr<Stanza> stanza) {
+	xmppLayer_->writeElement(stanza);
+}
+
 
 }

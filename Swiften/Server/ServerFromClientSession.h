@@ -8,6 +8,7 @@
 
 namespace Swift {
 	class Element;
+	class Stanza;
 	class PayloadParserFactoryCollection;
 	class PayloadSerializerCollection;
 	class StreamStack;
@@ -27,7 +28,17 @@ namespace Swift {
 					UserRegistry* userRegistry);
 			~ServerFromClientSession();
 
-			boost::signal<void (boost::shared_ptr<Element>)> onElementReceived;
+			void sendStanza(boost::shared_ptr<Stanza>);
+
+			const JID& getJID() const {
+				return jid_;
+			}
+
+			const JID& getDomain() const {
+				return domain_;
+			}
+
+			boost::signal<void (boost::shared_ptr<Stanza>)> onStanzaReceived;
 			boost::signal<void ()> onSessionFinished;
 			boost::signal<void (const ByteArray&)> onDataWritten;
 			boost::signal<void (const ByteArray&)> onDataRead;
@@ -47,7 +58,7 @@ namespace Swift {
 			IncomingConnectionLayer* connectionLayer_;
 			StreamStack* streamStack_;
 			XMPPLayer* xmppLayer_;
-			String domain_;
+			JID domain_;
 			String user_;
 			JID jid_;
 	};
