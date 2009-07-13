@@ -4,12 +4,14 @@
 #include <boost/signal.hpp>
 
 #include "Swiften/Base/String.h"
+#include "Swiften/JID/JID.h"
 
 namespace Swift {
 	class Element;
 	class PayloadParserFactoryCollection;
 	class PayloadSerializerCollection;
 	class StreamStack;
+	class UserRegistry;
 	class XMPPLayer;
 	class IncomingConnectionLayer;
 	class IncomingConnection;
@@ -21,10 +23,12 @@ namespace Swift {
 					const String& id,
 					boost::shared_ptr<IncomingConnection> connection, 
 					PayloadParserFactoryCollection* payloadParserFactories, 
-					PayloadSerializerCollection* payloadSerializers);
+					PayloadSerializerCollection* payloadSerializers,
+					UserRegistry* userRegistry);
 			~ServerFromClientSession();
 
-			boost::signal<void()> onSessionFinished;
+			boost::signal<void (boost::shared_ptr<Element>)> onElementReceived;
+			boost::signal<void ()> onSessionFinished;
 			boost::signal<void (const ByteArray&)> onDataWritten;
 			boost::signal<void (const ByteArray&)> onDataRead;
 
@@ -37,9 +41,14 @@ namespace Swift {
 			boost::shared_ptr<IncomingConnection> connection_;
 			PayloadParserFactoryCollection* payloadParserFactories_;
 			PayloadSerializerCollection* payloadSerializers_;
+			UserRegistry* userRegistry_;
+			bool authenticated_;
+			bool initialized_;
 			IncomingConnectionLayer* connectionLayer_;
 			StreamStack* streamStack_;
 			XMPPLayer* xmppLayer_;
 			String domain_;
+			String user_;
+			JID jid_;
 	};
 }

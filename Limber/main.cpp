@@ -8,6 +8,7 @@
 #include <boost/enable_shared_from_this.hpp>
 #include <boost/thread.hpp>
 
+#include "Swiften/Server/SimpleUserRegistry.h"
 #include "Swiften/Base/ByteArray.h"
 #include "Swiften/Base/IDGenerator.h"
 #include "Swiften/EventLoop/MainEventLoop.h"
@@ -122,7 +123,7 @@ class BoostConnectionServer : public ConnectionServer {
 
 class Server {
 	public:
-		Server() {
+		Server(UserRegistry* userRegistry) : userRegistry_(userRegistry) {
 			serverFromClientConnectionServer_ = new BoostConnectionServer(5222, boostIOServiceThread_.getIOService());
 			serverFromClientConnectionServer_->onNewConnection.connect(boost::bind(&Server::handleNewConnection, this, _1));
 		}
@@ -133,7 +134,7 @@ class Server {
 
 	private:
 		void handleNewConnection(boost::shared_ptr<IncomingConnection> c) {
-			ServerFromClientSession* session = new ServerFromClientSession(idGenerator_.generateID(), c, &payloadParserFactories_, &payloadSerializers_);
+			ServerFromClientSession* session = new ServerFromClientSession(idGenerator_.generateID(), c, &payloadParserFactories_, &payloadSerializers_, userRegistry_);
 			serverFromClientSessions_.push_back(session);
 			session->onSessionFinished.connect(boost::bind(&Server::handleSessionFinished, this, session));
 		}
@@ -145,6 +146,7 @@ class Server {
 
 	private:
 		IDGenerator idGenerator_;
+		UserRegistry* userRegistry_;
 		BoostIOServiceThread boostIOServiceThread_;
 		BoostConnectionServer* serverFromClientConnectionServer_;
 		std::vector<ServerFromClientSession*> serverFromClientSessions_;
@@ -154,7 +156,9 @@ class Server {
 
 int main() {
 	SimpleEventLoop eventLoop;
-	Server server;
+	SimpleUserRegistry userRegistry;
+	userRegistry.addUser(JID("remko@limber"), "pass");
+	Server server(&userRegistry);
 	eventLoop.run();
   return 0;
 }
