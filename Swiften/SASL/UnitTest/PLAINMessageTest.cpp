@@ -8,21 +8,53 @@ using namespace Swift;
 class PLAINMessageTest : public CppUnit::TestFixture
 {
 		CPPUNIT_TEST_SUITE(PLAINMessageTest);
+		CPPUNIT_TEST(testGetValue_WithoutAuthzID);
+		CPPUNIT_TEST(testGetValue_WithAuthzID);
 		CPPUNIT_TEST(testConstructor_WithoutAuthzID);
 		CPPUNIT_TEST(testConstructor_WithAuthzID);
+		CPPUNIT_TEST(testConstructor_NoAuthcid);
+		CPPUNIT_TEST(testConstructor_NoPassword);
 		CPPUNIT_TEST_SUITE_END();
 
 	public:
 		PLAINMessageTest() {}
 
-		void testConstructor_WithoutAuthzID() {
+		void testGetValue_WithoutAuthzID() {
 			PLAINMessage message("user", "pass");
 			CPPUNIT_ASSERT_EQUAL(message.getValue(), ByteArray("\0user\0pass", 10));
 		}
 
-		void testConstructor_WithAuthzID() {
+		void testGetValue_WithAuthzID() {
 			PLAINMessage message("user", "pass", "authz");
 			CPPUNIT_ASSERT_EQUAL(message.getValue(), ByteArray("authz\0user\0pass", 15));
+		}
+
+		void testConstructor_WithoutAuthzID() {
+			PLAINMessage message(ByteArray("\0user\0pass", 10));
+
+			CPPUNIT_ASSERT_EQUAL(String(""), message.getAuthorizationID());
+			CPPUNIT_ASSERT_EQUAL(String("user"), message.getAuthenticationID());
+			CPPUNIT_ASSERT_EQUAL(String("pass"), message.getPassword());
+		}
+
+		void testConstructor_WithAuthzID() {
+			PLAINMessage message(ByteArray("authz\0user\0pass", 15));
+
+			CPPUNIT_ASSERT_EQUAL(String("authz"), message.getAuthorizationID());
+			CPPUNIT_ASSERT_EQUAL(String("user"), message.getAuthenticationID());
+			CPPUNIT_ASSERT_EQUAL(String("pass"), message.getPassword());
+		}
+
+		void testConstructor_NoAuthcid() {
+			PLAINMessage message(ByteArray("authzid", 7));
+
+			CPPUNIT_ASSERT_EQUAL(String(""), message.getAuthenticationID());
+		}
+
+		void testConstructor_NoPassword() {
+			PLAINMessage message(ByteArray("authzid\0authcid", 15));
+
+			CPPUNIT_ASSERT_EQUAL(String(""), message.getAuthenticationID());
 		}
 };
 

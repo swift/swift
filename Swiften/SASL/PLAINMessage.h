@@ -1,22 +1,31 @@
-#ifndef SASL_PLAINMESSAGE_H
-#define SASL_PLAINMESSAGE_H
+#pragma once
 
 #include "Swiften/Base/String.h"
 #include "Swiften/Base/ByteArray.h"
 
 namespace Swift {
-	class PLAINMessage
-	{
+	class PLAINMessage {
 		public:
 			PLAINMessage(const String& authcid, const String& password, const String& authzid = "");
+			PLAINMessage(const ByteArray& value);
 
-			const ByteArray& getValue() {
-				return value_;
+			ByteArray getValue() const;
+
+			const String& getAuthenticationID() const {
+				return authcid;
+			}
+
+			const String& getPassword() const {
+				return password;
+			}
+
+			const String& getAuthorizationID() const {
+				return authzid;
 			}
 
 		private:
-			ByteArray value_;
+			String authcid;
+			String authzid;
+			String password;
 	};
 }
-
-#endif
