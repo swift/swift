@@ -1,5 +1,6 @@
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/extensions/TestFactoryRegistry.h>
+#include <boost/shared_ptr.hpp>
 
 #include "Swiften/Base/String.h"
 #include "Swiften/Base/sleep.h"
@@ -31,14 +32,14 @@ class BoostConnectionTest : public CppUnit::TestFixture {
 		void testDestructor() {
 			{
 				std::string domain("el-tramo.be");
-				std::auto_ptr<BoostConnection> testling(new BoostConnection(&boostIOServiceThread_->getIOService()));
+				boost::shared_ptr<BoostConnection> testling(new BoostConnection(&boostIOServiceThread_->getIOService()));
 				testling->connect(domain);
 			}
 		}
 
 		void testDestructor_PendingEvents() {
 			{
-				std::auto_ptr<BoostConnection> testling(new BoostConnection(&boostIOServiceThread_->getIOService()));
+				boost::shared_ptr<BoostConnection> testling(new BoostConnection(&boostIOServiceThread_->getIOService()));
 				testling->connect("el-tramo.be");
 				while (!eventLoop_->hasEvents()) {
 					Swift::sleep(10);

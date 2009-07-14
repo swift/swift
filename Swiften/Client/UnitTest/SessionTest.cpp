@@ -428,7 +428,7 @@ class SessionTest : public CppUnit::TestFixture {
 	private:
 		struct MockConnection;
 
-		MockConnection* getMockServer() const {
+		boost::shared_ptr<MockConnection> getMockServer() const {
 			CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(connectionFactory_->connections_.size()));
 			return connectionFactory_->connections_[0];
 		}
@@ -689,15 +689,15 @@ class SessionTest : public CppUnit::TestFixture {
 
 		struct MockConnectionFactory : public ConnectionFactory {
 			MockConnectionFactory() : fail_(false) {}
-			MockConnection* createConnection() {
-				MockConnection* result = new MockConnection(fail_);
+			boost::shared_ptr<Connection> createConnection() {
+				boost::shared_ptr<MockConnection> result(new MockConnection(fail_));
 				connections_.push_back(result);
 				return result;
 			}
 			void setCreateFailingConnections() {
 				fail_ = true;
 			}
-			std::vector<MockConnection*> connections_;
+			std::vector<boost::shared_ptr<MockConnection> > connections_;
 			bool fail_;
 		};
 

@@ -1,5 +1,6 @@
-#ifndef SWIFTEN_ConnectionFactory_H
-#define SWIFTEN_ConnectionFactory_H
+#pragma once
+
+#include <boost/shared_ptr.hpp>
 
 namespace Swift {
 	class Connection;
@@ -8,8 +9,6 @@ namespace Swift {
 		public:
 			virtual ~ConnectionFactory();
 
-			virtual Connection* createConnection() = 0;
+			virtual boost::shared_ptr<Connection> createConnection() = 0;
 	};
 }
-
-#endif

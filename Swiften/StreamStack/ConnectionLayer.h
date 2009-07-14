@@ -1,7 +1,7 @@
-#ifndef SWIFTEN_CONNECTIONLAYER_H
-#define SWIFTEN_CONNECTIONLAYER_H
+#pragma once
 
 #include <boost/signal.hpp>
+#include <boost/shared_ptr.hpp>
 
 #include "Swiften/StreamStack/LowLayer.h"
 #include "Swiften/Network/Connection.h"
@@ -9,17 +9,15 @@
 namespace Swift {
 	class ConnectionLayer : public LowLayer {
 		public:
-			ConnectionLayer(Connection* connection) : connection_(connection) {
-				connection_->onDataRead.connect(onDataRead);
+			ConnectionLayer(boost::shared_ptr<Connection> connection) : connection(connection) {
+				connection->onDataRead.connect(onDataRead);
 			}
 
 			void writeData(const ByteArray& data) {
-				connection_->write(data);
+				connection->write(data);
 			}
 
 		private:
-			Connection* connection_;
+			boost::shared_ptr<Connection> connection;
 	};
 }
-
-#endif

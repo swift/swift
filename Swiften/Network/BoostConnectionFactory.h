@@ -1,5 +1,4 @@
-#ifndef SWIFTEN_BoostConnectionFactory_H
-#define SWIFTEN_BoostConnectionFactory_H
+#pragma once
 
 #include <boost/asio.hpp>
 
@@ -13,11 +12,9 @@ namespace Swift {
 		public:
 			BoostConnectionFactory(boost::asio::io_service*);
 
-			virtual BoostConnection* createConnection();
+			virtual boost::shared_ptr<Connection> createConnection();
 
 		private:
 			boost::asio::io_service* ioService;
 	};
 }
-
-#endif

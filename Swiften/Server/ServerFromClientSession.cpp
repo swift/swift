@@ -42,7 +42,7 @@ ServerFromClientSession::ServerFromClientSession(
 			boost::bind(boost::ref(onDataRead), _1));
 	xmppLayer_->onWriteData.connect(
 			boost::bind(boost::ref(onDataWritten), _1));
-	connectionLayer_ = new ConnectionLayer(connection_.get());
+	connectionLayer_ = new ConnectionLayer(connection_);
 	streamStack_ = new StreamStack(xmppLayer_, connectionLayer_);
 }
 

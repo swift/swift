@@ -112,7 +112,7 @@ namespace Swift {
 			PayloadSerializerCollection* payloadSerializers_;
 			State state_;
 			SessionError error_;
-			Connection* connection_;
+			boost::shared_ptr<Connection> connection_;
 			XMPPLayer* xmppLayer_;
 			TLSLayer* tlsLayer_;
 			ConnectionLayer* connectionLayer_;

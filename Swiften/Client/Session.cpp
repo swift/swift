@@ -31,7 +31,6 @@ Session::Session(const JID& jid, ConnectionFactory* connectionFactory, TLSLayerF
 		payloadSerializers_(payloadSerializers),
 		state_(Initial), 
 		error_(NoError),
-		connection_(0),
 		xmppLayer_(0), 
 		tlsLayer_(0),
 		connectionLayer_(0), 
@@ -46,7 +45,6 @@ Session::~Session() {
 	delete connectionLayer_;
 	delete tlsLayer_;
 	delete xmppLayer_;
-	delete connection_;
 }
 
 void Session::start() {
