@@ -3,9 +3,9 @@
 #include <boost/bind.hpp>
 
 #include "Swiften/Server/UserRegistry.h"
-#include "Swiften/Network/IncomingConnection.h"
+#include "Swiften/Network/Connection.h"
 #include "Swiften/StreamStack/StreamStack.h"
-#include "Swiften/StreamStack/IncomingConnectionLayer.h"
+#include "Swiften/StreamStack/ConnectionLayer.h"
 #include "Swiften/StreamStack/XMPPLayer.h"
 #include "Swiften/Elements/StreamFeatures.h"
 #include "Swiften/Elements/ResourceBind.h"
@@ -20,7 +20,7 @@ namespace Swift {
 
 ServerFromClientSession::ServerFromClientSession(
 		const String& id,
-		boost::shared_ptr<IncomingConnection> connection, 
+		boost::shared_ptr<Connection> connection, 
 		PayloadParserFactoryCollection* payloadParserFactories, 
 		PayloadSerializerCollection* payloadSerializers,
 		UserRegistry* userRegistry) : 
@@ -42,7 +42,7 @@ ServerFromClientSession::ServerFromClientSession(
 			boost::bind(boost::ref(onDataRead), _1));
 	xmppLayer_->onWriteData.connect(
 			boost::bind(boost::ref(onDataWritten), _1));
-	connectionLayer_ = new IncomingConnectionLayer(connection_.get());
+	connectionLayer_ = new ConnectionLayer(connection_.get());
 	streamStack_ = new StreamStack(xmppLayer_, connectionLayer_);
 }
 

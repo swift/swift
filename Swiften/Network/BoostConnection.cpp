@@ -14,51 +14,65 @@ namespace Swift {
 
 static const size_t BUFFER_SIZE = 4096;
 
-BoostConnection::BoostConnection(const String& domain) :
-		Connection(domain), ioService_(0), thread_(0), socket_(0), readBuffer_(BUFFER_SIZE) {
-  ioService_ = new boost::asio::io_service();
+// -----------------------------------------------------------------------------
+
+// A reference-counted non-modifiable buffer class.
+class SharedBuffer {
+	public:
+		SharedBuffer(const ByteArray& data) : 
+				data_(new std::vector<char>(data.begin(), data.end())),
+				buffer_(boost::asio::buffer(*data_)) {
+		}
+
+		// ConstBufferSequence requirements.
+		typedef boost::asio::const_buffer value_type;
+		typedef const boost::asio::const_buffer* const_iterator;
+		const boost::asio::const_buffer* begin() const { return &buffer_; }
+		const boost::asio::const_buffer* end() const { return &buffer_ + 1; }
+
+	private:
+		boost::shared_ptr< std::vector<char> > data_;
+		boost::asio::const_buffer buffer_;
+};
+
+// -----------------------------------------------------------------------------
+
+BoostConnection::BoostConnection(boost::asio::io_service* ioService) :
+		socket_(*ioService), readBuffer_(BUFFER_SIZE) {
 }
 
 BoostConnection::~BoostConnection() {
 	MainEventLoop::removeEventsFromOwner(this);
-  ioService_->stop();
-  thread_->join();
-	delete socket_;
-	delete thread_;
-	delete ioService_;
 }
 
-void BoostConnection::connect() {
-	thread_ = new boost::thread(boost::bind(&BoostConnection::doConnect, this));
+void BoostConnection::listen() {
+	doRead();
+}
+
+void BoostConnection::connect(const String& domain) {
+	DomainNameResolver resolver;
+	try {
+		HostAddressPort addressPort = resolver.resolve(domain.getUTF8String());
+		boost::asio::ip::tcp::endpoint endpoint(	
+				boost::asio::ip::address::from_string(addressPort.getAddress().toString()), addressPort.getPort());
+		// Use shared_from_this
+		socket_.async_connect(
+				endpoint,
+				boost::bind(&BoostConnection::handleConnectFinished, this, boost::asio::placeholders::error));
+	}
+	catch (const DomainNameResolveException& e) {
+		onError(DomainNameResolveError);
+	}
 }
 
 void BoostConnection::disconnect() {
-	if (ioService_) {
-		ioService_->post(boost::bind(&BoostConnection::doDisconnect, this));
-	}
+	socket_.close();
 }
 
 void BoostConnection::write(const ByteArray& data) {
-	if (ioService_) {
-		ioService_->post(boost::bind(&BoostConnection::doWrite, this, data));
-	}
-}
-
-void BoostConnection::doConnect() {
-	DomainNameResolver resolver;
-	try {
-		HostAddressPort addressPort = resolver.resolve(getDomain().getUTF8String());
-		socket_ = new boost::asio::ip::tcp::socket(*ioService_);
-		boost::asio::ip::tcp::endpoint endpoint(	
-				boost::asio::ip::address::from_string(addressPort.getAddress().toString()), addressPort.getPort());
-		socket_->async_connect(
-				endpoint,
-				boost::bind(&BoostConnection::handleConnectFinished, this, boost::asio::placeholders::error));
-		ioService_->run();
-	}
-	catch (const DomainNameResolveException& e) {
-		MainEventLoop::postEvent(boost::bind(boost::ref(onError), DomainNameResolveError), this);
-	}
+	// Use shared_from_this
+	boost::asio::async_write(socket_, SharedBuffer(data),
+			boost::bind(&BoostConnection::handleDataWritten, this, boost::asio::placeholders::error));
 }
 
 void BoostConnection::handleConnectFinished(const boost::system::error_code& error) {
@@ -72,13 +86,10 @@ void BoostConnection::handleConnectFinished(const boost::system::error_code& err
 }
 
 void BoostConnection::doRead() {
-	socket_->async_read_some(
-	    boost::asio::buffer(readBuffer_),
+	// Use shared_from_this
+	socket_.async_read_some(
+			boost::asio::buffer(readBuffer_),
 			boost::bind(&BoostConnection::handleSocketRead, this, boost::asio::placeholders::error, boost::asio::placeholders::bytes_transferred));
-}
-
-void BoostConnection::doWrite(const ByteArray& data) {
-	boost::asio::write(*socket_, boost::asio::buffer(static_cast<const char*>(data.getData()), data.getSize()));
 }
 
 void BoostConnection::handleSocketRead(const boost::system::error_code& error, size_t bytesTransferred) {
@@ -91,9 +102,9 @@ void BoostConnection::handleSocketRead(const boost::system::error_code& error, s
 	}
 }
 
-void BoostConnection::doDisconnect() {
-	if (socket_) {
-		socket_->close();
+void BoostConnection::handleDataWritten(const boost::system::error_code& error) {
+	if (error && error != boost::asio::error::operation_aborted) {
+		MainEventLoop::postEvent(boost::bind(boost::ref(onError), WriteError), this);
 	}
 }
 

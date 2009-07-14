@@ -12,13 +12,15 @@ namespace Swift {
 			enum Error {
 				DomainNameResolveError,
 				ConnectionError,
-				ReadError
+				ReadError,
+				WriteError
 			};
 
-			Connection(const String& domain) : domain_(domain) {}
+			Connection() {}
 			virtual ~Connection() {}
 
-			virtual void connect() = 0;
+			virtual void listen() = 0;
+			virtual void connect(const String& domain) = 0;
 			virtual void disconnect() = 0;
 			virtual void write(const ByteArray& data) = 0;
 
@@ -26,14 +28,6 @@ namespace Swift {
 			boost::signal<void ()> onConnected;
 			boost::signal<void (Error)> onError;
 			boost::signal<void (const ByteArray&)> onDataRead;
-
-		protected:
-			const String& getDomain() const {
-				return domain_;
-			}
-
-		private:
-			String domain_;
 	};
 }
 

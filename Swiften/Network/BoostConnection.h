@@ -1,5 +1,4 @@
-#ifndef SWIFTEN_BoostConnection_H
-#define SWIFTEN_BoostConnection_H
+#pragma once
 
 #include <boost/asio.hpp>
 
@@ -15,29 +14,27 @@ namespace boost {
 namespace Swift {
 	class BoostConnection : public Connection {
 		public:
-			BoostConnection(const String& domain);
+			BoostConnection(boost::asio::io_service* ioService);
 			~BoostConnection();
 
-			virtual void connect();
+			virtual void listen();
+			virtual void connect(const String& domain);
 			virtual void disconnect();
 			virtual void write(const ByteArray& data);
 
-		private:
-			void doConnect();
-			void doDisconnect();
+			boost::asio::ip::tcp::socket& getSocket() {
+				return socket_;
+			}
 
+		private:
 			void handleConnectFinished(const boost::system::error_code& error);
 			void handleSocketRead(const boost::system::error_code& error, size_t bytesTransferred);
+			void handleDataWritten(const boost::system::error_code& error);
 			void doRead();
-			void doWrite(const ByteArray&);
 
 		private:
-			boost::asio::io_service* ioService_;
-			boost::thread* thread_;
-			boost::asio::ip::tcp::socket* socket_;
+			boost::asio::ip::tcp::socket socket_;
 			std::vector<char> readBuffer_;
 			bool disconnecting_;
 	};
 }
-
-#endif

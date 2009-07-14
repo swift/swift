@@ -209,6 +209,7 @@ void MainController::handleError(const ClientError& error) {
 		case ClientError::DomainNameResolveError: message = "Unable to find server"; break;
 		case ClientError::ConnectionError: message = "Error connecting to server"; break;
 		case ClientError::ConnectionReadError: message = "Error while receiving server data"; break;
+		case ClientError::ConnectionWriteError: message = "Error while sending data to the server"; break;
 		case ClientError::XMLError: message = "Error parsing server data"; break;
 		case ClientError::AuthenticationFailedError: message = "Login/password invalid"; break;
 		case ClientError::NoSupportedAuthMechanismsError: message = "Authentication mechanisms not supported"; break;

@@ -57,9 +57,9 @@ class SessionTest : public CppUnit::TestFixture {
 		CPPUNIT_TEST(testSessionStart);
 		CPPUNIT_TEST(testSessionStart_Error);
 		CPPUNIT_TEST(testSessionStart_AfterResourceBind);
-    CPPUNIT_TEST(testWhitespacePing);
+		CPPUNIT_TEST(testWhitespacePing);
 		CPPUNIT_TEST(testReceiveElementAfterSessionStarted);
-    CPPUNIT_TEST(testSendElement);
+		CPPUNIT_TEST(testSendElement);
 		CPPUNIT_TEST_SUITE_END();
 
 	public:
@@ -74,8 +74,8 @@ class SessionTest : public CppUnit::TestFixture {
 		}
 
 		void tearDown() {
-      delete tlsLayerFactory_;
-      delete connectionFactory_;
+			delete tlsLayerFactory_;
+			delete connectionFactory_;
 			delete eventLoop_;
 		}
 
@@ -250,7 +250,7 @@ class SessionTest : public CppUnit::TestFixture {
 			CPPUNIT_ASSERT_EQUAL(Session::Negotiating, session->getState());
 		}
 
-    void testAuthenticate_Unauthorized() {
+		void testAuthenticate_Unauthorized() {
 			std::auto_ptr<MockSession> session(createSession("me@foo.com/Bar"));
 			session->start();
 			getMockServer()->expectStreamStart();
@@ -265,9 +265,9 @@ class SessionTest : public CppUnit::TestFixture {
 
 			CPPUNIT_ASSERT_EQUAL(Session::Error, session->getState());
 			CPPUNIT_ASSERT_EQUAL(Session::AuthenticationFailedError, session->getError());
-    }
+		}
 
-    void testAuthenticate_NoValidAuthMechanisms() {
+		void testAuthenticate_NoValidAuthMechanisms() {
 			std::auto_ptr<MockSession> session(createSession("me@foo.com/Bar"));
 			session->start();
 			getMockServer()->expectStreamStart();
@@ -277,7 +277,7 @@ class SessionTest : public CppUnit::TestFixture {
 
 			CPPUNIT_ASSERT_EQUAL(Session::Error, session->getState());
 			CPPUNIT_ASSERT_EQUAL(Session::NoSupportedAuthMechanismsError, session->getError());
-    }
+		}
 
 		void testResourceBind() {
 			std::auto_ptr<MockSession> session(createSession("me@foo.com/Bar"));
@@ -389,7 +389,7 @@ class SessionTest : public CppUnit::TestFixture {
 			CPPUNIT_ASSERT(sessionStarted_);
 		}
 
-    void testWhitespacePing() {
+		void testWhitespacePing() {
 			std::auto_ptr<MockSession> session(createSession("me@foo.com/Bar"));
 			session->start();
 			getMockServer()->expectStreamStart();
@@ -397,7 +397,7 @@ class SessionTest : public CppUnit::TestFixture {
 			getMockServer()->sendStreamFeatures();
 			processEvents();
 			CPPUNIT_ASSERT(session->getWhitespacePingLayer());
-    }
+		}
 
 		void testReceiveElementAfterSessionStarted() {
 			std::auto_ptr<MockSession> session(createSession("me@foo.com/Bar"));
@@ -407,11 +407,11 @@ class SessionTest : public CppUnit::TestFixture {
 			getMockServer()->sendStreamFeatures();
 			processEvents();
 
-      getMockServer()->expectMessage();
-      session->sendElement(boost::shared_ptr<Message>(new Message()));
+			getMockServer()->expectMessage();
+			session->sendElement(boost::shared_ptr<Message>(new Message()));
 		}
 
-    void testSendElement() {
+		void testSendElement() {
 			std::auto_ptr<MockSession> session(createSession("me@foo.com/Bar"));
 			session->onElementReceived.connect(boost::bind(&SessionTest::addReceivedElement, this, _1));
 			session->start();
@@ -421,9 +421,9 @@ class SessionTest : public CppUnit::TestFixture {
 			getMockServer()->sendMessage();
 			processEvents();
 
-      CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(receivedElements_.size()));
-      CPPUNIT_ASSERT(boost::dynamic_pointer_cast<Message>(receivedElements_[0]));
-    }
+			CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(receivedElements_.size()));
+			CPPUNIT_ASSERT(boost::dynamic_pointer_cast<Message>(receivedElements_[0]));
+		}
 
 	private:
 		struct MockConnection;
@@ -446,9 +446,9 @@ class SessionTest : public CppUnit::TestFixture {
 			needCredentials_ = true;
 		}
 
-    void addReceivedElement(boost::shared_ptr<Element> element) {
-      receivedElements_.push_back(element);
-    }
+		void addReceivedElement(boost::shared_ptr<Element> element) {
+			receivedElements_.push_back(element);
+		}
 	
 	private:
 		struct MockConnection : public Connection, public XMPPParserClient {
@@ -463,12 +463,11 @@ class SessionTest : public CppUnit::TestFixture {
 						direction(direction), type(type), element(element) {}
 
 				Direction direction;
-				Type  type;
+				Type	type;
 				boost::shared_ptr<Element> element;
 			};
 
-			MockConnection(const String& domain, bool fail) : 
-					Connection(domain), 
+			MockConnection(bool fail) : 
 					fail_(fail), 
 					resetParser_(false),
 					parser_(0),
@@ -476,18 +475,23 @@ class SessionTest : public CppUnit::TestFixture {
 				parser_ = new XMPPParser(this, &payloadParserFactories_);
 			}
 
-      ~MockConnection() {
-        delete parser_;
-      }
+			~MockConnection() {
+				delete parser_;
+			}
 
 			void disconnect() {
 			}
 
-			void connect() {
+			void listen() {
+				assert(false);
+			}
+
+			void connect(const String& domain) {
 				if (fail_) {
 					MainEventLoop::postEvent(boost::bind(boost::ref(onError), Connection::ConnectionError));
 				}
 				else {
+					domain_ = domain;
 					MainEventLoop::postEvent(boost::bind(boost::ref(onConnected)));
 				}
 			}
@@ -510,7 +514,7 @@ class SessionTest : public CppUnit::TestFixture {
 			}
 
 			void handleStreamStart(const String&, const String& to, const String&) {
-				CPPUNIT_ASSERT_EQUAL(getDomain(), to);
+				CPPUNIT_ASSERT_EQUAL(domain_, to);
 				handleEvent(Event::StreamStartEvent);
 			}
 
@@ -544,7 +548,7 @@ class SessionTest : public CppUnit::TestFixture {
 			String serializeEvent(const Event& event) {
 				switch (event.type) {
 					case Event::StreamStartEvent: 
-						return serializer_.serializeHeader("", getDomain(), "");
+						return serializer_.serializeHeader("", domain_, "");
 					case Event::ElementEvent:
 						return serializer_.serializeElement(event.element);
 					case Event::StreamEndEvent:
@@ -571,7 +575,7 @@ class SessionTest : public CppUnit::TestFixture {
 			}
 
 			void expectAuth(const String& user, const String& password) {
-				String s  = String("") + '\0' + user + '\0' + password;
+				String s	= String("") + '\0' + user + '\0' + password;
 				events_.push_back(Event(Event::In, Event::ElementEvent, boost::shared_ptr<AuthRequest>(new AuthRequest("PLAIN", ByteArray(s.getUTF8Data(), s.getUTF8Size())))));
 			}
 
@@ -584,10 +588,10 @@ class SessionTest : public CppUnit::TestFixture {
 			void expectSessionStart(const String& id) {
 				events_.push_back(Event(Event::In, Event::ElementEvent, IQ::createRequest(IQ::Set, JID(), id, boost::shared_ptr<StartSession>(new StartSession()))));
 			}
-      
-      void expectMessage() {
+			
+			void expectMessage() {
 				events_.push_back(Event(Event::In, Event::ElementEvent, boost::shared_ptr<Message>(new Message())));
-      }
+			}
 
 			void sendInvalidXML() {
 				sendData("<invalid xml/>");
@@ -675,6 +679,7 @@ class SessionTest : public CppUnit::TestFixture {
 
 			bool fail_;
 			bool resetParser_;
+			String domain_;
 			FullPayloadParserFactoryCollection payloadParserFactories_;
 			FullPayloadSerializerCollection payloadSerializers_;
 			XMPPParser* parser_;
@@ -684,8 +689,8 @@ class SessionTest : public CppUnit::TestFixture {
 
 		struct MockConnectionFactory : public ConnectionFactory {
 			MockConnectionFactory() : fail_(false) {}
-			MockConnection* createConnection(const String& domain) {
-				MockConnection* result = new MockConnection(domain, fail_);
+			MockConnection* createConnection() {
+				MockConnection* result = new MockConnection(fail_);
 				connections_.push_back(result);
 				return result;
 			}
@@ -746,7 +751,7 @@ class SessionTest : public CppUnit::TestFixture {
 		FullPayloadSerializerCollection payloadSerializers_;
 		bool sessionStarted_;
 		bool needCredentials_;
-    std::vector< boost::shared_ptr<Element> > receivedElements_;
+		std::vector< boost::shared_ptr<Element> > receivedElements_;
 		typedef std::vector< boost::function<void ()> > EventQueue;
 		EventQueue events_;
 };

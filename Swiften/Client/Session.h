@@ -43,6 +43,7 @@ namespace Swift {
 				DomainNameResolveError,
 				ConnectionError,
 				ConnectionReadError,
+				ConnectionWriteError,
 				XMLError,
 				AuthenticationFailedError,
 				NoSupportedAuthMechanismsError,

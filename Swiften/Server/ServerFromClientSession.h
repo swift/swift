@@ -14,15 +14,15 @@ namespace Swift {
 	class StreamStack;
 	class UserRegistry;
 	class XMPPLayer;
-	class IncomingConnectionLayer;
-	class IncomingConnection;
+	class ConnectionLayer;
+	class Connection;
 	class ByteArray;
 
 	class ServerFromClientSession {
 		public:
 			ServerFromClientSession(
 					const String& id,
-					boost::shared_ptr<IncomingConnection> connection, 
+					boost::shared_ptr<Connection> connection, 
 					PayloadParserFactoryCollection* payloadParserFactories, 
 					PayloadSerializerCollection* payloadSerializers,
 					UserRegistry* userRegistry);
@@ -49,13 +49,13 @@ namespace Swift {
 
 		private:
 			String id_;
-			boost::shared_ptr<IncomingConnection> connection_;
+			boost::shared_ptr<Connection> connection_;
 			PayloadParserFactoryCollection* payloadParserFactories_;
 			PayloadSerializerCollection* payloadSerializers_;
 			UserRegistry* userRegistry_;
 			bool authenticated_;
 			bool initialized_;
-			IncomingConnectionLayer* connectionLayer_;
+			ConnectionLayer* connectionLayer_;
 			StreamStack* streamStack_;
 			XMPPLayer* xmppLayer_;
 			JID domain_;

@@ -2,11 +2,11 @@
 
 namespace Swift {
 
-BoostConnectionFactory::BoostConnectionFactory() {
+BoostConnectionFactory::BoostConnectionFactory(boost::asio::io_service* ioService) : ioService(ioService) {
 }
 
-BoostConnection* BoostConnectionFactory::createConnection(const String& domain) {
-	return new BoostConnection(domain);
+BoostConnection* BoostConnectionFactory::createConnection() {
+	return new BoostConnection(ioService);
 }
 
 }

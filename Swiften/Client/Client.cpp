@@ -11,14 +11,14 @@ namespace Swift {
 
 Client::Client(const JID& jid, const String& password) :
 		IQRouter(this), jid_(jid), password_(password), session_(0) {
-	connectionFactory_ = new BoostConnectionFactory();
+	connectionFactory_ = new BoostConnectionFactory(&boostIOServiceThread_.getIOService());
 	tlsLayerFactory_ = new PlatformTLSLayerFactory();
 }
 
 Client::~Client() {
 	delete session_;
 	delete tlsLayerFactory_;
-  delete connectionFactory_;
+	delete connectionFactory_;
 }
 
 void Client::connect() {
@@ -100,6 +100,9 @@ void Client::handleSessionError(Session::SessionError error) {
 			break;
 		case Session::ConnectionReadError:
 			clientError = ClientError(ClientError::ConnectionReadError);
+			break;
+		case Session::ConnectionWriteError:
+			clientError = ClientError(ClientError::ConnectionWriteError);
 			break;
 		case Session::XMLError:
 			clientError = ClientError(ClientError::XMLError);

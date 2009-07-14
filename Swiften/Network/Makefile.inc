@@ -5,7 +5,6 @@ SWIFTEN_SOURCES += \
 	Swiften/Network/BoostConnection.cpp \
 	Swiften/Network/BoostConnectionFactory.cpp \
 	Swiften/Network/ConnectionServer.cpp \
-	Swiften/Network/IncomingConnection.cpp \
 	Swiften/Network/BoostIOServiceThread.cpp \
 	Swiften/Network/Timer.cpp
 

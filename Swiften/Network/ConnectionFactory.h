@@ -2,14 +2,13 @@
 #define SWIFTEN_ConnectionFactory_H
 
 namespace Swift {
-	class String;
 	class Connection;
 
 	class ConnectionFactory {
 		public:
 			virtual ~ConnectionFactory();
 
-			virtual Connection* createConnection(const String& domain) = 0;
+			virtual Connection* createConnection() = 0;
 	};
 }
 

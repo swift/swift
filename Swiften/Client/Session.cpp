@@ -52,10 +52,10 @@ Session::~Session() {
 void Session::start() {
 	assert(state_ == Initial);
 	state_ = Connecting;
-	connection_ = connectionFactory_->createConnection(jid_.getDomain());
+	connection_ = connectionFactory_->createConnection();
 	connection_->onConnected.connect(boost::bind(&Session::handleConnected, this));
 	connection_->onError.connect(boost::bind(&Session::handleConnectionError, this, _1));
-	connection_->connect();
+	connection_->connect(jid_.getDomain());
 }
 
 void Session::stop() {
@@ -92,6 +92,9 @@ void Session::handleConnectionError(Connection::Error error) {
 			break;
 		case Connection::ReadError:
 			setError(ConnectionReadError);
+			break;
+		case Connection::WriteError:
+			setError(ConnectionWriteError);
 			break;
 		case Connection::ConnectionError:
 			setError(ConnectionError);
