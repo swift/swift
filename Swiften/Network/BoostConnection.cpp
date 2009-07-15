@@ -42,7 +42,7 @@ BoostConnection::BoostConnection(boost::asio::io_service* ioService) :
 }
 
 BoostConnection::~BoostConnection() {
-	MainEventLoop::removeEventsFromOwner(this);
+	MainEventLoop::removeEventsFromOwner(shared_from_this());
 }
 
 void BoostConnection::listen() {
@@ -55,10 +55,9 @@ void BoostConnection::connect(const String& domain) {
 		HostAddressPort addressPort = resolver.resolve(domain.getUTF8String());
 		boost::asio::ip::tcp::endpoint endpoint(	
 				boost::asio::ip::address::from_string(addressPort.getAddress().toString()), addressPort.getPort());
-		// Use shared_from_this
 		socket_.async_connect(
 				endpoint,
-				boost::bind(&BoostConnection::handleConnectFinished, this, boost::asio::placeholders::error));
+				boost::bind(&BoostConnection::handleConnectFinished, shared_from_this(), boost::asio::placeholders::error));
 	}
 	catch (const DomainNameResolveException& e) {
 		onError(DomainNameResolveError);
@@ -70,41 +69,39 @@ void BoostConnection::disconnect() {
 }
 
 void BoostConnection::write(const ByteArray& data) {
-	// Use shared_from_this
 	boost::asio::async_write(socket_, SharedBuffer(data),
-			boost::bind(&BoostConnection::handleDataWritten, this, boost::asio::placeholders::error));
+			boost::bind(&BoostConnection::handleDataWritten, shared_from_this(), boost::asio::placeholders::error));
 }
 
 void BoostConnection::handleConnectFinished(const boost::system::error_code& error) {
 	if (!error) {
-		MainEventLoop::postEvent(boost::bind(boost::ref(onConnected)), this);
+		MainEventLoop::postEvent(boost::bind(boost::ref(onConnected)), shared_from_this());
 		doRead();
 	}
 	else if (error != boost::asio::error::operation_aborted) {
-		MainEventLoop::postEvent(boost::bind(boost::ref(onError), ConnectionError), this);
+		MainEventLoop::postEvent(boost::bind(boost::ref(onError), ConnectionError), shared_from_this());
 	}
 }
 
 void BoostConnection::doRead() {
-	// Use shared_from_this
 	socket_.async_read_some(
 			boost::asio::buffer(readBuffer_),
-			boost::bind(&BoostConnection::handleSocketRead, this, boost::asio::placeholders::error, boost::asio::placeholders::bytes_transferred));
+			boost::bind(&BoostConnection::handleSocketRead, shared_from_this(), boost::asio::placeholders::error, boost::asio::placeholders::bytes_transferred));
 }
 
 void BoostConnection::handleSocketRead(const boost::system::error_code& error, size_t bytesTransferred) {
 	if (!error) {
-		MainEventLoop::postEvent(boost::bind(boost::ref(onDataRead), ByteArray(&readBuffer_[0], bytesTransferred)), this);
+		MainEventLoop::postEvent(boost::bind(boost::ref(onDataRead), ByteArray(&readBuffer_[0], bytesTransferred)), shared_from_this());
 		doRead();
 	}
 	else if (error != boost::asio::error::operation_aborted) {
-		MainEventLoop::postEvent(boost::bind(boost::ref(onError), ReadError), this);
+		MainEventLoop::postEvent(boost::bind(boost::ref(onError), ReadError), shared_from_this());
 	}
 }
 
 void BoostConnection::handleDataWritten(const boost::system::error_code& error) {
 	if (error && error != boost::asio::error::operation_aborted) {
-		MainEventLoop::postEvent(boost::bind(boost::ref(onError), WriteError), this);
+		MainEventLoop::postEvent(boost::bind(boost::ref(onError), WriteError), shared_from_this());
 	}
 }
 

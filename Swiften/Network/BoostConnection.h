@@ -1,8 +1,10 @@
 #pragma once
 
 #include <boost/asio.hpp>
+#include <boost/enable_shared_from_this.hpp>
 
 #include "Swiften/Network/Connection.h"
+#include "Swiften/EventLoop/EventOwner.h"
 
 namespace boost {
 	class thread;
@@ -12,7 +14,7 @@ namespace boost {
 }
 
 namespace Swift {
-	class BoostConnection : public Connection {
+	class BoostConnection : public Connection, public EventOwner, public boost::enable_shared_from_this<BoostConnection> {
 		public:
 			BoostConnection(boost::asio::io_service* ioService);
 			~BoostConnection();

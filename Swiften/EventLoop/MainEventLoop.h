@@ -8,6 +8,7 @@
 
 namespace Swift {
 	class EventLoop;
+	class EventOwner;
 
 	class MainEventLoop {
 			friend class EventLoop;
@@ -18,9 +19,9 @@ namespace Swift {
 			 * If the owner is destroyed, all events should be removed from the
 			 * loop using removeEventsFromOwner().
 			 */
-			static void postEvent(boost::function<void ()> event, void* owner = 0);
+			static void postEvent(boost::function<void ()> event, boost::shared_ptr<EventOwner> owner = 0);
 
-			static void removeEventsFromOwner(void* owner);
+			static void removeEventsFromOwner(boost::shared_ptr<EventOwner> owner);
 
 			template<typename T>
 			static void deleteLater(T* t) {

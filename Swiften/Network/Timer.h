@@ -1,12 +1,14 @@
-#ifndef SWIFTEN_Timer_H
-#define SWIFTEN_Timer_H
+#pragma once
 
 #include <boost/asio.hpp>
 #include <boost/signals.hpp>
 #include <boost/thread.hpp>
+#include <boost/enable_shared_from_this.hpp>
+
+#include "Swiften/EventLoop/EventOwner.h"
 
 namespace Swift {
-	class Timer {
+	class Timer : public EventOwner, public boost::enable_shared_from_this<Timer> {
 		public:
 			Timer(int milliseconds);
 			~Timer();
@@ -27,5 +29,3 @@ namespace Swift {
 			boost::asio::deadline_timer* timer_;
 	};
 }
-
-#endif

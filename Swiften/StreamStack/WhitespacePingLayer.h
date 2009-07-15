@@ -1,7 +1,7 @@
-#ifndef SWIFTEN_WhitespacePingLayer_H
-#define SWIFTEN_WhitespacePingLayer_H
+#pragma once
 
 #include <boost/noncopyable.hpp>
+#include <boost/shared_ptr.hpp>
 
 #include "Swiften/StreamStack/StreamLayer.h"
 
@@ -11,7 +11,6 @@ namespace Swift {
 	class WhitespacePingLayer : public StreamLayer, boost::noncopyable {
 		public:
 			WhitespacePingLayer();
-			~WhitespacePingLayer();
 
 			void writeData(const ByteArray& data);
 			void handleDataRead(const ByteArray& data);
@@ -20,8 +19,6 @@ namespace Swift {
 			void handleTimerTick();
 
 		private:
-			Timer* timer_;
+			boost::shared_ptr<Timer> timer;
 	};
 }
-
-#endif

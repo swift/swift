@@ -29,7 +29,7 @@ void SimpleEventLoop::run() {
 }
 
 void SimpleEventLoop::stop() {
-	postEvent(boost::bind(&SimpleEventLoop::doStop, this), 0);
+	postEvent(boost::bind(&SimpleEventLoop::doStop, this));
 }
 
 void SimpleEventLoop::doStop() {

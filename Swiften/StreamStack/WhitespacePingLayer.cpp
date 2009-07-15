@@ -6,13 +6,9 @@ namespace Swift {
 static const int TIMEOUT_MILLISECONDS = 60000;
 
 WhitespacePingLayer::WhitespacePingLayer() {
-	timer_ = new Timer(TIMEOUT_MILLISECONDS);
-	timer_->onTick.connect(boost::bind(&WhitespacePingLayer::handleTimerTick, this));
-	timer_->start();
-}
-
-WhitespacePingLayer::~WhitespacePingLayer() {
-	delete timer_;
+	timer = boost::shared_ptr<Timer>(new Timer(TIMEOUT_MILLISECONDS));
+	timer->onTick.connect(boost::bind(&WhitespacePingLayer::handleTimerTick, this));
+	timer->start();
 }
 
 void WhitespacePingLayer::writeData(const ByteArray& data) {

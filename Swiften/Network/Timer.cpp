@@ -12,7 +12,7 @@ Timer::Timer(int milliseconds) :
 }
 
 Timer::~Timer() {
-	MainEventLoop::removeEventsFromOwner(this);
+	MainEventLoop::removeEventsFromOwner(shared_from_this());
   ioService_->stop();
   thread_->join();
 	delete timer_;
@@ -21,20 +21,20 @@ Timer::~Timer() {
 }
 
 void Timer::start() {
-	thread_ = new boost::thread(boost::bind(&Timer::doStart, this));
+	thread_ = new boost::thread(boost::bind(&Timer::doStart, shared_from_this()));
 }
 
 void Timer::doStart() {
 	timer_ = new boost::asio::deadline_timer(*ioService_);
 	timer_->expires_from_now(boost::posix_time::milliseconds(timeout_));
-	timer_->async_wait(boost::bind(&Timer::handleTimerTick, this));
+	timer_->async_wait(boost::bind(&Timer::handleTimerTick, shared_from_this()));
 	ioService_->run();
 }
 
 void Timer::handleTimerTick() {
-	MainEventLoop::postEvent(boost::bind(boost::ref(onTick)), this);
+	MainEventLoop::postEvent(boost::bind(boost::ref(onTick)), shared_from_this());
 	timer_->expires_from_now(boost::posix_time::milliseconds(timeout_));
-	timer_->async_wait(boost::bind(&Timer::handleTimerTick, this));
+	timer_->async_wait(boost::bind(&Timer::handleTimerTick, shared_from_this()));
 }
 
 }

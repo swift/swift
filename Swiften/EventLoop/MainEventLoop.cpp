@@ -23,11 +23,11 @@ void MainEventLoop::resetInstance() {
 	instance_ = 0;
 }
 
-void MainEventLoop::postEvent(boost::function<void ()> event, void* owner) {
+void MainEventLoop::postEvent(boost::function<void ()> event, boost::shared_ptr<EventOwner> owner) {
 	getInstance()->postEvent(event, owner);
 }
 
-void MainEventLoop::removeEventsFromOwner(void* owner) {
+void MainEventLoop::removeEventsFromOwner(boost::shared_ptr<EventOwner> owner) {
 	getInstance()->removeEventsFromOwner(owner);
 }
 

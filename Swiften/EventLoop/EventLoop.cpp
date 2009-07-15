@@ -30,7 +30,7 @@ void EventLoop::handleEvent(const Event& event) {
 	}
 }
 
-void EventLoop::postEvent(boost::function<void ()> callback, void* owner) {
+void EventLoop::postEvent(boost::function<void ()> callback, boost::shared_ptr<EventOwner> owner) {
 	Event event(owner, callback);
 	{
 		boost::lock_guard<boost::mutex> lock(eventsMutex_);
@@ -41,7 +41,7 @@ void EventLoop::postEvent(boost::function<void ()> callback, void* owner) {
 	post(event);
 }
 
-void EventLoop::removeEventsFromOwner(void* owner) {
+void EventLoop::removeEventsFromOwner(boost::shared_ptr<EventOwner> owner) {
 		boost::lock_guard<boost::mutex> lock(eventsMutex_);
 		events_.remove_if(HasOwner(owner));
 }

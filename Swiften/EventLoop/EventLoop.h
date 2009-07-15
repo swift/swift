@@ -1,22 +1,22 @@
-#ifndef SWIFTEN_EventLoop_H
-#define SWIFTEN_EventLoop_H
+#pragma once
 
 #include <boost/function.hpp>
 #include <boost/thread/mutex.hpp>
 #include <list>
 
 namespace Swift {
+	class EventOwner;
 	class EventLoop {
 		public:
 			EventLoop();
 			virtual ~EventLoop();
 			
-			void postEvent(boost::function<void ()> event, void* owner);
-			void removeEventsFromOwner(void* owner);
+			void postEvent(boost::function<void ()> event, boost::shared_ptr<EventOwner> owner = boost::shared_ptr<EventOwner>());
+			void removeEventsFromOwner(boost::shared_ptr<EventOwner> owner);
 
 		protected:
 			struct Event {
-				Event(void* owner, const boost::function<void()>& callback) :
+				Event(boost::shared_ptr<EventOwner> owner, const boost::function<void()>& callback) :
 						owner(owner), callback(callback) {
 				}
 
@@ -25,7 +25,7 @@ namespace Swift {
 				}
 
 				unsigned int id;
-				void* owner;
+				boost::shared_ptr<EventOwner> owner;
 				boost::function<void()> callback;
 			};
 
@@ -39,14 +39,12 @@ namespace Swift {
 
 		private:
 			struct HasOwner {
-				HasOwner(void* owner) : owner(owner) {}
+				HasOwner(boost::shared_ptr<EventOwner> owner) : owner(owner) {}
 				bool operator()(const Event& event) { return event.owner == owner; }
-				void* owner;
+				boost::shared_ptr<EventOwner> owner;
 			};
 			boost::mutex eventsMutex_;
 			unsigned int nextEventID_;
 			std::list<Event> events_;
 	};
 }
-
-#endif

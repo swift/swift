@@ -44,7 +44,7 @@ int main(int, char**) {
 	client->connect();
 
 	{
-		Timer timer(10000);
+		boost::shared_ptr<Timer> timer(new Timer(10000));
 		timer.onTick.connect(boost::bind(&SimpleEventLoop::stop, &eventLoop));
 		timer.start();
 
