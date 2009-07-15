@@ -3,6 +3,7 @@
 #include <boost/thread.hpp>
 #include <boost/bind.hpp>
 
+#include "Swiften/EventLoop/EventOwner.h"
 #include "Swiften/EventLoop/SimpleEventLoop.h"
 #include "Swiften/Base/sleep.h"
 
@@ -25,8 +26,8 @@ class EventLoopTest : public CppUnit::TestFixture
 		void testPost() {
 			SimpleEventLoop testling;
 
-			testling.postEvent(boost::bind(&EventLoopTest::logEvent, this, 1), 0);
-			testling.postEvent(boost::bind(&EventLoopTest::logEvent, this, 2), 0);
+			testling.postEvent(boost::bind(&EventLoopTest::logEvent, this, 1));
+			testling.postEvent(boost::bind(&EventLoopTest::logEvent, this, 2));
 			testling.stop();
 			testling.run();
 
@@ -37,12 +38,14 @@ class EventLoopTest : public CppUnit::TestFixture
 
 		void testRemove() {
 			SimpleEventLoop testling;
+			boost::shared_ptr<MyEventOwner> eventOwner1(new MyEventOwner());
+			boost::shared_ptr<MyEventOwner> eventOwner2(new MyEventOwner());
 
-			testling.postEvent(boost::bind(&EventLoopTest::logEvent, this, 1), &testling);
-			testling.postEvent(boost::bind(&EventLoopTest::logEvent, this, 2), this);
-			testling.postEvent(boost::bind(&EventLoopTest::logEvent, this, 3), &testling);
-			testling.postEvent(boost::bind(&EventLoopTest::logEvent, this, 4), this);
-			testling.removeEventsFromOwner(this);
+			testling.postEvent(boost::bind(&EventLoopTest::logEvent, this, 1), eventOwner1);
+			testling.postEvent(boost::bind(&EventLoopTest::logEvent, this, 2), eventOwner2);
+			testling.postEvent(boost::bind(&EventLoopTest::logEvent, this, 3), eventOwner1);
+			testling.postEvent(boost::bind(&EventLoopTest::logEvent, this, 4), eventOwner2);
+			testling.removeEventsFromOwner(eventOwner2);
 			testling.stop();
 			testling.run();
 
@@ -52,6 +55,7 @@ class EventLoopTest : public CppUnit::TestFixture
 		}
 	
 	private:
+		struct MyEventOwner : public EventOwner {};
 		void logEvent(int i) {
 			events_.push_back(i);
 		}

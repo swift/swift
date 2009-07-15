@@ -19,7 +19,7 @@ namespace Swift {
 			 * If the owner is destroyed, all events should be removed from the
 			 * loop using removeEventsFromOwner().
 			 */
-			static void postEvent(boost::function<void ()> event, boost::shared_ptr<EventOwner> owner = 0);
+			static void postEvent(boost::function<void ()> event, boost::shared_ptr<EventOwner> owner = boost::shared_ptr<EventOwner>());
 
 			static void removeEventsFromOwner(boost::shared_ptr<EventOwner> owner);
 

@@ -12,7 +12,7 @@ Timer::Timer(int milliseconds) :
 }
 
 Timer::~Timer() {
-	MainEventLoop::removeEventsFromOwner(shared_from_this());
+	//MainEventLoop::removeEventsFromOwner(shared_from_this());
   ioService_->stop();
   thread_->join();
 	delete timer_;

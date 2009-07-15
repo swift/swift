@@ -22,12 +22,12 @@ bool PlatformTLSLayerFactory::canCreate() const {
 #endif
 }
 
-TLSLayer* PlatformTLSLayerFactory::createTLSLayer() {
+boost::shared_ptr<TLSLayer> PlatformTLSLayerFactory::createTLSLayer() {
 #ifdef HAVE_OPENSSL
-	return new OpenSSLLayer();
+	return boost::shared_ptr<TLSLayer>(new OpenSSLLayer());
 #else
 	assert(false);
-	return 0;
+	return boost::shared_ptr<TLSLayer>();
 #endif
 }
 

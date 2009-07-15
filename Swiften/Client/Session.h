@@ -113,10 +113,10 @@ namespace Swift {
 			State state_;
 			SessionError error_;
 			boost::shared_ptr<Connection> connection_;
-			XMPPLayer* xmppLayer_;
-			TLSLayer* tlsLayer_;
-			ConnectionLayer* connectionLayer_;
-			WhitespacePingLayer* whitespacePingLayer_;
+			boost::shared_ptr<XMPPLayer> xmppLayer_;
+			boost::shared_ptr<TLSLayer> tlsLayer_;
+			boost::shared_ptr<ConnectionLayer> connectionLayer_;
+			boost::shared_ptr<WhitespacePingLayer> whitespacePingLayer_;
 			StreamStack* streamStack_;
 			bool needSessionStart_;
 			PKCS12Certificate certificate_;

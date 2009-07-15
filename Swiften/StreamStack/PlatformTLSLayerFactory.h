@@ -1,5 +1,4 @@
-#ifndef SWIFTEN_OpenSSLLayerFactory_H
-#define SWIFTEN_OpenSSLLayerFactory_H
+#pragma once
 
 #include "Swiften/StreamStack/TLSLayerFactory.h"
 
@@ -9,8 +8,6 @@ namespace Swift {
 			PlatformTLSLayerFactory();
 
 			bool canCreate() const;
-			virtual TLSLayer* createTLSLayer();
+			virtual boost::shared_ptr<TLSLayer> createTLSLayer();
 	};
 }
-
-#endif

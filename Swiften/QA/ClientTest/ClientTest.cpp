@@ -45,8 +45,8 @@ int main(int, char**) {
 
 	{
 		boost::shared_ptr<Timer> timer(new Timer(10000));
-		timer.onTick.connect(boost::bind(&SimpleEventLoop::stop, &eventLoop));
-		timer.start();
+		timer->onTick.connect(boost::bind(&SimpleEventLoop::stop, &eventLoop));
+		timer->start();
 
 		eventLoop.run();
 	}

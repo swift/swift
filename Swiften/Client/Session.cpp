@@ -31,20 +31,12 @@ Session::Session(const JID& jid, ConnectionFactory* connectionFactory, TLSLayerF
 		payloadSerializers_(payloadSerializers),
 		state_(Initial), 
 		error_(NoError),
-		xmppLayer_(0), 
-		tlsLayer_(0),
-		connectionLayer_(0), 
-		whitespacePingLayer_(0),
 		streamStack_(0),
 		needSessionStart_(false) {
 }
 
 Session::~Session() {
 	delete streamStack_;
-	delete whitespacePingLayer_;
-	delete connectionLayer_;
-	delete tlsLayer_;
-	delete xmppLayer_;
 }
 
 void Session::start() {
@@ -73,13 +65,13 @@ void Session::sendStreamHeader() {
 }
 
 void Session::initializeStreamStack() {
-	xmppLayer_ = new XMPPLayer(payloadParserFactories_, payloadSerializers_);
+	xmppLayer_ = boost::shared_ptr<XMPPLayer>(new XMPPLayer(payloadParserFactories_, payloadSerializers_));
 	xmppLayer_->onStreamStart.connect(boost::bind(&Session::handleStreamStart, this));
 	xmppLayer_->onElement.connect(boost::bind(&Session::handleElement, this, _1));
 	xmppLayer_->onError.connect(boost::bind(&Session::setError, this, XMLError));
 	xmppLayer_->onDataRead.connect(boost::bind(boost::ref(onDataRead), _1));
 	xmppLayer_->onWriteData.connect(boost::bind(boost::ref(onDataWritten), _1));
-	connectionLayer_ = new ConnectionLayer(connection_);
+	connectionLayer_ = boost::shared_ptr<ConnectionLayer>(new ConnectionLayer(connection_));
 	streamStack_ = new StreamStack(xmppLayer_, connectionLayer_);
 }
 
@@ -144,7 +136,7 @@ void Session::handleElement(boost::shared_ptr<Element> element) {
 			// Start the session
 
 			// Add a whitespace ping layer
-			whitespacePingLayer_ = new WhitespacePingLayer();
+			whitespacePingLayer_ = boost::shared_ptr<WhitespacePingLayer>(new WhitespacePingLayer());
 			streamStack_->addLayer(whitespacePingLayer_);
 
 			if (streamFeatures->hasSession()) {

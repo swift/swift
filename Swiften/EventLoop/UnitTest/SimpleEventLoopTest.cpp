@@ -32,7 +32,7 @@ class SimpleEventLoopTest : public CppUnit::TestFixture
 
 		void testPostFromMainThread() {
 			SimpleEventLoop testling;
-			testling.postEvent(boost::bind(&SimpleEventLoopTest::incrementCounterAndStop, this, &testling), 0);
+			testling.postEvent(boost::bind(&SimpleEventLoopTest::incrementCounterAndStop, this, &testling));
 			testling.run();
 
 			CPPUNIT_ASSERT_EQUAL(1, counter_);
@@ -42,7 +42,7 @@ class SimpleEventLoopTest : public CppUnit::TestFixture
 		void runIncrementingThread(SimpleEventLoop* loop) {
 			for (unsigned int i = 0; i < 10; ++i) {
         Swift::sleep(1);
-				loop->postEvent(boost::bind(&SimpleEventLoopTest::incrementCounter, this), 0);
+				loop->postEvent(boost::bind(&SimpleEventLoopTest::incrementCounter, this));
 			}
 			loop->stop();
 		}

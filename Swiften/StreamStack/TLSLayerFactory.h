@@ -1,5 +1,6 @@
-#ifndef SWIFTEN_TLSLayerFactory_H
-#define SWIFTEN_TLSLayerFactory_H
+#pragma once
+
+#include <boost/shared_ptr.hpp>
 
 namespace Swift {
 	class TLSLayer;
@@ -9,8 +10,6 @@ namespace Swift {
 			virtual ~TLSLayerFactory();
 			virtual bool canCreate() const = 0;
 
-			virtual TLSLayer* createTLSLayer() = 0;
+			virtual boost::shared_ptr<TLSLayer> createTLSLayer() = 0;
 	};
 }
-
-#endif

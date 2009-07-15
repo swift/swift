@@ -31,7 +31,7 @@ ServerFromClientSession::ServerFromClientSession(
 			userRegistry_(userRegistry),
 			authenticated_(false),
 			initialized_(false) {
-	xmppLayer_ = new XMPPLayer(payloadParserFactories_, payloadSerializers_);
+	xmppLayer_ = boost::shared_ptr<XMPPLayer>(new XMPPLayer(payloadParserFactories_, payloadSerializers_));
 	xmppLayer_->onStreamStart.connect(
 			boost::bind(&ServerFromClientSession::handleStreamStart, this, _2));
 	xmppLayer_->onElement.connect(
@@ -42,14 +42,12 @@ ServerFromClientSession::ServerFromClientSession(
 			boost::bind(boost::ref(onDataRead), _1));
 	xmppLayer_->onWriteData.connect(
 			boost::bind(boost::ref(onDataWritten), _1));
-	connectionLayer_ = new ConnectionLayer(connection_);
+	connectionLayer_ = boost::shared_ptr<ConnectionLayer>(new ConnectionLayer(connection_));
 	streamStack_ = new StreamStack(xmppLayer_, connectionLayer_);
 }
 
 ServerFromClientSession::~ServerFromClientSession() {
 	delete streamStack_;
-	delete connectionLayer_;
-	delete xmppLayer_;
 }
 
 void ServerFromClientSession::handleElement(boost::shared_ptr<Element> element) {

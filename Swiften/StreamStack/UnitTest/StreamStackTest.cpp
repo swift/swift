@@ -29,15 +29,13 @@ class StreamStackTest : public CppUnit::TestFixture
 		StreamStackTest() {}
 
 		void setUp() {
-			physicalStream_ = new TestLowLayer();
-			xmppStream_ = new XMPPLayer(&parserFactories_, &serializers_);
+			physicalStream_ = boost::shared_ptr<TestLowLayer>(new TestLowLayer());
+			xmppStream_ = boost::shared_ptr<XMPPLayer>(new XMPPLayer(&parserFactories_, &serializers_));
 			elementsReceived_ = 0;
 			dataWriteReceived_ = 0;
 		}
 
 		void tearDown() {
-			delete physicalStream_;
-			delete xmppStream_;
 		}
 
 		void testWriteData_NoIntermediateStreamStack() {
@@ -51,8 +49,8 @@ class StreamStackTest : public CppUnit::TestFixture
 
 		void testWriteData_OneIntermediateStream() {
 			StreamStack testling(xmppStream_, physicalStream_);
-			std::auto_ptr<MyStreamLayer> xStream(new MyStreamLayer("X"));
-			testling.addLayer(xStream.get());
+			boost::shared_ptr<MyStreamLayer> xStream(new MyStreamLayer("X"));
+			testling.addLayer(xStream);
 
 			xmppStream_->writeData("foo");
 
@@ -62,10 +60,10 @@ class StreamStackTest : public CppUnit::TestFixture
 
 		void testWriteData_TwoIntermediateStreamStack() {
 			StreamStack testling(xmppStream_, physicalStream_);
-			std::auto_ptr<MyStreamLayer> xStream(new MyStreamLayer("X"));
-			std::auto_ptr<MyStreamLayer> yStream(new MyStreamLayer("Y"));
-			testling.addLayer(xStream.get());
-			testling.addLayer(yStream.get());
+			boost::shared_ptr<MyStreamLayer> xStream(new MyStreamLayer("X"));
+			boost::shared_ptr<MyStreamLayer> yStream(new MyStreamLayer("Y"));
+			testling.addLayer(xStream);
+			testling.addLayer(yStream);
 
 			xmppStream_->writeData("foo");
 
@@ -85,8 +83,8 @@ class StreamStackTest : public CppUnit::TestFixture
 		void testReadData_OneIntermediateStream() {
 			StreamStack testling(xmppStream_, physicalStream_);
 			xmppStream_->onElement.connect(boost::bind(&StreamStackTest::handleElement, this, _1));
-			std::auto_ptr<MyStreamLayer> xStream(new MyStreamLayer("<"));
-			testling.addLayer(xStream.get());
+			boost::shared_ptr<MyStreamLayer> xStream(new MyStreamLayer("<"));
+			testling.addLayer(xStream);
 
 			physicalStream_->onDataRead(ByteArray("stream:stream xmlns:stream='http://etherx.jabber.org/streams'><presence/>"));
 
@@ -96,10 +94,10 @@ class StreamStackTest : public CppUnit::TestFixture
 		void testReadData_TwoIntermediateStreamStack() {
 			StreamStack testling(xmppStream_, physicalStream_);
 			xmppStream_->onElement.connect(boost::bind(&StreamStackTest::handleElement, this, _1));
-			std::auto_ptr<MyStreamLayer> xStream(new MyStreamLayer("s"));
-			std::auto_ptr<MyStreamLayer> yStream(new MyStreamLayer("<"));
-			testling.addLayer(xStream.get());
-			testling.addLayer(yStream.get());
+			boost::shared_ptr<MyStreamLayer> xStream(new MyStreamLayer("s"));
+			boost::shared_ptr<MyStreamLayer> yStream(new MyStreamLayer("<"));
+			testling.addLayer(xStream);
+			testling.addLayer(yStream);
 
 			physicalStream_->onDataRead(ByteArray("tream:stream xmlns:stream='http://etherx.jabber.org/streams'><presence/>"));
 
@@ -109,8 +107,8 @@ class StreamStackTest : public CppUnit::TestFixture
 		void testAddLayer_ExistingOnWriteDataSlot() {
 			StreamStack testling(xmppStream_, physicalStream_);
 			xmppStream_->onWriteData.connect(boost::bind(&StreamStackTest::handleWriteData, this, _1));
-			std::auto_ptr<MyStreamLayer> xStream(new MyStreamLayer("X"));
-			testling.addLayer(xStream.get());
+			boost::shared_ptr<MyStreamLayer> xStream(new MyStreamLayer("X"));
+			testling.addLayer(xStream);
 
 			xmppStream_->writeData("foo");
 
@@ -158,8 +156,8 @@ class StreamStackTest : public CppUnit::TestFixture
 	private:
 		FullPayloadParserFactoryCollection parserFactories_;
 		FullPayloadSerializerCollection serializers_;
-		TestLowLayer* physicalStream_;
-		XMPPLayer* xmppStream_;
+		boost::shared_ptr<TestLowLayer> physicalStream_;
+		boost::shared_ptr<XMPPLayer> xmppStream_;
 		int elementsReceived_;
 		int dataWriteReceived_;
 };

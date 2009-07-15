@@ -718,23 +718,23 @@ class SessionTest : public CppUnit::TestFixture {
 			MockTLSLayerFactory() : haveTLS_(true) {}
 			void setTLSSupported(bool b) { haveTLS_ = b; }
 			virtual bool canCreate() const { return haveTLS_; }
-			virtual TLSLayer* createTLSLayer() { 
+			virtual boost::shared_ptr<TLSLayer> createTLSLayer() { 
 				assert(haveTLS_);
-				MockTLSLayer* result = new MockTLSLayer();
+				boost::shared_ptr<MockTLSLayer> result(new MockTLSLayer());
 				layers_.push_back(result);
 				return result;
 			}
-			std::vector<MockTLSLayer*> layers_;
+			std::vector< boost::shared_ptr<MockTLSLayer> > layers_;
 			bool haveTLS_;
 		};
 
 		struct MockSession : public Session {
 			MockSession(const JID& jid, ConnectionFactory* connectionFactory, TLSLayerFactory* tlsLayerFactory, PayloadParserFactoryCollection* payloadParserFactories, PayloadSerializerCollection* payloadSerializers) : Session(jid, connectionFactory, tlsLayerFactory, payloadParserFactories, payloadSerializers) {}
 
-			MockTLSLayer* getTLSLayer() const {
+			boost::shared_ptr<MockTLSLayer> getTLSLayer() const {
 				return getStreamStack()->getLayer<MockTLSLayer>();
 			}
-			WhitespacePingLayer* getWhitespacePingLayer() const {
+			boost::shared_ptr<WhitespacePingLayer> getWhitespacePingLayer() const {
 				return getStreamStack()->getLayer<WhitespacePingLayer>();
 			}
 		};

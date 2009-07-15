@@ -20,13 +20,13 @@ class BoostConnectionTest : public CppUnit::TestFixture {
 		BoostConnectionTest() {}
 
 		void setUp() {
-			eventLoop_ = new DummyEventLoop();
 			boostIOServiceThread_ = new BoostIOServiceThread();
+			eventLoop_ = new DummyEventLoop();
 		}
 
 		void tearDown() {
-			delete boostIOServiceThread_;
 			delete eventLoop_;
+			delete boostIOServiceThread_;
 		}
 
 		void testDestructor() {

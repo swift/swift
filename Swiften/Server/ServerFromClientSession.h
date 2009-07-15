@@ -55,9 +55,9 @@ namespace Swift {
 			UserRegistry* userRegistry_;
 			bool authenticated_;
 			bool initialized_;
-			ConnectionLayer* connectionLayer_;
+			boost::shared_ptr<XMPPLayer> xmppLayer_;
+			boost::shared_ptr<ConnectionLayer> connectionLayer_;
 			StreamStack* streamStack_;
-			XMPPLayer* xmppLayer_;
 			JID domain_;
 			String user_;
 			JID jid_;

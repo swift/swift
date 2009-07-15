@@ -42,7 +42,6 @@ BoostConnection::BoostConnection(boost::asio::io_service* ioService) :
 }
 
 BoostConnection::~BoostConnection() {
-	MainEventLoop::removeEventsFromOwner(shared_from_this());
 }
 
 void BoostConnection::listen() {
@@ -65,6 +64,7 @@ void BoostConnection::connect(const String& domain) {
 }
 
 void BoostConnection::disconnect() {
+	//MainEventLoop::removeEventsFromOwner(shared_from_this());
 	socket_.close();
 }
 
