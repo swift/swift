@@ -22,6 +22,7 @@ include Swiften/Notifier/Makefile.inc
 include Swiften/History/Makefile.inc
 include Swiften/Avatars/Makefile.inc
 include Swiften/Server/Makefile.inc
+include Swiften/LinkLocal/Makefile.inc
 
 CPPFLAGS += $(SQLITE_CPPFLAGS)
 

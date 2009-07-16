@@ -1,85 +1,111 @@
-#include <dns_sd.h>
-#include <iostream>
-#include <sys/socket.h>
+#include <string>
+#include <boost/bind.hpp>
+#include <boost/shared_ptr.hpp>
 
-#include "Swiften/Network/HostAddress.h"
+#include "Swiften/Elements/IQ.h"
+#include "Swiften/Elements/RosterPayload.h"
+#include "Swiften/Elements/VCard.h"
+#include "Swiften/Server/UserRegistry.h"
+#include "Swiften/JID/JID.h"
+#include "Swiften/Base/String.h"
+#include "Swiften/Server/UserRegistry.h"
+#include "Swiften/Base/IDGenerator.h"
+#include "Swiften/EventLoop/MainEventLoop.h"
+#include "Swiften/EventLoop/SimpleEventLoop.h"
+#include "Swiften/EventLoop/EventOwner.h"
+#include "Swiften/Elements/Stanza.h"
+#include "Swiften/LinkLocal/LinkLocalRoster.h"
+#include "Swiften/LinkLocal/DNSSDService.h"
+#include "Swiften/LinkLocal/AppleDNSSDService.h"
+#include "Swiften/Network/ConnectionServer.h"
+#include "Swiften/Network/BoostConnection.h"
+#include "Swiften/Network/BoostIOServiceThread.h"
+#include "Swiften/Network/BoostConnectionServer.h"
+#include "Swiften/Server/ServerFromClientSession.h"
+#include "Swiften/Parser/PayloadParsers/FullPayloadParserFactoryCollection.h"
+#include "Swiften/Serializer/PayloadSerializers/FullPayloadSerializerCollection.h"
 
 using namespace Swift;
 
-void handleServiceRegistered(DNSServiceRef sdRef, DNSServiceFlags flags, DNSServiceErrorType errorCode, const char *name, const char *regtype, const char *domain, void *context ) {
-	std::cerr << "Service registered " << name << " " << regtype << " " << domain << std::endl;
-}
 
-void handleServiceDiscovered(DNSServiceRef sdRef, DNSServiceFlags flags, uint32_t interfaceIndex, DNSServiceErrorType errorCode, const char *serviceName, const char *regtype, const char *replyDomain, void *context ) {
-	std::cerr << "Service discovered " << interfaceIndex << " " << serviceName << " " << regtype << " " << replyDomain << " " << flags << std::endl;
-}
+class DummyUserRegistry : public UserRegistry {
+	public:
+		DummyUserRegistry() {
+		}
 
-void handleServiceResolved( DNSServiceRef sdRef, DNSServiceFlags flags, uint32_t interfaceIndex, DNSServiceErrorType errorCode, const char *fullname, const char *hosttarget, uint16_t port, uint16_t txtLen, const unsigned char *txtRecord, void *context ) {
-	std::cerr << "Service resolved " << fullname << " " << hosttarget << " " << port << " " << txtLen << " " << /*std::string((const char*) txtRecord, txtLen) <<*/ std::endl;
-}
+		virtual bool isValidUserPassword(const JID&, const String&) const {
+			return true;
+		}
+};
 
-void handleAddressInfoReceived ( DNSServiceRef sdRef, DNSServiceFlags flags, uint32_t interfaceIndex, DNSServiceErrorType errorCode, const char *hostname, const struct sockaddr *address, uint32_t ttl, void *context ) {
-	std::cerr << "Address received " << HostAddress((const unsigned char*) address->sa_data, 4).toString() << std::endl;
-} 
+class Server {
+	public:
+		Server() {
+			serverFromClientConnectionServer_ = boost::shared_ptr<BoostConnectionServer>(new BoostConnectionServer(5224, &boostIOServiceThread_.getIOService()));
+			serverFromClientConnectionServer_->onNewConnection.connect(boost::bind(&Server::handleNewConnection, this, _1));
+			serverFromClientConnectionServer_->start();
 
-int main(int argc, char* argv[]) {
-	fd_set fdSet;
-	DNSServiceErrorType result;
+			dnsSDService_ = boost::shared_ptr<AppleDNSSDService>(new AppleDNSSDService());
+			linkLocalRoster_ = boost::shared_ptr<LinkLocalRoster>(new LinkLocalRoster(dnsSDService_));
+			dnsSDService_->start();
+			// dnsSDService_->publish
+		}
 
-	DNSServiceRef registerSDRef;
-	result = DNSServiceRegister(&registerSDRef, 0, 0, "eemi", "_presence._tcp", NULL, NULL, 5269, 0, NULL, handleServiceRegistered, NULL);
-	if (result != kDNSServiceErr_NoError) {
-		std::cerr << "Error 1" << std::endl;
-	}
-	int registerSocket = DNSServiceRefSockFD(registerSDRef);
-	FD_ZERO(&fdSet);
-	FD_SET(registerSocket, &fdSet);
-	select(registerSocket+1, &fdSet, &fdSet, &fdSet, 0);
-	DNSServiceProcessResult(registerSDRef);
+	private:
+		void handleNewConnection(boost::shared_ptr<Connection> c) {
+			ServerFromClientSession* session = new ServerFromClientSession(idGenerator_.generateID(), c, &payloadParserFactories_, &payloadSerializers_, &userRegistry_);
+			serverFromClientSessions_.push_back(session);
+			session->onStanzaReceived.connect(boost::bind(&Server::handleStanzaReceived, this, _1, session));
+			session->onSessionFinished.connect(boost::bind(&Server::handleSessionFinished, this, session));
+		}
 
-	DNSServiceRef browseSDRef;
-	result = DNSServiceBrowse(&browseSDRef, 0, 0, "_presence._tcp", 0, handleServiceDiscovered , 0);
-	if (result != kDNSServiceErr_NoError) {
-		std::cerr << "Error 2" << std::endl;
-	}
-	int browseSocket = DNSServiceRefSockFD(browseSDRef);
-	//while(true) {
-		FD_ZERO(&fdSet);
-		FD_SET(browseSocket, &fdSet);
-		select(browseSocket+1, &fdSet, &fdSet, &fdSet, 0);
-		DNSServiceProcessResult(browseSDRef);
-	//}
+		void handleSessionFinished(ServerFromClientSession* session) {
+			serverFromClientSessions_.erase(std::remove(serverFromClientSessions_.begin(), serverFromClientSessions_.end(), session), serverFromClientSessions_.end());
+			delete session;
+		}
 
+		void handleStanzaReceived(boost::shared_ptr<Stanza> stanza, ServerFromClientSession* session) {
+			stanza->setFrom(session->getJID());
+			if (!stanza->getTo().isValid()) {
+				stanza->setTo(JID(session->getDomain()));
+			}
+			if (!stanza->getTo().isValid() || stanza->getTo() == session->getDomain() || stanza->getTo() == session->getJID().toBare()) {
+				if (boost::shared_ptr<IQ> iq = boost::dynamic_pointer_cast<IQ>(stanza)) {
+					if (iq->getPayload<RosterPayload>()) {
+						session->sendStanza(IQ::createResult(iq->getFrom(), iq->getID(), boost::shared_ptr<RosterPayload>(new RosterPayload())));
+					}
+					if (iq->getPayload<VCard>()) {
+						if (iq->getType() == IQ::Get) {
+							boost::shared_ptr<VCard> vcard(new VCard());
+							vcard->setNickname(iq->getFrom().getNode());
+							session->sendStanza(IQ::createResult(iq->getFrom(), iq->getID(), vcard));
+						}
+						else {
+							session->sendStanza(IQ::createError(iq->getFrom(), iq->getID(), Error::Forbidden, Error::Cancel));
+						}
+					}
+					else {
+						session->sendStanza(IQ::createError(iq->getFrom(), iq->getID(), Error::FeatureNotImplemented, Error::Cancel));
+					}
+				}
+			}
+		}
 
-	DNSServiceRef resolveSDRef;
-	result = DNSServiceResolve(&resolveSDRef, 0, 6, "Remko@Micro", "_presence._tcp.", "local.", handleServiceResolved , 0);
-	if (result != kDNSServiceErr_NoError) {
-		std::cerr << "Error 3" << std::endl;
-	}
-	int resolveSocket = DNSServiceRefSockFD(resolveSDRef);
-	//while(true) {
-		FD_ZERO(&fdSet);
-		FD_SET(resolveSocket, &fdSet);
-		select(resolveSocket+1, &fdSet, &fdSet, &fdSet, 0);
-		DNSServiceProcessResult(resolveSDRef);
-	//}
+	private:
+		IDGenerator idGenerator_;
+		BoostIOServiceThread boostIOServiceThread_;
+		DummyUserRegistry userRegistry_;
+		boost::shared_ptr<AppleDNSSDService> dnsSDService_;
+		boost::shared_ptr<LinkLocalRoster> linkLocalRoster_;
+		boost::shared_ptr<BoostConnectionServer> serverFromClientConnectionServer_;
+		std::vector<ServerFromClientSession*> serverFromClientSessions_;
+		FullPayloadParserFactoryCollection payloadParserFactories_;
+		FullPayloadSerializerCollection payloadSerializers_;
+};
 
-
-	DNSServiceRef addressSDRef;
-	result = DNSServiceGetAddrInfo(&addressSDRef, 0, 6, kDNSServiceProtocol_IPv4, "Micro.local.", handleAddressInfoReceived, 0);
-	if (result != kDNSServiceErr_NoError) {
-		std::cerr << "Error 4" << std::endl;
-	}
-	int addressSocket = DNSServiceRefSockFD(addressSDRef);
-	//while(true) {
-	std::cout << "GetAddrInfo2" << std::endl;
-		FD_ZERO(&fdSet);
-		FD_SET(addressSocket, &fdSet);
-		select(addressSocket+1, &fdSet, &fdSet, &fdSet, 0);
-		DNSServiceProcessResult(addressSDRef);
-	//}
-
-	// DNSServiceRefDeallocate
-	
+int main() {
+	SimpleEventLoop eventLoop;
+	Server server;
+	eventLoop.run();
 	return 0;
 }
