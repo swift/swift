@@ -89,6 +89,7 @@ void ServerFromClientSession::handleElement(boost::shared_ptr<Element> element) 
 			else if (iq->getPayload<StartSession>()) {
 				initialized_ = true;
 				xmppLayer_->writeElement(IQ::createResult(jid_, iq->getID()));
+				onSessionStarted();
 			}
 		}
 	}

@@ -10,8 +10,8 @@ namespace Swift {
 			LinkLocalRoster(boost::shared_ptr<DNSSDService> service);
 
 		private:
-			void handleServiceAdded(const DNSSDService::DiscoveredService&);
-			void handleServiceRemoved(const DNSSDService::DiscoveredService&);
+			void handleServiceAdded(const DNSSDService::Service&);
+			void handleServiceRemoved(const DNSSDService::Service&);
 
 		private:
 			boost::shared_ptr<DNSSDService> dnsSDService;

@@ -40,6 +40,7 @@ namespace Swift {
 
 			boost::signal<void (boost::shared_ptr<Stanza>)> onStanzaReceived;
 			boost::signal<void ()> onSessionFinished;
+			boost::signal<void ()> onSessionStarted;
 			boost::signal<void (const ByteArray&)> onDataWritten;
 			boost::signal<void (const ByteArray&)> onDataRead;
 

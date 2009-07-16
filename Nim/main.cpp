@@ -40,15 +40,14 @@ class DummyUserRegistry : public UserRegistry {
 
 class Server {
 	public:
-		Server() {
-			serverFromClientConnectionServer_ = boost::shared_ptr<BoostConnectionServer>(new BoostConnectionServer(5224, &boostIOServiceThread_.getIOService()));
+		Server(int clientConnectionPort, int linkLocalConnectionPort) : dnsSDServiceRegistered_(false), clientConnectionPort_(clientConnectionPort), linkLocalConnectionPort_(linkLocalConnectionPort) {
+			serverFromClientConnectionServer_ = boost::shared_ptr<BoostConnectionServer>(new BoostConnectionServer(clientConnectionPort, &boostIOServiceThread_.getIOService()));
 			serverFromClientConnectionServer_->onNewConnection.connect(boost::bind(&Server::handleNewConnection, this, _1));
 			serverFromClientConnectionServer_->start();
 
 			dnsSDService_ = boost::shared_ptr<AppleDNSSDService>(new AppleDNSSDService());
 			linkLocalRoster_ = boost::shared_ptr<LinkLocalRoster>(new LinkLocalRoster(dnsSDService_));
 			dnsSDService_->start();
-			// dnsSDService_->publish
 		}
 
 	private:
@@ -56,12 +55,29 @@ class Server {
 			ServerFromClientSession* session = new ServerFromClientSession(idGenerator_.generateID(), c, &payloadParserFactories_, &payloadSerializers_, &userRegistry_);
 			serverFromClientSessions_.push_back(session);
 			session->onStanzaReceived.connect(boost::bind(&Server::handleStanzaReceived, this, _1, session));
+			session->onSessionStarted.connect(boost::bind(&Server::handleSessionStarted, this, session));
 			session->onSessionFinished.connect(boost::bind(&Server::handleSessionFinished, this, session));
+		}
+		
+		void handleSessionStarted(ServerFromClientSession* session) {
+			if (!dnsSDServiceRegistered_) {
+				dnsSDServiceRegistered_ = true;
+				dnsSDService_->onServiceRegistered.connect(boost::bind(&Server::handleServiceRegistered, this, _1));
+				dnsSDService_->registerService(session->getJID().toBare().toString(), linkLocalConnectionPort_, std::map<String,String>());
+			}
+		}
+
+		void handleServiceRegistered(const DNSSDService::Service& service) {
+			std::cout << "Service registered " << service.name << " " << service.type << " " << service.domain << std::endl;
 		}
 
 		void handleSessionFinished(ServerFromClientSession* session) {
 			serverFromClientSessions_.erase(std::remove(serverFromClientSessions_.begin(), serverFromClientSessions_.end(), session), serverFromClientSessions_.end());
 			delete session;
+			if (serverFromClientSessions_.empty()) {
+				dnsSDServiceRegistered_ = false;
+				dnsSDService_->unregisterService();
+			}
 		}
 
 		void handleStanzaReceived(boost::shared_ptr<Stanza> stanza, ServerFromClientSession* session) {
@@ -101,11 +117,14 @@ class Server {
 		std::vector<ServerFromClientSession*> serverFromClientSessions_;
 		FullPayloadParserFactoryCollection payloadParserFactories_;
 		FullPayloadSerializerCollection payloadSerializers_;
+		bool dnsSDServiceRegistered_;
+		int clientConnectionPort_;
+		int linkLocalConnectionPort_;
 };
 
 int main() {
 	SimpleEventLoop eventLoop;
-	Server server;
+	Server server(5222, 5562);
 	eventLoop.run();
 	return 0;
 }

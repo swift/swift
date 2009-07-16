@@ -10,11 +10,11 @@ LinkLocalRoster::LinkLocalRoster(boost::shared_ptr<DNSSDService> service) : dnsS
 	service->onServiceRemoved.connect(boost::bind(&LinkLocalRoster::handleServiceRemoved, this, _1));
 }
 
-void LinkLocalRoster::handleServiceAdded(const DNSSDService::DiscoveredService& service) {
+void LinkLocalRoster::handleServiceAdded(const DNSSDService::Service& service) {
 	std::cout << "Service added " << service.name << " " << service.type << " " << service.domain << std::endl;
 }
 
-void LinkLocalRoster::handleServiceRemoved(const DNSSDService::DiscoveredService& service) {
+void LinkLocalRoster::handleServiceRemoved(const DNSSDService::Service& service) {
 	std::cout << "Service removed " << service.name << " " << service.type << " " << service.domain << std::endl;
 }
 
