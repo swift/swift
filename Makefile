@@ -44,6 +44,9 @@ endif
 ifeq ($(BUILD_LIMBER),yes)
 include Limber/Makefile.inc
 endif
+ifeq ($(BUILD_NIM),yes)
+include Nim/Makefile.inc
+endif
 include QA/Makefile.inc
 ################################################################################
 # Main targets
