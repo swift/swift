@@ -8,13 +8,13 @@ namespace Swift {
 
 Timer::Timer(int milliseconds) :
 		timeout_(milliseconds), ioService_(0), thread_(0), timer_(0) {
-  ioService_ = new boost::asio::io_service();
+	ioService_ = new boost::asio::io_service();
 }
 
 Timer::~Timer() {
 	//MainEventLoop::removeEventsFromOwner(shared_from_this());
-  ioService_->stop();
-  thread_->join();
+	ioService_->stop();
+	thread_->join();
 	delete timer_;
 	delete thread_;
 	delete ioService_;
