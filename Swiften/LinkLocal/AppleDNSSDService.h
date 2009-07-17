@@ -14,7 +14,7 @@ namespace Swift {
 			AppleDNSSDService();
 			~AppleDNSSDService();
 
-			virtual void registerService(const String& name, int port, const std::map<String,String>& properties);
+			virtual void registerService(const String& name, int port, const LinkLocalServiceInfo&);
 			virtual void unregisterService();
 			virtual void start();
 			virtual void stop();

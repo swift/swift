@@ -6,6 +6,8 @@
 #include "Swiften/Base/String.h"
 
 namespace Swift {
+	class LinkLocalServiceInfo;
+
 	class DNSSDService {
 		public:
 			struct Service {
@@ -18,7 +20,7 @@ namespace Swift {
 
 			virtual ~DNSSDService();
 
-			virtual void registerService(const String& name, int port, const std::map<String,String>& properties) = 0;
+			virtual void registerService(const String& name, int port, const LinkLocalServiceInfo&) = 0;
 			virtual void unregisterService() = 0;
 			virtual void start() = 0;
 

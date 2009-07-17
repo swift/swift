@@ -14,6 +14,7 @@
 #include "Swiften/EventLoop/SimpleEventLoop.h"
 #include "Swiften/EventLoop/EventOwner.h"
 #include "Swiften/Elements/Stanza.h"
+#include "Swiften/LinkLocal/LinkLocalServiceInfo.h"
 #include "Swiften/LinkLocal/LinkLocalRoster.h"
 #include "Swiften/LinkLocal/DNSSDService.h"
 #include "Swiften/LinkLocal/AppleDNSSDService.h"
@@ -63,7 +64,16 @@ class Server {
 			if (!dnsSDServiceRegistered_) {
 				dnsSDServiceRegistered_ = true;
 				dnsSDService_->onServiceRegistered.connect(boost::bind(&Server::handleServiceRegistered, this, _1));
-				dnsSDService_->registerService(session->getJID().toBare().toString(), linkLocalConnectionPort_, std::map<String,String>());
+				LinkLocalServiceInfo info;
+				info.setFirstName("Remko");
+				info.setLastName("Tron\xc3\xe7on");
+				info.setEMail("email@example.com");
+				info.setJID(JID("jid@example.com"));
+				info.setMessage("I'm not Here");
+				info.setNick("remko");
+				info.setStatus(LinkLocalServiceInfo::Away);
+				info.setPort(linkLocalConnectionPort_);
+				dnsSDService_->registerService(session->getJID().toBare().toString(), linkLocalConnectionPort_, info);
 			}
 		}
 

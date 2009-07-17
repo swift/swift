@@ -6,6 +6,7 @@
 #include <sys/socket.h>
 
 #include "Swiften/EventLoop/MainEventLoop.h"
+#include "Swiften/LinkLocal/LinkLocalServiceInfo.h"
 
 namespace Swift {
 
@@ -44,12 +45,12 @@ void AppleDNSSDService::start() {
 	thread = new boost::thread(boost::bind(&AppleDNSSDService::doStart, shared_from_this()));
 }
 
-void AppleDNSSDService::registerService(const String& name, int port, const std::map<String,String>&) {
-	// TODO: Use properties
+void AppleDNSSDService::registerService(const String& name, int port, const LinkLocalServiceInfo& info) {
 	boost::lock_guard<boost::mutex> lock(sdRefsMutex);
 
 	assert(!registerSDRef);
-	DNSServiceErrorType result = DNSServiceRegister(&registerSDRef, 0, 0, name.getUTF8Data(), "_presence._tcp", NULL, NULL, port, 0, NULL, &AppleDNSSDService::handleServiceRegisteredGlobal, this);
+	ByteArray txtRecord = info.toTXTRecord();
+	DNSServiceErrorType result = DNSServiceRegister(&registerSDRef, 0, 0, name.getUTF8Data(), "_presence._tcp", NULL, NULL, port, txtRecord.getSize(), txtRecord.getData(), &AppleDNSSDService::handleServiceRegisteredGlobal, this);
 	interruptSelect();
 	if (result != kDNSServiceErr_NoError) {
 		onError();
