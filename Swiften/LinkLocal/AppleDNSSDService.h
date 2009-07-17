@@ -15,6 +15,8 @@ namespace Swift {
 			~AppleDNSSDService();
 
 			virtual void registerService(const String& name, int port, const LinkLocalServiceInfo&);
+			virtual void startResolvingService(const Service&);
+			virtual void stopResolvingService(const Service&);
 			virtual void unregisterService();
 			virtual void start();
 			virtual void stop();
@@ -27,6 +29,8 @@ namespace Swift {
 			void handleServiceDiscovered(DNSServiceRef, DNSServiceFlags, uint32_t, DNSServiceErrorType, const char *, const char *, const char *);
 			static void handleServiceRegisteredGlobal(DNSServiceRef, DNSServiceFlags, DNSServiceErrorType, const char *, const char *, const char *, void *);
 			void handleServiceRegistered(DNSServiceRef, DNSServiceFlags, DNSServiceErrorType, const char *, const char *, const char *);
+			static void handleServiceResolvedGlobal(DNSServiceRef, DNSServiceFlags, uint32_t, DNSServiceErrorType, const char *, const char *, uint16_t, uint16_t, const unsigned char *, void *);
+			void handleServiceResolved(DNSServiceRef, DNSServiceFlags, uint32_t, DNSServiceErrorType, const char *, const char *, uint16_t, uint16_t, const unsigned char *);
 
 		private:
 			boost::thread* thread;
@@ -36,5 +40,7 @@ namespace Swift {
 			boost::mutex sdRefsMutex;
 			DNSServiceRef browseSDRef;
 			DNSServiceRef registerSDRef;
+			typedef std::map<Service, DNSServiceRef> ServiceSDRefMap;
+			ServiceSDRefMap resolveSDRefs;
 	};
 }

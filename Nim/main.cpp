@@ -67,11 +67,11 @@ class Server {
 				dnsSDService_->onServiceRegistered.connect(boost::bind(&Server::handleServiceRegistered, this, _1));
 				LinkLocalServiceInfo info;
 				info.setFirstName("Remko");
-				info.setLastName("Tron\xc3\xe7on");
+				info.setLastName("Tron\xc3\xa7on");
 				info.setEMail("email@example.com");
 				info.setJID(JID("jid@example.com"));
 				info.setMessage("I'm not Here");
-				info.setNick("remko");
+				info.setNick("Remko");
 				info.setStatus(LinkLocalServiceInfo::Away);
 				info.setPort(linkLocalConnectionPort_);
 				dnsSDService_->registerService(session->getJID().toBare().toString(), linkLocalConnectionPort_, info);
@@ -85,6 +85,7 @@ class Server {
 		void handleSessionFinished(boost::shared_ptr<ServerFromClientSession> session) {
 			serverFromClientSessions_.erase(std::remove(serverFromClientSessions_.begin(), serverFromClientSessions_.end(), session), serverFromClientSessions_.end());
 			if (serverFromClientSessions_.empty()) {
+				std::cout << "Service unregistered" << std::endl;
 				dnsSDServiceRegistered_ = false;
 				dnsSDService_->unregisterService();
 			}
