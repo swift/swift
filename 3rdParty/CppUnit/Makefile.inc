@@ -5,6 +5,7 @@ CPPUNIT_TARGET = 3rdParty/CppUnit/CppUnit.a
 CPPUNIT_SOURCES = \
   3rdParty/CppUnit/src/TextTestRunner.cpp \
   3rdParty/CppUnit/src/TextTestProgressListener.cpp \
+  3rdParty/CppUnit/src/BriefTestProgressListener.cpp \
   3rdParty/CppUnit/src/TextOutputter.cpp \
   3rdParty/CppUnit/src/XmlOutputter.cpp \
   3rdParty/CppUnit/src/XmlElement.cpp \
