@@ -2,9 +2,11 @@
 
 #include <boost/shared_ptr.hpp>
 #include <boost/signal.hpp>
+#include <boost/enable_shared_from_this.hpp>
 
 #include "Swiften/Base/String.h"
 #include "Swiften/JID/JID.h"
+#include "Swiften/Network/Connection.h"
 
 namespace Swift {
 	class Element;
@@ -18,7 +20,7 @@ namespace Swift {
 	class Connection;
 	class ByteArray;
 
-	class ServerFromClientSession {
+	class ServerFromClientSession : public boost::enable_shared_from_this<ServerFromClientSession> {
 		public:
 			ServerFromClientSession(
 					const String& id,
@@ -27,6 +29,8 @@ namespace Swift {
 					PayloadSerializerCollection* payloadSerializers,
 					UserRegistry* userRegistry);
 			~ServerFromClientSession();
+
+			void start();
 
 			void sendStanza(boost::shared_ptr<Stanza>);
 
@@ -45,6 +49,7 @@ namespace Swift {
 			boost::signal<void (const ByteArray&)> onDataRead;
 
 		private:
+			void handleDisconnected(const boost::optional<Connection::Error>& error);
 			void handleElement(boost::shared_ptr<Element>);
 			void handleStreamStart(const String& domain);
 

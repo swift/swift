@@ -32,6 +32,15 @@ ServerFromClientSession::ServerFromClientSession(
 			authenticated_(false),
 			initialized_(false) {
 	xmppLayer_ = boost::shared_ptr<XMPPLayer>(new XMPPLayer(payloadParserFactories_, payloadSerializers_));
+	connectionLayer_ = boost::shared_ptr<ConnectionLayer>(new ConnectionLayer(connection_));
+	streamStack_ = new StreamStack(xmppLayer_, connectionLayer_);
+}
+
+ServerFromClientSession::~ServerFromClientSession() {
+	delete streamStack_;
+}
+
+void ServerFromClientSession::start() {
 	xmppLayer_->onStreamStart.connect(
 			boost::bind(&ServerFromClientSession::handleStreamStart, this, _2));
 	xmppLayer_->onElement.connect(
@@ -42,12 +51,7 @@ ServerFromClientSession::ServerFromClientSession(
 			boost::bind(boost::ref(onDataRead), _1));
 	xmppLayer_->onWriteData.connect(
 			boost::bind(boost::ref(onDataWritten), _1));
-	connectionLayer_ = boost::shared_ptr<ConnectionLayer>(new ConnectionLayer(connection_));
-	streamStack_ = new StreamStack(xmppLayer_, connectionLayer_);
-}
-
-ServerFromClientSession::~ServerFromClientSession() {
-	delete streamStack_;
+	connection_->onDisconnected.connect(boost::bind(&ServerFromClientSession::handleDisconnected, shared_from_this(), _1));
 }
 
 void ServerFromClientSession::handleElement(boost::shared_ptr<Element> element) {
@@ -112,6 +116,10 @@ void ServerFromClientSession::handleStreamStart(const String& domain) {
 
 void ServerFromClientSession::sendStanza(boost::shared_ptr<Stanza> stanza) {
 	xmppLayer_->writeElement(stanza);
+}
+
+void ServerFromClientSession::handleDisconnected(const boost::optional<Connection::Error>&) {
+	onSessionFinished();
 }
 
 

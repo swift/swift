@@ -488,7 +488,7 @@ class SessionTest : public CppUnit::TestFixture {
 
 			void connect(const String& domain) {
 				if (fail_) {
-					MainEventLoop::postEvent(boost::bind(boost::ref(onError), Connection::ConnectionError));
+					MainEventLoop::postEvent(boost::bind(boost::ref(onDisconnected), Connection::ConnectionError));
 				}
 				else {
 					domain_ = domain;
@@ -497,7 +497,7 @@ class SessionTest : public CppUnit::TestFixture {
 			}
 
 			void setError() {
-				MainEventLoop::postEvent(boost::bind(boost::ref(onError), Connection::ConnectionError));
+				MainEventLoop::postEvent(boost::bind(boost::ref(onDisconnected), Connection::ConnectionError));
 			}
 
 			void write(const ByteArray& data) {

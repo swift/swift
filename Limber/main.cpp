@@ -31,18 +31,18 @@ class Server {
 
 	private:
 		void handleNewConnection(boost::shared_ptr<Connection> c) {
-			ServerFromClientSession* session = new ServerFromClientSession(idGenerator_.generateID(), c, &payloadParserFactories_, &payloadSerializers_, userRegistry_);
+			boost::shared_ptr<ServerFromClientSession> session(new ServerFromClientSession(idGenerator_.generateID(), c, &payloadParserFactories_, &payloadSerializers_, userRegistry_));
 			serverFromClientSessions_.push_back(session);
 			session->onStanzaReceived.connect(boost::bind(&Server::handleStanzaReceived, this, _1, session));
 			session->onSessionFinished.connect(boost::bind(&Server::handleSessionFinished, this, session));
+			session->start();
 		}
 
-		void handleSessionFinished(ServerFromClientSession* session) {
+		void handleSessionFinished(boost::shared_ptr<ServerFromClientSession> session) {
 			serverFromClientSessions_.erase(std::remove(serverFromClientSessions_.begin(), serverFromClientSessions_.end(), session), serverFromClientSessions_.end());
-			delete session;
 		}
 
-		void handleStanzaReceived(boost::shared_ptr<Stanza> stanza, ServerFromClientSession* session) {
+		void handleStanzaReceived(boost::shared_ptr<Stanza> stanza, boost::shared_ptr<ServerFromClientSession> session) {
 			stanza->setFrom(session->getJID());
 			if (!stanza->getTo().isValid()) {
 				stanza->setTo(JID(session->getDomain()));
@@ -74,7 +74,7 @@ class Server {
 		UserRegistry* userRegistry_;
 		BoostIOServiceThread boostIOServiceThread_;
 		boost::shared_ptr<BoostConnectionServer> serverFromClientConnectionServer_;
-		std::vector<ServerFromClientSession*> serverFromClientSessions_;
+		std::vector< boost::shared_ptr<ServerFromClientSession> > serverFromClientSessions_;
 		FullPayloadParserFactoryCollection payloadParserFactories_;
 		FullPayloadSerializerCollection payloadSerializers_;
 };

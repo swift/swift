@@ -87,7 +87,7 @@ namespace Swift {
 			void sendSessionStart();
 
 			void handleConnected();
-			void handleConnectionError(Connection::Error);
+			void handleDisconnected(const boost::optional<Connection::Error>&);
 			void handleElement(boost::shared_ptr<Element>);
 			void handleStreamStart();
 			void handleTLSConnected();

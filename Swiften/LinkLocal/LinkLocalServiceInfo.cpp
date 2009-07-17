@@ -45,4 +45,70 @@ ByteArray LinkLocalServiceInfo::getEncoded(const String& s) {
 	return sizeByte + ByteArray(s);
 }
 
+LinkLocalServiceInfo LinkLocalServiceInfo::createFromTXTRecord(const ByteArray& record) {
+	LinkLocalServiceInfo info;
+	size_t i = 0;
+	while (i < record.getSize()) {
+		std::pair<String,String> entry = readEntry(record, &i);
+		if (entry.first.isEmpty()) {
+			break;
+		}
+		else if (entry.first == "1st") {
+			info.setFirstName(entry.second);
+		}
+		else if (entry.first == "last") {
+			info.setLastName(entry.second);
+		}
+		else if (entry.first == "email") {
+			info.setEMail(entry.second);
+		}
+		else if (entry.first == "jid") {
+			info.setJID(JID(entry.second));
+		}
+		else if (entry.first == "msg") {
+			info.setMessage(entry.second);
+		}
+		else if (entry.first == "nick") {
+			info.setNick(entry.second);
+		}
+		else if (entry.first == "port.p2pj") {
+			info.setPort(boost::lexical_cast<int>(entry.second));
+		}
+		else if (entry.first == "status") {
+			if (entry.second == "away") {
+				info.setStatus(Away);
+			}
+			else if (entry.second == "dnd") {
+				info.setStatus(DND);
+			}
+		}
+	}
+	return info;
+}
+
+std::pair<String,String> LinkLocalServiceInfo::readEntry(const ByteArray& record, size_t* index) {
+	size_t& i = *index;
+	String key;
+	String value;
+
+	size_t entryEnd = i + 1 + record[i];
+	++i;
+	bool inKey = true;
+	while (i < entryEnd && i < record.getSize()) {
+		if (inKey) {
+			if (record[i] == '=') {
+				inKey = false;
+			}
+			else {
+				key += record[i];
+			}
+		}
+		else {
+			value += record[i];
+		}
+		++i;
+	}
+	return std::make_pair(key, value);
+}
+
 }

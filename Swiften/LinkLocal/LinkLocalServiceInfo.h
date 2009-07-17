@@ -40,8 +40,11 @@ namespace Swift {
 
 			ByteArray toTXTRecord() const;
 
+			static LinkLocalServiceInfo createFromTXTRecord(const ByteArray& record);
+
 		private:
 			static ByteArray getEncoded(const String&);
+			static std::pair<String,String> readEntry(const ByteArray&, size_t*);
 
 		private:
 			String firstName;

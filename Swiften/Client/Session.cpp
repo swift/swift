@@ -44,7 +44,7 @@ void Session::start() {
 	state_ = Connecting;
 	connection_ = connectionFactory_->createConnection();
 	connection_->onConnected.connect(boost::bind(&Session::handleConnected, this));
-	connection_->onError.connect(boost::bind(&Session::handleConnectionError, this, _1));
+	connection_->onDisconnected.connect(boost::bind(&Session::handleDisconnected, this, _1));
 	connection_->connect(jid_.getDomain());
 }
 
@@ -75,20 +75,22 @@ void Session::initializeStreamStack() {
 	streamStack_ = new StreamStack(xmppLayer_, connectionLayer_);
 }
 
-void Session::handleConnectionError(Connection::Error error) {
-	switch (error) {
-		case Connection::DomainNameResolveError:
-			setError(DomainNameResolveError);
-			break;
-		case Connection::ReadError:
-			setError(ConnectionReadError);
-			break;
-		case Connection::WriteError:
-			setError(ConnectionWriteError);
-			break;
-		case Connection::ConnectionError:
-			setError(ConnectionError);
-			break;
+void Session::handleDisconnected(const boost::optional<Connection::Error>& error) {
+	if (error) {
+		switch (*error) {
+			case Connection::DomainNameResolveError:
+				setError(DomainNameResolveError);
+				break;
+			case Connection::ReadError:
+				setError(ConnectionReadError);
+				break;
+			case Connection::WriteError:
+				setError(ConnectionWriteError);
+				break;
+			case Connection::ConnectionError:
+				setError(ConnectionError);
+				break;
+		}
 	}
 }
 
