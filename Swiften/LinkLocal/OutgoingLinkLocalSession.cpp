@@ -1,9 +1,14 @@
+// TODO: Send back errors if we can't make a connection
+
 #include "Swiften/LinkLocal/OutgoingLinkLocalSession.h"
 
 #include <boost/bind.hpp>
 
 #include "Swiften/Elements/ProtocolHeader.h"
 #include "Swiften/Network/Connection.h"
+#include "Swiften/Network/ConnectionFactory.h"
+#include "Swiften/Network/HostAddress.h"
+#include "Swiften/Network/HostAddressPort.h"
 #include "Swiften/StreamStack/StreamStack.h"
 #include "Swiften/LinkLocal/DNSSDService.h"
 #include "Swiften/StreamStack/ConnectionLayer.h"
@@ -18,6 +23,7 @@ OutgoingLinkLocalSession::OutgoingLinkLocalSession(
 		const JID& localJID,
 		const JID& remoteJID,
 		const String& hostname,
+		int port,
 		boost::shared_ptr<DNSSDService> resolver,
 		PayloadParserFactoryCollection* payloadParserFactories, 
 		PayloadSerializerCollection* payloadSerializers,
@@ -30,34 +36,46 @@ OutgoingLinkLocalSession::OutgoingLinkLocalSession(
 			resolving_(false),
 			remoteJID_(remoteJID),
 			hostname_(hostname),
+			port_(port),
 			resolver_(resolver),
 			connectionFactory_(connectionFactory) {
 }
 
 void OutgoingLinkLocalSession::start() {
 	resolving_ = true;
-	//resolver_->onHostnameResolved.connect(boost::bind(&OutgoingLinkLocalSession::handleHostnameResolved, this, _1, _2));
+	resolver_->onHostnameResolved.connect(boost::bind(&OutgoingLinkLocalSession::handleHostnameResolved, boost::dynamic_pointer_cast<OutgoingLinkLocalSession>(shared_from_this()), _1, _2));
+	resolver_->resolveHostname(hostname_);
 }
 
-#if 0
-void OutgoingLinkLocalSession::handleHostnameResolved(const String& hostname, const HostAddress&) {
+void OutgoingLinkLocalSession::handleHostnameResolved(const String& hostname, const boost::optional<HostAddress>& address) {
 	if (resolving_) {
 		if (hostname == hostname_) {
-			boost::shared_ptr<Connection> connection = connectionFactory_->createConnection();
-			connection->onConnected.connect(boost::bind(&Session::handleConnected, shared_from_this()));
-			connection->onDisconnected.connect(boost::bind(&Session::handleDisconnected, shared_from_this(), _1));
-			connection_->connect(jid_.getDomain());
 			resolving_ = false;
-			boost::
+			if (address) {
+				boost::shared_ptr<Connection> connection = connectionFactory_->createConnection();
+				setConnection(connection);
+				initializeStreamStack();
+				connection->onConnected.connect(boost::bind(&OutgoingLinkLocalSession::handleConnected, boost::dynamic_pointer_cast<OutgoingLinkLocalSession>(shared_from_this())));
+				connection->connect(HostAddressPort(*address, port_));
+			}
+			else {
+				onSessionFinished(boost::optional<Error>(UnknownError));
+			}
 		}
 	}
 }
-#endif
 
-void OutgoingLinkLocalSession::handleStreamStart(const ProtocolHeader&) {
+void OutgoingLinkLocalSession::handleConnected() {
 	ProtocolHeader header;
 	header.setFrom(getLocalJID());
 	getXMPPLayer()->writeHeader(header);
+}
+
+void OutgoingLinkLocalSession::handleStreamStart(const ProtocolHeader&) {
+	foreach(const boost::shared_ptr<Stanza>& stanza, queuedStanzas_) {
+		LinkLocalSession::sendStanza(stanza);
+	}
+	queuedStanzas_.clear();
 	setInitialized();
 }
 
@@ -67,6 +85,15 @@ void OutgoingLinkLocalSession::handleElement(boost::shared_ptr<Element> element)
 		if (stanza) {
 			onStanzaReceived(stanza);
 		}
+	}
+}
+
+void OutgoingLinkLocalSession::sendStanza(boost::shared_ptr<Stanza> stanza) {
+	if (isInitialized()) {
+		LinkLocalSession::sendStanza(stanza);
+	}
+	else {
+		queuedStanzas_.push_back(stanza);
 	}
 }
 

@@ -2,6 +2,7 @@
 
 #include <boost/shared_ptr.hpp>
 #include <boost/signal.hpp>
+#include <boost/optional.hpp>
 #include <boost/enable_shared_from_this.hpp>
 
 #include "Swiften/JID/JID.h"
@@ -22,6 +23,8 @@ namespace Swift {
 	class LinkLocalSession : 
 			public boost::enable_shared_from_this<LinkLocalSession> {
 		public:
+			enum Error { ConnectionError, UnknownError };
+
 			LinkLocalSession(
 					const JID& localJID,
 					boost::shared_ptr<Connection> connection,
@@ -39,7 +42,7 @@ namespace Swift {
 			virtual void start() = 0;
 
 			boost::signal<void (boost::shared_ptr<Stanza>)> onStanzaReceived;
-			boost::signal<void ()> onSessionFinished;
+			boost::signal<void (boost::optional<Error>)> onSessionFinished;
 			boost::signal<void ()> onSessionStarted;
 			boost::signal<void (const ByteArray&)> onDataWritten;
 			boost::signal<void (const ByteArray&)> onDataRead;

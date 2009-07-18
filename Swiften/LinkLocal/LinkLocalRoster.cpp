@@ -128,4 +128,13 @@ String LinkLocalRoster::getHostname(const JID& j) const {
 	return "";
 }
 
+int LinkLocalRoster::getPort(const JID& j) const {
+	for(ServiceMap::const_iterator i = services.begin(); i != services.end(); ++i) {
+		if (getJIDForService(i->first) == j) {
+			return i->second.port;
+		}
+	}
+	return 0;
+}
+
 }

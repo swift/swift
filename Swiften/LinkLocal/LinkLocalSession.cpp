@@ -47,8 +47,13 @@ void LinkLocalSession::sendStanza(boost::shared_ptr<Stanza> stanza) {
 	xmppLayer->writeElement(stanza);
 }
 
-void LinkLocalSession::handleDisconnected(const boost::optional<Connection::Error>&) {
-	onSessionFinished();
+void LinkLocalSession::handleDisconnected(const boost::optional<Connection::Error>& connectionError) {
+	if (connectionError) {
+		onSessionFinished(boost::optional<Error>(ConnectionError));
+	}
+	else {
+		onSessionFinished(boost::optional<Error>());
+	}
 }
 
 void LinkLocalSession::setInitialized() {

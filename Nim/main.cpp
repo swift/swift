@@ -175,7 +175,9 @@ class Server {
 					if (linkLocalRoster_->hasItem(toJID)) {
 						boost::shared_ptr<OutgoingLinkLocalSession> outgoingSession(
 								new OutgoingLinkLocalSession(
-									selfJID_, toJID, linkLocalRoster_->getHostname(toJID),
+									selfJID_, toJID, 
+									linkLocalRoster_->getHostname(toJID),
+									linkLocalRoster_->getPort(toJID),
 									dnsSDService_, 
 									&payloadParserFactories_, &payloadSerializers_,
 									&boostConnectionFactory_));

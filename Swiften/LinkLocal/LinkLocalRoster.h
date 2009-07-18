@@ -25,6 +25,7 @@ namespace Swift {
 
 			bool hasItem(const JID&) const;
 			String getHostname(const JID&) const;
+			int getPort(const JID&) const;
 
 		private:
 			RosterItemPayload getRosterItem(const DNSSDService::Service& service, const DNSSDService::ResolveResult& info) const;
