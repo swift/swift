@@ -4,30 +4,21 @@
 #include <unistd.h>
 #include <iostream>
 #include <sys/socket.h>
+#include <netinet/in.h>
+#include <fcntl.h>
 
 #include "Swiften/EventLoop/MainEventLoop.h"
 #include "Swiften/LinkLocal/LinkLocalServiceInfo.h"
+#include "Swiften/Network/HostAddress.h"
 
 namespace Swift {
 
-#if 0
-namespace {
-	void handleAddressInfoReceived ( DNSServiceRef sdRef, DNSServiceFlags flags, uint32_t interfaceIndex, DNSServiceErrorType errorCode, const char *hostname, const struct sockaddr *address, uint32_t ttl, void *context ) {
-		//std::cerr << "Address received " << HostAddress((const unsigned char*) address->sa_data, 4).toString() << std::endl;
-	} 
-}
-
-/*
-		result = DNSServiceGetAddrInfo(&addressSDRef, 0, 6, kDNSServiceProtocol_IPv4, "Micro.local.", handleAddressInfoReceived, 0);
-	*/
-#endif
-
-
-AppleDNSSDService::AppleDNSSDService() : thread(0), stopRequested(false), browseSDRef(0), registerSDRef(0) {
+AppleDNSSDService::AppleDNSSDService() : thread(0), stopRequested(false), haveError(false), browseSDRef(0), registerSDRef(0) {
 	int fds[2];
 	int result = pipe(fds);
 	assert(result == 0);
 	interruptSelectReadSocket = fds[0];
+	fcntl(interruptSelectReadSocket, F_SETFL, fcntl(interruptSelectReadSocket, F_GETFL)|O_NONBLOCK);
 	interruptSelectWriteSocket = fds[1];
 }
 
@@ -36,57 +27,8 @@ AppleDNSSDService::~AppleDNSSDService() {
 }
 
 void AppleDNSSDService::start() {
-	assert(!thread);
+	stop();
 	thread = new boost::thread(boost::bind(&AppleDNSSDService::doStart, shared_from_this()));
-}
-
-void AppleDNSSDService::registerService(const String& name, int port, const LinkLocalServiceInfo& info) {
-	boost::lock_guard<boost::mutex> lock(sdRefsMutex);
-
-	assert(!registerSDRef);
-	ByteArray txtRecord = info.toTXTRecord();
-	DNSServiceErrorType result = DNSServiceRegister(&registerSDRef, 0, 0, name.getUTF8Data(), "_presence._tcp", NULL, NULL, port, txtRecord.getSize(), txtRecord.getData(), &AppleDNSSDService::handleServiceRegisteredGlobal, this);
-	if (result != kDNSServiceErr_NoError) {
-		onError();
-	}
-
-	interruptSelect();
-}
-
-void AppleDNSSDService::unregisterService() {
-	boost::lock_guard<boost::mutex> lock(sdRefsMutex);
-
-	assert(registerSDRef);
-	DNSServiceRefDeallocate(registerSDRef);
-	registerSDRef = NULL;
-
-	interruptSelect();
-}
-
-void AppleDNSSDService::startResolvingService(const Service& service) {
-	boost::lock_guard<boost::mutex> lock(sdRefsMutex);
-
-	DNSServiceRef resolveSDRef;
-	DNSServiceErrorType result = DNSServiceResolve(&resolveSDRef, 0, service.networkInterface, service.name.getUTF8Data(), service.type.getUTF8Data(), service.domain.getUTF8Data(), &AppleDNSSDService::handleServiceResolvedGlobal, this);
-	if (result != kDNSServiceErr_NoError) {
-		onError();
-	}
-
-	bool isNew = resolveSDRefs.insert(std::make_pair(service, resolveSDRef)).second;
-	assert(isNew);
-
-	interruptSelect();
-}
-
-void AppleDNSSDService::stopResolvingService(const Service& service) {
-	boost::lock_guard<boost::mutex> lock(sdRefsMutex);
-
-	ServiceSDRefMap::iterator i = resolveSDRefs.find(service);
-	assert(i != resolveSDRefs.end());
-	DNSServiceRefDeallocate(i->second);
-	resolveSDRefs.erase(i);
-
-	interruptSelect();
 }
 
 void AppleDNSSDService::stop() {
@@ -99,17 +41,84 @@ void AppleDNSSDService::stop() {
 	}
 }
 
+void AppleDNSSDService::registerService(const String& name, int port, const LinkLocalServiceInfo& info) {
+	boost::lock_guard<boost::mutex> lock(sdRefsMutex);
+
+	assert(!registerSDRef);
+	ByteArray txtRecord = info.toTXTRecord();
+	DNSServiceErrorType result = DNSServiceRegister(&registerSDRef, 0, 0, name.getUTF8Data(), "_presence._tcp", NULL, NULL, port, txtRecord.getSize(), txtRecord.getData(), &AppleDNSSDService::handleServiceRegisteredGlobal, this);
+	if (result != kDNSServiceErr_NoError) {
+		std::cerr << "Error creating service registration" << std::endl;
+		haveError = true;
+	}
+
+	interruptSelect();
+}
+
+void AppleDNSSDService::unregisterService() {
+	boost::lock_guard<boost::mutex> lock(sdRefsMutex);
+
+	assert(registerSDRef);
+	DNSServiceRefDeallocate(registerSDRef); // Interrupts select()
+	registerSDRef = NULL;
+}
+
+void AppleDNSSDService::startResolvingService(const Service& service) {
+	boost::lock_guard<boost::mutex> lock(sdRefsMutex);
+
+	DNSServiceRef resolveSDRef;
+	DNSServiceErrorType result = DNSServiceResolve(&resolveSDRef, 0, service.networkInterface, service.name.getUTF8Data(), service.type.getUTF8Data(), service.domain.getUTF8Data(), &AppleDNSSDService::handleServiceResolvedGlobal, this);
+	if (result != kDNSServiceErr_NoError) {
+		std::cerr << "Error creating service resolve query" << std::endl;
+		haveError = true;
+	}
+	else {
+		bool isNew = resolveSDRefs.insert(std::make_pair(service, resolveSDRef)).second;
+		assert(isNew);
+	}
+
+	interruptSelect();
+}
+
+void AppleDNSSDService::stopResolvingService(const Service& service) {
+	boost::lock_guard<boost::mutex> lock(sdRefsMutex);
+
+	ServiceSDRefMap::iterator i = resolveSDRefs.find(service);
+	assert(i != resolveSDRefs.end());
+	DNSServiceRefDeallocate(i->second); // Interrupts select()
+	resolveSDRefs.erase(i);
+}
+
+void AppleDNSSDService::resolveHostname(const String& hostname, int interfaceIndex) {
+	boost::lock_guard<boost::mutex> lock(sdRefsMutex);
+
+	DNSServiceRef hostnameResolveSDRef;
+	DNSServiceErrorType result = DNSServiceGetAddrInfo(&hostnameResolveSDRef, 0, interfaceIndex, kDNSServiceProtocol_IPv4, hostname.getUTF8Data(), &AppleDNSSDService::handleHostnameResolvedGlobal, this);
+	if (result != kDNSServiceErr_NoError) {
+		std::cerr << "Error creating hostname resolve query" << std::endl;
+		haveError = true;
+	}
+	else {
+		hostnameResolveSDRefs.push_back(hostnameResolveSDRef);
+	}
+
+	interruptSelect();
+}
+
 void AppleDNSSDService::doStart() {
+	haveError = false;
+	onStarted();
+
 	// Listen for new services
 	assert(!browseSDRef);
 	DNSServiceErrorType result = DNSServiceBrowse(&browseSDRef, 0, 0, "_presence._tcp", 0, &AppleDNSSDService::handleServiceDiscoveredGlobal , this);
 	if (result != kDNSServiceErr_NoError) {
-		MainEventLoop::postEvent(boost::ref(onError), shared_from_this());
-		return;
+		std::cerr << "Error creating browse query" << std::endl;
+		haveError = true;
 	}
 
 	// Run the main loop
-	while (!stopRequested) {
+	while (!haveError && !stopRequested) {
 		fd_set fdSet;
 		FD_ZERO(&fdSet);
 		int maxSocket = interruptSelectReadSocket;
@@ -130,24 +139,32 @@ void AppleDNSSDService::doStart() {
 				FD_SET(registerSocket, &fdSet);
 			}
 
-			// Resolving
+			// Service resolving
 			for (ServiceSDRefMap::const_iterator i = resolveSDRefs.begin(); i != resolveSDRefs.end(); ++i) {
 				int resolveSocket = DNSServiceRefSockFD(i->second);
 				maxSocket = std::max(maxSocket, resolveSocket);
 				FD_SET(resolveSocket, &fdSet);
 			}
+
+			// Hostname resolving
+			for (HostnameSDRefs::const_iterator i = hostnameResolveSDRefs.begin(); i != hostnameResolveSDRefs.end(); ++i) {
+				int hostnameResolveSocket = DNSServiceRefSockFD(*i);
+				maxSocket = std::max(maxSocket, hostnameResolveSocket);
+				FD_SET(hostnameResolveSocket, &fdSet);
+			}
 		}
 
 		int selectResult = select(maxSocket+1, &fdSet, NULL, NULL, 0);
 
+		// Flush the interruptSelectReadSocket
+		if (FD_ISSET(interruptSelectReadSocket, &fdSet)) {
+			char dummy;
+			while (read(interruptSelectReadSocket, &dummy, 1) > 0) {}
+		}
+
 		{
 			boost::lock_guard<boost::mutex> lock(sdRefsMutex);
-
-			if (selectResult == -1) {
-				MainEventLoop::postEvent(boost::ref(onError), shared_from_this());
-				return;
-			}
-			if (selectResult == 0) {
+			if (selectResult <= 0) {
 				continue;
 			}
 			if (FD_ISSET(DNSServiceRefSockFD(browseSDRef), &fdSet)) {
@@ -161,8 +178,26 @@ void AppleDNSSDService::doStart() {
 					DNSServiceProcessResult(i->second);
 				}
 			}
+			for (HostnameSDRefs::const_iterator i = hostnameResolveSDRefs.begin(); i != hostnameResolveSDRefs.end(); ++i) {
+				if (FD_ISSET(DNSServiceRefSockFD(*i), &fdSet)) {
+					DNSServiceProcessResult(*i);
+					hostnameResolveSDRefs.erase(std::remove(hostnameResolveSDRefs.begin(), hostnameResolveSDRefs.end(), *i), hostnameResolveSDRefs.end());
+					DNSServiceRefDeallocate(*i);
+					break; // Stop the loop, because we removed an element
+				}
+			}
 		}
 	}
+
+	for (ServiceSDRefMap::const_iterator i = resolveSDRefs.begin(); i != resolveSDRefs.end(); ++i) {
+		DNSServiceRefDeallocate(i->second);
+	}
+	resolveSDRefs.clear();
+
+	for (HostnameSDRefs::const_iterator i = hostnameResolveSDRefs.begin(); i != hostnameResolveSDRefs.end(); ++i) {
+		DNSServiceRefDeallocate(*i);
+	}
+	hostnameResolveSDRefs.clear();
 
 	if (registerSDRef) {
 		DNSServiceRefDeallocate(registerSDRef);
@@ -171,6 +206,8 @@ void AppleDNSSDService::doStart() {
 
 	DNSServiceRefDeallocate(browseSDRef);
 	browseSDRef = NULL;
+
+	MainEventLoop::postEvent(boost::bind(boost::ref(onStopped), haveError), shared_from_this());
 }
 
 void AppleDNSSDService::interruptSelect() {
@@ -184,7 +221,7 @@ void AppleDNSSDService::handleServiceDiscoveredGlobal(DNSServiceRef sdRef, DNSSe
 
 void AppleDNSSDService::handleServiceDiscovered(DNSServiceRef, DNSServiceFlags flags, uint32_t interfaceIndex, DNSServiceErrorType errorCode, const char *serviceName, const char *regtype, const char *replyDomain) {
 	if (errorCode != kDNSServiceErr_NoError) {
-		MainEventLoop::postEvent(boost::ref(onError), shared_from_this());
+		return;
 	}
 	else {
 		Service service(serviceName, regtype, replyDomain, interfaceIndex);
@@ -203,7 +240,8 @@ void AppleDNSSDService::handleServiceRegisteredGlobal(DNSServiceRef sdRef, DNSSe
 
 void AppleDNSSDService::handleServiceRegistered(DNSServiceRef, DNSServiceFlags, DNSServiceErrorType errorCode, const char *name, const char *regtype, const char *domain) {
 	if (errorCode != kDNSServiceErr_NoError) {
-		MainEventLoop::postEvent(boost::ref(onError), shared_from_this());
+		std::cerr << "Error registering service" << std::endl;
+		haveError = true;
 	}
 	else {
 		MainEventLoop::postEvent(boost::bind(boost::ref(onServiceRegistered), Service(name, regtype, domain, 0)), shared_from_this());
@@ -228,5 +266,21 @@ void AppleDNSSDService::handleServiceResolved(DNSServiceRef sdRef, DNSServiceFla
 	assert(false);
 }
 
+void AppleDNSSDService::handleHostnameResolvedGlobal(DNSServiceRef sdRef, DNSServiceFlags flags, uint32_t interfaceIndex, DNSServiceErrorType errorCode, const char *hostname, const struct sockaddr *address, uint32_t ttl, void *context) {
+	static_cast<AppleDNSSDService*>(context)->handleHostnameResolved(sdRef, flags, interfaceIndex, errorCode, hostname, address, ttl);
+} 
+
+void AppleDNSSDService::handleHostnameResolved(DNSServiceRef, DNSServiceFlags, uint32_t, DNSServiceErrorType errorCode, const char *hostname, const struct sockaddr *rawAddress, uint32_t) {
+	if (errorCode) {
+		std::cerr << "Error resolving hostname" << std::endl;
+		MainEventLoop::postEvent(boost::bind(boost::ref(onHostnameResolved), hostname, boost::optional<HostAddress>()), shared_from_this());
+	}
+	else {
+		assert(rawAddress->sa_family == AF_INET);
+		const sockaddr_in* sa = reinterpret_cast<const sockaddr_in*>(rawAddress);
+		uint32_t address = ntohl(sa->sin_addr.s_addr);
+		MainEventLoop::postEvent(boost::bind(boost::ref(onHostnameResolved), String(hostname), HostAddress(reinterpret_cast<unsigned char*>(&address), 4)), shared_from_this());
+	}
+}
 
 }

@@ -14,12 +14,16 @@ namespace Swift {
 			AppleDNSSDService();
 			~AppleDNSSDService();
 
-			virtual void registerService(const String& name, int port, const LinkLocalServiceInfo&);
-			virtual void startResolvingService(const Service&);
-			virtual void stopResolvingService(const Service&);
-			virtual void unregisterService();
 			virtual void start();
 			virtual void stop();
+
+			virtual void registerService(const String& name, int port, const LinkLocalServiceInfo&);
+			virtual void unregisterService();
+
+			virtual void startResolvingService(const Service&);
+			virtual void stopResolvingService(const Service&);
+
+			virtual void resolveHostname(const String& hostname, int interfaceIndex = 0);
 
 		private:
 			void doStart();
@@ -31,10 +35,13 @@ namespace Swift {
 			void handleServiceRegistered(DNSServiceRef, DNSServiceFlags, DNSServiceErrorType, const char *, const char *, const char *);
 			static void handleServiceResolvedGlobal(DNSServiceRef, DNSServiceFlags, uint32_t, DNSServiceErrorType, const char *, const char *, uint16_t, uint16_t, const unsigned char *, void *);
 			void handleServiceResolved(DNSServiceRef, DNSServiceFlags, uint32_t, DNSServiceErrorType, const char *, const char *, uint16_t, uint16_t, const unsigned char *);
+			static void handleHostnameResolvedGlobal(DNSServiceRef sdRef, DNSServiceFlags flags, uint32_t interfaceIndex, DNSServiceErrorType errorCode, const char *hostname, const struct sockaddr *address, uint32_t ttl, void *context);
+			void handleHostnameResolved(DNSServiceRef sdRef, DNSServiceFlags flags, uint32_t interfaceIndex, DNSServiceErrorType errorCode, const char *hostname, const struct sockaddr *address, uint32_t ttl);
 
 		private:
 			boost::thread* thread;
 			bool stopRequested;
+			bool haveError;
 			int interruptSelectReadSocket;
 			int interruptSelectWriteSocket;
 			boost::mutex sdRefsMutex;
@@ -42,5 +49,7 @@ namespace Swift {
 			DNSServiceRef registerSDRef;
 			typedef std::map<Service, DNSServiceRef> ServiceSDRefMap;
 			ServiceSDRefMap resolveSDRefs;
+			typedef std::vector<DNSServiceRef> HostnameSDRefs;
+			HostnameSDRefs hostnameResolveSDRefs;
 	};
 }
