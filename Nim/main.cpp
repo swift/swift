@@ -1,8 +1,11 @@
+// TODO: Prohibit multiple logins
+
 #include <string>
 #include <boost/bind.hpp>
 #include <boost/shared_ptr.hpp>
 
 #include "Swiften/Elements/IQ.h"
+#include "Swiften/Elements/Presence.h"
 #include "Swiften/Elements/RosterPayload.h"
 #include "Swiften/Elements/VCard.h"
 #include "Swiften/Server/UserRegistry.h"
@@ -41,24 +44,36 @@ class DummyUserRegistry : public UserRegistry {
 
 class Server {
 	public:
-		Server(int clientConnectionPort, int linkLocalConnectionPort) : dnsSDServiceRegistered_(false), clientConnectionPort_(clientConnectionPort), linkLocalConnectionPort_(linkLocalConnectionPort) {
+		Server(int clientConnectionPort, int linkLocalConnectionPort) : dnsSDServiceRegistered_(false), rosterRequested_(false), clientConnectionPort_(clientConnectionPort), linkLocalConnectionPort_(linkLocalConnectionPort) {
 			serverFromClientConnectionServer_ = boost::shared_ptr<BoostConnectionServer>(new BoostConnectionServer(clientConnectionPort, &boostIOServiceThread_.getIOService()));
-			serverFromClientConnectionServer_->onNewConnection.connect(boost::bind(&Server::handleNewConnection, this, _1));
+			serverFromClientConnectionServer_->onNewConnection.connect(boost::bind(&Server::handleNewClientConnection, this, _1));
 			serverFromClientConnectionServer_->start();
+
+			serverFromNetworkConnectionServer_ = boost::shared_ptr<BoostConnectionServer>(new BoostConnectionServer(linkLocalConnectionPort, &boostIOServiceThread_.getIOService()));
+			serverFromNetworkConnectionServer_->onNewConnection.connect(boost::bind(&Server::handleNewLinkLocalConnection, this, _1));
+			serverFromNetworkConnectionServer_->start();
 
 			dnsSDService_ = boost::shared_ptr<AppleDNSSDService>(new AppleDNSSDService());
 			linkLocalRoster_ = boost::shared_ptr<LinkLocalRoster>(new LinkLocalRoster(dnsSDService_));
+			linkLocalRoster_->onRosterChanged.connect(boost::bind(&Server::handleRosterChanged, this, _1));
+			linkLocalRoster_->onPresenceChanged.connect(boost::bind(&Server::handlePresenceChanged, this, _1));
 			dnsSDService_->start();
 		}
 
 	private:
-		void handleNewConnection(boost::shared_ptr<Connection> c) {
-			boost::shared_ptr<ServerFromClientSession> session(new ServerFromClientSession(idGenerator_.generateID(), c, &payloadParserFactories_, &payloadSerializers_, &userRegistry_));
-			serverFromClientSessions_.push_back(session);
-			session->onStanzaReceived.connect(boost::bind(&Server::handleStanzaReceived, this, _1, session));
-			session->onSessionStarted.connect(boost::bind(&Server::handleSessionStarted, this, session));
-			session->onSessionFinished.connect(boost::bind(&Server::handleSessionFinished, this, session));
-			session->start();
+		void handleNewClientConnection(boost::shared_ptr<Connection> c) {
+			if (serverFromClientSession_) {
+				c->disconnect();
+			}
+			serverFromClientSession_ = boost::shared_ptr<ServerFromClientSession>(new ServerFromClientSession(idGenerator_.generateID(), c, &payloadParserFactories_, &payloadSerializers_, &userRegistry_));
+			serverFromClientSession_->onStanzaReceived.connect(boost::bind(&Server::handleStanzaReceived, this, _1, serverFromClientSession_));
+			serverFromClientSession_->onSessionStarted.connect(boost::bind(&Server::handleSessionStarted, this, serverFromClientSession_));
+			serverFromClientSession_->onSessionFinished.connect(boost::bind(&Server::handleSessionFinished, this, serverFromClientSession_));
+			serverFromClientSession_->start();
+		}
+
+		void handleNewLinkLocalConnection(boost::shared_ptr<Connection>) {
+			std::cout << "Incoming link local connection" << std::endl;
 		}
 		
 		void handleSessionStarted(boost::shared_ptr<ServerFromClientSession> session) {
@@ -82,13 +97,13 @@ class Server {
 			std::cout << "Service registered " << service.name << " " << service.type << " " << service.domain << std::endl;
 		}
 
-		void handleSessionFinished(boost::shared_ptr<ServerFromClientSession> session) {
-			serverFromClientSessions_.erase(std::remove(serverFromClientSessions_.begin(), serverFromClientSessions_.end(), session), serverFromClientSessions_.end());
-			if (serverFromClientSessions_.empty()) {
-				std::cout << "Service unregistered" << std::endl;
-				dnsSDServiceRegistered_ = false;
-				dnsSDService_->unregisterService();
-			}
+		void handleSessionFinished(boost::shared_ptr<ServerFromClientSession>) {
+			serverFromClientSession_.reset();
+
+			std::cout << "Service unregistered" << std::endl;
+			dnsSDServiceRegistered_ = false;
+			rosterRequested_ = false;
+			dnsSDService_->unregisterService();
 		}
 
 		void handleStanzaReceived(boost::shared_ptr<Stanza> stanza, boost::shared_ptr<ServerFromClientSession> session) {
@@ -99,7 +114,16 @@ class Server {
 			if (!stanza->getTo().isValid() || stanza->getTo() == session->getDomain() || stanza->getTo() == session->getJID().toBare()) {
 				if (boost::shared_ptr<IQ> iq = boost::dynamic_pointer_cast<IQ>(stanza)) {
 					if (iq->getPayload<RosterPayload>()) {
-						session->sendStanza(IQ::createResult(iq->getFrom(), iq->getID(), boost::shared_ptr<RosterPayload>(new RosterPayload())));
+						if (iq->getType() == IQ::Get) {
+							session->sendStanza(IQ::createResult(iq->getFrom(), iq->getID(), linkLocalRoster_->getRoster()));
+							rosterRequested_ = true;
+							foreach(const boost::shared_ptr<Presence> presence, linkLocalRoster_->getAllPresence()) {
+								session->sendStanza(presence);
+							}
+						}
+						else {
+							session->sendStanza(IQ::createError(iq->getFrom(), iq->getID(), Error::Forbidden, Error::Cancel));
+						}
 					}
 					if (iq->getPayload<VCard>()) {
 						if (iq->getType() == IQ::Get) {
@@ -118,6 +142,20 @@ class Server {
 			}
 		}
 
+		void handleRosterChanged(boost::shared_ptr<RosterPayload> roster) {
+			if (rosterRequested_) {
+				boost::shared_ptr<IQ> iq = IQ::createRequest(IQ::Set, serverFromClientSession_->getJID(), idGenerator_.generateID(), roster);
+				iq->setFrom(serverFromClientSession_->getJID().toBare());
+				serverFromClientSession_->sendStanza(iq);
+			}
+		}
+
+		void handlePresenceChanged(boost::shared_ptr<Presence> presence) {
+			if (rosterRequested_) {
+				serverFromClientSession_->sendStanza(presence);
+			}
+		}
+
 	private:
 		IDGenerator idGenerator_;
 		BoostIOServiceThread boostIOServiceThread_;
@@ -125,10 +163,12 @@ class Server {
 		boost::shared_ptr<AppleDNSSDService> dnsSDService_;
 		boost::shared_ptr<LinkLocalRoster> linkLocalRoster_;
 		boost::shared_ptr<BoostConnectionServer> serverFromClientConnectionServer_;
-		std::vector< boost::shared_ptr<ServerFromClientSession> > serverFromClientSessions_;
+		boost::shared_ptr<ServerFromClientSession> serverFromClientSession_;
+		boost::shared_ptr<BoostConnectionServer> serverFromNetworkConnectionServer_;
 		FullPayloadParserFactoryCollection payloadParserFactories_;
 		FullPayloadSerializerCollection payloadSerializers_;
 		bool dnsSDServiceRegistered_;
+		bool rosterRequested_;
 		int clientConnectionPort_;
 		int linkLocalConnectionPort_;
 };
