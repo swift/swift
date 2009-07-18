@@ -2,6 +2,7 @@
 #include <cppunit/extensions/TestFactoryRegistry.h>
 #include <vector>
 
+#include "Swiften/Elements/ProtocolHeader.h"
 #include "Swiften/Base/String.h"
 #include "Swiften/Parser/XMPPParser.h"
 #include "Swiften/Parser/ElementParser.h"
@@ -165,8 +166,8 @@ class XMPPParserTest : public CppUnit::TestFixture
 
 				Client() {}
 
-				void handleStreamStart(const String& from, const String& to, const String& id) {
-					events.push_back(Event(StreamStart, from, to, id));
+				void handleStreamStart(const ProtocolHeader& header) {
+					events.push_back(Event(StreamStart, header.getFrom(), header.getTo(), header.getID()));
 				}
 
 				void handleElement(boost::shared_ptr<Element> element) {

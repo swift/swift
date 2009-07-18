@@ -3,6 +3,7 @@
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/extensions/TestFactoryRegistry.h>
 
+#include "Swiften/Elements/ProtocolHeader.h"
 #include "Swiften/Elements/Presence.h"
 #include "Swiften/Base/ByteArray.h"
 #include "Swiften/StreamStack/XMPPLayer.h"
@@ -68,9 +69,11 @@ class XMPPLayerTest : public CppUnit::TestFixture
 
 		void testWriteHeader() {
 			testling_->onWriteData.connect(boost::bind(&XMPPLayerTest::handleWriteData, this, _1));
-			testling_->writeHeader("example.com");
+			ProtocolHeader header;
+			header.setTo("example.com");
+			testling_->writeHeader(header);
 
-			CPPUNIT_ASSERT_EQUAL(String("<?xml version=\"1.0\"?><stream:stream xmlns=\"jabber:client\" xmlns:stream=\"http://etherx.jabber.org/streams\" version=\"1.0\" to=\"example.com\">"), dataReceived_);
+			CPPUNIT_ASSERT_EQUAL(String("<?xml version=\"1.0\"?><stream:stream xmlns=\"jabber:client\" xmlns:stream=\"http://etherx.jabber.org/streams\" to=\"example.com\" version=\"1.0\">"), dataReceived_);
 		}
 
 		void testWriteElement() {

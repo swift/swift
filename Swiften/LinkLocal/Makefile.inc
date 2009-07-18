@@ -1,7 +1,10 @@
 SWIFTEN_SOURCES += \
 	Swiften/LinkLocal/DNSSDService.cpp \
 	Swiften/LinkLocal/LinkLocalRoster.cpp \
-	Swiften/LinkLocal/LinkLocalServiceInfo.cpp
+	Swiften/LinkLocal/LinkLocalServiceInfo.cpp \
+	Swiften/LinkLocal/IncomingLinkLocalSession.cpp \
+	Swiften/LinkLocal/OutgoingLinkLocalSession.cpp \
+	Swiften/LinkLocal/LinkLocalSession.cpp
 
 
 ifeq ($(MACOSX),1)

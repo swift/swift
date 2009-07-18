@@ -1,5 +1,4 @@
-#ifndef SWIFTEN_XMPPLAYER_H
-#define SWIFTEN_XMPPLAYER_H
+#pragma once
 
 #include <boost/shared_ptr.hpp>
 #include <boost/signal.hpp>
@@ -10,6 +9,7 @@
 #include "Swiften/Parser/XMPPParserClient.h"
 
 namespace Swift {
+	class ProtocolHeader;
 	class XMPPParser;
 	class PayloadParserFactoryCollection;
 	class XMPPSerializer;
@@ -22,8 +22,7 @@ namespace Swift {
 					PayloadSerializerCollection* payloadSerializers);
 			~XMPPLayer();
 
-			void writeHeader(const String& from, const String& id);
-			void writeHeader(const String& to);
+			void writeHeader(const ProtocolHeader& header);
 			void writeFooter();
 			void writeElement(boost::shared_ptr<Element>);
 			void writeData(const String& data);
@@ -32,14 +31,14 @@ namespace Swift {
 			void resetParser();
 
 		public:
-			boost::signal<void (const String& /* from */, const String& /* to */ , const String& /* id */)> onStreamStart;
+			boost::signal<void (const ProtocolHeader&)> onStreamStart;
 			boost::signal<void (boost::shared_ptr<Element>)> onElement;
 			boost::signal<void (const ByteArray&)> onWriteData;
 			boost::signal<void (const ByteArray&)> onDataRead;
 			boost::signal<void ()> onError;
 
 		private:
-			void handleStreamStart(const String&, const String&, const String&);
+			void handleStreamStart(const ProtocolHeader&);
 			void handleElement(boost::shared_ptr<Element>);
 			void handleStreamEnd();
 
@@ -54,5 +53,3 @@ namespace Swift {
 			bool inParser_;
 	};
 }
-
-#endif

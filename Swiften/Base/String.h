@@ -87,6 +87,11 @@ namespace Swift {
 				return *this;
 			}
 
+			String& operator=(const String& o) {
+				data_ = o.data_;
+				return *this;
+			}
+
 			friend bool operator>(const String& a, const String& b) {
 				return a.data_ > b.data_;
 			}

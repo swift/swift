@@ -9,6 +9,7 @@
 #include "Swiften/Network/Connection.h"
 
 namespace Swift {
+	class ProtocolHeader;
 	class Element;
 	class Stanza;
 	class PayloadParserFactoryCollection;
@@ -51,7 +52,7 @@ namespace Swift {
 		private:
 			void handleDisconnected(const boost::optional<Connection::Error>& error);
 			void handleElement(boost::shared_ptr<Element>);
-			void handleStreamStart(const String& domain);
+			void handleStreamStart(const ProtocolHeader& header);
 
 		private:
 			String id_;

@@ -77,6 +77,7 @@ void LinkLocalRoster::handleServiceAdded(const DNSSDService::Service& service) {
 	if (selfService && *selfService == service) {
 		return;
 	}
+	std::cout << "Service added: " << service.name << std::endl;
 	dnsSDService->startResolvingService(service);
 }
 
@@ -93,7 +94,7 @@ void LinkLocalRoster::handleServiceRemoved(const DNSSDService::Service& service)
 
 void LinkLocalRoster::handleServiceResolved(const DNSSDService::Service& service, const DNSSDService::ResolveResult& result) {
 	services.insert(std::make_pair(service, result));
-	dnsSDService->resolveHostname(result.host);
+	std::cout << "Service resolved: " << service.name << std::endl;
 
 	boost::shared_ptr<RosterPayload> roster(new RosterPayload());
 	roster->addItem(getRosterItem(service, result));
@@ -107,6 +108,24 @@ void LinkLocalRoster::handleServiceRegistered(const DNSSDService::Service& servi
 
 void LinkLocalRoster::handleStopped(bool error) {
 	std::cout << "DNSSDService stopped: " << error << std::endl;
+}
+
+bool LinkLocalRoster::hasItem(const JID& j) const {
+	for(ServiceMap::const_iterator i = services.begin(); i != services.end(); ++i) {
+		if (getJIDForService(i->first) == j) {
+			return true;
+		}
+	}
+	return false;
+}
+
+String LinkLocalRoster::getHostname(const JID& j) const {
+	for(ServiceMap::const_iterator i = services.begin(); i != services.end(); ++i) {
+		if (getJIDForService(i->first) == j) {
+			return i->second.host;
+		}
+	}
+	return "";
 }
 
 }

@@ -11,6 +11,7 @@
 #include "Swiften/StreamStack/TLSLayer.h"
 #include "Swiften/StreamStack/StreamStack.h"
 #include "Swiften/StreamStack/WhitespacePingLayer.h"
+#include "Swiften/Elements/ProtocolHeader.h"
 #include "Swiften/Elements/StreamFeatures.h"
 #include "Swiften/Elements/Element.h"
 #include "Swiften/Elements/Error.h"
@@ -486,6 +487,7 @@ class SessionTest : public CppUnit::TestFixture {
 				assert(false);
 			}
 
+			void connect(const HostAddressPort&) { assert(false); }
 			void connect(const String& domain) {
 				if (fail_) {
 					MainEventLoop::postEvent(boost::bind(boost::ref(onDisconnected), Connection::ConnectionError));
@@ -513,8 +515,8 @@ class SessionTest : public CppUnit::TestFixture {
 				parser_ = new XMPPParser(this, &payloadParserFactories_);
 			}
 
-			void handleStreamStart(const String&, const String& to, const String&) {
-				CPPUNIT_ASSERT_EQUAL(domain_, to);
+			void handleStreamStart(const ProtocolHeader& header) {
+				CPPUNIT_ASSERT_EQUAL(domain_, header.getTo());
 				handleEvent(Event::StreamStartEvent);
 			}
 
@@ -548,7 +550,11 @@ class SessionTest : public CppUnit::TestFixture {
 			String serializeEvent(const Event& event) {
 				switch (event.type) {
 					case Event::StreamStartEvent: 
-						return serializer_.serializeHeader("", domain_, "");
+						{
+							ProtocolHeader header;
+							header.setTo(domain_);
+							return serializer_.serializeHeader(header);
+						}
 					case Event::ElementEvent:
 						return serializer_.serializeElement(event.element);
 					case Event::StreamEndEvent:

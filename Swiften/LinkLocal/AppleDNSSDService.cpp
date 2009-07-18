@@ -98,7 +98,6 @@ void AppleDNSSDService::stopResolvingService(const Service& service) {
 
 void AppleDNSSDService::resolveHostname(const String& hostname, int interfaceIndex) {
 	boost::lock_guard<boost::mutex> lock(sdRefsMutex);
-	std::cout << "Resolve " << hostname << std::endl;
 
 	DNSServiceRef hostnameResolveSDRef;
 	DNSServiceErrorType result = DNSServiceGetAddrInfo(&hostnameResolveSDRef, 0, interfaceIndex, kDNSServiceProtocol_IPv4, hostname.getUTF8Data(), &AppleDNSSDService::handleHostnameResolvedGlobal, this);
@@ -159,7 +158,6 @@ void AppleDNSSDService::doStart() {
 
 			// Hostname resolving
 			for (HostnameSDRefs::const_iterator i = hostnameResolveSDRefs.begin(); i != hostnameResolveSDRefs.end(); ++i) {
-				std::cout << "Adding ostname resolve " << std::endl;
 				int hostnameResolveSocket = DNSServiceRefSockFD(*i);
 				maxSocket = std::max(maxSocket, hostnameResolveSocket);
 				FD_SET(hostnameResolveSocket, &fdSet);
@@ -193,7 +191,6 @@ void AppleDNSSDService::doStart() {
 			for (HostnameSDRefs::const_iterator i = hostnameResolveSDRefs.begin(); i != hostnameResolveSDRefs.end(); ++i) {
 				if (FD_ISSET(DNSServiceRefSockFD(*i), &fdSet)) {
 					DNSServiceProcessResult(*i);
-					std::cout << "Removing hostnameResolve" << std::endl;
 					hostnameResolveSDRefs.erase(std::remove(hostnameResolveSDRefs.begin(), hostnameResolveSDRefs.end(), *i), hostnameResolveSDRefs.end());
 					DNSServiceRefDeallocate(*i);
 					break; // Stop the loop, because we removed an element
@@ -211,7 +208,6 @@ void AppleDNSSDService::doStart() {
 		resolveSDRefs.clear();
 
 		for (HostnameSDRefs::const_iterator i = hostnameResolveSDRefs.begin(); i != hostnameResolveSDRefs.end(); ++i) {
-			std::cout << "Removing hostnameResolve" << std::endl;
 			DNSServiceRefDeallocate(*i);
 		}
 		hostnameResolveSDRefs.clear();

@@ -51,16 +51,19 @@ void BoostConnection::listen() {
 void BoostConnection::connect(const String& domain) {
 	DomainNameResolver resolver;
 	try {
-		HostAddressPort addressPort = resolver.resolve(domain.getUTF8String());
-		boost::asio::ip::tcp::endpoint endpoint(	
-				boost::asio::ip::address::from_string(addressPort.getAddress().toString()), addressPort.getPort());
-		socket_.async_connect(
-				endpoint,
-				boost::bind(&BoostConnection::handleConnectFinished, shared_from_this(), boost::asio::placeholders::error));
+		connect(resolver.resolve(domain.getUTF8String()));
 	}
 	catch (const DomainNameResolveException& e) {
 		onDisconnected(DomainNameResolveError);
 	}
+}
+
+void BoostConnection::connect(const HostAddressPort& addressPort) {
+	boost::asio::ip::tcp::endpoint endpoint(	
+			boost::asio::ip::address::from_string(addressPort.getAddress().toString()), addressPort.getPort());
+	socket_.async_connect(
+			endpoint,
+			boost::bind(&BoostConnection::handleConnectFinished, shared_from_this(), boost::asio::placeholders::error));
 }
 
 void BoostConnection::disconnect() {

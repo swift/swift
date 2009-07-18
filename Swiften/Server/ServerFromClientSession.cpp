@@ -2,6 +2,7 @@
 
 #include <boost/bind.hpp>
 
+#include "Swiften/Elements/ProtocolHeader.h"
 #include "Swiften/Server/UserRegistry.h"
 #include "Swiften/Network/Connection.h"
 #include "Swiften/StreamStack/StreamStack.h"
@@ -42,7 +43,7 @@ ServerFromClientSession::~ServerFromClientSession() {
 
 void ServerFromClientSession::start() {
 	xmppLayer_->onStreamStart.connect(
-			boost::bind(&ServerFromClientSession::handleStreamStart, this, _2));
+			boost::bind(&ServerFromClientSession::handleStreamStart, this, _1));
 	xmppLayer_->onElement.connect(
 			boost::bind(&ServerFromClientSession::handleElement, this, _1));
 	//xmppLayer_->onError.connect(
@@ -99,9 +100,12 @@ void ServerFromClientSession::handleElement(boost::shared_ptr<Element> element) 
 	}
 }
 
-void ServerFromClientSession::handleStreamStart(const String& domain) {
-	domain_ = JID("", domain);
-	xmppLayer_->writeHeader(domain, id_);
+void ServerFromClientSession::handleStreamStart(const ProtocolHeader& incomingHeader) {
+	domain_ = JID("", incomingHeader.getTo());
+	ProtocolHeader header;
+	header.setFrom(incomingHeader.getTo());
+	header.setID(id_);
+	xmppLayer_->writeHeader(header);
 
 	boost::shared_ptr<StreamFeatures> features(new StreamFeatures());
 	if (!authenticated_) {

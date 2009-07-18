@@ -3,6 +3,7 @@
 #include <iostream>
 #include <cassert>
 
+#include "Swiften/Elements/ProtocolHeader.h"
 #include "Swiften/Base/String.h"
 #include "Swiften/Parser/XMLParser.h"
 #include "Swiften/Parser/PlatformXMLParserFactory.h"
@@ -54,7 +55,12 @@ bool XMPPParser::parse(const String& data) {
 void XMPPParser::handleStartElement(const String& element, const String& ns, const AttributeMap& attributes) {
 	if (!inStream()) {
 		if (element == "stream" && ns == "http://etherx.jabber.org/streams") {
-			client_->handleStreamStart(attributes.getAttribute("from"), attributes.getAttribute("to"), attributes.getAttribute("id"));
+			ProtocolHeader header;
+			header.setFrom(attributes.getAttribute("from"));
+			header.setTo(attributes.getAttribute("to"));
+			header.setID(attributes.getAttribute("id"));
+			header.setVersion(attributes.getAttribute("version"));
+			client_->handleStreamStart(header);
 		}
 		else {
 			parseErrorOccurred_ = true;

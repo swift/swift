@@ -2,6 +2,7 @@
 #include <boost/bind.hpp>
 #include <boost/shared_ptr.hpp>
 
+#include "Swiften/Network/BoostConnectionFactory.h"
 #include "Swiften/Elements/IQ.h"
 #include "Swiften/Elements/Presence.h"
 #include "Swiften/Elements/RosterPayload.h"
@@ -17,6 +18,9 @@
 #include "Swiften/Elements/Stanza.h"
 #include "Swiften/LinkLocal/LinkLocalServiceInfo.h"
 #include "Swiften/LinkLocal/LinkLocalRoster.h"
+#include "Swiften/LinkLocal/LinkLocalSession.h"
+#include "Swiften/LinkLocal/OutgoingLinkLocalSession.h"
+#include "Swiften/LinkLocal/IncomingLinkLocalSession.h"
 #include "Swiften/LinkLocal/DNSSDService.h"
 #include "Swiften/LinkLocal/AppleDNSSDService.h"
 #include "Swiften/Network/ConnectionServer.h"
@@ -42,7 +46,7 @@ class DummyUserRegistry : public UserRegistry {
 
 class Server {
 	public:
-		Server(int clientConnectionPort, int linkLocalConnectionPort) : dnsSDServiceRegistered_(false), rosterRequested_(false), clientConnectionPort_(clientConnectionPort), linkLocalConnectionPort_(linkLocalConnectionPort) {
+		Server(int clientConnectionPort, int linkLocalConnectionPort) : boostConnectionFactory_(&boostIOServiceThread_.getIOService()), dnsSDServiceRegistered_(false), rosterRequested_(false), clientConnectionPort_(clientConnectionPort), linkLocalConnectionPort_(linkLocalConnectionPort) {
 			serverFromClientConnectionServer_ = boost::shared_ptr<BoostConnectionServer>(new BoostConnectionServer(clientConnectionPort, &boostIOServiceThread_.getIOService()));
 			serverFromClientConnectionServer_->onNewConnection.connect(boost::bind(&Server::handleNewClientConnection, this, _1));
 			serverFromClientConnectionServer_->start();
@@ -53,7 +57,6 @@ class Server {
 
 			dnsSDService_ = boost::shared_ptr<AppleDNSSDService>(new AppleDNSSDService());
 			dnsSDService_->onServiceRegistered.connect(boost::bind(&Server::handleServiceRegistered, this, _1));
-
 			linkLocalRoster_ = boost::shared_ptr<LinkLocalRoster>(new LinkLocalRoster(dnsSDService_));
 			linkLocalRoster_->onRosterChanged.connect(boost::bind(&Server::handleRosterChanged, this, _1));
 			linkLocalRoster_->onPresenceChanged.connect(boost::bind(&Server::handlePresenceChanged, this, _1));
@@ -71,18 +74,38 @@ class Server {
 			serverFromClientSession_->start();
 		}
 
-		void handleNewLinkLocalConnection(boost::shared_ptr<Connection>) {
-			std::cout << "Incoming link local connection" << std::endl;
+		void handleNewLinkLocalConnection(boost::shared_ptr<Connection> connection) {
+			boost::shared_ptr<IncomingLinkLocalSession> session(
+					new IncomingLinkLocalSession(
+						selfJID_, connection, 
+						&payloadParserFactories_, &payloadSerializers_));
+			registerLinkLocalSession(session);
 		}
 		
 		void handleServiceRegistered(const DNSSDService::Service& service) {
 			std::cout << "Service registered " << service.name << " " << service.type << " " << service.domain << std::endl;
+			selfJID_ = JID(service.name);
 		}
 
 		void handleSessionFinished(boost::shared_ptr<ServerFromClientSession>) {
 			serverFromClientSession_.reset();
 			unregisterService();
+			selfJID_ = JID();
 			rosterRequested_ = false;
+		}
+
+		void handleLinkLocalSessionFinished(boost::shared_ptr<LinkLocalSession> session) {
+			std::cout << "Link local session from " << session->getRemoteJID() << " ended" << std::endl;
+			linkLocalSessions_.erase(std::remove(linkLocalSessions_.begin(), linkLocalSessions_.end(), session), linkLocalSessions_.end());
+		}
+
+		void handleLinkLocalStanzaReceived(boost::shared_ptr<Stanza> stanza, boost::shared_ptr<LinkLocalSession> session) {
+			JID fromJID = session->getRemoteJID();
+			if (!linkLocalRoster_->hasItem(fromJID)) {
+				return; // TODO: Queue
+			}
+			stanza->setFrom(fromJID);
+			serverFromClientSession_->sendStanza(stanza);
 		}
 
 		void unregisterService() {
@@ -141,6 +164,47 @@ class Server {
 					}
 				}
 			}
+			else {
+				JID toJID = stanza->getTo();
+				boost::shared_ptr<LinkLocalSession> outgoingSession = 
+						getLinkLocalSessionForJID(toJID);
+				if (outgoingSession) {
+					outgoingSession->sendStanza(stanza);
+				}
+				else {
+					if (linkLocalRoster_->hasItem(toJID)) {
+						boost::shared_ptr<OutgoingLinkLocalSession> outgoingSession(
+								new OutgoingLinkLocalSession(
+									selfJID_, toJID, linkLocalRoster_->getHostname(toJID),
+									dnsSDService_, 
+									&payloadParserFactories_, &payloadSerializers_,
+									&boostConnectionFactory_));
+						registerLinkLocalSession(outgoingSession);
+						outgoingSession->sendStanza(stanza);
+					}
+					else {
+						session->sendStanza(IQ::createError(
+								stanza->getFrom(), stanza->getID(), 
+								Error::RecipientUnavailable, Error::Wait));
+					}
+				}
+			}
+		}
+
+		void registerLinkLocalSession(boost::shared_ptr<LinkLocalSession> session) {
+			session->onSessionFinished.connect(boost::bind(&Server::handleLinkLocalSessionFinished, this, session));
+			session->onStanzaReceived.connect(boost::bind(&Server::handleLinkLocalStanzaReceived, this, _1, session));
+			linkLocalSessions_.push_back(session);
+			session->start();
+		}
+
+		boost::shared_ptr<LinkLocalSession> getLinkLocalSessionForJID(const JID& jid) {
+			foreach(const boost::shared_ptr<LinkLocalSession> session, linkLocalSessions_) {
+				if (session->getRemoteJID() == jid) {
+					return session;
+				}
+			}
+			return boost::shared_ptr<LinkLocalSession>();
 		}
 
 		void handleRosterChanged(boost::shared_ptr<RosterPayload> roster) {
@@ -186,18 +250,22 @@ class Server {
 	private:
 		IDGenerator idGenerator_;
 		BoostIOServiceThread boostIOServiceThread_;
+		BoostConnectionFactory boostConnectionFactory_;
 		DummyUserRegistry userRegistry_;
 		boost::shared_ptr<AppleDNSSDService> dnsSDService_;
 		boost::shared_ptr<LinkLocalRoster> linkLocalRoster_;
 		boost::shared_ptr<BoostConnectionServer> serverFromClientConnectionServer_;
 		boost::shared_ptr<ServerFromClientSession> serverFromClientSession_;
 		boost::shared_ptr<BoostConnectionServer> serverFromNetworkConnectionServer_;
+		std::vector< boost::shared_ptr<LinkLocalSession> > linkLocalSessions_;
+		std::vector< boost::shared_ptr<Stanza> > queuedOutgoingStanzas_;
 		FullPayloadParserFactoryCollection payloadParserFactories_;
 		FullPayloadSerializerCollection payloadSerializers_;
 		bool dnsSDServiceRegistered_;
 		bool rosterRequested_;
 		int clientConnectionPort_;
 		int linkLocalConnectionPort_;
+		JID selfJID_;
 };
 
 int main() {

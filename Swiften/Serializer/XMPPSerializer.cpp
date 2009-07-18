@@ -3,6 +3,7 @@
 #include <boost/bind.hpp>
 #include <iostream>
 
+#include "Swiften/Elements/ProtocolHeader.h"
 #include "Swiften/Base/foreach.h"
 #include "Swiften/Serializer/CompressRequestSerializer.h"
 #include "Swiften/Serializer/CompressFailureSerializer.h"
@@ -34,16 +35,19 @@ XMPPSerializer::XMPPSerializer(PayloadSerializerCollection* payloadSerializers) 
 	serializers_.push_back(boost::shared_ptr<ElementSerializer>(new StreamFeaturesSerializer()));
 }
 
-String XMPPSerializer::serializeHeader(const String& from, const String& to, const String& id) const {
-	String result = "<?xml version=\"1.0\"?><stream:stream xmlns=\"jabber:client\" xmlns:stream=\"http://etherx.jabber.org/streams\" version=\"1.0\"";
-	if (!from.isEmpty()) {
-		result += " from=\"" + from + "\"";
+String XMPPSerializer::serializeHeader(const ProtocolHeader& header) const {
+	String result = "<?xml version=\"1.0\"?><stream:stream xmlns=\"jabber:client\" xmlns:stream=\"http://etherx.jabber.org/streams\"";
+	if (!header.getFrom().isEmpty()) {
+		result += " from=\"" + header.getFrom() + "\"";
 	}
-	if (!to.isEmpty()) {
-		result += " to=\"" + to + "\"";
+	if (!header.getTo().isEmpty()) {
+		result += " to=\"" + header.getTo() + "\"";
 	}
-	if (!id.isEmpty()) {
-		result += " id=\"" + id + "\"";
+	if (!header.getID().isEmpty()) {
+		result += " id=\"" + header.getID() + "\"";
+	}
+	if (!header.getVersion().isEmpty()) {
+		result += " version=\"" + header.getVersion() + "\"";
 	}
 	result += ">";
 	return result;

@@ -23,6 +23,9 @@ namespace Swift {
 			boost::signal<void (boost::shared_ptr<RosterPayload>)> onRosterChanged;
 			boost::signal<void (boost::shared_ptr<Presence>)> onPresenceChanged;
 
+			bool hasItem(const JID&) const;
+			String getHostname(const JID&) const;
+
 		private:
 			RosterItemPayload getRosterItem(const DNSSDService::Service& service, const DNSSDService::ResolveResult& info) const;
 			String getRosterName(const DNSSDService::Service& service, const DNSSDService::ResolveResult& info) const;

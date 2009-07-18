@@ -1,6 +1,7 @@
 #include "Swiften/StreamStack/XMPPLayer.h"
 #include "Swiften/Parser/XMPPParser.h"
 #include "Swiften/Serializer/XMPPSerializer.h"
+#include "Swiften/Elements/ProtocolHeader.h"
 
 namespace Swift {
 
@@ -20,12 +21,8 @@ XMPPLayer::~XMPPLayer() {
 	delete xmppParser_;
 }
 
-void XMPPLayer::writeHeader(const String& to) {
-	onWriteData(ByteArray(xmppSerializer_->serializeHeader("", to)));
-}
-
-void XMPPLayer::writeHeader(const String& from, const String& id) {
-	onWriteData(ByteArray(xmppSerializer_->serializeHeader(from, "", id)));
+void XMPPLayer::writeHeader(const ProtocolHeader& header) {
+	onWriteData(ByteArray(xmppSerializer_->serializeHeader(header)));
 }
 
 void XMPPLayer::writeFooter() {
@@ -60,8 +57,8 @@ void XMPPLayer::doResetParser() {
 	resetParserAfterParse_ = false;
 }
 
-void XMPPLayer::handleStreamStart(const String& from, const String& to, const String& id) {
-	onStreamStart(from, to, id);
+void XMPPLayer::handleStreamStart(const ProtocolHeader& header) {
+	onStreamStart(header);
 }
 
 void XMPPLayer::handleElement(boost::shared_ptr<Element> stanza) {

@@ -1,5 +1,4 @@
-#ifndef SWIFTEN_XMPPSERIALIZER_H
-#define SWIFTEN_XMPPSERIALIZER_H
+#pragma once
 
 #include <boost/shared_ptr.hpp>
 #include <vector>
@@ -11,12 +10,13 @@
 namespace Swift {
 	class PayloadSerializerCollection;
 	class CompressRequestSerializer;
+	class ProtocolHeader;
 
 	class XMPPSerializer {
 		public:
 			XMPPSerializer(PayloadSerializerCollection*);
 
-			String serializeHeader(const String& from, const String& to, const String& id = "") const;
+			String serializeHeader(const ProtocolHeader&) const;
 			String serializeElement(boost::shared_ptr<Element> stanza) const;
 			String serializeFooter() const;
 		
@@ -24,5 +24,3 @@ namespace Swift {
 			std::vector< boost::shared_ptr<ElementSerializer> > serializers_;
 	};
 }
-
-#endif

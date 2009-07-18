@@ -1,5 +1,4 @@
-#ifndef SWIFTEN_CONNECTION_H
-#define SWIFTEN_CONNECTION_H
+#pragma once
 
 #include <boost/signals.hpp>
 
@@ -7,6 +6,8 @@
 #include "Swiften/Base/String.h"
 
 namespace Swift {
+	class HostAddressPort;
+
 	class Connection {
 		public:
 			enum Error {
@@ -20,6 +21,7 @@ namespace Swift {
 			virtual ~Connection() {}
 
 			virtual void listen() = 0;
+			virtual void connect(const HostAddressPort& address) = 0;
 			virtual void connect(const String& domain) = 0;
 			virtual void disconnect() = 0;
 			virtual void write(const ByteArray& data) = 0;
@@ -30,5 +32,3 @@ namespace Swift {
 			boost::signal<void (const ByteArray&)> onDataRead;
 	};
 }
-
-#endif

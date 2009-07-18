@@ -3,6 +3,7 @@
 #include <boost/bind.hpp>
 
 #include "Swiften/Network/ConnectionFactory.h"
+#include "Swiften/Elements/ProtocolHeader.h"
 #include "Swiften/StreamStack/StreamStack.h"
 #include "Swiften/StreamStack/ConnectionLayer.h"
 #include "Swiften/StreamStack/XMPPLayer.h"
@@ -61,7 +62,9 @@ void Session::handleConnected() {
 }
 
 void Session::sendStreamHeader() {
-	xmppLayer_->writeHeader(jid_.getDomain());
+	ProtocolHeader header;
+	header.setTo(jid_.getDomain());
+	xmppLayer_->writeHeader(header);
 }
 
 void Session::initializeStreamStack() {
