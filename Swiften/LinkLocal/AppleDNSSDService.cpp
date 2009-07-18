@@ -55,6 +55,13 @@ void AppleDNSSDService::registerService(const String& name, int port, const Link
 	interruptSelect();
 }
 
+void AppleDNSSDService::updateService(const LinkLocalServiceInfo& info) {
+	boost::lock_guard<boost::mutex> lock(sdRefsMutex);
+	assert(registerSDRef);
+	ByteArray txtRecord = info.toTXTRecord();
+	DNSServiceUpdateRecord(registerSDRef, NULL, NULL, txtRecord.getSize(), txtRecord.getData(), 0);
+}
+
 void AppleDNSSDService::unregisterService() {
 	boost::lock_guard<boost::mutex> lock(sdRefsMutex);
 
@@ -91,6 +98,7 @@ void AppleDNSSDService::stopResolvingService(const Service& service) {
 
 void AppleDNSSDService::resolveHostname(const String& hostname, int interfaceIndex) {
 	boost::lock_guard<boost::mutex> lock(sdRefsMutex);
+	std::cout << "Resolve " << hostname << std::endl;
 
 	DNSServiceRef hostnameResolveSDRef;
 	DNSServiceErrorType result = DNSServiceGetAddrInfo(&hostnameResolveSDRef, 0, interfaceIndex, kDNSServiceProtocol_IPv4, hostname.getUTF8Data(), &AppleDNSSDService::handleHostnameResolvedGlobal, this);
@@ -110,11 +118,14 @@ void AppleDNSSDService::doStart() {
 	onStarted();
 
 	// Listen for new services
-	assert(!browseSDRef);
-	DNSServiceErrorType result = DNSServiceBrowse(&browseSDRef, 0, 0, "_presence._tcp", 0, &AppleDNSSDService::handleServiceDiscoveredGlobal , this);
-	if (result != kDNSServiceErr_NoError) {
-		std::cerr << "Error creating browse query" << std::endl;
-		haveError = true;
+	{
+		boost::lock_guard<boost::mutex> lock(sdRefsMutex);
+		assert(!browseSDRef);
+		DNSServiceErrorType result = DNSServiceBrowse(&browseSDRef, 0, 0, "_presence._tcp", 0, &AppleDNSSDService::handleServiceDiscoveredGlobal , this);
+		if (result != kDNSServiceErr_NoError) {
+			std::cerr << "Error creating browse query" << std::endl;
+			haveError = true;
+		}
 	}
 
 	// Run the main loop
@@ -148,6 +159,7 @@ void AppleDNSSDService::doStart() {
 
 			// Hostname resolving
 			for (HostnameSDRefs::const_iterator i = hostnameResolveSDRefs.begin(); i != hostnameResolveSDRefs.end(); ++i) {
+				std::cout << "Adding ostname resolve " << std::endl;
 				int hostnameResolveSocket = DNSServiceRefSockFD(*i);
 				maxSocket = std::max(maxSocket, hostnameResolveSocket);
 				FD_SET(hostnameResolveSocket, &fdSet);
@@ -181,6 +193,7 @@ void AppleDNSSDService::doStart() {
 			for (HostnameSDRefs::const_iterator i = hostnameResolveSDRefs.begin(); i != hostnameResolveSDRefs.end(); ++i) {
 				if (FD_ISSET(DNSServiceRefSockFD(*i), &fdSet)) {
 					DNSServiceProcessResult(*i);
+					std::cout << "Removing hostnameResolve" << std::endl;
 					hostnameResolveSDRefs.erase(std::remove(hostnameResolveSDRefs.begin(), hostnameResolveSDRefs.end(), *i), hostnameResolveSDRefs.end());
 					DNSServiceRefDeallocate(*i);
 					break; // Stop the loop, because we removed an element
@@ -189,23 +202,28 @@ void AppleDNSSDService::doStart() {
 		}
 	}
 
-	for (ServiceSDRefMap::const_iterator i = resolveSDRefs.begin(); i != resolveSDRefs.end(); ++i) {
-		DNSServiceRefDeallocate(i->second);
-	}
-	resolveSDRefs.clear();
+	{
+		boost::lock_guard<boost::mutex> lock(sdRefsMutex);
 
-	for (HostnameSDRefs::const_iterator i = hostnameResolveSDRefs.begin(); i != hostnameResolveSDRefs.end(); ++i) {
-		DNSServiceRefDeallocate(*i);
-	}
-	hostnameResolveSDRefs.clear();
+		for (ServiceSDRefMap::const_iterator i = resolveSDRefs.begin(); i != resolveSDRefs.end(); ++i) {
+			DNSServiceRefDeallocate(i->second);
+		}
+		resolveSDRefs.clear();
 
-	if (registerSDRef) {
-		DNSServiceRefDeallocate(registerSDRef);
-		registerSDRef = NULL;
-	}
+		for (HostnameSDRefs::const_iterator i = hostnameResolveSDRefs.begin(); i != hostnameResolveSDRefs.end(); ++i) {
+			std::cout << "Removing hostnameResolve" << std::endl;
+			DNSServiceRefDeallocate(*i);
+		}
+		hostnameResolveSDRefs.clear();
 
-	DNSServiceRefDeallocate(browseSDRef);
-	browseSDRef = NULL;
+		if (registerSDRef) {
+			DNSServiceRefDeallocate(registerSDRef);
+			registerSDRef = NULL;
+		}
+
+		DNSServiceRefDeallocate(browseSDRef);
+		browseSDRef = NULL;
+	}
 
 	MainEventLoop::postEvent(boost::bind(boost::ref(onStopped), haveError), shared_from_this());
 }

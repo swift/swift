@@ -55,6 +55,7 @@ namespace Swift {
 			virtual void stop() = 0;
 
 			virtual void registerService(const String& name, int port, const LinkLocalServiceInfo&) = 0;
+			virtual void updateService(const LinkLocalServiceInfo&) = 0;
 			virtual void unregisterService() = 0;
 
 			virtual void startResolvingService(const Service&) = 0;

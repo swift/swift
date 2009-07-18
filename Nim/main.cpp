@@ -1,5 +1,3 @@
-// TODO: Prohibit multiple logins
-
 #include <string>
 #include <boost/bind.hpp>
 #include <boost/shared_ptr.hpp>
@@ -54,6 +52,8 @@ class Server {
 			serverFromNetworkConnectionServer_->start();
 
 			dnsSDService_ = boost::shared_ptr<AppleDNSSDService>(new AppleDNSSDService());
+			dnsSDService_->onServiceRegistered.connect(boost::bind(&Server::handleServiceRegistered, this, _1));
+
 			linkLocalRoster_ = boost::shared_ptr<LinkLocalRoster>(new LinkLocalRoster(dnsSDService_));
 			linkLocalRoster_->onRosterChanged.connect(boost::bind(&Server::handleRosterChanged, this, _1));
 			linkLocalRoster_->onPresenceChanged.connect(boost::bind(&Server::handlePresenceChanged, this, _1));
@@ -67,7 +67,6 @@ class Server {
 			}
 			serverFromClientSession_ = boost::shared_ptr<ServerFromClientSession>(new ServerFromClientSession(idGenerator_.generateID(), c, &payloadParserFactories_, &payloadSerializers_, &userRegistry_));
 			serverFromClientSession_->onStanzaReceived.connect(boost::bind(&Server::handleStanzaReceived, this, _1, serverFromClientSession_));
-			serverFromClientSession_->onSessionStarted.connect(boost::bind(&Server::handleSessionStarted, this, serverFromClientSession_));
 			serverFromClientSession_->onSessionFinished.connect(boost::bind(&Server::handleSessionFinished, this, serverFromClientSession_));
 			serverFromClientSession_->start();
 		}
@@ -76,34 +75,21 @@ class Server {
 			std::cout << "Incoming link local connection" << std::endl;
 		}
 		
-		void handleSessionStarted(boost::shared_ptr<ServerFromClientSession> session) {
-			if (!dnsSDServiceRegistered_) {
-				dnsSDServiceRegistered_ = true;
-				dnsSDService_->onServiceRegistered.connect(boost::bind(&Server::handleServiceRegistered, this, _1));
-				LinkLocalServiceInfo info;
-				info.setFirstName("Remko");
-				info.setLastName("Tron\xc3\xa7on");
-				info.setEMail("email@example.com");
-				info.setJID(JID("jid@example.com"));
-				info.setMessage("I'm not Here");
-				info.setNick("Remko");
-				info.setStatus(LinkLocalServiceInfo::Away);
-				info.setPort(linkLocalConnectionPort_);
-				dnsSDService_->registerService(session->getJID().toBare().toString(), linkLocalConnectionPort_, info);
-			}
-		}
-
 		void handleServiceRegistered(const DNSSDService::Service& service) {
 			std::cout << "Service registered " << service.name << " " << service.type << " " << service.domain << std::endl;
 		}
 
 		void handleSessionFinished(boost::shared_ptr<ServerFromClientSession>) {
 			serverFromClientSession_.reset();
-
-			std::cout << "Service unregistered" << std::endl;
-			dnsSDServiceRegistered_ = false;
+			unregisterService();
 			rosterRequested_ = false;
-			dnsSDService_->unregisterService();
+		}
+
+		void unregisterService() {
+			if (dnsSDServiceRegistered_) {
+				dnsSDServiceRegistered_ = false;
+				dnsSDService_->unregisterService();
+			}
 		}
 
 		void handleStanzaReceived(boost::shared_ptr<Stanza> stanza, boost::shared_ptr<ServerFromClientSession> session) {
@@ -111,7 +97,22 @@ class Server {
 			if (!stanza->getTo().isValid()) {
 				stanza->setTo(JID(session->getDomain()));
 			}
-			if (!stanza->getTo().isValid() || stanza->getTo() == session->getDomain() || stanza->getTo() == session->getJID().toBare()) {
+
+			if (boost::shared_ptr<Presence> presence = boost::dynamic_pointer_cast<Presence>(stanza)) {
+				if (presence->getType() == Presence::Available) {
+					if (!dnsSDServiceRegistered_) {
+						dnsSDServiceRegistered_ = true;
+						dnsSDService_->registerService(session->getJID().toBare().toString(), linkLocalConnectionPort_, getLinkLocalServiceInfo(presence));
+					}
+					else {
+						dnsSDService_->updateService(getLinkLocalServiceInfo(presence));
+					}
+				}
+				else {
+					unregisterService();
+				}
+			}
+			else if (!stanza->getTo().isValid() || stanza->getTo() == session->getDomain() || stanza->getTo() == session->getJID().toBare()) {
 				if (boost::shared_ptr<IQ> iq = boost::dynamic_pointer_cast<IQ>(stanza)) {
 					if (iq->getPayload<RosterPayload>()) {
 						if (iq->getType() == IQ::Get) {
@@ -154,6 +155,32 @@ class Server {
 			if (rosterRequested_) {
 				serverFromClientSession_->sendStanza(presence);
 			}
+		}
+
+		LinkLocalServiceInfo getLinkLocalServiceInfo(boost::shared_ptr<Presence> presence) {
+			LinkLocalServiceInfo info;
+			info.setFirstName("Remko");
+			info.setLastName("Tron\xc3\xa7on");
+			info.setEMail("email@example.com");
+			info.setJID(JID("jid@example.com"));
+			info.setMessage(presence->getStatus());
+			info.setNick("Remko");
+			switch (presence->getShow()) {
+				case StatusShow::Online: 
+				case StatusShow::None: 
+				case StatusShow::FFC: 
+					info.setStatus(LinkLocalServiceInfo::Available);
+					break;
+				case StatusShow::Away: 
+				case StatusShow::XA: 
+					info.setStatus(LinkLocalServiceInfo::Away);
+					break;
+				case StatusShow::DND: 
+					info.setStatus(LinkLocalServiceInfo::DND);
+					break;
+			}
+			info.setPort(linkLocalConnectionPort_);
+			return info;
 		}
 
 	private:

@@ -81,6 +81,9 @@ void LinkLocalRoster::handleServiceAdded(const DNSSDService::Service& service) {
 }
 
 void LinkLocalRoster::handleServiceRemoved(const DNSSDService::Service& service) {
+	if (selfService && *selfService == service) {
+		return;
+	}
 	dnsSDService->stopResolvingService(service);
 	services.erase(service);
 	boost::shared_ptr<RosterPayload> roster(new RosterPayload());
