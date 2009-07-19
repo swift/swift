@@ -2,6 +2,7 @@
 #include <boost/bind.hpp>
 #include <boost/shared_ptr.hpp>
 
+#include "Swiften/Session/SessionTracer.h"
 #include "Swiften/Network/BoostConnectionFactory.h"
 #include "Swiften/Elements/IQ.h"
 #include "Swiften/Elements/Presence.h"
@@ -86,6 +87,7 @@ class Server {
 			serverFromClientSession_ = boost::shared_ptr<ServerFromClientSession>(new ServerFromClientSession(idGenerator_.generateID(), c, &payloadParserFactories_, &payloadSerializers_, &userRegistry_));
 			serverFromClientSession_->onElementReceived.connect(boost::bind(&Server::handleElementReceived, this, _1, serverFromClientSession_));
 			serverFromClientSession_->onSessionFinished.connect(boost::bind(&Server::handleSessionFinished, this, serverFromClientSession_));
+			tracers_.push_back(boost::shared_ptr<SessionTracer>(new SessionTracer(serverFromClientSession_)));
 			serverFromClientSession_->startSession();
 		}
 
@@ -243,6 +245,7 @@ class Server {
 			session->onSessionFinished.connect(boost::bind(&Server::handleLinkLocalSessionFinished, this, session));
 			session->onElementReceived.connect(boost::bind(&Server::handleLinkLocalElementReceived, this, _1, session));
 			linkLocalSessions_.push_back(session);
+			tracers_.push_back(boost::shared_ptr<SessionTracer>(new SessionTracer(session)));
 			session->startSession();
 		}
 
@@ -313,6 +316,7 @@ class Server {
 		boost::shared_ptr<BoostConnectionServer> serverFromClientConnectionServer_;
 		boost::shared_ptr<ServerFromClientSession> serverFromClientSession_;
 		boost::shared_ptr<BoostConnectionServer> serverFromNetworkConnectionServer_;
+		std::vector< boost::shared_ptr<SessionTracer> > tracers_;
 		std::vector< boost::shared_ptr<Session> > linkLocalSessions_;
 		std::vector< boost::shared_ptr<LinkLocalConnector> > connectors_;
 		FullPayloadParserFactoryCollection payloadParserFactories_;
