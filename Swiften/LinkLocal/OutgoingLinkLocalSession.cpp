@@ -2,6 +2,7 @@
 
 #include <boost/bind.hpp>
 
+#include "Swiften/StreamStack/XMPPLayer.h"
 #include "Swiften/Elements/ProtocolHeader.h"
 #include "Swiften/Elements/StreamFeatures.h"
 #include "Swiften/Elements/IQ.h"
@@ -17,6 +18,12 @@ OutgoingLinkLocalSession::OutgoingLinkLocalSession(
 			Session(connection, payloadParserFactories, payloadSerializers) {
 	setLocalJID(localJID);
 	setRemoteJID(remoteJID);
+}
+
+void OutgoingLinkLocalSession::handleSessionStarted() {
+	ProtocolHeader header;
+	header.setFrom(getLocalJID());
+	getXMPPLayer()->writeHeader(header);
 }
 
 void OutgoingLinkLocalSession::handleStreamStart(const ProtocolHeader&) {

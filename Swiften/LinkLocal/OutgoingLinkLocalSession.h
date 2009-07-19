@@ -27,6 +27,7 @@ namespace Swift {
 			void queueElement(boost::shared_ptr<Element> element);
 
 		private:
+			void handleSessionStarted();
 			void handleElement(boost::shared_ptr<Element>);
 			void handleStreamStart(const ProtocolHeader&);
 

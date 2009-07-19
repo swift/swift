@@ -200,7 +200,7 @@ class Server {
 						boost::shared_ptr<LinkLocalConnector> connector =
 							getLinkLocalConnectorForJID(toJID);
 						if (!connector) {
-							boost::shared_ptr<LinkLocalConnector> connector(
+							connector = boost::shared_ptr<LinkLocalConnector>(
 									new LinkLocalConnector(
 										toJID, 
 										linkLocalRoster_->getHostname(toJID), 
@@ -210,6 +210,7 @@ class Server {
 							connector->onConnectFinished.connect(
 									boost::bind(&Server::handleConnectFinished, this, connector, _1));
 							connectors_.push_back(connector);
+							connector->connect();
 						}
 						connector->queueElement(element);
 					}
@@ -232,10 +233,10 @@ class Server {
 						new OutgoingLinkLocalSession(
 							selfJID_, connector->getRemoteJID(), connector->getConnection(),
 							&payloadParserFactories_, &payloadSerializers_));
-				registerLinkLocalSession(outgoingSession);
 				foreach(const boost::shared_ptr<Element> element, connector->getQueuedElements()) {
 					outgoingSession->queueElement(element);
 				}
+				registerLinkLocalSession(outgoingSession);
 			}
 			connectors_.erase(std::remove(connectors_.begin(), connectors_.end(), connector), connectors_.end());
 		}
