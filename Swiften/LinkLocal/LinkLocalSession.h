@@ -35,13 +35,13 @@ namespace Swift {
 			void finishSession();
 
 			// TODO: Make non-virtual when OutgoingSession is fixed
-			virtual void sendStanza(boost::shared_ptr<Stanza>);
+			virtual void sendElement(boost::shared_ptr<Element>);
 
 			virtual const JID& getRemoteJID() const = 0;
 
 			virtual void start() = 0;
 
-			boost::signal<void (boost::shared_ptr<Stanza>)> onStanzaReceived;
+			boost::signal<void (boost::shared_ptr<Element>)> onElementReceived;
 			boost::signal<void (boost::optional<Error>)> onSessionFinished;
 			boost::signal<void ()> onSessionStarted;
 			boost::signal<void (const ByteArray&)> onDataWritten;

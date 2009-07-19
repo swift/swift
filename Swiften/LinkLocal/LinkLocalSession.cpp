@@ -43,7 +43,7 @@ void LinkLocalSession::finishSession() {
 	connection->disconnect();
 }
 
-void LinkLocalSession::sendStanza(boost::shared_ptr<Stanza> stanza) {
+void LinkLocalSession::sendElement(boost::shared_ptr<Element> stanza) {
 	xmppLayer->writeElement(stanza);
 }
 

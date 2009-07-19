@@ -35,7 +35,7 @@ namespace Swift {
 
 			void start();
 
-			void sendStanza(boost::shared_ptr<Stanza> stanza);
+			void sendElement(boost::shared_ptr<Element> stanza);
 
 		private:
 			void handleElement(boost::shared_ptr<Element>);
@@ -49,7 +49,7 @@ namespace Swift {
 			String hostname_;
 			int port_;
 			boost::shared_ptr<DNSSDService> resolver_;
-			std::vector<boost::shared_ptr<Stanza> > queuedStanzas_;
+			std::vector<boost::shared_ptr<Element> > queuedElements_;
 			ConnectionFactory* connectionFactory_;
 	};
 }

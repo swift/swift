@@ -15,7 +15,7 @@
 #include "Swiften/EventLoop/MainEventLoop.h"
 #include "Swiften/EventLoop/SimpleEventLoop.h"
 #include "Swiften/EventLoop/EventOwner.h"
-#include "Swiften/Elements/Stanza.h"
+#include "Swiften/Elements/Element.h"
 #include "Swiften/LinkLocal/LinkLocalServiceInfo.h"
 #include "Swiften/LinkLocal/LinkLocalRoster.h"
 #include "Swiften/LinkLocal/LinkLocalSession.h"
@@ -69,9 +69,9 @@ class Server {
 				c->disconnect();
 			}
 			serverFromClientSession_ = boost::shared_ptr<ServerFromClientSession>(new ServerFromClientSession(idGenerator_.generateID(), c, &payloadParserFactories_, &payloadSerializers_, &userRegistry_));
-			serverFromClientSession_->onStanzaReceived.connect(boost::bind(&Server::handleStanzaReceived, this, _1, serverFromClientSession_));
+			serverFromClientSession_->onElementReceived.connect(boost::bind(&Server::handleElementReceived, this, _1, serverFromClientSession_));
 			serverFromClientSession_->onSessionFinished.connect(boost::bind(&Server::handleSessionFinished, this, serverFromClientSession_));
-			serverFromClientSession_->start();
+			serverFromClientSession_->startSession();
 		}
 
 		void handleNewLinkLocalConnection(boost::shared_ptr<Connection> connection) {
@@ -99,13 +99,15 @@ class Server {
 			linkLocalSessions_.erase(std::remove(linkLocalSessions_.begin(), linkLocalSessions_.end(), session), linkLocalSessions_.end());
 		}
 
-		void handleLinkLocalStanzaReceived(boost::shared_ptr<Stanza> stanza, boost::shared_ptr<LinkLocalSession> session) {
-			JID fromJID = session->getRemoteJID();
-			if (!linkLocalRoster_->hasItem(fromJID)) {
-				return; // TODO: Queue
+		void handleLinkLocalElementReceived(boost::shared_ptr<Element> element, boost::shared_ptr<LinkLocalSession> session) {
+			if (boost::shared_ptr<Stanza> stanza = boost::dynamic_pointer_cast<Stanza>(element)) {
+				JID fromJID = session->getRemoteJID();
+				if (!linkLocalRoster_->hasItem(fromJID)) {
+					return; // TODO: Queue
+				}
+				stanza->setFrom(fromJID);
+				serverFromClientSession_->sendElement(stanza);
 			}
-			stanza->setFrom(fromJID);
-			serverFromClientSession_->sendStanza(stanza);
 		}
 
 		void unregisterService() {
@@ -115,7 +117,12 @@ class Server {
 			}
 		}
 
-		void handleStanzaReceived(boost::shared_ptr<Stanza> stanza, boost::shared_ptr<ServerFromClientSession> session) {
+		void handleElementReceived(boost::shared_ptr<Element> element, boost::shared_ptr<ServerFromClientSession> session) {
+			boost::shared_ptr<Stanza> stanza = boost::dynamic_pointer_cast<Stanza>(element);
+			if (!stanza) {
+				return;
+			}
+
 			stanza->setFrom(session->getJID());
 			if (!stanza->getTo().isValid()) {
 				stanza->setTo(JID(session->getDomain()));
@@ -139,28 +146,28 @@ class Server {
 				if (boost::shared_ptr<IQ> iq = boost::dynamic_pointer_cast<IQ>(stanza)) {
 					if (iq->getPayload<RosterPayload>()) {
 						if (iq->getType() == IQ::Get) {
-							session->sendStanza(IQ::createResult(iq->getFrom(), iq->getID(), linkLocalRoster_->getRoster()));
+							session->sendElement(IQ::createResult(iq->getFrom(), iq->getID(), linkLocalRoster_->getRoster()));
 							rosterRequested_ = true;
 							foreach(const boost::shared_ptr<Presence> presence, linkLocalRoster_->getAllPresence()) {
-								session->sendStanza(presence);
+								session->sendElement(presence);
 							}
 						}
 						else {
-							session->sendStanza(IQ::createError(iq->getFrom(), iq->getID(), Error::Forbidden, Error::Cancel));
+							session->sendElement(IQ::createError(iq->getFrom(), iq->getID(), Error::Forbidden, Error::Cancel));
 						}
 					}
 					if (iq->getPayload<VCard>()) {
 						if (iq->getType() == IQ::Get) {
 							boost::shared_ptr<VCard> vcard(new VCard());
 							vcard->setNickname(iq->getFrom().getNode());
-							session->sendStanza(IQ::createResult(iq->getFrom(), iq->getID(), vcard));
+							session->sendElement(IQ::createResult(iq->getFrom(), iq->getID(), vcard));
 						}
 						else {
-							session->sendStanza(IQ::createError(iq->getFrom(), iq->getID(), Error::Forbidden, Error::Cancel));
+							session->sendElement(IQ::createError(iq->getFrom(), iq->getID(), Error::Forbidden, Error::Cancel));
 						}
 					}
 					else {
-						session->sendStanza(IQ::createError(iq->getFrom(), iq->getID(), Error::FeatureNotImplemented, Error::Cancel));
+						session->sendElement(IQ::createError(iq->getFrom(), iq->getID(), Error::FeatureNotImplemented, Error::Cancel));
 					}
 				}
 			}
@@ -169,7 +176,7 @@ class Server {
 				boost::shared_ptr<LinkLocalSession> outgoingSession = 
 						getLinkLocalSessionForJID(toJID);
 				if (outgoingSession) {
-					outgoingSession->sendStanza(stanza);
+					outgoingSession->sendElement(stanza);
 				}
 				else {
 					if (linkLocalRoster_->hasItem(toJID)) {
@@ -182,10 +189,10 @@ class Server {
 									&payloadParserFactories_, &payloadSerializers_,
 									&boostConnectionFactory_));
 						registerLinkLocalSession(outgoingSession);
-						outgoingSession->sendStanza(stanza);
+						outgoingSession->sendElement(stanza);
 					}
 					else {
-						session->sendStanza(IQ::createError(
+						session->sendElement(IQ::createError(
 								stanza->getFrom(), stanza->getID(), 
 								Error::RecipientUnavailable, Error::Wait));
 					}
@@ -195,7 +202,7 @@ class Server {
 
 		void registerLinkLocalSession(boost::shared_ptr<LinkLocalSession> session) {
 			session->onSessionFinished.connect(boost::bind(&Server::handleLinkLocalSessionFinished, this, session));
-			session->onStanzaReceived.connect(boost::bind(&Server::handleLinkLocalStanzaReceived, this, _1, session));
+			session->onElementReceived.connect(boost::bind(&Server::handleLinkLocalElementReceived, this, _1, session));
 			linkLocalSessions_.push_back(session);
 			session->start();
 		}
@@ -213,13 +220,13 @@ class Server {
 			if (rosterRequested_) {
 				boost::shared_ptr<IQ> iq = IQ::createRequest(IQ::Set, serverFromClientSession_->getJID(), idGenerator_.generateID(), roster);
 				iq->setFrom(serverFromClientSession_->getJID().toBare());
-				serverFromClientSession_->sendStanza(iq);
+				serverFromClientSession_->sendElement(iq);
 			}
 		}
 
 		void handlePresenceChanged(boost::shared_ptr<Presence> presence) {
 			if (rosterRequested_) {
-				serverFromClientSession_->sendStanza(presence);
+				serverFromClientSession_->sendElement(presence);
 			}
 		}
 
@@ -260,7 +267,6 @@ class Server {
 		boost::shared_ptr<ServerFromClientSession> serverFromClientSession_;
 		boost::shared_ptr<BoostConnectionServer> serverFromNetworkConnectionServer_;
 		std::vector< boost::shared_ptr<LinkLocalSession> > linkLocalSessions_;
-		std::vector< boost::shared_ptr<Stanza> > queuedOutgoingStanzas_;
 		FullPayloadParserFactoryCollection payloadParserFactories_;
 		FullPayloadSerializerCollection payloadSerializers_;
 		bool dnsSDServiceRegistered_;

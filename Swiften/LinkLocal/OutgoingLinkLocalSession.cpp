@@ -77,28 +77,28 @@ void OutgoingLinkLocalSession::handleConnected(bool error) {
 }
 
 void OutgoingLinkLocalSession::handleStreamStart(const ProtocolHeader&) {
-	foreach(const boost::shared_ptr<Stanza>& stanza, queuedStanzas_) {
-		LinkLocalSession::sendStanza(stanza);
+	foreach(const boost::shared_ptr<Element>& stanza, queuedElements_) {
+		LinkLocalSession::sendElement(stanza);
 	}
-	queuedStanzas_.clear();
+	queuedElements_.clear();
 	setInitialized();
 }
 
 void OutgoingLinkLocalSession::handleElement(boost::shared_ptr<Element> element) {
 	if (isInitialized()) {
-		boost::shared_ptr<Stanza> stanza = boost::dynamic_pointer_cast<Stanza>(element);
+		boost::shared_ptr<Element> stanza = boost::dynamic_pointer_cast<Element>(element);
 		if (stanza) {
-			onStanzaReceived(stanza);
+			onElementReceived(stanza);
 		}
 	}
 }
 
-void OutgoingLinkLocalSession::sendStanza(boost::shared_ptr<Stanza> stanza) {
+void OutgoingLinkLocalSession::sendElement(boost::shared_ptr<Element> stanza) {
 	if (isInitialized()) {
-		LinkLocalSession::sendStanza(stanza);
+		LinkLocalSession::sendElement(stanza);
 	}
 	else {
-		queuedStanzas_.push_back(stanza);
+		queuedElements_.push_back(stanza);
 	}
 }
 

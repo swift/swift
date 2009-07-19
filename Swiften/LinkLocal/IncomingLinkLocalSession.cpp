@@ -57,7 +57,7 @@ void IncomingLinkLocalSession::handleElement(boost::shared_ptr<Element> element)
 	
 	if (isInitialized()) {
 		if (stanza) {
-			onStanzaReceived(stanza);
+			onElementReceived(stanza);
 		}
 		else {
 			std::cerr << "Received unexpected element" << std::endl;

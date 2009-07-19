@@ -5,8 +5,6 @@
 #include "Swiften/Elements/ProtocolHeader.h"
 #include "Swiften/Server/UserRegistry.h"
 #include "Swiften/Network/Connection.h"
-#include "Swiften/StreamStack/StreamStack.h"
-#include "Swiften/StreamStack/ConnectionLayer.h"
 #include "Swiften/StreamStack/XMPPLayer.h"
 #include "Swiften/Elements/StreamFeatures.h"
 #include "Swiften/Elements/ResourceBind.h"
@@ -25,62 +23,34 @@ ServerFromClientSession::ServerFromClientSession(
 		PayloadParserFactoryCollection* payloadParserFactories, 
 		PayloadSerializerCollection* payloadSerializers,
 		UserRegistry* userRegistry) : 
+			Session(connection, payloadParserFactories, payloadSerializers),
 			id_(id),
-			connection_(connection), 
-			payloadParserFactories_(payloadParserFactories), 
-			payloadSerializers_(payloadSerializers),
 			userRegistry_(userRegistry),
-			authenticated_(false),
-			initialized_(false) {
-	xmppLayer_ = boost::shared_ptr<XMPPLayer>(new XMPPLayer(payloadParserFactories_, payloadSerializers_));
-	connectionLayer_ = boost::shared_ptr<ConnectionLayer>(new ConnectionLayer(connection_));
-	streamStack_ = new StreamStack(xmppLayer_, connectionLayer_);
+			authenticated_(false) {
 }
 
-ServerFromClientSession::~ServerFromClientSession() {
-	delete streamStack_;
-}
-
-void ServerFromClientSession::start() {
-	xmppLayer_->onStreamStart.connect(
-			boost::bind(&ServerFromClientSession::handleStreamStart, this, _1));
-	xmppLayer_->onElement.connect(
-			boost::bind(&ServerFromClientSession::handleElement, this, _1));
-	//xmppLayer_->onError.connect(
-	//		boost::bind(&ServerFromClientSession::setError, this, XMLError));
-	xmppLayer_->onDataRead.connect(
-			boost::bind(boost::ref(onDataRead), _1));
-	xmppLayer_->onWriteData.connect(
-			boost::bind(boost::ref(onDataWritten), _1));
-	connection_->onDisconnected.connect(boost::bind(&ServerFromClientSession::handleDisconnected, shared_from_this(), _1));
-}
 
 void ServerFromClientSession::handleElement(boost::shared_ptr<Element> element) {
-	if (initialized_) {
-		if (boost::shared_ptr<Stanza> stanza = boost::dynamic_pointer_cast<Stanza>(element)) {
-			onStanzaReceived(stanza);
-		}
-		else {
-			std::cerr << "Received unexpected element" << std::endl;
-		}
+	if (isInitialized()) {
+		onElementReceived(element);
 	}
 	else {
 		if (AuthRequest* authRequest = dynamic_cast<AuthRequest*>(element.get())) {
 			if (authRequest->getMechanism() != "PLAIN") {
-				xmppLayer_->writeElement(boost::shared_ptr<AuthFailure>(new AuthFailure));
-				onSessionFinished();
+				getXMPPLayer()->writeElement(boost::shared_ptr<AuthFailure>(new AuthFailure));
+				finishSession(NoSupportedAuthMechanismsError);
 			}
 			else {
 				PLAINMessage plainMessage(authRequest->getMessage());
 				if (userRegistry_->isValidUserPassword(JID(plainMessage.getAuthenticationID(), domain_.getDomain()), plainMessage.getPassword())) {
-					xmppLayer_->writeElement(boost::shared_ptr<AuthSuccess>(new AuthSuccess()));
+					getXMPPLayer()->writeElement(boost::shared_ptr<AuthSuccess>(new AuthSuccess()));
 					user_ = plainMessage.getAuthenticationID();
 					authenticated_ = true;
-					xmppLayer_->resetParser();
+					getXMPPLayer()->resetParser();
 				}
 				else {
-					xmppLayer_->writeElement(boost::shared_ptr<AuthFailure>(new AuthFailure));
-					onSessionFinished();
+					getXMPPLayer()->writeElement(boost::shared_ptr<AuthFailure>(new AuthFailure));
+					finishSession(AuthenticationFailedError);
 				}
 			}
 		}
@@ -89,12 +59,11 @@ void ServerFromClientSession::handleElement(boost::shared_ptr<Element> element) 
 				jid_ = JID(user_, domain_.getDomain(), resourceBind->getResource());
 				boost::shared_ptr<ResourceBind> resultResourceBind(new ResourceBind());
 				resultResourceBind->setJID(jid_);
-				xmppLayer_->writeElement(IQ::createResult(JID(), iq->getID(), resultResourceBind));
+				getXMPPLayer()->writeElement(IQ::createResult(JID(), iq->getID(), resultResourceBind));
 			}
 			else if (iq->getPayload<StartSession>()) {
-				initialized_ = true;
-				xmppLayer_->writeElement(IQ::createResult(jid_, iq->getID()));
-				onSessionStarted();
+				getXMPPLayer()->writeElement(IQ::createResult(jid_, iq->getID()));
+				setInitialized();
 			}
 		}
 	}
@@ -105,7 +74,7 @@ void ServerFromClientSession::handleStreamStart(const ProtocolHeader& incomingHe
 	ProtocolHeader header;
 	header.setFrom(incomingHeader.getTo());
 	header.setID(id_);
-	xmppLayer_->writeHeader(header);
+	getXMPPLayer()->writeHeader(header);
 
 	boost::shared_ptr<StreamFeatures> features(new StreamFeatures());
 	if (!authenticated_) {
@@ -115,16 +84,7 @@ void ServerFromClientSession::handleStreamStart(const ProtocolHeader& incomingHe
 		features->setHasResourceBind();
 		features->setHasSession();
 	}
-	xmppLayer_->writeElement(features);
+	getXMPPLayer()->writeElement(features);
 }
-
-void ServerFromClientSession::sendStanza(boost::shared_ptr<Stanza> stanza) {
-	xmppLayer_->writeElement(stanza);
-}
-
-void ServerFromClientSession::handleDisconnected(const boost::optional<Connection::Error>&) {
-	onSessionFinished();
-}
-
 
 }
