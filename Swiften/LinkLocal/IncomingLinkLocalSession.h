@@ -3,7 +3,7 @@
 #include <boost/shared_ptr.hpp>
 #include <boost/signal.hpp>
 
-#include "Swiften/LinkLocal/LinkLocalSession.h"
+#include "Swiften/Session/Session.h"
 #include "Swiften/JID/JID.h"
 #include "Swiften/Network/Connection.h"
 
@@ -14,7 +14,7 @@ namespace Swift {
 	class PayloadParserFactoryCollection;
 	class PayloadSerializerCollection;
 
-	class IncomingLinkLocalSession : public LinkLocalSession {
+	class IncomingLinkLocalSession : public Session {
 		public:
 			IncomingLinkLocalSession(
 					const JID& localJID,
@@ -22,18 +22,8 @@ namespace Swift {
 					PayloadParserFactoryCollection* payloadParserFactories, 
 					PayloadSerializerCollection* payloadSerializers);
 
-			const JID& getRemoteJID() const {
-				return remoteJID_;
-			}
-
-			void start();
-
 		private:
 			void handleElement(boost::shared_ptr<Element>);
 			void handleStreamStart(const ProtocolHeader&);
-
-		private:
-			bool initialized_;
-			JID remoteJID_;
 	};
 }

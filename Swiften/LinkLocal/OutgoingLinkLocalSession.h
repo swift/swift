@@ -5,51 +5,32 @@
 #include <boost/enable_shared_from_this.hpp>
 #include <vector>
 
-#include "Swiften/LinkLocal/LinkLocalSession.h"
+#include "Swiften/Session/Session.h"
 #include "Swiften/JID/JID.h"
 
 namespace Swift {
 	class ConnectionFactory;
-	class HostAddress;
 	class String;
 	class Element;
 	class PayloadParserFactoryCollection;
 	class PayloadSerializerCollection;
-	class DNSSDService;
 
-	class OutgoingLinkLocalSession : public LinkLocalSession {
+	class OutgoingLinkLocalSession : public Session {
 		public:
 			OutgoingLinkLocalSession(
 					const JID& localJID,
 					const JID& remoteJID,
-					const String& hostname,
-					int port,
-					boost::shared_ptr<DNSSDService> resolver,
+					boost::shared_ptr<Connection> connection,
 					PayloadParserFactoryCollection* payloadParserFactories, 
-					PayloadSerializerCollection* payloadSerializers,
-					ConnectionFactory* connectionFactory);
+					PayloadSerializerCollection* payloadSerializers);
 
-			const JID& getRemoteJID() const {
-				return remoteJID_;
-			}
-
-			void start();
-
-			void sendElement(boost::shared_ptr<Element> stanza);
+			void queueElement(boost::shared_ptr<Element> element);
 
 		private:
 			void handleElement(boost::shared_ptr<Element>);
 			void handleStreamStart(const ProtocolHeader&);
-			void handleHostnameResolved(const String& hostname, const boost::optional<HostAddress>& address);
-			void handleConnected(bool error);
 
 		private:
-			bool resolving_;
-			JID remoteJID_;
-			String hostname_;
-			int port_;
-			boost::shared_ptr<DNSSDService> resolver_;
 			std::vector<boost::shared_ptr<Element> > queuedElements_;
-			ConnectionFactory* connectionFactory_;
 	};
 }

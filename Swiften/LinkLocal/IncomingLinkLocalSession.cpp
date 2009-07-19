@@ -18,23 +18,17 @@ IncomingLinkLocalSession::IncomingLinkLocalSession(
 		boost::shared_ptr<Connection> connection, 
 		PayloadParserFactoryCollection* payloadParserFactories, 
 		PayloadSerializerCollection* payloadSerializers) :
-			LinkLocalSession(
-				localJID, 
-				connection, 
-				payloadParserFactories, 
-				payloadSerializers) {
-}
-
-void IncomingLinkLocalSession::start() {
-	initializeStreamStack();
+			Session(connection, payloadParserFactories, payloadSerializers) {
+	setLocalJID(localJID);
 }
 
 void IncomingLinkLocalSession::handleStreamStart(const ProtocolHeader& incomingHeader) {
-	remoteJID_ = JID(incomingHeader.getFrom());
-	if (!remoteJID_.isValid()) {
+	setRemoteJID(JID(incomingHeader.getFrom()));
+	if (!getRemoteJID().isValid()) {
 		finishSession();
 		return;
 	}
+
 	ProtocolHeader header;
 	header.setFrom(getLocalJID());
 	getXMPPLayer()->writeHeader(header);
@@ -55,14 +49,7 @@ void IncomingLinkLocalSession::handleElement(boost::shared_ptr<Element> element)
 		setInitialized();
 	}
 	
-	if (isInitialized()) {
-		if (stanza) {
-			onElementReceived(stanza);
-		}
-		else {
-			std::cerr << "Received unexpected element" << std::endl;
-		}
-	}
+	onElementReceived(element);
 }
 
 
