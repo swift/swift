@@ -259,7 +259,7 @@ class ClientSessionTest : public CppUnit::TestFixture {
 			processEvents();
 
 			CPPUNIT_ASSERT_EQUAL(ClientSession::SessionStarted, session->getState());
-			CPPUNIT_ASSERT_EQUAL(JID("me@foo.com/Bar"), session->getJID());
+			CPPUNIT_ASSERT_EQUAL(JID("me@foo.com/Bar"), session->getLocalJID());
 		}
 
 		void testResourceBind_ChangeResource() {
@@ -273,7 +273,7 @@ class ClientSessionTest : public CppUnit::TestFixture {
 			processEvents();
 
 			CPPUNIT_ASSERT_EQUAL(ClientSession::SessionStarted, session->getState());
-			CPPUNIT_ASSERT_EQUAL(JID("me@foo.com/Bar123"), session->getJID());
+			CPPUNIT_ASSERT_EQUAL(JID("me@foo.com/Bar123"), session->getLocalJID());
 		}
 
 		void testResourceBind_EmptyResource() {
@@ -287,7 +287,7 @@ class ClientSessionTest : public CppUnit::TestFixture {
 			processEvents();
 
 			CPPUNIT_ASSERT_EQUAL(ClientSession::SessionStarted, session->getState());
-			CPPUNIT_ASSERT_EQUAL(JID("me@foo.com/NewResource"), session->getJID());
+			CPPUNIT_ASSERT_EQUAL(JID("me@foo.com/NewResource"), session->getLocalJID());
 		}
 
 		void testResourceBind_Error() {

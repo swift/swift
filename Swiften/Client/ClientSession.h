@@ -54,10 +54,6 @@ namespace Swift {
 				return error_;
 			}
 
-			const JID& getJID() const {
-				return jid_;
-			}
-
 			void sendCredentials(const String& password);
 			void setCertificate(const PKCS12Certificate& certificate);
 
@@ -80,7 +76,6 @@ namespace Swift {
 			boost::signal<void ()> onNeedCredentials;
 		
 		private:
-			JID jid_;
 			TLSLayerFactory* tlsLayerFactory_;
 			State state_;
 			boost::optional<SessionError> error_;

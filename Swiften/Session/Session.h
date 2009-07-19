@@ -46,6 +46,14 @@ namespace Swift {
 			void finishSession();
 			void sendElement(boost::shared_ptr<Element>);
 
+			const JID& getLocalJID() const {
+				return localJID;
+			}
+
+			const JID& getRemoteJID() const {
+				return remoteJID;
+			}
+
 			boost::signal<void (boost::shared_ptr<Element>)> onElementReceived;
 			boost::signal<void ()> onSessionStarted;
 			boost::signal<void (const boost::optional<SessionError>&)> onSessionFinished;
@@ -53,6 +61,16 @@ namespace Swift {
 			boost::signal<void (const ByteArray&)> onDataRead;
 
 		protected:
+			void setRemoteJID(const JID& j) {
+				assert(!isInitialized());
+				remoteJID = j;
+			}
+
+			void setLocalJID(const JID& j) {
+				assert(!isInitialized());
+				localJID = j;
+			}
+
 			void finishSession(const SessionError&);
 
 			virtual void handleSessionStarted() {}
@@ -81,6 +99,8 @@ namespace Swift {
 			void handleDisconnected(const boost::optional<Connection::Error>& error);
 
 		private:
+			JID localJID;
+			JID remoteJID;
 			boost::shared_ptr<Connection> connection;
 			PayloadParserFactoryCollection* payloadParserFactories;
 			PayloadSerializerCollection* payloadSerializers;

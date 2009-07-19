@@ -31,10 +31,11 @@ ClientSession::ClientSession(
 		PayloadParserFactoryCollection* payloadParserFactories, 
 		PayloadSerializerCollection* payloadSerializers) : 
 			Session(connection, payloadParserFactories, payloadSerializers),
-			jid_(jid), 
 			tlsLayerFactory_(tlsLayerFactory),
 			state_(Initial), 
 			needSessionStart_(false) {
+	setLocalJID(jid);
+	setRemoteJID(JID("", jid.getDomain()));
 }
 
 void ClientSession::handleSessionStarted() {
@@ -45,7 +46,7 @@ void ClientSession::handleSessionStarted() {
 
 void ClientSession::sendStreamHeader() {
 	ProtocolHeader header;
-	header.setTo(jid_.getDomain());
+	header.setTo(getRemoteJID());
 	getXMPPLayer()->writeHeader(header);
 }
 
@@ -103,8 +104,8 @@ void ClientSession::handleElement(boost::shared_ptr<Element> element) {
 			if (streamFeatures->hasResourceBind()) {
 				state_ = BindingResource;
 				boost::shared_ptr<ResourceBind> resourceBind(new ResourceBind());
-				if (!jid_.getResource().isEmpty()) {
-					resourceBind->setResource(jid_.getResource());
+				if (!getLocalJID().getResource().isEmpty()) {
+					resourceBind->setResource(getLocalJID().getResource());
 				}
 				getXMPPLayer()->writeElement(IQ::createRequest(IQ::Set, JID(), "session-bind", resourceBind));
 			}
@@ -151,8 +152,8 @@ void ClientSession::handleElement(boost::shared_ptr<Element> element) {
 				finishSession(UnexpectedElementError);
 			}
 			else if (iq->getType() == IQ::Result) {
-				jid_ = resourceBind->getJID();
-				if (!jid_.isValid()) {
+				setLocalJID(resourceBind->getJID());
+				if (!getLocalJID().isValid()) {
 					finishSession(ResourceBindError);
 				}
 				if (needSessionStart_) {
@@ -216,7 +217,7 @@ bool ClientSession::checkState(State state) {
 void ClientSession::sendCredentials(const String& password) {
 	assert(WaitingForCredentials);
 	state_ = Authenticating;
-	getXMPPLayer()->writeElement(boost::shared_ptr<Element>(new AuthRequest("PLAIN", PLAINMessage(jid_.getNode(), password).getValue())));
+	getXMPPLayer()->writeElement(boost::shared_ptr<Element>(new AuthRequest("PLAIN", PLAINMessage(getLocalJID().getNode(), password).getValue())));
 }
 
 void ClientSession::handleTLSConnected() {

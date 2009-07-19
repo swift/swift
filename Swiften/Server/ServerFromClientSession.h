@@ -31,14 +31,6 @@ namespace Swift {
 					PayloadSerializerCollection* payloadSerializers,
 					UserRegistry* userRegistry);
 
-			const JID& getJID() const {
-				return jid_;
-			}
-
-			const JID& getDomain() const {
-				return domain_;
-			}
-
 		private:
 			void handleElement(boost::shared_ptr<Element>);
 			void handleStreamStart(const ProtocolHeader& header);
@@ -47,8 +39,6 @@ namespace Swift {
 			String id_;
 			UserRegistry* userRegistry_;
 			bool authenticated_;
-			JID domain_;
 			String user_;
-			JID jid_;
 	};
 }

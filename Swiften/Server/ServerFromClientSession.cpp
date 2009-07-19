@@ -42,7 +42,7 @@ void ServerFromClientSession::handleElement(boost::shared_ptr<Element> element) 
 			}
 			else {
 				PLAINMessage plainMessage(authRequest->getMessage());
-				if (userRegistry_->isValidUserPassword(JID(plainMessage.getAuthenticationID(), domain_.getDomain()), plainMessage.getPassword())) {
+				if (userRegistry_->isValidUserPassword(JID(plainMessage.getAuthenticationID(), getLocalJID().getDomain()), plainMessage.getPassword())) {
 					getXMPPLayer()->writeElement(boost::shared_ptr<AuthSuccess>(new AuthSuccess()));
 					user_ = plainMessage.getAuthenticationID();
 					authenticated_ = true;
@@ -56,13 +56,13 @@ void ServerFromClientSession::handleElement(boost::shared_ptr<Element> element) 
 		}
 		else if (IQ* iq = dynamic_cast<IQ*>(element.get())) {
 			if (boost::shared_ptr<ResourceBind> resourceBind = iq->getPayload<ResourceBind>()) {
-				jid_ = JID(user_, domain_.getDomain(), resourceBind->getResource());
+				setRemoteJID(JID(user_, getLocalJID().getDomain(), resourceBind->getResource()));
 				boost::shared_ptr<ResourceBind> resultResourceBind(new ResourceBind());
-				resultResourceBind->setJID(jid_);
+				resultResourceBind->setJID(getRemoteJID());
 				getXMPPLayer()->writeElement(IQ::createResult(JID(), iq->getID(), resultResourceBind));
 			}
 			else if (iq->getPayload<StartSession>()) {
-				getXMPPLayer()->writeElement(IQ::createResult(jid_, iq->getID()));
+				getXMPPLayer()->writeElement(IQ::createResult(getRemoteJID(), iq->getID()));
 				setInitialized();
 			}
 		}
@@ -70,7 +70,7 @@ void ServerFromClientSession::handleElement(boost::shared_ptr<Element> element) 
 }
 
 void ServerFromClientSession::handleStreamStart(const ProtocolHeader& incomingHeader) {
-	domain_ = JID("", incomingHeader.getTo());
+	setLocalJID(JID("", incomingHeader.getTo()));
 	ProtocolHeader header;
 	header.setFrom(incomingHeader.getTo());
 	header.setID(id_);
