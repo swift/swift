@@ -48,16 +48,6 @@ void BoostConnection::listen() {
 	doRead();
 }
 
-void BoostConnection::connect(const String& domain) {
-	DomainNameResolver resolver;
-	try {
-		connect(resolver.resolve(domain.getUTF8String()));
-	}
-	catch (const DomainNameResolveException& e) {
-		onDisconnected(DomainNameResolveError);
-	}
-}
-
 void BoostConnection::connect(const HostAddressPort& addressPort) {
 	boost::asio::ip::tcp::endpoint endpoint(	
 			boost::asio::ip::address::from_string(addressPort.getAddress().toString()), addressPort.getPort());
@@ -78,11 +68,11 @@ void BoostConnection::write(const ByteArray& data) {
 
 void BoostConnection::handleConnectFinished(const boost::system::error_code& error) {
 	if (!error) {
-		MainEventLoop::postEvent(boost::bind(boost::ref(onConnected)), shared_from_this());
+		MainEventLoop::postEvent(boost::bind(boost::ref(onConnectFinished), false), shared_from_this());
 		doRead();
 	}
 	else if (error != boost::asio::error::operation_aborted) {
-		MainEventLoop::postEvent(boost::bind(boost::ref(onDisconnected), ConnectionError), shared_from_this());
+		MainEventLoop::postEvent(boost::bind(boost::ref(onConnectFinished), true), shared_from_this());
 	}
 }
 

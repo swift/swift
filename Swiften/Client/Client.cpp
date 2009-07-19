@@ -2,9 +2,11 @@
 
 #include <boost/bind.hpp>
 
+#include "Swiften/Network/DomainNameResolver.h"
 #include "Swiften/Client/Session.h"
 #include "Swiften/StreamStack/PlatformTLSLayerFactory.h"
 #include "Swiften/Network/BoostConnectionFactory.h"
+#include "Swiften/Network/DomainNameResolveException.h"
 #include "Swiften/TLS/PKCS12Certificate.h"
 
 namespace Swift {
@@ -23,17 +25,37 @@ Client::~Client() {
 
 void Client::connect() {
 	delete session_;
-	session_ = new Session(jid_, connectionFactory_, tlsLayerFactory_, &payloadParserFactories_, &payloadSerializers_);
-	if (!certificate_.isEmpty()) {
-		session_->setCertificate(PKCS12Certificate(certificate_, password_));
+	session_ = 0;
+
+	DomainNameResolver resolver;
+	try {
+		HostAddressPort remote = resolver.resolve(jid_.getDomain().getUTF8String());
+		connection_ = connectionFactory_->createConnection();
+		connection_->onConnectFinished.connect(boost::bind(&Client::handleConnectionConnectFinished, this, _1));
+		connection_->connect(remote);
 	}
-	session_->onSessionStarted.connect(boost::bind(boost::ref(onConnected)));
-	session_->onError.connect(boost::bind(&Client::handleSessionError, this, _1));
-	session_->onNeedCredentials.connect(boost::bind(&Client::handleNeedCredentials, this));
-	session_->onDataRead.connect(boost::bind(&Client::handleDataRead, this, _1));
-	session_->onDataWritten.connect(boost::bind(&Client::handleDataWritten, this, _1));
-	session_->onElementReceived.connect(boost::bind(&Client::handleElement, this, _1));
-	session_->start();
+	catch (const DomainNameResolveException& e) {
+		onError(ClientError::DomainNameResolveError);
+	}
+}
+
+void Client::handleConnectionConnectFinished(bool error) {
+	if (error) {
+		onError(ClientError::ConnectionError);
+	}
+	else {
+		session_ = new Session(jid_, connection_, tlsLayerFactory_, &payloadParserFactories_, &payloadSerializers_);
+		if (!certificate_.isEmpty()) {
+			session_->setCertificate(PKCS12Certificate(certificate_, password_));
+		}
+		session_->onSessionStarted.connect(boost::bind(boost::ref(onConnected)));
+		session_->onError.connect(boost::bind(&Client::handleSessionError, this, _1));
+		session_->onNeedCredentials.connect(boost::bind(&Client::handleNeedCredentials, this));
+		session_->onDataRead.connect(boost::bind(&Client::handleDataRead, this, _1));
+		session_->onDataWritten.connect(boost::bind(&Client::handleDataWritten, this, _1));
+		session_->onElementReceived.connect(boost::bind(&Client::handleElement, this, _1));
+		session_->start();
+	}
 }
 
 void Client::disconnect() {
@@ -91,12 +113,6 @@ void Client::handleSessionError(Session::SessionError error) {
 	switch (error) {
 		case Session::NoError: 
 			assert(false);
-			break;
-		case Session::DomainNameResolveError:
-			clientError = ClientError(ClientError::DomainNameResolveError);
-			break;
-		case Session::ConnectionError:
-			clientError = ClientError(ClientError::ConnectionError);
 			break;
 		case Session::ConnectionReadError:
 			clientError = ClientError(ClientError::ConnectionReadError);

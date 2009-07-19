@@ -41,7 +41,7 @@ namespace Swift {
 			void handleElement(boost::shared_ptr<Element>);
 			void handleStreamStart(const ProtocolHeader&);
 			void handleHostnameResolved(const String& hostname, const boost::optional<HostAddress>& address);
-			void handleConnected();
+			void handleConnected(bool error);
 
 		private:
 			bool resolving_;

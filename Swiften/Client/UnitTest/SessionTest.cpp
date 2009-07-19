@@ -39,10 +39,8 @@ using namespace Swift;
 class SessionTest : public CppUnit::TestFixture {
 		CPPUNIT_TEST_SUITE(SessionTest);
 		CPPUNIT_TEST(testConstructor);
-		CPPUNIT_TEST(testConnect);
-		CPPUNIT_TEST(testConnect_Error);
-		CPPUNIT_TEST(testConnect_ErrorAfterSuccesfulConnect);
-		CPPUNIT_TEST(testConnect_XMLError);
+		CPPUNIT_TEST(testStart_Error);
+		CPPUNIT_TEST(testStart_XMLError);
 		CPPUNIT_TEST(testStartTLS);
 		CPPUNIT_TEST(testStartTLS_ServerError);
 		CPPUNIT_TEST(testStartTLS_NoTLSSupport);
@@ -68,7 +66,7 @@ class SessionTest : public CppUnit::TestFixture {
 
 		void setUp() {
 			eventLoop_ = new DummyEventLoop();
-			connectionFactory_ = new MockConnectionFactory();
+			connection_ = boost::shared_ptr<MockConnection>(new MockConnection());
 			tlsLayerFactory_ = new MockTLSLayerFactory();
 			sessionStarted_ = false;
 			needCredentials_ = false;
@@ -76,7 +74,6 @@ class SessionTest : public CppUnit::TestFixture {
 
 		void tearDown() {
 			delete tlsLayerFactory_;
-			delete connectionFactory_;
 			delete eventLoop_;
 		}
 
@@ -85,51 +82,26 @@ class SessionTest : public CppUnit::TestFixture {
 			CPPUNIT_ASSERT_EQUAL(Session::Initial, session->getState());
 		}
 
-		void testConnect() {
+		void testStart_Error() {
 			std::auto_ptr<MockSession> session(createSession("me@foo.com/Bar"));
-
-			session->start();
-			CPPUNIT_ASSERT_EQUAL(Session::Connecting, session->getState());
 
 			getMockServer()->expectStreamStart();
-
-			processEvents();
-			CPPUNIT_ASSERT_EQUAL(Session::WaitingForStreamStart, session->getState());
-		}
-
-		void testConnect_Error() {
-			std::auto_ptr<MockSession> session(createSession("me@foo.com/Bar"));
-			session->onSessionStarted.connect(boost::bind(&SessionTest::setSessionStarted, this));
-
-			connectionFactory_->setCreateFailingConnections();
 			session->start();
-			processEvents();
-
-			CPPUNIT_ASSERT_EQUAL(Session::Error, session->getState());
-			CPPUNIT_ASSERT(!sessionStarted_);
-			CPPUNIT_ASSERT_EQUAL(Session::ConnectionError, session->getError());
-		}
-
-		void testConnect_ErrorAfterSuccesfulConnect() {
-			std::auto_ptr<MockSession> session(createSession("me@foo.com/Bar"));
-
-			session->start();
-			getMockServer()->expectStreamStart();
 			processEvents();
 			CPPUNIT_ASSERT_EQUAL(Session::WaitingForStreamStart, session->getState());
 
-			connectionFactory_->connections_[0]->setError();
+			getMockServer()->setError();
 			processEvents();
 
 			CPPUNIT_ASSERT_EQUAL(Session::Error, session->getState());
-			CPPUNIT_ASSERT_EQUAL(Session::ConnectionError, session->getError());
+			CPPUNIT_ASSERT_EQUAL(Session::ConnectionReadError, session->getError());
 		}
 
-		void testConnect_XMLError() {
+		void testStart_XMLError() {
 			std::auto_ptr<MockSession> session(createSession("me@foo.com/Bar"));
 
-			session->start();
 			getMockServer()->expectStreamStart();
+			session->start();
 			processEvents();
 			CPPUNIT_ASSERT_EQUAL(Session::WaitingForStreamStart, session->getState());
 
@@ -143,25 +115,23 @@ class SessionTest : public CppUnit::TestFixture {
 		void testStartTLS_NoTLSSupport() {
 			std::auto_ptr<MockSession> session(createSession("me@foo.com/Bar"));
 			tlsLayerFactory_->setTLSSupported(false);
-			session->start();
-
 			getMockServer()->expectStreamStart();
 			getMockServer()->sendStreamStart();
 			getMockServer()->sendStreamFeaturesWithStartTLS();
+			session->start();
 			processEvents();
 			CPPUNIT_ASSERT_EQUAL(Session::SessionStarted, session->getState());
 		}
 
 		void testStartTLS() {
 			std::auto_ptr<MockSession> session(createSession("me@foo.com/Bar"));
-			session->start();
-
 			getMockServer()->expectStreamStart();
 			getMockServer()->sendStreamStart();
 			getMockServer()->sendStreamFeaturesWithStartTLS();
 			getMockServer()->expectStartTLS();
 			// FIXME: Test 'encrypting' state
 			getMockServer()->sendTLSProceed();
+			session->start();
 			processEvents();
 			CPPUNIT_ASSERT_EQUAL(Session::Encrypting, session->getState());
 			CPPUNIT_ASSERT(session->getTLSLayer());
@@ -178,13 +148,12 @@ class SessionTest : public CppUnit::TestFixture {
 
 		void testStartTLS_ServerError() {
 			std::auto_ptr<MockSession> session(createSession("me@foo.com/Bar"));
-			session->start();
-
 			getMockServer()->expectStreamStart();
 			getMockServer()->sendStreamStart();
 			getMockServer()->sendStreamFeaturesWithStartTLS();
 			getMockServer()->expectStartTLS();
 			getMockServer()->sendTLSFailure();
+			session->start();
 			processEvents();
 
 			CPPUNIT_ASSERT_EQUAL(Session::Error, session->getState());
@@ -193,13 +162,12 @@ class SessionTest : public CppUnit::TestFixture {
 
 		void testStartTLS_ConnectError() {
 			std::auto_ptr<MockSession> session(createSession("me@foo.com/Bar"));
-			session->start();
-
 			getMockServer()->expectStreamStart();
 			getMockServer()->sendStreamStart();
 			getMockServer()->sendStreamFeaturesWithStartTLS();
 			getMockServer()->expectStartTLS();
 			getMockServer()->sendTLSProceed();
+			session->start();
 			processEvents();
 			session->getTLSLayer()->setError();
 
@@ -209,13 +177,12 @@ class SessionTest : public CppUnit::TestFixture {
 
 		void testStartTLS_ErrorAfterConnect() {
 			std::auto_ptr<MockSession> session(createSession("me@foo.com/Bar"));
-			session->start();
-
 			getMockServer()->expectStreamStart();
 			getMockServer()->sendStreamStart();
 			getMockServer()->sendStreamFeaturesWithStartTLS();
 			getMockServer()->expectStartTLS();
 			getMockServer()->sendTLSProceed();
+			session->start();
 			processEvents();
 			getMockServer()->resetParser();
 			getMockServer()->expectStreamStart();
@@ -232,11 +199,10 @@ class SessionTest : public CppUnit::TestFixture {
 		void testAuthenticate() {
 			std::auto_ptr<MockSession> session(createSession("me@foo.com/Bar"));
 			session->onNeedCredentials.connect(boost::bind(&SessionTest::setNeedCredentials, this));
-			session->start();
-
 			getMockServer()->expectStreamStart();
 			getMockServer()->sendStreamStart();
 			getMockServer()->sendStreamFeaturesWithAuthentication();
+			session->start();
 			processEvents();
 			CPPUNIT_ASSERT_EQUAL(Session::WaitingForCredentials, session->getState());
 			CPPUNIT_ASSERT(needCredentials_);
@@ -253,10 +219,10 @@ class SessionTest : public CppUnit::TestFixture {
 
 		void testAuthenticate_Unauthorized() {
 			std::auto_ptr<MockSession> session(createSession("me@foo.com/Bar"));
-			session->start();
 			getMockServer()->expectStreamStart();
 			getMockServer()->sendStreamStart();
 			getMockServer()->sendStreamFeaturesWithAuthentication();
+			session->start();
 			processEvents();
 
 			getMockServer()->expectAuth("me", "mypass");
@@ -270,10 +236,10 @@ class SessionTest : public CppUnit::TestFixture {
 
 		void testAuthenticate_NoValidAuthMechanisms() {
 			std::auto_ptr<MockSession> session(createSession("me@foo.com/Bar"));
-			session->start();
 			getMockServer()->expectStreamStart();
 			getMockServer()->sendStreamStart();
 			getMockServer()->sendStreamFeaturesWithUnsupportedAuthentication();
+			session->start();
 			processEvents();
 
 			CPPUNIT_ASSERT_EQUAL(Session::Error, session->getState());
@@ -282,14 +248,14 @@ class SessionTest : public CppUnit::TestFixture {
 
 		void testResourceBind() {
 			std::auto_ptr<MockSession> session(createSession("me@foo.com/Bar"));
-			session->start();
-
 			getMockServer()->expectStreamStart();
 			getMockServer()->sendStreamStart();
 			getMockServer()->sendStreamFeaturesWithResourceBind();
 			getMockServer()->expectResourceBind("Bar", "session-bind");
 			// FIXME: Check CPPUNIT_ASSERT_EQUAL(Session::BindingResource, session->getState());
 			getMockServer()->sendResourceBindResponse("me@foo.com/Bar", "session-bind");
+			session->start();
+
 			processEvents();
 
 			CPPUNIT_ASSERT_EQUAL(Session::SessionStarted, session->getState());
@@ -298,13 +264,12 @@ class SessionTest : public CppUnit::TestFixture {
 
 		void testResourceBind_ChangeResource() {
 			std::auto_ptr<MockSession> session(createSession("me@foo.com/Bar"));
-			session->start();
-
 			getMockServer()->expectStreamStart();
 			getMockServer()->sendStreamStart();
 			getMockServer()->sendStreamFeaturesWithResourceBind();
 			getMockServer()->expectResourceBind("Bar", "session-bind");
 			getMockServer()->sendResourceBindResponse("me@foo.com/Bar123", "session-bind");
+			session->start();
 			processEvents();
 
 			CPPUNIT_ASSERT_EQUAL(Session::SessionStarted, session->getState());
@@ -313,13 +278,12 @@ class SessionTest : public CppUnit::TestFixture {
 
 		void testResourceBind_EmptyResource() {
 			std::auto_ptr<MockSession> session(createSession("me@foo.com"));
-			session->start();
-
 			getMockServer()->expectStreamStart();
 			getMockServer()->sendStreamStart();
 			getMockServer()->sendStreamFeaturesWithResourceBind();
 			getMockServer()->expectResourceBind("", "session-bind");
 			getMockServer()->sendResourceBindResponse("me@foo.com/NewResource", "session-bind");
+			session->start();
 			processEvents();
 
 			CPPUNIT_ASSERT_EQUAL(Session::SessionStarted, session->getState());
@@ -328,13 +292,12 @@ class SessionTest : public CppUnit::TestFixture {
 
 		void testResourceBind_Error() {
 			std::auto_ptr<MockSession> session(createSession("me@foo.com"));
-			session->start();
-
 			getMockServer()->expectStreamStart();
 			getMockServer()->sendStreamStart();
 			getMockServer()->sendStreamFeaturesWithResourceBind();
 			getMockServer()->expectResourceBind("", "session-bind");
 			getMockServer()->sendError("session-bind");
+			session->start();
 			processEvents();
 
 			CPPUNIT_ASSERT_EQUAL(Session::Error, session->getState());
@@ -344,14 +307,13 @@ class SessionTest : public CppUnit::TestFixture {
 		void testSessionStart() {
 			std::auto_ptr<MockSession> session(createSession("me@foo.com/Bar"));
 			session->onSessionStarted.connect(boost::bind(&SessionTest::setSessionStarted, this));
-			session->start();
-
 			getMockServer()->expectStreamStart();
 			getMockServer()->sendStreamStart();
 			getMockServer()->sendStreamFeaturesWithSession();
 			getMockServer()->expectSessionStart("session-start");
 			// FIXME: Check CPPUNIT_ASSERT_EQUAL(Session::StartingSession, session->getState());
 			getMockServer()->sendSessionStartResponse("session-start");
+			session->start();
 			processEvents();
 
 			CPPUNIT_ASSERT_EQUAL(Session::SessionStarted, session->getState());
@@ -360,13 +322,12 @@ class SessionTest : public CppUnit::TestFixture {
 
 		void testSessionStart_Error() {
 			std::auto_ptr<MockSession> session(createSession("me@foo.com/Bar"));
-			session->start();
-
 			getMockServer()->expectStreamStart();
 			getMockServer()->sendStreamStart();
 			getMockServer()->sendStreamFeaturesWithSession();
 			getMockServer()->expectSessionStart("session-start");
 			getMockServer()->sendError("session-start");
+			session->start();
 			processEvents();
 
 			CPPUNIT_ASSERT_EQUAL(Session::Error, session->getState());
@@ -376,7 +337,6 @@ class SessionTest : public CppUnit::TestFixture {
 		void testSessionStart_AfterResourceBind() {
 			std::auto_ptr<MockSession> session(createSession("me@foo.com/Bar"));
 			session->onSessionStarted.connect(boost::bind(&SessionTest::setSessionStarted, this));
-			session->start();
 			getMockServer()->expectStreamStart();
 			getMockServer()->sendStreamStart();
 			getMockServer()->sendStreamFeaturesWithResourceBindAndSession();
@@ -384,6 +344,7 @@ class SessionTest : public CppUnit::TestFixture {
 			getMockServer()->sendResourceBindResponse("me@foo.com/Bar", "session-bind");
 			getMockServer()->expectSessionStart("session-start");
 			getMockServer()->sendSessionStartResponse("session-start");
+			session->start();
 			processEvents();
 
 			CPPUNIT_ASSERT_EQUAL(Session::SessionStarted, session->getState());
@@ -392,20 +353,20 @@ class SessionTest : public CppUnit::TestFixture {
 
 		void testWhitespacePing() {
 			std::auto_ptr<MockSession> session(createSession("me@foo.com/Bar"));
-			session->start();
 			getMockServer()->expectStreamStart();
 			getMockServer()->sendStreamStart();
 			getMockServer()->sendStreamFeatures();
+			session->start();
 			processEvents();
 			CPPUNIT_ASSERT(session->getWhitespacePingLayer());
 		}
 
 		void testReceiveElementAfterSessionStarted() {
 			std::auto_ptr<MockSession> session(createSession("me@foo.com/Bar"));
-			session->start();
 			getMockServer()->expectStreamStart();
 			getMockServer()->sendStreamStart();
 			getMockServer()->sendStreamFeatures();
+			session->start();
 			processEvents();
 
 			getMockServer()->expectMessage();
@@ -415,11 +376,11 @@ class SessionTest : public CppUnit::TestFixture {
 		void testSendElement() {
 			std::auto_ptr<MockSession> session(createSession("me@foo.com/Bar"));
 			session->onElementReceived.connect(boost::bind(&SessionTest::addReceivedElement, this, _1));
-			session->start();
 			getMockServer()->expectStreamStart();
 			getMockServer()->sendStreamStart();
 			getMockServer()->sendStreamFeatures();
 			getMockServer()->sendMessage();
+			session->start();
 			processEvents();
 
 			CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(receivedElements_.size()));
@@ -430,8 +391,7 @@ class SessionTest : public CppUnit::TestFixture {
 		struct MockConnection;
 
 		boost::shared_ptr<MockConnection> getMockServer() const {
-			CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(connectionFactory_->connections_.size()));
-			return connectionFactory_->connections_[0];
+			return connection_;
 		}
 
 		void processEvents() {
@@ -468,9 +428,9 @@ class SessionTest : public CppUnit::TestFixture {
 				boost::shared_ptr<Element> element;
 			};
 
-			MockConnection(bool fail) : 
-					fail_(fail), 
+			MockConnection() :
 					resetParser_(false),
+					domain_("foo.com"),
 					parser_(0),
 					serializer_(&payloadSerializers_) {
 				parser_ = new XMPPParser(this, &payloadParserFactories_);
@@ -480,26 +440,17 @@ class SessionTest : public CppUnit::TestFixture {
 				delete parser_;
 			}
 
-			void disconnect() {
-			}
+			void disconnect() { }
 
 			void listen() {
 				assert(false);
 			}
 
 			void connect(const HostAddressPort&) { assert(false); }
-			void connect(const String& domain) {
-				if (fail_) {
-					MainEventLoop::postEvent(boost::bind(boost::ref(onDisconnected), Connection::ConnectionError));
-				}
-				else {
-					domain_ = domain;
-					MainEventLoop::postEvent(boost::bind(boost::ref(onConnected)));
-				}
-			}
+			void connect(const String&) { assert(false); }
 
 			void setError() {
-				MainEventLoop::postEvent(boost::bind(boost::ref(onDisconnected), Connection::ConnectionError));
+				MainEventLoop::postEvent(boost::bind(boost::ref(onDisconnected), Connection::ReadError));
 			}
 
 			void write(const ByteArray& data) {
@@ -565,6 +516,9 @@ class SessionTest : public CppUnit::TestFixture {
 			}
 
 			void assertNoMoreExpectations() {
+				foreach (const Event& event, events_) {
+					std::cout << "Unprocessed event: " << serializeEvent(event) << std::endl;
+				}
 				CPPUNIT_ASSERT(events_.empty());
 			}
 
@@ -683,7 +637,6 @@ class SessionTest : public CppUnit::TestFixture {
 				events_.push_back(Event(Event::Out, Event::ElementEvent, IQ::createResult(JID(), id, boost::shared_ptr<StartSession>(new StartSession()))));
 			}
 
-			bool fail_;
 			bool resetParser_;
 			String domain_;
 			FullPayloadParserFactoryCollection payloadParserFactories_;
@@ -691,20 +644,6 @@ class SessionTest : public CppUnit::TestFixture {
 			XMPPParser* parser_;
 			XMPPSerializer serializer_;
 			std::deque<Event> events_;
-		};
-
-		struct MockConnectionFactory : public ConnectionFactory {
-			MockConnectionFactory() : fail_(false) {}
-			boost::shared_ptr<Connection> createConnection() {
-				boost::shared_ptr<MockConnection> result(new MockConnection(fail_));
-				connections_.push_back(result);
-				return result;
-			}
-			void setCreateFailingConnections() {
-				fail_ = true;
-			}
-			std::vector<boost::shared_ptr<MockConnection> > connections_;
-			bool fail_;
 		};
 
 		struct MockTLSLayer : public TLSLayer {
@@ -735,7 +674,7 @@ class SessionTest : public CppUnit::TestFixture {
 		};
 
 		struct MockSession : public Session {
-			MockSession(const JID& jid, ConnectionFactory* connectionFactory, TLSLayerFactory* tlsLayerFactory, PayloadParserFactoryCollection* payloadParserFactories, PayloadSerializerCollection* payloadSerializers) : Session(jid, connectionFactory, tlsLayerFactory, payloadParserFactories, payloadSerializers) {}
+			MockSession(const JID& jid, boost::shared_ptr<Connection> connection, TLSLayerFactory* tlsLayerFactory, PayloadParserFactoryCollection* payloadParserFactories, PayloadSerializerCollection* payloadSerializers) : Session(jid, connection, tlsLayerFactory, payloadParserFactories, payloadSerializers) {}
 
 			boost::shared_ptr<MockTLSLayer> getTLSLayer() const {
 				return getStreamStack()->getLayer<MockTLSLayer>();
@@ -746,12 +685,12 @@ class SessionTest : public CppUnit::TestFixture {
 		};
 
 		MockSession* createSession(const String& jid) {
-			return new MockSession(JID(jid), connectionFactory_, tlsLayerFactory_, &payloadParserFactories_, &payloadSerializers_);
+			return new MockSession(JID(jid), connection_, tlsLayerFactory_, &payloadParserFactories_, &payloadSerializers_);
 		}
 
 
 		DummyEventLoop* eventLoop_;
-		MockConnectionFactory* connectionFactory_;
+		boost::shared_ptr<MockConnection> connection_;
 		MockTLSLayerFactory* tlsLayerFactory_;
 		FullPayloadParserFactoryCollection payloadParserFactories_;
 		FullPayloadSerializerCollection payloadSerializers_;

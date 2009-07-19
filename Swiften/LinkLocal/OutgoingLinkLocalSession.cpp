@@ -55,7 +55,7 @@ void OutgoingLinkLocalSession::handleHostnameResolved(const String& hostname, co
 				boost::shared_ptr<Connection> connection = connectionFactory_->createConnection();
 				setConnection(connection);
 				initializeStreamStack();
-				connection->onConnected.connect(boost::bind(&OutgoingLinkLocalSession::handleConnected, boost::dynamic_pointer_cast<OutgoingLinkLocalSession>(shared_from_this())));
+				connection->onConnectFinished.connect(boost::bind(&OutgoingLinkLocalSession::handleConnected, boost::dynamic_pointer_cast<OutgoingLinkLocalSession>(shared_from_this()), _1));
 				connection->connect(HostAddressPort(*address, port_));
 			}
 			else {
@@ -65,10 +65,15 @@ void OutgoingLinkLocalSession::handleHostnameResolved(const String& hostname, co
 	}
 }
 
-void OutgoingLinkLocalSession::handleConnected() {
-	ProtocolHeader header;
-	header.setFrom(getLocalJID());
-	getXMPPLayer()->writeHeader(header);
+void OutgoingLinkLocalSession::handleConnected(bool error) {
+	if (!error) {
+		ProtocolHeader header;
+		header.setFrom(getLocalJID());
+		getXMPPLayer()->writeHeader(header);
+	}
+	else {
+		// TODO: Error
+	}
 }
 
 void OutgoingLinkLocalSession::handleStreamStart(const ProtocolHeader&) {

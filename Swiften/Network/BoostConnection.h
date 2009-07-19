@@ -20,7 +20,6 @@ namespace Swift {
 			~BoostConnection();
 
 			virtual void listen();
-			virtual void connect(const String& domain);
 			virtual void connect(const HostAddressPort& address);
 			virtual void disconnect();
 			virtual void write(const ByteArray& data);

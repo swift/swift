@@ -24,16 +24,21 @@
 
 namespace Swift {
 
-Session::Session(const JID& jid, ConnectionFactory* connectionFactory, TLSLayerFactory* tlsLayerFactory, PayloadParserFactoryCollection* payloadParserFactories, PayloadSerializerCollection* payloadSerializers) : 
-		jid_(jid), 
-		connectionFactory_(connectionFactory), 
-		tlsLayerFactory_(tlsLayerFactory),
-		payloadParserFactories_(payloadParserFactories),
-		payloadSerializers_(payloadSerializers),
-		state_(Initial), 
-		error_(NoError),
-		streamStack_(0),
-		needSessionStart_(false) {
+Session::Session(
+		const JID& jid, 
+		boost::shared_ptr<Connection> connection,
+		TLSLayerFactory* tlsLayerFactory, 
+		PayloadParserFactoryCollection* payloadParserFactories, 
+		PayloadSerializerCollection* payloadSerializers) : 
+			jid_(jid), 
+			tlsLayerFactory_(tlsLayerFactory),
+			payloadParserFactories_(payloadParserFactories),
+			payloadSerializers_(payloadSerializers),
+			state_(Initial), 
+			error_(NoError),
+			connection_(connection),
+			streamStack_(0),
+			needSessionStart_(false) {
 }
 
 Session::~Session() {
@@ -42,23 +47,16 @@ Session::~Session() {
 
 void Session::start() {
 	assert(state_ == Initial);
-	state_ = Connecting;
-	connection_ = connectionFactory_->createConnection();
-	connection_->onConnected.connect(boost::bind(&Session::handleConnected, this));
+
 	connection_->onDisconnected.connect(boost::bind(&Session::handleDisconnected, this, _1));
-	connection_->connect(jid_.getDomain());
+	initializeStreamStack();
+	state_ = WaitingForStreamStart;
+	sendStreamHeader();
 }
 
 void Session::stop() {
 	// TODO: Send end stream header if applicable
 	connection_->disconnect();
-}
-
-void Session::handleConnected() {
-	assert(state_ == Connecting);
-	initializeStreamStack();
-	state_ = WaitingForStreamStart;
-	sendStreamHeader();
 }
 
 void Session::sendStreamHeader() {
@@ -81,17 +79,11 @@ void Session::initializeStreamStack() {
 void Session::handleDisconnected(const boost::optional<Connection::Error>& error) {
 	if (error) {
 		switch (*error) {
-			case Connection::DomainNameResolveError:
-				setError(DomainNameResolveError);
-				break;
 			case Connection::ReadError:
 				setError(ConnectionReadError);
 				break;
 			case Connection::WriteError:
 				setError(ConnectionWriteError);
-				break;
-			case Connection::ConnectionError:
-				setError(ConnectionError);
 				break;
 		}
 	}

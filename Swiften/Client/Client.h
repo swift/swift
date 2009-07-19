@@ -43,6 +43,7 @@ namespace Swift {
 			boost::signal<void (const String&)> onDataWritten;
 
 		private:
+			void handleConnectionConnectFinished(bool error);
 			void send(boost::shared_ptr<Stanza>);
 			virtual String getNewIQID();
 			void handleElement(boost::shared_ptr<Element>);
@@ -61,6 +62,7 @@ namespace Swift {
 			FullPayloadParserFactoryCollection payloadParserFactories_;
 			FullPayloadSerializerCollection payloadSerializers_;
 			Session* session_;
+			boost::shared_ptr<Connection> connection_;
 			String certificate_;
 	};
 }

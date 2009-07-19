@@ -11,8 +11,6 @@ namespace Swift {
 	class Connection {
 		public:
 			enum Error {
-				DomainNameResolveError,
-				ConnectionError,
 				ReadError,
 				WriteError
 			};
@@ -22,12 +20,11 @@ namespace Swift {
 
 			virtual void listen() = 0;
 			virtual void connect(const HostAddressPort& address) = 0;
-			virtual void connect(const String& domain) = 0;
 			virtual void disconnect() = 0;
 			virtual void write(const ByteArray& data) = 0;
 
 		public:
-			boost::signal<void ()> onConnected;
+			boost::signal<void (bool /* error */)> onConnectFinished;
 			boost::signal<void (const boost::optional<Error>&)> onDisconnected;
 			boost::signal<void (const ByteArray&)> onDataRead;
 	};

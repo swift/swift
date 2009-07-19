@@ -26,7 +26,6 @@ namespace Swift {
 		public:
 			enum State {
 				Initial,
-				Connecting,
 				WaitingForStreamStart,
 				Negotiating,
 				Compressing,
@@ -40,8 +39,6 @@ namespace Swift {
 			};
 			enum SessionError {
 				NoError,
-				DomainNameResolveError,
-				ConnectionError,
 				ConnectionReadError,
 				ConnectionWriteError,
 				XMLError,
@@ -55,7 +52,12 @@ namespace Swift {
 				ClientCertificateError
 			};
 
-			Session(const JID& jid, ConnectionFactory*, TLSLayerFactory*, PayloadParserFactoryCollection*, PayloadSerializerCollection*);
+			Session(
+					const JID& jid, 
+					boost::shared_ptr<Connection>, 
+					TLSLayerFactory*, 
+					PayloadParserFactoryCollection*, 
+					PayloadSerializerCollection*);
 			~Session();
 
 			State getState() const {
@@ -72,6 +74,7 @@ namespace Swift {
 
 			void start();
 			void stop();
+
 			void sendCredentials(const String& password);
 			void sendElement(boost::shared_ptr<Element>);
 			void setCertificate(const PKCS12Certificate& certificate);
@@ -86,7 +89,6 @@ namespace Swift {
 			void sendStreamHeader();
 			void sendSessionStart();
 
-			void handleConnected();
 			void handleDisconnected(const boost::optional<Connection::Error>&);
 			void handleElement(boost::shared_ptr<Element>);
 			void handleStreamStart();
@@ -106,7 +108,6 @@ namespace Swift {
 		
 		private:
 			JID jid_;
-			ConnectionFactory* connectionFactory_;
 			TLSLayerFactory* tlsLayerFactory_;
 			PayloadParserFactoryCollection* payloadParserFactories_;
 			PayloadSerializerCollection* payloadSerializers_;
