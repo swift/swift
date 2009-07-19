@@ -14,7 +14,7 @@ namespace Swift {
 	class ProtocolHeader;
 	class StreamStack;
 	class JID;
-	class Stanza;
+	class Element;
 	class ByteArray;
 	class PayloadParserFactoryCollection;
 	class PayloadSerializerCollection;
@@ -22,9 +22,18 @@ namespace Swift {
 
 	class Session : public boost::enable_shared_from_this<Session> {
 		public:
-			enum Error {
-				ConnectionError,
-				XMLError
+			enum SessionError {
+				ConnectionReadError,
+				ConnectionWriteError,
+				XMLError,
+				AuthenticationFailedError,
+				NoSupportedAuthMechanismsError,
+				UnexpectedElementError,
+				ResourceBindError,
+				SessionStartError,
+				TLSError,
+				ClientCertificateLoadError,
+				ClientCertificateError
 			};
 
 			Session(
@@ -35,18 +44,19 @@ namespace Swift {
 
 			void startSession();
 			void finishSession();
-			void sendStanza(boost::shared_ptr<Stanza>);
+			void sendElement(boost::shared_ptr<Element>);
 
-			boost::signal<void (boost::shared_ptr<Stanza>)> onStanzaReceived;
+			boost::signal<void (boost::shared_ptr<Element>)> onElementReceived;
 			boost::signal<void ()> onSessionStarted;
-			boost::signal<void (const boost::optional<Error>&)> onSessionFinished;
+			boost::signal<void (const boost::optional<SessionError>&)> onSessionFinished;
 			boost::signal<void (const ByteArray&)> onDataWritten;
 			boost::signal<void (const ByteArray&)> onDataRead;
 
 		protected:
-			void finishSession(const Error&);
+			void finishSession(const SessionError&);
 
 			virtual void handleSessionStarted() {}
+			virtual void handleSessionFinished(const boost::optional<SessionError>&) {}
 			virtual void handleElement(boost::shared_ptr<Element>) = 0;
 			virtual void handleStreamStart(const ProtocolHeader&) = 0;
 
@@ -56,10 +66,16 @@ namespace Swift {
 				return xmppLayer;
 			}
 
+			StreamStack* getStreamStack() const {
+				return streamStack;
+			}
+
 			void setInitialized();
 			bool isInitialized() const { 
 				return initialized; 
 			}
+
+			void setFinished();
 
 		private:
 			void handleDisconnected(const boost::optional<Connection::Error>& error);

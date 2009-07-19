@@ -12,21 +12,17 @@
 namespace Swift {
 
 Client::Client(const JID& jid, const String& password) :
-		IQRouter(this), jid_(jid), password_(password), session_(0) {
+		IQRouter(this), jid_(jid), password_(password) {
 	connectionFactory_ = new BoostConnectionFactory(&boostIOServiceThread_.getIOService());
 	tlsLayerFactory_ = new PlatformTLSLayerFactory();
 }
 
 Client::~Client() {
-	delete session_;
 	delete tlsLayerFactory_;
 	delete connectionFactory_;
 }
 
 void Client::connect() {
-	delete session_;
-	session_ = 0;
-
 	DomainNameResolver resolver;
 	try {
 		HostAddressPort remote = resolver.resolve(jid_.getDomain().getUTF8String());
@@ -44,23 +40,23 @@ void Client::handleConnectionConnectFinished(bool error) {
 		onError(ClientError::ConnectionError);
 	}
 	else {
-		session_ = new ClientSession(jid_, connection_, tlsLayerFactory_, &payloadParserFactories_, &payloadSerializers_);
+		session_ = boost::shared_ptr<ClientSession>(new ClientSession(jid_, connection_, tlsLayerFactory_, &payloadParserFactories_, &payloadSerializers_));
 		if (!certificate_.isEmpty()) {
 			session_->setCertificate(PKCS12Certificate(certificate_, password_));
 		}
 		session_->onSessionStarted.connect(boost::bind(boost::ref(onConnected)));
-		session_->onError.connect(boost::bind(&Client::handleSessionError, this, _1));
+		session_->onSessionFinished.connect(boost::bind(&Client::handleSessionFinished, this, _1));
 		session_->onNeedCredentials.connect(boost::bind(&Client::handleNeedCredentials, this));
 		session_->onDataRead.connect(boost::bind(&Client::handleDataRead, this, _1));
 		session_->onDataWritten.connect(boost::bind(&Client::handleDataWritten, this, _1));
 		session_->onElementReceived.connect(boost::bind(&Client::handleElement, this, _1));
-		session_->start();
+		session_->startSession();
 	}
 }
 
 void Client::disconnect() {
 	if (session_) {
-		session_->stop();
+		session_->finishSession();
 	}
 }
 
@@ -108,47 +104,46 @@ void Client::setCertificate(const String& certificate) {
 	certificate_ = certificate;
 }
 
-void Client::handleSessionError(ClientSession::SessionError error) {
-	ClientError clientError;
-	switch (error) {
-		case ClientSession::NoError: 
-			assert(false);
-			break;
-		case ClientSession::ConnectionReadError:
-			clientError = ClientError(ClientError::ConnectionReadError);
-			break;
-		case ClientSession::ConnectionWriteError:
-			clientError = ClientError(ClientError::ConnectionWriteError);
-			break;
-		case ClientSession::XMLError:
-			clientError = ClientError(ClientError::XMLError);
-			break;
-		case ClientSession::AuthenticationFailedError:
-			clientError = ClientError(ClientError::AuthenticationFailedError);
-			break;
-		case ClientSession::NoSupportedAuthMechanismsError:
-			clientError = ClientError(ClientError::NoSupportedAuthMechanismsError);
-			break;
-		case ClientSession::UnexpectedElementError:
-			clientError = ClientError(ClientError::UnexpectedElementError);
-			break;
-		case ClientSession::ResourceBindError:
-			clientError = ClientError(ClientError::ResourceBindError);
-			break;
-		case ClientSession::SessionStartError:
-			clientError = ClientError(ClientError::SessionStartError);
-			break;
-		case ClientSession::TLSError:
-			clientError = ClientError(ClientError::TLSError);
-			break;
-		case ClientSession::ClientCertificateLoadError:
-			clientError = ClientError(ClientError::ClientCertificateLoadError);
-			break;
-		case ClientSession::ClientCertificateError:
-			clientError = ClientError(ClientError::ClientCertificateError);
-			break;
+void Client::handleSessionFinished(const boost::optional<Session::SessionError>& error) {
+	if (error) {
+		ClientError clientError;
+		switch (*error) {
+			case Session::ConnectionReadError:
+				clientError = ClientError(ClientError::ConnectionReadError);
+				break;
+			case Session::ConnectionWriteError:
+				clientError = ClientError(ClientError::ConnectionWriteError);
+				break;
+			case Session::XMLError:
+				clientError = ClientError(ClientError::XMLError);
+				break;
+			case Session::AuthenticationFailedError:
+				clientError = ClientError(ClientError::AuthenticationFailedError);
+				break;
+			case Session::NoSupportedAuthMechanismsError:
+				clientError = ClientError(ClientError::NoSupportedAuthMechanismsError);
+				break;
+			case Session::UnexpectedElementError:
+				clientError = ClientError(ClientError::UnexpectedElementError);
+				break;
+			case Session::ResourceBindError:
+				clientError = ClientError(ClientError::ResourceBindError);
+				break;
+			case Session::SessionStartError:
+				clientError = ClientError(ClientError::SessionStartError);
+				break;
+			case Session::TLSError:
+				clientError = ClientError(ClientError::TLSError);
+				break;
+			case Session::ClientCertificateLoadError:
+				clientError = ClientError(ClientError::ClientCertificateLoadError);
+				break;
+			case Session::ClientCertificateError:
+				clientError = ClientError(ClientError::ClientCertificateError);
+				break;
+		}
+		onError(clientError);
 	}
-	onError(clientError);
 }
 
 void Client::handleNeedCredentials() {

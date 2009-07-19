@@ -47,7 +47,7 @@ namespace Swift {
 			void send(boost::shared_ptr<Stanza>);
 			virtual String getNewIQID();
 			void handleElement(boost::shared_ptr<Element>);
-			void handleSessionError(ClientSession::SessionError error);
+			void handleSessionFinished(const boost::optional<Session::SessionError>& error);
 			void handleNeedCredentials();
 			void handleDataRead(const ByteArray&);
 			void handleDataWritten(const ByteArray&);
@@ -61,7 +61,7 @@ namespace Swift {
 			TLSLayerFactory* tlsLayerFactory_;
 			FullPayloadParserFactoryCollection payloadParserFactories_;
 			FullPayloadSerializerCollection payloadSerializers_;
-			ClientSession* session_;
+			boost::shared_ptr<ClientSession> session_;
 			boost::shared_ptr<Connection> connection_;
 			String certificate_;
 	};

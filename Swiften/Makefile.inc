@@ -10,6 +10,7 @@ include Swiften/Serializer/Makefile.inc
 include Swiften/Parser/Makefile.inc
 include Swiften/MUC/Makefile.inc
 include Swiften/Network/Makefile.inc
+include Swiften/Session/Makefile.inc
 include Swiften/Client/Makefile.inc
 include Swiften/TLS/Makefile.inc
 include Swiften/SASL/Makefile.inc

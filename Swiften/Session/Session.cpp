@@ -28,12 +28,14 @@ void Session::startSession() {
 
 void Session::finishSession() {
 	connection->disconnect();
-	onSessionFinished(boost::optional<Error>());
+	handleSessionFinished(boost::optional<SessionError>());
+	onSessionFinished(boost::optional<SessionError>());
 }
 
-void Session::finishSession(const Error& error) {
+void Session::finishSession(const SessionError& error) {
 	connection->disconnect();
-	onSessionFinished(boost::optional<Error>(error));
+	handleSessionFinished(boost::optional<SessionError>(error));
+	onSessionFinished(boost::optional<SessionError>(error));
 }
 
 void Session::initializeStreamStack() {
@@ -41,23 +43,31 @@ void Session::initializeStreamStack() {
 			new XMPPLayer(payloadParserFactories, payloadSerializers));
 	xmppLayer->onStreamStart.connect(
 			boost::bind(&Session::handleStreamStart, this, _1));
-	xmppLayer->onElement.connect(
-			boost::bind(&Session::handleElement, this, _1));
+	xmppLayer->onElement.connect(boost::bind(&Session::handleElement, this, _1));
 	xmppLayer->onError.connect(
 			boost::bind(&Session::finishSession, this, XMLError));
+	xmppLayer->onDataRead.connect(boost::bind(boost::ref(onDataRead), _1));
+	xmppLayer->onWriteData.connect(boost::bind(boost::ref(onDataWritten), _1));
 	connection->onDisconnected.connect(
 			boost::bind(&Session::handleDisconnected, shared_from_this(), _1));
 	connectionLayer = boost::shared_ptr<ConnectionLayer>(new ConnectionLayer(connection));
 	streamStack = new StreamStack(xmppLayer, connectionLayer);
 }
 
-void Session::sendStanza(boost::shared_ptr<Stanza> stanza) {
+void Session::sendElement(boost::shared_ptr<Element> stanza) {
 	xmppLayer->writeElement(stanza);
 }
 
 void Session::handleDisconnected(const boost::optional<Connection::Error>& connectionError) {
 	if (connectionError) {
-		finishSession(ConnectionError);
+		switch (*connectionError) {
+			case Connection::ReadError:
+				finishSession(ConnectionReadError);
+				break;
+			case Connection::WriteError:
+				finishSession(ConnectionWriteError);
+				break;
+		}
 	}
 	else {
 		finishSession();
