@@ -1,4 +1,4 @@
-#include "Swiften/Client/Session.h"
+#include "Swiften/Client/ClientSession.h"
 
 #include <boost/bind.hpp>
 
@@ -24,7 +24,7 @@
 
 namespace Swift {
 
-Session::Session(
+ClientSession::ClientSession(
 		const JID& jid, 
 		boost::shared_ptr<Connection> connection,
 		TLSLayerFactory* tlsLayerFactory, 
@@ -41,42 +41,42 @@ Session::Session(
 			needSessionStart_(false) {
 }
 
-Session::~Session() {
+ClientSession::~ClientSession() {
 	delete streamStack_;
 }
 
-void Session::start() {
+void ClientSession::start() {
 	assert(state_ == Initial);
 
-	connection_->onDisconnected.connect(boost::bind(&Session::handleDisconnected, this, _1));
+	connection_->onDisconnected.connect(boost::bind(&ClientSession::handleDisconnected, this, _1));
 	initializeStreamStack();
 	state_ = WaitingForStreamStart;
 	sendStreamHeader();
 }
 
-void Session::stop() {
+void ClientSession::stop() {
 	// TODO: Send end stream header if applicable
 	connection_->disconnect();
 }
 
-void Session::sendStreamHeader() {
+void ClientSession::sendStreamHeader() {
 	ProtocolHeader header;
 	header.setTo(jid_.getDomain());
 	xmppLayer_->writeHeader(header);
 }
 
-void Session::initializeStreamStack() {
+void ClientSession::initializeStreamStack() {
 	xmppLayer_ = boost::shared_ptr<XMPPLayer>(new XMPPLayer(payloadParserFactories_, payloadSerializers_));
-	xmppLayer_->onStreamStart.connect(boost::bind(&Session::handleStreamStart, this));
-	xmppLayer_->onElement.connect(boost::bind(&Session::handleElement, this, _1));
-	xmppLayer_->onError.connect(boost::bind(&Session::setError, this, XMLError));
+	xmppLayer_->onStreamStart.connect(boost::bind(&ClientSession::handleStreamStart, this));
+	xmppLayer_->onElement.connect(boost::bind(&ClientSession::handleElement, this, _1));
+	xmppLayer_->onError.connect(boost::bind(&ClientSession::setError, this, XMLError));
 	xmppLayer_->onDataRead.connect(boost::bind(boost::ref(onDataRead), _1));
 	xmppLayer_->onWriteData.connect(boost::bind(boost::ref(onDataWritten), _1));
 	connectionLayer_ = boost::shared_ptr<ConnectionLayer>(new ConnectionLayer(connection_));
 	streamStack_ = new StreamStack(xmppLayer_, connectionLayer_);
 }
 
-void Session::handleDisconnected(const boost::optional<Connection::Error>& error) {
+void ClientSession::handleDisconnected(const boost::optional<Connection::Error>& error) {
 	if (error) {
 		switch (*error) {
 			case Connection::ReadError:
@@ -89,16 +89,16 @@ void Session::handleDisconnected(const boost::optional<Connection::Error>& error
 	}
 }
 
-void Session::setCertificate(const PKCS12Certificate& certificate) {
+void ClientSession::setCertificate(const PKCS12Certificate& certificate) {
 	certificate_ = certificate;
 }
 
-void Session::handleStreamStart() {
+void ClientSession::handleStreamStart() {
 	checkState(WaitingForStreamStart);
 	state_ = Negotiating;
 }
 
-void Session::handleElement(boost::shared_ptr<Element> element) {
+void ClientSession::handleElement(boost::shared_ptr<Element> element) {
 	if (getState() == SessionStarted) {
 		onElementReceived(element);
 	}
@@ -173,8 +173,8 @@ void Session::handleElement(boost::shared_ptr<Element> element) {
 			setError(ClientCertificateLoadError);
 		}
 		else {
-			tlsLayer_->onConnected.connect(boost::bind(&Session::handleTLSConnected, this));
-			tlsLayer_->onError.connect(boost::bind(&Session::handleTLSError, this));
+			tlsLayer_->onConnected.connect(boost::bind(&ClientSession::handleTLSConnected, this));
+			tlsLayer_->onError.connect(boost::bind(&ClientSession::handleTLSError, this));
 			tlsLayer_->connect();
 		}
 	}
@@ -229,19 +229,19 @@ void Session::handleElement(boost::shared_ptr<Element> element) {
 	}
 }
 
-void Session::sendSessionStart() {
+void ClientSession::sendSessionStart() {
 	state_ = StartingSession;
 	xmppLayer_->writeElement(IQ::createRequest(IQ::Set, JID(), "session-start", boost::shared_ptr<StartSession>(new StartSession())));
 }
 
-void Session::setError(SessionError error) {
+void ClientSession::setError(SessionError error) {
 	assert(error != NoError);
 	state_ = Error;
 	error_ = error;
 	onError(error);
 }
 
-bool Session::checkState(State state) {
+bool ClientSession::checkState(State state) {
 	if (state_ != state) {
 		setError(UnexpectedElementError);
 		return false;
@@ -249,24 +249,24 @@ bool Session::checkState(State state) {
 	return true;
 }
 
-void Session::sendCredentials(const String& password) {
+void ClientSession::sendCredentials(const String& password) {
 	assert(WaitingForCredentials);
 	state_ = Authenticating;
 	xmppLayer_->writeElement(boost::shared_ptr<Element>(new AuthRequest("PLAIN", PLAINMessage(jid_.getNode(), password).getValue())));
 }
 
-void Session::sendElement(boost::shared_ptr<Element> element) {
+void ClientSession::sendElement(boost::shared_ptr<Element> element) {
 	assert(SessionStarted);
 	xmppLayer_->writeElement(element);
 }
 
-void Session::handleTLSConnected() {
+void ClientSession::handleTLSConnected() {
 	state_ = WaitingForStreamStart;
 	xmppLayer_->resetParser();
 	sendStreamHeader();
 }
 
-void Session::handleTLSError() {
+void ClientSession::handleTLSError() {
 	setError(TLSError);
 }
 

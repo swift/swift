@@ -1,2 +1,2 @@
 UNITTEST_SOURCES += \
-	Swiften/Client/UnitTest/SessionTest.cpp
+	Swiften/Client/UnitTest/ClientSessionTest.cpp

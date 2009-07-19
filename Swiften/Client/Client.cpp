@@ -3,7 +3,7 @@
 #include <boost/bind.hpp>
 
 #include "Swiften/Network/DomainNameResolver.h"
-#include "Swiften/Client/Session.h"
+#include "Swiften/Client/ClientSession.h"
 #include "Swiften/StreamStack/PlatformTLSLayerFactory.h"
 #include "Swiften/Network/BoostConnectionFactory.h"
 #include "Swiften/Network/DomainNameResolveException.h"
@@ -44,7 +44,7 @@ void Client::handleConnectionConnectFinished(bool error) {
 		onError(ClientError::ConnectionError);
 	}
 	else {
-		session_ = new Session(jid_, connection_, tlsLayerFactory_, &payloadParserFactories_, &payloadSerializers_);
+		session_ = new ClientSession(jid_, connection_, tlsLayerFactory_, &payloadParserFactories_, &payloadSerializers_);
 		if (!certificate_.isEmpty()) {
 			session_->setCertificate(PKCS12Certificate(certificate_, password_));
 		}
@@ -108,43 +108,43 @@ void Client::setCertificate(const String& certificate) {
 	certificate_ = certificate;
 }
 
-void Client::handleSessionError(Session::SessionError error) {
+void Client::handleSessionError(ClientSession::SessionError error) {
 	ClientError clientError;
 	switch (error) {
-		case Session::NoError: 
+		case ClientSession::NoError: 
 			assert(false);
 			break;
-		case Session::ConnectionReadError:
+		case ClientSession::ConnectionReadError:
 			clientError = ClientError(ClientError::ConnectionReadError);
 			break;
-		case Session::ConnectionWriteError:
+		case ClientSession::ConnectionWriteError:
 			clientError = ClientError(ClientError::ConnectionWriteError);
 			break;
-		case Session::XMLError:
+		case ClientSession::XMLError:
 			clientError = ClientError(ClientError::XMLError);
 			break;
-		case Session::AuthenticationFailedError:
+		case ClientSession::AuthenticationFailedError:
 			clientError = ClientError(ClientError::AuthenticationFailedError);
 			break;
-		case Session::NoSupportedAuthMechanismsError:
+		case ClientSession::NoSupportedAuthMechanismsError:
 			clientError = ClientError(ClientError::NoSupportedAuthMechanismsError);
 			break;
-		case Session::UnexpectedElementError:
+		case ClientSession::UnexpectedElementError:
 			clientError = ClientError(ClientError::UnexpectedElementError);
 			break;
-		case Session::ResourceBindError:
+		case ClientSession::ResourceBindError:
 			clientError = ClientError(ClientError::ResourceBindError);
 			break;
-		case Session::SessionStartError:
+		case ClientSession::SessionStartError:
 			clientError = ClientError(ClientError::SessionStartError);
 			break;
-		case Session::TLSError:
+		case ClientSession::TLSError:
 			clientError = ClientError(ClientError::TLSError);
 			break;
-		case Session::ClientCertificateLoadError:
+		case ClientSession::ClientCertificateLoadError:
 			clientError = ClientError(ClientError::ClientCertificateLoadError);
 			break;
-		case Session::ClientCertificateError:
+		case ClientSession::ClientCertificateError:
 			clientError = ClientError(ClientError::ClientCertificateError);
 			break;
 	}

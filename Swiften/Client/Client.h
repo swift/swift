@@ -4,7 +4,7 @@
 #include <boost/signals.hpp>
 #include <boost/shared_ptr.hpp>
 
-#include "Swiften/Client/Session.h"
+#include "Swiften/Client/ClientSession.h"
 #include "Swiften/Client/ClientError.h"
 #include "Swiften/Elements/Presence.h"
 #include "Swiften/Elements/Message.h"
@@ -20,7 +20,7 @@
 namespace Swift {
 	class TLSLayerFactory;
 	class ConnectionFactory;
-	class Session;
+	class ClientSession;
 
 	class Client : public StanzaChannel, public IQRouter {
 		public:
@@ -47,7 +47,7 @@ namespace Swift {
 			void send(boost::shared_ptr<Stanza>);
 			virtual String getNewIQID();
 			void handleElement(boost::shared_ptr<Element>);
-			void handleSessionError(Session::SessionError error);
+			void handleSessionError(ClientSession::SessionError error);
 			void handleNeedCredentials();
 			void handleDataRead(const ByteArray&);
 			void handleDataWritten(const ByteArray&);
@@ -61,7 +61,7 @@ namespace Swift {
 			TLSLayerFactory* tlsLayerFactory_;
 			FullPayloadParserFactoryCollection payloadParserFactories_;
 			FullPayloadSerializerCollection payloadSerializers_;
-			Session* session_;
+			ClientSession* session_;
 			boost::shared_ptr<Connection> connection_;
 			String certificate_;
 	};

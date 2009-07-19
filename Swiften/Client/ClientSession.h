@@ -1,5 +1,4 @@
-#ifndef SWIFTEN_Session_H
-#define SWIFTEN_Session_H
+#pragma once
 
 #include <boost/signal.hpp>
 #include <boost/shared_ptr.hpp>
@@ -22,7 +21,7 @@ namespace Swift {
 	class TLSLayer;
 	class WhitespacePingLayer;
 
-	class Session {
+	class ClientSession {
 		public:
 			enum State {
 				Initial,
@@ -52,13 +51,13 @@ namespace Swift {
 				ClientCertificateError
 			};
 
-			Session(
+			ClientSession(
 					const JID& jid, 
 					boost::shared_ptr<Connection>, 
 					TLSLayerFactory*, 
 					PayloadParserFactoryCollection*, 
 					PayloadSerializerCollection*);
-			~Session();
+			~ClientSession();
 
 			State getState() const {
 				return state_;
@@ -122,7 +121,4 @@ namespace Swift {
 			bool needSessionStart_;
 			PKCS12Certificate certificate_;
 	};
-
 }
-
-#endif
