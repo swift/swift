@@ -77,7 +77,6 @@ void LinkLocalRoster::handleServiceAdded(const DNSSDService::Service& service) {
 	if (selfService && *selfService == service) {
 		return;
 	}
-	std::cout << "Service added: " << service.name << std::endl;
 	dnsSDService->startResolvingService(service);
 }
 
@@ -93,12 +92,15 @@ void LinkLocalRoster::handleServiceRemoved(const DNSSDService::Service& service)
 }
 
 void LinkLocalRoster::handleServiceResolved(const DNSSDService::Service& service, const DNSSDService::ResolveResult& result) {
-	services.insert(std::make_pair(service, result));
-	std::cout << "Service resolved: " << service.name << std::endl;
-
-	boost::shared_ptr<RosterPayload> roster(new RosterPayload());
-	roster->addItem(getRosterItem(service, result));
-	onRosterChanged(roster);
+	std::pair<ServiceMap::iterator, bool> r = services.insert(std::make_pair(service, result));
+	if (r.second) {
+		boost::shared_ptr<RosterPayload> roster(new RosterPayload());
+		roster->addItem(getRosterItem(service, result));
+		onRosterChanged(roster);
+	}
+	else {
+		r.first->second = result;
+	}
 	onPresenceChanged(getPresence(service, result));
 }
 
