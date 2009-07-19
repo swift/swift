@@ -268,6 +268,7 @@ void AppleDNSSDService::handleServiceResolvedGlobal(DNSServiceRef sdRef, DNSServ
 
 void AppleDNSSDService::handleServiceResolved(DNSServiceRef sdRef, DNSServiceFlags, uint32_t, DNSServiceErrorType errorCode, const char *, const char *hosttarget, uint16_t port, uint16_t txtLen, const unsigned char *txtRecord) {
 	if (errorCode != kDNSServiceErr_NoError) {
+		// TODO
 		std::cerr << "Resolve error " << hosttarget << std::endl;
 		return;
 	}

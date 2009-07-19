@@ -10,5 +10,9 @@ ifeq ($(MACOSX),1)
 SWIFTEN_SOURCES += \
 	Swiften/LinkLocal/AppleDNSSDService.cpp
 endif
+ifeq ($(HAVE_AVAHI),yes)
+SWIFTEN_SOURCES += \
+	Swiften/LinkLocal/AvahiDNSSDService.cpp
+endif
 
 include Swiften/LinkLocal/UnitTest/Makefile.inc

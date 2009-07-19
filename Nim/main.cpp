@@ -2,6 +2,7 @@
 #include <boost/bind.hpp>
 #include <boost/shared_ptr.hpp>
 
+#include "Swiften/Base/Platform.h"
 #include "Swiften/Session/SessionTracer.h"
 #include "Swiften/Network/BoostConnectionFactory.h"
 #include "Swiften/Elements/IQ.h"
@@ -23,7 +24,6 @@
 #include "Swiften/LinkLocal/OutgoingLinkLocalSession.h"
 #include "Swiften/LinkLocal/IncomingLinkLocalSession.h"
 #include "Swiften/LinkLocal/DNSSDService.h"
-#include "Swiften/LinkLocal/AppleDNSSDService.h"
 #include "Swiften/Network/ConnectionServer.h"
 #include "Swiften/Network/BoostConnection.h"
 #include "Swiften/Network/BoostIOServiceThread.h"
@@ -31,6 +31,12 @@
 #include "Swiften/Server/ServerFromClientSession.h"
 #include "Swiften/Parser/PayloadParsers/FullPayloadParserFactoryCollection.h"
 #include "Swiften/Serializer/PayloadSerializers/FullPayloadSerializerCollection.h"
+
+#if defined(SWIFTEN_PLATFORM_MACOSX) || defined(SWIFTEN_PLATFORM_WINDOWS)
+#include "Swiften/LinkLocal/AppleDNSSDService.h"
+#else
+#include "Swiften/LinkLocal/AvahiDNSSDService.h"
+#endif
 
 using namespace Swift;
 
@@ -66,8 +72,13 @@ class Server {
 					boost::bind(&Server::handleNewLinkLocalConnection, this, _1));
 			serverFromNetworkConnectionServer_->start();
 
+#if defined(SWIFTEN_PLATFORM_MACOSX) || defined(SWIFTEN_PLATFORM_WINDOWS)
 			dnsSDService_ = boost::shared_ptr<AppleDNSSDService>(
 					new AppleDNSSDService());
+#else
+			dnsSDService_ = boost::shared_ptr<AvahiDNSSDService>(
+					new AvahiDNSSDService());
+#endif
 			dnsSDService_->onServiceRegistered.connect
 					(boost::bind(&Server::handleServiceRegistered, this, _1));
 			linkLocalRoster_ = boost::shared_ptr<LinkLocalRoster>(
@@ -312,7 +323,7 @@ class Server {
 		IDGenerator idGenerator_;
 		BoostIOServiceThread boostIOServiceThread_;
 		DummyUserRegistry userRegistry_;
-		boost::shared_ptr<AppleDNSSDService> dnsSDService_;
+		boost::shared_ptr<DNSSDService> dnsSDService_;
 		boost::shared_ptr<LinkLocalRoster> linkLocalRoster_;
 		boost::shared_ptr<BoostConnectionServer> serverFromClientConnectionServer_;
 		boost::shared_ptr<ServerFromClientSession> serverFromClientSession_;
