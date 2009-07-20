@@ -4,6 +4,8 @@
 #include <boost/thread/mutex.hpp>
 #include <list>
 
+#include "Swiften/EventLoop/Event.h"
+
 namespace Swift {
 	class EventOwner;
 	class EventLoop {
@@ -15,20 +17,6 @@ namespace Swift {
 			void removeEventsFromOwner(boost::shared_ptr<EventOwner> owner);
 
 		protected:
-			struct Event {
-				Event(boost::shared_ptr<EventOwner> owner, const boost::function<void()>& callback) :
-						owner(owner), callback(callback) {
-				}
-
-				bool operator==(const Event& o) const {
-					return o.id == id;
-				}
-
-				unsigned int id;
-				boost::shared_ptr<EventOwner> owner;
-				boost::function<void()> callback;
-			};
-
 			/**
 			 * Reimplement this to call handleEvent(event) from the thread in which
 			 * the event loop is residing.
