@@ -108,7 +108,7 @@ endif
 	$(QUIET_CXX)$(CXX) -c $< -o $@ $(CPPFLAGS) $(CXXFLAGS)
 
 %.o: %.mm
-	$(QUIET_CC)$(CC) -c $< -o $@ $(CPPFLAGS) $(CXXFLAGS)
+	$(QUIET_CXX)$(CXX) -x objective-c++ -c $< -o $@ $(CPPFLAGS) $(CXXFLAGS)
 
 %.o: %.m
 	$(QUIET_CC)$(CC) -c $< -o $@ $(CPPFLAGS) $(CFLAGS)
