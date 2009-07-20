@@ -1,5 +1,6 @@
 SLIMBER_TARGET = Slimber/slimber
 SLIMBER_SOURCES = \
+	Slimber/Server.cpp \
 	Slimber/main.cpp
 SLIMBER_OBJECTS = \
 	$(SLIMBER_SOURCES:.cpp=.o)
