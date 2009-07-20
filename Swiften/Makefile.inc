@@ -30,7 +30,7 @@ CPPFLAGS += $(SQLITE_CPPFLAGS)
 SWIFTEN_TARGET = Swiften/Swiften.a
 SWIFTEN_OBJECTS = \
 	$(SWIFTEN_SOURCES:.cpp=.o) \
-	$(SWIFTEN_OBJECTIVE_SOURCES:.mm=.o) \
+	$(patsubst %.mm, %.o, $(patsubst %.m, %.o, $(SWIFTEN_OBJECTIVE_SOURCES))) \
 	$(LIBIDN_OBJECTS) \
 	$(BOOST_OBJECTS) \
 	$(ZLIB_OBJECTS) \
@@ -43,8 +43,8 @@ INSTALL_TARGETS += install-swiften
 UNITTEST_LIBS += $(SWIFTEN_TARGET)
 CLEANFILES += $(SWIFTEN_TARGET) $(SWIFTEN_OBJECTS)
 DEPS += \
-	$(SWIFTEN_SOURCES:.cpp=.dep) \
-	$(SWIFTEN_OBJECTIVE_SOURCES:.mm=.dep)
+	$(SWIFTEN_SOURCES:.cpp=.dep) 
+//TODO: Add objective stuff
 
 .PHONY: lib
 lib: $(SWIFTEN_TARGET)

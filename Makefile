@@ -1,6 +1,7 @@
 include Makefile.config
 
 CXXFLAGS += -I.
+CFLAGS += -I.
 ARFLAGS = rcs
 
 .DEFAULT_GOAL = all
