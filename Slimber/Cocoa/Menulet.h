@@ -3,7 +3,8 @@
 
 @interface Menulet : NSObject {
 	NSStatusItem* statusItem;
-	IBOutlet NSMenu *statusMenu;
+	IBOutlet NSMenu* statusMenu;
+	NSImage* menuIcon;
 }
 
 -(IBAction) updateStatus: (id) sender;

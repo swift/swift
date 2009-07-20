@@ -87,7 +87,7 @@ endif
 endif
 
 %/PkgInfo:
-	echo -n -e "APPL\x3f\x3f\x3f\x3f" > $@
+	printf "APPL\77\77\77\77" > $@
 
 %.dep: %.cpp
 	$(QUIET_MM)$(MM) -MM -MG -MT $(basename $@).o $(CPPFLAGS) $(filter-out -arch armv6 -arch i386 -arch ppc,$(CXXFLAGS)) $< > $@
