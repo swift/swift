@@ -8,6 +8,7 @@
 *.a
 *.pdb
 *.swp
+*.nib
 *.exe
 *.dll
 *.lib

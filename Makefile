@@ -17,12 +17,14 @@ QUIET_CC   = @echo "    " "CC  " $@;
 QUIET_CXX  = @echo "    " "CXX " $@;
 QUIET_AR   = @echo "    " "AR  " $@;
 QUIET_LINK = @echo "    " "LINK" $@;
+QUIET_NIB  = @echo "    " "NIB " $@;
 else
 QUIET_MM   = @echo "    $(shell tput setaf 5)MM$(shell tput sgr0)  " $@;
 QUIET_CC   = @echo "    $(shell tput setaf 3)CC$(shell tput sgr0)  " $@;
 QUIET_CXX  = @echo "    $(shell tput setaf 2)CXX$(shell tput sgr0) " $@;
 QUIET_AR   = @echo "    $(shell tput setaf 1)AR$(shell tput sgr0)  " $@;
 QUIET_LINK = @echo "    $(shell tput setaf 6)LINK$(shell tput sgr0)" $@;
+QUIET_NIB  = @echo "    $(shell tput setaf 4)NIB$(shell tput sgr0) " $@;
 endif
 endif
 endif
@@ -84,6 +86,9 @@ ifeq (,$(findstring clean-deps, $(MAKECMDGOALS)))
 endif
 endif
 
+%/PkgInfo:
+	echo -n -e "APPL\x3f\x3f\x3f\x3f" > $@
+
 %.dep: %.cpp
 	$(QUIET_MM)$(MM) -MM -MG -MT $(basename $@).o $(CPPFLAGS) $(filter-out -arch armv6 -arch i386 -arch ppc,$(CXXFLAGS)) $< > $@
 
@@ -91,7 +96,10 @@ endif
 	$(QUIET_MM)$(MM) -MM -MG -MT $(basename $@).o $(CPPFLAGS) $(filter-out -arch armv6 -arch i386 -arch ppc,$(CFLAGS)) $< > $@
 
 %.dep: %.mm
-	$(QUIET_MM)$(CC) -MM -MG -MT $(basename $@).o $(CPPFLAGS) $(filter-out -arch armv6 -arch i386 -arch ppc,$(CXXFLAGS)) $< > $@
+	$(QUIET_MM)$(MM) -MM -MG -MT $(basename $@).o $(CPPFLAGS) $(filter-out -arch armv6 -arch i386 -arch ppc,$(CXXFLAGS)) $< > $@
+
+%.dep: %.m
+	$(QUIET_MM)$(MM) -MM -MG -MT $(basename $@).o $(CPPFLAGS) $(filter-out -arch armv6 -arch i386 -arch ppc,$(CFLAGS)) $< > $@
 
 %.o: %.c
 	$(QUIET_CC)$(CC) -c $< -o $@ $(CPPFLAGS) $(CFLAGS)
@@ -101,3 +109,9 @@ endif
 
 %.o: %.mm
 	$(QUIET_CC)$(CC) -c $< -o $@ $(CPPFLAGS) $(CXXFLAGS)
+
+%.o: %.m
+	$(QUIET_CC)$(CC) -c $< -o $@ $(CPPFLAGS) $(CFLAGS)
+
+%.nib: %.xib
+	$(QUIET_NIB)/Developer/usr/bin/ibtool --errors --warnings --notices --output-format human-readable-text --compile $@ $<

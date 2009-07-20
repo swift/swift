@@ -2,7 +2,7 @@ SLIMBER_TARGET = Slimber/slimber
 SLIMBER_SOURCES = \
 	Slimber/main.cpp
 SLIMBER_OBJECTS = \
-	$(SLIMBER_SOURCES:.cpp=.o) \
+	$(SLIMBER_SOURCES:.cpp=.o)
 
 .PHONY: slimber
 slimber: $(SLIMBER_TARGET)
@@ -14,3 +14,5 @@ $(SLIMBER_TARGET): $(SWIFTEN_TARGET) $(SLIMBER_OBJECTS)
 CLEANFILES += $(SLIMBER_OBJECTS)
 DEPS += \
 	$(SLIMBER_SOURCES:.cpp=.dep) \
+
+include Slimber/Cocoa/Makefile.inc

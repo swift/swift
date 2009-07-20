@@ -1,0 +1,33 @@
+SLIMBER_COCOA_TARGET = Slimber/Cocoa/Slimber.app
+SLIMBER_COCOA_BINARY = \
+	Slimber/Cocoa/Slimber
+SLIMBER_COCOA_SOURCES = \
+	Slimber/Cocoa/main.m \
+	Slimber/Cocoa/Menulet.m
+SLIMBER_COCOA_XIBS = \
+	Slimber/Cocoa/MainMenu.xib
+
+SLIMBER_COCOA_NIBS = \
+	$(SLIMBER_COCOA_XIBS:.xib=.nib)
+SLIMBER_COCOA_OBJECTS = \
+	$(SLIMBER_COCOA_SOURCES:.m=.o)
+CLEANFILES += \
+	$(SLIMBER_COCOA_OBJECTS) \
+	$(SLIMBER_COCOA_TARGET) \
+	$(SLIMBER_COCOA_BINARY)
+DEPS += \
+	$(SLIMBER_COCOA_SOURCES:.m=.dep) \
+
+.PHONY: slimber-cocoa
+slimber-cocoa: $(SLIMBER_COCOA_TARGET)
+
+$(SLIMBER_COCOA_TARGET): $(SLIMBER_COCOA_BINARY) $(SLIMBER_COCOA_NIBS) Slimber/Cocoa/Info.plist Slimber/Cocoa/PkgInfo
+	mkdir -p $(SLIMBER_COCOA_TARGET)/Resources
+	mkdir -p $(SLIMBER_COCOA_TARGET)/MacOS
+	cp -r Slimber/Cocoa/Info.plist $(SLIMBER_COCOA_TARGET)
+	cp -r Slimber/Cocoa/PkgInfo $(SLIMBER_COCOA_TARGET)
+	cp $(SLIMBER_COCOA_BINARY) $(SLIMBER_COCOA_TARGET)/MacOS
+	cp $(SLIMBER_COCOA_NIBS) $(SLIMBER_COCOA_TARGET)/Resources
+
+$(SLIMBER_COCOA_BINARY): $(SLIMBER_COCOA_OBJECTS)
+	$(QUIET_LINK)$(CXX) -o $@ $(SLIMBER_COCOA_OBJECTS) $(LDFLAGS) $(SWIFTEN_TARGET) $(LIBS) -framework Cocoa
