@@ -16,7 +16,7 @@ SLIMBER_COCOA_RESOURCES = \
 SLIMBER_COCOA_NIBS = \
 	$(SLIMBER_COCOA_XIBS:.xib=.nib)
 SLIMBER_COCOA_OBJECTS = \
-	$(patsubst %.mm,%.o,$(patsubst %.cpp,%.o, $(SLIMBER_COCOA_SOURCES)))
+	$(patsubst %.m,%.o,$(patsubst %.mm,%.o,$(patsubst %.cpp,%.o, $(SLIMBER_COCOA_SOURCES))))
 CLEANFILES += \
 	Slimber/Cocoa/PkgInfo \
 	$(SLIMBER_COCOA_OBJECTS) \

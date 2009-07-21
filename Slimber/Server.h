@@ -26,10 +26,13 @@ namespace Swift {
 		public:
 			Server(int clientConnectionPort, int linkLocalConnectionPort, boost::shared_ptr<DNSSDService> dnsSDService);
 
+			boost::signal<void (bool)> onSelfConnected;
+
 		private:
 			void handleNewClientConnection(boost::shared_ptr<Connection> c);
 			void handleNewLinkLocalConnection(boost::shared_ptr<Connection> connection);
 			void handleServiceRegistered(const DNSSDService::Service& service);
+			void handleSessionStarted();
 			void handleSessionFinished(boost::shared_ptr<ServerFromClientSession>);
 			void handleLinkLocalSessionFinished(boost::shared_ptr<Session> session);
 			void handleLinkLocalElementReceived(boost::shared_ptr<Element> element, boost::shared_ptr<Session> session);

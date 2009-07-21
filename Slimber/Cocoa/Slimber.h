@@ -16,6 +16,9 @@ class Slimber {
 		~Slimber();
 
 	private:
+		void handleSelfConnected(bool b);
+
+	private:
 		boost::shared_ptr<Swift::DNSSDService> dnsSDService;
 		Swift::Server* server;
 		Menulet* menulet;

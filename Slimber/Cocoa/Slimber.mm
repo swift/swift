@@ -9,10 +9,15 @@ using namespace Swift;
 Slimber::Slimber() {
 	dnsSDService = boost::shared_ptr<AppleDNSSDService>(new AppleDNSSDService());
 	server = new Server(5222, 5562, dnsSDService);
+	server->onSelfConnected.connect(boost::bind(&Slimber::handleSelfConnected, this, _1));
 	menulet = [[Menulet alloc] init];
 }
 
 Slimber::~Slimber() {
 	delete server;
 	[menulet release];
+}
+
+void Slimber::handleSelfConnected(bool b) {
+	[menulet setSelfConnected: b];
 }

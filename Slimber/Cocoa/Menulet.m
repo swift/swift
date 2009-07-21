@@ -12,10 +12,8 @@
 		[statusItem setToolTip: @"Slimber"];	
 		[statusItem setMenu: statusMenu];
 
-		NSBundle* bundle = [NSBundle bundleForClass: [self class]];
-		NSString* path = [bundle pathForResource: @"Offline" ofType:@"png"];
-		menuIcon = [[NSImage alloc] initWithContentsOfFile: path];
-		[statusItem setImage: menuIcon];
+		[self setUsersOnline: NO];
+		selfOnline = NO;
 
 		[self updateMenu];
 	}
@@ -29,17 +27,45 @@
 }
 
 - (void) updateMenu {
+	while ([statusMenu numberOfItems] > 0) {
+		[statusMenu removeItemAtIndex: 0];
+	}
+
 	NSMenuItem* statusMenuItem = [[NSMenuItem alloc] initWithTitle: @"Online Users" action: NULL keyEquivalent: @""];
 	[statusMenu addItem: statusMenuItem];
 	[statusMenu addItem: [NSMenuItem separatorItem]];
 
-	NSMenuItem* loggedInItem = [[NSMenuItem alloc] initWithTitle: @"You are not logged in" action: NULL keyEquivalent: @""];
+	NSMenuItem* loggedInItem;
+	if (selfOnline) {
+		loggedInItem = [[NSMenuItem alloc] initWithTitle: @"You are logged in" action: NULL keyEquivalent: @""];
+	}
+	else {
+		loggedInItem = [[NSMenuItem alloc] initWithTitle: @"You are not logged in" action: NULL keyEquivalent: @""];
+	}
 	[statusMenu addItem: loggedInItem];
 	[statusMenu addItem: [NSMenuItem separatorItem]];
 
 	NSMenuItem* exitMenuItem = [[NSMenuItem alloc] initWithTitle: @"Exit" action: @selector(terminate:) keyEquivalent: @""];
 	[exitMenuItem setTarget: [NSApplication sharedApplication]];
 	[statusMenu addItem: exitMenuItem];
+}
+
+- (void) setUsersOnline: (BOOL) online {
+	NSBundle* bundle = [NSBundle bundleForClass: [self class]];
+	NSString* path;
+	if (online) {
+		path = [bundle pathForResource: @"Online" ofType:@"png"];
+	}
+	else {
+		path = [bundle pathForResource: @"Offline" ofType:@"png"];
+	}
+	menuIcon = [[NSImage alloc] initWithContentsOfFile: path];
+	[statusItem setImage: menuIcon];
+}
+
+- (void) setSelfConnected: (BOOL) online {
+	selfOnline = online;
+	[self updateMenu];
 }
 
 @end

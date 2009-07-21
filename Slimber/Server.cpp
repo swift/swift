@@ -53,9 +53,10 @@ void Server::handleNewClientConnection(boost::shared_ptr<Connection> c) {
 		c->disconnect();
 	}
 	serverFromClientSession_ = boost::shared_ptr<ServerFromClientSession>(new ServerFromClientSession(idGenerator_.generateID(), c, &payloadParserFactories_, &payloadSerializers_, &userRegistry_));
+	serverFromClientSession_->onSessionStarted.connect(boost::bind(&Server::handleSessionStarted, this));
 	serverFromClientSession_->onElementReceived.connect(boost::bind(&Server::handleElementReceived, this, _1, serverFromClientSession_));
 	serverFromClientSession_->onSessionFinished.connect(boost::bind(&Server::handleSessionFinished, this, serverFromClientSession_));
-	tracers_.push_back(boost::shared_ptr<SessionTracer>(new SessionTracer(serverFromClientSession_)));
+	//tracers_.push_back(boost::shared_ptr<SessionTracer>(new SessionTracer(serverFromClientSession_)));
 	serverFromClientSession_->startSession();
 }
 
@@ -72,11 +73,16 @@ void Server::handleServiceRegistered(const DNSSDService::Service& service) {
 	selfJID_ = JID(service.name);
 }
 
+void Server::handleSessionStarted() {
+	onSelfConnected(true);
+}
+
 void Server::handleSessionFinished(boost::shared_ptr<ServerFromClientSession>) {
 	serverFromClientSession_.reset();
 	unregisterService();
 	selfJID_ = JID();
 	rosterRequested_ = false;
+	onSelfConnected(false);
 }
 
 void Server::handleLinkLocalSessionFinished(boost::shared_ptr<Session> session) {
@@ -214,7 +220,7 @@ void Server::registerLinkLocalSession(boost::shared_ptr<Session> session) {
 	session->onSessionFinished.connect(boost::bind(&Server::handleLinkLocalSessionFinished, this, session));
 	session->onElementReceived.connect(boost::bind(&Server::handleLinkLocalElementReceived, this, _1, session));
 	linkLocalSessions_.push_back(session);
-	tracers_.push_back(boost::shared_ptr<SessionTracer>(new SessionTracer(session)));
+	//tracers_.push_back(boost::shared_ptr<SessionTracer>(new SessionTracer(session)));
 	session->startSession();
 }
 
