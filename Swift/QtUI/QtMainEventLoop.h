@@ -12,7 +12,7 @@ class QtMainEventLoop : public QObject, public Swift::EventLoop
 	public:
 		QtMainEventLoop() {}
 
-		virtual void post(const Event& event) {
+		virtual void post(const Swift::Event& event) {
 			QCoreApplication::postEvent(this, new Event(event));
 		}
 
@@ -29,11 +29,11 @@ class QtMainEventLoop : public QObject, public Swift::EventLoop
 	
 	private:
 		struct Event : public QEvent {
-				Event(const EventLoop::Event& event) :
+				Event(const Swift::Event& event) :
 						QEvent(QEvent::User), event_(event) {
 				}
 
-				EventLoop::Event event_;
+				Swift::Event event_;
 		};
 };
 
