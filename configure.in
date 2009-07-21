@@ -13,6 +13,7 @@ AC_CANONICAL_HOST
 AH_TEMPLATE(HAVE_OPENSSL, [OpenSSL library available])
 AH_TEMPLATE(HAVE_LIBXML, [LibXML library available])
 AH_TEMPLATE(HAVE_EXPAT, [Expat library available])
+AH_TEMPLATE(HAVE_AVAHI, [Avahi library available])
 
 ################################################################################
 # Default flags
@@ -215,6 +216,7 @@ echo
 
 AC_SUBST(SET_MAKE)
 AC_SUBST(HAVE_EXPAT)
+AC_SUBST(HAVE_AVAHI)
 AC_SUBST(CONFIG_CXX)
 AC_SUBST(CONFIG_CXXFLAGS)
 AC_SUBST(CONFIG_CC)

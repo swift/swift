@@ -10,7 +10,6 @@ namespace Swift {
 			UnixApplication(const String& name) : Application(name) {
 			}
 
-		private:
 			virtual ApplicationMessageDisplay* getApplicationMessageDisplay() {
 				return  &messageDisplay_;
 			}

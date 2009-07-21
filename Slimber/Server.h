@@ -69,6 +69,7 @@ namespace Swift {
 			boost::shared_ptr<LinkLocalRoster> linkLocalRoster_;
 			boost::shared_ptr<DNSSDService> dnsSDService_;
 			VCardCollection* vCardCollection_;
+			boost::shared_ptr<Presence> lastPresence_;
 			boost::shared_ptr<BoostConnectionServer> serverFromClientConnectionServer_;
 			boost::shared_ptr<ServerFromClientSession> serverFromClientSession_;
 			boost::shared_ptr<BoostConnectionServer> serverFromNetworkConnectionServer_;

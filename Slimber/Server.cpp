@@ -84,6 +84,7 @@ void Server::handleSessionFinished(boost::shared_ptr<ServerFromClientSession>) {
 	selfJID_ = JID();
 	rosterRequested_ = false;
 	onSelfConnected(false);
+	lastPresence_.reset();
 }
 
 void Server::handleLinkLocalSessionFinished(boost::shared_ptr<Session> session) {
@@ -129,6 +130,7 @@ void Server::handleElementReceived(boost::shared_ptr<Element> element, boost::sh
 			else {
 				dnsSDService_->updateService(getLinkLocalServiceInfo(presence));
 			}
+			lastPresence_ = presence;
 		}
 		else {
 			unregisterService();
@@ -148,14 +150,16 @@ void Server::handleElementReceived(boost::shared_ptr<Element> element, boost::sh
 					session->sendElement(IQ::createError(iq->getFrom(), iq->getID(), Error::Forbidden, Error::Cancel));
 				}
 			}
-			if (iq->getPayload<VCard>()) {
+			if (boost::shared_ptr<VCard> vcard = iq->getPayload<VCard>()) {
 				if (iq->getType() == IQ::Get) {
-					boost::shared_ptr<VCard> vcard(new VCard());
-					vcard->setNickname(iq->getFrom().getNode());
-					session->sendElement(IQ::createResult(iq->getFrom(), iq->getID(), vcard));
+					session->sendElement(IQ::createResult(iq->getFrom(), iq->getID(), vCardCollection_->getOwnVCard()));
 				}
 				else {
-					session->sendElement(IQ::createError(iq->getFrom(), iq->getID(), Error::Forbidden, Error::Cancel));
+					vCardCollection_->setOwnVCard(vcard);
+					session->sendElement(IQ::createResult(iq->getFrom(), iq->getID()));
+					if (lastPresence_) {
+						dnsSDService_->updateService(getLinkLocalServiceInfo(lastPresence_));
+					}
 				}
 			}
 			else {
@@ -259,12 +263,18 @@ void Server::handlePresenceChanged(boost::shared_ptr<Presence> presence) {
 
 LinkLocalServiceInfo Server::getLinkLocalServiceInfo(boost::shared_ptr<Presence> presence) {
 	LinkLocalServiceInfo info;
-	info.setFirstName("Remko");
-	info.setLastName("Tron\xc3\xa7on");
-	info.setEMail("email@example.com");
-	info.setJID(JID("jid@example.com"));
+	boost::shared_ptr<VCard> vcard = vCardCollection_->getOwnVCard();
+	if (!vcard->getFamilyName().isEmpty() || !vcard->getGivenName().isEmpty()) {
+		info.setFirstName(vcard->getGivenName());
+		info.setLastName(vcard->getFamilyName());
+	}
+	if (!vcard->getNickname().isEmpty()) {
+		info.setNick(vcard->getNickname());
+	}
+	if (!vcard->getEMail().isEmpty()) {
+		info.setEMail(vcard->getEMail());
+	}
 	info.setMessage(presence->getStatus());
-	info.setNick("Remko");
 	switch (presence->getShow()) {
 		case StatusShow::Online: 
 		case StatusShow::None: 

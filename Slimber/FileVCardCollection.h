@@ -15,5 +15,6 @@ namespace Swift {
 
 		private:
 			boost::filesystem::path vcardsPath;
+			boost::shared_ptr<VCard> vcard;
 	};
 }

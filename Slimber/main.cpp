@@ -8,7 +8,10 @@
 #include "Swiften/LinkLocal/AvahiDNSSDService.h"
 #endif
 #include "Slimber/Server.h"
+#include "Slimber/FileVCardCollection.h"
+#include "Swiften/LinkLocal/LinkLocalRoster.h"
 #include "Swiften/EventLoop/SimpleEventLoop.h"
+#include "Swiften/Application/Platform/PlatformApplication.h"
 
 using namespace Swift;
 
@@ -24,7 +27,11 @@ int main() {
 			new AvahiDNSSDService());
 #endif
 
-	Server server(5222, 5562, dnsSDService);
+	boost::shared_ptr<LinkLocalRoster> linkLocalRoster = boost::shared_ptr<LinkLocalRoster>(new LinkLocalRoster(dnsSDService));
+
+	FileVCardCollection vCardCollection(PlatformApplication("Slimber").getSettingsDir());
+
+	Server server(5222, 5562, linkLocalRoster, dnsSDService, &vCardCollection);
 	eventLoop.run();
 	return 0;
 }
