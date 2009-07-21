@@ -4,12 +4,13 @@
 	NSStatusItem* statusItem;
 	NSMenu* statusMenu;
 	NSImage* menuIcon;
+	NSArray* userNames;
 	BOOL selfOnline;
 }
 
 - (id) init;
 - (void) updateMenu;
-- (void) setUsersOnline: (BOOL) online;
+- (void) setUserNames: (NSArray*) names;
 - (void) setSelfConnected: (BOOL) online;
 
 @end

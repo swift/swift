@@ -24,7 +24,7 @@
 namespace Swift {
 	class Server {
 		public:
-			Server(int clientConnectionPort, int linkLocalConnectionPort, boost::shared_ptr<DNSSDService> dnsSDService);
+			Server(int clientConnectionPort, int linkLocalConnectionPort, boost::shared_ptr<LinkLocalRoster>, boost::shared_ptr<DNSSDService> dnsSDService);
 
 			boost::signal<void (bool)> onSelfConnected;
 
@@ -64,8 +64,8 @@ namespace Swift {
 			bool rosterRequested_;
 			int clientConnectionPort_;
 			int linkLocalConnectionPort_;
-			boost::shared_ptr<DNSSDService> dnsSDService_;
 			boost::shared_ptr<LinkLocalRoster> linkLocalRoster_;
+			boost::shared_ptr<DNSSDService> dnsSDService_;
 			boost::shared_ptr<BoostConnectionServer> serverFromClientConnectionServer_;
 			boost::shared_ptr<ServerFromClientSession> serverFromClientSession_;
 			boost::shared_ptr<BoostConnectionServer> serverFromNetworkConnectionServer_;

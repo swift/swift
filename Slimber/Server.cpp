@@ -17,11 +17,12 @@
 
 namespace Swift {
 
-Server::Server(int clientConnectionPort, int linkLocalConnectionPort, boost::shared_ptr<DNSSDService> dnsSDService) : 
+Server::Server(int clientConnectionPort, int linkLocalConnectionPort, boost::shared_ptr<LinkLocalRoster> linkLocalRoster, boost::shared_ptr<DNSSDService> dnsSDService) : 
 		dnsSDServiceRegistered_(false), 
 		rosterRequested_(false), 
 		clientConnectionPort_(clientConnectionPort), 
 		linkLocalConnectionPort_(linkLocalConnectionPort),
+		linkLocalRoster_(linkLocalRoster),
 		dnsSDService_(dnsSDService) {
 	serverFromClientConnectionServer_ = 
 			boost::shared_ptr<BoostConnectionServer>(new BoostConnectionServer(
@@ -39,8 +40,6 @@ Server::Server(int clientConnectionPort, int linkLocalConnectionPort, boost::sha
 
 	dnsSDService_->onServiceRegistered.connect
 			(boost::bind(&Server::handleServiceRegistered, this, _1));
-	linkLocalRoster_ = boost::shared_ptr<LinkLocalRoster>(
-			new LinkLocalRoster(dnsSDService_));
 	linkLocalRoster_->onRosterChanged.connect(
 			boost::bind(&Server::handleRosterChanged, this, _1));
 	linkLocalRoster_->onPresenceChanged.connect(

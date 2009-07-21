@@ -12,7 +12,7 @@
 		[statusItem setToolTip: @"Slimber"];	
 		[statusItem setMenu: statusMenu];
 
-		[self setUsersOnline: NO];
+		userNames = [[NSArray alloc] init];
 		selfOnline = NO;
 
 		[self updateMenu];
@@ -26,13 +26,36 @@
 	[super dealloc];
 }
 
+- (void) updateIcon: (BOOL) online {
+	NSBundle* bundle = [NSBundle bundleForClass: [self class]];
+	NSString* path;
+	if (online) {
+		path = [bundle pathForResource: @"Online" ofType:@"png"];
+	}
+	else {
+		path = [bundle pathForResource: @"Offline" ofType:@"png"];
+	}
+	menuIcon = [[NSImage alloc] initWithContentsOfFile: path];
+	[statusItem setImage: menuIcon];
+}
+
 - (void) updateMenu {
 	while ([statusMenu numberOfItems] > 0) {
 		[statusMenu removeItemAtIndex: 0];
 	}
 
-	NSMenuItem* statusMenuItem = [[NSMenuItem alloc] initWithTitle: @"Online Users" action: NULL keyEquivalent: @""];
-	[statusMenu addItem: statusMenuItem];
+	if ([userNames count] > 0) {
+		[statusMenu addItem: [[NSMenuItem alloc] initWithTitle: @"Online users:" action: NULL keyEquivalent: @""]];
+		int i;
+		for (i = 0; i < [userNames count]; ++i) {
+			NSMenuItem* userItem = [[NSMenuItem alloc] initWithTitle: [@"  " stringByAppendingString: [userNames objectAtIndex: i]] action: NULL keyEquivalent: @""];
+			[statusMenu addItem: userItem];
+		}
+	}
+	else {
+		[statusMenu addItem: [[NSMenuItem alloc] initWithTitle: @"No online users" action: NULL keyEquivalent: @""]];
+	}
+	[self updateIcon: [userNames count] > 0];
 	[statusMenu addItem: [NSMenuItem separatorItem]];
 
 	NSMenuItem* loggedInItem;
@@ -50,21 +73,15 @@
 	[statusMenu addItem: exitMenuItem];
 }
 
-- (void) setUsersOnline: (BOOL) online {
-	NSBundle* bundle = [NSBundle bundleForClass: [self class]];
-	NSString* path;
-	if (online) {
-		path = [bundle pathForResource: @"Online" ofType:@"png"];
-	}
-	else {
-		path = [bundle pathForResource: @"Offline" ofType:@"png"];
-	}
-	menuIcon = [[NSImage alloc] initWithContentsOfFile: path];
-	[statusItem setImage: menuIcon];
-}
-
 - (void) setSelfConnected: (BOOL) online {
 	selfOnline = online;
+	[self updateMenu];
+}
+
+- (void) setUserNames: (NSArray*) names {
+	[names retain];
+	[userNames release];
+	userNames = names;
 	[self updateMenu];
 }
 
