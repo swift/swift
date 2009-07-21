@@ -1,5 +1,9 @@
 #include "Slimber/FileVCardCollection.h"
+
+#include <boost/filesystem/fstream.hpp>
+
 #include "Swiften/Elements/VCard.h"
+#include "Swiften/Serializer/PayloadSerializers/VCardSerializer.h"
 
 namespace Swift {
 
@@ -12,7 +16,9 @@ boost::shared_ptr<VCard> FileVCardCollection::getOwnVCard() const {
 }
 
 void FileVCardCollection::setOwnVCard(boost::shared_ptr<VCard> v) {
-	vcard = v;
+	boost::filesystem::ofstream file(vcardsPath / std::string("vcard.xml"));
+	file << VCardSerializer().serializePayload(v);
+	file.close();
 }
 
 }
