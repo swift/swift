@@ -3,6 +3,8 @@ SLIMBER_COCOA_BINARY = \
 	Slimber/Cocoa/Slimber
 SLIMBER_COCOA_SOURCES = \
 	Slimber/Server.cpp \
+	Slimber/VCardCollection.cpp \
+	Slimber/FileVCardCollection.cpp \
 	Slimber/Cocoa/MainController.mm \
 	Slimber/Cocoa/Slimber.mm \
 	Slimber/Cocoa/main.mm \

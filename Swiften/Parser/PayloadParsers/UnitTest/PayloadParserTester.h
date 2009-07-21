@@ -1,10 +1,8 @@
-#ifndef SWIFTEN_PayloadParserTester_H
-#define SWIFTEN_PayloadParserTester_H
+#pragma once
 
 #include "Swiften/Parser/UnitTest/ParserTester.h"
+#include "Swiften/Parser/PayloadParser.h"
 
 namespace Swift {
 	typedef ParserTester<PayloadParser> PayloadParserTester;
 }
-
-#endif
