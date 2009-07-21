@@ -268,6 +268,11 @@ LinkLocalServiceInfo Server::getLinkLocalServiceInfo(boost::shared_ptr<Presence>
 		info.setFirstName(vcard->getGivenName());
 		info.setLastName(vcard->getFamilyName());
 	}
+	else if (!vcard->getFullName().isEmpty()) {
+		std::pair<String,String> p = vcard->getFullName().getSplittedAtFirst(' ');
+		info.setFirstName(p.first);
+		info.setLastName(p.second);
+	}
 	if (!vcard->getNickname().isEmpty()) {
 		info.setNick(vcard->getNickname());
 	}
