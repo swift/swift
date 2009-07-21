@@ -9,20 +9,16 @@
 
 namespace Swift {
 
-static void handleStartElement(void *client, const xmlChar* name, const xmlChar** attributes) {
+static void handleStartElement(void *client, const xmlChar* name, const xmlChar*, const xmlChar* xmlns, int, const xmlChar**, int nbAttributes, int, const xmlChar ** attributes) {
 	AttributeMap attributeValues;
-	const xmlChar** currentAttribute = attributes;
-	if (currentAttribute) {
-		while (*currentAttribute) {
-			attributeValues[String(reinterpret_cast<const char*>(*currentAttribute))] = String(reinterpret_cast<const char*>(*(currentAttribute+1)));
-			currentAttribute += 2;
-		}
+	for (int i = 0; i < nbAttributes*5; i += 5) {
+		attributeValues[String(reinterpret_cast<const char*>(attributes[i]))] = String(reinterpret_cast<const char*>(attributes[i+3]), attributes[i+4]-attributes[i+3]);
 	}
-	static_cast<XMLParserClient*>(client)->handleStartElement(reinterpret_cast<const char*>(name), attributeValues);
+	static_cast<XMLParserClient*>(client)->handleStartElement(reinterpret_cast<const char*>(name), (xmlns ? reinterpret_cast<const char*>(xmlns) : String()), attributeValues);
 }
 
-static void handleEndElement(void *client, const xmlChar* name) {
-	static_cast<XMLParserClient*>(client)->handleEndElement(reinterpret_cast<const char*>(name));
+static void handleEndElement(void *client, const xmlChar* name, const xmlChar*, const xmlChar* xmlns) {
+	static_cast<XMLParserClient*>(client)->handleEndElement(reinterpret_cast<const char*>(name), (xmlns ? reinterpret_cast<const char*>(xmlns) : String()));
 }
 
 static void handleCharacterData(void* client, const xmlChar* data, int len) {
@@ -40,8 +36,8 @@ static void handleWarning(void*, const char*, ... ) {
 LibXMLParser::LibXMLParser(XMLParserClient* client) : XMLParser(client) {
 	memset(&handler_, 0, sizeof(handler_) );
 	handler_.initialized = XML_SAX2_MAGIC;
-	handler_.startElement = &handleStartElement;
-	handler_.endElement = &handleEndElement;
+	handler_.startElementNs = &handleStartElement;
+	handler_.endElementNs = &handleEndElement;
 	handler_.characters = &handleCharacterData;
 	handler_.warning = &handleWarning;
 	handler_.error = &handleError;

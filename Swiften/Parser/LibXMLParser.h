@@ -1,5 +1,4 @@
-#ifndef SWIFTEN_LibXMLParser_H
-#define SWIFTEN_LibXMLParser_H
+#pragma once
 
 #include <libxml/parser.h>
 #include <boost/noncopyable.hpp>
@@ -19,5 +18,3 @@ namespace Swift {
 			xmlParserCtxtPtr context_;
 	};
 }
-
-#endif
