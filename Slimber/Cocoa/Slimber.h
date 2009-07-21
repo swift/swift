@@ -10,6 +10,7 @@
 @class Menulet;
 namespace Swift {
 	class Server;
+	class VCardCollection;
 }
 
 class Slimber {
@@ -24,6 +25,7 @@ class Slimber {
 	private:
 		boost::shared_ptr<Swift::DNSSDService> dnsSDService;
 		boost::shared_ptr<Swift::LinkLocalRoster>linkLocalRoster;
+		Swift::VCardCollection* vCardCollection;
 		Swift::Server* server;
 		Menulet* menulet;
 };

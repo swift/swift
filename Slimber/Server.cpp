@@ -13,17 +13,19 @@
 #include "Swiften/LinkLocal/OutgoingLinkLocalSession.h"
 #include "Swiften/LinkLocal/IncomingLinkLocalSession.h"
 #include "Swiften/Network/ConnectionServer.h"
+#include "Slimber/VCardCollection.h"
 #include "Swiften/Server/ServerFromClientSession.h"
 
 namespace Swift {
 
-Server::Server(int clientConnectionPort, int linkLocalConnectionPort, boost::shared_ptr<LinkLocalRoster> linkLocalRoster, boost::shared_ptr<DNSSDService> dnsSDService) : 
+Server::Server(int clientConnectionPort, int linkLocalConnectionPort, boost::shared_ptr<LinkLocalRoster> linkLocalRoster, boost::shared_ptr<DNSSDService> dnsSDService, VCardCollection* vCardCollection) : 
 		dnsSDServiceRegistered_(false), 
 		rosterRequested_(false), 
 		clientConnectionPort_(clientConnectionPort), 
 		linkLocalConnectionPort_(linkLocalConnectionPort),
 		linkLocalRoster_(linkLocalRoster),
-		dnsSDService_(dnsSDService) {
+		dnsSDService_(dnsSDService),
+		vCardCollection_(vCardCollection) {
 	serverFromClientConnectionServer_ = 
 			boost::shared_ptr<BoostConnectionServer>(new BoostConnectionServer(
 					clientConnectionPort, &boostIOServiceThread_.getIOService()));

@@ -3,8 +3,10 @@
 #include "Swiften/Base/foreach.h"
 #include "Swiften/Elements/RosterPayload.h"
 #include "Swiften/LinkLocal/AppleDNSSDService.h"
+#include "Swiften/Application/Platform/PlatformApplication.h"
 #include "Slimber/Cocoa/Menulet.h"
 #include "Slimber/Server.h"
+#include "Slimber/FileVCardCollection.h"
 
 using namespace Swift;
 
@@ -14,7 +16,9 @@ Slimber::Slimber() {
 	linkLocalRoster = boost::shared_ptr<LinkLocalRoster>(new LinkLocalRoster(dnsSDService));
 	linkLocalRoster->onRosterChanged.connect(boost::bind(&Slimber::handleRosterChanged, this));
 
-	server = new Server(5222, 5562, linkLocalRoster, dnsSDService);
+	vCardCollection = new FileVCardCollection(PlatformApplication("Slimber").getSettingsDir());
+
+	server = new Server(5222, 5562, linkLocalRoster, dnsSDService, vCardCollection);
 	server->onSelfConnected.connect(boost::bind(&Slimber::handleSelfConnected, this, _1));
 
 	menulet = [[Menulet alloc] init];
@@ -22,8 +26,9 @@ Slimber::Slimber() {
 }
 
 Slimber::~Slimber() {
-	delete server;
 	[menulet release];
+	delete server;
+	delete vCardCollection;
 }
 
 void Slimber::handleSelfConnected(bool b) {

@@ -1,5 +1,7 @@
 SLIMBER_TARGET = Slimber/slimber
 SLIMBER_SOURCES = \
+	Slimber/FileVCardCollection.cpp \
+	Slimber/VCardCollection.cpp \
 	Slimber/Server.cpp \
 	Slimber/main.cpp
 SLIMBER_OBJECTS = \

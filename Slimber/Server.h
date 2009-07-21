@@ -22,9 +22,11 @@
 #include "Swiften/Serializer/PayloadSerializers/FullPayloadSerializerCollection.h"
 
 namespace Swift {
+	class VCardCollection;
+
 	class Server {
 		public:
-			Server(int clientConnectionPort, int linkLocalConnectionPort, boost::shared_ptr<LinkLocalRoster>, boost::shared_ptr<DNSSDService> dnsSDService);
+			Server(int clientConnectionPort, int linkLocalConnectionPort, boost::shared_ptr<LinkLocalRoster>, boost::shared_ptr<DNSSDService> dnsSDService, VCardCollection* vCardCollection);
 
 			boost::signal<void (bool)> onSelfConnected;
 
@@ -66,6 +68,7 @@ namespace Swift {
 			int linkLocalConnectionPort_;
 			boost::shared_ptr<LinkLocalRoster> linkLocalRoster_;
 			boost::shared_ptr<DNSSDService> dnsSDService_;
+			VCardCollection* vCardCollection_;
 			boost::shared_ptr<BoostConnectionServer> serverFromClientConnectionServer_;
 			boost::shared_ptr<ServerFromClientSession> serverFromClientSession_;
 			boost::shared_ptr<BoostConnectionServer> serverFromNetworkConnectionServer_;
