@@ -30,20 +30,21 @@
 	NSBundle* bundle = [NSBundle bundleForClass: [self class]];
 	NSString* path;
 	if (online) {
-		path = [bundle pathForResource: @"Online" ofType:@"png"];
+		path = [bundle pathForResource: @"UsersOnline" ofType:@"png"];
 	}
 	else {
-		path = [bundle pathForResource: @"Offline" ofType:@"png"];
+		path = [bundle pathForResource: @"UsersOffline" ofType:@"png"];
 	}
-	menuIcon = [[NSImage alloc] initWithContentsOfFile: path];
-	[statusItem setImage: menuIcon];
+	[statusItem setImage: [[NSImage alloc] initWithContentsOfFile: path]];
 }
 
 - (void) updateMenu {
+	// Clear the menu
 	while ([statusMenu numberOfItems] > 0) {
 		[statusMenu removeItemAtIndex: 0];
 	}
 
+	// User items
 	if ([userNames count] > 0) {
 		[statusMenu addItem: [[NSMenuItem alloc] initWithTitle: @"Online users:" action: NULL keyEquivalent: @""]];
 		int i;
@@ -58,16 +59,23 @@
 	[self updateIcon: [userNames count] > 0];
 	[statusMenu addItem: [NSMenuItem separatorItem]];
 
+	// Self item
 	NSMenuItem* loggedInItem;
+	NSBundle* bundle = [NSBundle bundleForClass: [self class]];
+	NSString* path;
 	if (selfOnline) {
 		loggedInItem = [[NSMenuItem alloc] initWithTitle: @"You are logged in" action: NULL keyEquivalent: @""];
+		path = [bundle pathForResource: @"Online" ofType:@"png"];
 	}
 	else {
 		loggedInItem = [[NSMenuItem alloc] initWithTitle: @"You are not logged in" action: NULL keyEquivalent: @""];
+		path = [bundle pathForResource: @"Offline" ofType:@"png"];
 	}
+	[loggedInItem setImage: [[NSImage alloc] initWithContentsOfFile: path]];
 	[statusMenu addItem: loggedInItem];
 	[statusMenu addItem: [NSMenuItem separatorItem]];
 
+	// Exit item
 	NSMenuItem* exitMenuItem = [[NSMenuItem alloc] initWithTitle: @"Exit" action: @selector(terminate:) keyEquivalent: @""];
 	[exitMenuItem setTarget: [NSApplication sharedApplication]];
 	[statusMenu addItem: exitMenuItem];

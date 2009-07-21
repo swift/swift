@@ -11,7 +11,9 @@ SLIMBER_COCOA_XIBS = \
 	Slimber/Cocoa/MainMenu.xib
 SLIMBER_COCOA_RESOURCES = \
 	Slimber/Resources/Online.png \
-	Slimber/Resources/Offline.png
+	Slimber/Resources/Offline.png \
+	Slimber/Resources/UsersOnline.png \
+	Slimber/Resources/UsersOffline.png
 
 SLIMBER_COCOA_NIBS = \
 	$(SLIMBER_COCOA_XIBS:.xib=.nib)
