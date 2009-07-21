@@ -17,6 +17,8 @@ SLIMBER_COCOA_RESOURCES = \
 	Slimber/Resources/UsersOnline.png \
 	Slimber/Resources/UsersOffline.png
 
+TARGETS += $(SLIMBER_COCOA_TARGET)
+SLIMBER_TARGETS += $(SLIMBER_COCOA_TARGET)
 SLIMBER_COCOA_NIBS = \
 	$(SLIMBER_COCOA_XIBS:.xib=.nib)
 SLIMBER_COCOA_OBJECTS = \

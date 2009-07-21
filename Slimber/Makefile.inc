@@ -1,21 +1,24 @@
-SLIMBER_TARGET = Slimber/slimber
+SLIMBER_TARGET = Slimber/Slimber.a
 SLIMBER_SOURCES = \
 	Slimber/FileVCardCollection.cpp \
 	Slimber/VCardCollection.cpp \
-	Slimber/Server.cpp \
-	Slimber/main.cpp
+	Slimber/Server.cpp
 SLIMBER_OBJECTS = \
 	$(SLIMBER_SOURCES:.cpp=.o)
 
-.PHONY: slimber
-slimber: $(SLIMBER_TARGET)
-
-$(SLIMBER_TARGET): $(SWIFTEN_TARGET) $(SLIMBER_OBJECTS)
-	$(QUIET_LINK)$(CXX) -o $(SLIMBER_TARGET) $(SLIMBER_OBJECTS) $(LDFLAGS) $(SWIFTEN_TARGET) $(LIBS)
-
-#TARGETS += $(SLIMBER_TARGET)
-CLEANFILES += $(SLIMBER_OBJECTS)
+CLEANFILES += \
+	$(SLIMBER_OBJECTS) \
+	$(SLIMBER_TARGET)
 DEPS += \
 	$(SLIMBER_SOURCES:.cpp=.dep) \
 
+include Slimber/CLI/Makefile.inc
+ifeq ($(MACOSX),1)
 include Slimber/Cocoa/Makefile.inc
+endif
+
+.PHONY: slimber
+slimber: $(SLIMBER_TARGETS)
+
+$(SLIMBER_TARGET): $(SLIMBER_OBJECTS)
+	$(QUIET_AR)$(AR) $(ARFLAGS) $@ $(SLIMBER_OBJECTS)
