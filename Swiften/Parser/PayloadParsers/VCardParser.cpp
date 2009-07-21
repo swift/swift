@@ -23,6 +23,18 @@ void VCardParser::handleEndElement(const String&, const String&) {
 	else if (elementHierarchy == "/vCard/NICKNAME") {
 		getPayloadInternal()->setNickname(currentText_);
 	}
+	else if (elementHierarchy == "/vCard/FN") {
+		getPayloadInternal()->setFullName(currentText_);
+	}
+	else if (elementHierarchy == "/vCard/N/FAMILY") {
+		getPayloadInternal()->setFamilyName(currentText_);
+	}
+	else if (elementHierarchy == "/vCard/N/GIVEN") {
+		getPayloadInternal()->setGivenName(currentText_);
+	}
+	else if (elementHierarchy == "/vCard/EMAIL/USERID") {
+		getPayloadInternal()->setEMail(currentText_);
+	}
 	elementStack_.pop_back();
 }
 
