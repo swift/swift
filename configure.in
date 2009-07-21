@@ -147,6 +147,9 @@ fi
 
 # Qt
 if test "$BUILD_SWIFT" == "yes"; then
+	NEED_QT=yes
+fi
+if test "$NEED_QT" == "yes"; then
   AX_QT()
   if test "$HAVE_QT" != yes; then
     AC_MSG_ERROR([Could not find Qt])
