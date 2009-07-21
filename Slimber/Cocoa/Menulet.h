@@ -1,12 +1,12 @@
-#import <Cocoa/Cocoa.h>
-
+#include <Cocoa/Cocoa.h>
 
 @interface Menulet : NSObject {
 	NSStatusItem* statusItem;
-	IBOutlet NSMenu* statusMenu;
+	NSMenu* statusMenu;
 	NSImage* menuIcon;
 }
 
--(IBAction) updateStatus: (id) sender;
+- (id) init;
+- (void) updateMenu;
 
 @end

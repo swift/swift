@@ -3,7 +3,9 @@ SLIMBER_COCOA_BINARY = \
 	Slimber/Cocoa/Slimber
 SLIMBER_COCOA_SOURCES = \
 	Slimber/Server.cpp \
-	Slimber/Cocoa/main.m \
+	Slimber/Cocoa/MainController.mm \
+	Slimber/Cocoa/Slimber.mm \
+	Slimber/Cocoa/main.mm \
 	Slimber/Cocoa/Menulet.m
 SLIMBER_COCOA_XIBS = \
 	Slimber/Cocoa/MainMenu.xib
@@ -14,7 +16,7 @@ SLIMBER_COCOA_RESOURCES = \
 SLIMBER_COCOA_NIBS = \
 	$(SLIMBER_COCOA_XIBS:.xib=.nib)
 SLIMBER_COCOA_OBJECTS = \
-	$(patsubst %.m,%.o,$(patsubst %.cpp,%.o, $(SLIMBER_COCOA_SOURCES)))
+	$(patsubst %.mm,%.o,$(patsubst %.cpp,%.o, $(SLIMBER_COCOA_SOURCES)))
 CLEANFILES += \
 	Slimber/Cocoa/PkgInfo \
 	$(SLIMBER_COCOA_OBJECTS) \
