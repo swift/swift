@@ -197,7 +197,7 @@ void ClientSession::sendSessionStart() {
 
 void ClientSession::handleSessionFinished(const boost::optional<SessionError>& error) {
 	if (error) {
-		assert(!error_);
+		//assert(!error_);
 		state_ = Error;
 		error_ = error;
 	}
