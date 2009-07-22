@@ -28,21 +28,21 @@ namespace Swift {
 			int getPort(const JID&) const;
 
 		private:
-			RosterItemPayload getRosterItem(const DNSSDService::Service& service, const DNSSDService::ResolveResult& info) const;
-			String getRosterName(const DNSSDService::Service& service, const DNSSDService::ResolveResult& info) const;
-			JID getJIDForService(const DNSSDService::Service& service) const;
-			boost::shared_ptr<Presence> getPresence(const DNSSDService::Service& service, const DNSSDService::ResolveResult& info) const;
+			RosterItemPayload getRosterItem(const LinkLocalServiceID& service, const DNSSDService::ResolveResult& info) const;
+			String getRosterName(const LinkLocalServiceID& service, const DNSSDService::ResolveResult& info) const;
+			JID getJIDForService(const LinkLocalServiceID& service) const;
+			boost::shared_ptr<Presence> getPresence(const LinkLocalServiceID& service, const DNSSDService::ResolveResult& info) const;
 
 			void handleStopped(bool);
-			void handleServiceRegistered(const DNSSDService::Service& service);
-			void handleServiceAdded(const DNSSDService::Service&);
-			void handleServiceRemoved(const DNSSDService::Service&);
-			void handleServiceResolved(const DNSSDService::Service& service, const DNSSDService::ResolveResult& result);
+			void handleServiceRegistered(const LinkLocalServiceID& service);
+			void handleServiceAdded(const LinkLocalServiceID&);
+			void handleServiceRemoved(const LinkLocalServiceID&);
+			void handleServiceResolved(const LinkLocalServiceID& service, const DNSSDService::ResolveResult& result);
 
 		private:
 			boost::shared_ptr<DNSSDService> dnsSDService;
-			boost::optional<DNSSDService::Service> selfService;
-			typedef std::map<DNSSDService::Service, DNSSDService::ResolveResult> ServiceMap;
+			boost::optional<LinkLocalServiceID> selfService;
+			typedef std::map<LinkLocalServiceID, DNSSDService::ResolveResult> ServiceMap;
 			ServiceMap services;
 	};
 }

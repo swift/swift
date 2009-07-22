@@ -62,16 +62,16 @@ void AvahiDNSSDService::unregisterService() {
 	avahi_threaded_poll_unlock(threadedPoll);
 }
 
-void AvahiDNSSDService::startResolvingService(const Service& service) {
+void AvahiDNSSDService::startResolvingService(const LinkLocalServiceID& service) {
 	avahi_threaded_poll_lock(threadedPoll);
 
 	AvahiServiceResolver* resolver = avahi_service_resolver_new(
 			client, 
-			service.networkInterface, 
+			service.getNetworkInterfaceID(), 
 			AVAHI_PROTO_INET,
-			service.name.getUTF8Data(), 
-			service.type.getUTF8Data(), 
-			service.domain.getUTF8Data(), 
+			service.getName().getUTF8Data(), 
+			service.getType().getUTF8Data(), 
+			service.getDomain().getUTF8Data(), 
 			AVAHI_PROTO_UNSPEC, 
 			static_cast<AvahiLookupFlags>(0), 
 			&AvahiDNSSDService::handleServiceResolvedGlobal, 
@@ -112,13 +112,13 @@ void AvahiDNSSDService::handleServiceDiscovered(AvahiServiceBrowser *, AvahiIfIn
 			return;
 		case AVAHI_BROWSER_NEW: {
 				std::cerr << "Service added: " << name << " " << type << " " << domain << std::endl;
-				Service service(name, type, domain, interfaceIndex);
+				LinkLocalServiceID service(name, type, domain, interfaceIndex);
 				MainEventLoop::postEvent(boost::bind(boost::ref(onServiceAdded), service), shared_from_this());
 			}
 			break;
 		case AVAHI_BROWSER_REMOVE: {
 				std::cerr << "Service removed: " << name << " " << type << " " << domain << std::endl;
-				Service service(name, type, domain, interfaceIndex);
+				LinkLocalServiceID service(name, type, domain, interfaceIndex);
 				MainEventLoop::postEvent(boost::bind(boost::ref(onServiceRemoved), service), shared_from_this());
 			}
 			break;
@@ -146,7 +146,7 @@ void AvahiDNSSDService::handleServiceResolved(AvahiServiceResolver *, AvahiIfInd
 			HostAddress hostAddress(reinterpret_cast<const unsigned char*>(&address->data.ipv4.address), 4);
 			hostnameAddresses[String(hostname)] = hostAddress;
 			MainEventLoop::postEvent(boost::bind(boost::ref(onServiceResolved), 
-					Service(name, type, domain, interfaceIndex), 
+					LinkLocalServiceID(name, type, domain, interfaceIndex), 
 					ResolveResult(hostname, port, 
 						LinkLocalServiceInfo::createFromTXTRecord(data))),
 					shared_from_this());

@@ -26,8 +26,8 @@ namespace Swift {
 			virtual void updateService(const LinkLocalServiceInfo&);
 			virtual void unregisterService();
 
-			virtual void startResolvingService(const Service&);
-			virtual void stopResolvingService(const Service&);
+			virtual void startResolvingService(const LinkLocalServiceID&);
+			virtual void stopResolvingService(const LinkLocalServiceID&);
 
 			virtual void resolveHostname(const String& hostname, int interfaceIndex = 0);
 		

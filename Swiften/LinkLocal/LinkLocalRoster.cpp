@@ -30,11 +30,11 @@ std::vector<boost::shared_ptr<Presence> > LinkLocalRoster::getAllPresence() cons
 	return result;
 }
 
-RosterItemPayload LinkLocalRoster::getRosterItem(const DNSSDService::Service& service, const DNSSDService::ResolveResult& resolveResult) const {
+RosterItemPayload LinkLocalRoster::getRosterItem(const LinkLocalServiceID& service, const DNSSDService::ResolveResult& resolveResult) const {
  return RosterItemPayload(getJIDForService(service), getRosterName(service, resolveResult), RosterItemPayload::Both);
 }
 
-String LinkLocalRoster::getRosterName(const DNSSDService::Service& service, const DNSSDService::ResolveResult& resolveResult) const {
+String LinkLocalRoster::getRosterName(const LinkLocalServiceID& service, const DNSSDService::ResolveResult& resolveResult) const {
 	if (!resolveResult.info.getNick().isEmpty()) {
 		return resolveResult.info.getNick();
 	}
@@ -48,14 +48,14 @@ String LinkLocalRoster::getRosterName(const DNSSDService::Service& service, cons
 	else if (!resolveResult.info.getLastName().isEmpty()) {
 		return resolveResult.info.getLastName();
 	}
-	return service.name;
+	return service.getName();
 }
 
-JID LinkLocalRoster::getJIDForService(const DNSSDService::Service& service) const {
-	return JID(service.name);
+JID LinkLocalRoster::getJIDForService(const LinkLocalServiceID& service) const {
+	return JID(service.getName());
 }
 
-boost::shared_ptr<Presence> LinkLocalRoster::getPresence(const DNSSDService::Service& service, const DNSSDService::ResolveResult& resolveResult) const {
+boost::shared_ptr<Presence> LinkLocalRoster::getPresence(const LinkLocalServiceID& service, const DNSSDService::ResolveResult& resolveResult) const {
 	boost::shared_ptr<Presence> presence(new Presence());
 	presence->setFrom(getJIDForService(service));
 	switch (resolveResult.info.getStatus()) {
@@ -73,14 +73,14 @@ boost::shared_ptr<Presence> LinkLocalRoster::getPresence(const DNSSDService::Ser
 	return presence;
 }
 
-void LinkLocalRoster::handleServiceAdded(const DNSSDService::Service& service) {
+void LinkLocalRoster::handleServiceAdded(const LinkLocalServiceID& service) {
 	if (selfService && *selfService == service) {
 		return;
 	}
 	dnsSDService->startResolvingService(service);
 }
 
-void LinkLocalRoster::handleServiceRemoved(const DNSSDService::Service& service) {
+void LinkLocalRoster::handleServiceRemoved(const LinkLocalServiceID& service) {
 	if (selfService && *selfService == service) {
 		return;
 	}
@@ -91,7 +91,7 @@ void LinkLocalRoster::handleServiceRemoved(const DNSSDService::Service& service)
 	onRosterChanged(roster);
 }
 
-void LinkLocalRoster::handleServiceResolved(const DNSSDService::Service& service, const DNSSDService::ResolveResult& result) {
+void LinkLocalRoster::handleServiceResolved(const LinkLocalServiceID& service, const DNSSDService::ResolveResult& result) {
 	std::pair<ServiceMap::iterator, bool> r = services.insert(std::make_pair(service, result));
 	if (r.second) {
 		boost::shared_ptr<RosterPayload> roster(new RosterPayload());
@@ -104,7 +104,7 @@ void LinkLocalRoster::handleServiceResolved(const DNSSDService::Service& service
 	onPresenceChanged(getPresence(service, result));
 }
 
-void LinkLocalRoster::handleServiceRegistered(const DNSSDService::Service& service) {
+void LinkLocalRoster::handleServiceRegistered(const LinkLocalServiceID& service) {
 	selfService = service;
 }
 

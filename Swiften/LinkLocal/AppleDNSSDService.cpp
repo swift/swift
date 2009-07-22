@@ -70,11 +70,11 @@ void AppleDNSSDService::unregisterService() {
 	registerSDRef = NULL;
 }
 
-void AppleDNSSDService::startResolvingService(const Service& service) {
+void AppleDNSSDService::startResolvingService(const LinkLocalServiceID& service) {
 	boost::lock_guard<boost::mutex> lock(sdRefsMutex);
 
 	DNSServiceRef resolveSDRef;
-	DNSServiceErrorType result = DNSServiceResolve(&resolveSDRef, 0, service.networkInterface, service.name.getUTF8Data(), service.type.getUTF8Data(), service.domain.getUTF8Data(), &AppleDNSSDService::handleServiceResolvedGlobal, this);
+	DNSServiceErrorType result = DNSServiceResolve(&resolveSDRef, 0, service.getNetworkInterfaceID(), service.getName().getUTF8Data(), service.getType().getUTF8Data(), service.getDomain().getUTF8Data(), &AppleDNSSDService::handleServiceResolvedGlobal, this);
 	if (result != kDNSServiceErr_NoError) {
 		std::cerr << "Error creating service resolve query" << std::endl;
 		haveError = true;
@@ -87,7 +87,7 @@ void AppleDNSSDService::startResolvingService(const Service& service) {
 	interruptSelect();
 }
 
-void AppleDNSSDService::stopResolvingService(const Service& service) {
+void AppleDNSSDService::stopResolvingService(const LinkLocalServiceID& service) {
 	boost::lock_guard<boost::mutex> lock(sdRefsMutex);
 
 	ServiceSDRefMap::iterator i = resolveSDRefs.find(service);
@@ -238,7 +238,7 @@ void AppleDNSSDService::handleServiceDiscovered(DNSServiceRef, DNSServiceFlags f
 		return;
 	}
 	else {
-		Service service(serviceName, regtype, replyDomain, interfaceIndex);
+		LinkLocalServiceID service(serviceName, regtype, replyDomain, interfaceIndex);
 		if (flags & kDNSServiceFlagsAdd) {
 			MainEventLoop::postEvent(boost::bind(boost::ref(onServiceAdded), service), shared_from_this());
 		}
@@ -258,7 +258,7 @@ void AppleDNSSDService::handleServiceRegistered(DNSServiceRef, DNSServiceFlags, 
 		haveError = true;
 	}
 	else {
-		MainEventLoop::postEvent(boost::bind(boost::ref(onServiceRegistered), Service(name, regtype, domain, 0)), shared_from_this());
+		MainEventLoop::postEvent(boost::bind(boost::ref(onServiceRegistered), LinkLocalServiceID(name, regtype, domain, 0)), shared_from_this());
 	}
 }
 
