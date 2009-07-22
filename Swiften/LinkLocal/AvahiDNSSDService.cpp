@@ -23,7 +23,7 @@ void AvahiDNSSDService::start() {
 			static_cast<AvahiClientFlags>(0), NULL, this, &error); // TODO
 	if (!client) {
 		// TODO
-		std::cerr << "Error 1" << std::endl;
+		std::cerr << "Avahi Error: " << avahi_strerror(error) << std::endl;
 		return;
 	}
 
@@ -33,7 +33,7 @@ void AvahiDNSSDService::start() {
 			handleServiceDiscoveredGlobal, this);
 	if (!serviceBrowser) {
 		// TODO
-		std::cerr << "Error 2" << std::endl;
+		std::cerr << "Avahi Error: " << avahi_strerror(error) << std::endl;
 		return;
 	}
 

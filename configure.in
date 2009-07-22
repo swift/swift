@@ -194,6 +194,25 @@ fi
 # Resolv
 AC_CHECK_LIB(resolv, inet_aton)
 
+# Avahi
+case $host in
+	*-*-cygwin*)
+		;;
+	*-mingw32*)
+		;;
+	*-*-darwin*)
+		;;
+	*)
+    AX_AVAHI()
+    if test "$HAVE_AVAHI" = yes; then
+      CONFIG_CXXFLAGS="$CONFIG_CXXFLAGS $AVAHI_CPPFLAGS"
+      CONFIG_LDFLAGS="$CONFIG_LDFLAGS $AVAHI_LDFLAGS"
+      CONFIG_LIBS="$AVAHI_LIBS $CONFIG_LIBS"
+      AC_DEFINE(HAVE_AVAHI)
+    fi
+esac
+
+
 ################################################################################
 # Build configuration summary
 ################################################################################
