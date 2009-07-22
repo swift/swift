@@ -5,10 +5,12 @@
 namespace Swift {
 	class LinkLocalServiceID {
 		public:
+			static const String PresenceServiceType;
+
 			LinkLocalServiceID(
 				const String& name, 
 				const String& type, 
-				const String& domain, 
+				const String& domain = PresenceServiceType, 
 				int networkInterface = 0) : 
 					name(name), 
 					type(type), 
