@@ -16,8 +16,11 @@ namespace Swift {
 		public:
 			LinkLocalServiceBrowser(boost::shared_ptr<DNSSDService> service);
 
+			std::vector<LinkLocalService> getServices() const;
+
 			boost::signal<void (const LinkLocalServiceID&)> onServiceAdded;
 			boost::signal<void (const LinkLocalServiceID&)> onServiceChanged;
+			boost::signal<void (const LinkLocalServiceID&)> onServiceRemoved;
 
 		private:
 			void handleServiceAdded(const LinkLocalServiceID&);

@@ -18,6 +18,7 @@ class LinkLocalServiceBrowserTest : public CppUnit::TestFixture {
 		CPPUNIT_TEST(testServiceAdded);
 		CPPUNIT_TEST(testServiceAdded_NoServiceInfo);
 		CPPUNIT_TEST(testServiceChanged);
+		CPPUNIT_TEST(testServiceRemoved);
 		CPPUNIT_TEST_SUITE_END();
 
 	public:
@@ -32,6 +33,10 @@ class LinkLocalServiceBrowserTest : public CppUnit::TestFixture {
 		}
 
 		void tearDown() {
+			addedServices.clear();
+			removedServices.clear();
+			changedServices.clear();
+
 			delete testServiceInfo2;
 			delete testServiceInfo;
 			delete testServiceID;
@@ -47,7 +52,13 @@ class LinkLocalServiceBrowserTest : public CppUnit::TestFixture {
 
 			CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(addedServices.size()));
 			CPPUNIT_ASSERT(addedServices[0] == *testServiceID);
-			// TODO: Check getServices
+			CPPUNIT_ASSERT_EQUAL(0, static_cast<int>(changedServices.size()));
+			CPPUNIT_ASSERT_EQUAL(0, static_cast<int>(removedServices.size()));
+			std::vector<LinkLocalService> services = testling->getServices();
+			CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(services.size()));
+			CPPUNIT_ASSERT(*testServiceID == services[0].getID());
+			CPPUNIT_ASSERT(testServiceInfo->port == services[0].getPort());
+			CPPUNIT_ASSERT(testServiceInfo->host == services[0].getHostname());
 		}
 
 		void testServiceAdded_NoServiceInfo() {
@@ -57,6 +68,8 @@ class LinkLocalServiceBrowserTest : public CppUnit::TestFixture {
 			eventLoop->processEvents();
 
 			CPPUNIT_ASSERT_EQUAL(0, static_cast<int>(addedServices.size()));
+			std::vector<LinkLocalService> services = testling->getServices();
+			CPPUNIT_ASSERT_EQUAL(0, static_cast<int>(services.size()));
 		}
 
 		void testServiceChanged() {
@@ -67,7 +80,35 @@ class LinkLocalServiceBrowserTest : public CppUnit::TestFixture {
 
 			dnsSDService->setServiceInfo(*testServiceID,*testServiceInfo2);
 			eventLoop->processEvents();
-			// TODO: Check getServices
+
+			CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(addedServices.size()));
+			CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(changedServices.size()));
+			CPPUNIT_ASSERT_EQUAL(0, static_cast<int>(removedServices.size()));
+			CPPUNIT_ASSERT(changedServices[0] == *testServiceID);
+			std::vector<LinkLocalService> services = testling->getServices();
+			CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(services.size()));
+			CPPUNIT_ASSERT(*testServiceID == services[0].getID());
+			CPPUNIT_ASSERT(testServiceInfo2->port == services[0].getPort());
+			CPPUNIT_ASSERT(testServiceInfo2->host == services[0].getHostname());
+		}
+
+		void testServiceRemoved() {
+			boost::shared_ptr<LinkLocalServiceBrowser> testling = createTestling();
+			dnsSDService->setServiceInfo(*testServiceID,*testServiceInfo);
+			dnsSDService->addService(*testServiceID);
+			eventLoop->processEvents();
+
+			dnsSDService->removeService(*testServiceID);
+			eventLoop->processEvents();
+			dnsSDService->setServiceInfo(*testServiceID,*testServiceInfo2);
+			eventLoop->processEvents();
+
+			CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(addedServices.size()));
+			CPPUNIT_ASSERT_EQUAL(0, static_cast<int>(changedServices.size()));
+			CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(removedServices.size()));
+			CPPUNIT_ASSERT(removedServices[0] == *testServiceID);
+			std::vector<LinkLocalService> services = testling->getServices();
+			CPPUNIT_ASSERT_EQUAL(0, static_cast<int>(services.size()));
 		}
 
 	private:
@@ -76,6 +117,10 @@ class LinkLocalServiceBrowserTest : public CppUnit::TestFixture {
 					new LinkLocalServiceBrowser(dnsSDService));
 			testling->onServiceAdded.connect(boost::bind(
 					&LinkLocalServiceBrowserTest::handleServiceAdded, this, _1));
+			testling->onServiceChanged.connect(boost::bind(
+					&LinkLocalServiceBrowserTest::handleServiceChanged, this, _1));
+			testling->onServiceRemoved.connect(boost::bind(
+					&LinkLocalServiceBrowserTest::handleServiceRemoved, this, _1));
 			return testling;
 		}
 
@@ -83,10 +128,20 @@ class LinkLocalServiceBrowserTest : public CppUnit::TestFixture {
 			addedServices.push_back(service);
 		}
 
+		void handleServiceRemoved(const LinkLocalServiceID& service) {
+			removedServices.push_back(service);
+		}
+
+		void handleServiceChanged(const LinkLocalServiceID& service) {
+			changedServices.push_back(service);
+		}
+
 	private:
 		DummyEventLoop* eventLoop;
 		boost::shared_ptr<MockDNSSDService> dnsSDService;
 		std::vector<LinkLocalServiceID> addedServices;
+		std::vector<LinkLocalServiceID> changedServices;
+		std::vector<LinkLocalServiceID> removedServices;
 		LinkLocalServiceID* testServiceID;
 		DNSSDService::ResolveResult* testServiceInfo;
 		DNSSDService::ResolveResult* testServiceInfo2;

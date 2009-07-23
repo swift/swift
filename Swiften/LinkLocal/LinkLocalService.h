@@ -2,49 +2,40 @@
 
 #include "Swiften/Base/String.h"
 #include "Swiften/Network/HostAddress.h"
+#include "Swiften/LinkLocal/LinkLocalServiceID.h"
 #include "Swiften/LinkLocal/LinkLocalServiceInfo.h"
 
 namespace Swift {
 	class LinkLocalService {
 		public:
-			LinkLocalService();
+			LinkLocalService(
+					const LinkLocalServiceID& id,
+					const DNSSDService::ResolveResult& info) :
+						id(id),
+						info(info) {}
 
-			const String& getName() const {
-				return name;
+			const LinkLocalServiceID& getID() const {
+				return id;
 			}
 
-			void setName(const String& n) {
-				name = n;
+			const String& getName() const {
+				return id.getName();
+			}
+
+			int getPort() const {
+				return info.port;
 			}
 
 			const String& getHostname() const {
-				return hostname;
-			}
-
-			void setHostname(const String& h) {
-				hostname = h;
-			}
-
-			const HostAddress& getAddress() const {
-				return address;
-			}
-
-			void setAddress(const HostAddress& a) {
-				address = a;
+				return info.host;
 			}
 
 			const LinkLocalServiceInfo& getInfo() const {
-				return info;
-			}
-
-			void setInfo(const LinkLocalServiceInfo& i) {
-				info = i;
+				return info.info;
 			}
 
 		private:
-			String name;
-			String hostname;
-			LinkLocalServiceInfo info;
-			HostAddress address;
+			LinkLocalServiceID id;
+			DNSSDService::ResolveResult info;
 	};
 }

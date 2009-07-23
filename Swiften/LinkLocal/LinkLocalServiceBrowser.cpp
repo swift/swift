@@ -15,13 +15,22 @@ LinkLocalServiceBrowser::LinkLocalServiceBrowser(boost::shared_ptr<DNSSDService>
 			boost::bind(&LinkLocalServiceBrowser::handleServiceResolved, this, _1, _2));
 }
 
+std::vector<LinkLocalService> LinkLocalServiceBrowser::getServices() const {
+	std::vector<LinkLocalService> result;
+	for (ServiceMap::const_iterator i = services.begin(); i != services.end(); ++i) {
+		result.push_back(LinkLocalService(i->first, i->second));
+	}
+	return result;
+}
+
 void LinkLocalServiceBrowser::handleServiceAdded(const LinkLocalServiceID& service) {
 	dnsSDService->startResolvingService(service);
 }
 
 void LinkLocalServiceBrowser::handleServiceRemoved(const LinkLocalServiceID& service) {
-	/*dnsSDService->stopResolvingService(service);
-	services.erase(service);*/
+	dnsSDService->stopResolvingService(service);
+	services.erase(service);
+	onServiceRemoved(service);
 }
 
 void LinkLocalServiceBrowser::handleServiceResolved(const LinkLocalServiceID& service, const DNSSDService::ResolveResult& result) {
@@ -30,6 +39,7 @@ void LinkLocalServiceBrowser::handleServiceResolved(const LinkLocalServiceID& se
 		onServiceAdded(service);
 	}
 	else {
+		r.first->second = result;
 		onServiceChanged(service);
 	}
 }

@@ -48,8 +48,16 @@ namespace Swift {
 				MainEventLoop::postEvent(boost::bind(boost::ref(onServiceAdded), id));
 			}
 
+			void removeService(const LinkLocalServiceID& id) {
+				serviceInfo.erase(id);
+				MainEventLoop::postEvent(boost::bind(boost::ref(onServiceRemoved), id));
+			}
+
 			void setServiceInfo(const LinkLocalServiceID& id, const DNSSDService::ResolveResult& info) {
-				serviceInfo.insert(std::make_pair(id, info));
+				std::pair<ServiceInfoMap::iterator, bool> r = serviceInfo.insert(std::make_pair(id, info));
+				if (!r.second) {
+					r.first->second = info;
+				}
 				broadcastServiceInfo(id);
 			}
 
