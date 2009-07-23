@@ -82,7 +82,7 @@ void AvahiDNSSDService::startResolvingService(const LinkLocalServiceID& service)
 	avahi_threaded_poll_unlock(threadedPoll);
 }
 
-void AvahiDNSSDService::stopResolvingService(const Service& service) {
+void AvahiDNSSDService::stopResolvingService(const LinkLocalServiceID& service) {
 	avahi_threaded_poll_lock(threadedPoll);
 
 	ServiceResolverMap::iterator i = serviceResolvers.find(service);

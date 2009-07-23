@@ -7,6 +7,7 @@
 
 #include "Swiften/Base/String.h"
 #include "Swiften/LinkLocal/DNSSDService.h"
+#include "Swiften/LinkLocal/DNSSDServiceFactory.h"
 #include "Swiften/LinkLocal/LinkLocalService.h"
 
 namespace Swift {
@@ -14,7 +15,7 @@ namespace Swift {
 
 	class LinkLocalServiceBrowser {
 		public:
-			LinkLocalServiceBrowser(boost::shared_ptr<DNSSDService> service);
+			LinkLocalServiceBrowser(DNSSDServiceFactory*);
 
 			std::vector<LinkLocalService> getServices() const;
 

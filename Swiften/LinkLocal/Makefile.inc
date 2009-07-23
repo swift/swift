@@ -1,4 +1,6 @@
 SWIFTEN_SOURCES += \
+	Swiften/LinkLocal/DNSSDServiceFactory.cpp \
+	Swiften/LinkLocal/PlatformDNSSDServiceFactory.cpp \
 	Swiften/LinkLocal/DNSSDService.cpp \
 	Swiften/LinkLocal/LinkLocalRoster.cpp \
 	Swiften/LinkLocal/LinkLocalServiceID.cpp \
@@ -8,7 +10,7 @@ SWIFTEN_SOURCES += \
 	Swiften/LinkLocal/OutgoingLinkLocalSession.cpp \
 	Swiften/LinkLocal/LinkLocalConnector.cpp
 
-ifeq ($(MACOSX),1)
+ifeq ($(HAVE_BONJOUR),yes)
 SWIFTEN_SOURCES += \
 	Swiften/LinkLocal/AppleDNSSDService.cpp
 endif

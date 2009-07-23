@@ -47,7 +47,7 @@ namespace Swift {
 			AvahiClient* client;
 			AvahiThreadedPoll* threadedPoll;
 			AvahiServiceBrowser* serviceBrowser;
-			typedef std::map<Service, AvahiServiceResolver*> ServiceResolverMap;
+			typedef std::map<LinkLocalServiceID, AvahiServiceResolver*> ServiceResolverMap;
 			ServiceResolverMap serviceResolvers;
 			typedef std::map<String, HostAddress> HostnameAddressMap;
 			HostnameAddressMap hostnameAddresses;

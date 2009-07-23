@@ -6,7 +6,8 @@
 
 namespace Swift {
 
-LinkLocalServiceBrowser::LinkLocalServiceBrowser(boost::shared_ptr<DNSSDService> service) : dnsSDService(service) {
+LinkLocalServiceBrowser::LinkLocalServiceBrowser(DNSSDServiceFactory* factory) {
+  dnsSDService = factory->createDNSSDService();
 	dnsSDService->onServiceAdded.connect(
 			boost::bind(&LinkLocalServiceBrowser::handleServiceAdded, this, _1));
 	dnsSDService->onServiceRemoved.connect(

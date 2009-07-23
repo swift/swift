@@ -6,6 +6,7 @@
 
 #include "Swiften/EventLoop/MainEventLoop.h"
 #include "Swiften/LinkLocal/DNSSDService.h"
+#include "Swiften/LinkLocal/DNSSDServiceFactory.h"
 
 namespace Swift {
 	class MockDNSSDService : public DNSSDService {
@@ -78,5 +79,19 @@ namespace Swift {
 			std::vector<LinkLocalServiceID> resolvingServices;
 	};
 
+  class MockDNSSDServiceFactory : public DNSSDServiceFactory {
+    public:
+      boost::shared_ptr<DNSSDService> createDNSSDService() {
+        boost::shared_ptr<MockDNSSDService> result(new MockDNSSDService());   
+        services.push_back(result);
+        return result;
+      }
+
+      bool canCreate() const {
+        return true;
+      }
+
+      std::vector<boost::shared_ptr<MockDNSSDService> > services;
+  };
 
 }

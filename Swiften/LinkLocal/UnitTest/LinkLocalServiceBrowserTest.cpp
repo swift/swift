@@ -9,7 +9,7 @@
 #include "Swiften/LinkLocal/DNSSDService.h"
 #include "Swiften/EventLoop/DummyEventLoop.h"
 
-// Test IP address change
+// Test canCreate() == false
 
 using namespace Swift;
 
@@ -26,7 +26,7 @@ class LinkLocalServiceBrowserTest : public CppUnit::TestFixture {
 
 		void setUp() {
 			eventLoop = new DummyEventLoop();
-			dnsSDService = boost::shared_ptr<MockDNSSDService>(new MockDNSSDService());
+			dnsSDServiceFactory = new MockDNSSDServiceFactory();
 			testServiceID = new LinkLocalServiceID("foo", "bar.local");
 			testServiceInfo = new DNSSDService::ResolveResult("xmpp.bar.local", 1234, LinkLocalServiceInfo());
 			testServiceInfo2 = new DNSSDService::ResolveResult("xmpp.foo.local", 2345, LinkLocalServiceInfo());
@@ -40,14 +40,15 @@ class LinkLocalServiceBrowserTest : public CppUnit::TestFixture {
 			delete testServiceInfo2;
 			delete testServiceInfo;
 			delete testServiceID;
+      delete dnsSDServiceFactory;
 			delete eventLoop;
 		}
 
 		void testServiceAdded() {
 			boost::shared_ptr<LinkLocalServiceBrowser> testling = createTestling();
 
-			dnsSDService->setServiceInfo(*testServiceID,*testServiceInfo);
-			dnsSDService->addService(*testServiceID);
+			dnsSDService()->setServiceInfo(*testServiceID,*testServiceInfo);
+			dnsSDService()->addService(*testServiceID);
 			eventLoop->processEvents();
 
 			CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(addedServices.size()));
@@ -64,7 +65,7 @@ class LinkLocalServiceBrowserTest : public CppUnit::TestFixture {
 		void testServiceAdded_NoServiceInfo() {
 			boost::shared_ptr<LinkLocalServiceBrowser> testling = createTestling();
 
-			dnsSDService->addService(*testServiceID);
+			dnsSDService()->addService(*testServiceID);
 			eventLoop->processEvents();
 
 			CPPUNIT_ASSERT_EQUAL(0, static_cast<int>(addedServices.size()));
@@ -74,11 +75,11 @@ class LinkLocalServiceBrowserTest : public CppUnit::TestFixture {
 
 		void testServiceChanged() {
 			boost::shared_ptr<LinkLocalServiceBrowser> testling = createTestling();
-			dnsSDService->setServiceInfo(*testServiceID,*testServiceInfo);
-			dnsSDService->addService(*testServiceID);
+			dnsSDService()->setServiceInfo(*testServiceID,*testServiceInfo);
+			dnsSDService()->addService(*testServiceID);
 			eventLoop->processEvents();
 
-			dnsSDService->setServiceInfo(*testServiceID,*testServiceInfo2);
+			dnsSDService()->setServiceInfo(*testServiceID,*testServiceInfo2);
 			eventLoop->processEvents();
 
 			CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(addedServices.size()));
@@ -94,13 +95,13 @@ class LinkLocalServiceBrowserTest : public CppUnit::TestFixture {
 
 		void testServiceRemoved() {
 			boost::shared_ptr<LinkLocalServiceBrowser> testling = createTestling();
-			dnsSDService->setServiceInfo(*testServiceID,*testServiceInfo);
-			dnsSDService->addService(*testServiceID);
+			dnsSDService()->setServiceInfo(*testServiceID,*testServiceInfo);
+			dnsSDService()->addService(*testServiceID);
 			eventLoop->processEvents();
 
-			dnsSDService->removeService(*testServiceID);
+			dnsSDService()->removeService(*testServiceID);
 			eventLoop->processEvents();
-			dnsSDService->setServiceInfo(*testServiceID,*testServiceInfo2);
+			dnsSDService()->setServiceInfo(*testServiceID,*testServiceInfo2);
 			eventLoop->processEvents();
 
 			CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(addedServices.size()));
@@ -114,7 +115,7 @@ class LinkLocalServiceBrowserTest : public CppUnit::TestFixture {
 	private:
 		boost::shared_ptr<LinkLocalServiceBrowser> createTestling() {
 			boost::shared_ptr<LinkLocalServiceBrowser> testling(
-					new LinkLocalServiceBrowser(dnsSDService));
+					new LinkLocalServiceBrowser(dnsSDServiceFactory));
 			testling->onServiceAdded.connect(boost::bind(
 					&LinkLocalServiceBrowserTest::handleServiceAdded, this, _1));
 			testling->onServiceChanged.connect(boost::bind(
@@ -136,9 +137,14 @@ class LinkLocalServiceBrowserTest : public CppUnit::TestFixture {
 			changedServices.push_back(service);
 		}
 
+    boost::shared_ptr<MockDNSSDService> dnsSDService() const {
+      CPPUNIT_ASSERT(dnsSDServiceFactory->services.size() > 0);
+      return dnsSDServiceFactory->services[0];
+    }
+
 	private:
 		DummyEventLoop* eventLoop;
-		boost::shared_ptr<MockDNSSDService> dnsSDService;
+		MockDNSSDServiceFactory* dnsSDServiceFactory;
 		std::vector<LinkLocalServiceID> addedServices;
 		std::vector<LinkLocalServiceID> changedServices;
 		std::vector<LinkLocalServiceID> removedServices;
