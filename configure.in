@@ -198,12 +198,11 @@ AC_CHECK_LIB(resolv, inet_aton)
 # DNSSD Service
 case $host in
 	*-*-cygwin*)
-    AC_DEFINE(HAVE_BONJOUR)
 		;;
 	*-mingw32*)
-    AC_DEFINE(HAVE_BONJOUR)
 		;;
 	*-*-darwin*)
+    AC_DEFINE(HAVE_BONJOUR)
 		;;
 	*)
     AX_AVAHI()

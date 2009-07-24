@@ -6,7 +6,6 @@
 #include <boost/thread.hpp>
 #include <boost/thread/mutex.hpp>
 
-#include "Swiften/EventLoop/EventOwner.h"
 #include "Swiften/LinkLocal/DNSSDBrowseQuery.h"
 #include "Swiften/LinkLocal/DNSSDPublishQuery.h"
 #include "Swiften/LinkLocal/BonjourQuery.h"
@@ -14,9 +13,7 @@
 namespace Swift {
 	class LinkLocalServiceInfo;
 
-	class BonjourQuerier : 
-			public boost::enable_shared_from_this<BonjourQuerier>, 
-			public EventOwner {
+	class BonjourQuerier : public boost::enable_shared_from_this<BonjourQuerier> {
 		public:
 			BonjourQuerier();
 			~BonjourQuerier();

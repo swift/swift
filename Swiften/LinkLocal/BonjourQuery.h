@@ -5,10 +5,14 @@
 #include <boost/enable_shared_from_this.hpp>
 #include <boost/thread/mutex.hpp>
 
+#include "Swiften/EventLoop/EventOwner.h"
+
 namespace Swift {
 	class BonjourQuerier;
 
-	class BonjourQuery : public boost::enable_shared_from_this<BonjourQuery> {
+	class BonjourQuery : 
+			public EventOwner,
+			public boost::enable_shared_from_this<BonjourQuery> {
 		public:
 			BonjourQuery(boost::shared_ptr<BonjourQuerier>);
 			virtual ~BonjourQuery();

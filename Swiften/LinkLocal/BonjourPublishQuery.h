@@ -4,6 +4,7 @@
 #include "Swiften/LinkLocal/DNSSDPublishQuery.h"
 #include "Swiften/LinkLocal/LinkLocalServiceInfo.h"
 #include "Swiften/Base/ByteArray.h"
+#include "Swiften/EventLoop/MainEventLoop.h"
 
 namespace Swift {
 	class BonjourQuerier;
@@ -15,7 +16,7 @@ namespace Swift {
 				DNSServiceErrorType result = DNSServiceRegister(
 						&sdRef, 0, 0, name.getUTF8Data(), "_presence._tcp", NULL, NULL, port, 
 						txtRecord.getSize(), txtRecord.getData(), 
-						&BonjourPublishQuery::handleServiceRegistered, this);
+						&BonjourPublishQuery::handleServicePublishedStatic, this);
 				if (result != kDNSServiceErr_NoError) {
 					// TODO
 					std::cerr << "Error creating service registration" << std::endl;
@@ -26,15 +27,23 @@ namespace Swift {
 				run();
 			}
 
+			void update(const LinkLocalService& info) {
+				boost::lock_guard<boost::mutex> lock(sdRefMutex);
+				ByteArray txtRecord = info.toTXTRecord();
+				DNSServiceUpdateRecord(sdRef, NULL, NULL, txtRecord.getSize(), txtRecord.getData(), 0);
+			}
+
 		private:
-			static void handleServiceRegistered(DNSServiceRef, DNSServiceFlags, DNSServiceErrorType errorCode, const char *name, const char *regtype, const char *domain, void *context) {
-				std::cout << "Publish finished " << name << std::endl;
-				BonjourPublishQuery* query = static_cast<BonjourPublishQuery*>(context);
+			static void handleServicePublishedStatic(DNSServiceRef, DNSServiceFlags, DNSServiceErrorType errorCode, const char *name, const char *regtype, const char *domain, void *context) {
+				static_cast<BonjourPublishQuery*>(context)->handleServicePublished(errorCode, name, regtype, domain);
+			}
+
+			void handleServicePublished(DNSServiceErrorType errorCode, const char *name, const char *regtype, const char *domain) {
 				if (errorCode != kDNSServiceErr_NoError) {
-					query->onPublishFinished(boost::optional<LinkLocalServiceID>());
+					MainEventLoop::postEvent(boost::bind(boost::ref(onPublishFinished), boost::optional<LinkLocalServiceID>()), shared_from_this());
 				}
 				else {
-					query->onPublishFinished(boost::optional<LinkLocalServiceID>(LinkLocalServiceID(name, regtype, domain, 0)));
+					MainEventLoop::postEvent(boost::bind(boost::ref(onPublishFinished), boost::optional<LinkLocalServiceID>(LinkLocalServiceID(name, regtype, domain, 0))), shared_from_this());
 				}
 			}
 	};

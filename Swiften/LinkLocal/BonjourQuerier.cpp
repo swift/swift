@@ -5,7 +5,6 @@
 #include <netinet/in.h>
 #include <fcntl.h>
 
-#include "Swiften/EventLoop/MainEventLoop.h"
 #include "Swiften/LinkLocal/BonjourBrowseQuery.h"
 #include "Swiften/LinkLocal/BonjourPublishQuery.h"
 #include "Swiften/Base/foreach.h"
@@ -108,10 +107,9 @@ void BonjourQuerier::run() {
 
 		{
 			boost::lock_guard<boost::mutex> lock(runningQueriesMutex);
-			foreach(const boost::shared_ptr<BonjourQuery>& query, runningQueries) {
+			foreach(boost::shared_ptr<BonjourQuery> query, runningQueries) {
 				if (FD_ISSET(query->getSocketID(), &fdSet)) {
-					MainEventLoop::postEvent(
-							boost::bind(&BonjourQuery::processResult, query), shared_from_this());
+					query->processResult();
 				}
 			}
 		}
