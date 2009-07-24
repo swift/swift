@@ -14,6 +14,7 @@ Session::Session(
 			connection(connection),
 			payloadParserFactories(payloadParserFactories),
 			payloadSerializers(payloadSerializers),
+      streamStack(0),
 			initialized(false) {
 }
 
