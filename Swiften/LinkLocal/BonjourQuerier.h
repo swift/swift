@@ -7,7 +7,7 @@
 #include <boost/thread/mutex.hpp>
 
 #include "Swiften/LinkLocal/DNSSDBrowseQuery.h"
-#include "Swiften/LinkLocal/DNSSDPublishQuery.h"
+#include "Swiften/LinkLocal/DNSSDRegisterQuery.h"
 #include "Swiften/LinkLocal/BonjourQuery.h"
 
 namespace Swift {
@@ -19,7 +19,7 @@ namespace Swift {
 			~BonjourQuerier();
 
 			boost::shared_ptr<DNSSDBrowseQuery> createBrowseQuery();
-			boost::shared_ptr<DNSSDPublishQuery> createPublishQuery(const String& name, int port, const LinkLocalServiceInfo& info);
+			boost::shared_ptr<DNSSDRegisterQuery> createRegisterQuery(const String& name, int port, const LinkLocalServiceInfo& info);
 
 			void start();
 			void stop();

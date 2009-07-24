@@ -6,7 +6,7 @@
 #include <fcntl.h>
 
 #include "Swiften/LinkLocal/BonjourBrowseQuery.h"
-#include "Swiften/LinkLocal/BonjourPublishQuery.h"
+#include "Swiften/LinkLocal/BonjourRegisterQuery.h"
 #include "Swiften/Base/foreach.h"
 
 namespace Swift {
@@ -28,8 +28,8 @@ boost::shared_ptr<DNSSDBrowseQuery> BonjourQuerier::createBrowseQuery() {
 	return boost::shared_ptr<DNSSDBrowseQuery>(new BonjourBrowseQuery(shared_from_this()));
 }
 
-boost::shared_ptr<DNSSDPublishQuery> BonjourQuerier::createPublishQuery(const String& name, int port, const LinkLocalServiceInfo& info) {
-	return boost::shared_ptr<DNSSDPublishQuery>(new BonjourPublishQuery(name, port, info, shared_from_this()));
+boost::shared_ptr<DNSSDRegisterQuery> BonjourQuerier::createRegisterQuery(const String& name, int port, const LinkLocalServiceInfo& info) {
+	return boost::shared_ptr<DNSSDRegisterQuery>(new BonjourRegisterQuery(name, port, info, shared_from_this()));
 }
 
 void BonjourQuerier::addRunningQuery(boost::shared_ptr<BonjourQuery> query) {
