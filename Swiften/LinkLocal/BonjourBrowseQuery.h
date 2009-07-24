@@ -11,8 +11,9 @@ namespace Swift {
 			BonjourBrowseQuery(boost::shared_ptr<BonjourQuerier> q) : BonjourQuery(q) {
 				DNSServiceErrorType result = DNSServiceBrowse(
 						&sdRef, 0, 0, "_presence._tcp", 0, 
-						&BonjourBrowseQuery::handleServiceDiscoveredGlobal , this);
+						&BonjourBrowseQuery::handleServiceDiscovered, this);
 				if (result != kDNSServiceErr_NoError) {
+					std::cout << "Error" << std::endl;
 					// TODO
 				}
 			}
@@ -27,29 +28,21 @@ namespace Swift {
 			}
 
 		private:
-			static void handleServiceDiscoveredGlobal(DNSServiceRef, DNSServiceFlags flags, uint32_t interfaceIndex, DNSServiceErrorType errorCode, const char *serviceName, const char *regtype, const char *replyDomain, void *context) {
-				static_cast<BonjourBrowseQuery*>(context)->handleServiceDiscovered(flags, interfaceIndex, errorCode, serviceName, regtype, replyDomain);
-			}
-
-			void handleServiceDiscovered(
-					DNSServiceFlags flags, 
-					uint32_t interfaceIndex, 
-					DNSServiceErrorType errorCode, 
-					const char *serviceName, 
-					const char *type, 
-					const char *domain) {
+			static void handleServiceDiscovered(DNSServiceRef, DNSServiceFlags flags, uint32_t interfaceIndex, DNSServiceErrorType errorCode, const char *name, const char *type, const char *domain, void *context) {
 				if (errorCode != kDNSServiceErr_NoError) {
 					return;
 				}
 				else {
-					LinkLocalServiceID service(serviceName, type, domain, interfaceIndex);
+					BonjourBrowseQuery* query = static_cast<BonjourBrowseQuery*>(context);
+					LinkLocalServiceID service(name, type, domain, interfaceIndex);
+					std::cout << "Service discovered: " << name << std::endl;
 					if (flags & kDNSServiceFlagsAdd) {
-						onServiceAdded(service);
+						query->onServiceAdded(service);
 					}
 					else {
-						onServiceRemoved(service);
+						query->onServiceRemoved(service);
 					}
 				}
-		}
+			}
 	};
 }

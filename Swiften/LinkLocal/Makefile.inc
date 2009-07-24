@@ -1,6 +1,7 @@
 SWIFTEN_SOURCES += \
 	Swiften/LinkLocal/BonjourQuery.cpp \
 	Swiften/LinkLocal/DNSSDBrowseQuery.cpp \
+	Swiften/LinkLocal/DNSSDPublishQuery.cpp \
 	Swiften/LinkLocal/DNSSDServiceFactory.cpp \
 	Swiften/LinkLocal/BonjourQuerier.cpp \
 	Swiften/LinkLocal/PlatformDNSSDServiceFactory.cpp \

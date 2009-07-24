@@ -7,6 +7,7 @@
 
 #include "Swiften/EventLoop/MainEventLoop.h"
 #include "Swiften/LinkLocal/BonjourBrowseQuery.h"
+#include "Swiften/LinkLocal/BonjourPublishQuery.h"
 #include "Swiften/Base/foreach.h"
 
 namespace Swift {
@@ -18,7 +19,6 @@ BonjourQuerier::BonjourQuerier() : stopRequested(false), thread(0) {
 	interruptSelectReadSocket = fds[0];
 	fcntl(interruptSelectReadSocket, F_SETFL, fcntl(interruptSelectReadSocket, F_GETFL)|O_NONBLOCK);
 	interruptSelectWriteSocket = fds[1];
-	// TODO: Schedule thread
 }
 
 BonjourQuerier::~BonjourQuerier() {
@@ -27,6 +27,10 @@ BonjourQuerier::~BonjourQuerier() {
 
 boost::shared_ptr<DNSSDBrowseQuery> BonjourQuerier::createBrowseQuery() {
 	return boost::shared_ptr<DNSSDBrowseQuery>(new BonjourBrowseQuery(shared_from_this()));
+}
+
+boost::shared_ptr<DNSSDPublishQuery> BonjourQuerier::createPublishQuery(const String& name, int port, const LinkLocalServiceInfo& info) {
+	return boost::shared_ptr<DNSSDPublishQuery>(new BonjourPublishQuery(name, port, info, shared_from_this()));
 }
 
 void BonjourQuerier::addRunningQuery(boost::shared_ptr<BonjourQuery> query) {
@@ -74,14 +78,16 @@ void BonjourQuerier::run() {
 		int maxSocket;
 		{
 			boost::unique_lock<boost::mutex> lock(runningQueriesMutex);
-			runningQueriesAvailableEvent.wait(lock);
 			if (runningQueries.empty()) {
-				continue;
+				runningQueriesAvailableEvent.wait(lock);
+				if (runningQueries.empty()) {
+					continue;
+				}
 			}
 
 			// Run all running queries
 			FD_ZERO(&fdSet);
-			int maxSocket = interruptSelectReadSocket;
+			maxSocket = interruptSelectReadSocket;
 			FD_SET(interruptSelectReadSocket, &fdSet);
 
 			foreach(const boost::shared_ptr<BonjourQuery>& query, runningQueries) {

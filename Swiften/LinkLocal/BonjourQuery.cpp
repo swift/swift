@@ -11,7 +11,9 @@ BonjourQuery::~BonjourQuery() {
 }
 
 void BonjourQuery::processResult() {
+	std::cout << "Process result" << std::endl;
 	boost::lock_guard<boost::mutex> lock(sdRefMutex);
+	std::cout << "DNSSDServiceProcessResult" << std::endl;
 	DNSServiceProcessResult(sdRef);
 }
 

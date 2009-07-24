@@ -8,9 +8,12 @@
 
 #include "Swiften/EventLoop/EventOwner.h"
 #include "Swiften/LinkLocal/DNSSDBrowseQuery.h"
+#include "Swiften/LinkLocal/DNSSDPublishQuery.h"
 #include "Swiften/LinkLocal/BonjourQuery.h"
 
 namespace Swift {
+	class LinkLocalServiceInfo;
+
 	class BonjourQuerier : 
 			public boost::enable_shared_from_this<BonjourQuerier>, 
 			public EventOwner {
@@ -19,6 +22,7 @@ namespace Swift {
 			~BonjourQuerier();
 
 			boost::shared_ptr<DNSSDBrowseQuery> createBrowseQuery();
+			boost::shared_ptr<DNSSDPublishQuery> createPublishQuery(const String& name, int port, const LinkLocalServiceInfo& info);
 
 			void start();
 			void stop();
