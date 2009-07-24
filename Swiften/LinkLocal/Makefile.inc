@@ -1,9 +1,7 @@
 SWIFTEN_SOURCES += \
-	Swiften/LinkLocal/BonjourQuery.cpp \
 	Swiften/LinkLocal/DNSSDBrowseQuery.cpp \
 	Swiften/LinkLocal/DNSSDPublishQuery.cpp \
 	Swiften/LinkLocal/DNSSDServiceFactory.cpp \
-	Swiften/LinkLocal/BonjourQuerier.cpp \
 	Swiften/LinkLocal/PlatformDNSSDServiceFactory.cpp \
 	Swiften/LinkLocal/DNSSDService.cpp \
 	Swiften/LinkLocal/LinkLocalRoster.cpp \
@@ -16,6 +14,8 @@ SWIFTEN_SOURCES += \
 
 ifeq ($(HAVE_BONJOUR),yes)
 SWIFTEN_SOURCES += \
+	Swiften/LinkLocal/BonjourQuery.cpp \
+	Swiften/LinkLocal/BonjourQuerier.cpp \
 	Swiften/LinkLocal/AppleDNSSDService.cpp
 endif
 ifeq ($(HAVE_AVAHI),yes)

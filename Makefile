@@ -1,7 +1,7 @@
 include Makefile.config
 
-CXXFLAGS += -I.
-CFLAGS += -I.
+CXXFLAGS += -I$(PWD)
+CFLAGS += -I$(PWD)
 ARFLAGS = rcs
 
 .DEFAULT_GOAL = all
@@ -66,16 +66,9 @@ coverage:
 	tools/coverage/GenerateCoverageResults.sh
 
 .PHONY: clean
-clean: clean-deps $(CLEAN_TARGETS)
-
-	-$(RM) $(CLEANFILES) *.gcov
-	-find . -name "*.gcda" -exec rm {} \;
-	-find . -name "*.gcno" -exec rm {} \;
-
-.PHONY: clean-deps
-clean-deps:
-		-$(RM) $(DEPS)
-
+clean: $(CLEAN_TARGETS)
+	-rm -rf $(CLEANFILES)
+	-find . \( -name "*.dep" -or -name "*.a" -or -name "*.o" -or -name "*.obj" -or -name "*.gcda" -or -name "*.gcno" -or -name "*.gcov" \) -exec rm {} \;
 
 ################################################################################
 # Automatic dependency detection

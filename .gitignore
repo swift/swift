@@ -1,5 +1,6 @@
 .DS_Store
 *.dep
+*.gcov
 *.gcda
 *.gcno
 *.app

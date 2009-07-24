@@ -25,7 +25,6 @@ SLIMBER_COCOA_OBJECTS = \
 	$(patsubst %.m,%.o,$(patsubst %.mm,%.o,$(patsubst %.cpp,%.o, $(SLIMBER_COCOA_SOURCES))))
 CLEANFILES += \
 	Slimber/Cocoa/PkgInfo \
-	$(SLIMBER_COCOA_OBJECTS) \
 	$(SLIMBER_COCOA_NIBS) \
 	$(SLIMBER_COCOA_TARGET) \
 	$(SLIMBER_COCOA_BINARY)
