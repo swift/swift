@@ -2,11 +2,12 @@
 
 #include <unistd.h>
 #include <sys/socket.h>
-#include <netinet/in.h>
 #include <fcntl.h>
 
 #include "Swiften/LinkLocal/BonjourBrowseQuery.h"
 #include "Swiften/LinkLocal/BonjourRegisterQuery.h"
+#include "Swiften/LinkLocal/BonjourResolveServiceQuery.h"
+#include "Swiften/LinkLocal/BonjourResolveHostnameQuery.h"
 #include "Swiften/Base/foreach.h"
 
 namespace Swift {
@@ -30,6 +31,14 @@ boost::shared_ptr<DNSSDBrowseQuery> BonjourQuerier::createBrowseQuery() {
 
 boost::shared_ptr<DNSSDRegisterQuery> BonjourQuerier::createRegisterQuery(const String& name, int port, const LinkLocalServiceInfo& info) {
 	return boost::shared_ptr<DNSSDRegisterQuery>(new BonjourRegisterQuery(name, port, info, shared_from_this()));
+}
+
+boost::shared_ptr<DNSSDResolveServiceQuery> BonjourQuerier::createResolveServiceQuery(const LinkLocalServiceID& service) {
+	return boost::shared_ptr<DNSSDResolveServiceQuery>(new BonjourResolveServiceQuery(service, shared_from_this()));
+}
+
+boost::shared_ptr<DNSSDResolveHostnameQuery> BonjourQuerier::createResolveHostnameQuery(const String& hostname, int interfaceIndex) {
+	return boost::shared_ptr<DNSSDResolveHostnameQuery>(new BonjourResolveHostnameQuery(hostname, interfaceIndex, shared_from_this()));
 }
 
 void BonjourQuerier::addRunningQuery(boost::shared_ptr<BonjourQuery> query) {

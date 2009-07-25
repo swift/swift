@@ -22,8 +22,8 @@ int main() {
 	querier->start();
 	boost::shared_ptr<DNSSDBrowseQuery> query = querier->createBrowseQuery();
 	query->startBrowsing();
-	boost::shared_ptr<DNSSDPublishQuery> query2 = querier->createPublishQuery("remko", 1234, LinkLocalServiceInfo());
-	query2->publish();
+	boost::shared_ptr<DNSSDRegisterQuery> query2 = querier->createRegisterQuery("remko", 1234, LinkLocalServiceInfo());
+	query2->registerService();
 
 /*
 	boost::shared_ptr<DNSSDService> dnsSDService;

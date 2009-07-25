@@ -6,20 +6,26 @@
 #include <boost/thread.hpp>
 #include <boost/thread/mutex.hpp>
 
-#include "Swiften/LinkLocal/DNSSDBrowseQuery.h"
-#include "Swiften/LinkLocal/DNSSDRegisterQuery.h"
+#include "Swiften/LinkLocal/DNSSDQuerier.h"
 #include "Swiften/LinkLocal/BonjourQuery.h"
 
 namespace Swift {
 	class LinkLocalServiceInfo;
 
-	class BonjourQuerier : public boost::enable_shared_from_this<BonjourQuerier> {
+	class BonjourQuerier : 
+			public DNSSDQuerier, 
+			public boost::enable_shared_from_this<BonjourQuerier> {
 		public:
 			BonjourQuerier();
 			~BonjourQuerier();
 
 			boost::shared_ptr<DNSSDBrowseQuery> createBrowseQuery();
-			boost::shared_ptr<DNSSDRegisterQuery> createRegisterQuery(const String& name, int port, const LinkLocalServiceInfo& info);
+			boost::shared_ptr<DNSSDRegisterQuery> createRegisterQuery(
+					const String& name, int port, const LinkLocalServiceInfo& info);
+			boost::shared_ptr<DNSSDResolveServiceQuery> createResolveServiceQuery(
+					const LinkLocalServiceID&);
+			boost::shared_ptr<DNSSDResolveHostnameQuery> createResolveHostnameQuery(
+					const String& hostname, int interfaceIndex);
 
 			void start();
 			void stop();
@@ -29,8 +35,6 @@ namespace Swift {
 
 			void addRunningQuery(boost::shared_ptr<BonjourQuery>);
 			void removeRunningQuery(boost::shared_ptr<BonjourQuery>);
-		
-		private:
 			void interruptSelect();
 			void run();
 
