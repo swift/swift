@@ -1,8 +1,8 @@
 #pragma once
 
 #include "Swiften/Base/String.h"
-#include "Swiften/LinkLocal/BonjourQuery.h"
-#include "Swiften/LinkLocal/DNSSDResolveHostnameQuery.h"
+#include "Swiften/LinkLocal/DNSSD/Bonjour/BonjourQuery.h"
+#include "Swiften/LinkLocal/DNSSD/DNSSDResolveHostnameQuery.h"
 #include "Swiften/EventLoop/MainEventLoop.h"
 #include "Swiften/Network/HostAddress.h"
 

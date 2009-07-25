@@ -1,4 +1,4 @@
-#include "Swiften/LinkLocal/DNSSDResolveServiceQuery.h"
+#include "Swiften/LinkLocal/DNSSD/DNSSDResolveServiceQuery.h"
 
 namespace Swift {
 

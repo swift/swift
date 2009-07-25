@@ -6,8 +6,8 @@
 #include <boost/thread.hpp>
 #include <boost/thread/mutex.hpp>
 
-#include "Swiften/LinkLocal/DNSSDQuerier.h"
-#include "Swiften/LinkLocal/BonjourQuery.h"
+#include "Swiften/LinkLocal/DNSSD/DNSSDQuerier.h"
+#include "Swiften/LinkLocal/DNSSD/Bonjour/BonjourQuery.h"
 
 namespace Swift {
 	class LinkLocalServiceInfo;

@@ -1,4 +1,4 @@
-#include "Swiften/LinkLocal/DNSSDResolveHostnameQuery.h"
+#include "Swiften/LinkLocal/DNSSD/DNSSDResolveHostnameQuery.h"
 
 namespace Swift {
 

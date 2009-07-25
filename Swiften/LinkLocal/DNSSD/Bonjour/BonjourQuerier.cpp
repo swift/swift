@@ -1,13 +1,13 @@
-#include "Swiften/LinkLocal/BonjourQuerier.h"
+#include "Swiften/LinkLocal/DNSSD/Bonjour/BonjourQuerier.h"
 
 #include <unistd.h>
 #include <sys/socket.h>
 #include <fcntl.h>
 
-#include "Swiften/LinkLocal/BonjourBrowseQuery.h"
-#include "Swiften/LinkLocal/BonjourRegisterQuery.h"
-#include "Swiften/LinkLocal/BonjourResolveServiceQuery.h"
-#include "Swiften/LinkLocal/BonjourResolveHostnameQuery.h"
+#include "Swiften/LinkLocal/DNSSD/Bonjour/BonjourBrowseQuery.h"
+#include "Swiften/LinkLocal/DNSSD/Bonjour/BonjourRegisterQuery.h"
+#include "Swiften/LinkLocal/DNSSD/Bonjour/BonjourResolveServiceQuery.h"
+#include "Swiften/LinkLocal/DNSSD/Bonjour/BonjourResolveHostnameQuery.h"
 #include "Swiften/Base/foreach.h"
 
 namespace Swift {

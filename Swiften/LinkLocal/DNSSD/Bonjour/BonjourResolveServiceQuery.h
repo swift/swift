@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Swiften/LinkLocal/BonjourQuery.h"
-#include "Swiften/LinkLocal/DNSSDResolveServiceQuery.h"
+#include "Swiften/LinkLocal/DNSSD/Bonjour/BonjourQuery.h"
+#include "Swiften/LinkLocal/DNSSD/DNSSDResolveServiceQuery.h"
 #include "Swiften/LinkLocal/LinkLocalServiceInfo.h"
 #include "Swiften/Base/ByteArray.h"
 #include "Swiften/EventLoop/MainEventLoop.h"

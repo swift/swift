@@ -1,5 +1,5 @@
-#include "Swiften/LinkLocal/BonjourQuery.h"
-#include "Swiften/LinkLocal/BonjourQuerier.h"
+#include "Swiften/LinkLocal/DNSSD/Bonjour/BonjourQuery.h"
+#include "Swiften/LinkLocal/DNSSD/Bonjour/BonjourQuerier.h"
 
 namespace Swift {
 

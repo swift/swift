@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Swiften/LinkLocal/BonjourQuery.h"
-#include "Swiften/LinkLocal/DNSSDBrowseQuery.h"
+#include "Swiften/LinkLocal/DNSSD/Bonjour/BonjourQuery.h"
+#include "Swiften/LinkLocal/DNSSD/DNSSDBrowseQuery.h"
 #include "Swiften/EventLoop/MainEventLoop.h"
 
 namespace Swift {

@@ -1,4 +1,4 @@
-#include "Swiften/LinkLocal/DNSSDQuerier.h"
+#include "Swiften/LinkLocal/DNSSD/DNSSDQuerier.h"
 
 namespace Swift {
 
