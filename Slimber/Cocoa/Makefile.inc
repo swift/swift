@@ -12,6 +12,7 @@ SLIMBER_COCOA_SOURCES = \
 SLIMBER_COCOA_XIBS = \
 	Slimber/Cocoa/MainMenu.xib
 SLIMBER_COCOA_RESOURCES = \
+	Slimber/Resources/Credits.html \
 	Slimber/Resources/Online.png \
 	Slimber/Resources/Offline.png \
 	Slimber/Resources/UsersOnline.png \
