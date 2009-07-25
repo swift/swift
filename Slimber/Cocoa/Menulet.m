@@ -75,6 +75,12 @@
 	[statusMenu addItem: loggedInItem];
 	[statusMenu addItem: [NSMenuItem separatorItem]];
 
+	// About menu
+	NSMenuItem* aboutMenuItem = [[NSMenuItem alloc] initWithTitle: @"About Slimber" action: @selector(orderFrontStandardAboutPanel:) keyEquivalent: @""];
+	[aboutMenuItem setTarget: [NSApplication sharedApplication]];
+	[statusMenu addItem: aboutMenuItem];
+	[statusMenu addItem: [NSMenuItem separatorItem]];
+
 	// Exit item
 	NSMenuItem* exitMenuItem = [[NSMenuItem alloc] initWithTitle: @"Exit" action: @selector(terminate:) keyEquivalent: @""];
 	[exitMenuItem setTarget: [NSApplication sharedApplication]];

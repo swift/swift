@@ -10,7 +10,9 @@
 #include "Slimber/Server.h"
 #include "Slimber/FileVCardCollection.h"
 #include "Swiften/LinkLocal/LinkLocalRoster.h"
-#include "Swiften/LinkLocal/BonjourQuerier.h"
+#include "Swiften/LinkLocal/DNSSD/DNSSDBrowseQuery.h"
+#include "Swiften/LinkLocal/DNSSD/DNSSDRegisterQuery.h"
+#include "Swiften/LinkLocal/DNSSD/Bonjour/BonjourQuerier.h"
 #include "Swiften/EventLoop/SimpleEventLoop.h"
 #include "Swiften/Application/Platform/PlatformApplication.h"
 
