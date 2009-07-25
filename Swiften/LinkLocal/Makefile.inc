@@ -3,12 +3,11 @@ SWIFTEN_SOURCES += \
 	Swiften/LinkLocal/DNSSDService.cpp \
 	Swiften/LinkLocal/PlatformDNSSDServiceFactory.cpp \
 	Swiften/LinkLocal/LinkLocalRoster.cpp \
-	Swiften/LinkLocal/LinkLocalServiceID.cpp \
 	Swiften/LinkLocal/LinkLocalServiceInfo.cpp \
-	Swiften/LinkLocal/LinkLocalServiceBrowser.cpp \
 	Swiften/LinkLocal/IncomingLinkLocalSession.cpp \
 	Swiften/LinkLocal/OutgoingLinkLocalSession.cpp \
 	Swiften/LinkLocal/LinkLocalConnector.cpp
+#Swiften/LinkLocal/LinkLocalServiceBrowser.cpp 
 
 ifeq ($(HAVE_BONJOUR),yes)
 SWIFTEN_SOURCES += \

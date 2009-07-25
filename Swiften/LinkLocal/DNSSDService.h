@@ -4,7 +4,7 @@
 #include <map>
 
 #include "Swiften/Base/String.h"
-#include "Swiften/LinkLocal/LinkLocalServiceID.h"
+#include "Swiften/LinkLocal/DNSSD/DNSSDServiceID.h"
 #include "Swiften/LinkLocal/LinkLocalServiceInfo.h"
 
 namespace Swift {
@@ -29,17 +29,17 @@ namespace Swift {
 			virtual void updateService(const LinkLocalServiceInfo&) = 0;
 			virtual void unregisterService() = 0;
 
-			virtual void startResolvingService(const LinkLocalServiceID&) = 0;
-			virtual void stopResolvingService(const LinkLocalServiceID&) = 0;
+			virtual void startResolvingService(const DNSSDServiceID&) = 0;
+			virtual void stopResolvingService(const DNSSDServiceID&) = 0;
 			
 			virtual void resolveHostname(const String& hostname, int interfaceIndex = 0) = 0;
 
 			boost::signal<void ()> onStarted;
 			boost::signal<void (bool)> onStopped;
-			boost::signal<void (const LinkLocalServiceID&)> onServiceAdded;
-			boost::signal<void (const LinkLocalServiceID&)> onServiceRemoved;
-			boost::signal<void (const LinkLocalServiceID&)> onServiceRegistered;
-			boost::signal<void (const LinkLocalServiceID&, const ResolveResult&)> onServiceResolved;
+			boost::signal<void (const DNSSDServiceID&)> onServiceAdded;
+			boost::signal<void (const DNSSDServiceID&)> onServiceRemoved;
+			boost::signal<void (const DNSSDServiceID&)> onServiceRegistered;
+			boost::signal<void (const DNSSDServiceID&, const ResolveResult&)> onServiceResolved;
 			boost::signal<void (const String&, const boost::optional<HostAddress>&)> onHostnameResolved;
 	};
 }

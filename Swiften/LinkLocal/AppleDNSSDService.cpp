@@ -70,7 +70,7 @@ void AppleDNSSDService::unregisterService() {
 	registerSDRef = NULL;
 }
 
-void AppleDNSSDService::startResolvingService(const LinkLocalServiceID& service) {
+void AppleDNSSDService::startResolvingService(const DNSSDServiceID& service) {
 	boost::lock_guard<boost::mutex> lock(sdRefsMutex);
 
 	DNSServiceRef resolveSDRef;
@@ -87,7 +87,7 @@ void AppleDNSSDService::startResolvingService(const LinkLocalServiceID& service)
 	interruptSelect();
 }
 
-void AppleDNSSDService::stopResolvingService(const LinkLocalServiceID& service) {
+void AppleDNSSDService::stopResolvingService(const DNSSDServiceID& service) {
 	boost::lock_guard<boost::mutex> lock(sdRefsMutex);
 
 	ServiceSDRefMap::iterator i = resolveSDRefs.find(service);
@@ -238,7 +238,7 @@ void AppleDNSSDService::handleServiceDiscovered(DNSServiceRef, DNSServiceFlags f
 		return;
 	}
 	else {
-		LinkLocalServiceID service(serviceName, regtype, replyDomain, interfaceIndex);
+		DNSSDServiceID service(serviceName, regtype, replyDomain, interfaceIndex);
 		if (flags & kDNSServiceFlagsAdd) {
 			MainEventLoop::postEvent(boost::bind(boost::ref(onServiceAdded), service), shared_from_this());
 		}
@@ -258,7 +258,7 @@ void AppleDNSSDService::handleServiceRegistered(DNSServiceRef, DNSServiceFlags, 
 		haveError = true;
 	}
 	else {
-		MainEventLoop::postEvent(boost::bind(boost::ref(onServiceRegistered), LinkLocalServiceID(name, regtype, domain, 0)), shared_from_this());
+		MainEventLoop::postEvent(boost::bind(boost::ref(onServiceRegistered), DNSSDServiceID(name, regtype, domain, 0)), shared_from_this());
 	}
 }
 

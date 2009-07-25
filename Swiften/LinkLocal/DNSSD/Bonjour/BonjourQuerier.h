@@ -23,7 +23,7 @@ namespace Swift {
 			boost::shared_ptr<DNSSDRegisterQuery> createRegisterQuery(
 					const String& name, int port, const LinkLocalServiceInfo& info);
 			boost::shared_ptr<DNSSDResolveServiceQuery> createResolveServiceQuery(
-					const LinkLocalServiceID&);
+					const DNSSDServiceID&);
 			boost::shared_ptr<DNSSDResolveHostnameQuery> createResolveHostnameQuery(
 					const String& hostname, int interfaceIndex);
 

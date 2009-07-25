@@ -33,7 +33,7 @@ boost::shared_ptr<DNSSDRegisterQuery> BonjourQuerier::createRegisterQuery(const 
 	return boost::shared_ptr<DNSSDRegisterQuery>(new BonjourRegisterQuery(name, port, info, shared_from_this()));
 }
 
-boost::shared_ptr<DNSSDResolveServiceQuery> BonjourQuerier::createResolveServiceQuery(const LinkLocalServiceID& service) {
+boost::shared_ptr<DNSSDResolveServiceQuery> BonjourQuerier::createResolveServiceQuery(const DNSSDServiceID& service) {
 	return boost::shared_ptr<DNSSDResolveServiceQuery>(new BonjourResolveServiceQuery(service, shared_from_this()));
 }
 

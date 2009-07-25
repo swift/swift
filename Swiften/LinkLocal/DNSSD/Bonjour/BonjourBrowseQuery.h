@@ -38,7 +38,7 @@ namespace Swift {
 					return;
 				}
 				else {
-					LinkLocalServiceID service(name, type, domain, interfaceIndex);
+					DNSSDServiceID service(name, type, domain, interfaceIndex);
 					if (flags & kDNSServiceFlagsAdd) {
 						MainEventLoop::postEvent(boost::bind(boost::ref(onServiceAdded), service), shared_from_this());
 					}

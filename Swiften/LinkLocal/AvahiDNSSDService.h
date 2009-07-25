@@ -26,8 +26,8 @@ namespace Swift {
 			virtual void updateService(const LinkLocalServiceInfo&);
 			virtual void unregisterService();
 
-			virtual void startResolvingService(const LinkLocalServiceID&);
-			virtual void stopResolvingService(const LinkLocalServiceID&);
+			virtual void startResolvingService(const DNSSDServiceID&);
+			virtual void stopResolvingService(const DNSSDServiceID&);
 
 			virtual void resolveHostname(const String& hostname, int interfaceIndex = 0);
 		
@@ -47,7 +47,7 @@ namespace Swift {
 			AvahiClient* client;
 			AvahiThreadedPoll* threadedPoll;
 			AvahiServiceBrowser* serviceBrowser;
-			typedef std::map<LinkLocalServiceID, AvahiServiceResolver*> ServiceResolverMap;
+			typedef std::map<DNSSDServiceID, AvahiServiceResolver*> ServiceResolverMap;
 			ServiceResolverMap serviceResolvers;
 			typedef std::map<String, HostAddress> HostnameAddressMap;
 			HostnameAddressMap hostnameAddresses;

@@ -3,7 +3,7 @@
 #include <boost/signal.hpp>
 #include <boost/optional.hpp>
 
-#include "Swiften/LinkLocal/LinkLocalServiceID.h"
+#include "Swiften/LinkLocal/DNSSD/DNSSDServiceID.h"
 
 namespace Swift {
 	class LinkLocalServiceInfo;
@@ -15,6 +15,6 @@ namespace Swift {
 			virtual void registerService() = 0;
 			virtual void updateServiceInfo(const LinkLocalServiceInfo& info) = 0;
 
-			boost::signal<void (boost::optional<LinkLocalServiceID>)> onRegisterFinished;
+			boost::signal<void (boost::optional<DNSSDServiceID>)> onRegisterFinished;
 	};
 }

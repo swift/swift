@@ -3,7 +3,7 @@
 #include <boost/signal.hpp>
 #include <boost/optional.hpp>
 
-#include "Swiften/LinkLocal/LinkLocalServiceID.h"
+#include "Swiften/LinkLocal/DNSSD/DNSSDServiceID.h"
 #include "Swiften/LinkLocal/LinkLocalServiceInfo.h"
 
 namespace Swift {

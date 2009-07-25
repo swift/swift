@@ -6,31 +6,31 @@
 #include <vector>
 
 #include "Swiften/Base/String.h"
-#include "Swiften/LinkLocal/DNSSDService.h"
-#include "Swiften/LinkLocal/DNSSDServiceFactory.h"
 #include "Swiften/LinkLocal/LinkLocalService.h"
+#include "Swiften/LinkLocal/DNSSD/DNSSDQuerier.h"
+#include "Swiften/LinkLocal/DNSSD/DNSSDServiceID.h"
 
 namespace Swift {
 	class HostAddress;
 
 	class LinkLocalServiceBrowser {
 		public:
-			LinkLocalServiceBrowser(DNSSDServiceFactory*);
+			LinkLocalServiceBrowser(boost::shared_ptr<DNSSDQuerier> querier);
 
 			std::vector<LinkLocalService> getServices() const;
 
-			boost::signal<void (const LinkLocalServiceID&)> onServiceAdded;
-			boost::signal<void (const LinkLocalServiceID&)> onServiceChanged;
-			boost::signal<void (const LinkLocalServiceID&)> onServiceRemoved;
+			boost::signal<void (const DNSSDServiceID&)> onServiceAdded;
+			boost::signal<void (const DNSSDServiceID&)> onServiceChanged;
+			boost::signal<void (const DNSSDServiceID&)> onServiceRemoved;
 
 		private:
-			void handleServiceAdded(const LinkLocalServiceID&);
-			void handleServiceRemoved(const LinkLocalServiceID&);
-			void handleServiceResolved(const LinkLocalServiceID& service, const DNSSDService::ResolveResult& result);
+			//void handleServiceAdded(const DNSSDServiceID&);
+			//void handleServiceRemoved(const DNSSDServiceID&);
+			//void handleServiceResolved(const DNSSDServiceID& service, const DNSSDService::ResolveResult& result);
 
 		private:
-			boost::shared_ptr<DNSSDService> dnsSDService;
-			typedef std::map<LinkLocalServiceID, DNSSDService::ResolveResult> ServiceMap;
-			ServiceMap services;
+			boost::shared_ptr<DNSSDQuerier> querier;
+			//typedef std::map<DNSSDServiceID, DNSSDService::ResolveResult> ServiceMap;
+			//ServiceMap services;
 	};
 }

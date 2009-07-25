@@ -11,7 +11,7 @@ namespace Swift {
 
 	class BonjourResolveServiceQuery : public DNSSDResolveServiceQuery, public BonjourQuery {
 		public:	
-			BonjourResolveServiceQuery(const LinkLocalServiceID& service, boost::shared_ptr<BonjourQuerier> querier) : BonjourQuery(querier) {
+			BonjourResolveServiceQuery(const DNSSDServiceID& service, boost::shared_ptr<BonjourQuerier> querier) : BonjourQuery(querier) {
 				DNSServiceErrorType result = DNSServiceResolve(
 						&sdRef, 0, service.getNetworkInterfaceID(), 
 						service.getName().getUTF8Data(), service.getType().getUTF8Data(), 

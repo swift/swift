@@ -2,7 +2,7 @@
 
 #include <boost/signal.hpp>
 
-#include "Swiften/LinkLocal/LinkLocalServiceID.h"
+#include "Swiften/LinkLocal/DNSSD/DNSSDServiceID.h"
 
 namespace Swift {
 	class DNSSDBrowseQuery {
@@ -12,7 +12,7 @@ namespace Swift {
 			virtual void startBrowsing() = 0;
 			virtual void stopBrowsing() = 0;
 
-			boost::signal<void (const LinkLocalServiceID&)> onServiceAdded;
-			boost::signal<void (const LinkLocalServiceID&)> onServiceRemoved;
+			boost::signal<void (const DNSSDServiceID&)> onServiceAdded;
+			boost::signal<void (const DNSSDServiceID&)> onServiceRemoved;
 	};
 }

@@ -40,10 +40,10 @@ namespace Swift {
 
 			void handleServiceRegistered(DNSServiceErrorType errorCode, const char *name, const char *regtype, const char *domain) {
 				if (errorCode != kDNSServiceErr_NoError) {
-					MainEventLoop::postEvent(boost::bind(boost::ref(onRegisterFinished), boost::optional<LinkLocalServiceID>()), shared_from_this());
+					MainEventLoop::postEvent(boost::bind(boost::ref(onRegisterFinished), boost::optional<DNSSDServiceID>()), shared_from_this());
 				}
 				else {
-					MainEventLoop::postEvent(boost::bind(boost::ref(onRegisterFinished), boost::optional<LinkLocalServiceID>(LinkLocalServiceID(name, regtype, domain, 0))), shared_from_this());
+					MainEventLoop::postEvent(boost::bind(boost::ref(onRegisterFinished), boost::optional<DNSSDServiceID>(DNSSDServiceID(name, regtype, domain, 0))), shared_from_this());
 				}
 			}
 	};

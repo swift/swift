@@ -6,35 +6,35 @@
 
 namespace Swift {
 
-LinkLocalServiceBrowser::LinkLocalServiceBrowser(DNSSDServiceFactory* factory) {
-  dnsSDService = factory->createDNSSDService();
+LinkLocalServiceBrowser::LinkLocalServiceBrowser(boost::shared_ptr<DNSSDQuerier> querier) : querier(querier) {
+  /*dnsSDService = factory->createDNSSDService();
 	dnsSDService->onServiceAdded.connect(
 			boost::bind(&LinkLocalServiceBrowser::handleServiceAdded, this, _1));
 	dnsSDService->onServiceRemoved.connect(
 			boost::bind(&LinkLocalServiceBrowser::handleServiceRemoved, this, _1));
 	dnsSDService->onServiceResolved.connect(
-			boost::bind(&LinkLocalServiceBrowser::handleServiceResolved, this, _1, _2));
+			boost::bind(&LinkLocalServiceBrowser::handleServiceResolved, this, _1, _2));*/
 }
 
 std::vector<LinkLocalService> LinkLocalServiceBrowser::getServices() const {
 	std::vector<LinkLocalService> result;
-	for (ServiceMap::const_iterator i = services.begin(); i != services.end(); ++i) {
+	/*for (ServiceMap::const_iterator i = services.begin(); i != services.end(); ++i) {
 		result.push_back(LinkLocalService(i->first, i->second));
-	}
+	}*/
 	return result;
 }
 
-void LinkLocalServiceBrowser::handleServiceAdded(const LinkLocalServiceID& service) {
+/*void LinkLocalServiceBrowser::handleServiceAdded(const DNSSDServiceID& service) {
 	dnsSDService->startResolvingService(service);
 }
 
-void LinkLocalServiceBrowser::handleServiceRemoved(const LinkLocalServiceID& service) {
+void LinkLocalServiceBrowser::handleServiceRemoved(const DNSSDServiceID& service) {
 	dnsSDService->stopResolvingService(service);
 	services.erase(service);
 	onServiceRemoved(service);
 }
 
-void LinkLocalServiceBrowser::handleServiceResolved(const LinkLocalServiceID& service, const DNSSDService::ResolveResult& result) {
+void LinkLocalServiceBrowser::handleServiceResolved(const DNSSDServiceID& service, const DNSSDService::ResolveResult& result) {
 	std::pair<ServiceMap::iterator, bool> r = services.insert(std::make_pair(service, result));
 	if (r.second) {
 		onServiceAdded(service);
@@ -44,6 +44,6 @@ void LinkLocalServiceBrowser::handleServiceResolved(const LinkLocalServiceID& se
 		onServiceChanged(service);
 	}
 }
-
+*/
 
 }

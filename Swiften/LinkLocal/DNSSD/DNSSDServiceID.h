@@ -3,11 +3,11 @@
 #include "Swiften/Base/String.h"
 
 namespace Swift {
-	class LinkLocalServiceID {
+	class DNSSDServiceID {
 		public:
 			static const String PresenceServiceType;
 
-			LinkLocalServiceID(
+			DNSSDServiceID(
 				const String& name, 
 				const String& type, 
 				const String& domain = PresenceServiceType, 
@@ -18,11 +18,11 @@ namespace Swift {
 					networkInterface(networkInterface) {
 			}
 
-			bool operator==(const LinkLocalServiceID& o) const {
+			bool operator==(const DNSSDServiceID& o) const {
 				return name == o.name && type == o.type && domain == o.domain && (networkInterface != 0 && o.networkInterface != 0 ? networkInterface == o.networkInterface : true);
 			}
 
-			bool operator<(const LinkLocalServiceID& o) const {
+			bool operator<(const DNSSDServiceID& o) const {
 				if (o.name == name) {
 					if (o.type == type) {
 						if (o.domain == domain) {

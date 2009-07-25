@@ -2,19 +2,19 @@
 
 #include "Swiften/Base/String.h"
 #include "Swiften/Network/HostAddress.h"
-#include "Swiften/LinkLocal/LinkLocalServiceID.h"
+#include "Swiften/LinkLocal/DNSSD/DNSSDServiceID.h"
 #include "Swiften/LinkLocal/LinkLocalServiceInfo.h"
 
 namespace Swift {
 	class LinkLocalService {
 		public:
 			LinkLocalService(
-					const LinkLocalServiceID& id,
+					const DNSSDServiceID& id,
 					const DNSSDService::ResolveResult& info) :
 						id(id),
 						info(info) {}
 
-			const LinkLocalServiceID& getID() const {
+			const DNSSDServiceID& getID() const {
 				return id;
 			}
 
@@ -35,7 +35,7 @@ namespace Swift {
 			}
 
 		private:
-			LinkLocalServiceID id;
+			DNSSDServiceID id;
 			DNSSDService::ResolveResult info;
 	};
 }

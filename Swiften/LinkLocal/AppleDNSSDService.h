@@ -6,7 +6,7 @@
 #include <dns_sd.h>
 
 #include "Swiften/LinkLocal/DNSSDService.h"
-#include "Swiften/LinkLocal/LinkLocalServiceID.h"
+#include "Swiften/LinkLocal/DNSSD/DNSSDServiceID.h"
 #include "Swiften/EventLoop/EventOwner.h"
 
 namespace Swift {
@@ -22,8 +22,8 @@ namespace Swift {
 			virtual void updateService(const LinkLocalServiceInfo&);
 			virtual void unregisterService();
 
-			virtual void startResolvingService(const LinkLocalServiceID&);
-			virtual void stopResolvingService(const LinkLocalServiceID&);
+			virtual void startResolvingService(const DNSSDServiceID&);
+			virtual void stopResolvingService(const DNSSDServiceID&);
 
 			virtual void resolveHostname(const String& hostname, int interfaceIndex = 0);
 
@@ -49,7 +49,7 @@ namespace Swift {
 			boost::mutex sdRefsMutex;
 			DNSServiceRef browseSDRef;
 			DNSServiceRef registerSDRef;
-			typedef std::map<LinkLocalServiceID, DNSServiceRef> ServiceSDRefMap;
+			typedef std::map<DNSSDServiceID, DNSServiceRef> ServiceSDRefMap;
 			ServiceSDRefMap resolveSDRefs;
 			typedef std::vector<DNSServiceRef> HostnameSDRefs;
 			HostnameSDRefs hostnameResolveSDRefs;
