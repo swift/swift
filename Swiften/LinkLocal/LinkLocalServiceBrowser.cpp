@@ -20,7 +20,6 @@ LinkLocalServiceBrowser::~LinkLocalServiceBrowser() {
 	browseQuery->stopBrowsing();
 }
 
-/*
 std::vector<LinkLocalService> LinkLocalServiceBrowser::getServices() const {
 	std::vector<LinkLocalService> result;
 	for (ServiceMap::const_iterator i = services.begin(); i != services.end(); ++i) {
@@ -28,7 +27,6 @@ std::vector<LinkLocalService> LinkLocalServiceBrowser::getServices() const {
 	}
 	return result;
 }
-*/
 
 void LinkLocalServiceBrowser::handleServiceAdded(const DNSSDServiceID& service) {
 	boost::shared_ptr<DNSSDResolveServiceQuery> resolveQuery = querier->createResolveServiceQuery(service);
@@ -50,11 +48,7 @@ void LinkLocalServiceBrowser::handleServiceRemoved(const DNSSDServiceID& service
 }
 
 void LinkLocalServiceBrowser::handleServiceResolved(const DNSSDServiceID& service, const boost::optional<DNSSDResolveServiceQuery::Result>& result) {
-	if (!result) {
-		// TODO
-		std::cerr << "Error resolving" << std::endl;
-	}
-	else {
+	if (result) {
 		std::pair<ServiceMap::iterator, bool> r = services.insert(std::make_pair(service, *result));
 		if (r.second) {
 			onServiceAdded(service);

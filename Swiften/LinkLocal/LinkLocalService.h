@@ -1,8 +1,8 @@
 #pragma once
 
 #include "Swiften/Base/String.h"
-#include "Swiften/Network/HostAddress.h"
 #include "Swiften/LinkLocal/DNSSD/DNSSDServiceID.h"
+#include "Swiften/LinkLocal/DNSSD/DNSSDResolveServiceQuery.h"
 #include "Swiften/LinkLocal/LinkLocalServiceInfo.h"
 
 namespace Swift {
@@ -10,7 +10,7 @@ namespace Swift {
 		public:
 			LinkLocalService(
 					const DNSSDServiceID& id,
-					const DNSSDService::ResolveResult& info) :
+					const DNSSDResolveServiceQuery::Result& info) :
 						id(id),
 						info(info) {}
 
@@ -36,6 +36,6 @@ namespace Swift {
 
 		private:
 			DNSSDServiceID id;
-			DNSSDService::ResolveResult info;
+			DNSSDResolveServiceQuery::Result info;
 	};
 }

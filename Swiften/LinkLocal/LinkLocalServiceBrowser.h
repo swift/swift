@@ -10,16 +10,15 @@
 #include "Swiften/LinkLocal/DNSSD/DNSSDQuerier.h"
 #include "Swiften/LinkLocal/DNSSD/DNSSDResolveServiceQuery.h"
 #include "Swiften/LinkLocal/DNSSD/DNSSDServiceID.h"
+#include "Swiften/LinkLocal/LinkLocalService.h"
 
 namespace Swift {
-	//class HostAddress;
-
 	class LinkLocalServiceBrowser {
 		public:
 			LinkLocalServiceBrowser(boost::shared_ptr<DNSSDQuerier> querier);
 			~LinkLocalServiceBrowser();
 
-			/*std::vector<LinkLocalService> getServices() const;*/
+			std::vector<LinkLocalService> getServices() const;
 
 			boost::signal<void (const DNSSDServiceID&)> onServiceAdded;
 			boost::signal<void (const DNSSDServiceID&)> onServiceChanged;
