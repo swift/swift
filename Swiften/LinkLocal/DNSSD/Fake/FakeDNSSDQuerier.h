@@ -11,7 +11,7 @@
 #include "Swiften/LinkLocal/DNSSD/DNSSDResolveServiceQuery.h"
 
 namespace Swift {
-	class LinkLocalServiceInfo;
+	class ByteArray;
 	class FakeDNSSDQuery;
 	class FakeDNSSDBrowseQuery;
 
@@ -24,7 +24,7 @@ namespace Swift {
 
 			boost::shared_ptr<DNSSDBrowseQuery> createBrowseQuery();
 			boost::shared_ptr<DNSSDRegisterQuery> createRegisterQuery(
-					const String& name, int port, const LinkLocalServiceInfo& info);
+					const String& name, int port, const ByteArray& info);
 			boost::shared_ptr<DNSSDResolveServiceQuery> createResolveServiceQuery(
 					const DNSSDServiceID&);
 			boost::shared_ptr<DNSSDResolveHostnameQuery> createResolveHostnameQuery(

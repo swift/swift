@@ -2,7 +2,6 @@
 
 #include "Swiften/LinkLocal/DNSSD/Bonjour/BonjourQuery.h"
 #include "Swiften/LinkLocal/DNSSD/DNSSDRegisterQuery.h"
-#include "Swiften/LinkLocal/LinkLocalServiceInfo.h"
 #include "Swiften/Base/ByteArray.h"
 #include "Swiften/EventLoop/MainEventLoop.h"
 
@@ -11,8 +10,7 @@ namespace Swift {
 
 	class BonjourRegisterQuery : public DNSSDRegisterQuery, public BonjourQuery {
 		public:	
-			BonjourRegisterQuery(const String& name, int port, const LinkLocalServiceInfo& info, boost::shared_ptr<BonjourQuerier> querier) : BonjourQuery(querier) {
-				ByteArray txtRecord = info.toTXTRecord();
+			BonjourRegisterQuery(const String& name, int port, const ByteArray& txtRecord, boost::shared_ptr<BonjourQuerier> querier) : BonjourQuery(querier) {
 				DNSServiceErrorType result = DNSServiceRegister(
 						&sdRef, 0, 0, name.getUTF8Data(), "_presence._tcp", NULL, NULL, port, 
 						txtRecord.getSize(), txtRecord.getData(), 
@@ -35,9 +33,8 @@ namespace Swift {
 				stop();
 			}
 
-			void updateServiceInfo(const LinkLocalServiceInfo& info) {
+			void updateServiceInfo(const ByteArray& txtRecord) {
 				boost::lock_guard<boost::mutex> lock(sdRefMutex);
-				ByteArray txtRecord = info.toTXTRecord();
 				DNSServiceUpdateRecord(sdRef, NULL, NULL, txtRecord.getSize(), txtRecord.getData(), 0);
 			}
 

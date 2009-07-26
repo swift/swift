@@ -30,8 +30,8 @@ namespace Swift {
 				return info.host;
 			}
 
-			const LinkLocalServiceInfo& getInfo() const {
-				return info.info;
+			LinkLocalServiceInfo getInfo() const {
+				return LinkLocalServiceInfo::createFromTXTRecord(info.info);
 			}
 
 		private:

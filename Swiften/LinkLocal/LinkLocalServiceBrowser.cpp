@@ -57,7 +57,7 @@ bool LinkLocalServiceBrowser::isRegistered() const {
 
 void LinkLocalServiceBrowser::registerService(const String& name, int port, const LinkLocalServiceInfo& info) {
 	assert(!registerQuery);
-	registerQuery = querier->createRegisterQuery(name, port, info);
+	registerQuery = querier->createRegisterQuery(name, port, info.toTXTRecord());
 	registerQuery->onRegisterFinished.connect(
 		boost::bind(&LinkLocalServiceBrowser::handleRegisterFinished, this, _1));
 	registerQuery->registerService();

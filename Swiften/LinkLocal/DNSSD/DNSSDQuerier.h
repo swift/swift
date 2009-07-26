@@ -4,7 +4,7 @@
 
 namespace Swift {
 	class String;
-	class LinkLocalServiceInfo;
+	class ByteArray;
 	class DNSSDServiceID;
 	class DNSSDBrowseQuery;
 	class DNSSDRegisterQuery;
@@ -17,7 +17,7 @@ namespace Swift {
 
 			virtual boost::shared_ptr<DNSSDBrowseQuery> createBrowseQuery() = 0;
 			virtual boost::shared_ptr<DNSSDRegisterQuery> createRegisterQuery(
-					const String& name, int port, const LinkLocalServiceInfo& info) = 0;
+					const String& name, int port, const ByteArray& info) = 0;
 			virtual boost::shared_ptr<DNSSDResolveServiceQuery> createResolveServiceQuery(
 					const DNSSDServiceID&) = 0;
 			virtual boost::shared_ptr<DNSSDResolveHostnameQuery> createResolveHostnameQuery(

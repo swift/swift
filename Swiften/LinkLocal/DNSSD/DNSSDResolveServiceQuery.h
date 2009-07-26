@@ -4,19 +4,18 @@
 #include <boost/optional.hpp>
 
 #include "Swiften/LinkLocal/DNSSD/DNSSDServiceID.h"
-#include "Swiften/LinkLocal/LinkLocalServiceInfo.h"
+#include "Swiften/Base/ByteArray.h"
 
 namespace Swift {
 	class DNSSDResolveServiceQuery {
 		public:
 			struct Result {
-				Result(const String& fullName, const String& host, int port, 
-						const LinkLocalServiceInfo& info) : 
+				Result(const String& fullName, const String& host, int port, const ByteArray& info) : 
 							fullName(fullName), host(host), port(port), info(info) {}
 				String fullName;
 				String host;
 				int port;
-				LinkLocalServiceInfo info;
+				ByteArray info;
 			};
 
 			virtual ~DNSSDResolveServiceQuery();

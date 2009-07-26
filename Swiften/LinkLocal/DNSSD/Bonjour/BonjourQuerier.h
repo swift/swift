@@ -10,7 +10,7 @@
 #include "Swiften/LinkLocal/DNSSD/Bonjour/BonjourQuery.h"
 
 namespace Swift {
-	class LinkLocalServiceInfo;
+	class ByteArray;
 
 	class BonjourQuerier : 
 			public DNSSDQuerier, 
@@ -21,7 +21,7 @@ namespace Swift {
 
 			boost::shared_ptr<DNSSDBrowseQuery> createBrowseQuery();
 			boost::shared_ptr<DNSSDRegisterQuery> createRegisterQuery(
-					const String& name, int port, const LinkLocalServiceInfo& info);
+					const String& name, int port, const ByteArray& info);
 			boost::shared_ptr<DNSSDResolveServiceQuery> createResolveServiceQuery(
 					const DNSSDServiceID&);
 			boost::shared_ptr<DNSSDResolveHostnameQuery> createResolveHostnameQuery(

@@ -17,7 +17,7 @@ boost::shared_ptr<DNSSDBrowseQuery> FakeDNSSDQuerier::createBrowseQuery() {
 	return boost::shared_ptr<DNSSDBrowseQuery>(new FakeDNSSDBrowseQuery(shared_from_this()));
 }
 
-boost::shared_ptr<DNSSDRegisterQuery> FakeDNSSDQuerier::createRegisterQuery(const String& name, int port, const LinkLocalServiceInfo& info) {
+boost::shared_ptr<DNSSDRegisterQuery> FakeDNSSDQuerier::createRegisterQuery(const String& name, int port, const ByteArray& info) {
 	return boost::shared_ptr<DNSSDRegisterQuery>(new FakeDNSSDRegisterQuery(name, port, info, shared_from_this()));
 }
 

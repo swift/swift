@@ -29,7 +29,7 @@ boost::shared_ptr<DNSSDBrowseQuery> BonjourQuerier::createBrowseQuery() {
 	return boost::shared_ptr<DNSSDBrowseQuery>(new BonjourBrowseQuery(shared_from_this()));
 }
 
-boost::shared_ptr<DNSSDRegisterQuery> BonjourQuerier::createRegisterQuery(const String& name, int port, const LinkLocalServiceInfo& info) {
+boost::shared_ptr<DNSSDRegisterQuery> BonjourQuerier::createRegisterQuery(const String& name, int port, const ByteArray& info) {
 	return boost::shared_ptr<DNSSDRegisterQuery>(new BonjourRegisterQuery(name, port, info, shared_from_this()));
 }
 
