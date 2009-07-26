@@ -1,6 +1,6 @@
 #include "QtMainWindowFactory.h"
 #include "QtMainWindow.h"
-#include "QtTreeWidgetFactory.h"
+#include "Roster/QtTreeWidgetFactory.h"
 
 namespace Swift {
 

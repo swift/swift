@@ -2,8 +2,8 @@
 
 #include "QtJoinMUCDialog.h"
 #include "QtSwiftUtil.h"
-#include "QtTreeWidgetFactory.h"
-#include "QtTreeWidget.h"
+#include "Roster/QtTreeWidgetFactory.h"
+#include "Roster/QtTreeWidget.h"
 #include "QtStatusWidget.h"
 
 #include <QBoxLayout>

@@ -39,7 +39,7 @@ GroupRosterItem* Roster::getGroup(const String& groupName) {
 	}
 	GroupRosterItem* group = new GroupRosterItem(groupName, treeWidget_, widgetFactory_);
 	children_.push_back(group);
-  items_.push_back(group);
+	items_.push_back(group);
 	return group;
 }
 
@@ -49,7 +49,7 @@ void Roster::handleUserAction(boost::shared_ptr<UserRosterAction> action) {
 
 void Roster::addContact(const JID& jid, const String& name, const String& group) {
 	ContactRosterItem *item = new ContactRosterItem(jid, name, getGroup(group), widgetFactory_);
-  items_.push_back(item);
+	items_.push_back(item);
 	item->onUserAction.connect(boost::bind(&Roster::handleUserAction, this, _1));
 	filterItem(item);
 

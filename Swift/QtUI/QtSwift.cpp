@@ -3,7 +3,7 @@
 #include "QtLoginWindowFactory.h"
 #include "QtChatWindowFactory.h"
 #include "QtMainWindowFactory.h"
-#include "QtTreeWidgetFactory.h"
+#include "Roster/QtTreeWidgetFactory.h"
 #include "QtSystemTray.h"
 #include "QtSoundPlayer.h"
 

@@ -55,9 +55,6 @@ HEADERS += \
 	QtSettingsProvider.h \
 	QtStatusWidget.h \
 	QtSwift.h \
-	QtTreeWidget.h \
-	QtTreeWidgetFactory.h \
-	QtTreeWidgetItem.h \
 	QtChatView.h \
 	QtChatTabs.h \
 	QtSoundPlayer.h \
@@ -79,7 +76,6 @@ SOURCES += \
 	QtSettingsProvider.cpp \
 	QtStatusWidget.cpp \
 	QtSwift.cpp \
-	QtTreeWidget.cpp \
 	QtChatView.cpp	\
 	QtChatTabs.cpp \
 	QtSoundPlayer.cpp \
@@ -90,6 +86,8 @@ SOURCES += \
 	SystemMessageSnippet.cpp
 
 FORMS += QtJoinMUCDialog.ui
+
+include(Roster/Roster.pri)
 
 RESOURCES += Swift.qrc DefaultTheme.qrc
 
