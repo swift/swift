@@ -20,7 +20,7 @@ namespace Swift {
 			public EventOwner,
 			public boost::enable_shared_from_this<FakeDNSSDQuerier> {
 		public:
-			FakeDNSSDQuerier();
+			FakeDNSSDQuerier(const String& domain);
 
 			boost::shared_ptr<DNSSDBrowseQuery> createBrowseQuery();
 			boost::shared_ptr<DNSSDRegisterQuery> createRegisterQuery(
@@ -36,6 +36,7 @@ namespace Swift {
 			void addService(const DNSSDServiceID& id);
 			void removeService(const DNSSDServiceID& id);
 			void setServiceInfo(const DNSSDServiceID& id, const DNSSDResolveServiceQuery::Result& info);
+			bool isServiceRegistered(const String& name, int port, const ByteArray& info);
 
 			void setBrowseError();
 			void setRegisterError();
@@ -53,6 +54,7 @@ namespace Swift {
 			}
 
 		private:
+			String domain;
 			std::list< boost::shared_ptr<FakeDNSSDQuery> > runningQueries;
 			std::set<DNSSDServiceID> services;
 			typedef std::map<DNSSDServiceID,DNSSDResolveServiceQuery::Result> ServiceInfoMap;

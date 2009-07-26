@@ -11,7 +11,9 @@ LinkLocalServiceBrowser::LinkLocalServiceBrowser(boost::shared_ptr<DNSSDQuerier>
 }
 
 LinkLocalServiceBrowser::~LinkLocalServiceBrowser() {
-	assert(!isRunning());
+	if (isRunning()) {
+		std::cerr << "WARNING: LinkLocalServiceBrowser still running on destruction" << std::endl;
+	}
 }
 
 
@@ -67,6 +69,7 @@ void LinkLocalServiceBrowser::unregisterService() {
 	assert(registerQuery);
 	registerQuery->unregisterService();
 	registerQuery.reset();
+	selfService.reset();
 }
 
 std::vector<LinkLocalService> LinkLocalServiceBrowser::getServices() const {
@@ -78,6 +81,9 @@ std::vector<LinkLocalService> LinkLocalServiceBrowser::getServices() const {
 }
 
 void LinkLocalServiceBrowser::handleServiceAdded(const DNSSDServiceID& service) {
+	if (selfService && service == *selfService) {
+		return;
+	}
 	boost::shared_ptr<DNSSDResolveServiceQuery> resolveQuery = querier->createResolveServiceQuery(service);
 	resolveQuery->onServiceResolved.connect(
 		boost::bind(&LinkLocalServiceBrowser::handleServiceResolved, this, service, _1));
@@ -89,6 +95,9 @@ void LinkLocalServiceBrowser::handleServiceAdded(const DNSSDServiceID& service) 
 }
 
 void LinkLocalServiceBrowser::handleServiceRemoved(const DNSSDServiceID& service) {
+	if (selfService && service == *selfService) {
+		return;
+	}
 	ResolveQueryMap::iterator i = resolveQueries.find(service);
 	assert(i != resolveQueries.end());
 	i->second->stop();
@@ -111,7 +120,10 @@ void LinkLocalServiceBrowser::handleServiceResolved(const DNSSDServiceID& servic
 }
 
 void LinkLocalServiceBrowser::handleRegisterFinished(const boost::optional<DNSSDServiceID>& result) {
-	if (!result) {
+	if (result) {
+		selfService = result;
+	}
+	else {
 		haveError = true;
 		stop();
 	}

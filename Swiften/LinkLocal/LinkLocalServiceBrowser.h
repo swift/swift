@@ -45,6 +45,7 @@ namespace Swift {
 
 		private:
 			boost::shared_ptr<DNSSDQuerier> querier;
+			boost::optional<DNSSDServiceID> selfService;
 			boost::shared_ptr<DNSSDBrowseQuery> browseQuery;
 			boost::shared_ptr<DNSSDRegisterQuery> registerQuery;
 			typedef std::map<DNSSDServiceID, boost::shared_ptr<DNSSDResolveServiceQuery> > ResolveQueryMap;

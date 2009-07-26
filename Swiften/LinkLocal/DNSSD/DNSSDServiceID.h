@@ -9,31 +9,31 @@ namespace Swift {
 
 			DNSSDServiceID(
 				const String& name, 
-				const String& type, 
-				const String& domain = PresenceServiceType, 
+				const String& domain, 
+				const String& type = PresenceServiceType, 
 				int networkInterface = 0) : 
 					name(name), 
-					type(type), 
 					domain(domain), 
+					type(type), 
 					networkInterface(networkInterface) {
 			}
 
 			bool operator==(const DNSSDServiceID& o) const {
-				return name == o.name && type == o.type && domain == o.domain && (networkInterface != 0 && o.networkInterface != 0 ? networkInterface == o.networkInterface : true);
+				return name == o.name && domain == o.domain && type == o.type && (networkInterface != 0 && o.networkInterface != 0 ? networkInterface == o.networkInterface : true);
 			}
 
 			bool operator<(const DNSSDServiceID& o) const {
 				if (o.name == name) {
-					if (o.type == type) {
-						if (o.domain == domain) {
+					if (o.domain == domain) {
+						if (o.type == type) {
 							return networkInterface < o.networkInterface;
 						}
 						else {
-							return domain < o.domain;
+							return type < o.type;
 						}
 					}
 					else {
-						return type < o.type;
+						return domain < o.domain;
 					}
 				}
 				else {
@@ -45,12 +45,12 @@ namespace Swift {
 				return name;
 			}
 
-			const String& getType() const {
-				return type;
-			}
-
 			const String& getDomain() const {
 				return domain;
+			}
+
+			const String& getType() const {
+				return type;
 			}
 
 			int getNetworkInterfaceID() const {
@@ -59,8 +59,8 @@ namespace Swift {
 
 		private:
 			String name;
-			String type;
 			String domain;
+			String type;
 			int networkInterface;
 	};
 }

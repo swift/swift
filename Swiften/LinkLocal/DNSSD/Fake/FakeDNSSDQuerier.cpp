@@ -10,7 +10,7 @@
 
 namespace Swift {
 
-FakeDNSSDQuerier::FakeDNSSDQuerier() {
+FakeDNSSDQuerier::FakeDNSSDQuerier(const String& domain) : domain(domain) {
 }
 
 boost::shared_ptr<DNSSDBrowseQuery> FakeDNSSDQuerier::createBrowseQuery() {
@@ -42,6 +42,10 @@ void FakeDNSSDQuerier::addRunningQuery(boost::shared_ptr<FakeDNSSDQuery> query) 
 				MainEventLoop::postEvent(boost::bind(boost::ref(resolveQuery->onServiceResolved), i->second), shared_from_this());
 			}
 		}
+	}
+	else if (boost::shared_ptr<FakeDNSSDRegisterQuery> registerQuery = boost::dynamic_pointer_cast<FakeDNSSDRegisterQuery>(query)) {
+		DNSSDServiceID service(registerQuery->name, domain);
+		MainEventLoop::postEvent(boost::bind(boost::ref(registerQuery->onRegisterFinished), service), shared_from_this());
 	}
 }
 
@@ -75,6 +79,15 @@ void FakeDNSSDQuerier::setServiceInfo(const DNSSDServiceID& id, const DNSSDResol
 			MainEventLoop::postEvent(boost::bind(boost::ref(query->onServiceResolved), info), shared_from_this());
 		}
 	}
+}
+
+bool FakeDNSSDQuerier::isServiceRegistered(const String& name, int port, const ByteArray& info) {
+	foreach(const boost::shared_ptr<FakeDNSSDRegisterQuery>& query, getQueries<FakeDNSSDRegisterQuery>()) {
+		if (query->name == name && query->port == port && query->info == info) {
+			return true;
+		}
+	}
+	return false;
 }
 
 void FakeDNSSDQuerier::setBrowseError() {
