@@ -10,9 +10,6 @@ QtTreeWidget::QtTreeWidget(QWidget* parent) : QTreeView(parent) {
 	model_ = new RosterModel();
 	model_->setRoot(treeRoot_);
     setModel(model_);
-	//FIXME: just a dummy title.
-    setWindowTitle("A roster");
-    //show();
 	setHeaderHidden(true);
 #ifdef SWIFT_PLATFORM_MACOSX
 	setAlternatingRowColors(true);
