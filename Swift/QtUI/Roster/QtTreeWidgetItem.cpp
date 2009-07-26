@@ -10,7 +10,7 @@ QtTreeWidgetItem::QtTreeWidgetItem(QtTreeWidgetItem* parentItem) : QObject() {
 }
 
 void QtTreeWidgetItem::setText(const String& text) {
-	setName(P2QSTRING(text));
+	displayName_ = P2QSTRING(text);
 }
 
 void QtTreeWidgetItem::setTextColor(unsigned long color) {
@@ -68,7 +68,7 @@ void QtTreeWidgetItem::addChild(QtTreeWidgetItem* child) {
 }
 
 int QtTreeWidgetItem::rowCount() {
-	qDebug() << "Returning size of " << children_.size() << " for item " << name_;
+	qDebug() << "Returning size of " << children_.size() << " for item " << displayName_;
 	return children_.size();
 }
 
@@ -81,7 +81,7 @@ int QtTreeWidgetItem::row() {
 }
 
 QtTreeWidgetItem* QtTreeWidgetItem::getItem(int row) {
-	qDebug() << "Returning row " << row << " from item " << name_;
+	qDebug() << "Returning row " << row << " from item " << displayName_;
 	return children_[row];
 }
 
@@ -89,14 +89,7 @@ QVariant QtTreeWidgetItem::data(int role) {
 	if (role != Qt::DisplayRole) {
 		return QVariant();
 	}
-	qDebug() << "Returning name " << name_ << " for role " << role;
-	return name_;
+	qDebug() << "Returning name " << displayName_ << " for role " << role;
+	return displayName_;
 }
-
-void QtTreeWidgetItem::setName(QString name) {
-	name_ = name;
-	qDebug() << "Name changed to " << name;
-	changed();
-}
-
 }

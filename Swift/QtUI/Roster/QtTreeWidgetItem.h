@@ -26,7 +26,6 @@ class QtTreeWidgetItem : public QObject, public TreeWidgetItem {
 			int row();
 			QtTreeWidgetItem* getItem(int row);
 			QVariant data(int role);
-			void setName(QString name);
 			QtTreeWidgetItem(QtTreeWidgetItem* parentItem);
 			void setText(const String& text);
 			void setTextColor(unsigned long color);
@@ -43,7 +42,6 @@ class QtTreeWidgetItem : public QObject, public TreeWidgetItem {
 		private:
 			QList<QtTreeWidgetItem*> children_;
 			QtTreeWidgetItem* parent_;
-			QString name_;
 			QString displayName_;
 };
 
