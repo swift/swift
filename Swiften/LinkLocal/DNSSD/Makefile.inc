@@ -11,3 +11,5 @@ include Swiften/LinkLocal/DNSSD/Bonjour/Makefile.inc
 endif
 ifeq ($(HAVE_AVAHI),yes)
 endif
+
+include Swiften/LinkLocal/DNSSD/Fake/Makefile.inc

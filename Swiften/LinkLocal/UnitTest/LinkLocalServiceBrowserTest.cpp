@@ -5,20 +5,26 @@
 
 #include "Swiften/LinkLocal/LinkLocalServiceBrowser.h"
 #include "Swiften/LinkLocal/LinkLocalService.h"
-#include "Swiften/LinkLocal/UnitTest/MockDNSSDService.h"
-#include "Swiften/LinkLocal/DNSSDService.h"
+#include "Swiften/LinkLocal/DNSSD/DNSSDServiceID.h"
+#include "Swiften/LinkLocal/DNSSD/DNSSDResolveServiceQuery.h"
+#include "Swiften/LinkLocal/DNSSD/Fake/FakeDNSSDQuerier.h"
 #include "Swiften/EventLoop/DummyEventLoop.h"
-
-// Test canCreate() == false
 
 using namespace Swift;
 
 class LinkLocalServiceBrowserTest : public CppUnit::TestFixture {
 		CPPUNIT_TEST_SUITE(LinkLocalServiceBrowserTest);
+		CPPUNIT_TEST(testConstructor);
+		CPPUNIT_TEST(testStart);
 		CPPUNIT_TEST(testServiceAdded);
 		CPPUNIT_TEST(testServiceAdded_NoServiceInfo);
 		CPPUNIT_TEST(testServiceChanged);
 		CPPUNIT_TEST(testServiceRemoved);
+		CPPUNIT_TEST(testError_BrowseErrorAfterStart);
+		CPPUNIT_TEST(testError_BrowseErrorAfterResolve);
+		CPPUNIT_TEST(testRegisterService);
+		CPPUNIT_TEST(testRegisterService_Error);
+		CPPUNIT_TEST(testRegisterService_Reregister);
 		CPPUNIT_TEST_SUITE_END();
 
 	public:
@@ -26,10 +32,10 @@ class LinkLocalServiceBrowserTest : public CppUnit::TestFixture {
 
 		void setUp() {
 			eventLoop = new DummyEventLoop();
-			dnsSDServiceFactory = new MockDNSSDServiceFactory();
-			testServiceID = new LinkLocalServiceID("foo", "bar.local");
-			testServiceInfo = new DNSSDService::ResolveResult("xmpp.bar.local", 1234, LinkLocalServiceInfo());
-			testServiceInfo2 = new DNSSDService::ResolveResult("xmpp.foo.local", 2345, LinkLocalServiceInfo());
+			querier = boost::shared_ptr<FakeDNSSDQuerier>(new FakeDNSSDQuerier());
+			testServiceID = new DNSSDServiceID("foo", "bar.local");
+			testServiceInfo = new DNSSDResolveServiceQuery::Result("_presence._tcp.bar.local", "xmpp.bar.local", 1234, LinkLocalServiceInfo());
+			testServiceInfo2 = new DNSSDResolveServiceQuery::Result("_presence.tcp.bar.local", "xmpp.foo.local", 2345, LinkLocalServiceInfo());
 		}
 
 		void tearDown() {
@@ -40,15 +46,33 @@ class LinkLocalServiceBrowserTest : public CppUnit::TestFixture {
 			delete testServiceInfo2;
 			delete testServiceInfo;
 			delete testServiceID;
-      delete dnsSDServiceFactory;
 			delete eventLoop;
+		}
+
+		void testConstructor() {
+			boost::shared_ptr<LinkLocalServiceBrowser> testling = createTestling();
+
+			CPPUNIT_ASSERT(!testling->isRunning());
+			CPPUNIT_ASSERT(!testling->hasError());
+		}
+
+		void testStart() {
+			boost::shared_ptr<LinkLocalServiceBrowser> testling = createTestling();
+			testling->start();
+
+			CPPUNIT_ASSERT(testling->isRunning());
+			CPPUNIT_ASSERT(!testling->hasError());
+
+			testling->stop();
 		}
 
 		void testServiceAdded() {
 			boost::shared_ptr<LinkLocalServiceBrowser> testling = createTestling();
+			testling->start();
+			eventLoop->processEvents();
 
-			dnsSDService()->setServiceInfo(*testServiceID,*testServiceInfo);
-			dnsSDService()->addService(*testServiceID);
+			querier->setServiceInfo(*testServiceID,*testServiceInfo);
+			querier->addService(*testServiceID);
 			eventLoop->processEvents();
 
 			CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(addedServices.size()));
@@ -60,26 +84,33 @@ class LinkLocalServiceBrowserTest : public CppUnit::TestFixture {
 			CPPUNIT_ASSERT(*testServiceID == services[0].getID());
 			CPPUNIT_ASSERT(testServiceInfo->port == services[0].getPort());
 			CPPUNIT_ASSERT(testServiceInfo->host == services[0].getHostname());
+
+			testling->stop();
 		}
 
 		void testServiceAdded_NoServiceInfo() {
 			boost::shared_ptr<LinkLocalServiceBrowser> testling = createTestling();
+			testling->start();
+			eventLoop->processEvents();
 
-			dnsSDService()->addService(*testServiceID);
+			querier->addService(*testServiceID);
 			eventLoop->processEvents();
 
 			CPPUNIT_ASSERT_EQUAL(0, static_cast<int>(addedServices.size()));
 			std::vector<LinkLocalService> services = testling->getServices();
 			CPPUNIT_ASSERT_EQUAL(0, static_cast<int>(services.size()));
+
+			testling->stop();
 		}
 
 		void testServiceChanged() {
 			boost::shared_ptr<LinkLocalServiceBrowser> testling = createTestling();
-			dnsSDService()->setServiceInfo(*testServiceID,*testServiceInfo);
-			dnsSDService()->addService(*testServiceID);
+			testling->start();
+			querier->setServiceInfo(*testServiceID,*testServiceInfo);
+			querier->addService(*testServiceID);
 			eventLoop->processEvents();
 
-			dnsSDService()->setServiceInfo(*testServiceID,*testServiceInfo2);
+			querier->setServiceInfo(*testServiceID,*testServiceInfo2);
 			eventLoop->processEvents();
 
 			CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(addedServices.size()));
@@ -91,31 +122,93 @@ class LinkLocalServiceBrowserTest : public CppUnit::TestFixture {
 			CPPUNIT_ASSERT(*testServiceID == services[0].getID());
 			CPPUNIT_ASSERT(testServiceInfo2->port == services[0].getPort());
 			CPPUNIT_ASSERT(testServiceInfo2->host == services[0].getHostname());
+
+			testling->stop();
 		}
 
 		void testServiceRemoved() {
 			boost::shared_ptr<LinkLocalServiceBrowser> testling = createTestling();
-			dnsSDService()->setServiceInfo(*testServiceID,*testServiceInfo);
-			dnsSDService()->addService(*testServiceID);
+			testling->start();
+			querier->setServiceInfo(*testServiceID,*testServiceInfo);
+			querier->addService(*testServiceID);
 			eventLoop->processEvents();
 
-			dnsSDService()->removeService(*testServiceID);
+			querier->removeService(*testServiceID);
 			eventLoop->processEvents();
-			dnsSDService()->setServiceInfo(*testServiceID,*testServiceInfo2);
+			querier->setServiceInfo(*testServiceID,*testServiceInfo2);
 			eventLoop->processEvents();
 
 			CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(addedServices.size()));
 			CPPUNIT_ASSERT_EQUAL(0, static_cast<int>(changedServices.size()));
 			CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(removedServices.size()));
 			CPPUNIT_ASSERT(removedServices[0] == *testServiceID);
-			std::vector<LinkLocalService> services = testling->getServices();
-			CPPUNIT_ASSERT_EQUAL(0, static_cast<int>(services.size()));
+			CPPUNIT_ASSERT_EQUAL(0, static_cast<int>(testling->getServices().size()));
+
+			testling->stop();
+		}
+
+		void testError_BrowseErrorAfterStart() {
+			boost::shared_ptr<LinkLocalServiceBrowser> testling = createTestling();
+			testling->start();
+
+			querier->setBrowseError();
+			eventLoop->processEvents();
+
+			CPPUNIT_ASSERT(!testling->isRunning());
+			CPPUNIT_ASSERT(testling->hasError());
+		}
+
+		void testError_BrowseErrorAfterResolve() {
+			boost::shared_ptr<LinkLocalServiceBrowser> testling = createTestling();
+			testling->start();
+			querier->setServiceInfo(*testServiceID,*testServiceInfo);
+			querier->addService(*testServiceID);
+			eventLoop->processEvents();
+
+			querier->setBrowseError();
+			eventLoop->processEvents();
+			querier->setServiceInfo(*testServiceID,*testServiceInfo2);
+			eventLoop->processEvents();
+
+			CPPUNIT_ASSERT(!testling->isRunning());
+			CPPUNIT_ASSERT(testling->hasError());
+			CPPUNIT_ASSERT_EQUAL(0, static_cast<int>(testling->getServices().size()));
+			CPPUNIT_ASSERT_EQUAL(0, static_cast<int>(changedServices.size()));
+		}
+
+		void testRegisterService() {
+			boost::shared_ptr<LinkLocalServiceBrowser> testling = createTestling();
+			testling->start();
+			eventLoop->processEvents();
+
+			testling->stop();
+		}
+
+		void testRegisterService_Error() {
+			boost::shared_ptr<LinkLocalServiceBrowser> testling = createTestling();
+			testling->start();
+			testling->registerService("", 1234);
+			eventLoop->processEvents();
+
+			querier->setRegisterError();
+			eventLoop->processEvents();
+
+			CPPUNIT_ASSERT(!testling->isRunning());
+			CPPUNIT_ASSERT(testling->hasError());
+		}
+
+		void testRegisterService_Reregister() {
+			boost::shared_ptr<LinkLocalServiceBrowser> testling = createTestling();
+			testling->start();
+			eventLoop->processEvents();
+
+			testling->stop();
 		}
 
 	private:
 		boost::shared_ptr<LinkLocalServiceBrowser> createTestling() {
 			boost::shared_ptr<LinkLocalServiceBrowser> testling(
-					new LinkLocalServiceBrowser(dnsSDServiceFactory));
+					new LinkLocalServiceBrowser(querier));
 			testling->onServiceAdded.connect(boost::bind(
 					&LinkLocalServiceBrowserTest::handleServiceAdded, this, _1));
 			testling->onServiceChanged.connect(boost::bind(
@@ -125,32 +218,27 @@ class LinkLocalServiceBrowserTest : public CppUnit::TestFixture {
 			return testling;
 		}
 
-		void handleServiceAdded(const LinkLocalServiceID& service) {
+		void handleServiceAdded(const DNSSDServiceID& service) {
 			addedServices.push_back(service);
 		}
 
-		void handleServiceRemoved(const LinkLocalServiceID& service) {
+		void handleServiceRemoved(const DNSSDServiceID& service) {
 			removedServices.push_back(service);
 		}
 
-		void handleServiceChanged(const LinkLocalServiceID& service) {
+		void handleServiceChanged(const DNSSDServiceID& service) {
 			changedServices.push_back(service);
 		}
 
-    boost::shared_ptr<MockDNSSDService> dnsSDService() const {
-      CPPUNIT_ASSERT(dnsSDServiceFactory->services.size() > 0);
-      return dnsSDServiceFactory->services[0];
-    }
-
 	private:
 		DummyEventLoop* eventLoop;
-		MockDNSSDServiceFactory* dnsSDServiceFactory;
-		std::vector<LinkLocalServiceID> addedServices;
-		std::vector<LinkLocalServiceID> changedServices;
-		std::vector<LinkLocalServiceID> removedServices;
-		LinkLocalServiceID* testServiceID;
-		DNSSDService::ResolveResult* testServiceInfo;
-		DNSSDService::ResolveResult* testServiceInfo2;
+		boost::shared_ptr<FakeDNSSDQuerier> querier;
+		std::vector<DNSSDServiceID> addedServices;
+		std::vector<DNSSDServiceID> changedServices;
+		std::vector<DNSSDServiceID> removedServices;
+		DNSSDServiceID* testServiceID;
+		DNSSDResolveServiceQuery::Result* testServiceInfo;
+		DNSSDResolveServiceQuery::Result* testServiceInfo2;
 };
 
 CPPUNIT_TEST_SUITE_REGISTRATION(LinkLocalServiceBrowserTest);

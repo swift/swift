@@ -7,17 +7,66 @@
 
 namespace Swift {
 
-LinkLocalServiceBrowser::LinkLocalServiceBrowser(boost::shared_ptr<DNSSDQuerier> querier) : querier(querier) {
+LinkLocalServiceBrowser::LinkLocalServiceBrowser(boost::shared_ptr<DNSSDQuerier> querier) : querier(querier), haveError(false) {
+}
+
+LinkLocalServiceBrowser::~LinkLocalServiceBrowser() {
+	assert(!isRunning());
+}
+
+
+void LinkLocalServiceBrowser::start() {
+	assert(!isRunning());
+	haveError = false;
 	browseQuery = querier->createBrowseQuery();
 	browseQuery->onServiceAdded.connect(
 			boost::bind(&LinkLocalServiceBrowser::handleServiceAdded, this, _1));
 	browseQuery->onServiceRemoved.connect(
 			boost::bind(&LinkLocalServiceBrowser::handleServiceRemoved, this, _1));
+	browseQuery->onError.connect(
+			boost::bind(&LinkLocalServiceBrowser::handleBrowseError, this));
 	browseQuery->startBrowsing();
 }
 
-LinkLocalServiceBrowser::~LinkLocalServiceBrowser() {
+void LinkLocalServiceBrowser::stop() {
+	assert(isRunning());
+	if (isRegistered()) {
+		unregisterService();
+	}
+	for (ResolveQueryMap::const_iterator i = resolveQueries.begin(); i != resolveQueries.end(); ++i) {
+		i->second->stop();
+	}
+	resolveQueries.clear();
+	services.clear();
 	browseQuery->stopBrowsing();
+	browseQuery.reset();
+	onStopped(haveError);
+}
+
+bool LinkLocalServiceBrowser::isRunning() const {
+	return browseQuery;
+}
+
+bool LinkLocalServiceBrowser::hasError() const {
+	return haveError;
+}
+
+bool LinkLocalServiceBrowser::isRegistered() const {
+	return registerQuery;
+}
+
+void LinkLocalServiceBrowser::registerService(const String& name, int port, const LinkLocalServiceInfo& info) {
+	assert(!registerQuery);
+	registerQuery = querier->createRegisterQuery(name, port, info);
+	registerQuery->onRegisterFinished.connect(
+		boost::bind(&LinkLocalServiceBrowser::handleRegisterFinished, this, _1));
+	registerQuery->registerService();
+}
+
+void LinkLocalServiceBrowser::unregisterService() {
+	assert(registerQuery);
+	registerQuery->unregisterService();
+	registerQuery.reset();
 }
 
 std::vector<LinkLocalService> LinkLocalServiceBrowser::getServices() const {
@@ -44,6 +93,7 @@ void LinkLocalServiceBrowser::handleServiceRemoved(const DNSSDServiceID& service
 	assert(i != resolveQueries.end());
 	i->second->stop();
 	resolveQueries.erase(i);
+	services.erase(service);
 	onServiceRemoved(service);
 }
 
@@ -58,6 +108,18 @@ void LinkLocalServiceBrowser::handleServiceResolved(const DNSSDServiceID& servic
 			onServiceChanged(service);
 		}
 	}
+}
+
+void LinkLocalServiceBrowser::handleRegisterFinished(const boost::optional<DNSSDServiceID>& result) {
+	if (!result) {
+		haveError = true;
+		stop();
+	}
+}
+
+void LinkLocalServiceBrowser::handleBrowseError() {
+	haveError = true;
+	stop();
 }
 
 }

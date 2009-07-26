@@ -13,6 +13,7 @@ namespace Swift {
 			virtual ~DNSSDRegisterQuery();
 
 			virtual void registerService() = 0;
+			virtual void unregisterService() = 0;
 			virtual void updateServiceInfo(const LinkLocalServiceInfo& info) = 0;
 
 			boost::signal<void (boost::optional<DNSSDServiceID>)> onRegisterFinished;

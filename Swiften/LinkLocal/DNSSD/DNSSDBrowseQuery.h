@@ -14,5 +14,6 @@ namespace Swift {
 
 			boost::signal<void (const DNSSDServiceID&)> onServiceAdded;
 			boost::signal<void (const DNSSDServiceID&)> onServiceRemoved;
+			boost::signal<void ()> onError;
 	};
 }

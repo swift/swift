@@ -14,14 +14,17 @@ namespace Swift {
 						&sdRef, 0, 0, "_presence._tcp", 0, 
 						&BonjourBrowseQuery::handleServiceDiscoveredStatic, this);
 				if (result != kDNSServiceErr_NoError) {
-					std::cout << "Error" << std::endl;
-					// TODO
+					sdRef = NULL;
 				}
 			}
 
 			void startBrowsing() {
-				assert(sdRef);
-				run();
+				if (!sdRef) {
+					MainEventLoop::postEvent(boost::bind(boost::ref(onError)), shared_from_this());
+				}
+				else {
+					run();
+				}
 			}
 
 			void stopBrowsing() {
@@ -35,7 +38,7 @@ namespace Swift {
 
 			void handleServiceDiscovered(DNSServiceFlags flags, uint32_t interfaceIndex, DNSServiceErrorType errorCode, const char *name, const char *type, const char *domain) {
 				if (errorCode != kDNSServiceErr_NoError) {
-					return;
+					MainEventLoop::postEvent(boost::bind(boost::ref(onError)), shared_from_this());
 				}
 				else {
 					DNSSDServiceID service(name, type, domain, interfaceIndex);

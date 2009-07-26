@@ -22,7 +22,7 @@ BonjourQuerier::BonjourQuerier() : stopRequested(false), thread(0) {
 }
 
 BonjourQuerier::~BonjourQuerier() {
-	stop();
+	assert(!thread);
 }
 
 boost::shared_ptr<DNSSDBrowseQuery> BonjourQuerier::createBrowseQuery() {
@@ -64,18 +64,19 @@ void BonjourQuerier::interruptSelect() {
 }
 
 void BonjourQuerier::start() {
-	stop();
+	assert(!thread);
 	thread = new boost::thread(boost::bind(&BonjourQuerier::run, shared_from_this()));
 }
 
 void BonjourQuerier::stop() {
 	if (thread) {
 		stopRequested = true;
-		runningQueries.clear(); // TODO: Is this the right thing to do?
+		assert(runningQueries.empty());
 		runningQueriesAvailableEvent.notify_one();
 		interruptSelect();
 		thread->join();
 		delete thread;
+		thread = NULL;
 		stopRequested = false;
 	}
 }

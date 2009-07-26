@@ -19,13 +19,18 @@ namespace Swift {
 						hostname.getUTF8Data(), 
 						&BonjourResolveHostnameQuery::handleHostnameResolvedStatic, this);
 				if (result != kDNSServiceErr_NoError) {
-					MainEventLoop::postEvent(boost::bind(boost::ref(onHostnameResolved), boost::optional<HostAddress>()), shared_from_this());
+					sdRef = NULL;
 				}
 			}
 
 			//void DNSSDResolveHostnameQuery::run() {
 			void run() {
-				BonjourQuery::run();
+				if (sdRef) {
+					BonjourQuery::run();
+				}
+				else {
+					MainEventLoop::postEvent(boost::bind(boost::ref(onHostnameResolved), boost::optional<HostAddress>()), shared_from_this());
+				}
 			}
 
 		private:

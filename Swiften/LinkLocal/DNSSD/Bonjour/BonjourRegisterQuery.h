@@ -18,13 +18,21 @@ namespace Swift {
 						txtRecord.getSize(), txtRecord.getData(), 
 						&BonjourRegisterQuery::handleServiceRegisteredStatic, this);
 				if (result != kDNSServiceErr_NoError) {
-					// TODO
-					std::cerr << "Error creating service registration" << std::endl;
+					sdRef = NULL;
 				}
 			}
 
 			void registerService() {
-				run();
+				if (sdRef) {
+					run();
+				}
+				else {
+					MainEventLoop::postEvent(boost::bind(boost::ref(onRegisterFinished), boost::optional<DNSSDServiceID>()), shared_from_this());
+				}
+			}
+
+			void unregisterService() {
+				stop();
 			}
 
 			void updateServiceInfo(const LinkLocalServiceInfo& info) {

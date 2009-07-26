@@ -18,12 +18,17 @@ namespace Swift {
 						service.getDomain().getUTF8Data(), 
 						&BonjourResolveServiceQuery::handleServiceResolvedStatic, this);
 				if (result != kDNSServiceErr_NoError) {
-					MainEventLoop::postEvent(boost::bind(boost::ref(onServiceResolved), boost::optional<Result>()), shared_from_this());
+					sdRef = NULL;
 				}
 			}
 
 			void start() {
-				run();
+				if (sdRef) {
+					run();
+				}
+				else {
+					MainEventLoop::postEvent(boost::bind(boost::ref(onServiceResolved), boost::optional<Result>()), shared_from_this());
+				}
 			}
 
 			void stop() {
