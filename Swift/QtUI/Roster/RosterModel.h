@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Swift/QtUI/Roster/RosterItem.h"
+#include "Swift/QtUI/Roster/QtTreeWidgetItem.h"
 
 #include <QAbstractItemModel>
 #include <QList>
@@ -11,7 +11,7 @@ Q_OBJECT
 public:
 	RosterModel();
 	~RosterModel();
-	void setRoot(RosterItem* tree);
+	void setRoot(QtTreeWidgetItem* tree);
 	int columnCount(const QModelIndex& parent = QModelIndex()) const;
 	QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const;
 	QModelIndex index(int row, int column, const QModelIndex & parent = QModelIndex()) const;
@@ -20,7 +20,7 @@ public:
 private slots:
 	void handleItemChanged();
 private:
-	RosterItem* tree_;
+	QtTreeWidgetItem* tree_;
 };
 
 }

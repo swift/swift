@@ -9,7 +9,7 @@ RosterModel::~RosterModel() {
 	delete tree_;
 }
 
-void RosterModel::setRoot(RosterItem* root) {
+void RosterModel::setRoot(QtTreeWidgetItem* root) {
 	tree_ = root;
 	connect(tree_, SIGNAL(changed()), this, SLOT(handleItemChanged()));
 }
@@ -29,12 +29,12 @@ int RosterModel::columnCount(const QModelIndex& parent) const {
 }
 
 QVariant RosterModel::data(const QModelIndex& index, int role) const {
-	RosterItem* item = index.isValid() ? static_cast<RosterItem*>(index.internalPointer()) : NULL;
+	QtTreeWidgetItem* item = index.isValid() ? static_cast<QtTreeWidgetItem*>(index.internalPointer()) : NULL;
 	return item ? item->data(role) : QVariant();
 }
 
 QModelIndex RosterModel::index(int row, int column, const QModelIndex& parent) const {
-	RosterItem* parentItem = parent.isValid() ? static_cast<RosterItem*>(parent.internalPointer()) : tree_;
+	QtTreeWidgetItem* parentItem = parent.isValid() ? static_cast<QtTreeWidgetItem*>(parent.internalPointer()) : tree_;
 	Q_ASSERT(parentItem);
 	
 	return row < parentItem->rowCount() ? createIndex(row, column, parentItem->getItem(row)) : QModelIndex();
@@ -45,16 +45,16 @@ QModelIndex RosterModel::parent(const QModelIndex& index) const {
 		return QModelIndex();
 	}
 	
-	RosterItem* item = static_cast<RosterItem*>(index.internalPointer());
+	QtTreeWidgetItem* item = static_cast<QtTreeWidgetItem*>(index.internalPointer());
 	Q_ASSERT(item);
 
-	RosterItem* parentItem = item->getParentItem();
+	QtTreeWidgetItem* parentItem = item->getParentItem();
 	return parentItem == tree_ ? QModelIndex() : createIndex(parentItem->row(), 0, parentItem);
 
 }
 
 int RosterModel::rowCount(const QModelIndex& parent) const {
-	RosterItem* item = parent.isValid() ? static_cast<RosterItem*>(parent.internalPointer()) : tree_;
+	QtTreeWidgetItem* item = parent.isValid() ? static_cast<QtTreeWidgetItem*>(parent.internalPointer()) : tree_;
 	Q_ASSERT(item);
 	
 	return item->rowCount();

@@ -8,7 +8,6 @@
 #include "Swiften/Roster/TreeWidget.h"
 #include "Swiften/Roster/TreeWidgetItem.h"
 #include "Swift/QtUI/Roster/QtTreeWidgetItem.h"
-#include "Swift/QtUI/Roster/RosterItem.h"
 
 
 #include "Swift/QtUI/QtSwiftUtil.h"
@@ -16,47 +15,36 @@
 
 namespace Swift {
 class QtTreeWidget;
-class QtTreeWidgetItem : public TreeWidgetItem, public RosterItem {
+class QtTreeWidgetItem : public QObject, public TreeWidgetItem {
+	Q_OBJECT
 	public:
-		QtTreeWidgetItem(RosterItem* parentItem) : RosterItem(parentItem) {
+			~QtTreeWidgetItem();
+			void addChild(QtTreeWidgetItem* child);
+			QtTreeWidgetItem* getParentItem();
+			int rowCount();
+			int rowOf(QtTreeWidgetItem* item);
+			int row();
+			QtTreeWidgetItem* getItem(int row);
+			QVariant data(int role);
+			void setName(QString name);
+			QtTreeWidgetItem(QtTreeWidgetItem* parentItem);
+			void setText(const String& text);
+			void setTextColor(unsigned long color);
+			void setBackgroundColor(unsigned long color);
+			void setExpanded(bool b);
+			void hide();
+			void show();
 
-		}
-
-		void setText(const String& text) {
-			setName(P2QSTRING(text));
-		}
-
-		void setTextColor(unsigned long color) {
-			// QTreeWidgetItem::setTextColor(0, QColor(
-			// 					((color & 0xFF0000)>>16),
-			// 					((color & 0xFF00)>>8), 
-			// 					(color & 0xFF)));
-		}
-
-		void setBackgroundColor(unsigned long color) {
-			// QTreeWidgetItem::setBackgroundColor(0, QColor(
-			// 					((color & 0xFF0000)>>16),
-			// 					((color & 0xFF00)>>8), 
-			// 					(color & 0xFF)));
-		}
-
-		void setExpanded(bool b) {
-			//treeWidget()->setItemExpanded(this, b);
-		}
-
-		void hide() {
-			//setHidden(true);
-		}
-
-		void show() {
-			//setHidden(false);
-		}
+			QWidget* getCollapsedRosterWidget();
+			QWidget* getExpandedRosterWidget();
 		
-		QWidget* getCollapsedRosterWidget();
-		QWidget* getExpandedRosterWidget();
-		
-	private:
-		QString displayName_;
+		signals:
+			void changed();
+		private:
+			QList<QtTreeWidgetItem*> children_;
+			QtTreeWidgetItem* parent_;
+			QString name_;
+			QString displayName_;
 };
 
 }

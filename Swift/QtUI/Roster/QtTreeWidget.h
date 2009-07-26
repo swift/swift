@@ -9,7 +9,6 @@
 #include "Swift/QtUI/Roster/QtTreeWidgetItem.h"
 #include "Swift/QtUI/Roster/QtTreeWidget.h"
 #include "Swift/QtUI/Roster/RosterModel.h"
-#include "Swift/QtUI/Roster/RosterItem.h"
 
 namespace Swift {
 
