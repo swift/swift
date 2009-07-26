@@ -14,17 +14,17 @@ void QtTreeWidgetItem::setText(const String& text) {
 }
 
 void QtTreeWidgetItem::setTextColor(unsigned long color) {
-	// QTreeWidgetItem::setTextColor(0, QColor(
-	// 					((color & 0xFF0000)>>16),
-	// 					((color & 0xFF00)>>8), 
-	// 					(color & 0xFF)));
+	textColor_ = QColor(
+	 					((color & 0xFF0000)>>16),
+	 					((color & 0xFF00)>>8), 
+	 					(color & 0xFF));
 }
 
 void QtTreeWidgetItem::setBackgroundColor(unsigned long color) {
-	// QTreeWidgetItem::setBackgroundColor(0, QColor(
-	// 					((color & 0xFF0000)>>16),
-	// 					((color & 0xFF00)>>8), 
-	// 					(color & 0xFF)));
+	backgroundColor_ = QColor(
+	 					((color & 0xFF0000)>>16),
+	 					((color & 0xFF00)>>8), 
+	 					(color & 0xFF));
 }
 
 void QtTreeWidgetItem::setExpanded(bool b) {

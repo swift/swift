@@ -9,6 +9,7 @@
 #include "Swift/QtUI/Roster/QtTreeWidgetItem.h"
 #include "Swift/QtUI/Roster/QtTreeWidget.h"
 #include "Swift/QtUI/Roster/RosterModel.h"
+#include "Swift/QtUI/Roster/RosterDelegate.h"
 
 namespace Swift {
 
@@ -24,6 +25,7 @@ class QtTreeWidget : public QTreeView, public TreeWidget {
 	private:
 		void drawBranches(QPainter*, const QRect&, const QModelIndex&) const;
 		RosterModel* model_;
+		RosterDelegate* delegate_;
 		QtTreeWidgetItem* treeRoot_;
 		
 };

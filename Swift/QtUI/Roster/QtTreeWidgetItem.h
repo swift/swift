@@ -43,6 +43,8 @@ class QtTreeWidgetItem : public QObject, public TreeWidgetItem {
 			QList<QtTreeWidgetItem*> children_;
 			QtTreeWidgetItem* parent_;
 			QString displayName_;
+			QColor textColor_;
+			QColor backgroundColor_;
 };
 
 }

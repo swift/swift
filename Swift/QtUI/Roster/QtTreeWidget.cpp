@@ -10,6 +10,8 @@ QtTreeWidget::QtTreeWidget(QWidget* parent) : QTreeView(parent) {
 	model_ = new RosterModel();
 	model_->setRoot(treeRoot_);
     setModel(model_);
+	delegate_ = new RosterDelegate();
+	setItemDelegate(delegate_);
 	setHeaderHidden(true);
 #ifdef SWIFT_PLATFORM_MACOSX
 	setAlternatingRowColors(true);
@@ -22,6 +24,7 @@ QtTreeWidget::QtTreeWidget(QWidget* parent) : QTreeView(parent) {
 
 QtTreeWidget::~QtTreeWidget() {
 	delete model_;
+	delete delegate_;
 }
 
 QtTreeWidgetItem* QtTreeWidget::getRoot() {
