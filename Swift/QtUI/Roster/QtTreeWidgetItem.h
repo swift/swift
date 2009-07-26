@@ -23,8 +23,7 @@ class QtTreeWidgetItem : public TreeWidgetItem, public RosterItem {
 		}
 
 		void setText(const String& text) {
-			displayName_ = P2QSTRING(text);
-			// QTreeWidgetItem::setText(0, P2QSTRING(text));
+			setName(P2QSTRING(text));
 		}
 
 		void setTextColor(unsigned long color) {

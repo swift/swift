@@ -13,17 +13,19 @@
 
 namespace Swift {
 
-class QtTreeWidget : public QTreeView, public TreeWidget, public RosterItem {
+class QtTreeWidget : public QTreeView, public TreeWidget {
 	Q_OBJECT
 	public:
 		QtTreeWidget(QWidget* parent = 0);
+		~QtTreeWidget();
 		void show();
+		QtTreeWidgetItem* getRoot();
 	//private slots:
 	//	void handleItemActivated(QTreeWidgetItem*, int);
-
 	private:
 		void drawBranches(QPainter*, const QRect&, const QModelIndex&) const;
 		RosterModel* model_;
+		QtTreeWidgetItem* treeRoot_;
 		
 };
 

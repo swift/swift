@@ -2,12 +2,25 @@
 
 namespace Swift {
 
-RosterModel::RosterModel(RosterItem* tree) {
-	tree_ = tree;
+RosterModel::RosterModel() {
 }
 
 RosterModel::~RosterModel() {
-	
+	delete tree_;
+}
+
+void RosterModel::setRoot(RosterItem* root) {
+	tree_ = root;
+	connect(tree_, SIGNAL(changed()), this, SLOT(handleItemChanged()));
+}
+							  
+
+void RosterModel::handleItemChanged() {
+	//FIXME: This is just a lazy hack to cause the view to refresh until it works.
+	// Then I'll replace it with the proper implementation.
+	printf("Changed\n");
+	reset();
+	emit layoutChanged();
 }
 
 int RosterModel::columnCount(const QModelIndex& parent) const {
@@ -16,10 +29,8 @@ int RosterModel::columnCount(const QModelIndex& parent) const {
 }
 
 QVariant RosterModel::data(const QModelIndex& index, int role) const {
-	if (!index.isValid()) {
-		return QVariant();
-	}
-	return QVariant("bob");
+	RosterItem* item = index.isValid() ? static_cast<RosterItem*>(index.internalPointer()) : NULL;
+	return item ? item->data(role) : QVariant();
 }
 
 QModelIndex RosterModel::index(int row, int column, const QModelIndex& parent) const {
@@ -38,16 +49,12 @@ QModelIndex RosterModel::parent(const QModelIndex& index) const {
 	Q_ASSERT(item);
 
 	RosterItem* parentItem = item->getParentItem();
-	return parentItem == tree_ ? QModelIndex() : createIndex(parentItem->getParentItem()->rowOf(parentItem), 0, parentItem);
+	return parentItem == tree_ ? QModelIndex() : createIndex(parentItem->row(), 0, parentItem);
 
 }
 
 int RosterModel::rowCount(const QModelIndex& parent) const {
-	if (!parent.isValid()) {
-		return 0;
-	}
-	
-	RosterItem* item = static_cast<RosterItem*>(parent.internalPointer());
+	RosterItem* item = parent.isValid() ? static_cast<RosterItem*>(parent.internalPointer()) : tree_;
 	Q_ASSERT(item);
 	
 	return item->rowCount();

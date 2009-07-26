@@ -27,8 +27,9 @@ class QtTreeWidgetFactory : public TreeWidgetFactory {
 		}
 
 		TreeWidgetItem* createTreeWidgetItem(TreeWidget* item) {
-			QtTreeWidget* qtItem = dynamic_cast<QtTreeWidget*>(item);
-			assert(qtItem);
+			QtTreeWidget* treeItem = dynamic_cast<QtTreeWidget*>(item);
+			assert(treeItem);
+			QtTreeWidgetItem* qtItem = treeItem->getRoot();
 			QtTreeWidgetItem* newItem = new QtTreeWidgetItem(qtItem);
 			//qtItem->setItemWidget(newItem, 0, newItem->getCollapsedRosterWidget());
 			qtItem->addChild(newItem);

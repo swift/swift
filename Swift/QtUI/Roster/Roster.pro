@@ -10,3 +10,7 @@ exists(../config.pri) {
 	LIBS += ../../Controllers/Controllers.a ../../../Swiften/Swiften.a
 	include(../config.pri)
 }
+
+mac {
+	DEFINES += SWIFT_PLATFORM_MACOSX
+}

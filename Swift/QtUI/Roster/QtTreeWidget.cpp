@@ -5,10 +5,13 @@
 
 namespace Swift {
 
-QtTreeWidget::QtTreeWidget(QWidget* parent) : QTreeView(parent), RosterItem(NULL) {
-	model_ = new RosterModel(this);
+QtTreeWidget::QtTreeWidget(QWidget* parent) : QTreeView(parent) {
+	treeRoot_ = new QtTreeWidgetItem(NULL);
+	model_ = new RosterModel();
+	model_->setRoot(treeRoot_);
     setModel(model_);
-    //setWindowTitle("A roster");
+	//FIXME: just a dummy title.
+    setWindowTitle("A roster");
     //show();
 	setHeaderHidden(true);
 #ifdef SWIFT_PLATFORM_MACOSX
@@ -17,7 +20,15 @@ QtTreeWidget::QtTreeWidget(QWidget* parent) : QTreeView(parent), RosterItem(NULL
 	setAnimated(true);
 	setIndentation(0);
 	setRootIsDecorated(true);
-	connect(this, SIGNAL(itemActivated(QTreeWidgetItem*, int)), this, SLOT(handleItemActivated(QTreeWidgetItem*, int)));
+	//connect(this, SIGNAL(itemActivated(QTreeWidgetItem*, int)), this, SLOT(handleItemActivated(QTreeWidgetItem*, int)));
+}
+
+QtTreeWidget::~QtTreeWidget() {
+	delete model_;
+}
+
+QtTreeWidgetItem* QtTreeWidget::getRoot() {
+	return treeRoot_;
 }
 
 // void QtTreeWidget::handleItemActivated(QTreeWidgetItem* item, int column) {
