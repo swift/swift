@@ -14,3 +14,5 @@ exists(../config.pri) {
 mac {
 	DEFINES += SWIFT_PLATFORM_MACOSX
 }
+
+RESOURCES += ../Swift.qrc

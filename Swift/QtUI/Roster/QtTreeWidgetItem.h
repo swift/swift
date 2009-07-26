@@ -14,6 +14,11 @@
 
 
 namespace Swift {
+	enum RosterRoles {
+		StatusTextRole = Qt::UserRole,
+		AvatarRole = Qt::UserRole + 1
+	};
+	
 class QtTreeWidget;
 class QtTreeWidgetItem : public QObject, public TreeWidgetItem {
 	Q_OBJECT
@@ -28,11 +33,13 @@ class QtTreeWidgetItem : public QObject, public TreeWidgetItem {
 			QVariant data(int role);
 			QtTreeWidgetItem(QtTreeWidgetItem* parentItem);
 			void setText(const String& text);
+			void setStatusText(const String& text);
 			void setTextColor(unsigned long color);
 			void setBackgroundColor(unsigned long color);
 			void setExpanded(bool b);
 			void hide();
 			void show();
+			bool isContact();
 
 			QWidget* getCollapsedRosterWidget();
 			QWidget* getExpandedRosterWidget();
@@ -43,6 +50,7 @@ class QtTreeWidgetItem : public QObject, public TreeWidgetItem {
 			QList<QtTreeWidgetItem*> children_;
 			QtTreeWidgetItem* parent_;
 			QString displayName_;
+			QString statusText_;
 			QColor textColor_;
 			QColor backgroundColor_;
 };

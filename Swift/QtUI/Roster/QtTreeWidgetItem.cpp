@@ -11,6 +11,11 @@ QtTreeWidgetItem::QtTreeWidgetItem(QtTreeWidgetItem* parentItem) : QObject() {
 
 void QtTreeWidgetItem::setText(const String& text) {
 	displayName_ = P2QSTRING(text);
+	statusText_ = displayName_ + " went away";
+}
+
+void QtTreeWidgetItem::setStatusText(const String& text) {
+	statusText_ = P2QSTRING(text);
 }
 
 void QtTreeWidgetItem::setTextColor(unsigned long color) {
@@ -86,10 +91,15 @@ QtTreeWidgetItem* QtTreeWidgetItem::getItem(int row) {
 }
 
 QVariant QtTreeWidgetItem::data(int role) {
-	if (role != Qt::DisplayRole) {
-		return QVariant();
+ 	switch (role) {
+	 	case Qt::DisplayRole: return displayName_;
+	 	case StatusTextRole: return statusText_;
+	 	default: return QVariant();
 	}
-	qDebug() << "Returning name " << displayName_ << " for role " << role;
-	return displayName_;
 }
+
+bool QtTreeWidgetItem::isContact() {
+	return children_.size() == 0;
+}
+
 }
