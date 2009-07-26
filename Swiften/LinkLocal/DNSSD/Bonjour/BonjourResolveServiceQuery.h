@@ -49,8 +49,7 @@ namespace Swift {
 							boost::bind(
 								boost::ref(onServiceResolved), 
 								Result(String(fullName), String(host), port, 
-									LinkLocalServiceInfo::createFromTXTRecord(
-										ByteArray(reinterpret_cast<const char*>(txtRecord), txtLen)))), 
+									ByteArray(reinterpret_cast<const char*>(txtRecord), txtLen))), 
 							shared_from_this());
 				}
 			}

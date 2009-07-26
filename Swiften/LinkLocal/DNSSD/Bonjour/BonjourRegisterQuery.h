@@ -30,7 +30,7 @@ namespace Swift {
 			}
 
 			void unregisterService() {
-				stop();
+				finish();
 			}
 
 			void updateServiceInfo(const ByteArray& txtRecord) {
