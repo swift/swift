@@ -2,6 +2,6 @@
 
 namespace Swift {
 
-const String DNSSDServiceID::PresenceServiceType = String("_presence._tcp");
+const char* DNSSDServiceID::PresenceServiceType = "_presence._tcp";
 
 }

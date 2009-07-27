@@ -49,6 +49,8 @@ class LinkLocalServiceBrowserTest : public CppUnit::TestFixture {
 			removedServices.clear();
 			changedServices.clear();
 
+			delete aliceServiceID;
+			delete aliceServiceInfo;
 			delete testServiceInfo2;
 			delete testServiceInfo;
 			delete testServiceID;

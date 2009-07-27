@@ -33,7 +33,7 @@ namespace Swift {
 		private:
 			void handleNewClientConnection(boost::shared_ptr<Connection> c);
 			void handleNewLinkLocalConnection(boost::shared_ptr<Connection> connection);
-			void handleServiceRegistered(const LinkLocalServiceID& service);
+			void handleServiceRegistered(const DNSSDServiceID& service);
 			void handleSessionStarted();
 			void handleSessionFinished(boost::shared_ptr<ServerFromClientSession>);
 			void handleLinkLocalSessionFinished(boost::shared_ptr<Session> session);

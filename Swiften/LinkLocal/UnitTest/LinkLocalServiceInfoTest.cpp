@@ -10,6 +10,7 @@ class LinkLocalServiceInfoTest : public CppUnit::TestFixture {
 		CPPUNIT_TEST(testGetTXTRecord);
 		CPPUNIT_TEST(testCreateFromTXTRecord);
 		CPPUNIT_TEST(testCreateFromTXTRecord_InvalidSize);
+		CPPUNIT_TEST(testGetTXTRecordCreateFromTXTRecord_RoundTrip);
 		CPPUNIT_TEST_SUITE_END();
 
 	public:
@@ -36,6 +37,28 @@ class LinkLocalServiceInfoTest : public CppUnit::TestFixture {
 			LinkLocalServiceInfo info = LinkLocalServiceInfo::createFromTXTRecord(ByteArray("\x10last=a"));
 
 			CPPUNIT_ASSERT_EQUAL(String("a"), info.getLastName());
+		}
+
+		void testGetTXTRecordCreateFromTXTRecord_RoundTrip() {
+			LinkLocalServiceInfo info;
+			info.setFirstName("Remko");
+			info.setLastName("Tron\xc3\xe7on");
+			info.setEMail("remko-email@swift.im");
+			info.setJID(JID("remko-jid@swift.im"));
+			info.setMessage("I'm busy");
+			info.setNick("el-tramo");
+			info.setStatus(LinkLocalServiceInfo::DND);
+			info.setPort(1234);
+
+			LinkLocalServiceInfo info2 = LinkLocalServiceInfo::createFromTXTRecord(info.toTXTRecord());
+			CPPUNIT_ASSERT_EQUAL(info.getFirstName(), info2.getFirstName());
+			CPPUNIT_ASSERT_EQUAL(info.getLastName(), info2.getLastName());
+			CPPUNIT_ASSERT_EQUAL(info.getEMail(), info2.getEMail());
+			CPPUNIT_ASSERT_EQUAL(info.getJID(), info2.getJID());
+			CPPUNIT_ASSERT_EQUAL(info.getMessage(), info2.getMessage());
+			CPPUNIT_ASSERT_EQUAL(info.getNick(), info2.getNick());
+			CPPUNIT_ASSERT(info.getStatus() == info2.getStatus());
+			CPPUNIT_ASSERT(info.getPort() == info2.getPort());
 		}
 };
 

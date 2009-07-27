@@ -5,7 +5,7 @@
 namespace Swift {
 	class DNSSDServiceID {
 		public:
-			static const String PresenceServiceType;
+			static const char* PresenceServiceType;
 
 			DNSSDServiceID(
 				const String& name, 

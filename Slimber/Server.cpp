@@ -69,7 +69,7 @@ void Server::handleNewLinkLocalConnection(boost::shared_ptr<Connection> connecti
 	registerLinkLocalSession(session);
 }
 
-void Server::handleServiceRegistered(const LinkLocalServiceID& service) {
+void Server::handleServiceRegistered(const DNSSDServiceID& service) {
 	std::cout << "Service registered " << service.getName() << " " << service.getType() << " " << service.getDomain() << std::endl;
 	selfJID_ = JID(service.getName());
 }
