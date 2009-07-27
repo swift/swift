@@ -1,0 +1,59 @@
+#include "Swiften/LinkLocal/DNSSD/Avahi/AvahiQuerier.h"
+
+#include <iostream>
+
+//#include "Swiften/LinkLocal/DNSSD/Avahi/AvahiBrowseQuery.h"
+//#include "Swiften/LinkLocal/DNSSD/Avahi/AvahiRegisterQuery.h"
+//#include "Swiften/LinkLocal/DNSSD/Avahi/AvahiResolveServiceQuery.h"
+//#include "Swiften/LinkLocal/DNSSD/Avahi/AvahiResolveHostnameQuery.h"
+//#include "Swiften/Base/foreach.h"
+
+namespace Swift {
+
+AvahiQuerier::AvahiQuerier() : client(NULL), threadedPoll(NULL) {
+}
+
+AvahiQuerier::~AvahiQuerier() {
+}
+
+boost::shared_ptr<DNSSDBrowseQuery> AvahiQuerier::createBrowseQuery() {
+	//return boost::shared_ptr<DNSSDBrowseQuery>(new AvahiBrowseQuery(shared_from_this()));
+}
+
+boost::shared_ptr<DNSSDRegisterQuery> AvahiQuerier::createRegisterQuery(const String& name, int port, const ByteArray& info) {
+	//return boost::shared_ptr<DNSSDRegisterQuery>(new AvahiRegisterQuery(name, port, info, shared_from_this()));
+}
+
+boost::shared_ptr<DNSSDResolveServiceQuery> AvahiQuerier::createResolveServiceQuery(const DNSSDServiceID& service) {
+	//return boost::shared_ptr<DNSSDResolveServiceQuery>(new AvahiResolveServiceQuery(service, shared_from_this()));
+}
+
+boost::shared_ptr<DNSSDResolveHostnameQuery> AvahiQuerier::createResolveHostnameQuery(const String& hostname, int interfaceIndex) {
+	//return boost::shared_ptr<DNSSDResolveHostnameQuery>(new AvahiResolveHostnameQuery(hostname, interfaceIndex, shared_from_this()));
+}
+
+void AvahiQuerier::start() {
+	assert(!threadedPoll);
+	threadedPoll = avahi_threaded_poll_new();
+	int error;
+	assert(!client);
+	client = avahi_client_new(
+			avahi_threaded_poll_get(threadedPoll), 
+			static_cast<AvahiClientFlags>(0), NULL, this, &error); // TODO
+	if (!client) {
+		// TODO
+		std::cerr << "Avahi Error: " << avahi_strerror(error) << std::endl;
+		return;
+	}
+	avahi_threaded_poll_start(threadedPoll);
+}
+
+void AvahiQuerier::stop() {
+	assert(threadedPoll);
+	avahi_threaded_poll_stop(threadedPoll);
+	assert(client);
+	avahi_client_free(client);
+	avahi_threaded_poll_free(threadedPoll);
+}
+
+}
