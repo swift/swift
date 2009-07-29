@@ -10,6 +10,7 @@
 #include "Slimber/Server.h"
 #include "Slimber/FileVCardCollection.h"
 #include "Swiften/LinkLocal/LinkLocalRoster.h"
+#include "Swiften/LinkLocal/LinkLocalServiceBrowser.h"
 #include "Swiften/LinkLocal/DNSSD/DNSSDBrowseQuery.h"
 #include "Swiften/LinkLocal/DNSSD/DNSSDRegisterQuery.h"
 #include "Swiften/LinkLocal/DNSSD/Bonjour/BonjourQuerier.h"
@@ -22,10 +23,8 @@ int main() {
 	SimpleEventLoop eventLoop;
 	boost::shared_ptr<BonjourQuerier> querier(new BonjourQuerier());
 	querier->start();
-	boost::shared_ptr<DNSSDBrowseQuery> query = querier->createBrowseQuery();
-	query->startBrowsing();
-	boost::shared_ptr<DNSSDRegisterQuery> query2 = querier->createRegisterQuery("remko", 1234, LinkLocalServiceInfo());
-	query2->registerService();
+	LinkLocalServiceBrowser browser(querier);
+	browser.start();
 
 /*
 	boost::shared_ptr<DNSSDService> dnsSDService;

@@ -41,6 +41,7 @@ namespace Swift {
 					MainEventLoop::postEvent(boost::bind(boost::ref(onError)), shared_from_this());
 				}
 				else {
+					std::cout << "Discovered service: name:" << name << " domain:" << domain << " type: " << type << std::endl;
 					DNSSDServiceID service(name, domain, type, interfaceIndex);
 					if (flags & kDNSServiceFlagsAdd) {
 						MainEventLoop::postEvent(boost::bind(boost::ref(onServiceAdded), service), shared_from_this());

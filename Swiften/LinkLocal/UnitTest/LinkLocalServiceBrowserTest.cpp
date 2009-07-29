@@ -84,7 +84,7 @@ class LinkLocalServiceBrowserTest : public CppUnit::TestFixture {
 			eventLoop->processEvents();
 
 			CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(addedServices.size()));
-			CPPUNIT_ASSERT(addedServices[0] == *testServiceID);
+			CPPUNIT_ASSERT(addedServices[0].getID() == *testServiceID);
 			CPPUNIT_ASSERT_EQUAL(0, static_cast<int>(changedServices.size()));
 			CPPUNIT_ASSERT_EQUAL(0, static_cast<int>(removedServices.size()));
 			std::vector<LinkLocalService> services = testling->getServices();
@@ -141,7 +141,7 @@ class LinkLocalServiceBrowserTest : public CppUnit::TestFixture {
 			eventLoop->processEvents();
 
 			CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(addedServices.size()));
-			CPPUNIT_ASSERT(addedServices[0] == *aliceServiceID);
+			CPPUNIT_ASSERT(addedServices[0].getID() == *aliceServiceID);
 			CPPUNIT_ASSERT_EQUAL(0, static_cast<int>(changedServices.size()));
 			CPPUNIT_ASSERT_EQUAL(0, static_cast<int>(removedServices.size()));
 			std::vector<LinkLocalService> services = testling->getServices();
@@ -166,7 +166,7 @@ class LinkLocalServiceBrowserTest : public CppUnit::TestFixture {
 			CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(addedServices.size()));
 			CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(changedServices.size()));
 			CPPUNIT_ASSERT_EQUAL(0, static_cast<int>(removedServices.size()));
-			CPPUNIT_ASSERT(changedServices[0] == *testServiceID);
+			CPPUNIT_ASSERT(changedServices[0].getID() == *testServiceID);
 			std::vector<LinkLocalService> services = testling->getServices();
 			CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(services.size()));
 			CPPUNIT_ASSERT(*testServiceID == services[0].getID());
@@ -191,7 +191,7 @@ class LinkLocalServiceBrowserTest : public CppUnit::TestFixture {
 			CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(addedServices.size()));
 			CPPUNIT_ASSERT_EQUAL(0, static_cast<int>(changedServices.size()));
 			CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(removedServices.size()));
-			CPPUNIT_ASSERT(removedServices[0] == *testServiceID);
+			CPPUNIT_ASSERT(removedServices[0].getID() == *testServiceID);
 			CPPUNIT_ASSERT_EQUAL(0, static_cast<int>(testling->getServices().size()));
 
 			testling->stop();
@@ -294,15 +294,15 @@ class LinkLocalServiceBrowserTest : public CppUnit::TestFixture {
 			return testling;
 		}
 
-		void handleServiceAdded(const DNSSDServiceID& service) {
+		void handleServiceAdded(const LinkLocalService& service) {
 			addedServices.push_back(service);
 		}
 
-		void handleServiceRemoved(const DNSSDServiceID& service) {
+		void handleServiceRemoved(const LinkLocalService& service) {
 			removedServices.push_back(service);
 		}
 
-		void handleServiceChanged(const DNSSDServiceID& service) {
+		void handleServiceChanged(const LinkLocalService& service) {
 			changedServices.push_back(service);
 		}
 
@@ -320,9 +320,9 @@ class LinkLocalServiceBrowserTest : public CppUnit::TestFixture {
 	private:
 		DummyEventLoop* eventLoop;
 		boost::shared_ptr<FakeDNSSDQuerier> querier;
-		std::vector<DNSSDServiceID> addedServices;
-		std::vector<DNSSDServiceID> changedServices;
-		std::vector<DNSSDServiceID> removedServices;
+		std::vector<LinkLocalService> addedServices;
+		std::vector<LinkLocalService> changedServices;
+		std::vector<LinkLocalService> removedServices;
 		DNSSDServiceID* aliceServiceID;
 		DNSSDResolveServiceQuery::Result* aliceServiceInfo;
 		DNSSDServiceID* testServiceID;

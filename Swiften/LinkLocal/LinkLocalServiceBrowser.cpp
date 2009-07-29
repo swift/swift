@@ -102,19 +102,22 @@ void LinkLocalServiceBrowser::handleServiceRemoved(const DNSSDServiceID& service
 	assert(i != resolveQueries.end());
 	i->second->stop();
 	resolveQueries.erase(i);
-	services.erase(service);
-	onServiceRemoved(service);
+	ServiceMap::iterator j = services.find(service);
+	assert(j != services.end());
+	LinkLocalService linkLocalService(j->first, j->second);
+	services.erase(j);
+	onServiceRemoved(linkLocalService);
 }
 
 void LinkLocalServiceBrowser::handleServiceResolved(const DNSSDServiceID& service, const boost::optional<DNSSDResolveServiceQuery::Result>& result) {
 	if (result) {
 		std::pair<ServiceMap::iterator, bool> r = services.insert(std::make_pair(service, *result));
 		if (r.second) {
-			onServiceAdded(service);
+			onServiceAdded(LinkLocalService(r.first->first, r.first->second));
 		}
 		else {
 			r.first->second = *result;
-			onServiceChanged(service);
+			onServiceChanged(LinkLocalService(r.first->first, r.first->second));
 		}
 	}
 }

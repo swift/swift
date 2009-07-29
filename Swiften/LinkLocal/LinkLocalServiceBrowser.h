@@ -31,9 +31,9 @@ namespace Swift {
 
 			std::vector<LinkLocalService> getServices() const;
 
-			boost::signal<void (const DNSSDServiceID&)> onServiceAdded;
-			boost::signal<void (const DNSSDServiceID&)> onServiceChanged;
-			boost::signal<void (const DNSSDServiceID&)> onServiceRemoved;
+			boost::signal<void (const LinkLocalService&)> onServiceAdded;
+			boost::signal<void (const LinkLocalService&)> onServiceChanged;
+			boost::signal<void (const LinkLocalService&)> onServiceRemoved;
 			boost::signal<void (bool)> onStopped;
 
 		private:
