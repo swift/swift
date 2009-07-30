@@ -65,6 +65,11 @@ void LinkLocalServiceBrowser::registerService(const String& name, int port, cons
 	registerQuery->registerService();
 }
 
+void LinkLocalServiceBrowser::updateService(const LinkLocalServiceInfo& info) {
+	assert(registerQuery);
+	registerQuery->updateServiceInfo(info.toTXTRecord());
+}
+
 void LinkLocalServiceBrowser::unregisterService() {
 	assert(registerQuery);
 	registerQuery->unregisterService();
@@ -125,6 +130,7 @@ void LinkLocalServiceBrowser::handleServiceResolved(const DNSSDServiceID& servic
 void LinkLocalServiceBrowser::handleRegisterFinished(const boost::optional<DNSSDServiceID>& result) {
 	if (result) {
 		selfService = result;
+		onServiceRegistered(*result);
 	}
 	else {
 		haveError = true;

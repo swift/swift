@@ -18,6 +18,7 @@ using namespace Swift;
 
 class LinkLocalPresenceManagerTest : public CppUnit::TestFixture {
 		CPPUNIT_TEST_SUITE(LinkLocalPresenceManagerTest);
+		CPPUNIT_TEST(testConstructor);
 		CPPUNIT_TEST(testServiceAdded);
 		CPPUNIT_TEST(testServiceRemoved);
 		CPPUNIT_TEST(testServiceChanged);
@@ -31,8 +32,6 @@ class LinkLocalPresenceManagerTest : public CppUnit::TestFixture {
 		CPPUNIT_TEST_SUITE_END();
 
 	public:
-		LinkLocalPresenceManagerTest() {}
-
 		void setUp() {
 			eventLoop = new DummyEventLoop();
 			querier = boost::shared_ptr<FakeDNSSDQuerier>(new FakeDNSSDQuerier("wonderland.lit"));
@@ -44,6 +43,15 @@ class LinkLocalPresenceManagerTest : public CppUnit::TestFixture {
 			browser->stop();
 			delete browser;
 			delete eventLoop;
+		}
+
+		void testConstructor() {
+			addService("alice@wonderland");
+			addService("rabbit@teaparty");
+			std::auto_ptr<LinkLocalPresenceManager> testling(createTestling());
+
+			CPPUNIT_ASSERT_EQUAL(2, static_cast<int>(testling->getRoster()->getItems().size()));
+			CPPUNIT_ASSERT_EQUAL(2, static_cast<int>(testling->getAllPresence().size()));
 		}
 
 		void testServiceAdded() {

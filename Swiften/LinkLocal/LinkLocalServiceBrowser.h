@@ -25,7 +25,12 @@ namespace Swift {
 			bool isRunning() const;
 			bool hasError() const;
 
-			void registerService(const String& name, int port, const LinkLocalServiceInfo& info = LinkLocalServiceInfo());
+			void registerService(
+					const String& name, 
+					int port, 
+					const LinkLocalServiceInfo& info = LinkLocalServiceInfo());
+			void updateService(
+					const LinkLocalServiceInfo& info = LinkLocalServiceInfo());
 			void unregisterService();
 			bool isRegistered() const;
 
@@ -34,6 +39,7 @@ namespace Swift {
 			boost::signal<void (const LinkLocalService&)> onServiceAdded;
 			boost::signal<void (const LinkLocalService&)> onServiceChanged;
 			boost::signal<void (const LinkLocalService&)> onServiceRemoved;
+			boost::signal<void (const DNSSDServiceID&)> onServiceRegistered;
 			boost::signal<void (bool)> onStopped;
 
 		private:

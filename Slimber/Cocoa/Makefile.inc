@@ -2,9 +2,6 @@ SLIMBER_COCOA_TARGET = Slimber/Cocoa/Slimber.app
 SLIMBER_COCOA_BINARY = \
 	Slimber/Cocoa/Slimber
 SLIMBER_COCOA_SOURCES = \
-	Slimber/Server.cpp \
-	Slimber/VCardCollection.cpp \
-	Slimber/FileVCardCollection.cpp \
 	Slimber/Cocoa/MainController.mm \
 	Slimber/Cocoa/Slimber.mm \
 	Slimber/Cocoa/main.mm \
@@ -45,5 +42,5 @@ $(SLIMBER_COCOA_TARGET): $(SLIMBER_COCOA_BINARY) $(SLIMBER_COCOA_NIBS) Slimber/C
 	cp $(SLIMBER_COCOA_NIBS) $(SLIMBER_COCOA_TARGET)/Contents/Resources
 	cp $(SLIMBER_COCOA_RESOURCES) $(SLIMBER_COCOA_TARGET)/Contents/Resources
 
-$(SLIMBER_COCOA_BINARY): $(SLIMBER_COCOA_OBJECTS) $(SWIFTEN_TARGET)
-	$(QUIET_LINK)$(CXX) -o $@ $(SLIMBER_COCOA_OBJECTS) $(LDFLAGS) $(SWIFTEN_TARGET) $(LIBS) -framework Cocoa
+$(SLIMBER_COCOA_BINARY): $(SLIMBER_COCOA_OBJECTS) $(SWIFTEN_TARGET) $(SLIMBER_TRGET)
+	$(QUIET_LINK)$(CXX) -o $@ $(SLIMBER_COCOA_OBJECTS) $(LDFLAGS) $(SLIMBER_TARGET) $(SWIFTEN_TARGET) $(LIBS) -framework Cocoa

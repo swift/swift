@@ -49,8 +49,10 @@
 		[statusMenu addItem: [[NSMenuItem alloc] initWithTitle: @"Online users:" action: NULL keyEquivalent: @""]];
 		int i;
 		for (i = 0; i < [userNames count]; ++i) {
-			NSMenuItem* userItem = [[NSMenuItem alloc] initWithTitle: [@"  " stringByAppendingString: [userNames objectAtIndex: i]] action: NULL keyEquivalent: @""];
+			NSString* text = [NSString stringWithFormat: @"  %@", [userNames objectAtIndex: i]]; 
+			NSMenuItem* userItem = [[NSMenuItem alloc] initWithTitle: text action: NULL keyEquivalent: @""];
 			[statusMenu addItem: userItem];
+			[userItem release];
 		}
 	}
 	else {

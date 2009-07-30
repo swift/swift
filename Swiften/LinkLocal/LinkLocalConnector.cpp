@@ -6,7 +6,7 @@
 #include "Swiften/Network/ConnectionFactory.h"
 #include "Swiften/Network/HostAddress.h"
 #include "Swiften/Network/HostAddressPort.h"
-#include "Swiften/LinkLocal/DNSSDService.h"
+#include "Swiften/LinkLocal/DNSSD/DNSSDQuerier.h"
 
 namespace Swift {
 
@@ -14,22 +14,23 @@ LinkLocalConnector::LinkLocalConnector(
 		const JID& remoteJID,
 		const String& hostname,
 		int port,
-		boost::shared_ptr<DNSSDService> resolver,
+		boost::shared_ptr<DNSSDQuerier> querier,
 		boost::shared_ptr<Connection> connection) : 
 			remoteJID_(remoteJID),
 			hostname_(hostname),
 			port_(port),
-			resolver_(resolver),
+			querier_(querier),
 			connection_(connection),
 			resolving_(false) {
 }
 
 void LinkLocalConnector::connect() {
 	resolving_ = true;
-	resolver_->onHostnameResolved.connect(boost::bind(&LinkLocalConnector::handleHostnameResolved, boost::dynamic_pointer_cast<LinkLocalConnector>(shared_from_this()), _1, _2));
-	resolver_->resolveHostname(hostname_);
+	//querier_->onHostnameResolved.connect(boost::bind(&LinkLocalConnector::handleHostnameResolved, boost::dynamic_pointer_cast<LinkLocalConnector>(shared_from_this()), _1, _2));
+	//querier_->resolveHostname(hostname_);
 }
 
+/*
 void LinkLocalConnector::handleHostnameResolved(const String& hostname, const boost::optional<HostAddress>& address) {
 	if (resolving_) {
 		if (hostname == hostname_) {
@@ -44,6 +45,7 @@ void LinkLocalConnector::handleHostnameResolved(const String& hostname, const bo
 		}
 	}
 }
+*/
 
 void LinkLocalConnector::handleConnected(bool error) {
 	onConnectFinished(error);

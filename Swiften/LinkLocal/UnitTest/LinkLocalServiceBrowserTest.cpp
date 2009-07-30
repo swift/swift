@@ -27,6 +27,7 @@ class LinkLocalServiceBrowserTest : public CppUnit::TestFixture {
 		CPPUNIT_TEST(testRegisterService);
 		CPPUNIT_TEST(testRegisterService_Error);
 		CPPUNIT_TEST(testRegisterService_Reregister);
+		CPPUNIT_TEST(testUpdateService);
 		CPPUNIT_TEST_SUITE_END();
 
 	public:
@@ -239,7 +240,8 @@ class LinkLocalServiceBrowserTest : public CppUnit::TestFixture {
 			eventLoop->processEvents();
 
 			CPPUNIT_ASSERT(querier->isServiceRegistered("foo@bar", 1234, info.toTXTRecord()));
-
+			CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(registeredServices.size()));
+			CPPUNIT_ASSERT(registeredServices[0] == DNSSDServiceID("foo@bar", "wonderland.lit"));
 			testling->stop();
 		}
 
@@ -279,6 +281,23 @@ class LinkLocalServiceBrowserTest : public CppUnit::TestFixture {
 			testling->stop();
 		}
 
+		void testUpdateService() {
+			boost::shared_ptr<LinkLocalServiceBrowser> testling = createTestling();
+			testling->start();
+			eventLoop->processEvents();
+
+			LinkLocalServiceInfo info;
+			info.setFirstName("Foo");
+			testling->registerService("foo@bar", 1234, info);
+			eventLoop->processEvents();
+			info.setFirstName("Bar");
+			testling->updateService(info);
+
+			CPPUNIT_ASSERT(querier->isServiceRegistered("foo@bar", 1234, info.toTXTRecord()));
+
+			testling->stop();
+		}
+
 	private:
 		boost::shared_ptr<LinkLocalServiceBrowser> createTestling() {
 			boost::shared_ptr<LinkLocalServiceBrowser> testling(
@@ -289,6 +308,8 @@ class LinkLocalServiceBrowserTest : public CppUnit::TestFixture {
 					&LinkLocalServiceBrowserTest::handleServiceChanged, this, _1));
 			testling->onServiceRemoved.connect(boost::bind(
 					&LinkLocalServiceBrowserTest::handleServiceRemoved, this, _1));
+			testling->onServiceRegistered.connect(boost::bind(
+					&LinkLocalServiceBrowserTest::handleServiceRegistered, this, _1));
 			testling->onStopped.connect(boost::bind(
 					&LinkLocalServiceBrowserTest::handleStopped, this, _1));
 			return testling;
@@ -304,6 +325,10 @@ class LinkLocalServiceBrowserTest : public CppUnit::TestFixture {
 
 		void handleServiceChanged(const LinkLocalService& service) {
 			changedServices.push_back(service);
+		}
+
+		void handleServiceRegistered(const DNSSDServiceID& service) {
+			registeredServices.push_back(service);
 		}
 
 		void handleStopped(bool error) {
@@ -323,6 +348,7 @@ class LinkLocalServiceBrowserTest : public CppUnit::TestFixture {
 		std::vector<LinkLocalService> addedServices;
 		std::vector<LinkLocalService> changedServices;
 		std::vector<LinkLocalService> removedServices;
+		std::vector<DNSSDServiceID> registeredServices;
 		DNSSDServiceID* aliceServiceID;
 		DNSSDResolveServiceQuery::Result* aliceServiceInfo;
 		DNSSDServiceID* testServiceID;

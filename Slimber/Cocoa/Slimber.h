@@ -1,16 +1,13 @@
 #pragma once
 
-#include <string>
-#include <boost/bind.hpp>
 #include <boost/shared_ptr.hpp>
-
-#include "Swiften/LinkLocal/DNSSDService.h"
-#include "Swiften/LinkLocal/LinkLocalRoster.h"
 
 @class Menulet;
 namespace Swift {
 	class Server;
 	class VCardCollection;
+	class LinkLocalServiceBrowser;
+	class BonjourQuerier;
 }
 
 class Slimber {
@@ -20,11 +17,11 @@ class Slimber {
 
 	private:
 		void handleSelfConnected(bool b);
-		void handleRosterChanged();
+		void handleServicesChanged();
 
 	private:
-		boost::shared_ptr<Swift::DNSSDService> dnsSDService;
-		boost::shared_ptr<Swift::LinkLocalRoster>linkLocalRoster;
+		boost::shared_ptr<Swift::BonjourQuerier> dnsSDQuerier;
+		Swift::LinkLocalServiceBrowser* linkLocalServiceBrowser;
 		Swift::VCardCollection* vCardCollection;
 		Swift::Server* server;
 		Menulet* menulet;
