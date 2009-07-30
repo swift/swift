@@ -100,11 +100,12 @@ void LinkLocalServiceBrowser::handleServiceAdded(const DNSSDServiceID& service) 
 }
 
 void LinkLocalServiceBrowser::handleServiceRemoved(const DNSSDServiceID& service) {
-	if (selfService && service == *selfService) {
+	ResolveQueryMap::iterator i = resolveQueries.find(service);
+	if (i == resolveQueries.end()) {
+		// Can happen after an unregister(), when getting the old 'self' 
+		// service remove notification.
 		return;
 	}
-	ResolveQueryMap::iterator i = resolveQueries.find(service);
-	assert(i != resolveQueries.end());
 	i->second->stop();
 	resolveQueries.erase(i);
 	ServiceMap::iterator j = services.find(service);
