@@ -14,8 +14,6 @@ class LinkLocalServiceInfoTest : public CppUnit::TestFixture {
 		CPPUNIT_TEST_SUITE_END();
 
 	public:
-		LinkLocalServiceInfoTest() {}
-
 		void testGetTXTRecord() {
 			LinkLocalServiceInfo info;
 			info.setFirstName("Remko");

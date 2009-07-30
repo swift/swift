@@ -1,6 +1,7 @@
 SWIFTEN_SOURCES += \
 	Swiften/LinkLocal/LinkLocalServiceBrowser.cpp \
 	Swiften/LinkLocal/DNSSDService.cpp \
+	Swiften/LinkLocal/LinkLocalService.cpp \
 	Swiften/LinkLocal/LinkLocalRoster.cpp \
 	Swiften/LinkLocal/LinkLocalServiceInfo.cpp \
 	Swiften/LinkLocal/IncomingLinkLocalSession.cpp \

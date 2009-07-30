@@ -34,6 +34,8 @@ namespace Swift {
 				return LinkLocalServiceInfo::createFromTXTRecord(info.info);
 			}
 
+			String getDescription() const;
+
 		private:
 			DNSSDServiceID id;
 			DNSSDResolveServiceQuery::Result info;
