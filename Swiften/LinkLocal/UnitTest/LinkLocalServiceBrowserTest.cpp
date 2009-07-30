@@ -22,6 +22,7 @@ class LinkLocalServiceBrowserTest : public CppUnit::TestFixture {
 		CPPUNIT_TEST(testServiceAdded_UnregisteredService);
 		CPPUNIT_TEST(testServiceChanged);
 		CPPUNIT_TEST(testServiceRemoved);
+		CPPUNIT_TEST(testServiceRemoved_UnregisteredService);
 		CPPUNIT_TEST(testError_BrowseErrorAfterStart);
 		CPPUNIT_TEST(testError_BrowseErrorAfterResolve);
 		CPPUNIT_TEST(testRegisterService);
@@ -150,6 +151,23 @@ class LinkLocalServiceBrowserTest : public CppUnit::TestFixture {
 			CPPUNIT_ASSERT(*aliceServiceID == services[0].getID());
 			CPPUNIT_ASSERT(aliceServiceInfo->port == services[0].getPort());
 			CPPUNIT_ASSERT(aliceServiceInfo->host == services[0].getHostname());
+
+			testling->stop();
+		}
+
+		void testServiceRemoved_UnregisteredService() {
+			boost::shared_ptr<LinkLocalServiceBrowser> testling = createTestling();
+			testling->start();
+			eventLoop->processEvents();
+			testling->registerService("alice", 1234, LinkLocalServiceInfo());
+			eventLoop->processEvents();
+			testling->unregisterService();
+			eventLoop->processEvents();
+
+			querier->removeService(*aliceServiceID);
+			eventLoop->processEvents();
+
+			CPPUNIT_ASSERT_EQUAL(0, static_cast<int>(removedServices.size()));
 
 			testling->stop();
 		}
