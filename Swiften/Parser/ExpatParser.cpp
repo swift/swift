@@ -32,6 +32,10 @@ static void handleStartElement(void* client, const XML_Char* name, const XML_Cha
 
 static void handleEndElement(void* client, const XML_Char* name) {
 	std::pair<String,String> nsTagPair = String(name).getSplittedAtFirst(NAMESPACE_SEPARATOR);
+	if (nsTagPair.second == "") {
+		nsTagPair.second = nsTagPair.first;
+		nsTagPair.first = "";
+	}
 	static_cast<XMLParserClient*>(client)->handleEndElement(nsTagPair.second, nsTagPair.first);
 }
 
