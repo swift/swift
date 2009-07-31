@@ -1,8 +1,14 @@
 #!/usr/bin/env python
 
+# TODO: Add uncovered non-ignored files
+
 import sys, re, os.path
 
 assert(len(sys.argv) == 2)
+
+def isIgnored(file) :
+  return (find.find("/Swiften/") == -1 and find.find("/Slimber/") == -1 and find.find("/Swift/") == -1) or (find.find("/UnitTest/") != -1 or find.find("/QA/") != -1)
+  
 
 output = []
 inputFile = open(sys.argv[1])
@@ -12,7 +18,7 @@ for line in inputFile.readlines() :
     if line == "end_of_record\n" :
       inIgnoredFile = False
   else :
-    if line.startswith("SF:") and (line.find("/Swiften/") == -1 or line.find("/UnitTest/") != -1 or line.find("/QA/") != -1 or line.find("/3rdParty/") != -1):
+    if line.startswith("SF:") and isIgnored(line) :
       inIgnoredFile = True
     else :
       m = re.match("SF:(.*)", line)
