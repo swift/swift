@@ -44,7 +44,7 @@ void LinkLocalConnector::handleHostnameResolved(const boost::optional<HostAddres
 		connection->connect(HostAddressPort(*address, port));
 	}
 	else {
-		onConnectFinished(false);
+		onConnectFinished(true);
 	}
 }
 

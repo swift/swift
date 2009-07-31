@@ -6,9 +6,11 @@
 #include <set>
 
 #include "Swiften/Base/foreach.h"
+#include "Swiften/Base/String.h"
 #include "Swiften/EventLoop/EventOwner.h"
 #include "Swiften/LinkLocal/DNSSD/DNSSDQuerier.h"
 #include "Swiften/LinkLocal/DNSSD/DNSSDResolveServiceQuery.h"
+#include "Swiften/Network/HostAddress.h"
 
 namespace Swift {
 	class ByteArray;
@@ -37,6 +39,7 @@ namespace Swift {
 			void removeService(const DNSSDServiceID& id);
 			void setServiceInfo(const DNSSDServiceID& id, const DNSSDResolveServiceQuery::Result& info);
 			bool isServiceRegistered(const String& name, int port, const ByteArray& info);
+			void setAddress(const String& hostname, const HostAddress& address);
 
 			void setBrowseError();
 			void setRegisterError();
@@ -59,5 +62,6 @@ namespace Swift {
 			std::set<DNSSDServiceID> services;
 			typedef std::map<DNSSDServiceID,DNSSDResolveServiceQuery::Result> ServiceInfoMap;
 			ServiceInfoMap serviceInfo;
+			std::map<String, HostAddress> addresses;
 	};
 }
