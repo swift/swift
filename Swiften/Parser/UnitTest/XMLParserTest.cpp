@@ -2,7 +2,7 @@
 #include <cppunit/extensions/TestFactoryRegistry.h>
 #include <vector>
 
-#ifdef HAVE_CONFIG_H
+#ifdef HAVE_SWIFTEN_CONFIG_H
 #include "Swiften/config.h"
 #endif
 #include "Swiften/Base/String.h"
@@ -17,10 +17,10 @@
 using namespace Swift;
 
 template <typename ParserType>
-class XMLParserTest : public CppUnit::TestFixture
-{
+class XMLParserTest : public CppUnit::TestFixture {
 		CPPUNIT_TEST_SUITE(XMLParserTest);
 		CPPUNIT_TEST(testParse_NestedElements);
+		CPPUNIT_TEST(testParse_ElementInNamespacedElement);
 		CPPUNIT_TEST(testParse_CharacterData);
 		CPPUNIT_TEST(testParse_NamespacePrefix);
 		CPPUNIT_TEST(testParse_UnhandledXML);
@@ -30,8 +30,6 @@ class XMLParserTest : public CppUnit::TestFixture
 		CPPUNIT_TEST_SUITE_END();
 
 	public:
-		XMLParserTest() {}
-
 		void testParse_NestedElements() {
 			ParserType testling(&client_);
 
@@ -46,17 +44,51 @@ class XMLParserTest : public CppUnit::TestFixture
 			CPPUNIT_ASSERT_EQUAL(String("iq"), client_.events[0].data);
 			CPPUNIT_ASSERT_EQUAL(static_cast<size_t>(1), client_.events[0].attributes.size());
 			CPPUNIT_ASSERT_EQUAL(String("get"), client_.events[0].attributes["type"]);
+			CPPUNIT_ASSERT_EQUAL(String(), client_.events[0].ns);
 
 			CPPUNIT_ASSERT_EQUAL(Client::StartElement, client_.events[1].type);
 			CPPUNIT_ASSERT_EQUAL(String("query"), client_.events[1].data);
-			CPPUNIT_ASSERT_EQUAL(static_cast<size_t>(1), client_.events[1].attributes.size());
-			CPPUNIT_ASSERT_EQUAL(String("jabber:iq:version"), client_.events[1].attributes["xmlns"]);
+			CPPUNIT_ASSERT_EQUAL(static_cast<size_t>(0), client_.events[1].attributes.size());
+			CPPUNIT_ASSERT_EQUAL(String("jabber:iq:version"), client_.events[1].ns);
 
 			CPPUNIT_ASSERT_EQUAL(Client::EndElement, client_.events[2].type);
 			CPPUNIT_ASSERT_EQUAL(String("query"), client_.events[2].data);
+			CPPUNIT_ASSERT_EQUAL(String("jabber:iq:version"), client_.events[2].ns);
 
 			CPPUNIT_ASSERT_EQUAL(Client::EndElement, client_.events[3].type);
 			CPPUNIT_ASSERT_EQUAL(String("iq"), client_.events[3].data);
+			CPPUNIT_ASSERT_EQUAL(String(), client_.events[3].ns);
+		}
+
+		void testParse_ElementInNamespacedElement() {
+			ParserType testling(&client_);
+
+			CPPUNIT_ASSERT(testling.parse(
+				"<query xmlns='jabber:iq:version'>"
+          "<name>Swift</name>"
+				"</query>"));
+
+			CPPUNIT_ASSERT_EQUAL(static_cast<size_t>(5), client_.events.size());
+
+			CPPUNIT_ASSERT_EQUAL(Client::StartElement, client_.events[0].type);
+			CPPUNIT_ASSERT_EQUAL(String("query"), client_.events[0].data);
+			CPPUNIT_ASSERT_EQUAL(static_cast<size_t>(0), client_.events[0].attributes.size());
+			CPPUNIT_ASSERT_EQUAL(String("jabber:iq:version"), client_.events[0].ns);
+
+			CPPUNIT_ASSERT_EQUAL(Client::StartElement, client_.events[1].type);
+			CPPUNIT_ASSERT_EQUAL(String("name"), client_.events[1].data);
+			CPPUNIT_ASSERT_EQUAL(String("jabber:iq:version"), client_.events[1].ns);
+
+			CPPUNIT_ASSERT_EQUAL(Client::CharacterData, client_.events[2].type);
+			CPPUNIT_ASSERT_EQUAL(String("Swift"), client_.events[2].data);
+
+			CPPUNIT_ASSERT_EQUAL(Client::EndElement, client_.events[3].type);
+			CPPUNIT_ASSERT_EQUAL(String("name"), client_.events[3].data);
+			CPPUNIT_ASSERT_EQUAL(String("jabber:iq:version"), client_.events[3].ns);
+
+			CPPUNIT_ASSERT_EQUAL(Client::EndElement, client_.events[4].type);
+			CPPUNIT_ASSERT_EQUAL(String("query"), client_.events[4].data);
+			CPPUNIT_ASSERT_EQUAL(String("jabber:iq:version"), client_.events[4].ns);
 		}
 
 		void testParse_CharacterData() {
@@ -96,16 +128,20 @@ class XMLParserTest : public CppUnit::TestFixture
 			CPPUNIT_ASSERT_EQUAL(static_cast<size_t>(4), client_.events.size());
 
 			CPPUNIT_ASSERT_EQUAL(Client::StartElement, client_.events[0].type);
-			CPPUNIT_ASSERT_EQUAL(String("p:x"), client_.events[0].data);
+			CPPUNIT_ASSERT_EQUAL(String("x"), client_.events[0].data);
+			CPPUNIT_ASSERT_EQUAL(String("bla"), client_.events[0].ns);
 
 			CPPUNIT_ASSERT_EQUAL(Client::StartElement, client_.events[1].type);
-			CPPUNIT_ASSERT_EQUAL(String("p:y"), client_.events[1].data);
+			CPPUNIT_ASSERT_EQUAL(String("y"), client_.events[1].data);
+			CPPUNIT_ASSERT_EQUAL(String("bla"), client_.events[1].ns);
 
 			CPPUNIT_ASSERT_EQUAL(Client::EndElement, client_.events[2].type);
-			CPPUNIT_ASSERT_EQUAL(String("p:y"), client_.events[2].data);
+			CPPUNIT_ASSERT_EQUAL(String("y"), client_.events[2].data);
+			CPPUNIT_ASSERT_EQUAL(String("bla"), client_.events[2].ns);
 
 			CPPUNIT_ASSERT_EQUAL(Client::EndElement, client_.events[3].type);
-			CPPUNIT_ASSERT_EQUAL(String("p:x"), client_.events[3].data);
+			CPPUNIT_ASSERT_EQUAL(String("x"), client_.events[3].data);
+			CPPUNIT_ASSERT_EQUAL(String("bla"), client_.events[3].ns);
 		}
 
 		void testParse_UnhandledXML() {
@@ -158,24 +194,26 @@ class XMLParserTest : public CppUnit::TestFixture
 					Event(
 							Type type, 
 							const String& data, 
+              const String& ns,
 							const AttributeMap& attributes)
-								: type(type), data(data), attributes(attributes) {}
-					Event(Type type, const String& data)
-								: type(type), data(data) {}
+								: type(type), data(data), ns(ns), attributes(attributes) {}
+					Event(Type type, const String& data, const String& ns = String())
+								: type(type), data(data), ns(ns) {}
 
 					Type type;
 					String data;
+          String ns;
 					AttributeMap attributes;
 				};
 
 				Client() {}
 
-				virtual void handleStartElement(const String& element, const AttributeMap& attributes) {
-					events.push_back(Event(StartElement, element, attributes));
+				virtual void handleStartElement(const String& element, const String& ns, const AttributeMap& attributes) {
+					events.push_back(Event(StartElement, element, ns, attributes));
 				}
 
-				virtual void handleEndElement(const String& element) {
-					events.push_back(Event(EndElement, element));
+				virtual void handleEndElement(const String& element, const String& ns) {
+					events.push_back(Event(EndElement, element, ns));
 				}
 
 				virtual void handleCharacterData(const String& data) {
