@@ -96,4 +96,21 @@ String String::getLowerCase() const {
 	return String(lower);
 }
 
+std::vector<String> String::split(char c) const {
+	assert((c & 0x80) == 0);
+	std::vector<String> result;
+	String accumulator;
+	for (size_t i = 0; i < data_.size(); ++i) {
+		if (data_[i] == c) {
+			result.push_back(accumulator);
+			accumulator = "";
+		}
+		else {
+			accumulator += data_[i];
+		}
+	}
+	result.push_back(accumulator);
+	return result;
+}
+
 }

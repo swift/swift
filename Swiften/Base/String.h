@@ -37,6 +37,8 @@ namespace Swift {
 			 */
 			std::pair<String,String> getSplittedAtFirst(char c) const;
 
+			std::vector<String> split(char c) const;
+
 			size_t getLength() const;
       String getLowerCase() const;
 

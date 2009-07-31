@@ -24,6 +24,7 @@ class StringTest : public CppUnit::TestFixture
 		CPPUNIT_TEST(testReplaceAll_ConsecutiveChars);
 		CPPUNIT_TEST(testReplaceAll_MatchingReplace);
     CPPUNIT_TEST(testGetLowerCase);
+		CPPUNIT_TEST(testSplit);
 		CPPUNIT_TEST_SUITE_END();
 
 	public:
@@ -148,6 +149,15 @@ class StringTest : public CppUnit::TestFixture
 
       CPPUNIT_ASSERT_EQUAL(String("abcd e"), testling.getLowerCase());
     }
+
+		void testSplit() {
+			std::vector<String> result = String("abc def ghi").split(' ');
+
+			CPPUNIT_ASSERT_EQUAL(3, static_cast<int>(result.size()));
+			CPPUNIT_ASSERT_EQUAL(String("abc"), result[0]);
+			CPPUNIT_ASSERT_EQUAL(String("def"), result[1]);
+			CPPUNIT_ASSERT_EQUAL(String("ghi"), result[2]);
+		}
 };
 
 CPPUNIT_TEST_SUITE_REGISTRATION(StringTest);
