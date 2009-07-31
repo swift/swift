@@ -1,6 +1,8 @@
 #include "RosterDelegate.h"
 
 #include <QPainter>
+#include <QColor>
+#include <QBrush>
 #include <qdebug.h>
 
 #include "QtTreeWidgetItem.h"
@@ -28,17 +30,25 @@ void RosterDelegate::paint(QPainter* painter, const QStyleOptionViewItem& option
 	//QStyledItemDelegate::paint(painter, option, index);
 	//initStyleOption(option, index);
 	QRect fullRegion(option.rect);
-	
+	if ( option.state & QStyle::State_Selected ) {
+		painter->fillRect(fullRegion, option.palette.highlight());
+		painter->setPen(option.palette.highlightedText().color());
+	} 
 	QRect avatarRegion(QPoint(0, fullRegion.top()), QSize(32, 32));
 	QIcon icon = index.data(AvatarRole).isValid() && !index.data(AvatarRole).value<QIcon>().isNull()
 		? index.data(AvatarRole).value<QIcon>()
 		: QIcon(":/icons/avatar.png");
 	icon.paint(painter, avatarRegion, Qt::AlignVCenter | Qt::AlignHCenter);
 	
+	QFont nameFont = painter->font();
+	QFont statusFont = painter->font();
+	statusFont.setStyle(QFont::StyleItalic);
+	//statusFont.setSize(-1);
+	painter->setFont(nameFont);
 	QRect textRegion(fullRegion.adjusted(avatarRegion.width(), 0, 0, 0));
 	QRect nameRegion(textRegion.adjusted(0,0,0,-25));
 	painter->drawText(nameRegion, Qt::AlignVCenter, index.data(Qt::DisplayRole).toString());
-	
+	painter->setFont(statusFont);
 	QRect statusTextRegion(textRegion.adjusted(0, 25, 0, 0));
 	painter->drawText(statusTextRegion, Qt::AlignVCenter, index.data(StatusTextRole).toString());
 	
