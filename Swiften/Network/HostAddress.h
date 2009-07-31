@@ -1,13 +1,15 @@
-#ifndef SWIFTEN_HOSTADDRESS
-#define SWIFTEN_HOSTADDRESS
+#pragma once
 
 #include <string>
 #include <vector>
 
 namespace Swift {
+	class String;
+
 	class HostAddress {
 		public:
       HostAddress();
+			HostAddress(const String&);
 			HostAddress(const unsigned char* address, int length);
 
 			const std::vector<unsigned char>& getRawAddress() const {
@@ -20,5 +22,3 @@ namespace Swift {
 			std::vector<unsigned char> address_;
 	};
 }
-
-#endif

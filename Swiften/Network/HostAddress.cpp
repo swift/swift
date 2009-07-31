@@ -1,9 +1,13 @@
 #include "Swiften/Network/HostAddress.h"
 
 #include <boost/numeric/conversion/cast.hpp>
+#include <boost/lexical_cast.hpp>
 #include <cassert>
 #include <sstream>
 #include <iomanip>
+
+#include "Swiften/Base/foreach.h"
+#include "Swiften/Base/String.h"
 
 namespace Swift {
 
@@ -11,6 +15,14 @@ HostAddress::HostAddress() {
   for (int i = 0; i < 4; ++i) {
     address_.push_back(0);
   }
+}
+
+HostAddress::HostAddress(const String& address) {
+	std::vector<String> components = address.split('.');
+	assert(components.size() == 4);
+	foreach(const String& component, components) {
+		address_.push_back(boost::lexical_cast<int>(component.getUTF8String()));
+	}
 }
 
 HostAddress::HostAddress(const unsigned char* address, int length) {

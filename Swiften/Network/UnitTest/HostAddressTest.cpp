@@ -2,18 +2,23 @@
 #include <cppunit/extensions/TestFactoryRegistry.h>
 
 #include "Swiften/Network/HostAddress.h"
+#include "Swiften/Base/String.h"
 
 using namespace Swift;
 
-class HostAddressTest : public CppUnit::TestFixture
-{
+class HostAddressTest : public CppUnit::TestFixture {
 		CPPUNIT_TEST_SUITE(HostAddressTest);
+		CPPUNIT_TEST(testConstructor);
 		CPPUNIT_TEST(testToString);
 		CPPUNIT_TEST(testToString_IPv6);
 		CPPUNIT_TEST_SUITE_END();
 
 	public:
-		HostAddressTest() {}
+		void testConstructor() {
+			HostAddress testling("192.168.1.254");
+
+			CPPUNIT_ASSERT_EQUAL(std::string("192.168.1.254"), testling.toString());
+		}
 
 		void testToString() {
 			unsigned char address[4] = {10, 0, 1, 253}; 
