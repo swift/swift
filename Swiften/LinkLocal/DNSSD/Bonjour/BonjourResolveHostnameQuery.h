@@ -12,7 +12,7 @@ namespace Swift {
 	class BonjourQuerier;
 
 	class BonjourResolveHostnameQuery : public DNSSDResolveHostnameQuery, public BonjourQuery {
-		public:	
+		public: 
 			BonjourResolveHostnameQuery(const String& hostname, int interfaceIndex, boost::shared_ptr<BonjourQuerier> querier) : BonjourQuery(querier) {
 				DNSServiceErrorType result = DNSServiceGetAddrInfo(
 						&sdRef, 0, interfaceIndex, kDNSServiceProtocol_IPv4, 
@@ -31,6 +31,10 @@ namespace Swift {
 				else {
 					MainEventLoop::postEvent(boost::bind(boost::ref(onHostnameResolved), boost::optional<HostAddress>()), shared_from_this());
 				}
+			}
+
+			void finish() {
+				BonjourQuery::finish();
 			}
 
 		private:

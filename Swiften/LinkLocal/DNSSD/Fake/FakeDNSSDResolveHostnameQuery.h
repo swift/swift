@@ -19,6 +19,10 @@ namespace Swift {
 				FakeDNSSDQuery::run();
 			}
 
+			void finish() {
+				FakeDNSSDQuery::finish();
+			}
+
 			String hostname;
 			int interfaceIndex;
 	};

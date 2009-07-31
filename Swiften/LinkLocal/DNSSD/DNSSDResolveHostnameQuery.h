@@ -11,6 +11,7 @@ namespace Swift {
 			virtual ~DNSSDResolveHostnameQuery();
 
 			virtual void run() = 0;
+			virtual void finish() = 0;
 
 			boost::signal<void (const boost::optional<HostAddress>&)> onHostnameResolved;
 	};
