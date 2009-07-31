@@ -6,42 +6,45 @@
 #include "Swiften/Network/ConnectionFactory.h"
 #include "Swiften/Network/HostAddress.h"
 #include "Swiften/Network/HostAddressPort.h"
-#include "Swiften/LinkLocal/DNSSDService.h"
+#include "Swiften/LinkLocal/DNSSD/DNSSDQuerier.h"
+#include "Swiften/LinkLocal/DNSSD/DNSSDResolveHostnameQuery.h"
 
 namespace Swift {
 
 LinkLocalConnector::LinkLocalConnector(
 		const JID& remoteJID,
 		const String& hostname,
+		int interfaceIndex,
 		int port,
-		boost::shared_ptr<DNSSDService> resolver,
+		boost::shared_ptr<DNSSDQuerier> querier,
 		boost::shared_ptr<Connection> connection) : 
-			remoteJID_(remoteJID),
-			hostname_(hostname),
-			port_(port),
-			resolver_(resolver),
-			connection_(connection),
-			resolving_(false) {
+			remoteJID(remoteJID),
+			hostname(hostname),
+			interfaceIndex(interfaceIndex),
+			port(port),
+			querier(querier),
+			connection(connection) {
 }
 
 void LinkLocalConnector::connect() {
-	resolving_ = true;
-	resolver_->onHostnameResolved.connect(boost::bind(&LinkLocalConnector::handleHostnameResolved, boost::dynamic_pointer_cast<LinkLocalConnector>(shared_from_this()), _1, _2));
-	resolver_->resolveHostname(hostname_);
+	resolveQuery = querier->createResolveHostnameQuery(hostname, interfaceIndex);
+	resolveQuery->onHostnameResolved.connect(boost::bind(
+			&LinkLocalConnector::handleHostnameResolved, 
+			boost::dynamic_pointer_cast<LinkLocalConnector>(shared_from_this()), 
+			_1));
+	resolveQuery->run();
 }
 
-void LinkLocalConnector::handleHostnameResolved(const String& hostname, const boost::optional<HostAddress>& address) {
-	if (resolving_) {
-		if (hostname == hostname_) {
-			resolving_ = false;
-			if (address) {
-				connection_->onConnectFinished.connect(boost::bind(boost::ref(onConnectFinished), _1));
-				connection_->connect(HostAddressPort(*address, port_));
-			}
-			else {
-				onConnectFinished(false);
-			}
-		}
+void LinkLocalConnector::handleHostnameResolved(const boost::optional<HostAddress>& address) {
+	if (address) {
+		resolveQuery->finish();
+		resolveQuery.reset();
+		connection->onConnectFinished.connect(
+				boost::bind(boost::ref(onConnectFinished), _1));
+		connection->connect(HostAddressPort(*address, port));
+	}
+	else {
+		onConnectFinished(false);
 	}
 }
 
@@ -50,7 +53,7 @@ void LinkLocalConnector::handleConnected(bool error) {
 }
 
 void LinkLocalConnector::queueElement(boost::shared_ptr<Element> element) {
-	queuedElements_.push_back(element);
+	queuedElements.push_back(element);
 }
 
 

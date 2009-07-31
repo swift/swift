@@ -3,75 +3,89 @@
 #include <string>
 #include <boost/bind.hpp>
 
+#include "Swiften/LinkLocal/LinkLocalConnector.h"
+#include "Swiften/Network/Connection.h"
+#include "Swiften/Session/SessionTracer.h"
+#include "Swiften/Elements/Element.h"
+#include "Swiften/Elements/Presence.h"
+#include "Swiften/Elements/RosterPayload.h"
+#include "Swiften/Network/BoostConnection.h"
+#include "Swiften/Network/BoostConnectionServer.h"
 #include "Swiften/Session/SessionTracer.h"
 #include "Swiften/Elements/IQ.h"
 #include "Swiften/Elements/VCard.h"
 #include "Swiften/Server/UserRegistry.h"
 #include "Swiften/Base/String.h"
 #include "Swiften/LinkLocal/LinkLocalServiceInfo.h"
-#include "Swiften/LinkLocal/LinkLocalRoster.h"
 #include "Swiften/LinkLocal/OutgoingLinkLocalSession.h"
 #include "Swiften/LinkLocal/IncomingLinkLocalSession.h"
+#include "Swiften/LinkLocal/LinkLocalServiceBrowser.h"
 #include "Swiften/Network/ConnectionServer.h"
 #include "Slimber/VCardCollection.h"
+#include "Slimber/LinkLocalPresenceManager.h"
 #include "Swiften/Server/ServerFromClientSession.h"
 
 namespace Swift {
 
-Server::Server(int clientConnectionPort, int linkLocalConnectionPort, boost::shared_ptr<LinkLocalRoster> linkLocalRoster, boost::shared_ptr<DNSSDService> dnsSDService, VCardCollection* vCardCollection) : 
-		dnsSDServiceRegistered_(false), 
-		rosterRequested_(false), 
-		clientConnectionPort_(clientConnectionPort), 
-		linkLocalConnectionPort_(linkLocalConnectionPort),
-		linkLocalRoster_(linkLocalRoster),
-		dnsSDService_(dnsSDService),
-		vCardCollection_(vCardCollection) {
-	serverFromClientConnectionServer_ = 
+Server::Server(
+		int clientConnectionPort, 
+		int linkLocalConnectionPort, 
+		LinkLocalServiceBrowser* linkLocalServiceBrowser,
+		VCardCollection* vCardCollection) : 
+			linkLocalServiceRegistered(false), 
+			rosterRequested(false), 
+			clientConnectionPort(clientConnectionPort), 
+			linkLocalConnectionPort(linkLocalConnectionPort),
+			linkLocalServiceBrowser(linkLocalServiceBrowser),
+			vCardCollection(vCardCollection) {
+	serverFromClientConnectionServer = 
 			boost::shared_ptr<BoostConnectionServer>(new BoostConnectionServer(
-					clientConnectionPort, &boostIOServiceThread_.getIOService()));
-	serverFromClientConnectionServer_->onNewConnection.connect(
+					clientConnectionPort, &boostIOServiceThread.getIOService()));
+	serverFromClientConnectionServer->onNewConnection.connect(
 			boost::bind(&Server::handleNewClientConnection, this, _1));
-	serverFromClientConnectionServer_->start();
+	serverFromClientConnectionServer->start();
 
-	serverFromNetworkConnectionServer_ = 
-		boost::shared_ptr<BoostConnectionServer>(new BoostConnectionServer(
-			linkLocalConnectionPort, &boostIOServiceThread_.getIOService()));
-	serverFromNetworkConnectionServer_->onNewConnection.connect(
-			boost::bind(&Server::handleNewLinkLocalConnection, this, _1));
-	serverFromNetworkConnectionServer_->start();
-
-	dnsSDService_->onServiceRegistered.connect
-			(boost::bind(&Server::handleServiceRegistered, this, _1));
-	linkLocalRoster_->onRosterChanged.connect(
+	presenceManager = new LinkLocalPresenceManager(linkLocalServiceBrowser);
+	presenceManager->onRosterChanged.connect(
 			boost::bind(&Server::handleRosterChanged, this, _1));
-	linkLocalRoster_->onPresenceChanged.connect(
+	presenceManager->onPresenceChanged.connect(
 			boost::bind(&Server::handlePresenceChanged, this, _1));
-	dnsSDService_->start();
+
+	linkLocalServiceBrowser->onServiceRegistered.connect(
+			boost::bind(&Server::handleServiceRegistered, this, _1));
+
+	/*
+	serverFromNetworkConnectionServer = 
+		boost::shared_ptr<BoostConnectionServer>(new BoostConnectionServer(
+			linkLocalConnectionPort, &boostIOServiceThread.getIOService()));
+	serverFromNetworkConnectionServer->onNewConnection.connect(
+			boost::bind(&Server::handleNewLinkLocalConnection, this, _1));
+	serverFromNetworkConnectionServer->start();
+	*/
 }
 
-void Server::handleNewClientConnection(boost::shared_ptr<Connection> c) {
-	if (serverFromClientSession_) {
-		c->disconnect();
+Server::~Server() {
+	delete presenceManager;
+}
+
+void Server::handleNewClientConnection(boost::shared_ptr<Connection> connection) {
+	if (serverFromClientSession) {
+		connection->disconnect();
 	}
-	serverFromClientSession_ = boost::shared_ptr<ServerFromClientSession>(new ServerFromClientSession(idGenerator_.generateID(), c, &payloadParserFactories_, &payloadSerializers_, &userRegistry_));
-	serverFromClientSession_->onSessionStarted.connect(boost::bind(&Server::handleSessionStarted, this));
-	serverFromClientSession_->onElementReceived.connect(boost::bind(&Server::handleElementReceived, this, _1, serverFromClientSession_));
-	serverFromClientSession_->onSessionFinished.connect(boost::bind(&Server::handleSessionFinished, this, serverFromClientSession_));
-	//tracers_.push_back(boost::shared_ptr<SessionTracer>(new SessionTracer(serverFromClientSession_)));
-	serverFromClientSession_->startSession();
-}
-
-void Server::handleNewLinkLocalConnection(boost::shared_ptr<Connection> connection) {
-	boost::shared_ptr<IncomingLinkLocalSession> session(
-			new IncomingLinkLocalSession(
-				selfJID_, connection, 
-				&payloadParserFactories_, &payloadSerializers_));
-	registerLinkLocalSession(session);
-}
-
-void Server::handleServiceRegistered(const DNSSDService::Service& service) {
-	std::cout << "Service registered " << service.name << " " << service.type << " " << service.domain << std::endl;
-	selfJID_ = JID(service.name);
+	serverFromClientSession = boost::shared_ptr<ServerFromClientSession>(
+			new ServerFromClientSession(idGenerator.generateID(), connection, 
+					&payloadParserFactories, &payloadSerializers, &userRegistry));
+	serverFromClientSession->onSessionStarted.connect(
+			boost::bind(&Server::handleSessionStarted, this));
+	serverFromClientSession->onElementReceived.connect(
+			boost::bind(&Server::handleElementReceived, this, _1, 
+				serverFromClientSession));
+	serverFromClientSession->onSessionFinished.connect(
+			boost::bind(&Server::handleSessionFinished, this, 
+			serverFromClientSession));
+	tracers.push_back(boost::shared_ptr<SessionTracer>(
+			new SessionTracer(serverFromClientSession)));
+	serverFromClientSession->startSession();
 }
 
 void Server::handleSessionStarted() {
@@ -79,34 +93,18 @@ void Server::handleSessionStarted() {
 }
 
 void Server::handleSessionFinished(boost::shared_ptr<ServerFromClientSession>) {
-	serverFromClientSession_.reset();
+	serverFromClientSession.reset();
 	unregisterService();
-	selfJID_ = JID();
-	rosterRequested_ = false;
+	selfJID = JID();
+	rosterRequested = false;
 	onSelfConnected(false);
-	lastPresence_.reset();
-}
-
-void Server::handleLinkLocalSessionFinished(boost::shared_ptr<Session> session) {
-	std::cout << "Link local session from " << session->getRemoteJID() << " ended" << std::endl;
-	linkLocalSessions_.erase(std::remove(linkLocalSessions_.begin(), linkLocalSessions_.end(), session), linkLocalSessions_.end());
-}
-
-void Server::handleLinkLocalElementReceived(boost::shared_ptr<Element> element, boost::shared_ptr<Session> session) {
-	if (boost::shared_ptr<Stanza> stanza = boost::dynamic_pointer_cast<Stanza>(element)) {
-		JID fromJID = session->getRemoteJID();
-		if (!linkLocalRoster_->hasItem(fromJID)) {
-			return; // TODO: Queue
-		}
-		stanza->setFrom(fromJID);
-		serverFromClientSession_->sendElement(stanza);
-	}
+	lastPresence.reset();
 }
 
 void Server::unregisterService() {
-	if (dnsSDServiceRegistered_) {
-		dnsSDServiceRegistered_ = false;
-		dnsSDService_->unregisterService();
+	if (linkLocalServiceRegistered) {
+		linkLocalServiceRegistered = false;
+		linkLocalServiceBrowser->unregisterService();
 	}
 }
 
@@ -123,14 +121,17 @@ void Server::handleElementReceived(boost::shared_ptr<Element> element, boost::sh
 
 	if (boost::shared_ptr<Presence> presence = boost::dynamic_pointer_cast<Presence>(stanza)) {
 		if (presence->getType() == Presence::Available) {
-			if (!dnsSDServiceRegistered_) {
-				dnsSDServiceRegistered_ = true;
-				dnsSDService_->registerService(session->getRemoteJID().toBare().toString(), linkLocalConnectionPort_, getLinkLocalServiceInfo(presence));
+			if (!linkLocalServiceRegistered) {
+				linkLocalServiceRegistered = true;
+				linkLocalServiceBrowser->registerService(
+						session->getRemoteJID().toBare().toString(), 
+						linkLocalConnectionPort, getLinkLocalServiceInfo(presence));
 			}
 			else {
-				dnsSDService_->updateService(getLinkLocalServiceInfo(presence));
+				linkLocalServiceBrowser->updateService(
+						getLinkLocalServiceInfo(presence));
 			}
-			lastPresence_ = presence;
+			lastPresence = presence;
 		}
 		else {
 			unregisterService();
@@ -140,9 +141,9 @@ void Server::handleElementReceived(boost::shared_ptr<Element> element, boost::sh
 		if (boost::shared_ptr<IQ> iq = boost::dynamic_pointer_cast<IQ>(stanza)) {
 			if (iq->getPayload<RosterPayload>()) {
 				if (iq->getType() == IQ::Get) {
-					session->sendElement(IQ::createResult(iq->getFrom(), iq->getID(), linkLocalRoster_->getRoster()));
-					rosterRequested_ = true;
-					foreach(const boost::shared_ptr<Presence> presence, linkLocalRoster_->getAllPresence()) {
+					session->sendElement(IQ::createResult(iq->getFrom(), iq->getID(), presenceManager->getRoster()));
+					rosterRequested = true;
+					foreach(const boost::shared_ptr<Presence> presence, presenceManager->getAllPresence()) {
 						session->sendElement(presence);
 					}
 				}
@@ -152,13 +153,13 @@ void Server::handleElementReceived(boost::shared_ptr<Element> element, boost::sh
 			}
 			if (boost::shared_ptr<VCard> vcard = iq->getPayload<VCard>()) {
 				if (iq->getType() == IQ::Get) {
-					session->sendElement(IQ::createResult(iq->getFrom(), iq->getID(), vCardCollection_->getOwnVCard()));
+					session->sendElement(IQ::createResult(iq->getFrom(), iq->getID(), vCardCollection->getOwnVCard()));
 				}
 				else {
-					vCardCollection_->setOwnVCard(vcard);
+					vCardCollection->setOwnVCard(vcard);
 					session->sendElement(IQ::createResult(iq->getFrom(), iq->getID()));
-					if (lastPresence_) {
-						dnsSDService_->updateService(getLinkLocalServiceInfo(lastPresence_));
+					if (lastPresence) {
+						linkLocalServiceBrowser->updateService(getLinkLocalServiceInfo(lastPresence));
 					}
 				}
 			}
@@ -167,6 +168,7 @@ void Server::handleElementReceived(boost::shared_ptr<Element> element, boost::sh
 			}
 		}
 	}
+	/*
 	else {
 		JID toJID = stanza->getTo();
 		boost::shared_ptr<Session> outgoingSession = 
@@ -175,17 +177,17 @@ void Server::handleElementReceived(boost::shared_ptr<Element> element, boost::sh
 			outgoingSession->sendElement(stanza);
 		}
 		else {
-			if (linkLocalRoster_->hasItem(toJID)) {
+			if (linkLocalServiceBrowser->hasItem(toJID)) {
 				boost::shared_ptr<LinkLocalConnector> connector =
 					getLinkLocalConnectorForJID(toJID);
 				if (!connector) {
 					connector = boost::shared_ptr<LinkLocalConnector>(
 							new LinkLocalConnector(
 								toJID, 
-								linkLocalRoster_->getHostname(toJID), 
-								linkLocalRoster_->getPort(toJID), 
-								dnsSDService_,
-								boost::shared_ptr<BoostConnection>(new BoostConnection(&boostIOServiceThread_.getIOService()))));
+								linkLocalServiceBrowser->getHostname(toJID), 
+								linkLocalServiceBrowser->getPort(toJID), 
+								linkLocalServiceBrowser,
+								boost::shared_ptr<BoostConnection>(new BoostConnection(&boostIOServiceThread.getIOService()))));
 					connector->onConnectFinished.connect(
 							boost::bind(&Server::handleConnectFinished, this, connector, _1));
 					connectors_.push_back(connector);
@@ -200,6 +202,32 @@ void Server::handleElementReceived(boost::shared_ptr<Element> element, boost::sh
 			}
 		}
 	}
+	*/
+}
+
+/*
+void Server::handleNewLinkLocalConnection(boost::shared_ptr<Connection> connection) {
+	boost::shared_ptr<IncomingLinkLocalSession> session(
+			new IncomingLinkLocalSession(
+				selfJID, connection, 
+				&payloadParserFactories, &payloadSerializers));
+	registerLinkLocalSession(session);
+}
+
+void Server::handleLinkLocalSessionFinished(boost::shared_ptr<Session> session) {
+	std::cout << "Link local session from " << session->getRemoteJID() << " ended" << std::endl;
+	linkLocalSessions_.erase(std::remove(linkLocalSessions_.begin(), linkLocalSessions_.end(), session), linkLocalSessions_.end());
+}
+
+void Server::handleLinkLocalElementReceived(boost::shared_ptr<Element> element, boost::shared_ptr<Session> session) {
+	if (boost::shared_ptr<Stanza> stanza = boost::dynamic_pointer_cast<Stanza>(element)) {
+		JID fromJID = session->getRemoteJID();
+		if (!linkLocalServiceBrowser->hasItem(fromJID)) {
+			return; // TODO: Queue
+		}
+		stanza->setFrom(fromJID);
+		serverFromClientSession->sendElement(stanza);
+	}
 }
 
 void Server::handleConnectFinished(boost::shared_ptr<LinkLocalConnector> connector, bool error) {
@@ -210,8 +238,8 @@ void Server::handleConnectFinished(boost::shared_ptr<LinkLocalConnector> connect
 	else {
 		boost::shared_ptr<OutgoingLinkLocalSession> outgoingSession(
 				new OutgoingLinkLocalSession(
-					selfJID_, connector->getRemoteJID(), connector->getConnection(),
-					&payloadParserFactories_, &payloadSerializers_));
+					selfJID, connector->getRemoteJID(), connector->getConnection(),
+					&payloadParserFactories, &payloadSerializers));
 		foreach(const boost::shared_ptr<Element> element, connector->getQueuedElements()) {
 			outgoingSession->queueElement(element);
 		}
@@ -225,7 +253,7 @@ void Server::registerLinkLocalSession(boost::shared_ptr<Session> session) {
 	session->onSessionFinished.connect(boost::bind(&Server::handleLinkLocalSessionFinished, this, session));
 	session->onElementReceived.connect(boost::bind(&Server::handleLinkLocalElementReceived, this, _1, session));
 	linkLocalSessions_.push_back(session);
-	//tracers_.push_back(boost::shared_ptr<SessionTracer>(new SessionTracer(session)));
+	//tracers.push_back(boost::shared_ptr<SessionTracer>(new SessionTracer(session)));
 	session->startSession();
 }
 
@@ -246,24 +274,32 @@ boost::shared_ptr<LinkLocalConnector> Server::getLinkLocalConnectorForJID(const 
 	}
 	return boost::shared_ptr<LinkLocalConnector>();
 }
+*/
+
+void Server::handleServiceRegistered(const DNSSDServiceID& service) {
+	selfJID = JID(service.getName());
+}
 
 void Server::handleRosterChanged(boost::shared_ptr<RosterPayload> roster) {
-	if (rosterRequested_) {
-		boost::shared_ptr<IQ> iq = IQ::createRequest(IQ::Set, serverFromClientSession_->getRemoteJID(), idGenerator_.generateID(), roster);
-		iq->setFrom(serverFromClientSession_->getRemoteJID().toBare());
-		serverFromClientSession_->sendElement(iq);
+	if (rosterRequested) {
+		assert(serverFromClientSession);
+		boost::shared_ptr<IQ> iq = IQ::createRequest(
+				IQ::Set, serverFromClientSession->getRemoteJID(), 
+				idGenerator.generateID(), roster);
+		iq->setFrom(serverFromClientSession->getRemoteJID().toBare());
+		serverFromClientSession->sendElement(iq);
 	}
 }
 
 void Server::handlePresenceChanged(boost::shared_ptr<Presence> presence) {
-	if (rosterRequested_) {
-		serverFromClientSession_->sendElement(presence);
+	if (rosterRequested) {
+		serverFromClientSession->sendElement(presence);
 	}
 }
 
 LinkLocalServiceInfo Server::getLinkLocalServiceInfo(boost::shared_ptr<Presence> presence) {
 	LinkLocalServiceInfo info;
-	boost::shared_ptr<VCard> vcard = vCardCollection_->getOwnVCard();
+	boost::shared_ptr<VCard> vcard = vCardCollection->getOwnVCard();
 	if (!vcard->getFamilyName().isEmpty() || !vcard->getGivenName().isEmpty()) {
 		info.setFirstName(vcard->getGivenName());
 		info.setLastName(vcard->getFamilyName());
@@ -294,7 +330,7 @@ LinkLocalServiceInfo Server::getLinkLocalServiceInfo(boost::shared_ptr<Presence>
 			info.setStatus(LinkLocalServiceInfo::DND);
 			break;
 	}
-	info.setPort(linkLocalConnectionPort_);
+	info.setPort(linkLocalConnectionPort);
 	return info;
 }
 

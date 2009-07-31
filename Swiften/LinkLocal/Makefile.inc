@@ -1,18 +1,10 @@
 SWIFTEN_SOURCES += \
-	Swiften/LinkLocal/DNSSDService.cpp \
-	Swiften/LinkLocal/LinkLocalRoster.cpp \
+	Swiften/LinkLocal/LinkLocalServiceBrowser.cpp \
+	Swiften/LinkLocal/LinkLocalService.cpp \
 	Swiften/LinkLocal/LinkLocalServiceInfo.cpp \
 	Swiften/LinkLocal/IncomingLinkLocalSession.cpp \
 	Swiften/LinkLocal/OutgoingLinkLocalSession.cpp \
 	Swiften/LinkLocal/LinkLocalConnector.cpp
 
-ifeq ($(MACOSX),1)
-SWIFTEN_SOURCES += \
-	Swiften/LinkLocal/AppleDNSSDService.cpp
-endif
-ifeq ($(HAVE_AVAHI),yes)
-SWIFTEN_SOURCES += \
-	Swiften/LinkLocal/AvahiDNSSDService.cpp
-endif
-
+include Swiften/LinkLocal/DNSSD/Makefile.inc
 include Swiften/LinkLocal/UnitTest/Makefile.inc

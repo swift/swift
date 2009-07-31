@@ -1,9 +1,12 @@
 #include "Slimber/Cocoa/Slimber.h"
 
+#include <boost/bind.hpp>
+
 #include "Swiften/Base/foreach.h"
-#include "Swiften/Elements/RosterPayload.h"
-#include "Swiften/LinkLocal/AppleDNSSDService.h"
 #include "Swiften/Application/Platform/PlatformApplication.h"
+#include "Swiften/LinkLocal/LinkLocalService.h"
+#include "Swiften/LinkLocal/LinkLocalServiceBrowser.h"
+#include "Swiften/LinkLocal/DNSSD/Bonjour/BonjourQuerier.h"
 #include "Slimber/Cocoa/Menulet.h"
 #include "Slimber/Server.h"
 #include "Slimber/FileVCardCollection.h"
@@ -11,37 +14,46 @@
 using namespace Swift;
 
 Slimber::Slimber() {
-	dnsSDService = boost::shared_ptr<AppleDNSSDService>(new AppleDNSSDService());
+	dnsSDQuerier = boost::shared_ptr<BonjourQuerier>(new BonjourQuerier());
+	dnsSDQuerier->start();
 
-	linkLocalRoster = boost::shared_ptr<LinkLocalRoster>(new LinkLocalRoster(dnsSDService));
-	linkLocalRoster->onRosterChanged.connect(boost::bind(&Slimber::handleRosterChanged, this));
+	linkLocalServiceBrowser = new LinkLocalServiceBrowser(dnsSDQuerier);
+	linkLocalServiceBrowser->onServiceAdded.connect(
+			boost::bind(&Slimber::handleServicesChanged, this));
+	linkLocalServiceBrowser->onServiceRemoved.connect(
+			boost::bind(&Slimber::handleServicesChanged, this));
+	linkLocalServiceBrowser->onServiceChanged.connect(
+			boost::bind(&Slimber::handleServicesChanged, this));
+	linkLocalServiceBrowser->start();
 
-	vCardCollection = new FileVCardCollection(PlatformApplication("Slimber").getSettingsDir());
+	vCardCollection = new FileVCardCollection(
+			PlatformApplication("Slimber").getSettingsDir());
 
-	server = new Server(5222, 5562, linkLocalRoster, dnsSDService, vCardCollection);
-	server->onSelfConnected.connect(boost::bind(&Slimber::handleSelfConnected, this, _1));
+	server = new Server(5222, 5562, linkLocalServiceBrowser, vCardCollection);
+	server->onSelfConnected.connect(
+			boost::bind(&Slimber::handleSelfConnected, this, _1));
 
 	menulet = [[Menulet alloc] init];
-	handleRosterChanged();
+	handleServicesChanged();
 }
 
 Slimber::~Slimber() {
 	[menulet release];
 	delete server;
 	delete vCardCollection;
+	linkLocalServiceBrowser->stop();
+	delete linkLocalServiceBrowser;
+	dnsSDQuerier->stop();
 }
 
 void Slimber::handleSelfConnected(bool b) {
 	[menulet setSelfConnected: b];
 }
 
-void Slimber::handleRosterChanged() {
+void Slimber::handleServicesChanged() {
 	NSMutableArray* names = [[NSMutableArray alloc] init];
-	boost::shared_ptr<RosterPayload> roster = linkLocalRoster->getRoster();
-	foreach(const RosterItemPayload& item, roster->getItems()) {
-		NSString* name = [NSString stringWithUTF8String: item.getName().getUTF8Data()];
-		[names addObject: name];
-		[name release];
+	foreach(const LinkLocalService& service, linkLocalServiceBrowser->getServices()) {
+		[names addObject: [NSString stringWithUTF8String: service.getDescription().getUTF8Data()]];
 	}
 
 	[menulet setUserNames: names];

@@ -38,7 +38,7 @@ using namespace Swift;
 
 class ClientSessionTest : public CppUnit::TestFixture {
 		CPPUNIT_TEST_SUITE(ClientSessionTest);
-		//CPPUNIT_TEST(testConstructor);
+		CPPUNIT_TEST(testConstructor);
 		/*
 		CPPUNIT_TEST(testStart_Error);
 		CPPUNIT_TEST(testStart_XMLError);

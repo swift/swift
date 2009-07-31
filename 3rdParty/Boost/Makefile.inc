@@ -57,6 +57,3 @@ endif
 
 BOOST_OBJECTS = \
 	$(BOOST_SOURCES:.cpp=.o)
-
-CLEANFILES += \
-	$(BOOST_OBJECTS)

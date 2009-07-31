@@ -1,17 +1,16 @@
 SLIMBER_TARGET = Slimber/Slimber.a
 SLIMBER_SOURCES = \
+	Slimber/LinkLocalPresenceManager.cpp \
 	Slimber/FileVCardCollection.cpp \
 	Slimber/VCardCollection.cpp \
 	Slimber/Server.cpp
 SLIMBER_OBJECTS = \
 	$(SLIMBER_SOURCES:.cpp=.o)
 
-CLEANFILES += \
-	$(SLIMBER_OBJECTS) \
-	$(SLIMBER_TARGET)
-DEPS += \
-	$(SLIMBER_SOURCES:.cpp=.dep) \
+DEPS += $(SLIMBER_SOURCES:.cpp=.dep)
+UNITTEST_LIBS += $(SLIMBER_TARGET)
 
+include Slimber/UnitTest/Makefile.inc
 include Slimber/CLI/Makefile.inc
 ifeq ($(MACOSX),1)
 include Slimber/Cocoa/Makefile.inc
