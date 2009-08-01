@@ -5,13 +5,12 @@
 #include <boost/enable_shared_from_this.hpp>
 #include <vector>
 
-#include "Swiften/JID/JID.h"
 #include "Swiften/Network/Connection.h"
+#include "Swiften/LinkLocal/LinkLocalService.h"
 
 namespace Swift {
 	class ConnectionFactory;
 	class HostAddress;
-	class String;
 	class Element;
 	class PayloadParserFactoryCollection;
 	class PayloadSerializerCollection;
@@ -21,15 +20,12 @@ namespace Swift {
 	class LinkLocalConnector : public boost::enable_shared_from_this<LinkLocalConnector> {
 		public:
 			LinkLocalConnector(
-					const JID& remoteJID,
-					const String& hostname,
-					int interfaceIndex,
-					int port,
+					const LinkLocalService& service, 
 					boost::shared_ptr<DNSSDQuerier> querier,
 					boost::shared_ptr<Connection> connection);
 
-			const JID& getRemoteJID() const {
-				return remoteJID;
+			const LinkLocalService& getService() const {
+				return service;
 			}
 
 			void connect();
@@ -50,10 +46,7 @@ namespace Swift {
 			void handleConnected(bool error);
 
 		private:
-			JID remoteJID;
-			String hostname;
-			int interfaceIndex;
-			int port;
+			LinkLocalService service;
 			boost::shared_ptr<DNSSDQuerier> querier;
 			boost::shared_ptr<DNSSDResolveHostnameQuery> resolveQuery;
 			boost::shared_ptr<Connection> connection;

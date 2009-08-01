@@ -12,22 +12,18 @@
 namespace Swift {
 
 LinkLocalConnector::LinkLocalConnector(
-		const JID& remoteJID,
-		const String& hostname,
-		int interfaceIndex,
-		int port,
+		const LinkLocalService& service,
 		boost::shared_ptr<DNSSDQuerier> querier,
 		boost::shared_ptr<Connection> connection) : 
-			remoteJID(remoteJID),
-			hostname(hostname),
-			interfaceIndex(interfaceIndex),
-			port(port),
+			service(service),
 			querier(querier),
 			connection(connection) {
 }
 
 void LinkLocalConnector::connect() {
-	resolveQuery = querier->createResolveHostnameQuery(hostname, interfaceIndex);
+	resolveQuery = querier->createResolveHostnameQuery(
+			service.getHostname(), 
+			service.getID().getNetworkInterfaceID());
 	resolveQuery->onHostnameResolved.connect(boost::bind(
 			&LinkLocalConnector::handleHostnameResolved, 
 			boost::dynamic_pointer_cast<LinkLocalConnector>(shared_from_this()), 
@@ -41,7 +37,7 @@ void LinkLocalConnector::handleHostnameResolved(const boost::optional<HostAddres
 		resolveQuery.reset();
 		connection->onConnectFinished.connect(
 				boost::bind(boost::ref(onConnectFinished), _1));
-		connection->connect(HostAddressPort(*address, port));
+		connection->connect(HostAddressPort(*address, service.getPort()));
 	}
 	else {
 		onConnectFinished(true);

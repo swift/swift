@@ -16,6 +16,7 @@ namespace Swift {
 	class DNSSDServiceID;
 	class String;
 	class VCardCollection;
+	class LinkLocalConnector;
 	class LinkLocalServiceBrowser;
 	class LinkLocalPresenceManager;
 	class BoostConnectionServer;
@@ -42,16 +43,13 @@ namespace Swift {
 			void handleRosterChanged(boost::shared_ptr<RosterPayload> roster);
 			void handlePresenceChanged(boost::shared_ptr<Presence> presence);
 			void handleServiceRegistered(const DNSSDServiceID& service);
-/*
 			void handleNewLinkLocalConnection(boost::shared_ptr<Connection> connection);
 			void handleLinkLocalSessionFinished(boost::shared_ptr<Session> session);
 			void handleLinkLocalElementReceived(boost::shared_ptr<Element> element, boost::shared_ptr<Session> session);
 			void handleConnectFinished(boost::shared_ptr<LinkLocalConnector> connector, bool error);
-			void registerLinkLocalSession(boost::shared_ptr<Session> session);
 			boost::shared_ptr<Session> getLinkLocalSessionForJID(const JID& jid);
 			boost::shared_ptr<LinkLocalConnector> getLinkLocalConnectorForJID(const JID& jid);
-			*/
-
+			void registerLinkLocalSession(boost::shared_ptr<Session> session);
 			void unregisterService();
 			LinkLocalServiceInfo getLinkLocalServiceInfo(boost::shared_ptr<Presence> presence);
 
@@ -82,11 +80,9 @@ namespace Swift {
 			boost::shared_ptr<ServerFromClientSession> serverFromClientSession;
 			boost::shared_ptr<Presence> lastPresence;
 			JID selfJID;
-			/*
-			boost::shared_ptr<BoostConnectionServer> serverFromNetworkConnectionServer_;
-			std::vector< boost::shared_ptr<Session> > linkLocalSessions_;
-			std::vector< boost::shared_ptr<LinkLocalConnector> > connectors_;
-*/
+			boost::shared_ptr<BoostConnectionServer> serverFromNetworkConnectionServer;
+			std::vector< boost::shared_ptr<Session> > linkLocalSessions;
+			std::vector< boost::shared_ptr<LinkLocalConnector> > connectors;
 			std::vector< boost::shared_ptr<SessionTracer> > tracers;
 	};
 }

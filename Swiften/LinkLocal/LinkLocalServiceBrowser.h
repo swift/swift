@@ -36,6 +36,11 @@ namespace Swift {
 
 			std::vector<LinkLocalService> getServices() const;
 
+			// FIXME: Ugly that we need this
+			boost::shared_ptr<DNSSDQuerier> getQuerier() const {
+				return querier;
+			}
+
 			boost::signal<void (const LinkLocalService&)> onServiceAdded;
 			boost::signal<void (const LinkLocalService&)> onServiceChanged;
 			boost::signal<void (const LinkLocalService&)> onServiceRemoved;

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Swiften/Base/String.h"
+#include "Swiften/JID/JID.h"
 #include "Swiften/LinkLocal/DNSSD/DNSSDServiceID.h"
 #include "Swiften/LinkLocal/DNSSD/DNSSDResolveServiceQuery.h"
 #include "Swiften/LinkLocal/LinkLocalServiceInfo.h"
@@ -35,6 +36,8 @@ namespace Swift {
 			}
 
 			String getDescription() const;
+
+			JID getJID() const;
 
 		private:
 			DNSSDServiceID id;

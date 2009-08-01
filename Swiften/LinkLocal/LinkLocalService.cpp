@@ -20,4 +20,8 @@ String LinkLocalService::getDescription() const {
 	return getName();
 }
 
+JID LinkLocalService::getJID() const {
+	return JID(getName());
+}
+
 }

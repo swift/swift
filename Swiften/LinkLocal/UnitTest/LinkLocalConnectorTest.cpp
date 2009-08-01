@@ -74,8 +74,13 @@ class LinkLocalConnectorTest : public CppUnit::TestFixture {
 	
 	private:
 		boost::shared_ptr<LinkLocalConnector> createConnector(const String& hostname, int port) {
-			boost::shared_ptr<LinkLocalConnector> result(new LinkLocalConnector(
-					JID("rabbit@teaparty"), hostname, 0, port, querier, connection));
+			LinkLocalService service(
+					DNSSDServiceID("myname", "local."),
+					DNSSDResolveServiceQuery::Result(
+						"myname._presence._tcp.local", hostname, port,
+						LinkLocalServiceInfo().toTXTRecord()));
+			boost::shared_ptr<LinkLocalConnector> result(
+					new LinkLocalConnector(service, querier, connection));
 			result->onConnectFinished.connect(
 					boost::bind(&LinkLocalConnectorTest::handleConnected, this, _1));
 			return result;

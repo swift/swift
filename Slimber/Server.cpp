@@ -54,14 +54,12 @@ Server::Server(
 	linkLocalServiceBrowser->onServiceRegistered.connect(
 			boost::bind(&Server::handleServiceRegistered, this, _1));
 
-	/*
 	serverFromNetworkConnectionServer = 
 		boost::shared_ptr<BoostConnectionServer>(new BoostConnectionServer(
 			linkLocalConnectionPort, &boostIOServiceThread.getIOService()));
 	serverFromNetworkConnectionServer->onNewConnection.connect(
 			boost::bind(&Server::handleNewLinkLocalConnection, this, _1));
 	serverFromNetworkConnectionServer->start();
-	*/
 }
 
 Server::~Server() {
@@ -168,7 +166,6 @@ void Server::handleElementReceived(boost::shared_ptr<Element> element, boost::sh
 			}
 		}
 	}
-	/*
 	else {
 		JID toJID = stanza->getTo();
 		boost::shared_ptr<Session> outgoingSession = 
@@ -177,20 +174,20 @@ void Server::handleElementReceived(boost::shared_ptr<Element> element, boost::sh
 			outgoingSession->sendElement(stanza);
 		}
 		else {
-			if (linkLocalServiceBrowser->hasItem(toJID)) {
+			boost::optional<LinkLocalService> service = 
+					presenceManager->getServiceForJID(toJID);
+			if (service) {
 				boost::shared_ptr<LinkLocalConnector> connector =
 					getLinkLocalConnectorForJID(toJID);
 				if (!connector) {
 					connector = boost::shared_ptr<LinkLocalConnector>(
 							new LinkLocalConnector(
-								toJID, 
-								linkLocalServiceBrowser->getHostname(toJID), 
-								linkLocalServiceBrowser->getPort(toJID), 
-								linkLocalServiceBrowser,
+								*service,
+								linkLocalServiceBrowser->getQuerier(),
 								boost::shared_ptr<BoostConnection>(new BoostConnection(&boostIOServiceThread.getIOService()))));
 					connector->onConnectFinished.connect(
 							boost::bind(&Server::handleConnectFinished, this, connector, _1));
-					connectors_.push_back(connector);
+					connectors.push_back(connector);
 					connector->connect();
 				}
 				connector->queueElement(element);
@@ -202,10 +199,8 @@ void Server::handleElementReceived(boost::shared_ptr<Element> element, boost::sh
 			}
 		}
 	}
-	*/
 }
 
-/*
 void Server::handleNewLinkLocalConnection(boost::shared_ptr<Connection> connection) {
 	boost::shared_ptr<IncomingLinkLocalSession> session(
 			new IncomingLinkLocalSession(
@@ -216,14 +211,16 @@ void Server::handleNewLinkLocalConnection(boost::shared_ptr<Connection> connecti
 
 void Server::handleLinkLocalSessionFinished(boost::shared_ptr<Session> session) {
 	std::cout << "Link local session from " << session->getRemoteJID() << " ended" << std::endl;
-	linkLocalSessions_.erase(std::remove(linkLocalSessions_.begin(), linkLocalSessions_.end(), session), linkLocalSessions_.end());
+	linkLocalSessions.erase(
+			std::remove(linkLocalSessions.begin(), linkLocalSessions.end(), session), 
+			linkLocalSessions.end());
 }
 
 void Server::handleLinkLocalElementReceived(boost::shared_ptr<Element> element, boost::shared_ptr<Session> session) {
 	if (boost::shared_ptr<Stanza> stanza = boost::dynamic_pointer_cast<Stanza>(element)) {
 		JID fromJID = session->getRemoteJID();
-		if (!linkLocalServiceBrowser->hasItem(fromJID)) {
-			return; // TODO: Queue
+		if (!presenceManager->getServiceForJID(fromJID.toBare())) {
+			return; // TODO: Send error back
 		}
 		stanza->setFrom(fromJID);
 		serverFromClientSession->sendElement(stanza);
@@ -238,27 +235,28 @@ void Server::handleConnectFinished(boost::shared_ptr<LinkLocalConnector> connect
 	else {
 		boost::shared_ptr<OutgoingLinkLocalSession> outgoingSession(
 				new OutgoingLinkLocalSession(
-					selfJID, connector->getRemoteJID(), connector->getConnection(),
+					selfJID, connector->getService().getJID(), connector->getConnection(),
 					&payloadParserFactories, &payloadSerializers));
 		foreach(const boost::shared_ptr<Element> element, connector->getQueuedElements()) {
 			outgoingSession->queueElement(element);
 		}
 		registerLinkLocalSession(outgoingSession);
 	}
-	connectors_.erase(std::remove(connectors_.begin(), connectors_.end(), connector), connectors_.end());
+	connectors.erase(std::remove(connectors.begin(), connectors.end(), connector), connectors.end());
 }
 
-
 void Server::registerLinkLocalSession(boost::shared_ptr<Session> session) {
-	session->onSessionFinished.connect(boost::bind(&Server::handleLinkLocalSessionFinished, this, session));
-	session->onElementReceived.connect(boost::bind(&Server::handleLinkLocalElementReceived, this, _1, session));
-	linkLocalSessions_.push_back(session);
-	//tracers.push_back(boost::shared_ptr<SessionTracer>(new SessionTracer(session)));
+	session->onSessionFinished.connect(
+			boost::bind(&Server::handleLinkLocalSessionFinished, this, session));
+	session->onElementReceived.connect(
+			boost::bind(&Server::handleLinkLocalElementReceived, this, _1, session));
+	linkLocalSessions.push_back(session);
+	tracers.push_back(boost::shared_ptr<SessionTracer>(new SessionTracer(session)));
 	session->startSession();
 }
 
 boost::shared_ptr<Session> Server::getLinkLocalSessionForJID(const JID& jid) {
-	foreach(const boost::shared_ptr<Session> session, linkLocalSessions_) {
+	foreach(const boost::shared_ptr<Session> session, linkLocalSessions) {
 		if (session->getRemoteJID() == jid) {
 			return session;
 		}
@@ -267,14 +265,13 @@ boost::shared_ptr<Session> Server::getLinkLocalSessionForJID(const JID& jid) {
 }
 
 boost::shared_ptr<LinkLocalConnector> Server::getLinkLocalConnectorForJID(const JID& jid) {
-	foreach(const boost::shared_ptr<LinkLocalConnector> connector, connectors_) {
-		if (connector->getRemoteJID() == jid) {
+	foreach(const boost::shared_ptr<LinkLocalConnector> connector, connectors) {
+		if (connector->getService().getJID() == jid) {
 			return connector;
 		}
 	}
 	return boost::shared_ptr<LinkLocalConnector>();
 }
-*/
 
 void Server::handleServiceRegistered(const DNSSDServiceID& service) {
 	selfJID = JID(service.getName());

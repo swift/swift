@@ -20,6 +20,8 @@ namespace Swift {
 			boost::shared_ptr<RosterPayload> getRoster() const;
 			std::vector<boost::shared_ptr<Presence> > getAllPresence() const;
 
+			boost::optional<LinkLocalService> getServiceForJID(const JID&) const;
+
 			boost::signal<void (boost::shared_ptr<RosterPayload>)> onRosterChanged;
 			boost::signal<void (boost::shared_ptr<Presence>)> onPresenceChanged;
 
@@ -30,7 +32,6 @@ namespace Swift {
 
 			RosterItemPayload getRosterItem(const LinkLocalService& service) const;
 			String getRosterName(const LinkLocalService& service) const;
-			JID getJIDForService(const LinkLocalService& service) const;
 			boost::shared_ptr<Presence> getPresence(const LinkLocalService& service) const;
 
 		private:

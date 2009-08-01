@@ -29,6 +29,8 @@ class LinkLocalPresenceManagerTest : public CppUnit::TestFixture {
 		CPPUNIT_TEST(testGetRoster_InfoWithLastName);
 		CPPUNIT_TEST(testGetRoster_InfoWithFirstAndLastName);
 		CPPUNIT_TEST(testGetRoster_NoInfo);
+		CPPUNIT_TEST(testGetServiceForJID);
+		CPPUNIT_TEST(testGetServiceForJID_NoMatch);
 		CPPUNIT_TEST_SUITE_END();
 
 	public:
@@ -174,6 +176,27 @@ class LinkLocalPresenceManagerTest : public CppUnit::TestFixture {
 
 			boost::optional<RosterItemPayload> item = testling->getRoster()->getItem(JID("alice@wonderland"));
 			CPPUNIT_ASSERT_EQUAL(String(""), item->getName());
+		}
+
+		void testGetServiceForJID() {
+			std::auto_ptr<LinkLocalPresenceManager> testling(createTestling());
+
+			addService("alice@wonderland");
+			addService("rabbit@teaparty");
+			addService("queen@garden");
+
+			boost::optional<LinkLocalService> service = testling->getServiceForJID(JID("rabbit@teaparty"));
+			CPPUNIT_ASSERT(service);
+			CPPUNIT_ASSERT_EQUAL(String("rabbit@teaparty"), service->getID().getName());
+		}
+
+		void testGetServiceForJID_NoMatch() {
+			std::auto_ptr<LinkLocalPresenceManager> testling(createTestling());
+
+			addService("alice@wonderland");
+			addService("queen@garden");
+
+			CPPUNIT_ASSERT(!testling->getServiceForJID(JID("rabbit@teaparty")));
 		}
 
 	private:

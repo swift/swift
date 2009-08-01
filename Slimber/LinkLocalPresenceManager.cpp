@@ -18,6 +18,15 @@ LinkLocalPresenceManager::LinkLocalPresenceManager(LinkLocalServiceBrowser* brow
 			boost::bind(&LinkLocalPresenceManager::handleServiceRemoved, this, _1));
 }
 
+boost::optional<LinkLocalService> LinkLocalPresenceManager::getServiceForJID(const JID& j) const {
+	foreach(const LinkLocalService& service, browser->getServices()) {
+		if (service.getJID() == j) {
+			return service;
+		}
+	}
+	return boost::optional<LinkLocalService>();
+}
+
 void LinkLocalPresenceManager::handleServiceAdded(const LinkLocalService& service) {
 	boost::shared_ptr<RosterPayload> roster(new RosterPayload());
 	roster->addItem(getRosterItem(service));
@@ -31,7 +40,7 @@ void LinkLocalPresenceManager::handleServiceChanged(const LinkLocalService& serv
 
 void LinkLocalPresenceManager::handleServiceRemoved(const LinkLocalService& service) {
 	boost::shared_ptr<RosterPayload> roster(new RosterPayload());
-	roster->addItem(RosterItemPayload(getJIDForService(service), "", RosterItemPayload::Remove));
+	roster->addItem(RosterItemPayload(service.getJID(), "", RosterItemPayload::Remove));
 	onRosterChanged(roster);
 }
 
@@ -52,7 +61,7 @@ std::vector<boost::shared_ptr<Presence> > LinkLocalPresenceManager::getAllPresen
 }
 
 RosterItemPayload LinkLocalPresenceManager::getRosterItem(const LinkLocalService& service) const {
- return RosterItemPayload(getJIDForService(service), getRosterName(service), RosterItemPayload::Both);
+ return RosterItemPayload(service.getJID(), getRosterName(service), RosterItemPayload::Both);
 }
 
 String LinkLocalPresenceManager::getRosterName(const LinkLocalService& service) const {
@@ -73,13 +82,9 @@ String LinkLocalPresenceManager::getRosterName(const LinkLocalService& service) 
 	return "";
 }
 
-JID LinkLocalPresenceManager::getJIDForService(const LinkLocalService& service) const {
-	return JID(service.getName());
-}
-
 boost::shared_ptr<Presence> LinkLocalPresenceManager::getPresence(const LinkLocalService& service) const {
 	boost::shared_ptr<Presence> presence(new Presence());
-	presence->setFrom(getJIDForService(service));
+	presence->setFrom(service.getJID());
 	switch (service.getInfo().getStatus()) {
 		case LinkLocalServiceInfo::Available:
 			presence->setShow(StatusShow::Online);
