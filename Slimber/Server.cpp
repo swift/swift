@@ -37,33 +37,82 @@ Server::Server(
 			clientConnectionPort(clientConnectionPort), 
 			linkLocalConnectionPort(linkLocalConnectionPort),
 			linkLocalServiceBrowser(linkLocalServiceBrowser),
-			vCardCollection(vCardCollection) {
+			vCardCollection(vCardCollection),
+			presenceManager(NULL),
+			stopping(false) {
+	linkLocalServiceBrowser->onServiceRegistered.connect(
+			boost::bind(&Server::handleServiceRegistered, this, _1));
+}
+
+Server::~Server() {
+	stop();
+}
+
+void Server::start() {
+	assert(!serverFromClientConnectionServer);
 	serverFromClientConnectionServer = 
 			boost::shared_ptr<BoostConnectionServer>(new BoostConnectionServer(
 					clientConnectionPort, &boostIOServiceThread.getIOService()));
 	serverFromClientConnectionServer->onNewConnection.connect(
 			boost::bind(&Server::handleNewClientConnection, this, _1));
+	serverFromClientConnectionServer->onStopped.connect(
+			boost::bind(&Server::handleClientConnectionServerStopped, this, _1));
 	serverFromClientConnectionServer->start();
 
-	presenceManager = new LinkLocalPresenceManager(linkLocalServiceBrowser);
-	presenceManager->onRosterChanged.connect(
-			boost::bind(&Server::handleRosterChanged, this, _1));
-	presenceManager->onPresenceChanged.connect(
-			boost::bind(&Server::handlePresenceChanged, this, _1));
-
-	linkLocalServiceBrowser->onServiceRegistered.connect(
-			boost::bind(&Server::handleServiceRegistered, this, _1));
-
+	assert(!serverFromNetworkConnectionServer);
 	serverFromNetworkConnectionServer = 
 		boost::shared_ptr<BoostConnectionServer>(new BoostConnectionServer(
 			linkLocalConnectionPort, &boostIOServiceThread.getIOService()));
 	serverFromNetworkConnectionServer->onNewConnection.connect(
 			boost::bind(&Server::handleNewLinkLocalConnection, this, _1));
+	serverFromClientConnectionServer->onStopped.connect(
+			boost::bind(&Server::handleLinkLocalConnectionServerStopped, this, _1));
 	serverFromNetworkConnectionServer->start();
+
+	assert(!presenceManager);
+	presenceManager = new LinkLocalPresenceManager(linkLocalServiceBrowser);
+	presenceManager->onRosterChanged.connect(
+			boost::bind(&Server::handleRosterChanged, this, _1));
+	presenceManager->onPresenceChanged.connect(
+			boost::bind(&Server::handlePresenceChanged, this, _1));
 }
 
-Server::~Server() {
+void Server::stop() {
+	stop(boost::optional<ServerError>());
+}
+
+void Server::stop(boost::optional<ServerError> e) {
+	if (stopping) {
+		return;
+	}
+
+	stopping = true;
+
 	delete presenceManager;
+
+	if (serverFromClientSession) {
+		serverFromClientSession->finishSession();
+	}
+	serverFromClientSession.reset();
+	foreach(boost::shared_ptr<Session> session, linkLocalSessions) {
+		session->finishSession();
+	}
+	linkLocalSessions.clear();
+	foreach(boost::shared_ptr<LinkLocalConnector> connector, connectors) {
+		connector->cancel();
+	}
+	connectors.clear();
+	tracers.clear();
+
+	if (serverFromNetworkConnectionServer) {
+		serverFromNetworkConnectionServer->stop();
+	}
+	if (serverFromClientConnectionServer) {
+		serverFromClientConnectionServer->stop();
+	}
+
+	stopping = false;
+	onStopped(e);
 }
 
 void Server::handleNewClientConnection(boost::shared_ptr<Connection> connection) {
@@ -291,6 +340,34 @@ void Server::handleRosterChanged(boost::shared_ptr<RosterPayload> roster) {
 void Server::handlePresenceChanged(boost::shared_ptr<Presence> presence) {
 	if (rosterRequested) {
 		serverFromClientSession->sendElement(presence);
+	}
+}
+
+void Server::handleClientConnectionServerStopped(boost::optional<BoostConnectionServer::Error> e) {
+	if (e) {
+		if (*e == BoostConnectionServer::Conflict) {
+			stop(ServerError(ServerError::C2SPortConflict));
+		}
+		else {
+			stop(ServerError(ServerError::C2SError));
+		}
+	}
+	else {
+		stop();
+	}
+}
+
+void Server::handleLinkLocalConnectionServerStopped(boost::optional<BoostConnectionServer::Error> e) {
+	if (e) {
+		if (*e == BoostConnectionServer::Conflict) {
+			stop(ServerError(ServerError::LinkLocalPortConflict));
+		}
+		else {
+			stop(ServerError(ServerError::LinkLocalError));
+		}
+	}
+	else {
+		stop();
 	}
 }
 

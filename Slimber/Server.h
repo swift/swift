@@ -1,9 +1,11 @@
 #pragma once
 
 #include <boost/shared_ptr.hpp>
+#include <boost/optional.hpp>
 #include <vector>
 
 #include "Swiften/Network/BoostIOServiceThread.h"
+#include "Swiften/Network/BoostConnectionServer.h"
 #include "Swiften/Server/UserRegistry.h"
 #include "Swiften/Base/IDGenerator.h"
 #include "Swiften/Server/ServerFromClientSession.h"
@@ -11,6 +13,7 @@
 #include "Swiften/Parser/PayloadParsers/FullPayloadParserFactoryCollection.h"
 #include "Swiften/Serializer/PayloadSerializers/FullPayloadSerializerCollection.h"
 #include "Swiften/LinkLocal/LinkLocalServiceInfo.h"
+#include "Slimber/ServerError.h"
 
 namespace Swift {
 	class DNSSDServiceID;
@@ -33,9 +36,15 @@ namespace Swift {
 					VCardCollection* vCardCollection);
 			~Server();
 
+			void start();
+			void stop();
+
 			boost::signal<void (bool)> onSelfConnected;
+			boost::signal<void (boost::optional<ServerError>)> onStopped;
 
 		private:
+			void stop(boost::optional<ServerError>);
+
 			void handleNewClientConnection(boost::shared_ptr<Connection> c);
 			void handleSessionStarted();
 			void handleSessionFinished(boost::shared_ptr<ServerFromClientSession>);
@@ -47,6 +56,10 @@ namespace Swift {
 			void handleLinkLocalSessionFinished(boost::shared_ptr<Session> session);
 			void handleLinkLocalElementReceived(boost::shared_ptr<Element> element, boost::shared_ptr<Session> session);
 			void handleConnectFinished(boost::shared_ptr<LinkLocalConnector> connector, bool error);
+			void handleClientConnectionServerStopped(
+					boost::optional<BoostConnectionServer::Error>);
+			void handleLinkLocalConnectionServerStopped(
+					boost::optional<BoostConnectionServer::Error>);
 			boost::shared_ptr<Session> getLinkLocalSessionForJID(const JID& jid);
 			boost::shared_ptr<LinkLocalConnector> getLinkLocalConnectorForJID(const JID& jid);
 			void registerLinkLocalSession(boost::shared_ptr<Session> session);
@@ -76,6 +89,7 @@ namespace Swift {
 			LinkLocalServiceBrowser* linkLocalServiceBrowser;
 			VCardCollection* vCardCollection;
 			LinkLocalPresenceManager* presenceManager;
+			bool stopping;
 			boost::shared_ptr<BoostConnectionServer> serverFromClientConnectionServer;
 			boost::shared_ptr<ServerFromClientSession> serverFromClientSession;
 			boost::shared_ptr<Presence> lastPresence;

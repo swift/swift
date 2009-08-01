@@ -2,6 +2,7 @@ NETWORKTEST_TARGET += Swiften/QA/NetworkTest/checker
 NETWORKTEST_SOURCES += \
 	Swiften/QA/NetworkTest/DomainNameResolverTest.cpp \
 	Swiften/QA/NetworkTest/BoostConnectionTest.cpp \
+	Swiften/QA/NetworkTest/BoostConnectionServerTest.cpp \
 	QA/UnitTest/checker.cpp
 NETWORKTEST_OBJECTS = \
 	$(NETWORKTEST_SOURCES:.cpp=.o)
