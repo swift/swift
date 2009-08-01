@@ -12,8 +12,9 @@
 		[statusItem setToolTip: @"Slimber"];	
 		[statusItem setMenu: statusMenu];
 
+		xmppStatus = @"";
+		xmppOnline = NO;
 		userNames = [[NSArray alloc] init];
-		selfOnline = NO;
 
 		[self updateMenu];
 	}
@@ -65,12 +66,11 @@
 	NSMenuItem* loggedInItem;
 	NSBundle* bundle = [NSBundle bundleForClass: [self class]];
 	NSString* path;
-	if (selfOnline) {
-		loggedInItem = [[NSMenuItem alloc] initWithTitle: @"You are logged in" action: NULL keyEquivalent: @""];
+	loggedInItem = [[NSMenuItem alloc] initWithTitle: xmppStatus action: NULL keyEquivalent: @""];
+	if (xmppOnline) {
 		path = [bundle pathForResource: @"Online" ofType:@"png"];
 	}
 	else {
-		loggedInItem = [[NSMenuItem alloc] initWithTitle: @"You are not logged in" action: NULL keyEquivalent: @""];
 		path = [bundle pathForResource: @"Offline" ofType:@"png"];
 	}
 	[loggedInItem setImage: [[NSImage alloc] initWithContentsOfFile: path]];
@@ -89,8 +89,9 @@
 	[statusMenu addItem: exitMenuItem];
 }
 
-- (void) setSelfConnected: (BOOL) online {
-	selfOnline = online;
+- (void) setXMPPStatus: (NSString*) status online: (BOOL) online {
+	xmppStatus = status; // TODO: Should I retain status?
+	xmppOnline = online;
 	[self updateMenu];
 }
 

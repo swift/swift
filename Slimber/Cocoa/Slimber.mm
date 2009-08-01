@@ -30,11 +30,16 @@ Slimber::Slimber() {
 			PlatformApplication("Slimber").getSettingsDir());
 
 	server = new Server(5222, 5562, linkLocalServiceBrowser, vCardCollection);
+	server->onStopped.connect(
+			boost::bind(&Slimber::handleServerStopped, this, _1));
 	server->onSelfConnected.connect(
 			boost::bind(&Slimber::handleSelfConnected, this, _1));
 
 	menulet = [[Menulet alloc] init];
+	handleSelfConnected(false);
 	handleServicesChanged();
+
+	server->start();
 }
 
 Slimber::~Slimber() {
@@ -47,7 +52,12 @@ Slimber::~Slimber() {
 }
 
 void Slimber::handleSelfConnected(bool b) {
-	[menulet setSelfConnected: b];
+	if (b) {
+		[menulet setXMPPStatus: @"You are logged in" online: true];
+	}
+	else {
+		[menulet setXMPPStatus: @"You are not logged in" online: false];
+	}
 }
 
 void Slimber::handleServicesChanged() {
@@ -58,4 +68,13 @@ void Slimber::handleServicesChanged() {
 
 	[menulet setUserNames: names];
 	[names release];
+}
+
+void Slimber::handleServerStopped(boost::optional<ServerError> error) {
+	if (error) {
+		[menulet setXMPPStatus: @"XMPP Server Error." online: false];
+	}
+	else {
+		[menulet setXMPPStatus: @"XMPP Server Not Runnning." online: false];
+	}
 }

@@ -5,12 +5,13 @@
 	NSMenu* statusMenu;
 	NSImage* menuIcon;
 	NSArray* userNames;
-	BOOL selfOnline;
+	BOOL xmppOnline;
+	NSString* xmppStatus;
 }
 
 - (id) init;
 - (void) updateMenu;
 - (void) setUserNames: (NSArray*) names;
-- (void) setSelfConnected: (BOOL) online;
+- (void) setXMPPStatus: (NSString*) status online: (BOOL) online;
 
 @end

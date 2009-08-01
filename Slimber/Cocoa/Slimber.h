@@ -1,6 +1,9 @@
 #pragma once
 
 #include <boost/shared_ptr.hpp>
+#include <boost/optional.hpp>
+
+#include "Slimber/ServerError.h"
 
 @class Menulet;
 namespace Swift {
@@ -18,6 +21,7 @@ class Slimber {
 	private:
 		void handleSelfConnected(bool b);
 		void handleServicesChanged();
+		void handleServerStopped(boost::optional<Swift::ServerError> error);
 
 	private:
 		boost::shared_ptr<Swift::BonjourQuerier> dnsSDQuerier;
