@@ -25,6 +25,7 @@
   <key>LSUIElement</key>
   <string>1</string>
 	<key>NSHumanReadableCopyright</key>
-	<string>© 2009 Swift Development Team. All Rights Reserved.</string>
+	<string>© 2009 Swift Development Team.
+All Rights Reserved.</string>
 </dict>
 </plist>
