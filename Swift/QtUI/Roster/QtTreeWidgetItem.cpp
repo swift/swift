@@ -7,6 +7,7 @@ namespace Swift {
 
 QtTreeWidgetItem::QtTreeWidgetItem(QtTreeWidgetItem* parentItem) : QObject() {
 	parent_ = parentItem;
+	shown_ = true;
 }
 
 void QtTreeWidgetItem::setText(const String& text) {
@@ -37,13 +38,18 @@ void QtTreeWidgetItem::setExpanded(bool b) {
 }
 
 void QtTreeWidgetItem::hide() {
-	//setHidden(true);
+	shown_ = false;
+	emit changed();
 }
 
 void QtTreeWidgetItem::show() {
-	//setHidden(false);
+	shown_ = true;
+	emit changed();
 }
 
+bool QtTreeWidgetItem::isShown() {
+	return shown_;
+}
 
 QWidget* QtTreeWidgetItem::getCollapsedRosterWidget() {
 	QWidget* widget = new QWidget();
@@ -66,19 +72,28 @@ QtTreeWidgetItem* QtTreeWidgetItem::getParentItem() {
 }
 
 void QtTreeWidgetItem::addChild(QtTreeWidgetItem* child) {
-	printf("Boing\n");
 	children_.append(child);
-	connect(child, SIGNAL(changed()), this, SIGNAL(changed()));
+	connect(child, SIGNAL(changed()), this, SLOT(handleChanged()));
+	handleChanged();
+}
+
+void QtTreeWidgetItem::handleChanged() {
+	shownChildren_.clear();
+	for (int i = 0; i < children_.size(); i++) {
+		if (children_[i]->isShown()) {
+			shownChildren_.append(children_[i]);
+		}
+	}
 	emit changed();
 }
 
 int QtTreeWidgetItem::rowCount() {
 	qDebug() << "Returning size of " << children_.size() << " for item " << displayName_;
-	return children_.size();
+	return shownChildren_.size();
 }
 
 int QtTreeWidgetItem::rowOf(QtTreeWidgetItem* item) {
-	return children_.indexOf(item);
+	return shownChildren_.indexOf(item);
 }
 
 int QtTreeWidgetItem::row() {
@@ -87,7 +102,7 @@ int QtTreeWidgetItem::row() {
 
 QtTreeWidgetItem* QtTreeWidgetItem::getItem(int row) {
 	qDebug() << "Returning row " << row << " from item " << displayName_;
-	return children_[row];
+	return shownChildren_[row];
 }
 
 QVariant QtTreeWidgetItem::data(int role) {

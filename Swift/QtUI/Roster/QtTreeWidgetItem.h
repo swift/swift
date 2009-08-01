@@ -39,6 +39,7 @@ class QtTreeWidgetItem : public QObject, public TreeWidgetItem {
 			void setExpanded(bool b);
 			void hide();
 			void show();
+			bool isShown();
 			bool isContact();
 
 			QWidget* getCollapsedRosterWidget();
@@ -46,13 +47,17 @@ class QtTreeWidgetItem : public QObject, public TreeWidgetItem {
 		
 		signals:
 			void changed();
+		private slots:
+			void handleChanged();
 		private:
 			QList<QtTreeWidgetItem*> children_;
+			QList<QtTreeWidgetItem*> shownChildren_;
 			QtTreeWidgetItem* parent_;
 			QString displayName_;
 			QString statusText_;
 			QColor textColor_;
 			QColor backgroundColor_;
+			bool shown_;
 };
 
 }
