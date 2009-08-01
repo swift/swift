@@ -16,7 +16,15 @@ namespace Swift {
 			public EventOwner,
 			public boost::enable_shared_from_this<FakeConnection> {
 		public:
-			FakeConnection() {}
+			enum State {
+				Initial,
+				Connecting,
+				Connected,
+				Disconnected,
+				DisconnectedWithError
+			};
+
+			FakeConnection() : state(Initial), delayConnect(false) {}
 
 			virtual void listen() {
 				assert(false);
@@ -24,6 +32,7 @@ namespace Swift {
 
 			void setError(const Error& e) {
 				error = boost::optional<Error>(e);
+				state = DisconnectedWithError;
 				if (connectedTo) {
 					MainEventLoop::postEvent(
 							boost::bind(boost::ref(onDisconnected), error),
@@ -32,15 +41,31 @@ namespace Swift {
 			}
 
 			virtual void connect(const HostAddressPort& address) {
-				if (!error) {
-					connectedTo = address;
+				if (delayConnect) {
+					state = Connecting;
 				}
-				MainEventLoop::postEvent(
-						boost::bind(boost::ref(onConnectFinished), error),
-						shared_from_this());
+				else {
+					if (!error) {
+						connectedTo = address;
+						state = Connected;
+					}
+					else {
+						state = DisconnectedWithError;
+					}
+					MainEventLoop::postEvent(
+							boost::bind(boost::ref(onConnectFinished), error),
+							shared_from_this());
+				}
 			}
 
 			virtual void disconnect() {
+				if (!error) {
+					state = Disconnected;
+				}
+				else {
+					state = DisconnectedWithError;
+				}
+				connectedTo.reset();
 				MainEventLoop::postEvent(
 						boost::bind(boost::ref(onDisconnected), error),
 						shared_from_this());
@@ -50,8 +75,14 @@ namespace Swift {
 				dataWritten.push_back(data);
 			}
 
+			void setDelayConnect() {
+				delayConnect = true;
+			}
+
 			boost::optional<HostAddressPort> connectedTo;
 			std::vector<ByteArray> dataWritten;
 			boost::optional<Error> error;
+			State state;
+			bool delayConnect;
 	};
 }

@@ -39,7 +39,7 @@ namespace Swift {
 			void removeService(const DNSSDServiceID& id);
 			void setServiceInfo(const DNSSDServiceID& id, const DNSSDResolveServiceQuery::Result& info);
 			bool isServiceRegistered(const String& name, int port, const ByteArray& info);
-			void setAddress(const String& hostname, const HostAddress& address);
+			void setAddress(const String& hostname, boost::optional<HostAddress> address);
 
 			void setBrowseError();
 			void setRegisterError();
@@ -62,6 +62,6 @@ namespace Swift {
 			std::set<DNSSDServiceID> services;
 			typedef std::map<DNSSDServiceID,DNSSDResolveServiceQuery::Result> ServiceInfoMap;
 			ServiceInfoMap serviceInfo;
-			std::map<String, HostAddress> addresses;
+			std::map<String, boost::optional<HostAddress> > addresses;
 	};
 }

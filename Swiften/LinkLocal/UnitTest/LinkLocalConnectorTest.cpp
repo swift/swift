@@ -16,6 +16,8 @@ class LinkLocalConnectorTest : public CppUnit::TestFixture {
 		CPPUNIT_TEST(testConnect);
 		CPPUNIT_TEST(testConnect_UnableToResolve);
 		CPPUNIT_TEST(testConnect_UnableToConnect);
+		CPPUNIT_TEST(testCancel_DuringResolve);
+		CPPUNIT_TEST(testCancel_DuringConnect);
 		CPPUNIT_TEST_SUITE_END();
 
 	public:
@@ -49,6 +51,7 @@ class LinkLocalConnectorTest : public CppUnit::TestFixture {
 		void testConnect_UnableToResolve() {
 			boost::shared_ptr<LinkLocalConnector> 
 					testling(createConnector("rabbithole.local", 1234));
+			querier->setAddress("rabbithole.local", boost::optional<HostAddress>());
 
 			testling->connect();
 			eventLoop->processEvents();
@@ -70,6 +73,36 @@ class LinkLocalConnectorTest : public CppUnit::TestFixture {
 			CPPUNIT_ASSERT(connectFinished);
 			CPPUNIT_ASSERT(connectError);
 			CPPUNIT_ASSERT(!connection->connectedTo);
+		}
+
+		void testCancel_DuringResolve() {
+			boost::shared_ptr<LinkLocalConnector> 
+					testling(createConnector("rabbithole.local", 1234));
+			testling->connect();
+			eventLoop->processEvents();
+			CPPUNIT_ASSERT(!connectFinished);
+
+			testling->cancel();
+			eventLoop->processEvents();
+			querier->setAddress("rabbithole.local", HostAddress("192.168.1.1"));
+			eventLoop->processEvents();
+
+			CPPUNIT_ASSERT(FakeConnection::Disconnected == connection->state);
+		}
+
+		void testCancel_DuringConnect() {
+			boost::shared_ptr<LinkLocalConnector> 
+					testling(createConnector("rabbithole.local", 1234));
+			querier->setAddress("rabbithole.local", HostAddress("192.168.1.1"));
+			connection->setDelayConnect();
+			testling->connect();
+			eventLoop->processEvents();
+			CPPUNIT_ASSERT(FakeConnection::Connecting == connection->state);
+
+			testling->cancel();
+			eventLoop->processEvents();
+
+			CPPUNIT_ASSERT(FakeConnection::Disconnected == connection->state);
 		}
 	
 	private:

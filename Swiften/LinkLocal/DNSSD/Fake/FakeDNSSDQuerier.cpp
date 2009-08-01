@@ -48,18 +48,11 @@ void FakeDNSSDQuerier::addRunningQuery(boost::shared_ptr<FakeDNSSDQuery> query) 
 		MainEventLoop::postEvent(boost::bind(boost::ref(registerQuery->onRegisterFinished), service), shared_from_this());
 	}
 	else if (boost::shared_ptr<FakeDNSSDResolveHostnameQuery> resolveHostnameQuery = boost::dynamic_pointer_cast<FakeDNSSDResolveHostnameQuery>(query)) {
-		std::map<String,HostAddress>::const_iterator i = addresses.find(resolveHostnameQuery->hostname);
+		std::map<String,boost::optional<HostAddress> >::const_iterator i = addresses.find(resolveHostnameQuery->hostname);
 		if (i != addresses.end()) {
 			MainEventLoop::postEvent(
 					boost::bind(
 						boost::ref(resolveHostnameQuery->onHostnameResolved), i->second), 
-					shared_from_this());
-		}
-		else {
-			MainEventLoop::postEvent(
-					boost::bind(
-						boost::ref(resolveHostnameQuery->onHostnameResolved), 
-						boost::optional<HostAddress>()), 
 					shared_from_this());
 		}
 	}
@@ -118,8 +111,14 @@ void FakeDNSSDQuerier::setRegisterError() {
 	}
 }
 
-void FakeDNSSDQuerier::setAddress(const String& hostname, const HostAddress& address) {
+void FakeDNSSDQuerier::setAddress(const String& hostname, boost::optional<HostAddress> address) {
 	addresses[hostname] = address;
+	foreach(const boost::shared_ptr<FakeDNSSDResolveHostnameQuery>& query, getQueries<FakeDNSSDResolveHostnameQuery>()) {
+		if (query->hostname == hostname) {
+			MainEventLoop::postEvent(boost::bind(
+					boost::ref(query->onHostnameResolved), address), shared_from_this());
+		}
+	}
 }
 
 }

@@ -23,12 +23,14 @@ namespace Swift {
 					const LinkLocalService& service, 
 					boost::shared_ptr<DNSSDQuerier> querier,
 					boost::shared_ptr<Connection> connection);
+			~LinkLocalConnector();
 
 			const LinkLocalService& getService() const {
 				return service;
 			}
 
 			void connect();
+			void cancel();
 			void queueElement(boost::shared_ptr<Element> element);
 
 			const std::vector<boost::shared_ptr<Element> >& getQueuedElements() const {

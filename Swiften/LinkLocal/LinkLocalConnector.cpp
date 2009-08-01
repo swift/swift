@@ -20,6 +20,10 @@ LinkLocalConnector::LinkLocalConnector(
 			connection(connection) {
 }
 
+LinkLocalConnector::~LinkLocalConnector() {
+	assert(!resolveQuery);
+}
+
 void LinkLocalConnector::connect() {
 	resolveQuery = querier->createResolveHostnameQuery(
 			service.getHostname(), 
@@ -29,6 +33,14 @@ void LinkLocalConnector::connect() {
 			boost::dynamic_pointer_cast<LinkLocalConnector>(shared_from_this()), 
 			_1));
 	resolveQuery->run();
+}
+
+void LinkLocalConnector::cancel() {
+	if (resolveQuery) {
+		resolveQuery->finish();
+	}
+	resolveQuery.reset();
+	connection->disconnect();
 }
 
 void LinkLocalConnector::handleHostnameResolved(const boost::optional<HostAddress>& address) {
