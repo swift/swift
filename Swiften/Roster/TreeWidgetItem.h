@@ -13,6 +13,8 @@ class TreeWidgetItem {
 	public:
 		virtual ~TreeWidgetItem() {}
 		virtual void setText(const String& text) = 0;
+		virtual void setStatusText(const String& text) = 0;
+		virtual void setAvatarPath(const String& path) = 0;
 		virtual void setExpanded(bool b) = 0;
 		virtual void setTextColor(unsigned long color) = 0;
 		virtual void setBackgroundColor(unsigned long color) = 0;

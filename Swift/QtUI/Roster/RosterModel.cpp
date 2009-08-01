@@ -18,7 +18,7 @@ void RosterModel::setRoot(QtTreeWidgetItem* root) {
 void RosterModel::handleItemChanged() {
 	//FIXME: This is just a lazy hack to cause the view to refresh until it works.
 	// Then I'll replace it with the proper implementation.
-	printf("Changed\n");
+	//printf("Changed\n");
 	reset();
 	emit layoutChanged();
 }

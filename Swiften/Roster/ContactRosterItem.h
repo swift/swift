@@ -23,6 +23,8 @@ class ContactRosterItem : public RosterItem {
 
 		StatusShow::Type getStatusShow();
 		void setStatusShow(StatusShow::Type show);
+		void setStatusText(const String& status);
+		void setAvatarPath(const String& path);
 		const JID& getJID() const;
 		void show();
 		void hide();

@@ -5,18 +5,22 @@
 
 namespace Swift {
 
-QtTreeWidgetItem::QtTreeWidgetItem(QtTreeWidgetItem* parentItem) : QObject() {
+QtTreeWidgetItem::QtTreeWidgetItem(QtTreeWidgetItem* parentItem) : QObject(), textColor_(0,0,0), backgroundColor_(255,255,255) {
 	parent_ = parentItem;
 	shown_ = true;
 }
 
 void QtTreeWidgetItem::setText(const String& text) {
 	displayName_ = P2QSTRING(text);
-	statusText_ = displayName_ + " went away";
 }
 
 void QtTreeWidgetItem::setStatusText(const String& text) {
 	statusText_ = P2QSTRING(text);
+}
+
+void QtTreeWidgetItem::setAvatarPath(const String& path) {
+	qDebug() << "Setting avatar to " << P2QSTRING(path);
+	avatar_ = QIcon(P2QSTRING(path));
 }
 
 void QtTreeWidgetItem::setTextColor(unsigned long color) {
@@ -48,7 +52,7 @@ void QtTreeWidgetItem::show() {
 }
 
 bool QtTreeWidgetItem::isShown() {
-	return shown_;
+	return isContact() ? shown_ : shownChildren_.size() > 0;
 }
 
 QWidget* QtTreeWidgetItem::getCollapsedRosterWidget() {
@@ -88,7 +92,7 @@ void QtTreeWidgetItem::handleChanged() {
 }
 
 int QtTreeWidgetItem::rowCount() {
-	qDebug() << "Returning size of " << children_.size() << " for item " << displayName_;
+	//qDebug() << "Returning size of " << children_.size() << " for item " << displayName_;
 	return shownChildren_.size();
 }
 
@@ -101,14 +105,18 @@ int QtTreeWidgetItem::row() {
 }
 
 QtTreeWidgetItem* QtTreeWidgetItem::getItem(int row) {
-	qDebug() << "Returning row " << row << " from item " << displayName_;
+	//qDebug() << "Returning row " << row << " from item " << displayName_;
 	return shownChildren_[row];
 }
+
 
 QVariant QtTreeWidgetItem::data(int role) {
  	switch (role) {
 	 	case Qt::DisplayRole: return displayName_;
+		case Qt::TextColorRole: return textColor_;
+		case Qt::BackgroundColorRole: return backgroundColor_;
 	 	case StatusTextRole: return statusText_;
+		case AvatarRole: return avatar_;
 	 	default: return QVariant();
 	}
 }

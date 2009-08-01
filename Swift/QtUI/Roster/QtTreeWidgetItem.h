@@ -2,6 +2,7 @@
 #define SWIFT_QtTreeWidgetItem_H
 
 #include <QColor>
+#include <QVariant>
 
 #include "Swiften/Base/String.h"
 #include "Swiften/Roster/TreeWidgetFactory.h"
@@ -33,6 +34,7 @@ class QtTreeWidgetItem : public QObject, public TreeWidgetItem {
 			QVariant data(int role);
 			QtTreeWidgetItem(QtTreeWidgetItem* parentItem);
 			void setText(const String& text);
+			void setAvatarPath(const String& path);
 			void setStatusText(const String& text);
 			void setTextColor(unsigned long color);
 			void setBackgroundColor(unsigned long color);
@@ -57,6 +59,7 @@ class QtTreeWidgetItem : public QObject, public TreeWidgetItem {
 			QString statusText_;
 			QColor textColor_;
 			QColor backgroundColor_;
+			QVariant avatar_;
 			bool shown_;
 };
 

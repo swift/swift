@@ -16,7 +16,7 @@ QSize RosterDelegate::sizeHint(const QStyleOptionViewItem& option, const QModelI
 	}
 	//Doesn't work, yay! FIXME: why?
 	QSize size = (option.state & QStyle::State_Selected) ? QSize(150, 80) : QSize(150, avatarSize_ + margin_ * 2);
-	qDebug() << "Returning size" << size;
+	//qDebug() << "Returning size" << size;
 	return size;
 }
 
@@ -26,7 +26,7 @@ void RosterDelegate::paint(QPainter* painter, const QStyleOptionViewItem& option
 		QStyledItemDelegate::paint(painter, option, index);
 		return;
 	}
-	qDebug() << "painting" << index.data(Qt::DisplayRole).toString();
+	//qDebug() << "painting" << index.data(Qt::DisplayRole).toString();
 	painter->save();
 	//QStyledItemDelegate::paint(painter, option, index);
 	//initStyleOption(option, index);
@@ -48,8 +48,10 @@ void RosterDelegate::paint(QPainter* painter, const QStyleOptionViewItem& option
 	QRect textRegion(fullRegion.adjusted(avatarSize_ + margin_ * 2, 0, 0, 0));
 	
 	QFontMetrics nameMetrics(nameFont);
-	int nameHeight = nameMetrics.height() + margin_ * 2;
+	int nameHeight = nameMetrics.height() + margin_;
 	QRect nameRegion(textRegion.adjusted(0, margin_, 0, 0));
+	QColor nameColor = index.data(Qt::TextColorRole).value<QColor>();
+	painter->setPen(QPen(nameColor));
 	painter->drawText(nameRegion, Qt::AlignTop, index.data(Qt::DisplayRole).toString());
 	
 	statusFont.setStyle(QFont::StyleItalic);

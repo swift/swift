@@ -20,8 +20,10 @@ class SetPresence : public RosterItemOperation {
 			if (contact && contact->getJID().equals(presence_->getFrom(), compareType_)) {
 				if (presence_->getType() != Presence::Available) {
 					contact->setStatusShow(StatusShow::None);
+					contact->setStatusText(presence_->getStatus());
 				} else {
 					contact->setStatusShow(presence_->getShow());
+					contact->setStatusText(presence_->getStatus());
 				}
 			}
 		}
