@@ -3,6 +3,7 @@
 #include <QPainter>
 #include <QColor>
 #include <QBrush>
+#include <QFontMetrics>
 #include <qdebug.h>
 
 #include "QtTreeWidgetItem.h"
@@ -14,7 +15,7 @@ QSize RosterDelegate::sizeHint(const QStyleOptionViewItem& option, const QModelI
 		return QStyledItemDelegate::sizeHint(option, index);
 	}
 	//Doesn't work, yay! FIXME: why?
-	QSize size = (option.state & QStyle::State_Selected) ? QSize(200, 50) : QSize(100,50);
+	QSize size = (option.state & QStyle::State_Selected) ? QSize(150, 80) : QSize(150,56);
 	qDebug() << "Returning size" << size;
 	return size;
 }
@@ -34,7 +35,7 @@ void RosterDelegate::paint(QPainter* painter, const QStyleOptionViewItem& option
 		painter->fillRect(fullRegion, option.palette.highlight());
 		painter->setPen(option.palette.highlightedText().color());
 	} 
-	QRect avatarRegion(QPoint(0, fullRegion.top()), QSize(32, 32));
+	QRect avatarRegion(QPoint(4, fullRegion.top() + 4), QSize(48, 48));
 	QIcon icon = index.data(AvatarRole).isValid() && !index.data(AvatarRole).value<QIcon>().isNull()
 		? index.data(AvatarRole).value<QIcon>()
 		: QIcon(":/icons/avatar.png");
@@ -42,15 +43,21 @@ void RosterDelegate::paint(QPainter* painter, const QStyleOptionViewItem& option
 	
 	QFont nameFont = painter->font();
 	QFont statusFont = painter->font();
-	statusFont.setStyle(QFont::StyleItalic);
-	//statusFont.setSize(-1);
+	
 	painter->setFont(nameFont);
-	QRect textRegion(fullRegion.adjusted(avatarRegion.width(), 0, 0, 0));
-	QRect nameRegion(textRegion.adjusted(0,0,0,-25));
-	painter->drawText(nameRegion, Qt::AlignVCenter, index.data(Qt::DisplayRole).toString());
+	QRect textRegion(fullRegion.adjusted(56, 0, 0, 0));
+	
+	QFontMetrics nameMetrics(nameFont);
+	int nameHeight = nameMetrics.height() + 8;
+	QRect nameRegion(textRegion.adjusted(0, 4, 0, -1 * nameHeight));
+	painter->drawText(nameRegion, Qt::AlignTop, index.data(Qt::DisplayRole).toString());
+	
+	statusFont.setStyle(QFont::StyleItalic);
+	statusFont.setPointSize(10);
 	painter->setFont(statusFont);
-	QRect statusTextRegion(textRegion.adjusted(0, 25, 0, 0));
-	painter->drawText(statusTextRegion, Qt::AlignVCenter, index.data(StatusTextRole).toString());
+	painter->setPen(QPen(QColor(160,160,160)));
+	QRect statusTextRegion(textRegion.adjusted(0, nameHeight, 0, 0));
+	painter->drawText(statusTextRegion, Qt::AlignTop, index.data(StatusTextRole).toString());
 	
 	painter->restore();
 }
