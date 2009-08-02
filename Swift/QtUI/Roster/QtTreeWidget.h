@@ -2,7 +2,7 @@
 #define SWIFT_QtTreeWidget_H
 
 #include <QTreeView>
-
+#include <QModelIndex>
 #include "Swiften/Roster/TreeWidgetFactory.h"
 #include "Swiften/Roster/TreeWidget.h"
 #include "Swiften/Roster/TreeWidgetItem.h"
@@ -20,8 +20,8 @@ class QtTreeWidget : public QTreeView, public TreeWidget {
 		~QtTreeWidget();
 		void show();
 		QtTreeWidgetItem* getRoot();
-	//private slots:
-	//	void handleItemActivated(QTreeWidgetItem*, int);
+	private slots:
+		void handleItemActivated(const QModelIndex&);
 	private:
 		void drawBranches(QPainter*, const QRect&, const QModelIndex&) const;
 		RosterModel* model_;
