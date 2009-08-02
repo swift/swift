@@ -39,6 +39,14 @@ namespace Swift {
 			void start();
 			void stop();
 
+			int getLinkLocalPort() const {
+				return linkLocalConnectionPort;
+			}
+
+			int getClientToServerPort() const {
+				return clientConnectionPort;
+			}
+
 			boost::signal<void (bool)> onSelfConnected;
 			boost::signal<void (boost::optional<ServerError>)> onStopped;
 

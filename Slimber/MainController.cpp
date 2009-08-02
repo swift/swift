@@ -1,6 +1,7 @@
 #include "Slimber/MainController.h"
 
 #include <boost/bind.hpp>
+#include <boost/lexical_cast.hpp>
 #include <iostream>
 
 #include "Swiften/Base/foreach.h"
@@ -86,7 +87,22 @@ void MainController::handleServicesChanged() {
 
 void MainController::handleServerStopped(boost::optional<ServerError> error) {
 	if (error) {
-		menuletController->setXMPPStatus("XMPP Server Error", MenuletController::Offline);
+		String message;
+		switch (error->getType()) {
+			case ServerError::C2SPortConflict: 
+				message = String("Error: Port ") + boost::lexical_cast<std::string>(server->getClientToServerPort()) + String(" in use");
+				break;
+			case ServerError::C2SError:
+				message = String("Local connection server error");
+			 break;
+			case ServerError::LinkLocalPortConflict: 
+				message = String("Error: Port ") + boost::lexical_cast<std::string>(server->getLinkLocalPort()) + String(" in use");
+				break;
+			case ServerError::LinkLocalError: 
+				message = String("External connection server error");
+				break;
+		}
+		menuletController->setXMPPStatus(message, MenuletController::Offline);
 	}
 	else {
 		menuletController->setXMPPStatus("XMPP Server Not Running", MenuletController::Offline);
@@ -94,7 +110,6 @@ void MainController::handleServerStopped(boost::optional<ServerError> error) {
 }
 
 void MainController::handleRestartRequested() {
-	std::cout << "RESTART!" << std::endl;
 	stop();
 	start();
 }
