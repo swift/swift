@@ -5,7 +5,7 @@ SLIMBER_COCOA_SOURCES = \
 	Slimber/Cocoa/main.mm \
 	Slimber/Cocoa/CocoaController.mm \
 	Slimber/Cocoa/CocoaMenulet.mm \
-	Slimber/Cocoa/CocoaMenuletDelegate.mm
+	Slimber/Cocoa/CocoaAction.mm
 SLIMBER_COCOA_XIBS = \
 	Slimber/Cocoa/MainMenu.xib
 SLIMBER_COCOA_RESOURCES = \

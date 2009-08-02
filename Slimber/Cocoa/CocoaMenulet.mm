@@ -1,9 +1,12 @@
 #include "Slimber/Cocoa/CocoaMenulet.h"
 
+#include <boost/function.hpp>
+
 using namespace Swift;
 
 CocoaMenulet::CocoaMenulet() {
-	delegate = [[CocoaMenuletDelegate alloc] initWithMenulet: this];
+	restartAction = [[CocoaAction alloc] initWithFunction: 
+			new boost::function<void()>(boost::ref(onRestartClicked))];
 	menu = [[NSMenu alloc] init];
 
 	statusItem = [[[NSStatusBar systemStatusBar] 
@@ -15,10 +18,9 @@ CocoaMenulet::CocoaMenulet() {
 }
 
 CocoaMenulet::~CocoaMenulet() {
-	[delegate release];
 	[statusItem release];
 	[menu release];
-	[delegate release];
+	[restartAction release];
 }
 
 void CocoaMenulet::setIcon(const String& icon) {
@@ -58,8 +60,9 @@ void CocoaMenulet::addAboutItem() {
 }
 
 void CocoaMenulet::addRestartItem() {
-	NSMenuItem* item = [[NSMenuItem alloc] initWithTitle: @"Restart" action: @selector(handleRestartClicked:) keyEquivalent: @""];
-	[item setTarget: delegate];
+	NSMenuItem* item = [[NSMenuItem alloc] initWithTitle: 
+			@"Restart" action: @selector(doAction:) keyEquivalent: @""];
+	[item setTarget: restartAction];
 	[menu addItem: item];
 	[item release];
 }
