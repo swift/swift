@@ -37,7 +37,7 @@ void MenuletController::update() {
 		menulet->setIcon("UsersOnline");
 		menulet->addItem("Online users:");
 		foreach(const String& user, linkLocalUsers) {
-			menulet->addItem(user);
+			menulet->addItem(String("  ") + user);
 		}
 	}
 	menulet->addSeparator();
