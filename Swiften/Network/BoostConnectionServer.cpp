@@ -21,10 +21,10 @@ void BoostConnectionServer::start() {
 	}
 	catch (const boost::system::system_error& e) {
 		if (e.code() == boost::asio::error::address_in_use) {
-			onStopped(Conflict);
+			MainEventLoop::postEvent(boost::bind(boost::ref(onStopped), Conflict), shared_from_this());
 		}
 		else {
-			onStopped(UnknownError);
+			MainEventLoop::postEvent(boost::bind(boost::ref(onStopped), UnknownError), shared_from_this());
 		}
 	}
 }
@@ -39,7 +39,11 @@ void BoostConnectionServer::stop(boost::optional<Error> e) {
 		acceptor_->close();
 		acceptor_ = NULL;
 	}
-	onStopped(e);
+	MainEventLoop::postEvent(boost::bind(boost::ref(onStopped), e), shared_from_this());
+}
+
+void BoostConnectionServer::cancelAllEvents() {
+	MainEventLoop::removeEventsFromOwner(shared_from_this());
 }
 
 void BoostConnectionServer::acceptNextConnection() {

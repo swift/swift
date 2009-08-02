@@ -26,6 +26,9 @@ class MainController {
 		void handleServerStopped(boost::optional<Swift::ServerError> error);
 		void handleRestartRequested();
 
+		void start();
+		void stop();
+
 	private:
 		Menulet* menulet;
 		boost::shared_ptr<Swift::DNSSDQuerier> dnsSDQuerier;

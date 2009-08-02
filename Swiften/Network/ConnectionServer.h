@@ -10,6 +10,8 @@ namespace Swift {
 		public:
 			virtual ~ConnectionServer();
 
+			virtual void cancelAllEvents() = 0;
+
 			boost::signal<void (boost::shared_ptr<Connection>)> onNewConnection;
 	};
 }

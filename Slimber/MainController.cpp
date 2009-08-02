@@ -16,8 +16,11 @@
 using namespace Swift;
 
 MainController::MainController(Menulet* menulet) : menulet(menulet) {
+	menuletController = new MenuletController(menulet);
+	menuletController->onRestartRequested.connect(boost::bind(
+			&MainController::handleRestartRequested, this));
+
 	dnsSDQuerier = boost::shared_ptr<BonjourQuerier>(new BonjourQuerier());
-	dnsSDQuerier->start();
 
 	linkLocalServiceBrowser = new LinkLocalServiceBrowser(dnsSDQuerier);
 	linkLocalServiceBrowser->onServiceAdded.connect(
@@ -26,7 +29,6 @@ MainController::MainController(Menulet* menulet) : menulet(menulet) {
 			boost::bind(&MainController::handleServicesChanged, this));
 	linkLocalServiceBrowser->onServiceChanged.connect(
 			boost::bind(&MainController::handleServicesChanged, this));
-	linkLocalServiceBrowser->start();
 
 	vCardCollection = new FileVCardCollection(
 			PlatformApplication("Slimber").getSettingsDir());
@@ -37,14 +39,7 @@ MainController::MainController(Menulet* menulet) : menulet(menulet) {
 	server->onSelfConnected.connect(
 			boost::bind(&MainController::handleSelfConnected, this, _1));
 
-	menuletController = new MenuletController(menulet);
-	menuletController->onRestartRequested.connect(boost::bind(
-			&MainController::handleRestartRequested, this));
-
-	handleSelfConnected(false);
-	handleServicesChanged();
-
-	server->start();
+	start();
 }
 
 MainController::~MainController() {
@@ -53,6 +48,22 @@ MainController::~MainController() {
 	delete vCardCollection;
 	linkLocalServiceBrowser->stop();
 	delete linkLocalServiceBrowser;
+	dnsSDQuerier->stop();
+}
+
+void MainController::start() {
+	dnsSDQuerier->start();
+	linkLocalServiceBrowser->start();
+
+	handleSelfConnected(false);
+	handleServicesChanged();
+
+	server->start();
+}
+
+void MainController::stop() {
+	server->stop();
+	linkLocalServiceBrowser->stop();
 	dnsSDQuerier->stop();
 }
 
@@ -84,4 +95,6 @@ void MainController::handleServerStopped(boost::optional<ServerError> error) {
 
 void MainController::handleRestartRequested() {
 	std::cout << "RESTART!" << std::endl;
+	stop();
+	start();
 }
