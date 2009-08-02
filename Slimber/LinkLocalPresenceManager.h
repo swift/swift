@@ -13,7 +13,7 @@ namespace Swift {
 	class RosterPayload;
 	class Presence;
 
-	class LinkLocalPresenceManager {
+	class LinkLocalPresenceManager : public boost::bsignals::trackable {
 		public:
 			LinkLocalPresenceManager(LinkLocalServiceBrowser*);
 
