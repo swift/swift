@@ -91,10 +91,12 @@ namespace Swift {
 			LinkLocalPresenceManager* presenceManager;
 			bool stopping;
 			boost::shared_ptr<BoostConnectionServer> serverFromClientConnectionServer;
+			std::vector<boost::bsignals::connection> serverFromClientConnectionServerSignalConnections;
 			boost::shared_ptr<ServerFromClientSession> serverFromClientSession;
 			boost::shared_ptr<Presence> lastPresence;
 			JID selfJID;
 			boost::shared_ptr<BoostConnectionServer> serverFromNetworkConnectionServer;
+			std::vector<boost::bsignals::connection> serverFromNetworkConnectionServerSignalConnections;
 			std::vector< boost::shared_ptr<Session> > linkLocalSessions;
 			std::vector< boost::shared_ptr<LinkLocalConnector> > connectors;
 			std::vector< boost::shared_ptr<SessionTracer> > tracers;

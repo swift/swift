@@ -53,19 +53,23 @@ void Server::start() {
 	serverFromClientConnectionServer = 
 			boost::shared_ptr<BoostConnectionServer>(new BoostConnectionServer(
 					clientConnectionPort, &boostIOServiceThread.getIOService()));
-	serverFromClientConnectionServer->onNewConnection.connect(
-			boost::bind(&Server::handleNewClientConnection, this, _1));
-	serverFromClientConnectionServer->onStopped.connect(
-			boost::bind(&Server::handleClientConnectionServerStopped, this, _1));
+	serverFromClientConnectionServerSignalConnections.push_back(
+		serverFromClientConnectionServer->onNewConnection.connect(
+				boost::bind(&Server::handleNewClientConnection, this, _1)));
+	serverFromClientConnectionServerSignalConnections.push_back(
+		serverFromClientConnectionServer->onStopped.connect(
+				boost::bind(&Server::handleClientConnectionServerStopped, this, _1)));
 
 	assert(!serverFromNetworkConnectionServer);
 	serverFromNetworkConnectionServer = 
 		boost::shared_ptr<BoostConnectionServer>(new BoostConnectionServer(
 			linkLocalConnectionPort, &boostIOServiceThread.getIOService()));
-	serverFromNetworkConnectionServer->onNewConnection.connect(
-			boost::bind(&Server::handleNewLinkLocalConnection, this, _1));
-	serverFromNetworkConnectionServer->onStopped.connect(
-			boost::bind(&Server::handleLinkLocalConnectionServerStopped, this, _1));
+	serverFromNetworkConnectionServerSignalConnections.push_back(
+		serverFromNetworkConnectionServer->onNewConnection.connect(
+				boost::bind(&Server::handleNewLinkLocalConnection, this, _1)));
+	serverFromNetworkConnectionServerSignalConnections.push_back(
+		serverFromNetworkConnectionServer->onStopped.connect(
+				boost::bind(&Server::handleLinkLocalConnectionServerStopped, this, _1)));
 
 	assert(!presenceManager);
 	presenceManager = new LinkLocalPresenceManager(linkLocalServiceBrowser);
@@ -108,12 +112,18 @@ void Server::stop(boost::optional<ServerError> e) {
 
 	if (serverFromNetworkConnectionServer) {
 		serverFromNetworkConnectionServer->stop();
-		serverFromNetworkConnectionServer->cancelAllEvents();
+		foreach(boost::bsignals::connection& connection, serverFromNetworkConnectionServerSignalConnections) {
+			connection.disconnect();
+		}
+		serverFromNetworkConnectionServerSignalConnections.clear();
 		serverFromNetworkConnectionServer.reset();
 	}
 	if (serverFromClientConnectionServer) {
 		serverFromClientConnectionServer->stop();
-		serverFromClientConnectionServer->cancelAllEvents();
+		foreach(boost::bsignals::connection& connection, serverFromClientConnectionServerSignalConnections) {
+			connection.disconnect();
+		}
+		serverFromClientConnectionServerSignalConnections.clear();
 		serverFromClientConnectionServer.reset();
 	}
 
@@ -350,7 +360,6 @@ void Server::handlePresenceChanged(boost::shared_ptr<Presence> presence) {
 }
 
 void Server::handleClientConnectionServerStopped(boost::optional<BoostConnectionServer::Error> e) {
-	std::cout << "Client server stoppedd " << (bool) e << std::endl;
 	if (e) {
 		if (*e == BoostConnectionServer::Conflict) {
 			stop(ServerError(ServerError::C2SPortConflict));
@@ -365,7 +374,6 @@ void Server::handleClientConnectionServerStopped(boost::optional<BoostConnection
 }
 
 void Server::handleLinkLocalConnectionServerStopped(boost::optional<BoostConnectionServer::Error> e) {
-	std::cout << "LL server stoppedd " << (bool) e << std::endl;
 	if (e) {
 		if (*e == BoostConnectionServer::Conflict) {
 			stop(ServerError(ServerError::LinkLocalPortConflict));

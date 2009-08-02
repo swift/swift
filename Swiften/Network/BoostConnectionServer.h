@@ -20,7 +20,6 @@ namespace Swift {
 
 			void start();
 			void stop();
-			virtual void cancelAllEvents();
 
 			boost::signal<void (boost::optional<Error>)> onStopped;
 

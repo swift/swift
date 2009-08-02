@@ -42,10 +42,6 @@ void BoostConnectionServer::stop(boost::optional<Error> e) {
 	MainEventLoop::postEvent(boost::bind(boost::ref(onStopped), e), shared_from_this());
 }
 
-void BoostConnectionServer::cancelAllEvents() {
-	MainEventLoop::removeEventsFromOwner(shared_from_this());
-}
-
 void BoostConnectionServer::acceptNextConnection() {
 	boost::shared_ptr<BoostConnection> newConnection(new BoostConnection(&acceptor_->io_service()));
 	acceptor_->async_accept(newConnection->getSocket(), 
