@@ -15,6 +15,9 @@ namespace Swift {
 		public:
 			virtual ~DNSSDQuerier();
 
+			virtual void start() = 0;
+			virtual void stop() = 0;
+
 			virtual boost::shared_ptr<DNSSDBrowseQuery> createBrowseQuery() = 0;
 			virtual boost::shared_ptr<DNSSDRegisterQuery> createRegisterQuery(
 					const String& name, int port, const ByteArray& info) = 0;

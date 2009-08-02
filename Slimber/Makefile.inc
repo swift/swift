@@ -3,7 +3,10 @@ SLIMBER_SOURCES = \
 	Slimber/LinkLocalPresenceManager.cpp \
 	Slimber/FileVCardCollection.cpp \
 	Slimber/VCardCollection.cpp \
-	Slimber/Server.cpp
+	Slimber/Server.cpp \
+	Slimber/MainController.cpp \
+	Slimber/MenuletController.cpp \
+	Slimber/Menulet.cpp
 SLIMBER_OBJECTS = \
 	$(SLIMBER_SOURCES:.cpp=.o)
 

@@ -5,18 +5,20 @@
 
 #include "Slimber/ServerError.h"
 
-@class Menulet;
 namespace Swift {
-	class Server;
-	class VCardCollection;
+	class DNSSDQuerier;
 	class LinkLocalServiceBrowser;
-	class BonjourQuerier;
+	class VCardCollection;
+	class Server;
 }
 
-class Slimber {
+class MenuletController;
+class Menulet;
+
+class MainController {
 	public:
-		Slimber();
-		~Slimber();
+		MainController(Menulet* menulet);
+		virtual ~MainController();
 
 	private:
 		void handleSelfConnected(bool b);
@@ -24,9 +26,10 @@ class Slimber {
 		void handleServerStopped(boost::optional<Swift::ServerError> error);
 
 	private:
-		boost::shared_ptr<Swift::BonjourQuerier> dnsSDQuerier;
+		Menulet* menulet;
+		boost::shared_ptr<Swift::DNSSDQuerier> dnsSDQuerier;
 		Swift::LinkLocalServiceBrowser* linkLocalServiceBrowser;
 		Swift::VCardCollection* vCardCollection;
 		Swift::Server* server;
-		Menulet* menulet;
+		MenuletController* menuletController;
 };

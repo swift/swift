@@ -24,6 +24,9 @@ namespace Swift {
 		public:
 			FakeDNSSDQuerier(const String& domain);
 
+			void start() {}
+			void stop() {}
+
 			boost::shared_ptr<DNSSDBrowseQuery> createBrowseQuery();
 			boost::shared_ptr<DNSSDRegisterQuery> createRegisterQuery(
 					const String& name, int port, const ByteArray& info);

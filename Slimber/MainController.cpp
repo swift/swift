@@ -1,4 +1,4 @@
-#include "Slimber/Cocoa/Slimber.h"
+#include "Slimber/MainController.h"
 
 #include <boost/bind.hpp>
 
@@ -7,23 +7,24 @@
 #include "Swiften/LinkLocal/LinkLocalService.h"
 #include "Swiften/LinkLocal/LinkLocalServiceBrowser.h"
 #include "Swiften/LinkLocal/DNSSD/Bonjour/BonjourQuerier.h"
-#include "Slimber/Cocoa/Menulet.h"
 #include "Slimber/Server.h"
 #include "Slimber/FileVCardCollection.h"
+#include "Slimber/MenuletController.h"
+#include "Slimber/Menulet.h"
 
 using namespace Swift;
 
-Slimber::Slimber() {
+MainController::MainController(Menulet* menulet) : menulet(menulet) {
 	dnsSDQuerier = boost::shared_ptr<BonjourQuerier>(new BonjourQuerier());
 	dnsSDQuerier->start();
 
 	linkLocalServiceBrowser = new LinkLocalServiceBrowser(dnsSDQuerier);
 	linkLocalServiceBrowser->onServiceAdded.connect(
-			boost::bind(&Slimber::handleServicesChanged, this));
+			boost::bind(&MainController::handleServicesChanged, this));
 	linkLocalServiceBrowser->onServiceRemoved.connect(
-			boost::bind(&Slimber::handleServicesChanged, this));
+			boost::bind(&MainController::handleServicesChanged, this));
 	linkLocalServiceBrowser->onServiceChanged.connect(
-			boost::bind(&Slimber::handleServicesChanged, this));
+			boost::bind(&MainController::handleServicesChanged, this));
 	linkLocalServiceBrowser->start();
 
 	vCardCollection = new FileVCardCollection(
@@ -31,19 +32,20 @@ Slimber::Slimber() {
 
 	server = new Server(5222, 5562, linkLocalServiceBrowser, vCardCollection);
 	server->onStopped.connect(
-			boost::bind(&Slimber::handleServerStopped, this, _1));
+			boost::bind(&MainController::handleServerStopped, this, _1));
 	server->onSelfConnected.connect(
-			boost::bind(&Slimber::handleSelfConnected, this, _1));
+			boost::bind(&MainController::handleSelfConnected, this, _1));
 
-	menulet = [[Menulet alloc] init];
+	menuletController = new MenuletController(menulet);
+
 	handleSelfConnected(false);
 	handleServicesChanged();
 
 	server->start();
 }
 
-Slimber::~Slimber() {
-	[menulet release];
+MainController::~MainController() {
+	delete menuletController;
 	delete server;
 	delete vCardCollection;
 	linkLocalServiceBrowser->stop();
@@ -51,30 +53,28 @@ Slimber::~Slimber() {
 	dnsSDQuerier->stop();
 }
 
-void Slimber::handleSelfConnected(bool b) {
+void MainController::handleSelfConnected(bool b) {
 	if (b) {
-		[menulet setXMPPStatus: @"You are logged in" online: true];
+		menuletController->setXMPPStatus("You are logged in", MenuletController::Online);
 	}
 	else {
-		[menulet setXMPPStatus: @"You are not logged in" online: false];
+		menuletController->setXMPPStatus("You are not logged in", MenuletController::Offline);
 	}
 }
 
-void Slimber::handleServicesChanged() {
-	NSMutableArray* names = [[NSMutableArray alloc] init];
+void MainController::handleServicesChanged() {
+	std::vector<String> names;
 	foreach(const LinkLocalService& service, linkLocalServiceBrowser->getServices()) {
-		[names addObject: [NSString stringWithUTF8String: service.getDescription().getUTF8Data()]];
+		names.push_back(service.getDescription());
 	}
-
-	[menulet setUserNames: names];
-	[names release];
+	menuletController->setUserNames(names);
 }
 
-void Slimber::handleServerStopped(boost::optional<ServerError> error) {
+void MainController::handleServerStopped(boost::optional<ServerError> error) {
 	if (error) {
-		[menulet setXMPPStatus: @"XMPP Server Error." online: false];
+		menuletController->setXMPPStatus("XMPP Server Error", MenuletController::Offline);
 	}
 	else {
-		[menulet setXMPPStatus: @"XMPP Server Not Runnning." online: false];
+		menuletController->setXMPPStatus("XMPP Server Not Running", MenuletController::Offline);
 	}
 }

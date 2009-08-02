@@ -2,10 +2,9 @@ SLIMBER_COCOA_TARGET = Slimber/Cocoa/Slimber.app
 SLIMBER_COCOA_BINARY = \
 	Slimber/Cocoa/Slimber
 SLIMBER_COCOA_SOURCES = \
-	Slimber/Cocoa/MainController.mm \
-	Slimber/Cocoa/Slimber.mm \
 	Slimber/Cocoa/main.mm \
-	Slimber/Cocoa/Menulet.m
+	Slimber/Cocoa/CocoaController.mm \
+	Slimber/Cocoa/CocoaMenulet.mm
 SLIMBER_COCOA_XIBS = \
 	Slimber/Cocoa/MainMenu.xib
 SLIMBER_COCOA_RESOURCES = \
@@ -26,8 +25,8 @@ CLEANFILES += \
 	$(SLIMBER_COCOA_NIBS) \
 	$(SLIMBER_COCOA_TARGET) \
 	$(SLIMBER_COCOA_BINARY)
-//DEPS += \
-//	$(SLIMBER_COCOA_SOURCES:.m=.dep) \
+DEPS += \
+	$(SLIMBER_COCOA_SOURCES:.mm=.dep)
 
 .PHONY: slimber-cocoa
 slimber-cocoa: $(SLIMBER_COCOA_TARGET)
@@ -42,5 +41,5 @@ $(SLIMBER_COCOA_TARGET): $(SLIMBER_COCOA_BINARY) $(SLIMBER_COCOA_NIBS) Slimber/C
 	cp $(SLIMBER_COCOA_NIBS) $(SLIMBER_COCOA_TARGET)/Contents/Resources
 	cp $(SLIMBER_COCOA_RESOURCES) $(SLIMBER_COCOA_TARGET)/Contents/Resources
 
-$(SLIMBER_COCOA_BINARY): $(SLIMBER_COCOA_OBJECTS) $(SWIFTEN_TARGET) $(SLIMBER_TRGET)
+$(SLIMBER_COCOA_BINARY): $(SLIMBER_COCOA_OBJECTS) $(SWIFTEN_TARGET) $(SLIMBER_TARGET)
 	$(QUIET_LINK)$(CXX) -o $@ $(SLIMBER_COCOA_OBJECTS) $(LDFLAGS) $(SLIMBER_TARGET) $(SWIFTEN_TARGET) $(LIBS) -framework Cocoa
