@@ -3,6 +3,7 @@
 using namespace Swift;
 
 CocoaMenulet::CocoaMenulet() {
+	delegate = [[CocoaMenuletDelegate alloc] initWithMenulet: this];
 	menu = [[NSMenu alloc] init];
 
 	statusItem = [[[NSStatusBar systemStatusBar] 
@@ -14,8 +15,10 @@ CocoaMenulet::CocoaMenulet() {
 }
 
 CocoaMenulet::~CocoaMenulet() {
+	[delegate release];
 	[statusItem release];
 	[menu release];
+	[delegate release];
 }
 
 void CocoaMenulet::setIcon(const String& icon) {
@@ -50,6 +53,13 @@ void CocoaMenulet::addItem(const Swift::String& name, const String& icon) {
 void CocoaMenulet::addAboutItem() {
 	NSMenuItem* item = [[NSMenuItem alloc] initWithTitle: @"About Slimber" action: @selector(orderFrontStandardAboutPanel:) keyEquivalent: @""];
 	[item setTarget: [NSApplication sharedApplication]];
+	[menu addItem: item];
+	[item release];
+}
+
+void CocoaMenulet::addRestartItem() {
+	NSMenuItem* item = [[NSMenuItem alloc] initWithTitle: @"Restart" action: @selector(handleRestartClicked:) keyEquivalent: @""];
+	[item setTarget: delegate];
 	[menu addItem: item];
 	[item release];
 }

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <vector>
+#include <boost/signal.hpp>
 
 #include "Swiften/Base/String.h"
 
@@ -19,6 +20,8 @@ class MenuletController {
 		void setXMPPStatus(const Swift::String& message, Status status);
 		void setUserNames(const std::vector<Swift::String>&);
 	
+		boost::signal<void ()> onRestartRequested;
+
 	private:
 		void update();
 	

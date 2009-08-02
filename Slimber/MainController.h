@@ -24,6 +24,7 @@ class MainController {
 		void handleSelfConnected(bool b);
 		void handleServicesChanged();
 		void handleServerStopped(boost::optional<Swift::ServerError> error);
+		void handleRestartRequested();
 
 	private:
 		Menulet* menulet;

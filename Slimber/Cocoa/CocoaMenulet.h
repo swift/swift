@@ -3,6 +3,7 @@
 #include <Cocoa/Cocoa.h>
 
 #include "Slimber/Menulet.h"
+#include "Slimber/Cocoa/CocoaMenuletDelegate.h"
 
 class CocoaMenulet : public Menulet {
 	public:
@@ -15,9 +16,11 @@ class CocoaMenulet : public Menulet {
 		virtual void addSeparator();
 		void setIcon(const Swift::String& icon);
 		virtual void addAboutItem();
+		virtual void addRestartItem();
 		virtual void addExitItem();
 	
 	private:
 		NSStatusItem* statusItem;
 		NSMenu* menu;
+		CocoaMenuletDelegate* delegate;
 };

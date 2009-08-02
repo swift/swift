@@ -10,6 +10,7 @@ using namespace Swift;
 
 MenuletController::MenuletController(Menulet* menulet) : 
 		menulet(menulet), xmppStatus(Offline) {
+	menulet->onRestartClicked.connect(boost::ref(onRestartRequested));
 	update();
 }
 
@@ -45,5 +46,6 @@ void MenuletController::update() {
 	menulet->addSeparator();
 	menulet->addAboutItem();
 	menulet->addSeparator();
+	menulet->addRestartItem();
 	menulet->addExitItem();
 }

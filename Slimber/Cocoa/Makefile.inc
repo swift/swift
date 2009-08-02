@@ -4,7 +4,8 @@ SLIMBER_COCOA_BINARY = \
 SLIMBER_COCOA_SOURCES = \
 	Slimber/Cocoa/main.mm \
 	Slimber/Cocoa/CocoaController.mm \
-	Slimber/Cocoa/CocoaMenulet.mm
+	Slimber/Cocoa/CocoaMenulet.mm \
+	Slimber/Cocoa/CocoaMenuletDelegate.mm
 SLIMBER_COCOA_XIBS = \
 	Slimber/Cocoa/MainMenu.xib
 SLIMBER_COCOA_RESOURCES = \
@@ -26,7 +27,7 @@ CLEANFILES += \
 	$(SLIMBER_COCOA_TARGET) \
 	$(SLIMBER_COCOA_BINARY)
 DEPS += \
-	$(SLIMBER_COCOA_SOURCES:.mm=.dep)
+	$(patsubst %.m, %.dep, $(patsubst %.mm, %.dep, $(SLIMBER_COCOA_SOURCES)))
 
 .PHONY: slimber-cocoa
 slimber-cocoa: $(SLIMBER_COCOA_TARGET)

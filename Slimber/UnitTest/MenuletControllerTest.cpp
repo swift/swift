@@ -28,7 +28,7 @@ class MenuletControllerTest : public CppUnit::TestFixture {
 		void testConstructor() {
 			MenuletController testling(menulet);
 
-			CPPUNIT_ASSERT_EQUAL(7, static_cast<int>(menulet->items.size()));
+			CPPUNIT_ASSERT_EQUAL(8, static_cast<int>(menulet->items.size()));
 			int i = 0;
 			CPPUNIT_ASSERT_EQUAL(String("No online users"), menulet->items[i++]);
 			CPPUNIT_ASSERT_EQUAL(String("-"), menulet->items[i++]);
@@ -36,6 +36,7 @@ class MenuletControllerTest : public CppUnit::TestFixture {
 			CPPUNIT_ASSERT_EQUAL(String("-"), menulet->items[i++]);
 			CPPUNIT_ASSERT_EQUAL(String("*About*"), menulet->items[i++]);
 			CPPUNIT_ASSERT_EQUAL(String("-"), menulet->items[i++]);
+			CPPUNIT_ASSERT_EQUAL(String("*Restart*"), menulet->items[i++]);
 			CPPUNIT_ASSERT_EQUAL(String("*Exit*"), menulet->items[i++]);
 		}
 
@@ -44,7 +45,7 @@ class MenuletControllerTest : public CppUnit::TestFixture {
 
 			testling.setXMPPStatus("You are connected", MenuletController::Online);
 
-			CPPUNIT_ASSERT_EQUAL(7, static_cast<int>(menulet->items.size()));
+			CPPUNIT_ASSERT_EQUAL(8, static_cast<int>(menulet->items.size()));
 			int i = 0;
 			CPPUNIT_ASSERT_EQUAL(String("No online users"), menulet->items[i++]);
 			CPPUNIT_ASSERT_EQUAL(String("-"), menulet->items[i++]);
@@ -52,6 +53,7 @@ class MenuletControllerTest : public CppUnit::TestFixture {
 			CPPUNIT_ASSERT_EQUAL(String("-"), menulet->items[i++]);
 			CPPUNIT_ASSERT_EQUAL(String("*About*"), menulet->items[i++]);
 			CPPUNIT_ASSERT_EQUAL(String("-"), menulet->items[i++]);
+			CPPUNIT_ASSERT_EQUAL(String("*Restart*"), menulet->items[i++]);
 			CPPUNIT_ASSERT_EQUAL(String("*Exit*"), menulet->items[i++]);
 		}
 
@@ -121,6 +123,10 @@ class MenuletControllerTest : public CppUnit::TestFixture {
 
 			virtual void addAboutItem() {
 				items.push_back("*About*");
+			}
+
+			virtual void addRestartItem() {
+				items.push_back("*Restart*");
 			}
 
 			virtual void addExitItem() {

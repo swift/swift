@@ -1,6 +1,7 @@
 #include "Slimber/MainController.h"
 
 #include <boost/bind.hpp>
+#include <iostream>
 
 #include "Swiften/Base/foreach.h"
 #include "Swiften/Application/Platform/PlatformApplication.h"
@@ -37,6 +38,8 @@ MainController::MainController(Menulet* menulet) : menulet(menulet) {
 			boost::bind(&MainController::handleSelfConnected, this, _1));
 
 	menuletController = new MenuletController(menulet);
+	menuletController->onRestartRequested.connect(boost::bind(
+			&MainController::handleRestartRequested, this));
 
 	handleSelfConnected(false);
 	handleServicesChanged();
@@ -77,4 +80,8 @@ void MainController::handleServerStopped(boost::optional<ServerError> error) {
 	else {
 		menuletController->setXMPPStatus("XMPP Server Not Running", MenuletController::Offline);
 	}
+}
+
+void MainController::handleRestartRequested() {
+	std::cout << "RESTART!" << std::endl;
 }
