@@ -45,7 +45,7 @@ namespace Swift {
 					MainEventLoop::postEvent(boost::bind(boost::ref(onServiceResolved), boost::optional<Result>()), shared_from_this());
 				}
 				else {
-					std::cout << "Service resolved: name:" << fullName << " host:" << host << " port:" << port << std::endl;
+					//std::cout << "Service resolved: name:" << fullName << " host:" << host << " port:" << port << std::endl;
 					MainEventLoop::postEvent(
 							boost::bind(
 								boost::ref(onServiceResolved), 

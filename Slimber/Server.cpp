@@ -146,8 +146,8 @@ void Server::handleNewClientConnection(boost::shared_ptr<Connection> connection)
 	serverFromClientSession->onSessionFinished.connect(
 			boost::bind(&Server::handleSessionFinished, this, 
 			serverFromClientSession));
-	tracers.push_back(boost::shared_ptr<SessionTracer>(
-			new SessionTracer(serverFromClientSession)));
+	//tracers.push_back(boost::shared_ptr<SessionTracer>(
+	//		new SessionTracer(serverFromClientSession)));
 	serverFromClientSession->startSession();
 }
 
@@ -275,7 +275,7 @@ void Server::handleNewLinkLocalConnection(boost::shared_ptr<Connection> connecti
 }
 
 void Server::handleLinkLocalSessionFinished(boost::shared_ptr<Session> session) {
-	std::cout << "Link local session from " << session->getRemoteJID() << " ended" << std::endl;
+	//std::cout << "Link local session from " << session->getRemoteJID() << " ended" << std::endl;
 	linkLocalSessions.erase(
 			std::remove(linkLocalSessions.begin(), linkLocalSessions.end(), session), 
 			linkLocalSessions.end());
@@ -316,7 +316,7 @@ void Server::registerLinkLocalSession(boost::shared_ptr<Session> session) {
 	session->onElementReceived.connect(
 			boost::bind(&Server::handleLinkLocalElementReceived, this, _1, session));
 	linkLocalSessions.push_back(session);
-	tracers.push_back(boost::shared_ptr<SessionTracer>(new SessionTracer(session)));
+	//tracers.push_back(boost::shared_ptr<SessionTracer>(new SessionTracer(session)));
 	session->startSession();
 }
 

@@ -80,7 +80,11 @@ void MainController::handleSelfConnected(bool b) {
 void MainController::handleServicesChanged() {
 	std::vector<String> names;
 	foreach(const LinkLocalService& service, linkLocalServiceBrowser->getServices()) {
-		names.push_back(service.getDescription());
+		String description = service.getDescription();
+		if (description != service.getName()) {
+			description += " (" + service.getName() + ")";
+		}
+		names.push_back(description);
 	}
 	menuletController->setUserNames(names);
 }
