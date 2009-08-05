@@ -8,7 +8,7 @@
 #include "Swiften/Application/Platform/PlatformApplication.h"
 #include "Swiften/LinkLocal/LinkLocalService.h"
 #include "Swiften/LinkLocal/LinkLocalServiceBrowser.h"
-#include "Swiften/LinkLocal/DNSSD/Bonjour/BonjourQuerier.h"
+#include "Swiften/LinkLocal/DNSSD/PlatformDNSSDQuerierFactory.h"
 #include "Slimber/Server.h"
 #include "Slimber/FileVCardCollection.h"
 #include "Slimber/MenuletController.h"
@@ -21,7 +21,11 @@ MainController::MainController(Menulet* menulet) : menulet(menulet) {
 	menuletController->onRestartRequested.connect(boost::bind(
 			&MainController::handleRestartRequested, this));
 
-	dnsSDQuerier = boost::shared_ptr<BonjourQuerier>(new BonjourQuerier());
+	dnsSDQuerier = PlatformDNSSDQuerierFactory().createQuerier();
+	if (!dnsSDQuerier) {
+		// TODO
+		assert(false);
+	}
 
 	linkLocalServiceBrowser = new LinkLocalServiceBrowser(dnsSDQuerier);
 	linkLocalServiceBrowser->onServiceAdded.connect(

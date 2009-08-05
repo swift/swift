@@ -4,7 +4,8 @@ SWIFTEN_SOURCES += \
 	Swiften/LinkLocal/DNSSD/DNSSDBrowseQuery.cpp \
 	Swiften/LinkLocal/DNSSD/DNSSDRegisterQuery.cpp \
 	Swiften/LinkLocal/DNSSD/DNSSDResolveServiceQuery.cpp \
-	Swiften/LinkLocal/DNSSD/DNSSDResolveHostnameQuery.cpp
+	Swiften/LinkLocal/DNSSD/DNSSDResolveHostnameQuery.cpp \
+	Swiften/LinkLocal/DNSSD/PlatformDNSSDQuerierFactory.cpp
 
 ifeq ($(HAVE_BONJOUR),yes)
 include Swiften/LinkLocal/DNSSD/Bonjour/Makefile.inc
