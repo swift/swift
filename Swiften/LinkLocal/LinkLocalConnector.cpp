@@ -44,9 +44,9 @@ void LinkLocalConnector::cancel() {
 }
 
 void LinkLocalConnector::handleHostnameResolved(const boost::optional<HostAddress>& address) {
+	resolveQuery->finish();
+	resolveQuery.reset();
 	if (address) {
-		resolveQuery->finish();
-		resolveQuery.reset();
 		connection->onConnectFinished.connect(
 				boost::bind(boost::ref(onConnectFinished), _1));
 		connection->connect(HostAddressPort(*address, service.getPort()));

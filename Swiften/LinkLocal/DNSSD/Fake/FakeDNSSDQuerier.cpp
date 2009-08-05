@@ -13,6 +13,12 @@ namespace Swift {
 FakeDNSSDQuerier::FakeDNSSDQuerier(const String& domain) : domain(domain) {
 }
 
+FakeDNSSDQuerier::~FakeDNSSDQuerier() {
+	if (!runningQueries.empty()) {
+		std::cerr << "FakeDNSSDQuerier: Running queries not empty at destruction time" << std::endl;
+	}
+}
+
 boost::shared_ptr<DNSSDBrowseQuery> FakeDNSSDQuerier::createBrowseQuery() {
 	return boost::shared_ptr<DNSSDBrowseQuery>(new FakeDNSSDBrowseQuery(shared_from_this()));
 }

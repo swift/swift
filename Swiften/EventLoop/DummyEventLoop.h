@@ -1,7 +1,7 @@
-#ifndef SWIFTEN_DummyEventLoop_H
-#define SWIFTEN_DummyEventLoop_H
+#pragma once
 
 #include <deque>
+#include <iostream>
 #include <boost/function.hpp>
 
 #include "Swiften/EventLoop/EventLoop.h"
@@ -13,6 +13,13 @@ namespace Swift {
 			DummyEventLoop() {
 			}
 
+			~DummyEventLoop() {
+				if (!events_.empty()) {
+					std::cerr << "DummyEventLoop: Unhandled events at destruction time" << std::endl;
+				}
+				events_.clear();
+			}
+
 			void processEvents() {
 				while (!events_.empty()) {
 					handleEvent(events_[0]);
@@ -20,9 +27,9 @@ namespace Swift {
 				}
 			}
 
-      bool hasEvents() {
-        return events_.size() > 0;
-      }
+			bool hasEvents() {
+				return events_.size() > 0;
+			}
 
 			virtual void post(const Event& event) {
 				events_.push_back(event);
@@ -32,6 +39,3 @@ namespace Swift {
 			std::deque<Event> events_;
 	};
 }
-
-#endif
-

@@ -23,6 +23,7 @@ namespace Swift {
 			public boost::enable_shared_from_this<FakeDNSSDQuerier> {
 		public:
 			FakeDNSSDQuerier(const String& domain);
+			~FakeDNSSDQuerier();
 
 			void start() {}
 			void stop() {}
