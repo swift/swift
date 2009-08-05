@@ -1,0 +1,9 @@
+<!DOCTYPE RCC>
+<RCC version="1.0">
+	<qresource>
+		<file alias="icons/Offline.png">../Resources/Offline.png</file>
+		<file alias="icons/Online.png">../Resources/Online.png</file>
+		<file alias="icons/UsersOffline.png">../Resources/UsersOffline.png</file>
+		<file alias="icons/UsersOnline.png">../Resources/UsersOnline.png</file>
+	</qresource>
+</RCC>
