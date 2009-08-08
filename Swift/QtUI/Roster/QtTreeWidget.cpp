@@ -20,6 +20,7 @@ QtTreeWidget::QtTreeWidget(QWidget* parent) : QTreeView(parent) {
 	setIndentation(0);
 	setRootIsDecorated(true);
 	connect(this, SIGNAL(activated(const QModelIndex&)), this, SLOT(handleItemActivated(const QModelIndex&)));
+	connect(model_, SIGNAL(itemExpanded(const QModelIndex&, bool)), this, SLOT(handleItemExpanded(const QModelIndex&, bool)));
 }
 
 QtTreeWidget::~QtTreeWidget() {
@@ -36,6 +37,10 @@ void QtTreeWidget::handleItemActivated(const QModelIndex& index) {
 	if (qtItem) {
 		qtItem->performUserAction(boost::shared_ptr<UserRosterAction>(new OpenChatRosterAction()));
 	}
+}
+
+void QtTreeWidget::handleItemExpanded(const QModelIndex& index, bool expanded) {
+	setExpanded(index, expanded);
 }
 
 void QtTreeWidget::drawBranches(QPainter*, const QRect&, const QModelIndex&) const {

@@ -8,6 +8,7 @@ namespace Swift {
 QtTreeWidgetItem::QtTreeWidgetItem(QtTreeWidgetItem* parentItem) : QObject(), textColor_(0,0,0), backgroundColor_(255,255,255) {
 	parent_ = parentItem;
 	shown_ = true;
+	expanded_ = true;
 }
 
 void QtTreeWidgetItem::setText(const String& text) {
@@ -38,17 +39,18 @@ void QtTreeWidgetItem::setBackgroundColor(unsigned long color) {
 }
 
 void QtTreeWidgetItem::setExpanded(bool b) {
-	//treeWidget()->setItemExpanded(this, b);
+	expanded_ = true;
+	emit changed(this);
 }
 
 void QtTreeWidgetItem::hide() {
 	shown_ = false;
-	emit changed();
+	emit changed(this);
 }
 
 void QtTreeWidgetItem::show() {
 	shown_ = true;
-	emit changed();
+	emit changed(this);
 }
 
 bool QtTreeWidgetItem::isShown() {
@@ -77,18 +79,18 @@ QtTreeWidgetItem* QtTreeWidgetItem::getParentItem() {
 
 void QtTreeWidgetItem::addChild(QtTreeWidgetItem* child) {
 	children_.append(child);
-	connect(child, SIGNAL(changed()), this, SLOT(handleChanged()));
-	handleChanged();
+	connect(child, SIGNAL(changed(QtTreeWidgetItem*)), this, SLOT(handleChanged(QtTreeWidgetItem*)));
+	handleChanged(child);
 }
 
-void QtTreeWidgetItem::handleChanged() {
+void QtTreeWidgetItem::handleChanged(QtTreeWidgetItem* child) {
 	shownChildren_.clear();
 	for (int i = 0; i < children_.size(); i++) {
 		if (children_[i]->isShown()) {
 			shownChildren_.append(children_[i]);
 		}
 	}
-	emit changed();
+	emit changed(child);
 }
 
 int QtTreeWidgetItem::rowCount() {
@@ -106,6 +108,8 @@ int QtTreeWidgetItem::row() {
 
 QtTreeWidgetItem* QtTreeWidgetItem::getItem(int row) {
 	//qDebug() << "Returning row " << row << " from item " << displayName_;
+	Q_ASSERT(row >= 0);
+	Q_ASSERT(row < rowCount());
 	return shownChildren_[row];
 }
 
@@ -123,6 +127,10 @@ QVariant QtTreeWidgetItem::data(int role) {
 
 bool QtTreeWidgetItem::isContact() {
 	return children_.size() == 0;
+}
+
+bool QtTreeWidgetItem::isExpanded() {
+	return expanded_;
 }
 
 }

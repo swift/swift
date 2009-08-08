@@ -33,6 +33,7 @@ class QtTreeWidgetFactory : public TreeWidgetFactory {
 			QtTreeWidgetItem* newItem = new QtTreeWidgetItem(qtItem);
 			//qtItem->setItemWidget(newItem, 0, newItem->getCollapsedRosterWidget());
 			qtItem->addChild(newItem);
+			newItem->setExpanded(true);
 			return newItem;
 		}
 };

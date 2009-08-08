@@ -15,6 +15,7 @@ int main(int argc, char *argv[])
 
 	Swift::QtTreeWidgetFactory treeWidgetFactory;
 	Swift::QtTreeWidget* tree = dynamic_cast<Swift::QtTreeWidget*>(treeWidgetFactory.createTreeWidget());
+	tree->show();
 	for (int i = 0; i < 500; i++) {
 		Swift::QtTreeWidgetItem* group = dynamic_cast<Swift::QtTreeWidgetItem*>(treeWidgetFactory.createTreeWidgetItem(tree));
 		group->setText("People");
@@ -26,8 +27,9 @@ int main(int argc, char *argv[])
 		item1->setText("Remko");
 		item2->setText("Kevin");
 		item3->setText("Cath");
+		item4->setText("KimTypo");
 		item4->setText("Kim");
 	}
-	tree->show();
+	
     return app.exec();
 }

@@ -15,10 +15,14 @@ public:
 	int columnCount(const QModelIndex& parent = QModelIndex()) const;
 	QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const;
 	QModelIndex index(int row, int column, const QModelIndex & parent = QModelIndex()) const;
+	QModelIndex index(QtTreeWidgetItem* item) const;
 	QModelIndex parent(const QModelIndex& index) const;
+	QModelIndex parent(QtTreeWidgetItem* item) const;
 	int rowCount(const QModelIndex& parent = QModelIndex()) const;
+signals:
+	void itemExpanded(const QModelIndex& item, bool expanded);
 private slots:
-	void handleItemChanged();
+	void handleItemChanged(QtTreeWidgetItem* item);
 private:
 	QtTreeWidgetItem* tree_;
 };
