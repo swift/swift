@@ -19,15 +19,12 @@ void RosterModel::handleItemChanged(QtTreeWidgetItem* item) {
 	if (!item->isShown()) {
 		return;
 	}
-	//these two lines should be redundant, but...
-	reset();
-	emit layoutChanged();
-	//These lines don't seem to be enough
 	Q_ASSERT(item);
 	QModelIndex modelIndex = index(item);
+	Q_ASSERT(modelIndex.isValid());
 	emit itemExpanded(modelIndex, item->isExpanded());
 	emit dataChanged(modelIndex, modelIndex);
-	
+	emit layoutChanged();
 }
 
 int RosterModel::columnCount(const QModelIndex& parent) const {
@@ -48,17 +45,8 @@ QModelIndex RosterModel::index(int row, int column, const QModelIndex& parent) c
 }
 
 QModelIndex RosterModel::index(QtTreeWidgetItem* item) const {
-	QtTreeWidgetItem* parentItem = item->getParentItem();
-	Q_ASSERT(parentItem);
-	QModelIndex parentIndex = parent(item);
-	return index(item->row(), 0, parentIndex);
+	return createIndex(item->row(), 0, item);
 }
-
-QModelIndex RosterModel::parent(QtTreeWidgetItem* item) const {
-	QtTreeWidgetItem* parentItem = item->getParentItem();
-	return parentItem == tree_ ? QModelIndex() : index(parentItem->row(), 0, parent(parentItem));
-}
-
 
 QModelIndex RosterModel::parent(const QModelIndex& index) const {
 	if (!index.isValid()) {
