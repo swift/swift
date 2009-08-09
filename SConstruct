@@ -49,6 +49,8 @@ if conf.CheckCHeader("openssl/ssl.h") :
 	env["OPENSSL_FLAGS"] = {
 			"LIBS": ["ssl", "crypto"]
 		}
+else :
+	env["OPENSSL_FLAGS"] = ""
 
 if conf.CheckLib("z") :
 	env.Append(LIBS = "z")

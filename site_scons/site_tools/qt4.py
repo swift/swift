@@ -280,7 +280,7 @@ def generate(env):
 		QT4_QRCCXXSUFFIX = '$CXXFILESUFFIX',
 		QT4_QRCCXXPREFIX = 'qrc_',
 		QT4_MOCCPPPATH = [],
-		QT4_MOCINCFLAGS = '$( ${_concat(INCPREFIX, QT4_MOCCPPPATH, INCSUFFIX, __env__, RDirs)} $)',
+		QT4_MOCINCFLAGS = '$( ${_concat("-I", QT4_MOCCPPPATH, INCSUFFIX, __env__, RDirs)} $)',
 
 		# Commands for the qt support ...
 		QT4_UICCOM = '$QT4_UIC $QT4_UICFLAGS -o $TARGET $SOURCE',

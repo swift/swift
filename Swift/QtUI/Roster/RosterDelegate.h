@@ -1,6 +1,6 @@
 #pragma once
 
-#import <QStyledItemDelegate>
+#include <QStyledItemDelegate>
 
 namespace Swift {
 	class RosterDelegate : public QStyledItemDelegate {
