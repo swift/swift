@@ -15,6 +15,15 @@ def generateDefaultTheme(env, target, source) :
 	output.write("</qresource>")
 	output.write("</RCC>")
 
+def createBundle(env, target, source) :
+	target = target[0].abspath
+	source = source[0].abspath
+	os.makedirs(target + "/Contents/MacOS")
+	Execute(Copy(target + "/Contents/MacOS", source))
+	pkgInfo = open(target + "/Contents/PkgInfo", "w")
+	pkgInfo.write("APPL\77\77\77\77")
+	pkgInfo.close()
+
 Import("env")
 
 myenv = env.Clone()
@@ -68,7 +77,14 @@ sources = [
 if env["PLATFORM"] == "win32" :
 	sources += ["../resources/Windows/Swift.rc"]
 
-myenv.Program("swift", sources)
+if env["PLATFORM"] == "darwin" or env["PLATFORM"] == "win32" :
+	myenv.Program("Swift", sources)
+else :
+	myenv.Program("swift", sources)
+
 myenv.Uic4("QtJoinMUCDialog.ui")
 myenv.Qrc("DefaultTheme.qrc")
 myenv.Qrc("Swift.qrc")
+
+if env["PLATFORM"] == "darwin" :
+	myenv.Command("Swift.app", "Swift", createBundle)
