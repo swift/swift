@@ -59,19 +59,32 @@ bool QtTreeWidgetItem::isShown() {
 
 QWidget* QtTreeWidgetItem::getCollapsedRosterWidget() {
 	QWidget* widget = new QWidget();
-	
 	return widget;
 }
 
 QWidget* QtTreeWidgetItem::getExpandedRosterWidget() {
 	QWidget* widget = new QWidget();
-	
 	return widget;
 }
 
 QtTreeWidgetItem::~QtTreeWidgetItem() {
-	parent_->removeChild(this);
-	qDeleteAll(children_);
+	//It's possible (due to the way the roster deletes items in unknown order when it is deleted)
+	// That the children will be deleted before the groups, or that the groups are deleted 
+	// before the children. If the children are deleted first, they will let the parent know that
+	// They've been deleted. If the parent is deleted first, it must tell the children not to
+	// tell it when they're deleted. Everything will be deleted in the end, because all the
+	// widgets are owned by the Roster in Swiften.
+	if (parent_) {
+		parent_->removeChild(this);
+	}
+
+	for (int i = 0; i < children_.size(); i++) {
+		children_[i]->parentItemHasBeenDeleted();
+	}
+}
+
+void QtTreeWidgetItem::parentItemHasBeenDeleted() {
+	parent_ = NULL;
 }
 
 QtTreeWidgetItem* QtTreeWidgetItem::getParentItem() {

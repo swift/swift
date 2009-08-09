@@ -40,6 +40,7 @@ class QtTreeWidgetItem : public QObject, public TreeWidgetItem {
 			void setTextColor(unsigned long color);
 			void setBackgroundColor(unsigned long color);
 			void setExpanded(bool b);
+			void parentItemHasBeenDeleted();
 			void hide();
 			void show();
 			bool isShown();

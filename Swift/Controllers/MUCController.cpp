@@ -42,8 +42,7 @@ MUCController::MUCController (
 
 MUCController::~MUCController() {
 	delete muc_;
-	//don't crash on exit by masking this. FIXME.
-	//delete roster_;
+	delete roster_;
 }
 
 void MUCController::handleWindowClosed() {

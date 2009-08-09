@@ -20,9 +20,9 @@ Roster::Roster(TreeWidget *treeWidget, TreeWidgetFactory *widgetFactory) : treeW
 }
 
 Roster::~Roster() {
-  foreach (RosterItem* item, items_) {
-    delete item;
-  }
+	foreach (RosterItem* item, items_) {
+		delete item;
+	}
 	delete treeWidget_;
 }
 
