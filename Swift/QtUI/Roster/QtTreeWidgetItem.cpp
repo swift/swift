@@ -38,8 +38,8 @@ void QtTreeWidgetItem::setBackgroundColor(unsigned long color) {
 	 					(color & 0xFF));
 }
 
-void QtTreeWidgetItem::setExpanded(bool b) {
-	expanded_ = true;
+void QtTreeWidgetItem::setExpanded(bool expanded) {
+	expanded_ = expanded;
 	emit changed(this);
 }
 
@@ -70,6 +70,7 @@ QWidget* QtTreeWidgetItem::getExpandedRosterWidget() {
 }
 
 QtTreeWidgetItem::~QtTreeWidgetItem() {
+	parent_->removeChild(this);
 	qDeleteAll(children_);
 }
 
@@ -81,6 +82,11 @@ void QtTreeWidgetItem::addChild(QtTreeWidgetItem* child) {
 	children_.append(child);
 	connect(child, SIGNAL(changed(QtTreeWidgetItem*)), this, SLOT(handleChanged(QtTreeWidgetItem*)));
 	handleChanged(child);
+}
+
+void QtTreeWidgetItem::removeChild(QtTreeWidgetItem* child) {
+	children_.removeAll(child);
+	handleChanged(this);
 }
 
 void QtTreeWidgetItem::handleChanged(QtTreeWidgetItem* child) {

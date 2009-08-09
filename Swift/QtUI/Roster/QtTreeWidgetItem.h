@@ -26,6 +26,7 @@ class QtTreeWidgetItem : public QObject, public TreeWidgetItem {
 	public:
 			~QtTreeWidgetItem();
 			void addChild(QtTreeWidgetItem* child);
+			void removeChild(QtTreeWidgetItem* child);
 			QtTreeWidgetItem* getParentItem();
 			int rowCount();
 			int rowOf(QtTreeWidgetItem* item);
