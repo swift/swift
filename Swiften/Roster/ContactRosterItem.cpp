@@ -34,6 +34,14 @@ void ContactRosterItem::setStatusShow(StatusShow::Type show) {
 	widget_->setTextColor(colour);
 }
 
+void ContactRosterItem::setStatusText(const String& status) {
+	widget_->setStatusText(status);
+}
+
+void ContactRosterItem::setAvatarPath(const String& path) {
+	widget_->setAvatarPath(path);
+}
+
 const JID& ContactRosterItem::getJID() const {
 	return jid_;
 }

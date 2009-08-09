@@ -5,6 +5,7 @@
 #include "Swiften/Base/String.h"
 #include "Swiften/Elements/Presence.h"
 #include "Swiften/Roster/UserRosterAction.h"
+#include "Swiften/Avatars/AvatarManager.h"
 
 #include <boost/signals.hpp>
 #include <boost/shared_ptr.hpp>
@@ -20,7 +21,7 @@ namespace Swift {
 
 	class RosterController {
 		public:
-			RosterController(boost::shared_ptr<XMPPRoster> xmppRoster, MainWindowFactory *mainWindowFactory, TreeWidgetFactory *treeWidgetFactory);
+			RosterController(boost::shared_ptr<XMPPRoster> xmppRoster, AvatarManager* avatarManager, MainWindowFactory *mainWindowFactory, TreeWidgetFactory *treeWidgetFactory);
 			~RosterController();
 			void showRosterWindow();
 			MainWindow* getWindow() {return mainWindow_;};
@@ -28,6 +29,7 @@ namespace Swift {
 			boost::signal<void (const JID&, const String&)> onJoinMUCRequest;
 			boost::signal<void (StatusShow::Type, const String&)> onChangeStatusRequest;
 			void handleIncomingPresence(boost::shared_ptr<Presence> presence);
+			void handleAvatarChanged(const JID& jid, const String& hash);
 
 		private:
 			void handleOnJIDAdded(const JID &jid);
@@ -42,6 +44,7 @@ namespace Swift {
 			MainWindow* mainWindow_;
 			Roster* roster_;
 			OfflineRosterFilter* offlineFilter_;
+			AvatarManager* avatarManager_;
 	};
 }
 #endif

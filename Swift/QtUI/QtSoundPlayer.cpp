@@ -1,8 +1,12 @@
 #include "QtSoundPlayer.h"
 
+#ifdef Q_WS_X11
+#include "mediaobject.h"
+#include "audiooutput.h"
+#else
 #include <phonon/MediaObject>
 #include <phonon/AudioOutput>
-
+#endif
 
 namespace Swift{
 	

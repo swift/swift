@@ -9,6 +9,7 @@
 #include "Swiften/EventLoop/MainEventLoop.h"
 #include "Swiften/Roster/Roster.h"
 #include "Swiften/Roster/SetPresence.h"
+#include "Swiften/Roster/SetAvatar.h"
 #include "Swiften/Roster/OfflineRosterFilter.h"
 #include "Swiften/Roster/OpenChatRosterAction.h"
 #include "Swiften/Roster/TreeWidgetFactory.h"
@@ -19,9 +20,11 @@ namespace Swift {
 /**
  * The controller does not gain ownership of these parameters.
  */
-RosterController::RosterController(boost::shared_ptr<XMPPRoster> xmppRoster, MainWindowFactory* mainWindowFactory, TreeWidgetFactory* treeWidgetFactory)
+RosterController::RosterController(boost::shared_ptr<XMPPRoster> xmppRoster, AvatarManager* avatarManager, MainWindowFactory* mainWindowFactory, TreeWidgetFactory* treeWidgetFactory)
  : xmppRoster_(xmppRoster), mainWindowFactory_(mainWindowFactory), treeWidgetFactory_(treeWidgetFactory), mainWindow_(mainWindowFactory_->createMainWindow()), roster_(new Roster(mainWindow_->getTreeWidget(), treeWidgetFactory_)), offlineFilter_(new OfflineRosterFilter()) {
 	roster_->addFilter(offlineFilter_);
+	avatarManager_ = avatarManager;
+	avatarManager_->onAvatarChanged.connect(boost::bind(&RosterController::handleAvatarChanged, this, _1, _2));
 	mainWindow_->onStartChatRequest.connect(boost::bind(&RosterController::handleStartChatRequest, this, _1));
 	mainWindow_->onJoinMUCRequest.connect(boost::bind(&RosterController::handleJoinMUCRequest, this, _1, _2));
 	mainWindow_->onChangeStatusRequest.connect(boost::bind(&RosterController::handleChangeStatusRequest, this, _1, _2));
@@ -70,6 +73,11 @@ void RosterController::handleOnJIDAdded(const JID& jid) {
 
 void RosterController::handleIncomingPresence(boost::shared_ptr<Presence> presence) {
 	roster_->applyOnItems(SetPresence(presence));
+}
+
+void RosterController::handleAvatarChanged(const JID& jid, const String& hash) {
+	String path = avatarManager_->getAvatarPath(jid).string();
+	roster_->applyOnItems(SetAvatar(jid, path));
 }
 
 void RosterController::handleStartChatRequest(const JID& contact) {

@@ -3,7 +3,7 @@
 #include "QtChatTabs.h"
 #include "QtChatWindow.h"
 #include "QtSwiftUtil.h"
-#include "QtTreeWidgetFactory.h"
+#include "Roster/QtTreeWidgetFactory.h"
 
 
 namespace Swift {

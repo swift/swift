@@ -32,7 +32,7 @@ namespace Swift {
 			void handlePresenceReceived(boost::shared_ptr<Presence>);
 			void handleVCardReceived(const JID& from, const String& hash, boost::shared_ptr<VCard>, const boost::optional<Error>&);
 			void setAvatarHash(const JID& from, const String& hash);
-      JID getAvatarJID(const JID& o) const;
+			JID getAvatarJID(const JID& o) const;
 
 		private:
 			StanzaChannel* stanzaChannel_;
