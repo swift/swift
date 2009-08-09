@@ -446,7 +446,7 @@ def enable_modules(self, modules, debug=False, crosscompiling=False) :
 		try : self.AppendUnique(CPPDEFINES=moduleDefines[module])
 		except: pass
 	debugSuffix = ''
-	if sys.platform in ["darwin", "linux2"] and not crosscompiling :
+	if sys.platform in ["linux2"] and not crosscompiling :
 		if debug : debugSuffix = '_debug'
 		for module in modules :
 			if module not in pclessModules : continue
@@ -490,26 +490,23 @@ def enable_modules(self, modules, debug=False, crosscompiling=False) :
 			self["QT4_MOCCPPPATH"] = self["CPPPATH"]
 		self.AppendUnique(LIBPATH=[os.path.join('$QTDIR','lib')])
 		return
-	"""
 	if sys.platform=="darwin" :
-		# TODO: Test debug version on Mac
 		self.AppendUnique(LIBPATH=[os.path.join('$QTDIR','lib')])
 		self.AppendUnique(LINKFLAGS="-F$QTDIR/lib")
+		self.AppendUnique(CPPFLAGS="-F$QTDIR/lib")
 		self.AppendUnique(LINKFLAGS="-L$QTDIR/lib") #TODO clean!
+		self.Append(LINKFLAGS=['-framework', "phonon"])
 		if debug : debugSuffix = 'd'
 		for module in modules :
 #			self.AppendUnique(CPPPATH=[os.path.join("$QTDIR","include")])
 #			self.AppendUnique(CPPPATH=[os.path.join("$QTDIR","include",module)])
 # port qt4-mac:
-			self.AppendUnique(CPPPATH=[os.path.join("$QTDIR","include", "qt4")])
-			self.AppendUnique(CPPPATH=[os.path.join("$QTDIR","include", "qt4", module)])
 			if module in staticModules :
 				self.AppendUnique(LIBS=[module+debugSuffix]) # TODO: Add the debug suffix
 				self.AppendUnique(LIBPATH=[os.path.join("$QTDIR","lib")])
 			else :
-#				self.Append(LINKFLAGS=['-framework', module])
-# port qt4-mac:
-				self.Append(LIBS=module)
+				self.Append(CPPFLAGS = ["-I" + os.path.join("$QTDIR", "lib", module + ".framework", "Versions", "4", "Headers")])
+				self.Append(LINKFLAGS=['-framework', module])
 		if 'QtOpenGL' in modules:
 			self.AppendUnique(LINKFLAGS="-F/System/Library/Frameworks")
 			self.Append(LINKFLAGS=['-framework', 'AGL']) #TODO ughly kludge to avoid quotes
@@ -519,7 +516,6 @@ def enable_modules(self, modules, debug=False, crosscompiling=False) :
 # This should work for mac but doesn't
 #	env.AppendUnique(FRAMEWORKPATH=[os.path.join(env['QTDIR'],'lib')])
 #	env.AppendUnique(FRAMEWORKS=['QtCore','QtGui','QtOpenGL', 'AGL'])
-	"""
 
 
 def exists(env):
