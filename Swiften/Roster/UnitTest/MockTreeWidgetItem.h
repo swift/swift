@@ -13,6 +13,8 @@ class MockTreeWidgetItem : public TreeWidgetItem {
 	public:
 		virtual ~MockTreeWidgetItem() {};
 		virtual void setText(const String&) {};
+		virtual void setStatusText(const String&) {};
+		virtual void setAvatarPath(const String&) {};
 		virtual void setExpanded(bool) {};
 		virtual void setTextColor(unsigned long) {};
 		virtual void setBackgroundColor(unsigned long) {};
