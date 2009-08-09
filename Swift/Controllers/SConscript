@@ -1,0 +1,26 @@
+Import("env")
+
+env["SWIFT_CONTROLLERS_FLAGS"] = {
+		"LIBPATH": [Dir(".")],
+		"LIBS": ["SwiftControllers"]
+	}
+
+myenv = env.Clone()
+myenv.MergeFlags(env["BOOST_FLAGS"])
+myenv.StaticLibrary("SwiftControllers", [
+		"ChatController.cpp",
+		"ChatControllerBase.cpp",
+		"MainController.cpp",
+		"NickResolver.cpp",
+		"RosterController.cpp",
+		"XMPPRosterController.cpp",
+		"MUCController.cpp",
+		"EventController.cpp",
+		"SoundEventController.cpp",
+		"SystemTrayController.cpp"
+	])
+
+env.Append(UNITTEST_SOURCES = [
+		File("UnitTest/NickResolverTest.cpp"),
+		File("UnitTest/XMPPRosterControllerTest.cpp")
+	])

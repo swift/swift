@@ -29,6 +29,8 @@ config.log
 config.status
 configure
 Makefile.config
+.sconf_temp
+.sconsign.dblite
 Swiften/Examples/TuneBot/TuneBot
 Swiften/QA/ClientTest/ClientTest
 Swiften/config.h

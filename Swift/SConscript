@@ -1,0 +1,2 @@
+SConscript("Controllers/SConscript")
+SConscript("QtUI/SConscript")

@@ -1,0 +1,63 @@
+Import("env")
+
+cppdefines = ["BOOST_ALL_NO_LIB", ("BOOST_SIGNALS_NAMESPACE", "bsignals")]
+env["BOOST_FLAGS"] = {
+		"CPPFLAGS": ["-I" + Dir(".").abspath],
+		"CPPDEFINES": cppdefines,
+		"LIBPATH": [Dir(".")],
+		"LIBS": ["Boost"]
+	}
+
+sources = [
+		"libs/date_time/src/gregorian/date_generators.cpp",
+		"libs/date_time/src/gregorian/greg_month.cpp",
+		"libs/date_time/src/gregorian/greg_weekday.cpp",
+		"libs/date_time/src/gregorian/gregorian_types.cpp",
+		"libs/date_time/src/posix_time/posix_time_types.cpp",
+		"libs/system/src/error_code.cpp",
+		"libs/thread/src/tss_null.cpp",
+		"libs/signals/src/connection.cpp",
+		"libs/signals/src/named_slot_map.cpp",
+		"libs/signals/src/signal_base.cpp",
+		"libs/signals/src/slot.cpp",
+		"libs/signals/src/trackable.cpp",
+		"libs/filesystem/src/operations.cpp",
+		"libs/filesystem/src/path.cpp",
+		"libs/filesystem/src/portability.cpp",
+		"libs/filesystem/src/utf8_codecvt_facet.cpp",
+		"libs/regex/src/c_regex_traits.cpp",
+		"libs/regex/src/cpp_regex_traits.cpp",
+		"libs/regex/src/cregex.cpp",
+		"libs/regex/src/fileiter.cpp",
+		"libs/regex/src/icu.cpp",
+		"libs/regex/src/instances.cpp",
+		"libs/regex/src/posix_api.cpp",
+		"libs/regex/src/regex.cpp",
+		"libs/regex/src/regex_debug.cpp",
+		"libs/regex/src/regex_raw_buffer.cpp",
+		"libs/regex/src/regex_traits_defaults.cpp",
+		"libs/regex/src/static_mutex.cpp",
+		"libs/regex/src/w32_regex_traits.cpp",
+		"libs/regex/src/wc_regex_traits.cpp",
+		"libs/regex/src/wide_posix_api.cpp",
+		"libs/regex/src/winstances.cpp",
+		"libs/regex/src/usinstances.cpp"]
+
+if env.get("HAVE_PTHREAD", 0) :
+	sources += [
+			"libs/thread/src/pthread/exceptions.cpp",
+			"libs/thread/src/pthread/once.cpp",
+			"libs/thread/src/pthread/thread.cpp"]
+	env["BOOST_FLAGS"]["LIBS"] += ["pthread"]
+else :
+	sources += [
+			"win32_stubs.cpp",
+			"libs/thread/src/win32/exceptions.cpp",
+			"libs/thread/src/win32/thread.cpp",
+			"libs/thread/src/win32/tss_dll.cpp",
+			"libs/thread/src/win32/tss_pe.cpp"]
+	env["BOOST_FLAGS"]["CPPDEFINES"] += [("_WIN32_WINNT", "0x0501")]
+	if env["PLATFORM"] == "cygwin" :
+		env["BOOST_FLAGS"]["CPPDEFINES"] += ["__USE_W32_SOCKETS"]
+
+env.StaticLibrary("Boost", sources, CPPFLAGS = "-I" + Dir(".").abspath, CPPDEFINES = cppdefines)

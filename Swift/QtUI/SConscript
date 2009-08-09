@@ -1,0 +1,74 @@
+import os
+
+def generateDefaultTheme(env, target, source) :
+	sourceDir = source[0].abspath
+	output = open(target[0].abspath, "w")
+	output.write("<RCC version =\"1.0\">")
+	output.write("<qresource prefix=\"/themes/Default\">")
+	for (path, dirs, files) in os.walk(sourceDir) :
+		for file in files :
+			filePath = os.path.join(path,file)
+			output.write("<file alias=\"%(alias)s\">%(path)s</file>" % { 
+					"alias": filePath[len(sourceDir)+1:],
+					"path": filePath
+				})
+	output.write("</qresource>")
+	output.write("</RCC>")
+
+Import("env")
+
+myenv = env.Clone()
+
+myenv.MergeFlags(env["SWIFT_CONTROLLERS_FLAGS"])
+myenv.MergeFlags(env["SWIFTEN_FLAGS"])
+myenv.MergeFlags(env["CPPUNIT_FLAGS"])
+myenv.MergeFlags(env["LIBIDN_FLAGS"])
+myenv.MergeFlags(env["BOOST_FLAGS"])
+myenv.MergeFlags(env["SQLITE_FLAGS"])
+myenv.MergeFlags(env["EXPAT_FLAGS"])
+myenv.MergeFlags(env["ZLIB_FLAGS"])
+myenv.MergeFlags(env["OPENSSL_FLAGS"])
+
+myenv.Tool("qt4")
+myenv.EnableQt4Modules(['QtCore', 'QtGui', 'QtWebKit'], debug = False)
+myenv.Append(CPPPATH = ["/usr/include/phonon"])
+
+myenv.Append(CPPPATH = ["."])
+
+myenv.Command("DefaultTheme.qrc", "../resources/themes/Default", generateDefaultTheme)
+
+sources = [
+		"main.cpp",
+		"QtChatWindow.cpp",
+		"QtChatWindowFactory.cpp",
+		"QtJoinMUCDialog.cpp",
+		"QtLoginWindow.cpp",
+		"QtLoginWindowFactory.cpp",
+		"QtMainWindow.cpp",
+		"QtMainWindowFactory.cpp",
+		"QtSettingsProvider.cpp",
+		"QtStatusWidget.cpp",
+		"QtSwift.cpp",
+		"QtChatView.cpp",
+		"QtChatTabs.cpp",
+		"QtSoundPlayer.cpp",
+		"QtSystemTray.cpp",
+		"QtTabbable.cpp",
+		"ChatSnippet.cpp",
+		"MessageSnippet.cpp",
+		"SystemMessageSnippet.cpp",
+		"Roster/RosterModel.cpp",
+		"Roster/QtTreeWidget.cpp",
+		"Roster/QtTreeWidgetItem.cpp",
+		"Roster/RosterDelegate.cpp",
+		"qrc_DefaultTheme.cc",
+		"qrc_Swift.cc",
+	]
+
+if env["PLATFORM"] == "win32" :
+	sources += ["../resources/Windows/Swift.rc"]
+
+myenv.Program("swift", sources)
+myenv.Uic4("QtJoinMUCDialog.ui")
+myenv.Qrc("DefaultTheme.qrc")
+myenv.Qrc("Swift.qrc")

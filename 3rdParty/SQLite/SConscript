@@ -1,0 +1,9 @@
+Import("env")
+
+env["SQLITE_FLAGS"] = {
+		"CPPPATH": [Dir(".")],
+		"LIBPATH": [Dir(".")],
+		"LIBS": ["SQLite"],
+	}
+
+env.StaticLibrary("SQLite", ["sqlite3.c"], CPPPATH = ["."])

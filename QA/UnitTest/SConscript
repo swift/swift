@@ -1,0 +1,20 @@
+import os
+
+Import("env")
+
+if "check" in COMMAND_LINE_TARGETS or env.GetOption("clean") :
+	myenv = env.Clone()
+	myenv.MergeFlags(env["SWIFT_CONTROLLERS_FLAGS"])
+	myenv.MergeFlags(env["SWIFTEN_FLAGS"])
+	myenv.MergeFlags(env["CPPUNIT_FLAGS"])
+	myenv.MergeFlags(env["LIBIDN_FLAGS"])
+	myenv.MergeFlags(env["BOOST_FLAGS"])
+	myenv.MergeFlags(env["SQLITE_FLAGS"])
+	myenv.MergeFlags(env["EXPAT_FLAGS"])
+	myenv.MergeFlags(env["ZLIB_FLAGS"])
+	checker = myenv.Program("checker", ["checker.cpp"] + env["UNITTEST_SOURCES"])
+	for i in ["HOME", "USERPROFILE", "APPDATA"]:
+		if os.environ.get(i, "") :
+			myenv["ENV"][i] = os.environ[i]
+	check = myenv.Alias("check", checker, checker[0].abspath)
+	myenv.AlwaysBuild(check)

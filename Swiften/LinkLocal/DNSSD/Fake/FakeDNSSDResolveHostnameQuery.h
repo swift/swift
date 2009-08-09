@@ -5,8 +5,6 @@
 #include "Swiften/LinkLocal/DNSSD/DNSSDResolveHostnameQuery.h"
 #include "Swiften/Network/HostAddress.h"
 
-#include <netinet/in.h>
-
 namespace Swift {
 	class FakeDNSSDQuerier;
 

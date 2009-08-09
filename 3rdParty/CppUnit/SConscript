@@ -1,0 +1,42 @@
+Import("env")
+
+env["CPPUNIT_FLAGS"] = {
+		"CPPPATH": [env.Dir(".")],
+		"LIBPATH": [env.Dir(".")],
+		"LIBS": ["CppUnit"]
+	}
+
+env.StaticLibrary("CppUnit", [
+		"src/TextTestRunner.cpp",
+		"src/TextTestProgressListener.cpp",
+		"src/BriefTestProgressListener.cpp",
+		"src/TextOutputter.cpp",
+		"src/XmlOutputter.cpp",
+		"src/XmlElement.cpp",
+		"src/XmlDocument.cpp",
+		"src/StringTools.cpp",
+		"src/DefaultProtector.cpp",
+		"src/Protector.cpp",
+		"src/ProtectorChain.cpp",
+		"src/SynchronizedObject.cpp",
+		"src/SourceLine.cpp",
+		"src/TestRunner.cpp",
+		"src/TestFactoryRegistry.cpp",
+		"src/TestSuite.cpp",
+		"src/TestSuiteBuilderContext.cpp",
+		"src/TestResult.cpp",
+		"src/TestResultCollector.cpp",
+		"src/TestSuccessListener.cpp",
+		"src/TestComposite.cpp",
+		"src/TestCase.cpp",
+		"src/TestFailure.cpp",
+		"src/TestLeaf.cpp",
+		"src/TestNamer.cpp",
+		"src/Asserter.cpp",
+		"src/TypeInfoHelper.cpp",
+		"src/Exception.cpp",
+		"src/Message.cpp",
+		"src/AdditionalMessage.cpp",
+		"src/Test.cpp",
+		"src/TestPath.cpp"
+	], CPPPATH = ".")
