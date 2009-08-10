@@ -253,3 +253,5 @@ env.Append(UNITTEST_SOURCES = [
 		File("StringCodecs/UnitTest/Base64Test.cpp"),
 		File("StringCodecs/UnitTest/SHA1Test.cpp"),
 	])
+
+SConscript("QA/SConscript")

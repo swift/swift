@@ -32,7 +32,7 @@ if int(ARGUMENTS.get("universal", 0)) == 1 :
 			"-arch", "ppc"])
 
 if int(ARGUMENTS.get("warnings", env["PLATFORM"] != "win32")) == 1 :
-	if env["PLATFORM"] != "win32" :
+	if env["PLATFORM"] == "win32" :
 		env.Append(CCFLAGS = ["/Wall"])
 	else :
 		env.Append(CCFLAGS = ["-W", "-Wall"])
@@ -121,15 +121,18 @@ else :
 	SConscript("3rdParty/ZLib/SConscript")
 
 if conf.CheckLib("dl") :
-	env.Append(LIBS = "dl")
+	env.Append(LIBS = ["dl"])
+
+if conf.CheckLib("c") :
+	env.Append(LIBS = ["c"])
 
 if conf.CheckLib("resolv") :
-	env.Append(LIBS = "resolv")
+	env.Append(LIBS = ["resolv"])
 
 if conf.CheckCHeader("expat.h") and conf.CheckLib("expat") :
 	env["HAVE_EXPAT"] = 1
 	env["EXPAT_FLAGS"] = ""
-	env.Append(LIBS = "expat")
+	env.Append(LIBS = ["expat"])
 
 conf.Finish()
 
