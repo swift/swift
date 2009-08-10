@@ -6,11 +6,15 @@ env.Dump()
 
 if ARGUMENTS.get("V") != "1":
 	if sys.stdout.isatty() and env["PLATFORM"] != "win32":
-		env["CCCOMSTR"]     = "  \033[0;33;140mCC\033[0m     $TARGET"
-		env["CXXCOMSTR"]    = "  \033[0;32;140mCXX\033[0m    $TARGET"
-		env["LINKCOMSTR"]   = "  \033[0;31;140mLINK\033[0m   $TARGET"
-		env["ARCOMSTR"]     = "  \033[0;31;140mAR\033[0m     $TARGET"
-		env["RANLIBCOMSTR"] = "  \033[0;31;140mRANLIB\033[0m $TARGET"
+		env["CCCOMSTR"]             = "  \033[0;33;140mCC\033[0m     $TARGET"
+		env["CXXCOMSTR"]            = "  \033[0;32;140mCXX\033[0m    $TARGET"
+		env["LINKCOMSTR"]           = "  \033[0;31;140mLINK\033[0m   $TARGET"
+		env["ARCOMSTR"]             = "  \033[0;31;140mAR\033[0m     $TARGET"
+		env["RANLIBCOMSTR"]         = "  \033[0;31;140mRANLIB\033[0m $TARGET"
+		env["QT4_RCCCOMSTR"]        = "  \033[0;34;140mRCC\033[0m    $TARGET"
+		env["QT4_UICCOMSTR"]        = "  \033[0;34;140mUIC\033[0m    $TARGET"
+		env["QT4_MOCFROMHCOMSTR"]   = "  \033[0;34;140mMOC\033[0m    $TARGET"
+		env["QT4_MOCFROMCXXCOMSTR"] = "  \033[0;34;140mMOC\033[0m    $TARGET"
 		#Progress('  \033[0;35;140mDEP\033[0m $TARGET\n', overwrite = True)
 	else :
 		env["CCCOMSTR"]     = "  CC     $TARGET"
