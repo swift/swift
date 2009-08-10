@@ -31,8 +31,8 @@ if int(ARGUMENTS.get("universal", 0)) == 1 :
 			"-arch", "i386", 
 			"-arch", "ppc"])
 
-if int(ARGUMENTS.get("warnings", 1)) == 1 :
-	if env["PLATFORM"] == "win32" :
+if int(ARGUMENTS.get("warnings", env["PLATFORM"] != "win32")) == 1 :
+	if env["PLATFORM"] != "win32" :
 		env.Append(CCFLAGS = ["/Wall"])
 	else :
 		env.Append(CCFLAGS = ["-W", "-Wall"])
