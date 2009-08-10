@@ -144,6 +144,7 @@ if not env.get("HAVE_EXPAT", 0) :
 # OpenSSL
 openssl_env = conf_env.Clone()
 openssl_prefix = GetOption("openssl_prefix")
+openssl_flags = {}
 if openssl_prefix :
 	openssl_flags = { "CPPPATH": [os.path.join(openssl_prefix, "include")] }
 	if env["PLATFORM"] == "win32" : 
