@@ -98,6 +98,12 @@ if env["PLATFORM"] == "win32" :
 
 
 ################################################################################
+# Configuration options
+################################################################################
+
+AddOption("--with-openssl", dest="openssl_prefix", type="string", nargs=1, action="store", metavar="DIR", help="OpenSSL installation prefix")
+
+################################################################################
 # Platform configuration
 ################################################################################
 
@@ -105,14 +111,6 @@ conf = Configure(conf_env)
 
 if conf.CheckCHeader("pthread.h") :
 	env["HAVE_PTHREAD"] = 1
-
-if conf.CheckCHeader("openssl/ssl.h") :
-	env["HAVE_OPENSSL"] = 1
-	env["OPENSSL_FLAGS"] = {
-			"LIBS": ["ssl", "crypto"]
-		}
-else :
-	env["OPENSSL_FLAGS"] = ""
 
 if conf.CheckLib("z") :
 	env.Append(LIBS = "z")
@@ -142,6 +140,29 @@ if not env.get("HAVE_EXPAT", 0) :
 	SConscript("3rdParty/Expat/SConscript")
 	env["HAVE_EXPAT"] = 1
 	bundledExpat = True
+
+# OpenSSL
+openssl_env = conf_env.Clone()
+openssl_prefix = GetOption("openssl_prefix")
+if openssl_prefix :
+	openssl_flags = { "CPPPATH": [os.path.join(openssl_prefix, "include")] }
+	if env["PLATFORM"] == "win32" : 
+		openssl_flags["LIBPATH"] = [os.path.join(openssl_prefix, "lib", "VC")]
+	else :
+		openssl_flags["LIBPATH"] = [os.path.join(openssl_prefix, "lib")]
+	openssl_env.MergeFlags(openssl_flags)
+
+openssl_conf = Configure(openssl_env)
+if openssl_conf.CheckCHeader("openssl/ssl.h") :
+	env["HAVE_OPENSSL"] = 1
+	env["OPENSSL_FLAGS"] = openssl_flags
+	if env["PLATFORM"] == "win32" : 
+		env["OPENSSL_FLAGS"]["LIBS"] = ["libeay32MT", "ssleay32MT"]
+	else:
+		env["OPENSSL_FLAGS"]["LIBS"] = ["ssl", "crypto"]
+else :
+	env["OPENSSL_FLAGS"] = ""
+openssl_conf.Finish()
 
 
 ################################################################################

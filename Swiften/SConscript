@@ -11,6 +11,7 @@ myenv.MergeFlags(env["LIBIDN_FLAGS"])
 myenv.MergeFlags(env["SQLITE_FLAGS"])
 myenv.MergeFlags(env["EXPAT_FLAGS"])
 myenv.MergeFlags(env["ZLIB_FLAGS"])
+myenv.MergeFlags(env["OPENSSL_FLAGS"])
 
 sources = [
 		"Application/Application.cpp",
