@@ -38,13 +38,13 @@ myenv.MergeFlags(env["EXPAT_FLAGS"])
 myenv.MergeFlags(env["ZLIB_FLAGS"])
 myenv.MergeFlags(env["OPENSSL_FLAGS"])
 
-myenv.Tool("qt4")
+myenv.Tool("qt4", toolpath = ["#/BuildTools/SCons/Tools"])
 myenv.EnableQt4Modules(['QtCore', 'QtGui', 'QtWebKit'], debug = False)
 myenv.Append(CPPPATH = ["/usr/include/phonon"])
 
 myenv.Append(CPPPATH = ["."])
 
-myenv.Command("DefaultTheme.qrc", "../resources/themes/Default", generateDefaultTheme)
+myenv.Command("DefaultTheme.qrc", "../resources/themes/Default", Action(generateDefaultTheme, cmdstr = "$GENCOMSTR"))
 
 sources = [
 		"main.cpp",

@@ -9,6 +9,9 @@ env["LIBIDN_FLAGS"] = {
 
 myenv = env.Clone()
 
+# Remove warn flags
+myenv.Replace(CCFLAGS = [flag for flag in env["CCFLAGS"] if flag not in ["-W", "-Wall"]])
+
 # Check for strcasecmp() or replacement
 conf = Configure(myenv)
 if not conf.CheckFunc('strcasecmp') :

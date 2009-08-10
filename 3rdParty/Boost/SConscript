@@ -8,6 +8,9 @@ env["BOOST_FLAGS"] = {
 		"LIBS": ["Boost"]
 	}
 
+myenv = env.Clone()
+myenv.Replace(CCFLAGS = [flag for flag in env["CCFLAGS"] if flag not in ["-W", "-Wall"]])
+
 sources = [
 		"libs/date_time/src/gregorian/date_generators.cpp",
 		"libs/date_time/src/gregorian/greg_month.cpp",
@@ -60,4 +63,4 @@ else :
 	if env["PLATFORM"] == "cygwin" :
 		env["BOOST_FLAGS"]["CPPDEFINES"] += ["__USE_W32_SOCKETS"]
 
-env.StaticLibrary("Boost", sources, CPPFLAGS = "-I" + Dir(".").abspath, CPPDEFINES = cppdefines)
+myenv.StaticLibrary("Boost", sources, CPPFLAGS = "-I" + Dir(".").abspath, CPPDEFINES = cppdefines)
