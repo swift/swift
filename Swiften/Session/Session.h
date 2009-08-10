@@ -108,5 +108,6 @@ namespace Swift {
 			boost::shared_ptr<ConnectionLayer> connectionLayer;
 			StreamStack* streamStack;
 			bool initialized;
+			bool finishing;
 	};
 }

@@ -15,7 +15,8 @@ Session::Session(
 			payloadParserFactories(payloadParserFactories),
 			payloadSerializers(payloadSerializers),
       streamStack(0),
-			initialized(false) {
+			initialized(false),
+			finishing(false) {
 }
 
 Session::~Session() {
@@ -28,14 +29,18 @@ void Session::startSession() {
 }
 
 void Session::finishSession() {
+	finishing = true;
 	connection->disconnect();
 	handleSessionFinished(boost::optional<SessionError>());
+	finishing = false;
 	onSessionFinished(boost::optional<SessionError>());
 }
 
 void Session::finishSession(const SessionError& error) {
+	finishing = true;
 	connection->disconnect();
 	handleSessionFinished(boost::optional<SessionError>(error));
+	finishing = false;
 	onSessionFinished(boost::optional<SessionError>(error));
 }
 
