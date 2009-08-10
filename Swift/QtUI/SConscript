@@ -75,7 +75,8 @@ sources = [
 	]
 
 if env["PLATFORM"] == "win32" :
-	sources += ["../resources/Windows/Swift.rc"]
+	myenv.RES("../resources/Windows/Swift.rc")
+	sources += ["../resources/Windows/Swift.res"]
 
 if env["PLATFORM"] == "darwin" or env["PLATFORM"] == "win32" :
 	myenv.Program("Swift", sources)

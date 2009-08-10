@@ -1,4 +1,4 @@
-Import("env")
+Import(["env", "conf_env"])
 
 env["LIBIDN_FLAGS"] = {
 		"CPPDEFINES": ["IDNA_STATIC"],
@@ -13,7 +13,7 @@ myenv = env.Clone()
 myenv.Replace(CCFLAGS = [flag for flag in env["CCFLAGS"] if flag not in ["-W", "-Wall"]])
 
 # Check for strcasecmp() or replacement
-conf = Configure(myenv)
+conf = Configure(conf_env)
 if not conf.CheckFunc('strcasecmp') :
 	if conf.CheckFunc("stricmp") :
 		myenv.Append(CPPDEFINES = [("strcasecmp", "stricmp")])

@@ -463,6 +463,8 @@ def enable_modules(self, modules, debug=False, crosscompiling=False) :
 			self.AppendUnique(CPPPATH=[os.path.join("$QTDIR","include","QtAssistant")])
 			modules.remove("QtAssistant")
 			modules.append("QtAssistantClient")
+		# FIXME: Phonon Hack
+		self.AppendUnique(LIBS=['phonon4'+debugSuffix])
 		self.AppendUnique(LIBS=[lib+'4'+debugSuffix for lib in modules if lib not in staticModules])
 		self.PrependUnique(LIBS=[lib+debugSuffix for lib in modules if lib in staticModules])
 		if 'QtOpenGL' in modules:
@@ -482,6 +484,7 @@ def enable_modules(self, modules, debug=False, crosscompiling=False) :
 		self.AppendUnique(LINKFLAGS="-F$QTDIR/lib")
 		self.AppendUnique(CPPFLAGS="-F$QTDIR/lib")
 		self.AppendUnique(LINKFLAGS="-L$QTDIR/lib") #TODO clean!
+		# FIXME: Phonon Hack
 		self.Append(LINKFLAGS=['-framework', "phonon"])
 		if debug : debugSuffix = 'd'
 		for module in modules :
