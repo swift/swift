@@ -1,4 +1,4 @@
-Import("env")
+Import(["env", "conf_env")
 
 env["EXPAT_FLAGS"] = {
 		"CPPDEFINES": ["XML_STATIC"],
@@ -11,7 +11,7 @@ myenv = env.Clone()
 myenv.Append(CPPDEFINES = ["XML_STATIC", "HAVE_EXPAT_CONFIG_H"])
 myenv.Append(CPPPATH = [".", "src"])
 
-conf = Configure(myenv)
+conf = Configure(conf_env)
 if conf.CheckFunc('memmove') :
 	myenv.Append(CPPDEFINES = ["HAVE_MEMMOVE"])
 conf.Finish()

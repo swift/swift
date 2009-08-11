@@ -1,2 +1,8 @@
+Import("env")
+
+if not env.get("HAVE_OPENSSL", 0) :
+  print "Error: Swift requires OpenSSL support, and OpenSSL was not found."
+  Exit(1)
+
 SConscript("Controllers/SConscript")
 SConscript("QtUI/SConscript")
