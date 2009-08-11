@@ -1,4 +1,4 @@
-import os
+import os, shutil
 
 def generateDefaultTheme(env, target, source) :
 	sourceDir = source[0].abspath
@@ -15,7 +15,7 @@ def generateDefaultTheme(env, target, source) :
 	output.write("</qresource>")
 	output.write("</RCC>")
 
-def createBundle(env, target, source) :
+def createAppBundle(env, target, source) :
 	target = target[0].abspath
 	source = source[0].abspath
 	os.makedirs(target + "/Contents/MacOS")
@@ -24,9 +24,17 @@ def createBundle(env, target, source) :
 	pkgInfo.write("APPL\77\77\77\77")
 	pkgInfo.close()
 
+def buildWindowsBundle(env, target, source) :
+	sources = source
+	if not os.path.exists(target[0].abspath) :
+		os.mkdir(target[0].abspath)
+	for source in sources :
+		shutil.copy(source.abspath, target[0].abspath)
+
 Import("env")
 
 myenv = env.Clone()
+myenv["BUILDERS"]["WindowsBundle"] = Builder(action = Action(buildWindowsBundle, cmdstr = "$BUNDLECOMSTR"))
 
 myenv.MergeFlags(env["SWIFT_CONTROLLERS_FLAGS"])
 myenv.MergeFlags(env["SWIFTEN_FLAGS"])
@@ -79,13 +87,25 @@ if env["PLATFORM"] == "win32" :
 	sources += ["../resources/Windows/Swift.res"]
 
 if env["PLATFORM"] == "darwin" or env["PLATFORM"] == "win32" :
-	myenv.Program("Swift", sources)
+	swiftProgram = myenv.Program("Swift", sources)
 else :
-	myenv.Program("swift", sources)
+	swiftProgram = myenv.Program("swift", sources)
 
 myenv.Uic4("QtJoinMUCDialog.ui")
 myenv.Qrc("DefaultTheme.qrc")
 myenv.Qrc("Swift.qrc")
 
 if env["PLATFORM"] == "darwin" :
-	myenv.Command("Swift.app", "Swift", createBundle)
+	myenv.Command("Swift.app", "Swift", createAppBundle)
+
+if env["PLATFORM"] == "win32" :
+	myenv.WindowsBundle(Dir("Swift"), [
+			swiftProgram[0],
+			File(os.path.join(env["QTDIR"], "bin", "QtCore4.dll")),
+			File(os.path.join(env["QTDIR"], "bin", "QtGui4.dll")),
+			File(os.path.join(env["QTDIR"], "bin", "QtNetwork4.dll")),
+			File(os.path.join(env["QTDIR"], "bin", "QtWebKit4.dll")),	
+			File(os.path.join(env["QTDIR"], "bin", "phonon4.dll")),	
+			File(os.path.join(env["OPENSSL_DIR"], "bin", "ssleay32.dll")),	
+			File(os.path.join(env["OPENSSL_DIR"], "bin", "libeay32.dll")),	
+		])

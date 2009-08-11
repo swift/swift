@@ -92,6 +92,7 @@ if int(ARGUMENTS.get("V", 0)) == 0:
     env["QT4_MOCFROMCXXCOMSTR"] = "  \033[0;34;140mMOC\033[0m    $TARGET"
     env["GENCOMSTR"]            = "  \033[0;34;140mGEN\033[0m    $TARGET"
     env["RCCOMSTR"]             = "  \033[0;34;140mRC\033[0m     $TARGET"
+    env["BUNDLECOMSTR"]         = "  \033[0;34;140mBUNDLE\033[0m $TARGET"
     #Progress(                     "  \033[0;35;140mDEP\033[0m    $TARGET\n")
   else :
     env["CCCOMSTR"]             = "  CC     $TARGET"
@@ -105,10 +106,13 @@ if int(ARGUMENTS.get("V", 0)) == 0:
     env["QT4_MOCFROMCXXCOMSTR"] = "  MOC    $TARGET"
     env["GENCOMSTR"]            = "  GEN    $TARGET"
     env["RCCOMSTR"]             = "  RC     $TARGET"
+    env["BUNDLECOMSTR"]         = "  BUNDLE $TARGET"
     #Progress('  DEP $TARGET\n')
 
 if env["PLATFORM"] == "win32" :
 	env["MSVC_BATCH"] = 1
+	env["LINKCOM"] = [env["LINKCOM"], 'mt.exe -nologo -manifest ${TARGET}.manifest -outputresource:$TARGET;1']
+	env["SHLINKCOM"] = [env["SHLINKCOM"], 'mt.exe -nologo -manifest ${TARGET}.manifest -outputresource:$TARGET;2']
 
 
 ################################################################################
@@ -163,6 +167,7 @@ if openssl_prefix :
 	openssl_flags = { "CPPPATH": [os.path.join(openssl_prefix, "include")] }
 	if env["PLATFORM"] == "win32" : 
 		openssl_flags["LIBPATH"] = [os.path.join(openssl_prefix, "lib", "VC")]
+		env["OPENSSL_DIR"] = openssl_prefix
 	else :
 		openssl_flags["LIBPATH"] = [os.path.join(openssl_prefix, "lib")]
 	openssl_env.MergeFlags(openssl_flags)
