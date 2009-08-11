@@ -1,25 +1,38 @@
 import sys, os
 
 ################################################################################
+# Build variables
+################################################################################
+
+vars = Variables("config.py")
+vars.Add(BoolVariable("optimize", "Compile with optimizations turned on", "no"))
+vars.Add(BoolVariable("debug", "Compile with debug information", "yes"))
+vars.Add(BoolVariable("warnings", "Compile with warnings turned on", 
+    "yes" if os.name != "nt" else "no"))
+if os.name != "nt" :
+  vars.Add(BoolVariable("coverage", "Compile with coverage information", "no"))
+if os.name == "mac" :
+  vars.Add(BoolVariable("universal", "Create universal binaries", "no"))
+vars.Add(PackageVariable("openssl", "OpenSSL location", "yes"))
+
+################################################################################
 # Set up default build & configure environment
 ################################################################################
 
-env = Environment(CPPPATH = "#", ENV = {'PATH' : os.environ['PATH']})
+env = Environment(CPPPATH = "#", ENV = {'PATH' : os.environ['PATH']}, variables = vars)
+Help(vars.GenerateHelpText(env))
 
 # Default compiler flags
-if int(ARGUMENTS.get("optimize", 0)) == 1 :
-	if env["PLATFORM"] == "win32" :
-		env.Append(CCFLAGS = "/O2")
-	else :
-		env.Append(CCFLAGS = "-O2")
+if env["optimize"] :
+	env.Append(CCFLAGS = "-O2")
 
-if int(ARGUMENTS.get("debug", 1)) == 1 :
+if env["debug"] :
 	if env["PLATFORM"] == "win32" :
 		env.Append(CCFLAGS = ["/Zi", "/MDd"])
 	else :
 		env.Append(CCFLAGS = "-g")
 
-if int(ARGUMENTS.get("universal", 0)) == 1 :
+if env.get("universal", 0) :
 	assert(env["PLATFORM"] == "darwin")
 	env.Append(CCFLAGS = [
 			"-isysroot", "/Developer/SDKs/MacOSX10.4u.sdk", 
@@ -31,14 +44,14 @@ if int(ARGUMENTS.get("universal", 0)) == 1 :
 			"-arch", "i386", 
 			"-arch", "ppc"])
 
-if int(ARGUMENTS.get("warnings", env["PLATFORM"] != "win32")) == 1 :
+if env["warnings"] :
 	if env["PLATFORM"] == "win32" :
 		env.Append(CCFLAGS = ["/Wall"])
 	else :
 		env.Append(CCFLAGS = ["-W", "-Wall"])
 		#env.Append(CCFLAGS = ["-W", "-Wall", "-Wredundant-decls", "-pedantic", "-Wno-long-long", "-Woverloaded-virtual", "-Wundef", "-Wfloat-equal", "-Wold-style-cast"])
 
-if int(ARGUMENTS.get("coverage", 0)) == 1 :
+if env.get("coverage", 0) :
 	assert(env["PLATFORM"] != "win32")
 	env.Append(CCFLAGS = ["-fprofile-arcs", "-ftest-coverage"])
 	env.Append(LINKFLAGS = ["-fprofile-arcs", "-ftest-coverage"])
@@ -98,12 +111,6 @@ if env["PLATFORM"] == "win32" :
 
 
 ################################################################################
-# Configuration options
-################################################################################
-
-AddOption("--with-openssl", dest="openssl_prefix", type="string", nargs=1, action="store", metavar="DIR", help="OpenSSL installation prefix")
-
-################################################################################
 # Platform configuration
 ################################################################################
 
@@ -143,7 +150,8 @@ if not env.get("HAVE_EXPAT", 0) :
 
 # OpenSSL
 openssl_env = conf_env.Clone()
-openssl_prefix = GetOption("openssl_prefix")
+use_openssl = bool(env["openssl"])
+openssl_prefix = env["openssl"] if isinstance(env["openssl"], str) else ""
 openssl_flags = {}
 if openssl_prefix :
 	openssl_flags = { "CPPPATH": [os.path.join(openssl_prefix, "include")] }
@@ -154,7 +162,7 @@ if openssl_prefix :
 	openssl_env.MergeFlags(openssl_flags)
 
 openssl_conf = Configure(openssl_env)
-if openssl_conf.CheckCHeader("openssl/ssl.h") :
+if use_openssl and openssl_conf.CheckCHeader("openssl/ssl.h") :
 	env["HAVE_OPENSSL"] = 1
 	env["OPENSSL_FLAGS"] = openssl_flags
 	if env["PLATFORM"] == "win32" : 
