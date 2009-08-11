@@ -1,5 +1,14 @@
+# set dependencies
+!define buildDate "20090811"
+!define swiftBuildDir "..\..\QtUI\"
+!define openSSLDir "G:\usr\openssl-0.9.8a.win32\bin"
+!define msvccRedistributableDir "G:\devel\vcredist"
+!define msvccRedistributableExe "vcredist_x86.exe"
+!define qtDLLDir "G:\Qt\4.5.2-lgpl-vs2008\bin"
+
+
 # define installer name
-outFile "Swift-installer-win32.exe"
+outFile "Swift-installer-win32-${buildDate}.exe"
  
 # set desktop as install directory
 installDir "$PROGRAMFILES\Swift"
@@ -12,15 +21,20 @@ section "Main install"
 # define output path
 setOutPath $INSTDIR
  
-# specify files to go in output path
-file ..\..\src\UI\Qt\release\*
+# Specify files to go in output path.
+# If you update this list, update the uninstall list too.
+file ${swiftBuildDir}\Swift.exe
+file ${openSSLDir}\ssleay32.dll
+file ${openSSLDir}\libeay32.dll
+file ${qtDLLDir}\phonon4.dll
+file ${qtDLLDir}\QtCore4.dll
+file ${qtDLLDir}\QtGui4.dll
+file ${qtDLLDir}\QtWebKit4.dll
+file ${qtDLLDir}\QtNetwork4.dll
 
 # create start menu item
 createShortCut "$SMPROGRAMS\Swift\Swift.lnk" "$INSTDIR\Swift.exe"
 createShortCut "$SMPROGRAMS\Swift\Unistall Swift.lnk" "$INSTDIR\unistall.exe"
-
-# We /could/ start on login:
-# WriteRegStr HKEY_LOCAL_MACHINE "Software\Microsoft\Windows\CurrentVersion\Run" "Swift" "$INSTDIR\Swift.exe"
 
 # Add the information to Add/Remove
 WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\Swift" "DisplayName" "Swift"
@@ -36,18 +50,18 @@ sectionEnd
 
 Section -Prerequisites
 # http://nsis.sourceforge.net/Embedding_other_installers
-  SetOutPath $INSTDIR\Prerequisites
-  MessageBox MB_YESNO "Install C++ Runtime?" /SD IDYES IDNO endRuntime
-    File ..\..\vcredist_x86.exe
-    ExecWait "$INSTDIR\Prerequisites\vcredist_x86.exe"
-    delete $INSTDIR\Prerequisites\vcredist_x86.exe
+    SetOutPath $INSTDIR\Prerequisites
+    MessageBox MB_YESNO "Install C++ Runtime?" /SD IDYES IDNO endRuntime
+    File ${msvccRedistributableDir}\${msvccRedistributableExe}
+    ExecWait "$INSTDIR\Prerequisites\${msvccRedistributableExe}"
+    delete $INSTDIR\Prerequisites\${msvccRedistributableExe}
     delete $INSTDIR\Prerequisites
     Goto endRuntime
   endRuntime:
 SectionEnd
 
 section "autostart"
-  MessageBox MB_YESNO "Run at startup?" /SD IDYES IDNO endAutostart
+  MessageBox MB_YESNO "Would you like Swift to run at startup?" /SD IDYES IDNO endAutostart
     WriteRegStr HKEY_LOCAL_MACHINE "Software\Microsoft\Windows\CurrentVersion\Run" "Swift" "$INSTDIR\Swift.exe"
     Goto endAutostart
   endAutostart:
@@ -56,12 +70,19 @@ sectionEnd
 # create a section to define what the uninstaller does.
 # the section will always be named "Uninstall"
 section "Uninstall"
-  MessageBox MB_YESNO "The uninstaller will delete the entire Swift folder, including any user-created files. Are you sure?" /SD IDYES IDNO endUninstall
+    MessageBox MB_YESNO "The uninstaller will remove Swift. Are you sure?" /SD IDYES IDNO endUninstall
     # Always delete uninstaller first
     delete $INSTDIR\uninstaller.exe
  
     # now delete installed files
-    delete $INSTDIR\*
+    delete $INSTDIR\Swift.exe
+    delete $INSTDIR\ssleay32.dll
+    delete $INSTDIR\libeay32.dll
+    delete $INSTDIR\phonon4.dll
+    delete $INSTDIR\QtCore4.dll
+    delete $INSTDIR\QtGui4.dll
+    delete $INSTDIR\QtWebKit4.dll
+    delete $INSTDIR\QtNetwork4.dll
     Goto endUninstall
   endUninstall: 
 sectionEnd
