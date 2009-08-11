@@ -13,6 +13,8 @@ if os.name != "nt" :
   vars.Add(BoolVariable("coverage", "Compile with coverage information", "no"))
 if os.name == "mac" :
   vars.Add(BoolVariable("universal", "Create universal binaries", "no"))
+if os.name == "nt" :
+  vars.Add(PathVariable("vcredist", "MSVC redistributable dir", "", PathVariable.PathAccept))
 vars.Add(PackageVariable("openssl", "OpenSSL location", "yes"))
 vars.Add(PathVariable("qt", "Qt location", "", PathVariable.PathAccept))
 
@@ -22,6 +24,7 @@ vars.Add(PathVariable("qt", "Qt location", "", PathVariable.PathAccept))
 
 env = Environment(CPPPATH = "#", ENV = {'PATH' : os.environ['PATH']}, variables = vars)
 Help(vars.GenerateHelpText(env))
+env.Alias("dist", ["."])
 
 # Default compiler flags
 if env["optimize"] :
