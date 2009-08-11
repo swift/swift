@@ -6,7 +6,7 @@ import sys, os
 
 vars = Variables("config.py")
 vars.Add(BoolVariable("optimize", "Compile with optimizations turned on", "no"))
-vars.Add(BoolVariable("debug", "Compile with debug information", "yes"))
+vars.Add(BoolVariable("debug", "Compile with debug information", "yes" if os.name != "nt" else "no"))
 vars.Add(BoolVariable("warnings", "Compile with warnings turned on", 
     "yes" if os.name != "nt" else "no"))
 if os.name != "nt" :
