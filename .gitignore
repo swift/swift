@@ -23,6 +23,7 @@
 moc_*
 qrc_*
 ui_*
+config.py
 checker
 aclocal.m4
 autom4te.cache

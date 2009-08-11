@@ -14,6 +14,7 @@ if os.name != "nt" :
 if os.name == "mac" :
   vars.Add(BoolVariable("universal", "Create universal binaries", "no"))
 vars.Add(PackageVariable("openssl", "OpenSSL location", "yes"))
+vars.Add(PathVariable("qt", "Qt location", "", PathVariable.PathAccept))
 
 ################################################################################
 # Set up default build & configure environment
@@ -141,12 +142,17 @@ if conf.CheckCHeader("expat.h") and conf.CheckLib("expat") :
 
 conf.Finish()
 
+# Bundled expat
 bundledExpat = False
 if not env.get("HAVE_EXPAT", 0) :
 	print "Expat or LibXML not found. Using bundled Expat"
 	SConscript("3rdParty/Expat/SConscript")
 	env["HAVE_EXPAT"] = 1
 	bundledExpat = True
+
+# Qt
+if env["qt"] :
+	env["QTDIR"] = env["qt"]
 
 # OpenSSL
 openssl_env = conf_env.Clone()

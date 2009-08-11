@@ -1,4 +1,4 @@
-Import(["env", "conf_env")
+Import(["env", "conf_env"])
 
 env["EXPAT_FLAGS"] = {
 		"CPPDEFINES": ["XML_STATIC"],
