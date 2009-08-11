@@ -1,5 +1,4 @@
 # set dependencies
-!define buildDate "20090811"
 !define swiftBuildDir "..\..\QtUI\Swift"
 !define msvccRedistributableExe "vcredist_x86.exe"
 

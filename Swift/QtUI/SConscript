@@ -1,4 +1,4 @@
-import os, shutil
+import os, shutil, datetime
 
 def generateDefaultTheme(env, target, source) :
 	sourceDir = source[0].abspath
@@ -47,6 +47,7 @@ myenv.MergeFlags(env["ZLIB_FLAGS"])
 myenv.MergeFlags(env["OPENSSL_FLAGS"])
 
 myenv.Tool("qt4", toolpath = ["#/BuildTools/SCons/Tools"])
+myenv.Tool("nsis", toolpath = ["#/BuildTools/SCons/Tools"])
 myenv.EnableQt4Modules(['QtCore', 'QtGui', 'QtWebKit'], debug = False)
 myenv.Append(CPPPATH = ["/usr/include/phonon"])
 
@@ -109,3 +110,8 @@ if env["PLATFORM"] == "win32" :
 			File(os.path.join(env["OPENSSL_DIR"], "bin", "ssleay32.dll")),	
 			File(os.path.join(env["OPENSSL_DIR"], "bin", "libeay32.dll")),	
 		])
+
+	if "dist" in COMMAND_LINE_TARGETS or env.GetOption("clean") :
+		#myenv.Append(NSIS_OPTIONS = ["/DmsvccRedistributableDir=\"" + env["vcredist"] + "\""])
+		myenv.Append(NSIS_OPTIONS = ["/DmsvccRedistributableDir=\"" + env["vcredist"] + "\"", "/DbuildDate=" + datetime.date.today().strftime("%Y%m%d")])
+		myenv.Nsis("../Packaging/nsis/swift.nsi")
