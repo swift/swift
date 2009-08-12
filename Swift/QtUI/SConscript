@@ -35,6 +35,7 @@ Import("env")
 
 myenv = env.Clone()
 myenv["BUILDERS"]["WindowsBundle"] = Builder(action = Action(buildWindowsBundle, cmdstr = "$BUNDLECOMSTR"))
+myenv["BUILDERS"]["AppBundle"] = Builder(action = Action(buildAppBundle, cmdstr = "$BUNDLECOMSTR"))
 
 myenv.MergeFlags(env["SWIFT_CONTROLLERS_FLAGS"])
 myenv.MergeFlags(env["SWIFTEN_FLAGS"])
@@ -100,18 +101,20 @@ if env["PLATFORM"] == "darwin" :
 	myenv.Command("Swift.app", "Swift", createAppBundle)
 
 if env["PLATFORM"] == "win32" :
-	myenv.WindowsBundle(Dir("Swift"), [
-			swiftProgram[0],
-			File(os.path.join(env["QTDIR"], "bin", "QtCore4.dll")),
-			File(os.path.join(env["QTDIR"], "bin", "QtGui4.dll")),
-			File(os.path.join(env["QTDIR"], "bin", "QtNetwork4.dll")),
-			File(os.path.join(env["QTDIR"], "bin", "QtWebKit4.dll")),	
-			File(os.path.join(env["QTDIR"], "bin", "phonon4.dll")),	
-			File(os.path.join(env["OPENSSL_DIR"], "bin", "ssleay32.dll")),	
-			File(os.path.join(env["OPENSSL_DIR"], "bin", "libeay32.dll")),	
-		])
-
 	if "dist" in COMMAND_LINE_TARGETS or env.GetOption("clean") :
-		#myenv.Append(NSIS_OPTIONS = ["/DmsvccRedistributableDir=\"" + env["vcredist"] + "\""])
-		myenv.Append(NSIS_OPTIONS = ["/DmsvccRedistributableDir=\"" + env["vcredist"] + "\"", "/DbuildDate=" + datetime.date.today().strftime("%Y%m%d")])
+		myenv.WindowsBundle(Dir("Swift"), [
+				swiftProgram[0],
+				File(os.path.join(env["QTDIR"], "bin", "QtCore4.dll")),
+				File(os.path.join(env["QTDIR"], "bin", "QtGui4.dll")),
+				File(os.path.join(env["QTDIR"], "bin", "QtNetwork4.dll")),
+				File(os.path.join(env["QTDIR"], "bin", "QtWebKit4.dll")),	
+				File(os.path.join(env["QTDIR"], "bin", "phonon4.dll")),	
+				File(os.path.join(env["OPENSSL_DIR"], "bin", "ssleay32.dll")),	
+				File(os.path.join(env["OPENSSL_DIR"], "bin", "libeay32.dll")),	
+			])
+
+		myenv.Append(NSIS_OPTIONS = [
+				"/DmsvccRedistributableDir=\"" + env["vcredist"] + "\"", 
+				"/DbuildDate=" + datetime.date.today().strftime("%Y%m%d")
+			])
 		myenv.Nsis("../Packaging/nsis/swift.nsi")
