@@ -10,7 +10,6 @@ namespace Swift {
 			WindowsApplication(const String& name) : Application(name) {
 			}
 
-		protected:
 			virtual ApplicationMessageDisplay* getApplicationMessageDisplay() {
 				return  &messageDisplay_;
 			}
