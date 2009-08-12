@@ -116,6 +116,8 @@ if env["PLATFORM"] == "win32" :
 	env["MSVC_BATCH"] = 1
 	env["LINKCOM"] = [env["LINKCOM"], 'mt.exe -nologo -manifest ${TARGET}.manifest -outputresource:$TARGET;1']
 	env["SHLINKCOM"] = [env["SHLINKCOM"], 'mt.exe -nologo -manifest ${TARGET}.manifest -outputresource:$TARGET;2']
+	#env["LINKFLAGS"] = ["/SUBSYSTEM:WINDOWS", "/MANIFESTDEPENDENCY:type=\'win32\' name=\'Microsoft.Windows.Common-Controls\' version=\'6.0.0.0\' publicKeyToken=\'6595b64144ccf1df\' language=\'*\' processorArchitecture=\'*\'"]
+	env["LINKFLAGS"] = ["/SUBSYSTEM:CONSOLE"]
 
 
 ################################################################################

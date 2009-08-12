@@ -112,8 +112,7 @@ if env["PLATFORM"] == "win32" :
 				File(os.path.join(env["OPENSSL_DIR"], "bin", "libeay32.dll")),	
 			])
 
-		myenv.Append(NSIS_OPTIONS = [
+		myenv.Nsis("../Packaging/nsis/swift.nsi", NSIS_OPTIONS = [
 				"/DmsvccRedistributableDir=\"" + env["vcredist"] + "\"", 
 				"/DbuildDate=" + datetime.date.today().strftime("%Y%m%d")
 			])
-		myenv.Nsis("../Packaging/nsis/swift.nsi")
