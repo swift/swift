@@ -35,7 +35,6 @@ Import("env")
 
 myenv = env.Clone()
 myenv["BUILDERS"]["WindowsBundle"] = Builder(action = Action(buildWindowsBundle, cmdstr = "$BUNDLECOMSTR"))
-myenv["BUILDERS"]["AppBundle"] = Builder(action = Action(buildAppBundle, cmdstr = "$BUNDLECOMSTR"))
 
 myenv.MergeFlags(env["SWIFT_CONTROLLERS_FLAGS"])
 myenv.MergeFlags(env["SWIFTEN_FLAGS"])
