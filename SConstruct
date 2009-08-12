@@ -11,6 +11,8 @@ vars.Add(BoolVariable("warnings", "Compile with warnings turned on",
     "yes" if os.name != "nt" else "no"))
 if os.name != "nt" :
   vars.Add(BoolVariable("coverage", "Compile with coverage information", "no"))
+if os.name == "posix" :
+  vars.Add(BoolVariable("valgrind", "Run tests with valgrind", "no"))
 if os.name == "mac" :
   vars.Add(BoolVariable("universal", "Create universal binaries", "no"))
 if os.name == "nt" :
@@ -59,6 +61,9 @@ if env.get("coverage", 0) :
 	assert(env["PLATFORM"] != "win32")
 	env.Append(CCFLAGS = ["-fprofile-arcs", "-ftest-coverage"])
 	env.Append(LINKFLAGS = ["-fprofile-arcs", "-ftest-coverage"])
+
+if env.get("valgrind", 0) :
+  env["TEST_RUNNER"] = "valgrind --suppressions=QA/valgrind.supp -q --leak-check=full --track-origins=yes "
 
 if env["PLATFORM"] == "win32" :
 	env.Append(LIBS = ["dnsapi", "ws2_32", "wsock32"])
@@ -125,9 +130,6 @@ if env["PLATFORM"] == "win32" :
 ################################################################################
 
 conf = Configure(conf_env)
-
-if conf.CheckCHeader("pthread.h") :
-	env["HAVE_PTHREAD"] = 1
 
 if conf.CheckLib("z") :
 	env.Append(LIBS = "z")

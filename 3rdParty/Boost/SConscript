@@ -46,7 +46,7 @@ sources = [
 		"libs/regex/src/winstances.cpp",
 		"libs/regex/src/usinstances.cpp"]
 
-if env.get("HAVE_PTHREAD", 0) :
+if env["PLATFORM"] != "win32" :
 	sources += [
 			"libs/thread/src/pthread/exceptions.cpp",
 			"libs/thread/src/pthread/once.cpp",

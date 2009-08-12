@@ -17,5 +17,5 @@ for i in ["SWIFT_CLIENTTEST_JID", "SWIFT_CLIENTTEST_PASS"]:
 		myenv["ENV"][i] = os.environ[i]
 
 tester = myenv.Program("ClientTest", ["ClientTest.cpp"])
-clientTest = myenv.Alias("ClientTest", tester, tester[0].abspath)
+clientTest = myenv.Alias("ClientTest", tester, env.get("TEST_RUNNER", "") + tester[0].abspath)
 env.AlwaysBuild(clientTest)

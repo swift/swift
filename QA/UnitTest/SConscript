@@ -4,6 +4,7 @@ Import("env")
 
 if "check" in COMMAND_LINE_TARGETS or env.GetOption("clean") :
 	myenv = env.Clone()
+	myenv.MergeFlags(env["SLIMBER_FLAGS"])
 	myenv.MergeFlags(env["SWIFT_CONTROLLERS_FLAGS"])
 	myenv.MergeFlags(env["SWIFTEN_FLAGS"])
 	myenv.MergeFlags(env["CPPUNIT_FLAGS"])
@@ -16,5 +17,5 @@ if "check" in COMMAND_LINE_TARGETS or env.GetOption("clean") :
 	for i in ["HOME", "USERPROFILE", "APPDATA"]:
 		if os.environ.get(i, "") :
 			myenv["ENV"][i] = os.environ[i]
-	check = myenv.Alias("check", checker, checker[0].abspath)
+	check = myenv.Alias("check", checker, env.get("TEST_RUNNER", "") + checker[0].abspath)
 	myenv.AlwaysBuild(check)

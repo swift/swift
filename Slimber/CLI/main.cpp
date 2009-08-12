@@ -7,7 +7,7 @@
 #include "Swiften/LinkLocal/LinkLocalServiceBrowser.h"
 #include "Swiften/LinkLocal/DNSSD/DNSSDBrowseQuery.h"
 #include "Swiften/LinkLocal/DNSSD/DNSSDRegisterQuery.h"
-#include "Swiften/LinkLocal/DNSSD/Bonjour/BonjourQuerier.h"
+//#include "Swiften/LinkLocal/DNSSD/Bonjour/BonjourQuerier.h"
 #include "Swiften/EventLoop/SimpleEventLoop.h"
 #include "Swiften/Application/Platform/PlatformApplication.h"
 
@@ -15,10 +15,12 @@ using namespace Swift;
 
 int main() {
 	SimpleEventLoop eventLoop;
+  /*
 	boost::shared_ptr<BonjourQuerier> querier(new BonjourQuerier());
 	querier->start();
 	LinkLocalServiceBrowser browser(querier);
 	browser.start();
+  */
 
 /*
 	FileVCardCollection vCardCollection(PlatformApplication("Slimber").getSettingsDir());

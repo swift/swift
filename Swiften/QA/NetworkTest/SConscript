@@ -14,5 +14,5 @@ tester = myenv.Program("NetworkTest", [
 		"DomainNameResolverTest.cpp",
 		"#/QA/UnitTest/checker.cpp"
 	])
-clientTest = myenv.Alias("NetworkTest", tester, tester[0].abspath)
+clientTest = myenv.Alias("NetworkTest", tester, env.get("TEST_RUNNER", "") + tester[0].abspath)
 env.AlwaysBuild(clientTest)

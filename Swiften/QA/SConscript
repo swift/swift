@@ -1,9 +1,10 @@
 Import("env")
 
-if "test" in COMMAND_LINE_TARGETS or env.GetOption("clean") :
+tests = ["NetworkTest", "ClientTest"]
+if "test" in COMMAND_LINE_TARGETS or env.GetOption("clean") or len(set(tests) & set(COMMAND_LINE_TARGETS)):
 	SConscript([
 			"NetworkTest/SConscript",
 			"ClientTest/SConscript",
 		])
 
-	test = env.Alias("test", ["NetworkTest", "ClientTest"])
+	test = env.Alias("test", tests)
