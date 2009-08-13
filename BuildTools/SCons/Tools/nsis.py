@@ -13,7 +13,7 @@ def generate(env) :
 	Builder = SCons.Builder.Builder
 
 	env['NSIS_MAKENSIS'] = 'makensis'
-	env['NSIS_OPTIONS'] = ''
+	env['NSIS_OPTIONS'] = ["/V2"]
 	def winToLocalReformat(path) :
 		return os.path.join(*path.split("\\"))
 	def scanNsisContent(node, env, path, arg):
@@ -26,7 +26,7 @@ def generate(env) :
 		argument = None,
 		skeys = ['.nsi'])
 	nsisbuilder = Builder(
-		action = '$NSIS_MAKENSIS $NSIS_OPTIONS $SOURCE',
+		action = SCons.Action.Action('$NSIS_MAKENSIS $NSIS_OPTIONS $SOURCE', cmdstr = '$NSISCOMSTR'),
 		source_scanner = nsisscanner,
 		single_source = True
 		)

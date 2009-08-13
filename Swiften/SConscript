@@ -38,8 +38,6 @@ sources = [
 		"EventLoop/EventOwner.cpp",
 		"EventLoop/MainEventLoop.cpp",
 		"EventLoop/SimpleEventLoop.cpp",
-		"EventLoop/Cocoa/CocoaEventLoop.mm",
-		"EventLoop/Cocoa/CocoaEvent.mm",
 		"History/HistoryManager.cpp",
 		"History/SQLiteHistoryManager.cpp",
 		"JID/JID.cpp",
@@ -155,8 +153,11 @@ sources = [
 		"StringCodecs/Base64.cpp",
 		"StringCodecs/SHA1.cpp",
 	]
-
 # "Notifier/GrowlNotifier.cpp",
+
+if env["PLATFORM"] == "darwin" :
+	"EventLoop/Cocoa/CocoaEventLoop.mm",
+	"EventLoop/Cocoa/CocoaEvent.mm",
 
 if env["PLATFORM"] == "darwin" :
 	myenv.Append(CPPDEFINES = "HAVE_BONJOUR")
@@ -166,7 +167,6 @@ if env["PLATFORM"] == "darwin" :
 		]
 elif myenv.get("HAVE_AVAHI", 0) :
 	sources += ["LinkLocal/DNSSD/Avahi/AvahiQuerier.cpp"]
-
 
 if myenv.get("HAVE_OPENSSL", 0) :
 	myenv.Append(CPPDEFINES = "HAVE_OPENSSL")

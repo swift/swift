@@ -117,6 +117,7 @@ if int(ARGUMENTS.get("V", 0)) == 0:
     env["RCCOMSTR"]             = "  \033[0;34;140mRC\033[0m     $TARGET"
     env["BUNDLECOMSTR"]         = "  \033[0;34;140mBUNDLE\033[0m $TARGET"
     env["NIBCOMSTR"]            = "  \033[0;34;140mNIB\033[0m    $TARGET"
+    env["NSISCOMSTR"]           = "  \033[0;34;140mNSIS\033[0m   $TARGET"
     #Progress(                     "  \033[0;35;140mDEP\033[0m    $TARGET\n")
   else :
     env["CCCOMSTR"]             = "  CC     $TARGET"
@@ -132,6 +133,7 @@ if int(ARGUMENTS.get("V", 0)) == 0:
     env["RCCOMSTR"]             = "  RC     $TARGET"
     env["BUNDLECOMSTR"]         = "  BUNDLE $TARGET"
     env["NIBCOMSTR"]            = "  NIB    $TARGET"
+    env["NSISCOMSTR"]           = "  NSIS   $TARGET"
     #Progress('  DEP $TARGET\n')
 
 if env["PLATFORM"] == "win32" :
