@@ -15,17 +15,9 @@ def generateDefaultTheme(env, target, source) :
 	output.write("</qresource>")
 	output.write("</RCC>")
 
-def buildWindowsBundle(env, target, source) :
-	sources = source
-	if not os.path.exists(target[0].abspath) :
-		os.mkdir(target[0].abspath)
-	for source in sources :
-		shutil.copy(source.abspath, target[0].abspath)
-
 Import("env")
 
 myenv = env.Clone()
-myenv["BUILDERS"]["WindowsBundle"] = Builder(action = Action(buildWindowsBundle, cmdstr = "$BUNDLECOMSTR"))
 
 myenv.MergeFlags(env["SWIFT_CONTROLLERS_FLAGS"])
 myenv.MergeFlags(env["SWIFTEN_FLAGS"])
@@ -98,18 +90,12 @@ if env["PLATFORM"] == "darwin" :
     ])
 
 if env["PLATFORM"] == "win32" :
-	if "dist" in COMMAND_LINE_TARGETS or env.GetOption("clean") :
-		myenv.WindowsBundle(Dir("Swift"), [
-				swiftProgram[0],
-				File(os.path.join(env["QTDIR"], "bin", "QtCore4.dll")),
-				File(os.path.join(env["QTDIR"], "bin", "QtGui4.dll")),
-				File(os.path.join(env["QTDIR"], "bin", "QtNetwork4.dll")),
-				File(os.path.join(env["QTDIR"], "bin", "QtWebKit4.dll")),	
-				File(os.path.join(env["QTDIR"], "bin", "phonon4.dll")),	
-				File(os.path.join(env["OPENSSL_DIR"], "bin", "ssleay32.dll")),	
-				File(os.path.join(env["OPENSSL_DIR"], "bin", "libeay32.dll")),	
-			])
+	myenv.WindowsBundle("Swift", resources = [
+			os.path.join(env["OPENSSL_DIR"], "bin", "ssleay32.dll"),	
+			os.path.join(env["OPENSSL_DIR"], "bin", "libeay32.dll"),	
+		], qtlibs = ["QtCore4", "QtGui4", "QtNetwork4", "QtWebKit4", "phonon4"])
 
+	if "dist" in COMMAND_LINE_TARGETS or env.GetOption("clean") :
 		myenv.Append(NSIS_OPTIONS = [
 				"/DmsvccRedistributableDir=\"" + env["vcredist"] + "\"", 
 				"/DbuildDate=" + datetime.date.today().strftime("%Y%m%d")
