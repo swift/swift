@@ -1,7 +1,5 @@
 # set dependencies
-!define swiftBuildDir "..\..\QtUI\Swift"
 !define msvccRedistributableExe "vcredist_x86.exe"
-
 
 # define installer name
 outFile "Swift-installer-win32-${buildDate}.exe"
@@ -19,14 +17,14 @@ setOutPath $INSTDIR
  
 # Specify files to go in output path.
 # If you update this list, update the uninstall list too.
-file ${swiftBuildDir}\Swift.exe
-file ${swiftBuildDir}\ssleay32.dll
-file ${swiftBuildDir}\libeay32.dll
-file ${swiftBuildDir}\phonon4.dll
-file ${swiftBuildDir}\QtCore4.dll
-file ${swiftBuildDir}\QtGui4.dll
-file ${swiftBuildDir}\QtWebKit4.dll
-file ${swiftBuildDir}\QtNetwork4.dll
+File "..\..\QtUI\Swift\Swift.exe"
+File "..\..\QtUI\Swift\ssleay32.dll"
+File "..\..\QtUI\Swift\libeay32.dll"
+File "..\..\QtUI\Swift\phonon4.dll"
+File "..\..\QtUI\Swift\QtCore4.dll"
+File "..\..\QtUI\Swift\QtGui4.dll"
+File "..\..\QtUI\Swift\QtWebKit4.dll"
+File "..\..\QtUI\Swift\QtNetwork4.dll"
 
 # create start menu item
 createShortCut "$SMPROGRAMS\Swift\Swift.lnk" "$INSTDIR\Swift.exe"
