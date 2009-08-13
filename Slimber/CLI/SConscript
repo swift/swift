@@ -5,4 +5,4 @@ myenv.MergeFlags(env["SLIMBER_FLAGS"])
 myenv.MergeFlags(env["SWIFTEN_FLAGS"])
 myenv.MergeFlags(env["BOOST_FLAGS"])
 
-#myenv.Program("slimber", ["main.cpp"])
+myenv.Program("slimber", ["main.cpp"])

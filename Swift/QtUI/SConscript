@@ -53,6 +53,11 @@ myenv.Append(CPPPATH = ["/usr/include/phonon"])
 
 myenv.Append(CPPPATH = ["."])
 
+if env["PLATFORM"] == "win32" :
+	#env["LINKFLAGS"] = ["/SUBSYSTEM:WINDOWS", "/MANIFESTDEPENDENCY:type=\'win32\' name=\'Microsoft.Windows.Common-Controls\' version=\'6.0.0.0\' publicKeyToken=\'6595b64144ccf1df\' language=\'*\' processorArchitecture=\'*\'"]
+	myenv["LINKFLAGS"] = ["/SUBSYSTEM:CONSOLE"]
+
+
 myenv.Command("DefaultTheme.qrc", "../resources/themes/Default", Action(generateDefaultTheme, cmdstr = "$GENCOMSTR"))
 
 sources = [

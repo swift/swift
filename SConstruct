@@ -31,12 +31,18 @@ env.Alias("dist", ["."])
 # Default compiler flags
 if env["optimize"] :
 	env.Append(CCFLAGS = "-O2")
+	if env["PLATFORM"] == "win32" :
+		env.Append(CCFLAGS = ["GL"])
+		env.Append(LINKFLAGS = ["/INCREMENTAL:NO", "/LTCG"])
 
 if env["debug"] :
 	if env["PLATFORM"] == "win32" :
 		env.Append(CCFLAGS = ["/Zi", "/MDd"])
+		env.Append(LINKFLAGS = ["/DEBUG"])
 	else :
 		env.Append(CCFLAGS = "-g")
+elif env["PLATFORM"] == "win32" :
+	env.Append(CCFLAGS = ["/MD"])
 
 if env.get("universal", 0) :
 	assert(env["PLATFORM"] == "darwin")
@@ -68,6 +74,8 @@ if env.get("valgrind", 0) :
 if env["PLATFORM"] == "win32" :
 	env.Append(LIBS = ["dnsapi", "ws2_32", "wsock32"])
 	env.Append(CCFLAGS = "/EHsc")
+	env["LINKCOM"] = [env["LINKCOM"], 'mt.exe -nologo -manifest ${TARGET}.manifest -outputresource:$TARGET;1']
+	env["SHLINKCOM"] = [env["SHLINKCOM"], 'mt.exe -nologo -manifest ${TARGET}.manifest -outputresource:$TARGET;2']
 
 if env["PLATFORM"] == "darwin" :
 	env.Append(FRAMEWORKS = "AppKit")
@@ -119,11 +127,6 @@ if int(ARGUMENTS.get("V", 0)) == 0:
 
 if env["PLATFORM"] == "win32" :
 	env["MSVC_BATCH"] = 1
-	env["LINKCOM"] = [env["LINKCOM"], 'mt.exe -nologo -manifest ${TARGET}.manifest -outputresource:$TARGET;1']
-	env["SHLINKCOM"] = [env["SHLINKCOM"], 'mt.exe -nologo -manifest ${TARGET}.manifest -outputresource:$TARGET;2']
-	#env["LINKFLAGS"] = ["/SUBSYSTEM:WINDOWS", "/MANIFESTDEPENDENCY:type=\'win32\' name=\'Microsoft.Windows.Common-Controls\' version=\'6.0.0.0\' publicKeyToken=\'6595b64144ccf1df\' language=\'*\' processorArchitecture=\'*\'"]
-	env["LINKFLAGS"] = ["/SUBSYSTEM:CONSOLE"]
-
 
 ################################################################################
 # Platform configuration
