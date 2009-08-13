@@ -25,6 +25,12 @@ File "..\..\QtUI\Swift\QtCore4.dll"
 File "..\..\QtUI\Swift\QtGui4.dll"
 File "..\..\QtUI\Swift\QtWebKit4.dll"
 File "..\..\QtUI\Swift\QtNetwork4.dll"
+File "..\..\QtUI\Swift\qgif4.dll"
+File "..\..\QtUI\Swift\qico4.dll"
+File "..\..\QtUI\Swift\qjpeg4.dll"
+File "..\..\QtUI\Swift\qmng4.dll"
+File "..\..\QtUI\Swift\qsvg4.dll"
+File "..\..\QtUI\Swift\qtiff4.dll"
 
 # create start menu item
 createShortCut "$SMPROGRAMS\Swift\Swift.lnk" "$INSTDIR\Swift.exe"
