@@ -15,15 +15,6 @@ def generateDefaultTheme(env, target, source) :
 	output.write("</qresource>")
 	output.write("</RCC>")
 
-def createAppBundle(env, target, source) :
-	target = target[0].abspath
-	source = source[0].abspath
-	os.makedirs(target + "/Contents/MacOS")
-	Execute(Copy(target + "/Contents/MacOS", source))
-	pkgInfo = open(target + "/Contents/PkgInfo", "w")
-	pkgInfo.write("APPL\77\77\77\77")
-	pkgInfo.close()
-
 def buildWindowsBundle(env, target, source) :
 	sources = source
 	if not os.path.exists(target[0].abspath) :
@@ -102,7 +93,9 @@ myenv.Qrc("DefaultTheme.qrc")
 myenv.Qrc("Swift.qrc")
 
 if env["PLATFORM"] == "darwin" :
-	myenv.Command("Swift.app", "Swift", createAppBundle)
+  myenv.AppBundle("Swift", resources = [
+      "../resources/MacOSX/Swift.icns"
+    ])
 
 if env["PLATFORM"] == "win32" :
 	if "dist" in COMMAND_LINE_TARGETS or env.GetOption("clean") :

@@ -158,13 +158,15 @@ sources = [
 
 # "Notifier/GrowlNotifier.cpp",
 
-if myenv.get("HAVE_AVAHI", 0) :
-	sources += ["LinkLocal/DNSSD/Avahi/AvahiQuerier.cpp"]
-if myenv.get("HAVE_BONJOUR", 0) :
+if env["PLATFORM"] == "darwin" :
+	myenv.Append(CPPDEFINES = "HAVE_BONJOUR")
 	sources += [
 			"LinkLocal/DNSSD/Bonjour/BonjourQuerier.cpp",
 			"LinkLocal/DNSSD/Bonjour/BonjourQuery.cpp",
 		]
+elif myenv.get("HAVE_AVAHI", 0) :
+	sources += ["LinkLocal/DNSSD/Avahi/AvahiQuerier.cpp"]
+
 
 if myenv.get("HAVE_OPENSSL", 0) :
 	myenv.Append(CPPDEFINES = "HAVE_OPENSSL")

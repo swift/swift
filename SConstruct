@@ -33,6 +33,7 @@ env.Alias("dist", ["."])
 # Default custom tools
 if env["PLATFORM"] == "darwin" :
 	env.Tool("Nib", toolpath = ["#/BuildTools/SCons/Tools"])
+	env.Tool("AppBundle", toolpath = ["#/BuildTools/SCons/Tools"])
 
 # Default compiler flags
 if env["optimize"] :
