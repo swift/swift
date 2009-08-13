@@ -38,7 +38,7 @@ myenv.Append(CPPPATH = ["."])
 
 if env["PLATFORM"] == "win32" :
 	#myenv["LINKFLAGS"] = ["/SUBSYSTEM:CONSOLE"]
-	myenv.Append(LINKFLAGS = ["/SUBSYSTEM:WINDOWS", "/MANIFESTDEPENDENCY:type=\'win32\' name=\'Microsoft.Windows.Common-Controls\' version=\'6.0.0.0\' publicKeyToken=\'6595b64144ccf1df\' language=\'*\' processorArchitecture=\'*\'"])
+	myenv.Append(LINKFLAGS = ["/SUBSYSTEM:WINDOWS"])
 	myenv.Append(LIBS = "qtmain")
 
 myenv.Command("DefaultTheme.qrc", "../resources/themes/Default", Action(generateDefaultTheme, cmdstr = "$GENCOMSTR"))
