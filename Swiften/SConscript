@@ -156,8 +156,10 @@ sources = [
 # "Notifier/GrowlNotifier.cpp",
 
 if env["PLATFORM"] == "darwin" :
-	"EventLoop/Cocoa/CocoaEventLoop.mm",
-	"EventLoop/Cocoa/CocoaEvent.mm",
+	sources += [
+			"EventLoop/Cocoa/CocoaEventLoop.mm",
+			"EventLoop/Cocoa/CocoaEvent.mm"
+		]
 
 if env["PLATFORM"] == "darwin" :
 	myenv.Append(CPPDEFINES = "HAVE_BONJOUR")
