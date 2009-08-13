@@ -25,8 +25,14 @@ vars.Add(PathVariable("qt", "Qt location", "", PathVariable.PathAccept))
 ################################################################################
 
 env = Environment(CPPPATH = "#", ENV = {'PATH' : os.environ['PATH']}, variables = vars)
+
 Help(vars.GenerateHelpText(env))
+
 env.Alias("dist", ["."])
+
+# Default custom tools
+if env["PLATFORM"] == "darwin" :
+	env.Tool("Nib", toolpath = ["#/BuildTools/SCons/Tools"])
 
 # Default compiler flags
 if env["optimize"] :
@@ -109,6 +115,7 @@ if int(ARGUMENTS.get("V", 0)) == 0:
     env["GENCOMSTR"]            = "  \033[0;34;140mGEN\033[0m    $TARGET"
     env["RCCOMSTR"]             = "  \033[0;34;140mRC\033[0m     $TARGET"
     env["BUNDLECOMSTR"]         = "  \033[0;34;140mBUNDLE\033[0m $TARGET"
+    env["NIBCOMSTR"]            = "  \033[0;34;140mNIB\033[0m    $TARGET"
     #Progress(                     "  \033[0;35;140mDEP\033[0m    $TARGET\n")
   else :
     env["CCCOMSTR"]             = "  CC     $TARGET"
@@ -123,6 +130,7 @@ if int(ARGUMENTS.get("V", 0)) == 0:
     env["GENCOMSTR"]            = "  GEN    $TARGET"
     env["RCCOMSTR"]             = "  RC     $TARGET"
     env["BUNDLECOMSTR"]         = "  BUNDLE $TARGET"
+    env["NIBCOMSTR"]            = "  NIB    $TARGET"
     #Progress('  DEP $TARGET\n')
 
 if env["PLATFORM"] == "win32" :

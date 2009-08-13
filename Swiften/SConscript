@@ -38,6 +38,8 @@ sources = [
 		"EventLoop/EventOwner.cpp",
 		"EventLoop/MainEventLoop.cpp",
 		"EventLoop/SimpleEventLoop.cpp",
+		"EventLoop/Cocoa/CocoaEventLoop.mm",
+		"EventLoop/Cocoa/CocoaEvent.mm",
 		"History/HistoryManager.cpp",
 		"History/SQLiteHistoryManager.cpp",
 		"JID/JID.cpp",
