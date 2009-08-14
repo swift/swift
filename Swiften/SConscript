@@ -62,6 +62,7 @@ sources = [
 		"Network/BoostConnection.cpp",
 		"Network/BoostConnectionFactory.cpp",
 		"Network/BoostConnectionServer.cpp",
+		"Network/MainBoostIOServiceThread.cpp",
 		"Network/BoostIOServiceThread.cpp",
 		"Network/ConnectionFactory.cpp",
 		"Network/ConnectionServer.cpp",
