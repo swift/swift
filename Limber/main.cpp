@@ -33,37 +33,41 @@ class Server {
 		void handleNewConnection(boost::shared_ptr<Connection> c) {
 			boost::shared_ptr<ServerFromClientSession> session(new ServerFromClientSession(idGenerator_.generateID(), c, &payloadParserFactories_, &payloadSerializers_, userRegistry_));
 			serverFromClientSessions_.push_back(session);
-			session->onStanzaReceived.connect(boost::bind(&Server::handleStanzaReceived, this, _1, session));
+			session->onElementReceived.connect(boost::bind(&Server::handleElementReceived, this, _1, session));
 			session->onSessionFinished.connect(boost::bind(&Server::handleSessionFinished, this, session));
-			session->start();
+			session->startSession();
 		}
 
 		void handleSessionFinished(boost::shared_ptr<ServerFromClientSession> session) {
 			serverFromClientSessions_.erase(std::remove(serverFromClientSessions_.begin(), serverFromClientSessions_.end(), session), serverFromClientSessions_.end());
 		}
 
-		void handleStanzaReceived(boost::shared_ptr<Stanza> stanza, boost::shared_ptr<ServerFromClientSession> session) {
-			stanza->setFrom(session->getJID());
-			if (!stanza->getTo().isValid()) {
-				stanza->setTo(JID(session->getDomain()));
+		void handleElementReceived(boost::shared_ptr<Element> element, boost::shared_ptr<ServerFromClientSession> session) {
+			boost::shared_ptr<Stanza> stanza(boost::dynamic_pointer_cast<Stanza>(element));
+			if (!stanza) {
+				return;
 			}
-			if (!stanza->getTo().isValid() || stanza->getTo() == session->getDomain() || stanza->getTo() == session->getJID().toBare()) {
+			stanza->setFrom(session->getRemoteJID());
+			if (!stanza->getTo().isValid()) {
+				stanza->setTo(JID(session->getLocalJID()));
+			}
+			if (!stanza->getTo().isValid() || stanza->getTo() == session->getLocalJID() || stanza->getTo() == session->getRemoteJID().toBare()) {
 				if (boost::shared_ptr<IQ> iq = boost::dynamic_pointer_cast<IQ>(stanza)) {
 					if (iq->getPayload<RosterPayload>()) {
-						session->sendStanza(IQ::createResult(iq->getFrom(), iq->getID(), boost::shared_ptr<RosterPayload>(new RosterPayload())));
+						session->sendElement(IQ::createResult(iq->getFrom(), iq->getID(), boost::shared_ptr<RosterPayload>(new RosterPayload())));
 					}
 					if (iq->getPayload<VCard>()) {
 						if (iq->getType() == IQ::Get) {
 							boost::shared_ptr<VCard> vcard(new VCard());
 							vcard->setNickname(iq->getFrom().getNode());
-							session->sendStanza(IQ::createResult(iq->getFrom(), iq->getID(), vcard));
+							session->sendElement(IQ::createResult(iq->getFrom(), iq->getID(), vcard));
 						}
 						else {
-							session->sendStanza(IQ::createError(iq->getFrom(), iq->getID(), Error::Forbidden, Error::Cancel));
+							session->sendElement(IQ::createError(iq->getFrom(), iq->getID(), Error::Forbidden, Error::Cancel));
 						}
 					}
 					else {
-						session->sendStanza(IQ::createError(iq->getFrom(), iq->getID(), Error::FeatureNotImplemented, Error::Cancel));
+						session->sendElement(IQ::createError(iq->getFrom(), iq->getID(), Error::FeatureNotImplemented, Error::Cancel));
 					}
 				}
 			}
