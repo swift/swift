@@ -15,14 +15,13 @@
 #include "Swiften/Queries/IQRouter.h"
 #include "Swiften/Parser/PayloadParsers/FullPayloadParserFactoryCollection.h"
 #include "Swiften/Serializer/PayloadSerializers/FullPayloadSerializerCollection.h"
-#include "Swiften/Network/BoostIOServiceThread.h"
 
 namespace Swift {
 	class TLSLayerFactory;
 	class ConnectionFactory;
 	class ClientSession;
 
-	class Client : public StanzaChannel, public IQRouter {
+	class Client : public StanzaChannel, public IQRouter, public boost::bsignals::trackable {
 		public:
 			Client(const JID& jid, const String& password);
 			~Client();
@@ -53,7 +52,6 @@ namespace Swift {
 			void handleDataWritten(const ByteArray&);
 
 		private:
-			BoostIOServiceThread boostIOServiceThread_;
 			JID jid_;
 			String password_;
 			IDGenerator idGenerator_;

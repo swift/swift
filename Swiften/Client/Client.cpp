@@ -3,6 +3,8 @@
 #include <boost/bind.hpp>
 
 #include "Swiften/Network/DomainNameResolver.h"
+#include "Swiften/Network/MainBoostIOServiceThread.h"
+#include "Swiften/Network/BoostIOServiceThread.h"
 #include "Swiften/Client/ClientSession.h"
 #include "Swiften/StreamStack/PlatformTLSLayerFactory.h"
 #include "Swiften/Network/BoostConnectionFactory.h"
@@ -13,7 +15,7 @@ namespace Swift {
 
 Client::Client(const JID& jid, const String& password) :
 		IQRouter(this), jid_(jid), password_(password) {
-	connectionFactory_ = new BoostConnectionFactory(&boostIOServiceThread_.getIOService());
+	connectionFactory_ = new BoostConnectionFactory(&MainBoostIOServiceThread::getInstance().getIOService());
 	tlsLayerFactory_ = new PlatformTLSLayerFactory();
 }
 

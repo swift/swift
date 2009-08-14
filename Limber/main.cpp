@@ -24,7 +24,7 @@ using namespace Swift;
 class Server {
 	public:
 		Server(UserRegistry* userRegistry) : userRegistry_(userRegistry) {
-			serverFromClientConnectionServer_ = boost::shared_ptr<BoostConnectionServer>(new BoostConnectionServer(5224, &boostIOServiceThread_.getIOService()));
+			serverFromClientConnectionServer_ = boost::shared_ptr<BoostConnectionServer>(new BoostConnectionServer(5222, &boostIOServiceThread_.getIOService()));
 			serverFromClientConnectionServer_->onNewConnection.connect(boost::bind(&Server::handleNewConnection, this, _1));
 			serverFromClientConnectionServer_->start();
 		}
