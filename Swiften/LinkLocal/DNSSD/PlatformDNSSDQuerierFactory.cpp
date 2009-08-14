@@ -1,8 +1,5 @@
 #include "Swiften/LinkLocal/DNSSD/PlatformDNSSDQuerierFactory.h"
 
-#ifdef HAVE_SWIFTEN_CONFIG_H
-#include "Swiften/config.h"
-#endif
 #if defined(HAVE_BONJOUR)
 #include "Swiften/LinkLocal/DNSSD/Bonjour/BonjourQuerier.h"
 #elif defined(HAVE_AVAHI)

@@ -2,9 +2,6 @@
 
 #include <cassert>
 
-#ifdef HAVE_SWIFTEN_CONFIG_H
-#include "Swiften/config.h"
-#endif
 #ifdef HAVE_LIBXML
 #include "Swiften/Parser/LibXMLParser.h"
 #else

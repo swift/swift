@@ -2,9 +2,6 @@
 #include <cppunit/extensions/TestFactoryRegistry.h>
 #include <vector>
 
-#ifdef HAVE_SWIFTEN_CONFIG_H
-#include "Swiften/config.h"
-#endif
 #include "Swiften/Base/String.h"
 #include "Swiften/Parser/XMLParserClient.h"
 #ifdef HAVE_EXPAT
