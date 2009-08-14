@@ -1,0 +1,27 @@
+Prerequisites
+------------
+- Qt Open Source Edition
+- Microsoft Visual C++ Express Edition
+- Python
+- OpenSSL
+  * Download and extract the Windows binary version of OpenSSL from
+    http://www.slproweb.com/products/Win32OpenSSL.html
+
+Building Qt for Microsoft Visual C++
+------------------------------------
+- From the 'Visual C++' 'Programs' group, launch the Visual C++ command prompt
+- Go to the dir where you installed Qt
+- Configure Qt:
+    configure
+- Build Qt:
+    nmake
+
+Building Swift
+--------------
+- From the 'Visual C++' 'Programs' group, launch the Visual C++ command prompt
+- Go to the Swift source dir
+- Create a file 'config.py' with the following contents, reflecting your local
+  setup:
+		openssl = "path\to\openssl"
+		qt = "path\to\qt"
+- Run 'scons'
