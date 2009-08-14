@@ -14,10 +14,10 @@ if [ "$?" != 0 ]; then
 fi
 
 SOURCE_DIR=.
-SCRIPT_DIR=tools/coverage
+SCRIPT_DIR=Tools/Coverage
 LCOVDIR=3rdParty/LCov
 
-RESULTS_DIR=tools/coverage/results
+RESULTS_DIR=Tools/Coverage/results
 OUTPUT_DIR=$RESULTS_DIR/coverage-`git log --pretty=format:%ct-%h | head -n 1`
 
 make -C $SOURCE_DIR
