@@ -20,7 +20,6 @@ void QtTreeWidgetItem::setStatusText(const String& text) {
 }
 
 void QtTreeWidgetItem::setAvatarPath(const String& path) {
-	qDebug() << "Setting avatar to " << P2QSTRING(path);
 	avatar_ = QIcon(P2QSTRING(path));
 }
 
