@@ -5,6 +5,7 @@
 #include <QMenu>
 #include "Swift/Controllers/MainWindow.h"
 #include "Swift/QtUI/QtRosterHeader.h"
+#include "Swift/QtUI/EventViewer/EventView.h"
 
 #include <vector>
 
@@ -14,11 +15,12 @@ class QPushButton;
 class QToolBar;
 class QAction;
 
+class QTabWidget;
+
 namespace Swift {
 	class QtTreeWidget;
 	class QtTreeWidgetFactory;
 	class TreeWidget;
-
 
 	class QtMainWindow : public QWidget, public MainWindow {
 		Q_OBJECT
@@ -38,7 +40,6 @@ namespace Swift {
 			void handleAddActionTriggered(bool checked);
 		private:
 			std::vector<QMenu*> menus_;
-			//QtStatusWidget* statusWidget_;
 			QLineEdit* muc_;
 			QLineEdit* mucNick_;
 			QPushButton* mucButton_;
@@ -46,6 +47,10 @@ namespace Swift {
 			QtRosterHeader* meView_;
 			QToolBar* bottomBar_;
 			QAction* addAction_;
+			QTabWidget* tabs_;
+			QWidget* contactsTabWidget_;
+			QWidget* eventsTabWidget_;
+			EventView* eventView_;
 	};
 }
 

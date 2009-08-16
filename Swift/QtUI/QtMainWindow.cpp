@@ -15,6 +15,7 @@
 #include <QMenuBar>
 #include <QToolBar>
 #include <QAction>
+#include <QTabWidget>
 
 namespace Swift {
 
@@ -25,18 +26,34 @@ QtMainWindow::QtMainWindow(QtTreeWidgetFactory *treeWidgetFactory) : QWidget() {
 	mainLayout->setSpacing(0);
 	meView_ = new QtRosterHeader(this);
 	mainLayout->addWidget(meView_);
-	//statusWidget_ = new QtStatusWidget(this);
 	connect(meView_, SIGNAL(onChangeStatusRequest(StatusShow::Type, const QString&)), this, SLOT(handleStatusChanged(StatusShow::Type, const QString&)));
-	//mainLayout->addWidget(statusWidget_);
+
+	tabs_ = new QTabWidget(this);
+	tabs_->setDocumentMode(true);
+	tabs_->setTabPosition(QTabWidget::South);
+	mainLayout->addWidget(tabs_);
+	contactsTabWidget_ = new QWidget(this);
+	contactsTabWidget_->setContentsMargins(0, 0, 0, 0);
+	QBoxLayout *contactTabLayout = new QBoxLayout(QBoxLayout::TopToBottom, contactsTabWidget_);
+	contactsTabWidget_->setLayout(contactTabLayout);
+	contactTabLayout->setSpacing(0);
+	contactTabLayout->setContentsMargins(0, 0, 0, 0);
+	
 	treeWidget_ = dynamic_cast<QtTreeWidget*>(treeWidgetFactory->createTreeWidget());
-	mainLayout->addWidget(treeWidget_);
+	contactTabLayout->addWidget(treeWidget_);
 
 	bottomBar_ = new QToolBar(this);
-	mainLayout->addWidget(bottomBar_);
+	contactTabLayout->addWidget(bottomBar_);
 	
 	addAction_ = new QAction("Add Contact", this);
 	bottomBar_->addAction(addAction_);
 	connect(addAction_, SIGNAL(triggered(bool)), this, SLOT(handleAddActionTriggered(bool)));
+	
+	tabs_->addTab(contactsTabWidget_, "Contacts");
+	
+	eventView_ = new EventView(this);
+	
+	tabs_->addTab(eventView_, "Events");
 	
 	this->setLayout(mainLayout);
 	
