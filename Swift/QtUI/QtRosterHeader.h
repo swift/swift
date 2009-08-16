@@ -10,6 +10,8 @@
 #include "Swiften/Base/String.h"
 #include "Swiften/Elements/StatusShow.h"
 
+class QHBoxLayout;
+
 namespace Swift {
 	class QtStatusWidget;
 	
@@ -28,13 +30,17 @@ namespace Swift {
 		void handleChangeStatusRequest(StatusShow::Type type);
 	protected:
 		virtual void resizeEvent(QResizeEvent* event);
+		virtual void mousePressEvent(QMouseEvent* event);
 	private:
 		void resizeNameLabel();
+		void toggleExpanded();
 		QString name_;
 		QLabel* avatarLabel_;
 		QLabel* nameLabel_;
 		QTextEdit* statusEdit_;
 		QToolBar* toolBar_;
 		QtStatusWidget* statusWidget_;
+		QHBoxLayout* expandedLayout_;
+		bool expanded_;
 	};
 }

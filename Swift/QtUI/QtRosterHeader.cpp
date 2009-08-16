@@ -5,6 +5,7 @@
 #include <QIcon>
 #include <QSizePolicy>
 #include <qdebug.h>
+#include <QMouseEvent>
 
 #include "QtStatusWidget.h"
 
@@ -20,7 +21,7 @@ QtRosterHeader::QtRosterHeader(QWidget* parent) : QWidget(parent) {
 
 	statusWidget_ = new QtStatusWidget(this);
 	toolBar_->addWidget(statusWidget_);
-	statusWidget_->resize(50, statusWidget_->height());
+	statusWidget_->setMaximumWidth(60);
 	connect(statusWidget_, SIGNAL(onChangeStatusRequest(StatusShow::Type)), this, SLOT(handleChangeStatusRequest(StatusShow::Type)));
 
 	nameLabel_ = new QLabel(this);
@@ -28,24 +29,52 @@ QtRosterHeader::QtRosterHeader(QWidget* parent) : QWidget(parent) {
 	toolBar_->addWidget(nameLabel_);
 	//nameLabel_->setMaximumWidth(width() - 5 - statusWidget_->width());
 		
-	QHBoxLayout* expandedLayout = new QHBoxLayout();
-	expandedLayout->setContentsMargins(5,5,5,5);
-	expandedLayout->setSpacing(11);
+	expandedLayout_ = new QHBoxLayout();
+	expandedLayout_->setContentsMargins(0,0,0,0);
+	expandedLayout_->setSpacing(0);
 	
 	avatarLabel_ = new QLabel(this);
 	setAvatar(":/icons/avatar.png");
-	expandedLayout->addWidget(avatarLabel_);
+	expandedLayout_->addWidget(avatarLabel_);
 	
 	statusEdit_ = new QTextEdit(this);
-	expandedLayout->addWidget(statusEdit_);
+	expandedLayout_->addWidget(statusEdit_);
 	statusEdit_->resize(statusEdit_->width(), 64);
 	statusEdit_->setAcceptRichText(false);
 	statusEdit_->setReadOnly(false);
 	setStatusText("");
 
-	vLayout->addLayout(expandedLayout);
+	vLayout->addLayout(expandedLayout_);
+	expanded_ = false;
+	avatarLabel_->hide();
+	statusEdit_->hide();
 
 	setSizePolicy(QSizePolicy(QSizePolicy::Minimum, QSizePolicy::Fixed));
+}
+
+void QtRosterHeader::mousePressEvent(QMouseEvent* event) {
+	if (nameLabel_->underMouse() || toolBar_->underMouse() && !statusWidget_->underMouse()) {
+		toggleExpanded();
+		event->accept();
+	} else {
+		event->ignore();
+	}
+	
+}
+
+void QtRosterHeader::toggleExpanded() {
+	expanded_ = !expanded_;
+	if (expanded_) {
+		expandedLayout_->setContentsMargins(5,5,5,5);
+		expandedLayout_->setSpacing(11);
+		avatarLabel_->show();
+		statusEdit_->show();
+	} else {
+		expandedLayout_->setContentsMargins(0,0,0,0);
+		expandedLayout_->setSpacing(0);
+		avatarLabel_->hide();
+		statusEdit_->hide();
+	}
 }
 
 void QtRosterHeader::handleChangeStatusRequest(StatusShow::Type type) {
