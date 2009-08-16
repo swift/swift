@@ -6,7 +6,7 @@
 
 
 namespace Swift {
-QtStatusWidget::QtStatusWidget(QWidget *parent) {
+QtStatusWidget::QtStatusWidget(QWidget *parent) : QWidget(parent) {
 	types_ = new QComboBox(this);
 	types_->addItem("Available", QVariant(StatusShow::Online));
 	types_->addItem("Free For Chat", QVariant(StatusShow::FFC));
@@ -22,7 +22,12 @@ QtStatusWidget::QtStatusWidget(QWidget *parent) {
 }
 
 void QtStatusWidget::handleTypeSelected(int index) {
-	emit onChangeStatusRequest((StatusShow::Type)types_->itemData(index).toInt(), "");
+	Q_UNUSED(index);
+	emit onChangeStatusRequest(getSelectedStatusShow());
+}
+
+StatusShow::Type QtStatusWidget::getSelectedStatusShow() {
+	return (StatusShow::Type)types_->itemData(types_->currentIndex()).toInt();
 }
 
 }

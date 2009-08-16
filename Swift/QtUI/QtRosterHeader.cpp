@@ -23,7 +23,7 @@ QtRosterHeader::QtRosterHeader(QWidget* parent) : QWidget(parent) {
 	statusWidget_ = new QtStatusWidget(this);
 	toolBar_->addWidget(statusWidget_);
 	statusWidget_->resize(50, statusWidget_->height());
-	connect(statusWidget_, SIGNAL(onChangeStatusRequest(StatusShow::Type, const QString&)), this, SIGNAL(onChangeStatusRequest(StatusShow::Type, const QString&)));
+	connect(statusWidget_, SIGNAL(onChangeStatusRequest(StatusShow::Type)), this, SLOT(handleChangeStatusRequest(StatusShow::Type)));
 
 	nameLabel_ = new QLabel(this);
 	setName("Me");
@@ -48,6 +48,14 @@ QtRosterHeader::QtRosterHeader(QWidget* parent) : QWidget(parent) {
 	vLayout->addLayout(expandedLayout);
 
 	setSizePolicy(QSizePolicy(QSizePolicy::Minimum, QSizePolicy::Fixed));
+}
+
+void QtRosterHeader::handleChangeStatusRequest(StatusShow::Type type) {
+	emitStatus();
+}
+
+void QtRosterHeader::emitStatus() {
+	emit onChangeStatusRequest(statusWidget_->getSelectedStatusShow(), statusEdit_->toPlainText());
 }
 
 void QtRosterHeader::setStatusText(const QString& statusMessage) {

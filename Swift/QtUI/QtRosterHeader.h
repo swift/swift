@@ -20,8 +20,11 @@ namespace Swift {
 		void setName(const QString& name);
 		void setStatusText(const QString& statusMessage);
 		QSize sizeHint() const;
+		void emitStatus();
 	signals:
 		void onChangeStatusRequest(StatusShow::Type showType, const QString &statusMessage);
+	private slots:
+		void handleChangeStatusRequest(StatusShow::Type type);
 	private:
 		QLabel* avatarLabel_;
 		QLabel* nameLabel_;

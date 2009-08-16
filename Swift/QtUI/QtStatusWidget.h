@@ -13,13 +13,13 @@ namespace Swift {
 		Q_OBJECT
 		public:
 			QtStatusWidget(QWidget *parent);
+			StatusShow::Type getSelectedStatusShow();
 		signals:
-			void onChangeStatusRequest(StatusShow::Type showType, const QString &statusMessage);
+			void onChangeStatusRequest(StatusShow::Type showType);
 		private slots:
 			void handleTypeSelected(int index);
 		private:
 			QComboBox *types_;
-			QLineEdit *message_;
 	};
 }
 
