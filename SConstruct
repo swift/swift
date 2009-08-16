@@ -162,12 +162,28 @@ if conf.CheckLib("c") :
 if conf.CheckLib("resolv") :
 	env.Append(LIBS = ["resolv"])
 
+# Expat
 if conf.CheckCHeader("expat.h") and conf.CheckLib("expat") :
 	env["HAVE_EXPAT"] = 1
-	env["EXPAT_FLAGS"] = ""
-	env.Append(LIBS = ["expat"])
+	env["EXPAT_FLAGS"] = { "LIBS": ["expat"] }
 
 conf.Finish()
+
+# LibXML
+conf = Configure(conf_env)
+if conf.CheckCHeader("libxml/parser.h") and conf.CheckLib("xml2") :
+	env["HAVE_LIBXML"] = 1
+	env["LIBXML_FLAGS"] = { "LIBS": ["xml2"] }
+conf.Finish()
+
+if not env.get("HAVE_LIBXML", 0) :
+	libxml_env = conf_env.Clone()
+	libxml_env.Append(CPPPATH = ["/usr/include/libxml2"])
+	conf = Configure(libxml_env)
+	if conf.CheckCHeader("libxml/parser.h") and conf.CheckLib("xml2") :
+		env["HAVE_LIBXML"] = 1
+		env["LIBXML_FLAGS"] = { "CPPPATH": ["/usr/include/libxml2"], "LIBS": ["xml2"] }
+	conf.Finish()
 
 # Bundled expat
 bundledExpat = False

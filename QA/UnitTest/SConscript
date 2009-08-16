@@ -11,7 +11,8 @@ if "check" in COMMAND_LINE_TARGETS or env.GetOption("clean") :
 	myenv.MergeFlags(env["LIBIDN_FLAGS"])
 	myenv.MergeFlags(env["BOOST_FLAGS"])
 	myenv.MergeFlags(env["SQLITE_FLAGS"])
-	myenv.MergeFlags(env["EXPAT_FLAGS"])
+	myenv.MergeFlags(env.get("LIBXML_FLAGS", ""))
+	myenv.MergeFlags(env.get("EXPAT_FLAGS", ""))
 	myenv.MergeFlags(env["ZLIB_FLAGS"])
 	checker = myenv.Program("checker", ["checker.cpp"] + env["UNITTEST_SOURCES"])
 	for i in ["HOME", "USERPROFILE", "APPDATA"]:
