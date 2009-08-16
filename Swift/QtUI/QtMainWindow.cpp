@@ -4,7 +4,6 @@
 #include "QtSwiftUtil.h"
 #include "Roster/QtTreeWidgetFactory.h"
 #include "Roster/QtTreeWidget.h"
-#include "QtStatusWidget.h"
 
 #include <QBoxLayout>
 #include <QComboBox>
@@ -22,9 +21,11 @@ QtMainWindow::QtMainWindow(QtTreeWidgetFactory *treeWidgetFactory) : QWidget() {
 	QBoxLayout *mainLayout = new QBoxLayout(QBoxLayout::TopToBottom, this);
 	mainLayout->setContentsMargins(0,0,0,0);
 	mainLayout->setSpacing(0);
-	statusWidget_ = new QtStatusWidget(this);
-	connect(statusWidget_, SIGNAL(onChangeStatusRequest(StatusShow::Type, const QString&)), this, SLOT(handleStatusChanged(StatusShow::Type, const QString&)));
-	mainLayout->addWidget(statusWidget_);
+	meView_ = new QtRosterHeader(this);
+	mainLayout->addWidget(meView_);
+	//statusWidget_ = new QtStatusWidget(this);
+	connect(meView_, SIGNAL(onChangeStatusRequest(StatusShow::Type, const QString&)), this, SLOT(handleStatusChanged(StatusShow::Type, const QString&)));
+	//mainLayout->addWidget(statusWidget_);
 	treeWidget_ = dynamic_cast<QtTreeWidget*>(treeWidgetFactory->createTreeWidget());
 	mainLayout->addWidget(treeWidget_);
 

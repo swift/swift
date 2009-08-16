@@ -22,7 +22,7 @@ QtLoginWindow::QtLoginWindow(const String& defaultJID, const String& defaultPass
 	QBoxLayout *topLayout = new QBoxLayout(QBoxLayout::TopToBottom, centralWidget);
 	stack_ = new QStackedWidget(centralWidget);
 	topLayout->addWidget(stack_);
-	topLayout->setMargin(5);
+	topLayout->setMargin(0);
 	QWidget *wrapperWidget = new QWidget(this);
 	wrapperWidget->setSizePolicy(QSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding));
 	QBoxLayout *layout = new QBoxLayout(QBoxLayout::TopToBottom, wrapperWidget);

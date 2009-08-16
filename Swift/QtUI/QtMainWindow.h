@@ -4,6 +4,7 @@
 #include <QWidget>
 #include <QMenu>
 #include "Swift/Controllers/MainWindow.h"
+#include "Swift/QtUI/QtRosterHeader.h"
 
 #include <vector>
 
@@ -14,7 +15,6 @@ class QPushButton;
 namespace Swift {
 	class QtTreeWidget;
 	class QtTreeWidgetFactory;
-	class QtStatusWidget;
 	class TreeWidget;
 
 
@@ -31,11 +31,12 @@ namespace Swift {
 			void handleJoinMUCDialogComplete(const JID& muc, const QString& nick);
 		private:
 			std::vector<QMenu*> menus_;
-			QtStatusWidget *statusWidget_;
-			QLineEdit *muc_;
-			QLineEdit *mucNick_;
-			QPushButton *mucButton_;
-			QtTreeWidget *treeWidget_;
+			//QtStatusWidget* statusWidget_;
+			QLineEdit* muc_;
+			QLineEdit* mucNick_;
+			QPushButton* mucButton_;
+			QtTreeWidget* treeWidget_;
+			QtRosterHeader* meView_;
 	};
 }
 

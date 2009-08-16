@@ -67,6 +67,7 @@ sources = [
 		"Roster/QtTreeWidget.cpp",
 		"Roster/QtTreeWidgetItem.cpp",
 		"Roster/RosterDelegate.cpp",
+		"QtRosterHeader.cpp",
 		"qrc_DefaultTheme.cc",
 		"qrc_Swift.cc",
 	]
