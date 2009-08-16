@@ -1,5 +1,6 @@
 #include "QtMainWindow.h"
 
+#include "QtAddContactDialog.h"
 #include "QtJoinMUCDialog.h"
 #include "QtSwiftUtil.h"
 #include "Roster/QtTreeWidgetFactory.h"
@@ -13,6 +14,7 @@
 #include <QPushButton>
 #include <QMenuBar>
 #include <QToolBar>
+#include <QAction>
 
 namespace Swift {
 
@@ -29,6 +31,13 @@ QtMainWindow::QtMainWindow(QtTreeWidgetFactory *treeWidgetFactory) : QWidget() {
 	treeWidget_ = dynamic_cast<QtTreeWidget*>(treeWidgetFactory->createTreeWidget());
 	mainLayout->addWidget(treeWidget_);
 
+	bottomBar_ = new QToolBar(this);
+	mainLayout->addWidget(bottomBar_);
+	
+	addAction_ = new QAction("Add Contact", this);
+	bottomBar_->addAction(addAction_);
+	connect(addAction_, SIGNAL(triggered(bool)), this, SLOT(handleAddActionTriggered(bool)));
+	
 	this->setLayout(mainLayout);
 	
 	QMenu* viewMenu = new QMenu(tr("View"), this);
@@ -44,6 +53,17 @@ QtMainWindow::QtMainWindow(QtTreeWidgetFactory *treeWidgetFactory) : QWidget() {
 	QAction* joinMUCAction = new QAction("Join chatroom", this);
 	connect(joinMUCAction, SIGNAL(triggered()), SLOT(handleJoinMUCAction()));
 	chatMenu->addAction(joinMUCAction);
+}
+
+void QtMainWindow::handleAddActionTriggered(bool checked) {
+	Q_UNUSED(checked);
+	QtAddContactDialog* addContact = new QtAddContactDialog(this);
+	connect(addContact, SIGNAL(onAddCommand(const JID&, const QString&)), SLOT(handleAddContactDialogComplete(const JID&, const QString&)));
+	addContact->show();
+}
+
+void QtMainWindow::handleAddContactDialogComplete(const JID& contact, const QString& name) {
+	onAddContactRequest(contact, Q2PSTRING(name));
 }
 
 TreeWidget* QtMainWindow::getTreeWidget() {

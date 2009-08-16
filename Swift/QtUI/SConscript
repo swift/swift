@@ -45,6 +45,7 @@ myenv.Command("DefaultTheme.qrc", "../resources/themes/Default", Action(generate
 
 sources = [
 		"main.cpp",
+		"QtAddContactDialog.cpp",
 		"QtChatWindow.cpp",
 		"QtChatWindowFactory.cpp",
 		"QtJoinMUCDialog.cpp",
@@ -82,6 +83,7 @@ else :
 	swiftProgram = myenv.Program("swift", sources)
 
 myenv.Uic4("QtJoinMUCDialog.ui")
+myenv.Uic4("QtAddContactDialog.ui")
 myenv.Qrc("DefaultTheme.qrc")
 myenv.Qrc("Swift.qrc")
 

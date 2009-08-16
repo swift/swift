@@ -11,6 +11,8 @@
 class QComboBox;
 class QLineEdit;
 class QPushButton;
+class QToolBar;
+class QAction;
 
 namespace Swift {
 	class QtTreeWidget;
@@ -32,6 +34,8 @@ namespace Swift {
 			void handleShowOfflineToggled(bool);
 			void handleJoinMUCAction();
 			void handleJoinMUCDialogComplete(const JID& muc, const QString& nick);
+			void handleAddContactDialogComplete(const JID& contact, const QString& name);
+			void handleAddActionTriggered(bool checked);
 		private:
 			std::vector<QMenu*> menus_;
 			//QtStatusWidget* statusWidget_;
@@ -40,6 +44,8 @@ namespace Swift {
 			QPushButton* mucButton_;
 			QtTreeWidget* treeWidget_;
 			QtRosterHeader* meView_;
+			QToolBar* bottomBar_;
+			QAction* addAction_;
 	};
 }
 

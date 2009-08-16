@@ -20,6 +20,7 @@ namespace Swift {
 			virtual void setMyStatusText(const String& status) = 0;
 			
 			boost::signal<void (const JID&)> onStartChatRequest;
+			boost::signal<void (const JID&, const String&)> onAddContactRequest;
 			boost::signal<void (const JID&, const String&)> onJoinMUCRequest;
 			boost::signal<void (StatusShow::Type, const String&)> onChangeStatusRequest;
 			boost::signal<void (bool)> onShowOfflineToggled;

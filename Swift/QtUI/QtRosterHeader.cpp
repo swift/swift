@@ -101,13 +101,13 @@ void QtRosterHeader::resizeNameLabel() {
 	nameLabel_->setText("<b>" + escapedName + "</b>");
 	int reductionCount = 0;
 	while (nameLabel_->sizeHint().width() + statusWidget_->width() + 30 > width()) {
-		qDebug() << nameLabel_->sizeHint().width() << " " << statusWidget_->width() << " " << width();
+		//qDebug() << nameLabel_->sizeHint().width() << " " << statusWidget_->width() << " " << width();
 		reductionCount++;
 		QString reducedName = name_;
 		reducedName.remove(name_.length() - reductionCount, reductionCount);
 		reducedName.replace("<","&lt;");
 		nameLabel_->setText("<b>" + reducedName +  + "...</b>");
-		qDebug() << "Shrunk " << escapedName << " down to " << reducedName;
+	//	qDebug() << "Shrunk " << escapedName << " down to " << reducedName;
 	}
 	nameLabel_->setToolTip(name_);
 }
