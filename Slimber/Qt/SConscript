@@ -1,0 +1,44 @@
+import os, shutil, datetime
+
+Import("env")
+
+myenv = env.Clone()
+
+myenv.MergeFlags(env["SLIMBER_FLAGS"])
+myenv.MergeFlags(env["SWIFTEN_FLAGS"])
+myenv.MergeFlags(env["CPPUNIT_FLAGS"])
+myenv.MergeFlags(env["LIBIDN_FLAGS"])
+myenv.MergeFlags(env["BOOST_FLAGS"])
+myenv.MergeFlags(env["EXPAT_FLAGS"])
+
+myenv.Tool("qt4", toolpath = ["#/BuildTools/SCons/Tools"])
+myenv.Tool("nsis", toolpath = ["#/BuildTools/SCons/Tools"])
+myenv.EnableQt4Modules(['QtCore', 'QtGui'], debug = False)
+
+myenv.Append(CPPPATH = ["."])
+
+if env["PLATFORM"] == "win32" :
+	myenv.Append(LINKFLAGS = ["/SUBSYSTEM:WINDOWS"])
+	myenv.Append(LIBS = "qtmain")
+
+sources = ["main.cpp", "QtMenulet.cpp"]
+
+#if env["PLATFORM"] == "win32" :
+#	myenv.RES("../resources/Windows/Slimber.rc")
+#	sources += ["../resources/Windows/Slimber.res"]
+
+if env["PLATFORM"] == "win32" :
+	slimberProgram = myenv.Program("Slimber", sources)
+else :
+	slimberProgram = myenv.Program("slimber", sources)
+
+myenv.Qrc("Slimber.qrc")
+
+if env["PLATFORM"] == "win32" :
+	if "dist" in COMMAND_LINE_TARGETS or env.GetOption("clean") :
+		myenv.WindowsBundle("Slimber", resources = [], qtlibs = ["QtCore4", "QtGui4"])
+		myenv.Append(NSIS_OPTIONS = [
+				"/DmsvccRedistributableDir=\"" + env["vcredist"] + "\"", 
+				"/DbuildDate=" + datetime.date.today().strftime("%Y%m%d")
+			])
+		#myenv.Nsis("../Packaging/nsis/slimber.nsi")

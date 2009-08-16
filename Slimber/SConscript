@@ -26,3 +26,5 @@ env.Append(UNITTEST_SOURCES = [
 SConscript("CLI/SConscript")
 if env["PLATFORM"] == "darwin" :
   SConscript("Cocoa/SConscript")
+else :
+  SConscript("Qt/SConscript")
