@@ -5,6 +5,7 @@
 #include "Swiften/Base/foreach.h"
 #include "Swift/Controllers/MainWindow.h"
 #include "Swift/Controllers/MainWindowFactory.h"
+#include "Swift/Controllers/NickResolver.h"
 #include "Swiften/Queries/Requests/GetRosterRequest.h"
 #include "Swiften/EventLoop/MainEventLoop.h"
 #include "Swiften/Roster/Roster.h"
@@ -15,13 +16,15 @@
 #include "Swiften/Roster/TreeWidgetFactory.h"
 #include "Swiften/Roster/XMPPRoster.h"
 
+
 namespace Swift {
 	
 /**
  * The controller does not gain ownership of these parameters.
  */
-RosterController::RosterController(boost::shared_ptr<XMPPRoster> xmppRoster, AvatarManager* avatarManager, MainWindowFactory* mainWindowFactory, TreeWidgetFactory* treeWidgetFactory)
- : xmppRoster_(xmppRoster), mainWindowFactory_(mainWindowFactory), treeWidgetFactory_(treeWidgetFactory), mainWindow_(mainWindowFactory_->createMainWindow()), roster_(new Roster(mainWindow_->getTreeWidget(), treeWidgetFactory_)), offlineFilter_(new OfflineRosterFilter()) {
+RosterController::RosterController(const JID& jid, boost::shared_ptr<XMPPRoster> xmppRoster, AvatarManager* avatarManager, MainWindowFactory* mainWindowFactory, TreeWidgetFactory* treeWidgetFactory, NickResolver* nickResolver)
+ : myJID_(jid), xmppRoster_(xmppRoster), mainWindowFactory_(mainWindowFactory), treeWidgetFactory_(treeWidgetFactory), mainWindow_(mainWindowFactory_->createMainWindow()), roster_(new Roster(mainWindow_->getTreeWidget(), treeWidgetFactory_)), offlineFilter_(new OfflineRosterFilter()) {
+	nickResolver_ = nickResolver;
 	roster_->addFilter(offlineFilter_);
 	avatarManager_ = avatarManager;
 	avatarManager_->onAvatarChanged.connect(boost::bind(&RosterController::handleAvatarChanged, this, _1, _2));
@@ -31,6 +34,9 @@ RosterController::RosterController(boost::shared_ptr<XMPPRoster> xmppRoster, Ava
 	mainWindow_->onShowOfflineToggled.connect(boost::bind(&RosterController::handleShowOfflineToggled, this, _1));
 	roster_->onUserAction.connect(boost::bind(&RosterController::handleUserAction, this, _1));
 	xmppRoster_->onJIDAdded.connect(boost::bind(&RosterController::handleOnJIDAdded, this, _1));
+	
+	mainWindow_->setMyAvatarPath(avatarManager_->getAvatarPath(myJID_).string());
+	mainWindow_->setMyName(nickResolver_->jidToNick(myJID_));
 }
 
 RosterController::~RosterController() {
@@ -78,6 +84,9 @@ void RosterController::handleIncomingPresence(boost::shared_ptr<Presence> presen
 void RosterController::handleAvatarChanged(const JID& jid, const String& hash) {
 	String path = avatarManager_->getAvatarPath(jid).string();
 	roster_->applyOnItems(SetAvatar(jid, path));
+	if (jid.equals(myJID_, JID::WithoutResource)) {
+		mainWindow_->setMyAvatarPath(path);
+	}
 }
 
 void RosterController::handleStartChatRequest(const JID& contact) {

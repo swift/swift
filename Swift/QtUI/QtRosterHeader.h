@@ -7,6 +7,7 @@
 #include <QSize>
 #include <QToolBar>
 
+#include "Swiften/Base/String.h"
 #include "Swiften/Elements/StatusShow.h"
 
 namespace Swift {
@@ -25,7 +26,11 @@ namespace Swift {
 		void onChangeStatusRequest(StatusShow::Type showType, const QString &statusMessage);
 	private slots:
 		void handleChangeStatusRequest(StatusShow::Type type);
+	protected:
+		virtual void resizeEvent(QResizeEvent* event);
 	private:
+		void resizeNameLabel();
+		QString name_;
 		QLabel* avatarLabel_;
 		QLabel* nameLabel_;
 		QTextEdit* statusEdit_;

@@ -18,10 +18,11 @@ namespace Swift {
 	class MainWindowFactory;
 	class TreeWidgetFactory;
 	class OfflineRosterFilter;
+	class NickResolver;
 
 	class RosterController {
 		public:
-			RosterController(boost::shared_ptr<XMPPRoster> xmppRoster, AvatarManager* avatarManager, MainWindowFactory *mainWindowFactory, TreeWidgetFactory *treeWidgetFactory);
+			RosterController(const JID& jid, boost::shared_ptr<XMPPRoster> xmppRoster, AvatarManager* avatarManager, MainWindowFactory* mainWindowFactory, TreeWidgetFactory* treeWidgetFactory, NickResolver* nickResolver);
 			~RosterController();
 			void showRosterWindow();
 			MainWindow* getWindow() {return mainWindow_;};
@@ -38,6 +39,7 @@ namespace Swift {
 			void handleUserAction(boost::shared_ptr<UserRosterAction> action);
 			void handleChangeStatusRequest(StatusShow::Type show, const String &statusText);
 			void handleShowOfflineToggled(bool state);
+			JID myJID_;
 			boost::shared_ptr<XMPPRoster> xmppRoster_;
 			MainWindowFactory* mainWindowFactory_;
 			TreeWidgetFactory* treeWidgetFactory_;
@@ -45,6 +47,7 @@ namespace Swift {
 			Roster* roster_;
 			OfflineRosterFilter* offlineFilter_;
 			AvatarManager* avatarManager_;
+			NickResolver* nickResolver_;
 	};
 }
 #endif

@@ -24,6 +24,9 @@ namespace Swift {
 			QtMainWindow(QtTreeWidgetFactory *treeWidgetFactory);
 			TreeWidget* getTreeWidget();
 			std::vector<QMenu*> getMenus() {return menus_;}
+			void setMyName(const String& name);
+			void setMyAvatarPath(const String& path);
+			void setMyStatusText(const String& status);
 		private slots:
 			void handleStatusChanged(StatusShow::Type showType, const QString &statusMessage);
 			void handleShowOfflineToggled(bool);

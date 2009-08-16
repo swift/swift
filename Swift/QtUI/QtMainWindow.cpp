@@ -68,5 +68,17 @@ void QtMainWindow::handleShowOfflineToggled(bool state) {
 	onShowOfflineToggled(state);
 }
 
+void QtMainWindow::setMyName(const String& name) {
+	meView_->setName(P2QSTRING(name));
+}
+
+void QtMainWindow::setMyAvatarPath(const String& path) {
+	meView_->setAvatar(P2QSTRING(path));
+}
+
+void QtMainWindow::setMyStatusText(const String& status) {
+	meView_->setStatusText(P2QSTRING(status));
+}
+
 }
 

@@ -113,7 +113,7 @@ void MainController::handleConnected() {
 	avatarManager_ = new AvatarManager(client_, client_, avatarStorage_, this);
 	
 	delete rosterController_;
-	rosterController_ = new RosterController(xmppRoster, avatarManager_, mainWindowFactory_, treeWidgetFactory_);
+	rosterController_ = new RosterController(jid_, xmppRoster, avatarManager_, mainWindowFactory_, treeWidgetFactory_, nickResolver_);
 	rosterController_->onStartChatRequest.connect(boost::bind(&MainController::handleChatRequest, this, _1));
 	rosterController_->onJoinMUCRequest.connect(boost::bind(&MainController::handleJoinMUCRequest, this, _1, _2));
 	rosterController_->onChangeStatusRequest.connect(boost::bind(&MainController::handleChangeStatusRequest, this, _1, _2));

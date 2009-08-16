@@ -4,6 +4,7 @@
 #include <QVBoxLayout>
 #include <QIcon>
 #include <QSizePolicy>
+#include <qdebug.h>
 
 #include "QtStatusWidget.h"
 
@@ -14,9 +15,6 @@ QtRosterHeader::QtRosterHeader(QWidget* parent) : QWidget(parent) {
 	vLayout->setContentsMargins(0,0,0,0);
 	setLayout(vLayout);
 
-	//QHBoxLayout* topLayout = new QHBoxLayout();
-	//vLayout->addLayout(topLayout);
-	
 	toolBar_ = new QToolBar(this);
 	vLayout->addWidget(toolBar_);
 
@@ -27,8 +25,8 @@ QtRosterHeader::QtRosterHeader(QWidget* parent) : QWidget(parent) {
 
 	nameLabel_ = new QLabel(this);
 	setName("Me");
-	//topLayout->addWidget(nameLabel_);
 	toolBar_->addWidget(nameLabel_);
+	//nameLabel_->setMaximumWidth(width() - 5 - statusWidget_->width());
 		
 	QHBoxLayout* expandedLayout = new QHBoxLayout();
 	expandedLayout->setContentsMargins(5,5,5,5);
@@ -43,7 +41,7 @@ QtRosterHeader::QtRosterHeader(QWidget* parent) : QWidget(parent) {
 	statusEdit_->resize(statusEdit_->width(), 64);
 	statusEdit_->setAcceptRichText(false);
 	statusEdit_->setReadOnly(false);
-	setStatusText("Could be here, could be away.");
+	setStatusText("");
 
 	vLayout->addLayout(expandedLayout);
 
@@ -51,6 +49,7 @@ QtRosterHeader::QtRosterHeader(QWidget* parent) : QWidget(parent) {
 }
 
 void QtRosterHeader::handleChangeStatusRequest(StatusShow::Type type) {
+	Q_UNUSED(type);
 	emitStatus();
 }
 
@@ -63,9 +62,30 @@ void QtRosterHeader::setStatusText(const QString& statusMessage) {
 }
 
 void QtRosterHeader::setName(const QString& name) {
-	QString escapedName = name;
+	name_ = name;
+	resizeNameLabel();
+}
+
+void QtRosterHeader::resizeNameLabel() {	
+	QString escapedName = name_;
 	escapedName.replace("<","&lt;");
 	nameLabel_->setText("<b>" + escapedName + "</b>");
+	int reductionCount = 0;
+	while (nameLabel_->sizeHint().width() + statusWidget_->width() + 30 > width()) {
+		qDebug() << nameLabel_->sizeHint().width() << " " << statusWidget_->width() << " " << width();
+		reductionCount++;
+		QString reducedName = name_;
+		reducedName.remove(name_.length() - reductionCount, reductionCount);
+		reducedName.replace("<","&lt;");
+		nameLabel_->setText("<b>" + reducedName +  + "...</b>");
+		qDebug() << "Shrunk " << escapedName << " down to " << reducedName;
+	}
+	nameLabel_->setToolTip(name_);
+}
+
+void QtRosterHeader::resizeEvent(QResizeEvent* event) {
+	QWidget::resizeEvent(event);
+	resizeNameLabel();
 }
 
 void QtRosterHeader::setAvatar(const QString& path) {
