@@ -17,6 +17,8 @@ if os.name == "mac" :
   vars.Add(BoolVariable("universal", "Create universal binaries", "no"))
 if os.name == "nt" :
   vars.Add(PathVariable("vcredist", "MSVC redistributable dir", "", PathVariable.PathAccept))
+if os.name == "nt" :
+  vars.Add(PackageVariable("bonjour", "Bonjour SDK location", "yes"))
 vars.Add(PackageVariable("openssl", "OpenSSL location", "yes"))
 vars.Add(PathVariable("qt", "Qt location", "", PathVariable.PathAccept))
 
@@ -221,8 +223,26 @@ if use_openssl and openssl_conf.CheckCHeader("openssl/ssl.h") :
 		env["OPENSSL_FLAGS"]["LIBS"] = ["ssl", "crypto"]
 else :
 	env["OPENSSL_FLAGS"] = ""
+
 openssl_conf.Finish()
 
+# Bonjour
+if env["PLATFORM"] == "darwin" :
+	env["HAVE_BONJOUR"] = 1
+elif env.get("bonjour", False) :
+	bonjour_env = conf_env.Clone()
+	bonjour_conf = Configure(bonjour_env)
+	bonjour_flags = {}
+	if env.get("bonjour") != True :		
+		bonjour_prefix = env["bonjour"]
+		bonjour_flags["CPPPATH"] = [os.path.join(bonjour_prefix, "include")]
+		bonjour_flags["LIBPATH"] = [os.path.join(bonjour_prefix, "lib", "win32")]
+	bonjour_env.MergeFlags(bonjour_flags)
+	if bonjour_conf.CheckCHeader("dns_sd.h") and bonjour_conf.CheckLib("dnssd") :
+		env["HAVE_BONJOUR"] = 1
+		env["BONJOUR_FLAGS"] = bonjour_flags
+		env["BONJOUR_FLAGS"]["LIBS"] = ["dnssd"]
+	bonjour_conf.Finish()
 
 ################################################################################
 # Project files
@@ -255,8 +275,8 @@ SConscript("QA/SConscript")
 ################################################################################
 
 print
-print "		 Build Configuration"
-print "		 -------------------"
+print "  Build Configuration"
+print "  -------------------"
 
 parsers = []
 if env.get("HAVE_LIBXML", 0):
@@ -265,7 +285,8 @@ if env.get("HAVE_EXPAT", 0):
 	parsers.append("Expat")
 	if bundledExpat:
 		parsers.append("(Bundled)")
-print "		 XML Parsers: " + ' '.join(parsers)
+print "  XML Parsers: " + ' '.join(parsers)
 
-print "		 TLS Support: " + ("OpenSSL" if env.get("HAVE_OPENSSL",0) else "Disabled")
+print "  TLS Support: " + ("OpenSSL" if env.get("HAVE_OPENSSL",0) else "Disabled")
+print "  DNSSD Support: " + ("Bonjour" if env.get("HAVE_BONJOUR") else ("Avahi" if env.get("HAVE_AVAHI") else "Disabled"))
 print

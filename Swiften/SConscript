@@ -11,6 +11,7 @@ myenv.MergeFlags(env["LIBIDN_FLAGS"])
 myenv.MergeFlags(env["SQLITE_FLAGS"])
 myenv.MergeFlags(env.get("LIBXML_FLAGS", ""))
 myenv.MergeFlags(env.get("EXPAT_FLAGS", ""))
+myenv.MergeFlags(env.get("BONJOUR_FLAGS", ""))
 myenv.MergeFlags(env["ZLIB_FLAGS"])
 myenv.MergeFlags(env["OPENSSL_FLAGS"])
 
@@ -163,7 +164,7 @@ if env["PLATFORM"] == "darwin" :
 			"EventLoop/Cocoa/CocoaEvent.mm"
 		]
 
-if env["PLATFORM"] == "darwin" :
+if myenv.get("HAVE_BONJOUR", 0) :
 	myenv.Append(CPPDEFINES = "HAVE_BONJOUR")
 	sources += [
 			"LinkLocal/DNSSD/Bonjour/BonjourQuerier.cpp",
