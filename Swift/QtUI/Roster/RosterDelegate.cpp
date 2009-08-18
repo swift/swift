@@ -36,17 +36,20 @@ void RosterDelegate::paint(QPainter* painter, const QStyleOptionViewItem& option
 		painter->setPen(option.palette.highlightedText().color());
 	} 
 	
-	QRect presenceIconRegion(QPoint(margin_, fullRegion.top()), QSize(presenceIconSize_, fullRegion.height()));
-	QIcon presenceIcon = index.data(PresenceIconRole).isValid() && !index.data(PresenceIconRole).value<QIcon>().isNull()
-		? index.data(PresenceIconRole).value<QIcon>()
-		: QIcon(":/icons/offline.png");
-	presenceIcon.paint(painter, presenceIconRegion, Qt::AlignVCenter | Qt::AlignHCenter);
+	QRect presenceIconRegion(QPoint(margin_, fullRegion.top()), QSize(presenceIconWidth_, fullRegion.height()));
 	
-	QRect avatarRegion(QPoint(presenceIconRegion.right() + margin_, fullRegion.top()), QSize(avatarSize_, fullRegion.height()));
+	//This overlaps the presenceIcon, so must be painted first
+	QRect avatarRegion(QPoint(presenceIconRegion.right() - presenceIconWidth_ / 2, fullRegion.top()), QSize(avatarSize_, fullRegion.height()));
 	QIcon avatar = index.data(AvatarRole).isValid() && !index.data(AvatarRole).value<QIcon>().isNull()
 		? index.data(AvatarRole).value<QIcon>()
 		: QIcon(":/icons/avatar.png");
 	avatar.paint(painter, avatarRegion, Qt::AlignVCenter | Qt::AlignHCenter);
+
+	//Paint the presence icon over the top of the avatar
+	QIcon presenceIcon = index.data(PresenceIconRole).isValid() && !index.data(PresenceIconRole).value<QIcon>().isNull()
+		? index.data(PresenceIconRole).value<QIcon>()
+		: QIcon(":/icons/offline.png");
+	presenceIcon.paint(painter, presenceIconRegion, Qt::AlignBottom | Qt::AlignHCenter);
 	
 	QFont nameFont = painter->font();
 	QFont statusFont = painter->font();
