@@ -17,7 +17,8 @@
 namespace Swift {
 	enum RosterRoles {
 		StatusTextRole = Qt::UserRole,
-		AvatarRole = Qt::UserRole + 1
+		AvatarRole = Qt::UserRole + 1,
+		PresenceIconRole = Qt::UserRole + 2
 	};
 	
 class QtTreeWidget;
@@ -33,6 +34,7 @@ class QtTreeWidgetItem : public QObject, public TreeWidgetItem {
 			int row();
 			QtTreeWidgetItem* getItem(int row);
 			QVariant data(int role);
+			QIcon getPresenceIcon(); 
 			QtTreeWidgetItem(QtTreeWidgetItem* parentItem);
 			void setText(const String& text);
 			void setAvatarPath(const String& path);

@@ -139,8 +139,13 @@ QVariant QtTreeWidgetItem::data(int role) {
 		case Qt::BackgroundColorRole: return backgroundColor_;
 	 	case StatusTextRole: return statusText_;
 		case AvatarRole: return avatar_;
+		case PresenceIconRole: return getPresenceIcon();
 	 	default: return QVariant();
 	}
+}
+
+QIcon QtTreeWidgetItem::getPresenceIcon() {
+	return QIcon(":/icons/online.png");
 }
 
 bool QtTreeWidgetItem::isContact() {

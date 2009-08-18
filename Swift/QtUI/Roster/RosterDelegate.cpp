@@ -35,17 +35,24 @@ void RosterDelegate::paint(QPainter* painter, const QStyleOptionViewItem& option
 		painter->fillRect(fullRegion, option.palette.highlight());
 		painter->setPen(option.palette.highlightedText().color());
 	} 
-	QRect avatarRegion(QPoint(margin_, fullRegion.top() + margin_), QSize(avatarSize_, avatarSize_));
-	QIcon icon = index.data(AvatarRole).isValid() && !index.data(AvatarRole).value<QIcon>().isNull()
+	
+	QRect presenceIconRegion(QPoint(margin_, fullRegion.top()), QSize(presenceIconSize_, fullRegion.height()));
+	QIcon presenceIcon = index.data(PresenceIconRole).isValid() && !index.data(PresenceIconRole).value<QIcon>().isNull()
+		? index.data(PresenceIconRole).value<QIcon>()
+		: QIcon(":/icons/offline.png");
+	presenceIcon.paint(painter, presenceIconRegion, Qt::AlignVCenter | Qt::AlignHCenter);
+	
+	QRect avatarRegion(QPoint(presenceIconRegion.right() + margin_, fullRegion.top()), QSize(avatarSize_, fullRegion.height()));
+	QIcon avatar = index.data(AvatarRole).isValid() && !index.data(AvatarRole).value<QIcon>().isNull()
 		? index.data(AvatarRole).value<QIcon>()
 		: QIcon(":/icons/avatar.png");
-	icon.paint(painter, avatarRegion, Qt::AlignVCenter | Qt::AlignHCenter);
+	avatar.paint(painter, avatarRegion, Qt::AlignVCenter | Qt::AlignHCenter);
 	
 	QFont nameFont = painter->font();
 	QFont statusFont = painter->font();
 	
 	painter->setFont(nameFont);
-	QRect textRegion(fullRegion.adjusted(avatarSize_ + margin_ * 2, 0, 0, 0));
+	QRect textRegion(fullRegion.adjusted(avatarRegion.right() + margin_ * 2, 0, 0, 0));
 	
 	QFontMetrics nameMetrics(nameFont);
 	int nameHeight = nameMetrics.height() + margin_;
