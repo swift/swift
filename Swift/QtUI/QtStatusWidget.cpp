@@ -8,12 +8,12 @@
 namespace Swift {
 QtStatusWidget::QtStatusWidget(QWidget *parent) : QWidget(parent) {
 	types_ = new QComboBox(this);
-	types_->addItem("Available", QVariant(StatusShow::Online));
-	types_->addItem("Free For Chat", QVariant(StatusShow::FFC));
-	types_->addItem("Away", QVariant(StatusShow::Away));
-	types_->addItem("Extended Away", QVariant(StatusShow::XA));
-	types_->addItem("Do Not Disturb", QVariant(StatusShow::DND));
-	types_->addItem("Offline", QVariant(StatusShow::None));
+	types_->addItem(QIcon(":/icons/online.png"), "Available", QVariant(StatusShow::Online));
+	types_->addItem(QIcon(":/icons/online.png"), "Free For Chat", QVariant(StatusShow::FFC));
+	types_->addItem(QIcon(":/icons/away.png"), "Away", QVariant(StatusShow::Away));
+	types_->addItem(QIcon(":/icons/away.png"), "Extended Away", QVariant(StatusShow::XA));
+	types_->addItem(QIcon(":/icons/dnd.png"), "Do Not Disturb", QVariant(StatusShow::DND));
+	types_->addItem(QIcon(":/icons/offline.png"), "Offline", QVariant(StatusShow::None));
 	connect(types_, SIGNAL(activated(int)), this, SLOT(handleTypeSelected(int)));
 	QBoxLayout *mainLayout = new QBoxLayout(QBoxLayout::TopToBottom, this);
 	mainLayout->setContentsMargins(0,0,0,0);

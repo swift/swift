@@ -2,6 +2,10 @@
 <RCC version="1.0">
 	<qresource>
 		<file alias="logo-shaded-text.256.png">../resources/logo/logo-shaded-text.256.png</file>
+		<file alias="icons/online.png">../resources/icons/online.png</file>
+		<file alias="icons/away.png">../resources/icons/away.png</file>
+		<file alias="icons/dnd.png">../resources/icons/dnd.png</file>
+		<file alias="icons/offline.png">../resources/icons/offline.png</file>
 		<file alias="icons/certificate.png">../resources/icons/certificate.png</file>
 		<file alias="icons/error.png">../resources/icons/error.png</file>
 		<file alias="icons/avatar.png">../resources/icons/avatar.png</file>
