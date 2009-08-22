@@ -1,5 +1,4 @@
-#ifndef SWIFT_QtMainEventLoop_H
-#define SWIFT_QtMainEventLoop_H
+#pragma once
 
 #include <QObject>
 #include <QEvent>
@@ -7,10 +6,9 @@
 
 #include "Swiften/EventLoop/EventLoop.h"
 
-class QtMainEventLoop : public QObject, public Swift::EventLoop
-{
+class QtEventLoop : public QObject, public Swift::EventLoop {
 	public:
-		QtMainEventLoop() {}
+		QtEventLoop() {}
 
 		virtual void post(const Swift::Event& event) {
 			QCoreApplication::postEvent(this, new Event(event));
@@ -36,5 +34,3 @@ class QtMainEventLoop : public QObject, public Swift::EventLoop
 				Swift::Event event_;
 		};
 };
-
-#endif

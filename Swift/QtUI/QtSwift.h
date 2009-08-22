@@ -2,7 +2,7 @@
 #define SWIFT_QtSwift_H
 
 #include "Swiften/Base/String.h"
-#include "QtMainEventLoop.h"
+#include "Swiften/EventLoop/Qt/QtEventLoop.h"
 #include "QtLoginWindowFactory.h"
 #include "QtMainWindowFactory.h"
 #include "QtChatWindowFactory.h"
@@ -31,7 +31,7 @@ namespace Swift {
 			QtChatWindowFactory *chatWindowFactory_;
 			QtMainWindowFactory *rosterWindowFactory_;
 			QtLoginWindowFactory *loginWindowFactory_;
-			QtMainEventLoop clientMainThreadCaller_;
+			QtEventLoop clientMainThreadCaller_;
 			QtSettingsProvider *settings_;
 			QtSystemTray* systemTray_;
 			QSplitter* splitter_;
