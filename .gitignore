@@ -18,6 +18,7 @@
 *.res
 *.moc
 *~
+_CL_*
 *.manifest
 moc_*
 qrc_*
