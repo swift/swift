@@ -15,8 +15,8 @@ namespace Swift {
 			}
 
 			boost::filesystem::path getSettingsDir() const {
-				char* homeDirRaw = getenv("APPDATA");
-				boost::filesystem::path result(boost::filesystem::path(getHomeDir()) / getName().getUTF8String());
+				char* appDirRaw = getenv("APPDATA");
+				boost::filesystem::path result(boost::filesystem::path(appDirRaw) / getName().getUTF8String());
 				boost::filesystem::create_directory(result);
 				return result;
 			}
