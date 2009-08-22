@@ -15,12 +15,12 @@ using namespace Swift;
 
 int main() {
 	SimpleEventLoop eventLoop;
-  /*
+	/*
 	boost::shared_ptr<BonjourQuerier> querier(new BonjourQuerier());
 	querier->start();
 	LinkLocalServiceBrowser browser(querier);
 	browser.start();
-  */
+	*/
 
 /*
 	FileVCardCollection vCardCollection(PlatformApplication("Slimber").getSettingsDir());

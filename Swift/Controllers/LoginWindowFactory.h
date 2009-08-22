@@ -5,8 +5,8 @@
 
 namespace Swift {
 	class LoginWindow;
-    class String;
-    
+		class String;
+		
 	class LoginWindowFactory {
 		public:
 			virtual ~LoginWindowFactory() {};

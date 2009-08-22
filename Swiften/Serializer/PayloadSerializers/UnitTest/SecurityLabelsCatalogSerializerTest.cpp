@@ -45,7 +45,7 @@ class SecurityLabelsCatalogSerializerTest : public CppUnit::TestFixture
 						"<displaymarking bgcolor=\"navy\" fgcolor=\"black\">CONFIDENTIAL</displaymarking>"
 						"<label><esssecuritylabel xmlns=\"urn:xmpp:sec-label:ess:0\">MQMGASk=</esssecuritylabel></label>"
 					"</securitylabel>"
-    		"</catalog>"), testling.serialize(catalog));
+				"</catalog>"), testling.serialize(catalog));
 		}
 };
 

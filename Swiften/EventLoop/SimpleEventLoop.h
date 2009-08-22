@@ -18,8 +18,8 @@ namespace Swift {
 
 			virtual void post(const Event& event);
 
-    private:
-      void doStop();
+		private:
+			void doStop();
 
 		private:
 			bool isRunning_;

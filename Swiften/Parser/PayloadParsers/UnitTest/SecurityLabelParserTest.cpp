@@ -21,17 +21,17 @@ class SecurityLabelParserTest : public CppUnit::TestFixture
 
 			CPPUNIT_ASSERT(parser.parse(
 				"<securitylabel xmlns=\"urn:xmpp:sec-label:0\">"
-        	"<displaymarking fgcolor=\"black\" bgcolor=\"red\">SECRET</displaymarking>"
-        	"<label>"
+					"<displaymarking fgcolor=\"black\" bgcolor=\"red\">SECRET</displaymarking>"
+					"<label>"
 						"<esssecuritylabel xmlns=\"urn:xmpp:sec-label:ess:0\">MQYCAQQGASk=</esssecuritylabel>"
 					"</label>"
-        	"<equivalentlabel>"
+					"<equivalentlabel>"
 						"<icismlabel xmlns=\"http://example.gov/IC-ISM/0\" classification=\"S\" ownerProducer=\"USA\" disseminationControls=\"FOUO\"/>"
 					"</equivalentlabel>"
-        	"<equivalentlabel>"
+					"<equivalentlabel>"
 						"<esssecuritylabel xmlns=\"urn:xmpp:sec-label:ess:0\">MRUCAgD9DA9BcXVhIChvYnNvbGV0ZSk=</esssecuritylabel>"
 					"</equivalentlabel>"
-    		"</securitylabel>"));
+				"</securitylabel>"));
 
 			SecurityLabel* payload = dynamic_cast<SecurityLabel*>(testling.getPayload().get());
 			CPPUNIT_ASSERT_EQUAL(String("SECRET"), payload->getDisplayMarking());

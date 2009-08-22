@@ -15,7 +15,7 @@ namespace Swift {
 			virtual void sendPresence(boost::shared_ptr<Presence>) = 0;
 
 			boost::signal<void (boost::shared_ptr<Message>)> onMessageReceived;
-      boost::signal<void (boost::shared_ptr<Presence>) > onPresenceReceived;
+			boost::signal<void (boost::shared_ptr<Presence>) > onPresenceReceived;
 	};
 }
 

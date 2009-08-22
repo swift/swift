@@ -30,15 +30,15 @@ DomainNameResolver::~DomainNameResolver() {
 }
 
 HostAddressPort DomainNameResolver::resolve(const String& domain) {
-  char* output;
-  if (idna_to_ascii_8z(domain.getUTF8Data(), &output, 0) == IDNA_SUCCESS) {
-    std::string outputString(output);
-    free(output);
-    return resolveDomain(outputString);
-  }
-  else {
-    return resolveDomain(domain.getUTF8String());
-  }
+	char* output;
+	if (idna_to_ascii_8z(domain.getUTF8Data(), &output, 0) == IDNA_SUCCESS) {
+		std::string outputString(output);
+		free(output);
+		return resolveDomain(outputString);
+	}
+	else {
+		return resolveDomain(domain.getUTF8String());
+	}
 }
 
 HostAddressPort DomainNameResolver::resolveDomain(const std::string& domain) {
@@ -51,14 +51,14 @@ HostAddressPort DomainNameResolver::resolveDomain(const std::string& domain) {
 }
 
 HostAddressPort DomainNameResolver::resolveXMPPService(const std::string& domain) {
-  std::string srvQuery = "_xmpp-client._tcp." + domain;
+	std::string srvQuery = "_xmpp-client._tcp." + domain;
 
 #if defined(SWIFTEN_PLATFORM_WINDOWS)
 	DNS_RECORD* responses;
 	// FIXME: This conversion doesn't work if unicode is deffed above
-  	if (DnsQuery(srvQuery.c_str(), DNS_TYPE_SRV, DNS_QUERY_STANDARD, NULL, &responses, NULL) != ERROR_SUCCESS) {
+		if (DnsQuery(srvQuery.c_str(), DNS_TYPE_SRV, DNS_QUERY_STANDARD, NULL, &responses, NULL) != ERROR_SUCCESS) {
 		throw DomainNameResolveException();
-  	}
+		}
 
 	DNS_RECORD* currentEntry = responses;
 	while (currentEntry) {
@@ -83,10 +83,10 @@ HostAddressPort DomainNameResolver::resolveXMPPService(const std::string& domain
 
 #else
 
-  ByteArray response;
-  response.resize(NS_PACKETSZ);
-  int responseLength = res_query(const_cast<char*>(srvQuery.c_str()), ns_c_in, ns_t_srv, reinterpret_cast<u_char*>(response.getData()), response.getSize());
-  if (responseLength == -1) {
+	ByteArray response;
+	response.resize(NS_PACKETSZ);
+	int responseLength = res_query(const_cast<char*>(srvQuery.c_str()), ns_c_in, ns_t_srv, reinterpret_cast<u_char*>(response.getData()), response.getSize());
+	if (responseLength == -1) {
 		throw DomainNameResolveException();
 	}
 

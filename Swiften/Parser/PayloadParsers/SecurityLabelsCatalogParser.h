@@ -5,13 +5,13 @@
 #include "Swiften/Parser/GenericPayloadParser.h"
 
 namespace Swift {
-  class SecurityLabelParserFactory;
-  class SecurityLabelParser;
+	class SecurityLabelParserFactory;
+	class SecurityLabelParser;
 
 	class SecurityLabelsCatalogParser : public GenericPayloadParser<SecurityLabelsCatalog> {
 		public:
 			SecurityLabelsCatalogParser();
-      ~SecurityLabelsCatalogParser();
+			~SecurityLabelsCatalogParser();
 
 			virtual void handleStartElement(const String& element, const String&, const AttributeMap& attributes);
 			virtual void handleEndElement(const String& element, const String&);
@@ -21,11 +21,11 @@ namespace Swift {
 			enum Level { 
 				TopLevel = 0, 
 				PayloadLevel = 1,
-        LabelLevel = 2
+				LabelLevel = 2
 			};
 			int level_;
-      SecurityLabelParserFactory* labelParserFactory_;
-      SecurityLabelParser* labelParser_;
+			SecurityLabelParserFactory* labelParserFactory_;
+			SecurityLabelParser* labelParser_;
 	};
 }
 

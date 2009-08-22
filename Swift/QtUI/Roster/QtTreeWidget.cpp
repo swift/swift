@@ -9,7 +9,7 @@ QtTreeWidget::QtTreeWidget(QWidget* parent) : QTreeView(parent) {
 	treeRoot_ = new QtTreeWidgetItem(NULL);
 	model_ = new RosterModel();
 	model_->setRoot(treeRoot_);
-    setModel(model_);
+		setModel(model_);
 	delegate_ = new RosterDelegate();
 	setItemDelegate(delegate_);
 	setHeaderHidden(true);

@@ -29,7 +29,7 @@ class SecurityLabelsCatalogParserTest : public CppUnit::TestFixture
 						"<displaymarking bgcolor=\"navy\" fgcolor=\"black\">CONFIDENTIAL</displaymarking>"
 						"<label><esssecuritylabel xmlns=\"urn:xmpp:sec-label:ess:0\">MQMGASk=</esssecuritylabel></label>"
 					"</securitylabel>"
-    		"</catalog>"));
+				"</catalog>"));
 
 			SecurityLabelsCatalog* payload = dynamic_cast<SecurityLabelsCatalog*>(testling.getPayload().get());
 			CPPUNIT_ASSERT_EQUAL(String("Default"), payload->getName());

@@ -33,7 +33,7 @@ void SimpleEventLoop::stop() {
 }
 
 void SimpleEventLoop::doStop() {
-  isRunning_ = false;
+	isRunning_ = false;
 }
 
 void SimpleEventLoop::post(const Event& event) {

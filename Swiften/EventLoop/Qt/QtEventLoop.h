@@ -17,7 +17,7 @@ class QtEventLoop : public QObject, public Swift::EventLoop {
 		virtual bool event(QEvent* qevent) {
 			Event* event = dynamic_cast<Event*>(qevent);
 			if (event) {
-        handleEvent(event->event_);
+				handleEvent(event->event_);
 				//event->deleteLater(); FIXME: Leak?
 				return true;
 			}

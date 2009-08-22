@@ -4,14 +4,14 @@
 
 int main(int argc, char *argv[])
 {
-    QApplication app(argc, argv);
+		QApplication app(argc, argv);
 
-    //Swift::RosterModel model;
+		//Swift::RosterModel model;
 
-    //QTreeView view;
-    //view.setModel(&model);
-    //view.setWindowTitle("A roster");
-    //view.show();
+		//QTreeView view;
+		//view.setModel(&model);
+		//view.setWindowTitle("A roster");
+		//view.show();
 
 	Swift::QtTreeWidgetFactory treeWidgetFactory;
 	Swift::QtTreeWidget* tree = dynamic_cast<Swift::QtTreeWidget*>(treeWidgetFactory.createTreeWidget());
@@ -31,5 +31,5 @@ int main(int argc, char *argv[])
 		item4->setText("Kim");
 	}
 	
-    return app.exec();
+		return app.exec();
 }

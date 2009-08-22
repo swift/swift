@@ -26,17 +26,17 @@ class SecurityLabelSerializerTest : public CppUnit::TestFixture
 
 			CPPUNIT_ASSERT_EQUAL(String(
 				"<securitylabel xmlns=\"urn:xmpp:sec-label:0\">"
-        	"<displaymarking bgcolor=\"red\" fgcolor=\"black\">SECRET</displaymarking>"
-        	"<label>"
+					"<displaymarking bgcolor=\"red\" fgcolor=\"black\">SECRET</displaymarking>"
+					"<label>"
 						"<esssecuritylabel xmlns=\"urn:xmpp:sec-label:ess:0\">MQYCAQQGASk=</esssecuritylabel>"
 					"</label>"
-        	"<equivalentlabel>"
+					"<equivalentlabel>"
 						"<icismlabel xmlns=\"http://example.gov/IC-ISM/0\" classification=\"S\" ownerProducer=\"USA\" disseminationControls=\"FOUO\"/>"
 					"</equivalentlabel>"
-        	"<equivalentlabel>"
+					"<equivalentlabel>"
 						"<esssecuritylabel xmlns=\"urn:xmpp:sec-label:ess:0\">MRUCAgD9DA9BcXVhIChvYnNvbGV0ZSk=</esssecuritylabel>"
 					"</equivalentlabel>"
-    		"</securitylabel>"), testling.serialize(securityLabel));
+				"</securitylabel>"), testling.serialize(securityLabel));
 		}
 };
 

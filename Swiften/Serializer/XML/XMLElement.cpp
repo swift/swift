@@ -16,7 +16,7 @@ String XMLElement::serialize() {
 	result += "<" + tag_;
 	typedef std::pair<String,String> Pair;
 	foreach(const Pair& p, attributes_) {
-    result += " " + p.first + "=\"" + p.second + "\"";
+		result += " " + p.first + "=\"" + p.second + "\"";
 	}
 
 	if (childNodes_.size() > 0) {

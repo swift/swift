@@ -19,42 +19,42 @@ using namespace Swift;
 
 /*
 class MyNetworkReply : public QNetworkReply {
-  public:
-    MyNetworkReply() {
-    }
-    
-    qint64 readData(char*, qint64) {
-      return 0;
-    }
+	public:
+		MyNetworkReply() {
+		}
+		
+		qint64 readData(char*, qint64) {
+			return 0;
+		}
 
-    virtual void abort() {
-    }
+		virtual void abort() {
+		}
 };
 
 class MyNetworkAccessManager : public QNetworkAccessManager {
-  public:
-    MyNetworkAccessManager() {
-    }
+	public:
+		MyNetworkAccessManager() {
+		}
 
-    QNetworkReply * createRequest (Operation op, const QNetworkRequest& request, QIODevice* outgoingData = 0) {
-      assert(op == QNetworkAccessManager::GetOperation);
-      qDebug() << "Requesting: " << request.url();
+		QNetworkReply * createRequest (Operation op, const QNetworkRequest& request, QIODevice* outgoingData = 0) {
+			assert(op == QNetworkAccessManager::GetOperation);
+			qDebug() << "Requesting: " << request.url();
 			return QNetworkAccessManager::createRequest(op, request, outgoingData);
-      //return new MyNetworkReply();
-    }
+			//return new MyNetworkReply();
+		}
 };
 
-      QVBoxLayout* mainLayout = new QVBoxLayout(this);
-      webView_ = new QWebView(this);
+			QVBoxLayout* mainLayout = new QVBoxLayout(this);
+			webView_ = new QWebView(this);
 
 			QFile file(":/themes/Stockholm/Contents/Resources/Incoming/Content.html");
 			file.open(QIODevice::ReadOnly);
 			QString content = QString::fromUtf8(file.readAll());
 
-      webPage_ = new QWebPage(this);
-      webPage_->setNetworkAccessManager(new MyNetworkAccessManager());
-      webView_->setPage(webPage_);
-      QString pagehtml = 
+			webPage_ = new QWebPage(this);
+			webPage_->setNetworkAccessManager(new MyNetworkAccessManager());
+			webView_->setPage(webPage_);
+			QString pagehtml = 
 				"<head>"
 					//"<base href=\"file:///Users/remko/src/swift/resources/themes/Stockholm/Contents/Resources/\"/>"
 					"<base href=\"file:///Users/remko/src/swift/resources/themes/Stockholm/Contents/Resources/\"/>"
@@ -62,7 +62,7 @@ class MyNetworkAccessManager : public QNetworkAccessManager {
 					"<link rel=\"stylesheet\" type=\"text/css\" href=\"Variants/Alt Blue - Blue.css\"/>"
 				"</head><body>" + content + "</body>";
 			qDebug() << pagehtml;
-      webPage_->mainFrame()->setHtml(pagehtml);
+			webPage_->mainFrame()->setHtml(pagehtml);
 
 */
 
@@ -81,13 +81,13 @@ class ChatView : public QWidget {
 			webView_->setFocusPolicy(Qt::NoFocus);
 			mainLayout->addWidget(webView_);
 
-      webPage_ = new QWebPage(this);
+			webPage_ = new QWebPage(this);
 			webPage_->setLinkDelegationPolicy(QWebPage::DelegateAllLinks);
-      webView_->setPage(webPage_);
+			webView_->setPage(webPage_);
 			connect(webPage_, SIGNAL(selectionChanged()), SLOT(copySelectionToClipboard()));
 
 			QString pageHTML = "<head></head><body><div id=\"chat\"></div></body>";
-      webPage_->mainFrame()->setHtml(pageHTML);
+			webPage_->mainFrame()->setHtml(pageHTML);
 		}
 
 		void appendHTML(const QString& html) {
@@ -100,31 +100,31 @@ class ChatView : public QWidget {
 		}
 
 	private:
-    QWebView* webView_;
-    QWebPage* webPage_;
+		QWebView* webView_;
+		QWebPage* webPage_;
 };
 */
 
 class MyWidget : public QWidget {
-    Q_OBJECT
+		Q_OBJECT
 
-  public:
-    MyWidget() : previousWasIncoming_(false), previousWasOutgoing_(false), previousWasSystem_(false) {
-      QVBoxLayout* mainLayout = new QVBoxLayout(this);
+	public:
+		MyWidget() : previousWasIncoming_(false), previousWasOutgoing_(false), previousWasSystem_(false) {
+			QVBoxLayout* mainLayout = new QVBoxLayout(this);
 			chatView_ = new QtChatView(this);
-      mainLayout->addWidget(chatView_);
-      input1_ = new QLineEdit(this);
+			mainLayout->addWidget(chatView_);
+			input1_ = new QLineEdit(this);
 			connect(input1_, SIGNAL(returnPressed()), SLOT(addIncoming()));
-      mainLayout->addWidget(input1_);
-      input2_ = new QLineEdit(this);
+			mainLayout->addWidget(input1_);
+			input2_ = new QLineEdit(this);
 			connect(input2_, SIGNAL(returnPressed()), SLOT(addOutgoing()));
-      mainLayout->addWidget(input2_);
-      input3_ = new QLineEdit(this);
+			mainLayout->addWidget(input2_);
+			input3_ = new QLineEdit(this);
 			connect(input3_, SIGNAL(returnPressed()), SLOT(addSystem()));
-      mainLayout->addWidget(input3_);
+			mainLayout->addWidget(input3_);
 
 			resize(300,200);
-    }
+		}
 	
 	public slots:
 		void addIncoming() {
@@ -151,7 +151,7 @@ class MyWidget : public QWidget {
 			input3_->clear();
 		}
 
-  private:
+	private:
 		bool previousWasIncoming_;
 		bool previousWasOutgoing_;
 		bool previousWasSystem_;
@@ -160,13 +160,13 @@ class MyWidget : public QWidget {
 		QLineEdit* input2_;
 		QLineEdit* input3_;
 };
-    
+		
 
 int main(int argc, char* argv[]) {
-  QApplication app(argc, argv);
-  MyWidget w;
-  w.show();
-  return app.exec();
+	QApplication app(argc, argv);
+	MyWidget w;
+	w.show();
+	return app.exec();
 }
 
 #include "main.moc"

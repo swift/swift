@@ -309,7 +309,7 @@ void MainController::handleServerDiscoInfoResponse(boost::shared_ptr<DiscoInfo> 
 }
 
 bool MainController::isMUC(const JID& jid) const {
-  return mucControllers_.find(jid.toBare()) != mucControllers_.end();
+	return mucControllers_.find(jid.toBare()) != mucControllers_.end();
 }
 
 void MainController::handleOwnVCardReceived(boost::shared_ptr<VCard> vCard, const boost::optional<Error>& error) {

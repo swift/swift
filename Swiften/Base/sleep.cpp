@@ -5,10 +5,10 @@
 namespace Swift {
 
 void sleep(unsigned int msecs) {
-  boost::xtime xt;
-  boost::xtime_get(&xt, boost::TIME_UTC);
-  xt.nsec += msecs*1000000;
-  boost::thread::sleep(xt);
+	boost::xtime xt;
+	boost::xtime_get(&xt, boost::TIME_UTC);
+	xt.nsec += msecs*1000000;
+	boost::thread::sleep(xt);
 }
 
 }

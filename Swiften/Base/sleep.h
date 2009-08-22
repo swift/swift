@@ -2,7 +2,7 @@
 #define SWIFTEN_sleep_H
 
 namespace Swift {
-  void sleep(unsigned int msecs);
+	void sleep(unsigned int msecs);
 }
 
 #endif

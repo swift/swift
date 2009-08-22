@@ -62,7 +62,7 @@ class XMLParserTest : public CppUnit::TestFixture {
 
 			CPPUNIT_ASSERT(testling.parse(
 				"<query xmlns='jabber:iq:version'>"
-          "<name>Swift</name>"
+					"<name>Swift</name>"
 				"</query>"));
 
 			CPPUNIT_ASSERT_EQUAL(static_cast<size_t>(5), client_.events.size());
@@ -191,7 +191,7 @@ class XMLParserTest : public CppUnit::TestFixture {
 					Event(
 							Type type, 
 							const String& data, 
-              const String& ns,
+							const String& ns,
 							const AttributeMap& attributes)
 								: type(type), data(data), ns(ns), attributes(attributes) {}
 					Event(Type type, const String& data, const String& ns = String())
@@ -199,7 +199,7 @@ class XMLParserTest : public CppUnit::TestFixture {
 
 					Type type;
 					String data;
-          String ns;
+					String ns;
 					AttributeMap attributes;
 				};
 

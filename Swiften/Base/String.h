@@ -40,7 +40,7 @@ namespace Swift {
 			std::vector<String> split(char c) const;
 
 			size_t getLength() const;
-      String getLowerCase() const;
+			String getLowerCase() const;
 
 			void removeAll(char c);
 

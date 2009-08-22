@@ -10,7 +10,7 @@
 
 namespace Swift {
 	class MessageEvent {
-    	public:
+			public:
 			MessageEvent(boost::shared_ptr<Message> stanza) : stanza_(stanza){}
 			boost::shared_ptr<Message> getStanza() {return stanza_;}
 			boost::signal<void()> onRead;

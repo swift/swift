@@ -5,44 +5,44 @@
 namespace Swift {
 
 SecurityLabelsCatalogParser::SecurityLabelsCatalogParser() : level_(TopLevel), labelParser_(0) {
-  labelParserFactory_ = new SecurityLabelParserFactory();
+	labelParserFactory_ = new SecurityLabelParserFactory();
 }
 
 SecurityLabelsCatalogParser::~SecurityLabelsCatalogParser() {
-  delete labelParserFactory_;
+	delete labelParserFactory_;
 }
 
 void SecurityLabelsCatalogParser::handleStartElement(const String& element, const String& ns, const AttributeMap& attributes) {
 	++level_;
 	if (level_ == PayloadLevel) {
-    getPayloadInternal()->setTo(JID(attributes.getAttribute("to")));
-    getPayloadInternal()->setName(attributes.getAttribute("name"));
-    getPayloadInternal()->setDescription(attributes.getAttribute("desc"));
-  }
-  else if (level_ == LabelLevel) {
-    assert(!labelParser_);
-    if (labelParserFactory_->canParse(element, ns, attributes)) {
-      labelParser_ = dynamic_cast<SecurityLabelParser*>(labelParserFactory_->createPayloadParser());
-      assert(labelParser_);
-    }
-  }
+		getPayloadInternal()->setTo(JID(attributes.getAttribute("to")));
+		getPayloadInternal()->setName(attributes.getAttribute("name"));
+		getPayloadInternal()->setDescription(attributes.getAttribute("desc"));
+	}
+	else if (level_ == LabelLevel) {
+		assert(!labelParser_);
+		if (labelParserFactory_->canParse(element, ns, attributes)) {
+			labelParser_ = dynamic_cast<SecurityLabelParser*>(labelParserFactory_->createPayloadParser());
+			assert(labelParser_);
+		}
+	}
 
-  if (labelParser_) {
-    labelParser_->handleStartElement(element, ns, attributes);
-  }
+	if (labelParser_) {
+		labelParser_->handleStartElement(element, ns, attributes);
+	}
 }
 
 void SecurityLabelsCatalogParser::handleEndElement(const String& element, const String& ns) {
-  if (labelParser_) {
-    labelParser_->handleEndElement(element, ns);
-  }
-  if (level_ == LabelLevel && labelParser_) {
-    SecurityLabel* label = dynamic_cast<SecurityLabel*>(labelParser_->getPayload().get());
-    assert(label);
-    getPayloadInternal()->addLabel(SecurityLabel(*label));
-    delete labelParser_;
-    labelParser_ = 0;
-  }
+	if (labelParser_) {
+		labelParser_->handleEndElement(element, ns);
+	}
+	if (level_ == LabelLevel && labelParser_) {
+		SecurityLabel* label = dynamic_cast<SecurityLabel*>(labelParser_->getPayload().get());
+		assert(label);
+		getPayloadInternal()->addLabel(SecurityLabel(*label));
+		delete labelParser_;
+		labelParser_ = 0;
+	}
 	--level_;
 }
 

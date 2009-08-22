@@ -5,9 +5,9 @@ namespace Swift {
 boost::shared_ptr<IQ> IQ::createRequest(
 		Type type, const JID& to, const String& id, boost::shared_ptr<Payload> payload) {
 	boost::shared_ptr<IQ> iq(new IQ(type));
-  if (to.isValid()) {
-    iq->setTo(to);
-  }
+	if (to.isValid()) {
+		iq->setTo(to);
+	}
 	iq->setID(id);
 	if (payload) {
 		iq->addPayload(payload);

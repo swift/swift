@@ -12,9 +12,9 @@
 namespace Swift {
 
 HostAddress::HostAddress() {
-  for (int i = 0; i < 4; ++i) {
-    address_.push_back(0);
-  }
+	for (int i = 0; i < 4; ++i) {
+		address_.push_back(0);
+	}
 }
 
 HostAddress::HostAddress(const String& address) {
@@ -54,7 +54,7 @@ std::string HostAddress::toString() const {
 	}
 	else {
 		assert(false);
-    return "";
+		return "";
 	}
 }
 

@@ -8,7 +8,7 @@ namespace Swift {
 
 	class HostAddress {
 		public:
-      HostAddress();
+			HostAddress();
 			HostAddress(const String&);
 			HostAddress(const unsigned char* address, int length);
 

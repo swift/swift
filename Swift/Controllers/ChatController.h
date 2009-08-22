@@ -10,7 +10,7 @@ namespace Swift {
 		public:
 			ChatController(const JID& self, StanzaChannel* stanzaChannel, IQRouter* iqRouter, ChatWindowFactory* chatWindowFactory, const JID &contact, NickResolver* nickResolver, PresenceOracle* presenceOracle, AvatarManager*);
 
-    private:
+		private:
 			void handlePresenceChange(boost::shared_ptr<Presence> newPresence, boost::shared_ptr<Presence> previousPresence);
 			String getStatusChangeString(boost::shared_ptr<Presence> presence);
 			bool isIncomingMessageFromMe(boost::shared_ptr<Message> message);

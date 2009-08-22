@@ -41,7 +41,7 @@ class SimpleEventLoopTest : public CppUnit::TestFixture
 	private:
 		void runIncrementingThread(SimpleEventLoop* loop) {
 			for (unsigned int i = 0; i < 10; ++i) {
-        Swift::sleep(1);
+				Swift::sleep(1);
 				loop->postEvent(boost::bind(&SimpleEventLoopTest::incrementCounter, this));
 			}
 			loop->stop();

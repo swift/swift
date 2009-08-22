@@ -20,7 +20,7 @@ class ApplicationTest : public CppUnit::TestFixture
 		}
 
 		void tearDown() {
-      delete testling_;
+			delete testling_;
 		}
 
 		void testGetSettingsDir() {

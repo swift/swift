@@ -20,9 +20,9 @@ class VCardUpdateSerializerTest : public CppUnit::TestFixture
 			update->setPhotoHash("sha1-hash-of-image");
 
 			String expectedResult = 
-        "<x xmlns=\"vcard-temp:x:update\">"
-          "<photo>sha1-hash-of-image</photo>"
-        "</x>";
+				"<x xmlns=\"vcard-temp:x:update\">"
+					"<photo>sha1-hash-of-image</photo>"
+				"</x>";
 
 			CPPUNIT_ASSERT_EQUAL(expectedResult, testling.serialize(update));
 		}

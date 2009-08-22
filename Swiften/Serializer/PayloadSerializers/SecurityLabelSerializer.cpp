@@ -13,12 +13,12 @@ String SecurityLabelSerializer::serializePayload(boost::shared_ptr<SecurityLabel
 	XMLElement element("securitylabel", "urn:xmpp:sec-label:0");
 	if (!label->getDisplayMarking().isEmpty()) {
 		boost::shared_ptr<XMLElement> displayMarking(new XMLElement("displaymarking"));
-    if (!label->getForegroundColor().isEmpty()) {
-      displayMarking->setAttribute("fgcolor", label->getForegroundColor());
-    }
-    if (!label->getBackgroundColor().isEmpty()) {
-      displayMarking->setAttribute("bgcolor", label->getBackgroundColor());
-    }
+		if (!label->getForegroundColor().isEmpty()) {
+			displayMarking->setAttribute("fgcolor", label->getForegroundColor());
+		}
+		if (!label->getBackgroundColor().isEmpty()) {
+			displayMarking->setAttribute("bgcolor", label->getBackgroundColor());
+		}
 		displayMarking->addNode(boost::shared_ptr<XMLTextNode>(new XMLTextNode(label->getDisplayMarking())));
 		element.addNode(displayMarking);
 	}
