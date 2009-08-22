@@ -6,7 +6,7 @@ foundExpandedTabs = False
 
 for (path, dirs, files) in os.walk(".") :
 	if not "3rdParty" in path :
-		for filename in [os.path.join(path, file) for file in files if file.endswith(".cpp") or file.endswith(".h")] :
+		for filename in [os.path.join(path, file) for file in files if (file.endswith(".cpp") or file.endswith(".h")) and not "ui_" in file and not "moc_" in file and not "qrc_" in file] :
 			file = open(filename, "r")
 			contents = []
 			contentsChanged = False
