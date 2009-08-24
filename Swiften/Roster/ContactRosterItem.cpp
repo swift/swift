@@ -22,16 +22,7 @@ StatusShow::Type ContactRosterItem::getStatusShow() {
 
 void ContactRosterItem::setStatusShow(StatusShow::Type show) {
 	statusShow_ = show;
-	int colour = 0;
-	switch (show) {
-		case StatusShow::Online: colour = 0x000000;break;
-		case StatusShow::Away: colour = 0x336699;break;
-		case StatusShow::XA: colour = 0x336699;break;
-		case StatusShow::FFC: colour = 0x000000;break;
-		case StatusShow::DND: colour = 0x990000;break;
-		case StatusShow::None: colour = 0x7F7F7F;break;
-	}
-	widget_->setTextColor(colour);
+	widget_->setStatusShow(show);
 }
 
 void ContactRosterItem::setStatusText(const String& status) {

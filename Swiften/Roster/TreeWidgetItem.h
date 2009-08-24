@@ -3,6 +3,7 @@
 
 #include "Swiften/Base/String.h"
 #include "Swiften/Roster/UserRosterAction.h"
+#include "Swiften/Elements/StatusShow.h"
 
 #include <boost/signal.hpp>
 #include <boost/shared_ptr.hpp>
@@ -16,8 +17,9 @@ class TreeWidgetItem {
 		virtual void setStatusText(const String& text) = 0;
 		virtual void setAvatarPath(const String& path) = 0;
 		virtual void setExpanded(bool b) = 0;
-		virtual void setTextColor(unsigned long color) = 0;
-		virtual void setBackgroundColor(unsigned long color) = 0;
+		//virtual void setTextColor(unsigned long color) = 0;
+		virtual void setStatusShow(StatusShow::Type show) = 0;
+		//virtual void setBackgroundColor(unsigned long color) = 0;
 		boost::signal<void (boost::shared_ptr<UserRosterAction>)> onUserAction;
 		virtual void show() = 0;
 		virtual void hide() = 0;

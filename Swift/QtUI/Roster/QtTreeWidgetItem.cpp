@@ -23,6 +23,20 @@ void QtTreeWidgetItem::setAvatarPath(const String& path) {
 	avatar_ = QIcon(P2QSTRING(path));
 }
 
+void QtTreeWidgetItem::setStatusShow(StatusShow::Type show) {
+	statusShowType_ = show;
+	int color = 0;
+	switch (show) {
+	 	case StatusShow::Online: color = 0x000000;break;
+	 	case StatusShow::Away: color = 0x336699;break;
+	 	case StatusShow::XA: color = 0x336699;break;
+	 	case StatusShow::FFC: color = 0x000000;break;
+	 	case StatusShow::DND: color = 0x990000;break;
+	 	case StatusShow::None: color = 0x7F7F7F;break;
+	}
+	setTextColor(color);
+}
+
 void QtTreeWidgetItem::setTextColor(unsigned long color) {
 	textColor_ = QColor(
 	 					((color & 0xFF0000)>>16),
@@ -133,6 +147,10 @@ QtTreeWidgetItem* QtTreeWidgetItem::getItem(int row) {
 
 
 QVariant QtTreeWidgetItem::data(int role) {
+	if (!isContact()) {
+		setTextColor(0xFFFFFF);
+		setBackgroundColor(0x969696);
+	}
  	switch (role) {
 	 	case Qt::DisplayRole: return displayName_;
 		case Qt::TextColorRole: return textColor_;
@@ -145,7 +163,16 @@ QVariant QtTreeWidgetItem::data(int role) {
 }
 
 QIcon QtTreeWidgetItem::getPresenceIcon() {
-	return QIcon(":/icons/online.png");
+	QString iconString;
+	switch (statusShowType_) {
+	 	case StatusShow::Online: iconString = "online";break;
+	 	case StatusShow::Away: iconString = "away";break;
+	 	case StatusShow::XA: iconString = "away";break;
+	 	case StatusShow::FFC: iconString = "online";break;
+	 	case StatusShow::DND: iconString = "dnd";break;
+	 	case StatusShow::None: iconString = "offline";break;
+	}
+	return QIcon(":/icons/" + iconString + ".png");
 }
 
 bool QtTreeWidgetItem::isContact() {

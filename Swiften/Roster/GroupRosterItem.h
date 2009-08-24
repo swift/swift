@@ -18,8 +18,6 @@ class GroupRosterItem : public RosterItem {
 			widget_ = factory->createTreeWidgetItem(tree);
 			widget_->setExpanded(true);
 			widget_->setText(name);
-			widget_->setTextColor(0xFFFFFF);
-			widget_->setBackgroundColor(0x969696);
 		}
 
 		~GroupRosterItem() {

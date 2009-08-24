@@ -18,7 +18,8 @@ namespace Swift {
 	enum RosterRoles {
 		StatusTextRole = Qt::UserRole,
 		AvatarRole = Qt::UserRole + 1,
-		PresenceIconRole = Qt::UserRole + 2
+		PresenceIconRole = Qt::UserRole + 2,
+		StatusShowTypeRole = Qt::UserRole + 3
 	};
 	
 class QtTreeWidget;
@@ -39,6 +40,7 @@ class QtTreeWidgetItem : public QObject, public TreeWidgetItem {
 			void setText(const String& text);
 			void setAvatarPath(const String& path);
 			void setStatusText(const String& text);
+			void setStatusShow(StatusShow::Type show);
 			void setTextColor(unsigned long color);
 			void setBackgroundColor(unsigned long color);
 			void setExpanded(bool b);
@@ -67,6 +69,7 @@ class QtTreeWidgetItem : public QObject, public TreeWidgetItem {
 			QVariant avatar_;
 			bool shown_;
 			bool expanded_;
+			StatusShow::Type statusShowType_;
 };
 
 }
