@@ -5,6 +5,7 @@
 #include <QColor>
 #include <QBrush>
 #include <QFontMetrics>
+#include <QPainterPath>
 #include <qdebug.h>
 
 #include "QtTreeWidgetItem.h"
@@ -32,12 +33,30 @@ QSize RosterDelegate::sizeHint(const QStyleOptionViewItem& option, const QModelI
 	return QSize(150, sizeByText > sizeByAvatar ? sizeByText : sizeByAvatar);
 }
 
+
+
 void RosterDelegate::paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const {
 	QtTreeWidgetItem* item = static_cast<QtTreeWidgetItem*>(index.internalPointer());
 	if (item && !item->isContact()) {
-		QStyledItemDelegate::paint(painter, option, index);
-		return;
+		paintGroup(painter, option, index);
+	} else {
+		paintContact(painter, option, index);
 	}
+}
+
+void RosterDelegate::paintGroup(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const {
+	painter->save();		
+	//QLinearGradient
+	QBrush backgroundBrush = QBrush(index.data(Qt::BackgroundColorRole).value<QColor>(), Qt::SolidPattern);
+	painter->setPen(QPen(index.data(Qt::TextColorRole).value<QColor>()));
+	QPainterPath roundedPath;
+	roundedPath.addRoundedRect(option.rect, 5, 5);
+	painter->fillPath(roundedPath, backgroundBrush);
+	painter->drawText(option.rect.adjusted(margin_, 0, -1 * margin_, 0), Qt::AlignTop, index.data(Qt::DisplayRole).toString());
+	painter->restore();
+}
+
+void RosterDelegate::paintContact(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const {
 	//qDebug() << "painting" << index.data(Qt::DisplayRole).toString();
 	painter->save();
 	//QStyledItemDelegate::paint(painter, option, index);
