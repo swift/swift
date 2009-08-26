@@ -46,8 +46,11 @@ void RosterDelegate::paint(QPainter* painter, const QStyleOptionViewItem& option
 
 void RosterDelegate::paintGroup(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const {
 	painter->save();		
-	//QLinearGradient
-	QBrush backgroundBrush = QBrush(index.data(Qt::BackgroundColorRole).value<QColor>(), Qt::SolidPattern);
+	QLinearGradient fillGradient(option.rect.topLeft(), option.rect.bottomLeft());
+	fillGradient.setColorAt(0, QColor(200, 200, 200));
+	fillGradient.setColorAt(0.5, QColor(150, 150, 150));
+	fillGradient.setColorAt(1, QColor(200, 200, 200));
+	QBrush backgroundBrush = QBrush(fillGradient);
 	painter->setPen(QPen(index.data(Qt::TextColorRole).value<QColor>()));
 	QPainterPath roundedPath;
 	roundedPath.addRoundedRect(option.rect, 5, 5);
