@@ -12,9 +12,9 @@
 namespace Swift {
 
 RosterDelegate::RosterDelegate() : nameFont_(QApplication::font()), statusFont_(QApplication::font()) {
-	nameFont_.setPointSize(12);
+	int statusFontSizeDrop = nameFont_.pointSize() >= 10 ? 2 : 0;
 	statusFont_.setStyle(QFont::StyleItalic);
-	statusFont_.setPointSize(10);
+	statusFont_.setPointSize(nameFont_.pointSize() - statusFontSizeDrop);
 }
 	
 QSize RosterDelegate::sizeHint(const QStyleOptionViewItem& option, const QModelIndex& index ) const {
