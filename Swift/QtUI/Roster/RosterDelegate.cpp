@@ -71,7 +71,7 @@ void RosterDelegate::paintGroup(QPainter* painter, const QStyleOptionViewItem& o
 	linePath.addRoundedRect(region, groupCornerRadius_, groupCornerRadius_);
 	painter->fillPath(fillPath, backgroundBrush);
 	painter->drawPath(linePath);
-	QRect textRect = region.adjusted(horizontalMargin_, 0, -1 * horizontalMargin_, 0);
+	QRect textRect = region.adjusted(2 * horizontalMargin_ + 1, 0, -1 * horizontalMargin_, 0);
 	painter->setFont(groupFont_);
 	painter->setPen(QPen(QColor(254, 254, 254)));
 	painter->drawText(textRect.adjusted(1, 1, 0, 0), Qt::AlignTop, index.data(Qt::DisplayRole).toString());
