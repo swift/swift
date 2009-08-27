@@ -6,6 +6,7 @@
    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
    xmlns:svg="http://www.w3.org/2000/svg"
    xmlns="http://www.w3.org/2000/svg"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    width="128"
@@ -21,6 +22,17 @@
    inkscape:export-ydpi="33.75">
   <defs
      id="defs2461">
+    <linearGradient
+       id="linearGradient3151">
+      <stop
+         style="stop-color:#b5b5b5;stop-opacity:1;"
+         offset="0"
+         id="stop3153" />
+      <stop
+         style="stop-color:#ffffff;stop-opacity:1;"
+         offset="1"
+         id="stop3155" />
+    </linearGradient>
     <inkscape:perspective
        sodipodi:type="inkscape:persp3d"
        inkscape:vp_x="0 : 526.18109 : 1"
@@ -28,6 +40,16 @@
        inkscape:vp_z="744.09448 : 526.18109 : 1"
        inkscape:persp3d-origin="372.04724 : 350.78739 : 1"
        id="perspective2390" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient3151"
+       id="linearGradient3157"
+       x1="17.991968"
+       y1="115.66266"
+       x2="96.913872"
+       y2="12.610445"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(0.9442617,0,0,0.9442617,4.0741457,4.0741457)" />
   </defs>
   <sodipodi:namedview
      id="base"
@@ -41,14 +63,14 @@
      inkscape:pageshadow="2"
      inkscape:zoom="1.9453125"
      inkscape:cx="64"
-     inkscape:cy="65.413664"
+     inkscape:cy="48.751619"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
      inkscape:window-width="996"
      inkscape:window-height="701"
-     inkscape:window-x="367"
-     inkscape:window-y="302" />
+     inkscape:window-x="1503"
+     inkscape:window-y="236" />
   <metadata
      id="metadata2464">
     <rdf:RDF>
@@ -65,16 +87,22 @@
      inkscape:groupmode="layer"
      id="layer1">
     <rect
-       style="opacity:1;fill:#dddddd;fill-opacity:1;stroke:none;stroke-width:0.84708154000000002;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       style="opacity:1;fill:url(#linearGradient3157);fill-opacity:1;stroke:#8c8c8c;stroke-width:9.59699999999999953;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        id="rect2380"
-       width="114.43742"
-       height="114.43742"
-       x="6.6527715"
-       y="6.6527715"
-       ry="28.16264" />
+       width="116.94396"
+       height="116.94396"
+       x="5.9135523"
+       y="5.9135523"
+       ry="28.779495"
+       inkscape:export-filename="/Users/remko/src/swift/Swift/resources/icons/avatar.png"
+       inkscape:export-xdpi="34.093784"
+       inkscape:export-ydpi="34.093784" />
     <path
        id="path2469"
-       style="fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:0.17320289000000000px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-       d="M 83.931575,55.285799 C 115.26693,32.513263 86.693227,18.49586 33.044239,13.879988 C 111.20922,31.337441 49.374474,60.941478 17.020549,74.684131 C 91.0432,55.306225 106.38056,53.252291 112.49262,53.792734 C 88.102635,38.478381 87.747305,47.286909 14.016109,68.165575 C 81.818057,59.854231 97.544513,74.75209 55.970406,113.41509 C 107.44992,86.637383 119.04422,67.281306 83.931575,55.285799 z M 96.033288,50.505973 C 96.033288,51.399065 95.248092,52.123892 94.280618,52.123892 C 93.313136,52.123892 92.527938,51.399065 92.527938,50.505973 C 92.527938,49.612884 93.313136,48.888056 94.280618,48.888056 C 95.248092,48.888056 96.033288,49.612884 96.033288,50.505973 z" />
+       style="fill:#8c8c8c;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:0.17320289000000000px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="M 84.186703,55.87472 C 115.18862,33.344515 86.918967,19.476275 33.840876,14.909522 C 111.17407,32.181205 49.997334,61.470216 17.987699,75.066628 C 91.222651,55.894928 106.3968,53.862851 112.44381,54.397544 C 88.313377,39.246156 87.961827,47.960949 15.015231,68.617437 C 82.095674,60.394538 97.654781,75.133863 56.523078,113.38543 C 107.45479,86.892681 118.9257,67.742581 84.186703,55.87472 z M 96.159637,51.145757 C 96.159637,52.029347 95.382795,52.74646 94.425618,52.74646 C 93.46843,52.74646 92.69159,52.029347 92.69159,51.145757 C 92.69159,50.262174 93.46843,49.545057 94.425618,49.545057 C 95.382795,49.545057 96.159637,50.262174 96.159637,51.145757 z"
+       inkscape:export-filename="/Users/remko/src/swift/Swift/resources/icons/avatar.png"
+       inkscape:export-xdpi="34.093784"
+       inkscape:export-ydpi="34.093784" />
   </g>
 </svg>
