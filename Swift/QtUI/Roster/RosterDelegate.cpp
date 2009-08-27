@@ -58,7 +58,7 @@ void RosterDelegate::paintGroup(QPainter* painter, const QStyleOptionViewItem& o
 	painter->setPen(QPen(QColor(189, 189, 189)));
 	//FIXME: It looks like Qt is passing us a rectangle that's too small
 	//This deliberately draws outside the lines, and we need to find a better solution.
-	QRect region(QPoint(option.rect.left() - 1, option.rect.top() + verticalMargin_), QSize(option.rect.width() + 1, option.rect.height() - 2 * verticalMargin_));
+	QRect region(QPoint(option.rect.left() - 1, option.rect.top()), QSize(option.rect.width() + 1, option.rect.height() - verticalMargin_));
 	QLinearGradient fillGradient(region.topLeft(), region.bottomLeft());
 	fillGradient.setColorAt(0, QColor(244, 244, 244));
 	fillGradient.setColorAt(0.1, QColor(231, 231, 231));
@@ -94,11 +94,11 @@ void RosterDelegate::paintContact(QPainter* painter, const QStyleOptionViewItem&
 		painter->setPen(QPen(nameColor));
 	}
 	
-	QRect presenceIconRegion(QPoint(farLeftMargin_, fullRegion.top()), QSize(presenceIconWidth_, fullRegion.height()));
+	QRect presenceIconRegion(QPoint(farLeftMargin_, fullRegion.top()), QSize(presenceIconWidth_, fullRegion.height() - verticalMargin_));
 	
-	int calculatedAvatarSize = fullRegion.height() - 2 * verticalMargin_;
+	int calculatedAvatarSize = presenceIconRegion.height();
 	//This overlaps the presenceIcon, so must be painted first
-	QRect avatarRegion(QPoint(presenceIconRegion.right() - presenceIconWidth_ / 2, fullRegion.top() + verticalMargin_), QSize(calculatedAvatarSize, calculatedAvatarSize));
+	QRect avatarRegion(QPoint(presenceIconRegion.right() - presenceIconWidth_ / 2, presenceIconRegion.top()), QSize(calculatedAvatarSize, calculatedAvatarSize));
 	QIcon avatar = index.data(AvatarRole).isValid() && !index.data(AvatarRole).value<QIcon>().isNull()
 		? index.data(AvatarRole).value<QIcon>()
 		: QIcon(":/icons/avatar.png");
@@ -133,7 +133,7 @@ const int RosterDelegate::presenceIconHeight_ = 16;
 const int RosterDelegate::presenceIconWidth_ = 16;
 const int RosterDelegate::groupCornerRadius_ = 0;
 const int RosterDelegate::horizontalMargin_ = 2;
-const int RosterDelegate::verticalMargin_ = 1;
+const int RosterDelegate::verticalMargin_ = 2;
 const int RosterDelegate::farLeftMargin_ = 2;
 
 }
