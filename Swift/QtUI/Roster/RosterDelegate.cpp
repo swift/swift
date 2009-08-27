@@ -23,14 +23,14 @@ QSize RosterDelegate::sizeHint(const QStyleOptionViewItem& option, const QModelI
 	if (!item || !item->isContact()) {
 		return QStyledItemDelegate::sizeHint(option, index);
 	}
-	int sizeByAvatar = avatarSize_ + margin_ * 2;
+	int heightByAvatar = avatarSize_ + verticalMargin_ * 2;
 	QFontMetrics nameMetrics(nameFont_);
 	QFontMetrics statusMetrics(statusFont_);
-	int sizeByText = 2 * margin_ + nameMetrics.height() + statusMetrics.height();
+	int sizeByText = 2 * verticalMargin_ + nameMetrics.height() + statusMetrics.height();
 	//Doesn't work, yay! FIXME: why?
 	//QSize size = (option.state & QStyle::State_Selected) ? QSize(150, 80) : QSize(150, avatarSize_ + margin_ * 2);
 	//qDebug() << "Returning size" << size;
-	return QSize(150, sizeByText > sizeByAvatar ? sizeByText : sizeByAvatar);
+	return QSize(150, sizeByText > heightByAvatar ? sizeByText : heightByAvatar);
 }
 
 
@@ -46,16 +46,24 @@ void RosterDelegate::paint(QPainter* painter, const QStyleOptionViewItem& option
 
 void RosterDelegate::paintGroup(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const {
 	painter->save();		
+	painter->setPen(QPen(QColor(189, 189, 189)));
 	QLinearGradient fillGradient(option.rect.topLeft(), option.rect.bottomLeft());
-	fillGradient.setColorAt(0, QColor(200, 200, 200));
-	fillGradient.setColorAt(0.5, QColor(150, 150, 150));
-	fillGradient.setColorAt(1, QColor(200, 200, 200));
+	fillGradient.setColorAt(0, QColor(244, 244, 244));
+	fillGradient.setColorAt(0.1, QColor(231, 231, 231));
+	fillGradient.setColorAt(1, QColor(209, 209, 209));
+	
 	QBrush backgroundBrush = QBrush(fillGradient);
-	painter->setPen(QPen(index.data(Qt::TextColorRole).value<QColor>()));
-	QPainterPath roundedPath;
-	roundedPath.addRoundedRect(option.rect, 5, 5);
-	painter->fillPath(roundedPath, backgroundBrush);
-	painter->drawText(option.rect.adjusted(margin_, 0, -1 * margin_, 0), Qt::AlignTop, index.data(Qt::DisplayRole).toString());
+	QPainterPath fillPath;
+	fillPath.addRoundedRect(option.rect, groupCornerRadius_, groupCornerRadius_);
+	QPainterPath linePath;
+	linePath.addRoundedRect(option.rect, groupCornerRadius_, groupCornerRadius_);
+	painter->fillPath(fillPath, backgroundBrush);
+	painter->drawPath(linePath);
+	QRect textRect = option.rect.adjusted(horizontalMargin_, 0, -1 * horizontalMargin_, 0);
+	painter->setPen(QPen(QColor(254, 254, 254)));
+	painter->drawText(textRect.adjusted(1, 1, 0, 0), Qt::AlignTop, index.data(Qt::DisplayRole).toString());
+	painter->setPen(QPen(QColor(80, 80, 80)));
+	painter->drawText(textRect, Qt::AlignTop, index.data(Qt::DisplayRole).toString());
 	painter->restore();
 }
 
@@ -73,7 +81,7 @@ void RosterDelegate::paintContact(QPainter* painter, const QStyleOptionViewItem&
 		painter->setPen(QPen(nameColor));
 	}
 	
-	QRect presenceIconRegion(QPoint(margin_, fullRegion.top()), QSize(presenceIconWidth_, fullRegion.height()));
+	QRect presenceIconRegion(QPoint(horizontalMargin_, fullRegion.top()), QSize(presenceIconWidth_, fullRegion.height()));
 	
 	//This overlaps the presenceIcon, so must be painted first
 	QRect avatarRegion(QPoint(presenceIconRegion.right() - presenceIconWidth_ / 2, fullRegion.top()), QSize(avatarSize_, fullRegion.height()));
@@ -89,11 +97,11 @@ void RosterDelegate::paintContact(QPainter* painter, const QStyleOptionViewItem&
 	presenceIcon.paint(painter, presenceIconRegion, Qt::AlignBottom | Qt::AlignHCenter);
 	
 	painter->setFont(nameFont_);
-	QRect textRegion(fullRegion.adjusted(avatarRegion.right() + margin_ * 2, 0, 0, 0));
+	QRect textRegion(fullRegion.adjusted(avatarRegion.right() + verticalMargin_ * 2, 0, 0, 0));
 	
 	QFontMetrics nameMetrics(nameFont_);
-	int nameHeight = nameMetrics.height() + margin_;
-	QRect nameRegion(textRegion.adjusted(0, margin_, 0, 0));
+	int nameHeight = nameMetrics.height() + verticalMargin_;
+	QRect nameRegion(textRegion.adjusted(0, verticalMargin_, 0, 0));
 	
 	painter->drawText(nameRegion, Qt::AlignTop, index.data(Qt::DisplayRole).toString());
 	

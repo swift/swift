@@ -16,9 +16,11 @@ namespace Swift {
 		void paintContact(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const; 
 		QFont nameFont_;
 		QFont statusFont_;
-		static const int avatarSize_ = 28;
+		static const int avatarSize_ = 20;
 		static const int presenceIconHeight_ = 16;
 		static const int presenceIconWidth_ = 16;
-		static const int margin_ = 4;
+		static const int groupCornerRadius_ = 4;
+		static const int horizontalMargin_ = 4;
+		static const int verticalMargin_ = 1;
 	};
 }
