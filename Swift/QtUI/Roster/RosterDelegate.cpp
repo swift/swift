@@ -12,17 +12,28 @@
 
 namespace Swift {
 
-RosterDelegate::RosterDelegate() : nameFont_(QApplication::font()), statusFont_(QApplication::font()) {
+RosterDelegate::RosterDelegate() : nameFont_(QApplication::font()), statusFont_(QApplication::font()), groupFont_(QApplication::font()) {
 	int statusFontSizeDrop = nameFont_.pointSize() >= 10 ? 2 : 0;
 	statusFont_.setStyle(QFont::StyleItalic);
 	statusFont_.setPointSize(nameFont_.pointSize() - statusFontSizeDrop);
+	groupFont_.setPointSize(nameFont_.pointSize() - statusFontSizeDrop);
 }
 	
 QSize RosterDelegate::sizeHint(const QStyleOptionViewItem& option, const QModelIndex& index ) const {
 	QtTreeWidgetItem* item = static_cast<QtTreeWidgetItem*>(index.internalPointer());
 	if (!item || !item->isContact()) {
-		return QStyledItemDelegate::sizeHint(option, index);
+		return groupSizeHint(option, index);
 	}
+	return contactSizeHint(option, index);
+}
+
+QSize RosterDelegate::groupSizeHint(const QStyleOptionViewItem& option, const QModelIndex& index ) const {
+	QFontMetrics nameMetrics(groupFont_);
+	return QSize(150, nameMetrics.height() + 2);
+	return QStyledItemDelegate::sizeHint(option, index);
+}
+
+QSize RosterDelegate::contactSizeHint(const QStyleOptionViewItem& option, const QModelIndex& index ) const {
 	int heightByAvatar = avatarSize_ + verticalMargin_ * 2;
 	QFontMetrics nameMetrics(nameFont_);
 	QFontMetrics statusMetrics(statusFont_);
@@ -32,8 +43,6 @@ QSize RosterDelegate::sizeHint(const QStyleOptionViewItem& option, const QModelI
 	//qDebug() << "Returning size" << size;
 	return QSize(150, sizeByText > heightByAvatar ? sizeByText : heightByAvatar);
 }
-
-
 
 void RosterDelegate::paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const {
 	QtTreeWidgetItem* item = static_cast<QtTreeWidgetItem*>(index.internalPointer());
@@ -47,19 +56,21 @@ void RosterDelegate::paint(QPainter* painter, const QStyleOptionViewItem& option
 void RosterDelegate::paintGroup(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const {
 	painter->save();		
 	painter->setPen(QPen(QColor(189, 189, 189)));
-	QLinearGradient fillGradient(option.rect.topLeft(), option.rect.bottomLeft());
+	QRect region(QPoint(option.rect.left(), option.rect.top() + verticalMargin_), QSize(option.rect.width(), option.rect.height() - 2 * verticalMargin_));
+	QLinearGradient fillGradient(region.topLeft(), region.bottomLeft());
 	fillGradient.setColorAt(0, QColor(244, 244, 244));
 	fillGradient.setColorAt(0.1, QColor(231, 231, 231));
 	fillGradient.setColorAt(1, QColor(209, 209, 209));
 	
 	QBrush backgroundBrush = QBrush(fillGradient);
 	QPainterPath fillPath;
-	fillPath.addRoundedRect(option.rect, groupCornerRadius_, groupCornerRadius_);
+	fillPath.addRoundedRect(region, groupCornerRadius_, groupCornerRadius_);
 	QPainterPath linePath;
-	linePath.addRoundedRect(option.rect, groupCornerRadius_, groupCornerRadius_);
+	linePath.addRoundedRect(region, groupCornerRadius_, groupCornerRadius_);
 	painter->fillPath(fillPath, backgroundBrush);
 	painter->drawPath(linePath);
-	QRect textRect = option.rect.adjusted(horizontalMargin_, 0, -1 * horizontalMargin_, 0);
+	QRect textRect = region.adjusted(horizontalMargin_, 0, -1 * horizontalMargin_, 0);
+	painter->setFont(groupFont_);
 	painter->setPen(QPen(QColor(254, 254, 254)));
 	painter->drawText(textRect.adjusted(1, 1, 0, 0), Qt::AlignTop, index.data(Qt::DisplayRole).toString());
 	painter->setPen(QPen(QColor(80, 80, 80)));
@@ -81,10 +92,11 @@ void RosterDelegate::paintContact(QPainter* painter, const QStyleOptionViewItem&
 		painter->setPen(QPen(nameColor));
 	}
 	
-	QRect presenceIconRegion(QPoint(horizontalMargin_, fullRegion.top()), QSize(presenceIconWidth_, fullRegion.height()));
+	QRect presenceIconRegion(QPoint(farLeftMargin_, fullRegion.top()), QSize(presenceIconWidth_, fullRegion.height()));
 	
+	int calculatedAvatarSize = fullRegion.height() - 2 * verticalMargin_;
 	//This overlaps the presenceIcon, so must be painted first
-	QRect avatarRegion(QPoint(presenceIconRegion.right() - presenceIconWidth_ / 2, fullRegion.top()), QSize(avatarSize_, fullRegion.height()));
+	QRect avatarRegion(QPoint(presenceIconRegion.right() - presenceIconWidth_ / 2, fullRegion.top() + verticalMargin_), QSize(calculatedAvatarSize, calculatedAvatarSize));
 	QIcon avatar = index.data(AvatarRole).isValid() && !index.data(AvatarRole).value<QIcon>().isNull()
 		? index.data(AvatarRole).value<QIcon>()
 		: QIcon(":/icons/avatar.png");
@@ -97,7 +109,7 @@ void RosterDelegate::paintContact(QPainter* painter, const QStyleOptionViewItem&
 	presenceIcon.paint(painter, presenceIconRegion, Qt::AlignBottom | Qt::AlignHCenter);
 	
 	painter->setFont(nameFont_);
-	QRect textRegion(fullRegion.adjusted(avatarRegion.right() + verticalMargin_ * 2, 0, 0, 0));
+	QRect textRegion(fullRegion.adjusted(avatarRegion.right() + horizontalMargin_ * 2, 0, 0, 0));
 	
 	QFontMetrics nameMetrics(nameFont_);
 	int nameHeight = nameMetrics.height() + verticalMargin_;
@@ -113,5 +125,13 @@ void RosterDelegate::paintContact(QPainter* painter, const QStyleOptionViewItem&
 	
 	painter->restore();
 }
+
+const int RosterDelegate::avatarSize_ = 20;
+const int RosterDelegate::presenceIconHeight_ = 16;
+const int RosterDelegate::presenceIconWidth_ = 16;
+const int RosterDelegate::groupCornerRadius_ = 0;
+const int RosterDelegate::horizontalMargin_ = 4;
+const int RosterDelegate::verticalMargin_ = 1;
+const int RosterDelegate::farLeftMargin_ = 2;
 
 }
