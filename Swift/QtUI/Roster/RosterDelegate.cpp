@@ -56,7 +56,9 @@ void RosterDelegate::paint(QPainter* painter, const QStyleOptionViewItem& option
 void RosterDelegate::paintGroup(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const {
 	painter->save();		
 	painter->setPen(QPen(QColor(189, 189, 189)));
-	QRect region(QPoint(option.rect.left(), option.rect.top() + verticalMargin_), QSize(option.rect.width(), option.rect.height() - 2 * verticalMargin_));
+	//FIXME: It looks like Qt is passing us a rectangle that's too small
+	//This deliberately draws outside the lines, and we need to find a better solution.
+	QRect region(QPoint(option.rect.left() - 1, option.rect.top() + verticalMargin_), QSize(option.rect.width() + 1, option.rect.height() - 2 * verticalMargin_));
 	QLinearGradient fillGradient(region.topLeft(), region.bottomLeft());
 	fillGradient.setColorAt(0, QColor(244, 244, 244));
 	fillGradient.setColorAt(0.1, QColor(231, 231, 231));
@@ -130,7 +132,7 @@ const int RosterDelegate::avatarSize_ = 20;
 const int RosterDelegate::presenceIconHeight_ = 16;
 const int RosterDelegate::presenceIconWidth_ = 16;
 const int RosterDelegate::groupCornerRadius_ = 0;
-const int RosterDelegate::horizontalMargin_ = 4;
+const int RosterDelegate::horizontalMargin_ = 2;
 const int RosterDelegate::verticalMargin_ = 1;
 const int RosterDelegate::farLeftMargin_ = 2;
 
