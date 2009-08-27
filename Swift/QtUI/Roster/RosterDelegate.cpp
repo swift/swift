@@ -17,6 +17,7 @@ RosterDelegate::RosterDelegate() : nameFont_(QApplication::font()), statusFont_(
 	statusFont_.setStyle(QFont::StyleItalic);
 	statusFont_.setPointSize(nameFont_.pointSize() - statusFontSizeDrop);
 	groupFont_.setPointSize(nameFont_.pointSize() - statusFontSizeDrop);
+	groupFont_.setWeight(QFont::Bold);
 }
 	
 QSize RosterDelegate::sizeHint(const QStyleOptionViewItem& option, const QModelIndex& index ) const {
@@ -58,7 +59,8 @@ void RosterDelegate::paintGroup(QPainter* painter, const QStyleOptionViewItem& o
 	painter->setPen(QPen(QColor(189, 189, 189)));
 	//FIXME: It looks like Qt is passing us a rectangle that's too small
 	//This deliberately draws outside the lines, and we need to find a better solution.
-	QRect region(QPoint(option.rect.left() - 1, option.rect.top()), QSize(option.rect.width() + 1, option.rect.height() - verticalMargin_));
+	int correctionAmount = groupCornerRadius_ > 0 ? 0 : 1;
+	QRect region(QPoint(option.rect.left() - correctionAmount, option.rect.top()), QSize(option.rect.width() + correctionAmount, option.rect.height() - verticalMargin_));
 	QLinearGradient fillGradient(region.topLeft(), region.bottomLeft());
 	fillGradient.setColorAt(0, QColor(244, 244, 244));
 	fillGradient.setColorAt(0.1, QColor(231, 231, 231));
@@ -74,8 +76,8 @@ void RosterDelegate::paintGroup(QPainter* painter, const QStyleOptionViewItem& o
 	QRect textRect = region.adjusted(2 * horizontalMargin_ + 1, 0, -1 * horizontalMargin_, 0);
 	painter->setFont(groupFont_);
 	painter->setPen(QPen(QColor(254, 254, 254)));
-	painter->drawText(textRect.adjusted(1, 1, 0, 0), Qt::AlignTop, index.data(Qt::DisplayRole).toString());
-	painter->setPen(QPen(QColor(80, 80, 80)));
+	painter->drawText(textRect.adjusted(0, 1, 0, 0), Qt::AlignTop, index.data(Qt::DisplayRole).toString());
+	painter->setPen(QPen(QColor(115, 115, 115)));
 	painter->drawText(textRect, Qt::AlignTop, index.data(Qt::DisplayRole).toString());
 	painter->restore();
 }
