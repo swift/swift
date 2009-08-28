@@ -1,4 +1,5 @@
 import sys, os
+sys.path.append(Dir("BuildTools/SCons").abspath)
 
 ################################################################################
 # Build variables
@@ -33,6 +34,8 @@ Help(vars.GenerateHelpText(env))
 env.Alias("dist", ["."])
 
 # Default custom tools
+env.Tool("WriteVal", toolpath = ["#/BuildTools/SCons/Tools"])
+env.Tool("BuildVersion", toolpath = ["#/BuildTools/SCons/Tools"])
 if env["PLATFORM"] == "darwin" :
 	env.Tool("Nib", toolpath = ["#/BuildTools/SCons/Tools"])
 	env.Tool("AppBundle", toolpath = ["#/BuildTools/SCons/Tools"])

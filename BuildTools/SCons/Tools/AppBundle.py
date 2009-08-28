@@ -1,18 +1,7 @@
 import SCons.Util
 
 def generate(env) :
-  # WriteVal helper builder
-  def writeVal(env, target, source) :
-    f = open(str(target[0]), 'wb')
-    f.write(source[0].get_contents())
-    f.close()
-
-  env["BUILDERS"]["WriteVal"] = SCons.Builder.Builder(
-    action = SCons.Action.Action(writeVal, cmdstr = "$GENCOMSTR"),
-    single_source = True)
-
-  # createAppBundle
-  def createAppBundle(env, bundle, resources = [], info = {}) :
+  def createAppBundle(env, bundle, version = "1.0", resources = [], info = {}) :
     bundleContentsDir = bundle + ".app" + "/Contents"
     resourcesDir = bundleContentsDir + "/Resources"
     env.Install(bundleContentsDir + "/MacOS", bundle)
@@ -26,7 +15,7 @@ def generate(env) :
         "CFBundleName" : bundle,
         "CFBundlePackageType" : "APPL",
         "CFBundleSignature": "\77\77\77\77",
-        "CFBundleVersion" : "1.0",
+        "CFBundleVersion" : version,
         "CFBundleIconFile" : bundle,
         "NSPrincipalClass" : "NSApplication",
         "NSHumanReadableCopyright" : unichr(0xA9) + " 2009 Swift Development Team.\nAll Rights Reserved."

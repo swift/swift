@@ -2,7 +2,7 @@
 !define msvccRedistributableExe "vcredist_x86.exe"
 
 # define installer name
-outFile "Swift-installer-win32-${buildDate}.exe"
+outFile "Swift-installer-win32-${buildVersion}.exe"
  
 # set desktop as install directory
 installDir "$PROGRAMFILES\Swift"
