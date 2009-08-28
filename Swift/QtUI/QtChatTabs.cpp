@@ -77,6 +77,9 @@ void QtChatTabs::handleTabTitleUpdated() {
 		return;
 	}
 	tabs_->setTabText(index, widget->windowTitle());
+	if (widget == tabs_->currentWidget()) {
+		setWindowTitle(widget->windowTitle());
+	}
 }
 
 }
