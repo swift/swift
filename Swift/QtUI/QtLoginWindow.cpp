@@ -81,6 +81,7 @@ QtLoginWindow::QtLoginWindow(const String& defaultJID, const String& defaultPass
 	connect(loginButton_, SIGNAL(clicked()), SLOT(loginClicked()));
 	stack_->addWidget(wrapperWidget);
 	menuBar_ = new QMenuBar(NULL);
+	QApplication::setQuitOnLastWindowClosed(false);
 	
 	swiftMenu_ = new QMenu(tr("Swift"), this);
 	QAction* quitAction = new QAction("Quit", this);
