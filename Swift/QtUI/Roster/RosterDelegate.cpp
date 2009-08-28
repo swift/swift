@@ -30,7 +30,7 @@ QSize RosterDelegate::sizeHint(const QStyleOptionViewItem& option, const QModelI
 
 QSize RosterDelegate::groupSizeHint(const QStyleOptionViewItem& option, const QModelIndex& index ) const {
 	QFontMetrics groupMetrics(groupFont_);
-	return QSize(150, groupMetrics.height() + 2);
+	return QSize(150, groupMetrics.height() + 4);
 }
 
 QSize RosterDelegate::contactSizeHint(const QStyleOptionViewItem& option, const QModelIndex& index ) const {
