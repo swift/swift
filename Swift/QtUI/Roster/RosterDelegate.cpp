@@ -29,9 +29,8 @@ QSize RosterDelegate::sizeHint(const QStyleOptionViewItem& option, const QModelI
 }
 
 QSize RosterDelegate::groupSizeHint(const QStyleOptionViewItem& option, const QModelIndex& index ) const {
-	QFontMetrics nameMetrics(groupFont_);
-	return QSize(150, nameMetrics.height() + 2);
-	return QStyledItemDelegate::sizeHint(option, index);
+	QFontMetrics groupMetrics(groupFont_);
+	return QSize(150, groupMetrics.height() + 2);
 }
 
 QSize RosterDelegate::contactSizeHint(const QStyleOptionViewItem& option, const QModelIndex& index ) const {
@@ -73,7 +72,10 @@ void RosterDelegate::paintGroup(QPainter* painter, const QStyleOptionViewItem& o
 	linePath.addRoundedRect(region, groupCornerRadius_, groupCornerRadius_);
 	painter->fillPath(fillPath, backgroundBrush);
 	painter->drawPath(linePath);
-	QRect textRect = region.adjusted(2 * horizontalMargin_ + 1, 0, -1 * horizontalMargin_, 0);
+	int textLeftOffset = 2 * horizontalMargin_ + 1;
+	QFontMetrics fontMetrics(groupFont_);
+	int textTopOffset = (option.rect.height() - fontMetrics.height()) / 2;
+	QRect textRect = region.adjusted(textLeftOffset, textTopOffset, -1 * textLeftOffset, -1 * textTopOffset);
 	painter->setFont(groupFont_);
 	painter->setPen(QPen(QColor(254, 254, 254)));
 	painter->drawText(textRect.adjusted(0, 1, 0, 0), Qt::AlignTop, index.data(Qt::DisplayRole).toString());
