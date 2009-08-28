@@ -48,6 +48,9 @@ QtLoginWindow::QtLoginWindow(const String& defaultJID, const String& defaultPass
 	credentialsLayout->setSpacing(3);
 	password_ = new QLineEdit(this);
 	password_->setEchoMode(QLineEdit::Password);
+	connect(password_, SIGNAL(returnPressed()), this, SLOT(loginClicked()));
+	connect(username_, SIGNAL(returnPressed()), password_, SLOT(setFocus()));
+	connect(username_, SIGNAL(returnPressed()), password_, SLOT(selectAll()));
 	credentialsLayout->addWidget(password_);
 
 	certificateButton_ = new QToolButton(this);
