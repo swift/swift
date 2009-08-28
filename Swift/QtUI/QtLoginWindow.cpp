@@ -2,6 +2,7 @@
 #include "QtSwiftUtil.h"
 #include "QtMainWindow.h"
 
+#include <QApplication>
 #include <QBoxLayout>
 #include <QFileDialog>
 #include <QStatusBar>
@@ -80,6 +81,12 @@ QtLoginWindow::QtLoginWindow(const String& defaultJID, const String& defaultPass
 	connect(loginButton_, SIGNAL(clicked()), SLOT(loginClicked()));
 	stack_->addWidget(wrapperWidget);
 	menuBar_ = new QMenuBar(NULL);
+	
+	swiftMenu_ = new QMenu(tr("Swift"), this);
+	QAction* quitAction = new QAction("Quit", this);
+	connect(quitAction, SIGNAL(activated()), SLOT(handleQuit()));
+	swiftMenu_->addAction(quitAction);
+	
 	setInitialMenus();
 	this->show();
 }
@@ -111,8 +118,13 @@ void QtLoginWindow::handleCertficateChecked(bool checked) {
 	}
 }
 
+void QtLoginWindow::handleQuit() {
+	QApplication::quit();
+}
+
 void QtLoginWindow::setInitialMenus() {
 	menuBar_->clear();
+	menuBar_->addMenu(swiftMenu_);
 }
 
 void QtLoginWindow::morphInto(MainWindow *mainWindow) {

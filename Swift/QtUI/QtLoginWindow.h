@@ -27,6 +27,7 @@ namespace Swift {
 		private slots:
 			void loginClicked();
 			void handleCertficateChecked(bool);
+			void handleQuit();
 
 		private:
 			void setInitialMenus();
@@ -39,6 +40,7 @@ namespace Swift {
 			QString certificateFile_;
 			QToolButton* certificateButton_;
 			QMenuBar* menuBar_;
+			QMenu* swiftMenu_;
 	};
 }
 
