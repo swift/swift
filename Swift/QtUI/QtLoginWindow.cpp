@@ -83,7 +83,11 @@ QtLoginWindow::QtLoginWindow(const String& defaultJID, const String& defaultPass
 	layout->addWidget(remember_);
 	connect(loginButton_, SIGNAL(clicked()), SLOT(loginClicked()));
 	stack_->addWidget(wrapperWidget);
+#ifdef SWIFTEN_PLATFORM_MACOSX
 	menuBar_ = new QMenuBar(NULL);
+#else
+	menuBar_ = menuBar();
+#endif
 	QApplication::setQuitOnLastWindowClosed(false);
 	
 	swiftMenu_ = new QMenu(tr("Swift"), this);
