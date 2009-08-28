@@ -3,8 +3,9 @@
 
 namespace Swift {
 
-QtLoginWindowFactory::QtLoginWindowFactory(QSplitter* splitter) {
+QtLoginWindowFactory::QtLoginWindowFactory(QSplitter* splitter, QtSystemTray* systemTray) : QObject() {
 	splitter_ = splitter;
+	systemTray_ = systemTray;
 }
 
 LoginWindow* QtLoginWindowFactory::createLoginWindow(const String& defaultJID, const String& defaultPassword, const String& defaultCertificate) {
@@ -12,6 +13,7 @@ LoginWindow* QtLoginWindowFactory::createLoginWindow(const String& defaultJID, c
 	if (splitter_) {
 		splitter_->insertWidget(0, window);
 	}
+	connect(systemTray_, SIGNAL(clicked()), window, SLOT(show()));
 	return window;
 }
 }
