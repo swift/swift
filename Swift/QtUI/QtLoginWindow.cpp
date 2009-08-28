@@ -79,6 +79,8 @@ QtLoginWindow::QtLoginWindow(const String& defaultJID, const String& defaultPass
 	layout->addWidget(remember_);
 	connect(loginButton_, SIGNAL(clicked()), SLOT(loginClicked()));
 	stack_->addWidget(wrapperWidget);
+	menuBar_ = new QMenuBar(NULL);
+	setInitialMenus();
 	this->show();
 }
 
@@ -88,6 +90,7 @@ void QtLoginWindow::loggedOut() {
 		stack_->setCurrentIndex(0);
 		stack_->removeWidget(current);
 	}
+	setInitialMenus();
 	setEnabled(true);
 }
 
@@ -108,14 +111,19 @@ void QtLoginWindow::handleCertficateChecked(bool checked) {
 	}
 }
 
+void QtLoginWindow::setInitialMenus() {
+	menuBar_->clear();
+}
+
 void QtLoginWindow::morphInto(MainWindow *mainWindow) {
 	QtMainWindow *qtMainWindow = dynamic_cast<QtMainWindow*>(mainWindow);
 	assert(qtMainWindow);
 	stack_->addWidget(qtMainWindow);
 	stack_->setCurrentWidget(qtMainWindow);
 	setEnabled(true);
+	setInitialMenus();
 	foreach (QMenu* menu, qtMainWindow->getMenus()) {
-		menuBar()->addMenu(menu);
+		menuBar_->addMenu(menu);
 	}
 }
 

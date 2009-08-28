@@ -6,6 +6,7 @@
 #include <QPushButton>
 #include <QCheckBox>
 #include <QStackedWidget>
+#include <QMenuBar>
 
 #include "Swift/Controllers/LoginWindow.h"
 #include "Swift/Controllers/MainWindow.h"
@@ -28,6 +29,7 @@ namespace Swift {
 			void handleCertficateChecked(bool);
 
 		private:
+			void setInitialMenus();
 			QLineEdit *username_;
 			QLineEdit *password_;
 			QPushButton *loginButton_;
@@ -36,6 +38,7 @@ namespace Swift {
 			QLabel* message_;
 			QString certificateFile_;
 			QToolButton* certificateButton_;
+			QMenuBar* menuBar_;
 	};
 }
 
