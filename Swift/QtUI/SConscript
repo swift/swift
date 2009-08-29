@@ -64,6 +64,7 @@ sources = [
 		"QtSoundPlayer.cpp",
 		"QtSystemTray.cpp",
 		"QtTabbable.cpp",
+		"QtTextEdit.cpp",
 		"ChatSnippet.cpp",
 		"MessageSnippet.cpp",
 		"SystemMessageSnippet.cpp",

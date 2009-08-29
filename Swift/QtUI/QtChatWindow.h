@@ -14,6 +14,7 @@ namespace Swift {
 	class QtTreeWidget;
 	class QtTreeWidgetFactory;
 	class TreeWidget;
+	class QtTextEdit;
 	class QtChatWindow : public QtTabbable, public ChatWindow {
 		Q_OBJECT
 		public:
@@ -46,7 +47,7 @@ namespace Swift {
 			int unreadCount_;
 			QString contact_;
 			QtChatView *messageLog_;
-			QLineEdit* input_;
+			QtTextEdit* input_;
 			QComboBox *labelsWidget_;
 			QtTreeWidget *treeWidget_;
 			std::vector<SecurityLabel> availableLabels_;

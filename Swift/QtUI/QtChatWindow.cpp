@@ -5,6 +5,7 @@
 #include "QtChatView.h"
 #include "MessageSnippet.h"
 #include "SystemMessageSnippet.h"
+#include "QtTextEdit.h"
 
 #include <QApplication>
 #include <QBoxLayout>
@@ -50,9 +51,10 @@ QtChatWindow::QtChatWindow(const QString &contact, QtTreeWidgetFactory *treeWidg
 	labelsWidget_->setSizeAdjustPolicy(QComboBox::AdjustToContents);
 	midBarLayout->addWidget(labelsWidget_,0);
 
-	input_ = new QLineEdit(this);
+	input_ = new QtTextEdit(this);
+	input_->setAcceptRichText(false);
 	layout->addWidget(input_);
-
+	
 	connect(input_, SIGNAL(returnPressed()), this, SLOT(returnPressed()));
 	setFocusProxy(input_);
 	connect(qApp, SIGNAL(focusChanged(QWidget*, QWidget*)), this, SLOT(qAppFocusChanged(QWidget*, QWidget*)));
@@ -106,6 +108,7 @@ void QtChatWindow::convertToMUC() {
 
 void QtChatWindow::qAppFocusChanged(QWidget *old, QWidget *now) {
 	Q_UNUSED(old);
+	Q_UNUSED(now);
 	if (isWidgetSelected()) {
 		onAllMessagesRead();
 	}
@@ -182,7 +185,7 @@ void QtChatWindow::addSystemMessage(const String& message) {
 }
 
 void QtChatWindow::returnPressed() {
-	onSendMessageRequest(Q2PSTRING(input_->text()));
+	onSendMessageRequest(Q2PSTRING(input_->toPlainText()));
 	messageLog_->scrollToBottom();
 	input_->clear();
 }
