@@ -97,11 +97,11 @@ void RosterDelegate::paintGroup(QPainter* painter, const QStyleOptionViewItem& o
 			triangleTopLeft += QPoint(0, 1);
 			trianglePoint2 = triangleTopLeft + QPointF(triangleWidth, 0);
 			trianglePoint3 = trianglePoint2 + QPointF(-1 * (triangleWidth / 2), triangleHeight);
-			qDebug() << "Plotting expanded" << triangleTopLeft << ", " << trianglePoint2 << ", " << trianglePoint3;
+			//qDebug() << "Plotting expanded" << triangleTopLeft << ", " << trianglePoint2 << ", " << trianglePoint3;
 		} else {
 			trianglePoint2 = triangleTopLeft + QPointF(0, triangleWidth);
 			trianglePoint3 = trianglePoint2 + QPointF(triangleHeight, -1 * (triangleWidth / 2));
-			qDebug() << "Plotting collapsed" << triangleTopLeft << ", " << trianglePoint2 << ", " << trianglePoint3;
+			//qDebug() << "Plotting collapsed" << triangleTopLeft << ", " << trianglePoint2 << ", " << trianglePoint3;
 		}
 		triangle << triangleTopLeft << trianglePoint2 << trianglePoint3 << triangleTopLeft;
 		triangleShadow << triangleTopLeft + shadowOffset << trianglePoint2 + shadowOffset << trianglePoint3 + shadowOffset << triangleTopLeft + shadowOffset;
