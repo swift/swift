@@ -24,6 +24,7 @@ void RosterModel::handleItemChanged(QtTreeWidgetItem* item) {
 	Q_ASSERT(modelIndex.isValid());
 	emit itemExpanded(modelIndex, item->isExpanded());
 	emit dataChanged(modelIndex, modelIndex);
+	emit dataChanged(parent(modelIndex), parent(modelIndex));
 	emit layoutChanged();
 }
 

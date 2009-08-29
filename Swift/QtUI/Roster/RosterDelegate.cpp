@@ -99,7 +99,7 @@ void RosterDelegate::paintGroup(QPainter* painter, const QStyleOptionViewItem& o
 		contactCountWidth = groupMetrics.width(countString) + 2 * horizontalMargin_;
 		int offsetAmount = textRect.width() - contactCountWidth + horizontalMargin_;
 		QRect countRect = textRect.adjusted(offsetAmount, 0, 0/*-1 * offsetAmount*/, 0);
-		qDebug() << "Painting count string " << countString << " at " << countRect << " from offset " << offsetAmount;
+		//qDebug() << "Painting count string " << countString << " at " << countRect << " from offset " << offsetAmount;
 		paintShadowText(painter, countRect, countString);
 	}
 	QRect nameTextRect = textRect.adjusted(0, 0, contactCountWidth, 0);

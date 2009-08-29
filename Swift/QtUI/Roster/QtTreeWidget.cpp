@@ -80,8 +80,8 @@ void QtTreeWidget::handleDataChanged(const QModelIndex& topLeft, const QModelInd
 	}
 	QtTreeWidgetItem* qtItem = static_cast<QtTreeWidgetItem*>(topLeft.internalPointer());
 	if (qtItem) {
-		//qDebug() << "Item changed, passing expanded state to view: " << qtItem->isExpanded();
 		setExpanded(topLeft, qtItem->isExpanded());
+		//qDebug() << "Item changed, passing expanded state to view: " << qtItem->isExpanded() << " giving an expanded state of " << isExpanded(topLeft);
 	}
 
 }
