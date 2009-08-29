@@ -17,6 +17,7 @@
 #include "Swiften/Client/Client.h"
 #include "Swift/Controllers/ChatController.h"
 #include "Swift/Controllers/MainController.h"
+#include "Swift/QtUI/BuildVersion.h"
 
 namespace Swift{
 
@@ -35,6 +36,7 @@ QtSwift::QtSwift(bool netbookMode) {
 	QCoreApplication::setApplicationName("Swift");
 	QCoreApplication::setOrganizationName("Swift");
 	QCoreApplication::setOrganizationDomain("swift.im");
+	QCoreApplication::setApplicationVersion(buildVersion);
 	settings_ = new QtSettingsProvider();
 	application_ = new PlatformApplication("Swift");
 	if (splitter_) {

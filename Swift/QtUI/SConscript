@@ -47,6 +47,7 @@ myenv.Command("DefaultTheme.qrc", "../resources/themes/Default", Action(generate
 
 sources = [
 		"main.cpp",
+		"QtAboutWidget.cpp",
 		"QtAddContactDialog.cpp",
 		"QtChatWindow.cpp",
 		"QtChatWindowFactory.cpp",

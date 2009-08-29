@@ -1,4 +1,6 @@
 #include "QtLoginWindow.h"
+
+#include "QtAboutWidget.h"
 #include "QtSwiftUtil.h"
 #include "QtMainWindow.h"
 
@@ -91,9 +93,16 @@ QtLoginWindow::QtLoginWindow(const String& defaultJID, const String& defaultPass
 	QApplication::setQuitOnLastWindowClosed(false);
 	
 	swiftMenu_ = new QMenu(tr("Swift"), this);
+	
+	QAction* aboutAction = new QAction("About Swift", this);
+	connect(aboutAction, SIGNAL(activated()), SLOT(handleAbout()));
+	swiftMenu_->addAction(aboutAction);
+	
 	QAction* quitAction = new QAction("Quit", this);
 	connect(quitAction, SIGNAL(activated()), SLOT(handleQuit()));
 	swiftMenu_->addAction(quitAction);
+	
+	
 	
 	setInitialMenus();
 	this->show();
@@ -124,6 +133,10 @@ void QtLoginWindow::handleCertficateChecked(bool checked) {
 	else {
 		certificateFile_ = "";
 	}
+}
+
+void QtLoginWindow::handleAbout() {
+	QtAboutWidget::instance()->show();
 }
 
 void QtLoginWindow::handleQuit() {

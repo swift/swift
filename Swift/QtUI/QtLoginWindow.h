@@ -28,6 +28,7 @@ namespace Swift {
 			void loginClicked();
 			void handleCertficateChecked(bool);
 			void handleQuit();
+			void handleAbout();
 
 		private:
 			void setInitialMenus();
