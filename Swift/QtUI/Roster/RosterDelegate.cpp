@@ -78,50 +78,71 @@ void RosterDelegate::paintGroup(QPainter* painter, const QStyleOptionViewItem& o
 	painter->fillPath(fillPath, backgroundBrush);
 	painter->drawPath(linePath);
 	
-	QBrush triangleBrush(QColor(110, 110, 110));
-	QBrush triangleShadowBrush(QColor(47, 47, 47));
 	double triangleWidth = 9;
 	double triangleHeight = 5;
 	QtTreeWidgetItem* item = index.isValid() ? static_cast<QtTreeWidgetItem*>(index.internalPointer()) : NULL;
 	if (item) {
-		QPainterPath trianglePath;
-		QPainterPath triangleShadowPath;
-		QPolygonF triangle;
-		QPolygonF triangleShadow;
-		QPointF triangleTopLeft(region.left() + horizontalMargin_ + 1, region.top() + region.height() / 2 - triangleHeight / 2);
-		QPointF shadowOffset(0,-1);
-		QPointF trianglePoint2;
-		QPointF trianglePoint3;
-		
-		if (item->isExpanded()) {
-			triangleTopLeft += QPoint(0, 1);
-			trianglePoint2 = triangleTopLeft + QPointF(triangleWidth, 0);
-			trianglePoint3 = trianglePoint2 + QPointF(-1 * (triangleWidth / 2), triangleHeight);
-			//qDebug() << "Plotting expanded" << triangleTopLeft << ", " << trianglePoint2 << ", " << trianglePoint3;
-		} else {
-			trianglePoint2 = triangleTopLeft + QPointF(0, triangleWidth);
-			trianglePoint3 = trianglePoint2 + QPointF(triangleHeight, -1 * (triangleWidth / 2));
-			//qDebug() << "Plotting collapsed" << triangleTopLeft << ", " << trianglePoint2 << ", " << trianglePoint3;
-		}
-		triangle << triangleTopLeft << trianglePoint2 << trianglePoint3 << triangleTopLeft;
-		triangleShadow << triangleTopLeft + shadowOffset << trianglePoint2 + shadowOffset << trianglePoint3 + shadowOffset << triangleTopLeft + shadowOffset;
-		
-		trianglePath.addPolygon(triangle);
-		triangleShadowPath.addPolygon(triangleShadow);
-		painter->fillPath(triangleShadowPath, triangleShadowBrush);
-		painter->fillPath(trianglePath, triangleBrush);
+		paintExpansionTriangle(painter, region.adjusted(horizontalMargin_ +  1, 0, 0, 0), triangleWidth, triangleHeight, item->isExpanded());
 	}
 	
-	int textLeftOffset = 2 * horizontalMargin_ + 1 + triangleWidth;
+	int textLeftOffset = 3 * horizontalMargin_ + 1 + triangleWidth;
 	QFontMetrics fontMetrics(groupFont_);
 	int textTopOffset = (option.rect.height() - fontMetrics.height()) / 2;
-	QRect textRect = region.adjusted(textLeftOffset, textTopOffset, -1 * textLeftOffset, -1 * textTopOffset);
 	painter->setFont(groupFont_);
-	painter->setPen(QPen(QColor(254, 254, 254)));
-	painter->drawText(textRect.adjusted(0, 1, 0, 0), Qt::AlignTop, index.data(Qt::DisplayRole).toString());
-	painter->setPen(QPen(QColor(115, 115, 115)));
-	painter->drawText(textRect, Qt::AlignTop, index.data(Qt::DisplayRole).toString());
+	int contactCountWidth = 0;
+	QRect textRect = region.adjusted(textLeftOffset, textTopOffset, -1 * textLeftOffset, -1 * textTopOffset);
+
+	if (!item->isExpanded()) {
+		QFontMetrics groupMetrics(groupFont_);
+		int contactCount = item->rowCount();
+		QString countString = QString("%1").arg(contactCount);
+		contactCountWidth = groupMetrics.width(countString) + 2 * horizontalMargin_;
+		int offsetAmount = textRect.width() - contactCountWidth + horizontalMargin_;
+		QRect countRect = textRect.adjusted(offsetAmount, 0, 0/*-1 * offsetAmount*/, 0);
+		qDebug() << "Painting count string " << countString << " at " << countRect << " from offset " << offsetAmount;
+		paintShadowText(painter, countRect, countString);
+	}
+	QRect nameTextRect = textRect.adjusted(0, 0, contactCountWidth, 0);
+	paintShadowText(painter, nameTextRect, index.data(Qt::DisplayRole).toString());
 	painter->restore();
+}
+
+void RosterDelegate::paintExpansionTriangle(QPainter* painter, const QRect& region, int width, int height, bool expanded) const {
+	QBrush triangleBrush(QColor(110, 110, 110));
+	QBrush triangleShadowBrush(QColor(47, 47, 47));
+	QPainterPath trianglePath;
+	QPainterPath triangleShadowPath;
+	QPolygonF triangle;
+	QPolygonF triangleShadow;
+	QPointF triangleTopLeft(region.left(), region.top() + region.height() / 2 - height / 2);
+	QPointF shadowOffset(0,-1);
+	QPointF trianglePoint2;
+	QPointF trianglePoint3;
+	
+	if (expanded) {
+		triangleTopLeft += QPoint(0, 1);
+		trianglePoint2 = triangleTopLeft + QPointF(width, 0);
+		trianglePoint3 = trianglePoint2 + QPointF(-1 * (width / 2), height);
+		//qDebug() << "Plotting expanded" << triangleTopLeft << ", " << trianglePoint2 << ", " << trianglePoint3;
+	} else {
+		trianglePoint2 = triangleTopLeft + QPointF(0, width);
+		trianglePoint3 = trianglePoint2 + QPointF(height, -1 * (width / 2));
+		//qDebug() << "Plotting collapsed" << triangleTopLeft << ", " << trianglePoint2 << ", " << trianglePoint3;
+	}
+	triangle << triangleTopLeft << trianglePoint2 << trianglePoint3 << triangleTopLeft;
+	triangleShadow << triangleTopLeft + shadowOffset << trianglePoint2 + shadowOffset << trianglePoint3 + shadowOffset << triangleTopLeft + shadowOffset;
+	
+	trianglePath.addPolygon(triangle);
+	triangleShadowPath.addPolygon(triangleShadow);
+	painter->fillPath(triangleShadowPath, triangleShadowBrush);
+	painter->fillPath(trianglePath, triangleBrush);
+}
+
+void RosterDelegate::paintShadowText(QPainter* painter, const QRect& region, const QString& text) const {
+	painter->setPen(QPen(QColor(254, 254, 254)));
+	painter->drawText(region.adjusted(0, 1, 0, 0), Qt::AlignTop, text);
+	painter->setPen(QPen(QColor(115, 115, 115)));
+	painter->drawText(region, Qt::AlignTop, text);
 }
 
 void RosterDelegate::paintContact(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const {

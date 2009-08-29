@@ -22,7 +22,10 @@ class QtTreeWidget : public QTreeView, public TreeWidget {
 		QtTreeWidgetItem* getRoot();
 	private slots:
 		void handleItemActivated(const QModelIndex&);
-		void handleItemExpanded(const QModelIndex&, bool expanded);
+		void handleModelItemExpanded(const QModelIndex&, bool expanded);
+		void handleExpanded(const QModelIndex&);
+		void handleCollapsed(const QModelIndex&);
+		void handleDataChanged(const QModelIndex& topLeft, const QModelIndex& bottomRight);
 	private:
 		void drawBranches(QPainter*, const QRect&, const QModelIndex&) const;
 		RosterModel* model_;

@@ -99,6 +99,9 @@ void QtRosterHeader::resizeNameLabel() {
 	QString escapedName = name_;
 	escapedName.replace("<","&lt;");
 	nameLabel_->setText("<b>" + escapedName + "</b>");
+	return;
+	//FIXME: Make this not an infinite loop, so it can be continued.
+	
 	int reductionCount = 0;
 	while (nameLabel_->sizeHint().width() + statusWidget_->width() + 30 > width()) {
 		//qDebug() << nameLabel_->sizeHint().width() << " " << statusWidget_->width() << " " << width();

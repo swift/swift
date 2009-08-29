@@ -16,6 +16,8 @@ namespace Swift {
 		QSize contactSizeHint(const QStyleOptionViewItem& option, const QModelIndex& index) const;
 		void paintGroup(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const; 
 		void paintContact(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const; 
+		void paintShadowText(QPainter* painter, const QRect& region, const QString& text) const;
+		void paintExpansionTriangle(QPainter* painter, const QRect& region, int width, int height, bool expanded) const;
 		QFont nameFont_;
 		QFont statusFont_;
 		QFont groupFont_;
