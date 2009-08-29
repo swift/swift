@@ -195,4 +195,8 @@ void QtChatWindow::show() {
 	emit windowOpening();
 }
 
+void QtChatWindow::activate() {
+	emit wantsToActivate();
+}
+
 }

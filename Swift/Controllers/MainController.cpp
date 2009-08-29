@@ -244,7 +244,9 @@ void MainController::logout() {
 
 
 void MainController::handleChatRequest(const String &contact) {
-	getChatController(JID(contact))->showChatWindow();
+	ChatController* controller = getChatController(JID(contact));
+	controller->showChatWindow();
+	controller->activateChatWindow();
 }
 
 ChatController* MainController::getChatController(const JID &contact) {

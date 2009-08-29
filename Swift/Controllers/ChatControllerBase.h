@@ -26,6 +26,7 @@ namespace Swift {
 		public:
 			virtual ~ChatControllerBase();
 			void showChatWindow();
+			void activateChatWindow();
 			void setAvailableServerFeatures(boost::shared_ptr<DiscoInfo> info);
 			void handleIncomingMessage(boost::shared_ptr<MessageEvent> message);
 

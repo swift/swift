@@ -10,6 +10,7 @@ namespace Swift {
 		public:
 			QtChatTabs();
 			void addTab(QtTabbable* tab);
+			void minimise();
 
 		protected slots:
 			void closeEvent(QCloseEvent* event);
@@ -19,6 +20,7 @@ namespace Swift {
 			void handleTabTitleUpdated();
 			void handleTabCloseRequested(int index);
 			void handleWidgetShown();
+			void handleWantsToActivate();
 		private:
 			QTabWidget* tabs_;
 	};

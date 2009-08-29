@@ -24,6 +24,7 @@ namespace Swift {
 
 			virtual void setName(const String& name) = 0;
 			virtual void show() = 0;
+			virtual void activate() = 0;
 			virtual void setAvailableSecurityLabels(const std::vector<SecurityLabel>& labels) = 0;
 			virtual void setSecurityLabelsEnabled(bool enabled) = 0;
 			virtual void setUnreadMessageCount(int count) = 0;

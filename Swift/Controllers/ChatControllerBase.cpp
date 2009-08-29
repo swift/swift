@@ -80,6 +80,9 @@ void ChatControllerBase::showChatWindow() {
 	chatWindow_->show();
 }
 
+void ChatControllerBase::activateChatWindow() {
+	chatWindow_->activate();
+}
 
 void ChatControllerBase::handleIncomingMessage(boost::shared_ptr<MessageEvent> messageEvent) {
 	unreadMessages_.push_back(messageEvent);

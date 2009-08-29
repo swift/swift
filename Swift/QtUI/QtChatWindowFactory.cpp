@@ -17,7 +17,10 @@ QtChatWindowFactory::QtChatWindowFactory(QtTreeWidgetFactory *treeWidgetFactory,
 ChatWindow* QtChatWindowFactory::createChatWindow(const JID &contact) {
 	QtChatWindow *chatWindow = new QtChatWindow(P2QSTRING(contact.toString()), treeWidgetFactory_);
 	tabs_->addTab(chatWindow);
-	tabs_->show();
+	if (!tabs_->isVisible()) {
+		tabs_->showMinimized();
+		//tabs_->minimise();
+	}
 	//chatWindow->show();
 	return chatWindow;
 }

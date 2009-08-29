@@ -23,6 +23,7 @@ namespace Swift {
 			void addSystemMessage(const String& message);
 			void addErrorMessage(const String& errorMessage);
 			void show();
+			void activate();
 			void setUnreadMessageCount(int count);
 			void convertToMUC();
 			TreeWidget *getTreeWidget();

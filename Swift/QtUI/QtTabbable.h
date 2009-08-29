@@ -15,5 +15,6 @@ namespace Swift {
 			void titleUpdated();
 			void windowClosing();
 			void windowOpening();
+			void wantsToActivate();
 	};
 }

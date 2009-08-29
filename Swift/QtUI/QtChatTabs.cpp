@@ -1,6 +1,7 @@
 #include "QtChatTabs.h"
 
 #include <QCloseEvent>
+#include <QtGlobal>
 #include <QTabWidget>
 #include <QLayout>
 
@@ -36,6 +37,7 @@ void QtChatTabs::addTab(QtTabbable* tab) {
 	connect(tab, SIGNAL(titleUpdated()), this, SLOT(handleTabTitleUpdated()));
 	connect(tab, SIGNAL(windowClosing()), this, SLOT(handleTabClosing()));
 	connect(tab, SIGNAL(windowOpening()), this, SLOT(handleWidgetShown()));
+	connect(tab, SIGNAL(wantsToActivate()), this, SLOT(handleWantsToActivate()));
 }
 
 void QtChatTabs::handleWidgetShown() {
@@ -48,6 +50,15 @@ void QtChatTabs::handleWidgetShown() {
 	}
 	addTab(widget);
 	show();
+}
+
+void QtChatTabs::handleWantsToActivate() {
+	QtTabbable* widget = qobject_cast<QtTabbable*>(sender());
+	Q_ASSERT(widget);
+	Q_ASSERT(tabs_->indexOf(widget) >= 0);
+	//Un-minimize and bring to front.
+	setWindowState(windowState() & ~Qt::WindowMinimized | Qt::WindowActive);
+	tabs_->setCurrentWidget(widget);
 }
 
 void QtChatTabs::handleTabClosing() {
