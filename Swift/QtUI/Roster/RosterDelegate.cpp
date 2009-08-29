@@ -6,6 +6,7 @@
 #include <QBrush>
 #include <QFontMetrics>
 #include <QPainterPath>
+#include <QPolygon>
 #include <qdebug.h>
 
 #include "QtTreeWidgetItem.h"
@@ -29,11 +30,15 @@ QSize RosterDelegate::sizeHint(const QStyleOptionViewItem& option, const QModelI
 }
 
 QSize RosterDelegate::groupSizeHint(const QStyleOptionViewItem& option, const QModelIndex& index ) const {
+	Q_UNUSED(option);
+	Q_UNUSED(index);
 	QFontMetrics groupMetrics(groupFont_);
 	return QSize(150, groupMetrics.height() + 4);
 }
 
 QSize RosterDelegate::contactSizeHint(const QStyleOptionViewItem& option, const QModelIndex& index ) const {
+	Q_UNUSED(option);
+	Q_UNUSED(index);
 	int heightByAvatar = avatarSize_ + verticalMargin_ * 2;
 	QFontMetrics nameMetrics(nameFont_);
 	QFontMetrics statusMetrics(statusFont_);
@@ -72,7 +77,42 @@ void RosterDelegate::paintGroup(QPainter* painter, const QStyleOptionViewItem& o
 	linePath.addRoundedRect(region, groupCornerRadius_, groupCornerRadius_);
 	painter->fillPath(fillPath, backgroundBrush);
 	painter->drawPath(linePath);
-	int textLeftOffset = 2 * horizontalMargin_ + 1;
+	
+	QBrush triangleBrush(QColor(110, 110, 110));
+	QBrush triangleShadowBrush(QColor(47, 47, 47));
+	double triangleWidth = 9;
+	double triangleHeight = 5;
+	QtTreeWidgetItem* item = index.isValid() ? static_cast<QtTreeWidgetItem*>(index.internalPointer()) : NULL;
+	if (item) {
+		QPainterPath trianglePath;
+		QPainterPath triangleShadowPath;
+		QPolygonF triangle;
+		QPolygonF triangleShadow;
+		QPointF triangleTopLeft(region.left() + horizontalMargin_ + 1, region.top() + region.height() / 2 - triangleHeight / 2);
+		QPointF shadowOffset(0,-1);
+		QPointF trianglePoint2;
+		QPointF trianglePoint3;
+		
+		if (item->isExpanded()) {
+			triangleTopLeft += QPoint(0, 1);
+			trianglePoint2 = triangleTopLeft + QPointF(triangleWidth, 0);
+			trianglePoint3 = trianglePoint2 + QPointF(-1 * (triangleWidth / 2), triangleHeight);
+			qDebug() << "Plotting expanded" << triangleTopLeft << ", " << trianglePoint2 << ", " << trianglePoint3;
+		} else {
+			trianglePoint2 = triangleTopLeft + QPointF(0, triangleWidth);
+			trianglePoint3 = trianglePoint2 + QPointF(triangleHeight, -1 * (triangleWidth / 2));
+			qDebug() << "Plotting collapsed" << triangleTopLeft << ", " << trianglePoint2 << ", " << trianglePoint3;
+		}
+		triangle << triangleTopLeft << trianglePoint2 << trianglePoint3 << triangleTopLeft;
+		triangleShadow << triangleTopLeft + shadowOffset << trianglePoint2 + shadowOffset << trianglePoint3 + shadowOffset << triangleTopLeft + shadowOffset;
+		
+		trianglePath.addPolygon(triangle);
+		triangleShadowPath.addPolygon(triangleShadow);
+		painter->fillPath(triangleShadowPath, triangleShadowBrush);
+		painter->fillPath(trianglePath, triangleBrush);
+	}
+	
+	int textLeftOffset = 2 * horizontalMargin_ + 1 + triangleWidth;
 	QFontMetrics fontMetrics(groupFont_);
 	int textTopOffset = (option.rect.height() - fontMetrics.height()) / 2;
 	QRect textRect = region.adjusted(textLeftOffset, textTopOffset, -1 * textLeftOffset, -1 * textTopOffset);
