@@ -10,12 +10,6 @@
 #include "Swiften/Application/Application.h"
 
 namespace Swift {
-QtAboutWidget* QtAboutWidget::instance() {
-	if (!instance_) {
-		instance_ = new QtAboutWidget();
-	}
-	return instance_;
-}
 
 QtAboutWidget::QtAboutWidget() : QWidget() {
 	resize(180, 240);
@@ -38,8 +32,6 @@ QtAboutWidget::QtAboutWidget() : QWidget() {
 	buildString += "</centre></font>";
 	QLabel* buildLabel = new QLabel(buildString, this);
 	mainLayout->addWidget(buildLabel);
-	
 }
 
-QtAboutWidget* QtAboutWidget::instance_ = NULL;
 }

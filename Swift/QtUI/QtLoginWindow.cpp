@@ -136,7 +136,13 @@ void QtLoginWindow::handleCertficateChecked(bool checked) {
 }
 
 void QtLoginWindow::handleAbout() {
-	QtAboutWidget::instance()->show();
+	if (!aboutDialog_) {
+		aboutDialog_ = new QtAboutWidget();
+		aboutDialog_->show();
+	}
+	else {
+		aboutDialog_->raise();
+	}
 }
 
 void QtLoginWindow::handleQuit() {

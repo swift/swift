@@ -4,12 +4,9 @@
 
 namespace Swift {
 	class QtAboutWidget : public QWidget {
-		Q_OBJECT
-		public:
-			static QtAboutWidget* instance();
+			Q_OBJECT
 
-		private:
+		public:
 			QtAboutWidget();
-			static QtAboutWidget* instance_;
 	};
 }

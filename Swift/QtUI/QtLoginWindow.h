@@ -2,6 +2,7 @@
 #define SWIFT_QtLoginWindow_H
 
 #include <QMainWindow>
+#include <QPointer>
 #include <QLineEdit>
 #include <QPushButton>
 #include <QCheckBox>
@@ -10,6 +11,7 @@
 
 #include "Swift/Controllers/LoginWindow.h"
 #include "Swift/Controllers/MainWindow.h"
+#include "QtAboutWidget.h"
 
 class QLabel;
 class QToolButton;
@@ -43,6 +45,7 @@ namespace Swift {
 			QToolButton* certificateButton_;
 			QMenuBar* menuBar_;
 			QMenu* swiftMenu_;
+			QPointer<QtAboutWidget> aboutDialog_;
 	};
 }
 
