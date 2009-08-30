@@ -57,7 +57,7 @@ void QtChatTabs::handleWantsToActivate() {
 	Q_ASSERT(widget);
 	Q_ASSERT(tabs_->indexOf(widget) >= 0);
 	//Un-minimize and bring to front.
-	setWindowState(windowState() & ~Qt::WindowMinimized | Qt::WindowActive);
+	setWindowState((windowState() & ~Qt::WindowMinimized) | Qt::WindowActive);
 	tabs_->setCurrentWidget(widget);
 }
 

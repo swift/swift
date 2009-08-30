@@ -53,7 +53,7 @@ QtRosterHeader::QtRosterHeader(QWidget* parent) : QWidget(parent) {
 }
 
 void QtRosterHeader::mousePressEvent(QMouseEvent* event) {
-	if (nameLabel_->underMouse() || toolBar_->underMouse() && !statusWidget_->underMouse()) {
+	if (nameLabel_->underMouse() || (toolBar_->underMouse() && !statusWidget_->underMouse())) {
 		toggleExpanded();
 		event->accept();
 	} else {
