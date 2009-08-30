@@ -141,7 +141,9 @@ void QtLoginWindow::handleAbout() {
 		aboutDialog_->show();
 	}
 	else {
+		aboutDialog_->show();
 		aboutDialog_->raise();
+		aboutDialog_->activateWindow();
 	}
 }
 
