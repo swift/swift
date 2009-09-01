@@ -13,7 +13,7 @@ LoginWindow* QtLoginWindowFactory::createLoginWindow(const String& defaultJID, c
 	if (splitter_) {
 		splitter_->insertWidget(0, window);
 	}
-	connect(systemTray_, SIGNAL(clicked()), window, SLOT(show()));
+	connect(systemTray_, SIGNAL(clicked()), window, SLOT(bringToFront()));
 	return window;
 }
 }

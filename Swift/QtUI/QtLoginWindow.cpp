@@ -169,4 +169,15 @@ void QtLoginWindow::setMessage(const String& message) {
 	}
 }
 
+void QtLoginWindow::bringToFront() {
+	if (isHidden()) {
+		showNormal();
+		raise();
+		activateWindow();
+	}
+	else {
+		hide();
+	}
+}
+
 }

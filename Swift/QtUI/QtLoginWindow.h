@@ -29,6 +29,7 @@ namespace Swift {
 			void handleCertficateChecked(bool);
 			void handleQuit();
 			void handleAbout();
+			void bringToFront();
 
 		private:
 			void setInitialMenus();
