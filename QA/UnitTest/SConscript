@@ -8,7 +8,8 @@ checker_env.MergeFlags(env["CPPUNIT_FLAGS"])
 checker_env.Library("Checker", "checker.cpp")
 env["CHECKER_FLAGS"] = { 
     "LIBS": ["Checker"],
-    "LIBPATH": [Dir(".")]
+    "LIBPATH": [Dir(".")],
+		"LINKFLAGS": ["/SUBSYSTEM:CONSOLE"] if env["PLATFORM"] == "win32" else []
   }
 
 if "check" in COMMAND_LINE_TARGETS or env.GetOption("clean") :
