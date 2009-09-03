@@ -3,6 +3,7 @@ import os
 Import("env")
 
 myenv = env.Clone()
+myenv.MergeFlags(env["CHECKER_FLAGS"])
 myenv.MergeFlags(env["SWIFTEN_FLAGS"])
 myenv.MergeFlags(env["CPPUNIT_FLAGS"])
 myenv.MergeFlags(env["BOOST_FLAGS"])
@@ -12,7 +13,6 @@ tester = myenv.Program("NetworkTest", [
 		"BoostConnectionServerTest.cpp",
 		"BoostConnectionTest.cpp",
 		"DomainNameResolverTest.cpp",
-		"#/QA/UnitTest/checker.cpp"
 	])
 clientTest = myenv.Alias("NetworkTest", tester, env.get("TEST_RUNNER", "") + tester[0].abspath)
 env.AlwaysBuild(clientTest)

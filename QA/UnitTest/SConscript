@@ -2,8 +2,18 @@ import os
 
 Import("env")
 
+# The checker
+checker_env = env.Clone()
+checker_env.MergeFlags(env["CPPUNIT_FLAGS"])
+checker_env.Library("Checker", "checker.cpp")
+env["CHECKER_FLAGS"] = { 
+    "LIBS": ["Checker"],
+    "LIBPATH": [Dir(".")]
+  }
+
 if "check" in COMMAND_LINE_TARGETS or env.GetOption("clean") :
 	myenv = env.Clone()
+	myenv.MergeFlags(env["CHECKER_FLAGS"])
 	myenv.MergeFlags(env["SLIMBER_FLAGS"])
 	myenv.MergeFlags(env["SWIFT_CONTROLLERS_FLAGS"])
 	myenv.MergeFlags(env["SWIFTEN_FLAGS"])
@@ -18,7 +28,7 @@ if "check" in COMMAND_LINE_TARGETS or env.GetOption("clean") :
 		myenv.Append(CPPDEFINES = ["HAVE_LIBXML"])
 	if env.get("HAVE_EXPAT") :
 		myenv.Append(CPPDEFINES = ["HAVE_EXPAT"])
-	checker = myenv.Program("checker", ["checker.cpp"] + env["UNITTEST_SOURCES"])
+	checker = myenv.Program("checker", env["UNITTEST_SOURCES"])
 	for i in ["HOME", "USERPROFILE", "APPDATA"]:
 		if os.environ.get(i, "") :
 			myenv["ENV"][i] = os.environ[i]

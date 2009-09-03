@@ -252,14 +252,14 @@ elif env.get("bonjour", False) :
 ################################################################################
 
 # Third-party modules
-SConscript([
-		"3rdParty/CppUnit/SConscript",
-		"3rdParty/Boost/SConscript",
-		"3rdParty/LibIDN/SConscript",
-		"3rdParty/SQLite/SConscript"])
+SConscript(dirs = [
+		"3rdParty/CppUnit",
+		"3rdParty/Boost",
+		"3rdParty/LibIDN",
+		"3rdParty/SQLite"])
 
 # Swiften
-SConscript("Swiften/SConscript")
+SConscript(dirs = "Swiften")
 
 # Projects
 for dir in os.listdir(".") :
@@ -270,8 +270,7 @@ for dir in os.listdir(".") :
 		SConscript(sconscript)
 
 # QA
-SConscript("QA/SConscript")
-
+SConscript(dirs = "QA")
 
 ################################################################################
 # Print summary

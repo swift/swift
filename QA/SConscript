@@ -1,1 +1,4 @@
-SConscript("UnitTest/SConscript")
+SConscript(dirs = [
+    "UnitTest",
+    "Swiften"
+  ])
