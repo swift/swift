@@ -19,6 +19,16 @@ namespace Swift {
 					return i->second;
 				}
 			}
+
+			bool getBoolAttribute(const String& attribute, bool defaultValue = false) const {
+				AttributeMap::const_iterator i = find(attribute);
+				if (i == end()) {
+					return defaultValue;
+				}
+				else {
+					return i->second == "true" || i->second == "1";
+				}
+			}
 	};
 }
 

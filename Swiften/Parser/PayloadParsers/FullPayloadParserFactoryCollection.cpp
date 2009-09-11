@@ -11,6 +11,7 @@
 #include "Swiften/Parser/PayloadParsers/StatusShowParserFactory.h"
 #include "Swiften/Parser/PayloadParsers/RosterParserFactory.h"
 #include "Swiften/Parser/PayloadParsers/SoftwareVersionParserFactory.h"
+#include "Swiften/Parser/PayloadParsers/StorageParserFactory.h"
 #include "Swiften/Parser/PayloadParsers/DiscoInfoParserFactory.h"
 #include "Swiften/Parser/PayloadParsers/SecurityLabelParserFactory.h"
 #include "Swiften/Parser/PayloadParsers/SecurityLabelsCatalogParserFactory.h"
@@ -29,6 +30,7 @@ FullPayloadParserFactoryCollection::FullPayloadParserFactoryCollection() {
 	factories_.push_back(shared_ptr<PayloadParserFactory>(new PriorityParserFactory()));
 	factories_.push_back(shared_ptr<PayloadParserFactory>(new ErrorParserFactory()));
 	factories_.push_back(shared_ptr<PayloadParserFactory>(new SoftwareVersionParserFactory()));
+	factories_.push_back(shared_ptr<PayloadParserFactory>(new StorageParserFactory()));
 	factories_.push_back(shared_ptr<PayloadParserFactory>(new RosterParserFactory()));
 	factories_.push_back(shared_ptr<PayloadParserFactory>(new DiscoInfoParserFactory()));
 	factories_.push_back(shared_ptr<PayloadParserFactory>(new ResourceBindParserFactory()));

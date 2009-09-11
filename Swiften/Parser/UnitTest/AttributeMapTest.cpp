@@ -1,0 +1,71 @@
+#include <cppunit/extensions/HelperMacros.h>
+#include <cppunit/extensions/TestFactoryRegistry.h>
+
+#include "Swiften/Parser/AttributeMap.h"
+
+using namespace Swift;
+
+class AttributeMapTest : public CppUnit::TestFixture
+{
+		CPPUNIT_TEST_SUITE(AttributeMapTest);
+		CPPUNIT_TEST(testGetBoolAttribute_True);
+		CPPUNIT_TEST(testGetBoolAttribute_1);
+		CPPUNIT_TEST(testGetBoolAttribute_False);
+		CPPUNIT_TEST(testGetBoolAttribute_0);
+		CPPUNIT_TEST(testGetBoolAttribute_Invalid);
+		CPPUNIT_TEST(testGetBoolAttribute_UnknownWithDefaultTrue);
+		CPPUNIT_TEST(testGetBoolAttribute_UnknownWithDefaultFalse);
+		CPPUNIT_TEST_SUITE_END();
+
+	public:
+		AttributeMapTest() {}
+
+		void testGetBoolAttribute_True() {
+			AttributeMap testling;
+			testling["foo"] = "true";
+
+			CPPUNIT_ASSERT(testling.getBoolAttribute("foo"));
+		}
+
+		void testGetBoolAttribute_1() {
+			AttributeMap testling;
+			testling["foo"] = "1";
+
+			CPPUNIT_ASSERT(testling.getBoolAttribute("foo"));
+		}
+
+		void testGetBoolAttribute_False() {
+			AttributeMap testling;
+			testling["foo"] = "false";
+
+			CPPUNIT_ASSERT(!testling.getBoolAttribute("foo", true));
+		}
+
+		void testGetBoolAttribute_0() {
+			AttributeMap testling;
+			testling["foo"] = "0";
+
+			CPPUNIT_ASSERT(!testling.getBoolAttribute("foo", true));
+		}
+
+		void testGetBoolAttribute_Invalid() {
+			AttributeMap testling;
+			testling["foo"] = "bla";
+
+			CPPUNIT_ASSERT(!testling.getBoolAttribute("foo", true));
+		}
+
+		void testGetBoolAttribute_UnknownWithDefaultTrue() {
+			AttributeMap testling;
+
+			CPPUNIT_ASSERT(testling.getBoolAttribute("foo", true));
+		}
+
+		void testGetBoolAttribute_UnknownWithDefaultFalse() {
+			AttributeMap testling;
+
+			CPPUNIT_ASSERT(!testling.getBoolAttribute("foo", false));
+		}
+};
+
+CPPUNIT_TEST_SUITE_REGISTRATION(AttributeMapTest);
