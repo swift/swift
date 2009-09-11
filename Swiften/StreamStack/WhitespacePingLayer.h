@@ -12,6 +12,8 @@ namespace Swift {
 		public:
 			WhitespacePingLayer();
 
+			void setActive();
+			void setInactive();
 			void writeData(const ByteArray& data);
 			void handleDataRead(const ByteArray& data);
 

@@ -10,22 +10,20 @@
 namespace Swift {
 	class Timer : public EventOwner, public boost::enable_shared_from_this<Timer> {
 		public:
-			Timer(int milliseconds);
+			Timer(int milliseconds, boost::asio::io_service* service);
 			~Timer();
 
 			void start();
+			void stop();
 
 		public:
 			boost::signal<void ()> onTick;
 
 		private:
-			void doStart();
-			void handleTimerTick();
+			void handleTimerTick(const boost::system::error_code& error);
 
 		private:
-			int timeout_;
-			boost::asio::io_service* ioService_;
-			boost::thread* thread_;
-			boost::asio::deadline_timer* timer_;
+			int timeout;
+			boost::asio::deadline_timer timer;
 	};
 }

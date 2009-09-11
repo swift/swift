@@ -7,6 +7,8 @@
 #include "Swiften/EventLoop/SimpleEventLoop.h"
 #include "Swiften/Queries/Requests/GetRosterRequest.h"
 #include "Swiften/Client/ClientXMLTracer.h"
+#include "Swiften/Network/BoostIOServiceThread.h"
+#include "Swiften/Network/MainBoostIOServiceThread.h"
 
 using namespace Swift;
 
@@ -44,7 +46,7 @@ int main(int, char**) {
 	client->connect();
 
 	{
-		boost::shared_ptr<Timer> timer(new Timer(10000));
+		boost::shared_ptr<Timer> timer(new Timer(10000, &MainBoostIOServiceThread::getInstance().getIOService()));
 		timer->onTick.connect(boost::bind(&SimpleEventLoop::stop, &eventLoop));
 		timer->start();
 

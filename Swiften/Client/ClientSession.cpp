@@ -96,6 +96,7 @@ void ClientSession::handleElement(boost::shared_ptr<Element> element) {
 			// Add a whitespace ping layer
 			whitespacePingLayer_ = boost::shared_ptr<WhitespacePingLayer>(new WhitespacePingLayer());
 			getStreamStack()->addLayer(whitespacePingLayer_);
+			whitespacePingLayer_->setActive();
 
 			if (streamFeatures->hasSession()) {
 				needSessionStart_ = true;
@@ -196,6 +197,10 @@ void ClientSession::sendSessionStart() {
 }
 
 void ClientSession::handleSessionFinished(const boost::optional<SessionError>& error) {
+	if (whitespacePingLayer_) {
+		whitespacePingLayer_->setInactive();
+	}
+	
 	if (error) {
 		//assert(!error_);
 		state_ = Error;

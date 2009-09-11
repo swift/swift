@@ -39,6 +39,7 @@ using namespace Swift;
 class ClientSessionTest : public CppUnit::TestFixture {
 		CPPUNIT_TEST_SUITE(ClientSessionTest);
 		CPPUNIT_TEST(testConstructor);
+		CPPUNIT_TEST(testDisconnect);
 		/*
 		CPPUNIT_TEST(testStart_Error);
 		CPPUNIT_TEST(testStart_XMLError);
@@ -82,6 +83,21 @@ class ClientSessionTest : public CppUnit::TestFixture {
 		void testConstructor() {
 			boost::shared_ptr<MockSession> session(createSession("me@foo.com/Bar"));
 			CPPUNIT_ASSERT_EQUAL(ClientSession::Initial, session->getState());
+		}
+
+		void testDisconnect() {
+			boost::shared_ptr<MockSession> session(createSession("me@foo.com/Bar"));
+
+			/*
+			session->startSession();
+			processEvents();
+			session->finishSession();
+			processEvents();
+
+			boost::shared_ptr<WhitespacePingLayer> whitespacePingLayer = session->getWhitespacePingLayer();
+			CPPUNIT_ASSERT(whitespacePingLayer);
+			*/
+			//CPPUNIT_ASSERT(!whitespacePingLayer->isActive());
 		}
 
 /*
@@ -648,6 +664,12 @@ class ClientSessionTest : public CppUnit::TestFixture {
 		};
 
 	*/
+
+	private:
+		void processEvents() {
+			eventLoop_->processEvents();
+		}
+
 
 	private:
 		struct MockConnection : public Connection, public XMPPParserClient {
