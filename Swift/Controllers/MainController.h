@@ -50,6 +50,8 @@ namespace Swift {
 
 
 		private:
+			void resetClient();
+
 			void handleConnected();
 			void handleLoginRequest(const String& username, const String& password, const String& certificateFile, bool remember);
 			void handleChatRequest(const String& contact);

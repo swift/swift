@@ -76,27 +76,39 @@ MainController::MainController(ChatWindowFactory* chatWindowFactory, MainWindowF
 }
 
 MainController::~MainController() {
-	delete avatarManager_;
-	delete discoResponder_;
-	delete clientVersionResponder_;
-	delete xmppRosterController_;
-	delete rosterController_;
 	foreach (JIDChatControllerPair controllerPair, chatControllers_) {
 		delete controllerPair.second;
 	}
 	foreach (JIDMUCControllerPair controllerPair, mucControllers_) {
 		delete controllerPair.second;
 	}
-	delete presenceOracle_;
-	delete nickResolver_;
-	delete client_;
 	delete systemTrayController_;
 	delete soundEventController_;
 	delete avatarStorage_;
+	resetClient();
+}
+
+void MainController::resetClient() {
+	// FIXME: Most of this should be moved closer to the point where the client is logged out.
+	delete presenceOracle_;
+	presenceOracle_ = NULL;
+	delete nickResolver_;
+	nickResolver_ = NULL;
+	delete avatarManager_;
+	avatarManager_ = NULL;
+	delete rosterController_;
+	rosterController_ = NULL;
+	delete xmppRosterController_;
+	xmppRosterController_ = NULL;
+	delete clientVersionResponder_;
+	clientVersionResponder_ = NULL;
+	delete discoResponder_;
+	discoResponder_ = NULL;
+	delete client_;
+	client_ = NULL;
 }
 
 void MainController::handleConnected() {
-	delete presenceOracle_;
 	presenceOracle_ = new PresenceOracle(client_);
 
 	lastSentPresence_ = boost::shared_ptr<Presence>();
@@ -105,30 +117,25 @@ void MainController::handleConnected() {
 
 	boost::shared_ptr<XMPPRoster> xmppRoster(new XMPPRoster());
 
-
-	delete nickResolver_;
 	nickResolver_ = new NickResolver(xmppRoster);
 
-	delete avatarManager_;
 	avatarManager_ = new AvatarManager(client_, client_, avatarStorage_, this);
 	
-	delete rosterController_;
 	rosterController_ = new RosterController(jid_, xmppRoster, avatarManager_, mainWindowFactory_, treeWidgetFactory_, nickResolver_);
 	rosterController_->onStartChatRequest.connect(boost::bind(&MainController::handleChatRequest, this, _1));
 	rosterController_->onJoinMUCRequest.connect(boost::bind(&MainController::handleJoinMUCRequest, this, _1, _2));
 	rosterController_->onChangeStatusRequest.connect(boost::bind(&MainController::handleChangeStatusRequest, this, _1, _2));
 
-	delete xmppRosterController_;
 	xmppRosterController_ = new XMPPRosterController(client_, xmppRoster);
 	xmppRosterController_->requestRoster();
 
-	delete clientVersionResponder_;
 	clientVersionResponder_ = new SoftwareVersionResponder(CLIENT_NAME, CLIENT_VERSION, client_);
 	loginWindow_->morphInto(rosterController_->getWindow());
 
 	DiscoInfo discoInfo;
 	discoInfo.addIdentity(DiscoInfo::Identity(CLIENT_NAME, "client", "pc"));
 	capsInfo_ = boost::shared_ptr<CapsInfo>(new CapsInfo(CapsInfoGenerator(CLIENT_NODE).generateCapsInfo(discoInfo)));
+
 	discoResponder_ = new DiscoInfoResponder(client_);
 	discoResponder_->setDiscoInfo(discoInfo);
 	discoResponder_->setDiscoInfo(capsInfo_->getNode() + "#" + capsInfo_->getVersion(), discoInfo);
@@ -188,7 +195,8 @@ void MainController::handleLoginRequest(const String &username, const String &pa
 	settings_->storeString("certificate", certificateFile);
 	settings_->storeString("pass", remember ? password : "");
 
-	delete client_;
+	resetClient();
+
 	jid_ = JID(username);
 	client_ = new Swift::Client(jid_, password);
 	//client_->onDataRead.connect(&printIncomingData);
