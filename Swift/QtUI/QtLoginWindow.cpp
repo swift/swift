@@ -105,7 +105,7 @@ void QtLoginWindow::addAvailableAccount(const String& defaultJID, const String& 
 	QString username = P2QSTRING(defaultJID);
 	int index = -1;
 	for (int i = 0; i < usernames_.count(); i++) {
-		if (username_->currentText() == usernames_[i]) {
+		if (username == usernames_[i]) {
 			index = i;
 		}
 	}
