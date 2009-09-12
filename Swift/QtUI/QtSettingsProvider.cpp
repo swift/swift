@@ -1,6 +1,8 @@
 #include "QtSettingsProvider.h"
 #include "QtSwiftUtil.h"
 
+#include <QStringList>
+
 namespace Swift {
 
 QtSettingsProvider::QtSettingsProvider() {
@@ -26,6 +28,21 @@ bool QtSettingsProvider::getBoolSetting(const String &settingPath, bool defaultV
 
 void QtSettingsProvider::storeBool(const String &settingPath, bool settingValue) {
 	settings_.setValue(P2QSTRING(settingPath), settingValue);
+}
+
+std::vector<String> QtSettingsProvider::getAvailableProfiles() {
+	std::vector<String> profiles;
+	QVariant profilesVariant = settings_.value("profileList");
+	foreach(QString profileQString, profilesVariant.toStringList()) {
+		profiles.push_back(Q2PSTRING(profileQString));
+	}
+	return profiles;
+}
+
+void QtSettingsProvider::createProfile(const String& profile) {
+	QStringList stringList = settings_.value("profileList").toStringList();
+	stringList.append(P2QSTRING(profile));
+	settings_.setValue("profileList", stringList);
 }
 
 }

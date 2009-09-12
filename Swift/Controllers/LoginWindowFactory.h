@@ -14,7 +14,7 @@ namespace Swift {
 			/**
 			 * Transfers ownership of result.
 			 */
-			virtual LoginWindow* createLoginWindow(const String& defaultJID, const String& defaultPassword, const String& defaultCertificate) = 0;
+			virtual LoginWindow* createLoginWindow() = 0;
 
 	};
 }

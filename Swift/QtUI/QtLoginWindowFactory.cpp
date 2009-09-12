@@ -8,8 +8,8 @@ QtLoginWindowFactory::QtLoginWindowFactory(QSplitter* splitter, QtSystemTray* sy
 	systemTray_ = systemTray;
 }
 
-LoginWindow* QtLoginWindowFactory::createLoginWindow(const String& defaultJID, const String& defaultPassword, const String& defaultCertificate) {
-	QtLoginWindow* window = new QtLoginWindow(defaultJID, defaultPassword, defaultCertificate);
+LoginWindow* QtLoginWindowFactory::createLoginWindow() {
+	QtLoginWindow* window = new QtLoginWindow();
 	if (splitter_) {
 		splitter_->insertWidget(0, window);
 	}

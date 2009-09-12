@@ -20,12 +20,12 @@ namespace Swift {
 	class QtLoginWindow : public QMainWindow, public LoginWindow {
 		Q_OBJECT
 		public:
-			QtLoginWindow(const String& defaultJID, const String& defaultPassword, const String& defaultCertificate);
+			QtLoginWindow();
 
 			void morphInto(MainWindow *mainWindow);
 			virtual void loggedOut();
 			virtual void setMessage(const String& message);
-
+			virtual void addAvailableAccount(const String& defaultJID, const String& defaultPassword, const String& defaultCertificate);
 		private slots:
 			void loginClicked();
 			void handleCertficateChecked(bool);

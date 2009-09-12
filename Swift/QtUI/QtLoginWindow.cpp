@@ -16,7 +16,7 @@
 
 namespace Swift{
 
-QtLoginWindow::QtLoginWindow(const String& defaultJID, const String& defaultPassword, const String& defaultCertificate) : QMainWindow() {
+QtLoginWindow::QtLoginWindow() : QMainWindow() {
 	setWindowTitle("Swift");
 	resize(200, 500);
 	setContentsMargins(0,0,0,0);
@@ -58,10 +58,7 @@ QtLoginWindow::QtLoginWindow(const String& defaultJID, const String& defaultPass
 	certificateButton_ = new QToolButton(this);
 	certificateButton_->setCheckable(true);
 	certificateButton_->setIcon(QIcon(":/icons/certificate.png"));
-	certificateFile_ = P2QSTRING(defaultCertificate);
-	if (!certificateFile_.isEmpty()) {
-		certificateButton_->setChecked(true);
-	}
+	
 	credentialsLayout->addWidget(certificateButton_);
 	connect(certificateButton_, SIGNAL(clicked(bool)), SLOT(handleCertficateChecked(bool)));
 
@@ -71,9 +68,6 @@ QtLoginWindow::QtLoginWindow(const String& defaultJID, const String& defaultPass
 	loginButton_->setDefault(true);
 	layout->addWidget(loginButton_);
 
-	username_->setText(P2QSTRING(defaultJID));
-	password_->setText(P2QSTRING(defaultPassword));
-
 	message_ = new QLabel(this);
 	message_->setTextFormat(Qt::RichText);
 	message_->setWordWrap(true);
@@ -81,7 +75,6 @@ QtLoginWindow::QtLoginWindow(const String& defaultJID, const String& defaultPass
 
 	layout->addStretch();
 	remember_ = new QCheckBox(tr("Remember Password?"), this);
-	remember_->setChecked(defaultPassword != "");
 	layout->addWidget(remember_);
 	connect(loginButton_, SIGNAL(clicked()), SLOT(loginClicked()));
 	stack_->addWidget(wrapperWidget);
@@ -102,10 +95,18 @@ QtLoginWindow::QtLoginWindow(const String& defaultJID, const String& defaultPass
 	connect(quitAction, SIGNAL(activated()), SLOT(handleQuit()));
 	swiftMenu_->addAction(quitAction);
 	
-	
-	
 	setInitialMenus();
 	this->show();
+}
+
+void QtLoginWindow::addAvailableAccount(const String& defaultJID, const String& defaultPassword, const String& defaultCertificate) {
+	username_->setText(P2QSTRING(defaultJID));
+	password_->setText(P2QSTRING(defaultPassword));
+	certificateFile_ = P2QSTRING(defaultCertificate);
+	if (!certificateFile_.isEmpty()) {
+		certificateButton_->setChecked(true);
+	}
+	remember_->setChecked(defaultPassword != "");
 }
 
 void QtLoginWindow::loggedOut() {

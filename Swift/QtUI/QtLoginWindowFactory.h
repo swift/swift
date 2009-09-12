@@ -11,7 +11,7 @@ namespace Swift {
 		Q_OBJECT
 		public:
 			QtLoginWindowFactory(QSplitter* splitter, QtSystemTray* systemTray);
-			LoginWindow* createLoginWindow(const String& defaultJID, const String& defaultPassword, const String& defaultCertificate);
+			LoginWindow* createLoginWindow();
 		private:
 			QSplitter* splitter_;
 			QtSystemTray* systemTray_;

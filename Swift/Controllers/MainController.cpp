@@ -16,6 +16,7 @@
 #include "Swift/Controllers/MainWindowFactory.h"
 #include "Swift/Controllers/MUCController.h"
 #include "Swift/Controllers/NickResolver.h"
+#include "Swift/Controllers/ProfileSettingsProvider.h"
 #include "Swift/Controllers/RosterController.h"
 #include "Swift/Controllers/SoundEventController.h"
 #include "Swift/Controllers/SoundPlayer.h"
@@ -71,7 +72,12 @@ MainController::MainController(ChatWindowFactory* chatWindowFactory, MainWindowF
 	eventController_->onEventQueueLengthChange.connect(boost::bind(&MainController::handleEventQueueLengthChange, this, _1));
 	systemTrayController_ = new SystemTrayController(eventController_, systemTray);
 	soundEventController_ = new SoundEventController(eventController_, soundPlayer, settings->getBoolSetting("playSounds", true));
-	loginWindow_ = loginWindowFactory_->createLoginWindow(settings->getStringSetting("jid"), settings->getStringSetting("pass"), settings->getStringSetting("certificate"));
+	loginWindow_ = loginWindowFactory_->createLoginWindow();
+	foreach (String profile, settings->getAvailableProfiles()) {
+		ProfileSettingsProvider* profileSettings = new ProfileSettingsProvider(profile, settings);
+		loginWindow_->addAvailableAccount(profileSettings->getStringSetting("jid"), profileSettings->getStringSetting("pass"), profileSettings->getStringSetting("certificate"));
+		delete profileSettings;
+	}
 	loginWindow_->onLoginRequest.connect(boost::bind(&MainController::handleLoginRequest, this, _1, _2, _3, _4));
 }
 
@@ -190,10 +196,11 @@ void MainController::handleIncomingPresence(boost::shared_ptr<Presence> presence
 
 void MainController::handleLoginRequest(const String &username, const String &password, const String& certificateFile, bool remember) {
 	loginWindow_->setMessage("");
-
-	settings_->storeString("jid", username);
-	settings_->storeString("certificate", certificateFile);
-	settings_->storeString("pass", remember ? password : "");
+	ProfileSettingsProvider* profileSettings = new ProfileSettingsProvider(username, settings_);
+	profileSettings->storeString("jid", username);
+	profileSettings->storeString("certificate", certificateFile);
+	profileSettings->storeString("pass", remember ? password : "");
+	delete profileSettings;
 
 	resetClient();
 
