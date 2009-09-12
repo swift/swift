@@ -2,7 +2,7 @@
 #include <cppunit/extensions/TestFactoryRegistry.h>
 
 #include "Swiften/Parser/PayloadParsers/SecurityLabelsCatalogParser.h"
-#include "Swiften/Parser/PayloadParsers/UnitTest/PayloadParserTester.h"
+#include "Swiften/Parser/PayloadParsers/UnitTest/PayloadsParserTester.h"
 
 using namespace Swift;
 
@@ -16,8 +16,7 @@ class SecurityLabelsCatalogParserTest : public CppUnit::TestFixture
 		SecurityLabelsCatalogParserTest() {}
 
 		void testParse() {
-			SecurityLabelsCatalogParser testling;
-			PayloadParserTester parser(&testling);
+			PayloadsParserTester parser;
 
 			CPPUNIT_ASSERT(parser.parse(
 				"<catalog desc=\"an example set of labels\" name=\"Default\" to=\"example.com\" xmlns=\"urn:xmpp:sec-label:catalog:0\">"
@@ -31,7 +30,7 @@ class SecurityLabelsCatalogParserTest : public CppUnit::TestFixture
 					"</securitylabel>"
 				"</catalog>"));
 
-			SecurityLabelsCatalog* payload = dynamic_cast<SecurityLabelsCatalog*>(testling.getPayload().get());
+			SecurityLabelsCatalog* payload = dynamic_cast<SecurityLabelsCatalog*>(parser.getPayload().get());
 			CPPUNIT_ASSERT_EQUAL(String("Default"), payload->getName());
 			CPPUNIT_ASSERT_EQUAL(String("an example set of labels"), payload->getDescription());
 			CPPUNIT_ASSERT_EQUAL(JID("example.com"), payload->getTo());

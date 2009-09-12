@@ -2,7 +2,7 @@
 #include <cppunit/extensions/TestFactoryRegistry.h>
 
 #include "Swiften/Parser/PayloadParsers/StorageParser.h"
-#include "Swiften/Parser/PayloadParsers/UnitTest/PayloadParserTester.h"
+#include "Swiften/Parser/PayloadParsers/UnitTest/PayloadsParserTester.h"
 
 using namespace Swift;
 
@@ -17,8 +17,7 @@ class StorageParserTest : public CppUnit::TestFixture
 		StorageParserTest() {}
 
 		void testParse_Conference() {
-			StorageParser testling;
-			PayloadParserTester parser(&testling);
+			PayloadsParserTester parser;
 
 			CPPUNIT_ASSERT(parser.parse(
 				"<storage xmlns='storage:bookmarks'>"
@@ -30,7 +29,7 @@ class StorageParserTest : public CppUnit::TestFixture
 					"</conference>"
 				"</storage>"));
 
-			Storage* payload = dynamic_cast<Storage*>(testling.getPayload().get());
+			Storage* payload = dynamic_cast<Storage*>(parser.getPayload().get());
 			std::vector<Storage::Conference> conferences = payload->getConferences();
 			CPPUNIT_ASSERT_EQUAL(1U, conferences.size());
 			CPPUNIT_ASSERT_EQUAL(String("Council of Oberon"), conferences[0].name);
@@ -41,8 +40,7 @@ class StorageParserTest : public CppUnit::TestFixture
 		}
 
 		void testParse_MultipleConferences() {
-			StorageParser testling;
-			PayloadParserTester parser(&testling);
+			PayloadsParserTester parser;
 
 			CPPUNIT_ASSERT(parser.parse(
 				"<storage xmlns='storage:bookmarks'>"
@@ -54,7 +52,7 @@ class StorageParserTest : public CppUnit::TestFixture
 							"jid='teaparty@wonderland.lit' />"
 				"</storage>"));
 
-			Storage* payload = dynamic_cast<Storage*>(testling.getPayload().get());
+			Storage* payload = dynamic_cast<Storage*>(parser.getPayload().get());
 			std::vector<Storage::Conference> conferences = payload->getConferences();
 			CPPUNIT_ASSERT_EQUAL(2U, conferences.size());
 			CPPUNIT_ASSERT_EQUAL(String("Council of Oberon"), conferences[0].name);

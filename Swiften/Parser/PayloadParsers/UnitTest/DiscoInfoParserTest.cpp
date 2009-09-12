@@ -2,7 +2,7 @@
 #include <cppunit/extensions/TestFactoryRegistry.h>
 
 #include "Swiften/Parser/PayloadParsers/DiscoInfoParser.h"
-#include "Swiften/Parser/PayloadParsers/UnitTest/PayloadParserTester.h"
+#include "Swiften/Parser/PayloadParsers/UnitTest/PayloadsParserTester.h"
 
 using namespace Swift;
 
@@ -16,8 +16,7 @@ class DiscoInfoParserTest : public CppUnit::TestFixture
 		DiscoInfoParserTest() {}
 
 		void testParse() {
-			DiscoInfoParser testling;
-			PayloadParserTester parser(&testling);
+			PayloadsParserTester parser;
 
 			CPPUNIT_ASSERT(parser.parse(
 				"<query xmlns=\"http://jabber.org/protocol/disco#info\">"
@@ -28,7 +27,7 @@ class DiscoInfoParserTest : public CppUnit::TestFixture
 					"<feature var=\"baz-feature\"/>"
 				"</query>"));
 
-			DiscoInfo* payload = dynamic_cast<DiscoInfo*>(testling.getPayload().get());
+			DiscoInfo* payload = dynamic_cast<DiscoInfo*>(parser.getPayload().get());
 			CPPUNIT_ASSERT_EQUAL(2, static_cast<int>(payload->getIdentities().size()));
 			CPPUNIT_ASSERT_EQUAL(String("Swift"), payload->getIdentities()[0].getName());
 			CPPUNIT_ASSERT_EQUAL(String("pc"), payload->getIdentities()[0].getType());

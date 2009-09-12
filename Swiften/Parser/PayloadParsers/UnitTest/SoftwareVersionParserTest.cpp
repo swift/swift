@@ -2,7 +2,7 @@
 #include <cppunit/extensions/TestFactoryRegistry.h>
 
 #include "Swiften/Parser/PayloadParsers/SoftwareVersionParser.h"
-#include "Swiften/Parser/PayloadParsers/UnitTest/PayloadParserTester.h"
+#include "Swiften/Parser/PayloadParsers/UnitTest/PayloadsParserTester.h"
 
 using namespace Swift;
 
@@ -16,8 +16,7 @@ class SoftwareVersionParserTest : public CppUnit::TestFixture
 		SoftwareVersionParserTest() {}
 
 		void testParse() {
-			SoftwareVersionParser testling;
-			PayloadParserTester parser(&testling);
+			PayloadsParserTester parser;
 			
 			CPPUNIT_ASSERT(parser.parse(
 				"<query xmlns=\"jabber:iq:version\">"
@@ -26,7 +25,7 @@ class SoftwareVersionParserTest : public CppUnit::TestFixture
 					"<os>Mac OS X</os>"
 				"</query>"));
 
-			SoftwareVersion* payload = dynamic_cast<SoftwareVersion*>(testling.getPayload().get());
+			SoftwareVersion* payload = dynamic_cast<SoftwareVersion*>(parser.getPayload().get());
 			CPPUNIT_ASSERT_EQUAL(String("myclient"), payload->getName());
 			CPPUNIT_ASSERT_EQUAL(String("1.0"), payload->getVersion());
 			CPPUNIT_ASSERT_EQUAL(String("Mac OS X"), payload->getOS());

@@ -2,7 +2,7 @@
 #include <cppunit/extensions/TestFactoryRegistry.h>
 
 #include "Swiften/Parser/PayloadParsers/VCardUpdateParser.h"
-#include "Swiften/Parser/PayloadParsers/UnitTest/PayloadParserTester.h"
+#include "Swiften/Parser/PayloadParsers/UnitTest/PayloadsParserTester.h"
 
 using namespace Swift;
 
@@ -16,15 +16,14 @@ class VCardUpdateParserTest : public CppUnit::TestFixture
 		VCardUpdateParserTest() {}
 
 		void testParse() {
-			VCardUpdateParser testling;
-			PayloadParserTester parser(&testling);
+			PayloadsParserTester parser;
 
 			CPPUNIT_ASSERT(parser.parse(
 				"<x xmlns='vcard-temp:x:update'>"
 					"<photo>sha1-hash-of-image</photo>"
 				"</x>"));
 
-			VCardUpdate* payload = dynamic_cast<VCardUpdate*>(testling.getPayload().get());
+			VCardUpdate* payload = dynamic_cast<VCardUpdate*>(parser.getPayload().get());
 			CPPUNIT_ASSERT_EQUAL(String("sha1-hash-of-image"), payload->getPhotoHash());
 		}
 };

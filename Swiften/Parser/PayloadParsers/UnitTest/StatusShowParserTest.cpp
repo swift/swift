@@ -2,7 +2,7 @@
 #include <cppunit/extensions/TestFactoryRegistry.h>
 
 #include "Swiften/Parser/PayloadParsers/StatusShowParser.h"
-#include "Swiften/Parser/PayloadParsers/UnitTest/PayloadParserTester.h"
+#include "Swiften/Parser/PayloadParsers/UnitTest/PayloadsParserTester.h"
 
 using namespace Swift;
 
@@ -20,52 +20,47 @@ class StatusShowParserTest : public CppUnit::TestFixture
 		StatusShowParserTest() {}
 
 		void testParse_Invalid() {
-			StatusShowParser testling;
-			PayloadParserTester parser(&testling);
+			PayloadsParserTester parser;
 			
 			CPPUNIT_ASSERT(parser.parse("<show>invalid</show>"));
 
-			StatusShow* payload = dynamic_cast<StatusShow*>(testling.getPayload().get());
+			StatusShow* payload = dynamic_cast<StatusShow*>(parser.getPayload().get());
 			CPPUNIT_ASSERT(StatusShow::Online == payload->getType());
 		}
 
 		void testParse_Away() {
-			StatusShowParser testling;
-			PayloadParserTester parser(&testling);
+			PayloadsParserTester parser;
 			
 			CPPUNIT_ASSERT(parser.parse("<show>away</show>"));
 
-			StatusShow* payload = dynamic_cast<StatusShow*>(testling.getPayload().get());
+			StatusShow* payload = dynamic_cast<StatusShow*>(parser.getPayload().get());
 			CPPUNIT_ASSERT(StatusShow::Away == payload->getType());
 		}
 
 		void testParse_FFC() {
-			StatusShowParser testling;
-			PayloadParserTester parser(&testling);
+			PayloadsParserTester parser;
 			
 			CPPUNIT_ASSERT(parser.parse("<show>chat</show>"));
 
-			StatusShow* payload = dynamic_cast<StatusShow*>(testling.getPayload().get());
+			StatusShow* payload = dynamic_cast<StatusShow*>(parser.getPayload().get());
 			CPPUNIT_ASSERT(StatusShow::FFC == payload->getType());
 		}
 
 		void testParse_XA() {
-			StatusShowParser testling;
-			PayloadParserTester parser(&testling);
+			PayloadsParserTester parser;
 			
 			CPPUNIT_ASSERT(parser.parse("<show>xa</show>"));
 
-			StatusShow* payload = dynamic_cast<StatusShow*>(testling.getPayload().get());
+			StatusShow* payload = dynamic_cast<StatusShow*>(parser.getPayload().get());
 			CPPUNIT_ASSERT(StatusShow::XA == payload->getType());
 		}
 
 		void testParse_DND() {
-			StatusShowParser testling;
-			PayloadParserTester parser(&testling);
+			PayloadsParserTester parser;
 			
 			CPPUNIT_ASSERT(parser.parse("<show>dnd</show>"));
 
-			StatusShow* payload = dynamic_cast<StatusShow*>(testling.getPayload().get());
+			StatusShow* payload = dynamic_cast<StatusShow*>(parser.getPayload().get());
 			CPPUNIT_ASSERT(StatusShow::DND == payload->getType());
 		}
 };

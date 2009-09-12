@@ -2,7 +2,7 @@
 #include <cppunit/extensions/TestFactoryRegistry.h>
 
 #include "Swiften/Parser/PayloadParsers/VCardParser.h"
-#include "Swiften/Parser/PayloadParsers/UnitTest/PayloadParserTester.h"
+#include "Swiften/Parser/PayloadParsers/UnitTest/PayloadsParserTester.h"
 
 using namespace Swift;
 
@@ -17,8 +17,7 @@ class VCardParserTest : public CppUnit::TestFixture
 		VCardParserTest() {}
 
 		void testParse_Photo() {
-			VCardParser testling;
-			PayloadParserTester parser(&testling);
+			PayloadsParserTester parser;
 
 			CPPUNIT_ASSERT(parser.parse(
 				"<vCard xmlns='vcard-temp'>"
@@ -31,21 +30,20 @@ class VCardParserTest : public CppUnit::TestFixture
 					"</PHOTO>"
 				"</vCard>"));
 
-			VCard* payload = dynamic_cast<VCard*>(testling.getPayload().get());
+			VCard* payload = dynamic_cast<VCard*>(parser.getPayload().get());
 			CPPUNIT_ASSERT_EQUAL(String("image/jpeg"), payload->getPhotoType());
 			CPPUNIT_ASSERT_EQUAL(ByteArray("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890"), payload->getPhoto());
 		}
 
 		void testParse_Nickname() {
-			VCardParser testling;
-			PayloadParserTester parser(&testling);
+			PayloadsParserTester parser;
 
 			CPPUNIT_ASSERT(parser.parse(
 				"<vCard xmlns='vcard-temp'>"
 					"<NICKNAME>mynick</NICKNAME>"
 				"</vCard>"));
 
-			VCard* payload = dynamic_cast<VCard*>(testling.getPayload().get());
+			VCard* payload = dynamic_cast<VCard*>(parser.getPayload().get());
 			CPPUNIT_ASSERT_EQUAL(String("mynick"), payload->getNickname());
 		}
 };

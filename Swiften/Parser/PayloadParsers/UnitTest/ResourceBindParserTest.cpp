@@ -2,7 +2,7 @@
 #include <cppunit/extensions/TestFactoryRegistry.h>
 
 #include "Swiften/Parser/PayloadParsers/ResourceBindParser.h"
-#include "Swiften/Parser/PayloadParsers/UnitTest/PayloadParserTester.h"
+#include "Swiften/Parser/PayloadParsers/UnitTest/PayloadsParserTester.h"
 
 using namespace Swift;
 
@@ -17,22 +17,20 @@ class ResourceBindParserTest : public CppUnit::TestFixture
 		ResourceBindParserTest() {}
 
 		void testParse_JID() {
-			ResourceBindParser testling;
-			PayloadParserTester parser(&testling);
+			PayloadsParserTester parser;
 
 			CPPUNIT_ASSERT(parser.parse("<bind xmlns='urn:ietf:params:xml:ns:xmpp-bind'><jid>somenode@example.com/someresource</jid></bind>"));
 
-			ResourceBind* payload = dynamic_cast<ResourceBind*>(testling.getPayload().get());
+			ResourceBind* payload = dynamic_cast<ResourceBind*>(parser.getPayload().get());
 			CPPUNIT_ASSERT_EQUAL(JID("somenode@example.com/someresource"), payload->getJID());
 		}
 
 		void testParse_Resource() {
-			ResourceBindParser testling;
-			PayloadParserTester parser(&testling);
+			PayloadsParserTester parser;
 
 			CPPUNIT_ASSERT(parser.parse("<bind xmlns='urn:ietf:params:xml:ns:xmpp-bind'><resource>someresource</resource></bind>"));
 
-			ResourceBind* payload = dynamic_cast<ResourceBind*>(testling.getPayload().get());
+			ResourceBind* payload = dynamic_cast<ResourceBind*>(parser.getPayload().get());
 			CPPUNIT_ASSERT_EQUAL(String("someresource"), payload->getResource());
 		}
 };

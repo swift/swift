@@ -2,7 +2,7 @@
 #include <cppunit/extensions/TestFactoryRegistry.h>
 
 #include "Swiften/Parser/PayloadParsers/PriorityParser.h"
-#include "Swiften/Parser/PayloadParsers/UnitTest/PayloadParserTester.h"
+#include "Swiften/Parser/PayloadParsers/UnitTest/PayloadsParserTester.h"
 
 using namespace Swift;
 
@@ -16,12 +16,11 @@ class PriorityParserTest : public CppUnit::TestFixture
 		PriorityParserTest() {}
 
 		void testParse() {
-			PriorityParser testling;
-			PayloadParserTester parser(&testling);
+			PayloadsParserTester parser;
 
 			CPPUNIT_ASSERT(parser.parse("<priority>-120</priority>"));
 
-			Priority* payload = dynamic_cast<Priority*>(testling.getPayload().get());
+			Priority* payload = dynamic_cast<Priority*>(parser.getPayload().get());
 			CPPUNIT_ASSERT_EQUAL(-120, payload->getPriority());
 		}
 };

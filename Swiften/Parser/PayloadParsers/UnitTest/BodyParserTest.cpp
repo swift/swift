@@ -2,7 +2,7 @@
 #include <cppunit/extensions/TestFactoryRegistry.h>
 
 #include "Swiften/Parser/PayloadParsers/BodyParser.h"
-#include "Swiften/Parser/PayloadParsers/UnitTest/PayloadParserTester.h"
+#include "Swiften/Parser/PayloadParsers/UnitTest/PayloadsParserTester.h"
 
 using namespace Swift;
 
@@ -16,12 +16,11 @@ class BodyParserTest : public CppUnit::TestFixture
 		BodyParserTest() {}
 
 		void testParse() {
-			BodyParser testling;
-			PayloadParserTester parser(&testling);
+			PayloadsParserTester parser;
 
 			CPPUNIT_ASSERT(parser.parse("<body>foo<baz>bar</baz>fum</body>"));
 
-			Body* payload = dynamic_cast<Body*>(testling.getPayload().get());
+			Body* payload = dynamic_cast<Body*>(parser.getPayload().get());
 			CPPUNIT_ASSERT_EQUAL(String("foobarfum"), payload->getText());
 		}
 };

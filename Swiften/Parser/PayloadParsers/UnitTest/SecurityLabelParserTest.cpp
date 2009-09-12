@@ -2,7 +2,7 @@
 #include <cppunit/extensions/TestFactoryRegistry.h>
 
 #include "Swiften/Parser/PayloadParsers/SecurityLabelParser.h"
-#include "Swiften/Parser/PayloadParsers/UnitTest/PayloadParserTester.h"
+#include "Swiften/Parser/PayloadParsers/UnitTest/PayloadsParserTester.h"
 
 using namespace Swift;
 
@@ -16,8 +16,7 @@ class SecurityLabelParserTest : public CppUnit::TestFixture
 		SecurityLabelParserTest() {}
 
 		void testParse() {
-			SecurityLabelParser testling;
-			PayloadParserTester parser(&testling);
+			PayloadsParserTester parser;
 
 			CPPUNIT_ASSERT(parser.parse(
 				"<securitylabel xmlns=\"urn:xmpp:sec-label:0\">"
@@ -33,7 +32,7 @@ class SecurityLabelParserTest : public CppUnit::TestFixture
 					"</equivalentlabel>"
 				"</securitylabel>"));
 
-			SecurityLabel* payload = dynamic_cast<SecurityLabel*>(testling.getPayload().get());
+			SecurityLabel* payload = dynamic_cast<SecurityLabel*>(parser.getPayload().get());
 			CPPUNIT_ASSERT_EQUAL(String("SECRET"), payload->getDisplayMarking());
 			CPPUNIT_ASSERT_EQUAL(String("black"), payload->getForegroundColor());
 			CPPUNIT_ASSERT_EQUAL(String("red"), payload->getBackgroundColor());

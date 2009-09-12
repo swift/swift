@@ -2,7 +2,7 @@
 #include <cppunit/extensions/TestFactoryRegistry.h>
 
 #include "Swiften/Parser/PayloadParsers/RosterParser.h"
-#include "Swiften/Parser/PayloadParsers/UnitTest/XMLPayloadParser.h"
+#include "Swiften/Parser/PayloadParsers/UnitTest/PayloadsParserTester.h"
 
 using namespace Swift;
 
@@ -16,8 +16,7 @@ class RosterParserTest : public CppUnit::TestFixture
 		RosterParserTest() {}
 
 		void testParse() {
-			RosterParser testling;
-			XMLPayloadParser parser(&testling);
+			PayloadsParserTester parser;
 			parser.parse(
 				"<query xmlns='jabber:iq:roster'>"
 				"	<item jid='foo@bar.com' name='Foo @ Bar' subscription='from' ask='subscribe'>"
@@ -27,7 +26,7 @@ class RosterParserTest : public CppUnit::TestFixture
 				" <item jid='baz@blo.com' name='Baz'/>"
 				"</query>");
 
-			RosterPayload* payload = dynamic_cast<RosterPayload*>(testling.getPayload().get());
+			RosterPayload* payload = dynamic_cast<RosterPayload*>(parser.getPayload().get());
 			const RosterPayload::RosterItemPayloads& items = payload->getItems();
 
 			CPPUNIT_ASSERT_EQUAL(static_cast<size_t>(2), items.size());

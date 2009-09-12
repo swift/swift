@@ -2,7 +2,7 @@
 #include <cppunit/extensions/TestFactoryRegistry.h>
 
 #include "Swiften/Parser/PayloadParsers/ErrorParser.h"
-#include "Swiften/Parser/PayloadParsers/UnitTest/PayloadParserTester.h"
+#include "Swiften/Parser/PayloadParsers/UnitTest/PayloadsParserTester.h"
 
 using namespace Swift;
 
@@ -16,8 +16,7 @@ class ErrorParserTest : public CppUnit::TestFixture
 		ErrorParserTest() {}
 
 		void testParse() {
-			ErrorParser testling;
-			PayloadParserTester parser(&testling);
+			PayloadsParserTester parser;
 
 			CPPUNIT_ASSERT(parser.parse(
 				"<error type=\"modify\">"
@@ -25,7 +24,7 @@ class ErrorParserTest : public CppUnit::TestFixture
 					"<text xmlns=\"urn:ietf:params:xml:ns:xmpp-stanzas\">boo</text>"
 				"</error>"));
 
-			Error* payload = dynamic_cast<Error*>(testling.getPayload().get());
+			Error* payload = dynamic_cast<Error*>(parser.getPayload().get());
 			CPPUNIT_ASSERT_EQUAL(Error::BadRequest, payload->getCondition());
 			CPPUNIT_ASSERT_EQUAL(Error::Modify, payload->getType());
 			CPPUNIT_ASSERT_EQUAL(String("boo"), payload->getText());

@@ -2,7 +2,7 @@
 #include <cppunit/extensions/TestFactoryRegistry.h>
 
 #include "Swiften/Parser/PayloadParsers/StatusParser.h"
-#include "Swiften/Parser/PayloadParsers/UnitTest/PayloadParserTester.h"
+#include "Swiften/Parser/PayloadParsers/UnitTest/PayloadsParserTester.h"
 
 using namespace Swift;
 
@@ -16,12 +16,11 @@ class StatusParserTest : public CppUnit::TestFixture
 		StatusParserTest() {}
 
 		void testParse() {
-			StatusParser testling;
-			PayloadParserTester parser(&testling);
+			PayloadsParserTester parser;
 
 			CPPUNIT_ASSERT(parser.parse("<status>foo<baz>bar</baz>fum</status>"));
 
-			Status* payload = dynamic_cast<Status*>(testling.getPayload().get());
+			Status* payload = dynamic_cast<Status*>(parser.getPayload().get());
 			CPPUNIT_ASSERT_EQUAL(String("foobarfum"), payload->getText());
 		}
 };
