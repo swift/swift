@@ -10,6 +10,8 @@ class SettingsProvider {
 		virtual ~SettingsProvider() {}
 		virtual String getStringSetting(const String &settingPath) = 0;
 		virtual void storeString(const String &settingPath, const String &settingValue) = 0;
+		virtual bool getBoolSetting(const String &settingPath, bool defaultValue) = 0;
+		virtual void storeBool(const String &settingPath, bool settingValue) = 0;
 };
 
 }

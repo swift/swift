@@ -70,7 +70,7 @@ MainController::MainController(ChatWindowFactory* chatWindowFactory, MainWindowF
 	eventController_ = new EventController();
 	eventController_->onEventQueueLengthChange.connect(boost::bind(&MainController::handleEventQueueLengthChange, this, _1));
 	systemTrayController_ = new SystemTrayController(eventController_, systemTray);
-	soundEventController_ = new SoundEventController(eventController_, soundPlayer);
+	soundEventController_ = new SoundEventController(eventController_, soundPlayer, settings->getBoolSetting("playSounds", true));
 	loginWindow_ = loginWindowFactory_->createLoginWindow(settings->getStringSetting("jid"), settings->getStringSetting("pass"), settings->getStringSetting("certificate"));
 	loginWindow_->onLoginRequest.connect(boost::bind(&MainController::handleLoginRequest, this, _1, _2, _3, _4));
 }
