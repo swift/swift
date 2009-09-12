@@ -15,6 +15,7 @@
 
 class QLabel;
 class QToolButton;
+class QComboBox;
 
 namespace Swift {
 	class QtLoginWindow : public QMainWindow, public LoginWindow {
@@ -32,14 +33,18 @@ namespace Swift {
 			void handleQuit();
 			void handleAbout();
 			void bringToFront();
+			void handleUsernameTextChanged();
 
 		private:
 			void setInitialMenus();
-			QLineEdit *username_;
-			QLineEdit *password_;
-			QPushButton *loginButton_;
-			QCheckBox *remember_;
-			QStackedWidget *stack_;
+			QStringList usernames_;
+			QStringList passwords_;
+			QStringList certificateFiles_;
+			QComboBox* username_;
+			QLineEdit* password_;
+			QPushButton* loginButton_;
+			QCheckBox* remember_;
+			QStackedWidget* stack_;
 			QLabel* message_;
 			QString certificateFile_;
 			QToolButton* certificateButton_;

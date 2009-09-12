@@ -6,6 +6,7 @@
 
 #include <QApplication>
 #include <QBoxLayout>
+#include <QComboBox>
 #include <QFileDialog>
 #include <QStatusBar>
 #include <QToolButton>
@@ -38,7 +39,8 @@ QtLoginWindow::QtLoginWindow() : QMainWindow() {
 	layout->addWidget(logo);
 	layout->addStretch();
 
-	username_ = new QLineEdit(this);
+	username_ = new QComboBox(this);
+	username_->setEditable(true);
 	layout->addWidget(username_);
 
 	QWidget* w = new QWidget(this);
@@ -51,8 +53,8 @@ QtLoginWindow::QtLoginWindow() : QMainWindow() {
 	password_ = new QLineEdit(this);
 	password_->setEchoMode(QLineEdit::Password);
 	connect(password_, SIGNAL(returnPressed()), this, SLOT(loginClicked()));
-	connect(username_, SIGNAL(returnPressed()), password_, SLOT(setFocus()));
-	connect(username_, SIGNAL(returnPressed()), password_, SLOT(selectAll()));
+	connect(username_->lineEdit(), SIGNAL(returnPressed()), password_, SLOT(setFocus()));
+	connect(username_, SIGNAL(editTextChanged(const QString&)), this, SLOT(handleUsernameTextChanged()));
 	credentialsLayout->addWidget(password_);
 
 	certificateButton_ = new QToolButton(this);
@@ -100,13 +102,37 @@ QtLoginWindow::QtLoginWindow() : QMainWindow() {
 }
 
 void QtLoginWindow::addAvailableAccount(const String& defaultJID, const String& defaultPassword, const String& defaultCertificate) {
-	username_->setText(P2QSTRING(defaultJID));
-	password_->setText(P2QSTRING(defaultPassword));
-	certificateFile_ = P2QSTRING(defaultCertificate);
+	QString username = P2QSTRING(defaultJID);
+	int index = -1;
+	for (int i = 0; i < usernames_.count(); i++) {
+		if (username_->currentText() == usernames_[i]) {
+			index = i;
+		}
+	}
+	if (index == -1) {
+		usernames_.append(username);
+		passwords_.append(P2QSTRING(defaultPassword));
+		certificateFiles_.append(P2QSTRING(defaultCertificate));
+		username_->addItem(username);
+	} else {
+		usernames_[index] = username;
+		passwords_[index] = P2QSTRING(defaultPassword);
+		certificateFiles_[index] = P2QSTRING(defaultCertificate);
+	}
+}
+
+void QtLoginWindow::handleUsernameTextChanged() {
+	QString username = username_->currentText();
+	for (int i = 0; i < usernames_.count(); i++) {
+		if (username_->currentText() == usernames_[i]) {
+			certificateFile_ == certificateFiles_[i];
+			password_->setText(passwords_[i]);
+		}
+	}
 	if (!certificateFile_.isEmpty()) {
 		certificateButton_->setChecked(true);
 	}
-	remember_->setChecked(defaultPassword != "");
+	remember_->setChecked(password_->text() != "");
 }
 
 void QtLoginWindow::loggedOut() {
@@ -121,7 +147,7 @@ void QtLoginWindow::loggedOut() {
 
 void QtLoginWindow::loginClicked() {
 	setEnabled(false);
-	onLoginRequest(Q2PSTRING(username_->text()), Q2PSTRING(password_->text()), Q2PSTRING(certificateFile_), remember_->isChecked());
+	onLoginRequest(Q2PSTRING(username_->currentText()), Q2PSTRING(password_->text()), Q2PSTRING(certificateFile_), remember_->isChecked());
 }
 
 void QtLoginWindow::handleCertficateChecked(bool checked) {

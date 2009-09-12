@@ -200,6 +200,7 @@ void MainController::handleLoginRequest(const String &username, const String &pa
 	profileSettings->storeString("jid", username);
 	profileSettings->storeString("certificate", certificateFile);
 	profileSettings->storeString("pass", remember ? password : "");
+	loginWindow_->addAvailableAccount(profileSettings->getStringSetting("jid"), profileSettings->getStringSetting("pass"), profileSettings->getStringSetting("certificate"));
 	delete profileSettings;
 
 	resetClient();
