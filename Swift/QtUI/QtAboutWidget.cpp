@@ -11,7 +11,7 @@
 
 namespace Swift {
 
-QtAboutWidget::QtAboutWidget() : QWidget() {
+QtAboutWidget::QtAboutWidget() : QDialog() {
 	resize(180, 240);
 	QVBoxLayout *mainLayout = new QVBoxLayout(this);
 	mainLayout->setAlignment(Qt::AlignHCenter);

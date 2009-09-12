@@ -1,9 +1,9 @@
 #pragma once
 
-#include <QWidget>
+#include <QDialog>
 
 namespace Swift {
-	class QtAboutWidget : public QWidget {
+	class QtAboutWidget : public QDialog {
 			Q_OBJECT
 
 		public:
