@@ -1,5 +1,4 @@
-#ifndef SWIFTEN_GetRosterRequest_H
-#define SWIFTEN_GetRosterRequest_H
+#pragma once
 
 #include "Swiften/Queries/GenericRequest.h"
 #include "Swiften/Elements/RosterPayload.h"
@@ -12,5 +11,3 @@ namespace Swift {
 			}
 	};
 }
-
-#endif

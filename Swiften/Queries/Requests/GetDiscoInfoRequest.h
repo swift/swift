@@ -1,5 +1,4 @@
-#ifndef SWIFTEN_GetDiscoInfoRequest_H
-#define SWIFTEN_GetDiscoInfoRequest_H
+#pragma once
 
 #include "Swiften/Queries/GenericRequest.h"
 #include "Swiften/Elements/DiscoInfo.h"
@@ -12,5 +11,3 @@ namespace Swift {
 			}
 	};
 }
-
-#endif

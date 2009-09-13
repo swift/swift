@@ -1,5 +1,4 @@
-#ifndef SWIFTEN_GetSecurityLabelsCatalogRequest_H
-#define SWIFTEN_GetSecurityLabelsCatalogRequest_H
+#pragma once
 
 #include "Swiften/Queries/GenericRequest.h"
 #include "Swiften/Elements/SecurityLabelsCatalog.h"
@@ -15,5 +14,3 @@ namespace Swift {
 			}
 	};
 }
-
-#endif
