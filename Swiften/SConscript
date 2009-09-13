@@ -5,26 +5,18 @@ env["SWIFTEN_FLAGS"] = {
 		"LIBS": ["Swiften"]
 	}
 
-myenv = env.Clone()
-myenv.MergeFlags(env["BOOST_FLAGS"])
-myenv.MergeFlags(env["LIBIDN_FLAGS"])
-myenv.MergeFlags(env["SQLITE_FLAGS"])
-myenv.MergeFlags(env.get("LIBXML_FLAGS", ""))
-myenv.MergeFlags(env.get("EXPAT_FLAGS", ""))
-myenv.MergeFlags(env.get("BONJOUR_FLAGS", ""))
+swiften_env = env.Clone()
+swiften_env.MergeFlags(env["BOOST_FLAGS"])
+Export("swiften_env")
+
+# TODO: Move all this to a submodule SConscript
+myenv = swiften_env.Clone()
 myenv.MergeFlags(env["ZLIB_FLAGS"])
 myenv.MergeFlags(env["OPENSSL_FLAGS"])
-
 sources = [
-		"Application/Application.cpp",
-		"Application/ApplicationMessageDisplay.cpp",
 		"Avatars/AvatarFileStorage.cpp",
 		"Avatars/AvatarManager.cpp",
 		"Avatars/AvatarStorage.cpp",
-		"Base/ByteArray.cpp",
-		"Base/IDGenerator.cpp",
-		"Base/String.cpp",
-		"Base/sleep.cpp",
 		"Client/Client.cpp",
 		"Client/ClientSession.cpp",
 		"Compress/ZLibCodecompressor.cpp",
@@ -36,76 +28,10 @@ sources = [
 		"Elements/Payload.cpp",
 		"Elements/RosterPayload.cpp",
 		"Elements/Stanza.cpp",
-		"EventLoop/EventLoop.cpp",
-		"EventLoop/EventOwner.cpp",
-		"EventLoop/MainEventLoop.cpp",
-		"EventLoop/SimpleEventLoop.cpp",
-		"History/HistoryManager.cpp",
-		"History/SQLiteHistoryManager.cpp",
-		"JID/JID.cpp",
-		"LinkLocal/DNSSD/DNSSDBrowseQuery.cpp",
-		"LinkLocal/DNSSD/DNSSDQuerier.cpp",
-		"LinkLocal/DNSSD/DNSSDRegisterQuery.cpp",
-		"LinkLocal/DNSSD/DNSSDResolveHostnameQuery.cpp",
-		"LinkLocal/DNSSD/DNSSDResolveServiceQuery.cpp",
-		"LinkLocal/DNSSD/DNSSDServiceID.cpp",
-		"LinkLocal/DNSSD/Fake/FakeDNSSDQuerier.cpp",
-		"LinkLocal/DNSSD/Fake/FakeDNSSDQuery.cpp",
-		"LinkLocal/DNSSD/PlatformDNSSDQuerierFactory.cpp",
-		"LinkLocal/IncomingLinkLocalSession.cpp",
-		"LinkLocal/LinkLocalConnector.cpp",
-		"LinkLocal/LinkLocalService.cpp",
-		"LinkLocal/LinkLocalServiceBrowser.cpp",
-		"LinkLocal/LinkLocalServiceInfo.cpp",
-		"LinkLocal/OutgoingLinkLocalSession.cpp",
 		"MUC/MUC.cpp",
 		"MUC/MUCOccupant.cpp",
 		"MUC/MUCRegistry.cpp",
-		"Network/BoostConnection.cpp",
-		"Network/BoostConnectionFactory.cpp",
-		"Network/BoostConnectionServer.cpp",
-		"Network/MainBoostIOServiceThread.cpp",
-		"Network/BoostIOServiceThread.cpp",
-		"Network/ConnectionFactory.cpp",
-		"Network/ConnectionServer.cpp",
-		"Network/DomainNameResolver.cpp",
-		"Network/HostAddress.cpp",
-		"Network/Timer.cpp",
 		"Notifier/Notifier.cpp",
-		"Parser/AuthRequestParser.cpp",
-		"Parser/CompressParser.cpp",
-		"Parser/ElementParser.cpp",
-		"Parser/IQParser.cpp",
-		"Parser/MessageParser.cpp",
-		"Parser/PayloadParser.cpp",
-		"Parser/PayloadParserFactory.cpp",
-		"Parser/PayloadParserFactoryCollection.cpp",
-		"Parser/PayloadParsers/BodyParser.cpp",
-		"Parser/PayloadParsers/DiscoInfoParser.cpp",
-		"Parser/PayloadParsers/ErrorParser.cpp",
-		"Parser/PayloadParsers/FullPayloadParserFactoryCollection.cpp",
-		"Parser/PayloadParsers/PriorityParser.cpp",
-		"Parser/PayloadParsers/RawXMLPayloadParser.cpp",
-		"Parser/PayloadParsers/ResourceBindParser.cpp",
-		"Parser/PayloadParsers/RosterParser.cpp",
-		"Parser/PayloadParsers/SecurityLabelParser.cpp",
-		"Parser/PayloadParsers/SecurityLabelsCatalogParser.cpp",
-		"Parser/PayloadParsers/SoftwareVersionParser.cpp",
-		"Parser/PayloadParsers/StorageParser.cpp",
-		"Parser/PayloadParsers/StatusParser.cpp",
-		"Parser/PayloadParsers/StatusShowParser.cpp",
-		"Parser/PayloadParsers/VCardParser.cpp",
-		"Parser/PayloadParsers/VCardUpdateParser.cpp",
-		"Parser/PlatformXMLParserFactory.cpp",
-		"Parser/PresenceParser.cpp",
-		"Parser/SerializingParser.cpp",
-		"Parser/StanzaParser.cpp",
-		"Parser/StreamFeaturesParser.cpp",
-		"Parser/XMLParser.cpp",
-		"Parser/XMLParserClient.cpp",
-		"Parser/XMLParserFactory.cpp",
-		"Parser/XMPPParser.cpp",
-		"Parser/XMPPParserClient.cpp",
 		"Presence/PresenceOracle.cpp",
 		"Queries/IQChannel.cpp",
 		"Queries/IQHandler.cpp",
@@ -148,52 +74,27 @@ sources = [
 		"Server/SimpleUserRegistry.cpp",
 		"Server/UserRegistry.cpp",
 		"Session/Session.cpp",
-		"StreamStack/HighLayer.cpp",
-		"StreamStack/LowLayer.cpp",
-		"StreamStack/PlatformTLSLayerFactory.cpp",
-		"StreamStack/StreamStack.cpp",
-		"StreamStack/TLSLayerFactory.cpp",
-		"StreamStack/WhitespacePingLayer.cpp",
-		"StreamStack/XMPPLayer.cpp",
 		"StringCodecs/Base64.cpp",
 		"StringCodecs/SHA1.cpp",
 	]
 # "Notifier/GrowlNotifier.cpp",
 
-if env["PLATFORM"] == "darwin" :
-	sources += [
-			"EventLoop/Cocoa/CocoaEventLoop.mm",
-			"EventLoop/Cocoa/CocoaEvent.mm"
-		]
-
-if myenv.get("HAVE_BONJOUR", 0) :
-	myenv.Append(CPPDEFINES = "HAVE_BONJOUR")
-	sources += [
-			"LinkLocal/DNSSD/Bonjour/BonjourQuerier.cpp",
-			"LinkLocal/DNSSD/Bonjour/BonjourQuery.cpp",
-		]
-elif myenv.get("HAVE_AVAHI", 0) :
-	sources += ["LinkLocal/DNSSD/Avahi/AvahiQuerier.cpp"]
-
 if myenv.get("HAVE_OPENSSL", 0) :
-	myenv.Append(CPPDEFINES = "HAVE_OPENSSL")
-	sources += ["StreamStack/OpenSSLLayer.cpp"]
 	sources += ["TLS/OpenSSL/OpenSSLContext.cpp"]
 
-if myenv.get("HAVE_EXPAT", 0) :
-	myenv.Append(CPPDEFINES = "HAVE_EXPAT")
-	sources += ["Parser/ExpatParser.cpp"]
-if myenv.get("HAVE_LIBXML", 0) :
-	myenv.Append(CPPDEFINES = "HAVE_LIBXML")
-	sources += ["Parser/LibXMLParser.cpp"]
+SConscript(dirs = [
+		"Base",
+		"Application",
+		"EventLoop",
+		"Parser",
+		"JID",
+		"Network",
+		"History",
+		"StreamStack",
+		"LinkLocal",
+	])
 
-if myenv["PLATFORM"] == "darwin" :
-	sources += [
-			"Application/MacOSX/MacOSXApplication.cpp",
-			"Application/MacOSX/MacOSXApplicationMessageDisplay.mm"
-		]
-
-myenv.StaticLibrary("Swiften", sources)
+myenv.StaticLibrary("Swiften", sources + swiften_env["SWIFTEN_OBJECTS"])
 
 env.Append(UNITTEST_SOURCES = [
 		File("Application/UnitTest/ApplicationTest.cpp"),

@@ -1,0 +1,18 @@
+Import("swiften_env")
+
+myenv = swiften_env.Clone()
+myenv.MergeFlags(swiften_env["LIBIDN_FLAGS"])
+
+objects = myenv.StaticObject([
+			"BoostConnection.cpp",
+			"BoostConnectionFactory.cpp",
+			"BoostConnectionServer.cpp",
+			"MainBoostIOServiceThread.cpp",
+			"BoostIOServiceThread.cpp",
+			"ConnectionFactory.cpp",
+			"ConnectionServer.cpp",
+			"DomainNameResolver.cpp",
+			"HostAddress.cpp",
+			"Timer.cpp",
+		])
+swiften_env.Append(SWIFTEN_OBJECTS = [objects])

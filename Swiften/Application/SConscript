@@ -1,0 +1,15 @@
+Import("swiften_env")
+
+sources = [
+		"Application.cpp",
+		"ApplicationMessageDisplay.cpp",
+	]
+
+if swiften_env["PLATFORM"] == "darwin" :
+	sources += [
+			"MacOSX/MacOSXApplication.cpp",
+			"MacOSX/MacOSXApplicationMessageDisplay.mm"
+		]
+
+objects = swiften_env.StaticObject(sources)
+swiften_env.Append(SWIFTEN_OBJECTS = [objects])

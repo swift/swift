@@ -1,0 +1,9 @@
+Import("swiften_env")
+
+objects = swiften_env.StaticObject([
+			"ByteArray.cpp",
+			"IDGenerator.cpp",
+			"String.cpp",
+			"sleep.cpp",
+		])
+swiften_env.Append(SWIFTEN_OBJECTS = [objects])
