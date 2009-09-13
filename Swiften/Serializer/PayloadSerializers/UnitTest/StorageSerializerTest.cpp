@@ -1,7 +1,8 @@
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/extensions/TestFactoryRegistry.h>
 
-#include "Swiften/Serializer/PayloadSerializers/StorageSerializer.h"
+#include "Swiften/Serializer/PayloadSerializers/UnitTest/PayloadsSerializer.h"
+#include "Swiften/Elements/Storage.h"
 
 using namespace Swift;
 
@@ -15,7 +16,7 @@ class StorageSerializerTest : public CppUnit::TestFixture {
 		StorageSerializerTest() {}
 
 		void testSerialize() {
-			StorageSerializer testling;
+			PayloadsSerializer serializer;
 			boost::shared_ptr<Storage> storage(new Storage());
 			Storage::Conference conference;
 			conference.name = "Council of Oberon";
@@ -34,11 +35,11 @@ class StorageSerializerTest : public CppUnit::TestFixture {
 						"<nick>Puck</nick>"
 						"<password>MyPass</password>"
 					"</conference>"
-				"</storage>"), testling.serialize(storage));
+				"</storage>"), serializer.serialize(storage));
 		}
 
 		void testSerialize_NoNickOrPassword() {
-			StorageSerializer testling;
+			PayloadsSerializer serializer;
 			boost::shared_ptr<Storage> storage(new Storage());
 			Storage::Conference conference;
 			conference.name = "Council of Oberon";
@@ -52,7 +53,7 @@ class StorageSerializerTest : public CppUnit::TestFixture {
 							"autojoin=\"1\" "
 							"jid=\"council@conference.underhill.org\" "
 							"name=\"Council of Oberon\"/>"
-				"</storage>"), testling.serialize(storage));
+				"</storage>"), serializer.serialize(storage));
 		}
 };
 
