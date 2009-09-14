@@ -19,6 +19,7 @@ sources = [
 		"PayloadParsers/ErrorParser.cpp",
 		"PayloadParsers/FullPayloadParserFactoryCollection.cpp",
 		"PayloadParsers/PriorityParser.cpp",
+		"PayloadParsers/PrivateStorageParser.cpp",
 		"PayloadParsers/RawXMLPayloadParser.cpp",
 		"PayloadParsers/ResourceBindParser.cpp",
 		"PayloadParsers/RosterParser.cpp",

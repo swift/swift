@@ -1,0 +1,28 @@
+#include "Swiften/Serializer/PayloadSerializers/PrivateStorageSerializer.h"
+
+#include <boost/shared_ptr.hpp>
+
+#include "Swiften/Base/foreach.h"
+#include "Swiften/Serializer/XML/XMLElement.h"
+#include "Swiften/Serializer/XML/XMLTextNode.h"
+#include "Swiften/Serializer/XML/XMLRawTextNode.h"
+#include "Swiften/Serializer/PayloadSerializerCollection.h"
+
+namespace Swift {
+
+PrivateStorageSerializer::PrivateStorageSerializer(PayloadSerializerCollection* serializers) : serializers(serializers) {
+}
+
+String PrivateStorageSerializer::serializePayload(boost::shared_ptr<PrivateStorage> storage)	const {
+	XMLElement storageElement("query", "jabber:iq:private");
+	boost::shared_ptr<Payload> payload = storage->getPayload();
+	if (payload) {
+		PayloadSerializer* serializer = serializers->getPayloadSerializer(payload);
+		if (serializer) {
+			storageElement.addNode(boost::shared_ptr<XMLRawTextNode>(new XMLRawTextNode(serializer->serialize(payload))));
+		}
+	}
+	return storageElement.serialize();
+}
+
+}

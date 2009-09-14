@@ -6,8 +6,7 @@
 
 using namespace Swift;
 
-class StorageParserTest : public CppUnit::TestFixture
-{
+class StorageParserTest : public CppUnit::TestFixture {
 		CPPUNIT_TEST_SUITE(StorageParserTest);
 		CPPUNIT_TEST(testParse_Conference);
 		CPPUNIT_TEST(testParse_MultipleConferences);

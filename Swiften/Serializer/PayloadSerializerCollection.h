@@ -1,5 +1,4 @@
-#ifndef SWIFTEN_PAYLOADSERIALIZERCOLLECTION_H
-#define SWIFTEN_PAYLOADSERIALIZERCOLLECTION_H
+#pragma once
 
 #include <vector>
 #include <boost/shared_ptr.hpp>
@@ -22,5 +21,3 @@ namespace Swift {
 			std::vector<PayloadSerializer*> serializers_;
 	};
 }
-
-#endif
