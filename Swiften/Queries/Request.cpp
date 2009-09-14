@@ -7,7 +7,11 @@ namespace Swift {
 Request::Request(IQ::Type type, const JID& receiver, boost::shared_ptr<Payload> payload, IQRouter* router) : router_(router), type_(type), receiver_(receiver), payload_(payload), sent_(false) {
 }
 
+Request::Request(IQ::Type type, const JID& receiver, IQRouter* router) : router_(router), type_(type), receiver_(receiver), sent_(false) {
+}
+
 void Request::send() {
+	assert(payload_);
 	assert(!sent_);
 	sent_ = true;
 

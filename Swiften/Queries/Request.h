@@ -20,10 +20,18 @@ namespace Swift {
 					const JID& receiver, 
 					boost::shared_ptr<Payload> payload, 
 					IQRouter* router);
+			Request(
+					IQ::Type type, 
+					const JID& receiver, 
+					IQRouter* router);
 
 			void send();
 
 		protected:
+			virtual void setPayload(boost::shared_ptr<Payload> p) {
+				payload_ = p;
+			}
+
 			virtual void handleResponse(boost::shared_ptr<Payload>, boost::optional<Error>) = 0;
 
 		private:

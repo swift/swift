@@ -7,7 +7,7 @@
 namespace Swift {
 	class PrivateStorage : public Payload {
 		public:
-			PrivateStorage() {
+			PrivateStorage(boost::shared_ptr<Payload> payload = boost::shared_ptr<Payload>()) : payload(payload) {
 			}
 
 			boost::shared_ptr<Payload> getPayload() const {

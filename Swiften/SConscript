@@ -143,6 +143,7 @@ env.Append(UNITTEST_SOURCES = [
 		File("Parser/UnitTest/StreamFeaturesParserTest.cpp"),
 		File("Parser/UnitTest/XMLParserTest.cpp"),
 		File("Parser/UnitTest/XMPPParserTest.cpp"),
+		File("Queries/Requests/UnitTest/GetPrivateStorageRequestTest.cpp"),
 		File("Queries/Responders/UnitTest/DiscoInfoResponderTest.cpp"),
 		File("Queries/UnitTest/IQRouterTest.cpp"),
 		File("Queries/UnitTest/RequestTest.cpp"),
