@@ -31,7 +31,7 @@ class StorageParserTest : public CppUnit::TestFixture
 
 			Storage* payload = dynamic_cast<Storage*>(parser.getPayload().get());
 			std::vector<Storage::Conference> conferences = payload->getConferences();
-			CPPUNIT_ASSERT_EQUAL(1U, conferences.size());
+			CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(conferences.size()));
 			CPPUNIT_ASSERT_EQUAL(String("Council of Oberon"), conferences[0].name);
 			CPPUNIT_ASSERT_EQUAL(JID("council@conference.underhill.org"), conferences[0].jid);
 			CPPUNIT_ASSERT(conferences[0].autoJoin);
@@ -54,7 +54,7 @@ class StorageParserTest : public CppUnit::TestFixture
 
 			Storage* payload = dynamic_cast<Storage*>(parser.getPayload().get());
 			std::vector<Storage::Conference> conferences = payload->getConferences();
-			CPPUNIT_ASSERT_EQUAL(2U, conferences.size());
+			CPPUNIT_ASSERT_EQUAL(2, static_cast<int>(conferences.size()));
 			CPPUNIT_ASSERT_EQUAL(String("Council of Oberon"), conferences[0].name);
 			CPPUNIT_ASSERT_EQUAL(JID("council@conference.underhill.org"), conferences[0].jid);
 			CPPUNIT_ASSERT_EQUAL(String("Tea party"), conferences[1].name);
