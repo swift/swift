@@ -71,6 +71,9 @@ void QtChatTabs::handleTabClosing() {
 		return;
 	}
 	tabs_->removeTab(index);
+	if (tabs_->count() == 0) {
+		hide();
+	}
 }
 
 void QtChatTabs::handleTabCloseRequested(int index) {
