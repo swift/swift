@@ -16,6 +16,7 @@ ChatControllerBase::ChatControllerBase(const JID& self, StanzaChannel* stanzaCha
 	chatWindow_ = chatWindowFactory_->createChatWindow(toJID);
 	chatWindow_->onAllMessagesRead.connect(boost::bind(&ChatControllerBase::handleAllMessagesRead, this));
 	chatWindow_->onSendMessageRequest.connect(boost::bind(&ChatControllerBase::handleSendMessageRequest, this, _1));
+	setEnabled(stanzaChannel->isAvailable() && iqRouter->isAvailable());
 }
 
 ChatControllerBase::~ChatControllerBase() {

@@ -168,7 +168,7 @@ void MainController::handleConnected() {
 		initialPresence = boost::shared_ptr<Presence>(new Presence());
 	}
 	initialPresence->addPayload(capsInfo_);
-	enableManagers();
+	setManagersEnabled(true);
 	sendPresence(initialPresence);
 }
 
@@ -278,29 +278,19 @@ void MainController::signout() {
 }
 
 void MainController::logout() {
-	disableManagers();
+	setManagersEnabled(false);
 }
 
-void MainController::disableManagers() {
+void MainController::setManagersEnabled(bool enabled) {
 	foreach (JIDChatControllerPair controllerPair, chatControllers_) {
-		controllerPair.second->setEnabled(false);
+		//printf("Setting enabled on %d to %d\n", controllerPair.second, enabled);
+		controllerPair.second->setEnabled(enabled);
 	}
 	foreach (JIDMUCControllerPair controllerPair, mucControllers_) {
-		controllerPair.second->setEnabled(false);
+		controllerPair.second->setEnabled(enabled);
 	}
-	rosterController_->setEnabled(false);
+	rosterController_->setEnabled(enabled);
 }
-
-void MainController::enableManagers() {
-	foreach (JIDChatControllerPair controllerPair, chatControllers_) {
-		controllerPair.second->setEnabled(true);
-	}
-	foreach (JIDMUCControllerPair controllerPair, mucControllers_) {
-		controllerPair.second->setEnabled(true);
-	}
-	rosterController_->setEnabled(true);
-}
-
 
 void MainController::handleChatRequest(const String &contact) {
 	ChatController* controller = getChatController(JID(contact));

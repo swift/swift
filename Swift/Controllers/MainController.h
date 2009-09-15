@@ -74,8 +74,7 @@ namespace Swift {
 	
 		private:	
 			void performLoginFromCachedCredentials();
-			void enableManagers();
-			void disableManagers();
+			void setManagersEnabled(bool enabled);
 			Client* client_;
 			ChatWindowFactory* chatWindowFactory_;
 			MainWindowFactory* mainWindowFactory_;
