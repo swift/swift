@@ -13,14 +13,17 @@ QtTreeWidgetItem::QtTreeWidgetItem(QtTreeWidgetItem* parentItem) : QObject(), te
 
 void QtTreeWidgetItem::setText(const String& text) {
 	displayName_ = P2QSTRING(text);
+	emit changed(this);
 }
 
 void QtTreeWidgetItem::setStatusText(const String& text) {
 	statusText_ = P2QSTRING(text);
+	emit changed(this);
 }
 
 void QtTreeWidgetItem::setAvatarPath(const String& path) {
 	avatar_ = QIcon(P2QSTRING(path));
+	emit changed(this);
 }
 
 void QtTreeWidgetItem::setStatusShow(StatusShow::Type show) {
@@ -35,6 +38,7 @@ void QtTreeWidgetItem::setStatusShow(StatusShow::Type show) {
 	 	case StatusShow::None: color = 0x7F7F7F;break;
 	}
 	setTextColor(color);
+	emit changed(this);
 }
 
 void QtTreeWidgetItem::setTextColor(unsigned long color) {
