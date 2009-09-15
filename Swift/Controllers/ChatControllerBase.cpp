@@ -23,12 +23,11 @@ ChatControllerBase::~ChatControllerBase() {
 }
 
 void ChatControllerBase::setEnabled(bool enabled) {
-	//FIXME: implement
-	h
+	chatWindow_->setInputEnabled(enabled);
 }
 
 void ChatControllerBase::setAvailableServerFeatures(boost::shared_ptr<DiscoInfo> info) {
-	if (info->hasFeature(DiscoInfo::SecurityLabels)) {
+	if (iqRouter_->isAvailable() && info->hasFeature(DiscoInfo::SecurityLabels)) {
 		chatWindow_->setSecurityLabelsEnabled(true);
 		chatWindow_->setSecurityLabelsError();
 		boost::shared_ptr<GetSecurityLabelsCatalogRequest> request(new GetSecurityLabelsCatalogRequest(JID(toJID_.toBare()), iqRouter_));
@@ -50,7 +49,7 @@ void ChatControllerBase::handleAllMessagesRead() {
 }
 
 void ChatControllerBase::handleSendMessageRequest(const String &body) {
-	if (body.isEmpty()) {
+	if (!stanzaChannel_->isAvailable() || body.isEmpty()) {
 		return;
 	}
 	boost::shared_ptr<Message> message(new Message());

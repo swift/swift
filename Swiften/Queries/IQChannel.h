@@ -14,6 +14,8 @@ namespace Swift {
 
 			virtual void sendIQ(boost::shared_ptr<IQ>) = 0;
 			virtual String getNewIQID() = 0;
+			
+			virtual bool isAvailable() = 0;
 
 			boost::signal<void (boost::shared_ptr<IQ>)> onIQReceived;
 	};

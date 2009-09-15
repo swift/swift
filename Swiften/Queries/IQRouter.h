@@ -23,6 +23,8 @@ namespace Swift {
 
 			void sendIQ(boost::shared_ptr<IQ> iq);
 			String getNewIQID();
+			
+			bool isAvailable();
 
 		private:
 			void handleIQ(boost::shared_ptr<IQ> iq);

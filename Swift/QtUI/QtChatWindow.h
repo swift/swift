@@ -32,6 +32,7 @@ namespace Swift {
 			void setSecurityLabelsError();
 			SecurityLabel getSelectedSecurityLabel();
 			void setName(const String& name);
+			void setInputEnabled(bool enabled);
 
 		protected slots:
 			void qAppFocusChanged(QWidget* old, QWidget* now);

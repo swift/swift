@@ -19,6 +19,10 @@ IQRouter::IQRouter(IQChannel* channel) : channel_(channel), queueRemoves_(false)
 IQRouter::~IQRouter() {
 }
 
+bool IQRouter::isAvailable() {
+	return channel_->isAvailable();
+}
+
 void IQRouter::handleIQ(boost::shared_ptr<IQ> iq) {
 	queueRemoves_ = true;
 

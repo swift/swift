@@ -32,6 +32,7 @@ namespace Swift {
 			virtual TreeWidget *getTreeWidget() = 0;
 			virtual void setSecurityLabelsError() = 0;
 			virtual SecurityLabel getSelectedSecurityLabel() = 0;
+			virtual void setInputEnabled(bool enabled) = 0;
 
 			boost::signal<void ()> onClosed;
 			boost::signal<void ()> onAllMessagesRead;

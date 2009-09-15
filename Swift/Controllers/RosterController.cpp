@@ -10,6 +10,7 @@
 #include "Swiften/EventLoop/MainEventLoop.h"
 #include "Swiften/Roster/Roster.h"
 #include "Swiften/Roster/SetPresence.h"
+#include "Swiften/Roster/AppearOffline.h"
 #include "Swiften/Roster/SetAvatar.h"
 #include "Swiften/Roster/OfflineRosterFilter.h"
 #include "Swiften/Roster/OpenChatRosterAction.h"
@@ -63,8 +64,9 @@ void RosterController::setAvatarManager(AvatarManager* avatarManager) {
 }
 
 void RosterController::setEnabled(bool enabled) {
-	//FIXME: implement;
-	h
+	if (!enabled) {
+		roster_->applyOnItems(AppearOffline());
+	}
 }
 
 void RosterController::handleShowOfflineToggled(bool state) {

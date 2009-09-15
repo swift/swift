@@ -14,6 +14,7 @@
 #include "Swiften/Elements/SecurityLabelsCatalog.h"
 #include "Swiften/Elements/Error.h"
 #include "Swiften/Presence/PresenceOracle.h"
+#include "Swiften/Queries/IQRouter.h"
 
 namespace Swift {
 	class IQRouter;

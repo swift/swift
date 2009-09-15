@@ -115,6 +115,10 @@ void QtChatWindow::qAppFocusChanged(QWidget *old, QWidget *now) {
 	
 }
 
+void QtChatWindow::setInputEnabled(bool enabled) {
+	input_->setEnabled(enabled);
+}
+
 void QtChatWindow::showEvent(QShowEvent* event) {
 	emit windowOpening();
 	QWidget::showEvent(event);
