@@ -30,6 +30,8 @@ namespace Swift {
 
 			void connect();
 			void disconnect();
+			
+			bool isAvailable();
 
 			virtual void sendIQ(boost::shared_ptr<IQ>);
 			virtual void sendMessage(boost::shared_ptr<Message>);

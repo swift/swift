@@ -24,6 +24,10 @@ Client::~Client() {
 	delete connectionFactory_;
 }
 
+bool Client::isAvailable() {
+	return session_;
+}
+
 void Client::connect() {
 	DomainNameResolver resolver;
 	try {
