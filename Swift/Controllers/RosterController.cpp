@@ -24,24 +24,47 @@ namespace Swift {
  */
 RosterController::RosterController(const JID& jid, boost::shared_ptr<XMPPRoster> xmppRoster, AvatarManager* avatarManager, MainWindowFactory* mainWindowFactory, TreeWidgetFactory* treeWidgetFactory, NickResolver* nickResolver)
  : myJID_(jid), xmppRoster_(xmppRoster), mainWindowFactory_(mainWindowFactory), treeWidgetFactory_(treeWidgetFactory), mainWindow_(mainWindowFactory_->createMainWindow()), roster_(new Roster(mainWindow_->getTreeWidget(), treeWidgetFactory_)), offlineFilter_(new OfflineRosterFilter()) {
-	nickResolver_ = nickResolver;
+	
 	roster_->addFilter(offlineFilter_);
-	avatarManager_ = avatarManager;
-	avatarManager_->onAvatarChanged.connect(boost::bind(&RosterController::handleAvatarChanged, this, _1, _2));
+	
 	mainWindow_->onStartChatRequest.connect(boost::bind(&RosterController::handleStartChatRequest, this, _1));
 	mainWindow_->onJoinMUCRequest.connect(boost::bind(&RosterController::handleJoinMUCRequest, this, _1, _2));
 	mainWindow_->onChangeStatusRequest.connect(boost::bind(&RosterController::handleChangeStatusRequest, this, _1, _2));
 	mainWindow_->onShowOfflineToggled.connect(boost::bind(&RosterController::handleShowOfflineToggled, this, _1));
 	roster_->onUserAction.connect(boost::bind(&RosterController::handleUserAction, this, _1));
 	xmppRoster_->onJIDAdded.connect(boost::bind(&RosterController::handleOnJIDAdded, this, _1));
+	avatarManager_ = NULL;
+	setAvatarManager(avatarManager);
+	setNickResolver(nickResolver);
 	
-	mainWindow_->setMyAvatarPath(avatarManager_->getAvatarPath(myJID_).string());
-	mainWindow_->setMyName(nickResolver_->jidToNick(myJID_));
 }
 
 RosterController::~RosterController() {
 	delete offlineFilter_;
 
+}
+
+void RosterController::setNickResolver(NickResolver* nickResolver) {
+	nickResolver_ = nickResolver;
+	if (nickResolver_ != NULL) {
+		mainWindow_->setMyName(nickResolver_->jidToNick(myJID_));
+	}
+}
+
+void RosterController::setAvatarManager(AvatarManager* avatarManager) {
+	if (avatarManager_ != NULL) {
+		//FIXME: disconnect old signal;
+	}
+	avatarManager_ = avatarManager;
+	if (avatarManager != NULL) {
+		avatarManager_->onAvatarChanged.connect(boost::bind(&RosterController::handleAvatarChanged, this, _1, _2));
+		mainWindow_->setMyAvatarPath(avatarManager_->getAvatarPath(myJID_).string());
+	}
+}
+
+void RosterController::setEnabled(bool enabled) {
+	//FIXME: implement;
+	h
 }
 
 void RosterController::handleShowOfflineToggled(bool state) {

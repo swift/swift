@@ -28,7 +28,6 @@
 #include "Swiften/Client/Client.h"
 #include "Swiften/Elements/Presence.h"
 #include "Swiften/Elements/VCardUpdate.h"
-#include "Swiften/Roster/XMPPRoster.h"
 #include "Swiften/Queries/Responders/SoftwareVersionResponder.h"
 #include "Swiften/Roster/TreeWidgetFactory.h"
 #include "Swiften/Settings/SettingsProvider.h"
@@ -63,8 +62,10 @@ typedef std::pair<JID, MUCController*> JIDMUCControllerPair;
 MainController::MainController(ChatWindowFactory* chatWindowFactory, MainWindowFactory *mainWindowFactory, LoginWindowFactory *loginWindowFactory, TreeWidgetFactory *treeWidgetFactory, SettingsProvider *settings, Application* application, SystemTray* systemTray, SoundPlayer* soundPlayer)
 		: client_(NULL), chatWindowFactory_(chatWindowFactory), mainWindowFactory_(mainWindowFactory), loginWindowFactory_(loginWindowFactory), treeWidgetFactory_(treeWidgetFactory), settings_(settings),
 		xmppRosterController_(NULL), rosterController_(NULL), loginWindow_(NULL), clientVersionResponder_(NULL), nickResolver_(NULL), discoResponder_(NULL), 
-		serverDiscoInfo_(new DiscoInfo()), presenceOracle_(NULL), avatarManager_(NULL) {
+		serverDiscoInfo_(new DiscoInfo()),  xmppRoster_(new XMPPRoster()) {
 	application_ = application;
+	presenceOracle_ = NULL;
+	avatarManager_ = NULL;
 
 	avatarStorage_ = new AvatarFileStorage(application_->getAvatarDir());
 
@@ -102,8 +103,12 @@ void MainController::resetClient() {
 	nickResolver_ = NULL;
 	delete avatarManager_;
 	avatarManager_ = NULL;
-	delete rosterController_;
-	rosterController_ = NULL;
+	//delete rosterController_;
+	//rosterController_ = NULL;
+	if (rosterController_) {
+		rosterController_->setAvatarManager(NULL);
+		rosterController_->setNickResolver(NULL);
+	}
 	delete xmppRosterController_;
 	xmppRosterController_ = NULL;
 	delete clientVersionResponder_;
@@ -115,28 +120,36 @@ void MainController::resetClient() {
 }
 
 void MainController::handleConnected() {
+	//FIXME: this freshLogin thing is temporary so I can see what's what before I split into a seperate method.
+	bool freshLogin = rosterController_ == NULL;
+	
 	presenceOracle_ = new PresenceOracle(client_);
-
-	lastSentPresence_ = boost::shared_ptr<Presence>();
+	if (freshLogin) {
+		lastSentPresence_ = boost::shared_ptr<Presence>();
+	}
 
 	client_->onPresenceReceived.connect(boost::bind(&MainController::handleIncomingPresence, this, _1));
 
-	boost::shared_ptr<XMPPRoster> xmppRoster(new XMPPRoster());
-
-	nickResolver_ = new NickResolver(xmppRoster);
+	nickResolver_ = new NickResolver(xmppRoster_);
 
 	avatarManager_ = new AvatarManager(client_, client_, avatarStorage_, this);
-	
-	rosterController_ = new RosterController(jid_, xmppRoster, avatarManager_, mainWindowFactory_, treeWidgetFactory_, nickResolver_);
-	rosterController_->onStartChatRequest.connect(boost::bind(&MainController::handleChatRequest, this, _1));
-	rosterController_->onJoinMUCRequest.connect(boost::bind(&MainController::handleJoinMUCRequest, this, _1, _2));
-	rosterController_->onChangeStatusRequest.connect(boost::bind(&MainController::handleChangeStatusRequest, this, _1, _2));
+	if (freshLogin) {
+		rosterController_ = new RosterController(jid_, xmppRoster_, avatarManager_, mainWindowFactory_, treeWidgetFactory_, nickResolver_);
+		rosterController_->onStartChatRequest.connect(boost::bind(&MainController::handleChatRequest, this, _1));
+		rosterController_->onJoinMUCRequest.connect(boost::bind(&MainController::handleJoinMUCRequest, this, _1, _2));
+		rosterController_->onChangeStatusRequest.connect(boost::bind(&MainController::handleChangeStatusRequest, this, _1, _2));
+	} else {
+		rosterController_->setAvatarManager(avatarManager_);
+		rosterController_->setNickResolver(nickResolver_);
+	}
 
-	xmppRosterController_ = new XMPPRosterController(client_, xmppRoster);
+	xmppRosterController_ = new XMPPRosterController(client_, xmppRoster_);
 	xmppRosterController_->requestRoster();
 
 	clientVersionResponder_ = new SoftwareVersionResponder(CLIENT_NAME, CLIENT_VERSION, client_);
-	loginWindow_->morphInto(rosterController_->getWindow());
+	if (freshLogin) {
+		loginWindow_->morphInto(rosterController_->getWindow());
+	}
 
 	DiscoInfo discoInfo;
 	discoInfo.addIdentity(DiscoInfo::Identity(CLIENT_NAME, "client", "pc"));
@@ -156,9 +169,15 @@ void MainController::handleConnected() {
 	vCardRequest->send();
 	
 	//Send presence last to catch all the incoming presences.
-	boost::shared_ptr<Presence> initialPresence(new Presence());
+	boost::shared_ptr<Presence> initialPresence;
+	if (queuedPresence_.get() != NULL) {
+		initialPresence = queuedPresence_;
+	} else {
+		initialPresence = boost::shared_ptr<Presence>(new Presence());
+	}
 	initialPresence->addPayload(capsInfo_);
 	sendPresence(initialPresence);
+	enableManagers();
 }
 
 void MainController::handleEventQueueLengthChange(int count) {
@@ -176,7 +195,12 @@ void MainController::handleChangeStatusRequest(StatusShow::Type show, const Stri
 		presence->setShow(show);
 	}
 	presence->setStatus(statusText);
-	sendPresence(presence);
+	if (presence->getType() != Presence::Unavailable && !client_) {
+		performLoginFromCachedCredentials();
+		queuedPresence_ = presence;
+	} else {
+		sendPresence(presence);
+	}
 }
 
 void MainController::sendPresence(boost::shared_ptr<Presence> presence) {
@@ -191,6 +215,7 @@ void MainController::sendPresence(boost::shared_ptr<Presence> presence) {
 }
 
 void MainController::handleIncomingPresence(boost::shared_ptr<Presence> presence) {
+	//FIXME: subscribe, subscribed
 	rosterController_->handleIncomingPresence(presence);
 }
 
@@ -202,15 +227,20 @@ void MainController::handleLoginRequest(const String &username, const String &pa
 	profileSettings->storeString("pass", remember ? password : "");
 	loginWindow_->addAvailableAccount(profileSettings->getStringSetting("jid"), profileSettings->getStringSetting("pass"), profileSettings->getStringSetting("certificate"));
 	delete profileSettings;
+	jid_ = JID(username);
+	password_ = password;
+	certificateFile_ = certificateFile;
+	performLoginFromCachedCredentials();
+}
 
+void MainController::performLoginFromCachedCredentials() {
 	resetClient();
 
-	jid_ = JID(username);
-	client_ = new Swift::Client(jid_, password);
+	client_ = new Swift::Client(jid_, password_);
 	//client_->onDataRead.connect(&printIncomingData);
 	//client_->onDataWritten.connect(&printOutgoingData);
-	if (!certificateFile.isEmpty()) {
-		client_->setCertificate(certificateFile);
+	if (!certificateFile_.isEmpty()) {
+		client_->setCertificate(certificateFile_);
 	}
 	client_->onError.connect(boost::bind(&MainController::handleError, this, _1));
 	client_->onConnected.connect(boost::bind(&MainController::handleConnected, this));
@@ -240,22 +270,45 @@ void MainController::handleError(const ClientError& error) {
 	logout();
 }
 
-void MainController::logout() {
+void MainController::signout() {
 	loginWindow_->loggedOut();
-
-	delete discoResponder_;
-	discoResponder_ = NULL;
-	delete clientVersionResponder_;
-	clientVersionResponder_ = NULL;
 	foreach (JIDChatControllerPair controllerPair, chatControllers_) {
 		delete controllerPair.second;
 	}
-	client_->disconnect();
 	chatControllers_.clear();
 	foreach (JIDMUCControllerPair controllerPair, mucControllers_) {
 		delete controllerPair.second;
 	}
 	mucControllers_.clear();
+}
+
+void MainController::logout() {
+	delete discoResponder_;
+	discoResponder_ = NULL;
+	delete clientVersionResponder_;
+	clientVersionResponder_ = NULL;
+	disableManagers();
+	resetClient();
+}
+
+void MainController::disableManagers() {
+	foreach (JIDChatControllerPair controllerPair, chatControllers_) {
+		controllerPair.second->setEnabled(false);
+	}
+	foreach (JIDMUCControllerPair controllerPair, mucControllers_) {
+		controllerPair.second->setEnabled(false);
+	}
+	rosterController_->setEnabled(false);
+}
+
+void MainController::enableManagers() {
+	foreach (JIDChatControllerPair controllerPair, chatControllers_) {
+		controllerPair.second->setEnabled(true);
+	}
+	foreach (JIDMUCControllerPair controllerPair, mucControllers_) {
+		controllerPair.second->setEnabled(true);
+	}
+	rosterController_->setEnabled(true);
 }
 
 

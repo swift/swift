@@ -26,12 +26,14 @@ namespace Swift {
 			~RosterController();
 			void showRosterWindow();
 			MainWindow* getWindow() {return mainWindow_;};
+			void setAvatarManager(AvatarManager* avatarManager);
+			void setNickResolver(NickResolver* nickResolver);
 			boost::signal<void (const JID&)> onStartChatRequest;
 			boost::signal<void (const JID&, const String&)> onJoinMUCRequest;
 			boost::signal<void (StatusShow::Type, const String&)> onChangeStatusRequest;
 			void handleIncomingPresence(boost::shared_ptr<Presence> presence);
 			void handleAvatarChanged(const JID& jid, const String& hash);
-
+			void setEnabled(bool enabled);
 		private:
 			void handleOnJIDAdded(const JID &jid);
 			void handleStartChatRequest(const JID& contact);

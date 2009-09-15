@@ -16,6 +16,7 @@
 #include "Swiften/Settings/SettingsProvider.h"
 #include "Swiften/Elements/CapsInfo.h"
 #include "Swiften/MUC/MUCRegistry.h"
+#include "Swiften/Roster/XMPPRoster.h"
 
 namespace Swift {
 	class AvatarStorage;
@@ -67,10 +68,14 @@ namespace Swift {
 			ChatController* getChatController(const JID &contact);
 			void sendPresence(boost::shared_ptr<Presence> presence);
 			void logout();
+			void signout();
 
 			virtual bool isMUC(const JID& muc) const;
 	
 		private:	
+			void performLoginFromCachedCredentials();
+			void enableManagers();
+			void disableManagers();
 			Client* client_;
 			ChatWindowFactory* chatWindowFactory_;
 			MainWindowFactory* mainWindowFactory_;
@@ -91,6 +96,7 @@ namespace Swift {
 			std::map<JID, MUCController*> mucControllers_;
 			std::map<JID, ChatController*> chatControllers_;
 			boost::shared_ptr<DiscoInfo> serverDiscoInfo_;
+			boost::shared_ptr<XMPPRoster> xmppRoster_;;
 			JID jid_;
 			PresenceOracle* presenceOracle_;
 			SystemTrayController* systemTrayController_;
@@ -98,6 +104,9 @@ namespace Swift {
 			AvatarManager* avatarManager_;
 			boost::shared_ptr<Presence> lastSentPresence_;
 			String vCardPhotoHash_;
+			boost::shared_ptr<Presence> queuedPresence_;
+			String password_;
+			String certificateFile_;
 	};
 }
 #endif

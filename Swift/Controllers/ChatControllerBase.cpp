@@ -21,7 +21,12 @@ ChatControllerBase::ChatControllerBase(const JID& self, StanzaChannel* stanzaCha
 ChatControllerBase::~ChatControllerBase() {
 	delete chatWindow_;
 }
-	
+
+void ChatControllerBase::setEnabled(bool enabled) {
+	//FIXME: implement
+	h
+}
+
 void ChatControllerBase::setAvailableServerFeatures(boost::shared_ptr<DiscoInfo> info) {
 	if (info->hasFeature(DiscoInfo::SecurityLabels)) {
 		chatWindow_->setSecurityLabelsEnabled(true);
