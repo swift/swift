@@ -18,6 +18,10 @@ namespace Swift {
 				return "test-id";
 			}
 
+			virtual bool isAvailable() {
+				return true;
+			}
+
 			std::vector<boost::shared_ptr<IQ> > iqs_;
 	};
 }
