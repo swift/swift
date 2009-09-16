@@ -35,6 +35,7 @@ namespace Swift {
 			void handleStatusChanged(StatusShow::Type showType, const QString &statusMessage);
 			void handleShowOfflineToggled(bool);
 			void handleJoinMUCAction();
+			void handleSignOutAction();
 			void handleJoinMUCDialogComplete(const JID& muc, const QString& nick);
 			void handleAddContactDialogComplete(const JID& contact, const QString& name);
 			void handleAddActionTriggered(bool checked);

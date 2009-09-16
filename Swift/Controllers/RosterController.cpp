@@ -32,6 +32,7 @@ RosterController::RosterController(const JID& jid, boost::shared_ptr<XMPPRoster>
 	mainWindow_->onJoinMUCRequest.connect(boost::bind(&RosterController::handleJoinMUCRequest, this, _1, _2));
 	mainWindow_->onChangeStatusRequest.connect(boost::bind(&RosterController::handleChangeStatusRequest, this, _1, _2));
 	mainWindow_->onShowOfflineToggled.connect(boost::bind(&RosterController::handleShowOfflineToggled, this, _1));
+	mainWindow_->onSignOutRequest.connect(boost::bind(boost::ref(onSignOutRequest)));
 	roster_->onUserAction.connect(boost::bind(&RosterController::handleUserAction, this, _1));
 	xmppRoster_->onJIDAdded.connect(boost::bind(&RosterController::handleOnJIDAdded, this, _1));
 	avatarManager_ = NULL;

@@ -24,6 +24,7 @@ namespace Swift {
 			boost::signal<void (const JID&, const String&)> onJoinMUCRequest;
 			boost::signal<void (StatusShow::Type, const String&)> onChangeStatusRequest;
 			boost::signal<void (bool)> onShowOfflineToggled;
+			boost::signal<void ()> onSignOutRequest;
 	};
 }
 #endif

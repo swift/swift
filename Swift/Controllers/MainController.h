@@ -68,7 +68,7 @@ namespace Swift {
 			ChatController* getChatController(const JID &contact);
 			void sendPresence(boost::shared_ptr<Presence> presence);
 			void logout();
-			void signout();
+			void signOut();
 
 			virtual bool isMUC(const JID& muc) const;
 	

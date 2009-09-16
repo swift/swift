@@ -70,6 +70,9 @@ QtMainWindow::QtMainWindow(QtTreeWidgetFactory *treeWidgetFactory) : QWidget() {
 	QAction* joinMUCAction = new QAction("Join chatroom", this);
 	connect(joinMUCAction, SIGNAL(triggered()), SLOT(handleJoinMUCAction()));
 	chatMenu->addAction(joinMUCAction);
+	QAction* signOutAction = new QAction("Sign Out", this);
+	connect(signOutAction, SIGNAL(triggered()), SLOT(handleSignOutAction()));
+	chatMenu->addAction(signOutAction);
 }
 
 void QtMainWindow::handleAddActionTriggered(bool checked) {
@@ -77,6 +80,10 @@ void QtMainWindow::handleAddActionTriggered(bool checked) {
 	QtAddContactDialog* addContact = new QtAddContactDialog(this);
 	connect(addContact, SIGNAL(onAddCommand(const JID&, const QString&)), SLOT(handleAddContactDialogComplete(const JID&, const QString&)));
 	addContact->show();
+}
+
+void QtMainWindow::handleSignOutAction() {
+	onSignOutRequest();
 }
 
 void QtMainWindow::handleAddContactDialogComplete(const JID& contact, const QString& name) {

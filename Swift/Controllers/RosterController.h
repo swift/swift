@@ -31,6 +31,7 @@ namespace Swift {
 			boost::signal<void (const JID&)> onStartChatRequest;
 			boost::signal<void (const JID&, const String&)> onJoinMUCRequest;
 			boost::signal<void (StatusShow::Type, const String&)> onChangeStatusRequest;
+			boost::signal<void ()> onSignOutRequest;
 			void handleIncomingPresence(boost::shared_ptr<Presence> presence);
 			void handleAvatarChanged(const JID& jid, const String& hash);
 			void setEnabled(bool enabled);

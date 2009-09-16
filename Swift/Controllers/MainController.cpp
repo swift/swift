@@ -135,6 +135,7 @@ void MainController::handleConnected() {
 		rosterController_->onStartChatRequest.connect(boost::bind(&MainController::handleChatRequest, this, _1));
 		rosterController_->onJoinMUCRequest.connect(boost::bind(&MainController::handleJoinMUCRequest, this, _1, _2));
 		rosterController_->onChangeStatusRequest.connect(boost::bind(&MainController::handleChangeStatusRequest, this, _1, _2));
+		rosterController_->onSignOutRequest.connect(boost::bind(&MainController::signOut, this));
 
 		xmppRosterController_ = new XMPPRosterController(client_, xmppRoster_);
 		xmppRosterController_->requestRoster();
@@ -262,7 +263,8 @@ void MainController::handleError(const ClientError& error) {
 	logout();
 }
 
-void MainController::signout() {
+void MainController::signOut() {
+	logout();
 	loginWindow_->loggedOut();
 	foreach (JIDChatControllerPair controllerPair, chatControllers_) {
 		delete controllerPair.second;
@@ -278,6 +280,9 @@ void MainController::signout() {
 }
 
 void MainController::logout() {
+	if (client_->isAvailable()) {
+		client_->disconnect();
+	}
 	setManagersEnabled(false);
 }
 
