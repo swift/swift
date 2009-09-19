@@ -6,6 +6,7 @@
 #include <QWebView>
 #include <QWebFrame>
 #include <QKeyEvent>
+#include <QStackedWidget>
 
 namespace Swift {
 
@@ -15,10 +16,21 @@ QtChatView::QtChatView(QWidget* parent) : QWidget(parent) {
 	QVBoxLayout* mainLayout = new QVBoxLayout(this);
 	mainLayout->setSpacing(0);
 	mainLayout->setContentsMargins(0,0,0,0);
-
 	webView_ = new QWebView(this);
 	webView_->setFocusPolicy(Qt::NoFocus);
+#ifdef Q_WS_X11
+	/* To give a border on Linux, where it looks bad without */
+	QStackedWidget* stack = new QStackedWidget(this);
+	stack->addWidget(webView_);
+	stack->setFrameStyle(QFrame::StyledPanel | QFrame::Sunken);
+	stack->setLineWidth(2);
+	mainLayout->addWidget(stack);
+#else
 	mainLayout->addWidget(webView_);
+#endif
+
+
+	
 
 	webPage_ = new QWebPage(this);
 	webPage_->setLinkDelegationPolicy(QWebPage::DelegateAllLinks);
