@@ -12,7 +12,7 @@ QtTextEdit::QtTextEdit(QWidget* parent) : QTextEdit(parent){
 
 void QtTextEdit::keyPressEvent(QKeyEvent* event) {
 	if ((event->key() == Qt::Key_Enter || event->key() == Qt::Key_Return)
-		&& event->modifiers() == Qt::NoModifier) {
+		&& (event->modifiers() == Qt::NoModifier || event->modifiers() == Qt::KeypadModifier)) {
 		emit returnPressed();
 	} else {
 		QTextEdit::keyPressEvent(event);
