@@ -1,17 +1,40 @@
+# Use the newer, nicer installer style
+!include MUI2.nsh
+
 # set dependencies
 !define msvccRedistributableExe "vcredist_x86.exe"
 
 # define installer name
+Name "Swift"
 outFile "Swift-installer-win32-${buildVersion}.exe"
  
-# set desktop as install directory
+# set default install directory
 installDir "$PROGRAMFILES\Swift"
 
+# Declare variables needed later
+Var StartMenuFolder
+
 SetCompressor lzma
+# How to do pages with the modern ui.
+!define MUI_ABORTWARNING
+!insertmacro MUI_PAGE_DIRECTORY
+
+# Remember the start menu folder for uninstall
+!define MUI_STARTMENUPAGE_REGISTRY_ROOT "HKCU" 
+!define MUI_STARTMENUPAGE_REGISTRY_KEY "Software\Swift" 
+!define MUI_STARTMENUPAGE_REGISTRY_VALUENAME "Start Menu Folder"
+
+!insertmacro MUI_PAGE_STARTMENU Application $StartMenuFolder
+!insertmacro MUI_PAGE_INSTFILES
+
+!insertmacro MUI_UNPAGE_CONFIRM
+!insertmacro MUI_UNPAGE_INSTFILES
+
+
 
 # default section start
 section "Main install"
- 
+
 # define output path
 setOutPath $INSTDIR
  
@@ -25,21 +48,25 @@ File "..\..\QtUI\Swift\QtCore4.dll"
 File "..\..\QtUI\Swift\QtGui4.dll"
 File "..\..\QtUI\Swift\QtWebKit4.dll"
 File "..\..\QtUI\Swift\QtNetwork4.dll"
-File "..\..\QtUI\Swift\qgif4.dll"
-File "..\..\QtUI\Swift\qico4.dll"
-File "..\..\QtUI\Swift\qjpeg4.dll"
-File "..\..\QtUI\Swift\qmng4.dll"
-File "..\..\QtUI\Swift\qsvg4.dll"
-File "..\..\QtUI\Swift\qtiff4.dll"
+
+SetOutPath $INSTDIR\imageformats
+
+File "..\..\QtUI\Swift\imageformats\qgif4.dll"
+File "..\..\QtUI\Swift\imageformats\qico4.dll"
+File "..\..\QtUI\Swift\imageformats\qjpeg4.dll"
+File "..\..\QtUI\Swift\imageformats\qmng4.dll"
+File "..\..\QtUI\Swift\imageformats\qsvg4.dll"
+File "..\..\QtUI\Swift\imageformats\qtiff4.dll"
 
 # create start menu item
-createShortCut "$SMPROGRAMS\Swift\Swift.lnk" "$INSTDIR\Swift.exe"
-createShortCut "$SMPROGRAMS\Swift\Unistall Swift.lnk" "$INSTDIR\unistall.exe"
+CreateDirectory "$SMPROGRAMS\$StartMenuFolder"
+CreateShortCut "$SMPROGRAMS\$StartMenuFolder\Swift.lnk" "$INSTDIR\Swift.exe"
+CreateShortCut "$SMPROGRAMS\$StartMenuFolder\Uninstall Swift.lnk" "$INSTDIR\uninstaller.exe"
 
 # Add the information to Add/Remove
 WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\Swift" "DisplayName" "Swift"
-WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\Swift" "UninstallString" "$\"$INSTDIR\uninstall.exe$\""
-WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\Swift" "QuietUninstallString" "$\"$INSTDIR\uninstall.exe$\""
+WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\Swift" "UninstallString" "$\"$INSTDIR\uninstaller.exe$\""
+WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\Swift" "QuietUninstallString" "$\"$INSTDIR\uninstaller.exe$\""
 
 
 # define uninstaller name
@@ -54,15 +81,15 @@ Section -Prerequisites
     MessageBox MB_YESNO "Install C++ Runtime?" /SD IDYES IDNO endRuntime
     File ${msvccRedistributableDir}\${msvccRedistributableExe}
     ExecWait "$INSTDIR\Prerequisites\${msvccRedistributableExe}"
-    delete $INSTDIR\Prerequisites\${msvccRedistributableExe}
-    delete $INSTDIR\Prerequisites
+    Delete $INSTDIR\Prerequisites\${msvccRedistributableExe}
+    RmDir $INSTDIR\Prerequisites
     Goto endRuntime
   endRuntime:
 SectionEnd
 
 section "autostart"
   MessageBox MB_YESNO "Would you like Swift to run at startup?" /SD IDYES IDNO endAutostart
-    WriteRegStr HKEY_LOCAL_MACHINE "Software\Microsoft\Windows\CurrentVersion\Run" "Swift" "$INSTDIR\Swift.exe"
+    WriteRegStr HKEY_CURRENT_USER "Software\Microsoft\Windows\CurrentVersion\Run" "Swift" "$INSTDIR\Swift.exe"
     Goto endAutostart
   endAutostart:
 sectionEnd
@@ -70,7 +97,6 @@ sectionEnd
 # create a section to define what the uninstaller does.
 # the section will always be named "Uninstall"
 section "Uninstall"
-    MessageBox MB_YESNO "The uninstaller will remove Swift. Are you sure?" /SD IDYES IDNO endUninstall
     # Always delete uninstaller first
     delete $INSTDIR\uninstaller.exe
  
@@ -83,6 +109,25 @@ section "Uninstall"
     delete $INSTDIR\QtGui4.dll
     delete $INSTDIR\QtWebKit4.dll
     delete $INSTDIR\QtNetwork4.dll
+    delete $INSTDIR\imageformats\qgif4.dll
+    delete $INSTDIR\imageformats\qico4.dll
+    delete $INSTDIR\imageformats\qjpeg4.dll
+    delete $INSTDIR\imageformats\qmng4.dll
+    delete $INSTDIR\imageformats\qsvg4.dll
+    delete $INSTDIR\imageformats\qtiff4.dll
+
+    RmDir $INSTDIR\imageformats
+    RmDir $INSTDIR
+
+!insertmacro MUI_STARTMENU_GETFOLDER page_id $R0
+    Delete "$SMPROGRAMS\$R0\Swift.lnk"
+    Delete "$SMPROGRAMS\$R0\Uninstall Swift.lnk"
+    RmDir "$SMPROGRAMS\$R0"
+
+    DeleteRegKey HKEY_CURRENT_USER "Software\Swift\Start Menu Folder"
+    DeleteRegKey /ifempty HKEY_CURRENT_USER "Software\Swift"
+    DeleteRegKey HKEY_CURRENT_USER "Software\Microsoft\Windows\CurrentVersion\Run\Swift"
+
     Goto endUninstall
   endUninstall: 
 sectionEnd
