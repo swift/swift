@@ -142,11 +142,6 @@ void QtTreeWidgetItem::handleChanged(QtTreeWidgetItem* child) {
 			shownChildren_.append(children_[i]);
 		}
 	}
-
-	qDebug() << "List sorted, now:";
-	for (int i = 0; i < shownChildren_.size(); i++) {
-		qDebug() << (int)(shownChildren_[i]->getStatusShow()) << ":" << shownChildren_[i]->getName();
- 	}
 	emit changed(child);
 }
 
