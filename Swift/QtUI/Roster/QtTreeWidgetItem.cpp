@@ -2,6 +2,7 @@
 #include "Swift/QtUI/Roster/QtTreeWidget.h"
 
 #include <qdebug.h>
+#include <QtAlgorithms>
 
 namespace Swift {
 
@@ -119,13 +120,33 @@ void QtTreeWidgetItem::removeChild(QtTreeWidgetItem* child) {
 	handleChanged(this);
 }
 
+void bubbleSort(QList<QtTreeWidgetItem*>& list) {
+	for (int i = 0; i < list.size(); i++) {
+		for (int j = i + 1; j < list.size(); j++) {
+			if (*(list[j]) < *(list[j - 1])) {
+				QtTreeWidgetItem* lower = list[j];
+				list[j] = list[j - 1];
+				list[j - 1] = lower;
+			}
+		}
+	}
+}
+
 void QtTreeWidgetItem::handleChanged(QtTreeWidgetItem* child) {
+	/*We don't use the much faster qStableSort because it causes changed(child) and all sorts of nasty recursion*/
+	//qStableSort(children_.begin(), children_.end(), itemLessThan);
+	bubbleSort(children_);
 	shownChildren_.clear();
 	for (int i = 0; i < children_.size(); i++) {
 		if (children_[i]->isShown()) {
 			shownChildren_.append(children_[i]);
 		}
 	}
+
+	qDebug() << "List sorted, now:";
+	for (int i = 0; i < shownChildren_.size(); i++) {
+		qDebug() << (int)(shownChildren_[i]->getStatusShow()) << ":" << shownChildren_[i]->getName();
+ 	}
 	emit changed(child);
 }
 
@@ -179,12 +200,30 @@ QIcon QtTreeWidgetItem::getPresenceIcon() {
 	return QIcon(":/icons/" + iconString + ".png");
 }
 
-bool QtTreeWidgetItem::isContact() {
+bool QtTreeWidgetItem::isContact() const {
 	return children_.size() == 0;
 }
 
 bool QtTreeWidgetItem::isExpanded() {
 	return expanded_;
 }
+
+bool QtTreeWidgetItem::operator<(const QtTreeWidgetItem& item) const {
+	if (isContact()) {
+		if (!item.isContact()) {
+			return false;
+		}
+		return getStatusShow() == item.getStatusShow() ? getName().toLower() < item.getName().toLower() : getStatusShow() < item.getStatusShow();
+	} else {
+		if (item.isContact()) {
+			return true;
+		}
+		return getName().toLower() < item.getName().toLower();
+	}
+}
+
+//bool itemLessThan(const QtTreeWidgetItem& left, const QtTreeWidgetItem& right) {
+//	return left < right;
+//}
 
 }

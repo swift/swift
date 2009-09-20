@@ -48,12 +48,15 @@ class QtTreeWidgetItem : public QObject, public TreeWidgetItem {
 			void hide();
 			void show();
 			bool isShown();
-			bool isContact();
+			bool isContact() const;
 			bool isExpanded();
+			QString getName() const {return displayName_;};
+			StatusShow::Type getStatusShow() const {return statusShowType_;};
 
 			QWidget* getCollapsedRosterWidget();
 			QWidget* getExpandedRosterWidget();
-		
+			bool operator<(const QtTreeWidgetItem& item) const;
+			
 		signals:
 			void changed(QtTreeWidgetItem*);
 		private slots:
@@ -71,6 +74,8 @@ class QtTreeWidgetItem : public QObject, public TreeWidgetItem {
 			bool expanded_;
 			StatusShow::Type statusShowType_;
 };
+
+//bool itemLessThan(const QtTreeWidgetItem& left, const QtTreeWidgetItem& right);
 
 }
 #endif
