@@ -175,12 +175,16 @@ QVariant QtTreeWidgetItem::data(int role) {
 	 	case Qt::DisplayRole: return displayName_;
 		case Qt::TextColorRole: return textColor_;
 		case Qt::BackgroundColorRole: return backgroundColor_;
-		case Qt::ToolTipRole: return isContact() ? displayName_ + ": " + statusText_ : QVariant();
+		case Qt::ToolTipRole: return isContact() ? toolTipString() : QVariant();
 	 	case StatusTextRole: return statusText_;
 		case AvatarRole: return avatar_;
 		case PresenceIconRole: return getPresenceIcon();
 	 	default: return QVariant();
 	}
+}
+
+QString QtTreeWidgetItem::toolTipString() {
+	return displayName_ + "\n " + statusText_;
 }
 
 QIcon QtTreeWidgetItem::getPresenceIcon() {

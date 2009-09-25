@@ -62,6 +62,7 @@ class QtTreeWidgetItem : public QObject, public TreeWidgetItem {
 		private slots:
 			void handleChanged(QtTreeWidgetItem* item);
 		private:
+			QString toolTipString();
 			QList<QtTreeWidgetItem*> children_;
 			QList<QtTreeWidgetItem*> shownChildren_;
 			QtTreeWidgetItem* parent_;
