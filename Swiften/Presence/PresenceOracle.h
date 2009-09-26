@@ -15,6 +15,7 @@ class PresenceOracle {
 		~PresenceOracle() {};
 
 		boost::signal<void (boost::shared_ptr<Presence>, boost::shared_ptr<Presence>)> onPresenceChange;
+		boost::signal<void (const JID&, const String&)> onPresenceSubscriptionRequest;
 
 	private:
 		void handleIncomingPresence(boost::shared_ptr<Presence> presence);

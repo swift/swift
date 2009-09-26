@@ -1,9 +1,9 @@
 #pragma once
 
-#include <QWidget>
+#include <QListView>
 
 namespace Swift {
-	class EventView : public QWidget {
+	class EventView : public QListView {
 		Q_OBJECT
 		public:
 			EventView(QWidget* parent);
