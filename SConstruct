@@ -94,6 +94,10 @@ if env["PLATFORM"] == "win32" :
 if env["PLATFORM"] == "darwin" :
 	env.Append(FRAMEWORKS = "AppKit")
 
+# Packaging
+if ARGUMENTS.get("SWIFT_INSTALLDIR", "") :
+	env["SWIFT_INSTALLDIR"] = Dir(ARGUMENTS["SWIFT_INSTALLDIR"]).abspath
+
 conf_env = env.Clone()
 
 Export("env")

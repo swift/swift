@@ -1,10 +1,13 @@
-Package: swift
-Version: %VERSION%
-Section: network
+Source: swift
+Section: x11
 Priority: optional
-Architecture: %ARCH%
-Depends: libqt4-webkit, libqt4-core, libqt4-gui
-Installed-Size: %SIZE%
-Maintainer: Swift [http://swift.im]
-Provides: swift
-Description: XMPP Client
+Maintainer: Remko Tronçon <dev@el-tramo.be>
+Build-Depends: debhelper (>= 7)
+Standards-Version: 3.8.0
+Homepage: http://swift.im
+
+Package: swift
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: XMPP Client.
+	The Swift IM client.

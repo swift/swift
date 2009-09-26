@@ -101,6 +101,9 @@ buildVersion = Version.getBuildVersion(ARGUMENTS.get("swift_version", None))
 if env["PLATFORM"] == "darwin" :
   myenv.AppBundle("Swift", version = buildVersion, resources = ["../resources/MacOSX/Swift.icns"])
 
+if env.get("SWIFT_INSTALLDIR", "") :
+	env.Install(os.path.join(env["SWIFT_INSTALLDIR"], "bin"), swiftProgram)
+
 if env["PLATFORM"] == "win32" :
 	if "dist" in COMMAND_LINE_TARGETS or env.GetOption("clean") :
 		myenv.WindowsBundle("Swift", resources = [

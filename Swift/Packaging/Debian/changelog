@@ -1,0 +1,5 @@
+swift (0.1-1) unstable; urgency=low
+
+  * Initial release (Closes: #nnnn)  <nnnn is the bug number of your ITP>
+
+ -- Remko Tronçon <swift@swift.im>  Sat, 26 Sep 2009 11:08:32 +0200
