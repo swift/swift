@@ -1,5 +1,4 @@
-#ifndef SWIFTEN_BYTEARRAY_H
-#define SWIFTEN_BYTEARRAY_H
+#pragma once
 
 #include <cstring>
 #include <vector>
@@ -25,16 +24,18 @@ namespace Swift {
 			}
 
 			ByteArray(const char* c, size_t n) {
-				data_.resize(n);
-				memcpy(&data_[0], c, n);
+				if (n > 0) {
+					data_.resize(n);
+					memcpy(&data_[0], c, n);
+				}
 			}
 
 			const char* getData() const {
-				return &data_[0];
+				return data_.empty() ? NULL : &data_[0];
 			}
 
 			char* getData() {
-				return &data_[0];
+				return data_.empty() ? NULL : &data_[0];
 			}
 
 			size_t getSize() const {
@@ -93,5 +94,3 @@ namespace Swift {
 }
 
 std::ostream& operator<<(std::ostream& os, const Swift::ByteArray& s);
-
-#endif
