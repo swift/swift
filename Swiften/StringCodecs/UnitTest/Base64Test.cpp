@@ -10,7 +10,9 @@ class Base64Test : public CppUnit::TestFixture
 		CPPUNIT_TEST_SUITE(Base64Test);
 		CPPUNIT_TEST(testEncode);
 		CPPUNIT_TEST(testEncode_NonAscii);
+		CPPUNIT_TEST(testEncode_NoData);
 		CPPUNIT_TEST(testDecode);
+		CPPUNIT_TEST(testDecode_NoData);
 		CPPUNIT_TEST_SUITE_END();
 
 	public:
@@ -26,9 +28,19 @@ class Base64Test : public CppUnit::TestFixture
 			CPPUNIT_ASSERT_EQUAL(String("QgayPKawpkPSDYmwT/WM94uAlu0="), result);
 		}
 
+		void testEncode_NoData() {
+			String result(Base64::encode(ByteArray()));
+			CPPUNIT_ASSERT_EQUAL(String(""), result);
+		}
+
 		void testDecode() {
 			ByteArray result(Base64::decode("QUJDREVGR0hJSktMTU5PUFFSU1RVVldYWVphYmNkZWZnaGlqa2xtbm9wcXJzdHV2d3h5ejEyMzQ1Njc4OTA="));
 			CPPUNIT_ASSERT_EQUAL(ByteArray("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890"), result);
+		}
+
+		void testDecode_NoData() {
+			ByteArray result(Base64::decode(""));
+			CPPUNIT_ASSERT_EQUAL(ByteArray(), result);
 		}
 };
 

@@ -11,6 +11,7 @@ class SHA1Test : public CppUnit::TestFixture
 		CPPUNIT_TEST(testGetBinaryHash);
 		CPPUNIT_TEST(testGetBinaryHash_Twice);
 		CPPUNIT_TEST(testGetHexHash);
+		CPPUNIT_TEST(testGetHexHash_NoData);
 		CPPUNIT_TEST_SUITE_END();
 
 	public:
@@ -33,6 +34,12 @@ class SHA1Test : public CppUnit::TestFixture
 		void testGetHexHash() {
 			String result(SHA1::getHexHash("client/pc//Exodus 0.9.1<http://jabber.org/protocol/caps<http://jabber.org/protocol/disco#info<http://jabber.org/protocol/disco#items<http://jabber.org/protocol/muc<"));
 			CPPUNIT_ASSERT_EQUAL(String("4206b23ca6b0a643d20d89b04ff58cf78b8096ed"), result);
+		}
+
+		void testGetHexHash_NoData() {
+			String result(SHA1::getHexHash(ByteArray()));
+
+			CPPUNIT_ASSERT_EQUAL(String("da39a3ee5e6b4b0d3255bfef95601890afd80709"), result);
 		}
 };
 
