@@ -79,6 +79,7 @@ MainController::MainController(ChatWindowFactory* chatWindowFactory, MainWindowF
 		delete profileSettings;
 	}
 	loginWindow_->onLoginRequest.connect(boost::bind(&MainController::handleLoginRequest, this, _1, _2, _3, _4));
+	loginWindow_->onCancelLoginRequest.connect(boost::bind(&MainController::handleCancelLoginRequest, this));
 }
 
 MainController::~MainController() {
@@ -259,8 +260,15 @@ void MainController::handleError(const ClientError& error) {
 		case ClientError::ClientCertificateLoadError: message = "Error loading certificate (Invalid password?)"; break;
 		case ClientError::ClientCertificateError: message = "Certificate not authorized"; break;
 	}
-	loginWindow_->setMessage(message);
+	if (!rosterController_) { //hasn't been logged in yet
+		signOut();
+		loginWindow_->setMessage(message);
+	}
 	logout();
+}
+
+void MainController::handleCancelLoginRequest() {
+	signOut();
 }
 
 void MainController::signOut() {
@@ -280,7 +288,7 @@ void MainController::signOut() {
 }
 
 void MainController::logout() {
-	if (client_->isAvailable()) {
+	if (client_ && client_->isAvailable()) {
 		client_->disconnect();
 	}
 	setManagersEnabled(false);
@@ -294,7 +302,9 @@ void MainController::setManagersEnabled(bool enabled) {
 	foreach (JIDMUCControllerPair controllerPair, mucControllers_) {
 		controllerPair.second->setEnabled(enabled);
 	}
-	rosterController_->setEnabled(enabled);
+	if (rosterController_) {
+		rosterController_->setEnabled(enabled);
+	}
 }
 
 void MainController::handleChatRequest(const String &contact) {

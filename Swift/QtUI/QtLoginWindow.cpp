@@ -147,6 +147,7 @@ void QtLoginWindow::loggedOut() {
 
 void QtLoginWindow::loginClicked() {
 	setEnabled(false);
+	message_->setText("");
 	onLoginRequest(Q2PSTRING(username_->currentText()), Q2PSTRING(password_->text()), Q2PSTRING(certificateFile_), remember_->isChecked());
 }
 

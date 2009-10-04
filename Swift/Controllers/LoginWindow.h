@@ -16,6 +16,7 @@ namespace Swift {
 			virtual void setMessage(const String&) = 0;
 			virtual void addAvailableAccount(const String& defaultJID, const String& defaultPassword, const String& defaultCertificate) = 0;
 			boost::signal<void (const String&, const String&, const String& /* certificateFile */, bool)> onLoginRequest;
+			boost::signal<void ()> onCancelLoginRequest;
 	};
 }
 #endif

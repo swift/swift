@@ -55,6 +55,7 @@ namespace Swift {
 
 			void handleConnected();
 			void handleLoginRequest(const String& username, const String& password, const String& certificateFile, bool remember);
+			void handleCancelLoginRequest();
 			void handleChatRequest(const String& contact);
 			void handleJoinMUCRequest(const JID& muc, const String& nick);
 			void handleIncomingPresence(boost::shared_ptr<Presence> presence);
