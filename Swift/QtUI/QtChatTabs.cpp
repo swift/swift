@@ -46,6 +46,7 @@ void QtChatTabs::handleWidgetShown() {
 		return;
 	}
 	if (tabs_->indexOf(widget) >= 0) {
+		widget->setFocus();
 		return;
 	}
 	addTab(widget);
