@@ -121,9 +121,12 @@ void QtTreeWidgetItem::removeChild(QtTreeWidgetItem* child) {
 }
 
 void bubbleSort(QList<QtTreeWidgetItem*>& list) {
-	for (int i = 0; i < list.size(); i++) {
+	bool done = true;
+	for (int i = 0; i < list.size() - 1 && !done; i++) {
+		done = true;
 		for (int j = i + 1; j < list.size(); j++) {
 			if (*(list[j]) < *(list[j - 1])) {
+				done = false;
 				QtTreeWidgetItem* lower = list[j];
 				list[j] = list[j - 1];
 				list[j - 1] = lower;
@@ -135,7 +138,7 @@ void bubbleSort(QList<QtTreeWidgetItem*>& list) {
 void QtTreeWidgetItem::handleChanged(QtTreeWidgetItem* child) {
 	/*We don't use the much faster qStableSort because it causes changed(child) and all sorts of nasty recursion*/
 	//qStableSort(children_.begin(), children_.end(), itemLessThan);
-	//bubbleSort(children_);
+	bubbleSort(children_);
 	shownChildren_.clear();
 	for (int i = 0; i < children_.size(); i++) {
 		if (children_[i]->isShown()) {
