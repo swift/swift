@@ -121,7 +121,7 @@ void QtTreeWidgetItem::removeChild(QtTreeWidgetItem* child) {
 }
 
 void bubbleSort(QList<QtTreeWidgetItem*>& list) {
-	bool done = true;
+	bool done = false;
 	for (int i = 0; i < list.size() - 1 && !done; i++) {
 		done = true;
 		for (int j = i + 1; j < list.size(); j++) {

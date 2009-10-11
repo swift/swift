@@ -19,6 +19,7 @@ namespace Swift {
 		Q_OBJECT
 		public:
 			QtChatWindow(const QString &contact, QtTreeWidgetFactory* treeWidgetFactory);
+			~QtChatWindow();
 			void addMessage(const String &message, const String &senderName, bool senderIsSelf, const boost::optional<SecurityLabel>& label, const String& avatarPath);
 			void addSystemMessage(const String& message);
 			void addErrorMessage(const String& errorMessage);

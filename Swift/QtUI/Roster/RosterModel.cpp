@@ -58,7 +58,8 @@ QModelIndex RosterModel::parent(const QModelIndex& index) const {
 	Q_ASSERT(item);
 
 	QtTreeWidgetItem* parentItem = item->getParentItem();
-	return parentItem == tree_ ? QModelIndex() : createIndex(parentItem->row(), 0, parentItem);
+	/* parentItem_ == NULL can happen during destruction.*/
+	return parentItem == tree_ || parentItem == NULL ? QModelIndex() : createIndex(parentItem->row(), 0, parentItem);
 
 }
 

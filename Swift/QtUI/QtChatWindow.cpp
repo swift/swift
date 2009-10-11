@@ -62,6 +62,10 @@ QtChatWindow::QtChatWindow(const QString &contact, QtTreeWidgetFactory *treeWidg
 	resize(400,300);
 }
 
+QtChatWindow::~QtChatWindow() {
+
+}
+
 TreeWidget* QtChatWindow::getTreeWidget() {
 	return treeWidget_;
 }
