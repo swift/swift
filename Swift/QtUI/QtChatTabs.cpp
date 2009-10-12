@@ -46,7 +46,6 @@ void QtChatTabs::handleWidgetShown() {
 		return;
 	}
 	if (tabs_->indexOf(widget) >= 0) {
-		widget->setFocus();
 		return;
 	}
 	addTab(widget);
@@ -61,6 +60,7 @@ void QtChatTabs::handleWantsToActivate() {
 	setWindowState(windowState() & ~Qt::WindowMinimized);
 	setWindowState(windowState() | Qt::WindowActive);
 	tabs_->setCurrentWidget(widget);
+	widget->setFocus();
 	activateWindow();
 }
 
