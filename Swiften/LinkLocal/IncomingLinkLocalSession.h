@@ -22,8 +22,16 @@ namespace Swift {
 					PayloadParserFactoryCollection* payloadParserFactories, 
 					PayloadSerializerCollection* payloadSerializers);
 
+			boost::signal<void ()> onSessionStarted;
+
 		private:
 			void handleElement(boost::shared_ptr<Element>);
 			void handleStreamStart(const ProtocolHeader&);
+			void setInitialized();
+			bool isInitialized() const { 
+				return initialized; 
+			}
+
+			bool initialized;
 	};
 }

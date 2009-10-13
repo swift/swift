@@ -44,6 +44,7 @@ namespace Swift {
 
 			void startSession();
 			void finishSession();
+
 			void sendElement(boost::shared_ptr<Element>);
 
 			const JID& getLocalJID() const {
@@ -55,19 +56,16 @@ namespace Swift {
 			}
 
 			boost::signal<void (boost::shared_ptr<Element>)> onElementReceived;
-			boost::signal<void ()> onSessionStarted;
 			boost::signal<void (const boost::optional<SessionError>&)> onSessionFinished;
 			boost::signal<void (const ByteArray&)> onDataWritten;
 			boost::signal<void (const ByteArray&)> onDataRead;
 
 		protected:
 			void setRemoteJID(const JID& j) {
-				assert(!isInitialized());
 				remoteJID = j;
 			}
 
 			void setLocalJID(const JID& j) {
-				assert(!isInitialized());
 				localJID = j;
 			}
 
@@ -88,11 +86,6 @@ namespace Swift {
 				return streamStack;
 			}
 
-			void setInitialized();
-			bool isInitialized() const { 
-				return initialized; 
-			}
-
 			void setFinished();
 
 		private:
@@ -107,7 +100,6 @@ namespace Swift {
 			boost::shared_ptr<XMPPLayer> xmppLayer;
 			boost::shared_ptr<ConnectionLayer> connectionLayer;
 			StreamStack* streamStack;
-			bool initialized;
 			bool finishing;
 	};
 }

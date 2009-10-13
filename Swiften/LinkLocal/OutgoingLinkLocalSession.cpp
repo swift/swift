@@ -31,7 +31,6 @@ void OutgoingLinkLocalSession::handleStreamStart(const ProtocolHeader&) {
 		sendElement(stanza);
 	}
 	queuedElements_.clear();
-	setInitialized();
 }
 
 void OutgoingLinkLocalSession::handleElement(boost::shared_ptr<Element> element) {

@@ -115,7 +115,7 @@ void ClientSession::handleElement(boost::shared_ptr<Element> element) {
 			}
 			else {
 				state_ = SessionStarted;
-				setInitialized();
+				onSessionStarted();
 			}
 		}
 	}
@@ -171,7 +171,7 @@ void ClientSession::handleElement(boost::shared_ptr<Element> element) {
 		else if (state_ == StartingSession) {
 			if (iq->getType() == IQ::Result) {
 				state_ = SessionStarted;
-				setInitialized();
+				onSessionStarted();
 			}
 			else if (iq->getType() == IQ::Error) {
 				finishSession(SessionStartError);
@@ -187,7 +187,7 @@ void ClientSession::handleElement(boost::shared_ptr<Element> element) {
 	else {
 		// FIXME Not correct?
 		state_ = SessionStarted;
-		setInitialized();
+		onSessionStarted();
 	}
 }
 

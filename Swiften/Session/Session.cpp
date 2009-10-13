@@ -15,7 +15,6 @@ Session::Session(
 			payloadParserFactories(payloadParserFactories),
 			payloadSerializers(payloadSerializers),
 			streamStack(0),
-			initialized(false),
 			finishing(false) {
 }
 
@@ -78,11 +77,6 @@ void Session::handleDisconnected(const boost::optional<Connection::Error>& conne
 	else {
 		finishSession();
 	}
-}
-
-void Session::setInitialized() {
-	initialized = true;
-	onSessionStarted();
 }
 
 }

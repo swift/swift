@@ -26,7 +26,8 @@ ServerFromClientSession::ServerFromClientSession(
 			Session(connection, payloadParserFactories, payloadSerializers),
 			id_(id),
 			userRegistry_(userRegistry),
-			authenticated_(false) {
+			authenticated_(false),
+			initialized(false) {
 }
 
 
@@ -86,5 +87,11 @@ void ServerFromClientSession::handleStreamStart(const ProtocolHeader& incomingHe
 	}
 	getXMPPLayer()->writeElement(features);
 }
+
+void ServerFromClientSession::setInitialized() {
+	initialized = true;
+	onSessionStarted();
+}
+
 
 }

@@ -18,7 +18,8 @@ IncomingLinkLocalSession::IncomingLinkLocalSession(
 		boost::shared_ptr<Connection> connection, 
 		PayloadParserFactoryCollection* payloadParserFactories, 
 		PayloadSerializerCollection* payloadSerializers) :
-			Session(connection, payloadParserFactories, payloadSerializers) {
+			Session(connection, payloadParserFactories, payloadSerializers),
+			initialized(false) {
 	setLocalJID(localJID);
 }
 
@@ -51,6 +52,12 @@ void IncomingLinkLocalSession::handleElement(boost::shared_ptr<Element> element)
 	
 	onElementReceived(element);
 }
+
+void IncomingLinkLocalSession::setInitialized() {
+	initialized = true;
+	onSessionStarted();
+}
+
 
 
 }

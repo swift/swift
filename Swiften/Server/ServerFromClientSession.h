@@ -31,14 +31,22 @@ namespace Swift {
 					PayloadSerializerCollection* payloadSerializers,
 					UserRegistry* userRegistry);
 
+			boost::signal<void ()> onSessionStarted;
+
 		private:
 			void handleElement(boost::shared_ptr<Element>);
 			void handleStreamStart(const ProtocolHeader& header);
+
+			void setInitialized();
+			bool isInitialized() const { 
+				return initialized; 
+			}
 
 		private:
 			String id_;
 			UserRegistry* userRegistry_;
 			bool authenticated_;
+			bool initialized;
 			String user_;
 	};
 }

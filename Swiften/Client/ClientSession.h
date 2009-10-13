@@ -74,6 +74,7 @@ namespace Swift {
 
 		public:
 			boost::signal<void ()> onNeedCredentials;
+			boost::signal<void ()> onSessionStarted;
 		
 		private:
 			TLSLayerFactory* tlsLayerFactory_;
