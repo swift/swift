@@ -6,15 +6,22 @@
 
 #include <QSplitter>
 
+#include "QtSettingsProvider.h"
+
 namespace Swift {
+	class QtLoginWindow;
 	class QtLoginWindowFactory : public QObject, public LoginWindowFactory {
 		Q_OBJECT
 		public:
-			QtLoginWindowFactory(QSplitter* splitter, QtSystemTray* systemTray);
+			QtLoginWindowFactory(QSplitter* splitter, QtSystemTray* systemTray, QtSettingsProvider* settings);
 			LoginWindow* createLoginWindow();
+		private slots:
+			void handleWindowGeometryChanged();
 		private:
 			QSplitter* splitter_;
 			QtSystemTray* systemTray_;
+			QtSettingsProvider* settings_;
+			QtLoginWindow* window_;
 	};
 }
 

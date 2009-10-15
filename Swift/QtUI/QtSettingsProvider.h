@@ -17,6 +17,7 @@ class QtSettingsProvider : public SettingsProvider {
 		virtual void storeBool(const String &settingPath, bool settingValue);
 		virtual std::vector<String> getAvailableProfiles();
 		virtual void createProfile(const String& profile);
+		QSettings* getQSettings();
 	private:
 		QSettings settings_;
 };

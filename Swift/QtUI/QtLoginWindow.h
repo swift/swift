@@ -27,6 +27,11 @@ namespace Swift {
 			virtual void loggedOut();
 			virtual void setMessage(const String& message);
 			virtual void addAvailableAccount(const String& defaultJID, const String& defaultPassword, const String& defaultCertificate);
+			static QRect defaultPosition();
+			void setGentleGeometry(const QRect&);
+		signals:
+			void geometryChanged();
+
 		private slots:
 			void loginClicked();
 			void handleCertficateChecked(bool);
@@ -34,6 +39,8 @@ namespace Swift {
 			void handleAbout();
 			void bringToFront();
 			void handleUsernameTextChanged();
+			void resizeEvent(QResizeEvent* event);
+			void moveEvent(QMoveEvent* event);
 
 		private:
 			void setInitialMenus();

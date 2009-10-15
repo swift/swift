@@ -1,6 +1,9 @@
 #include "QtChatTabs.h"
 
+#include <algorithm>
+
 #include <QCloseEvent>
+#include <QDesktopWidget>
 #include <QtGlobal>
 #include <QTabWidget>
 #include <QLayout>
@@ -20,7 +23,7 @@ QtChatTabs::QtChatTabs() : QWidget() {
 	layout->setContentsMargins(0, 3, 0, 0);
 	layout->addWidget(tabs_);
 	setLayout(layout);
-	resize(400, 300);
+	//resize(400, 300);
 }
 
 void QtChatTabs::closeEvent(QCloseEvent* event) {
@@ -97,6 +100,14 @@ void QtChatTabs::handleTabTitleUpdated() {
 	if (widget == tabs_->currentWidget()) {
 		setWindowTitle(widget->windowTitle());
 	}
+}
+
+void QtChatTabs::resizeEvent(QResizeEvent* event) {
+	emit geometryChanged();
+}
+
+void QtChatTabs::moveEvent(QMoveEvent* event) {
+	emit geometryChanged();	
 }
 
 }

@@ -2,6 +2,8 @@
 
 #include "QtLoginWindowFactory.h"
 #include "QtChatWindowFactory.h"
+#include "QtLoginWindow.h"
+#include "QtChatTabs.h"
 #include "QtMainWindowFactory.h"
 #include "Roster/QtTreeWidgetFactory.h"
 #include "QtSystemTray.h"
@@ -27,18 +29,18 @@ QtSwift::QtSwift(bool netbookMode) {
 	} else {
 		splitter_ = NULL;
 	}
-	treeWidgetFactory_ = new QtTreeWidgetFactory(); 
-	systemTray_ = new QtSystemTray();
-	loginWindowFactory_ = new QtLoginWindowFactory(splitter_, systemTray_);
-	chatWindowFactory_ = new QtChatWindowFactory(treeWidgetFactory_, splitter_);
-	rosterWindowFactory_ = new QtMainWindowFactory(treeWidgetFactory_);
-	soundPlayer_ = new QtSoundPlayer();
 	QCoreApplication::setApplicationName("Swift");
 	QCoreApplication::setOrganizationName("Swift");
 	QCoreApplication::setOrganizationDomain("swift.im");
 	QCoreApplication::setApplicationVersion(buildVersion);
 	settings_ = new QtSettingsProvider();
 	application_ = new PlatformApplication("Swift");
+	treeWidgetFactory_ = new QtTreeWidgetFactory(); 
+	systemTray_ = new QtSystemTray();
+	loginWindowFactory_ = new QtLoginWindowFactory(splitter_, systemTray_, settings_);
+	chatWindowFactory_ = new QtChatWindowFactory(treeWidgetFactory_, splitter_, settings_);
+	rosterWindowFactory_ = new QtMainWindowFactory(treeWidgetFactory_);
+	soundPlayer_ = new QtSoundPlayer();
 	if (splitter_) {
 		splitter_->show();
 	}

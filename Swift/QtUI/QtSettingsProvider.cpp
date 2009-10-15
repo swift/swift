@@ -45,5 +45,9 @@ void QtSettingsProvider::createProfile(const String& profile) {
 	settings_.setValue("profileList", stringList);
 }
 
+QSettings* QtSettingsProvider::getQSettings() {
+	return &settings_;
+}
+
 }
 
