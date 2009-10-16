@@ -20,9 +20,9 @@ class RawXMLPayloadParserTest : public CppUnit::TestFixture
 			PayloadParserTester parser(&testling);
 
 			String xml = 
-				"<foo foo-attr=\"foo-val\" xmlns=\"foo-ns\">"
-					"<bar bar-attr=\"bar-val\" xmlns=\"bar-ns\"/>"
-					"<baz baz-attr=\"baz-val\" xmlns=\"baz-ns\"/>"
+				"<foo foo-attr=\"foo-val\" xmlns=\"ns:foo\">"
+					"<bar bar-attr=\"bar-val\" xmlns=\"ns:bar\"/>"
+					"<baz baz-attr=\"baz-val\" xmlns=\"ns:baz\"/>"
 				"</foo>";
 			CPPUNIT_ASSERT(parser.parse(xml));
 

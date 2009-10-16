@@ -31,7 +31,7 @@ class PrivateStorageSerializerTest : public CppUnit::TestFixture {
 				"<query xmlns=\"jabber:iq:private\">"	
 					"<storage xmlns=\"storage:bookmarks\">"
 						"<conference "
-								"autojoin=\"1\" "
+								"autojoin=\"0\" "
 								"jid=\"swift@rooms.swift.im\" "
 								"name=\"Swift\">"
 							"<nick>Alice</nick>"

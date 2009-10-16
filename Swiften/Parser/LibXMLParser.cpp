@@ -26,6 +26,12 @@ static void handleCharacterData(void* client, const xmlChar* data, int len) {
 }
 
 static void handleError(void*, const char*, ... ) {
+	/*
+	va_list args;
+	va_start(args, m);
+	vfprintf(stdout, m, args);
+	va_end(args);
+	*/
 }
 
 static void handleWarning(void*, const char*, ... ) {

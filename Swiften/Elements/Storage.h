@@ -10,6 +10,8 @@ namespace Swift {
 	class Storage : public Payload {
 		public:
 			struct Conference {
+				Conference() : autoJoin(false) {}
+
 				String name;
 				JID jid;
 				bool autoJoin;
