@@ -18,6 +18,7 @@ namespace Swift {
 			virtual void setMyName(const String& name) = 0;
 			virtual void setMyAvatarPath(const String& path) = 0;
 			virtual void setMyStatusText(const String& status) = 0;
+			virtual void setMyStatusType(StatusShow::Type type) = 0;
 			
 			boost::signal<void (const JID&)> onStartChatRequest;
 			boost::signal<void (const JID&, const String&)> onAddContactRequest;

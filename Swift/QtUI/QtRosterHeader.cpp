@@ -90,6 +90,10 @@ void QtRosterHeader::setStatusText(const QString& statusMessage) {
 	statusEdit_->setText(statusMessage);
 }
 
+void QtRosterHeader::setStatusType(StatusShow::Type type) {
+	statusWidget_->setStatusType(type);
+}
+
 void QtRosterHeader::setName(const QString& name) {
 	name_ = name;
 	resizeNameLabel();

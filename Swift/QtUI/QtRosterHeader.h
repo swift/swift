@@ -22,6 +22,7 @@ namespace Swift {
 		void setAvatar(const QString& path);
 		void setName(const QString& name);
 		void setStatusText(const QString& statusMessage);
+		void setStatusType(StatusShow::Type type);
 		QSize sizeHint() const;
 		void emitStatus();
 	signals:

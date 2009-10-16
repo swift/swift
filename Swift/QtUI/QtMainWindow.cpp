@@ -124,5 +124,9 @@ void QtMainWindow::setMyStatusText(const String& status) {
 	meView_->setStatusText(P2QSTRING(status));
 }
 
+void QtMainWindow::setMyStatusType(StatusShow::Type type) {
+	meView_->setStatusType(type);
+}
+
 }
 

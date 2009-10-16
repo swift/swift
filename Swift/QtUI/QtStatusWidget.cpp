@@ -30,6 +30,15 @@ StatusShow::Type QtStatusWidget::getSelectedStatusShow() {
 	return (StatusShow::Type)types_->itemData(types_->currentIndex()).toInt();
 }
 
+void QtStatusWidget::setStatusType(StatusShow::Type type) {
+	for (int i = 0; i < types_->count(); i++) {
+		if (types_->itemData(i).toInt() == type) {
+			types_->setCurrentIndex(i);
+			break;
+		}
+	}
+}
+
 }
 
 

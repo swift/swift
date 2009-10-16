@@ -31,6 +31,7 @@ namespace Swift {
 			void setMyName(const String& name);
 			void setMyAvatarPath(const String& path);
 			void setMyStatusText(const String& status);
+			void setMyStatusType(const StatusShow::Type type);
 		private slots:
 			void handleStatusChanged(StatusShow::Type showType, const QString &statusMessage);
 			void handleShowOfflineToggled(bool);

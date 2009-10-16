@@ -14,6 +14,7 @@ namespace Swift {
 		public:
 			QtStatusWidget(QWidget *parent);
 			StatusShow::Type getSelectedStatusShow();
+			void setStatusType(StatusShow::Type type);
 		signals:
 			void onChangeStatusRequest(StatusShow::Type showType);
 		private slots:

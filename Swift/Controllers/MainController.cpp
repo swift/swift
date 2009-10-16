@@ -291,6 +291,8 @@ void MainController::logout() {
 	if (client_ && client_->isAvailable()) {
 		client_->disconnect();
 	}
+	rosterController_->getWindow()->setMyStatusType(StatusShow::None);
+	rosterController_->getWindow()->setMyStatusText("");
 	setManagersEnabled(false);
 }
 
