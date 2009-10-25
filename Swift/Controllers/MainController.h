@@ -25,6 +25,7 @@ namespace Swift {
 	class ChatWindowFactory;
 	class ChatController;
 	class EventController;
+	class IdleDetector;
 	class MainWindowFactory;
 	class MainWindow;
 	class NickResolver;
@@ -46,7 +47,7 @@ namespace Swift {
 
 	class MainController : public MUCRegistry {
 		public:
-			MainController(ChatWindowFactory* chatWindowFactory, MainWindowFactory *mainWindowFactory, LoginWindowFactory *loginWindowFactory, TreeWidgetFactory* treeWidgetFactory, SettingsProvider *settings, Application* application, SystemTray* systemTray, SoundPlayer* soundPlayer);
+			MainController(ChatWindowFactory* chatWindowFactory, MainWindowFactory *mainWindowFactory, LoginWindowFactory *loginWindowFactory, TreeWidgetFactory* treeWidgetFactory, SettingsProvider *settings, Application* application, SystemTray* systemTray, SoundPlayer* soundPlayer, IdleDetector* idleDetector);
 			~MainController();
 
 
@@ -68,12 +69,13 @@ namespace Swift {
 			void handleOwnVCardReceived(boost::shared_ptr<VCard> vCard, const boost::optional<Error>& error);
 			ChatController* getChatController(const JID &contact);
 			void sendPresence(boost::shared_ptr<Presence> presence);
+			void handleInputIdle();
+			void handleInputNotIdle();
 			void logout();
 			void signOut();
 
 			virtual bool isMUC(const JID& muc) const;
 	
-		private:	
 			void performLoginFromCachedCredentials();
 			void setManagersEnabled(bool enabled);
 			Client* client_;
@@ -92,6 +94,7 @@ namespace Swift {
 			SoftwareVersionResponder* clientVersionResponder_;
 			NickResolver* nickResolver_;
 			DiscoInfoResponder* discoResponder_;
+			IdleDetector* idleDetector_;
 			boost::shared_ptr<CapsInfo> capsInfo_;
 			std::map<JID, MUCController*> mucControllers_;
 			std::map<JID, ChatController*> chatControllers_;

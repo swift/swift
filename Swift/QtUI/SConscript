@@ -51,6 +51,7 @@ sources = [
 		"QtAddContactDialog.cpp",
 		"QtChatWindow.cpp",
 		"QtChatWindowFactory.cpp",
+		"QtIdleDetector.cpp",
 		"QtJoinMUCDialog.cpp",
 		"QtLoginWindow.cpp",
 		"QtLoginWindowFactory.cpp",

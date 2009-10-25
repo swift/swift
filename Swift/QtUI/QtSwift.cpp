@@ -8,6 +8,7 @@
 #include "Roster/QtTreeWidgetFactory.h"
 #include "QtSystemTray.h"
 #include "QtSoundPlayer.h"
+#include "QtIdleDetector.h"
 
 #include <boost/bind.hpp>
 #include <QSplitter>
@@ -41,10 +42,11 @@ QtSwift::QtSwift(bool netbookMode) {
 	chatWindowFactory_ = new QtChatWindowFactory(treeWidgetFactory_, splitter_, settings_);
 	rosterWindowFactory_ = new QtMainWindowFactory(treeWidgetFactory_);
 	soundPlayer_ = new QtSoundPlayer();
+	idleDetector_ = new QtIdleDetector();
 	if (splitter_) {
 		splitter_->show();
 	}
-	mainController_ = new MainController(chatWindowFactory_, rosterWindowFactory_, loginWindowFactory_, treeWidgetFactory_, settings_, application_, systemTray_, soundPlayer_);
+	mainController_ = new MainController(chatWindowFactory_, rosterWindowFactory_, loginWindowFactory_, treeWidgetFactory_, settings_, application_, systemTray_, soundPlayer_, idleDetector_);
 }
 
 QtSwift::~QtSwift() {
@@ -58,6 +60,7 @@ QtSwift::~QtSwift() {
 	delete systemTray_;
 	delete splitter_;
 	delete soundPlayer_;
+	delete idleDetector_;
 }
 
 }
