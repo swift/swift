@@ -28,6 +28,10 @@ namespace Swift {
 			virtual String getNewIQID() {
 				return "test-id";
 			}
+			
+			virtual bool isAvailable() {
+				return true;
+			}
 
 			std::vector<boost::shared_ptr<Stanza> > sentStanzas_;
 	};
