@@ -106,6 +106,7 @@ namespace Swift {
 			SoundEventController* soundEventController_;
 			AvatarManager* avatarManager_;
 			boost::shared_ptr<Presence> lastSentPresence_;
+			boost::shared_ptr<Presence> preIdlePresence_;
 			String vCardPhotoHash_;
 			boost::shared_ptr<Presence> queuedPresence_;
 			String password_;

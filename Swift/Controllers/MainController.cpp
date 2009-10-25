@@ -185,7 +185,6 @@ void MainController::handleEventQueueLengthChange(int count) {
 
 void MainController::handleChangeStatusRequest(StatusShow::Type show, const String &statusText) {
 	boost::shared_ptr<Presence> presence(new Presence());
-	presence->addPayload(capsInfo_);
 	if (show == StatusShow::None) {
 		// FIXME: This is wrong. None doesn't mean unavailable
 		presence->setType(Presence::Unavailable);
@@ -206,6 +205,7 @@ void MainController::sendPresence(boost::shared_ptr<Presence> presence) {
 	if (!vCardPhotoHash_.isEmpty()) {
 		presence->addPayload(boost::shared_ptr<VCardUpdate>(new VCardUpdate(vCardPhotoHash_)));
 	}
+	presence->addPayload(capsInfo_);
 	lastSentPresence_ = presence;
 	client_->sendPresence(presence);
 	if (presence->getType() == Presence::Unavailable) {
@@ -214,11 +214,19 @@ void MainController::sendPresence(boost::shared_ptr<Presence> presence) {
 }
 
 void MainController::handleInputIdle() {
-	
+	preIdlePresence_ = lastSentPresence_;
+	boost::shared_ptr<Presence> presence(new Presence());
+	presence->setShow(StatusShow::Away);
+	presence->setStatus("Auto-away");
+	sendPresence(presence);
 }
 
 void MainController::handleInputNotIdle() {
-	
+	if (client_) {
+		sendPresence(preIdlePresence_);
+	} else {
+		queuedPresence_ = preIdlePresence_;
+	}
 }
 
 void MainController::handleIncomingPresence(boost::shared_ptr<Presence> presence) {
