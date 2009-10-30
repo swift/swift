@@ -139,7 +139,7 @@ void QtChatWindow::setName(const String& name) {
 }
 
 void QtChatWindow::updateTitleWithUnreadCount() {
-	setWindowTitle(unreadCount_ > 0 ? QString("(%1) %2)").arg(unreadCount_).arg(contact_) : contact_);
+	setWindowTitle(unreadCount_ > 0 ? QString("(%1) %2").arg(unreadCount_).arg(contact_) : contact_);
 	emit titleUpdated();
 }
 
