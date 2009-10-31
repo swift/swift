@@ -17,10 +17,15 @@ namespace Swift {
 			void writeData(const ByteArray& data);
 			void handleDataRead(const ByteArray& data);
 
+			bool getIsActive() const {
+				return isActive;
+			}
+
 		private:
 			void handleTimerTick();
 
 		private:
+			bool isActive;
 			boost::shared_ptr<Timer> timer;
 	};
 }

@@ -8,7 +8,7 @@ namespace Swift {
 
 static const int TIMEOUT_MILLISECONDS = 60000;
 
-WhitespacePingLayer::WhitespacePingLayer() {
+WhitespacePingLayer::WhitespacePingLayer() : isActive(false) {
 	// FIXME: Create a BoostTimerFactory.
 	timer = boost::shared_ptr<Timer>(new Timer(TIMEOUT_MILLISECONDS, &MainBoostIOServiceThread::getInstance().getIOService()));
 	timer->onTick.connect(boost::bind(&WhitespacePingLayer::handleTimerTick, this));
@@ -27,11 +27,13 @@ void WhitespacePingLayer::handleTimerTick() {
 }
 
 void WhitespacePingLayer::setActive() {
+	isActive = true;
 	timer->start();
 }
 
 void WhitespacePingLayer::setInactive() {
 	timer->stop();
+	isActive = false;
 }
 
 }
