@@ -120,43 +120,37 @@ Export("conf_env")
 # strings in config.log)
 ################################################################################
 
-# Pretty output
-if int(ARGUMENTS.get("V", 0)) == 0:
-  if sys.stdout.isatty() and env["PLATFORM"] != "win32":
-    env["CCCOMSTR"]             = "  \033[0;33;140mCC\033[0m     $TARGET"
-    env["CXXCOMSTR"]            = "  \033[0;32;140mCXX\033[0m    $TARGET"
-    env["LINKCOMSTR"]           = "  \033[0;31;140mLINK\033[0m   $TARGET"
-    env["ARCOMSTR"]             = "  \033[0;31;140mAR\033[0m     $TARGET"
-    env["RANLIBCOMSTR"]         = "  \033[0;31;140mRANLIB\033[0m $TARGET"
-    env["QT4_RCCCOMSTR"]        = "  \033[0;34;140mRCC\033[0m    $TARGET"
-    env["QT4_UICCOMSTR"]        = "  \033[0;34;140mUIC\033[0m    $TARGET"
-    env["QT4_MOCFROMHCOMSTR"]   = "  \033[0;34;140mMOC\033[0m    $TARGET"
-    env["QT4_MOCFROMCXXCOMSTR"] = "  \033[0;34;140mMOC\033[0m    $TARGET"
-    env["GENCOMSTR"]            = "  \033[0;34;140mGEN\033[0m    $TARGET"
-    env["RCCOMSTR"]             = "  \033[0;34;140mRC\033[0m     $TARGET"
-    env["BUNDLECOMSTR"]         = "  \033[0;34;140mBUNDLE\033[0m $TARGET"
-    env["NIBCOMSTR"]            = "  \033[0;34;140mNIB\033[0m    $TARGET"
-    env["NSISCOMSTR"]           = "  \033[0;34;140mNSIS\033[0m   $TARGET"
-    #Progress(                     "  \033[0;35;140mDEP\033[0m    $TARGET\n")
-  else :
-    env["CCCOMSTR"]             = "  CC     $TARGET"
-    env["CXXCOMSTR"]            = "  CXX    $TARGET"
-    env["LINKCOMSTR"]           = "  LINK   $TARGET"
-    env["ARCOMSTR"]             = "  AR     $TARGET"
-    env["RANLIBCOMSTR"]         = "  RANLIB $TARGET"
-    env["QT4_RCCCOMSTR"]        = "  RCC    $TARGET"
-    env["QT4_UICCOMSTR"]        = "  UIC    $TARGET"
-    env["QT4_MOCFROMHCOMSTR"]   = "  MOC    $TARGET"
-    env["QT4_MOCFROMCXXCOMSTR"] = "  MOC    $TARGET"
-    env["GENCOMSTR"]            = "  GEN    $TARGET"
-    env["RCCOMSTR"]             = "  RC     $TARGET"
-    env["BUNDLECOMSTR"]         = "  BUNDLE $TARGET"
-    env["NIBCOMSTR"]            = "  NIB    $TARGET"
-    env["NSISCOMSTR"]           = "  NSIS   $TARGET"
-    #Progress('  DEP $TARGET\n')
-
 if env["PLATFORM"] == "win32" :
 	env["MSVC_BATCH"] = 1
+
+# Pretty output
+def colorize(command, target, color) :
+	colors = { "red": "31", "green": "32", "yellow": "33", "blue": "34" }
+	prefix = ""
+	suffix = ""
+	if sys.stdout.isatty() and env["PLATFORM"] != "win32":
+		prefix = "\033[0;" + colors[color] + ";140m"
+		suffix = "\033[0m"
+	return "  " + prefix + command + suffix + " " + target
+
+if int(ARGUMENTS.get("V", 0)) == 0:
+  if sys.stdout.isatty() and env["PLATFORM"] != "win32":
+    env["CCCOMSTR"] = colorize("CC", "$TARGET", "green")
+    env["CXXCOMSTR"] = colorize("CXX", "$TARGET", "green")
+    env["LINKCOMSTR"] = colorize("LINK", "$TARGET", "red")
+    env["ARCOMSTR"] = colorize("AR", "$TARGET", "red")
+    env["RANLIBCOMSTR"] = colorize("RANLIB", "$TARGET", "red")
+    env["QT4_RCCCOMSTR"] = colorize("RCC", "$TARGET", "blue")
+    env["QT4_UICCOMSTR"] = colorize("UIC", "$TARGET", "blue")
+    env["QT4_MOCFROMHCOMSTR"] = colorize("MOC", "$TARGET", "blue")
+    env["QT4_MOCFROMCXXCOMSTR"] = colorize("MOC", "$TARGET", "blue")
+    env["GENCOMSTR"] = colorize("GEN", "$TARGET", "blue")
+    env["RCCOMSTR"] = colorize("RC", "$TARGET", "blue")
+    env["BUNDLECOMSTR"] = colorize("BUNDLE", "$TARGET", "blue")
+    env["NIBCOMSTR"] = colorize("NIB", "$TARGET", "blue")
+    env["NSISCOMSTR"] = colorize("NSIS", "$TARGET", "blue")
+    env["TESTCOMSTR"] = colorize("TEST", "$SOURCE", "yellow")
+    #Progress(colorize("DEP", "$TARGET", "red")
 
 ################################################################################
 # Platform configuration
