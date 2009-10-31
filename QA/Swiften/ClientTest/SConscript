@@ -2,21 +2,21 @@ import os
 
 Import("env")
 
-myenv = env.Clone()
-myenv.MergeFlags(env["SWIFTEN_FLAGS"])
-myenv.MergeFlags(env["CPPUNIT_FLAGS"])
-myenv.MergeFlags(env["LIBIDN_FLAGS"])
-myenv.MergeFlags(env["BOOST_FLAGS"])
-myenv.MergeFlags(env["SQLITE_FLAGS"])
-myenv.MergeFlags(env["ZLIB_FLAGS"])
-myenv.MergeFlags(env["OPENSSL_FLAGS"])
-myenv.MergeFlags(env.get("LIBXML_FLAGS", ""))
-myenv.MergeFlags(env.get("EXPAT_FLAGS", ""))
+if env["TEST"] :
+	myenv = env.Clone()
+	myenv.MergeFlags(env["SWIFTEN_FLAGS"])
+	myenv.MergeFlags(env["CPPUNIT_FLAGS"])
+	myenv.MergeFlags(env["LIBIDN_FLAGS"])
+	myenv.MergeFlags(env["BOOST_FLAGS"])
+	myenv.MergeFlags(env["SQLITE_FLAGS"])
+	myenv.MergeFlags(env["ZLIB_FLAGS"])
+	myenv.MergeFlags(env["OPENSSL_FLAGS"])
+	myenv.MergeFlags(env.get("LIBXML_FLAGS", ""))
+	myenv.MergeFlags(env.get("EXPAT_FLAGS", ""))
 
-for i in ["SWIFT_CLIENTTEST_JID", "SWIFT_CLIENTTEST_PASS"]:
-	if os.environ.get(i, "") :
-		myenv["ENV"][i] = os.environ[i]
+	for i in ["SWIFT_CLIENTTEST_JID", "SWIFT_CLIENTTEST_PASS"]:
+		if os.environ.get(i, "") :
+			myenv["ENV"][i] = os.environ[i]
 
-tester = myenv.Program("ClientTest", ["ClientTest.cpp"])
-clientTest = myenv.Alias("ClientTest", tester, env.get("TEST_RUNNER", "") + tester[0].abspath)
-env.AlwaysBuild(clientTest)
+	tester = myenv.Program("ClientTest", ["ClientTest.cpp"])
+	myenv.Test(tester, "system")

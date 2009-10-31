@@ -6,6 +6,7 @@ sys.path.append(Dir("BuildTools/SCons").abspath)
 ################################################################################
 
 vars = Variables("config.py")
+vars.Add(EnumVariable("test", "Compile and run tests", "none", ["none", "all", "unit", "system"]))
 vars.Add(BoolVariable("optimize", "Compile with optimizations turned on", "no"))
 vars.Add(BoolVariable("debug", "Compile with debug information", "yes" if os.name != "nt" else "no"))
 vars.Add(BoolVariable("warnings", "Compile with warnings turned on", 
@@ -34,6 +35,7 @@ Help(vars.GenerateHelpText(env))
 env.Alias("dist", ["."])
 
 # Default custom tools
+env.Tool("Test", toolpath = ["#/BuildTools/SCons/Tools"])
 env.Tool("WriteVal", toolpath = ["#/BuildTools/SCons/Tools"])
 env.Tool("BuildVersion", toolpath = ["#/BuildTools/SCons/Tools"])
 if env["PLATFORM"] == "darwin" :
@@ -82,9 +84,6 @@ if env.get("coverage", 0) :
 	env.Append(CCFLAGS = ["-fprofile-arcs", "-ftest-coverage"])
 	env.Append(LINKFLAGS = ["-fprofile-arcs", "-ftest-coverage"])
 
-if env.get("valgrind", 0) :
-  env["TEST_RUNNER"] = "valgrind --suppressions=QA/valgrind.supp -q --leak-check=full --track-origins=yes "
-
 if env["PLATFORM"] == "win32" :
 	env.Append(LIBS = ["dnsapi", "ws2_32", "wsock32"])
 	env.Append(CCFLAGS = "/EHsc")
@@ -93,6 +92,15 @@ if env["PLATFORM"] == "win32" :
 
 if env["PLATFORM"] == "darwin" :
 	env.Append(FRAMEWORKS = "AppKit")
+
+# Testing
+env["TEST_TYPE"] = env["test"]
+env.Alias("check", ".")
+if "check" in ARGUMENTS or "check" in COMMAND_LINE_TARGETS :
+	env["TEST_TYPE"] = "unit"
+env["TEST"] = (env["TEST_TYPE"] != "none") or env.GetOption("clean")
+if env.get("valgrind", 0) :
+  env["TEST_RUNNER"] = "valgrind --suppressions=QA/valgrind.supp -q --leak-check=full --track-origins=yes "
 
 # Packaging
 if ARGUMENTS.get("SWIFT_INSTALLDIR", "") :

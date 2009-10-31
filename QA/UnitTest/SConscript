@@ -12,7 +12,7 @@ env["CHECKER_FLAGS"] = {
 		"LINKFLAGS": ["/SUBSYSTEM:CONSOLE"] if env["PLATFORM"] == "win32" else []
   }
 
-if "check" in COMMAND_LINE_TARGETS or env.GetOption("clean") :
+if env["TEST"] :
 	myenv = env.Clone()
 	myenv.MergeFlags(env["CHECKER_FLAGS"])
 	myenv.MergeFlags(env["SLIMBER_FLAGS"])
@@ -33,5 +33,4 @@ if "check" in COMMAND_LINE_TARGETS or env.GetOption("clean") :
 	for i in ["HOME", "USERPROFILE", "APPDATA"]:
 		if os.environ.get(i, "") :
 			myenv["ENV"][i] = os.environ[i]
-	check = myenv.Alias("check", checker, env.get("TEST_RUNNER", "") + checker[0].abspath)
-	myenv.AlwaysBuild(check)
+	myenv.Test(checker)
