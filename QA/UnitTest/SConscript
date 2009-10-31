@@ -2,16 +2,6 @@ import os
 
 Import("env")
 
-# The checker
-checker_env = env.Clone()
-checker_env.MergeFlags(env["CPPUNIT_FLAGS"])
-checker_env.Library("Checker", "checker.cpp")
-env["CHECKER_FLAGS"] = { 
-    "LIBS": ["Checker"],
-    "LIBPATH": [Dir(".")],
-		"LINKFLAGS": ["/SUBSYSTEM:CONSOLE"] if env["PLATFORM"] == "win32" else []
-  }
-
 if env["TEST"] :
 	myenv = env.Clone()
 	myenv.MergeFlags(env["CHECKER_FLAGS"])

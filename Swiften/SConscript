@@ -93,6 +93,7 @@ SConscript(dirs = [
 		"History",
 		"StreamStack",
 		"LinkLocal",
+		"QA",
 	])
 
 myenv.StaticLibrary("Swiften", sources + swiften_env["SWIFTEN_OBJECTS"])

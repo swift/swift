@@ -270,6 +270,9 @@ SConscript(dirs = [
 		"3rdParty/LibIDN",
 		"3rdParty/SQLite"])
 
+# Checker
+SConscript(dirs = ["QA/Checker"])
+
 # Swiften
 SConscript(dirs = "Swiften")
 
@@ -281,8 +284,8 @@ for dir in os.listdir(".") :
 	if os.path.isfile(sconscript) :
 		SConscript(sconscript)
 
-# QA
-SConscript(dirs = "QA")
+# Unit test runner
+SConscript(dirs = ["QA/UnitTest"])
 
 ################################################################################
 # Print summary

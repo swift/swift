@@ -1,4 +1,0 @@
-SConscript(dirs = [
-    "UnitTest",
-    "Swiften"
-  ])
