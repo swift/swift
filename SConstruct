@@ -134,23 +134,22 @@ def colorize(command, target, color) :
 	return "  " + prefix + command + suffix + " " + target
 
 if int(ARGUMENTS.get("V", 0)) == 0:
-  if sys.stdout.isatty() and env["PLATFORM"] != "win32":
-    env["CCCOMSTR"] = colorize("CC", "$TARGET", "green")
-    env["CXXCOMSTR"] = colorize("CXX", "$TARGET", "green")
-    env["LINKCOMSTR"] = colorize("LINK", "$TARGET", "red")
-    env["ARCOMSTR"] = colorize("AR", "$TARGET", "red")
-    env["RANLIBCOMSTR"] = colorize("RANLIB", "$TARGET", "red")
-    env["QT4_RCCCOMSTR"] = colorize("RCC", "$TARGET", "blue")
-    env["QT4_UICCOMSTR"] = colorize("UIC", "$TARGET", "blue")
-    env["QT4_MOCFROMHCOMSTR"] = colorize("MOC", "$TARGET", "blue")
-    env["QT4_MOCFROMCXXCOMSTR"] = colorize("MOC", "$TARGET", "blue")
-    env["GENCOMSTR"] = colorize("GEN", "$TARGET", "blue")
-    env["RCCOMSTR"] = colorize("RC", "$TARGET", "blue")
-    env["BUNDLECOMSTR"] = colorize("BUNDLE", "$TARGET", "blue")
-    env["NIBCOMSTR"] = colorize("NIB", "$TARGET", "blue")
-    env["NSISCOMSTR"] = colorize("NSIS", "$TARGET", "blue")
-    env["TESTCOMSTR"] = colorize("TEST", "$SOURCE", "yellow")
-    #Progress(colorize("DEP", "$TARGET", "red")
+	env["CCCOMSTR"] = colorize("CC", "$TARGET", "green")
+	env["CXXCOMSTR"] = colorize("CXX", "$TARGET", "green")
+	env["LINKCOMSTR"] = colorize("LINK", "$TARGET", "red")
+	env["ARCOMSTR"] = colorize("AR", "$TARGET", "red")
+	env["RANLIBCOMSTR"] = colorize("RANLIB", "$TARGET", "red")
+	env["QT4_RCCCOMSTR"] = colorize("RCC", "$TARGET", "blue")
+	env["QT4_UICCOMSTR"] = colorize("UIC", "$TARGET", "blue")
+	env["QT4_MOCFROMHCOMSTR"] = colorize("MOC", "$TARGET", "blue")
+	env["QT4_MOCFROMCXXCOMSTR"] = colorize("MOC", "$TARGET", "blue")
+	env["GENCOMSTR"] = colorize("GEN", "$TARGET", "blue")
+	env["RCCOMSTR"] = colorize("RC", "$TARGET", "blue")
+	env["BUNDLECOMSTR"] = colorize("BUNDLE", "$TARGET", "blue")
+	env["NIBCOMSTR"] = colorize("NIB", "$TARGET", "blue")
+	env["NSISCOMSTR"] = colorize("NSIS", "$TARGET", "blue")
+	env["TESTCOMSTR"] = colorize("TEST", "$SOURCE", "yellow")
+	#Progress(colorize("DEP", "$TARGET", "red")
 
 ################################################################################
 # Platform configuration
