@@ -110,8 +110,9 @@ if env["PLATFORM"] == "win32" :
 		myenv.WindowsBundle("Swift", resources = [
 				os.path.join(env["OPENSSL_DIR"], "bin", "ssleay32.dll"),	
 				os.path.join(env["OPENSSL_DIR"], "bin", "libeay32.dll"),	
-				[os.path.join(env["QTDIR"], "plugins", "imageformats", "q" + codec + "4.dll") for codec in ["gif", "ico", "jpeg", "mng", "svg", "tiff"]]
-			], qtlibs = ["QtCore4", "QtGui4", "QtNetwork4", "QtWebKit4", "phonon4"])
+			],	
+			qtimageformats = ["gif", "ico", "jpeg", "mng", "svg", "tiff"],
+			qtlibs = ["QtCore4", "QtGui4", "QtNetwork4", "QtWebKit4", "phonon4"])
 
 		myenv.Append(NSIS_OPTIONS = [
 				"/DmsvccRedistributableDir=\"" + env["vcredist"] + "\"", 
