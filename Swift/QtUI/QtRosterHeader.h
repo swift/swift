@@ -3,12 +3,13 @@
 #include <QWidget>
 #include <QLabel>
 #include <QPixmap>
-#include <QTextEdit>
 #include <QSize>
 #include <QToolBar>
 
 #include "Swiften/Base/String.h"
 #include "Swiften/Elements/StatusShow.h"
+
+#include "QtTextEdit.h"
 
 class QHBoxLayout;
 
@@ -24,6 +25,7 @@ namespace Swift {
 		void setStatusText(const QString& statusMessage);
 		void setStatusType(StatusShow::Type type);
 		QSize sizeHint() const;
+	public slots:
 		void emitStatus();
 	signals:
 		void onChangeStatusRequest(StatusShow::Type showType, const QString &statusMessage);
@@ -38,7 +40,7 @@ namespace Swift {
 		QString name_;
 		QLabel* avatarLabel_;
 		QLabel* nameLabel_;
-		QTextEdit* statusEdit_;
+		QtTextEdit* statusEdit_;
 		QToolBar* toolBar_;
 		QtStatusWidget* statusWidget_;
 		QHBoxLayout* expandedLayout_;

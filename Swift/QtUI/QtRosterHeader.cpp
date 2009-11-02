@@ -37,7 +37,7 @@ QtRosterHeader::QtRosterHeader(QWidget* parent) : QWidget(parent) {
 	setAvatar(":/icons/avatar.png");
 	expandedLayout_->addWidget(avatarLabel_);
 	
-	statusEdit_ = new QTextEdit(this);
+	statusEdit_ = new QtTextEdit(this);
 	expandedLayout_->addWidget(statusEdit_);
 	statusEdit_->resize(statusEdit_->width(), 64);
 	statusEdit_->setAcceptRichText(false);
@@ -48,6 +48,7 @@ QtRosterHeader::QtRosterHeader(QWidget* parent) : QWidget(parent) {
 	expanded_ = false;
 	avatarLabel_->hide();
 	statusEdit_->hide();
+	connect(statusEdit_, SIGNAL(returnPressed()), this, SLOT(emitStatus()));
 
 	setSizePolicy(QSizePolicy(QSizePolicy::Minimum, QSizePolicy::Fixed));
 }
