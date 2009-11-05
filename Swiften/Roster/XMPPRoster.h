@@ -23,7 +23,7 @@ class XMPPRoster {
 
 		boost::signal<void (const JID&)> onJIDAdded;
 		boost::signal<void (const JID&)> onJIDRemoved;
-		boost::signal<void (const JID&)> onJIDUpdated;
+		boost::signal<void (const JID&, const String&, const std::vector<String>&)> onJIDUpdated;
 
 	private:
 		std::map<JID, std::pair<String, std::vector<String> > > entries_;

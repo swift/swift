@@ -35,6 +35,8 @@ RosterController::RosterController(const JID& jid, boost::shared_ptr<XMPPRoster>
 	mainWindow_->onSignOutRequest.connect(boost::bind(boost::ref(onSignOutRequest)));
 	roster_->onUserAction.connect(boost::bind(&RosterController::handleUserAction, this, _1));
 	xmppRoster_->onJIDAdded.connect(boost::bind(&RosterController::handleOnJIDAdded, this, _1));
+	xmppRoster_->onJIDUpdated.connect(boost::bind(&RosterController::handleOnJIDUpdated, this, _1, _2, _3));
+	xmppRoster_->onJIDRemoved.connect(boost::bind(&RosterController::handleOnJIDRemoved, this, _1));
 	avatarManager_ = NULL;
 	setAvatarManager(avatarManager);
 	setNickResolver(nickResolver);
@@ -101,6 +103,34 @@ void RosterController::handleOnJIDAdded(const JID& jid) {
 	} else {
 		roster_->addContact(jid, name, "Contacts");
 	}
+}
+
+void RosterController::handleOnJIDRemoved(const JID& jid) {
+	roster_->removeContact(jid);
+}
+
+void RosterController::handleOnJIDUpdated(const JID& jid, const String& oldName, const std::vector<String> oldGroups) {
+	if (oldName != xmppRoster_->getNameForJID(jid)) {
+		handleOnJIDAdded(jid);
+		return;
+	}
+	std::vector<String> groups = xmppRoster_->getGroupsForJID(jid);
+	String name = xmppRoster_->getNameForJID(jid);
+	String contactsGroup = "Contacts";
+	if (groups.empty()) {
+		groups.push_back(contactsGroup);
+	}
+	foreach(const String& group, groups) {
+		if (std::find(oldGroups.begin(), oldGroups.end(), jid) == oldGroups.end()) {
+			roster_->addContact(jid, xmppRoster_->getNameForJID(jid), group);
+		}
+	} 
+	foreach(const String& group, oldGroups) {
+		if (std::find(groups.begin(), groups.end(), group) == groups.end()) {
+			roster_->removeContactFromGroup(jid, group);
+		}
+	}
+	
 }
 
 void RosterController::handleIncomingPresence(boost::shared_ptr<Presence> presence) {

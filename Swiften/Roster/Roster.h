@@ -27,6 +27,7 @@ class Roster {
 		GroupRosterItem* getGroup(const String& groupName);
 		void addContact(const JID& jid, const String& name, const String& group);
 		void removeContact(const JID& jid);
+		void removeContactFromGroup(const JID& jid, const String& group);
 		void applyOnItems(const RosterItemOperation& operation);
 		boost::signal<void (boost::shared_ptr<UserRosterAction>)> onUserAction;
 		void addFilter(RosterFilter *filter) {filters_.push_back(filter);filterAll();}

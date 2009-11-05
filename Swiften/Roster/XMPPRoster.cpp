@@ -8,9 +8,12 @@ void XMPPRoster::addContact(const JID& jid, const String& name, const std::vecto
 	if (exists) {
 		entries_.erase(bareJID);
 	}
+	String oldName = getNameForJID(bareJID);
+	std::vector<String> oldGroups = entries_[bareJID].second;
 	entries_[bareJID] = std::pair<String, std::vector<String> >(name, groups);
 	if (exists) {
-		onJIDUpdated(bareJID);
+		
+		onJIDUpdated(bareJID, oldName, oldGroups);
 	} else {
 		onJIDAdded(bareJID);
 	}

@@ -37,6 +37,8 @@ namespace Swift {
 			void setEnabled(bool enabled);
 		private:
 			void handleOnJIDAdded(const JID &jid);
+			void handleOnJIDRemoved(const JID &jid);
+			void handleOnJIDUpdated(const JID &jid, const String& oldName, const std::vector<String> oldGroups);
 			void handleStartChatRequest(const JID& contact);
 			void handleJoinMUCRequest(const JID &muc, const String &nick);
 			void handleUserAction(boost::shared_ptr<UserRosterAction> action);

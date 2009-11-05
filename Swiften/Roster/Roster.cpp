@@ -72,6 +72,18 @@ void Roster::removeContact(const JID& jid) {
 	}
 }
 
+void Roster::removeContactFromGroup(const JID& jid, const String& groupName) {
+	std::vector<RosterItem*>::iterator it = children_.begin();
+	while (it != children_.end()) {
+		GroupRosterItem* group = dynamic_cast<GroupRosterItem*>(*it);
+		if (group && group->getName() == groupName) {
+			group->removeChild(jid);
+		}
+		it++;
+	}
+}
+
+
 void Roster::applyOnItems(const RosterItemOperation& operation) {
 	std::deque<RosterItem*> queue(children_.begin(), children_.end());
 	while (!queue.empty()) {
