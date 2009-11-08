@@ -22,5 +22,6 @@ myenv.StaticLibrary("SwiftControllers", [
 
 env.Append(UNITTEST_SOURCES = [
 		File("UnitTest/NickResolverTest.cpp"),
+		File("UnitTest/RosterControllerTest.cpp"),
 		File("UnitTest/XMPPRosterControllerTest.cpp")
 	])

@@ -16,7 +16,7 @@ class MockTreeWidgetItem : public TreeWidgetItem {
 		virtual void setStatusText(const String&) {};
 		virtual void setAvatarPath(const String&) {};
 		virtual void setExpanded(bool) {};
-		virtual void setStatusShow(StatusShow::Type show) {};
+		virtual void setStatusShow(StatusShow::Type /*show*/) {};
 		virtual void show() {};
 		virtual void hide() {};
 };
