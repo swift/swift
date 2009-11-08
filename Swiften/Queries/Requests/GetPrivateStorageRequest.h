@@ -5,7 +5,7 @@
 
 #include "Swiften/Queries/Request.h"
 #include "Swiften/Elements/PrivateStorage.h"
-#include "Swiften/Elements/Error.h"
+#include "Swiften/Elements/ErrorPayload.h"
 
 namespace Swift {
 	template<typename PAYLOAD_TYPE>
@@ -14,7 +14,7 @@ namespace Swift {
 			GetPrivateStorageRequest(IQRouter* router) : Request(IQ::Get, JID(), boost::shared_ptr<PrivateStorage>(new PrivateStorage(boost::shared_ptr<Payload>(new PAYLOAD_TYPE()))), router) {
 			}
 
-			virtual void handleResponse(boost::shared_ptr<Payload> payload, boost::optional<Error> error) {
+			virtual void handleResponse(boost::shared_ptr<Payload> payload, boost::optional<ErrorPayload> error) {
 				boost::shared_ptr<PrivateStorage> storage = boost::dynamic_pointer_cast<PrivateStorage>(payload);
 				if (storage) {
 					onResponse(boost::dynamic_pointer_cast<PAYLOAD_TYPE>(storage->getPayload()), error);
@@ -25,6 +25,6 @@ namespace Swift {
 			}
 
 		public:
-			boost::signal<void (boost::shared_ptr<PAYLOAD_TYPE>, const boost::optional<Error>&)> onResponse;
+			boost::signal<void (boost::shared_ptr<PAYLOAD_TYPE>, const boost::optional<ErrorPayload>&)> onResponse;
 	};
 }

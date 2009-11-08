@@ -1,5 +1,4 @@
-#ifndef SWIFTEN_GenericRequest_H
-#define SWIFTEN_GenericRequest_H
+#pragma once
 
 #include <boost/signal.hpp>
 
@@ -17,13 +16,11 @@ namespace Swift {
 						Request(type, receiver, payload, router) {
 			}
 
-			virtual void handleResponse(boost::shared_ptr<Payload> payload, boost::optional<Error> error) {
+			virtual void handleResponse(boost::shared_ptr<Payload> payload, boost::optional<ErrorPayload> error) {
 				onResponse(boost::dynamic_pointer_cast<PAYLOAD_TYPE>(payload), error);
 			}
 
 		public:
-			boost::signal<void (boost::shared_ptr<PAYLOAD_TYPE>, const boost::optional<Error>&)> onResponse;
+			boost::signal<void (boost::shared_ptr<PAYLOAD_TYPE>, const boost::optional<ErrorPayload>&)> onResponse;
 	};
 }
-
-#endif

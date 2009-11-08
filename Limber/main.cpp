@@ -63,11 +63,11 @@ class Server {
 							session->sendElement(IQ::createResult(iq->getFrom(), iq->getID(), vcard));
 						}
 						else {
-							session->sendElement(IQ::createError(iq->getFrom(), iq->getID(), Error::Forbidden, Error::Cancel));
+							session->sendElement(IQ::createError(iq->getFrom(), iq->getID(), ErrorPayload::Forbidden, ErrorPayload::Cancel));
 						}
 					}
 					else {
-						session->sendElement(IQ::createError(iq->getFrom(), iq->getID(), Error::FeatureNotImplemented, Error::Cancel));
+						session->sendElement(IQ::createError(iq->getFrom(), iq->getID(), ErrorPayload::FeatureNotImplemented, ErrorPayload::Cancel));
 					}
 				}
 			}

@@ -9,7 +9,7 @@
 #include "Swiften/Queries/IQHandler.h"
 #include "Swiften/Elements/IQ.h"
 #include "Swiften/Elements/Payload.h"
-#include "Swiften/Elements/Error.h"
+#include "Swiften/Elements/ErrorPayload.h"
 #include "Swiften/JID/JID.h"
 
 namespace Swift {
@@ -32,7 +32,7 @@ namespace Swift {
 				payload_ = p;
 			}
 
-			virtual void handleResponse(boost::shared_ptr<Payload>, boost::optional<Error>) = 0;
+			virtual void handleResponse(boost::shared_ptr<Payload>, boost::optional<ErrorPayload>) = 0;
 
 		private:
 			bool handleIQ(boost::shared_ptr<IQ>);

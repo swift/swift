@@ -35,7 +35,7 @@ void AvatarManager::handlePresenceReceived(boost::shared_ptr<Presence> presence)
 	}
 }
 
-void AvatarManager::handleVCardReceived(const JID& from, const String& promisedHash, boost::shared_ptr<VCard> vCard, const boost::optional<Error>& error) {
+void AvatarManager::handleVCardReceived(const JID& from, const String& promisedHash, boost::shared_ptr<VCard> vCard, const boost::optional<ErrorPayload>& error) {
 	if (error) {
 		// FIXME: What to do here?
 		std::cerr << "Warning: " << from << ": Could not get vCard" << std::endl;

@@ -14,7 +14,7 @@
 #include "Swiften/Elements/ProtocolHeader.h"
 #include "Swiften/Elements/StreamFeatures.h"
 #include "Swiften/Elements/Element.h"
-#include "Swiften/Elements/Error.h"
+#include "Swiften/Elements/ErrorPayload.h"
 #include "Swiften/Elements/IQ.h"
 #include "Swiften/Elements/AuthRequest.h"
 #include "Swiften/Elements/AuthSuccess.h"

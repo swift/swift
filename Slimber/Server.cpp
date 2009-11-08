@@ -211,7 +211,7 @@ void Server::handleElementReceived(boost::shared_ptr<Element> element, boost::sh
 					}
 				}
 				else {
-					session->sendElement(IQ::createError(iq->getFrom(), iq->getID(), Error::Forbidden, Error::Cancel));
+					session->sendElement(IQ::createError(iq->getFrom(), iq->getID(), ErrorPayload::Forbidden, ErrorPayload::Cancel));
 				}
 			}
 			if (boost::shared_ptr<VCard> vcard = iq->getPayload<VCard>()) {
@@ -227,7 +227,7 @@ void Server::handleElementReceived(boost::shared_ptr<Element> element, boost::sh
 				}
 			}
 			else {
-				session->sendElement(IQ::createError(iq->getFrom(), iq->getID(), Error::FeatureNotImplemented, Error::Cancel));
+				session->sendElement(IQ::createError(iq->getFrom(), iq->getID(), ErrorPayload::FeatureNotImplemented, ErrorPayload::Cancel));
 			}
 		}
 	}
@@ -260,7 +260,7 @@ void Server::handleElementReceived(boost::shared_ptr<Element> element, boost::sh
 			else {
 				session->sendElement(IQ::createError(
 						stanza->getFrom(), stanza->getID(), 
-						Error::RecipientUnavailable, Error::Wait));
+						ErrorPayload::RecipientUnavailable, ErrorPayload::Wait));
 			}
 		}
 	}

@@ -1,11 +1,11 @@
 #ifndef SWIFTEN_ErrorParser_H
 #define SWIFTEN_ErrorParser_H
 
-#include "Swiften/Elements/Error.h"
+#include "Swiften/Elements/ErrorPayload.h"
 #include "Swiften/Parser/GenericPayloadParser.h"
 
 namespace Swift {
-	class ErrorParser : public GenericPayloadParser<Error> {
+	class ErrorParser : public GenericPayloadParser<ErrorPayload> {
 		public:
 			ErrorParser();
 

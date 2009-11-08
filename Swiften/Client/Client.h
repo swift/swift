@@ -20,6 +20,7 @@ namespace Swift {
 	class TLSLayerFactory;
 	class ConnectionFactory;
 	class ClientSession;
+	class BasicSessionStream;
 
 	class Client : public StanzaChannel, public IQRouter, public boost::bsignals::trackable {
 		public:
@@ -53,6 +54,8 @@ namespace Swift {
 			void handleDataRead(const ByteArray&);
 			void handleDataWritten(const ByteArray&);
 
+			void reset();
+
 		private:
 			JID jid_;
 			String password_;
@@ -61,8 +64,9 @@ namespace Swift {
 			TLSLayerFactory* tlsLayerFactory_;
 			FullPayloadParserFactoryCollection payloadParserFactories_;
 			FullPayloadSerializerCollection payloadSerializers_;
-			boost::shared_ptr<ClientSession> session_;
 			boost::shared_ptr<Connection> connection_;
+			boost::shared_ptr<BasicSessionStream> sessionStream_;
+			boost::shared_ptr<ClientSession> session_;
 			String certificate_;
 	};
 }

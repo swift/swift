@@ -67,7 +67,7 @@ void ChatControllerBase::handleSendMessageRequest(const String &body) {
 	postSendMessage(message->getBody());
 }
 
-void ChatControllerBase::handleSecurityLabelsCatalogResponse(boost::shared_ptr<SecurityLabelsCatalog> catalog, const boost::optional<Error>& error) {
+void ChatControllerBase::handleSecurityLabelsCatalogResponse(boost::shared_ptr<SecurityLabelsCatalog> catalog, const boost::optional<ErrorPayload>& error) {
 	if (!error) {
 		if (catalog->getLabels().size() == 0) {
 			chatWindow_->setSecurityLabelsEnabled(false);
@@ -97,7 +97,7 @@ void ChatControllerBase::handleIncomingMessage(boost::shared_ptr<MessageEvent> m
 	preHandleIncomingMessage(message);	
 	String body = message->getBody();
 	if (message->isError()) {
-		String errorMessage = getErrorMessage(message->getPayload<Error>());
+		String errorMessage = getErrorMessage(message->getPayload<ErrorPayload>());
 		chatWindow_->addErrorMessage(errorMessage);
 	}
 	else {
@@ -109,35 +109,35 @@ void ChatControllerBase::handleIncomingMessage(boost::shared_ptr<MessageEvent> m
 	}
 }
 
-String ChatControllerBase::getErrorMessage(boost::shared_ptr<Error> error) {
+String ChatControllerBase::getErrorMessage(boost::shared_ptr<ErrorPayload> error) {
 	String defaultMessage = "Error sending message";
 	if (!error->getText().isEmpty()) {
 		return error->getText();
 	}
 	else {
 		switch (error->getCondition()) {
-			case Error::BadRequest: return defaultMessage; break;
-			case Error::Conflict: return defaultMessage; break;
-			case Error::FeatureNotImplemented: return defaultMessage; break;
-			case Error::Forbidden: return defaultMessage; break;
-			case Error::Gone: return "Recipient can no longer be contacted"; break;
-			case Error::InternalServerError: return "Internal server error"; break;
-			case Error::ItemNotFound: return defaultMessage; break;
-			case Error::JIDMalformed: return defaultMessage; break;
-			case Error::NotAcceptable: return "Message was rejected"; break;
-			case Error::NotAllowed: return defaultMessage; break;
-			case Error::NotAuthorized: return defaultMessage; break;
-			case Error::PaymentRequired: return defaultMessage; break;
-			case Error::RecipientUnavailable: return "Recipient is unavailable."; break;
-			case Error::Redirect: return defaultMessage; break;
-			case Error::RegistrationRequired: return defaultMessage; break;
-			case Error::RemoteServerNotFound: return "Recipient's server not found."; break;
-			case Error::RemoteServerTimeout: return defaultMessage; break;
-			case Error::ResourceConstraint: return defaultMessage; break;
-			case Error::ServiceUnavailable: return defaultMessage; break;
-			case Error::SubscriptionRequired: return defaultMessage; break;
-			case Error::UndefinedCondition: return defaultMessage; break;
-			case Error::UnexpectedRequest: return defaultMessage; break;
+			case ErrorPayload::BadRequest: return defaultMessage; break;
+			case ErrorPayload::Conflict: return defaultMessage; break;
+			case ErrorPayload::FeatureNotImplemented: return defaultMessage; break;
+			case ErrorPayload::Forbidden: return defaultMessage; break;
+			case ErrorPayload::Gone: return "Recipient can no longer be contacted"; break;
+			case ErrorPayload::InternalServerError: return "Internal server error"; break;
+			case ErrorPayload::ItemNotFound: return defaultMessage; break;
+			case ErrorPayload::JIDMalformed: return defaultMessage; break;
+			case ErrorPayload::NotAcceptable: return "Message was rejected"; break;
+			case ErrorPayload::NotAllowed: return defaultMessage; break;
+			case ErrorPayload::NotAuthorized: return defaultMessage; break;
+			case ErrorPayload::PaymentRequired: return defaultMessage; break;
+			case ErrorPayload::RecipientUnavailable: return "Recipient is unavailable."; break;
+			case ErrorPayload::Redirect: return defaultMessage; break;
+			case ErrorPayload::RegistrationRequired: return defaultMessage; break;
+			case ErrorPayload::RemoteServerNotFound: return "Recipient's server not found."; break;
+			case ErrorPayload::RemoteServerTimeout: return defaultMessage; break;
+			case ErrorPayload::ResourceConstraint: return defaultMessage; break;
+			case ErrorPayload::ServiceUnavailable: return defaultMessage; break;
+			case ErrorPayload::SubscriptionRequired: return defaultMessage; break;
+			case ErrorPayload::UndefinedCondition: return defaultMessage; break;
+			case ErrorPayload::UnexpectedRequest: return defaultMessage; break;
 		}
 	}
 	return defaultMessage;

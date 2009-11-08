@@ -12,7 +12,7 @@
 #include "Swiften/Events/MessageEvent.h"
 #include "Swiften/JID/JID.h"
 #include "Swiften/Elements/SecurityLabelsCatalog.h"
-#include "Swiften/Elements/Error.h"
+#include "Swiften/Elements/ErrorPayload.h"
 #include "Swiften/Presence/PresenceOracle.h"
 #include "Swiften/Queries/IQRouter.h"
 
@@ -44,8 +44,8 @@ namespace Swift {
 		private:
 			void handleSendMessageRequest(const String &body);
 			void handleAllMessagesRead();
-			void handleSecurityLabelsCatalogResponse(boost::shared_ptr<SecurityLabelsCatalog>, const boost::optional<Error>& error);
-			String getErrorMessage(boost::shared_ptr<Error>);
+			void handleSecurityLabelsCatalogResponse(boost::shared_ptr<SecurityLabelsCatalog>, const boost::optional<ErrorPayload>& error);
+			String getErrorMessage(boost::shared_ptr<ErrorPayload>);
 
 		protected:
 			JID selfJID_;

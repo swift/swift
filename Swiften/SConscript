@@ -75,6 +75,8 @@ sources = [
 		"Server/SimpleUserRegistry.cpp",
 		"Server/UserRegistry.cpp",
 		"Session/Session.cpp",
+		"Session/SessionStream.cpp",
+		"Session/BasicSessionStream.cpp",
 		"StringCodecs/Base64.cpp",
 		"StringCodecs/SHA1.cpp",
 	]

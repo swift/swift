@@ -13,13 +13,16 @@
 
 namespace Swift {
 
-BasicSessionStream::BasicSessionStream(boost::shared_ptr<Connection> connection, PayloadParserFactoryCollection* payloadParserFactories, PayloadSerializerCollection* payloadSerializers, TLSLayerFactory* tlsLayerFactory) : tlsLayerFactory(tlsLayerFactory) {
+BasicSessionStream::BasicSessionStream(boost::shared_ptr<Connection> connection, PayloadParserFactoryCollection* payloadParserFactories, PayloadSerializerCollection* payloadSerializers, TLSLayerFactory* tlsLayerFactory) : connection(connection), payloadParserFactories(payloadParserFactories), payloadSerializers(payloadSerializers), tlsLayerFactory(tlsLayerFactory) {
+}
+
+void BasicSessionStream::initialize() {
 	xmppLayer = boost::shared_ptr<XMPPLayer>(
 			new XMPPLayer(payloadParserFactories, payloadSerializers));
-	xmppLayer->onStreamStart.connect(boost::ref(onStreamStartReceived));
-	xmppLayer->onElement.connect(boost::ref(onElementReceived));
+	xmppLayer->onStreamStart.connect(boost::bind(&BasicSessionStream::handleStreamStartReceived, shared_from_this(), _1));
+	xmppLayer->onElement.connect(boost::bind(&BasicSessionStream::handleElementReceived, shared_from_this(), _1));
 	xmppLayer->onError.connect(boost::bind(
-      &BasicSessionStream::handleXMPPError, this));
+      &BasicSessionStream::handleXMPPError, shared_from_this()));
 
 	connectionLayer = boost::shared_ptr<ConnectionLayer>(
       new ConnectionLayer(connection));
@@ -47,7 +50,7 @@ void BasicSessionStream::addTLSEncryption() {
 	tlsLayer = tlsLayerFactory->createTLSLayer();
   streamStack->addLayer(tlsLayer);
   // TODO: Add tls layer certificate if needed
-  tlsLayer->onError.connect(boost::bind(&BasicSessionStream::handleTLSError, this));
+  tlsLayer->onError.connect(boost::bind(&BasicSessionStream::handleTLSError, shared_from_this()));
   tlsLayer->connect();
 }
 
@@ -61,12 +64,20 @@ void BasicSessionStream::resetXMPPParser() {
   xmppLayer->resetParser();
 }
 
+void BasicSessionStream::handleStreamStartReceived(const ProtocolHeader& header) {
+	onStreamStartReceived(header);
+}
+
+void BasicSessionStream::handleElementReceived(boost::shared_ptr<Element> element) {
+	onElementReceived(element);
+}
+
 void BasicSessionStream::handleXMPPError() {
-  // TODO
+	onError(boost::shared_ptr<Error>(new Error()));
 }
 
 void BasicSessionStream::handleTLSError() {
-  // TODO
+	onError(boost::shared_ptr<Error>(new Error()));
 }
 
 };

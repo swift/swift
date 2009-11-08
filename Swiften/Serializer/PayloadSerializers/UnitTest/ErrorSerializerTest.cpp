@@ -16,7 +16,7 @@ class ErrorSerializerTest : public CppUnit::TestFixture
 
 		void testSerialize() {
 			ErrorSerializer testling;
-			boost::shared_ptr<Error> error(new Error(Error::BadRequest, Error::Cancel, "My Error"));
+			boost::shared_ptr<ErrorPayload> error(new ErrorPayload(ErrorPayload::BadRequest, ErrorPayload::Cancel, "My Error"));
 
 			CPPUNIT_ASSERT_EQUAL(String("<error type=\"cancel\"><bad-request xmlns=\"urn:ietf:params:xml:ns:xmpp-stanzas\"/><text xmlns=\"urn:ietf:params:xml:ns:xmpp-stanzas\">My Error</text></error>"), testling.serialize(error));
 		}

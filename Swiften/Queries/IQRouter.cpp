@@ -6,7 +6,7 @@
 #include "Swiften/Base/foreach.h"
 #include "Swiften/Queries/IQHandler.h"
 #include "Swiften/Queries/IQChannel.h"
-#include "Swiften/Elements/Error.h"
+#include "Swiften/Elements/ErrorPayload.h"
 
 namespace Swift {
 
@@ -34,7 +34,7 @@ void IQRouter::handleIQ(boost::shared_ptr<IQ> iq) {
 		}
 	}
 	if (!handled && (iq->getType() == IQ::Get || iq->getType() == IQ::Set) ) {
-		channel_->sendIQ(IQ::createError(iq->getFrom(), iq->getID(), Error::FeatureNotImplemented, Error::Cancel));
+		channel_->sendIQ(IQ::createError(iq->getFrom(), iq->getID(), ErrorPayload::FeatureNotImplemented, ErrorPayload::Cancel));
 	}
 
 	processPendingRemoves();

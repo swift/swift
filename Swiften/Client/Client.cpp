@@ -10,6 +10,7 @@
 #include "Swiften/Network/BoostConnectionFactory.h"
 #include "Swiften/Network/DomainNameResolveException.h"
 #include "Swiften/TLS/PKCS12Certificate.h"
+#include "Swiften/Session/BasicSessionStream.h"
 
 namespace Swift {
 
@@ -46,6 +47,10 @@ void Client::handleConnectionConnectFinished(bool error) {
 		onError(ClientError::ConnectionError);
 	}
 	else {
+		assert(!sessionStream_);
+		sessionStream_ = boost::shared_ptr<BasicSessionStream>(new BasicSessionStream(connection_, &payloadParserFactories_, &payloadSerializers_, tlsLayerFactory_));
+		sessionStream_->initialize();
+
 		session_ = boost::shared_ptr<ClientSession>(new ClientSession(jid_, connection_, tlsLayerFactory_, &payloadParserFactories_, &payloadSerializers_));
 		if (!certificate_.isEmpty()) {
 			session_->setCertificate(PKCS12Certificate(certificate_, password_));

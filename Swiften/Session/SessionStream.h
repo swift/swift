@@ -5,10 +5,16 @@
 
 #include "Swiften/Elements/ProtocolHeader.h"
 #include "Swiften/Elements/Element.h"
+#include "Swiften/Base/Error.h"
 
 namespace Swift {
 	class SessionStream {
 		public:
+			class Error : public Swift::Error {
+				public:
+					Error() {}
+			};
+
 			virtual ~SessionStream();
 
 			virtual void writeHeader(const ProtocolHeader& header) = 0;
@@ -23,5 +29,6 @@ namespace Swift {
 
 			boost::signal<void (const ProtocolHeader&)> onStreamStartReceived;
 			boost::signal<void (boost::shared_ptr<Element>)> onElementReceived;
+			boost::signal<void (boost::shared_ptr<Error>)> onError;
 	};
 }
