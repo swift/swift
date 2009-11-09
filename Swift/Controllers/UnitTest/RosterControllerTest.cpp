@@ -53,7 +53,7 @@ class RosterControllerTest : public CppUnit::TestFixture
 			groups.push_back("testGroup2");
 			xmppRoster_->addContact(JID("test@testdomain.com/bob"), "name", groups);
 			
-			//CPPUNIT_ASSERT(treeWidgetFactory_->);
+			CPPUNIT_ASSERT_EQUAL(2, (int)treeWidgetFactory_->getGroups().size());
 			//CPPUNIT_ASSERT_EQUAL(String("Bob"), xmppRoster_->getNameForJID(JID("foo@bar.com")));
 		};
 
