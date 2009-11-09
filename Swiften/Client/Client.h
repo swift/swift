@@ -3,7 +3,9 @@
 
 #include <boost/signals.hpp>
 #include <boost/shared_ptr.hpp>
+#include <boost/enable_shared_from_this.hpp>
 
+#include "Swiften/Base/Error.h"
 #include "Swiften/Client/ClientSession.h"
 #include "Swiften/Client/ClientError.h"
 #include "Swiften/Elements/Presence.h"
@@ -22,7 +24,7 @@ namespace Swift {
 	class ClientSession;
 	class BasicSessionStream;
 
-	class Client : public StanzaChannel, public IQRouter, public boost::bsignals::trackable {
+	class Client : public StanzaChannel, public IQRouter, public boost::enable_shared_from_this<Client> {
 		public:
 			Client(const JID& jid, const String& password);
 			~Client();
@@ -39,7 +41,7 @@ namespace Swift {
 			virtual void sendPresence(boost::shared_ptr<Presence>);
 
 		public:
-			boost::signal<void (ClientError)> onError;
+			boost::signal<void (const ClientError&)> onError;
 			boost::signal<void ()> onConnected;
 			boost::signal<void (const String&)> onDataRead;
 			boost::signal<void (const String&)> onDataWritten;
@@ -49,7 +51,7 @@ namespace Swift {
 			void send(boost::shared_ptr<Stanza>);
 			virtual String getNewIQID();
 			void handleElement(boost::shared_ptr<Element>);
-			void handleSessionFinished(const boost::optional<Session::SessionError>& error);
+			void handleSessionFinished(boost::shared_ptr<Error>);
 			void handleNeedCredentials();
 			void handleDataRead(const ByteArray&);
 			void handleDataWritten(const ByteArray&);

@@ -2,13 +2,7 @@
 
 #include <boost/bind.hpp>
 
-#include "Swiften/Network/ConnectionFactory.h"
 #include "Swiften/Elements/ProtocolHeader.h"
-#include "Swiften/StreamStack/StreamStack.h"
-#include "Swiften/StreamStack/ConnectionLayer.h"
-#include "Swiften/StreamStack/XMPPLayer.h"
-#include "Swiften/StreamStack/TLSLayer.h"
-#include "Swiften/StreamStack/TLSLayerFactory.h"
 #include "Swiften/Elements/StreamFeatures.h"
 #include "Swiften/Elements/StartTLSRequest.h"
 #include "Swiften/Elements/StartTLSFailure.h"
@@ -20,47 +14,46 @@
 #include "Swiften/Elements/IQ.h"
 #include "Swiften/Elements/ResourceBind.h"
 #include "Swiften/SASL/PLAINMessage.h"
-#include "Swiften/StreamStack/WhitespacePingLayer.h"
+#include "Swiften/Session/SessionStream.h"
 
 namespace Swift {
 
 ClientSession::ClientSession(
 		const JID& jid, 
-		boost::shared_ptr<Connection> connection,
-		TLSLayerFactory* tlsLayerFactory, 
-		PayloadParserFactoryCollection* payloadParserFactories, 
-		PayloadSerializerCollection* payloadSerializers) : 
-			Session(connection, payloadParserFactories, payloadSerializers),
-			tlsLayerFactory_(tlsLayerFactory),
-			state_(Initial), 
-			needSessionStart_(false) {
-	setLocalJID(jid);
-	setRemoteJID(JID("", jid.getDomain()));
+		boost::shared_ptr<SessionStream> stream) :
+			localJID(jid),	
+			state(Initial), 
+			stream(stream),
+			needSessionStart(false) {
+	stream->onStreamStartReceived.connect(boost::bind(&ClientSession::handleStreamStart, shared_from_this(), _1));
+	stream->onElementReceived.connect(boost::bind(&ClientSession::handleElement, shared_from_this(), _1));
+	stream->onError.connect(boost::bind(&ClientSession::handleStreamError, shared_from_this(), _1));
+	stream->onTLSEncrypted.connect(boost::bind(&ClientSession::handleTLSEncrypted, shared_from_this()));
 }
 
-void ClientSession::handleSessionStarted() {
-	assert(state_ == Initial);
-	state_ = WaitingForStreamStart;
+void ClientSession::start() {
+	assert(state == Initial);
+	state = WaitingForStreamStart;
 	sendStreamHeader();
 }
 
 void ClientSession::sendStreamHeader() {
 	ProtocolHeader header;
 	header.setTo(getRemoteJID());
-	getXMPPLayer()->writeHeader(header);
+	stream->writeHeader(header);
 }
 
-void ClientSession::setCertificate(const PKCS12Certificate& certificate) {
-	certificate_ = certificate;
+void ClientSession::sendElement(boost::shared_ptr<Element> element) {
+	stream->writeElement(element);
 }
 
 void ClientSession::handleStreamStart(const ProtocolHeader&) {
 	checkState(WaitingForStreamStart);
-	state_ = Negotiating;
+	state = Negotiating;
 }
 
 void ClientSession::handleElement(boost::shared_ptr<Element> element) {
-	if (getState() == SessionStarted) {
+	if (getState() == Initialized) {
 		onElementReceived(element);
 	}
 	else if (StreamFeatures* streamFeatures = dynamic_cast<StreamFeatures*>(element.get())) {
@@ -68,152 +61,121 @@ void ClientSession::handleElement(boost::shared_ptr<Element> element) {
 			return;
 		}
 
-		if (streamFeatures->hasStartTLS() && tlsLayerFactory_->canCreate()) {
-			state_ = Encrypting;
-			getXMPPLayer()->writeElement(boost::shared_ptr<StartTLSRequest>(new StartTLSRequest()));
+		if (streamFeatures->hasStartTLS() && stream->supportsTLSEncryption()) {
+			state = WaitingForEncrypt;
+			stream->writeElement(boost::shared_ptr<StartTLSRequest>(new StartTLSRequest()));
 		}
 		else if (streamFeatures->hasAuthenticationMechanisms()) {
-			if (!certificate_.isNull()) {
-				if (streamFeatures->hasAuthenticationMechanism("EXTERNAL")) {
-					state_ = Authenticating;
-					getXMPPLayer()->writeElement(boost::shared_ptr<Element>(new AuthRequest("EXTERNAL", "")));
-				}
-				else {
-					finishSession(ClientCertificateError);
-				}
+			if (stream->hasTLSCertificate() && streamFeatures->hasAuthenticationMechanism("EXTERNAL")) {
+					state = Authenticating;
+					stream->writeElement(boost::shared_ptr<Element>(new AuthRequest("EXTERNAL", "")));
 			}
 			else if (streamFeatures->hasAuthenticationMechanism("PLAIN")) {
-				state_ = WaitingForCredentials;
+				state = WaitingForCredentials;
 				onNeedCredentials();
 			}
 			else {
-				finishSession(NoSupportedAuthMechanismsError);
+				finishSession(Error::NoSupportedAuthMechanismsError);
 			}
 		}
 		else {
 			// Start the session
-
-			// Add a whitespace ping layer
-			whitespacePingLayer_ = boost::shared_ptr<WhitespacePingLayer>(new WhitespacePingLayer());
-			getStreamStack()->addLayer(whitespacePingLayer_);
-			whitespacePingLayer_->setActive();
+			stream->setWhitespacePingEnabled(true);
 
 			if (streamFeatures->hasSession()) {
-				needSessionStart_ = true;
+				needSessionStart = true;
 			}
 
 			if (streamFeatures->hasResourceBind()) {
-				state_ = BindingResource;
+				state = BindingResource;
 				boost::shared_ptr<ResourceBind> resourceBind(new ResourceBind());
-				if (!getLocalJID().getResource().isEmpty()) {
-					resourceBind->setResource(getLocalJID().getResource());
+				if (!localJID.getResource().isEmpty()) {
+					resourceBind->setResource(localJID.getResource());
 				}
-				getXMPPLayer()->writeElement(IQ::createRequest(IQ::Set, JID(), "session-bind", resourceBind));
+				stream->writeElement(IQ::createRequest(IQ::Set, JID(), "session-bind", resourceBind));
 			}
-			else if (needSessionStart_) {
+			else if (needSessionStart) {
 				sendSessionStart();
 			}
 			else {
-				state_ = SessionStarted;
-				onSessionStarted();
+				state = Initialized;
+				onInitialized();
 			}
 		}
 	}
 	else if (dynamic_cast<AuthSuccess*>(element.get())) {
 		checkState(Authenticating);
-		state_ = WaitingForStreamStart;
-		getXMPPLayer()->resetParser();
+		state = WaitingForStreamStart;
+		stream->resetXMPPParser();
 		sendStreamHeader();
 	}
 	else if (dynamic_cast<AuthFailure*>(element.get())) {
-		finishSession(AuthenticationFailedError);
+		finishSession(Error::AuthenticationFailedError);
 	}
 	else if (dynamic_cast<TLSProceed*>(element.get())) {
-		tlsLayer_ = tlsLayerFactory_->createTLSLayer();
-		getStreamStack()->addLayer(tlsLayer_);
-		if (!certificate_.isNull() && !tlsLayer_->setClientCertificate(certificate_)) {
-			finishSession(ClientCertificateLoadError);
-		}
-		else {
-			tlsLayer_->onConnected.connect(boost::bind(&ClientSession::handleTLSConnected, this));
-			tlsLayer_->onError.connect(boost::bind(&ClientSession::handleTLSError, this));
-			tlsLayer_->connect();
-		}
+		checkState(WaitingForEncrypt);
+		state = Encrypting;
+		stream->addTLSEncryption();
 	}
 	else if (dynamic_cast<StartTLSFailure*>(element.get())) {
-		finishSession(TLSError);
+		finishSession(Error::TLSError);
 	}
 	else if (IQ* iq = dynamic_cast<IQ*>(element.get())) {
-		if (state_ == BindingResource) {
+		if (state == BindingResource) {
 			boost::shared_ptr<ResourceBind> resourceBind(iq->getPayload<ResourceBind>());
 			if (iq->getType() == IQ::Error && iq->getID() == "session-bind") {
-				finishSession(ResourceBindError);
+				finishSession(Error::ResourceBindError);
 			}
 			else if (!resourceBind) {
-				finishSession(UnexpectedElementError);
+				finishSession(Error::UnexpectedElementError);
 			}
 			else if (iq->getType() == IQ::Result) {
-				setLocalJID(resourceBind->getJID());
-				if (!getLocalJID().isValid()) {
-					finishSession(ResourceBindError);
+				localJID = resourceBind->getJID();
+				if (!localJID.isValid()) {
+					finishSession(Error::ResourceBindError);
 				}
-				if (needSessionStart_) {
+				if (needSessionStart) {
 					sendSessionStart();
 				}
 				else {
-					state_ = SessionStarted;
+					state = Initialized;
 				}
 			}
 			else {
-				finishSession(UnexpectedElementError);
+				finishSession(Error::UnexpectedElementError);
 			}
 		}
-		else if (state_ == StartingSession) {
+		else if (state == StartingSession) {
 			if (iq->getType() == IQ::Result) {
-				state_ = SessionStarted;
-				onSessionStarted();
+				state = Initialized;
+				onInitialized();
 			}
 			else if (iq->getType() == IQ::Error) {
-				finishSession(SessionStartError);
+				finishSession(Error::SessionStartError);
 			}
 			else {
-				finishSession(UnexpectedElementError);
+				finishSession(Error::UnexpectedElementError);
 			}
 		}
 		else {
-			finishSession(UnexpectedElementError);
+			finishSession(Error::UnexpectedElementError);
 		}
 	}
 	else {
 		// FIXME Not correct?
-		state_ = SessionStarted;
-		onSessionStarted();
+		state = Initialized;
+		onInitialized();
 	}
 }
 
 void ClientSession::sendSessionStart() {
-	state_ = StartingSession;
-	getXMPPLayer()->writeElement(IQ::createRequest(IQ::Set, JID(), "session-start", boost::shared_ptr<StartSession>(new StartSession())));
-}
-
-void ClientSession::handleSessionFinished(const boost::optional<SessionError>& error) {
-	if (whitespacePingLayer_) {
-		whitespacePingLayer_->setInactive();
-	}
-	
-	if (error) {
-		//assert(!error_);
-		state_ = Error;
-		error_ = error;
-	}
-	else {
-		state_ = Finished;
-	}
+	state = StartingSession;
+	stream->writeElement(IQ::createRequest(IQ::Set, JID(), "session-start", boost::shared_ptr<StartSession>(new StartSession())));
 }
 
 bool ClientSession::checkState(State state) {
-	if (state_ != state) {
-		finishSession(UnexpectedElementError);
+	if (state != state) {
+		finishSession(Error::UnexpectedElementError);
 		return false;
 	}
 	return true;
@@ -221,18 +183,36 @@ bool ClientSession::checkState(State state) {
 
 void ClientSession::sendCredentials(const String& password) {
 	assert(WaitingForCredentials);
-	state_ = Authenticating;
-	getXMPPLayer()->writeElement(boost::shared_ptr<Element>(new AuthRequest("PLAIN", PLAINMessage(getLocalJID().getNode(), password).getValue())));
+	state = Authenticating;
+	stream->writeElement(boost::shared_ptr<Element>(new AuthRequest("PLAIN", PLAINMessage(localJID.getNode(), password).getValue())));
 }
 
-void ClientSession::handleTLSConnected() {
-	state_ = WaitingForStreamStart;
-	getXMPPLayer()->resetParser();
+void ClientSession::handleTLSEncrypted() {
+	checkState(WaitingForEncrypt);
+	state = WaitingForStreamStart;
+	stream->resetXMPPParser();
 	sendStreamHeader();
 }
 
-void ClientSession::handleTLSError() {
-	finishSession(TLSError);
+void ClientSession::handleStreamError(boost::shared_ptr<Swift::Error> error) {
+	finishSession(error);
 }
+
+void ClientSession::finish() {
+	if (stream->isAvailable()) {
+		stream->writeFooter();
+	}
+	finishSession(boost::shared_ptr<Error>());
+}
+
+void ClientSession::finishSession(Error::Type error) {
+	finishSession(boost::shared_ptr<Swift::ClientSession::Error>(new Swift::ClientSession::Error(error)));
+}
+
+void ClientSession::finishSession(boost::shared_ptr<Swift::Error> error) {
+	stream->setWhitespacePingEnabled(false);
+	onFinished(error);
+}
+
 
 }

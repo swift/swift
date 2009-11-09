@@ -30,23 +30,29 @@ namespace Swift {
 
 			void initialize();
 
+			virtual bool isAvailable();
+
 			virtual void writeHeader(const ProtocolHeader& header);
 			virtual void writeElement(boost::shared_ptr<Element>);
+			virtual void writeFooter();
 
 			virtual bool supportsTLSEncryption();
 			virtual void addTLSEncryption();
 
-			virtual void addWhitespacePing();
+			virtual void setWhitespacePingEnabled(bool);
 
 			virtual void resetXMPPParser();
 
     private:
+			void handleConnectionError(const boost::optional<Connection::Error>& error);
       void handleXMPPError();
+			void handleTLSConnected();
       void handleTLSError();
 			void handleStreamStartReceived(const ProtocolHeader&);
 			void handleElementReceived(boost::shared_ptr<Element>);
 
     private:
+			bool available;
 			boost::shared_ptr<Connection> connection;
 			PayloadParserFactoryCollection* payloadParserFactories;
 			PayloadSerializerCollection* payloadSerializers;
