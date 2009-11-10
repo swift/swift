@@ -25,13 +25,14 @@ ClientSession::ClientSession(
 			state(Initial), 
 			stream(stream),
 			needSessionStart(false) {
+}
+
+void ClientSession::start() {
 	stream->onStreamStartReceived.connect(boost::bind(&ClientSession::handleStreamStart, shared_from_this(), _1));
 	stream->onElementReceived.connect(boost::bind(&ClientSession::handleElement, shared_from_this(), _1));
 	stream->onError.connect(boost::bind(&ClientSession::handleStreamError, shared_from_this(), _1));
 	stream->onTLSEncrypted.connect(boost::bind(&ClientSession::handleTLSEncrypted, shared_from_this()));
-}
 
-void ClientSession::start() {
 	assert(state == Initial);
 	state = WaitingForStreamStart;
 	sendStreamHeader();

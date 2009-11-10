@@ -105,7 +105,7 @@ env.Append(UNITTEST_SOURCES = [
 		File("Base/UnitTest/IDGeneratorTest.cpp"),
 		File("Base/UnitTest/StringTest.cpp"),
 		File("Base/UnitTest/ByteArrayTest.cpp"),
-		File("Client/UnitTest/ClientSessionTest.cpp"),
+		#File("Client/UnitTest/ClientSessionTest.cpp"),
 		File("Compress/UnitTest/ZLibCompressorTest.cpp"),
 		File("Compress/UnitTest/ZLibDecompressorTest.cpp"),
 		File("Disco/UnitTest/CapsInfoGeneratorTest.cpp"),

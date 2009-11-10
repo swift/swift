@@ -19,6 +19,7 @@ bool rosterReceived = false;
 
 void handleRosterReceived(boost::shared_ptr<Payload>) {
 	rosterReceived = true;
+	client->disconnect();
 	eventLoop.stop();
 }
 
@@ -46,12 +47,13 @@ int main(int, char**) {
 	client->connect();
 
 	{
-		boost::shared_ptr<Timer> timer(new Timer(10000, &MainBoostIOServiceThread::getInstance().getIOService()));
+		boost::shared_ptr<Timer> timer(new Timer(30000, &MainBoostIOServiceThread::getInstance().getIOService()));
 		timer->onTick.connect(boost::bind(&SimpleEventLoop::stop, &eventLoop));
 		timer->start();
 
 		eventLoop.run();
 	}
+
 	delete tracer;
 	delete client;
 	return !rosterReceived;

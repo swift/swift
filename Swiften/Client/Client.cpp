@@ -21,6 +21,9 @@ Client::Client(const JID& jid, const String& password) :
 }
 
 Client::~Client() {
+	if (session_ || connection_) {
+		std::cerr << "Warning: Client not disconnected properly" << std::endl;
+	}
 	delete tlsLayerFactory_;
 	delete connectionFactory_;
 }
@@ -52,24 +55,28 @@ void Client::handleConnectionConnectFinished(bool error) {
 		if (!certificate_.isEmpty()) {
 			sessionStream_->setTLSCertificate(PKCS12Certificate(certificate_, password_));
 		}
-		sessionStream_->onDataRead.connect(boost::bind(&Client::handleDataRead, shared_from_this(), _1));
-		sessionStream_->onDataWritten.connect(boost::bind(&Client::handleDataWritten, shared_from_this(), _1));
+		sessionStream_->onDataRead.connect(boost::bind(&Client::handleDataRead, this, _1));
+		sessionStream_->onDataWritten.connect(boost::bind(&Client::handleDataWritten, this, _1));
 		sessionStream_->initialize();
 
 		session_ = boost::shared_ptr<ClientSession>(new ClientSession(jid_, sessionStream_));
 		session_->onInitialized.connect(boost::bind(boost::ref(onConnected)));
-		session_->onFinished.connect(boost::bind(&Client::handleSessionFinished, shared_from_this(), _1));
-		session_->onNeedCredentials.connect(boost::bind(&Client::handleNeedCredentials, shared_from_this()));
-		session_->onElementReceived.connect(boost::bind(&Client::handleElement, shared_from_this(), _1));
+		session_->onFinished.connect(boost::bind(&Client::handleSessionFinished, this, _1));
+		session_->onNeedCredentials.connect(boost::bind(&Client::handleNeedCredentials, this));
+		session_->onElementReceived.connect(boost::bind(&Client::handleElement, this, _1));
 		session_->start();
 	}
 }
 
 void Client::disconnect() {
-	// TODO
-	//if (session_) {
-	//	session_->finishSession();
-	//}
+	if (session_) {
+		session_->finish();
+		session_.reset();
+	}
+	if (connection_) {
+		connection_->disconnect();
+		connection_.reset();
+	}
 }
 
 void Client::send(boost::shared_ptr<Stanza> stanza) {

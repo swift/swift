@@ -12,6 +12,12 @@ void nop() {}
 SimpleEventLoop::SimpleEventLoop() : isRunning_(true) {
 }
 
+SimpleEventLoop::~SimpleEventLoop() {
+	if (!events_.empty()) {
+		std::cerr << "Warning: Pending events in SimpleEventLoop at destruction time" << std::endl;
+	}
+}
+
 void SimpleEventLoop::run() {
 	while (isRunning_) {
 		std::vector<Event> events;

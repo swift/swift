@@ -1,5 +1,4 @@
-#ifndef SWIFTEN_SimpleEventLoop_H
-#define SWIFTEN_SimpleEventLoop_H
+#pragma once
 
 #include <vector>
 #include <boost/function.hpp>
@@ -12,6 +11,7 @@ namespace Swift {
 	class SimpleEventLoop : public EventLoop {
 		public:
 			SimpleEventLoop();
+			~SimpleEventLoop();
 
 			void run();
 			void stop();
@@ -28,4 +28,3 @@ namespace Swift {
 			boost::condition_variable eventsAvailable_;
 	};
 }
-#endif

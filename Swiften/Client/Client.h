@@ -3,7 +3,6 @@
 
 #include <boost/signals.hpp>
 #include <boost/shared_ptr.hpp>
-#include <boost/enable_shared_from_this.hpp>
 
 #include "Swiften/Base/Error.h"
 #include "Swiften/Client/ClientSession.h"
@@ -24,7 +23,7 @@ namespace Swift {
 	class ClientSession;
 	class BasicSessionStream;
 
-	class Client : public StanzaChannel, public IQRouter, public boost::enable_shared_from_this<Client> {
+	class Client : public StanzaChannel, public IQRouter, public boost::bsignals::trackable {
 		public:
 			Client(const JID& jid, const String& password);
 			~Client();
