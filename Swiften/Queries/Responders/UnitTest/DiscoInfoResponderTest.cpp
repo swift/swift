@@ -72,7 +72,7 @@ class DiscoInfoResponderTest : public CppUnit::TestFixture {
 			channel_->onIQReceived(IQ::createRequest(IQ::Get, JID("foo@bar.com"), "id-1", query));
 
 			CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(channel_->iqs_.size()));
-			boost::shared_ptr<Error> payload(channel_->iqs_[0]->getPayload<Error>());
+			boost::shared_ptr<ErrorPayload> payload(channel_->iqs_[0]->getPayload<ErrorPayload>());
 			CPPUNIT_ASSERT(payload);
 		}
 

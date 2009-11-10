@@ -1,5 +1,3 @@
-// TODO: whitespacePingLayer_->setInactive();
-
 #include "Swiften/Session/BasicSessionStream.h"
 
 #include <boost/bind.hpp>
@@ -13,18 +11,26 @@
 
 namespace Swift {
 
-BasicSessionStream::BasicSessionStream(boost::shared_ptr<Connection> connection, PayloadParserFactoryCollection* payloadParserFactories, PayloadSerializerCollection* payloadSerializers, TLSLayerFactory* tlsLayerFactory) : tlsLayerFactory(tlsLayerFactory) {
+BasicSessionStream::BasicSessionStream(boost::shared_ptr<Connection> connection, PayloadParserFactoryCollection* payloadParserFactories, PayloadSerializerCollection* payloadSerializers, TLSLayerFactory* tlsLayerFactory) : available(false), connection(connection), payloadParserFactories(payloadParserFactories), payloadSerializers(payloadSerializers), tlsLayerFactory(tlsLayerFactory) {
+}
+
+void BasicSessionStream::initialize() {
 	xmppLayer = boost::shared_ptr<XMPPLayer>(
 			new XMPPLayer(payloadParserFactories, payloadSerializers));
-	xmppLayer->onStreamStart.connect(boost::ref(onStreamStartReceived));
-	xmppLayer->onElement.connect(boost::ref(onElementReceived));
+	xmppLayer->onStreamStart.connect(boost::bind(&BasicSessionStream::handleStreamStartReceived, shared_from_this(), _1));
+	xmppLayer->onElement.connect(boost::bind(&BasicSessionStream::handleElementReceived, shared_from_this(), _1));
 	xmppLayer->onError.connect(boost::bind(
-      &BasicSessionStream::handleXMPPError, this));
+      &BasicSessionStream::handleXMPPError, shared_from_this()));
+  xmppLayer->onDataRead.connect(boost::bind(&BasicSessionStream::handleDataRead, shared_from_this(), _1));
+  xmppLayer->onWriteData.connect(boost::bind(&BasicSessionStream::handleDataWritten, shared_from_this(), _1));
 
+	connection->onDisconnected.connect(boost::bind(&BasicSessionStream::handleConnectionError, shared_from_this(), _1));
 	connectionLayer = boost::shared_ptr<ConnectionLayer>(
       new ConnectionLayer(connection));
 
 	streamStack = new StreamStack(xmppLayer, connectionLayer);
+
+	available = true;
 }
 
 BasicSessionStream::~BasicSessionStream() {
@@ -32,11 +38,22 @@ BasicSessionStream::~BasicSessionStream() {
 }
 
 void BasicSessionStream::writeHeader(const ProtocolHeader& header) {
+	assert(available);
 	xmppLayer->writeHeader(header);
 }
 
 void BasicSessionStream::writeElement(boost::shared_ptr<Element> element) {
+	assert(available);
 	xmppLayer->writeElement(element);
+}
+
+void BasicSessionStream::writeFooter() {
+	assert(available);
+	xmppLayer->writeFooter();
+}
+
+bool BasicSessionStream::isAvailable() {
+	return available;
 }
 
 bool BasicSessionStream::supportsTLSEncryption() {
@@ -44,29 +61,69 @@ bool BasicSessionStream::supportsTLSEncryption() {
 }
 
 void BasicSessionStream::addTLSEncryption() {
+	assert(available);
 	tlsLayer = tlsLayerFactory->createTLSLayer();
-  streamStack->addLayer(tlsLayer);
-  // TODO: Add tls layer certificate if needed
-  tlsLayer->onError.connect(boost::bind(&BasicSessionStream::handleTLSError, this));
-  tlsLayer->connect();
+	if (hasTLSCertificate() && !tlsLayer->setClientCertificate(getTLSCertificate())) {
+		onError(boost::shared_ptr<Error>(new Error(Error::InvalidTLSCertificateError)));
+	}
+	else {
+		streamStack->addLayer(tlsLayer);
+		tlsLayer->onError.connect(boost::bind(&BasicSessionStream::handleTLSError, shared_from_this()));
+		tlsLayer->onConnected.connect(boost::bind(&BasicSessionStream::handleTLSConnected, shared_from_this()));
+		tlsLayer->connect();
+	}
 }
 
-void BasicSessionStream::addWhitespacePing() {
-  whitespacePingLayer = boost::shared_ptr<WhitespacePingLayer>(new WhitespacePingLayer());
-  streamStack->addLayer(whitespacePingLayer);
-  whitespacePingLayer->setActive();
+void BasicSessionStream::setWhitespacePingEnabled(bool enabled) {
+	if (enabled && !whitespacePingLayer) {
+		whitespacePingLayer = boost::shared_ptr<WhitespacePingLayer>(new WhitespacePingLayer());
+		streamStack->addLayer(whitespacePingLayer);
+	}
+	if (enabled) {
+		whitespacePingLayer->setActive();
+	}
+	else {
+		whitespacePingLayer->setInactive();
+	}
 }
 
 void BasicSessionStream::resetXMPPParser() {
   xmppLayer->resetParser();
 }
 
+void BasicSessionStream::handleStreamStartReceived(const ProtocolHeader& header) {
+	onStreamStartReceived(header);
+}
+
+void BasicSessionStream::handleElementReceived(boost::shared_ptr<Element> element) {
+	onElementReceived(element);
+}
+
 void BasicSessionStream::handleXMPPError() {
-  // TODO
+	available = false;
+	onError(boost::shared_ptr<Error>(new Error(Error::ParseError)));
+}
+
+void BasicSessionStream::handleTLSConnected() {
+	onTLSEncrypted();
 }
 
 void BasicSessionStream::handleTLSError() {
-  // TODO
+	available = false;
+	onError(boost::shared_ptr<Error>(new Error(Error::TLSError)));
+}
+
+void BasicSessionStream::handleConnectionError(const boost::optional<Connection::Error>&) {
+	available = false;
+	onError(boost::shared_ptr<Error>(new Error(Error::ConnectionError)));
+}
+
+void BasicSessionStream::handleDataRead(const ByteArray& data) {
+	onDataRead(String(data.getData(), data.getSize()));
+}
+
+void BasicSessionStream::handleDataWritten(const ByteArray& data) {
+	onDataWritten(String(data.getData(), data.getSize()));
 }
 
 };

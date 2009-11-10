@@ -113,7 +113,7 @@ class RequestTest : public CppUnit::TestFixture
 		}
 	
 	private:
-		void handleResponse(boost::shared_ptr<Payload> p, const boost::optional<Error>& e) {
+		void handleResponse(boost::shared_ptr<Payload> p, const boost::optional<ErrorPayload>& e) {
 			if (e) {
 				++errorsReceived_;
 			}

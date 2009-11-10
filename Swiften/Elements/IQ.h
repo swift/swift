@@ -1,8 +1,7 @@
-#ifndef SWIFTEN_IQ_H
-#define SWIFTEN_IQ_H
+#pragma once
 
 #include "Swiften/Elements/Stanza.h"
-#include "Swiften/Elements/Error.h"
+#include "Swiften/Elements/ErrorPayload.h"
 
 namespace Swift 
 {
@@ -28,12 +27,10 @@ namespace Swift
 			static boost::shared_ptr<IQ> createError(
 					const JID& to,
 					const String& id,
-					Error::Condition condition,
-					Error::Type type);
+					ErrorPayload::Condition condition,
+					ErrorPayload::Type type);
 
 		private:
 			Type type_;
 	};
 }
-
-#endif

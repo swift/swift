@@ -389,7 +389,7 @@ void MainController::handleIncomingMessage(boost::shared_ptr<Message> message) {
 	}
 }
 
-void MainController::handleServerDiscoInfoResponse(boost::shared_ptr<DiscoInfo> info, const boost::optional<Error>& error) {
+void MainController::handleServerDiscoInfoResponse(boost::shared_ptr<DiscoInfo> info, const boost::optional<ErrorPayload>& error) {
 	if (!error) {
 		serverDiscoInfo_ = info;
 		foreach (JIDChatControllerPair pair, chatControllers_) {
@@ -405,7 +405,7 @@ bool MainController::isMUC(const JID& jid) const {
 	return mucControllers_.find(jid.toBare()) != mucControllers_.end();
 }
 
-void MainController::handleOwnVCardReceived(boost::shared_ptr<VCard> vCard, const boost::optional<Error>& error) {
+void MainController::handleOwnVCardReceived(boost::shared_ptr<VCard> vCard, const boost::optional<ErrorPayload>& error) {
 	if (!error && !vCard->getPhoto().isEmpty()) {
 		vCardPhotoHash_ = SHA1::getHexHash(vCard->getPhoto());
 		if (lastSentPresence_) {

@@ -10,7 +10,7 @@
 #include "Swiften/JID/JID.h"
 #include "Swiften/Elements/VCard.h"
 #include "Swiften/Elements/DiscoInfo.h"
-#include "Swiften/Elements/Error.h"
+#include "Swiften/Elements/ErrorPayload.h"
 #include "Swiften/Elements/Presence.h"
 #include "Swiften/Elements/Message.h"
 #include "Swiften/Settings/SettingsProvider.h"
@@ -64,9 +64,9 @@ namespace Swift {
 			void handleIncomingMessage(boost::shared_ptr<Message> message);
 			void handleChangeStatusRequest(StatusShow::Type show, const String &statusText);
 			void handleError(const ClientError& error);
-			void handleServerDiscoInfoResponse(boost::shared_ptr<DiscoInfo>, const boost::optional<Error>&);
+			void handleServerDiscoInfoResponse(boost::shared_ptr<DiscoInfo>, const boost::optional<ErrorPayload>&);
 			void handleEventQueueLengthChange(int count);
-			void handleOwnVCardReceived(boost::shared_ptr<VCard> vCard, const boost::optional<Error>& error);
+			void handleOwnVCardReceived(boost::shared_ptr<VCard> vCard, const boost::optional<ErrorPayload>& error);
 			ChatController* getChatController(const JID &contact);
 			void sendPresence(boost::shared_ptr<Presence> presence);
 			void handleInputIdle();

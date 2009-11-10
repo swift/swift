@@ -27,7 +27,7 @@ bool DiscoInfoResponder::handleGetRequest(const JID& from, const String& id, boo
 			sendResponse(from, id, boost::shared_ptr<DiscoInfo>(new DiscoInfo((*i).second)));
 		}
 		else {
-			sendError(from, id, Error::ItemNotFound, Error::Cancel);
+			sendError(from, id, ErrorPayload::ItemNotFound, ErrorPayload::Cancel);
 		}
 	}
 	return true;

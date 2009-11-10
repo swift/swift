@@ -9,19 +9,19 @@ void ErrorParser::handleStartElement(const String&, const String&, const Attribu
 	if (level_ == TopLevel) {
 		String type = attributes.getAttribute("type");
 		if (type == "continue") {
-			getPayloadInternal()->setType(Error::Continue);
+			getPayloadInternal()->setType(ErrorPayload::Continue);
 		}
 		else if (type == "modify") {
-			getPayloadInternal()->setType(Error::Modify);
+			getPayloadInternal()->setType(ErrorPayload::Modify);
 		}
 		else if (type == "auth") {
-			getPayloadInternal()->setType(Error::Auth);
+			getPayloadInternal()->setType(ErrorPayload::Auth);
 		}
 		else if (type == "wait") {
-			getPayloadInternal()->setType(Error::Wait);
+			getPayloadInternal()->setType(ErrorPayload::Wait);
 		}
 		else {
-			getPayloadInternal()->setType(Error::Cancel);
+			getPayloadInternal()->setType(ErrorPayload::Cancel);
 		}
 	}
 	++level_;
@@ -34,70 +34,70 @@ void ErrorParser::handleEndElement(const String& element, const String&) {
 			getPayloadInternal()->setText(currentText_);
 		}
 		else if (element == "bad-request") {
-			getPayloadInternal()->setCondition(Error::BadRequest);
+			getPayloadInternal()->setCondition(ErrorPayload::BadRequest);
 		}
 		else if (element == "conflict") {
-			getPayloadInternal()->setCondition(Error::Conflict);
+			getPayloadInternal()->setCondition(ErrorPayload::Conflict);
 		}
 		else if (element == "feature-not-implemented") {
-			getPayloadInternal()->setCondition(Error::FeatureNotImplemented);
+			getPayloadInternal()->setCondition(ErrorPayload::FeatureNotImplemented);
 		}
 		else if (element == "forbidden") {
-			getPayloadInternal()->setCondition(Error::Forbidden);
+			getPayloadInternal()->setCondition(ErrorPayload::Forbidden);
 		}
 		else if (element == "gone") {
-			getPayloadInternal()->setCondition(Error::Gone);
+			getPayloadInternal()->setCondition(ErrorPayload::Gone);
 		}
 		else if (element == "internal-server-error") {
-			getPayloadInternal()->setCondition(Error::InternalServerError);
+			getPayloadInternal()->setCondition(ErrorPayload::InternalServerError);
 		}
 		else if (element == "item-not-found") {
-			getPayloadInternal()->setCondition(Error::ItemNotFound);
+			getPayloadInternal()->setCondition(ErrorPayload::ItemNotFound);
 		}
 		else if (element == "jid-malformed") {
-			getPayloadInternal()->setCondition(Error::JIDMalformed);
+			getPayloadInternal()->setCondition(ErrorPayload::JIDMalformed);
 		}
 		else if (element == "not-acceptable") {
-			getPayloadInternal()->setCondition(Error::NotAcceptable);
+			getPayloadInternal()->setCondition(ErrorPayload::NotAcceptable);
 		}
 		else if (element == "not-allowed") {
-			getPayloadInternal()->setCondition(Error::NotAllowed);
+			getPayloadInternal()->setCondition(ErrorPayload::NotAllowed);
 		}
 		else if (element == "not-authorized") {
-			getPayloadInternal()->setCondition(Error::NotAuthorized);
+			getPayloadInternal()->setCondition(ErrorPayload::NotAuthorized);
 		}
 		else if (element == "payment-required") {
-			getPayloadInternal()->setCondition(Error::PaymentRequired);
+			getPayloadInternal()->setCondition(ErrorPayload::PaymentRequired);
 		}
 		else if (element == "recipient-unavailable") {
-			getPayloadInternal()->setCondition(Error::RecipientUnavailable);
+			getPayloadInternal()->setCondition(ErrorPayload::RecipientUnavailable);
 		}
 		else if (element == "redirect") {
-			getPayloadInternal()->setCondition(Error::Redirect);
+			getPayloadInternal()->setCondition(ErrorPayload::Redirect);
 		}
 		else if (element == "registration-required") {
-			getPayloadInternal()->setCondition(Error::RegistrationRequired);
+			getPayloadInternal()->setCondition(ErrorPayload::RegistrationRequired);
 		}
 		else if (element == "remote-server-not-found") {
-			getPayloadInternal()->setCondition(Error::RemoteServerNotFound);
+			getPayloadInternal()->setCondition(ErrorPayload::RemoteServerNotFound);
 		}
 		else if (element == "remote-server-timeout") {
-			getPayloadInternal()->setCondition(Error::RemoteServerTimeout);
+			getPayloadInternal()->setCondition(ErrorPayload::RemoteServerTimeout);
 		}
 		else if (element == "resource-constraint") {
-			getPayloadInternal()->setCondition(Error::ResourceConstraint);
+			getPayloadInternal()->setCondition(ErrorPayload::ResourceConstraint);
 		}
 		else if (element == "service-unavailable") {
-			getPayloadInternal()->setCondition(Error::ServiceUnavailable);
+			getPayloadInternal()->setCondition(ErrorPayload::ServiceUnavailable);
 		}
 		else if (element == "subscription-required") {
-			getPayloadInternal()->setCondition(Error::SubscriptionRequired);
+			getPayloadInternal()->setCondition(ErrorPayload::SubscriptionRequired);
 		}
 		else if (element == "unexpected-request") {
-			getPayloadInternal()->setCondition(Error::UnexpectedRequest);
+			getPayloadInternal()->setCondition(ErrorPayload::UnexpectedRequest);
 		}
 		else {
-			getPayloadInternal()->setCondition(Error::UndefinedCondition);
+			getPayloadInternal()->setCondition(ErrorPayload::UndefinedCondition);
 		}
 	}
 }

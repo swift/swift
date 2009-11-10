@@ -87,7 +87,7 @@ class IQRouterTest : public CppUnit::TestFixture
 			channel_->onIQReceived(boost::shared_ptr<IQ>(new IQ()));
 
 			CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(channel_->iqs_.size()));
-			CPPUNIT_ASSERT(channel_->iqs_[0]->getPayload<Error>());
+			CPPUNIT_ASSERT(channel_->iqs_[0]->getPayload<ErrorPayload>());
 		}
 
 

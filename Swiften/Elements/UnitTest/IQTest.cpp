@@ -37,14 +37,14 @@ class IQTest : public CppUnit::TestFixture
 		}
 
 		void testCreateError() {
-			boost::shared_ptr<IQ> iq(IQ::createError(JID("foo@bar/fum"), "myid", Error::BadRequest, Error::Modify));
+			boost::shared_ptr<IQ> iq(IQ::createError(JID("foo@bar/fum"), "myid", ErrorPayload::BadRequest, ErrorPayload::Modify));
 
 			CPPUNIT_ASSERT_EQUAL(JID("foo@bar/fum"), iq->getTo());
 			CPPUNIT_ASSERT_EQUAL(String("myid"), iq->getID());
-			boost::shared_ptr<Error> error(iq->getPayload<Error>());
+			boost::shared_ptr<ErrorPayload> error(iq->getPayload<ErrorPayload>());
 			CPPUNIT_ASSERT(error);
-			CPPUNIT_ASSERT_EQUAL(Error::BadRequest, error->getCondition());
-			CPPUNIT_ASSERT_EQUAL(Error::Modify, error->getType());
+			CPPUNIT_ASSERT_EQUAL(ErrorPayload::BadRequest, error->getCondition());
+			CPPUNIT_ASSERT_EQUAL(ErrorPayload::Modify, error->getType());
 		}
 
 };

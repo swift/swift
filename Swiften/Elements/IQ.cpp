@@ -26,11 +26,11 @@ boost::shared_ptr<IQ> IQ::createResult(
 	return iq;
 }
 
-boost::shared_ptr<IQ> IQ::createError(const JID& to, const String& id, Error::Condition condition, Error::Type type) {
+boost::shared_ptr<IQ> IQ::createError(const JID& to, const String& id, ErrorPayload::Condition condition, ErrorPayload::Type type) {
 	boost::shared_ptr<IQ> iq(new IQ(IQ::Error));
 	iq->setTo(to);
 	iq->setID(id);
-	iq->addPayload(boost::shared_ptr<Swift::Error>(new Swift::Error(condition, type)));
+	iq->addPayload(boost::shared_ptr<Swift::ErrorPayload>(new Swift::ErrorPayload(condition, type)));
 	return iq;
 }
 

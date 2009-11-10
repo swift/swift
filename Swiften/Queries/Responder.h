@@ -3,7 +3,7 @@
 
 #include "Swiften/Queries/IQHandler.h"
 #include "Swiften/Queries/IQRouter.h"
-#include "Swiften/Elements/Error.h"
+#include "Swiften/Elements/ErrorPayload.h"
 
 namespace Swift {
 	template<typename PAYLOAD_TYPE>
@@ -25,7 +25,7 @@ namespace Swift {
 				router_->sendIQ(IQ::createResult(to, id, payload));
 			}
 
-			void sendError(const JID& to, const String& id, Error::Condition condition, Error::Type type) {
+			void sendError(const JID& to, const String& id, ErrorPayload::Condition condition, ErrorPayload::Type type) {
 				router_->sendIQ(IQ::createError(to, id, condition, type));
 			}
 
@@ -42,7 +42,7 @@ namespace Swift {
 							result = handleGetRequest(iq->getFrom(), iq->getID(), payload);
 						}
 						if (!result) {
-							router_->sendIQ(IQ::createError(iq->getFrom(), iq->getID(), Error::NotAllowed, Error::Cancel));
+							router_->sendIQ(IQ::createError(iq->getFrom(), iq->getID(), ErrorPayload::NotAllowed, ErrorPayload::Cancel));
 						}
 						return true;
 					}

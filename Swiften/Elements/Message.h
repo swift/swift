@@ -1,11 +1,10 @@
-#ifndef SWIFTEN_STANZAS_MESSAGE_H
-#define SWIFTEN_STANZAS_MESSAGE_H
+#pragma once
 
 #include <boost/optional.hpp>
 
 #include "Swiften/Base/String.h"
 #include "Swiften/Elements/Body.h"
-#include "Swiften/Elements/Error.h"
+#include "Swiften/Elements/ErrorPayload.h"
 #include "Swiften/Elements/Stanza.h"
 
 namespace Swift
@@ -30,8 +29,8 @@ namespace Swift
 			}
 
 			bool isError() {
-				boost::shared_ptr<Swift::Error> error(getPayload<Swift::Error>());
-				return getType() == Message::Error || error.get() != NULL;
+				boost::shared_ptr<Swift::ErrorPayload> error(getPayload<Swift::ErrorPayload>());
+				return getType() == Message::Error || error;
 			}
 
 			Type getType() const { return type_; }
@@ -42,5 +41,3 @@ namespace Swift
 			Type type_;
 	};
 }
-
-#endif

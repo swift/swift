@@ -24,9 +24,9 @@ class ErrorParserTest : public CppUnit::TestFixture
 					"<text xmlns=\"urn:ietf:params:xml:ns:xmpp-stanzas\">boo</text>"
 				"</error>"));
 
-			Error* payload = dynamic_cast<Error*>(parser.getPayload().get());
-			CPPUNIT_ASSERT_EQUAL(Error::BadRequest, payload->getCondition());
-			CPPUNIT_ASSERT_EQUAL(Error::Modify, payload->getType());
+			ErrorPayload* payload = dynamic_cast<ErrorPayload*>(parser.getPayload().get());
+			CPPUNIT_ASSERT_EQUAL(ErrorPayload::BadRequest, payload->getCondition());
+			CPPUNIT_ASSERT_EQUAL(ErrorPayload::Modify, payload->getType());
 			CPPUNIT_ASSERT_EQUAL(String("boo"), payload->getText());
 		}
 };

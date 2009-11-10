@@ -2,87 +2,88 @@
 
 #include <boost/signal.hpp>
 #include <boost/shared_ptr.hpp>
+#include <boost/enable_shared_from_this.hpp>
 
-#include "Swiften/Session/Session.h"
+#include "Swiften/Base/Error.h"
+#include "Swiften/Session/SessionStream.h"
+#include "Swiften/Session/BasicSessionStream.h"
 #include "Swiften/Base/String.h"
 #include "Swiften/JID/JID.h"
 #include "Swiften/Elements/Element.h"
-#include "Swiften/Network/Connection.h"
-#include "Swiften/TLS/PKCS12Certificate.h"
 
 namespace Swift {
-	class PayloadParserFactoryCollection;
-	class PayloadSerializerCollection;
-	class ConnectionFactory;
-	class Connection;
-	class StreamStack;
-	class XMPPLayer;
-	class ConnectionLayer;
-	class TLSLayerFactory;
-	class TLSLayer;
-	class WhitespacePingLayer;
-
-	class ClientSession : public Session {
+	class ClientSession : public boost::enable_shared_from_this<ClientSession> {
 		public:
 			enum State {
 				Initial,
 				WaitingForStreamStart,
 				Negotiating,
 				Compressing,
+				WaitingForEncrypt,
 				Encrypting,
 				WaitingForCredentials,
 				Authenticating,
 				BindingResource,
 				StartingSession,
-				SessionStarted,
-				Error,
+				Initialized,
 				Finished
+			};
+
+			struct Error : public Swift::Error {
+				enum Type {
+					AuthenticationFailedError,
+					NoSupportedAuthMechanismsError,
+					UnexpectedElementError,
+					ResourceBindError,
+					SessionStartError,
+					TLSError,
+				} type;
+				Error(Type type) : type(type) {}
 			};
 
 			ClientSession(
 					const JID& jid, 
-					boost::shared_ptr<Connection>, 
-					TLSLayerFactory*, 
-					PayloadParserFactoryCollection*, 
-					PayloadSerializerCollection*);
+					boost::shared_ptr<SessionStream>);
 
 			State getState() const {
-				return state_;
+				return state;
 			}
 
-			boost::optional<SessionError> getError() const {
-				return error_;
-			}
+			void start();
+			void finish();
 
 			void sendCredentials(const String& password);
-			void setCertificate(const PKCS12Certificate& certificate);
+			void sendElement(boost::shared_ptr<Element> element);
 
 		private:
+			void finishSession(Error::Type error);
+			void finishSession(boost::shared_ptr<Swift::Error> error);
+
+			JID getRemoteJID() const {
+				return JID("", localJID.getDomain());
+			}
+
 			void sendStreamHeader();
 			void sendSessionStart();
 
-			virtual void handleSessionStarted();
-			virtual void handleSessionFinished(const boost::optional<SessionError>& error);
-			virtual void handleElement(boost::shared_ptr<Element>);
-			virtual void handleStreamStart(const ProtocolHeader&);
+			void handleElement(boost::shared_ptr<Element>);
+			void handleStreamStart(const ProtocolHeader&);
+			void handleStreamError(boost::shared_ptr<Swift::Error>);
 
-			void handleTLSConnected();
-			void handleTLSError();
+			void handleTLSEncrypted();
 
-			void setError(SessionError);
 			bool checkState(State);
 
 		public:
 			boost::signal<void ()> onNeedCredentials;
-			boost::signal<void ()> onSessionStarted;
+			boost::signal<void ()> onInitialized;
+			boost::signal<void (boost::shared_ptr<Swift::Error>)> onFinished;
+			boost::signal<void (boost::shared_ptr<Element>)> onElementReceived;
 		
 		private:
-			TLSLayerFactory* tlsLayerFactory_;
-			State state_;
-			boost::optional<SessionError> error_;
-			boost::shared_ptr<TLSLayer> tlsLayer_;
-			boost::shared_ptr<WhitespacePingLayer> whitespacePingLayer_;
-			bool needSessionStart_;
-			PKCS12Certificate certificate_;
+			JID localJID;
+			State state;
+			boost::shared_ptr<SessionStream> stream;
+			bool needSessionStart;
 	};
 }

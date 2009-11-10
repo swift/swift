@@ -1,11 +1,10 @@
-#ifndef SWIFTEN_Error_H
-#define SWIFTEN_Error_H
+#pragma once
 
 #include "Swiften/Elements/Payload.h"
 #include "Swiften/Base/String.h"
 
 namespace Swift {
-	class Error : public Payload {
+	class ErrorPayload : public Payload {
 		public:
 			enum Type { Cancel, Continue, Modify, Auth, Wait };
 
@@ -34,7 +33,7 @@ namespace Swift {
 				UnexpectedRequest
 			};
 
-			Error(Condition condition = UndefinedCondition, Type type = Cancel, const String& text = String()) : type_(type), condition_(condition), text_(text) { }
+			ErrorPayload(Condition condition = UndefinedCondition, Type type = Cancel, const String& text = String()) : type_(type), condition_(condition), text_(text) { }
 
 			Type getType() const {
 				return type_; 
@@ -66,5 +65,3 @@ namespace Swift {
 			String text_;
 	};
 }
-
-#endif

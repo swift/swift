@@ -4,6 +4,7 @@
 #include <boost/signals.hpp>
 #include <boost/shared_ptr.hpp>
 
+#include "Swiften/Base/Error.h"
 #include "Swiften/Client/ClientSession.h"
 #include "Swiften/Client/ClientError.h"
 #include "Swiften/Elements/Presence.h"
@@ -20,6 +21,7 @@ namespace Swift {
 	class TLSLayerFactory;
 	class ConnectionFactory;
 	class ClientSession;
+	class BasicSessionStream;
 
 	class Client : public StanzaChannel, public IQRouter, public boost::bsignals::trackable {
 		public:
@@ -38,7 +40,7 @@ namespace Swift {
 			virtual void sendPresence(boost::shared_ptr<Presence>);
 
 		public:
-			boost::signal<void (ClientError)> onError;
+			boost::signal<void (const ClientError&)> onError;
 			boost::signal<void ()> onConnected;
 			boost::signal<void (const String&)> onDataRead;
 			boost::signal<void (const String&)> onDataWritten;
@@ -48,10 +50,12 @@ namespace Swift {
 			void send(boost::shared_ptr<Stanza>);
 			virtual String getNewIQID();
 			void handleElement(boost::shared_ptr<Element>);
-			void handleSessionFinished(const boost::optional<Session::SessionError>& error);
+			void handleSessionFinished(boost::shared_ptr<Error>);
 			void handleNeedCredentials();
-			void handleDataRead(const ByteArray&);
-			void handleDataWritten(const ByteArray&);
+			void handleDataRead(const String&);
+			void handleDataWritten(const String&);
+
+			void reset();
 
 		private:
 			JID jid_;
@@ -61,8 +65,9 @@ namespace Swift {
 			TLSLayerFactory* tlsLayerFactory_;
 			FullPayloadParserFactoryCollection payloadParserFactories_;
 			FullPayloadSerializerCollection payloadSerializers_;
-			boost::shared_ptr<ClientSession> session_;
 			boost::shared_ptr<Connection> connection_;
+			boost::shared_ptr<BasicSessionStream> sessionStream_;
+			boost::shared_ptr<ClientSession> session_;
 			String certificate_;
 	};
 }

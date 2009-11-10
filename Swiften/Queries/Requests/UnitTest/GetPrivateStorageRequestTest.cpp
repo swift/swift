@@ -72,7 +72,7 @@ class GetPrivateStorageRequestTest : public CppUnit::TestFixture
 		}
 
 	private:
-		void handleResponse(boost::shared_ptr<Payload> p, const boost::optional<Error>& e) {
+		void handleResponse(boost::shared_ptr<Payload> p, const boost::optional<ErrorPayload>& e) {
 			if (e) {
 				errors.push_back(*e);
 			}
@@ -99,7 +99,7 @@ class GetPrivateStorageRequestTest : public CppUnit::TestFixture
 	private:
 		IQRouter* router;
 		DummyIQChannel* channel;
-		std::vector< Error > errors;
+		std::vector< ErrorPayload > errors;
 		std::vector< boost::shared_ptr<Payload> > responses;
 };
 

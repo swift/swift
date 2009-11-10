@@ -10,6 +10,7 @@
 #include "Swiften/Network/BoostConnectionFactory.h"
 #include "Swiften/Network/DomainNameResolveException.h"
 #include "Swiften/TLS/PKCS12Certificate.h"
+#include "Swiften/Session/BasicSessionStream.h"
 
 namespace Swift {
 
@@ -20,6 +21,9 @@ Client::Client(const JID& jid, const String& password) :
 }
 
 Client::~Client() {
+	if (session_ || connection_) {
+		std::cerr << "Warning: Client not disconnected properly" << std::endl;
+	}
 	delete tlsLayerFactory_;
 	delete connectionFactory_;
 }
@@ -46,23 +50,32 @@ void Client::handleConnectionConnectFinished(bool error) {
 		onError(ClientError::ConnectionError);
 	}
 	else {
-		session_ = boost::shared_ptr<ClientSession>(new ClientSession(jid_, connection_, tlsLayerFactory_, &payloadParserFactories_, &payloadSerializers_));
+		assert(!sessionStream_);
+		sessionStream_ = boost::shared_ptr<BasicSessionStream>(new BasicSessionStream(connection_, &payloadParserFactories_, &payloadSerializers_, tlsLayerFactory_));
 		if (!certificate_.isEmpty()) {
-			session_->setCertificate(PKCS12Certificate(certificate_, password_));
+			sessionStream_->setTLSCertificate(PKCS12Certificate(certificate_, password_));
 		}
-		session_->onSessionStarted.connect(boost::bind(boost::ref(onConnected)));
-		session_->onSessionFinished.connect(boost::bind(&Client::handleSessionFinished, this, _1));
+		sessionStream_->onDataRead.connect(boost::bind(&Client::handleDataRead, this, _1));
+		sessionStream_->onDataWritten.connect(boost::bind(&Client::handleDataWritten, this, _1));
+		sessionStream_->initialize();
+
+		session_ = boost::shared_ptr<ClientSession>(new ClientSession(jid_, sessionStream_));
+		session_->onInitialized.connect(boost::bind(boost::ref(onConnected)));
+		session_->onFinished.connect(boost::bind(&Client::handleSessionFinished, this, _1));
 		session_->onNeedCredentials.connect(boost::bind(&Client::handleNeedCredentials, this));
-		session_->onDataRead.connect(boost::bind(&Client::handleDataRead, this, _1));
-		session_->onDataWritten.connect(boost::bind(&Client::handleDataWritten, this, _1));
 		session_->onElementReceived.connect(boost::bind(&Client::handleElement, this, _1));
-		session_->startSession();
+		session_->start();
 	}
 }
 
 void Client::disconnect() {
 	if (session_) {
-		session_->finishSession();
+		session_->finish();
+		session_.reset();
+	}
+	if (connection_) {
+		connection_->disconnect();
+		connection_.reset();
 	}
 }
 
@@ -110,9 +123,10 @@ void Client::setCertificate(const String& certificate) {
 	certificate_ = certificate;
 }
 
-void Client::handleSessionFinished(const boost::optional<Session::SessionError>& error) {
+void Client::handleSessionFinished(boost::shared_ptr<Error> error) {
 	if (error) {
 		ClientError clientError;
+		/*
 		switch (*error) {
 			case Session::ConnectionReadError:
 				clientError = ClientError(ClientError::ConnectionReadError);
@@ -148,6 +162,7 @@ void Client::handleSessionFinished(const boost::optional<Session::SessionError>&
 				clientError = ClientError(ClientError::ClientCertificateError);
 				break;
 		}
+		*/
 		onError(clientError);
 	}
 }
@@ -156,12 +171,12 @@ void Client::handleNeedCredentials() {
 	session_->sendCredentials(password_);
 }
 
-void Client::handleDataRead(const ByteArray& data) {
-	onDataRead(String(data.getData(), data.getSize()));
+void Client::handleDataRead(const String& data) {
+  onDataRead(data);
 }
 
-void Client::handleDataWritten(const ByteArray& data) {
-	onDataWritten(String(data.getData(), data.getSize()));
+void Client::handleDataWritten(const String& data) {
+  onDataWritten(data);
 }
 
 }

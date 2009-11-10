@@ -9,7 +9,7 @@
 #include "Swiften/JID/JID.h"
 #include "Swiften/Elements/Presence.h"
 #include "Swiften/Elements/VCard.h"
-#include "Swiften/Elements/Error.h"
+#include "Swiften/Elements/ErrorPayload.h"
 
 namespace Swift {
 	class MUCRegistry;
@@ -30,7 +30,7 @@ namespace Swift {
 
 		private:
 			void handlePresenceReceived(boost::shared_ptr<Presence>);
-			void handleVCardReceived(const JID& from, const String& hash, boost::shared_ptr<VCard>, const boost::optional<Error>&);
+			void handleVCardReceived(const JID& from, const String& hash, boost::shared_ptr<VCard>, const boost::optional<ErrorPayload>&);
 			void setAvatarHash(const JID& from, const String& hash);
 			JID getAvatarJID(const JID& o) const;
 
