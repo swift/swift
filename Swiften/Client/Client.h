@@ -55,7 +55,7 @@ namespace Swift {
 			void handleDataRead(const String&);
 			void handleDataWritten(const String&);
 
-			void reset();
+			void closeConnection();
 
 		private:
 			JID jid_;

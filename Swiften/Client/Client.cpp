@@ -33,6 +33,7 @@ bool Client::isAvailable() {
 }
 
 void Client::connect() {
+	assert(!connection_);
 	DomainNameResolver resolver;
 	try {
 		HostAddressPort remote = resolver.resolve(jid_.getDomain().getUTF8String());
@@ -73,6 +74,10 @@ void Client::disconnect() {
 		session_->finish();
 		session_.reset();
 	}
+	closeConnection();
+}
+
+void Client::closeConnection() {
 	if (connection_) {
 		connection_->disconnect();
 		connection_.reset();
@@ -124,6 +129,7 @@ void Client::setCertificate(const String& certificate) {
 }
 
 void Client::handleSessionFinished(boost::shared_ptr<Error> error) {
+	closeConnection();
 	if (error) {
 		ClientError clientError;
 		if (boost::shared_ptr<ClientSession::Error> actualError = boost::dynamic_pointer_cast<ClientSession::Error>(error)) {
@@ -172,6 +178,7 @@ void Client::handleSessionFinished(boost::shared_ptr<Error> error) {
 		}
 		onError(clientError);
 	}
+	session_.reset();
 }
 
 void Client::handleNeedCredentials() {
