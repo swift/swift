@@ -1,5 +1,3 @@
-// TODO: Send out better errors
-
 #include "Swiften/Session/BasicSessionStream.h"
 
 #include <boost/bind.hpp>
@@ -23,6 +21,8 @@ void BasicSessionStream::initialize() {
 	xmppLayer->onElement.connect(boost::bind(&BasicSessionStream::handleElementReceived, shared_from_this(), _1));
 	xmppLayer->onError.connect(boost::bind(
       &BasicSessionStream::handleXMPPError, shared_from_this()));
+  xmppLayer->onDataRead.connect(boost::bind(&BasicSessionStream::handleDataRead, shared_from_this(), _1));
+  xmppLayer->onWriteData.connect(boost::bind(&BasicSessionStream::handleDataWritten, shared_from_this(), _1));
 
 	connection->onDisconnected.connect(boost::bind(&BasicSessionStream::handleConnectionError, shared_from_this(), _1));
 	connectionLayer = boost::shared_ptr<ConnectionLayer>(
@@ -64,7 +64,7 @@ void BasicSessionStream::addTLSEncryption() {
 	assert(available);
 	tlsLayer = tlsLayerFactory->createTLSLayer();
 	if (hasTLSCertificate() && !tlsLayer->setClientCertificate(getTLSCertificate())) {
-		onError(boost::shared_ptr<Error>(new Error()));
+		onError(boost::shared_ptr<Error>(new Error(Error::InvalidTLSCertificateError)));
 	}
 	else {
 		streamStack->addLayer(tlsLayer);
@@ -101,7 +101,7 @@ void BasicSessionStream::handleElementReceived(boost::shared_ptr<Element> elemen
 
 void BasicSessionStream::handleXMPPError() {
 	available = false;
-	onError(boost::shared_ptr<Error>(new Error()));
+	onError(boost::shared_ptr<Error>(new Error(Error::ParseError)));
 }
 
 void BasicSessionStream::handleTLSConnected() {
@@ -110,12 +110,20 @@ void BasicSessionStream::handleTLSConnected() {
 
 void BasicSessionStream::handleTLSError() {
 	available = false;
-	onError(boost::shared_ptr<Error>(new Error()));
+	onError(boost::shared_ptr<Error>(new Error(Error::TLSError)));
 }
 
 void BasicSessionStream::handleConnectionError(const boost::optional<Connection::Error>&) {
 	available = false;
-	onError(boost::shared_ptr<Error>(new Error()));
+	onError(boost::shared_ptr<Error>(new Error(Error::ConnectionError)));
+}
+
+void BasicSessionStream::handleDataRead(const ByteArray& data) {
+	onDataRead(String(data.getData(), data.getSize()));
+}
+
+void BasicSessionStream::handleDataWritten(const ByteArray& data) {
+	onDataWritten(String(data.getData(), data.getSize()));
 }
 
 };

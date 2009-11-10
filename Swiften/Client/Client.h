@@ -53,8 +53,8 @@ namespace Swift {
 			void handleElement(boost::shared_ptr<Element>);
 			void handleSessionFinished(boost::shared_ptr<Error>);
 			void handleNeedCredentials();
-			void handleDataRead(const ByteArray&);
-			void handleDataWritten(const ByteArray&);
+			void handleDataRead(const String&);
+			void handleDataWritten(const String&);
 
 			void reset();
 

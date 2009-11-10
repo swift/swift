@@ -49,12 +49,12 @@ void Client::handleConnectionConnectFinished(bool error) {
 	else {
 		assert(!sessionStream_);
 		sessionStream_ = boost::shared_ptr<BasicSessionStream>(new BasicSessionStream(connection_, &payloadParserFactories_, &payloadSerializers_, tlsLayerFactory_));
-		sessionStream_->initialize();
 		if (!certificate_.isEmpty()) {
 			sessionStream_->setTLSCertificate(PKCS12Certificate(certificate_, password_));
 		}
-		//sessionStream_->onDataRead.connect(boost::bind(&Client::handleDataRead, this, _1));
-		//sessionStream_->onDataWritten.connect(boost::bind(&Client::handleDataWritten, this, _1));
+		sessionStream_->onDataRead.connect(boost::bind(&Client::handleDataRead, shared_from_this(), _1));
+		sessionStream_->onDataWritten.connect(boost::bind(&Client::handleDataWritten, shared_from_this(), _1));
+		sessionStream_->initialize();
 
 		session_ = boost::shared_ptr<ClientSession>(new ClientSession(jid_, sessionStream_));
 		session_->onInitialized.connect(boost::bind(boost::ref(onConnected)));
@@ -164,12 +164,12 @@ void Client::handleNeedCredentials() {
 	session_->sendCredentials(password_);
 }
 
-void Client::handleDataRead(const ByteArray& data) {
-	onDataRead(String(data.getData(), data.getSize()));
+void Client::handleDataRead(const String& data) {
+  onDataRead(data);
 }
 
-void Client::handleDataWritten(const ByteArray& data) {
-	onDataWritten(String(data.getData(), data.getSize()));
+void Client::handleDataWritten(const String& data) {
+  onDataWritten(data);
 }
 
 }

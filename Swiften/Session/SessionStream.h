@@ -13,7 +13,16 @@ namespace Swift {
 		public:
 			class Error : public Swift::Error {
 				public:
-					Error() {}
+					enum Type {
+						ParseError,
+						TLSError,
+						InvalidTLSCertificateError,
+						ConnectionError
+					};
+
+					Error(Type type) : type(type) {}
+
+					Type type;
 			};
 
 			virtual ~SessionStream();
@@ -43,6 +52,8 @@ namespace Swift {
 			boost::signal<void (boost::shared_ptr<Element>)> onElementReceived;
 			boost::signal<void (boost::shared_ptr<Error>)> onError;
 			boost::signal<void ()> onTLSEncrypted;
+			boost::signal<void (const String&)> onDataRead;
+			boost::signal<void (const String&)> onDataWritten;
 
 		protected:
 			const PKCS12Certificate& getTLSCertificate() const {

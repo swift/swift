@@ -50,6 +50,8 @@ namespace Swift {
       void handleTLSError();
 			void handleStreamStartReceived(const ProtocolHeader&);
 			void handleElementReceived(boost::shared_ptr<Element>);
+      void handleDataRead(const ByteArray& data);
+      void handleDataWritten(const ByteArray& data);
 
     private:
 			bool available;

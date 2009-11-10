@@ -66,9 +66,9 @@ namespace Swift {
 			void sendStreamHeader();
 			void sendSessionStart();
 
-			virtual void handleElement(boost::shared_ptr<Element>);
-			virtual void handleStreamStart(const ProtocolHeader&);
-			virtual void handleStreamError(boost::shared_ptr<Swift::Error>);
+			void handleElement(boost::shared_ptr<Element>);
+			void handleStreamStart(const ProtocolHeader&);
+			void handleStreamError(boost::shared_ptr<Swift::Error>);
 
 			void handleTLSEncrypted();
 
