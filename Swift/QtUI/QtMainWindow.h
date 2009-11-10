@@ -47,7 +47,6 @@ namespace Swift {
 			QPushButton* mucButton_;
 			QtTreeWidget* treeWidget_;
 			QtRosterHeader* meView_;
-			QToolBar* bottomBar_;
 			QAction* addAction_;
 			QTabWidget* tabs_;
 			QWidget* contactsTabWidget_;

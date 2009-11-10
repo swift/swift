@@ -42,13 +42,6 @@ QtMainWindow::QtMainWindow(QtTreeWidgetFactory *treeWidgetFactory) : QWidget() {
 	treeWidget_ = dynamic_cast<QtTreeWidget*>(treeWidgetFactory->createTreeWidget());
 	contactTabLayout->addWidget(treeWidget_);
 
-	bottomBar_ = new QToolBar(this);
-	contactTabLayout->addWidget(bottomBar_);
-	
-	addAction_ = new QAction("Add Contact", this);
-	bottomBar_->addAction(addAction_);
-	connect(addAction_, SIGNAL(triggered(bool)), this, SLOT(handleAddActionTriggered(bool)));
-	
 	tabs_->addTab(contactsTabWidget_, "Contacts");
 	
 	eventView_ = new EventView(this);
@@ -70,6 +63,9 @@ QtMainWindow::QtMainWindow(QtTreeWidgetFactory *treeWidgetFactory) : QWidget() {
 	QAction* joinMUCAction = new QAction("Join chatroom", this);
 	connect(joinMUCAction, SIGNAL(triggered()), SLOT(handleJoinMUCAction()));
 	chatMenu->addAction(joinMUCAction);
+	addAction_ = new QAction("Add Contact", this);
+	connect(addAction_, SIGNAL(triggered(bool)), this, SLOT(handleAddActionTriggered(bool)));
+	chatMenu->addAction(addAction_);
 	QAction* signOutAction = new QAction("Sign Out", this);
 	connect(signOutAction, SIGNAL(triggered()), SLOT(handleSignOutAction()));
 	chatMenu->addAction(signOutAction);
