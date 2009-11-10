@@ -67,9 +67,14 @@ void ClientSession::handleElement(boost::shared_ptr<Element> element) {
 			stream->writeElement(boost::shared_ptr<StartTLSRequest>(new StartTLSRequest()));
 		}
 		else if (streamFeatures->hasAuthenticationMechanisms()) {
-			if (stream->hasTLSCertificate() && streamFeatures->hasAuthenticationMechanism("EXTERNAL")) {
+			if (stream->hasTLSCertificate()) {
+				if (streamFeatures->hasAuthenticationMechanism("EXTERNAL")) {
 					state = Authenticating;
 					stream->writeElement(boost::shared_ptr<Element>(new AuthRequest("EXTERNAL", "")));
+				}
+				else {
+					finishSession(Error::TLSClientCertificateError);
+				}
 			}
 			else if (streamFeatures->hasAuthenticationMechanism("PLAIN")) {
 				state = WaitingForCredentials;

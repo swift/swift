@@ -17,7 +17,8 @@ namespace Swift {
 						ParseError,
 						TLSError,
 						InvalidTLSCertificateError,
-						ConnectionError
+						ConnectionReadError,
+						ConnectionWriteError
 					};
 
 					Error(Type type) : type(type) {}

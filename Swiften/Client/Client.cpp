@@ -126,43 +126,50 @@ void Client::setCertificate(const String& certificate) {
 void Client::handleSessionFinished(boost::shared_ptr<Error> error) {
 	if (error) {
 		ClientError clientError;
-		/*
-		switch (*error) {
-			case Session::ConnectionReadError:
-				clientError = ClientError(ClientError::ConnectionReadError);
-				break;
-			case Session::ConnectionWriteError:
-				clientError = ClientError(ClientError::ConnectionWriteError);
-				break;
-			case Session::XMLError:
-				clientError = ClientError(ClientError::XMLError);
-				break;
-			case Session::AuthenticationFailedError:
-				clientError = ClientError(ClientError::AuthenticationFailedError);
-				break;
-			case Session::NoSupportedAuthMechanismsError:
-				clientError = ClientError(ClientError::NoSupportedAuthMechanismsError);
-				break;
-			case Session::UnexpectedElementError:
-				clientError = ClientError(ClientError::UnexpectedElementError);
-				break;
-			case Session::ResourceBindError:
-				clientError = ClientError(ClientError::ResourceBindError);
-				break;
-			case Session::SessionStartError:
-				clientError = ClientError(ClientError::SessionStartError);
-				break;
-			case Session::TLSError:
-				clientError = ClientError(ClientError::TLSError);
-				break;
-			case Session::ClientCertificateLoadError:
-				clientError = ClientError(ClientError::ClientCertificateLoadError);
-				break;
-			case Session::ClientCertificateError:
-				clientError = ClientError(ClientError::ClientCertificateError);
-				break;
+		if (boost::shared_ptr<ClientSession::Error> actualError = boost::dynamic_pointer_cast<ClientSession::Error>(error)) {
+			switch(actualError->type) {
+				case ClientSession::Error::AuthenticationFailedError:
+					clientError = ClientError(ClientError::AuthenticationFailedError);
+					break;
+				case ClientSession::Error::NoSupportedAuthMechanismsError:
+					clientError = ClientError(ClientError::NoSupportedAuthMechanismsError);
+					break;
+				case ClientSession::Error::UnexpectedElementError:
+					clientError = ClientError(ClientError::UnexpectedElementError);
+					break;
+				case ClientSession::Error::ResourceBindError:
+					clientError = ClientError(ClientError::ResourceBindError);
+					break;
+				case ClientSession::Error::SessionStartError:
+					clientError = ClientError(ClientError::SessionStartError);
+					break;
+				case ClientSession::Error::TLSError:
+					clientError = ClientError(ClientError::TLSError);
+					break;
+				case ClientSession::Error::TLSClientCertificateError:
+					clientError = ClientError(ClientError::ClientCertificateError);
+					break;
+			}
 		}
-		*/
+		else if (boost::shared_ptr<SessionStream::Error> actualError = boost::dynamic_pointer_cast<SessionStream::Error>(error)) {
+			switch(actualError->type) {
+				case SessionStream::Error::ParseError:
+					clientError = ClientError(ClientError::XMLError);
+					break;
+				case SessionStream::Error::TLSError:
+					clientError = ClientError(ClientError::TLSError);
+					break;
+				case SessionStream::Error::InvalidTLSCertificateError:
+					clientError = ClientError(ClientError::ClientCertificateLoadError);
+					break;
+				case SessionStream::Error::ConnectionReadError:
+					clientError = ClientError(ClientError::ConnectionReadError);
+					break;
+				case SessionStream::Error::ConnectionWriteError:
+					clientError = ClientError(ClientError::ConnectionWriteError);
+					break;
+			}
+		}
 		onError(clientError);
 	}
 }

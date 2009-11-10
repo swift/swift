@@ -113,9 +113,14 @@ void BasicSessionStream::handleTLSError() {
 	onError(boost::shared_ptr<Error>(new Error(Error::TLSError)));
 }
 
-void BasicSessionStream::handleConnectionError(const boost::optional<Connection::Error>&) {
+void BasicSessionStream::handleConnectionError(const boost::optional<Connection::Error>& error) {
 	available = false;
-	onError(boost::shared_ptr<Error>(new Error(Error::ConnectionError)));
+	if (error == Connection::ReadError) {
+		onError(boost::shared_ptr<Error>(new Error(Error::ConnectionReadError)));
+	}
+	else {
+		onError(boost::shared_ptr<Error>(new Error(Error::ConnectionWriteError)));
+	}
 }
 
 void BasicSessionStream::handleDataRead(const ByteArray& data) {

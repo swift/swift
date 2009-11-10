@@ -36,6 +36,7 @@ namespace Swift {
 					UnexpectedElementError,
 					ResourceBindError,
 					SessionStartError,
+					TLSClientCertificateError,
 					TLSError,
 				} type;
 				Error(Type type) : type(type) {}
