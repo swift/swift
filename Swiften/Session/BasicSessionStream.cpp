@@ -75,14 +75,14 @@ void BasicSessionStream::addTLSEncryption() {
 }
 
 void BasicSessionStream::setWhitespacePingEnabled(bool enabled) {
-	if (enabled && !whitespacePingLayer) {
-		whitespacePingLayer = boost::shared_ptr<WhitespacePingLayer>(new WhitespacePingLayer());
-		streamStack->addLayer(whitespacePingLayer);
-	}
 	if (enabled) {
+		if (!whitespacePingLayer) {
+			whitespacePingLayer = boost::shared_ptr<WhitespacePingLayer>(new WhitespacePingLayer());
+			streamStack->addLayer(whitespacePingLayer);
+		}
 		whitespacePingLayer->setActive();
 	}
-	else {
+	else if (whitespacePingLayer) {
 		whitespacePingLayer->setInactive();
 	}
 }

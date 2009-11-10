@@ -1,11 +1,10 @@
-#ifndef SWIFTEN_ClientError_H
-#define SWIFTEN_ClientError_H
+#pragma once
 
 namespace Swift {
 	class ClientError {
 		public:
 			enum Type {
-				NoError,
+				UnknownError,
 				DomainNameResolveError,
 				ConnectionError,
 				ConnectionReadError,
@@ -21,7 +20,7 @@ namespace Swift {
 				ClientCertificateError
 			};
 
-			ClientError(Type type = NoError) : type_(type) {}
+			ClientError(Type type = UnknownError) : type_(type) {}
 
 			Type getType() const { return type_; }
 
@@ -29,5 +28,3 @@ namespace Swift {
 			Type type_;
 	};
 }
-
-#endif

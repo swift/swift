@@ -266,7 +266,7 @@ void MainController::performLoginFromCachedCredentials() {
 void MainController::handleError(const ClientError& error) {
 	String message;
 	switch(error.getType()) {
-		case ClientError::NoError: assert(false); break;
+		case ClientError::UnknownError: message = "Unknown Error"; break;
 		case ClientError::DomainNameResolveError: message = "Unable to find server"; break;
 		case ClientError::ConnectionError: message = "Error connecting to server"; break;
 		case ClientError::ConnectionReadError: message = "Error while receiving server data"; break;
