@@ -7,7 +7,7 @@ import sys, re, os.path
 assert(len(sys.argv) == 2)
 
 def isIgnored(file) :
-  return (find.find("/Swiften/") == -1 and find.find("/Slimber/") == -1 and find.find("/Swift/") == -1) or (find.find("/UnitTest/") != -1 or find.find("/QA/") != -1)
+  return (file.find("/Swiften/") == -1 and file.find("/Slimber/") == -1 and file.find("/Swift/") == -1) or (file.find("/UnitTest/") != -1 or file.find("/QA/") != -1)
   
 
 output = []
