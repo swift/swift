@@ -18,6 +18,7 @@ class RequestTest : public CppUnit::TestFixture
 		CPPUNIT_TEST(testHandleIQ);
 		CPPUNIT_TEST(testHandleIQ_InvalidID);
 		CPPUNIT_TEST(testHandleIQ_Error);
+		CPPUNIT_TEST(testHandleIQ_ErrorWithoutPayload);
 		CPPUNIT_TEST(testHandleIQ_BeforeSend);
 		CPPUNIT_TEST_SUITE_END();
 
@@ -39,7 +40,6 @@ class RequestTest : public CppUnit::TestFixture
 			payload_ = boost::shared_ptr<Payload>(new MyPayload("foo"));
 			responsePayload_ = boost::shared_ptr<Payload>(new MyPayload("bar"));
 			responsesReceived_ = 0;
-			errorsReceived_ = 0;
 		}
 
 		void tearDown() {
@@ -73,7 +73,7 @@ class RequestTest : public CppUnit::TestFixture
 			channel_->onIQReceived(createResponse("test-id"));
 
 			CPPUNIT_ASSERT_EQUAL(1, responsesReceived_);
-			CPPUNIT_ASSERT_EQUAL(0, errorsReceived_);
+			CPPUNIT_ASSERT_EQUAL(0, static_cast<int>(receivedErrors.size()));
 			CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(channel_->iqs_.size()));
 		}
 
@@ -86,7 +86,7 @@ class RequestTest : public CppUnit::TestFixture
 			channel_->onIQReceived(createResponse("different-id"));
 
 			CPPUNIT_ASSERT_EQUAL(0, responsesReceived_);
-			CPPUNIT_ASSERT_EQUAL(0, errorsReceived_);
+			CPPUNIT_ASSERT_EQUAL(0, static_cast<int>(receivedErrors.size()));
 			CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(channel_->iqs_.size()));
 		}
 
@@ -95,11 +95,28 @@ class RequestTest : public CppUnit::TestFixture
 			testling.onResponse.connect(boost::bind(&RequestTest::handleResponse, this, _1, _2));
 			testling.send();
 
+			boost::shared_ptr<IQ> error = createError("test-id");
+			boost::shared_ptr<Payload> errorPayload = boost::shared_ptr<ErrorPayload>(new ErrorPayload(ErrorPayload::FeatureNotImplemented));
+			error->addPayload(errorPayload);
+			channel_->onIQReceived(error);
+
+			CPPUNIT_ASSERT_EQUAL(0, responsesReceived_);
+			CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(receivedErrors.size()));
+			CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(channel_->iqs_.size()));
+			CPPUNIT_ASSERT_EQUAL(ErrorPayload::FeatureNotImplemented, receivedErrors[0].getCondition());
+		}
+
+		void testHandleIQ_ErrorWithoutPayload() {
+			MyRequest testling(IQ::Get, JID("foo@bar.com/baz"), payload_, router_);
+			testling.onResponse.connect(boost::bind(&RequestTest::handleResponse, this, _1, _2));
+			testling.send();
+
 			channel_->onIQReceived(createError("test-id"));
 
 			CPPUNIT_ASSERT_EQUAL(0, responsesReceived_);
-			CPPUNIT_ASSERT_EQUAL(1, errorsReceived_);
+			CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(receivedErrors.size()));
 			CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(channel_->iqs_.size()));
+			CPPUNIT_ASSERT_EQUAL(ErrorPayload::UndefinedCondition, receivedErrors[0].getCondition());
 		}
 
 		void testHandleIQ_BeforeSend() {
@@ -108,14 +125,14 @@ class RequestTest : public CppUnit::TestFixture
 			channel_->onIQReceived(createResponse("test-id"));
 
 			CPPUNIT_ASSERT_EQUAL(0, responsesReceived_);
-			CPPUNIT_ASSERT_EQUAL(0, errorsReceived_);
+			CPPUNIT_ASSERT_EQUAL(0, static_cast<int>(receivedErrors.size()));
 			CPPUNIT_ASSERT_EQUAL(0, static_cast<int>(channel_->iqs_.size()));
 		}
 	
 	private:
 		void handleResponse(boost::shared_ptr<Payload> p, const boost::optional<ErrorPayload>& e) {
 			if (e) {
-				++errorsReceived_;
+				receivedErrors.push_back(*e);
 			}
 			else {
 				boost::shared_ptr<MyPayload> payload(boost::dynamic_pointer_cast<MyPayload>(p));
@@ -144,7 +161,7 @@ class RequestTest : public CppUnit::TestFixture
 		boost::shared_ptr<Payload> payload_;
 		boost::shared_ptr<Payload> responsePayload_;
 		int responsesReceived_;
-		int errorsReceived_;
+		std::vector<ErrorPayload> receivedErrors;
 };
 
 CPPUNIT_TEST_SUITE_REGISTRATION(RequestTest);

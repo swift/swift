@@ -38,8 +38,13 @@ bool Request::handleIQ(boost::shared_ptr<IQ> iq) {
 			handleResponse(iq->getPayloadOfSameType(payload_), boost::optional<ErrorPayload>());
 		}
 		else {
-			// FIXME: Get proper error
-			handleResponse(boost::shared_ptr<Payload>(), boost::optional<ErrorPayload>(ErrorPayload::UndefinedCondition));
+			boost::shared_ptr<ErrorPayload> errorPayload = iq->getPayload<ErrorPayload>();
+			if (errorPayload) {
+				handleResponse(boost::shared_ptr<Payload>(), boost::optional<ErrorPayload>(*errorPayload));
+			}
+			else {
+				handleResponse(boost::shared_ptr<Payload>(), boost::optional<ErrorPayload>(ErrorPayload::UndefinedCondition));
+			}
 		}
 		router_->removeHandler(this);
 		handled = true;
