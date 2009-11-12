@@ -9,6 +9,7 @@
 namespace Swift {
 	class TLSLayerFactory;
 	class TLSLayer;
+	class TimerFactory;
 	class WhitespacePingLayer;
 	class PayloadParserFactoryCollection;
 	class PayloadSerializerCollection;
@@ -24,7 +25,8 @@ namespace Swift {
 				boost::shared_ptr<Connection> connection,
 				PayloadParserFactoryCollection* payloadParserFactories, 
 				PayloadSerializerCollection* payloadSerializers,
-				TLSLayerFactory* tlsLayerFactory
+				TLSLayerFactory* tlsLayerFactory,
+				TimerFactory* whitespacePingLayerFactory
 			);
 			~BasicSessionStream();
 
@@ -59,6 +61,7 @@ namespace Swift {
 			PayloadParserFactoryCollection* payloadParserFactories;
 			PayloadSerializerCollection* payloadSerializers;
 			TLSLayerFactory* tlsLayerFactory;
+			TimerFactory* timerFactory;
 			boost::shared_ptr<XMPPLayer> xmppLayer;
 			boost::shared_ptr<ConnectionLayer> connectionLayer;
 			StreamStack* streamStack;

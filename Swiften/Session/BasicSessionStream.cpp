@@ -11,7 +11,7 @@
 
 namespace Swift {
 
-BasicSessionStream::BasicSessionStream(boost::shared_ptr<Connection> connection, PayloadParserFactoryCollection* payloadParserFactories, PayloadSerializerCollection* payloadSerializers, TLSLayerFactory* tlsLayerFactory) : available(false), connection(connection), payloadParserFactories(payloadParserFactories), payloadSerializers(payloadSerializers), tlsLayerFactory(tlsLayerFactory) {
+BasicSessionStream::BasicSessionStream(boost::shared_ptr<Connection> connection, PayloadParserFactoryCollection* payloadParserFactories, PayloadSerializerCollection* payloadSerializers, TLSLayerFactory* tlsLayerFactory, TimerFactory* timerFactory) : available(false), connection(connection), payloadParserFactories(payloadParserFactories), payloadSerializers(payloadSerializers), tlsLayerFactory(tlsLayerFactory), timerFactory(timerFactory) {
 }
 
 void BasicSessionStream::initialize() {
@@ -77,7 +77,7 @@ void BasicSessionStream::addTLSEncryption() {
 void BasicSessionStream::setWhitespacePingEnabled(bool enabled) {
 	if (enabled) {
 		if (!whitespacePingLayer) {
-			whitespacePingLayer = boost::shared_ptr<WhitespacePingLayer>(new WhitespacePingLayer());
+			whitespacePingLayer = boost::shared_ptr<WhitespacePingLayer>(new WhitespacePingLayer(timerFactory));
 			streamStack->addLayer(whitespacePingLayer);
 		}
 		whitespacePingLayer->setActive();

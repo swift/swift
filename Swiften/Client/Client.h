@@ -1,5 +1,4 @@
-#ifndef SWIFTEN_Client_H
-#define SWIFTEN_Client_H
+#pragma once
 
 #include <boost/signals.hpp>
 #include <boost/shared_ptr.hpp>
@@ -21,6 +20,7 @@
 namespace Swift {
 	class TLSLayerFactory;
 	class ConnectionFactory;
+	class TimerFactory;
 	class ClientSession;
 	class BasicSessionStream;
 	class Connector;
@@ -66,6 +66,7 @@ namespace Swift {
 			IDGenerator idGenerator_;
 			boost::shared_ptr<Connector> connector_;
 			ConnectionFactory* connectionFactory_;
+			TimerFactory* timerFactory_;
 			TLSLayerFactory* tlsLayerFactory_;
 			FullPayloadParserFactoryCollection payloadParserFactories_;
 			FullPayloadSerializerCollection payloadSerializers_;
@@ -75,5 +76,3 @@ namespace Swift {
 			String certificate_;
 	};
 }
-
-#endif

@@ -12,10 +12,13 @@ objects = myenv.StaticObject([
 			"ConnectionFactory.cpp",
 			"ConnectionServer.cpp",
       "Connector.cpp",
+			"TimerFactory.cpp",
+			"BoostTimerFactory.cpp",
 			"DomainNameResolver.cpp",
 			"PlatformDomainNameResolver.cpp",
 			"StaticDomainNameResolver.cpp",
 			"HostAddress.cpp",
 			"Timer.cpp",
+			"BoostTimer.cpp",
 		])
 swiften_env.Append(SWIFTEN_OBJECTS = [objects])

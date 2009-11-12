@@ -2,7 +2,7 @@
 #include <boost/thread.hpp>
 
 #include "Swiften/Client/Client.h"
-#include "Swiften/Network/Timer.h"
+#include "Swiften/Network/BoostTimer.h"
 #include "Swiften/EventLoop/MainEventLoop.h"
 #include "Swiften/EventLoop/SimpleEventLoop.h"
 #include "Swiften/Queries/Requests/GetRosterRequest.h"
@@ -55,7 +55,7 @@ int main(int, char**) {
 	client->connect();
 
 	{
-		boost::shared_ptr<Timer> timer(new Timer(30000, &MainBoostIOServiceThread::getInstance().getIOService()));
+		boost::shared_ptr<BoostTimer> timer(new BoostTimer(30000, &MainBoostIOServiceThread::getInstance().getIOService()));
 		timer->onTick.connect(boost::bind(&SimpleEventLoop::stop, &eventLoop));
 		timer->start();
 

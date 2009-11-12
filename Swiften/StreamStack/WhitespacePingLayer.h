@@ -7,10 +7,11 @@
 
 namespace Swift {
 	class Timer;
+	class TimerFactory;
 
 	class WhitespacePingLayer : public StreamLayer, boost::noncopyable {
 		public:
-			WhitespacePingLayer();
+			WhitespacePingLayer(TimerFactory* timerFactory);
 
 			void setActive();
 			void setInactive();

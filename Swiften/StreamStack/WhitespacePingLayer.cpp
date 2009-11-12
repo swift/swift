@@ -1,16 +1,16 @@
 #include "Swiften/StreamStack/WhitespacePingLayer.h"
 
-#include "Swiften/Network/BoostIOServiceThread.h"
-#include "Swiften/Network/MainBoostIOServiceThread.h"
+#include <boost/bind.hpp>
+
+#include "Swiften/Network/TimerFactory.h"
 #include "Swiften/Network/Timer.h"
 
 namespace Swift {
 
 static const int TIMEOUT_MILLISECONDS = 60000;
 
-WhitespacePingLayer::WhitespacePingLayer() : isActive(false) {
-	// FIXME: Create a BoostTimerFactory.
-	timer = boost::shared_ptr<Timer>(new Timer(TIMEOUT_MILLISECONDS, &MainBoostIOServiceThread::getInstance().getIOService()));
+WhitespacePingLayer::WhitespacePingLayer(TimerFactory* timerFactory) : isActive(false) {
+	timer = timerFactory->createTimer(TIMEOUT_MILLISECONDS);
 	timer->onTick.connect(boost::bind(&WhitespacePingLayer::handleTimerTick, this));
 }
 

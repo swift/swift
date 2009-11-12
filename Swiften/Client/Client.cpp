@@ -8,6 +8,7 @@
 #include "Swiften/StreamStack/PlatformTLSLayerFactory.h"
 #include "Swiften/Network/Connector.h"
 #include "Swiften/Network/BoostConnectionFactory.h"
+#include "Swiften/Network/BoostTimerFactory.h"
 #include "Swiften/Network/DomainNameResolveException.h"
 #include "Swiften/TLS/PKCS12Certificate.h"
 #include "Swiften/Session/BasicSessionStream.h"
@@ -17,6 +18,7 @@ namespace Swift {
 Client::Client(const JID& jid, const String& password) :
 		IQRouter(this), jid_(jid), password_(password) {
 	connectionFactory_ = new BoostConnectionFactory(&MainBoostIOServiceThread::getInstance().getIOService());
+	timerFactory_ = new BoostTimerFactory(&MainBoostIOServiceThread::getInstance().getIOService());
 	tlsLayerFactory_ = new PlatformTLSLayerFactory();
 }
 
@@ -25,6 +27,7 @@ Client::~Client() {
 		std::cerr << "Warning: Client not disconnected properly" << std::endl;
 	}
 	delete tlsLayerFactory_;
+	delete timerFactory_;
 	delete connectionFactory_;
 }
 
@@ -50,7 +53,7 @@ void Client::handleConnectorFinished(boost::shared_ptr<Connection> connection) {
 		connection_ = connection;
 
 		assert(!sessionStream_);
-		sessionStream_ = boost::shared_ptr<BasicSessionStream>(new BasicSessionStream(connection_, &payloadParserFactories_, &payloadSerializers_, tlsLayerFactory_));
+		sessionStream_ = boost::shared_ptr<BasicSessionStream>(new BasicSessionStream(connection_, &payloadParserFactories_, &payloadSerializers_, tlsLayerFactory_, timerFactory_));
 		if (!certificate_.isEmpty()) {
 			sessionStream_->setTLSCertificate(PKCS12Certificate(certificate_, password_));
 		}
