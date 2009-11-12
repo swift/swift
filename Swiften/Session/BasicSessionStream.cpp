@@ -20,13 +20,13 @@ void BasicSessionStream::initialize() {
 	xmppLayer->onStreamStart.connect(boost::bind(&BasicSessionStream::handleStreamStartReceived, shared_from_this(), _1));
 	xmppLayer->onElement.connect(boost::bind(&BasicSessionStream::handleElementReceived, shared_from_this(), _1));
 	xmppLayer->onError.connect(boost::bind(
-      &BasicSessionStream::handleXMPPError, shared_from_this()));
-  xmppLayer->onDataRead.connect(boost::bind(&BasicSessionStream::handleDataRead, shared_from_this(), _1));
-  xmppLayer->onWriteData.connect(boost::bind(&BasicSessionStream::handleDataWritten, shared_from_this(), _1));
+			&BasicSessionStream::handleXMPPError, shared_from_this()));
+	xmppLayer->onDataRead.connect(boost::bind(&BasicSessionStream::handleDataRead, shared_from_this(), _1));
+	xmppLayer->onWriteData.connect(boost::bind(&BasicSessionStream::handleDataWritten, shared_from_this(), _1));
 
 	connection->onDisconnected.connect(boost::bind(&BasicSessionStream::handleConnectionError, shared_from_this(), _1));
 	connectionLayer = boost::shared_ptr<ConnectionLayer>(
-      new ConnectionLayer(connection));
+			new ConnectionLayer(connection));
 
 	streamStack = new StreamStack(xmppLayer, connectionLayer);
 
@@ -34,7 +34,7 @@ void BasicSessionStream::initialize() {
 }
 
 BasicSessionStream::~BasicSessionStream() {
-  delete streamStack;
+	delete streamStack;
 }
 
 void BasicSessionStream::writeHeader(const ProtocolHeader& header) {
@@ -57,7 +57,7 @@ bool BasicSessionStream::isAvailable() {
 }
 
 bool BasicSessionStream::supportsTLSEncryption() {
-  return tlsLayerFactory && tlsLayerFactory->canCreate();
+	return tlsLayerFactory && tlsLayerFactory->canCreate();
 }
 
 void BasicSessionStream::addTLSEncryption() {
@@ -88,7 +88,7 @@ void BasicSessionStream::setWhitespacePingEnabled(bool enabled) {
 }
 
 void BasicSessionStream::resetXMPPParser() {
-  xmppLayer->resetParser();
+	xmppLayer->resetParser();
 }
 
 void BasicSessionStream::handleStreamStartReceived(const ProtocolHeader& header) {

@@ -121,6 +121,7 @@ env.Append(UNITTEST_SOURCES = [
 		File("LinkLocal/UnitTest/LinkLocalServiceInfoTest.cpp"),
 		File("LinkLocal/UnitTest/LinkLocalServiceTest.cpp"),
 		File("Network/UnitTest/HostAddressTest.cpp"),
+		File("Network/UnitTest/ConnectorTest.cpp"),
 		File("Parser/PayloadParsers/UnitTest/BodyParserTest.cpp"),
 		File("Parser/PayloadParsers/UnitTest/DiscoInfoParserTest.cpp"),
 		File("Parser/PayloadParsers/UnitTest/ErrorParserTest.cpp"),

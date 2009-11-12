@@ -11,7 +11,10 @@ objects = myenv.StaticObject([
 			"BoostIOServiceThread.cpp",
 			"ConnectionFactory.cpp",
 			"ConnectionServer.cpp",
+      "Connector.cpp",
 			"DomainNameResolver.cpp",
+			"PlatformDomainNameResolver.cpp",
+			"StaticDomainNameResolver.cpp",
 			"HostAddress.cpp",
 			"Timer.cpp",
 		])

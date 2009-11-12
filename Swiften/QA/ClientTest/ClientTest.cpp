@@ -15,12 +15,20 @@ using namespace Swift;
 SimpleEventLoop eventLoop;
 
 Client* client = 0;
+bool reconnected = false;
 bool rosterReceived = false;
 
 void handleRosterReceived(boost::shared_ptr<Payload>) {
-	rosterReceived = true;
-	client->disconnect();
-	eventLoop.stop();
+	if (reconnected) {
+		rosterReceived = true;
+		client->disconnect();
+		eventLoop.stop();
+	}
+	else {
+		reconnected = true;
+		client->disconnect();
+		client->connect();
+	}
 }
 
 void handleConnected() {

@@ -17,6 +17,10 @@ namespace Swift {
 				return port_;
 			}
 
+			bool operator==(const HostAddressPort& o) const {
+				return address_ == o.address_ && port_ == o.port_;
+			}
+
 		private:
 			HostAddress address_;
 			int port_;

@@ -18,6 +18,10 @@ namespace Swift {
 
 			std::string toString() const;
 
+			bool operator==(const HostAddress& o) const {
+				return address_ == o.address_;
+			}
+
 		private:
 			std::vector<unsigned char> address_;
 	};

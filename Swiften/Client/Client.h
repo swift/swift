@@ -4,6 +4,7 @@
 #include <boost/signals.hpp>
 #include <boost/shared_ptr.hpp>
 
+#include "Swiften/Network/PlatformDomainNameResolver.h"
 #include "Swiften/Base/Error.h"
 #include "Swiften/Client/ClientSession.h"
 #include "Swiften/Client/ClientError.h"
@@ -22,6 +23,7 @@ namespace Swift {
 	class ConnectionFactory;
 	class ClientSession;
 	class BasicSessionStream;
+	class Connector;
 
 	class Client : public StanzaChannel, public IQRouter, public boost::bsignals::trackable {
 		public:
@@ -46,7 +48,7 @@ namespace Swift {
 			boost::signal<void (const String&)> onDataWritten;
 
 		private:
-			void handleConnectionConnectFinished(bool error);
+			void handleConnectorFinished(boost::shared_ptr<Connection>);
 			void send(boost::shared_ptr<Stanza>);
 			virtual String getNewIQID();
 			void handleElement(boost::shared_ptr<Element>);
@@ -58,9 +60,11 @@ namespace Swift {
 			void closeConnection();
 
 		private:
+			PlatformDomainNameResolver resolver_;
 			JID jid_;
 			String password_;
 			IDGenerator idGenerator_;
+			boost::shared_ptr<Connector> connector_;
 			ConnectionFactory* connectionFactory_;
 			TLSLayerFactory* tlsLayerFactory_;
 			FullPayloadParserFactoryCollection payloadParserFactories_;

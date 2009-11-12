@@ -7,26 +7,26 @@
 #include "Swiften/Session/SessionStream.h"
 
 namespace Swift {
-  class TLSLayerFactory;
-  class TLSLayer;
-  class WhitespacePingLayer;
+	class TLSLayerFactory;
+	class TLSLayer;
+	class WhitespacePingLayer;
 	class PayloadParserFactoryCollection;
 	class PayloadSerializerCollection;
-  class StreamStack;
+	class StreamStack;
 	class XMPPLayer;
-  class ConnectionLayer;
+	class ConnectionLayer;
 
-  class BasicSessionStream : 
-      public SessionStream, 
-      public boost::enable_shared_from_this<BasicSessionStream> {
-    public:
-      BasicSessionStream(
-		    boost::shared_ptr<Connection> connection,
-        PayloadParserFactoryCollection* payloadParserFactories, 
-        PayloadSerializerCollection* payloadSerializers,
-		    TLSLayerFactory* tlsLayerFactory
-      );
-      ~BasicSessionStream();
+	class BasicSessionStream : 
+			public SessionStream, 
+			public boost::enable_shared_from_this<BasicSessionStream> {
+		public:
+			BasicSessionStream(
+				boost::shared_ptr<Connection> connection,
+				PayloadParserFactoryCollection* payloadParserFactories, 
+				PayloadSerializerCollection* payloadSerializers,
+				TLSLayerFactory* tlsLayerFactory
+			);
+			~BasicSessionStream();
 
 			void initialize();
 
@@ -43,17 +43,17 @@ namespace Swift {
 
 			virtual void resetXMPPParser();
 
-    private:
+		private:
 			void handleConnectionError(const boost::optional<Connection::Error>& error);
-      void handleXMPPError();
+			void handleXMPPError();
 			void handleTLSConnected();
-      void handleTLSError();
+			void handleTLSError();
 			void handleStreamStartReceived(const ProtocolHeader&);
 			void handleElementReceived(boost::shared_ptr<Element>);
-      void handleDataRead(const ByteArray& data);
-      void handleDataWritten(const ByteArray& data);
+			void handleDataRead(const ByteArray& data);
+			void handleDataWritten(const ByteArray& data);
 
-    private:
+		private:
 			bool available;
 			boost::shared_ptr<Connection> connection;
 			PayloadParserFactoryCollection* payloadParserFactories;
@@ -62,7 +62,7 @@ namespace Swift {
 			boost::shared_ptr<XMPPLayer> xmppLayer;
 			boost::shared_ptr<ConnectionLayer> connectionLayer;
 			StreamStack* streamStack;
-      boost::shared_ptr<TLSLayer> tlsLayer;
-      boost::shared_ptr<WhitespacePingLayer> whitespacePingLayer;
-  };
+			boost::shared_ptr<TLSLayer> tlsLayer;
+			boost::shared_ptr<WhitespacePingLayer> whitespacePingLayer;
+	};
 }

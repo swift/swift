@@ -2,11 +2,11 @@
 
 #include <boost/bind.hpp>
 
-#include "Swiften/Network/DomainNameResolver.h"
 #include "Swiften/Network/MainBoostIOServiceThread.h"
 #include "Swiften/Network/BoostIOServiceThread.h"
 #include "Swiften/Client/ClientSession.h"
 #include "Swiften/StreamStack/PlatformTLSLayerFactory.h"
+#include "Swiften/Network/Connector.h"
 #include "Swiften/Network/BoostConnectionFactory.h"
 #include "Swiften/Network/DomainNameResolveException.h"
 #include "Swiften/TLS/PKCS12Certificate.h"
@@ -33,24 +33,22 @@ bool Client::isAvailable() {
 }
 
 void Client::connect() {
-	assert(!connection_);
-	DomainNameResolver resolver;
-	try {
-		HostAddressPort remote = resolver.resolve(jid_.getDomain().getUTF8String());
-		connection_ = connectionFactory_->createConnection();
-		connection_->onConnectFinished.connect(boost::bind(&Client::handleConnectionConnectFinished, this, _1));
-		connection_->connect(remote);
-	}
-	catch (const DomainNameResolveException& e) {
-		onError(ClientError::DomainNameResolveError);
-	}
+	assert(!connector_);
+	connector_ = boost::shared_ptr<Connector>(new Connector(jid_.getDomain(), &resolver_, connectionFactory_));
+	connector_->onConnectFinished.connect(boost::bind(&Client::handleConnectorFinished, this, _1));
+	connector_->start();
 }
 
-void Client::handleConnectionConnectFinished(bool error) {
-	if (error) {
+void Client::handleConnectorFinished(boost::shared_ptr<Connection> connection) {
+	// TODO: Add domain name resolver error
+	connector_.reset();
+	if (!connection) {
 		onError(ClientError::ConnectionError);
 	}
 	else {
+		assert(!connection_);
+		connection_ = connection;
+
 		assert(!sessionStream_);
 		sessionStream_ = boost::shared_ptr<BasicSessionStream>(new BasicSessionStream(connection_, &payloadParserFactories_, &payloadSerializers_, tlsLayerFactory_));
 		if (!certificate_.isEmpty()) {
@@ -78,6 +76,9 @@ void Client::disconnect() {
 }
 
 void Client::closeConnection() {
+	if (sessionStream_) {
+		sessionStream_.reset();
+	}
 	if (connection_) {
 		connection_->disconnect();
 		connection_.reset();
@@ -186,11 +187,11 @@ void Client::handleNeedCredentials() {
 }
 
 void Client::handleDataRead(const String& data) {
-  onDataRead(data);
+	onDataRead(data);
 }
 
 void Client::handleDataWritten(const String& data) {
-  onDataWritten(data);
+	onDataWritten(data);
 }
 
 }
