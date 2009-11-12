@@ -193,7 +193,7 @@ void MainController::handleChangeStatusRequest(StatusShow::Type show, const Stri
 		presence->setShow(show);
 	}
 	presence->setStatus(statusText);
-	if (presence->getType() != Presence::Unavailable && !client_) {
+	if (presence->getType() != Presence::Unavailable && !client_->isAvailable()) {
 		performLoginFromCachedCredentials();
 		queuedPresence_ = presence;
 	} else {
