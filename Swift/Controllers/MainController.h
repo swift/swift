@@ -77,6 +77,7 @@ namespace Swift {
 			virtual bool isMUC(const JID& muc) const;
 	
 			void performLoginFromCachedCredentials();
+			void reconnectAfterError();
 			void setManagersEnabled(bool enabled);
 			Client* client_;
 			ChatWindowFactory* chatWindowFactory_;

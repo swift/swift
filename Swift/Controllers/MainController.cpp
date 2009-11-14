@@ -184,6 +184,11 @@ void MainController::handleEventQueueLengthChange(int count) {
 	application_->getApplicationMessageDisplay()->setMessage(count == 0 ? "" : boost::lexical_cast<std::string>(count).c_str());
 }
 
+void MainController::reconnectAfterError() {
+	performLoginFromCachedCredentials();
+	sendPresence(queuedPresence_);
+}
+
 void MainController::handleChangeStatusRequest(StatusShow::Type show, const String &statusText) {
 	boost::shared_ptr<Presence> presence(new Presence());
 	if (show == StatusShow::None) {
@@ -287,6 +292,9 @@ void MainController::handleError(const ClientError& error) {
 		loginWindow_->setMessage(message);
 	}
 	logout();
+	if (rosterController_) {
+		//reconnectAfterError();
+	}
 }
 
 void MainController::handleCancelLoginRequest() {
