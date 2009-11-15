@@ -2,6 +2,7 @@
 #include "QtSwiftUtil.h"
 #include "Roster/QtTreeWidget.h"
 #include "Roster/QtTreeWidgetFactory.h"
+#include "SwifTools/Linkify.h"
 #include "QtChatView.h"
 #include "MessageSnippet.h"
 #include "SystemMessageSnippet.h"
@@ -155,6 +156,7 @@ void QtChatWindow::addMessage(const String &message, const String &senderName, b
 	}
 	QString messageHTML(Qt::escape(P2QSTRING(message)));
 	messageHTML.replace("\n","<br/>");
+	messageHTML = P2QSTRING(Linkify::linkify(Q2PSTRING(messageHTML)));
 	htmlString += messageHTML;
 
 	bool appendToPrevious = !previousMessageWasSystem_ && ((senderIsSelf && previousMessageWasSelf_) || (!senderIsSelf && !previousMessageWasSelf_ && previousSenderName_ == P2QSTRING(senderName)));

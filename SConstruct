@@ -254,6 +254,10 @@ elif env.get("bonjour", False) :
 
 ################################################################################
 # Project files
+# FIXME: We need to explicitly list the order of libraries here, because of
+# the exported FLAGS. We should put FLAGS in separate SConscript files, and
+# read these in before anything else, such that we don't need to manually
+# list modules in order.
 ################################################################################
 
 # Third-party modules
@@ -266,12 +270,15 @@ SConscript(dirs = [
 # Checker
 SConscript(dirs = ["QA/Checker"])
 
-# Swiften
-SConscript(dirs = "Swiften")
+# Libraries
+SConscript(dirs = [
+		"Swiften",
+		"SwifTools"
+	])
 
 # Projects
 for dir in os.listdir(".") :
-	if dir in ["QA", "Swiften"] :
+	if dir in ["QA", "Swiften", "SwifTools"] :
 		continue 
 	sconscript = os.path.join(dir, "SConscript")
 	if os.path.isfile(sconscript) :

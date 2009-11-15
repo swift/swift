@@ -8,6 +8,7 @@
 
 class QWebView;
 class QWebPage;
+class QUrl;
 
 namespace Swift {
 	class QtChatView : public QWidget {
@@ -21,6 +22,7 @@ namespace Swift {
 		public slots:
 			void copySelectionToClipboard();
 			void scrollToBottom();
+			void handleLinkClicked(const QUrl&);
 
 		private:
 			QWebView* webView_;

@@ -1,0 +1,15 @@
+Import("env")
+
+env["SWIFTOOLS_FLAGS"] = {
+		"LIBPATH": [Dir(".")],
+		"LIBS": ["SwifTools"]
+	}
+
+myenv = env.Clone()
+
+myenv.MergeFlags(myenv["BOOST_FLAGS"])
+myenv.StaticLibrary("SwifTools", [
+		"Linkify.cpp"
+	])
+
+SConscript(dirs = ["UnitTest"])

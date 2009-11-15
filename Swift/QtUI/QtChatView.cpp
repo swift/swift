@@ -2,6 +2,7 @@
 
 #include <QtDebug>
 #include <QFile>
+#include <QDesktopServices>
 #include <QVBoxLayout>
 #include <QWebView>
 #include <QWebFrame>
@@ -18,6 +19,7 @@ QtChatView::QtChatView(QWidget* parent) : QWidget(parent) {
 	mainLayout->setContentsMargins(0,0,0,0);
 	webView_ = new QWebView(this);
 	webView_->setFocusPolicy(Qt::NoFocus);
+	connect(webView_, SIGNAL(linkClicked(const QUrl&)), SLOT(handleLinkClicked(const QUrl&)));
 #ifdef Q_WS_X11
 	/* To give a border on Linux, where it looks bad without */
 	QStackedWidget* stack = new QStackedWidget(this);
@@ -86,6 +88,10 @@ bool QtChatView::isScrolledToBottom() const {
 
 void QtChatView::scrollToBottom() {
 	webPage_->mainFrame()->setScrollBarValue(Qt::Vertical, webPage_->mainFrame()->scrollBarMaximum(Qt::Vertical));
+}
+
+void QtChatView::handleLinkClicked(const QUrl& url) {
+	QDesktopServices::openUrl(url);
 }
 
 }

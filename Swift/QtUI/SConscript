@@ -21,6 +21,7 @@ Import("env")
 myenv = env.Clone()
 
 myenv.MergeFlags(env["SWIFT_CONTROLLERS_FLAGS"])
+myenv.MergeFlags(env["SWIFTOOLS_FLAGS"])
 myenv.MergeFlags(env["SWIFTEN_FLAGS"])
 myenv.MergeFlags(env["CPPUNIT_FLAGS"])
 myenv.MergeFlags(env["LIBIDN_FLAGS"])
