@@ -5,6 +5,7 @@
 #include <boost/shared_ptr.hpp>
 
 #include "Swiften/Network/Connection.h"
+#include "Swiften/Network/HostAddressPort.h"
 #include "Swiften/Base/String.h"
 
 namespace Swift {

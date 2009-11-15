@@ -120,8 +120,8 @@ Export("conf_env")
 # strings in config.log)
 ################################################################################
 
-if env["PLATFORM"] == "win32" :
-	env["MSVC_BATCH"] = 1
+#if env["PLATFORM"] == "win32" :
+#	env["MSVC_BATCH"] = 1
 
 # Pretty output
 def colorize(command, target, color) :
