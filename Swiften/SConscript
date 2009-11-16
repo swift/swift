@@ -6,13 +6,13 @@ env["SWIFTEN_FLAGS"] = {
 	}
 
 swiften_env = env.Clone()
-swiften_env.MergeFlags(env["BOOST_FLAGS"])
+swiften_env.MergeFlags(swiften_env["BOOST_FLAGS"])
 Export("swiften_env")
 
 # TODO: Move all this to a submodule SConscript
 myenv = swiften_env.Clone()
-myenv.MergeFlags(env["ZLIB_FLAGS"])
-myenv.MergeFlags(env["OPENSSL_FLAGS"])
+myenv.MergeFlags(myenv["ZLIB_FLAGS"])
+myenv.MergeFlags(myenv["OPENSSL_FLAGS"])
 sources = [
 		"Avatars/AvatarFileStorage.cpp",
 		"Avatars/AvatarManager.cpp",
