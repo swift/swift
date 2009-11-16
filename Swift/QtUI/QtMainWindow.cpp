@@ -40,6 +40,7 @@ QtMainWindow::QtMainWindow(QtTreeWidgetFactory *treeWidgetFactory) : QWidget() {
 	contactTabLayout->setContentsMargins(0, 0, 0, 0);
 	
 	treeWidget_ = dynamic_cast<QtTreeWidget*>(treeWidgetFactory->createTreeWidget());
+	treeWidget_->setVerticalScrollMode(QAbstractItemView::ScrollPerPixel);
 	contactTabLayout->addWidget(treeWidget_);
 
 	tabs_->addTab(contactsTabWidget_, "Contacts");
