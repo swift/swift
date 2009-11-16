@@ -12,6 +12,7 @@ class LinkifyTest : public CppUnit::TestFixture {
 		CPPUNIT_TEST(testLinkify_BareURL);
 		CPPUNIT_TEST(testLinkify_URLSurroundedByWhitespace);
 		CPPUNIT_TEST(testLinkify_MultipleURLs);
+		CPPUNIT_TEST(testLinkify_CamelCase);
 		CPPUNIT_TEST_SUITE_END();
 
 	public:
@@ -53,6 +54,14 @@ class LinkifyTest : public CppUnit::TestFixture {
 
 			CPPUNIT_ASSERT_EQUAL(
 					String("Foo <a href=\"http://swift.im/blog\">http://swift.im/blog</a> Bar <a href=\"http://el-tramo.be/about\">http://el-tramo.be/about</a> Baz"),
+					result);
+		}
+
+		void testLinkify_CamelCase() {
+			String result = Linkify::linkify("http://fOo.cOm/bAz");
+
+			CPPUNIT_ASSERT_EQUAL(
+					String("<a href=\"http://fOo.cOm/bAz\">http://fOo.cOm/bAz</a>"),
 					result);
 		}
 };
