@@ -24,10 +24,15 @@ namespace Swift {
 			void scrollToBottom();
 			void handleLinkClicked(const QUrl&);
 
+		private slots:
+			void handleViewLoadFinished(bool);
+
 		private:
+			bool viewReady_;
 			QWebView* webView_;
 			QWebPage* webPage_;
 			QString previousContinuationElementID_;
+			QString queuedMessages_;
 	};
 }
 

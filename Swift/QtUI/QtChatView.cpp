@@ -20,6 +20,7 @@ QtChatView::QtChatView(QWidget* parent) : QWidget(parent) {
 	webView_ = new QWebView(this);
 	webView_->setFocusPolicy(Qt::NoFocus);
 	connect(webView_, SIGNAL(linkClicked(const QUrl&)), SLOT(handleLinkClicked(const QUrl&)));
+	connect(webView_, SIGNAL(loadFinished(bool)), SLOT(handleViewLoadFinished(bool)));
 #ifdef Q_WS_X11
 	/* To give a border on Linux, where it looks bad without */
 	QStackedWidget* stack = new QStackedWidget(this);
@@ -50,6 +51,8 @@ QtChatView::QtChatView(QWidget* parent) : QWidget(parent) {
 	pageHTML.replace(pageHTML.indexOf("%@"), 2, "");
 	pageHTML.replace(pageHTML.indexOf("%@"), 2, "");
 	file.close();
+
+	viewReady_ = false;
 	webPage_->mainFrame()->setHtml(pageHTML);
 }
 
@@ -61,11 +64,18 @@ void QtChatView::addMessage(const ChatSnippet& snippet) {
 	content.replace("\"", "\\\"");
 	content.replace("\n", "\\n");
 	content.replace("\r", "");
+	QString command;
 	if (previousContinuationElementID_.isEmpty() || !snippet.getAppendToPrevious()) {
-		webPage_->mainFrame()->evaluateJavaScript("appendMessage(\"" + content + "\");");
+		command = "appendMessage(\"" + content + "\");";
 	}
 	else {
-		webPage_->mainFrame()->evaluateJavaScript("appendNextMessage(\"" + content + "\");");
+		command = "appendNextMessage(\"" + content + "\");";
+	}
+	if (viewReady_) {
+		webPage_->mainFrame()->evaluateJavaScript(command);
+	}
+	else {
+		queuedMessages_ += command;
 	}
 
 	//qDebug() << webPage_->mainFrame()->toHtml();
@@ -92,6 +102,13 @@ void QtChatView::scrollToBottom() {
 
 void QtChatView::handleLinkClicked(const QUrl& url) {
 	QDesktopServices::openUrl(url);
+}
+
+void QtChatView::handleViewLoadFinished(bool ok) {
+	Q_ASSERT(ok);
+	viewReady_ = true;
+	webPage_->mainFrame()->evaluateJavaScript(queuedMessages_);
+	queuedMessages_.clear();
 }
 
 }
