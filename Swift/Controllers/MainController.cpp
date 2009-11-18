@@ -148,6 +148,7 @@ void MainController::handleConnected() {
 
 		DiscoInfo discoInfo;
 		discoInfo.addIdentity(DiscoInfo::Identity(CLIENT_NAME, "client", "pc"));
+		discoInfo.addFeature("urn:xmpp:sec-label:0");
 		capsInfo_ = boost::shared_ptr<CapsInfo>(new CapsInfo(CapsInfoGenerator(CLIENT_NODE).generateCapsInfo(discoInfo)));
 
 		discoResponder_ = new DiscoInfoResponder(client_);
