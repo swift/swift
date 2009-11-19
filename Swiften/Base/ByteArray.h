@@ -56,6 +56,13 @@ namespace Swift {
 				return result;
 			}
 
+			friend ByteArray operator+(const ByteArray& a, char b) {
+				ByteArray x;
+				x.resize(1);
+				x[0] = b;
+				return a + x;
+			}
+
 			ByteArray& operator+=(const ByteArray& b) {
 				data_.insert(data_.end(), b.data_.begin(), b.data_.end());
 				return *this;
