@@ -175,10 +175,12 @@ void RosterDelegate::paintContact(QPainter* painter, const QStyleOptionViewItem&
 		: QIcon(":/icons/offline.png");
 	presenceIcon.paint(painter, presenceIconRegion, Qt::AlignBottom | Qt::AlignHCenter);
 	
-	painter->setFont(nameFont_);
-	QRect textRegion(fullRegion.adjusted(avatarRegion.right() + horizontalMargin_ * 2, 0, 0, 0));
-	
 	QFontMetrics nameMetrics(nameFont_);
+	painter->setFont(nameFont_);
+	int extraFontWidth = nameMetrics.width("H");
+	int leftOffset = avatarRegion.right() + horizontalMargin_ * 2 + extraFontWidth / 2;
+	QRect textRegion(fullRegion.adjusted(leftOffset, 0, -leftOffset, 0));
+	
 	int nameHeight = nameMetrics.height() + verticalMargin_;
 	QRect nameRegion(textRegion.adjusted(0, verticalMargin_, 0, 0));
 	
@@ -187,6 +189,7 @@ void RosterDelegate::paintContact(QPainter* painter, const QStyleOptionViewItem&
 	
 	painter->setFont(statusFont_);
 	painter->setPen(QPen(QColor(160,160,160)));
+	
 	QRect statusTextRegion(textRegion.adjusted(0, nameHeight, 0, 0));
 	painter->drawText(statusTextRegion, Qt::AlignTop, index.data(StatusTextRole).toString());
 	
