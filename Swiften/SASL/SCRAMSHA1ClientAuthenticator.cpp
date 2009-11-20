@@ -7,7 +7,7 @@
 
 namespace Swift {
 
-SCRAMSHA1ClientAuthenticator::SCRAMSHA1ClientAuthenticator(const ByteArray& nonce) : ClientAuthenticator("SCRAM-SHA1"), step(Initial), clientnonce(nonce) {
+SCRAMSHA1ClientAuthenticator::SCRAMSHA1ClientAuthenticator(const ByteArray& nonce) : ClientAuthenticator("SCRAM-SHA-1"), step(Initial), clientnonce(nonce) {
 }
 
 ByteArray SCRAMSHA1ClientAuthenticator::getResponse() const {

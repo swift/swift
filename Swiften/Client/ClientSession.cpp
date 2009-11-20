@@ -10,10 +10,13 @@
 #include "Swiften/Elements/AuthRequest.h"
 #include "Swiften/Elements/AuthSuccess.h"
 #include "Swiften/Elements/AuthFailure.h"
+#include "Swiften/Elements/AuthChallenge.h"
+#include "Swiften/Elements/AuthResponse.h"
 #include "Swiften/Elements/StartSession.h"
 #include "Swiften/Elements/IQ.h"
 #include "Swiften/Elements/ResourceBind.h"
 #include "Swiften/SASL/PLAINClientAuthenticator.h"
+#include "Swiften/SASL/SCRAMSHA1ClientAuthenticator.h"
 #include "Swiften/Session/SessionStream.h"
 
 namespace Swift {
@@ -77,6 +80,12 @@ void ClientSession::handleElement(boost::shared_ptr<Element> element) {
 					finishSession(Error::TLSClientCertificateError);
 				}
 			}
+			/*else if (streamFeatures->hasAuthenticationMechanism("SCRAM-SHA-1")) {
+				// FIXME: Use a real nonce
+				authenticator = new SCRAMSHA1ClientAuthenticator(ByteArray("\x01\x02\x03\x04\x05\x06\x07\x08", 8));
+				state = WaitingForCredentials;
+				onNeedCredentials();
+			}*/
 			else if (streamFeatures->hasAuthenticationMechanism("PLAIN")) {
 				authenticator = new PLAINClientAuthenticator();
 				state = WaitingForCredentials;
@@ -109,6 +118,16 @@ void ClientSession::handleElement(boost::shared_ptr<Element> element) {
 				state = Initialized;
 				onInitialized();
 			}
+		}
+	}
+	else if (AuthChallenge* challenge = dynamic_cast<AuthChallenge*>(element.get())) {
+		checkState(Authenticating);
+		assert(authenticator);
+		if (authenticator->setChallenge(challenge->getValue())) {
+			stream->writeElement(boost::shared_ptr<AuthResponse>(new AuthResponse(authenticator->getResponse())));
+		}
+		else {
+			finishSession(Error::AuthenticationFailedError);
 		}
 	}
 	else if (dynamic_cast<AuthSuccess*>(element.get())) {
