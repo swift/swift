@@ -18,6 +18,7 @@ class BoostConnectionTest : public CppUnit::TestFixture {
 		CPPUNIT_TEST_SUITE(BoostConnectionTest);
 		CPPUNIT_TEST(testDestructor);
 		CPPUNIT_TEST(testDestructor_PendingEvents);
+		CPPUNIT_TEST(testWrite);
 		CPPUNIT_TEST_SUITE_END();
 
 	public:
@@ -26,6 +27,7 @@ class BoostConnectionTest : public CppUnit::TestFixture {
 		void setUp() {
 			boostIOServiceThread_ = new BoostIOServiceThread();
 			eventLoop_ = new DummyEventLoop();
+			disconnected = false;
 		}
 
 		void tearDown() {
@@ -51,9 +53,36 @@ class BoostConnectionTest : public CppUnit::TestFixture {
 			eventLoop_->processEvents();
 		}
 
+		void testWrite() {
+			boost::shared_ptr<BoostConnection> testling(new BoostConnection(&boostIOServiceThread_->getIOService()));
+			testling->onConnectFinished.connect(boost::bind(&BoostConnectionTest::doWrite, this, testling.get()));
+			testling->onDataRead.connect(boost::bind(&BoostConnectionTest::handleDataRead, this, _1));
+			testling->onDisconnected.connect(boost::bind(&BoostConnectionTest::handleDisconnected, this));
+			testling->connect(HostAddressPort(HostAddress("65.99.222.137"), 5222));
+			while (receivedData.isEmpty()) {
+				Swift::sleep(10);
+				eventLoop_->processEvents();
+			}
+			testling->disconnect();
+		}
+
+		void doWrite(BoostConnection* connection) {
+			connection->write(ByteArray("<stream:stream>"));
+		}
+
+		void handleDataRead(const ByteArray& data) {
+			receivedData += data;
+		}
+
+		void handleDisconnected() {
+			disconnected = true;
+		}
+
 	private:
 		BoostIOServiceThread* boostIOServiceThread_;
 		DummyEventLoop* eventLoop_;
+		ByteArray receivedData;
+		bool disconnected;
 };
 
 CPPUNIT_TEST_SUITE_REGISTRATION(BoostConnectionTest);

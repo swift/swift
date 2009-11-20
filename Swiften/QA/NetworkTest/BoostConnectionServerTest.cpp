@@ -25,6 +25,9 @@ class BoostConnectionServerTest : public CppUnit::TestFixture {
 		}
 
 		void tearDown() {
+			while (eventLoop_->hasEvents()) {
+				eventLoop_->processEvents();
+			}
 			delete eventLoop_;
 			delete boostIOServiceThread_;
 		}

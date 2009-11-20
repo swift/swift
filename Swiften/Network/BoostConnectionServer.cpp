@@ -37,6 +37,7 @@ void BoostConnectionServer::stop() {
 void BoostConnectionServer::stop(boost::optional<Error> e) {
 	if (acceptor_) {
 		acceptor_->close();
+		delete acceptor_;
 		acceptor_ = NULL;
 	}
 	MainEventLoop::postEvent(boost::bind(boost::ref(onStopped), e), shared_from_this());
