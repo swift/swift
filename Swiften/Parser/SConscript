@@ -7,6 +7,8 @@ myenv.MergeFlags(swiften_env.get("EXPAT_FLAGS", ""))
 
 sources = [
 		"AuthRequestParser.cpp",
+		"AuthChallengeParser.cpp",
+		"AuthResponseParser.cpp",
 		"CompressParser.cpp",
 		"ElementParser.cpp",
 		"IQParser.cpp",

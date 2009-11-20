@@ -11,6 +11,8 @@
 #include "Swiften/Serializer/AuthRequestSerializer.h"
 #include "Swiften/Serializer/AuthFailureSerializer.h"
 #include "Swiften/Serializer/AuthSuccessSerializer.h"
+#include "Swiften/Serializer/AuthChallengeSerializer.h"
+#include "Swiften/Serializer/AuthResponseSerializer.h"
 #include "Swiften/Serializer/StartTLSRequestSerializer.h"
 #include "Swiften/Serializer/StartTLSFailureSerializer.h"
 #include "Swiften/Serializer/TLSProceedSerializer.h"
@@ -29,6 +31,8 @@ XMPPSerializer::XMPPSerializer(PayloadSerializerCollection* payloadSerializers) 
 	serializers_.push_back(boost::shared_ptr<ElementSerializer>(new AuthRequestSerializer()));
 	serializers_.push_back(boost::shared_ptr<ElementSerializer>(new AuthFailureSerializer()));
 	serializers_.push_back(boost::shared_ptr<ElementSerializer>(new AuthSuccessSerializer()));
+	serializers_.push_back(boost::shared_ptr<ElementSerializer>(new AuthChallengeSerializer()));
+	serializers_.push_back(boost::shared_ptr<ElementSerializer>(new AuthResponseSerializer()));
 	serializers_.push_back(boost::shared_ptr<ElementSerializer>(new StartTLSRequestSerializer()));
 	serializers_.push_back(boost::shared_ptr<ElementSerializer>(new StartTLSFailureSerializer()));
 	serializers_.push_back(boost::shared_ptr<ElementSerializer>(new TLSProceedSerializer()));

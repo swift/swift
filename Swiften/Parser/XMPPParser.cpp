@@ -17,6 +17,8 @@
 #include "Swiften/Parser/AuthRequestParser.h"
 #include "Swiften/Parser/AuthSuccessParser.h"
 #include "Swiften/Parser/AuthFailureParser.h"
+#include "Swiften/Parser/AuthChallengeParser.h"
+#include "Swiften/Parser/AuthResponseParser.h"
 #include "Swiften/Parser/StartTLSParser.h"
 #include "Swiften/Parser/StartTLSFailureParser.h"
 #include "Swiften/Parser/CompressParser.h"
@@ -126,6 +128,12 @@ ElementParser* XMPPParser::createElementParser(const String& element, const Stri
 	}
 	else if (element == "failure" && ns == "urn:ietf:params:xml:ns:xmpp-sasl") {
 		return new AuthFailureParser();
+	}
+	else if (element == "challenge" && ns == "urn:ietf:params:xml:ns:xmpp-sasl") {
+		return new AuthChallengeParser();
+	}
+	else if (element == "response" && ns == "urn:ietf:params:xml:ns:xmpp-sasl") {
+		return new AuthResponseParser();
 	}
 	else if (element == "starttls") {
 		return new StartTLSParser();

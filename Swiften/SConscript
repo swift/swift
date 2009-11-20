@@ -47,6 +47,8 @@ sources = [
 		"SASL/PLAINMessage.cpp",
 		"SASL/SCRAMSHA1ClientAuthenticator.cpp",
 		"Serializer/AuthRequestSerializer.cpp",
+		"Serializer/AuthChallengeSerializer.cpp",
+		"Serializer/AuthResponseSerializer.cpp",
 		"Serializer/CompressRequestSerializer.cpp",
 		"Serializer/ElementSerializer.cpp",
 		"Serializer/MessageSerializer.cpp",
