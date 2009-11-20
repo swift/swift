@@ -61,7 +61,7 @@ void Client::handleConnectorFinished(boost::shared_ptr<Connection> connection) {
 		sessionStream_->onDataWritten.connect(boost::bind(&Client::handleDataWritten, this, _1));
 		sessionStream_->initialize();
 
-		session_ = boost::shared_ptr<ClientSession>(new ClientSession(jid_, sessionStream_));
+		session_ = ClientSession::create(jid_, sessionStream_);
 		session_->onInitialized.connect(boost::bind(boost::ref(onConnected)));
 		session_->onFinished.connect(boost::bind(&Client::handleSessionFinished, this, _1));
 		session_->onNeedCredentials.connect(boost::bind(&Client::handleNeedCredentials, this));

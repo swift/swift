@@ -1,56 +1,31 @@
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/extensions/TestFactoryRegistry.h>
+#include <deque>
 #include <boost/bind.hpp>
-#include <boost/function.hpp>
 #include <boost/optional.hpp>
 
-#include "Swiften/Parser/XMPPParser.h"
-#include "Swiften/Parser/XMPPParserClient.h"
-#include "Swiften/Serializer/XMPPSerializer.h"
-#include "Swiften/StreamStack/TLSLayerFactory.h"
-#include "Swiften/StreamStack/TLSLayer.h"
-#include "Swiften/StreamStack/StreamStack.h"
-#include "Swiften/StreamStack/WhitespacePingLayer.h"
-#include "Swiften/Elements/ProtocolHeader.h"
+#include "Swiften/Session/SessionStream.h"
+#include "Swiften/Client/ClientSession.h"
+#include "Swiften/Elements/StartTLSRequest.h"
 #include "Swiften/Elements/StreamFeatures.h"
-#include "Swiften/Elements/Element.h"
-#include "Swiften/Elements/ErrorPayload.h"
-#include "Swiften/Elements/IQ.h"
+#include "Swiften/Elements/TLSProceed.h"
+#include "Swiften/Elements/StartTLSFailure.h"
 #include "Swiften/Elements/AuthRequest.h"
 #include "Swiften/Elements/AuthSuccess.h"
 #include "Swiften/Elements/AuthFailure.h"
-#include "Swiften/Elements/ResourceBind.h"
-#include "Swiften/Elements/StartSession.h"
-#include "Swiften/Elements/StartTLSRequest.h"
-#include "Swiften/Elements/StartTLSFailure.h"
-#include "Swiften/Elements/TLSProceed.h"
-#include "Swiften/Elements/Message.h"
-#include "Swiften/EventLoop/MainEventLoop.h"
-#include "Swiften/EventLoop/DummyEventLoop.h"
-#include "Swiften/Network/Connection.h"
-#include "Swiften/Network/ConnectionFactory.h"
-#include "Swiften/Client/ClientSession.h"
-#include "Swiften/TLS/PKCS12Certificate.h"
-#include "Swiften/Parser/PayloadParsers/FullPayloadParserFactoryCollection.h"
-#include "Swiften/Serializer/PayloadSerializers/FullPayloadSerializerCollection.h"
 
 using namespace Swift;
 
 class ClientSessionTest : public CppUnit::TestFixture {
 		CPPUNIT_TEST_SUITE(ClientSessionTest);
-		CPPUNIT_TEST(testConstructor);
-		CPPUNIT_TEST(testDisconnect);
-		/*
 		CPPUNIT_TEST(testStart_Error);
-		CPPUNIT_TEST(testStart_XMLError);
 		CPPUNIT_TEST(testStartTLS);
 		CPPUNIT_TEST(testStartTLS_ServerError);
-		CPPUNIT_TEST(testStartTLS_NoTLSSupport);
 		CPPUNIT_TEST(testStartTLS_ConnectError);
-		CPPUNIT_TEST(testStartTLS_ErrorAfterConnect);
 		CPPUNIT_TEST(testAuthenticate);
 		CPPUNIT_TEST(testAuthenticate_Unauthorized);
 		CPPUNIT_TEST(testAuthenticate_NoValidAuthMechanisms);
+		/*
 		CPPUNIT_TEST(testResourceBind);
 		CPPUNIT_TEST(testResourceBind_ChangeResource);
 		CPPUNIT_TEST(testResourceBind_EmptyResource);
@@ -65,156 +40,266 @@ class ClientSessionTest : public CppUnit::TestFixture {
 		CPPUNIT_TEST_SUITE_END();
 
 	public:
-		ClientSessionTest() {}
-
 		void setUp() {
-			eventLoop_ = new DummyEventLoop();
-			connection_ = boost::shared_ptr<MockConnection>(new MockConnection());
-			tlsLayerFactory_ = new MockTLSLayerFactory();
-			sessionStarted_ = false;
-			needCredentials_ = false;
+			server = boost::shared_ptr<MockSessionStream>(new MockSessionStream());
+			sessionFinishedReceived = false;
+			needCredentials = false;
 		}
 
-		void tearDown() {
-			delete tlsLayerFactory_;
-			delete eventLoop_;
-		}
-
-		void testConstructor() {
-			boost::shared_ptr<MockSession> session(createSession("me@foo.com/Bar"));
-			CPPUNIT_ASSERT_EQUAL(ClientSession::Initial, session->getState());
-		}
-
-		void testDisconnect() {
-			boost::shared_ptr<MockSession> session(createSession("me@foo.com/Bar"));
-
-			/*
-			session->startSession();
-			processEvents();
-			session->finishSession();
-			processEvents();
-
-			boost::shared_ptr<WhitespacePingLayer> whitespacePingLayer = session->getWhitespacePingLayer();
-			CPPUNIT_ASSERT(whitespacePingLayer);
-			*/
-			//CPPUNIT_ASSERT(!whitespacePingLayer->isActive());
-		}
-
-/*
 		void testStart_Error() {
-			boost::shared_ptr<MockSession> session(createSession("me@foo.com/Bar"));
+			boost::shared_ptr<ClientSession> session(createSession());
+			session->start();
+			server->breakConnection();
 
-			getMockServer()->expectStreamStart();
-			session->startSession();
-			processEvents();
-			CPPUNIT_ASSERT_EQUAL(ClientSession::WaitingForStreamStart, session->getState());
-
-			getMockServer()->setError();
-			processEvents();
-
-			CPPUNIT_ASSERT_EQUAL(ClientSession::Error, session->getState());
-			CPPUNIT_ASSERT_EQUAL(ClientSession::ConnectionReadError, *session->getError());
-		}
-
-		void testStart_XMLError() {
-			boost::shared_ptr<MockSession> session(createSession("me@foo.com/Bar"));
-
-			getMockServer()->expectStreamStart();
-			session->startSession();
-			processEvents();
-			CPPUNIT_ASSERT_EQUAL(ClientSession::WaitingForStreamStart, session->getState());
-
-			getMockServer()->sendInvalidXML();
-			processEvents();
-
-			CPPUNIT_ASSERT_EQUAL(ClientSession::Error, session->getState());
-			CPPUNIT_ASSERT_EQUAL(ClientSession::XMLError, *session->getError());
-		}
-
-		void testStartTLS_NoTLSSupport() {
-			boost::shared_ptr<MockSession> session(createSession("me@foo.com/Bar"));
-			tlsLayerFactory_->setTLSSupported(false);
-			getMockServer()->expectStreamStart();
-			getMockServer()->sendStreamStart();
-			getMockServer()->sendStreamFeaturesWithStartTLS();
-			session->startSession();
-			processEvents();
-			CPPUNIT_ASSERT_EQUAL(ClientSession::SessionStarted, session->getState());
+			CPPUNIT_ASSERT_EQUAL(ClientSession::Finished, session->getState());
+			CPPUNIT_ASSERT(sessionFinishedReceived);
+			CPPUNIT_ASSERT(sessionFinishedError);
 		}
 
 		void testStartTLS() {
-			boost::shared_ptr<MockSession> session(createSession("me@foo.com/Bar"));
-			getMockServer()->expectStreamStart();
-			getMockServer()->sendStreamStart();
-			getMockServer()->sendStreamFeaturesWithStartTLS();
-			getMockServer()->expectStartTLS();
-			// FIXME: Test 'encrypting' state
-			getMockServer()->sendTLSProceed();
-			session->startSession();
-			processEvents();
-			CPPUNIT_ASSERT_EQUAL(ClientSession::Encrypting, session->getState());
-			CPPUNIT_ASSERT(session->getTLSLayer());
-			CPPUNIT_ASSERT(session->getTLSLayer()->isConnecting());
-
-			getMockServer()->resetParser();
-			getMockServer()->expectStreamStart();
-			getMockServer()->sendStreamStart();
-			session->getTLSLayer()->setConnected();
-			// FIXME: Test 'WatingForStreamStart' state
-			processEvents();
-			CPPUNIT_ASSERT_EQUAL(ClientSession::Negotiating, session->getState());
+			boost::shared_ptr<ClientSession> session(createSession());
+			session->start();
+			server->receiveStreamStart();
+			server->sendStreamStart();
+			server->sendStreamFeaturesWithStartTLS();
+			server->receiveStartTLS();
+			CPPUNIT_ASSERT(!server->tlsEncrypted);
+			server->sendTLSProceed();
+			CPPUNIT_ASSERT(server->tlsEncrypted);
+			server->onTLSEncrypted();
+			server->receiveStreamStart();
+			server->sendStreamStart();
 		}
 
 		void testStartTLS_ServerError() {
-			boost::shared_ptr<MockSession> session(createSession("me@foo.com/Bar"));
-			getMockServer()->expectStreamStart();
-			getMockServer()->sendStreamStart();
-			getMockServer()->sendStreamFeaturesWithStartTLS();
-			getMockServer()->expectStartTLS();
-			getMockServer()->sendTLSFailure();
-			session->startSession();
-			processEvents();
+			boost::shared_ptr<ClientSession> session(createSession());
+			session->start();
+			server->receiveStreamStart();
+			server->sendStreamStart();
+			server->sendStreamFeaturesWithStartTLS();
+			server->receiveStartTLS();
+			server->sendTLSFailure();
 
-			CPPUNIT_ASSERT_EQUAL(ClientSession::Error, session->getState());
-			CPPUNIT_ASSERT_EQUAL(ClientSession::TLSError, *session->getError());
+			CPPUNIT_ASSERT(!server->tlsEncrypted);
+			CPPUNIT_ASSERT_EQUAL(ClientSession::Finished, session->getState());
+			CPPUNIT_ASSERT(sessionFinishedReceived);
+			CPPUNIT_ASSERT(sessionFinishedError);
 		}
 
 		void testStartTLS_ConnectError() {
-			boost::shared_ptr<MockSession> session(createSession("me@foo.com/Bar"));
-			getMockServer()->expectStreamStart();
-			getMockServer()->sendStreamStart();
-			getMockServer()->sendStreamFeaturesWithStartTLS();
-			getMockServer()->expectStartTLS();
-			getMockServer()->sendTLSProceed();
-			session->startSession();
-			processEvents();
-			session->getTLSLayer()->setError();
+			boost::shared_ptr<ClientSession> session(createSession());
+			session->start();
+			server->receiveStreamStart();
+			server->sendStreamStart();
+			server->sendStreamFeaturesWithStartTLS();
+			server->receiveStartTLS();
+			server->sendTLSProceed();
+			server->breakTLS();
 
-			CPPUNIT_ASSERT_EQUAL(ClientSession::Error, session->getState());
-			CPPUNIT_ASSERT_EQUAL(ClientSession::TLSError, *session->getError());
+			CPPUNIT_ASSERT_EQUAL(ClientSession::Finished, session->getState());
+			CPPUNIT_ASSERT(sessionFinishedReceived);
+			CPPUNIT_ASSERT(sessionFinishedError);
 		}
 
-		void testStartTLS_ErrorAfterConnect() {
-			boost::shared_ptr<MockSession> session(createSession("me@foo.com/Bar"));
-			getMockServer()->expectStreamStart();
-			getMockServer()->sendStreamStart();
-			getMockServer()->sendStreamFeaturesWithStartTLS();
-			getMockServer()->expectStartTLS();
-			getMockServer()->sendTLSProceed();
-			session->startSession();
-			processEvents();
-			getMockServer()->resetParser();
-			getMockServer()->expectStreamStart();
-			getMockServer()->sendStreamStart();
-			session->getTLSLayer()->setConnected();
-			processEvents();
-
-			session->getTLSLayer()->setError();
-
-			CPPUNIT_ASSERT_EQUAL(ClientSession::Error, session->getState());
-			CPPUNIT_ASSERT_EQUAL(ClientSession::TLSError, *session->getError());
+		void testAuthenticate() {
+			boost::shared_ptr<ClientSession> session(createSession());
+			session->start();
+			server->receiveStreamStart();
+			server->sendStreamStart();
+			server->sendStreamFeaturesWithPLAINAuthentication();
+			CPPUNIT_ASSERT(needCredentials);
+			CPPUNIT_ASSERT_EQUAL(ClientSession::WaitingForCredentials, session->getState());
+			session->sendCredentials("mypass");
+			server->receiveAuthRequest("PLAIN");
+			server->sendAuthSuccess();
+			server->receiveStreamStart();
 		}
 
+		void testAuthenticate_Unauthorized() {
+			boost::shared_ptr<ClientSession> session(createSession());
+			session->start();
+			server->receiveStreamStart();
+			server->sendStreamStart();
+			server->sendStreamFeaturesWithPLAINAuthentication();
+			CPPUNIT_ASSERT(needCredentials);
+			CPPUNIT_ASSERT_EQUAL(ClientSession::WaitingForCredentials, session->getState());
+			session->sendCredentials("mypass");
+			server->receiveAuthRequest("PLAIN");
+			server->sendAuthFailure();
+
+			CPPUNIT_ASSERT_EQUAL(ClientSession::Finished, session->getState());
+			CPPUNIT_ASSERT(sessionFinishedReceived);
+			CPPUNIT_ASSERT(sessionFinishedError);
+		}
+
+		void testAuthenticate_NoValidAuthMechanisms() {
+			boost::shared_ptr<ClientSession> session(createSession());
+			session->start();
+			server->receiveStreamStart();
+			server->sendStreamStart();
+			server->sendStreamFeaturesWithUnknownAuthentication();
+
+			CPPUNIT_ASSERT_EQUAL(ClientSession::Finished, session->getState());
+			CPPUNIT_ASSERT(sessionFinishedReceived);
+			CPPUNIT_ASSERT(sessionFinishedError);
+		}
+
+	private:
+		boost::shared_ptr<ClientSession> createSession() {
+			boost::shared_ptr<ClientSession> session = ClientSession::create(JID("me@foo.com"), server);
+			session->onFinished.connect(boost::bind(&ClientSessionTest::handleSessionFinished, this, _1));
+			session->onNeedCredentials.connect(boost::bind(&ClientSessionTest::handleSessionNeedCredentials, this));
+			return session;
+		}
+
+		void handleSessionFinished(boost::shared_ptr<Error> error) {
+			sessionFinishedReceived = true;
+			sessionFinishedError = error;
+		}
+
+		void handleSessionNeedCredentials() {
+			needCredentials = true;
+		}
+
+		class MockSessionStream : public SessionStream {
+			public:
+				struct Event {
+					Event(boost::shared_ptr<Element> element) : element(element), footer(false) {}
+					Event(const ProtocolHeader& header) : header(header), footer(false) {}
+					Event() : footer(true) {}
+					
+					boost::shared_ptr<Element> element;
+					boost::optional<ProtocolHeader> header;
+					bool footer;
+				};
+
+				MockSessionStream() : available(true), canTLSEncrypt(true), tlsEncrypted(false), whitespacePingEnabled(false), resetCount(0) {
+				}
+
+				virtual bool isAvailable() {
+					return available;
+				}
+
+				virtual void writeHeader(const ProtocolHeader& header) {
+					receivedEvents.push_back(Event(header));
+				}
+
+				virtual void writeFooter() {
+					receivedEvents.push_back(Event());
+				}
+
+				virtual void writeElement(boost::shared_ptr<Element> element) {
+					receivedEvents.push_back(Event(element));
+				}
+
+				virtual bool supportsTLSEncryption() {
+					return canTLSEncrypt;
+				}
+
+				virtual void addTLSEncryption() {
+					tlsEncrypted = true;
+				}
+
+				virtual void setWhitespacePingEnabled(bool enabled) {
+					whitespacePingEnabled = enabled;
+				}
+
+				virtual void resetXMPPParser() {
+					resetCount++;
+				}
+
+				void breakConnection() {
+					onError(boost::shared_ptr<SessionStream::Error>(new SessionStream::Error(SessionStream::Error::ConnectionReadError)));
+				}
+
+				void breakTLS() {
+					onError(boost::shared_ptr<SessionStream::Error>(new SessionStream::Error(SessionStream::Error::TLSError)));
+				}
+
+
+				void sendStreamStart() {
+					ProtocolHeader header;
+					header.setTo("foo.com");
+					return onStreamStartReceived(header);
+				}
+
+				void sendStreamFeaturesWithStartTLS() {
+					boost::shared_ptr<StreamFeatures> streamFeatures(new StreamFeatures());
+					streamFeatures->setHasStartTLS();
+					onElementReceived(streamFeatures);
+				}
+
+				void sendTLSProceed() {
+					onElementReceived(boost::shared_ptr<TLSProceed>(new TLSProceed()));
+				}
+
+				void sendTLSFailure() {
+					onElementReceived(boost::shared_ptr<StartTLSFailure>(new StartTLSFailure()));
+				}
+
+				void sendStreamFeaturesWithPLAINAuthentication() {
+					boost::shared_ptr<StreamFeatures> streamFeatures(new StreamFeatures());
+					streamFeatures->addAuthenticationMechanism("PLAIN");
+					onElementReceived(streamFeatures);
+				}
+
+				void sendStreamFeaturesWithUnknownAuthentication() {
+					boost::shared_ptr<StreamFeatures> streamFeatures(new StreamFeatures());
+					streamFeatures->addAuthenticationMechanism("UNKNOWN");
+					onElementReceived(streamFeatures);
+				}
+
+				void sendAuthSuccess() {
+					onElementReceived(boost::shared_ptr<AuthSuccess>(new AuthSuccess()));
+				}
+
+				void sendAuthFailure() {
+					onElementReceived(boost::shared_ptr<AuthFailure>(new AuthFailure()));
+				}
+
+				void receiveStreamStart() {
+					Event event = popEvent();
+					CPPUNIT_ASSERT(event.header);
+				}
+
+				void receiveStartTLS() {
+					Event event = popEvent();
+					CPPUNIT_ASSERT(event.element);
+					CPPUNIT_ASSERT(boost::dynamic_pointer_cast<StartTLSRequest>(event.element));
+				}
+
+				void receiveAuthRequest(const String& mech) {
+					Event event = popEvent();
+					CPPUNIT_ASSERT(event.element);
+					boost::shared_ptr<AuthRequest> request(boost::dynamic_pointer_cast<AuthRequest>(event.element));
+					CPPUNIT_ASSERT(request);
+					CPPUNIT_ASSERT_EQUAL(mech, request->getMechanism());
+				}
+
+				Event popEvent() {
+					CPPUNIT_ASSERT(receivedEvents.size() > 0);
+					Event event = receivedEvents.front();
+					receivedEvents.pop_front();
+					return event;
+				}
+
+				bool available;
+				bool canTLSEncrypt;
+				bool tlsEncrypted;
+				bool whitespacePingEnabled;
+				int resetCount;
+				std::deque<Event> receivedEvents;
+		};
+
+		boost::shared_ptr<MockSessionStream> server;
+		bool sessionFinishedReceived;
+		bool needCredentials;
+		boost::shared_ptr<Error> sessionFinishedError;
+};
+
+CPPUNIT_TEST_SUITE_REGISTRATION(ClientSessionTest);
+
+#if 0
 		void testAuthenticate() {
 			boost::shared_ptr<MockSession> session(createSession("me@foo.com/Bar"));
 			session->onNeedCredentials.connect(boost::bind(&ClientSessionTest::setNeedCredentials, this));
@@ -405,384 +490,4 @@ class ClientSessionTest : public CppUnit::TestFixture {
 			CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(receivedElements_.size()));
 			CPPUNIT_ASSERT(boost::dynamic_pointer_cast<Message>(receivedElements_[0]));
 		}
-
-	private:
-		struct MockConnection;
-
-		boost::shared_ptr<MockConnection> getMockServer() const {
-			return connection_;
-		}
-
-		void processEvents() {
-			eventLoop_->processEvents();
-			getMockServer()->assertNoMoreExpectations();
-		}
-
-		void setSessionStarted() {
-			sessionStarted_ = true;
-		}
-
-		void setNeedCredentials() {
-			needCredentials_ = true;
-		}
-
-		void addReceivedElement(boost::shared_ptr<Element> element) {
-			receivedElements_.push_back(element);
-		}
-	
-	private:
-		struct MockConnection : public Connection, public XMPPParserClient {
-			struct Event {
-				enum Direction { In, Out };
-				enum Type { StreamStartEvent, StreamEndEvent, ElementEvent };
-
-				Event(
-					Direction direction,
-					Type type, 
-					boost::shared_ptr<Element> element = boost::shared_ptr<Element>()) :
-						direction(direction), type(type), element(element) {}
-
-				Direction direction;
-				Type	type;
-				boost::shared_ptr<Element> element;
-			};
-
-			MockConnection() :
-					resetParser_(false),
-					domain_("foo.com"),
-					parser_(0),
-					serializer_(&payloadSerializers_) {
-				parser_ = new XMPPParser(this, &payloadParserFactories_);
-			}
-
-			~MockConnection() {
-				delete parser_;
-			}
-
-			void disconnect() { }
-
-			void listen() {
-				assert(false);
-			}
-
-			void connect(const HostAddressPort&) { assert(false); }
-			void connect(const String&) { assert(false); }
-
-			void setError() {
-				MainEventLoop::postEvent(boost::bind(boost::ref(onDisconnected), Connection::ReadError));
-			}
-
-			void write(const ByteArray& data) {
-				CPPUNIT_ASSERT(parser_->parse(data.toString()));
-				if (resetParser_) {
-					resetParser();
-					resetParser_ = false;
-				}
-			}
-
-			void resetParser() {
-				delete parser_;
-				parser_ = new XMPPParser(this, &payloadParserFactories_);
-			}
-
-			void handleStreamStart(const ProtocolHeader& header) {
-				CPPUNIT_ASSERT_EQUAL(domain_, header.getTo());
-				handleEvent(Event::StreamStartEvent);
-			}
-
-			void handleElement(boost::shared_ptr<Swift::Element> element) {
-				handleEvent(Event::ElementEvent, element);
-			}
-
-			void handleStreamEnd() {
-				handleEvent(Event::StreamEndEvent);
-			}
-
-			void handleEvent(Event::Type type, boost::shared_ptr<Element> element = boost::shared_ptr<Element>()) {
-				CPPUNIT_ASSERT(!events_.empty());
-				CPPUNIT_ASSERT_EQUAL(events_[0].direction, Event::In);
-				CPPUNIT_ASSERT_EQUAL(events_[0].type, type);
-				if (type == Event::ElementEvent) {
-					CPPUNIT_ASSERT_EQUAL(serializer_.serializeElement(events_[0].element), serializer_.serializeElement(element));
-				}
-				events_.pop_front();
-
-				while (!events_.empty() && events_[0].direction == Event::Out) {
-					sendData(serializeEvent(events_[0]));
-					events_.pop_front();
-				}
-
-				if (!events_.empty() && events_[0].type == Event::StreamStartEvent) {
-					resetParser_ = true;
-				}
-			}
-
-			String serializeEvent(const Event& event) {
-				switch (event.type) {
-					case Event::StreamStartEvent: 
-						{
-							ProtocolHeader header;
-							header.setTo(domain_);
-							return serializer_.serializeHeader(header);
-						}
-					case Event::ElementEvent:
-						return serializer_.serializeElement(event.element);
-					case Event::StreamEndEvent:
-						return serializer_.serializeFooter();
-				}
-				assert(false);
-				return "";
-			}
-
-			void assertNoMoreExpectations() {
-				foreach (const Event& event, events_) {
-					std::cout << "Unprocessed event: " << serializeEvent(event) << std::endl;
-				}
-				CPPUNIT_ASSERT(events_.empty());
-			}
-
-			void sendData(const ByteArray& data) {
-				MainEventLoop::postEvent(boost::bind(boost::ref(onDataRead), data));
-			}
-
-			void expectStreamStart() {
-				events_.push_back(Event(Event::In, Event::StreamStartEvent));
-			}
-
-			void expectStartTLS() {
-				events_.push_back(Event(Event::In, Event::ElementEvent, boost::shared_ptr<StartTLSRequest>(new StartTLSRequest())));
-			}
-
-			void expectAuth(const String& user, const String& password) {
-				String s	= String("") + '\0' + user + '\0' + password;
-				events_.push_back(Event(Event::In, Event::ElementEvent, boost::shared_ptr<AuthRequest>(new AuthRequest("PLAIN", ByteArray(s.getUTF8Data(), s.getUTF8Size())))));
-			}
-
-			void expectResourceBind(const String& resource, const String& id) {
-				boost::shared_ptr<ResourceBind> sessionStart(new ResourceBind());
-				sessionStart->setResource(resource);
-				events_.push_back(Event(Event::In, Event::ElementEvent, IQ::createRequest(IQ::Set, JID(), id, sessionStart)));
-			}
-
-			void expectSessionStart(const String& id) {
-				events_.push_back(Event(Event::In, Event::ElementEvent, IQ::createRequest(IQ::Set, JID(), id, boost::shared_ptr<StartSession>(new StartSession()))));
-			}
-			
-			void expectMessage() {
-				events_.push_back(Event(Event::In, Event::ElementEvent, boost::shared_ptr<Message>(new Message())));
-			}
-
-			void sendInvalidXML() {
-				sendData("<invalid xml/>");
-			}
-
-			void sendStreamStart() {
-				events_.push_back(Event(Event::Out, Event::StreamStartEvent));
-			}
-
-			void sendStreamFeatures() {
-				boost::shared_ptr<StreamFeatures> streamFeatures(new StreamFeatures());
-				events_.push_back(Event(Event::Out, Event::ElementEvent, streamFeatures));
-			}
-
-			void sendStreamFeaturesWithStartTLS() {
-				boost::shared_ptr<StreamFeatures> streamFeatures(new StreamFeatures());
-				streamFeatures->setHasStartTLS();
-				events_.push_back(Event(Event::Out, Event::ElementEvent, streamFeatures));
-			}
-
-			void sendStreamFeaturesWithAuthentication() {
-				boost::shared_ptr<StreamFeatures> streamFeatures(new StreamFeatures());
-				streamFeatures->addAuthenticationMechanism("PLAIN");
-				events_.push_back(Event(Event::Out, Event::ElementEvent, streamFeatures));
-			}
-
-			void sendStreamFeaturesWithUnsupportedAuthentication() {
-				boost::shared_ptr<StreamFeatures> streamFeatures(new StreamFeatures());
-				streamFeatures->addAuthenticationMechanism("MY-UNSUPPORTED-MECH");
-				events_.push_back(Event(Event::Out, Event::ElementEvent, streamFeatures));
-			}
-
-			void sendStreamFeaturesWithResourceBind() {
-				boost::shared_ptr<StreamFeatures> streamFeatures(new StreamFeatures());
-				streamFeatures->setHasResourceBind();
-				events_.push_back(Event(Event::Out, Event::ElementEvent, streamFeatures));
-			}
-
-			void sendStreamFeaturesWithSession() {
-				boost::shared_ptr<StreamFeatures> streamFeatures(new StreamFeatures());
-				streamFeatures->setHasSession();
-				events_.push_back(Event(Event::Out, Event::ElementEvent, streamFeatures));
-			}
-
-			void sendStreamFeaturesWithResourceBindAndSession() {
-				boost::shared_ptr<StreamFeatures> streamFeatures(new StreamFeatures());
-				streamFeatures->setHasResourceBind();
-				streamFeatures->setHasSession();
-				events_.push_back(Event(Event::Out, Event::ElementEvent, streamFeatures));
-			}
-
-			void sendMessage() {
-				events_.push_back(Event(Event::Out, Event::ElementEvent, boost::shared_ptr<Message>(new Message())));
-			}
-
-			void sendTLSProceed() {
-				events_.push_back(Event(Event::Out, Event::ElementEvent, boost::shared_ptr<TLSProceed>(new TLSProceed())));
-			}
-
-			void sendTLSFailure() {
-				events_.push_back(Event(Event::Out, Event::ElementEvent, boost::shared_ptr<StartTLSFailure>(new StartTLSFailure())));
-			}
-
-			void sendAuthSuccess() {
-				events_.push_back(Event(Event::Out, Event::ElementEvent, boost::shared_ptr<AuthSuccess>(new AuthSuccess())));
-			}
-
-			void sendAuthFailure() {
-				events_.push_back(Event(Event::Out, Event::ElementEvent, boost::shared_ptr<AuthFailure>(new AuthFailure())));
-			}
-
-			void sendResourceBindResponse(const String& jid, const String& id) {
-				boost::shared_ptr<ResourceBind> sessionStart(new ResourceBind());
-				sessionStart->setJID(JID(jid));
-				events_.push_back(Event(Event::Out, Event::ElementEvent, IQ::createResult(JID(), id, sessionStart)));
-			}
-
-			void sendError(const String& id) {
-				events_.push_back(Event(Event::Out, Event::ElementEvent, IQ::createError(JID(), id, Swift::Error::NotAllowed, Swift::Error::Cancel)));
-			}
-
-			void sendSessionStartResponse(const String& id) {
-				events_.push_back(Event(Event::Out, Event::ElementEvent, IQ::createResult(JID(), id, boost::shared_ptr<StartSession>(new StartSession()))));
-			}
-
-			bool resetParser_;
-			String domain_;
-			XMPPParser* parser_;
-			XMPPSerializer serializer_;
-			std::deque<Event> events_;
-		};
-
-	*/
-
-	private:
-		void processEvents() {
-			eventLoop_->processEvents();
-		}
-
-
-	private:
-		struct MockConnection : public Connection, public XMPPParserClient {
-			MockConnection() :
-					resetParser_(false),
-					serializer_(&payloadSerializers_) {
-				parser_ = new XMPPParser(this, &payloadParserFactories_);
-			}
-
-			~MockConnection() {
-				delete parser_;
-			}
-
-			void handleStreamStart(const ProtocolHeader& header) {
-			}
-
-			void handleElement(boost::shared_ptr<Swift::Element> element) {
-			}
-
-			void handleStreamEnd() {
-			}
-
-			void disconnect() { }
-			void listen() { assert(false); }
-			void connect(const HostAddressPort&) { CPPUNIT_ASSERT(false); }
-			void connect(const String&) { CPPUNIT_ASSERT(false); }
-
-			void write(const ByteArray& data) {
-				CPPUNIT_ASSERT(parser_->parse(data.toString()));
-				if (resetParser_) {
-					resetParser();
-					resetParser_ = false;
-				}
-			}
-
-			void resetParser() {
-				delete parser_;
-				parser_ = new XMPPParser(this, &payloadParserFactories_);
-			}
-
-			FullPayloadParserFactoryCollection payloadParserFactories_;
-			FullPayloadSerializerCollection payloadSerializers_;
-			bool resetParser_;
-			XMPPParser* parser_;
-			XMPPSerializer serializer_;
-		};
-
-		struct MockTLSLayer : public TLSLayer {
-			MockTLSLayer() : connecting_(false) {}
-
-			bool setClientCertificate(const PKCS12Certificate&) { return true; }
-			void writeData(const ByteArray& data) { onWriteData(data); }
-			void handleDataRead(const ByteArray& data) { onDataRead(data); }
-			void setConnected() { onConnected(); }
-			void setError() { onError(); }
-			void connect() { connecting_ = true; }
-			bool isConnecting() { return connecting_; }
-
-			bool connecting_;
-		};
-
-		struct MockTLSLayerFactory : public TLSLayerFactory {
-			MockTLSLayerFactory() : haveTLS_(true) {}
-
-			void setTLSSupported(bool b) { haveTLS_ = b; }
-
-			virtual bool canCreate() const { return haveTLS_; }
-
-			virtual boost::shared_ptr<TLSLayer> createTLSLayer() { 
-				CPPUNIT_ASSERT(haveTLS_);
-				boost::shared_ptr<MockTLSLayer> result(new MockTLSLayer());
-				layers_.push_back(result);
-				return result;
-			}
-
-			std::vector< boost::shared_ptr<MockTLSLayer> > layers_;
-			bool haveTLS_;
-		};
-
-		struct MockSession : public ClientSession {
-			MockSession(
-					const JID& jid, 
-					boost::shared_ptr<Connection> connection, 
-					TLSLayerFactory* tlsLayerFactory, 
-					PayloadParserFactoryCollection* payloadParserFactories, 
-					PayloadSerializerCollection* payloadSerializers) : 
-					ClientSession(jid, connection, tlsLayerFactory, payloadParserFactories, payloadSerializers) {}
-
-			boost::shared_ptr<MockTLSLayer> getTLSLayer() const {
-				return getStreamStack()->getLayer<MockTLSLayer>();
-			}
-
-			boost::shared_ptr<WhitespacePingLayer> getWhitespacePingLayer() const {
-				return getStreamStack()->getLayer<WhitespacePingLayer>();
-			}
-		};
-
-		boost::shared_ptr<MockSession> createSession(const String& jid) {
-			return boost::shared_ptr<MockSession>(new MockSession(JID(jid), connection_, tlsLayerFactory_, &payloadParserFactories_, &payloadSerializers_));
-		}
-	
-	private:
-		FullPayloadParserFactoryCollection payloadParserFactories_;
-		FullPayloadSerializerCollection payloadSerializers_;
-		DummyEventLoop* eventLoop_;
-		boost::shared_ptr<MockConnection> connection_;
-		MockTLSLayerFactory* tlsLayerFactory_;
-		bool sessionStarted_;
-		bool needCredentials_;
-		std::vector< boost::shared_ptr<Element> > receivedElements_;
-		/*
-		typedef std::vector< boost::function<void ()> > EventQueue;
-		EventQueue events_;*/
-};
-
-CPPUNIT_TEST_SUITE_REGISTRATION(ClientSessionTest);
+#endif

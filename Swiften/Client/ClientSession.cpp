@@ -216,6 +216,7 @@ void ClientSession::finishSession(Error::Type error) {
 }
 
 void ClientSession::finishSession(boost::shared_ptr<Swift::Error> error) {
+	state = Finished;
 	stream->setWhitespacePingEnabled(false);
 	onFinished(error);
 }

@@ -42,9 +42,9 @@ namespace Swift {
 				Error(Type type) : type(type) {}
 			};
 
-			ClientSession(
-					const JID& jid, 
-					boost::shared_ptr<SessionStream>);
+			static boost::shared_ptr<ClientSession> create(const JID& jid, boost::shared_ptr<SessionStream> stream) {
+				return boost::shared_ptr<ClientSession>(new ClientSession(jid, stream));
+			}
 
 			State getState() const {
 				return state;
@@ -56,7 +56,17 @@ namespace Swift {
 			void sendCredentials(const String& password);
 			void sendElement(boost::shared_ptr<Element> element);
 
+		public:
+			boost::signal<void ()> onNeedCredentials;
+			boost::signal<void ()> onInitialized;
+			boost::signal<void (boost::shared_ptr<Swift::Error>)> onFinished;
+			boost::signal<void (boost::shared_ptr<Element>)> onElementReceived;
+		
 		private:
+			ClientSession(
+					const JID& jid, 
+					boost::shared_ptr<SessionStream>);
+
 			void finishSession(Error::Type error);
 			void finishSession(boost::shared_ptr<Swift::Error> error);
 
@@ -75,12 +85,6 @@ namespace Swift {
 
 			bool checkState(State);
 
-		public:
-			boost::signal<void ()> onNeedCredentials;
-			boost::signal<void ()> onInitialized;
-			boost::signal<void (boost::shared_ptr<Swift::Error>)> onFinished;
-			boost::signal<void (boost::shared_ptr<Element>)> onElementReceived;
-		
 		private:
 			JID localJID;
 			State state;
