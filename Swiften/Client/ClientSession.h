@@ -12,6 +12,8 @@
 #include "Swiften/Elements/Element.h"
 
 namespace Swift {
+	class ClientAuthenticator;
+
 	class ClientSession : public boost::enable_shared_from_this<ClientSession> {
 		public:
 			enum State {
@@ -90,5 +92,6 @@ namespace Swift {
 			State state;
 			boost::shared_ptr<SessionStream> stream;
 			bool needSessionStart;
+			ClientAuthenticator* authenticator;
 	};
 }

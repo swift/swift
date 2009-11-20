@@ -13,7 +13,7 @@
 #include "Swiften/Elements/StartSession.h"
 #include "Swiften/Elements/IQ.h"
 #include "Swiften/Elements/ResourceBind.h"
-#include "Swiften/SASL/PLAINMessage.h"
+#include "Swiften/SASL/PLAINClientAuthenticator.h"
 #include "Swiften/Session/SessionStream.h"
 
 namespace Swift {
@@ -24,7 +24,8 @@ ClientSession::ClientSession(
 			localJID(jid),	
 			state(Initial), 
 			stream(stream),
-			needSessionStart(false) {
+			needSessionStart(false),
+			authenticator(NULL) {
 }
 
 void ClientSession::start() {
@@ -77,6 +78,7 @@ void ClientSession::handleElement(boost::shared_ptr<Element> element) {
 				}
 			}
 			else if (streamFeatures->hasAuthenticationMechanism("PLAIN")) {
+				authenticator = new PLAINClientAuthenticator();
 				state = WaitingForCredentials;
 				onNeedCredentials();
 			}
@@ -112,10 +114,14 @@ void ClientSession::handleElement(boost::shared_ptr<Element> element) {
 	else if (dynamic_cast<AuthSuccess*>(element.get())) {
 		checkState(Authenticating);
 		state = WaitingForStreamStart;
+		delete authenticator;
+		authenticator = NULL;
 		stream->resetXMPPParser();
 		sendStreamHeader();
 	}
 	else if (dynamic_cast<AuthFailure*>(element.get())) {
+		delete authenticator;
+		authenticator = NULL;
 		finishSession(Error::AuthenticationFailedError);
 	}
 	else if (dynamic_cast<TLSProceed*>(element.get())) {
@@ -190,7 +196,8 @@ bool ClientSession::checkState(State state) {
 void ClientSession::sendCredentials(const String& password) {
 	assert(WaitingForCredentials);
 	state = Authenticating;
-	stream->writeElement(boost::shared_ptr<Element>(new AuthRequest("PLAIN", PLAINMessage(localJID.getNode(), password).getValue())));
+	authenticator->setCredentials(localJID.getNode(), password);
+	stream->writeElement(boost::shared_ptr<AuthRequest>(new AuthRequest(authenticator->getName(), authenticator->getResponse())));
 }
 
 void ClientSession::handleTLSEncrypted() {

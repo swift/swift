@@ -1,5 +1,4 @@
-#ifndef SWIFTEN_AuthSuccess_H
-#define SWIFTEN_AuthSuccess_H
+#pragma once
 
 #include "Swiften/Elements/Element.h"
 
@@ -9,5 +8,3 @@ namespace Swift {
 			AuthSuccess() {}
 	};
 }
-
-#endif

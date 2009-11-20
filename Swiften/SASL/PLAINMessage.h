@@ -1,3 +1,5 @@
+// TODO: Get rid of this
+//
 #pragma once
 
 #include "Swiften/Base/String.h"

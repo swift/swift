@@ -2,14 +2,15 @@
 
 #include "Swiften/Base/String.h"
 #include "Swiften/Base/ByteArray.h"
+#include "Swiften/SASL/ClientAuthenticator.h"
 
 namespace Swift {
-	class SCRAMSHA1ClientAuthenticator {
+	class SCRAMSHA1ClientAuthenticator : public ClientAuthenticator {
 		public:
-			SCRAMSHA1ClientAuthenticator(const String& authcid, const String& password, const String& authzid, const ByteArray& nonce);
-
-			ByteArray getMessage() const;
-			bool setResponse(const ByteArray&);
+			SCRAMSHA1ClientAuthenticator(const ByteArray& nonce);
+			
+			ByteArray getResponse() const;
+			bool setChallenge(const ByteArray&);
 
 		private:
 			ByteArray getInitialClientMessage() const;

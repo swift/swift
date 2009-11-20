@@ -7,16 +7,16 @@
 
 namespace Swift {
 
-SCRAMSHA1ClientAuthenticator::SCRAMSHA1ClientAuthenticator(const String& authcid, const String& password, const String& authzid, const ByteArray& nonce) : step(Initial), authcid(authcid), password(password), authzid(authzid), clientnonce(nonce) {
+SCRAMSHA1ClientAuthenticator::SCRAMSHA1ClientAuthenticator(const ByteArray& nonce) : ClientAuthenticator("SCRAM-SHA1"), step(Initial), clientnonce(nonce) {
 }
 
-ByteArray SCRAMSHA1ClientAuthenticator::getMessage() const {
+ByteArray SCRAMSHA1ClientAuthenticator::getResponse() const {
 	if (step == Initial) {
 		return getInitialClientMessage();
 	}
 	else {
 		ByteArray mask = HMACSHA1::getResult(getClientVerifier(), initialServerMessage + getInitialClientMessage());
-		ByteArray p = SHA1::getBinaryHash(password);
+		ByteArray p = SHA1::getBinaryHash(getPassword());
 		for (unsigned int i = 0; i < p.getSize(); ++i) {
 			p[i] ^= mask[i];
 		}
@@ -24,7 +24,7 @@ ByteArray SCRAMSHA1ClientAuthenticator::getMessage() const {
 	}
 }
 
-bool SCRAMSHA1ClientAuthenticator::setResponse(const ByteArray& response) {
+bool SCRAMSHA1ClientAuthenticator::setChallenge(const ByteArray& response) {
 	if (step == Initial) {
 		initialServerMessage = response;
 		step = Proof;
@@ -46,11 +46,11 @@ ByteArray SCRAMSHA1ClientAuthenticator::getSalt() const {
 }
 
 ByteArray SCRAMSHA1ClientAuthenticator::getClientVerifier() const {
-	return HMACSHA1::getResult(SHA1::getBinaryHash(password), getSalt());
+	return HMACSHA1::getResult(SHA1::getBinaryHash(getPassword()), getSalt());
 }
 
 ByteArray SCRAMSHA1ClientAuthenticator::getInitialClientMessage() const {
-	return ByteArray(authzid) + '\0' + ByteArray(authcid) + '\0' + ByteArray(clientnonce);
+	return ByteArray(getAuthorizationID()) + '\0' + ByteArray(getAuthenticationID()) + '\0' + ByteArray(clientnonce);
 }
 
 }

@@ -9,7 +9,6 @@
 #include "Swiften/StreamStack/XMPPLayer.h"
 #include "Swiften/Elements/StreamFeatures.h"
 #include "Swiften/Elements/IQ.h"
-#include "Swiften/SASL/PLAINMessage.h"
 
 namespace Swift {
 
