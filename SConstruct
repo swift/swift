@@ -7,7 +7,7 @@ sys.path.append(Dir("BuildTools/SCons").abspath)
 
 vars = Variables("config.py")
 vars.Add('ccflags', "Extra C(++) compiler flags")
-vars.Add('ldflags', "Extra linker flags")
+vars.Add('linkflags', "Extra linker flags")
 vars.Add(EnumVariable("test", "Compile and run tests", "none", ["none", "all", "unit", "system"]))
 vars.Add(BoolVariable("optimize", "Compile with optimizations turned on", "no"))
 vars.Add(BoolVariable("debug", "Compile with debug information", "yes" if os.name != "nt" else "no"))
@@ -48,7 +48,7 @@ if env["PLATFORM"] == "win32" :
 
 # Default compiler flags
 env["CCFLAGS"] = env.get("ccflags", [])
-env["LDFLAGS"] = env.get("ldflags", [])
+env["LINKFLAGS"] = env.get("linkflags", [])
 if env["optimize"] :
 	env.Append(CCFLAGS = "-O2")
 	if env["PLATFORM"] == "win32" :
