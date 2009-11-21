@@ -3,7 +3,7 @@
 
 namespace Swift {
 
-QtJoinMUCDialog::QtJoinMUCDialog(const QString& nick, const QString& muc, QWidget* parent) : QDialog(parent) {
+QtJoinMUCDialog::QtJoinMUCDialog(const QString&, const QString&, QWidget* parent) : QDialog(parent) {
 	setupUi(this);
 	errorLabel_->hide();
 	setAttribute(Qt::WA_DeleteOnClose, true);

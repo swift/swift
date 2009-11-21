@@ -14,7 +14,7 @@ SoundEventController::SoundEventController(EventController* eventController, Sou
 	eventController_->onEventQueueEventAdded.connect(boost::bind(&SoundEventController::handleEventQueueEventAdded, this, _1));
 }
 
-void SoundEventController::handleEventQueueEventAdded(boost::shared_ptr<MessageEvent> event) {
+void SoundEventController::handleEventQueueEventAdded(boost::shared_ptr<MessageEvent>) {
 	if (playSounds_) soundPlayer_->playSound(SoundPlayer::MessageReceived);
 }
 

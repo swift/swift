@@ -102,11 +102,11 @@ void QtChatTabs::handleTabTitleUpdated() {
 	}
 }
 
-void QtChatTabs::resizeEvent(QResizeEvent* event) {
+void QtChatTabs::resizeEvent(QResizeEvent*) {
 	emit geometryChanged();
 }
 
-void QtChatTabs::moveEvent(QMoveEvent* event) {
+void QtChatTabs::moveEvent(QMoveEvent*) {
 	emit geometryChanged();	
 }
 

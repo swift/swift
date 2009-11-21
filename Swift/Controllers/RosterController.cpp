@@ -137,7 +137,7 @@ void RosterController::handleIncomingPresence(boost::shared_ptr<Presence> presen
 	roster_->applyOnItems(SetPresence(presence));
 }
 
-void RosterController::handleAvatarChanged(const JID& jid, const String& hash) {
+void RosterController::handleAvatarChanged(const JID& jid, const String&) {
 	String path = avatarManager_->getAvatarPath(jid).string();
 	roster_->applyOnItems(SetAvatar(jid, path));
 	if (jid.equals(myJID_, JID::WithoutResource)) {

@@ -9,11 +9,11 @@ EventModel::~EventModel() {
 	
 }
 
-QVariant EventModel::data(const QModelIndex& index, int role) const {
+QVariant EventModel::data(const QModelIndex& /*index*/, int /*role*/) const {
 	return QVariant();
 }
 
-int EventModel::rowCount(const QModelIndex& parent) const {
+int EventModel::rowCount(const QModelIndex& /*parent*/) const {
 	return 0;
 }
 

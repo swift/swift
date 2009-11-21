@@ -251,11 +251,11 @@ void QtLoginWindow::bringToFront() {
 	}
 }
 
-void QtLoginWindow::resizeEvent(QResizeEvent* event) {
+void QtLoginWindow::resizeEvent(QResizeEvent*) {
 	emit geometryChanged();
 }
 
-void QtLoginWindow::moveEvent(QMoveEvent* event) {
+void QtLoginWindow::moveEvent(QMoveEvent*) {
 	emit geometryChanged();	
 }
 
