@@ -163,6 +163,7 @@ env.Append(UNITTEST_SOURCES = [
 		File("Queries/UnitTest/ResponderTest.cpp"),
 		File("Roster/UnitTest/OfflineRosterFilterTest.cpp"),
 		File("Roster/UnitTest/RosterTest.cpp"),
+		File("Roster/UnitTest/XMPPRosterTest.cpp"),
 		File("SASL/UnitTest/PLAINMessageTest.cpp"),
 		File("SASL/UnitTest/PLAINClientAuthenticatorTest.cpp"),
 		File("Serializer/PayloadSerializers/UnitTest/PayloadsSerializer.cpp"),
