@@ -90,7 +90,7 @@ if env.get("coverage", 0) :
 
 if env["PLATFORM"] == "win32" :
 	env.Append(LIBS = ["dnsapi", "ws2_32", "wsock32"])
-	env.Append(CCFLAGS = "/EHsc")
+	env.Append(CCFLAGS = ["/EHsc", "/nologo"])
 	env["LINKCOM"] = [env["LINKCOM"], 'mt.exe -nologo -manifest ${TARGET}.manifest -outputresource:$TARGET;1']
 	env["SHLINKCOM"] = [env["SHLINKCOM"], 'mt.exe -nologo -manifest ${TARGET}.manifest -outputresource:$TARGET;2']
 

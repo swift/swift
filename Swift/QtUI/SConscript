@@ -40,8 +40,8 @@ myenv.Append(CPPPATH = ["/usr/include/phonon"])
 myenv.Append(CPPPATH = ["."])
 
 if env["PLATFORM"] == "win32" :
-	#myenv["LINKFLAGS"] = ["/SUBSYSTEM:CONSOLE"]
-	myenv.Append(LINKFLAGS = ["/SUBSYSTEM:WINDOWS"])
+	myenv["LINKFLAGS"] = ["/SUBSYSTEM:CONSOLE"]
+	#myenv.Append(LINKFLAGS = ["/SUBSYSTEM:WINDOWS"])
 	myenv.Append(LIBS = "qtmain")
 
 myenv.Command("DefaultTheme.qrc", "../resources/themes/Default", Action(generateDefaultTheme, cmdstr = "$GENCOMSTR"))
