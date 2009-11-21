@@ -1,56 +1,94 @@
 #include "Swiften/SASL/SCRAMSHA1ClientAuthenticator.h"
 
 #include <cassert>
+#include <map>
+#include <boost/lexical_cast.hpp>
 
 #include "Swiften/StringCodecs/SHA1.h"
+#include "Swiften/StringCodecs/Base64.h"
 #include "Swiften/StringCodecs/HMACSHA1.h"
+#include "Swiften/StringCodecs/PBKDF2.h"
 
 namespace Swift {
 
-SCRAMSHA1ClientAuthenticator::SCRAMSHA1ClientAuthenticator(const ByteArray& nonce) : ClientAuthenticator("SCRAM-SHA-1"), step(Initial), clientnonce(nonce) {
+SCRAMSHA1ClientAuthenticator::SCRAMSHA1ClientAuthenticator(const String& nonce) : ClientAuthenticator("SCRAM-SHA-1"), step(Initial), clientnonce(nonce) {
+	// TODO: Normalize authentication id
+	// TODO: Normalize getPassword()
 }
 
-ByteArray SCRAMSHA1ClientAuthenticator::getResponse() const {
+ByteArray SCRAMSHA1ClientAuthenticator::getResponse() {
 	if (step == Initial) {
-		return getInitialClientMessage();
+		return "n,," + getInitialBareClientMessage();
 	}
 	else {
-		ByteArray mask = HMACSHA1::getResult(getClientVerifier(), initialServerMessage + getInitialClientMessage());
-		ByteArray p = SHA1::getBinaryHash(getPassword());
-		for (unsigned int i = 0; i < p.getSize(); ++i) {
-			p[i] ^= mask[i];
+		ByteArray saltedPassword = PBKDF2::encode(getPassword(), salt, iterations);
+		ByteArray clientKey = HMACSHA1::getResult(saltedPassword, "Client Key");
+		ByteArray storedKey = SHA1::getBinaryHash(clientKey);
+		ByteArray serverKey = HMACSHA1::getResult(saltedPassword, "Server Key");
+
+		ByteArray authMessage = getInitialBareClientMessage() + "," + initialServerMessage + "," + "c=biwsCg==," + "r=" + clientnonce + serverNonce;
+		ByteArray clientSignature = HMACSHA1::getResult(storedKey, authMessage);
+		serverSignature = HMACSHA1::getResult(serverKey, authMessage);
+		ByteArray clientProof = clientKey;
+		for (unsigned int i = 0; i < clientProof.getSize(); ++i) {
+			clientProof[i] ^= clientSignature[i];
 		}
-		return p;
+		ByteArray result = ByteArray("c=biwsCg==,r=") + clientnonce + serverNonce + ",p=" + Base64::encode(clientProof);
+		return result;
 	}
 }
 
-bool SCRAMSHA1ClientAuthenticator::setChallenge(const ByteArray& response) {
+bool SCRAMSHA1ClientAuthenticator::setChallenge(const ByteArray& challenge) {
 	if (step == Initial) {
-		initialServerMessage = response;
+		initialServerMessage = challenge;
+
+		// TODO: Check if these values are correct
+		std::map<char, String> keys = parseMap(String(initialServerMessage.getData(), initialServerMessage.getSize()));
+		salt = Base64::decode(keys['s']);
+		String clientServerNonce = keys['r'];
+		serverNonce = clientServerNonce.getSubstring(clientnonce.getUTF8Size(), clientServerNonce.npos());
+		iterations = boost::lexical_cast<int>(keys['i'].getUTF8String());
+
 		step = Proof;
-		return getSalt().getSize() > 0;
+		return true;
 	}
 	else {
-		return response == HMACSHA1::getResult(getClientVerifier(), getInitialClientMessage() + initialServerMessage);
+		return challenge == Base64::encode(ByteArray("v=") + Base64::encode(serverSignature));
 	}
 }
 
-ByteArray SCRAMSHA1ClientAuthenticator::getSalt() const {
-	if (initialServerMessage.getSize() < 8) {
-		std::cerr << "ERROR: SCRAM-SHA1: Invalid server response" << std::endl;
-		return ByteArray();
+std::map<char, String> SCRAMSHA1ClientAuthenticator::parseMap(const String& s) {
+	// TODO: Do some proper checking here
+	std::map<char, String> result;
+	if (s.getUTF8Size() > 0) {
+		char key;
+		String value;
+		size_t i = 0;
+		bool expectKey = true;
+		while (i < s.getUTF8Size()) {
+			if (expectKey) {
+				key = s[i];
+				expectKey = false;
+				i++;
+			}
+			else if (s[i] == ',') {
+				result[key] = value;
+				value = "";
+				expectKey = true;
+			}
+			else {
+				value += s[i];
+			}
+			i++;
+		}
+		result[key] = value;
 	}
-	else {
-		return ByteArray(initialServerMessage.getData(), 8);
-	}
+	return result;
 }
 
-ByteArray SCRAMSHA1ClientAuthenticator::getClientVerifier() const {
-	return HMACSHA1::getResult(SHA1::getBinaryHash(getPassword()), getSalt());
-}
-
-ByteArray SCRAMSHA1ClientAuthenticator::getInitialClientMessage() const {
-	return ByteArray(getAuthorizationID()) + '\0' + ByteArray(getAuthenticationID()) + '\0' + ByteArray(clientnonce);
+ByteArray SCRAMSHA1ClientAuthenticator::getInitialBareClientMessage() const {
+	// TODO: Replace , and =
+	return ByteArray(String("n=" + getAuthenticationID() + ",r=" + clientnonce));
 }
 
 }

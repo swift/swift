@@ -80,12 +80,12 @@ void ClientSession::handleElement(boost::shared_ptr<Element> element) {
 					finishSession(Error::TLSClientCertificateError);
 				}
 			}
-			/*else if (streamFeatures->hasAuthenticationMechanism("SCRAM-SHA-1")) {
+			else if (streamFeatures->hasAuthenticationMechanism("SCRAM-SHA-1")) {
 				// FIXME: Use a real nonce
-				authenticator = new SCRAMSHA1ClientAuthenticator(ByteArray("\x01\x02\x03\x04\x05\x06\x07\x08", 8));
+				authenticator = new SCRAMSHA1ClientAuthenticator("ClientNonce");
 				state = WaitingForCredentials;
 				onNeedCredentials();
-			}*/
+			}
 			else if (streamFeatures->hasAuthenticationMechanism("PLAIN")) {
 				authenticator = new PLAINClientAuthenticator();
 				state = WaitingForCredentials;
@@ -131,6 +131,7 @@ void ClientSession::handleElement(boost::shared_ptr<Element> element) {
 		}
 	}
 	else if (dynamic_cast<AuthSuccess*>(element.get())) {
+		// TODO: Check success data with authenticator
 		checkState(Authenticating);
 		state = WaitingForStreamStart;
 		delete authenticator;

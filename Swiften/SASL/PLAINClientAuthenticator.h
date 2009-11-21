@@ -7,7 +7,7 @@ namespace Swift {
 		public:
 			PLAINClientAuthenticator();
 
-			virtual ByteArray getResponse() const;
+			virtual ByteArray getResponse();
 			virtual bool setChallenge(const ByteArray&);
 	};
 }

@@ -1,5 +1,7 @@
 #pragma once
 
+#include <map>
+
 #include "Swiften/Base/String.h"
 #include "Swiften/Base/ByteArray.h"
 #include "Swiften/SASL/ClientAuthenticator.h"
@@ -7,25 +9,25 @@
 namespace Swift {
 	class SCRAMSHA1ClientAuthenticator : public ClientAuthenticator {
 		public:
-			SCRAMSHA1ClientAuthenticator(const ByteArray& nonce);
+			SCRAMSHA1ClientAuthenticator(const String& nonce);
 			
-			ByteArray getResponse() const;
+			ByteArray getResponse();
 			bool setChallenge(const ByteArray&);
 
 		private:
-			ByteArray getInitialClientMessage() const;
-			ByteArray getSalt() const;
-			ByteArray getClientVerifier() const;
+			ByteArray getInitialBareClientMessage() const;
+			static std::map<char, String> parseMap(const String&);
 
 		private:
 			enum Step {
 				Initial,
 				Proof
 			} step;
-			String authcid;
-			String password;
-			String authzid;
-			ByteArray clientnonce;
+			String clientnonce;
 			ByteArray initialServerMessage;
+			int iterations;
+			ByteArray serverNonce;
+			ByteArray salt;
+			ByteArray serverSignature;
 	};
 }

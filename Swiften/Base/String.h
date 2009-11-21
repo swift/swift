@@ -94,6 +94,10 @@ namespace Swift {
 				return *this;
 			}
 
+			char operator[](size_t i) const {
+				return data_[i];
+			}
+
 			friend bool operator>(const String& a, const String& b) {
 				return a.data_ > b.data_;
 			}
