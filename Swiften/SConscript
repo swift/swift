@@ -42,10 +42,6 @@ sources = [
 		"Roster/ContactRosterItem.cpp",
 		"Roster/Roster.cpp",
 		"Roster/XMPPRoster.cpp",
-		"SASL/ClientAuthenticator.cpp",
-		"SASL/PLAINClientAuthenticator.cpp",
-		"SASL/PLAINMessage.cpp",
-		"SASL/SCRAMSHA1ClientAuthenticator.cpp",
 		"Serializer/AuthRequestSerializer.cpp",
 		"Serializer/AuthChallengeSerializer.cpp",
 		"Serializer/AuthResponseSerializer.cpp",
@@ -95,6 +91,7 @@ if myenv.get("HAVE_OPENSSL", 0) :
 SConscript(dirs = [
 		"Base",
 		"StringPrep",
+		"SASL",
 		"Application",
 		"EventLoop",
 		"Parser",

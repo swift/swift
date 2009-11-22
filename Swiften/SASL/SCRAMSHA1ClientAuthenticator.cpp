@@ -8,6 +8,7 @@
 #include "Swiften/StringCodecs/Base64.h"
 #include "Swiften/StringCodecs/HMACSHA1.h"
 #include "Swiften/StringCodecs/PBKDF2.h"
+#include "Swiften/StringPrep/StringPrep.h"
 
 namespace Swift {
 
@@ -87,7 +88,7 @@ std::map<char, String> SCRAMSHA1ClientAuthenticator::parseMap(const String& s) {
 }
 
 ByteArray SCRAMSHA1ClientAuthenticator::getInitialBareClientMessage() const {
-	String authenticationID = getAuthenticationID();
+	String authenticationID = StringPrep::getPrepared(getAuthenticationID(), StringPrep::SASLPrep);
 	String escapedAuthenticationID;
 	for (size_t i = 0; i < authenticationID.getUTF8Size(); ++i) {
 		if (authenticationID[i] == ',') {
