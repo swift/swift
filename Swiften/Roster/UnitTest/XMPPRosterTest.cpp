@@ -71,6 +71,8 @@ class XMPPRosterTest : public CppUnit::TestFixture
 {
 		CPPUNIT_TEST_SUITE(XMPPRosterTest);
 		CPPUNIT_TEST(testJIDAdded);
+		CPPUNIT_TEST(testJIDRemoved);
+		CPPUNIT_TEST(testJIDUpdated);
 		CPPUNIT_TEST_SUITE_END();
 
 	private:
@@ -104,21 +106,57 @@ class XMPPRosterTest : public CppUnit::TestFixture
 			CPPUNIT_ASSERT_EQUAL(Add, handler_->getLastEvent());
 			CPPUNIT_ASSERT_EQUAL(jid1_, handler_->getLastJID());
 			CPPUNIT_ASSERT_EQUAL(String("NewName"), roster_->getNameForJID(jid1_));
-			//CPPUNIT_ASSERT_EQUAL(groups1_, roster_->getGroupsForJID(jid1_));
+			CPPUNIT_ASSERT(groups1_ == roster_->getGroupsForJID(jid1_));
 			handler_->reset();
 			roster_->addContact(jid2_, "NameTwo", groups1_);
 			CPPUNIT_ASSERT_EQUAL(Add, handler_->getLastEvent());
 			CPPUNIT_ASSERT_EQUAL(jid2_, handler_->getLastJID());
 			CPPUNIT_ASSERT_EQUAL(String("NameTwo"), roster_->getNameForJID(jid2_));
 			CPPUNIT_ASSERT_EQUAL(String("NewName"), roster_->getNameForJID(jid1_));
-			//CPPUNIT_ASSERT_EQUAL(groups1_, roster_->getGroupsForJID(jid2_));
-			//CPPUNIT_ASSERT_EQUAL(groups1_, roster_->getGroupsForJID(jid1_));
+			CPPUNIT_ASSERT(groups1_ == roster_->getGroupsForJID(jid2_));
+			CPPUNIT_ASSERT(groups1_ == roster_->getGroupsForJID(jid1_));
 			handler_->reset();
 			roster_->addContact(jid3_, "NewName", groups2_);
 			CPPUNIT_ASSERT_EQUAL(Add, handler_->getLastEvent());
 			CPPUNIT_ASSERT_EQUAL(jid3_, handler_->getLastJID());
 			CPPUNIT_ASSERT_EQUAL(String("NewName"), roster_->getNameForJID(jid3_));
-			//CPPUNIT_ASSERT_EQUAL(groups2_, roster_->getGroupsForJID(jid3_));
+			CPPUNIT_ASSERT(groups2_ == roster_->getGroupsForJID(jid3_));
+		}
+
+		void testJIDRemoved() {
+			roster_->addContact(jid1_, "NewName", groups1_);
+			handler_->reset();
+			roster_->removeContact(jid1_);
+			CPPUNIT_ASSERT_EQUAL(Remove, handler_->getLastEvent());
+			CPPUNIT_ASSERT_EQUAL(jid1_, handler_->getLastJID());
+			handler_->reset();
+			roster_->addContact(jid1_, "NewName2", groups1_);
+			CPPUNIT_ASSERT_EQUAL(Add, handler_->getLastEvent());
+			CPPUNIT_ASSERT_EQUAL(jid1_, handler_->getLastJID());
+			CPPUNIT_ASSERT_EQUAL(String("NewName2"), roster_->getNameForJID(jid1_));
+			roster_->addContact(jid2_, "NewName3", groups1_);
+			handler_->reset();
+			roster_->removeContact(jid2_);
+			CPPUNIT_ASSERT_EQUAL(Remove, handler_->getLastEvent());
+			CPPUNIT_ASSERT_EQUAL(jid2_, handler_->getLastJID());
+			handler_->reset();
+			roster_->removeContact(jid1_);
+			CPPUNIT_ASSERT_EQUAL(Remove, handler_->getLastEvent());
+			CPPUNIT_ASSERT_EQUAL(jid1_, handler_->getLastJID());
+		}
+
+		void testJIDUpdated() {
+			roster_->addContact(jid1_, "NewName", groups1_);
+			CPPUNIT_ASSERT_EQUAL(Add, handler_->getLastEvent());
+			CPPUNIT_ASSERT_EQUAL(jid1_, handler_->getLastJID());
+			CPPUNIT_ASSERT_EQUAL(String("NewName"), roster_->getNameForJID(jid1_));
+			CPPUNIT_ASSERT(groups1_ == roster_->getGroupsForJID(jid1_));
+			handler_->reset();
+			roster_->addContact(jid1_, "NameTwo", groups2_);
+			CPPUNIT_ASSERT_EQUAL(Update, handler_->getLastEvent());
+			CPPUNIT_ASSERT_EQUAL(jid1_, handler_->getLastJID());
+			CPPUNIT_ASSERT_EQUAL(String("NameTwo"), roster_->getNameForJID(jid1_));
+			CPPUNIT_ASSERT(groups2_ == roster_->getGroupsForJID(jid1_));
 		}
 
 };
