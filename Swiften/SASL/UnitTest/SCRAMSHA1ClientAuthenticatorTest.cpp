@@ -14,6 +14,10 @@ class SCRAMSHA1ClientAuthenticatorTest : public CppUnit::TestFixture {
 		CPPUNIT_TEST(testSetChallenge);
 		CPPUNIT_TEST(testSetChallenge_InvalidClientNonce);
 		CPPUNIT_TEST(testSetChallenge_OnlyClientNonce);
+		CPPUNIT_TEST(testSetChallenge_InvalidIterations);
+		CPPUNIT_TEST(testSetChallenge_ZeroIterations);
+		CPPUNIT_TEST(testSetChallenge_NegativeIterations);
+		CPPUNIT_TEST(testSetChallenge_MissingIterations);
 		CPPUNIT_TEST(testSetFinalChallenge);
 		CPPUNIT_TEST(testSetFinalChallenge_InvalidChallenge);
 		CPPUNIT_TEST_SUITE_END();
@@ -82,6 +86,42 @@ class SCRAMSHA1ClientAuthenticatorTest : public CppUnit::TestFixture {
 			testling.setCredentials("user", "pass", "");
 
 			bool result = testling.setChallenge(ByteArray("r=abcdefgh,s=MTIzNDU2NzgK,i=4096"));
+
+			CPPUNIT_ASSERT(!result);
+		}
+
+		void testSetChallenge_InvalidIterations() {
+			SCRAMSHA1ClientAuthenticator testling("abcdefgh");
+			testling.setCredentials("user", "pass", "");
+
+			bool result = testling.setChallenge(ByteArray("r=abcdefghABCDEFGH,s=MTIzNDU2NzgK,i=bla"));
+
+			CPPUNIT_ASSERT(!result);
+		}
+
+		void testSetChallenge_MissingIterations() {
+			SCRAMSHA1ClientAuthenticator testling("abcdefgh");
+			testling.setCredentials("user", "pass", "");
+
+			bool result = testling.setChallenge(ByteArray("r=abcdefghABCDEFGH,s=MTIzNDU2NzgK"));
+
+			CPPUNIT_ASSERT(!result);
+		}
+
+		void testSetChallenge_ZeroIterations() {
+			SCRAMSHA1ClientAuthenticator testling("abcdefgh");
+			testling.setCredentials("user", "pass", "");
+
+			bool result = testling.setChallenge(ByteArray("r=abcdefghABCDEFGH,s=MTIzNDU2NzgK,i=0"));
+
+			CPPUNIT_ASSERT(!result);
+		}
+
+		void testSetChallenge_NegativeIterations() {
+			SCRAMSHA1ClientAuthenticator testling("abcdefgh");
+			testling.setCredentials("user", "pass", "");
+
+			bool result = testling.setChallenge(ByteArray("r=abcdefghABCDEFGH,s=MTIzNDU2NzgK,i=-1"));
 
 			CPPUNIT_ASSERT(!result);
 		}

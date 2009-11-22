@@ -36,12 +36,13 @@ bool SCRAMSHA1ClientAuthenticator::setChallenge(const ByteArray& challenge) {
 	if (step == Initial) {
 		initialServerMessage = challenge;
 
-		// TODO: Check if this is correct
 		std::map<char, String> keys = parseMap(String(initialServerMessage.getData(), initialServerMessage.getSize()));
+
+		// Extract the salt
 		ByteArray salt = Base64::decode(keys['s']);
-		String clientServerNonce = keys['r'];
 
 		// Extract the server nonce
+		String clientServerNonce = keys['r'];
 		if (clientServerNonce.getUTF8Size() <= clientnonce.getUTF8Size()) {
 			return false;
 		}
@@ -50,7 +51,18 @@ bool SCRAMSHA1ClientAuthenticator::setChallenge(const ByteArray& challenge) {
 			return false;
 		}
 		serverNonce = clientServerNonce.getSubstring(clientnonce.getUTF8Size(), clientServerNonce.npos());
-		int iterations = boost::lexical_cast<int>(keys['i'].getUTF8String());
+
+		// Extract the number of iterations
+		int iterations = 0;
+		try {
+			iterations = boost::lexical_cast<int>(keys['i'].getUTF8String());
+		}
+		catch (const boost::bad_lexical_cast&) {
+			return false;
+		}
+		if (iterations <= 0) {
+			return false;
+		}
 
 		// Compute all the values needed for the server signature
 		saltedPassword = PBKDF2::encode(StringPrep::getPrepared(getPassword(), StringPrep::SASLPrep), salt, iterations);
