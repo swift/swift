@@ -13,8 +13,6 @@
 namespace Swift {
 
 SCRAMSHA1ClientAuthenticator::SCRAMSHA1ClientAuthenticator(const String& nonce) : ClientAuthenticator("SCRAM-SHA-1"), step(Initial), clientnonce(nonce) {
-	// TODO: Normalize authentication id
-	// TODO: Normalize getPassword()
 }
 
 ByteArray SCRAMSHA1ClientAuthenticator::getResponse() const {
@@ -38,10 +36,19 @@ bool SCRAMSHA1ClientAuthenticator::setChallenge(const ByteArray& challenge) {
 	if (step == Initial) {
 		initialServerMessage = challenge;
 
-		// TODO: Check if these values are correct
+		// TODO: Check if this is correct
 		std::map<char, String> keys = parseMap(String(initialServerMessage.getData(), initialServerMessage.getSize()));
 		ByteArray salt = Base64::decode(keys['s']);
 		String clientServerNonce = keys['r'];
+
+		// Extract the server nonce
+		if (clientServerNonce.getUTF8Size() <= clientnonce.getUTF8Size()) {
+			return false;
+		}
+		String receivedClientNonce = clientServerNonce.getSubstring(0, clientnonce.getUTF8Size());
+		if (receivedClientNonce != clientnonce) {
+			return false;
+		}
 		serverNonce = clientServerNonce.getSubstring(clientnonce.getUTF8Size(), clientServerNonce.npos());
 		int iterations = boost::lexical_cast<int>(keys['i'].getUTF8String());
 
@@ -61,7 +68,6 @@ bool SCRAMSHA1ClientAuthenticator::setChallenge(const ByteArray& challenge) {
 }
 
 std::map<char, String> SCRAMSHA1ClientAuthenticator::parseMap(const String& s) {
-	// TODO: Do some proper checking here
 	std::map<char, String> result;
 	if (s.getUTF8Size() > 0) {
 		char key;
