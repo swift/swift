@@ -19,7 +19,7 @@ namespace Swift {
 				this->authzid = authzid;
 			}
 
-			virtual ByteArray getResponse() = 0;
+			virtual ByteArray getResponse() const = 0;
 			virtual bool setChallenge(const ByteArray&) = 0;
 
 			const String& getAuthenticationID() const {

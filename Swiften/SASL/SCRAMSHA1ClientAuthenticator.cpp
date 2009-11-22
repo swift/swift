@@ -17,19 +17,14 @@ SCRAMSHA1ClientAuthenticator::SCRAMSHA1ClientAuthenticator(const String& nonce) 
 	// TODO: Normalize getPassword()
 }
 
-ByteArray SCRAMSHA1ClientAuthenticator::getResponse() {
+ByteArray SCRAMSHA1ClientAuthenticator::getResponse() const {
 	if (step == Initial) {
 		return "n,," + getInitialBareClientMessage();
 	}
 	else {
-		ByteArray saltedPassword = PBKDF2::encode(getPassword(), salt, iterations);
 		ByteArray clientKey = HMACSHA1::getResult(saltedPassword, "Client Key");
 		ByteArray storedKey = SHA1::getBinaryHash(clientKey);
-		ByteArray serverKey = HMACSHA1::getResult(saltedPassword, "Server Key");
-
-		ByteArray authMessage = getInitialBareClientMessage() + "," + initialServerMessage + "," + "c=biwsCg==," + "r=" + clientnonce + serverNonce;
 		ByteArray clientSignature = HMACSHA1::getResult(storedKey, authMessage);
-		serverSignature = HMACSHA1::getResult(serverKey, authMessage);
 		ByteArray clientProof = clientKey;
 		for (unsigned int i = 0; i < clientProof.getSize(); ++i) {
 			clientProof[i] ^= clientSignature[i];
@@ -45,16 +40,23 @@ bool SCRAMSHA1ClientAuthenticator::setChallenge(const ByteArray& challenge) {
 
 		// TODO: Check if these values are correct
 		std::map<char, String> keys = parseMap(String(initialServerMessage.getData(), initialServerMessage.getSize()));
-		salt = Base64::decode(keys['s']);
+		ByteArray salt = Base64::decode(keys['s']);
 		String clientServerNonce = keys['r'];
 		serverNonce = clientServerNonce.getSubstring(clientnonce.getUTF8Size(), clientServerNonce.npos());
-		iterations = boost::lexical_cast<int>(keys['i'].getUTF8String());
+		int iterations = boost::lexical_cast<int>(keys['i'].getUTF8String());
+
+		// Compute all the values needed for the server signature
+		saltedPassword = PBKDF2::encode(StringPrep::getPrepared(getPassword(), StringPrep::SASLPrep), salt, iterations);
+		authMessage = getInitialBareClientMessage() + "," + initialServerMessage + "," + "c=biwsCg==," + "r=" + clientnonce + serverNonce;
+		ByteArray serverKey = HMACSHA1::getResult(saltedPassword, "Server Key");
+		serverSignature = HMACSHA1::getResult(serverKey, authMessage);
 
 		step = Proof;
 		return true;
 	}
 	else {
-		return challenge == Base64::encode(ByteArray("v=") + Base64::encode(serverSignature));
+		ByteArray result = ByteArray("v=") + ByteArray(Base64::encode(serverSignature));
+		return challenge == result;
 	}
 }
 

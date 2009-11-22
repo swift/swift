@@ -11,7 +11,7 @@ namespace Swift {
 		public:
 			SCRAMSHA1ClientAuthenticator(const String& nonce);
 			
-			virtual ByteArray getResponse();
+			virtual ByteArray getResponse() const;
 			virtual bool setChallenge(const ByteArray&);
 
 		private:
@@ -25,9 +25,9 @@ namespace Swift {
 			} step;
 			String clientnonce;
 			ByteArray initialServerMessage;
-			int iterations;
 			ByteArray serverNonce;
-			ByteArray salt;
+			ByteArray authMessage;
+			ByteArray saltedPassword;
 			ByteArray serverSignature;
 	};
 }

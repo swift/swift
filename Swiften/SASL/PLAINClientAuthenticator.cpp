@@ -5,7 +5,7 @@ namespace Swift {
 PLAINClientAuthenticator::PLAINClientAuthenticator() : ClientAuthenticator("PLAIN") {
 }
 
-ByteArray PLAINClientAuthenticator::getResponse() {
+ByteArray PLAINClientAuthenticator::getResponse() const {
 	return ByteArray(getAuthorizationID()) + '\0' + ByteArray(getAuthenticationID()) + '\0' + ByteArray(getPassword());
 }
 
