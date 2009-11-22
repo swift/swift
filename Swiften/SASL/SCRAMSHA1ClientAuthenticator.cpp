@@ -17,7 +17,7 @@ SCRAMSHA1ClientAuthenticator::SCRAMSHA1ClientAuthenticator(const String& nonce) 
 
 ByteArray SCRAMSHA1ClientAuthenticator::getResponse() const {
 	if (step == Initial) {
-		return "n,," + getInitialBareClientMessage();
+		return getGS2Header() + getInitialBareClientMessage();
 	}
 	else {
 		ByteArray clientKey = HMACSHA1::getResult(saltedPassword, "Client Key");
@@ -27,7 +27,7 @@ ByteArray SCRAMSHA1ClientAuthenticator::getResponse() const {
 		for (unsigned int i = 0; i < clientProof.getSize(); ++i) {
 			clientProof[i] ^= clientSignature[i];
 		}
-		ByteArray result = ByteArray("c=biwsCg==,r=") + clientnonce + serverNonce + ",p=" + Base64::encode(clientProof);
+		ByteArray result = ByteArray("c=") + Base64::encode(getGS2Header()) + ",r=" + clientnonce + serverNonce + ",p=" + Base64::encode(clientProof);
 		return result;
 	}
 }
@@ -66,7 +66,7 @@ bool SCRAMSHA1ClientAuthenticator::setChallenge(const ByteArray& challenge) {
 
 		// Compute all the values needed for the server signature
 		saltedPassword = PBKDF2::encode(StringPrep::getPrepared(getPassword(), StringPrep::SASLPrep), salt, iterations);
-		authMessage = getInitialBareClientMessage() + "," + initialServerMessage + "," + "c=biwsCg==," + "r=" + clientnonce + serverNonce;
+		authMessage = getInitialBareClientMessage() + "," + initialServerMessage + "," + "c=" + Base64::encode(getGS2Header()) + ",r=" + clientnonce + serverNonce;
 		ByteArray serverKey = HMACSHA1::getResult(saltedPassword, "Server Key");
 		serverSignature = HMACSHA1::getResult(serverKey, authMessage);
 
@@ -122,6 +122,10 @@ ByteArray SCRAMSHA1ClientAuthenticator::getInitialBareClientMessage() const {
 		}
 	}
 	return ByteArray(String("n=" + escapedAuthenticationID + ",r=" + clientnonce));
+}
+
+ByteArray SCRAMSHA1ClientAuthenticator::getGS2Header() const {
+	return ByteArray("n,") + getAuthorizationID() + ",";
 }
 
 }
