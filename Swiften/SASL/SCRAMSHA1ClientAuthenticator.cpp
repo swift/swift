@@ -87,8 +87,20 @@ std::map<char, String> SCRAMSHA1ClientAuthenticator::parseMap(const String& s) {
 }
 
 ByteArray SCRAMSHA1ClientAuthenticator::getInitialBareClientMessage() const {
-	// TODO: Replace , and =
-	return ByteArray(String("n=" + getAuthenticationID() + ",r=" + clientnonce));
+	String authenticationID = getAuthenticationID();
+	String escapedAuthenticationID;
+	for (size_t i = 0; i < authenticationID.getUTF8Size(); ++i) {
+		if (authenticationID[i] == ',') {
+			escapedAuthenticationID += "=2C";
+		}
+		else if (authenticationID[i] == '=') {
+			escapedAuthenticationID += "=3D";
+		}
+		else {
+			escapedAuthenticationID += authenticationID[i];
+		}
+	}
+	return ByteArray(String("n=" + escapedAuthenticationID + ",r=" + clientnonce));
 }
 
 }

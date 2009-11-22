@@ -5,16 +5,13 @@
 
 using namespace Swift;
 
-class PLAINClientAuthenticatorTest : public CppUnit::TestFixture
-{
+class PLAINClientAuthenticatorTest : public CppUnit::TestFixture {
 		CPPUNIT_TEST_SUITE(PLAINClientAuthenticatorTest);
 		CPPUNIT_TEST(testGetResponse_WithoutAuthzID);
 		CPPUNIT_TEST(testGetResponse_WithAuthzID);
 		CPPUNIT_TEST_SUITE_END();
 
 	public:
-		PLAINClientAuthenticatorTest() {}
-
 		void testGetResponse_WithoutAuthzID() {
 			PLAINClientAuthenticator testling;
 
