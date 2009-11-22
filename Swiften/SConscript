@@ -94,6 +94,7 @@ if myenv.get("HAVE_OPENSSL", 0) :
 
 SConscript(dirs = [
 		"Base",
+		"StringPrep",
 		"Application",
 		"EventLoop",
 		"Parser",

@@ -3,39 +3,9 @@
 #include <iostream>
 
 #include "Swiften/JID/JID.h"
+#include "Swiften/StringPrep/StringPrep.h"
 
 namespace Swift {
-
-
-class StringPrepper {
-	private:
-		static const int MAX_STRINGPREP_SIZE = 1024;
-
-	public:
-		static String getNamePrepped(const String& name) {
-			return getStringPrepped(name, stringprep_nameprep);
-		}
-
-		static String getNodePrepped(const String& node) {
-			return getStringPrepped(node, stringprep_xmpp_nodeprep);
-		}
-
-		static String getResourcePrepped(const String& resource) {
-			return getStringPrepped(resource, stringprep_xmpp_resourceprep);
-		}
-
-		static String getStringPrepped(const String& s, const Stringprep_profile profile[]) {
-			std::vector<char> input(s.getUTF8String().begin(), s.getUTF8String().end());
-			input.resize(MAX_STRINGPREP_SIZE);
-			if (stringprep(&input[0], MAX_STRINGPREP_SIZE, static_cast<Stringprep_profile_flags>(0), profile) == 0) {
-				return String(&input[0]);
-			}
-			else {
-				return "";
-			}
-		}
-};
-
 
 JID::JID(const char* jid) {
 	initializeFromString(String(jid));
@@ -80,9 +50,9 @@ void JID::initializeFromString(const String& jid) {
 
 
 void JID::nameprepAndSetComponents(const String& node, const String& domain, const String& resource) {
-	node_ = StringPrepper::getNamePrepped(node);
-	domain_ = StringPrepper::getNodePrepped(domain);
-	resource_ = StringPrepper::getResourcePrepped(resource);
+	node_ = StringPrep::getPrepared(node, StringPrep::NamePrep);
+	domain_ = StringPrep::getPrepared(domain, StringPrep::XMPPNodePrep);
+	resource_ = StringPrep::getPrepared(resource, StringPrep::XMPPResourcePrep);
 }
 
 String JID::toString() const {
