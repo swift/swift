@@ -279,6 +279,7 @@ void MainController::handleError(const ClientError& error) {
 		case ClientError::ConnectionWriteError: message = "Error while sending data to the server"; break;
 		case ClientError::XMLError: message = "Error parsing server data"; break;
 		case ClientError::AuthenticationFailedError: message = "Login/password invalid"; break;
+		case ClientError::ServerVerificationFailedError: message = "Server verification failed"; break;
 		case ClientError::NoSupportedAuthMechanismsError: message = "Authentication mechanisms not supported"; break;
 		case ClientError::UnexpectedElementError: message = "Unexpected response"; break;
 		case ClientError::ResourceBindError: message = "Error binding resource"; break;

@@ -43,6 +43,7 @@ sources = [
 		"Roster/Roster.cpp",
 		"Roster/XMPPRoster.cpp",
 		"Serializer/AuthRequestSerializer.cpp",
+		"Serializer/AuthSuccessSerializer.cpp",
 		"Serializer/AuthChallengeSerializer.cpp",
 		"Serializer/AuthResponseSerializer.cpp",
 		"Serializer/CompressRequestSerializer.cpp",

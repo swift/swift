@@ -130,14 +130,18 @@ void ClientSession::handleElement(boost::shared_ptr<Element> element) {
 			finishSession(Error::AuthenticationFailedError);
 		}
 	}
-	else if (dynamic_cast<AuthSuccess*>(element.get())) {
-		// TODO: Check success data with authenticator
+	else if (AuthSuccess* authSuccess = dynamic_cast<AuthSuccess*>(element.get())) {
 		checkState(Authenticating);
-		state = WaitingForStreamStart;
-		delete authenticator;
-		authenticator = NULL;
-		stream->resetXMPPParser();
-		sendStreamHeader();
+		if (!authenticator->setChallenge(authSuccess->getValue())) {
+			finishSession(Error::ServerVerificationFailedError);
+		}
+		else {
+			state = WaitingForStreamStart;
+			delete authenticator;
+			authenticator = NULL;
+			stream->resetXMPPParser();
+			sendStreamHeader();
+		}
 	}
 	else if (dynamic_cast<AuthFailure*>(element.get())) {
 		delete authenticator;

@@ -1,22 +1,15 @@
-#ifndef SWIFTEN_AuthSuccessSerializer_H
-#define SWIFTEN_AuthSuccessSerializer_H
+#pragma once
 
 #include <boost/shared_ptr.hpp>
 
 #include "Swiften/Elements/AuthSuccess.h"
 #include "Swiften/Serializer/GenericElementSerializer.h"
-#include "Swiften/Serializer/XML/XMLElement.h"
 
 namespace Swift {
 	class AuthSuccessSerializer : public GenericElementSerializer<AuthSuccess> {
 		public:
-			AuthSuccessSerializer() : GenericElementSerializer<AuthSuccess>() {
-			}
+			AuthSuccessSerializer();
 
-			virtual String serialize(boost::shared_ptr<Element>) const {
-				return XMLElement("success", "urn:ietf:params:xml:ns:xmpp-sasl").serialize();
-			}
+			virtual String serialize(boost::shared_ptr<Element> element)  const;
 	};
 }
-
-#endif
