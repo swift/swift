@@ -12,6 +12,23 @@
 
 namespace Swift {
 
+static String escape(const String& s) {
+	String result;
+	for (size_t i = 0; i < s.getUTF8Size(); ++i) {
+		if (s[i] == ',') {
+			result += "=2C";
+		}
+		else if (s[i] == '=') {
+			result += "=3D";
+		}
+		else {
+			result += s[i];
+		}
+	}
+	return result;
+}
+
+
 SCRAMSHA1ClientAuthenticator::SCRAMSHA1ClientAuthenticator(const String& nonce) : ClientAuthenticator("SCRAM-SHA-1"), step(Initial), clientnonce(nonce) {
 }
 
@@ -109,23 +126,11 @@ std::map<char, String> SCRAMSHA1ClientAuthenticator::parseMap(const String& s) {
 
 ByteArray SCRAMSHA1ClientAuthenticator::getInitialBareClientMessage() const {
 	String authenticationID = StringPrep::getPrepared(getAuthenticationID(), StringPrep::SASLPrep);
-	String escapedAuthenticationID;
-	for (size_t i = 0; i < authenticationID.getUTF8Size(); ++i) {
-		if (authenticationID[i] == ',') {
-			escapedAuthenticationID += "=2C";
-		}
-		else if (authenticationID[i] == '=') {
-			escapedAuthenticationID += "=3D";
-		}
-		else {
-			escapedAuthenticationID += authenticationID[i];
-		}
-	}
-	return ByteArray(String("n=" + escapedAuthenticationID + ",r=" + clientnonce));
+	return ByteArray(String("n=" + escape(authenticationID) + ",r=" + clientnonce));
 }
 
 ByteArray SCRAMSHA1ClientAuthenticator::getGS2Header() const {
-	return ByteArray("n,") + getAuthorizationID() + ",";
+	return ByteArray("n,") + (getAuthorizationID().isEmpty() ? "" : "a=" + escape(getAuthorizationID())) + ",";
 }
 
 }

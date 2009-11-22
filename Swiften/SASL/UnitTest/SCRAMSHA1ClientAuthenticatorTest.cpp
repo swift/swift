@@ -11,6 +11,7 @@ class SCRAMSHA1ClientAuthenticatorTest : public CppUnit::TestFixture {
 		CPPUNIT_TEST(testGetInitialResponse);
 		CPPUNIT_TEST(testGetInitialResponse_UsernameHasSpecialChars);
 		CPPUNIT_TEST(testGetInitialResponse_WithAuthorizationID);
+		CPPUNIT_TEST(testGetInitialResponse_WithAuthorizationIDWithSpecialChars);
 		CPPUNIT_TEST(testGetFinalResponse);
 		CPPUNIT_TEST(testSetChallenge);
 		CPPUNIT_TEST(testSetChallenge_InvalidClientNonce);
@@ -51,7 +52,16 @@ class SCRAMSHA1ClientAuthenticatorTest : public CppUnit::TestFixture {
 
 			ByteArray response = testling.getResponse();
 
-			CPPUNIT_ASSERT_EQUAL(String("n,auth,n=user,r=abcdefghABCDEFGH"), testling.getResponse().toString());
+			CPPUNIT_ASSERT_EQUAL(String("n,a=auth,n=user,r=abcdefghABCDEFGH"), testling.getResponse().toString());
+		}
+
+		void testGetInitialResponse_WithAuthorizationIDWithSpecialChars() {
+			SCRAMSHA1ClientAuthenticator testling("abcdefghABCDEFGH");
+			testling.setCredentials("user", "pass", "a=u,th");
+
+			ByteArray response = testling.getResponse();
+
+			CPPUNIT_ASSERT_EQUAL(String("n,a=a=3Du=2Cth,n=user,r=abcdefghABCDEFGH"), testling.getResponse().toString());
 		}
 
 		void testGetFinalResponse() {

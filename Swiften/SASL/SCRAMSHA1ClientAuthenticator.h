@@ -16,8 +16,9 @@ namespace Swift {
 
 		private:
 			ByteArray getInitialBareClientMessage() const;
-			static std::map<char, String> parseMap(const String&);
 			ByteArray getGS2Header() const;
+
+			static std::map<char, String> parseMap(const String&);
 
 		private:
 			enum Step {
