@@ -132,7 +132,7 @@ void ClientSession::handleElement(boost::shared_ptr<Element> element) {
 	}
 	else if (AuthSuccess* authSuccess = dynamic_cast<AuthSuccess*>(element.get())) {
 		checkState(Authenticating);
-		if (!authenticator->setChallenge(authSuccess->getValue())) {
+		if (authenticator && !authenticator->setChallenge(authSuccess->getValue())) {
 			finishSession(Error::ServerVerificationFailedError);
 		}
 		else {
