@@ -15,6 +15,7 @@ class LinkifyTest : public CppUnit::TestFixture {
 		CPPUNIT_TEST(testLinkify_CamelCase);
 		CPPUNIT_TEST(testLinkify_HierarchicalResource);
 		CPPUNIT_TEST(testLinkify_Anchor);
+		CPPUNIT_TEST(testLinkify_Plus);
 		CPPUNIT_TEST_SUITE_END();
 
 	public:
@@ -80,6 +81,14 @@ class LinkifyTest : public CppUnit::TestFixture {
 
 			CPPUNIT_ASSERT_EQUAL(
 					String("<a href=\"http://foo.com/bar#baz\">http://foo.com/bar#baz</a>"),
+					result);
+		}
+
+		void testLinkify_Plus() {
+			String result = Linkify::linkify("http://foo.com/bar+baz");
+
+			CPPUNIT_ASSERT_EQUAL(
+					String("<a href=\"http://foo.com/bar+baz\">http://foo.com/bar+baz</a>"),
 					result);
 		}
 };
