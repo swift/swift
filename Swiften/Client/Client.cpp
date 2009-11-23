@@ -89,6 +89,10 @@ void Client::closeConnection() {
 }
 
 void Client::send(boost::shared_ptr<Stanza> stanza) {
+	if (!isAvailable()) {
+		std::cerr << "Warning: Client: Trying to send a stanza while disconnected." << std::endl;
+		return;
+	}
 	session_->sendElement(stanza);
 }
 
@@ -189,6 +193,7 @@ void Client::handleSessionFinished(boost::shared_ptr<Error> error) {
 }
 
 void Client::handleNeedCredentials() {
+	assert(session_);
 	session_->sendCredentials(password_);
 }
 
