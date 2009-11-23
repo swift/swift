@@ -179,7 +179,7 @@ void RosterDelegate::paintContact(QPainter* painter, const QStyleOptionViewItem&
 	painter->setFont(nameFont_);
 	int extraFontWidth = nameMetrics.width("H");
 	int leftOffset = avatarRegion.right() + horizontalMargin_ * 2 + extraFontWidth / 2;
-	QRect textRegion(fullRegion.adjusted(leftOffset, 0, -leftOffset, 0));
+	QRect textRegion(fullRegion.adjusted(leftOffset, 0, 0/*-leftOffset*/, 0));
 	
 	int nameHeight = nameMetrics.height() + verticalMargin_;
 	QRect nameRegion(textRegion.adjusted(0, verticalMargin_, 0, 0));
