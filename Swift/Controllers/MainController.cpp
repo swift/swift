@@ -10,7 +10,6 @@
 #include "Swift/Controllers/ChatController.h"
 #include "Swift/Controllers/ChatWindowFactory.h"
 #include "Swift/Controllers/EventController.h"
-#include "Swift/Controllers/IdleDetector.h"
 #include "Swift/Controllers/LoginWindow.h"
 #include "Swift/Controllers/LoginWindowFactory.h"
 #include "Swift/Controllers/MainWindow.h"
@@ -60,10 +59,8 @@ static const String CLIENT_NODE = "http://swift.im";
 typedef std::pair<JID, ChatController*> JIDChatControllerPair;
 typedef std::pair<JID, MUCController*> JIDMUCControllerPair;
 
-MainController::MainController(ChatWindowFactory* chatWindowFactory, MainWindowFactory *mainWindowFactory, LoginWindowFactory *loginWindowFactory, TreeWidgetFactory *treeWidgetFactory, SettingsProvider *settings, Application* application, SystemTray* systemTray, SoundPlayer* soundPlayer, IdleDetector* idleDetector)
-		: client_(NULL), chatWindowFactory_(chatWindowFactory), mainWindowFactory_(mainWindowFactory), loginWindowFactory_(loginWindowFactory), treeWidgetFactory_(treeWidgetFactory), settings_(settings),
-		xmppRosterController_(NULL), rosterController_(NULL), loginWindow_(NULL), clientVersionResponder_(NULL), nickResolver_(NULL), discoResponder_(NULL) {
-	idleDetector_ = idleDetector;
+MainController::MainController(ChatWindowFactory* chatWindowFactory, MainWindowFactory *mainWindowFactory, LoginWindowFactory *loginWindowFactory, TreeWidgetFactory *treeWidgetFactory, SettingsProvider *settings, Application* application, SystemTray* systemTray, SoundPlayer* soundPlayer)
+		: timerFactory_(&boostIOServiceThread_.getIOService()), idleDetector_(&idleQuerier_, &timerFactory_, 100), client_(NULL), chatWindowFactory_(chatWindowFactory), mainWindowFactory_(mainWindowFactory), loginWindowFactory_(loginWindowFactory), treeWidgetFactory_(treeWidgetFactory), settings_(settings), xmppRosterController_(NULL), rosterController_(NULL), loginWindow_(NULL), clientVersionResponder_(NULL), nickResolver_(NULL), discoResponder_(NULL) {
 	application_ = application;
 	presenceOracle_ = NULL;
 	avatarManager_ = NULL;
@@ -82,6 +79,9 @@ MainController::MainController(ChatWindowFactory* chatWindowFactory, MainWindowF
 	}
 	loginWindow_->onLoginRequest.connect(boost::bind(&MainController::handleLoginRequest, this, _1, _2, _3, _4));
 	loginWindow_->onCancelLoginRequest.connect(boost::bind(&MainController::handleCancelLoginRequest, this));
+
+	idleDetector_.setIdleTimeSeconds(600);
+	idleDetector_.onIdleChanged.connect(boost::bind(&MainController::handleInputIdleChanged, this, _1));
 }
 
 MainController::~MainController() {
@@ -165,9 +165,6 @@ void MainController::handleConnected() {
 	vCardRequest->onResponse.connect(boost::bind(&MainController::handleOwnVCardReceived, this, _1, _2));
 	vCardRequest->send();
 
-	idleDetector_->onInputIdle.connect(boost::bind(&MainController::handleInputIdle, this));
-	idleDetector_->onInputNotIdle.connect(boost::bind(&MainController::handleInputNotIdle, this));
-	
 	//Send presence last to catch all the incoming presences.
 	boost::shared_ptr<Presence> initialPresence;
 	if (queuedPresence_.get() != NULL) {
@@ -219,19 +216,23 @@ void MainController::sendPresence(boost::shared_ptr<Presence> presence) {
 	}
 }
 
-void MainController::handleInputIdle() {
-	preIdlePresence_ = lastSentPresence_;
-	boost::shared_ptr<Presence> presence(new Presence());
-	presence->setShow(StatusShow::Away);
-	presence->setStatus("Auto-away");
-	sendPresence(presence);
-}
-
-void MainController::handleInputNotIdle() {
-	if (client_) {
-		sendPresence(preIdlePresence_);
-	} else {
-		queuedPresence_ = preIdlePresence_;
+void MainController::handleInputIdleChanged(bool idle) {
+	if (!client_ || !client_->isAvailable()) {
+		return;
+	}
+	if (idle) {
+		preIdlePresence_ = lastSentPresence_;
+		boost::shared_ptr<Presence> presence(new Presence());
+		presence->setShow(StatusShow::Away);
+		presence->setStatus("Auto-away");
+		sendPresence(presence);
+	}
+	else {
+		if (client_) {
+			sendPresence(preIdlePresence_);
+		} else {
+			queuedPresence_ = preIdlePresence_;
+		}
 	}
 }
 
@@ -304,8 +305,6 @@ void MainController::handleCancelLoginRequest() {
 
 void MainController::signOut() {
 	logout();
-	idleDetector_->onInputIdle.connect(boost::bind(&MainController::handleInputIdle, this));
-	idleDetector_->onInputNotIdle.connect(boost::bind(&MainController::handleInputNotIdle, this));
 	loginWindow_->loggedOut();
 	foreach (JIDChatControllerPair controllerPair, chatControllers_) {
 		delete controllerPair.second;

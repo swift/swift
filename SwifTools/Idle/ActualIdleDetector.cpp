@@ -1,6 +1,7 @@
 #include "SwifTools/Idle/ActualIdleDetector.h"
 
 #include <boost/bind.hpp>
+#include <iostream>
 
 #include "SwifTools/Idle/IdleQuerier.h"
 #include "Swiften/Network/Timer.h"
@@ -8,8 +9,8 @@
 
 namespace Swift {
 
-ActualIdleDetector::ActualIdleDetector(IdleQuerier* querier, TimerFactory* timerFactory, int refreshRateSeconds) : querier(querier), isIdle(false) {
-	timer = timerFactory->createTimer(refreshRateSeconds*1000);
+ActualIdleDetector::ActualIdleDetector(IdleQuerier* querier, TimerFactory* timerFactory, int refreshRateMilliseconds) : querier(querier) {
+	timer = timerFactory->createTimer(refreshRateMilliseconds);
 	timer->onTick.connect(boost::bind(&ActualIdleDetector::handleTimerTick, this));
 	timer->start();
 }
@@ -19,11 +20,7 @@ ActualIdleDetector::~ActualIdleDetector() {
 }
 
 void ActualIdleDetector::handleTimerTick() {
-	bool idle = (querier->getIdleTimeSeconds() >= getIdleTimeSeconds());
-	if (idle != isIdle) {
-		isIdle = idle;
-		onIdleChanged(isIdle);
-	}
+	setIdle(querier->getIdleTimeSeconds() >= getIdleTimeSeconds());
 }
 
 }

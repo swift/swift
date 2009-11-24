@@ -7,7 +7,6 @@
 #include "QtMainWindowFactory.h"
 #include "QtChatWindowFactory.h"
 #include "QtSettingsProvider.h"
-#include "QtIdleDetector.h"
 
 class QSplitter;
 
@@ -37,7 +36,6 @@ namespace Swift {
 			QtSystemTray* systemTray_;
 			QSplitter* splitter_;
 			QtSoundPlayer* soundPlayer_;
-			QtIdleDetector* idleDetector_;
 			Application* application_;
 	};
 }

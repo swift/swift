@@ -6,6 +6,7 @@
 namespace Swift {
 	class IdleDetector {
 		public:
+			IdleDetector() : idle(false) {}
 			virtual ~IdleDetector();
 
 			void setIdleTimeSeconds(int time) {
@@ -16,9 +17,22 @@ namespace Swift {
 				return idleTimeSeconds;
 			}
 
+			virtual bool isIdle() const {
+				return idle;
+			}
+
 			boost::signal<void (bool /* isIdle */)> onIdleChanged;
+
+		protected:
+			void setIdle(bool b) {
+				if (b != idle) {
+					idle = b;
+					onIdleChanged(b);
+				}
+			}
 
 		private:
 			int idleTimeSeconds;
+			bool idle;
 	};
 }

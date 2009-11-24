@@ -11,7 +11,7 @@ namespace Swift {
 
 	class ActualIdleDetector : public IdleDetector, public boost::bsignals::trackable {
 		public:
-			ActualIdleDetector(IdleQuerier*, TimerFactory*, int refreshRateSeconds);
+			ActualIdleDetector(IdleQuerier*, TimerFactory*, int refreshRateMilliseconds);
 			~ActualIdleDetector();
 
 		private:
@@ -19,7 +19,6 @@ namespace Swift {
 
 		private:
 			IdleQuerier* querier;
-			bool isIdle;
 			boost::shared_ptr<Timer> timer;
 	};
 }

@@ -1,10 +1,13 @@
-#ifndef SWIFTEN_MainController_H
-#define SWIFTEN_MainController_H
+#pragma once
 
 #include <boost/signals.hpp>
 #include <boost/shared_ptr.hpp>
 #include <vector>
 
+#include "Swiften/Network/BoostIOServiceThread.h"
+#include "Swiften/Network/BoostTimerFactory.h"
+#include "SwifTools/Idle/PlatformIdleQuerier.h"
+#include "SwifTools/Idle/ActualIdleDetector.h"
 #include "Swiften/Base/String.h"
 #include "Swiften/Client/ClientError.h"
 #include "Swiften/JID/JID.h"
@@ -25,7 +28,6 @@ namespace Swift {
 	class ChatWindowFactory;
 	class ChatController;
 	class EventController;
-	class IdleDetector;
 	class MainWindowFactory;
 	class MainWindow;
 	class NickResolver;
@@ -47,7 +49,7 @@ namespace Swift {
 
 	class MainController : public MUCRegistry {
 		public:
-			MainController(ChatWindowFactory* chatWindowFactory, MainWindowFactory *mainWindowFactory, LoginWindowFactory *loginWindowFactory, TreeWidgetFactory* treeWidgetFactory, SettingsProvider *settings, Application* application, SystemTray* systemTray, SoundPlayer* soundPlayer, IdleDetector* idleDetector);
+			MainController(ChatWindowFactory* chatWindowFactory, MainWindowFactory *mainWindowFactory, LoginWindowFactory *loginWindowFactory, TreeWidgetFactory* treeWidgetFactory, SettingsProvider *settings, Application* application, SystemTray* systemTray, SoundPlayer* soundPlayer);
 			~MainController();
 
 
@@ -69,8 +71,7 @@ namespace Swift {
 			void handleOwnVCardReceived(boost::shared_ptr<VCard> vCard, const boost::optional<ErrorPayload>& error);
 			ChatController* getChatController(const JID &contact);
 			void sendPresence(boost::shared_ptr<Presence> presence);
-			void handleInputIdle();
-			void handleInputNotIdle();
+			void handleInputIdleChanged(bool);
 			void logout();
 			void signOut();
 
@@ -79,6 +80,11 @@ namespace Swift {
 			void performLoginFromCachedCredentials();
 			void reconnectAfterError();
 			void setManagersEnabled(bool enabled);
+
+			BoostIOServiceThread boostIOServiceThread_;
+			BoostTimerFactory timerFactory_;
+			PlatformIdleQuerier idleQuerier_;
+			ActualIdleDetector idleDetector_;
 			Client* client_;
 			ChatWindowFactory* chatWindowFactory_;
 			MainWindowFactory* mainWindowFactory_;
@@ -95,7 +101,6 @@ namespace Swift {
 			SoftwareVersionResponder* clientVersionResponder_;
 			NickResolver* nickResolver_;
 			DiscoInfoResponder* discoResponder_;
-			IdleDetector* idleDetector_;
 			boost::shared_ptr<CapsInfo> capsInfo_;
 			std::map<JID, MUCController*> mucControllers_;
 			std::map<JID, ChatController*> chatControllers_;
@@ -114,5 +119,3 @@ namespace Swift {
 			String certificateFile_;
 	};
 }
-#endif
-
