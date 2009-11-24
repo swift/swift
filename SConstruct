@@ -95,7 +95,7 @@ if env["PLATFORM"] == "win32" :
 	env["SHLINKCOM"] = [env["SHLINKCOM"], 'mt.exe -nologo -manifest ${TARGET}.manifest -outputresource:$TARGET;2']
 
 if env["PLATFORM"] == "darwin" :
-	env.Append(FRAMEWORKS = "AppKit")
+	env.Append(FRAMEWORKS = ["IOKit", "AppKit"])
 
 # Testing
 env["TEST_TYPE"] = env["test"]

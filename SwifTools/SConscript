@@ -19,7 +19,7 @@ sources = [
 if myenv["PLATFORM"] == "win32" :
 	pass
 elif myenv["PLATFORM"] == "darwin" :
-	pass
+	sources += ["Idle/MacOSXIdleQuerier.cpp"]
 elif myenv["HAVE_XSS"] :
 	myenv.Append(CPPDEFINES = ["HAVE_XSS"])
 	sources += ["Idle/XSSIdleQuerier.cpp"]

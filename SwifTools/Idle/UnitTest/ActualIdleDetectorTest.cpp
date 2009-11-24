@@ -39,7 +39,7 @@ class ActualIdleDetectorTest : public CppUnit::TestFixture {
 			querier->idleTime = 15;
 			timerFactory->updateTime(15000);
 			
-			CPPUNIT_ASSERT_EQUAL(0U, idleEvents.size());
+			CPPUNIT_ASSERT_EQUAL(0, static_cast<int>(idleEvents.size()));
 		}
 
 		void testHandleTick_Idle() {
@@ -49,7 +49,7 @@ class ActualIdleDetectorTest : public CppUnit::TestFixture {
 
 			timerFactory->updateTime(15000);
 			
-			CPPUNIT_ASSERT_EQUAL(1U, idleEvents.size());
+			CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(idleEvents.size()));
 			CPPUNIT_ASSERT(idleEvents[0]);
 		}
 
@@ -62,7 +62,7 @@ class ActualIdleDetectorTest : public CppUnit::TestFixture {
 			querier->idleTime = 30;
 			timerFactory->updateTime(30000);
 			
-			CPPUNIT_ASSERT_EQUAL(1U, idleEvents.size());
+			CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(idleEvents.size()));
 			CPPUNIT_ASSERT(idleEvents[0]);
 		}
 
@@ -75,7 +75,7 @@ class ActualIdleDetectorTest : public CppUnit::TestFixture {
 			querier->idleTime = 5;
 			timerFactory->updateTime(30000);
 			
-			CPPUNIT_ASSERT_EQUAL(2U, idleEvents.size());
+			CPPUNIT_ASSERT_EQUAL(2, static_cast<int>(idleEvents.size()));
 			CPPUNIT_ASSERT(idleEvents[0]);
 			CPPUNIT_ASSERT(!idleEvents[1]);
 		}
@@ -87,7 +87,7 @@ class ActualIdleDetectorTest : public CppUnit::TestFixture {
 
 			timerFactory->updateTime(15000);
 			
-			CPPUNIT_ASSERT_EQUAL(0U, idleEvents.size());
+			CPPUNIT_ASSERT_EQUAL(0, static_cast<int>(idleEvents.size()));
 		}
 	
 	private:
