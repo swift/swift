@@ -17,7 +17,7 @@ sources = [
 	]
 
 if myenv["PLATFORM"] == "win32" :
-	pass
+	sources += ["Idle/WindowsIdleQuerier.cpp"]
 elif myenv["PLATFORM"] == "darwin" :
 	sources += ["Idle/MacOSXIdleQuerier.cpp"]
 elif myenv["HAVE_XSS"] :
