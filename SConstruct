@@ -12,17 +12,17 @@ vars.Add(EnumVariable("test", "Compile and run tests", "none", ["none", "all", "
 vars.Add(BoolVariable("optimize", "Compile with optimizations turned on", "no"))
 vars.Add(BoolVariable("debug", "Compile with debug information", "yes" if os.name != "nt" else "no"))
 vars.Add(BoolVariable("warnings", "Compile with warnings turned on", 
-    "yes" if os.name != "nt" else "no"))
+		"yes" if os.name != "nt" else "no"))
 if os.name != "nt" :
-  vars.Add(BoolVariable("coverage", "Compile with coverage information", "no"))
+	vars.Add(BoolVariable("coverage", "Compile with coverage information", "no"))
 if os.name == "posix" :
-  vars.Add(BoolVariable("valgrind", "Run tests with valgrind", "no"))
+	vars.Add(BoolVariable("valgrind", "Run tests with valgrind", "no"))
 if os.name == "mac" :
-  vars.Add(BoolVariable("universal", "Create universal binaries", "no"))
+	vars.Add(BoolVariable("universal", "Create universal binaries", "no"))
 if os.name == "nt" :
-  vars.Add(PathVariable("vcredist", "MSVC redistributable dir", "", PathVariable.PathAccept))
+	vars.Add(PathVariable("vcredist", "MSVC redistributable dir", "", PathVariable.PathAccept))
 if os.name == "nt" :
-  vars.Add(PackageVariable("bonjour", "Bonjour SDK location", "yes"))
+	vars.Add(PackageVariable("bonjour", "Bonjour SDK location", "yes"))
 vars.Add(PackageVariable("openssl", "OpenSSL location", "yes"))
 vars.Add(PathVariable("qt", "Qt location", "", PathVariable.PathAccept))
 
@@ -104,7 +104,7 @@ if "check" in ARGUMENTS or "check" in COMMAND_LINE_TARGETS :
 	env["TEST_TYPE"] = "unit"
 env["TEST"] = (env["TEST_TYPE"] != "none") or env.GetOption("clean")
 if env.get("valgrind", 0) :
-  env["TEST_RUNNER"] = "valgrind --suppressions=QA/valgrind.supp -q --leak-check=full --track-origins=yes "
+	env["TEST_RUNNER"] = "valgrind --suppressions=QA/valgrind.supp -q --leak-check=full --track-origins=yes "
 
 # Packaging
 if ARGUMENTS.get("SWIFT_INSTALLDIR", "") :
@@ -182,6 +182,21 @@ if conf.CheckCHeader("expat.h") and conf.CheckLib("expat") :
 	env["EXPAT_FLAGS"] = { "LIBS": ["expat"] }
 
 conf.Finish()
+
+# Xss
+env["HAVE_XSS"] = 0
+if env["PLATFORM"] != "win32" and env["PLATFORM"] != "darwin" :
+	xss_flags = {
+			"LIBPATH": ["/usr/X11R6/lib"],
+			"LIBS": ["X11", "Xss"]
+		}
+	xss_env = conf_env.Clone()
+	xss_env.MergeFlags(xss_flags)
+	conf = Configure(xss_env)
+	if conf.CheckFunc("XScreenSaverQueryExtension") :
+		env["HAVE_XSS"] = 1
+		env["XSS_FLAGS"] = xss_flags
+	conf.Finish()
 
 # LibXML
 conf = Configure(conf_env)

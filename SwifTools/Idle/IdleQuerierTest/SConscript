@@ -1,0 +1,11 @@
+Import("env")
+
+if env["TEST"] :
+	myenv = env.Clone()
+	myenv.MergeFlags(myenv["SWIFTOOLS_FLAGS"])
+	myenv.MergeFlags(myenv["SWIFTEN_FLAGS"])
+	myenv.MergeFlags(myenv["BOOST_FLAGS"])
+	myenv.MergeFlags(myenv.get("XSS_FLAGS", {}))
+	myenv.Append(LIBPATH = ["/usr/X11R6/lib"])
+	myenv.Append(LIBS = ["X11", "Xss"])
+	tester = myenv.Program("IdleQuerierTest", ["IdleQuerierTest.cpp"])
