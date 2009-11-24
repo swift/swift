@@ -5,7 +5,6 @@ if env["TEST"] :
 	myenv.MergeFlags(myenv["SWIFTOOLS_FLAGS"])
 	myenv.MergeFlags(myenv["SWIFTEN_FLAGS"])
 	myenv.MergeFlags(myenv["BOOST_FLAGS"])
-	myenv.MergeFlags(myenv.get("XSS_FLAGS", {}))
-	myenv.Append(LIBPATH = ["/usr/X11R6/lib"])
-	myenv.Append(LIBS = ["X11", "Xss"])
+	if myenv["HAVE_XSS"] :
+		myenv.MergeFlags(myenv.get("XSS_FLAGS", {}))
 	tester = myenv.Program("IdleQuerierTest", ["IdleQuerierTest.cpp"])
