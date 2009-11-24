@@ -1,5 +1,4 @@
-#ifndef SWIFTEN_Presence
-#define SWIFTEN_Presence
+#pragma once
 
 #include "Swiften/Elements/Stanza.h"
 #include "Swiften/Elements/Status.h"
@@ -57,5 +56,3 @@ namespace Swift {
 			Presence::Type type_;
 	};
 }
-
-#endif

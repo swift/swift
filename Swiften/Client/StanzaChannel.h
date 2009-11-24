@@ -1,5 +1,4 @@
-#ifndef SWIFTEN_MessageChannel_H
-#define SWIFTEN_MessageChannel_H
+#pragma once
 
 #include <boost/signal.hpp>
 #include <boost/shared_ptr.hpp>
@@ -19,5 +18,3 @@ namespace Swift {
 			boost::signal<void (boost::shared_ptr<Presence>) > onPresenceReceived;
 	};
 }
-
-#endif

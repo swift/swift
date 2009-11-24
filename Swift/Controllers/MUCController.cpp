@@ -21,13 +21,14 @@ MUCController::MUCController (
 		const JID &muc, 
 		const String &nick, 
 		StanzaChannel* stanzaChannel, 
+		PresenceSender* presenceSender,
 		IQRouter* iqRouter, 
 		ChatWindowFactory* chatWindowFactory, 
 		TreeWidgetFactory *treeWidgetFactory,
 		PresenceOracle* presenceOracle,
 		AvatarManager* avatarManager) : 
 			ChatControllerBase(self, stanzaChannel, iqRouter, chatWindowFactory, muc, presenceOracle, avatarManager),
-			muc_(new MUC(stanzaChannel, muc)), 
+			muc_(new MUC(stanzaChannel, presenceSender, muc)), 
 			nick_(nick), 
 			treeWidgetFactory_(treeWidgetFactory) { 
 	roster_ = new Roster(chatWindow_->getTreeWidget(), treeWidgetFactory_);

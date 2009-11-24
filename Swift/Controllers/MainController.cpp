@@ -26,6 +26,7 @@
 #include "Swiften/Base/foreach.h"
 #include "Swiften/Base/String.h"
 #include "Swiften/Client/Client.h"
+#include "Swiften/Presence/PresenceSender.h"
 #include "Swiften/Elements/Presence.h"
 #include "Swiften/Elements/VCardUpdate.h"
 #include "Swiften/Queries/Responders/SoftwareVersionResponder.h"
@@ -60,7 +61,7 @@ typedef std::pair<JID, ChatController*> JIDChatControllerPair;
 typedef std::pair<JID, MUCController*> JIDMUCControllerPair;
 
 MainController::MainController(ChatWindowFactory* chatWindowFactory, MainWindowFactory *mainWindowFactory, LoginWindowFactory *loginWindowFactory, TreeWidgetFactory *treeWidgetFactory, SettingsProvider *settings, Application* application, SystemTray* systemTray, SoundPlayer* soundPlayer)
-		: timerFactory_(&boostIOServiceThread_.getIOService()), idleDetector_(&idleQuerier_, &timerFactory_, 100), client_(NULL), chatWindowFactory_(chatWindowFactory), mainWindowFactory_(mainWindowFactory), loginWindowFactory_(loginWindowFactory), treeWidgetFactory_(treeWidgetFactory), settings_(settings), xmppRosterController_(NULL), rosterController_(NULL), loginWindow_(NULL), clientVersionResponder_(NULL), nickResolver_(NULL), discoResponder_(NULL) {
+		: timerFactory_(&boostIOServiceThread_.getIOService()), idleDetector_(&idleQuerier_, &timerFactory_, 100), client_(NULL), presenceSender_(NULL), chatWindowFactory_(chatWindowFactory), mainWindowFactory_(mainWindowFactory), loginWindowFactory_(loginWindowFactory), treeWidgetFactory_(treeWidgetFactory), settings_(settings), xmppRosterController_(NULL), rosterController_(NULL), loginWindow_(NULL), clientVersionResponder_(NULL), nickResolver_(NULL), discoResponder_(NULL) {
 	application_ = application;
 	presenceOracle_ = NULL;
 	avatarManager_ = NULL;
@@ -114,6 +115,8 @@ void MainController::resetClient() {
 	clientVersionResponder_ = NULL;
 	delete discoResponder_;
 	discoResponder_ = NULL;
+	delete presenceSender_;
+	presenceSender_ = NULL;
 	delete client_;
 	client_ = NULL;
 	
@@ -210,7 +213,7 @@ void MainController::sendPresence(boost::shared_ptr<Presence> presence) {
 	}
 	presence->addPayload(capsInfo_);
 	lastSentPresence_ = presence;
-	client_->sendPresence(presence);
+	presenceSender_->sendPresence(presence);
 	if (presence->getType() == Presence::Unavailable) {
 		logout();
 	}
@@ -258,6 +261,7 @@ void MainController::handleLoginRequest(const String &username, const String &pa
 void MainController::performLoginFromCachedCredentials() {
 	if (!client_) {
 		client_ = new Swift::Client(jid_, password_);
+		presenceSender_ = new PresenceSender(client_);
 		//client_->onDataRead.connect(&printIncomingData);
 		//client_->onDataWritten.connect(&printOutgoingData);
 		if (!certificateFile_.isEmpty()) {
@@ -368,7 +372,7 @@ void MainController::handleChatControllerJIDChanged(const JID& from, const JID& 
 }
 
 void MainController::handleJoinMUCRequest(const JID &muc, const String &nick) {
-	mucControllers_[muc] = new MUCController(jid_, muc, nick, client_, client_, chatWindowFactory_, treeWidgetFactory_, presenceOracle_, avatarManager_);
+	mucControllers_[muc] = new MUCController(jid_, muc, nick, client_, presenceSender_, client_, chatWindowFactory_, treeWidgetFactory_, presenceOracle_, avatarManager_);
 	mucControllers_[muc]->setAvailableServerFeatures(serverDiscoInfo_);
 }
 

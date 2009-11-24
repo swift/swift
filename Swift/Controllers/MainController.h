@@ -33,6 +33,7 @@ namespace Swift {
 	class NickResolver;
 	class RosterController;
 	class XMPPRosterController;
+	class PresenceSender;
 	class DiscoInfoResponder;
 	class AvatarManager;
 	class LoginWindow;
@@ -86,6 +87,7 @@ namespace Swift {
 			PlatformIdleQuerier idleQuerier_;
 			ActualIdleDetector idleDetector_;
 			Client* client_;
+			PresenceSender* presenceSender_;
 			ChatWindowFactory* chatWindowFactory_;
 			MainWindowFactory* mainWindowFactory_;
 			LoginWindowFactory* loginWindowFactory_;

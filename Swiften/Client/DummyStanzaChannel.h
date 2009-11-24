@@ -10,19 +10,19 @@ namespace Swift {
 			DummyStanzaChannel() {}
 
 			virtual void sendStanza(boost::shared_ptr<Stanza> stanza) {
-				sentStanzas_.push_back(stanza);
+				sentStanzas.push_back(stanza);
 			}
 
 			virtual void sendIQ(boost::shared_ptr<IQ> iq) {
-				sentStanzas_.push_back(iq);
+				sentStanzas.push_back(iq);
 			}
 
 			virtual void sendMessage(boost::shared_ptr<Message> message) {
-				sentStanzas_.push_back(message);
+				sentStanzas.push_back(message);
 			}
 
 			virtual void sendPresence(boost::shared_ptr<Presence> presence) {
-				sentStanzas_.push_back(presence);
+				sentStanzas.push_back(presence);
 			}
 
 			virtual String getNewIQID() {
@@ -33,6 +33,6 @@ namespace Swift {
 				return true;
 			}
 
-			std::vector<boost::shared_ptr<Stanza> > sentStanzas_;
+			std::vector<boost::shared_ptr<Stanza> > sentStanzas;
 	};
 }

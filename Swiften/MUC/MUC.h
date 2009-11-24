@@ -1,5 +1,4 @@
-#ifndef SWIFTEN_MUC_H
-#define SWIFTEN_MUC_H
+#pragma once
 
 #include "Swiften/JID/JID.h"
 #include "Swiften/Base/String.h"
@@ -14,6 +13,7 @@
 
 namespace Swift {
 	class StanzaChannel;
+	class PresenceSender;
 
 	class MUC {
 		public:
@@ -21,8 +21,7 @@ namespace Swift {
 			enum LeavingType { Part };
 
 		public:
-			MUC(StanzaChannel* stanzaChannel, const JID &muc);
-			~MUC();
+			MUC(StanzaChannel* stanzaChannel, PresenceSender* presenceSender, const JID &muc);
 
 			void joinAs(const String &nick);
 			String getCurrentNick();
@@ -38,12 +37,22 @@ namespace Swift {
 			boost::signal<void (const MUCOccupant&, LeavingType, const String&)> onOccupantLeft;
 
 		private:
+			bool isFromMUC(const JID& j) const {
+				return ownMUCJID.equals(j, JID::WithoutResource);
+			}
+
+			const String& getOwnNick() const {
+				return ownMUCJID.getResource();
+			}
+
+		private:
 			void handleIncomingPresence(boost::shared_ptr<Presence> presence);
-			JID muc_;
-			StanzaChannel *stanzaChannel_;
-			String myNick_;
-			std::map<String, MUCOccupant> occupants_;
+
+		private:
+			JID ownMUCJID;
+			StanzaChannel* stanzaChannel;
+			PresenceSender* presenceSender;
+			std::map<String, MUCOccupant> occupants;
+			bool firstPresenceSeen;
 	};
 }
-
-#endif
