@@ -30,7 +30,6 @@ namespace Swift {
 
 		public:
 			boost::signal<void (JoinResult)> onJoinComplete;
-			boost::signal<void (boost::shared_ptr<Message>)> onMessageReceived;
 			boost::signal<void (boost::shared_ptr<Presence>)> onOccupantPresenceChange;
 			boost::signal<void (const MUCOccupant&)> onOccupantJoined;
 			/**Occupant, type, and reason. */
