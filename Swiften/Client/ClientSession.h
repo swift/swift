@@ -34,6 +34,7 @@ namespace Swift {
 			struct Error : public Swift::Error {
 				enum Type {
 					AuthenticationFailedError,
+					CompressionFailedError,
 					ServerVerificationFailedError,
 					NoSupportedAuthMechanismsError,
 					UnexpectedElementError,

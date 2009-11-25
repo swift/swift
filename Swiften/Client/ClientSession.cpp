@@ -12,6 +12,9 @@
 #include "Swiften/Elements/AuthFailure.h"
 #include "Swiften/Elements/AuthChallenge.h"
 #include "Swiften/Elements/AuthResponse.h"
+#include "Swiften/Elements/Compressed.h"
+#include "Swiften/Elements/CompressFailure.h"
+#include "Swiften/Elements/CompressRequest.h"
 #include "Swiften/Elements/StartSession.h"
 #include "Swiften/Elements/IQ.h"
 #include "Swiften/Elements/ResourceBind.h"
@@ -70,6 +73,10 @@ void ClientSession::handleElement(boost::shared_ptr<Element> element) {
 			state = WaitingForEncrypt;
 			stream->writeElement(boost::shared_ptr<StartTLSRequest>(new StartTLSRequest()));
 		}
+		else if (streamFeatures->hasCompressionMethod("zlib")) {
+			state = Compressing;
+			stream->writeElement(boost::shared_ptr<CompressRequest>(new CompressRequest("zlib")));
+		}
 		else if (streamFeatures->hasAuthenticationMechanisms()) {
 			if (stream->hasTLSCertificate()) {
 				if (streamFeatures->hasAuthenticationMechanism("EXTERNAL")) {
@@ -119,6 +126,16 @@ void ClientSession::handleElement(boost::shared_ptr<Element> element) {
 				onInitialized();
 			}
 		}
+	}
+	else if (boost::dynamic_pointer_cast<Compressed>(element)) {
+		checkState(Compressing);
+		state = WaitingForStreamStart;
+		stream->addZLibCompression();
+		stream->resetXMPPParser();
+		sendStreamHeader();
+	}
+	else if (boost::dynamic_pointer_cast<CompressFailure>(element)) {
+		finishSession(Error::CompressionFailedError);
 	}
 	else if (AuthChallenge* challenge = dynamic_cast<AuthChallenge*>(element.get())) {
 		checkState(Authenticating);

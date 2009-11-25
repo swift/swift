@@ -6,6 +6,7 @@
 #include "Swiften/StreamStack/StreamStack.h"
 #include "Swiften/StreamStack/ConnectionLayer.h"
 #include "Swiften/StreamStack/WhitespacePingLayer.h"
+#include "Swiften/StreamStack/CompressionLayer.h"
 #include "Swiften/StreamStack/TLSLayer.h"
 #include "Swiften/StreamStack/TLSLayerFactory.h"
 
@@ -72,6 +73,11 @@ void BasicSessionStream::addTLSEncryption() {
 		tlsLayer->onConnected.connect(boost::bind(&BasicSessionStream::handleTLSConnected, shared_from_this()));
 		tlsLayer->connect();
 	}
+}
+
+void BasicSessionStream::addZLibCompression() {
+	boost::shared_ptr<CompressionLayer> compressionLayer(new CompressionLayer());
+	streamStack->addLayer(compressionLayer);
 }
 
 void BasicSessionStream::setWhitespacePingEnabled(bool enabled) {

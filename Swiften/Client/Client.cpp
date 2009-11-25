@@ -145,6 +145,9 @@ void Client::handleSessionFinished(boost::shared_ptr<Error> error) {
 				case ClientSession::Error::AuthenticationFailedError:
 					clientError = ClientError(ClientError::AuthenticationFailedError);
 					break;
+				case ClientSession::Error::CompressionFailedError:
+					clientError = ClientError(ClientError::CompressionFailedError);
+					break;
 				case ClientSession::Error::ServerVerificationFailedError:
 					clientError = ClientError(ClientError::ServerVerificationFailedError);
 					break;

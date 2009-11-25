@@ -34,6 +34,8 @@ namespace Swift {
 			virtual void writeFooter() = 0;
 			virtual void writeElement(boost::shared_ptr<Element>) = 0;
 
+			virtual void addZLibCompression() = 0;
+
 			virtual bool supportsTLSEncryption() = 0;
 			virtual void addTLSEncryption() = 0;
 			virtual void setWhitespacePingEnabled(bool enabled) = 0;

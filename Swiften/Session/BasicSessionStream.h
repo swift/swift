@@ -16,6 +16,7 @@ namespace Swift {
 	class StreamStack;
 	class XMPPLayer;
 	class ConnectionLayer;
+	class CompressionLayer;
 
 	class BasicSessionStream : 
 			public SessionStream, 
@@ -37,6 +38,8 @@ namespace Swift {
 			virtual void writeHeader(const ProtocolHeader& header);
 			virtual void writeElement(boost::shared_ptr<Element>);
 			virtual void writeFooter();
+
+			virtual void addZLibCompression();
 
 			virtual bool supportsTLSEncryption();
 			virtual void addTLSEncryption();
@@ -65,6 +68,7 @@ namespace Swift {
 			boost::shared_ptr<XMPPLayer> xmppLayer;
 			boost::shared_ptr<ConnectionLayer> connectionLayer;
 			StreamStack* streamStack;
+			boost::shared_ptr<CompressionLayer> compressionLayer;
 			boost::shared_ptr<TLSLayer> tlsLayer;
 			boost::shared_ptr<WhitespacePingLayer> whitespacePingLayer;
 	};

@@ -173,7 +173,7 @@ class ClientSessionTest : public CppUnit::TestFixture {
 					bool footer;
 				};
 
-				MockSessionStream() : available(true), canTLSEncrypt(true), tlsEncrypted(false), whitespacePingEnabled(false), resetCount(0) {
+				MockSessionStream() : available(true), canTLSEncrypt(true), tlsEncrypted(false), compressed(false), whitespacePingEnabled(false), resetCount(0) {
 				}
 
 				virtual bool isAvailable() {
@@ -198,6 +198,10 @@ class ClientSessionTest : public CppUnit::TestFixture {
 
 				virtual void addTLSEncryption() {
 					tlsEncrypted = true;
+				}
+
+				virtual void addZLibCompression() {
+					compressed = true;
 				}
 
 				virtual void setWhitespacePingEnabled(bool enabled) {
@@ -286,6 +290,7 @@ class ClientSessionTest : public CppUnit::TestFixture {
 				bool available;
 				bool canTLSEncrypt;
 				bool tlsEncrypted;
+				bool compressed;
 				bool whitespacePingEnabled;
 				int resetCount;
 				std::deque<Event> receivedEvents;

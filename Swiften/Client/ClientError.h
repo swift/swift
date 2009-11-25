@@ -11,6 +11,7 @@ namespace Swift {
 				ConnectionWriteError,
 				XMLError,
 				AuthenticationFailedError,
+				CompressionFailedError,
 				ServerVerificationFailedError,
 				NoSupportedAuthMechanismsError,
 				UnexpectedElementError,

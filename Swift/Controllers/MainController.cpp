@@ -262,8 +262,8 @@ void MainController::performLoginFromCachedCredentials() {
 	if (!client_) {
 		client_ = new Swift::Client(jid_, password_);
 		presenceSender_ = new PresenceSender(client_);
-		//client_->onDataRead.connect(&printIncomingData);
-		//client_->onDataWritten.connect(&printOutgoingData);
+		client_->onDataRead.connect(&printIncomingData);
+		client_->onDataWritten.connect(&printOutgoingData);
 		if (!certificateFile_.isEmpty()) {
 			client_->setCertificate(certificateFile_);
 		}
@@ -284,6 +284,7 @@ void MainController::handleError(const ClientError& error) {
 		case ClientError::ConnectionWriteError: message = "Error while sending data to the server"; break;
 		case ClientError::XMLError: message = "Error parsing server data"; break;
 		case ClientError::AuthenticationFailedError: message = "Login/password invalid"; break;
+		case ClientError::CompressionFailedError: message = "Error while compressing stream"; break;
 		case ClientError::ServerVerificationFailedError: message = "Server verification failed"; break;
 		case ClientError::NoSupportedAuthMechanismsError: message = "Authentication mechanisms not supported"; break;
 		case ClientError::UnexpectedElementError: message = "Unexpected response"; break;
