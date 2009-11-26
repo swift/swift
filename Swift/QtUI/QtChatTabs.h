@@ -24,6 +24,7 @@ namespace Swift {
 		private slots:
 			void handleTabClosing();
 			void handleTabTitleUpdated();
+			void handleTabTitleUpdated(QWidget* widget);
 			void handleTabCloseRequested(int index);
 			void handleWidgetShown();
 			void handleWantsToActivate();

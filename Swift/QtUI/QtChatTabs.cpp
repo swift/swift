@@ -80,6 +80,7 @@ void QtChatTabs::handleTabClosing() {
 	if (tabs_->count() == 0) {
 		hide();
 	}
+	handleTabTitleUpdated(tabs_->currentWidget());
 }
 
 void QtChatTabs::handleTabCloseRequested(int index) {
@@ -89,6 +90,10 @@ void QtChatTabs::handleTabCloseRequested(int index) {
 
 void QtChatTabs::handleTabTitleUpdated() {
 	QWidget* widget = qobject_cast<QWidget*>(sender());
+	handleTabTitleUpdated(widget);
+}
+
+void QtChatTabs::handleTabTitleUpdated(QWidget* widget) {
 	if (!widget) {
 		return;
 	}
