@@ -8,5 +8,11 @@ namespace Swift {
 		Q_OBJECT
 		public:
 			QtXMLConsoleWidget();
+			void show();
+			void activate();
+		protected slots:
+			void closeEvent(QCloseEvent* event);
+		protected:
+			void showEvent(QShowEvent* event);
 	};
 }
