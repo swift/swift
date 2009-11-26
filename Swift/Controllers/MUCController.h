@@ -32,6 +32,7 @@ namespace Swift {
 
 		private:
 			void handleWindowClosed();
+			void handleAvatarChanged(const JID& jid, const String&);
 			void handleOccupantJoined(const MUCOccupant& occupant);
 			void handleOccupantLeft(const MUCOccupant& occupant, MUC::LeavingType type, const String& reason);
 			void handleOccupantPresenceChange(boost::shared_ptr<Presence> presence);
