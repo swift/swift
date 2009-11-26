@@ -1,5 +1,4 @@
-#ifndef SWIFTEN_XMLTextNode_H
-#define SWIFTEN_XMLTextNode_H
+#pragma once
 
 #include "Swiften/Serializer/XML/XMLNode.h"
 
@@ -9,6 +8,7 @@ namespace Swift {
 			XMLTextNode(const String& text) : text_(text) {
 				text_.replaceAll('&', "&amp;"); // Should come first
 				text_.replaceAll('<', "&lt;");
+				text_.replaceAll('>', "&gt;");
 			}
 
 			String serialize() {
@@ -19,5 +19,3 @@ namespace Swift {
 			String text_;
 	};
 }
-
-#endif
