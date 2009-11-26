@@ -13,7 +13,7 @@ namespace Swift {
 	class QtChatWindowFactory : public QObject, public ChatWindowFactory {
 		Q_OBJECT
 		public:
-			QtChatWindowFactory(QtTreeWidgetFactory *treeWidgetFactory, QSplitter* splitter, QtSettingsProvider* settings);
+			QtChatWindowFactory(QtTreeWidgetFactory *treeWidgetFactory, QSplitter* splitter, QtSettingsProvider* settings, QtChatTabs* tabs);
 			ChatWindow* createChatWindow(const JID &contact);
 		private slots:
 			void handleWindowGeometryChanged();

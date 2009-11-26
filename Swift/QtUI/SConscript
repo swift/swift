@@ -68,6 +68,8 @@ sources = [
 		"QtSystemTray.cpp",
 		"QtTabbable.cpp",
 		"QtTextEdit.cpp",
+		"QtXMLConsoleWidgetFactory.cpp",
+		"QtXMLConsoleWidget.cpp",
 		"ChatSnippet.cpp",
 		"MessageSnippet.cpp",
 		"SystemMessageSnippet.cpp",

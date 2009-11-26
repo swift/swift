@@ -10,8 +10,8 @@
 #include "Swift/Controllers/ChatController.h"
 #include "Swift/Controllers/ChatWindowFactory.h"
 #include "Swift/Controllers/EventController.h"
-#include "Swift/Controllers/LoginWindow.h"
-#include "Swift/Controllers/LoginWindowFactory.h"
+#include "Swift/Controllers/UIInterfaces/LoginWindow.h"
+#include "Swift/Controllers/UIInterfaces/LoginWindowFactory.h"
 #include "Swift/Controllers/MainWindow.h"
 #include "Swift/Controllers/MainWindowFactory.h"
 #include "Swift/Controllers/MUCController.h"
@@ -22,7 +22,10 @@
 #include "Swift/Controllers/SoundPlayer.h"
 #include "Swift/Controllers/SystemTray.h"
 #include "Swift/Controllers/SystemTrayController.h"
+#include "Swift/Controllers/XMLConsoleController.h"
 #include "Swift/Controllers/XMPPRosterController.h"
+#include "Swift/Controllers/UIInterfaces/XMLConsoleWidgetFactory.h"
+#include "Swift/Controllers/UIEvents/UIEventStream.h"
 #include "Swiften/Base/foreach.h"
 #include "Swiften/Base/String.h"
 #include "Swiften/Client/Client.h"
@@ -60,11 +63,12 @@ static const String CLIENT_NODE = "http://swift.im";
 typedef std::pair<JID, ChatController*> JIDChatControllerPair;
 typedef std::pair<JID, MUCController*> JIDMUCControllerPair;
 
-MainController::MainController(ChatWindowFactory* chatWindowFactory, MainWindowFactory *mainWindowFactory, LoginWindowFactory *loginWindowFactory, TreeWidgetFactory *treeWidgetFactory, SettingsProvider *settings, Application* application, SystemTray* systemTray, SoundPlayer* soundPlayer)
+MainController::MainController(ChatWindowFactory* chatWindowFactory, MainWindowFactory *mainWindowFactory, LoginWindowFactory *loginWindowFactory, TreeWidgetFactory *treeWidgetFactory, SettingsProvider *settings, Application* application, SystemTray* systemTray, SoundPlayer* soundPlayer, XMLConsoleWidgetFactory* xmlConsoleWidgetFactory)
 		: timerFactory_(&boostIOServiceThread_.getIOService()), idleDetector_(&idleQuerier_, &timerFactory_, 100), client_(NULL), presenceSender_(NULL), chatWindowFactory_(chatWindowFactory), mainWindowFactory_(mainWindowFactory), loginWindowFactory_(loginWindowFactory), treeWidgetFactory_(treeWidgetFactory), settings_(settings), xmppRosterController_(NULL), rosterController_(NULL), loginWindow_(NULL), clientVersionResponder_(NULL), nickResolver_(NULL), discoResponder_(NULL) {
 	application_ = application;
 	presenceOracle_ = NULL;
 	avatarManager_ = NULL;
+	uiEventStream_ = new UIEventStream();
 
 	avatarStorage_ = new AvatarFileStorage(application_->getAvatarDir());
 
@@ -72,7 +76,7 @@ MainController::MainController(ChatWindowFactory* chatWindowFactory, MainWindowF
 	eventController_->onEventQueueLengthChange.connect(boost::bind(&MainController::handleEventQueueLengthChange, this, _1));
 	systemTrayController_ = new SystemTrayController(eventController_, systemTray);
 	soundEventController_ = new SoundEventController(eventController_, soundPlayer, settings->getBoolSetting("playSounds", true));
-	loginWindow_ = loginWindowFactory_->createLoginWindow();
+	loginWindow_ = loginWindowFactory_->createLoginWindow(uiEventStream_);
 	foreach (String profile, settings->getAvailableProfiles()) {
 		ProfileSettingsProvider* profileSettings = new ProfileSettingsProvider(profile, settings);
 		loginWindow_->addAvailableAccount(profileSettings->getStringSetting("jid"), profileSettings->getStringSetting("pass"), profileSettings->getStringSetting("certificate"));
@@ -83,6 +87,8 @@ MainController::MainController(ChatWindowFactory* chatWindowFactory, MainWindowF
 
 	idleDetector_.setIdleTimeSeconds(600);
 	idleDetector_.onIdleChanged.connect(boost::bind(&MainController::handleInputIdleChanged, this, _1));
+
+	xmlConsoleController_ = new XMLConsoleController(uiEventStream_, xmlConsoleWidgetFactory);
 }
 
 MainController::~MainController() {
@@ -95,6 +101,8 @@ MainController::~MainController() {
 	delete systemTrayController_;
 	delete soundEventController_;
 	delete avatarStorage_;
+	delete xmlConsoleController_;
+	delete uiEventStream_;
 	resetClient();
 }
 

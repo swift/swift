@@ -1,5 +1,7 @@
 #include "QtLoginWindow.h"
 
+#include "Swift/Controllers/UIEvents/UIEventStream.h"
+#include "Swift/Controllers/UIEvents/RequestXMLConsoleUIEvent.h"
 #include "QtAboutWidget.h"
 #include "QtSwiftUtil.h"
 #include "QtMainWindow.h"
@@ -20,7 +22,8 @@
 
 namespace Swift{
 
-QtLoginWindow::QtLoginWindow() : QMainWindow() {
+QtLoginWindow::QtLoginWindow(UIEventStream* uiEventStream) : QMainWindow() {
+	uiEventStream_ = uiEventStream;
 	setWindowTitle("Swift");
 	resize(200, 500);
 	setContentsMargins(0,0,0,0);
@@ -104,6 +107,12 @@ QtLoginWindow::QtLoginWindow() : QMainWindow() {
 	QAction* aboutAction = new QAction("About Swift", this);
 	connect(aboutAction, SIGNAL(activated()), SLOT(handleAbout()));
 	swiftMenu_->addAction(aboutAction);
+
+	toolsMenu_ = new QMenu(tr("Tools"), this);
+
+	QAction* xmlConsoleAction = new QAction(tr("Show Debug Console"), this);
+	connect(xmlConsoleAction, SIGNAL(activated()), SLOT(handleShowXMLConsole()));
+	toolsMenu_->addAction(xmlConsoleAction);
 	
 	QAction* quitAction = new QAction("Quit", this);
 	connect(quitAction, SIGNAL(activated()), SLOT(handleQuit()));
@@ -210,6 +219,10 @@ void QtLoginWindow::handleAbout() {
 	}
 }
 
+void QtLoginWindow::handleShowXMLConsole() {
+	uiEventStream_->send(boost::shared_ptr<RequestXMLConsoleUIEvent>(new RequestXMLConsoleUIEvent()));
+}
+
 void QtLoginWindow::handleQuit() {
 	QApplication::quit();
 }
@@ -217,6 +230,7 @@ void QtLoginWindow::handleQuit() {
 void QtLoginWindow::setInitialMenus() {
 	menuBar_->clear();
 	menuBar_->addMenu(swiftMenu_);
+	menuBar_->addMenu(toolsMenu_);
 }
 
 void QtLoginWindow::morphInto(MainWindow *mainWindow) {

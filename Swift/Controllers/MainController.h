@@ -47,10 +47,13 @@ namespace Swift {
 	class SystemTrayController;
 	class SoundEventController;
 	class SoundPlayer;
+	class XMLConsoleController;
+	class UIEventStream;
+	class XMLConsoleWidgetFactory;
 
 	class MainController : public MUCRegistry {
 		public:
-			MainController(ChatWindowFactory* chatWindowFactory, MainWindowFactory *mainWindowFactory, LoginWindowFactory *loginWindowFactory, TreeWidgetFactory* treeWidgetFactory, SettingsProvider *settings, Application* application, SystemTray* systemTray, SoundPlayer* soundPlayer);
+			MainController(ChatWindowFactory* chatWindowFactory, MainWindowFactory *mainWindowFactory, LoginWindowFactory *loginWindowFactory, TreeWidgetFactory* treeWidgetFactory, SettingsProvider *settings, Application* application, SystemTray* systemTray, SoundPlayer* soundPlayer, XMLConsoleWidgetFactory* xmlConsoleWidgetFactory);
 			~MainController();
 
 
@@ -103,6 +106,8 @@ namespace Swift {
 			SoftwareVersionResponder* clientVersionResponder_;
 			NickResolver* nickResolver_;
 			DiscoInfoResponder* discoResponder_;
+			UIEventStream* uiEventStream_;
+			XMLConsoleController* xmlConsoleController_;
 			boost::shared_ptr<CapsInfo> capsInfo_;
 			std::map<JID, MUCController*> mucControllers_;
 			std::map<JID, ChatController*> chatControllers_;

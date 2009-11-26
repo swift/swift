@@ -9,9 +9,9 @@
 
 
 namespace Swift {
-QtChatWindowFactory::QtChatWindowFactory(QtTreeWidgetFactory *treeWidgetFactory, QSplitter* splitter, QtSettingsProvider* settings) : treeWidgetFactory_(treeWidgetFactory) {
+QtChatWindowFactory::QtChatWindowFactory(QtTreeWidgetFactory *treeWidgetFactory, QSplitter* splitter, QtSettingsProvider* settings, QtChatTabs* tabs) : treeWidgetFactory_(treeWidgetFactory) {
 	settings_ = settings;
-	tabs_ = new QtChatTabs();
+	tabs_ = tabs;
 	if (splitter) {
 		splitter->addWidget(tabs_);
 	} else {

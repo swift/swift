@@ -8,6 +8,7 @@
 #include "Roster/QtTreeWidgetFactory.h"
 #include "QtSystemTray.h"
 #include "QtSoundPlayer.h"
+#include "QtXMLConsoleWidgetFactory.h"
 #include <boost/bind.hpp>
 #include <QSplitter>
 
@@ -32,18 +33,21 @@ QtSwift::QtSwift(bool netbookMode) {
 	QCoreApplication::setOrganizationName("Swift");
 	QCoreApplication::setOrganizationDomain("swift.im");
 	QCoreApplication::setApplicationVersion(buildVersion);
+
+	tabs_ = new QtChatTabs();
 	settings_ = new QtSettingsProvider();
 	application_ = new PlatformApplication("Swift");
 	treeWidgetFactory_ = new QtTreeWidgetFactory(); 
 	systemTray_ = new QtSystemTray();
 	loginWindowFactory_ = new QtLoginWindowFactory(splitter_, systemTray_, settings_);
-	chatWindowFactory_ = new QtChatWindowFactory(treeWidgetFactory_, splitter_, settings_);
+	chatWindowFactory_ = new QtChatWindowFactory(treeWidgetFactory_, splitter_, settings_, tabs_);
 	rosterWindowFactory_ = new QtMainWindowFactory(treeWidgetFactory_);
+	xmlConsoleWidgetFactory_ = new QtXMLConsoleWidgetFactory(tabs_);
 	soundPlayer_ = new QtSoundPlayer();
 	if (splitter_) {
 		splitter_->show();
 	}
-	mainController_ = new MainController(chatWindowFactory_, rosterWindowFactory_, loginWindowFactory_, treeWidgetFactory_, settings_, application_, systemTray_, soundPlayer_);
+	mainController_ = new MainController(chatWindowFactory_, rosterWindowFactory_, loginWindowFactory_, treeWidgetFactory_, settings_, application_, systemTray_, soundPlayer_, xmlConsoleWidgetFactory_);
 }
 
 QtSwift::~QtSwift() {
@@ -57,6 +61,8 @@ QtSwift::~QtSwift() {
 	delete systemTray_;
 	delete splitter_;
 	delete soundPlayer_;
+	delete tabs_;
+	delete xmlConsoleWidgetFactory_;
 }
 
 }

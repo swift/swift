@@ -11,8 +11,8 @@ QtLoginWindowFactory::QtLoginWindowFactory(QSplitter* splitter, QtSystemTray* sy
 	systemTray_ = systemTray;
 }
 
-LoginWindow* QtLoginWindowFactory::createLoginWindow() {
-	window_ = new QtLoginWindow();
+LoginWindow* QtLoginWindowFactory::createLoginWindow(UIEventStream* uiEventStream) {
+	window_ = new QtLoginWindow(uiEventStream);
 	if (splitter_) {
 		splitter_->insertWidget(0, window_);
 		return window_;

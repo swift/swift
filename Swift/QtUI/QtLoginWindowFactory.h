@@ -1,7 +1,7 @@
 #ifndef SWIFT_QtLoginWindowFactory_H
 #define SWIFT_QtLoginWindowFactory_H
 
-#include "Swift/Controllers/LoginWindowFactory.h"
+#include "Swift/Controllers/UIInterfaces/LoginWindowFactory.h"
 #include "Swift/QtUI/QtSystemTray.h"
 
 #include <QSplitter>
@@ -14,7 +14,7 @@ namespace Swift {
 		Q_OBJECT
 		public:
 			QtLoginWindowFactory(QSplitter* splitter, QtSystemTray* systemTray, QtSettingsProvider* settings);
-			LoginWindow* createLoginWindow();
+			LoginWindow* createLoginWindow(UIEventStream* uiEventStream);
 		private slots:
 			void handleWindowGeometryChanged();
 		private:

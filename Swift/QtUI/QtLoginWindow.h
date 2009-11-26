@@ -9,7 +9,7 @@
 #include <QStackedWidget>
 #include <QMenuBar>
 
-#include "Swift/Controllers/LoginWindow.h"
+#include "Swift/Controllers/UIInterfaces/LoginWindow.h"
 #include "Swift/Controllers/MainWindow.h"
 #include "QtAboutWidget.h"
 
@@ -18,10 +18,11 @@ class QToolButton;
 class QComboBox;
 
 namespace Swift {
+	class UIEventStream;
 	class QtLoginWindow : public QMainWindow, public LoginWindow {
 		Q_OBJECT
 		public:
-			QtLoginWindow();
+			QtLoginWindow(UIEventStream* uiEventStream);
 
 			void morphInto(MainWindow *mainWindow);
 			virtual void loggedOut();
@@ -36,6 +37,7 @@ namespace Swift {
 			void loginClicked();
 			void handleCertficateChecked(bool);
 			void handleQuit();
+			void handleShowXMLConsole();
 			void handleAbout();
 			void bringToFront();
 			void handleUsernameTextChanged();
@@ -57,6 +59,8 @@ namespace Swift {
 			QToolButton* certificateButton_;
 			QMenuBar* menuBar_;
 			QMenu* swiftMenu_;
+			QMenu* toolsMenu_;
+			UIEventStream* uiEventStream_;
 			QPointer<QtAboutWidget> aboutDialog_;
 	};
 }

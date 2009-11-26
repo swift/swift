@@ -17,7 +17,9 @@ myenv.StaticLibrary("SwiftControllers", [
 		"MUCController.cpp",
 		"EventController.cpp",
 		"SoundEventController.cpp",
-		"SystemTrayController.cpp"
+		"SystemTrayController.cpp",
+		"XMLConsoleController.cpp",
+		"UIEvents/UIEvent.cpp"
 	])
 
 env.Append(UNITTEST_SOURCES = [

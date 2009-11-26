@@ -5,7 +5,8 @@
 
 namespace Swift {
 	class LoginWindow;
-		class String;
+	class String;
+	class UIEventStream;
 		
 	class LoginWindowFactory {
 		public:
@@ -14,7 +15,7 @@ namespace Swift {
 			/**
 			 * Transfers ownership of result.
 			 */
-			virtual LoginWindow* createLoginWindow() = 0;
+			virtual LoginWindow* createLoginWindow(UIEventStream* uiEventStream) = 0;
 
 	};
 }
