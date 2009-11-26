@@ -82,6 +82,7 @@ MainController::MainController(ChatWindowFactory* chatWindowFactory, MainWindowF
 		loginWindow_->addAvailableAccount(profileSettings->getStringSetting("jid"), profileSettings->getStringSetting("pass"), profileSettings->getStringSetting("certificate"));
 		delete profileSettings;
 	}
+	loginWindow_->selectUser(settings_->getStringSetting("lastLoginJID"));
 	loginWindow_->onLoginRequest.connect(boost::bind(&MainController::handleLoginRequest, this, _1, _2, _3, _4));
 	loginWindow_->onCancelLoginRequest.connect(boost::bind(&MainController::handleCancelLoginRequest, this));
 
@@ -258,6 +259,7 @@ void MainController::handleLoginRequest(const String &username, const String &pa
 	profileSettings->storeString("jid", username);
 	profileSettings->storeString("certificate", certificateFile);
 	profileSettings->storeString("pass", remember ? password : "");
+	settings_->storeString("lastLoginJID", username);
 	loginWindow_->addAvailableAccount(profileSettings->getStringSetting("jid"), profileSettings->getStringSetting("pass"), profileSettings->getStringSetting("certificate"));
 	delete profileSettings;
 	jid_ = JID(username);

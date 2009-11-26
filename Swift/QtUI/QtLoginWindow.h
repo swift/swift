@@ -30,6 +30,7 @@ namespace Swift {
 			virtual void addAvailableAccount(const String& defaultJID, const String& defaultPassword, const String& defaultCertificate);
 			static QRect defaultPosition();
 			void setGentleGeometry(const QRect&);
+			void selectUser(const String& user);
 		signals:
 			void geometryChanged();
 

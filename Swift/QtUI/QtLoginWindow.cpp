@@ -133,6 +133,15 @@ void QtLoginWindow::setGentleGeometry(const QRect& rect) {
 	move(rect.topLeft());
 }
 
+void QtLoginWindow::selectUser(const String& username) {
+	for (int i = 0; i < usernames_.count(); i++) {
+		if (P2QSTRING(username) == usernames_[i]) {
+			username_->setCurrentIndex(i);
+			break;
+		}
+	}
+}
+
 QRect QtLoginWindow::defaultPosition() {
 	QDesktopWidget desktop;
 	int windowWidth = 200;
