@@ -85,7 +85,8 @@ sources = [
 		"qrc_Swift.cc",
 	]
 
-myenv.BuildVersion("BuildVersion.h", version = ARGUMENTS.get("swift_version", None))
+
+myenv.BuildVersion("BuildVersion.h", version = env["SWIFT_VERSION"])
 
 if env["PLATFORM"] == "win32" :
 	myenv.RES("../resources/Windows/Swift.rc")
@@ -101,10 +102,8 @@ myenv.Uic4("QtAddContactDialog.ui")
 myenv.Qrc("DefaultTheme.qrc")
 myenv.Qrc("Swift.qrc")
 
-buildVersion = Version.getBuildVersion(ARGUMENTS.get("swift_version", None))
-
 if env["PLATFORM"] == "darwin" :
-  myenv.AppBundle("Swift", version = buildVersion, resources = ["../resources/MacOSX/Swift.icns"])
+  myenv.AppBundle("Swift", version = env["SWIFT_VERSION"], resources = ["../resources/MacOSX/Swift.icns"])
 
 if env.get("SWIFT_INSTALLDIR", "") :
 	env.Install(os.path.join(env["SWIFT_INSTALLDIR"], "bin"), swiftProgram)
@@ -120,6 +119,6 @@ if env["PLATFORM"] == "win32" :
 
 		myenv.Append(NSIS_OPTIONS = [
 				"/DmsvccRedistributableDir=\"" + env["vcredist"] + "\"", 
-				"/DbuildVersion=" + buildVersion
+				"/DbuildVersion=" + env["SWIFT_VERSION"]
 			])
 		myenv.Nsis("../Packaging/nsis/swift.nsi")
