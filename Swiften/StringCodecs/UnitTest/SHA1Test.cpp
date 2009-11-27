@@ -5,41 +5,32 @@
 
 using namespace Swift;
 
-class SHA1Test : public CppUnit::TestFixture
-{
+class SHA1Test : public CppUnit::TestFixture {
 		CPPUNIT_TEST_SUITE(SHA1Test);
-		CPPUNIT_TEST(testGetBinaryHash);
-		CPPUNIT_TEST(testGetBinaryHash_Twice);
-		CPPUNIT_TEST(testGetHexHash);
-		CPPUNIT_TEST(testGetHexHash_NoData);
+		CPPUNIT_TEST(testGetHash);
+		CPPUNIT_TEST(testGetHash_Twice);
+		CPPUNIT_TEST(testGetHash_NoData);
 		CPPUNIT_TEST_SUITE_END();
 
 	public:
-		SHA1Test() {}
-
-		void testGetBinaryHash() {
-			ByteArray result(SHA1::getBinaryHash("client/pc//Exodus 0.9.1<http://jabber.org/protocol/caps<http://jabber.org/protocol/disco#info<http://jabber.org/protocol/disco#items<http://jabber.org/protocol/muc<"));
+		void testGetHash() {
+			ByteArray result(SHA1::getHash("client/pc//Exodus 0.9.1<http://jabber.org/protocol/caps<http://jabber.org/protocol/disco#info<http://jabber.org/protocol/disco#items<http://jabber.org/protocol/muc<"));
 			CPPUNIT_ASSERT_EQUAL(ByteArray("\x42\x06\xb2\x3c\xa6\xb0\xa6\x43\xd2\x0d\x89\xb0\x4f\xf5\x8c\xf7\x8b\x80\x96\xed"), result);
 		}
 
 
-		void testGetBinaryHash_Twice() {
+		void testGetHash_Twice() {
 			ByteArray input("client/pc//Exodus 0.9.1<http://jabber.org/protocol/caps<http://jabber.org/protocol/disco#info<http://jabber.org/protocol/disco#items<http://jabber.org/protocol/muc<");
-			SHA1::getBinaryHash(input);
-			ByteArray result(SHA1::getBinaryHash(input));
+			SHA1::getHash(input);
+			ByteArray result(SHA1::getHash(input));
 
 			CPPUNIT_ASSERT_EQUAL(ByteArray("\x42\x06\xb2\x3c\xa6\xb0\xa6\x43\xd2\x0d\x89\xb0\x4f\xf5\x8c\xf7\x8b\x80\x96\xed"), result);
 		}
 
-		void testGetHexHash() {
-			String result(SHA1::getHexHash("client/pc//Exodus 0.9.1<http://jabber.org/protocol/caps<http://jabber.org/protocol/disco#info<http://jabber.org/protocol/disco#items<http://jabber.org/protocol/muc<"));
-			CPPUNIT_ASSERT_EQUAL(String("4206b23ca6b0a643d20d89b04ff58cf78b8096ed"), result);
-		}
+		void testGetHash_NoData() {
+			ByteArray result(SHA1::getHash(ByteArray()));
 
-		void testGetHexHash_NoData() {
-			String result(SHA1::getHexHash(ByteArray()));
-
-			CPPUNIT_ASSERT_EQUAL(String("da39a3ee5e6b4b0d3255bfef95601890afd80709"), result);
+			CPPUNIT_ASSERT_EQUAL(ByteArray("\xda\x39\xa3\xee\x5e\x6b\x4b\x0d\x32\x55\xbf\xef\x95\x60\x18\x90\xaf\xd8\x07\x09"), result);
 		}
 };
 

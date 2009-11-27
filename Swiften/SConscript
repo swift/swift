@@ -83,7 +83,9 @@ sources = [
 		"StringCodecs/Base64.cpp",
 		"StringCodecs/SHA1.cpp",
 		"StringCodecs/HMACSHA1.cpp",
+		"StringCodecs/MD5.cpp",
 		"StringCodecs/PBKDF2.cpp",
+		"StringCodecs/Hexify.cpp",
 	]
 # "Notifier/GrowlNotifier.cpp",
 
@@ -190,6 +192,8 @@ env.Append(UNITTEST_SOURCES = [
 		File("StreamStack/UnitTest/XMPPLayerTest.cpp"),
 		File("StringCodecs/UnitTest/Base64Test.cpp"),
 		File("StringCodecs/UnitTest/SHA1Test.cpp"),
+		File("StringCodecs/UnitTest/MD5Test.cpp"),
+		File("StringCodecs/UnitTest/HexifyTest.cpp"),
 		File("StringCodecs/UnitTest/HMACSHA1Test.cpp"),
 		File("StringCodecs/UnitTest/PBKDF2Test.cpp"),
 	])

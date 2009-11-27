@@ -1,5 +1,6 @@
 import sys, os
 sys.path.append(Dir("BuildTools/SCons").abspath)
+import SCons.SConf
 
 ################################################################################
 # Build variables
@@ -158,6 +159,9 @@ if int(ARGUMENTS.get("V", 0)) == 0:
 ################################################################################
 # Platform configuration
 ################################################################################
+
+if ARGUMENTS.get("force-configure", 0) :
+  SCons.SConf.SetCacheMode("force")
 
 conf = Configure(conf_env)
 

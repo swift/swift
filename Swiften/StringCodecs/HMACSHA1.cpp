@@ -31,9 +31,9 @@ ByteArray HMACSHA1::getResult(const ByteArray& key, const ByteArray& data) {
 	for (unsigned int i = 0; i < y.getSize(); ++i) {
 		y[i] ^= 0x5c;
 	}
-	y += SHA1::getBinaryHash(x);
+	y += SHA1::getHash(x);
 
-	return SHA1::getBinaryHash(y);
+	return SHA1::getHash(y);
 }
 
 }

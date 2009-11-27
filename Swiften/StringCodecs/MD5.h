@@ -1,9 +1,9 @@
 #pragma once
 
-#include "Swiften/Base/ByteArray.h"
-
 namespace Swift {
-	class SHA1 {
+	class ByteArray;
+
+	class MD5 {
 		public:
 			static ByteArray getHash(const ByteArray& data);
 	};

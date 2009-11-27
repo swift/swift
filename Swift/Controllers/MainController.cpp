@@ -43,6 +43,7 @@
 #include "Swiften/Avatars/AvatarFileStorage.h"
 #include "Swiften/Avatars/AvatarManager.h"
 #include "Swiften/StringCodecs/SHA1.h"
+#include "Swiften/StringCodecs/Hexify.h"
 
 namespace {
 	void printIncomingData(const Swift::String& data) {
@@ -430,7 +431,7 @@ bool MainController::isMUC(const JID& jid) const {
 
 void MainController::handleOwnVCardReceived(boost::shared_ptr<VCard> vCard, const boost::optional<ErrorPayload>& error) {
 	if (!error && !vCard->getPhoto().isEmpty()) {
-		vCardPhotoHash_ = SHA1::getHexHash(vCard->getPhoto());
+		vCardPhotoHash_ = Hexify::hexify(SHA1::getHash(vCard->getPhoto()));
 		if (lastSentPresence_) {
 			sendPresence(lastSentPresence_);
 		}

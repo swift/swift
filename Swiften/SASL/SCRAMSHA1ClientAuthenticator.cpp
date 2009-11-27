@@ -38,7 +38,7 @@ ByteArray SCRAMSHA1ClientAuthenticator::getResponse() const {
 	}
 	else {
 		ByteArray clientKey = HMACSHA1::getResult(saltedPassword, "Client Key");
-		ByteArray storedKey = SHA1::getBinaryHash(clientKey);
+		ByteArray storedKey = SHA1::getHash(clientKey);
 		ByteArray clientSignature = HMACSHA1::getResult(storedKey, authMessage);
 		ByteArray clientProof = clientKey;
 		for (unsigned int i = 0; i < clientProof.getSize(); ++i) {

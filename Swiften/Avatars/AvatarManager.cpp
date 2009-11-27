@@ -6,6 +6,7 @@
 #include "Swiften/Elements/VCardUpdate.h"
 #include "Swiften/Queries/Requests/GetVCardRequest.h"
 #include "Swiften/StringCodecs/SHA1.h"
+#include "Swiften/StringCodecs/Hexify.h"
 #include "Swiften/Avatars/AvatarStorage.h"
 #include "Swiften/MUC/MUCRegistry.h"
 
@@ -41,7 +42,7 @@ void AvatarManager::handleVCardReceived(const JID& from, const String& promisedH
 		std::cerr << "Warning: " << from << ": Could not get vCard" << std::endl;
 		return;
 	}
-	String realHash = SHA1::getHexHash(vCard->getPhoto());
+	String realHash = Hexify::hexify(SHA1::getHash(vCard->getPhoto()));
 	if (promisedHash != realHash) {
 		std::cerr << "Warning: " << from << ": Got different vCard photo hash (" << promisedHash << " != " << realHash << ")" << std::endl;
 	}
@@ -50,7 +51,7 @@ void AvatarManager::handleVCardReceived(const JID& from, const String& promisedH
 }
 
 void AvatarManager::setAvatar(const JID& jid, const ByteArray& avatar) {
-	String hash = SHA1::getHexHash(avatar);
+	String hash = Hexify::hexify(SHA1::getHash(avatar));
 	avatarStorage_->addAvatar(hash, avatar);
 	setAvatarHash(getAvatarJID(jid), hash);
 }

@@ -5,8 +5,7 @@
 
 using namespace Swift;
 
-class Base64Test : public CppUnit::TestFixture
-{
+class Base64Test : public CppUnit::TestFixture {
 		CPPUNIT_TEST_SUITE(Base64Test);
 		CPPUNIT_TEST(testEncode);
 		CPPUNIT_TEST(testEncode_NonAscii);
@@ -16,8 +15,6 @@ class Base64Test : public CppUnit::TestFixture
 		CPPUNIT_TEST_SUITE_END();
 
 	public:
-		Base64Test() {}
-
 		void testEncode() {
 			String result(Base64::encode("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890"));
 			CPPUNIT_ASSERT_EQUAL(String("QUJDREVGR0hJSktMTU5PUFFSU1RVVldYWVphYmNkZWZnaGlqa2xtbm9wcXJzdHV2d3h5ejEyMzQ1Njc4OTA="), result);

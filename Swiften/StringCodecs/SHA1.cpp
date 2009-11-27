@@ -1,7 +1,3 @@
-#include <sstream>
-#include <iomanip>
-#include <boost/numeric/conversion/cast.hpp>
-
 #include "Swiften/Base/Platform.h"
 
 #pragma GCC diagnostic ignored "-Wold-style-cast"
@@ -187,7 +183,7 @@ boost::uint8_t finalcount[8];
 
 namespace Swift {
 
-ByteArray SHA1::getBinaryHash(const ByteArray& input) {
+ByteArray SHA1::getHash(const ByteArray& input) {
 	ByteArray inputCopy(input);
 	ByteArray digest;
 	digest.resize(20);
@@ -196,17 +192,6 @@ ByteArray SHA1::getBinaryHash(const ByteArray& input) {
 	SHA1Update(&context, (boost::uint8_t*) inputCopy.getData(), inputCopy.getSize());
 	SHA1Final((boost::uint8_t*) digest.getData(), &context);
 	return digest;
-}
-
-String SHA1::getHexHash(const ByteArray& input) {
-	ByteArray digest = getBinaryHash(input);
-	std::ostringstream result;
-	result << std::hex;
-
-	for (unsigned int i = 0; i < digest.getSize(); ++i) {
-		result << std::setw(2) << std::setfill('0') << boost::numeric_cast<unsigned int>(static_cast<unsigned char>(digest[i]));
-	}
-	return String(result.str());
 }
 
 }

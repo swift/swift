@@ -27,7 +27,7 @@ CapsInfo CapsInfoGenerator::generateCapsInfo(const DiscoInfo& discoInfo) const {
 		serializedCaps += feature + "<";
 	}
 
-	String version(Base64::encode(SHA1::getBinaryHash(serializedCaps)));
+	String version(Base64::encode(SHA1::getHash(serializedCaps)));
 	return CapsInfo(node_, version, "sha-1");
 }
 
