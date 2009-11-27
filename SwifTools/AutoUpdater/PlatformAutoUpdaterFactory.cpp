@@ -12,6 +12,7 @@ AutoUpdater* PlatformAutoUpdaterFactory::createAutoUpdater(const String& appcast
 #ifdef HAVE_SPARKLE
 	return new SparkleAutoUpdater(appcastURL);
 #else
+	(void) appcastURL;
 	return new DummyAutoUpdater();
 #endif
 }
