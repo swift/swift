@@ -224,6 +224,7 @@ if env["PLATFORM"] == "darwin" :
 	if conf.CheckObjCHeader("Sparkle/Sparkle.h") :
 		env["HAVE_SPARKLE"] = 1
 		env["SPARKLE_FLAGS"] = sparkle_flags
+		env["SPARKLE_FRAMEWORK"] = "/Library/Frameworks/Sparkle.framework"
 	conf.Finish()
 
 # LibXML

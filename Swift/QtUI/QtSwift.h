@@ -11,6 +11,7 @@
 class QSplitter;
 
 namespace Swift {
+	class AutoUpdater;
 	class Application;
 	class MainController;
 	class QtChatWindowFactory;
@@ -40,6 +41,7 @@ namespace Swift {
 			QtSoundPlayer* soundPlayer_;
 			QtChatTabs* tabs_;
 			Application* application_;
+			AutoUpdater* autoUpdater_;
 	};
 }
 

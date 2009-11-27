@@ -14,10 +14,13 @@ sources = [
 		"Idle/IdleQuerier.cpp",
 		"Idle/PlatformIdleQuerier.cpp",
 		"AutoUpdater/AutoUpdater.cpp",
+		"AutoUpdater/PlatformAutoUpdaterFactory.cpp",
 		"Linkify.cpp",
 	]
 
 if myenv.get("HAVE_SPARKLE", 0) :
+	myenv.MergeFlags(myenv["SPARKLE_FLAGS"])
+	myenv.Append(CPPDEFINES = ["HAVE_SPARKLE"])
 	sources += ["AutoUpdater/SparkleAutoUpdater.mm"]
 
 if myenv["PLATFORM"] == "win32" :

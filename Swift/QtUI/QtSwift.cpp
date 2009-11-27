@@ -15,13 +15,23 @@
 #include "Swiften/Application/Application.h"
 #include "Swiften/Application/Platform/PlatformApplication.h"
 #include "Swiften/Base/String.h"
+#include "Swiften/Base/Platform.h"
 #include "Swiften/Elements/Presence.h"
 #include "Swiften/Client/Client.h"
 #include "Swift/Controllers/ChatController.h"
 #include "Swift/Controllers/MainController.h"
 #include "Swift/QtUI/BuildVersion.h"
+#include "SwifTools/AutoUpdater/AutoUpdater.h"
+#include "SwifTools/AutoUpdater/PlatformAutoUpdaterFactory.h"
 
 namespace Swift{
+
+#if defined(SWIFTEN_PLATFORM_MACOSX)
+#define SWIFT_APPCAST_URL "http://swift.im/appcast/psi-mac.xml"
+#else 
+#define SWIFT_APPCAST_URL ""
+#endif
+
 
 QtSwift::QtSwift(bool netbookMode) {
 	if (netbookMode) {
@@ -48,9 +58,13 @@ QtSwift::QtSwift(bool netbookMode) {
 		splitter_->show();
 	}
 	mainController_ = new MainController(chatWindowFactory_, rosterWindowFactory_, loginWindowFactory_, treeWidgetFactory_, settings_, application_, systemTray_, soundPlayer_, xmlConsoleWidgetFactory_);
+
+	autoUpdater_ = PlatformAutoUpdaterFactory().createAutoUpdater(SWIFT_APPCAST_URL);
+	autoUpdater_->checkForUpdates();
 }
 
 QtSwift::~QtSwift() {
+	delete autoUpdater_;
 	delete chatWindowFactory_;
 	delete rosterWindowFactory_;
 	delete loginWindowFactory_;

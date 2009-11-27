@@ -8,7 +8,8 @@ sources = [
 if swiften_env["PLATFORM"] == "darwin" :
 	sources += [
 			"MacOSX/MacOSXApplication.cpp",
-			"MacOSX/MacOSXApplicationMessageDisplay.mm"
+			"MacOSX/MacOSXApplicationMessageDisplay.mm",
+			"MacOSX/MacOSXApplicationInitializer.mm",
 		]
 
 objects = swiften_env.StaticObject(sources)

@@ -2,19 +2,19 @@ import os, shutil, datetime
 import Version
 
 def generateDefaultTheme(env, target, source) :
-	sourceDir = source[0].abspath
-	output = open(target[0].abspath, "w")
-	output.write("<RCC version =\"1.0\">")
-	output.write("<qresource prefix=\"/themes/Default\">")
-	for (path, dirs, files) in os.walk(sourceDir) :
-		for file in files :
-			filePath = os.path.join(path,file)
-			output.write("<file alias=\"%(alias)s\">%(path)s</file>" % { 
-					"alias": filePath[len(sourceDir)+1:],
-					"path": filePath
-				})
-	output.write("</qresource>")
-	output.write("</RCC>")
+  sourceDir = source[0].abspath
+  output = open(target[0].abspath, "w")
+  output.write("<RCC version =\"1.0\">")
+  output.write("<qresource prefix=\"/themes/Default\">")
+  for (path, dirs, files) in os.walk(sourceDir) :
+    for file in files :
+      filePath = os.path.join(path,file)
+      output.write("<file alias=\"%(alias)s\">%(path)s</file>" % { 
+          "alias": filePath[len(sourceDir)+1:],
+          "path": filePath
+        })
+  output.write("</qresource>")
+  output.write("</RCC>")
 
 Import("env")
 
@@ -24,6 +24,8 @@ myenv.MergeFlags(env["SWIFT_CONTROLLERS_FLAGS"])
 myenv.MergeFlags(env["SWIFTOOLS_FLAGS"])
 if myenv["HAVE_XSS"] :
   myenv.MergeFlags(env["XSS_FLAGS"])
+if myenv["HAVE_SPARKLE"] :
+  myenv.MergeFlags(env["SPARKLE_FLAGS"])
 myenv.MergeFlags(env["SWIFTEN_FLAGS"])
 myenv.MergeFlags(env["CPPUNIT_FLAGS"])
 myenv.MergeFlags(env["LIBIDN_FLAGS"])
@@ -42,60 +44,60 @@ myenv.Append(CPPPATH = ["/usr/include/phonon"])
 myenv.Append(CPPPATH = ["."])
 
 if env["PLATFORM"] == "win32" :
-	#myenv["LINKFLAGS"] = ["/SUBSYSTEM:CONSOLE"]
-	myenv.Append(LINKFLAGS = ["/SUBSYSTEM:WINDOWS"])
-	myenv.Append(LIBS = "qtmain")
+  #myenv["LINKFLAGS"] = ["/SUBSYSTEM:CONSOLE"]
+  myenv.Append(LINKFLAGS = ["/SUBSYSTEM:WINDOWS"])
+  myenv.Append(LIBS = "qtmain")
 
 myenv.Command("DefaultTheme.qrc", "../resources/themes/Default", Action(generateDefaultTheme, cmdstr = "$GENCOMSTR"))
 
 sources = [
-		"main.cpp",
-		"QtAboutWidget.cpp",
-		"QtAddContactDialog.cpp",
-		"QtChatWindow.cpp",
-		"QtChatWindowFactory.cpp",
-		"QtJoinMUCDialog.cpp",
-		"QtLoginWindow.cpp",
-		"QtLoginWindowFactory.cpp",
-		"QtMainWindow.cpp",
-		"QtMainWindowFactory.cpp",
-		"QtSettingsProvider.cpp",
-		"QtStatusWidget.cpp",
-		"QtSwift.cpp",
-		"QtChatView.cpp",
-		"QtChatTabs.cpp",
-		"QtSoundPlayer.cpp",
-		"QtSystemTray.cpp",
-		"QtTabbable.cpp",
-		"QtTextEdit.cpp",
-		"QtXMLConsoleWidgetFactory.cpp",
-		"QtXMLConsoleWidget.cpp",
-		"ChatSnippet.cpp",
-		"MessageSnippet.cpp",
-		"SystemMessageSnippet.cpp",
-		"Roster/RosterModel.cpp",
-		"Roster/QtTreeWidget.cpp",
-		"Roster/QtTreeWidgetItem.cpp",
-		"Roster/RosterDelegate.cpp",
-		"EventViewer/EventView.cpp",
-		"EventViewer/EventModel.cpp",
-		"EventViewer/EventDelegate.cpp",
-		"QtRosterHeader.cpp",
-		"qrc_DefaultTheme.cc",
-		"qrc_Swift.cc",
-	]
+    "main.cpp",
+    "QtAboutWidget.cpp",
+    "QtAddContactDialog.cpp",
+    "QtChatWindow.cpp",
+    "QtChatWindowFactory.cpp",
+    "QtJoinMUCDialog.cpp",
+    "QtLoginWindow.cpp",
+    "QtLoginWindowFactory.cpp",
+    "QtMainWindow.cpp",
+    "QtMainWindowFactory.cpp",
+    "QtSettingsProvider.cpp",
+    "QtStatusWidget.cpp",
+    "QtSwift.cpp",
+    "QtChatView.cpp",
+    "QtChatTabs.cpp",
+    "QtSoundPlayer.cpp",
+    "QtSystemTray.cpp",
+    "QtTabbable.cpp",
+    "QtTextEdit.cpp",
+    "QtXMLConsoleWidgetFactory.cpp",
+    "QtXMLConsoleWidget.cpp",
+    "ChatSnippet.cpp",
+    "MessageSnippet.cpp",
+    "SystemMessageSnippet.cpp",
+    "Roster/RosterModel.cpp",
+    "Roster/QtTreeWidget.cpp",
+    "Roster/QtTreeWidgetItem.cpp",
+    "Roster/RosterDelegate.cpp",
+    "EventViewer/EventView.cpp",
+    "EventViewer/EventModel.cpp",
+    "EventViewer/EventDelegate.cpp",
+    "QtRosterHeader.cpp",
+    "qrc_DefaultTheme.cc",
+    "qrc_Swift.cc",
+  ]
 
 
 myenv.BuildVersion("BuildVersion.h", version = env["SWIFT_VERSION"])
 
 if env["PLATFORM"] == "win32" :
-	myenv.RES("../resources/Windows/Swift.rc")
-	sources += ["../resources/Windows/Swift.res"]
+  myenv.RES("../resources/Windows/Swift.rc")
+  sources += ["../resources/Windows/Swift.res"]
 
 if env["PLATFORM"] == "darwin" or env["PLATFORM"] == "win32" :
-	swiftProgram = myenv.Program("Swift", sources)
+  swiftProgram = myenv.Program("Swift", sources)
 else :
-	swiftProgram = myenv.Program("swift", sources)
+  swiftProgram = myenv.Program("swift", sources)
 
 myenv.Uic4("QtJoinMUCDialog.ui")
 myenv.Uic4("QtAddContactDialog.ui")
@@ -103,22 +105,25 @@ myenv.Qrc("DefaultTheme.qrc")
 myenv.Qrc("Swift.qrc")
 
 if env["PLATFORM"] == "darwin" :
-  myenv.AppBundle("Swift", version = env["SWIFT_VERSION"], resources = ["../resources/MacOSX/Swift.icns"])
+  frameworks = []
+  if env["HAVE_SPARKLE"] :
+    frameworks.append(env["SPARKLE_FRAMEWORK"])
+  myenv.AppBundle("Swift", version = env["SWIFT_VERSION"], resources = ["../resources/MacOSX/Swift.icns"], frameworks = frameworks)
 
 if env.get("SWIFT_INSTALLDIR", "") :
-	env.Install(os.path.join(env["SWIFT_INSTALLDIR"], "bin"), swiftProgram)
+  env.Install(os.path.join(env["SWIFT_INSTALLDIR"], "bin"), swiftProgram)
 
 if env["PLATFORM"] == "win32" :
-	if "dist" in COMMAND_LINE_TARGETS or env.GetOption("clean") :
-		myenv.WindowsBundle("Swift", resources = [
-				os.path.join(env["OPENSSL_DIR"], "bin", "ssleay32.dll"),	
-				os.path.join(env["OPENSSL_DIR"], "bin", "libeay32.dll"),	
-			],	
-			qtimageformats = ["gif", "ico", "jpeg", "mng", "svg", "tiff"],
-			qtlibs = ["QtCore4", "QtGui4", "QtNetwork4", "QtWebKit4", "phonon4"])
+  if "dist" in COMMAND_LINE_TARGETS or env.GetOption("clean") :
+    myenv.WindowsBundle("Swift", resources = [
+        os.path.join(env["OPENSSL_DIR"], "bin", "ssleay32.dll"),  
+        os.path.join(env["OPENSSL_DIR"], "bin", "libeay32.dll"),  
+      ],  
+      qtimageformats = ["gif", "ico", "jpeg", "mng", "svg", "tiff"],
+      qtlibs = ["QtCore4", "QtGui4", "QtNetwork4", "QtWebKit4", "phonon4"])
 
-		myenv.Append(NSIS_OPTIONS = [
-				"/DmsvccRedistributableDir=\"" + env["vcredist"] + "\"", 
-				"/DbuildVersion=" + env["SWIFT_VERSION"]
-			])
-		myenv.Nsis("../Packaging/nsis/swift.nsi")
+    myenv.Append(NSIS_OPTIONS = [
+        "/DmsvccRedistributableDir=\"" + env["vcredist"] + "\"", 
+        "/DbuildVersion=" + env["SWIFT_VERSION"]
+      ])
+    myenv.Nsis("../Packaging/nsis/swift.nsi")

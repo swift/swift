@@ -3,6 +3,7 @@
 
 #include "Swiften/Application/Application.h"
 #include "Swiften/Application/MacOSX/MacOSXApplicationMessageDisplay.h"
+#include "Swiften/Application/MacOSX/MacOSXApplicationInitializer.h"
 
 namespace Swift {
 	class ApplicationMessageDisplay;
@@ -16,6 +17,7 @@ namespace Swift {
 			boost::filesystem::path getSettingsDir() const;
 
 		private:
+			MacOSXApplicationInitializer initializer_;
 			MacOSXApplicationMessageDisplay messageDisplay_;
 	};
 }
