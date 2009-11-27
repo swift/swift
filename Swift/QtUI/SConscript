@@ -39,7 +39,6 @@ myenv.MergeFlags(env.get("EXPAT_FLAGS", ""))
 myenv.Tool("qt4", toolpath = ["#/BuildTools/SCons/Tools"])
 myenv.Tool("nsis", toolpath = ["#/BuildTools/SCons/Tools"])
 myenv.EnableQt4Modules(['QtCore', 'QtGui', 'QtWebKit'], debug = False)
-myenv.Append(CPPPATH = ["/usr/include/phonon"])
 
 myenv.Append(CPPPATH = ["."])
 
@@ -120,7 +119,7 @@ if env["PLATFORM"] == "win32" :
         os.path.join(env["OPENSSL_DIR"], "bin", "libeay32.dll"),  
       ],  
       qtimageformats = ["gif", "ico", "jpeg", "mng", "svg", "tiff"],
-      qtlibs = ["QtCore4", "QtGui4", "QtNetwork4", "QtWebKit4", "phonon4"])
+      qtlibs = ["QtCore4", "QtGui4", "QtNetwork4", "QtWebKit4"])
 
     myenv.Append(NSIS_OPTIONS = [
         "/DmsvccRedistributableDir=\"" + env["vcredist"] + "\"", 
