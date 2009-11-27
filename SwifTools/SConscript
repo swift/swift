@@ -13,8 +13,12 @@ sources = [
 		"Idle/ActualIdleDetector.cpp",
 		"Idle/IdleQuerier.cpp",
 		"Idle/PlatformIdleQuerier.cpp",
+		"AutoUpdater/AutoUpdater.cpp",
 		"Linkify.cpp",
 	]
+
+if myenv.get("HAVE_SPARKLE", 0) :
+	sources += ["AutoUpdater/SparkleAutoUpdater.mm"]
 
 if myenv["PLATFORM"] == "win32" :
 	sources += ["Idle/WindowsIdleQuerier.cpp"]

@@ -156,6 +156,12 @@ if int(ARGUMENTS.get("V", 0)) == 0:
 	env["TESTCOMSTR"] = colorize("TEST", "$SOURCE", "yellow")
 	#Progress(colorize("DEP", "$TARGET", "red")
 
+def checkObjCHeader(context, header) :
+	context.Message("Checking for Objective-C header " + header + " ... ")
+	ret = context.TryCompile("#include <Cocoa/Cocoa.h>\n#include <" + header + ">", ".m")
+	context.Result(ret)
+	return ret
+
 ################################################################################
 # Platform configuration
 ################################################################################
@@ -164,6 +170,9 @@ if ARGUMENTS.get("force-configure", 0) :
   SCons.SConf.SetCacheMode("force")
 
 conf = Configure(conf_env)
+
+conf.CheckCXX()
+conf.CheckCC()
 
 if conf.CheckLib("z") :
 	env.Append(LIBS = "z")
@@ -200,6 +209,21 @@ if env["PLATFORM"] != "win32" and env["PLATFORM"] != "darwin" :
 	if conf.CheckFunc("XScreenSaverQueryExtension") :
 		env["HAVE_XSS"] = 1
 		env["XSS_FLAGS"] = xss_flags
+	conf.Finish()
+
+# Sparkle
+env["HAVE_SPARKLE"] = 0
+if env["PLATFORM"] == "darwin" :
+	sparkle_flags = {
+			"FRAMEWORKPATH": ["/Library/Frameworks"],
+			"FRAMEWORKS": ["Sparkle"]
+		}
+	sparkle_env = conf_env.Clone()
+	sparkle_env.MergeFlags(sparkle_flags)
+	conf = Configure(sparkle_env, custom_tests = { "CheckObjCHeader" : checkObjCHeader })
+	if conf.CheckObjCHeader("Sparkle/Sparkle.h") :
+		env["HAVE_SPARKLE"] = 1
+		env["SPARKLE_FLAGS"] = sparkle_flags
 	conf.Finish()
 
 # LibXML
