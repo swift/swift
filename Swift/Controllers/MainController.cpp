@@ -45,16 +45,6 @@
 #include "Swiften/StringCodecs/SHA1.h"
 #include "Swiften/StringCodecs/Hexify.h"
 
-namespace {
-	void printIncomingData(const Swift::String& data) {
-		std::cout << "<- " << data << std::endl;
-	}
-
-	void printOutgoingData(const Swift::String& data) {
-		std::cout << "-> " << data << std::endl;
-	}
-}
-
 namespace Swift {
 
 static const String CLIENT_NAME = "Swift";
@@ -273,8 +263,10 @@ void MainController::performLoginFromCachedCredentials() {
 	if (!client_) {
 		client_ = new Swift::Client(jid_, password_);
 		presenceSender_ = new PresenceSender(client_);
-		//client_->onDataRead.connect(&printIncomingData);
-		//client_->onDataWritten.connect(&printOutgoingData);
+		client_->onDataRead.connect(boost::bind(
+				&XMLConsoleController::handleDataRead, xmlConsoleController_, _1));
+		client_->onDataWritten.connect(boost::bind(
+				&XMLConsoleController::handleDataWritten, xmlConsoleController_, _1));
 		if (!certificateFile_.isEmpty()) {
 			client_->setCertificate(certificateFile_);
 		}

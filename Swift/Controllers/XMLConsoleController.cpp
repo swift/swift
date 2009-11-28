@@ -24,4 +24,16 @@ void XMLConsoleController::handleUIEvent(boost::shared_ptr<UIEvent> rawEvent) {
 	}
 }
 
+void XMLConsoleController::handleDataRead(const String& data) {
+	if (xmlConsoleWidget) {
+		xmlConsoleWidget->handleDataRead(data);
+	}
+}
+
+void XMLConsoleController::handleDataWritten(const String& data) {
+	if (xmlConsoleWidget) {
+		xmlConsoleWidget->handleDataWritten(data);
+	}
+}
+
 }
