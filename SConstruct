@@ -153,6 +153,7 @@ if int(ARGUMENTS.get("V", 0)) == 0:
 	env["BUNDLECOMSTR"] = colorize("BUNDLE", "$TARGET", "blue")
 	env["NIBCOMSTR"] = colorize("NIB", "$TARGET", "blue")
 	env["NSISCOMSTR"] = colorize("NSIS", "$TARGET", "blue")
+	env["INSTALLSTR"] = colorize("INSTALL", "$TARGET", "blue")
 	env["TESTCOMSTR"] = colorize("TEST", "$SOURCE", "yellow")
 	#Progress(colorize("DEP", "$TARGET", "red")
 

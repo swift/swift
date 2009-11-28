@@ -86,7 +86,7 @@ def installFunc(target, source, env):
 def stringFunc(target, source, env):
     installstr = env.get('INSTALLSTR')
     if installstr:
-        return env.subst_target_source(installstr, 0, target, source)
+        return env.subst_target_source(installstr, 1, target, source)
     target = str(target[0])
     source = str(source[0])
     if os.path.isdir(source):
