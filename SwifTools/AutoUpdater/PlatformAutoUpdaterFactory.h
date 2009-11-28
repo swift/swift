@@ -1,6 +1,7 @@
+#include "Swiften/Base/String.h"
+
 namespace Swift {
 	class AutoUpdater;
-	class String;
 
 	class PlatformAutoUpdaterFactory {
 		public:
