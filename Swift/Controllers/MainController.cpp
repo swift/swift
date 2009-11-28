@@ -273,8 +273,8 @@ void MainController::performLoginFromCachedCredentials() {
 	if (!client_) {
 		client_ = new Swift::Client(jid_, password_);
 		presenceSender_ = new PresenceSender(client_);
-		client_->onDataRead.connect(&printIncomingData);
-		client_->onDataWritten.connect(&printOutgoingData);
+		//client_->onDataRead.connect(&printIncomingData);
+		//client_->onDataWritten.connect(&printOutgoingData);
 		if (!certificateFile_.isEmpty()) {
 			client_->setCertificate(certificateFile_);
 		}
