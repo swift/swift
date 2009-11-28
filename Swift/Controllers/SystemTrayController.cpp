@@ -14,7 +14,7 @@ SystemTrayController::SystemTrayController(EventController* eventController, Sys
 }
 
 void SystemTrayController::handleEventQueueLengthChange(int length) {
-	systemTray_->setUnreadMessages(length > 0 ? true : false);
+	systemTray_->setUnreadMessages(length > 0);
 }
 
 

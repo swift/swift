@@ -6,7 +6,8 @@ namespace Swift {
 	class UIEventStream;
 	class XMLConsoleWidgetFactory {
 		public:
-			virtual XMLConsoleWidget* createXMLConsoleWidget() = 0;
 			virtual ~XMLConsoleWidgetFactory() {};
+
+			virtual XMLConsoleWidget* createXMLConsoleWidget() = 0;
 	};
 }

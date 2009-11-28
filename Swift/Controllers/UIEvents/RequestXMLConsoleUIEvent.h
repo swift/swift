@@ -4,6 +4,5 @@
 
 namespace Swift {
 	class RequestXMLConsoleUIEvent : public UIEvent {
-
 	};
 }

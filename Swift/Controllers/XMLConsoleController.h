@@ -12,10 +12,13 @@ namespace Swift {
 	class XMLConsoleController {
 		public:
 			XMLConsoleController(UIEventStream* uiEventStream, XMLConsoleWidgetFactory* xmlConsoleWidgetFactory);
+			~XMLConsoleController();
+
 		private:
 			void handleUIEvent(boost::shared_ptr<UIEvent> event);
-			UIEventStream* uiEventStream_;
-			XMLConsoleWidgetFactory* xmlConsoleWidgetFactory_;
-			XMLConsoleWidget* xmlConsoleWidget_;
+
+		private:
+			XMLConsoleWidgetFactory* xmlConsoleWidgetFactory;
+			XMLConsoleWidget* xmlConsoleWidget;
 	};
 }
