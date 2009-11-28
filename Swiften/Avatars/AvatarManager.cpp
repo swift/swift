@@ -16,6 +16,17 @@ AvatarManager::AvatarManager(StanzaChannel* stanzaChannel, IQRouter* iqRouter, A
 	stanzaChannel->onPresenceReceived.connect(boost::bind(&AvatarManager::handlePresenceReceived, this, _1));
 }
 
+AvatarManager::AvatarManager() {
+	stanzaChannel_ = NULL;
+	iqRouter_ = NULL;
+	avatarStorage_ = NULL;
+	mucRegistry_ = NULL;
+}
+
+AvatarManager::~AvatarManager() {
+
+}
+
 void AvatarManager::handlePresenceReceived(boost::shared_ptr<Presence> presence) {
 	boost::shared_ptr<VCardUpdate> update = presence->getPayload<VCardUpdate>();
 	if (!update) {

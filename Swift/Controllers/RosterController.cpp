@@ -28,7 +28,6 @@ RosterController::RosterController(const JID& jid, boost::shared_ptr<XMPPRoster>
 	
 	roster_->addFilter(offlineFilter_);
 	
-	mainWindow_->onStartChatRequest.connect(boost::bind(&RosterController::handleStartChatRequest, this, _1));
 	mainWindow_->onJoinMUCRequest.connect(boost::bind(&RosterController::handleJoinMUCRequest, this, _1, _2));
 	mainWindow_->onChangeStatusRequest.connect(boost::bind(&RosterController::handleChangeStatusRequest, this, _1, _2));
 	mainWindow_->onShowOfflineToggled.connect(boost::bind(&RosterController::handleShowOfflineToggled, this, _1));
@@ -143,10 +142,6 @@ void RosterController::handleAvatarChanged(const JID& jid, const String&) {
 	if (jid.equals(myJID_, JID::WithoutResource)) {
 		mainWindow_->setMyAvatarPath(path);
 	}
-}
-
-void RosterController::handleStartChatRequest(const JID& contact) {
-	onStartChatRequest(contact);
 }
 
 void RosterController::handleJoinMUCRequest(const JID &muc, const String &nick) {

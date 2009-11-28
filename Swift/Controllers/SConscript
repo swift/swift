@@ -10,6 +10,7 @@ myenv.MergeFlags(env["BOOST_FLAGS"])
 myenv.StaticLibrary("SwiftControllers", [
 		"ChatController.cpp",
 		"ChatControllerBase.cpp",
+		"ChatsManager.cpp",
 		"MainController.cpp",
 		"NickResolver.cpp",
 		"RosterController.cpp",
@@ -29,4 +30,6 @@ env.Append(UNITTEST_SOURCES = [
 		File("UnitTest/RosterControllerTest.cpp"),
 		File("UnitTest/XMPPRosterControllerTest.cpp"),
 		File("UnitTest/PreviousStatusStoreTest.cpp"),
+		File("UnitTest/ChatsManagerTest.cpp"),
+		File("UnitTest/MockChatWindow.cpp"),
 	])

@@ -113,6 +113,7 @@ myenv.StaticLibrary("Swiften", sources + swiften_env["SWIFTEN_OBJECTS"])
 
 env.Append(UNITTEST_SOURCES = [
 		File("Application/UnitTest/ApplicationTest.cpp"),
+		File("Avatars/UnitTest/MockAvatarManager.cpp"),
 		File("Base/UnitTest/IDGeneratorTest.cpp"),
 		File("Base/UnitTest/StringTest.cpp"),
 		File("Base/UnitTest/ByteArrayTest.cpp"),

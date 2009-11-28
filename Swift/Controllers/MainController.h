@@ -15,10 +15,8 @@
 #include "Swiften/Elements/DiscoInfo.h"
 #include "Swiften/Elements/ErrorPayload.h"
 #include "Swiften/Elements/Presence.h"
-#include "Swiften/Elements/Message.h"
 #include "Swiften/Settings/SettingsProvider.h"
 #include "Swiften/Elements/CapsInfo.h"
-#include "Swiften/MUC/MUCRegistry.h"
 #include "Swiften/Roster/XMPPRoster.h"
 
 namespace Swift {
@@ -27,6 +25,7 @@ namespace Swift {
 	class Client;
 	class ChatWindowFactory;
 	class ChatController;
+	class ChatsManager;
 	class EventController;
 	class MainWindowFactory;
 	class MainWindow;
@@ -51,7 +50,7 @@ namespace Swift {
 	class UIEventStream;
 	class XMLConsoleWidgetFactory;
 
-	class MainController : public MUCRegistry {
+	class MainController {
 		public:
 			MainController(ChatWindowFactory* chatWindowFactory, MainWindowFactory *mainWindowFactory, LoginWindowFactory *loginWindowFactory, TreeWidgetFactory* treeWidgetFactory, SettingsProvider *settings, Application* application, SystemTray* systemTray, SoundPlayer* soundPlayer, XMLConsoleWidgetFactory* xmlConsoleWidgetFactory);
 			~MainController();
@@ -59,27 +58,19 @@ namespace Swift {
 
 		private:
 			void resetClient();
-
 			void handleConnected();
 			void handleLoginRequest(const String& username, const String& password, const String& certificateFile, bool remember);
 			void handleCancelLoginRequest();
-			void handleChatRequest(const String& contact);
-			void handleJoinMUCRequest(const JID& muc, const String& nick);
 			void handleIncomingPresence(boost::shared_ptr<Presence> presence);
-			void handleChatControllerJIDChanged(const JID& from, const JID& to);
-			void handleIncomingMessage(boost::shared_ptr<Message> message);
 			void handleChangeStatusRequest(StatusShow::Type show, const String &statusText);
 			void handleError(const ClientError& error);
 			void handleServerDiscoInfoResponse(boost::shared_ptr<DiscoInfo>, const boost::optional<ErrorPayload>&);
 			void handleEventQueueLengthChange(int count);
 			void handleOwnVCardReceived(boost::shared_ptr<VCard> vCard, const boost::optional<ErrorPayload>& error);
-			ChatController* getChatController(const JID &contact);
 			void sendPresence(boost::shared_ptr<Presence> presence);
 			void handleInputIdleChanged(bool);
 			void logout();
 			void signOut();
-
-			virtual bool isMUC(const JID& muc) const;
 	
 			void performLoginFromCachedCredentials();
 			void reconnectAfterError();
@@ -108,9 +99,8 @@ namespace Swift {
 			DiscoInfoResponder* discoResponder_;
 			UIEventStream* uiEventStream_;
 			XMLConsoleController* xmlConsoleController_;
+			ChatsManager* chatsManager_;
 			boost::shared_ptr<CapsInfo> capsInfo_;
-			std::map<JID, MUCController*> mucControllers_;
-			std::map<JID, ChatController*> chatControllers_;
 			boost::shared_ptr<DiscoInfo> serverDiscoInfo_;
 			boost::shared_ptr<XMPPRoster> xmppRoster_;;
 			JID jid_;

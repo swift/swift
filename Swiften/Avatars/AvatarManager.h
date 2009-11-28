@@ -20,13 +20,18 @@ namespace Swift {
 	class AvatarManager {
 		public:
 			AvatarManager(StanzaChannel*, IQRouter*, AvatarStorage*, MUCRegistry*);
+			virtual ~AvatarManager();
 
-			String getAvatarHash(const JID&) const;
-			boost::filesystem::path getAvatarPath(const JID&) const;
-			void setAvatar(const JID&, const ByteArray& avatar);
+			virtual String getAvatarHash(const JID&) const;
+			virtual boost::filesystem::path getAvatarPath(const JID&) const;
+			virtual void setAvatar(const JID&, const ByteArray& avatar);
 
 		public:
 			boost::signal<void (const JID&, const String&)> onAvatarChanged;
+
+		protected:
+			/** Used only for testing. Leads to a non-functional object. */
+			AvatarManager();
 
 		private:
 			void handlePresenceReceived(boost::shared_ptr<Presence>);

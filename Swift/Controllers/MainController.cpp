@@ -9,6 +9,7 @@
 #include "Swiften/Application/ApplicationMessageDisplay.h"
 #include "Swift/Controllers/ChatController.h"
 #include "Swift/Controllers/ChatWindowFactory.h"
+#include "Swift/Controllers/ChatsManager.h"
 #include "Swift/Controllers/EventController.h"
 #include "Swift/Controllers/UIInterfaces/LoginWindow.h"
 #include "Swift/Controllers/UIInterfaces/LoginWindowFactory.h"
@@ -51,14 +52,13 @@ static const String CLIENT_NAME = "Swift";
 static const String CLIENT_VERSION = "0.3";
 static const String CLIENT_NODE = "http://swift.im";
 
-typedef std::pair<JID, ChatController*> JIDChatControllerPair;
-typedef std::pair<JID, MUCController*> JIDMUCControllerPair;
 
 MainController::MainController(ChatWindowFactory* chatWindowFactory, MainWindowFactory *mainWindowFactory, LoginWindowFactory *loginWindowFactory, TreeWidgetFactory *treeWidgetFactory, SettingsProvider *settings, Application* application, SystemTray* systemTray, SoundPlayer* soundPlayer, XMLConsoleWidgetFactory* xmlConsoleWidgetFactory)
 		: timerFactory_(&boostIOServiceThread_.getIOService()), idleDetector_(&idleQuerier_, &timerFactory_, 100), client_(NULL), presenceSender_(NULL), chatWindowFactory_(chatWindowFactory), mainWindowFactory_(mainWindowFactory), loginWindowFactory_(loginWindowFactory), treeWidgetFactory_(treeWidgetFactory), settings_(settings), xmppRosterController_(NULL), rosterController_(NULL), loginWindow_(NULL), clientVersionResponder_(NULL), nickResolver_(NULL), discoResponder_(NULL) {
 	application_ = application;
 	presenceOracle_ = NULL;
 	avatarManager_ = NULL;
+	chatsManager_ = NULL;
 	uiEventStream_ = new UIEventStream();
 
 	avatarStorage_ = new AvatarFileStorage(application_->getAvatarDir());
@@ -84,12 +84,6 @@ MainController::MainController(ChatWindowFactory* chatWindowFactory, MainWindowF
 }
 
 MainController::~MainController() {
-	foreach (JIDChatControllerPair controllerPair, chatControllers_) {
-		delete controllerPair.second;
-	}
-	foreach (JIDMUCControllerPair controllerPair, mucControllers_) {
-		delete controllerPair.second;
-	}
 	delete systemTrayController_;
 	delete soundEventController_;
 	delete avatarStorage_;
@@ -101,6 +95,8 @@ MainController::~MainController() {
 void MainController::resetClient() {
 	serverDiscoInfo_ = boost::shared_ptr<DiscoInfo>();
 	xmppRoster_ = boost::shared_ptr<XMPPRoster>();
+	delete chatsManager_;
+	chatsManager_ = NULL;
 	delete presenceOracle_;
 	presenceOracle_ = NULL;
 	delete nickResolver_;
@@ -129,17 +125,21 @@ void MainController::handleConnected() {
 		serverDiscoInfo_ = boost::shared_ptr<DiscoInfo>(new DiscoInfo());
 		xmppRoster_ = boost::shared_ptr<XMPPRoster>(new XMPPRoster());
 		presenceOracle_ = new PresenceOracle(client_);
+		nickResolver_ = new NickResolver(xmppRoster_);		
+		chatsManager_ = new ChatsManager(jid_, client_, client_, eventController_, chatWindowFactory_, treeWidgetFactory_, nickResolver_, presenceOracle_, serverDiscoInfo_, presenceSender_);
 
 		lastSentPresence_ = boost::shared_ptr<Presence>();
 
 		client_->onPresenceReceived.connect(boost::bind(&MainController::handleIncomingPresence, this, _1));
 
-		nickResolver_ = new NickResolver(xmppRoster_);
+		avatarManager_ = new AvatarManager(client_, client_, avatarStorage_, chatsManager_);
+		chatsManager_->setAvatarManager(avatarManager_);
 
-		avatarManager_ = new AvatarManager(client_, client_, avatarStorage_, this);
+		client_->onMessageReceived.connect(boost::bind(&ChatsManager::handleIncomingMessage, chatsManager_, _1));
+
 		rosterController_ = new RosterController(jid_, xmppRoster_, avatarManager_, mainWindowFactory_, treeWidgetFactory_, nickResolver_);
-		rosterController_->onStartChatRequest.connect(boost::bind(&MainController::handleChatRequest, this, _1));
-		rosterController_->onJoinMUCRequest.connect(boost::bind(&MainController::handleJoinMUCRequest, this, _1, _2));
+		rosterController_->onStartChatRequest.connect(boost::bind(&ChatsManager::handleChatRequest, chatsManager_, _1));
+		rosterController_->onJoinMUCRequest.connect(boost::bind(&ChatsManager::handleJoinMUCRequest, chatsManager_, _1, _2));
 		rosterController_->onChangeStatusRequest.connect(boost::bind(&MainController::handleChangeStatusRequest, this, _1, _2));
 		rosterController_->onSignOutRequest.connect(boost::bind(&MainController::signOut, this));
 
@@ -272,7 +272,6 @@ void MainController::performLoginFromCachedCredentials() {
 		}
 		client_->onError.connect(boost::bind(&MainController::handleError, this, _1));
 		client_->onConnected.connect(boost::bind(&MainController::handleConnected, this));
-		client_->onMessageReceived.connect(boost::bind(&MainController::handleIncomingMessage, this, _1));
 	}
 	client_->connect();
 }
@@ -314,14 +313,6 @@ void MainController::handleCancelLoginRequest() {
 void MainController::signOut() {
 	logout();
 	loginWindow_->loggedOut();
-	foreach (JIDChatControllerPair controllerPair, chatControllers_) {
-		delete controllerPair.second;
-	}
-	chatControllers_.clear();
-	foreach (JIDMUCControllerPair controllerPair, mucControllers_) {
-		delete controllerPair.second;
-	}
-	mucControllers_.clear();
 	delete rosterController_;
 	rosterController_ = NULL;
 	resetClient();
@@ -339,86 +330,19 @@ void MainController::logout() {
 }
 
 void MainController::setManagersEnabled(bool enabled) {
-	foreach (JIDChatControllerPair controllerPair, chatControllers_) {
-		//printf("Setting enabled on %d to %d\n", controllerPair.second, enabled);
-		controllerPair.second->setEnabled(enabled);
-	}
-	foreach (JIDMUCControllerPair controllerPair, mucControllers_) {
-		controllerPair.second->setEnabled(enabled);
-	}
+	chatsManager_->setEnabled(enabled);
 	if (rosterController_) {
 		rosterController_->setEnabled(enabled);
 	}
 }
 
-void MainController::handleChatRequest(const String &contact) {
-	ChatController* controller = getChatController(JID(contact));
-	controller->showChatWindow();
-	controller->activateChatWindow();
-}
 
-ChatController* MainController::getChatController(const JID &contact) {
-	JID lookupContact(contact);
-	if (chatControllers_.find(lookupContact) == chatControllers_.end()) {
-		lookupContact = JID(contact.toBare());
-	}
-	if (chatControllers_.find(lookupContact) == chatControllers_.end()) {
-		chatControllers_[contact] = new ChatController(jid_, client_, client_, chatWindowFactory_, contact, nickResolver_, presenceOracle_, avatarManager_);
-		chatControllers_[contact]->setAvailableServerFeatures(serverDiscoInfo_);
-		lookupContact = contact;
-	}
-	return chatControllers_[lookupContact];
-}
-
-void MainController::handleChatControllerJIDChanged(const JID& from, const JID& to) {
-	chatControllers_[to] = chatControllers_[from];
-	chatControllers_.erase(from);
-}
-
-void MainController::handleJoinMUCRequest(const JID &muc, const String &nick) {
-	mucControllers_[muc] = new MUCController(jid_, muc, nick, client_, presenceSender_, client_, chatWindowFactory_, treeWidgetFactory_, presenceOracle_, avatarManager_);
-	mucControllers_[muc]->setAvailableServerFeatures(serverDiscoInfo_);
-}
-
-void MainController::handleIncomingMessage(boost::shared_ptr<Message> message) {
-	JID jid = message->getFrom();
-	boost::shared_ptr<MessageEvent> event(new MessageEvent(message));
-	if (!event->isReadable()) {
-		return;
-	}
-
-	// Try to deliver it to a MUC
-	if (message->getType() == Message::Groupchat || message->getType() == Message::Error) {
-		std::map<JID, MUCController*>::iterator i = mucControllers_.find(jid.toBare());
-		if (i != mucControllers_.end()) {
-			i->second->handleIncomingMessage(event);
-			return;
-		}
-		else if (message->getType() == Message::Groupchat) {
-			//FIXME: Error handling - groupchat messages from an unknown muc.
-			return;
-		}
-	}
-	
-	//if not a mucroom
-	eventController_->handleIncomingEvent(event);
-	getChatController(jid)->handleIncomingMessage(event);
-}
 
 void MainController::handleServerDiscoInfoResponse(boost::shared_ptr<DiscoInfo> info, const boost::optional<ErrorPayload>& error) {
 	if (!error) {
 		serverDiscoInfo_ = info;
-		foreach (JIDChatControllerPair pair, chatControllers_) {
-			pair.second->setAvailableServerFeatures(info);
-		}
-		foreach (JIDMUCControllerPair pair, mucControllers_) {
-			pair.second->setAvailableServerFeatures(info);
-		}
+		chatsManager_->setServerDiscoInfo(info);
 	}
-}
-
-bool MainController::isMUC(const JID& jid) const {
-	return mucControllers_.find(jid.toBare()) != mucControllers_.end();
 }
 
 void MainController::handleOwnVCardReceived(boost::shared_ptr<VCard> vCard, const boost::optional<ErrorPayload>& error) {
