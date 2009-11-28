@@ -100,7 +100,7 @@ QtLoginWindow::QtLoginWindow(UIEventStream* uiEventStream) : QMainWindow() {
 #else
 	menuBar_ = menuBar();
 #endif
-	QApplication::setQuitOnLastWindowClosed(false);
+	QApplication::setQuitOnLastWindowClosed(true);
 	
 	swiftMenu_ = new QMenu(tr("Swift"), this);
 	
