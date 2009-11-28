@@ -5,6 +5,8 @@ namespace Swift {
 
 	class PlatformAutoUpdaterFactory {
 		public:
+			bool isSupported() const;
+
 			AutoUpdater* createAutoUpdater(const String& appcastURL);
 	};
 }

@@ -33,7 +33,7 @@ namespace Swift{
 #endif
 
 
-QtSwift::QtSwift(bool netbookMode) {
+QtSwift::QtSwift(bool netbookMode) : autoUpdater_(NULL) {
 	if (netbookMode) {
 		splitter_ = new QSplitter();
 	} else {
@@ -59,8 +59,11 @@ QtSwift::QtSwift(bool netbookMode) {
 	}
 	mainController_ = new MainController(chatWindowFactory_, rosterWindowFactory_, loginWindowFactory_, treeWidgetFactory_, settings_, application_, systemTray_, soundPlayer_, xmlConsoleWidgetFactory_);
 
-	autoUpdater_ = PlatformAutoUpdaterFactory().createAutoUpdater(SWIFT_APPCAST_URL);
-	autoUpdater_->checkForUpdates();
+	PlatformAutoUpdaterFactory autoUpdaterFactory;
+	if (autoUpdaterFactory.isSupported()) {
+		autoUpdater_ = autoUpdaterFactory.createAutoUpdater(SWIFT_APPCAST_URL);
+		autoUpdater_->checkForUpdates();
+	}
 }
 
 QtSwift::~QtSwift() {

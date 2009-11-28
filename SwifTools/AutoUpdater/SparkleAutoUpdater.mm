@@ -15,6 +15,7 @@ SparkleAutoUpdater::SparkleAutoUpdater(const String& url) {
 
 	d->updater = [SUUpdater sharedUpdater];
 	[d->updater retain];
+	[d->updater setAutomaticallyChecksForUpdates: true];
 
 	NSURL* nsurl = [NSURL URLWithString:
 			[NSString stringWithUTF8String: url.getUTF8Data()]];
