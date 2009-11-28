@@ -19,6 +19,7 @@ void XMLConsoleController::handleUIEvent(boost::shared_ptr<UIEvent> rawEvent) {
 			xmlConsoleWidget_ = xmlConsoleWidgetFactory_->createXMLConsoleWidget();
 		}
 		xmlConsoleWidget_->show();
+		xmlConsoleWidget_->activate();
 	}
 }
 

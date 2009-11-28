@@ -6,5 +6,6 @@ namespace Swift {
 			virtual ~XMLConsoleWidget();
 
 			virtual void show() = 0;
+			virtual void activate() = 0;
 	};
 }
