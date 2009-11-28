@@ -2,7 +2,8 @@ import SCons.Util
 
 def generate(env) :
   def createAppBundle(env, bundle, version = "1.0", resources = [], frameworks = [], info = {}) :
-    bundleContentsDir = bundle + ".app" + "/Contents"
+    bundleDir = bundle + ".app"
+    bundleContentsDir = bundleDir + "/Contents"
     resourcesDir = bundleContentsDir + "/Resources"
     frameworksDir = bundleContentsDir + "/Frameworks"
     env.Install(bundleContentsDir + "/MacOS", bundle)
@@ -41,6 +42,8 @@ def generate(env) :
 
     for framework in frameworks :
       env.Install(frameworksDir, framework)
+
+    return env.Dir(bundleDir)
 
   env.AddMethod(createAppBundle, "AppBundle")
 

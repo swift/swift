@@ -107,7 +107,12 @@ if env["PLATFORM"] == "darwin" :
   frameworks = []
   if env["HAVE_SPARKLE"] :
     frameworks.append(env["SPARKLE_FRAMEWORK"])
-  myenv.AppBundle("Swift", version = env["SWIFT_VERSION"], resources = ["../resources/MacOSX/Swift.icns"], frameworks = frameworks)
+  app = myenv.AppBundle("Swift", version = env["SWIFT_VERSION"], resources = ["../resources/MacOSX/Swift.icns"], frameworks = frameworks)
+  if "dist" in COMMAND_LINE_TARGETS :
+    myenv.Command(["Swift-${SWIFT_VERSION}.dmg"], [app], [
+        "$QTDIR/bin/macdeployqt $SOURCE -dmg",
+        Move("$TARGET", "$SOURCE.dir/Swift.dmg")
+      ])
 
 if env.get("SWIFT_INSTALLDIR", "") :
   env.Install(os.path.join(env["SWIFT_INSTALLDIR"], "bin"), swiftProgram)
