@@ -5,6 +5,7 @@
 #include <QVBoxLayout>
 #include <QPushButton>
 #include <QScrollBar>
+#include <QCheckBox>
 
 #include "QtSwiftUtil.h"
 #include "Swiften/Base/String.h"
@@ -26,9 +27,15 @@ QtXMLConsoleWidget::QtXMLConsoleWidget() {
 	layout->addWidget(bottom);
 
 	QHBoxLayout* buttonLayout = new QHBoxLayout(bottom);
-	buttonLayout->setContentsMargins(0,0,20,0);
+	buttonLayout->setContentsMargins(10,0,20,0);
 	buttonLayout->setSpacing(0);
+
+	enabled = new QCheckBox("Trace input/output", bottom);
+	enabled->setChecked(true);
+	buttonLayout->addWidget(enabled);
+
 	buttonLayout->addStretch();
+
 	QPushButton* clearButton = new QPushButton("Clear", bottom);
 	connect(clearButton, SIGNAL(clicked()), textEdit, SLOT(clear()));
 	buttonLayout->addWidget(clearButton);
@@ -55,20 +62,22 @@ void QtXMLConsoleWidget::closeEvent(QCloseEvent* event) {
 
 void QtXMLConsoleWidget::handleDataRead(const String& data) {
 	textEdit->setTextColor(QColor(33,98,33));
-	appendText(data);
+	appendTextIfEnabled(data);
 }
 
 void QtXMLConsoleWidget::handleDataWritten(const String& data) {
 	textEdit->setTextColor(QColor(155,1,0));
-	appendText(data);
+	appendTextIfEnabled(data);
 }
 
-void QtXMLConsoleWidget::appendText(const String& data) {
-	QScrollBar* scrollBar = textEdit->verticalScrollBar();
-	bool scrollToBottom = (!scrollBar || scrollBar->value() == scrollBar->maximum());
-	textEdit->append(P2QSTRING(data));
-	if (scrollToBottom) {
-		textEdit->ensureCursorVisible();
+void QtXMLConsoleWidget::appendTextIfEnabled(const String& data) {
+	if (enabled->isChecked()) {
+		QScrollBar* scrollBar = textEdit->verticalScrollBar();
+		bool scrollToBottom = (!scrollBar || scrollBar->value() == scrollBar->maximum());
+		textEdit->append(P2QSTRING(data));
+		if (scrollToBottom) {
+			textEdit->ensureCursorVisible();
+		}
 	}
 }
 

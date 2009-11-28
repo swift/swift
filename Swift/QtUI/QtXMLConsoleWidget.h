@@ -4,6 +4,7 @@
 #include "QtTabbable.h"
 
 class QTextEdit;
+class QCheckBox;
 
 namespace Swift {
 	class QtXMLConsoleWidget : public QtTabbable, public XMLConsoleWidget {
@@ -22,9 +23,10 @@ namespace Swift {
 			virtual void closeEvent(QCloseEvent* event);
 			virtual void showEvent(QShowEvent* event);
 
-			void appendText(const String& data);
+			void appendTextIfEnabled(const String& data);
 
 		private:
 			QTextEdit* textEdit;
+			QCheckBox* enabled;
 	};
 }
