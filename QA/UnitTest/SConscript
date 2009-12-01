@@ -2,26 +2,25 @@ import os
 
 Import("env")
 
-if env["TEST"] :
-	myenv = env.Clone()
-	myenv.MergeFlags(env["CHECKER_FLAGS"])
-	myenv.MergeFlags(env["SLIMBER_FLAGS"])
-	myenv.MergeFlags(env["SWIFT_CONTROLLERS_FLAGS"])
-	myenv.MergeFlags(env["SWIFTOOLS_FLAGS"])
-	myenv.MergeFlags(env["SWIFTEN_FLAGS"])
-	myenv.MergeFlags(env["CPPUNIT_FLAGS"])
-	myenv.MergeFlags(env["LIBIDN_FLAGS"])
-	myenv.MergeFlags(env["BOOST_FLAGS"])
-	myenv.MergeFlags(env["SQLITE_FLAGS"])
-	myenv.MergeFlags(env.get("LIBXML_FLAGS", ""))
-	myenv.MergeFlags(env.get("EXPAT_FLAGS", ""))
-	myenv.MergeFlags(env["ZLIB_FLAGS"])
-	if env.get("HAVE_LIBXML") :
-		myenv.Append(CPPDEFINES = ["HAVE_LIBXML"])
-	if env.get("HAVE_EXPAT") :
-		myenv.Append(CPPDEFINES = ["HAVE_EXPAT"])
-	checker = myenv.Program("checker", env["UNITTEST_SOURCES"])
-	for i in ["HOME", "USERPROFILE", "APPDATA"]:
-		if os.environ.get(i, "") :
-			myenv["ENV"][i] = os.environ[i]
-	myenv.Test(checker)
+myenv = env.Clone()
+myenv.MergeFlags(env["CHECKER_FLAGS"])
+myenv.MergeFlags(env["SLIMBER_FLAGS"])
+myenv.MergeFlags(env["SWIFT_CONTROLLERS_FLAGS"])
+myenv.MergeFlags(env["SWIFTOOLS_FLAGS"])
+myenv.MergeFlags(env["SWIFTEN_FLAGS"])
+myenv.MergeFlags(env["CPPUNIT_FLAGS"])
+myenv.MergeFlags(env["LIBIDN_FLAGS"])
+myenv.MergeFlags(env["BOOST_FLAGS"])
+myenv.MergeFlags(env["SQLITE_FLAGS"])
+myenv.MergeFlags(env.get("LIBXML_FLAGS", ""))
+myenv.MergeFlags(env.get("EXPAT_FLAGS", ""))
+myenv.MergeFlags(env["ZLIB_FLAGS"])
+if env.get("HAVE_LIBXML") :
+  myenv.Append(CPPDEFINES = ["HAVE_LIBXML"])
+if env.get("HAVE_EXPAT") :
+  myenv.Append(CPPDEFINES = ["HAVE_EXPAT"])
+checker = myenv.Program("checker", env["UNITTEST_SOURCES"])
+for i in ["HOME", "USERPROFILE", "APPDATA"]:
+  if os.environ.get(i, "") :
+    myenv["ENV"][i] = os.environ[i]
+myenv.Test(checker)

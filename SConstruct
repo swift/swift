@@ -47,6 +47,13 @@ if env["PLATFORM"] == "darwin" :
 if env["PLATFORM"] == "win32" :
 	env.Tool("WindowsBundle", toolpath = ["#/BuildTools/SCons/Tools"])
 
+# Override SConscript to handle tests
+oldSConscript = SConscript
+def SConscript(*arguments, **keywords) :
+  if not keywords.get("test_only", False) or env["TEST"] :
+    return apply(oldSConscript, arguments, keywords)
+  
+
 # Default compiler flags
 env["CCFLAGS"] = env.get("ccflags", [])
 env["LINKFLAGS"] = env.get("linkflags", [])
@@ -317,7 +324,7 @@ SConscript(dirs = [
 		"3rdParty/SQLite"])
 
 # Checker
-SConscript(dirs = ["QA/Checker"])
+SConscript(dirs = ["QA/Checker"], test_only = True)
 
 # Libraries
 SConscript(dirs = [
@@ -334,7 +341,7 @@ for dir in os.listdir(".") :
 		SConscript(sconscript)
 
 # Unit test runner
-SConscript(dirs = ["QA/UnitTest"])
+SConscript(dirs = ["QA/UnitTest"], test_only = True)
 
 ################################################################################
 # Print summary
