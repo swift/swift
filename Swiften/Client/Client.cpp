@@ -9,7 +9,6 @@
 #include "Swiften/Network/Connector.h"
 #include "Swiften/Network/BoostConnectionFactory.h"
 #include "Swiften/Network/BoostTimerFactory.h"
-#include "Swiften/Network/DomainNameResolveException.h"
 #include "Swiften/TLS/PKCS12Certificate.h"
 #include "Swiften/Session/BasicSessionStream.h"
 

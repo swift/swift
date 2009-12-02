@@ -40,8 +40,8 @@ class ConnectorTest : public CppUnit::TestFixture {
 
 		void testConnect() {
 			std::auto_ptr<Connector> testling(createConnector());
-			resolver->addDomain("foo.com", host1);
-			resolver->addDomain("foo.com", host2);
+			resolver->addXMPPClientService("foo.com", host1);
+			resolver->addXMPPClientService("foo.com", host2);
 
 			testling->start();
 			eventLoop->processEvents();
@@ -63,8 +63,8 @@ class ConnectorTest : public CppUnit::TestFixture {
 
 		void testConnect_FirstHostFails() {
 			std::auto_ptr<Connector> testling(createConnector());
-			resolver->addDomain("foo.com", host1);
-			resolver->addDomain("foo.com", host2);
+			resolver->addXMPPClientService("foo.com", host1);
+			resolver->addXMPPClientService("foo.com", host2);
 			connectionFactory->failingPorts.push_back(host1);
 
 			testling->start();
@@ -76,8 +76,8 @@ class ConnectorTest : public CppUnit::TestFixture {
 
 		void testConnect_AllHostsFail() {
 			std::auto_ptr<Connector> testling(createConnector());
-			resolver->addDomain("foo.com", host1);
-			resolver->addDomain("foo.com", host2);
+			resolver->addXMPPClientService("foo.com", host1);
+			resolver->addXMPPClientService("foo.com", host2);
 			connectionFactory->failingPorts.push_back(host1);
 			connectionFactory->failingPorts.push_back(host2);
 

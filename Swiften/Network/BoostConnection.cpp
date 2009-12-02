@@ -7,8 +7,7 @@
 #include "Swiften/EventLoop/MainEventLoop.h"
 #include "Swiften/Base/String.h"
 #include "Swiften/Base/ByteArray.h"
-#include "Swiften/Network/DomainNameResolver.h"
-#include "Swiften/Network/DomainNameResolveException.h"
+#include "Swiften/Network/HostAddressPort.h"
 
 namespace Swift {
 
