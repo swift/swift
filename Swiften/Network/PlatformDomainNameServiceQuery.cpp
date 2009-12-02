@@ -32,10 +32,25 @@ namespace {
 
 namespace Swift {
 
-PlatformDomainNameServiceQuery::PlatformDomainNameServiceQuery(const String& service) : service(service) {
+PlatformDomainNameServiceQuery::PlatformDomainNameServiceQuery(const String& service) : thread(NULL), service(service), safeToJoin(true) {
+}
+
+PlatformDomainNameServiceQuery::~PlatformDomainNameServiceQuery() {
+	if (safeToJoin) {
+		thread->join();
+	}
+	else {
+		// FIXME: UGLYYYYY
+	}
+	delete thread;
 }
 
 void PlatformDomainNameServiceQuery::run() {
+	safeToJoin = false;
+	thread = new boost::thread(boost::bind(&PlatformDomainNameServiceQuery::doRun, shared_from_this()));
+}
+
+void PlatformDomainNameServiceQuery::doRun() {
 	std::vector<DomainNameServiceQuery::Result> records;
 
 #if defined(SWIFTEN_PLATFORM_WINDOWS)
@@ -145,11 +160,13 @@ void PlatformDomainNameServiceQuery::run() {
 	}
 #endif
 
+	safeToJoin = true;
 	std::sort(records.begin(), records.end(), SRVRecordPriorityComparator());
 	MainEventLoop::postEvent(boost::bind(boost::ref(onResult), records)); 
 }
 
 void PlatformDomainNameServiceQuery::emitError() {
+	safeToJoin = true;
 	MainEventLoop::postEvent(boost::bind(boost::ref(onResult), std::vector<DomainNameServiceQuery::Result>()), shared_from_this());
 }
 

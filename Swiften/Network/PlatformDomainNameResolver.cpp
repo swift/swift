@@ -7,6 +7,7 @@
 #include <vector>
 #include <boost/asio.hpp>
 #include <boost/bind.hpp>
+#include <boost/thread.hpp>
 #include <boost/enable_shared_from_this.hpp>
 #include <idna.h>
 #include <algorithm>
@@ -21,9 +22,24 @@ using namespace Swift;
 
 namespace {
 	struct AddressQuery : public DomainNameAddressQuery, public boost::enable_shared_from_this<AddressQuery>, public EventOwner {
-		AddressQuery(const String& host) : hostname(host) {}
+		AddressQuery(const String& host) : hostname(host), thread(NULL), safeToJoin(false) {}
 
-		virtual void run() {
+		~AddressQuery() {
+			if (safeToJoin) {
+				thread->join();
+			}
+			else {
+				// FIXME: UGLYYYYY
+			}
+			delete thread;
+		}
+
+		void run() {
+			safeToJoin = false;
+			thread = new boost::thread(boost::bind(&AddressQuery::doRun, shared_from_this()));
+		}
+		
+		void doRun() {
 			boost::asio::ip::tcp::resolver resolver(ioService);
 			boost::asio::ip::tcp::resolver::query query(hostname.getUTF8String(), "5222");
 			try {
@@ -42,6 +58,7 @@ namespace {
 			catch (...) {
 				emitError();
 			}
+			safeToJoin = true;
 		}
 
 		void emitError() {
@@ -50,6 +67,8 @@ namespace {
 
 		boost::asio::io_service ioService;
 		String hostname;
+		boost::thread* thread;
+		bool safeToJoin;
 	};
 
 	String getNormalized(const String& domain) {
