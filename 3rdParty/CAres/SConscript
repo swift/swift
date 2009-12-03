@@ -2,6 +2,7 @@ Import("env")
 
 myenv = env.Clone()
 myenv.Append(CPPPATH = ["src"])
+myenv.Append(CPPDEFINES = [("CARES_STATICLIB")])
 if myenv["PLATFORM"] != "win32" :
   myenv.Append(CPPDEFINES = ["HAVE_CONFIG_H"])
 
