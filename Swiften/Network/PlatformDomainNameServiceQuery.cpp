@@ -82,9 +82,11 @@ void PlatformDomainNameServiceQuery::doRun() {
 
 #else
 
+	std::cout << "SRV: Querying " << service << std::endl;
 	ByteArray response;
 	response.resize(NS_PACKETSZ);
 	int responseLength = res_query(const_cast<char*>(service.getUTF8Data()), ns_c_in, ns_t_srv, reinterpret_cast<u_char*>(response.getData()), response.getSize());
+	std::cout << "res_query done " << (responseLength != -1) << std::endl;
 	if (responseLength == -1) {
 		emitError();
 		return;
@@ -162,6 +164,7 @@ void PlatformDomainNameServiceQuery::doRun() {
 
 	safeToJoin = true;
 	std::sort(records.begin(), records.end(), SRVRecordPriorityComparator());
+	std::cout << "Sending out " << records.size() << " SRV results " << std::endl;
 	MainEventLoop::postEvent(boost::bind(boost::ref(onResult), records)); 
 }
 

@@ -21,7 +21,7 @@ namespace Swift {
 
 		private:
 			boost::thread* thread;
-			bool safeToJoin;
 			String service;
+			bool safeToJoin;
 	};
 }
