@@ -321,6 +321,7 @@ SConscript(dirs = [
 		"3rdParty/CppUnit",
 		"3rdParty/Boost",
 		"3rdParty/LibIDN",
+		#"3rdParty/CAres",
 		"3rdParty/SQLite"])
 
 # Checker

@@ -1,0 +1,49 @@
+Import("env")
+
+myenv = env.Clone()
+myenv.Append(CPPPATH = ["src"])
+if myenv["PLATFORM"] != "win32" :
+  myenv.Append(CPPDEFINES = ["HAVE_CONFIG_H"])
+
+myenv.StaticLibrary("CAres", [
+    "src/ares__close_sockets.c",
+    "src/ares__get_hostent.c",
+    "src/ares__read_line.c",
+    "src/ares__timeval.c",
+    "src/ares_cancel.c",
+    "src/ares_data.c",
+    "src/ares_destroy.c",
+    "src/ares_expand_name.c",
+    "src/ares_expand_string.c",
+    "src/ares_fds.c",
+    "src/ares_free_hostent.c",
+    "src/ares_free_string.c",
+    "src/ares_gethostbyaddr.c",
+    "src/ares_gethostbyname.c",
+    "src/ares_getnameinfo.c",
+    "src/ares_getsock.c",
+    "src/ares_init.c",
+    "src/ares_library_init.c",
+    "src/ares_llist.c",
+    "src/ares_mkquery.c",
+    "src/ares_parse_a_reply.c",
+    "src/ares_parse_aaaa_reply.c",
+    "src/ares_parse_ns_reply.c",
+    "src/ares_parse_ptr_reply.c",
+    "src/ares_parse_srv_reply.c",
+    "src/ares_parse_txt_reply.c",
+    "src/ares_process.c",
+    "src/ares_query.c",
+    "src/ares_search.c",
+    "src/ares_send.c",
+    "src/ares_strcasecmp.c",
+    "src/ares_strdup.c",
+    "src/ares_strerror.c",
+    "src/ares_timeout.c",
+    "src/ares_version.c",
+    "src/ares_writev.c",
+    "src/bitncmp.c",
+    "src/inet_net_pton.c",
+    "src/inet_ntop.c",
+    "src/windows_port.c",
+  ])
