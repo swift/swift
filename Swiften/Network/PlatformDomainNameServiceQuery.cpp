@@ -81,6 +81,8 @@ void PlatformDomainNameServiceQuery::doRun() {
 	DnsRecordListFree(responses, DnsFreeRecordList);
 
 #else
+	// Make sure we reinitialize the domain list every time
+	res_init();
 
 	std::cout << "SRV: Querying " << service << std::endl;
 	ByteArray response;
