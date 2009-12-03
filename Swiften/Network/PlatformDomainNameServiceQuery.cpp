@@ -64,7 +64,7 @@ void PlatformDomainNameServiceQuery::doRun() {
 	DNS_RECORD* currentEntry = responses;
 	while (currentEntry) {
 		if (currentEntry->wType == DNS_TYPE_SRV) {
-			SRVRecord record;
+			DomainNameServiceQuery::Result record;
 			record.priority = currentEntry->Data.SRV.wPriority;
 			record.weight = currentEntry->Data.SRV.wWeight;
 			record.port = currentEntry->Data.SRV.wPort;
@@ -73,7 +73,7 @@ void PlatformDomainNameServiceQuery::doRun() {
 			// conversion to not work at all, but it does.
 			// Actually, it doesn't. Fix this and remove explicit cast
 			// Remove unicode undef above as well
-			record.hostname = std::string((const char*) currentEntry->Data.SRV.pNameTarget);
+			record.hostname = String((const char*) currentEntry->Data.SRV.pNameTarget);
 			records.push_back(record);
 		}
 		currentEntry = currentEntry->pNext;
