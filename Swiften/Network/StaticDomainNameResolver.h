@@ -8,6 +8,7 @@
 #include "Swiften/Network/DomainNameResolver.h"
 #include "Swiften/Network/DomainNameServiceQuery.h"
 #include "Swiften/Network/DomainNameAddressQuery.h"
+#include "Swiften/EventLoop/MainEventLoop.h"
 
 namespace Swift {
 	class String;
