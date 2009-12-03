@@ -1,5 +1,12 @@
 Import("env")
 
+env["CARES_FLAGS"] = {
+		"CPPDEFINES": ["CARES_STATICLIB"],
+		"CPPPATH": [Dir("src"), Dir(".")],
+		"LIBPATH": [Dir(".")],
+		"LIBS": ["CAres"],
+	}
+
 myenv = env.Clone()
 myenv.Append(CPPPATH = ["src"])
 myenv.Append(CPPDEFINES = [("CARES_STATICLIB")])
