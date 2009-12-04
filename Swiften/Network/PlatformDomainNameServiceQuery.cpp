@@ -22,14 +22,6 @@
 
 using namespace Swift;
 
-namespace {
-	struct SRVRecordPriorityComparator {
-		bool operator()(const DomainNameServiceQuery::Result& a, const DomainNameServiceQuery::Result& b) const {
-			return a.priority < b.priority;
-		}
-	};
-}
-
 namespace Swift {
 
 PlatformDomainNameServiceQuery::PlatformDomainNameServiceQuery(const String& service) : thread(NULL), service(service), safeToJoin(true) {
@@ -165,7 +157,7 @@ void PlatformDomainNameServiceQuery::doRun() {
 #endif
 
 	safeToJoin = true;
-	std::sort(records.begin(), records.end(), SRVRecordPriorityComparator());
+	std::sort(records.begin(), records.end(), ResultPriorityComparator());
 	std::cout << "Sending out " << records.size() << " SRV results " << std::endl;
 	MainEventLoop::postEvent(boost::bind(boost::ref(onResult), records)); 
 }

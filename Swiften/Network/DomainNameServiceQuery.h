@@ -18,6 +18,12 @@ namespace Swift {
 				int weight;
 			};
 
+			struct ResultPriorityComparator {
+				bool operator()(const DomainNameServiceQuery::Result& a, const DomainNameServiceQuery::Result& b) const {
+					return a.priority < b.priority;
+				}
+			};
+
 			virtual ~DomainNameServiceQuery();
 
 			virtual void run() = 0;

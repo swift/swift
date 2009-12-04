@@ -9,7 +9,6 @@
 #include <boost/bind.hpp>
 #include <boost/thread.hpp>
 #include <boost/enable_shared_from_this.hpp>
-#include <idna.h>
 #include <algorithm>
 
 #include "Swiften/Base/String.h"
@@ -77,17 +76,6 @@ namespace {
 		bool safeToJoin;
 	};
 
-	String getNormalized(const String& domain) {
-		char* output;
-		if (idna_to_ascii_8z(domain.getUTF8Data(), &output, 0) == IDNA_SUCCESS) {
-			String result(output);
-			free(output);
-			return result;
-		}
-		else {
-			return domain;
-		}
-	}
 }
 
 namespace Swift {

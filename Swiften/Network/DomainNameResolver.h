@@ -2,6 +2,8 @@
 
 #include <boost/shared_ptr.hpp>
 
+#include "Swiften/Base/String.h"
+
 namespace Swift {
 	class DomainNameServiceQuery;
 	class DomainNameAddressQuery;
@@ -13,5 +15,8 @@ namespace Swift {
 
 			virtual boost::shared_ptr<DomainNameServiceQuery> createServiceQuery(const String& name) = 0;
 			virtual boost::shared_ptr<DomainNameAddressQuery> createAddressQuery(const String& name) = 0;
+
+		protected:
+			static String getNormalized(const String& domain);
 	};
 }

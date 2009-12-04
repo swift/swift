@@ -2,7 +2,7 @@ Import("env")
 
 env["CARES_FLAGS"] = {
 		"CPPDEFINES": ["CARES_STATICLIB"],
-		"CPPPATH": [Dir("src"), Dir(".")],
+		"CPPPATH": [Dir("include")],
 		"LIBPATH": [Dir(".")],
 		"LIBS": ["CAres"],
 	}
@@ -14,6 +14,12 @@ myenv.Append(CPPPATH = ["src", "."])
 if myenv["PLATFORM"] != "win32" :
   myenv.Append(CPPDEFINES = ["HAVE_CONFIG_H"])
 
+myenv.Install("include", [
+		"src/ares.h",
+		"src/ares_version.h",
+		"src/ares_build.h",
+		"src/ares_rules.h"
+	])
 myenv.StaticLibrary("CAres", [
     "src/ares__close_sockets.c",
     "src/ares__get_hostent.c",
