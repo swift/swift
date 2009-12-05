@@ -2,9 +2,12 @@
 // goes for the PlatformDomainNameResolver.
 
 #include "Swiften/Network/CAresDomainNameResolver.h"
+#include "Swiften/Base/Platform.h"
 
+#ifndef SWIFTEN_PLATFORM_WINDOWS
 #include <netdb.h>
 #include <arpa/inet.h>
+#endif
 #include <algorithm>
 
 #include "Swiften/Network/DomainNameServiceQuery.h"
