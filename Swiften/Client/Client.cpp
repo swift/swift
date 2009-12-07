@@ -72,9 +72,10 @@ void Client::handleConnectorFinished(boost::shared_ptr<Connection> connection) {
 void Client::disconnect() {
 	if (session_) {
 		session_->finish();
-		session_.reset();
 	}
-	closeConnection();
+	else {
+		closeConnection();
+	}
 }
 
 void Client::closeConnection() {
@@ -136,6 +137,7 @@ void Client::setCertificate(const String& certificate) {
 }
 
 void Client::handleSessionFinished(boost::shared_ptr<Error> error) {
+	session_.reset();
 	closeConnection();
 	if (error) {
 		ClientError clientError;
@@ -191,7 +193,6 @@ void Client::handleSessionFinished(boost::shared_ptr<Error> error) {
 		}
 		onError(clientError);
 	}
-	session_.reset();
 }
 
 void Client::handleNeedCredentials() {

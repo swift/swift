@@ -46,6 +46,7 @@ namespace Swift {
 				Error(Type type) : type(type) {}
 			};
 
+			~ClientSession();
 			static boost::shared_ptr<ClientSession> create(const JID& jid, boost::shared_ptr<SessionStream> stream) {
 				return boost::shared_ptr<ClientSession>(new ClientSession(jid, stream));
 			}

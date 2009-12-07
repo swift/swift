@@ -34,6 +34,9 @@ ClientSession::ClientSession(
 			authenticator(NULL) {
 }
 
+ClientSession::~ClientSession() {
+}
+
 void ClientSession::start() {
 	stream->onStreamStartReceived.connect(boost::bind(&ClientSession::handleStreamStart, shared_from_this(), _1));
 	stream->onElementReceived.connect(boost::bind(&ClientSession::handleElement, shared_from_this(), _1));
