@@ -17,13 +17,16 @@ using namespace Swift;
 class ConnectorTest : public CppUnit::TestFixture {
 		CPPUNIT_TEST_SUITE(ConnectorTest);
 		CPPUNIT_TEST(testConnect);
+		CPPUNIT_TEST(testConnect_NoSRVHost);
 		CPPUNIT_TEST(testConnect_NoHosts);
-		CPPUNIT_TEST(testConnect_FirstHostFails);
-		CPPUNIT_TEST(testConnect_AllHostsFail);
+		CPPUNIT_TEST(testConnect_FirstSRVHostFails);
+		CPPUNIT_TEST(testConnect_AllSRVHostsFailWithoutFallbackHost);
+		CPPUNIT_TEST(testConnect_AllSRVHostsFailWithFallbackHost);
+		CPPUNIT_TEST(testConnect_SRVAndFallbackHostsFail);
 		CPPUNIT_TEST_SUITE_END();
 
 	public:
-		ConnectorTest() : host1(HostAddress("1.1.1.1"), 1234), host2(HostAddress("2.2.2.2"), 2345) {
+		ConnectorTest() : host1(HostAddress("1.1.1.1"), 1234), host2(HostAddress("2.2.2.2"), 2345), host3(HostAddress("3.3.3.3"), 5222) {
 		}
 		
 		void setUp() {
@@ -42,6 +45,7 @@ class ConnectorTest : public CppUnit::TestFixture {
 			std::auto_ptr<Connector> testling(createConnector());
 			resolver->addXMPPClientService("foo.com", host1);
 			resolver->addXMPPClientService("foo.com", host2);
+			resolver->addAddress("foo.com", host3.getAddress());
 
 			testling->start();
 			eventLoop->processEvents();
@@ -49,6 +53,18 @@ class ConnectorTest : public CppUnit::TestFixture {
 			CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(connections.size()));
 			CPPUNIT_ASSERT(connections[0]);
 			CPPUNIT_ASSERT(host1 == *(connections[0]->hostAddressPort));
+		}
+
+		void testConnect_NoSRVHost() {
+			std::auto_ptr<Connector> testling(createConnector());
+			resolver->addAddress("foo.com", host3.getAddress());
+
+			testling->start();
+			eventLoop->processEvents();
+
+			CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(connections.size()));
+			CPPUNIT_ASSERT(connections[0]);
+			CPPUNIT_ASSERT(host3 == *(connections[0]->hostAddressPort));
 		}
 
 		void testConnect_NoHosts() {
@@ -61,7 +77,7 @@ class ConnectorTest : public CppUnit::TestFixture {
 			CPPUNIT_ASSERT(!connections[0]);
 		}
 
-		void testConnect_FirstHostFails() {
+		void testConnect_FirstSRVHostFails() {
 			std::auto_ptr<Connector> testling(createConnector());
 			resolver->addXMPPClientService("foo.com", host1);
 			resolver->addXMPPClientService("foo.com", host2);
@@ -74,12 +90,42 @@ class ConnectorTest : public CppUnit::TestFixture {
 			CPPUNIT_ASSERT(host2 == *(connections[0]->hostAddressPort));
 		}
 
-		void testConnect_AllHostsFail() {
+		void testConnect_AllSRVHostsFailWithoutFallbackHost() {
 			std::auto_ptr<Connector> testling(createConnector());
 			resolver->addXMPPClientService("foo.com", host1);
 			resolver->addXMPPClientService("foo.com", host2);
 			connectionFactory->failingPorts.push_back(host1);
 			connectionFactory->failingPorts.push_back(host2);
+
+			testling->start();
+			eventLoop->processEvents();
+
+			CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(connections.size()));
+			CPPUNIT_ASSERT(!connections[0]);
+		}
+
+		void testConnect_AllSRVHostsFailWithFallbackHost() {
+			std::auto_ptr<Connector> testling(createConnector());
+			resolver->addXMPPClientService("foo.com", host1);
+			resolver->addXMPPClientService("foo.com", host2);
+			resolver->addAddress("foo.com", host3.getAddress());
+			connectionFactory->failingPorts.push_back(host1);
+			connectionFactory->failingPorts.push_back(host2);
+
+			testling->start();
+			eventLoop->processEvents();
+
+			CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(connections.size()));
+			CPPUNIT_ASSERT(connections[0]);
+			CPPUNIT_ASSERT(host3 == *(connections[0]->hostAddressPort));
+		}
+
+		void testConnect_SRVAndFallbackHostsFail() {
+			std::auto_ptr<Connector> testling(createConnector());
+			resolver->addXMPPClientService("foo.com", host1);
+			resolver->addAddress("foo.com", host3.getAddress());
+			connectionFactory->failingPorts.push_back(host1);
+			connectionFactory->failingPorts.push_back(host3);
 
 			testling->start();
 			eventLoop->processEvents();
@@ -131,6 +177,7 @@ class ConnectorTest : public CppUnit::TestFixture {
 	private:
 		HostAddressPort host1;
 		HostAddressPort host2;
+		HostAddressPort host3;
 		DummyEventLoop* eventLoop;
 		StaticDomainNameResolver* resolver;
 		MockConnectionFactory* connectionFactory;
