@@ -68,6 +68,7 @@ sources = [
     "QtSoundPlayer.cpp",
     "QtSystemTray.cpp",
     "QtTabbable.cpp",
+    "QtTabWidget.cpp",
     "QtTextEdit.cpp",
     "QtXMLConsoleWidgetFactory.cpp",
     "QtXMLConsoleWidget.cpp",

@@ -134,6 +134,10 @@ void QtChatWindow::setUnreadMessageCount(int count) {
 	updateTitleWithUnreadCount();
 }
 
+bool QtChatWindow::isWidgetAlerting() {
+	return unreadCount_ > 0;
+}
+
 void QtChatWindow::setName(const String& name) {
 	contact_ = P2QSTRING(name);
 	updateTitleWithUnreadCount();

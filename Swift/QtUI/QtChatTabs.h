@@ -1,6 +1,7 @@
 #pragma once
 
 #include "QtTabbable.h"
+#include "QtTabWidget.h"
 #include <QWidget>
 #include <QRect>
 
@@ -29,7 +30,7 @@ namespace Swift {
 			void handleWidgetShown();
 			void handleWantsToActivate();
 		private:
-			QTabWidget* tabs_;
+			QtTabWidget* tabs_;
 	};
 }
 

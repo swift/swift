@@ -8,6 +8,7 @@ namespace Swift {
 		Q_OBJECT
 		public:
 			bool isWidgetSelected();
+			virtual bool isWidgetAlerting() {return false;};
 		protected:
 			QtTabbable() : QWidget() {};
 

@@ -7,10 +7,11 @@
 #include <QtGlobal>
 #include <QTabWidget>
 #include <QLayout>
+#include <QTabBar>
 
 namespace Swift {
 QtChatTabs::QtChatTabs() : QWidget() {
-	tabs_ = new QTabWidget(this);
+	tabs_ = new QtTabWidget(this);
 #if QT_VERSION >= 0x040500
 	/*For Macs, change the tab rendering.*/
 	tabs_->setDocumentMode(true);
@@ -97,11 +98,13 @@ void QtChatTabs::handleTabTitleUpdated(QWidget* widget) {
 	if (!widget) {
 		return;
 	}
+	QtTabbable* tabbable = qobject_cast<QtTabbable*>(widget);
 	int index = tabs_->indexOf(widget);
 	if (index < 0) {
 		return;
 	}
 	tabs_->setTabText(index, widget->windowTitle());
+	tabs_->tabBar()->setTabTextColor(index, tabbable->isWidgetAlerting() ? QColor(255,0,0) : QColor(-1,-1,-1)); //invalid resets to default
 	if (widget == tabs_->currentWidget()) {
 		setWindowTitle(widget->windowTitle());
 	}
