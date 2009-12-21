@@ -2,6 +2,8 @@
 
 #include "Swift/Controllers/UIEvents/UIEventStream.h"
 #include "Swift/Controllers/UIEvents/RequestXMLConsoleUIEvent.h"
+#include "Swiften/Base/Platform.h"
+
 #include "QtAboutWidget.h"
 #include "QtSwiftUtil.h"
 #include "QtMainWindow.h"
