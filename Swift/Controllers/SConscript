@@ -21,10 +21,12 @@ myenv.StaticLibrary("SwiftControllers", [
 		"XMLConsoleController.cpp",
 		"UIEvents/UIEvent.cpp",
 		"UIInterfaces/XMLConsoleWidget.cpp",
+		"PreviousStatusStore.cpp",
 	])
 
 env.Append(UNITTEST_SOURCES = [
 		File("UnitTest/NickResolverTest.cpp"),
 		File("UnitTest/RosterControllerTest.cpp"),
-		File("UnitTest/XMPPRosterControllerTest.cpp")
+		File("UnitTest/XMPPRosterControllerTest.cpp"),
+		File("UnitTest/PreviousStatusStoreTest.cpp"),
 	])

@@ -94,6 +94,10 @@ namespace Swift {
 				return *this;
 			}
 
+			bool contains(const String& o) {
+				return data_.find(o.data_) != std::string::npos;
+			}
+
 			char operator[](size_t i) const {
 				return data_[i];
 			}

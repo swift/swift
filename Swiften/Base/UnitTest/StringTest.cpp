@@ -25,6 +25,9 @@ class StringTest : public CppUnit::TestFixture
 		CPPUNIT_TEST(testReplaceAll_MatchingReplace);
 		CPPUNIT_TEST(testGetLowerCase);
 		CPPUNIT_TEST(testSplit);
+ 		CPPUNIT_TEST(testContains);
+		CPPUNIT_TEST(testContainsFalse);
+		CPPUNIT_TEST(testContainsExact);
 		CPPUNIT_TEST_SUITE_END();
 
 	public:
@@ -158,6 +161,19 @@ class StringTest : public CppUnit::TestFixture
 			CPPUNIT_ASSERT_EQUAL(String("def"), result[1]);
 			CPPUNIT_ASSERT_EQUAL(String("ghi"), result[2]);
 		}
+
+		void testContains() {
+			CPPUNIT_ASSERT(String("abcde").contains(String("bcd")));
+		}
+
+		void testContainsFalse() {
+			CPPUNIT_ASSERT(!String("abcde").contains(String("abcdef")));
+		}
+
+		void testContainsExact() {
+			CPPUNIT_ASSERT(String("abcde").contains(String("abcde")));
+		}
+
 };
 
 CPPUNIT_TEST_SUITE_REGISTRATION(StringTest);
