@@ -14,6 +14,7 @@ vars.Add(BoolVariable("optimize", "Compile with optimizations turned on", "no"))
 vars.Add(BoolVariable("debug", "Compile with debug information", "yes" if os.name != "nt" else "no"))
 vars.Add(BoolVariable("warnings", "Compile with warnings turned on", 
 		"yes" if os.name != "nt" else "no"))
+vars.Add(BoolVariable("max_jobs", "Build with maximum number of parallel jobs", "no"))
 if os.name != "nt" :
 	vars.Add(BoolVariable("coverage", "Compile with coverage information", "no"))
 if os.name == "posix" :
@@ -53,6 +54,10 @@ def SConscript(*arguments, **keywords) :
   if not keywords.get("test_only", False) or env["TEST"] :
     return apply(oldSConscript, arguments, keywords)
   
+# Max out the number of jobs
+if env["max_jobs"] :
+	import multiprocessing
+	SetOption("num_jobs", multiprocessing.cpu_count())
 
 # Default compiler flags
 env["CCFLAGS"] = env.get("ccflags", [])
