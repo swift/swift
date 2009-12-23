@@ -39,28 +39,28 @@ namespace {
 		}
 		
 		void doRun() {
-			std::cout << "PlatformDomainNameResolver::doRun()" << std::endl;
+			//std::cout << "PlatformDomainNameResolver::doRun()" << std::endl;
 			boost::asio::ip::tcp::resolver resolver(ioService);
 			boost::asio::ip::tcp::resolver::query query(hostname.getUTF8String(), "5222");
 			try {
-				std::cout << "PlatformDomainNameResolver::doRun(): Resolving" << std::endl;
+				//std::cout << "PlatformDomainNameResolver::doRun(): Resolving" << std::endl;
 				boost::asio::ip::tcp::resolver::iterator endpointIterator = resolver.resolve(query);
-				std::cout << "PlatformDomainNameResolver::doRun(): Resolved" << std::endl;
+				//std::cout << "PlatformDomainNameResolver::doRun(): Resolved" << std::endl;
 				if (endpointIterator == boost::asio::ip::tcp::resolver::iterator()) {
-					std::cout << "PlatformDomainNameResolver::doRun(): Error 1" << std::endl;
+					//std::cout << "PlatformDomainNameResolver::doRun(): Error 1" << std::endl;
 					emitError();
 				}
 				else {
 					boost::asio::ip::address address = (*endpointIterator).endpoint().address();
 					HostAddress result = (address.is_v4() ? HostAddress(&address.to_v4().to_bytes()[0], 4) : HostAddress(&address.to_v6().to_bytes()[0], 16));
-					std::cout << "PlatformDomainNameResolver::doRun(): Success" << std::endl;
+					//std::cout << "PlatformDomainNameResolver::doRun(): Success" << std::endl;
 					MainEventLoop::postEvent(
 							boost::bind(boost::ref(onResult), result, boost::optional<DomainNameResolveError>()), 
 							shared_from_this());
 				}
 			}
 			catch (...) {
-				std::cout << "PlatformDomainNameResolver::doRun(): Error 2" << std::endl;
+				//std::cout << "PlatformDomainNameResolver::doRun(): Error 2" << std::endl;
 				emitError();
 			}
 			safeToJoin = true;
