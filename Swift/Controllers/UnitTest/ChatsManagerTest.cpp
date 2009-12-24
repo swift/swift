@@ -26,7 +26,10 @@ using namespace Swift;
 class ChatsManagerTest : public CppUnit::TestFixture
 {
 	CPPUNIT_TEST_SUITE(ChatsManagerTest);
-	CPPUNIT_TEST(testFirstOpenWindow);
+	CPPUNIT_TEST(testFirstOpenWindowIncoming);
+	CPPUNIT_TEST(testFirstOpenWindowOutgoing);
+	CPPUNIT_TEST(testFirstOpenWindowBareToFull);
+	CPPUNIT_TEST(testSecondWindow);
 	CPPUNIT_TEST_SUITE_END();
 	
 public:
@@ -58,14 +61,13 @@ public:
 		delete presenceOracle_;
 		delete nickResolver_;
 		delete treeWidgetFactory_;
-		//delete chatWindowFactory_;
 		delete stanzaChannel_;
 		delete iqChannel_;
 		delete iqRouter_;
 		delete mocks_;
 	}
 
-	void testFirstOpenWindow() {
+	void testFirstOpenWindowIncoming() {
 		JID messageJID("testling@test.com/resource1");
 		
 		ChatWindow* window = new MockChatWindow();//mocks_->InterfaceMock<ChatWindow>();
@@ -76,6 +78,49 @@ public:
 		message->setBody("This is a legible message.");
 		manager_->handleIncomingMessage(message);
 	}
+
+	void testFirstOpenWindowOutgoing() {
+		String messageJIDString("testling@test.com");
+		
+		ChatWindow* window = new MockChatWindow();//mocks_->InterfaceMock<ChatWindow>();
+		mocks_->ExpectCall(chatWindowFactory_, ChatWindowFactory::createChatWindow).With(JID(messageJIDString)).Return(window);
+
+		manager_->handleChatRequest(messageJIDString);
+	}
+
+
+	void testFirstOpenWindowBareToFull() {
+		String bareJIDString("testling@test.com");
+		String fullJIDString("testling@test.com/resource1");
+		
+		MockChatWindow* window = new MockChatWindow();//mocks_->InterfaceMock<ChatWindow>();
+		mocks_->ExpectCall(chatWindowFactory_, ChatWindowFactory::createChatWindow).With(JID(bareJIDString)).Return(window);
+		manager_->handleChatRequest(bareJIDString);
+
+		boost::shared_ptr<Message> message(new Message());
+		message->setFrom(JID(fullJIDString));
+		message->setBody("This is a legible message.");
+		manager_->handleIncomingMessage(message);
+		/*FIXME: check the message got through. For now, checking that there isn't a new window created is useful enough.*/
+		//CPPUNIT_ASSERT_EQUAL(fullJIDString, window->name_);
+	}
+
+	void testSecondWindow() {
+		String messageJIDString1("testling1@test.com");
+		
+		ChatWindow* window1 = new MockChatWindow();//mocks_->InterfaceMock<ChatWindow>();
+		mocks_->ExpectCall(chatWindowFactory_, ChatWindowFactory::createChatWindow).With(JID(messageJIDString1)).Return(window1);
+
+		manager_->handleChatRequest(messageJIDString1);
+
+		String messageJIDString2("testling2@test.com");
+		
+		ChatWindow* window2 = new MockChatWindow();//mocks_->InterfaceMock<ChatWindow>();
+		mocks_->ExpectCall(chatWindowFactory_, ChatWindowFactory::createChatWindow).With(JID(messageJIDString2)).Return(window2);
+
+		manager_->handleChatRequest(messageJIDString2);
+	}
+
 	
 private:
 	JID jid_;
