@@ -8,7 +8,7 @@ namespace Swift {
 			MockChatWindow() {};
 			virtual ~MockChatWindow();
 
-			virtual void addMessage(const String& /*message*/, const String& /*senderName*/, bool /*senderIsSelf*/, const boost::optional<SecurityLabel>& /*label*/, const String& /*avatarPath*/) {};
+			virtual void addMessage(const String& message, const String& /*senderName*/, bool /*senderIsSelf*/, const boost::optional<SecurityLabel>& /*label*/, const String& /*avatarPath*/) {lastMessageBody_ = message;};
 			virtual void addSystemMessage(const String& /*message*/) {};
 			virtual void addErrorMessage(const String& /*message*/) {};
 
@@ -29,6 +29,7 @@ namespace Swift {
 			boost::signal<void (const String&)> onSendMessageRequest;
 
 			String name_;
+			String lastMessageBody_;
 			std::vector<SecurityLabel> labels_;
 			bool labelsEnabled_;
 	};

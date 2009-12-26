@@ -7,6 +7,7 @@
 #include "Swiften/Base/String.h"
 #include "Swiften/Elements/DiscoInfo.h"
 #include "Swiften/Elements/Message.h"
+#include "Swiften/Elements/Presence.h"
 #include "Swiften/JID/JID.h"
 #include "Swiften/MUC/MUCRegistry.h"
 
@@ -33,7 +34,8 @@ namespace Swift {
 			void handleChatRequest(const String& contact);
 			void handleJoinMUCRequest(const JID& muc, const String& nick);
 		private:
-			void handleChatControllerJIDChanged(const JID& from, const JID& to);
+			void rebindControllerJID(const JID& from, const JID& to);
+			void handlePresenceChange(boost::shared_ptr<Presence> oldPresence, boost::shared_ptr<Presence> newPresence);
 			ChatController* getChatController(const JID &contact);
 			virtual bool isMUC(const JID& muc) const;
 

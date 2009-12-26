@@ -1,5 +1,7 @@
 #include "Swift/Controllers/ChatsManager.h"
 
+#include <boost/bind.hpp>
+
 #include "Swiften/Client/Client.h"
 
 #include "Swift/Controllers/ChatController.h"
@@ -23,6 +25,7 @@ ChatsManager::ChatsManager(JID jid, StanzaChannel* stanzaChannel, IQRouter* iqRo
 	avatarManager_ = NULL;
 	serverDiscoInfo_ = serverDiscoInfo;
 	presenceSender_ = presenceSender;
+	presenceOracle_->onPresenceChange.connect(boost::bind(&ChatsManager::handlePresenceChange, this, _1, _2));
 }
 
 ChatsManager::~ChatsManager() {
@@ -33,6 +36,20 @@ ChatsManager::~ChatsManager() {
 		delete controllerPair.second;
 	}
 
+}
+
+/**
+ * If a resource goes offline, release bound chatdialog to that resource.
+ */
+void ChatsManager::handlePresenceChange(boost::shared_ptr<Presence> /*oldPresence*/, boost::shared_ptr<Presence> newPresence) {
+	if (newPresence->getType() != Presence::Unavailable) return;
+	JID fullJID(newPresence->getFrom());
+	std::map<JID, ChatController*>::iterator it = chatControllers_.find(fullJID);
+	if (it == chatControllers_.end()) return;
+	JID bareJID(fullJID.toBare());
+	//It doesn't make sense to have two unbound dialogs.
+	if (chatControllers_.find(bareJID) != chatControllers_.end()) return;
+	rebindControllerJID(fullJID, bareJID);
 }
 
 void ChatsManager::setAvatarManager(AvatarManager* avatarManager) {
@@ -83,19 +100,20 @@ void ChatsManager::handleChatRequest(const String &contact) {
 }
 
 ChatController* ChatsManager::getChatController(const JID &contact) {
-	JID lookupContact(contact);
-	if (chatControllers_.find(lookupContact) == chatControllers_.end()) {
-		lookupContact = JID(contact.toBare());
+	if (chatControllers_.find(contact) == chatControllers_.end()) {
+		//Need to look for an unboud window to bind first
+		JID bare(contact.toBare());
+		if (chatControllers_.find(bare) != chatControllers_.end()) {
+			rebindControllerJID(bare, contact);
+		} else {
+			chatControllers_[contact] = new ChatController(jid_, stanzaChannel_, iqRouter_, chatWindowFactory_, contact, nickResolver_, presenceOracle_, avatarManager_);
+			chatControllers_[contact]->setAvailableServerFeatures(serverDiscoInfo_);
+		}
 	}
-	if (chatControllers_.find(lookupContact) == chatControllers_.end()) {
-		chatControllers_[contact] = new ChatController(jid_, stanzaChannel_, iqRouter_, chatWindowFactory_, contact, nickResolver_, presenceOracle_, avatarManager_);
-		chatControllers_[contact]->setAvailableServerFeatures(serverDiscoInfo_);
-		lookupContact = contact;
-	}
-	return chatControllers_[lookupContact];
+	return chatControllers_[contact];
 }
 
-void ChatsManager::handleChatControllerJIDChanged(const JID& from, const JID& to) {
+void ChatsManager::rebindControllerJID(const JID& from, const JID& to) {
 	chatControllers_[to] = chatControllers_[from];
 	chatControllers_.erase(from);
 }
