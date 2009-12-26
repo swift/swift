@@ -35,7 +35,7 @@ namespace Swift {
 			void handleJoinMUCRequest(const JID& muc, const String& nick);
 		private:
 			void rebindControllerJID(const JID& from, const JID& to);
-			void handlePresenceChange(boost::shared_ptr<Presence> oldPresence, boost::shared_ptr<Presence> newPresence);
+			void handlePresenceChange(boost::shared_ptr<Presence> newPresence, boost::shared_ptr<Presence> lastPresence);
 			ChatController* getChatController(const JID &contact);
 			virtual bool isMUC(const JID& muc) const;
 

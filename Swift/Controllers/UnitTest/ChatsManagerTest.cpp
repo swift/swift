@@ -176,7 +176,7 @@ public:
 		boost::shared_ptr<Presence> jid1Offline(new Presence());
 		jid1Offline->setFrom(JID(fullJIDString1));
 		jid1Offline->setType(Presence::Unavailable);
-		presenceOracle_->onPresenceChange(jid1Online, jid1Offline);
+		presenceOracle_->onPresenceChange(jid1Offline, jid1Online);
 
 		boost::shared_ptr<Message> message2(new Message());
 		message2->setFrom(JID(fullJIDString2));
@@ -221,14 +221,14 @@ public:
 		boost::shared_ptr<Presence> jid1Offline(new Presence());
 		jid1Offline->setFrom(JID(messageJID1));
 		jid1Offline->setType(Presence::Unavailable);
-		presenceOracle_->onPresenceChange(jid1Online, jid1Offline);
+		presenceOracle_->onPresenceChange(jid1Offline, jid1Online);
  
 		boost::shared_ptr<Presence> jid2Online(new Presence());
 		jid2Online->setFrom(JID(messageJID2));
 		boost::shared_ptr<Presence> jid2Offline(new Presence());
 		jid2Offline->setFrom(JID(messageJID2));
 		jid2Offline->setType(Presence::Unavailable);
-		presenceOracle_->onPresenceChange(jid2Online, jid2Offline);
+		presenceOracle_->onPresenceChange(jid2Offline, jid2Online);
 
 		JID messageJID3("testling@test.com/resource3");
 

@@ -41,7 +41,7 @@ ChatsManager::~ChatsManager() {
 /**
  * If a resource goes offline, release bound chatdialog to that resource.
  */
-void ChatsManager::handlePresenceChange(boost::shared_ptr<Presence> /*oldPresence*/, boost::shared_ptr<Presence> newPresence) {
+void ChatsManager::handlePresenceChange(boost::shared_ptr<Presence> newPresence, boost::shared_ptr<Presence> /*lastPresence*/) {
 	if (newPresence->getType() != Presence::Unavailable) return;
 	JID fullJID(newPresence->getFrom());
 	std::map<JID, ChatController*>::iterator it = chatControllers_.find(fullJID);
