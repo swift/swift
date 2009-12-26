@@ -116,6 +116,7 @@ ChatController* ChatsManager::getChatController(const JID &contact) {
 void ChatsManager::rebindControllerJID(const JID& from, const JID& to) {
 	chatControllers_[to] = chatControllers_[from];
 	chatControllers_.erase(from);
+	chatControllers_[to]->setToJID(to);
 }
 
 void ChatsManager::handleJoinMUCRequest(const JID &muc, const String &nick) {
