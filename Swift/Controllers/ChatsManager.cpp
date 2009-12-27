@@ -120,8 +120,14 @@ void ChatsManager::rebindControllerJID(const JID& from, const JID& to) {
 }
 
 void ChatsManager::handleJoinMUCRequest(const JID &muc, const String &nick) {
-	mucControllers_[muc] = new MUCController(jid_, muc, nick, stanzaChannel_, presenceSender_, iqRouter_, chatWindowFactory_, treeWidgetFactory_, presenceOracle_, avatarManager_);
-	mucControllers_[muc]->setAvailableServerFeatures(serverDiscoInfo_);
+	std::map<JID, MUCController*>::iterator it = mucControllers_.find(muc);
+	if (it != mucControllers_.end()) {
+		//FIXME: What's correct behaviour here?
+	} else {
+		mucControllers_[muc] = new MUCController(jid_, muc, nick, stanzaChannel_, presenceSender_, iqRouter_, chatWindowFactory_, treeWidgetFactory_, presenceOracle_, avatarManager_);
+		mucControllers_[muc]->setAvailableServerFeatures(serverDiscoInfo_);
+	}
+	mucControllers_[muc]->activateChatWindow();
 }
 
 void ChatsManager::handleIncomingMessage(boost::shared_ptr<Message> message) {
