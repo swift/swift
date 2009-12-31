@@ -24,7 +24,6 @@ sources = [
 		"Elements/DiscoInfo.cpp",
 		"Elements/Element.cpp",
 		"Elements/IQ.cpp",
-		"Elements/MUCPayload.cpp",
 		"Elements/Payload.cpp",
 		"Elements/RosterPayload.cpp",
 		"Elements/Stanza.cpp",
