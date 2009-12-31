@@ -14,6 +14,8 @@ const Stringprep_profile* getLibIDNProfile(StringPrep::Profile profile) {
 		case StringPrep::XMPPResourcePrep: return stringprep_xmpp_resourceprep; break;
 		case StringPrep::SASLPrep: return stringprep_saslprep; break;
 	}
+	assert(false);
+	return 0;
 }
 
 String StringPrep::getPrepared(const String& s, Profile profile) {

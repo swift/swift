@@ -135,7 +135,7 @@ class _Automoc:
 		out_sources = source[:]
 
 		for obj in source:
-			if isinstance(obj,basestring):  # big kludge!
+			if isinstance(obj,basestring):	# big kludge!
 				print "scons: qt4: '%s' MAYBE USING AN OLD SCONS VERSION AND NOT CONVERTED TO 'File'. Discarded." % str(obj)
 				continue
 			if not obj.has_builder():
@@ -202,6 +202,9 @@ def _detect(env):
 
 	moc = env.WhereIs('moc-qt4') or env.WhereIs('moc4') or env.WhereIs('moc')
 	if moc:
+		import sys
+		if sys.platform == "darwin" :
+			return ""
 		QTDIR = os.path.dirname(os.path.dirname(moc))
 		SCons.Warnings.warn(
 			QtdirNotFound,
@@ -217,6 +220,8 @@ def generate(env):
 	"""Add Builders and construction variables for qt to an Environment."""
 
 	def locateQt4Command(env, command, qtdir) :
+		if len(qtdir) == 0 :
+			qtdir = "/usr"
 		suffixes = [
 			'-qt4',
 			'-qt4.exe',
@@ -243,14 +248,11 @@ def generate(env):
 	Builder = SCons.Builder.Builder
 	splitext = SCons.Util.splitext
 
-	env['QTDIR']  = _detect(env)
+	env['QTDIR']	= _detect(env)
 	# TODO: 'Replace' should be 'SetDefault'
 #	env.SetDefault(
 	env.Replace(
 		QTDIR  = _detect(env),
-		QT4_BINPATH = os.path.join('$QTDIR', 'bin'),
-		QT4_CPPPATH = os.path.join('$QTDIR', 'include'),
-		QT4_LIBPATH = os.path.join('$QTDIR', 'lib'),
 		# TODO: This is not reliable to QTDIR value changes but needed in order to support '-qt4' variants
 		QT4_MOC = locateQt4Command(env,'moc', env['QTDIR']),
 		QT4_UIC = locateQt4Command(env,'uic', env['QTDIR']),
@@ -292,6 +294,8 @@ def generate(env):
 		QT4_LRELEASECOM = '$QT4_LRELEASE $SOURCE',
 		QT4_RCCCOM = '$QT4_RCC $QT4_QRCFLAGS -name $SOURCE $SOURCE -o $TARGET',
 		)
+	if len(env["QTDIR"]) > 0 :
+		env.Replace(QT4_LIBPATH = os.path.join('$QTDIR', 'lib'))
 
 	# Translation builder
 	tsbuilder = Builder(
@@ -382,7 +386,6 @@ def generate(env):
 					 SHLIBEMITTER=[AutomocShared],
 					 LIBEMITTER  =[AutomocStatic],
 					 # Of course, we need to link against the qt libraries
-#					 CPPPATH=["$QT4_CPPPATH"],
 					 LIBPATH=["$QT4_LIBPATH"],
 					 LIBS=['$QT4_LIB'])
 
@@ -427,20 +430,21 @@ def enable_modules(self, modules, debug=False, crosscompiling=False) :
 			str(invalidModules),str(validModules)))
 
 	moduleDefines = {
-		'QtScript'   : ['QT_SCRIPT_LIB'],
-		'QtSvg'      : ['QT_SVG_LIB'],
+		'QtScript'	 : ['QT_SCRIPT_LIB'],
+		'QtSvg'			 : ['QT_SVG_LIB'],
 		'Qt3Support' : ['QT_QT3SUPPORT_LIB','QT3_SUPPORT'],
-		'QtSql'      : ['QT_SQL_LIB'],
-		'QtXml'      : ['QT_XML_LIB'],
-		'QtOpenGL'   : ['QT_OPENGL_LIB'],
-		'QtGui'      : ['QT_GUI_LIB'],
+		'QtSql'			 : ['QT_SQL_LIB'],
+		'QtXml'			 : ['QT_XML_LIB'],
+		'QtOpenGL'	 : ['QT_OPENGL_LIB'],
+		'QtGui'			 : ['QT_GUI_LIB'],
 		'QtNetwork'  : ['QT_NETWORK_LIB'],
-		'QtCore'     : ['QT_CORE_LIB'],
+		'QtCore'		 : ['QT_CORE_LIB'],
 	}
 	for module in modules :
 		try : self.AppendUnique(CPPDEFINES=moduleDefines[module])
 		except: pass
 	debugSuffix = ''
+
 	if sys.platform in ["linux2"] and not crosscompiling :
 		if debug : debugSuffix = '_debug'
 		self.AppendUnique(CPPPATH=[os.path.join("$QTDIR","include", "phonon")])
@@ -451,6 +455,7 @@ def enable_modules(self, modules, debug=False, crosscompiling=False) :
 			self.AppendUnique(CPPPATH=[os.path.join("$QTDIR","include",module)])
 		self["QT4_MOCCPPPATH"] = self["CPPPATH"]
 		return
+
 	if sys.platform == "win32" or crosscompiling :
 		if crosscompiling:
 			transformedQtdir = transformToWinePath(self['QTDIR'])
@@ -479,34 +484,34 @@ def enable_modules(self, modules, debug=False, crosscompiling=False) :
 			self["QT4_MOCCPPPATH"] = self["CPPPATH"]
 		self.AppendUnique(LIBPATH=[os.path.join('$QTDIR','lib')])
 		return
+
 	if sys.platform=="darwin" :
-		self.AppendUnique(LIBPATH=[os.path.join('$QTDIR','lib')])
-		self.AppendUnique(LINKFLAGS="-F$QTDIR/lib")
-		self.AppendUnique(CPPFLAGS="-F$QTDIR/lib")
-		self.AppendUnique(LINKFLAGS="-L$QTDIR/lib") #TODO clean!
+		if debug : debugSuffix = 'd'
+
+		if len(self["QTDIR"]) > 0 :
+			self.AppendUnique(LIBPATH=[os.path.join('$QTDIR','lib')])
+			self.AppendUnique(LINKFLAGS="-F$QTDIR/lib")
+			self.AppendUnique(CPPFLAGS="-F$QTDIR/lib")
+			self.AppendUnique(LINKFLAGS="-L$QTDIR/lib") #TODO clean!
+
 		# FIXME: Phonon Hack
 		self.Append(LINKFLAGS=['-framework', "phonon"])
-		if debug : debugSuffix = 'd'
+
 		for module in modules :
-#			self.AppendUnique(CPPPATH=[os.path.join("$QTDIR","include")])
-#			self.AppendUnique(CPPPATH=[os.path.join("$QTDIR","include",module)])
-# port qt4-mac:
 			if module in staticModules :
 				self.AppendUnique(LIBS=[module+debugSuffix]) # TODO: Add the debug suffix
 				self.AppendUnique(LIBPATH=[os.path.join("$QTDIR","lib")])
 			else :
-				self.Append(CPPFLAGS = ["-I" + os.path.join("$QTDIR", "lib", module + ".framework", "Versions", "4", "Headers")])
+				if len(self["QTDIR"]) > 0 :
+					self.Append(CPPFLAGS = ["-I" + os.path.join("$QTDIR", "lib", module + ".framework", "Versions", "4", "Headers")])
+				else :
+					self.Append(CPPFLAGS = ["-I" + os.path.join("/Library/Frameworks", module + ".framework", "Versions", "4", "Headers")])
 				self.Append(LINKFLAGS=['-framework', module])
 		if 'QtOpenGL' in modules:
 			self.AppendUnique(LINKFLAGS="-F/System/Library/Frameworks")
 			self.Append(LINKFLAGS=['-framework', 'AGL']) #TODO ughly kludge to avoid quotes
 			self.Append(LINKFLAGS=['-framework', 'OpenGL'])
 		self["QT4_MOCCPPPATH"] = self["CPPPATH"]
-		return
-# This should work for mac but doesn't
-#	env.AppendUnique(FRAMEWORKPATH=[os.path.join(env['QTDIR'],'lib')])
-#	env.AppendUnique(FRAMEWORKS=['QtCore','QtGui','QtOpenGL', 'AGL'])
-
 
 def exists(env):
 	return _detect(env)

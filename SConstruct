@@ -184,8 +184,9 @@ if ARGUMENTS.get("force-configure", 0) :
 
 conf = Configure(conf_env)
 
-conf.CheckCXX()
-conf.CheckCC()
+if not conf.CheckCXX() or not conf.CheckCC() :
+	print "Error: You need a working compiler"
+	Exit(1)
 
 if conf.CheckLib("z") :
 	env.Append(LIBS = "z")
