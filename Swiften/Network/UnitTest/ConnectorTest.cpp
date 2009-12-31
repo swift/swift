@@ -24,9 +24,9 @@ class ConnectorTest : public CppUnit::TestFixture {
 		CPPUNIT_TEST(testConnect_AllSRVHostsFailWithoutFallbackHost);
 		CPPUNIT_TEST(testConnect_AllSRVHostsFailWithFallbackHost);
 		CPPUNIT_TEST(testConnect_SRVAndFallbackHostsFail);
-		//CPPUNIT_TEST(testConnect_TimeoutDuringResolve);
-		//CPPUNIT_TEST(testConnect_TimeoutDuringConnect);
-		//CPPUNIT_TEST(testConnect_NoTimeout);
+		CPPUNIT_TEST(testConnect_TimeoutDuringResolve);
+		CPPUNIT_TEST(testConnect_TimeoutDuringConnect);
+		CPPUNIT_TEST(testConnect_NoTimeout);
 		CPPUNIT_TEST_SUITE_END();
 
 	public:
@@ -186,7 +186,7 @@ class ConnectorTest : public CppUnit::TestFixture {
 
 	private:
 		Connector* createConnector() {
-			Connector* connector = new Connector("foo.com", resolver, connectionFactory);
+			Connector* connector = new Connector("foo.com", resolver, connectionFactory, timerFactory);
 			connector->onConnectFinished.connect(boost::bind(&ConnectorTest::handleConnectorFinished, this, _1));
 			return connector;
 		}

@@ -1,16 +1,11 @@
-#ifndef SWIFTEN_MUCPayload_H
-#define SWIFTEN_MUCPayload_H
+#pragma once
 
-#include "Swiften/Base/String.h"
 #include "Swiften/Elements/Payload.h"
 
 namespace Swift {
-	class MUCPayload : public Payload
-	{
+	class MUCPayload : public Payload {
 		public:
-			MUCPayload() { }
-
+			MUCPayload() {
+			}
 	};
 }
-
-#endif

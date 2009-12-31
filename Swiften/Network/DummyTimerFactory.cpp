@@ -2,8 +2,8 @@
 
 #include <algorithm>
 
-#include "Swiften/Network/Timer.h"
 #include "Swiften/Base/foreach.h"
+#include "Swiften/Network/Timer.h"
 
 namespace Swift {
 
@@ -40,7 +40,7 @@ static bool hasZeroTimeout(boost::shared_ptr<DummyTimerFactory::DummyTimer> time
 
 void DummyTimerFactory::setTime(int time) {
 	assert(time > currentTime);
-	int increment = currentTime - time;
+	int increment = time - currentTime;
 	std::vector< boost::shared_ptr<DummyTimer> > notifyTimers(timers.begin(), timers.end());
 	foreach(boost::shared_ptr<DummyTimer> timer, notifyTimers) {
 		if (increment >= timer->timeout) {
@@ -48,6 +48,9 @@ void DummyTimerFactory::setTime(int time) {
 				timer->onTick();
 			}
 			timer->timeout = 0;
+		}
+		else {
+			timer->timeout -= increment;
 		}
 	}
 	timers.erase(std::remove_if(timers.begin(), timers.end(), hasZeroTimeout), timers.end());

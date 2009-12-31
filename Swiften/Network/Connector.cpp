@@ -6,10 +6,11 @@
 #include "Swiften/Network/ConnectionFactory.h"
 #include "Swiften/Network/DomainNameResolver.h"
 #include "Swiften/Network/DomainNameAddressQuery.h"
+#include "Swiften/Network/TimerFactory.h"
 
 namespace Swift {
 
-Connector::Connector(const String& hostname, DomainNameResolver* resolver, ConnectionFactory* connectionFactory) : hostname(hostname), resolver(resolver), connectionFactory(connectionFactory), queriedAllHosts(true) {
+Connector::Connector(const String& hostname, DomainNameResolver* resolver, ConnectionFactory* connectionFactory, TimerFactory* timerFactory) : hostname(hostname), resolver(resolver), connectionFactory(connectionFactory), timerFactory(timerFactory), timeoutMilliseconds(0), queriedAllHosts(true) {
 }
 
 void Connector::setTimeoutMilliseconds(int milliseconds) {
@@ -20,9 +21,15 @@ void Connector::start() {
 	//std::cout << "Connector::start()" << std::endl;
 	assert(!currentConnection);
 	assert(!serviceQuery);
+	assert(!timer);
 	queriedAllHosts = false;
 	serviceQuery = resolver->createServiceQuery("_xmpp-client._tcp." + hostname);
 	serviceQuery->onResult.connect(boost::bind(&Connector::handleServiceQueryResult, this, _1));
+	if (timeoutMilliseconds > 0) {
+		timer = timerFactory->createTimer(timeoutMilliseconds);
+		timer->onTick.connect(boost::bind(&Connector::handleTimeout, this));
+		timer->start();
+	}
 	serviceQuery->run();
 }
 
@@ -43,7 +50,7 @@ void Connector::handleServiceQueryResult(const std::vector<DomainNameServiceQuer
 void Connector::tryNextHostname() {
 	if (queriedAllHosts) {
 		//std::cout << "Connector::tryNextHostName(): Queried all hosts. Error." << std::endl;
-		onConnectFinished(boost::shared_ptr<Connection>());
+		finish(boost::shared_ptr<Connection>());
 	}
 	else if (serviceQueryResults.empty()) {
 		//std::cout << "Connector::tryNextHostName(): Falling back on A resolution" << std::endl;
@@ -76,7 +83,7 @@ void Connector::handleAddressQueryResult(const HostAddress& address, boost::opti
 		//std::cout << "Connector::handleAddressQueryResult(): Fallback address query failed. Giving up" << std::endl;
 		// The fallback address query failed
 		assert(queriedAllHosts);
-		onConnectFinished(boost::shared_ptr<Connection>());
+		finish(boost::shared_ptr<Connection>());
 	}
 	else {
 		//std::cout << "Connector::handleAddressQueryResult(): Fallback address query succeeded: " << address.toString() << std::endl;
@@ -100,8 +107,20 @@ void Connector::handleConnectionConnectFinished(bool error) {
 		tryNextHostname();
 	}
 	else {
-		onConnectFinished(currentConnection);
+		finish(currentConnection);
 	}
+}
+
+void Connector::finish(boost::shared_ptr<Connection> connection) {
+	if (timer) {
+		timer->stop();
+		timer.reset();
+	}
+	onConnectFinished(connection);
+}
+
+void Connector::handleTimeout() {
+	finish(boost::shared_ptr<Connection>());
 }
 
 };
