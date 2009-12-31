@@ -9,6 +9,7 @@
 #include "Swiften/Network/ConnectionFactory.h"
 #include "Swiften/Network/HostAddressPort.h"
 #include "Swiften/Network/StaticDomainNameResolver.h"
+#include "Swiften/Network/DummyTimerFactory.h"
 #include "Swiften/EventLoop/MainEventLoop.h"
 #include "Swiften/EventLoop/DummyEventLoop.h"
 
@@ -23,6 +24,9 @@ class ConnectorTest : public CppUnit::TestFixture {
 		CPPUNIT_TEST(testConnect_AllSRVHostsFailWithoutFallbackHost);
 		CPPUNIT_TEST(testConnect_AllSRVHostsFailWithFallbackHost);
 		CPPUNIT_TEST(testConnect_SRVAndFallbackHostsFail);
+		//CPPUNIT_TEST(testConnect_TimeoutDuringResolve);
+		//CPPUNIT_TEST(testConnect_TimeoutDuringConnect);
+		//CPPUNIT_TEST(testConnect_NoTimeout);
 		CPPUNIT_TEST_SUITE_END();
 
 	public:
@@ -33,9 +37,11 @@ class ConnectorTest : public CppUnit::TestFixture {
 			eventLoop = new DummyEventLoop();
 			resolver = new StaticDomainNameResolver();
 			connectionFactory = new MockConnectionFactory();
+			timerFactory = new DummyTimerFactory();
 		}
 
 		void tearDown() {
+			delete timerFactory;
 			delete connectionFactory;
 			delete resolver;
 			delete eventLoop;
@@ -134,6 +140,50 @@ class ConnectorTest : public CppUnit::TestFixture {
 			CPPUNIT_ASSERT(!connections[0]);
 		}
 
+		void testConnect_TimeoutDuringResolve() {
+			std::auto_ptr<Connector> testling(createConnector());
+			testling->setTimeoutMilliseconds(10);
+			resolver->setIsResponsive(false);
+
+			testling->start();
+			eventLoop->processEvents();
+			timerFactory->setTime(10);
+			eventLoop->processEvents();
+
+			CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(connections.size()));
+			CPPUNIT_ASSERT(!connections[0]);
+		}
+
+		void testConnect_TimeoutDuringConnect() {
+			std::auto_ptr<Connector> testling(createConnector());
+			testling->setTimeoutMilliseconds(10);
+			resolver->addXMPPClientService("foo.com", host1);
+			connectionFactory->isResponsive = false;
+
+			testling->start();
+			eventLoop->processEvents();
+			timerFactory->setTime(10);
+			eventLoop->processEvents();
+
+			CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(connections.size()));
+			CPPUNIT_ASSERT(!connections[0]);
+		}
+
+		void testConnect_NoTimeout() {
+			std::auto_ptr<Connector> testling(createConnector());
+			testling->setTimeoutMilliseconds(10);
+			resolver->addXMPPClientService("foo.com", host1);
+
+			testling->start();
+			eventLoop->processEvents();
+			timerFactory->setTime(10);
+			eventLoop->processEvents();
+
+			CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(connections.size()));
+			CPPUNIT_ASSERT(connections[0]);
+		}
+
+
 	private:
 		Connector* createConnector() {
 			Connector* connector = new Connector("foo.com", resolver, connectionFactory);
@@ -151,12 +201,14 @@ class ConnectorTest : public CppUnit::TestFixture {
 
 		struct MockConnection : public Connection {
 			public:
-				MockConnection(const std::vector<HostAddressPort>& failingPorts) : failingPorts(failingPorts) {}
+				MockConnection(const std::vector<HostAddressPort>& failingPorts, bool isResponsive) : failingPorts(failingPorts), isResponsive(isResponsive) {}
 
 				void listen() { assert(false); }
 				void connect(const HostAddressPort& address) {
 					hostAddressPort = address;
-					MainEventLoop::postEvent(boost::bind(boost::ref(onConnectFinished), std::find(failingPorts.begin(), failingPorts.end(), address) != failingPorts.end()));
+					if (isResponsive) {
+						MainEventLoop::postEvent(boost::bind(boost::ref(onConnectFinished), std::find(failingPorts.begin(), failingPorts.end(), address) != failingPorts.end()));
+					}
 				}
 
 				void disconnect() { assert(false); }
@@ -164,13 +216,18 @@ class ConnectorTest : public CppUnit::TestFixture {
 
 				boost::optional<HostAddressPort> hostAddressPort;
 				std::vector<HostAddressPort> failingPorts;
+				bool isResponsive;
 		};
 
 		struct MockConnectionFactory : public ConnectionFactory {
-			boost::shared_ptr<Connection> createConnection() {
-				return boost::shared_ptr<Connection>(new MockConnection(failingPorts));
+			MockConnectionFactory() : isResponsive(true) {
 			}
 
+			boost::shared_ptr<Connection> createConnection() {
+				return boost::shared_ptr<Connection>(new MockConnection(failingPorts, isResponsive));
+			}
+
+			bool isResponsive;
 			std::vector<HostAddressPort> failingPorts;
 		};
 
@@ -181,6 +238,7 @@ class ConnectorTest : public CppUnit::TestFixture {
 		DummyEventLoop* eventLoop;
 		StaticDomainNameResolver* resolver;
 		MockConnectionFactory* connectionFactory;
+		DummyTimerFactory* timerFactory;
 		std::vector< boost::shared_ptr<MockConnection> > connections;
 };
 

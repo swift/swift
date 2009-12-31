@@ -19,6 +19,8 @@ namespace Swift {
 			typedef std::vector< std::pair<String, DomainNameServiceQuery::Result> > ServicesCollection;
 
 		public:
+			StaticDomainNameResolver();
+
 			void addAddress(const String& domain, const HostAddress& address);
 			void addService(const String& service, const DomainNameServiceQuery::Result& result);
 			void addXMPPClientService(const String& domain, const HostAddressPort&);
@@ -31,10 +33,19 @@ namespace Swift {
 				return services;
 			}
 
+			bool getIsResponsive() const {
+				return isResponsive;
+			}
+
+			void setIsResponsive(bool b) {
+				isResponsive = b;
+			}
+
 			virtual boost::shared_ptr<DomainNameServiceQuery> createServiceQuery(const String& name);
 			virtual boost::shared_ptr<DomainNameAddressQuery> createAddressQuery(const String& name);
 			
 		private:
+			bool isResponsive;
 			AddressesMap addresses;
 			ServicesCollection services;
 	};

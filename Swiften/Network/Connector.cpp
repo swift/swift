@@ -12,6 +12,10 @@ namespace Swift {
 Connector::Connector(const String& hostname, DomainNameResolver* resolver, ConnectionFactory* connectionFactory) : hostname(hostname), resolver(resolver), connectionFactory(connectionFactory), queriedAllHosts(true) {
 }
 
+void Connector::setTimeoutMilliseconds(int milliseconds) {
+	timeoutMilliseconds = milliseconds;
+}
+
 void Connector::start() {
 	//std::cout << "Connector::start()" << std::endl;
 	assert(!currentConnection);

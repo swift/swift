@@ -19,6 +19,7 @@ namespace Swift {
 		public:
 			Connector(const String& hostname, DomainNameResolver*, ConnectionFactory*);
 
+			void setTimeoutMilliseconds(int milliseconds);
 			void start();
 
 			boost::signal<void (boost::shared_ptr<Connection>)> onConnectFinished;
@@ -37,11 +38,11 @@ namespace Swift {
 			String hostname;
 			DomainNameResolver* resolver;
 			ConnectionFactory* connectionFactory;
+			int timeoutMilliseconds;
 			boost::shared_ptr<DomainNameServiceQuery> serviceQuery;
 			std::deque<DomainNameServiceQuery::Result> serviceQueryResults;
 			boost::shared_ptr<DomainNameAddressQuery> addressQuery;
 			bool queriedAllHosts;
 			boost::shared_ptr<Connection> currentConnection;
 	};
-		
 };

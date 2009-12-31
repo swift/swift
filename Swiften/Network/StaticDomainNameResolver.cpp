@@ -13,6 +13,9 @@ namespace {
 		ServiceQuery(const String& service, Swift::StaticDomainNameResolver* resolver) : service(service), resolver(resolver) {}
 
 		virtual void run() {
+			if (!resolver->getIsResponsive()) {
+				return;
+			}
 			std::vector<DomainNameServiceQuery::Result> results;
 			for(StaticDomainNameResolver::ServicesCollection::const_iterator i = resolver->getServices().begin(); i != resolver->getServices().end(); ++i) {
 				if (i->first == service) {
@@ -30,6 +33,9 @@ namespace {
 		AddressQuery(const String& host, StaticDomainNameResolver* resolver) : host(host), resolver(resolver) {}
 
 		virtual void run() {
+			if (!resolver->getIsResponsive()) {
+				return;
+			}
 			StaticDomainNameResolver::AddressesMap::const_iterator i = resolver->getAddresses().find(host);
 			if (i != resolver->getAddresses().end()) {
 				MainEventLoop::postEvent(
@@ -47,6 +53,9 @@ namespace {
 }
 
 namespace Swift {
+
+StaticDomainNameResolver::StaticDomainNameResolver() : isResponsive(true) {
+}
 
 void StaticDomainNameResolver::addAddress(const String& domain, const HostAddress& address) {
 	addresses[domain] = address;
