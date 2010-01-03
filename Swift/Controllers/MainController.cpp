@@ -202,17 +202,21 @@ void MainController::handleChangeStatusRequest(StatusShow::Type show, const Stri
 	if (presence->getType() != Presence::Unavailable && !client_->isAvailable()) {
 		performLoginFromCachedCredentials();
 		queuedPresence_ = presence;
-	} else {
+	} 
+	else {
 		sendPresence(presence);
 	}
 }
 
 void MainController::sendPresence(boost::shared_ptr<Presence> presence) {
+	// Copy presence before adding extra information
+	lastSentPresence_ = presence->clone();
+
+	// Add information and send
 	if (!vCardPhotoHash_.isEmpty()) {
 		presence->addPayload(boost::shared_ptr<VCardUpdate>(new VCardUpdate(vCardPhotoHash_)));
 	}
 	presence->addPayload(capsInfo_);
-	lastSentPresence_ = presence;
 	presenceSender_->sendPresence(presence);
 	if (presence->getType() == Presence::Unavailable) {
 		logout();
@@ -233,7 +237,8 @@ void MainController::handleInputIdleChanged(bool idle) {
 	else {
 		if (client_) {
 			sendPresence(preIdlePresence_);
-		} else {
+		} 
+		else {
 			queuedPresence_ = preIdlePresence_;
 		}
 	}

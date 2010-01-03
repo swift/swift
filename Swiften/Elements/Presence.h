@@ -52,6 +52,10 @@ namespace Swift {
 				updatePayload(boost::shared_ptr<Priority>(new Priority(priority)));
 			}
 
+			boost::shared_ptr<Presence> clone() const {
+				return boost::shared_ptr<Presence>(new Presence(*this));
+			}
+
 		private:
 			Presence::Type type_;
 	};
