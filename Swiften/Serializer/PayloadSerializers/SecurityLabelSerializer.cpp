@@ -22,11 +22,11 @@ String SecurityLabelSerializer::serializePayload(boost::shared_ptr<SecurityLabel
 		displayMarking->addNode(boost::shared_ptr<XMLTextNode>(new XMLTextNode(label->getDisplayMarking())));
 		element.addNode(displayMarking);
 	}
-	if (!label->getLabel().isEmpty()) {
-		boost::shared_ptr<XMLElement> labelElement(new XMLElement("label"));
-		labelElement->addNode(boost::shared_ptr<XMLRawTextNode>(new XMLRawTextNode(label->getLabel())));
-		element.addNode(labelElement);
-	}
+
+	boost::shared_ptr<XMLElement> labelElement(new XMLElement("label"));
+	labelElement->addNode(boost::shared_ptr<XMLRawTextNode>(new XMLRawTextNode(label->getLabel())));
+	element.addNode(labelElement);
+	
 	foreach(const String& equivalentLabel, label->getEquivalentLabels()) {
 		boost::shared_ptr<XMLElement> equivalentLabelElement(new XMLElement("equivalentlabel"));
 		equivalentLabelElement->addNode(boost::shared_ptr<XMLRawTextNode>(new XMLRawTextNode(equivalentLabel)));

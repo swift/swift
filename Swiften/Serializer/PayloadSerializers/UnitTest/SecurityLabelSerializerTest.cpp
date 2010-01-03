@@ -5,15 +5,13 @@
 
 using namespace Swift;
 
-class SecurityLabelSerializerTest : public CppUnit::TestFixture
-{
+class SecurityLabelSerializerTest : public CppUnit::TestFixture {
 		CPPUNIT_TEST_SUITE(SecurityLabelSerializerTest);
 		CPPUNIT_TEST(testSerialize);
+		CPPUNIT_TEST(testSerialize_EmptyLabel);
 		CPPUNIT_TEST_SUITE_END();
 
 	public:
-		SecurityLabelSerializerTest() {}
-
 		void testSerialize() {
 			SecurityLabelSerializer testling;
 			boost::shared_ptr<SecurityLabel> securityLabel(new SecurityLabel());
@@ -36,6 +34,19 @@ class SecurityLabelSerializerTest : public CppUnit::TestFixture
 					"<equivalentlabel>"
 						"<esssecuritylabel xmlns=\"urn:xmpp:sec-label:ess:0\">MRUCAgD9DA9BcXVhIChvYnNvbGV0ZSk=</esssecuritylabel>"
 					"</equivalentlabel>"
+				"</securitylabel>"), testling.serialize(securityLabel));
+		}
+
+		void testSerialize_EmptyLabel() {
+			SecurityLabelSerializer testling;
+			boost::shared_ptr<SecurityLabel> securityLabel(new SecurityLabel());
+			securityLabel->setDisplayMarking("SECRET");
+			securityLabel->setLabel("");
+
+			CPPUNIT_ASSERT_EQUAL(String(
+				"<securitylabel xmlns=\"urn:xmpp:sec-label:0\">"
+					"<displaymarking>SECRET</displaymarking>"
+					"<label></label>"
 				"</securitylabel>"), testling.serialize(securityLabel));
 		}
 };
