@@ -56,8 +56,11 @@ def SConscript(*arguments, **keywords) :
   
 # Max out the number of jobs
 if env["max_jobs"] :
-	import multiprocessing
-	SetOption("num_jobs", multiprocessing.cpu_count())
+	try :
+		import multiprocessing
+		SetOption("num_jobs", multiprocessing.cpu_count())
+	except NotImplementedError :
+		pass
 
 # Default compiler flags
 env["CCFLAGS"] = env.get("ccflags", [])
