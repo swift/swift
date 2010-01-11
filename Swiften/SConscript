@@ -107,6 +107,9 @@ SConscript(dirs = [
 SConscript(test_only = True, dirs = [
 		"QA",
   ])
+SConscript(dirs = [
+		"Examples"
+	])
 
 myenv.StaticLibrary("Swiften", sources + swiften_env["SWIFTEN_OBJECTS"])
 
