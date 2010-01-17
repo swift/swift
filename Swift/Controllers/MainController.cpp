@@ -8,7 +8,7 @@
 #include "Swiften/Application/Application.h"
 #include "Swiften/Application/ApplicationMessageDisplay.h"
 #include "Swift/Controllers/ChatController.h"
-#include "Swift/Controllers/ChatWindowFactory.h"
+#include "Swift/Controllers/UIInterfaces/ChatWindowFactory.h"
 #include "Swift/Controllers/ChatsManager.h"
 #include "Swift/Controllers/EventController.h"
 #include "Swift/Controllers/UIInterfaces/LoginWindow.h"

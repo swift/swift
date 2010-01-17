@@ -19,6 +19,7 @@ namespace Swift {
 			virtual ~ChatWindow() {};
 
 			virtual void addMessage(const String& message, const String& senderName, bool senderIsSelf, const boost::optional<SecurityLabel>& label, const String& avatarPath) = 0;
+			virtual void addAction(const String& message, const String& senderName, bool senderIsSelf, const boost::optional<SecurityLabel>& label, const String& avatarPath) = 0;
 			virtual void addSystemMessage(const String& message) = 0;
 			virtual void addErrorMessage(const String& message) = 0;
 

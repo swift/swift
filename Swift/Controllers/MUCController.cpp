@@ -3,8 +3,8 @@
 #include <boost/bind.hpp>
 
 #include "Swiften/Base/foreach.h"
-#include "Swift/Controllers/ChatWindow.h"
-#include "Swift/Controllers/ChatWindowFactory.h"
+#include "Swift/Controllers/UIInterfaces/ChatWindow.h"
+#include "Swift/Controllers/UIInterfaces/ChatWindowFactory.h"
 #include "Swiften/Avatars/AvatarManager.h"
 #include "Swiften/MUC/MUC.h"
 #include "Swiften/Client/StanzaChannel.h"

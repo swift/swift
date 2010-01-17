@@ -5,8 +5,8 @@
 
 #include "Swiften/Client/StanzaChannel.h"
 #include "Swiften/Base/foreach.h"
-#include "Swift/Controllers/ChatWindow.h"
-#include "Swift/Controllers/ChatWindowFactory.h"
+#include "Swift/Controllers/UIInterfaces/ChatWindow.h"
+#include "Swift/Controllers/UIInterfaces/ChatWindowFactory.h"
 #include "Swiften/Queries/Requests/GetSecurityLabelsCatalogRequest.h"
 #include "Swiften/Avatars/AvatarManager.h"
 
@@ -89,6 +89,14 @@ void ChatControllerBase::activateChatWindow() {
 	chatWindow_->activate();
 }
 
+void ChatControllerBase::addMessage(const String& message, const String& senderName, bool senderIsSelf, const boost::optional<SecurityLabel>& label, const String& avatarPath) {
+	if (message.beginsWith("/me ")) {
+		chatWindow_->addMessage(message, senderName, senderIsSelf, label, avatarPath);
+	} else {
+		chatWindow_->addAction(message, senderName, senderIsSelf, label, avatarPath);
+	}
+}
+
 void ChatControllerBase::handleIncomingMessage(boost::shared_ptr<MessageEvent> messageEvent) {
 	unreadMessages_.push_back(messageEvent);
 	chatWindow_->setUnreadMessageCount(unreadMessages_.size());
@@ -105,7 +113,7 @@ void ChatControllerBase::handleIncomingMessage(boost::shared_ptr<MessageEvent> m
 		boost::shared_ptr<SecurityLabel> label = message->getPayload<SecurityLabel>();
 		boost::optional<SecurityLabel> maybeLabel = label ? boost::optional<SecurityLabel>(*label) : boost::optional<SecurityLabel>();
 		JID from = message->getFrom();
-		chatWindow_->addMessage(body, senderDisplayNameFromMessage(from), isIncomingMessageFromMe(message), maybeLabel, String(avatarManager_->getAvatarPath(from).string()));
+		addMessage(body, senderDisplayNameFromMessage(from), isIncomingMessageFromMe(message), maybeLabel, String(avatarManager_->getAvatarPath(from).string()));
 	}
 }
 

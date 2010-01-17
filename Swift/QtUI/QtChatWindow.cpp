@@ -172,6 +172,10 @@ void QtChatWindow::addMessage(const String &message, const String &senderName, b
 	previousMessageWasSystem_ = false;
 }
 
+void QtChatWindow::addAction(const String &message, const String &senderName, bool senderIsSelf, const boost::optional<SecurityLabel>& label, const String& avatarPath) {
+	addMessage(message, senderName, senderIsSelf, label, avatarPath);
+}
+
 void QtChatWindow::addErrorMessage(const String& errorMessage) {
 	if (isWidgetSelected()) {
 		onAllMessagesRead();

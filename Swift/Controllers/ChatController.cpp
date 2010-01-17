@@ -3,8 +3,8 @@
 #include <boost/bind.hpp>
 
 #include "Swiften/Avatars/AvatarManager.h"
-#include "Swift/Controllers/ChatWindow.h"
-#include "Swift/Controllers/ChatWindowFactory.h"
+#include "Swift/Controllers/UIInterfaces/ChatWindow.h"
+#include "Swift/Controllers/UIInterfaces/ChatWindowFactory.h"
 #include "Swift/Controllers/NickResolver.h"
 
 namespace Swift {
@@ -33,7 +33,7 @@ void ChatController::preHandleIncomingMessage(boost::shared_ptr<Message> message
 }
 
 void ChatController::postSendMessage(const String& body) {
-	chatWindow_->addMessage(body, "me", true, labelsEnabled_ ? chatWindow_->getSelectedSecurityLabel() : boost::optional<SecurityLabel>(), String(avatarManager_->getAvatarPath(selfJID_).string()));
+	addMessage(body, "me", true, labelsEnabled_ ? chatWindow_->getSelectedSecurityLabel() : boost::optional<SecurityLabel>(), String(avatarManager_->getAvatarPath(selfJID_).string()));
 }
 
 String ChatController::senderDisplayNameFromMessage(const JID& from) {

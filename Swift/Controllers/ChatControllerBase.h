@@ -30,6 +30,7 @@ namespace Swift {
 			void activateChatWindow();
 			void setAvailableServerFeatures(boost::shared_ptr<DiscoInfo> info);
 			void handleIncomingMessage(boost::shared_ptr<MessageEvent> message);
+			void addMessage(const String& message, const String& senderName, bool senderIsSelf, const boost::optional<SecurityLabel>& label, const String& avatarPath);
 			void setEnabled(bool enabled);
 			void setToJID(const JID& jid) {toJID_ = jid;};
 		protected:
