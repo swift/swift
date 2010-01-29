@@ -16,6 +16,7 @@ class LinkifyTest : public CppUnit::TestFixture {
 		CPPUNIT_TEST(testLinkify_HierarchicalResource);
 		CPPUNIT_TEST(testLinkify_Anchor);
 		CPPUNIT_TEST(testLinkify_Plus);
+		CPPUNIT_TEST(testLinkify_Tilde);
 		CPPUNIT_TEST_SUITE_END();
 
 	public:
