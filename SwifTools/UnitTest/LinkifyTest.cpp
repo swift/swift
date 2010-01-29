@@ -91,6 +91,14 @@ class LinkifyTest : public CppUnit::TestFixture {
 					String("<a href=\"http://foo.com/bar+baz\">http://foo.com/bar+baz</a>"),
 					result);
 		}
+
+		void testLinkify_Tilde() {
+			String result = Linkify::linkify("http://foo.com/~kev/");
+
+			CPPUNIT_ASSERT_EQUAL(
+					String("<a href=\"http://foo.com/~kev/\">http://foo.com/~kev/</a>"),
+					result);
+		}
 };
 
 CPPUNIT_TEST_SUITE_REGISTRATION(LinkifyTest);

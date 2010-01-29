@@ -4,8 +4,8 @@
 
 #include "Swift/Controllers/ChatsManager.h"
 
-#include "Swift/Controllers/ChatWindow.h"
-#include "Swift/Controllers/ChatWindowFactory.h"
+#include "Swift/Controllers/UIInterfaces/ChatWindow.h"
+#include "Swift/Controllers/UIInterfaces/ChatWindowFactory.h"
 #include "Swiften/Roster/TreeWidgetFactory.h"
 #include "Swiften/Client/Client.h"
 #include "Swift/Controllers/ChatController.h"

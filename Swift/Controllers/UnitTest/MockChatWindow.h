@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Swift/Controllers/ChatWindow.h"
+#include "Swift/Controllers/UIInterfaces/ChatWindow.h"
 
 namespace Swift {
 	class MockChatWindow : public ChatWindow {
@@ -9,6 +9,7 @@ namespace Swift {
 			virtual ~MockChatWindow();
 
 			virtual void addMessage(const String& message, const String& /*senderName*/, bool /*senderIsSelf*/, const boost::optional<SecurityLabel>& /*label*/, const String& /*avatarPath*/) {lastMessageBody_ = message;};
+			virtual void addAction(const String& message, const String& /*senderName*/, bool /*senderIsSelf*/, const boost::optional<SecurityLabel>& /*label*/, const String& /*avatarPath*/) {lastMessageBody_ = message;};
 			virtual void addSystemMessage(const String& /*message*/) {};
 			virtual void addErrorMessage(const String& /*message*/) {};
 
