@@ -31,6 +31,14 @@ namespace Swift {
 
 			void start();
 			void stop();
+			
+			AvahiThreadedPoll* getThreadedPoll() const {
+				return threadedPoll;
+			}
+
+			AvahiClient* getClient() const {
+				return client;
+			}
 
 		private:
 			AvahiClient* client;

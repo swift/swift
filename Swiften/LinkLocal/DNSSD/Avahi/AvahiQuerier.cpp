@@ -2,11 +2,10 @@
 
 #include <iostream>
 
-//#include "Swiften/LinkLocal/DNSSD/Avahi/AvahiBrowseQuery.h"
-//#include "Swiften/LinkLocal/DNSSD/Avahi/AvahiRegisterQuery.h"
-//#include "Swiften/LinkLocal/DNSSD/Avahi/AvahiResolveServiceQuery.h"
-//#include "Swiften/LinkLocal/DNSSD/Avahi/AvahiResolveHostnameQuery.h"
-//#include "Swiften/Base/foreach.h"
+#include "Swiften/LinkLocal/DNSSD/Avahi/AvahiBrowseQuery.h"
+#include "Swiften/LinkLocal/DNSSD/Avahi/AvahiResolveServiceQuery.h"
+#include "Swiften/LinkLocal/DNSSD/Avahi/AvahiResolveHostnameQuery.h"
+#include "Swiften/LinkLocal/DNSSD/Avahi/AvahiRegisterQuery.h"
 
 namespace Swift {
 
@@ -17,22 +16,23 @@ AvahiQuerier::~AvahiQuerier() {
 }
 
 boost::shared_ptr<DNSSDBrowseQuery> AvahiQuerier::createBrowseQuery() {
-	//return boost::shared_ptr<DNSSDBrowseQuery>(new AvahiBrowseQuery(shared_from_this()));
+	return boost::shared_ptr<DNSSDBrowseQuery>(new AvahiBrowseQuery(shared_from_this()));
 }
 
 boost::shared_ptr<DNSSDRegisterQuery> AvahiQuerier::createRegisterQuery(const String& name, int port, const ByteArray& info) {
-	//return boost::shared_ptr<DNSSDRegisterQuery>(new AvahiRegisterQuery(name, port, info, shared_from_this()));
+	return boost::shared_ptr<DNSSDRegisterQuery>(new AvahiRegisterQuery(name, port, info, shared_from_this()));
 }
 
 boost::shared_ptr<DNSSDResolveServiceQuery> AvahiQuerier::createResolveServiceQuery(const DNSSDServiceID& service) {
-	//return boost::shared_ptr<DNSSDResolveServiceQuery>(new AvahiResolveServiceQuery(service, shared_from_this()));
+	return boost::shared_ptr<DNSSDResolveServiceQuery>(new AvahiResolveServiceQuery(service, shared_from_this()));
 }
 
 boost::shared_ptr<DNSSDResolveHostnameQuery> AvahiQuerier::createResolveHostnameQuery(const String& hostname, int interfaceIndex) {
-	//return boost::shared_ptr<DNSSDResolveHostnameQuery>(new AvahiResolveHostnameQuery(hostname, interfaceIndex, shared_from_this()));
+	return boost::shared_ptr<DNSSDResolveHostnameQuery>(new AvahiResolveHostnameQuery(hostname, interfaceIndex, shared_from_this()));
 }
 
 void AvahiQuerier::start() {
+	std::cout << "Starrting querier" << std::endl;
 	assert(!threadedPoll);
 	threadedPoll = avahi_threaded_poll_new();
 	int error;
@@ -45,6 +45,7 @@ void AvahiQuerier::start() {
 		std::cerr << "Avahi Error: " << avahi_strerror(error) << std::endl;
 		return;
 	}
+	std::cout << "Starrting event loop" << std::endl;
 	avahi_threaded_poll_start(threadedPoll);
 }
 

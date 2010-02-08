@@ -28,7 +28,10 @@ if myenv.get("HAVE_BONJOUR", 0) :
 			"DNSSD/Bonjour/BonjourQuery.cpp",
 		]
 elif myenv.get("HAVE_AVAHI", 0) :
-	sources += ["DNSSD/Avahi/AvahiQuerier.cpp"]
+	sources += [
+			"DNSSD/Avahi/AvahiQuerier.cpp",
+			"DNSSD/Avahi/AvahiQuery.cpp"
+		]
 
 objects = myenv.StaticObject(sources)
 swiften_env.Append(SWIFTEN_OBJECTS = [objects])
