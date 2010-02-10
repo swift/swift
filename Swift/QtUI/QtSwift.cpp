@@ -18,7 +18,6 @@
 #include "Swiften/Base/Platform.h"
 #include "Swiften/Elements/Presence.h"
 #include "Swiften/Client/Client.h"
-#include "Swift/Controllers/ChatController.h"
 #include "Swift/Controllers/MainController.h"
 #include "Swift/QtUI/BuildVersion.h"
 #include "SwifTools/AutoUpdater/AutoUpdater.h"

@@ -4,7 +4,7 @@
 #include <boost/shared_ptr.hpp>
 
 #include "Swiften/Base/String.h"
-#include "Swift/Controllers/ChatControllerBase.h"
+#include "Swift/Controllers/Chat/ChatControllerBase.h"
 #include "Swiften/Elements/Message.h"
 #include "Swiften/Elements/DiscoInfo.h"
 #include "Swiften/JID/JID.h"

@@ -1,12 +1,12 @@
-#include "Swift/Controllers/ChatsManager.h"
+#include "Swift/Controllers/Chat/ChatsManager.h"
 
 #include <boost/bind.hpp>
 
 #include "Swiften/Client/Client.h"
 
-#include "Swift/Controllers/ChatController.h"
+#include "Swift/Controllers/Chat/ChatController.h"
 #include "Swift/Controllers/EventController.h"
-#include "Swift/Controllers/MUCController.h"
+#include "Swift/Controllers/Chat/MUCController.h"
 #include "Swiften/Presence/PresenceSender.h"
 
 namespace Swift {

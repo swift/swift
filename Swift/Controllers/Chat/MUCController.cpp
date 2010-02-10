@@ -1,4 +1,4 @@
-#include "Swift/Controllers/MUCController.h"
+#include "Swift/Controllers/Chat/MUCController.h"
 
 #include <boost/bind.hpp>
 

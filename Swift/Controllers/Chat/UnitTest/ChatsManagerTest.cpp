@@ -2,15 +2,15 @@
 #include <cppunit/extensions/TestFactoryRegistry.h>
 #include "3rdParty/hippomocks.h"
 
-#include "Swift/Controllers/ChatsManager.h"
+#include "Swift/Controllers/Chat/ChatsManager.h"
 
 #include "Swift/Controllers/UIInterfaces/ChatWindow.h"
 #include "Swift/Controllers/UIInterfaces/ChatWindowFactory.h"
 #include "Swiften/Roster/TreeWidgetFactory.h"
 #include "Swiften/Client/Client.h"
-#include "Swift/Controllers/ChatController.h"
+#include "Swift/Controllers/Chat/ChatController.h"
 #include "Swift/Controllers/EventController.h"
-#include "Swift/Controllers/MUCController.h"
+#include "Swift/Controllers/Chat/MUCController.h"
 #include "Swiften/Presence/PresenceSender.h"
 #include "Swiften/Avatars/UnitTest/MockAvatarManager.h"
 #include "Swift/Controllers/NickResolver.h"

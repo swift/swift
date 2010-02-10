@@ -1,7 +1,7 @@
 #ifndef SWIFTEN_ChatController_H
 #define SWIFTEN_ChatController_H
 
-#include "Swift/Controllers/ChatControllerBase.h"
+#include "Swift/Controllers/Chat/ChatControllerBase.h"
 
 namespace Swift {
 	class AvatarManager;

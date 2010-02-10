@@ -1,4 +1,4 @@
-#include "Swift/Controllers/ChatControllerBase.h"
+#include "Swift/Controllers/Chat/ChatControllerBase.h"
 
 #include <boost/bind.hpp>
 #include <boost/shared_ptr.hpp>
