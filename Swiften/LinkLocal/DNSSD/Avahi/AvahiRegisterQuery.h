@@ -70,23 +70,23 @@ namespace Swift {
 						// Domain is a hack!
 						MainEventLoop::postEvent(boost::bind(boost::ref(onRegisterFinished), boost::optional<DNSSDServiceID>(DNSSDServiceID(name, "local", "_presence._tcp", 0))), shared_from_this());
 						std::cout << "Entry group established" << std::endl;
-            break;
-        case AVAHI_ENTRY_GROUP_COLLISION : {
+						break;
+				case AVAHI_ENTRY_GROUP_COLLISION : {
 						std::cout << "Entry group collision" << std::endl;
-            /*char *n;
-            n = avahi_alternative_service_name(name);
-            avahi_free(name);
-            name = n;*/
-            break;
-        }
+						/*char *n;
+						n = avahi_alternative_service_name(name);
+						avahi_free(name);
+						name = n;*/
+						break;
+				}
 
-        case AVAHI_ENTRY_GROUP_FAILURE :
+				case AVAHI_ENTRY_GROUP_FAILURE :
 						std::cout << "Entry group failure " << avahi_strerror(avahi_client_errno(avahi_entry_group_get_client(g))) << std::endl;
-            break;
+						break;
 
-        case AVAHI_ENTRY_GROUP_UNCOMMITED:
-        case AVAHI_ENTRY_GROUP_REGISTERING:
-            ;
+				case AVAHI_ENTRY_GROUP_UNCOMMITED:
+				case AVAHI_ENTRY_GROUP_REGISTERING:
+						;
 
 				/*
 				DNSServiceErrorType result = DNSServiceRegister(

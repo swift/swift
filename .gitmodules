@@ -1,0 +1,18 @@
+[submodule "3rdParty/CppUnit"]
+	path = 3rdParty/CppUnit
+	url = swift@swift.im:git/cppunit-module.git
+[submodule "3rdParty/ZLib"]
+	path = 3rdParty/ZLib
+	url = swift@swift.im:git/zlib-module.git
+[submodule "3rdParty/Boost"]
+	path = 3rdParty/Boost
+	url = swift@swift.im:git/boost-module.git
+[submodule "3rdParty/CAres"]
+	path = 3rdParty/CAres
+	url = swift@swift.im:git/cares-module.git
+[submodule "3rdParty/SQLite"]
+	path = 3rdParty/SQLite
+	url = swift@swift.im:git/sqlite-module.git
+[submodule "Slimber"]
+	path = Slimber
+	url = swift@swift.im:git/slimber-module.git
