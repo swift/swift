@@ -16,3 +16,15 @@
 [submodule "Slimber"]
 	path = Slimber
 	url = swift@swift.im:git/slimber-module.git
+[submodule "3rdParty/Expat"]
+	path = 3rdParty/Expat
+	url = swift@swift.im:git/expat-module.git
+[submodule "3rdParty/LibIDN"]
+	path = 3rdParty/LibIDN
+	url = swift@swift.im:git/libidn-module.git
+[submodule "3rdParty/SCons"]
+	path = 3rdParty/SCons
+	url = swift@swift.im:git/scons-module.git
+[submodule "3rdParty/LCov"]
+	path = 3rdParty/LCov
+	url = swift@swift.im:git/lcov-module.git
