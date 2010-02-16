@@ -4,6 +4,7 @@
 #include "Swiften/Parser/PayloadParserFactory.h"
 #include "Swiften/Parser/PayloadParsers/ErrorParserFactory.h"
 #include "Swiften/Parser/PayloadParsers/BodyParserFactory.h"
+#include "Swiften/Parser/PayloadParsers/ChatStateParserFactory.h"
 #include "Swiften/Parser/PayloadParsers/PriorityParserFactory.h"
 #include "Swiften/Parser/PayloadParsers/ResourceBindParserFactory.h"
 #include "Swiften/Parser/PayloadParsers/StartSessionParserFactory.h"
@@ -41,6 +42,7 @@ FullPayloadParserFactoryCollection::FullPayloadParserFactoryCollection() {
 	factories_.push_back(shared_ptr<PayloadParserFactory>(new VCardUpdateParserFactory()));
 	factories_.push_back(shared_ptr<PayloadParserFactory>(new VCardParserFactory()));
 	factories_.push_back(shared_ptr<PayloadParserFactory>(new PrivateStorageParserFactory(this)));
+	factories_.push_back(shared_ptr<PayloadParserFactory>(new ChatStateParserFactory()));
 	foreach(shared_ptr<PayloadParserFactory> factory, factories_) {
 		addFactory(factory.get());
 	}

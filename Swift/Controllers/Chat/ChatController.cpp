@@ -3,6 +3,9 @@
 #include <boost/bind.hpp>
 
 #include "Swiften/Avatars/AvatarManager.h"
+#include "Swiften/Chat/ChatStateNotifier.h"
+#include "Swiften/Chat/ChatStateMessageSender.h"
+#include "Swiften/Chat/ChatStateTracker.h"
 #include "Swift/Controllers/UIInterfaces/ChatWindow.h"
 #include "Swift/Controllers/UIInterfaces/ChatWindowFactory.h"
 #include "Swift/Controllers/NickResolver.h"
@@ -14,9 +17,20 @@ namespace Swift {
  */
 ChatController::ChatController(const JID& self, StanzaChannel* stanzaChannel, IQRouter* iqRouter, ChatWindowFactory* chatWindowFactory, const JID &contact, NickResolver* nickResolver, PresenceOracle* presenceOracle, AvatarManager* avatarManager)
  : ChatControllerBase(self, stanzaChannel, iqRouter, chatWindowFactory, contact, presenceOracle, avatarManager) {
+	chatStateNotifier_ = new ChatStateNotifier();
+	chatStateMessageSender_ = new ChatStateMessageSender(chatStateNotifier_, stanzaChannel, contact);
+	chatStateTracker_ = new ChatStateTracker();
 	nickResolver_ = nickResolver;
 	presenceOracle_->onPresenceChange.connect(boost::bind(&ChatController::handlePresenceChange, this, _1, _2));
+	chatStateTracker_->onChatStateChange.connect(boost::bind(&ChatWindow::setContactChatState, chatWindow_, _1));
 	chatWindow_->setName(nickResolver_->jidToNick(toJID_));
+	chatWindow_->onUserTyping.connect(boost::bind(&ChatStateNotifier::setUserIsTyping, chatStateNotifier_));
+	chatWindow_->onUserCancelsTyping.connect(boost::bind(&ChatStateNotifier::userCancelledNewMessage, chatStateNotifier_));
+}
+
+void ChatController::setToJID(const JID& jid) {
+	chatStateMessageSender_->setContact(jid);
+	ChatControllerBase::setToJID(jid);
 }
 
 bool ChatController::isIncomingMessageFromMe(boost::shared_ptr<Message>) {
@@ -30,10 +44,19 @@ void ChatController::preHandleIncomingMessage(boost::shared_ptr<Message> message
 			toJID_ = from;
 		}
 	}
+	chatStateNotifier_->receivedMessageFromContact(message->getPayload<ChatState>());
+	chatStateTracker_->handleMessageReceived(message);
+}
+
+void ChatController::preSendMessageRequest(boost::shared_ptr<Message> message) {
+	if (chatStateNotifier_->contactShouldReceiveStates()) {
+		message->addPayload(boost::shared_ptr<Payload>(new ChatState(ChatState::Active)));
+	}
 }
 
 void ChatController::postSendMessage(const String& body) {
 	addMessage(body, "me", true, labelsEnabled_ ? chatWindow_->getSelectedSecurityLabel() : boost::optional<SecurityLabel>(), String(avatarManager_->getAvatarPath(selfJID_).string()));
+	chatStateNotifier_->userSentMessage();
 }
 
 String ChatController::senderDisplayNameFromMessage(const JID& from) {
@@ -62,6 +85,7 @@ void ChatController::handlePresenceChange(boost::shared_ptr<Presence> newPresenc
 	if (!(toJID_.isBare() && newPresence->getFrom().equals(toJID_, JID::WithoutResource)) && newPresence->getFrom() != toJID_) {
 		return;
 	}
+	chatStateTracker_->handlePresenceChange(newPresence, previousPresence);
 	String newStatusChangeString = getStatusChangeString(newPresence);
 	if (!previousPresence || newStatusChangeString != getStatusChangeString(previousPresence)) {
 		chatWindow_->addSystemMessage(newStatusChangeString);

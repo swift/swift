@@ -98,7 +98,9 @@ void ChatControllerBase::addMessage(const String& message, const String& senderN
 }
 
 void ChatControllerBase::handleIncomingMessage(boost::shared_ptr<MessageEvent> messageEvent) {
-	unreadMessages_.push_back(messageEvent);
+	if (messageEvent->isReadable()) {
+		unreadMessages_.push_back(messageEvent);
+	}
 	chatWindow_->setUnreadMessageCount(unreadMessages_.size());
 
 	boost::shared_ptr<Message> message = messageEvent->getStanza();
@@ -109,6 +111,9 @@ void ChatControllerBase::handleIncomingMessage(boost::shared_ptr<MessageEvent> m
 		chatWindow_->addErrorMessage(errorMessage);
 	}
 	else {
+		if (!messageEvent->isReadable()) {
+			return;
+		}
 		showChatWindow();
 		boost::shared_ptr<SecurityLabel> label = message->getPayload<SecurityLabel>();
 		boost::optional<SecurityLabel> maybeLabel = label ? boost::optional<SecurityLabel>(*label) : boost::optional<SecurityLabel>();

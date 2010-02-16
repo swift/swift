@@ -7,9 +7,10 @@ namespace Swift {
 	class QtTabbable : public QWidget {
 		Q_OBJECT
 		public:
+			enum AlertType {NoActivity, WaitingActivity, ImpendingActivity};
 			~QtTabbable();
 			bool isWidgetSelected();
-			virtual bool isWidgetAlerting() {return false;};
+			virtual AlertType getWidgetAlertState() {return NoActivity;};
 		protected:
 			QtTabbable() : QWidget() {};
 

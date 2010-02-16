@@ -35,7 +35,8 @@ namespace Swift {
 			SecurityLabel getSelectedSecurityLabel();
 			void setName(const String& name);
 			void setInputEnabled(bool enabled);
-			virtual bool isWidgetAlerting();
+			QtTabbable::AlertType getWidgetAlertState();
+			void setContactChatState(ChatState::ChatStateType state);
 
 		protected slots:
 			void qAppFocusChanged(QWidget* old, QWidget* now);
@@ -45,11 +46,13 @@ namespace Swift {
 			void showEvent(QShowEvent* event);
 		private slots:
 			void returnPressed();
+			void handleInputChanged();
 
 		private:
 			void updateTitleWithUnreadCount();
 
 			int unreadCount_;
+			bool contactIsTyping_;
 			QString contact_;
 			QtChatView *messageLog_;
 			QtTextEdit* input_;
@@ -59,6 +62,7 @@ namespace Swift {
 			bool previousMessageWasSelf_;
 			bool previousMessageWasSystem_;
 			QString previousSenderName_;
+			bool inputClearing_;
 	};
 }
 

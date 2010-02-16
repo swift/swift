@@ -32,7 +32,7 @@ namespace Swift {
 			void handleIncomingMessage(boost::shared_ptr<MessageEvent> message);
 			void addMessage(const String& message, const String& senderName, bool senderIsSelf, const boost::optional<SecurityLabel>& label, const String& avatarPath);
 			void setEnabled(bool enabled);
-			void setToJID(const JID& jid) {toJID_ = jid;};
+			virtual void setToJID(const JID& jid) {toJID_ = jid;};
 		protected:
 			ChatControllerBase(const JID& self, StanzaChannel* stanzaChannel, IQRouter* iqRouter, ChatWindowFactory* chatWindowFactory, const JID &toJID, PresenceOracle* presenceOracle, AvatarManager* avatarManager);
 

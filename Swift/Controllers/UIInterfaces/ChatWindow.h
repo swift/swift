@@ -8,6 +8,7 @@
 
 #include "Swiften/Base/String.h"
 #include "Swiften/Elements/SecurityLabel.h"
+#include "Swiften/Elements/ChatState.h"
 
 namespace Swift {
 	class AvatarManager;
@@ -23,6 +24,7 @@ namespace Swift {
 			virtual void addSystemMessage(const String& message) = 0;
 			virtual void addErrorMessage(const String& message) = 0;
 
+			virtual void setContactChatState(ChatState::ChatStateType state) = 0;
 			virtual void setName(const String& name) = 0;
 			virtual void show() = 0;
 			virtual void activate() = 0;
@@ -38,6 +40,8 @@ namespace Swift {
 			boost::signal<void ()> onClosed;
 			boost::signal<void ()> onAllMessagesRead;
 			boost::signal<void (const String&)> onSendMessageRequest;
+			boost::signal<void ()> onUserTyping;
+			boost::signal<void ()> onUserCancelsTyping;
 	};
 }
 #endif

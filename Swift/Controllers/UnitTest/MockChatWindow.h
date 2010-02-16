@@ -13,6 +13,7 @@ namespace Swift {
 			virtual void addSystemMessage(const String& /*message*/) {};
 			virtual void addErrorMessage(const String& /*message*/) {};
 
+			virtual void setContactChatState(ChatState::ChatStateType /*state*/) {};
 			virtual void setName(const String& name) {name_ = name;};
 			virtual void show() {};
 			virtual void activate() {};

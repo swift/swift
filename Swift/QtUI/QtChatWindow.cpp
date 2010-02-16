@@ -56,7 +56,11 @@ QtChatWindow::QtChatWindow(const QString &contact, QtTreeWidgetFactory *treeWidg
 	input_->setAcceptRichText(false);
 	layout->addWidget(input_);
 	
+	inputClearing_ = false;
+	contactIsTyping_ = false;
+
 	connect(input_, SIGNAL(returnPressed()), this, SLOT(returnPressed()));
+	connect(input_, SIGNAL(textChanged()), this, SLOT(handleInputChanged()));
 	setFocusProxy(input_);
 	connect(qApp, SIGNAL(focusChanged(QWidget*, QWidget*)), this, SLOT(qAppFocusChanged(QWidget*, QWidget*)));
 
@@ -134,8 +138,20 @@ void QtChatWindow::setUnreadMessageCount(int count) {
 	updateTitleWithUnreadCount();
 }
 
-bool QtChatWindow::isWidgetAlerting() {
-	return unreadCount_ > 0;
+void QtChatWindow::setContactChatState(ChatState::ChatStateType state) {
+	contactIsTyping_ = (state == ChatState::Composing);
+	printf("Hay, composing %d, %d!\n", state, contactIsTyping_);
+	emit titleUpdated();
+}
+
+QtTabbable::AlertType QtChatWindow::getWidgetAlertState() {
+	if (contactIsTyping_) {
+		return ImpendingActivity;
+	} 
+	if (unreadCount_ > 0) {
+		return WaitingActivity;
+	}
+	return NoActivity;
 }
 
 void QtChatWindow::setName(const String& name) {
@@ -205,7 +221,20 @@ void QtChatWindow::addSystemMessage(const String& message) {
 void QtChatWindow::returnPressed() {
 	onSendMessageRequest(Q2PSTRING(input_->toPlainText()));
 	messageLog_->scrollToBottom();
+	inputClearing_ = true;
 	input_->clear();
+	inputClearing_ = false;
+}
+
+void QtChatWindow::handleInputChanged() {
+	if (inputClearing_) {
+		return;
+	}
+	if (input_->toPlainText().isEmpty()) {
+		onUserCancelsTyping();
+	} else {
+		onUserTyping();
+	}
 }
 
 void QtChatWindow::show() {

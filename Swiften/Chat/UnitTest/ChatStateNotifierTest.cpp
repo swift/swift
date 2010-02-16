@@ -18,15 +18,15 @@ public:
 
 	int composingCallCount;
 	int activeCallCount;
-	ChatStateNotifier::ChatState currentState;
+	ChatState::ChatStateType currentState;
 
 private:
-	void handleChatStateChanged(ChatStateNotifier::ChatState newState) {
+	void handleChatStateChanged(ChatState::ChatStateType newState) {
 		switch (newState) {
-			case ChatStateNotifier::Composing:
+			case ChatState::Composing:
 				composingCallCount++;
 				break;
-			case ChatStateNotifier::Active:
+			case ChatState::Active:
 				activeCallCount++;
 				break;
 			default:
@@ -86,7 +86,7 @@ public:
 		notifier_->userCancelledNewMessage();
 		CPPUNIT_ASSERT_EQUAL(1, monitor_->composingCallCount);
 		CPPUNIT_ASSERT_EQUAL(1, monitor_->activeCallCount);
-		CPPUNIT_ASSERT_EQUAL(ChatStateNotifier::Active, monitor_->currentState);
+		CPPUNIT_ASSERT_EQUAL(ChatState::Active, monitor_->currentState);
 	}
 
 

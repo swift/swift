@@ -16,7 +16,7 @@ void ChatStateNotifier::setContactHas85Caps(bool hasCaps) {
 void ChatStateNotifier::setUserIsTyping() {
 	if (contactShouldReceiveStates() && !userIsTyping_) {
 		userIsTyping_ = true;
-		onChatStateChanged(Composing);
+		onChatStateChanged(ChatState::Composing);
 	}
 }
 
@@ -27,7 +27,7 @@ void ChatStateNotifier::userSentMessage() {
 void ChatStateNotifier::userCancelledNewMessage() {
 	if (userIsTyping_) {
 		userIsTyping_ = false;
-		onChatStateChanged(Active);
+		onChatStateChanged(ChatState::Active);
 	}
 }
 

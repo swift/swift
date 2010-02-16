@@ -55,6 +55,7 @@ sources = [
 		"Serializer/PayloadSerializer.cpp",
 		"Serializer/PayloadSerializerCollection.cpp",
 		"Serializer/PayloadSerializers/CapsInfoSerializer.cpp",
+		"Serializer/PayloadSerializers/ChatStateSerializer.cpp",
 		"Serializer/PayloadSerializers/DiscoInfoSerializer.cpp",
 		"Serializer/PayloadSerializers/ErrorSerializer.cpp",
 		"Serializer/PayloadSerializers/FullPayloadSerializerCollection.cpp",

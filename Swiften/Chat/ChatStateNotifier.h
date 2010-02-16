@@ -3,10 +3,11 @@
 #include <boost/signals.hpp>
 #include <boost/shared_ptr.hpp>
 
+#include "Swiften/Elements/ChatState.h"
+
 namespace Swift {
 	class ChatStateNotifier {
 		public:
-			enum ChatState {Active, Composing, Paused, Inactive, Gone};
 			ChatStateNotifier();
 			void setContactHas85Caps(bool hasCaps);
 			void setUserIsTyping();
@@ -15,7 +16,7 @@ namespace Swift {
 			void receivedMessageFromContact(bool hasActiveElement);
 			bool contactShouldReceiveStates();
 
-			boost::signal<void (ChatState)> onChatStateChanged;
+			boost::signal<void (ChatState::ChatStateType)> onChatStateChanged;
 		private:
 			bool contactHas85Caps_;
 			bool isInConversation_;
