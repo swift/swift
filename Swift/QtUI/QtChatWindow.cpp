@@ -140,7 +140,6 @@ void QtChatWindow::setUnreadMessageCount(int count) {
 
 void QtChatWindow::setContactChatState(ChatState::ChatStateType state) {
 	contactIsTyping_ = (state == ChatState::Composing);
-	printf("Hay, composing %d, %d!\n", state, contactIsTyping_);
 	emit titleUpdated();
 }
 

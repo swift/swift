@@ -19,7 +19,6 @@ void ChatStateTracker::handlePresenceChange(boost::shared_ptr<Presence> newPrese
 }
 
 void ChatStateTracker::changeState(ChatState::ChatStateType state) {
-	printf("Comparing state %d to old state %d\n", state, currentState_);
 	if (state != currentState_) {
 		currentState_ = state;
 		onChatStateChange(state);
