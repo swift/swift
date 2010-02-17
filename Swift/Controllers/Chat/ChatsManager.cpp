@@ -8,6 +8,7 @@
 #include "Swift/Controllers/EventController.h"
 #include "Swift/Controllers/Chat/MUCController.h"
 #include "Swiften/Presence/PresenceSender.h"
+#include "Swiften/Elements/ChatState.h"
 
 namespace Swift {
 
@@ -133,9 +134,9 @@ void ChatsManager::handleJoinMUCRequest(const JID &muc, const String &nick) {
 void ChatsManager::handleIncomingMessage(boost::shared_ptr<Message> message) {
 	JID jid = message->getFrom();
 	boost::shared_ptr<MessageEvent> event(new MessageEvent(message));
-	//if (!event->isReadable()) {
-	//	return;
-	//}
+	if (!event->isReadable() && !message->getPayload<ChatState>()) {
+		return;
+	}
 
 	// Try to deliver it to a MUC
 	if (message->getType() == Message::Groupchat || message->getType() == Message::Error) {
