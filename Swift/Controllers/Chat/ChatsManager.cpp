@@ -75,6 +75,7 @@ void ChatsManager::setAvatarManager(AvatarManager* avatarManager) {
 
 
 void ChatsManager::setServerDiscoInfo(boost::shared_ptr<DiscoInfo> info) {
+	serverDiscoInfo_ = info;
 	foreach (JIDChatControllerPair pair, chatControllers_) {
 		pair.second->setAvailableServerFeatures(info);
 	}
