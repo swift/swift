@@ -5,7 +5,7 @@
 
 #include "Swiften/Elements/Message.h"
 #include "Swiften/Elements/Presence.h"
-#include "Swiften/ELements/ChatState.h"
+#include "Swiften/Elements/ChatState.h"
 
 namespace Swift {
 	class ChatStateTracker {
