@@ -91,9 +91,9 @@ void ChatControllerBase::activateChatWindow() {
 
 void ChatControllerBase::addMessage(const String& message, const String& senderName, bool senderIsSelf, const boost::optional<SecurityLabel>& label, const String& avatarPath) {
 	if (message.beginsWith("/me ")) {
-		chatWindow_->addMessage(message, senderName, senderIsSelf, label, avatarPath);
+		chatWindow_->addAction(message.getSplittedAtFirst(' ').second, senderName, senderIsSelf, label, avatarPath);
 	} else {
-		chatWindow_->addAction(message, senderName, senderIsSelf, label, avatarPath);
+		chatWindow_->addMessage(message, senderName, senderIsSelf, label, avatarPath);
 	}
 }
 

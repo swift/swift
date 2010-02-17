@@ -50,6 +50,7 @@ namespace Swift {
 
 		private:
 			void updateTitleWithUnreadCount();
+			void addMessage(const String &message, const String &senderName, bool senderIsSelf, const boost::optional<SecurityLabel>& label, const String& avatarPath, const QString& style);
 
 			int unreadCount_;
 			bool contactIsTyping_;

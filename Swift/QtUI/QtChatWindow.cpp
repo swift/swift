@@ -165,6 +165,10 @@ void QtChatWindow::updateTitleWithUnreadCount() {
 }
 
 void QtChatWindow::addMessage(const String &message, const String &senderName, bool senderIsSelf, const boost::optional<SecurityLabel>& label, const String& avatarPath) {
+	addMessage(message, senderName, senderIsSelf, label, avatarPath, "");
+}
+
+void QtChatWindow::addMessage(const String &message, const String &senderName, bool senderIsSelf, const boost::optional<SecurityLabel>& label, const String& avatarPath, const QString& style) {
 	if (isWidgetSelected()) {
 		onAllMessagesRead();
 	}
@@ -177,7 +181,9 @@ void QtChatWindow::addMessage(const String &message, const String &senderName, b
 	QString messageHTML(Qt::escape(P2QSTRING(message)));
 	messageHTML.replace("\n","<br/>");
 	messageHTML = P2QSTRING(Linkify::linkify(Q2PSTRING(messageHTML)));
-	htmlString += messageHTML;
+	QString styleSpanStart = style == "" ? "" : "<span style=\"" + style + "\">";
+	QString styleSpanEnd = style == "" ? "" : "</span>";
+	htmlString += styleSpanStart + messageHTML + styleSpanEnd;
 
 	bool appendToPrevious = !previousMessageWasSystem_ && ((senderIsSelf && previousMessageWasSelf_) || (!senderIsSelf && !previousMessageWasSelf_ && previousSenderName_ == P2QSTRING(senderName)));
 	QString qAvatarPath =  avatarPath.isEmpty() ? "qrc:/icons/avatar.png" : QUrl::fromLocalFile(P2QSTRING(avatarPath)).toEncoded();
@@ -189,7 +195,7 @@ void QtChatWindow::addMessage(const String &message, const String &senderName, b
 }
 
 void QtChatWindow::addAction(const String &message, const String &senderName, bool senderIsSelf, const boost::optional<SecurityLabel>& label, const String& avatarPath) {
-	addMessage(message, senderName, senderIsSelf, label, avatarPath);
+	addMessage(" *" + message + "*", senderName, senderIsSelf, label, avatarPath, "font-style:italic ");
 }
 
 void QtChatWindow::addErrorMessage(const String& errorMessage) {
