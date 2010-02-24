@@ -335,7 +335,9 @@ void MainController::logout() {
 }
 
 void MainController::setManagersEnabled(bool enabled) {
-	chatsManager_->setEnabled(enabled);
+	if (chatsManager_) {
+		chatsManager_->setEnabled(enabled);
+	}
 	if (rosterController_) {
 		rosterController_->setEnabled(enabled);
 	}
