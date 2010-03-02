@@ -15,11 +15,12 @@ vars.Add(BoolVariable("debug", "Compile with debug information", "yes" if os.nam
 vars.Add(BoolVariable("warnings", "Compile with warnings turned on", 
 		"yes" if os.name != "nt" else "no"))
 vars.Add(BoolVariable("max_jobs", "Build with maximum number of parallel jobs", "no"))
+vars.Add(EnumVariable("target", "Choose a target platform for compilation", "native", ["native", "iphone-simulator", "iphone-device"]))
 if os.name != "nt" :
 	vars.Add(BoolVariable("coverage", "Compile with coverage information", "no"))
 if os.name == "posix" :
 	vars.Add(BoolVariable("valgrind", "Run tests with valgrind", "no"))
-if os.name == "mac" :
+if os.name == "mac" or (os.name == "posix" and os.uname()[0] == "Darwin"):
 	vars.Add(BoolVariable("universal", "Create universal binaries", "no"))
 if os.name == "nt" :
 	vars.Add(PathVariable("vcredist", "MSVC redistributable dir", "", PathVariable.PathAccept))
@@ -125,6 +126,34 @@ if env.get("valgrind", 0) :
 # Packaging
 if ARGUMENTS.get("SWIFT_INSTALLDIR", "") :
 	env["SWIFT_INSTALLDIR"] = Dir(ARGUMENTS["SWIFT_INSTALLDIR"]).abspath
+
+# cross-compiling
+target = env["target"]
+if target in ("iphone-device", "iphone-simulator"):
+   if target == "iphone-device":
+      sdkPart = "iPhoneOS"
+      env["CC"] = "/Developer/Platforms/iPhoneOS.platform/Developer/usr/bin/arm-apple-darwin9-gcc-4.0.1"
+      env["CXX"] = "/Developer/Platforms/iPhoneOS.platform/Developer/usr/bin/arm-apple-darwin9-g++-4.0.1"
+      env["PATH"] = "/Developer/Platforms/iPhoneOS.platform/Developer/usr/bin/"
+      env["LD"] = env["CC"]
+#      env["openssl"] = "3rdParty/openssl-0.9.8l-arm"
+      targetIncludesArch = "arm"
+
+   if target == "iphone-simulator":
+      sdkPart = "iPhoneSimulator"
+      env.Append(CCFLAGS = ["-arch", "i386"])
+      env.Append(LINKFLAGS = ["-arch", "i386"])
+      targetIncludesArch = "i686"
+
+   sdkVer = "3.0"
+   sdk = "/Developer/Platforms/" + sdkPart + ".platform/Developer/SDKs/" + sdkPart + sdkVer + ".sdk"
+
+   env["FRAMEWORKS"] = ["CoreFoundation", "Foundation", "UIKit", "CoreGraphics"]
+   env.Append(LINKFLAGS = ["-L\"" + sdk + "/usr/lib\"", "-F\"" + sdk + "/System/Library/Frameworks\"", "-F\"" + sdk + "/System/Library/PrivateFrameworks\""])
+   env["CPPPATH"] = ["/Users/kismith/devel/swift/iPhone/Swiftly/swift/", "/Developer/Platforms/" + sdkPart + ".platform/Developer/usr/lib/gcc/" + targetIncludesArch + "-apple-darwin9/4.0.1/include/", sdk + "/usr/include", sdk + "/usr/include/c++/4.0.0/" + targetIncludesArch + "-apple-darwin9", sdk + "/usr/include/c++/4.0.0", "/Developer/Platforms/" + sdkPart + ".platform/Developer/usr/include/"]
+
+# end cross compiling stuff
+
 
 conf_env = env.Clone()
 
@@ -326,12 +355,14 @@ elif env.get("bonjour", False) :
 ################################################################################
 
 # Third-party modules
-SConscript(dirs = [
-		"3rdParty/CppUnit",
+third_party_dirs = ["3rdParty/CppUnit",
 		"3rdParty/Boost",
-		"3rdParty/LibIDN",
-		"3rdParty/CAres",
-		"3rdParty/SQLite"])
+		"3rdParty/LibIDN"]
+if env.get("target", 0) == "native":
+   third_party_dirs += ["3rdParty/CAres",
+		"3rdParty/SQLite"]
+
+SConscript(dirs=third_party_dirs)
 
 # Checker
 SConscript(dirs = ["QA/Checker"], test_only = True)

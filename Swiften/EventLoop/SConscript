@@ -7,7 +7,7 @@ sources = [
 		"SimpleEventLoop.cpp",
 	]
 
-if swiften_env["PLATFORM"] == "darwin" :
+if swiften_env["PLATFORM"] == "darwin" and swiften_env["target"] == "native":
 	sources += [
 			"Cocoa/CocoaEventLoop.mm",
 			"Cocoa/CocoaEvent.mm"

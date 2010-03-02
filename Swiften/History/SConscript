@@ -1,7 +1,8 @@
 Import("swiften_env")
 
 myenv = swiften_env.Clone()
-myenv.MergeFlags(swiften_env["SQLITE_FLAGS"])
+if myenv["target"] == "native":
+   myenv.MergeFlags(swiften_env["SQLITE_FLAGS"])
 
 objects = myenv.StaticObject([
 			"HistoryManager.cpp",

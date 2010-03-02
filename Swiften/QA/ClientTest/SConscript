@@ -8,7 +8,7 @@ if env["TEST"] :
 	myenv.MergeFlags(myenv["CPPUNIT_FLAGS"])
 	myenv.MergeFlags(myenv["LIBIDN_FLAGS"])
 	myenv.MergeFlags(myenv["BOOST_FLAGS"])
-	myenv.MergeFlags(myenv["SQLITE_FLAGS"])
+	myenv.MergeFlags(myenv.get("SQLITE_FLAGS", ""))
 	myenv.MergeFlags(myenv["ZLIB_FLAGS"])
 	myenv.MergeFlags(myenv["OPENSSL_FLAGS"])
 	myenv.MergeFlags(myenv.get("LIBXML_FLAGS", ""))

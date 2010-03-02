@@ -10,4 +10,6 @@ if not GetOption("help") and not env.get("HAVE_OPENSSL", 0) :
 env["SWIFT_VERSION"] = "0.9.9." + datetime.date.today().strftime("%Y%m%d")
 
 SConscript("Controllers/SConscript")
-SConscript("QtUI/SConscript")
+
+if env["target"] == "native":
+   SConscript("QtUI/SConscript")

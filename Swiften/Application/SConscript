@@ -5,7 +5,7 @@ sources = [
 		"ApplicationMessageDisplay.cpp",
 	]
 
-if swiften_env["PLATFORM"] == "darwin" :
+if swiften_env["PLATFORM"] == "darwin" and swiften_env["target"] == "native" :
 	sources += [
 			"MacOSX/MacOSXApplication.cpp",
 			"MacOSX/MacOSXApplicationMessageDisplay.mm",
