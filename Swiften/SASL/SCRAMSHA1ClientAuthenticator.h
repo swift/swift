@@ -23,7 +23,8 @@ namespace Swift {
 		private:
 			enum Step {
 				Initial,
-				Proof
+				Proof,
+        Final
 			} step;
 			String clientnonce;
 			ByteArray initialServerMessage;

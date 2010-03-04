@@ -36,7 +36,7 @@ ByteArray SCRAMSHA1ClientAuthenticator::getResponse() const {
 	if (step == Initial) {
 		return getGS2Header() + getInitialBareClientMessage();
 	}
-	else {
+	else if (step == Proof) {
 		ByteArray clientKey = HMACSHA1::getResult(saltedPassword, "Client Key");
 		ByteArray storedKey = SHA1::getHash(clientKey);
 		ByteArray clientSignature = HMACSHA1::getResult(storedKey, authMessage);
@@ -46,6 +46,9 @@ ByteArray SCRAMSHA1ClientAuthenticator::getResponse() const {
 		}
 		ByteArray result = ByteArray("c=") + Base64::encode(getGS2Header()) + ",r=" + clientnonce + serverNonce + ",p=" + Base64::encode(clientProof);
 		return result;
+	}
+	else {
+		return ByteArray();
 	}
 }
 
@@ -90,9 +93,13 @@ bool SCRAMSHA1ClientAuthenticator::setChallenge(const ByteArray& challenge) {
 		step = Proof;
 		return true;
 	}
-	else {
+	else if (step == Proof) {
 		ByteArray result = ByteArray("v=") + ByteArray(Base64::encode(serverSignature));
+		step = Final;
 		return challenge == result;
+	}
+	else {
+		return true;
 	}
 }
 

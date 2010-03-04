@@ -22,6 +22,7 @@ class SCRAMSHA1ClientAuthenticatorTest : public CppUnit::TestFixture {
 		CPPUNIT_TEST(testSetChallenge_MissingIterations);
 		CPPUNIT_TEST(testSetFinalChallenge);
 		CPPUNIT_TEST(testSetFinalChallenge_InvalidChallenge);
+		CPPUNIT_TEST(testGetResponseAfterFinalChallenge);
 		CPPUNIT_TEST_SUITE_END();
 
 	public:
@@ -154,6 +155,17 @@ class SCRAMSHA1ClientAuthenticatorTest : public CppUnit::TestFixture {
 			bool result = testling.setChallenge(ByteArray("v=e26kI69ICb6zosapLLxrER/631A="));
 
 			CPPUNIT_ASSERT(!result);
+		}
+
+		void testGetResponseAfterFinalChallenge() {
+			SCRAMSHA1ClientAuthenticator testling("abcdefgh");
+			testling.setCredentials("user", "pass", "");
+			testling.setChallenge(ByteArray("r=abcdefghABCDEFGH,s=MTIzNDU2NzgK,i=4096"));
+			testling.setChallenge(ByteArray("v=Dd+Q20knZs9jeeK0pi1Mx1Se+yo="));
+
+			ByteArray result = testling.getResponse();
+
+			CPPUNIT_ASSERT_EQUAL(ByteArray(), result);
 		}
 };
 
