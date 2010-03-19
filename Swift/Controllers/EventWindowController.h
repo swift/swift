@@ -10,8 +10,10 @@ namespace Swift {
 	class EventWindowController {
 		public:
 			EventWindowController(EventController* eventController, EventWindowFactory* windowFactory);
+			~EventWindowController();
 		private:
 			void handleEventQueueEventAdded(boost::shared_ptr<Event> event);
+			void handleEventConcluded(boost::shared_ptr<Event> event);
 
 			EventController* eventController_;
 			EventWindowFactory* windowFactory_;

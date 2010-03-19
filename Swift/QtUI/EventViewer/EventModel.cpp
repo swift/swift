@@ -41,22 +41,26 @@ void EventModel::addEvent(boost::shared_ptr<Event> event, bool active) {
 	} else {
 		inactiveEvents_.push_front(new QtEvent(event, active));
 		emit dataChanged(createIndex(activeEvents_.size() -1, 0), createIndex(activeEvents_.size(), 0));
+		if (inactiveEvents_.size() > 50) {
+			removeEvent(inactiveEvents_[20]->getEvent());
+		}
 	}
 	emit layoutChanged();
 }
 
 void EventModel::removeEvent(boost::shared_ptr<Event> event) {
+	for (int i = inactiveEvents_.size() - 1; i >= 0; i--) {
+		if (event == inactiveEvents_[i]->getEvent()) {
+			inactiveEvents_.removeAt(i);
+			emit dataChanged(createIndex(activeEvents_.size() + i - 1, 0), createIndex(activeEvents_.size() + i - 1, 0));
+			return;
+		}
+	}
+
 	for (int i = 0; i < activeEvents_.size(); i++) {
 		if (event == activeEvents_[i]->getEvent()) {
 			activeEvents_.removeAt(i);
 			emit dataChanged(createIndex(i - 1, 0), createIndex(i - 1, 0));
-			return;
-		}
-	}
-	for (int i = 0; i < inactiveEvents_.size(); i++) {
-		if (event == inactiveEvents_[i]->getEvent()) {
-			inactiveEvents_.removeAt(i);
-			emit dataChanged(createIndex(activeEvents_.size() + i - 1, 0), createIndex(activeEvents_.size() + i - 1, 0));
 			return;
 		}
 	}

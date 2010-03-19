@@ -11,8 +11,18 @@ EventWindowController::EventWindowController(EventController* eventController, E
 	eventController_->onEventQueueEventAdded.connect(boost::bind(&EventWindowController::handleEventQueueEventAdded, this, _1));
 }
 
+EventWindowController::~EventWindowController() {
+	delete window_;
+}
+
 void EventWindowController::handleEventQueueEventAdded(boost::shared_ptr<Event> event) {
+	event->onConclusion.connect(boost::bind(&EventWindowController::handleEventConcluded, this, event));
 	window_->addEvent(event, true);
+}
+
+void EventWindowController::handleEventConcluded(boost::shared_ptr<Event> event) {
+	window_->removeEvent(event);
+	window_->addEvent(event, false);
 }
 
 }

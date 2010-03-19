@@ -14,7 +14,8 @@ int main(int argc, char *argv[])
 		message1->setBody("Oooh, shiny");
 		boost::shared_ptr<Swift::MessageEvent> event1(new Swift::MessageEvent(message1));
 		viewer->addEvent(boost::dynamic_pointer_cast<Swift::Event>(event1), true);
-		viewer->addEvent(boost::dynamic_pointer_cast<Swift::Event>(event1), false);
-		viewer->addEvent(boost::dynamic_pointer_cast<Swift::Event>(event1), false);
+		for (int i = 0; i < 100; i++) {
+			viewer->addEvent(boost::dynamic_pointer_cast<Swift::Event>(event1), false);
+		}
 		return app.exec();
 }
