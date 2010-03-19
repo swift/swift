@@ -8,8 +8,8 @@
 namespace Swift {
 
 SystemTrayController::SystemTrayController(EventController* eventController, SystemTray* systemTray) {
-	eventController_ = eventController;
 	systemTray_ = systemTray;
+	eventController_ = eventController;
 	eventController_->onEventQueueLengthChange.connect(boost::bind(&SystemTrayController::handleEventQueueLengthChange, this, _1));
 }
 

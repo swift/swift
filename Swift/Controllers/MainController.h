@@ -49,10 +49,12 @@ namespace Swift {
 	class XMLConsoleController;
 	class UIEventStream;
 	class XMLConsoleWidgetFactory;
+	class EventWindowFactory;
+	class EventWindowController;
 
 	class MainController {
 		public:
-			MainController(ChatWindowFactory* chatWindowFactory, MainWindowFactory *mainWindowFactory, LoginWindowFactory *loginWindowFactory, TreeWidgetFactory* treeWidgetFactory, SettingsProvider *settings, Application* application, SystemTray* systemTray, SoundPlayer* soundPlayer, XMLConsoleWidgetFactory* xmlConsoleWidgetFactory);
+			MainController(ChatWindowFactory* chatWindowFactory, MainWindowFactory *mainWindowFactory, LoginWindowFactory *loginWindowFactory, TreeWidgetFactory* treeWidgetFactory, EventWindowFactory* eventWindowFactory, SettingsProvider *settings, Application* application, SystemTray* systemTray, SoundPlayer* soundPlayer, XMLConsoleWidgetFactory* xmlConsoleWidgetFactory);
 			~MainController();
 
 
@@ -86,6 +88,7 @@ namespace Swift {
 			MainWindowFactory* mainWindowFactory_;
 			LoginWindowFactory* loginWindowFactory_;
 			TreeWidgetFactory* treeWidgetFactory_;
+			EventWindowFactory* eventWindowFactory_;
 			SettingsProvider *settings_;
 			Application* application_;
 			AvatarStorage* avatarStorage_;
@@ -93,6 +96,7 @@ namespace Swift {
 			XMPPRosterController* xmppRosterController_;
 			RosterController* rosterController_;
 			EventController* eventController_;
+			EventWindowController* eventWindowController_;
 			LoginWindow* loginWindow_;
 			SoftwareVersionResponder* clientVersionResponder_;
 			NickResolver* nickResolver_;

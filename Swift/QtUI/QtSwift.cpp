@@ -9,6 +9,7 @@
 #include "QtSystemTray.h"
 #include "QtSoundPlayer.h"
 #include "QtXMLConsoleWidgetFactory.h"
+#include "EventViewer/QtEventWindowFactory.h"
 #include <boost/bind.hpp>
 #include <QSplitter>
 
@@ -51,12 +52,13 @@ QtSwift::QtSwift(bool netbookMode) : autoUpdater_(NULL) {
 	loginWindowFactory_ = new QtLoginWindowFactory(splitter_, systemTray_, settings_);
 	chatWindowFactory_ = new QtChatWindowFactory(treeWidgetFactory_, splitter_, settings_, tabs_);
 	rosterWindowFactory_ = new QtMainWindowFactory(treeWidgetFactory_);
+	eventWindowFactory_ = new QtEventWindowFactory(rosterWindowFactory_);
 	xmlConsoleWidgetFactory_ = new QtXMLConsoleWidgetFactory(tabs_);
 	soundPlayer_ = new QtSoundPlayer();
 	if (splitter_) {
 		splitter_->show();
 	}
-	mainController_ = new MainController(chatWindowFactory_, rosterWindowFactory_, loginWindowFactory_, treeWidgetFactory_, settings_, application_, systemTray_, soundPlayer_, xmlConsoleWidgetFactory_);
+	mainController_ = new MainController(chatWindowFactory_, rosterWindowFactory_, loginWindowFactory_, treeWidgetFactory_, eventWindowFactory_, settings_, application_, systemTray_, soundPlayer_, xmlConsoleWidgetFactory_);
 
 	PlatformAutoUpdaterFactory autoUpdaterFactory;
 	if (autoUpdaterFactory.isSupported()) {
@@ -79,6 +81,7 @@ QtSwift::~QtSwift() {
 	delete soundPlayer_;
 	delete tabs_;
 	delete xmlConsoleWidgetFactory_;
+	delete eventWindowFactory_;
 }
 
 }

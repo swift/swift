@@ -45,9 +45,9 @@ QtMainWindow::QtMainWindow(QtTreeWidgetFactory *treeWidgetFactory) : QWidget() {
 
 	tabs_->addTab(contactsTabWidget_, "Contacts");
 	
-	eventView_ = new EventView(this);
+	eventWindow_ = new QtEventWindow();
 	
-	tabs_->addTab(eventView_, "Events");
+	tabs_->addTab(eventWindow_, "Events");
 	
 	this->setLayout(mainLayout);
 	
@@ -70,6 +70,10 @@ QtMainWindow::QtMainWindow(QtTreeWidgetFactory *treeWidgetFactory) : QWidget() {
 	QAction* signOutAction = new QAction("Sign Out", this);
 	connect(signOutAction, SIGNAL(triggered()), SLOT(handleSignOutAction()));
 	chatMenu->addAction(signOutAction);
+}
+
+QtEventWindow* QtMainWindow::getEventWindow() {
+	return eventWindow_;
 }
 
 void QtMainWindow::handleAddActionTriggered(bool checked) {

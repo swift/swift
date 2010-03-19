@@ -3,17 +3,18 @@
 
 #include <cassert>
 
-#include "Swiften/Elements/Message.h"
-
 #include <boost/signals.hpp>
 #include <boost/shared_ptr.hpp>
 
+#include "Swiften/Events/Event.h"
+#include "Swiften/Elements/Message.h"
+
 namespace Swift {
-	class MessageEvent {
-			public:
-			MessageEvent(boost::shared_ptr<Message> stanza) : stanza_(stanza){}
+	class MessageEvent : public Event {
+		public:
+			MessageEvent(boost::shared_ptr<Message> stanza) : stanza_(stanza){};
+			virtual ~MessageEvent(){};
 			boost::shared_ptr<Message> getStanza() {return stanza_;}
-			boost::signal<void()> onRead;
 
 			bool isReadable() {
 				return getStanza()->isError() || !getStanza()->getBody().isEmpty();
@@ -21,7 +22,7 @@ namespace Swift {
 
 			void read() {
 				assert (isReadable());
-				onRead();
+				onConclusion();
 			}
 
 		private:

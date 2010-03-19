@@ -5,7 +5,7 @@
 #include <QMenu>
 #include "Swift/Controllers/MainWindow.h"
 #include "Swift/QtUI/QtRosterHeader.h"
-#include "Swift/QtUI/EventViewer/EventView.h"
+#include "Swift/QtUI/EventViewer/QtEventWindow.h"
 
 #include <vector>
 
@@ -32,6 +32,7 @@ namespace Swift {
 			void setMyAvatarPath(const String& path);
 			void setMyStatusText(const String& status);
 			void setMyStatusType(const StatusShow::Type type);
+			QtEventWindow* getEventWindow();
 		private slots:
 			void handleStatusChanged(StatusShow::Type showType, const QString &statusMessage);
 			void handleShowOfflineToggled(bool);
@@ -51,7 +52,7 @@ namespace Swift {
 			QTabWidget* tabs_;
 			QWidget* contactsTabWidget_;
 			QWidget* eventsTabWidget_;
-			EventView* eventView_;
+			QtEventWindow* eventWindow_;
 	};
 }
 

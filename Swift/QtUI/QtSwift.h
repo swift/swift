@@ -21,6 +21,7 @@ namespace Swift {
 	class QtXMLConsoleWidgetFactory;
 	class QtSystemTray;
 	class QtSoundPlayer;
+	class QtEventWindowFactory;
 		
 	class QtSwift : public QObject {
 		Q_OBJECT
@@ -40,6 +41,7 @@ namespace Swift {
 			QSplitter* splitter_;
 			QtSoundPlayer* soundPlayer_;
 			QtChatTabs* tabs_;
+			QtEventWindowFactory* eventWindowFactory_;
 			Application* application_;
 			AutoUpdater* autoUpdater_;
 	};

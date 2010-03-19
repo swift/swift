@@ -6,18 +6,20 @@
 #include <boost/shared_ptr.hpp>
 #include <vector>
 
+#include "Swiften/Events/Event.h"
 #include "Swiften/Events/MessageEvent.h"
 
 namespace Swift {
 	class EventController {
 		public:
-			void handleIncomingEvent(boost::shared_ptr<MessageEvent> event);
+			EventController();
+			void handleIncomingEvent(boost::shared_ptr<Event> sourceEvent);
 			boost::signal<void (int)> onEventQueueLengthChange;
-			boost::signal<void (boost::shared_ptr<MessageEvent>)> onEventQueueEventAdded;
+			boost::signal<void (boost::shared_ptr<Event>)> onEventQueueEventAdded;
 
 		private:
-			void handleEventRead(boost::shared_ptr<MessageEvent> event);
-			std::vector<boost::shared_ptr<MessageEvent> > events_;
+			void handleEventConcluded(boost::shared_ptr<Event> event);
+			std::vector<boost::shared_ptr<Event> > events_;
 	};
 }
 #endif

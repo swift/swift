@@ -17,6 +17,7 @@ myenv.StaticLibrary("SwiftControllers", [
 		"XMPPRosterController.cpp",
 		"Chat/MUCController.cpp",
 		"EventController.cpp",
+		"EventWindowController.cpp",
 		"SoundEventController.cpp",
 		"SystemTrayController.cpp",
 		"XMLConsoleController.cpp",

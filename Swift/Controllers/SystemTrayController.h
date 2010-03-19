@@ -6,8 +6,7 @@ namespace Swift {
 
 	class SystemTrayController {
 		public:
-			SystemTrayController(EventController* eventController, SystemTray* systemTray);
-
+		SystemTrayController(EventController* eventController, SystemTray* systemTray);
 		private:
 			void handleEventQueueLengthChange(int length);
 
