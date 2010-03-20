@@ -53,6 +53,11 @@ void AvatarManager::handleVCardReceived(const JID& from, const String& promisedH
 		std::cerr << "Warning: " << from << ": Could not get vCard" << std::endl;
 		return;
 	}
+	if (!vCard) {
+		std::cerr << "Warning: " << from << ": null vcard payload" << std::endl;
+		//FIXME: Why could this happen?
+		return;
+	}
 	String realHash = Hexify::hexify(SHA1::getHash(vCard->getPhoto()));
 	if (promisedHash != realHash) {
 		std::cerr << "Warning: " << from << ": Got different vCard photo hash (" << promisedHash << " != " << realHash << ")" << std::endl;
