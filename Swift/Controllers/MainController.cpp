@@ -134,10 +134,8 @@ void MainController::handleConnected() {
 		presenceOracle_ = new PresenceOracle(client_);
 		nickResolver_ = new NickResolver(xmppRoster_);		
 		lastSentPresence_ = boost::shared_ptr<Presence>();
-
-		client_->onPresenceReceived.connect(boost::bind(&MainController::handleIncomingPresence, this, _1));
-
-		chatsManager_ = new ChatsManager(jid_, client_, client_, eventController_, chatWindowFactory_, treeWidgetFactory_, nickResolver_, presenceOracle_, serverDiscoInfo_, presenceSender_);
+		
+		chatsManager_ = new ChatsManager(jid_, client_, client_, eventController_, chatWindowFactory_, treeWidgetFactory_, nickResolver_, presenceOracle_, serverDiscoInfo_, presenceSender_, uiEventStream_);
 		client_->onMessageReceived.connect(boost::bind(&ChatsManager::handleIncomingMessage, chatsManager_, _1));
 
 		avatarManager_ = new AvatarManager(client_, client_, avatarStorage_, chatsManager_);
@@ -145,7 +143,7 @@ void MainController::handleConnected() {
 		chatsManager_->setAvatarManager(avatarManager_);
 
 
-		rosterController_ = new RosterController(jid_, xmppRoster_, avatarManager_, mainWindowFactory_, treeWidgetFactory_, nickResolver_);
+		rosterController_ = new RosterController(jid_, xmppRoster_, avatarManager_, mainWindowFactory_, treeWidgetFactory_, nickResolver_, presenceOracle_, eventController_, uiEventStream_);
 		rosterController_->onChangeStatusRequest.connect(boost::bind(&MainController::handleChangeStatusRequest, this, _1, _2));
 		rosterController_->onSignOutRequest.connect(boost::bind(&MainController::signOut, this));
 				rosterController_->onStartChatRequest.connect(boost::bind(&ChatsManager::handleChatRequest, chatsManager_, _1));
@@ -252,11 +250,6 @@ void MainController::handleInputIdleChanged(bool idle) {
 			queuedPresence_ = preIdlePresence_;
 		}
 	}
-}
-
-void MainController::handleIncomingPresence(boost::shared_ptr<Presence> presence) {
-	//FIXME: subscribe, subscribed
-	rosterController_->handleIncomingPresence(presence);
 }
 
 void MainController::handleLoginRequest(const String &username, const String &password, const String& certificateFile, bool remember) {

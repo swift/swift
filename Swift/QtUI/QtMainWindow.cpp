@@ -19,7 +19,8 @@
 
 namespace Swift {
 
-QtMainWindow::QtMainWindow(QtTreeWidgetFactory *treeWidgetFactory) : QWidget() {
+QtMainWindow::QtMainWindow(UIEventStream* uiEventStream, QtTreeWidgetFactory *treeWidgetFactory) : QWidget() {
+	uiEventStream_ = uiEventStream;
 	setSizePolicy(QSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding));
 	QBoxLayout *mainLayout = new QBoxLayout(QBoxLayout::TopToBottom, this);
 	mainLayout->setContentsMargins(0,0,0,0);
@@ -45,7 +46,7 @@ QtMainWindow::QtMainWindow(QtTreeWidgetFactory *treeWidgetFactory) : QWidget() {
 
 	tabs_->addTab(contactsTabWidget_, "Contacts");
 	
-	eventWindow_ = new QtEventWindow();
+	eventWindow_ = new QtEventWindow(uiEventStream_);
 	
 	tabs_->addTab(eventWindow_, "Events");
 	

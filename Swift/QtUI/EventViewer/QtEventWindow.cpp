@@ -1,10 +1,17 @@
 #include "Swift/QtUI/EventViewer/QtEventWindow.h"
 
+#include <qdebug>
+
+#include "Swiften/Events/MessageEvent.h"
+#include "Swiften/Events/SubscriptionRequestEvent.h"
+#include "Swift/Controllers/UIEvents/RequestChatUIEvent.h"
+
 #include "Swiften/Base/Platform.h"
 
 namespace Swift {
 
-QtEventWindow::QtEventWindow(QWidget* parent) : QTreeView(parent) {
+QtEventWindow::QtEventWindow(UIEventStream* eventStream, QWidget* parent) : QTreeView(parent) {
+	eventStream_ = eventStream;
 	model_ = new EventModel();
 	setModel(model_);
 	delegate_ = new EventDelegate();
@@ -16,6 +23,7 @@ QtEventWindow::QtEventWindow(QWidget* parent) : QTreeView(parent) {
 	setAnimated(true);
 	setIndentation(0);
 	setRootIsDecorated(true);
+	connect(this, SIGNAL(activated(const QModelIndex&)), this, SLOT(handleItemActivated(const QModelIndex&)));
 }
 
 QtEventWindow::~QtEventWindow() {
@@ -23,11 +31,27 @@ QtEventWindow::~QtEventWindow() {
 	delete delegate_;
 }
 
-void QtEventWindow::addEvent(boost::shared_ptr<Event> event, bool active) {
+void QtEventWindow::handleItemActivated(const QModelIndex& item) {
+	QtEvent* event = model_->getItem(item.row());
+	boost::shared_ptr<MessageEvent> messageEvent = boost::dynamic_pointer_cast<MessageEvent>(event->getEvent());
+	boost::shared_ptr<SubscriptionRequestEvent> subscriptionEvent = boost::dynamic_pointer_cast<SubscriptionRequestEvent>(event->getEvent());
+	
+	if (messageEvent) {
+		eventStream_->send(boost::shared_ptr<UIEvent>(new RequestChatUIEvent(messageEvent->getStanza()->getFrom())));
+	} else if (subscriptionEvent) {
+		printf("Subscription activated\n");
+		//FIXME: do something
+	} else {
+		qWarning() << "Trying to activate an unexpected event";
+	}
+
+}
+
+void QtEventWindow::addEvent(boost::shared_ptr<StanzaEvent> event, bool active) {
 	model_->addEvent(event, active);
 }
 
-void QtEventWindow::removeEvent(boost::shared_ptr<Event> event) {
+void QtEventWindow::removeEvent(boost::shared_ptr<StanzaEvent> event) {
 	model_->removeEvent(event);
 }
 

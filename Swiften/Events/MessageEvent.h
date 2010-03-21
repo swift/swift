@@ -6,11 +6,11 @@
 #include <boost/signals.hpp>
 #include <boost/shared_ptr.hpp>
 
-#include "Swiften/Events/Event.h"
+#include "Swiften/Events/StanzaEvent.h"
 #include "Swiften/Elements/Message.h"
 
 namespace Swift {
-	class MessageEvent : public Event {
+	class MessageEvent : public StanzaEvent {
 		public:
 			MessageEvent(boost::shared_ptr<Message> stanza) : stanza_(stanza){};
 			virtual ~MessageEvent(){};

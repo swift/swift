@@ -2,6 +2,7 @@
 #define SWIFTEN_MainWindowFactory_H
 
 #include "Swiften/JID/JID.h"
+#include "Swift/Controllers/UIEvents/UIEventStream.h"
 
 namespace Swift {
 	class MainWindow;
@@ -12,7 +13,7 @@ namespace Swift {
 			/**
 			 * Transfers ownership of result.
 			 */
-			virtual MainWindow* createMainWindow() = 0;
+			virtual MainWindow* createMainWindow(UIEventStream* eventStream) = 0;
 
 	};
 }

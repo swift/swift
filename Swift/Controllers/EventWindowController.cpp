@@ -15,12 +15,13 @@ EventWindowController::~EventWindowController() {
 	delete window_;
 }
 
-void EventWindowController::handleEventQueueEventAdded(boost::shared_ptr<Event> event) {
+void EventWindowController::handleEventQueueEventAdded(boost::shared_ptr<StanzaEvent> event) {
 	event->onConclusion.connect(boost::bind(&EventWindowController::handleEventConcluded, this, event));
+	fprintf(stderr, "Adding to ewc\n");
 	window_->addEvent(event, true);
 }
 
-void EventWindowController::handleEventConcluded(boost::shared_ptr<Event> event) {
+void EventWindowController::handleEventConcluded(boost::shared_ptr<StanzaEvent> event) {
 	window_->removeEvent(event);
 	window_->addEvent(event, false);
 }

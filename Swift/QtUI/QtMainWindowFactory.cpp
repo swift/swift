@@ -8,8 +8,8 @@ QtMainWindowFactory::QtMainWindowFactory(QtTreeWidgetFactory *treeWidgetFactory)
 	lastWindow_ = NULL;
 }
 
-MainWindow* QtMainWindowFactory::createMainWindow() {
-	QtMainWindow* window = new QtMainWindow(treeWidgetFactory_);
+MainWindow* QtMainWindowFactory::createMainWindow(UIEventStream* eventStream) {
+	QtMainWindow* window = new QtMainWindow(eventStream, treeWidgetFactory_);
 	lastWindow_ = window;
 	return window;
 }

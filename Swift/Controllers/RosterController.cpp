@@ -7,7 +7,9 @@
 #include "Swift/Controllers/MainWindowFactory.h"
 #include "Swift/Controllers/NickResolver.h"
 #include "Swiften/Queries/Requests/GetRosterRequest.h"
-#include "Swiften/EventLoop/MainEventLoop.h"
+#include "Swiften/Events/SubscriptionRequestEvent.h"
+#include "Swiften/Presence/PresenceOracle.h"
+#include "Swift/Controllers/EventController.h"
 #include "Swiften/Roster/Roster.h"
 #include "Swiften/Roster/SetPresence.h"
 #include "Swiften/Roster/AppearOffline.h"
@@ -23,9 +25,10 @@ namespace Swift {
 /**
  * The controller does not gain ownership of these parameters.
  */
-RosterController::RosterController(const JID& jid, boost::shared_ptr<XMPPRoster> xmppRoster, AvatarManager* avatarManager, MainWindowFactory* mainWindowFactory, TreeWidgetFactory* treeWidgetFactory, NickResolver* nickResolver)
- : myJID_(jid), xmppRoster_(xmppRoster), mainWindowFactory_(mainWindowFactory), treeWidgetFactory_(treeWidgetFactory), mainWindow_(mainWindowFactory_->createMainWindow()), roster_(new Roster(mainWindow_->getTreeWidget(), treeWidgetFactory_)), offlineFilter_(new OfflineRosterFilter()) {
-	
+RosterController::RosterController(const JID& jid, boost::shared_ptr<XMPPRoster> xmppRoster, AvatarManager* avatarManager, MainWindowFactory* mainWindowFactory, TreeWidgetFactory* treeWidgetFactory, NickResolver* nickResolver, PresenceOracle* presenceOracle, EventController* eventController, UIEventStream* uiEventStream)
+ : myJID_(jid), xmppRoster_(xmppRoster), mainWindowFactory_(mainWindowFactory), treeWidgetFactory_(treeWidgetFactory), mainWindow_(mainWindowFactory_->createMainWindow(uiEventStream)), roster_(new Roster(mainWindow_->getTreeWidget(), treeWidgetFactory_)), offlineFilter_(new OfflineRosterFilter()) {
+	presenceOracle_ = presenceOracle;
+	eventController_ = eventController;
 	roster_->addFilter(offlineFilter_);
 	
 	mainWindow_->onJoinMUCRequest.connect(boost::bind(&RosterController::handleJoinMUCRequest, this, _1, _2));
@@ -36,6 +39,8 @@ RosterController::RosterController(const JID& jid, boost::shared_ptr<XMPPRoster>
 	xmppRoster_->onJIDAdded.connect(boost::bind(&RosterController::handleOnJIDAdded, this, _1));
 	xmppRoster_->onJIDUpdated.connect(boost::bind(&RosterController::handleOnJIDUpdated, this, _1, _2, _3));
 	xmppRoster_->onJIDRemoved.connect(boost::bind(&RosterController::handleOnJIDRemoved, this, _1));
+	presenceOracle_->onPresenceSubscriptionRequest.connect(boost::bind(&RosterController::handleSubscriptionRequest, this, _1, _2));
+	presenceOracle_->onPresenceChange.connect(boost::bind(&RosterController::handleIncomingPresence, this, _1, _2));
 	avatarManager_ = NULL;
 	setAvatarManager(avatarManager);
 	setNickResolver(nickResolver);
@@ -132,8 +137,24 @@ void RosterController::handleOnJIDUpdated(const JID& jid, const String& oldName,
 	
 }
 
-void RosterController::handleIncomingPresence(boost::shared_ptr<Presence> presence) {
-	roster_->applyOnItems(SetPresence(presence));
+void RosterController::handleIncomingPresence(boost::shared_ptr<Presence> newPresence, boost::shared_ptr<Presence> /*oldPresence*/) {
+	roster_->applyOnItems(SetPresence(newPresence));
+}
+
+void RosterController::handleSubscriptionRequest(const JID& jid, const String& message) {
+	SubscriptionRequestEvent* eventPointer = new SubscriptionRequestEvent(jid, message);
+	eventPointer->onAccept.connect(boost::bind(&RosterController::handleSubscriptionRequestAccepted, this, eventPointer));
+	eventPointer->onDecline.connect(boost::bind(&RosterController::handleSubscriptionRequestDeclined, this, eventPointer));
+	boost::shared_ptr<StanzaEvent> event(eventPointer);
+	eventController_->handleIncomingEvent(event);
+}
+
+void RosterController::handleSubscriptionRequestAccepted(SubscriptionRequestEvent* event) {
+		//FIXME: do something
+}
+
+void RosterController::handleSubscriptionRequestDeclined(SubscriptionRequestEvent* event) {
+	//FIXME: do something
 }
 
 void RosterController::handleAvatarChanged(const JID& jid, const String&) {

@@ -4,17 +4,17 @@
 
 #include <QVariant>
 
-#include "Swiften/Events/Event.h"
+#include "Swiften/Events/StanzaEvent.h"
 
 namespace Swift {
 	class QtEvent {
 		public:
-			QtEvent(boost::shared_ptr<Event> event, bool active);
+			QtEvent(boost::shared_ptr<StanzaEvent> event, bool active);
 			QVariant data(int role);
-			boost::shared_ptr<Event> getEvent() { return event_; };
+			boost::shared_ptr<StanzaEvent> getEvent() { return event_; };
 		private:
 			QString text();
-			boost::shared_ptr<Event> event_;
+			boost::shared_ptr<StanzaEvent> event_;
 			bool active_;
 	};
 }

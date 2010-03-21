@@ -10,6 +10,7 @@
 #include "Swiften/Elements/Presence.h"
 #include "Swiften/JID/JID.h"
 #include "Swiften/MUC/MUCRegistry.h"
+#include "Swift/Controllers/UIEvents/UIEventStream.h"
 
 namespace Swift {
 	class EventController;
@@ -23,9 +24,10 @@ namespace Swift {
 	class StanzaChannel;
 	class IQRouter;
 	class PresenceSender;
+
 	class ChatsManager : public MUCRegistry {
 		public:
-			ChatsManager(JID jid, StanzaChannel* stanzaChannel, IQRouter* iqRouter, EventController* eventController, ChatWindowFactory* chatWindowFactory, TreeWidgetFactory* treeWidgetFactory, NickResolver* nickResolver, PresenceOracle* presenceOracle, boost::shared_ptr<DiscoInfo> serverDiscoInfo, PresenceSender* presenceSender);
+			ChatsManager(JID jid, StanzaChannel* stanzaChannel, IQRouter* iqRouter, EventController* eventController, ChatWindowFactory* chatWindowFactory, TreeWidgetFactory* treeWidgetFactory, NickResolver* nickResolver, PresenceOracle* presenceOracle, boost::shared_ptr<DiscoInfo> serverDiscoInfo, PresenceSender* presenceSender, UIEventStream* uiEventStream);
 			~ChatsManager();
 			void setAvatarManager(AvatarManager* avatarManager);
 			void setEnabled(bool enabled);
@@ -36,6 +38,7 @@ namespace Swift {
 		private:
 			void rebindControllerJID(const JID& from, const JID& to);
 			void handlePresenceChange(boost::shared_ptr<Presence> newPresence, boost::shared_ptr<Presence> lastPresence);
+			void handleUIEvent(boost::shared_ptr<UIEvent> event);
 			ChatController* getChatController(const JID &contact);
 			virtual bool isMUC(const JID& muc) const;
 
@@ -51,6 +54,7 @@ namespace Swift {
 			PresenceOracle* presenceOracle_;
 			AvatarManager* avatarManager_;
 			PresenceSender* presenceSender_;
+			UIEventStream* uiEventStream_;
 			boost::shared_ptr<DiscoInfo> serverDiscoInfo_;
 	};
 }

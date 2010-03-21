@@ -8,7 +8,7 @@ namespace Swift {
 	class QtMainWindowFactory : public MainWindowFactory{
 		public:
 			QtMainWindowFactory(QtTreeWidgetFactory *treeWidgetFactory);
-			MainWindow* createMainWindow();
+			MainWindow* createMainWindow(UIEventStream* eventStream);
 			MainWindow* getLastCreatedWindow();
 		private:
 			QtTreeWidgetFactory *treeWidgetFactory_;

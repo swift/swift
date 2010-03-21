@@ -16,14 +16,16 @@ EventModel::~EventModel() {
 	}
 }
 
+QtEvent* EventModel::getItem(int row) const {
+	return row < activeEvents_.size() ? activeEvents_[row] : inactiveEvents_[row - activeEvents_.size()];
+}
+
 QVariant EventModel::data(const QModelIndex& index, int role) const {
 	if (!index.isValid()) {
 		return QVariant();
 	}
-	int row = index.row();
-	QtEvent* item = index.row() < activeEvents_.size() ? activeEvents_[row] : inactiveEvents_[row - activeEvents_.size()];
+	QtEvent* item = getItem(index.row());
 	QVariant result = item ? item->data(role) : QVariant();
-	qDebug() << "Asked for data of " << index << ", " << role << " returning " << result;
 	return result;
 }
 
@@ -33,8 +35,7 @@ int EventModel::rowCount(const QModelIndex& parent) const {
 	return count;
 }
 
-void EventModel::addEvent(boost::shared_ptr<Event> event, bool active) {
-	qDebug() << " Adding Event";
+void EventModel::addEvent(boost::shared_ptr<StanzaEvent> event, bool active) {
 	if (active) {
 		activeEvents_.push_front(new QtEvent(event, active));
 		emit dataChanged(createIndex(0, 0), createIndex(1, 0));
@@ -48,7 +49,7 @@ void EventModel::addEvent(boost::shared_ptr<Event> event, bool active) {
 	emit layoutChanged();
 }
 
-void EventModel::removeEvent(boost::shared_ptr<Event> event) {
+void EventModel::removeEvent(boost::shared_ptr<StanzaEvent> event) {
 	for (int i = inactiveEvents_.size() - 1; i >= 0; i--) {
 		if (event == inactiveEvents_[i]->getEvent()) {
 			inactiveEvents_.removeAt(i);

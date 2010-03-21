@@ -7,6 +7,7 @@
 #include "Swift/Controllers/Chat/ChatController.h"
 #include "Swift/Controllers/EventController.h"
 #include "Swift/Controllers/Chat/MUCController.h"
+#include "Swift/Controllers/UIEvents/RequestChatUIEvent.h"
 #include "Swiften/Presence/PresenceSender.h"
 #include "Swiften/Elements/ChatState.h"
 
@@ -15,7 +16,7 @@ namespace Swift {
 typedef std::pair<JID, ChatController*> JIDChatControllerPair;
 typedef std::pair<JID, MUCController*> JIDMUCControllerPair;
 
-ChatsManager::ChatsManager(JID jid, StanzaChannel* stanzaChannel, IQRouter* iqRouter, EventController* eventController, ChatWindowFactory* chatWindowFactory, TreeWidgetFactory* treeWidgetFactory, NickResolver* nickResolver, PresenceOracle* presenceOracle, boost::shared_ptr<DiscoInfo> serverDiscoInfo, PresenceSender* presenceSender) : jid_(jid) {
+ChatsManager::ChatsManager(JID jid, StanzaChannel* stanzaChannel, IQRouter* iqRouter, EventController* eventController, ChatWindowFactory* chatWindowFactory, TreeWidgetFactory* treeWidgetFactory, NickResolver* nickResolver, PresenceOracle* presenceOracle, boost::shared_ptr<DiscoInfo> serverDiscoInfo, PresenceSender* presenceSender, UIEventStream* uiEventStream) : jid_(jid) {
 	eventController_ = eventController;
 	stanzaChannel_ = stanzaChannel;
 	iqRouter_ = iqRouter;
@@ -26,7 +27,9 @@ ChatsManager::ChatsManager(JID jid, StanzaChannel* stanzaChannel, IQRouter* iqRo
 	avatarManager_ = NULL;
 	serverDiscoInfo_ = serverDiscoInfo;
 	presenceSender_ = presenceSender;
+	uiEventStream_ = uiEventStream;
 	presenceOracle_->onPresenceChange.connect(boost::bind(&ChatsManager::handlePresenceChange, this, _1, _2));
+	uiEventStream_->onUIEvent.connect(boost::bind(&ChatsManager::handleUIEvent, this, _1));
 }
 
 ChatsManager::~ChatsManager() {
@@ -37,6 +40,13 @@ ChatsManager::~ChatsManager() {
 		delete controllerPair.second;
 	}
 
+}
+
+void ChatsManager::handleUIEvent(boost::shared_ptr<UIEvent> event) {
+	boost::shared_ptr<RequestChatUIEvent> chatEvent = boost::dynamic_pointer_cast<RequestChatUIEvent>(event);
+	if (chatEvent) {
+		handleChatRequest(chatEvent->getContact());
+	}
 }
 
 /**

@@ -4,10 +4,10 @@
 #include <boost/shared_ptr.hpp>
 
 namespace Swift {
-	class Event {
+	class StanzaEvent {
 		public:
-			Event(){};
-			virtual ~Event() {};
+			StanzaEvent(){};
+			virtual ~StanzaEvent() {};
 			boost::signal<void()> onConclusion;
 	};
 }

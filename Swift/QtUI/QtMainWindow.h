@@ -21,11 +21,12 @@ namespace Swift {
 	class QtTreeWidget;
 	class QtTreeWidgetFactory;
 	class TreeWidget;
+	class UIEventStream;
 
 	class QtMainWindow : public QWidget, public MainWindow {
 		Q_OBJECT
 		public:
-			QtMainWindow(QtTreeWidgetFactory *treeWidgetFactory);
+			QtMainWindow(UIEventStream* eventStream, QtTreeWidgetFactory *treeWidgetFactory);
 			TreeWidget* getTreeWidget();
 			std::vector<QMenu*> getMenus() {return menus_;}
 			void setMyName(const String& name);
@@ -53,6 +54,7 @@ namespace Swift {
 			QWidget* contactsTabWidget_;
 			QWidget* eventsTabWidget_;
 			QtEventWindow* eventWindow_;
+			UIEventStream* uiEventStream_;
 	};
 }
 

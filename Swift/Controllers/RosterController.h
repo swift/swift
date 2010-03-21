@@ -19,10 +19,14 @@ namespace Swift {
 	class TreeWidgetFactory;
 	class OfflineRosterFilter;
 	class NickResolver;
+	class PresenceOracle;
+	class EventController;
+	class SubscriptionRequestEvent;
+	class UIEventStream;
 
 	class RosterController {
 		public:
-			RosterController(const JID& jid, boost::shared_ptr<XMPPRoster> xmppRoster, AvatarManager* avatarManager, MainWindowFactory* mainWindowFactory, TreeWidgetFactory* treeWidgetFactory, NickResolver* nickResolver);
+			RosterController(const JID& jid, boost::shared_ptr<XMPPRoster> xmppRoster, AvatarManager* avatarManager, MainWindowFactory* mainWindowFactory, TreeWidgetFactory* treeWidgetFactory, NickResolver* nickResolver, PresenceOracle* presenceOracle, EventController* eventController, UIEventStream* uiEventStream);
 			~RosterController();
 			void showRosterWindow();
 			MainWindow* getWindow() {return mainWindow_;};
@@ -32,7 +36,6 @@ namespace Swift {
 			boost::signal<void (const JID&, const String&)> onJoinMUCRequest;
 			boost::signal<void (StatusShow::Type, const String&)> onChangeStatusRequest;
 			boost::signal<void ()> onSignOutRequest;
-			void handleIncomingPresence(boost::shared_ptr<Presence> presence);
 			void handleAvatarChanged(const JID& jid, const String& hash);
 			void setEnabled(bool enabled);
 		private:
@@ -44,6 +47,10 @@ namespace Swift {
 			void handleUserAction(boost::shared_ptr<UserRosterAction> action);
 			void handleChangeStatusRequest(StatusShow::Type show, const String &statusText);
 			void handleShowOfflineToggled(bool state);
+			void handleIncomingPresence(boost::shared_ptr<Presence> newPresence, boost::shared_ptr<Presence> oldPresence);
+			void handleSubscriptionRequest(const JID& jid, const String& message);
+			void handleSubscriptionRequestAccepted(SubscriptionRequestEvent* event);
+			void handleSubscriptionRequestDeclined(SubscriptionRequestEvent* event);
 			JID myJID_;
 			boost::shared_ptr<XMPPRoster> xmppRoster_;
 			MainWindowFactory* mainWindowFactory_;
@@ -53,6 +60,8 @@ namespace Swift {
 			OfflineRosterFilter* offlineFilter_;
 			AvatarManager* avatarManager_;
 			NickResolver* nickResolver_;
+			PresenceOracle* presenceOracle_;
+			EventController* eventController_;
 	};
 }
 #endif

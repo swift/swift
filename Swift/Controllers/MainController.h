@@ -63,7 +63,6 @@ namespace Swift {
 			void handleConnected();
 			void handleLoginRequest(const String& username, const String& password, const String& certificateFile, bool remember);
 			void handleCancelLoginRequest();
-			void handleIncomingPresence(boost::shared_ptr<Presence> presence);
 			void handleChangeStatusRequest(StatusShow::Type show, const String &statusText);
 			void handleError(const ClientError& error);
 			void handleServerDiscoInfoResponse(boost::shared_ptr<DiscoInfo>, const boost::optional<ErrorPayload>&);

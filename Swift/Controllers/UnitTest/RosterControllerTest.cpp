@@ -8,8 +8,11 @@
 // #include "Swiften/Elements/RosterItemPayload.h"
 // #include "Swiften/Elements/RosterPayload.h"
 #include "Swiften/Queries/DummyIQChannel.h"
+#include "Swiften/Client/DummyStanzaChannel.h"
 #include "Swiften/Queries/IQRouter.h"
 #include "Swiften/Roster/XMPPRoster.h"
+#include "Swift/Controllers/EventController.h"
+#include "Swiften/Presence/PresenceOracle.h"
 #include "Swift/Controllers/NickResolver.h"
 
 using namespace Swift;
@@ -30,10 +33,13 @@ class RosterControllerTest : public CppUnit::TestFixture
 			treeWidgetFactory_ = new MockTreeWidgetFactory();
 			mainWindowFactory_ = new MockMainWindowFactory(treeWidgetFactory_);
 			nickResolver_ = new NickResolver(xmppRoster_);
-			rosterController_ = new RosterController(jid_, xmppRoster_, avatarManager_, mainWindowFactory_, treeWidgetFactory_, nickResolver_);
-
 			channel_ = new DummyIQChannel();
 			router_ = new IQRouter(channel_);
+			stanzaChannel_ = new DummyStanzaChannel();
+			presenceOracle_ = new PresenceOracle(stanzaChannel_);
+			eventController_ = new EventController();
+			rosterController_ = new RosterController(jid_, xmppRoster_, avatarManager_, mainWindowFactory_, treeWidgetFactory_, nickResolver_, presenceOracle_, eventController_);
+
 
 		};
 
@@ -45,6 +51,9 @@ class RosterControllerTest : public CppUnit::TestFixture
 			delete avatarManager_;
 			delete channel_;
 			delete router_;
+			delete eventController_;
+			delete presenceOracle_;
+			delete stanzaChannel_;
 		};
 
 		void testAdd() {
@@ -66,6 +75,9 @@ class RosterControllerTest : public CppUnit::TestFixture
 		NickResolver* nickResolver_;
 		RosterController* rosterController_;
 		DummyIQChannel* channel_;
+		DummyStanzaChannel* stanzaChannel_;	
 		IQRouter* router_;
+		PresenceOracle* presenceOracle_;
+		EventController* eventController_;
 
 };
