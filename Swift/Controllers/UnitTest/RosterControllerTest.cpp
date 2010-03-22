@@ -1,3 +1,4 @@
+
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/extensions/TestFactoryRegistry.h>
 
@@ -14,6 +15,7 @@
 #include "Swift/Controllers/EventController.h"
 #include "Swiften/Presence/PresenceOracle.h"
 #include "Swift/Controllers/NickResolver.h"
+#include "Swift/Controllers/UIEvents/UIEventStream.h"
 
 using namespace Swift;
 
@@ -38,7 +40,8 @@ class RosterControllerTest : public CppUnit::TestFixture
 			stanzaChannel_ = new DummyStanzaChannel();
 			presenceOracle_ = new PresenceOracle(stanzaChannel_);
 			eventController_ = new EventController();
-			rosterController_ = new RosterController(jid_, xmppRoster_, avatarManager_, mainWindowFactory_, treeWidgetFactory_, nickResolver_, presenceOracle_, eventController_);
+			uiEventStream_ = new UIEventStream();
+			rosterController_ = new RosterController(jid_, xmppRoster_, avatarManager_, mainWindowFactory_, treeWidgetFactory_, nickResolver_, presenceOracle_, eventController_, uiEventStream_);
 
 
 		};
@@ -54,6 +57,7 @@ class RosterControllerTest : public CppUnit::TestFixture
 			delete eventController_;
 			delete presenceOracle_;
 			delete stanzaChannel_;
+			delete uiEventStream_;
 		};
 
 		void testAdd() {
@@ -79,5 +83,5 @@ class RosterControllerTest : public CppUnit::TestFixture
 		IQRouter* router_;
 		PresenceOracle* presenceOracle_;
 		EventController* eventController_;
-
+		UIEventStream* uiEventStream_;
 };

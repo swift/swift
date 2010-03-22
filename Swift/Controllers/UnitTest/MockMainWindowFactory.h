@@ -13,7 +13,7 @@ namespace Swift {
 			/**
 			 * Transfers ownership of result.
 			 */
-			virtual MainWindow* createMainWindow() {return new MockMainWindow(factory_->createTreeWidget());};
+			virtual MainWindow* createMainWindow(UIEventStream*) {return new MockMainWindow(factory_->createTreeWidget());};
 	private:
 			TreeWidgetFactory* factory_;
 	};

@@ -15,7 +15,6 @@ void PresenceOracle::handleIncomingPresence(boost::shared_ptr<Presence> presence
 	JID bareJID = JID(presence->getFrom().toBare());
 
 	if (presence->getType() == Presence::Subscribe) {
-		fprintf(stderr, "rarr, sub\n");
 		onPresenceSubscriptionRequest(bareJID, presence->getStatus());
 	} else {
 		std::map<JID, boost::shared_ptr<Presence> > jidMap = entries_[bareJID];

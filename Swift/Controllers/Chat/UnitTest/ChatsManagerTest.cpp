@@ -19,6 +19,7 @@
 #include "Swiften/Client/DummyStanzaChannel.h"
 #include "Swiften/Queries/DummyIQChannel.h"
 #include "Swiften/Presence/PresenceOracle.h"
+#include "Swift/Controllers/UIEvents/UIEventStream.h"
 
 
 using namespace Swift;
@@ -52,7 +53,8 @@ public:
 		presenceOracle_ = new PresenceOracle(stanzaChannel_);
 		serverDiscoInfo_ = boost::shared_ptr<DiscoInfo>(new DiscoInfo());
 		presenceSender_ = NULL;
-		manager_ = new ChatsManager(jid_, stanzaChannel_, iqRouter_, eventController_, chatWindowFactory_, treeWidgetFactory_, nickResolver_, presenceOracle_, serverDiscoInfo_, presenceSender_);
+		uiEventStream_ = new UIEventStream();
+		manager_ = new ChatsManager(jid_, stanzaChannel_, iqRouter_, eventController_, chatWindowFactory_, treeWidgetFactory_, nickResolver_, presenceOracle_, serverDiscoInfo_, presenceSender_, uiEventStream_);
 		avatarManager_ = new MockAvatarManager();
 		manager_->setAvatarManager(avatarManager_);
 	};
@@ -68,6 +70,7 @@ public:
 		delete iqChannel_;
 		delete iqRouter_;
 		delete mocks_;
+		delete uiEventStream_;
 	}
 
 	void testFirstOpenWindowIncoming() {
@@ -263,6 +266,7 @@ private:
 	boost::shared_ptr<XMPPRoster> xmppRoster_;
 	PresenceSender* presenceSender_;
 	MockRepository* mocks_;
+	UIEventStream* uiEventStream_;
 };
 
 CPPUNIT_TEST_SUITE_REGISTRATION(ChatsManagerTest);

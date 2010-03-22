@@ -17,7 +17,6 @@ EventWindowController::~EventWindowController() {
 
 void EventWindowController::handleEventQueueEventAdded(boost::shared_ptr<StanzaEvent> event) {
 	event->onConclusion.connect(boost::bind(&EventWindowController::handleEventConcluded, this, event));
-	fprintf(stderr, "Adding to ewc\n");
 	window_->addEvent(event, true);
 }
 
