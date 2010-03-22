@@ -33,7 +33,7 @@ class NickResolverTest : public CppUnit::TestFixture
 			boost::shared_ptr<XMPPRoster> xmppRoster(new XMPPRoster());
 			NickResolver resolver(xmppRoster);
 			JID testJID("foo@bar/baz");
-			xmppRoster->addContact(testJID, "", groups_);
+			xmppRoster->addContact(testJID, "", groups_, RosterItemPayload::Both);
 			CPPUNIT_ASSERT_EQUAL(String("foo@bar"), resolver.jidToNick(testJID));
 		}
 
@@ -41,7 +41,7 @@ class NickResolverTest : public CppUnit::TestFixture
 			boost::shared_ptr<XMPPRoster> xmppRoster(new XMPPRoster());
 			NickResolver resolver(xmppRoster);
 			JID testJID("foo@bar/baz");
-			xmppRoster->addContact(testJID, "Test", groups_);
+			xmppRoster->addContact(testJID, "Test", groups_, RosterItemPayload::Both);
 
 			CPPUNIT_ASSERT_EQUAL(String("Test"), resolver.jidToNick(testJID));
 		}
@@ -50,8 +50,8 @@ class NickResolverTest : public CppUnit::TestFixture
 			boost::shared_ptr<XMPPRoster> xmppRoster(new XMPPRoster());
 			NickResolver resolver(xmppRoster);
 			JID testJID("foo@bar/baz");
-			xmppRoster->addContact(testJID, "FailTest", groups_);
-			xmppRoster->addContact(testJID, "Test", groups_);
+			xmppRoster->addContact(testJID, "FailTest", groups_, RosterItemPayload::Both);
+			xmppRoster->addContact(testJID, "Test", groups_, RosterItemPayload::Both);
 
 			CPPUNIT_ASSERT_EQUAL(String("Test"), resolver.jidToNick(testJID));
 		}
@@ -60,7 +60,7 @@ class NickResolverTest : public CppUnit::TestFixture
 			boost::shared_ptr<XMPPRoster> xmppRoster(new XMPPRoster());
 			NickResolver resolver(xmppRoster);
 			JID testJID("foo@bar/baz");
-			xmppRoster->addContact(testJID, "FailTest", groups_);
+			xmppRoster->addContact(testJID, "FailTest", groups_, RosterItemPayload::Both);
 			xmppRoster->removeContact(testJID);
 			CPPUNIT_ASSERT_EQUAL(String("foo@bar"), resolver.jidToNick(testJID));
 		}

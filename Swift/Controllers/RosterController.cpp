@@ -18,6 +18,7 @@
 #include "Swiften/Roster/OpenChatRosterAction.h"
 #include "Swiften/Roster/TreeWidgetFactory.h"
 #include "Swiften/Roster/XMPPRoster.h"
+#include "Swift/Controllers/UIEvents/AddContactUIEvent.h"
 
 
 namespace Swift {
@@ -41,6 +42,7 @@ RosterController::RosterController(const JID& jid, boost::shared_ptr<XMPPRoster>
 	xmppRoster_->onJIDRemoved.connect(boost::bind(&RosterController::handleOnJIDRemoved, this, _1));
 	presenceOracle_->onPresenceSubscriptionRequest.connect(boost::bind(&RosterController::handleSubscriptionRequest, this, _1, _2));
 	presenceOracle_->onPresenceChange.connect(boost::bind(&RosterController::handleIncomingPresence, this, _1, _2));
+	uiEventStream->onUIEvent.connect(boost::bind(&RosterController::handleUIEvent, this, _1));
 	avatarManager_ = NULL;
 	setAvatarManager(avatarManager);
 	setNickResolver(nickResolver);
@@ -135,6 +137,13 @@ void RosterController::handleOnJIDUpdated(const JID& jid, const String& oldName,
 		}
 	}
 	
+}
+
+void RosterController::handleUIEvent(boost::shared_ptr<UIEvent> event) {
+	boost::shared_ptr<AddContactUIEvent> addContactEvent = boost::dynamic_pointer_cast<AddContactUIEvent>(event);
+	if (addContactEvent) {
+		presenceOracle_->requestSubscription(addContactEvent->getJID());
+	}
 }
 
 void RosterController::handleIncomingPresence(boost::shared_ptr<Presence> newPresence, boost::shared_ptr<Presence> /*oldPresence*/) {

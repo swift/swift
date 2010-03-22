@@ -5,6 +5,8 @@
 #include "QtSwiftUtil.h"
 #include "Roster/QtTreeWidgetFactory.h"
 #include "Roster/QtTreeWidget.h"
+#include "Swift/Controllers/UIEvents/AddContactUIEvent.h"
+
 
 #include <QBoxLayout>
 #include <QComboBox>
@@ -89,7 +91,8 @@ void QtMainWindow::handleSignOutAction() {
 }
 
 void QtMainWindow::handleAddContactDialogComplete(const JID& contact, const QString& name) {
-	onAddContactRequest(contact, Q2PSTRING(name));
+	boost::shared_ptr<UIEvent> event(new AddContactUIEvent(contact, Q2PSTRING(name)));
+	uiEventStream_->send(event);
 }
 
 TreeWidget* QtMainWindow::getTreeWidget() {

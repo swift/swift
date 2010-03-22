@@ -6,6 +6,7 @@
 #include "Swiften/Elements/Presence.h"
 #include "Swiften/Roster/UserRosterAction.h"
 #include "Swiften/Avatars/AvatarManager.h"
+#include "Swift/Controllers/UIEvents/UIEvent.h"
 
 #include <boost/signals.hpp>
 #include <boost/shared_ptr.hpp>
@@ -51,6 +52,7 @@ namespace Swift {
 			void handleSubscriptionRequest(const JID& jid, const String& message);
 			void handleSubscriptionRequestAccepted(SubscriptionRequestEvent* event);
 			void handleSubscriptionRequestDeclined(SubscriptionRequestEvent* event);
+			void handleUIEvent(boost::shared_ptr<UIEvent> event);
 			JID myJID_;
 			boost::shared_ptr<XMPPRoster> xmppRoster_;
 			MainWindowFactory* mainWindowFactory_;

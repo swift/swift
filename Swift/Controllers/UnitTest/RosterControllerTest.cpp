@@ -64,7 +64,7 @@ class RosterControllerTest : public CppUnit::TestFixture
 			std::vector<String> groups;
 			groups.push_back("testGroup1");
 			groups.push_back("testGroup2");
-			xmppRoster_->addContact(JID("test@testdomain.com/bob"), "name", groups);
+			xmppRoster_->addContact(JID("test@testdomain.com/bob"), "name", groups, RosterItemPayload::Both);
 			
 			CPPUNIT_ASSERT_EQUAL(2, (int)treeWidgetFactory_->getGroups().size());
 			//CPPUNIT_ASSERT_EQUAL(String("Bob"), xmppRoster_->getNameForJID(JID("foo@bar.com")));
