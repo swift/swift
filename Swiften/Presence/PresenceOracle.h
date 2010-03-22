@@ -14,6 +14,10 @@ class PresenceOracle {
 		PresenceOracle(StanzaChannel* stanzaChannel);
 		~PresenceOracle() {};
 
+		void cancelSubscription(const JID& jid);
+		void confirmSubscription(const JID& jid);
+		void requestSubscription(const JID& jid);
+
 		boost::signal<void (boost::shared_ptr<Presence>, boost::shared_ptr<Presence>)> onPresenceChange;
 		boost::signal<void (const JID&, const String&)> onPresenceSubscriptionRequest;
 

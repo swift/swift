@@ -37,7 +37,7 @@ void XMPPRosterController::handleRosterReceived(boost::shared_ptr<RosterPayload>
 		if (item.getSubscription() == RosterItemPayload::Remove) {
 			xmppRoster_->removeContact(item.getJID());
 		} else {
-			xmppRoster_->addContact(item.getJID(), item.getName(), item.getGroups());
+			xmppRoster_->addContact(item.getJID(), item.getName(), item.getGroups(), item.getSubscription());
 		}
 	}
 }

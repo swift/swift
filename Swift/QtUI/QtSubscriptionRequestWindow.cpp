@@ -9,7 +9,7 @@
 
 namespace Swift {
 QtSubscriptionRequestWindow::QtSubscriptionRequestWindow(boost::shared_ptr<SubscriptionRequestEvent> event, QWidget* parent) : QDialog(parent), event_(event) {
-	QString text = P2QSTRING(event->getJID().toString()) + " would like to add you to their roster. Would you like to add them to your roster and share your status when you're online? If you choose to defer this choice, you'll be asked again when you next login.";
+	QString text = P2QSTRING(event->getJID().toString()) + " would like to add you to their roster.\n Would you like to add them to your roster and share your status when you're online? \n\nIf you choose to defer this choice, you'll be asked again when you next login.";
 	QVBoxLayout* layout = new QVBoxLayout();
 	QLabel* label = new QLabel(text, this);
 	layout->addWidget(label);

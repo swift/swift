@@ -2,17 +2,21 @@
 
 namespace Swift {
 
-void XMPPRoster::addContact(const JID& jid, const String& name, const std::vector<String>& groups) {
+void XMPPRoster::addContact(const JID& jid, const String& name, const std::vector<String>& groups, RosterItemPayload::Subscription subscription) {
 	JID bareJID(jid.toBare());
 	bool exists = containsJID(bareJID);
+	String oldName = getNameForJID(bareJID);
+	std::vector<String> oldGroups = entries_[bareJID].groups;
 	if (exists) {
 		entries_.erase(bareJID);
 	}
-	String oldName = getNameForJID(bareJID);
-	std::vector<String> oldGroups = entries_[bareJID].second;
-	entries_[bareJID] = std::pair<String, std::vector<String> >(name, groups);
+	XMPPRosterItem item;
+	item.groups = groups;
+	item.name = name;
+	item.jid = jid;
+	item.subscription = subscription;
+	entries_[bareJID] = item;
 	if (exists) {
-		
 		onJIDUpdated(bareJID, oldName, oldGroups);
 	} else {
 		onJIDAdded(bareJID);
@@ -29,11 +33,15 @@ bool XMPPRoster::containsJID(const JID& jid) {
 }
 
 const String& XMPPRoster::getNameForJID(const JID& jid) {
-	return entries_[JID(jid.toBare())].first;
+	return entries_[JID(jid.toBare())].name;
 }
 
 const std::vector<String>& XMPPRoster::getGroupsForJID(const JID& jid) {
-	return entries_[JID(jid.toBare())].second;
+	return entries_[JID(jid.toBare())].groups;
+}
+
+RosterItemPayload::Subscription XMPPRoster::getSubscriptionStateForJID(const JID& jid) {
+	return entries_[JID(jid.toBare())].subscription;
 }
 
 }

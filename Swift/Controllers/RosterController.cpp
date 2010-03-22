@@ -142,6 +142,7 @@ void RosterController::handleIncomingPresence(boost::shared_ptr<Presence> newPre
 }
 
 void RosterController::handleSubscriptionRequest(const JID& jid, const String& message) {
+	//FIXME: If already subscribed, auto-subscribe
 	SubscriptionRequestEvent* eventPointer = new SubscriptionRequestEvent(jid, message);
 	eventPointer->onAccept.connect(boost::bind(&RosterController::handleSubscriptionRequestAccepted, this, eventPointer));
 	eventPointer->onDecline.connect(boost::bind(&RosterController::handleSubscriptionRequestDeclined, this, eventPointer));
@@ -150,11 +151,14 @@ void RosterController::handleSubscriptionRequest(const JID& jid, const String& m
 }
 
 void RosterController::handleSubscriptionRequestAccepted(SubscriptionRequestEvent* event) {
-		//FIXME: do something
+	presenceOracle_->confirmSubscription(event->getJID());
+	if (!xmppRoster_->containsJID(event->getJID()) || xmppRoster_->getSubscriptionStateForJID(event->getJID()) == RosterItemPayload::None || xmppRoster_->getSubscriptionStateForJID(event->getJID()) == RosterItemPayload::From) {
+		presenceOracle_->requestSubscription(event->getJID());
+	}
 }
 
 void RosterController::handleSubscriptionRequestDeclined(SubscriptionRequestEvent* event) {
-	//FIXME: do something
+	presenceOracle_->cancelSubscription(event->getJID());
 }
 
 void RosterController::handleAvatarChanged(const JID& jid, const String&) {
