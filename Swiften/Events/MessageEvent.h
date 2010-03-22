@@ -22,7 +22,7 @@ namespace Swift {
 
 			void read() {
 				assert (isReadable());
-				onConclusion();
+				conclude();
 			}
 
 		private:

@@ -20,13 +20,13 @@ namespace Swift {
 			boost::signal<void()> onDecline;
 			void accept() {
 				onAccept();
-				onConclusion();
-			}
+				conclude();
+			};
 
 			void decline() {
 				onDecline();
-				onConclusion();
-			}
+				conclude();
+			};
 
 		private:
 			JID jid_;

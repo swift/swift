@@ -84,6 +84,7 @@ sources = [
     "EventViewer/QtEventWindowFactory.cpp",
     "EventViewer/QtEventWindow.cpp",
     "EventViewer/QtEvent.cpp",
+    "QtSubscriptionRequestWindow.cpp",
     "QtRosterHeader.cpp",
     "qrc_DefaultTheme.cc",
     "qrc_Swift.cc",

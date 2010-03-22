@@ -1,10 +1,13 @@
+
 #include "Swift/QtUI/EventViewer/QtEventWindow.h"
 
 #include <qdebug>
 
 #include "Swiften/Events/MessageEvent.h"
+#include "Swift/QtUI/QtSubscriptionRequestWindow.h"
 #include "Swiften/Events/SubscriptionRequestEvent.h"
 #include "Swift/Controllers/UIEvents/RequestChatUIEvent.h"
+
 
 #include "Swiften/Base/Platform.h"
 
@@ -39,8 +42,8 @@ void QtEventWindow::handleItemActivated(const QModelIndex& item) {
 	if (messageEvent) {
 		eventStream_->send(boost::shared_ptr<UIEvent>(new RequestChatUIEvent(messageEvent->getStanza()->getFrom())));
 	} else if (subscriptionEvent) {
-		printf("Subscription activated\n");
-		//FIXME: do something
+		QtSubscriptionRequestWindow* window = QtSubscriptionRequestWindow::getWindow(subscriptionEvent, this);
+		window->show();
 	} else {
 		qWarning() << "Trying to activate an unexpected event";
 	}
