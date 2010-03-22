@@ -151,7 +151,10 @@ void RosterController::handleIncomingPresence(boost::shared_ptr<Presence> newPre
 }
 
 void RosterController::handleSubscriptionRequest(const JID& jid, const String& message) {
-	//FIXME: If already subscribed, auto-subscribe
+	if (xmppRoster_->containsJID(jid) && xmppRoster_->getSubscriptionStateForJID(jid) == RosterItemPayload::To || xmppRoster_->getSubscriptionStateForJID(jid) == RosterItemPayload::Both) {
+		presenceOracle_->confirmSubscription(jid);
+		return;
+	}
 	SubscriptionRequestEvent* eventPointer = new SubscriptionRequestEvent(jid, message);
 	eventPointer->onAccept.connect(boost::bind(&RosterController::handleSubscriptionRequestAccepted, this, eventPointer));
 	eventPointer->onDecline.connect(boost::bind(&RosterController::handleSubscriptionRequestDeclined, this, eventPointer));
