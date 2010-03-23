@@ -20,6 +20,10 @@ QtEvent* EventModel::getItem(int row) const {
 	return row < activeEvents_.size() ? activeEvents_[row] : inactiveEvents_[row - activeEvents_.size()];
 }
 
+int EventModel::getNewEventCount() {
+	return activeEvents_.size();
+}
+
 QVariant EventModel::data(const QModelIndex& index, int role) const {
 	if (!index.isValid()) {
 		return QVariant();

@@ -3,6 +3,7 @@
 #include "QtAddContactDialog.h"
 #include "QtJoinMUCDialog.h"
 #include "QtSwiftUtil.h"
+#include "QtTabWidget.h"
 #include "Roster/QtTreeWidgetFactory.h"
 #include "Roster/QtTreeWidget.h"
 #include "Swift/Controllers/UIEvents/AddContactUIEvent.h"
@@ -31,7 +32,7 @@ QtMainWindow::QtMainWindow(UIEventStream* uiEventStream, QtTreeWidgetFactory *tr
 	mainLayout->addWidget(meView_);
 	connect(meView_, SIGNAL(onChangeStatusRequest(StatusShow::Type, const QString&)), this, SLOT(handleStatusChanged(StatusShow::Type, const QString&)));
 
-	tabs_ = new QTabWidget(this);
+	tabs_ = new QtTabWidget(this);
 	tabs_->setDocumentMode(true);
 	tabs_->setTabPosition(QTabWidget::South);
 	mainLayout->addWidget(tabs_);
@@ -49,6 +50,7 @@ QtMainWindow::QtMainWindow(UIEventStream* uiEventStream, QtTreeWidgetFactory *tr
 	tabs_->addTab(contactsTabWidget_, "Contacts");
 	
 	eventWindow_ = new QtEventWindow(uiEventStream_);
+	connect(eventWindow_, SIGNAL(onNewEventCountUpdated(int)), this, SLOT(handleEventCountUpdated(int)));
 	
 	tabs_->addTab(eventWindow_, "Events");
 	
@@ -77,6 +79,17 @@ QtMainWindow::QtMainWindow(UIEventStream* uiEventStream, QtTreeWidgetFactory *tr
 
 QtEventWindow* QtMainWindow::getEventWindow() {
 	return eventWindow_;
+}
+
+void QtMainWindow::handleEventCountUpdated(int count) {
+	QColor eventTabColor = (count == 0) ? QColor(-1, -1, -1) : QColor(255, 0, 0); // invalid resets to default
+	int eventIndex = 1;
+	tabs_->tabBar()->setTabTextColor(eventIndex, eventTabColor);
+	QString text = "Events";
+	if (count > 0) {
+		text += QString(" (%1)").arg(count);
+	}
+	tabs_->setTabText(eventIndex, text);
 }
 
 void QtMainWindow::handleAddActionTriggered(bool checked) {

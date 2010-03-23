@@ -52,10 +52,12 @@ void QtEventWindow::handleItemActivated(const QModelIndex& item) {
 
 void QtEventWindow::addEvent(boost::shared_ptr<StanzaEvent> event, bool active) {
 	model_->addEvent(event, active);
+	emit onNewEventCountUpdated(model_->getNewEventCount());
 }
 
 void QtEventWindow::removeEvent(boost::shared_ptr<StanzaEvent> event) {
 	model_->removeEvent(event);
+	emit onNewEventCountUpdated(model_->getNewEventCount());
 }
 
 }

@@ -20,6 +20,7 @@ public:
 	QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const;
 	int rowCount(const QModelIndex& parent = QModelIndex()) const;
 	QtEvent* getItem(int row) const;
+	int getNewEventCount();
 private:
 	QList<QtEvent*> activeEvents_;
 	QList<QtEvent*> inactiveEvents_;

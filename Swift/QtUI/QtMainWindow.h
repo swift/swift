@@ -22,6 +22,7 @@ namespace Swift {
 	class QtTreeWidgetFactory;
 	class TreeWidget;
 	class UIEventStream;
+	class QtTabWidget;
 
 	class QtMainWindow : public QWidget, public MainWindow {
 		Q_OBJECT
@@ -42,6 +43,7 @@ namespace Swift {
 			void handleJoinMUCDialogComplete(const JID& muc, const QString& nick);
 			void handleAddContactDialogComplete(const JID& contact, const QString& name);
 			void handleAddActionTriggered(bool checked);
+			void handleEventCountUpdated(int count);
 		private:
 			std::vector<QMenu*> menus_;
 			QLineEdit* muc_;
@@ -50,7 +52,7 @@ namespace Swift {
 			QtTreeWidget* treeWidget_;
 			QtRosterHeader* meView_;
 			QAction* addAction_;
-			QTabWidget* tabs_;
+			QtTabWidget* tabs_;
 			QWidget* contactsTabWidget_;
 			QWidget* eventsTabWidget_;
 			QtEventWindow* eventWindow_;

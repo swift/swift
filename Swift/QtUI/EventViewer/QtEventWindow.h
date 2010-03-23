@@ -18,6 +18,8 @@ namespace Swift {
 			~QtEventWindow();
 			void addEvent(boost::shared_ptr<StanzaEvent> event, bool active);
 			void removeEvent(boost::shared_ptr<StanzaEvent> event);
+		signals:
+			void onNewEventCountUpdated(int count);
 		private slots:
 			void handleItemActivated(const QModelIndex& item);
 		private:
