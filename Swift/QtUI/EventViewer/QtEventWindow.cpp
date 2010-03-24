@@ -1,7 +1,7 @@
 
 #include "Swift/QtUI/EventViewer/QtEventWindow.h"
 
-#include <qdebug>
+#include <QtDebug>
 
 #include "Swiften/Events/MessageEvent.h"
 #include "Swift/QtUI/QtSubscriptionRequestWindow.h"

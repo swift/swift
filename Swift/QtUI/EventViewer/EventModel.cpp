@@ -1,6 +1,6 @@
 #include "EventModel.h"
 
-#include <qdebug>
+#include <QtDebug>
 
 namespace Swift {
 EventModel::EventModel() {
