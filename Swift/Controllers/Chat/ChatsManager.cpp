@@ -56,6 +56,17 @@ void ChatsManager::handleMUCBookmarksChanged() {
 	}
 }
 
+void ChatsManager::handleUserLeftMUC(MUCController* mucController) {
+	std::map<JID, MUCController*>::iterator it;
+	for (it = mucControllers_.begin(); it != mucControllers_.end(); it++) {
+		if ((*it).second == mucController) {
+			mucControllers_.erase(it);
+			delete mucController;
+			return;
+		}
+	}
+}
+
 void ChatsManager::handleUIEvent(boost::shared_ptr<UIEvent> event) {
 	boost::shared_ptr<RequestChatUIEvent> chatEvent = boost::dynamic_pointer_cast<RequestChatUIEvent>(event);
 	if (chatEvent) {
@@ -150,8 +161,10 @@ void ChatsManager::handleJoinMUCRequest(const JID &muc, const String &nick) {
 	if (it != mucControllers_.end()) {
 		//FIXME: What's correct behaviour here?
 	} else {
-		mucControllers_[muc] = new MUCController(jid_, muc, nick, stanzaChannel_, presenceSender_, iqRouter_, chatWindowFactory_, treeWidgetFactory_, presenceOracle_, avatarManager_);
-		mucControllers_[muc]->setAvailableServerFeatures(serverDiscoInfo_);
+		MUCController* controller = new MUCController(jid_, muc, nick, stanzaChannel_, presenceSender_, iqRouter_, chatWindowFactory_, treeWidgetFactory_, presenceOracle_, avatarManager_);
+		mucControllers_[muc] = controller;
+		controller->setAvailableServerFeatures(serverDiscoInfo_);
+		controller->onUserLeft.connect(boost::bind(&ChatsManager::handleUserLeftMUC, this, controller));
 	}
 	mucControllers_[muc]->activateChatWindow();
 }

@@ -106,9 +106,9 @@ SecurityLabel QtChatWindow::getSelectedSecurityLabel() {
 }
 
 void QtChatWindow::closeEvent(QCloseEvent* event) {
-	onClosed();
-	emit windowClosing();
 	event->accept();
+	emit windowClosing();
+	onClosed();
 }
 
 void QtChatWindow::convertToMUC() {

@@ -2,6 +2,8 @@
 #define SWIFTEN_MUCController_H
 
 #include <boost/shared_ptr.hpp>
+#include <boost/signals.hpp>
+#include <boost/signals/connection.hpp>
 
 #include "Swiften/Base/String.h"
 #include "Swift/Controllers/Chat/ChatControllerBase.h"
@@ -24,6 +26,7 @@ namespace Swift {
 		public:
 			MUCController(const JID& self, const JID &muc, const String &nick, StanzaChannel* stanzaChannel, PresenceSender* presenceSender, IQRouter* iqRouter, ChatWindowFactory* chatWindowFactory, TreeWidgetFactory *treeWidgetFactory, PresenceOracle* presenceOracle, AvatarManager* avatarManager);
 			~MUCController();
+			boost::signal<void ()> onUserLeft;
 		
 		protected:
 			void preSendMessageRequest(boost::shared_ptr<Message> message);
@@ -42,6 +45,8 @@ namespace Swift {
 			String nick_;
 			TreeWidgetFactory *treeWidgetFactory_;
 			Roster *roster_;
+			bool parting_;
+			boost::bsignals::scoped_connection avatarChangedConnection_;
 	};
 }
 #endif

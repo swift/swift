@@ -13,7 +13,7 @@ namespace Swift {
 typedef std::pair<String, MUCOccupant> StringMUCOccupantPair;
 
 MUC::MUC(StanzaChannel* stanzaChannel, PresenceSender* presenceSender, const JID &muc) : ownMUCJID(muc), stanzaChannel(stanzaChannel), presenceSender(presenceSender) {
-	stanzaChannel->onPresenceReceived.connect(boost::bind(&MUC::handleIncomingPresence, this, _1));
+	scopedConnection_ = stanzaChannel->onPresenceReceived.connect(boost::bind(&MUC::handleIncomingPresence, this, _1));
 }
 
 void MUC::joinAs(const String &nick) {

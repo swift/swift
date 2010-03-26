@@ -6,8 +6,9 @@
 #include "Swiften/Elements/Presence.h"
 #include "Swiften/MUC/MUCOccupant.h"
 
-#include <boost/signals.hpp>
 #include <boost/shared_ptr.hpp>
+#include <boost/signals.hpp>
+#include <boost/signals/connection.hpp>
 
 #include <map>
 
@@ -53,5 +54,6 @@ namespace Swift {
 			PresenceSender* presenceSender;
 			std::map<String, MUCOccupant> occupants;
 			bool firstPresenceSeen;
+			boost::bsignals::scoped_connection scopedConnection_;
 	};
 }

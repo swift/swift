@@ -31,7 +31,7 @@ void QtChatTabs::closeEvent(QCloseEvent* event) {
 	//Hide first to prevent flickering as each tab is removed.
 	hide();
 	for (int i = tabs_->count() - 1; i >= 0; i--) {
-		tabs_->removeTab(i);
+		tabs_->widget(i)->close();
 	}
 	event->accept();
 }

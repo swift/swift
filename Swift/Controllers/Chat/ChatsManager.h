@@ -41,6 +41,7 @@ namespace Swift {
 			void handlePresenceChange(boost::shared_ptr<Presence> newPresence, boost::shared_ptr<Presence> lastPresence);
 			void handleUIEvent(boost::shared_ptr<UIEvent> event);
 			void handleMUCBookmarksChanged();
+			void handleUserLeftMUC(MUCController* mucController);
 			ChatController* getChatController(const JID &contact);
 			virtual bool isMUC(const JID& muc) const;
 

@@ -33,6 +33,7 @@ MUCController::MUCController (
 			muc_(new MUC(stanzaChannel, presenceSender, muc)), 
 			nick_(nick), 
 			treeWidgetFactory_(treeWidgetFactory) { 
+	parting_ = false;
 	roster_ = new Roster(chatWindow_->getTreeWidget(), treeWidgetFactory_);
 	chatWindow_->onClosed.connect(boost::bind(&MUCController::handleWindowClosed, this));
 	muc_->joinAs(nick);
@@ -42,7 +43,7 @@ MUCController::MUCController (
 	chatWindow_->convertToMUC();
 	chatWindow_->show();
 	if (avatarManager_ != NULL) {
-		avatarManager_->onAvatarChanged.connect(boost::bind(&MUCController::handleAvatarChanged, this, _1, _2));
+		avatarChangedConnection_ = (avatarManager_->onAvatarChanged.connect(boost::bind(&MUCController::handleAvatarChanged, this, _1, _2)));
 	} 
 }
 
@@ -52,12 +53,17 @@ MUCController::~MUCController() {
 }
 
 void MUCController::handleAvatarChanged(const JID& jid, const String&) {
+	if (parting_) {
+		return;
+	}
 	String path = avatarManager_->getAvatarPath(jid).string();
 	roster_->applyOnItems(SetAvatar(jid, path, JID::WithResource));
 }
 
 void MUCController::handleWindowClosed() {
+	parting_ = true;
 	muc_->part();
+	onUserLeft();
 }
 
 void MUCController::handleOccupantJoined(const MUCOccupant& occupant) {
