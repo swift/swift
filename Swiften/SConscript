@@ -33,6 +33,7 @@ sources = [
 		"MUC/MUC.cpp",
 		"MUC/MUCOccupant.cpp",
 		"MUC/MUCRegistry.cpp",
+		"MUC/MUCBookmarkManager.cpp",
 		"Notifier/Notifier.cpp",
 		"Presence/PresenceOracle.cpp",
 		"Presence/PresenceSender.cpp",

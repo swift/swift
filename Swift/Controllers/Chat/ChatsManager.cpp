@@ -10,6 +10,7 @@
 #include "Swift/Controllers/UIEvents/RequestChatUIEvent.h"
 #include "Swiften/Presence/PresenceSender.h"
 #include "Swiften/Elements/ChatState.h"
+#include "Swiften/MUC/MUCBookmarkManager.h"
 
 namespace Swift {
 
@@ -28,6 +29,8 @@ ChatsManager::ChatsManager(JID jid, StanzaChannel* stanzaChannel, IQRouter* iqRo
 	serverDiscoInfo_ = serverDiscoInfo;
 	presenceSender_ = presenceSender;
 	uiEventStream_ = uiEventStream;
+	mucBookmarkManager_ = new MUCBookmarkManager(iqRouter);
+	mucBookmarkManager_->onBookmarksChanged.connect(boost::bind(&ChatsManager::handleMUCBookmarksChanged, this));
 	presenceOracle_->onPresenceChange.connect(boost::bind(&ChatsManager::handlePresenceChange, this, _1, _2));
 	uiEventStream_->onUIEvent.connect(boost::bind(&ChatsManager::handleUIEvent, this, _1));
 }
@@ -39,7 +42,18 @@ ChatsManager::~ChatsManager() {
 	foreach (JIDMUCControllerPair controllerPair, mucControllers_) {
 		delete controllerPair.second;
 	}
+	delete mucBookmarkManager_;
+}
 
+void ChatsManager::handleMUCBookmarksChanged() {
+	foreach (boost::shared_ptr<MUCBookmark> bookmark, mucBookmarkManager_->getBookmarks()) {
+		std::map<JID, MUCController*>::iterator it = mucControllers_.find(bookmark->getRoom());
+		if (it == mucControllers_.end()) {
+			//FIXME: need vcard stuff here to get a nick
+			String nick = bookmark->getNick() ? bookmark->getNick().get() : "Swift user";
+			handleJoinMUCRequest(bookmark->getRoom(), nick);
+		}
+	}
 }
 
 void ChatsManager::handleUIEvent(boost::shared_ptr<UIEvent> event) {

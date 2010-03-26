@@ -24,6 +24,7 @@ namespace Swift {
 	class StanzaChannel;
 	class IQRouter;
 	class PresenceSender;
+	class MUCBookmarkManager;
 
 	class ChatsManager : public MUCRegistry {
 		public:
@@ -39,6 +40,7 @@ namespace Swift {
 			void rebindControllerJID(const JID& from, const JID& to);
 			void handlePresenceChange(boost::shared_ptr<Presence> newPresence, boost::shared_ptr<Presence> lastPresence);
 			void handleUIEvent(boost::shared_ptr<UIEvent> event);
+			void handleMUCBookmarksChanged();
 			ChatController* getChatController(const JID &contact);
 			virtual bool isMUC(const JID& muc) const;
 
@@ -55,6 +57,7 @@ namespace Swift {
 			AvatarManager* avatarManager_;
 			PresenceSender* presenceSender_;
 			UIEventStream* uiEventStream_;
+			MUCBookmarkManager* mucBookmarkManager_;
 			boost::shared_ptr<DiscoInfo> serverDiscoInfo_;
 	};
 }
