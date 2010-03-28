@@ -1,0 +1,22 @@
+<?xml version="1.0" ?>
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN" "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+
+<book>
+  <title>Swiften Developer's Guide</title>
+
+  <chapter>
+    <title>Introduction</title>
+
+    <para>
+      This is an introduction
+    </para>
+
+    <sect1>
+      <title>Section</title>
+
+      <para>
+        This is a section
+      </para>
+    </sect1>
+  </chapter>
+</book>

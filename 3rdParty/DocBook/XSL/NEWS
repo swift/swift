@@ -1,0 +1,75 @@
+Changes since the 1.75.0 release
+
+Note: This document lists changes only since the 1.75.0 release. If you instead
+want a record of the complete list of changes for the codebase over its entire
+history, you can obtain one by running the following commands:
+
+  svn checkout https://docbook.svn.sourceforge.net/svnroot/docbook/trunk/xsl
+  svn log --xml --verbose xsl > ChangeHistory.xml
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Table of Contents
+
+Release Notes: 1.75.1
+
+    FO
+    HTML
+    Epub
+    Params
+
+Release Notes: 1.75.1
+
+The following is a list of changes that have been made since the 1.75.0
+release.
+
+FO
+
+The following changes have been made to the fo code since the 1.75.0 release.
+
+  ● Keith Fahlgren: block.xsl
+
+    Switching to em dash for character before attribution in epigraph; resolves Bug #2793878
+
+  ● Robert Stayton: lists.xsl
+
+    Fixed bug 2789947, id attribute missing on simplelist fo output.
+
+HTML
+
+The following changes have been made to the html code since the 1.75.0 release.
+
+  ● Keith Fahlgren: block.xsl
+
+    Switching to em dash for character before attribution in epigraph; resolves Bug #2793878
+
+  ● Robert Stayton: lists.xsl
+
+    Fixed bug 2789678: apply-templates line accidentally deleted.
+
+Epub
+
+The following changes have been made to the epub code since the 1.75.0 release.
+
+  ● Keith Fahlgren: bin/spec/epub_regressions_spec.rb; docbook.xsl
+
+    Added regression and fix to correct "bug" with namespace-prefixed container elements in META-INF/container.xml ; resolves Issue #2790017
+
+  ● Keith Fahlgren: bin/spec/epub_regressions_spec.rb; bin/spec/files/
+    onegraphic.xinclude.xml;⋯
+
+    Another attempt at flexible named entity and XInclude processing
+
+  ● Keith Fahlgren: bin/lib/docbook.rb
+
+    Tweaking solution to Bug #2750442 following regression reported by Michael Wiedmann.
+
+Params
+
+The following changes have been made to the params code since the 1.75.0
+release.
+
+  ● Mauritz Jeanson: highlight.source.xml
+
+    Updated documentation to reflect changes made in r8419.
+

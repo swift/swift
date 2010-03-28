@@ -1,0 +1,84 @@
+<?xml version="1.0"?>
+
+<article>
+<info>
+<abstract>
+<para><emphasis role="strong">Note:</emphasis> This
+            document lists changes only since the 1.75.0 release.
+            If you instead want a record of the complete list of
+            changes for the codebase over its entire history, you
+            can obtain one by running the following commands:
+            
+<screen>  <code>svn checkout https://docbook.svn.sourceforge.net/svnroot/docbook/trunk/xsl</code>
+  <code>svn log --xml --verbose xsl &gt; ChangeHistory.xml</code></screen></para>
+</abstract>
+</info><title>Changes since the 1.75.0 release</title>
+
+<sect1 xml:id="V1.75.1">
+<title>Release Notes: 1.75.1</title>
+<para>The following is a list of changes that have been made
+        since the 1.75.0 release.</para>
+
+<sect2 xml:id="V1.75.1_FO">
+<title>FO</title>
+<para>The following changes have been made to the
+            <filename>fo</filename> code
+            since the 1.75.0 release.</para>
+<itemizedlist>
+<listitem>
+<para><literal>Keith Fahlgren: block.xsl</literal></para><screen><phrase role="commit-message">Switching to em dash for character before <tag>attribution</tag> in <tag>epigraph</tag>; resolves Bug #2793878</phrase></screen>
+</listitem>
+<listitem>
+<para><literal>Robert Stayton: lists.xsl</literal></para><screen><phrase role="commit-message">Fixed bug 2789947, id attribute missing on <tag>simplelist</tag> fo output.</phrase></screen>
+</listitem>
+</itemizedlist>
+</sect2><!--end of FO changes for 1.75.1-->
+
+<sect2 xml:id="V1.75.1_HTML">
+<title>HTML</title>
+<para>The following changes have been made to the
+            <filename>html</filename> code
+            since the 1.75.0 release.</para>
+<itemizedlist>
+<listitem>
+<para><literal>Keith Fahlgren: block.xsl</literal></para><screen><phrase role="commit-message">Switching to em dash for character before <tag>attribution</tag> in <tag>epigraph</tag>; resolves Bug #2793878</phrase></screen>
+</listitem>
+<listitem>
+<para><literal>Robert Stayton: lists.xsl</literal></para><screen><phrase role="commit-message">Fixed bug 2789678: apply-templates line accidentally deleted.</phrase></screen>
+</listitem>
+</itemizedlist>
+</sect2><!--end of HTML changes for 1.75.1-->
+
+<sect2 xml:id="V1.75.1_Epub">
+<title>Epub</title>
+<para>The following changes have been made to the
+            <filename>epub</filename> code
+            since the 1.75.0 release.</para>
+<itemizedlist>
+<listitem>
+<para><literal>Keith Fahlgren: bin/spec/epub_regressions_spec.rb; docbook.xsl</literal></para><screen><phrase role="commit-message">Added regression and fix to correct "bug" with namespace-prefixed container elements in META-INF/container.xml ; resolves Issue #2790017</phrase></screen>
+</listitem>
+<listitem>
+<para><literal>Keith Fahlgren: bin/spec/epub_regressions_spec.rb; bin/spec/files/onegraphic.xinclude.xml;⋯</literal></para><screen><phrase role="commit-message">Another attempt at flexible named entity and XInclude processing</phrase></screen>
+</listitem>
+<listitem>
+<para><literal>Keith Fahlgren: bin/lib/docbook.rb</literal></para><screen><phrase role="commit-message">Tweaking solution to Bug #2750442 following regression reported by Michael Wiedmann.</phrase></screen>
+</listitem>
+</itemizedlist>
+</sect2><!--end of Epub changes for 1.75.1-->
+
+<sect2 xml:id="V1.75.1_Params">
+<title>Params</title>
+<para>The following changes have been made to the
+            <filename>params</filename> code
+            since the 1.75.0 release.</para>
+<itemizedlist>
+<listitem>
+<para><literal>Mauritz Jeanson: highlight.source.xml</literal></para><screen><phrase role="commit-message">Updated documentation to reflect changes made in r8419.</phrase></screen>
+</listitem>
+</itemizedlist>
+</sect2><!--end of Params changes for 1.75.1-->
+
+</sect1>
+</article>
+
