@@ -1,0 +1,46 @@
+#include <cppunit/extensions/HelperMacros.h>
+#include <cppunit/extensions/TestFactoryRegistry.h>
+
+#include "Swiften/Serializer/StreamFeaturesSerializer.h"
+#include "Swiften/Elements/StreamFeatures.h"
+
+using namespace Swift;
+
+class StreamFeaturesSerializerTest : public CppUnit::TestFixture
+{
+		CPPUNIT_TEST_SUITE(StreamFeaturesSerializerTest);
+		CPPUNIT_TEST(testSerialize);
+		CPPUNIT_TEST_SUITE_END();
+
+	public:
+		StreamFeaturesSerializerTest() {}
+
+		void testSerialize() {
+			StreamFeaturesSerializer testling;
+			boost::shared_ptr<StreamFeatures> streamFeatures(new StreamFeatures());
+			streamFeatures->setHasStartTLS();
+			streamFeatures->addCompressionMethod("zlib");
+			streamFeatures->addCompressionMethod("lzw");
+			streamFeatures->addAuthenticationMechanism("DIGEST-MD5");
+			streamFeatures->addAuthenticationMechanism("PLAIN");
+			streamFeatures->setHasResourceBind();
+			streamFeatures->setHasSession();
+
+			CPPUNIT_ASSERT_EQUAL(String(
+				"<stream:features>"
+					"<starttls xmlns=\"urn:ietf:params:xml:ns:xmpp-tls\"/>"
+					"<compression xmlns=\"http://jabber.org/features/compress\">"
+						"<method>zlib</method>"
+						"<method>lzw</method>"
+					"</compression>"
+					"<mechanisms xmlns=\"urn:ietf:params:xml:ns:xmpp-sasl\">"
+						"<mechanism>DIGEST-MD5</mechanism>"
+						"<mechanism>PLAIN</mechanism>"
+					"</mechanisms>"
+					"<bind xmlns=\"urn:ietf:params:xml:ns:xmpp-bind\"/>"
+					"<session xmlns=\"urn:ietf:params:xml:ns:xmpp-session\"/>"
+				"</stream:features>"), testling.serialize(streamFeatures));
+		}
+};
+
+CPPUNIT_TEST_SUITE_REGISTRATION(StreamFeaturesSerializerTest);

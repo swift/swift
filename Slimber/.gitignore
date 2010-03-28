@@ -1,0 +1,5 @@
+*.o
+*.a
+*.app
+*.nib
+slimber

@@ -1,0 +1,22 @@
+import os
+
+Import("env")
+
+if env["TEST"] :
+	myenv = env.Clone()
+	myenv.MergeFlags(myenv["SWIFTEN_FLAGS"])
+	myenv.MergeFlags(myenv["CPPUNIT_FLAGS"])
+	myenv.MergeFlags(myenv["LIBIDN_FLAGS"])
+	myenv.MergeFlags(myenv["BOOST_FLAGS"])
+	myenv.MergeFlags(myenv.get("SQLITE_FLAGS", ""))
+	myenv.MergeFlags(myenv["ZLIB_FLAGS"])
+	myenv.MergeFlags(myenv["OPENSSL_FLAGS"])
+	myenv.MergeFlags(myenv.get("LIBXML_FLAGS", ""))
+	myenv.MergeFlags(myenv.get("EXPAT_FLAGS", ""))
+
+	for i in ["SWIFT_CLIENTTEST_JID", "SWIFT_CLIENTTEST_PASS"]:
+		if os.environ.get(i, "") :
+			myenv["ENV"][i] = os.environ[i]
+
+	tester = myenv.Program("ClientTest", ["ClientTest.cpp"])
+	myenv.Test(tester, "system")

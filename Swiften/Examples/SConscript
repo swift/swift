@@ -1,0 +1,8 @@
+Import("swiften_env")
+
+myenv = swiften_env.Clone()
+
+if myenv["target"] == "native":
+   SConscript(dirs = [
+		"SendMessage"
+	])

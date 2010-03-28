@@ -1,0 +1,32 @@
+Import("env")
+
+myenv = env.Clone()
+myenv.MergeFlags(env["SLIMBER_FLAGS"])
+myenv.MergeFlags(env["SWIFTEN_FLAGS"])
+myenv.MergeFlags(env["LIBIDN_FLAGS"])
+myenv.MergeFlags(env["BOOST_FLAGS"])
+myenv.MergeFlags(env.get("LIBXML_FLAGS", ""))
+myenv.MergeFlags(env.get("EXPAT_FLAGS", ""))
+myenv.Append(FRAMEWORKS = "Cocoa")
+
+myenv.Program("Slimber", [
+		"main.mm",
+		"CocoaController.mm",
+		"CocoaMenulet.mm",
+		"CocoaAction.mm"
+	])
+
+myenv.Nib("MainMenu")
+
+myenv.AppBundle("Slimber", resources = [
+		"MainMenu.nib",
+		"../Resources/Slimber.icns",
+		"../Resources/Credits.html",
+		"../Resources/Online.png",
+		"../Resources/Offline.png",
+		"../Resources/UsersOnline.png",
+		"../Resources/UsersOffline.png"
+	], info = {
+		"NSMainNibFile" : "MainMenu",
+		"LSUIElement" : "1",
+	})

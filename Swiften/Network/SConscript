@@ -1,0 +1,34 @@
+Import("swiften_env")
+
+myenv = swiften_env.Clone()
+myenv.MergeFlags(myenv["LIBIDN_FLAGS"])
+if myenv["target"] == "native":
+   myenv.MergeFlags(myenv["CARES_FLAGS"])
+
+sourceList = [
+			"BoostConnection.cpp",
+			"BoostConnectionFactory.cpp",
+			"BoostConnectionServer.cpp",
+			"MainBoostIOServiceThread.cpp",
+			"BoostIOServiceThread.cpp",
+			"ConnectionFactory.cpp",
+			"ConnectionServer.cpp",
+ 			"Connector.cpp",
+			"TimerFactory.cpp",
+			"DummyTimerFactory.cpp",
+			"BoostTimerFactory.cpp",
+			"DomainNameResolver.cpp",
+			"DomainNameAddressQuery.cpp",
+			"DomainNameServiceQuery.cpp",
+			"PlatformDomainNameResolver.cpp",
+			"PlatformDomainNameServiceQuery.cpp",
+			"StaticDomainNameResolver.cpp",
+			"HostAddress.cpp",
+			"Timer.cpp",
+			"BoostTimer.cpp"]
+if myenv["target"] == "native":
+   sourceList.append("CAresDomainNameResolver.cpp")
+		
+
+objects = myenv.StaticObject(sourceList)
+swiften_env.Append(SWIFTEN_OBJECTS = [objects])

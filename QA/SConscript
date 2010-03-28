@@ -1,0 +1,4 @@
+SConscript(dirs = [
+		"Checker", 
+		"UnitTest"
+	])

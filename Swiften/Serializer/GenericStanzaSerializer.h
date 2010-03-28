@@ -1,0 +1,29 @@
+#ifndef SWIFTEN_GENERICSTANZASERIALIZER_H
+#define SWIFTEN_GENERICSTANZASERIALIZER_H
+
+#include "Swiften/Serializer/StanzaSerializer.h"
+
+namespace Swift {
+	template<typename STANZA_TYPE>
+	class GenericStanzaSerializer : public StanzaSerializer {
+		public:
+			GenericStanzaSerializer(const String& tag, PayloadSerializerCollection* payloadSerializers) : StanzaSerializer(tag, payloadSerializers) {}
+
+			virtual bool canSerialize(boost::shared_ptr<Element> element) const {
+				return dynamic_cast<STANZA_TYPE*>(element.get()) != 0;
+			}
+
+			virtual void setStanzaSpecificAttributes(
+					boost::shared_ptr<Element> stanza, 
+					XMLElement& element) const {
+				setStanzaSpecificAttributesGeneric(
+						boost::dynamic_pointer_cast<STANZA_TYPE>(stanza), element);
+			}
+
+			virtual void setStanzaSpecificAttributesGeneric(
+					boost::shared_ptr<STANZA_TYPE>, 
+					XMLElement&) const = 0;
+	};
+}
+
+#endif

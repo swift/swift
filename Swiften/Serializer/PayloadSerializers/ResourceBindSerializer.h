@@ -1,0 +1,16 @@
+#ifndef SWIFTEN_ResourceBindSerializer_H
+#define SWIFTEN_ResourceBindSerializer_H
+
+#include "Swiften/Serializer/GenericPayloadSerializer.h"
+#include "Swiften/Elements/ResourceBind.h"
+
+namespace Swift {
+	class ResourceBindSerializer : public GenericPayloadSerializer<ResourceBind> {
+		public:
+			ResourceBindSerializer();
+
+			virtual String serializePayload(boost::shared_ptr<ResourceBind>)  const;
+	};
+}
+
+#endif
