@@ -11,6 +11,8 @@ if env["SCONS_STAGE"] == "flags" :
 			"LIBPATH": [Dir(".")],
 			"LIBS": ["IDN"],
 		}
+	if env["PLATFORM"] == "win32" :
+		env["LIBIDN_FLAGS"]["CPPPATH"] += [Dir("stubs/win32")]
 
 ################################################################################
 # Build
@@ -42,7 +44,6 @@ if env["SCONS_STAGE"] == "build" :
 	myenv.Append(CPPPATH = ["src", "stubs"])
 	if myenv["PLATFORM"] == "win32" :
 		myenv.Append(CPPPATH = "stubs/win32")
-		env["LIBIDN_FLAGS"]["CPPPATH"] += [Dir("stubs/win32")]
 
 	myenv.StaticLibrary("IDN", [
 			"src/stringprep.c",

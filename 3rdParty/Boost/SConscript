@@ -13,6 +13,12 @@ if env["SCONS_STAGE"] == "flags" :
 			"LIBPATH": [Dir(".")],
 			"LIBS": ["Boost"]
 		}
+	if env["PLATFORM"] != "win32" :
+		env["BOOST_FLAGS"]["LIBS"] += ["pthread"]
+	else :
+		env["BOOST_FLAGS"]["CPPDEFINES"] += [("_WIN32_WINNT", "0x0501")]
+		if env["PLATFORM"] == "cygwin" :
+			env["BOOST_FLAGS"]["CPPDEFINES"] += ["__USE_W32_SOCKETS"]
 
 ################################################################################
 # Build
@@ -62,7 +68,6 @@ if env["SCONS_STAGE"] == "build" :
 				"src/libs/thread/src/pthread/exceptions.cpp",
 				"src/libs/thread/src/pthread/once.cpp",
 				"src/libs/thread/src/pthread/thread.cpp"]
-		env["BOOST_FLAGS"]["LIBS"] += ["pthread"]
 	else :
 		sources += [
 				"win32_stubs.cpp",
@@ -70,9 +75,6 @@ if env["SCONS_STAGE"] == "build" :
 				"src/libs/thread/src/win32/thread.cpp",
 				"src/libs/thread/src/win32/tss_dll.cpp",
 				"src/libs/thread/src/win32/tss_pe.cpp"]
-		env["BOOST_FLAGS"]["CPPDEFINES"] += [("_WIN32_WINNT", "0x0501")]
-		if env["PLATFORM"] == "cygwin" :
-			env["BOOST_FLAGS"]["CPPDEFINES"] += ["__USE_W32_SOCKETS"]
 
 	myenv.StaticLibrary("Boost", sources, CPPFLAGS = "-I" + Dir("src").abspath, CPPDEFINES = cppdefines)
 

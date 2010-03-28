@@ -2,10 +2,10 @@
 
 #include <QTreeView>
 
-#import "Swift/Controllers/UIInterfaces/ChatListWindow.h"
-#import "Swift/Controllers/UIEvents/UIEventStream.h"
-#import "Swift/QtUI/ChatList/ChatListModel.h"
-#import "Swift/QtUI/ChatList/ChatListDelegate.h"
+#include "Swift/Controllers/UIInterfaces/ChatListWindow.h"
+#include "Swift/Controllers/UIEvents/UIEventStream.h"
+#include "Swift/QtUI/ChatList/ChatListModel.h"
+#include "Swift/QtUI/ChatList/ChatListDelegate.h"
 
 namespace Swift {
 
