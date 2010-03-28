@@ -11,6 +11,7 @@ MUCBookmarkManager::MUCBookmarkManager(IQRouter* iqRouter) {
 void MUCBookmarkManager::addBookmark(boost::shared_ptr<MUCBookmark> bookmark) {
 	bookmarks_.push_back(bookmark);
 	flush();
+	onBookmarkAdded(bookmark);
 }
 
 
@@ -19,6 +20,7 @@ void MUCBookmarkManager::removeBookmark(boost::shared_ptr<MUCBookmark> bookmark)
 	for (it = bookmarks_.begin(); it != bookmarks_.end(); it++) {
 		if ((*it).get() == bookmark.get()) {
 			bookmarks_.erase(it);
+			onBookmarkRemoved(bookmark);
 			return;
 		}
 	}
