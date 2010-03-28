@@ -1,7 +1,0 @@
-#!/bin/sh
-
-echo "Checking tabs ..."
-if ! BuildTools/CheckTabs.py; then
-	echo "Expanded tabs found. Aborting commit."
-	exit -1
-fi
