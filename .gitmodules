@@ -28,3 +28,6 @@
 [submodule "3rdParty/LCov"]
 	path = 3rdParty/LCov
 	url = swift@swift.im:git/lcov-module.git
+[submodule "BuildTools"]
+	path = BuildTools
+	url = swift@swift.im:git/buildtools-module.git
