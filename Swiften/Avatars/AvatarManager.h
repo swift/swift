@@ -19,8 +19,10 @@ namespace Swift {
 
 	class AvatarManager {
 		public:
-			AvatarManager(StanzaChannel*, IQRouter*, AvatarStorage*, MUCRegistry*);
+			AvatarManager(StanzaChannel*, IQRouter*, AvatarStorage*, MUCRegistry* = NULL);
 			virtual ~AvatarManager();
+
+			virtual void setMUCRegistry(MUCRegistry*);
 
 			virtual String getAvatarHash(const JID&) const;
 			virtual boost::filesystem::path getAvatarPath(const JID&) const;

@@ -18,7 +18,8 @@ namespace Swift {
 			void flush();
 			/** Returns pointers to the bookmarks. These can be edited, and then flush()ed.*/
 			const std::vector<boost::shared_ptr<MUCBookmark> >& getBookmarks(); 
-			boost::signal<void ()> onBookmarksChanged;
+			boost::signal<void (boost::shared_ptr<MUCBookmark>)> onBookmarkAdded;
+			boost::signal<void (boost::shared_ptr<MUCBookmark>)> onBookmarkRemoved;
 		private:
 			
 			std::vector<boost::shared_ptr<MUCBookmark> > bookmarks_;

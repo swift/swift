@@ -6,6 +6,7 @@
 #include "Swift/Controllers/MainWindow.h"
 #include "Swift/QtUI/QtRosterHeader.h"
 #include "Swift/QtUI/EventViewer/QtEventWindow.h"
+#include "Swift/QtUI/ChatList/QtChatListWindow.h"
 
 #include <vector>
 
@@ -35,6 +36,7 @@ namespace Swift {
 			void setMyStatusText(const String& status);
 			void setMyStatusType(const StatusShow::Type type);
 			QtEventWindow* getEventWindow();
+			QtChatListWindow* getChatListWindow();
 		private slots:
 			void handleStatusChanged(StatusShow::Type showType, const QString &statusMessage);
 			void handleShowOfflineToggled(bool);
@@ -56,6 +58,7 @@ namespace Swift {
 			QWidget* contactsTabWidget_;
 			QWidget* eventsTabWidget_;
 			QtEventWindow* eventWindow_;
+			QtChatListWindow* chatListWindow_;
 			UIEventStream* uiEventStream_;
 	};
 }

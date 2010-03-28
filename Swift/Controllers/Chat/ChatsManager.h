@@ -11,6 +11,7 @@
 #include "Swiften/JID/JID.h"
 #include "Swiften/MUC/MUCRegistry.h"
 #include "Swift/Controllers/UIEvents/UIEventStream.h"
+#include "Swiften/MUC/MUCBookmark.h"
 
 namespace Swift {
 	class EventController;
@@ -25,10 +26,12 @@ namespace Swift {
 	class IQRouter;
 	class PresenceSender;
 	class MUCBookmarkManager;
+	class ChatListWindow;
+	class ChatListWindowFactory;
 
 	class ChatsManager : public MUCRegistry {
 		public:
-			ChatsManager(JID jid, StanzaChannel* stanzaChannel, IQRouter* iqRouter, EventController* eventController, ChatWindowFactory* chatWindowFactory, TreeWidgetFactory* treeWidgetFactory, NickResolver* nickResolver, PresenceOracle* presenceOracle, boost::shared_ptr<DiscoInfo> serverDiscoInfo, PresenceSender* presenceSender, UIEventStream* uiEventStream);
+			ChatsManager(JID jid, StanzaChannel* stanzaChannel, IQRouter* iqRouter, EventController* eventController, ChatWindowFactory* chatWindowFactory, TreeWidgetFactory* treeWidgetFactory, NickResolver* nickResolver, PresenceOracle* presenceOracle, boost::shared_ptr<DiscoInfo> serverDiscoInfo, PresenceSender* presenceSender, UIEventStream* uiEventStream, ChatListWindowFactory* chatListWindowFactory);
 			~ChatsManager();
 			void setAvatarManager(AvatarManager* avatarManager);
 			void setEnabled(bool enabled);
@@ -40,7 +43,8 @@ namespace Swift {
 			void rebindControllerJID(const JID& from, const JID& to);
 			void handlePresenceChange(boost::shared_ptr<Presence> newPresence, boost::shared_ptr<Presence> lastPresence);
 			void handleUIEvent(boost::shared_ptr<UIEvent> event);
-			void handleMUCBookmarksChanged();
+			void handleMUCBookmarkAdded(boost::shared_ptr<MUCBookmark> bookmark);
+			void handleMUCBookmarkRemoved(boost::shared_ptr<MUCBookmark> bookmark);
 			void handleUserLeftMUC(MUCController* mucController);
 			ChatController* getChatController(const JID &contact);
 			virtual bool isMUC(const JID& muc) const;
@@ -60,5 +64,6 @@ namespace Swift {
 			UIEventStream* uiEventStream_;
 			MUCBookmarkManager* mucBookmarkManager_;
 			boost::shared_ptr<DiscoInfo> serverDiscoInfo_;
+			ChatListWindow* chatListWindow_;
 	};
 }

@@ -52,8 +52,11 @@ QtMainWindow::QtMainWindow(UIEventStream* uiEventStream, QtTreeWidgetFactory *tr
 	eventWindow_ = new QtEventWindow(uiEventStream_);
 	connect(eventWindow_, SIGNAL(onNewEventCountUpdated(int)), this, SLOT(handleEventCountUpdated(int)));
 	
+	chatListWindow_ = new QtChatListWindow(uiEventStream_);
+
 	tabs_->addTab(eventWindow_, "Events");
-	
+	tabs_->addTab(chatListWindow_, "Chats");
+
 	this->setLayout(mainLayout);
 	
 	QMenu* viewMenu = new QMenu(tr("View"), this);
@@ -79,6 +82,10 @@ QtMainWindow::QtMainWindow(UIEventStream* uiEventStream, QtTreeWidgetFactory *tr
 
 QtEventWindow* QtMainWindow::getEventWindow() {
 	return eventWindow_;
+}
+
+QtChatListWindow* QtMainWindow::getChatListWindow() {
+	return chatListWindow_;
 }
 
 void QtMainWindow::handleEventCountUpdated(int count) {

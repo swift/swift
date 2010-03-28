@@ -27,6 +27,10 @@ AvatarManager::~AvatarManager() {
 
 }
 
+void AvatarManager::setMUCRegistry(MUCRegistry* mucRegistry) {
+	mucRegistry_ = mucRegistry;
+}
+
 void AvatarManager::handlePresenceReceived(boost::shared_ptr<Presence> presence) {
 	boost::shared_ptr<VCardUpdate> update = presence->getPayload<VCardUpdate>();
 	if (!update) {
@@ -97,7 +101,7 @@ boost::filesystem::path AvatarManager::getAvatarPath(const JID& jid) const {
 
 JID AvatarManager::getAvatarJID(const JID& jid) const {
 	JID bareFrom = jid.toBare();
-	return (mucRegistry_->isMUC(bareFrom) ? jid : bareFrom);
+	return (mucRegistry_ && mucRegistry_->isMUC(bareFrom)) ? jid : bareFrom;
 }
 
 

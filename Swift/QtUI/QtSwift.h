@@ -22,6 +22,7 @@ namespace Swift {
 	class QtSystemTray;
 	class QtSoundPlayer;
 	class QtEventWindowFactory;
+	class QtChatListWindowFactory;
 		
 	class QtSwift : public QObject {
 		Q_OBJECT
@@ -32,6 +33,7 @@ namespace Swift {
 			MainController *mainController_;
 			QtTreeWidgetFactory *treeWidgetFactory_;
 			QtChatWindowFactory *chatWindowFactory_;
+			QtChatListWindowFactory *chatListWindowFactory_;
 			QtMainWindowFactory *rosterWindowFactory_;
 			QtLoginWindowFactory *loginWindowFactory_;
 			QtXMLConsoleWidgetFactory* xmlConsoleWidgetFactory_;

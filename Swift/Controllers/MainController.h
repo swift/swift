@@ -26,6 +26,7 @@ namespace Swift {
 	class ChatWindowFactory;
 	class ChatController;
 	class ChatsManager;
+	class ChatListWindowFactory;
 	class EventController;
 	class MainWindowFactory;
 	class MainWindow;
@@ -54,7 +55,7 @@ namespace Swift {
 
 	class MainController {
 		public:
-			MainController(ChatWindowFactory* chatWindowFactory, MainWindowFactory *mainWindowFactory, LoginWindowFactory *loginWindowFactory, TreeWidgetFactory* treeWidgetFactory, EventWindowFactory* eventWindowFactory, SettingsProvider *settings, Application* application, SystemTray* systemTray, SoundPlayer* soundPlayer, XMLConsoleWidgetFactory* xmlConsoleWidgetFactory);
+			MainController(ChatWindowFactory* chatWindowFactory, MainWindowFactory *mainWindowFactory, LoginWindowFactory *loginWindowFactory, TreeWidgetFactory* treeWidgetFactory, EventWindowFactory* eventWindowFactory, SettingsProvider *settings, Application* application, SystemTray* systemTray, SoundPlayer* soundPlayer, XMLConsoleWidgetFactory* xmlConsoleWidgetFactory, ChatListWindowFactory* chatListWindowFactory_);
 			~MainController();
 
 
@@ -117,5 +118,6 @@ namespace Swift {
 			boost::shared_ptr<Presence> queuedPresence_;
 			String password_;
 			String certificateFile_;
+			ChatListWindowFactory* chatListWindowFactory_;
 	};
 }
