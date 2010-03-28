@@ -34,3 +34,6 @@
 [submodule "Swiften"]
 	path = Swiften
 	url = swift@swift.im:git/swiften-module.git
+[submodule "QA"]
+	path = QA
+	url = swift@swift.im:git/qa-module.git
