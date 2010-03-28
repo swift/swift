@@ -7,7 +7,7 @@ import xml.dom.minidom, re, os.path, sys
 
 def generate(env) :
   # Location of stylesheets and catalogs
-  docbook_dir = "#/DocBook"
+  docbook_dir = "#/BuildTools/DocBook"
   docbook_xsl_style_dir = env.Dir(docbook_dir + "/Stylesheets").abspath
   docbook_xml_catalog = env.File("catalog.xml").abspath
   docbook_xml_dir = env.Dir("#/3rdParty/DocBook/XML").abspath
@@ -57,10 +57,18 @@ def generate(env) :
     db_env["XMLCATALOGS"] = [docbook_xml_catalog]
     db_env["ENV"].update({"OS" : os.environ.get("OS", "")})
 
+    db_env["XMLLINT"] = env.WhereIs("xmllint")
+    db_env["XSLT"] = env.WhereIs("xsltproc")
+    db_env["FO"] = env.WhereIs("fop")
+
+    if not db_env["XMLLINT"] or not db_env["XSLT"] :
+      return
+
     # PDF generation
-    fo = db_env.XSLT(os.path.splitext(source)[0] + ".fo", source, 
-        XSLTSTYLESHEET = db_env["DOCBOOK_XSL_FO"])
-    pdf = db_env.FO(fo)
+    if db_env["FO"] :
+      fo = db_env.XSLT(os.path.splitext(source)[0] + ".fo", source, 
+          XSLTSTYLESHEET = db_env["DOCBOOK_XSL_FO"])
+      pdf = db_env.FO(fo)
 
     # HTML generation
     db_env.XSLT(os.path.splitext(source)[0] + ".html", source, 

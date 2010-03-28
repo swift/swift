@@ -1,5 +1,5 @@
 Import("env")
 
-env.Tool("DocBook", toolpath = ["#/DocBook/SCons"])
+env.Tool("DocBook", toolpath = ["#/BuildTools/DocBook/SCons"])
 
 env.DocBook("SwiftenDevelopersGuide.xml")
