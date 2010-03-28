@@ -1,42 +1,52 @@
 Import("env")
 
-env["SWIFTOOLS_FLAGS"] = {
-		"LIBPATH": [Dir(".")],
-		"LIBS": ["SwifTools"]
-	}
+################################################################################
+# Flags
+################################################################################
 
-myenv = env.Clone()
-myenv.MergeFlags(myenv["BOOST_FLAGS"])
+if env["SCONS_STAGE"] == "flags" :
+	env["SWIFTOOLS_FLAGS"] = {
+			"LIBPATH": [Dir(".")],
+			"LIBS": ["SwifTools"]
+		}
 
-sources = [
-		"Idle/IdleDetector.cpp",
-		"Idle/ActualIdleDetector.cpp",
-		"Idle/IdleQuerier.cpp",
-		"Idle/PlatformIdleQuerier.cpp",
-		"AutoUpdater/AutoUpdater.cpp",
-		"AutoUpdater/PlatformAutoUpdaterFactory.cpp",
-		"Linkify.cpp",
-	]
+################################################################################
+# Build
+################################################################################
 
-if myenv.get("HAVE_SPARKLE", 0) :
-	myenv.MergeFlags(myenv["SPARKLE_FLAGS"])
-	myenv.Append(CPPDEFINES = ["HAVE_SPARKLE"])
-	sources += ["AutoUpdater/SparkleAutoUpdater.mm"]
+if env["SCONS_STAGE"] == "build" :
+	myenv = env.Clone()
+	myenv.MergeFlags(myenv["BOOST_FLAGS"])
 
-if myenv["PLATFORM"] == "win32" :
-	sources += ["Idle/WindowsIdleQuerier.cpp"]
-elif myenv["PLATFORM"] == "darwin" :
-	sources += ["Idle/MacOSXIdleQuerier.cpp"]
-elif myenv["HAVE_XSS"] :
-	myenv.Append(CPPDEFINES = ["HAVE_XSS"])
-	sources += ["Idle/XSSIdleQuerier.cpp"]
-else :
-  sources += ["Idle/DummyIdleQuerier.cpp"]
+	sources = [
+			"Idle/IdleDetector.cpp",
+			"Idle/ActualIdleDetector.cpp",
+			"Idle/IdleQuerier.cpp",
+			"Idle/PlatformIdleQuerier.cpp",
+			"AutoUpdater/AutoUpdater.cpp",
+			"AutoUpdater/PlatformAutoUpdaterFactory.cpp",
+			"Linkify.cpp",
+		]
 
-myenv.StaticLibrary("SwifTools", sources)
+	if myenv.get("HAVE_SPARKLE", 0) :
+		myenv.MergeFlags(myenv["SPARKLE_FLAGS"])
+		myenv.Append(CPPDEFINES = ["HAVE_SPARKLE"])
+		sources += ["AutoUpdater/SparkleAutoUpdater.mm"]
 
-SConscript(dirs = [
-		"Idle/IdleQuerierTest",
-		"Idle/UnitTest",
-		"UnitTest"
-	])
+	if myenv["PLATFORM"] == "win32" :
+		sources += ["Idle/WindowsIdleQuerier.cpp"]
+	elif myenv["PLATFORM"] == "darwin" :
+		sources += ["Idle/MacOSXIdleQuerier.cpp"]
+	elif myenv["HAVE_XSS"] :
+		myenv.Append(CPPDEFINES = ["HAVE_XSS"])
+		sources += ["Idle/XSSIdleQuerier.cpp"]
+	else :
+		sources += ["Idle/DummyIdleQuerier.cpp"]
+
+	myenv.StaticLibrary("SwifTools", sources)
+
+	SConscript(dirs = [
+			"Idle/IdleQuerierTest",
+			"Idle/UnitTest",
+			"UnitTest"
+		])

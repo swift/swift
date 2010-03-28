@@ -2,14 +2,15 @@ import datetime
 
 Import("env")
 
-if not GetOption("help") and not env.get("HAVE_OPENSSL", 0) :
-  print "Error: Swift requires OpenSSL support, and OpenSSL was not found."
-  Exit(1)
-
-
-env["SWIFT_VERSION"] = "0.9.9." + datetime.date.today().strftime("%Y%m%d")
-
 SConscript("Controllers/SConscript")
 
-if env["target"] == "native":
-   SConscript("QtUI/SConscript")
+if env["SCONS_STAGE"] == "build" :
+	if not GetOption("help") and not env.get("HAVE_OPENSSL", 0) :
+		print "Error: Swift requires OpenSSL support, and OpenSSL was not found."
+		Exit(1)
+
+
+	env["SWIFT_VERSION"] = "0.9.9." + datetime.date.today().strftime("%Y%m%d")
+
+	if env["target"] == "native":
+		 SConscript("QtUI/SConscript")

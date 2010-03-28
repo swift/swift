@@ -1,36 +1,46 @@
 Import("env")
 
-env["SWIFT_CONTROLLERS_FLAGS"] = {
-		"LIBPATH": [Dir(".")],
-		"LIBS": ["SwiftControllers"]
-	}
+################################################################################
+# Flags
+################################################################################
 
-myenv = env.Clone()
-myenv.MergeFlags(env["BOOST_FLAGS"])
-myenv.StaticLibrary("SwiftControllers", [
-		"Chat/ChatController.cpp",
-		"Chat/ChatControllerBase.cpp",
-		"Chat/ChatsManager.cpp",
-		"MainController.cpp",
-		"NickResolver.cpp",
-		"RosterController.cpp",
-		"XMPPRosterController.cpp",
-		"Chat/MUCController.cpp",
-		"EventController.cpp",
-		"EventWindowController.cpp",
-		"SoundEventController.cpp",
-		"SystemTrayController.cpp",
-		"XMLConsoleController.cpp",
-		"UIEvents/UIEvent.cpp",
-		"UIInterfaces/XMLConsoleWidget.cpp",
-		"PreviousStatusStore.cpp",
-	])
+if env["SCONS_STAGE"] == "flags" :
+	env["SWIFT_CONTROLLERS_FLAGS"] = {
+			"LIBPATH": [Dir(".")],
+			"LIBS": ["SwiftControllers"]
+		}
 
-env.Append(UNITTEST_SOURCES = [
-		File("UnitTest/NickResolverTest.cpp"),
-		File("UnitTest/RosterControllerTest.cpp"),
-		File("UnitTest/XMPPRosterControllerTest.cpp"),
-		File("UnitTest/PreviousStatusStoreTest.cpp"),
-		File("Chat/UnitTest/ChatsManagerTest.cpp"),
-		File("UnitTest/MockChatWindow.cpp"),
-	])
+################################################################################
+# Build
+################################################################################
+
+if env["SCONS_STAGE"] == "build" :
+	myenv = env.Clone()
+	myenv.MergeFlags(env["BOOST_FLAGS"])
+	myenv.StaticLibrary("SwiftControllers", [
+			"Chat/ChatController.cpp",
+			"Chat/ChatControllerBase.cpp",
+			"Chat/ChatsManager.cpp",
+			"MainController.cpp",
+			"NickResolver.cpp",
+			"RosterController.cpp",
+			"XMPPRosterController.cpp",
+			"Chat/MUCController.cpp",
+			"EventController.cpp",
+			"EventWindowController.cpp",
+			"SoundEventController.cpp",
+			"SystemTrayController.cpp",
+			"XMLConsoleController.cpp",
+			"UIEvents/UIEvent.cpp",
+			"UIInterfaces/XMLConsoleWidget.cpp",
+			"PreviousStatusStore.cpp",
+		])
+
+	env.Append(UNITTEST_SOURCES = [
+			File("UnitTest/NickResolverTest.cpp"),
+			File("UnitTest/RosterControllerTest.cpp"),
+			File("UnitTest/XMPPRosterControllerTest.cpp"),
+			File("UnitTest/PreviousStatusStoreTest.cpp"),
+			File("Chat/UnitTest/ChatsManagerTest.cpp"),
+			File("UnitTest/MockChatWindow.cpp"),
+		])

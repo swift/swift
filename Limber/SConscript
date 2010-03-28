@@ -1,11 +1,12 @@
 Import("env")
 
-myenv = env.Clone()
-myenv.MergeFlags(env["SWIFTEN_FLAGS"])
-myenv.MergeFlags(env["LIBIDN_FLAGS"])
-myenv.MergeFlags(env.get("LIBXML_FLAGS", ""))
-myenv.MergeFlags(env.get("EXPAT_FLAGS", ""))
-myenv.MergeFlags(env["OPENSSL_FLAGS"])
-myenv.MergeFlags(env["BOOST_FLAGS"])
+if env["SCONS_STAGE"] == "build" :
+	myenv = env.Clone()
+	myenv.MergeFlags(env["SWIFTEN_FLAGS"])
+	myenv.MergeFlags(env["LIBIDN_FLAGS"])
+	myenv.MergeFlags(env.get("LIBXML_FLAGS", ""))
+	myenv.MergeFlags(env.get("EXPAT_FLAGS", ""))
+	myenv.MergeFlags(env["OPENSSL_FLAGS"])
+	myenv.MergeFlags(env["BOOST_FLAGS"])
 
-myenv.Program("limber", ["main.cpp"])
+	myenv.Program("limber", ["main.cpp"])
