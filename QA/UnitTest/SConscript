@@ -7,18 +7,18 @@ if env["TEST"] :
 		env["UNITTEST_SOURCES"] = []
 	if env["SCONS_STAGE"] == "test" :
 		myenv = env.Clone()
-		myenv.MergeFlags(env["CHECKER_FLAGS"])
-		myenv.MergeFlags(env["SLIMBER_FLAGS"])
-		myenv.MergeFlags(env["SWIFT_CONTROLLERS_FLAGS"])
-		myenv.MergeFlags(env["SWIFTOOLS_FLAGS"])
-		myenv.MergeFlags(env["SWIFTEN_FLAGS"])
-		myenv.MergeFlags(env["CPPUNIT_FLAGS"])
-		myenv.MergeFlags(env["LIBIDN_FLAGS"])
-		myenv.MergeFlags(env["BOOST_FLAGS"])
+		myenv.MergeFlags(env.get("CHECKER_FLAGS",""))
+		myenv.MergeFlags(env.get("SLIMBER_FLAGS",""))
+		myenv.MergeFlags(env.get("SWIFT_CONTROLLERS_FLAGS",""))
+		myenv.MergeFlags(env.get("SWIFTOOLS_FLAGS",""))
+		myenv.MergeFlags(env.get("SWIFTEN_FLAGS",""))
+		myenv.MergeFlags(env.get("CPPUNIT_FLAGS",""))
+		myenv.MergeFlags(env.get("LIBIDN_FLAGS", ""))
+		myenv.MergeFlags(env.get("BOOST_FLAGS", ""))
 		myenv.MergeFlags(env.get("SQLITE_FLAGS", ""))
 		myenv.MergeFlags(env.get("LIBXML_FLAGS", ""))
 		myenv.MergeFlags(env.get("EXPAT_FLAGS", ""))
-		myenv.MergeFlags(env["ZLIB_FLAGS"])
+		myenv.MergeFlags(env.get("ZLIB_FLAGS", ""))
 		if env.get("HAVE_LIBXML") :
 			myenv.Append(CPPDEFINES = ["HAVE_LIBXML"])
 		if env.get("HAVE_EXPAT") :
