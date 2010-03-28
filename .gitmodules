@@ -31,3 +31,6 @@
 [submodule "BuildTools"]
 	path = BuildTools
 	url = swift@swift.im:git/buildtools-module.git
+[submodule "Swiften"]
+	path = Swiften
+	url = swift@swift.im:git/swiften-module.git

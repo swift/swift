@@ -1,4 +1,0 @@
-SConscript([
-		"NetworkTest/SConscript",
-		"ClientTest/SConscript",
-	])
