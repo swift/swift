@@ -34,7 +34,7 @@ int main(int argc, char *argv[])
 	Swift::QtTreeWidgetItem* group = dynamic_cast<Swift::QtTreeWidgetItem*>(treeWidgetFactory.createTreeWidgetItem(tree));
 	group->setText("Many People");
 	
-	for (int i = 0; i < 600; i++) {
+	for (int i = 0; i < 1500; i++) {
 		Swift::QtTreeWidgetItem* item = dynamic_cast<Swift::QtTreeWidgetItem*>(treeWidgetFactory.createTreeWidgetItem(group));
 		item->setText(Q2PSTRING(QString("Some person %1").arg(i)));
 
