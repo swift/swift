@@ -12,8 +12,10 @@ QtTreeWidgetItem::QtTreeWidgetItem(QtTreeWidgetItem* parentItem) : QObject(), te
 	expanded_ = true;
 }
 
+
 void QtTreeWidgetItem::setText(const String& text) {
 	displayName_ = P2QSTRING(text);
+	displayNameLower_ = displayName_.toLower();
 	emit changed(this);
 }
 
@@ -216,12 +218,12 @@ bool QtTreeWidgetItem::operator<(const QtTreeWidgetItem& item) const {
 		if (!item.isContact()) {
 			return false;
 		}
-		return getStatusShow() == item.getStatusShow() ? getName().toLower() < item.getName().toLower() : getStatusShow() < item.getStatusShow();
+		return getStatusShow() == item.getStatusShow() ? getLowerName() < item.getLowerName() : getStatusShow() < item.getStatusShow();
 	} else {
 		if (item.isContact()) {
 			return true;
 		}
-		return getName().toLower() < item.getName().toLower();
+		return getLowerName() < item.getLowerName();
 	}
 }
 

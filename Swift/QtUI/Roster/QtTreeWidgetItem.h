@@ -50,7 +50,8 @@ class QtTreeWidgetItem : public QObject, public TreeWidgetItem {
 			bool isShown();
 			bool isContact() const;
 			bool isExpanded();
-			QString getName() const {return displayName_;};
+			const QString& getName() const {return displayName_;};
+			const QString& getLowerName() const {return displayNameLower_;};
 			StatusShow::Type getStatusShow() const {return statusShowType_;};
 
 			QWidget* getCollapsedRosterWidget();
@@ -67,6 +68,7 @@ class QtTreeWidgetItem : public QObject, public TreeWidgetItem {
 			QList<QtTreeWidgetItem*> shownChildren_;
 			QtTreeWidgetItem* parent_;
 			QString displayName_;
+			QString displayNameLower_;
 			QString statusText_;
 			QColor textColor_;
 			QColor backgroundColor_;
