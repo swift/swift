@@ -4,8 +4,11 @@
 
 #include <boost/shared_ptr.hpp>
 #include <boost/signals.hpp>
+#include <boost/optional.hpp>
 
 #include "Swiften/MUC/MUCBookmark.h"
+#include "Swiften/Elements/Storage.h"
+#include "Swiften/Queries/Requests/GetPrivateStorageRequest.h"
 
 namespace Swift {
 	class IQRouter;
@@ -21,7 +24,7 @@ namespace Swift {
 			boost::signal<void (boost::shared_ptr<MUCBookmark>)> onBookmarkAdded;
 			boost::signal<void (boost::shared_ptr<MUCBookmark>)> onBookmarkRemoved;
 		private:
-			
+			void handleBookmarksReceived(boost::shared_ptr<Storage> payload, const boost::optional<ErrorPayload>& error);
 			std::vector<boost::shared_ptr<MUCBookmark> > bookmarks_;
 			IQRouter* iqRouter_;
 	};

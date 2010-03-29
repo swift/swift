@@ -135,8 +135,6 @@ void MainController::handleConnected() {
 		presenceOracle_ = new PresenceOracle(client_);
 		nickResolver_ = new NickResolver(xmppRoster_);		
 		lastSentPresence_ = boost::shared_ptr<Presence>();
-		
-		
 
 		avatarManager_ = new AvatarManager(client_, client_, avatarStorage_);
 
