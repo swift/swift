@@ -13,7 +13,7 @@ namespace Swift {
 			int rowCount() {return items_.size();};
 			ChatListItem* item(int i) {return items_[i];};
 			int row(ChatListItem* item) {return items_.indexOf(item);};
-			QVariant data(int role) {return "Bob";};
+			QVariant data(int role) {return (role == Qt::DisplayRole) ? name_ : QVariant();};
 		private:
 			QString name_;
 			QList<ChatListItem*> items_;

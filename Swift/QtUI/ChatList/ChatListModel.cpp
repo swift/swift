@@ -7,12 +7,16 @@ namespace Swift {
 ChatListModel::ChatListModel() {
 	root_ = new ChatListGroupItem("", NULL);
 	mucBookmarks_ = new ChatListGroupItem("MUC Bookmarks", root_);
+	root_->addItem(mucBookmarks_);
 }
 
 void ChatListModel::addMUCBookmark(boost::shared_ptr<Swift::MUCBookmark> bookmark) {
 	emit layoutAboutToBeChanged();
 	mucBookmarks_->addItem(new ChatListMUCItem(bookmark, mucBookmarks_));
 	emit layoutChanged();
+	//QModelIndex index = createIndex(mucBookmarks_->rowCount() - 1, 0, mucBookmarks_);
+	//emit dataChanged(index, index);
+	//emit dataChanged(parent(index), parent(index));
 }
 
 void ChatListModel::removeMUCBookmark(boost::shared_ptr<Swift::MUCBookmark> bookmark) {
@@ -54,11 +58,17 @@ QModelIndex ChatListModel::parent(const QModelIndex& index) const {
 }
 
 int ChatListModel::rowCount(const QModelIndex& parentIndex) const {
-	ChatListGroupItem* parent = root_;
+	ChatListGroupItem* parent = NULL;
+	printf("Counting\n");
 	if (parentIndex.isValid()) {
-		parent = static_cast<ChatListGroupItem*>(parentIndex.internalPointer());
+		printf("Valid index\n");
+		parent = dynamic_cast<ChatListGroupItem*>(static_cast<ChatListItem*>(parentIndex.internalPointer()));
+	} else {
+		parent = root_;
 	}
-	return parent ? parent->rowCount() : 0;
+	int count = (parent ? parent->rowCount() : 0);
+	printf("Count returned as %d, muc count is %d\n", count, mucBookmarks_->rowCount());
+	return count;
 }
 
 }

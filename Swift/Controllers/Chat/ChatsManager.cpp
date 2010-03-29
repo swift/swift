@@ -50,7 +50,7 @@ ChatsManager::~ChatsManager() {
 
 void ChatsManager::handleMUCBookmarkAdded(boost::shared_ptr<MUCBookmark> bookmark) {
 	std::map<JID, MUCController*>::iterator it = mucControllers_.find(bookmark->getRoom());
-	if (it == mucControllers_.end()) {
+	if (it == mucControllers_.end() && bookmark->getAutojoin()) {
 		//FIXME: need vcard stuff here to get a nick
 		String nick = bookmark->getNick() ? bookmark->getNick().get() : "Swift user";
 		handleJoinMUCRequest(bookmark->getRoom(), nick);

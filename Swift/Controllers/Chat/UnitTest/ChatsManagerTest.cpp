@@ -6,6 +6,7 @@
 
 #include "Swift/Controllers/UIInterfaces/ChatWindow.h"
 #include "Swift/Controllers/UIInterfaces/ChatWindowFactory.h"
+#include "Swift/Controllers/UIInterfaces/ChatListWindowFactory.h"
 #include "Swiften/Roster/TreeWidgetFactory.h"
 #include "Swiften/Client/Client.h"
 #include "Swift/Controllers/Chat/ChatController.h"
@@ -54,15 +55,16 @@ public:
 		serverDiscoInfo_ = boost::shared_ptr<DiscoInfo>(new DiscoInfo());
 		presenceSender_ = NULL;
 		uiEventStream_ = new UIEventStream();
-		manager_ = new ChatsManager(jid_, stanzaChannel_, iqRouter_, eventController_, chatWindowFactory_, treeWidgetFactory_, nickResolver_, presenceOracle_, serverDiscoInfo_, presenceSender_, uiEventStream_);
+		chatListWindowFactory_ = mocks_->InterfaceMock<ChatListWindowFactory>();
+		manager_ = new ChatsManager(jid_, stanzaChannel_, iqRouter_, eventController_, chatWindowFactory_, treeWidgetFactory_, nickResolver_, presenceOracle_, serverDiscoInfo_, presenceSender_, uiEventStream_, chatListWindowFactory_);
 		avatarManager_ = new MockAvatarManager();
 		manager_->setAvatarManager(avatarManager_);
 	};
 	
 	void tearDown() {
+		delete avatarManager_;
 		delete manager_;
 		delete presenceSender_;
-		delete avatarManager_;
 		delete presenceOracle_;
 		delete nickResolver_;
 		delete treeWidgetFactory_;
@@ -267,6 +269,7 @@ private:
 	PresenceSender* presenceSender_;
 	MockRepository* mocks_;
 	UIEventStream* uiEventStream_;
+	ChatListWindowFactory* chatListWindowFactory_;
 };
 
 CPPUNIT_TEST_SUITE_REGISTRATION(ChatsManagerTest);
