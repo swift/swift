@@ -64,17 +64,21 @@ int main(int argc, char* argv[]) {
 	client = new Swift::Client(JID(jid), String(argv[argi++]));
 	char* timeoutChar = argv[argi++];
 	int timeout = atoi(timeoutChar);
+	timeout = (timeout ? timeout : 30) * 1000;
 	ClientXMLTracer* tracer = new ClientXMLTracer(client);
 	client->onConnected.connect(&handleConnected);
 	errorConnection = client->onError.connect(&handleError);
+	std::cout << "Connecting to JID " << jid << " with timeout " << timeout << "ms on host: "; ;
 	if (!connectHost.isEmpty()) {
+		std::cout << connectHost << std::endl;
 		client->connect(connectHost);
 	} else {
+		std::cout << " Default" << std::endl;
 		client->connect();
 	}
 
 	{
-		boost::shared_ptr<BoostTimer> timer(new BoostTimer((timeout ? timeout : 30) * 1000, &MainBoostIOServiceThread::getInstance().getIOService()));
+		boost::shared_ptr<BoostTimer> timer(new BoostTimer(timeout, &MainBoostIOServiceThread::getInstance().getIOService()));
 		timer->onTick.connect(boost::bind(&SimpleEventLoop::stop, &eventLoop));
 		timer->start();
 
