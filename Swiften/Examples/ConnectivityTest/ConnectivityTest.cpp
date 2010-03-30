@@ -1,0 +1,87 @@
+#include <boost/bind.hpp>
+#include <boost/thread.hpp>
+
+#include "Swiften/Client/Client.h"
+#include "Swiften/Network/BoostTimer.h"
+#include "Swiften/EventLoop/MainEventLoop.h"
+#include "Swiften/Client/ClientXMLTracer.h"
+#include "Swiften/EventLoop/SimpleEventLoop.h"
+#include "Swiften/Network/BoostIOServiceThread.h"
+#include "Swiften/Network/MainBoostIOServiceThread.h"
+#include "Swiften/Queries/Requests/GetDiscoInfoRequest.h"
+
+using namespace Swift;
+
+enum ExitCodes {OK = 0, CANNOT_CONNECT, CANNOT_AUTH, NO_RESPONSE, DISCO_ERROR};
+
+SimpleEventLoop eventLoop;
+
+Client* client = 0;
+JID recipient;
+int exitCode = CANNOT_CONNECT;
+boost::bsignals::connection errorConnection;
+
+void handleServerDiscoInfoResponse(boost::shared_ptr<DiscoInfo> /*info*/, const boost::optional<ErrorPayload>& error) {
+	if (!error) {
+		errorConnection.disconnect();
+		client->disconnect();
+		eventLoop.stop();
+		exitCode = OK;
+	} else {
+		errorConnection.disconnect();
+		exitCode = DISCO_ERROR;
+	}
+}
+
+void handleConnected() {
+	exitCode = NO_RESPONSE;
+	boost::shared_ptr<GetDiscoInfoRequest> discoInfoRequest(new GetDiscoInfoRequest(JID(), client));
+	discoInfoRequest->onResponse.connect(handleServerDiscoInfoResponse);
+	discoInfoRequest->send();
+}
+
+void handleError(const ClientError&) {
+	exitCode = CANNOT_AUTH;
+	eventLoop.stop();
+}
+
+
+
+int main(int argc, char* argv[]) {
+	if (argc < 4 || argc > 5) {
+		std::cerr << "Usage: " << argv[0] << " <jid> [<connect_host>] <password> <timeout_seconds>" << std::endl;
+		return -1;
+	}
+
+	int argi = 1;
+	
+	String jid = argv[argi++];
+	String connectHost = "";
+	if (argc == 5) {
+		connectHost = argv[argi++];
+	}
+
+	client = new Swift::Client(JID(jid), String(argv[argi++]));
+	char* timeoutChar = argv[argi++];
+	int timeout = atoi(timeoutChar);
+	ClientXMLTracer* tracer = new ClientXMLTracer(client);
+	client->onConnected.connect(&handleConnected);
+	errorConnection = client->onError.connect(&handleError);
+	if (!connectHost.isEmpty()) {
+		client->connect(connectHost);
+	} else {
+		client->connect();
+	}
+
+	{
+		boost::shared_ptr<BoostTimer> timer(new BoostTimer((timeout ? timeout : 30) * 1000, &MainBoostIOServiceThread::getInstance().getIOService()));
+		timer->onTick.connect(boost::bind(&SimpleEventLoop::stop, &eventLoop));
+		timer->start();
+
+		eventLoop.run();
+	}
+
+	delete tracer;
+	delete client;
+	return exitCode;
+}

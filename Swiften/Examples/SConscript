@@ -4,5 +4,6 @@ myenv = swiften_env.Clone()
 
 if myenv["target"] == "native":
    SConscript(dirs = [
-		"SendMessage"
+		"SendMessage",
+		"ConnectivityTest"
 	])
