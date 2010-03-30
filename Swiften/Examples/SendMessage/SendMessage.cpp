@@ -16,6 +16,8 @@ SimpleEventLoop eventLoop;
 Client* client = 0;
 JID recipient;
 std::string messageBody;
+int exitCode = 0;
+
 
 void handleConnected() {
 	boost::shared_ptr<Message> message(new Message());
@@ -24,6 +26,11 @@ void handleConnected() {
 	client->sendMessage(message);
 	client->disconnect();
 	eventLoop.stop();
+}
+
+void handleError(const ClientError&) {
+	std::cerr << "Error!" << std::endl;
+	exitCode = 1;
 }
 
 int main(int argc, char* argv[]) {
@@ -38,6 +45,7 @@ int main(int argc, char* argv[]) {
 	client = new Swift::Client(JID(argv[1]), String(argv[2]));
 	ClientXMLTracer* tracer = new ClientXMLTracer(client);
 	client->onConnected.connect(&handleConnected);
+	client->onError.connect(&handleError);
 	client->connect();
 
 	{
@@ -50,4 +58,5 @@ int main(int argc, char* argv[]) {
 
 	delete tracer;
 	delete client;
+	return exitCode;
 }
