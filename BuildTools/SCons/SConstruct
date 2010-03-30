@@ -37,8 +37,6 @@ env = Environment(CPPPATH = "#", ENV = {'PATH' : os.environ['PATH']}, variables 
 
 Help(vars.GenerateHelpText(env))
 
-env.Alias("dist", ["."])
-
 # Default custom tools
 env.Tool("Test", toolpath = ["#/BuildTools/SCons/Tools"])
 env.Tool("WriteVal", toolpath = ["#/BuildTools/SCons/Tools"])
@@ -116,14 +114,14 @@ if env["PLATFORM"] == "darwin" :
 
 # Testing
 env["TEST_TYPE"] = env["test"]
-env.Alias("check", ".")
-if "check" in ARGUMENTS or "check" in COMMAND_LINE_TARGETS :
+if "check" in ARGUMENTS :
 	env["TEST_TYPE"] = "unit"
 env["TEST"] = (env["TEST_TYPE"] != "none") or env.GetOption("clean")
 if env.get("valgrind", 0) :
 	env["TEST_RUNNER"] = "valgrind --suppressions=QA/valgrind.supp -q --leak-check=full --track-origins=yes "
 
 # Packaging
+env["DIST"] = "dist" in ARGUMENTS or env.GetOption("clean")
 if ARGUMENTS.get("SWIFT_INSTALLDIR", "") :
 	env["SWIFT_INSTALLDIR"] = Dir(ARGUMENTS["SWIFT_INSTALLDIR"]).abspath
 
