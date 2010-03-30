@@ -17,6 +17,7 @@ Client* client = 0;
 JID recipient;
 std::string messageBody;
 int exitCode = 0;
+boost::bsignals::connection errorConnection;
 
 
 void handleConnected() {
@@ -24,6 +25,7 @@ void handleConnected() {
 	message->setBody(messageBody);
 	message->setTo(recipient);
 	client->sendMessage(message);
+	errorConnection.disconnect();
 	client->disconnect();
 	eventLoop.stop();
 }
@@ -31,6 +33,7 @@ void handleConnected() {
 void handleError(const ClientError&) {
 	std::cerr << "Error!" << std::endl;
 	exitCode = 1;
+	eventLoop.stop();
 }
 
 int main(int argc, char* argv[]) {
@@ -45,7 +48,7 @@ int main(int argc, char* argv[]) {
 	client = new Swift::Client(JID(argv[1]), String(argv[2]));
 	ClientXMLTracer* tracer = new ClientXMLTracer(client);
 	client->onConnected.connect(&handleConnected);
-	client->onError.connect(&handleError);
+	errorConnection = client->onError.connect(&handleError);
 	client->connect();
 
 	{
