@@ -78,7 +78,7 @@ class QtTreeWidgetItem : public QObject, public TreeWidgetItem {
 			StatusShow::Type statusShowType_;
 };
 
-//bool itemLessThan(const QtTreeWidgetItem& left, const QtTreeWidgetItem& right);
+bool itemLessThan(QtTreeWidgetItem* left, QtTreeWidgetItem* right);
 
 }
 #endif
