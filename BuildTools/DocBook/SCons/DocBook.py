@@ -26,10 +26,15 @@ def generate(env) :
       rewritePrefix="%(docbook_xsl_dir)s/" />
 </catalog>"""
     
+    docbook_xml_dir = source[0].get_contents()
+    docbook_xsl_dir = source[1].get_contents()
+    if env["PLATFORM"] == "win32" :
+      docbook_xml_dir = docbook_xml_dir.replace("\\","/")
+      docbook_xsl_dir = docbook_xsl_dir.replace("\\","/")
     file = open(target[0].abspath, "w")
     file.write(catalog % {
-        "docbook_xml_dir" : source[0].get_contents(),
-        "docbook_xsl_dir" : source[1].get_contents(),
+        "docbook_xml_dir" : docbook_xml_dir,
+        "docbook_xsl_dir" : docbook_xsl_dir,
       })
     file.close()
 
