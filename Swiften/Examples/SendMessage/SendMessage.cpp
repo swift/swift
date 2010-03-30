@@ -16,7 +16,7 @@ SimpleEventLoop eventLoop;
 Client* client = 0;
 JID recipient;
 std::string messageBody;
-int exitCode = 0;
+int exitCode = 2;
 boost::bsignals::connection errorConnection;
 
 
@@ -25,6 +25,7 @@ void handleConnected() {
 	message->setBody(messageBody);
 	message->setTo(recipient);
 	client->sendMessage(message);
+	exitCode = 0;
 	errorConnection.disconnect();
 	client->disconnect();
 	eventLoop.stop();
@@ -37,19 +38,32 @@ void handleError(const ClientError&) {
 }
 
 int main(int argc, char* argv[]) {
-	if (argc != 5) {
-		std::cerr << "Usage: " << argv[0] << " <jid> <password> <recipient> <message>" << std::endl;
+	if (argc < 5 || argc > 6) {
+		std::cerr << "Usage: " << argv[0] << " <jid> [<connect_host>]<password> <recipient> <message>" << std::endl;
 		return -1;
 	}
 
-	recipient = JID(argv[3]);
-	messageBody = std::string(argv[4]);
+	int argi = 1;
+	
+	String jid = argv[argi++];
+	String connectHost = "";
+	if (argc == 6) {
+		connectHost = argv[argi++];
+	}
 
-	client = new Swift::Client(JID(argv[1]), String(argv[2]));
+	client = new Swift::Client(JID(jid), String(argv[argi++]));
+
+	recipient = JID(argv[argi++]);
+	messageBody = std::string(argv[argi++]);
+
 	ClientXMLTracer* tracer = new ClientXMLTracer(client);
 	client->onConnected.connect(&handleConnected);
 	errorConnection = client->onError.connect(&handleError);
-	client->connect();
+	if (!connectHost.isEmpty()) {
+		client->connect(connectHost);
+	} else {
+		client->connect();
+	}
 
 	{
 		boost::shared_ptr<BoostTimer> timer(new BoostTimer(30000, &MainBoostIOServiceThread::getInstance().getIOService()));

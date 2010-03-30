@@ -33,6 +33,7 @@ namespace Swift {
 			void setCertificate(const String& certificate);
 
 			void connect();
+			void connect(const String& host);
 			void disconnect();
 			
 			bool isAvailable();

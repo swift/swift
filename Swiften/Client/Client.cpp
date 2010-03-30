@@ -35,8 +35,12 @@ bool Client::isAvailable() {
 }
 
 void Client::connect() {
+	connect(jid_.getDomain());
+}
+
+void Client::connect(const String& host) {
 	assert(!connector_);
-	connector_ = boost::shared_ptr<Connector>(new Connector(jid_.getDomain(), &resolver_, connectionFactory_, timerFactory_));
+	connector_ = boost::shared_ptr<Connector>(new Connector(host, &resolver_, connectionFactory_, timerFactory_));
 	connector_->onConnectFinished.connect(boost::bind(&Client::handleConnectorFinished, this, _1));
 	connector_->setTimeoutMilliseconds(60*1000);
 	connector_->start();
