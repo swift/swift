@@ -83,7 +83,7 @@ sectionEnd
 
 Section -Prerequisites
 # http://nsis.sourceforge.net/Embedding_other_installers
-    FindFirst $R1 $R0 "$WINDIR\winsxs\x86_microsoft.vc90.crt_1fc8b3b9a1e18e3b_9.0.30729.492*"
+    FindFirst $R1 $R0 "$WINDIR\winsxs\x86_microsoft.vc90.crt_1fc8b3b9a1e18e3b_9.0.30729.*"
     ${If} $R0 != ""
     	  #Skip vc runtime, already installed
     ${Else}
