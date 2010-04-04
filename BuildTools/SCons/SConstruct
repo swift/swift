@@ -46,6 +46,8 @@ if env["PLATFORM"] == "darwin" :
 	env.Tool("AppBundle", toolpath = ["#/BuildTools/SCons/Tools"])
 if env["PLATFORM"] == "win32" :
 	env.Tool("WindowsBundle", toolpath = ["#/BuildTools/SCons/Tools"])
+	#So we don't need to escalate with UAC
+	env['ENV']['TMP'] = os.environ['TMP'] 
 
 # Override SConscript to handle tests
 oldSConscript = SConscript
