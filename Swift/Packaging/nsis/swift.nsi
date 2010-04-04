@@ -51,6 +51,7 @@ File "..\..\QtUI\Swift\QtCore4.dll"
 File "..\..\QtUI\Swift\QtGui4.dll"
 File "..\..\QtUI\Swift\QtWebKit4.dll"
 File "..\..\QtUI\Swift\QtNetwork4.dll"
+File "..\..\QtUI\Swift\QtXMLPatterns4.dll"
 
 SetOutPath $INSTDIR\imageformats
 
@@ -114,6 +115,7 @@ section "Uninstall"
     delete $INSTDIR\QtGui4.dll
     delete $INSTDIR\QtWebKit4.dll
     delete $INSTDIR\QtNetwork4.dll
+    delete $INSTDIR\QtXMLPatterns4.dll
     delete $INSTDIR\imageformats\qgif4.dll
     delete $INSTDIR\imageformats\qico4.dll
     delete $INSTDIR\imageformats\qjpeg4.dll
