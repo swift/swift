@@ -44,6 +44,8 @@ QtMainWindow::QtMainWindow(UIEventStream* uiEventStream, QtTreeWidgetFactory *tr
 	contactTabLayout->setContentsMargins(0, 0, 0, 0);
 	
 	treeWidget_ = dynamic_cast<QtTreeWidget*>(treeWidgetFactory->createTreeWidget());
+	contextMenu_ = new QtRosterContextMenu(uiEventStream_);
+	treeWidget_->setContextMenu(contextMenu_);
 	treeWidget_->setVerticalScrollMode(QAbstractItemView::ScrollPerPixel);
 	contactTabLayout->addWidget(treeWidget_);
 
@@ -78,6 +80,10 @@ QtMainWindow::QtMainWindow(UIEventStream* uiEventStream, QtTreeWidgetFactory *tr
 	QAction* signOutAction = new QAction("Sign Out", this);
 	connect(signOutAction, SIGNAL(triggered()), SLOT(handleSignOutAction()));
 	chatMenu->addAction(signOutAction);
+}
+
+QtMainWindow::~QtMainWindow() {
+	delete contextMenu_;
 }
 
 QtEventWindow* QtMainWindow::getEventWindow() {

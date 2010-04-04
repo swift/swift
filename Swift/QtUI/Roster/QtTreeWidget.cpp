@@ -4,6 +4,7 @@
 #include "Swiften/Roster/OpenChatRosterAction.h"
 
 #include <qdebug.h>
+#include <QMenu>
 
 namespace Swift {
 
@@ -15,6 +16,7 @@ QtTreeWidget::QtTreeWidget(QWidget* parent) : QTreeView(parent) {
 	delegate_ = new RosterDelegate();
 	setItemDelegate(delegate_);
 	setHeaderHidden(true);
+	contextMenu_ = NULL;
 #ifdef SWIFT_PLATFORM_MACOSX
 	setAlternatingRowColors(true);
 #endif
@@ -33,6 +35,10 @@ QtTreeWidget::~QtTreeWidget() {
 	delete delegate_;
 }
 
+void QtTreeWidget::setContextMenu(QtContextMenu* contextMenu) {
+	contextMenu_ = contextMenu;
+}
+
 QtTreeWidgetItem* QtTreeWidget::getRoot() {
 	return treeRoot_;
 }
@@ -41,6 +47,16 @@ void QtTreeWidget::handleItemActivated(const QModelIndex& index) {
 	QtTreeWidgetItem* qtItem = static_cast<QtTreeWidgetItem*>(index.internalPointer());
 	if (qtItem) {
 		qtItem->performUserAction(boost::shared_ptr<UserRosterAction>(new OpenChatRosterAction()));
+	}
+}
+
+void QtTreeWidget::contextMenuEvent(QContextMenuEvent* event) {
+	if (!contextMenu_) {
+		return;
+	}
+	QtTreeWidgetItem* qtItem = static_cast<QtTreeWidgetItem*>(selectedIndexes()[0].internalPointer());
+	if (qtItem) {
+		contextMenu_->show(qtItem);
 	}
 }
 

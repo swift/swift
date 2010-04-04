@@ -7,6 +7,7 @@
 #include "Swift/QtUI/QtRosterHeader.h"
 #include "Swift/QtUI/EventViewer/QtEventWindow.h"
 #include "Swift/QtUI/ChatList/QtChatListWindow.h"
+#include "Swift/QtUI/ContextMenus/QtRosterContextMenu.h"
 
 #include <vector>
 
@@ -29,6 +30,7 @@ namespace Swift {
 		Q_OBJECT
 		public:
 			QtMainWindow(UIEventStream* eventStream, QtTreeWidgetFactory *treeWidgetFactory);
+			~QtMainWindow();
 			TreeWidget* getTreeWidget();
 			std::vector<QMenu*> getMenus() {return menus_;}
 			void setMyName(const String& name);
@@ -60,6 +62,7 @@ namespace Swift {
 			QtEventWindow* eventWindow_;
 			QtChatListWindow* chatListWindow_;
 			UIEventStream* uiEventStream_;
+			QtRosterContextMenu* contextMenu_;
 	};
 }
 

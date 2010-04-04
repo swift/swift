@@ -19,6 +19,7 @@
 #include "Swiften/Roster/TreeWidgetFactory.h"
 #include "Swiften/Roster/XMPPRoster.h"
 #include "Swift/Controllers/UIEvents/AddContactUIEvent.h"
+#include "Swift/Controllers/UIEvents/RemoveItemRosterAction.h"
 
 
 namespace Swift {
@@ -96,6 +97,15 @@ void RosterController::handleUserAction(boost::shared_ptr<UserRosterAction> acti
 		ContactRosterItem *contactItem = dynamic_cast<ContactRosterItem*>(chatAction->getRosterItem());
 		assert(contactItem);
 		onStartChatRequest(contactItem->getJID().toBare());
+		return;
+	}
+
+	boost::shared_ptr<RemoveItemRosterAction> removeAction = boost::dynamic_pointer_cast<RemoveItemRosterAction>(action);
+	if (removeAction.get() != NULL) {
+		ContactRosterItem *contactItem = dynamic_cast<ContactRosterItem*>(chatAction->getRosterItem());
+		assert(contactItem);
+		//FIXME: remove it
+		return;
 	}
 }
 
@@ -142,6 +152,7 @@ void RosterController::handleOnJIDUpdated(const JID& jid, const String& oldName,
 void RosterController::handleUIEvent(boost::shared_ptr<UIEvent> event) {
 	boost::shared_ptr<AddContactUIEvent> addContactEvent = boost::dynamic_pointer_cast<AddContactUIEvent>(event);
 	if (addContactEvent) {
+		
 		presenceOracle_->requestSubscription(addContactEvent->getJID());
 	}
 }

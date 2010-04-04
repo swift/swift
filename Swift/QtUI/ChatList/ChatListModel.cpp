@@ -59,15 +59,12 @@ QModelIndex ChatListModel::parent(const QModelIndex& index) const {
 
 int ChatListModel::rowCount(const QModelIndex& parentIndex) const {
 	ChatListGroupItem* parent = NULL;
-	printf("Counting\n");
 	if (parentIndex.isValid()) {
-		printf("Valid index\n");
 		parent = dynamic_cast<ChatListGroupItem*>(static_cast<ChatListItem*>(parentIndex.internalPointer()));
 	} else {
 		parent = root_;
 	}
 	int count = (parent ? parent->rowCount() : 0);
-	printf("Count returned as %d, muc count is %d\n", count, mucBookmarks_->rowCount());
 	return count;
 }
 
