@@ -2,6 +2,7 @@
 
 #include "Swift/Controllers/UIEvents/UIEventStream.h"
 #include "Swift/Controllers/UIEvents/RequestXMLConsoleUIEvent.h"
+#include "Swift/Controllers/UIEvents/ToggleSoundsUIEvent.h"
 #include "Swiften/Base/Platform.h"
 
 #include "QtAboutWidget.h"
@@ -115,6 +116,13 @@ QtLoginWindow::QtLoginWindow(UIEventStream* uiEventStream) : QMainWindow() {
 	QAction* xmlConsoleAction = new QAction(tr("Show Debug Console"), this);
 	connect(xmlConsoleAction, SIGNAL(activated()), SLOT(handleShowXMLConsole()));
 	toolsMenu_->addAction(xmlConsoleAction);
+
+	QAction* toggleSoundsAction = new QAction(tr("Toggle Sounds"), this);
+	toggleSoundsAction->setCheckable(true);
+	toggleSoundsAction->setChecked(true);
+	connect(toggleSoundsAction, SIGNAL(toggled(bool)), SLOT(handleToggleSounds(bool)));
+	swiftMenu_->addAction(toggleSoundsAction);
+
 	
 	QAction* quitAction = new QAction("Quit", this);
 	connect(quitAction, SIGNAL(activated()), SLOT(handleQuit()));
@@ -233,6 +241,11 @@ void QtLoginWindow::handleAbout() {
 void QtLoginWindow::handleShowXMLConsole() {
 	uiEventStream_->send(boost::shared_ptr<RequestXMLConsoleUIEvent>(new RequestXMLConsoleUIEvent()));
 }
+
+void QtLoginWindow::handleToggleSounds(bool enabled) {
+	uiEventStream_->send(boost::shared_ptr<ToggleSoundsUIEvent>(new ToggleSoundsUIEvent(enabled)));
+}
+
 
 void QtLoginWindow::handleQuit() {
 	QApplication::quit();

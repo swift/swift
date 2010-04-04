@@ -39,6 +39,7 @@ namespace Swift {
 			void handleCertficateChecked(bool);
 			void handleQuit();
 			void handleShowXMLConsole();
+			void handleToggleSounds(bool enabled);
 			void handleAbout();
 			void bringToFront();
 			void handleUsernameTextChanged();
