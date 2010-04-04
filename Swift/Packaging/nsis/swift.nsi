@@ -1,3 +1,6 @@
+# Ask to be an admin
+RequestExecutionLevel admin # Note - this doesn't mean you get it!
+
 # Use the newer, nicer installer style
 !include MUI2.nsh
 
@@ -62,6 +65,8 @@ File "..\..\QtUI\Swift\imageformats\qtiff4.dll"
 CreateDirectory "$SMPROGRAMS\$StartMenuFolder"
 CreateShortCut "$SMPROGRAMS\$StartMenuFolder\Swift.lnk" "$INSTDIR\Swift.exe"
 CreateShortCut "$SMPROGRAMS\$StartMenuFolder\Uninstall Swift.lnk" "$INSTDIR\uninstaller.exe"
+# remember where we put them
+WriteRegStr HKCU "Software\Swift\" "Start Menu Folder" "$SMPROGRAMS\$StartMenuFolder"
 
 # Add the information to Add/Remove
 WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\Swift" "DisplayName" "Swift"
@@ -116,13 +121,14 @@ section "Uninstall"
     delete $INSTDIR\imageformats\qsvg4.dll
     delete $INSTDIR\imageformats\qtiff4.dll
 
+    RmDir $INSTDIR\Prerequisites
     RmDir $INSTDIR\imageformats
     RmDir $INSTDIR
 
-!insertmacro MUI_STARTMENU_GETFOLDER page_id $R0
-    Delete "$SMPROGRAMS\$R0\Swift.lnk"
-    Delete "$SMPROGRAMS\$R0\Uninstall Swift.lnk"
-    RmDir "$SMPROGRAMS\$R0"
+    ReadRegStr $0 HKCU "Software\Swift\" "Start Menu Folder"
+    Delete "$0\Swift.lnk"
+    Delete "$0\Uninstall Swift.lnk"
+    RmDir "$0"
 
     DeleteRegKey HKEY_CURRENT_USER "Software\Swift\Start Menu Folder"
     DeleteRegKey /ifempty HKEY_CURRENT_USER "Software\Swift"
