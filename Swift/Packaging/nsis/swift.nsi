@@ -83,12 +83,17 @@ sectionEnd
 
 Section -Prerequisites
 # http://nsis.sourceforge.net/Embedding_other_installers
-    SetOutPath $INSTDIR\Prerequisites
-    MessageBox MB_YESNO "Install C++ Runtime?" /SD IDYES IDNO endRuntime
-    File ${msvccRedistributableDir}\${msvccRedistributableExe}
-    ExecWait "$INSTDIR\Prerequisites\${msvccRedistributableExe}"
-    Delete $INSTDIR\Prerequisites\${msvccRedistributableExe}
-    RmDir $INSTDIR\Prerequisites
+    FindFirst $R1 $R0 "$WINDIR\winsxs\x86_microsoft.vc90.crt_1fc8b3b9a1e18e3b_9.0.30729.492*"
+    ${If} $R0 != ""
+    	  #Skip vc runtime, already installed
+    ${Else}
+        SetOutPath $INSTDIR\Prerequisites
+        MessageBox MB_YESNO "Install C++ Runtime?" /SD IDYES IDNO endRuntime
+        File ${msvccRedistributableDir}\${msvccRedistributableExe}
+        ExecWait "$INSTDIR\Prerequisites\${msvccRedistributableExe}"
+        Delete $INSTDIR\Prerequisites\${msvccRedistributableExe}
+        RmDir $INSTDIR\Prerequisites
+    ${EndIf}
     Goto endRuntime
   endRuntime:
 SectionEnd
