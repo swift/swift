@@ -46,7 +46,10 @@ namespace Swift {
 			void handleMUCBookmarkAdded(boost::shared_ptr<MUCBookmark> bookmark);
 			void handleMUCBookmarkRemoved(boost::shared_ptr<MUCBookmark> bookmark);
 			void handleUserLeftMUC(MUCController* mucController);
-			ChatController* getChatController(const JID &contact);
+			ChatController* getChatControllerOrFindAnother(const JID &contact);
+			ChatController* createNewChatController(const JID &contact);
+			ChatController* getChatControllerOrCreate(const JID &contact);
+			ChatController* getChatControllerIfExists(const JID &contact);
 			virtual bool isMUC(const JID& muc) const;
 
 			std::map<JID, MUCController*> mucControllers_;

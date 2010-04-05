@@ -137,20 +137,44 @@ void ChatsManager::setEnabled(bool enabled) {
 }
 
 void ChatsManager::handleChatRequest(const String &contact) {
-	ChatController* controller = getChatController(JID(contact));
+	ChatController* controller = getChatControllerOrFindAnother(JID(contact));
 	controller->showChatWindow();
 	controller->activateChatWindow();
 }
 
-ChatController* ChatsManager::getChatController(const JID &contact) {
+ChatController* ChatsManager::getChatControllerOrFindAnother(const JID &contact) {
+	ChatController* controller = getChatControllerIfExists(contact);
+	if (!controller) {
+		foreach (JIDChatControllerPair pair, chatControllers_) {
+			if (pair.first.toBare() == contact.toBare()) {
+				controller = pair.second;
+				break;
+			}
+		}
+	}
+	return controller ? controller : createNewChatController(contact);
+}
+
+ChatController* ChatsManager::createNewChatController(const JID& contact) {
+	ChatController* controller = new ChatController(jid_, stanzaChannel_, iqRouter_, chatWindowFactory_, contact, nickResolver_, presenceOracle_, avatarManager_);
+	chatControllers_[contact] = controller;
+	controller->setAvailableServerFeatures(serverDiscoInfo_);
+	return controller;
+}
+
+ChatController* ChatsManager::getChatControllerOrCreate(const JID &contact) {
+	ChatController* controller = getChatControllerIfExists(contact);
+	return controller ? controller : createNewChatController(contact);
+}
+
+ChatController* ChatsManager::getChatControllerIfExists(const JID &contact) {
 	if (chatControllers_.find(contact) == chatControllers_.end()) {
-		//Need to look for an unboud window to bind first
+		//Need to look for an unbound window to bind first
 		JID bare(contact.toBare());
 		if (chatControllers_.find(bare) != chatControllers_.end()) {
 			rebindControllerJID(bare, contact);
 		} else {
-			chatControllers_[contact] = new ChatController(jid_, stanzaChannel_, iqRouter_, chatWindowFactory_, contact, nickResolver_, presenceOracle_, avatarManager_);
-			chatControllers_[contact]->setAvailableServerFeatures(serverDiscoInfo_);
+			return NULL;
 		}
 	}
 	return chatControllers_[contact];
@@ -197,7 +221,7 @@ void ChatsManager::handleIncomingMessage(boost::shared_ptr<Message> message) {
 	
 	//if not a mucroom
 	eventController_->handleIncomingEvent(event);
-	getChatController(jid)->handleIncomingMessage(event);
+	getChatControllerOrCreate(jid)->handleIncomingMessage(event);
 }
 
 bool ChatsManager::isMUC(const JID& jid) const {
