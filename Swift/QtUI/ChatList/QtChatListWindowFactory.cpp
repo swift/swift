@@ -9,7 +9,7 @@ QtChatListWindowFactory::QtChatListWindowFactory(QtMainWindowFactory* mainWindow
 	mainWindowFactory_ = mainWindowFactory;
 }
 
-ChatListWindow* QtChatListWindowFactory::createWindow(UIEventStream* uiEventStream) {
+ChatListWindow* QtChatListWindowFactory::createWindow(UIEventStream* /*uiEventStream*/) {
 	return ((QtMainWindow*)mainWindowFactory_->getLastCreatedWindow())->getChatListWindow();
 }
 

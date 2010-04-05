@@ -50,7 +50,7 @@ void QtTreeWidget::handleItemActivated(const QModelIndex& index) {
 	}
 }
 
-void QtTreeWidget::contextMenuEvent(QContextMenuEvent* event) {
+void QtTreeWidget::contextMenuEvent(QContextMenuEvent* /*event*/) {
 	if (!contextMenu_) {
 		return;
 	}
