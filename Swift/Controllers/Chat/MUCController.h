@@ -9,6 +9,7 @@
 #include "Swift/Controllers/Chat/ChatControllerBase.h"
 #include "Swiften/Elements/Message.h"
 #include "Swiften/Elements/DiscoInfo.h"
+#include "Swiften/Roster/UserRosterAction.h"
 #include "Swiften/JID/JID.h"
 #include "Swiften/MUC/MUC.h"
 #include "Swiften/MUC/MUCOccupant.h"
@@ -21,10 +22,11 @@ namespace Swift {
 	class Roster;
 	class TreeWidgetFactory;
 	class AvatarManager;
+	class UIEventStream;
 
 	class MUCController : public ChatControllerBase {
 		public:
-			MUCController(const JID& self, const JID &muc, const String &nick, StanzaChannel* stanzaChannel, PresenceSender* presenceSender, IQRouter* iqRouter, ChatWindowFactory* chatWindowFactory, TreeWidgetFactory *treeWidgetFactory, PresenceOracle* presenceOracle, AvatarManager* avatarManager);
+			MUCController(const JID& self, const JID &muc, const String &nick, StanzaChannel* stanzaChannel, PresenceSender* presenceSender, IQRouter* iqRouter, ChatWindowFactory* chatWindowFactory, TreeWidgetFactory *treeWidgetFactory, PresenceOracle* presenceOracle, AvatarManager* avatarManager, UIEventStream* events);
 			~MUCController();
 			boost::signal<void ()> onUserLeft;
 		
@@ -39,12 +41,14 @@ namespace Swift {
 			void handleOccupantJoined(const MUCOccupant& occupant);
 			void handleOccupantLeft(const MUCOccupant& occupant, MUC::LeavingType type, const String& reason);
 			void handleOccupantPresenceChange(boost::shared_ptr<Presence> presence);
+			void handleUserAction(boost::shared_ptr<UserRosterAction> action);
 
 		private:
-			MUC *muc_;
+			MUC* muc_;
+			UIEventStream* events_;
 			String nick_;
-			TreeWidgetFactory *treeWidgetFactory_;
-			Roster *roster_;
+			TreeWidgetFactory* treeWidgetFactory_;
+			Roster* roster_;
 			bool parting_;
 			boost::bsignals::scoped_connection avatarChangedConnection_;
 	};

@@ -167,7 +167,7 @@ void ChatsManager::handleJoinMUCRequest(const JID &muc, const String &nick) {
 	if (it != mucControllers_.end()) {
 		//FIXME: What's correct behaviour here?
 	} else {
-		MUCController* controller = new MUCController(jid_, muc, nick, stanzaChannel_, presenceSender_, iqRouter_, chatWindowFactory_, treeWidgetFactory_, presenceOracle_, avatarManager_);
+		MUCController* controller = new MUCController(jid_, muc, nick, stanzaChannel_, presenceSender_, iqRouter_, chatWindowFactory_, treeWidgetFactory_, presenceOracle_, avatarManager_, uiEventStream_);
 		mucControllers_[muc] = controller;
 		controller->setAvailableServerFeatures(serverDiscoInfo_);
 		controller->onUserLeft.connect(boost::bind(&ChatsManager::handleUserLeftMUC, this, controller));

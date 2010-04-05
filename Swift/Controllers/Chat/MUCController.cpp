@@ -5,10 +5,13 @@
 #include "Swiften/Base/foreach.h"
 #include "Swift/Controllers/UIInterfaces/ChatWindow.h"
 #include "Swift/Controllers/UIInterfaces/ChatWindowFactory.h"
+#include "Swift/Controllers/UIEvents/UIEventStream.h"
+#include "Swift/Controllers/UIEvents/RequestChatUIEvent.h"
 #include "Swiften/Avatars/AvatarManager.h"
 #include "Swiften/MUC/MUC.h"
 #include "Swiften/Client/StanzaChannel.h"
 #include "Swiften/Roster/Roster.h"
+#include "Swiften/Roster/OpenChatRosterAction.h"
 #include "Swiften/Roster/SetAvatar.h"
 #include "Swiften/Roster/SetPresence.h"
 #include "Swiften/Roster/TreeWidgetFactory.h"
@@ -28,13 +31,16 @@ MUCController::MUCController (
 		ChatWindowFactory* chatWindowFactory, 
 		TreeWidgetFactory *treeWidgetFactory,
 		PresenceOracle* presenceOracle,
-		AvatarManager* avatarManager) : 
+		AvatarManager* avatarManager,
+		UIEventStream* uiEventStream) :
 			ChatControllerBase(self, stanzaChannel, iqRouter, chatWindowFactory, muc, presenceOracle, avatarManager),
 			muc_(new MUC(stanzaChannel, presenceSender, muc)), 
 			nick_(nick), 
 			treeWidgetFactory_(treeWidgetFactory) { 
 	parting_ = false;
+	events_ = uiEventStream;
 	roster_ = new Roster(chatWindow_->getTreeWidget(), treeWidgetFactory_);
+	roster_->onUserAction.connect(boost::bind(&MUCController::handleUserAction, this, _1));
 	chatWindow_->onClosed.connect(boost::bind(&MUCController::handleWindowClosed, this));
 	muc_->joinAs(nick);
 	muc_->onOccupantJoined.connect(boost::bind(&MUCController::handleOccupantJoined, this, _1));
@@ -50,6 +56,16 @@ MUCController::MUCController (
 MUCController::~MUCController() {
 	delete muc_;
 	delete roster_;
+}
+
+void MUCController::handleUserAction(boost::shared_ptr<UserRosterAction> action) {
+	boost::shared_ptr<OpenChatRosterAction> chatAction = boost::dynamic_pointer_cast<OpenChatRosterAction>(action);
+	if (chatAction.get() != NULL) {
+		ContactRosterItem *contactItem = dynamic_cast<ContactRosterItem*>(chatAction->getRosterItem());
+		assert(contactItem);
+		events_->send(boost::shared_ptr<RequestChatUIEvent>(new RequestChatUIEvent(contactItem->getJID())));
+		return;
+	}
 }
 
 void MUCController::handleAvatarChanged(const JID& jid, const String&) {

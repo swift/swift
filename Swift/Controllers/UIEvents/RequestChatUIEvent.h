@@ -1,17 +1,15 @@
-//Not used yet.
-
 #pragma once
 
-#include "Swiften/Base/String.h"
+#include "Swiften/JID/JID.h"
 
 #include "Swift/Controllers/UIEvents/UIEvent.h"
 
 namespace Swift {
 	class RequestChatUIEvent : public UIEvent {
 		public:
-			RequestChatUIEvent(const String& contact) : contact_(contact) {};
-			String getContact() {return contact_;}
+			RequestChatUIEvent(const JID& contact) : contact_(contact) {};
+			JID getContact() {return contact_;}
 		private:
-			String contact_;
+			JID contact_;
 	};
 }
