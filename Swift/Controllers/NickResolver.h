@@ -9,14 +9,16 @@
 
 namespace Swift {
 	class XMPPRoster;
+	class MUCRegistry;
 	class NickResolver {
 		public:
 			NickResolver(boost::shared_ptr<XMPPRoster> xmppRoster);
 			String jidToNick(const JID& jid);
-		
+			void setMUCRegistry(MUCRegistry* registry);
 		private:
 			std::map<JID, String> map_;
 			boost::shared_ptr<XMPPRoster> xmppRoster_;
+			MUCRegistry* mucRegistry_;
 	};
 }
 #endif
