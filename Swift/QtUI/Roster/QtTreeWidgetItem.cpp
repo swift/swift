@@ -34,12 +34,12 @@ void QtTreeWidgetItem::setStatusShow(StatusShow::Type show) {
 	statusShowType_ = show;
 	int color = 0;
 	switch (show) {
-	 	case StatusShow::Online: color = 0x000000;break;
-	 	case StatusShow::Away: color = 0x336699;break;
-	 	case StatusShow::XA: color = 0x336699;break;
-	 	case StatusShow::FFC: color = 0x000000;break;
-	 	case StatusShow::DND: color = 0x990000;break;
-	 	case StatusShow::None: color = 0x7F7F7F;break;
+		case StatusShow::Online: color = 0x000000; mergedShowType_ = StatusShow::Online; break;
+		case StatusShow::Away: color = 0x336699; mergedShowType_ = StatusShow::Away; break;
+	 	case StatusShow::XA: color = 0x336699; mergedShowType_ = StatusShow::Away; break;
+		case StatusShow::FFC: color = 0x000000; mergedShowType_ = StatusShow::Online; break;
+		case StatusShow::DND: color = 0x990000; mergedShowType_ = show; break;
+		case StatusShow::None: color = 0x7F7F7F; mergedShowType_ = show; break;
 	}
 	setTextColor(color);
 	emit changed(this);
@@ -220,7 +220,7 @@ bool QtTreeWidgetItem::operator<(const QtTreeWidgetItem& item) const {
 		if (!item.isContact()) {
 			return false;
 		}
-		return getStatusShow() == item.getStatusShow() ? getLowerName() < item.getLowerName() : getStatusShow() < item.getStatusShow();
+		return getStatusShowMerged() == item.getStatusShowMerged() ? getLowerName() < item.getLowerName() : getStatusShowMerged() < item.getStatusShowMerged();
 	} else {
 		if (item.isContact()) {
 			return true;

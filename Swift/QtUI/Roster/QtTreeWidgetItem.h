@@ -53,6 +53,7 @@ class QtTreeWidgetItem : public QObject, public TreeWidgetItem {
 			const QString& getName() const {return displayName_;};
 			const QString& getLowerName() const {return displayNameLower_;};
 			StatusShow::Type getStatusShow() const {return statusShowType_;};
+			StatusShow::Type getStatusShowMerged() const {return mergedShowType_;};
 
 			QWidget* getCollapsedRosterWidget();
 			QWidget* getExpandedRosterWidget();
@@ -76,6 +77,7 @@ class QtTreeWidgetItem : public QObject, public TreeWidgetItem {
 			bool shown_;
 			bool expanded_;
 			StatusShow::Type statusShowType_;
+			StatusShow::Type mergedShowType_;
 };
 
 bool itemLessThan(QtTreeWidgetItem* left, QtTreeWidgetItem* right);
