@@ -71,8 +71,8 @@ MainController::MainController(ChatWindowFactory* chatWindowFactory, MainWindowF
 	eventController_->onEventQueueLengthChange.connect(boost::bind(&MainController::handleEventQueueLengthChange, this, _1));
 
 	systemTrayController_ = new SystemTrayController(eventController_, systemTray);
-	soundEventController_ = new SoundEventController(eventController_, soundPlayer, settings->getBoolSetting("playSounds", true), uiEventStream_);
 	loginWindow_ = loginWindowFactory_->createLoginWindow(uiEventStream_);
+	soundEventController_ = new SoundEventController(eventController_, soundPlayer, settings, uiEventStream_);
 	foreach (String profile, settings->getAvailableProfiles()) {
 		ProfileSettingsProvider* profileSettings = new ProfileSettingsProvider(profile, settings);
 		loginWindow_->addAvailableAccount(profileSettings->getStringSetting("jid"), profileSettings->getStringSetting("pass"), profileSettings->getStringSetting("certificate"));

@@ -9,13 +9,17 @@
 
 namespace Swift {
 
-SoundEventController::SoundEventController(EventController* eventController, SoundPlayer* soundPlayer, bool playSounds, UIEventStream* uiEvents) {
-	eventController_ = eventController;
-	eventController_->onEventQueueEventAdded.connect(boost::bind(&SoundEventController::handleEventQueueEventAdded, this, _1));
-	soundPlayer_ = soundPlayer;
-	playSounds_ = playSounds;
+SoundEventController::SoundEventController(EventController* eventController, SoundPlayer* soundPlayer, SettingsProvider* settings, UIEventStream* uiEvents) {
 	uiEvents_ = uiEvents;
+	settings_ = settings;
+	eventController_ = eventController;
+	soundPlayer_ = soundPlayer;
 	uiEvents_->onUIEvent.connect(boost::bind(&SoundEventController::handleUIEvent, this, _1));
+	eventController_->onEventQueueEventAdded.connect(boost::bind(&SoundEventController::handleEventQueueEventAdded, this, _1));
+
+	bool playSounds = settings->getBoolSetting("playSounds", true);
+	playSounds_ = !playSounds;
+	setPlaySounds(playSounds);	
 }
 
 void SoundEventController::handleEventQueueEventAdded(boost::shared_ptr<StanzaEvent>) {
@@ -23,7 +27,12 @@ void SoundEventController::handleEventQueueEventAdded(boost::shared_ptr<StanzaEv
 }
 
 void SoundEventController::setPlaySounds(bool playSounds) {
+	bool transmit = playSounds != playSounds_;
 	playSounds_ = playSounds;
+	settings_->storeBool("playSounds", playSounds);
+	if (transmit) {
+		uiEvents_->send(boost::shared_ptr<ToggleSoundsUIEvent>(new ToggleSoundsUIEvent(playSounds_)));
+	}
 }
 
 void SoundEventController::handleUIEvent(boost::shared_ptr<UIEvent> event) {

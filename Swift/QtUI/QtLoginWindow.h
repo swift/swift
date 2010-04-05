@@ -10,6 +10,7 @@
 #include <QMenuBar>
 
 #include "Swift/Controllers/UIInterfaces/LoginWindow.h"
+#include "Swift/Controllers/UIEvents/UIEventStream.h"
 #include "Swift/Controllers/MainWindow.h"
 #include "QtAboutWidget.h"
 
@@ -18,7 +19,6 @@ class QToolButton;
 class QComboBox;
 
 namespace Swift {
-	class UIEventStream;
 	class QtLoginWindow : public QMainWindow, public LoginWindow {
 		Q_OBJECT
 		public:
@@ -45,6 +45,7 @@ namespace Swift {
 			void handleUsernameTextChanged();
 			void resizeEvent(QResizeEvent* event);
 			void moveEvent(QMoveEvent* event);
+			void handleUIEvent(boost::shared_ptr<UIEvent> event);
 
 		private:
 			void setInitialMenus();
@@ -62,6 +63,7 @@ namespace Swift {
 			QMenuBar* menuBar_;
 			QMenu* swiftMenu_;
 			QMenu* toolsMenu_;
+			QAction* toggleSoundsAction_;
 			UIEventStream* uiEventStream_;
 			QPointer<QtAboutWidget> aboutDialog_;
 	};

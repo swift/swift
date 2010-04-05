@@ -1,5 +1,7 @@
 #include "QtLoginWindow.h"
 
+#include <boost/bind.hpp>
+
 #include "Swift/Controllers/UIEvents/UIEventStream.h"
 #include "Swift/Controllers/UIEvents/RequestXMLConsoleUIEvent.h"
 #include "Swift/Controllers/UIEvents/ToggleSoundsUIEvent.h"
@@ -117,19 +119,27 @@ QtLoginWindow::QtLoginWindow(UIEventStream* uiEventStream) : QMainWindow() {
 	connect(xmlConsoleAction, SIGNAL(activated()), SLOT(handleShowXMLConsole()));
 	toolsMenu_->addAction(xmlConsoleAction);
 
-	QAction* toggleSoundsAction = new QAction(tr("Toggle Sounds"), this);
-	toggleSoundsAction->setCheckable(true);
-	toggleSoundsAction->setChecked(true);
-	connect(toggleSoundsAction, SIGNAL(toggled(bool)), SLOT(handleToggleSounds(bool)));
-	swiftMenu_->addAction(toggleSoundsAction);
+	toggleSoundsAction_ = new QAction(tr("Toggle Sounds"), this);
+	toggleSoundsAction_->setCheckable(true);
+	toggleSoundsAction_->setChecked(true);
+	connect(toggleSoundsAction_, SIGNAL(toggled(bool)), SLOT(handleToggleSounds(bool)));
+	swiftMenu_->addAction(toggleSoundsAction_);
 
 	
 	QAction* quitAction = new QAction("Quit", this);
 	connect(quitAction, SIGNAL(activated()), SLOT(handleQuit()));
 	swiftMenu_->addAction(quitAction);
-	
+
 	setInitialMenus();
+	uiEventStream_->onUIEvent.connect(boost::bind(&QtLoginWindow::handleUIEvent, this, _1));
 	this->show();
+}
+
+void QtLoginWindow::handleUIEvent(boost::shared_ptr<UIEvent> event) {
+	boost::shared_ptr<ToggleSoundsUIEvent> soundEvent = boost::dynamic_pointer_cast<ToggleSoundsUIEvent>(event);
+	if (soundEvent) {
+		toggleSoundsAction_->setChecked(soundEvent->getEnabled());
+	}
 }
 
 /**
