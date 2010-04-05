@@ -95,16 +95,19 @@ class CAresDomainNameAddressQuery : public DomainNameAddressQuery, public CAresQ
 					// Check whether the different fields are what we expect them to be
 					struct in_addr addr;
 					addr.s_addr = *(unsigned int*)hosts->h_addr_list[0];
-					HostAddress result(inet_ntoa(addr));
-					MainEventLoop::postEvent(boost::bind(boost::ref(onResult), result, boost::optional<DomainNameResolveError>()), boost::dynamic_pointer_cast<CAresDomainNameAddressQuery>(shared_from_this())); 
+
+					std::vector<HostAddress> results;
+					results.push_back(HostAddress(inet_ntoa(addr)));
+
+					MainEventLoop::postEvent(boost::bind(boost::ref(onResult), results, boost::optional<DomainNameResolveError>()), boost::dynamic_pointer_cast<CAresDomainNameAddressQuery>(shared_from_this())); 
 					ares_free_hostent(hosts);
 				}
 				else {
-					MainEventLoop::postEvent(boost::bind(boost::ref(onResult), HostAddress(), boost::optional<DomainNameResolveError>(DomainNameResolveError())), shared_from_this());
+					MainEventLoop::postEvent(boost::bind(boost::ref(onResult), std::vector<HostAddress>(), boost::optional<DomainNameResolveError>(DomainNameResolveError())), shared_from_this());
 				}
 			}
 			else if (status != ARES_EDESTRUCTION) {
-				MainEventLoop::postEvent(boost::bind(boost::ref(onResult), HostAddress(), boost::optional<DomainNameResolveError>(DomainNameResolveError())), shared_from_this());
+				MainEventLoop::postEvent(boost::bind(boost::ref(onResult), std::vector<HostAddress>(), boost::optional<DomainNameResolveError>(DomainNameResolveError())), shared_from_this());
 			}
 		}
 };

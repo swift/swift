@@ -28,7 +28,7 @@ namespace Swift {
 
 		private:
 			void handleServiceQueryResult(const std::vector<DomainNameServiceQuery::Result>& result);
-			void handleAddressQueryResult(const HostAddress& address, boost::optional<DomainNameResolveError> error);
+			void handleAddressQueryResult(const std::vector<HostAddress>& address, boost::optional<DomainNameResolveError> error);
 			void queryAddress(const String& hostname);
 
 			void tryNextHostname();

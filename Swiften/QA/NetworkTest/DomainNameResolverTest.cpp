@@ -16,7 +16,8 @@ class DomainNameResolverTest : public CppUnit::TestFixture {
 		CPPUNIT_TEST_SUITE(DomainNameResolverTest);
 		CPPUNIT_TEST(testResolveAddress);
 		CPPUNIT_TEST(testResolveAddress_Error);
-		//CPPUNIT_TEST(testResolveAddress_IPv6);
+		CPPUNIT_TEST(testResolveAddress_IPv6);
+		CPPUNIT_TEST(testResolveAddress_IPv4and6);
 		CPPUNIT_TEST(testResolveAddress_International);
 		CPPUNIT_TEST(testResolveAddress_Localhost);
 		CPPUNIT_TEST(testResolveService);
@@ -44,7 +45,8 @@ class DomainNameResolverTest : public CppUnit::TestFixture {
 			waitForResults();
 
 			CPPUNIT_ASSERT(!addressQueryError);
-			CPPUNIT_ASSERT_EQUAL(std::string("10.0.0.0"), addressQueryResult.toString());
+			CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(addressQueryResult.size()));
+			CPPUNIT_ASSERT_EQUAL(std::string("10.0.0.0"), addressQueryResult[0].toString());
 		}
 
 		void testResolveAddress_Error() {
@@ -63,7 +65,19 @@ class DomainNameResolverTest : public CppUnit::TestFixture {
 			waitForResults();
 
 			CPPUNIT_ASSERT(!addressQueryError);
-			CPPUNIT_ASSERT_EQUAL(std::string("0000:0000:0000:0000:0000:ffff:0a00:0104"), addressQueryResult.toString());
+			CPPUNIT_ASSERT_EQUAL(std::string("0000:0000:0000:0000:0000:ffff:0a00:0104"), addressQueryResult[0].toString());
+		}
+
+		void testResolveAddress_IPv4and6() {
+			boost::shared_ptr<DomainNameAddressQuery> query(createAddressQuery("xmpp-ipv46.test.swift.im"));
+
+			query->run();
+			waitForResults();
+
+			CPPUNIT_ASSERT(!addressQueryError);
+			CPPUNIT_ASSERT_EQUAL(2, static_cast<int>(addressQueryResult.size()));
+			CPPUNIT_ASSERT_EQUAL(std::string("1234:5678:9abc:def0:0fed:cba9:8765:4321"), addressQueryResult[0].toString());
+			CPPUNIT_ASSERT_EQUAL(std::string("10.0.0.7"), addressQueryResult[1].toString());
 		}
 
 		void testResolveAddress_International() {
@@ -73,7 +87,8 @@ class DomainNameResolverTest : public CppUnit::TestFixture {
 			waitForResults();
 
 			CPPUNIT_ASSERT(!addressQueryError);
-			CPPUNIT_ASSERT_EQUAL(std::string("10.0.0.3"), addressQueryResult.toString());
+			CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(addressQueryResult.size()));
+			CPPUNIT_ASSERT_EQUAL(std::string("10.0.0.3"), addressQueryResult[0].toString());
 		}
 
 		void testResolveAddress_Localhost() {
@@ -83,7 +98,8 @@ class DomainNameResolverTest : public CppUnit::TestFixture {
 			waitForResults();
 
 			CPPUNIT_ASSERT(!addressQueryError);
-			CPPUNIT_ASSERT_EQUAL(std::string("127.0.0.1"), addressQueryResult.toString());
+			CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(addressQueryResult.size()));
+			CPPUNIT_ASSERT_EQUAL(std::string("127.0.0.1"), addressQueryResult[0].toString());
 		}
 
 
@@ -126,8 +142,8 @@ class DomainNameResolverTest : public CppUnit::TestFixture {
 				return result;
 			}
 
-			void handleAddressQueryResult(const HostAddress& address, boost::optional<DomainNameResolveError> error) {
-				addressQueryResult = address;
+			void handleAddressQueryResult(const std::vector<HostAddress>& addresses, boost::optional<DomainNameResolveError> error) {
+				addressQueryResult = addresses;
 				addressQueryError = error;
 				resultsAvailable = true;
 			}
@@ -159,7 +175,7 @@ class DomainNameResolverTest : public CppUnit::TestFixture {
 	private:
 		DummyEventLoop* eventLoop;
 		bool resultsAvailable;
-		HostAddress addressQueryResult;
+		std::vector<HostAddress> addressQueryResult;
 		boost::optional<DomainNameResolveError> addressQueryError;
 		std::vector<DomainNameServiceQuery::Result> serviceQueryResult;
 		PlatformDomainNameResolver* resolver;

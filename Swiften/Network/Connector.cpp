@@ -64,22 +64,22 @@ void Connector::tryNextHostname() {
 	}
 }
 
-void Connector::handleAddressQueryResult(const HostAddress& address, boost::optional<DomainNameResolveError> error) {
+void Connector::handleAddressQueryResult(const std::vector<HostAddress>& addresses, boost::optional<DomainNameResolveError> error) {
 	//std::cout << "Connector::handleAddressQueryResult(): Start" << std::endl;
 	addressQuery.reset();
 	if (!serviceQueryResults.empty()) {
 		DomainNameServiceQuery::Result serviceQueryResult = serviceQueryResults.front();
 		serviceQueryResults.pop_front();
-		if (error) {
+		if (error || addresses.empty()) {
 			//std::cout << "Connector::handleAddressQueryResult(): A lookup for SRV host " << serviceQueryResult.hostname << " failed." << std::endl;
 			tryNextHostname();
 		}
 		else {
 			//std::cout << "Connector::handleAddressQueryResult(): A lookup for SRV host " << serviceQueryResult.hostname << " succeeded: " << address.toString() << std::endl;
-			tryConnect(HostAddressPort(address, serviceQueryResult.port));
+			tryConnect(HostAddressPort(addresses[0], serviceQueryResult.port));
 		}
 	}
-	else if (error) {
+	else if (error || addresses.empty()) {
 		//std::cout << "Connector::handleAddressQueryResult(): Fallback address query failed. Giving up" << std::endl;
 		// The fallback address query failed
 		assert(queriedAllHosts);
@@ -88,7 +88,7 @@ void Connector::handleAddressQueryResult(const HostAddress& address, boost::opti
 	else {
 		//std::cout << "Connector::handleAddressQueryResult(): Fallback address query succeeded: " << address.toString() << std::endl;
 		// The fallback query succeeded
-		tryConnect(HostAddressPort(address, 5222));
+		tryConnect(HostAddressPort(addresses[0], 5222));
 	}
 }
 

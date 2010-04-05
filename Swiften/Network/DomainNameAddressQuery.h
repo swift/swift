@@ -14,6 +14,6 @@ namespace Swift {
 
 			virtual void run() = 0;
 
-			boost::signal<void (const HostAddress&, boost::optional<DomainNameResolveError>)> onResult;
+			boost::signal<void (const std::vector<HostAddress>&, boost::optional<DomainNameResolveError>)> onResult;
 	};
 }

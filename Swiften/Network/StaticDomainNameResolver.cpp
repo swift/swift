@@ -38,11 +38,13 @@ namespace {
 			}
 			StaticDomainNameResolver::AddressesMap::const_iterator i = resolver->getAddresses().find(host);
 			if (i != resolver->getAddresses().end()) {
+				std::vector<HostAddress> result;
+				result.push_back(i->second);
 				MainEventLoop::postEvent(
-						boost::bind(boost::ref(onResult), i->second, boost::optional<DomainNameResolveError>()));
+						boost::bind(boost::ref(onResult), result, boost::optional<DomainNameResolveError>()));
 			}
 			else {
-				MainEventLoop::postEvent(boost::bind(boost::ref(onResult), HostAddress(), boost::optional<DomainNameResolveError>(DomainNameResolveError())));
+				MainEventLoop::postEvent(boost::bind(boost::ref(onResult), std::vector<HostAddress>(), boost::optional<DomainNameResolveError>(DomainNameResolveError())));
 			}
 
 		}

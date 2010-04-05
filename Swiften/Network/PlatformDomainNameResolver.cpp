@@ -51,11 +51,15 @@ namespace {
 					emitError();
 				}
 				else {
-					boost::asio::ip::address address = (*endpointIterator).endpoint().address();
-					HostAddress result = (address.is_v4() ? HostAddress(&address.to_v4().to_bytes()[0], 4) : HostAddress(&address.to_v6().to_bytes()[0], 16));
+					std::vector<HostAddress> results;
+					for ( ; endpointIterator != boost::asio::ip::tcp::resolver::iterator(); ++endpointIterator) {
+						boost::asio::ip::address address = (*endpointIterator).endpoint().address();
+						results.push_back(address.is_v4() ? HostAddress(&address.to_v4().to_bytes()[0], 4) : HostAddress(&address.to_v6().to_bytes()[0], 16));
+					}
+
 					//std::cout << "PlatformDomainNameResolver::doRun(): Success" << std::endl;
 					MainEventLoop::postEvent(
-							boost::bind(boost::ref(onResult), result, boost::optional<DomainNameResolveError>()), 
+							boost::bind(boost::ref(onResult), results, boost::optional<DomainNameResolveError>()), 
 							shared_from_this());
 				}
 			}
@@ -67,7 +71,7 @@ namespace {
 		}
 
 		void emitError() {
-			MainEventLoop::postEvent(boost::bind(boost::ref(onResult), HostAddress(), boost::optional<DomainNameResolveError>(DomainNameResolveError())), shared_from_this());
+			MainEventLoop::postEvent(boost::bind(boost::ref(onResult), std::vector<HostAddress>(), boost::optional<DomainNameResolveError>(DomainNameResolveError())), shared_from_this());
 		}
 
 		boost::asio::io_service ioService;
