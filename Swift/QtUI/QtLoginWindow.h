@@ -28,6 +28,8 @@ namespace Swift {
 			virtual void loggedOut();
 			virtual void setMessage(const String& message);
 			virtual void addAvailableAccount(const String& defaultJID, const String& defaultPassword, const String& defaultCertificate);
+			virtual void setLoginAutomatically(bool loginAutomatically);
+			virtual void setIsLoggingIn(bool loggingIn);
 			static QRect defaultPosition();
 			void setGentleGeometry(const QRect&);
 			void selectUser(const String& user);
@@ -56,6 +58,7 @@ namespace Swift {
 			QLineEdit* password_;
 			QPushButton* loginButton_;
 			QCheckBox* remember_;
+			QCheckBox* loginAutomatically_;
 			QStackedWidget* stack_;
 			QLabel* message_;
 			QString certificateFile_;

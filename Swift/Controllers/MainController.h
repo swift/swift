@@ -62,7 +62,7 @@ namespace Swift {
 		private:
 			void resetClient();
 			void handleConnected();
-			void handleLoginRequest(const String& username, const String& password, const String& certificateFile, bool remember);
+			void handleLoginRequest(const String& username, const String& password, const String& certificateFile, bool remember, bool loginAutomatically);
 			void handleCancelLoginRequest();
 			void handleChangeStatusRequest(StatusShow::Type show, const String &statusText);
 			void handleError(const ClientError& error);

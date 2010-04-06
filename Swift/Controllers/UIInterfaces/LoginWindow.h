@@ -15,8 +15,10 @@ namespace Swift {
 			virtual void morphInto(MainWindow *mainWindow) = 0;
 			virtual void loggedOut() = 0;
 			virtual void setMessage(const String&) = 0;
+			virtual void setIsLoggingIn(bool loggingIn) = 0;
 			virtual void addAvailableAccount(const String& defaultJID, const String& defaultPassword, const String& defaultCertificate) = 0;
-			boost::signal<void (const String&, const String&, const String& /* certificateFile */, bool)> onLoginRequest;
+			boost::signal<void (const String&, const String&, const String& /* certificateFile */, bool /* remember password*/, bool /* login automatically */)> onLoginRequest;
+			virtual void setLoginAutomatically(bool loginAutomatically) = 0;
 			boost::signal<void ()> onCancelLoginRequest;
 	};
 }

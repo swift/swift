@@ -73,19 +73,36 @@ MainController::MainController(ChatWindowFactory* chatWindowFactory, MainWindowF
 	systemTrayController_ = new SystemTrayController(eventController_, systemTray);
 	loginWindow_ = loginWindowFactory_->createLoginWindow(uiEventStream_);
 	soundEventController_ = new SoundEventController(eventController_, soundPlayer, settings, uiEventStream_);
+
+	String selectedLoginJID = settings_->getStringSetting("lastLoginJID");
+	bool loginAutomatically = settings_->getBoolSetting("loginAutomatically", false);
+	String cachedPassword;
+	String cachedCertificate;
 	foreach (String profile, settings->getAvailableProfiles()) {
 		ProfileSettingsProvider* profileSettings = new ProfileSettingsProvider(profile, settings);
-		loginWindow_->addAvailableAccount(profileSettings->getStringSetting("jid"), profileSettings->getStringSetting("pass"), profileSettings->getStringSetting("certificate"));
+		String password = profileSettings->getStringSetting("pass");
+		String certificate = profileSettings->getStringSetting("certificate");
+		String jid = profileSettings->getStringSetting("jid");
+		loginWindow_->addAvailableAccount(jid, password, certificate);
+		if (jid == selectedLoginJID) {
+			cachedPassword = password;
+			cachedCertificate = certificate;
+		}
 		delete profileSettings;
 	}
-	loginWindow_->selectUser(settings_->getStringSetting("lastLoginJID"));
-	loginWindow_->onLoginRequest.connect(boost::bind(&MainController::handleLoginRequest, this, _1, _2, _3, _4));
+	loginWindow_->selectUser(selectedLoginJID);
+	loginWindow_->setLoginAutomatically(loginAutomatically);
+	loginWindow_->onLoginRequest.connect(boost::bind(&MainController::handleLoginRequest, this, _1, _2, _3, _4, _5));
 	loginWindow_->onCancelLoginRequest.connect(boost::bind(&MainController::handleCancelLoginRequest, this));
 
 	idleDetector_.setIdleTimeSeconds(600);
 	idleDetector_.onIdleChanged.connect(boost::bind(&MainController::handleInputIdleChanged, this, _1));
 
 	xmlConsoleController_ = new XMLConsoleController(uiEventStream_, xmlConsoleWidgetFactory);
+
+	if (loginAutomatically) {
+		handleLoginRequest(selectedLoginJID, cachedPassword, cachedCertificate, true, true);
+	}
 }
 
 MainController::~MainController() {
@@ -127,6 +144,7 @@ void MainController::resetClient() {
 }
 
 void MainController::handleConnected() {
+	loginWindow_->setIsLoggingIn(false);
 	//FIXME: this freshLogin thing is temporary so I can see what's what before I split into a seperate method.
 	bool freshLogin = rosterController_ == NULL;
 	if (freshLogin) {
@@ -254,13 +272,15 @@ void MainController::handleInputIdleChanged(bool idle) {
 	}
 }
 
-void MainController::handleLoginRequest(const String &username, const String &password, const String& certificateFile, bool remember) {
+void MainController::handleLoginRequest(const String &username, const String &password, const String& certificateFile, bool remember, bool loginAutomatically) {
 	loginWindow_->setMessage("");
+	loginWindow_->setIsLoggingIn(true);
 	ProfileSettingsProvider* profileSettings = new ProfileSettingsProvider(username, settings_);
 	profileSettings->storeString("jid", username);
 	profileSettings->storeString("certificate", certificateFile);
-	profileSettings->storeString("pass", remember ? password : "");
+	profileSettings->storeString("pass", (remember || loginAutomatically) ? password : "");
 	settings_->storeString("lastLoginJID", username);
+	settings_->storeBool("loginAutomatically", loginAutomatically);
 	loginWindow_->addAvailableAccount(profileSettings->getStringSetting("jid"), profileSettings->getStringSetting("pass"), profileSettings->getStringSetting("certificate"));
 	delete profileSettings;
 	jid_ = JID(username);

@@ -98,6 +98,9 @@ QtLoginWindow::QtLoginWindow(UIEventStream* uiEventStream) : QMainWindow() {
 	layout->addStretch();
 	remember_ = new QCheckBox(tr("Remember Password?"), this);
 	layout->addWidget(remember_);
+	loginAutomatically_ = new QCheckBox(tr("Login Automatically?"), this);
+	layout->addWidget(loginAutomatically_);
+
 	connect(loginButton_, SIGNAL(clicked()), SLOT(loginClicked()));
 	stack_->addWidget(wrapperWidget);
 #ifdef SWIFTEN_PLATFORM_MACOSX
@@ -218,10 +221,16 @@ void QtLoginWindow::loggedOut() {
 	setEnabled(true);
 }
 
+void QtLoginWindow::setIsLoggingIn(bool loggingIn) {
+	setEnabled(!loggingIn);
+}
+
 void QtLoginWindow::loginClicked() {
-	setEnabled(false);
-	message_->setText("");
-	onLoginRequest(Q2PSTRING(username_->currentText()), Q2PSTRING(password_->text()), Q2PSTRING(certificateFile_), remember_->isChecked());
+	onLoginRequest(Q2PSTRING(username_->currentText()), Q2PSTRING(password_->text()), Q2PSTRING(certificateFile_), remember_->isChecked(), loginAutomatically_->isChecked());
+}
+
+void QtLoginWindow::setLoginAutomatically(bool loginAutomatically) {
+	loginAutomatically_->setChecked(loginAutomatically);
 }
 
 void QtLoginWindow::handleCertficateChecked(bool checked) {
