@@ -90,6 +90,7 @@ sources = [
     "ChatList/ChatListDelegate.cpp",
     "ChatList/ChatListMUCItem.cpp",
     "ContextMenus/QtRosterContextMenu.cpp",
+    "ContextMenus/QtContextMenu.cpp",
     "QtSubscriptionRequestWindow.cpp",
     "QtRosterHeader.cpp",
     "qrc_DefaultTheme.cc",
