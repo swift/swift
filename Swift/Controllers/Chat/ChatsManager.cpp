@@ -138,7 +138,6 @@ void ChatsManager::setEnabled(bool enabled) {
 
 void ChatsManager::handleChatRequest(const String &contact) {
 	ChatController* controller = getChatControllerOrFindAnother(JID(contact));
-	controller->showChatWindow();
 	controller->activateChatWindow();
 }
 

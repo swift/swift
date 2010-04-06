@@ -47,7 +47,6 @@ MUCController::MUCController (
 	muc_->onOccupantPresenceChange.connect(boost::bind(&MUCController::handleOccupantPresenceChange, this, _1));
 	muc_->onOccupantLeft.connect(boost::bind(&MUCController::handleOccupantLeft, this, _1, _2, _3));
 	chatWindow_->convertToMUC();
-	chatWindow_->show();
 	if (avatarManager_ != NULL) {
 		avatarChangedConnection_ = (avatarManager_->onAvatarChanged.connect(boost::bind(&MUCController::handleAvatarChanged, this, _1, _2)));
 	} 

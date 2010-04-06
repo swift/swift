@@ -30,6 +30,7 @@ namespace Swift {
 			void handleWidgetShown();
 			void handleWantsToActivate();
 		private:
+			void checkForFirstShow();
 			QtTabWidget* tabs_;
 	};
 }

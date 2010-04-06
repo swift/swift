@@ -49,6 +49,7 @@ void QtChatTabs::handleWidgetShown() {
 	if (!widget) {
 		return;
 	}
+	checkForFirstShow();
 	if (tabs_->indexOf(widget) >= 0) {
 		return;
 	}
@@ -59,10 +60,11 @@ void QtChatTabs::handleWidgetShown() {
 void QtChatTabs::handleWantsToActivate() {
 	QtTabbable* widget = qobject_cast<QtTabbable*>(sender());
 	Q_ASSERT(widget);
-	Q_ASSERT(tabs_->indexOf(widget) >= 0);
 	//Un-minimize and bring to front.
 	setWindowState(windowState() & ~Qt::WindowMinimized);
 	setWindowState(windowState() | Qt::WindowActive);
+	show();
+	widget->show();
 	tabs_->setCurrentWidget(widget);
 	widget->setFocus();
 	activateWindow();
@@ -122,6 +124,12 @@ void QtChatTabs::resizeEvent(QResizeEvent*) {
 
 void QtChatTabs::moveEvent(QMoveEvent*) {
 	emit geometryChanged();	
+}
+
+void QtChatTabs::checkForFirstShow() {
+	if (!isVisible()) {
+		showMinimized();
+	}
 }
 
 }
