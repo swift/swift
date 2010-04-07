@@ -38,10 +38,8 @@ namespace {
 			}
 			StaticDomainNameResolver::AddressesMap::const_iterator i = resolver->getAddresses().find(host);
 			if (i != resolver->getAddresses().end()) {
-				std::vector<HostAddress> result;
-				result.push_back(i->second);
 				MainEventLoop::postEvent(
-						boost::bind(boost::ref(onResult), result, boost::optional<DomainNameResolveError>()));
+						boost::bind(boost::ref(onResult), i->second, boost::optional<DomainNameResolveError>()));
 			}
 			else {
 				MainEventLoop::postEvent(boost::bind(boost::ref(onResult), std::vector<HostAddress>(), boost::optional<DomainNameResolveError>(DomainNameResolveError())));
@@ -60,7 +58,7 @@ StaticDomainNameResolver::StaticDomainNameResolver() : isResponsive(true) {
 }
 
 void StaticDomainNameResolver::addAddress(const String& domain, const HostAddress& address) {
-	addresses[domain] = address;
+	addresses[domain].push_back(address);
 }
 
 void StaticDomainNameResolver::addService(const String& service, const DomainNameServiceQuery::Result& result) {
@@ -74,6 +72,10 @@ void StaticDomainNameResolver::addXMPPClientService(const String& domain, const 
 
 	addService("_xmpp-client._tcp." + domain, ServiceQuery::Result(hostname, address.getPort(), 0, 0));
 	addAddress(hostname, address.getAddress());
+}
+
+void StaticDomainNameResolver::addXMPPClientService(const String& domain, const String& hostname, int port) {
+	addService("_xmpp-client._tcp." + domain, ServiceQuery::Result(hostname, port, 0, 0));
 }
 
 boost::shared_ptr<DomainNameServiceQuery> StaticDomainNameResolver::createServiceQuery(const String& name) {

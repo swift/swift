@@ -15,7 +15,7 @@ namespace Swift {
 
 	class StaticDomainNameResolver : public DomainNameResolver {
 		public:
-			typedef std::map<String, HostAddress> AddressesMap;
+			typedef std::map<String, std::vector<HostAddress> > AddressesMap;
 			typedef std::vector< std::pair<String, DomainNameServiceQuery::Result> > ServicesCollection;
 
 		public:
@@ -24,6 +24,7 @@ namespace Swift {
 			void addAddress(const String& domain, const HostAddress& address);
 			void addService(const String& service, const DomainNameServiceQuery::Result& result);
 			void addXMPPClientService(const String& domain, const HostAddressPort&);
+			void addXMPPClientService(const String& domain, const String& host, int port);
 
 			const AddressesMap& getAddresses() const {
 				return addresses;
