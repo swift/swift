@@ -22,6 +22,7 @@ namespace po = boost::program_options;
 class QSplitter;
 
 namespace Swift {
+	class VCardStorageFactory;
 	class AutoUpdater;
 	class Application;
 	class ApplicationPathProvider;
@@ -61,6 +62,7 @@ namespace Swift {
 			Application* application_;
 			ApplicationPathProvider* applicationPathProvider_;
 			AvatarStorage* avatarStorage_;
+			VCardStorageFactory* vcardStorageFactory_;
 			AutoUpdater* autoUpdater_;
 
 	};

@@ -63,10 +63,25 @@ namespace Swift {
 	class MUCSearchController;
 	class MUCSearchWindowFactory;
 	class StatusTracker;
+	class VCardStorageFactory;
 
 	class MainController {
 		public:
-			MainController(ChatWindowFactory* chatWindowFactory, MainWindowFactory *mainWindowFactory, LoginWindowFactory *loginWindowFactory, EventWindowFactory* eventWindowFactory, SettingsProvider *settings, SystemTray* systemTray, SoundPlayer* soundPlayer, XMLConsoleWidgetFactory* xmlConsoleWidgetFactory, ChatListWindowFactory* chatListWindowFactory_, MUCSearchWindowFactory* mucSearchWindowFactory, AvatarStorage* avatarStorage, ApplicationMessageDisplay* applicationMessageDisplay, bool useDelayForLatency);
+			MainController(
+					ChatWindowFactory* chatWindowFactory,
+					MainWindowFactory *mainWindowFactory,
+					LoginWindowFactory *loginWindowFactory,
+					EventWindowFactory* eventWindowFactory,
+					SettingsProvider *settings,
+					SystemTray* systemTray,
+					SoundPlayer* soundPlayer,
+					XMLConsoleWidgetFactory* xmlConsoleWidgetFactory,
+					ChatListWindowFactory* chatListWindowFactory_,
+					MUCSearchWindowFactory* mucSearchWindowFactory,
+					AvatarStorage* avatarStorage,
+					VCardStorageFactory* vcardStorageFactory,
+					ApplicationMessageDisplay* applicationMessageDisplay,
+					bool useDelayForLatency);
 			~MainController();
 
 
@@ -105,6 +120,7 @@ namespace Swift {
 			SettingsProvider *settings_;
 			ProfileSettingsProvider* profileSettings_;
 			AvatarStorage* avatarStorage_;
+			VCardStorageFactory* vcardStorageFactory_;
 			ApplicationMessageDisplay* applicationMessageDisplay_;
 			ChatController* chatController_;
 			XMPPRosterController* xmppRosterController_;

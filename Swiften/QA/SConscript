@@ -3,4 +3,5 @@ SConscript(dirs = [
 		"ReconnectTest",
 		"ClientTest",
 		"DNSSDTest",
+		"StorageTest",
 	])

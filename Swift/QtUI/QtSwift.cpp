@@ -24,6 +24,7 @@
 #include "Swiften/Application/PlatformApplication.h"
 #include "Swiften/Application/PlatformApplicationPathProvider.h"
 #include "Swiften/Avatars/AvatarFileStorage.h"
+#include "Swiften/VCards/VCardFileStorageFactory.h"
 #include "Swiften/Base/String.h"
 #include "Swiften/Base/Platform.h"
 #include "Swiften/Elements/Presence.h"
@@ -79,6 +80,7 @@ QtSwift::QtSwift(po::variables_map options) : autoUpdater_(NULL) {
 	application_ = new PlatformApplication(SWIFT_APPLICATION_NAME);
 	applicationPathProvider_ = new PlatformApplicationPathProvider(SWIFT_APPLICATION_NAME);
 	avatarStorage_ = new AvatarFileStorage(applicationPathProvider_->getAvatarDir());
+	vcardStorageFactory_ = new VCardFileStorageFactory(applicationPathProvider_->getDataDir());
 	chatWindowFactory_ = new QtChatWindowFactory(splitter_, settings_, tabs_);
 	soundPlayer_ = new QtSoundPlayer(applicationPathProvider_);
 	if (splitter_) {
@@ -100,7 +102,21 @@ QtSwift::QtSwift(po::variables_map options) : autoUpdater_(NULL) {
 		chatListWindowFactories_.push_back(chatListWindowFactory);
 		QtMUCSearchWindowFactory* mucSearchWindowFactory = new QtMUCSearchWindowFactory();
 		mucSearchWindowFactories_.push_back(mucSearchWindowFactory);
-		MainController* mainController = new MainController(chatWindowFactory_, rosterWindowFactory, loginWindowFactory, eventWindowFactory, settings_, systemTray, soundPlayer_, xmlConsoleWidgetFactory, chatListWindowFactory, mucSearchWindowFactory, avatarStorage_, application_->getApplicationMessageDisplay(), options.count("latency-debug") > 0);
+		MainController* mainController = new MainController(
+				chatWindowFactory_,
+				rosterWindowFactory,
+				loginWindowFactory,
+				eventWindowFactory,
+				settings_,
+				systemTray,
+				soundPlayer_,
+				xmlConsoleWidgetFactory,
+				chatListWindowFactory,
+				mucSearchWindowFactory,
+				avatarStorage_,
+				vcardStorageFactory_,
+				application_->getApplicationMessageDisplay(),
+				options.count("latency-debug") > 0);
 		mainControllers_.push_back(mainController);
 	}
 
@@ -144,6 +160,8 @@ QtSwift::~QtSwift() {
 	foreach (QtChatListWindowFactory* factory, chatListWindowFactories_) {
 		delete factory;
 	}
+	delete avatarStorage_;
+	delete vcardStorageFactory_;
 }
 
 }

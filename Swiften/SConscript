@@ -123,6 +123,7 @@ if env["SCONS_STAGE"] == "build" :
 			"EventLoop",
 			"Parser",
 			"JID",
+			"VCards",
 			"Network",
 			"History",
 			"StreamStack",

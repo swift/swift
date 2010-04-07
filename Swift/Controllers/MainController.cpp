@@ -19,6 +19,7 @@
 #include "Swiften/Network/MainBoostIOServiceThread.h"
 #include "Swift/Controllers/BuildVersion.h"
 #include "Swift/Controllers/Chat/ChatController.h"
+#include "Swiften/VCards/VCardStorageFactory.h"
 #include "Swift/Controllers/Chat/MUCSearchController.h"
 #include "Swift/Controllers/Chat/ChatsManager.h"
 #include "Swift/Controllers/EventController.h"
@@ -63,8 +64,30 @@ static const String CLIENT_VERSION = "1.0-devel";
 static const String CLIENT_NODE = "http://swift.im";
 
 
-MainController::MainController(ChatWindowFactory* chatWindowFactory, MainWindowFactory *mainWindowFactory, LoginWindowFactory *loginWindowFactory, EventWindowFactory* eventWindowFactory, SettingsProvider *settings, SystemTray* systemTray, SoundPlayer* soundPlayer, XMLConsoleWidgetFactory* xmlConsoleWidgetFactory, ChatListWindowFactory* chatListWindowFactory, MUCSearchWindowFactory* mucSearchWindowFactory, AvatarStorage* avatarStorage, ApplicationMessageDisplay* applicationMessageDisplay, bool useDelayForLatency)
-	: timerFactory_(&boostIOServiceThread_.getIOService()), idleDetector_(&idleQuerier_, &timerFactory_, 100), chatWindowFactory_(chatWindowFactory), mainWindowFactory_(mainWindowFactory), loginWindowFactory_(loginWindowFactory), settings_(settings), loginWindow_(NULL), useDelayForLatency_(useDelayForLatency)  {
+MainController::MainController(
+		ChatWindowFactory* chatWindowFactory,
+		MainWindowFactory *mainWindowFactory,
+		LoginWindowFactory *loginWindowFactory,
+		EventWindowFactory* eventWindowFactory,
+		SettingsProvider *settings,
+		SystemTray* systemTray,
+		SoundPlayer* soundPlayer,
+		XMLConsoleWidgetFactory* xmlConsoleWidgetFactory,
+		ChatListWindowFactory* chatListWindowFactory,
+		MUCSearchWindowFactory* mucSearchWindowFactory,
+		AvatarStorage* avatarStorage,
+		VCardStorageFactory* vcardStorageFactory,
+		ApplicationMessageDisplay* applicationMessageDisplay,
+		bool useDelayForLatency) :
+			timerFactory_(&boostIOServiceThread_.getIOService()),
+			idleDetector_(&idleQuerier_, &timerFactory_, 100),
+			chatWindowFactory_(chatWindowFactory),
+			mainWindowFactory_(mainWindowFactory),
+			loginWindowFactory_(loginWindowFactory),
+			settings_(settings),
+			loginWindow_(NULL),
+			vcardStorageFactory_(vcardStorageFactory),
+			useDelayForLatency_(useDelayForLatency)  {
 	presenceOracle_ = NULL;
 	avatarManager_ = NULL;
 	chatsManager_ = NULL;

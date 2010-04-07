@@ -7,11 +7,12 @@
 #pragma once
 
 #include "Swiften/Base/String.h"
+#include "Swiften/Base/Shared.h"
 #include "Swiften/Base/ByteArray.h"
 #include "Swiften/Elements/Payload.h"
 
 namespace Swift {
-	class VCard : public Payload {
+	class VCard : public Payload, public Shared<VCard> {
 		public:
 			VCard() {}
 
