@@ -237,6 +237,9 @@ void MainController::handleChangeStatusRequest(StatusShow::Type show, const Stri
 }
 
 void MainController::sendPresence(boost::shared_ptr<Presence> presence) {
+	rosterController_->getWindow()->setMyStatusType(presence->getShow());
+	rosterController_->getWindow()->setMyStatusText(presence->getStatus());
+
 	// Copy presence before adding extra information
 	lastSentPresence_ = presence->clone();
 
