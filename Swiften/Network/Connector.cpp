@@ -10,7 +10,7 @@
 
 namespace Swift {
 
-Connector::Connector(const String& hostname, DomainNameResolver* resolver, ConnectionFactory* connectionFactory, TimerFactory* timerFactory) : hostname(hostname), resolver(resolver), connectionFactory(connectionFactory), timerFactory(timerFactory), timeoutMilliseconds(0), queriedAllHosts(true) {
+Connector::Connector(const String& hostname, DomainNameResolver* resolver, ConnectionFactory* connectionFactory, TimerFactory* timerFactory) : hostname(hostname), resolver(resolver), connectionFactory(connectionFactory), timerFactory(timerFactory), timeoutMilliseconds(0), queriedAllServices(true) {
 }
 
 void Connector::setTimeoutMilliseconds(int milliseconds) {
@@ -22,7 +22,7 @@ void Connector::start() {
 	assert(!currentConnection);
 	assert(!serviceQuery);
 	assert(!timer);
-	queriedAllHosts = false;
+	queriedAllServices = false;
 	serviceQuery = resolver->createServiceQuery("_xmpp-client._tcp." + hostname);
 	serviceQuery->onResult.connect(boost::bind(&Connector::handleServiceQueryResult, this, _1));
 	if (timeoutMilliseconds > 0) {
@@ -44,18 +44,18 @@ void Connector::handleServiceQueryResult(const std::vector<DomainNameServiceQuer
 	//std::cout << "Received SRV results" << std::endl;
 	serviceQueryResults = std::deque<DomainNameServiceQuery::Result>(result.begin(), result.end());
 	serviceQuery.reset();
-	tryNextHostname();
+	tryNextServiceOrFallback();
 }
 
-void Connector::tryNextHostname() {
-	if (queriedAllHosts) {
-		//std::cout << "Connector::tryNextHostName(): Queried all hosts. Error." << std::endl;
+void Connector::tryNextServiceOrFallback() {
+	if (queriedAllServices) {
+		//std::cout << "Connector::tryNextServiceOrCallback(): Queried all hosts. Error." << std::endl;
 		finish(boost::shared_ptr<Connection>());
 	}
 	else if (serviceQueryResults.empty()) {
 		//std::cout << "Connector::tryNextHostName(): Falling back on A resolution" << std::endl;
 		// Fall back on simple address resolving
-		queriedAllHosts = true;
+		queriedAllServices = true;
 		queryAddress(hostname);
 	}
 	else {
@@ -67,28 +67,38 @@ void Connector::tryNextHostname() {
 void Connector::handleAddressQueryResult(const std::vector<HostAddress>& addresses, boost::optional<DomainNameResolveError> error) {
 	//std::cout << "Connector::handleAddressQueryResult(): Start" << std::endl;
 	addressQuery.reset();
-	if (!serviceQueryResults.empty()) {
-		DomainNameServiceQuery::Result serviceQueryResult = serviceQueryResults.front();
-		serviceQueryResults.pop_front();
-		if (error || addresses.empty()) {
-			//std::cout << "Connector::handleAddressQueryResult(): A lookup for SRV host " << serviceQueryResult.hostname << " failed." << std::endl;
-			tryNextHostname();
+	if (error || addresses.empty()) {
+		if (!serviceQueryResults.empty()) {
+			serviceQueryResults.pop_front();
 		}
-		else {
-			//std::cout << "Connector::handleAddressQueryResult(): A lookup for SRV host " << serviceQueryResult.hostname << " succeeded: " << address.toString() << std::endl;
-			tryConnect(HostAddressPort(addresses[0], serviceQueryResult.port));
-		}
-	}
-	else if (error || addresses.empty()) {
-		//std::cout << "Connector::handleAddressQueryResult(): Fallback address query failed. Giving up" << std::endl;
-		// The fallback address query failed
-		assert(queriedAllHosts);
-		finish(boost::shared_ptr<Connection>());
+		tryNextServiceOrFallback();
 	}
 	else {
-		//std::cout << "Connector::handleAddressQueryResult(): Fallback address query succeeded: " << address.toString() << std::endl;
-		// The fallback query succeeded
-		tryConnect(HostAddressPort(addresses[0], 5222));
+		addressQueryResults = std::deque<HostAddress>(addresses.begin(), addresses.end());
+		tryNextAddress();
+	}
+}
+
+void Connector::tryNextAddress() {
+	if (addressQueryResults.empty()) {
+		//std::cout << "Connector::tryNextAddress(): Done trying addresses. Moving on" << std::endl;
+		// Done trying all addresses. Move on to the next host.
+		if (!serviceQueryResults.empty()) {
+			serviceQueryResults.pop_front();
+		}
+		tryNextServiceOrFallback();
+	}
+	else {
+		//std::cout << "Connector::tryNextAddress(): trying next address." << std::endl;
+		HostAddress address = addressQueryResults.front();
+		addressQueryResults.pop_front();
+
+		int port = 5222;
+		if (!serviceQueryResults.empty()) {
+			port = serviceQueryResults.front().port;
+		}
+
+		tryConnect(HostAddressPort(address, port));
 	}
 }
 
@@ -104,7 +114,15 @@ void Connector::handleConnectionConnectFinished(bool error) {
 	//std::cout << "Connector::handleConnectionConnectFinished() " << error << std::endl;
 	if (error) {
 		currentConnection.reset();
-		tryNextHostname();
+		if (!addressQueryResults.empty()) {
+			tryNextAddress();
+		}
+		else {
+			if (!serviceQueryResults.empty()) {
+				serviceQueryResults.pop_front();
+			}
+			tryNextServiceOrFallback();
+		}
 	}
 	else {
 		finish(currentConnection);

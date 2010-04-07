@@ -31,7 +31,8 @@ namespace Swift {
 			void handleAddressQueryResult(const std::vector<HostAddress>& address, boost::optional<DomainNameResolveError> error);
 			void queryAddress(const String& hostname);
 
-			void tryNextHostname();
+			void tryNextServiceOrFallback();
+			void tryNextAddress();
 			void tryConnect(const HostAddressPort& target);
 
 			void handleConnectionConnectFinished(bool error);
@@ -48,7 +49,8 @@ namespace Swift {
 			boost::shared_ptr<DomainNameServiceQuery> serviceQuery;
 			std::deque<DomainNameServiceQuery::Result> serviceQueryResults;
 			boost::shared_ptr<DomainNameAddressQuery> addressQuery;
-			bool queriedAllHosts;
+			std::deque<HostAddress> addressQueryResults;
+			bool queriedAllServices;
 			boost::shared_ptr<Connection> currentConnection;
 	};
 };

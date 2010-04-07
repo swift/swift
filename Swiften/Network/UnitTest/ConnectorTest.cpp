@@ -18,6 +18,7 @@ using namespace Swift;
 class ConnectorTest : public CppUnit::TestFixture {
 		CPPUNIT_TEST_SUITE(ConnectorTest);
 		CPPUNIT_TEST(testConnect);
+		CPPUNIT_TEST(testConnect_FirstAddressHostFails);
 		CPPUNIT_TEST(testConnect_NoSRVHost);
 		CPPUNIT_TEST(testConnect_NoHosts);
 		CPPUNIT_TEST(testConnect_FirstSRVHostFails);
@@ -71,6 +72,24 @@ class ConnectorTest : public CppUnit::TestFixture {
 			CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(connections.size()));
 			CPPUNIT_ASSERT(connections[0]);
 			CPPUNIT_ASSERT(host3 == *(connections[0]->hostAddressPort));
+		}
+
+		void testConnect_FirstAddressHostFails() {
+			std::auto_ptr<Connector> testling(createConnector());
+
+			HostAddress address1("1.1.1.1");
+			HostAddress address2("2.2.2.2");
+			resolver->addXMPPClientService("foo.com", "host-foo.com", 1234);
+			resolver->addAddress("host-foo.com", address1);
+			resolver->addAddress("host-foo.com", address2);
+			connectionFactory->failingPorts.push_back(HostAddressPort(address1, 1234));
+
+			testling->start();
+			eventLoop->processEvents();
+
+			CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(connections.size()));
+			CPPUNIT_ASSERT(connections[0]);
+			CPPUNIT_ASSERT(HostAddressPort(address2, 1234) == *(connections[0]->hostAddressPort));
 		}
 
 		void testConnect_NoHosts() {
@@ -207,7 +226,8 @@ class ConnectorTest : public CppUnit::TestFixture {
 				void connect(const HostAddressPort& address) {
 					hostAddressPort = address;
 					if (isResponsive) {
-						MainEventLoop::postEvent(boost::bind(boost::ref(onConnectFinished), std::find(failingPorts.begin(), failingPorts.end(), address) != failingPorts.end()));
+						bool fail = std::find(failingPorts.begin(), failingPorts.end(), address) != failingPorts.end();
+						MainEventLoop::postEvent(boost::bind(boost::ref(onConnectFinished), fail));
 					}
 				}
 
