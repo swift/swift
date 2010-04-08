@@ -1,3 +1,9 @@
+/*
+ * Copyright (c) 2010 Kevin Smith
+ * Licensed under the GNU General Public License v3.
+ * See Documentation/Licenses/GPLv3.txt for more information.
+ */
+
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/extensions/TestFactoryRegistry.h>
 #include "3rdParty/hippomocks.h"
