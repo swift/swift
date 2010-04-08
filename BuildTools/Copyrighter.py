@@ -61,11 +61,11 @@ def parse_file(filename) :
       if re.match(get_comment_chars_re_for_filename(filename), line) != None :
         copyright_text.append(line.rstrip())
         continue
-      elif len(line.strip()) == 0 :
-        continue
       else :
         inCopyright = False
         inEpilog = True
+        if len(line.strip()) == 0 :
+          continue
 
     if inEpilog :
       epilog += line
