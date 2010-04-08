@@ -1,96 +1,156 @@
 #!/usr/bin/env python
 #coding=utf-8
 
-import os, re, datetime
+import os, re, datetime, sys, subprocess
 
-TEMPLATE = """/*
- * Copyright (c) %(year)s  %(author)s.
- * See the included COPYING file for license details.
- */
+DEFAULT_LICENSE = "gpl3"
+CONTRIBUTOR_LICENSE = "mit"
+LICENSE_DIR = "Documentation/Licenses"
 
-"""
+class License :
+  def __init__(self, name, file) :
+    self.name = name
+    self.file = file
 
-def updateCopyright(fileName) :
-  file = open(fileName)
-  fileData = ""
+licenses = {
+    "gpl3" : License("GNU General Public License v3", "GPLv3.txt"),
+    "mit" : License("MIT License", "MIT.txt"),
+  }
 
-  author = ""
-  startYear = ""
-  endYear = ""
-  previousCopyright = ""
-  
-  # Retrieve previous copyright information
-  header = ""
-  inHeader = False
-  inSpaceBelowHeader = False
-  lines = file.readlines()
-  lines2 = lines
-  for line in lines2 :
-    lines.pop(0)
-    if inSpaceBelowHeader :
-      if line.strip() != "" :
-        break
-    elif inHeader :
-      if line.startswith(" */") :
-        inSpaceBelowHeader = True
-      else :
-        header += line
-    else :
-      if line.strip() == "" :
+
+class Copyright :
+  def __init__(self, author, year, license) :
+    self.author = author
+    self.year = year
+    self.license = license
+
+  def to_string(self, comment_chars) :
+    return "\n".join([
+      comment_chars[0],
+      comment_chars[1] + " Copyright (c) %(year)s %(name)s" % {"year" : self.year, "name" : self.author },
+      comment_chars[1] + " Licensed under the " + licenses[self.license].name + ".",
+      comment_chars[1] + " See " + LICENSE_DIR + "/" + licenses[self.license].file + " for more information.",
+      comment_chars[2],
+      "\n"])
+
+def get_comment_chars_for_filename(filename) :
+  return ("/*", " *", " */")
+
+def get_comment_chars_re_for_filename(filename) :
+  comment_chars = get_comment_chars_for_filename(filename)
+  return "|".join(comment_chars).replace("*", "\\*")
+
+def parse_file(filename) :
+  file = open(filename)
+  copyright_text = []
+  prolog = ""
+  epilog = ""
+  inProlog = True
+  inCopyright = False
+  inEpilog = False
+  for line in file.readlines() :
+    if inProlog :
+      if line.startswith("#!") or len(line.strip()) == 0 :
+        prolog += line
         continue
-      elif line.startswith("/*") :
-        inHeader = True
-        header += line
       else :
-        fileData += line
-        break
-  if "Copyright" in header :
-    previousCopyright = header
-    m = re.match("\* Copyright \(c\) (?P<startYear>\d\d\d\d)(-(?P<endYear>\d\d\d\d))? (?P<author>.*)", header)
-    if m :
-      author = m.group("author")
-      startYear = m.group("startYear")
-      endYear = m.group("endYear")
-  elif header != "" :
-    fileData = header
+        inProlog = False
+        inCopyright = True
+
+    if inCopyright :
+      if re.match(get_comment_chars_re_for_filename(filename), line) != None :
+        copyright_text.append(line.rstrip())
+        continue
+      elif len(line.strip()) == 0 :
+        continue
+      else :
+        inCopyright = False
+        inEpilog = True
+
+    if inEpilog :
+      epilog += line
+      continue
+
   file.close()
 
-  # Read in the rest of the data
-  fileData += "".join(lines)
+  # Parse the copyright
+  copyright = None
+  if len(copyright_text) == 5 :
+    comment_chars = get_comment_chars_for_filename(filename)
+    if copyright_text[0] == comment_chars[0] and copyright_text[4] == comment_chars[2] :
+      matchstring = "(" + get_comment_chars_re_for_filename(filename) + ") Copyright \(c\) (?P<startYear>\d\d\d\d)(-(?P<endYear>\d\d\d\d))? (?P<author>.*)"
+      m = re.match(matchstring, copyright_text[1])
+      if m != None :
+        # FIXME: Do better copyright reconstruction here
+        copyright = True
+  if not copyright :
+    epilog = "\n".join(copyright_text) + epilog
+  return (prolog, copyright, epilog)
 
-  # Guess empty values
-  if author == "" :
-    if "Swift/" in fileName :
-      author = "Kevin Smith"
-    else :
-      author = u"Remko Tronçon"
-  if startYear == "" :
-    startYear = datetime.date.today().strftime("%Y")
-  elif endYear == "" :
-    ## TODO: Guess end year by looking at git log --pretty=format:%ai -- <filename>
-    pass
+def get_userinfo() :
+  p = subprocess.Popen("git config user.name", shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE, close_fds=(os.name != "nt"))
+  username = p.stdout.read().rstrip()
+  p.stdin.close()
+  if p.wait() != 0 :
+    return None
+  p = subprocess.Popen("git config user.email", shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE, close_fds=(os.name != "nt"))
+  email = p.stdout.read().rstrip()
+  p.stdin.close()
+  if p.wait() != 0 :
+    return None
+  return (username, email)
 
-  # Generate a copyright
-  year = startYear + "-" + endYear if len(endYear) > 0 else startYear
-  copyright = TEMPLATE % {
-      "author" : author,
-      "year" : year
-    }
+def get_copyright(username, email) :
+  if email in ["git@el-tramo.be", "git@kismith.co.uk"] :
+    license = DEFAULT_LICENSE
+  else :
+    license = CONTRIBUTOR_LICENSE
+  return Copyright(username, datetime.date.today().strftime("%Y"), license)
 
-  # Write the copyright to the file
-  if copyright.encode("utf-8") != previousCopyright :
-    file = open(fileName, "w")
-    file.write(copyright.encode("utf-8"))
-    file.write(fileData)
-    file.close()
+def check_copyright(filename) :
+  (prolog, copyright, epilog) = parse_file(filename)
+  if copyright == None :
+    print "No copyright found in: " + filename
+    return False
+  else :
+    return True
 
-for (path, dirs, files) in os.walk("Swiften/JID") :
-  if "3rdParty" in path :
-    continue
-  for filename in files :
-    if not filename.endswith(".cpp") and not filename.endswith(".h") :
+def set_copyright(filename, copyright) :
+  (prolog, c, epilog) = parse_file(filename)
+  comment_chars = get_comment_chars_for_filename(filename)
+  copyright_text = copyright.to_string(comment_chars)
+  file = open(filename, "w")
+  if prolog != "":
+    file.write(prolog)
+  file.write(copyright_text)
+  if epilog != "" :
+    file.write(epilog)
+  file.close()
+
+if sys.argv[1] == "check-copyright" :
+  if not check_copyright(sys.argv[2]) :
+    sys.exit(-1)
+elif sys.argv[1] == "check-all-copyrights" :
+  ok = True
+  for (path, dirs, files) in os.walk(".") :
+    if "3rdParty" in path or ".sconf" in path :
       continue
-    if filename.startswith("moc_") :
+    for filename in [os.path.join(path, file) for file in files if (file.endswith(".cpp") or file.endswith(".h")) and not "ui_" in file and not "moc_" in file and not "qrc_" in file] :
+      ok &= check_copyright(filename) 
+  if not ok :
+    sys.exit(-1)
+elif sys.argv[1] == "set-copyright" :
+  (username, email) = get_userinfo()
+  copyright = get_copyright(username, email)
+  set_copyright(sys.argv[2], copyright)
+elif sys.argv[1] == "set-all-copyrights" :
+  (username, email) = get_userinfo()
+  copyright = get_copyright(username, email)
+  for (path, dirs, files) in os.walk(".") :
+    if "3rdParty" in path or ".sconf" in path :
       continue
-    fullFilename = path + "/" + filename
-    updateCopyright(fullFilename)
+    for filename in [os.path.join(path, file) for file in files if (file.endswith(".cpp") or file.endswith(".h")) and not "ui_" in file and not "moc_" in file and not "qrc_" in file] :
+      set_copyright(filename, copyright) 
+else :
+  print "Unknown command: " + sys.argv[1]
+  sys.exit(-1)
