@@ -10,3 +10,4 @@ echo "Checking copyrights ..."
 if ! BuildTools/Copyrighter.py check-all-copyrights; then
 	echo "Copyright error found. Aborting commit."
 	exit -1
+fi

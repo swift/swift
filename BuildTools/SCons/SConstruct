@@ -352,6 +352,12 @@ elif env.get("bonjour", False) :
 	bonjour_conf.Finish()
 
 ################################################################################
+# Set up git hooks
+################################################################################
+
+env.Install("#/.git/hooks", Glob("#/BuildTools/Git/Hooks/*"))
+
+################################################################################
 # Project files
 # FIXME: We need to explicitly list the order of libraries here, because of
 # the exported FLAGS. We should put FLAGS in separate SConscript files, and
