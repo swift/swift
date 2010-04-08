@@ -1,3 +1,9 @@
+/*
+ * Copyright (c) 2010 Remko Tronçon
+ * Licensed under the GNU General Public License v3.
+ * See Documentation/Licenses/GPLv3.txt for more information.
+ */
+
 // FIXME: Is it safe to pass boost::function<void()> by raw values?
 // FIXME: Should we release the strings created in the constructor?
 

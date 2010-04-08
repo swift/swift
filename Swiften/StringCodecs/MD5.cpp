@@ -1,13 +1,20 @@
-/* 
- * This implementation is shamelessly copied from L. Peter Deutsch's 
- * implementation, and altered to use our own defines and datastructures. 
- * Original license below.
+/*
+ * Copyright (c) 2010 Remko Tronçon
+ * Licensed under the GNU General Public License v3.
+ * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
 /*
-	Copyright (C) 1999, 2002 Aladdin Enterprises.  All rights reserved.
-
-	This software is provided 'as-is', without any express or implied
+ * Copyright (c) 2010 Remko Tronçon
+ * Licensed under the GNU General Public License v3.
+ * See Documentation/Licenses/GPLv3.txt for more information.
+ */
+/*
+ * This implementation is shamelessly copied from L. Peter Deutsch's
+ * implementation, and altered to use our own defines and datastructures.
+ * Original license below.
+ */
+/*	Copyright (C) 1999, 2002 Aladdin Enterprises.  All rights reserved.	This software is provided 'as-is', without any express or implied
 	warranty.  In no event will the authors be held liable for any damages
 	arising from the use of this software.
 
