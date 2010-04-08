@@ -30,7 +30,7 @@ namespace Swift {
 			enum Step {
 				Initial,
 				Proof,
-        Final
+				Final
 			} step;
 			String clientnonce;
 			ByteArray initialServerMessage;
