@@ -76,6 +76,7 @@ public:
 		delete nickResolver_;
 		delete treeWidgetFactory_;
 		delete stanzaChannel_;
+		delete eventController_;
 		delete iqChannel_;
 		delete iqRouter_;
 		delete mocks_;
@@ -199,13 +200,13 @@ public:
 	}
 
 	/**
-	   Test that a second window isn't unbound where there's already an unbound one.
-	   Bind 1
-	   Bind 2
-	   Unbind 1
-	   Unbind 2 (but it doesn't)
-	   Sent to bound 2
-	   Rebind 1
+		 Test that a second window isn't unbound where there's already an unbound one.
+		 Bind 1
+		 Bind 2
+		 Unbind 1
+		 Unbind 2 (but it doesn't)
+		 Sent to bound 2
+		 Rebind 1
 	 */
 	void testNoDuplicateUnbind() {
 		JID messageJID1("testling@test.com/resource1");
