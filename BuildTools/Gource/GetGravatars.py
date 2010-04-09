@@ -22,7 +22,8 @@ if p.wait() != 0 :
   sys.exit(-1)
 
 # Get & save the avatars
-os.makedirs(output_dir)
+if not os.path.isdir(output_dir) :
+  os.makedirs(output_dir)
 for email, name in authors.items() :
   print "Processing avatar for " + name + " <" + email + ">"
   filename = os.path.join(output_dir, name + ".png")
