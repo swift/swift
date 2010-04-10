@@ -24,6 +24,7 @@ namespace Swift {
 			EventController* eventController_;
 			EventWindowFactory* windowFactory_;
 			EventWindow* window_;
+			boost::bsignals::scoped_connection eventAddedConnection_;
 	};
 
 }

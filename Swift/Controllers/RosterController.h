@@ -70,6 +70,11 @@ namespace Swift {
 			NickResolver* nickResolver_;
 			PresenceOracle* presenceOracle_;
 			EventController* eventController_;
+			boost::bsignals::scoped_connection joinMUCConnection_;
+			boost::bsignals::scoped_connection changeStatusConnection_;
+			boost::bsignals::scoped_connection showOfflineConnection_;
+			boost::bsignals::scoped_connection signOutConnection_;
+			boost::bsignals::scoped_connection uiEventConnection_;
 	};
 }
 #endif

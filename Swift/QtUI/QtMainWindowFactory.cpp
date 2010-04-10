@@ -15,9 +15,7 @@ QtMainWindowFactory::QtMainWindowFactory(QtTreeWidgetFactory *treeWidgetFactory)
 }
 
 MainWindow* QtMainWindowFactory::createMainWindow(UIEventStream* eventStream) {
-	if (!lastWindow_) {
-		lastWindow_  = new QtMainWindow(eventStream, treeWidgetFactory_);
-	}
+	lastWindow_  = new QtMainWindow(eventStream, treeWidgetFactory_);
 	return lastWindow_;
 }
 
