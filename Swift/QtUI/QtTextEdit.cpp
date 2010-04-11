@@ -17,9 +17,14 @@ QtTextEdit::QtTextEdit(QWidget* parent) : QTextEdit(parent){
 };
 
 void QtTextEdit::keyPressEvent(QKeyEvent* event) {
-	if ((event->key() == Qt::Key_Enter || event->key() == Qt::Key_Return)
-		&& (event->modifiers() == Qt::NoModifier || event->modifiers() == Qt::KeypadModifier)) {
+	int key = event->key();
+	Qt::KeyboardModifiers modifiers = event->modifiers();
+	if ((key == Qt::Key_Enter || key == Qt::Key_Return)
+		&& (modifiers == Qt::NoModifier || modifiers == Qt::KeypadModifier)) {
 		emit returnPressed();
+	} else if (((key == Qt::Key_PageUp || key == Qt::Key_PageDown) && modifiers == Qt::ShiftModifier)
+			   || (key == Qt::Key_C && modifiers == Qt::ControlModifier && textCursor().selectedText().isEmpty())) {
+		emit unhandledKeyPressEvent(event);
 	} else {
 		QTextEdit::keyPressEvent(event);
 	}

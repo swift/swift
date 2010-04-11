@@ -12,11 +12,11 @@
 
 #include "ChatSnippet.h"
 
-class QWebView;
 class QWebPage;
 class QUrl;
 
 namespace Swift {
+	class QtWebView;
 	class QtChatView : public QWidget {
 			Q_OBJECT
 		public:
@@ -29,13 +29,14 @@ namespace Swift {
 			void copySelectionToClipboard();
 			void scrollToBottom();
 			void handleLinkClicked(const QUrl&);
+			void handleKeyPressEvent(QKeyEvent* event);
 
 		private slots:
 			void handleViewLoadFinished(bool);
 
 		private:
 			bool viewReady_;
-			QWebView* webView_;
+			QtWebView* webView_;
 			QWebPage* webPage_;
 			QString previousContinuationElementID_;
 			QString queuedMessages_;

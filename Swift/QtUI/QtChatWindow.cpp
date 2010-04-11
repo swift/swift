@@ -39,6 +39,7 @@ QtChatWindow::QtChatWindow(const QString &contact, QtTreeWidgetFactory *treeWidg
 	layout->addWidget(logRosterSplitter);
 
 	messageLog_ = new QtChatView(this);
+	messageLog_->setFocusPolicy(Qt::NoFocus);
 	logRosterSplitter->addWidget(messageLog_);
 
 	treeWidget_ = dynamic_cast<QtTreeWidget*>(treeWidgetFactory->createTreeWidget());
@@ -65,6 +66,7 @@ QtChatWindow::QtChatWindow(const QString &contact, QtTreeWidgetFactory *treeWidg
 	inputClearing_ = false;
 	contactIsTyping_ = false;
 
+	connect(input_, SIGNAL(unhandledKeyPressEvent(QKeyEvent*)), messageLog_, SLOT(handleKeyPressEvent(QKeyEvent*)));
 	connect(input_, SIGNAL(returnPressed()), this, SLOT(returnPressed()));
 	connect(input_, SIGNAL(textChanged()), this, SLOT(handleInputChanged()));
 	setFocusProxy(input_);

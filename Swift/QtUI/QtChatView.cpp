@@ -10,10 +10,11 @@
 #include <QFile>
 #include <QDesktopServices>
 #include <QVBoxLayout>
-#include <QWebView>
 #include <QWebFrame>
 #include <QKeyEvent>
 #include <QStackedWidget>
+
+#include "QtWebView.h"
 
 namespace Swift {
 
@@ -23,7 +24,7 @@ QtChatView::QtChatView(QWidget* parent) : QWidget(parent) {
 	QVBoxLayout* mainLayout = new QVBoxLayout(this);
 	mainLayout->setSpacing(0);
 	mainLayout->setContentsMargins(0,0,0,0);
-	webView_ = new QWebView(this);
+	webView_ = new QtWebView(this);
 	webView_->setFocusPolicy(Qt::NoFocus);
 	connect(webView_, SIGNAL(linkClicked(const QUrl&)), SLOT(handleLinkClicked(const QUrl&)));
 	connect(webView_, SIGNAL(loadFinished(bool)), SLOT(handleViewLoadFinished(bool)));
@@ -60,6 +61,10 @@ QtChatView::QtChatView(QWidget* parent) : QWidget(parent) {
 
 	viewReady_ = false;
 	webPage_->mainFrame()->setHtml(pageHTML);
+}
+
+void QtChatView::handleKeyPressEvent(QKeyEvent* event) {
+	webView_->keyPressEvent(event);
 }
 
 void QtChatView::addMessage(const ChatSnippet& snippet) {

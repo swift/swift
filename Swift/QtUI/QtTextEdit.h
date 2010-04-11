@@ -15,6 +15,7 @@ namespace Swift {
 		virtual QSize sizeHint() const;
 	signals:
 		void returnPressed();
+		void unhandledKeyPressEvent(QKeyEvent* event);
 	protected:
 		virtual void keyPressEvent(QKeyEvent* event);
 	private slots:
