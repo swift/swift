@@ -40,8 +40,6 @@ if env["SCONS_STAGE"] == "build" :
 	elif myenv["HAVE_XSS"] :
 		myenv.Append(CPPDEFINES = ["HAVE_XSS"])
 		sources += ["Idle/XSSIdleQuerier.cpp"]
-	else :
-		sources += ["Idle/DummyIdleQuerier.cpp"]
 
 	myenv.StaticLibrary("SwifTools", sources)
 
