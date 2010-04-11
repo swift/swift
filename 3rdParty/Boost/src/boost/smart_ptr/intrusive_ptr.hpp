@@ -77,7 +77,7 @@ public:
     template<class U>
 #if !defined( BOOST_SP_NO_SP_CONVERTIBLE )
 
-    intrusive_ptr( intrusive_ptr<U> const & rhs, typename detail::sp_enable_if_convertible<U,T>::type = detail::sp_empty() )
+    intrusive_ptr( intrusive_ptr<U> const & rhs, typename boost::detail::sp_enable_if_convertible<U,T>::type = boost::detail::sp_empty() )
 
 #else
 
@@ -106,6 +106,23 @@ public:
     template<class U> intrusive_ptr & operator=(intrusive_ptr<U> const & rhs)
     {
         this_type(rhs).swap(*this);
+        return *this;
+    }
+
+#endif
+
+// Move support
+
+#if defined( BOOST_HAS_RVALUE_REFS )
+
+    intrusive_ptr(intrusive_ptr && rhs): px( rhs.px )
+    {
+        rhs.px = 0;
+    }
+
+    intrusive_ptr & operator=(intrusive_ptr && rhs)
+    {
+        this_type( static_cast< intrusive_ptr && >( rhs ) ).swap(*this);
         return *this;
     }
 

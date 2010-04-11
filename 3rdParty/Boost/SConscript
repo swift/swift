@@ -65,13 +65,11 @@ if env["SCONS_STAGE"] == "build" :
 
 	if env["PLATFORM"] != "win32" :
 		sources += [
-				"src/libs/thread/src/pthread/exceptions.cpp",
 				"src/libs/thread/src/pthread/once.cpp",
 				"src/libs/thread/src/pthread/thread.cpp"]
 	else :
 		sources += [
 				"win32_stubs.cpp",
-				"src/libs/thread/src/win32/exceptions.cpp",
 				"src/libs/thread/src/win32/thread.cpp",
 				"src/libs/thread/src/win32/tss_dll.cpp",
 				"src/libs/thread/src/win32/tss_pe.cpp"]

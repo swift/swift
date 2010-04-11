@@ -54,14 +54,7 @@ using boost::system::system_category;
 
 # if defined(BOOST_WINDOWS_API)
 #   include <windows.h>
-#   if defined(__BORLANDC__) || defined(__MWERKS__)
-#     if defined(__BORLANDC__)
-        using std::time_t;
-#     endif
-#     include <utime.h>
-#   else
-#     include <sys/utime.h>
-#   endif
+#   include <ctime>  // for time_t
 
 # else // BOOST_POSIX_API
 #   include <sys/types.h>
@@ -706,9 +699,9 @@ namespace boost
       }
 
       BOOST_FILESYSTEM_DECL error_code
-      copy_file_api( const std::wstring & from, const std::wstring & to )
+      copy_file_api( const std::wstring & from, const std::wstring & to, bool fail_if_exists )
       {
-        return error_code( ::CopyFileW( from.c_str(), to.c_str(), /*fail_if_exists=*/true )
+        return error_code( ::CopyFileW( from.c_str(), to.c_str(), fail_if_exists )
           ? 0 : ::GetLastError(), system_category );
       }
 
@@ -886,9 +879,9 @@ namespace boost
       }
 
       BOOST_FILESYSTEM_DECL error_code
-      copy_file_api( const std::string & from, const std::string & to )
+      copy_file_api( const std::string & from, const std::string & to, bool fail_if_exists )
       {
-        return error_code( ::CopyFileA( from.c_str(), to.c_str(), /*fail_if_exists=*/true )
+        return error_code( ::CopyFileA( from.c_str(), to.c_str(), fail_if_exists )
           ? 0 : ::GetLastError(), system_category );
       }
 
@@ -1203,22 +1196,30 @@ namespace boost
 
       BOOST_FILESYSTEM_DECL error_code
       copy_file_api( const std::string & from_file_ph,
-        const std::string & to_file_ph )
+        const std::string & to_file_ph, bool fail_if_exists )
       {
         const std::size_t buf_sz = 32768;
         boost::scoped_array<char> buf( new char [buf_sz] );
         int infile=-1, outfile=-1;  // -1 means not open
-        struct stat from_stat;
 
-        if ( ::stat( from_file_ph.c_str(), &from_stat ) != 0
-          || (infile = ::open( from_file_ph.c_str(),
-                              O_RDONLY )) < 0
-          || (outfile = ::open( to_file_ph.c_str(),
-                                O_WRONLY | O_CREAT | O_EXCL,
-                                from_stat.st_mode )) < 0 )
+        // bug fixed: code previously did a stat() on the from_file first, but that
+        // introduced a gratuitous race condition; the stat() is now done after the open()
+
+        if ( (infile = ::open( from_file_ph.c_str(), O_RDONLY )) < 0 )
+          { return error_code( errno, system_category ); }
+
+        struct stat from_stat;
+        if ( ::stat( from_file_ph.c_str(), &from_stat ) != 0 )
+          { return error_code( errno, system_category ); }
+
+        int oflag = O_CREAT | O_WRONLY;
+        if ( fail_if_exists ) oflag |= O_EXCL;
+        if (  (outfile = ::open( to_file_ph.c_str(), oflag, from_stat.st_mode )) < 0 )
         {
-          if ( infile >= 0 ) ::close( infile );
-          return error_code( errno, system_category );
+          int open_errno = errno;
+          BOOST_ASSERT( infile >= 0 );
+          ::close( infile );
+          return error_code( open_errno, system_category );
         }
 
         ssize_t sz, sz_read=1, sz_write;
@@ -1281,7 +1282,7 @@ namespace boost
         target = std::string( "." ); // string was static but caused trouble
                                      // when iteration called from dtor, after
                                      // static had already been destroyed
-        std::size_t path_size;
+        std::size_t path_size (0);  // initialization quiets gcc warning
         error_code ec = path_max( path_size );
         if ( ec ) return ec;
         dirent de;

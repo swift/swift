@@ -2,7 +2,7 @@
 // dev_poll_reactor.hpp
 // ~~~~~~~~~~~~~~~~~~~~
 //
-// Copyright (c) 2003-2008 Christopher M. Kohlhoff (chris at kohlhoff dot com)
+// Copyright (c) 2003-2010 Christopher M. Kohlhoff (chris at kohlhoff dot com)
 //
 // Distributed under the Boost Software License, Version 1.0. (See accompanying
 // file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -366,23 +366,26 @@ private:
 
     // Write the pending event registration changes to the /dev/poll descriptor.
     std::size_t events_size = sizeof(::pollfd) * pending_event_changes_.size();
-    errno = 0;
-    int result = ::write(dev_poll_fd_,
-        &pending_event_changes_[0], events_size);
-    if (result != static_cast<int>(events_size))
+    if (events_size > 0)
     {
-      for (std::size_t i = 0; i < pending_event_changes_.size(); ++i)
+      errno = 0;
+      int result = ::write(dev_poll_fd_,
+          &pending_event_changes_[0], events_size);
+      if (result != static_cast<int>(events_size))
       {
-        int descriptor = pending_event_changes_[i].fd;
-        boost::system::error_code ec = boost::system::error_code(
-            errno, boost::asio::error::get_system_category());
-        read_op_queue_.perform_all_operations(descriptor, ec);
-        write_op_queue_.perform_all_operations(descriptor, ec);
-        except_op_queue_.perform_all_operations(descriptor, ec);
+        for (std::size_t i = 0; i < pending_event_changes_.size(); ++i)
+        {
+          int descriptor = pending_event_changes_[i].fd;
+          boost::system::error_code ec = boost::system::error_code(
+              errno, boost::asio::error::get_system_category());
+          read_op_queue_.perform_all_operations(descriptor, ec);
+          write_op_queue_.perform_all_operations(descriptor, ec);
+          except_op_queue_.perform_all_operations(descriptor, ec);
+        }
       }
+      pending_event_changes_.clear();
+      pending_event_change_index_.clear();
     }
-    pending_event_changes_.clear();
-    pending_event_change_index_.clear();
 
     int timeout = block ? get_timeout() : 0;
     wait_in_progress_ = true;
@@ -398,9 +401,6 @@ private:
 
     lock.lock();
     wait_in_progress_ = false;
-
-    // Block signals while performing operations.
-    boost::asio::detail::signal_blocker sb;
 
     // Dispatch the waiting events.
     for (int i = 0; i < num_events; ++i)
@@ -435,7 +435,6 @@ private:
           more_writes = write_op_queue_.has_operation(descriptor);
 
         if ((events[i].events & (POLLERR | POLLHUP)) != 0
-              && (events[i].events & ~(POLLERR | POLLHUP)) == 0
               && !more_except && !more_reads && !more_writes)
         {
           // If we have an event and no operations associated with the

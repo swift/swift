@@ -24,9 +24,17 @@
 #ifndef BOOST_ARRAY_HPP
 #define BOOST_ARRAY_HPP
 
+#include <boost/detail/workaround.hpp>
+
+#if BOOST_WORKAROUND(BOOST_MSVC, >= 1400)  
+# pragma warning(push)  
+# pragma warning(disable:4996) // 'std::equal': Function call with parameters that may be unsafe
+#endif
+
 #include <cstddef>
 #include <stdexcept>
 #include <boost/assert.hpp>
+#include <boost/swap.hpp>
 
 // Handles broken standard libraries better than <iterator>
 #include <boost/detail/iterator.hpp>
@@ -131,7 +139,8 @@ namespace boost {
 
         // swap (note: linear complexity)
         void swap (array<T,N>& y) {
-            std::swap_ranges(begin(),end(),y.begin());
+            for (size_type i = 0; i < N; ++i)
+                boost::swap(elems[i],y.elems[i]);
         }
 
         // direct access to data (read-only)
@@ -209,19 +218,19 @@ namespace boost {
         }
 
         // operator[]
-        reference operator[](size_type i)
+        reference operator[](size_type /*i*/)
         {
             return failed_rangecheck();
         }
 
-        const_reference operator[](size_type i) const
+        const_reference operator[](size_type /*i*/) const
         {
             return failed_rangecheck();
         }
 
         // at() with range check
-        reference at(size_type i)               {   return failed_rangecheck(); }
-        const_reference at(size_type i) const   {   return failed_rangecheck(); }
+        reference at(size_type /*i*/)               {   return failed_rangecheck(); }
+        const_reference at(size_type /*i*/) const   {   return failed_rangecheck(); }
 
         // front() and back()
         reference front()
@@ -250,7 +259,7 @@ namespace boost {
         static size_type max_size() { return 0; }
         enum { static_size = 0 };
 
-        void swap (array<T,0>& y) {
+        void swap (array<T,0>& /*y*/) {
         }
 
         // direct access to data (read-only)
@@ -317,5 +326,10 @@ namespace boost {
     }
 
 } /* namespace boost */
+
+
+#if BOOST_WORKAROUND(BOOST_MSVC, >= 1400)  
+# pragma warning(pop)  
+#endif 
 
 #endif /*BOOST_ARRAY_HPP*/

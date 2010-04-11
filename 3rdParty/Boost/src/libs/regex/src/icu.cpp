@@ -101,6 +101,8 @@ const icu_regex_traits::char_class_type icu_regex_traits::mask_underscore = icu_
 const icu_regex_traits::char_class_type icu_regex_traits::mask_unicode = icu_regex_traits::char_class_type(1) << offset_unicode;
 const icu_regex_traits::char_class_type icu_regex_traits::mask_any = icu_regex_traits::char_class_type(1) << offset_any;
 const icu_regex_traits::char_class_type icu_regex_traits::mask_ascii = icu_regex_traits::char_class_type(1) << offset_ascii;
+const icu_regex_traits::char_class_type icu_regex_traits::mask_horizontal = icu_regex_traits::char_class_type(1) << offset_horizontal;
+const icu_regex_traits::char_class_type icu_regex_traits::mask_vertical = icu_regex_traits::char_class_type(1) << offset_vertical;
 
 icu_regex_traits::char_class_type icu_regex_traits::lookup_icu_mask(const ::UChar32* p1, const ::UChar32* p2)
 {
@@ -370,6 +372,7 @@ icu_regex_traits::char_class_type icu_regex_traits::lookup_classname(const char_
       U_GC_ND_MASK,
       U_GC_ND_MASK,
       (0x3FFFFFFFu) & ~(U_GC_CC_MASK | U_GC_CF_MASK | U_GC_CS_MASK | U_GC_CN_MASK | U_GC_Z_MASK),
+      mask_horizontal,
       U_GC_LL_MASK,
       U_GC_LL_MASK,
       ~(U_GC_C_MASK),
@@ -379,6 +382,7 @@ icu_regex_traits::char_class_type icu_regex_traits::lookup_classname(const char_
       U_GC_LU_MASK,
       mask_unicode,
       U_GC_LU_MASK,
+      mask_vertical,
       char_class_type(U_GC_L_MASK | U_GC_ND_MASK | U_GC_MN_MASK) | mask_underscore, 
       char_class_type(U_GC_L_MASK | U_GC_ND_MASK | U_GC_MN_MASK) | mask_underscore, 
       char_class_type(U_GC_ND_MASK) | mask_xdigit,
@@ -486,6 +490,10 @@ bool icu_regex_traits::isctype(char_type c, char_class_type f) const
    if(((f & mask_any) != 0) && (c <= 0x10FFFF))
       return true;
    if(((f & mask_ascii) != 0) && (c <= 0x7F))
+      return true;
+   if(((f & mask_vertical) != 0) && (::boost::re_detail::is_separator(c) || (c == static_cast<char_type>('\v')) || (m == U_GC_ZL_MASK) || (m == U_GC_ZP_MASK)))
+      return true;
+   if(((f & mask_horizontal) != 0) && !::boost::re_detail::is_separator(c) && u_isspace(c) && (c != static_cast<char_type>('\v')))
       return true;
    return false;
 }

@@ -29,4 +29,4 @@ LIBS="date_time regex system thread signals filesystem"
 for lib in $LIBS; do
 	rm -rf $TARGET_DIR/libs/$lib/build $TARGET_DIR/libs/$lib/*.doc $TARGET_DIR/libs/$lib/src/*.doc $TARGET_DIR/libs/$lib/src/CMakeLists.txt $TARGET_DIR/libs/$lib/test
 done
-rm -rf $TARGET_DIR/tools/bcp/*.html $TARGET_DIR/libs/test $TARGET_DIR/doc $TARGET_DIR/boost.png $TARGET_DIR/boost/test
+rm -rf $TARGET_DIR/tools/bcp/*.html $TARGET_DIR/libs/test $TARGET_DIR/doc $TARGET_DIR/boost.png $TARGET_DIR/boost/test $TARGET_DIR/tools/bcp/Jamfile.v2 $TARGET_DIR/tools/bcp/doc $TARGET_DIR/tools/bcp/test

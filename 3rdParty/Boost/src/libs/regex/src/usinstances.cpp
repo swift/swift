@@ -17,13 +17,17 @@
   */
 
 #define BOOST_REGEX_SOURCE
+#ifdef _MSC_VER
+#pragma warning(disable:4506) // 'no definition for inline function'
+#endif
 
 #include <boost/detail/workaround.hpp>
 #include <memory>
 #include <string>
 
 #if defined(_DLL_CPPLIB) && !defined(_M_CEE_PURE) && defined(_NATIVE_WCHAR_T_DEFINED) \
-   && !(defined(__SGI_STL_PORT) || defined(_STLPORT_VERSION) || defined(__STD_RWCOMPILER_H__) || defined(_RWSTD_VER))
+   && !(defined(__SGI_STL_PORT) || defined(_STLPORT_VERSION) || defined(__STD_RWCOMPILER_H__) || defined(_RWSTD_VER))\
+   && BOOST_WORKAROUND(BOOST_MSVC, <1600)
 //
 // This is a horrible workaround, but without declaring these symbols extern we get
 // duplicate symbol errors when linking if the application is built without
