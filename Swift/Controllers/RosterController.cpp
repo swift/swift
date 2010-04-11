@@ -131,19 +131,25 @@ void RosterController::handleOnJIDRemoved(const JID& jid) {
 	roster_->removeContact(jid);
 }
 
-void RosterController::handleOnJIDUpdated(const JID& jid, const String& oldName, const std::vector<String> oldGroups) {
+void RosterController::handleOnJIDUpdated(const JID& jid, const String& oldName, const std::vector<String> passedOldGroups) {
 	if (oldName != xmppRoster_->getNameForJID(jid)) {
+		handleOnJIDRemoved(jid);
 		handleOnJIDAdded(jid);
+		//FIXME: use a roster visitor to avoid losing presence.
 		return;
 	}
 	std::vector<String> groups = xmppRoster_->getGroupsForJID(jid);
+	std::vector<String> oldGroups = passedOldGroups;
 	String name = xmppRoster_->getNameForJID(jid);
 	String contactsGroup = "Contacts";
+	if (oldGroups.empty()) {
+		oldGroups.push_back(contactsGroup);
+	}
 	if (groups.empty()) {
 		groups.push_back(contactsGroup);
 	}
 	foreach(const String& group, groups) {
-		if (std::find(oldGroups.begin(), oldGroups.end(), jid) == oldGroups.end()) {
+		if (std::find(oldGroups.begin(), oldGroups.end(), group) == oldGroups.end()) {
 			roster_->addContact(jid, xmppRoster_->getNameForJID(jid), group);
 		}
 	} 
