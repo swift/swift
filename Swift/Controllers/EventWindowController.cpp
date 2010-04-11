@@ -14,7 +14,6 @@ EventWindowController::EventWindowController(EventController* eventController, E
 	eventController_ = eventController;
 	windowFactory_ = windowFactory;
 	window_ = windowFactory_->createEventWindow();
-	printf("Got new window, pointer %d\n", (int)window_);
 	eventAddedConnection_ = eventController_->onEventQueueEventAdded.connect(boost::bind(&EventWindowController::handleEventQueueEventAdded, this, _1));
 }
 
