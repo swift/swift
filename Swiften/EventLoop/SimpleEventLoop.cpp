@@ -7,6 +7,7 @@
 #include "Swiften/EventLoop/SimpleEventLoop.h"
 
 #include <boost/bind.hpp>
+#include <iostream>
 
 #include "Swiften/Base/foreach.h"
 
