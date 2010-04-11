@@ -20,7 +20,7 @@ their own platform definition.
 """
 
 #
-# Copyright (c) 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009 The SCons Foundation
+# Copyright (c) 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010 The SCons Foundation
 # 
 # Permission is hereby granted, free of charge, to any person obtaining
 # a copy of this software and associated documentation files (the
@@ -42,7 +42,9 @@ their own platform definition.
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #
 
-__revision__ = "src/engine/SCons/Platform/__init__.py 4043 2009/02/23 09:06:45 scons"
+__revision__ = "src/engine/SCons/Platform/__init__.py 4761 2010/04/04 14:04:44 bdeegan"
+
+import SCons.compat
 
 import imp
 import os
@@ -176,8 +178,8 @@ class TempFileMunge:
         # We use the .lnk suffix for the benefit of the Phar Lap
         # linkloc linker, which likes to append an .lnk suffix if
         # none is given.
-        tmp = os.path.normpath(tempfile.mktemp('.lnk'))
-        native_tmp = SCons.Util.get_native_path(tmp)
+        (fd, tmp) = tempfile.mkstemp('.lnk', text=True)
+        native_tmp = SCons.Util.get_native_path(os.path.normpath(tmp))
 
         if env['SHELL'] and env['SHELL'] == 'sh':
             # The sh shell will try to escape the backslashes in the
@@ -197,7 +199,8 @@ class TempFileMunge:
             prefix = '@'
 
         args = map(SCons.Subst.quote_spaces, cmd[1:])
-        open(tmp, 'w').write(string.join(args, " ") + "\n")
+        os.write(fd, string.join(args, " ") + "\n")
+        os.close(fd)
         # XXX Using the SCons.Action.print_actions value directly
         # like this is bogus, but expedient.  This class should
         # really be rewritten as an Action that defines the

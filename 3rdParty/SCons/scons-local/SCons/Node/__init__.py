@@ -20,7 +20,7 @@ be able to depend on any other type of "thing."
 """
 
 #
-# Copyright (c) 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009 The SCons Foundation
+# Copyright (c) 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010 The SCons Foundation
 #
 # Permission is hereby granted, free of charge, to any person obtaining
 # a copy of this software and associated documentation files (the
@@ -42,7 +42,7 @@ be able to depend on any other type of "thing."
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #
 
-__revision__ = "src/engine/SCons/Node/__init__.py 4043 2009/02/23 09:06:45 scons"
+__revision__ = "src/engine/SCons/Node/__init__.py 4761 2010/04/04 14:04:44 bdeegan"
 
 import copy
 from itertools import chain, izip
@@ -352,7 +352,7 @@ class Node:
             if d.missing():
                 msg = "Explicit dependency `%s' not found, needed by target `%s'."
                 raise SCons.Errors.StopError, msg % (d, self)
-        if not self.implicit is None:
+        if self.implicit is not None:
             for i in self.implicit:
                 if i.missing():
                     msg = "Implicit dependency `%s' not found, needed by target `%s'."
@@ -474,7 +474,7 @@ class Node:
             # There was no explicit builder for this Node, so initialize
             # the self.builder attribute to None now.
             b = self.builder = None
-        return not b is None
+        return b is not None
 
     def set_explicit(self, is_explicit):
         self.is_explicit = is_explicit
@@ -602,7 +602,7 @@ class Node:
         # Don't bother scanning non-derived files, because we don't
         # care what their dependencies are.
         # Don't scan again, if we already have scanned.
-        if not self.implicit is None:
+        if self.implicit is not None:
             return
         self.implicit = []
         self.implicit_set = set()
@@ -891,7 +891,7 @@ class Node:
 
     def add_wkid(self, wkid):
         """Add a node to the list of kids waiting to be evaluated"""
-        if self.wkids != None:
+        if self.wkids is not None:
             self.wkids.append(wkid)
 
     def _children_reset(self):

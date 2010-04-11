@@ -1,6 +1,7 @@
 """SCons.Tool.latex
 
 Tool-specific initialization for LaTeX.
+Generates .dvi files from .latex or .ltx files
 
 There normally shouldn't be any need to import this module directly.
 It will usually be imported through the generic SCons.Tool.Tool()
@@ -9,7 +10,7 @@ selection method.
 """
 
 #
-# Copyright (c) 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009 The SCons Foundation
+# Copyright (c) 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010 The SCons Foundation
 #
 # Permission is hereby granted, free of charge, to any person obtaining
 # a copy of this software and associated documentation files (the
@@ -31,7 +32,7 @@ selection method.
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #
 
-__revision__ = "src/engine/SCons/Tool/latex.py 4043 2009/02/23 09:06:45 scons"
+__revision__ = "src/engine/SCons/Tool/latex.py 4761 2010/04/04 14:04:44 bdeegan"
 
 import SCons.Action
 import SCons.Defaults
@@ -40,10 +41,10 @@ import SCons.Util
 import SCons.Tool
 import SCons.Tool.tex
 
-LaTeXAction = None
-
 def LaTeXAuxFunction(target = None, source= None, env=None):
-    result = SCons.Tool.tex.InternalLaTeXAuxAction( LaTeXAction, target, source, env )
+    result = SCons.Tool.tex.InternalLaTeXAuxAction( SCons.Tool.tex.LaTeXAction, target, source, env )
+    if result != 0:
+        print env['LATEX']," returned an error, check the log file"
     return result
 
 LaTeXAuxAction = SCons.Action.Action(LaTeXAuxFunction,
@@ -51,9 +52,8 @@ LaTeXAuxAction = SCons.Action.Action(LaTeXAuxFunction,
 
 def generate(env):
     """Add Builders and construction variables for LaTeX to an Environment."""
-    global LaTeXAction
-    if LaTeXAction is None:
-        LaTeXAction = SCons.Action.Action('$LATEXCOM', '$LATEXCOMSTR')
+
+    env.AppendUnique(LATEXSUFFIXES=SCons.Tool.LaTeXSuffixes)
 
     import dvi
     dvi.generate(env)
@@ -67,10 +67,7 @@ def generate(env):
     bld.add_emitter('.ltx', SCons.Tool.tex.tex_eps_emitter)
     bld.add_emitter('.latex', SCons.Tool.tex.tex_eps_emitter)
 
-    env['LATEX']        = 'latex'
-    env['LATEXFLAGS']   = SCons.Util.CLVar('-interaction=nonstopmode')
-    env['LATEXCOM']     = 'cd ${TARGET.dir} && $LATEX $LATEXFLAGS ${SOURCE.file}'
-    env['LATEXRETRIES'] = 3
+    SCons.Tool.tex.generate_common(env)
 
 def exists(env):
     return env.Detect('latex')

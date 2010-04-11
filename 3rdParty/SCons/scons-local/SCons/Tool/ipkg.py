@@ -1,13 +1,13 @@
-"""SCons.Tool.sgiar
+"""SCons.Tool.ipkg
 
-Tool-specific initialization for SGI ar (library archive).  If CC
-exists, static libraries should be built with it, so the prelinker has
-a chance to resolve C++ template instantiations.
+Tool-specific initialization for ipkg.
 
 There normally shouldn't be any need to import this module directly.
 It will usually be imported through the generic SCons.Tool.Tool()
 selection method.
 
+The ipkg tool calls the ipkg-build. Its only argument should be the 
+packages fake_root.
 """
 
 #
@@ -33,33 +33,36 @@ selection method.
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #
 
-__revision__ = "src/engine/SCons/Tool/sgiar.py 4761 2010/04/04 14:04:44 bdeegan"
+__revision__ = "src/engine/SCons/Tool/ipkg.py 4761 2010/04/04 14:04:44 bdeegan"
 
-import SCons.Defaults
-import SCons.Tool
-import SCons.Util
+import os
+import string
+
+import SCons.Builder
 
 def generate(env):
-    """Add Builders and construction variables for ar to an Environment."""
-    SCons.Tool.createStaticLibBuilder(env)
-    
-    if env.Detect('CC'):
-        env['AR']          = 'CC'
-        env['ARFLAGS']     = SCons.Util.CLVar('-ar')
-        env['ARCOM']       = '$AR $ARFLAGS -o $TARGET $SOURCES'
-    else:
-        env['AR']          = 'ar'
-        env['ARFLAGS']     = SCons.Util.CLVar('r')
-        env['ARCOM']       = '$AR $ARFLAGS $TARGET $SOURCES'
-        
-    env['SHLINK']      = '$LINK'
-    env['SHLINKFLAGS'] = SCons.Util.CLVar('$LINKFLAGS -shared')
-    env['SHLINKCOM']   = '$SHLINK $SHLINKFLAGS -o $TARGET $SOURCES $_LIBDIRFLAGS $_LIBFLAGS'
-    env['LIBPREFIX']   = 'lib'
-    env['LIBSUFFIX']   = '.a'
+    """Add Builders and construction variables for ipkg to an Environment."""
+    try:
+        bld = env['BUILDERS']['Ipkg']
+    except KeyError:
+        bld = SCons.Builder.Builder( action  = '$IPKGCOM',
+                                     suffix  = '$IPKGSUFFIX',
+                                     source_scanner = None,
+                                     target_scanner = None)
+        env['BUILDERS']['Ipkg'] = bld
+
+    env['IPKG']       = 'ipkg-build'
+    env['IPKGCOM']    = '$IPKG $IPKGFLAGS ${SOURCE}'
+    # TODO(1.5)
+    #env['IPKGUSER']   = os.popen('id -un').read().strip()
+    #env['IPKGGROUP']  = os.popen('id -gn').read().strip()
+    env['IPKGUSER']   = string.strip(os.popen('id -un').read())
+    env['IPKGGROUP']  = string.strip(os.popen('id -gn').read())
+    env['IPKGFLAGS']  = SCons.Util.CLVar('-o $IPKGUSER -g $IPKGGROUP')
+    env['IPKGSUFFIX'] = '.ipk'
 
 def exists(env):
-    return env.Detect('CC') or env.Detect('ar')
+    return env.Detect('ipkg-build')
 
 # Local Variables:
 # tab-width:4

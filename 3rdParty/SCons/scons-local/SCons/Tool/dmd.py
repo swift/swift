@@ -32,7 +32,7 @@ Lib tool variables:
 """
 
 #
-# Copyright (c) 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009 The SCons Foundation
+# Copyright (c) 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010 The SCons Foundation
 #
 # Permission is hereby granted, free of charge, to any person obtaining
 # a copy of this software and associated documentation files (the
@@ -54,7 +54,7 @@ Lib tool variables:
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #
 
-__revision__ = "src/engine/SCons/Tool/dmd.py 4043 2009/02/23 09:06:45 scons"
+__revision__ = "src/engine/SCons/Tool/dmd.py 4761 2010/04/04 14:04:44 bdeegan"
 
 import os
 import string
@@ -200,7 +200,7 @@ def generate(env):
                         libs = env['LIBS']
                     except KeyError:
                         libs = []
-                    if 'phobos' not in libs:
+                    if 'phobos' not in libs and 'gphobos' not in libs:
                         if dc is 'dmd':
                             env.Append(LIBS = ['phobos'])
                         elif dc is 'gdmd':

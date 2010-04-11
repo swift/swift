@@ -9,7 +9,7 @@ selection method.
 """
 
 #
-# Copyright (c) 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009 The SCons Foundation
+# Copyright (c) 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010 The SCons Foundation
 #
 # Permission is hereby granted, free of charge, to any person obtaining
 # a copy of this software and associated documentation files (the
@@ -31,11 +31,12 @@ selection method.
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #
 
-__revision__ = "src/engine/SCons/Tool/swig.py 4043 2009/02/23 09:06:45 scons"
+__revision__ = "src/engine/SCons/Tool/swig.py 4761 2010/04/04 14:04:44 bdeegan"
 
 import os.path
 import re
 import string
+import subprocess
 
 import SCons.Action
 import SCons.Defaults
@@ -62,7 +63,13 @@ def _find_modules(src):
        case.)"""
     directors = 0
     mnames = []
-    matches = _reModule.findall(open(src).read())
+    try:
+        matches = _reModule.findall(open(src).read())
+    except IOError:
+        # If the file's not yet generated, guess the module name from the filename
+        matches = []
+        mnames.append(os.path.splitext(src)[0])
+
     for m in matches:
         mnames.append(m[2])
         directors = directors or string.find(m[0], 'directors') >= 0
@@ -90,8 +97,18 @@ def _swigEmitter(target, source, env):
                 mnames, directors = _find_modules(src)
             if directors:
                 _add_director_header_targets(target, env)
-            target.extend(map(lambda m, d=target[0].dir:
-                                     d.File(m + ".py"), mnames))
+            python_files = map(lambda m: m + ".py", mnames)
+            outdir = env.subst('$SWIGOUTDIR', target=target, source=source)
+            # .py files should be generated in SWIGOUTDIR if specified,
+            # otherwise in the same directory as the target
+            if outdir:
+                python_files = map(lambda j, o=outdir, e=env:
+                                   e.fs.File(os.path.join(o, j)),
+                                   python_files)
+            else:
+                python_files = map(lambda m, d=target[0].dir:
+                                   d.File(m), python_files)
+            target.extend(python_files)
         if "-java" in flags:
             if mnames is None:
                 mnames, directors = _find_modules(src)
@@ -108,6 +125,19 @@ def _swigEmitter(target, source, env):
                 SCons.Util.AddMethod(jf, t_from_s, 'target_from_source')
             target.extend(java_files)
     return (target, source)
+
+def _get_swig_version(env):
+    """Run the SWIG command line tool to get and return the version number"""
+    pipe = SCons.Action._subproc(env, [env['SWIG'], '-version'],
+                                 stdin = 'devnull',
+                                 stderr = 'devnull',
+                                 stdout = subprocess.PIPE)
+    if pipe.wait() != 0: return
+
+    out = pipe.stdout.read()
+    match = re.search(r'SWIG Version\s+(\S+)$', out, re.MULTILINE)
+    if match:
+        return match.group(1)
 
 def generate(env):
     """Add Builders and construction variables for swig to an Environment."""
@@ -129,6 +159,7 @@ def generate(env):
     java_file.add_emitter('.i', _swigEmitter)
 
     env['SWIG']              = 'swig'
+    env['SWIGVERSION']       = _get_swig_version(env)
     env['SWIGFLAGS']         = SCons.Util.CLVar('')
     env['SWIGDIRECTORSUFFIX'] = '_wrap.h'
     env['SWIGCFILESUFFIX']   = '_wrap$CFILESUFFIX'

@@ -5,7 +5,7 @@ Stuff for processing Java.
 """
 
 #
-# Copyright (c) 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009 The SCons Foundation
+# Copyright (c) 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010 The SCons Foundation
 #
 # Permission is hereby granted, free of charge, to any person obtaining
 # a copy of this software and associated documentation files (the
@@ -27,7 +27,7 @@ Stuff for processing Java.
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #
 
-__revision__ = "src/engine/SCons/Tool/JavaCommon.py 4043 2009/02/23 09:06:45 scons"
+__revision__ = "src/engine/SCons/Tool/JavaCommon.py 4761 2010/04/04 14:04:44 bdeegan"
 
 import os
 import os.path
@@ -65,7 +65,8 @@ if java_parsing:
         interfaces, and anonymous inner classes."""
         def __init__(self, version=default_java_version):
 
-            if not version in ('1.1', '1.2', '1.3','1.4', '1.5', '1.6'):
+            if not version in ('1.1', '1.2', '1.3','1.4', '1.5', '1.6',
+                               '5', '6'):
                 msg = "Java version %s not supported" % version
                 raise NotImplementedError, msg
 
@@ -171,7 +172,7 @@ if java_parsing:
             if self.version in ('1.1', '1.2', '1.3', '1.4'):
                 clazz = self.listClasses[0]
                 self.listOutputs.append('%s$%d' % (clazz, self.nextAnon))
-            elif self.version in ('1.5', '1.6'):
+            elif self.version in ('1.5', '1.6', '5', '6'):
                 self.stackAnonClassBrackets.append(self.brackets)
                 className = []
                 className.extend(self.listClasses)

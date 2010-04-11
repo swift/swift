@@ -5,7 +5,7 @@ The Scanner package for the SCons software construction utility.
 """
 
 #
-# Copyright (c) 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009 The SCons Foundation
+# Copyright (c) 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010 The SCons Foundation
 #
 # Permission is hereby granted, free of charge, to any person obtaining
 # a copy of this software and associated documentation files (the
@@ -27,7 +27,7 @@ The Scanner package for the SCons software construction utility.
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #
 
-__revision__ = "src/engine/SCons/Scanner/__init__.py 4043 2009/02/23 09:06:45 scons"
+__revision__ = "src/engine/SCons/Scanner/__init__.py 4761 2010/04/04 14:04:44 bdeegan"
 
 import re
 import string
@@ -92,7 +92,9 @@ class Base:
                  argument = _null,
                  skeys = _null,
                  path_function = None,
-                 node_class = SCons.Node.FS.Entry,
+                 # Node.FS.Base so that, by default, it's okay for a
+                 # scanner to return a Dir, File or Entry.
+                 node_class = SCons.Node.FS.Base,
                  node_factory = None,
                  scan_check = None,
                  recursive = None):
@@ -352,16 +354,13 @@ class Classic(Current):
     def scan(self, node, path=()):
 
         # cache the includes list in node so we only scan it once:
-        if node.includes != None:
+        if node.includes is not None:
             includes = node.includes
         else:
             includes = self.find_include_names (node)
             # Intern the names of the include files. Saves some memory
             # if the same header is included many times.
-            try:
-                node.includes = map(intern, includes)
-            except TypeError:
-                node.includes = includes
+            node.includes = map(SCons.Util.silent_intern, includes)
 
         # This is a hand-coded DSU (decorate-sort-undecorate, or
         # Schwartzian transform) pattern.  The sort key is the raw name
@@ -405,7 +404,8 @@ class ClassicCPP(Classic):
 
         n = SCons.Node.FS.find_file(include[1], paths)
 
-        return n, intern(include[1])
+        i = SCons.Util.silent_intern(include[1])
+        return n, i
 
     def sort_key(self, include):
         return SCons.Node.FS._my_normcase(string.join(include))

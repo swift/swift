@@ -10,7 +10,7 @@ selection method.
 """
 
 #
-# Copyright (c) 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009 The SCons Foundation
+# Copyright (c) 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010 The SCons Foundation
 #
 # Permission is hereby granted, free of charge, to any person obtaining
 # a copy of this software and associated documentation files (the
@@ -32,7 +32,7 @@ selection method.
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #
 
-__revision__ = "src/engine/SCons/Tool/intelc.py 4043 2009/02/23 09:06:45 scons"
+__revision__ = "src/engine/SCons/Tool/intelc.py 4761 2010/04/04 14:04:44 bdeegan"
 
 import math, sys, os.path, glob, string, re
 
@@ -259,7 +259,9 @@ def get_intel_compiler_top(version, abi):
         if not SCons.Util.can_read_reg:
             raise NoRegistryModuleError, "No Windows registry module was found"
         top = get_intel_registry_value('ProductDir', version, abi)
-        if not os.path.exists(os.path.join(top, "Bin", "icl.exe")):
+        # pre-11, icl was in Bin.  11 and later, it's in Bin/<abi> apparently.
+        if not os.path.exists(os.path.join(top, "Bin", "icl.exe")) \
+              and not os.path.exists(os.path.join(top, "Bin", abi, "icl.exe")):
             raise MissingDirError, \
                   "Can't find Intel compiler in %s"%(top)
     elif is_mac or is_linux:

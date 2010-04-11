@@ -5,7 +5,7 @@ Various utility functions go here.
 """
 
 #
-# Copyright (c) 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009 The SCons Foundation
+# Copyright (c) 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010 The SCons Foundation
 #
 # Permission is hereby granted, free of charge, to any person obtaining
 # a copy of this software and associated documentation files (the
@@ -27,7 +27,7 @@ Various utility functions go here.
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #
 
-__revision__ = "src/engine/SCons/Util.py 4043 2009/02/23 09:06:45 scons"
+__revision__ = "src/engine/SCons/Util.py 4761 2010/04/04 14:04:44 bdeegan"
 
 import copy
 import os
@@ -675,11 +675,11 @@ try:
     can_read_reg = 1
     hkey_mod = _winreg
 
-    RegOpenKeyEx = _winreg.OpenKeyEx
-    RegEnumKey = _winreg.EnumKey
-    RegEnumValue = _winreg.EnumValue
+    RegOpenKeyEx    = _winreg.OpenKeyEx
+    RegEnumKey      = _winreg.EnumKey
+    RegEnumValue    = _winreg.EnumValue
     RegQueryValueEx = _winreg.QueryValueEx
-    RegError = _winreg.error
+    RegError        = _winreg.error
 
 except ImportError:
     try:
@@ -688,11 +688,11 @@ except ImportError:
         can_read_reg = 1
         hkey_mod = win32con
 
-        RegOpenKeyEx = win32api.RegOpenKeyEx
-        RegEnumKey = win32api.RegEnumKey
-        RegEnumValue = win32api.RegEnumValue
+        RegOpenKeyEx    = win32api.RegOpenKeyEx
+        RegEnumKey      = win32api.RegEnumKey
+        RegEnumValue    = win32api.RegEnumValue
         RegQueryValueEx = win32api.RegQueryValueEx
-        RegError = win32api.error
+        RegError        = win32api.error
 
     except ImportError:
         class _NoError(Exception):
@@ -700,10 +700,10 @@ except ImportError:
         RegError = _NoError
 
 if can_read_reg:
-    HKEY_CLASSES_ROOT = hkey_mod.HKEY_CLASSES_ROOT
+    HKEY_CLASSES_ROOT  = hkey_mod.HKEY_CLASSES_ROOT
     HKEY_LOCAL_MACHINE = hkey_mod.HKEY_LOCAL_MACHINE
-    HKEY_CURRENT_USER = hkey_mod.HKEY_CURRENT_USER
-    HKEY_USERS = hkey_mod.HKEY_USERS
+    HKEY_CURRENT_USER  = hkey_mod.HKEY_CURRENT_USER
+    HKEY_USERS         = hkey_mod.HKEY_USERS
 
     def RegGetValue(root, key):
         """This utility function returns a value in the registry
@@ -752,6 +752,9 @@ else:
     HKEY_USERS = None
 
     def RegGetValue(root, key):
+        raise WindowsError
+
+    def RegOpenKeyEx(root, key):
         raise WindowsError
 
 if sys.platform == 'win32':
@@ -1127,7 +1130,7 @@ class Selector(OrderedDict):
             # the dictionary before giving up.
             s_dict = {}
             for (k,v) in self.items():
-                if not k is None:
+                if k is not None:
                     s_k = env.subst(k)
                     if s_dict.has_key(s_k):
                         # We only raise an error when variables point
@@ -1566,6 +1569,27 @@ def MD5collect(signatures):
         return signatures[0]
     else:
         return MD5signature(string.join(signatures, ', '))
+
+
+
+# Wrap the intern() function so it doesn't throw exceptions if ineligible
+# arguments are passed. The intern() function was moved into the sys module in
+# Python 3.
+try:
+    intern
+except NameError:
+    from sys import intern
+
+def silent_intern(x):
+    """
+    Perform intern() on the passed argument and return the result.
+    If the input is ineligible (e.g. a unicode string) the original argument is
+    returned and no exception is thrown.
+    """
+    try:
+        return intern(x)
+    except TypeError:
+        return x
 
 
 

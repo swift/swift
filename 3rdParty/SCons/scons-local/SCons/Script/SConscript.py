@@ -6,7 +6,7 @@ files.
 """
 
 #
-# Copyright (c) 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009 The SCons Foundation
+# Copyright (c) 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010 The SCons Foundation
 #
 # Permission is hereby granted, free of charge, to any person obtaining
 # a copy of this software and associated documentation files (the
@@ -28,7 +28,7 @@ files.
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #
 
-__revision__ = "src/engine/SCons/Script/SConscript.py 4043 2009/02/23 09:06:45 scons"
+__revision__ = "src/engine/SCons/Script/SConscript.py 4761 2010/04/04 14:04:44 bdeegan"
 
 import SCons
 import SCons.Action
@@ -189,7 +189,11 @@ def _SConscript(fs, *files, **kw):
                 # fs match so we can open the SConscript.
                 fs.chdir(top, change_os_dir=1)
                 if f.rexists():
-                    _file_ = open(f.rfile().get_abspath(), "r")
+                    actual = f.rfile()
+                    _file_ = open(actual.get_abspath(), "r")
+                elif f.srcnode().rexists():
+                    actual = f.srcnode().rfile()
+                    _file_ = open(actual.get_abspath(), "r")
                 elif f.has_src_builder():
                     # The SConscript file apparently exists in a source
                     # code management system.  Build it, but then clear
@@ -233,8 +237,7 @@ def _SConscript(fs, *files, **kw):
                         # interpret the stuff within the SConscript file
                         # relative to where we are logically.
                         fs.chdir(ldir, change_os_dir=0)
-                        # TODO Not sure how to handle src_dir here
-                        os.chdir(f.rfile().dir.get_abspath())
+                        os.chdir(actual.dir.get_abspath())
 
                     # Append the SConscript directory to the beginning
                     # of sys.path so Python modules in the SConscript
@@ -488,9 +491,10 @@ class SConsEnvironment(SCons.Environment.Base):
     def Exit(self, value=0):
         sys.exit(value)
 
-    def Export(self, *vars):
+    def Export(self, *vars, **kw):
         for var in vars:
             global_exports.update(compute_exports(self.Split(var)))
+        global_exports.update(kw)
 
     def GetLaunchDir(self):
         global launch_dir

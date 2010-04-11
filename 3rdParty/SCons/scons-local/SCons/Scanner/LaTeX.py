@@ -5,7 +5,7 @@ This module implements the dependency scanner for LaTeX code.
 """
 
 #
-# Copyright (c) 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009 The SCons Foundation
+# Copyright (c) 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010 The SCons Foundation
 #
 # Permission is hereby granted, free of charge, to any person obtaining
 # a copy of this software and associated documentation files (the
@@ -27,7 +27,7 @@ This module implements the dependency scanner for LaTeX code.
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #
 
-__revision__ = "src/engine/SCons/Scanner/LaTeX.py 4043 2009/02/23 09:06:45 scons"
+__revision__ = "src/engine/SCons/Scanner/LaTeX.py 4761 2010/04/04 14:04:44 bdeegan"
 
 import os.path
 import string
@@ -151,6 +151,7 @@ class LaTeX(SCons.Scanner.Base):
     of the file being searched:
     env['TEXINPUTS'] for "input" and "include" keywords
     env['TEXINPUTS'] for "includegraphics" keyword
+    env['TEXINPUTS'] for "lstinputlisting" keyword
     env['BIBINPUTS'] for "bibliography" keyword
     env['BSTINPUTS'] for "bibliographystyle" keyword
 
@@ -162,7 +163,8 @@ class LaTeX(SCons.Scanner.Base):
                      'includegraphics': 'TEXINPUTS',
                      'bibliography': 'BIBINPUTS',
                      'bibliographystyle': 'BSTINPUTS',
-                     'usepackage': 'TEXINPUTS'}
+                     'usepackage': 'TEXINPUTS',
+                     'lstinputlisting': 'TEXINPUTS'}
     env_variables = SCons.Util.unique(keyword_paths.values())
 
     def __init__(self, name, suffixes, graphics_extensions, *args, **kw):
@@ -172,7 +174,7 @@ class LaTeX(SCons.Scanner.Base):
         # Without the \n,  the ^ could match the beginning of a *previous*
         # line followed by one or more newline characters (i.e. blank
         # lines), interfering with a match on the next line.
-        regex = r'^[^%\n]*\\(include|includegraphics(?:\[[^\]]+\])?|input|bibliography|usepackage){([^}]*)}'
+        regex = r'^[^%\n]*\\(include|includegraphics(?:\[[^\]]+\])?|lstinputlisting(?:\[[^\]]+\])?|input|bibliography|usepackage){([^}]*)}'
         self.cre = re.compile(regex, re.M)
         self.graphics_extensions = graphics_extensions
 
@@ -180,7 +182,7 @@ class LaTeX(SCons.Scanner.Base):
             node = node.rfile()
             if not node.exists():
                 return []
-            return self.scan(node, path)
+            return self.scan_recurse(node, path)
 
         class FindMultiPathDirs:
             """The stock FindPathDirs function has the wrong granularity:
@@ -224,7 +226,7 @@ class LaTeX(SCons.Scanner.Base):
 
         kw['function'] = _scan
         kw['path_function'] = FindMultiPathDirs(LaTeX.keyword_paths)
-        kw['recursive'] = 1
+        kw['recursive'] = 0
         kw['skeys'] = suffixes
         kw['scan_check'] = LaTeXScanCheck(suffixes)
         kw['name'] = name
@@ -277,13 +279,13 @@ class LaTeX(SCons.Scanner.Base):
                 return i, include
         return i, include
 
-    def scan(self, node, path=()):
+    def scan(self, node):
         # Modify the default scan function to allow for the regular
         # expression to return a comma separated list of file names
         # as can be the case with the bibliography keyword.
 
         # Cache the includes list in node so we only scan it once:
-        path_dict = dict(list(path))
+        # path_dict = dict(list(path))
         noopt_cre = re.compile('\[.*$')
         if node.includes != None:
             includes = node.includes
@@ -308,6 +310,19 @@ class LaTeX(SCons.Scanner.Base):
             includes = split_includes
             node.includes = includes
 
+        return includes
+
+    def scan_recurse(self, node, path=()):
+        """ do a recursive scan of the top level target file
+        This lets us search for included files based on the
+        directory of the main file just as latex does"""
+
+        path_dict = dict(list(path))
+        
+        queue = [] 
+        queue.extend( self.scan(node) )
+        seen = {}
+
         # This is a hand-coded DSU (decorate-sort-undecorate, or
         # Schwartzian transform) pattern.  The sort key is the raw name
         # of the file as specifed on the \include, \input, etc. line.
@@ -317,7 +332,24 @@ class LaTeX(SCons.Scanner.Base):
         # is actually found in a Repository or locally."""
         nodes = []
         source_dir = node.get_dir()
-        for include in includes:
+        #for include in includes:
+        while queue:
+            
+            include = queue.pop()
+            # TODO(1.5):  more compact:
+            #try:
+            #    if seen[include[1]] == 1:
+            #        continue
+            #except KeyError:
+            #    seen[include[1]] = 1
+            try:
+                already_seen = seen[include[1]]
+            except KeyError:
+                seen[include[1]] = 1
+                already_seen = False
+            if already_seen:
+                continue
+
             #
             # Handle multiple filenames in include[1]
             #
@@ -331,6 +363,9 @@ class LaTeX(SCons.Scanner.Base):
             else:
                 sortkey = self.sort_key(n)
                 nodes.append((sortkey, n))
+                # recurse down 
+                queue.extend( self.scan(n) )
+
         #
         nodes.sort()
         nodes = map(lambda pair: pair[1], nodes)

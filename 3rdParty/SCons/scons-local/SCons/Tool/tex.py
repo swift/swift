@@ -1,6 +1,7 @@
 """SCons.Tool.tex
 
 Tool-specific initialization for TeX.
+Generates .dvi files from .tex files
 
 There normally shouldn't be any need to import this module directly.
 It will usually be imported through the generic SCons.Tool.Tool()
@@ -9,7 +10,7 @@ selection method.
 """
 
 #
-# Copyright (c) 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009 The SCons Foundation
+# Copyright (c) 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010 The SCons Foundation
 #
 # Permission is hereby granted, free of charge, to any person obtaining
 # a copy of this software and associated documentation files (the
@@ -31,7 +32,7 @@ selection method.
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #
 
-__revision__ = "src/engine/SCons/Tool/tex.py 4043 2009/02/23 09:06:45 scons"
+__revision__ = "src/engine/SCons/Tool/tex.py 4761 2010/04/04 14:04:44 bdeegan"
 
 import os.path
 import re
@@ -52,14 +53,14 @@ must_rerun_latex = True
 check_suffixes = ['.toc', '.lof', '.lot', '.out', '.nav', '.snm']
 
 # these are files that require bibtex or makeindex to be run when they change
-all_suffixes = check_suffixes + ['.bbl', '.idx', '.nlo', '.glo']
+all_suffixes = check_suffixes + ['.bbl', '.idx', '.nlo', '.glo', '.acn']
 
 #
 # regular expressions used to search for Latex features
 # or outputs that require rerunning latex
 #
-# search for all .aux files opened by latex (recorded in the .log file)
-openout_aux_re = re.compile(r"\\openout.*`(.*\.aux)'")
+# search for all .aux files opened by latex (recorded in the .fls file)
+openout_aux_re = re.compile(r"INPUT *(.*\.aux)")
 
 #printindex_re = re.compile(r"^[^%]*\\printindex", re.MULTILINE)
 #printnomenclature_re = re.compile(r"^[^%]*\\printnomenclature", re.MULTILINE)
@@ -87,16 +88,19 @@ listoftables_re = re.compile(r"^[^%\n]*\\listoftables", re.MULTILINE)
 hyperref_re = re.compile(r"^[^%\n]*\\usepackage.*\{hyperref\}", re.MULTILINE)
 makenomenclature_re = re.compile(r"^[^%\n]*\\makenomenclature", re.MULTILINE)
 makeglossary_re = re.compile(r"^[^%\n]*\\makeglossary", re.MULTILINE)
+makeglossaries_re = re.compile(r"^[^%\n]*\\makeglossaries", re.MULTILINE)
+makeacronyms_re = re.compile(r"^[^%\n]*\\makeglossaries", re.MULTILINE)
 beamer_re = re.compile(r"^[^%\n]*\\documentclass\{beamer\}", re.MULTILINE)
 
 # search to find all files included by Latex
 include_re = re.compile(r'^[^%\n]*\\(?:include|input){([^}]*)}', re.MULTILINE)
+includeOnly_re = re.compile(r'^[^%\n]*\\(?:include){([^}]*)}', re.MULTILINE)
 
 # search to find all graphics files included by Latex
 includegraphics_re = re.compile(r'^[^%\n]*\\(?:includegraphics(?:\[[^\]]+\])?){([^}]*)}', re.MULTILINE)
 
 # search to find all files opened by Latex (recorded in .log file)
-openout_re = re.compile(r"\\openout.*`(.*)'")
+openout_re = re.compile(r"OUTPUT *(.*)")
 
 # list of graphics file extensions for TeX and LaTeX
 TexGraphics   = SCons.Scanner.LaTeX.TexGraphics
@@ -120,6 +124,9 @@ MakeNclAction = None
 
 # An action to run MakeIndex (for glossary) on a file.
 MakeGlossaryAction = None
+
+# An action to run MakeIndex (for acronyms) on a file.
+MakeAcronymsAction = None
 
 # Used as a return value of modify_env_var if the variable is not set.
 _null = SCons.Scanner.LaTeX._null
@@ -206,6 +213,8 @@ def InternalLaTeXAuxAction(XXXLaTeXAction, target = None, source= None, env=None
     run_makeindex = makeindex_re.search(src_content) and not os.path.exists(targetbase + '.idx')
     run_nomenclature = makenomenclature_re.search(src_content) and not os.path.exists(targetbase + '.nlo')
     run_glossary = makeglossary_re.search(src_content) and not os.path.exists(targetbase + '.glo')
+    run_glossaries = makeglossaries_re.search(src_content) and not os.path.exists(targetbase + '.glo')
+    run_acronyms = makeacronyms_re.search(src_content) and not os.path.exists(targetbase + '.acn')
 
     saved_hashes = {}
     suffix_nodes = {}
@@ -256,13 +265,22 @@ def InternalLaTeXAuxAction(XXXLaTeXAction, target = None, source= None, env=None
         must_rerun_latex = False
         # Decide if various things need to be run, or run again.
 
-        # Read the log file to find all .aux files
+        # Read the log file to find warnings/errors
         logfilename = targetbase + '.log'
         logContent = ''
-        auxfiles = []
         if os.path.exists(logfilename):
             logContent = open(logfilename, "rb").read()
-            auxfiles = openout_aux_re.findall(logContent)
+
+
+        # Read the fls file to find all .aux files
+        flsfilename = targetbase + '.fls'
+        flsContent = ''
+        auxfiles = []
+        if os.path.exists(flsfilename):
+            flsContent = open(flsfilename, "rb").read()
+            auxfiles = openout_aux_re.findall(flsContent)
+        if Verbose:
+            print "auxfiles ",auxfiles
 
         # Now decide if bibtex will need to be run.
         # The information that bibtex reads from the .aux file is
@@ -280,6 +298,7 @@ def InternalLaTeXAuxAction(XXXLaTeXAction, target = None, source= None, env=None
                         bibfile = env.fs.File(targetbase)
                         result = BibTeXAction(bibfile, bibfile, env)
                         if result != 0:
+                            print env['BIBTEX']," returned an error, check the blg file"
                             return result
                         must_rerun_latex = check_MD5(suffix_nodes['.bbl'],'.bbl')
                         break
@@ -292,6 +311,7 @@ def InternalLaTeXAuxAction(XXXLaTeXAction, target = None, source= None, env=None
             idxfile = suffix_nodes['.idx']
             result = MakeIndexAction(idxfile, idxfile, env)
             if result != 0:
+                print env['MAKEINDEX']," returned an error, check the ilg file"
                 return result
 
         # TO-DO: need to add a way for the user to extend this list for whatever
@@ -309,16 +329,29 @@ def InternalLaTeXAuxAction(XXXLaTeXAction, target = None, source= None, env=None
             nclfile = suffix_nodes['.nlo']
             result = MakeNclAction(nclfile, nclfile, env)
             if result != 0:
-                return result
+                print env['MAKENCL']," (nomenclature) returned an error, check the nlg file"
+                #return result
 
         # Now decide if latex will need to be run again due to glossary.
-        if check_MD5(suffix_nodes['.glo'],'.glo') or (count == 1 and run_glossary):
+        if check_MD5(suffix_nodes['.glo'],'.glo') or (count == 1 and run_glossaries) or (count == 1 and run_glossary):
             # We must run makeindex
             if Verbose:
                 print "Need to run makeindex for glossary"
             glofile = suffix_nodes['.glo']
             result = MakeGlossaryAction(glofile, glofile, env)
             if result != 0:
+                print env['MAKEGLOSSARY']," (glossary) returned an error, check the glg file"
+                #return result
+
+        # Now decide if latex will need to be run again due to acronyms.
+        if check_MD5(suffix_nodes['.acn'],'.acn') or (count == 1 and run_acronyms):
+            # We must run makeindex
+            if Verbose:
+                print "Need to run makeindex for acronyms"
+            acrfile = suffix_nodes['.acn']
+            result = MakeAcronymsAction(acrfile, acrfile, env)
+            if result != 0:
+                print env['MAKEACRONYMS']," (acronymns) returned an error, check the alg file"
                 return result
 
         # Now decide if latex needs to be run yet again to resolve warnings.
@@ -374,22 +407,92 @@ def LaTeXAuxAction(target = None, source= None, env=None):
 
 LaTeX_re = re.compile("\\\\document(style|class)")
 
-def is_LaTeX(flist):
-    # Scan a file list to decide if it's TeX- or LaTeX-flavored.
+def is_LaTeX(flist,env,abspath):
+    """Scan a file list to decide if it's TeX- or LaTeX-flavored."""
+
+    # We need to scan files that are included in case the
+    # \documentclass command is in them.
+
+    # get path list from both env['TEXINPUTS'] and env['ENV']['TEXINPUTS']
+    savedpath = modify_env_var(env, 'TEXINPUTS', abspath)
+    paths = env['ENV']['TEXINPUTS']
+    if SCons.Util.is_List(paths):
+        pass
+    else:
+        # Split at os.pathsep to convert into absolute path
+        # TODO(1.5)
+        #paths = paths.split(os.pathsep)
+        paths = string.split(paths, os.pathsep)
+
+    # now that we have the path list restore the env
+    if savedpath is _null:
+        try:
+            del env['ENV']['TEXINPUTS']
+        except KeyError:
+            pass # was never set
+    else:
+        env['ENV']['TEXINPUTS'] = savedpath
+    if Verbose:
+        print "is_LaTeX search path ",paths
+        print "files to search :",flist
+
+    # Now that we have the search path and file list, check each one
     for f in flist:
+        if Verbose:
+            print " checking for Latex source ",str(f)
+
         content = f.get_text_contents()
         if LaTeX_re.search(content):
+            if Verbose:
+                print "file %s is a LaTeX file" % str(f)
             return 1
+        if Verbose:
+            print "file %s is not a LaTeX file" % str(f)
+
+        # now find included files
+        inc_files = [ ]
+        inc_files.extend( include_re.findall(content) )
+        if Verbose:
+            print "files included by '%s': "%str(f),inc_files
+        # inc_files is list of file names as given. need to find them
+        # using TEXINPUTS paths.
+
+        # search the included files
+        for src in inc_files:
+            srcNode = FindFile(src,['.tex','.ltx','.latex'],paths,env,requireExt=False)
+            # make this a list since is_LaTeX takes a list.
+            fileList = [srcNode,]
+            if Verbose:
+                print "FindFile found ",srcNode
+            if srcNode is not None:
+                file_test = is_LaTeX(fileList, env, abspath)
+
+            # return on first file that finds latex is needed.
+            if file_test:
+                return file_test
+
+        if Verbose:
+            print " done scanning ",str(f)
+
     return 0
 
 def TeXLaTeXFunction(target = None, source= None, env=None):
     """A builder for TeX and LaTeX that scans the source file to
     decide the "flavor" of the source and then executes the appropriate
     program."""
-    if is_LaTeX(source):
+
+    # find these paths for use in is_LaTeX to search for included files
+    basedir = os.path.split(str(source[0]))[0]
+    abspath = os.path.abspath(basedir)
+
+    if is_LaTeX(source,env,abspath):
         result = LaTeXAuxAction(target,source,env)
+        if result != 0:
+            print env['LATEX']," returned an error, check the log file"
     else:
         result = TeXAction(target,source,env)
+        if result != 0:
+            print env['TEX']," returned an error, check the log file"
     return result
 
 def TeXLaTeXStrFunction(target = None, source= None, env=None):
@@ -397,7 +500,12 @@ def TeXLaTeXStrFunction(target = None, source= None, env=None):
     decide the "flavor" of the source and then returns the appropriate
     command string."""
     if env.GetOption("no_exec"):
-        if is_LaTeX(source):
+
+        # find these paths for use in is_LaTeX to search for included files
+        basedir = os.path.split(str(source[0]))[0]
+        abspath = os.path.abspath(basedir)
+
+        if is_LaTeX(source,env,abspath):
             result = env.subst('$LATEXCOM',0,target,source)+" ..."
         else:
             result = env.subst("$TEXCOM",0,target,source)+" ..."
@@ -423,17 +531,23 @@ def tex_pdf_emitter(target, source, env):
 
     return (target, source)
 
-def ScanFiles(theFile, target, paths, file_tests, file_tests_search, env, graphics_extensions, targetdir):
-    # for theFile (a Node) update any file_tests and search for graphics files
-    # then find all included files and call ScanFiles for each of them
+def ScanFiles(theFile, target, paths, file_tests, file_tests_search, env, graphics_extensions, targetdir, aux_files):
+    """ For theFile (a Node) update any file_tests and search for graphics files
+    then find all included files and call ScanFiles recursively for each of them"""
+
     content = theFile.get_text_contents()
     if Verbose:
         print " scanning ",str(theFile)
 
     for i in range(len(file_tests_search)):
-        if file_tests[i][0] == None:
+        if file_tests[i][0] is None:
             file_tests[i][0] = file_tests_search[i].search(content)
 
+    incResult = includeOnly_re.search(content)
+    if incResult:
+        aux_files.append(os.path.join(targetdir, incResult.group(1)))
+    if Verbose:
+        print "\include file names : ", aux_files
     # recursively call this on each of the included files
     inc_files = [ ]
     inc_files.extend( include_re.findall(content) )
@@ -443,9 +557,9 @@ def ScanFiles(theFile, target, paths, file_tests, file_tests_search, env, graphi
     # using TEXINPUTS paths.
 
     for src in inc_files:
-        srcNode = srcNode = FindFile(src,['.tex','.ltx','.latex'],paths,env,requireExt=False)
-        if srcNode != None:
-            file_test = ScanFiles(srcNode, target, paths, file_tests, file_tests_search, env, graphics_extensions, targetdir)
+        srcNode = FindFile(src,['.tex','.ltx','.latex'],paths,env,requireExt=False)
+        if srcNode is not None:
+            file_tests = ScanFiles(srcNode, target, paths, file_tests, file_tests_search, env, graphics_extensions, targetdir, aux_files)
     if Verbose:
         print " done scanning ",str(theFile)
     return file_tests
@@ -456,32 +570,38 @@ def tex_emitter_core(target, source, env, graphics_extensions):
     are needed on subsequent runs of latex to finish tables of contents,
     bibliographies, indices, lists of figures, and hyperlink references.
     """
-    targetbase = SCons.Util.splitext(str(target[0]))[0]
     basename = SCons.Util.splitext(str(source[0]))[0]
     basefile = os.path.split(str(basename))[1]
+    targetdir = os.path.split(str(target[0]))[0]
+    targetbase = os.path.join(targetdir, basefile)
 
     basedir = os.path.split(str(source[0]))[0]
-    targetdir = os.path.split(str(target[0]))[0]
     abspath = os.path.abspath(basedir)
     target[0].attributes.path = abspath
-
+    
     #
     # file names we will make use of in searching the sources and log file
     #
-    emit_suffixes = ['.aux', '.log', '.ilg', '.blg', '.nls', '.nlg', '.gls', '.glg'] + all_suffixes
+    emit_suffixes = ['.aux', '.log', '.ilg', '.blg', '.nls', '.nlg', '.gls', '.glg', '.alg'] + all_suffixes
     auxfilename = targetbase + '.aux'
     logfilename = targetbase + '.log'
+    flsfilename = targetbase + '.fls'
 
     env.SideEffect(auxfilename,target[0])
     env.SideEffect(logfilename,target[0])
+    env.SideEffect(flsfilename,target[0])
+    if Verbose:
+        print "side effect :",auxfilename,logfilename,flsfilename
     env.Clean(target[0],auxfilename)
     env.Clean(target[0],logfilename)
+    env.Clean(target[0],flsfilename)
 
     content = source[0].get_text_contents()
 
     idx_exists = os.path.exists(targetbase + '.idx')
     nlo_exists = os.path.exists(targetbase + '.nlo')
     glo_exists = os.path.exists(targetbase + '.glo')
+    acr_exists = os.path.exists(targetbase + '.acn')
 
     # set up list with the regular expressions
     # we use to find features used
@@ -494,6 +614,8 @@ def tex_emitter_core(target, source, env, graphics_extensions):
                          hyperref_re,
                          makenomenclature_re,
                          makeglossary_re,
+                         makeglossaries_re,
+                         makeacronyms_re,
                          beamer_re ]
     # set up list with the file suffixes that need emitting
     # when a feature is found
@@ -506,6 +628,8 @@ def tex_emitter_core(target, source, env, graphics_extensions):
                   ['.out'],
                   ['.nlo', '.nls', '.nlg'],
                   ['.glo', '.gls', '.glg'],
+                  ['.glo', '.gls', '.glg'],
+                  ['.acn', '.acr', '.alg'],
                   ['.nav', '.snm', '.out', '.toc'] ]
     # build the list of lists
     file_tests = []
@@ -537,19 +661,35 @@ def tex_emitter_core(target, source, env, graphics_extensions):
     if Verbose:
         print "search path ",paths
 
-    file_tests = ScanFiles(source[0], target, paths, file_tests, file_tests_search, env, graphics_extensions, targetdir)
+    aux_files = []
+    file_tests = ScanFiles(source[0], target, paths, file_tests, file_tests_search, env, graphics_extensions, targetdir, aux_files)
 
     for (theSearch,suffix_list) in file_tests:
         if theSearch:
             for suffix in suffix_list:
                 env.SideEffect(targetbase + suffix,target[0])
+                if Verbose:
+                    print "side effect :",targetbase + suffix
                 env.Clean(target[0],targetbase + suffix)
 
-    # read log file to get all other files that latex creates and will read on the next pass
-    if os.path.exists(logfilename):
-        content = open(logfilename, "rb").read()
+    for aFile in aux_files:
+        aFile_base = SCons.Util.splitext(aFile)[0]
+        env.SideEffect(aFile_base + '.aux',target[0])
+        if Verbose:
+            print "side effect :",aFile_base + '.aux'
+        env.Clean(target[0],aFile_base + '.aux')
+    # read fls file to get all other files that latex creates and will read on the next pass
+    # remove files from list that we explicitly dealt with above
+    if os.path.exists(flsfilename):
+        content = open(flsfilename, "rb").read()
         out_files = openout_re.findall(content)
+        myfiles = [auxfilename, logfilename, flsfilename, targetbase+'.dvi',targetbase+'.pdf']
+        for filename in out_files[:]:
+            if filename in myfiles:
+                out_files.remove(filename)
         env.SideEffect(out_files,target[0])
+        if Verbose:
+            print "side effect :",out_files
         env.Clean(target[0],out_files)
 
     return (target, source)
@@ -559,6 +699,25 @@ TeXLaTeXAction = None
 
 def generate(env):
     """Add Builders and construction variables for TeX to an Environment."""
+
+    global TeXLaTeXAction
+    if TeXLaTeXAction is None:
+        TeXLaTeXAction = SCons.Action.Action(TeXLaTeXFunction,
+                              strfunction=TeXLaTeXStrFunction)
+
+    env.AppendUnique(LATEXSUFFIXES=SCons.Tool.LaTeXSuffixes)
+
+    generate_common(env)
+
+    import dvi
+    dvi.generate(env)
+
+    bld = env['BUILDERS']['DVI']
+    bld.add_action('.tex', TeXLaTeXAction)
+    bld.add_emitter('.tex', tex_eps_emitter)
+
+def generate_common(env):
+    """Add internal Builders and construction variables for LaTeX to an Environment."""
 
     # A generic tex file Action, sufficient for all tex files.
     global TeXAction
@@ -591,27 +750,27 @@ def generate(env):
     if MakeGlossaryAction is None:
         MakeGlossaryAction = SCons.Action.Action("$MAKEGLOSSARYCOM", "$MAKEGLOSSARYCOMSTR")
 
-    global TeXLaTeXAction
-    if TeXLaTeXAction is None:
-        TeXLaTeXAction = SCons.Action.Action(TeXLaTeXFunction,
-                              strfunction=TeXLaTeXStrFunction)
-
-    import dvi
-    dvi.generate(env)
-
-    bld = env['BUILDERS']['DVI']
-    bld.add_action('.tex', TeXLaTeXAction)
-    bld.add_emitter('.tex', tex_eps_emitter)
+    # Define an action to run MakeIndex on a file for acronyms.
+    global MakeAcronymsAction
+    if MakeAcronymsAction is None:
+        MakeAcronymsAction = SCons.Action.Action("$MAKEACRONYMSCOM", "$MAKEACRONYMSCOMSTR")
 
     env['TEX']      = 'tex'
-    env['TEXFLAGS'] = SCons.Util.CLVar('-interaction=nonstopmode')
+    env['TEXFLAGS'] = SCons.Util.CLVar('-interaction=nonstopmode -recorder')
     env['TEXCOM']   = 'cd ${TARGET.dir} && $TEX $TEXFLAGS ${SOURCE.file}'
 
-    # Duplicate from latex.py.  If latex.py goes away, then this is still OK.
+    env['PDFTEX']      = 'pdftex'
+    env['PDFTEXFLAGS'] = SCons.Util.CLVar('-interaction=nonstopmode -recorder')
+    env['PDFTEXCOM']   = 'cd ${TARGET.dir} && $PDFTEX $PDFTEXFLAGS ${SOURCE.file}'
+
     env['LATEX']        = 'latex'
-    env['LATEXFLAGS']   = SCons.Util.CLVar('-interaction=nonstopmode')
+    env['LATEXFLAGS']   = SCons.Util.CLVar('-interaction=nonstopmode -recorder')
     env['LATEXCOM']     = 'cd ${TARGET.dir} && $LATEX $LATEXFLAGS ${SOURCE.file}'
     env['LATEXRETRIES'] = 3
+
+    env['PDFLATEX']      = 'pdflatex'
+    env['PDFLATEXFLAGS'] = SCons.Util.CLVar('-interaction=nonstopmode -recorder')
+    env['PDFLATEXCOM']   = 'cd ${TARGET.dir} && $PDFLATEX $PDFLATEXFLAGS ${SOURCE.file}'
 
     env['BIBTEX']      = 'bibtex'
     env['BIBTEXFLAGS'] = SCons.Util.CLVar('')
@@ -626,15 +785,15 @@ def generate(env):
     env['MAKEGLOSSARYFLAGS'] = SCons.Util.CLVar('-s ${MAKEGLOSSARYSTYLE} -t ${SOURCE.filebase}.glg')
     env['MAKEGLOSSARYCOM']   = 'cd ${TARGET.dir} && $MAKEGLOSSARY ${SOURCE.filebase}.glo $MAKEGLOSSARYFLAGS -o ${SOURCE.filebase}.gls'
 
+    env['MAKEACRONYMS']      = 'makeindex'
+    env['MAKEACRONYMSSTYLE'] = '${SOURCE.filebase}.ist'
+    env['MAKEACRONYMSFLAGS'] = SCons.Util.CLVar('-s ${MAKEACRONYMSSTYLE} -t ${SOURCE.filebase}.alg')
+    env['MAKEACRONYMSCOM']   = 'cd ${TARGET.dir} && $MAKEACRONYMS ${SOURCE.filebase}.acn $MAKEACRONYMSFLAGS -o ${SOURCE.filebase}.acr'
+
     env['MAKENCL']      = 'makeindex'
-    env['MAKENCLSTYLE'] = '$nomencl.ist'
+    env['MAKENCLSTYLE'] = 'nomencl.ist'
     env['MAKENCLFLAGS'] = '-s ${MAKENCLSTYLE} -t ${SOURCE.filebase}.nlg'
     env['MAKENCLCOM']   = 'cd ${TARGET.dir} && $MAKENCL ${SOURCE.filebase}.nlo $MAKENCLFLAGS -o ${SOURCE.filebase}.nls'
-
-    # Duplicate from pdflatex.py.  If latex.py goes away, then this is still OK.
-    env['PDFLATEX']      = 'pdflatex'
-    env['PDFLATEXFLAGS'] = SCons.Util.CLVar('-interaction=nonstopmode')
-    env['PDFLATEXCOM']   = 'cd ${TARGET.dir} && $PDFLATEX $PDFLATEXFLAGS ${SOURCE.file}'
 
 def exists(env):
     return env.Detect('tex')

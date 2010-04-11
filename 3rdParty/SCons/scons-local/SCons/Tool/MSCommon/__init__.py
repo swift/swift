@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009 The SCons Foundation
+# Copyright (c) 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010 The SCons Foundation
 #
 # Permission is hereby granted, free of charge, to any person obtaining
 # a copy of this software and associated documentation files (the
@@ -21,7 +21,7 @@
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #
 
-__revision__ = "src/engine/SCons/Tool/MSCommon/__init__.py 4043 2009/02/23 09:06:45 scons"
+__revision__ = "src/engine/SCons/Tool/MSCommon/__init__.py 4761 2010/04/04 14:04:44 bdeegan"
 
 __doc__ = """
 Common functions for Microsoft Visual Studio and Visual C/C++.
@@ -36,10 +36,17 @@ import SCons.Errors
 import SCons.Platform.win32
 import SCons.Util
 
-from SCons.Tool.MSCommon.vs import detect_msvs, \
-                                   get_default_version, \
+from SCons.Tool.MSCommon.sdk import mssdk_exists, \
+                                    mssdk_setup_env
+
+from SCons.Tool.MSCommon.vc import msvc_exists, \
+                                   msvc_setup_env, \
+                                   msvc_setup_env_once
+
+from SCons.Tool.MSCommon.vs import get_default_version, \
                                    get_vs_by_version, \
                                    merge_default_version, \
+                                   msvs_exists, \
                                    query_versions
 
 # Local Variables:

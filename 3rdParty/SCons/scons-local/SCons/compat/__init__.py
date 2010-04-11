@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009 The SCons Foundation
+# Copyright (c) 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010 The SCons Foundation
 #
 # Permission is hereby granted, free of charge, to any person obtaining
 # a copy of this software and associated documentation files (the
@@ -60,7 +60,7 @@ function defined below loads the module as the "real" name (without the
 rest of our code will find our pre-loaded compatibility module.
 """
 
-__revision__ = "src/engine/SCons/compat/__init__.py 4043 2009/02/23 09:06:45 scons"
+__revision__ = "src/engine/SCons/compat/__init__.py 4761 2010/04/04 14:04:44 bdeegan"
 
 def import_as(module, name):
     """
@@ -175,6 +175,14 @@ except AttributeError:
         return os.path.exists(path) or os.path.islink(path)
     os.path.lexists = lexists
 
+
+try:
+    import platform
+except ImportError:
+    # Pre-2.3 Python has no platform module.
+    import_as('_scons_platform', 'platform')
+
+
 import shlex
 try:
     shlex.split
@@ -249,6 +257,43 @@ try:
 except ImportError:
     # Pre-1.6 Python has no UserString module.
     import_as('_scons_UserString', 'UserString')
+
+import tempfile
+try:
+    tempfile.mkstemp
+except AttributeError:
+    # Pre-2.3 Python has no tempfile.mkstemp function, so try to simulate it.
+    # adapted from the mkstemp implementation in python 3.
+    import os
+    import errno
+    def mkstemp(*args, **kw):
+        text = False
+        # TODO (1.5)
+        #if 'text' in kw :
+        if 'text' in kw.keys() :
+            text = kw['text']
+            del kw['text']
+        elif len( args ) == 4 :
+            text = args[3]
+            args = args[:3]
+        flags = os.O_RDWR | os.O_CREAT | os.O_EXCL
+        if not text and hasattr( os, 'O_BINARY' ) :
+            flags = flags | os.O_BINARY
+        while True:
+            try :
+                name = apply(tempfile.mktemp, args, kw)
+                fd = os.open( name, flags, 0600 )
+                return (fd, os.path.abspath(name))
+            except OSError, e:
+                if e.errno == errno.EEXIST:
+                    continue
+                raise
+
+    tempfile.mkstemp = mkstemp
+    del mkstemp
+
+
+
 
 # Local Variables:
 # tab-width:4

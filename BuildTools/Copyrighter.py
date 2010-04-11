@@ -134,7 +134,7 @@ if sys.argv[1] == "check-copyright" :
 elif sys.argv[1] == "check-all-copyrights" :
   ok = True
   for (path, dirs, files) in os.walk(".") :
-    if "3rdParty" in path or ".sconf" in path :
+    if "3rdParty" in path or ".sconf" in path or "Swift.app" in path :
       continue
     for filename in [os.path.join(path, file) for file in files if (file.endswith(".cpp") or file.endswith(".h")) and not "ui_" in file and not "moc_" in file and not "qrc_" in file and not "BuildVersion.h" in file] :
       ok &= check_copyright(filename) 
@@ -148,7 +148,7 @@ elif sys.argv[1] == "set-all-copyrights" :
   (username, email) = get_userinfo()
   copyright = get_copyright(username, email)
   for (path, dirs, files) in os.walk(".") :
-    if "3rdParty" in path or ".sconf" in path :
+    if "3rdParty" in path or ".sconf" in path or "Swift.app" in path :
       continue
     for filename in [os.path.join(path, file) for file in files if (file.endswith(".cpp") or file.endswith(".h")) and not "ui_" in file and not "moc_" in file and not "qrc_" in file and not "BuildVersion.h" in file] :
       set_copyright(filename, copyright) 

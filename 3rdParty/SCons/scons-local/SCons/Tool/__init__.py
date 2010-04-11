@@ -14,7 +14,7 @@ tool definition.
 """
 
 #
-# Copyright (c) 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009 The SCons Foundation
+# Copyright (c) 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010 The SCons Foundation
 #
 # Permission is hereby granted, free of charge, to any person obtaining
 # a copy of this software and associated documentation files (the
@@ -36,7 +36,7 @@ tool definition.
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #
 
-__revision__ = "src/engine/SCons/Tool/__init__.py 4043 2009/02/23 09:06:45 scons"
+__revision__ = "src/engine/SCons/Tool/__init__.py 4761 2010/04/04 14:04:44 bdeegan"
 
 import imp
 import sys
@@ -550,6 +550,7 @@ def FindAllTools(tools, env):
 
 def tool_list(platform, env):
 
+    other_plat_tools=[]
     # XXX this logic about what tool to prefer on which platform
     #     should be moved into either the platform files or
     #     the tool files themselves.
@@ -563,14 +564,15 @@ def tool_list(platform, env):
         assemblers = ['masm', 'nasm', 'gas', '386asm' ]
         fortran_compilers = ['gfortran', 'g77', 'ifl', 'cvf', 'f95', 'f90', 'fortran']
         ars = ['mslib', 'ar', 'tlib']
+        other_plat_tools=['msvs','midl']
     elif str(platform) == 'os2':
         "prefer IBM tools on OS/2"
-        linkers = ['ilink', 'gnulink', 'mslink']
-        c_compilers = ['icc', 'gcc', 'msvc', 'cc']
-        cxx_compilers = ['icc', 'g++', 'msvc', 'c++']
-        assemblers = ['nasm', 'masm', 'gas']
+        linkers = ['ilink', 'gnulink', ]#'mslink']
+        c_compilers = ['icc', 'gcc',]# 'msvc', 'cc']
+        cxx_compilers = ['icc', 'g++',]# 'msvc', 'c++']
+        assemblers = ['nasm',]# 'masm', 'gas']
         fortran_compilers = ['ifl', 'g77']
-        ars = ['ar', 'mslib']
+        ars = ['ar',]# 'mslib']
     elif str(platform) == 'irix':
         "prefer MIPSPro on IRIX"
         linkers = ['sgilink', 'gnulink']
@@ -650,14 +652,14 @@ def tool_list(platform, env):
                                 'dvipdf', 'dvips', 'gs',
                                 'jar', 'javac', 'javah',
                                 'latex', 'lex',
-                                'm4', 'midl', 'msvs',
+                                'm4', #'midl', 'msvs',
                                 'pdflatex', 'pdftex', 'Perforce',
                                 'RCS', 'rmic', 'rpcgen',
                                 'SCCS',
                                 # 'Subversion',
                                 'swig',
                                 'tar', 'tex',
-                                'yacc', 'zip', 'rpm', 'wix'],
+                                'yacc', 'zip', 'rpm', 'wix']+other_plat_tools,
                                env)
 
     tools = ([linker, c_compiler, cxx_compiler,

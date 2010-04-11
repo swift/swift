@@ -2,7 +2,7 @@
 #
 # SCons - a Software Constructor
 #
-# Copyright (c) 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009 The SCons Foundation
+# Copyright (c) 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010 The SCons Foundation
 #
 # Permission is hereby granted, free of charge, to any person obtaining
 # a copy of this software and associated documentation files (the
@@ -24,17 +24,17 @@
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #
 
-__revision__ = "src/script/sconsign.py 4043 2009/02/23 09:06:45 scons"
+__revision__ = "src/script/sconsign.py 4761 2010/04/04 14:04:44 bdeegan"
 
-__version__ = "1.2.0.d20090223"
+__version__ = "1.3.0.d20100404"
 
-__build__ = "r4043"
+__build__ = "r4761"
 
-__buildsys__ = "scons-dev"
+__buildsys__ = "cooldog"
 
-__date__ = "2009/02/23 09:06:45"
+__date__ = "2010/04/04 14:04:44"
 
-__developer__ = "scons"
+__developer__ = "bdeegan"
 
 import os
 import os.path
@@ -147,6 +147,19 @@ else:
         libpath, tail = os.path.split(libpath)
         # Check /usr/libfoo/scons*.
         prefs.append(libpath)
+
+    try:
+        import pkg_resources
+    except ImportError:
+        pass
+    else:
+        # when running from an egg add the egg's directory 
+        try:
+            d = pkg_resources.get_distribution('scons')
+        except pkg_resources.DistributionNotFound:
+            pass
+        else:
+            prefs.append(d.location)
 
 # Look first for 'scons-__version__' in all of our preference libs,
 # then for 'scons'.

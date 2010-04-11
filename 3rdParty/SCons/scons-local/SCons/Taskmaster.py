@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009 The SCons Foundation
+# Copyright (c) 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010 The SCons Foundation
 #
 # Permission is hereby granted, free of charge, to any person obtaining
 # a copy of this software and associated documentation files (the
@@ -48,7 +48,7 @@ interface and the SCons build engine.  There are two key classes here:
         target(s) that it decides need to be evaluated and/or built.
 """
 
-__revision__ = "src/engine/SCons/Taskmaster.py 4043 2009/02/23 09:06:45 scons"
+__revision__ = "src/engine/SCons/Taskmaster.py 4761 2010/04/04 14:04:44 bdeegan"
 
 from itertools import chain
 import operator
@@ -359,7 +359,8 @@ class Task:
         for t in self.targets:
             t.disambiguate().set_state(NODE_EXECUTING)
             for s in t.side_effects:
-                s.set_state(NODE_EXECUTING)
+                # add disambiguate here to mirror the call on targets above
+                s.disambiguate().set_state(NODE_EXECUTING)
 
     def make_ready_current(self):
         """
@@ -390,7 +391,8 @@ class Task:
             for t in self.targets:
                 t.set_state(NODE_EXECUTING)
                 for s in t.side_effects:
-                    s.set_state(NODE_EXECUTING)
+                    # add disambiguate here to mirror the call on targets in first loop above
+                    s.disambiguate().set_state(NODE_EXECUTING)
         else:
             for t in self.targets:
                 # We must invoke visited() to ensure that the node
@@ -797,7 +799,7 @@ class Taskmaster:
             children_not_ready = []
             children_failed = False
 
-            for child in chain(children, executor.get_all_prerequisites()):
+            for child in chain(executor.get_all_prerequisites(), children):
                 childstate = child.get_state()
 
                 if T: T.write(self.trace_message('       ' + self.trace_node(child)))

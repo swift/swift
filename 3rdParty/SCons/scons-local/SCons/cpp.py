@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009 The SCons Foundation
+# Copyright (c) 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010 The SCons Foundation
 #
 # Permission is hereby granted, free of charge, to any person obtaining
 # a copy of this software and associated documentation files (the
@@ -21,7 +21,7 @@
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #
 
-__revision__ = "src/engine/SCons/cpp.py 4043 2009/02/23 09:06:45 scons"
+__revision__ = "src/engine/SCons/cpp.py 4761 2010/04/04 14:04:44 bdeegan"
 
 __doc__ = """
 SCons C Pre-Processor module
@@ -66,10 +66,10 @@ cpp_lines_dict = {
     #   2) The optional parentheses and arguments (if it's a function-like
     #      macro, '' if it's not).
     #   3) The expansion value.
-    ('define',)         : '\s+([_A-Za-z][_A-Za-z0-9_]+)(\([^)]*\))?\s*(.*)',
+    ('define',)         : '\s+([_A-Za-z][_A-Za-z0-9_]*)(\([^)]*\))?\s*(.*)',
 
     # Fetch the #undefed keyword from a #undef line.
-    ('undef',)          : '\s+([_A-Za-z][A-Za-z0-9_]+)',
+    ('undef',)          : '\s+([_A-Za-z][A-Za-z0-9_]*)',
 }
 
 # Create a table that maps each individual C preprocessor directive to

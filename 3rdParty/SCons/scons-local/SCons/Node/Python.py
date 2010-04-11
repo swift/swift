@@ -5,7 +5,7 @@ Python nodes.
 """
 
 #
-# Copyright (c) 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009 The SCons Foundation
+# Copyright (c) 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010 The SCons Foundation
 #
 # Permission is hereby granted, free of charge, to any person obtaining
 # a copy of this software and associated documentation files (the
@@ -27,7 +27,7 @@ Python nodes.
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #
 
-__revision__ = "src/engine/SCons/Node/Python.py 4043 2009/02/23 09:06:45 scons"
+__revision__ = "src/engine/SCons/Node/Python.py 4761 2010/04/04 14:04:44 bdeegan"
 
 import SCons.Node
 
@@ -53,7 +53,7 @@ class Value(SCons.Node.Node):
     def __init__(self, value, built_value=None):
         SCons.Node.Node.__init__(self)
         self.value = value
-        if not built_value is None:
+        if built_value is not None:
             self.built_value = built_value
 
     def str_for_display(self):
@@ -88,16 +88,19 @@ class Value(SCons.Node.Node):
             self.built_value = self.value
         return self.built_value
 
-    def get_contents(self):
+    def get_text_contents(self):
         """By the assumption that the node.built_value is a
         deterministic product of the sources, the contents of a Value
         are the concatenation of all the contents of its sources.  As
         the value need not be built when get_contents() is called, we
         cannot use the actual node.built_value."""
+        ###TODO: something reasonable about universal newlines
         contents = str(self.value)
         for kid in self.children(None):
             contents = contents + kid.get_contents()
         return contents
+
+    get_contents = get_text_contents    ###TODO should return 'bytes' value
 
     def changed_since_last_build(self, target, prev_ni):
         cur_csig = self.get_csig()

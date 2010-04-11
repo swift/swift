@@ -11,7 +11,7 @@ that can be used by scripts or modules looking for the canonical default.
 """
 
 #
-# Copyright (c) 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009 The SCons Foundation
+# Copyright (c) 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010 The SCons Foundation
 #
 # Permission is hereby granted, free of charge, to any person obtaining
 # a copy of this software and associated documentation files (the
@@ -33,7 +33,7 @@ that can be used by scripts or modules looking for the canonical default.
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #
 
-__revision__ = "src/engine/SCons/Node/FS.py 4043 2009/02/23 09:06:45 scons"
+__revision__ = "src/engine/SCons/Node/FS.py 4761 2010/04/04 14:04:44 bdeegan"
 
 from itertools import izip
 import cStringIO
@@ -58,12 +58,46 @@ else:
     except AttributeError:
         codecs.BOM_UTF8 = '\xef\xbb\xbf'
     try:
-        codecs.BOM_UTF16
+        codecs.BOM_UTF16_LE
+        codecs.BOM_UTF16_BE
     except AttributeError:
-        if sys.byteorder == 'little':
-            codecs.BOM_UTF16 = '\xff\xfe'
+        codecs.BOM_UTF16_LE = '\xff\xfe'
+        codecs.BOM_UTF16_BE = '\xfe\xff'
+
+    # Provide a wrapper function to handle decoding differences in
+    # different versions of Python.  Normally, we'd try to do this in the
+    # compat layer (and maybe it still makes sense to move there?) but
+    # that doesn't provide a way to supply the string class used in
+    # pre-2.3 Python versions with a .decode() method that all strings
+    # naturally have.  Plus, the 2.[01] encodings behave differently
+    # enough that we have to settle for a lowest-common-denominator
+    # wrapper approach.
+    #
+    # Note that the 2.[012] implementations below may be inefficient
+    # because they perform an explicit look up of the encoding for every
+    # decode, but they're old enough (and we want to stop supporting
+    # them soon enough) that it's not worth complicating the interface.
+    # Think of it as additional incentive for people to upgrade...
+    try:
+        ''.decode
+    except AttributeError:
+        # 2.0 through 2.2:  strings have no .decode() method
+        try:
+            codecs.lookup('ascii').decode
+        except AttributeError:
+            # 2.0 and 2.1:  encodings are a tuple of functions, and the
+            # decode() function returns a (result, length) tuple.
+            def my_decode(contents, encoding):
+                return codecs.lookup(encoding)[1](contents)[0]
         else:
-            codecs.BOM_UTF16 = '\xfe\xff'
+            # 2.2:  encodings are an object with methods, and the
+            # .decode() method returns just the decoded bytes.
+            def my_decode(contents, encoding):
+                return codecs.lookup(encoding).decode(contents)
+    else:
+        # 2.3 or later:  use the .decode() string method
+        def my_decode(contents, encoding):
+            return contents.decode(encoding)
 
 import SCons.Action
 from SCons.Debug import logInstanceCreation
@@ -554,22 +588,22 @@ class Base(SCons.Node.Node):
 
         # Filenames and paths are probably reused and are intern'ed to
         # save some memory.
-        self.name = intern(name)
-        self.suffix = intern(SCons.Util.splitext(name)[1])
+        self.name = SCons.Util.silent_intern(name)
+        self.suffix = SCons.Util.silent_intern(SCons.Util.splitext(name)[1])
         self.fs = fs
 
         assert directory, "A directory must be provided"
 
-        self.abspath = intern(directory.entry_abspath(name))
-        self.labspath = intern(directory.entry_labspath(name))
+        self.abspath = SCons.Util.silent_intern(directory.entry_abspath(name))
+        self.labspath = SCons.Util.silent_intern(directory.entry_labspath(name))
         if directory.path == '.':
-            self.path = intern(name)
+            self.path = SCons.Util.silent_intern(name)
         else:
-            self.path = intern(directory.entry_path(name))
+            self.path = SCons.Util.silent_intern(directory.entry_path(name))
         if directory.tpath == '.':
-            self.tpath = intern(name)
+            self.tpath = SCons.Util.silent_intern(name)
         else:
-            self.tpath = intern(directory.entry_tpath(name))
+            self.tpath = SCons.Util.silent_intern(directory.entry_tpath(name))
         self.path_elements = directory.path_elements + [self]
 
         self.dir = directory
@@ -1749,7 +1783,7 @@ class Dir(Base):
                 d[name] = result
             return result
         else:
-            return d.has_key(name)
+            return d.has_key(_my_normcase(name))
 
     memoizer_counters.append(SCons.Memoize.CountValue('srcdir_list'))
 
@@ -1919,7 +1953,9 @@ class Dir(Base):
         """
         dirname, basename = os.path.split(pathname)
         if not dirname:
-            return self._glob1(basename, ondisk, source, strings)
+            result = self._glob1(basename, ondisk, source, strings)
+            result.sort(lambda a, b: cmp(str(a), str(b)))
+            return result
         if has_glob_magic(dirname):
             list = self.glob(dirname, ondisk, source, strings=False)
         else:
@@ -2074,7 +2110,8 @@ class RootDir(Dir):
             result = self._lookupDict[k]
         except KeyError:
             if not create:
-                raise SCons.Errors.UserError
+                msg = "No such file or directory: '%s' in '%s' (and create is False)" % (p, str(self))
+                raise SCons.Errors.UserError, msg
             # There is no Node for this path name, and we're allowed
             # to create it.
             dir_name, file_name = os.path.split(p)
@@ -2309,10 +2346,27 @@ class File(Base):
         # it's a valid python string.
         def get_text_contents(self):
             contents = self.get_contents()
+            # The behavior of various decode() methods and functions
+            # w.r.t. the initial BOM bytes is different for different
+            # encodings and/or Python versions.  ('utf-8' does not strip
+            # them, but has a 'utf-8-sig' which does; 'utf-16' seems to
+            # strip them; etc.)  Just side step all the complication by
+            # explicitly stripping the BOM before we decode().
             if contents.startswith(codecs.BOM_UTF8):
-                contents = contents.decode('utf-8')
-            elif contents.startswith(codecs.BOM_UTF16):
-                contents = contents.decode('utf-16')
+                contents = contents[len(codecs.BOM_UTF8):]
+                # TODO(2.2):  Remove when 2.3 becomes floor.
+                #contents = contents.decode('utf-8')
+                contents = my_decode(contents, 'utf-8')
+            elif contents.startswith(codecs.BOM_UTF16_LE):
+                contents = contents[len(codecs.BOM_UTF16_LE):]
+                # TODO(2.2):  Remove when 2.3 becomes floor.
+                #contents = contents.decode('utf-16-le')
+                contents = my_decode(contents, 'utf-16-le')
+            elif contents.startswith(codecs.BOM_UTF16_BE):
+                contents = contents[len(codecs.BOM_UTF16_BE):]
+                # TODO(2.2):  Remove when 2.3 becomes floor.
+                #contents = contents.decode('utf-16-be')
+                contents = my_decode(contents, 'utf-16-be')
             return contents
 
     def get_content_hash(self):

@@ -1,13 +1,3 @@
-"""engine.SCons.Tool.f90
-
-Tool-specific initialization for the generic Posix f90 Fortran compiler.
-
-There normally shouldn't be any need to import this module directly.
-It will usually be imported through the generic SCons.Tool.Tool()
-selection method.
-
-"""
-
 #
 # Copyright (c) 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010 The SCons Foundation
 #
@@ -31,32 +21,41 @@ selection method.
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #
 
-__revision__ = "src/engine/SCons/Tool/f90.py 4761 2010/04/04 14:04:44 bdeegan"
+__revision__ = "src/engine/SCons/Tool/MSCommon/arch.py 4761 2010/04/04 14:04:44 bdeegan"
 
-import SCons.Defaults
-import SCons.Scanner.Fortran
-import SCons.Tool
-import SCons.Util
-from SCons.Tool.FortranCommon import add_all_to_env, add_f90_to_env
+__doc__ = """Module to define supported Windows chip architectures.
+"""
 
-compilers = ['f90']
+import os
 
-def generate(env):
-    add_all_to_env(env)
-    add_f90_to_env(env)
+class ArchDefinition:
+    """
+    A class for defining architecture-specific settings and logic.
+    """
+    def __init__(self, arch, synonyms=[]):
+        self.arch = arch
+        self.synonyms = synonyms
 
-    fc = env.Detect(compilers) or 'f90'
-    env['F90']  = fc
-    env['SHF90']  = fc
+SupportedArchitectureList = [
+    ArchitectureDefinition(
+        'x86',
+        ['i386', 'i486', 'i586', 'i686'],
+    ),
 
-    env['FORTRAN']  = fc
-    env['SHFORTRAN']  = fc
+    ArchitectureDefinition(
+        'x86_64',
+        ['AMD64', 'amd64', 'em64t', 'EM64T', 'x86_64'],
+    ),
 
-def exists(env):
-    return env.Detect(compilers)
+    ArchitectureDefinition(
+        'ia64',
+        ['IA64'],
+    ),
+]
 
-# Local Variables:
-# tab-width:4
-# indent-tabs-mode:nil
-# End:
-# vim: set expandtab tabstop=4 shiftwidth=4:
+SupportedArchitectureMap = {}
+for a in SupportedArchitectureList:
+    SupportedArchitectureMap[a.arch] = a
+    for s in a.synonyms:
+        SupportedArchitectureMap[s] = a
+

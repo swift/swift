@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009 The SCons Foundation
+# Copyright (c) 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010 The SCons Foundation
 #
 # Permission is hereby granted, free of charge, to any person obtaining
 # a copy of this software and associated documentation files (the
@@ -21,10 +21,10 @@
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #
 
-__revision__ = "src/engine/SCons/Tool/MSCommon/common.py 4043 2009/02/23 09:06:45 scons"
+__revision__ = "src/engine/SCons/Tool/MSCommon/common.py 4761 2010/04/04 14:04:44 bdeegan"
 
 __doc__ = """
-Common helper functions for working with
+Common helper functions for working with the Microsoft tool chain.
 """
 
 import copy
@@ -36,7 +36,10 @@ import SCons.Util
 
 
 logfile = os.environ.get('SCONS_MSCOMMON_DEBUG')
-if logfile:
+if logfile == '-':
+    def debug(x):
+        print x
+elif logfile:
     try:
         import logging
     except ImportError:
@@ -48,23 +51,51 @@ else:
     debug = lambda x: None
 
 
-# TODO(sgk): unused
+_is_win64 = None
+
 def is_win64():
-    """Return true if running on windows 64 bits."""
-    # Unfortunately, python does not seem to have anything useful: neither
-    # sys.platform nor os.name gives something different on windows running on
-    # 32 bits or 64 bits. Note that we don't care about whether python itself
-    # is 32 or 64 bits here
-    value = "Software\Wow6432Node"
-    yo = SCons.Util.RegGetValue(SCons.Util.HKEY_LOCAL_MACHINE, value)[0]
-    if yo is None:
-        return 0
-    else:
-        return 1
+    """Return true if running on windows 64 bits.
+    
+    Works whether python itself runs in 64 bits or 32 bits."""
+    # Unfortunately, python does not provide a useful way to determine
+    # if the underlying Windows OS is 32-bit or 64-bit.  Worse, whether
+    # the Python itself is 32-bit or 64-bit affects what it returns,
+    # so nothing in sys.* or os.* help.  
+
+    # Apparently the best solution is to use env vars that Windows
+    # sets.  If PROCESSOR_ARCHITECTURE is not x86, then the python
+    # process is running in 64 bit mode (on a 64-bit OS, 64-bit
+    # hardware, obviously).
+    # If this python is 32-bit but the OS is 64, Windows will set
+    # ProgramW6432 and PROCESSOR_ARCHITEW6432 to non-null.
+    # (Checking for HKLM\Software\Wow6432Node in the registry doesn't
+    # work, because some 32-bit installers create it.)
+    global _is_win64
+    if _is_win64 is None:
+        # I structured these tests to make it easy to add new ones or
+        # add exceptions in the future, because this is a bit fragile.
+        _is_win64 = False
+        if os.environ.get('PROCESSOR_ARCHITECTURE','x86') != 'x86':
+            _is_win64 = True
+        if os.environ.get('PROCESSOR_ARCHITEW6432'):
+            _is_win64 = True
+        if os.environ.get('ProgramW6432'):
+            _is_win64 = True
+    return _is_win64
+
 
 def read_reg(value):
     return SCons.Util.RegGetValue(SCons.Util.HKEY_LOCAL_MACHINE, value)[0]
 
+def has_reg(value):
+    """Return True if the given key exists in HKEY_LOCAL_MACHINE, False
+    otherwise."""
+    try:
+        SCons.Util.RegOpenKeyEx(SCons.Util.HKEY_LOCAL_MACHINE, value)
+        ret = True
+    except WindowsError:
+        ret = False
+    return ret
 
 # Functions for fetching environment variable settings from batch files.
 
@@ -125,7 +156,7 @@ def parse_output(output, keep = ("INCLUDE", "LIB", "LIBPATH", "PATH")):
     for i in keep:
         rdk[i] = re.compile('%s=(.*)' % i, re.I)
 
-    def add_env(rmatch, key):
+    def add_env(rmatch, key, dkeep=dkeep):
         plist = rmatch.group(1).split(os.pathsep)
         for p in plist:
             # Do not add empty paths (when a var ends with ;)

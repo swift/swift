@@ -46,7 +46,7 @@ Usage example:
 """
 
 #
-# Copyright (c) 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009 The SCons Foundation
+# Copyright (c) 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010 The SCons Foundation
 #
 # Permission is hereby granted, free of charge, to any person obtaining
 # a copy of this software and associated documentation files (the
@@ -68,7 +68,7 @@ Usage example:
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #
 
-__revision__ = "src/engine/SCons/Variables/PathVariable.py 4043 2009/02/23 09:06:45 scons"
+__revision__ = "src/engine/SCons/Variables/PathVariable.py 4761 2010/04/04 14:04:44 bdeegan"
 
 __all__ = ['PathVariable',]
 

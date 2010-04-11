@@ -76,7 +76,7 @@ way for wrapping up the functions.
 
 """
 
-# Copyright (c) 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009 The SCons Foundation
+# Copyright (c) 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010 The SCons Foundation
 #
 # Permission is hereby granted, free of charge, to any person obtaining
 # a copy of this software and associated documentation files (the
@@ -97,7 +97,7 @@ way for wrapping up the functions.
 # OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-__revision__ = "src/engine/SCons/Action.py 4043 2009/02/23 09:06:45 scons"
+__revision__ = "src/engine/SCons/Action.py 4761 2010/04/04 14:04:44 bdeegan"
 
 import cPickle
 import dis
@@ -430,7 +430,7 @@ class ActionBase:
         # This should never happen, as the Action() factory should wrap
         # the varlist, but just in case an action is created directly,
         # we duplicate this check here.
-        vl = self.varlist
+        vl = self.get_varlist(target, source, env)
         if is_String(vl): vl = (vl,)
         for v in vl:
             result.append(env.subst('${'+v+'}'))
@@ -453,6 +453,9 @@ class ActionBase:
         lines = string.split(str(self), '\n')
         self.presub_env = None      # don't need this any more
         return lines
+
+    def get_varlist(self, target, source, env, executor=None):
+        return self.varlist
 
     def get_targets(self, env, executor):
         """
@@ -897,6 +900,9 @@ class CommandGeneratorAction(ActionBase):
     def get_implicit_deps(self, target, source, env, executor=None):
         return self._generate(target, source, env, 1, executor).get_implicit_deps(target, source, env)
 
+    def get_varlist(self, target, source, env, executor=None):
+        return self._generate(target, source, env, 1, executor).get_varlist(target, source, env, executor)
+
     def get_targets(self, env, executor):
         return self._generate(None, None, env, 1, executor).get_targets(env, executor)
 
@@ -958,6 +964,9 @@ class LazyAction(CommandGeneratorAction, CommandAction):
         c = self.get_parent_class(env)
         return c.get_presig(self, target, source, env)
 
+    def get_varlist(self, target, source, env, executor=None):
+        c = self.get_parent_class(env)
+        return c.get_varlist(self, target, source, env, executor)
 
 
 class FunctionAction(_ActionAction):
@@ -1138,6 +1147,13 @@ class ListAction(ActionBase):
         for act in self.list:
             result.extend(act.get_implicit_deps(target, source, env))
         return result
+
+    def get_varlist(self, target, source, env, executor=None):
+        result = SCons.Util.OrderedDict()
+        for act in self.list:
+            for var in act.get_varlist(target, source, env, executor):
+                result[var] = True
+        return result.keys()
 
 class ActionCaller:
     """A class for delaying calling an Action function with specific
