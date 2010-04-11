@@ -40,7 +40,7 @@ ChatsManager::ChatsManager(JID jid, StanzaChannel* stanzaChannel, IQRouter* iqRo
 	mucBookmarkManager_->onBookmarkAdded.connect(boost::bind(&ChatsManager::handleMUCBookmarkAdded, this, _1));
 	mucBookmarkManager_->onBookmarkRemoved.connect(boost::bind(&ChatsManager::handleMUCBookmarkRemoved, this, _1));
 	presenceOracle_->onPresenceChange.connect(boost::bind(&ChatsManager::handlePresenceChange, this, _1, _2));
-	uiEventStream_->onUIEvent.connect(boost::bind(&ChatsManager::handleUIEvent, this, _1));
+	uiEventConnection_ = uiEventStream_->onUIEvent.connect(boost::bind(&ChatsManager::handleUIEvent, this, _1));
 	chatListWindow_ = chatListWindowFactory->createWindow(uiEventStream_);
 }
 

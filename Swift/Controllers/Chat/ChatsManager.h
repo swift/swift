@@ -74,5 +74,6 @@ namespace Swift {
 			MUCBookmarkManager* mucBookmarkManager_;
 			boost::shared_ptr<DiscoInfo> serverDiscoInfo_;
 			ChatListWindow* chatListWindow_;
+			boost::bsignals::scoped_connection uiEventConnection_;
 	};
 }
