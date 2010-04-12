@@ -15,6 +15,7 @@
 #include "Swiften/Queries/Requests/GetRosterRequest.h"
 #include "Swiften/Queries/Requests/SetRosterRequest.h"
 #include "Swiften/Events/SubscriptionRequestEvent.h"
+#include "Swiften/Events/ErrorEvent.h"
 #include "Swiften/Presence/PresenceOracle.h"
 #include "Swift/Controllers/EventController.h"
 #include "Swiften/Queries/IQRouter.h"
@@ -180,7 +181,12 @@ void RosterController::handleUIEvent(boost::shared_ptr<UIEvent> event) {
 }
 
 void RosterController::handleRosterSetError(boost::optional<ErrorPayload> error, boost::shared_ptr<RosterPayload> rosterPayload) {
-	//FIXME: Create error events.
+	String text = "Server " + myJID_.getDomain() + " rejected roster change to item '" + rosterPayload->getItems()[0].getJID() + "'";
+	if (!error->getText().isEmpty()) {
+		text += ": " + error->getText();
+	}
+	boost::shared_ptr<ErrorEvent> errorEvent(new ErrorEvent(JID(myJID_.getDomain()), text));
+	eventController_->handleIncomingEvent(errorEvent);
 }
 
 void RosterController::handleIncomingPresence(boost::shared_ptr<Presence> newPresence, boost::shared_ptr<Presence> /*oldPresence*/) {

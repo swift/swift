@@ -10,6 +10,7 @@
 #include <QtDebug>
 
 #include "Swiften/Events/MessageEvent.h"
+#include "Swiften/Events/ErrorEvent.h"
 #include "Swift/QtUI/QtSubscriptionRequestWindow.h"
 #include "Swiften/Events/SubscriptionRequestEvent.h"
 #include "Swift/Controllers/UIEvents/RequestChatUIEvent.h"
@@ -44,12 +45,15 @@ void QtEventWindow::handleItemActivated(const QModelIndex& item) {
 	QtEvent* event = model_->getItem(item.row());
 	boost::shared_ptr<MessageEvent> messageEvent = boost::dynamic_pointer_cast<MessageEvent>(event->getEvent());
 	boost::shared_ptr<SubscriptionRequestEvent> subscriptionEvent = boost::dynamic_pointer_cast<SubscriptionRequestEvent>(event->getEvent());
+	boost::shared_ptr<ErrorEvent> errorEvent = boost::dynamic_pointer_cast<ErrorEvent>(event->getEvent());
 	
 	if (messageEvent) {
 		eventStream_->send(boost::shared_ptr<UIEvent>(new RequestChatUIEvent(messageEvent->getStanza()->getFrom())));
 	} else if (subscriptionEvent) {
 		QtSubscriptionRequestWindow* window = QtSubscriptionRequestWindow::getWindow(subscriptionEvent, this);
 		window->show();
+	} else if (errorEvent) {
+		errorEvent->onConclusion();
 	} else {
 		qWarning() << "Trying to activate an unexpected event";
 	}

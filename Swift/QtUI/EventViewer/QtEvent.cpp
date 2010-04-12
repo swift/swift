@@ -7,6 +7,7 @@
 #include "Swift/QtUI/EventViewer/QtEvent.h"
 
 #include "Swiften/Events/MessageEvent.h"
+#include "Swiften/Events/ErrorEvent.h"
 #include "Swiften/Events/SubscriptionRequestEvent.h"
 
 #include "Swift/QtUI/QtSwiftUtil.h"
@@ -40,6 +41,10 @@ QString QtEvent::text() {
 		String reason = subscriptionRequestEvent->getReason();
 		String message = subscriptionRequestEvent->getJID().toBare().toString() + " would like to add you to their roster" + (reason.isEmpty() ? "." : ", saying '" + reason + "'.");
 		return P2QSTRING(message);
+	}
+	boost::shared_ptr<ErrorEvent> errorEvent = boost::dynamic_pointer_cast<ErrorEvent>(event_);
+	if (errorEvent) {
+		return P2QSTRING(errorEvent->getText());
 	}
 	return "";
 }
