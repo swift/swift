@@ -13,9 +13,11 @@
 #include "Swift/Controllers/MainWindowFactory.h"
 #include "Swift/Controllers/NickResolver.h"
 #include "Swiften/Queries/Requests/GetRosterRequest.h"
+#include "Swiften/Queries/Requests/SetRosterRequest.h"
 #include "Swiften/Events/SubscriptionRequestEvent.h"
 #include "Swiften/Presence/PresenceOracle.h"
 #include "Swift/Controllers/EventController.h"
+#include "Swiften/Queries/IQRouter.h"
 #include "Swiften/Roster/Roster.h"
 #include "Swiften/Roster/SetPresence.h"
 #include "Swiften/Roster/AppearOffline.h"
@@ -33,8 +35,9 @@ namespace Swift {
 /**
  * The controller does not gain ownership of these parameters.
  */
-RosterController::RosterController(const JID& jid, boost::shared_ptr<XMPPRoster> xmppRoster, AvatarManager* avatarManager, MainWindowFactory* mainWindowFactory, TreeWidgetFactory* treeWidgetFactory, NickResolver* nickResolver, PresenceOracle* presenceOracle, EventController* eventController, UIEventStream* uiEventStream)
+RosterController::RosterController(const JID& jid, boost::shared_ptr<XMPPRoster> xmppRoster, AvatarManager* avatarManager, MainWindowFactory* mainWindowFactory, TreeWidgetFactory* treeWidgetFactory, NickResolver* nickResolver, PresenceOracle* presenceOracle, EventController* eventController, UIEventStream* uiEventStream, IQRouter* iqRouter)
  : myJID_(jid), xmppRoster_(xmppRoster), mainWindowFactory_(mainWindowFactory), treeWidgetFactory_(treeWidgetFactory), mainWindow_(mainWindowFactory_->createMainWindow(uiEventStream)), roster_(new Roster(mainWindow_->getTreeWidget(), treeWidgetFactory_)), offlineFilter_(new OfflineRosterFilter()) {
+	iqRouter_ = iqRouter;
 	presenceOracle_ = presenceOracle;
 	eventController_ = eventController;
 	roster_->addFilter(offlineFilter_);
@@ -164,9 +167,20 @@ void RosterController::handleOnJIDUpdated(const JID& jid, const String& oldName,
 void RosterController::handleUIEvent(boost::shared_ptr<UIEvent> event) {
 	boost::shared_ptr<AddContactUIEvent> addContactEvent = boost::dynamic_pointer_cast<AddContactUIEvent>(event);
 	if (addContactEvent) {
-		
+		RosterItemPayload item;
+		item.setName(addContactEvent->getName());
+		item.setJID(addContactEvent->getJID());
+		boost::shared_ptr<RosterPayload> roster(new RosterPayload());
+		roster->addItem(item);
+		boost::shared_ptr<SetRosterRequest> request(new SetRosterRequest(roster, iqRouter_));
+		request->onResponse.connect(boost::bind(&RosterController::handleRosterSetError, this, _1, roster));
+		request->send();
 		presenceOracle_->requestSubscription(addContactEvent->getJID());
 	}
+}
+
+void RosterController::handleRosterSetError(boost::optional<ErrorPayload> error, boost::shared_ptr<RosterPayload> rosterPayload) {
+	//FIXME: Create error events.
 }
 
 void RosterController::handleIncomingPresence(boost::shared_ptr<Presence> newPresence, boost::shared_ptr<Presence> /*oldPresence*/) {
@@ -174,7 +188,7 @@ void RosterController::handleIncomingPresence(boost::shared_ptr<Presence> newPre
 }
 
 void RosterController::handleSubscriptionRequest(const JID& jid, const String& message) {
-	if (xmppRoster_->containsJID(jid) && xmppRoster_->getSubscriptionStateForJID(jid) == RosterItemPayload::To || xmppRoster_->getSubscriptionStateForJID(jid) == RosterItemPayload::Both) {
+	if (xmppRoster_->containsJID(jid) && (xmppRoster_->getSubscriptionStateForJID(jid) == RosterItemPayload::To || xmppRoster_->getSubscriptionStateForJID(jid) == RosterItemPayload::Both)) {
 		presenceOracle_->confirmSubscription(jid);
 		return;
 	}

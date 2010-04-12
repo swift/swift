@@ -10,6 +10,7 @@
 #include "Swiften/JID/JID.h"
 #include "Swiften/Base/String.h"
 #include "Swiften/Elements/Presence.h"
+#include "Swiften/Elements/RosterPayload.h"
 #include "Swiften/Roster/UserRosterAction.h"
 #include "Swiften/Avatars/AvatarManager.h"
 #include "Swift/Controllers/UIEvents/UIEvent.h"
@@ -30,10 +31,11 @@ namespace Swift {
 	class EventController;
 	class SubscriptionRequestEvent;
 	class UIEventStream;
+	class IQRouter;
 
 	class RosterController {
 		public:
-			RosterController(const JID& jid, boost::shared_ptr<XMPPRoster> xmppRoster, AvatarManager* avatarManager, MainWindowFactory* mainWindowFactory, TreeWidgetFactory* treeWidgetFactory, NickResolver* nickResolver, PresenceOracle* presenceOracle, EventController* eventController, UIEventStream* uiEventStream);
+			RosterController(const JID& jid, boost::shared_ptr<XMPPRoster> xmppRoster, AvatarManager* avatarManager, MainWindowFactory* mainWindowFactory, TreeWidgetFactory* treeWidgetFactory, NickResolver* nickResolver, PresenceOracle* presenceOracle, EventController* eventController, UIEventStream* uiEventStream, IQRouter* iqRouter_);
 			~RosterController();
 			void showRosterWindow();
 			MainWindow* getWindow() {return mainWindow_;};
@@ -59,6 +61,7 @@ namespace Swift {
 			void handleSubscriptionRequestAccepted(SubscriptionRequestEvent* event);
 			void handleSubscriptionRequestDeclined(SubscriptionRequestEvent* event);
 			void handleUIEvent(boost::shared_ptr<UIEvent> event);
+			void handleRosterSetError(boost::optional<ErrorPayload> error, boost::shared_ptr<RosterPayload> rosterPayload);
 			JID myJID_;
 			boost::shared_ptr<XMPPRoster> xmppRoster_;
 			MainWindowFactory* mainWindowFactory_;
@@ -70,6 +73,7 @@ namespace Swift {
 			NickResolver* nickResolver_;
 			PresenceOracle* presenceOracle_;
 			EventController* eventController_;
+			IQRouter* iqRouter_;
 			boost::bsignals::scoped_connection joinMUCConnection_;
 			boost::bsignals::scoped_connection changeStatusConnection_;
 			boost::bsignals::scoped_connection showOfflineConnection_;

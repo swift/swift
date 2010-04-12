@@ -47,7 +47,7 @@ class RosterControllerTest : public CppUnit::TestFixture
 			presenceOracle_ = new PresenceOracle(stanzaChannel_);
 			eventController_ = new EventController();
 			uiEventStream_ = new UIEventStream();
-			rosterController_ = new RosterController(jid_, xmppRoster_, avatarManager_, mainWindowFactory_, treeWidgetFactory_, nickResolver_, presenceOracle_, eventController_, uiEventStream_);
+			rosterController_ = new RosterController(jid_, xmppRoster_, avatarManager_, mainWindowFactory_, treeWidgetFactory_, nickResolver_, presenceOracle_, eventController_, uiEventStream_, router_);
 
 
 		};
