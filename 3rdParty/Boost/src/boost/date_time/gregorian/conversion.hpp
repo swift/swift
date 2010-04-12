@@ -15,6 +15,7 @@
 #include <boost/date_time/c_time.hpp>
 #include <boost/date_time/special_defs.hpp>
 #include <boost/date_time/gregorian/gregorian_types.hpp>
+#include <cstring>
 
 namespace boost {
 

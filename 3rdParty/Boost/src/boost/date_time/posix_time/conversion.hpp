@@ -15,6 +15,7 @@
 #include <boost/date_time/c_time.hpp>
 #include <boost/date_time/time_resolution_traits.hpp> // absolute_value
 #include <boost/date_time/gregorian/conversion.hpp>
+#include <cstring>
 
 namespace boost {
 
