@@ -161,6 +161,10 @@ void MainController::resetClient() {
 
 void MainController::handleConnected() {
 	loginWindow_->setIsLoggingIn(false);
+	if (lastDisconnectError_) {
+		lastDisconnectError_->conclude();
+		lastDisconnectError_ = boost::shared_ptr<ErrorEvent>();
+	}
 	//FIXME: this freshLogin thing is temporary so I can see what's what before I split into a seperate method.
 	bool freshLogin = rosterController_ == NULL;
 	if (freshLogin) {
@@ -348,6 +352,10 @@ void MainController::handleError(const ClientError& error) {
 	if (!rosterController_) { //hasn't been logged in yet
 		signOut();
 		loginWindow_->setMessage(message);
+	} else {
+		message = "Disconnected from " + jid_.getDomain() + ": ";
+		lastDisconnectError_ = boost::shared_ptr<ErrorEvent>(new ErrorEvent(JID(jid_.getDomain()), message));
+		eventController_->handleIncomingEvent(lastDisconnectError_);
 	}
 	logout();
 	if (rosterController_) {

@@ -23,6 +23,7 @@
 #include "Swiften/Elements/Presence.h"
 #include "Swiften/Settings/SettingsProvider.h"
 #include "Swiften/Elements/CapsInfo.h"
+#include "Swiften/Events/ErrorEvent.h"
 #include "Swiften/Roster/XMPPRoster.h"
 
 namespace Swift {
@@ -125,5 +126,6 @@ namespace Swift {
 			String password_;
 			String certificateFile_;
 			ChatListWindowFactory* chatListWindowFactory_;
+			boost::shared_ptr<ErrorEvent> lastDisconnectError_;
 	};
 }

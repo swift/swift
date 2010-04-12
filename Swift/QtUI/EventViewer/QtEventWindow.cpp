@@ -53,7 +53,7 @@ void QtEventWindow::handleItemActivated(const QModelIndex& item) {
 		QtSubscriptionRequestWindow* window = QtSubscriptionRequestWindow::getWindow(subscriptionEvent, this);
 		window->show();
 	} else if (errorEvent) {
-		errorEvent->onConclusion();
+		errorEvent->conclude();
 	} else {
 		qWarning() << "Trying to activate an unexpected event";
 	}
