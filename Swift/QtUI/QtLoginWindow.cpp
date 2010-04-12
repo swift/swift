@@ -47,7 +47,7 @@ QtLoginWindow::QtLoginWindow(UIEventStream* uiEventStream) : QMainWindow() {
 	QWidget *wrapperWidget = new QWidget(this);
 	wrapperWidget->setSizePolicy(QSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding));
 	QBoxLayout *layout = new QBoxLayout(QBoxLayout::TopToBottom, wrapperWidget);
-	layout->addStretch();
+	layout->addStretch(2);
 
 	QLabel* logo = new QLabel(this);
 	logo->setPixmap(QPixmap(":/logo-shaded-text.256.png"));
@@ -106,6 +106,8 @@ QtLoginWindow::QtLoginWindow(UIEventStream* uiEventStream) : QMainWindow() {
 	layout->addWidget(remember_);
 	loginAutomatically_ = new QCheckBox(tr("Login Automatically?"), this);
 	layout->addWidget(loginAutomatically_);
+
+	layout->addStretch(2);
 
 	connect(loginButton_, SIGNAL(clicked()), SLOT(loginClicked()));
 	stack_->addWidget(wrapperWidget);
