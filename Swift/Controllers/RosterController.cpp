@@ -103,7 +103,7 @@ void RosterController::handleChangeStatusRequest(StatusShow::Type show, const St
 
 void RosterController::handleUserAction(boost::shared_ptr<UserRosterAction> action) {
 	boost::shared_ptr<OpenChatRosterAction> chatAction = boost::dynamic_pointer_cast<OpenChatRosterAction>(action);
-	if (chatAction.get() != NULL) {
+	if (chatAction) {
 		ContactRosterItem *contactItem = dynamic_cast<ContactRosterItem*>(chatAction->getRosterItem());
 		assert(contactItem);
 		onStartChatRequest(contactItem->getJID().toBare());
@@ -111,10 +111,17 @@ void RosterController::handleUserAction(boost::shared_ptr<UserRosterAction> acti
 	}
 
 	boost::shared_ptr<RemoveItemRosterAction> removeAction = boost::dynamic_pointer_cast<RemoveItemRosterAction>(action);
-	if (removeAction.get() != NULL) {
-		ContactRosterItem *contactItem = dynamic_cast<ContactRosterItem*>(chatAction->getRosterItem());
+	if (removeAction) {
+		ContactRosterItem *contactItem = dynamic_cast<ContactRosterItem*>(removeAction->getRosterItem());
 		assert(contactItem);
-		//FIXME: remove it
+		
+		RosterItemPayload item(contactItem->getJID(), "", RosterItemPayload::Remove);
+		boost::shared_ptr<RosterPayload> roster(new RosterPayload());
+		roster->addItem(item);
+		boost::shared_ptr<SetRosterRequest> request(new SetRosterRequest(roster, iqRouter_));
+		request->onResponse.connect(boost::bind(&RosterController::handleRosterSetError, this, _1, roster));
+		request->send();
+
 		return;
 	}
 }
@@ -181,6 +188,9 @@ void RosterController::handleUIEvent(boost::shared_ptr<UIEvent> event) {
 }
 
 void RosterController::handleRosterSetError(boost::optional<ErrorPayload> error, boost::shared_ptr<RosterPayload> rosterPayload) {
+	if (!error) {
+		return;
+	}
 	String text = "Server " + myJID_.getDomain() + " rejected roster change to item '" + rosterPayload->getItems()[0].getJID() + "'";
 	if (!error->getText().isEmpty()) {
 		text += ": " + error->getText();
