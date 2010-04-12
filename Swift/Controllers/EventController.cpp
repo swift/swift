@@ -10,6 +10,7 @@
 #include <algorithm>
 
 #include "Swiften/Events/MessageEvent.h"
+#include "Swiften/Events/ErrorEvent.h"
 #include "Swiften/Events/SubscriptionRequestEvent.h"
 
 namespace Swift {
@@ -20,7 +21,8 @@ EventController::EventController() {
 void EventController::handleIncomingEvent(boost::shared_ptr<StanzaEvent> sourceEvent) {
 	boost::shared_ptr<MessageEvent> messageEvent = boost::dynamic_pointer_cast<MessageEvent>(sourceEvent);
 	boost::shared_ptr<SubscriptionRequestEvent> subscriptionEvent = boost::dynamic_pointer_cast<SubscriptionRequestEvent>(sourceEvent);
-	if ((messageEvent && messageEvent->isReadable()) || subscriptionEvent) {
+	boost::shared_ptr<ErrorEvent> errorEvent = boost::dynamic_pointer_cast<ErrorEvent>(sourceEvent);
+	if ((messageEvent && messageEvent->isReadable()) || subscriptionEvent || errorEvent) {
 		events_.push_back(sourceEvent);
 		sourceEvent->onConclusion.connect(boost::bind(&EventController::handleEventConcluded, this, sourceEvent));
 		onEventQueueLengthChange(events_.size());
