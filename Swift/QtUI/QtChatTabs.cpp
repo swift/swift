@@ -14,6 +14,7 @@
 #include <QTabWidget>
 #include <QLayout>
 #include <QTabBar>
+#include <QApplication>
 
 namespace Swift {
 QtChatTabs::QtChatTabs() : QWidget() {
@@ -113,14 +114,21 @@ void QtChatTabs::handleTabTitleUpdated(QWidget* widget) {
 	}
 	tabs_->setTabText(index, widget->windowTitle());
 	QColor tabTextColor;
+	bool flash = false;
 	switch (tabbable->getWidgetAlertState()) {
-	case QtTabbable::WaitingActivity : tabTextColor = QColor(255, 0, 0); break;
+	case QtTabbable::WaitingActivity : flash = true; tabTextColor = QColor(255, 0, 0); break;
 	case QtTabbable::ImpendingActivity : tabTextColor = QColor(0, 255, 0); break;
 	default : tabTextColor = QColor(-1,-1,-1);//invalid resets to default
 	}
 	tabs_->tabBar()->setTabTextColor(index, tabTextColor); 
 	if (widget == tabs_->currentWidget()) {
 		setWindowTitle(widget->windowTitle());
+	}
+
+	if (flash) {
+#ifndef SWIFTEN_PLATFORM_MACOSX
+		QApplication::alert(this, 3000);
+#endif
 	}
 }
 
