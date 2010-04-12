@@ -62,12 +62,22 @@ static const String CLIENT_NODE = "http://swift.im";
 
 
 MainController::MainController(ChatWindowFactory* chatWindowFactory, MainWindowFactory *mainWindowFactory, LoginWindowFactory *loginWindowFactory, TreeWidgetFactory *treeWidgetFactory, EventWindowFactory* eventWindowFactory, SettingsProvider *settings, Application* application, SystemTray* systemTray, SoundPlayer* soundPlayer, XMLConsoleWidgetFactory* xmlConsoleWidgetFactory, ChatListWindowFactory* chatListWindowFactory)
-		: timerFactory_(&boostIOServiceThread_.getIOService()), idleDetector_(&idleQuerier_, &timerFactory_, 100), client_(NULL), presenceSender_(NULL), chatWindowFactory_(chatWindowFactory), mainWindowFactory_(mainWindowFactory), loginWindowFactory_(loginWindowFactory), treeWidgetFactory_(treeWidgetFactory), settings_(settings), xmppRosterController_(NULL), rosterController_(NULL), loginWindow_(NULL), clientVersionResponder_(NULL), nickResolver_(NULL), discoResponder_(NULL) {
+		: timerFactory_(&boostIOServiceThread_.getIOService()), idleDetector_(&idleQuerier_, &timerFactory_, 100), chatWindowFactory_(chatWindowFactory), mainWindowFactory_(mainWindowFactory), loginWindowFactory_(loginWindowFactory), treeWidgetFactory_(treeWidgetFactory), settings_(settings), loginWindow_(NULL)  {
 	application_ = application;
 	presenceOracle_ = NULL;
 	avatarManager_ = NULL;
 	chatsManager_ = NULL;
 	eventController_ = NULL;
+	eventWindowController_ = NULL;
+	nickResolver_ = NULL;
+	avatarManager_ = NULL;
+	rosterController_ = NULL;
+	xmppRosterController_ = NULL;
+	clientVersionResponder_ = NULL;
+	discoResponder_ = NULL;
+	presenceSender_ = NULL;
+	client_ = NULL;
+
 	eventWindowFactory_ = eventWindowFactory;
 	chatListWindowFactory_ = chatListWindowFactory;
 	uiEventStream_ = new UIEventStream();
