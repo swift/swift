@@ -117,6 +117,11 @@ QtLoginWindow::QtLoginWindow(UIEventStream* uiEventStream) : QMainWindow() {
 	QApplication::setQuitOnLastWindowClosed(false);
 	
 	swiftMenu_ = new QMenu(tr("Swift"), this);
+#ifdef SWIFTEN_PLATFORM_MACOSX
+	generalMenu_ = new QMenu(tr("General"), this);
+#else
+	generalMenu_ = swiftMenu_;
+#endif
 	
 	QAction* aboutAction = new QAction("About Swift", this);
 	connect(aboutAction, SIGNAL(activated()), SLOT(handleAbout()));
@@ -132,7 +137,7 @@ QtLoginWindow::QtLoginWindow(UIEventStream* uiEventStream) : QMainWindow() {
 	toggleSoundsAction_->setCheckable(true);
 	toggleSoundsAction_->setChecked(true);
 	connect(toggleSoundsAction_, SIGNAL(toggled(bool)), SLOT(handleToggleSounds(bool)));
-	swiftMenu_->addAction(toggleSoundsAction_);
+	generalMenu_->addAction(toggleSoundsAction_);
 
 	
 	QAction* quitAction = new QAction("Quit", this);
@@ -279,6 +284,9 @@ void QtLoginWindow::handleQuit() {
 void QtLoginWindow::setInitialMenus() {
 	menuBar_->clear();
 	menuBar_->addMenu(swiftMenu_);
+#ifdef SWIFTEN_PLATFORM_MACOSX
+	menuBar_->addMenu(generalMenu_);
+#endif
 	menuBar_->addMenu(toolsMenu_);
 }
 
