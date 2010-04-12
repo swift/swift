@@ -234,7 +234,7 @@ void MainController::handleEventQueueLengthChange(int count) {
 
 void MainController::reconnectAfterError() {
 	performLoginFromCachedCredentials();
-	sendPresence(queuedPresence_);
+	//sendPresence(queuedPresence_);
 }
 
 void MainController::handleChangeStatusRequest(StatusShow::Type show, const String &statusText) {
@@ -353,13 +353,15 @@ void MainController::handleError(const ClientError& error) {
 		signOut();
 		loginWindow_->setMessage(message);
 	} else {
-		message = "Disconnected from " + jid_.getDomain() + ": ";
-		lastDisconnectError_ = boost::shared_ptr<ErrorEvent>(new ErrorEvent(JID(jid_.getDomain()), message));
-		eventController_->handleIncomingEvent(lastDisconnectError_);
+		if (!lastDisconnectError_) {
+			message = "Disconnected from " + jid_.getDomain() + ": ";
+			lastDisconnectError_ = boost::shared_ptr<ErrorEvent>(new ErrorEvent(JID(jid_.getDomain()), message));
+			eventController_->handleIncomingEvent(lastDisconnectError_);
+		}
 	}
 	logout();
 	if (rosterController_) {
-		//reconnectAfterError();
+		reconnectAfterError();
 	}
 }
 
