@@ -43,7 +43,8 @@ namespace posix_time {
   //! Convert a time_duration to a tm structure truncating any fractional seconds and zeroing fields for date components
   inline
   std::tm to_tm(const boost::posix_time::time_duration& td) {
-    std::tm timetm = {};
+    std::tm timetm;
+    memset(&timetm, 0, sizeof(std::tm));
     timetm.tm_hour = date_time::absolute_value(td.hours());
     timetm.tm_min = date_time::absolute_value(td.minutes());
     timetm.tm_sec = date_time::absolute_value(td.seconds());
