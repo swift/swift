@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Remko Tronçon
+ * Copyright (c) 2010 Kevin Smith
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -14,10 +14,11 @@
 #include <boost/shared_ptr.hpp>
 
 namespace Swift {
-
+	class MockTreeWidgetFactory;
 class MockTreeWidgetItem : public TreeWidgetItem {
 	public:
-		virtual ~MockTreeWidgetItem() {};
+		MockTreeWidgetItem(MockTreeWidgetFactory* factory) {factory_ = factory;};
+		virtual ~MockTreeWidgetItem();
 		virtual void setText(const String& text) {text_ = text;};
 		String getText() {return text_;};
 		virtual void setStatusText(const String&) {};
@@ -28,6 +29,7 @@ class MockTreeWidgetItem : public TreeWidgetItem {
 		virtual void hide() {};
 	private:
 		String text_;
+		MockTreeWidgetFactory* factory_;
 };
 
 }

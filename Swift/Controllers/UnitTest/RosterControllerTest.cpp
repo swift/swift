@@ -29,6 +29,8 @@ class RosterControllerTest : public CppUnit::TestFixture
 {
 		CPPUNIT_TEST_SUITE(RosterControllerTest);
 		CPPUNIT_TEST(testAdd);
+		CPPUNIT_TEST(testAddSubscription);
+		CPPUNIT_TEST(testRename);
 		CPPUNIT_TEST_SUITE_END();
 
 	public:
@@ -55,7 +57,6 @@ class RosterControllerTest : public CppUnit::TestFixture
 		void tearDown() {
 			delete rosterController_;
 			delete nickResolver_;
-			delete treeWidgetFactory_;
 			delete mainWindowFactory_;
 			delete avatarManager_;
 			delete channel_;
@@ -64,6 +65,7 @@ class RosterControllerTest : public CppUnit::TestFixture
 			delete presenceOracle_;
 			delete stanzaChannel_;
 			delete uiEventStream_;
+			delete treeWidgetFactory_;
 		};
 
 		void testAdd() {
@@ -74,6 +76,36 @@ class RosterControllerTest : public CppUnit::TestFixture
 			
 			CPPUNIT_ASSERT_EQUAL(2, (int)treeWidgetFactory_->getGroups().size());
 			//CPPUNIT_ASSERT_EQUAL(String("Bob"), xmppRoster_->getNameForJID(JID("foo@bar.com")));
+		};
+
+ 		void testAddSubscription() {
+			std::vector<String> groups;
+			JID jid("test@testdomain.com");
+			xmppRoster_->addContact(jid, "name", groups, RosterItemPayload::None);
+			
+			CPPUNIT_ASSERT_EQUAL(1, (int)treeWidgetFactory_->getGroups().size());
+			CPPUNIT_ASSERT_EQUAL(1, (int)treeWidgetFactory_->getGroupMembers("Contacts").size());
+			xmppRoster_->addContact(jid, "name", groups, RosterItemPayload::To);
+			CPPUNIT_ASSERT_EQUAL(1, (int)treeWidgetFactory_->getGroups().size());
+			CPPUNIT_ASSERT_EQUAL(1, (int)treeWidgetFactory_->getGroupMembers("Contacts").size());
+
+			xmppRoster_->addContact(jid, "name", groups, RosterItemPayload::Both);
+			CPPUNIT_ASSERT_EQUAL(1, (int)treeWidgetFactory_->getGroups().size());
+			CPPUNIT_ASSERT_EQUAL(1, (int)treeWidgetFactory_->getGroupMembers("Contacts").size());
+
+		};
+
+		void testRename() {
+			std::vector<String> groups;
+			JID jid("test@testdomain.com");
+			xmppRoster_->addContact(jid, "name", groups, RosterItemPayload::Both);
+			
+			CPPUNIT_ASSERT_EQUAL(1, (int)treeWidgetFactory_->getGroups().size());
+			CPPUNIT_ASSERT_EQUAL(1, (int)treeWidgetFactory_->getGroupMembers("Contacts").size());
+			xmppRoster_->addContact(jid, "NewName", groups, RosterItemPayload::Both);
+			CPPUNIT_ASSERT_EQUAL(1, (int)treeWidgetFactory_->getGroups().size());
+			CPPUNIT_ASSERT_EQUAL(1, (int)treeWidgetFactory_->getGroupMembers("Contacts").size());
+			CPPUNIT_ASSERT_EQUAL(String("NewName"), treeWidgetFactory_->getGroupMembers("Contacts")[0]->getText());
 		};
 
 	private:
@@ -91,3 +123,5 @@ class RosterControllerTest : public CppUnit::TestFixture
 		EventController* eventController_;
 		UIEventStream* uiEventStream_;
 };
+
+CPPUNIT_TEST_SUITE_REGISTRATION(RosterControllerTest);
