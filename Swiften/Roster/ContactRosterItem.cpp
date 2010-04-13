@@ -22,6 +22,10 @@ ContactRosterItem::~ContactRosterItem() {
 	delete widget_;
 }
 
+void ContactRosterItem::setName(const String& name) {
+	widget_->setText(name);
+}
+
 StatusShow::Type ContactRosterItem::getStatusShow() {
 	return statusShow_;
 }

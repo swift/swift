@@ -23,6 +23,7 @@
 #include "Swiften/Roster/SetPresence.h"
 #include "Swiften/Roster/AppearOffline.h"
 #include "Swiften/Roster/SetAvatar.h"
+#include "Swiften/Roster/SetName.h"
 #include "Swiften/Roster/OfflineRosterFilter.h"
 #include "Swiften/Roster/OpenChatRosterAction.h"
 #include "Swiften/Roster/TreeWidgetFactory.h"
@@ -144,9 +145,7 @@ void RosterController::handleOnJIDRemoved(const JID& jid) {
 
 void RosterController::handleOnJIDUpdated(const JID& jid, const String& oldName, const std::vector<String> passedOldGroups) {
 	if (oldName != xmppRoster_->getNameForJID(jid)) {
-		handleOnJIDRemoved(jid);
-		handleOnJIDAdded(jid);
-		//FIXME: use a roster visitor to avoid losing presence.
+		roster_->applyOnItems(SetName(xmppRoster_->getNameForJID(jid), jid));
 		return;
 	}
 	std::vector<String> groups = xmppRoster_->getGroupsForJID(jid);

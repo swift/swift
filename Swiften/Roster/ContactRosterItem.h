@@ -32,6 +32,7 @@ class ContactRosterItem : public RosterItem {
 		void setStatusText(const String& status);
 		void setAvatarPath(const String& path);
 		const JID& getJID() const;
+		void setName(const String& name);
 		void show();
 		void hide();
 
