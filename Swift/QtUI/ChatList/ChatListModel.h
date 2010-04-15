@@ -27,6 +27,7 @@ namespace Swift {
 			QModelIndex index(int row, int column, const QModelIndex & parent = QModelIndex()) const;
 			QModelIndex parent(const QModelIndex& index) const;
 			int rowCount(const QModelIndex& parent = QModelIndex()) const;
+			ChatListItem* getItemForIndex(const QModelIndex& index) const;
 		private:
 			ChatListGroupItem* mucBookmarks_;
 			ChatListGroupItem* root_;

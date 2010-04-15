@@ -9,8 +9,8 @@
 #include <boost/bind.hpp>
 
 #include "Swiften/Base/foreach.h"
-#include "Swift/Controllers/MainWindow.h"
-#include "Swift/Controllers/MainWindowFactory.h"
+#include "Swift/Controllers/UIInterfaces/MainWindow.h"
+#include "Swift/Controllers/UIInterfaces/MainWindowFactory.h"
 #include "Swift/Controllers/NickResolver.h"
 #include "Swiften/Queries/Requests/GetRosterRequest.h"
 #include "Swiften/Queries/Requests/SetRosterRequest.h"
@@ -44,7 +44,6 @@ RosterController::RosterController(const JID& jid, boost::shared_ptr<XMPPRoster>
 	eventController_ = eventController;
 	roster_->addFilter(offlineFilter_);
 	
-	joinMUCConnection_ = mainWindow_->onJoinMUCRequest.connect(boost::bind(&RosterController::handleJoinMUCRequest, this, _1, _2));
 	changeStatusConnection_ = mainWindow_->onChangeStatusRequest.connect(boost::bind(&RosterController::handleChangeStatusRequest, this, _1, _2));
 	showOfflineConnection_ = mainWindow_->onShowOfflineToggled.connect(boost::bind(&RosterController::handleShowOfflineToggled, this, _1));
 	signOutConnection_ = mainWindow_->onSignOutRequest.connect(boost::bind(boost::ref(onSignOutRequest)));
@@ -231,10 +230,6 @@ void RosterController::handleAvatarChanged(const JID& jid, const String&) {
 	if (jid.equals(myJID_, JID::WithoutResource)) {
 		mainWindow_->setMyAvatarPath(path);
 	}
-}
-
-void RosterController::handleJoinMUCRequest(const JID &muc, const String &nick) {
-	onJoinMUCRequest(JID(muc), nick);
 }
 
 }

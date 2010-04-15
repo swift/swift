@@ -41,8 +41,13 @@ int ChatListModel::columnCount(const QModelIndex& /*parent*/) const {
 	return 1;
 }
 
+ChatListItem* ChatListModel::getItemForIndex(const QModelIndex& index) const {
+	return index.isValid() ? static_cast<ChatListItem*>(index.internalPointer()) : NULL;
+}
+
 QVariant ChatListModel::data(const QModelIndex& index, int role) const {
-	return index.isValid() ? static_cast<ChatListItem*>(index.internalPointer())->data(role) : QVariant();
+	ChatListItem* item = getItemForIndex(index);
+	return item ? item->data(role) : QVariant();
 }
 
 QModelIndex ChatListModel::index(int row, int column, const QModelIndex & parent) const {

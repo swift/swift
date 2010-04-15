@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include "Swift/Controllers/MainWindowFactory.h"
+#include "Swift/Controllers/UIInterfaces/MainWindowFactory.h"
 #include "Swiften/Roster/TreeWidgetFactory.h"
 #include "Swift/Controllers/UnitTest/MockMainWindow.h"
 

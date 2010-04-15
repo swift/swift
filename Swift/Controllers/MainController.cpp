@@ -21,8 +21,8 @@
 #include "Swift/Controllers/UIInterfaces/LoginWindow.h"
 #include "Swift/Controllers/UIInterfaces/LoginWindowFactory.h"
 #include "Swift/Controllers/UIInterfaces/EventWindowFactory.h"
-#include "Swift/Controllers/MainWindow.h"
-#include "Swift/Controllers/MainWindowFactory.h"
+#include "Swift/Controllers/UIInterfaces/MainWindow.h"
+#include "Swift/Controllers/UIInterfaces/MainWindowFactory.h"
 #include "Swift/Controllers/Chat/MUCController.h"
 #include "Swift/Controllers/NickResolver.h"
 #include "Swift/Controllers/ProfileSettingsProvider.h"
@@ -185,7 +185,6 @@ void MainController::handleConnected() {
 		client_->onMessageReceived.connect(boost::bind(&ChatsManager::handleIncomingMessage, chatsManager_, _1));
 		chatsManager_->setAvatarManager(avatarManager_);
 		rosterController_->onStartChatRequest.connect(boost::bind(&ChatsManager::handleChatRequest, chatsManager_, _1));
-		rosterController_->onJoinMUCRequest.connect(boost::bind(&ChatsManager::handleJoinMUCRequest, chatsManager_, _1, _2));
 
 		avatarManager_->setMUCRegistry(chatsManager_);
 

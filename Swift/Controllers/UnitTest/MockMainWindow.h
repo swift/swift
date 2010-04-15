@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include "Swift/Controllers/MainWindow.h"
+#include "Swift/Controllers/UIInterfaces/MainWindow.h"
 #include "Swiften/Roster/TreeWidget.h"
 
 namespace Swift {

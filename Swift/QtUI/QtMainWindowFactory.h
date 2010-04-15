@@ -7,7 +7,7 @@
 #ifndef SWIFT_QtMainWindowFactory_H
 #define SWIFT_QtMainWindowFactory_H
 
-#include "Swift/Controllers/MainWindowFactory.h"
+#include "Swift/Controllers/UIInterfaces/MainWindowFactory.h"
 
 namespace Swift {
 	class QtTreeWidgetFactory;

@@ -9,8 +9,6 @@
 #include <boost/bind.hpp>
 
 #include "Swiften/Base/foreach.h"
-#include "Swift/Controllers/MainWindow.h"
-#include "Swift/Controllers/MainWindowFactory.h"
 #include "Swiften/Elements/RosterItemPayload.h"
 #include "Swiften/Queries/IQRouter.h"
 #include "Swiften/Queries/Requests/GetRosterRequest.h"

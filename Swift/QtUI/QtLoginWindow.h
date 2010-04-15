@@ -17,7 +17,7 @@
 
 #include "Swift/Controllers/UIInterfaces/LoginWindow.h"
 #include "Swift/Controllers/UIEvents/UIEventStream.h"
-#include "Swift/Controllers/MainWindow.h"
+#include "Swift/Controllers/UIInterfaces/MainWindow.h"
 #include "QtAboutWidget.h"
 
 class QLabel;

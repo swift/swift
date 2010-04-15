@@ -9,7 +9,7 @@
 
 #include <QWidget>
 #include <QMenu>
-#include "Swift/Controllers/MainWindow.h"
+#include "Swift/Controllers/UIInterfaces/MainWindow.h"
 #include "Swift/QtUI/QtRosterHeader.h"
 #include "Swift/QtUI/EventViewer/QtEventWindow.h"
 #include "Swift/QtUI/ChatList/QtChatListWindow.h"

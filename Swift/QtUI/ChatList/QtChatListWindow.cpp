@@ -5,6 +5,8 @@
  */
 
 #include "Swift/QtUI/ChatList/QtChatListWindow.h"
+#include "Swift/QtUI/ChatList/ChatListMUCItem.h"
+#include "Swift/Controllers/UIEvents/JoinMUCUIEvent.h"
 
 namespace Swift {
 
@@ -29,8 +31,13 @@ QtChatListWindow::~QtChatListWindow() {
 	delete delegate_;
 }
 
-void QtChatListWindow::handleItemActivated(const QModelIndex& item) {
-
+void QtChatListWindow::handleItemActivated(const QModelIndex& index) {
+	ChatListItem* item = model_->getItemForIndex(index);
+	ChatListMUCItem* mucItem = dynamic_cast<ChatListMUCItem*>(item);
+	if (mucItem) {
+		boost::shared_ptr<UIEvent> event(new JoinMUCUIEvent(mucItem->getBookmark()->getRoom(), mucItem->getBookmark()->getNick()));
+		eventStream_->send(event);
+	}
 }
 
 void QtChatListWindow::addMUCBookmark(boost::shared_ptr<MUCBookmark> bookmark) {

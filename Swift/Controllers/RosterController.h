@@ -42,7 +42,6 @@ namespace Swift {
 			void setAvatarManager(AvatarManager* avatarManager);
 			void setNickResolver(NickResolver* nickResolver);
 			boost::signal<void (const JID&)> onStartChatRequest;
-			boost::signal<void (const JID&, const String&)> onJoinMUCRequest;
 			boost::signal<void (StatusShow::Type, const String&)> onChangeStatusRequest;
 			boost::signal<void ()> onSignOutRequest;
 			void handleAvatarChanged(const JID& jid, const String& hash);
@@ -52,7 +51,6 @@ namespace Swift {
 			void handleOnJIDRemoved(const JID &jid);
 			void handleOnJIDUpdated(const JID &jid, const String& oldName, const std::vector<String> oldGroups);
 			void handleStartChatRequest(const JID& contact);
-			void handleJoinMUCRequest(const JID &muc, const String &nick);
 			void handleUserAction(boost::shared_ptr<UserRosterAction> action);
 			void handleChangeStatusRequest(StatusShow::Type show, const String &statusText);
 			void handleShowOfflineToggled(bool state);
@@ -74,7 +72,6 @@ namespace Swift {
 			PresenceOracle* presenceOracle_;
 			EventController* eventController_;
 			IQRouter* iqRouter_;
-			boost::bsignals::scoped_connection joinMUCConnection_;
 			boost::bsignals::scoped_connection changeStatusConnection_;
 			boost::bsignals::scoped_connection showOfflineConnection_;
 			boost::bsignals::scoped_connection signOutConnection_;

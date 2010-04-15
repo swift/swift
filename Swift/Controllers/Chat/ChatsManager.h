@@ -44,8 +44,8 @@ namespace Swift {
 			void setServerDiscoInfo(boost::shared_ptr<DiscoInfo> info);
 			void handleIncomingMessage(boost::shared_ptr<Message> message);
 			void handleChatRequest(const String& contact);
-			void handleJoinMUCRequest(const JID& muc, const String& nick);
 		private:
+			void handleJoinMUCRequest(const JID& muc, const boost::optional<String>& nick);
 			void rebindControllerJID(const JID& from, const JID& to);
 			void handlePresenceChange(boost::shared_ptr<Presence> newPresence, boost::shared_ptr<Presence> lastPresence);
 			void handleUIEvent(boost::shared_ptr<UIEvent> event);

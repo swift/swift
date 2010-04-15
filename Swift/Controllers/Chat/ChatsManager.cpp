@@ -14,6 +14,7 @@
 #include "Swift/Controllers/EventController.h"
 #include "Swift/Controllers/Chat/MUCController.h"
 #include "Swift/Controllers/UIEvents/RequestChatUIEvent.h"
+#include "Swift/Controllers/UIEvents/JoinMUCUIEvent.h"
 #include "Swift/Controllers/UIInterfaces/ChatListWindowFactory.h"
 #include "Swiften/Presence/PresenceSender.h"
 #include "Swiften/Elements/ChatState.h"
@@ -58,8 +59,7 @@ void ChatsManager::handleMUCBookmarkAdded(boost::shared_ptr<MUCBookmark> bookmar
 	std::map<JID, MUCController*>::iterator it = mucControllers_.find(bookmark->getRoom());
 	if (it == mucControllers_.end() && bookmark->getAutojoin()) {
 		//FIXME: need vcard stuff here to get a nick
-		String nick = bookmark->getNick() ? bookmark->getNick().get() : "Swift user";
-		handleJoinMUCRequest(bookmark->getRoom(), nick);
+		handleJoinMUCRequest(bookmark->getRoom(), bookmark->getNick());
 	}
 	chatListWindow_->addMUCBookmark(bookmark);
 }
@@ -83,6 +83,10 @@ void ChatsManager::handleUIEvent(boost::shared_ptr<UIEvent> event) {
 	boost::shared_ptr<RequestChatUIEvent> chatEvent = boost::dynamic_pointer_cast<RequestChatUIEvent>(event);
 	if (chatEvent) {
 		handleChatRequest(chatEvent->getContact());
+	}
+	boost::shared_ptr<JoinMUCUIEvent> joinMUCEvent = boost::dynamic_pointer_cast<JoinMUCUIEvent>(event);
+	if (joinMUCEvent) {
+		handleJoinMUCRequest(joinMUCEvent->getJID(), joinMUCEvent->getNick());
 	}
 }
 
@@ -115,7 +119,7 @@ void ChatsManager::setAvatarManager(AvatarManager* avatarManager) {
 // 	{
 // 		boost::shared_ptr<JoinMUCUIEvent> event = boost::dynamic_pointer_cast<JoinMUCUIEvent>(rawEvent);
 // 		if (event != NULL) {
-// 			handleJoinMUCRequest(event->getRoom(), event->getNick());
+// 			handleJoinMUCRequest();
 // 		}
 // 	}
 // }
@@ -191,11 +195,12 @@ void ChatsManager::rebindControllerJID(const JID& from, const JID& to) {
 	chatControllers_[to]->setToJID(to);
 }
 
-void ChatsManager::handleJoinMUCRequest(const JID &muc, const String &nick) {
+void ChatsManager::handleJoinMUCRequest(const JID &muc, const boost::optional<String>& nickMaybe) {
 	std::map<JID, MUCController*>::iterator it = mucControllers_.find(muc);
 	if (it != mucControllers_.end()) {
 		//FIXME: What's correct behaviour here?
 	} else {
+		String nick = nickMaybe ? nickMaybe.get() : "Swift user";
 		MUCController* controller = new MUCController(jid_, muc, nick, stanzaChannel_, presenceSender_, iqRouter_, chatWindowFactory_, treeWidgetFactory_, presenceOracle_, avatarManager_, uiEventStream_);
 		mucControllers_[muc] = controller;
 		controller->setAvailableServerFeatures(serverDiscoInfo_);

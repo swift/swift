@@ -6,6 +6,8 @@
 
 #include "QtMainWindow.h"
 
+#include <boost/optional.hpp>
+
 #include <QBoxLayout>
 #include <QComboBox>
 #include <QLineEdit>
@@ -24,6 +26,7 @@
 #include "Roster/QtTreeWidgetFactory.h"
 #include "Roster/QtTreeWidget.h"
 #include "Swift/Controllers/UIEvents/AddContactUIEvent.h"
+#include "Swift/Controllers/UIEvents/JoinMUCUIEvent.h"
 
 namespace Swift {
 
@@ -137,7 +140,9 @@ void QtMainWindow::handleJoinMUCAction() {
 }
 
 void QtMainWindow::handleJoinMUCDialogComplete(const JID& muc, const QString& nick) {
-	onJoinMUCRequest(muc, Q2PSTRING(nick));
+	boost::optional<String> maybeNick(Q2PSTRING(nick));
+	boost::shared_ptr<UIEvent> event(new JoinMUCUIEvent(muc, maybeNick));
+	uiEventStream_->send(event);
 }
 
 void QtMainWindow::handleStatusChanged(StatusShow::Type showType, const QString &statusMessage) {
