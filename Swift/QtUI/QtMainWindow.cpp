@@ -6,15 +6,6 @@
 
 #include "QtMainWindow.h"
 
-#include "QtAddContactDialog.h"
-#include "QtJoinMUCDialog.h"
-#include "QtSwiftUtil.h"
-#include "QtTabWidget.h"
-#include "Roster/QtTreeWidgetFactory.h"
-#include "Roster/QtTreeWidget.h"
-#include "Swift/Controllers/UIEvents/AddContactUIEvent.h"
-
-
 #include <QBoxLayout>
 #include <QComboBox>
 #include <QLineEdit>
@@ -25,6 +16,14 @@
 #include <QToolBar>
 #include <QAction>
 #include <QTabWidget>
+
+#include "QtAddContactDialog.h"
+#include "QtJoinMUCDialog.h"
+#include "QtSwiftUtil.h"
+#include "QtTabWidget.h"
+#include "Roster/QtTreeWidgetFactory.h"
+#include "Roster/QtTreeWidget.h"
+#include "Swift/Controllers/UIEvents/AddContactUIEvent.h"
 
 namespace Swift {
 

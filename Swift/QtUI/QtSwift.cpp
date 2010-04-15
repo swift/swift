@@ -27,6 +27,7 @@
 #include "Swiften/Elements/Presence.h"
 #include "Swiften/Client/Client.h"
 #include "Swift/Controllers/MainController.h"
+#include "Swift/Controllers/ApplicationInfo.h"
 #include "Swift/QtUI/BuildVersion.h"
 #include "SwifTools/AutoUpdater/AutoUpdater.h"
 #include "SwifTools/AutoUpdater/PlatformAutoUpdaterFactory.h"
@@ -46,14 +47,14 @@ QtSwift::QtSwift(bool netbookMode) : autoUpdater_(NULL) {
 	} else {
 		splitter_ = NULL;
 	}
-	QCoreApplication::setApplicationName("Swift");
-	QCoreApplication::setOrganizationName("Swift");
-	QCoreApplication::setOrganizationDomain("swift.im");
+	QCoreApplication::setApplicationName(SWIFT_APPLICATION_NAME);
+	QCoreApplication::setOrganizationName(SWIFT_ORGANIZATION_NAME);
+	QCoreApplication::setOrganizationDomain(SWIFT_ORGANIZATION_DOMAIN);
 	QCoreApplication::setApplicationVersion(buildVersion);
 
 	tabs_ = new QtChatTabs();
 	settings_ = new QtSettingsProvider();
-	application_ = new PlatformApplication("Swift");
+	application_ = new PlatformApplication(SWIFT_APPLICATION_NAME);
 	treeWidgetFactory_ = new QtTreeWidgetFactory(); 
 	systemTray_ = new QtSystemTray();
 	loginWindowFactory_ = new QtLoginWindowFactory(splitter_, systemTray_, settings_);

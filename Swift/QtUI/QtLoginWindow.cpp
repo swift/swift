@@ -7,17 +7,8 @@
 #include "QtLoginWindow.h"
 
 #include <boost/bind.hpp>
-
-#include "Swift/Controllers/UIEvents/UIEventStream.h"
-#include "Swift/Controllers/UIEvents/RequestXMLConsoleUIEvent.h"
-#include "Swift/Controllers/UIEvents/ToggleSoundsUIEvent.h"
-#include "Swiften/Base/Platform.h"
-
-#include "QtAboutWidget.h"
-#include "QtSwiftUtil.h"
-#include "QtMainWindow.h"
-
 #include <algorithm>
+#include <cassert>
 
 #include <QApplication>
 #include <QBoxLayout>
@@ -29,13 +20,24 @@
 #include <QLabel>
 #include <QMenuBar>
 
-#include <cassert>
+#include "Swift/Controllers/UIEvents/UIEventStream.h"
+#include "Swift/Controllers/UIEvents/RequestXMLConsoleUIEvent.h"
+#include "Swift/Controllers/UIEvents/ToggleSoundsUIEvent.h"
+#include "Swiften/Base/Platform.h"
+
+#include "QtAboutWidget.h"
+#include "QtSwiftUtil.h"
+#include "QtMainWindow.h"
+#include "QtUtilities.h"
 
 namespace Swift{
 
 QtLoginWindow::QtLoginWindow(UIEventStream* uiEventStream) : QMainWindow() {
 	uiEventStream_ = uiEventStream;
+
 	setWindowTitle("Swift");
+	QtUtilities::setX11Resource(this, "Main");
+
 	resize(200, 500);
 	setContentsMargins(0,0,0,0);
 	QWidget *centralWidget = new QWidget(this);
