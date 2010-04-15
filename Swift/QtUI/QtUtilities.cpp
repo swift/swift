@@ -24,6 +24,9 @@ void setX11Resource(QWidget* widget, const QString& c) {
 	hint.res_name = (QString(SWIFT_APPLICATION_NAME) + "-" + c).toUtf8().data();
 	hint.res_class = res_class;
 	XSetClassHint(widget->x11Info().display(), widget->winId(), &hint);
+#else
+	(void) widget;
+	(void) c;
 #endif
 }
 
