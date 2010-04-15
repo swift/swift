@@ -56,7 +56,7 @@ QtLoginWindow::QtLoginWindow(UIEventStream* uiEventStream) : QMainWindow() {
 	logo->setScaledContents(true);
 	logo->setFixedSize(192,192);
 	layout->addWidget(logo);
-	layout->addStretch();
+	layout->addStretch(2);
 
 	QLabel* jidLabel = new QLabel(this);
 	jidLabel->setText("<font size='-1'>User address</font>");
@@ -103,13 +103,11 @@ QtLoginWindow::QtLoginWindow(UIEventStream* uiEventStream) : QMainWindow() {
 	message_->setWordWrap(true);
 	layout->addWidget(message_);
 
-	layout->addStretch();
+	layout->addStretch(2);
 	remember_ = new QCheckBox(tr("Remember Password?"), this);
 	layout->addWidget(remember_);
 	loginAutomatically_ = new QCheckBox(tr("Login Automatically?"), this);
 	layout->addWidget(loginAutomatically_);
-
-	layout->addStretch(2);
 
 	connect(loginButton_, SIGNAL(clicked()), SLOT(loginClicked()));
 	stack_->addWidget(wrapperWidget);
