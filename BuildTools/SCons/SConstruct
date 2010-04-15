@@ -100,7 +100,8 @@ if env["warnings"] :
 	else :
 		env.Append(CCFLAGS = ["-W", "-Wall"])
 		#env.Append(CCFLAGS = ["-W", "-Wall", "-Wredundant-decls", "-pedantic", "-Wno-long-long", "-Woverloaded-virtual", "-Wundef", "-Wfloat-equal", "-Wold-style-cast"])
-		if env["CCVERSION"].split(".")[0] > 4 or onv["CCVERSION"].split(".")[1] >= 5 :
+		gccVersion = env["CCVERSION"].split(".")
+		if gccVersion >= ["4", "5", "0"] :
 			env.Append(CCFLAGS = ["-Wlogical-op"])
 
 if env.get("coverage", 0) :
