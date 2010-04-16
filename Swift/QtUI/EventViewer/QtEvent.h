@@ -18,8 +18,14 @@ namespace Swift {
 			QtEvent(boost::shared_ptr<StanzaEvent> event, bool active);
 			QVariant data(int role);
 			boost::shared_ptr<StanzaEvent> getEvent() { return event_; };
+			enum EventRoles {
+				SenderRole = Qt::UserRole
+
+			};
+
 		private:
 			QString text();
+			QString sender();
 			boost::shared_ptr<StanzaEvent> event_;
 			bool active_;
 	};

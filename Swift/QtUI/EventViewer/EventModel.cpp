@@ -39,6 +39,17 @@ QVariant EventModel::data(const QModelIndex& index, int role) const {
 	return result;
 }
 
+/*
+ * We only reimplement this to get the pointers inside the indices.
+ */
+QModelIndex EventModel::index(int row, int column, const QModelIndex & parent) const {
+	if (!hasIndex(row, column, parent) || parent.isValid()) {
+		return QModelIndex();
+	}
+
+	return row < rowCount() ? createIndex(row, column, getItem(row)) : QModelIndex();
+}
+
 int EventModel::rowCount(const QModelIndex& parent) const {
 	/* Invalid parent = root, valid parent = child, and we're a list not a tree.*/
 	int count = parent.isValid() ? 0 : activeEvents_.size() + inactiveEvents_.size();

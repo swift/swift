@@ -84,6 +84,7 @@ sources = [
     "Roster/DelegateCommons.cpp",
     "EventViewer/EventModel.cpp",
     "EventViewer/EventDelegate.cpp",
+    "EventViewer/TwoLineDelegate.cpp",
     "EventViewer/QtEventWindowFactory.cpp",
     "EventViewer/QtEventWindow.cpp",
     "EventViewer/QtEvent.cpp",
