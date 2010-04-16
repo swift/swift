@@ -20,6 +20,7 @@ boost::shared_ptr<MUCBookmark> ChatListMUCItem::getBookmark() {
 QVariant ChatListMUCItem::data(int role) { 
 	switch (role) {
 		case Qt::DisplayRole: return P2QSTRING(bookmark_->getName());
+		case DetailTextRole: return P2QSTRING(bookmark_->getRoom().toString());
 			/*case Qt::TextColorRole: return textColor_;
 		case Qt::BackgroundColorRole: return backgroundColor_;
 		case Qt::ToolTipRole: return isContact() ? toolTipString() : QVariant();

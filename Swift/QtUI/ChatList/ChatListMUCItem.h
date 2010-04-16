@@ -15,6 +15,12 @@
 #include "Swift/QtUI/ChatList/ChatListItem.h"
 
 namespace Swift {
+	enum MUCItemRoles {
+		DetailTextRole = Qt::UserRole/*,
+		AvatarRole = Qt::UserRole + 1,
+		PresenceIconRole = Qt::UserRole + 2,
+		StatusShowTypeRole = Qt::UserRole + 3*/
+	};
 	class ChatListMUCItem : public ChatListItem {
 		public:
 			ChatListMUCItem(boost::shared_ptr<MUCBookmark> bookmark, ChatListGroupItem* parent);

@@ -80,6 +80,8 @@ sources = [
     "Roster/QtTreeWidget.cpp",
     "Roster/QtTreeWidgetItem.cpp",
     "Roster/RosterDelegate.cpp",
+    "Roster/GroupItemDelegate.cpp",
+    "Roster/DelegateCommons.cpp",
     "EventViewer/EventModel.cpp",
     "EventViewer/EventDelegate.cpp",
     "EventViewer/QtEventWindowFactory.cpp",
