@@ -33,7 +33,7 @@ vars.Add(PathVariable("qt", "Qt location", "", PathVariable.PathAccept))
 # Set up default build & configure environment
 ################################################################################
 
-env = Environment(CPPPATH = "#", ENV = {'PATH' : os.environ['PATH'], 'LD_LIBRARY_PATH' : os.environ["LD_LIBRARY_PATH"]}, variables = vars)
+env = Environment(CPPPATH = "#", ENV = {'PATH' : os.environ['PATH'], 'LD_LIBRARY_PATH' : os.environ.get("LD_LIBRARY_PATH","")}, variables = vars)
 
 Help(vars.GenerateHelpText(env))
 
