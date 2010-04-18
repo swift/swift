@@ -77,17 +77,17 @@ QtMainWindow::QtMainWindow(UIEventStream* uiEventStream, QtTreeWidgetFactory *tr
 	connect(showOfflineAction, SIGNAL(toggled(bool)), SLOT(handleShowOfflineToggled(bool)));
 	viewMenu->addAction(showOfflineAction);
 
-	QMenu* chatMenu = new QMenu(tr("Chat"), this);
-	menus_.push_back(chatMenu);
+	QMenu* actionsMenu = new QMenu(tr("Actions"), this);
+	menus_.push_back(actionsMenu);
 	QAction* joinMUCAction = new QAction("Join chatroom", this);
 	connect(joinMUCAction, SIGNAL(triggered()), SLOT(handleJoinMUCAction()));
-	chatMenu->addAction(joinMUCAction);
+	actionsMenu->addAction(joinMUCAction);
 	addAction_ = new QAction("Add Contact", this);
 	connect(addAction_, SIGNAL(triggered(bool)), this, SLOT(handleAddActionTriggered(bool)));
-	chatMenu->addAction(addAction_);
+	actionsMenu->addAction(addAction_);
 	QAction* signOutAction = new QAction("Sign Out", this);
 	connect(signOutAction, SIGNAL(triggered()), SLOT(handleSignOutAction()));
-	chatMenu->addAction(signOutAction);
+	actionsMenu->addAction(signOutAction);
 }
 
 QtMainWindow::~QtMainWindow() {

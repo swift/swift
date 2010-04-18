@@ -135,7 +135,7 @@ QtLoginWindow::QtLoginWindow(UIEventStream* uiEventStream) : QMainWindow() {
 	connect(xmlConsoleAction, SIGNAL(activated()), SLOT(handleShowXMLConsole()));
 	toolsMenu_->addAction(xmlConsoleAction);
 
-	toggleSoundsAction_ = new QAction(tr("Toggle Sounds"), this);
+	toggleSoundsAction_ = new QAction(tr("Play Sounds"), this);
 	toggleSoundsAction_->setCheckable(true);
 	toggleSoundsAction_->setChecked(true);
 	connect(toggleSoundsAction_, SIGNAL(toggled(bool)), SLOT(handleToggleSounds(bool)));
