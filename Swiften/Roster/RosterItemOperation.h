@@ -13,8 +13,14 @@ namespace Swift {
 
 class RosterItemOperation {
 	public:
-		virtual ~RosterItemOperation() {}
+		RosterItemOperation(bool requiresLookup = false, const JID& lookupJID = JID()) : requiresLookup_(requiresLookup), lookupJID_(lookupJID) {};
+		virtual ~RosterItemOperation() {};
+		bool requiresLookup() const {return requiresLookup_;};
+		const JID& lookupJID() const {return lookupJID_;}; 
 		virtual void operator() (RosterItem*) const = 0;
+	private:
+		bool requiresLookup_;
+		JID lookupJID_;
 };
 
 }

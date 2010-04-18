@@ -14,6 +14,7 @@
 #include "Swiften/Roster/RosterFilter.h"
 
 #include <vector>
+#include <map>
 #include <boost/signal.hpp>
 #include <boost/shared_ptr.hpp>
 
@@ -35,6 +36,8 @@ class Roster {
 		void removeContact(const JID& jid);
 		void removeContactFromGroup(const JID& jid, const String& group);
 		void applyOnItems(const RosterItemOperation& operation);
+		void applyOnAllItems(const RosterItemOperation& operation);
+		void applyOnItem(const RosterItemOperation& operation, const JID& jid);
 		boost::signal<void (boost::shared_ptr<UserRosterAction>)> onUserAction;
 		void addFilter(RosterFilter *filter) {filters_.push_back(filter);filterAll();}
 		void removeFilter(RosterFilter *filter);
@@ -49,6 +52,7 @@ class Roster {
 		std::vector<RosterItem*> children_;
 		std::vector<RosterItem*> items_;
 		std::vector<RosterFilter*> filters_;
+		std::map<JID, std::vector<RosterItem*> > itemMap_;
 };
 }
 

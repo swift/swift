@@ -18,7 +18,7 @@ class RosterItem;
 
 class SetPresence : public RosterItemOperation {
 	public:
-		SetPresence(boost::shared_ptr<Presence> presence, JID::CompareType compareType = JID::WithoutResource) : presence_(presence), compareType_(compareType) {
+		SetPresence(boost::shared_ptr<Presence> presence, JID::CompareType compareType = JID::WithoutResource) : RosterItemOperation(true, presence->getFrom().toBare()), presence_(presence), compareType_(compareType) {
 		}
 
 		virtual void operator() (RosterItem* item) const {

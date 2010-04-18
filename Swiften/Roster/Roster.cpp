@@ -56,12 +56,14 @@ void Roster::handleUserAction(boost::shared_ptr<UserRosterAction> action) {
 void Roster::addContact(const JID& jid, const String& name, const String& group) {
 	ContactRosterItem *item = new ContactRosterItem(jid, name, getGroup(group), widgetFactory_);
 	items_.push_back(item);
+	itemMap_[jid.toBare()].push_back(item);
 	item->onUserAction.connect(boost::bind(&Roster::handleUserAction, this, _1));
 	filterItem(item);
 
 }
 
 void Roster::removeContact(const JID& jid) {
+	itemMap_.erase(jid.toBare());
 	std::vector<RosterItem*>::iterator it = children_.begin();
 	while (it != children_.end()) {
 		ContactRosterItem* contact = dynamic_cast<ContactRosterItem*>(*it);
@@ -91,6 +93,21 @@ void Roster::removeContactFromGroup(const JID& jid, const String& groupName) {
 
 
 void Roster::applyOnItems(const RosterItemOperation& operation) {
+	if (operation.requiresLookup()) {
+		applyOnItem(operation, operation.lookupJID());
+	} else {
+		applyOnAllItems(operation);
+	}
+}
+
+void Roster::applyOnItem(const RosterItemOperation& operation, const JID& jid) {
+	foreach (RosterItem* item, itemMap_[jid]) {
+		operation(item);
+		filterItem(item);
+	}
+}
+
+void Roster::applyOnAllItems(const RosterItemOperation& operation) {
 	std::deque<RosterItem*> queue(children_.begin(), children_.end());
 	while (!queue.empty()) {
 		RosterItem* item = *queue.begin();
