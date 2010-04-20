@@ -80,6 +80,7 @@ if env["SCONS_STAGE"] == "build" :
 			"Serializer/PayloadSerializers/VCardUpdateSerializer.cpp",
 			"Serializer/PayloadSerializers/StorageSerializer.cpp",
 			"Serializer/PayloadSerializers/PrivateStorageSerializer.cpp",
+			"Serializer/PayloadSerializers/DelaySerializer.cpp",
 			"Serializer/PresenceSerializer.cpp",
 			"Serializer/StanzaSerializer.cpp",
 			"Serializer/StreamFeaturesSerializer.cpp",

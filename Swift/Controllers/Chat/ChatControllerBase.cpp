@@ -6,10 +6,14 @@
 
 #include "Swift/Controllers/Chat/ChatControllerBase.h"
 
+#include <sstream>
+
 #include <boost/bind.hpp>
 #include <boost/shared_ptr.hpp>
+#include <boost/date_time/posix_time/posix_time.hpp>
 
 #include "Swiften/Client/StanzaChannel.h"
+#include "Swiften/Elements/Delay.h"
 #include "Swiften/Base/foreach.h"
 #include "Swift/Controllers/UIInterfaces/ChatWindow.h"
 #include "Swift/Controllers/UIInterfaces/ChatWindowFactory.h"
@@ -69,6 +73,12 @@ void ChatControllerBase::handleSendMessageRequest(const String &body) {
 		label = boost::optional<SecurityLabel>(chatWindow_->getSelectedSecurityLabel());
 	}
 	preSendMessageRequest(message);
+	//FIXME: optional
+	bool useSwiftDelay = true;
+	if (useSwiftDelay) {
+		boost::posix_time::ptime now = boost::posix_time::microsec_clock::universal_time();
+		message->addPayload(boost::shared_ptr<Delay>(new Delay(now, selfJID_)));
+	}
 	stanzaChannel_->sendMessage(message);
 	postSendMessage(message->getBody());
 }
@@ -121,6 +131,13 @@ void ChatControllerBase::handleIncomingMessage(boost::shared_ptr<MessageEvent> m
 			return;
 		}
 		showChatWindow();
+		boost::shared_ptr<Delay> delayPayload = message->getPayload<Delay>();
+		if (delayPayload) {
+			boost::posix_time::ptime now = boost::posix_time::microsec_clock::universal_time();
+			std::ostringstream s;
+			s << "The following message took " << (now - delayPayload->getStamp()).total_milliseconds() <<  " milliseconds to be delivered.";
+			chatWindow_->addSystemMessage(String(s.str()));
+		}
 		boost::shared_ptr<SecurityLabel> label = message->getPayload<SecurityLabel>();
 		boost::optional<SecurityLabel> maybeLabel = label ? boost::optional<SecurityLabel>(*label) : boost::optional<SecurityLabel>();
 		JID from = message->getFrom();

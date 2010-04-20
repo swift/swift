@@ -27,6 +27,7 @@
 #include "Swiften/Serializer/PayloadSerializers/RawXMLPayloadSerializer.h"
 #include "Swiften/Serializer/PayloadSerializers/StorageSerializer.h"
 #include "Swiften/Serializer/PayloadSerializers/PrivateStorageSerializer.h"
+#include "Swiften/Serializer/PayloadSerializers/DelaySerializer.h"
 
 namespace Swift {
 
@@ -50,6 +51,7 @@ FullPayloadSerializerCollection::FullPayloadSerializerCollection() {
 	serializers_.push_back(new VCardUpdateSerializer());
 	serializers_.push_back(new RawXMLPayloadSerializer());
 	serializers_.push_back(new StorageSerializer());
+	serializers_.push_back(new DelaySerializer());
 	serializers_.push_back(new PrivateStorageSerializer(this));
 	foreach(PayloadSerializer* serializer, serializers_) {
 		addSerializer(serializer);

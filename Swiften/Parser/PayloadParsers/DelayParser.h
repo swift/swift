@@ -6,19 +6,20 @@
 
 #pragma once
 
-#include "Swiften/Elements/ChatState.h"
+#include "Swiften/Elements/Delay.h"
 #include "Swiften/Parser/GenericPayloadParser.h"
 
 namespace Swift {
-	class ChatStateParser : public GenericPayloadParser<ChatState> {
+	class DelayParser : public GenericPayloadParser<Delay> {
 		public:
-			ChatStateParser();
+			DelayParser();
 
 			virtual void handleStartElement(const String& element, const String&, const AttributeMap& attributes);
 			virtual void handleEndElement(const String& element, const String&);
 			virtual void handleCharacterData(const String& data);
 
 		private:
+			boost::posix_time::ptime dateFromString(const String& string);
 			int level_;
 	};
 }

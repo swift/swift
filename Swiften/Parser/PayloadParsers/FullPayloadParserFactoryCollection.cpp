@@ -26,6 +26,7 @@
 #include "Swiften/Parser/PayloadParsers/VCardParserFactory.h"
 #include "Swiften/Parser/PayloadParsers/RawXMLPayloadParserFactory.h"
 #include "Swiften/Parser/PayloadParsers/PrivateStorageParserFactory.h"
+#include "Swiften/Parser/PayloadParsers/DelayParserFactory.h"
 
 using namespace boost;
 
@@ -49,6 +50,7 @@ FullPayloadParserFactoryCollection::FullPayloadParserFactoryCollection() {
 	factories_.push_back(shared_ptr<PayloadParserFactory>(new VCardParserFactory()));
 	factories_.push_back(shared_ptr<PayloadParserFactory>(new PrivateStorageParserFactory(this)));
 	factories_.push_back(shared_ptr<PayloadParserFactory>(new ChatStateParserFactory()));
+	factories_.push_back(shared_ptr<PayloadParserFactory>(new DelayParserFactory()));
 	foreach(shared_ptr<PayloadParserFactory> factory, factories_) {
 		addFactory(factory.get());
 	}
