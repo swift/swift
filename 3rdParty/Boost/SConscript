@@ -61,7 +61,18 @@ if env["SCONS_STAGE"] == "build" :
 			"src/libs/regex/src/wc_regex_traits.cpp",
 			"src/libs/regex/src/wide_posix_api.cpp",
 			"src/libs/regex/src/winstances.cpp",
-			"src/libs/regex/src/usinstances.cpp"]
+			"src/libs/regex/src/usinstances.cpp",
+			"src/libs/program_options/src/cmdline.cpp",
+			"src/libs/program_options/src/config_file.cpp",
+			"src/libs/program_options/src/convert.cpp",
+			"src/libs/program_options/src/options_description.cpp",
+			"src/libs/program_options/src/parsers.cpp",
+			"src/libs/program_options/src/positional_options.cpp",
+			"src/libs/program_options/src/split.cpp",
+			"src/libs/program_options/src/utf8_codecvt_facet.cpp",
+			"src/libs/program_options/src/value_semantic.cpp",
+			"src/libs/program_options/src/variables_map.cpp",
+			"src/libs/program_options/src/winmain.cpp"]
 
 	if env["PLATFORM"] != "win32" :
 		sources += [
@@ -82,6 +93,7 @@ if env["SCONS_STAGE"] == "build" :
 		bcp_env.Append(CPPPATH = ["src/tools/bcp"])
 		bcp_env.Program("bcp", [
 				"src/tools/bcp/add_path.cpp",
+				"src/tools/bcp/add_dependent_lib.cpp",
 				"src/tools/bcp/bcp_imp.cpp",
 				"src/tools/bcp/copy_path.cpp",
 				"src/tools/bcp/file_types.cpp",

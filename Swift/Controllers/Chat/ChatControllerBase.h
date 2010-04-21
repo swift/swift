@@ -40,14 +40,14 @@ namespace Swift {
 			void setEnabled(bool enabled);
 			virtual void setToJID(const JID& jid) {toJID_ = jid;};
 		protected:
-			ChatControllerBase(const JID& self, StanzaChannel* stanzaChannel, IQRouter* iqRouter, ChatWindowFactory* chatWindowFactory, const JID &toJID, PresenceOracle* presenceOracle, AvatarManager* avatarManager);
+			ChatControllerBase(const JID& self, StanzaChannel* stanzaChannel, IQRouter* iqRouter, ChatWindowFactory* chatWindowFactory, const JID &toJID, PresenceOracle* presenceOracle, AvatarManager* avatarManager, bool useDelayForLatency);
 
 			virtual void postSendMessage(const String&) {};
 			virtual String senderDisplayNameFromMessage(const JID& from) = 0;
 			virtual bool isIncomingMessageFromMe(boost::shared_ptr<Message>) = 0;
 			virtual void preHandleIncomingMessage(boost::shared_ptr<Message>) {};
 			virtual void preSendMessageRequest(boost::shared_ptr<Message>) {};
-
+			virtual bool isFromContact(const JID& from);
 
 		private:
 			void handleSendMessageRequest(const String &body);
@@ -66,6 +66,7 @@ namespace Swift {
 			bool labelsEnabled_;
 			PresenceOracle* presenceOracle_;
 			AvatarManager* avatarManager_;
+			bool useDelayForLatency_;
 	};
 }
 

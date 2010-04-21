@@ -62,7 +62,7 @@ namespace Swift {
 
 	class MainController {
 		public:
-			MainController(ChatWindowFactory* chatWindowFactory, MainWindowFactory *mainWindowFactory, LoginWindowFactory *loginWindowFactory, TreeWidgetFactory* treeWidgetFactory, EventWindowFactory* eventWindowFactory, SettingsProvider *settings, Application* application, SystemTray* systemTray, SoundPlayer* soundPlayer, XMLConsoleWidgetFactory* xmlConsoleWidgetFactory, ChatListWindowFactory* chatListWindowFactory_);
+			MainController(ChatWindowFactory* chatWindowFactory, MainWindowFactory *mainWindowFactory, LoginWindowFactory *loginWindowFactory, TreeWidgetFactory* treeWidgetFactory, EventWindowFactory* eventWindowFactory, SettingsProvider *settings, Application* application, SystemTray* systemTray, SoundPlayer* soundPlayer, XMLConsoleWidgetFactory* xmlConsoleWidgetFactory, ChatListWindowFactory* chatListWindowFactory_, bool useDelayForLatency);
 			~MainController();
 
 
@@ -127,5 +127,6 @@ namespace Swift {
 			String certificateFile_;
 			ChatListWindowFactory* chatListWindowFactory_;
 			boost::shared_ptr<ErrorEvent> lastDisconnectError_;
+			bool useDelayForLatency_;
 	};
 }

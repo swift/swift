@@ -7,12 +7,17 @@
 #ifndef SWIFT_QtSwift_H
 #define SWIFT_QtSwift_H
 
+#include <boost/program_options/variables_map.hpp>
+#include <boost/program_options/options_description.hpp>
+
 #include "Swiften/Base/String.h"
 #include "Swiften/EventLoop/Qt/QtEventLoop.h"
 #include "QtLoginWindowFactory.h"
 #include "QtMainWindowFactory.h"
 #include "QtChatWindowFactory.h"
 #include "QtSettingsProvider.h"
+
+namespace po = boost::program_options;
 
 class QSplitter;
 
@@ -33,7 +38,8 @@ namespace Swift {
 	class QtSwift : public QObject {
 		Q_OBJECT
 		public:
-			QtSwift(bool netbookMode);
+			QtSwift(po::variables_map options);
+			static po::options_description getOptionsDescription();
 			~QtSwift();
 		private:
 			MainController *mainController_;

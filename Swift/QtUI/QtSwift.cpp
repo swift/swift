@@ -40,9 +40,19 @@ namespace Swift{
 #define SWIFT_APPCAST_URL ""
 #endif
 
+po::options_description QtSwift::getOptionsDescription() {
+	po::options_description result("Options");
+	result.add_options()
+		("help", "produce help message")
+		("netbook-mode", "use netbook mode display")
+		("latency-debug", "use latency debugging")
+		;
+	return result;
+}
 
-QtSwift::QtSwift(bool netbookMode) : autoUpdater_(NULL) {
-	if (netbookMode) {
+
+QtSwift::QtSwift(po::variables_map options) : autoUpdater_(NULL) {
+	if (options.count("netbook-mode")) {
 		splitter_ = new QSplitter();
 	} else {
 		splitter_ = NULL;
@@ -67,7 +77,7 @@ QtSwift::QtSwift(bool netbookMode) : autoUpdater_(NULL) {
 	if (splitter_) {
 		splitter_->show();
 	}
-	mainController_ = new MainController(chatWindowFactory_, rosterWindowFactory_, loginWindowFactory_, treeWidgetFactory_, eventWindowFactory_, settings_, application_, systemTray_, soundPlayer_, xmlConsoleWidgetFactory_, chatListWindowFactory_);
+		mainController_ = new MainController(chatWindowFactory_, rosterWindowFactory_, loginWindowFactory_, treeWidgetFactory_, eventWindowFactory_, settings_, application_, systemTray_, soundPlayer_, xmlConsoleWidgetFactory_, chatListWindowFactory_, options.count("latency-debug") > 0);
 
 	PlatformAutoUpdaterFactory autoUpdaterFactory;
 	if (autoUpdaterFactory.isSupported()) {

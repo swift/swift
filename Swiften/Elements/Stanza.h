@@ -32,6 +32,19 @@ namespace Swift {
 				return boost::shared_ptr<T>();
 			}
 
+			template<typename T> 
+			std::vector< boost::shared_ptr<T> > getPayloads() const {
+				std::vector< boost::shared_ptr<T> > results;
+				foreach (const boost::shared_ptr<Payload>& i, payloads_) {
+					boost::shared_ptr<T> result(boost::dynamic_pointer_cast<T>(i));
+					if (result) {
+						results.push_back(result);
+					}
+				}
+				return results;
+			}
+
+
 			const std::vector< boost::shared_ptr<Payload> >& getPayloads() const {
 				return payloads_;
 			}

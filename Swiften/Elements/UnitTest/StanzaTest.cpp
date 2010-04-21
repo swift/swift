@@ -19,6 +19,7 @@ class StanzaTest : public CppUnit::TestFixture
 		CPPUNIT_TEST_SUITE(StanzaTest);
 		CPPUNIT_TEST(testConstructor_Copy);
 		CPPUNIT_TEST(testGetPayload);
+		CPPUNIT_TEST(testGetPayloads);
 		CPPUNIT_TEST(testGetPayload_NoSuchPayload);
 		CPPUNIT_TEST(testDestructor);
 		CPPUNIT_TEST(testDestructor_Copy);
@@ -112,6 +113,21 @@ class StanzaTest : public CppUnit::TestFixture
 			boost::shared_ptr<MyPayload2> p(m.getPayload<MyPayload2>());
 			CPPUNIT_ASSERT(!p);
 		}
+
+		void testGetPayloads() {
+			Message m;
+			boost::shared_ptr<MyPayload2> payload1(new MyPayload2());
+			boost::shared_ptr<MyPayload2> payload2(new MyPayload2());
+			m.addPayload(boost::shared_ptr<MyPayload1>(new MyPayload1()));
+			m.addPayload(payload1);
+			m.addPayload(boost::shared_ptr<MyPayload3>(new MyPayload3()));
+			m.addPayload(payload2);
+
+			CPPUNIT_ASSERT_EQUAL((size_t)2, m.getPayloads<MyPayload2>().size());
+			CPPUNIT_ASSERT_EQUAL(payload1, m.getPayloads<MyPayload2>()[0]);
+			CPPUNIT_ASSERT_EQUAL(payload2, m.getPayloads<MyPayload2>()[1]);
+		}
+
 
 		void testUpdatePayload_ExistingPayload() {
 			Message m;

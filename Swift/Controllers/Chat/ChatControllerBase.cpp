@@ -22,7 +22,7 @@
 
 namespace Swift {
 
-ChatControllerBase::ChatControllerBase(const JID& self, StanzaChannel* stanzaChannel, IQRouter* iqRouter, ChatWindowFactory* chatWindowFactory, const JID &toJID, PresenceOracle* presenceOracle, AvatarManager* avatarManager) : selfJID_(self), stanzaChannel_(stanzaChannel), iqRouter_(iqRouter), chatWindowFactory_(chatWindowFactory), toJID_(toJID), labelsEnabled_(false), presenceOracle_(presenceOracle), avatarManager_(avatarManager) {
+ChatControllerBase::ChatControllerBase(const JID& self, StanzaChannel* stanzaChannel, IQRouter* iqRouter, ChatWindowFactory* chatWindowFactory, const JID &toJID, PresenceOracle* presenceOracle, AvatarManager* avatarManager, bool useDelayForLatency) : selfJID_(self), stanzaChannel_(stanzaChannel), iqRouter_(iqRouter), chatWindowFactory_(chatWindowFactory), toJID_(toJID), labelsEnabled_(false), presenceOracle_(presenceOracle), avatarManager_(avatarManager), useDelayForLatency_(useDelayForLatency)  {
 	chatWindow_ = chatWindowFactory_->createChatWindow(toJID);
 	chatWindow_->onAllMessagesRead.connect(boost::bind(&ChatControllerBase::handleAllMessagesRead, this));
 	chatWindow_->onSendMessageRequest.connect(boost::bind(&ChatControllerBase::handleSendMessageRequest, this, _1));
@@ -73,9 +73,7 @@ void ChatControllerBase::handleSendMessageRequest(const String &body) {
 		label = boost::optional<SecurityLabel>(chatWindow_->getSelectedSecurityLabel());
 	}
 	preSendMessageRequest(message);
-	//FIXME: optional
-	bool useSwiftDelay = true;
-	if (useSwiftDelay) {
+	if (useDelayForLatency_) {
 		boost::posix_time::ptime now = boost::posix_time::microsec_clock::universal_time();
 		message->addPayload(boost::shared_ptr<Delay>(new Delay(now, selfJID_)));
 	}
@@ -113,6 +111,10 @@ void ChatControllerBase::addMessage(const String& message, const String& senderN
 	}
 }
 
+bool ChatControllerBase::isFromContact(const JID& from) {
+	return from.toBare() == toJID_.toBare();
+}
+
 void ChatControllerBase::handleIncomingMessage(boost::shared_ptr<MessageEvent> messageEvent) {
 	if (messageEvent->isReadable()) {
 		unreadMessages_.push_back(messageEvent);
@@ -131,16 +133,19 @@ void ChatControllerBase::handleIncomingMessage(boost::shared_ptr<MessageEvent> m
 			return;
 		}
 		showChatWindow();
-		boost::shared_ptr<Delay> delayPayload = message->getPayload<Delay>();
-		if (delayPayload) {
+		JID from = message->getFrom();
+		std::vector<boost::shared_ptr<Delay> > delayPayloads = message->getPayloads<Delay>();
+		for (size_t i = 0; useDelayForLatency_ && i < delayPayloads.size(); i++) {
+			if (!delayPayloads[i]->getFrom()) { 
+				continue;
+			}
 			boost::posix_time::ptime now = boost::posix_time::microsec_clock::universal_time();
 			std::ostringstream s;
-			s << "The following message took " << (now - delayPayload->getStamp()).total_milliseconds() <<  " milliseconds to be delivered.";
+			s << "The following message took " << (now - delayPayloads[i]->getStamp()).total_milliseconds() / 1000.0 <<  " seconds to be delivered from " << delayPayloads[i]->getFrom()->toString() << ".";
 			chatWindow_->addSystemMessage(String(s.str()));
 		}
 		boost::shared_ptr<SecurityLabel> label = message->getPayload<SecurityLabel>();
 		boost::optional<SecurityLabel> maybeLabel = label ? boost::optional<SecurityLabel>(*label) : boost::optional<SecurityLabel>();
-		JID from = message->getFrom();
 		addMessage(body, senderDisplayNameFromMessage(from), isIncomingMessageFromMe(message), maybeLabel, String(avatarManager_->getAvatarPath(from).string()));
 	}
 }

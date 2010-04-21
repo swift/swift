@@ -38,8 +38,9 @@ MUCController::MUCController (
 		TreeWidgetFactory *treeWidgetFactory,
 		PresenceOracle* presenceOracle,
 		AvatarManager* avatarManager,
-		UIEventStream* uiEventStream) :
-			ChatControllerBase(self, stanzaChannel, iqRouter, chatWindowFactory, muc, presenceOracle, avatarManager),
+		UIEventStream* uiEventStream,
+		bool useDelayForLatency) :
+	ChatControllerBase(self, stanzaChannel, iqRouter, chatWindowFactory, muc, presenceOracle, avatarManager, useDelayForLatency),
 			muc_(new MUC(stanzaChannel, presenceSender, muc)), 
 			nick_(nick), 
 			treeWidgetFactory_(treeWidgetFactory) { 

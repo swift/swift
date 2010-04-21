@@ -15,8 +15,9 @@ TARGET_DIR=src
 	noncopyable.hpp \
 	numeric/conversion/cast.hpp \
 	shared_ptr.hpp \
-  optional.hpp \
+	optional.hpp \
 	signals.hpp \
+	program_options.hpp \
 	thread.hpp \
 	asio.hpp \
 	regex.hpp \
@@ -25,7 +26,7 @@ TARGET_DIR=src
 rm -rf $TARGET_DIR/libs/config
 rm -rf $TARGET_DIR/libs/smart_ptr
 
-LIBS="date_time regex system thread signals filesystem"
+LIBS="date_time regex system thread signals filesystem program_options"
 for lib in $LIBS; do
 	rm -rf $TARGET_DIR/libs/$lib/build $TARGET_DIR/libs/$lib/*.doc $TARGET_DIR/libs/$lib/src/*.doc $TARGET_DIR/libs/$lib/src/CMakeLists.txt $TARGET_DIR/libs/$lib/test
 done

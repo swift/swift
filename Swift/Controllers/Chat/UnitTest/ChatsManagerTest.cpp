@@ -63,7 +63,7 @@ public:
 		uiEventStream_ = new UIEventStream();
 		chatListWindowFactory_ = mocks_->InterfaceMock<ChatListWindowFactory>();
 		mocks_->ExpectCall(chatListWindowFactory_, ChatListWindowFactory::createWindow).With(uiEventStream_).Return(NULL);
-		manager_ = new ChatsManager(jid_, stanzaChannel_, iqRouter_, eventController_, chatWindowFactory_, treeWidgetFactory_, nickResolver_, presenceOracle_, serverDiscoInfo_, presenceSender_, uiEventStream_, chatListWindowFactory_);
+		manager_ = new ChatsManager(jid_, stanzaChannel_, iqRouter_, eventController_, chatWindowFactory_, treeWidgetFactory_, nickResolver_, presenceOracle_, serverDiscoInfo_, presenceSender_, uiEventStream_, chatListWindowFactory_, true);
 		avatarManager_ = new MockAvatarManager();
 		manager_->setAvatarManager(avatarManager_);
 	};
