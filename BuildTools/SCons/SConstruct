@@ -360,8 +360,9 @@ elif env.get("bonjour", False) :
 # Set up git hooks
 ################################################################################
 
-if not env.GetOption("clean") :
-	env.Install("#/.git/hooks", Glob("#/BuildTools/Git/Hooks/*"))
+if env.Dir("#/.git").exists() :
+	if not env.GetOption("clean") :
+		env.Install("#/.git/hooks", Glob("#/BuildTools/Git/Hooks/*"))
 
 ################################################################################
 # Project files
