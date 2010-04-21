@@ -1,11 +1,11 @@
 Prerequisites
 ------------
-- Qt Open Source Edition
 - Microsoft Visual C++ Express Edition
 - Python
 - OpenSSL
   * Download and extract the Windows binary version of OpenSSL from
     http://www.slproweb.com/products/Win32OpenSSL.html
+- Qt Open Source Edition (optional; not needed for Swiften)
 
 Building Qt for Microsoft Visual C++
 ------------------------------------
