@@ -11,7 +11,7 @@
 #include <QResource>
 
 namespace Swift {
-QtSystemTray::QtSystemTray() : QObject(), standardIcon_(":icons/tray-standard.png"), newMessageIcon_(":icons/new-chat.png") {
+QtSystemTray::QtSystemTray() : QObject(), standardIcon_(":icons/online.png"), newMessageIcon_(":icons/new-chat.png") {
 	trayIcon_ = new QSystemTrayIcon(standardIcon_);
 	connect(trayIcon_, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), this, SLOT(handleIconActivated(QSystemTrayIcon::ActivationReason)));
 	trayIcon_->show();

@@ -8,6 +8,8 @@
 #include <cppunit/extensions/TestFactoryRegistry.h>
 #include <boost/bind.hpp>
 
+#include <algorithm>
+
 #include "Swiften/Base/sleep.h"
 #include "Swiften/Base/String.h"
 #include "Swiften/Base/ByteArray.h"
@@ -17,6 +19,12 @@
 #include "Swiften/EventLoop/DummyEventLoop.h"
 
 using namespace Swift;
+
+struct CompareHostAddresses {
+	bool operator()(const HostAddress& h1, const HostAddress& h2) {
+		return h1.toString() < h2.toString();
+	}
+};
 
 class DomainNameResolverTest : public CppUnit::TestFixture {
 		CPPUNIT_TEST_SUITE(DomainNameResolverTest);
@@ -82,8 +90,8 @@ class DomainNameResolverTest : public CppUnit::TestFixture {
 
 			CPPUNIT_ASSERT(!addressQueryError);
 			CPPUNIT_ASSERT_EQUAL(2, static_cast<int>(addressQueryResult.size()));
-			CPPUNIT_ASSERT_EQUAL(std::string("1234:5678:9abc:def0:0fed:cba9:8765:4321"), addressQueryResult[0].toString());
-			CPPUNIT_ASSERT_EQUAL(std::string("10.0.0.7"), addressQueryResult[1].toString());
+			CPPUNIT_ASSERT_EQUAL(std::string("10.0.0.7"), addressQueryResult[0].toString());
+			CPPUNIT_ASSERT_EQUAL(std::string("1234:5678:9abc:def0:0fed:cba9:8765:4321"), addressQueryResult[1].toString());
 		}
 
 		void testResolveAddress_International() {
@@ -104,8 +112,7 @@ class DomainNameResolverTest : public CppUnit::TestFixture {
 			waitForResults();
 
 			CPPUNIT_ASSERT(!addressQueryError);
-			CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(addressQueryResult.size()));
-			CPPUNIT_ASSERT_EQUAL(std::string("127.0.0.1"), addressQueryResult[0].toString());
+			CPPUNIT_ASSERT(std::find(addressQueryResult.begin(), addressQueryResult.end(), HostAddress("127.0.0.1")) != addressQueryResult.end());
 		}
 
 
@@ -150,6 +157,7 @@ class DomainNameResolverTest : public CppUnit::TestFixture {
 
 			void handleAddressQueryResult(const std::vector<HostAddress>& addresses, boost::optional<DomainNameResolveError> error) {
 				addressQueryResult = addresses;
+				std::sort(addressQueryResult.begin(), addressQueryResult.end(), CompareHostAddresses());
 				addressQueryError = error;
 				resultsAvailable = true;
 			}
