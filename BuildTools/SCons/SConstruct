@@ -256,6 +256,10 @@ if conf.CheckCHeader("idna.h") and conf.CheckLib("idn") :
 else :
 	env["LIBIDN_BUNDLED"] = 1
 
+# Avahi
+if conf.CheckCHeader("avahi-client/client.h") and conf.CheckLib("avahi-client") :
+	env["HAVE_AVAHI"] = True
+	env["AVAHI_FLAGS"] = { "LIBS": ["avahi"] }
 
 conf.Finish()
 
