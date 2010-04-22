@@ -27,7 +27,6 @@ if myenv["HAVE_XSS"] :
 if myenv["HAVE_SPARKLE"] :
   myenv.MergeFlags(env["SPARKLE_FLAGS"])
 myenv.MergeFlags(env["SWIFTEN_FLAGS"])
-myenv.MergeFlags(env["CPPUNIT_FLAGS"])
 myenv.MergeFlags(env["LIBIDN_FLAGS"])
 myenv.MergeFlags(env["BOOST_FLAGS"])
 myenv.MergeFlags(env["SQLITE_FLAGS"])

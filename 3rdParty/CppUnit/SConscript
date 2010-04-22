@@ -1,55 +1,57 @@
 Import("env")
 
+if env["TEST"] :
+
 ################################################################################
 # Module flags
 ################################################################################
 
-if env["SCONS_STAGE"] == "flags" :
-	env["CPPUNIT_FLAGS"] = {
-			"CPPPATH": [env.Dir("src/include"), env.Dir(".")],
-			"LIBPATH": [env.Dir(".")],
-			"LIBS": ["CppUnit"]
-		}
+	if env["SCONS_STAGE"] == "flags" :
+		env["CPPUNIT_FLAGS"] = {
+				"CPPPATH": [env.Dir("src/include"), env.Dir(".")],
+				"LIBPATH": [env.Dir(".")],
+				"LIBS": ["CppUnit"]
+			}
 
 ################################################################################
 # Build
 ################################################################################
 
-if env["SCONS_STAGE"] == "build" :
-	myenv = env.Clone()
-	myenv.Append(CPPPATH = ["src/include", "."])
-	sources = [
-			"src/src/cppunit/TextTestRunner.cpp",
-			"src/src/cppunit/TextTestProgressListener.cpp",
-			"src/src/cppunit/BriefTestProgressListener.cpp",
-			"src/src/cppunit/TextOutputter.cpp",
-			"src/src/cppunit/XmlOutputter.cpp",
-			"src/src/cppunit/XmlElement.cpp",
-			"src/src/cppunit/XmlDocument.cpp",
-			"src/src/cppunit/StringTools.cpp",
-			"src/src/cppunit/DefaultProtector.cpp",
-			"src/src/cppunit/Protector.cpp",
-			"src/src/cppunit/ProtectorChain.cpp",
-			"src/src/cppunit/SynchronizedObject.cpp",
-			"src/src/cppunit/SourceLine.cpp",
-			"src/src/cppunit/TestRunner.cpp",
-			"src/src/cppunit/TestFactoryRegistry.cpp",
-			"src/src/cppunit/TestSuite.cpp",
-			"src/src/cppunit/TestSuiteBuilderContext.cpp",
-			"src/src/cppunit/TestResult.cpp",
-			"src/src/cppunit/TestResultCollector.cpp",
-			"src/src/cppunit/TestSuccessListener.cpp",
-			"src/src/cppunit/TestComposite.cpp",
-			"src/src/cppunit/TestCase.cpp",
-			"src/src/cppunit/TestFailure.cpp",
-			"src/src/cppunit/TestLeaf.cpp",
-			"src/src/cppunit/TestNamer.cpp",
-			"src/src/cppunit/Asserter.cpp",
-			"src/src/cppunit/TypeInfoHelper.cpp",
-			"src/src/cppunit/Exception.cpp",
-			"src/src/cppunit/Message.cpp",
-			"src/src/cppunit/AdditionalMessage.cpp",
-			"src/src/cppunit/Test.cpp",
-			"src/src/cppunit/TestPath.cpp"
-		]
-	myenv.StaticLibrary("CppUnit", sources)
+	if env["SCONS_STAGE"] == "build" :
+		myenv = env.Clone()
+		myenv.Append(CPPPATH = ["src/include", "."])
+		sources = [
+				"src/src/cppunit/TextTestRunner.cpp",
+				"src/src/cppunit/TextTestProgressListener.cpp",
+				"src/src/cppunit/BriefTestProgressListener.cpp",
+				"src/src/cppunit/TextOutputter.cpp",
+				"src/src/cppunit/XmlOutputter.cpp",
+				"src/src/cppunit/XmlElement.cpp",
+				"src/src/cppunit/XmlDocument.cpp",
+				"src/src/cppunit/StringTools.cpp",
+				"src/src/cppunit/DefaultProtector.cpp",
+				"src/src/cppunit/Protector.cpp",
+				"src/src/cppunit/ProtectorChain.cpp",
+				"src/src/cppunit/SynchronizedObject.cpp",
+				"src/src/cppunit/SourceLine.cpp",
+				"src/src/cppunit/TestRunner.cpp",
+				"src/src/cppunit/TestFactoryRegistry.cpp",
+				"src/src/cppunit/TestSuite.cpp",
+				"src/src/cppunit/TestSuiteBuilderContext.cpp",
+				"src/src/cppunit/TestResult.cpp",
+				"src/src/cppunit/TestResultCollector.cpp",
+				"src/src/cppunit/TestSuccessListener.cpp",
+				"src/src/cppunit/TestComposite.cpp",
+				"src/src/cppunit/TestCase.cpp",
+				"src/src/cppunit/TestFailure.cpp",
+				"src/src/cppunit/TestLeaf.cpp",
+				"src/src/cppunit/TestNamer.cpp",
+				"src/src/cppunit/Asserter.cpp",
+				"src/src/cppunit/TypeInfoHelper.cpp",
+				"src/src/cppunit/Exception.cpp",
+				"src/src/cppunit/Message.cpp",
+				"src/src/cppunit/AdditionalMessage.cpp",
+				"src/src/cppunit/Test.cpp",
+				"src/src/cppunit/TestPath.cpp"
+			]
+		myenv.StaticLibrary("CppUnit", sources)

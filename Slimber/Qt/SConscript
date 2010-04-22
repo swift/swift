@@ -6,7 +6,6 @@ myenv = env.Clone()
 
 myenv.MergeFlags(env["SLIMBER_FLAGS"])
 myenv.MergeFlags(env["SWIFTEN_FLAGS"])
-myenv.MergeFlags(env["CPPUNIT_FLAGS"])
 myenv.MergeFlags(env["LIBIDN_FLAGS"])
 myenv.MergeFlags(env["BOOST_FLAGS"])
 myenv.MergeFlags(env.get("LIBXML_FLAGS", ""))
