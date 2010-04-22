@@ -35,7 +35,11 @@ namespace Swift {
 			}
 
 			void stopBrowsing() {
-				// TODO
+				assert(browser);
+				avahi_threaded_poll_lock(querier->getThreadedPoll());
+				avahi_server_browser_free(browser);
+				browser = NULL;
+				avahi_threaded_poll_unlock(querier->getThreadedPoll());
 			}
 
 		private:
