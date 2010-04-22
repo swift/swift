@@ -257,9 +257,10 @@ else :
 	env["LIBIDN_BUNDLED"] = 1
 
 # Avahi
-if conf.CheckCHeader("avahi-client/client.h") and conf.CheckLib("avahi-client") :
-	env["HAVE_AVAHI"] = True
-	env["AVAHI_FLAGS"] = { "LIBS": ["avahi-client"] }
+if env["PLATFORM"] != "darwin" :
+	if conf.CheckCHeader("avahi-client/client.h") and conf.CheckLib("avahi-client") :
+		env["HAVE_AVAHI"] = True
+		env["AVAHI_FLAGS"] = { "LIBS": ["avahi-client"] }
 
 conf.Finish()
 
