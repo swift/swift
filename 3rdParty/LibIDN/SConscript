@@ -1,56 +1,58 @@
 Import(["env", "conf_env"])
 
+if env.get("LIBIDN_BUNDLED", False) :
+
 ################################################################################
 # Module flags
 ################################################################################
 
-if env["SCONS_STAGE"] == "flags" :
-	env["LIBIDN_FLAGS"] = {
-			"CPPDEFINES": ["IDNA_STATIC"],
-			"CPPPATH": [Dir("src")],
-			"LIBPATH": [Dir(".")],
-			"LIBS": ["IDN"],
-		}
-	if env["PLATFORM"] == "win32" :
-		env["LIBIDN_FLAGS"]["CPPPATH"] += [Dir("stubs/win32")]
+	if env["SCONS_STAGE"] == "flags" :
+		env["LIBIDN_FLAGS"] = {
+				"CPPDEFINES": ["IDNA_STATIC"],
+				"CPPPATH": [Dir("src")],
+				"LIBPATH": [Dir(".")],
+				"LIBS": ["IDN"],
+			}
+		if env["PLATFORM"] == "win32" :
+			env["LIBIDN_FLAGS"]["CPPPATH"] += [Dir("stubs/win32")]
 
 ################################################################################
 # Build
 ################################################################################
 
-if env["SCONS_STAGE"] == "build" :
-	myenv = env.Clone()
+	if env["SCONS_STAGE"] == "build" :
+		myenv = env.Clone()
 
-# Remove warn flags
-	myenv.Replace(CCFLAGS = [flag for flag in env["CCFLAGS"] if flag not in ["-W", "-Wall"]])
+		# Remove warn flags
+		myenv.Replace(CCFLAGS = [flag for flag in env["CCFLAGS"] if flag not in ["-W", "-Wall"]])
 
-# Check for strcasecmp() or replacement
-	conf = Configure(conf_env)
-	if not conf.CheckFunc('strcasecmp') :
-		if conf.CheckFunc("stricmp") :
-			myenv.Append(CPPDEFINES = [("strcasecmp", "stricmp")])
-		else :
-			print "Error: Cannot find strcasecmp() or stricmp()"
-			Exit(1)
-	if not conf.CheckFunc('strncasecmp') :
-		if conf.CheckFunc("strnicmp") :
-			myenv.Append(CPPDEFINES = [("strncasecmp", "strnicmp")])
-		else :
-			print "Error: Cannot find strncasecmp() or strnicmp()"
-			Exit(1)
-	conf.Finish()
+		# Check for strcasecmp() or replacement
+		conf = Configure(conf_env)
+		if not conf.CheckFunc('strcasecmp') :
+			if conf.CheckFunc("stricmp") :
+				myenv.Append(CPPDEFINES = [("strcasecmp", "stricmp")])
+			else :
+				print "Error: Cannot find strcasecmp() or stricmp()"
+				Exit(1)
+		if not conf.CheckFunc('strncasecmp') :
+			if conf.CheckFunc("strnicmp") :
+				myenv.Append(CPPDEFINES = [("strncasecmp", "strnicmp")])
+			else :
+				print "Error: Cannot find strncasecmp() or strnicmp()"
+				Exit(1)
+		conf.Finish()
 
-	myenv.Append(CPPDEFINES = "IDNA_STATIC")
-	myenv.Append(CPPPATH = ["src", "stubs"])
-	if myenv["PLATFORM"] == "win32" :
-		myenv.Append(CPPPATH = "stubs/win32")
+		myenv.Append(CPPDEFINES = "IDNA_STATIC")
+		myenv.Append(CPPPATH = ["src", "stubs"])
+		if myenv["PLATFORM"] == "win32" :
+			myenv.Append(CPPPATH = "stubs/win32")
 
-	myenv.StaticLibrary("IDN", [
-			"src/stringprep.c",
-			"src/profiles.c",
-			"src/rfc3454.c",
-			"src/punycode.c",
-			"src/idna.c",
-			"src/toutf8.c",
-			"src/nfkc.c"
-		])
+		myenv.StaticLibrary("IDN", [
+				"src/stringprep.c",
+				"src/profiles.c",
+				"src/rfc3454.c",
+				"src/punycode.c",
+				"src/idna.c",
+				"src/toutf8.c",
+				"src/nfkc.c"
+			])

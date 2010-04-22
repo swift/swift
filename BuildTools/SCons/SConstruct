@@ -250,6 +250,13 @@ if conf.CheckCHeader("expat.h") and conf.CheckLib("expat") :
 	env["HAVE_EXPAT"] = 1
 	env["EXPAT_FLAGS"] = { "LIBS": ["expat"] }
 
+# LibIDN
+if conf.CheckCHeader("idna.h") and conf.CheckLib("idn") :
+	env["LIBIDN_FLAGS"] = { "LIBS": ["idn"] }
+else :
+	env["LIBIDN_BUNDLED"] = 1
+
+
 conf.Finish()
 
 # Xss
