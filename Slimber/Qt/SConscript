@@ -22,7 +22,11 @@ if env["PLATFORM"] == "win32" :
 	myenv.Append(LINKFLAGS = ["/SUBSYSTEM:WINDOWS"])
 	myenv.Append(LIBS = "qtmain")
 
-sources = ["main.cpp", "QtMenulet.cpp"]
+sources = [
+		"main.cpp", 
+		"QtMenulet.cpp",
+		myenv.Qrc("Slimber.qrc"),
+	]
 
 #if env["PLATFORM"] == "win32" :
 #	myenv.RES("../resources/Windows/Slimber.rc")
@@ -32,8 +36,6 @@ if env["PLATFORM"] == "win32" :
 	slimberProgram = myenv.Program("Slimber", sources)
 else :
 	slimberProgram = myenv.Program("slimber", sources)
-
-myenv.Qrc("Slimber.qrc")
 
 if env["PLATFORM"] == "win32" :
 	if "dist" in COMMAND_LINE_TARGETS or env.GetOption("clean") :
