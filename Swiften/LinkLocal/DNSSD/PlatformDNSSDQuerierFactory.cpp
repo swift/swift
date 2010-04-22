@@ -25,4 +25,12 @@ boost::shared_ptr<DNSSDQuerier> PlatformDNSSDQuerierFactory::createQuerier() {
 #endif
 }
 
+bool PlatformDNSSDQuerierFactory::canCreate() {
+#if defined(HAVE_BONJOUR) || defined(HAVE_AVAHI)
+	return true;
+#else
+	return false;
+#endif
+}
+
 }

@@ -28,10 +28,7 @@ MainController::MainController(Menulet* menulet) : menulet(menulet) {
 			&MainController::handleRestartRequested, this));
 
 	dnsSDQuerier = PlatformDNSSDQuerierFactory().createQuerier();
-	if (!dnsSDQuerier) {
-		// TODO
-		assert(false);
-	}
+	assert(dnsSDQuerier);
 
 	linkLocalServiceBrowser = new LinkLocalServiceBrowser(dnsSDQuerier);
 	linkLocalServiceBrowser->onServiceAdded.connect(

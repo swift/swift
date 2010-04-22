@@ -14,5 +14,7 @@ namespace Swift {
 	class PlatformDNSSDQuerierFactory {
 		public:
 			 boost::shared_ptr<DNSSDQuerier> createQuerier();
+
+			 bool canCreate();
 	};
 }
