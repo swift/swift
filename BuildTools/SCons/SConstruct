@@ -374,10 +374,6 @@ if env.Dir("#/.git").exists() :
 
 ################################################################################
 # Project files
-# FIXME: We need to explicitly list the order of libraries here, because of
-# the exported FLAGS. We should put FLAGS in separate SConscript files, and
-# read these in before anything else, such that we don't need to manually
-# list modules in order.
 ################################################################################
 
 # Modules
@@ -398,6 +394,7 @@ for dir in os.listdir(Dir("#/3rdParty").abspath) :
 		modules.append("3rdParty/" + dir)
 
 # Flags
+env["PROJECTS"] = [m for m in modules if m not in ["Documentation", "QA", "SwifTools"] and not m.startswith("3rdParty")]
 for stage in ["flags", "build", "test"] :
 	env["SCONS_STAGE"] = stage
 	SConscript(dirs = map(lambda x : "#/" + x, modules))
@@ -417,6 +414,8 @@ if env.get("HAVE_EXPAT", 0):
 	parsers.append("Expat")
 	if env.get("EXPAT_BUNDLED", False) :
 		parsers.append("(Bundled)")
+print "  Projects: " + ' '.join(env["PROJECTS"])
+print ""
 print "  XML Parsers: " + ' '.join(parsers)
 
 print "  TLS Support: " + ("OpenSSL" if env.get("HAVE_OPENSSL",0) else "Disabled")
