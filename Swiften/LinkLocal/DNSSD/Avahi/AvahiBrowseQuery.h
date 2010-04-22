@@ -17,14 +17,15 @@ namespace Swift {
 
 	class AvahiBrowseQuery : public DNSSDBrowseQuery, public AvahiQuery {
 		public:	
-			AvahiBrowseQuery(boost::shared_ptr<AvahiQuerier> q) : AvahiQuery(q) {
+			AvahiBrowseQuery(boost::shared_ptr<AvahiQuerier> q) : AvahiQuery(q), browser(NULL) {
 			}
 
 			void startBrowsing() {
+				assert(!browser);
 				std::cout << "Start browsing" << std::endl;
 				avahi_threaded_poll_lock(querier->getThreadedPoll());
 				std::cout << "Creating browser" << std::endl;
-				AvahiServiceBrowser* browser = avahi_service_browser_new(querier->getClient(), AVAHI_IF_UNSPEC, AVAHI_PROTO_UNSPEC, "_presence._tcp", NULL, (AvahiLookupFlags) 0, &handleServiceDiscoveredStatic, this);
+				browser = avahi_service_browser_new(querier->getClient(), AVAHI_IF_UNSPEC, AVAHI_PROTO_UNSPEC, "_presence._tcp", NULL, (AvahiLookupFlags) 0, &handleServiceDiscoveredStatic, this);
 				if (!browser) {
 					std::cout << "Error" << std::endl;
 					MainEventLoop::postEvent(boost::bind(boost::ref(onError)), shared_from_this());
@@ -35,9 +36,8 @@ namespace Swift {
 			}
 
 			void stopBrowsing() {
-				assert(browser);
 				avahi_threaded_poll_lock(querier->getThreadedPoll());
-				avahi_server_browser_free(browser);
+				avahi_service_browser_free(browser);
 				browser = NULL;
 				avahi_threaded_poll_unlock(querier->getThreadedPoll());
 			}
@@ -70,5 +70,9 @@ namespace Swift {
 						break;
 				}
 			}
+
+		private:
+			AvahiServiceBrowser* browser;
+			
 	};
 }

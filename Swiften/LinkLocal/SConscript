@@ -28,6 +28,7 @@ if myenv.get("HAVE_BONJOUR", 0) :
 			"DNSSD/Bonjour/BonjourQuery.cpp",
 		]
 elif myenv.get("HAVE_AVAHI", 0) :
+	myenv.Append(CPPDEFINES = ["HAVE_AVAHI"])
 	sources += [
 			"DNSSD/Avahi/AvahiQuerier.cpp",
 			"DNSSD/Avahi/AvahiQuery.cpp"

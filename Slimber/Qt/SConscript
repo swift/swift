@@ -10,6 +10,7 @@ myenv.MergeFlags(env["LIBIDN_FLAGS"])
 myenv.MergeFlags(env["BOOST_FLAGS"])
 myenv.MergeFlags(env.get("LIBXML_FLAGS", ""))
 myenv.MergeFlags(env.get("EXPAT_FLAGS", ""))
+myenv.MergeFlags(env.get("AVAHI_FLAGS", ""))
 
 myenv.Tool("qt4", toolpath = ["#/BuildTools/SCons/Tools"])
 myenv.Tool("nsis", toolpath = ["#/BuildTools/SCons/Tools"])

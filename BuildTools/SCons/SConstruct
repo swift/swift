@@ -259,7 +259,7 @@ else :
 # Avahi
 if conf.CheckCHeader("avahi-client/client.h") and conf.CheckLib("avahi-client") :
 	env["HAVE_AVAHI"] = True
-	env["AVAHI_FLAGS"] = { "LIBS": ["avahi"] }
+	env["AVAHI_FLAGS"] = { "LIBS": ["avahi-client"] }
 
 conf.Finish()
 
