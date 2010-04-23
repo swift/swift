@@ -41,7 +41,9 @@ QtMainWindow::QtMainWindow(UIEventStream* uiEventStream, QtTreeWidgetFactory *tr
 	connect(meView_, SIGNAL(onChangeStatusRequest(StatusShow::Type, const QString&)), this, SLOT(handleStatusChanged(StatusShow::Type, const QString&)));
 
 	tabs_ = new QtTabWidget(this);
+#if QT_VERSION >= 0x040500
 	tabs_->setDocumentMode(true);
+#endif
 	tabs_->setTabPosition(QTabWidget::South);
 	mainLayout->addWidget(tabs_);
 	contactsTabWidget_ = new QWidget(this);
