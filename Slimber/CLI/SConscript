@@ -3,7 +3,10 @@ Import("env")
 myenv = env.Clone()
 myenv.MergeFlags(env["SLIMBER_FLAGS"])
 myenv.MergeFlags(env["SWIFTEN_FLAGS"])
+myenv.MergeFlags(env["LIBIDN_FLAGS"])
 myenv.MergeFlags(env["BOOST_FLAGS"])
+myenv.MergeFlags(env.get("LIBXML_FLAGS", {}))
+myenv.MergeFlags(env.get("EXPAT_FLAGS", {}))
 myenv.MergeFlags(env.get("AVAHI_FLAGS", {}))
 
 myenv.Program("slimber", [
