@@ -53,12 +53,12 @@ namespace Swift {
 						break;
 					case AVAHI_BROWSER_NEW: {
 						DNSSDServiceID service(name, domain, type, interfaceIndex);
-						std::cout << "Service discovered " << name << " " << type << " " << domain << " " << interfaceIndex << std::endl;
+						std::cout << "Service discovered " << name << " " << domain << " " << type << " " << interfaceIndex << std::endl;
 						MainEventLoop::postEvent(boost::bind(boost::ref(onServiceAdded), service), shared_from_this());
 						break;
 					}
 					case AVAHI_BROWSER_REMOVE: {
-						std::cout << "Service went away " << name << " " << type << " " << domain << std::endl;
+						std::cout << "Service went away " << name << " " << domain << " " << type << " " << interfaceIndex << std::endl;
 						DNSSDServiceID service(name, domain, type, interfaceIndex);
 						MainEventLoop::postEvent(boost::bind(boost::ref(onServiceRemoved), service), shared_from_this());
 						break;

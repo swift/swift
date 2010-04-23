@@ -17,7 +17,7 @@ namespace Swift {
 				const String& name, 
 				const String& domain, 
 				const String& type = PresenceServiceType, 
-				int networkInterface = 0) : 
+				int networkInterface = -1) : 
 					name(name), 
 					domain(domain), 
 					type(type), 
