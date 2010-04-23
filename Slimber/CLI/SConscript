@@ -6,4 +6,7 @@ myenv.MergeFlags(env["SWIFTEN_FLAGS"])
 myenv.MergeFlags(env["BOOST_FLAGS"])
 myenv.MergeFlags(env.get("AVAHI_FLAGS", {}))
 
-myenv.Program("slimber", ["main.cpp"])
+myenv.Program("slimber", [
+		"main.cpp",
+		"DummyMenulet.cpp",
+	])
