@@ -21,7 +21,7 @@ namespace Swift {
 			}
 
 			void start() {
-				std::cout << "Resolving " << service.getName() << std::endl;
+				std::cout << "Start resolving " << service.getName() << std::endl;
 				avahi_threaded_poll_lock(querier->getThreadedPoll());
 				assert(!resolver);
 				resolver = avahi_service_resolver_new(querier->getClient(), service.getNetworkInterfaceID(), AVAHI_PROTO_UNSPEC, service.getName().getUTF8Data(), service.getType().getUTF8Data(), service.getDomain().getUTF8Data(), AVAHI_PROTO_UNSPEC, (AvahiLookupFlags) 0, handleServiceResolvedStatic, this);
@@ -33,6 +33,7 @@ namespace Swift {
 			}
 
 			void stop() {
+				std::cout << "Stop resolving" << std::endl;
 				avahi_threaded_poll_lock(querier->getThreadedPoll());
 				avahi_service_resolver_free(resolver);
 				resolver = NULL;
@@ -52,6 +53,7 @@ namespace Swift {
 						MainEventLoop::postEvent(boost::bind(boost::ref(onServiceResolved), boost::optional<Result>()), shared_from_this());
 						break;
 					case AVAHI_RESOLVER_FOUND: {
+						std::cout << "Success" << std::endl;
 						char a[AVAHI_ADDRESS_STR_MAX];
 						avahi_address_snprint(a, sizeof(a), address);
 

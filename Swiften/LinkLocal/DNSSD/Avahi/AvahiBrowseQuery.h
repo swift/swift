@@ -21,21 +21,19 @@ namespace Swift {
 			}
 
 			void startBrowsing() {
-				assert(!browser);
 				std::cout << "Start browsing" << std::endl;
+				assert(!browser);
 				avahi_threaded_poll_lock(querier->getThreadedPoll());
-				std::cout << "Creating browser" << std::endl;
 				browser = avahi_service_browser_new(querier->getClient(), AVAHI_IF_UNSPEC, AVAHI_PROTO_UNSPEC, "_presence._tcp", NULL, (AvahiLookupFlags) 0, &handleServiceDiscoveredStatic, this);
 				if (!browser) {
 					std::cout << "Error" << std::endl;
 					MainEventLoop::postEvent(boost::bind(boost::ref(onError)), shared_from_this());
 				}
-				std::cout << "Unlocking" << std::endl;
 				avahi_threaded_poll_unlock(querier->getThreadedPoll());
-				std::cout << "Browse started" << std::endl;
 			}
 
 			void stopBrowsing() {
+				std::cout << "Stop browsing" << std::endl;
 				avahi_threaded_poll_lock(querier->getThreadedPoll());
 				avahi_service_browser_free(browser);
 				browser = NULL;
@@ -55,7 +53,7 @@ namespace Swift {
 						break;
 					case AVAHI_BROWSER_NEW: {
 						DNSSDServiceID service(name, domain, type, interfaceIndex);
-						std::cout << "Service discovered " << name << " " << type << " " << domain << std::endl;
+						std::cout << "Service discovered " << name << " " << type << " " << domain << " " << interfaceIndex << std::endl;
 						MainEventLoop::postEvent(boost::bind(boost::ref(onServiceAdded), service), shared_from_this());
 						break;
 					}
