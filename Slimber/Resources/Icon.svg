@@ -375,16 +375,6 @@
        inkscape:vp_y="0 : 1000 : 0"
        inkscape:vp_x="0 : 0.5 : 1"
        sodipodi:type="inkscape:persp3d" />
-    <linearGradient
-       inkscape:collect="always"
-       xlink:href="#linearGradient3217"
-       id="linearGradient3672"
-       x1="22.703396"
-       y1="58.794174"
-       x2="103.99275"
-       y2="58.794174"
-       gradientUnits="userSpaceOnUse"
-       gradientTransform="matrix(1.0987439,0,0,1.0987439,-5.9555535,-3.4088514)" />
   </defs>
   <sodipodi:namedview
      id="base"
@@ -398,14 +388,14 @@
      inkscape:pageshadow="2"
      inkscape:zoom="4.0390625"
      inkscape:cx="73.903288"
-     inkscape:cy="64.396202"
+     inkscape:cy="81.146943"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
      inkscape:window-width="753"
-     inkscape:window-height="771"
-     inkscape:window-x="880"
-     inkscape:window-y="181"
+     inkscape:window-height="600"
+     inkscape:window-x="86"
+     inkscape:window-y="10"
      showguides="true"
      inkscape:guide-bbox="true"
      inkscape:window-maximized="0" />
@@ -417,7 +407,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -426,7 +416,7 @@
      inkscape:groupmode="layer"
      id="layer1">
     <path
-       style="fill:url(#linearGradient3672);fill-opacity:1;stroke:#aaaaaa;stroke-width:9.95349216;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1"
+       style="fill:none;fill-opacity:1;stroke:#aaaaaa;stroke-width:9.95349215999999970;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1"
        d="m 103.28636,72.990766 c 0,20.666593 -17.907453,37.632534 -39.638616,37.439464 C 41.831354,110.2364 25.058088,93.633675 24.00915,72.990766 22.948846,52.124177 41.767241,11.949912 63.647744,11.949912 c 21.880507,0 40.698906,40.174265 39.638616,61.040854 z"
        id="path2890"
        sodipodi:nodetypes="csssc" />
