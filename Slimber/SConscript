@@ -1,3 +1,5 @@
+import datetime 
+
 Import("env")
 
 env["BUILD_SLIMBER"] = True
@@ -40,6 +42,9 @@ if "Slimber" in env["PROJECTS"] :
 				"MenuletController.cpp",
 				"Menulet.cpp"
 			])
+
+	
+		env["SLIMBER_VERSION"] = "0.9.9." + datetime.date.today().strftime("%Y%m%d")
 
 		env.Append(UNITTEST_SOURCES = [
 				File("UnitTest/LinkLocalPresenceManagerTest.cpp"),

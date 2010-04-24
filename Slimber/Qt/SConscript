@@ -22,9 +22,12 @@ if env["PLATFORM"] == "win32" :
 	myenv.Append(LINKFLAGS = ["/SUBSYSTEM:WINDOWS"])
 	myenv.Append(LIBS = "qtmain")
 
+myenv.BuildVersion("BuildVersion.h", version = env["SLIMBER_VERSION"])
+
 sources = [
 		"main.cpp", 
 		"QtMenulet.cpp",
+		"QtAboutDialog.cpp",
 		myenv.Qrc("Slimber.qrc"),
 	]
 

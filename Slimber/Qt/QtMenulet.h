@@ -12,8 +12,10 @@
 #include <QSystemTrayIcon>
 #include <QObject>
 #include <QPixmap>
+#include <QPointer>
 
 #include "Slimber/Menulet.h"
+#include "Slimber/Qt/QtAboutDialog.h"
 
 class QtMenulet : public QObject, public Menulet {
 		Q_OBJECT
@@ -33,7 +35,7 @@ class QtMenulet : public QObject, public Menulet {
 		}
 
 		void addAboutItem() {
-			menu.addAction("About");
+			menu.addAction("About", this, SLOT(showAboutDialog()));
 		}
 
 		void addRestartItem() {
@@ -59,6 +61,14 @@ class QtMenulet : public QObject, public Menulet {
 
 	private slots:
 		void showAboutDialog() {
+			if (aboutDialog) {
+				aboutDialog->raise();
+				aboutDialog->activateWindow();
+			}
+			else {
+				aboutDialog = new QtAboutDialog();
+				aboutDialog->show();
+			}
 		}
 
 		void restart() {
@@ -68,4 +78,5 @@ class QtMenulet : public QObject, public Menulet {
 	private:
 		QMenu menu;
 		QSystemTrayIcon trayIcon;
+		QPointer<QtAboutDialog> aboutDialog;
 };

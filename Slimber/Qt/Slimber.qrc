@@ -5,5 +5,6 @@
 		<file alias="icons/Online.png">../Resources/Online.png</file>
 		<file alias="icons/UsersOffline.png">../Resources/UsersOffline.png</file>
 		<file alias="icons/UsersOnline.png">../Resources/UsersOnline.png</file>
+		<file alias="icons/Icon-128.png">../Resources/Icon-128.png</file>
 	</qresource>
 </RCC>
