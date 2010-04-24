@@ -54,6 +54,18 @@ namespace Swift {
 			void setBrowseError();
 			void setRegisterError();
 
+		public:
+			template<typename T>
+			std::vector< boost::shared_ptr<T> > getAllQueriesEverRun() const {
+				std::vector< boost::shared_ptr<T> > result;
+				foreach(const boost::shared_ptr<FakeDNSSDQuery>& query, allQueriesEverRun) {
+					if (boost::shared_ptr<T> resultQuery = boost::dynamic_pointer_cast<T>(query)) {
+						result.push_back(resultQuery);
+					}
+				}
+				return result;
+			}
+
 		private:
 			template<typename T>
 			std::vector< boost::shared_ptr<T> > getQueries() const {
@@ -69,6 +81,7 @@ namespace Swift {
 		private:
 			String domain;
 			std::list< boost::shared_ptr<FakeDNSSDQuery> > runningQueries;
+			std::list< boost::shared_ptr<FakeDNSSDQuery> > allQueriesEverRun;
 			std::set<DNSSDServiceID> services;
 			typedef std::map<DNSSDServiceID,DNSSDResolveServiceQuery::Result> ServiceInfoMap;
 			ServiceInfoMap serviceInfo;

@@ -95,14 +95,16 @@ void LinkLocalServiceBrowser::handleServiceAdded(const DNSSDServiceID& service) 
 	if (selfService && service == *selfService) {
 		return;
 	}
-	boost::shared_ptr<DNSSDResolveServiceQuery> resolveQuery = querier->createResolveServiceQuery(service);
-	resolveQuery->onServiceResolved.connect(
-		boost::bind(&LinkLocalServiceBrowser::handleServiceResolved, this, service, _1));
-	std::pair<ResolveQueryMap::iterator, bool> r = resolveQueries.insert(std::make_pair(service, resolveQuery));
-	if (!r.second) {
+
+	std::pair<ResolveQueryMap::iterator, bool> r = resolveQueries.insert(std::make_pair(service, boost::shared_ptr<DNSSDResolveServiceQuery>()));
+	if (r.second) {
+		// There was no existing query yet. Start a new query.
+		boost::shared_ptr<DNSSDResolveServiceQuery> resolveQuery = querier->createResolveServiceQuery(service);
+		resolveQuery->onServiceResolved.connect(
+			boost::bind(&LinkLocalServiceBrowser::handleServiceResolved, this, service, _1));
 		r.first->second = resolveQuery;
+		resolveQuery->start();
 	}
-	resolveQuery->start();
 }
 
 void LinkLocalServiceBrowser::handleServiceRemoved(const DNSSDServiceID& service) {

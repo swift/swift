@@ -14,6 +14,7 @@
 #include "Swiften/LinkLocal/DNSSD/DNSSDServiceID.h"
 #include "Swiften/LinkLocal/DNSSD/DNSSDResolveServiceQuery.h"
 #include "Swiften/LinkLocal/DNSSD/Fake/FakeDNSSDQuerier.h"
+#include "Swiften/LinkLocal/DNSSD/Fake/FakeDNSSDResolveServiceQuery.h"
 #include "Swiften/EventLoop/DummyEventLoop.h"
 
 using namespace Swift;
@@ -26,6 +27,7 @@ class LinkLocalServiceBrowserTest : public CppUnit::TestFixture {
 		CPPUNIT_TEST(testServiceAdded_NoServiceInfo);
 		CPPUNIT_TEST(testServiceAdded_RegisteredService);
 		CPPUNIT_TEST(testServiceAdded_UnregisteredService);
+		CPPUNIT_TEST(testServiceAdded_Twice);
 		CPPUNIT_TEST(testServiceChanged);
 		CPPUNIT_TEST(testServiceRemoved);
 		CPPUNIT_TEST(testServiceRemoved_UnregisteredService);
@@ -177,6 +179,31 @@ class LinkLocalServiceBrowserTest : public CppUnit::TestFixture {
 
 			testling->stop();
 		}
+
+		void testServiceAdded_Twice() {
+			boost::shared_ptr<LinkLocalServiceBrowser> testling = createTestling();
+			testling->start();
+			eventLoop->processEvents();
+
+			querier->setServiceInfo(*testServiceID,*testServiceInfo);
+			querier->addService(*testServiceID);
+			querier->addService(*testServiceID);
+			eventLoop->processEvents();
+
+			CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(querier->getAllQueriesEverRun<FakeDNSSDResolveServiceQuery>().size()));
+			CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(addedServices.size()));
+			CPPUNIT_ASSERT(addedServices[0].getID() == *testServiceID);
+			CPPUNIT_ASSERT_EQUAL(0, static_cast<int>(changedServices.size()));
+			CPPUNIT_ASSERT_EQUAL(0, static_cast<int>(removedServices.size()));
+			std::vector<LinkLocalService> services = testling->getServices();
+			CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(services.size()));
+			CPPUNIT_ASSERT(*testServiceID == services[0].getID());
+			CPPUNIT_ASSERT(testServiceInfo->port == services[0].getPort());
+			CPPUNIT_ASSERT(testServiceInfo->host == services[0].getHostname());
+
+			testling->stop();
+		}
+
 
 		void testServiceChanged() {
 			boost::shared_ptr<LinkLocalServiceBrowser> testling = createTestling();

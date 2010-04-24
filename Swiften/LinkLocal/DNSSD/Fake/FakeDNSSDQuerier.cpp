@@ -43,6 +43,7 @@ boost::shared_ptr<DNSSDResolveHostnameQuery> FakeDNSSDQuerier::createResolveHost
 
 void FakeDNSSDQuerier::addRunningQuery(boost::shared_ptr<FakeDNSSDQuery> query) {
 	runningQueries.push_back(query);
+	allQueriesEverRun.push_back(query);
 	if (boost::shared_ptr<FakeDNSSDBrowseQuery> browseQuery = boost::dynamic_pointer_cast<FakeDNSSDBrowseQuery>(query)) {
 		foreach(const DNSSDServiceID& service, services) {
 			MainEventLoop::postEvent(boost::bind(boost::ref(browseQuery->onServiceAdded), service), shared_from_this());
