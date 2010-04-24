@@ -104,6 +104,7 @@ class XMPPRosterTest : public CppUnit::TestFixture
 		}
 
 		void tearDown() {
+			delete handler_;
 			delete roster_;
 		}
 
