@@ -10,9 +10,12 @@
 
 #include "QtMenulet.h"
 #include "Slimber/MainController.h"
+#include "Swiften/EventLoop/Qt/QtEventLoop.h"
 
 int main(int argc, char* argv[]) {
 	QApplication app(argc, argv);
+	QtEventLoop eventLoop;
+
 	if (!QSystemTrayIcon::isSystemTrayAvailable()) {
 QMessageBox::critical(0, QObject::tr("Systray"), QObject::tr("No system tray"));
 		return 1;
