@@ -23,10 +23,6 @@
 using namespace Swift;
 
 MainController::MainController(Menulet* menulet) : menulet(menulet) {
-	menuletController = new MenuletController(menulet);
-	menuletController->onRestartRequested.connect(boost::bind(
-			&MainController::handleRestartRequested, this));
-
 	dnsSDQuerier = PlatformDNSSDQuerierFactory().createQuerier();
 	assert(dnsSDQuerier);
 
@@ -47,12 +43,17 @@ MainController::MainController(Menulet* menulet) : menulet(menulet) {
 	server->onSelfConnected.connect(
 			boost::bind(&MainController::handleSelfConnected, this, _1));
 
+	menuletController = new MenuletController(menulet);
+	menuletController->onRestartRequested.connect(boost::bind(
+			&MainController::handleRestartRequested, this));
+
+
 	start();
 }
 
 MainController::~MainController() {
-	delete menuletController;
 	delete server;
+	delete menuletController;
 	delete vCardCollection;
 	linkLocalServiceBrowser->stop();
 	delete linkLocalServiceBrowser;
