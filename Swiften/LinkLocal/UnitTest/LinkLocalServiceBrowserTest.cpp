@@ -55,6 +55,7 @@ class LinkLocalServiceBrowserTest : public CppUnit::TestFixture {
 		}
 
 		void tearDown() {
+			querier->clearAllQueriesEverRun();
 			addedServices.clear();
 			removedServices.clear();
 			changedServices.clear();

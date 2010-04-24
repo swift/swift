@@ -34,7 +34,7 @@ void LinkLocalConnector::connect() {
 	resolveQuery = querier->createResolveHostnameQuery(
 			service.getHostname(), 
 			service.getID().getNetworkInterfaceID());
-	resolveQuery->onHostnameResolved.connect(boost::bind(
+	resolveQueryHostNameResolvedConnection = resolveQuery->onHostnameResolved.connect(boost::bind(
 			&LinkLocalConnector::handleHostnameResolved, 
 			boost::dynamic_pointer_cast<LinkLocalConnector>(shared_from_this()), 
 			_1));
@@ -44,17 +44,20 @@ void LinkLocalConnector::connect() {
 void LinkLocalConnector::cancel() {
 	if (resolveQuery) {
 		resolveQuery->finish();
+		resolveQueryHostNameResolvedConnection.disconnect();
+		resolveQuery.reset();
 	}
-	resolveQuery.reset();
+	connectionConnectFinishedConnection.disconnect();
 	connection->disconnect();
 }
 
 void LinkLocalConnector::handleHostnameResolved(const boost::optional<HostAddress>& address) {
 	resolveQuery->finish();
+	resolveQueryHostNameResolvedConnection.disconnect();
 	resolveQuery.reset();
 	if (address) {
-		connection->onConnectFinished.connect(
-				boost::bind(boost::ref(onConnectFinished), _1));
+		connectionConnectFinishedConnection = connection->onConnectFinished.connect(
+				boost::bind(&LinkLocalConnector::handleConnected, shared_from_this(), _1));
 		connection->connect(HostAddressPort(*address, service.getPort()));
 	}
 	else {
@@ -64,6 +67,8 @@ void LinkLocalConnector::handleHostnameResolved(const boost::optional<HostAddres
 
 void LinkLocalConnector::handleConnected(bool error) {
 	onConnectFinished(error);
+	assert(connectionConnectFinishedConnection.connected());
+	connectionConnectFinishedConnection.disconnect();
 }
 
 void LinkLocalConnector::queueElement(boost::shared_ptr<Element> element) {

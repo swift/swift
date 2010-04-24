@@ -57,7 +57,9 @@ namespace Swift {
 			LinkLocalService service;
 			boost::shared_ptr<DNSSDQuerier> querier;
 			boost::shared_ptr<DNSSDResolveHostnameQuery> resolveQuery;
+			boost::bsignals::connection resolveQueryHostNameResolvedConnection;
 			boost::shared_ptr<Connection> connection;
+			boost::bsignals::connection connectionConnectFinishedConnection;
 			std::vector<boost::shared_ptr<Element> > queuedElements;
 	};
 }

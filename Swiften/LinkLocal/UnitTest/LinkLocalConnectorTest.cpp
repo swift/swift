@@ -36,6 +36,7 @@ class LinkLocalConnectorTest : public CppUnit::TestFixture {
 		}
 
 		void tearDown() {
+			querier->clearAllQueriesEverRun();
 			delete eventLoop;
 		}
 

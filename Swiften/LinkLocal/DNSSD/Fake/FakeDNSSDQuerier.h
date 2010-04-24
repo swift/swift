@@ -34,6 +34,10 @@ namespace Swift {
 			void start() {}
 			void stop() {}
 
+			void clearAllQueriesEverRun() {
+				allQueriesEverRun.clear();
+			}
+
 			boost::shared_ptr<DNSSDBrowseQuery> createBrowseQuery();
 			boost::shared_ptr<DNSSDRegisterQuery> createRegisterQuery(
 					const String& name, int port, const ByteArray& info);
