@@ -7,7 +7,6 @@
 #include "Swiften/Parser/PayloadParsers/DelayParser.h"
 
 #include <locale>
-#include <iostream>
 
 #include <boost/date_time/time_facet.hpp>
 
@@ -31,7 +30,6 @@ void DelayParser::handleStartElement(const String& /*element*/, const String& /*
 		boost::posix_time::ptime stamp = dateFromString(attributes.getAttribute("stamp"));
 		getPayloadInternal()->setStamp(stamp);
 		if (!attributes.getAttribute("from").isEmpty()) {
-			std::cout << attributes.getAttribute("from");
 			String from = attributes.getAttribute("from");
 			getPayloadInternal()->setFrom(JID(from));
 		}
