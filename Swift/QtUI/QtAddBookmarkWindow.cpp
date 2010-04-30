@@ -13,9 +13,12 @@ QtAddBookmarkWindow::QtAddBookmarkWindow(UIEventStream* eventStream) : eventStre
 
 }
 
-void QtAddBookmarkWindow::commit() {
-	qDebug() << "committing";
-	eventStream_->send(boost::shared_ptr<UIEvent>(new AddMUCBookmarkUIEvent(createBookmarkFromForm())));
+bool QtAddBookmarkWindow::commit() {
+	boost::shared_ptr<MUCBookmark> bookmark(createBookmarkFromForm());
+	if (bookmark) {
+		eventStream_->send(boost::shared_ptr<UIEvent>(new AddMUCBookmarkUIEvent(bookmark)));
+	}
+	return bookmark;
 }
 
 }

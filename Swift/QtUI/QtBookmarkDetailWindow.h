@@ -19,7 +19,7 @@ namespace Swift {
 		Q_OBJECT
 		public:
 			QtBookmarkDetailWindow(QWidget* parent = NULL);
-			virtual void commit() = 0;
+			virtual bool commit() = 0;
 			boost::shared_ptr<MUCBookmark> createBookmarkFromForm();
 		public slots:
 			void accept();

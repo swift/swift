@@ -6,13 +6,22 @@
 
 #include "QtEditBookmarkWindow.h"
 
+#include "QtSwiftUtil.h"
+
 namespace Swift {
 QtEditBookmarkWindow::QtEditBookmarkWindow(UIEventStream* eventStream, boost::shared_ptr<MUCBookmark> bookmark) : eventStream_(eventStream), bookmark_(bookmark) {
-
+	name_->setText(P2QSTRING(bookmark->getName()));
+	room_->setText(P2QSTRING(bookmark->getRoom().toString()));
+	autojoin_->setChecked(bookmark->getAutojoin());
+	nick_->setText(bookmark->getNick() ? P2QSTRING(bookmark->getNick().get()) : "");
+	password_->setText(bookmark->getPassword() ? P2QSTRING(bookmark->getPassword().get()) : "");
 }
 
-void QtEditBookmarkWindow::commit() {
-	eventStream_->send(boost::shared_ptr<UIEvent>(new EditMUCBookmarkUIEvent(bookmark_, createBookmarkFromForm())));
+bool QtEditBookmarkWindow::commit() {
+	boost::shared_ptr<MUCBookmark> bookmark = createBookmarkFromForm();
+	if (!bookmark) return false;
+	eventStream_->send(boost::shared_ptr<UIEvent>(new EditMUCBookmarkUIEvent(bookmark_, bookmark)));
+	return true;
 }
 
 }

@@ -6,6 +6,7 @@
 
 #include "QtBookmarkDetailWindow.h"
 #include "QtSwiftUtil.h"
+#include <QMessageBox>
 
 namespace Swift {
 
@@ -17,15 +18,24 @@ QtBookmarkDetailWindow::QtBookmarkDetailWindow(QWidget* parent) : QDialog(parent
 }
 
 void QtBookmarkDetailWindow::accept() {
-	commit();
-	QDialog::accept();
+	if (commit()) {
+		QDialog::accept();
+	}
 }
 
 boost::shared_ptr<MUCBookmark> QtBookmarkDetailWindow::createBookmarkFromForm() {
 	//check room
 	//check bookmarkName
 	JID room(Q2PSTRING(room_->text()));
+	if (!room.isValid() || room.getNode().isEmpty() || !room.getResource().isEmpty()) {
+		QMessageBox::warning(this, "Bookmark not valid", "You must specify a valid room address (e.g. myroom@chats.example.com).");
+		return boost::shared_ptr<MUCBookmark>();
+	}
 	String name(Q2PSTRING(name_->text()));
+	if (name.isEmpty()) {
+		name = room.toString();
+	}
+
 	String nick(Q2PSTRING(nick_->text()));
 	String password(Q2PSTRING(password_->text()));
 	bool autojoin = autojoin_->isChecked();

@@ -80,7 +80,6 @@ void MUCBookmarkManager::replaceBookmark(boost::shared_ptr<MUCBookmark> oldBookm
 }
 
 void MUCBookmarkManager::addBookmark(boost::shared_ptr<MUCBookmark> bookmark) {
-	std::cout << "adding bookmark with pointer " << bookmark.get() << std::endl;
 	bookmarks_.push_back(bookmark);
 	onBookmarkAdded(bookmark);
 	flush();

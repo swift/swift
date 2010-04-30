@@ -16,7 +16,7 @@ namespace Swift {
 		Q_OBJECT
 		public:
 			QtAddBookmarkWindow(UIEventStream* eventStream);
-			void commit();
+			bool commit();
 		private:
 			UIEventStream* eventStream_;
 	};

@@ -15,7 +15,7 @@ namespace Swift {
 		Q_OBJECT
 		public:
 			QtEditBookmarkWindow(UIEventStream* eventStream, boost::shared_ptr<MUCBookmark> bookmark);
-			void commit();
+			bool commit();
 	
 		private:
 			UIEventStream* eventStream_;
