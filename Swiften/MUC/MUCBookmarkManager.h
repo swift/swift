@@ -23,14 +23,14 @@ namespace Swift {
 			MUCBookmarkManager(IQRouter* iqRouter);
 			void addBookmark(boost::shared_ptr<MUCBookmark> bookmark);
 			void removeBookmark(boost::shared_ptr<MUCBookmark> bookmark);
-			/** Call flush after editing an existing bookmark. */
-			void flush();
-			/** Returns pointers to the bookmarks. These can be edited, and then flush()ed.*/
+			void replaceBookmark(boost::shared_ptr<MUCBookmark> oldBookmark, boost::shared_ptr<MUCBookmark> newBookmark);
 			const std::vector<boost::shared_ptr<MUCBookmark> >& getBookmarks(); 
 			boost::signal<void (boost::shared_ptr<MUCBookmark>)> onBookmarkAdded;
 			boost::signal<void (boost::shared_ptr<MUCBookmark>)> onBookmarkRemoved;
 		private:
+			bool containsEquivalent(std::vector<boost::shared_ptr<MUCBookmark> > list, boost::shared_ptr<MUCBookmark> bookmark);
 			void handleBookmarksReceived(boost::shared_ptr<Storage> payload, const boost::optional<ErrorPayload>& error);
+			void flush();
 			std::vector<boost::shared_ptr<MUCBookmark> > bookmarks_;
 			IQRouter* iqRouter_;
 	};

@@ -12,6 +12,7 @@
 #include "Swift/Controllers/UIEvents/UIEventStream.h"
 #include "Swift/QtUI/ChatList/ChatListModel.h"
 #include "Swift/QtUI/ChatList/ChatListDelegate.h"
+#include "Swift/QtUI/ContextMenus/QtContextMenu.h"
 
 namespace Swift {
 
@@ -24,10 +25,21 @@ namespace Swift {
 			void removeMUCBookmark(boost::shared_ptr<MUCBookmark> bookmark);
 		private slots:
 			void handleItemActivated(const QModelIndex&);
+			void handleAddBookmark();
+			void handleEditBookmark();
+			void handleRemoveBookmark();
+
+		protected:
+			void contextMenuEvent(QContextMenuEvent* event);
 		private:
+			void setupContextMenus();
 			UIEventStream* eventStream_;
 			ChatListModel* model_;
 			ChatListDelegate* delegate_;
+			QtContextMenu* contextMenu_;
+			QMenu* mucMenu_;
+			QMenu* emptyMenu_;
+			ChatListItem* contextMenuItem_;
 	};
 
 }

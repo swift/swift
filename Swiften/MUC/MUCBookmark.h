@@ -23,6 +23,7 @@ namespace Swift {
 			const boost::optional<String>& getPassword() const {return password_;};
 			const String& getName() const {return name_;};
 			const JID& getRoom() const {return room_;};
+			bool operator==(const MUCBookmark& rhs) {return rhs.room_ == room_ && rhs.name_ == name_ && rhs.nick_ == nick_ && rhs.password_ == password_ && rhs.autojoin_ == autojoin_;};
 		private:
 			JID room_;
 			String name_;

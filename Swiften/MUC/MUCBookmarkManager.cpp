@@ -7,6 +7,7 @@
 #include "MUCBookmarkManager.h"
 
 #include <boost/bind.hpp>
+#include <iostream>
 
 #include "Swiften/Queries/IQRouter.h"
 
@@ -24,7 +25,7 @@ void MUCBookmarkManager::handleBookmarksReceived(boost::shared_ptr<Storage> payl
 	if (error) {
 		return;
 	}
-	std::vector<boost::shared_ptr<MUCBookmark> > newBookmarks;
+	std::vector<boost::shared_ptr<MUCBookmark> > receivedBookmarks;
 	foreach (Storage::Conference conference, payload->getConferences()) {
 		String name = (!conference.name.isEmpty()) ? conference.name : conference.jid.getNode();
 		boost::shared_ptr<MUCBookmark> bookmark(new MUCBookmark(conference.jid, name));
@@ -35,25 +36,54 @@ void MUCBookmarkManager::handleBookmarksReceived(boost::shared_ptr<Storage> payl
 		if (!conference.password.isEmpty()) {
 			bookmark->setPassword(conference.password);
 		}
-		newBookmarks.push_back(bookmark);
+		receivedBookmarks.push_back(bookmark);
 	}
 
-	//FIXME: This needs to be fixed before we start doing anything supporting updates
+	std::vector<boost::shared_ptr<MUCBookmark> > newBookmarks;
 	foreach (boost::shared_ptr<MUCBookmark> oldBookmark, bookmarks_) {
-		onBookmarkRemoved(oldBookmark);
+		if (containsEquivalent(receivedBookmarks, oldBookmark)) {
+			newBookmarks.push_back(oldBookmark);
+		} else {
+			onBookmarkRemoved(oldBookmark);
+		} 
 	}
 
-	foreach (boost::shared_ptr<MUCBookmark> newBookmark, newBookmarks) {
-		onBookmarkAdded(newBookmark);
+	foreach (boost::shared_ptr<MUCBookmark> newBookmark, receivedBookmarks) {
+		if (!containsEquivalent(bookmarks_, newBookmark)) {
+			newBookmarks.push_back(newBookmark);
+			onBookmarkAdded(newBookmark);
+		}
 	}
+	bookmarks_ = newBookmarks;
+}
 
+bool MUCBookmarkManager::containsEquivalent(std::vector<boost::shared_ptr<MUCBookmark> > list, boost::shared_ptr<MUCBookmark> bookmark) {
+	foreach (boost::shared_ptr<MUCBookmark> listBookmark, list) {
+		if (*listBookmark == *bookmark) {
+			return true;
+		}
+	}
+	return false;
+}
 
+void MUCBookmarkManager::replaceBookmark(boost::shared_ptr<MUCBookmark> oldBookmark, boost::shared_ptr<MUCBookmark> newBookmark) {
+	for (size_t i = 0; i < bookmarks_.size(); i++) {
+		boost::shared_ptr<MUCBookmark> bookmark(bookmarks_[i]);
+		if (bookmark.get() == oldBookmark.get()) {
+			bookmarks_[i] = newBookmark;
+			flush();
+			onBookmarkRemoved(oldBookmark);
+			onBookmarkAdded(newBookmark);
+			return;
+		}
+	}
 }
 
 void MUCBookmarkManager::addBookmark(boost::shared_ptr<MUCBookmark> bookmark) {
+	std::cout << "adding bookmark with pointer " << bookmark.get() << std::endl;
 	bookmarks_.push_back(bookmark);
-	flush();
 	onBookmarkAdded(bookmark);
+	flush();
 }
 
 
@@ -63,10 +93,9 @@ void MUCBookmarkManager::removeBookmark(boost::shared_ptr<MUCBookmark> bookmark)
 		if ((*it).get() == bookmark.get()) {
 			bookmarks_.erase(it);
 			onBookmarkRemoved(bookmark);
-			return;
+			break;
 		}
 	}
-	assert(false);
 	flush();
 }
 

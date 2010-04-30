@@ -15,6 +15,9 @@
 #include "Swift/Controllers/Chat/MUCController.h"
 #include "Swift/Controllers/UIEvents/RequestChatUIEvent.h"
 #include "Swift/Controllers/UIEvents/JoinMUCUIEvent.h"
+#include "Swift/Controllers/UIEvents/AddMUCBookmarkUIEvent.h"
+#include "Swift/Controllers/UIEvents/RemoveMUCBookmarkUIEvent.h"
+#include "Swift/Controllers/UIEvents/EditMUCBookmarkUIEvent.h"
 #include "Swift/Controllers/UIInterfaces/ChatListWindowFactory.h"
 #include "Swiften/Presence/PresenceSender.h"
 #include "Swiften/Elements/ChatState.h"
@@ -83,10 +86,27 @@ void ChatsManager::handleUIEvent(boost::shared_ptr<UIEvent> event) {
 	boost::shared_ptr<RequestChatUIEvent> chatEvent = boost::dynamic_pointer_cast<RequestChatUIEvent>(event);
 	if (chatEvent) {
 		handleChatRequest(chatEvent->getContact());
+		return;
 	}
 	boost::shared_ptr<JoinMUCUIEvent> joinMUCEvent = boost::dynamic_pointer_cast<JoinMUCUIEvent>(event);
 	if (joinMUCEvent) {
 		handleJoinMUCRequest(joinMUCEvent->getJID(), joinMUCEvent->getNick());
+		return;
+	}
+	boost::shared_ptr<RemoveMUCBookmarkUIEvent> removeMUCBookmarkEvent = boost::dynamic_pointer_cast<RemoveMUCBookmarkUIEvent>(event);
+	if (removeMUCBookmarkEvent) {
+		mucBookmarkManager_->removeBookmark(removeMUCBookmarkEvent->getBookmark());
+		return;
+	}
+	boost::shared_ptr<AddMUCBookmarkUIEvent> addMUCBookmarkEvent = boost::dynamic_pointer_cast<AddMUCBookmarkUIEvent>(event);
+	if (addMUCBookmarkEvent) {
+		mucBookmarkManager_->addBookmark(addMUCBookmarkEvent->getBookmark());
+		return;
+	}
+	boost::shared_ptr<EditMUCBookmarkUIEvent> editMUCBookmarkEvent = boost::dynamic_pointer_cast<EditMUCBookmarkUIEvent>(event);
+	if (editMUCBookmarkEvent) {
+		mucBookmarkManager_->replaceBookmark(editMUCBookmarkEvent->getOldBookmark(), editMUCBookmarkEvent->getNewBookmark());
+		return;
 	}
 }
 
