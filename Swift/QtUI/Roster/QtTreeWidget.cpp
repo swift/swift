@@ -11,6 +11,7 @@
 
 #include <qdebug.h>
 #include <QMenu>
+#include <QContextMenuEvent>
 
 namespace Swift {
 
@@ -56,11 +57,12 @@ void QtTreeWidget::handleItemActivated(const QModelIndex& index) {
 	}
 }
 
-void QtTreeWidget::contextMenuEvent(QContextMenuEvent* /*event*/) {
+void QtTreeWidget::contextMenuEvent(QContextMenuEvent* event) {
 	if (!contextMenu_) {
 		return;
 	}
-	QtTreeWidgetItem* qtItem = static_cast<QtTreeWidgetItem*>(selectedIndexes()[0].internalPointer());
+	QModelIndex index = indexAt(event->pos());
+	QtTreeWidgetItem* qtItem = index.isValid() ? static_cast<QtTreeWidgetItem*>(index.internalPointer()) : NULL;
 	if (qtItem) {
 		contextMenu_->show(qtItem);
 	}
