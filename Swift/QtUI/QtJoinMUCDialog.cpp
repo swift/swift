@@ -13,8 +13,8 @@ QtJoinMUCDialog::QtJoinMUCDialog(const QString&, const QString&, QWidget* parent
 	setupUi(this);
 	errorLabel_->hide();
 	setAttribute(Qt::WA_DeleteOnClose, true);
-//	connect(buttons_, SIGNAL(accepted()), SLOT(accept()));
-//	connect(buttons_, SIGNAL(rejected()), SLOT(reject()));
+	connect(buttons_, SIGNAL(accepted()), SLOT(accept()));
+	connect(buttons_, SIGNAL(rejected()), SLOT(reject()));
 }
 
 void QtJoinMUCDialog::accept() {
