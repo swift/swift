@@ -42,6 +42,9 @@ void AvatarManager::handlePresenceReceived(boost::shared_ptr<Presence> presence)
 	if (!update) {
 		return;
 	}
+	if (presence->getPayload<ErrorPayload>()) {
+		return;
+	}
 	JID from = getAvatarJID(presence->getFrom());
 	String& hash = avatarHashes_[from];
 	if (hash != update->getPhotoHash()) {

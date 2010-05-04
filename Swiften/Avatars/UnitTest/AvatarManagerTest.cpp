@@ -19,18 +19,19 @@ using namespace Swift;
 class AvatarManagerTest : public CppUnit::TestFixture {
 		CPPUNIT_TEST_SUITE(AvatarManagerTest);
 		CPPUNIT_TEST(testUpdate_UpdateNewHash);
+		/*&
 		CPPUNIT_TEST(testUpdate_UpdateNewHashAlreadyHaveAvatar);
 		CPPUNIT_TEST(testUpdate_UpdateNewHashFromMUC);
-		CPPUNIT_TEST(testUpdate_UpdateSameHash);
+		CPPUNIT_TEST(testUpdate_UpdateSameHash);*/
+		CPPUNIT_TEST(testUpdate_UpdateWithError);
+		/*
 		CPPUNIT_TEST(testUpdate_UpdateNewHashSameThanOtherUser);
 		CPPUNIT_TEST(testReceiveVCard);
 		CPPUNIT_TEST(testGetAvatarPath);
-		CPPUNIT_TEST(testGetAvatarPathFromMUC);
+		CPPUNIT_TEST(testGetAvatarPathFromMUC);*/
 		CPPUNIT_TEST_SUITE_END();
 
 	public:
-		AvatarManagerTest() {}
-
 		void setUp() {
 			stanzaChannel_ = new DummyStanzaChannel();
 			iqRouter_ = new IQRouter(stanzaChannel_);
@@ -49,11 +50,12 @@ class AvatarManagerTest : public CppUnit::TestFixture {
 			std::auto_ptr<AvatarManager> testling = createManager();
 			stanzaChannel_->onPresenceReceived(createPresenceWithPhotoHash());
 
-			CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(stanzaChannel_->sentStanzas_.size()));
-			IQ* 
-			CPPUNIT_ASSERT(stanzaChannel->isRequestAtIndex<VCardUpdate>(0, JID("foo@bar.com"), IQ::Get));
+			CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(stanzaChannel_->sentStanzas.size()));
+			// TODO
+			//CPPUNIT_ASSERT(stanzaChannel_->isRequestAtIndex<VCardUpdate>(0, JID("foo@bar.com"), IQ::Get));
 		}
 
+/*
 		void testUpdate_UpdateNewHashAlreadyHaveAvatar() {
 			std::auto_ptr<AvatarManager> testling = createManager();
 		}
@@ -81,6 +83,17 @@ class AvatarManagerTest : public CppUnit::TestFixture {
 		void testGetAvatarPathFromMUC() {
 			std::auto_ptr<AvatarManager> testling = createManager();
 		}
+		*/
+
+		void testUpdate_UpdateWithError() {
+			std::auto_ptr<AvatarManager> testling = createManager();
+			boost::shared_ptr<Presence> update = createPresenceWithPhotoHash();
+			update->addPayload(boost::shared_ptr<ErrorPayload>(new ErrorPayload()));
+			stanzaChannel_->onPresenceReceived(update);
+
+			CPPUNIT_ASSERT_EQUAL(0, static_cast<int>(stanzaChannel_->sentStanzas.size()));
+		}
+
 
 	private:
 		std::auto_ptr<AvatarManager> createManager() {
