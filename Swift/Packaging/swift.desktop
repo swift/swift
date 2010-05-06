@@ -1,0 +1,13 @@
+[Desktop Entry]
+
+# Desktop Entry specification version
+Version=1.0
+
+Type=Application
+Name=Swift
+GenericName=Jabber/XMPP Client
+Comment=Client for the Jabber/XMPP network
+Icon=swift
+Exec=swift
+Terminal=false
+Categories=Network;InstantMessaging;Qt;
