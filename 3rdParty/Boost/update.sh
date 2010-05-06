@@ -24,7 +24,8 @@ fi
 	program_options.hpp \
 	thread.hpp \
 	asio.hpp \
-	uuid.hpp \
+	uuid/uuid.hpp \
+	uuid/uuid_generators.hpp \
 	regex.hpp \
 	$TARGET_DIR
 

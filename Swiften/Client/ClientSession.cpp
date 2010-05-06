@@ -7,6 +7,9 @@
 #include "Swiften/Client/ClientSession.h"
 
 #include <boost/bind.hpp>
+#include <boost/uuid/uuid.hpp>
+#include <boost/uuid/uuid_io.hpp>
+#include <boost/uuid/uuid_generators.hpp>
 
 #include "Swiften/Elements/ProtocolHeader.h"
 #include "Swiften/Elements/StreamFeatures.h"
@@ -98,7 +101,9 @@ void ClientSession::handleElement(boost::shared_ptr<Element> element) {
 			}
 			else if (streamFeatures->hasAuthenticationMechanism("SCRAM-SHA-1")) {
 				// FIXME: Use a real nonce
-				authenticator = new SCRAMSHA1ClientAuthenticator("ClientNonce");
+				std::ostringstream s;
+				s << boost::uuids::random_generator()();
+				authenticator = new SCRAMSHA1ClientAuthenticator(s.str());
 				state = WaitingForCredentials;
 				onNeedCredentials();
 			}
