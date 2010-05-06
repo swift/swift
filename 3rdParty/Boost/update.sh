@@ -25,6 +25,7 @@ fi
 	thread.hpp \
 	asio.hpp \
 	uuid/uuid.hpp \
+	uuid/uuid_io.hpp \
 	uuid/uuid_generators.hpp \
 	regex.hpp \
 	$TARGET_DIR
