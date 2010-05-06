@@ -15,6 +15,7 @@
 #include <boost/date_time/c_time.hpp>
 #include <boost/date_time/special_defs.hpp>
 #include <boost/date_time/gregorian/gregorian_types.hpp>
+#include <cstring>
 
 namespace boost {
 
@@ -41,7 +42,8 @@ namespace gregorian {
         boost::throw_exception(std::out_of_range(s));
     }
 
-    std::tm datetm = {}; // zero initialization is needed for extension members, like tm_zone
+    std::tm datetm;
+    memset(&datetm, 0, sizeof(std::tm));
     boost::gregorian::date::ymd_type ymd = d.year_month_day();
     datetm.tm_year = ymd.year - 1900;
     datetm.tm_mon = ymd.month - 1;
