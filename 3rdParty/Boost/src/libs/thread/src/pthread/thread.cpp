@@ -13,6 +13,7 @@
 #include <boost/thread/locks.hpp>
 #include <boost/thread/once.hpp>
 #include <boost/thread/tss.hpp>
+#include <boost/throw_exception.hpp>
 #ifdef __linux__
 #include <sys/sysinfo.h>
 #elif defined(__APPLE__) || defined(__FreeBSD__)
@@ -186,7 +187,7 @@ namespace boost
         if (res != 0)
         {
             thread_info->self.reset();
-            throw thread_resource_error();
+            boost::throw_exception(thread_resource_error());
         }
     }
 

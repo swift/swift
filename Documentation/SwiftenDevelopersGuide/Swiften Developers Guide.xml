@@ -19,4 +19,31 @@
       </para>
     </sect1>
   </chapter>
+
+  <chapter>
+    <title>Tutorial: Writing an Echo Bot</title>
+    
+    <para>
+      In this chapter, we build a simple echo bot, illustrating how
+      to use and extend Swiften for your own purposes.
+    </para>
+
+    <sect1>
+      <title>Setting up the build environment</title>
+      <para>
+      </para>
+    </sect1>
+
+    <sect1>
+      <title>Connecting to the network</title>
+      <para>
+      </para>
+    </sect1>
+
+    <sect1>
+      <title>T</title>
+      <para>
+      </para>
+    </sect1>
+  </chapter>
 </book>
