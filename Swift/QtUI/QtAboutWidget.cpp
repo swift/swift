@@ -25,19 +25,21 @@ QtAboutWidget::QtAboutWidget() : QDialog() {
 	
 	QLabel* iconLabel = new QLabel(this);
 	iconLabel->setPixmap(QIcon(":/logo-shaded-text.256.png").pixmap(90, 90));
+	iconLabel->setAlignment(Qt::AlignHCenter);
 	mainLayout->addWidget(iconLabel);
 	
-	QLabel* appNameLabel = new QLabel("<font size='+1'><b>" + QCoreApplication::applicationName() + "</b></font>", this);
-	//appNameLabel->setTextFormat
+	QLabel* appNameLabel = new QLabel("<center><font size='+1'><b>" + QCoreApplication::applicationName() + "</b></font></center>", this);
 	mainLayout->addWidget(appNameLabel);
 	
-	QLabel* versionLabel = new QLabel(QString("<font size='-1'>Version ") + QCoreApplication::applicationVersion() + "</font>", this);
+	QLabel* versionLabel = new QLabel(QString("<center><font size='-1'>Version ") + QCoreApplication::applicationVersion() + "</font></center>", this);
 	mainLayout->addWidget(versionLabel);
-	QString buildString = QString("<font size='-1'><centre>Built with: Qt version ") + QT_VERSION_STR;
-	buildString += QString("</centre><br/><centre>Running with Qt version ") + qVersion();
-	buildString += "</centre></font>";
+	QString buildString = QString("<center><font size='-1'>Built with: Qt version ") + QT_VERSION_STR;
+	buildString += QString("<br/>Running with Qt version ") + qVersion();
+	buildString += "</font></center>";
 	QLabel* buildLabel = new QLabel(buildString, this);
 	mainLayout->addWidget(buildLabel);
+
+	setFixedSize(minimumSizeHint());
 }
 
 }
