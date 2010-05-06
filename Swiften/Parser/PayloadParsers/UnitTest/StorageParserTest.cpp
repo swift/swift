@@ -16,6 +16,7 @@ class StorageParserTest : public CppUnit::TestFixture {
 		CPPUNIT_TEST_SUITE(StorageParserTest);
 		CPPUNIT_TEST(testParse_Conference);
 		CPPUNIT_TEST(testParse_MultipleConferences);
+		CPPUNIT_TEST(testParse_URL);
 		CPPUNIT_TEST_SUITE_END();
 
 	public:
@@ -65,6 +66,22 @@ class StorageParserTest : public CppUnit::TestFixture {
 			CPPUNIT_ASSERT_EQUAL(String("Tea party"), conferences[1].name);
 			CPPUNIT_ASSERT_EQUAL(JID("teaparty@wonderland.lit"), conferences[1].jid);
 		}
+
+		void testParse_URL() {
+			PayloadsParserTester parser;
+
+			CPPUNIT_ASSERT(parser.parse(
+				"<storage xmlns='storage:bookmarks'>"
+					"<url name='Complete Works of Shakespeare' url='http://the-tech.mit.edu/Shakespeare/'/>"
+				"</storage>"));
+
+			Storage* payload = dynamic_cast<Storage*>(parser.getPayload().get());
+			std::vector<Storage::URL> urls = payload->getURLs();
+			CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(urls.size()));
+			CPPUNIT_ASSERT_EQUAL(String("Complete Works of Shakespeare"), urls[0].name);
+			CPPUNIT_ASSERT_EQUAL(String("http://the-tech.mit.edu/Shakespeare/"), urls[0].url);
+		}
+
 };
 
 CPPUNIT_TEST_SUITE_REGISTRATION(StorageParserTest);

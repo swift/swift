@@ -22,6 +22,12 @@ void StorageParser::handleStartElement(const String& element, const String&, con
 			conference->jid = JID(attributes.getAttribute("jid"));
 			conference->name = attributes.getAttribute("name");
 		}
+		else if (element == "url") {
+			assert(!url);
+			url = Storage::URL();
+			url->name = attributes.getAttribute("name");
+			url->url = attributes.getAttribute("url");
+		}
 	}
 	else if (level == DetailLevel) {
 		currentText = "";
@@ -36,6 +42,11 @@ void StorageParser::handleEndElement(const String& element, const String&) {
 			assert(conference);
 			getPayloadInternal()->addConference(*conference);
 			conference.reset();
+		}
+		else if (element == "url") {
+			assert(url);
+			getPayloadInternal()->addURL(*url);
+			url.reset();
 		}
 	}
 	else if (level == DetailLevel && conference) {

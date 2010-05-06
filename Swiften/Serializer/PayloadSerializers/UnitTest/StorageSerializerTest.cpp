@@ -31,6 +31,10 @@ class StorageSerializerTest : public CppUnit::TestFixture {
 			conference.nick = "Puck";
 			conference.password = "MyPass";
 			storage->addConference(conference);
+			Storage::URL url;
+			url.name = "Complete Works of Shakespeare";
+			url.url = "http://the-tech.mit.edu/Shakespeare/";
+			storage->addURL(url);
 
 			CPPUNIT_ASSERT_EQUAL(String(
 				"<storage xmlns=\"storage:bookmarks\">"
@@ -41,6 +45,7 @@ class StorageSerializerTest : public CppUnit::TestFixture {
 						"<nick>Puck</nick>"
 						"<password>MyPass</password>"
 					"</conference>"
+					"<url name=\"Complete Works of Shakespeare\" url=\"http://the-tech.mit.edu/Shakespeare/\"/>"
 				"</storage>"), serializer.serialize(storage));
 		}
 

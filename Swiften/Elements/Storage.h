@@ -25,6 +25,13 @@ namespace Swift {
 				String password;
 			};
 
+			struct URL {
+				URL() {}
+
+				String name;
+				String url;
+			};
+
 			Storage() {
 			}
 
@@ -36,7 +43,16 @@ namespace Swift {
 				conferences.push_back(conference);
 			}
 
+			const std::vector<URL>& getURLs() const {
+				return urls;
+			}
+
+			void addURL(const URL& url) {
+				urls.push_back(url);
+			}
+
 		private:
 			std::vector<Conference> conferences;
+			std::vector<URL> urls;
 	};
 }

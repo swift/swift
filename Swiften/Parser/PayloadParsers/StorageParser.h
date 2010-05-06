@@ -29,5 +29,6 @@ namespace Swift {
 			int level;
 			String currentText;
 			boost::optional<Storage::Conference> conference;
+			boost::optional<Storage::URL> url;
 	};
 }

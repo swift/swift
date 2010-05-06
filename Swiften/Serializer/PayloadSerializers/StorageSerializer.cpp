@@ -19,6 +19,7 @@ StorageSerializer::StorageSerializer() : GenericPayloadSerializer<Storage>() {
 
 String StorageSerializer::serializePayload(boost::shared_ptr<Storage> storage)	const {
 	XMLElement storageElement("storage", "storage:bookmarks");
+
 	foreach(const Storage::Conference& conference, storage->getConferences()) {
 		boost::shared_ptr<XMLElement> conferenceElement(new XMLElement("conference"));
 		conferenceElement->setAttribute("name", conference.name);
@@ -36,6 +37,14 @@ String StorageSerializer::serializePayload(boost::shared_ptr<Storage> storage)	c
 		}
 		storageElement.addNode(conferenceElement);
 	}
+
+	foreach(const Storage::URL& url, storage->getURLs()) {
+		boost::shared_ptr<XMLElement> urlElement(new XMLElement("url"));
+		urlElement->setAttribute("name", url.name);
+		urlElement->setAttribute("url", url.url);
+		storageElement.addNode(urlElement);
+	}
+
 	return storageElement.serialize();
 }
 
