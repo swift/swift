@@ -7,20 +7,19 @@
 #pragma once
 
 #include "Swift/Controllers/UIInterfaces/MainWindow.h"
-#include "Swiften/Roster/TreeWidget.h"
 
 namespace Swift {
+	class Roster;
 	class MockMainWindow : public MainWindow {
 		public:
-			MockMainWindow(TreeWidget* treeWidget) {treeWidget_ = treeWidget;};
+			MockMainWindow() {};
 			virtual ~MockMainWindow() {};
-			virtual TreeWidget* getTreeWidget() {return treeWidget_;};
+			virtual void setRosterModel(Roster* roster) {this->roster = roster;};
 			virtual void setMyName(const String& /*name*/) {};;
 			virtual void setMyAvatarPath(const String& /*path*/) {};
 			virtual void setMyStatusText(const String& /*status*/) {};
 			virtual void setMyStatusType(StatusShow::Type /*type*/) {};
-			
-		private:
-			TreeWidget* treeWidget_;
+			Roster* roster;
+
 	};
 }

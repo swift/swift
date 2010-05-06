@@ -28,7 +28,6 @@ namespace Swift {
 	class QtChatWindowFactory;
 	class QtMainWindowFactory;
 	class QtLoginWindowFactory;
-	class QtTreeWidgetFactory;
 	class QtXMLConsoleWidgetFactory;
 	class QtSystemTray;
 	class QtSoundPlayer;
@@ -43,7 +42,6 @@ namespace Swift {
 			~QtSwift();
 		private:
 			MainController *mainController_;
-			QtTreeWidgetFactory *treeWidgetFactory_;
 			QtChatWindowFactory *chatWindowFactory_;
 			QtChatListWindowFactory *chatListWindowFactory_;
 			QtMainWindowFactory *rosterWindowFactory_;

@@ -21,7 +21,7 @@ class AppearOffline : public RosterItemOperation {
 		virtual void operator() (RosterItem* item) const {
 			ContactRosterItem* contact = dynamic_cast<ContactRosterItem*>(item);
 			if (contact) {
-				contact->setStatusShow(StatusShow::None);
+				contact->clearPresence();
 			}
 		}
 

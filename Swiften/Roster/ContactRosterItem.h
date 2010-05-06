@@ -1,48 +1,47 @@
 /*
- * Copyright (c) 2010 Remko Tronçon
+ * Copyright (c) 2010 Kevin Smith
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#ifndef SWIFTEN_ContactRosterItem_H
-#define SWIFTEN_ContactRosterItem_H
+#pragma once
 
 #include "Swiften/Base/String.h"
 #include "Swiften/JID/JID.h"
-#include "Swiften/Roster/TreeWidgetFactory.h"
 #include "Swiften/Roster/RosterItem.h"
-#include "Swiften/Roster/UserRosterAction.h"
 #include "Swiften/Elements/StatusShow.h"
+#include "Swiften/Elements/Presence.h"
 
+#include <map>
 #include <boost/bind.hpp>
 #include <boost/signal.hpp>
 #include <boost/shared_ptr.hpp>
 
 namespace Swift {
 
-class TreeWidgetItem;
 class GroupRosterItem;
 class ContactRosterItem : public RosterItem {
 	public:
-		ContactRosterItem(const JID& jid, const String& name, GroupRosterItem* parent, TreeWidgetFactory* factory);
-		~ContactRosterItem();
+		ContactRosterItem(const JID& jid, const String& name, GroupRosterItem* parent);
+		virtual ~ContactRosterItem();
 
-		StatusShow::Type getStatusShow();
-		void setStatusShow(StatusShow::Type show);
-		void setStatusText(const String& status);
+		StatusShow::Type getStatusShow() const;
+		StatusShow::Type getSimplifiedStatusShow() const;
+		String getStatusText() const;
 		void setAvatarPath(const String& path);
+		const String& getAvatarPath() const;
 		const JID& getJID() const;
-		void setName(const String& name);
-		void show();
-		void hide();
-
+		void applyPresence(const String& resource, boost::shared_ptr<Presence> presence);
+		void clearPresence();
+		void calculateShownPresence();
 	private:
 		JID jid_;
-		String name_;
-		TreeWidgetItem *widget_;
-		StatusShow::Type statusShow_;
+		String avatarPath_;
+		bool hidden_;
+		std::map<String, boost::shared_ptr<Presence> > presences_;
+		boost::shared_ptr<Presence> offlinePresence_;
+		boost::shared_ptr<Presence> shownPresence_;
 };
 
 }
-#endif
 

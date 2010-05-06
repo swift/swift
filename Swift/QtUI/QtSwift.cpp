@@ -11,7 +11,6 @@
 #include "QtLoginWindow.h"
 #include "QtChatTabs.h"
 #include "QtMainWindowFactory.h"
-#include "Roster/QtTreeWidgetFactory.h"
 #include "QtSystemTray.h"
 #include "QtSoundPlayer.h"
 #include "QtXMLConsoleWidgetFactory.h"
@@ -65,11 +64,10 @@ QtSwift::QtSwift(po::variables_map options) : autoUpdater_(NULL) {
 	tabs_ = new QtChatTabs();
 	settings_ = new QtSettingsProvider();
 	application_ = new PlatformApplication(SWIFT_APPLICATION_NAME);
-	treeWidgetFactory_ = new QtTreeWidgetFactory(); 
 	systemTray_ = new QtSystemTray();
 	loginWindowFactory_ = new QtLoginWindowFactory(splitter_, systemTray_, settings_);
-	chatWindowFactory_ = new QtChatWindowFactory(treeWidgetFactory_, splitter_, settings_, tabs_);
-	rosterWindowFactory_ = new QtMainWindowFactory(treeWidgetFactory_);
+	chatWindowFactory_ = new QtChatWindowFactory(splitter_, settings_, tabs_);
+	rosterWindowFactory_ = new QtMainWindowFactory();
 	eventWindowFactory_ = new QtEventWindowFactory(rosterWindowFactory_);
 	xmlConsoleWidgetFactory_ = new QtXMLConsoleWidgetFactory(tabs_);
 	chatListWindowFactory_ = new QtChatListWindowFactory(rosterWindowFactory_);
@@ -77,7 +75,7 @@ QtSwift::QtSwift(po::variables_map options) : autoUpdater_(NULL) {
 	if (splitter_) {
 		splitter_->show();
 	}
-		mainController_ = new MainController(chatWindowFactory_, rosterWindowFactory_, loginWindowFactory_, treeWidgetFactory_, eventWindowFactory_, settings_, application_, systemTray_, soundPlayer_, xmlConsoleWidgetFactory_, chatListWindowFactory_, options.count("latency-debug") > 0);
+		mainController_ = new MainController(chatWindowFactory_, rosterWindowFactory_, loginWindowFactory_, eventWindowFactory_, settings_, application_, systemTray_, soundPlayer_, xmlConsoleWidgetFactory_, chatListWindowFactory_, options.count("latency-debug") > 0);
 
 	PlatformAutoUpdaterFactory autoUpdaterFactory;
 	if (autoUpdaterFactory.isSupported()) {
@@ -91,7 +89,6 @@ QtSwift::~QtSwift() {
 	delete chatWindowFactory_;
 	delete rosterWindowFactory_;
 	delete loginWindowFactory_;
-	delete treeWidgetFactory_;
 	delete mainController_;
 	delete settings_;
 	delete application_;

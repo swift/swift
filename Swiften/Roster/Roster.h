@@ -10,7 +10,6 @@
 #include "Swiften/Base/String.h"
 #include "Swiften/JID/JID.h"
 #include "Swiften/Roster/RosterItemOperation.h"
-#include "Swiften/Roster/UserRosterAction.h"
 #include "Swiften/Roster/RosterFilter.h"
 
 #include <vector>
@@ -20,39 +19,38 @@
 
 namespace Swift {
 
-class TreeWidgetFactory;
-class TreeWidget;
 class RosterItem;
 class GroupRosterItem;
+class ContactRosterItem;
 
 class Roster {
 	public:
-		Roster(TreeWidget *treeWidget, TreeWidgetFactory *widgetFactory);
+		Roster();
 		~Roster();
 
-		TreeWidget* getWidget();
-		GroupRosterItem* getGroup(const String& groupName);
 		void addContact(const JID& jid, const String& name, const String& group);
 		void removeContact(const JID& jid);
 		void removeContactFromGroup(const JID& jid, const String& group);
 		void applyOnItems(const RosterItemOperation& operation);
 		void applyOnAllItems(const RosterItemOperation& operation);
 		void applyOnItem(const RosterItemOperation& operation, const JID& jid);
-		boost::signal<void (boost::shared_ptr<UserRosterAction>)> onUserAction;
-		void addFilter(RosterFilter *filter) {filters_.push_back(filter);filterAll();}
+		void addFilter(RosterFilter *filter) {filters_.push_back(filter);filterAll();};
 		void removeFilter(RosterFilter *filter);
-		std::vector<RosterFilter*> getFilters() {return filters_;}
-
+		GroupRosterItem* getRoot();
+		std::vector<RosterFilter*> getFilters() {return filters_;};
+		boost::signal<void (GroupRosterItem*)> onChildrenChanged;
+		boost::signal<void (GroupRosterItem*)> onGroupAdded;
+		boost::signal<void (RosterItem*)> onDataChanged;
 	private:
-		void filterItem(RosterItem* item);
+		GroupRosterItem* getGroup(const String& groupName);
+		void handleDataChanged(RosterItem* item);
+		void handleChildrenChanged(GroupRosterItem* item);
+		void filterGroup(GroupRosterItem* item);
+		void filterContact(ContactRosterItem* contact, GroupRosterItem* group);
 		void filterAll();
-		void handleUserAction(boost::shared_ptr<UserRosterAction> action);
-		TreeWidget *treeWidget_;
-		TreeWidgetFactory *widgetFactory_;
-		std::vector<RosterItem*> children_;
-		std::vector<RosterItem*> items_;
+		GroupRosterItem* root_;
 		std::vector<RosterFilter*> filters_;
-		std::map<JID, std::vector<RosterItem*> > itemMap_;
+		std::map<JID, std::vector<ContactRosterItem*> > itemMap_;
 };
 }
 

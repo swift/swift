@@ -35,9 +35,8 @@ namespace Swift {
 	class QtMainWindow : public QWidget, public MainWindow {
 		Q_OBJECT
 		public:
-			QtMainWindow(UIEventStream* eventStream, QtTreeWidgetFactory *treeWidgetFactory);
+			QtMainWindow(UIEventStream* eventStream);
 			~QtMainWindow();
-			TreeWidget* getTreeWidget();
 			std::vector<QMenu*> getMenus() {return menus_;}
 			void setMyName(const String& name);
 			void setMyAvatarPath(const String& path);
@@ -45,6 +44,7 @@ namespace Swift {
 			void setMyStatusType(const StatusShow::Type type);
 			QtEventWindow* getEventWindow();
 			QtChatListWindow* getChatListWindow();
+			void setRosterModel(Roster* roster);
 		private slots:
 			void handleStatusChanged(StatusShow::Type showType, const QString &statusMessage);
 			void handleShowOfflineToggled(bool);

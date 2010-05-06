@@ -15,11 +15,16 @@
 #include <QPolygon>
 #include <qdebug.h>
 
-#include "QtTreeWidgetItem.h"
+#include "Swiften/Roster/ContactRosterItem.h"
+#include "Swiften/Roster/GroupRosterItem.h"
+
+#include "QtTreeWidget.h"
+#include "RosterModel.h"
 
 namespace Swift {
 
-RosterDelegate::RosterDelegate() {
+RosterDelegate::RosterDelegate(QtTreeWidget* tree) {
+	tree_ = tree;
 	groupDelegate_ = new GroupItemDelegate();
 }
 
@@ -28,16 +33,14 @@ RosterDelegate::~RosterDelegate() {
 }
 	
 QSize RosterDelegate::sizeHint(const QStyleOptionViewItem& option, const QModelIndex& index ) const {
-	QtTreeWidgetItem* item = static_cast<QtTreeWidgetItem*>(index.internalPointer());
-	if (!item || !item->isContact()) {
+	RosterItem* item = static_cast<RosterItem*>(index.internalPointer());
+	if (dynamic_cast<GroupRosterItem*>(item)) {
 		return groupDelegate_->sizeHint(option, index);
 	}
 	return contactSizeHint(option, index);
 }
 
-QSize RosterDelegate::contactSizeHint(const QStyleOptionViewItem& option, const QModelIndex& index ) const {
-	Q_UNUSED(option);
-	Q_UNUSED(index);
+QSize RosterDelegate::contactSizeHint(const QStyleOptionViewItem& /*option*/, const QModelIndex& /*index*/ ) const {
 	int heightByAvatar = avatarSize_ + common_.verticalMargin * 2;
 	QFontMetrics nameMetrics(common_.nameFont);
 	QFontMetrics statusMetrics(common_.detailFont);
@@ -49,8 +52,8 @@ QSize RosterDelegate::contactSizeHint(const QStyleOptionViewItem& option, const 
 }
 
 void RosterDelegate::paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const {
-	QtTreeWidgetItem* item = static_cast<QtTreeWidgetItem*>(index.internalPointer());
-	if (item && !item->isContact()) {
+	RosterItem* item = static_cast<RosterItem*>(index.internalPointer());
+	if (dynamic_cast<GroupRosterItem*>(item)) {
 		paintGroup(painter, option, index);
 	} else {
 		paintContact(painter, option, index);
@@ -58,14 +61,10 @@ void RosterDelegate::paint(QPainter* painter, const QStyleOptionViewItem& option
 }
 
 void RosterDelegate::paintGroup(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const {
-	QtTreeWidgetItem* item = index.isValid() ? static_cast<QtTreeWidgetItem*>(index.internalPointer()) : NULL;
-	if (item) {
-		groupDelegate_->paint(painter, option, index.data(Qt::DisplayRole).toString(), item->rowCount(), item->isExpanded());
+	if (index.isValid()) {
+		groupDelegate_->paint(painter, option, index.data(Qt::DisplayRole).toString(), index.data(ChildCountRole).toInt(), tree_->isExpanded(index));
 	}
 }
-
-
-
 
 void RosterDelegate::paintContact(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const {
 	//qDebug() << "painting" << index.data(Qt::DisplayRole).toString();

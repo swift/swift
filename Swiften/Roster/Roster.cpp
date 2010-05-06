@@ -13,79 +13,93 @@
 #include "Swiften/Roster/RosterItem.h"
 #include "Swiften/Roster/GroupRosterItem.h"
 #include "Swiften/Roster/RosterItemOperation.h"
-#include "Swiften/Roster/TreeWidget.h"
-#include "Swiften/Roster/TreeWidgetFactory.h"
 
 #include <boost/bind.hpp>
 
+#include <iostream>
 #include <deque>
 
 namespace Swift {
 
-Roster::Roster(TreeWidget *treeWidget, TreeWidgetFactory *widgetFactory) : treeWidget_(treeWidget), widgetFactory_(widgetFactory) {
+Roster::Roster() {
+	root_ = new GroupRosterItem("Dummy-Root", NULL);
 }
 
 Roster::~Roster() {
-	foreach (RosterItem* item, items_) {
+	std::deque<RosterItem*> queue;
+	queue.push_back(root_);
+	while (!queue.empty()) {
+		RosterItem* item = *queue.begin();
+		queue.pop_front();
+		GroupRosterItem* group = dynamic_cast<GroupRosterItem*>(item);
+		if (group) {
+			queue.insert(queue.begin(), group->getChildren().begin(), group->getChildren().end());
+		}
 		delete item;
 	}
-	delete treeWidget_;
 }
 
-TreeWidget* Roster::getWidget() {
-	return treeWidget_;
+GroupRosterItem* Roster::getRoot() {
+	return root_;
 }
 
 GroupRosterItem* Roster::getGroup(const String& groupName) {
-	foreach (RosterItem *item, children_) {
+	foreach (RosterItem *item, root_->getChildren()) {
 		GroupRosterItem *group = dynamic_cast<GroupRosterItem*>(item);
-		if (group && group->getName() == groupName) {
+		if (group && group->getDisplayName() == groupName) {
 			return group;
 		}
 	}
-	GroupRosterItem* group = new GroupRosterItem(groupName, treeWidget_, widgetFactory_);
-	children_.push_back(group);
-	items_.push_back(group);
+	GroupRosterItem* group = new GroupRosterItem(groupName, root_);
+	root_->addChild(group);
+//	std::cout << "Added " << groupName << " to root" << std::endl;
+	group->onChildrenChanged.connect(boost::bind(&Roster::handleChildrenChanged, this, group));
+	group->onDataChanged.connect(boost::bind(&Roster::handleDataChanged, this, group));
 	return group;
 }
 
-void Roster::handleUserAction(boost::shared_ptr<UserRosterAction> action) {
-	onUserAction(action);
+void Roster::handleDataChanged(RosterItem* item) {
+	onDataChanged(item);
 }
 
-void Roster::addContact(const JID& jid, const String& name, const String& group) {
-	ContactRosterItem *item = new ContactRosterItem(jid, name, getGroup(group), widgetFactory_);
-	items_.push_back(item);
+void Roster::handleChildrenChanged(GroupRosterItem* item) {
+	onChildrenChanged(item);
+}
+
+void Roster::addContact(const JID& jid, const String& name, const String& groupName) {
+	GroupRosterItem* group(getGroup(groupName));
+	ContactRosterItem *item = new ContactRosterItem(jid, name, group);
+	group->addChild(item);
 	itemMap_[jid.toBare()].push_back(item);
-	item->onUserAction.connect(boost::bind(&Roster::handleUserAction, this, _1));
-	filterItem(item);
-
+	item->onDataChanged.connect(boost::bind(&Roster::handleDataChanged, this, item));
+	filterContact(item, group);
 }
+
 
 void Roster::removeContact(const JID& jid) {
-	itemMap_.erase(jid.toBare());
-	std::vector<RosterItem*>::iterator it = children_.begin();
-	while (it != children_.end()) {
-		ContactRosterItem* contact = dynamic_cast<ContactRosterItem*>(*it);
-		if (contact && contact->getJID() == jid) {
-			delete contact;
-			it = children_.erase(it);
-			continue;
-		} 
-		GroupRosterItem* group = dynamic_cast<GroupRosterItem*>(*it);
-		if (group) {
-			group->removeChild(jid);
+	std::vector<ContactRosterItem*> items = itemMap_[jid.toBare()];
+	std::vector<ContactRosterItem*>::iterator it = items.begin();
+	while (it != items.end()) {
+		if (jid == (*it)->getJID()) {
+			it = items.erase(it);
 		}
-		it++;
 	}
+	if (items.size() == 0) {
+		itemMap_.erase(jid.toBare());
+	}
+	//Causes the delete
+	root_->removeChild(jid);
 }
 
 void Roster::removeContactFromGroup(const JID& jid, const String& groupName) {
-	std::vector<RosterItem*>::iterator it = children_.begin();
-	while (it != children_.end()) {
+	std::vector<RosterItem*> children = root_->getChildren();
+	std::vector<RosterItem*>::iterator it = children.begin();
+	while (it != children.end()) {
 		GroupRosterItem* group = dynamic_cast<GroupRosterItem*>(*it);
-		if (group && group->getName() == groupName) {
-			group->removeChild(jid);
+		if (group && group->getDisplayName() == groupName) {
+			ContactRosterItem* deleted = group->removeChild(jid);
+			std::vector<ContactRosterItem*> items = itemMap_[jid.toBare()];
+			items.erase(std::remove(items.begin(), items.end(), deleted), items.end());
 		}
 		it++;
 	}
@@ -101,14 +115,15 @@ void Roster::applyOnItems(const RosterItemOperation& operation) {
 }
 
 void Roster::applyOnItem(const RosterItemOperation& operation, const JID& jid) {
-	foreach (RosterItem* item, itemMap_[jid]) {
+	foreach (ContactRosterItem* item, itemMap_[jid.toBare()]) {
 		operation(item);
-		filterItem(item);
+		filterContact(item, item->getParent());
 	}
 }
 
 void Roster::applyOnAllItems(const RosterItemOperation& operation) {
-	std::deque<RosterItem*> queue(children_.begin(), children_.end());
+	std::deque<RosterItem*> queue;
+	queue.push_back(root_);
 	while (!queue.empty()) {
 		RosterItem* item = *queue.begin();
 		queue.pop_front();
@@ -131,29 +146,40 @@ void Roster::removeFilter(RosterFilter *filter) {
 	filterAll();
 }
 
-
-void Roster::filterItem(RosterItem* rosterItem) {
-	ContactRosterItem *item = dynamic_cast<ContactRosterItem*>(rosterItem);
-	if (!item) {
-		return;
-	}
+void Roster::filterContact(ContactRosterItem* contact, GroupRosterItem* group) {
+	int oldDisplayedSize = group->getDisplayedChildren().size();
 	bool hide = true;
 	foreach (RosterFilter *filter, filters_) {
-		hide &= (*filter)(item);
+		hide &= (*filter)(contact);
 	}
-	filters_.size() > 0 && hide ? item->hide() : item->show();
+	group->setDisplayed(contact, filters_.size() == 0 || !hide);
+	int newDisplayedSize = group->getDisplayedChildren().size();
+//	std::cout << ", new size = " << newDisplayedSize << std::endl;
+	if (oldDisplayedSize == 0 && newDisplayedSize > 0) {
+//		std::cout << "Newly created" << std::endl;
+		onGroupAdded(group);
+	}
+}
+
+void Roster::filterGroup(GroupRosterItem* group) {
+	foreach (RosterItem* child, group->getChildren()) {
+		ContactRosterItem* contact = dynamic_cast<ContactRosterItem*>(child);
+		if (contact) {
+			filterContact(contact, group);
+		}
+	}
 }
 
 void Roster::filterAll() {
-	std::deque<RosterItem*> queue(children_.begin(), children_.end());
+	std::deque<RosterItem*> queue;
+	queue.push_back(root_);
 	while (!queue.empty()) {
 		RosterItem *item = *queue.begin();
 		queue.pop_front();
 		GroupRosterItem* group = dynamic_cast<GroupRosterItem*>(item);
 		if (group) {
 			queue.insert(queue.begin(), group->getChildren().begin(), group->getChildren().end());
-		} else {
-			filterItem(item);
+			filterGroup(group);
 		}
 	}
 }

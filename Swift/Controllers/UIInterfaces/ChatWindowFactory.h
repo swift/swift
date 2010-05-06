@@ -11,14 +11,14 @@
 
 namespace Swift {
 	class ChatWindow;
-
+	class UIEventStream;
 	class ChatWindowFactory {
 		public:
 			virtual ~ChatWindowFactory() {};
 			/**
 			 * Transfers ownership of result.
 			 */
-			virtual ChatWindow* createChatWindow(const JID &contact) = 0;
+			virtual ChatWindow* createChatWindow(const JID &contact, UIEventStream* eventStream) = 0;
 
 	};
 }

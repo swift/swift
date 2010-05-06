@@ -29,6 +29,7 @@ QtChatListWindow::QtChatListWindow(UIEventStream *uiEventStream, QWidget* parent
 	#ifdef SWIFT_PLATFORM_MACOSX
 	setAlternatingRowColors(true);
 #endif
+	expandAll();
 	setAnimated(true);
 	setIndentation(0);
 	setRootIsDecorated(true);

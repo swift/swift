@@ -15,16 +15,16 @@
 #include <boost/shared_ptr.hpp>
 
 namespace Swift {
-	class TreeWidget;
+	class Roster;
 
 	class MainWindow {
 		public:
 			virtual ~MainWindow() {};
-			virtual TreeWidget* getTreeWidget() = 0;
 			virtual void setMyName(const String& name) = 0;
 			virtual void setMyAvatarPath(const String& path) = 0;
 			virtual void setMyStatusText(const String& status) = 0;
 			virtual void setMyStatusType(StatusShow::Type type) = 0;
+			virtual void setRosterModel(Roster* roster) = 0;
 			
 			boost::signal<void (const JID&)> onStartChatRequest;
 			boost::signal<void (StatusShow::Type, const String&)> onChangeStatusRequest;

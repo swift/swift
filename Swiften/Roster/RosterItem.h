@@ -1,30 +1,32 @@
 /*
- * Copyright (c) 2010 Remko Tronçon
+ * Copyright (c) 2010 Kevin Smith
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#ifndef SWIFTEN_RosterItem_H
-#define SWIFTEN_RosterItem_H
-
-#include "Swiften/Roster/UserRosterAction.h"
+#pragma once
 
 #include <boost/signal.hpp>
 #include <boost/shared_ptr.hpp>
 
-namespace Swift {
+#include "Swiften/Base/String.h"
 
+namespace Swift {
+class GroupRosterItem;
 class RosterItem {
 	public:
-		virtual ~RosterItem() {};
-		boost::signal<void (boost::shared_ptr<UserRosterAction>)> onUserAction;
-	protected:
-		void handleUserAction(boost::shared_ptr<UserRosterAction> action) {
-			action->setRosterItem(this);
-			onUserAction(action);
-		}
+		RosterItem(const String& name, GroupRosterItem* parent);
+		virtual ~RosterItem();
+		boost::signal<void ()> onDataChanged;
+		GroupRosterItem* getParent() const;
+		void setDisplayName(const String& name);
+		String getDisplayName() const;
+		String getSortableDisplayName() const;
+	private:
+		String name_;
+		String sortableDisplayName_;
+		GroupRosterItem* parent_;
 };
 
 }
-#endif
 

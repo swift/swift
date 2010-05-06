@@ -6,8 +6,8 @@
 
 #include "QtChatWindow.h"
 #include "QtSwiftUtil.h"
+#include "Swiften/Roster/Roster.h"
 #include "Roster/QtTreeWidget.h"
-#include "Roster/QtTreeWidgetFactory.h"
 #include "SwifTools/Linkify.h"
 #include "QtChatView.h"
 #include "MessageSnippet.h"
@@ -26,7 +26,7 @@
 #include <QUrl>
 
 namespace Swift {
-QtChatWindow::QtChatWindow(const QString &contact, QtTreeWidgetFactory *treeWidgetFactory) : QtTabbable(), contact_(contact), previousMessageWasSelf_(false), previousMessageWasSystem_(false) {
+QtChatWindow::QtChatWindow(const QString &contact, UIEventStream* eventStream) : QtTabbable(), contact_(contact), previousMessageWasSelf_(false), previousMessageWasSystem_(false), eventStream_(eventStream) {
 	unreadCount_ = 0;
 	updateTitleWithUnreadCount();
 
@@ -42,7 +42,7 @@ QtChatWindow::QtChatWindow(const QString &contact, QtTreeWidgetFactory *treeWidg
 	messageLog_->setFocusPolicy(Qt::NoFocus);
 	logRosterSplitter->addWidget(messageLog_);
 
-	treeWidget_ = dynamic_cast<QtTreeWidget*>(treeWidgetFactory->createTreeWidget());
+	treeWidget_ = new QtTreeWidget(eventStream_);
 	treeWidget_->hide();
 	logRosterSplitter->addWidget(treeWidget_);
 
@@ -79,8 +79,8 @@ QtChatWindow::~QtChatWindow() {
 
 }
 
-TreeWidget* QtChatWindow::getTreeWidget() {
-	return treeWidget_;
+void QtChatWindow::setRosterModel(Roster* roster) {
+	treeWidget_->setRosterModel(roster);	
 }
 
 void QtChatWindow::setAvailableSecurityLabels(const std::vector<SecurityLabel>& labels) {

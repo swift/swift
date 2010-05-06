@@ -7,11 +7,11 @@
 #pragma once
 
 namespace Swift {
-	class QtTreeWidgetItem;
+	class RosterItem;
 	class QtContextMenu {
 		public:
 			virtual ~QtContextMenu();
 
-			virtual void show(QtTreeWidgetItem* item) = 0;
+			virtual void show(RosterItem* item) = 0;
 	};
 }

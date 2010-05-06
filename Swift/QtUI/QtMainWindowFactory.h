@@ -13,11 +13,10 @@ namespace Swift {
 	class QtTreeWidgetFactory;
 	class QtMainWindowFactory : public MainWindowFactory{
 		public:
-			QtMainWindowFactory(QtTreeWidgetFactory *treeWidgetFactory);
+			QtMainWindowFactory();
 			MainWindow* createMainWindow(UIEventStream* eventStream);
 			MainWindow* getLastCreatedWindow();
 		private:
-			QtTreeWidgetFactory *treeWidgetFactory_;
 			MainWindow* lastWindow_;
 	};
 }

@@ -19,6 +19,7 @@
 namespace Swift {
 	class AvatarManager;
 	class TreeWidget;
+	class Roster;
 
 	class ChatWindow {
 		public:
@@ -38,10 +39,11 @@ namespace Swift {
 			virtual void setSecurityLabelsEnabled(bool enabled) = 0;
 			virtual void setUnreadMessageCount(int count) = 0;
 			virtual void convertToMUC() = 0;
-			virtual TreeWidget *getTreeWidget() = 0;
+//			virtual TreeWidget *getTreeWidget() = 0;
 			virtual void setSecurityLabelsError() = 0;
 			virtual SecurityLabel getSelectedSecurityLabel() = 0;
 			virtual void setInputEnabled(bool enabled) = 0;
+			virtual void setRosterModel(Roster* model) = 0;
 
 			boost::signal<void ()> onClosed;
 			boost::signal<void ()> onAllMessagesRead;

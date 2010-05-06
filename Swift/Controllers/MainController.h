@@ -47,7 +47,6 @@ namespace Swift {
 	class EventLoop;
 	class SoftwareVersionResponder;
 	class LoginWindowFactory;
-	class TreeWidgetFactory;
 	class MUCController;
 	class PresenceOracle;
 	class SystemTray;
@@ -62,7 +61,7 @@ namespace Swift {
 
 	class MainController {
 		public:
-			MainController(ChatWindowFactory* chatWindowFactory, MainWindowFactory *mainWindowFactory, LoginWindowFactory *loginWindowFactory, TreeWidgetFactory* treeWidgetFactory, EventWindowFactory* eventWindowFactory, SettingsProvider *settings, Application* application, SystemTray* systemTray, SoundPlayer* soundPlayer, XMLConsoleWidgetFactory* xmlConsoleWidgetFactory, ChatListWindowFactory* chatListWindowFactory_, bool useDelayForLatency);
+			MainController(ChatWindowFactory* chatWindowFactory, MainWindowFactory *mainWindowFactory, LoginWindowFactory *loginWindowFactory, EventWindowFactory* eventWindowFactory, SettingsProvider *settings, Application* application, SystemTray* systemTray, SoundPlayer* soundPlayer, XMLConsoleWidgetFactory* xmlConsoleWidgetFactory, ChatListWindowFactory* chatListWindowFactory_, bool useDelayForLatency);
 			~MainController();
 
 
@@ -94,7 +93,6 @@ namespace Swift {
 			ChatWindowFactory* chatWindowFactory_;
 			MainWindowFactory* mainWindowFactory_;
 			LoginWindowFactory* loginWindowFactory_;
-			TreeWidgetFactory* treeWidgetFactory_;
 			EventWindowFactory* eventWindowFactory_;
 			SettingsProvider *settings_;
 			Application* application_;

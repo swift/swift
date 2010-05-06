@@ -14,10 +14,10 @@
 #include "DelegateCommons.h"
 
 namespace Swift {
-	class QtTreeWidgetItem;
+	class QtTreeWidget;
 	class RosterDelegate : public QStyledItemDelegate {
 	public:
-		RosterDelegate();
+		RosterDelegate(QtTreeWidget* tree);
 		~RosterDelegate();
 		QSize sizeHint(const QStyleOptionViewItem& option, const QModelIndex& index) const;
 		void paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const;
@@ -27,6 +27,7 @@ namespace Swift {
 		void paintContact(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const; 
 		DelegateCommons common_;
 		GroupItemDelegate* groupDelegate_;
+		QtTreeWidget* tree_;
 		static const int avatarSize_;
 		static const int presenceIconHeight_;
 		static const int presenceIconWidth_;

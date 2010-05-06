@@ -4,8 +4,7 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#ifndef SWIFTEN_SetPresence_H
-#define SWIFTEN_SetPresence_H
+#pragma once
 
 #include "Swiften/Elements/Presence.h"
 #include "Swiften/JID/JID.h"
@@ -24,13 +23,7 @@ class SetPresence : public RosterItemOperation {
 		virtual void operator() (RosterItem* item) const {
 			ContactRosterItem* contact = dynamic_cast<ContactRosterItem*>(item);
 			if (contact && contact->getJID().equals(presence_->getFrom(), compareType_)) {
-				if (presence_->getType() != Presence::Available) {
-					contact->setStatusShow(StatusShow::None);
-					contact->setStatusText(presence_->getStatus());
-				} else {
-					contact->setStatusShow(presence_->getShow());
-					contact->setStatusText(presence_->getStatus());
-				}
+				contact->applyPresence(presence_->getFrom().getResource(), presence_);
 			}
 		}
 	
@@ -40,5 +33,4 @@ class SetPresence : public RosterItemOperation {
 };
 
 }
-#endif
 

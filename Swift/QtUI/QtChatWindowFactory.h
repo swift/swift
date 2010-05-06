@@ -4,8 +4,7 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#ifndef SWIFT_QtChatWindowFactory_H
-#define SWIFT_QtChatWindowFactory_H
+#pragma once
 
 #include "Swift/Controllers/UIInterfaces/ChatWindowFactory.h"
 #include "Swiften/JID/JID.h"
@@ -14,20 +13,18 @@
 #include <QObject>
 #include <QSplitter>
 namespace Swift {
-	class QtTreeWidgetFactory;
 	class QtChatTabs;
+	class UIEventStream;
 	class QtChatWindowFactory : public QObject, public ChatWindowFactory {
 		Q_OBJECT
 		public:
-			QtChatWindowFactory(QtTreeWidgetFactory *treeWidgetFactory, QSplitter* splitter, QtSettingsProvider* settings, QtChatTabs* tabs);
-			ChatWindow* createChatWindow(const JID &contact);
+			QtChatWindowFactory(QSplitter* splitter, QtSettingsProvider* settings, QtChatTabs* tabs);
+			ChatWindow* createChatWindow(const JID &contact, UIEventStream* eventStream);
 		private slots:
 			void handleWindowGeometryChanged();
 		private:
-			QtTreeWidgetFactory* treeWidgetFactory_;
 			QtSettingsProvider* settings_;
 			QtChatTabs* tabs_;
 	};
 }
 
-#endif

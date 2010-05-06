@@ -16,8 +16,6 @@
 #include "Swiften/Roster/Roster.h"
 #include "Swiften/Roster/SetPresence.h"
 #include "Swiften/Roster/OfflineRosterFilter.h"
-#include "Swiften/Roster/OpenChatRosterAction.h"
-#include "Swiften/Roster/TreeWidgetFactory.h"
 #include "Swiften/Roster/XMPPRoster.h"
 
 namespace Swift {

@@ -6,30 +6,48 @@
 
 #pragma once
 
-#include "Swift/QtUI/Roster/QtTreeWidgetItem.h"
+#include "Swiften/Roster/Roster.h"
 
 #include <QAbstractItemModel>
 #include <QList>
 
 namespace Swift {
-class RosterModel : public QAbstractItemModel {
-Q_OBJECT
-public:
-	RosterModel();
-	~RosterModel();
-	void setRoot(QtTreeWidgetItem* tree);
-	int columnCount(const QModelIndex& parent = QModelIndex()) const;
-	QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const;
-	QModelIndex index(int row, int column, const QModelIndex & parent = QModelIndex()) const;
-	QModelIndex index(QtTreeWidgetItem* item) const;
-	QModelIndex parent(const QModelIndex& index) const;
-	int rowCount(const QModelIndex& parent = QModelIndex()) const;
-signals:
-	void itemExpanded(const QModelIndex& item, bool expanded);
-private slots:
-	void handleItemChanged(QtTreeWidgetItem* item);
-private:
-	QtTreeWidgetItem* tree_;
-};
+	enum RosterRoles {
+		StatusTextRole = Qt::UserRole,
+		AvatarRole = Qt::UserRole + 1,
+		PresenceIconRole = Qt::UserRole + 2,
+		StatusShowTypeRole = Qt::UserRole + 3,
+		ChildCountRole = Qt::UserRole + 4,
+	};
 
+	class QtTreeWidget;
+
+	class RosterModel : public QAbstractItemModel {
+		Q_OBJECT
+		public:
+			RosterModel(QtTreeWidget* view);
+			~RosterModel();
+			void setRoster(Roster* swiftRoster);
+			int columnCount(const QModelIndex& parent = QModelIndex()) const;
+			QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const;
+			QModelIndex index(int row, int column, const QModelIndex & parent = QModelIndex()) const;
+			QModelIndex index(RosterItem* item) const;
+			QModelIndex parent(const QModelIndex& index) const;
+			int rowCount(const QModelIndex& parent = QModelIndex()) const;
+		private:
+			void handleDataChanged(RosterItem* item);
+			void handleChildrenChanged(GroupRosterItem* item);
+			void handleGroupAdded(GroupRosterItem* group);
+			RosterItem* getItem(const QModelIndex& index) const;
+			QColor intToColor(int color) const;
+			QColor getTextColor(RosterItem* item) const;
+			QColor getBackgroundColor(RosterItem* item) const;
+			QString getToolTip(RosterItem* item) const;
+			QIcon getAvatar(RosterItem* item) const;
+			QString getStatusText(RosterItem* item) const;
+			QIcon getPresenceIcon(RosterItem* item) const;
+			int getChildCount(RosterItem* item) const;
+			Roster* roster_;
+			QtTreeWidget* view_;
+	};
 }

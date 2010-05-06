@@ -21,10 +21,11 @@ namespace Swift {
 	class QtTreeWidgetFactory;
 	class TreeWidget;
 	class QtTextEdit;
+	class UIEventStream;
 	class QtChatWindow : public QtTabbable, public ChatWindow {
 		Q_OBJECT
 		public:
-			QtChatWindow(const QString &contact, QtTreeWidgetFactory* treeWidgetFactory);
+			QtChatWindow(const QString &contact, UIEventStream* eventStream);
 			~QtChatWindow();
 			void addMessage(const String &message, const String &senderName, bool senderIsSelf, const boost::optional<SecurityLabel>& label, const String& avatarPath);
 			void addAction(const String &message, const String &senderName, bool senderIsSelf, const boost::optional<SecurityLabel>& label, const String& avatarPath);
@@ -34,7 +35,7 @@ namespace Swift {
 			void activate();
 			void setUnreadMessageCount(int count);
 			void convertToMUC();
-			TreeWidget *getTreeWidget();
+//			TreeWidget *getTreeWidget();
 			void setAvailableSecurityLabels(const std::vector<SecurityLabel>& labels);
 			void setSecurityLabelsEnabled(bool enabled);
 			void setSecurityLabelsError();
@@ -43,6 +44,7 @@ namespace Swift {
 			void setInputEnabled(bool enabled);
 			QtTabbable::AlertType getWidgetAlertState();
 			void setContactChatState(ChatState::ChatStateType state);
+			void setRosterModel(Roster* roster);
 
 		protected slots:
 			void qAppFocusChanged(QWidget* old, QWidget* now);
@@ -70,6 +72,7 @@ namespace Swift {
 			bool previousMessageWasSystem_;
 			QString previousSenderName_;
 			bool inputClearing_;
+			UIEventStream* eventStream_;
 	};
 }
 

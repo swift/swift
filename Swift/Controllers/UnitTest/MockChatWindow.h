@@ -27,10 +27,10 @@ namespace Swift {
 			virtual void setSecurityLabelsEnabled(bool enabled) {labelsEnabled_ = enabled;};
 			virtual void setUnreadMessageCount(int /*count*/) {};
 			virtual void convertToMUC() {};
-			virtual TreeWidget *getTreeWidget() {return NULL;};
 			virtual void setSecurityLabelsError() {};
 			virtual SecurityLabel getSelectedSecurityLabel() {return SecurityLabel();};
 			virtual void setInputEnabled(bool /*enabled*/) {};
+			virtual void setRosterModel(Roster* /*roster*/) {};
 
 			boost::signal<void ()> onClosed;
 			boost::signal<void ()> onAllMessagesRead;

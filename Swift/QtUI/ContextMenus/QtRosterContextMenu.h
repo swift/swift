@@ -12,17 +12,18 @@
 #include "Swift/Controllers/UIEvents/UIEventStream.h"
 
 namespace Swift {
+	class RosterItem;
 	class QtRosterContextMenu : public QObject, public QtContextMenu {
 		Q_OBJECT
 		public:
 			QtRosterContextMenu(UIEventStream* eventStream);
-			void show(QtTreeWidgetItem* item);
+			void show(RosterItem* item);
 
 		private slots:
 			void handleRemove();
 
 		private:
-			QtTreeWidgetItem* item_;
+			RosterItem* item_;
 			UIEventStream* eventStream_;
 	};
 }

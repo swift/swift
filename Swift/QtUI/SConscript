@@ -80,7 +80,7 @@ sources = [
     "SystemMessageSnippet.cpp",
     "Roster/RosterModel.cpp",
     "Roster/QtTreeWidget.cpp",
-    "Roster/QtTreeWidgetItem.cpp",
+#    "Roster/QtTreeWidgetItem.cpp",
     "Roster/RosterDelegate.cpp",
     "Roster/GroupItemDelegate.cpp",
     "Roster/DelegateCommons.cpp",

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Remko Tronçon
+ * Copyright (c) 2010 Kevin Smith
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -10,49 +10,77 @@
 namespace Swift {
 
 
-ContactRosterItem::ContactRosterItem(const JID& jid, const String& name, GroupRosterItem* parent, TreeWidgetFactory* factory) : jid_(jid), name_(name) {
-	parent->addChild(this);
-	widget_ = factory->createTreeWidgetItem(parent->getWidget());
-	widget_->setText(name.isEmpty() ? jid.toString() : name);
-	widget_->onUserAction.connect(boost::bind(&ContactRosterItem::handleUserAction, this, _1));
-	setStatusShow(StatusShow::None);
+ContactRosterItem::ContactRosterItem(const JID& jid, const String& name, GroupRosterItem* parent) : RosterItem(name, parent), jid_(jid) {
 }
 
 ContactRosterItem::~ContactRosterItem() {
-	delete widget_;
 }
 
-void ContactRosterItem::setName(const String& name) {
-	widget_->setText(name);
+StatusShow::Type ContactRosterItem::getStatusShow() const {
+	return shownPresence_ ? shownPresence_->getShow() : StatusShow::None;
 }
 
-StatusShow::Type ContactRosterItem::getStatusShow() {
-	return statusShow_;
+StatusShow::Type ContactRosterItem::getSimplifiedStatusShow() const {
+	switch (shownPresence_ ? shownPresence_->getShow() : StatusShow::None) {
+		case StatusShow::Online: return StatusShow::Online; break;
+		case StatusShow::Away: return StatusShow::Away; break;
+	 	case StatusShow::XA: return StatusShow::Away; break;
+		case StatusShow::FFC: return StatusShow::Online; break;
+		case StatusShow::DND: return StatusShow::DND; break;
+		case StatusShow::None: return StatusShow::None; break;
+	}
+	assert(false);
 }
 
-void ContactRosterItem::setStatusShow(StatusShow::Type show) {
-	statusShow_ = show;
-	widget_->setStatusShow(show);
-}
-
-void ContactRosterItem::setStatusText(const String& status) {
-	widget_->setStatusText(status);
+String ContactRosterItem::getStatusText() const {
+	return shownPresence_ ? shownPresence_->getStatus() : "";
 }
 
 void ContactRosterItem::setAvatarPath(const String& path) {
-	widget_->setAvatarPath(path);
+	avatarPath_ = path;
+	onDataChanged();
+}
+const String& ContactRosterItem::getAvatarPath() const {
+	return avatarPath_;
 }
 
 const JID& ContactRosterItem::getJID() const {
 	return jid_;
 }
 
-void ContactRosterItem::show() {
-	widget_->show();
+typedef std::pair<String, boost::shared_ptr<Presence> > StringPresencePair;
+
+void ContactRosterItem::calculateShownPresence() {
+	shownPresence_ = offlinePresence_;
+	foreach (StringPresencePair presencePair, presences_) {
+		boost::shared_ptr<Presence> presence = presencePair.second;
+		if (!shownPresence_ || presence->getPriority() > shownPresence_->getPriority() || presence->getShow() < shownPresence_->getShow()) {
+			shownPresence_ = presence;
+		}
+	}
 }
 
-void ContactRosterItem::hide() {
-	widget_->hide();
+void ContactRosterItem::clearPresence() {
+	presences_.clear();
+	calculateShownPresence();
+}
+
+void ContactRosterItem::applyPresence(const String& resource, boost::shared_ptr<Presence> presence) {
+	if (offlinePresence_) {
+		offlinePresence_ = boost::shared_ptr<Presence>();
+	}
+	if (presence->getType() == Presence::Unavailable) {
+		if (presences_.find(resource) != presences_.end()) {
+			presences_.erase(resource);
+		}
+		if (presences_.size() > 0) {
+			offlinePresence_ = presence;
+		}
+	} else {
+		presences_[resource] = presence;
+	}
+	calculateShownPresence();
+	onDataChanged();
 }
 
 }

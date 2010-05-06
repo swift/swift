@@ -13,7 +13,6 @@
 #include "Swift/Controllers/UIInterfaces/ChatWindow.h"
 #include "Swift/Controllers/UIInterfaces/ChatWindowFactory.h"
 #include "Swift/Controllers/UIInterfaces/ChatListWindowFactory.h"
-#include "Swiften/Roster/TreeWidgetFactory.h"
 #include "Swiften/Client/Client.h"
 #include "Swift/Controllers/Chat/ChatController.h"
 #include "Swift/Controllers/EventController.h"
@@ -26,6 +25,7 @@
 #include "Swiften/Client/DummyStanzaChannel.h"
 #include "Swiften/Queries/DummyIQChannel.h"
 #include "Swiften/Presence/PresenceOracle.h"
+#include "Swift/Controllers/UIEvents/RequestChatUIEvent.h"
 #include "Swift/Controllers/UIEvents/UIEventStream.h"
 
 
@@ -54,7 +54,6 @@ public:
 		iqRouter_ = new IQRouter(iqChannel_);
 		eventController_ = new EventController();
 		chatWindowFactory_ = mocks_->InterfaceMock<ChatWindowFactory>();
-		treeWidgetFactory_ = NULL;
 		xmppRoster_ = boost::shared_ptr<XMPPRoster>(new XMPPRoster());
 		nickResolver_ = new NickResolver(xmppRoster_);
 		presenceOracle_ = new PresenceOracle(stanzaChannel_);
@@ -63,7 +62,7 @@ public:
 		uiEventStream_ = new UIEventStream();
 		chatListWindowFactory_ = mocks_->InterfaceMock<ChatListWindowFactory>();
 		mocks_->ExpectCall(chatListWindowFactory_, ChatListWindowFactory::createWindow).With(uiEventStream_).Return(NULL);
-		manager_ = new ChatsManager(jid_, stanzaChannel_, iqRouter_, eventController_, chatWindowFactory_, treeWidgetFactory_, nickResolver_, presenceOracle_, serverDiscoInfo_, presenceSender_, uiEventStream_, chatListWindowFactory_, true);
+		manager_ = new ChatsManager(jid_, stanzaChannel_, iqRouter_, eventController_, chatWindowFactory_, nickResolver_, presenceOracle_, serverDiscoInfo_, presenceSender_, uiEventStream_, chatListWindowFactory_, true);
 		avatarManager_ = new MockAvatarManager();
 		manager_->setAvatarManager(avatarManager_);
 	};
@@ -74,7 +73,6 @@ public:
 		delete presenceSender_;
 		delete presenceOracle_;
 		delete nickResolver_;
-		delete treeWidgetFactory_;
 		delete stanzaChannel_;
 		delete eventController_;
 		delete iqChannel_;
@@ -87,7 +85,7 @@ public:
 		JID messageJID("testling@test.com/resource1");
 		
 		MockChatWindow* window = new MockChatWindow();//mocks_->InterfaceMock<ChatWindow>();
-		mocks_->ExpectCall(chatWindowFactory_, ChatWindowFactory::createChatWindow).With(messageJID).Return(window);
+		mocks_->ExpectCall(chatWindowFactory_, ChatWindowFactory::createChatWindow).With(messageJID, uiEventStream_).Return(window);
 
 		boost::shared_ptr<Message> message(new Message());
 		message->setFrom(messageJID);
@@ -101,7 +99,7 @@ public:
 		JID messageJID1("testling@test.com/resource1");
 		
 		MockChatWindow* window1 = new MockChatWindow();//mocks_->InterfaceMock<ChatWindow>();
-		mocks_->ExpectCall(chatWindowFactory_, ChatWindowFactory::createChatWindow).With(messageJID1).Return(window1);
+		mocks_->ExpectCall(chatWindowFactory_, ChatWindowFactory::createChatWindow).With(messageJID1, uiEventStream_).Return(window1);
 
 		boost::shared_ptr<Message> message1(new Message());
 		message1->setFrom(messageJID1);
@@ -113,7 +111,7 @@ public:
 		JID messageJID2("testling@test.com/resource2");
 		
 		MockChatWindow* window2 = new MockChatWindow();//mocks_->InterfaceMock<ChatWindow>();
-		mocks_->ExpectCall(chatWindowFactory_, ChatWindowFactory::createChatWindow).With(messageJID2).Return(window2);
+		mocks_->ExpectCall(chatWindowFactory_, ChatWindowFactory::createChatWindow).With(messageJID2, uiEventStream_).Return(window2);
 
 		boost::shared_ptr<Message> message2(new Message());
 		message2->setFrom(messageJID2);
@@ -127,9 +125,9 @@ public:
 		String messageJIDString("testling@test.com");
 		
 		ChatWindow* window = new MockChatWindow();//mocks_->InterfaceMock<ChatWindow>();
-		mocks_->ExpectCall(chatWindowFactory_, ChatWindowFactory::createChatWindow).With(JID(messageJIDString)).Return(window);
-
-		manager_->handleChatRequest(messageJIDString);
+		mocks_->ExpectCall(chatWindowFactory_, ChatWindowFactory::createChatWindow).With(JID(messageJIDString), uiEventStream_).Return(window);
+		
+		uiEventStream_->send(boost::shared_ptr<UIEvent>(new RequestChatUIEvent(JID(messageJIDString))));
 	}
 
 
@@ -138,8 +136,8 @@ public:
 		String fullJIDString("testling@test.com/resource1");
 		
 		MockChatWindow* window = new MockChatWindow();//mocks_->InterfaceMock<ChatWindow>();
-		mocks_->ExpectCall(chatWindowFactory_, ChatWindowFactory::createChatWindow).With(JID(bareJIDString)).Return(window);
-		manager_->handleChatRequest(bareJIDString);
+		mocks_->ExpectCall(chatWindowFactory_, ChatWindowFactory::createChatWindow).With(JID(bareJIDString), uiEventStream_).Return(window);
+		uiEventStream_->send(boost::shared_ptr<UIEvent>(new RequestChatUIEvent(JID(bareJIDString))));
 
 		boost::shared_ptr<Message> message(new Message());
 		message->setFrom(JID(fullJIDString));
@@ -152,14 +150,14 @@ public:
 	void testSecondWindow() {
 		String messageJIDString1("testling1@test.com");
 		ChatWindow* window1 = new MockChatWindow();//mocks_->InterfaceMock<ChatWindow>();
-		mocks_->ExpectCall(chatWindowFactory_, ChatWindowFactory::createChatWindow).With(JID(messageJIDString1)).Return(window1);
-		manager_->handleChatRequest(messageJIDString1);
+		mocks_->ExpectCall(chatWindowFactory_, ChatWindowFactory::createChatWindow).With(JID(messageJIDString1), uiEventStream_).Return(window1);
+		uiEventStream_->send(boost::shared_ptr<UIEvent>(new RequestChatUIEvent(JID(messageJIDString1))));
 
 		String messageJIDString2("testling2@test.com");
 		ChatWindow* window2 = new MockChatWindow();//mocks_->InterfaceMock<ChatWindow>();
-		mocks_->ExpectCall(chatWindowFactory_, ChatWindowFactory::createChatWindow).With(JID(messageJIDString2)).Return(window2);
+		mocks_->ExpectCall(chatWindowFactory_, ChatWindowFactory::createChatWindow).With(JID(messageJIDString2), uiEventStream_).Return(window2);
 
-		manager_->handleChatRequest(messageJIDString2);
+		uiEventStream_->send(boost::shared_ptr<UIEvent>(new RequestChatUIEvent(JID(messageJIDString2))));
 	}
 
 	/** Complete cycle.
@@ -174,8 +172,8 @@ public:
 		String fullJIDString2("testling@test.com/resource2");
 		
 		MockChatWindow* window = new MockChatWindow();//mocks_->InterfaceMock<ChatWindow>();
-		mocks_->ExpectCall(chatWindowFactory_, ChatWindowFactory::createChatWindow).With(JID(bareJIDString)).Return(window);
-		manager_->handleChatRequest(bareJIDString);
+		mocks_->ExpectCall(chatWindowFactory_, ChatWindowFactory::createChatWindow).With(JID(bareJIDString), uiEventStream_).Return(window);
+		uiEventStream_->send(boost::shared_ptr<UIEvent>(new RequestChatUIEvent(JID(bareJIDString))));
 
 		boost::shared_ptr<Message> message1(new Message());
 		message1->setFrom(JID(fullJIDString1));
@@ -212,7 +210,7 @@ public:
 		JID messageJID1("testling@test.com/resource1");
 		
 		MockChatWindow* window1 = new MockChatWindow();//mocks_->InterfaceMock<ChatWindow>();
-		mocks_->ExpectCall(chatWindowFactory_, ChatWindowFactory::createChatWindow).With(messageJID1).Return(window1);
+		mocks_->ExpectCall(chatWindowFactory_, ChatWindowFactory::createChatWindow).With(messageJID1, uiEventStream_).Return(window1);
 
 		boost::shared_ptr<Message> message1(new Message());
 		message1->setFrom(messageJID1);
@@ -222,7 +220,7 @@ public:
 		JID messageJID2("testling@test.com/resource2");
 		
 		MockChatWindow* window2 = new MockChatWindow();//mocks_->InterfaceMock<ChatWindow>();
-		mocks_->ExpectCall(chatWindowFactory_, ChatWindowFactory::createChatWindow).With(messageJID2).Return(window2);
+		mocks_->ExpectCall(chatWindowFactory_, ChatWindowFactory::createChatWindow).With(messageJID2, uiEventStream_).Return(window2);
 
 		boost::shared_ptr<Message> message2(new Message());
 		message2->setFrom(messageJID2);
@@ -268,7 +266,6 @@ private:
 	IQRouter* iqRouter_;
 	EventController* eventController_;
 	ChatWindowFactory* chatWindowFactory_;
-	TreeWidgetFactory* treeWidgetFactory_;
 	NickResolver* nickResolver_;
 	PresenceOracle* presenceOracle_;
 	AvatarManager* avatarManager_;

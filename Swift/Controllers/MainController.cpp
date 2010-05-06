@@ -42,7 +42,6 @@
 #include "Swiften/Elements/Presence.h"
 #include "Swiften/Elements/VCardUpdate.h"
 #include "Swiften/Queries/Responders/SoftwareVersionResponder.h"
-#include "Swiften/Roster/TreeWidgetFactory.h"
 #include "Swiften/Settings/SettingsProvider.h"
 #include "Swiften/Elements/DiscoInfo.h"
 #include "Swiften/Queries/Responders/DiscoInfoResponder.h"
@@ -61,8 +60,8 @@ static const String CLIENT_VERSION = "0.3";
 static const String CLIENT_NODE = "http://swift.im";
 
 
-MainController::MainController(ChatWindowFactory* chatWindowFactory, MainWindowFactory *mainWindowFactory, LoginWindowFactory *loginWindowFactory, TreeWidgetFactory *treeWidgetFactory, EventWindowFactory* eventWindowFactory, SettingsProvider *settings, Application* application, SystemTray* systemTray, SoundPlayer* soundPlayer, XMLConsoleWidgetFactory* xmlConsoleWidgetFactory, ChatListWindowFactory* chatListWindowFactory, bool useDelayForLatency)
-	: timerFactory_(&boostIOServiceThread_.getIOService()), idleDetector_(&idleQuerier_, &timerFactory_, 100), chatWindowFactory_(chatWindowFactory), mainWindowFactory_(mainWindowFactory), loginWindowFactory_(loginWindowFactory), treeWidgetFactory_(treeWidgetFactory), settings_(settings), loginWindow_(NULL), useDelayForLatency_(useDelayForLatency)  {
+MainController::MainController(ChatWindowFactory* chatWindowFactory, MainWindowFactory *mainWindowFactory, LoginWindowFactory *loginWindowFactory, EventWindowFactory* eventWindowFactory, SettingsProvider *settings, Application* application, SystemTray* systemTray, SoundPlayer* soundPlayer, XMLConsoleWidgetFactory* xmlConsoleWidgetFactory, ChatListWindowFactory* chatListWindowFactory, bool useDelayForLatency)
+	: timerFactory_(&boostIOServiceThread_.getIOService()), idleDetector_(&idleQuerier_, &timerFactory_, 100), chatWindowFactory_(chatWindowFactory), mainWindowFactory_(mainWindowFactory), loginWindowFactory_(loginWindowFactory), settings_(settings), loginWindow_(NULL), useDelayForLatency_(useDelayForLatency)  {
 	application_ = application;
 	presenceOracle_ = NULL;
 	avatarManager_ = NULL;
@@ -176,15 +175,14 @@ void MainController::handleConnected() {
 
 		avatarManager_ = new AvatarManager(client_, client_, avatarStorage_);
 
-		rosterController_ = new RosterController(jid_, xmppRoster_, avatarManager_, mainWindowFactory_, treeWidgetFactory_, nickResolver_, presenceOracle_, eventController_, uiEventStream_, client_);
+		rosterController_ = new RosterController(jid_, xmppRoster_, avatarManager_, mainWindowFactory_, nickResolver_, presenceOracle_, eventController_, uiEventStream_, client_);
 		rosterController_->onChangeStatusRequest.connect(boost::bind(&MainController::handleChangeStatusRequest, this, _1, _2));
 		rosterController_->onSignOutRequest.connect(boost::bind(&MainController::signOut, this));
 
-		chatsManager_ = new ChatsManager(jid_, client_, client_, eventController_, chatWindowFactory_, treeWidgetFactory_, nickResolver_, presenceOracle_, serverDiscoInfo_, presenceSender_, uiEventStream_, chatListWindowFactory_, useDelayForLatency_);
+		chatsManager_ = new ChatsManager(jid_, client_, client_, eventController_, chatWindowFactory_, nickResolver_, presenceOracle_, serverDiscoInfo_, presenceSender_, uiEventStream_, chatListWindowFactory_, useDelayForLatency_);
 		nickResolver_->setMUCRegistry(chatsManager_);
 		client_->onMessageReceived.connect(boost::bind(&ChatsManager::handleIncomingMessage, chatsManager_, _1));
 		chatsManager_->setAvatarManager(avatarManager_);
-		rosterController_->onStartChatRequest.connect(boost::bind(&ChatsManager::handleChatRequest, chatsManager_, _1));
 
 		avatarManager_->setMUCRegistry(chatsManager_);
 

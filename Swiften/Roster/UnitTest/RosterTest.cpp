@@ -9,9 +9,7 @@
 #include <boost/shared_ptr.hpp>
 
 #include "Swiften/Roster/Roster.h"
-#include "Swiften/Roster/UnitTest/MockTreeWidget.h"
-#include "Swiften/Roster/UnitTest/MockTreeWidgetFactory.h"
-#include "Swiften/Roster/UnitTest/MockTreeWidgetItem.h"
+#include "Swiften/Roster/GroupRosterItem.h"
 
 using namespace Swift;
 
@@ -23,8 +21,6 @@ class RosterTest : public CppUnit::TestFixture
 
 	private:
 		Roster *roster_;
-		TreeWidget *widget_;
-		TreeWidgetFactory *factory_;
 		JID jid1_;
 		JID jid2_; 
 		JID jid3_;
@@ -34,15 +30,11 @@ class RosterTest : public CppUnit::TestFixture
 		RosterTest() : jid1_(JID("a@b.c")), jid2_(JID("b@c.d")), jid3_(JID("c@d.e")) {}
 
 		void setUp() {
-			factory_ = new MockTreeWidgetFactory();
-			widget_ = factory_->createTreeWidget();
-			roster_ = new Roster(widget_, factory_);
+			roster_ = new Roster();
 		}
 
 		void tearDown() {
 			delete roster_;
-			//delete widget_;
-			delete factory_;
 		}
 
 		void testGetGroup() {
@@ -50,12 +42,13 @@ class RosterTest : public CppUnit::TestFixture
 			roster_->addContact(jid2_, "Ernie", "group2");
 			roster_->addContact(jid3_, "Cookie", "group1");
 
-			CPPUNIT_ASSERT_EQUAL(roster_->getGroup("group1"), roster_->getGroup("group1"));
-			CPPUNIT_ASSERT_EQUAL(roster_->getGroup("group2"), roster_->getGroup("group2"));
-			CPPUNIT_ASSERT_EQUAL(roster_->getGroup("group3"), roster_->getGroup("group3"));
-			CPPUNIT_ASSERT(roster_->getGroup("group1") != roster_->getGroup("group2"));
-			CPPUNIT_ASSERT(roster_->getGroup("group2") != roster_->getGroup("group3"));
-			CPPUNIT_ASSERT(roster_->getGroup("group3") != roster_->getGroup("group1"));
+			CPPUNIT_ASSERT_EQUAL(2, (int)roster_->getRoot()->getChildren().size());
+			CPPUNIT_ASSERT_EQUAL(String("group1"), roster_->getRoot()->getChildren()[0]->getDisplayName());
+			CPPUNIT_ASSERT_EQUAL(String("group2"), roster_->getRoot()->getChildren()[1]->getDisplayName());
+			CPPUNIT_ASSERT_EQUAL(String("Bert"), ((GroupRosterItem*)roster_->getRoot()->getChildren()[0])->getChildren()[0]->getDisplayName());
+			CPPUNIT_ASSERT_EQUAL(String("Cookie"), ((GroupRosterItem*)roster_->getRoot()->getChildren()[0])->getChildren()[1]->getDisplayName());
+			CPPUNIT_ASSERT_EQUAL(String("Ernie"), ((GroupRosterItem*)roster_->getRoot()->getChildren()[1])->getChildren()[0]->getDisplayName());
+
 		}
 
 };

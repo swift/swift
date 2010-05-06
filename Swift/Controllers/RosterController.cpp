@@ -25,11 +25,9 @@
 #include "Swiften/Roster/SetAvatar.h"
 #include "Swiften/Roster/SetName.h"
 #include "Swiften/Roster/OfflineRosterFilter.h"
-#include "Swiften/Roster/OpenChatRosterAction.h"
-#include "Swiften/Roster/TreeWidgetFactory.h"
 #include "Swiften/Roster/XMPPRoster.h"
 #include "Swift/Controllers/UIEvents/AddContactUIEvent.h"
-#include "Swift/Controllers/UIEvents/RemoveItemRosterAction.h"
+#include "Swift/Controllers/UIEvents/RemoveRosterItemUIEvent.h"
 
 
 namespace Swift {
@@ -37,17 +35,17 @@ namespace Swift {
 /**
  * The controller does not gain ownership of these parameters.
  */
-RosterController::RosterController(const JID& jid, boost::shared_ptr<XMPPRoster> xmppRoster, AvatarManager* avatarManager, MainWindowFactory* mainWindowFactory, TreeWidgetFactory* treeWidgetFactory, NickResolver* nickResolver, PresenceOracle* presenceOracle, EventController* eventController, UIEventStream* uiEventStream, IQRouter* iqRouter)
- : myJID_(jid), xmppRoster_(xmppRoster), mainWindowFactory_(mainWindowFactory), treeWidgetFactory_(treeWidgetFactory), mainWindow_(mainWindowFactory_->createMainWindow(uiEventStream)), roster_(new Roster(mainWindow_->getTreeWidget(), treeWidgetFactory_)), offlineFilter_(new OfflineRosterFilter()) {
+RosterController::RosterController(const JID& jid, boost::shared_ptr<XMPPRoster> xmppRoster, AvatarManager* avatarManager, MainWindowFactory* mainWindowFactory, NickResolver* nickResolver, PresenceOracle* presenceOracle, EventController* eventController, UIEventStream* uiEventStream, IQRouter* iqRouter)
+ : myJID_(jid), xmppRoster_(xmppRoster), mainWindowFactory_(mainWindowFactory), mainWindow_(mainWindowFactory_->createMainWindow(uiEventStream)), roster_(new Roster()), offlineFilter_(new OfflineRosterFilter()) {
 	iqRouter_ = iqRouter;
 	presenceOracle_ = presenceOracle;
 	eventController_ = eventController;
 	roster_->addFilter(offlineFilter_);
+	mainWindow_->setRosterModel(roster_);
 	
 	changeStatusConnection_ = mainWindow_->onChangeStatusRequest.connect(boost::bind(&RosterController::handleChangeStatusRequest, this, _1, _2));
 	showOfflineConnection_ = mainWindow_->onShowOfflineToggled.connect(boost::bind(&RosterController::handleShowOfflineToggled, this, _1));
 	signOutConnection_ = mainWindow_->onSignOutRequest.connect(boost::bind(boost::ref(onSignOutRequest)));
-	roster_->onUserAction.connect(boost::bind(&RosterController::handleUserAction, this, _1));
 	xmppRoster_->onJIDAdded.connect(boost::bind(&RosterController::handleOnJIDAdded, this, _1));
 	xmppRoster_->onJIDUpdated.connect(boost::bind(&RosterController::handleOnJIDUpdated, this, _1, _2, _3));
 	xmppRoster_->onJIDRemoved.connect(boost::bind(&RosterController::handleOnJIDRemoved, this, _1));
@@ -99,31 +97,6 @@ void RosterController::handleShowOfflineToggled(bool state) {
 
 void RosterController::handleChangeStatusRequest(StatusShow::Type show, const String &statusText) {
 	onChangeStatusRequest(show, statusText);
-}
-
-void RosterController::handleUserAction(boost::shared_ptr<UserRosterAction> action) {
-	boost::shared_ptr<OpenChatRosterAction> chatAction = boost::dynamic_pointer_cast<OpenChatRosterAction>(action);
-	if (chatAction) {
-		ContactRosterItem *contactItem = dynamic_cast<ContactRosterItem*>(chatAction->getRosterItem());
-		assert(contactItem);
-		onStartChatRequest(contactItem->getJID().toBare());
-		return;
-	}
-
-	boost::shared_ptr<RemoveItemRosterAction> removeAction = boost::dynamic_pointer_cast<RemoveItemRosterAction>(action);
-	if (removeAction) {
-		ContactRosterItem *contactItem = dynamic_cast<ContactRosterItem*>(removeAction->getRosterItem());
-		assert(contactItem);
-		
-		RosterItemPayload item(contactItem->getJID(), "", RosterItemPayload::Remove);
-		boost::shared_ptr<RosterPayload> roster(new RosterPayload());
-		roster->addItem(item);
-		boost::shared_ptr<SetRosterRequest> request(new SetRosterRequest(roster, iqRouter_));
-		request->onResponse.connect(boost::bind(&RosterController::handleRosterSetError, this, _1, roster));
-		request->send();
-
-		return;
-	}
 }
 
 void RosterController::handleOnJIDAdded(const JID& jid) {
@@ -182,7 +155,20 @@ void RosterController::handleUIEvent(boost::shared_ptr<UIEvent> event) {
 		request->onResponse.connect(boost::bind(&RosterController::handleRosterSetError, this, _1, roster));
 		request->send();
 		presenceOracle_->requestSubscription(addContactEvent->getJID());
+		return;
 	}
+	boost::shared_ptr<RemoveRosterItemUIEvent> removeEvent = boost::dynamic_pointer_cast<RemoveRosterItemUIEvent>(event);
+	if (removeEvent) {
+		RosterItemPayload item(removeEvent->getJID(), "", RosterItemPayload::Remove);
+		boost::shared_ptr<RosterPayload> roster(new RosterPayload());
+		roster->addItem(item);
+		boost::shared_ptr<SetRosterRequest> request(new SetRosterRequest(roster, iqRouter_));
+		request->onResponse.connect(boost::bind(&RosterController::handleRosterSetError, this, _1, roster));
+		request->send();
+
+		return;
+	}
+
 }
 
 void RosterController::handleRosterSetError(boost::optional<ErrorPayload> error, boost::shared_ptr<RosterPayload> rosterPayload) {

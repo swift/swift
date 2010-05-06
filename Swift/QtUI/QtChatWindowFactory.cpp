@@ -11,11 +11,10 @@
 #include "QtChatTabs.h"
 #include "QtChatWindow.h"
 #include "QtSwiftUtil.h"
-#include "Roster/QtTreeWidgetFactory.h"
 
 
 namespace Swift {
-QtChatWindowFactory::QtChatWindowFactory(QtTreeWidgetFactory *treeWidgetFactory, QSplitter* splitter, QtSettingsProvider* settings, QtChatTabs* tabs) : treeWidgetFactory_(treeWidgetFactory) {
+QtChatWindowFactory::QtChatWindowFactory(QSplitter* splitter, QtSettingsProvider* settings, QtChatTabs* tabs) {
 	settings_ = settings;
 	tabs_ = tabs;
 	if (splitter) {
@@ -29,10 +28,9 @@ QtChatWindowFactory::QtChatWindowFactory(QtTreeWidgetFactory *treeWidgetFactory,
 	}
 }
 
-ChatWindow* QtChatWindowFactory::createChatWindow(const JID &contact) {
-	QtChatWindow *chatWindow = new QtChatWindow(P2QSTRING(contact.toString()), treeWidgetFactory_);
+ChatWindow* QtChatWindowFactory::createChatWindow(const JID &contact,UIEventStream* eventStream) {
+	QtChatWindow *chatWindow = new QtChatWindow(P2QSTRING(contact.toString()), eventStream);
 	tabs_->addTab(chatWindow);
-	//chatWindow->show();
 	return chatWindow;
 }
 

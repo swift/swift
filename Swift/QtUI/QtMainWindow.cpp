@@ -23,14 +23,13 @@
 #include "QtJoinMUCDialog.h"
 #include "QtSwiftUtil.h"
 #include "QtTabWidget.h"
-#include "Roster/QtTreeWidgetFactory.h"
 #include "Roster/QtTreeWidget.h"
 #include "Swift/Controllers/UIEvents/AddContactUIEvent.h"
 #include "Swift/Controllers/UIEvents/JoinMUCUIEvent.h"
 
 namespace Swift {
 
-QtMainWindow::QtMainWindow(UIEventStream* uiEventStream, QtTreeWidgetFactory *treeWidgetFactory) : QWidget() {
+QtMainWindow::QtMainWindow(UIEventStream* uiEventStream) : QWidget() {
 	uiEventStream_ = uiEventStream;
 	setSizePolicy(QSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding));
 	QBoxLayout *mainLayout = new QBoxLayout(QBoxLayout::TopToBottom, this);
@@ -53,7 +52,7 @@ QtMainWindow::QtMainWindow(UIEventStream* uiEventStream, QtTreeWidgetFactory *tr
 	contactTabLayout->setSpacing(0);
 	contactTabLayout->setContentsMargins(0, 0, 0, 0);
 	
-	treeWidget_ = dynamic_cast<QtTreeWidget*>(treeWidgetFactory->createTreeWidget());
+	treeWidget_ = new QtTreeWidget(uiEventStream_);
 	contextMenu_ = new QtRosterContextMenu(uiEventStream_);
 	treeWidget_->setContextMenu(contextMenu_);
 	treeWidget_->setVerticalScrollMode(QAbstractItemView::ScrollPerPixel);
@@ -104,6 +103,10 @@ QtChatListWindow* QtMainWindow::getChatListWindow() {
 	return chatListWindow_;
 }
 
+void QtMainWindow::setRosterModel(Roster* roster) {
+	treeWidget_->setRosterModel(roster);
+}
+
 void QtMainWindow::handleEventCountUpdated(int count) {
 	QColor eventTabColor = (count == 0) ? QColor(-1, -1, -1) : QColor(255, 0, 0); // invalid resets to default
 	int eventIndex = 1;
@@ -129,10 +132,6 @@ void QtMainWindow::handleSignOutAction() {
 void QtMainWindow::handleAddContactDialogComplete(const JID& contact, const QString& name) {
 	boost::shared_ptr<UIEvent> event(new AddContactUIEvent(contact, Q2PSTRING(name)));
 	uiEventStream_->send(event);
-}
-
-TreeWidget* QtMainWindow::getTreeWidget() {
-	return treeWidget_;
 }
 
 void QtMainWindow::handleJoinMUCAction() {

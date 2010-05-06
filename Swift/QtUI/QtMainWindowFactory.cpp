@@ -6,16 +6,15 @@
 
 #include "QtMainWindowFactory.h"
 #include "QtMainWindow.h"
-#include "Roster/QtTreeWidgetFactory.h"
 
 namespace Swift {
 
-QtMainWindowFactory::QtMainWindowFactory(QtTreeWidgetFactory *treeWidgetFactory) : treeWidgetFactory_(treeWidgetFactory) {
+QtMainWindowFactory::QtMainWindowFactory() {
 	lastWindow_ = NULL;
 }
 
 MainWindow* QtMainWindowFactory::createMainWindow(UIEventStream* eventStream) {
-	lastWindow_  = new QtMainWindow(eventStream, treeWidgetFactory_);
+	lastWindow_  = new QtMainWindow(eventStream);
 	return lastWindow_;
 }
 

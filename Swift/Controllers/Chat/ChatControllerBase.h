@@ -28,6 +28,7 @@ namespace Swift {
 	class ChatWindow;
 	class ChatWindowFactory;
 	class AvatarManager;
+	class UIEventStream;
 
 	class ChatControllerBase  {
 		public:
@@ -40,7 +41,7 @@ namespace Swift {
 			void setEnabled(bool enabled);
 			virtual void setToJID(const JID& jid) {toJID_ = jid;};
 		protected:
-			ChatControllerBase(const JID& self, StanzaChannel* stanzaChannel, IQRouter* iqRouter, ChatWindowFactory* chatWindowFactory, const JID &toJID, PresenceOracle* presenceOracle, AvatarManager* avatarManager, bool useDelayForLatency);
+			ChatControllerBase(const JID& self, StanzaChannel* stanzaChannel, IQRouter* iqRouter, ChatWindowFactory* chatWindowFactory, const JID &toJID, PresenceOracle* presenceOracle, AvatarManager* avatarManager, bool useDelayForLatency, UIEventStream* eventStream);
 
 			virtual void postSendMessage(const String&) {};
 			virtual String senderDisplayNameFromMessage(const JID& from) = 0;

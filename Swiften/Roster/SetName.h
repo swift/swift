@@ -22,7 +22,7 @@ class SetName : public RosterItemOperation {
 		virtual void operator() (RosterItem* item) const {
 			ContactRosterItem* contact = dynamic_cast<ContactRosterItem*>(item);
 			if (contact && contact->getJID().equals(jid_, compareType_)) {
-				contact->setName(name_);
+				contact->setDisplayName(name_);
 			}
 		}
 	

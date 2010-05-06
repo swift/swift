@@ -11,9 +11,10 @@
 
 #include <boost/shared_ptr.hpp>
 
+#include "Swiften/Roster/ContactRosterItem.h"
 #include "Swiften/Base/String.h"
-#include "Swift/Controllers/UIEvents/RemoveItemRosterAction.h"
-#include "Swift/QtUI/Roster/QtTreeWidgetItem.h"
+#include "Swift/Controllers/UIEvents/UIEvent.h"
+#include "Swift/Controllers/UIEvents/RemoveRosterItemUIEvent.h"
 #include "Swift/QtUI/QtSwiftUtil.h"
 
 namespace Swift {
@@ -22,8 +23,9 @@ QtRosterContextMenu::QtRosterContextMenu(UIEventStream* eventStream) {
 	eventStream_ = eventStream;
 }
 
-void QtRosterContextMenu::show(QtTreeWidgetItem* item) {
-	if (!item->isContact()) {
+void QtRosterContextMenu::show(RosterItem* item) {
+	ContactRosterItem* contact = dynamic_cast<ContactRosterItem*>(item);
+	if (!contact) {
 		return;
 	}
 	item_ = item;
@@ -33,7 +35,9 @@ void QtRosterContextMenu::show(QtTreeWidgetItem* item) {
 }
 
 void QtRosterContextMenu::handleRemove() {
-	item_->performUserAction(boost::shared_ptr<UserRosterAction>(new RemoveItemRosterAction()));
+	ContactRosterItem* contact = dynamic_cast<ContactRosterItem*>(item_);
+	assert(contact);
+	eventStream_->send(boost::shared_ptr<UIEvent>(new RemoveRosterItemUIEvent(contact->getJID())));
 }
 
 }
