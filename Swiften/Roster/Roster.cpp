@@ -82,9 +82,9 @@ struct JIDEqualsTo {
 };
 
 void Roster::removeContact(const JID& jid) {
-	std::vector<ContactRosterItem*> items = itemMap_[jid.toBare()];
-	items.erase(std::remove_if(items.begin(), items.end(), JIDEqualsTo(jid)), items.end());
-	if (items.size() == 0) {
+	std::vector<ContactRosterItem*>* items = &itemMap_[jid.toBare()];
+	items->erase(std::remove_if(items->begin(), items->end(), JIDEqualsTo(jid)), items->end());
+	if (items->size() == 0) {
 		itemMap_.erase(jid.toBare());
 	}
 	//Causes the delete
@@ -98,8 +98,8 @@ void Roster::removeContactFromGroup(const JID& jid, const String& groupName) {
 		GroupRosterItem* group = dynamic_cast<GroupRosterItem*>(*it);
 		if (group && group->getDisplayName() == groupName) {
 			ContactRosterItem* deleted = group->removeChild(jid);
-			std::vector<ContactRosterItem*> items = itemMap_[jid.toBare()];
-			items.erase(std::remove(items.begin(), items.end(), deleted), items.end());
+			std::vector<ContactRosterItem*>* items = &itemMap_[jid.toBare()];
+			items->erase(std::remove(items->begin(), items->end(), deleted), items->end());
 		}
 		it++;
 	}
@@ -116,6 +116,7 @@ void Roster::applyOnItems(const RosterItemOperation& operation) {
 
 void Roster::applyOnItem(const RosterItemOperation& operation, const JID& jid) {
 	foreach (ContactRosterItem* item, itemMap_[jid.toBare()]) {
+		//std::cout << "Applying on item " << item << " : " << item->getDisplayName() << std::endl;
 		operation(item);
 		filterContact(item, item->getParent());
 	}

@@ -10,6 +10,7 @@
 
 #include "Swiften/Roster/Roster.h"
 #include "Swiften/Roster/GroupRosterItem.h"
+#include "Swiften/Roster/SetPresence.h"
 
 using namespace Swift;
 
@@ -20,6 +21,7 @@ class RosterTest : public CppUnit::TestFixture
 		CPPUNIT_TEST(testRemoveContact);
 		CPPUNIT_TEST(testRemoveSecondContact);
 		CPPUNIT_TEST(testRemoveSecondContactSameBare);
+		CPPUNIT_TEST(testApplyPresenceLikeMUC);
 		CPPUNIT_TEST_SUITE_END();
 
 	private:
@@ -82,6 +84,44 @@ class RosterTest : public CppUnit::TestFixture
 			roster_->removeContact(jid4b);
 			CPPUNIT_ASSERT_EQUAL(1, (int)((GroupRosterItem*)roster_->getRoot()->getChildren()[0])->getChildren().size());
 			CPPUNIT_ASSERT_EQUAL(String("Bert"), ((GroupRosterItem*)roster_->getRoot()->getChildren()[0])->getChildren()[0]->getDisplayName());
+		}
+
+		void testApplyPresenceLikeMUC() {
+			JID jid4a("a@b/c");
+			JID jid4b("a@b/d");
+			JID jid4c("a@b/e");
+			roster_->addContact(jid4a, "Bird", "group1");
+			roster_->addContact(jid4b, "Cookie", "group1");
+			roster_->removeContact(jid4b);
+			roster_->addContact(jid4c, "Bert", "group1");
+			roster_->addContact(jid4b, "Ernie", "group1");
+			boost::shared_ptr<Presence> presence(new Presence());
+			presence->setShow(StatusShow::DND);
+			presence->setFrom(jid4a);
+			roster_->applyOnItems(SetPresence(presence, JID::WithResource));
+			presence->setFrom(jid4b);
+			roster_->applyOnItems(SetPresence(presence, JID::WithResource));
+			presence->setFrom(jid4c);
+			roster_->applyOnItems(SetPresence(presence, JID::WithResource));
+			
+			presence = boost::shared_ptr<Presence>(new Presence());
+			presence->setFrom(jid4b);
+			presence->setShow(StatusShow::Online);
+			roster_->applyOnItems(SetPresence(presence, JID::WithResource));
+			std::vector<RosterItem*> children = ((GroupRosterItem*)roster_->getRoot()->getDisplayedChildren()[0])->getDisplayedChildren();
+			CPPUNIT_ASSERT_EQUAL(3, (int)children.size());
+			
+			/* Check order */
+			CPPUNIT_ASSERT_EQUAL(String("Ernie"), children[0]->getDisplayName());
+			CPPUNIT_ASSERT_EQUAL(String("Bert"), children[1]->getDisplayName());
+			CPPUNIT_ASSERT_EQUAL(String("Bird"), children[2]->getDisplayName());
+
+			presence = boost::shared_ptr<Presence>(new Presence());
+			presence->setFrom(jid4c);
+			presence->setType(Presence::Unavailable);
+			roster_->removeContact(jid4c);
+			roster_->applyOnItems(SetPresence(presence, JID::WithResource));
+
 		}
 
 };
