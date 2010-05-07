@@ -80,7 +80,7 @@ QtMainWindow::QtMainWindow(UIEventStream* uiEventStream) : QWidget() {
 
 	QMenu* actionsMenu = new QMenu(tr("Actions"), this);
 	menus_.push_back(actionsMenu);
-	QAction* joinMUCAction = new QAction("Join chatroom", this);
+	QAction* joinMUCAction = new QAction("Join Room", this);
 	connect(joinMUCAction, SIGNAL(triggered()), SLOT(handleJoinMUCAction()));
 	actionsMenu->addAction(joinMUCAction);
 	addAction_ = new QAction("Add Contact", this);
