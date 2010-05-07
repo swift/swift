@@ -26,6 +26,7 @@
 #include "Swiften/Queries/DummyIQChannel.h"
 #include "Swiften/Presence/PresenceOracle.h"
 #include "Swift/Controllers/UIEvents/RequestChatUIEvent.h"
+#include "Swift/Controllers/UIEvents/JoinMUCUIEvent.h"
 #include "Swift/Controllers/UIEvents/UIEventStream.h"
 
 
@@ -41,6 +42,7 @@ class ChatsManagerTest : public CppUnit::TestFixture
 	CPPUNIT_TEST(testSecondWindow);
 	CPPUNIT_TEST(testUnbindRebind);
 	CPPUNIT_TEST(testNoDuplicateUnbind);
+	CPPUNIT_TEST(testThreeMUCWindows);
 	CPPUNIT_TEST_SUITE_END();
 	
 public:
@@ -58,7 +60,7 @@ public:
 		nickResolver_ = new NickResolver(xmppRoster_);
 		presenceOracle_ = new PresenceOracle(stanzaChannel_);
 		serverDiscoInfo_ = boost::shared_ptr<DiscoInfo>(new DiscoInfo());
-		presenceSender_ = NULL;
+		presenceSender_ = new PresenceSender(stanzaChannel_);
 		uiEventStream_ = new UIEventStream();
 		chatListWindowFactory_ = mocks_->InterfaceMock<ChatListWindowFactory>();
 		mocks_->ExpectCall(chatListWindowFactory_, ChatListWindowFactory::createWindow).With(uiEventStream_).Return(NULL);
@@ -195,6 +197,39 @@ public:
 		message2->setBody(messageBody2);
 		manager_->handleIncomingMessage(message2);
 		CPPUNIT_ASSERT_EQUAL(messageBody2, window->lastMessageBody_);
+	}
+
+	/**
+	 * Test that MUC PMs get opened in the right windows
+	 */
+	void testThreeMUCWindows() {
+		JID muc("testling@test.com");
+		ChatWindow* mucWindow = new MockChatWindow();
+		mocks_->ExpectCall(chatWindowFactory_, ChatWindowFactory::createChatWindow).With(muc, uiEventStream_).Return(mucWindow);
+		uiEventStream_->send(boost::shared_ptr<JoinMUCUIEvent>(new JoinMUCUIEvent(muc, String("nick"))));
+
+
+		String messageJIDString1("testling@test.com/1");
+		ChatWindow* window1 = new MockChatWindow();//mocks_->InterfaceMock<ChatWindow>();
+		mocks_->ExpectCall(chatWindowFactory_, ChatWindowFactory::createChatWindow).With(JID(messageJIDString1), uiEventStream_).Return(window1);
+		uiEventStream_->send(boost::shared_ptr<UIEvent>(new RequestChatUIEvent(JID(messageJIDString1))));
+
+		String messageJIDString2("testling@test.com/2");
+		ChatWindow* window2 = new MockChatWindow();//mocks_->InterfaceMock<ChatWindow>();
+		mocks_->ExpectCall(chatWindowFactory_, ChatWindowFactory::createChatWindow).With(JID(messageJIDString2), uiEventStream_).Return(window2);
+
+		uiEventStream_->send(boost::shared_ptr<UIEvent>(new RequestChatUIEvent(JID(messageJIDString2))));
+
+		String messageJIDString3("testling@test.com/3");
+		ChatWindow* window3 = new MockChatWindow();//mocks_->InterfaceMock<ChatWindow>();
+		mocks_->ExpectCall(chatWindowFactory_, ChatWindowFactory::createChatWindow).With(JID(messageJIDString3), uiEventStream_).Return(window3);
+
+		uiEventStream_->send(boost::shared_ptr<UIEvent>(new RequestChatUIEvent(JID(messageJIDString3))));
+
+		/* Refetch an earlier window */
+		/* We do not expect a new window to be created */
+		uiEventStream_->send(boost::shared_ptr<UIEvent>(new RequestChatUIEvent(JID(messageJIDString1))));
+
 	}
 
 	/**

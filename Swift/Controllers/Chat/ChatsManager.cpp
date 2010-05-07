@@ -172,7 +172,7 @@ void ChatsManager::handleChatRequest(const String &contact) {
 
 ChatController* ChatsManager::getChatControllerOrFindAnother(const JID &contact) {
 	ChatController* controller = getChatControllerIfExists(contact);
-	if (!controller) {
+	if (!controller && !isMUC(contact.toBare())) {
 		foreach (JIDChatControllerPair pair, chatControllers_) {
 			if (pair.first.toBare() == contact.toBare()) {
 				controller = pair.second;
