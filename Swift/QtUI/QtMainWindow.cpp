@@ -65,7 +65,7 @@ QtMainWindow::QtMainWindow(UIEventStream* uiEventStream) : QWidget() {
 	
 	chatListWindow_ = new QtChatListWindow(uiEventStream_);
 
-	tabs_->addTab(eventWindow_, "Events");
+	tabs_->addTab(eventWindow_, "Notices");
 	tabs_->addTab(chatListWindow_, "Chats");
 
 	this->setLayout(mainLayout);
@@ -111,7 +111,7 @@ void QtMainWindow::handleEventCountUpdated(int count) {
 	QColor eventTabColor = (count == 0) ? QColor(-1, -1, -1) : QColor(255, 0, 0); // invalid resets to default
 	int eventIndex = 1;
 	tabs_->tabBar()->setTabTextColor(eventIndex, eventTabColor);
-	QString text = "Events";
+	QString text = "Notices";
 	if (count > 0) {
 		text += QString(" (%1)").arg(count);
 	}
