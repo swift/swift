@@ -73,6 +73,7 @@ namespace Swift {
 			QString previousSenderName_;
 			bool inputClearing_;
 			UIEventStream* eventStream_;
+			bool inputEnabled_;
 	};
 }
 

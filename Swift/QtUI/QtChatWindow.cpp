@@ -28,6 +28,7 @@
 namespace Swift {
 QtChatWindow::QtChatWindow(const QString &contact, UIEventStream* eventStream) : QtTabbable(), contact_(contact), previousMessageWasSelf_(false), previousMessageWasSystem_(false), eventStream_(eventStream) {
 	unreadCount_ = 0;
+	inputEnabled_ = true;
 	updateTitleWithUnreadCount();
 
 	QBoxLayout *layout = new QBoxLayout(QBoxLayout::TopToBottom, this);
@@ -133,7 +134,8 @@ void QtChatWindow::qAppFocusChanged(QWidget *old, QWidget *now) {
 }
 
 void QtChatWindow::setInputEnabled(bool enabled) {
-	input_->setEnabled(enabled);
+	inputEnabled_ = enabled;
+//	input_->setEnabled(enabled);
 }
 
 void QtChatWindow::showEvent(QShowEvent* event) {
@@ -232,6 +234,9 @@ void QtChatWindow::addSystemMessage(const String& message) {
 }
 
 void QtChatWindow::returnPressed() {
+	if (!inputEnabled_) {
+		return;
+	}
 	onSendMessageRequest(Q2PSTRING(input_->toPlainText()));
 	messageLog_->scrollToBottom();
 	inputClearing_ = true;
