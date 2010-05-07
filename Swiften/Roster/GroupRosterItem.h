@@ -27,7 +27,8 @@ class GroupRosterItem : public RosterItem {
 		static bool itemLessThan(const RosterItem* left, const RosterItem* right);
 	private:
 		void handleChildrenChanged(GroupRosterItem* group);
-		void sortDisplayed();
+		void handleDataChanged(RosterItem* item);
+		bool sortDisplayed();
 		String name_;
 		std::vector<RosterItem*> children_;
 		std::vector<RosterItem*> displayedChildren_;

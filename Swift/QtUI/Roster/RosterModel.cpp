@@ -182,7 +182,7 @@ int RosterModel::rowCount(const QModelIndex& parent) const {
 	Q_ASSERT(item);
 	GroupRosterItem* group = dynamic_cast<GroupRosterItem*>(item);
 	int count = group ? group->getDisplayedChildren().size() : 0;
-	qDebug() << "rowCount = " << count << " where parent.isValid() == " << parent.isValid() << ", group == " << (group ? P2QSTRING(group->getDisplayName()) : "*contact*");
+//	qDebug() << "rowCount = " << count << " where parent.isValid() == " << parent.isValid() << ", group == " << (group ? P2QSTRING(group->getDisplayName()) : "*contact*");
 	return count;
 }
 

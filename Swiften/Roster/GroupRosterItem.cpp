@@ -7,6 +7,7 @@
 #include "Swiften/Roster/GroupRosterItem.h"
 
 #include <boost/bind.hpp>
+//#include <boost/algorithm.hpp>
 #include <iostream>
 
 namespace Swift {
@@ -33,6 +34,8 @@ void GroupRosterItem::addChild(RosterItem* item) {
 	GroupRosterItem* group = dynamic_cast<GroupRosterItem*>(item);
 	if (group) {
 		group->onChildrenChanged.connect(boost::bind(&GroupRosterItem::handleChildrenChanged, this, group));
+	} else {
+		item->onDataChanged.connect(boost::bind(&GroupRosterItem::handleDataChanged, this, item));
 	}
 	onChildrenChanged();
 	onDataChanged();
@@ -68,8 +71,17 @@ ContactRosterItem* GroupRosterItem::removeChild(const JID& jid) {
 	return removed;
 }
 
-void GroupRosterItem::sortDisplayed() {
-	std::stable_sort(displayedChildren_.begin(), displayedChildren_.end(), itemLessThan);
+/**
+ * Returns false if the list didn't need a resort
+ */
+bool GroupRosterItem::sortDisplayed() {
+	/* Not doing this until we import boost::algorithm*/
+//	if (boost::is_sorted(displayedChildren_begin(), displayedChildren_.end(), itemLessThan)) {
+//		return false;
+//	}
+	//Sholudn't need stable_sort here
+	std::sort(displayedChildren_.begin(), displayedChildren_.end(), itemLessThan);
+	return true;
 }
 
 bool GroupRosterItem::itemLessThan(const RosterItem* left, const RosterItem* right) {
@@ -90,6 +102,7 @@ bool GroupRosterItem::itemLessThan(const RosterItem* left, const RosterItem* rig
 		if (rightContact) {
 			return true;
 		}
+//		std::cout << "Comparing groups " << left->getSortableDisplayName() << " and " << right->getSortableDisplayName() << std::endl;
 		return left->getSortableDisplayName() < right->getSortableDisplayName();
 	}
 }
@@ -112,6 +125,12 @@ void GroupRosterItem::setDisplayed(RosterItem* item, bool displayed) {
 	}
 	onDataChanged();
 	onChildrenChanged();
+}
+
+void GroupRosterItem::handleDataChanged(RosterItem* /*item*/) {
+	if (sortDisplayed()) {
+		onChildrenChanged();
+	}
 }
 
 void GroupRosterItem::handleChildrenChanged(GroupRosterItem* group) {

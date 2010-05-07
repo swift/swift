@@ -10,7 +10,7 @@
 
 namespace Swift {
 
-RosterItem::RosterItem(const String& name, GroupRosterItem* parent) : name_(name), parent_(parent) {
+RosterItem::RosterItem(const String& name, GroupRosterItem* parent) : name_(name), sortableDisplayName_(name_.getLowerCase()), parent_(parent) {
 	/* The following would be good, but because of C++'s inheritance not working in constructors, it's not going to work. */
 	//if (parent) {
 	//	parent_->addChild(this);
