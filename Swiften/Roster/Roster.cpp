@@ -75,15 +75,15 @@ void Roster::addContact(const JID& jid, const String& name, const String& groupN
 	filterContact(item, group);
 }
 
+struct JIDEqualsTo {
+	JIDEqualsTo(const JID& jid) : jid(jid) {}
+	bool operator()(ContactRosterItem* i) const { return jid == i->getJID(); }
+	JID jid;
+};
 
 void Roster::removeContact(const JID& jid) {
 	std::vector<ContactRosterItem*> items = itemMap_[jid.toBare()];
-	std::vector<ContactRosterItem*>::iterator it = items.begin();
-	while (it != items.end()) {
-		if (jid == (*it)->getJID()) {
-			it = items.erase(it);
-		}
-	}
+	items.erase(std::remove_if(items.begin(), items.end(), JIDEqualsTo(jid)), items.end());
 	if (items.size() == 0) {
 		itemMap_.erase(jid.toBare());
 	}

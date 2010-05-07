@@ -76,7 +76,7 @@ bool GroupRosterItem::itemLessThan(const RosterItem* left, const RosterItem* rig
 	const ContactRosterItem* leftContact = dynamic_cast<const ContactRosterItem*>(left);
 	const ContactRosterItem* rightContact = dynamic_cast<const ContactRosterItem*>(right);
 	if (leftContact) {
-		if (rightContact) {
+		if (!rightContact) {
 			return false;
 		}
 		StatusShow::Type leftType = leftContact->getSimplifiedStatusShow();

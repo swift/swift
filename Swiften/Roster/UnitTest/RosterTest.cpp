@@ -17,6 +17,9 @@ class RosterTest : public CppUnit::TestFixture
 {
 		CPPUNIT_TEST_SUITE(RosterTest);
 		CPPUNIT_TEST(testGetGroup);
+		CPPUNIT_TEST(testRemoveContact);
+		CPPUNIT_TEST(testRemoveSecondContact);
+		CPPUNIT_TEST(testRemoveSecondContactSameBare);
 		CPPUNIT_TEST_SUITE_END();
 
 	private:
@@ -49,6 +52,36 @@ class RosterTest : public CppUnit::TestFixture
 			CPPUNIT_ASSERT_EQUAL(String("Cookie"), ((GroupRosterItem*)roster_->getRoot()->getChildren()[0])->getChildren()[1]->getDisplayName());
 			CPPUNIT_ASSERT_EQUAL(String("Ernie"), ((GroupRosterItem*)roster_->getRoot()->getChildren()[1])->getChildren()[0]->getDisplayName());
 
+		}
+
+		void testRemoveContact() {
+			roster_->addContact(jid1_, "Bert", "group1");
+			CPPUNIT_ASSERT_EQUAL(String("Bert"), ((GroupRosterItem*)roster_->getRoot()->getChildren()[0])->getChildren()[0]->getDisplayName());
+
+			roster_->removeContact(jid1_);
+			CPPUNIT_ASSERT_EQUAL(0, (int)((GroupRosterItem*)roster_->getRoot()->getChildren()[0])->getChildren().size());
+		}
+
+		void testRemoveSecondContact() {
+			roster_->addContact(jid1_, "Bert", "group1");
+			roster_->addContact(jid2_, "Cookie", "group1");
+			CPPUNIT_ASSERT_EQUAL(String("Cookie"), ((GroupRosterItem*)roster_->getRoot()->getChildren()[0])->getChildren()[1]->getDisplayName());
+
+			roster_->removeContact(jid2_);
+			CPPUNIT_ASSERT_EQUAL(1, (int)((GroupRosterItem*)roster_->getRoot()->getChildren()[0])->getChildren().size());
+			CPPUNIT_ASSERT_EQUAL(String("Bert"), ((GroupRosterItem*)roster_->getRoot()->getChildren()[0])->getChildren()[0]->getDisplayName());
+		}
+
+		void testRemoveSecondContactSameBare() {
+			JID jid4a("a@b/c");
+			JID jid4b("a@b/d");
+			roster_->addContact(jid4a, "Bert", "group1");
+			roster_->addContact(jid4b, "Cookie", "group1");
+			CPPUNIT_ASSERT_EQUAL(String("Cookie"), ((GroupRosterItem*)roster_->getRoot()->getChildren()[0])->getChildren()[1]->getDisplayName());
+
+			roster_->removeContact(jid4b);
+			CPPUNIT_ASSERT_EQUAL(1, (int)((GroupRosterItem*)roster_->getRoot()->getChildren()[0])->getChildren().size());
+			CPPUNIT_ASSERT_EQUAL(String("Bert"), ((GroupRosterItem*)roster_->getRoot()->getChildren()[0])->getChildren()[0]->getDisplayName());
 		}
 
 };
