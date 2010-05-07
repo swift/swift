@@ -14,11 +14,11 @@ namespace Swift {
 	class QtEditBookmarkWindow : public QtBookmarkDetailWindow {
 		Q_OBJECT
 		public:
-			QtEditBookmarkWindow(UIEventStream* eventStream, boost::shared_ptr<MUCBookmark> bookmark);
+			QtEditBookmarkWindow(UIEventStream* eventStream, const MUCBookmark& bookmark);
 			bool commit();
 	
 		private:
 			UIEventStream* eventStream_;
-			boost::shared_ptr<MUCBookmark> bookmark_;
+			MUCBookmark bookmark_;
 	};
 }

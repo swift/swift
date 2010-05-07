@@ -15,7 +15,7 @@ namespace Swift {
 		public:
 			virtual ~ChatListWindow();
 
-			virtual void addMUCBookmark(boost::shared_ptr<MUCBookmark> bookmark) = 0;
-			virtual void removeMUCBookmark(boost::shared_ptr<MUCBookmark> bookmark) = 0;
+			virtual void addMUCBookmark(const MUCBookmark& bookmark) = 0;
+			virtual void removeMUCBookmark(const MUCBookmark& bookmark) = 0;
 	};
 }

@@ -23,11 +23,11 @@ namespace Swift {
 	};
 	class ChatListMUCItem : public ChatListItem {
 		public:
-			ChatListMUCItem(boost::shared_ptr<MUCBookmark> bookmark, ChatListGroupItem* parent);
-			boost::shared_ptr<MUCBookmark> getBookmark();
+			ChatListMUCItem(const MUCBookmark& bookmark, ChatListGroupItem* parent);
+			const MUCBookmark& getBookmark();
 			QVariant data(int role);
 		private:
-			boost::shared_ptr<MUCBookmark> bookmark_;
+			MUCBookmark bookmark_;
 			QList<ChatListItem*> items_;
 	};
 }

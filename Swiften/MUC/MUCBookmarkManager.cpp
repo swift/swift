@@ -25,22 +25,22 @@ void MUCBookmarkManager::handleBookmarksReceived(boost::shared_ptr<Storage> payl
 	if (error) {
 		return;
 	}
-	std::vector<boost::shared_ptr<MUCBookmark> > receivedBookmarks;
+	std::vector<MUCBookmark> receivedBookmarks;
 	foreach (Storage::Conference conference, payload->getConferences()) {
 		String name = (!conference.name.isEmpty()) ? conference.name : conference.jid.getNode();
-		boost::shared_ptr<MUCBookmark> bookmark(new MUCBookmark(conference.jid, name));
-		bookmark->setAutojoin(conference.autoJoin);
+		MUCBookmark bookmark(conference.jid, name);
+		bookmark.setAutojoin(conference.autoJoin);
 		if (!conference.nick.isEmpty()) {
-			bookmark->setNick(conference.nick);
+			bookmark.setNick(conference.nick);
 		}
 		if (!conference.password.isEmpty()) {
-			bookmark->setPassword(conference.password);
+			bookmark.setPassword(conference.password);
 		}
 		receivedBookmarks.push_back(bookmark);
 	}
 
-	std::vector<boost::shared_ptr<MUCBookmark> > newBookmarks;
-	foreach (boost::shared_ptr<MUCBookmark> oldBookmark, bookmarks_) {
+	std::vector<MUCBookmark> newBookmarks;
+	foreach (const MUCBookmark& oldBookmark, bookmarks_) {
 		if (containsEquivalent(receivedBookmarks, oldBookmark)) {
 			newBookmarks.push_back(oldBookmark);
 		} else {
@@ -48,7 +48,7 @@ void MUCBookmarkManager::handleBookmarksReceived(boost::shared_ptr<Storage> payl
 		} 
 	}
 
-	foreach (boost::shared_ptr<MUCBookmark> newBookmark, receivedBookmarks) {
+	foreach (const MUCBookmark& newBookmark, receivedBookmarks) {
 		if (!containsEquivalent(bookmarks_, newBookmark)) {
 			newBookmarks.push_back(newBookmark);
 			onBookmarkAdded(newBookmark);
@@ -57,19 +57,13 @@ void MUCBookmarkManager::handleBookmarksReceived(boost::shared_ptr<Storage> payl
 	bookmarks_ = newBookmarks;
 }
 
-bool MUCBookmarkManager::containsEquivalent(std::vector<boost::shared_ptr<MUCBookmark> > list, boost::shared_ptr<MUCBookmark> bookmark) {
-	foreach (boost::shared_ptr<MUCBookmark> listBookmark, list) {
-		if (*listBookmark == *bookmark) {
-			return true;
-		}
-	}
-	return false;
+bool MUCBookmarkManager::containsEquivalent(const std::vector<MUCBookmark>& list, const MUCBookmark& bookmark) {
+	return std::find(list.begin(), list.end(), bookmark) != list.end();
 }
 
-void MUCBookmarkManager::replaceBookmark(boost::shared_ptr<MUCBookmark> oldBookmark, boost::shared_ptr<MUCBookmark> newBookmark) {
+void MUCBookmarkManager::replaceBookmark(const MUCBookmark& oldBookmark, const MUCBookmark& newBookmark) {
 	for (size_t i = 0; i < bookmarks_.size(); i++) {
-		boost::shared_ptr<MUCBookmark> bookmark(bookmarks_[i]);
-		if (bookmark.get() == oldBookmark.get()) {
+		if (bookmarks_[i] == oldBookmark) {
 			bookmarks_[i] = newBookmark;
 			flush();
 			onBookmarkRemoved(oldBookmark);
@@ -79,17 +73,18 @@ void MUCBookmarkManager::replaceBookmark(boost::shared_ptr<MUCBookmark> oldBookm
 	}
 }
 
-void MUCBookmarkManager::addBookmark(boost::shared_ptr<MUCBookmark> bookmark) {
+void MUCBookmarkManager::addBookmark(const MUCBookmark& bookmark) {
 	bookmarks_.push_back(bookmark);
 	onBookmarkAdded(bookmark);
 	flush();
 }
 
 
-void MUCBookmarkManager::removeBookmark(boost::shared_ptr<MUCBookmark> bookmark) {
-	std::vector<boost::shared_ptr<MUCBookmark> >::iterator it;
+void MUCBookmarkManager::removeBookmark(const MUCBookmark& bookmark) {
+	// FIXME: Clean this up using proper STL
+	std::vector<MUCBookmark>::iterator it;
 	for (it = bookmarks_.begin(); it != bookmarks_.end(); it++) {
-		if ((*it).get() == bookmark.get()) {
+		if ((*it) == bookmark) {
 			bookmarks_.erase(it);
 			onBookmarkRemoved(bookmark);
 			break;
@@ -102,7 +97,7 @@ void MUCBookmarkManager::flush() {
 	//FIXME: some code may be useful
 }
 
-const std::vector<boost::shared_ptr<MUCBookmark> >& MUCBookmarkManager::getBookmarks() {
+const std::vector<MUCBookmark>& MUCBookmarkManager::getBookmarks() const {
 	return bookmarks_;
 }
 

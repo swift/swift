@@ -8,7 +8,7 @@
 
 #include "ui_QtBookmarkDetailWindow.h"
 
-#include <boost/shared_ptr.hpp>
+#include <boost/optional.hpp>
 
 #include <QDialog>
 
@@ -20,7 +20,8 @@ namespace Swift {
 		public:
 			QtBookmarkDetailWindow(QWidget* parent = NULL);
 			virtual bool commit() = 0;
-			boost::shared_ptr<MUCBookmark> createBookmarkFromForm();
+			boost::optional<MUCBookmark> createBookmarkFromForm();
+
 		public slots:
 			void accept();
 	};

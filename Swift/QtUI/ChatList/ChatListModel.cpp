@@ -16,7 +16,7 @@ ChatListModel::ChatListModel() {
 	root_->addItem(mucBookmarks_);
 }
 
-void ChatListModel::addMUCBookmark(boost::shared_ptr<Swift::MUCBookmark> bookmark) {
+void ChatListModel::addMUCBookmark(const Swift::MUCBookmark& bookmark) {
 	emit layoutAboutToBeChanged();
 	mucBookmarks_->addItem(new ChatListMUCItem(bookmark, mucBookmarks_));
 	emit layoutChanged();
@@ -25,7 +25,7 @@ void ChatListModel::addMUCBookmark(boost::shared_ptr<Swift::MUCBookmark> bookmar
 	//emit dataChanged(parent(index), parent(index));
 }
 
-void ChatListModel::removeMUCBookmark(boost::shared_ptr<Swift::MUCBookmark> bookmark) {
+void ChatListModel::removeMUCBookmark(const Swift::MUCBookmark& bookmark) {
 	for (int i = 0; i < mucBookmarks_->rowCount(); i++) {
 		ChatListMUCItem* item = dynamic_cast<ChatListMUCItem*>(mucBookmarks_->item(i));
 		if (item->getBookmark() == bookmark) {

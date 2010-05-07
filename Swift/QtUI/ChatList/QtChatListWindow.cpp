@@ -58,16 +58,16 @@ void QtChatListWindow::handleItemActivated(const QModelIndex& index) {
 	ChatListItem* item = model_->getItemForIndex(index);
 	ChatListMUCItem* mucItem = dynamic_cast<ChatListMUCItem*>(item);
 	if (mucItem) {
-		boost::shared_ptr<UIEvent> event(new JoinMUCUIEvent(mucItem->getBookmark()->getRoom(), mucItem->getBookmark()->getNick()));
+		boost::shared_ptr<UIEvent> event(new JoinMUCUIEvent(mucItem->getBookmark().getRoom(), mucItem->getBookmark().getNick()));
 		eventStream_->send(event);
 	}
 }
 
-void QtChatListWindow::addMUCBookmark(boost::shared_ptr<MUCBookmark> bookmark) {
+void QtChatListWindow::addMUCBookmark(const MUCBookmark& bookmark) {
 	model_->addMUCBookmark(bookmark);
 }
 
-void QtChatListWindow::removeMUCBookmark(boost::shared_ptr<MUCBookmark> bookmark) {
+void QtChatListWindow::removeMUCBookmark(const MUCBookmark& bookmark) {
 	model_->removeMUCBookmark(bookmark);
 }
 

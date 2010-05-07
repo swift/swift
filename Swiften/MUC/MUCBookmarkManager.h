@@ -18,20 +18,28 @@
 
 namespace Swift {
 	class IQRouter;
+
 	class MUCBookmarkManager {
 		public:
 			MUCBookmarkManager(IQRouter* iqRouter);
-			void addBookmark(boost::shared_ptr<MUCBookmark> bookmark);
-			void removeBookmark(boost::shared_ptr<MUCBookmark> bookmark);
-			void replaceBookmark(boost::shared_ptr<MUCBookmark> oldBookmark, boost::shared_ptr<MUCBookmark> newBookmark);
-			const std::vector<boost::shared_ptr<MUCBookmark> >& getBookmarks(); 
-			boost::signal<void (boost::shared_ptr<MUCBookmark>)> onBookmarkAdded;
-			boost::signal<void (boost::shared_ptr<MUCBookmark>)> onBookmarkRemoved;
+
+			void addBookmark(const MUCBookmark& bookmark);
+			void removeBookmark(const MUCBookmark& bookmark);
+			void replaceBookmark(const MUCBookmark& oldBookmark, const MUCBookmark& newBookmark);
+
+			const std::vector<MUCBookmark>& getBookmarks() const; 
+
+		public:
+			boost::signal<void (const MUCBookmark&)> onBookmarkAdded;
+			boost::signal<void (const MUCBookmark&)> onBookmarkRemoved;
+
 		private:
-			bool containsEquivalent(std::vector<boost::shared_ptr<MUCBookmark> > list, boost::shared_ptr<MUCBookmark> bookmark);
+			bool containsEquivalent(const std::vector<MUCBookmark>& list, const MUCBookmark& bookmark);
 			void handleBookmarksReceived(boost::shared_ptr<Storage> payload, const boost::optional<ErrorPayload>& error);
 			void flush();
-			std::vector<boost::shared_ptr<MUCBookmark> > bookmarks_;
+
+		private:
+			std::vector<MUCBookmark> bookmarks_;
 			IQRouter* iqRouter_;
 	};
 }

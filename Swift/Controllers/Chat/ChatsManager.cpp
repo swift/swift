@@ -57,16 +57,16 @@ ChatsManager::~ChatsManager() {
 	delete mucBookmarkManager_;
 }
 
-void ChatsManager::handleMUCBookmarkAdded(boost::shared_ptr<MUCBookmark> bookmark) {
-	std::map<JID, MUCController*>::iterator it = mucControllers_.find(bookmark->getRoom());
-	if (it == mucControllers_.end() && bookmark->getAutojoin()) {
+void ChatsManager::handleMUCBookmarkAdded(const MUCBookmark& bookmark) {
+	std::map<JID, MUCController*>::iterator it = mucControllers_.find(bookmark.getRoom());
+	if (it == mucControllers_.end() && bookmark.getAutojoin()) {
 		//FIXME: need vcard stuff here to get a nick
-		handleJoinMUCRequest(bookmark->getRoom(), bookmark->getNick());
+		handleJoinMUCRequest(bookmark.getRoom(), bookmark.getNick());
 	}
 	chatListWindow_->addMUCBookmark(bookmark);
 }
 
-void ChatsManager::handleMUCBookmarkRemoved(boost::shared_ptr<MUCBookmark> bookmark) {
+void ChatsManager::handleMUCBookmarkRemoved(const MUCBookmark& bookmark) {
 	chatListWindow_->removeMUCBookmark(bookmark);
 }
 

@@ -48,8 +48,8 @@ namespace Swift {
 			void rebindControllerJID(const JID& from, const JID& to);
 			void handlePresenceChange(boost::shared_ptr<Presence> newPresence, boost::shared_ptr<Presence> lastPresence);
 			void handleUIEvent(boost::shared_ptr<UIEvent> event);
-			void handleMUCBookmarkAdded(boost::shared_ptr<MUCBookmark> bookmark);
-			void handleMUCBookmarkRemoved(boost::shared_ptr<MUCBookmark> bookmark);
+			void handleMUCBookmarkAdded(const MUCBookmark& bookmark);
+			void handleMUCBookmarkRemoved(const MUCBookmark& bookmark);
 			void handleUserLeftMUC(MUCController* mucController);
 			ChatController* getChatControllerOrFindAnother(const JID &contact);
 			ChatController* createNewChatController(const JID &contact);

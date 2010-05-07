@@ -14,9 +14,10 @@
 namespace Swift {
 	class AddMUCBookmarkUIEvent : public UIEvent {
 		public:
-			AddMUCBookmarkUIEvent(const boost::shared_ptr<MUCBookmark> bookmark) : bookmark_(bookmark) {};
-			boost::shared_ptr<MUCBookmark> getBookmark() {return bookmark_;};
+			AddMUCBookmarkUIEvent(const MUCBookmark& bookmark) : bookmark(bookmark) {};
+			const MUCBookmark& getBookmark() { return bookmark; }
+
 		private:
-			boost::shared_ptr<MUCBookmark> bookmark_;
+			MUCBookmark bookmark;
 	};
 }

@@ -21,8 +21,8 @@ namespace Swift {
 		public:
 			QtChatListWindow(UIEventStream *uiEventStream, QWidget* parent = NULL);
 			virtual ~QtChatListWindow();
-			void addMUCBookmark(boost::shared_ptr<MUCBookmark> bookmark);
-			void removeMUCBookmark(boost::shared_ptr<MUCBookmark> bookmark);
+			void addMUCBookmark(const MUCBookmark& bookmark);
+			void removeMUCBookmark(const MUCBookmark& bookmark);
 		private slots:
 			void handleItemActivated(const QModelIndex&);
 			void handleAddBookmark();

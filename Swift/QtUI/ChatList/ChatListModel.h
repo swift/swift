@@ -20,8 +20,8 @@ namespace Swift {
 		Q_OBJECT
 		public:
 			ChatListModel();
-			void addMUCBookmark(boost::shared_ptr<MUCBookmark> bookmark);
-			void removeMUCBookmark(boost::shared_ptr<MUCBookmark> bookmark);
+			void addMUCBookmark(const MUCBookmark& bookmark);
+			void removeMUCBookmark(const MUCBookmark& bookmark);
 			int columnCount(const QModelIndex& parent = QModelIndex()) const;
 			QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const;
 			QModelIndex index(int row, int column, const QModelIndex & parent = QModelIndex()) const;

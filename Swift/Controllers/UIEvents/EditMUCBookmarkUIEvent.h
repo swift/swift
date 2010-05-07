@@ -14,11 +14,13 @@
 namespace Swift {
 	class EditMUCBookmarkUIEvent : public UIEvent {
 		public:
-			EditMUCBookmarkUIEvent(const boost::shared_ptr<MUCBookmark> oldBookmark, const boost::shared_ptr<MUCBookmark> newBookmark) : oldBookmark_(oldBookmark) , newBookmark_(newBookmark) {};
-			boost::shared_ptr<MUCBookmark> getOldBookmark() {return oldBookmark_;};
-			boost::shared_ptr<MUCBookmark> getNewBookmark() {return newBookmark_;};
+			EditMUCBookmarkUIEvent(const MUCBookmark& oldBookmark, const MUCBookmark& newBookmark) : oldBookmark(oldBookmark) , newBookmark(newBookmark) {};
+
+			const MUCBookmark& getOldBookmark() {return oldBookmark;};
+			const MUCBookmark& getNewBookmark() {return newBookmark;};
+
 		private:
-			boost::shared_ptr<MUCBookmark> oldBookmark_;
-			boost::shared_ptr<MUCBookmark> newBookmark_;
+			MUCBookmark oldBookmark;
+			MUCBookmark newBookmark;
 	};
 }
