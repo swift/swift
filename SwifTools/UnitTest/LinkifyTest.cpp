@@ -23,6 +23,7 @@ class LinkifyTest : public CppUnit::TestFixture {
 		CPPUNIT_TEST(testLinkify_Anchor);
 		CPPUNIT_TEST(testLinkify_Plus);
 		CPPUNIT_TEST(testLinkify_Tilde);
+		CPPUNIT_TEST(testLinkify_Authentication);
 		CPPUNIT_TEST_SUITE_END();
 
 	public:
@@ -104,6 +105,14 @@ class LinkifyTest : public CppUnit::TestFixture {
 
 			CPPUNIT_ASSERT_EQUAL(
 					String("<a href=\"http://foo.com/~kev/\">http://foo.com/~kev/</a>"),
+					result);
+		}
+
+		void testLinkify_Authentication() {
+			String result = Linkify::linkify("http://bob:bla@swift.im/foo/bar");
+
+			CPPUNIT_ASSERT_EQUAL(
+					String("<a href=\"http://bob:bla@swift.im/foo/bar\">http://bob:bla@swift.im/foo/bar</a>"),
 					result);
 		}
 };
