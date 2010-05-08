@@ -61,6 +61,10 @@ namespace Swift {
 				return state;
 			}
 
+			void setAllowPLAINOverNonTLS(bool b) {
+				allowPLAINOverNonTLS = b;
+			}
+
 			void start();
 			void finish();
 
@@ -100,6 +104,7 @@ namespace Swift {
 			JID localJID;
 			State state;
 			boost::shared_ptr<SessionStream> stream;
+			bool allowPLAINOverNonTLS;
 			bool needSessionStart;
 			ClientAuthenticator* authenticator;
 	};

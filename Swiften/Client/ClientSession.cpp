@@ -40,6 +40,7 @@ ClientSession::ClientSession(
 			localJID(jid),	
 			state(Initial), 
 			stream(stream),
+			allowPLAINOverNonTLS(false),
 			needSessionStart(false),
 			authenticator(NULL) {
 }
@@ -108,16 +109,16 @@ void ClientSession::handleElement(boost::shared_ptr<Element> element) {
 				state = WaitingForCredentials;
 				onNeedCredentials();
 			}
+			else if ((stream->isTLSEncrypted() || allowPLAINOverNonTLS) && streamFeatures->hasAuthenticationMechanism("PLAIN")) {
+				authenticator = new PLAINClientAuthenticator();
+				state = WaitingForCredentials;
+				onNeedCredentials();
+			}
 			else if (streamFeatures->hasAuthenticationMechanism("DIGEST-MD5")) {
 				std::ostringstream s;
 				s << boost::uuids::random_generator()();
 				// FIXME: Host should probably be the actual host
 				authenticator = new DIGESTMD5ClientAuthenticator(localJID.getDomain(), s.str());
-				state = WaitingForCredentials;
-				onNeedCredentials();
-			}
-			else if (streamFeatures->hasAuthenticationMechanism("PLAIN")) {
-				authenticator = new PLAINClientAuthenticator();
 				state = WaitingForCredentials;
 				onNeedCredentials();
 			}

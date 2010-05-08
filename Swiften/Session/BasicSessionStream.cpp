@@ -81,6 +81,10 @@ void BasicSessionStream::addTLSEncryption() {
 	}
 }
 
+bool BasicSessionStream::isTLSEncrypted() {
+	return tlsLayer;
+}
+
 void BasicSessionStream::addZLibCompression() {
 	boost::shared_ptr<CompressionLayer> compressionLayer(new CompressionLayer());
 	streamStack->addLayer(compressionLayer);

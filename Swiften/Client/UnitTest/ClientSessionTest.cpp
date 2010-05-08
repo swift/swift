@@ -138,6 +138,19 @@ class ClientSessionTest : public CppUnit::TestFixture {
 			CPPUNIT_ASSERT(sessionFinishedError);
 		}
 
+		void testAuthenticate_PLAINOverNonTLS() {
+			boost::shared_ptr<ClientSession> session(createSession());
+			session->setAllowPLAINOverNonTLS(false);
+			session->start();
+			server->receiveStreamStart();
+			server->sendStreamStart();
+			server->sendStreamFeaturesWithPLAINAuthentication();
+
+			CPPUNIT_ASSERT_EQUAL(ClientSession::Finished, session->getState());
+			CPPUNIT_ASSERT(sessionFinishedReceived);
+			CPPUNIT_ASSERT(sessionFinishedError);
+		}
+
 		void testAuthenticate_NoValidAuthMechanisms() {
 			boost::shared_ptr<ClientSession> session(createSession());
 			session->start();
@@ -155,6 +168,7 @@ class ClientSessionTest : public CppUnit::TestFixture {
 			boost::shared_ptr<ClientSession> session = ClientSession::create(JID("me@foo.com"), server);
 			session->onFinished.connect(boost::bind(&ClientSessionTest::handleSessionFinished, this, _1));
 			session->onNeedCredentials.connect(boost::bind(&ClientSessionTest::handleSessionNeedCredentials, this));
+			session->setAllowPLAINOverNonTLS(true);
 			return session;
 		}
 
@@ -204,6 +218,10 @@ class ClientSessionTest : public CppUnit::TestFixture {
 
 				virtual void addTLSEncryption() {
 					tlsEncrypted = true;
+				}
+
+				virtual bool isTLSEncrypted() {
+					return tlsEncrypted;
 				}
 
 				virtual void addZLibCompression() {

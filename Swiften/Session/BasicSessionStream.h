@@ -49,6 +49,7 @@ namespace Swift {
 
 			virtual bool supportsTLSEncryption();
 			virtual void addTLSEncryption();
+			virtual bool isTLSEncrypted();
 
 			virtual void setWhitespacePingEnabled(bool);
 
