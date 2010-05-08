@@ -17,7 +17,7 @@ namespace Swift {
 		public:
 			DIGESTMD5Properties();
 			
-			boost::optional<String> getValue(const String& key);
+			boost::optional<String> getValue(const String& key) const;
 
 			void setValue(const String& key, const String& value);
 

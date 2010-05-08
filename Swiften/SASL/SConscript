@@ -9,6 +9,7 @@ objects = myenv.StaticObject([
 		"PLAINMessage.cpp",
 		"SCRAMSHA1ClientAuthenticator.cpp",
 		"DIGESTMD5Properties.cpp",
+		"DIGESTMD5ClientAuthenticator.cpp",
 	])
 swiften_env.Append(SWIFTEN_OBJECTS = [objects])
 env.Append(UNITTEST_SOURCES = [
@@ -16,4 +17,5 @@ env.Append(UNITTEST_SOURCES = [
 			File("UnitTest/PLAINClientAuthenticatorTest.cpp"),
 			File("UnitTest/SCRAMSHA1ClientAuthenticatorTest.cpp"),
 			File("UnitTest/DIGESTMD5PropertiesTest.cpp"),
+			File("UnitTest/DIGESTMD5ClientAuthenticatorTest.cpp"),
 	])

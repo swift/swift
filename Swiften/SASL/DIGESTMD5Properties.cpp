@@ -106,7 +106,7 @@ ByteArray DIGESTMD5Properties::serialize() const {
 	return result;
 }
 
-boost::optional<String> DIGESTMD5Properties::getValue(const String& key) {
+boost::optional<String> DIGESTMD5Properties::getValue(const String& key) const {
 	DIGESTMD5PropertiesMap::const_iterator i = properties.find(key);
 	if (i != properties.end()) {
 		return i->second.toString();

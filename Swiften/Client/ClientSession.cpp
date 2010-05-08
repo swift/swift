@@ -29,6 +29,7 @@
 #include "Swiften/Elements/ResourceBind.h"
 #include "Swiften/SASL/PLAINClientAuthenticator.h"
 #include "Swiften/SASL/SCRAMSHA1ClientAuthenticator.h"
+#include "Swiften/SASL/DIGESTMD5ClientAuthenticator.h"
 #include "Swiften/Session/SessionStream.h"
 
 namespace Swift {
@@ -104,6 +105,14 @@ void ClientSession::handleElement(boost::shared_ptr<Element> element) {
 				std::ostringstream s;
 				s << boost::uuids::random_generator()();
 				authenticator = new SCRAMSHA1ClientAuthenticator(s.str());
+				state = WaitingForCredentials;
+				onNeedCredentials();
+			}
+			else if (streamFeatures->hasAuthenticationMechanism("DIGEST-MD5")) {
+				std::ostringstream s;
+				s << boost::uuids::random_generator()();
+				// FIXME: Host should probably be the actual host
+				authenticator = new DIGESTMD5ClientAuthenticator(localJID.getDomain(), s.str());
 				state = WaitingForCredentials;
 				onNeedCredentials();
 			}
