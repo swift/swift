@@ -74,6 +74,11 @@ namespace Swift {
 				return *this;
 			}
 
+			ByteArray& operator+=(char c) {
+				data_.push_back(c);
+				return *this;
+			}
+
 			friend bool operator==(const ByteArray& a, const ByteArray& b) {
 				return a.data_ == b.data_;
 			}

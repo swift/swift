@@ -1,4 +1,4 @@
-Import("swiften_env")
+Import("swiften_env", "env")
 
 myenv = swiften_env.Clone()
 myenv.MergeFlags(swiften_env["LIBIDN_FLAGS"])
@@ -8,5 +8,12 @@ objects = myenv.StaticObject([
 		"PLAINClientAuthenticator.cpp",
 		"PLAINMessage.cpp",
 		"SCRAMSHA1ClientAuthenticator.cpp",
+		"DIGESTMD5Properties.cpp",
 	])
 swiften_env.Append(SWIFTEN_OBJECTS = [objects])
+env.Append(UNITTEST_SOURCES = [
+			File("UnitTest/PLAINMessageTest.cpp"),
+			File("UnitTest/PLAINClientAuthenticatorTest.cpp"),
+			File("UnitTest/SCRAMSHA1ClientAuthenticatorTest.cpp"),
+			File("UnitTest/DIGESTMD5PropertiesTest.cpp"),
+	])
