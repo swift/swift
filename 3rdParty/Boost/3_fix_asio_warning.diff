@@ -1,0 +1,13 @@
+diff --git a/3rdParty/Boost/src/boost/asio/detail/epoll_reactor.hpp b/3rdParty/Boost/src/boost/asio/detail/epoll_reactor.hpp
+index 4684944..40cc3aa 100644
+--- a/3rdParty/Boost/src/boost/asio/detail/epoll_reactor.hpp
++++ b/3rdParty/Boost/src/boost/asio/detail/epoll_reactor.hpp
+@@ -208,7 +208,7 @@ public:
+   // Cancel all operations associated with the given descriptor. The
+   // handlers associated with the descriptor will be invoked with the
+   // operation_aborted error.
+-  void cancel_ops(socket_type descriptor, per_descriptor_data& descriptor_data)
++  void cancel_ops(socket_type, per_descriptor_data& descriptor_data)
+   {
+     mutex::scoped_lock descriptor_lock(descriptor_data->mutex_);
+ 
