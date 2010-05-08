@@ -7,6 +7,7 @@
 #pragma once
 
 #include <map>
+#include <boost/optional.hpp>
 
 #include "Swiften/Base/String.h"
 #include "Swiften/Base/ByteArray.h"
@@ -16,6 +17,8 @@ namespace Swift {
 		public:
 			DIGESTMD5Properties();
 			
+			boost::optional<String> getValue(const String& key);
+
 			void setValue(const String& key, const String& value);
 
 			ByteArray serialize() const;
