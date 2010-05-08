@@ -33,6 +33,7 @@ namespace Swift {
 	class QtSoundPlayer;
 	class QtEventWindowFactory;
 	class QtChatListWindowFactory;
+	class QtMUCSearchWindowFactory;
 		
 	class QtSwift : public QObject {
 		Q_OBJECT
@@ -56,6 +57,7 @@ namespace Swift {
 			QtEventWindowFactory* eventWindowFactory_;
 			Application* application_;
 			AutoUpdater* autoUpdater_;
+			QtMUCSearchWindowFactory* mucSearchWindowFactory_;
 	};
 }
 

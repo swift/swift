@@ -20,6 +20,7 @@ sources = [
 		"PayloadParsers/BodyParser.cpp",
 		"PayloadParsers/ChatStateParser.cpp",
 		"PayloadParsers/DiscoInfoParser.cpp",
+		"PayloadParsers/DiscoItemsParser.cpp",
 		"PayloadParsers/ErrorParser.cpp",
 		"PayloadParsers/FullPayloadParserFactoryCollection.cpp",
 		"PayloadParsers/PriorityParser.cpp",

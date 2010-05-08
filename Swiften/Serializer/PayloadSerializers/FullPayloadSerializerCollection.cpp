@@ -17,6 +17,7 @@
 #include "Swiften/Serializer/PayloadSerializers/StatusSerializer.h"
 #include "Swiften/Serializer/PayloadSerializers/StatusShowSerializer.h"
 #include "Swiften/Serializer/PayloadSerializers/DiscoInfoSerializer.h"
+#include "Swiften/Serializer/PayloadSerializers/DiscoItemsSerializer.h"
 #include "Swiften/Serializer/PayloadSerializers/CapsInfoSerializer.h"
 #include "Swiften/Serializer/PayloadSerializers/ResourceBindSerializer.h"
 #include "Swiften/Serializer/PayloadSerializers/StartSessionSerializer.h"
@@ -42,6 +43,7 @@ FullPayloadSerializerCollection::FullPayloadSerializerCollection() {
 	serializers_.push_back(new StatusSerializer());
 	serializers_.push_back(new StatusShowSerializer());
 	serializers_.push_back(new DiscoInfoSerializer());
+	serializers_.push_back(new DiscoItemsSerializer());
 	serializers_.push_back(new CapsInfoSerializer());
 	serializers_.push_back(new ResourceBindSerializer());
 	serializers_.push_back(new StartSessionSerializer());

@@ -16,6 +16,7 @@
 #include "QtXMLConsoleWidgetFactory.h"
 #include "ChatList/QtChatListWindowFactory.h"
 #include "EventViewer/QtEventWindowFactory.h"
+#include "MUCSearch/QtMUCSearchWindowFactory.h"
 #include <boost/bind.hpp>
 #include <QSplitter>
 
@@ -71,11 +72,12 @@ QtSwift::QtSwift(po::variables_map options) : autoUpdater_(NULL) {
 	eventWindowFactory_ = new QtEventWindowFactory(rosterWindowFactory_);
 	xmlConsoleWidgetFactory_ = new QtXMLConsoleWidgetFactory(tabs_);
 	chatListWindowFactory_ = new QtChatListWindowFactory(rosterWindowFactory_);
+	mucSearchWindowFactory_ = new QtMUCSearchWindowFactory();
 	soundPlayer_ = new QtSoundPlayer();
 	if (splitter_) {
 		splitter_->show();
 	}
-		mainController_ = new MainController(chatWindowFactory_, rosterWindowFactory_, loginWindowFactory_, eventWindowFactory_, settings_, application_, systemTray_, soundPlayer_, xmlConsoleWidgetFactory_, chatListWindowFactory_, options.count("latency-debug") > 0);
+	mainController_ = new MainController(chatWindowFactory_, rosterWindowFactory_, loginWindowFactory_, eventWindowFactory_, settings_, application_, systemTray_, soundPlayer_, xmlConsoleWidgetFactory_, chatListWindowFactory_, mucSearchWindowFactory_, options.count("latency-debug") > 0);
 
 	PlatformAutoUpdaterFactory autoUpdaterFactory;
 	if (autoUpdaterFactory.isSupported()) {
@@ -89,6 +91,7 @@ QtSwift::~QtSwift() {
 	delete chatWindowFactory_;
 	delete rosterWindowFactory_;
 	delete loginWindowFactory_;
+	delete mucSearchWindowFactory_;
 	delete mainController_;
 	delete settings_;
 	delete application_;

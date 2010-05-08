@@ -25,6 +25,7 @@
 #include "QtTabWidget.h"
 #include "Roster/QtTreeWidget.h"
 #include "Swift/Controllers/UIEvents/AddContactUIEvent.h"
+#include "Swift/Controllers/UIEvents/RequestMUCSearchUIEvent.h"
 #include "Swift/Controllers/UIEvents/JoinMUCUIEvent.h"
 
 namespace Swift {
@@ -138,6 +139,7 @@ void QtMainWindow::handleJoinMUCAction() {
 	QtJoinMUCDialog* joinMUC = new QtJoinMUCDialog("jabber@conference.jabber.org", "SwiftUser", this);
 	connect(joinMUC, SIGNAL(onJoinCommand(const JID&, const QString&)), SLOT(handleJoinMUCDialogComplete(const JID&, const QString&)));
 	joinMUC->show();
+	uiEventStream_->send(boost::shared_ptr<UIEvent>(new RequestMUCSearchUIEvent()));
 }
 
 void QtMainWindow::handleJoinMUCDialogComplete(const JID& muc, const QString& nick) {

@@ -58,10 +58,12 @@ namespace Swift {
 	class XMLConsoleWidgetFactory;
 	class EventWindowFactory;
 	class EventWindowController;
+	class MUCSearchController;
+	class MUCSearchWindowFactory;
 
 	class MainController {
 		public:
-			MainController(ChatWindowFactory* chatWindowFactory, MainWindowFactory *mainWindowFactory, LoginWindowFactory *loginWindowFactory, EventWindowFactory* eventWindowFactory, SettingsProvider *settings, Application* application, SystemTray* systemTray, SoundPlayer* soundPlayer, XMLConsoleWidgetFactory* xmlConsoleWidgetFactory, ChatListWindowFactory* chatListWindowFactory_, bool useDelayForLatency);
+			MainController(ChatWindowFactory* chatWindowFactory, MainWindowFactory *mainWindowFactory, LoginWindowFactory *loginWindowFactory, EventWindowFactory* eventWindowFactory, SettingsProvider *settings, Application* application, SystemTray* systemTray, SoundPlayer* soundPlayer, XMLConsoleWidgetFactory* xmlConsoleWidgetFactory, ChatListWindowFactory* chatListWindowFactory_, MUCSearchWindowFactory* mucSearchWindowFactory, bool useDelayForLatency);
 			~MainController();
 
 
@@ -126,5 +128,7 @@ namespace Swift {
 			ChatListWindowFactory* chatListWindowFactory_;
 			boost::shared_ptr<ErrorEvent> lastDisconnectError_;
 			bool useDelayForLatency_;
+			MUCSearchController* mucSearchController_;
+			MUCSearchWindowFactory* mucSearchWindowFactory_;
 	};
 }

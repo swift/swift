@@ -70,6 +70,7 @@ if env["SCONS_STAGE"] == "build" :
 			"Serializer/PayloadSerializers/CapsInfoSerializer.cpp",
 			"Serializer/PayloadSerializers/ChatStateSerializer.cpp",
 			"Serializer/PayloadSerializers/DiscoInfoSerializer.cpp",
+			"Serializer/PayloadSerializers/DiscoItemsSerializer.cpp",
 			"Serializer/PayloadSerializers/ErrorSerializer.cpp",
 			"Serializer/PayloadSerializers/FullPayloadSerializerCollection.cpp",
 			"Serializer/PayloadSerializers/MUCPayloadSerializer.cpp",

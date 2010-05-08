@@ -14,15 +14,16 @@
 #include "Swiften/Application/Application.h"
 #include "Swiften/Application/ApplicationMessageDisplay.h"
 #include "Swift/Controllers/Chat/ChatController.h"
-#include "Swift/Controllers/UIInterfaces/ChatWindowFactory.h"
+#include "Swift/Controllers/Chat/MUCSearchController.h"
+//#include "Swift/Controllers/UIInterfaces/ChatWindowFactory.h"
 #include "Swift/Controllers/Chat/ChatsManager.h"
 #include "Swift/Controllers/EventController.h"
 #include "Swift/Controllers/EventWindowController.h"
 #include "Swift/Controllers/UIInterfaces/LoginWindow.h"
 #include "Swift/Controllers/UIInterfaces/LoginWindowFactory.h"
-#include "Swift/Controllers/UIInterfaces/EventWindowFactory.h"
+//#include "Swift/Controllers/UIInterfaces/EventWindowFactory.h"
 #include "Swift/Controllers/UIInterfaces/MainWindow.h"
-#include "Swift/Controllers/UIInterfaces/MainWindowFactory.h"
+//#include "Swift/Controllers/UIInterfaces/MainWindowFactory.h"
 #include "Swift/Controllers/Chat/MUCController.h"
 #include "Swift/Controllers/NickResolver.h"
 #include "Swift/Controllers/ProfileSettingsProvider.h"
@@ -33,7 +34,7 @@
 #include "Swift/Controllers/SystemTrayController.h"
 #include "Swift/Controllers/XMLConsoleController.h"
 #include "Swift/Controllers/XMPPRosterController.h"
-#include "Swift/Controllers/UIInterfaces/XMLConsoleWidgetFactory.h"
+//#include "Swift/Controllers/UIInterfaces/XMLConsoleWidgetFactory.h"
 #include "Swift/Controllers/UIEvents/UIEventStream.h"
 #include "Swiften/Base/foreach.h"
 #include "Swiften/Base/String.h"
@@ -60,7 +61,7 @@ static const String CLIENT_VERSION = "0.3";
 static const String CLIENT_NODE = "http://swift.im";
 
 
-MainController::MainController(ChatWindowFactory* chatWindowFactory, MainWindowFactory *mainWindowFactory, LoginWindowFactory *loginWindowFactory, EventWindowFactory* eventWindowFactory, SettingsProvider *settings, Application* application, SystemTray* systemTray, SoundPlayer* soundPlayer, XMLConsoleWidgetFactory* xmlConsoleWidgetFactory, ChatListWindowFactory* chatListWindowFactory, bool useDelayForLatency)
+MainController::MainController(ChatWindowFactory* chatWindowFactory, MainWindowFactory *mainWindowFactory, LoginWindowFactory *loginWindowFactory, EventWindowFactory* eventWindowFactory, SettingsProvider *settings, Application* application, SystemTray* systemTray, SoundPlayer* soundPlayer, XMLConsoleWidgetFactory* xmlConsoleWidgetFactory, ChatListWindowFactory* chatListWindowFactory, MUCSearchWindowFactory* mucSearchWindowFactory, bool useDelayForLatency)
 	: timerFactory_(&boostIOServiceThread_.getIOService()), idleDetector_(&idleQuerier_, &timerFactory_, 100), chatWindowFactory_(chatWindowFactory), mainWindowFactory_(mainWindowFactory), loginWindowFactory_(loginWindowFactory), settings_(settings), loginWindow_(NULL), useDelayForLatency_(useDelayForLatency)  {
 	application_ = application;
 	presenceOracle_ = NULL;
@@ -77,6 +78,7 @@ MainController::MainController(ChatWindowFactory* chatWindowFactory, MainWindowF
 	presenceSender_ = NULL;
 	client_ = NULL;
 
+	mucSearchWindowFactory_ = mucSearchWindowFactory;
 	eventWindowFactory_ = eventWindowFactory;
 	chatListWindowFactory_ = chatListWindowFactory;
 	uiEventStream_ = new UIEventStream();
@@ -155,6 +157,8 @@ void MainController::resetClient() {
 	presenceSender_ = NULL;
 	delete client_;
 	client_ = NULL;
+	delete mucSearchController_;
+	mucSearchController_ = NULL;
 	
 }
 
@@ -203,6 +207,8 @@ void MainController::handleConnected() {
 		discoResponder_->setDiscoInfo(discoInfo);
 		discoResponder_->setDiscoInfo(capsInfo_->getNode() + "#" + capsInfo_->getVersion(), discoInfo);
 		serverDiscoInfo_ = boost::shared_ptr<DiscoInfo>(new DiscoInfo());
+
+		mucSearchController_ = new MUCSearchController(jid_, uiEventStream_, mucSearchWindowFactory_, client_);
 	}
 	
 	boost::shared_ptr<GetDiscoInfoRequest> discoInfoRequest(new GetDiscoInfoRequest(JID(), client_));
