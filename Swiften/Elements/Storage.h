@@ -35,12 +35,17 @@ namespace Swift {
 			Storage() {
 			}
 
-			const std::vector<Room>& getRooms() const {
-				return conferences;
+			
+			void clearRooms() {
+				rooms.clear();
 			}
 
-			void addRoom(const Room& conference) {
-				conferences.push_back(conference);
+			const std::vector<Room>& getRooms() const {
+				return rooms;
+			}
+
+			void addRoom(const Room& room) {
+				rooms.push_back(room);
 			}
 
 			const std::vector<URL>& getURLs() const {
@@ -52,7 +57,7 @@ namespace Swift {
 			}
 
 		private:
-			std::vector<Room> conferences;
+			std::vector<Room> rooms;
 			std::vector<URL> urls;
 	};
 }

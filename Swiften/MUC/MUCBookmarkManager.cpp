@@ -10,6 +10,8 @@
 #include <iostream>
 
 #include "Swiften/Queries/IQRouter.h"
+#include "Swiften/Queries/Requests/GetPrivateStorageRequest.h"
+#include "Swiften/Queries/Requests/SetPrivateStorageRequest.h"
 
 
 namespace Swift {
@@ -29,16 +31,7 @@ void MUCBookmarkManager::handleBookmarksReceived(boost::shared_ptr<Storage> payl
 
 	std::vector<MUCBookmark> receivedBookmarks;
 	foreach (Storage::Room room, payload->getRooms()) {
-		String name = (!room.name.isEmpty()) ? room.name : room.jid.getNode();
-		MUCBookmark bookmark(room.jid, name);
-		bookmark.setAutojoin(room.autoJoin);
-		if (!room.nick.isEmpty()) {
-			bookmark.setNick(room.nick);
-		}
-		if (!room.password.isEmpty()) {
-			bookmark.setPassword(room.password);
-		}
-		receivedBookmarks.push_back(bookmark);
+		receivedBookmarks.push_back(MUCBookmark(room));
 	}
 
 	std::vector<MUCBookmark> newBookmarks;
@@ -95,7 +88,17 @@ void MUCBookmarkManager::removeBookmark(const MUCBookmark& bookmark) {
 }
 
 void MUCBookmarkManager::flush() {
-	//FIXME: some code may be useful
+	// Update the storage element
+	storage->clearRooms();
+	foreach(const MUCBookmark& bookmark, bookmarks_) {
+		storage->addRoom(bookmark.toStorage());
+	}
+
+	// Send an iq to save the storage element
+	boost::shared_ptr<SetPrivateStorageRequest<Storage> > request(new SetPrivateStorageRequest<Storage>(storage, iqRouter_));
+	// FIXME: We should care about the result
+	//request->onResponse.connect(boost::bind(&MUCBookmarkManager::handleBookmarksSet, this, _1, _2));
+	request->send();
 }
 
 const std::vector<MUCBookmark>& MUCBookmarkManager::getBookmarks() const {

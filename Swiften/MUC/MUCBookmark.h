@@ -10,21 +10,70 @@
 
 #include "Swiften/Base/String.h"
 #include "Swiften/JID/JID.h"
+#include "Swiften/Elements/Storage.h"
 
 namespace Swift {
 	class MUCBookmark {
 		public:
-			MUCBookmark(const JID& room, const String& bookmarkName) : room_(room), name_(bookmarkName){};
-			void setAutojoin(bool enabled) {autojoin_ = enabled;};
-			void setNick(const boost::optional<String>& nick) {nick_ = nick;};
-			void setPassword(const boost::optional<String>& password) {password_ = password;};
-			bool getAutojoin() const {return autojoin_;};
-			const boost::optional<String>& getNick() const {return nick_;};
-			const boost::optional<String>& getPassword() const {return password_;};
-			const String& getName() const {return name_;};
-			const JID& getRoom() const {return room_;};
+			MUCBookmark(const Storage::Room& room) {
+				name_ = room.name;
+				room_ = room.jid;
+				nick_ = room.nick;
+				password_ = room.password;
+			}
 
-			bool operator==(const MUCBookmark& rhs) const {return rhs.room_ == room_ && rhs.name_ == name_ && rhs.nick_ == nick_ && rhs.password_ == password_ && rhs.autojoin_ == autojoin_;};
+			MUCBookmark(const JID& room, const String& bookmarkName) : room_(room), name_(bookmarkName) {
+			}
+
+			void setAutojoin(bool enabled) {
+				autojoin_ = enabled; 
+			}
+
+			bool getAutojoin() const {
+				return autojoin_;
+			}
+
+			void setNick(const boost::optional<String>& nick) {
+				nick_ = nick;
+			}
+
+			void setPassword(const boost::optional<String>& password) {
+				password_ = password;
+			}
+
+			const boost::optional<String>& getNick() const {
+				return nick_;
+			}
+
+			const boost::optional<String>& getPassword() const {
+				return password_;
+			}
+
+			const String& getName() const {
+				return name_;
+			}
+
+			const JID& getRoom() const {
+				return room_;
+			}
+
+			bool operator==(const MUCBookmark& rhs) const {
+				return rhs.room_ == room_ && rhs.name_ == name_ && rhs.nick_ == nick_ && rhs.password_ == password_ && rhs.autojoin_ == autojoin_;
+			}
+
+			Storage::Room toStorage() const {
+				Storage::Room room;
+				room.name = name_;
+				room.jid = room_;
+				if (nick_) {
+					room.nick = *nick_;
+				}
+				if (password_) {
+					room.password = *password_;
+				}
+				return room;
+			}
+
 		private:
 			JID room_;
 			String name_;

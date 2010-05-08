@@ -14,7 +14,7 @@
 
 #include "Swiften/MUC/MUCBookmark.h"
 #include "Swiften/Elements/Storage.h"
-#include "Swiften/Queries/Requests/GetPrivateStorageRequest.h"
+#include "Swiften/Elements/ErrorPayload.h"
 
 namespace Swift {
 	class IQRouter;

@@ -20,7 +20,7 @@ namespace Swift {
 			SetPrivateStorageRequest(boost::shared_ptr<PAYLOAD_TYPE> payload, IQRouter* router) : Request(IQ::Set, JID(), boost::shared_ptr<PrivateStorage>(new PrivateStorage(payload)), router) {
 			}
 
-			virtual void handleResponse(boost::shared_ptr<Payload> payload, boost::optional<ErrorPayload> error) {
+			virtual void handleResponse(boost::shared_ptr<Payload>, boost::optional<ErrorPayload> error) {
 				onResponse(error);
 			}
 
