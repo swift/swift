@@ -14,15 +14,15 @@ using namespace Swift;
 
 class StorageParserTest : public CppUnit::TestFixture {
 		CPPUNIT_TEST_SUITE(StorageParserTest);
-		CPPUNIT_TEST(testParse_Conference);
-		CPPUNIT_TEST(testParse_MultipleConferences);
+		CPPUNIT_TEST(testParse_Room);
+		CPPUNIT_TEST(testParse_MultipleRooms);
 		CPPUNIT_TEST(testParse_URL);
 		CPPUNIT_TEST_SUITE_END();
 
 	public:
 		StorageParserTest() {}
 
-		void testParse_Conference() {
+		void testParse_Room() {
 			PayloadsParserTester parser;
 
 			CPPUNIT_ASSERT(parser.parse(
@@ -36,16 +36,16 @@ class StorageParserTest : public CppUnit::TestFixture {
 				"</storage>"));
 
 			Storage* payload = dynamic_cast<Storage*>(parser.getPayload().get());
-			std::vector<Storage::Conference> conferences = payload->getConferences();
-			CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(conferences.size()));
-			CPPUNIT_ASSERT_EQUAL(String("Council of Oberon"), conferences[0].name);
-			CPPUNIT_ASSERT_EQUAL(JID("council@conference.underhill.org"), conferences[0].jid);
-			CPPUNIT_ASSERT(conferences[0].autoJoin);
-			CPPUNIT_ASSERT_EQUAL(String("Puck"), conferences[0].nick);
-			CPPUNIT_ASSERT_EQUAL(String("MyPass"), conferences[0].password);
+			std::vector<Storage::Room> rooms = payload->getRooms();
+			CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(rooms.size()));
+			CPPUNIT_ASSERT_EQUAL(String("Council of Oberon"), rooms[0].name);
+			CPPUNIT_ASSERT_EQUAL(JID("council@conference.underhill.org"), rooms[0].jid);
+			CPPUNIT_ASSERT(rooms[0].autoJoin);
+			CPPUNIT_ASSERT_EQUAL(String("Puck"), rooms[0].nick);
+			CPPUNIT_ASSERT_EQUAL(String("MyPass"), rooms[0].password);
 		}
 
-		void testParse_MultipleConferences() {
+		void testParse_MultipleRooms() {
 			PayloadsParserTester parser;
 
 			CPPUNIT_ASSERT(parser.parse(
@@ -59,12 +59,12 @@ class StorageParserTest : public CppUnit::TestFixture {
 				"</storage>"));
 
 			Storage* payload = dynamic_cast<Storage*>(parser.getPayload().get());
-			std::vector<Storage::Conference> conferences = payload->getConferences();
-			CPPUNIT_ASSERT_EQUAL(2, static_cast<int>(conferences.size()));
-			CPPUNIT_ASSERT_EQUAL(String("Council of Oberon"), conferences[0].name);
-			CPPUNIT_ASSERT_EQUAL(JID("council@conference.underhill.org"), conferences[0].jid);
-			CPPUNIT_ASSERT_EQUAL(String("Tea party"), conferences[1].name);
-			CPPUNIT_ASSERT_EQUAL(JID("teaparty@wonderland.lit"), conferences[1].jid);
+			std::vector<Storage::Room> rooms = payload->getRooms();
+			CPPUNIT_ASSERT_EQUAL(2, static_cast<int>(rooms.size()));
+			CPPUNIT_ASSERT_EQUAL(String("Council of Oberon"), rooms[0].name);
+			CPPUNIT_ASSERT_EQUAL(JID("council@conference.underhill.org"), rooms[0].jid);
+			CPPUNIT_ASSERT_EQUAL(String("Tea party"), rooms[1].name);
+			CPPUNIT_ASSERT_EQUAL(JID("teaparty@wonderland.lit"), rooms[1].jid);
 		}
 
 		void testParse_URL() {

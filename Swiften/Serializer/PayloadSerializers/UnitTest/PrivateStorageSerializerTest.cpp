@@ -26,11 +26,11 @@ class PrivateStorageSerializerTest : public CppUnit::TestFixture {
 
 			boost::shared_ptr<PrivateStorage> privateStorage(new PrivateStorage());
 			boost::shared_ptr<Storage> storage(new Storage());
-			Storage::Conference conference;
-			conference.name = "Swift";
-			conference.jid = JID("swift@rooms.swift.im");
-			conference.nick = "Alice";
-			storage->addConference(conference);
+			Storage::Room room;
+			room.name = "Swift";
+			room.jid = JID("swift@rooms.swift.im");
+			room.nick = "Alice";
+			storage->addRoom(room);
 			privateStorage->setPayload(storage);
 
 			CPPUNIT_ASSERT_EQUAL(String(

@@ -24,13 +24,13 @@ class StorageSerializerTest : public CppUnit::TestFixture {
 		void testSerialize() {
 			PayloadsSerializer serializer;
 			boost::shared_ptr<Storage> storage(new Storage());
-			Storage::Conference conference;
-			conference.name = "Council of Oberon";
-			conference.autoJoin = true;
-			conference.jid = JID("council@conference.underhill.org");
-			conference.nick = "Puck";
-			conference.password = "MyPass";
-			storage->addConference(conference);
+			Storage::Room room;
+			room.name = "Council of Oberon";
+			room.autoJoin = true;
+			room.jid = JID("council@conference.underhill.org");
+			room.nick = "Puck";
+			room.password = "MyPass";
+			storage->addRoom(room);
 			Storage::URL url;
 			url.name = "Complete Works of Shakespeare";
 			url.url = "http://the-tech.mit.edu/Shakespeare/";
@@ -52,11 +52,11 @@ class StorageSerializerTest : public CppUnit::TestFixture {
 		void testSerialize_NoNickOrPassword() {
 			PayloadsSerializer serializer;
 			boost::shared_ptr<Storage> storage(new Storage());
-			Storage::Conference conference;
-			conference.name = "Council of Oberon";
-			conference.autoJoin = true;
-			conference.jid = JID("council@conference.underhill.org");
-			storage->addConference(conference);
+			Storage::Room room;
+			room.name = "Council of Oberon";
+			room.autoJoin = true;
+			room.jid = JID("council@conference.underhill.org");
+			storage->addRoom(room);
 
 			CPPUNIT_ASSERT_EQUAL(String(
 				"<storage xmlns=\"storage:bookmarks\">"

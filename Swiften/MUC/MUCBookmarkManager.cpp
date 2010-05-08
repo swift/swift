@@ -28,15 +28,15 @@ void MUCBookmarkManager::handleBookmarksReceived(boost::shared_ptr<Storage> payl
 	storage = payload;
 
 	std::vector<MUCBookmark> receivedBookmarks;
-	foreach (Storage::Conference conference, payload->getConferences()) {
-		String name = (!conference.name.isEmpty()) ? conference.name : conference.jid.getNode();
-		MUCBookmark bookmark(conference.jid, name);
-		bookmark.setAutojoin(conference.autoJoin);
-		if (!conference.nick.isEmpty()) {
-			bookmark.setNick(conference.nick);
+	foreach (Storage::Room room, payload->getRooms()) {
+		String name = (!room.name.isEmpty()) ? room.name : room.jid.getNode();
+		MUCBookmark bookmark(room.jid, name);
+		bookmark.setAutojoin(room.autoJoin);
+		if (!room.nick.isEmpty()) {
+			bookmark.setNick(room.nick);
 		}
-		if (!conference.password.isEmpty()) {
-			bookmark.setPassword(conference.password);
+		if (!room.password.isEmpty()) {
+			bookmark.setPassword(room.password);
 		}
 		receivedBookmarks.push_back(bookmark);
 	}

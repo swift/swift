@@ -20,19 +20,19 @@ StorageSerializer::StorageSerializer() : GenericPayloadSerializer<Storage>() {
 String StorageSerializer::serializePayload(boost::shared_ptr<Storage> storage)	const {
 	XMLElement storageElement("storage", "storage:bookmarks");
 
-	foreach(const Storage::Conference& conference, storage->getConferences()) {
+	foreach(const Storage::Room& room, storage->getRooms()) {
 		boost::shared_ptr<XMLElement> conferenceElement(new XMLElement("conference"));
-		conferenceElement->setAttribute("name", conference.name);
-		conferenceElement->setAttribute("jid", conference.jid);
-		conferenceElement->setAttribute("autojoin", conference.autoJoin ? "1" : "0");
-		if (!conference.nick.isEmpty()) {
+		conferenceElement->setAttribute("name", room.name);
+		conferenceElement->setAttribute("jid", room.jid);
+		conferenceElement->setAttribute("autojoin", room.autoJoin ? "1" : "0");
+		if (!room.nick.isEmpty()) {
 			boost::shared_ptr<XMLElement> nickElement(new XMLElement("nick"));
-			nickElement->addNode(boost::shared_ptr<XMLTextNode>(new XMLTextNode(conference.nick)));
+			nickElement->addNode(boost::shared_ptr<XMLTextNode>(new XMLTextNode(room.nick)));
 			conferenceElement->addNode(nickElement);
 		}
-		if (!conference.password.isEmpty()) {
+		if (!room.password.isEmpty()) {
 			boost::shared_ptr<XMLElement> passwordElement(new XMLElement("password"));
-			passwordElement->addNode(boost::shared_ptr<XMLTextNode>(new XMLTextNode(conference.password)));
+			passwordElement->addNode(boost::shared_ptr<XMLTextNode>(new XMLTextNode(room.password)));
 			conferenceElement->addNode(passwordElement);
 		}
 		storageElement.addNode(conferenceElement);

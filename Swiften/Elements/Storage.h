@@ -15,8 +15,8 @@
 namespace Swift {
 	class Storage : public Payload {
 		public:
-			struct Conference {
-				Conference() : autoJoin(false) {}
+			struct Room {
+				Room() : autoJoin(false) {}
 
 				String name;
 				JID jid;
@@ -35,11 +35,11 @@ namespace Swift {
 			Storage() {
 			}
 
-			const std::vector<Conference>& getConferences() const {
+			const std::vector<Room>& getRooms() const {
 				return conferences;
 			}
 
-			void addConference(const Conference& conference) {
+			void addRoom(const Room& conference) {
 				conferences.push_back(conference);
 			}
 
@@ -52,7 +52,7 @@ namespace Swift {
 			}
 
 		private:
-			std::vector<Conference> conferences;
+			std::vector<Room> conferences;
 			std::vector<URL> urls;
 	};
 }

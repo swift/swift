@@ -16,11 +16,11 @@ StorageParser::StorageParser() : level(TopLevel) {
 void StorageParser::handleStartElement(const String& element, const String&, const AttributeMap& attributes) {
 	if (level == BookmarkLevel) {
 		if (element == "conference") {
-			assert(!conference);
-			conference = Storage::Conference();
-			conference->autoJoin = attributes.getBoolAttribute("autojoin", false);
-			conference->jid = JID(attributes.getAttribute("jid"));
-			conference->name = attributes.getAttribute("name");
+			assert(!room);
+			room = Storage::Room();
+			room->autoJoin = attributes.getBoolAttribute("autojoin", false);
+			room->jid = JID(attributes.getAttribute("jid"));
+			room->name = attributes.getAttribute("name");
 		}
 		else if (element == "url") {
 			assert(!url);
@@ -39,9 +39,9 @@ void StorageParser::handleEndElement(const String& element, const String&) {
 	--level;
 	if (level == BookmarkLevel) {
 		if (element == "conference") {
-			assert(conference);
-			getPayloadInternal()->addConference(*conference);
-			conference.reset();
+			assert(room);
+			getPayloadInternal()->addRoom(*room);
+			room.reset();
 		}
 		else if (element == "url") {
 			assert(url);
@@ -49,12 +49,12 @@ void StorageParser::handleEndElement(const String& element, const String&) {
 			url.reset();
 		}
 	}
-	else if (level == DetailLevel && conference) {
+	else if (level == DetailLevel && room) {
 		if (element == "nick") {
-			conference->nick = currentText;
+			room->nick = currentText;
 		}
 		else if (element == "password") {
-			conference->password = currentText;
+			room->password = currentText;
 		}
 	}
 }
