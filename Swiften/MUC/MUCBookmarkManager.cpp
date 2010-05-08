@@ -25,6 +25,8 @@ void MUCBookmarkManager::handleBookmarksReceived(boost::shared_ptr<Storage> payl
 	if (error) {
 		return;
 	}
+	storage = payload;
+
 	std::vector<MUCBookmark> receivedBookmarks;
 	foreach (Storage::Conference conference, payload->getConferences()) {
 		String name = (!conference.name.isEmpty()) ? conference.name : conference.jid.getNode();
@@ -81,7 +83,6 @@ void MUCBookmarkManager::addBookmark(const MUCBookmark& bookmark) {
 
 
 void MUCBookmarkManager::removeBookmark(const MUCBookmark& bookmark) {
-	// FIXME: Clean this up using proper STL
 	std::vector<MUCBookmark>::iterator it;
 	for (it = bookmarks_.begin(); it != bookmarks_.end(); it++) {
 		if ((*it) == bookmark) {

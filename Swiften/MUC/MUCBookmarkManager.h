@@ -41,5 +41,6 @@ namespace Swift {
 		private:
 			std::vector<MUCBookmark> bookmarks_;
 			IQRouter* iqRouter_;
+			boost::shared_ptr<Storage> storage;
 	};
 }
