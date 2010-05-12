@@ -20,6 +20,7 @@ namespace Swift {
 				room_ = room.jid;
 				nick_ = room.nick;
 				password_ = room.password;
+				autojoin_ = room.autoJoin;
 			}
 
 			MUCBookmark(const JID& room, const String& bookmarkName) : room_(room), name_(bookmarkName) {
