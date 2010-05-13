@@ -8,6 +8,8 @@
 #include "Swift/QtUI/EventViewer/QtEventWindow.h"
 
 #include <QtDebug>
+#include <QBoxLayout>
+#include <QPushButton>
 
 #include "Swiften/Events/MessageEvent.h"
 #include "Swiften/Events/ErrorEvent.h"
@@ -20,25 +22,45 @@
 
 namespace Swift {
 
-QtEventWindow::QtEventWindow(UIEventStream* eventStream, QWidget* parent) : QTreeView(parent) {
+QtEventWindow::QtEventWindow(UIEventStream* eventStream, QWidget* parent) : QWidget(parent) {
+	QBoxLayout* layout = new QBoxLayout(QBoxLayout::TopToBottom, this);
+	layout->setContentsMargins(0,0,0,0);
+	layout->setSpacing(0);
+
+	view_ = new QTreeView(this);
+	layout->addWidget(view_);
 	eventStream_ = eventStream;
 	model_ = new EventModel();
-	setModel(model_);
+	view_->setModel(model_);
 	delegate_ = new EventDelegate();
-	setItemDelegate(delegate_);
-	setHeaderHidden(true);
+	view_->setItemDelegate(delegate_);
+	view_->setHeaderHidden(true);
 #ifdef SWIFT_PLATFORM_MACOSX
-	setAlternatingRowColors(true);
+	view_->setAlternatingRowColors(true);
 #endif
-	setAnimated(true);
-	setIndentation(0);
-	setRootIsDecorated(true);
-	connect(this, SIGNAL(activated(const QModelIndex&)), this, SLOT(handleItemActivated(const QModelIndex&)));
+	view_->setAnimated(true);
+	view_->setIndentation(0);
+	view_->setRootIsDecorated(true);
+	
+	QPushButton* readButton = new QPushButton("Read Notice", this);
+	layout->addWidget(readButton);
+	connect(readButton, SIGNAL(clicked()), this, SLOT(handleReadClicked()));
+
+	connect(view_, SIGNAL(activated(const QModelIndex&)), this, SLOT(handleItemActivated(const QModelIndex&)));
 }
 
 QtEventWindow::~QtEventWindow() {
 	delete model_;
 	delete delegate_;
+	/* Not view_ because this is the parent */
+}
+
+void QtEventWindow::handleReadClicked() {
+	QModelIndex index = view_->currentIndex();
+	if (!index.isValid()) {
+		return;
+	}
+	handleItemActivated(index);
 }
 
 void QtEventWindow::handleItemActivated(const QModelIndex& item) {

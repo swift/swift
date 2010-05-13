@@ -17,7 +17,7 @@
 #include "Swift/QtUI/EventViewer/EventDelegate.h"
 
 namespace Swift {
-	class QtEventWindow : public QTreeView, public EventWindow {
+	class QtEventWindow : public QWidget, public EventWindow {
 		Q_OBJECT
 		public:
 			QtEventWindow(UIEventStream* eventStream, QWidget* parent = 0);
@@ -28,10 +28,12 @@ namespace Swift {
 			void onNewEventCountUpdated(int count);
 		private slots:
 			void handleItemActivated(const QModelIndex& item);
+			void handleReadClicked();
 		private:
 			EventModel* model_;
 			EventDelegate* delegate_;
 			UIEventStream* eventStream_;
+			QTreeView* view_;
 	};
 		
 }
