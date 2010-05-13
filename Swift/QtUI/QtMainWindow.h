@@ -50,15 +50,11 @@ namespace Swift {
 			void handleShowOfflineToggled(bool);
 			void handleJoinMUCAction();
 			void handleSignOutAction();
-			void handleJoinMUCDialogComplete(const JID& muc, const QString& nick);
 			void handleAddContactDialogComplete(const JID& contact, const QString& name);
 			void handleAddActionTriggered(bool checked);
 			void handleEventCountUpdated(int count);
 		private:
 			std::vector<QMenu*> menus_;
-			QLineEdit* muc_;
-			QLineEdit* mucNick_;
-			QPushButton* mucButton_;
 			QtTreeWidget* treeWidget_;
 			QtRosterHeader* meView_;
 			QAction* addAction_;

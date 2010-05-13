@@ -54,7 +54,6 @@ sources = [
     "QtAddContactDialog.cpp",
     "QtChatWindow.cpp",
     "QtChatWindowFactory.cpp",
-    "QtJoinMUCDialog.cpp",
     "QtLoginWindow.cpp",
     "QtLoginWindowFactory.cpp",
     "QtMainWindow.cpp",
@@ -119,7 +118,6 @@ if env["PLATFORM"] == "darwin" or env["PLATFORM"] == "win32" :
 else :
   swiftProgram = myenv.Program("swift", sources)
 
-myenv.Uic4("QtJoinMUCDialog.ui")
 myenv.Uic4("MUCSearch/QtMUCSearchWindow.ui")
 myenv.Uic4("QtAddContactDialog.ui")
 myenv.Uic4("QtBookmarkDetailWindow.ui")

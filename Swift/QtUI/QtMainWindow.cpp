@@ -20,7 +20,6 @@
 #include <QTabWidget>
 
 #include "QtAddContactDialog.h"
-#include "QtJoinMUCDialog.h"
 #include "QtSwiftUtil.h"
 #include "QtTabWidget.h"
 #include "Roster/QtTreeWidget.h"
@@ -136,16 +135,7 @@ void QtMainWindow::handleAddContactDialogComplete(const JID& contact, const QStr
 }
 
 void QtMainWindow::handleJoinMUCAction() {
-	QtJoinMUCDialog* joinMUC = new QtJoinMUCDialog("jabber@conference.jabber.org", "SwiftUser", this);
-	connect(joinMUC, SIGNAL(onJoinCommand(const JID&, const QString&)), SLOT(handleJoinMUCDialogComplete(const JID&, const QString&)));
-	joinMUC->show();
 	uiEventStream_->send(boost::shared_ptr<UIEvent>(new RequestMUCSearchUIEvent()));
-}
-
-void QtMainWindow::handleJoinMUCDialogComplete(const JID& muc, const QString& nick) {
-	boost::optional<String> maybeNick(Q2PSTRING(nick));
-	boost::shared_ptr<UIEvent> event(new JoinMUCUIEvent(muc, maybeNick));
-	uiEventStream_->send(event);
 }
 
 void QtMainWindow::handleStatusChanged(StatusShow::Type showType, const QString &statusMessage) {
