@@ -102,6 +102,9 @@ void RosterController::handleChangeStatusRequest(StatusShow::Type show, const St
 void RosterController::handleOnJIDAdded(const JID& jid) {
 	std::vector<String> groups = xmppRoster_->getGroupsForJID(jid);
 	String name = xmppRoster_->getNameForJID(jid);
+	if (name.isEmpty()) {
+		name = jid.toString();
+	}
 	if (!groups.empty()) {
 		foreach(const String& group, groups) {
 			roster_->addContact(jid, name, group);
@@ -123,6 +126,9 @@ void RosterController::handleOnJIDUpdated(const JID& jid, const String& oldName,
 	std::vector<String> groups = xmppRoster_->getGroupsForJID(jid);
 	std::vector<String> oldGroups = passedOldGroups;
 	String name = xmppRoster_->getNameForJID(jid);
+	if (name.isEmpty()) {
+		name = jid.toString();
+	}
 	String contactsGroup = "Contacts";
 	if (oldGroups.empty()) {
 		oldGroups.push_back(contactsGroup);
