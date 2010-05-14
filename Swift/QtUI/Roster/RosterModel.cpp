@@ -38,10 +38,15 @@ void RosterModel::setRoster(Roster* roster) {
 }
 
 void RosterModel::handleGroupAdded(GroupRosterItem* group) {
-	view_->setExpanded(index(group), true);
+	emit itemExpanded(index(group), group->isExpanded());
 }
 
-void RosterModel::handleChildrenChanged(GroupRosterItem* /*group*/) {
+void RosterModel::handleChildrenChanged(GroupRosterItem* group) {
+	foreach (RosterItem* item, group->getDisplayedChildren()) {
+		GroupRosterItem* child = dynamic_cast<GroupRosterItem*>(item);
+		if (!child) continue;
+		emit itemExpanded(index(child), child->isExpanded());
+	}
 	emit layoutChanged();
 }							  
 
@@ -49,7 +54,10 @@ void RosterModel::handleDataChanged(RosterItem* item) {
 	Q_ASSERT(item);
 	QModelIndex modelIndex = index(item);
 	if (modelIndex.isValid()) {
-		//emit itemExpanded(modelIndex, item->isExpanded());
+		GroupRosterItem* group = dynamic_cast<GroupRosterItem*>(item);
+		if (group) {
+			emit itemExpanded(modelIndex, group->isExpanded());
+		}
 		emit dataChanged(modelIndex, modelIndex);
 	}
 }

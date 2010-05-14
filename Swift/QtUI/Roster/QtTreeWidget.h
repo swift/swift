@@ -28,9 +28,9 @@ class QtTreeWidget : public QTreeView{
 		void setRosterModel(Roster* roster);
 	private slots:
 		void handleItemActivated(const QModelIndex&);
-//		void handleModelItemExpanded(const QModelIndex&, bool expanded);
-//		void handleExpanded(const QModelIndex&);
-//		void handleCollapsed(const QModelIndex&);
+		void handleModelItemExpanded(const QModelIndex&, bool expanded);
+		void handleExpanded(const QModelIndex&);
+		void handleCollapsed(const QModelIndex&);
 //		void handleDataChanged(const QModelIndex& topLeft, const QModelIndex& bottomRight);
 	protected:
 		void contextMenuEvent(QContextMenuEvent* event);

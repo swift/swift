@@ -13,11 +13,19 @@
 namespace Swift {
 
 GroupRosterItem::GroupRosterItem(const String& name, GroupRosterItem* parent) : RosterItem(name, parent) {
-
+	expanded_ = true;
 }
 
 GroupRosterItem::~GroupRosterItem() {
 
+}
+
+bool GroupRosterItem::isExpanded() const {
+	return expanded_;
+}
+
+void GroupRosterItem::setExpanded(bool expanded) {
+	expanded_ = expanded;
 }
 
 const std::vector<RosterItem*>& GroupRosterItem::getChildren() const {

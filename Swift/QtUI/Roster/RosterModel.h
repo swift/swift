@@ -34,6 +34,8 @@ namespace Swift {
 			QModelIndex index(RosterItem* item) const;
 			QModelIndex parent(const QModelIndex& index) const;
 			int rowCount(const QModelIndex& parent = QModelIndex()) const;
+		signals:
+			void itemExpanded(const QModelIndex& item, bool expanded);
 		private:
 			void handleDataChanged(RosterItem* item);
 			void handleChildrenChanged(GroupRosterItem* item);

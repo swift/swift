@@ -25,11 +25,14 @@ class GroupRosterItem : public RosterItem {
 		void setDisplayed(RosterItem* item, bool displayed);
 		boost::signal<void ()> onChildrenChanged;
 		static bool itemLessThan(const RosterItem* left, const RosterItem* right);
+		void setExpanded(bool expanded);
+		bool isExpanded() const;
 	private:
 		void handleChildrenChanged(GroupRosterItem* group);
 		void handleDataChanged(RosterItem* item);
 		bool sortDisplayed();
 		String name_;
+		bool expanded_;
 		std::vector<RosterItem*> children_;
 		std::vector<RosterItem*> displayedChildren_;
 };

@@ -8,6 +8,7 @@
 
 #include "Swiften/Base/Platform.h"
 #include "Swiften/Roster/ContactRosterItem.h"
+#include "Swiften/Roster/GroupRosterItem.h"
 #include "Swift/Controllers/UIEvents/UIEventStream.h"
 #include "Swift/Controllers/UIEvents/RequestChatUIEvent.h"
 
@@ -33,10 +34,10 @@ QtTreeWidget::QtTreeWidget(UIEventStream* eventStream, QWidget* parent) : QTreeV
 	setIndentation(0);
 	setRootIsDecorated(true);
 	connect(this, SIGNAL(activated(const QModelIndex&)), this, SLOT(handleItemActivated(const QModelIndex&)));
-//	connect(model_, SIGNAL(itemExpanded(const QModelIndex&, bool)), this, SLOT(handleModelItemExpanded(const QModelIndex&, bool)));
+	connect(model_, SIGNAL(itemExpanded(const QModelIndex&, bool)), this, SLOT(handleModelItemExpanded(const QModelIndex&, bool)));
 //	connect(model_, SIGNAL(dataChanged(const QModelIndex&, const QModelIndex&)), this, SLOT(handleDataChanged(const QModelIndex&, const QModelIndex&)));
-//	connect(this, SIGNAL(expanded(const QModelIndex&)), this, SLOT(handleExpanded(const QModelIndex&)));
-//	connect(this, SIGNAL(collapsed(const QModelIndex&)), this, SLOT(handleCollapsed(const QModelIndex&)));
+	connect(this, SIGNAL(expanded(const QModelIndex&)), this, SLOT(handleExpanded(const QModelIndex&)));
+	connect(this, SIGNAL(collapsed(const QModelIndex&)), this, SLOT(handleCollapsed(const QModelIndex&)));
 }
 
 QtTreeWidget::~QtTreeWidget() {
@@ -76,33 +77,33 @@ void QtTreeWidget::contextMenuEvent(QContextMenuEvent* event) {
 	}
 }
 
-//void QtTreeWidget::handleExpanded(const QModelIndex& index) {
-//	QtTreeWidgetItem* qtItem = static_cast<QtTreeWidgetItem*>(index.internalPointer());
-//	if (qtItem) {
-//		qtItem->setExpanded(true);
-//	}
-//}
+void QtTreeWidget::handleExpanded(const QModelIndex& index) {
+	GroupRosterItem* item = dynamic_cast<GroupRosterItem*>(static_cast<RosterItem*>(index.internalPointer()));
+	if (item) {
+		item->setExpanded(true);
+	}
+}
 
-//void QtTreeWidget::handleCollapsed(const QModelIndex& index) {
-//	QtTreeWidgetItem* qtItem = static_cast<QtTreeWidgetItem*>(index.internalPointer());
-//	if (qtItem) {
-//		qtItem->setExpanded(false);
-//	}
-//}
+void QtTreeWidget::handleCollapsed(const QModelIndex& index) {
+	GroupRosterItem* item = dynamic_cast<GroupRosterItem*>(static_cast<RosterItem*>(index.internalPointer()));
+	if (item) {
+		item->setExpanded(false);
+	}
+}
 
-//void QtTreeWidget::handleModelItemExpanded(const QModelIndex& index, bool shouldExpand) {
-//	if (this->isExpanded(index) == shouldExpand) {
-//		return;
-//	}
-//	//setExpanded(index, shouldExpand);
-//	if (shouldExpand) {
-//		expand(index);
-//		emit expanded(index);
-//	} else {
-//		collapse(index);
-//		emit collapsed(index);
-//	}
-//}
+void QtTreeWidget::handleModelItemExpanded(const QModelIndex& index, bool shouldExpand) {
+	if (this->isExpanded(index) == shouldExpand) {
+		return;
+	}
+	//setExpanded(index, shouldExpand);
+	if (shouldExpand) {
+		expand(index);
+		emit expanded(index);
+	} else {
+		collapse(index);
+		emit collapsed(index);
+	}
+}
 
 // void QtTreeWidget::handleDataChanged(const QModelIndex& topLeft, const QModelIndex& /*bottomRight*/) {
 // 	//in our model, this is only thrown with topLeft == bottomRight
