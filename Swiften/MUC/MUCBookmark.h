@@ -72,6 +72,7 @@ namespace Swift {
 				if (password_) {
 					room.password = *password_;
 				}
+				room.autoJoin = autojoin_;
 				return room;
 			}
 
