@@ -356,11 +356,10 @@ void MainController::handleError(const ClientError& error) {
 		signOut();
 		loginWindow_->setMessage(message);
 	} else {
-		std::cout << "Yay, error" << std::endl;
 		if (!lastDisconnectError_) {
 			message = "Disconnected from " + jid_.getDomain() + ": " + message;
 			lastDisconnectError_ = boost::shared_ptr<ErrorEvent>(new ErrorEvent(JID(jid_.getDomain()), message));
-			std::cout << message << std::endl;
+			//std::cout << message << std::endl;
 			eventController_->handleIncomingEvent(lastDisconnectError_);
 		}
 	}
