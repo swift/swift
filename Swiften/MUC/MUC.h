@@ -26,11 +26,16 @@ namespace Swift {
 		public:
 			enum JoinResult { JoinSucceeded, JoinFailed };
 			enum LeavingType { Part };
+			enum Roles {Moderator, Participant, Visitor, NoRole};
+			enum Affiliations {Owner, Admin, Member, Outcast, NoAffiliation};
+			
 
 		public:
 			MUC(StanzaChannel* stanzaChannel, PresenceSender* presenceSender, const JID &muc);
 
 			void joinAs(const String &nick);
+			/*void queryRoomInfo(); */
+			/*void queryRoomItems(); */
 			String getCurrentNick();
 			void part();
 			void handleIncomingMessage(boost::shared_ptr<Message> message);
@@ -39,8 +44,10 @@ namespace Swift {
 			boost::signal<void (JoinResult)> onJoinComplete;
 			boost::signal<void (boost::shared_ptr<Presence>)> onOccupantPresenceChange;
 			boost::signal<void (const MUCOccupant&)> onOccupantJoined;
-			/**Occupant, type, and reason. */
-			boost::signal<void (const MUCOccupant&, LeavingType, const String&)> onOccupantLeft;
+			boost::signal<void (const MUCOccupant&, LeavingType, const String& /*reason*/)> onOccupantLeft;
+			/* boost::signal<void (const MUCInfo&)> onInfoResult; */
+			/* boost::signal<void (const blah&)> onItemsResult; */
+			
 
 		private:
 			bool isFromMUC(const JID& j) const {

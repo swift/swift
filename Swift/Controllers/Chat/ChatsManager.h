@@ -33,10 +33,11 @@ namespace Swift {
 	class MUCBookmarkManager;
 	class ChatListWindow;
 	class ChatListWindowFactory;
+	class TimerFactory;
 
 	class ChatsManager : public MUCRegistry {
 		public:
-			ChatsManager(JID jid, StanzaChannel* stanzaChannel, IQRouter* iqRouter, EventController* eventController, ChatWindowFactory* chatWindowFactory, NickResolver* nickResolver, PresenceOracle* presenceOracle, boost::shared_ptr<DiscoInfo> serverDiscoInfo, PresenceSender* presenceSender, UIEventStream* uiEventStream, ChatListWindowFactory* chatListWindowFactory, bool useDelayForLatency);
+			ChatsManager(JID jid, StanzaChannel* stanzaChannel, IQRouter* iqRouter, EventController* eventController, ChatWindowFactory* chatWindowFactory, NickResolver* nickResolver, PresenceOracle* presenceOracle, boost::shared_ptr<DiscoInfo> serverDiscoInfo, PresenceSender* presenceSender, UIEventStream* uiEventStream, ChatListWindowFactory* chatListWindowFactory, bool useDelayForLatency, TimerFactory* timerFactory);
 			~ChatsManager();
 			void setAvatarManager(AvatarManager* avatarManager);
 			void setEnabled(bool enabled);
@@ -74,5 +75,6 @@ namespace Swift {
 			ChatListWindow* chatListWindow_;
 			boost::bsignals::scoped_connection uiEventConnection_;
 			bool useDelayForLatency_;
+			TimerFactory* timerFactory_;
 	};
 }

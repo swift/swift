@@ -13,6 +13,8 @@
 
 #include "Swiften/Application/Application.h"
 #include "Swiften/Application/ApplicationMessageDisplay.h"
+#include "Swiften/Network/TimerFactory.h"
+#include "Swiften/Network/BoostTimerFactory.h"
 #include "Swift/Controllers/Chat/ChatController.h"
 #include "Swift/Controllers/Chat/MUCSearchController.h"
 //#include "Swift/Controllers/UIInterfaces/ChatWindowFactory.h"
@@ -183,7 +185,7 @@ void MainController::handleConnected() {
 		rosterController_->onChangeStatusRequest.connect(boost::bind(&MainController::handleChangeStatusRequest, this, _1, _2));
 		rosterController_->onSignOutRequest.connect(boost::bind(&MainController::signOut, this));
 
-		chatsManager_ = new ChatsManager(jid_, client_, client_, eventController_, chatWindowFactory_, nickResolver_, presenceOracle_, serverDiscoInfo_, presenceSender_, uiEventStream_, chatListWindowFactory_, useDelayForLatency_);
+		chatsManager_ = new ChatsManager(jid_, client_, client_, eventController_, chatWindowFactory_, nickResolver_, presenceOracle_, serverDiscoInfo_, presenceSender_, uiEventStream_, chatListWindowFactory_, useDelayForLatency_, &timerFactory_);
 		nickResolver_->setMUCRegistry(chatsManager_);
 		client_->onMessageReceived.connect(boost::bind(&ChatsManager::handleIncomingMessage, chatsManager_, _1));
 		chatsManager_->setAvatarManager(avatarManager_);

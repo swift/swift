@@ -22,7 +22,11 @@ MUC::MUC(StanzaChannel* stanzaChannel, PresenceSender* presenceSender, const JID
 	scopedConnection_ = stanzaChannel->onPresenceReceived.connect(boost::bind(&MUC::handleIncomingPresence, this, _1));
 }
 
+//FIXME: discover reserved nickname
+
 void MUC::joinAs(const String &nick) {
+	//FIXME: password
+	//FIXME: history request
 	firstPresenceSeen = false;
 
 	ownMUCJID = JID(ownMUCJID.getNode(), ownMUCJID.getDomain(), nick);
@@ -45,6 +49,14 @@ void MUC::handleIncomingPresence(boost::shared_ptr<Presence> presence) {
 	if (!firstPresenceSeen) {
 		if (presence->getType() == Presence::Error) {
 			onJoinComplete(JoinFailed);
+			//FIXME: parse error element
+			//Wrong password
+			//Members-only
+			//Banned
+			//Nickname-conflict
+			//Max-users
+			//Locked-room
+			
 			return;
 		}
 		firstPresenceSeen = true;
@@ -56,9 +68,19 @@ void MUC::handleIncomingPresence(boost::shared_ptr<Presence> presence) {
 	if (nick.isEmpty()) {
 		return;
 	}
+	//FIXME: occupant affiliation, role.
+	//FIXME: if status code='110', This is me, stop talking.
+	//FIXME: what's status 210?
+	//100 is non-anonymous
+	//FIXME: 100 may also be specified in a <message/>
+	//Once I've got my nick (110), everything new is a join
+	//170 is room logging to http
+	//FIXME: full JIDs
+	//FIXME: Nick changes
 	if (presence->getType() == Presence::Unavailable) {
 		std::map<String,MUCOccupant>::iterator i = occupants.find(nick);
 		if (i != occupants.end()) {
+			//FIXME: part type
 			onOccupantLeft(i->second, Part, "");
 			occupants.erase(i);
 		}
@@ -72,5 +94,20 @@ void MUC::handleIncomingPresence(boost::shared_ptr<Presence> presence) {
 	}
 }
 
+//FIXME: Recognise Topic changes
+
+//TODO: Invites(direct/mediated)
+
+//TODO: requesting membership
+
+//TODO: get member list
+
+//TODO: request voice
+
+//TODO: moderator use cases
+
+//TODO: Admin use cases
+
+//TODO: Owner use cases
 
 }

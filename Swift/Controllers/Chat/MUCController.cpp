@@ -8,6 +8,8 @@
 
 #include <boost/bind.hpp>
 
+#include "Swiften/Network/Timer.h"
+#include "Swiften/Network/TimerFactory.h"
 #include "Swiften/Base/foreach.h"
 #include "Swift/Controllers/UIInterfaces/ChatWindow.h"
 #include "Swift/Controllers/UIInterfaces/ChatWindowFactory.h"
@@ -19,6 +21,8 @@
 #include "Swiften/Roster/Roster.h"
 #include "Swiften/Roster/SetAvatar.h"
 #include "Swiften/Roster/SetPresence.h"
+
+#define MUC_JOIN_WARNING_TIMEOUT_MILLISECONDS 60000
 
 namespace Swift {
 	
@@ -36,20 +40,29 @@ MUCController::MUCController (
 		PresenceOracle* presenceOracle,
 		AvatarManager* avatarManager,
 		UIEventStream* uiEventStream,
-		bool useDelayForLatency) :
+		bool useDelayForLatency,
+		TimerFactory* timerFactory) :
 	ChatControllerBase(self, stanzaChannel, iqRouter, chatWindowFactory, muc, presenceOracle, avatarManager, useDelayForLatency, uiEventStream),
 			muc_(new MUC(stanzaChannel, presenceSender, muc)), 
-			nick_(nick) { 
+	nick_(nick) {
+	loginCheckTimer_ = boost::shared_ptr<Timer>(timerFactory->createTimer(MUC_JOIN_WARNING_TIMEOUT_MILLISECONDS));
 	parting_ = false;
 	events_ = uiEventStream;
+	
 	roster_ = new Roster();
 	chatWindow_->setRosterModel(roster_);
 	chatWindow_->onClosed.connect(boost::bind(&MUCController::handleWindowClosed, this));
-	muc_->joinAs(nick);
+	muc_->onJoinComplete.connect(boost::bind(&MUCController::handleJoinComplete, this, _1));
 	muc_->onOccupantJoined.connect(boost::bind(&MUCController::handleOccupantJoined, this, _1));
 	muc_->onOccupantPresenceChange.connect(boost::bind(&MUCController::handleOccupantPresenceChange, this, _1));
 	muc_->onOccupantLeft.connect(boost::bind(&MUCController::handleOccupantLeft, this, _1, _2, _3));
+	loginCheckTimer_->onTick.connect(boost::bind(&MUCController::handleJoinTimeoutTick, this));
+	loginCheckTimer_->start();
+
+	muc_->joinAs(nick);
 	chatWindow_->convertToMUC();
+	chatWindow_->addSystemMessage("Trying to join room " + toJID_.toString());
+	joined_ = false;
 	if (avatarManager_ != NULL) {
 		avatarChangedConnection_ = (avatarManager_->onAvatarChanged.connect(boost::bind(&MUCController::handleAvatarChanged, this, _1, _2)));
 	} 
@@ -59,6 +72,22 @@ MUCController::~MUCController() {
 	delete muc_;
 	chatWindow_->setRosterModel(NULL);
 	delete roster_;
+	loginCheckTimer_->stop();
+}
+
+void MUCController::handleJoinTimeoutTick() {
+	loginCheckTimer_->stop();
+	chatWindow_->addSystemMessage("Room " + toJID_.toString() + " is not responding. This operation may never complete");
+}
+
+void MUCController::handleJoinComplete(MUC::JoinResult result) {
+	loginCheckTimer_->stop();
+	if (result == MUC::JoinFailed) {
+		chatWindow_->addErrorMessage("Unable to join this room");
+	} 
+	joined_ = true;
+	String joinMessage = "You have joined room " + toJID_.toString() + " as " + nick_;
+	chatWindow_->addSystemMessage(joinMessage);
 }
 
 void MUCController::handleAvatarChanged(const JID& jid, const String&) {
