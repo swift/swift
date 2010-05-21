@@ -42,17 +42,23 @@ QtEventWindow::QtEventWindow(UIEventStream* eventStream, QWidget* parent) : QWid
 	view_->setIndentation(0);
 	view_->setRootIsDecorated(true);
 	
-	QPushButton* readButton = new QPushButton("Read Notice", this);
-	layout->addWidget(readButton);
-	connect(readButton, SIGNAL(clicked()), this, SLOT(handleReadClicked()));
-
+	readButton_ = new QPushButton("Read Notice", this);
+	layout->addWidget(readButton_);
+	readButton_->setEnabled(false);
+	connect(readButton_, SIGNAL(clicked()), this, SLOT(handleReadClicked()));
+	connect(view_, SIGNAL(clicked(const QModelIndex&)), this, SLOT(handleItemClicked(const QModelIndex&)));
 	connect(view_, SIGNAL(activated(const QModelIndex&)), this, SLOT(handleItemActivated(const QModelIndex&)));
+	
 }
 
 QtEventWindow::~QtEventWindow() {
 	delete model_;
 	delete delegate_;
 	/* Not view_ because this is the parent */
+}
+
+void QtEventWindow::handleItemClicked(const QModelIndex&) {
+	readButton_->setEnabled(true);
 }
 
 void QtEventWindow::handleReadClicked() {

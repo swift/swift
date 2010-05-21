@@ -16,6 +16,8 @@
 #include "Swift/QtUI/EventViewer/EventModel.h"
 #include "Swift/QtUI/EventViewer/EventDelegate.h"
 
+class QPushButton;
+
 namespace Swift {
 	class QtEventWindow : public QWidget, public EventWindow {
 		Q_OBJECT
@@ -28,12 +30,14 @@ namespace Swift {
 			void onNewEventCountUpdated(int count);
 		private slots:
 			void handleItemActivated(const QModelIndex& item);
+			void handleItemClicked(const QModelIndex& item);
 			void handleReadClicked();
 		private:
 			EventModel* model_;
 			EventDelegate* delegate_;
 			UIEventStream* eventStream_;
 			QTreeView* view_;
+			QPushButton* readButton_;
 	};
 		
 }
