@@ -45,7 +45,6 @@ MUCController::MUCController (
 	ChatControllerBase(self, stanzaChannel, iqRouter, chatWindowFactory, muc, presenceOracle, avatarManager, useDelayForLatency, uiEventStream),
 			muc_(new MUC(stanzaChannel, presenceSender, muc)), 
 	nick_(nick) {
-	loginCheckTimer_ = boost::shared_ptr<Timer>(timerFactory->createTimer(MUC_JOIN_WARNING_TIMEOUT_MILLISECONDS));
 	parting_ = false;
 	events_ = uiEventStream;
 	
@@ -53,11 +52,16 @@ MUCController::MUCController (
 	chatWindow_->setRosterModel(roster_);
 	chatWindow_->onClosed.connect(boost::bind(&MUCController::handleWindowClosed, this));
 	muc_->onJoinComplete.connect(boost::bind(&MUCController::handleJoinComplete, this, _1));
+	muc_->onJoinFailed.connect(boost::bind(&MUCController::handleJoinFailed, this, _1));
 	muc_->onOccupantJoined.connect(boost::bind(&MUCController::handleOccupantJoined, this, _1));
 	muc_->onOccupantPresenceChange.connect(boost::bind(&MUCController::handleOccupantPresenceChange, this, _1));
 	muc_->onOccupantLeft.connect(boost::bind(&MUCController::handleOccupantLeft, this, _1, _2, _3));
-	loginCheckTimer_->onTick.connect(boost::bind(&MUCController::handleJoinTimeoutTick, this));
-	loginCheckTimer_->start();
+	muc_->onOccupantRoleChanged.connect(boost::bind(&MUCController::handleOccupantRoleChanged, this, _1, _2, _3));
+	if (timerFactory) {
+		loginCheckTimer_ = boost::shared_ptr<Timer>(timerFactory->createTimer(MUC_JOIN_WARNING_TIMEOUT_MILLISECONDS));
+		loginCheckTimer_->onTick.connect(boost::bind(&MUCController::handleJoinTimeoutTick, this));
+		loginCheckTimer_->start();
+	}
 
 	muc_->joinAs(nick);
 	chatWindow_->convertToMUC();
@@ -72,21 +76,51 @@ MUCController::~MUCController() {
 	delete muc_;
 	chatWindow_->setRosterModel(NULL);
 	delete roster_;
-	loginCheckTimer_->stop();
+	if (loginCheckTimer_) {
+		loginCheckTimer_->stop();
+	}
 }
 
 void MUCController::handleJoinTimeoutTick() {
-	loginCheckTimer_->stop();
+	receivedActivity();
 	chatWindow_->addSystemMessage("Room " + toJID_.toString() + " is not responding. This operation may never complete");
 }
 
-void MUCController::handleJoinComplete(MUC::JoinResult result) {
-	loginCheckTimer_->stop();
-	if (result == MUC::JoinFailed) {
-		chatWindow_->addErrorMessage("Unable to join this room");
-	} 
+void MUCController::receivedActivity() {
+	if (loginCheckTimer_) {
+		loginCheckTimer_->stop();
+	}
+}
+
+void MUCController::handleJoinFailed(boost::shared_ptr<ErrorPayload> error) {
+	receivedActivity();
+	String errorMessage = "Unable to join this room";
+	String rejoinNick;
+	if (error) {
+		switch (error->getCondition()) {
+		case ErrorPayload::Conflict: rejoinNick = nick_ + "_"; errorMessage += " as " + nick_ + ", retrying as " + rejoinNick; break;
+		case ErrorPayload::JIDMalformed: errorMessage += ", no nickname specified";break;
+		case ErrorPayload::NotAuthorized: errorMessage += ", a password needed";break;
+		case ErrorPayload::RegistrationRequired: errorMessage += ", only members may join"; break;
+		case ErrorPayload::Forbidden: errorMessage += ", you are banned from the room"; break;
+		case ErrorPayload::ServiceUnavailable: errorMessage += ", the room is full";break;
+		case ErrorPayload::ItemNotFound: errorMessage += ", the room does not exist";break;
+			
+		default: break;
+		}
+	}
+	errorMessage += ".";
+	chatWindow_->addErrorMessage(errorMessage);
+	if (!rejoinNick.isEmpty()) {
+		muc_->joinAs(rejoinNick);
+	}
+}
+
+void MUCController::handleJoinComplete(const String& nick) {
+	receivedActivity();
 	joined_ = true;
-	String joinMessage = "You have joined room " + toJID_.toString() + " as " + nick_;
+	String joinMessage = "You have joined room " + toJID_.toString() + " as " + nick;
+	nick_ = nick;
 	chatWindow_->addSystemMessage(joinMessage);
 }
 
@@ -105,18 +139,76 @@ void MUCController::handleWindowClosed() {
 }
 
 void MUCController::handleOccupantJoined(const MUCOccupant& occupant) {
-	JID jid(JID(toJID_.getNode(), toJID_.getDomain(), occupant.getNick()));
-	roster_->addContact(jid, occupant.getNick(), "Occupants");
+	receivedActivity();
+	JID jid(nickToJID(occupant.getNick()));
+	roster_->addContact(jid, occupant.getNick(), roleToGroupName(occupant.getRole()));
+	if (joined_) {
+		String joinString = occupant.getNick() + " has joined the room";
+		MUCOccupant::Role role = occupant.getRole();
+		if (role != MUCOccupant::NoRole && role != MUCOccupant::Participant) {
+			joinString += " as a " + roleToFriendlyName(role);
+
+		}
+		joinString += ".";
+		chatWindow_->addSystemMessage(joinString);
+	}
 	if (avatarManager_ != NULL) {
 		handleAvatarChanged(jid, "dummy");
 	}
 }
 
-void MUCController::handleOccupantLeft(const MUCOccupant& occupant, MUC::LeavingType, const String& /*reason*/) {
+String MUCController::roleToFriendlyName(MUCOccupant::Role role) {
+	switch (role) {
+	case MUCOccupant::Moderator: return "moderator";
+	case MUCOccupant::Participant: return "participant";
+	case MUCOccupant::Visitor: return "visitor";
+	case MUCOccupant::NoRole: return "";
+	}
+	return "";
+}
+
+JID MUCController::nickToJID(const String& nick) {
+	return JID(toJID_.getNode(), toJID_.getDomain(), nick);
+}
+
+void MUCController::preHandleIncomingMessage(boost::shared_ptr<Message>) {
+	/*Buggy implementations never send the status code, so use an incoming message as a hint that joining's done (e.g. the old ejabberd on psi-im.org).*/
+	receivedActivity();
+	joined_ = true;
+}
+
+void MUCController::handleOccupantRoleChanged(const String& nick, const MUCOccupant::Role& newRole, const MUCOccupant::Role& oldRole) {
+	receivedActivity();
+	JID jid(nickToJID(nick));
+	roster_->removeContactFromGroup(jid, roleToGroupName(oldRole));
+	roster_->addContact(jid, nick, roleToGroupName(newRole));
+	chatWindow_->addSystemMessage(nick + " is now a " + roleToFriendlyName(newRole));
+}
+
+String MUCController::roleToGroupName(MUCOccupant::Role role) {
+	String result;
+	switch (role) {
+	case MUCOccupant::Moderator: result = "Moderators"; break;
+	case MUCOccupant::Participant: result = "Participants"; break;
+	case MUCOccupant::Visitor: result = "Visitors"; break;
+	case MUCOccupant::NoRole: result = "Occupants"; break;
+	default: assert(false);
+	}
+	return result;
+}
+
+void MUCController::handleOccupantLeft(const MUCOccupant& occupant, MUC::LeavingType, const String& reason) {
+	String partMessage = occupant.getNick() + " has left the room";
+	if (!reason.isEmpty()) {
+		partMessage += " (" + reason + ")";
+	}
+	partMessage += ".";
+	chatWindow_->addSystemMessage(partMessage);
 	roster_->removeContact(JID(toJID_.getNode(), toJID_.getDomain(), occupant.getNick()));
 }
 
 void MUCController::handleOccupantPresenceChange(boost::shared_ptr<Presence> presence) {
+	receivedActivity();
 	roster_->applyOnItems(SetPresence(presence, JID::WithResource));
 }
 

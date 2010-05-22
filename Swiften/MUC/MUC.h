@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Remko Tronçon
+ * Copyright (c) 2010 Kevin Smith
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -25,10 +25,7 @@ namespace Swift {
 	class MUC {
 		public:
 			enum JoinResult { JoinSucceeded, JoinFailed };
-			enum LeavingType { Part };
-			enum Roles {Moderator, Participant, Visitor, NoRole};
-			enum Affiliations {Owner, Admin, Member, Outcast, NoAffiliation};
-			
+			enum LeavingType { Part };			
 
 		public:
 			MUC(StanzaChannel* stanzaChannel, PresenceSender* presenceSender, const JID &muc);
@@ -41,8 +38,11 @@ namespace Swift {
 			void handleIncomingMessage(boost::shared_ptr<Message> message);
 
 		public:
-			boost::signal<void (JoinResult)> onJoinComplete;
+			boost::signal<void (const String& /*nick*/)> onJoinComplete;
+			boost::signal<void (boost::shared_ptr<ErrorPayload>)> onJoinFailed;
 			boost::signal<void (boost::shared_ptr<Presence>)> onOccupantPresenceChange;
+			boost::signal<void (const String&, const MUCOccupant::Role& /*new*/, const MUCOccupant::Role& /*old*/)> onOccupantRoleChanged;
+			boost::signal<void (const String&, const MUCOccupant::Affiliation& /*new*/, const MUCOccupant::Affiliation& /*old*/)> onOccupantAffiliationChanged;
 			boost::signal<void (const MUCOccupant&)> onOccupantJoined;
 			boost::signal<void (const MUCOccupant&, LeavingType, const String& /*reason*/)> onOccupantLeft;
 			/* boost::signal<void (const MUCInfo&)> onInfoResult; */
@@ -66,7 +66,7 @@ namespace Swift {
 			StanzaChannel* stanzaChannel;
 			PresenceSender* presenceSender;
 			std::map<String, MUCOccupant> occupants;
-			bool firstPresenceSeen;
+			bool joinComplete_;
 			boost::bsignals::scoped_connection scopedConnection_;
 	};
 }

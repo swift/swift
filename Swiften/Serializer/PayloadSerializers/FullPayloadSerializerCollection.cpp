@@ -13,6 +13,7 @@
 #include "Swiften/Serializer/PayloadSerializers/ErrorSerializer.h"
 #include "Swiften/Serializer/PayloadSerializers/RosterSerializer.h"
 #include "Swiften/Serializer/PayloadSerializers/MUCPayloadSerializer.h"
+#include "Swiften/Serializer/PayloadSerializers/MUCUserPayloadSerializer.h"
 #include "Swiften/Serializer/PayloadSerializers/SoftwareVersionSerializer.h"
 #include "Swiften/Serializer/PayloadSerializers/StatusSerializer.h"
 #include "Swiften/Serializer/PayloadSerializers/StatusShowSerializer.h"

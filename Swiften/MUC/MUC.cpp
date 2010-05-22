@@ -1,10 +1,12 @@
 /*
- * Copyright (c) 2010 Remko Tronçon
+ * Copyright (c) 2010 Kevin Smith
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
 #include "Swiften/MUC/MUC.h"
+
+#include <iostream>
 
 #include <boost/bind.hpp>
 #include <boost/shared_ptr.hpp>
@@ -12,6 +14,7 @@
 #include "Swiften/Presence/PresenceSender.h"
 #include "Swiften/Client/StanzaChannel.h"
 #include "Swiften/Elements/IQ.h"
+#include "Swiften/Elements/MUCUserPayload.h"
 #include "Swiften/Elements/MUCPayload.h"
 
 namespace Swift {
@@ -25,9 +28,9 @@ MUC::MUC(StanzaChannel* stanzaChannel, PresenceSender* presenceSender, const JID
 //FIXME: discover reserved nickname
 
 void MUC::joinAs(const String &nick) {
-	//FIXME: password
-	//FIXME: history request
-	firstPresenceSeen = false;
+	//TODO: password
+	//TODO: history request
+	joinComplete_ = false;
 
 	ownMUCJID = JID(ownMUCJID.getNode(), ownMUCJID.getDomain(), nick);
 
@@ -45,53 +48,73 @@ void MUC::handleIncomingPresence(boost::shared_ptr<Presence> presence) {
 	if (!isFromMUC(presence->getFrom())) {
 		return;
 	}
-
-	if (!firstPresenceSeen) {
+	boost::shared_ptr<MUCUserPayload> mucPayload;
+	foreach (boost::shared_ptr<MUCUserPayload> payload, presence->getPayloads<MUCUserPayload>()) {
+		if (payload->getItems().size() > 0 || payload->getStatusCodes().size() > 0) {
+			mucPayload = payload;
+		}
+	}
+	
+	if (!joinComplete_) {
 		if (presence->getType() == Presence::Error) {
-			onJoinComplete(JoinFailed);
-			//FIXME: parse error element
-			//Wrong password
-			//Members-only
-			//Banned
-			//Nickname-conflict
-			//Max-users
-			//Locked-room
-			
+			String reason;
+			onJoinFailed(presence->getPayload<ErrorPayload>());
 			return;
 		}
-		firstPresenceSeen = true;
-		onJoinComplete(JoinSucceeded);
-		presenceSender->addDirectedPresenceReceiver(ownMUCJID);
 	}
 
 	String nick = presence->getFrom().getResource();
 	if (nick.isEmpty()) {
 		return;
 	}
-	//FIXME: occupant affiliation, role.
-	//FIXME: if status code='110', This is me, stop talking.
-	//FIXME: what's status 210?
+	MUCOccupant::Role role(MUCOccupant::NoRole);
+	MUCOccupant::Affiliation affiliation(MUCOccupant::NoAffiliation);
+	if (mucPayload && mucPayload->getItems().size() > 0) {
+		role = mucPayload->getItems()[0].role;
+		affiliation = mucPayload->getItems()[0].affiliation;
+	}
+
 	//100 is non-anonymous
-	//FIXME: 100 may also be specified in a <message/>
-	//Once I've got my nick (110), everything new is a join
+	//TODO: 100 may also be specified in a <message/>
 	//170 is room logging to http
-	//FIXME: full JIDs
-	//FIXME: Nick changes
+	//TODO: Nick changes
 	if (presence->getType() == Presence::Unavailable) {
 		std::map<String,MUCOccupant>::iterator i = occupants.find(nick);
 		if (i != occupants.end()) {
-			//FIXME: part type
+			//TODO: part type
 			onOccupantLeft(i->second, Part, "");
 			occupants.erase(i);
 		}
 	}
 	else if (presence->getType() == Presence::Available) {
-		std::pair<std::map<String,MUCOccupant>::iterator, bool> result = occupants.insert(std::make_pair(nick, MUCOccupant(nick)));
+		std::map<String, MUCOccupant>::iterator it = occupants.find(nick);
+		if (it != occupants.end()) {
+			MUCOccupant oldOccupant = it->second;
+			if (oldOccupant.getRole() != role) {
+				onOccupantRoleChanged(nick, role, oldOccupant.getRole());
+			}
+			if (oldOccupant.getAffiliation() != affiliation) {
+				onOccupantAffiliationChanged(nick, affiliation, oldOccupant.getAffiliation());
+			}
+		}
+		std::pair<std::map<String, MUCOccupant>::iterator, bool> result = occupants.insert(std::make_pair(nick, MUCOccupant(nick, role, affiliation)));
 		if (result.second) {
 			onOccupantJoined(result.first->second);
 		}
 		onOccupantPresenceChange(presence);
 	}
+	if (mucPayload && !joinComplete_) {
+		foreach (MUCUserPayload::StatusCode status, mucPayload->getStatusCodes()) {
+			if (status.code == 110) {
+				/* Simply knowing this is your presence is enough, 210 doesn't seem to be necessary. */
+				joinComplete_ = true;
+				ownMUCJID = presence->getFrom();
+				onJoinComplete(getOwnNick());
+				presenceSender->addDirectedPresenceReceiver(ownMUCJID);
+			}
+		}
+	}
+
 }
 
 //FIXME: Recognise Topic changes

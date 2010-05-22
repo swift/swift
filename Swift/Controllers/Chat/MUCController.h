@@ -4,8 +4,7 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#ifndef SWIFTEN_MUCController_H
-#define SWIFTEN_MUCController_H
+#pragma once
 
 #include <boost/shared_ptr.hpp>
 #include <boost/signals.hpp>
@@ -47,9 +46,15 @@ namespace Swift {
 			void handleOccupantJoined(const MUCOccupant& occupant);
 			void handleOccupantLeft(const MUCOccupant& occupant, MUC::LeavingType type, const String& reason);
 			void handleOccupantPresenceChange(boost::shared_ptr<Presence> presence);
-			void handleJoinComplete(MUC::JoinResult result);
+			void handleOccupantRoleChanged(const String& nick, const MUCOccupant::Role& newRole, const MUCOccupant::Role& oldRole);
+			void handleJoinComplete(const String& nick);
+			void handleJoinFailed(boost::shared_ptr<ErrorPayload> error);
 			void handleJoinTimeoutTick();
-
+			String roleToGroupName(MUCOccupant::Role role);
+			JID nickToJID(const String& nick);
+			String roleToFriendlyName(MUCOccupant::Role role);
+			void receivedActivity();
+			void preHandleIncomingMessage(boost::shared_ptr<Message>);
 		private:
 			MUC* muc_;
 			UIEventStream* events_;
@@ -61,5 +66,4 @@ namespace Swift {
 			boost::shared_ptr<Timer> loginCheckTimer_;
 	};
 }
-#endif
 
