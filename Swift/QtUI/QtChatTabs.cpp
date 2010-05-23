@@ -25,6 +25,8 @@ QtChatTabs::QtChatTabs() : QWidget() {
 	/*Closable tabs are only in Qt4.5 and later*/
 	tabs_->setTabsClosable(true);
 	connect(tabs_, SIGNAL(tabCloseRequested(int)), this, SLOT(handleTabCloseRequested(int)));
+#else
+#warning Qt 4.5 or later is needed. Trying anyway, some things will be disabled.
 #endif
 	QVBoxLayout *layout = new QVBoxLayout;
 	layout->setSpacing(0);
