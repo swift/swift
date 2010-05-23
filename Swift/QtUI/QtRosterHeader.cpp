@@ -17,84 +17,68 @@
 
 namespace Swift {
 QtRosterHeader::QtRosterHeader(QWidget* parent) : QWidget(parent) {
-	QVBoxLayout* vLayout = new QVBoxLayout();
-	vLayout->setSpacing(0);
-	vLayout->setContentsMargins(0,0,0,0);
-	setLayout(vLayout);
+	QHBoxLayout* topLayout = new QHBoxLayout();
+	topLayout->setSpacing(0);
+	topLayout->setContentsMargins(0,0,0,0);
+	setLayout(topLayout);
+	setMinimumHeight(64);
+	setMaximumHeight(64);
 
-	toolBar_ = new QToolBar(this);
-	vLayout->addWidget(toolBar_);
+	avatarLabel_ = new QLabel(this);
+	avatarLabel_->setMinimumSize(64, 64);
+	avatarLabel_->setMaximumSize(64, 64);
+	setAvatar(":/icons/avatar.png");
+	avatarLabel_->setScaledContents(true);
+	topLayout->addWidget(avatarLabel_);
 
-	statusWidget_ = new QtStatusWidget(this);
-	toolBar_->addWidget(statusWidget_);
-	statusWidget_->setMaximumWidth(60);
-	connect(statusWidget_, SIGNAL(onChangeStatusRequest(StatusShow::Type)), this, SLOT(handleChangeStatusRequest(StatusShow::Type)));
+	QVBoxLayout* rightLayout = new QVBoxLayout();
+	rightLayout->setSpacing(4);
+	rightLayout->setContentsMargins(4,4,4,4);
+	topLayout->addLayout(rightLayout);
 
 	nameLabel_ = new QLabel(this);
 	setName("Me");
-	toolBar_->addWidget(nameLabel_);
-	//nameLabel_->setMaximumWidth(width() - 5 - statusWidget_->width());
-		
-	expandedLayout_ = new QHBoxLayout();
-	expandedLayout_->setContentsMargins(0,0,0,0);
-	expandedLayout_->setSpacing(0);
+	rightLayout->addWidget(nameLabel_);
+
+
+	statusWidget_ = new QtStatusWidget(this);
+	connect(statusWidget_, SIGNAL(onChangeStatusRequest(StatusShow::Type, const QString&)), this, SLOT(handleChangeStatusRequest(StatusShow::Type, const QString&)));
+	rightLayout->addWidget(statusWidget_);
+	show();
+	//statusWidget_->setMaximumWidth(60);
+
+	// statusEdit_ = new QtTextEdit(this);
+	// expandedLayout_->addWidget(statusEdit_);
+	// statusEdit_->resize(statusEdit_->width(), 64);
+	// statusEdit_->setAcceptRichText(false);
+	// statusEdit_->setReadOnly(false);
+	// setStatusText("");
+	// connect(statusEdit_, SIGNAL(returnPressed()), this, SLOT(emitStatus()));
+
+	//setSizePolicy(QSizePolicy(QSizePolicy::Minimum, QSizePolicy::Fixed));
+}
+
+// void QtRosterHeader::mousePressEvent(QMouseEvent* event) {
+// 	if (nameLabel_->underMouse() || (toolBar_->underMouse() && !statusWidget_->underMouse())) {
+// 		toggleExpanded();
+// 		event->accept();
+// 	} else {
+// 		event->ignore();
+// 	}
 	
-	avatarLabel_ = new QLabel(this);
-	setAvatar(":/icons/avatar.png");
-	expandedLayout_->addWidget(avatarLabel_);
-	
-	statusEdit_ = new QtTextEdit(this);
-	expandedLayout_->addWidget(statusEdit_);
-	statusEdit_->resize(statusEdit_->width(), 64);
-	statusEdit_->setAcceptRichText(false);
-	statusEdit_->setReadOnly(false);
-	setStatusText("");
+// }
 
-	vLayout->addLayout(expandedLayout_);
-	expanded_ = false;
-	avatarLabel_->hide();
-	statusEdit_->hide();
-	connect(statusEdit_, SIGNAL(returnPressed()), this, SLOT(emitStatus()));
 
-	setSizePolicy(QSizePolicy(QSizePolicy::Minimum, QSizePolicy::Fixed));
+void QtRosterHeader::handleChangeStatusRequest(StatusShow::Type type, const QString& text) {
+	emit onChangeStatusRequest(type, text);
 }
 
-void QtRosterHeader::mousePressEvent(QMouseEvent* event) {
-	if (nameLabel_->underMouse() || (toolBar_->underMouse() && !statusWidget_->underMouse())) {
-		toggleExpanded();
-		event->accept();
-	} else {
-		event->ignore();
-	}
-	
-}
-
-void QtRosterHeader::toggleExpanded() {
-	expanded_ = !expanded_;
-	if (expanded_) {
-		expandedLayout_->setContentsMargins(5,5,5,5);
-		expandedLayout_->setSpacing(11);
-		avatarLabel_->show();
-		statusEdit_->show();
-	} else {
-		expandedLayout_->setContentsMargins(0,0,0,0);
-		expandedLayout_->setSpacing(0);
-		avatarLabel_->hide();
-		statusEdit_->hide();
-	}
-}
-
-void QtRosterHeader::handleChangeStatusRequest(StatusShow::Type type) {
-	Q_UNUSED(type);
-	emitStatus();
-}
-
-void QtRosterHeader::emitStatus() {
-	emit onChangeStatusRequest(statusWidget_->getSelectedStatusShow(), statusEdit_->toPlainText());
-}
+//void QtRosterHeader::emitStatus() {
+//	emit onChangeStatusRequest(statusWidget_->getSelectedStatusShow(), statusEdit_->toPlainText());
+//}
 
 void QtRosterHeader::setStatusText(const QString& statusMessage) {
-	statusEdit_->setText(statusMessage);
+	statusWidget_->setStatusText(statusMessage);
 }
 
 void QtRosterHeader::setStatusType(StatusShow::Type type) {
@@ -103,40 +87,48 @@ void QtRosterHeader::setStatusType(StatusShow::Type type) {
 
 void QtRosterHeader::setName(const QString& name) {
 	name_ = name;
-	resizeNameLabel();
-}
-
-void QtRosterHeader::resizeNameLabel() {	
 	QString escapedName = name_;
 	escapedName.replace("<","&lt;");
-	nameLabel_->setText("<b>" + escapedName + "</b>");
-	return;
-	//FIXME: Make this not an infinite loop, so it can be continued.
-	
-	int reductionCount = 0;
-	while (nameLabel_->sizeHint().width() + statusWidget_->width() + 30 > width()) {
-		//qDebug() << nameLabel_->sizeHint().width() << " " << statusWidget_->width() << " " << width();
-		reductionCount++;
-		QString reducedName = name_;
-		reducedName.remove(name_.length() - reductionCount, reductionCount);
-		reducedName.replace("<","&lt;");
-		nameLabel_->setText("<b>" + reducedName +  + "...</b>");
-	//	qDebug() << "Shrunk " << escapedName << " down to " << reducedName;
-	}
-	nameLabel_->setToolTip(name_);
+ 	nameLabel_->setText("<b>" + escapedName + "</b>");
+//	resizeNameLabel();
 }
 
-void QtRosterHeader::resizeEvent(QResizeEvent* event) {
-	QWidget::resizeEvent(event);
-	resizeNameLabel();
-}
+// void QtRosterHeader::resizeNameLabel() {	
+// 	QString escapedName = name_;
+// 	escapedName.replace("<","&lt;");
+// 	nameLabel_->setText("<b>" + escapedName + "</b>");
+// 	return;
+// 	//FIXME: Make this not an infinite loop, so it can be continued.
+	
+// 	int reductionCount = 0;
+// 	while (nameLabel_->sizeHint().width() + statusWidget_->width() + 30 > width()) {
+// 		//qDebug() << nameLabel_->sizeHint().width() << " " << statusWidget_->width() << " " << width();
+// 		reductionCount++;
+// 		QString reducedName = name_;
+// 		reducedName.remove(name_.length() - reductionCount, reductionCount);
+// 		reducedName.replace("<","&lt;");
+// 		nameLabel_->setText("<b>" + reducedName +  + "...</b>");
+// 	//	qDebug() << "Shrunk " << escapedName << " down to " << reducedName;
+// 	}
+// 	nameLabel_->setToolTip(name_);
+// }
+
+//void QtRosterHeader::resizeEvent(QResizeEvent* event) {
+//	QWidget::resizeEvent(event);
+//	resizeNameLabel();
+//}
 
 void QtRosterHeader::setAvatar(const QString& path) {
-	avatarLabel_->setPixmap(QIcon(path).pixmap(64, 64));
+	QIcon avatar(path);
+	if (avatar.isNull()) {
+		qDebug() << "Setting null avatar";
+		avatar = QIcon(":/icons/avatar.png");
+	} 
+	avatarLabel_->setPixmap(avatar.pixmap(64, 64));
 }
 
-QSize QtRosterHeader::sizeHint() const {
-	return minimumSizeHint();
-}
+//QSize QtRosterHeader::sizeHint() const {
+//	return minimumSizeHint();
+//}
 
 }

@@ -10,23 +10,50 @@
 #include "Swiften/Elements/StatusShow.h"
 
 #include <QWidget>
+#include <QMap>
+#include <QIcon>
 
 class QComboBox;
+class QLabel;
+class QStackedWidget;
 class QLineEdit;
+class QListWidget;
+class QListWidgetItem;
 
 namespace Swift {
 	class QtStatusWidget : public QWidget {
 		Q_OBJECT
 		public:
 			QtStatusWidget(QWidget *parent);
+			~QtStatusWidget();
 			StatusShow::Type getSelectedStatusShow();
 			void setStatusType(StatusShow::Type type);
 		signals:
-			void onChangeStatusRequest(StatusShow::Type showType);
+			void onChangeStatusRequest(StatusShow::Type showType, const QString& text);
+		public slots:
+			void setStatusText(const QString& text);
 		private slots:
-			void handleTypeSelected(int index);
+			void generateList();
+			void handleClicked();
+			void handleEditComplete();
+			void handleEditCancelled();
+		protected slots:
+			virtual void mousePressEvent(QMouseEvent* event);
+			void handleItemClicked(QListWidgetItem* item);
 		private:
-			QComboBox *types_;
+			void viewMode();
+			//QComboBox *types_;
+			QStackedWidget* stack_;
+			QLabel* statusIcon_;
+			QLabel* statusTextLabel_;
+			QLineEdit* statusEdit_;
+			QString statusText_;
+			QMap<StatusShow::Type, QIcon> icons_;
+			StatusShow::Type selectedStatusType_;
+			bool isClicking_;
+			QListWidget* menu_;
+			QCursor editCursor_;
+			QCursor viewCursor_;
 	};
 }
 
