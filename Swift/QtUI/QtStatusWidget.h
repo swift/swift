@@ -48,12 +48,14 @@ namespace Swift {
 			QLabel* statusTextLabel_;
 			QtLineEdit* statusEdit_;
 			QString statusText_;
+			QString newStatusText_;
 			QMap<StatusShow::Type, QIcon> icons_;
 			StatusShow::Type selectedStatusType_;
 			bool isClicking_;
 			QListWidget* menu_;
 			QCursor editCursor_;
 			QCursor viewCursor_;
+			bool editing_;
 	};
 }
 

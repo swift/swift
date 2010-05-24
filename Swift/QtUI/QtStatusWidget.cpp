@@ -90,7 +90,7 @@ QtStatusWidget::~QtStatusWidget() {
 }
 
 void QtStatusWidget::handleApplicationFocusChanged(QWidget* /*old*/, QWidget* now) {
-	if (stack_->currentIndex() == 0) {
+	if (!editing_ || stack_->currentIndex() == 0) {
 		return;
 	}
 	if (!now || (now != menu_ && now != statusEdit_ && !now->isAncestorOf(statusEdit_) && !now->isAncestorOf(menu_) && !statusEdit_->isAncestorOf(now) && !menu_->isAncestorOf(now))) {
@@ -106,7 +106,11 @@ void QtStatusWidget::mousePressEvent(QMouseEvent*) {
 }
 
 void QtStatusWidget::generateList() {
+	if (!editing_) {
+		return;
+	}
 	QString text = statusEdit_->text();
+	newStatusText_ = text;
 	menu_->clear();
 	foreach (StatusShow::Type type, icons_.keys()) {
 		QListWidgetItem* item = new QListWidgetItem(text, menu_);
@@ -117,6 +121,7 @@ void QtStatusWidget::generateList() {
 
 
 void QtStatusWidget::handleClicked() {
+	editing_ = true;
 	QPoint point = mapToGlobal(QPoint(0, height()));
 	int x = point.x();
 	int y = point.y();
@@ -143,17 +148,20 @@ void QtStatusWidget::handleClicked() {
 }
 
 void QtStatusWidget::viewMode() {
+	editing_ = false;
 	menu_->hide();
 	stack_->setCurrentIndex(0);	
 }
 
 void QtStatusWidget::handleEditComplete() {
-	statusText_ = statusEdit_->text();
+	editing_ = false;
+	statusText_ = newStatusText_;
 	viewMode();
 	emit onChangeStatusRequest(selectedStatusType_, statusText_);
 }
 
 void QtStatusWidget::handleEditCancelled() {
+	editing_ = false;
 	setStatusText(statusText_);
 	viewMode();
 }
@@ -163,6 +171,7 @@ StatusShow::Type QtStatusWidget::getSelectedStatusShow() {
 }
 
 void QtStatusWidget::handleItemClicked(QListWidgetItem* item) {
+	editing_ = false;
 	selectedStatusType_ = (StatusShow::Type)(item->data(Qt::UserRole).toInt());
 	handleEditComplete();
 }
