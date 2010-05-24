@@ -74,14 +74,27 @@ QtStatusWidget::QtStatusWidget(QWidget *parent) : QWidget(parent), editCursor_(Q
 
 	menu_ = new QListWidget();
 	menu_->setWindowFlags(Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint | Qt::X11BypassWindowManagerHint );
-	menu_->setAlternatingRowColors(true);		
+	menu_->setAlternatingRowColors(true);
+	menu_->setFocusProxy(statusEdit_);
 
 	connect(menu_, SIGNAL(itemClicked(QListWidgetItem*)), this, SLOT(handleItemClicked(QListWidgetItem*)));
+
+	connect(qApp, SIGNAL(focusChanged(QWidget*, QWidget*)), this, SLOT(handleApplicationFocusChanged(QWidget*, QWidget*)));
+
 	viewMode();
 }
 
 QtStatusWidget::~QtStatusWidget() {
 	delete menu_;
+}
+
+void QtStatusWidget::handleApplicationFocusChanged(QWidget* /*old*/, QWidget* now) {
+	if (stack_->currentIndex() == 0) {
+		return;
+	}
+	if (now != menu_ && now != statusEdit_) {
+		handleEditCancelled();
+	}
 }
 
 void QtStatusWidget::mousePressEvent(QMouseEvent*) {

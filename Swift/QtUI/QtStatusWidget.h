@@ -37,6 +37,7 @@ namespace Swift {
 			void handleClicked();
 			void handleEditComplete();
 			void handleEditCancelled();
+			void handleApplicationFocusChanged(QWidget* old, QWidget* now);
 		protected slots:
 			virtual void mousePressEvent(QMouseEvent* event);
 			void handleItemClicked(QListWidgetItem* item);
