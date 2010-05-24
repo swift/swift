@@ -79,6 +79,7 @@ MainController::MainController(ChatWindowFactory* chatWindowFactory, MainWindowF
 	discoResponder_ = NULL;
 	presenceSender_ = NULL;
 	client_ = NULL;
+	mucSearchController_ = NULL;
 
 	mucSearchWindowFactory_ = mucSearchWindowFactory;
 	eventWindowFactory_ = eventWindowFactory;
