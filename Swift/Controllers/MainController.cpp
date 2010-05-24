@@ -281,21 +281,24 @@ void MainController::sendPresence(boost::shared_ptr<Presence> presence) {
 }
 
 void MainController::handleInputIdleChanged(bool idle) {
-	if (!client_ || !client_->isAvailable()) {
-		return;
-	}
 	if (idle) {
+		if (lastSentPresence_->getShow() != StatusShow::Online) {
+			return;
+		}
 		preIdlePresence_ = lastSentPresence_;
 		boost::shared_ptr<Presence> presence(new Presence());
 		presence->setShow(StatusShow::Away);
-		presence->setStatus("Auto-away");
-		sendPresence(presence);
+		presence->setStatus(lastSentPresence_->getStatus());
+		if (client_ && client_->isAvailable()) {
+			sendPresence(presence);
+		} else {
+			queuedPresence_ = presence;
+		}
 	}
 	else {
-		if (client_) {
+		if (client_ && client_->isAvailable()) {
 			sendPresence(preIdlePresence_);
-		} 
-		else {
+		} else {
 			queuedPresence_ = preIdlePresence_;
 		}
 	}
