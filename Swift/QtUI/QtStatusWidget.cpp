@@ -8,7 +8,6 @@
 
 #include <QBoxLayout>
 #include <QComboBox>
-#include <QLineEdit>
 #include <QLabel>
 #include <QFrame>
 #include <QPoint>
@@ -20,6 +19,7 @@
 #include <QListWidgetItem>
 
 #include "Swift/QtUI/QtElidingLabel.h"
+#include "Swift/QtUI/QtLineEdit.h"
 
 namespace Swift {
 
@@ -64,9 +64,10 @@ QtStatusWidget::QtStatusWidget(QWidget *parent) : QWidget(parent), editCursor_(Q
 	page2Layout->setContentsMargins(0,0,0,0);
 	stack_->addWidget(page2);
 	
-	statusEdit_ = new QLineEdit(this);
+	statusEdit_ = new QtLineEdit(this);
 	page2Layout->addWidget(statusEdit_);
 	connect(statusEdit_, SIGNAL(returnPressed()), this, SLOT(handleEditComplete()));
+	connect(statusEdit_, SIGNAL(escapePressed()), this, SLOT(handleEditCancelled()));
 	connect(statusEdit_, SIGNAL(textChanged(const QString&)), this, SLOT(generateList()));
 
 	setStatusText("");

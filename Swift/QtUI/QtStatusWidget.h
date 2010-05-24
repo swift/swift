@@ -16,11 +16,11 @@
 class QComboBox;
 class QLabel;
 class QStackedWidget;
-class QLineEdit;
 class QListWidget;
 class QListWidgetItem;
 
 namespace Swift {
+	class QtLineEdit;
 	class QtStatusWidget : public QWidget {
 		Q_OBJECT
 		public:
@@ -47,7 +47,7 @@ namespace Swift {
 			QStackedWidget* stack_;
 			QLabel* statusIcon_;
 			QLabel* statusTextLabel_;
-			QLineEdit* statusEdit_;
+			QtLineEdit* statusEdit_;
 			QString statusText_;
 			QMap<StatusShow::Type, QIcon> icons_;
 			StatusShow::Type selectedStatusType_;
