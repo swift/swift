@@ -133,6 +133,7 @@ void QtStatusWidget::handleClicked() {
 
 	menu_->show();
 	activateWindow();
+	statusEdit_->selectAll();
 	stack_->setCurrentIndex(1);
 	statusEdit_->setFocus();
 }
