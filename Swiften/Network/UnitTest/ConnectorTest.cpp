@@ -55,7 +55,7 @@ class ConnectorTest : public CppUnit::TestFixture {
 		}
 
 		void testConnect() {
-			std::auto_ptr<Connector> testling(createConnector());
+			Connector::ref testling(createConnector());
 			resolver->addXMPPClientService("foo.com", host1);
 			resolver->addXMPPClientService("foo.com", host2);
 			resolver->addAddress("foo.com", host3.getAddress());
@@ -69,7 +69,7 @@ class ConnectorTest : public CppUnit::TestFixture {
 		}
 
 		void testConnect_NoSRVHost() {
-			std::auto_ptr<Connector> testling(createConnector());
+			Connector::ref testling(createConnector());
 			resolver->addAddress("foo.com", host3.getAddress());
 
 			testling->start();
@@ -81,7 +81,7 @@ class ConnectorTest : public CppUnit::TestFixture {
 		}
 
 		void testConnect_FirstAddressHostFails() {
-			std::auto_ptr<Connector> testling(createConnector());
+			Connector::ref testling(createConnector());
 
 			HostAddress address1("1.1.1.1");
 			HostAddress address2("2.2.2.2");
@@ -99,7 +99,7 @@ class ConnectorTest : public CppUnit::TestFixture {
 		}
 
 		void testConnect_NoHosts() {
-			std::auto_ptr<Connector> testling(createConnector());
+			Connector::ref testling(createConnector());
 
 			testling->start();
 			eventLoop->processEvents();
@@ -109,7 +109,7 @@ class ConnectorTest : public CppUnit::TestFixture {
 		}
 
 		void testConnect_FirstSRVHostFails() {
-			std::auto_ptr<Connector> testling(createConnector());
+			Connector::ref testling(createConnector());
 			resolver->addXMPPClientService("foo.com", host1);
 			resolver->addXMPPClientService("foo.com", host2);
 			connectionFactory->failingPorts.push_back(host1);
@@ -122,7 +122,7 @@ class ConnectorTest : public CppUnit::TestFixture {
 		}
 
 		void testConnect_AllSRVHostsFailWithoutFallbackHost() {
-			std::auto_ptr<Connector> testling(createConnector());
+			Connector::ref testling(createConnector());
 			resolver->addXMPPClientService("foo.com", host1);
 			resolver->addXMPPClientService("foo.com", host2);
 			connectionFactory->failingPorts.push_back(host1);
@@ -136,7 +136,7 @@ class ConnectorTest : public CppUnit::TestFixture {
 		}
 
 		void testConnect_AllSRVHostsFailWithFallbackHost() {
-			std::auto_ptr<Connector> testling(createConnector());
+			Connector::ref testling(createConnector());
 			resolver->addXMPPClientService("foo.com", host1);
 			resolver->addXMPPClientService("foo.com", host2);
 			resolver->addAddress("foo.com", host3.getAddress());
@@ -152,7 +152,7 @@ class ConnectorTest : public CppUnit::TestFixture {
 		}
 
 		void testConnect_SRVAndFallbackHostsFail() {
-			std::auto_ptr<Connector> testling(createConnector());
+			Connector::ref testling(createConnector());
 			resolver->addXMPPClientService("foo.com", host1);
 			resolver->addAddress("foo.com", host3.getAddress());
 			connectionFactory->failingPorts.push_back(host1);
@@ -166,7 +166,7 @@ class ConnectorTest : public CppUnit::TestFixture {
 		}
 
 		void testConnect_TimeoutDuringResolve() {
-			std::auto_ptr<Connector> testling(createConnector());
+			Connector::ref testling(createConnector());
 			testling->setTimeoutMilliseconds(10);
 			resolver->setIsResponsive(false);
 
@@ -180,7 +180,7 @@ class ConnectorTest : public CppUnit::TestFixture {
 		}
 
 		void testConnect_TimeoutDuringConnect() {
-			std::auto_ptr<Connector> testling(createConnector());
+			Connector::ref testling(createConnector());
 			testling->setTimeoutMilliseconds(10);
 			resolver->addXMPPClientService("foo.com", host1);
 			connectionFactory->isResponsive = false;
@@ -195,7 +195,7 @@ class ConnectorTest : public CppUnit::TestFixture {
 		}
 
 		void testConnect_NoTimeout() {
-			std::auto_ptr<Connector> testling(createConnector());
+			Connector::ref testling(createConnector());
 			testling->setTimeoutMilliseconds(10);
 			resolver->addXMPPClientService("foo.com", host1);
 
@@ -210,8 +210,8 @@ class ConnectorTest : public CppUnit::TestFixture {
 
 
 	private:
-		Connector* createConnector() {
-			Connector* connector = new Connector("foo.com", resolver, connectionFactory, timerFactory);
+		Connector::ref createConnector() {
+			Connector::ref connector = Connector::create("foo.com", resolver, connectionFactory, timerFactory);
 			connector->onConnectFinished.connect(boost::bind(&ConnectorTest::handleConnectorFinished, this, _1));
 			return connector;
 		}

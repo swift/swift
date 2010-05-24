@@ -10,6 +10,7 @@
 #include <boost/shared_ptr.hpp>
 
 #include "Swiften/Network/PlatformDomainNameResolver.h"
+#include "Swiften/Network/Connector.h"
 #include "Swiften/Base/Error.h"
 #include "Swiften/Client/ClientSession.h"
 #include "Swiften/Client/ClientError.h"
@@ -29,7 +30,6 @@ namespace Swift {
 	class TimerFactory;
 	class ClientSession;
 	class BasicSessionStream;
-	class Connector;
 
 	class Client : public StanzaChannel, public IQRouter, public boost::bsignals::trackable {
 		public:
@@ -71,7 +71,7 @@ namespace Swift {
 			JID jid_;
 			String password_;
 			IDGenerator idGenerator_;
-			boost::shared_ptr<Connector> connector_;
+			Connector::ref connector_;
 			ConnectionFactory* connectionFactory_;
 			TimerFactory* timerFactory_;
 			TLSLayerFactory* tlsLayerFactory_;

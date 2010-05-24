@@ -30,10 +30,10 @@ void Connector::start() {
 	assert(!timer);
 	queriedAllServices = false;
 	serviceQuery = resolver->createServiceQuery("_xmpp-client._tcp." + hostname);
-	serviceQuery->onResult.connect(boost::bind(&Connector::handleServiceQueryResult, this, _1));
+	serviceQuery->onResult.connect(boost::bind(&Connector::handleServiceQueryResult, shared_from_this(), _1));
 	if (timeoutMilliseconds > 0) {
 		timer = timerFactory->createTimer(timeoutMilliseconds);
-		timer->onTick.connect(boost::bind(&Connector::handleTimeout, this));
+		timer->onTick.connect(boost::bind(&Connector::handleTimeout, shared_from_this()));
 		timer->start();
 	}
 	serviceQuery->run();
@@ -42,7 +42,7 @@ void Connector::start() {
 void Connector::queryAddress(const String& hostname) {
 	assert(!addressQuery);
 	addressQuery = resolver->createAddressQuery(hostname);
-	addressQuery->onResult.connect(boost::bind(&Connector::handleAddressQueryResult, this, _1, _2));
+	addressQuery->onResult.connect(boost::bind(&Connector::handleAddressQueryResult, shared_from_this(), _1, _2));
 	addressQuery->run();
 }
 
@@ -112,7 +112,7 @@ void Connector::tryConnect(const HostAddressPort& target) {
 	assert(!currentConnection);
 	//std::cout << "Connector::tryConnect() " << target.getAddress().toString() << " " << target.getPort() << std::endl;
 	currentConnection = connectionFactory->createConnection();
-	currentConnection->onConnectFinished.connect(boost::bind(&Connector::handleConnectionConnectFinished, this, _1));
+	currentConnection->onConnectFinished.connect(boost::bind(&Connector::handleConnectionConnectFinished, shared_from_this(), _1));
 	currentConnection->connect(target);
 }
 

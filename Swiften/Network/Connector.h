@@ -23,9 +23,13 @@ namespace Swift {
 	class ConnectionFactory;
 	class TimerFactory;
 
-	class Connector : public boost::bsignals::trackable {
+	class Connector : public boost::bsignals::trackable, public boost::enable_shared_from_this<Connector> {
 		public:
-			Connector(const String& hostname, DomainNameResolver*, ConnectionFactory*, TimerFactory*);
+			typedef boost::shared_ptr<Connector> ref;
+
+			static Connector::ref create(const String& hostname, DomainNameResolver* resolver, ConnectionFactory* connectionFactory, TimerFactory* timerFactory) {
+				return Connector::ref(new Connector(hostname, resolver, connectionFactory, timerFactory));
+			}
 
 			void setTimeoutMilliseconds(int milliseconds);
 			void start();
@@ -33,6 +37,8 @@ namespace Swift {
 			boost::signal<void (boost::shared_ptr<Connection>)> onConnectFinished;
 
 		private:
+			Connector(const String& hostname, DomainNameResolver*, ConnectionFactory*, TimerFactory*);
+
 			void handleServiceQueryResult(const std::vector<DomainNameServiceQuery::Result>& result);
 			void handleAddressQueryResult(const std::vector<HostAddress>& address, boost::optional<DomainNameResolveError> error);
 			void queryAddress(const String& hostname);
@@ -44,6 +50,7 @@ namespace Swift {
 			void handleConnectionConnectFinished(bool error);
 			void finish(boost::shared_ptr<Connection>);
 			void handleTimeout();
+
 
 		private:
 			String hostname;
