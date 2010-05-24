@@ -71,7 +71,7 @@ QtStatusWidget::QtStatusWidget(QWidget *parent) : QWidget(parent), editCursor_(Q
 
 
 	menu_ = new QListWidget();
-	menu_->setWindowFlags(Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint);
+	menu_->setWindowFlags(Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint | Qt::X11BypassWindowManagerHint );
 	menu_->setAlternatingRowColors(true);		
 
 	connect(menu_, SIGNAL(itemClicked(QListWidgetItem*)), this, SLOT(handleItemClicked(QListWidgetItem*)));
