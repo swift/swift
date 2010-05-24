@@ -1,0 +1,25 @@
+Prerequisites
+------------
+- GCC
+- Python
+- OpenSSL
+- Qt Open Source Edition (optional; not needed for Swiften)
+
+Building
+--------
+- Create a file 'config.py' with the following contents, reflecting your local
+  setup:
+		qt = "path/to/qt"
+	(e.g. qt = "/usr/share/qt4")
+- Run 
+		./scons
+- To build only a subdir, add the path as a target to scons. E.g., for Swift:
+		./scons Swift
+
+Running tests
+-------------
+- Run
+		./scons test=unit
+	for running the unit tests, or
+		./scons test=all
+	for running all tests.

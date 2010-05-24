@@ -25,3 +25,13 @@ Building Swift
 		openssl = "path\to\openssl"
 		qt = "path\to\qt"
 - Run 'scons'
+- To build only a subdir, add the path as a target to scons. E.g., for Swift:
+		scons Swift
+
+Running tests
+-------------
+- Run
+		scons test=unit
+	for running the unit tests, or
+		scons test=all
+	for running all tests.
