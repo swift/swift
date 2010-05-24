@@ -77,6 +77,7 @@ sources = [
     "ChatSnippet.cpp",
     "MessageSnippet.cpp",
     "SystemMessageSnippet.cpp",
+    "QtElidingLabel.cpp",
     "Roster/RosterModel.cpp",
     "Roster/QtTreeWidget.cpp",
 #    "Roster/QtTreeWidgetItem.cpp",

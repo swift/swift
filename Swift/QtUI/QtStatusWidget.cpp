@@ -19,6 +19,8 @@
 #include <QListWidget>
 #include <QListWidgetItem>
 
+#include "Swift/QtUI/QtElidingLabel.h"
+
 namespace Swift {
 
 QtStatusWidget::QtStatusWidget(QWidget *parent) : QWidget(parent), editCursor_(Qt::IBeamCursor), viewCursor_(Qt::PointingHandCursor) {
@@ -46,7 +48,7 @@ QtStatusWidget::QtStatusWidget(QWidget *parent) : QWidget(parent), editCursor_(Q
 	statusIcon_->setMaximumSize(16, 16);
 	page1Layout->addWidget(statusIcon_);
 
-	statusTextLabel_ = new QLabel(this);
+	statusTextLabel_ = new QtElidingLabel(this);
 	page1Layout->addWidget(statusTextLabel_);
 
 	icons_[StatusShow::Online] = QIcon(":/icons/online.png");
@@ -103,7 +105,8 @@ void QtStatusWidget::handleClicked() {
 	int y = point.y();
 	int width = 200;
 	int height = 80;
-	int screenWidth = QApplication::desktop()->screenGeometry().width();
+	int desktop = QApplication::desktop()->screenNumber(this);
+	int screenWidth = QApplication::desktop()->screenGeometry(desktop).width();
 	if (x + width > screenWidth) {
 		x = screenWidth - width;
 	}

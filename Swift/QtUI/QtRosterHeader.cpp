@@ -14,6 +14,7 @@
 #include <QMouseEvent>
 
 #include "QtStatusWidget.h"
+#include "Swift/QtUI/QtElidingLabel.h"
 
 namespace Swift {
 QtRosterHeader::QtRosterHeader(QWidget* parent) : QWidget(parent) {
@@ -36,7 +37,7 @@ QtRosterHeader::QtRosterHeader(QWidget* parent) : QWidget(parent) {
 	rightLayout->setContentsMargins(4,0,0,0);
 	topLayout->addLayout(rightLayout);
 
-	nameLabel_ = new QLabel(this);
+	nameLabel_ = new QtElidingLabel(this);
 	setName("Me");
 	rightLayout->addWidget(nameLabel_);
 
