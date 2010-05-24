@@ -19,21 +19,21 @@ namespace Swift {
 QtRosterHeader::QtRosterHeader(QWidget* parent) : QWidget(parent) {
 	QHBoxLayout* topLayout = new QHBoxLayout();
 	topLayout->setSpacing(0);
-	topLayout->setContentsMargins(0,0,0,0);
+	topLayout->setContentsMargins(4,4,4,4);
 	setLayout(topLayout);
-	setMinimumHeight(64);
-	setMaximumHeight(64);
+	setMinimumHeight(50);
+	setMaximumHeight(50);
 
 	avatarLabel_ = new QLabel(this);
-	avatarLabel_->setMinimumSize(64, 64);
-	avatarLabel_->setMaximumSize(64, 64);
+	avatarLabel_->setMinimumSize(40, 40);
+	avatarLabel_->setMaximumSize(40, 40);
 	setAvatar(":/icons/avatar.png");
 	avatarLabel_->setScaledContents(true);
 	topLayout->addWidget(avatarLabel_);
 
 	QVBoxLayout* rightLayout = new QVBoxLayout();
 	rightLayout->setSpacing(4);
-	rightLayout->setContentsMargins(4,4,4,4);
+	rightLayout->setContentsMargins(4,0,0,0);
 	topLayout->addLayout(rightLayout);
 
 	nameLabel_ = new QLabel(this);
