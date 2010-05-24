@@ -45,8 +45,6 @@ namespace Swift {
 //		void toggleExpanded();
 		QString name_;
 		QLabel* avatarLabel_;
-#warning FIXME - replace QLabel with override to do elide
-//http://lists.trolltech.com/pipermail/qt-interest/2010-January/018056.html
 		QLabel* nameLabel_;
 		QtTextEdit* statusEdit_;
 		QToolBar* toolBar_;

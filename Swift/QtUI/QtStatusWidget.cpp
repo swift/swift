@@ -93,13 +93,16 @@ void QtStatusWidget::handleApplicationFocusChanged(QWidget* /*old*/, QWidget* no
 	if (stack_->currentIndex() == 0) {
 		return;
 	}
-	if (now != menu_ && now != statusEdit_) {
+	if (!now || (now != menu_ && now != statusEdit_ && !now->isAncestorOf(statusEdit_) && !now->isAncestorOf(menu_) && !statusEdit_->isAncestorOf(now) && !menu_->isAncestorOf(now))) {
 		handleEditCancelled();
 	}
+	
 }
 
 void QtStatusWidget::mousePressEvent(QMouseEvent*) {
-	handleClicked();
+	if (stack_->currentIndex() == 0) {
+		handleClicked();
+	}
 }
 
 void QtStatusWidget::generateList() {

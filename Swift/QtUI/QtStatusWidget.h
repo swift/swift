@@ -4,8 +4,7 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#ifndef SWIFT_QtStatusWidget_H
-#define SWIFT_QtStatusWidget_H
+#pragma once
 
 #include "Swiften/Elements/StatusShow.h"
 
@@ -57,7 +56,4 @@ namespace Swift {
 			QCursor viewCursor_;
 	};
 }
-
-#endif
-
 
