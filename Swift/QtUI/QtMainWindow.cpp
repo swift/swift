@@ -108,7 +108,7 @@ void QtMainWindow::setRosterModel(Roster* roster) {
 }
 
 void QtMainWindow::handleEventCountUpdated(int count) {
-	QColor eventTabColor = (count == 0) ? QColor(-1, -1, -1) : QColor(255, 0, 0); // invalid resets to default
+	QColor eventTabColor = (count == 0) ? QColor() : QColor(255, 0, 0); // invalid resets to default
 	int eventIndex = 1;
 	tabs_->tabBar()->setTabTextColor(eventIndex, eventTabColor);
 	QString text = "Notices";
