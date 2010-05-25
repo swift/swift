@@ -16,6 +16,7 @@
 #include "QtStatusWidget.h"
 #include "Swift/QtUI/QtElidingLabel.h"
 
+
 namespace Swift {
 QtRosterHeader::QtRosterHeader(QWidget* parent) : QWidget(parent) {
 	QHBoxLayout* topLayout = new QHBoxLayout();
@@ -26,10 +27,11 @@ QtRosterHeader::QtRosterHeader(QWidget* parent) : QWidget(parent) {
 	setMaximumHeight(50);
 
 	avatarLabel_ = new QLabel(this);
-	avatarLabel_->setMinimumSize(40, 40);
-	avatarLabel_->setMaximumSize(40, 40);
+	avatarLabel_->setMinimumSize(avatarSize_, avatarSize_);
+	avatarLabel_->setMaximumSize(avatarSize_, avatarSize_);
+	avatarLabel_->setAlignment(Qt::AlignCenter);
 	setAvatar(":/icons/avatar.png");
-	avatarLabel_->setScaledContents(true);
+	avatarLabel_->setScaledContents(false);
 	topLayout->addWidget(avatarLabel_);
 
 	QVBoxLayout* rightLayout = new QVBoxLayout();
@@ -125,11 +127,13 @@ void QtRosterHeader::setAvatar(const QString& path) {
 		qDebug() << "Setting null avatar";
 		avatar = QIcon(":/icons/avatar.png");
 	} 
-	avatarLabel_->setPixmap(avatar.pixmap(64, 64));
+	avatarLabel_->setPixmap(avatar.pixmap(avatarSize_, avatarSize_));
 }
 
 //QSize QtRosterHeader::sizeHint() const {
 //	return minimumSizeHint();
 //}
+
+const int QtRosterHeader::avatarSize_ = 40;
 
 }
