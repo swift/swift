@@ -51,6 +51,8 @@ void QtChatTabs::addTab(QtTabbable* tab) {
 	connect(tab, SIGNAL(windowClosing()), this, SLOT(handleTabClosing()));
 	connect(tab, SIGNAL(windowOpening()), this, SLOT(handleWidgetShown()));
 	connect(tab, SIGNAL(wantsToActivate()), this, SLOT(handleWantsToActivate()));
+	connect(tab, SIGNAL(requestNextTab()), this, SLOT(handleRequestedNextTab()));
+	connect(tab, SIGNAL(requestPreviousTab()), this, SLOT(handleRequestedPreviousTab()));
 }
 
 void QtChatTabs::handleWidgetShown() {
@@ -94,6 +96,18 @@ void QtChatTabs::handleTabClosing() {
 	}
 	handleTabTitleUpdated(tabs_->currentWidget());
 }
+
+void QtChatTabs::handleRequestedPreviousTab() {
+	int newIndex = tabs_->currentIndex() - 1;
+	tabs_->setCurrentIndex(newIndex >= 0 ? newIndex : tabs_->count() - 1);
+}
+
+void QtChatTabs::handleRequestedNextTab() {
+	int newIndex = tabs_->currentIndex() + 1;
+	tabs_->setCurrentIndex(newIndex < tabs_->count() ? newIndex : 0);
+	
+}
+
 
 void QtChatTabs::handleTabCloseRequested(int index) {
 	QWidget* widget = tabs_->widget(index);

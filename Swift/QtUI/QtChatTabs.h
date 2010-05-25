@@ -35,6 +35,9 @@ namespace Swift {
 			void handleTabCloseRequested(int index);
 			void handleWidgetShown();
 			void handleWantsToActivate();
+			void handleRequestedPreviousTab();
+			void handleRequestedNextTab();
+
 		private:
 			void checkForFirstShow();
 			QtTabWidget* tabs_;

@@ -24,7 +24,12 @@ void QtTextEdit::keyPressEvent(QKeyEvent* event) {
 		emit returnPressed();
 	} else if (((key == Qt::Key_PageUp || key == Qt::Key_PageDown) && modifiers == Qt::ShiftModifier)
 			   || (key == Qt::Key_C && modifiers == Qt::ControlModifier && textCursor().selectedText().isEmpty())
-			   || (key == Qt::Key_W && modifiers == Qt::ControlModifier)) {
+			   || (key == Qt::Key_W && modifiers == Qt::ControlModifier)
+			   || (key == Qt::Key_PageUp && modifiers == Qt::ControlModifier)
+			   || (key == Qt::Key_PageDown && modifiers == Qt::ControlModifier)
+			   || (key == Qt::Key_Left && modifiers == (Qt::ControlModifier | Qt::ShiftModifier))
+			   || (key == Qt::Key_Right && modifiers == (Qt::ControlModifier | Qt::ShiftModifier))
+	) {
 		emit unhandledKeyPressEvent(event);
 	} else {
 		QTextEdit::keyPressEvent(event);

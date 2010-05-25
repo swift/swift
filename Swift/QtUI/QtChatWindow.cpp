@@ -83,10 +83,18 @@ QtChatWindow::~QtChatWindow() {
 void QtChatWindow::handleKeyPressEvent(QKeyEvent* event) {
 	int key = event->key();
 	Qt::KeyboardModifiers modifiers = event->modifiers();
-	if (
-		(key == Qt::Key_W && modifiers == Qt::ControlModifier)
-	) {
+	if (key == Qt::Key_W && modifiers == Qt::ControlModifier) {
 		close();
+	} else if (
+		(key == Qt::Key_PageUp && modifiers == Qt::ControlModifier)
+		|| (key == Qt::Key_Left && modifiers == (Qt::ControlModifier & Qt::ShiftModifier))
+	) {
+		emit requestPreviousTab();
+	} else if (
+		(key == Qt::Key_PageDown && modifiers == Qt::ControlModifier)
+		|| (key == Qt::Key_Right && modifiers == (Qt::ControlModifier & Qt::ShiftModifier))
+	) {
+		emit requestNextTab();
 	} else {
 		messageLog_->handleKeyPressEvent(event);
 	}

@@ -25,5 +25,7 @@ namespace Swift {
 			void windowClosing();
 			void windowOpening();
 			void wantsToActivate();
+			void requestPreviousTab();
+			void requestNextTab();
 	};
 }
