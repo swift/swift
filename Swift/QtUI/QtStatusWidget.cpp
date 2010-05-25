@@ -20,6 +20,7 @@
 
 #include "Swift/QtUI/QtElidingLabel.h"
 #include "Swift/QtUI/QtLineEdit.h"
+#include "Swift/QtUI/QtSwiftUtil.h"
 
 namespace Swift {
 
@@ -77,6 +78,12 @@ QtStatusWidget::QtStatusWidget(QWidget *parent) : QWidget(parent), editCursor_(Q
 	menu_->setWindowFlags(Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint | Qt::X11BypassWindowManagerHint );
 	menu_->setAlternatingRowColors(true);
 	menu_->setFocusProxy(statusEdit_);
+	menu_->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+	menu_->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+	QSizePolicy policy(menu_->sizePolicy());
+	policy.setVerticalPolicy(QSizePolicy::Expanding);
+	menu_->setSizePolicy(policy);
+
 
 	connect(menu_, SIGNAL(itemClicked(QListWidgetItem*)), this, SLOT(handleItemClicked(QListWidgetItem*)));
 
@@ -116,6 +123,11 @@ void QtStatusWidget::generateList() {
 		item->setIcon(icons_[type]);
 		item->setData(Qt::UserRole, QVariant(type));
 	}
+	foreach (StatusShow::Type type, icons_.keys()) {
+		QListWidgetItem* item = new QListWidgetItem(P2QSTRING(StatusShow::typeToFriendlyName(type)), menu_);
+		item->setIcon(icons_[type]);
+		item->setData(Qt::UserRole, QVariant(type));
+	}
 }
 
 
@@ -131,13 +143,12 @@ void QtStatusWidget::handleClicked() {
 	if (x + width > screenWidth) {
 		x = screenWidth - width;
 	}
+	generateList();
+
+	height = menu_->sizeHintForRow(0) * menu_->count();
 	menu_->setGeometry(x, y, width, height);
 	menu_->setMaximumWidth(width);
-	QSizePolicy policy(menu_->sizePolicy());
-	policy.setVerticalPolicy(QSizePolicy::Expanding);
-	menu_->setSizePolicy(policy);
-	menu_->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-	generateList();
+
 
 	menu_->show();
 	activateWindow();
@@ -174,6 +185,8 @@ StatusShow::Type QtStatusWidget::getSelectedStatusShow() {
 void QtStatusWidget::handleItemClicked(QListWidgetItem* item) {
 	editing_ = false;
 	selectedStatusType_ = (StatusShow::Type)(item->data(Qt::UserRole).toInt());
+	newStatusText_ = item->data(Qt::DisplayRole).toString();
+	statusEdit_->setText(newStatusText_);
 	handleEditComplete();
 }
 

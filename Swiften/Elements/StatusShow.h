@@ -8,6 +8,7 @@
 #define SWIFTEN_StatusShow_H
 
 #include "Swiften/Elements/Payload.h"
+#include "Swiften/Base/String.h"
 
 namespace Swift {
 	class StatusShow : public Payload {
@@ -23,6 +24,18 @@ namespace Swift {
 
 			const Type& getType() const {
 				return type_;
+			}
+
+			static String typeToFriendlyName(Type type) {
+				switch (type) {
+				case Online: return "Available";
+				case FFC: return "Available";
+				case Away: return "Away";
+				case XA: return "Away";
+				case DND: return "Busy";
+				case None: return "Offline";
+				}
+				return "Unknown";
 			}
 
 		private:
