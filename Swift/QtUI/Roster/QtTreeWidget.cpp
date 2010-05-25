@@ -35,9 +35,9 @@ QtTreeWidget::QtTreeWidget(UIEventStream* eventStream, QWidget* parent) : QTreeV
 	setRootIsDecorated(true);
 	connect(this, SIGNAL(activated(const QModelIndex&)), this, SLOT(handleItemActivated(const QModelIndex&)));
 	connect(model_, SIGNAL(itemExpanded(const QModelIndex&, bool)), this, SLOT(handleModelItemExpanded(const QModelIndex&, bool)));
-//	connect(model_, SIGNAL(dataChanged(const QModelIndex&, const QModelIndex&)), this, SLOT(handleDataChanged(const QModelIndex&, const QModelIndex&)));
 	connect(this, SIGNAL(expanded(const QModelIndex&)), this, SLOT(handleExpanded(const QModelIndex&)));
 	connect(this, SIGNAL(collapsed(const QModelIndex&)), this, SLOT(handleCollapsed(const QModelIndex&)));
+	connect(this, SIGNAL(clicked(const QModelIndex&)), this, SLOT(handleClicked(const QModelIndex&)));
 }
 
 QtTreeWidget::~QtTreeWidget() {
@@ -57,6 +57,14 @@ void QtTreeWidget::setContextMenu(QtContextMenu* contextMenu) {
 QtTreeWidgetItem* QtTreeWidget::getRoot() {
 	return treeRoot_;
 }
+
+void QtTreeWidget::handleClicked(const QModelIndex& index) {
+	GroupRosterItem* item = dynamic_cast<GroupRosterItem*>(static_cast<RosterItem*>(index.internalPointer()));
+	if (item) {
+		setExpanded(index, !isExpanded(index));
+	}
+}
+
 
 void QtTreeWidget::handleItemActivated(const QModelIndex& index) {
 	RosterItem* item = static_cast<RosterItem*>(index.internalPointer());

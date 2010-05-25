@@ -31,7 +31,7 @@ class QtTreeWidget : public QTreeView{
 		void handleModelItemExpanded(const QModelIndex&, bool expanded);
 		void handleExpanded(const QModelIndex&);
 		void handleCollapsed(const QModelIndex&);
-//		void handleDataChanged(const QModelIndex& topLeft, const QModelIndex& bottomRight);
+		void handleClicked(const QModelIndex&);
 	protected:
 		void contextMenuEvent(QContextMenuEvent* event);
 
