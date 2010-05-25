@@ -291,6 +291,10 @@ void MainController::handleInputIdleChanged(bool idle) {
 		}
 	}
 	else {
+		if (!preIdlePresence_) {
+			/* We didn't go autoaway (the user was already away when the timer ticked */
+			return;
+		}
 		if (client_ && client_->isAvailable()) {
 			sendPresence(preIdlePresence_);
 		} else {
