@@ -87,7 +87,8 @@ QtStatusWidget::~QtStatusWidget() {
 	delete menu_;
 }
 
-void QtStatusWidget::handleApplicationFocusChanged(QWidget* /*old*/, QWidget* now) {
+void QtStatusWidget::handleApplicationFocusChanged(QWidget* /*old*/, QWidget* /*now*/) {
+	QWidget* now = qApp->focusWidget();
 	if (!editing_ || stack_->currentIndex() == 0) {
 		return;
 	}
