@@ -17,15 +17,12 @@
 #include "Swiften/Network/BoostTimerFactory.h"
 #include "Swift/Controllers/Chat/ChatController.h"
 #include "Swift/Controllers/Chat/MUCSearchController.h"
-//#include "Swift/Controllers/UIInterfaces/ChatWindowFactory.h"
 #include "Swift/Controllers/Chat/ChatsManager.h"
 #include "Swift/Controllers/EventController.h"
 #include "Swift/Controllers/EventWindowController.h"
 #include "Swift/Controllers/UIInterfaces/LoginWindow.h"
 #include "Swift/Controllers/UIInterfaces/LoginWindowFactory.h"
-//#include "Swift/Controllers/UIInterfaces/EventWindowFactory.h"
 #include "Swift/Controllers/UIInterfaces/MainWindow.h"
-//#include "Swift/Controllers/UIInterfaces/MainWindowFactory.h"
 #include "Swift/Controllers/Chat/MUCController.h"
 #include "Swift/Controllers/NickResolver.h"
 #include "Swift/Controllers/ProfileSettingsProvider.h"
@@ -36,7 +33,6 @@
 #include "Swift/Controllers/SystemTrayController.h"
 #include "Swift/Controllers/XMLConsoleController.h"
 #include "Swift/Controllers/XMPPRosterController.h"
-//#include "Swift/Controllers/UIInterfaces/XMLConsoleWidgetFactory.h"
 #include "Swift/Controllers/UIEvents/UIEventStream.h"
 #include "Swiften/Base/foreach.h"
 #include "Swiften/Base/String.h"
@@ -229,7 +225,6 @@ void MainController::handleConnected() {
 	} else {
 		initialPresence = boost::shared_ptr<Presence>(new Presence());
 	}
-	initialPresence->addPayload(capsInfo_);
 	setManagersEnabled(true);
 	sendPresence(initialPresence);
 }
