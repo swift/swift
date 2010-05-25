@@ -67,7 +67,7 @@ QtChatWindow::QtChatWindow(const QString &contact, UIEventStream* eventStream) :
 	inputClearing_ = false;
 	contactIsTyping_ = false;
 
-	connect(input_, SIGNAL(unhandledKeyPressEvent(QKeyEvent*)), messageLog_, SLOT(handleKeyPressEvent(QKeyEvent*)));
+	connect(input_, SIGNAL(unhandledKeyPressEvent(QKeyEvent*)), this, SLOT(handleKeyPressEvent(QKeyEvent*)));
 	connect(input_, SIGNAL(returnPressed()), this, SLOT(returnPressed()));
 	connect(input_, SIGNAL(textChanged()), this, SLOT(handleInputChanged()));
 	setFocusProxy(input_);
@@ -78,6 +78,18 @@ QtChatWindow::QtChatWindow(const QString &contact, UIEventStream* eventStream) :
 
 QtChatWindow::~QtChatWindow() {
 
+}
+
+void QtChatWindow::handleKeyPressEvent(QKeyEvent* event) {
+	int key = event->key();
+	Qt::KeyboardModifiers modifiers = event->modifiers();
+	if (
+		(key == Qt::Key_W && modifiers == Qt::ControlModifier)
+	) {
+		close();
+	} else {
+		messageLog_->handleKeyPressEvent(event);
+	}
 }
 
 void QtChatWindow::setRosterModel(Roster* roster) {

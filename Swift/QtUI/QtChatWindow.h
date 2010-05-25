@@ -55,6 +55,7 @@ namespace Swift {
 		private slots:
 			void returnPressed();
 			void handleInputChanged();
+			void handleKeyPressEvent(QKeyEvent* event);
 
 		private:
 			void updateTitleWithUnreadCount();
