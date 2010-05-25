@@ -109,7 +109,9 @@ sources = [
   ]
 
 
-myenv.BuildVersion("BuildVersion.h", version = env["SWIFT_VERSION"])
+env["SWIFT_VERSION"] = Version.getBuildVersion("swift")
+print env["SWIFT_VERSION"]
+myenv.BuildVersion("BuildVersion.h", project = "swift")
 
 if env["PLATFORM"] == "win32" :
   myenv.RES("../resources/Windows/Swift.rc")

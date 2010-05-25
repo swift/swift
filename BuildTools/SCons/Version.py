@@ -1,15 +1,26 @@
 import subprocess, os, datetime
 
-def getGitBuildVersion() :
-  p = subprocess.Popen("git rev-parse HEAD", shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE, close_fds=(os.name != "nt"))
-  gitVersion = p.stdout.read().rstrip()[0:7]
+def getGitBuildVersion(project) :
+  headVersion = git("rev-parse HEAD")
+  if headVersion :
+    tags = git("tag --contains HEAD -l " + project + "-*")
+    if len(tags) > 0 :
+      for tag in tags.split("\n") :
+        tagVersion = git("rev-parse " + tag + "^{commit}")
+        if tagVersion == headVersion :
+          return tag
+  return None
+
+def git(cmd) :
+  p = subprocess.Popen("git " + cmd, shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE, close_fds=(os.name != "nt"))
+  gitVersion = p.stdout.read()
   p.stdin.close()
   return gitVersion if p.wait() == 0 else None
 
-def getBuildVersion(version = None) :
-  if version :
-    return version
-  gitVersion = getGitBuildVersion() 
+def getBuildVersion(project) :
+  gitVersion = getGitBuildVersion(project) 
   if gitVersion :
     return gitVersion
+  # TODO: Add the current branch
+  # TODO: Pick up a version number from a file (for distributing)
   return datetime.date.today().strftime("%Y%m%d")
