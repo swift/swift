@@ -80,8 +80,6 @@ QtStatusWidget::QtStatusWidget(QWidget *parent) : QWidget(parent), editCursor_(Q
 
 	connect(menu_, SIGNAL(itemClicked(QListWidgetItem*)), this, SLOT(handleItemClicked(QListWidgetItem*)));
 
-	connect(qApp, SIGNAL(focusChanged(QWidget*, QWidget*)), this, SLOT(handleApplicationFocusChanged(QWidget*, QWidget*)));
-
 	viewMode();
 }
 
@@ -145,9 +143,11 @@ void QtStatusWidget::handleClicked() {
 	statusEdit_->selectAll();
 	stack_->setCurrentIndex(1);
 	statusEdit_->setFocus();
+	connect(qApp, SIGNAL(focusChanged(QWidget*, QWidget*)), this, SLOT(handleApplicationFocusChanged(QWidget*, QWidget*)), Qt/*::ConnectionType*/::QueuedConnection);
 }
 
 void QtStatusWidget::viewMode() {
+	disconnect(qApp, SIGNAL(focusChanged(QWidget*, QWidget*)), this, SLOT(handleApplicationFocusChanged(QWidget*, QWidget*)));
 	editing_ = false;
 	menu_->hide();
 	stack_->setCurrentIndex(0);	
