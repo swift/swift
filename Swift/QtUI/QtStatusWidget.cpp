@@ -133,13 +133,16 @@ void QtStatusWidget::generateList() {
 
 void QtStatusWidget::handleClicked() {
 	editing_ = true;
+	QDesktopWidget* desktop = QApplication::desktop();
+	int screen = desktop->screenNumber(this);
 	QPoint point = mapToGlobal(QPoint(0, height()));
+	QRect geometry = desktop->availableGeometry(screen);
 	int x = point.x();
 	int y = point.y();
 	int width = 200;
 	int height = 80;
-	int desktop = QApplication::desktop()->screenNumber(this);
-	int screenWidth = QApplication::desktop()->screenGeometry(desktop).width();
+
+	int screenWidth = geometry.x() + geometry.width();
 	if (x + width > screenWidth) {
 		x = screenWidth - width;
 	}
@@ -147,15 +150,14 @@ void QtStatusWidget::handleClicked() {
 
 	height = menu_->sizeHintForRow(0) * menu_->count();
 	menu_->setGeometry(x, y, width, height);
+	menu_->move(x, y);
 	menu_->setMaximumWidth(width);
-
-
 	menu_->show();
 	activateWindow();
 	statusEdit_->selectAll();
 	stack_->setCurrentIndex(1);
 	statusEdit_->setFocus();
-	connect(qApp, SIGNAL(focusChanged(QWidget*, QWidget*)), this, SLOT(handleApplicationFocusChanged(QWidget*, QWidget*)), Qt/*::ConnectionType*/::QueuedConnection);
+	connect(qApp, SIGNAL(focusChanged(QWidget*, QWidget*)), this, SLOT(handleApplicationFocusChanged(QWidget*, QWidget*)), Qt::QueuedConnection);
 }
 
 void QtStatusWidget::viewMode() {
