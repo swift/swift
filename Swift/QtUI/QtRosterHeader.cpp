@@ -41,6 +41,9 @@ QtRosterHeader::QtRosterHeader(QWidget* parent) : QWidget(parent) {
 
 	nameLabel_ = new QtElidingLabel(this);
 	setName("Me");
+	QFont font = nameLabel_->font();
+	font.setBold(true);
+	nameLabel_->setFont(font);
 	rightLayout->addWidget(nameLabel_);
 
 
@@ -92,7 +95,8 @@ void QtRosterHeader::setName(const QString& name) {
 	name_ = name;
 	QString escapedName = name_;
 	escapedName.replace("<","&lt;");
- 	nameLabel_->setText("<b>" + escapedName + "</b>");
+// 	nameLabel_->setText("<b>" + escapedName + "</b>");
+ 	nameLabel_->setText(escapedName);
 //	resizeNameLabel();
 }
 

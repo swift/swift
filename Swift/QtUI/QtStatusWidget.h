@@ -20,6 +20,7 @@ class QListWidgetItem;
 
 namespace Swift {
 	class QtLineEdit;
+	class QtElidingLabel;
 	class QtStatusWidget : public QWidget {
 		Q_OBJECT
 		public:
@@ -45,7 +46,7 @@ namespace Swift {
 			//QComboBox *types_;
 			QStackedWidget* stack_;
 			QLabel* statusIcon_;
-			QLabel* statusTextLabel_;
+			QtElidingLabel* statusTextLabel_;
 			QtLineEdit* statusEdit_;
 			QString statusText_;
 			QString newStatusText_;

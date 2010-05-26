@@ -50,6 +50,9 @@ QtStatusWidget::QtStatusWidget(QWidget *parent) : QWidget(parent), editCursor_(Q
 	page1Layout->addWidget(statusIcon_);
 
 	statusTextLabel_ = new QtElidingLabel(this);
+	QFont font = statusTextLabel_->font();
+	font.setItalic(true);
+	statusTextLabel_->setFont(font);
 	page1Layout->addWidget(statusTextLabel_);
 
 	icons_[StatusShow::Online] = QIcon(":/icons/online.png");
@@ -210,7 +213,8 @@ void QtStatusWidget::setStatusText(const QString& text) {
 	statusEdit_->setText(text);
 	QString escapedText(text.isEmpty() ? "(No message)" : text);
 	escapedText.replace("<","&lt;");
-	statusTextLabel_->setText("<i>" + escapedText + "</i>");
+//	statusTextLabel_->setText("<i>" + escapedText + "</i>");
+	statusTextLabel_->setText(escapedText);
 }
 
 void QtStatusWidget::setStatusType(StatusShow::Type type) {

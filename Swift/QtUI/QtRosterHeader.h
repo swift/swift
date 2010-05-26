@@ -21,6 +21,7 @@ class QHBoxLayout;
 
 namespace Swift {
 	class QtStatusWidget;
+	class QtElidingLabel;
 	
 	class QtRosterHeader : public QWidget {
 		Q_OBJECT
@@ -37,7 +38,7 @@ namespace Swift {
 	private:
 		QString name_;
 		QLabel* avatarLabel_;
-		QLabel* nameLabel_;
+		QtElidingLabel* nameLabel_;
 		QtTextEdit* statusEdit_;
 		QToolBar* toolBar_;
 		QtStatusWidget* statusWidget_;

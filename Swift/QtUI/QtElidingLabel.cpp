@@ -8,10 +8,14 @@
 
 namespace Swift {
 QtElidingLabel::QtElidingLabel(QWidget* parent, Qt::WindowFlags f) : QLabel(parent, f) {
+	fullText_ = "";
+	dirty_ = true;
 	setSizes();
 }
 
 QtElidingLabel::QtElidingLabel(const QString& text, QWidget* parent, Qt::WindowFlags f) : QLabel(text, parent, f) {
+	fullText_ = text;
+	dirty_ = true;
 	setSizes();
 }
 
@@ -23,15 +27,24 @@ void QtElidingLabel::setSizes() {
 	setMinimumSize(1, minimumHeight());
 }
 
+void QtElidingLabel::setText(const QString& text) {
+	fullText_ = text;
+	QLabel::setText(text);
+	dirty_ = true;
+}
+
 void QtElidingLabel::paintEvent(QPaintEvent* event) {
-	//QPainter painter(this);
-	QString fullText(text());
-	if (fontMetrics().width(fullText) > contentsRect().width()) {
-		//QString elidedText(fontMetrics().elidedText(fullText));
-		setText(fontMetrics().elidedText(fullText, Qt::ElideRight, rect().width(), Qt::TextShowMnemonic));
+	QRect rect = contentsRect();
+	dirty_ = dirty_ || rect != lastRect_;
+	if (dirty_) {
+		lastRect_ = rect;
+		if (fontMetrics().width(fullText_) > rect.width()) {
+			QString elidedText(fontMetrics().elidedText(fullText_, Qt::ElideRight, rect.width(), Qt::TextShowMnemonic));
+			QLabel::setText(elidedText);
+		}
+		dirty_ = false;
 	}
 	QLabel::paintEvent(event);
-	setText(fullText);
 }
 
 }
