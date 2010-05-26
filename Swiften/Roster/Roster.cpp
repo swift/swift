@@ -23,6 +23,7 @@ namespace Swift {
 
 Roster::Roster() {
 	root_ = new GroupRosterItem("Dummy-Root", NULL);
+	root_->onChildrenChanged.connect(boost::bind(&Roster::handleChildrenChanged, this, root_));
 }
 
 Roster::~Roster() {
@@ -52,7 +53,6 @@ GroupRosterItem* Roster::getGroup(const String& groupName) {
 	}
 	GroupRosterItem* group = new GroupRosterItem(groupName, root_);
 	root_->addChild(group);
-//	std::cout << "Added " << groupName << " to root" << std::endl;
 	group->onChildrenChanged.connect(boost::bind(&Roster::handleChildrenChanged, this, group));
 	group->onDataChanged.connect(boost::bind(&Roster::handleDataChanged, this, group));
 	return group;
@@ -155,9 +155,7 @@ void Roster::filterContact(ContactRosterItem* contact, GroupRosterItem* group) {
 	}
 	group->setDisplayed(contact, filters_.size() == 0 || !hide);
 	int newDisplayedSize = group->getDisplayedChildren().size();
-//	std::cout << ", new size = " << newDisplayedSize << std::endl;
 	if (oldDisplayedSize == 0 && newDisplayedSize > 0) {
-//		std::cout << "Newly created" << std::endl;
 		onGroupAdded(group);
 	}
 }

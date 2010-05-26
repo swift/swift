@@ -24,6 +24,12 @@ bool GroupRosterItem::isExpanded() const {
 	return expanded_;
 }
 
+/**
+	This has no effect, and is only used by the UI.
+	If reTransmit is specified, dataChanged will be emitted on a change -
+	This may be undesireable if called from the UI, so you can use reTransmit=false
+	to avoid a loop in this case.
+ */
 void GroupRosterItem::setExpanded(bool expanded) {
 	expanded_ = expanded;
 }
@@ -33,7 +39,6 @@ const std::vector<RosterItem*>& GroupRosterItem::getChildren() const {
 }
 
 const std::vector<RosterItem*>& GroupRosterItem::getDisplayedChildren() const {
-//	std::cout << "Fetching displayed children for " << getDisplayName() << " and found " << displayedChildren_.size() << std::endl;
 	return displayedChildren_;
 }
 
@@ -110,7 +115,6 @@ bool GroupRosterItem::itemLessThan(const RosterItem* left, const RosterItem* rig
 		if (rightContact) {
 			return true;
 		}
-//		std::cout << "Comparing groups " << left->getSortableDisplayName() << " and " << right->getSortableDisplayName() << std::endl;
 		return left->getSortableDisplayName() < right->getSortableDisplayName();
 	}
 }
@@ -131,8 +135,8 @@ void GroupRosterItem::setDisplayed(RosterItem* item, bool displayed) {
 	} else {
 		displayedChildren_.erase(std::remove(displayedChildren_.begin(), displayedChildren_.end(), item), displayedChildren_.end());
 	}
-	onDataChanged();
 	onChildrenChanged();
+	onDataChanged();
 }
 
 void GroupRosterItem::handleDataChanged(RosterItem* /*item*/) {
@@ -158,8 +162,8 @@ void GroupRosterItem::handleChildrenChanged(GroupRosterItem* group) {
 		displayedChildren_.erase(std::remove(displayedChildren_.begin(), displayedChildren_.end(), group), displayedChildren_.end());
 	}
 	if (oldSize != getDisplayedChildren().size()) {
-		onDataChanged();
 		onChildrenChanged();
+		onDataChanged();
 	}
 }
 

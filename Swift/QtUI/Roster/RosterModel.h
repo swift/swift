@@ -39,7 +39,6 @@ namespace Swift {
 		private:
 			void handleDataChanged(RosterItem* item);
 			void handleChildrenChanged(GroupRosterItem* item);
-			void handleGroupAdded(GroupRosterItem* group);
 			RosterItem* getItem(const QModelIndex& index) const;
 			QColor intToColor(int color) const;
 			QColor getTextColor(RosterItem* item) const;
@@ -49,6 +48,7 @@ namespace Swift {
 			QString getStatusText(RosterItem* item) const;
 			QIcon getPresenceIcon(RosterItem* item) const;
 			int getChildCount(RosterItem* item) const;
+			void reLayout();
 			Roster* roster_;
 			QtTreeWidget* view_;
 	};

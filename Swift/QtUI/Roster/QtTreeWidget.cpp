@@ -100,31 +100,15 @@ void QtTreeWidget::handleCollapsed(const QModelIndex& index) {
 }
 
 void QtTreeWidget::handleModelItemExpanded(const QModelIndex& index, bool shouldExpand) {
-	if (this->isExpanded(index) == shouldExpand) {
+	if (!index.isValid()) {
 		return;
 	}
-	//setExpanded(index, shouldExpand);
-	if (shouldExpand) {
-		expand(index);
-		emit expanded(index);
-	} else {
-		collapse(index);
-		emit collapsed(index);
+	bool alreadyRight = this->isExpanded(index) == shouldExpand;
+	if (alreadyRight) {
+		return;
 	}
+	setExpanded(index, shouldExpand);
 }
-
-// void QtTreeWidget::handleDataChanged(const QModelIndex& topLeft, const QModelIndex& /*bottomRight*/) {
-// 	//in our model, this is only thrown with topLeft == bottomRight
-// 	if (!topLeft.isValid()) {
-// 		return;
-// 	}
-// 	QtTreeWidgetItem* qtItem = static_cast<QtTreeWidgetItem*>(topLeft.internalPointer());
-// 	if (qtItem) {
-// 		setExpanded(topLeft, qtItem->isExpanded());
-// 		//qDebug() << "Item changed, passing expanded state to view: " << qtItem->isExpanded() << " giving an expanded state of " << isExpanded(topLeft);
-// 	}
-
-// }
 
 void QtTreeWidget::drawBranches(QPainter*, const QRect&, const QModelIndex&) const {
 }

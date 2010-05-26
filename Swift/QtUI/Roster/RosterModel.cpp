@@ -33,31 +33,26 @@ void RosterModel::setRoster(Roster* roster) {
 	if (!roster_) return;
 	roster->onChildrenChanged.connect(boost::bind(&RosterModel::handleChildrenChanged, this, _1));
 	roster->onDataChanged.connect(boost::bind(&RosterModel::handleDataChanged, this, _1));
-	roster->onGroupAdded.connect(boost::bind(&RosterModel::handleGroupAdded, this, _1));
+	reLayout();
+}
+
+void RosterModel::reLayout() {
 	emit layoutChanged();
-}
-
-void RosterModel::handleGroupAdded(GroupRosterItem* group) {
-	emit itemExpanded(index(group), group->isExpanded());
-}
-
-void RosterModel::handleChildrenChanged(GroupRosterItem* group) {
-	foreach (RosterItem* item, group->getDisplayedChildren()) {
+	foreach (RosterItem* item, roster_->getRoot()->getDisplayedChildren()) {
 		GroupRosterItem* child = dynamic_cast<GroupRosterItem*>(item);
 		if (!child) continue;
 		emit itemExpanded(index(child), child->isExpanded());
 	}
-	emit layoutChanged();
+}
+
+void RosterModel::handleChildrenChanged(GroupRosterItem* /*group*/) {
+	reLayout();
 }							  
 
 void RosterModel::handleDataChanged(RosterItem* item) {
 	Q_ASSERT(item);
 	QModelIndex modelIndex = index(item);
 	if (modelIndex.isValid()) {
-		GroupRosterItem* group = dynamic_cast<GroupRosterItem*>(item);
-		if (group) {
-			emit itemExpanded(modelIndex, group->isExpanded());
-		}
 		emit dataChanged(modelIndex, modelIndex);
 	}
 }
@@ -167,6 +162,12 @@ QModelIndex RosterModel::index(int row, int column, const QModelIndex& parent) c
 
 QModelIndex RosterModel::index(RosterItem* item) const {
 	GroupRosterItem* parent = item->getParent();
+	/* Recursive check that it's ok to create such an item 
+		Assuming there are more contacts in a group than groups in a 
+		group, this could save a decent chunk of search time at startup.*/
+	if (parent != roster_->getRoot() && !index(parent).isValid()) {
+		return QModelIndex();
+	}
 	for (size_t i = 0; i < parent->getDisplayedChildren().size(); i++) {
 		if (parent->getDisplayedChildren()[i] == item) {
 			return createIndex(i, 0, item);
