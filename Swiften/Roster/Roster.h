@@ -25,7 +25,7 @@ class ContactRosterItem;
 
 class Roster {
 	public:
-		Roster();
+		Roster(bool fullJIDMapping = false);
 		~Roster();
 
 		void addContact(const JID& jid, const String& name, const String& group);
@@ -51,6 +51,7 @@ class Roster {
 		GroupRosterItem* root_;
 		std::vector<RosterFilter*> filters_;
 		std::map<JID, std::vector<ContactRosterItem*> > itemMap_;
+		bool fullJIDMapping_;
 };
 }
 

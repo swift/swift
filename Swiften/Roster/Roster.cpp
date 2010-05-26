@@ -21,7 +21,8 @@
 
 namespace Swift {
 
-Roster::Roster() {
+Roster::Roster(bool fullJIDMapping) {
+	fullJIDMapping_ = fullJIDMapping;
 	root_ = new GroupRosterItem("Dummy-Root", NULL);
 	root_->onChildrenChanged.connect(boost::bind(&Roster::handleChildrenChanged, this, root_));
 }
@@ -70,7 +71,7 @@ void Roster::addContact(const JID& jid, const String& name, const String& groupN
 	GroupRosterItem* group(getGroup(groupName));
 	ContactRosterItem *item = new ContactRosterItem(jid, name, group);
 	group->addChild(item);
-	itemMap_[jid.toBare()].push_back(item);
+	itemMap_[fullJIDMapping_ ? jid : jid.toBare()].push_back(item);
 	item->onDataChanged.connect(boost::bind(&Roster::handleDataChanged, this, item));
 	filterContact(item, group);
 }
@@ -82,10 +83,10 @@ struct JIDEqualsTo {
 };
 
 void Roster::removeContact(const JID& jid) {
-	std::vector<ContactRosterItem*>* items = &itemMap_[jid.toBare()];
+	std::vector<ContactRosterItem*>* items = &itemMap_[fullJIDMapping_ ? jid : jid.toBare()];
 	items->erase(std::remove_if(items->begin(), items->end(), JIDEqualsTo(jid)), items->end());
 	if (items->size() == 0) {
-		itemMap_.erase(jid.toBare());
+		itemMap_.erase(fullJIDMapping_ ? jid : jid.toBare());
 	}
 	//Causes the delete
 	root_->removeChild(jid);
@@ -98,7 +99,7 @@ void Roster::removeContactFromGroup(const JID& jid, const String& groupName) {
 		GroupRosterItem* group = dynamic_cast<GroupRosterItem*>(*it);
 		if (group && group->getDisplayName() == groupName) {
 			ContactRosterItem* deleted = group->removeChild(jid);
-			std::vector<ContactRosterItem*>* items = &itemMap_[jid.toBare()];
+			std::vector<ContactRosterItem*>* items = &itemMap_[fullJIDMapping_ ? jid : jid.toBare()];
 			items->erase(std::remove(items->begin(), items->end(), deleted), items->end());
 		}
 		it++;
@@ -115,8 +116,8 @@ void Roster::applyOnItems(const RosterItemOperation& operation) {
 }
 
 void Roster::applyOnItem(const RosterItemOperation& operation, const JID& jid) {
-	foreach (ContactRosterItem* item, itemMap_[jid.toBare()]) {
-		//std::cout << "Applying on item " << item << " : " << item->getDisplayName() << std::endl;
+	
+	foreach (ContactRosterItem* item, itemMap_[fullJIDMapping_ ? jid : jid.toBare()]) {
 		operation(item);
 		filterContact(item, item->getParent());
 	}

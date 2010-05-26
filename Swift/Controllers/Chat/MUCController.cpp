@@ -48,7 +48,7 @@ MUCController::MUCController (
 	parting_ = false;
 	events_ = uiEventStream;
 	
-	roster_ = new Roster();
+	roster_ = new Roster(true);
 	chatWindow_->setRosterModel(roster_);
 	chatWindow_->onClosed.connect(boost::bind(&MUCController::handleWindowClosed, this));
 	muc_->onJoinComplete.connect(boost::bind(&MUCController::handleJoinComplete, this, _1));
@@ -125,7 +125,7 @@ void MUCController::handleJoinComplete(const String& nick) {
 }
 
 void MUCController::handleAvatarChanged(const JID& jid, const String&) {
-	if (parting_) {
+	if (parting_ || !jid.equals(toJID_, JID::WithoutResource)) {
 		return;
 	}
 	String path = avatarManager_->getAvatarPath(jid).string();
