@@ -146,6 +146,18 @@ void QtStatusWidget::handleClicked() {
 	if (x + width > screenWidth) {
 		x = screenWidth - width;
 	}
+	std::vector<StatusShow::Type> types;
+	types.push_back(StatusShow::Online);
+	types.push_back(StatusShow::FFC);
+	types.push_back(StatusShow::Away);
+	types.push_back(StatusShow::XA);
+	types.push_back(StatusShow::DND);
+	types.push_back(StatusShow::None);
+	foreach (StatusShow::Type type, types) {
+		if (statusEdit_->text() == P2QSTRING(StatusShow::typeToFriendlyName(type))) {
+			statusEdit_->setText("");
+		}
+	}
 	generateList();
 
 	height = menu_->sizeHintForRow(0) * menu_->count();
