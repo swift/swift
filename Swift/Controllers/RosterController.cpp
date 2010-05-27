@@ -101,10 +101,7 @@ void RosterController::handleChangeStatusRequest(StatusShow::Type show, const St
 
 void RosterController::handleOnJIDAdded(const JID& jid) {
 	std::vector<String> groups = xmppRoster_->getGroupsForJID(jid);
-	String name = xmppRoster_->getNameForJID(jid);
-	if (name.isEmpty()) {
-		name = jid.toString();
-	}
+	String name = nickResolver_->jidToNick(jid);
 	if (!groups.empty()) {
 		foreach(const String& group, groups) {
 			roster_->addContact(jid, name, group);
@@ -120,15 +117,12 @@ void RosterController::handleOnJIDRemoved(const JID& jid) {
 
 void RosterController::handleOnJIDUpdated(const JID& jid, const String& oldName, const std::vector<String> passedOldGroups) {
 	if (oldName != xmppRoster_->getNameForJID(jid)) {
-		roster_->applyOnItems(SetName(xmppRoster_->getNameForJID(jid), jid));
+		roster_->applyOnItems(SetName(nickResolver_->jidToNick(jid), jid));
 		return;
 	}
 	std::vector<String> groups = xmppRoster_->getGroupsForJID(jid);
 	std::vector<String> oldGroups = passedOldGroups;
-	String name = xmppRoster_->getNameForJID(jid);
-	if (name.isEmpty()) {
-		name = jid.toString();
-	}
+	String name = nickResolver_->jidToNick(jid);
 	String contactsGroup = "Contacts";
 	if (oldGroups.empty()) {
 		oldGroups.push_back(contactsGroup);

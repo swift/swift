@@ -29,9 +29,10 @@ String NickResolver::jidToNick(const JID& jid) {
 		return jid.getResource();
 	}
 
-	if (xmppRoster_->containsJID(jid) && xmppRoster_->getNameForJID(jid) != "") {
+	if (xmppRoster_->containsJID(jid) && !xmppRoster_->getNameForJID(jid).isEmpty()) {
 		return xmppRoster_->getNameForJID(jid);
 	}
+
 	std::map<JID, String>::const_iterator it = map_.find(jid);
 	return (it == map_.end()) ? jid.toBare() : it->second;
 }
