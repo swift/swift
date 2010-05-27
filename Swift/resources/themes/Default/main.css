@@ -150,8 +150,8 @@ body {
 }
 
 .chatItem .avatar {
-	width:26px;
-	height:26px;
+	max-width:32px;
+	max-height:32px;
 	float:left;
 }
 
