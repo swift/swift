@@ -45,15 +45,23 @@ void Client::connect() {
 }
 
 void Client::connect(const String& host) {
-	assert(!connector_);
+	assert(!connector_); // Crash on reconnect is here.
 	connector_ = Connector::create(host, &resolver_, connectionFactory_, timerFactory_);
-	connector_->onConnectFinished.connect(boost::bind(&Client::handleConnectorFinished, this, _1));
+	connector_->onConnectFinished.connect(boost::bind(&Client::handleConnectorFinished, this, _1, connector_));
 	connector_->setTimeoutMilliseconds(60*1000);
 	connector_->start();
 }
 
-void Client::handleConnectorFinished(boost::shared_ptr<Connection> connection) {
+void Client::handleConnectorFinished(boost::shared_ptr<Connection> connection, Connector::ref connector) {
+	bool currentConnection = connector_ && (connector.get() == connector_.get());
 	// TODO: Add domain name resolver error
+	if (!currentConnection) {
+		/* disconnect() was called, this connection should be thrown away*/
+		if (connection) {
+			connection->disconnect();
+		}
+		return;
+	}
 	connector_.reset();
 	if (!connection) {
 		onError(ClientError::ConnectionError);
@@ -81,6 +89,9 @@ void Client::handleConnectorFinished(boost::shared_ptr<Connection> connection) {
 }
 
 void Client::disconnect() {
+	if (connector_) {
+		connector_.reset();
+	}
 	if (session_) {
 		session_->finish();
 	}

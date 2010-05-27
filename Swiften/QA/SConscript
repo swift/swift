@@ -1,4 +1,5 @@
 SConscript([
 		"NetworkTest/SConscript",
+		"ReconnectTest/SConscript",
 		"ClientTest/SConscript",
 	])

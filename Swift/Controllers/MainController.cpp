@@ -333,6 +333,9 @@ void MainController::performLoginFromCachedCredentials() {
 		}
 		client_->onError.connect(boost::bind(&MainController::handleError, this, _1));
 		client_->onConnected.connect(boost::bind(&MainController::handleConnected, this));
+	} else {
+		/* In case we're in the middle of another login, make sure they don't overlap */
+		client_->disconnect();
 	}
 	client_->connect();
 }
@@ -387,7 +390,7 @@ void MainController::signOut() {
 }
 
 void MainController::logout() {
-	if (client_ && client_->isAvailable()) {
+	if (client_ /*&& client_->isAvailable()*/) {
 		client_->disconnect();
 	}
 	if (rosterController_) {

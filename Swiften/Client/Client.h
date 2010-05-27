@@ -55,7 +55,7 @@ namespace Swift {
 			boost::signal<void (const String&)> onDataWritten;
 
 		private:
-			void handleConnectorFinished(boost::shared_ptr<Connection>);
+			void handleConnectorFinished(boost::shared_ptr<Connection>, Connector::ref);
 			void send(boost::shared_ptr<Stanza>);
 			virtual String getNewIQID();
 			void handleElement(boost::shared_ptr<Element>);

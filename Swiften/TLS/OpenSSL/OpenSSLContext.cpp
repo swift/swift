@@ -93,7 +93,7 @@ void OpenSSLContext::handleDataFromNetwork(const ByteArray& data) {
 			sendPendingDataToApplication();
 			break;
 		case Start: assert(false); break;
-		case Error: assert(false); break;
+		case Error: /*assert(false);*/ break;
 	}
 }
 
