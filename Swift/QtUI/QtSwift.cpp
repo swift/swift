@@ -79,11 +79,11 @@ QtSwift::QtSwift(po::variables_map options) : autoUpdater_(NULL) {
 	}
 	mainController_ = new MainController(chatWindowFactory_, rosterWindowFactory_, loginWindowFactory_, eventWindowFactory_, settings_, application_, systemTray_, soundPlayer_, xmlConsoleWidgetFactory_, chatListWindowFactory_, mucSearchWindowFactory_, options.count("latency-debug") > 0);
 
-	PlatformAutoUpdaterFactory autoUpdaterFactory;
-	if (autoUpdaterFactory.isSupported()) {
-		autoUpdater_ = autoUpdaterFactory.createAutoUpdater(SWIFT_APPCAST_URL);
-		autoUpdater_->checkForUpdates();
-	}
+	// PlatformAutoUpdaterFactory autoUpdaterFactory;
+	// if (autoUpdaterFactory.isSupported()) {
+	// 	autoUpdater_ = autoUpdaterFactory.createAutoUpdater(SWIFT_APPCAST_URL);
+	// 	autoUpdater_->checkForUpdates();
+	// }
 }
 
 QtSwift::~QtSwift() {

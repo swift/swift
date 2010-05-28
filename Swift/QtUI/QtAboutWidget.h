@@ -14,5 +14,8 @@ namespace Swift {
 
 		public:
 			QtAboutWidget();
+
+		private slots:
+			void handleLicenseClicked();
 	};
 }

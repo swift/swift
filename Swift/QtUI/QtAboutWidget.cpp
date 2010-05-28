@@ -11,7 +11,10 @@
 #include <QLabel>
 #include <QVBoxLayout>
 #include <QtGlobal>
-
+#include <QPushButton>
+#include <QTextEdit>
+#include <QFile>
+#include <QTextStream>
 
 #include "Swiften/Application/Application.h"
 
@@ -39,7 +42,26 @@ QtAboutWidget::QtAboutWidget() : QDialog() {
 	QLabel* buildLabel = new QLabel(buildString, this);
 	mainLayout->addWidget(buildLabel);
 
+	QPushButton* licenseButton = new QPushButton("View License", this);
+	mainLayout->addWidget(licenseButton);
+	connect(licenseButton, SIGNAL(clicked()), this, SLOT(handleLicenseClicked()));
+
 	setFixedSize(minimumSizeHint());
+}
+
+void QtAboutWidget::handleLicenseClicked() {
+	QTextEdit* text = new QTextEdit();
+	text->setAttribute(Qt::WA_DeleteOnClose);
+	text->setReadOnly(true);
+	QFile file(":/COPYING");
+	file.open(QIODevice::ReadOnly);
+	QTextStream in(&file);
+	in.setAutoDetectUnicode(true);
+	text->setPlainText(in.readAll());
+	file.close();
+	text->resize(500, 600);
+	text->show();
+	text->activateWindow();
 }
 
 }
