@@ -8,7 +8,7 @@ def getGitBuildVersion(project) :
       for tag in tags.split("\n") :
         tagVersion = git("rev-parse " + tag + "^{commit}")
         if tagVersion == headVersion :
-          return tag
+          return tag[len(project)+1:]
   return None
 
 def git(cmd) :
