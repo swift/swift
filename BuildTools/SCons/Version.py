@@ -1,16 +1,10 @@
 import subprocess, os, datetime
 
 def getGitBuildVersion(project) :
-  headVersion = git("rev-parse HEAD")
-  if headVersion :
-    tags = git("tag --contains HEAD -l " + project + "-*")
-    if len(tags) > 0 :
-      for tag in tags.split("\n") :
-        tagVersion = git("rev-parse " + tag + "^{commit}")
-        if tagVersion == headVersion :
-          return tag[len(project)+1:]
-  return None
-
+  tag = git("describe --tags --exact --match " + project + "-*")
+  if tag :
+    return tag.rstrip()[len(project)+1:]
+    
 def git(cmd) :
   p = subprocess.Popen("git " + cmd, shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE, close_fds=(os.name != "nt"))
   gitVersion = p.stdout.read()
