@@ -109,7 +109,7 @@ sources = [
   ]
 
 
-env["SWIFT_VERSION"] = Version.getBuildVersion("swift")
+myenv["SWIFT_VERSION"] = Version.getBuildVersion("swift")
 myenv.BuildVersion("BuildVersion.h", project = "swift")
 
 if env["PLATFORM"] == "win32" :
@@ -131,7 +131,7 @@ if env["PLATFORM"] == "darwin" :
   frameworks = []
   if env["HAVE_SPARKLE"] :
     frameworks.append(env["SPARKLE_FRAMEWORK"])
-  app = myenv.AppBundle("Swift", version = env["SWIFT_VERSION"], resources = ["../resources/MacOSX/Swift.icns"], frameworks = frameworks)
+  app = myenv.AppBundle("Swift", version = myenv["SWIFT_VERSION"], resources = ["../resources/MacOSX/Swift.icns"], frameworks = frameworks)
   if env["DIST"] :
     myenv.Command(["Swift-${SWIFT_VERSION}.dmg"], [app], [
         "$QTDIR/bin/macdeployqt $SOURCE -dmg",
@@ -152,6 +152,6 @@ if env["PLATFORM"] == "win32" :
 
     myenv.Append(NSIS_OPTIONS = [
         "/DmsvccRedistributableDir=\"" + env["vcredist"] + "\"", 
-        "/DbuildVersion=" + env["SWIFT_VERSION"]
+        "/DbuildVersion=" + myenv["SWIFT_VERSION"]
       ])
     myenv.Nsis("../Packaging/nsis/swift.nsi")
