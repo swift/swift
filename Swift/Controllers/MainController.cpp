@@ -55,8 +55,8 @@
 namespace Swift {
 
 static const String CLIENT_NAME = "Swift";
-static const String CLIENT_VERSION = "1.0-beta1";
-//static const String CLIENT_VERSION = "1.0-devel";
+//static const String CLIENT_VERSION = "1.0-beta1";
+static const String CLIENT_VERSION = "1.0-devel";
 static const String CLIENT_NODE = "http://swift.im";
 
 
