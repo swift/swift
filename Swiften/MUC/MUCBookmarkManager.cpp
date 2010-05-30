@@ -88,6 +88,9 @@ void MUCBookmarkManager::removeBookmark(const MUCBookmark& bookmark) {
 }
 
 void MUCBookmarkManager::flush() {
+	if (!storage) {
+		storage = boost::shared_ptr<Storage>(new Storage());
+	}
 	// Update the storage element
 	storage->clearRooms();
 	foreach(const MUCBookmark& bookmark, bookmarks_) {
