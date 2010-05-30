@@ -91,7 +91,7 @@ if env.get("universal", 0) :
 			"-arch", "ppc"])
 	env.Append(LINKFLAGS = [
 			"-mmacosx-version-min=10.4", 
-			"-Wl", "-syslibroot,/Developer/SDKs/MacOSX10.4u.sdk", 
+			"-isysroot", "/Developer/SDKs/MacOSX10.4u.sdk", 
 			"-arch", "i386", 
 			"-arch", "ppc"])
 
@@ -101,8 +101,8 @@ if env.get("mac105", 0) :
 			"-isysroot", "/Developer/SDKs/MacOSX10.5.sdk", 
 			"-arch", "i386"])
 	env.Append(LINKFLAGS = [
-			"-mmacosx-version-min=10.4", 
-			"-Wl", "-syslibroot,/Developer/SDKs/MacOSX10.5.sdk", 
+			"-mmacosx-version-min=10.5", 
+			"-isysroot", "/Developer/SDKs/MacOSX10.5.sdk", 
 			"-arch", "i386"])
 
 
