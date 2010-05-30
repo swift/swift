@@ -96,9 +96,9 @@ QtSwift::~QtSwift() {
 	delete settings_;
 	delete application_;
 	delete systemTray_;
+	delete tabs_;
 	delete splitter_;
 	delete soundPlayer_;
-	delete tabs_;
 	delete xmlConsoleWidgetFactory_;
 	delete eventWindowFactory_;
 	delete chatListWindowFactory_;
