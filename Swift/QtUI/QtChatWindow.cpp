@@ -46,7 +46,7 @@ QtChatWindow::QtChatWindow(const QString &contact, UIEventStream* eventStream) :
 	treeWidget_ = new QtTreeWidget(eventStream_);
 	treeWidget_->hide();
 	logRosterSplitter->addWidget(treeWidget_);
-
+	logRosterSplitter->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 
 	QWidget* midBar = new QWidget(this);
 	layout->addWidget(midBar);

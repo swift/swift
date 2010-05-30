@@ -46,6 +46,9 @@ void QtChatTabs::closeEvent(QCloseEvent* event) {
 }
 
 void QtChatTabs::addTab(QtTabbable* tab) {
+	QSizePolicy policy = sizePolicy();
+	/* Chat windows like to grow - don't let them */
+	setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
 	tabs_->addTab(tab, tab->windowTitle());
 	connect(tab, SIGNAL(titleUpdated()), this, SLOT(handleTabTitleUpdated()));
 	connect(tab, SIGNAL(windowClosing()), this, SLOT(handleTabClosing()));
@@ -53,6 +56,7 @@ void QtChatTabs::addTab(QtTabbable* tab) {
 	connect(tab, SIGNAL(wantsToActivate()), this, SLOT(handleWantsToActivate()));
 	connect(tab, SIGNAL(requestNextTab()), this, SLOT(handleRequestedNextTab()));
 	connect(tab, SIGNAL(requestPreviousTab()), this, SLOT(handleRequestedPreviousTab()));
+	setSizePolicy(policy);
 }
 
 void QtChatTabs::handleWidgetShown() {
