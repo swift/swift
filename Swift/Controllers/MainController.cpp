@@ -15,6 +15,7 @@
 #include "Swiften/Application/ApplicationMessageDisplay.h"
 #include "Swiften/Network/TimerFactory.h"
 #include "Swiften/Network/BoostTimerFactory.h"
+#include "Swift/Controllers/BuildVersion.h"
 #include "Swift/Controllers/Chat/ChatController.h"
 #include "Swift/Controllers/Chat/MUCSearchController.h"
 #include "Swift/Controllers/Chat/ChatsManager.h"
@@ -195,7 +196,7 @@ void MainController::handleConnected() {
 
 		eventWindowController_ = new EventWindowController(eventController_, eventWindowFactory_);
 
-		clientVersionResponder_ = new SoftwareVersionResponder(CLIENT_NAME, CLIENT_VERSION, client_);
+		clientVersionResponder_ = new SoftwareVersionResponder(CLIENT_NAME, buildVersion, client_);
 		loginWindow_->morphInto(rosterController_->getWindow());
 
 		DiscoInfo discoInfo;

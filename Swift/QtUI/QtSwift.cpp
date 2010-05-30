@@ -28,7 +28,7 @@
 #include "Swiften/Client/Client.h"
 #include "Swift/Controllers/MainController.h"
 #include "Swift/Controllers/ApplicationInfo.h"
-#include "Swift/QtUI/BuildVersion.h"
+#include "Swift/Controllers/BuildVersion.h"
 #include "SwifTools/AutoUpdater/AutoUpdater.h"
 #include "SwifTools/AutoUpdater/PlatformAutoUpdaterFactory.h"
 
