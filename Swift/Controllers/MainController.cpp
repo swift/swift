@@ -420,6 +420,9 @@ void MainController::handleServerDiscoInfoResponse(boost::shared_ptr<DiscoInfo> 
 }
 
 void MainController::handleOwnVCardReceived(boost::shared_ptr<VCard> vCard, const boost::optional<ErrorPayload>& error) {
+	if (!vCard) {
+		return;
+	}
 	if (!error && !vCard->getPhoto().isEmpty()) {
 		vCardPhotoHash_ = Hexify::hexify(SHA1::getHash(vCard->getPhoto()));
 		if (lastSentPresence_) {
