@@ -32,8 +32,10 @@ namespace Swift {
 			void handleSelected(const QModelIndex& current);
 			void handleActivated(const QModelIndex& index);
 		private:
+			void createAutoJoin(const JID& room, boost::optional<String> passedNick);
 			MUCSearchModel* model_;
 			MUCSearchDelegate* delegate_;
 			UIEventStream* eventStream_;
+			String lastSetNick_;
 	};
 }

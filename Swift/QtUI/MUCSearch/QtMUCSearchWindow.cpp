@@ -10,6 +10,7 @@
 
 #include "Swift/Controllers/UIEvents/UIEventStream.h"
 #include "Swift/Controllers/UIEvents/JoinMUCUIEvent.h"
+#include "Swift/Controllers/UIEvents/AddMUCBookmarkUIEvent.h"
 #include "Swift/QtUI/MUCSearch/MUCSearchModel.h"
 #include "Swift/QtUI/MUCSearch/MUCSearchDelegate.h"
 #include "Swift/QtUI/QtSwiftUtil.h"
@@ -79,14 +80,37 @@ void QtMUCSearchWindow::handleJoin() {
 	}
 	boost::optional<String> maybeNick;
 	if (!nickName_->text().isEmpty()) {
-		maybeNick = Q2PSTRING(nickName_->text());
+		lastSetNick_ = Q2PSTRING(nickName_->text());
+		maybeNick = lastSetNick_;
 	}
-	eventStream_->send(boost::shared_ptr<UIEvent>(new JoinMUCUIEvent(JID(Q2PSTRING(room_->text())), maybeNick)));
+
+	JID room(Q2PSTRING(room_->text()));
+	if (joinAutomatically_->isChecked()) {
+		createAutoJoin(room, maybeNick);
+	}
+	eventStream_->send(boost::shared_ptr<UIEvent>(new JoinMUCUIEvent(room, maybeNick)));
 	hide();
 }
 
+void QtMUCSearchWindow::createAutoJoin(const JID& room, boost::optional<String> passedNick) {
+	String nick = lastSetNick_;
+	if (passedNick) {
+		nick = passedNick.get();
+	}
+	MUCBookmark bookmark(room, room.getNode());
+	bookmark.setAutojoin(true);
+	if (!nick.isEmpty()) {
+		bookmark.setNick(nick);
+	}
+	//if (!password.isEmpty()) {
+	//	bookmark.setPassword(password);
+	//}
+	eventStream_->send(boost::shared_ptr<UIEvent>(new AddMUCBookmarkUIEvent(bookmark)));
+} 
+
 void QtMUCSearchWindow::setNick(const String& nick) {
 	nickName_->setText(P2QSTRING(nick));
+	lastSetNick_ = nick;
 }
 
 void QtMUCSearchWindow::setMUC(const String& nick) {

@@ -95,7 +95,7 @@
    <property name="geometry">
     <rect>
      <x>280</x>
-     <y>410</y>
+     <y>380</y>
      <width>211</width>
      <height>18</height>
     </rect>
@@ -131,7 +131,7 @@
    <property name="geometry">
     <rect>
      <x>280</x>
-     <y>430</y>
+     <y>400</y>
      <width>201</width>
      <height>26</height>
     </rect>
@@ -177,6 +177,19 @@
    </property>
    <property name="text">
     <string>Search</string>
+   </property>
+  </widget>
+  <widget class="QCheckBox" name="joinAutomatically_">
+   <property name="geometry">
+    <rect>
+     <x>280</x>
+     <y>440</y>
+     <width>211</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Join automatically in future</string>
    </property>
   </widget>
  </widget>
