@@ -30,6 +30,7 @@ QtMUCSearchWindow::QtMUCSearchWindow(UIEventStream* eventStream) {
 #ifdef SWIFT_PLATFORM_MACOSX
 	results_->setAlternatingRowColors(true);
 #endif
+	connect(service_, SIGNAL(returnPressed()), this, SLOT(handleSearch()));
 	connect(searchButton_, SIGNAL(clicked()), this, SLOT(handleSearch()));
 	connect(joinButton_, SIGNAL(clicked()), this, SLOT(handleJoin()));
 	connect(results_, SIGNAL(clicked(const QModelIndex&)), this, SLOT(handleSelected(const QModelIndex&)));
