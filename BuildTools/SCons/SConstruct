@@ -268,6 +268,21 @@ if conf.CheckCHeader("idna.h") and conf.CheckLib("idn") :
 else :
 	env["LIBIDN_BUNDLED"] = 1
 
+# Boost
+# NOTE: We can't use the system boost, because of 'signals' (which we
+# redefine as signals2 for avoiding Qt clashes)
+#boostLibs = ["boost_signals", "boost_thread", "boost_program_options", "boost_filesystem"]
+#if conf.CheckCHeader("boost/foreach.hpp") and conf.CheckCHeader("boost/signals.hpp") and conf.CheckCHeader("boost/thread.hpp") and conf.CheckCHeader("boost/program_options.hpp") and Conf.CheckCHeader("boost/filesystem.hpp") :
+#	allLibsPresent = True
+#	for lib in boostLibs :
+#		if not env.CheckLib(lib) :
+#			allLibsPresent = False
+#			break
+#	if allLibsPresent :
+#		env["BOOST_FLAGS"] = { "LIBS": [boostLibs] }
+#	else :
+#		env["BOOST_BUNDLED"] = True
+
 # Avahi
 if env["PLATFORM"] != "darwin" :
 	if conf.CheckCHeader("avahi-client/client.h") and conf.CheckLib("avahi-client") :
