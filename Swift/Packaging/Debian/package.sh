@@ -1,6 +1,7 @@
 #!/bin/sh
 
-VERSION=`../../../GetBuildVersion.py swift`
+export PYTHONPATH=../../../BuildTools/SCons
+VERSION=`../../../BuildTools/GetBuildVersion.py swift`
 DIRNAME=swift-$VERSION
 
 rm -rf $DIRNAME
