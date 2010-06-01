@@ -1,0 +1,3 @@
+?package(swift):needs="X11" section="Applications/Network/Communication"\
+  title="Swift" command="/usr/bin/swift"\
+	icon="/usr/share/pixmaps/swift.xpm"

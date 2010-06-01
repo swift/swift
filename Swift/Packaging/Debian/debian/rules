@@ -1,0 +1,36 @@
+#!/usr/bin/make -f
+
+#export DH_VERBOSE=1
+
+configure:
+
+build: configure
+
+clean: 
+
+install: build
+	dh_testdir
+	dh_testroot
+	dh_prep  
+	dh_installdirs
+	scons qt=/usr/share/qt4 SWIFT_INSTALLDIR=$(CURDIR)/debian/swift/usr $(CURDIR)
+
+binary-indep: install
+binary-arch: install
+	dh_testdir
+	dh_testroot
+	dh_installchangelogs 
+	dh_installdocs
+	dh_installmenu
+	dh_link
+	dh_strip
+	dh_compress
+	dh_fixperms
+	dh_installdeb
+	dh_shlibdeps
+	dh_gencontrol
+	dh_md5sums
+	dh_builddeb
+
+binary: binary-indep binary-arch
+.PHONY: build clean binary-indep binary-arch binary install configure
