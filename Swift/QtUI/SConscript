@@ -138,7 +138,7 @@ if env["PLATFORM"] == "darwin" :
 
 if env.get("SWIFT_INSTALLDIR", "") :
   env.Install(os.path.join(env["SWIFT_INSTALLDIR"], "bin"), swiftProgram)
-  env.InstallAs(os.path.join(env["SWIFT_INSTALLDIR"], "share", "pixmaps", "swift.xpm"), "../resources/logo/logo-icon-16.xpm")
+  env.InstallAs(os.path.join(env["SWIFT_INSTALLDIR"], "share", "pixmaps", "swift.xpm"), "../resources/logo/logo-icon-32.xpm")
   env.Install(os.path.join(env["SWIFT_INSTALLDIR"], "share", "applications"), "../resources/swift.desktop")
 
 if env["PLATFORM"] == "win32" :
