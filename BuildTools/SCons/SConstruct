@@ -281,6 +281,9 @@ for (lib, header) in boostLibs :
 		break
 if allLibsPresent :
 	env["BOOST_FLAGS"] = { "LIBS": ["boost_" + lib for lib, header in boostLibs] }
+	if not conf.CheckCXXHeader("boost/uuid/uuid.hpp") :
+		# FIXME: Remove this workaround when UUID is available in most distros
+		env["BOOST_BUNDLED_UUID_ONLY"] = True
 else :
 	env["BOOST_BUNDLED"] = True
 

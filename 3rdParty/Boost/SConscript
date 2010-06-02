@@ -1,6 +1,15 @@
 Import("env")
 
-if env.get("BOOST_BUNDLED", False) :
+# FIXME: Remove this when Boost UUID is present on most distros
+if env.get("BOOST_BUNDLED_UUID_ONLY", False) :
+	# Cherry pick UUID out of the 3rdParty dir, install it in a separate
+	# dir, and use this as an include path.
+	if env["SCONS_STAGE"] == "flags" :
+		env["BOOST_FLAGS"]["CPPFLAGS"] = env["BOOST_FLAGS"].get("CPPFLAGS", []) + ["-I" + env.Dir("uuid").abspath]
+	elif env["SCONS_STAGE"] == "build" :
+		env.Install("uuid/boost", "src/boost/uuid")
+
+elif env.get("BOOST_BUNDLED", False) :
 
 ################################################################################
 # Common
