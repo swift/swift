@@ -2,8 +2,8 @@ Import("swiften_env")
 
 myenv = swiften_env.Clone()
 myenv.MergeFlags(myenv["LIBIDN_FLAGS"])
-if myenv["target"] == "native":
-   myenv.MergeFlags(myenv["CARES_FLAGS"])
+if myenv.get("HAVE_CARES", False) :
+   myenv.MergeFlags(myenv.get("CARES_FLAGS", {}))
 
 sourceList = [
 			"BoostConnection.cpp",
@@ -26,7 +26,7 @@ sourceList = [
 			"HostAddress.cpp",
 			"Timer.cpp",
 			"BoostTimer.cpp"]
-if myenv["target"] == "native":
+if myenv.get("HAVE_CARES", False) :
    sourceList.append("CAresDomainNameResolver.cpp")
 		
 
