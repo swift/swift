@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include "Swiften/Base/boost_signalslib.h"
+#include "Swiften/Base/boost_bsignals.h"
 
 #include "Swiften/Base/ByteArray.h"
 #include "Swiften/Base/String.h"

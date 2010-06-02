@@ -7,7 +7,7 @@
 #pragma once
 
 #include <boost/shared_ptr.hpp>
-#include "Swiften/Base/boost_signalslib.h"
+#include "Swiften/Base/boost_bsignals.h"
 
 #include "Swiften/Session/Session.h"
 #include "Swiften/JID/JID.h"

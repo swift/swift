@@ -14,7 +14,7 @@
 
 #include <map>
 #include <boost/bind.hpp>
-#include "Swiften/Base/boost_signalslib.h"
+#include "Swiften/Base/boost_bsignals.h"
 #include <boost/shared_ptr.hpp>
 
 namespace Swift {

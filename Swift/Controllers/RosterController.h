@@ -14,7 +14,7 @@
 #include "Swiften/Avatars/AvatarManager.h"
 #include "Swift/Controllers/UIEvents/UIEvent.h"
 
-#include "Swiften/Base/boost_signalslib.h"
+#include "Swiften/Base/boost_bsignals.h"
 #include <boost/shared_ptr.hpp>
 
 namespace Swift {

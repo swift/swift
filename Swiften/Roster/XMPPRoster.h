@@ -13,7 +13,7 @@
 
 #include <map>
 #include <vector>
-#include "Swiften/Base/boost_signalslib.h"
+#include "Swiften/Base/boost_bsignals.h"
 
 namespace Swift {
 

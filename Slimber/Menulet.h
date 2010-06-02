@@ -6,9 +6,8 @@
 
 #pragma once
 
-#include <boost/signal.hpp>
-
 #include "Swiften/Base/String.h"
+#include "Swiften/Base/boost_bsignals.h"
 
 class Menulet {
 	public:

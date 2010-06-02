@@ -13,7 +13,7 @@
 #include "Swiften/MUC/MUCOccupant.h"
 
 #include <boost/shared_ptr.hpp>
-#include "Swiften/Base/boost_signalslib.h"
+#include "Swiften/Base/boost_bsignals.h"
 #include <boost/signals/connection.hpp>
 
 #include <map>

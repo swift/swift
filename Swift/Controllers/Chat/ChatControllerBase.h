@@ -10,7 +10,7 @@
 #include <map>
 #include <vector>
 #include <boost/shared_ptr.hpp>
-#include "Swiften/Base/boost_signalslib.h"
+#include "Swiften/Base/boost_bsignals.h"
 #include <boost/filesystem.hpp>
 
 #include "Swiften/Base/String.h"
