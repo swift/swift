@@ -12,7 +12,7 @@
 #include "Swiften/Elements/RosterPayload.h"
 #include "Swiften/Queries/Responders/RosterPushResponder.h"
 
-#include <boost/signals.hpp>
+#include "Swiften/Base/boost_signalslib.h"
 #include <boost/shared_ptr.hpp>
 
 namespace Swift {

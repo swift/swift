@@ -10,7 +10,7 @@
 #include <map>
 
 #include <boost/shared_ptr.hpp>
-#include <boost/signals.hpp>
+#include "Swiften/Base/boost_signalslib.h"
 
 #include "Swiften/Base/String.h"
 #include "Swiften/JID/JID.h"

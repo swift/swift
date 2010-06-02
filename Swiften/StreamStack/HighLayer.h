@@ -7,7 +7,7 @@
 #ifndef SWIFTEN_HIGHLAYER_H
 #define SWIFTEN_HIGHLAYER_H
 
-#include <boost/signal.hpp>
+#include "Swiften/Base/boost_signalslib.h"
 
 #include "Swiften/Base/ByteArray.h"
 

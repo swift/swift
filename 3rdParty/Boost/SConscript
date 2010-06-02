@@ -1,6 +1,6 @@
 Import("env")
 
-cppdefines = ["BOOST_ALL_NO_LIB", ("BOOST_SIGNALS_NAMESPACE", "bsignals")]
+cppdefines = ["BOOST_ALL_NO_LIB"]
 
 ################################################################################
 # Flags

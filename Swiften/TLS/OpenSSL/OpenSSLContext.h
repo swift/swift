@@ -5,7 +5,7 @@
  */
 
 #include <openssl/ssl.h>
-#include <boost/signal.hpp>
+#include "Swiften/Base/boost_signalslib.h"
 #include <boost/noncopyable.hpp>
 
 #include "Swiften/Base/ByteArray.h"

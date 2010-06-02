@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include <boost/signals.hpp>
+#include "Swiften/Base/boost_signalslib.h"
 
 namespace Swift {
 	class Timer {

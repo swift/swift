@@ -11,7 +11,7 @@
 #include "Swiften/JID/JID.h"
 #include "Swiften/Elements/StatusShow.h"
 
-#include <boost/signals.hpp>
+#include "Swiften/Base/boost_signalslib.h"
 #include <boost/shared_ptr.hpp>
 
 namespace Swift {

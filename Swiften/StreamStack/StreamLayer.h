@@ -7,7 +7,7 @@
 #ifndef SWIFTEN_STREAMLAYER_H
 #define SWIFTEN_STREAMLAYER_H
 
-#include <boost/signal.hpp>
+#include "Swiften/Base/boost_signalslib.h"
 
 #include "Swiften/StreamStack/LowLayer.h"
 #include "Swiften/StreamStack/HighLayer.h"

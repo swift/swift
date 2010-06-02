@@ -8,7 +8,7 @@
 
 #include <cassert>
 
-#include <boost/signals.hpp>
+#include "Swiften/Base/boost_signalslib.h"
 #include <boost/shared_ptr.hpp>
 
 #include "Swiften/Events/StanzaEvent.h"

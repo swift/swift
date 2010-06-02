@@ -10,7 +10,7 @@
 #include "Swiften/Elements/Presence.h"
 
 #include <map>
-#include <boost/signal.hpp>
+#include "Swiften/Base/boost_signalslib.h"
 
 namespace Swift {
 class StanzaChannel;

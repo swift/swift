@@ -7,7 +7,7 @@
 #pragma once
 
 #include <boost/shared_ptr.hpp>
-#include <boost/signal.hpp>
+#include "Swiften/Base/boost_signalslib.h"
 #include <vector>
 
 #include "Swiften/Elements/Stanza.h"

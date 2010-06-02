@@ -8,7 +8,7 @@
 #define SWIFTEN_OpenSSLLayer_H
 
 #include <boost/noncopyable.hpp>
-#include <boost/signal.hpp>
+#include "Swiften/Base/boost_signalslib.h"
 
 #include "Swiften/Base/ByteArray.h"
 #include "Swiften/StreamStack/TLSLayer.h"

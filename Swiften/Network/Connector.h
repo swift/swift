@@ -7,7 +7,7 @@
 #pragma once
 
 #include <deque>
-#include <boost/signal.hpp>
+#include "Swiften/Base/boost_signalslib.h"
 #include <boost/shared_ptr.hpp>
 
 #include "Swiften/Network/DomainNameServiceQuery.h"

@@ -7,7 +7,7 @@
 #ifndef SWIFTEN_IQChannel_H
 #define SWIFTEN_IQChannel_H
 
-#include <boost/signal.hpp>
+#include "Swiften/Base/boost_signalslib.h"
 #include <boost/shared_ptr.hpp>
 
 #include "Swiften/Base/String.h"

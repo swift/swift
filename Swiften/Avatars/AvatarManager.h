@@ -9,7 +9,7 @@
 #include <boost/filesystem.hpp>
 #include <boost/shared_ptr.hpp>
 #include <boost/optional.hpp>
-#include <boost/signal.hpp>
+#include "Swiften/Base/boost_signalslib.h"
 #include <map>
 
 #include "Swiften/JID/JID.h"

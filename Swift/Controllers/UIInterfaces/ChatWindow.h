@@ -8,7 +8,7 @@
 #define SWIFTEN_CHATWINDOW_H
 
 #include <boost/optional.hpp>
-#include <boost/signals.hpp>
+#include "Swiften/Base/boost_signalslib.h"
 #include <boost/shared_ptr.hpp>
 #include <vector>
 

@@ -8,7 +8,7 @@
 #define SWIFTEN_COMPRESSIONLAYER_H
 
 #include <boost/noncopyable.hpp>
-#include <boost/signal.hpp>
+#include "Swiften/Base/boost_signalslib.h"
 
 #include "Swiften/Base/ByteArray.h"
 #include "Swiften/StreamStack/StreamLayer.h"

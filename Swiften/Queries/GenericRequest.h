@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include <boost/signal.hpp>
+#include "Swiften/Base/boost_signalslib.h"
 
 #include "Swiften/Queries/Request.h"
 
