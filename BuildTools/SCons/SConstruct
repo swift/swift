@@ -248,8 +248,8 @@ if conf.CheckLib("z") :
 else :
 	env["ZLIB_BUNDLED"] = True
 
-if conf.CheckLib("dl") :
-	env.Append(LIBS = ["dl"])
+#if conf.CheckLib("dl") :
+#	env.Append(LIBS = ["dl"])
 
 if conf.CheckLib("c") :
 	env.Append(LIBS = ["c"])
