@@ -43,22 +43,29 @@ void ServerFromClientSession::handleElement(boost::shared_ptr<Element> element) 
 	}
 	else {
 		if (AuthRequest* authRequest = dynamic_cast<AuthRequest*>(element.get())) {
-			if (authRequest->getMechanism() != "PLAIN") {
-				getXMPPLayer()->writeElement(boost::shared_ptr<AuthFailure>(new AuthFailure));
-				finishSession(NoSupportedAuthMechanismsError);
-			}
-			else {
-				PLAINMessage plainMessage(authRequest->getMessage() ? *authRequest->getMessage() : "");
-				if (userRegistry_->isValidUserPassword(JID(plainMessage.getAuthenticationID(), getLocalJID().getDomain()), plainMessage.getPassword())) {
-					getXMPPLayer()->writeElement(boost::shared_ptr<AuthSuccess>(new AuthSuccess()));
-					user_ = plainMessage.getAuthenticationID();
-					authenticated_ = true;
-					getXMPPLayer()->resetParser();
+			if (authRequest->getMechanism() == "PLAIN" || (allowSASLEXTERNAL && authRequest->getMechanism() == "EXTERNAL")) {
+				if (authRequest->getMechanism() == "EXTERNAL") {
+						getXMPPLayer()->writeElement(boost::shared_ptr<AuthSuccess>(new AuthSuccess()));
+						authenticated_ = true;
+						getXMPPLayer()->resetParser();
 				}
 				else {
-					getXMPPLayer()->writeElement(boost::shared_ptr<AuthFailure>(new AuthFailure));
-					finishSession(AuthenticationFailedError);
+					PLAINMessage plainMessage(authRequest->getMessage() ? *authRequest->getMessage() : "");
+					if (userRegistry_->isValidUserPassword(JID(plainMessage.getAuthenticationID(), getLocalJID().getDomain()), plainMessage.getPassword())) {
+						getXMPPLayer()->writeElement(boost::shared_ptr<AuthSuccess>(new AuthSuccess()));
+						user_ = plainMessage.getAuthenticationID();
+						authenticated_ = true;
+						getXMPPLayer()->resetParser();
+					}
+					else {
+						getXMPPLayer()->writeElement(boost::shared_ptr<AuthFailure>(new AuthFailure));
+						finishSession(AuthenticationFailedError);
+					}
 				}
+			}
+			else {
+				getXMPPLayer()->writeElement(boost::shared_ptr<AuthFailure>(new AuthFailure));
+				finishSession(NoSupportedAuthMechanismsError);
 			}
 		}
 		else if (IQ* iq = dynamic_cast<IQ*>(element.get())) {
@@ -86,6 +93,9 @@ void ServerFromClientSession::handleStreamStart(const ProtocolHeader& incomingHe
 	boost::shared_ptr<StreamFeatures> features(new StreamFeatures());
 	if (!authenticated_) {
 		features->addAuthenticationMechanism("PLAIN");
+		if (allowSASLEXTERNAL) {
+			features->addAuthenticationMechanism("EXTERNAL");
+		}
 	}
 	else {
 		features->setHasResourceBind();
@@ -99,5 +109,8 @@ void ServerFromClientSession::setInitialized() {
 	onSessionStarted();
 }
 
+void ServerFromClientSession::setAllowSASLEXTERNAL() {
+	allowSASLEXTERNAL = true;
+}
 
 }

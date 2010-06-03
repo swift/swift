@@ -38,6 +38,7 @@ namespace Swift {
 					UserRegistry* userRegistry);
 
 			boost::signal<void ()> onSessionStarted;
+			void setAllowSASLEXTERNAL();
 
 		private:
 			void handleElement(boost::shared_ptr<Element>);
@@ -53,6 +54,7 @@ namespace Swift {
 			UserRegistry* userRegistry_;
 			bool authenticated_;
 			bool initialized;
+			bool allowSASLEXTERNAL;
 			String user_;
 	};
 }

@@ -101,6 +101,10 @@ void ClientSession::handleElement(boost::shared_ptr<Element> element) {
 					finishSession(Error::TLSClientCertificateError);
 				}
 			}
+			else if (streamFeatures->hasAuthenticationMechanism("EXTERNAL")) {
+				state = Authenticating;
+				stream->writeElement(boost::shared_ptr<Element>(new AuthRequest("EXTERNAL", "")));
+			}
 			else if (streamFeatures->hasAuthenticationMechanism("SCRAM-SHA-1")) {
 				// FIXME: Use a real nonce
 				std::ostringstream s;
