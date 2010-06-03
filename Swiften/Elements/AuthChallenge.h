@@ -6,24 +6,29 @@
 
 #pragma once
 
+#include <boost/optional.hpp>
+
 #include "Swiften/Base/ByteArray.h"
 #include "Swiften/Elements/Element.h"
 
 namespace Swift {
 	class AuthChallenge : public Element {
 		public:
-			AuthChallenge(const ByteArray& value = "") : value(value) {
+			AuthChallenge() {
 			}
 
-			const ByteArray& getValue() const {
+			AuthChallenge(const ByteArray& value) : value(value) {
+			}
+
+			const boost::optional<ByteArray>& getValue() const {
 				return value;
 			}
 
 			void setValue(const ByteArray& value) {
-				this->value = value;
+				this->value = boost::optional<ByteArray>(value);
 			}
 
 		private:
-			ByteArray value;
+			boost::optional<ByteArray> value;
 	};
 }

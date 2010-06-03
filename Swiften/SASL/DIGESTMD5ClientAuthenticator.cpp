@@ -16,9 +16,9 @@ namespace Swift {
 DIGESTMD5ClientAuthenticator::DIGESTMD5ClientAuthenticator(const String& host, const String& nonce) : ClientAuthenticator("DIGEST-MD5"), step(Initial), host(host), cnonce(nonce) {
 }
 
-ByteArray DIGESTMD5ClientAuthenticator::getResponse() const {
+boost::optional<ByteArray> DIGESTMD5ClientAuthenticator::getResponse() const {
 	if (step == Initial) {
-		return ByteArray();
+		return boost::optional<ByteArray>();
 	}
 	else if (step == Response) {
 		String realm;
@@ -59,13 +59,16 @@ ByteArray DIGESTMD5ClientAuthenticator::getResponse() const {
 		return response.serialize();
 	}
 	else {
-		return ByteArray();
+		return boost::optional<ByteArray>();
 	}
 }
 
-bool DIGESTMD5ClientAuthenticator::setChallenge(const ByteArray& challengeData) {
+bool DIGESTMD5ClientAuthenticator::setChallenge(const boost::optional<ByteArray>& challengeData) {
 	if (step == Initial) {
-		challenge = DIGESTMD5Properties::parse(challengeData);
+		if (!challengeData) {
+			return false;
+		}
+		challenge = DIGESTMD5Properties::parse(*challengeData);
 
 		// Sanity checks
 		if (!challenge.getValue("nonce")) {

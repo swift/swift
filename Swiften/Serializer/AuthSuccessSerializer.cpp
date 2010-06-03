@@ -15,8 +15,17 @@ AuthSuccessSerializer::AuthSuccessSerializer() {
 }
 
 String AuthSuccessSerializer::serialize(boost::shared_ptr<Element> element)  const {
-	boost::shared_ptr<AuthSuccess> authRequest(boost::dynamic_pointer_cast<AuthSuccess>(element));
-	String value = (authRequest->getValue().isEmpty() ? "=" : Base64::encode(authRequest->getValue()));
+	boost::shared_ptr<AuthSuccess> authSuccess(boost::dynamic_pointer_cast<AuthSuccess>(element));
+	String value;
+	boost::optional<ByteArray> message = authSuccess->getValue();
+	if (message) {
+		if ((*message).isEmpty()) {
+			value = "=";
+		}
+		else {
+			value = Base64::encode(*message);
+		}
+	}
 	return "<success xmlns=\"urn:ietf:params:xml:ns:xmpp-sasl\">" + value + "</success>";
 }
 

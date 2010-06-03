@@ -14,9 +14,18 @@ namespace Swift {
 AuthResponseSerializer::AuthResponseSerializer() {
 }
 
-String AuthResponseSerializer::serialize(boost::shared_ptr<Element> element)  const {
-	boost::shared_ptr<AuthResponse> authRequest(boost::dynamic_pointer_cast<AuthResponse>(element));
-	String value = (authRequest->getValue().isEmpty() ? "=" : Base64::encode(authRequest->getValue()));
+String AuthResponseSerializer::serialize(boost::shared_ptr<Element> element)	const {
+	boost::shared_ptr<AuthResponse> authResponse(boost::dynamic_pointer_cast<AuthResponse>(element));
+	String value;
+	boost::optional<ByteArray> message = authResponse->getValue();
+	if (message) {
+		if ((*message).isEmpty()) {
+			value = "=";
+		}
+		else {
+			value = Base64::encode(*message);
+		}
+	}
 	return "<response xmlns=\"urn:ietf:params:xml:ns:xmpp-sasl\">" + value + "</response>";
 }
 

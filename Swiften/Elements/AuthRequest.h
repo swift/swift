@@ -4,8 +4,9 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#ifndef SWIFTEN_AuthRequest_H
-#define SWIFTEN_AuthRequest_H
+#pragma once
+
+#include <boost/optional.hpp>
 
 #include "Swiften/Base/ByteArray.h"
 #include "Swiften/Elements/Element.h"
@@ -13,16 +14,23 @@
 namespace Swift {
 	class AuthRequest : public Element {
 		public:
-			AuthRequest(const String& mechanism = "", const ByteArray& message = "") : 
+			AuthRequest(const String& mechanism = "") : mechanism_(mechanism) {
+			}
+
+			AuthRequest(const String& mechanism, const ByteArray& message) : 
 					mechanism_(mechanism), message_(message) {
 			}
 
-			const ByteArray& getMessage() const {
+			AuthRequest(const String& mechanism, const boost::optional<ByteArray>& message) : 
+					mechanism_(mechanism), message_(message) {
+			}
+
+			const boost::optional<ByteArray>& getMessage() const {
 				return message_;
 			}
 
 			void setMessage(const ByteArray& message) {
-				message_ = message;
+				message_ = boost::optional<ByteArray>(message);
 			}
 
 			const String& getMechanism() const {
@@ -35,8 +43,6 @@ namespace Swift {
 
 		private:
 			String mechanism_;
-			ByteArray message_;
+			boost::optional<ByteArray> message_;
 	};
 }
-
-#endif

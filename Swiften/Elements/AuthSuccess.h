@@ -6,6 +6,8 @@
 
 #pragma once
 
+#include <boost/optional.hpp>
+
 #include "Swiften/Elements/Element.h"
 #include "Swiften/Base/ByteArray.h"
 
@@ -14,15 +16,15 @@ namespace Swift {
 		public:
 			AuthSuccess() {}
 
-			const ByteArray& getValue() const {
+			const boost::optional<ByteArray>& getValue() const {
 				return value;
 			}
 
 			void setValue(const ByteArray& value) {
-				this->value = value;
+				this->value = boost::optional<ByteArray>(value);
 			}
 
 		private:
-			ByteArray value;
+			boost::optional<ByteArray> value;
 	};
 }

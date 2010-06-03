@@ -18,8 +18,8 @@ namespace Swift {
 		public:
 			DIGESTMD5ClientAuthenticator(const String& host, const String& nonce);
 			
-			virtual ByteArray getResponse() const;
-			virtual bool setChallenge(const ByteArray&);
+			virtual boost::optional<ByteArray> getResponse() const;
+			virtual bool setChallenge(const boost::optional<ByteArray>&);
 
 		private:
 			enum Step {

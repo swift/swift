@@ -48,7 +48,7 @@ void ServerFromClientSession::handleElement(boost::shared_ptr<Element> element) 
 				finishSession(NoSupportedAuthMechanismsError);
 			}
 			else {
-				PLAINMessage plainMessage(authRequest->getMessage());
+				PLAINMessage plainMessage(authRequest->getMessage() ? *authRequest->getMessage() : "");
 				if (userRegistry_->isValidUserPassword(JID(plainMessage.getAuthenticationID(), getLocalJID().getDomain()), plainMessage.getPassword())) {
 					getXMPPLayer()->writeElement(boost::shared_ptr<AuthSuccess>(new AuthSuccess()));
 					user_ = plainMessage.getAuthenticationID();

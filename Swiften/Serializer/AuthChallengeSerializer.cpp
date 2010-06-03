@@ -15,8 +15,17 @@ AuthChallengeSerializer::AuthChallengeSerializer() {
 }
 
 String AuthChallengeSerializer::serialize(boost::shared_ptr<Element> element)  const {
-	boost::shared_ptr<AuthChallenge> authRequest(boost::dynamic_pointer_cast<AuthChallenge>(element));
-	String value = (authRequest->getValue().isEmpty() ? "=" : Base64::encode(authRequest->getValue()));
+	boost::shared_ptr<AuthChallenge> authChallenge(boost::dynamic_pointer_cast<AuthChallenge>(element));
+	String value;
+	boost::optional<ByteArray> message = authChallenge->getValue();
+	if (message) {
+		if ((*message).isEmpty()) {
+			value = "=";
+		}
+		else {
+			value = Base64::encode(*message);
+		}
+	}
 	return "<challenge xmlns=\"urn:ietf:params:xml:ns:xmpp-sasl\">" + value + "</challenge>";
 }
 

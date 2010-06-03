@@ -6,6 +6,8 @@
 
 #pragma once
 
+#include <boost/optional.hpp>
+
 #include "Swiften/Base/String.h"
 #include "Swiften/Base/ByteArray.h"
 
@@ -25,8 +27,8 @@ namespace Swift {
 				this->authzid = authzid;
 			}
 
-			virtual ByteArray getResponse() const = 0;
-			virtual bool setChallenge(const ByteArray&) = 0;
+			virtual boost::optional<ByteArray> getResponse() const = 0;
+			virtual bool setChallenge(const boost::optional<ByteArray>&) = 0;
 
 			const String& getAuthenticationID() const {
 				return authcid;

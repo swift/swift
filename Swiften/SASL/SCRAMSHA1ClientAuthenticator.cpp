@@ -38,7 +38,7 @@ static String escape(const String& s) {
 SCRAMSHA1ClientAuthenticator::SCRAMSHA1ClientAuthenticator(const String& nonce) : ClientAuthenticator("SCRAM-SHA-1"), step(Initial), clientnonce(nonce) {
 }
 
-ByteArray SCRAMSHA1ClientAuthenticator::getResponse() const {
+boost::optional<ByteArray> SCRAMSHA1ClientAuthenticator::getResponse() const {
 	if (step == Initial) {
 		return getGS2Header() + getInitialBareClientMessage();
 	}
@@ -54,13 +54,16 @@ ByteArray SCRAMSHA1ClientAuthenticator::getResponse() const {
 		return result;
 	}
 	else {
-		return ByteArray();
+		return boost::optional<ByteArray>();
 	}
 }
 
-bool SCRAMSHA1ClientAuthenticator::setChallenge(const ByteArray& challenge) {
+bool SCRAMSHA1ClientAuthenticator::setChallenge(const boost::optional<ByteArray>& challenge) {
 	if (step == Initial) {
-		initialServerMessage = challenge;
+		if (!challenge) {
+			return false;
+		}
+		initialServerMessage = *challenge;
 
 		std::map<char, String> keys = parseMap(String(initialServerMessage.getData(), initialServerMessage.getSize()));
 
@@ -102,7 +105,7 @@ bool SCRAMSHA1ClientAuthenticator::setChallenge(const ByteArray& challenge) {
 	else if (step == Proof) {
 		ByteArray result = ByteArray("v=") + ByteArray(Base64::encode(serverSignature));
 		step = Final;
-		return challenge == result;
+		return challenge && challenge == result;
 	}
 	else {
 		return true;

@@ -11,11 +11,11 @@ namespace Swift {
 PLAINClientAuthenticator::PLAINClientAuthenticator() : ClientAuthenticator("PLAIN") {
 }
 
-ByteArray PLAINClientAuthenticator::getResponse() const {
+boost::optional<ByteArray> PLAINClientAuthenticator::getResponse() const {
 	return ByteArray(getAuthorizationID()) + '\0' + ByteArray(getAuthenticationID()) + '\0' + ByteArray(getPassword());
 }
 
-bool PLAINClientAuthenticator::setChallenge(const ByteArray&) {
+bool PLAINClientAuthenticator::setChallenge(const boost::optional<ByteArray>&) {
 	return true;
 }
 
