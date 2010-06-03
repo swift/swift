@@ -30,7 +30,7 @@ if myenv["HAVE_SPARKLE"] :
 myenv.MergeFlags(env["SWIFTEN_FLAGS"])
 myenv.MergeFlags(env["LIBIDN_FLAGS"])
 myenv.MergeFlags(env["BOOST_FLAGS"])
-myenv.MergeFlags(env["SQLITE_FLAGS"])
+myenv.MergeFlags(env.get("SQLITE_FLAGS", {}))
 myenv.MergeFlags(env["ZLIB_FLAGS"])
 myenv.MergeFlags(env["OPENSSL_FLAGS"])
 myenv.MergeFlags(env.get("LIBXML_FLAGS", ""))
