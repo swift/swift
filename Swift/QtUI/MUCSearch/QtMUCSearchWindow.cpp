@@ -18,6 +18,9 @@
 namespace Swift {
 
 QtMUCSearchWindow::QtMUCSearchWindow(UIEventStream* eventStream) {
+#ifndef Q_WS_MAC
+	setWindowIcon(QIcon(":/logo-icon-16.png"));
+#endif
 	eventStream_ = eventStream;
 	setupUi(this);
 	showEmptyRooms_->hide();
