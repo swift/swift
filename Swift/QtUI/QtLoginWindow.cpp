@@ -36,6 +36,7 @@ QtLoginWindow::QtLoginWindow(UIEventStream* uiEventStream) : QMainWindow() {
 	uiEventStream_ = uiEventStream;
 
 	setWindowTitle("Swift");
+	setWindowIcon(QIcon(":/logo-icon-16.png"));
 	QtUtilities::setX11Resource(this, "Main");
 
 	resize(200, 500);

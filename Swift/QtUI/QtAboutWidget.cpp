@@ -21,6 +21,9 @@
 namespace Swift {
 
 QtAboutWidget::QtAboutWidget() : QDialog() {
+	setWindowTitle("About Swift");
+	setWindowIcon(QIcon(":/logo-icon-16.png"));
+
 	resize(180, 240);
 	QVBoxLayout *mainLayout = new QVBoxLayout(this);
 	mainLayout->setAlignment(Qt::AlignHCenter);
