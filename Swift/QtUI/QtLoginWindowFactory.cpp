@@ -21,7 +21,7 @@ LoginWindow* QtLoginWindowFactory::createLoginWindow(UIEventStream* uiEventStrea
 	window_ = new QtLoginWindow(uiEventStream);
 	if (splitter_) {
 		splitter_->insertWidget(0, window_);
-		return window_;
+		//return window_;
 	}
 	connect(systemTray_, SIGNAL(clicked()), window_, SLOT(bringToFront()));
 	QVariant loginWindowGeometryVariant = settings_->getQSettings()->value("loginWindowGeometry");

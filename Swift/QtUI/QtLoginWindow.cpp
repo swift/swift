@@ -19,6 +19,7 @@
 #include <QToolButton>
 #include <QLabel>
 #include <QMenuBar>
+#include <qdebug.h>
 
 #include "Swift/Controllers/UIEvents/UIEventStream.h"
 #include "Swift/Controllers/UIEvents/RequestXMLConsoleUIEvent.h"
@@ -317,13 +318,13 @@ void QtLoginWindow::setMessage(const String& message) {
 }
 
 void QtLoginWindow::bringToFront() {
-	if (isHidden()) {
-		showNormal();
-		raise();
-		activateWindow();
+	if (!isVisible()) {
+		window()->showNormal();
+		window()->raise();
+		window()->activateWindow();
 	}
 	else {
-		hide();
+		window()->hide();
 	}
 }
 
