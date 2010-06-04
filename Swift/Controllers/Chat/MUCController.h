@@ -46,7 +46,7 @@ namespace Swift {
 			void handleOccupantJoined(const MUCOccupant& occupant);
 			void handleOccupantLeft(const MUCOccupant& occupant, MUC::LeavingType type, const String& reason);
 			void handleOccupantPresenceChange(boost::shared_ptr<Presence> presence);
-			void handleOccupantRoleChanged(const String& nick, const MUCOccupant::Role& newRole, const MUCOccupant::Role& oldRole);
+			void handleOccupantRoleChanged(const String& nick, const MUCOccupant& occupant,const MUCOccupant::Role& oldRole);
 			void handleJoinComplete(const String& nick);
 			void handleJoinFailed(boost::shared_ptr<ErrorPayload> error);
 			void handleJoinTimeoutTick();

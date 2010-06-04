@@ -115,7 +115,18 @@ QColor RosterModel::getBackgroundColor(RosterItem* item) const {
 }
 
 QString RosterModel::getToolTip(RosterItem* item) const {
-	return dynamic_cast<ContactRosterItem*>(item) && !getStatusText(item).isEmpty() ? P2QSTRING(item->getDisplayName()) + "\n" + getStatusText(item) : P2QSTRING(item->getDisplayName());
+	QString tip(P2QSTRING(item->getDisplayName()));
+	ContactRosterItem* contact = dynamic_cast<ContactRosterItem*>(item);
+	if (contact) {
+		if (contact->getDisplayJID().isValid()) {
+			tip += "\n" + P2QSTRING(contact->getDisplayJID().toBare().toString());
+		}
+		tip += "\n " + P2QSTRING(StatusShow::typeToFriendlyName(contact->getStatusShow()));
+		if (!getStatusText(item).isEmpty()) {
+			tip += ": " + getStatusText(item);
+		}
+	}
+	return tip;
 }
 
 QIcon RosterModel::getAvatar(RosterItem* item) const {

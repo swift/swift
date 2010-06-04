@@ -43,6 +43,7 @@ namespace Swift {
 			void handleItemClicked(QListWidgetItem* item);
 		private:
 			void viewMode();
+			void setNewToolTip();
 			//QComboBox *types_;
 			QStackedWidget* stack_;
 			QLabel* statusIcon_;

@@ -22,7 +22,7 @@ namespace Swift {
 class GroupRosterItem;
 class ContactRosterItem : public RosterItem {
 	public:
-		ContactRosterItem(const JID& jid, const String& name, GroupRosterItem* parent);
+		ContactRosterItem(const JID& jid, const JID& displayJID, const String& name, GroupRosterItem* parent);
 		virtual ~ContactRosterItem();
 
 		StatusShow::Type getStatusShow() const;
@@ -31,11 +31,14 @@ class ContactRosterItem : public RosterItem {
 		void setAvatarPath(const String& path);
 		const String& getAvatarPath() const;
 		const JID& getJID() const;
+		void setDisplayJID(const JID& jid);
+		const JID& getDisplayJID() const;
 		void applyPresence(const String& resource, boost::shared_ptr<Presence> presence);
 		void clearPresence();
 		void calculateShownPresence();
 	private:
 		JID jid_;
+		JID displayJID_;
 		String avatarPath_;
 		bool hidden_;
 		std::map<String, boost::shared_ptr<Presence> > presences_;

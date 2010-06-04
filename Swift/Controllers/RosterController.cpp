@@ -104,10 +104,10 @@ void RosterController::handleOnJIDAdded(const JID& jid) {
 	String name = nickResolver_->jidToNick(jid);
 	if (!groups.empty()) {
 		foreach(const String& group, groups) {
-			roster_->addContact(jid, name, group);
+			roster_->addContact(jid, jid, name, group);
 		}
 	} else {
-		roster_->addContact(jid, name, "Contacts");
+		roster_->addContact(jid, jid, name, "Contacts");
 	}
 }
 
@@ -132,7 +132,7 @@ void RosterController::handleOnJIDUpdated(const JID& jid, const String& oldName,
 	}
 	foreach(const String& group, groups) {
 		if (std::find(oldGroups.begin(), oldGroups.end(), group) == oldGroups.end()) {
-			roster_->addContact(jid, xmppRoster_->getNameForJID(jid), group);
+			roster_->addContact(jid, jid, xmppRoster_->getNameForJID(jid), group);
 		}
 	} 
 	foreach(const String& group, oldGroups) {

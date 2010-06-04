@@ -88,16 +88,17 @@ void MUC::handleIncomingPresence(boost::shared_ptr<Presence> presence) {
 	}
 	else if (presence->getType() == Presence::Available) {
 		std::map<String, MUCOccupant>::iterator it = occupants.find(nick);
+		MUCOccupant occupant(nick, role, affiliation);
 		if (it != occupants.end()) {
 			MUCOccupant oldOccupant = it->second;
 			if (oldOccupant.getRole() != role) {
-				onOccupantRoleChanged(nick, role, oldOccupant.getRole());
+				onOccupantRoleChanged(nick, occupant, oldOccupant.getRole());
 			}
 			if (oldOccupant.getAffiliation() != affiliation) {
 				onOccupantAffiliationChanged(nick, affiliation, oldOccupant.getAffiliation());
 			}
 		}
-		std::pair<std::map<String, MUCOccupant>::iterator, bool> result = occupants.insert(std::make_pair(nick, MUCOccupant(nick, role, affiliation)));
+		std::pair<std::map<String, MUCOccupant>::iterator, bool> result = occupants.insert(std::make_pair(nick, occupant));
 		if (result.second) {
 			onOccupantJoined(result.first->second);
 		}

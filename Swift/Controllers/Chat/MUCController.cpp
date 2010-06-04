@@ -141,7 +141,11 @@ void MUCController::handleWindowClosed() {
 void MUCController::handleOccupantJoined(const MUCOccupant& occupant) {
 	receivedActivity();
 	JID jid(nickToJID(occupant.getNick()));
-	roster_->addContact(jid, occupant.getNick(), roleToGroupName(occupant.getRole()));
+	JID realJID;
+	if (occupant.getRealJID()) {
+		realJID = occupant.getRealJID().get();
+	}
+	roster_->addContact(jid, realJID, occupant.getNick(), roleToGroupName(occupant.getRole()));
 	if (joined_) {
 		String joinString = occupant.getNick() + " has joined the room";
 		MUCOccupant::Role role = occupant.getRole();
@@ -177,12 +181,16 @@ void MUCController::preHandleIncomingMessage(boost::shared_ptr<Message>) {
 	joined_ = true;
 }
 
-void MUCController::handleOccupantRoleChanged(const String& nick, const MUCOccupant::Role& newRole, const MUCOccupant::Role& oldRole) {
+void MUCController::handleOccupantRoleChanged(const String& nick, const MUCOccupant& occupant, const MUCOccupant::Role& oldRole) {
 	receivedActivity();
 	JID jid(nickToJID(nick));
 	roster_->removeContactFromGroup(jid, roleToGroupName(oldRole));
-	roster_->addContact(jid, nick, roleToGroupName(newRole));
-	chatWindow_->addSystemMessage(nick + " is now a " + roleToFriendlyName(newRole));
+	JID realJID;
+	if (occupant.getRealJID()) {
+		realJID = occupant.getRealJID().get();
+	}
+	roster_->addContact(jid, realJID, nick, roleToGroupName(occupant.getRole()));
+	chatWindow_->addSystemMessage(nick + " is now a " + roleToFriendlyName(occupant.getRole()));
 }
 
 String MUCController::roleToGroupName(MUCOccupant::Role role) {

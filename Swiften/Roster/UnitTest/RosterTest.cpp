@@ -43,9 +43,9 @@ class RosterTest : public CppUnit::TestFixture
 		}
 
 		void testGetGroup() {
-			roster_->addContact(jid1_, "Bert", "group1");
-			roster_->addContact(jid2_, "Ernie", "group2");
-			roster_->addContact(jid3_, "Cookie", "group1");
+			roster_->addContact(jid1_, JID(), "Bert", "group1");
+			roster_->addContact(jid2_, JID(), "Ernie", "group2");
+			roster_->addContact(jid3_, JID(), "Cookie", "group1");
 
 			CPPUNIT_ASSERT_EQUAL(2, (int)roster_->getRoot()->getChildren().size());
 			CPPUNIT_ASSERT_EQUAL(String("group1"), roster_->getRoot()->getChildren()[0]->getDisplayName());
@@ -57,7 +57,7 @@ class RosterTest : public CppUnit::TestFixture
 		}
 
 		void testRemoveContact() {
-			roster_->addContact(jid1_, "Bert", "group1");
+			roster_->addContact(jid1_, jid1_, "Bert", "group1");
 			CPPUNIT_ASSERT_EQUAL(String("Bert"), ((GroupRosterItem*)roster_->getRoot()->getChildren()[0])->getChildren()[0]->getDisplayName());
 
 			roster_->removeContact(jid1_);
@@ -65,8 +65,8 @@ class RosterTest : public CppUnit::TestFixture
 		}
 
 		void testRemoveSecondContact() {
-			roster_->addContact(jid1_, "Bert", "group1");
-			roster_->addContact(jid2_, "Cookie", "group1");
+			roster_->addContact(jid1_, jid1_, "Bert", "group1");
+			roster_->addContact(jid2_, jid2_, "Cookie", "group1");
 			CPPUNIT_ASSERT_EQUAL(String("Cookie"), ((GroupRosterItem*)roster_->getRoot()->getChildren()[0])->getChildren()[1]->getDisplayName());
 
 			roster_->removeContact(jid2_);
@@ -77,8 +77,8 @@ class RosterTest : public CppUnit::TestFixture
 		void testRemoveSecondContactSameBare() {
 			JID jid4a("a@b/c");
 			JID jid4b("a@b/d");
-			roster_->addContact(jid4a, "Bert", "group1");
-			roster_->addContact(jid4b, "Cookie", "group1");
+			roster_->addContact(jid4a, JID(), "Bert", "group1");
+			roster_->addContact(jid4b, JID(), "Cookie", "group1");
 			CPPUNIT_ASSERT_EQUAL(String("Cookie"), ((GroupRosterItem*)roster_->getRoot()->getChildren()[0])->getChildren()[1]->getDisplayName());
 
 			roster_->removeContact(jid4b);
@@ -90,11 +90,11 @@ class RosterTest : public CppUnit::TestFixture
 			JID jid4a("a@b/c");
 			JID jid4b("a@b/d");
 			JID jid4c("a@b/e");
-			roster_->addContact(jid4a, "Bird", "group1");
-			roster_->addContact(jid4b, "Cookie", "group1");
+			roster_->addContact(jid4a, JID(), "Bird", "group1");
+			roster_->addContact(jid4b, JID(), "Cookie", "group1");
 			roster_->removeContact(jid4b);
-			roster_->addContact(jid4c, "Bert", "group1");
-			roster_->addContact(jid4b, "Ernie", "group1");
+			roster_->addContact(jid4c, JID(), "Bert", "group1");
+			roster_->addContact(jid4b, JID(), "Ernie", "group1");
 			boost::shared_ptr<Presence> presence(new Presence());
 			presence->setShow(StatusShow::DND);
 			presence->setFrom(jid4a);

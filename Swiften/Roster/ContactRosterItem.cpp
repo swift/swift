@@ -10,7 +10,7 @@
 namespace Swift {
 
 
-ContactRosterItem::ContactRosterItem(const JID& jid, const String& name, GroupRosterItem* parent) : RosterItem(name, parent), jid_(jid) {
+ContactRosterItem::ContactRosterItem(const JID& jid, const JID& displayJID, const String& name, GroupRosterItem* parent) : RosterItem(name, parent), jid_(jid), displayJID_(displayJID) {
 }
 
 ContactRosterItem::~ContactRosterItem() {
@@ -47,6 +47,15 @@ const String& ContactRosterItem::getAvatarPath() const {
 const JID& ContactRosterItem::getJID() const {
 	return jid_;
 }
+
+void ContactRosterItem::setDisplayJID(const JID& jid) {
+	displayJID_ = jid;
+}
+
+const JID& ContactRosterItem::getDisplayJID() const {
+	return displayJID_;
+}
+
 
 typedef std::pair<String, boost::shared_ptr<Presence> > StringPresencePair;
 

@@ -41,7 +41,7 @@ namespace Swift {
 			boost::signal<void (const String& /*nick*/)> onJoinComplete;
 			boost::signal<void (boost::shared_ptr<ErrorPayload>)> onJoinFailed;
 			boost::signal<void (boost::shared_ptr<Presence>)> onOccupantPresenceChange;
-			boost::signal<void (const String&, const MUCOccupant::Role& /*new*/, const MUCOccupant::Role& /*old*/)> onOccupantRoleChanged;
+			boost::signal<void (const String&, const MUCOccupant& /*now*/, const MUCOccupant::Role& /*old*/)> onOccupantRoleChanged;
 			boost::signal<void (const String&, const MUCOccupant::Affiliation& /*new*/, const MUCOccupant::Affiliation& /*old*/)> onOccupantAffiliationChanged;
 			boost::signal<void (const MUCOccupant&)> onOccupantJoined;
 			boost::signal<void (const MUCOccupant&, LeavingType, const String& /*reason*/)> onOccupantLeft;

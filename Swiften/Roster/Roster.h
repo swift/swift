@@ -28,7 +28,7 @@ class Roster {
 		Roster(bool fullJIDMapping = false);
 		~Roster();
 
-		void addContact(const JID& jid, const String& name, const String& group);
+		void addContact(const JID& jid, const JID& displayJID, const String& name, const String& group);
 		void removeContact(const JID& jid);
 		void removeContactFromGroup(const JID& jid, const String& group);
 		void applyOnItems(const RosterItemOperation& operation);

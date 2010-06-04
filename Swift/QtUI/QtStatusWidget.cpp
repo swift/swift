@@ -124,11 +124,15 @@ void QtStatusWidget::generateList() {
 	foreach (StatusShow::Type type, icons_.keys()) {
 		QListWidgetItem* item = new QListWidgetItem(text, menu_);
 		item->setIcon(icons_[type]);
+		item->setToolTip(P2QSTRING(StatusShow::typeToFriendlyName(type)) + ": " + item->text());
+		item->setStatusTip(item->toolTip());
 		item->setData(Qt::UserRole, QVariant(type));
 	}
 	foreach (StatusShow::Type type, icons_.keys()) {
 		QListWidgetItem* item = new QListWidgetItem(P2QSTRING(StatusShow::typeToFriendlyName(type)), menu_);
 		item->setIcon(icons_[type]);
+		item->setToolTip(item->text());
+		item->setStatusTip(item->toolTip());
 		item->setData(Qt::UserRole, QVariant(type));
 	}
 }
@@ -207,6 +211,9 @@ void QtStatusWidget::handleItemClicked(QListWidgetItem* item) {
 	handleEditComplete();
 }
 
+void QtStatusWidget::setNewToolTip() {
+	statusTextLabel_->setToolTip(P2QSTRING(StatusShow::typeToFriendlyName(selectedStatusType_)) + ": " + statusTextLabel_->text());
+}
 
 void QtStatusWidget::setStatusText(const QString& text) {
 	statusText_ = text;
@@ -215,11 +222,13 @@ void QtStatusWidget::setStatusText(const QString& text) {
 	escapedText.replace("<","&lt;");
 //	statusTextLabel_->setText("<i>" + escapedText + "</i>");
 	statusTextLabel_->setText(escapedText);
+	setNewToolTip();
 }
 
 void QtStatusWidget::setStatusType(StatusShow::Type type) {
 	selectedStatusType_ = icons_.contains(type) ? type : StatusShow::Online;
 	statusIcon_->setPixmap(icons_[selectedStatusType_].pixmap(16, 16));
+	setNewToolTip();
 }
 
 }
