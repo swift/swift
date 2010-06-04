@@ -18,7 +18,9 @@
 
 namespace Swift {
 QtChatTabs::QtChatTabs() : QWidget() {
+#ifndef Q_WS_MAC
 	setWindowIcon(QIcon(":/logo-chat-16.png"));
+#endif
 
 	tabs_ = new QtTabWidget(this);
 #if QT_VERSION >= 0x040500
