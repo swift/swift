@@ -14,6 +14,8 @@
 #include "SystemMessageSnippet.h"
 #include "QtTextEdit.h"
 
+#include "SwifTools/TabComplete.h"
+
 #include <QApplication>
 #include <QBoxLayout>
 #include <QCloseEvent>
@@ -80,6 +82,10 @@ QtChatWindow::~QtChatWindow() {
 
 }
 
+void QtChatWindow::setTabComplete(TabComplete* completer) {
+	completer_ = completer;
+}
+
 void QtChatWindow::handleKeyPressEvent(QKeyEvent* event) {
 	int key = event->key();
 	Qt::KeyboardModifiers modifiers = event->modifiers();
@@ -95,9 +101,34 @@ void QtChatWindow::handleKeyPressEvent(QKeyEvent* event) {
 		|| (key == Qt::Key_Right && modifiers == (Qt::ControlModifier & Qt::ShiftModifier))
 	) {
 		emit requestNextTab();
+	} else if (key == Qt::Key_Tab) {
+		tabComplete();
 	} else {
 		messageLog_->handleKeyPressEvent(event);
 	}
+}
+
+void QtChatWindow::tabComplete() {
+	if (!completer_) {
+		return;
+	}
+//	QTextDocument* document = input_->document();
+	QTextCursor cursor = input_->textCursor();
+	cursor.select(QTextCursor::WordUnderCursor);
+	QString root = cursor.selectedText();
+	bool firstWord = cursor.selectionStart() == 0;
+	QString suggestion = P2QSTRING(completer_->completeWord(Q2PSTRING(root)));
+	if (root == suggestion) {
+		return;
+	}
+	cursor.beginEditBlock();
+	cursor.removeSelectedText();
+	cursor.insertText(suggestion);
+	if (firstWord) {
+		//	cursor.insertText(":");
+	}
+	//cursor.insertText(" ");
+	cursor.endEditBlock();
 }
 
 void QtChatWindow::setRosterModel(Roster* roster) {

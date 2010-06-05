@@ -45,6 +45,7 @@ namespace Swift {
 			QtTabbable::AlertType getWidgetAlertState();
 			void setContactChatState(ChatState::ChatStateType state);
 			void setRosterModel(Roster* roster);
+			void setTabComplete(TabComplete* completer);
 
 		protected slots:
 			void qAppFocusChanged(QWidget* old, QWidget* now);
@@ -59,6 +60,7 @@ namespace Swift {
 
 		private:
 			void updateTitleWithUnreadCount();
+			void tabComplete();
 			void addMessage(const String &message, const String &senderName, bool senderIsSelf, const boost::optional<SecurityLabel>& label, const String& avatarPath, const QString& style);
 
 			int unreadCount_;
@@ -68,6 +70,7 @@ namespace Swift {
 			QtTextEdit* input_;
 			QComboBox *labelsWidget_;
 			QtTreeWidget *treeWidget_;
+			TabComplete* completer_;
 			std::vector<SecurityLabel> availableLabels_;
 			bool previousMessageWasSelf_;
 			bool previousMessageWasSystem_;

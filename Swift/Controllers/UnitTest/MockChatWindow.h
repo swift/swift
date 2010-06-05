@@ -31,6 +31,7 @@ namespace Swift {
 			virtual SecurityLabel getSelectedSecurityLabel() {return SecurityLabel();};
 			virtual void setInputEnabled(bool /*enabled*/) {};
 			virtual void setRosterModel(Roster* /*roster*/) {};
+			virtual void setTabComplete(TabComplete* complete) {};
 
 			boost::signal<void ()> onClosed;
 			boost::signal<void ()> onAllMessagesRead;

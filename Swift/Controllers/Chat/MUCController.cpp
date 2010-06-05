@@ -10,6 +10,7 @@
 
 #include "Swiften/Network/Timer.h"
 #include "Swiften/Network/TimerFactory.h"
+#include "SwifTools/TabComplete.h"
 #include "Swiften/Base/foreach.h"
 #include "Swift/Controllers/UIInterfaces/ChatWindow.h"
 #include "Swift/Controllers/UIInterfaces/ChatWindowFactory.h"
@@ -49,7 +50,9 @@ MUCController::MUCController (
 	events_ = uiEventStream;
 	
 	roster_ = new Roster(true);
+	completer_ = new TabComplete();
 	chatWindow_->setRosterModel(roster_);
+	chatWindow_->setTabComplete(completer_);
 	chatWindow_->onClosed.connect(boost::bind(&MUCController::handleWindowClosed, this));
 	muc_->onJoinComplete.connect(boost::bind(&MUCController::handleJoinComplete, this, _1));
 	muc_->onJoinFailed.connect(boost::bind(&MUCController::handleJoinFailed, this, _1));
@@ -79,6 +82,8 @@ MUCController::~MUCController() {
 	if (loginCheckTimer_) {
 		loginCheckTimer_->stop();
 	}
+	chatWindow_->setTabComplete(NULL);
+	delete completer_;
 }
 
 void MUCController::handleJoinTimeoutTick() {
@@ -139,6 +144,9 @@ void MUCController::handleWindowClosed() {
 }
 
 void MUCController::handleOccupantJoined(const MUCOccupant& occupant) {
+	if (nick_ != occupant.getNick()) {
+		completer_->addWord(occupant.getNick());
+	}
 	receivedActivity();
 	JID jid(nickToJID(occupant.getNick()));
 	JID realJID;
@@ -175,7 +183,12 @@ JID MUCController::nickToJID(const String& nick) {
 	return JID(toJID_.getNode(), toJID_.getDomain(), nick);
 }
 
-void MUCController::preHandleIncomingMessage(boost::shared_ptr<Message>) {
+void MUCController::preHandleIncomingMessage(boost::shared_ptr<Message> message) {
+	String nick = message->getFrom().getResource();
+	if (nick != nick_) {
+		completer_->removeWord(nick);
+		completer_->addWord(nick);
+	}
 	/*Buggy implementations never send the status code, so use an incoming message as a hint that joining's done (e.g. the old ejabberd on psi-im.org).*/
 	receivedActivity();
 	joined_ = true;
@@ -206,6 +219,7 @@ String MUCController::roleToGroupName(MUCOccupant::Role role) {
 }
 
 void MUCController::handleOccupantLeft(const MUCOccupant& occupant, MUC::LeavingType, const String& reason) {
+	completer_->removeWord(occupant.getNick());
 	String partMessage = occupant.getNick() + " has left the room";
 	if (!reason.isEmpty()) {
 		partMessage += " (" + reason + ")";

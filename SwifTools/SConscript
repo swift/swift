@@ -26,6 +26,7 @@ if env["SCONS_STAGE"] == "build" :
 			"AutoUpdater/AutoUpdater.cpp",
 			"AutoUpdater/PlatformAutoUpdaterFactory.cpp",
 			"Linkify.cpp",
+			"TabComplete.cpp",
 		]
 
 	if myenv.get("HAVE_SPARKLE", 0) :

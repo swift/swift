@@ -20,6 +20,7 @@ namespace Swift {
 	class AvatarManager;
 	class TreeWidget;
 	class Roster;
+	class TabComplete;
 
 	class ChatWindow {
 		public:
@@ -44,6 +45,7 @@ namespace Swift {
 			virtual SecurityLabel getSelectedSecurityLabel() = 0;
 			virtual void setInputEnabled(bool enabled) = 0;
 			virtual void setRosterModel(Roster* model) = 0;
+			virtual void setTabComplete(TabComplete* completer) = 0;
 
 			boost::signal<void ()> onClosed;
 			boost::signal<void ()> onAllMessagesRead;

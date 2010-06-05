@@ -28,6 +28,7 @@ namespace Swift {
 	class AvatarManager;
 	class UIEventStream;
 	class TimerFactory;
+	class TabComplete;
 
 	class MUCController : public ChatControllerBase {
 		public:
@@ -60,6 +61,7 @@ namespace Swift {
 			UIEventStream* events_;
 			String nick_;
 			Roster* roster_;
+			TabComplete* completer_;
 			bool parting_;
 			bool joined_;
 			boost::bsignals::scoped_connection avatarChangedConnection_;
