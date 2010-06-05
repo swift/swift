@@ -5,6 +5,9 @@
  */
 
 #include "SwifTools/TabComplete.h"
+
+#include <algorithm>
+
 #include "Swiften/Base/foreach.h"
 
 namespace Swift {
