@@ -40,6 +40,7 @@ namespace Swift {
 			void preSendMessageRequest(boost::shared_ptr<Message> message);
 			bool isIncomingMessageFromMe(boost::shared_ptr<Message> message);
 			String senderDisplayNameFromMessage(const JID& from);
+			boost::optional<boost::posix_time::ptime> getMessageTimestamp(boost::shared_ptr<Message> message) const;
 
 		private:
 			void handleWindowClosed();

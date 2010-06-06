@@ -70,7 +70,7 @@ void ChatController::preSendMessageRequest(boost::shared_ptr<Message> message) {
 }
 
 void ChatController::postSendMessage(const String& body) {
-	addMessage(body, "me", true, labelsEnabled_ ? chatWindow_->getSelectedSecurityLabel() : boost::optional<SecurityLabel>(), String(avatarManager_->getAvatarPath(selfJID_).string()));
+	addMessage(body, "me", true, labelsEnabled_ ? chatWindow_->getSelectedSecurityLabel() : boost::optional<SecurityLabel>(), String(avatarManager_->getAvatarPath(selfJID_).string()), boost::posix_time::microsec_clock::universal_time());
 	chatStateNotifier_->userSentMessage();
 }
 
@@ -107,5 +107,8 @@ void ChatController::handlePresenceChange(boost::shared_ptr<Presence> newPresenc
 	}
 }
 
+boost::optional<boost::posix_time::ptime> ChatController::getMessageTimestamp(boost::shared_ptr<Message> message) const {
+	return message->getTimestamp();
+}
 
 }

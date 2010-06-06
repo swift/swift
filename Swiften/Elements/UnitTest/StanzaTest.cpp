@@ -11,6 +11,7 @@
 #include "Swiften/Elements/Stanza.h"
 #include "Swiften/Elements/Payload.h"
 #include "Swiften/Elements/Message.h"
+#include "Swiften/Elements/Delay.h"
 
 using namespace Swift;
 
@@ -27,6 +28,11 @@ class StanzaTest : public CppUnit::TestFixture
 		CPPUNIT_TEST(testUpdatePayload_NewPayload);
 		CPPUNIT_TEST(testGetPayloadOfSameType);
 		CPPUNIT_TEST(testGetPayloadOfSameType_NoSuchPayload);
+		CPPUNIT_TEST(testGetTimestamp);
+		CPPUNIT_TEST(testGetTimestamp_TimestampWithFrom);
+		CPPUNIT_TEST(testGetTimestamp_NoDelay);
+		CPPUNIT_TEST(testGetTimestampFrom);
+		CPPUNIT_TEST(testGetTimestampFrom_Fallsback);
 		CPPUNIT_TEST_SUITE_END();
 
 	public:
@@ -59,8 +65,6 @@ class StanzaTest : public CppUnit::TestFixture
 			private:
 				bool* alive_;
 		};
-
-		StanzaTest() {}
 
 		void testConstructor_Copy() {
 			Message m;
@@ -171,6 +175,55 @@ class StanzaTest : public CppUnit::TestFixture
 			m.addPayload(boost::shared_ptr<MyPayload3>(new MyPayload3()));
 
 			CPPUNIT_ASSERT(!m.getPayloadOfSameType(boost::shared_ptr<MyPayload2>(new MyPayload2("bar"))));
+		}
+
+		void testGetTimestamp() {
+			Message m;
+			m.addPayload(boost::shared_ptr<Delay>(new Delay(boost::posix_time::from_time_t(1))));
+
+			boost::optional<boost::posix_time::ptime> timestamp = m.getTimestamp();
+
+			CPPUNIT_ASSERT(timestamp);
+			CPPUNIT_ASSERT_EQUAL(std::string("1970-Jan-01 00:00:01"), boost::posix_time::to_simple_string(*timestamp));
+		}
+
+		void testGetTimestamp_TimestampWithFrom() {
+			Message m;
+			m.addPayload(boost::shared_ptr<Delay>(new Delay(boost::posix_time::from_time_t(1), JID("foo@bar.com"))));
+
+			boost::optional<boost::posix_time::ptime> timestamp = m.getTimestamp();
+
+			CPPUNIT_ASSERT(timestamp);
+			CPPUNIT_ASSERT_EQUAL(std::string("1970-Jan-01 00:00:01"), boost::posix_time::to_simple_string(*timestamp));
+		}
+
+		void testGetTimestamp_NoDelay() {
+			Message m;
+			CPPUNIT_ASSERT(!m.getTimestamp());
+		}
+
+		void testGetTimestampFrom() {
+			Message m;
+			m.addPayload(boost::shared_ptr<Delay>(new Delay(boost::posix_time::from_time_t(0))));
+			m.addPayload(boost::shared_ptr<Delay>(new Delay(boost::posix_time::from_time_t(1), JID("foo1@bar.com"))));
+			m.addPayload(boost::shared_ptr<Delay>(new Delay(boost::posix_time::from_time_t(2), JID("foo2@bar.com"))));
+			m.addPayload(boost::shared_ptr<Delay>(new Delay(boost::posix_time::from_time_t(3), JID("foo3@bar.com"))));
+
+			boost::optional<boost::posix_time::ptime> timestamp = m.getTimestampFrom(JID("foo2@bar.com"));
+
+			CPPUNIT_ASSERT(timestamp);
+			CPPUNIT_ASSERT_EQUAL(std::string("1970-Jan-01 00:00:02"), boost::posix_time::to_simple_string(*timestamp));
+		}
+
+		void testGetTimestampFrom_Fallsback() {
+			Message m;
+			m.addPayload(boost::shared_ptr<Delay>(new Delay(boost::posix_time::from_time_t(1), JID("foo1@bar.com"))));
+			m.addPayload(boost::shared_ptr<Delay>(new Delay(boost::posix_time::from_time_t(3), JID("foo3@bar.com"))));
+
+			boost::optional<boost::posix_time::ptime> timestamp = m.getTimestampFrom(JID("foo2@bar.com"));
+
+			CPPUNIT_ASSERT(timestamp);
+			CPPUNIT_ASSERT_EQUAL(std::string("1970-Jan-01 00:00:01"), boost::posix_time::to_simple_string(*timestamp));
 		}
 };
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Kevin Smith
+ * Copyright (c) 2010 Remko Tronçon
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -9,5 +9,7 @@
 
 #define P2QSTRING(a) QString::fromUtf8(a.getUTF8Data())
 #define Q2PSTRING(a) Swift::String(a.toUtf8())
+
+#define B2QDATE(a) QDateTime::fromTime_t((a - boost::posix_time::from_time_t(0)).total_seconds())
 
 #endif

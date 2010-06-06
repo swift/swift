@@ -14,8 +14,8 @@ namespace Swift {
 			MockChatWindow() {};
 			virtual ~MockChatWindow();
 
-			virtual void addMessage(const String& message, const String& /*senderName*/, bool /*senderIsSelf*/, const boost::optional<SecurityLabel>& /*label*/, const String& /*avatarPath*/) {lastMessageBody_ = message;};
-			virtual void addAction(const String& message, const String& /*senderName*/, bool /*senderIsSelf*/, const boost::optional<SecurityLabel>& /*label*/, const String& /*avatarPath*/) {lastMessageBody_ = message;};
+			virtual void addMessage(const String& message, const String& /*senderName*/, bool /*senderIsSelf*/, const boost::optional<SecurityLabel>& /*label*/, const String& /*avatarPath*/, const boost::posix_time::ptime&) {lastMessageBody_ = message;};
+			virtual void addAction(const String& message, const String& /*senderName*/, bool /*senderIsSelf*/, const boost::optional<SecurityLabel>& /*label*/, const String& /*avatarPath*/, const boost::posix_time::ptime&) {lastMessageBody_ = message;};
 			virtual void addSystemMessage(const String& /*message*/) {};
 			virtual void addErrorMessage(const String& /*message*/) {};
 
@@ -31,7 +31,7 @@ namespace Swift {
 			virtual SecurityLabel getSelectedSecurityLabel() {return SecurityLabel();};
 			virtual void setInputEnabled(bool /*enabled*/) {};
 			virtual void setRosterModel(Roster* /*roster*/) {};
-			virtual void setTabComplete(TabComplete* complete) {};
+			virtual void setTabComplete(TabComplete*) {};
 
 			boost::signal<void ()> onClosed;
 			boost::signal<void ()> onAllMessagesRead;

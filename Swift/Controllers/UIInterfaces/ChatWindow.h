@@ -10,6 +10,7 @@
 #include <boost/optional.hpp>
 #include "Swiften/Base/boost_bsignals.h"
 #include <boost/shared_ptr.hpp>
+#include <boost/date_time/posix_time/posix_time.hpp>
 #include <vector>
 
 #include "Swiften/Base/String.h"
@@ -27,8 +28,8 @@ namespace Swift {
 			ChatWindow() {}
 			virtual ~ChatWindow() {};
 
-			virtual void addMessage(const String& message, const String& senderName, bool senderIsSelf, const boost::optional<SecurityLabel>& label, const String& avatarPath) = 0;
-			virtual void addAction(const String& message, const String& senderName, bool senderIsSelf, const boost::optional<SecurityLabel>& label, const String& avatarPath) = 0;
+			virtual void addMessage(const String& message, const String& senderName, bool senderIsSelf, const boost::optional<SecurityLabel>& label, const String& avatarPath, const boost::posix_time::ptime& time) = 0;
+			virtual void addAction(const String& message, const String& senderName, bool senderIsSelf, const boost::optional<SecurityLabel>& label, const String& avatarPath, const boost::posix_time::ptime& time) = 0;
 			virtual void addSystemMessage(const String& message) = 0;
 			virtual void addErrorMessage(const String& message) = 0;
 

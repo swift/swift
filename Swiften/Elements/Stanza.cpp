@@ -5,6 +5,7 @@
  */
 
 #include "Swiften/Elements/Stanza.h"
+#include "Swiften/Elements/Delay.h"
 
 #include <typeinfo>
 
@@ -31,6 +32,21 @@ boost::shared_ptr<Payload> Stanza::getPayloadOfSameType(boost::shared_ptr<Payloa
 		}
 	}
 	return boost::shared_ptr<Payload>();
+}
+
+boost::optional<boost::posix_time::ptime> Stanza::getTimestamp() const {
+	boost::shared_ptr<Delay> delay = getPayload<Delay>();
+	return delay ? delay->getStamp() : boost::optional<boost::posix_time::ptime>();
+}
+
+boost::optional<boost::posix_time::ptime> Stanza::getTimestampFrom(const JID& jid) const {
+	std::vector< boost::shared_ptr<Delay> > delays = getPayloads<Delay>();
+	for (size_t i = 0; i < delays.size(); ++i) {
+		if (delays[i]->getFrom() == jid) {
+			return delays[i]->getStamp();
+		}
+	}
+	return getTimestamp();
 }
 
 

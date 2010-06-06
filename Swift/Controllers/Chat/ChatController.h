@@ -28,6 +28,7 @@ namespace Swift {
 			void preHandleIncomingMessage(boost::shared_ptr<Message> message);
 			void preSendMessageRequest(boost::shared_ptr<Message>);
 			String senderDisplayNameFromMessage(const JID& from);
+			virtual boost::optional<boost::posix_time::ptime> getMessageTimestamp(boost::shared_ptr<Message>) const;
 
 		private:
 			NickResolver* nickResolver_;

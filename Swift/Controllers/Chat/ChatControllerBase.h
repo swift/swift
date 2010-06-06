@@ -12,6 +12,8 @@
 #include <boost/shared_ptr.hpp>
 #include "Swiften/Base/boost_bsignals.h"
 #include <boost/filesystem.hpp>
+#include <boost/optional.hpp>
+#include <boost/date_time/posix_time/posix_time.hpp>
 
 #include "Swiften/Base/String.h"
 #include "Swiften/Elements/DiscoInfo.h"
@@ -37,7 +39,7 @@ namespace Swift {
 			void activateChatWindow();
 			void setAvailableServerFeatures(boost::shared_ptr<DiscoInfo> info);
 			void handleIncomingMessage(boost::shared_ptr<MessageEvent> message);
-			void addMessage(const String& message, const String& senderName, bool senderIsSelf, const boost::optional<SecurityLabel>& label, const String& avatarPath);
+			void addMessage(const String& message, const String& senderName, bool senderIsSelf, const boost::optional<SecurityLabel>& label, const String& avatarPath, const boost::posix_time::ptime& time);
 			void setEnabled(bool enabled);
 			virtual void setToJID(const JID& jid) {toJID_ = jid;};
 		protected:
@@ -49,6 +51,7 @@ namespace Swift {
 			virtual void preHandleIncomingMessage(boost::shared_ptr<Message>) {};
 			virtual void preSendMessageRequest(boost::shared_ptr<Message>) {};
 			virtual bool isFromContact(const JID& from);
+			virtual boost::optional<boost::posix_time::ptime> getMessageTimestamp(boost::shared_ptr<Message>) const = 0;
 
 		private:
 			void handleSendMessageRequest(const String &body);

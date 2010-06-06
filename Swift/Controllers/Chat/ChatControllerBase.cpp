@@ -105,11 +105,11 @@ void ChatControllerBase::activateChatWindow() {
 	chatWindow_->activate();
 }
 
-void ChatControllerBase::addMessage(const String& message, const String& senderName, bool senderIsSelf, const boost::optional<SecurityLabel>& label, const String& avatarPath) {
+void ChatControllerBase::addMessage(const String& message, const String& senderName, bool senderIsSelf, const boost::optional<SecurityLabel>& label, const String& avatarPath, const boost::posix_time::ptime& time) {
 	if (message.beginsWith("/me ")) {
-		chatWindow_->addAction(message.getSplittedAtFirst(' ').second, senderName, senderIsSelf, label, avatarPath);
+		chatWindow_->addAction(message.getSplittedAtFirst(' ').second, senderName, senderIsSelf, label, avatarPath, time);
 	} else {
-		chatWindow_->addMessage(message, senderName, senderIsSelf, label, avatarPath);
+		chatWindow_->addMessage(message, senderName, senderIsSelf, label, avatarPath, time);
 	}
 }
 
@@ -148,7 +148,14 @@ void ChatControllerBase::handleIncomingMessage(boost::shared_ptr<MessageEvent> m
 		}
 		boost::shared_ptr<SecurityLabel> label = message->getPayload<SecurityLabel>();
 		boost::optional<SecurityLabel> maybeLabel = label ? boost::optional<SecurityLabel>(*label) : boost::optional<SecurityLabel>();
-		addMessage(body, senderDisplayNameFromMessage(from), isIncomingMessageFromMe(message), maybeLabel, String(avatarManager_->getAvatarPath(from).string()));
+
+		// TODO: determine the timestamp
+		boost::posix_time::ptime timeStamp = boost::posix_time::microsec_clock::universal_time();
+		boost::optional<boost::posix_time::ptime> messageTimeStamp = getMessageTimestamp(message);
+		if (messageTimeStamp) {
+			timeStamp = *messageTimeStamp;
+		}
+		addMessage(body, senderDisplayNameFromMessage(from), isIncomingMessageFromMe(message), maybeLabel, String(avatarManager_->getAvatarPath(from).string()), timeStamp);
 	}
 }
 

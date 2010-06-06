@@ -4,11 +4,12 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#ifndef SWIFTEN_STANZAS_STANZA_H
-#define SWIFTEN_STANZAS_STANZA_H
+#pragma once
 
 #include <vector>
 #include <boost/shared_ptr.hpp>
+#include <boost/optional.hpp>
+#include <boost/date_time/posix_time/posix_time.hpp>
 
 #include "Swiften/Elements/Element.h"
 #include "Swiften/Elements/Payload.h"
@@ -65,6 +66,11 @@ namespace Swift {
 
 			const String& getID() const { return id_; }
 			void setID(const String& id) { id_ = id; }
+
+			boost::optional<boost::posix_time::ptime> getTimestamp() const;
+
+			// Falls back to any timestamp if no specific timestamp for the given JID is found.
+			boost::optional<boost::posix_time::ptime> getTimestampFrom(const JID& jid) const;
 	
 		private:
 			String id_;
@@ -75,5 +81,3 @@ namespace Swift {
 			Payloads payloads_;
 	};
 }
-
-#endif

@@ -224,11 +224,11 @@ void QtChatWindow::updateTitleWithUnreadCount() {
 	emit titleUpdated();
 }
 
-void QtChatWindow::addMessage(const String &message, const String &senderName, bool senderIsSelf, const boost::optional<SecurityLabel>& label, const String& avatarPath) {
-	addMessage(message, senderName, senderIsSelf, label, avatarPath, "");
+void QtChatWindow::addMessage(const String &message, const String &senderName, bool senderIsSelf, const boost::optional<SecurityLabel>& label, const String& avatarPath, const boost::posix_time::ptime& time) {
+	addMessage(message, senderName, senderIsSelf, label, avatarPath, "", time);
 }
 
-void QtChatWindow::addMessage(const String &message, const String &senderName, bool senderIsSelf, const boost::optional<SecurityLabel>& label, const String& avatarPath, const QString& style) {
+void QtChatWindow::addMessage(const String &message, const String &senderName, bool senderIsSelf, const boost::optional<SecurityLabel>& label, const String& avatarPath, const QString& style, const boost::posix_time::ptime& time) {
 	if (isWidgetSelected()) {
 		onAllMessagesRead();
 	}
@@ -247,15 +247,15 @@ void QtChatWindow::addMessage(const String &message, const String &senderName, b
 
 	bool appendToPrevious = !previousMessageWasSystem_ && ((senderIsSelf && previousMessageWasSelf_) || (!senderIsSelf && !previousMessageWasSelf_ && previousSenderName_ == P2QSTRING(senderName)));
 	QString qAvatarPath =  avatarPath.isEmpty() ? "qrc:/icons/avatar.png" : QUrl::fromLocalFile(P2QSTRING(avatarPath)).toEncoded();
-	messageLog_->addMessage(MessageSnippet(htmlString, Qt::escape(P2QSTRING(senderName)), QDateTime::currentDateTime(), qAvatarPath, senderIsSelf, appendToPrevious));
+	messageLog_->addMessage(MessageSnippet(htmlString, Qt::escape(P2QSTRING(senderName)), B2QDATE(time), qAvatarPath, senderIsSelf, appendToPrevious));
 
 	previousMessageWasSelf_ = senderIsSelf;
 	previousSenderName_ = P2QSTRING(senderName);
 	previousMessageWasSystem_ = false;
 }
 
-void QtChatWindow::addAction(const String &message, const String &senderName, bool senderIsSelf, const boost::optional<SecurityLabel>& label, const String& avatarPath) {
-	addMessage(" *" + message + "*", senderName, senderIsSelf, label, avatarPath, "font-style:italic ");
+void QtChatWindow::addAction(const String &message, const String &senderName, bool senderIsSelf, const boost::optional<SecurityLabel>& label, const String& avatarPath, const boost::posix_time::ptime& time) {
+	addMessage(" *" + message + "*", senderName, senderIsSelf, label, avatarPath, "font-style:italic ", time);
 }
 
 void QtChatWindow::addErrorMessage(const String& errorMessage) {

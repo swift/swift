@@ -247,4 +247,8 @@ void MUCController::preSendMessageRequest(boost::shared_ptr<Message> message) {
 	message->setType(Swift::Message::Groupchat);
 }
 
+boost::optional<boost::posix_time::ptime> MUCController::getMessageTimestamp(boost::shared_ptr<Message> message) const {
+	return message->getTimestampFrom(toJID_);
+}
+
 }

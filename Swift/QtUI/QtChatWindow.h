@@ -27,8 +27,8 @@ namespace Swift {
 		public:
 			QtChatWindow(const QString &contact, UIEventStream* eventStream);
 			~QtChatWindow();
-			void addMessage(const String &message, const String &senderName, bool senderIsSelf, const boost::optional<SecurityLabel>& label, const String& avatarPath);
-			void addAction(const String &message, const String &senderName, bool senderIsSelf, const boost::optional<SecurityLabel>& label, const String& avatarPath);
+			void addMessage(const String &message, const String &senderName, bool senderIsSelf, const boost::optional<SecurityLabel>& label, const String& avatarPath, const boost::posix_time::ptime& time);
+			void addAction(const String &message, const String &senderName, bool senderIsSelf, const boost::optional<SecurityLabel>& label, const String& avatarPath, const boost::posix_time::ptime& time);
 			void addSystemMessage(const String& message);
 			void addErrorMessage(const String& errorMessage);
 			void show();
@@ -61,7 +61,7 @@ namespace Swift {
 		private:
 			void updateTitleWithUnreadCount();
 			void tabComplete();
-			void addMessage(const String &message, const String &senderName, bool senderIsSelf, const boost::optional<SecurityLabel>& label, const String& avatarPath, const QString& style);
+			void addMessage(const String &message, const String &senderName, bool senderIsSelf, const boost::optional<SecurityLabel>& label, const String& avatarPath, const QString& style, const boost::posix_time::ptime& time);
 
 			int unreadCount_;
 			bool contactIsTyping_;
