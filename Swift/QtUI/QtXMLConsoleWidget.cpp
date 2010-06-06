@@ -45,10 +45,14 @@ QtXMLConsoleWidget::QtXMLConsoleWidget() {
 	QPushButton* clearButton = new QPushButton("Clear", bottom);
 	connect(clearButton, SIGNAL(clicked()), textEdit, SLOT(clear()));
 	buttonLayout->addWidget(clearButton);
+
+	setWindowTitle("Debug Console");
+	emit titleUpdated();
 }
 
 void QtXMLConsoleWidget::showEvent(QShowEvent* event) {
 	emit windowOpening();
+	emit titleUpdated(); /* This just needs to be somewhere after construction */
 	QWidget::showEvent(event);
 }
 
