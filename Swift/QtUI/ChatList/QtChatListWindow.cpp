@@ -26,7 +26,7 @@ QtChatListWindow::QtChatListWindow(UIEventStream *uiEventStream, QWidget* parent
 	delegate_ = new ChatListDelegate();
 	setItemDelegate(delegate_);
 	setHeaderHidden(true);
-	#ifdef SWIFT_PLATFORM_MACOSX
+#ifdef SWIFT_PLATFORM_MACOSX
 	setAlternatingRowColors(true);
 #endif
 	expandAll();
@@ -35,6 +35,7 @@ QtChatListWindow::QtChatListWindow(UIEventStream *uiEventStream, QWidget* parent
 	setRootIsDecorated(true);
 	setupContextMenus();
 	connect(this, SIGNAL(activated(const QModelIndex&)), this, SLOT(handleItemActivated(const QModelIndex&)));
+	connect(this, SIGNAL(clicked(const QModelIndex&)), this, SLOT(handleClicked(const QModelIndex&)));
 }
 
 QtChatListWindow::~QtChatListWindow() {
@@ -42,6 +43,13 @@ QtChatListWindow::~QtChatListWindow() {
 	delete delegate_;
 	delete mucMenu_;
 	delete emptyMenu_;
+}
+
+void QtChatListWindow::handleClicked(const QModelIndex& index) {
+	ChatListGroupItem* item = dynamic_cast<ChatListGroupItem*>(static_cast<ChatListItem*>(index.internalPointer()));
+	if (item) {
+		setExpanded(index, !isExpanded(index));
+	}
 }
 
 void QtChatListWindow::setupContextMenus() {

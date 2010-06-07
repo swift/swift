@@ -28,6 +28,7 @@ namespace Swift {
 			void handleAddBookmark();
 			void handleEditBookmark();
 			void handleRemoveBookmark();
+			void handleClicked(const QModelIndex& index);
 
 		protected:
 			void contextMenuEvent(QContextMenuEvent* event);
