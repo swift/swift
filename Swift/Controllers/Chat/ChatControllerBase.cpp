@@ -149,12 +149,13 @@ void ChatControllerBase::handleIncomingMessage(boost::shared_ptr<MessageEvent> m
 		boost::shared_ptr<SecurityLabel> label = message->getPayload<SecurityLabel>();
 		boost::optional<SecurityLabel> maybeLabel = label ? boost::optional<SecurityLabel>(*label) : boost::optional<SecurityLabel>();
 
-		// TODO: determine the timestamp
+		// Determine the timestamp
 		boost::posix_time::ptime timeStamp = boost::posix_time::microsec_clock::universal_time();
 		boost::optional<boost::posix_time::ptime> messageTimeStamp = getMessageTimestamp(message);
 		if (messageTimeStamp) {
 			timeStamp = *messageTimeStamp;
 		}
+
 		addMessage(body, senderDisplayNameFromMessage(from), isIncomingMessageFromMe(message), maybeLabel, String(avatarManager_->getAvatarPath(from).string()), timeStamp);
 	}
 }
