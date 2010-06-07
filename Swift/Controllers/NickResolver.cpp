@@ -26,7 +26,7 @@ String NickResolver::jidToNick(const JID& jid) {
 	String nick;
 
 	if (mucRegistry_ && mucRegistry_->isMUC(jid.toBare()) ) {
-		return jid.getResource();
+		return jid.getResource().isEmpty() ? jid.toBare().toString() : jid.getResource();
 	}
 
 	if (xmppRoster_->containsJID(jid) && !xmppRoster_->getNameForJID(jid).isEmpty()) {
