@@ -37,7 +37,8 @@ void RosterModel::setRoster(Roster* roster) {
 }
 
 void RosterModel::reLayout() {
-	emit layoutChanged();
+	//emit layoutChanged();
+	reset();
 	foreach (RosterItem* item, roster_->getRoot()->getDisplayedChildren()) {
 		GroupRosterItem* child = dynamic_cast<GroupRosterItem*>(item);
 		if (!child) continue;
