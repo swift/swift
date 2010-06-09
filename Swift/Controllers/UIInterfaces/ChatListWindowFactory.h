@@ -12,6 +12,7 @@ namespace Swift {
 	class UIEventStream;
 	class ChatListWindowFactory {
 		public:
+			virtual ~ChatListWindowFactory() {}
 			virtual ChatListWindow* createWindow(UIEventStream* uiEventStream) = 0;	
 	};
 }
