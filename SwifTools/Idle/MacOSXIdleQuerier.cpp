@@ -6,6 +6,8 @@
 
 #include "SwifTools/Idle/MacOSXIdleQuerier.h"
 
+#pragma GCC diagnostic ignored "-Wold-style-cast"
+
 #include <cassert>
 #include <iostream>
 #include <CoreFoundation/CoreFoundation.h>

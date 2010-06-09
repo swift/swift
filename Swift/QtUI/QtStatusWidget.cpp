@@ -205,7 +205,7 @@ StatusShow::Type QtStatusWidget::getSelectedStatusShow() {
 
 void QtStatusWidget::handleItemClicked(QListWidgetItem* item) {
 	editing_ = false;
-	selectedStatusType_ = (StatusShow::Type)(item->data(Qt::UserRole).toInt());
+	selectedStatusType_ = static_cast<StatusShow::Type>(item->data(Qt::UserRole).toInt());
 	newStatusText_ = item->data(Qt::DisplayRole).toString();
 	statusEdit_->setText(newStatusText_);
 	handleEditComplete();

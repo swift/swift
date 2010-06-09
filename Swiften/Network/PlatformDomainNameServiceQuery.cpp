@@ -6,6 +6,8 @@
 
 #include "Swiften/Network/PlatformDomainNameServiceQuery.h"
 
+#pragma GCC diagnostic ignored "-Wold-style-cast"
+
 #include "Swiften/Base/Platform.h"
 #include <stdlib.h>
 #ifdef SWIFTEN_PLATFORM_WINDOWS

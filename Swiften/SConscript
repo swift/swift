@@ -33,6 +33,8 @@ if env["SCONS_STAGE"] == "build" :
 			"Client/Client.cpp",
 			"Client/ClientSession.cpp",
 			"Compress/ZLibCodecompressor.cpp",
+			"Compress/ZLibDecompressor.cpp",
+			"Compress/ZLibCompressor.cpp",
 			"Disco/CapsInfoGenerator.cpp",
 			"Elements/DiscoInfo.cpp",
 			"Elements/Element.cpp",

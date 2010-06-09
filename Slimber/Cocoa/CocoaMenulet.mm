@@ -1,5 +1,7 @@
 #include "Slimber/Cocoa/CocoaMenulet.h"
 
+#pragma GCC diagnostic ignored "-Wold-style-cast"
+
 #include <boost/function.hpp>
 
 using namespace Swift;

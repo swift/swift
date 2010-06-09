@@ -169,7 +169,7 @@ QModelIndex RosterModel::index(int row, int column, const QModelIndex& parent) c
 		parentItem = dynamic_cast<GroupRosterItem*>(getItem(parent));
 		if (!parentItem) return QModelIndex();
 	}
-	return (size_t)row < parentItem->getDisplayedChildren().size() ? createIndex(row, column, parentItem->getDisplayedChildren()[row]) : QModelIndex();
+	return static_cast<size_t>(row) < parentItem->getDisplayedChildren().size() ? createIndex(row, column, parentItem->getDisplayedChildren()[row]) : QModelIndex();
 }
 
 QModelIndex RosterModel::index(RosterItem* item) const {

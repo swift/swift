@@ -16,7 +16,7 @@ QtEventWindowFactory::QtEventWindowFactory(QtMainWindowFactory* mainWindowFactor
 }
 
 EventWindow* QtEventWindowFactory::createEventWindow() {
-	return ((QtMainWindow*)mainWindowFactory_->getLastCreatedWindow())->getEventWindow();
+	return static_cast<QtMainWindow*>(mainWindowFactory_->getLastCreatedWindow())->getEventWindow();
 }
 
 }

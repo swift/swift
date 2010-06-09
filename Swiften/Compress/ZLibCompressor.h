@@ -4,8 +4,7 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#ifndef SWIFTEN_ZLibCompressor_H
-#define SWIFTEN_ZLibCompressor_H
+#pragma once
 
 #include <cassert>
 
@@ -15,11 +14,7 @@
 namespace Swift {
 	class ZLibCompressor : public ZLibCodecompressor {
 		public:
-			ZLibCompressor() {
-				int result = deflateInit(&stream_, COMPRESSION_LEVEL);
-				assert(result == Z_OK);
-				(void) result;
-			}
+			ZLibCompressor();
 
 			~ZLibCompressor() {
 				deflateEnd(&stream_);
@@ -33,5 +28,3 @@ namespace Swift {
 			static const int COMPRESSION_LEVEL = 9;
 	};
 }
-
-#endif

@@ -13,7 +13,7 @@ namespace Swift {
 MUCPayloadSerializer::MUCPayloadSerializer() : GenericPayloadSerializer<MUCPayload>() {
 }
 
-String MUCPayloadSerializer::serializePayload(boost::shared_ptr<MUCPayload> payload)  const {
+String MUCPayloadSerializer::serializePayload(boost::shared_ptr<MUCPayload>)  const {
 	XMLElement mucElement("x", "http://jabber.org/protocol/muc");
 	return mucElement.serialize();
 }

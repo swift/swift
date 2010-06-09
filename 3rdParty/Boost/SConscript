@@ -16,6 +16,11 @@ elif env.get("BOOST_BUNDLED", False) :
 ################################################################################
 
 	cppdefines = ["BOOST_ALL_NO_LIB"]
+	if env["PLATFORM"] == "win32" :
+		cppflags = ["/I" + Dir("src").abspath]
+	else :
+		cppflags = [("-isystem", Dir("src").abspath)]
+
 
 ################################################################################
 # Flags
@@ -23,7 +28,7 @@ elif env.get("BOOST_BUNDLED", False) :
 
 	if env["SCONS_STAGE"] == "flags" :
 		env["BOOST_FLAGS"] = {
-				"CPPFLAGS": ["-I" + Dir("src").abspath],
+				"CPPFLAGS": cppflags,
 				"CPPDEFINES": cppdefines,
 				"LIBPATH": [Dir(".")],
 				"LIBS": ["Boost"]
@@ -41,7 +46,7 @@ elif env.get("BOOST_BUNDLED", False) :
 
 	if env["SCONS_STAGE"] == "build" :
 		myenv = env.Clone()
-		myenv.Replace(CCFLAGS = [flag for flag in env["CCFLAGS"] if flag not in ["-W", "-Wall"]])
+		myenv.Replace(CXXFLAGS = [flag for flag in env["CXXFLAGS"] if not flag.startswith("-W")])
 
 		sources = [
 				"src/libs/date_time/src/gregorian/date_generators.cpp",
@@ -100,7 +105,7 @@ elif env.get("BOOST_BUNDLED", False) :
 					"src/libs/thread/src/win32/tss_dll.cpp",
 					"src/libs/thread/src/win32/tss_pe.cpp"]
 
-		myenv.StaticLibrary("Boost", sources, CPPFLAGS = "-I" + Dir("src").abspath, CPPDEFINES = cppdefines)
+		myenv.StaticLibrary("Boost", sources, CPPFLAGS = cppflags, CPPDEFINES = cppdefines)
 
 		if ARGUMENTS.get("BOOST_BUILD_BCP") or env.GetOption("clean") :
 			bcp_env = myenv.Clone()

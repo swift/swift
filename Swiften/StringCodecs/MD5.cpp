@@ -31,6 +31,8 @@
 	ghost@aladdin.com
  */
 
+#pragma GCC diagnostic ignored "-Wold-style-cast"
+
 #include "Swiften/StringCodecs/MD5.h"
 
 #include <cassert>

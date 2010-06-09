@@ -6,6 +6,8 @@
 
 #pragma once
 
+#pragma GCC diagnostic ignored "-Wold-style-cast"
+
 #include "Swiften/Base/String.h"
 #include "Swiften/LinkLocal/DNSSD/Bonjour/BonjourQuery.h"
 #include "Swiften/LinkLocal/DNSSD/DNSSDResolveHostnameQuery.h"

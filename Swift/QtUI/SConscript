@@ -20,7 +20,7 @@ def generateDefaultTheme(dir) :
 Import("env")
 
 myenv = env.Clone()
-
+myenv["CXXFLAGS"] = filter(lambda x : x != "-Wfloat-equal", myenv["CXXFLAGS"])
 myenv.MergeFlags(env["SWIFT_CONTROLLERS_FLAGS"])
 myenv.MergeFlags(env["SWIFTOOLS_FLAGS"])
 if myenv["HAVE_XSS"] :
