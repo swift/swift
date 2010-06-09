@@ -2,13 +2,19 @@ Import("env")
 
 if env["TEST"] :
 
+	if env["PLATFORM"] == "win32" :
+		cppflags = ["/I" + Dir("src/include").abspath]
+	else :
+		cppflags = [("-isystem", Dir("src/include").abspath)]
+
 ################################################################################
 # Module flags
 ################################################################################
 
 	if env["SCONS_STAGE"] == "flags" :
 		env["CPPUNIT_FLAGS"] = {
-				"CPPPATH": [env.Dir("src/include"), env.Dir(".")],
+				"CPPPATH": [env.Dir(".")],
+				"CPPFLAGS": cppflags,
 				"LIBPATH": [env.Dir(".")],
 				"LIBS": ["CppUnit"]
 			}
@@ -19,6 +25,7 @@ if env["TEST"] :
 
 	if env["SCONS_STAGE"] == "build" :
 		myenv = env.Clone()
+		myenv.Replace(CXXFLAGS = [flag for flag in env["CXXFLAGS"] if not flag.startswith("-W")])
 		myenv.Append(CPPPATH = ["src/include", "."])
 		sources = [
 				"src/src/cppunit/TextTestRunner.cpp",

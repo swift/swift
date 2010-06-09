@@ -78,7 +78,7 @@ class RosterControllerTest : public CppUnit::TestFixture
 			groups.push_back("testGroup2");
 			xmppRoster_->addContact(JID("test@testdomain.com/bob"), "name", groups, RosterItemPayload::Both);
 			
-			CPPUNIT_ASSERT_EQUAL(2, (int)CHILDREN.size());
+			CPPUNIT_ASSERT_EQUAL(2, static_cast<int>(CHILDREN.size()));
 			//CPPUNIT_ASSERT_EQUAL(String("Bob"), xmppRoster_->getNameForJID(JID("foo@bar.com")));
 		};
 
@@ -87,15 +87,15 @@ class RosterControllerTest : public CppUnit::TestFixture
 			JID jid("test@testdomain.com");
 			xmppRoster_->addContact(jid, "name", groups, RosterItemPayload::None);
 			
-			CPPUNIT_ASSERT_EQUAL(1, (int)CHILDREN.size());
-			CPPUNIT_ASSERT_EQUAL(1, (int)groupChild(0)->getChildren().size());
+			CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(CHILDREN.size()));
+			CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(groupChild(0)->getChildren().size()));
 			xmppRoster_->addContact(jid, "name", groups, RosterItemPayload::To);
-			CPPUNIT_ASSERT_EQUAL(1, (int)CHILDREN.size());
-			CPPUNIT_ASSERT_EQUAL(1, (int)groupChild(0)->getChildren().size());
+			CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(CHILDREN.size()));
+			CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(groupChild(0)->getChildren().size()));
 
 			xmppRoster_->addContact(jid, "name", groups, RosterItemPayload::Both);
-			CPPUNIT_ASSERT_EQUAL(1, (int)CHILDREN.size());
-			CPPUNIT_ASSERT_EQUAL(1, (int)groupChild(0)->getChildren().size());
+			CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(CHILDREN.size()));
+			CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(groupChild(0)->getChildren().size()));
 
 		};
 
@@ -104,12 +104,12 @@ class RosterControllerTest : public CppUnit::TestFixture
 			JID jid("test@testdomain.com");
 			xmppRoster_->addContact(jid, "name", groups, RosterItemPayload::Both);
 			
-			CPPUNIT_ASSERT_EQUAL(1, (int)CHILDREN.size());
-			CPPUNIT_ASSERT_EQUAL(1, (int)groupChild(0)->getChildren().size());
+			CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(CHILDREN.size()));
+			CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(groupChild(0)->getChildren().size()));
 			CPPUNIT_ASSERT_EQUAL(String("name"), groupChild(0)->getChildren()[0]->getDisplayName());
 			xmppRoster_->addContact(jid, "NewName", groups, RosterItemPayload::Both);
-			CPPUNIT_ASSERT_EQUAL(1, (int)CHILDREN.size());
-			CPPUNIT_ASSERT_EQUAL(1, (int)groupChild(0)->getChildren().size());
+			CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(CHILDREN.size()));
+			CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(groupChild(0)->getChildren().size()));
 			CPPUNIT_ASSERT_EQUAL(String("NewName"), groupChild(0)->getChildren()[0]->getDisplayName());
 		};
 

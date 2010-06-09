@@ -127,7 +127,7 @@ class StanzaTest : public CppUnit::TestFixture
 			m.addPayload(boost::shared_ptr<MyPayload3>(new MyPayload3()));
 			m.addPayload(payload2);
 
-			CPPUNIT_ASSERT_EQUAL((size_t)2, m.getPayloads<MyPayload2>().size());
+			CPPUNIT_ASSERT_EQUAL(static_cast<size_t>(2), m.getPayloads<MyPayload2>().size());
 			CPPUNIT_ASSERT_EQUAL(payload1, m.getPayloads<MyPayload2>()[0]);
 			CPPUNIT_ASSERT_EQUAL(payload2, m.getPayloads<MyPayload2>()[1]);
 		}

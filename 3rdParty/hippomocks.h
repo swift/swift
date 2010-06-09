@@ -1,6 +1,9 @@
 #ifndef HIPPOMOCKS_H
 #define HIPPOMOCKS_H
 
+#pragma GCC diagnostic ignored "-Wold-style-cast"
+#pragma GCC diagnostic ignored "-Wnon-virtual-dtor"
+
 #ifndef EXCEPTION_BUFFER_SIZE
 #define EXCEPTION_BUFFER_SIZE 65536
 #endif
