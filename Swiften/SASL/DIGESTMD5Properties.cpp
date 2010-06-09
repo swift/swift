@@ -17,7 +17,7 @@ namespace {
 			return v[0] == '"';
 		}
 		else if (v[0] == '"') {
-			return !v[v.getSize() - 1] == '"';
+			return v[v.getSize() - 1] != '"';
 		}
 		else {
 			return false;
