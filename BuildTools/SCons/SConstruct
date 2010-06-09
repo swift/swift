@@ -110,7 +110,7 @@ if env["warnings"] :
 	if env["PLATFORM"] == "win32" :
 		env.Append(CCFLAGS = ["/Wall"])
 	else :
-		env.Append(CCFLAGS = ["-W", "-Wall"])
+		env.Append(CCFLAGS = ["-W", "-Wall", "-Wnon-virtual-dtor"])
 		#env.Append(CCFLAGS = ["-W", "-Wall", "-Wredundant-decls", "-pedantic", "-Wno-long-long", "-Woverloaded-virtual", "-Wundef", "-Wfloat-equal", "-Wold-style-cast"])
 		gccVersion = env["CCVERSION"].split(".")
 		if gccVersion >= ["4", "5", "0"] :
