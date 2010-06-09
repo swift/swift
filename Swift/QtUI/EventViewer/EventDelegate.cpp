@@ -54,7 +54,7 @@ EventType EventDelegate::getEventType(boost::shared_ptr<StanzaEvent> event) cons
 	if (errorEvent) return ErrorEventType;
 	//I don't know what this is.
 	assert(false);
-
+	return MessageEventType;
 }
 
 }

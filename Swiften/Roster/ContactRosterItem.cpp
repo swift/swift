@@ -30,6 +30,7 @@ StatusShow::Type ContactRosterItem::getSimplifiedStatusShow() const {
 		case StatusShow::None: return StatusShow::None; break;
 	}
 	assert(false);
+	return StatusShow::None;
 }
 
 String ContactRosterItem::getStatusText() const {
