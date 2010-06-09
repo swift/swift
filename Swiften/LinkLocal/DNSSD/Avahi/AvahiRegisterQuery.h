@@ -54,7 +54,7 @@ namespace Swift {
 				AvahiStringList* txtList;
 				avahi_string_list_parse(txtRecord.getData(), txtRecord.getSize(), &txtList);
 
-				int result = avahi_entry_group_add_service_strlst(group, AVAHI_IF_UNSPEC, AVAHI_PROTO_UNSPEC, (AvahiPublishFlags) 0, name.getUTF8Data(), "_presence._tcp", NULL, NULL, port, txtList);
+				int result = avahi_entry_group_add_service_strlst(group, AVAHI_IF_UNSPEC, AVAHI_PROTO_UNSPEC, static_cast<AvahiPublishFlags>(0), name.getUTF8Data(), "_presence._tcp", NULL, NULL, port, txtList);
 				if (result < 0) {
 					std::cout << "Error registering service: " << avahi_strerror(result) << std::endl;
 					MainEventLoop::postEvent(boost::bind(boost::ref(onRegisterFinished), boost::optional<DNSSDServiceID>()), shared_from_this());

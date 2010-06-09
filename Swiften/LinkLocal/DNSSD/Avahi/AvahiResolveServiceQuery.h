@@ -24,7 +24,7 @@ namespace Swift {
 				std::cout << "Start resolving " << service.getName() << " " << service.getType() << " " << service.getDomain() << std::endl;
 				avahi_threaded_poll_lock(querier->getThreadedPoll());
 				assert(!resolver);
-				resolver = avahi_service_resolver_new(querier->getClient(), service.getNetworkInterfaceID(), AVAHI_PROTO_UNSPEC, service.getName().getUTF8Data(), service.getType().getUTF8Data(), service.getDomain().getUTF8Data(), AVAHI_PROTO_UNSPEC, (AvahiLookupFlags) 0, handleServiceResolvedStatic, this);
+				resolver = avahi_service_resolver_new(querier->getClient(), service.getNetworkInterfaceID(), AVAHI_PROTO_UNSPEC, service.getName().getUTF8Data(), service.getType().getUTF8Data(), service.getDomain().getUTF8Data(), AVAHI_PROTO_UNSPEC, static_cast<AvahiLookupFlags>(0), handleServiceResolvedStatic, this);
 				if (!resolver) {
 					std::cout << "Error starting resolver" << std::endl;
 					MainEventLoop::postEvent(boost::bind(boost::ref(onServiceResolved), boost::optional<Result>()), shared_from_this());

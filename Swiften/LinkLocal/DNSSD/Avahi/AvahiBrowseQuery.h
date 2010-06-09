@@ -24,7 +24,7 @@ namespace Swift {
 				std::cout << "Start browsing" << std::endl;
 				assert(!browser);
 				avahi_threaded_poll_lock(querier->getThreadedPoll());
-				browser = avahi_service_browser_new(querier->getClient(), AVAHI_IF_UNSPEC, AVAHI_PROTO_UNSPEC, "_presence._tcp", NULL, (AvahiLookupFlags) 0, &handleServiceDiscoveredStatic, this);
+				browser = avahi_service_browser_new(querier->getClient(), AVAHI_IF_UNSPEC, AVAHI_PROTO_UNSPEC, "_presence._tcp", NULL, static_cast<AvahiLookupFlags>(0), &handleServiceDiscoveredStatic, this);
 				if (!browser) {
 					std::cout << "Error" << std::endl;
 					MainEventLoop::postEvent(boost::bind(boost::ref(onError)), shared_from_this());

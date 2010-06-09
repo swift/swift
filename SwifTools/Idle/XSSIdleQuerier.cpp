@@ -9,6 +9,8 @@
 #include <cassert>
 #include <iostream>
 
+#pragma GCC diagnostic ignored "-Wold-style-cast"
+
 namespace Swift {
 
 XSSIdleQuerier::XSSIdleQuerier() : display(NULL), info(NULL) {
