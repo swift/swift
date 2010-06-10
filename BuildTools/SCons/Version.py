@@ -1,7 +1,7 @@
 import subprocess, os, datetime
 
 def getGitBuildVersion(project) :
-  tag = git("describe --tags --exact --match '" + project + "-*'")
+  tag = git("describe --tags --exact --match \"" + project + "-*\"")
   if tag :
     return tag.rstrip()[len(project)+1:]
     
