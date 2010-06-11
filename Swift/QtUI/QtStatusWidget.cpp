@@ -22,6 +22,8 @@
 #include "Swift/QtUI/QtLineEdit.h"
 #include "Swift/QtUI/QtSwiftUtil.h"
 
+const QString NO_MESSAGE = QString("(No message)");
+
 namespace Swift {
 
 QtStatusWidget::QtStatusWidget(QWidget *parent) : QWidget(parent), editCursor_(Qt::IBeamCursor), viewCursor_(Qt::PointingHandCursor) {
@@ -122,7 +124,7 @@ void QtStatusWidget::generateList() {
 	newStatusText_ = text;
 	menu_->clear();
 	foreach (StatusShow::Type type, icons_.keys()) {
-		QListWidgetItem* item = new QListWidgetItem(text, menu_);
+		QListWidgetItem* item = new QListWidgetItem(text == "" ? NO_MESSAGE : text, menu_);
 		item->setIcon(icons_[type]);
 		item->setToolTip(P2QSTRING(StatusShow::typeToFriendlyName(type)) + ": " + item->text());
 		item->setStatusTip(item->toolTip());
@@ -206,7 +208,8 @@ StatusShow::Type QtStatusWidget::getSelectedStatusShow() {
 void QtStatusWidget::handleItemClicked(QListWidgetItem* item) {
 	editing_ = false;
 	selectedStatusType_ = static_cast<StatusShow::Type>(item->data(Qt::UserRole).toInt());
-	newStatusText_ = item->data(Qt::DisplayRole).toString();
+	QString message = item->data(Qt::DisplayRole).toString();
+	newStatusText_ = message == NO_MESSAGE ? "" : message;
 	statusEdit_->setText(newStatusText_);
 	handleEditComplete();
 }
@@ -218,7 +221,7 @@ void QtStatusWidget::setNewToolTip() {
 void QtStatusWidget::setStatusText(const QString& text) {
 	statusText_ = text;
 	statusEdit_->setText(text);
-	QString escapedText(text.isEmpty() ? "(No message)" : text);
+	QString escapedText(text.isEmpty() ? NO_MESSAGE : text);
 	escapedText.replace("<","&lt;");
 //	statusTextLabel_->setText("<i>" + escapedText + "</i>");
 	statusTextLabel_->setText(escapedText);
