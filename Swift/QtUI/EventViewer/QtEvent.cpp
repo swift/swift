@@ -6,6 +6,8 @@
 
 #include "Swift/QtUI/EventViewer/QtEvent.h"
 
+#include <QDateTime>
+
 #include "Swiften/Events/MessageEvent.h"
 #include "Swiften/Events/ErrorEvent.h"
 #include "Swiften/Events/SubscriptionRequestEvent.h"
@@ -20,7 +22,7 @@ QtEvent::QtEvent(boost::shared_ptr<StanzaEvent> event, bool active) : event_(eve
 
 QVariant QtEvent::data(int role) {
  	switch (role) {
-		case Qt::ToolTipRole:
+		case Qt::ToolTipRole: return QVariant(text()).toString() + "\n" + B2QDATE(event_->getTime()).toString();
 		case Qt::DisplayRole: return QVariant(text());
 		case Qt::TextColorRole: return active_ ? Qt::black : Qt::darkGray;
 		case Qt::BackgroundColorRole: return active_ ? Qt::white : Qt::lightGray;

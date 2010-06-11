@@ -6,19 +6,23 @@
 
 #pragma once
 
-#include "Swiften/Base/boost_bsignals.h"
 #include <boost/shared_ptr.hpp>
+#include <boost/date_time/posix_time/posix_time.hpp>
+
+#include "Swiften/Base/boost_bsignals.h"
 
 namespace Swift {
 	class StanzaEvent {
 		public:
-			StanzaEvent(){concluded_ = false;};
+			StanzaEvent() : time_(boost::posix_time::microsec_clock::universal_time()) {concluded_ = false;};
 			virtual ~StanzaEvent() {};
 			void conclude() {concluded_ = true; onConclusion();};
 			/** Do not call this directly from outside the class */
 			boost::signal<void()> onConclusion;
 			bool getConcluded() {return concluded_;};
+			boost::posix_time::ptime getTime() {return time_;}
 		private:
 			bool concluded_;
+			boost::posix_time::ptime time_;
 	};
 }
