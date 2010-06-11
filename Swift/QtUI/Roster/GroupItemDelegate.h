@@ -14,7 +14,7 @@
 
 namespace Swift {
 	class QtTreeWidgetItem;
-	class GroupItemDelegate : public QStyledItemDelegate {
+	class GroupItemDelegate {
 	public:
 		GroupItemDelegate();
 		QSize sizeHint(const QStyleOptionViewItem& option, const QModelIndex& index) const;
