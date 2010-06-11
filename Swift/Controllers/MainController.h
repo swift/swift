@@ -81,6 +81,7 @@ namespace Swift {
 			void handleInputIdleChanged(bool);
 			void logout();
 			void signOut();
+			void setReconnectTimer();
 	
 			void performLoginFromCachedCredentials();
 			void reconnectAfterError();
@@ -130,5 +131,7 @@ namespace Swift {
 			bool useDelayForLatency_;
 			MUCSearchController* mucSearchController_;
 			MUCSearchWindowFactory* mucSearchWindowFactory_;
+			int timeBeforeNextReconnect_;
+			BoostTimer* reconnectTimer_;
 	};
 }

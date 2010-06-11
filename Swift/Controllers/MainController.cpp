@@ -10,11 +10,14 @@
 #include <boost/lexical_cast.hpp>
 #include <boost/shared_ptr.hpp>
 #include <stdlib.h>
+#include <sstream>
 
 #include "Swiften/Application/Application.h"
 #include "Swiften/Application/ApplicationMessageDisplay.h"
 #include "Swiften/Network/TimerFactory.h"
 #include "Swiften/Network/BoostTimerFactory.h"
+#include "Swiften/Network/BoostIOServiceThread.h"
+#include "Swiften/Network/MainBoostIOServiceThread.h"
 #include "Swift/Controllers/BuildVersion.h"
 #include "Swift/Controllers/Chat/ChatController.h"
 #include "Swift/Controllers/Chat/MUCSearchController.h"
@@ -78,7 +81,9 @@ MainController::MainController(ChatWindowFactory* chatWindowFactory, MainWindowF
 	presenceSender_ = NULL;
 	client_ = NULL;
 	mucSearchController_ = NULL;
+	reconnectTimer_ = NULL;
 
+	timeBeforeNextReconnect_ = -1;
 	mucSearchWindowFactory_ = mucSearchWindowFactory;
 	eventWindowFactory_ = eventWindowFactory;
 	chatListWindowFactory_ = chatListWindowFactory;
@@ -164,6 +169,9 @@ void MainController::resetClient() {
 }
 
 void MainController::handleConnected() {
+	timeBeforeNextReconnect_ = -1;
+	delete reconnectTimer_;
+	reconnectTimer_ = NULL;
 	loginWindow_->setIsLoggingIn(false);
 	if (lastDisconnectError_) {
 		lastDisconnectError_->conclude();
@@ -366,17 +374,30 @@ void MainController::handleError(const ClientError& error) {
 		signOut();
 		loginWindow_->setMessage(message);
 	} else {
-		if (!lastDisconnectError_) {
+		logout();
+		setReconnectTimer();
+		if (lastDisconnectError_) {
+			std::stringstream ss;
+			ss << "Reconnect to " << jid_.getDomain() << " failed: " << message << ". Will retry in " << timeBeforeNextReconnect_ << " seconds.";
+			message = ss.str();
+		} else {
 			message = "Disconnected from " + jid_.getDomain() + ": " + message;
-			lastDisconnectError_ = boost::shared_ptr<ErrorEvent>(new ErrorEvent(JID(jid_.getDomain()), message));
-			//std::cout << message << std::endl;
-			eventController_->handleIncomingEvent(lastDisconnectError_);
 		}
+		lastDisconnectError_ = boost::shared_ptr<ErrorEvent>(new ErrorEvent(JID(jid_.getDomain()), message));
+		eventController_->handleIncomingEvent(lastDisconnectError_);
 	}
-	logout();
-	if (rosterController_) {
-		reconnectAfterError();
+
+}
+
+void MainController::setReconnectTimer() {
+	if (timeBeforeNextReconnect_ < 0) {
+		timeBeforeNextReconnect_ = 1;
+	} else {
+		timeBeforeNextReconnect_ = timeBeforeNextReconnect_ >= 150 ? 300 : timeBeforeNextReconnect_ * 2;
 	}
+	reconnectTimer_ = new BoostTimer(timeBeforeNextReconnect_ * 1000, &MainBoostIOServiceThread::getInstance().getIOService());
+	reconnectTimer_->onTick.connect(boost::bind(&MainController::reconnectAfterError, this));
+	reconnectTimer_->start();
 }
 
 void MainController::handleCancelLoginRequest() {
@@ -392,6 +413,8 @@ void MainController::signOut() {
 }
 
 void MainController::logout() {
+	delete reconnectTimer_;
+	reconnectTimer_ = 0;
 	if (client_ /*&& client_->isAvailable()*/) {
 		client_->disconnect();
 	}
