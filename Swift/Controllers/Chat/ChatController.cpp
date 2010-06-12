@@ -97,9 +97,10 @@ String ChatController::getStatusChangeString(boost::shared_ptr<Presence> presenc
 }
 
 void ChatController::handlePresenceChange(boost::shared_ptr<Presence> newPresence, boost::shared_ptr<Presence> previousPresence) {
-	if (!(toJID_.isBare() && newPresence->getFrom().equals(toJID_, JID::WithoutResource)) && newPresence->getFrom() != toJID_) {
+	if (!toJID_.equals(newPresence->getFrom(), toJID_.isBare() ? JID::WithoutResource : JID::WithResource)) {
 		return;
 	}
+
 	chatStateTracker_->handlePresenceChange(newPresence, previousPresence);
 	String newStatusChangeString = getStatusChangeString(newPresence);
 	if (!previousPresence || newStatusChangeString != getStatusChangeString(previousPresence)) {

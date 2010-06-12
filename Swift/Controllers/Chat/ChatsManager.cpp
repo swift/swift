@@ -114,6 +114,7 @@ void ChatsManager::handleUIEvent(boost::shared_ptr<UIEvent> event) {
  * If a resource goes offline, release bound chatdialog to that resource.
  */
 void ChatsManager::handlePresenceChange(boost::shared_ptr<Presence> newPresence, boost::shared_ptr<Presence> /*lastPresence*/) {
+	if (isMUC(newPresence->getFrom().toBare())) return;
 	if (newPresence->getType() != Presence::Unavailable) return;
 	JID fullJID(newPresence->getFrom());
 	std::map<JID, ChatController*>::iterator it = chatControllers_.find(fullJID);
@@ -128,23 +129,6 @@ void ChatsManager::setAvatarManager(AvatarManager* avatarManager) {
 	avatarManager_ = avatarManager;
 }
 
-// void ChatsManager::handleUIEvent(boost::shared_ptr<UIEvent> rawEvent) {
-// 	{
-// 		boost::shared_ptr<RequestChatUIEvent> event = boost::dynamic_pointer_cast<RequestChatUIEvent>(rawEvent);
-// 		if (event != NULL) {
-// 			handleChatRequest(event->getContact());
-// 			return;
-// 		}
-// 	}
-// 	{
-// 		boost::shared_ptr<JoinMUCUIEvent> event = boost::dynamic_pointer_cast<JoinMUCUIEvent>(rawEvent);
-// 		if (event != NULL) {
-// 			handleJoinMUCRequest();
-// 		}
-// 	}
-// }
-
-
 void ChatsManager::setServerDiscoInfo(boost::shared_ptr<DiscoInfo> info) {
 	serverDiscoInfo_ = info;
 	foreach (JIDChatControllerPair pair, chatControllers_) {
@@ -157,7 +141,6 @@ void ChatsManager::setServerDiscoInfo(boost::shared_ptr<DiscoInfo> info) {
 
 void ChatsManager::setEnabled(bool enabled) {
 	foreach (JIDChatControllerPair controllerPair, chatControllers_) {
-		//printf("Setting enabled on %d to %d\n", controllerPair.second, enabled);
 		controllerPair.second->setEnabled(enabled);
 	}
 	foreach (JIDMUCControllerPair controllerPair, mucControllers_) {

@@ -43,6 +43,7 @@ namespace Swift {
 			void setEnabled(bool enabled);
 			void setServerDiscoInfo(boost::shared_ptr<DiscoInfo> info);
 			void handleIncomingMessage(boost::shared_ptr<Message> message);
+			virtual bool isMUC(const JID& muc) const;
 		private:
 			void handleChatRequest(const String& contact);
 			void handleJoinMUCRequest(const JID& muc, const boost::optional<String>& nick);
@@ -56,8 +57,6 @@ namespace Swift {
 			ChatController* createNewChatController(const JID &contact);
 			ChatController* getChatControllerOrCreate(const JID &contact);
 			ChatController* getChatControllerIfExists(const JID &contact);
-			virtual bool isMUC(const JID& muc) const;
-
 			std::map<JID, MUCController*> mucControllers_;
 			std::map<JID, ChatController*> chatControllers_;
 			EventController* eventController_;
