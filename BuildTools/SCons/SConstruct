@@ -267,16 +267,24 @@ else :
 # Boost
 boostLibs = [("signals", None), ("thread", None), ("regex", None), ("program_options", None), ("filesystem", None), ("system", "system/system_error.hpp"), ("date_time", "date_time/date.hpp")]
 allLibsPresent = True
+libNames = []
 for (lib, header) in boostLibs :
 	if header :
 		header = "boost/" + header
 	else :
 		header = "boost/" + lib + ".hpp"
-	if not conf.CheckCXXHeader(header) or not conf.CheckLib("boost_" + lib) :
+	if not conf.CheckCXXHeader(header) :
 		allLibsPresent = False
 		break
+	libName = "boost_" + lib
+	if not conf.CheckLib(libName) :
+		libName += "-mt"
+		if not conf.CheckLib(libName) :
+			allLibsPresent = False
+			break
+	libNames.append(libName)
 if allLibsPresent :
-	env["BOOST_FLAGS"] = { "LIBS": ["boost_" + lib for lib, header in boostLibs] }
+	env["BOOST_FLAGS"] = { "LIBS": libNames }
 	if not conf.CheckCXXHeader("boost/uuid/uuid.hpp") :
 		# FIXME: Remove this workaround when UUID is available in most distros
 		env["BOOST_BUNDLED_UUID_ONLY"] = True
