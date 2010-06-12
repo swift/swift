@@ -130,13 +130,13 @@ QtLoginWindow::QtLoginWindow(UIEventStream* uiEventStream) : QMainWindow() {
 #endif
 	
 	QAction* aboutAction = new QAction("About Swift", this);
-	connect(aboutAction, SIGNAL(activated()), SLOT(handleAbout()));
+	connect(aboutAction, SIGNAL(triggered()), SLOT(handleAbout()));
 	swiftMenu_->addAction(aboutAction);
 
 	toolsMenu_ = new QMenu(tr("Tools"), this);
 
 	QAction* xmlConsoleAction = new QAction(tr("Show Debug Console"), this);
-	connect(xmlConsoleAction, SIGNAL(activated()), SLOT(handleShowXMLConsole()));
+	connect(xmlConsoleAction, SIGNAL(triggered()), SLOT(handleShowXMLConsole()));
 	toolsMenu_->addAction(xmlConsoleAction);
 
 	toggleSoundsAction_ = new QAction(tr("Play Sounds"), this);
@@ -147,7 +147,7 @@ QtLoginWindow::QtLoginWindow(UIEventStream* uiEventStream) : QMainWindow() {
 
 	
 	QAction* quitAction = new QAction("Quit", this);
-	connect(quitAction, SIGNAL(activated()), SLOT(handleQuit()));
+	connect(quitAction, SIGNAL(triggered()), SLOT(handleQuit()));
 	swiftMenu_->addAction(quitAction);
 
 	setInitialMenus();
