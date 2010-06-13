@@ -16,6 +16,7 @@ echo "Checking out a fresh copy ..."
 rm -rf $DIRNAME
 git clone ../../../.git $DIRNAME
 ln -s Swift/Packaging/Debian/debian $DIRNAME/debian
+../../../BuildTools/UpdateDebianChangelog.py $DIRNAME/debian/changelog $VERSION
 
 echo "Building ..."
 cd $DIRNAME
