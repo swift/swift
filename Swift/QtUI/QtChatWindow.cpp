@@ -239,8 +239,8 @@ void QtChatWindow::addMessage(const String &message, const String &senderName, b
 		htmlString += QString("%3</span> ").arg(Qt::escape(P2QSTRING(label->getDisplayMarking())));
 	}
 	QString messageHTML(Qt::escape(P2QSTRING(message)));
-	messageHTML.replace("\n","<br/>");
 	messageHTML = P2QSTRING(Linkify::linkify(Q2PSTRING(messageHTML)));
+	messageHTML.replace("\n","<br/>");
 	QString styleSpanStart = style == "" ? "" : "<span style=\"" + style + "\">";
 	QString styleSpanEnd = style == "" ? "" : "</span>";
 	htmlString += styleSpanStart + messageHTML + styleSpanEnd;
