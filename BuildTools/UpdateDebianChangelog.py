@@ -12,7 +12,7 @@ changelog.close()
 
 project = ""
 last_version = ""
-m = re.match("(\w+) \((.*)\)", last_version_line)
+m = re.match("(\w+) \((.*)-\d+\)", last_version_line)
 if m :
   project = m.group(1)
   last_version = m.group(2)
@@ -22,7 +22,7 @@ if last_version != version :
   changelog_data = changelog.read()
   changelog.close()
   changelog = open(sys.argv[1], "w")
-  changelog.write(project + " (" + version + ")" + " unstable; urgency=low\n\n")
+  changelog.write(project + " (" + version + "-1)" + " unstable; urgency=low\n\n")
   changelog.write("  * Upstream development snapshot\n\n")
   changelog.write(" -- Remko Tron\xc3\xa7on <dev@el-tramo.be>  " + email.utils.formatdate() + "\n")
   changelog.write("\n")

@@ -1,10 +1,10 @@
-swift (1.0beta2-1) unstable; urgency=low
+swift (1.0~beta2-1) unstable; urgency=low
 
   * Upstream release
 
  -- Remko Tronçon <dev@el-tramo.be>  Sat, 26 Sep 2009 11:08:32 +0200
 
-swift (1.0beta1-1) unstable; urgency=low
+swift (1.0~beta1-1) unstable; urgency=low
 
   * Upstream release
 

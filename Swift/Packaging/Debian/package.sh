@@ -2,9 +2,10 @@
 
 export PYTHONPATH=../../../BuildTools/SCons
 VERSION=`../../../BuildTools/GetBuildVersion.py swift`
-DIRNAME=swift-$VERSION
+DEBIAN_VERSION=`../../../BuildTools/DebianizeVersion.py $VERSION`
+DIRNAME=swift-$DEBIAN_VERSION
 
-if [ -z "$VERSION" ]; then
+if [ -z "$DEBIAN_VERSION" ]; then
 	echo "Unable to determine version"
 	exit -1
 fi
@@ -16,7 +17,7 @@ echo "Checking out a fresh copy ..."
 rm -rf $DIRNAME
 git clone ../../../.git $DIRNAME
 ln -s Swift/Packaging/Debian/debian $DIRNAME/debian
-../../../BuildTools/UpdateDebianChangelog.py $DIRNAME/debian/changelog $VERSION
+../../../BuildTools/UpdateDebianChangelog.py $DIRNAME/debian/changelog $DEBIAN_VERSION
 
 echo "Building ..."
 cd $DIRNAME
