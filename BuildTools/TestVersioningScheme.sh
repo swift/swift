@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 function test_versions() {
 	versions=$@
@@ -22,6 +22,7 @@ DEVELOPMENT_VERSIONS="
 	swift-1.0beta1-dev3
 	swift-1.0beta2 
 	swift-1.0rc1
+	swift-1.0rc1-dev2
 	swift-1.0 
 	swift-1.0-dev2
 	swift-1.0-dev4 
