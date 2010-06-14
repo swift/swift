@@ -41,8 +41,8 @@ void GroupItemDelegate::paint(QPainter* painter, const QStyleOptionViewItem& opt
 	painter->fillPath(fillPath, backgroundBrush);
 	painter->drawPath(linePath);
 	
-	double triangleWidth = 9;
-	double triangleHeight = 5;
+	int triangleWidth = 9;
+	int triangleHeight = 5;
 	paintExpansionTriangle(painter, region.adjusted(common_.horizontalMargin +  1, 0, 0, 0), triangleWidth, triangleHeight, expanded);
 	
 	int textLeftOffset = 3 * common_.horizontalMargin + 1 + triangleWidth;
