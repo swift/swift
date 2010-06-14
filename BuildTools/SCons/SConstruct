@@ -29,6 +29,8 @@ if os.name == "nt" :
 	vars.Add(PackageVariable("bonjour", "Bonjour SDK location", "yes"))
 vars.Add(PackageVariable("openssl", "OpenSSL location", "yes"))
 vars.Add(PathVariable("qt", "Qt location", "", PathVariable.PathAccept))
+vars.Add(PathVariable("docbook_xml", "DocBook XML", None, PathVariable.PathAccept))
+vars.Add(PathVariable("docbook_xsl", "DocBook XSL", None, PathVariable.PathAccept))
 
 ################################################################################
 # Set up default build & configure environment
@@ -403,6 +405,18 @@ elif env.get("bonjour", False) :
 		env["BONJOUR_FLAGS"] = bonjour_flags
 		env["BONJOUR_FLAGS"]["LIBS"] = ["dnssd"]
 	bonjour_conf.Finish()
+
+
+################################################################################
+# DocBook setup
+################################################################################
+
+if env.get("docbook_xml") :
+	env["DOCBOOK_XML_DIR"] = env["docbook_xml"]
+if env.get("docbook_xsl") :
+	env["DOCBOOK_XSL_DIR"] = env["docbook_xsl"]
+print env["DOCBOOK_XSL_DIR"]
+
 
 ################################################################################
 # Set up git hooks

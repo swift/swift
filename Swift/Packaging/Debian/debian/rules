@@ -13,7 +13,7 @@ install: build
 	dh_testroot
 	dh_prep  
 	dh_installdirs
-	scons qt=/usr/share/qt4 SWIFT_INSTALLDIR=$(CURDIR)/debian/swift/usr $(CURDIR)
+	scons qt=/usr/share/qt4 docbook_xsl=/usr/share/xml/docbook/stylesheet/docbook-xsl docbook_xml=/usr/share/xml/docbook/schema/dtd/4.5 SWIFT_INSTALLDIR=$(CURDIR)/debian/swift/usr $(CURDIR)
 
 binary-indep: install
 binary-arch: install

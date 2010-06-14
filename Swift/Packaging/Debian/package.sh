@@ -19,6 +19,7 @@ rm -rf $DIRNAME
 git clone ../../../.git $DIRNAME
 find $DIRNAME/3rdParty/Boost/src -type f | grep -v uuid | xargs rm -f
 find $DIRNAME/3rdParty/SCons -delete
+find $DIRNAME/3rdParty/DocBook -delete
 ln -s Swift/Packaging/Debian/debian $DIRNAME/debian
 ../../../BuildTools/UpdateDebianChangelog.py $DIRNAME/debian/changelog $DEBIAN_VERSION
 

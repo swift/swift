@@ -10,8 +10,14 @@ def generate(env) :
   docbook_dir = "#/BuildTools/DocBook"
   docbook_xsl_style_dir = env.Dir(docbook_dir + "/Stylesheets").abspath
   docbook_xml_catalog = env.File("catalog.xml").abspath
-  docbook_xml_dir = env.Dir("#/3rdParty/DocBook/XML").abspath
-  docbook_xsl_dir = env.Dir("#/3rdParty/DocBook/XSL").abspath
+  if "DOCBOOK_XML_DIR" in env :
+    docbook_xml_dir = env.Dir("$DOCBOOK_XML_DIR").abspath
+  else :
+    docbook_xml_dir = env.Dir("#/3rdParty/DocBook/XML").abspath
+  if "DOCBOOK_XSL_DIR" in env :
+    docbook_xsl_dir = env.Dir("$DOCBOOK_XSL_DIR").abspath
+  else :
+    docbook_xsl_dir = env.Dir("#/3rdParty/DocBook/XSL").abspath
   fop_fonts_dir = env.Dir(docbook_dir + "/Fonts").abspath
 
   # Generates a catalog from paths to external tools
