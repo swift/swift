@@ -31,6 +31,7 @@ namespace Swift {
 QtChatWindow::QtChatWindow(const QString &contact, UIEventStream* eventStream) : QtTabbable(), contact_(contact), previousMessageWasSelf_(false), previousMessageWasSystem_(false), eventStream_(eventStream) {
 	unreadCount_ = 0;
 	inputEnabled_ = true;
+	completer_ = NULL;
 	updateTitleWithUnreadCount();
 
 	QBoxLayout *layout = new QBoxLayout(QBoxLayout::TopToBottom, this);
