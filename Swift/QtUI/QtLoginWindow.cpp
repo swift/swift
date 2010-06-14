@@ -68,6 +68,8 @@ QtLoginWindow::QtLoginWindow(UIEventStream* uiEventStream) : QMainWindow() {
 
 	username_ = new QComboBox(this);
 	username_->setEditable(true);
+	username_->setWhatsThis("User address - looks like someuser@someserver.com");
+	username_->setToolTip("User address - looks like someuser@someserver.com");
 	layout->addWidget(username_);
 
 	QLabel* passwordLabel = new QLabel();
@@ -92,6 +94,8 @@ QtLoginWindow::QtLoginWindow(UIEventStream* uiEventStream) : QMainWindow() {
 	certificateButton_ = new QToolButton(this);
 	certificateButton_->setCheckable(true);
 	certificateButton_->setIcon(QIcon(":/icons/certificate.png"));
+	certificateButton_->setToolTip("Click if you have a personal certificate used for login to the service.");
+	certificateButton_->setWhatsThis("Click if you have a personal certificate used for login to the service.");
 	
 	credentialsLayout->addWidget(certificateButton_);
 	connect(certificateButton_, SIGNAL(clicked(bool)), SLOT(handleCertficateChecked(bool)));
