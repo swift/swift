@@ -16,6 +16,7 @@ rm swift_*
 echo "Checking out a fresh copy ..."
 rm -rf $DIRNAME
 git clone ../../../.git $DIRNAME
+find $DIRNAME/3rdParty/Boost/src -type f | grep -v uuid | xargs rm -f
 ln -s Swift/Packaging/Debian/debian $DIRNAME/debian
 ../../../BuildTools/UpdateDebianChangelog.py $DIRNAME/debian/changelog $DEBIAN_VERSION
 
