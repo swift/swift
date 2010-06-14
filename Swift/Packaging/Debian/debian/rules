@@ -23,7 +23,7 @@ binary-arch: install
 	dh_installdocs
 	dh_installmenu
 	dh_link
-	dh_strip
+	dh_strip --dbg-package=swift-dbg
 	dh_compress
 	dh_fixperms
 	dh_installdeb

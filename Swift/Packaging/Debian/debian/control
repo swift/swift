@@ -11,3 +11,10 @@ Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}
 Description: XMPP Client.
 	The Swift IM client.
+
+Package: swift-dbg
+Architecture: any
+Section: debug
+Depends: swift (= ${binary:Version}), ${shlibs:Depends}, ${misc:Depends}
+Description: Debugging symbols for swift.
+	The Swift IM client.
