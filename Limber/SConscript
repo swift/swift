@@ -2,6 +2,7 @@ Import("env")
 
 if env["SCONS_STAGE"] == "build" :
 	myenv = env.Clone()
+	myenv.BuildVersion("BuildVersion.h", project = "limber")
 	myenv.MergeFlags(env["SWIFTEN_FLAGS"])
 	myenv.MergeFlags(env["LIBIDN_FLAGS"])
 	myenv.MergeFlags(env.get("LIBXML_FLAGS", ""))
