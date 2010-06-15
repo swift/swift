@@ -295,9 +295,9 @@ else :
 
 # Avahi
 if env["PLATFORM"] != "darwin" :
-	if conf.CheckCHeader("avahi-client/client.h") and conf.CheckLib("avahi-client") :
+	if conf.CheckCHeader("avahi-client/client.h") and conf.CheckLib("avahi-client") and conf.CheckLib("avahi-common") :
 		env["HAVE_AVAHI"] = True
-		env["AVAHI_FLAGS"] = { "LIBS": ["avahi-client"] }
+		env["AVAHI_FLAGS"] = { "LIBS": ["avahi-client", "avahi-common"] }
 
 conf.Finish()
 
