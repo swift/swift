@@ -415,7 +415,6 @@ if env.get("docbook_xml") :
 	env["DOCBOOK_XML_DIR"] = env["docbook_xml"]
 if env.get("docbook_xsl") :
 	env["DOCBOOK_XSL_DIR"] = env["docbook_xsl"]
-print env.get("DOCBOOK_XSL_DIR","")
 
 
 ################################################################################
