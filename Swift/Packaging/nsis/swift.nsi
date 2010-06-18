@@ -63,11 +63,11 @@ File "..\..\QtUI\Swift\imageformats\qsvg4.dll"
 File "..\..\QtUI\Swift\imageformats\qtiff4.dll"
 
 # create start menu item
-CreateDirectory "$SMPROGRAMS\$StartMenuFolder"
-CreateShortCut "$SMPROGRAMS\$StartMenuFolder\Swift.lnk" "$INSTDIR\Swift.exe"
-CreateShortCut "$SMPROGRAMS\$StartMenuFolder\Uninstall Swift.lnk" "$INSTDIR\uninstaller.exe"
-# remember where we put them
-WriteRegStr HKCU "Software\Swift\" "Start Menu Folder" "$SMPROGRAMS\$StartMenuFolder"
+!insertmacro MUI_STARTMENU_WRITE_BEGIN Application
+	     CreateDirectory "$SMPROGRAMS\$StartMenuFolder"
+	     CreateShortCut "$SMPROGRAMS\$StartMenuFolder\Swift.lnk" "$INSTDIR\Swift.exe"
+	     CreateShortCut "$SMPROGRAMS\$StartMenuFolder\Uninstall Swift.lnk" "$INSTDIR\uninstaller.exe"
+!insertmacro MUI_STARTMENU_WRITE_END
 
 # Add the information to Add/Remove
 WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\Swift" "DisplayName" "Swift"
@@ -132,10 +132,10 @@ section "Uninstall"
     RmDir $INSTDIR\imageformats
     RmDir $INSTDIR
 
-    ReadRegStr $0 HKCU "Software\Swift\" "Start Menu Folder"
-    Delete "$0\Swift.lnk"
-    Delete "$0\Uninstall Swift.lnk"
-    RmDir "$0"
+    !insertmacro MUI_STARTMENU_GETFOLDER Application $StartMenuFolder
+    Delete "$SMPROGRAMS\$StartMenuFolder\Swift.lnk"
+    Delete "$SMPROGRAMS\$StartMenuFolder\Uninstall Swift.lnk"
+    RmDir "$SMPROGRAMS\$StartMenuFolder"
 
     DeleteRegKey HKEY_CURRENT_USER "Software\Swift\Start Menu Folder"
     DeleteRegKey /ifempty HKEY_CURRENT_USER "Software\Swift"
