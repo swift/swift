@@ -29,36 +29,58 @@
 # LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
 # OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-#
-
+from __future__ import division
 from __future__ import nested_scopes
 
-__revision__ = "src/script/scons-time.py 4761 2010/04/04 14:04:44 bdeegan"
+__revision__ = "src/script/scons-time.py 5023 2010/06/14 22:05:46 scons"
 
 import getopt
 import glob
 import os
-import os.path
 import re
 import shutil
-import string
 import sys
 import tempfile
 import time
 
 try:
-    False
+    sorted
 except NameError:
-    # Pre-2.2 Python has no False keyword.
-    import __builtin__
-    __builtin__.False = not 1
+    # Pre-2.4 Python has no sorted() function.
+    #
+    # The pre-2.4 Python list.sort() method does not support
+    # list.sort(key=) nor list.sort(reverse=) keyword arguments, so
+    # we must implement the functionality of those keyword arguments
+    # by hand instead of passing them to list.sort().
+    def sorted(iterable, cmp=None, key=None, reverse=False):
+        if key is not None:
+            result = [(key(x), x) for x in iterable]
+        else:
+            result = iterable[:]
+        if cmp is None:
+            # Pre-2.3 Python does not support list.sort(None).
+            result.sort()
+        else:
+            result.sort(cmp)
+        if key is not None:
+            result = [t1 for t0,t1 in result]
+        if reverse:
+            result.reverse()
+        return result
 
-try:
-    True
-except NameError:
-    # Pre-2.2 Python has no True keyword.
-    import __builtin__
-    __builtin__.True = not 0
+if os.environ.get('SCONS_HORRIBLE_REGRESSION_TEST_HACK') is not None:
+    # We can't apply the 'callable' fixer until the floor is 2.6, but the
+    # '-3' option to Python 2.6 and 2.7 generates almost ten thousand
+    # warnings.  This hack allows us to run regression tests with the '-3'
+    # option by replacing the callable() built-in function with a hack
+    # that performs the same function but doesn't generate the warning.
+    # Note that this hack is ONLY intended to be used for regression
+    # testing, and should NEVER be used for real runs.
+    from types import ClassType
+    def callable(obj):
+        if hasattr(obj, '__call__'): return True
+        if isinstance(obj, (ClassType, type)): return True
+        return False
 
 def make_temp_file(**kw):
     try:
@@ -90,7 +112,7 @@ def HACK_for_exec(cmd, *args):
     elif len(args) == 1:  exec cmd in args[0]
     else:                 exec cmd in args[0], args[1]
 
-class Plotter:
+class Plotter(object):
     def increment_size(self, largest):
         """
         Return the size of each horizontal increment line for a specified
@@ -98,12 +120,12 @@ class Plotter:
         between 5 and 9 horizontal lines on the graph, on some set of
         boundaries that are multiples of 10/100/1000/etc.
         """
-        i = largest / 5
+        i = largest // 5
         if not i:
             return largest
         multiplier = 1
         while i >= 10:
-            i = i / 10
+            i = i // 10
             multiplier = multiplier * 10
         return i * multiplier
 
@@ -111,9 +133,9 @@ class Plotter:
         # Round up to next integer.
         largest = int(largest) + 1
         increment = self.increment_size(largest)
-        return ((largest + increment - 1) / increment) * increment
+        return ((largest + increment - 1) // increment) * increment
 
-class Line:
+class Line(object):
     def __init__(self, points, type, title, label, comment, fmt="%s %s"):
         self.points = points
         self.type = type
@@ -177,13 +199,13 @@ class Gnuplotter(Plotter):
         result = []
         for line in self.lines:
             result.extend(line.get_x_values())
-        return filter(lambda r: not r is None, result)
+        return [r for r in result if not r is None]
 
     def get_all_y_values(self):
         result = []
         for line in self.lines:
             result.extend(line.get_y_values())
-        return filter(lambda r: not r is None, result)
+        return [r for r in result if not r is None]
 
     def get_min_x(self):
         try:
@@ -236,10 +258,9 @@ class Gnuplotter(Plotter):
 
         min_y = self.get_min_y()
         max_y = self.max_graph_value(self.get_max_y())
-        range = max_y - min_y
-        incr = range / 10.0
+        incr = (max_y - min_y) / 10.0
         start = min_y + (max_y / 2.0) + (2.0 * incr)
-        position = [ start - (i * incr) for i in xrange(5) ]
+        position = [ start - (i * incr) for i in range(5) ]
 
         inx = 1
         for line in self.lines:
@@ -274,12 +295,11 @@ def unzip(fname):
         open(name, 'w').write(zf.read(name))
 
 def read_tree(dir):
-    def read_files(arg, dirname, fnames):
-        for fn in fnames:
-            fn = os.path.join(dirname, fn)
+    for dirpath, dirnames, filenames in os.walk(dir):
+        for fn in filenames:
+            fn = os.path.join(dirpath, fn)
             if os.path.isfile(fn):
                 open(fn, 'rb').read()
-    os.path.walk('.', read_files, None)
 
 def redirect_to_file(command, log):
     return '%s > %s 2>&1' % (command, log)
@@ -289,7 +309,7 @@ def tee_to_file(command, log):
 
 
     
-class SConsTimer:
+class SConsTimer(object):
     """
     Usage: scons-time SUBCOMMAND [ARGUMENTS]
     Type "scons-time help SUBCOMMAND" for help on a specific subcommand.
@@ -506,9 +526,7 @@ class SConsTimer:
         """
         files = []
         for a in args:
-            g = glob.glob(a)
-            g.sort()
-            files.extend(g)
+            files.extend(sorted(glob.glob(a)))
 
         if tail:
             files = files[-tail:]
@@ -539,7 +557,7 @@ class SConsTimer:
 
         for file in files:
             base = os.path.splitext(file)[0]
-            run, index = string.split(base, '-')[-2:]
+            run, index = base.split('-')[-2:]
 
             run = int(run)
             index = int(index)
@@ -577,11 +595,11 @@ class SConsTimer:
         and returns the next run number after the largest it finds.
         """
         x = re.compile(re.escape(prefix) + '-([0-9]+).*')
-        matches = map(lambda e, x=x: x.match(e), os.listdir(dir))
-        matches = filter(None, matches)
+        matches = [x.match(e) for e in os.listdir(dir)]
+        matches = [_f for _f in matches if _f]
         if not matches:
             return 0
-        run_numbers = map(lambda m: int(m.group(1)), matches)
+        run_numbers = [int(m.group(1)) for m in matches]
         return int(max(run_numbers)) + 1
 
     def gnuplot_results(self, results, fmt='%s %.3f'):
@@ -590,10 +608,7 @@ class SConsTimer:
         """
         gp = Gnuplotter(self.title, self.key_location)
 
-        indices = results.keys()
-        indices.sort()
-
-        for i in indices:
+        for i in sorted(results.keys()):
             try:
                 t = self.run_titles[i]
             except IndexError:
@@ -964,7 +979,7 @@ class SConsTimer:
 
         if self.chdir:
             os.chdir(self.chdir)
-            logfile_path = lambda x, c=self.chdir: os.path.join(c, x)
+            logfile_path = lambda x: os.path.join(self.chdir, x)
 
         if not args:
 
@@ -1084,7 +1099,7 @@ class SConsTimer:
 
         if self.chdir:
             os.chdir(self.chdir)
-            logfile_path = lambda x, c=self.chdir: os.path.join(c, x)
+            logfile_path = lambda x: os.path.join(self.chdir, x)
 
         if not args:
 
@@ -1248,7 +1263,7 @@ class SConsTimer:
             except ValueError:
                 result.append(int(n))
             else:
-                result.extend(range(int(x), int(y)+1))
+                result.extend(list(range(int(x), int(y)+1)))
         return result
 
     def scons_path(self, dir):
@@ -1462,7 +1477,7 @@ class SConsTimer:
 
         if self.chdir:
             os.chdir(self.chdir)
-            logfile_path = lambda x, c=self.chdir: os.path.join(c, x)
+            logfile_path = lambda x: os.path.join(self.chdir, x)
 
         if not args:
 

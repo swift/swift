@@ -24,17 +24,17 @@
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #
 
-__revision__ = "src/script/scons.py 4761 2010/04/04 14:04:44 bdeegan"
+__revision__ = "src/script/scons.py 5023 2010/06/14 22:05:46 scons"
 
-__version__ = "1.3.0.d20100404"
+__version__ = "2.0.0.final.0"
 
-__build__ = "r4761"
+__build__ = "r5023"
 
-__buildsys__ = "cooldog"
+__buildsys__ = "scons-dev"
 
-__date__ = "2010/04/04 14:04:44"
+__date__ = "2010/06/14 22:05:46"
 
-__developer__ = "bdeegan"
+__developer__ = "scons"
 
 import os
 import os.path
@@ -76,7 +76,7 @@ if script_dir in sys.path:
 
 libs = []
 
-if os.environ.has_key("SCONS_LIB_DIR"):
+if "SCONS_LIB_DIR" in os.environ:
     libs.append(os.environ["SCONS_LIB_DIR"])
 
 local_version = 'scons-local-' + __version__
@@ -137,12 +137,11 @@ else:
         # check only /foo/lib/scons*.
         prefs.append(sys.prefix)
 
-    temp = map(lambda x: os.path.join(x, 'lib'), prefs)
-    temp.extend(map(lambda x: os.path.join(x,
+    temp = [os.path.join(x, 'lib') for x in prefs]
+    temp.extend([os.path.join(x,
                                            'lib',
                                            'python' + sys.version[:3],
-                                           'site-packages'),
-                           prefs))
+                                           'site-packages') for x in prefs])
     prefs = temp
 
     # Add the parent directory of the current python's library to the
@@ -175,8 +174,8 @@ else:
 
 # Look first for 'scons-__version__' in all of our preference libs,
 # then for 'scons'.
-libs.extend(map(lambda x: os.path.join(x, scons_version), prefs))
-libs.extend(map(lambda x: os.path.join(x, 'scons'), prefs))
+libs.extend([os.path.join(x, scons_version) for x in prefs])
+libs.extend([os.path.join(x, 'scons') for x in prefs])
 
 sys.path = libs + sys.path
 

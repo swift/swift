@@ -22,22 +22,20 @@
 # LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
 # OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-#
 
-__revision__ = "src/script/sconsign.py 4761 2010/04/04 14:04:44 bdeegan"
+__revision__ = "src/script/sconsign.py 5023 2010/06/14 22:05:46 scons"
 
-__version__ = "1.3.0.d20100404"
+__version__ = "2.0.0.final.0"
 
-__build__ = "r4761"
+__build__ = "r5023"
 
-__buildsys__ = "cooldog"
+__buildsys__ = "scons-dev"
 
-__date__ = "2010/04/04 14:04:44"
+__date__ = "2010/06/14 22:05:46"
 
-__developer__ = "bdeegan"
+__developer__ = "scons"
 
 import os
-import os.path
 import sys
 import time
 
@@ -64,7 +62,7 @@ if script_dir in sys.path:
 
 libs = []
 
-if os.environ.has_key("SCONS_LIB_DIR"):
+if "SCONS_LIB_DIR" in os.environ:
     libs.append(os.environ["SCONS_LIB_DIR"])
 
 local_version = 'scons-local-' + __version__
@@ -125,12 +123,11 @@ else:
         # check only /foo/lib/scons*.
         prefs.append(sys.prefix)
 
-    temp = map(lambda x: os.path.join(x, 'lib'), prefs)
-    temp.extend(map(lambda x: os.path.join(x,
+    temp = [os.path.join(x, 'lib') for x in prefs]
+    temp.extend([os.path.join(x,
                                            'lib',
                                            'python' + sys.version[:3],
-                                           'site-packages'),
-                           prefs))
+                                           'site-packages') for x in prefs])
     prefs = temp
 
     # Add the parent directory of the current python's library to the
@@ -163,8 +160,8 @@ else:
 
 # Look first for 'scons-__version__' in all of our preference libs,
 # then for 'scons'.
-libs.extend(map(lambda x: os.path.join(x, scons_version), prefs))
-libs.extend(map(lambda x: os.path.join(x, 'scons'), prefs))
+libs.extend([os.path.join(x, scons_version) for x in prefs])
+libs.extend([os.path.join(x, 'scons') for x in prefs])
 
 sys.path = libs + sys.path
 
@@ -172,10 +169,11 @@ sys.path = libs + sys.path
 # END STANDARD SCons SCRIPT HEADER
 ##############################################################################
 
-import cPickle
-import imp
-import string
+import SCons.compat   # so pickle will import cPickle instead
+
 import whichdb
+import pickle
+import imp
 
 import SCons.SConsign
 
@@ -195,7 +193,7 @@ whichdb.whichdb = my_whichdb
 
 def my_import(mname):
     if '.' in mname:
-        i = string.rfind(mname, '.')
+        i = mname.rfind('.')
         parent = my_import(mname[:i])
         fp, pathname, description = imp.find_module(mname[i+1:],
                                                     parent.__path__)
@@ -203,7 +201,7 @@ def my_import(mname):
         fp, pathname, description = imp.find_module(mname)
     return imp.load_module(mname, fp, pathname, description)
 
-class Flagger:
+class Flagger(object):
     default_value = 1
     def __setitem__(self, item, value):
         self.__dict__[item] = value
@@ -250,11 +248,11 @@ def map_bkids(entry, name):
     except AttributeError:
         return None
     result = []
-    for i in xrange(len(bkids)):
+    for i in range(len(bkids)):
         result.append(nodeinfo_string(bkids[i], bkidsigs[i], "        "))
     if result == []:
         return None
-    return string.join(result, "\n        ")
+    return "\n        ".join(result)
 
 map_field = {
     'action'    : map_action,
@@ -283,29 +281,27 @@ def nodeinfo_raw(name, ninfo, prefix=""):
     try:
         keys = ninfo.field_list + ['_version_id']
     except AttributeError:
-        keys = d.keys()
-        keys.sort()
+        keys = sorted(d.keys())
     l = []
     for k in keys:
         l.append('%s: %s' % (repr(k), repr(d.get(k))))
     if '\n' in name:
         name = repr(name)
-    return name + ': {' + string.join(l, ', ') + '}'
+    return name + ': {' + ', '.join(l) + '}'
 
 def nodeinfo_cooked(name, ninfo, prefix=""):
     try:
         field_list = ninfo.field_list
     except AttributeError:
         field_list = []
-    f = lambda x, ni=ninfo, v=Verbose: field(x, ni, v)
     if '\n' in name:
         name = repr(name)
-    outlist = [name+':'] + filter(None, map(f, field_list))
+    outlist = [name+':'] + [_f for _f in [field(x, ninfo, Verbose) for x in field_list] if _f]
     if Verbose:
         sep = '\n    ' + prefix
     else:
         sep = ' '
-    return string.join(outlist, sep)
+    return sep.join(outlist)
 
 nodeinfo_string = nodeinfo_cooked
 
@@ -338,9 +334,7 @@ def printentries(entries, location):
                     print nodeinfo_string(name, entry.ninfo)
                 printfield(name, entry.binfo)
     else:
-        names = entries.keys()
-        names.sort()
-        for name in names:
+        for name in sorted(entries.keys()):
             entry = entries[name]
             try:
                 ninfo = entry.ninfo
@@ -350,7 +344,7 @@ def printentries(entries, location):
                 print nodeinfo_string(name, entry.ninfo)
             printfield(name, entry.binfo)
 
-class Do_SConsignDB:
+class Do_SConsignDB(object):
     def __init__(self, dbm_name, dbm):
         self.dbm_name = dbm_name
         self.dbm = dbm
@@ -388,7 +382,7 @@ class Do_SConsignDB:
                 return
         except KeyboardInterrupt:
             raise
-        except cPickle.UnpicklingError:
+        except pickle.UnpicklingError:
             sys.stderr.write("sconsign: ignoring invalid `%s' file `%s'\n" % (self.dbm_name, fname))
             return
         except Exception, e:
@@ -404,14 +398,12 @@ class Do_SConsignDB:
                 else:
                     self.printentries(dir, val)
         else:
-            keys = db.keys()
-            keys.sort()
-            for dir in keys:
+            for dir in sorted(db.keys()):
                 self.printentries(dir, db[dir])
 
     def printentries(self, dir, val):
         print '=== ' + dir + ':'
-        printentries(cPickle.loads(val), dir)
+        printentries(pickle.loads(val), dir)
 
 def Do_SConsignDir(name):
     try:
@@ -423,7 +415,7 @@ def Do_SConsignDir(name):
         sconsign = SCons.SConsign.Dir(fp)
     except KeyboardInterrupt:
         raise
-    except cPickle.UnpicklingError:
+    except pickle.UnpicklingError:
         sys.stderr.write("sconsign: ignoring invalid .sconsign file `%s'\n" % (name))
         return
     except Exception, e:
