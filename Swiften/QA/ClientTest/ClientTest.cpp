@@ -61,7 +61,7 @@ int main(int, char**) {
 	client->connect();
 
 	{
-		boost::shared_ptr<BoostTimer> timer(new BoostTimer(30000, &MainBoostIOServiceThread::getInstance().getIOService()));
+		boost::shared_ptr<BoostTimer> timer(BoostTimer::create(30000, &MainBoostIOServiceThread::getInstance().getIOService()));
 		timer->onTick.connect(boost::bind(&SimpleEventLoop::stop, &eventLoop));
 		timer->start();
 

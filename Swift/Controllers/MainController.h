@@ -132,6 +132,6 @@ namespace Swift {
 			MUCSearchController* mucSearchController_;
 			MUCSearchWindowFactory* mucSearchWindowFactory_;
 			int timeBeforeNextReconnect_;
-			BoostTimer* reconnectTimer_;
+			Timer::ref reconnectTimer_;
 	};
 }

@@ -15,7 +15,6 @@
 #include "Swiften/Application/Application.h"
 #include "Swiften/Application/ApplicationMessageDisplay.h"
 #include "Swiften/Network/TimerFactory.h"
-#include "Swiften/Network/BoostTimerFactory.h"
 #include "Swiften/Network/BoostIOServiceThread.h"
 #include "Swiften/Network/MainBoostIOServiceThread.h"
 #include "Swift/Controllers/BuildVersion.h"
@@ -81,7 +80,6 @@ MainController::MainController(ChatWindowFactory* chatWindowFactory, MainWindowF
 	presenceSender_ = NULL;
 	client_ = NULL;
 	mucSearchController_ = NULL;
-	reconnectTimer_ = NULL;
 
 	timeBeforeNextReconnect_ = -1;
 	mucSearchWindowFactory_ = mucSearchWindowFactory;
@@ -170,8 +168,10 @@ void MainController::resetClient() {
 
 void MainController::handleConnected() {
 	timeBeforeNextReconnect_ = -1;
-	delete reconnectTimer_;
-	reconnectTimer_ = NULL;
+	if (reconnectTimer_) {
+		reconnectTimer_->stop();
+		reconnectTimer_.reset();
+	}
 	loginWindow_->setIsLoggingIn(false);
 	if (lastDisconnectError_) {
 		lastDisconnectError_->conclude();
@@ -395,7 +395,7 @@ void MainController::setReconnectTimer() {
 	} else {
 		timeBeforeNextReconnect_ = timeBeforeNextReconnect_ >= 150 ? 300 : timeBeforeNextReconnect_ * 2;
 	}
-	reconnectTimer_ = new BoostTimer(timeBeforeNextReconnect_ * 1000, &MainBoostIOServiceThread::getInstance().getIOService());
+	reconnectTimer_ = timerFactory_.createTimer(timeBeforeNextReconnect_ * 1000);
 	reconnectTimer_->onTick.connect(boost::bind(&MainController::reconnectAfterError, this));
 	reconnectTimer_->start();
 }
@@ -413,8 +413,10 @@ void MainController::signOut() {
 }
 
 void MainController::logout() {
-	delete reconnectTimer_;
-	reconnectTimer_ = 0;
+	if (reconnectTimer_) {
+		reconnectTimer_->stop();
+		reconnectTimer_.reset();
+	}
 	if (client_ /*&& client_->isAvailable()*/) {
 		client_->disconnect();
 	}

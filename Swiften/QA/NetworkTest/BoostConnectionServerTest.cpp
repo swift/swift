@@ -39,15 +39,15 @@ class BoostConnectionServerTest : public CppUnit::TestFixture {
 		}
 
 		void testConstructor_TwoServersOnSamePort() {
-			boost::shared_ptr<BoostConnectionServer> testling(new BoostConnectionServer(9999, &boostIOServiceThread_->getIOService()));
-			boost::shared_ptr<BoostConnectionServer> testling2(new BoostConnectionServer(9999, &boostIOServiceThread_->getIOService()));
+			BoostConnectionServer::ref testling(BoostConnectionServer::create(9999, &boostIOServiceThread_->getIOService()));
+			BoostConnectionServer::ref testling2(BoostConnectionServer::create(9999, &boostIOServiceThread_->getIOService()));
 		}
 
 		void testStart_Conflict() {
-			boost::shared_ptr<BoostConnectionServer> testling(new BoostConnectionServer(9999, &boostIOServiceThread_->getIOService()));
+			BoostConnectionServer::ref testling(BoostConnectionServer::create(9999, &boostIOServiceThread_->getIOService()));
 			testling->start();
 
-			boost::shared_ptr<BoostConnectionServer> testling2(new BoostConnectionServer(9999, &boostIOServiceThread_->getIOService()));
+			BoostConnectionServer::ref testling2(BoostConnectionServer::create(9999, &boostIOServiceThread_->getIOService()));
 			testling2->onStopped.connect(
 					boost::bind(&BoostConnectionServerTest::handleStopped, this, _1));
 
@@ -55,12 +55,12 @@ class BoostConnectionServerTest : public CppUnit::TestFixture {
 		}
 
 		void testStop() {
-			boost::shared_ptr<BoostConnectionServer> testling(new BoostConnectionServer(9999, &boostIOServiceThread_->getIOService()));
+			BoostConnectionServer::ref testling(BoostConnectionServer::create(9999, &boostIOServiceThread_->getIOService()));
 			testling->start();
 
 			testling->stop();
 
-			boost::shared_ptr<BoostConnectionServer> testling2(new BoostConnectionServer(9999, &boostIOServiceThread_->getIOService()));
+			BoostConnectionServer::ref testling2(BoostConnectionServer::create(9999, &boostIOServiceThread_->getIOService()));
 			testling2->start();
 
 			testling2->stop();

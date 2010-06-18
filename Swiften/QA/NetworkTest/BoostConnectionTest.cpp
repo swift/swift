@@ -43,14 +43,14 @@ class BoostConnectionTest : public CppUnit::TestFixture {
 
 		void testDestructor() {
 			{
-				boost::shared_ptr<BoostConnection> testling(new BoostConnection(&boostIOServiceThread_->getIOService()));
+				BoostConnection::ref testling(BoostConnection::create(&boostIOServiceThread_->getIOService()));
 				testling->connect(HostAddressPort(HostAddress(address, 4), 5222));
 			}
 		}
 
 		void testDestructor_PendingEvents() {
 			{
-				boost::shared_ptr<BoostConnection> testling(new BoostConnection(&boostIOServiceThread_->getIOService()));
+				BoostConnection::ref testling(BoostConnection::create(&boostIOServiceThread_->getIOService()));
 				testling->connect(HostAddressPort(HostAddress(address, 4), 5222));
 				while (!eventLoop_->hasEvents()) {
 					Swift::sleep(10);
@@ -60,7 +60,7 @@ class BoostConnectionTest : public CppUnit::TestFixture {
 		}
 
 		void testWrite() {
-			boost::shared_ptr<BoostConnection> testling(new BoostConnection(&boostIOServiceThread_->getIOService()));
+			BoostConnection::ref testling(BoostConnection::create(&boostIOServiceThread_->getIOService()));
 			testling->onConnectFinished.connect(boost::bind(&BoostConnectionTest::doWrite, this, testling.get()));
 			testling->onDataRead.connect(boost::bind(&BoostConnectionTest::handleDataRead, this, _1));
 			testling->onDisconnected.connect(boost::bind(&BoostConnectionTest::handleDisconnected, this));

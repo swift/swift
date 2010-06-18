@@ -8,13 +8,13 @@
 
 #include <boost/shared_ptr.hpp>
 
-namespace Swift {
-	class Timer;
+#include "Swiften/Network/Timer.h"
 
+namespace Swift {
 	class TimerFactory {
 		public:
 			virtual ~TimerFactory();
 
-			virtual boost::shared_ptr<Timer> createTimer(int milliseconds) = 0;
+			virtual Timer::ref createTimer(int milliseconds) = 0;
 	};
 }

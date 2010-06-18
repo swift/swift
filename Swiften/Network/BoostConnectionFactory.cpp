@@ -13,7 +13,7 @@ BoostConnectionFactory::BoostConnectionFactory(boost::asio::io_service* ioServic
 }
 
 boost::shared_ptr<Connection> BoostConnectionFactory::createConnection() {
-	return boost::shared_ptr<Connection>(new BoostConnection(ioService));
+	return BoostConnection::create(ioService);
 }
 
 }

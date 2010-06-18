@@ -16,12 +16,18 @@
 namespace Swift {
 	class BoostTimer : public Timer, public EventOwner, public boost::enable_shared_from_this<BoostTimer> {
 		public:
-			BoostTimer(int milliseconds, boost::asio::io_service* service);
+			typedef boost::shared_ptr<BoostTimer> ref;
+
+			static ref create(int milliseconds, boost::asio::io_service* service) {
+				return ref(new BoostTimer(milliseconds, service));
+			}
 
 			virtual void start();
 			virtual void stop();
 
 		private:
+			BoostTimer(int milliseconds, boost::asio::io_service* service);
+
 			void handleTimerTick(const boost::system::error_code& error);
 
 		private:

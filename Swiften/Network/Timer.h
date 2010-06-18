@@ -11,6 +11,8 @@
 namespace Swift {
 	class Timer {
 		public:
+			typedef boost::shared_ptr<Timer> ref;
+
 			virtual ~Timer();
 
 			virtual void start() = 0;

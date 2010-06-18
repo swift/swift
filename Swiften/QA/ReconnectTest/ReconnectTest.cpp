@@ -43,7 +43,7 @@ void handleTick(boost::shared_ptr<BoostTimer> timer) {
 	
 	int delay = 500;
 //	int delay = 0;
-	boost::shared_ptr<BoostTimer> newTimer(new BoostTimer(delay, &MainBoostIOServiceThread::getInstance().getIOService()));
+	boost::shared_ptr<BoostTimer> newTimer(BoostTimer::create(delay, &MainBoostIOServiceThread::getInstance().getIOService()));
 	newTimer->onTick.connect(boost::bind(&handleTick, timer));
 	newTimer->start();
 }

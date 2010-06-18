@@ -18,18 +18,25 @@
 namespace Swift {
 	class BoostConnectionServer : public ConnectionServer, public EventOwner, public boost::enable_shared_from_this<BoostConnectionServer> {
 		public:
+			typedef boost::shared_ptr<BoostConnectionServer> ref;
+
 			enum Error {
 				Conflict,
 				UnknownError
 			};
-			BoostConnectionServer(int port, boost::asio::io_service* ioService);
 
+			static ref create(int port, boost::asio::io_service* ioService) {
+				return ref(new BoostConnectionServer(port, ioService));
+			}
+			
 			void start();
 			void stop();
 
 			boost::signal<void (boost::optional<Error>)> onStopped;
 
 		private:
+			BoostConnectionServer(int port, boost::asio::io_service* ioService);
+
 			void stop(boost::optional<Error> e);
 			void acceptNextConnection();
 			void handleAccept(boost::shared_ptr<BoostConnection> newConnection, const boost::system::error_code& error);

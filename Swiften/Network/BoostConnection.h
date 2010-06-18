@@ -22,8 +22,13 @@ namespace boost {
 namespace Swift {
 	class BoostConnection : public Connection, public EventOwner, public boost::enable_shared_from_this<BoostConnection> {
 		public:
-			BoostConnection(boost::asio::io_service* ioService);
+			typedef boost::shared_ptr<BoostConnection> ref;
+
 			~BoostConnection();
+
+			static ref create(boost::asio::io_service* ioService) {
+				return ref(new BoostConnection(ioService));
+			}
 
 			virtual void listen();
 			virtual void connect(const HostAddressPort& address);
@@ -35,6 +40,8 @@ namespace Swift {
 			}
 
 		private:
+			BoostConnection(boost::asio::io_service* ioService);
+
 			void handleConnectFinished(const boost::system::error_code& error);
 			void handleSocketRead(const boost::system::error_code& error, size_t bytesTransferred);
 			void handleDataWritten(const boost::system::error_code& error);

@@ -50,7 +50,7 @@ void BoostConnectionServer::stop(boost::optional<Error> e) {
 }
 
 void BoostConnectionServer::acceptNextConnection() {
-	boost::shared_ptr<BoostConnection> newConnection(new BoostConnection(&acceptor_->io_service()));
+	BoostConnection::ref newConnection(BoostConnection::create(&acceptor_->io_service()));
 	acceptor_->async_accept(newConnection->getSocket(), 
 		boost::bind(&BoostConnectionServer::handleAccept, shared_from_this(), newConnection, boost::asio::placeholders::error));
 }

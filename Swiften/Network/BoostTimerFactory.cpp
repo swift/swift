@@ -13,7 +13,7 @@ BoostTimerFactory::BoostTimerFactory(boost::asio::io_service* ioService) : ioSer
 }
 
 boost::shared_ptr<Timer> BoostTimerFactory::createTimer(int milliseconds) {
-	return boost::shared_ptr<Timer>(new BoostTimer(milliseconds, ioService));
+	return BoostTimer::create(milliseconds, ioService);
 }
 
 }
