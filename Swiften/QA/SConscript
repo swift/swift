@@ -1,5 +1,6 @@
-SConscript([
-		"NetworkTest/SConscript",
-		"ReconnectTest/SConscript",
-		"ClientTest/SConscript",
+SConscript(dirs = [
+		"NetworkTest",
+		"ReconnectTest",
+		"ClientTest",
+		"DNSSDTest",
 	])

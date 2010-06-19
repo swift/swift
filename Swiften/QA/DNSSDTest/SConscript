@@ -9,11 +9,13 @@ if env["TEST"] :
 	myenv.MergeFlags(myenv["CPPUNIT_FLAGS"])
 	myenv.MergeFlags(myenv["BOOST_FLAGS"])
 	myenv.MergeFlags(myenv["LIBIDN_FLAGS"])
+	if myenv.get("HAVE_BONJOUR", 0) :
+		myenv.Append(CPPDEFINES = "HAVE_BONJOUR")
+	elif myenv.get("HAVE_AVAHI", 0) :
+		myenv.Append(CPPDEFINES = ["HAVE_AVAHI"])
+		myenv.MergeFlags(myenv["AVAHI_FLAGS"])
 
-	tester = myenv.Program("NetworkTest", [
-			"BoostConnectionServerTest.cpp",
-			"BoostConnectionTest.cpp",
-			"DomainNameResolverTest.cpp",
+	tester = myenv.Program("DNSSDTest", [
 			"DNSSDTest.cpp",
 		])
 	myenv.Test(tester, "system")

@@ -38,6 +38,10 @@ namespace Swift {
 			}
 
 			void unregisterService() {
+				if (group) {
+					avahi_entry_group_free(group);
+					group = NULL;
+				}
 			}
 
 			void updateServiceInfo(const ByteArray& txtRecord) {
