@@ -53,6 +53,7 @@ MUCController::MUCController (
 	completer_ = new TabComplete();
 	chatWindow_->setRosterModel(roster_);
 	chatWindow_->setTabComplete(completer_);
+	chatWindow_->setName(muc.getNode());
 	chatWindow_->onClosed.connect(boost::bind(&MUCController::handleWindowClosed, this));
 	muc_->onJoinComplete.connect(boost::bind(&MUCController::handleJoinComplete, this, _1));
 	muc_->onJoinFailed.connect(boost::bind(&MUCController::handleJoinFailed, this, _1));
