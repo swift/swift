@@ -82,6 +82,8 @@ namespace Swift {
 			void logout();
 			void signOut();
 			void setReconnectTimer();
+			void resetPendingReconnects();
+			void resetCurrentError();
 	
 			void performLoginFromCachedCredentials();
 			void reconnectAfterError();

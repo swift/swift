@@ -137,6 +137,7 @@ MainController::~MainController() {
 }
 
 void MainController::resetClient() {
+	resetCurrentError();
 	serverDiscoInfo_ = boost::shared_ptr<DiscoInfo>();
 	xmppRoster_ = boost::shared_ptr<XMPPRoster>();
 	delete chatsManager_;
@@ -163,20 +164,28 @@ void MainController::resetClient() {
 	client_ = NULL;
 	delete mucSearchController_;
 	mucSearchController_ = NULL;
-	
 }
 
-void MainController::handleConnected() {
+void MainController::resetPendingReconnects() {
 	timeBeforeNextReconnect_ = -1;
 	if (reconnectTimer_) {
 		reconnectTimer_->stop();
 		reconnectTimer_.reset();
 	}
-	loginWindow_->setIsLoggingIn(false);
+
+}
+
+void MainController::resetCurrentError() {
 	if (lastDisconnectError_) {
 		lastDisconnectError_->conclude();
 		lastDisconnectError_ = boost::shared_ptr<ErrorEvent>();
 	}
+}
+
+void MainController::handleConnected() {
+	loginWindow_->setIsLoggingIn(false);
+	resetCurrentError();
+	resetPendingReconnects();
 	//FIXME: this freshLogin thing is temporary so I can see what's what before I split into a seperate method.
 	bool freshLogin = rosterController_ == NULL;
 	if (freshLogin) {
@@ -244,6 +253,9 @@ void MainController::handleEventQueueLengthChange(int count) {
 }
 
 void MainController::reconnectAfterError() {
+	if (reconnectTimer_) {
+		reconnectTimer_->stop();
+	}
 	performLoginFromCachedCredentials();
 	//sendPresence(queuedPresence_);
 }
@@ -395,6 +407,9 @@ void MainController::setReconnectTimer() {
 	} else {
 		timeBeforeNextReconnect_ = timeBeforeNextReconnect_ >= 150 ? 300 : timeBeforeNextReconnect_ * 2;
 	}
+	if (reconnectTimer_) {
+		reconnectTimer_->stop();
+	}
 	reconnectTimer_ = timerFactory_.createTimer(timeBeforeNextReconnect_ * 1000);
 	reconnectTimer_->onTick.connect(boost::bind(&MainController::reconnectAfterError, this));
 	reconnectTimer_->start();
@@ -413,10 +428,7 @@ void MainController::signOut() {
 }
 
 void MainController::logout() {
-	if (reconnectTimer_) {
-		reconnectTimer_->stop();
-		reconnectTimer_.reset();
-	}
+	resetPendingReconnects();
 	if (client_ /*&& client_->isAvailable()*/) {
 		client_->disconnect();
 	}
