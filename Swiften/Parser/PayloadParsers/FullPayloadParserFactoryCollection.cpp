@@ -10,6 +10,7 @@
 #include "Swiften/Parser/PayloadParserFactory.h"
 #include "Swiften/Parser/PayloadParsers/ErrorParserFactory.h"
 #include "Swiften/Parser/PayloadParsers/BodyParserFactory.h"
+#include "Swiften/Parser/PayloadParsers/SubjectParserFactory.h"
 #include "Swiften/Parser/PayloadParsers/ChatStateParserFactory.h"
 #include "Swiften/Parser/PayloadParsers/PriorityParserFactory.h"
 #include "Swiften/Parser/PayloadParsers/ResourceBindParserFactory.h"
@@ -38,6 +39,7 @@ FullPayloadParserFactoryCollection::FullPayloadParserFactoryCollection() {
 	factories_.push_back(shared_ptr<PayloadParserFactory>(new StatusParserFactory()));
 	factories_.push_back(shared_ptr<PayloadParserFactory>(new StatusShowParserFactory()));
 	factories_.push_back(shared_ptr<PayloadParserFactory>(new BodyParserFactory()));
+	factories_.push_back(shared_ptr<PayloadParserFactory>(new SubjectParserFactory()));
 	factories_.push_back(shared_ptr<PayloadParserFactory>(new PriorityParserFactory()));
 	factories_.push_back(shared_ptr<PayloadParserFactory>(new ErrorParserFactory()));
 	factories_.push_back(shared_ptr<PayloadParserFactory>(new SoftwareVersionParserFactory()));

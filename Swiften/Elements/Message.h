@@ -10,6 +10,7 @@
 
 #include "Swiften/Base/String.h"
 #include "Swiften/Elements/Body.h"
+#include "Swiften/Elements/Subject.h"
 #include "Swiften/Elements/ErrorPayload.h"
 #include "Swiften/Elements/Stanza.h"
 
@@ -21,6 +22,18 @@ namespace Swift
 			enum Type { Normal, Chat, Error, Groupchat, Headline };
 
 			Message() : type_(Chat) { }
+
+			String getSubject() const { 
+				boost::shared_ptr<Subject> subject(getPayload<Subject>());
+				if (subject) {
+					return subject->getText();
+				}
+				return "";
+			}
+
+			void setSubject(const String& subject) { 
+				updatePayload(boost::shared_ptr<Subject>(new Subject(subject)));
+			}
 
 			String getBody() const { 
 				boost::shared_ptr<Body> body(getPayload<Body>());
@@ -43,7 +56,6 @@ namespace Swift
 			void setType(Type type) { type_ = type; }
 
 		private:
-			String body_;
 			Type type_;
 	};
 }

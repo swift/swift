@@ -215,7 +215,7 @@ void ChatsManager::handleJoinMUCRequest(const JID &muc, const boost::optional<St
 void ChatsManager::handleIncomingMessage(boost::shared_ptr<Message> message) {
 	JID jid = message->getFrom();
 	boost::shared_ptr<MessageEvent> event(new MessageEvent(message));
-	if (!event->isReadable() && !message->getPayload<ChatState>()) {
+	if (!event->isReadable() && !message->getPayload<ChatState>() && message->getSubject().isEmpty()) {
 		return;
 	}
 

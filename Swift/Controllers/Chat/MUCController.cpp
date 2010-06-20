@@ -194,6 +194,10 @@ void MUCController::preHandleIncomingMessage(boost::shared_ptr<Message> message)
 	/*Buggy implementations never send the status code, so use an incoming message as a hint that joining's done (e.g. the old ejabberd on psi-im.org).*/
 	receivedActivity();
 	joined_ = true;
+
+	if (!message->getSubject().isEmpty() && message->getBody().isEmpty()) {
+		chatWindow_->addSystemMessage("The room subject is now: " + message->getSubject());
+	}
 }
 
 void MUCController::handleOccupantRoleChanged(const String& nick, const MUCOccupant& occupant, const MUCOccupant::Role& oldRole) {

@@ -8,6 +8,7 @@
 #include "Swiften/Base/foreach.h"
 #include "Swiften/Serializer/PayloadSerializer.h"
 #include "Swiften/Serializer/PayloadSerializers/BodySerializer.h"
+#include "Swiften/Serializer/PayloadSerializers/SubjectSerializer.h"
 #include "Swiften/Serializer/PayloadSerializers/ChatStateSerializer.h"
 #include "Swiften/Serializer/PayloadSerializers/PrioritySerializer.h"
 #include "Swiften/Serializer/PayloadSerializers/ErrorSerializer.h"
@@ -35,6 +36,7 @@ namespace Swift {
 
 FullPayloadSerializerCollection::FullPayloadSerializerCollection() {
 	serializers_.push_back(new BodySerializer());
+	serializers_.push_back(new SubjectSerializer());
 	serializers_.push_back(new ChatStateSerializer());
 	serializers_.push_back(new PrioritySerializer());
 	serializers_.push_back(new ErrorSerializer());
