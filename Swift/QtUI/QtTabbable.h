@@ -17,11 +17,13 @@ namespace Swift {
 			~QtTabbable();
 			bool isWidgetSelected();
 			virtual AlertType getWidgetAlertState() {return NoActivity;};
+			virtual int getCount() {return 0;}
 		protected:
 			QtTabbable() : QWidget() {};
 
 		signals:
 			void titleUpdated();
+			void countUpdated();
 			void windowClosing();
 			void windowOpening();
 			void wantsToActivate();

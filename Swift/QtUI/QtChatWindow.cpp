@@ -198,6 +198,7 @@ void QtChatWindow::showEvent(QShowEvent* event) {
 void QtChatWindow::setUnreadMessageCount(int count) {
 	unreadCount_ = count;
 	updateTitleWithUnreadCount();
+	emit countUpdated();
 }
 
 void QtChatWindow::setContactChatState(ChatState::ChatStateType state) {
@@ -221,7 +222,7 @@ void QtChatWindow::setName(const String& name) {
 }
 
 void QtChatWindow::updateTitleWithUnreadCount() {
-	setWindowTitle(unreadCount_ > 0 ? QString("(%1) %2").arg(unreadCount_).arg(contact_) : contact_);
+	setWindowTitle(contact_);
 	emit titleUpdated();
 }
 
@@ -253,6 +254,10 @@ void QtChatWindow::addMessage(const String &message, const String &senderName, b
 	previousMessageWasSelf_ = senderIsSelf;
 	previousSenderName_ = P2QSTRING(senderName);
 	previousMessageWasSystem_ = false;
+}
+
+int QtChatWindow::getCount() {
+	return unreadCount_;
 }
 
 void QtChatWindow::addAction(const String &message, const String &senderName, bool senderIsSelf, const boost::optional<SecurityLabel>& label, const String& avatarPath, const boost::posix_time::ptime& time) {

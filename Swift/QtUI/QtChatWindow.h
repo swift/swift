@@ -46,6 +46,7 @@ namespace Swift {
 			void setContactChatState(ChatState::ChatStateType state);
 			void setRosterModel(Roster* roster);
 			void setTabComplete(TabComplete* completer);
+			int getCount();
 
 		protected slots:
 			void qAppFocusChanged(QWidget* old, QWidget* now);
