@@ -168,8 +168,16 @@ void QtStatusWidget::handleClicked() {
 		}
 	}
 	generateList();
-
+	
 	height = menu_->sizeHintForRow(0) * menu_->count();
+	int marginLeft;
+	int marginTop;
+	int marginRight;
+	int marginBottom;
+	menu_->getContentsMargins(&marginLeft, &marginTop, &marginRight, &marginBottom);
+	height += marginTop + marginBottom;
+	width += marginLeft + marginRight;
+
 	menu_->setGeometry(x, y, width, height);
 	menu_->move(x, y);
 	menu_->setMaximumWidth(width);
