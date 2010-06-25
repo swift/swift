@@ -35,6 +35,7 @@ if env["SCONS_STAGE"] == "build" :
 			"SoundEventController.cpp",
 			"SystemTrayController.cpp",
 			"XMLConsoleController.cpp",
+			"StatusTracker.cpp",
 			"UIEvents/UIEvent.cpp",
 			"UIInterfaces/XMLConsoleWidget.cpp",
 			"UIInterfaces/ChatListWindow.cpp",

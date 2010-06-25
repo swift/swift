@@ -60,6 +60,7 @@ namespace Swift {
 	class EventWindowController;
 	class MUCSearchController;
 	class MUCSearchWindowFactory;
+	class StatusTracker;
 
 	class MainController {
 		public:
@@ -122,10 +123,7 @@ namespace Swift {
 			SystemTrayController* systemTrayController_;
 			SoundEventController* soundEventController_;
 			AvatarManager* avatarManager_;
-			boost::shared_ptr<Presence> lastSentPresence_;
-			boost::shared_ptr<Presence> preIdlePresence_;
 			String vCardPhotoHash_;
-			boost::shared_ptr<Presence> queuedPresence_;
 			String password_;
 			String certificateFile_;
 			ChatListWindowFactory* chatListWindowFactory_;
@@ -135,5 +133,6 @@ namespace Swift {
 			MUCSearchWindowFactory* mucSearchWindowFactory_;
 			int timeBeforeNextReconnect_;
 			Timer::ref reconnectTimer_;
+			StatusTracker* statusTracker_;
 	};
 }

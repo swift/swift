@@ -32,6 +32,7 @@
 #include "Swift/Controllers/RosterController.h"
 #include "Swift/Controllers/SoundEventController.h"
 #include "Swift/Controllers/SoundPlayer.h"
+#include "Swift/Controllers/StatusTracker.h"
 #include "Swift/Controllers/SystemTray.h"
 #include "Swift/Controllers/SystemTrayController.h"
 #include "Swift/Controllers/XMLConsoleController.h"
@@ -94,6 +95,7 @@ MainController::MainController(ChatWindowFactory* chatWindowFactory, MainWindowF
 	systemTrayController_ = new SystemTrayController(eventController_, systemTray);
 	loginWindow_ = loginWindowFactory_->createLoginWindow(uiEventStream_);
 	soundEventController_ = new SoundEventController(eventController_, soundPlayer, settings, uiEventStream_);
+	statusTracker_  = new StatusTracker();
 
 	String selectedLoginJID = settings_->getStringSetting("lastLoginJID");
 	bool loginAutomatically = settings_->getBoolSetting("loginAutomatically", false);
@@ -164,6 +166,8 @@ void MainController::resetClient() {
 	client_ = NULL;
 	delete mucSearchController_;
 	mucSearchController_ = NULL;
+	delete statusTracker_;
+	statusTracker_ = NULL;
 }
 
 void MainController::resetPendingReconnects() {
@@ -172,7 +176,6 @@ void MainController::resetPendingReconnects() {
 		reconnectTimer_->stop();
 		reconnectTimer_.reset();
 	}
-
 }
 
 void MainController::resetCurrentError() {
@@ -193,7 +196,6 @@ void MainController::handleConnected() {
 		xmppRoster_ = boost::shared_ptr<XMPPRoster>(new XMPPRoster());
 		presenceOracle_ = new PresenceOracle(client_);
 		nickResolver_ = new NickResolver(xmppRoster_);		
-		lastSentPresence_ = boost::shared_ptr<Presence>();
 
 		avatarManager_ = new AvatarManager(client_, client_, avatarStorage_);
 
@@ -237,15 +239,10 @@ void MainController::handleConnected() {
 	vCardRequest->onResponse.connect(boost::bind(&MainController::handleOwnVCardReceived, this, _1, _2));
 	vCardRequest->send();
 
-	//Send presence last to catch all the incoming presences.
-	boost::shared_ptr<Presence> initialPresence;
-	if (queuedPresence_.get() != NULL) {
-		initialPresence = queuedPresence_;
-	} else {
-		initialPresence = boost::shared_ptr<Presence>(new Presence());
-	}
+	
 	setManagersEnabled(true);
-	sendPresence(initialPresence);
+	//Send presence last to catch all the incoming presences.
+	sendPresence(statusTracker_->getNextPresence());
 }
 
 void MainController::handleEventQueueLengthChange(int count) {
@@ -257,7 +254,6 @@ void MainController::reconnectAfterError() {
 		reconnectTimer_->stop();
 	}
 	performLoginFromCachedCredentials();
-	//sendPresence(queuedPresence_);
 }
 
 void MainController::handleChangeStatusRequest(StatusShow::Type show, const String &statusText) {
@@ -270,11 +266,10 @@ void MainController::handleChangeStatusRequest(StatusShow::Type show, const Stri
 		presence->setShow(show);
 	}
 	presence->setStatus(statusText);
+	statusTracker_->setRequestedPresence(presence);
 	if (presence->getType() != Presence::Unavailable && !client_->isAvailable()) {
 		performLoginFromCachedCredentials();
-		queuedPresence_ = presence;
-	} 
-	else {
+	} else {
 		sendPresence(presence);
 	}
 }
@@ -282,9 +277,6 @@ void MainController::handleChangeStatusRequest(StatusShow::Type show, const Stri
 void MainController::sendPresence(boost::shared_ptr<Presence> presence) {
 	rosterController_->getWindow()->setMyStatusType(presence->getShow());
 	rosterController_->getWindow()->setMyStatusText(presence->getStatus());
-
-	// Copy presence before adding extra information
-	lastSentPresence_ = presence->clone();
 
 	// Add information and send
 	if (!vCardPhotoHash_.isEmpty()) {
@@ -299,28 +291,16 @@ void MainController::sendPresence(boost::shared_ptr<Presence> presence) {
 
 void MainController::handleInputIdleChanged(bool idle) {
 	if (idle) {
-		if (lastSentPresence_->getShow() != StatusShow::Online) {
-			return;
+		if (statusTracker_->goAutoAway()) {
+			if (client_ && client_->isAvailable()) {
+				sendPresence(statusTracker_->getNextPresence());
+			}
 		}
-		preIdlePresence_ = lastSentPresence_;
-		boost::shared_ptr<Presence> presence(new Presence());
-		presence->setShow(StatusShow::Away);
-		presence->setStatus(lastSentPresence_->getStatus());
-		if (client_ && client_->isAvailable()) {
-			sendPresence(presence);
-		} else {
-			queuedPresence_ = presence;
-		}
-	}
-	else {
-		if (!preIdlePresence_) {
-			/* We didn't go autoaway (the user was already away when the timer ticked */
-			return;
-		}
-		if (client_ && client_->isAvailable()) {
-			sendPresence(preIdlePresence_);
-		} else {
-			queuedPresence_ = preIdlePresence_;
+	} else {
+		if (statusTracker_->goAutoUnAway()) {
+			if (client_ && client_->isAvailable()) {
+				sendPresence(statusTracker_->getNextPresence());
+			}
 		}
 	}
 }
@@ -463,8 +443,8 @@ void MainController::handleOwnVCardReceived(boost::shared_ptr<VCard> vCard, cons
 	}
 	if (!error && !vCard->getPhoto().isEmpty()) {
 		vCardPhotoHash_ = Hexify::hexify(SHA1::getHash(vCard->getPhoto()));
-		if (lastSentPresence_) {
-			sendPresence(lastSentPresence_);
+		if (client_ && client_->isAvailable()) {
+			sendPresence(statusTracker_->getNextPresence());
 		}
 		avatarManager_->setAvatar(jid_, vCard->getPhoto());
 	}
