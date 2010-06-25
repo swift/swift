@@ -48,12 +48,18 @@ namespace Swift {
 			void setTabComplete(TabComplete* completer);
 			int getCount();
 
+		signals:
+			void geometryChanged();
+
 		protected slots:
 			void qAppFocusChanged(QWidget* old, QWidget* now);
 			void closeEvent(QCloseEvent* event);
+			void resizeEvent(QResizeEvent* event);
+			void moveEvent(QMoveEvent* event);
 
 		protected:
 			void showEvent(QShowEvent* event);
+
 		private slots:
 			void returnPressed();
 			void handleInputChanged();

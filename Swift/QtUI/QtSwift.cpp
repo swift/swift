@@ -45,6 +45,7 @@ po::options_description QtSwift::getOptionsDescription() {
 	result.add_options()
 		("help", "produce help message")
 		("netbook-mode", "use netbook mode display")
+		("no-tabs", "don't manage chat windows in tabs")
 		("latency-debug", "use latency debugging")
 		;
 	return result;
@@ -62,7 +63,7 @@ QtSwift::QtSwift(po::variables_map options) : autoUpdater_(NULL) {
 	QCoreApplication::setOrganizationDomain(SWIFT_ORGANIZATION_DOMAIN);
 	QCoreApplication::setApplicationVersion(buildVersion);
 
-	tabs_ = new QtChatTabs();
+	tabs_ = options.count("no-tabs") && !splitter_ > 0 ? NULL : new QtChatTabs();
 	settings_ = new QtSettingsProvider();
 	application_ = new PlatformApplication(SWIFT_APPLICATION_NAME);
 	systemTray_ = new QtSystemTray();

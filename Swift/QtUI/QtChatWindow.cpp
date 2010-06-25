@@ -222,7 +222,11 @@ void QtChatWindow::setName(const String& name) {
 }
 
 void QtChatWindow::updateTitleWithUnreadCount() {
-	setWindowTitle(contact_);
+	if (isWindow()) {
+		setWindowTitle(unreadCount_ > 0 ? QString("(%1) %2").arg(unreadCount_).arg(contact_) : contact_);
+	} else {
+		setWindowTitle(contact_);
+	}
 	emit titleUpdated();
 }
 
@@ -318,7 +322,18 @@ void QtChatWindow::show() {
 }
 
 void QtChatWindow::activate() {
+	if (isWindow()) {
+		QWidget::show();
+	}
 	emit wantsToActivate();
+}
+
+void QtChatWindow::resizeEvent(QResizeEvent*) {
+	emit geometryChanged();
+}
+
+void QtChatWindow::moveEvent(QMoveEvent*) {
+	emit geometryChanged();	
 }
 
 }

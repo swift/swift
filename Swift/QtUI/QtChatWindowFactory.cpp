@@ -19,7 +19,7 @@ QtChatWindowFactory::QtChatWindowFactory(QSplitter* splitter, QtSettingsProvider
 	tabs_ = tabs;
 	if (splitter) {
 		splitter->addWidget(tabs_);
-	} else {
+	} else if (tabs_) {
 		QVariant chatTabsGeometryVariant = settings_->getQSettings()->value("chatTabsGeometry");
 		if (chatTabsGeometryVariant.isValid()) {
 			tabs_->restoreGeometry(chatTabsGeometryVariant.toByteArray());
@@ -30,12 +30,20 @@ QtChatWindowFactory::QtChatWindowFactory(QSplitter* splitter, QtSettingsProvider
 
 ChatWindow* QtChatWindowFactory::createChatWindow(const JID &contact,UIEventStream* eventStream) {
 	QtChatWindow *chatWindow = new QtChatWindow(P2QSTRING(contact.toString()), eventStream);
-	tabs_->addTab(chatWindow);
+	if (tabs_) {
+		tabs_->addTab(chatWindow);
+	} else {
+		QVariant chatGeometryVariant = settings_->getQSettings()->value("chatTabsGeometry");
+		if (chatGeometryVariant.isValid()) {
+			chatWindow->restoreGeometry(chatGeometryVariant.toByteArray());
+		}
+		connect(chatWindow, SIGNAL(geometryChanged()), this, SLOT(handleWindowGeometryChanged()));
+	}
 	return chatWindow;
 }
 
 void QtChatWindowFactory::handleWindowGeometryChanged() {
-	settings_->getQSettings()->setValue("chatTabsGeometry", tabs_->saveGeometry());
+	settings_->getQSettings()->setValue("chatTabsGeometry", qobject_cast<QWidget*>(sender())->saveGeometry());
 }
 
 }
