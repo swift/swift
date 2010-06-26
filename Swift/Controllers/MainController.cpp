@@ -95,7 +95,6 @@ MainController::MainController(ChatWindowFactory* chatWindowFactory, MainWindowF
 	systemTrayController_ = new SystemTrayController(eventController_, systemTray);
 	loginWindow_ = loginWindowFactory_->createLoginWindow(uiEventStream_);
 	soundEventController_ = new SoundEventController(eventController_, soundPlayer, settings, uiEventStream_);
-	statusTracker_  = new StatusTracker();
 
 	String selectedLoginJID = settings_->getStringSetting("lastLoginJID");
 	bool loginAutomatically = settings_->getBoolSetting("loginAutomatically", false);
@@ -229,6 +228,7 @@ void MainController::handleConnected() {
 		serverDiscoInfo_ = boost::shared_ptr<DiscoInfo>(new DiscoInfo());
 
 		mucSearchController_ = new MUCSearchController(jid_, uiEventStream_, mucSearchWindowFactory_, client_);
+		statusTracker_  = new StatusTracker();
 	}
 	
 	boost::shared_ptr<GetDiscoInfoRequest> discoInfoRequest(new GetDiscoInfoRequest(JID(), client_));
