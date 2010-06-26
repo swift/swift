@@ -72,13 +72,13 @@ void ChatListDelegate::paintMUC(QPainter* painter, const QStyleOptionViewItem& o
 	int nameHeight = nameMetrics.height() + common_.verticalMargin;
 	QRect nameRegion(textRegion.adjusted(0, common_.verticalMargin, 0, 0));
 	
-	painter->drawText(nameRegion, Qt::AlignTop, item->data(Qt::DisplayRole).toString());
+	DelegateCommons::drawElidedText(painter, nameRegion, item->data(Qt::DisplayRole).toString());
 	
 	painter->setFont(common_.detailFont);
 	painter->setPen(QPen(QColor(160,160,160)));
 	
 	QRect detailRegion(textRegion.adjusted(0, nameHeight, 0, 0));
-	painter->drawText(detailRegion, Qt::AlignTop, item->data(DetailTextRole).toString());
+	DelegateCommons::drawElidedText(painter, detailRegion, item->data(DetailTextRole).toString());
 	
 	painter->restore();
 }

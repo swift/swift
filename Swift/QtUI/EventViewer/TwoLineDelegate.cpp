@@ -48,13 +48,13 @@ void TwoLineDelegate::paint(QPainter* painter, const QStyleOptionViewItem& optio
 	int nameHeight = nameMetrics.height() + common_.verticalMargin;
 	QRect nameRegion(textRegion.adjusted(0, common_.verticalMargin, 0, 0));
 	
-	painter->drawText(nameRegion, Qt::AlignTop, event->data(firstRole_).toString());
+	DelegateCommons::drawElidedText(painter, nameRegion, event->data(firstRole_).toString());
 	
 	painter->setFont(common_.detailFont);
 	painter->setPen(QPen(QColor(160,160,160)));
 	
 	QRect detailRegion(textRegion.adjusted(0, nameHeight, 0, 0));
-	painter->drawText(detailRegion, Qt::AlignTop, event->data(secondRole_).toString());
+	DelegateCommons::drawElidedText(painter, detailRegion, event->data(secondRole_).toString());
 	
 	painter->restore();
 }

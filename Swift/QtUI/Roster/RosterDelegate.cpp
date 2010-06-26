@@ -105,20 +105,22 @@ void RosterDelegate::paintContact(QPainter* painter, const QStyleOptionViewItem&
 	int nameHeight = nameMetrics.height() + common_.verticalMargin;
 	QRect nameRegion(textRegion.adjusted(0, common_.verticalMargin, 0, 0));
 	
-	painter->drawText(nameRegion, Qt::AlignTop, index.data(Qt::DisplayRole).toString());
+	DelegateCommons::drawElidedText(painter, nameRegion, index.data(Qt::DisplayRole).toString());
 	
 	
 	painter->setFont(common_.detailFont);
 	painter->setPen(QPen(QColor(160,160,160)));
 	
 	QRect statusTextRegion(textRegion.adjusted(0, nameHeight, 0, 0));
-	painter->drawText(statusTextRegion, Qt::AlignTop, index.data(StatusTextRole).toString());
+	DelegateCommons::drawElidedText(painter, statusTextRegion, index.data(StatusTextRole).toString());
 	
 	painter->restore();
 }
+
 
 const int RosterDelegate::avatarSize_ = 20;
 const int RosterDelegate::presenceIconHeight_ = 16;
 const int RosterDelegate::presenceIconWidth_ = 16;
 
 }
+

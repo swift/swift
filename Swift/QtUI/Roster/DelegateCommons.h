@@ -8,6 +8,9 @@
 
 #include <QApplication>
 #include <QFont>
+#include <QPainter>
+#include <QRect>
+#include <QString>
 
 namespace Swift {
 	class DelegateCommons {
@@ -17,6 +20,8 @@ namespace Swift {
 				detailFont.setStyle(QFont::StyleItalic);
 				detailFont.setPointSize(nameFont.pointSize() - detailFontSizeDrop);
 			}
+
+			static void drawElidedText(QPainter* painter, const QRect& region, const QString& text);
 
 			int detailFontSizeDrop;
 			QFont nameFont;

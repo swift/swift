@@ -7,7 +7,18 @@
 #include "DelegateCommons.h"
 
 namespace Swift {
+
+
+void DelegateCommons::drawElidedText(QPainter* painter, const QRect& region, const QString& text) {
+	QString adjustedText(painter->fontMetrics().elidedText(text, Qt::ElideRight, region.width(), Qt::TextShowMnemonic));
+	painter->drawText(region, Qt::AlignTop, adjustedText);
+}
+
+
 const int DelegateCommons::horizontalMargin = 2;
 const int DelegateCommons::verticalMargin = 2;
 const int DelegateCommons::farLeftMargin = 2;
+
+
+
 }
