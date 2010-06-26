@@ -6,10 +6,13 @@
 
 #pragma once
 
+#include "Swiften/Elements/StatusShow.h"
+
 namespace Swift {
 	class SystemTray {
 		public:
 			virtual ~SystemTray(){};
 			virtual void setUnreadMessages(bool some) = 0;
+			virtual void setStatusType(StatusShow::Type type) = 0;
 	};
 }

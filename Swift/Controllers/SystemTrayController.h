@@ -6,13 +6,16 @@
 
 #pragma once
 
+#include "Swiften/Elements/StatusShow.h"
+
 namespace Swift {
 	class EventController;
 	class SystemTray;
 
 	class SystemTrayController {
 		public:
-		SystemTrayController(EventController* eventController, SystemTray* systemTray);
+			SystemTrayController(EventController* eventController, SystemTray* systemTray);
+			void setMyStatusType(StatusShow::Type type);
 		private:
 			void handleEventQueueLengthChange(int length);
 

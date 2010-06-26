@@ -11,8 +11,8 @@
 #include <QResource>
 
 namespace Swift {
-QtSystemTray::QtSystemTray() : QObject(), standardIcon_(":icons/online.png"), newMessageIcon_(":icons/new-chat.png") {
-	trayIcon_ = new QSystemTrayIcon(standardIcon_);
+QtSystemTray::QtSystemTray() : QObject(), onlineIcon_(":icons/online.png"), awayIcon_(":icons/away.png"), dndIcon_(":icons/dnd.png"), offlineIcon_(":icons/offline.png"), newMessageIcon_(":icons/new-chat.png") {
+	trayIcon_ = new QSystemTrayIcon(offlineIcon_);
 	connect(trayIcon_, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), this, SLOT(handleIconActivated(QSystemTrayIcon::ActivationReason)));
 	trayIcon_->show();
 }
@@ -22,7 +22,11 @@ QtSystemTray::~QtSystemTray() {
 }
 
 void QtSystemTray::setUnreadMessages(bool some) {
-	trayIcon_->setIcon(some ? newMessageIcon_ : standardIcon_);
+	if (some) {
+		trayIcon_->setIcon(newMessageIcon_);
+	} else {
+		updateStatusIcon();
+	}
 }
 
 void QtSystemTray::handleIconActivated(QSystemTrayIcon::ActivationReason reason) {
@@ -30,4 +34,20 @@ void QtSystemTray::handleIconActivated(QSystemTrayIcon::ActivationReason reason)
 		emit clicked();
 	}
 }
+void QtSystemTray::setStatusType(StatusShow::Type type) {
+	statusType_ = type;
+	updateStatusIcon();
+}
+
+void QtSystemTray::updateStatusIcon() {
+	switch (statusType_) {
+		case StatusShow::Online : trayIcon_->setIcon(onlineIcon_);break;
+		case StatusShow::FFC : trayIcon_->setIcon(onlineIcon_);break;
+		case StatusShow::Away : trayIcon_->setIcon(awayIcon_);break;
+		case StatusShow::XA : trayIcon_->setIcon(awayIcon_);break;
+		case StatusShow::DND : trayIcon_->setIcon(dndIcon_);break;
+		case StatusShow::None : trayIcon_->setIcon(offlineIcon_);break;
+	}
+}
+
 }

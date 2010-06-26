@@ -277,6 +277,7 @@ void MainController::handleChangeStatusRequest(StatusShow::Type show, const Stri
 void MainController::sendPresence(boost::shared_ptr<Presence> presence) {
 	rosterController_->getWindow()->setMyStatusType(presence->getShow());
 	rosterController_->getWindow()->setMyStatusText(presence->getStatus());
+	systemTrayController_->setMyStatusType(presence->getShow());
 
 	// Add information and send
 	if (!vCardPhotoHash_.isEmpty()) {
@@ -408,6 +409,7 @@ void MainController::signOut() {
 }
 
 void MainController::logout() {
+	systemTrayController_->setMyStatusType(StatusShow::None);
 	resetPendingReconnects();
 	if (client_ /*&& client_->isAvailable()*/) {
 		client_->disconnect();

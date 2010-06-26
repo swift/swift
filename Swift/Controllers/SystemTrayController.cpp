@@ -23,5 +23,8 @@ void SystemTrayController::handleEventQueueLengthChange(int length) {
 	systemTray_->setUnreadMessages(length > 0);
 }
 
+void SystemTrayController::setMyStatusType(StatusShow::Type type) {
+	systemTray_->setStatusType(type);
+}
 
 }

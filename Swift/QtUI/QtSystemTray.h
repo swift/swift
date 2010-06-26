@@ -19,13 +19,19 @@ namespace Swift {
 			QtSystemTray();
 			~QtSystemTray();
 			void setUnreadMessages(bool some);
+			void setStatusType(StatusShow::Type type);
 		signals:
 			void clicked();
 		private slots:
 			void handleIconActivated(QSystemTrayIcon::ActivationReason reason);
 		private:
+			void updateStatusIcon();
+			StatusShow::Type statusType_;
 			QSystemTrayIcon* trayIcon_;
-			QIcon standardIcon_;
+			QIcon onlineIcon_;
+			QIcon awayIcon_;
+			QIcon dndIcon_;
+			QIcon offlineIcon_;
 			QIcon newMessageIcon_;
 	};
 }
