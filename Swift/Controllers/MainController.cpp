@@ -139,6 +139,7 @@ MainController::~MainController() {
 
 void MainController::resetClient() {
 	resetCurrentError();
+	resetPendingReconnects();
 	serverDiscoInfo_ = boost::shared_ptr<DiscoInfo>();
 	xmppRoster_ = boost::shared_ptr<XMPPRoster>();
 	delete chatsManager_;
@@ -175,6 +176,7 @@ void MainController::resetPendingReconnects() {
 		reconnectTimer_->stop();
 		reconnectTimer_.reset();
 	}
+	resetCurrentError();
 }
 
 void MainController::resetCurrentError() {
@@ -261,6 +263,7 @@ void MainController::handleChangeStatusRequest(StatusShow::Type show, const Stri
 	if (show == StatusShow::None) {
 		// FIXME: This is wrong. None doesn't mean unavailable
 		presence->setType(Presence::Unavailable);
+		resetPendingReconnects();
 	}
 	else {
 		presence->setShow(show);
@@ -373,6 +376,7 @@ void MainController::handleError(const ClientError& error) {
 			std::stringstream ss;
 			ss << "Reconnect to " << jid_.getDomain() << " failed: " << message << ". Will retry in " << timeBeforeNextReconnect_ << " seconds.";
 			message = ss.str();
+			lastDisconnectError_->conclude();
 		} else {
 			message = "Disconnected from " + jid_.getDomain() + ": " + message;
 		}
@@ -386,7 +390,7 @@ void MainController::setReconnectTimer() {
 	if (timeBeforeNextReconnect_ < 0) {
 		timeBeforeNextReconnect_ = 1;
 	} else {
-		timeBeforeNextReconnect_ = timeBeforeNextReconnect_ >= 150 ? 300 : timeBeforeNextReconnect_ * 2;
+		timeBeforeNextReconnect_ = timeBeforeNextReconnect_ >= 150 ? 300 : timeBeforeNextReconnect_ * 2; // Randomly selected by roll of a die, as required by 3920bis
 	}
 	if (reconnectTimer_) {
 		reconnectTimer_->stop();
@@ -410,7 +414,6 @@ void MainController::signOut() {
 
 void MainController::logout() {
 	systemTrayController_->setMyStatusType(StatusShow::None);
-	resetPendingReconnects();
 	if (client_ /*&& client_->isAvailable()*/) {
 		client_->disconnect();
 	}
