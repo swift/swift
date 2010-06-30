@@ -47,6 +47,7 @@ po::options_description QtSwift::getOptionsDescription() {
 		("netbook-mode", "use netbook mode display")
 		("no-tabs", "don't manage chat windows in tabs")
 		("latency-debug", "use latency debugging")
+		("multi-account", po::value<int>()->default_value(1), "number of accounts to open windows for")
 		;
 	return result;
 }
@@ -63,22 +64,36 @@ QtSwift::QtSwift(po::variables_map options) : autoUpdater_(NULL) {
 	QCoreApplication::setOrganizationDomain(SWIFT_ORGANIZATION_DOMAIN);
 	QCoreApplication::setApplicationVersion(buildVersion);
 
+	int numberOfAccounts = options["multi-account"].as<int>();
+
 	tabs_ = options.count("no-tabs") && !splitter_ > 0 ? NULL : new QtChatTabs();
 	settings_ = new QtSettingsProvider();
 	application_ = new PlatformApplication(SWIFT_APPLICATION_NAME);
-	systemTray_ = new QtSystemTray();
-	loginWindowFactory_ = new QtLoginWindowFactory(splitter_, systemTray_, settings_);
 	chatWindowFactory_ = new QtChatWindowFactory(splitter_, settings_, tabs_);
-	rosterWindowFactory_ = new QtMainWindowFactory();
-	eventWindowFactory_ = new QtEventWindowFactory(rosterWindowFactory_);
-	xmlConsoleWidgetFactory_ = new QtXMLConsoleWidgetFactory(tabs_);
-	chatListWindowFactory_ = new QtChatListWindowFactory(rosterWindowFactory_);
-	mucSearchWindowFactory_ = new QtMUCSearchWindowFactory();
 	soundPlayer_ = new QtSoundPlayer();
 	if (splitter_) {
 		splitter_->show();
 	}
-	mainController_ = new MainController(chatWindowFactory_, rosterWindowFactory_, loginWindowFactory_, eventWindowFactory_, settings_, application_, systemTray_, soundPlayer_, xmlConsoleWidgetFactory_, chatListWindowFactory_, mucSearchWindowFactory_, options.count("latency-debug") > 0);
+
+	for (int i = 0; i < numberOfAccounts; i++) {
+		QtSystemTray* systemTray = new QtSystemTray();
+		systemTrays_.push_back(systemTray);
+		QtLoginWindowFactory* loginWindowFactory = new QtLoginWindowFactory(splitter_, systemTray, settings_);
+		loginWindowFactories_.push_back(loginWindowFactory);
+		QtMainWindowFactory* rosterWindowFactory = new QtMainWindowFactory();
+		rosterWindowFactories_.push_back(rosterWindowFactory);
+		QtEventWindowFactory* eventWindowFactory = new QtEventWindowFactory(rosterWindowFactory);
+		eventWindowFactories_.push_back(eventWindowFactory);
+		QtXMLConsoleWidgetFactory* xmlConsoleWidgetFactory = new QtXMLConsoleWidgetFactory(tabs_);
+		xmlConsoleWidgetFactories_.push_back(xmlConsoleWidgetFactory);
+		QtChatListWindowFactory* chatListWindowFactory = new QtChatListWindowFactory(rosterWindowFactory);
+		chatListWindowFactories_.push_back(chatListWindowFactory);
+		QtMUCSearchWindowFactory* mucSearchWindowFactory = new QtMUCSearchWindowFactory();
+		mucSearchWindowFactories_.push_back(mucSearchWindowFactory);
+		MainController* mainController = new MainController(chatWindowFactory_, rosterWindowFactory, loginWindowFactory, eventWindowFactory, settings_, application_, systemTray, soundPlayer_, xmlConsoleWidgetFactory, chatListWindowFactory, mucSearchWindowFactory, options.count("latency-debug") > 0);
+		mainControllers_.push_back(mainController);
+	}
+
 
 	// PlatformAutoUpdaterFactory autoUpdaterFactory;
 	// if (autoUpdaterFactory.isSupported()) {
@@ -90,19 +105,35 @@ QtSwift::QtSwift(po::variables_map options) : autoUpdater_(NULL) {
 QtSwift::~QtSwift() {
 	delete autoUpdater_;
 	delete chatWindowFactory_;
-	delete rosterWindowFactory_;
-	delete loginWindowFactory_;
-	delete mucSearchWindowFactory_;
-	delete mainController_;
+	foreach (QtMainWindowFactory* factory, rosterWindowFactories_) {
+		delete factory;
+	}
+	foreach (QtLoginWindowFactory* factory, loginWindowFactories_) {
+		delete factory;
+	}
+	foreach (MUCSearchWindowFactory* factory, mucSearchWindowFactories_) {
+		delete factory;
+	}
+	foreach (MainController* controller, mainControllers_) {
+		delete controller;
+	}
 	delete settings_;
 	delete application_;
-	delete systemTray_;
+	foreach (QtSystemTray* tray, systemTrays_) {
+		delete tray;
+	}
 	delete tabs_;
 	delete splitter_;
 	delete soundPlayer_;
-	delete xmlConsoleWidgetFactory_;
-	delete eventWindowFactory_;
-	delete chatListWindowFactory_;
+	foreach (QtXMLConsoleWidgetFactory* factory, xmlConsoleWidgetFactories_) {
+		delete factory;
+	}
+	foreach (QtEventWindowFactory* factory, eventWindowFactories_) {
+		delete factory;
+	}
+	foreach (QtChatListWindowFactory* factory, chatListWindowFactories_) {
+		delete factory;
+	}
 }
 
 }

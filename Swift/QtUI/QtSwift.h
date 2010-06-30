@@ -42,22 +42,23 @@ namespace Swift {
 			static po::options_description getOptionsDescription();
 			~QtSwift();
 		private:
-			MainController *mainController_;
+			std::vector<MainController*> mainControllers_;
 			QtChatWindowFactory *chatWindowFactory_;
-			QtChatListWindowFactory *chatListWindowFactory_;
-			QtMainWindowFactory *rosterWindowFactory_;
-			QtLoginWindowFactory *loginWindowFactory_;
-			QtXMLConsoleWidgetFactory* xmlConsoleWidgetFactory_;
+			std::vector<QtMainWindowFactory*> rosterWindowFactories_;
+			std::vector<QtLoginWindowFactory*> loginWindowFactories_;
+			std::vector<QtXMLConsoleWidgetFactory*> xmlConsoleWidgetFactories_;
+			std::vector<QtEventWindowFactory*> eventWindowFactories_;
+			std::vector<QtSystemTray*> systemTrays_;
+			std::vector<QtChatListWindowFactory*> chatListWindowFactories_;
+			std::vector<QtMUCSearchWindowFactory*> mucSearchWindowFactories_;
 			QtEventLoop clientMainThreadCaller_;
 			QtSettingsProvider *settings_;
-			QtSystemTray* systemTray_;
 			QSplitter* splitter_;
 			QtSoundPlayer* soundPlayer_;
 			QtChatTabs* tabs_;
-			QtEventWindowFactory* eventWindowFactory_;
 			Application* application_;
 			AutoUpdater* autoUpdater_;
-			QtMUCSearchWindowFactory* mucSearchWindowFactory_;
+
 	};
 }
 
