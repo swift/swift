@@ -15,6 +15,7 @@
 #include <QLayout>
 #include <QTabBar>
 #include <QApplication>
+#include <qdebug.h>
 
 namespace Swift {
 QtChatTabs::QtChatTabs() : QWidget() {
@@ -148,7 +149,10 @@ void QtChatTabs::handleTabTitleUpdated(QWidget* widget) {
 	tabs_->tabBar()->setTabTextColor(index, tabTextColor); 
 	int unread = 0;
 	for (int i = 0; i < tabs_->count(); i++) {
-		unread += qobject_cast<QtTabbable*>(tabs_->widget(i))->getCount();
+		QtTabbable* tab = qobject_cast<QtTabbable*>(tabs_->widget(i));
+		if (tab) {
+			unread += tab->getCount(); 
+		}
 	}
 	
 	QtTabbable* current = qobject_cast<QtTabbable*>(tabs_->currentWidget());
