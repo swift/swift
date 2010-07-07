@@ -16,6 +16,7 @@ vars.Add(BoolVariable("warnings", "Compile with warnings turned on",
 		"yes" if os.name != "nt" else "no"))
 vars.Add(BoolVariable("max_jobs", "Build with maximum number of parallel jobs", "no"))
 vars.Add(EnumVariable("target", "Choose a target platform for compilation", "native", ["native", "iphone-simulator", "iphone-device"]))
+vars.Add("iosversion", "Choose an iOS version to target")
 if os.name != "nt" :
 	vars.Add(BoolVariable("coverage", "Compile with coverage information", "no"))
 if os.name == "posix" :
@@ -148,6 +149,7 @@ if ARGUMENTS.get("SWIFT_INSTALLDIR", "") :
 
 # cross-compiling
 target = env["target"]
+iOSVersion = env.get("iosversion", "4.0")
 if target in ("iphone-device", "iphone-simulator"):
    if target == "iphone-device":
       sdkPart = "iPhoneOS"
@@ -164,7 +166,7 @@ if target in ("iphone-device", "iphone-simulator"):
       env.Append(LINKFLAGS = ["-arch", "i386"])
       targetIncludesArch = "i686"
 
-   sdkVer = "3.0"
+   sdkVer = iOSVersion
    sdk = "/Developer/Platforms/" + sdkPart + ".platform/Developer/SDKs/" + sdkPart + sdkVer + ".sdk"
 
    env["FRAMEWORKS"] = ["CoreFoundation", "Foundation", "UIKit", "CoreGraphics"]
