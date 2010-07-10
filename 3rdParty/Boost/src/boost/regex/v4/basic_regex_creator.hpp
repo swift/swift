@@ -769,14 +769,14 @@ void basic_regex_creator<charT, traits>::fixup_recursions(re_syntax_base* state)
       case syntax_element_assert_backref:
          {
             // just check that the index is valid:
-            int id = static_cast<const re_brace*>(state)->index;
-            if(id < 0)
+            int idVar = static_cast<const re_brace*>(state)->index;
+            if(idVar < 0)
             {
-               id = -id-1;
-               if(id >= 10000)
+               idVar = -idVar-1;
+               if(idVar >= 10000)
                {
-                  id = m_pdata->get_id(id);
-                  if(id <= 0)
+                  idVar = m_pdata->get_id(idVar);
+                  if(idVar <= 0)
                   {
                      // check of sub-expression that doesn't exist:
                      if(0 == this->m_pdata->m_status) // update the error code if not already set
@@ -804,12 +804,12 @@ void basic_regex_creator<charT, traits>::fixup_recursions(re_syntax_base* state)
          {
             bool ok = false;
             re_syntax_base* p = base;
-            int id = static_cast<re_jump*>(state)->alt.i;
-            if(id > 10000)
-               id = m_pdata->get_id(id);
+            int idVar = static_cast<re_jump*>(state)->alt.i;
+            if(idVar > 10000)
+               idVar = m_pdata->get_id(idVar);
             while(p)
             {
-               if((p->type == syntax_element_startmark) && (static_cast<re_brace*>(p)->index == id))
+               if((p->type == syntax_element_startmark) && (static_cast<re_brace*>(p)->index == idVar))
                {
                   //
                   // We've found the target of the recursion, set the jump target:
@@ -833,7 +833,7 @@ void basic_regex_creator<charT, traits>::fixup_recursions(re_syntax_base* state)
                         next_rep_id = static_cast<re_repeat*>(p)->state_id;
                         break;
                      case syntax_element_endmark:
-                        if(static_cast<const re_brace*>(p)->index == id)
+                        if(static_cast<const re_brace*>(p)->index == idVar)
                            next_rep_id = -1;
                         break;
                      default: 
