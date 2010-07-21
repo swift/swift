@@ -43,6 +43,12 @@ ChatController::ChatController(const JID& self, StanzaChannel* stanzaChannel, IQ
 	chatWindow_->onUserCancelsTyping.connect(boost::bind(&ChatStateNotifier::userCancelledNewMessage, chatStateNotifier_));
 }
 
+ChatController::~ChatController() {
+	delete chatStateNotifier_;
+	delete chatStateMessageSender_;
+	delete chatStateTracker_;
+}
+
 void ChatController::setToJID(const JID& jid) {
 	chatStateMessageSender_->setContact(jid);
 	ChatControllerBase::setToJID(jid);

@@ -18,6 +18,7 @@ namespace Swift {
 	class ChatController : public ChatControllerBase {
 		public:
 			ChatController(const JID& self, StanzaChannel* stanzaChannel, IQRouter* iqRouter, ChatWindowFactory* chatWindowFactory, const JID &contact, NickResolver* nickResolver, PresenceOracle* presenceOracle, AvatarManager* avatarManager, bool isInMUC, bool useDelayForLatency, UIEventStream* eventStream);
+			virtual ~ChatController();
 			virtual void setToJID(const JID& jid);
 
 		private:
