@@ -53,6 +53,7 @@ QtChatWindow::QtChatWindow(const QString &contact, UIEventStream* eventStream) :
 
 	QWidget* midBar = new QWidget(this);
 	layout->addWidget(midBar);
+	midBar->setAutoFillBackground(true);
 	QHBoxLayout *midBarLayout = new QHBoxLayout(midBar);
 	midBarLayout->setContentsMargins(0,0,0,0);
 	midBarLayout->setSpacing(2);
