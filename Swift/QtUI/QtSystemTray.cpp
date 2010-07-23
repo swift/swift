@@ -11,7 +11,7 @@
 #include <QResource>
 
 namespace Swift {
-QtSystemTray::QtSystemTray() : QObject(), onlineIcon_(":icons/online.png"), awayIcon_(":icons/away.png"), dndIcon_(":icons/dnd.png"), offlineIcon_(":icons/offline.png"), newMessageIcon_(":icons/new-chat.png") {
+QtSystemTray::QtSystemTray() : QObject(), onlineIcon_(":icons/online.png"), awayIcon_(":icons/away.png"), dndIcon_(":icons/dnd.png"), offlineIcon_(":icons/offline.png"), newMessageIcon_(":icons/new-chat.png"), unreadMessages_(false) {
 	trayIcon_ = new QSystemTrayIcon(offlineIcon_);
 	connect(trayIcon_, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), this, SLOT(handleIconActivated(QSystemTrayIcon::ActivationReason)));
 	trayIcon_->show();
@@ -22,11 +22,8 @@ QtSystemTray::~QtSystemTray() {
 }
 
 void QtSystemTray::setUnreadMessages(bool some) {
-	if (some) {
-		trayIcon_->setIcon(newMessageIcon_);
-	} else {
-		updateStatusIcon();
-	}
+	unreadMessages_ = some;
+	updateStatusIcon();
 }
 
 void QtSystemTray::handleIconActivated(QSystemTrayIcon::ActivationReason reason) {
@@ -40,13 +37,17 @@ void QtSystemTray::setStatusType(StatusShow::Type type) {
 }
 
 void QtSystemTray::updateStatusIcon() {
-	switch (statusType_) {
-		case StatusShow::Online : trayIcon_->setIcon(onlineIcon_);break;
-		case StatusShow::FFC : trayIcon_->setIcon(onlineIcon_);break;
-		case StatusShow::Away : trayIcon_->setIcon(awayIcon_);break;
-		case StatusShow::XA : trayIcon_->setIcon(awayIcon_);break;
-		case StatusShow::DND : trayIcon_->setIcon(dndIcon_);break;
-		case StatusShow::None : trayIcon_->setIcon(offlineIcon_);break;
+	if (unreadMessages_) {
+		trayIcon_->setIcon(newMessageIcon_);
+	} else {
+		switch (statusType_) {
+			case StatusShow::Online : trayIcon_->setIcon(onlineIcon_);break;
+			case StatusShow::FFC : trayIcon_->setIcon(onlineIcon_);break;
+			case StatusShow::Away : trayIcon_->setIcon(awayIcon_);break;
+			case StatusShow::XA : trayIcon_->setIcon(awayIcon_);break;
+			case StatusShow::DND : trayIcon_->setIcon(dndIcon_);break;
+			case StatusShow::None : trayIcon_->setIcon(offlineIcon_);break;
+		}
 	}
 }
 

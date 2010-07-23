@@ -33,5 +33,6 @@ namespace Swift {
 			QIcon dndIcon_;
 			QIcon offlineIcon_;
 			QIcon newMessageIcon_;
+			bool unreadMessages_;
 	};
 }
