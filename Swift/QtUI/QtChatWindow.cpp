@@ -40,6 +40,7 @@ QtChatWindow::QtChatWindow(const QString &contact, UIEventStream* eventStream) :
 	
 
 	QSplitter *logRosterSplitter = new QSplitter(this);
+	logRosterSplitter->setAutoFillBackground(true);
 	layout->addWidget(logRosterSplitter);
 
 	messageLog_ = new QtChatView(this);
