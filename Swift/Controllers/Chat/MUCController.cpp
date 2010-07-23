@@ -18,6 +18,7 @@
 #include "Swift/Controllers/UIEvents/UIEventStream.h"
 #include "Swift/Controllers/UIEvents/RequestChatUIEvent.h"
 #include "Swiften/Avatars/AvatarManager.h"
+#include "Swiften/Elements/Delay.h"
 #include "Swiften/MUC/MUC.h"
 #include "Swiften/Client/StanzaChannel.h"
 #include "Swiften/Roster/Roster.h"
@@ -203,7 +204,7 @@ bool MUCController::messageTargetsMe(boost::shared_ptr<Message> message) {
 
 void MUCController::preHandleIncomingMessage(boost::shared_ptr<MessageEvent> messageEvent) {
 	boost::shared_ptr<Message> message = messageEvent->getStanza();
-	if (joined_ && messageTargetsMe(message)) {
+	if (joined_ && messageTargetsMe(message) && !message->getPayload<Delay>()) {
 		eventController_->handleIncomingEvent(messageEvent);
 	}
 	String nick = message->getFrom().getResource();
