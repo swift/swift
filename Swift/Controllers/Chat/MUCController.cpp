@@ -12,6 +12,7 @@
 #include "Swiften/Network/TimerFactory.h"
 #include "SwifTools/TabComplete.h"
 #include "Swiften/Base/foreach.h"
+#include "Swift/Controllers/EventController.h"
 #include "Swift/Controllers/UIInterfaces/ChatWindow.h"
 #include "Swift/Controllers/UIInterfaces/ChatWindowFactory.h"
 #include "Swift/Controllers/UIEvents/UIEventStream.h"
@@ -22,6 +23,7 @@
 #include "Swiften/Roster/Roster.h"
 #include "Swiften/Roster/SetAvatar.h"
 #include "Swiften/Roster/SetPresence.h"
+
 
 #define MUC_JOIN_WARNING_TIMEOUT_MILLISECONDS 60000
 
@@ -42,8 +44,9 @@ MUCController::MUCController (
 		AvatarManager* avatarManager,
 		UIEventStream* uiEventStream,
 		bool useDelayForLatency,
-		TimerFactory* timerFactory) :
-	ChatControllerBase(self, stanzaChannel, iqRouter, chatWindowFactory, muc, presenceOracle, avatarManager, useDelayForLatency, uiEventStream),
+		TimerFactory* timerFactory,
+		EventController* eventController) :
+	ChatControllerBase(self, stanzaChannel, iqRouter, chatWindowFactory, muc, presenceOracle, avatarManager, useDelayForLatency, uiEventStream, eventController),
 			muc_(new MUC(stanzaChannel, presenceSender, muc)), 
 	nick_(nick) {
 	parting_ = false;
@@ -185,7 +188,15 @@ JID MUCController::nickToJID(const String& nick) {
 	return JID(toJID_.getNode(), toJID_.getDomain(), nick);
 }
 
-void MUCController::preHandleIncomingMessage(boost::shared_ptr<Message> message) {
+bool MUCController::messageTargetsMe(boost::shared_ptr<Message> message) {
+	return message->getBody().contains(nick_);
+}
+
+void MUCController::preHandleIncomingMessage(boost::shared_ptr<MessageEvent> messageEvent) {
+	boost::shared_ptr<Message> message = messageEvent->getStanza();
+	if (messageTargetsMe(message)) {
+		eventController_->handleIncomingEvent(messageEvent);
+	}
 	String nick = message->getFrom().getResource();
 	if (nick != nick_) {
 		completer_->removeWord(nick);

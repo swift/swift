@@ -16,6 +16,7 @@
 #include "Swift/QtUI/QtSubscriptionRequestWindow.h"
 #include "Swiften/Events/SubscriptionRequestEvent.h"
 #include "Swift/Controllers/UIEvents/RequestChatUIEvent.h"
+#include "Swift/Controllers/UIEvents/JoinMUCUIEvent.h"
 
 
 #include "Swiften/Base/Platform.h"
@@ -76,7 +77,11 @@ void QtEventWindow::handleItemActivated(const QModelIndex& item) {
 	boost::shared_ptr<ErrorEvent> errorEvent = boost::dynamic_pointer_cast<ErrorEvent>(event->getEvent());
 	
 	if (messageEvent) {
-		eventStream_->send(boost::shared_ptr<UIEvent>(new RequestChatUIEvent(messageEvent->getStanza()->getFrom())));
+		if (messageEvent->getStanza()->getType() == Message::Groupchat) {
+			eventStream_->send(boost::shared_ptr<UIEvent>(new JoinMUCUIEvent(messageEvent->getStanza()->getFrom().toBare(), messageEvent->getStanza()->getTo().getResource())));
+		} else {
+			eventStream_->send(boost::shared_ptr<UIEvent>(new RequestChatUIEvent(messageEvent->getStanza()->getFrom())));
+		}
 	} else if (subscriptionEvent) {
 		QtSubscriptionRequestWindow* window = QtSubscriptionRequestWindow::getWindow(subscriptionEvent, this);
 		window->show();

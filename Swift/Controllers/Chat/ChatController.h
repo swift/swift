@@ -17,7 +17,7 @@ namespace Swift {
 	class NickResolver;
 	class ChatController : public ChatControllerBase {
 		public:
-			ChatController(const JID& self, StanzaChannel* stanzaChannel, IQRouter* iqRouter, ChatWindowFactory* chatWindowFactory, const JID &contact, NickResolver* nickResolver, PresenceOracle* presenceOracle, AvatarManager* avatarManager, bool isInMUC, bool useDelayForLatency, UIEventStream* eventStream);
+			ChatController(const JID& self, StanzaChannel* stanzaChannel, IQRouter* iqRouter, ChatWindowFactory* chatWindowFactory, const JID &contact, NickResolver* nickResolver, PresenceOracle* presenceOracle, AvatarManager* avatarManager, bool isInMUC, bool useDelayForLatency, UIEventStream* eventStream, EventController* eventController);
 			virtual ~ChatController();
 			virtual void setToJID(const JID& jid);
 
@@ -26,7 +26,7 @@ namespace Swift {
 			String getStatusChangeString(boost::shared_ptr<Presence> presence);
 			bool isIncomingMessageFromMe(boost::shared_ptr<Message> message);
 			void postSendMessage(const String &body);
-			void preHandleIncomingMessage(boost::shared_ptr<Message> message);
+			void preHandleIncomingMessage(boost::shared_ptr<MessageEvent> messageEvent);
 			void preSendMessageRequest(boost::shared_ptr<Message>);
 			String senderDisplayNameFromMessage(const JID& from);
 			virtual boost::optional<boost::posix_time::ptime> getMessageTimestamp(boost::shared_ptr<Message>) const;

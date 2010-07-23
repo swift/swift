@@ -32,7 +32,7 @@ namespace Swift {
 
 	class MUCController : public ChatControllerBase {
 		public:
-			MUCController(const JID& self, const JID &muc, const String &nick, StanzaChannel* stanzaChannel, PresenceSender* presenceSender, IQRouter* iqRouter, ChatWindowFactory* chatWindowFactory, PresenceOracle* presenceOracle, AvatarManager* avatarManager, UIEventStream* events, bool useDelayForLatency, TimerFactory* timerFactory);
+			MUCController(const JID& self, const JID &muc, const String &nick, StanzaChannel* stanzaChannel, PresenceSender* presenceSender, IQRouter* iqRouter, ChatWindowFactory* chatWindowFactory, PresenceOracle* presenceOracle, AvatarManager* avatarManager, UIEventStream* events, bool useDelayForLatency, TimerFactory* timerFactory, EventController* eventController);
 			~MUCController();
 			boost::signal<void ()> onUserLeft;
 		
@@ -41,6 +41,7 @@ namespace Swift {
 			bool isIncomingMessageFromMe(boost::shared_ptr<Message> message);
 			String senderDisplayNameFromMessage(const JID& from);
 			boost::optional<boost::posix_time::ptime> getMessageTimestamp(boost::shared_ptr<Message> message) const;
+			void preHandleIncomingMessage(boost::shared_ptr<MessageEvent>);
 
 		private:
 			void handleWindowClosed();
@@ -56,7 +57,7 @@ namespace Swift {
 			JID nickToJID(const String& nick);
 			String roleToFriendlyName(MUCOccupant::Role role);
 			void receivedActivity();
-			void preHandleIncomingMessage(boost::shared_ptr<Message>);
+			bool messageTargetsMe(boost::shared_ptr<Message> message);
 		private:
 			MUC* muc_;
 			UIEventStream* events_;

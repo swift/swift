@@ -168,7 +168,7 @@ ChatController* ChatsManager::getChatControllerOrFindAnother(const JID &contact)
 }
 
 ChatController* ChatsManager::createNewChatController(const JID& contact) {
-	ChatController* controller = new ChatController(jid_, stanzaChannel_, iqRouter_, chatWindowFactory_, contact, nickResolver_, presenceOracle_, avatarManager_, isMUC(contact.toBare()), useDelayForLatency_, uiEventStream_);
+	ChatController* controller = new ChatController(jid_, stanzaChannel_, iqRouter_, chatWindowFactory_, contact, nickResolver_, presenceOracle_, avatarManager_, isMUC(contact.toBare()), useDelayForLatency_, uiEventStream_, eventController_);
 	chatControllers_[contact] = controller;
 	controller->setAvailableServerFeatures(serverDiscoInfo_);
 	return controller;
@@ -204,7 +204,7 @@ void ChatsManager::handleJoinMUCRequest(const JID &muc, const boost::optional<St
 		//FIXME: What's correct behaviour here?
 	} else {
 		String nick = nickMaybe ? nickMaybe.get() : "Swift user";
-		MUCController* controller = new MUCController(jid_, muc, nick, stanzaChannel_, presenceSender_, iqRouter_, chatWindowFactory_, presenceOracle_, avatarManager_, uiEventStream_, false, timerFactory_);
+		MUCController* controller = new MUCController(jid_, muc, nick, stanzaChannel_, presenceSender_, iqRouter_, chatWindowFactory_, presenceOracle_, avatarManager_, uiEventStream_, false, timerFactory_, eventController_);
 		mucControllers_[muc] = controller;
 		controller->setAvailableServerFeatures(serverDiscoInfo_);
 		controller->onUserLeft.connect(boost::bind(&ChatsManager::handleUserLeftMUC, this, controller));
@@ -233,7 +233,6 @@ void ChatsManager::handleIncomingMessage(boost::shared_ptr<Message> message) {
 	}
 	
 	//if not a mucroom
-	eventController_->handleIncomingEvent(event);
 	getChatControllerOrCreate(jid)->handleIncomingMessage(event);
 }
 

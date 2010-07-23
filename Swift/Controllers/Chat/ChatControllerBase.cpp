@@ -15,6 +15,7 @@
 #include "Swiften/Client/StanzaChannel.h"
 #include "Swiften/Elements/Delay.h"
 #include "Swiften/Base/foreach.h"
+#include "Swift/Controllers/EventController.h"
 #include "Swift/Controllers/UIInterfaces/ChatWindow.h"
 #include "Swift/Controllers/UIInterfaces/ChatWindowFactory.h"
 #include "Swiften/Queries/Requests/GetSecurityLabelsCatalogRequest.h"
@@ -22,7 +23,7 @@
 
 namespace Swift {
 
-ChatControllerBase::ChatControllerBase(const JID& self, StanzaChannel* stanzaChannel, IQRouter* iqRouter, ChatWindowFactory* chatWindowFactory, const JID &toJID, PresenceOracle* presenceOracle, AvatarManager* avatarManager, bool useDelayForLatency, UIEventStream* eventStream) : selfJID_(self), stanzaChannel_(stanzaChannel), iqRouter_(iqRouter), chatWindowFactory_(chatWindowFactory), toJID_(toJID), labelsEnabled_(false), presenceOracle_(presenceOracle), avatarManager_(avatarManager), useDelayForLatency_(useDelayForLatency)  {
+ChatControllerBase::ChatControllerBase(const JID& self, StanzaChannel* stanzaChannel, IQRouter* iqRouter, ChatWindowFactory* chatWindowFactory, const JID &toJID, PresenceOracle* presenceOracle, AvatarManager* avatarManager, bool useDelayForLatency, UIEventStream* eventStream, EventController* eventController) : selfJID_(self), stanzaChannel_(stanzaChannel), iqRouter_(iqRouter), chatWindowFactory_(chatWindowFactory), toJID_(toJID), labelsEnabled_(false), presenceOracle_(presenceOracle), avatarManager_(avatarManager), useDelayForLatency_(useDelayForLatency), eventController_(eventController) {
 	chatWindow_ = chatWindowFactory_->createChatWindow(toJID, eventStream);
 	chatWindow_->onAllMessagesRead.connect(boost::bind(&ChatControllerBase::handleAllMessagesRead, this));
 	chatWindow_->onSendMessageRequest.connect(boost::bind(&ChatControllerBase::handleSendMessageRequest, this, _1));
@@ -123,8 +124,9 @@ void ChatControllerBase::handleIncomingMessage(boost::shared_ptr<MessageEvent> m
 	}
 	chatWindow_->setUnreadMessageCount(unreadMessages_.size());
 
+
+	preHandleIncomingMessage(messageEvent);	
 	boost::shared_ptr<Message> message = messageEvent->getStanza();
-	preHandleIncomingMessage(message);	
 	String body = message->getBody();
 	if (message->isError()) {
 		String errorMessage = getErrorMessage(message->getPayload<ErrorPayload>());

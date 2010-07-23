@@ -15,14 +15,15 @@
 #include "Swift/Controllers/UIInterfaces/ChatWindow.h"
 #include "Swift/Controllers/UIInterfaces/ChatWindowFactory.h"
 #include "Swift/Controllers/NickResolver.h"
+#include "Swift/Controllers/EventController.h"
 
 namespace Swift {
 	
 /**
  * The controller does not gain ownership of the stanzaChannel, nor the factory.
  */
-ChatController::ChatController(const JID& self, StanzaChannel* stanzaChannel, IQRouter* iqRouter, ChatWindowFactory* chatWindowFactory, const JID &contact, NickResolver* nickResolver, PresenceOracle* presenceOracle, AvatarManager* avatarManager, bool isInMUC, bool useDelayForLatency, UIEventStream* eventStream)
-	: ChatControllerBase(self, stanzaChannel, iqRouter, chatWindowFactory, contact, presenceOracle, avatarManager, useDelayForLatency, eventStream) {
+ChatController::ChatController(const JID& self, StanzaChannel* stanzaChannel, IQRouter* iqRouter, ChatWindowFactory* chatWindowFactory, const JID &contact, NickResolver* nickResolver, PresenceOracle* presenceOracle, AvatarManager* avatarManager, bool isInMUC, bool useDelayForLatency, UIEventStream* eventStream, EventController* eventController)
+	: ChatControllerBase(self, stanzaChannel, iqRouter, chatWindowFactory, contact, presenceOracle, avatarManager, useDelayForLatency, eventStream, eventController) {
 	isInMUC_ = isInMUC;
 	chatStateNotifier_ = new ChatStateNotifier();
 	chatStateMessageSender_ = new ChatStateMessageSender(chatStateNotifier_, stanzaChannel, contact);
@@ -58,7 +59,9 @@ bool ChatController::isIncomingMessageFromMe(boost::shared_ptr<Message>) {
 	return false;
 }
 
-void ChatController::preHandleIncomingMessage(boost::shared_ptr<Message> message) {
+void ChatController::preHandleIncomingMessage(boost::shared_ptr<MessageEvent> messageEvent) {
+	eventController_->handleIncomingEvent(messageEvent);
+	boost::shared_ptr<Message> message = messageEvent->getStanza();
 	JID from = message->getFrom();
 	if (!from.equals(toJID_, JID::WithResource)) {
 		if (toJID_.equals(from, JID::WithoutResource)  && toJID_.isBare()){
