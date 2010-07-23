@@ -25,7 +25,7 @@ namespace Swift {
 	class MUC {
 		public:
 			enum JoinResult { JoinSucceeded, JoinFailed };
-			enum LeavingType { Part };			
+			enum LeavingType { Part, Disconnect };			
 
 		public:
 			MUC(StanzaChannel* stanzaChannel, PresenceSender* presenceSender, const JID &muc);
@@ -36,6 +36,8 @@ namespace Swift {
 			String getCurrentNick();
 			void part();
 			void handleIncomingMessage(boost::shared_ptr<Message> message);
+			/** Expose public so it can be called when e.g. user goes offline */
+			void handleUserLeft(LeavingType);
 
 		public:
 			boost::signal<void (const String& /*nick*/)> onJoinComplete;

@@ -55,6 +55,27 @@ void GroupRosterItem::addChild(RosterItem* item) {
 }
 
 /**
+ * Does not emit a changed signal.
+ */
+void GroupRosterItem::removeAll() {
+	std::vector<RosterItem*>::iterator it = children_.begin();
+	displayedChildren_.clear();
+	while (it != children_.end()) {
+		ContactRosterItem* contact = dynamic_cast<ContactRosterItem*>(*it);
+		if (contact) {
+			delete contact;
+		} 
+		GroupRosterItem* group = dynamic_cast<GroupRosterItem*>(*it);
+		if (group) {
+			group->removeAll();
+			delete group;
+		}
+		it++;
+	}
+	children_.clear();
+}
+
+/**
  * Returns the removed item - but only if it's the only one, otherwise
  * the return result is undefined.
  */

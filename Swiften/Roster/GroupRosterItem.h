@@ -22,6 +22,7 @@ class GroupRosterItem : public RosterItem {
 		const std::vector<RosterItem*>& getDisplayedChildren() const;
 		void addChild(RosterItem* item);
 		ContactRosterItem* removeChild(const JID& jid);
+		void removeAll();
 		void setDisplayed(RosterItem* item, bool displayed);
 		boost::signal<void ()> onChildrenChanged;
 		static bool itemLessThan(const RosterItem* left, const RosterItem* right);

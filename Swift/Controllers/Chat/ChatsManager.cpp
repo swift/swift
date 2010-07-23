@@ -139,12 +139,18 @@ void ChatsManager::setServerDiscoInfo(boost::shared_ptr<DiscoInfo> info) {
 	}
 }
 
+/**
+ * This is to be called on connect/disconnect.
+ */ 
 void ChatsManager::setEnabled(bool enabled) {
 	foreach (JIDChatControllerPair controllerPair, chatControllers_) {
 		controllerPair.second->setEnabled(enabled);
 	}
 	foreach (JIDMUCControllerPair controllerPair, mucControllers_) {
 		controllerPair.second->setEnabled(enabled);
+		if (enabled) {
+			controllerPair.second->rejoin();
+		}
 	}
 
 }
@@ -201,9 +207,9 @@ void ChatsManager::rebindControllerJID(const JID& from, const JID& to) {
 void ChatsManager::handleJoinMUCRequest(const JID &muc, const boost::optional<String>& nickMaybe) {
 	std::map<JID, MUCController*>::iterator it = mucControllers_.find(muc);
 	if (it != mucControllers_.end()) {
-		//FIXME: What's correct behaviour here?
+		it->second->rejoin();
 	} else {
-		String nick = nickMaybe ? nickMaybe.get() : "Swift user";
+		String nick = nickMaybe ? nickMaybe.get() : jid_.getNode();
 		MUCController* controller = new MUCController(jid_, muc, nick, stanzaChannel_, presenceSender_, iqRouter_, chatWindowFactory_, presenceOracle_, avatarManager_, uiEventStream_, false, timerFactory_, eventController_);
 		mucControllers_[muc] = controller;
 		controller->setAvailableServerFeatures(serverDiscoInfo_);

@@ -82,6 +82,13 @@ struct JIDEqualsTo {
 	JID jid;
 };
 
+void Roster::removeAll() {
+	root_->removeAll();
+	itemMap_.clear();
+	onChildrenChanged(root_);
+	onDataChanged(root_);
+}
+
 void Roster::removeContact(const JID& jid) {
 	std::vector<ContactRosterItem*>* items = &itemMap_[fullJIDMapping_ ? jid : jid.toBare()];
 	items->erase(std::remove_if(items->begin(), items->end(), JIDEqualsTo(jid)), items->end());

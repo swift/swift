@@ -44,6 +44,18 @@ void MUC::part() {
 	presenceSender->removeDirectedPresenceReceiver(ownMUCJID);
 }
 
+void MUC::handleUserLeft(LeavingType type) {
+	std::map<String,MUCOccupant>::iterator i = occupants.find(ownMUCJID.getResource());
+	if (i != occupants.end()) {
+		MUCOccupant me = i->second;
+		occupants.erase(i);
+		onOccupantLeft(me, type, "");
+	}
+	occupants.clear();
+	joinComplete_ = false;
+	presenceSender->removeDirectedPresenceReceiver(ownMUCJID);
+}
+
 void MUC::handleIncomingPresence(boost::shared_ptr<Presence> presence) {
 	if (!isFromMUC(presence->getFrom())) {
 		return;
@@ -79,14 +91,18 @@ void MUC::handleIncomingPresence(boost::shared_ptr<Presence> presence) {
 	//170 is room logging to http
 	//TODO: Nick changes
 	if (presence->getType() == Presence::Unavailable) {
-		std::map<String,MUCOccupant>::iterator i = occupants.find(nick);
-		if (i != occupants.end()) {
-			//TODO: part type
-			onOccupantLeft(i->second, Part, "");
-			occupants.erase(i);
+		if (presence->getFrom() == ownMUCJID) {
+			handleUserLeft(Part);
+			return;
+		} else {
+			std::map<String,MUCOccupant>::iterator i = occupants.find(nick);
+			if (i != occupants.end()) {
+				//TODO: part type
+				onOccupantLeft(i->second, Part, "");
+				occupants.erase(i);
+			}
 		}
-	}
-	else if (presence->getType() == Presence::Available) {
+	} else if (presence->getType() == Presence::Available) {
 		std::map<String, MUCOccupant>::iterator it = occupants.find(nick);
 		MUCOccupant occupant(nick, role, affiliation);
 		if (it != occupants.end()) {

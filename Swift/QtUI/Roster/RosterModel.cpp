@@ -177,7 +177,7 @@ QModelIndex RosterModel::index(RosterItem* item) const {
 	/* Recursive check that it's ok to create such an item 
 		Assuming there are more contacts in a group than groups in a 
 		group, this could save a decent chunk of search time at startup.*/
-	if (parent != roster_->getRoot() && !index(parent).isValid()) {
+	if (parent == NULL || (parent != roster_->getRoot() && !index(parent).isValid())) {
 		return QModelIndex();
 	}
 	for (size_t i = 0; i < parent->getDisplayedChildren().size(); i++) {

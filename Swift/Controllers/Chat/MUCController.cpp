@@ -46,10 +46,9 @@ MUCController::MUCController (
 		bool useDelayForLatency,
 		TimerFactory* timerFactory,
 		EventController* eventController) :
-	ChatControllerBase(self, stanzaChannel, iqRouter, chatWindowFactory, muc, presenceOracle, avatarManager, useDelayForLatency, uiEventStream, eventController),
-			muc_(new MUC(stanzaChannel, presenceSender, muc)), 
-	nick_(nick) {
-	parting_ = false;
+			ChatControllerBase(self, stanzaChannel, iqRouter, chatWindowFactory, muc, presenceOracle, avatarManager, useDelayForLatency, uiEventStream, eventController), muc_(new MUC(stanzaChannel, presenceSender, muc)), nick_(nick) {
+	parting_ = true;
+	joined_ = false;
 	events_ = uiEventStream;
 	
 	roster_ = new Roster(true);
@@ -69,11 +68,9 @@ MUCController::MUCController (
 		loginCheckTimer_->onTick.connect(boost::bind(&MUCController::handleJoinTimeoutTick, this));
 		loginCheckTimer_->start();
 	}
-
-	muc_->joinAs(nick);
 	chatWindow_->convertToMUC();
 	chatWindow_->addSystemMessage("Trying to join room " + toJID_.toString());
-	joined_ = false;
+	rejoin();
 	if (avatarManager_ != NULL) {
 		avatarChangedConnection_ = (avatarManager_->onAvatarChanged.connect(boost::bind(&MUCController::handleAvatarChanged, this, _1, _2)));
 	} 
@@ -88,6 +85,17 @@ MUCController::~MUCController() {
 	}
 	chatWindow_->setTabComplete(NULL);
 	delete completer_;
+}
+
+/**
+ * Join the MUC if not already in it.
+ */
+void MUCController::rejoin() {
+	if (parting_) {
+		joined_ = false;
+		parting_ = false;
+		muc_->joinAs(nick_);
+	}
 }
 
 void MUCController::handleJoinTimeoutTick() {
@@ -122,7 +130,7 @@ void MUCController::handleJoinFailed(boost::shared_ptr<ErrorPayload> error) {
 	chatWindow_->addErrorMessage(errorMessage);
 	if (!rejoinNick.isEmpty()) {
 		nick_ = rejoinNick;
-		muc_->joinAs(rejoinNick);
+		rejoin();
 	}
 }
 
@@ -132,6 +140,7 @@ void MUCController::handleJoinComplete(const String& nick) {
 	String joinMessage = "You have joined room " + toJID_.toString() + " as " + nick;
 	nick_ = nick;
 	chatWindow_->addSystemMessage(joinMessage);
+	setEnabled(true);
 }
 
 void MUCController::handleAvatarChanged(const JID& jid, const String&) {
@@ -194,7 +203,7 @@ bool MUCController::messageTargetsMe(boost::shared_ptr<Message> message) {
 
 void MUCController::preHandleIncomingMessage(boost::shared_ptr<MessageEvent> messageEvent) {
 	boost::shared_ptr<Message> message = messageEvent->getStanza();
-	if (messageTargetsMe(message)) {
+	if (joined_ && messageTargetsMe(message)) {
 		eventController_->handleIncomingEvent(messageEvent);
 	}
 	String nick = message->getFrom().getResource();
@@ -235,15 +244,32 @@ String MUCController::roleToGroupName(MUCOccupant::Role role) {
 	return result;
 }
 
+void MUCController::setEnabled(bool enabled) {
+	ChatControllerBase::setEnabled(enabled);
+	if (!enabled) {
+		roster_->removeAll();
+		/* handleUserLeft won't throw a part back up unless this is called
+		   when it doesn't yet know we've left - which only happens on
+		   disconnect, so call with disconnect here so if the signal does
+		   bubble back up, it'll be with the right type.*/
+		muc_->handleUserLeft(MUC::Disconnect);
+	}
+}
+
 void MUCController::handleOccupantLeft(const MUCOccupant& occupant, MUC::LeavingType, const String& reason) {
 	completer_->removeWord(occupant.getNick());
-	String partMessage = occupant.getNick() + " has left the room";
+	String partMessage = (occupant.getNick() != nick_) ? occupant.getNick() + " has left the room" : "You have left the room";
 	if (!reason.isEmpty()) {
 		partMessage += " (" + reason + ")";
 	}
 	partMessage += ".";
 	chatWindow_->addSystemMessage(partMessage);
-	roster_->removeContact(JID(toJID_.getNode(), toJID_.getDomain(), occupant.getNick()));
+	if (occupant.getNick() != nick_) {
+		roster_->removeContact(JID(toJID_.getNode(), toJID_.getDomain(), occupant.getNick()));
+	} else {
+		parting_ = true;
+		setEnabled(false);
+	}
 }
 
 void MUCController::handleOccupantPresenceChange(boost::shared_ptr<Presence> presence) {

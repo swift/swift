@@ -41,7 +41,7 @@ namespace Swift {
 			void setAvailableServerFeatures(boost::shared_ptr<DiscoInfo> info);
 			void handleIncomingMessage(boost::shared_ptr<MessageEvent> message);
 			void addMessage(const String& message, const String& senderName, bool senderIsSelf, const boost::optional<SecurityLabel>& label, const String& avatarPath, const boost::posix_time::ptime& time);
-			void setEnabled(bool enabled);
+			virtual void setEnabled(bool enabled);
 			virtual void setToJID(const JID& jid) {toJID_ = jid;};
 		protected:
 			ChatControllerBase(const JID& self, StanzaChannel* stanzaChannel, IQRouter* iqRouter, ChatWindowFactory* chatWindowFactory, const JID &toJID, PresenceOracle* presenceOracle, AvatarManager* avatarManager, bool useDelayForLatency, UIEventStream* eventStream, EventController* eventController);

@@ -35,6 +35,8 @@ namespace Swift {
 			MUCController(const JID& self, const JID &muc, const String &nick, StanzaChannel* stanzaChannel, PresenceSender* presenceSender, IQRouter* iqRouter, ChatWindowFactory* chatWindowFactory, PresenceOracle* presenceOracle, AvatarManager* avatarManager, UIEventStream* events, bool useDelayForLatency, TimerFactory* timerFactory, EventController* eventController);
 			~MUCController();
 			boost::signal<void ()> onUserLeft;
+			virtual void setEnabled(bool enabled);
+			void rejoin();
 		
 		protected:
 			void preSendMessageRequest(boost::shared_ptr<Message> message);
