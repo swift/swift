@@ -81,6 +81,7 @@ MainController::MainController(ChatWindowFactory* chatWindowFactory, MainWindowF
 	presenceSender_ = NULL;
 	client_ = NULL;
 	mucSearchController_ = NULL;
+	statusTracker_ = NULL;
 
 	timeBeforeNextReconnect_ = -1;
 	mucSearchWindowFactory_ = mucSearchWindowFactory;
