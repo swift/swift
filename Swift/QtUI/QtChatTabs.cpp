@@ -24,6 +24,8 @@ QtChatTabs::QtChatTabs() : QWidget() {
 #endif
 
 	tabs_ = new QtTabWidget(this);
+	tabs_->setUsesScrollButtons(true);
+	tabs_->setElideMode(Qt::ElideRight);
 #if QT_VERSION >= 0x040500
 	/*For Macs, change the tab rendering.*/
 	tabs_->setDocumentMode(true);
