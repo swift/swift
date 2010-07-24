@@ -120,6 +120,9 @@ void QtChatWindow::tabComplete() {
 	cursor.select(QTextCursor::WordUnderCursor);
 	QString root = cursor.selectedText();
 	bool firstWord = cursor.selectionStart() == 0;
+	if (root.isEmpty()) {
+		return;
+	}
 	QString suggestion = P2QSTRING(completer_->completeWord(Q2PSTRING(root)));
 	if (root == suggestion) {
 		return;
