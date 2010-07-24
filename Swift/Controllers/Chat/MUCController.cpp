@@ -207,10 +207,11 @@ void MUCController::preHandleIncomingMessage(boost::shared_ptr<MessageEvent> mes
 	if (joined_ && messageTargetsMe(message) && !message->getPayload<Delay>()) {
 		eventController_->handleIncomingEvent(messageEvent);
 	}
-	String nick = message->getFrom().getResource();
-	if (nick != nick_) {
-		completer_->removeWord(nick);
-		completer_->addWord(nick);
+	if (joined_) {
+		String nick = message->getFrom().getResource();
+		if (nick != nick_) {
+			completer_->addWord(nick);
+		}
 	}
 	/*Buggy implementations never send the status code, so use an incoming message as a hint that joining's done (e.g. the old ejabberd on psi-im.org).*/
 	receivedActivity();

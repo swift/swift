@@ -20,6 +20,7 @@ class TabCompleteTest : public CppUnit::TestFixture {
 	CPPUNIT_TEST(testChangeMatch);
 	CPPUNIT_TEST(testRemoveDuringComplete);
 	CPPUNIT_TEST(testAddDuringComplete);
+	CPPUNIT_TEST(testSwiftRoomSample);
 	CPPUNIT_TEST_SUITE_END();
 	
 public:
@@ -71,14 +72,14 @@ public:
 		completer_.addWord(long2);
 		completer_.addWord("Bleh");
 		CPPUNIT_ASSERT_EQUAL(
-			long1,
-			completer_.completeWord(short1));
-		CPPUNIT_ASSERT_EQUAL(
 			long2,
-			completer_.completeWord(long1));
+			completer_.completeWord(short1));
 		CPPUNIT_ASSERT_EQUAL(
 			long1,
 			completer_.completeWord(long2));
+		CPPUNIT_ASSERT_EQUAL(
+			long2,
+			completer_.completeWord(long1));
 	}
 
 	void testChangeMatch() {
@@ -113,15 +114,15 @@ public:
 		completer_.addWord(long2);
 		completer_.addWord("Bleh");
 		CPPUNIT_ASSERT_EQUAL(
-			long1,
+			long2,
 			completer_.completeWord(short1));
-		completer_.removeWord(long1);
+		completer_.removeWord(long2);
 		CPPUNIT_ASSERT_EQUAL(
-			long2,
-			completer_.completeWord(long1));
-		CPPUNIT_ASSERT_EQUAL(
-			long2,
+			long1,
 			completer_.completeWord(long2));
+		CPPUNIT_ASSERT_EQUAL(
+			long1,
+			completer_.completeWord(long1));
 	}
 
 	void testAddDuringComplete() {
@@ -134,16 +135,128 @@ public:
 		completer_.addWord(long2);
 		completer_.addWord("Bleh");
 		CPPUNIT_ASSERT_EQUAL(
-			long1,
+			long2,
 			completer_.completeWord(short1));
 		completer_.addWord(long3);
 		CPPUNIT_ASSERT_EQUAL(
-			long2,
-			completer_.completeWord(long1));
+			long1,
+			completer_.completeWord(long2));
 		CPPUNIT_ASSERT_EQUAL(
 			long3,
-			completer_.completeWord(long2));
+			completer_.completeWord(long1));
 	}
+
+	void testSwiftRoomSample() {
+		String t("t");
+		String Anpan("Anpan");
+		String cdubouloz("cdubouloz");
+		String Tobias("Tobias");
+		String Zash("Zash");
+		String lastsky("lastsky");
+		String Steve("Steve Kille");
+		String Flo("Flo");
+		String Test("Test");
+		String test("test");
+		completer_.addWord(Anpan);
+		completer_.addWord(cdubouloz);
+		completer_.addWord(Tobias);
+		completer_.addWord(lastsky);
+		completer_.addWord(Steve);
+		completer_.addWord(Flo);
+		completer_.addWord(Zash);
+
+		CPPUNIT_ASSERT_EQUAL(
+			Tobias,
+			completer_.completeWord(t));
+		CPPUNIT_ASSERT_EQUAL(
+			Tobias,
+			completer_.completeWord(Tobias));
+
+		completer_.addWord(Test);
+
+		CPPUNIT_ASSERT_EQUAL(
+			Test,
+			completer_.completeWord(t));
+		CPPUNIT_ASSERT_EQUAL(
+			Tobias,
+			completer_.completeWord(Test));
+		CPPUNIT_ASSERT_EQUAL(
+			Test,
+			completer_.completeWord(Tobias));
+		CPPUNIT_ASSERT_EQUAL(
+			Tobias,
+			completer_.completeWord(Test));
+
+		completer_.addWord(Zash);
+		completer_.addWord(Zash);
+		completer_.addWord(Zash);
+		completer_.addWord(Zash);
+
+		completer_.removeWord(Test);
+
+		CPPUNIT_ASSERT_EQUAL(
+			Tobias,
+			completer_.completeWord(t));
+		CPPUNIT_ASSERT_EQUAL(
+			Tobias,
+			completer_.completeWord(Tobias));
+
+		completer_.addWord(test);
+
+		completer_.addWord(Zash);
+		completer_.addWord(Zash);
+		completer_.addWord(Zash);
+		completer_.addWord(Zash);
+
+
+		CPPUNIT_ASSERT_EQUAL(
+			test,
+			completer_.completeWord(t));
+		CPPUNIT_ASSERT_EQUAL(
+			Tobias,
+			completer_.completeWord(test));
+		CPPUNIT_ASSERT_EQUAL(
+			test,
+			completer_.completeWord(Tobias));
+		CPPUNIT_ASSERT_EQUAL(
+			Tobias,
+			completer_.completeWord(test));
+
+		completer_.removeWord(test);
+
+		CPPUNIT_ASSERT_EQUAL(
+			Tobias,
+			completer_.completeWord(t));
+		CPPUNIT_ASSERT_EQUAL(
+			Tobias,
+			completer_.completeWord(Tobias));
+
+		completer_.removeWord(Tobias);
+		CPPUNIT_ASSERT_EQUAL(
+			t,
+			completer_.completeWord(t));
+		CPPUNIT_ASSERT_EQUAL(
+			t,
+			completer_.completeWord(t));
+		CPPUNIT_ASSERT_EQUAL(
+			t,
+			completer_.completeWord(t));
+		CPPUNIT_ASSERT_EQUAL(
+			t,
+			completer_.completeWord(t));
+
+		completer_.addWord(Tobias);
+
+		CPPUNIT_ASSERT_EQUAL(
+			Tobias,
+			completer_.completeWord(t));
+		CPPUNIT_ASSERT_EQUAL(
+			Tobias,
+			completer_.completeWord(Tobias));
+
+	}
+
+
 
 private:
 	TabComplete completer_;

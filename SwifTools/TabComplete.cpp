@@ -13,9 +13,10 @@
 namespace Swift {
 
 void TabComplete::addWord(const String& word) {
-	words_.push_back(word);
+	words_.erase(std::remove(words_.begin(), words_.end(), word), words_.end());
+	words_.insert(words_.begin(), word);
 	if (word.getLowerCase().beginsWith(lastShort_)) {
-		lastCompletionCandidates_.push_back(word);
+		lastCompletionCandidates_.insert(lastCompletionCandidates_.begin(), word);
 	}
 }
 
