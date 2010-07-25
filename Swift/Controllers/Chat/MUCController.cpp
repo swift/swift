@@ -131,6 +131,7 @@ void MUCController::handleJoinFailed(boost::shared_ptr<ErrorPayload> error) {
 	chatWindow_->addErrorMessage(errorMessage);
 	if (!rejoinNick.isEmpty()) {
 		nick_ = rejoinNick;
+		parting_ = true;
 		rejoin();
 	}
 }
