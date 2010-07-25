@@ -63,6 +63,7 @@ void QtChatTabs::addTab(QtTabbable* tab) {
 	connect(tab, SIGNAL(windowOpening()), this, SLOT(handleWidgetShown()));
 	connect(tab, SIGNAL(wantsToActivate()), this, SLOT(handleWantsToActivate()));
 	connect(tab, SIGNAL(requestNextTab()), this, SLOT(handleRequestedNextTab()));
+	connect(tab, SIGNAL(requestActiveTab()), this, SLOT(handleRequestedActiveTab()));
 	connect(tab, SIGNAL(requestPreviousTab()), this, SLOT(handleRequestedPreviousTab()));
 	setSizePolicy(policy);
 }
@@ -117,7 +118,28 @@ void QtChatTabs::handleRequestedPreviousTab() {
 void QtChatTabs::handleRequestedNextTab() {
 	int newIndex = tabs_->currentIndex() + 1;
 	tabs_->setCurrentIndex(newIndex < tabs_->count() ? newIndex : 0);
-	
+}
+
+void QtChatTabs::handleRequestedActiveTab() {
+	QtTabbable::AlertType types[] = {QtTabbable::WaitingActivity, QtTabbable::ImpendingActivity};
+	bool finished = false;
+	for (int j = 0; j < 2; j++) {
+		bool looped = false;
+		for (int i = tabs_->currentIndex() + 1; !finished && i != tabs_->currentIndex(); i++) {
+			if (i >= tabs_->count()) {
+				if (looped) {
+					break;
+				}
+				looped = true;
+				i = 0;
+			}
+			if (qobject_cast<QtTabbable*>(tabs_->widget(i))->getWidgetAlertState() == types[j]) {
+				tabs_->setCurrentIndex(i);
+				finished = true;
+				break;
+			}
+		}
+	}
 }
 
 

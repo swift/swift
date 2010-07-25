@@ -29,5 +29,6 @@ namespace Swift {
 			void wantsToActivate();
 			void requestPreviousTab();
 			void requestNextTab();
+			void requestActiveTab();
 	};
 }

@@ -27,8 +27,10 @@ void QtTextEdit::keyPressEvent(QKeyEvent* event) {
 			   || (key == Qt::Key_W && modifiers == Qt::ControlModifier)
 			   || (key == Qt::Key_PageUp && modifiers == Qt::ControlModifier)
 			   || (key == Qt::Key_PageDown && modifiers == Qt::ControlModifier)
-			   || (key == Qt::Key_Left && modifiers == (Qt::ControlModifier | Qt::ShiftModifier))
-			   || (key == Qt::Key_Right && modifiers == (Qt::ControlModifier | Qt::ShiftModifier))
+//			   || (key == Qt::Key_Left && modifiers == (Qt::ControlModifier | Qt::ShiftModifier))
+//			   || (key == Qt::Key_Right && modifiers == (Qt::ControlModifier | Qt::ShiftModifier))
+			   || (key == Qt::Key_Tab && modifiers == Qt::ControlModifier)
+			   || (key == Qt::Key_A && modifiers == Qt::AltModifier)
 			   || (key == Qt::Key_Tab)
 	) {
 		emit unhandledKeyPressEvent(event);

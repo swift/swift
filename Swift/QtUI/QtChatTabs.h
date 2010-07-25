@@ -37,6 +37,7 @@ namespace Swift {
 			void handleWantsToActivate();
 			void handleRequestedPreviousTab();
 			void handleRequestedNextTab();
+			void handleRequestedActiveTab();
 
 		private:
 			void checkForFirstShow();
