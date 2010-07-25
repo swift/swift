@@ -113,7 +113,7 @@ void ChatController::handlePresenceChange(boost::shared_ptr<Presence> newPresenc
 	chatStateTracker_->handlePresenceChange(newPresence, previousPresence);
 	String newStatusChangeString = getStatusChangeString(newPresence);
 	if (!previousPresence || newStatusChangeString != getStatusChangeString(previousPresence)) {
-		chatWindow_->addSystemMessage(newStatusChangeString);
+		chatWindow_->addPresenceMessage(newStatusChangeString);
 	}
 }
 

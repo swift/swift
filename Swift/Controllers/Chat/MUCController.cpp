@@ -178,7 +178,7 @@ void MUCController::handleOccupantJoined(const MUCOccupant& occupant) {
 
 		}
 		joinString += ".";
-		chatWindow_->addSystemMessage(joinString);
+		chatWindow_->addPresenceMessage(joinString);
 	}
 	if (avatarManager_ != NULL) {
 		handleAvatarChanged(jid, "dummy");
@@ -266,7 +266,7 @@ void MUCController::handleOccupantLeft(const MUCOccupant& occupant, MUC::Leaving
 		partMessage += " (" + reason + ")";
 	}
 	partMessage += ".";
-	chatWindow_->addSystemMessage(partMessage);
+	chatWindow_->addPresenceMessage(partMessage);
 	if (occupant.getNick() != nick_) {
 		roster_->removeContact(JID(toJID_.getNode(), toJID_.getDomain(), occupant.getNick()));
 	} else {

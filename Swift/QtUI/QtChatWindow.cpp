@@ -28,7 +28,7 @@
 #include <QUrl>
 
 namespace Swift {
-QtChatWindow::QtChatWindow(const QString &contact, UIEventStream* eventStream) : QtTabbable(), contact_(contact), previousMessageWasSelf_(false), previousMessageWasSystem_(false), eventStream_(eventStream) {
+QtChatWindow::QtChatWindow(const QString &contact, UIEventStream* eventStream) : QtTabbable(), contact_(contact), previousMessageWasSelf_(false), previousMessageWasSystem_(false), previousMessageWasPresence_(false), eventStream_(eventStream) {
 	unreadCount_ = 0;
 	inputEnabled_ = true;
 	completer_ = NULL;
@@ -268,6 +268,7 @@ void QtChatWindow::addMessage(const String &message, const String &senderName, b
 	previousMessageWasSelf_ = senderIsSelf;
 	previousSenderName_ = P2QSTRING(senderName);
 	previousMessageWasSystem_ = false;
+	previousMessageWasPresence_ = false;
 }
 
 int QtChatWindow::getCount() {
@@ -289,6 +290,7 @@ void QtChatWindow::addErrorMessage(const String& errorMessage) {
 
 	previousMessageWasSelf_ = false;
 	previousMessageWasSystem_ = true;
+	previousMessageWasPresence_ = false;
 }
 
 void QtChatWindow::addSystemMessage(const String& message) {
@@ -302,7 +304,23 @@ void QtChatWindow::addSystemMessage(const String& message) {
 
 	previousMessageWasSelf_ = false;
 	previousMessageWasSystem_ = true;
+	previousMessageWasPresence_ = false;
 }
+
+void QtChatWindow::addPresenceMessage(const String& message) {
+	if (isWidgetSelected()) {
+		onAllMessagesRead();
+	}
+
+	QString messageHTML(Qt::escape(P2QSTRING(message)));
+	messageHTML.replace("\n","<br/>");
+	messageLog_->addMessage(SystemMessageSnippet(messageHTML, QDateTime::currentDateTime(),previousMessageWasPresence_));
+
+	previousMessageWasSelf_ = false;
+	previousMessageWasSystem_ = false;
+	previousMessageWasPresence_ = true;
+}
+
 
 void QtChatWindow::returnPressed() {
 	if (!inputEnabled_) {

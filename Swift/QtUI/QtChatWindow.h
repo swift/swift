@@ -30,6 +30,7 @@ namespace Swift {
 			void addMessage(const String &message, const String &senderName, bool senderIsSelf, const boost::optional<SecurityLabel>& label, const String& avatarPath, const boost::posix_time::ptime& time);
 			void addAction(const String &message, const String &senderName, bool senderIsSelf, const boost::optional<SecurityLabel>& label, const String& avatarPath, const boost::posix_time::ptime& time);
 			void addSystemMessage(const String& message);
+			void addPresenceMessage(const String& message);
 			void addErrorMessage(const String& errorMessage);
 			void show();
 			void activate();
@@ -81,6 +82,7 @@ namespace Swift {
 			std::vector<SecurityLabel> availableLabels_;
 			bool previousMessageWasSelf_;
 			bool previousMessageWasSystem_;
+			bool previousMessageWasPresence_;
 			QString previousSenderName_;
 			bool inputClearing_;
 			UIEventStream* eventStream_;

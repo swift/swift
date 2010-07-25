@@ -18,6 +18,7 @@ namespace Swift {
 			virtual void addAction(const String& message, const String& /*senderName*/, bool /*senderIsSelf*/, const boost::optional<SecurityLabel>& /*label*/, const String& /*avatarPath*/, const boost::posix_time::ptime&) {lastMessageBody_ = message;};
 			virtual void addSystemMessage(const String& /*message*/) {};
 			virtual void addErrorMessage(const String& /*message*/) {};
+			virtual void addPresenceMessage(const String& /*message*/) {};
 
 			virtual void setContactChatState(ChatState::ChatStateType /*state*/) {};
 			virtual void setName(const String& name) {name_ = name;};
