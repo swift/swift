@@ -261,7 +261,7 @@ void QtChatWindow::addMessage(const String &message, const String &senderName, b
 	QString styleSpanEnd = style == "" ? "" : "</span>";
 	htmlString += styleSpanStart + messageHTML + styleSpanEnd;
 
-	bool appendToPrevious = !previousMessageWasSystem_ && ((senderIsSelf && previousMessageWasSelf_) || (!senderIsSelf && !previousMessageWasSelf_ && previousSenderName_ == P2QSTRING(senderName)));
+	bool appendToPrevious = !previousMessageWasSystem_ && !previousMessageWasPresence_ && ((senderIsSelf && previousMessageWasSelf_) || (!senderIsSelf && !previousMessageWasSelf_ && previousSenderName_ == P2QSTRING(senderName)));
 	QString qAvatarPath =  avatarPath.isEmpty() ? "qrc:/icons/avatar.png" : QUrl::fromLocalFile(P2QSTRING(avatarPath)).toEncoded();
 	messageLog_->addMessage(MessageSnippet(htmlString, Qt::escape(P2QSTRING(senderName)), B2QDATE(time), qAvatarPath, senderIsSelf, appendToPrevious));
 
@@ -314,7 +314,7 @@ void QtChatWindow::addPresenceMessage(const String& message) {
 
 	QString messageHTML(Qt::escape(P2QSTRING(message)));
 	messageHTML.replace("\n","<br/>");
-	messageLog_->addMessage(SystemMessageSnippet(messageHTML, QDateTime::currentDateTime(),previousMessageWasPresence_));
+	messageLog_->addMessage(SystemMessageSnippet(messageHTML, QDateTime::currentDateTime(), previousMessageWasPresence_));
 
 	previousMessageWasSelf_ = false;
 	previousMessageWasSystem_ = false;
