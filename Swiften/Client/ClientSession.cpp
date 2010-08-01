@@ -255,7 +255,7 @@ void ClientSession::sendSessionStart() {
 }
 
 bool ClientSession::checkState(State state) {
-	if (state != state) {
+	if (this->state != state) {
 		finishSession(Error::UnexpectedElementError);
 		return false;
 	}
