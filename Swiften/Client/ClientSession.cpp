@@ -270,7 +270,7 @@ void ClientSession::sendCredentials(const String& password) {
 }
 
 void ClientSession::handleTLSEncrypted() {
-	checkState(WaitingForEncrypt);
+	checkState(Encrypting);
 	state = WaitingForStreamStart;
 	stream->resetXMPPParser();
 	sendStreamHeader();
