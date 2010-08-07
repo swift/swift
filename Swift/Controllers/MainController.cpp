@@ -295,6 +295,10 @@ void MainController::sendPresence(boost::shared_ptr<Presence> presence) {
 }
 
 void MainController::handleInputIdleChanged(bool idle) {
+	if (!statusTracker_) {
+		//Haven't logged in yet.
+		return;
+	}
 	if (idle) {
 		if (statusTracker_->goAutoAway()) {
 			if (client_ && client_->isAvailable()) {
