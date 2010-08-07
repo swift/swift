@@ -64,11 +64,12 @@ void GroupRosterItem::removeAll() {
 		ContactRosterItem* contact = dynamic_cast<ContactRosterItem*>(*it);
 		if (contact) {
 			delete contact;
-		} 
-		GroupRosterItem* group = dynamic_cast<GroupRosterItem*>(*it);
-		if (group) {
-			group->removeAll();
-			delete group;
+		} else {
+			GroupRosterItem* group = dynamic_cast<GroupRosterItem*>(*it);
+			if (group) {
+				group->removeAll();
+				delete group;
+			}
 		}
 		it++;
 	}
