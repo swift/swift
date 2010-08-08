@@ -11,6 +11,8 @@
 namespace Swift {
 	class XMLTextNode : public XMLNode {
 		public:
+			typedef boost::shared_ptr<XMLTextNode> ref;
+
 			XMLTextNode(const String& text) : text_(text) {
 				text_.replaceAll('&', "&amp;"); // Should come first
 				text_.replaceAll('<', "&lt;");
@@ -19,6 +21,10 @@ namespace Swift {
 
 			String serialize() {
 				return text_;
+			}
+
+			static ref create(const String& text) {
+				return ref(new XMLTextNode(text));
 			}
 
 		private:

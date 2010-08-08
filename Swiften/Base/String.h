@@ -36,6 +36,8 @@ namespace Swift {
 			size_t getUTF8Size() const { return data_.size(); }
 			std::vector<unsigned int> getUnicodeCodePoints() const;
 
+			void clear() { data_.clear(); }
+
 			/**
 			 * Returns the part before and after 'c'.
 			 * If the given splitter does not occur in the string, the second

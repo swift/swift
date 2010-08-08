@@ -4,8 +4,7 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#ifndef SWIFTEN_DiscoInfoParser_H
-#define SWIFTEN_DiscoInfoParser_H
+#pragma once
 
 #include "Swiften/Elements/DiscoInfo.h"
 #include "Swiften/Parser/GenericPayloadParser.h"
@@ -27,5 +26,3 @@ namespace Swift {
 			int level_;
 	};
 }
-
-#endif

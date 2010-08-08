@@ -27,6 +27,7 @@ fi
 	uuid/uuid.hpp \
 	uuid/uuid_io.hpp \
 	uuid/uuid_generators.hpp \
+	variant.hpp \
 	regex.hpp \
 	$TARGET_DIR
 

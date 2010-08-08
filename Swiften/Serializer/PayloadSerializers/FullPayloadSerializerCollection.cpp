@@ -31,6 +31,8 @@
 #include "Swiften/Serializer/PayloadSerializers/StorageSerializer.h"
 #include "Swiften/Serializer/PayloadSerializers/PrivateStorageSerializer.h"
 #include "Swiften/Serializer/PayloadSerializers/DelaySerializer.h"
+#include "Swiften/Serializer/PayloadSerializers/FormSerializer.h"
+#include "Swiften/Serializer/PayloadSerializers/CommandSerializer.h"
 
 namespace Swift {
 
@@ -57,7 +59,9 @@ FullPayloadSerializerCollection::FullPayloadSerializerCollection() {
 	serializers_.push_back(new RawXMLPayloadSerializer());
 	serializers_.push_back(new StorageSerializer());
 	serializers_.push_back(new DelaySerializer());
+	serializers_.push_back(new FormSerializer());
 	serializers_.push_back(new PrivateStorageSerializer(this));
+	serializers_.push_back(new CommandSerializer(this));
 	foreach(PayloadSerializer* serializer, serializers_) {
 		addSerializer(serializer);
 	}
