@@ -225,6 +225,9 @@
 			range.selectNode(chat);
 			var documentFragment = range.createContextualFragment(html);
       var myFrag = chat.appendChild(documentFragment);
+      
+      // Don't do the fadomatic, it's too slow
+      /*
       var frag1 = document.getElementById("insert");
       if (frag1) {
         var frag= frag1.parentNode.parentNode.parentNode.parentNode.parentNode.parentNode.parentNode.parentNode;
@@ -236,6 +239,7 @@
         }
         fader.fadeIn();
       }
+      */
             
 			alignChat(shouldScroll);
 		}
