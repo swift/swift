@@ -169,11 +169,9 @@ if target in ("iphone-device", "iphone-simulator"):
    sdkVer = iOSVersion
    sdk = "/Developer/Platforms/" + sdkPart + ".platform/Developer/SDKs/" + sdkPart + sdkVer + ".sdk"
 
-   env["FRAMEWORKS"] = ["CoreFoundation", "Foundation", "UIKit", "CoreGraphics"]
+   env.Append(FRAMEWORKS = ["CoreFoundation", "Foundation", "UIKit", "CoreGraphics"])
    env.Append(LINKFLAGS = ["-L\"" + sdk + "/usr/lib\"", "-F\"" + sdk + "/System/Library/Frameworks\"", "-F\"" + sdk + "/System/Library/PrivateFrameworks\""])
-   env["CPPPATH"] = ["/Users/kismith/devel/swift/iPhone/Swiftly/swift/", "/Developer/Platforms/" + sdkPart + ".platform/Developer/usr/lib/gcc/" + targetIncludesArch + "-apple-darwin9/4.0.1/include/", sdk + "/usr/include", sdk + "/usr/include/c++/4.0.0/" + targetIncludesArch + "-apple-darwin9", sdk + "/usr/include/c++/4.0.0", "/Developer/Platforms/" + sdkPart + ".platform/Developer/usr/include/"]
-
-# end cross compiling stuff
+   env.Append(CPPFLAGS = ["-isysroot", sdk])
 
 
 conf_env = env.Clone()
@@ -408,6 +406,12 @@ elif env.get("bonjour", False) :
 		env["BONJOUR_FLAGS"]["LIBS"] = ["dnssd"]
 	bonjour_conf.Finish()
 
+# Cocoa
+if env["PLATFORM"] == "darwin" :
+	cocoa_conf = Configure(conf_env)
+	if cocoa_conf.CheckCHeader("Cocoa/Cocoa.h") :
+		env["HAVE_COCOA"] = True
+	cocoa_conf.Finish()
 
 ################################################################################
 # DocBook setup

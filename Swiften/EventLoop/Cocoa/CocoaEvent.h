@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include <Cocoa/Cocoa.h>
+#include <Foundation/Foundation.h>
 
 namespace Swift {
 	class Event;

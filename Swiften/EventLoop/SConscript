@@ -7,11 +7,14 @@ sources = [
 		"SimpleEventLoop.cpp",
 	]
 
-if swiften_env["PLATFORM"] == "darwin" and swiften_env["target"] == "native":
-	sources += [
-			"Cocoa/CocoaEventLoop.mm",
-			"Cocoa/CocoaEvent.mm"
-		]
-
 objects = swiften_env.StaticObject(sources)
 swiften_env.Append(SWIFTEN_OBJECTS = [objects])
+
+if swiften_env["PLATFORM"] == "darwin" :
+	myenv = swiften_env.Clone()
+	myenv.Append(CXXFLAGS = ["-fobjc-abi-version=2", "-fobjc-legacy-dispatch"])
+	objects = myenv.StaticObject([
+			"Cocoa/CocoaEventLoop.mm",
+			"Cocoa/CocoaEvent.mm"
+		])
+	swiften_env.Append(SWIFTEN_OBJECTS = [objects])
