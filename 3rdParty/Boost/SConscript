@@ -105,7 +105,8 @@ elif env.get("BOOST_BUNDLED", False) :
 					"src/libs/thread/src/win32/tss_dll.cpp",
 					"src/libs/thread/src/win32/tss_pe.cpp"]
 
-		myenv.StaticLibrary("Boost", sources, CPPFLAGS = cppflags, CPPDEFINES = cppdefines)
+		myenv.MergeFlags(myenv["BOOST_FLAGS"])
+		myenv.StaticLibrary("Boost", sources)
 
 		if ARGUMENTS.get("BOOST_BUILD_BCP") or env.GetOption("clean") :
 			bcp_env = myenv.Clone()

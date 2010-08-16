@@ -36,8 +36,9 @@ if env["SCONS_STAGE"] == "build" :
 
 	if myenv["PLATFORM"] == "win32" :
 		sources += ["Idle/WindowsIdleQuerier.cpp"]
-	elif myenv["PLATFORM"] == "darwin" :
-		sources += ["Idle/MacOSXIdleQuerier.cpp"]
+	elif myenv["PLATFORM"] == "darwin" and myenv.get("HAVE_IOKIT", False) :
+			myenv.Append(CPPDEFINES = ["HAVE_IOKIT"])
+			sources += ["Idle/MacOSXIdleQuerier.cpp"]
 	elif myenv["HAVE_XSS"] :
 		myenv.Append(CPPDEFINES = ["HAVE_XSS"])
 		sources += ["Idle/XSSIdleQuerier.cpp"]

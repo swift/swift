@@ -151,27 +151,30 @@ if ARGUMENTS.get("SWIFT_INSTALLDIR", "") :
 target = env["target"]
 iOSVersion = env.get("iosversion", "4.0")
 if target in ("iphone-device", "iphone-simulator"):
-   if target == "iphone-device":
-      sdkPart = "iPhoneOS"
-      env["CC"] = "/Developer/Platforms/iPhoneOS.platform/Developer/usr/bin/arm-apple-darwin9-gcc-4.0.1"
-      env["CXX"] = "/Developer/Platforms/iPhoneOS.platform/Developer/usr/bin/arm-apple-darwin9-g++-4.0.1"
-      env["PATH"] = "/Developer/Platforms/iPhoneOS.platform/Developer/usr/bin/"
-      env["LD"] = env["CC"]
-#      env["openssl"] = "#/3rdParty/openssl-0.9.8l-arm"
-      targetIncludesArch = "arm"
+	if target == "iphone-device":
+		sdkPart = "iPhoneOS"
+	else :
+		sdkPart = "iPhoneSimulator"
+	sdkVer = iOSVersion
+	sdk = "/Developer/Platforms/" + sdkPart + ".platform/Developer/SDKs/" + sdkPart + sdkVer + ".sdk"
 
-   if target == "iphone-simulator":
-      sdkPart = "iPhoneSimulator"
-      env.Append(CCFLAGS = ["-arch", "i386"])
-      env.Append(LINKFLAGS = ["-arch", "i386"])
-      targetIncludesArch = "i686"
+	if target == "iphone-device":
+		sdkPart = "iPhoneOS"
+		env["CC"] = "/Developer/Platforms/iPhoneOS.platform/Developer/usr/bin/arm-apple-darwin10-gcc-4.2.1"
+		env["CXX"] = "/Developer/Platforms/iPhoneOS.platform/Developer/usr/bin/arm-apple-darwin10-g++-4.2.1"
+		env["PATH"] = "/Developer/Platforms/iPhoneOS.platform/Developer/usr/bin/"
+		env["LD"] = env["CC"]
+		env.Append(CPPPATH = [sdk + "/usr/include/c++/4.2.1/armv7-apple-darwin10"])
+		env.Append(CPPDEFINES = ["_LITTLE_ENDIAN"])
+		targetIncludesArch = "arm"
+	if target == "iphone-simulator":
+		env.Append(CCFLAGS = ["-arch", "i386"])
+		env.Append(LINKFLAGS = ["-arch", "i386"])
+		targetIncludesArch = "i686"
 
-   sdkVer = iOSVersion
-   sdk = "/Developer/Platforms/" + sdkPart + ".platform/Developer/SDKs/" + sdkPart + sdkVer + ".sdk"
-
-   env.Append(FRAMEWORKS = ["CoreFoundation", "Foundation", "UIKit", "CoreGraphics"])
-   env.Append(LINKFLAGS = ["-L\"" + sdk + "/usr/lib\"", "-F\"" + sdk + "/System/Library/Frameworks\"", "-F\"" + sdk + "/System/Library/PrivateFrameworks\""])
-   env.Append(CPPFLAGS = ["-isysroot", sdk])
+	env.Append(FRAMEWORKS = ["CoreFoundation", "Foundation", "UIKit", "CoreGraphics"])
+	env.Append(LINKFLAGS = ["-L\"" + sdk + "/usr/lib\"", "-F\"" + sdk + "/System/Library/Frameworks\"", "-F\"" + sdk + "/System/Library/PrivateFrameworks\""])
+	env.Append(CPPFLAGS = ["-isysroot", sdk])
 
 
 conf_env = env.Clone()
@@ -383,6 +386,9 @@ if use_openssl and openssl_conf.CheckCHeader("openssl/ssl.h") :
 		env["OPENSSL_FLAGS"]["LIBS"] = ["libeay32MT", "ssleay32MT"]
 	else:
 		env["OPENSSL_FLAGS"]["LIBS"] = ["ssl", "crypto"]
+elif target in ("iphone-device", "iphone-simulator") :
+	env["OPENSSL_BUNDLED"] = True
+	env["HAVE_OPENSSL"] = True
 else :
 	env["OPENSSL_FLAGS"] = ""
 
@@ -406,11 +412,11 @@ elif env.get("bonjour", False) :
 		env["BONJOUR_FLAGS"]["LIBS"] = ["dnssd"]
 	bonjour_conf.Finish()
 
-# Cocoa
+# Cocoa & IOKit
 if env["PLATFORM"] == "darwin" :
 	cocoa_conf = Configure(conf_env)
-	if cocoa_conf.CheckCHeader("Cocoa/Cocoa.h") :
-		env["HAVE_COCOA"] = True
+	if cocoa_conf.CheckCHeader("IOKit/IOKitLib.h") :
+		env["HAVE_IOKIT"] = True
 	cocoa_conf.Finish()
 
 ################################################################################

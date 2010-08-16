@@ -7,15 +7,14 @@
 #include "SwifTools/Idle/PlatformIdleQuerier.h"
 #include "Swiften/Base/Platform.h"
 
-#if defined(SWIFTEN_PLATFORM_MACOSX)
+#if defined(SWIFTEN_PLATFORM_MACOSX) && defined(HAVE_IOKIT)
 #include "SwifTools/Idle/MacOSXIdleQuerier.h"
 #elif defined(SWIFTEN_PLATFORM_WINDOWS)
 #include "SwifTools/Idle/WindowsIdleQuerier.h"
 #elif defined(HAVE_XSS)
 #include "SwifTools/Idle/XSSIdleQuerier.h"
-#else
-#include "SwifTools/Idle/DummyIdleQuerier.h"
 #endif
+#include "SwifTools/Idle/DummyIdleQuerier.h"
 
 #include <cassert>
 #include <iostream>
@@ -24,7 +23,11 @@ namespace Swift {
 
 PlatformIdleQuerier::PlatformIdleQuerier() : querier(NULL) {
 #if defined(SWIFTEN_PLATFORM_MACOSX)
+#if defined(HAVE_IOKIT)
 	querier = new MacOSXIdleQuerier();
+#else
+	querier = new DummyIdleQuerier();
+#endif
 #elif defined(SWIFTEN_PLATFORM_WINDOWS)
 	querier = new WindowsIdleQuerier();
 #elif defined(HAVE_XSS)
