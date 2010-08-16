@@ -146,47 +146,42 @@ env["DIST"] = "dist" in ARGUMENTS or env.GetOption("clean")
 if ARGUMENTS.get("SWIFT_INSTALLDIR", "") :
 	env["SWIFT_INSTALLDIR"] = Dir(ARGUMENTS["SWIFT_INSTALLDIR"]).abspath
 
-# cross-compiling
+
+################################################################################
+# XCode / iPhone / ...
+################################################################################
+
 target = env["target"]
-if target == "xcode" :
-	m = re.match(".*/iPhoneOS(.*)\.sdk", os.environ["SDKROOT"])
-	if m :
-		target = "iphone-device"
-		sdkVer = m.group(1)
+if target in ["iphone-device", "iphone-simulator", "xcode"] :
+	# Extract/initialize all the information we need
+	if target == "xcode" :
+		# Get the information from the XCode environment
+		env["XCODE_PLATFORM_DEVELOPER_BIN_DIR"] = os.environ["PLATFORM_DEVELOPER_BIN_DIR"]
+		env["XCODE_SDKROOT"] = os.environ["SDKROOT"]
+		env["XCODE_ARCH_FLAGS"] = sum([["-arch", arch] for arch in os.environ["ARCHS"].split(" ")], [])
 	else :
-		print "Matching simulator " + os.environ["SDKROOT"]
-		m = re.match(".*/iPhoneSimulator(.*)\.sdk", os.environ["SDKROOT"])
-		if m :
-			print "YAY"
-			target = "iphone-simulator"
-			sdkVer = m.group(1)
-else :
-	sdkVer = "4.0"
-if target in ("iphone-device", "iphone-simulator"):
-	if target == "iphone-device":
-		sdkPart = "iPhoneOS"
-	else :
-		sdkPart = "iPhoneSimulator"
-	sdk = "/Developer/Platforms/" + sdkPart + ".platform/Developer/SDKs/" + sdkPart + sdkVer + ".sdk"
+		# Hard code values
+		env["XCODE_PLATFORM_DEVELOPER_BIN_DIR"] = "/Developer/Platforms/iPhoneOS.platform/Developer/usr/bin"
+		if target == "iphone-device":
+			env["XCODE_ARCHFLAGS"] = ["-arch", "armv6"]
+			sdkPart = "iPhoneOS"
+		else :
+			env["XCODE_ARCHFLAGS"] = ["-arch", "i386"]
+			sdkPart = "iPhoneSimulator"
+		sdkVer = "4.0"
+		env["XCODE_SDKROOT"] = "/Developer/Platforms/" + sdkPart + ".platform/Developer/SDKs/" + sdkPart + sdkVer + ".sdk"
 
-	if target == "iphone-device":
-		sdkPart = "iPhoneOS"
-		env["CC"] = "/Developer/Platforms/iPhoneOS.platform/Developer/usr/bin/arm-apple-darwin10-gcc-4.2.1"
-		env["CXX"] = "/Developer/Platforms/iPhoneOS.platform/Developer/usr/bin/arm-apple-darwin10-g++-4.2.1"
-		env["PATH"] = "/Developer/Platforms/iPhoneOS.platform/Developer/usr/bin/"
-		env["LD"] = env["CC"]
-		env.Append(CPPPATH = [sdk + "/usr/include/c++/4.2.1/armv7-apple-darwin10"])
-		env.Append(CPPDEFINES = ["_LITTLE_ENDIAN"])
-		targetIncludesArch = "arm"
-	if target == "iphone-simulator":
-		env.Append(CCFLAGS = ["-arch", "i386"])
-		env.Append(LINKFLAGS = ["-arch", "i386"])
-		targetIncludesArch = "i686"
-
+	# Set the build flags
+	env["CC"] = "$XCODE_PLATFORM_DEVELOPER_BIN_DIR/gcc"
+	env["CXX"] = "$XCODE_PLATFORM_DEVELOPER_BIN_DIR/g++"
+	env["LD"] = env["CC"]
+	env.Append(CCFLAGS = env["XCODE_ARCH_FLAGS"])
+	env.Append(LINKFLAGS = env["XCODE_ARCH_FLAGS"])
+	env.Append(CPPFLAGS = ["-isysroot", "$XCODE_SDKROOT"])
 	env.Append(FRAMEWORKS = ["CoreFoundation", "Foundation", "UIKit", "CoreGraphics"])
-	env.Append(LINKFLAGS = ["-L\"" + sdk + "/usr/lib\"", "-F\"" + sdk + "/System/Library/Frameworks\"", "-F\"" + sdk + "/System/Library/PrivateFrameworks\""])
-	env.Append(CPPFLAGS = ["-isysroot", sdk])
-
+	env.Append(LINKFLAGS = ["-L\"$XCODE_SDKROOT/usr/lib\"", "-F\"$XCODE_SDKROOT/System/Library/Frameworks\"", "-F\"$XCODE_SDKROOT/System/Library/PrivateFrameworks\""])
+	# Bit of a hack, because BOOST doesn't know the endianness for ARM
+	env.Append(CPPDEFINES = ["_LITTLE_ENDIAN"]) 
 
 conf_env = env.Clone()
 
@@ -397,7 +392,7 @@ if use_openssl and openssl_conf.CheckCHeader("openssl/ssl.h") :
 		env["OPENSSL_FLAGS"]["LIBS"] = ["libeay32MT", "ssleay32MT"]
 	else:
 		env["OPENSSL_FLAGS"]["LIBS"] = ["ssl", "crypto"]
-elif target in ("iphone-device", "iphone-simulator") :
+elif target in ("iphone-device", "iphone-simulator", "xcode") :
 	env["OPENSSL_BUNDLED"] = True
 	env["HAVE_OPENSSL"] = True
 else :
