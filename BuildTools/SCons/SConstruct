@@ -1,4 +1,4 @@
-import sys, os
+import sys, os, re
 sys.path.append(Dir("BuildTools/SCons").abspath)
 import SCons.SConf
 
@@ -15,8 +15,7 @@ vars.Add(BoolVariable("debug", "Compile with debug information", "yes" if os.nam
 vars.Add(BoolVariable("warnings", "Compile with warnings turned on", 
 		"yes" if os.name != "nt" else "no"))
 vars.Add(BoolVariable("max_jobs", "Build with maximum number of parallel jobs", "no"))
-vars.Add(EnumVariable("target", "Choose a target platform for compilation", "native", ["native", "iphone-simulator", "iphone-device"]))
-vars.Add("iosversion", "Choose an iOS version to target")
+vars.Add(EnumVariable("target", "Choose a target platform for compilation", "native", ["native", "iphone-simulator", "iphone-device", "xcode"]))
 if os.name != "nt" :
 	vars.Add(BoolVariable("coverage", "Compile with coverage information", "no"))
 if os.name == "posix" :
@@ -149,13 +148,25 @@ if ARGUMENTS.get("SWIFT_INSTALLDIR", "") :
 
 # cross-compiling
 target = env["target"]
-iOSVersion = env.get("iosversion", "4.0")
+if target == "xcode" :
+	m = re.match(".*/iPhoneOS(.*)\.sdk", os.environ["SDKROOT"])
+	if m :
+		target = "iphone-device"
+		sdkVer = m.group(1)
+	else :
+		print "Matching simulator " + os.environ["SDKROOT"]
+		m = re.match(".*/iPhoneSimulator(.*)\.sdk", os.environ["SDKROOT"])
+		if m :
+			print "YAY"
+			target = "iphone-simulator"
+			sdkVer = m.group(1)
+else :
+	sdkVer = "4.0"
 if target in ("iphone-device", "iphone-simulator"):
 	if target == "iphone-device":
 		sdkPart = "iPhoneOS"
 	else :
 		sdkPart = "iPhoneSimulator"
-	sdkVer = iOSVersion
 	sdk = "/Developer/Platforms/" + sdkPart + ".platform/Developer/SDKs/" + sdkPart + sdkVer + ".sdk"
 
 	if target == "iphone-device":
