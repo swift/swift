@@ -10,6 +10,8 @@
 #include "Swiften/Application/Application.h"
 #include "Swiften/Application/NullApplicationMessageDisplay.h"
 
+#include <iostream>
+
 namespace Swift {
 	class UnixApplication : public Application {
 		public:
@@ -26,7 +28,12 @@ namespace Swift {
 
 			boost::filesystem::path getSettingsDir() const {
 				boost::filesystem::path result(getHomeDir() / ("." + getName().getLowerCase().getUTF8String()));
-				boost::filesystem::create_directory(result);
+				try {
+					boost::filesystem::create_directory(result);
+				}
+				catch (const boost::filesystem::filesystem_error& e) {
+					std::cerr << "ERROR: " << e.what() << std::endl;
+				}
 				return result;
 			}
 

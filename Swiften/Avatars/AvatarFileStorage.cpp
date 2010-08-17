@@ -12,7 +12,12 @@
 namespace Swift {
 
 AvatarFileStorage::AvatarFileStorage(const boost::filesystem::path& path) : path_(path) {
-	boost::filesystem::create_directory(path_);
+	try {
+		boost::filesystem::create_directory(path_);
+	}
+	catch (const boost::filesystem::filesystem_error& e) {
+		std::cerr << "ERROR: " << e.what() << std::endl;
+	}
 }
 
 bool AvatarFileStorage::hasAvatar(const String& hash) const { 

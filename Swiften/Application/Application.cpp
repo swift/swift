@@ -6,6 +6,7 @@
 
 #include "Swiften/Application/Application.h"
 
+#include <iostream>
 #include <boost/filesystem.hpp>
 #include <stdlib.h>
 
@@ -29,7 +30,12 @@ boost::filesystem::path Application::getAvatarDir() const {
 
 boost::filesystem::path Application::getProfileDir(const String& profile) const {
 	boost::filesystem::path result(getHomeDir() / profile.getUTF8String());
-	boost::filesystem::create_directory(result);
+	try {
+		boost::filesystem::create_directory(result);
+	}
+	catch (const boost::filesystem::filesystem_error& e) {
+		std::cerr << "ERROR: " << e.what() << std::endl;
+	}
 	return result;
 }
 
