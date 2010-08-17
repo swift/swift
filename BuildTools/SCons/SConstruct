@@ -81,7 +81,7 @@ if env["debug"] :
 		env.Append(CCFLAGS = ["/Zi", "/MDd"])
 		env.Append(LINKFLAGS = ["/DEBUG"])
 	else :
-		env.Append(CCFLAGS = "-g")
+		env.Append(CCFLAGS = ["-g"])
 elif env["PLATFORM"] == "win32" :
 	env.Append(CCFLAGS = ["/MD"])
 
@@ -130,7 +130,7 @@ if env["PLATFORM"] == "win32" :
 		env["LINKCOM"] = [env["LINKCOM"], 'mt.exe -nologo -manifest ${TARGET}.manifest -outputresource:$TARGET;1']
 		env["SHLINKCOM"] = [env["SHLINKCOM"], 'mt.exe -nologo -manifest ${TARGET}.manifest -outputresource:$TARGET;2']
 
-if env["PLATFORM"] == "darwin" :
+if env["PLATFORM"] == "darwin" and not env["target"] in ["iphone-device", "iphone-simulator", "xcode"] :
 	env.Append(FRAMEWORKS = ["IOKit", "AppKit"])
 
 # Testing
@@ -163,10 +163,10 @@ if target in ["iphone-device", "iphone-simulator", "xcode"] :
 		# Hard code values
 		env["XCODE_PLATFORM_DEVELOPER_BIN_DIR"] = "/Developer/Platforms/iPhoneOS.platform/Developer/usr/bin"
 		if target == "iphone-device":
-			env["XCODE_ARCHFLAGS"] = ["-arch", "armv6"]
+			env["XCODE_ARCH_FLAGS"] = ["-arch", "armv6"]
 			sdkPart = "iPhoneOS"
 		else :
-			env["XCODE_ARCHFLAGS"] = ["-arch", "i386"]
+			env["XCODE_ARCH_FLAGS"] = ["-arch", "i386"]
 			sdkPart = "iPhoneSimulator"
 		sdkVer = "4.0"
 		env["XCODE_SDKROOT"] = "/Developer/Platforms/" + sdkPart + ".platform/Developer/SDKs/" + sdkPart + sdkVer + ".sdk"
@@ -179,7 +179,7 @@ if target in ["iphone-device", "iphone-simulator", "xcode"] :
 	env.Append(LINKFLAGS = env["XCODE_ARCH_FLAGS"])
 	env.Append(CPPFLAGS = ["-isysroot", "$XCODE_SDKROOT"])
 	env.Append(FRAMEWORKS = ["CoreFoundation", "Foundation", "UIKit", "CoreGraphics"])
-	env.Append(LINKFLAGS = ["-L\"$XCODE_SDKROOT/usr/lib\"", "-F\"$XCODE_SDKROOT/System/Library/Frameworks\"", "-F\"$XCODE_SDKROOT/System/Library/PrivateFrameworks\""])
+	env.Append(LINKFLAGS = env["XCODE_ARCH_FLAGS"] + ["-isysroot", "$XCODE_SDKROOT", "-L\"$XCODE_SDKROOT/usr/lib\"", "-F\"$XCODE_SDKROOT/System/Library/Frameworks\"", "-F\"$XCODE_SDKROOT/System/Library/PrivateFrameworks\""])
 	# Bit of a hack, because BOOST doesn't know the endianness for ARM
 	env.Append(CPPDEFINES = ["_LITTLE_ENDIAN"]) 
 
