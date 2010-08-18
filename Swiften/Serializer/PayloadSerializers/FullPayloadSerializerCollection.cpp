@@ -61,7 +61,7 @@ FullPayloadSerializerCollection::FullPayloadSerializerCollection() {
 	serializers_.push_back(new DelaySerializer());
 	serializers_.push_back(new FormSerializer());
 	serializers_.push_back(new PrivateStorageSerializer(this));
-	serializers_.push_back(new CommandSerializer(this));
+	serializers_.push_back(new CommandSerializer());
 	foreach(PayloadSerializer* serializer, serializers_) {
 		addSerializer(serializer);
 	}

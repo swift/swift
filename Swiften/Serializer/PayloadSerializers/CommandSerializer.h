@@ -14,12 +14,11 @@ namespace Swift {
 
 	class CommandSerializer : public GenericPayloadSerializer<Command> {
 		public:
-			CommandSerializer(PayloadSerializerCollection* serializers);
+			CommandSerializer();
 
 			virtual String serializePayload(boost::shared_ptr<Command>)  const;
 
 		private:
-			PayloadSerializerCollection* serializers;
 			String actionToString(Command::Action action) const;
 	};
 }

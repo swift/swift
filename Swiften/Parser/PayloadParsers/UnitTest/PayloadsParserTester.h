@@ -12,6 +12,8 @@
 #include "Swiften/Parser/XMLParser.h"
 #include "Swiften/Parser/XMLParserClient.h"
 #include "Swiften/Parser/PlatformXMLParserFactory.h"
+#include "Swiften/Elements/Payload.h"
+#include "Swiften/Parser/PayloadParser.h"
 
 namespace Swift {
 	class PayloadsParserTester : public XMLParserClient {
@@ -50,6 +52,11 @@ namespace Swift {
 
 			boost::shared_ptr<Payload> getPayload() const {
 				return payloadParser->getPayload();
+			}
+
+			template<typename T>
+			boost::shared_ptr<T> getPayload() const {
+				return boost::dynamic_pointer_cast<T>(payloadParser->getPayload());
 			}
 
 		private:

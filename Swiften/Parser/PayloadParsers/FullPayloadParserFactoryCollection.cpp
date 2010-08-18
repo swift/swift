@@ -25,6 +25,7 @@
 #include "Swiften/Parser/PayloadParsers/SecurityLabelParserFactory.h"
 #include "Swiften/Parser/PayloadParsers/SecurityLabelsCatalogParserFactory.h"
 #include "Swiften/Parser/PayloadParsers/FormParserFactory.h"
+#include "Swiften/Parser/PayloadParsers/CommandParserFactory.h"
 #include "Swiften/Parser/PayloadParsers/VCardUpdateParserFactory.h"
 #include "Swiften/Parser/PayloadParsers/VCardParserFactory.h"
 #include "Swiften/Parser/PayloadParsers/RawXMLPayloadParserFactory.h"
@@ -53,6 +54,7 @@ FullPayloadParserFactoryCollection::FullPayloadParserFactoryCollection() {
 	factories_.push_back(shared_ptr<PayloadParserFactory>(new SecurityLabelParserFactory()));
 	factories_.push_back(shared_ptr<PayloadParserFactory>(new SecurityLabelsCatalogParserFactory()));
 	factories_.push_back(shared_ptr<PayloadParserFactory>(new FormParserFactory()));
+	factories_.push_back(shared_ptr<PayloadParserFactory>(new CommandParserFactory()));
 	factories_.push_back(shared_ptr<PayloadParserFactory>(new VCardUpdateParserFactory()));
 	factories_.push_back(shared_ptr<PayloadParserFactory>(new VCardParserFactory()));
 	factories_.push_back(shared_ptr<PayloadParserFactory>(new PrivateStorageParserFactory(this)));

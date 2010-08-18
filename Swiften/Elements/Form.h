@@ -11,6 +11,7 @@
 #include "Swiften/Elements/Payload.h"
 #include "Swiften/Elements/FormField.h"
 #include "Swiften/Base/String.h"
+#include "Swiften/Base/Shared.h"
 #include "Swiften/JID/JID.h"
 
 namespace Swift {
@@ -19,7 +20,7 @@ namespace Swift {
 	 * For the relevant Fields, the parsers and serialisers protect the API user against
 	 * the strange multi-value instead of newline thing by transforming them.
 	 */
-	class Form : public Payload {
+	class Form : public Payload, public Shared<Form> {
 		public:
 			enum Type { FormType, SubmitType, CancelType, ResultType };
 

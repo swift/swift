@@ -13,10 +13,11 @@
 #include "Swiften/Serializer/XML/XMLTextNode.h"
 #include "Swiften/Serializer/XML/XMLRawTextNode.h"
 #include "Swiften/Serializer/PayloadSerializerCollection.h"
+#include "Swiften/Serializer/PayloadSerializers/FormSerializer.h"
 
 namespace Swift {
 
-CommandSerializer::CommandSerializer(PayloadSerializerCollection* serializers) : serializers(serializers) {
+CommandSerializer::CommandSerializer() {
 }
 
 String CommandSerializer::serializePayload(boost::shared_ptr<Command> command)	const {
@@ -27,7 +28,7 @@ String CommandSerializer::serializePayload(boost::shared_ptr<Command> command)	c
 		commandElement.setAttribute("sessionid", command->getSessionID());
 	}
 
-	String action = actionToString(command->getPerformedAction());
+	String action = actionToString(command->getAction());
 	if (!action.isEmpty()) {
 		commandElement.setAttribute("action", action);
 	}
@@ -72,12 +73,9 @@ String CommandSerializer::serializePayload(boost::shared_ptr<Command> command)	c
 		commandElement.addNode(noteElement);
 	}
 
-	boost::shared_ptr<Payload> payload = command->getPayload();
-	if (payload) {
-		PayloadSerializer* serializer = serializers->getPayloadSerializer(payload);
-		if (serializer) {
-			commandElement.addNode(boost::shared_ptr<XMLRawTextNode>(new XMLRawTextNode(serializer->serialize(payload))));
-		}
+	Form::ref form = command->getForm();
+	if (form) {
+		commandElement.addNode(boost::shared_ptr<XMLRawTextNode>(new XMLRawTextNode(FormSerializer().serialize(form))));
 	}
 	return commandElement.serialize();
 }

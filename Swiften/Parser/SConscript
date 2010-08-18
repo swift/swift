@@ -24,6 +24,7 @@ sources = [
 		"PayloadParsers/DiscoItemsParser.cpp",
 		"PayloadParsers/ErrorParser.cpp",
 		"PayloadParsers/FormParser.cpp",
+		"PayloadParsers/CommandParser.cpp",
 		"PayloadParsers/FullPayloadParserFactoryCollection.cpp",
 		"PayloadParsers/PriorityParser.cpp",
 		"PayloadParsers/PrivateStorageParser.cpp",
