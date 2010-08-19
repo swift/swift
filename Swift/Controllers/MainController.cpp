@@ -64,9 +64,8 @@ static const String CLIENT_VERSION = "1.0-devel";
 static const String CLIENT_NODE = "http://swift.im";
 
 
-MainController::MainController(ChatWindowFactory* chatWindowFactory, MainWindowFactory *mainWindowFactory, LoginWindowFactory *loginWindowFactory, EventWindowFactory* eventWindowFactory, SettingsProvider *settings, Application* application, SystemTray* systemTray, SoundPlayer* soundPlayer, XMLConsoleWidgetFactory* xmlConsoleWidgetFactory, ChatListWindowFactory* chatListWindowFactory, MUCSearchWindowFactory* mucSearchWindowFactory, bool useDelayForLatency)
+MainController::MainController(ChatWindowFactory* chatWindowFactory, MainWindowFactory *mainWindowFactory, LoginWindowFactory *loginWindowFactory, EventWindowFactory* eventWindowFactory, SettingsProvider *settings, Application* application, SystemTray* systemTray, SoundPlayer* soundPlayer, XMLConsoleWidgetFactory* xmlConsoleWidgetFactory, ChatListWindowFactory* chatListWindowFactory, MUCSearchWindowFactory* mucSearchWindowFactory, AvatarStorage* avatarStorage, ApplicationMessageDisplay* applicationMessageDisplay, bool useDelayForLatency)
 	: timerFactory_(&boostIOServiceThread_.getIOService()), idleDetector_(&idleQuerier_, &timerFactory_, 100), chatWindowFactory_(chatWindowFactory), mainWindowFactory_(mainWindowFactory), loginWindowFactory_(loginWindowFactory), settings_(settings), loginWindow_(NULL), useDelayForLatency_(useDelayForLatency)  {
-	application_ = application;
 	presenceOracle_ = NULL;
 	avatarManager_ = NULL;
 	chatsManager_ = NULL;
@@ -86,10 +85,11 @@ MainController::MainController(ChatWindowFactory* chatWindowFactory, MainWindowF
 	timeBeforeNextReconnect_ = -1;
 	mucSearchWindowFactory_ = mucSearchWindowFactory;
 	eventWindowFactory_ = eventWindowFactory;
+	applicationMessageDisplay_ = applicationMessageDisplay;
 	chatListWindowFactory_ = chatListWindowFactory;
 	uiEventStream_ = new UIEventStream();
 
-	avatarStorage_ = new AvatarFileStorage(application_->getAvatarDir());
+	avatarStorage_ = avatarStorage;
 	eventController_ = new EventController();
 	eventController_->onEventQueueLengthChange.connect(boost::bind(&MainController::handleEventQueueLengthChange, this, _1));
 
@@ -249,7 +249,7 @@ void MainController::handleConnected() {
 }
 
 void MainController::handleEventQueueLengthChange(int count) {
-	application_->getApplicationMessageDisplay()->setMessage(count == 0 ? "" : boost::lexical_cast<std::string>(count).c_str());
+	applicationMessageDisplay_->setMessage(count == 0 ? "" : boost::lexical_cast<std::string>(count).c_str());
 }
 
 void MainController::reconnectAfterError() {

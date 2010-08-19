@@ -7,22 +7,18 @@
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/extensions/TestFactoryRegistry.h>
 
-#include "Swiften/Application/Application.h"
-#include "Swiften/Application/Platform/PlatformApplication.h"
+#include "Swiften/Application/PlatformApplicationPathProvider.h"
 
 using namespace Swift;
 
-class ApplicationTest : public CppUnit::TestFixture
-{
-		CPPUNIT_TEST_SUITE(ApplicationTest);
+class ApplicationPathProviderTest : public CppUnit::TestFixture {
+		CPPUNIT_TEST_SUITE(ApplicationPathProviderTest);
 		CPPUNIT_TEST(testGetSettingsDir);
 		CPPUNIT_TEST_SUITE_END();
 
 	public:
-		ApplicationTest() {}
-
 		void setUp() {
-			testling_ = new PlatformApplication("SwiftTest");
+			testling_ = new PlatformApplicationPathProvider("SwiftTest");
 		}
 
 		void tearDown() {
@@ -39,7 +35,7 @@ class ApplicationTest : public CppUnit::TestFixture
 		}
 	
 	private:
-		Application* testling_;
+		ApplicationPathProvider* testling_;
 };
 
-CPPUNIT_TEST_SUITE_REGISTRATION(ApplicationTest);
+CPPUNIT_TEST_SUITE_REGISTRATION(ApplicationPathProviderTest);

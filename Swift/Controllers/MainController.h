@@ -42,6 +42,7 @@ namespace Swift {
 	class XMPPRosterController;
 	class PresenceSender;
 	class DiscoInfoResponder;
+	class ApplicationMessageDisplay;
 	class AvatarManager;
 	class LoginWindow;
 	class EventLoop;
@@ -64,7 +65,7 @@ namespace Swift {
 
 	class MainController {
 		public:
-			MainController(ChatWindowFactory* chatWindowFactory, MainWindowFactory *mainWindowFactory, LoginWindowFactory *loginWindowFactory, EventWindowFactory* eventWindowFactory, SettingsProvider *settings, Application* application, SystemTray* systemTray, SoundPlayer* soundPlayer, XMLConsoleWidgetFactory* xmlConsoleWidgetFactory, ChatListWindowFactory* chatListWindowFactory_, MUCSearchWindowFactory* mucSearchWindowFactory, bool useDelayForLatency);
+			MainController(ChatWindowFactory* chatWindowFactory, MainWindowFactory *mainWindowFactory, LoginWindowFactory *loginWindowFactory, EventWindowFactory* eventWindowFactory, SettingsProvider *settings, Application* application, SystemTray* systemTray, SoundPlayer* soundPlayer, XMLConsoleWidgetFactory* xmlConsoleWidgetFactory, ChatListWindowFactory* chatListWindowFactory_, MUCSearchWindowFactory* mucSearchWindowFactory, AvatarStorage* avatarStorage, ApplicationMessageDisplay* applicationMessageDisplay, bool useDelayForLatency);
 			~MainController();
 
 
@@ -101,8 +102,8 @@ namespace Swift {
 			LoginWindowFactory* loginWindowFactory_;
 			EventWindowFactory* eventWindowFactory_;
 			SettingsProvider *settings_;
-			Application* application_;
 			AvatarStorage* avatarStorage_;
+			ApplicationMessageDisplay* applicationMessageDisplay_;
 			ChatController* chatController_;
 			XMPPRosterController* xmppRosterController_;
 			RosterController* rosterController_;

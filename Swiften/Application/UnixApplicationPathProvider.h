@@ -4,22 +4,16 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#ifndef SWIFTEN_UnixApplication_H
-#define SWIFTEN_UnixApplication_H
+#pragma once
 
-#include "Swiften/Application/Application.h"
-#include "Swiften/Application/NullApplicationMessageDisplay.h"
+#include "Swiften/Application/ApplicationPathProvider.h"
 
 #include <iostream>
 
 namespace Swift {
-	class UnixApplication : public Application {
+	class UnixApplicationPathProvider : public ApplicationPathProvider {
 		public:
-			UnixApplication(const String& name) : Application(name) {
-			}
-
-			virtual ApplicationMessageDisplay* getApplicationMessageDisplay() {
-				return  &messageDisplay_;
+			UnixApplicationPathProvider(const String& name) : ApplicationPathProvider(name) {
 			}
 
 			virtual boost::filesystem::path getHomeDir() const {
@@ -36,9 +30,6 @@ namespace Swift {
 				}
 				return result;
 			}
-
-		private:
-			NullApplicationMessageDisplay messageDisplay_;
 	};
 }
 

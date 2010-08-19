@@ -4,8 +4,7 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#ifndef SWIFTEN_PlatformApplication_H
-#define SWIFTEN_PlatformApplication_H
+#pragma once
 
 #include "Swiften/Base/Platform.h"
 
@@ -16,15 +15,13 @@ namespace Swift {
 	typedef MacOSXApplication PlatformApplication;
 }
 #elif defined(SWIFTEN_PLATFORM_WIN32)
-#include "Swiften/Application/Windows/WindowsApplication.h"
+#include "Swiften/Application/WindowsApplication.h"
 namespace Swift {
 	typedef WindowsApplication PlatformApplication;
 }
 #else
-#include "Swiften/Application/Unix/UnixApplication.h"
+#include "Swiften/Application/UnixApplication.h"
 namespace Swift {
 	typedef UnixApplication PlatformApplication;
 }
-#endif
-
 #endif

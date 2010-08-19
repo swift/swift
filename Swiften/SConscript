@@ -138,7 +138,7 @@ if env["SCONS_STAGE"] == "build" :
 	myenv.StaticLibrary("Swiften", sources + swiften_env["SWIFTEN_OBJECTS"])
 
 	env.Append(UNITTEST_SOURCES = [
-			File("Application/UnitTest/ApplicationTest.cpp"),
+			File("Application/UnitTest/ApplicationPathProviderTest.cpp"),
 			File("Avatars/UnitTest/MockAvatarManager.cpp"),
 			File("Avatars/UnitTest/AvatarManagerTest.cpp"),
 			File("Base/UnitTest/IDGeneratorTest.cpp"),

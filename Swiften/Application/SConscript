@@ -3,6 +3,7 @@ Import("swiften_env")
 sources = [
 		"Application.cpp",
 		"ApplicationMessageDisplay.cpp",
+		"ApplicationPathProvider.cpp",
 	]
 
 if swiften_env["PLATFORM"] == "darwin" and swiften_env["target"] == "native" :
@@ -10,6 +11,11 @@ if swiften_env["PLATFORM"] == "darwin" and swiften_env["target"] == "native" :
 			"MacOSX/MacOSXApplication.cpp",
 			"MacOSX/MacOSXApplicationMessageDisplay.mm",
 			"MacOSX/MacOSXApplicationInitializer.mm",
+			"MacOSX/MacOSXApplicationPathProvider.cpp",
+		]
+elif swiften_env["PLATFORM"] == "win32" :
+	sources += [
+			"WindowsApplicationPathProvider.cpp"
 		]
 
 objects = swiften_env.StaticObject(sources)
