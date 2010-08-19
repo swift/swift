@@ -11,7 +11,7 @@ if swiften_env["PLATFORM"] == "darwin" and swiften_env["target"] == "native" :
 			"MacOSX/MacOSXApplication.cpp",
 			"MacOSX/MacOSXApplicationMessageDisplay.mm",
 			"MacOSX/MacOSXApplicationInitializer.mm",
-			"MacOSX/MacOSXApplicationPathProvider.cpp",
+			"MacOSXApplicationPathProvider.cpp",
 		]
 elif swiften_env["PLATFORM"] == "win32" :
 	sources += [

@@ -4,8 +4,9 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#ifndef SWIFTEN_MacOSXApplication_H
-#define SWIFTEN_MacOSXApplication_H
+#pragma once
+
+#include <boost/filesystem.hpp>
 
 #include "Swiften/Application/Application.h"
 #include "Swiften/Application/MacOSX/MacOSXApplicationMessageDisplay.h"
@@ -18,14 +19,10 @@ namespace Swift {
 		public:
 			MacOSXApplication(const String& name);
 
-			virtual boost::filesystem::path getHomeDir() const;
-			virtual ApplicationMessageDisplay* getApplicationMessageDisplay();
-			boost::filesystem::path getSettingsDir() const;
+			ApplicationMessageDisplay* getApplicationMessageDisplay();
 
 		private:
 			MacOSXApplicationInitializer initializer_;
 			MacOSXApplicationMessageDisplay messageDisplay_;
 	};
 }
-
-#endif

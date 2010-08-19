@@ -17,19 +17,4 @@ ApplicationMessageDisplay* MacOSXApplication::getApplicationMessageDisplay() {
 	return &messageDisplay_;
 }
 
-boost::filesystem::path MacOSXApplication::getSettingsDir() const {
-	try {
-		boost::filesystem::path result(getHomeDir() / "Library/Application Support" / getName().getUTF8String());
-	}
-	catch (const boost::filesystem::filesystem_error& e) {
-		std::cerr << "ERROR: " << e.what() << std::endl;
-	}
-	boost::filesystem::create_directory(result);
-	return result;
-}
-
-boost::filesystem::path MacOSXApplication::getHomeDir() const {
-	return boost::filesystem::path(getenv("HOME"));
-}
-
 }

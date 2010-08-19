@@ -65,7 +65,7 @@ namespace Swift {
 
 	class MainController {
 		public:
-			MainController(ChatWindowFactory* chatWindowFactory, MainWindowFactory *mainWindowFactory, LoginWindowFactory *loginWindowFactory, EventWindowFactory* eventWindowFactory, SettingsProvider *settings, Application* application, SystemTray* systemTray, SoundPlayer* soundPlayer, XMLConsoleWidgetFactory* xmlConsoleWidgetFactory, ChatListWindowFactory* chatListWindowFactory_, MUCSearchWindowFactory* mucSearchWindowFactory, AvatarStorage* avatarStorage, ApplicationMessageDisplay* applicationMessageDisplay, bool useDelayForLatency);
+			MainController(ChatWindowFactory* chatWindowFactory, MainWindowFactory *mainWindowFactory, LoginWindowFactory *loginWindowFactory, EventWindowFactory* eventWindowFactory, SettingsProvider *settings, SystemTray* systemTray, SoundPlayer* soundPlayer, XMLConsoleWidgetFactory* xmlConsoleWidgetFactory, ChatListWindowFactory* chatListWindowFactory_, MUCSearchWindowFactory* mucSearchWindowFactory, AvatarStorage* avatarStorage, ApplicationMessageDisplay* applicationMessageDisplay, bool useDelayForLatency);
 			~MainController();
 
 

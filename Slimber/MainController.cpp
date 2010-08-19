@@ -11,7 +11,7 @@
 #include <iostream>
 
 #include "Swiften/Base/foreach.h"
-#include "Swiften/Application/Platform/PlatformApplication.h"
+#include "Swiften/Application/PlatformApplicationPathProvider.h"
 #include "Swiften/LinkLocal/LinkLocalService.h"
 #include "Swiften/LinkLocal/LinkLocalServiceBrowser.h"
 #include "Swiften/LinkLocal/DNSSD/PlatformDNSSDQuerierFactory.h"
@@ -35,7 +35,7 @@ MainController::MainController(Menulet* menulet) : menulet(menulet) {
 			boost::bind(&MainController::handleServicesChanged, this));
 
 	vCardCollection = new FileVCardCollection(
-			PlatformApplication("Slimber").getSettingsDir());
+			PlatformApplicationPathProvider("Slimber").getSettingsDir());
 
 	server = new Server(5222, 5562, linkLocalServiceBrowser, vCardCollection);
 	server->onStopped.connect(

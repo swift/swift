@@ -14,13 +14,13 @@ MacOSXApplicationPathProvider::MacOSXApplicationPathProvider(const String& name)
 }
 
 boost::filesystem::path MacOSXApplicationPathProvider::getSettingsDir() const {
+	boost::filesystem::path result(getHomeDir() / "Library/Application Support" / getApplicationName().getUTF8String());
 	try {
-		boost::filesystem::path result(getHomeDir() / "Library/Application Support" / getApplicationName().getUTF8String());
+		boost::filesystem::create_directory(result);
 	}
 	catch (const boost::filesystem::filesystem_error& e) {
 		std::cerr << "ERROR: " << e.what() << std::endl;
 	}
-	boost::filesystem::create_directory(result);
 	return result;
 }
 

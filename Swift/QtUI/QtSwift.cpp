@@ -94,7 +94,7 @@ QtSwift::QtSwift(po::variables_map options) : autoUpdater_(NULL) {
 		chatListWindowFactories_.push_back(chatListWindowFactory);
 		QtMUCSearchWindowFactory* mucSearchWindowFactory = new QtMUCSearchWindowFactory();
 		mucSearchWindowFactories_.push_back(mucSearchWindowFactory);
-		MainController* mainController = new MainController(chatWindowFactory_, rosterWindowFactory, loginWindowFactory, eventWindowFactory, settings_, application_, systemTray, soundPlayer_, xmlConsoleWidgetFactory, chatListWindowFactory, mucSearchWindowFactory, avatarStorage_, application_->getApplicationMessageDisplay(), options.count("latency-debug") > 0);
+		MainController* mainController = new MainController(chatWindowFactory_, rosterWindowFactory, loginWindowFactory, eventWindowFactory, settings_, systemTray, soundPlayer_, xmlConsoleWidgetFactory, chatListWindowFactory, mucSearchWindowFactory, avatarStorage_, application_->getApplicationMessageDisplay(), options.count("latency-debug") > 0);
 		mainControllers_.push_back(mainController);
 	}
 
