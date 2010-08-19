@@ -36,7 +36,7 @@ namespace Swift {
 
 			virtual boost::filesystem::path getExecutableDir() const {
 				ByteArray path;
-				path.resize(SSIZE_MAX);
+				path.resize(4096);
 				size_t size = readlink("/proc/self/exe", path.getData(), path.getSize());
 				if (size > 0) {
 					path.resize(size);
