@@ -9,6 +9,7 @@
 
 #include <QString>
 #include <QWidget>
+#include <QList>
 
 #include "ChatSnippet.h"
 
@@ -35,11 +36,12 @@ namespace Swift {
 			void handleViewLoadFinished(bool);
 
 		private:
+			void appendToView(const ChatSnippet& snippet);
 			bool viewReady_;
 			QtWebView* webView_;
 			QWebPage* webPage_;
 			QString previousContinuationElementID_;
-			QString queuedMessages_;
+			QList<ChatSnippet> queuedSnippets_;
 	};
 }
 
