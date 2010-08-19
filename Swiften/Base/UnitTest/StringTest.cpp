@@ -34,11 +34,11 @@ class StringTest : public CppUnit::TestFixture
  		CPPUNIT_TEST(testContains);
 		CPPUNIT_TEST(testContainsFalse);
 		CPPUNIT_TEST(testContainsExact);
+		CPPUNIT_TEST(testEndsWith);
+		CPPUNIT_TEST(testEndsWith_DoesNotEndWith);
 		CPPUNIT_TEST_SUITE_END();
 
 	public:
-		StringTest() {}
-
 		void testGetLength() {
 			String testling("xyz$xyz");
 
@@ -178,6 +178,14 @@ class StringTest : public CppUnit::TestFixture
 
 		void testContainsExact() {
 			CPPUNIT_ASSERT(String("abcde").contains(String("abcde")));
+		}
+
+		void testEndsWith() {
+			CPPUNIT_ASSERT(String("abcdef").endsWith("cdef"));
+		}
+
+		void testEndsWith_DoesNotEndWith() {
+			CPPUNIT_ASSERT(!String("abcdef").endsWith("ddef"));
 		}
 
 };

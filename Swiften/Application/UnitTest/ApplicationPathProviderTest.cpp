@@ -8,12 +8,14 @@
 #include <cppunit/extensions/TestFactoryRegistry.h>
 
 #include "Swiften/Application/PlatformApplicationPathProvider.h"
+#include "Swiften/Base/String.h"
 
 using namespace Swift;
 
 class ApplicationPathProviderTest : public CppUnit::TestFixture {
 		CPPUNIT_TEST_SUITE(ApplicationPathProviderTest);
 		CPPUNIT_TEST(testGetSettingsDir);
+		CPPUNIT_TEST(testGetExecutableDir);
 		CPPUNIT_TEST_SUITE_END();
 
 	public:
@@ -32,6 +34,12 @@ class ApplicationPathProviderTest : public CppUnit::TestFixture {
 			CPPUNIT_ASSERT(boost::filesystem::is_directory(dir));
 
 			boost::filesystem::remove(dir);
+		}
+
+		void testGetExecutableDir() {
+			boost::filesystem::path dir = testling_->getExecutableDir();
+			CPPUNIT_ASSERT(boost::filesystem::is_directory(dir));
+			CPPUNIT_ASSERT(String(dir.string()).endsWith("UnitTest"));
 		}
 	
 	private:

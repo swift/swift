@@ -9,6 +9,7 @@
 #include "Swiften/Application/ApplicationPathProvider.h"
 
 #include <iostream>
+#include <unistd.h>
 
 namespace Swift {
 	class UnixApplicationPathProvider : public ApplicationPathProvider {
@@ -29,6 +30,19 @@ namespace Swift {
 					std::cerr << "ERROR: " << e.what() << std::endl;
 				}
 				return result;
+			}
+
+			virtual boost::filesystem::path getExecutableDir() const {
+				ByteArray path;
+				path.resize(SSIZE_MAX);
+				size_t size = readlink("/proc/self/exe", path.getData(), path.getSize());
+				if (size > 0) {
+					path.resize(size);
+					return boost::filesystem::path(path.toString().getUTF8Data()).parent_path();
+				}
+				else {
+					return boost::filesystem::path();
+				}
 			}
 	};
 }

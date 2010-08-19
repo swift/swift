@@ -20,6 +20,7 @@ namespace Swift {
 			boost::filesystem::path getAvatarDir() const;
 			virtual boost::filesystem::path getHomeDir() const = 0;
 			virtual boost::filesystem::path getSettingsDir() const = 0;
+			virtual boost::filesystem::path getExecutableDir() const = 0;
 			boost::filesystem::path getProfileDir(const String& profile) const;
 
 		protected:

@@ -7,6 +7,7 @@
 #include "Swiften/Application/MacOSXApplicationPathProvider.h"
 
 #include <iostream>
+#include <mach-o/dyld.h>
 
 namespace Swift {
 
@@ -26,6 +27,19 @@ boost::filesystem::path MacOSXApplicationPathProvider::getSettingsDir() const {
 
 boost::filesystem::path MacOSXApplicationPathProvider::getHomeDir() const {
 	return boost::filesystem::path(getenv("HOME"));
+}
+
+
+boost::filesystem::path MacOSXApplicationPathProvider::getExecutableDir() const {
+	ByteArray path;
+	uint32_t size = 4096;
+	path.resize(size);
+	if (_NSGetExecutablePath(path, &size) == 0) {
+		return boost::filesystem::path(path.toString().getUTF8Data()).parent_path();
+	}
+	else {
+		return boost::filesystem::path();
+	}
 }
 
 }

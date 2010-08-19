@@ -66,6 +66,10 @@ namespace Swift {
 				return data_.size() > 0 && data_[data_.size()-1] == c; 
 			}
 
+			bool endsWith(const String& s) const {
+				return data_.substr(data_.size() - s.data_.size(), data_.npos) == s;
+			}
+
 			String getSubstring(size_t begin, size_t end) const {
 				return String(data_.substr(begin, end));
 			}

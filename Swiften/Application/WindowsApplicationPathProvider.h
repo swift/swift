@@ -26,5 +26,7 @@ namespace Swift {
 				char* homeDirRaw = getenv("USERPROFILE");
 				return boost::filesystem::path(homeDirRaw);
 			}
+
+			virtual boost::filesystem::path getExecutableDir() const;
 	};
 }
