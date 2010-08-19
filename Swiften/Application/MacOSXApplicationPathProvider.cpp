@@ -9,6 +9,8 @@
 #include <iostream>
 #include <mach-o/dyld.h>
 
+#include "Swiften/Base/ByteArray.h"
+
 namespace Swift {
 
 MacOSXApplicationPathProvider::MacOSXApplicationPathProvider(const String& name) : ApplicationPathProvider(name) {
@@ -34,7 +36,7 @@ boost::filesystem::path MacOSXApplicationPathProvider::getExecutableDir() const 
 	ByteArray path;
 	uint32_t size = 4096;
 	path.resize(size);
-	if (_NSGetExecutablePath(path, &size) == 0) {
+	if (_NSGetExecutablePath(path.getData(), &size) == 0) {
 		return boost::filesystem::path(path.toString().getUTF8Data()).parent_path();
 	}
 	else {

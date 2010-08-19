@@ -11,6 +11,8 @@
 #include <iostream>
 #include <unistd.h>
 
+#include "Swiften/Base/ByteArray.h"
+
 namespace Swift {
 	class UnixApplicationPathProvider : public ApplicationPathProvider {
 		public:
