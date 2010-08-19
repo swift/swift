@@ -77,7 +77,7 @@
 	</natures>
 	<filteredResources>
 		<filter>
-			<id>1282232084903</id>
+			<id>1282241138279</id>
 			<name></name>
 			<type>22</type>
 			<matcher>
@@ -86,7 +86,7 @@
 			</matcher>
 		</filter>
 		<filter>
-			<id>1282232084906</id>
+			<id>1282241138280</id>
 			<name></name>
 			<type>22</type>
 			<matcher>
@@ -95,7 +95,7 @@
 			</matcher>
 		</filter>
 		<filter>
-			<id>1282232084909</id>
+			<id>1282241138282</id>
 			<name></name>
 			<type>22</type>
 			<matcher>
@@ -104,7 +104,7 @@
 			</matcher>
 		</filter>
 		<filter>
-			<id>1282232084912</id>
+			<id>1282241138283</id>
 			<name></name>
 			<type>22</type>
 			<matcher>
@@ -113,7 +113,7 @@
 			</matcher>
 		</filter>
 		<filter>
-			<id>1282232084914</id>
+			<id>1282241138306</id>
 			<name></name>
 			<type>22</type>
 			<matcher>
@@ -122,7 +122,7 @@
 			</matcher>
 		</filter>
 		<filter>
-			<id>1282232084917</id>
+			<id>1282241138307</id>
 			<name></name>
 			<type>22</type>
 			<matcher>
@@ -131,12 +131,12 @@
 			</matcher>
 		</filter>
 		<filter>
-			<id>1282231206287</id>
-			<name>3rdParty/Boost</name>
-			<type>26</type>
+			<id>1282241138308</id>
+			<name></name>
+			<type>10</type>
 			<matcher>
 				<id>org.eclipse.ui.ide.multiFilter</id>
-				<arguments>1.0-name-matches-false-false-src</arguments>
+				<arguments>1.0-name-matches-false-false-.sconf_temp</arguments>
 			</matcher>
 		</filter>
 	</filteredResources>
