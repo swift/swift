@@ -68,14 +68,6 @@ void QtChatView::handleKeyPressEvent(QKeyEvent* event) {
 }
 
 void QtChatView::addMessage(const ChatSnippet& snippet) {
-	if (viewReady_) {
-		appendToView(snippet);
-	} else {
-		queuedSnippets_.append(snippet);
-	}
-}
-
-void QtChatView::appendToView(const ChatSnippet& snippet) {
 	//bool wasScrolledToBottom = isScrolledToBottom();
 	
 	QString content = snippet.getContent();
@@ -90,7 +82,12 @@ void QtChatView::appendToView(const ChatSnippet& snippet) {
 	else {
 		command = "appendNextMessage(\"" + content + "\");";
 	}
-	webPage_->mainFrame()->evaluateJavaScript(command);
+	if (viewReady_) {
+		webPage_->mainFrame()->evaluateJavaScript(command);
+	}
+	else {
+		queuedMessages_ += command;
+	}
 
 	//qDebug() << webPage_->mainFrame()->toHtml();
 	previousContinuationElementID_ = snippet.getContinuationElementID();
@@ -121,9 +118,7 @@ void QtChatView::handleLinkClicked(const QUrl& url) {
 void QtChatView::handleViewLoadFinished(bool ok) {
 	Q_ASSERT(ok);
 	viewReady_ = true;
-	foreach (const ChatSnippet& snippet, queuedSnippets_) {
-		appendToView(snippet);
-	}
+	webPage_->mainFrame()->evaluateJavaScript(queuedMessages_);
 	queuedMessages_.clear();
 }
 
