@@ -15,6 +15,9 @@ namespace Swift {
 		public:
 			QtWebView(QWidget* parent);
 			void keyPressEvent(QKeyEvent* event);
+			void dragEnterEvent(QDragEnterEvent *event);
+			void contextMenuEvent(QContextMenuEvent* ev);
+
 		signals:
 			void gotFocus();
 

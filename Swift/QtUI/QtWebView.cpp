@@ -9,10 +9,10 @@
 
 #include <QKeyEvent>
 #include <QFocusEvent>
+#include <QMenu>
 
 namespace Swift {
 QtWebView::QtWebView(QWidget* parent) : QWebView(parent) {
-
 }
 
 void QtWebView::keyPressEvent(QKeyEvent* event) {
@@ -29,6 +29,19 @@ void QtWebView::keyPressEvent(QKeyEvent* event) {
 							   event->count());
 	QWebView::keyPressEvent(translatedEvent);
 	delete translatedEvent;
+}
+
+void QtWebView::dragEnterEvent(QDragEnterEvent *event) {
+
+}
+
+void QtWebView::contextMenuEvent(QContextMenuEvent* ev) {
+	QAction* copyLinkAction = pageAction(QWebPage::CopyLinkToClipboard);
+	if (copyLinkAction) {
+		QMenu menu(this);
+		menu.addAction(copyLinkAction);
+		menu.exec(ev->globalPos());
+	}
 }
 
 void QtWebView::focusInEvent(QFocusEvent* event) {
