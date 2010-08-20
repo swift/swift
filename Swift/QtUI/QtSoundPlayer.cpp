@@ -7,17 +7,30 @@
 #include "QtSoundPlayer.h"
 
 #include <QSound>
+#include <iostream>
+
+#include "Swiften/Application/ApplicationPathProvider.h"
 
 namespace Swift {
 	
-QtSoundPlayer::QtSoundPlayer() {
+QtSoundPlayer::QtSoundPlayer(ApplicationPathProvider* applicationPathProvider) : applicationPathProvider(applicationPathProvider) {
 }
 
 void QtSoundPlayer::playSound(SoundEffect sound) {
 	switch (sound) {
-		case MessageReceived: 
-			QSound::play(":/sounds/message-received.wav");
+		case MessageReceived:
+			playSound("/sounds/message-received.wav");
 			break;
+	}
+}
+
+void QtSoundPlayer::playSound(const String& soundResource) {
+	boost::filesystem::path resourcePath = applicationPathProvider->getResourcePath(soundResource);
+	if (boost::filesystem::exists(resourcePath)) {
+		QSound::play(resourcePath.string().c_str());
+	}
+	else {
+		std::cerr << "Unable to find sound: " << soundResource << std::endl;
 	}
 }
 

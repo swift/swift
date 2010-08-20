@@ -11,11 +11,20 @@
 #include <QObject>
 
 namespace Swift {
+	class ApplicationPathProvider;
+	class String;
+
 	class QtSoundPlayer : public QObject, public SoundPlayer {
 			Q_OBJECT
 		public:
-			QtSoundPlayer();
+			QtSoundPlayer(ApplicationPathProvider* applicationPathProvider);
 
 			void playSound(SoundEffect sound);
+
+		private:
+			void playSound(const String& soundResource);
+
+		private:
+			ApplicationPathProvider* applicationPathProvider;
 	};
 }

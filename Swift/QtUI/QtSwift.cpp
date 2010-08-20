@@ -80,7 +80,7 @@ QtSwift::QtSwift(po::variables_map options) : autoUpdater_(NULL) {
 	applicationPathProvider_ = new PlatformApplicationPathProvider(SWIFT_APPLICATION_NAME);
 	avatarStorage_ = new AvatarFileStorage(applicationPathProvider_->getAvatarDir());
 	chatWindowFactory_ = new QtChatWindowFactory(splitter_, settings_, tabs_);
-	soundPlayer_ = new QtSoundPlayer();
+	soundPlayer_ = new QtSoundPlayer(applicationPathProvider_);
 	if (splitter_) {
 		splitter_->show();
 	}

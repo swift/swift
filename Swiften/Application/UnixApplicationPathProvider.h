@@ -17,6 +17,8 @@ namespace Swift {
 	class UnixApplicationPathProvider : public ApplicationPathProvider {
 		public:
 			UnixApplicationPathProvider(const String& name) : ApplicationPathProvider(name) {
+				resourceDirs.push_back("/usr/share/swift");
+				resourceDirs.push_back(getExecutableDir() / "../resources"); // Development
 			}
 
 			virtual boost::filesystem::path getHomeDir() const {
@@ -46,6 +48,13 @@ namespace Swift {
 					return boost::filesystem::path();
 				}
 			}
+
+			virtual std::vector<boost::filesystem::path> getResourceDirs() const {
+				return resourceDirs;
+			}
+
+		private:
+			std::vector<boost::filesystem::path> resourceDirs;
 	};
 }
 

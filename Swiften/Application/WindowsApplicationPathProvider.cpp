@@ -13,6 +13,8 @@
 namespace Swift {
 
 WindowsApplicationPathProvider::WindowsApplicationPathProvider(const String& name) : ApplicationPathProvider(name) {
+	resourceDirs.push_back(getExecutableDir());
+	resourceDirs.push_back(getExecutableDir() / "../resources"); // Development
 }
 
 boost::filesystem::path WindowsApplicationPathProvider::getExecutableDir() const {

@@ -14,6 +14,8 @@
 namespace Swift {
 
 MacOSXApplicationPathProvider::MacOSXApplicationPathProvider(const String& name) : ApplicationPathProvider(name) {
+	resourceDirs.push_back(getExecutableDir() / "../Resources");
+	resourceDirs.push_back(getExecutableDir() / "../resources"); // Development
 }
 
 boost::filesystem::path MacOSXApplicationPathProvider::getSettingsDir() const {

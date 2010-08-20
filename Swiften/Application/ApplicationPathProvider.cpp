@@ -10,6 +10,7 @@
 #include <iostream>
 
 #include "Swiften/Application/ApplicationPathProvider.h"
+#include "Swiften/Base/foreach.h"
 
 namespace Swift {
 
@@ -36,6 +37,17 @@ boost::filesystem::path ApplicationPathProvider::getProfileDir(const String& pro
 		std::cerr << "ERROR: " << e.what() << std::endl;
 	}
 	return result;
+}
+
+boost::filesystem::path ApplicationPathProvider::getResourcePath(const String& resource) const {
+	std::vector<boost::filesystem::path> resourcePaths = getResourceDirs();
+	foreach(const boost::filesystem::path& resourcePath, resourcePaths) {
+		boost::filesystem::path r(resourcePath / resource.getUTF8String());
+		if (boost::filesystem::exists(r)) {
+			return r;
+		}
+	}
+	return boost::filesystem::path();
 }
 
 }
