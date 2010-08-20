@@ -17,6 +17,10 @@ elif swiften_env["PLATFORM"] == "win32" :
 	sources += [
 			"WindowsApplicationPathProvider.cpp"
 		]
+else :
+	sources += [
+			"UnixApplicationPathProvider.cpp"
+		]
 
 objects = swiften_env.StaticObject(sources)
 swiften_env.Append(SWIFTEN_OBJECTS = [objects])

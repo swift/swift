@@ -35,7 +35,7 @@ MainController::MainController(Menulet* menulet) : menulet(menulet) {
 			boost::bind(&MainController::handleServicesChanged, this));
 
 	vCardCollection = new FileVCardCollection(
-			PlatformApplicationPathProvider("Slimber").getSettingsDir());
+			PlatformApplicationPathProvider("Slimber").getDataDir());
 
 	server = new Server(5222, 5562, linkLocalServiceBrowser, vCardCollection);
 	server->onStopped.connect(
