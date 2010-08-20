@@ -122,7 +122,7 @@ void ChatControllerBase::handleIncomingMessage(boost::shared_ptr<MessageEvent> m
 	if (messageEvent->isReadable()) {
 		unreadMessages_.push_back(messageEvent);
 	}
-	chatWindow_->setUnreadMessageCount(unreadMessages_.size());
+
 
 
 	preHandleIncomingMessage(messageEvent);	
@@ -160,6 +160,8 @@ void ChatControllerBase::handleIncomingMessage(boost::shared_ptr<MessageEvent> m
 
 		addMessage(body, senderDisplayNameFromMessage(from), isIncomingMessageFromMe(message), maybeLabel, String(avatarManager_->getAvatarPath(from).string()), timeStamp);
 	}
+	chatWindow_->show();
+	chatWindow_->setUnreadMessageCount(unreadMessages_.size());
 }
 
 String ChatControllerBase::getErrorMessage(boost::shared_ptr<ErrorPayload> error) {
