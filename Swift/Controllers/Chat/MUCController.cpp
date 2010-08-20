@@ -52,7 +52,7 @@ MUCController::MUCController (
 	joined_ = false;
 	events_ = uiEventStream;
 	
-	roster_ = new Roster(true);
+	roster_ = new Roster(false, true);
 	completer_ = new TabComplete();
 	chatWindow_->setRosterModel(roster_);
 	chatWindow_->setTabComplete(completer_);

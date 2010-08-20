@@ -16,7 +16,7 @@ namespace Swift {
 
 class GroupRosterItem : public RosterItem {
 	public:
-		GroupRosterItem(const String& name, GroupRosterItem* parent);
+		GroupRosterItem(const String& name, GroupRosterItem* parent, bool sortByStatus);
 		virtual ~GroupRosterItem();
 		const std::vector<RosterItem*>& getChildren() const;
 		const std::vector<RosterItem*>& getDisplayedChildren() const;
@@ -25,7 +25,8 @@ class GroupRosterItem : public RosterItem {
 		void removeAll();
 		void setDisplayed(RosterItem* item, bool displayed);
 		boost::signal<void ()> onChildrenChanged;
-		static bool itemLessThan(const RosterItem* left, const RosterItem* right);
+		static bool itemLessThanWithStatus(const RosterItem* left, const RosterItem* right);
+		static bool itemLessThanWithoutStatus(const RosterItem* left, const RosterItem* right);
 		void setExpanded(bool expanded);
 		bool isExpanded() const;
 	private:
@@ -36,6 +37,7 @@ class GroupRosterItem : public RosterItem {
 		bool expanded_;
 		std::vector<RosterItem*> children_;
 		std::vector<RosterItem*> displayedChildren_;
+		bool sortByStatus_;
 };
 
 }

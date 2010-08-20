@@ -12,7 +12,7 @@
 
 namespace Swift {
 
-GroupRosterItem::GroupRosterItem(const String& name, GroupRosterItem* parent) : RosterItem(name, parent) {
+GroupRosterItem::GroupRosterItem(const String& name, GroupRosterItem* parent, bool sortByStatus) : RosterItem(name, parent), sortByStatus_(sortByStatus) {
 	expanded_ = true;
 }
 
@@ -115,11 +115,15 @@ bool GroupRosterItem::sortDisplayed() {
 //		return false;
 //	}
 	//Sholudn't need stable_sort here
-	std::sort(displayedChildren_.begin(), displayedChildren_.end(), itemLessThan);
+	std::sort(displayedChildren_.begin(), displayedChildren_.end(), sortByStatus_? itemLessThanWithStatus : itemLessThanWithoutStatus);
 	return true;
 }
 
-bool GroupRosterItem::itemLessThan(const RosterItem* left, const RosterItem* right) {
+bool GroupRosterItem::itemLessThanWithoutStatus(const RosterItem* left, const RosterItem* right) {
+	return left->getSortableDisplayName() < right->getSortableDisplayName();
+}
+
+bool GroupRosterItem::itemLessThanWithStatus(const RosterItem* left, const RosterItem* right) {
 	const ContactRosterItem* leftContact = dynamic_cast<const ContactRosterItem*>(left);
 	const ContactRosterItem* rightContact = dynamic_cast<const ContactRosterItem*>(right);
 	if (leftContact) {

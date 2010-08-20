@@ -21,9 +21,10 @@
 
 namespace Swift {
 
-Roster::Roster(bool fullJIDMapping) {
+Roster::Roster(bool sortByStatus, bool fullJIDMapping) {
+	sortByStatus_ = sortByStatus;
 	fullJIDMapping_ = fullJIDMapping;
-	root_ = new GroupRosterItem("Dummy-Root", NULL);
+	root_ = new GroupRosterItem("Dummy-Root", NULL, sortByStatus_);
 	root_->onChildrenChanged.connect(boost::bind(&Roster::handleChildrenChanged, this, root_));
 }
 
@@ -52,7 +53,7 @@ GroupRosterItem* Roster::getGroup(const String& groupName) {
 			return group;
 		}
 	}
-	GroupRosterItem* group = new GroupRosterItem(groupName, root_);
+	GroupRosterItem* group = new GroupRosterItem(groupName, root_, sortByStatus_);
 	root_->addChild(group);
 	group->onChildrenChanged.connect(boost::bind(&Roster::handleChildrenChanged, this, group));
 	group->onDataChanged.connect(boost::bind(&Roster::handleDataChanged, this, group));
