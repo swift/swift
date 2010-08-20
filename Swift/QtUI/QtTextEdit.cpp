@@ -40,8 +40,11 @@ void QtTextEdit::keyPressEvent(QKeyEvent* event) {
 }
 
 void QtTextEdit::handleTextChanged() {
+	QSize previous(maximumSize());
 	setMaximumSize(QSize(maximumWidth(), sizeHint().height()));
-	updateGeometry();
+	if (previous != maximumSize()) {
+		updateGeometry();
+	}
 }
 
 QSize QtTextEdit::sizeHint() const {
