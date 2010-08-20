@@ -285,9 +285,9 @@ void MainController::sendPresence(boost::shared_ptr<Presence> presence) {
 
 	// Add information and send
 	if (!vCardPhotoHash_.isEmpty()) {
-		presence->addPayload(boost::shared_ptr<VCardUpdate>(new VCardUpdate(vCardPhotoHash_)));
+		presence->updatePayload(boost::shared_ptr<VCardUpdate>(new VCardUpdate(vCardPhotoHash_)));
 	}
-	presence->addPayload(capsInfo_);
+	presence->updatePayload(capsInfo_);
 	presenceSender_->sendPresence(presence);
 	if (presence->getType() == Presence::Unavailable) {
 		logout();
