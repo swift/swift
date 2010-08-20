@@ -18,7 +18,7 @@ MacOSXApplicationPathProvider::MacOSXApplicationPathProvider(const String& name)
 	resourceDirs.push_back(getExecutableDir() / "../resources"); // Development
 }
 
-boost::filesystem::path MacOSXApplicationPathProvider::getSettingsDir() const {
+boost::filesystem::path MacOSXApplicationPathProvider::getDataDir() const {
 	boost::filesystem::path result(getHomeDir() / "Library/Application Support" / getApplicationName().getUTF8String());
 	try {
 		boost::filesystem::create_directory(result);

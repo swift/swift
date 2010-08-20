@@ -20,12 +20,8 @@ ApplicationPathProvider::ApplicationPathProvider(const String& applicationName) 
 ApplicationPathProvider::~ApplicationPathProvider() {
 }
 
-boost::filesystem::path ApplicationPathProvider::getSettingsFileName() const {
-	return getSettingsDir() / "settings";
-}
-
 boost::filesystem::path ApplicationPathProvider::getAvatarDir() const {
-	return getSettingsDir() / "avatars";
+	return getDataDir() / "avatars";
 }
 
 boost::filesystem::path ApplicationPathProvider::getProfileDir(const String& profile) const {

@@ -14,7 +14,7 @@ namespace Swift {
 			MacOSXApplicationPathProvider(const String& name);
 
 			virtual boost::filesystem::path getHomeDir() const;
-			boost::filesystem::path getSettingsDir() const;
+			boost::filesystem::path getDataDir() const;
 			virtual boost::filesystem::path getExecutableDir() const;
 
 			virtual std::vector<boost::filesystem::path> getResourceDirs() const {

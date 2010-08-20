@@ -14,7 +14,7 @@ using namespace Swift;
 
 class ApplicationPathProviderTest : public CppUnit::TestFixture {
 		CPPUNIT_TEST_SUITE(ApplicationPathProviderTest);
-		CPPUNIT_TEST(testGetSettingsDir);
+		CPPUNIT_TEST(testGetDataDir);
 		CPPUNIT_TEST(testGetExecutableDir);
 		CPPUNIT_TEST_SUITE_END();
 
@@ -27,8 +27,8 @@ class ApplicationPathProviderTest : public CppUnit::TestFixture {
 			delete testling_;
 		}
 
-		void testGetSettingsDir() {
-			boost::filesystem::path dir = testling_->getSettingsDir();
+		void testGetDataDir() {
+			boost::filesystem::path dir = testling_->getDataDir();
 
 			CPPUNIT_ASSERT(boost::filesystem::exists(dir));
 			CPPUNIT_ASSERT(boost::filesystem::is_directory(dir));

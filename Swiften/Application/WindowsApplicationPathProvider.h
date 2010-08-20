@@ -13,7 +13,7 @@ namespace Swift {
 		public:
 			WindowsApplicationPathProvider(const String& name);
 
-			boost::filesystem::path getSettingsDir() const {
+			boost::filesystem::path getDataDir() const {
 				char* appDirRaw = getenv("APPDATA");
 				boost::filesystem::path result(boost::filesystem::path(appDirRaw) / getApplicationName().getUTF8String());
 				boost::filesystem::create_directory(result);
