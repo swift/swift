@@ -17,7 +17,7 @@ const MUCBookmark& ChatListMUCItem::getBookmark() {
 	return bookmark_;
 }
 
-QVariant ChatListMUCItem::data(int role) { 
+QVariant ChatListMUCItem::data(int role) const {
 	switch (role) {
 		case Qt::DisplayRole: return P2QSTRING(bookmark_.getName());
 		case DetailTextRole: return P2QSTRING(bookmark_.getRoom().toString());

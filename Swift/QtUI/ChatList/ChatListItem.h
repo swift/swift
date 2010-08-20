@@ -7,6 +7,7 @@
 #pragma once
 
 #include <QVariant>
+#include <qdebug.h>
 
 namespace Swift {
 	class ChatListGroupItem;
@@ -16,7 +17,7 @@ namespace Swift {
 			virtual ~ChatListItem() {}
 
 			ChatListGroupItem* parent() {return parent_;};
-			virtual QVariant data(int role) = 0;
+			virtual QVariant data(int role) const = 0;
 
 		private:
 			ChatListGroupItem* parent_;

@@ -25,7 +25,7 @@ namespace Swift {
 		public:
 			ChatListMUCItem(const MUCBookmark& bookmark, ChatListGroupItem* parent);
 			const MUCBookmark& getBookmark();
-			QVariant data(int role);
+			QVariant data(int role) const;
 		private:
 			MUCBookmark bookmark_;
 			QList<ChatListItem*> items_;
