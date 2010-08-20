@@ -21,7 +21,7 @@ namespace Swift {
 				resourceDirs.push_back(getExecutableDir() / "../resources"); // Development
 				char* xdgDataDirs = getenv("XDG_DATA_DIRS");
 				if (xdgDataDirs) {
-					std::vector<String> dataDirs = String(xdgDataDirs).split(":");
+					std::vector<String> dataDirs = String(xdgDataDirs).split(':');
 					if (!dataDirs.empty()) {
 						foreach(const String& dir, dataDirs) {
 							resourceDirs.push_back(boost::filesystem::path(dir.getUTF8String()) / "swift");
