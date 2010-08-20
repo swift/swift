@@ -49,8 +49,11 @@ void QtTextEdit::handleTextChanged() {
 
 QSize QtTextEdit::sizeHint() const {
 	QFontMetrics inputMetrics(currentFont());
-	QRect boundingRect = inputMetrics.boundingRect(geometry(), Qt::TextWordWrap, toPlainText());
-	int height = boundingRect.height() + inputMetrics.height();
+	QRect horizontalBounds = contentsRect().adjusted(0,0,0,9999);
+	QRect boundingRect = inputMetrics.boundingRect(horizontalBounds, Qt::TextWordWrap, toPlainText() + "A");
+	int left, top, right, bottom;
+	getContentsMargins(&left, &top, &right, &bottom);
+	int height = boundingRect.height() + top + bottom + inputMetrics.height();
 	return QSize(width(), height);
 	//int numberOfLines = 1;
 	//int lineHeight = inputMetrics.lineSpacing();
