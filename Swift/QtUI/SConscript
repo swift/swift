@@ -105,6 +105,7 @@ sources = [
     "ContextMenus/QtContextMenu.cpp",
     "QtSubscriptionRequestWindow.cpp",
     "QtRosterHeader.cpp",
+    "QtWebView.cpp",
     "qrc_DefaultTheme.cc",
     "qrc_Swift.cc",
   ]

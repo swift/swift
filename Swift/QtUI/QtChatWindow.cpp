@@ -44,7 +44,6 @@ QtChatWindow::QtChatWindow(const QString &contact, UIEventStream* eventStream) :
 	layout->addWidget(logRosterSplitter);
 
 	messageLog_ = new QtChatView(this);
-	messageLog_->setFocusPolicy(Qt::NoFocus);
 	logRosterSplitter->addWidget(messageLog_);
 
 	treeWidget_ = new QtTreeWidget(eventStream_);
@@ -59,6 +58,7 @@ QtChatWindow::QtChatWindow(const QString &contact, UIEventStream* eventStream) :
 	midBarLayout->setContentsMargins(0,0,0,0);
 	midBarLayout->setSpacing(2);
 	midBarLayout->addStretch();
+
 	labelsWidget_ = new QComboBox(this);
 	labelsWidget_->setFocusPolicy(Qt::NoFocus);
 	labelsWidget_->hide();
@@ -76,9 +76,13 @@ QtChatWindow::QtChatWindow(const QString &contact, UIEventStream* eventStream) :
 	connect(input_, SIGNAL(returnPressed()), this, SLOT(returnPressed()));
 	connect(input_, SIGNAL(textChanged()), this, SLOT(handleInputChanged()));
 	setFocusProxy(input_);
+	logRosterSplitter->setFocusProxy(input_);
+	midBar->setFocusProxy(input_);
+	messageLog_->setFocusProxy(input_);
 	connect(qApp, SIGNAL(focusChanged(QWidget*, QWidget*)), this, SLOT(qAppFocusChanged(QWidget*, QWidget*)));
-
+	connect(messageLog_, SIGNAL(gotFocus()), input_, SLOT(setFocus()));
 	resize(400,300);
+	input_->setFocus();
 }
 
 QtChatWindow::~QtChatWindow() {
@@ -347,6 +351,7 @@ void QtChatWindow::handleInputChanged() {
 void QtChatWindow::show() {
 	QWidget::show();
 	emit windowOpening();
+	input_->setFocus();
 }
 
 void QtChatWindow::activate() {
@@ -354,6 +359,7 @@ void QtChatWindow::activate() {
 		QWidget::show();
 	}
 	emit wantsToActivate();
+	input_->setFocus();
 }
 
 void QtChatWindow::resizeEvent(QResizeEvent*) {

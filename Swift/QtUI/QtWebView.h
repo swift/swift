@@ -11,22 +11,14 @@
 
 namespace Swift {
 	class QtWebView : public QWebView {
+		Q_OBJECT
 		public:
-			QtWebView(QWidget* parent) : QWebView(parent) {}
-			void keyPressEvent(QKeyEvent* event) {
-				Qt::KeyboardModifiers modifiers = event->modifiers();
-				int key = event->key();
-				if (modifiers == Qt::ShiftModifier && (key == Qt::Key_PageUp || key == Qt::Key_PageDown)) {
-					modifiers = Qt::NoModifier;
-				}
-				QKeyEvent* translatedEvent = new QKeyEvent(QEvent::KeyPress,
-										   key,
-										   modifiers,
-										   event->text(),
-										   event->isAutoRepeat(),
-										   event->count());
-				QWebView::keyPressEvent(translatedEvent);
-				delete translatedEvent;
-			};
+			QtWebView(QWidget* parent);
+			void keyPressEvent(QKeyEvent* event);
+		signals:
+			void gotFocus();
+
+		protected:
+			void focusInEvent(QFocusEvent* event);
 	};
 }

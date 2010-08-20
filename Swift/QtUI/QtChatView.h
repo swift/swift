@@ -25,6 +25,9 @@ namespace Swift {
 			void addMessage(const ChatSnippet& snippet);
 			bool isScrolledToBottom() const;
 
+		signals:
+			void gotFocus();
+
 		public slots:
 			void copySelectionToClipboard();
 			void scrollToBottom();

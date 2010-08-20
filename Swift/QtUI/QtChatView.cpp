@@ -19,15 +19,14 @@
 namespace Swift {
 
 QtChatView::QtChatView(QWidget* parent) : QWidget(parent) {
-	setFocusPolicy(Qt::NoFocus);
 
 	QVBoxLayout* mainLayout = new QVBoxLayout(this);
 	mainLayout->setSpacing(0);
 	mainLayout->setContentsMargins(0,0,0,0);
 	webView_ = new QtWebView(this);
-	webView_->setFocusPolicy(Qt::NoFocus);
 	connect(webView_, SIGNAL(linkClicked(const QUrl&)), SLOT(handleLinkClicked(const QUrl&)));
 	connect(webView_, SIGNAL(loadFinished(bool)), SLOT(handleViewLoadFinished(bool)));
+	connect(webView_, SIGNAL(gotFocus()), SIGNAL(gotFocus()));
 #ifdef Q_WS_X11
 	/* To give a border on Linux, where it looks bad without */
 	QStackedWidget* stack = new QStackedWidget(this);
