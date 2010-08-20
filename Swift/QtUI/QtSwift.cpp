@@ -66,7 +66,13 @@ QtSwift::QtSwift(po::variables_map options) : autoUpdater_(NULL) {
 	QCoreApplication::setOrganizationDomain(SWIFT_ORGANIZATION_DOMAIN);
 	QCoreApplication::setApplicationVersion(buildVersion);
 
-	int numberOfAccounts = options["multi-account"].as<int>();
+	int numberOfAccounts = 1;
+	try {
+		numberOfAccounts = options["multi-account"].as<int>();
+	} catch (...) {
+		/* This seems to fail on a Mac when the .app is launched directly (the usual path).*/
+		numberOfAccounts = 1;
+	}
 
 	tabs_ = options.count("no-tabs") && !(splitter_ > 0) ? NULL : new QtChatTabs();
 	settings_ = new QtSettingsProvider();
