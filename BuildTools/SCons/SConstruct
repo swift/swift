@@ -70,6 +70,9 @@ if env["max_jobs"] :
 # Default compiler flags
 env["CCFLAGS"] = env.get("ccflags", [])
 env["LINKFLAGS"] = env.get("linkflags", [])
+# This isn't a real flag (yet) AFAIK. Be sure to append it to the CXXFLAGS
+# where you need it
+env["OBJCCFLAGS"] = []
 if env["optimize"] :
 	env.Append(CCFLAGS = "-O2")
 	if env["PLATFORM"] == "win32" :
@@ -174,6 +177,7 @@ if target in ["iphone-device", "iphone-simulator", "xcode"] :
 	# Set the build flags
 	env["CC"] = "$XCODE_PLATFORM_DEVELOPER_BIN_DIR/gcc"
 	env["CXX"] = "$XCODE_PLATFORM_DEVELOPER_BIN_DIR/g++"
+	env["OBJCCFLAGS"] = ["-fobjc-abi-version=2", "-fobjc-legacy-dispatch"]
 	env["LD"] = env["CC"]
 	env.Append(CCFLAGS = env["XCODE_ARCH_FLAGS"])
 	env.Append(LINKFLAGS = env["XCODE_ARCH_FLAGS"])

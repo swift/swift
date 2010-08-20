@@ -7,6 +7,7 @@ myenv.MergeFlags(env["LIBIDN_FLAGS"])
 myenv.MergeFlags(env["BOOST_FLAGS"])
 myenv.MergeFlags(env.get("LIBXML_FLAGS", ""))
 myenv.MergeFlags(env.get("EXPAT_FLAGS", ""))
+myenv.Append(CXXFLAGS = myenv["OBJCCFLAGS"])
 myenv.Append(FRAMEWORKS = "Cocoa")
 
 myenv.Program("Slimber", [
