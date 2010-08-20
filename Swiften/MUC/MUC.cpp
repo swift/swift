@@ -81,9 +81,11 @@ void MUC::handleIncomingPresence(boost::shared_ptr<Presence> presence) {
 	}
 	MUCOccupant::Role role(MUCOccupant::NoRole);
 	MUCOccupant::Affiliation affiliation(MUCOccupant::NoAffiliation);
+	boost::optional<JID> realJID;
 	if (mucPayload && mucPayload->getItems().size() > 0) {
 		role = mucPayload->getItems()[0].role;
 		affiliation = mucPayload->getItems()[0].affiliation;
+		realJID = mucPayload->getItems()[0].realJID;
 	}
 
 	//100 is non-anonymous
@@ -105,6 +107,9 @@ void MUC::handleIncomingPresence(boost::shared_ptr<Presence> presence) {
 	} else if (presence->getType() == Presence::Available) {
 		std::map<String, MUCOccupant>::iterator it = occupants.find(nick);
 		MUCOccupant occupant(nick, role, affiliation);
+		if (realJID) {
+			occupant.setRealJID(realJID.get());
+		}
 		if (it != occupants.end()) {
 			MUCOccupant oldOccupant = it->second;
 			if (oldOccupant.getRole() != role) {
