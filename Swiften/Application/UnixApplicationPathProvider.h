@@ -12,13 +12,25 @@
 #include <unistd.h>
 
 #include "Swiften/Base/ByteArray.h"
+#include "Swiften/Base/foreach.h"
 
 namespace Swift {
 	class UnixApplicationPathProvider : public ApplicationPathProvider {
 		public:
 			UnixApplicationPathProvider(const String& name) : ApplicationPathProvider(name) {
-				resourceDirs.push_back("/usr/share/swift");
 				resourceDirs.push_back(getExecutableDir() / "../resources"); // Development
+				char* xdgDataDirs = getenv("XDG_DATA_DIRS");
+				if (xdgDataDirs) {
+					std::vector<String> dataDirs = String(xdgDataDirs).split(":");
+					if (!dataDirs.empty()) {
+						foreach(const String& dir, dataDirs) {
+							resourceDirs.push_back(boost::filesystem::path(dir.getUTF8String()) / "swift");
+						}
+						return;
+					}
+				}
+				resourceDirs.push_back("/usr/local/share/swift");
+				resourceDirs.push_back("/usr/share/swift");
 			}
 
 			virtual boost::filesystem::path getHomeDir() const {
