@@ -22,6 +22,7 @@
 #include "Swiften/Elements/ErrorPayload.h"
 #include "Swiften/Elements/Presence.h"
 #include "Swiften/Settings/SettingsProvider.h"
+#include "Swift/Controllers/ProfileSettingsProvider.h"
 #include "Swiften/Elements/CapsInfo.h"
 #include "Swiften/Events/ErrorEvent.h"
 #include "Swiften/Roster/XMPPRoster.h"
@@ -102,6 +103,7 @@ namespace Swift {
 			LoginWindowFactory* loginWindowFactory_;
 			EventWindowFactory* eventWindowFactory_;
 			SettingsProvider *settings_;
+			ProfileSettingsProvider* profileSettings_;
 			AvatarStorage* avatarStorage_;
 			ApplicationMessageDisplay* applicationMessageDisplay_;
 			ChatController* chatController_;

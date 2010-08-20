@@ -28,7 +28,6 @@
 #include "Swift/Controllers/UIInterfaces/MainWindow.h"
 #include "Swift/Controllers/Chat/MUCController.h"
 #include "Swift/Controllers/NickResolver.h"
-#include "Swift/Controllers/ProfileSettingsProvider.h"
 #include "Swift/Controllers/RosterController.h"
 #include "Swift/Controllers/SoundEventController.h"
 #include "Swift/Controllers/SoundPlayer.h"
@@ -122,8 +121,8 @@ MainController::MainController(ChatWindowFactory* chatWindowFactory, MainWindowF
 	idleDetector_.onIdleChanged.connect(boost::bind(&MainController::handleInputIdleChanged, this, _1));
 
 	xmlConsoleController_ = new XMLConsoleController(uiEventStream_, xmlConsoleWidgetFactory);
-
 	if (loginAutomatically) {
+		profileSettings_ = new ProfileSettingsProvider(selectedLoginJID, settings_);
 		handleLoginRequest(selectedLoginJID, cachedPassword, cachedCertificate, true, true);
 	}
 }
@@ -169,6 +168,8 @@ void MainController::resetClient() {
 	mucSearchController_ = NULL;
 	delete statusTracker_;
 	statusTracker_ = NULL;
+	delete profileSettings_;
+	profileSettings_ = NULL;
 }
 
 void MainController::resetPendingReconnects() {
@@ -231,7 +232,6 @@ void MainController::handleConnected() {
 		serverDiscoInfo_ = boost::shared_ptr<DiscoInfo>(new DiscoInfo());
 
 		mucSearchController_ = new MUCSearchController(jid_, uiEventStream_, mucSearchWindowFactory_, client_);
-		statusTracker_  = new StatusTracker();
 	}
 	
 	boost::shared_ptr<GetDiscoInfoRequest> discoInfoRequest(new GetDiscoInfoRequest(JID(), client_));
@@ -271,6 +271,10 @@ void MainController::handleChangeStatusRequest(StatusShow::Type show, const Stri
 	}
 	presence->setStatus(statusText);
 	statusTracker_->setRequestedPresence(presence);
+	if (presence->getType() != Presence::Unavailable) {
+		profileSettings_->storeInt("lastShow", presence->getShow());
+		profileSettings_->storeString("lastStatus", presence->getStatus());
+	}
 	if (presence->getType() != Presence::Unavailable && !client_->isAvailable()) {
 		performLoginFromCachedCredentials();
 	} else {
@@ -317,14 +321,13 @@ void MainController::handleInputIdleChanged(bool idle) {
 void MainController::handleLoginRequest(const String &username, const String &password, const String& certificateFile, bool remember, bool loginAutomatically) {
 	loginWindow_->setMessage("");
 	loginWindow_->setIsLoggingIn(true);
-	ProfileSettingsProvider* profileSettings = new ProfileSettingsProvider(username, settings_);
-	profileSettings->storeString("jid", username);
-	profileSettings->storeString("certificate", certificateFile);
-	profileSettings->storeString("pass", (remember || loginAutomatically) ? password : "");
+	profileSettings_ = new ProfileSettingsProvider(username, settings_);
+	profileSettings_->storeString("jid", username);
+	profileSettings_->storeString("certificate", certificateFile);
+	profileSettings_->storeString("pass", (remember || loginAutomatically) ? password : "");
 	settings_->storeString("lastLoginJID", username);
 	settings_->storeBool("loginAutomatically", loginAutomatically);
-	loginWindow_->addAvailableAccount(profileSettings->getStringSetting("jid"), profileSettings->getStringSetting("pass"), profileSettings->getStringSetting("certificate"));
-	delete profileSettings;
+	loginWindow_->addAvailableAccount(profileSettings_->getStringSetting("jid"), profileSettings_->getStringSetting("pass"), profileSettings_->getStringSetting("certificate"));
 	jid_ = JID(username);
 	password_ = password;
 	certificateFile_ = certificateFile;
@@ -332,6 +335,9 @@ void MainController::handleLoginRequest(const String &username, const String &pa
 }
 
 void MainController::performLoginFromCachedCredentials() {
+	if (!statusTracker_) {
+		statusTracker_  = new StatusTracker();
+	}
 	if (!client_) {
 		client_ = new Swift::Client(jid_, password_);
 		presenceSender_ = new PresenceSender(client_);
@@ -344,6 +350,10 @@ void MainController::performLoginFromCachedCredentials() {
 		}
 		client_->onError.connect(boost::bind(&MainController::handleError, this, _1));
 		client_->onConnected.connect(boost::bind(&MainController::handleConnected, this));
+		boost::shared_ptr<Presence> presence(new Presence());
+		presence->setShow(static_cast<StatusShow::Type>(profileSettings_->getIntSetting("lastShow", StatusShow::Online)));
+		presence->setStatus(profileSettings_->getStringSetting("lastStatus"));
+		statusTracker_->setRequestedPresence(presence);
 	} else {
 		/* In case we're in the middle of another login, make sure they don't overlap */
 		client_->disconnect();

@@ -36,6 +36,15 @@ void QtSettingsProvider::storeBool(const String &settingPath, bool settingValue)
 	settings_.setValue(P2QSTRING(settingPath), settingValue);
 }
 
+int QtSettingsProvider::getIntSetting(const String &settingPath, int defaultValue) {
+	QVariant setting = settings_.value(P2QSTRING(settingPath));
+	return setting.isNull() ? defaultValue : setting.toInt();
+}
+
+void QtSettingsProvider::storeInt(const String &settingPath, int settingValue) {
+	settings_.setValue(P2QSTRING(settingPath), settingValue);
+}
+
 std::vector<String> QtSettingsProvider::getAvailableProfiles() {
 	std::vector<String> profiles;
 	QVariant profilesVariant = settings_.value("profileList");

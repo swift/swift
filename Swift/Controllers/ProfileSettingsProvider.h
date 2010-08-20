@@ -27,6 +27,8 @@ class ProfileSettingsProvider {
 		virtual ~ProfileSettingsProvider() {};
 		virtual String getStringSetting(const String &settingPath) {return provider_->getStringSetting(profileSettingPath(settingPath));};
 		virtual void storeString(const String &settingPath, const String &settingValue) {provider_->storeString(profileSettingPath(settingPath), settingValue);};
+		virtual int getIntSetting(const String& settingPath, int defaultValue) {return provider_->getIntSetting(settingPath, defaultValue);}
+		virtual void storeInt(const String& settingPath, int settingValue) {provider_->storeInt(settingPath, settingValue);}
 		
 	private:
 		String profileSettingPath(const String &settingPath) {return profile_ + ":" + settingPath;};
