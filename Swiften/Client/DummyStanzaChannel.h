@@ -39,6 +39,11 @@ namespace Swift {
 				return true;
 			}
 
+			template<typename T> bool isRequestAtIndex(int index, const JID& jid, IQ::Type type) {
+				boost::shared_ptr<IQ> iqStanza = boost::dynamic_pointer_cast<IQ>(sentStanzas[index]);
+				return iqStanza && iqStanza->getType() == type && iqStanza->getTo() == jid && iqStanza->getPayload<T>();
+			}
+
 			std::vector<boost::shared_ptr<Stanza> > sentStanzas;
 	};
 }

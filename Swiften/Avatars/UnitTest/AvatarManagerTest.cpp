@@ -51,15 +51,17 @@ class AvatarManagerTest : public CppUnit::TestFixture {
 			stanzaChannel_->onPresenceReceived(createPresenceWithPhotoHash());
 
 			CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(stanzaChannel_->sentStanzas.size()));
-			// TODO
-			//CPPUNIT_ASSERT(stanzaChannel_->isRequestAtIndex<VCardUpdate>(0, JID("foo@bar.com"), IQ::Get));
+			CPPUNIT_ASSERT(stanzaChannel_->isRequestAtIndex<VCard>(0, JID("foo@bar.com"), IQ::Get));
 		}
 
-/*
 		void testUpdate_UpdateNewHashAlreadyHaveAvatar() {
+			avatarStorage_->addAvatar("aef56135bcce35eb24a43fcd684005b4ca286497", ByteArray("ghij"));
 			std::auto_ptr<AvatarManager> testling = createManager();
-		}
+			stanzaChannel_->onPresenceReceived(createPresenceWithPhotoHash());
 
+			CPPUNIT_ASSERT_EQUAL(0, static_cast<int>(stanzaChannel_->sentStanzas.size()));
+		}
+/*
 		void testUpdate_UpdateNewHashFromMUC() {
 			std::auto_ptr<AvatarManager> testling = createManager();
 		}
