@@ -25,7 +25,7 @@ namespace Swift {
 	class AutoUpdater;
 	class Application;
 	class ApplicationPathProvider;
-	class AvatarStorage;
+	class AvatarStorageFactory;
 	class MainController;
 	class QtChatWindowFactory;
 	class QtMainWindowFactory;
@@ -60,7 +60,7 @@ namespace Swift {
 			QtChatTabs* tabs_;
 			Application* application_;
 			ApplicationPathProvider* applicationPathProvider_;
-			AvatarStorage* avatarStorage_;
+			AvatarStorageFactory* avatarStorageFactory_;
 			AutoUpdater* autoUpdater_;
 
 	};
