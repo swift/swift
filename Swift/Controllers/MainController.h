@@ -9,7 +9,6 @@
 #include "Swiften/Base/boost_bsignals.h"
 #include <boost/shared_ptr.hpp>
 #include <vector>
-#include <map>
 
 #include "Swiften/Network/BoostIOServiceThread.h"
 #include "Swiften/Network/BoostTimerFactory.h"
@@ -29,7 +28,6 @@
 #include "Swiften/Roster/XMPPRoster.h"
 
 namespace Swift {
-	class AvatarStorageFactory;
 	class AvatarStorage;
 	class Application;
 	class Client;
@@ -68,12 +66,11 @@ namespace Swift {
 
 	class MainController {
 		public:
-			MainController(ChatWindowFactory* chatWindowFactory, MainWindowFactory *mainWindowFactory, LoginWindowFactory *loginWindowFactory, EventWindowFactory* eventWindowFactory, SettingsProvider *settings, SystemTray* systemTray, SoundPlayer* soundPlayer, XMLConsoleWidgetFactory* xmlConsoleWidgetFactory, ChatListWindowFactory* chatListWindowFactory_, MUCSearchWindowFactory* mucSearchWindowFactory, AvatarStorageFactory* avatarStorageFactory, ApplicationMessageDisplay* applicationMessageDisplay, bool useDelayForLatency);
+			MainController(ChatWindowFactory* chatWindowFactory, MainWindowFactory *mainWindowFactory, LoginWindowFactory *loginWindowFactory, EventWindowFactory* eventWindowFactory, SettingsProvider *settings, SystemTray* systemTray, SoundPlayer* soundPlayer, XMLConsoleWidgetFactory* xmlConsoleWidgetFactory, ChatListWindowFactory* chatListWindowFactory_, MUCSearchWindowFactory* mucSearchWindowFactory, AvatarStorage* avatarStorage, ApplicationMessageDisplay* applicationMessageDisplay, bool useDelayForLatency);
 			~MainController();
 
 
 		private:
-			AvatarStorage* getAvatarStorageForProfile(const JID&);
 			void resetClient();
 			void handleConnected();
 			void handleLoginRequest(const String& username, const String& password, const String& certificateFile, bool remember, bool loginAutomatically);
@@ -107,7 +104,7 @@ namespace Swift {
 			EventWindowFactory* eventWindowFactory_;
 			SettingsProvider *settings_;
 			ProfileSettingsProvider* profileSettings_;
-			AvatarStorageFactory* avatarStorageFactory_;
+			AvatarStorage* avatarStorage_;
 			ApplicationMessageDisplay* applicationMessageDisplay_;
 			ChatController* chatController_;
 			XMPPRosterController* xmppRosterController_;
@@ -140,6 +137,5 @@ namespace Swift {
 			int timeBeforeNextReconnect_;
 			Timer::ref reconnectTimer_;
 			StatusTracker* statusTracker_;
-			std::map<JID, AvatarStorage*> avatarStorages_;
 	};
 }

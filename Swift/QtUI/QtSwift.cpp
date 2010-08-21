@@ -23,7 +23,7 @@
 #include "Swiften/Application/Application.h"
 #include "Swiften/Application/PlatformApplication.h"
 #include "Swiften/Application/PlatformApplicationPathProvider.h"
-#include "Swiften/Avatars/AvatarFileStorageFactory.h"
+#include "Swiften/Avatars/AvatarFileStorage.h"
 #include "Swiften/Base/String.h"
 #include "Swiften/Base/Platform.h"
 #include "Swiften/Elements/Presence.h"
@@ -78,7 +78,7 @@ QtSwift::QtSwift(po::variables_map options) : autoUpdater_(NULL) {
 	settings_ = new QtSettingsProvider();
 	application_ = new PlatformApplication(SWIFT_APPLICATION_NAME);
 	applicationPathProvider_ = new PlatformApplicationPathProvider(SWIFT_APPLICATION_NAME);
-	avatarStorageFactory_ = new AvatarFileStorageFactory(applicationPathProvider_->getAvatarDir());
+	avatarStorage_ = new AvatarFileStorage(applicationPathProvider_->getAvatarDir());
 	chatWindowFactory_ = new QtChatWindowFactory(splitter_, settings_, tabs_);
 	soundPlayer_ = new QtSoundPlayer(applicationPathProvider_);
 	if (splitter_) {
@@ -100,7 +100,7 @@ QtSwift::QtSwift(po::variables_map options) : autoUpdater_(NULL) {
 		chatListWindowFactories_.push_back(chatListWindowFactory);
 		QtMUCSearchWindowFactory* mucSearchWindowFactory = new QtMUCSearchWindowFactory();
 		mucSearchWindowFactories_.push_back(mucSearchWindowFactory);
-		MainController* mainController = new MainController(chatWindowFactory_, rosterWindowFactory, loginWindowFactory, eventWindowFactory, settings_, systemTray, soundPlayer_, xmlConsoleWidgetFactory, chatListWindowFactory, mucSearchWindowFactory, avatarStorageFactory_, application_->getApplicationMessageDisplay(), options.count("latency-debug") > 0);
+		MainController* mainController = new MainController(chatWindowFactory_, rosterWindowFactory, loginWindowFactory, eventWindowFactory, settings_, systemTray, soundPlayer_, xmlConsoleWidgetFactory, chatListWindowFactory, mucSearchWindowFactory, avatarStorage_, application_->getApplicationMessageDisplay(), options.count("latency-debug") > 0);
 		mainControllers_.push_back(mainController);
 	}
 
@@ -114,7 +114,6 @@ QtSwift::QtSwift(po::variables_map options) : autoUpdater_(NULL) {
 
 QtSwift::~QtSwift() {
 	delete autoUpdater_;
-	delete avatarStorageFactory_;
 	delete chatWindowFactory_;
 	foreach (QtMainWindowFactory* factory, rosterWindowFactories_) {
 		delete factory;

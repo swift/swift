@@ -51,7 +51,6 @@
 #include "Swiften/Queries/Requests/GetDiscoInfoRequest.h"
 #include "Swiften/Queries/Requests/GetVCardRequest.h"
 #include "Swiften/Avatars/AvatarFileStorage.h"
-#include "Swiften/Avatars/AvatarStorageFactory.h"
 #include "Swiften/Avatars/AvatarManager.h"
 #include "Swiften/StringCodecs/SHA1.h"
 #include "Swiften/StringCodecs/Hexify.h"
@@ -64,7 +63,7 @@ static const String CLIENT_VERSION = "1.0-devel";
 static const String CLIENT_NODE = "http://swift.im";
 
 
-MainController::MainController(ChatWindowFactory* chatWindowFactory, MainWindowFactory *mainWindowFactory, LoginWindowFactory *loginWindowFactory, EventWindowFactory* eventWindowFactory, SettingsProvider *settings, SystemTray* systemTray, SoundPlayer* soundPlayer, XMLConsoleWidgetFactory* xmlConsoleWidgetFactory, ChatListWindowFactory* chatListWindowFactory, MUCSearchWindowFactory* mucSearchWindowFactory, AvatarStorageFactory* avatarStorageFactory, ApplicationMessageDisplay* applicationMessageDisplay, bool useDelayForLatency)
+MainController::MainController(ChatWindowFactory* chatWindowFactory, MainWindowFactory *mainWindowFactory, LoginWindowFactory *loginWindowFactory, EventWindowFactory* eventWindowFactory, SettingsProvider *settings, SystemTray* systemTray, SoundPlayer* soundPlayer, XMLConsoleWidgetFactory* xmlConsoleWidgetFactory, ChatListWindowFactory* chatListWindowFactory, MUCSearchWindowFactory* mucSearchWindowFactory, AvatarStorage* avatarStorage, ApplicationMessageDisplay* applicationMessageDisplay, bool useDelayForLatency)
 	: timerFactory_(&boostIOServiceThread_.getIOService()), idleDetector_(&idleQuerier_, &timerFactory_, 100), chatWindowFactory_(chatWindowFactory), mainWindowFactory_(mainWindowFactory), loginWindowFactory_(loginWindowFactory), settings_(settings), loginWindow_(NULL), useDelayForLatency_(useDelayForLatency)  {
 	presenceOracle_ = NULL;
 	avatarManager_ = NULL;
@@ -89,7 +88,7 @@ MainController::MainController(ChatWindowFactory* chatWindowFactory, MainWindowF
 	chatListWindowFactory_ = chatListWindowFactory;
 	uiEventStream_ = new UIEventStream();
 
-	avatarStorageFactory_ = avatarStorageFactory;
+	avatarStorage_ = avatarStorage;
 	eventController_ = new EventController();
 	eventController_->onEventQueueLengthChange.connect(boost::bind(&MainController::handleEventQueueLengthChange, this, _1));
 
@@ -131,15 +130,11 @@ MainController::MainController(ChatWindowFactory* chatWindowFactory, MainWindowF
 MainController::~MainController() {
 	delete systemTrayController_;
 	delete soundEventController_;
-	delete avatarStorageFactory_;
+	delete avatarStorage_;
 	delete xmlConsoleController_;
 	delete uiEventStream_;
 	delete eventController_;
 	resetClient();
-	for(std::map<JID, AvatarStorage*>::const_iterator i = avatarStorages_.begin(); i != avatarStorages_.end(); ++i) {
-		delete i->second;
-	}
-	avatarStorages_.clear();
 }
 
 void MainController::resetClient() {
@@ -205,7 +200,7 @@ void MainController::handleConnected() {
 		presenceOracle_ = new PresenceOracle(client_);
 		nickResolver_ = new NickResolver(xmppRoster_);		
 
-		avatarManager_ = new AvatarManager(client_, client_, getAvatarStorageForProfile(jid_));
+		avatarManager_ = new AvatarManager(client_, client_, avatarStorage_);
 
 		rosterController_ = new RosterController(jid_, xmppRoster_, avatarManager_, mainWindowFactory_, nickResolver_, presenceOracle_, eventController_, uiEventStream_, client_);
 		rosterController_->onChangeStatusRequest.connect(boost::bind(&MainController::handleChangeStatusRequest, this, _1, _2));
@@ -474,14 +469,5 @@ void MainController::handleOwnVCardReceived(boost::shared_ptr<VCard> vCard, cons
 		avatarManager_->setAvatar(jid_, vCard->getPhoto());
 	}
 }
-
-AvatarStorage* MainController::getAvatarStorageForProfile(const JID& jid) {
-	std::pair< std::map<JID, AvatarStorage*>::iterator, bool > r = avatarStorages_.insert(std::make_pair<JID,AvatarStorage*>(jid, NULL));
-	if (r.second) {
-		r.first->second = avatarStorageFactory_->createAvatarStorage(jid);
-	}
-	return r.first->second;
-}
-
 
 }
