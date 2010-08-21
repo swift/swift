@@ -20,6 +20,7 @@ namespace Swift {
 			QtSoundPlayer(ApplicationPathProvider* applicationPathProvider);
 
 			void playSound(SoundEffect sound);
+			bool isAvailable() const;
 
 		private:
 			void playSound(const String& soundResource);
