@@ -34,8 +34,4 @@ void QtSoundPlayer::playSound(const String& soundResource) {
 	}
 }
 
-bool QtSoundPlayer::isAvailable() const {
-	return QSound::isAvailable();
-}
-
 }

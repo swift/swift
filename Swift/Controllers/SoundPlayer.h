@@ -12,6 +12,5 @@ namespace Swift {
 			virtual ~SoundPlayer() {};
 			enum SoundEffect{MessageReceived};
 			virtual void playSound(SoundEffect sound) = 0;
-			virtual bool isAvailable() const = 0;
 	};
 }
