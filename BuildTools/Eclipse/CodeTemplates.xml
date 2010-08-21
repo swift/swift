@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><templates><template autoinsert="true" context="org.eclipse.cdt.ui.text.codetemplates.constructorcomment_context" deleted="false" description="Comment for created constructors" enabled="true" id="org.eclipse.cdt.ui.text.codetemplates.constructorcomment" name="constructorcomment">/*
+ *
+ */</template><template autoinsert="true" context="org.eclipse.cdt.ui.text.codetemplates.destructorcomment_context" deleted="false" description="Comment for created destructors" enabled="true" id="org.eclipse.cdt.ui.text.codetemplates.destructorcomment" name="destructorcomment">/*
+ *
+ */</template><template autoinsert="false" context="org.eclipse.cdt.ui.text.codetemplates.filecomment_context" deleted="false" description="Comment for created C/C++ files" enabled="true" id="org.eclipse.cdt.ui.text.codetemplates.filecomment" name="filecomment">/*&#13;
+ * Copyright (c) ${year} Remko Tronçon&#13;
+ * Licensed under the GNU General Public License v3.&#13;
+ * See Documentation/Licenses/GPLv3.txt for more information.&#13;
+ */</template><template autoinsert="true" context="org.eclipse.cdt.ui.text.codetemplates.typecomment_context" deleted="false" description="Comment for created classes" enabled="true" id="org.eclipse.cdt.ui.text.codetemplates.typecomment" name="typecomment">/*
+ *
+ */</template><template autoinsert="true" context="org.eclipse.cdt.ui.text.codetemplates.fieldcomment_context" deleted="false" description="Comment for fields" enabled="true" id="org.eclipse.cdt.ui.text.codetemplates.fieldcomment" name="fieldcomment">/*
+ *
+ */</template><template autoinsert="true" context="org.eclipse.cdt.ui.text.codetemplates.methodcomment_context" deleted="false" description="Comment for methods" enabled="true" id="org.eclipse.cdt.ui.text.codetemplates.methodcomment" name="methodcomment">/*
+ *
+ */</template><template autoinsert="true" context="org.eclipse.cdt.core.cxxSource.contenttype_context" deleted="false" description="Default template for newly created C++ source files" enabled="true" id="org.eclipse.cdt.ui.text.codetemplates.cppsourcefile" name="Default C++ source template">${filecomment}
+
+${declarations}</template><template autoinsert="false" context="org.eclipse.cdt.core.cxxHeader.contenttype_context" deleted="false" description="Default template for newly created C++ header files" enabled="true" id="org.eclipse.cdt.ui.text.codetemplates.cppheaderfile" name="Default C++ header template">${filecomment}
+
+#pragma once
+
+${typecomment}
+${declarations}</template><template autoinsert="true" context="org.eclipse.cdt.core.cSource.contenttype_context" deleted="false" description="Default template for newly created C source files" enabled="true" id="org.eclipse.cdt.ui.text.codetemplates.csourcefile" name="Default C source template">${filecomment}
+
+${declarations}</template><template autoinsert="true" context="org.eclipse.cdt.core.cHeader.contenttype_context" deleted="false" description="Default template for newly created C header files" enabled="true" id="org.eclipse.cdt.ui.text.codetemplates.cheaderfile" name="Default C header template">${filecomment}
+
+#ifndef ${include_guard_symbol}
+#define ${include_guard_symbol}
+
+${declarations}
+
+#endif /* ${include_guard_symbol} */
+</template><template autoinsert="false" context="org.eclipse.cdt.ui.text.codetemplates.methodbody_context" deleted="false" description="Code in created method stubs" enabled="true" id="org.eclipse.cdt.ui.text.codetemplates.methodbody" name="methodbody">${body_statement}</template><template autoinsert="false" context="org.eclipse.cdt.ui.text.codetemplates.constructorbody_context" deleted="false" description="Code in created constructor stubs" enabled="true" id="org.eclipse.cdt.ui.text.codetemplates.constructorbody" name="constructorbody">${body_statement}</template><template autoinsert="false" context="org.eclipse.cdt.ui.text.codetemplates.destructorbody_context" deleted="false" description="Code in created destructor stubs" enabled="true" id="org.eclipse.cdt.ui.text.codetemplates.destructorbody" name="destructorbody">${body_statement}</template><template autoinsert="true" context="org.eclipse.cdt.core.asmSource.contenttype_context" deleted="false" description="Default template for newly created assembly files" enabled="true" id="org.eclipse.cdt.ui.text.codetemplates.asmsourcefile" name="Default assembly template">${filecomment}
+</template><template autoinsert="true" context="org.eclipse.core.runtime.text.contenttype_context" deleted="false" description="Default template for newly created text files" enabled="true" id="org.eclipse.cdt.ui.text.codetemplates.textfile" name="Default text file template">${file_name}
+
+ Created on: ${date}
+     Author: ${user}
+
+</template></templates>
