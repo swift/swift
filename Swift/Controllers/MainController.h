@@ -29,6 +29,8 @@
 
 namespace Swift {
 	class AvatarStorage;
+	class VCardStorage;
+	class VCardManager;
 	class Application;
 	class Client;
 	class ChatWindowFactory;
@@ -94,7 +96,7 @@ namespace Swift {
 			void handleError(const ClientError& error);
 			void handleServerDiscoInfoResponse(boost::shared_ptr<DiscoInfo>, const boost::optional<ErrorPayload>&);
 			void handleEventQueueLengthChange(int count);
-			void handleOwnVCardReceived(boost::shared_ptr<VCard> vCard, const boost::optional<ErrorPayload>& error);
+			void handleOwnVCardReceived(VCard::ref vCard);
 			void sendPresence(boost::shared_ptr<Presence> presence);
 			void handleInputIdleChanged(bool);
 			void logout();
@@ -107,6 +109,9 @@ namespace Swift {
 			void reconnectAfterError();
 			void setManagersEnabled(bool enabled);
 
+			VCardStorage* getVCardStorageForProfile(const JID& jid);
+
+		private:
 			BoostIOServiceThread boostIOServiceThread_;
 			BoostTimerFactory timerFactory_;
 			PlatformIdleQuerier idleQuerier_;
@@ -121,6 +126,7 @@ namespace Swift {
 			ProfileSettingsProvider* profileSettings_;
 			AvatarStorage* avatarStorage_;
 			VCardStorageFactory* vcardStorageFactory_;
+			VCardManager* vcardManager_;
 			ApplicationMessageDisplay* applicationMessageDisplay_;
 			ChatController* chatController_;
 			XMPPRosterController* xmppRosterController_;
@@ -153,5 +159,8 @@ namespace Swift {
 			int timeBeforeNextReconnect_;
 			Timer::ref reconnectTimer_;
 			StatusTracker* statusTracker_;
+
+			typedef std::map<String, VCardStorage*> VCardStorageMap;
+			VCardStorageMap vcardStorages_;
 	};
 }

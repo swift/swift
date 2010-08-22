@@ -16,8 +16,8 @@ namespace Swift {
 		public:
 			VCardFileStorage(boost::filesystem::path dir);
 
-			virtual boost::shared_ptr<VCard> getVCard(const JID& jid) const;
-			virtual void setVCard(const JID& jid, boost::shared_ptr<VCard> v);
+			virtual VCard::ref getVCard(const JID& jid) const;
+			virtual void setVCard(const JID& jid, VCard::ref v);
 
 		private:
 			boost::filesystem::path getVCardPath(const JID&) const;

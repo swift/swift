@@ -10,6 +10,7 @@
 
 #include "Swiften/Serializer/XML/XMLElement.h"
 #include "Swiften/Serializer/XML/XMLTextNode.h"
+#include "Swiften/StringCodecs/Hexify.h"
 
 namespace Swift {
 
@@ -49,7 +50,20 @@ String VCardSerializer::serializePayload(boost::shared_ptr<VCard> vcard)  const 
 		nickElement->addNode(boost::shared_ptr<XMLTextNode>(new XMLTextNode(vcard->getNickname())));
 		queryElement.addNode(nickElement);
 	}
-	// TODO
+	if (!vcard->getPhoto().isEmpty() || !vcard->getPhotoType().isEmpty()) {
+		XMLElement::ref photoElement(new XMLElement("PHOTO"));
+		if (!vcard->getPhotoType().isEmpty()) {
+			XMLElement::ref typeElement(new XMLElement("TYPE"));
+			typeElement->addNode(XMLTextNode::ref(new XMLTextNode(vcard->getPhotoType())));
+			photoElement->addNode(typeElement);
+		}
+		if (!vcard->getPhoto().isEmpty()) {
+			XMLElement::ref binvalElement(new XMLElement("BINVAL"));
+			binvalElement->addNode(XMLTextNode::ref(new XMLTextNode(Hexify::hexify(vcard->getPhoto()))));
+			photoElement->addNode(binvalElement);
+		}
+		queryElement.addNode(photoElement);
+	}
 	return queryElement.serialize();
 }
 

@@ -6,17 +6,49 @@
 
 #include "Swiften/VCards/VCardManager.h"
 
+#include <boost/bind.hpp>
+
+#include "Swiften/JID/JID.h"
+#include "Swiften/VCards/VCardStorage.h"
+#include "Swiften/Queries/Requests/GetVCardRequest.h"
+
 namespace Swift {
 
-VCardManager::VCardManager(IQRouter* iqRouter, VCardStorage* vcardStorage) : iqRouter(iqRouter), storage(vcardStorage) {
+VCardManager::VCardManager(const JID& ownJID, IQRouter* iqRouter, VCardStorage* vcardStorage) : ownJID(ownJID), iqRouter(iqRouter), storage(vcardStorage) {
 }
 
-boost::shared_ptr<VCard> VCardManager::getVCardAndRequestWhenNeeded(const JID& jid) const {
-	boost::shared_ptr<VCard> vcard = storage->getVCard(jid);
+VCard::ref VCardManager::getVCardAndRequestWhenNeeded(const JID& jid) {
+	VCard::ref vcard = storage->getVCard(jid);
 	if (!vcard) {
-		// TODO: Request vcard if necessary
+		requestVCard(jid);
 	}
 	return vcard;
 }
-	
+
+void VCardManager::requestVCard(const JID& requestedJID) {
+	JID jid = requestedJID.equals(ownJID, JID::WithoutResource) ? JID() : requestedJID;
+	if (requestedVCards.find(jid) != requestedVCards.end()) {
+		return;
+	}
+	GetVCardRequest::ref request(new GetVCardRequest(jid, iqRouter));
+	request->onResponse.connect(boost::bind(&VCardManager::handleVCardReceived, this, jid, _1, _2));
+	request->send();
+	requestedVCards.insert(jid);
+}
+
+void VCardManager::requestOwnVCard() {
+	requestVCard(JID());
+}
+
+
+void VCardManager::handleVCardReceived(const JID& actualJID, VCard::ref vcard, const boost::optional<ErrorPayload>& error) {
+	if (error) {
+		vcard = VCard::ref(new VCard());
+	}
+	requestedVCards.erase(actualJID);
+	JID jid = actualJID.isValid() ? actualJID : ownJID.toBare();
+	storage->setVCard(jid, vcard);
+	onVCardChanged(jid, vcard);
+}
+
 }

@@ -15,18 +15,13 @@
 #include "Swiften/StringCodecs/Hexify.h"
 #include "Swiften/Avatars/AvatarStorage.h"
 #include "Swiften/MUC/MUCRegistry.h"
+#include "Swiften/VCards/VCardManager.h"
 
 namespace Swift {
 
-AvatarManager::AvatarManager(StanzaChannel* stanzaChannel, IQRouter* iqRouter, AvatarStorage* avatarStorage, MUCRegistry* mucRegistry) : stanzaChannel_(stanzaChannel), iqRouter_(iqRouter), avatarStorage_(avatarStorage), mucRegistry_(mucRegistry) {
+AvatarManager::AvatarManager(VCardManager* vcardManager, StanzaChannel* stanzaChannel, AvatarStorage* avatarStorage, MUCRegistry* mucRegistry) : vcardManager_(vcardManager), stanzaChannel_(stanzaChannel), avatarStorage_(avatarStorage), mucRegistry_(mucRegistry) {
 	stanzaChannel->onPresenceReceived.connect(boost::bind(&AvatarManager::handlePresenceReceived, this, _1));
-}
-
-AvatarManager::AvatarManager() {
-	stanzaChannel_ = NULL;
-	iqRouter_ = NULL;
-	avatarStorage_ = NULL;
-	mucRegistry_ = NULL;
+	vcardManager_->onVCardChanged.connect(boost::bind(&AvatarManager::handleVCardChanged, this, _1, _2));
 }
 
 AvatarManager::~AvatarManager() {
@@ -39,56 +34,44 @@ void AvatarManager::setMUCRegistry(MUCRegistry* mucRegistry) {
 
 void AvatarManager::handlePresenceReceived(boost::shared_ptr<Presence> presence) {
 	boost::shared_ptr<VCardUpdate> update = presence->getPayload<VCardUpdate>();
-	if (!update) {
-		return;
-	}
-	if (presence->getPayload<ErrorPayload>()) {
+	if (!update || presence->getPayload<ErrorPayload>()) {
 		return;
 	}
 	JID from = getAvatarJID(presence->getFrom());
-	String& hash = avatarHashes_[from];
-	if (hash != update->getPhotoHash()) {
-		String newHash = update->getPhotoHash();
-		if (avatarStorage_->hasAvatar(newHash)) {
-			setAvatarHash(from, newHash);
-		}
-		else {
-			boost::shared_ptr<GetVCardRequest> request(new GetVCardRequest(from, iqRouter_));
-			request->onResponse.connect(boost::bind(&AvatarManager::handleVCardReceived, this, from, newHash, _1, _2));
-			request->send();
-		}
+	if (getAvatarHash(from) == update->getPhotoHash()) {
+		return;
+	}
+	if (avatarStorage_->hasAvatar(update->getPhotoHash())) {
+		setAvatarHash(from, update->getPhotoHash());
+	}
+	else {
+		vcardManager_->requestVCard(from);
 	}
 }
 
-void AvatarManager::handleVCardReceived(const JID& from, const String& promisedHash, boost::shared_ptr<VCard> vCard, const boost::optional<ErrorPayload>& error) {
-	if (error) {
-		// FIXME: What to do here?
-		std::cerr << "Warning: " << from << ": Could not get vCard" << std::endl;
-		return;
-	}
+void AvatarManager::handleVCardChanged(const JID& from, VCard::ref vCard) {
 	if (!vCard) {
 		std::cerr << "Warning: " << from << ": null vcard payload" << std::endl;
-		//FIXME: Why could this happen?
 		return;
 	}
-	String realHash = Hexify::hexify(SHA1::getHash(vCard->getPhoto()));
-	if (promisedHash != realHash) {
-		std::cerr << "Warning: " << from << ": Got different vCard photo hash (" << promisedHash << " != " << realHash << ")" << std::endl;
-	}
-	avatarStorage_->addAvatar(realHash, vCard->getPhoto());
-	setAvatarHash(from, realHash);
-}
 
-void AvatarManager::setAvatar(const JID& jid, const ByteArray& avatar) {
-	String hash = Hexify::hexify(SHA1::getHash(avatar));
-	avatarStorage_->addAvatar(hash, avatar);
-	setAvatarHash(getAvatarJID(jid), hash);
+	String hash = Hexify::hexify(SHA1::getHash(vCard->getPhoto()));
+	avatarStorage_->addAvatar(hash, vCard->getPhoto());
+	setAvatarHash(from, hash);
 }
 
 void AvatarManager::setAvatarHash(const JID& from, const String& hash) {
 	avatarHashes_[from] = hash;
 	onAvatarChanged(from, hash);
 }
+
+/*
+void AvatarManager::setAvatar(const JID& jid, const ByteArray& avatar) {
+	String hash = Hexify::hexify(SHA1::getHash(avatar));
+	avatarStorage_->addAvatar(hash, avatar);
+	setAvatarHash(getAvatarJID(jid), hash);
+}
+*/
 
 String AvatarManager::getAvatarHash(const JID& jid) const {
 	std::map<JID, String>::const_iterator i = avatarHashes_.find(getAvatarJID(jid));

@@ -20,6 +20,7 @@ namespace Swift {
 
 			virtual bool hasAvatar(const String& hash) const;
 			virtual void addAvatar(const String& hash, const ByteArray& avatar);
+			virtual ByteArray getAvatar(const String& hash) const;
 
 			virtual boost::filesystem::path getAvatarPath(const String& hash) const;
 

@@ -18,7 +18,7 @@ namespace Swift {
 			}
 
 			virtual VCardStorage* createVCardStorage(const String& profile) {
-				return new VCardFileStorage(base / profile.getUTF8String());
+				return new VCardFileStorage(base / profile.getUTF8String() / "vcards");
 			}
 
 		private:

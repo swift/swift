@@ -4,18 +4,18 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#ifndef SWIFTEN_XMLElement_H
-#define SWIFTEN_XMLElement_H
+#pragma once
 
 #include <boost/shared_ptr.hpp>
 #include <vector>
 #include <map>
 
 #include "Swiften/Base/String.h"
+#include "Swiften/Base/Shared.h"
 #include "Swiften/Serializer/XML/XMLNode.h"
 
 namespace Swift {
-	class XMLElement : public XMLNode {
+	class XMLElement : public XMLNode, public Shared<XMLElement> {
 		public:
 			XMLElement(const String& tag, const String& xmlns = "");
 
@@ -30,4 +30,3 @@ namespace Swift {
 			std::vector< boost::shared_ptr<XMLNode> > childNodes_;
 	};
 }
-#endif

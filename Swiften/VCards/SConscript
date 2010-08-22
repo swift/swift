@@ -1,6 +1,7 @@
 Import("swiften_env")
 
 objects = swiften_env.StaticObject([
+			"VCardManager.cpp",
 			"VCardStorage.cpp",
 			"VCardFileStorage.cpp",
 			"VCardStorageFactory.cpp",

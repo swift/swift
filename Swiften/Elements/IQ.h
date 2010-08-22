@@ -8,10 +8,11 @@
 
 #include "Swiften/Elements/Stanza.h"
 #include "Swiften/Elements/ErrorPayload.h"
+#include "Swiften/Base/Shared.h"
 
 namespace Swift 
 {
-	class IQ : public Stanza
+	class IQ : public Stanza, public Shared<IQ>
 	{
 		public: 
 			enum Type { Get, Set, Result, Error };
@@ -33,8 +34,8 @@ namespace Swift
 			static boost::shared_ptr<IQ> createError(
 					const JID& to,
 					const String& id,
-					ErrorPayload::Condition condition,
-					ErrorPayload::Type type);
+					ErrorPayload::Condition condition = ErrorPayload::BadRequest,
+					ErrorPayload::Type type = ErrorPayload::Cancel);
 
 		private:
 			Type type_;

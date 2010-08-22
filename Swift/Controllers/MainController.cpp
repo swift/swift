@@ -20,6 +20,8 @@
 #include "Swift/Controllers/BuildVersion.h"
 #include "Swift/Controllers/Chat/ChatController.h"
 #include "Swiften/VCards/VCardStorageFactory.h"
+#include "Swiften/VCards/VCardManager.h"
+#include "Swiften/VCards/VCardStorage.h"
 #include "Swift/Controllers/Chat/MUCSearchController.h"
 #include "Swift/Controllers/Chat/ChatsManager.h"
 #include "Swift/Controllers/EventController.h"
@@ -85,16 +87,16 @@ MainController::MainController(
 			mainWindowFactory_(mainWindowFactory),
 			loginWindowFactory_(loginWindowFactory),
 			settings_(settings),
-			loginWindow_(NULL),
 			vcardStorageFactory_(vcardStorageFactory),
-			useDelayForLatency_(useDelayForLatency)  {
+			loginWindow_(NULL) ,
+			useDelayForLatency_(useDelayForLatency) {
 	presenceOracle_ = NULL;
-	avatarManager_ = NULL;
 	chatsManager_ = NULL;
 	eventController_ = NULL;
 	eventWindowController_ = NULL;
 	nickResolver_ = NULL;
 	avatarManager_ = NULL;
+	vcardManager_ = NULL;
 	rosterController_ = NULL;
 	xmppRosterController_ = NULL;
 	clientVersionResponder_ = NULL;
@@ -153,11 +155,13 @@ MainController::MainController(
 MainController::~MainController() {
 	delete systemTrayController_;
 	delete soundEventController_;
-	delete avatarStorage_;
 	delete xmlConsoleController_;
 	delete uiEventStream_;
 	delete eventController_;
 	resetClient();
+	for(VCardStorageMap::iterator i = vcardStorages_.begin(); i != vcardStorages_.end(); ++i) {
+		delete i->second;
+	}
 }
 
 void MainController::resetClient() {
@@ -173,6 +177,8 @@ void MainController::resetClient() {
 	nickResolver_ = NULL;
 	delete avatarManager_;
 	avatarManager_ = NULL;
+	delete vcardManager_;
+	vcardManager_ = NULL;
 	delete eventWindowController_;
 	eventWindowController_ = NULL;
 	delete rosterController_;
@@ -223,7 +229,9 @@ void MainController::handleConnected() {
 		presenceOracle_ = new PresenceOracle(client_);
 		nickResolver_ = new NickResolver(xmppRoster_);		
 
-		avatarManager_ = new AvatarManager(client_, client_, avatarStorage_);
+		vcardManager_ = new VCardManager(jid_, client_, getVCardStorageForProfile(jid_));
+		vcardManager_->onOwnVCardChanged.connect(boost::bind(&MainController::handleOwnVCardReceived, this, _1));
+		avatarManager_ = new AvatarManager(vcardManager_, client_, avatarStorage_);
 
 		rosterController_ = new RosterController(jid_, xmppRoster_, avatarManager_, mainWindowFactory_, nickResolver_, presenceOracle_, eventController_, uiEventStream_, client_);
 		rosterController_->onChangeStatusRequest.connect(boost::bind(&MainController::handleChangeStatusRequest, this, _1, _2));
@@ -261,10 +269,7 @@ void MainController::handleConnected() {
 	discoInfoRequest->onResponse.connect(boost::bind(&MainController::handleServerDiscoInfoResponse, this, _1, _2));
 	discoInfoRequest->send();
 
-	boost::shared_ptr<GetVCardRequest> vCardRequest(new GetVCardRequest(JID(), client_));
-	vCardRequest->onResponse.connect(boost::bind(&MainController::handleOwnVCardReceived, this, _1, _2));
-	vCardRequest->send();
-
+	vcardManager_->requestOwnVCard();
 	
 	setManagersEnabled(true);
 	//Send presence last to catch all the incoming presences.
@@ -480,17 +485,24 @@ void MainController::handleServerDiscoInfoResponse(boost::shared_ptr<DiscoInfo> 
 	}
 }
 
-void MainController::handleOwnVCardReceived(boost::shared_ptr<VCard> vCard, const boost::optional<ErrorPayload>& error) {
-	if (!vCard) {
+void MainController::handleOwnVCardReceived(VCard::ref vCard) {
+	if (!vCard || vCard->getPhoto().isEmpty()) {
 		return;
 	}
-	if (!error && !vCard->getPhoto().isEmpty()) {
-		vCardPhotoHash_ = Hexify::hexify(SHA1::getHash(vCard->getPhoto()));
-		if (client_ && client_->isAvailable()) {
-			sendPresence(statusTracker_->getNextPresence());
-		}
-		avatarManager_->setAvatar(jid_, vCard->getPhoto());
+	vCardPhotoHash_ = Hexify::hexify(SHA1::getHash(vCard->getPhoto()));
+	if (client_ && client_->isAvailable()) {
+		sendPresence(statusTracker_->getNextPresence());
 	}
 }
+
+VCardStorage* MainController::getVCardStorageForProfile(const JID& jid) {
+	String profile = jid.toBare().toString();
+	std::pair<VCardStorageMap::iterator, bool> r = vcardStorages_.insert(std::make_pair<String, VCardStorage*>(profile, NULL));
+	if (r.second) {
+		r.first->second = vcardStorageFactory_->createVCardStorage(profile);
+	}
+	return r.first->second;
+}
+
 
 }

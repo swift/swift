@@ -9,9 +9,9 @@
 #include <boost/filesystem.hpp>
 #include <boost/shared_ptr.hpp>
 #include <boost/optional.hpp>
-#include "Swiften/Base/boost_bsignals.h"
 #include <map>
 
+#include "Swiften/Base/boost_bsignals.h"
 #include "Swiften/JID/JID.h"
 #include "Swiften/Elements/Presence.h"
 #include "Swiften/Elements/VCard.h"
@@ -21,35 +21,32 @@ namespace Swift {
 	class MUCRegistry;
 	class AvatarStorage;
 	class StanzaChannel;
-	class IQRouter;
+	class VCardManager;
 
 	class AvatarManager {
 		public:
-			AvatarManager(StanzaChannel*, IQRouter*, AvatarStorage*, MUCRegistry* = NULL);
+			AvatarManager(VCardManager*, StanzaChannel*, AvatarStorage*, MUCRegistry* = NULL);
 			virtual ~AvatarManager();
 
 			virtual void setMUCRegistry(MUCRegistry*);
 
-			virtual String getAvatarHash(const JID&) const;
 			virtual boost::filesystem::path getAvatarPath(const JID&) const;
-			virtual void setAvatar(const JID&, const ByteArray& avatar);
+
+//			virtual void setAvatar(const JID&, const ByteArray& avatar);*/
 
 		public:
-			boost::signal<void (const JID&, const String&)> onAvatarChanged;
-
-		protected:
-			/** Used only for testing. Leads to a non-functional object. */
-			AvatarManager();
+			boost::signal<void (const JID&, const String& /*hash*/)> onAvatarChanged;
 
 		private:
 			void handlePresenceReceived(boost::shared_ptr<Presence>);
-			void handleVCardReceived(const JID& from, const String& hash, boost::shared_ptr<VCard>, const boost::optional<ErrorPayload>&);
+			void handleVCardChanged(const JID& from, VCard::ref);
 			void setAvatarHash(const JID& from, const String& hash);
 			JID getAvatarJID(const JID& o) const;
+			String getAvatarHash(const JID&) const;
 
 		private:
+			VCardManager* vcardManager_;
 			StanzaChannel* stanzaChannel_;
-			IQRouter* iqRouter_;
 			AvatarStorage* avatarStorage_;
 			MUCRegistry* mucRegistry_;
 			std::map<JID, String> avatarHashes_;

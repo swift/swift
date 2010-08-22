@@ -6,23 +6,40 @@
 
 #pragma once
 
+#include <boost/signals.hpp>
+#include <set>
+
+#include "Swiften/JID/JID.h"
 #include "Swiften/Elements/VCard.h"
+#include "Swiften/Elements/ErrorPayload.h"
 
 namespace Swift {
 	class JID;
 	class VCardStorage;
+	class IQRouter;
 
 	class VCardManager {
 		public:
-			VCardManager(IQRouter* iqRouter, VCardStorage* vcardStorage);
+			VCardManager(const JID& ownJID, IQRouter* iqRouter, VCardStorage* vcardStorage);
 
-			virtual boost::shared_ptr<VCard> getVCardAndRequestWhenNeeded(const JID& jid) const ;
+			VCard::ref getVCardAndRequestWhenNeeded(const JID& jid);
+			void requestVCard(const JID& jid);
+			void requestOwnVCard();
 
 		public:
-			boost::signal<void (const JID&)> onVCardChanged;
+			/**
+			 * The JID will always be bare.
+			 */
+			boost::signal<void (const JID&, VCard::ref)> onVCardChanged;
+			boost::signal<void (VCard::ref)> onOwnVCardChanged;
 
 		private:
+			void handleVCardReceived(const JID& from, VCard::ref, const boost::optional<ErrorPayload>&);
+
+		private:
+			JID ownJID;
 			IQRouter* iqRouter;
 			VCardStorage* storage;
+			std::set<JID> requestedVCards;
 	};
 }

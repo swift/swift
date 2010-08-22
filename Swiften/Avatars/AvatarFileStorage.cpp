@@ -34,4 +34,11 @@ boost::filesystem::path AvatarFileStorage::getAvatarPath(const String& hash) con
 	return path_ / hash.getUTF8String();
 }
 
+ByteArray AvatarFileStorage::getAvatar(const String& hash) const {
+	ByteArray data;
+	data.readFromFile(getAvatarPath(hash).string());
+	return data;
+}
+
+
 }

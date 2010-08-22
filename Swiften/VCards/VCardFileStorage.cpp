@@ -47,7 +47,9 @@ void VCardFileStorage::setVCard(const JID& jid, boost::shared_ptr<VCard> v) {
 }
 
 boost::filesystem::path VCardFileStorage::getVCardPath(const JID& jid) const {
-	return boost::filesystem::path(vcardsPath / (jid.toBare().toString().getUTF8String() + ".xml"));
+	String file(jid.toString());
+	file.replaceAll('/', "%2f");
+	return boost::filesystem::path(vcardsPath / (file.getUTF8String() + ".xml"));
 }
 
 }

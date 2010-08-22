@@ -39,9 +39,9 @@ class VCardFileStorageTest : public CppUnit::TestFixture {
 			vcard->setFullName("Alice In Wonderland");
 			vcard->setEMail("alice@wonderland.lit");
 
-			testling->setVCard(JID("alice@wonderland.lit"), vcard);
+			testling->setVCard(JID("alice@wonderland.lit/TeaRoom"), vcard);
 
-			boost::filesystem::path vcardFile(vcardsPath / "alice@wonderland.lit.xml");
+			boost::filesystem::path vcardFile(vcardsPath / "alice@wonderland.lit%2fTeaRoom.xml");
 			CPPUNIT_ASSERT(boost::filesystem::exists(vcardFile));
 			ByteArray data;
 			data.readFromFile(vcardFile.string());

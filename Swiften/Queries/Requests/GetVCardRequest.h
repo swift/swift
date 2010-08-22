@@ -8,9 +8,10 @@
 
 #include "Swiften/Queries/GenericRequest.h"
 #include "Swiften/Elements/VCard.h"
+#include "Swiften/Base/Shared.h"
 
 namespace Swift {
-	class GetVCardRequest : public GenericRequest<VCard> {
+	class GetVCardRequest : public GenericRequest<VCard>, public Shared<GetVCardRequest> {
 		public:
 			GetVCardRequest(const JID& jid, IQRouter* router) : GenericRequest<VCard>(IQ::Get, jid, boost::shared_ptr<Payload>(new VCard()), router) {
 			}
