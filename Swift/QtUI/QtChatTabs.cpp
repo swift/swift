@@ -52,6 +52,10 @@ void QtChatTabs::closeEvent(QCloseEvent* event) {
 	event->accept();
 }
 
+QtTabbable* QtChatTabs::getCurrentTab() {
+	return qobject_cast<QtTabbable*>(tabs_->currentWidget());
+}
+
 void QtChatTabs::addTab(QtTabbable* tab) {
 	QSizePolicy policy = sizePolicy();
 	/* Chat windows like to grow - don't let them */

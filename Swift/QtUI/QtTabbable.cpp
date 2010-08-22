@@ -8,6 +8,8 @@
 
 #include <QApplication>
 
+#include "QtChatTabs.h"
+
 namespace Swift {
 
 QtTabbable::~QtTabbable() {
@@ -16,7 +18,11 @@ QtTabbable::~QtTabbable() {
 
 bool QtTabbable::isWidgetSelected() {
 	/*isActiveWindow() shouldn't be necessary, but I don't trust it as far as I can throw it*/
-	return isActiveWindow() && isAncestorOf(QApplication::focusWidget());
+	if (!isActiveWindow()) {
+		return false;
+	}
+	QtChatTabs* parent = qobject_cast<QtChatTabs*>(window());
+	return parent ? parent->getCurrentTab() == this : isAncestorOf(QApplication::focusWidget());
 }
 
 }

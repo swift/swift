@@ -20,6 +20,7 @@ namespace Swift {
 			QtChatTabs();
 			void addTab(QtTabbable* tab);
 			void minimise();
+			QtTabbable* getCurrentTab();
 		signals:
 			void geometryChanged();
 

@@ -82,7 +82,6 @@ QtChatWindow::QtChatWindow(const QString &contact, UIEventStream* eventStream) :
 	connect(qApp, SIGNAL(focusChanged(QWidget*, QWidget*)), this, SLOT(qAppFocusChanged(QWidget*, QWidget*)));
 	connect(messageLog_, SIGNAL(gotFocus()), input_, SLOT(setFocus()));
 	resize(400,300);
-	input_->setFocus();
 }
 
 QtChatWindow::~QtChatWindow() {
@@ -194,6 +193,7 @@ void QtChatWindow::qAppFocusChanged(QWidget *old, QWidget *now) {
 	Q_UNUSED(old);
 	Q_UNUSED(now);
 	if (isWidgetSelected()) {
+		input_->setFocus();
 		onAllMessagesRead();
 	}
 	
@@ -351,7 +351,6 @@ void QtChatWindow::handleInputChanged() {
 void QtChatWindow::show() {
 	QWidget::show();
 	emit windowOpening();
-	input_->setFocus();
 }
 
 void QtChatWindow::activate() {
