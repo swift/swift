@@ -61,14 +61,14 @@ void QtChatTabs::addTab(QtTabbable* tab) {
 	/* Chat windows like to grow - don't let them */
 	setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
 	tabs_->addTab(tab, tab->windowTitle());
-	connect(tab, SIGNAL(titleUpdated()), this, SLOT(handleTabTitleUpdated()));
-	connect(tab, SIGNAL(countUpdated()), this, SLOT(handleTabTitleUpdated()));
-	connect(tab, SIGNAL(windowClosing()), this, SLOT(handleTabClosing()));
-	connect(tab, SIGNAL(windowOpening()), this, SLOT(handleWidgetShown()));
-	connect(tab, SIGNAL(wantsToActivate()), this, SLOT(handleWantsToActivate()));
-	connect(tab, SIGNAL(requestNextTab()), this, SLOT(handleRequestedNextTab()));
-	connect(tab, SIGNAL(requestActiveTab()), this, SLOT(handleRequestedActiveTab()));
-	connect(tab, SIGNAL(requestPreviousTab()), this, SLOT(handleRequestedPreviousTab()));
+	connect(tab, SIGNAL(titleUpdated()), this, SLOT(handleTabTitleUpdated()), Qt::UniqueConnection);
+	connect(tab, SIGNAL(countUpdated()), this, SLOT(handleTabTitleUpdated()), Qt::UniqueConnection);
+	connect(tab, SIGNAL(windowClosing()), this, SLOT(handleTabClosing()), Qt::UniqueConnection);
+	connect(tab, SIGNAL(windowOpening()), this, SLOT(handleWidgetShown()), Qt::UniqueConnection);
+	connect(tab, SIGNAL(wantsToActivate()), this, SLOT(handleWantsToActivate()), Qt::UniqueConnection);
+	connect(tab, SIGNAL(requestNextTab()), this, SLOT(handleRequestedNextTab()), Qt::UniqueConnection);
+	connect(tab, SIGNAL(requestActiveTab()), this, SLOT(handleRequestedActiveTab()), Qt::UniqueConnection);
+	connect(tab, SIGNAL(requestPreviousTab()), this, SLOT(handleRequestedPreviousTab()), Qt::UniqueConnection);
 	setSizePolicy(policy);
 }
 
