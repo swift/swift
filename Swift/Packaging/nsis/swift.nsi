@@ -62,6 +62,9 @@ File "..\..\QtUI\Swift\imageformats\qmng4.dll"
 File "..\..\QtUI\Swift\imageformats\qsvg4.dll"
 File "..\..\QtUI\Swift\imageformats\qtiff4.dll"
 
+SetOutPath $INSTDIR\sounds
+File "..\..\QtUI\Swift\sounds\message-received.wav"
+
 # create start menu item
 !insertmacro MUI_STARTMENU_WRITE_BEGIN Application
 	     CreateDirectory "$SMPROGRAMS\$StartMenuFolder"
@@ -127,6 +130,7 @@ section "Uninstall"
     delete $INSTDIR\imageformats\qmng4.dll
     delete $INSTDIR\imageformats\qsvg4.dll
     delete $INSTDIR\imageformats\qtiff4.dll
+    delete $INSTDIR\sounds\message-received.wav
 
     RmDir $INSTDIR\Prerequisites
     RmDir $INSTDIR\imageformats
