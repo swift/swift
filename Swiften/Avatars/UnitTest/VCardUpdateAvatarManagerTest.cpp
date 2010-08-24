@@ -9,7 +9,7 @@
 #include <boost/bind.hpp>
 
 #include "Swiften/Elements/VCardUpdate.h"
-#include "Swiften/Avatars/AvatarManager.h"
+#include "Swiften/Avatars/VCardUpdateAvatarManager.h"
 #include "Swiften/Avatars/AvatarMemoryStorage.h"
 #include "Swiften/VCards/VCardMemoryStorage.h"
 #include "Swiften/VCards/VCardManager.h"
@@ -21,8 +21,8 @@
 
 using namespace Swift;
 
-class AvatarManagerTest : public CppUnit::TestFixture {
-		CPPUNIT_TEST_SUITE(AvatarManagerTest);
+class VCardUpdateAvatarManagerTest : public CppUnit::TestFixture {
+		CPPUNIT_TEST_SUITE(VCardUpdateAvatarManagerTest);
 		CPPUNIT_TEST(testUpdate_NewHashNewVCardRequestsVCard);
 		CPPUNIT_TEST(testUpdate_NewHashStoresAvatarAndEmitsNotificationOnVCardReceive);
 		CPPUNIT_TEST(testUpdate_KnownHash);
@@ -64,7 +64,7 @@ class AvatarManagerTest : public CppUnit::TestFixture {
 		}
 
 		void testUpdate_NewHashNewVCardRequestsVCard() {
-			std::auto_ptr<AvatarManager> testling = createManager();
+			std::auto_ptr<VCardUpdateAvatarManager> testling = createManager();
 			stanzaChannel->onPresenceReceived(createPresenceWithPhotoHash(user1, avatar1Hash));
 
 			CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(stanzaChannel->sentStanzas.size()));
@@ -72,7 +72,7 @@ class AvatarManagerTest : public CppUnit::TestFixture {
 		}
 
 		void testUpdate_NewHashStoresAvatarAndEmitsNotificationOnVCardReceive() {
-			std::auto_ptr<AvatarManager> testling = createManager();
+			std::auto_ptr<VCardUpdateAvatarManager> testling = createManager();
 			stanzaChannel->onPresenceReceived(createPresenceWithPhotoHash(user1, avatar1Hash));
 			stanzaChannel->onIQReceived(createVCardResult(avatar1));
 
@@ -84,7 +84,7 @@ class AvatarManagerTest : public CppUnit::TestFixture {
 		}
 
 		void testUpdate_KnownHash() {
-			std::auto_ptr<AvatarManager> testling = createManager();
+			std::auto_ptr<VCardUpdateAvatarManager> testling = createManager();
 			stanzaChannel->onPresenceReceived(createPresenceWithPhotoHash(user1, avatar1Hash));
 			stanzaChannel->onIQReceived(createVCardResult(avatar1));
 			changes.clear();
@@ -97,7 +97,7 @@ class AvatarManagerTest : public CppUnit::TestFixture {
 		}
 
 		void testUpdate_KnownHashFromDifferentUserDoesNotRequestVCardButTriggersNotification() {
-			std::auto_ptr<AvatarManager> testling = createManager();
+			std::auto_ptr<VCardUpdateAvatarManager> testling = createManager();
 			stanzaChannel->onPresenceReceived(createPresenceWithPhotoHash(user1, avatar1Hash));
 			stanzaChannel->onIQReceived(createVCardResult(avatar1));
 			changes.clear();
@@ -113,13 +113,13 @@ class AvatarManagerTest : public CppUnit::TestFixture {
 
 /*
 		void testUpdate_UpdateNewHashFromMUC() {
-			std::auto_ptr<AvatarManager> testling = createManager();
+			std::auto_ptr<VCardUpdateAvatarManager> testling = createManager();
 		}
 
 		*/
 
 		/*void testUpdate_UpdateWithError() {
-			std::auto_ptr<AvatarManager> testling = createManager();
+			std::auto_ptr<VCardUpdateAvatarManager> testling = createManager();
 			boost::shared_ptr<Presence> update = createPresenceWithPhotoHash();
 			update->addPayload(boost::shared_ptr<ErrorPayload>(new ErrorPayload()));
 			stanzaChannel_->onPresenceReceived(update);
@@ -129,9 +129,9 @@ class AvatarManagerTest : public CppUnit::TestFixture {
 
 
 	private:
-		std::auto_ptr<AvatarManager> createManager() {
-			std::auto_ptr<AvatarManager> result(new AvatarManager(vcardManager, stanzaChannel, avatarStorage, mucRegistry));
-			result->onAvatarChanged.connect(boost::bind(&AvatarManagerTest::handleAvatarChanged, this, _1, _2));
+		std::auto_ptr<VCardUpdateAvatarManager> createManager() {
+			std::auto_ptr<VCardUpdateAvatarManager> result(new VCardUpdateAvatarManager(vcardManager, stanzaChannel, avatarStorage, mucRegistry));
+			result->onAvatarChanged.connect(boost::bind(&VCardUpdateAvatarManagerTest::handleAvatarChanged, this, _1, _2));
 			return result;
 		}
 
@@ -172,4 +172,4 @@ class AvatarManagerTest : public CppUnit::TestFixture {
 		JID user2;
 };
 
-CPPUNIT_TEST_SUITE_REGISTRATION(AvatarManagerTest);
+CPPUNIT_TEST_SUITE_REGISTRATION(VCardUpdateAvatarManagerTest);

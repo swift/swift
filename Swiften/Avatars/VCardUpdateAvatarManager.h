@@ -22,12 +22,11 @@ namespace Swift {
 	class AvatarStorage;
 	class StanzaChannel;
 	class VCardManager;
-	class VCardUpdateAvatarManager;
 
-	class AvatarManager {
+	class VCardUpdateAvatarManager {
 		public:
-			AvatarManager(VCardManager*, StanzaChannel*, AvatarStorage*, MUCRegistry* = NULL);
-			virtual ~AvatarManager();
+			VCardUpdateAvatarManager(VCardManager*, StanzaChannel*, AvatarStorage*, MUCRegistry* = NULL);
+			virtual ~VCardUpdateAvatarManager();
 
 			virtual void setMUCRegistry(MUCRegistry*);
 
@@ -37,6 +36,17 @@ namespace Swift {
 			boost::signal<void (const JID&, const String& /*hash*/)> onAvatarChanged;
 
 		private:
-			VCardUpdateAvatarManager* vcardUpdateAvatarManager;
+			void handlePresenceReceived(boost::shared_ptr<Presence>);
+			void handleVCardChanged(const JID& from, VCard::ref);
+			void setAvatarHash(const JID& from, const String& hash);
+			JID getAvatarJID(const JID& o) const;
+			String getAvatarHash(const JID&) const;
+
+		private:
+			VCardManager* vcardManager_;
+			StanzaChannel* stanzaChannel_;
+			AvatarStorage* avatarStorage_;
+			MUCRegistry* mucRegistry_;
+			std::map<JID, String> avatarHashes_;
 	};
 }
