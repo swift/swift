@@ -30,6 +30,7 @@ class XMLParserTest : public CppUnit::TestFixture {
 		CPPUNIT_TEST(testParse_InvalidXML);
 		CPPUNIT_TEST(testParse_InErrorState);
 		CPPUNIT_TEST(testParse_Incremental);
+		CPPUNIT_TEST(testParse_WhitespaceInAttribute);
 		CPPUNIT_TEST_SUITE_END();
 
 	public:
@@ -187,6 +188,22 @@ class XMLParserTest : public CppUnit::TestFixture {
 
 			CPPUNIT_ASSERT_EQUAL(Client::EndElement, client_.events[1].type);
 			CPPUNIT_ASSERT_EQUAL(String("iq"), client_.events[1].data);
+		}
+
+		void testParse_WhitespaceInAttribute() {
+			ParserType testling(&client_);
+
+			CPPUNIT_ASSERT(testling.parse(
+				"<query xmlns='http://www.xmpp.org/extensions/xep-0084.html#ns-data '>"));
+			CPPUNIT_ASSERT(testling.parse(
+				"<presence/>"));
+			CPPUNIT_ASSERT_EQUAL(static_cast<size_t>(3), client_.events.size());
+			CPPUNIT_ASSERT_EQUAL(Client::StartElement, client_.events[0].type);
+			CPPUNIT_ASSERT_EQUAL(String("query"), client_.events[0].data);
+			CPPUNIT_ASSERT_EQUAL(Client::StartElement, client_.events[1].type);
+			CPPUNIT_ASSERT_EQUAL(String("presence"), client_.events[1].data);
+			CPPUNIT_ASSERT_EQUAL(Client::EndElement, client_.events[2].type);
+			CPPUNIT_ASSERT_EQUAL(String("presence"), client_.events[2].data);
 		}
 	
 	private:

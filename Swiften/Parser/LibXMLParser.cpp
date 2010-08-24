@@ -31,7 +31,7 @@ static void handleCharacterData(void* client, const xmlChar* data, int len) {
 	static_cast<XMLParserClient*>(client)->handleCharacterData(String(reinterpret_cast<const char*>(data), len));
 }
 
-static void handleError(void*, const char*, ... ) {
+static void handleError(void*, const char* /*m*/, ... ) {
 	/*
 	va_list args;
 	va_start(args, m);
@@ -65,7 +65,16 @@ LibXMLParser::~LibXMLParser() {
 }
 
 bool LibXMLParser::parse(const String& data) {
-	return xmlParseChunk(context_, data.getUTF8Data(), data.getUTF8Size(), false) == XML_ERR_OK;
+	if (xmlParseChunk(context_, data.getUTF8Data(), data.getUTF8Size(), false) == XML_ERR_OK) {
+		return true;
+	}
+	xmlError* error = xmlCtxtGetLastError(context_);
+	if (error->code == XML_WAR_NS_URI || error->code == XML_WAR_NS_URI_RELATIVE) {
+		xmlCtxtResetLastError(context_);
+		context_->errNo = XML_ERR_OK;
+		return true;
+	}
+	return false;
 }
 
 }
