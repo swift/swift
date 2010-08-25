@@ -7,8 +7,12 @@ import SCons.SConf
 ################################################################################
 
 vars = Variables(os.path.join(Dir("#").abspath, "config.py"))
+vars.Add('cc', "C compiler")
+vars.Add('cxx', "C++ compiler")
 vars.Add('ccflags', "Extra C(++) compiler flags")
 vars.Add('linkflags', "Extra linker flags")
+vars.Add(BoolVariable("distcc", "Use DistCC", "no"))
+vars.Add('distcc_hosts', "DistCC hosts (overrides DISTCC_HOSTS)")
 vars.Add(EnumVariable("test", "Compile and run tests", "none", ["none", "all", "unit", "system"]))
 vars.Add(BoolVariable("optimize", "Compile with optimizations turned on", "no"))
 vars.Add(BoolVariable("debug", "Compile with debug information", "yes" if os.name != "nt" else "no"))
@@ -36,7 +40,10 @@ vars.Add(PathVariable("docbook_xsl", "DocBook XSL", None, PathVariable.PathAccep
 # Set up default build & configure environment
 ################################################################################
 
-env = Environment(CPPPATH = "#", ENV = {'PATH' : os.environ['PATH'], 'LD_LIBRARY_PATH' : os.environ.get("LD_LIBRARY_PATH","")}, variables = vars)
+env = Environment(CPPPATH = "#", ENV = {
+		'PATH' : os.environ['PATH'], 
+		'LD_LIBRARY_PATH' : os.environ.get("LD_LIBRARY_PATH", ""),
+	}, variables = vars)
 
 Help(vars.GenerateHelpText(env))
 
@@ -68,6 +75,17 @@ if env["max_jobs"] :
 		pass
 
 # Default compiler flags
+if env.get("distcc", False) :
+	env["ENV"]["HOME"] = os.environ["HOME"]
+	env["ENV"]["DISTCC_HOSTS"] = os.environ.get("DISTCC_HOSTS", "")
+	if "distcc_hosts" in env :
+		env["ENV"]["DISTCC_HOSTS"] = env["distcc_hosts"]
+	env["CC"] = "distcc gcc"
+	env["CXX"] = "distcc g++"
+if "cc" in env :
+	env["CC"] = env["cc"]
+if "cxx" in env :
+	env["CXX"] = env["cxx"]
 env["CCFLAGS"] = env.get("ccflags", [])
 env["LINKFLAGS"] = env.get("linkflags", [])
 # This isn't a real flag (yet) AFAIK. Be sure to append it to the CXXFLAGS
