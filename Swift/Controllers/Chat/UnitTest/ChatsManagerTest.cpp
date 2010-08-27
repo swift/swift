@@ -60,7 +60,7 @@ public:
 		eventController_ = new EventController();
 		chatWindowFactory_ = mocks_->InterfaceMock<ChatWindowFactory>();
 		xmppRoster_ = boost::shared_ptr<XMPPRoster>(new XMPPRoster());
-		nickResolver_ = new NickResolver(xmppRoster_);
+		nickResolver_ = new NickResolver(jid_.toBare(), xmppRoster_, NULL);
 		presenceOracle_ = new PresenceOracle(stanzaChannel_);
 		serverDiscoInfo_ = boost::shared_ptr<DiscoInfo>(new DiscoInfo());
 		presenceSender_ = new PresenceSender(stanzaChannel_);

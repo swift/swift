@@ -56,6 +56,7 @@ namespace Swift {
 			void handleSubscriptionRequestDeclined(SubscriptionRequestEvent* event);
 			void handleUIEvent(boost::shared_ptr<UIEvent> event);
 			void handleRosterSetError(boost::optional<ErrorPayload> error, boost::shared_ptr<RosterPayload> rosterPayload);
+			void handleOwnNickChanged(const String& nick);
 			JID myJID_;
 			boost::shared_ptr<XMPPRoster> xmppRoster_;
 			MainWindowFactory* mainWindowFactory_;

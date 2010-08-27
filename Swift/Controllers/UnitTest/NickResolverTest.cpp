@@ -10,6 +10,10 @@
 #include "Swift/Controllers/NickResolver.h"
 #include "Swift/Controllers/UnitTest/MockMUCRegistry.h"
 #include "Swiften/Roster/XMPPRoster.h"
+#include "Swiften/VCards/VCardManager.h"
+#include "Swiften/VCards/VCardMemoryStorage.h"
+#include "Swiften/Queries/IQRouter.h"
+#include "Swiften/Client/DummyStanzaChannel.h"
 
 using namespace Swift;
 
@@ -24,80 +28,124 @@ class NickResolverTest : public CppUnit::TestFixture
 		CPPUNIT_TEST(testMUCNick);
 		CPPUNIT_TEST(testMUCNoNick);
 		CPPUNIT_TEST(testRemovedMatch);
+		CPPUNIT_TEST(testOwnNickFullOnly);
+		CPPUNIT_TEST(testOwnNickGivenAndFull);
+		CPPUNIT_TEST(testOwnNickNickEtAl);
 		CPPUNIT_TEST_SUITE_END();
 
 		std::vector<String> groups_;
+		boost::shared_ptr<XMPPRoster> xmppRoster_;
+		VCardStorage* vCardStorage_;
+		IQRouter* iqRouter_;
+		DummyStanzaChannel* stanzaChannel_;
+		VCardManager* vCardManager_;
+		NickResolver* resolver_;
+		JID ownJID_;
 
 	public:
 		NickResolverTest() {}
 
+		void setUp() {
+			ownJID_ = JID("kev@wonderland.lit");
+			xmppRoster_ = boost::shared_ptr<XMPPRoster>(new XMPPRoster());
+			stanzaChannel_ = new DummyStanzaChannel();
+		  iqRouter_ = new IQRouter(stanzaChannel_);
+			vCardStorage_ = new VCardMemoryStorage();
+			vCardManager_ = new VCardManager(ownJID_, iqRouter_, vCardStorage_);
+			resolver_ = new NickResolver(ownJID_, xmppRoster_, vCardManager_);
+		}
+
+		void tearDown() {
+			delete vCardManager_;
+			delete stanzaChannel_;
+			delete iqRouter_;
+			delete vCardStorage_;
+			delete resolver_;
+		}
+
 		void testMUCNick() {
-			boost::shared_ptr<XMPPRoster> xmppRoster(new XMPPRoster());
-			NickResolver resolver(xmppRoster);
 			MockMUCRegistry registry;
-			resolver.setMUCRegistry(&registry);
+			resolver_->setMUCRegistry(&registry);
 			registry.setNext(true);
 			JID testJID("foo@bar/baz");
 
-			CPPUNIT_ASSERT_EQUAL(String("baz"), resolver.jidToNick(testJID));
+			CPPUNIT_ASSERT_EQUAL(String("baz"), resolver_->jidToNick(testJID));
 		}
 
 		void testMUCNoNick() {
-			boost::shared_ptr<XMPPRoster> xmppRoster(new XMPPRoster());
-			NickResolver resolver(xmppRoster);
 			MockMUCRegistry registry;
-			resolver.setMUCRegistry(&registry);
+			resolver_->setMUCRegistry(&registry);
 			registry.setNext(true);
 			JID testJID("foo@bar");
 
-			CPPUNIT_ASSERT_EQUAL(String("foo@bar"), resolver.jidToNick(testJID));
+			CPPUNIT_ASSERT_EQUAL(String("foo@bar"), resolver_->jidToNick(testJID));
 		}
 
 
 		void testNoMatch() {
-			boost::shared_ptr<XMPPRoster> xmppRoster(new XMPPRoster());
-			NickResolver resolver(xmppRoster);
 			JID testJID("foo@bar/baz");
 
-			CPPUNIT_ASSERT_EQUAL(String("foo@bar"), resolver.jidToNick(testJID));
+			CPPUNIT_ASSERT_EQUAL(String("foo@bar"), resolver_->jidToNick(testJID));
 		}
 		
 		void testZeroLengthMatch() {
-			boost::shared_ptr<XMPPRoster> xmppRoster(new XMPPRoster());
-			NickResolver resolver(xmppRoster);
 			JID testJID("foo@bar/baz");
-			xmppRoster->addContact(testJID, "", groups_, RosterItemPayload::Both);
-			CPPUNIT_ASSERT_EQUAL(String("foo@bar"), resolver.jidToNick(testJID));
+			xmppRoster_->addContact(testJID, "", groups_, RosterItemPayload::Both);
+			CPPUNIT_ASSERT_EQUAL(String("foo@bar"), resolver_->jidToNick(testJID));
 		}
 
 		void testMatch() {
-			boost::shared_ptr<XMPPRoster> xmppRoster(new XMPPRoster());
-			NickResolver resolver(xmppRoster);
 			JID testJID("foo@bar/baz");
-			xmppRoster->addContact(testJID, "Test", groups_, RosterItemPayload::Both);
+			xmppRoster_->addContact(testJID, "Test", groups_, RosterItemPayload::Both);
 
-			CPPUNIT_ASSERT_EQUAL(String("Test"), resolver.jidToNick(testJID));
+			CPPUNIT_ASSERT_EQUAL(String("Test"), resolver_->jidToNick(testJID));
 		}
 
 		void testOverwrittenMatch() {
-			boost::shared_ptr<XMPPRoster> xmppRoster(new XMPPRoster());
-			NickResolver resolver(xmppRoster);
 			JID testJID("foo@bar/baz");
-			xmppRoster->addContact(testJID, "FailTest", groups_, RosterItemPayload::Both);
-			xmppRoster->addContact(testJID, "Test", groups_, RosterItemPayload::Both);
+			xmppRoster_->addContact(testJID, "FailTest", groups_, RosterItemPayload::Both);
+			xmppRoster_->addContact(testJID, "Test", groups_, RosterItemPayload::Both);
 
-			CPPUNIT_ASSERT_EQUAL(String("Test"), resolver.jidToNick(testJID));
+			CPPUNIT_ASSERT_EQUAL(String("Test"), resolver_->jidToNick(testJID));
 		}
 
 		void testRemovedMatch() {
-			boost::shared_ptr<XMPPRoster> xmppRoster(new XMPPRoster());
-			NickResolver resolver(xmppRoster);
 			JID testJID("foo@bar/baz");
-			xmppRoster->addContact(testJID, "FailTest", groups_, RosterItemPayload::Both);
-			xmppRoster->removeContact(testJID);
-			CPPUNIT_ASSERT_EQUAL(String("foo@bar"), resolver.jidToNick(testJID));
+			xmppRoster_->addContact(testJID, "FailTest", groups_, RosterItemPayload::Both);
+			xmppRoster_->removeContact(testJID);
+			CPPUNIT_ASSERT_EQUAL(String("foo@bar"), resolver_->jidToNick(testJID));
 		}
 
+		void testOwnNickFullOnly() {
+			populateOwnVCard("", "", "Kevin Smith");
+			CPPUNIT_ASSERT_EQUAL(String("Kevin Smith"), resolver_->jidToNick(ownJID_));
+		}
+
+		void testOwnNickGivenAndFull() {
+			populateOwnVCard("", "Kevin", "Kevin Smith");
+			CPPUNIT_ASSERT_EQUAL(String("Kevin"), resolver_->jidToNick(ownJID_));
+		}
+
+		void testOwnNickNickEtAl() {
+			populateOwnVCard("Kev", "Kevin", "Kevin Smith");
+			CPPUNIT_ASSERT_EQUAL(String("Kev"), resolver_->jidToNick(ownJID_));
+		}
+
+		void populateOwnVCard(const String& nick, const String& given, const String& full) {
+			VCard::ref vcard(new VCard());
+			if (!nick.isEmpty()) {
+				vcard->setNickname(nick);
+			}
+			if (!given.isEmpty()) {
+				vcard->setGivenName(given);
+			}
+			if (!full.isEmpty()) {
+				vcard->setFullName(full);
+			}
+			vCardManager_->requestVCard(ownJID_);
+			IQ::ref result(IQ::createResult(JID(), stanzaChannel_->sentStanzas[0]->getID(), vcard));
+			stanzaChannel_->onIQReceived(result);
+		}
 };
 
 CPPUNIT_TEST_SUITE_REGISTRATION(NickResolverTest);

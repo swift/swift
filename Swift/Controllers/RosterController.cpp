@@ -66,8 +66,14 @@ RosterController::~RosterController() {
 void RosterController::setNickResolver(NickResolver* nickResolver) {
 	nickResolver_ = nickResolver;
 	if (nickResolver_ != NULL) {
-		mainWindow_->setMyName(nickResolver_->jidToNick(myJID_));
+		handleOwnNickChanged(nickResolver_->jidToNick(myJID_));
+
+		nickResolver_->onOwnNickChanged.connect(boost::bind(&RosterController::handleOwnNickChanged, this, _1));
 	}
+}
+
+void RosterController::handleOwnNickChanged(const String& nick) {
+	mainWindow_->setMyName(nick);
 }
 
 void RosterController::setAvatarManager(AvatarManager* avatarManager) {

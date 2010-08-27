@@ -221,17 +221,17 @@ void MainController::handleConnected() {
 	loginWindow_->setIsLoggingIn(false);
 	resetCurrentError();
 	resetPendingReconnects();
-	//FIXME: this freshLogin thing is temporary so I can see what's what before I split into a seperate method.
 	bool freshLogin = rosterController_ == NULL;
 	if (freshLogin) {
 		serverDiscoInfo_ = boost::shared_ptr<DiscoInfo>(new DiscoInfo());
 		xmppRoster_ = boost::shared_ptr<XMPPRoster>(new XMPPRoster());
 		presenceOracle_ = new PresenceOracle(client_);
-		nickResolver_ = new NickResolver(xmppRoster_);		
 
 		vcardManager_ = new VCardManager(jid_, client_, getVCardStorageForProfile(jid_));
 		vcardManager_->onOwnVCardChanged.connect(boost::bind(&MainController::handleOwnVCardReceived, this, _1));
 		avatarManager_ = new AvatarManager(vcardManager_, client_, avatarStorage_);
+
+		nickResolver_ = new NickResolver(this->jid_.toBare(), xmppRoster_, vcardManager_);
 
 		rosterController_ = new RosterController(jid_, xmppRoster_, avatarManager_, mainWindowFactory_, nickResolver_, presenceOracle_, eventController_, uiEventStream_, client_);
 		rosterController_->onChangeStatusRequest.connect(boost::bind(&MainController::handleChangeStatusRequest, this, _1, _2));

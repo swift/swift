@@ -44,7 +44,7 @@ class RosterControllerTest : public CppUnit::TestFixture
 			xmppRoster_ = boost::shared_ptr<XMPPRoster>(new XMPPRoster());
 			avatarManager_ = NULL;//new AvatarManager();
 			mainWindowFactory_ = new MockMainWindowFactory();
-			nickResolver_ = new NickResolver(xmppRoster_);
+			nickResolver_ = new NickResolver(jid_.toBare(), xmppRoster_, NULL);
 			channel_ = new DummyIQChannel();
 			router_ = new IQRouter(channel_);
 			stanzaChannel_ = new DummyStanzaChannel();
