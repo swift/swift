@@ -18,6 +18,7 @@ namespace Swift {
 		virtual ~QtElidingLabel();
 		
 		virtual void paintEvent(QPaintEvent* event);
+
 	private:
 		void setSizes();
 		bool dirty_;

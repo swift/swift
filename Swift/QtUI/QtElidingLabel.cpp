@@ -38,9 +38,12 @@ void QtElidingLabel::paintEvent(QPaintEvent* event) {
 	dirty_ = dirty_ || rect != lastRect_;
 	if (dirty_) {
 		lastRect_ = rect;
-		if (fontMetrics().width(fullText_) > rect.width()) {
+		int fontWidth = fontMetrics().width(fullText_);
+		if (fontWidth > rect.width()) {
 			QString elidedText(fontMetrics().elidedText(fullText_, Qt::ElideRight, rect.width(), Qt::TextShowMnemonic));
 			QLabel::setText(elidedText);
+		} else {
+			QLabel::setText(fullText_);
 		}
 		dirty_ = false;
 	}
