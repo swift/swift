@@ -32,6 +32,7 @@ class XMPPRoster {
 		void addContact(const JID& jid, const String& name, const std::vector<String>& groups, const RosterItemPayload::Subscription subscription);
 		bool containsJID(const JID& jid); 
 		void removeContact(const JID& jid);
+		void clear();
 		RosterItemPayload::Subscription getSubscriptionStateForJID(const JID& jid);
 		const String& getNameForJID(const JID& jid);
 		const std::vector<String>& getGroupsForJID(const JID& jid);
@@ -39,6 +40,7 @@ class XMPPRoster {
 		boost::signal<void (const JID&)> onJIDAdded;
 		boost::signal<void (const JID&)> onJIDRemoved;
 		boost::signal<void (const JID&, const String&, const std::vector<String>&)> onJIDUpdated;
+		boost::signal<void ()> onRosterCleared;
 
 	private:
 		//std::map<JID, std::pair<String, std::vector<String> > > entries_;

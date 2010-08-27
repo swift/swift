@@ -34,6 +34,11 @@ void XMPPRoster::removeContact(const JID& jid) {
 	onJIDRemoved(jid);
 }
 
+void XMPPRoster::clear() {
+	entries_.clear();
+	onRosterCleared();
+}
+
 bool XMPPRoster::containsJID(const JID& jid) {
 	return entries_.find(JID(jid.toBare())) != entries_.end();
 }

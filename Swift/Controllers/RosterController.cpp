@@ -49,6 +49,7 @@ RosterController::RosterController(const JID& jid, boost::shared_ptr<XMPPRoster>
 	xmppRoster_->onJIDAdded.connect(boost::bind(&RosterController::handleOnJIDAdded, this, _1));
 	xmppRoster_->onJIDUpdated.connect(boost::bind(&RosterController::handleOnJIDUpdated, this, _1, _2, _3));
 	xmppRoster_->onJIDRemoved.connect(boost::bind(&RosterController::handleOnJIDRemoved, this, _1));
+	xmppRoster_->onRosterCleared.connect(boost::bind(&RosterController::handleRosterCleared, this));
 	presenceOracle_->onPresenceSubscriptionRequest.connect(boost::bind(&RosterController::handleSubscriptionRequest, this, _1, _2));
 	presenceOracle_->onPresenceChange.connect(boost::bind(&RosterController::handleIncomingPresence, this, _1, _2));
 	uiEventConnection_ = uiEventStream->onUIEvent.connect(boost::bind(&RosterController::handleUIEvent, this, _1));
@@ -115,6 +116,10 @@ void RosterController::handleOnJIDAdded(const JID& jid) {
 	} else {
 		roster_->addContact(jid, jid, name, "Contacts");
 	}
+}
+
+void RosterController::handleRosterCleared() {
+	roster_->removeAll();
 }
 
 void RosterController::handleOnJIDRemoved(const JID& jid) {

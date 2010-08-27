@@ -45,6 +45,7 @@ namespace Swift {
 			void setEnabled(bool enabled);
 		private:
 			void handleOnJIDAdded(const JID &jid);
+			void handleRosterCleared();
 			void handleOnJIDRemoved(const JID &jid);
 			void handleOnJIDUpdated(const JID &jid, const String& oldName, const std::vector<String> oldGroups);
 			void handleStartChatRequest(const JID& contact);

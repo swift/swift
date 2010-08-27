@@ -247,7 +247,6 @@ void MainController::handleConnected() {
 		avatarManager_->setMUCRegistry(chatsManager_);
 
 		xmppRosterController_ = new XMPPRosterController(client_, xmppRoster_);
-		xmppRosterController_->requestRoster();
 
 		eventWindowController_ = new EventWindowController(eventController_, eventWindowFactory_);
 
@@ -267,6 +266,8 @@ void MainController::handleConnected() {
 		mucSearchController_ = new MUCSearchController(jid_, uiEventStream_, mucSearchWindowFactory_, client_);
 	}
 	
+	xmppRosterController_->requestRoster();
+
 	boost::shared_ptr<GetDiscoInfoRequest> discoInfoRequest(new GetDiscoInfoRequest(JID(), client_));
 	discoInfoRequest->onResponse.connect(boost::bind(&MainController::handleServerDiscoInfoResponse, this, _1, _2));
 	discoInfoRequest->send();
