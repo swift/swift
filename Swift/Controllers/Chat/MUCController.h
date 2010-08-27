@@ -9,6 +9,7 @@
 #include <boost/shared_ptr.hpp>
 #include "Swiften/Base/boost_bsignals.h"
 #include <boost/signals/connection.hpp>
+#include <set>
 
 #include "Swiften/Base/String.h"
 #include "Swiften/Network/Timer.h"
@@ -70,6 +71,7 @@ namespace Swift {
 			bool joined_;
 			boost::bsignals::scoped_connection avatarChangedConnection_;
 			boost::shared_ptr<Timer> loginCheckTimer_;
+			std::set<String> currentOccupants_;
 	};
 }
 

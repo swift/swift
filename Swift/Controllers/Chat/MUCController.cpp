@@ -169,6 +169,7 @@ void MUCController::handleOccupantJoined(const MUCOccupant& occupant) {
 	if (occupant.getRealJID()) {
 		realJID = occupant.getRealJID().get();
 	}
+	currentOccupants_.insert(occupant.getNick());
 	roster_->addContact(jid, realJID, occupant.getNick(), roleToGroupName(occupant.getRole()));
 	if (joined_) {
 		String joinString = occupant.getNick() + " has joined the room";
@@ -210,7 +211,7 @@ void MUCController::preHandleIncomingMessage(boost::shared_ptr<MessageEvent> mes
 	}
 	if (joined_) {
 		String nick = message->getFrom().getResource();
-		if (nick != nick_) {
+		if (nick != nick_ && currentOccupants_.find(nick) != currentOccupants_.end()) {
 			completer_->addWord(nick);
 		}
 	}
@@ -260,6 +261,7 @@ void MUCController::setEnabled(bool enabled) {
 }
 
 void MUCController::handleOccupantLeft(const MUCOccupant& occupant, MUC::LeavingType, const String& reason) {
+	currentOccupants_.erase(occupant.getNick());
 	completer_->removeWord(occupant.getNick());
 	String partMessage = (occupant.getNick() != nick_) ? occupant.getNick() + " has left the room" : "You have left the room";
 	if (!reason.isEmpty()) {
