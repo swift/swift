@@ -66,6 +66,7 @@ namespace Swift {
 	class MUCSearchWindowFactory;
 	class StatusTracker;
 	class VCardStorageFactory;
+	class MUCRegistry;
 
 	class MainController {
 		public:
@@ -96,7 +97,7 @@ namespace Swift {
 			void handleError(const ClientError& error);
 			void handleServerDiscoInfoResponse(boost::shared_ptr<DiscoInfo>, const boost::optional<ErrorPayload>&);
 			void handleEventQueueLengthChange(int count);
-			void handleOwnVCardReceived(VCard::ref vCard);
+			void handleVCardReceived(const JID& j, VCard::ref vCard);
 			void sendPresence(boost::shared_ptr<Presence> presence);
 			void handleInputIdleChanged(bool);
 			void logout();
@@ -159,6 +160,7 @@ namespace Swift {
 			int timeBeforeNextReconnect_;
 			Timer::ref reconnectTimer_;
 			StatusTracker* statusTracker_;
+			MUCRegistry* mucRegistry_;
 
 			typedef std::map<String, VCardStorage*> VCardStorageMap;
 			VCardStorageMap vcardStorages_;

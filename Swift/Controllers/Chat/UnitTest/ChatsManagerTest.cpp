@@ -60,14 +60,15 @@ public:
 		eventController_ = new EventController();
 		chatWindowFactory_ = mocks_->InterfaceMock<ChatWindowFactory>();
 		xmppRoster_ = boost::shared_ptr<XMPPRoster>(new XMPPRoster());
-		nickResolver_ = new NickResolver(jid_.toBare(), xmppRoster_, NULL);
+		mucRegistry_ = new MUCRegistry();
+		nickResolver_ = new NickResolver(jid_.toBare(), xmppRoster_, NULL, mucRegistry_);
 		presenceOracle_ = new PresenceOracle(stanzaChannel_);
 		serverDiscoInfo_ = boost::shared_ptr<DiscoInfo>(new DiscoInfo());
 		presenceSender_ = new PresenceSender(stanzaChannel_);
 		uiEventStream_ = new UIEventStream();
 		chatListWindowFactory_ = mocks_->InterfaceMock<ChatListWindowFactory>();
 		mocks_->ExpectCall(chatListWindowFactory_, ChatListWindowFactory::createWindow).With(uiEventStream_).Return(NULL);
-		manager_ = new ChatsManager(jid_, stanzaChannel_, iqRouter_, eventController_, chatWindowFactory_, nickResolver_, presenceOracle_, serverDiscoInfo_, presenceSender_, uiEventStream_, chatListWindowFactory_, true, NULL);
+		manager_ = new ChatsManager(jid_, stanzaChannel_, iqRouter_, eventController_, chatWindowFactory_, nickResolver_, presenceOracle_, serverDiscoInfo_, presenceSender_, uiEventStream_, chatListWindowFactory_, true, NULL, mucRegistry_);
 
 		vcardStorage_ = new VCardMemoryStorage();
 		vcardManager_ = new VCardManager(jid_, iqRouter_, vcardStorage_);
@@ -85,6 +86,7 @@ public:
 		delete presenceSender_;
 		delete presenceOracle_;
 		delete nickResolver_;
+		delete mucRegistry_;
 		delete stanzaChannel_;
 		delete eventController_;
 		delete iqChannel_;
@@ -323,6 +325,7 @@ private:
 	MockRepository* mocks_;
 	UIEventStream* uiEventStream_;
 	ChatListWindowFactory* chatListWindowFactory_;
+	MUCRegistry* mucRegistry_;
 };
 
 CPPUNIT_TEST_SUITE_REGISTRATION(ChatsManagerTest);

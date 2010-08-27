@@ -28,10 +28,6 @@ VCardUpdateAvatarManager::~VCardUpdateAvatarManager() {
 
 }
 
-void VCardUpdateAvatarManager::setMUCRegistry(MUCRegistry* mucRegistry) {
-	mucRegistry_ = mucRegistry;
-}
-
 void VCardUpdateAvatarManager::handlePresenceReceived(boost::shared_ptr<Presence> presence) {
 	boost::shared_ptr<VCardUpdate> update = presence->getPayload<VCardUpdate>();
 	if (!update || presence->getPayload<ErrorPayload>()) {

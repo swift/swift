@@ -35,15 +35,14 @@ namespace Swift {
 	class ChatListWindowFactory;
 	class TimerFactory;
 
-	class ChatsManager : public MUCRegistry {
+	class ChatsManager {
 		public:
-			ChatsManager(JID jid, StanzaChannel* stanzaChannel, IQRouter* iqRouter, EventController* eventController, ChatWindowFactory* chatWindowFactory, NickResolver* nickResolver, PresenceOracle* presenceOracle, boost::shared_ptr<DiscoInfo> serverDiscoInfo, PresenceSender* presenceSender, UIEventStream* uiEventStream, ChatListWindowFactory* chatListWindowFactory, bool useDelayForLatency, TimerFactory* timerFactory);
-			~ChatsManager();
+			ChatsManager(JID jid, StanzaChannel* stanzaChannel, IQRouter* iqRouter, EventController* eventController, ChatWindowFactory* chatWindowFactory, NickResolver* nickResolver, PresenceOracle* presenceOracle, boost::shared_ptr<DiscoInfo> serverDiscoInfo, PresenceSender* presenceSender, UIEventStream* uiEventStream, ChatListWindowFactory* chatListWindowFactory, bool useDelayForLatency, TimerFactory* timerFactory, MUCRegistry* mucRegistry);
+			virtual ~ChatsManager();
 			void setAvatarManager(AvatarManager* avatarManager);
 			void setEnabled(bool enabled);
 			void setServerDiscoInfo(boost::shared_ptr<DiscoInfo> info);
 			void handleIncomingMessage(boost::shared_ptr<Message> message);
-			virtual bool isMUC(const JID& muc) const;
 		private:
 			void handleChatRequest(const String& contact);
 			void handleJoinMUCRequest(const JID& muc, const boost::optional<String>& nick);
@@ -75,5 +74,6 @@ namespace Swift {
 			boost::bsignals::scoped_connection uiEventConnection_;
 			bool useDelayForLatency_;
 			TimerFactory* timerFactory_;
+			MUCRegistry* mucRegistry_;
 	};
 }

@@ -21,10 +21,6 @@ AvatarManager::~AvatarManager() {
 	delete vcardUpdateAvatarManager;
 }
 
-void AvatarManager::setMUCRegistry(MUCRegistry* mucRegistry) {
-	vcardUpdateAvatarManager->setMUCRegistry(mucRegistry);
-}
-
 boost::filesystem::path AvatarManager::getAvatarPath(const JID& jid) const {
 	return vcardUpdateAvatarManager->getAvatarPath(jid);
 }

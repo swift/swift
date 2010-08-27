@@ -95,6 +95,7 @@ MainController::MainController(
 	eventController_ = NULL;
 	eventWindowController_ = NULL;
 	nickResolver_ = NULL;
+	mucRegistry_ = NULL;
 	avatarManager_ = NULL;
 	vcardManager_ = NULL;
 	rosterController_ = NULL;
@@ -201,6 +202,8 @@ void MainController::resetClient() {
 	statusTracker_ = NULL;
 	delete profileSettings_;
 	profileSettings_ = NULL;
+	delete mucRegistry_;
+	mucRegistry_ = NULL;
 }
 
 void MainController::resetPendingReconnects() {
@@ -228,23 +231,20 @@ void MainController::handleConnected() {
 		serverDiscoInfo_ = boost::shared_ptr<DiscoInfo>(new DiscoInfo());
 		xmppRoster_ = boost::shared_ptr<XMPPRoster>(new XMPPRoster());
 		presenceOracle_ = new PresenceOracle(client_);
-
+		mucRegistry_ = new MUCRegistry();
 		vcardManager_ = new VCardManager(jid_, client_, getVCardStorageForProfile(jid_));
-		vcardManager_->onOwnVCardChanged.connect(boost::bind(&MainController::handleOwnVCardReceived, this, _1));
-		avatarManager_ = new AvatarManager(vcardManager_, client_, avatarStorage_);
+		vcardManager_->onVCardChanged.connect(boost::bind(&MainController::handleVCardReceived, this, _1, _2));
+		avatarManager_ = new AvatarManager(vcardManager_, client_, avatarStorage_, mucRegistry_);
 
-		nickResolver_ = new NickResolver(this->jid_.toBare(), xmppRoster_, vcardManager_);
+		nickResolver_ = new NickResolver(this->jid_.toBare(), xmppRoster_, vcardManager_, mucRegistry_);
 
 		rosterController_ = new RosterController(jid_, xmppRoster_, avatarManager_, mainWindowFactory_, nickResolver_, presenceOracle_, eventController_, uiEventStream_, client_);
 		rosterController_->onChangeStatusRequest.connect(boost::bind(&MainController::handleChangeStatusRequest, this, _1, _2));
 		rosterController_->onSignOutRequest.connect(boost::bind(&MainController::signOut, this));
 
-		chatsManager_ = new ChatsManager(jid_, client_, client_, eventController_, chatWindowFactory_, nickResolver_, presenceOracle_, serverDiscoInfo_, presenceSender_, uiEventStream_, chatListWindowFactory_, useDelayForLatency_, &timerFactory_);
-		nickResolver_->setMUCRegistry(chatsManager_);
+		chatsManager_ = new ChatsManager(jid_, client_, client_, eventController_, chatWindowFactory_, nickResolver_, presenceOracle_, serverDiscoInfo_, presenceSender_, uiEventStream_, chatListWindowFactory_, useDelayForLatency_, &timerFactory_, mucRegistry_);
 		client_->onMessageReceived.connect(boost::bind(&ChatsManager::handleIncomingMessage, chatsManager_, _1));
 		chatsManager_->setAvatarManager(avatarManager_);
-
-		avatarManager_->setMUCRegistry(chatsManager_);
 
 		xmppRosterController_ = new XMPPRosterController(client_, xmppRoster_);
 
@@ -488,8 +488,8 @@ void MainController::handleServerDiscoInfoResponse(boost::shared_ptr<DiscoInfo> 
 	}
 }
 
-void MainController::handleOwnVCardReceived(VCard::ref vCard) {
-	if (!vCard || vCard->getPhoto().isEmpty()) {
+void MainController::handleVCardReceived(const JID& jid, VCard::ref vCard) {
+	if (!jid.equals(jid_, JID::WithoutResource) || !vCard || vCard->getPhoto().isEmpty()) {
 		return;
 	}
 	vCardPhotoHash_ = Hexify::hexify(SHA1::getHash(vCard->getPhoto()));

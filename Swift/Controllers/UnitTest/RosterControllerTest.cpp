@@ -24,6 +24,7 @@
 #include "Swiften/Presence/PresenceOracle.h"
 #include "Swift/Controllers/NickResolver.h"
 #include "Swift/Controllers/UIEvents/UIEventStream.h"
+#include "Swiften/MUC/MUCRegistry.h"
 
 using namespace Swift;
 
@@ -44,7 +45,8 @@ class RosterControllerTest : public CppUnit::TestFixture
 			xmppRoster_ = boost::shared_ptr<XMPPRoster>(new XMPPRoster());
 			avatarManager_ = NULL;//new AvatarManager();
 			mainWindowFactory_ = new MockMainWindowFactory();
-			nickResolver_ = new NickResolver(jid_.toBare(), xmppRoster_, NULL);
+			mucRegistry_ = new MUCRegistry();
+			nickResolver_ = new NickResolver(jid_.toBare(), xmppRoster_, NULL, mucRegistry_);
 			channel_ = new DummyIQChannel();
 			router_ = new IQRouter(channel_);
 			stanzaChannel_ = new DummyStanzaChannel();
@@ -58,6 +60,7 @@ class RosterControllerTest : public CppUnit::TestFixture
 		void tearDown() {
 			delete rosterController_;
 			delete nickResolver_;
+			delete mucRegistry_;
 			delete mainWindowFactory_;
 			delete avatarManager_;
 			delete channel_;
@@ -116,6 +119,7 @@ class RosterControllerTest : public CppUnit::TestFixture
 	private:
 		JID jid_;
 		boost::shared_ptr<XMPPRoster> xmppRoster_;
+		MUCRegistry* mucRegistry_;
 		AvatarManager* avatarManager_;
 		MockMainWindowFactory* mainWindowFactory_;
 		NickResolver* nickResolver_;

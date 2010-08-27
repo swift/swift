@@ -31,7 +31,6 @@ namespace Swift {
 			 * The JID will always be bare.
 			 */
 			boost::signal<void (const JID&, VCard::ref)> onVCardChanged;
-			boost::signal<void (VCard::ref)> onOwnVCardChanged;
 
 		private:
 			void handleVCardReceived(const JID& from, VCard::ref, const boost::optional<ErrorPayload>&);

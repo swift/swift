@@ -21,13 +21,14 @@ namespace Swift {
 	class VCardManager;
 	class NickResolver {
 		public:
-			NickResolver(const JID& ownJID, boost::shared_ptr<XMPPRoster> xmppRoster, VCardManager* vcardManager);
+			NickResolver(const JID& ownJID, boost::shared_ptr<XMPPRoster> xmppRoster, VCardManager* vcardManager, MUCRegistry* mucRegistry);
+
 			String jidToNick(const JID& jid);
 			void setMUCRegistry(MUCRegistry* registry);
 
 			boost::signal<void (const String&)> onOwnNickChanged;
 		private:
-			void handleOwnVCardReceived(VCard::ref vCard);
+			void handleVCardReceived(const JID& jid, VCard::ref vCard);
 			JID ownJID_;
 			String ownNick_;
 			std::map<JID, String> map_;

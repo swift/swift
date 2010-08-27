@@ -8,7 +8,7 @@
 #include <cppunit/extensions/TestFactoryRegistry.h>
 
 #include "Swift/Controllers/NickResolver.h"
-#include "Swift/Controllers/UnitTest/MockMUCRegistry.h"
+#include "Swiften/MUC/MUCRegistry.h"
 #include "Swiften/Roster/XMPPRoster.h"
 #include "Swiften/VCards/VCardManager.h"
 #include "Swiften/VCards/VCardMemoryStorage.h"
@@ -17,8 +17,7 @@
 
 using namespace Swift;
 
-class NickResolverTest : public CppUnit::TestFixture
-{
+class NickResolverTest : public CppUnit::TestFixture {
 		CPPUNIT_TEST_SUITE(NickResolverTest);
 		CPPUNIT_TEST(testNoMatch);
 		CPPUNIT_TEST(testZeroLengthMatch);
@@ -33,18 +32,7 @@ class NickResolverTest : public CppUnit::TestFixture
 		CPPUNIT_TEST(testOwnNickNickEtAl);
 		CPPUNIT_TEST_SUITE_END();
 
-		std::vector<String> groups_;
-		boost::shared_ptr<XMPPRoster> xmppRoster_;
-		VCardStorage* vCardStorage_;
-		IQRouter* iqRouter_;
-		DummyStanzaChannel* stanzaChannel_;
-		VCardManager* vCardManager_;
-		NickResolver* resolver_;
-		JID ownJID_;
-
 	public:
-		NickResolverTest() {}
-
 		void setUp() {
 			ownJID_ = JID("kev@wonderland.lit");
 			xmppRoster_ = boost::shared_ptr<XMPPRoster>(new XMPPRoster());
@@ -52,30 +40,28 @@ class NickResolverTest : public CppUnit::TestFixture
 		  iqRouter_ = new IQRouter(stanzaChannel_);
 			vCardStorage_ = new VCardMemoryStorage();
 			vCardManager_ = new VCardManager(ownJID_, iqRouter_, vCardStorage_);
-			resolver_ = new NickResolver(ownJID_, xmppRoster_, vCardManager_);
+			registry_ = new MUCRegistry();
+			resolver_ = new NickResolver(ownJID_, xmppRoster_, vCardManager_, registry_);
 		}
 
 		void tearDown() {
+			delete resolver_;
+			delete registry_;
 			delete vCardManager_;
 			delete stanzaChannel_;
 			delete iqRouter_;
 			delete vCardStorage_;
-			delete resolver_;
 		}
 
 		void testMUCNick() {
-			MockMUCRegistry registry;
-			resolver_->setMUCRegistry(&registry);
-			registry.setNext(true);
+			registry_->addMUC(JID("foo@bar"));
 			JID testJID("foo@bar/baz");
 
 			CPPUNIT_ASSERT_EQUAL(String("baz"), resolver_->jidToNick(testJID));
 		}
 
 		void testMUCNoNick() {
-			MockMUCRegistry registry;
-			resolver_->setMUCRegistry(&registry);
-			registry.setNext(true);
+			registry_->addMUC(JID("foo@bar"));
 			JID testJID("foo@bar");
 
 			CPPUNIT_ASSERT_EQUAL(String("foo@bar"), resolver_->jidToNick(testJID));
@@ -146,6 +132,18 @@ class NickResolverTest : public CppUnit::TestFixture
 			IQ::ref result(IQ::createResult(JID(), stanzaChannel_->sentStanzas[0]->getID(), vcard));
 			stanzaChannel_->onIQReceived(result);
 		}
+	
+	private:
+		std::vector<String> groups_;
+		boost::shared_ptr<XMPPRoster> xmppRoster_;
+		VCardStorage* vCardStorage_;
+		IQRouter* iqRouter_;
+		DummyStanzaChannel* stanzaChannel_;
+		VCardManager* vCardManager_;
+		MUCRegistry* registry_;
+		NickResolver* resolver_;
+		JID ownJID_;
+
 };
 
 CPPUNIT_TEST_SUITE_REGISTRATION(NickResolverTest);

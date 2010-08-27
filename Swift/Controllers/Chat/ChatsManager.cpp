@@ -28,7 +28,7 @@ namespace Swift {
 typedef std::pair<JID, ChatController*> JIDChatControllerPair;
 typedef std::pair<JID, MUCController*> JIDMUCControllerPair;
 
-ChatsManager::ChatsManager(JID jid, StanzaChannel* stanzaChannel, IQRouter* iqRouter, EventController* eventController, ChatWindowFactory* chatWindowFactory, NickResolver* nickResolver, PresenceOracle* presenceOracle, boost::shared_ptr<DiscoInfo> serverDiscoInfo, PresenceSender* presenceSender, UIEventStream* uiEventStream, ChatListWindowFactory* chatListWindowFactory, bool useDelayForLatency, TimerFactory* timerFactory) : jid_(jid), useDelayForLatency_(useDelayForLatency) {
+ChatsManager::ChatsManager(JID jid, StanzaChannel* stanzaChannel, IQRouter* iqRouter, EventController* eventController, ChatWindowFactory* chatWindowFactory, NickResolver* nickResolver, PresenceOracle* presenceOracle, boost::shared_ptr<DiscoInfo> serverDiscoInfo, PresenceSender* presenceSender, UIEventStream* uiEventStream, ChatListWindowFactory* chatListWindowFactory, bool useDelayForLatency, TimerFactory* timerFactory, MUCRegistry* mucRegistry) : jid_(jid), useDelayForLatency_(useDelayForLatency), mucRegistry_(mucRegistry) {
 	timerFactory_ = timerFactory;
 	eventController_ = eventController;
 	stanzaChannel_ = stanzaChannel;
@@ -75,6 +75,7 @@ void ChatsManager::handleUserLeftMUC(MUCController* mucController) {
 	std::map<JID, MUCController*>::iterator it;
 	for (it = mucControllers_.begin(); it != mucControllers_.end(); it++) {
 		if ((*it).second == mucController) {
+			mucRegistry_->removeMUC(it->first);
 			mucControllers_.erase(it);
 			delete mucController;
 			return;
@@ -114,7 +115,7 @@ void ChatsManager::handleUIEvent(boost::shared_ptr<UIEvent> event) {
  * If a resource goes offline, release bound chatdialog to that resource.
  */
 void ChatsManager::handlePresenceChange(boost::shared_ptr<Presence> newPresence, boost::shared_ptr<Presence> /*lastPresence*/) {
-	if (isMUC(newPresence->getFrom().toBare())) return;
+	if (mucRegistry_->isMUC(newPresence->getFrom().toBare())) return;
 	if (newPresence->getType() != Presence::Unavailable) return;
 	JID fullJID(newPresence->getFrom());
 	std::map<JID, ChatController*>::iterator it = chatControllers_.find(fullJID);
@@ -162,7 +163,7 @@ void ChatsManager::handleChatRequest(const String &contact) {
 
 ChatController* ChatsManager::getChatControllerOrFindAnother(const JID &contact) {
 	ChatController* controller = getChatControllerIfExists(contact);
-	if (!controller && !isMUC(contact.toBare())) {
+	if (!controller && !mucRegistry_->isMUC(contact.toBare())) {
 		foreach (JIDChatControllerPair pair, chatControllers_) {
 			if (pair.first.toBare() == contact.toBare()) {
 				controller = pair.second;
@@ -174,7 +175,7 @@ ChatController* ChatsManager::getChatControllerOrFindAnother(const JID &contact)
 }
 
 ChatController* ChatsManager::createNewChatController(const JID& contact) {
-	ChatController* controller = new ChatController(jid_, stanzaChannel_, iqRouter_, chatWindowFactory_, contact, nickResolver_, presenceOracle_, avatarManager_, isMUC(contact.toBare()), useDelayForLatency_, uiEventStream_, eventController_);
+	ChatController* controller = new ChatController(jid_, stanzaChannel_, iqRouter_, chatWindowFactory_, contact, nickResolver_, presenceOracle_, avatarManager_, mucRegistry_->isMUC(contact.toBare()), useDelayForLatency_, uiEventStream_, eventController_);
 	chatControllers_[contact] = controller;
 	controller->setAvailableServerFeatures(serverDiscoInfo_);
 	return controller;
@@ -214,6 +215,7 @@ void ChatsManager::handleJoinMUCRequest(const JID &muc, const boost::optional<St
 		mucControllers_[muc] = controller;
 		controller->setAvailableServerFeatures(serverDiscoInfo_);
 		controller->onUserLeft.connect(boost::bind(&ChatsManager::handleUserLeftMUC, this, controller));
+		mucRegistry_->addMUC(muc);
 	}
 	mucControllers_[muc]->activateChatWindow();
 }
@@ -241,11 +243,5 @@ void ChatsManager::handleIncomingMessage(boost::shared_ptr<Message> message) {
 	//if not a mucroom
 	getChatControllerOrCreate(jid)->handleIncomingMessage(event);
 }
-
-bool ChatsManager::isMUC(const JID& jid) const {
-	return mucControllers_.find(jid.toBare()) != mucControllers_.end();
-}
-
-
 
 }

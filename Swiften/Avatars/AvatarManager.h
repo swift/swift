@@ -29,8 +29,6 @@ namespace Swift {
 			AvatarManager(VCardManager*, StanzaChannel*, AvatarStorage*, MUCRegistry* = NULL);
 			virtual ~AvatarManager();
 
-			virtual void setMUCRegistry(MUCRegistry*);
-
 			virtual boost::filesystem::path getAvatarPath(const JID&) const;
 
 		public:

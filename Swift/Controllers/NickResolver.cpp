@@ -15,18 +15,14 @@
 
 namespace Swift {
 
-NickResolver::NickResolver(const JID& ownJID, boost::shared_ptr<XMPPRoster> xmppRoster, VCardManager* vcardManager) : ownJID_(ownJID) {
+NickResolver::NickResolver(const JID& ownJID, boost::shared_ptr<XMPPRoster> xmppRoster, VCardManager* vcardManager, MUCRegistry* mucRegistry) : ownJID_(ownJID) {
 	xmppRoster_ = xmppRoster;
 	vcardManager_ = vcardManager;
 	if (vcardManager_) {
-		vcardManager_->onOwnVCardChanged.connect(boost::bind(&NickResolver::handleOwnVCardReceived, this, _1));
+		vcardManager_->onVCardChanged.connect(boost::bind(&NickResolver::handleVCardReceived, this, _1, _2));
 		VCard::ref ownVCard = vcardManager_->getVCardAndRequestWhenNeeded(ownJID_);
-		handleOwnVCardReceived(ownVCard);
+		handleVCardReceived(ownJID_, ownVCard);
 	}
-	mucRegistry_ = NULL;
-}
-
-void NickResolver::setMUCRegistry(MUCRegistry* mucRegistry) {
 	mucRegistry_ = mucRegistry;
 }
 
@@ -50,7 +46,10 @@ String NickResolver::jidToNick(const JID& jid) {
 	return (it == map_.end()) ? jid.toBare() : it->second;
 }
 
-void NickResolver::handleOwnVCardReceived(VCard::ref ownVCard) {
+void NickResolver::handleVCardReceived(const JID& jid, VCard::ref ownVCard) {
+	if (!jid.equals(ownJID_, JID::WithoutResource)) {
+		return;
+	}
 	String initialNick = ownNick_;
 	ownNick_ = ownJID_.toString();
 	if (ownVCard) {

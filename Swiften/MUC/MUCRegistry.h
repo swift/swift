@@ -6,13 +6,22 @@
 
 #pragma once
 
+#include <vector>
+
+#include "Swiften/JID/JID.h"
+
 namespace Swift {
 	class JID;
 
 	class MUCRegistry {
 		public:
-			virtual ~MUCRegistry();
+			~MUCRegistry();
 
-			virtual bool isMUC(const JID&) const = 0;
+			bool isMUC(const JID& j) const;
+			void addMUC(const JID& j);
+			void removeMUC(const JID& j);
+
+		private:
+			std::vector<JID> mucs;
 	};
 }
