@@ -149,6 +149,8 @@ MainController::MainController(
 	if (loginAutomatically) {
 		profileSettings_ = new ProfileSettingsProvider(selectedLoginJID, settings_);
 		handleLoginRequest(selectedLoginJID, cachedPassword, cachedCertificate, true, true);
+	} else {
+		profileSettings_ = NULL;
 	}
 }
 
