@@ -19,6 +19,11 @@
 #include "Swiften/Serializer/AuthSuccessSerializer.h"
 #include "Swiften/Serializer/AuthChallengeSerializer.h"
 #include "Swiften/Serializer/AuthResponseSerializer.h"
+#include "Swiften/Serializer/EnableSessionManagementSerializer.h"
+#include "Swiften/Serializer/SessionManagementEnabledSerializer.h"
+#include "Swiften/Serializer/SessionManagementFailedSerializer.h"
+#include "Swiften/Serializer/StanzaAckSerializer.h"
+#include "Swiften/Serializer/StanzaAckRequestSerializer.h"
 #include "Swiften/Serializer/StartTLSRequestSerializer.h"
 #include "Swiften/Serializer/StartTLSFailureSerializer.h"
 #include "Swiften/Serializer/TLSProceedSerializer.h"
@@ -43,6 +48,11 @@ XMPPSerializer::XMPPSerializer(PayloadSerializerCollection* payloadSerializers) 
 	serializers_.push_back(boost::shared_ptr<ElementSerializer>(new StartTLSFailureSerializer()));
 	serializers_.push_back(boost::shared_ptr<ElementSerializer>(new TLSProceedSerializer()));
 	serializers_.push_back(boost::shared_ptr<ElementSerializer>(new StreamFeaturesSerializer()));
+	serializers_.push_back(boost::shared_ptr<ElementSerializer>(new EnableSessionManagementSerializer()));
+	serializers_.push_back(boost::shared_ptr<ElementSerializer>(new SessionManagementEnabledSerializer()));
+	serializers_.push_back(boost::shared_ptr<ElementSerializer>(new SessionManagementFailedSerializer()));
+	serializers_.push_back(boost::shared_ptr<ElementSerializer>(new StanzaAckSerializer()));
+	serializers_.push_back(boost::shared_ptr<ElementSerializer>(new StanzaAckRequestSerializer()));
 }
 
 String XMPPSerializer::serializeHeader(const ProtocolHeader& header) const {

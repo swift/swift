@@ -15,6 +15,7 @@ sources = [
 		"IQParser.cpp",
 		"MessageParser.cpp",
 		"PayloadParser.cpp",
+		"StanzaAckParser.cpp",
 		"PayloadParserFactory.cpp",
 		"PayloadParserFactoryCollection.cpp",
 		"PayloadParsers/BodyParser.cpp",

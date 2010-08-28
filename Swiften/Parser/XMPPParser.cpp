@@ -25,6 +25,11 @@
 #include "Swiften/Parser/AuthFailureParser.h"
 #include "Swiften/Parser/AuthChallengeParser.h"
 #include "Swiften/Parser/AuthResponseParser.h"
+#include "Swiften/Parser/EnableSessionManagementParser.h"
+#include "Swiften/Parser/SessionManagementEnabledParser.h"
+#include "Swiften/Parser/SessionManagementFailedParser.h"
+#include "Swiften/Parser/StanzaAckParser.h"
+#include "Swiften/Parser/StanzaAckRequestParser.h"
 #include "Swiften/Parser/StartTLSParser.h"
 #include "Swiften/Parser/StartTLSFailureParser.h"
 #include "Swiften/Parser/CompressParser.h"
@@ -158,6 +163,21 @@ ElementParser* XMPPParser::createElementParser(const String& element, const Stri
 	}
 	else if (element == "proceed") {
 		return new TLSProceedParser();
+	}
+	else if (element == "enable" && ns == "urn:xmpp:sm:2") {
+		return new EnableSessionManagementParser();
+	}
+	else if (element == "enabled" && ns == "urn:xmpp:sm:2") {
+		return new SessionManagementEnabledParser();
+	}
+	else if (element == "failed" && ns == "urn:xmpp:sm:2") {
+		return new SessionManagementFailedParser();
+	}
+	else if (element == "a" && ns == "urn:xmpp:sm:2") {
+		return new StanzaAckParser();
+	}
+	else if (element == "r" && ns == "urn:xmpp:sm:2") {
+		return new StanzaAckRequestParser();
 	}
 	return new UnknownElementParser();
 }
