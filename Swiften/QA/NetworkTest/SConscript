@@ -9,6 +9,7 @@ if env["TEST"] :
 	myenv.MergeFlags(myenv["CPPUNIT_FLAGS"])
 	myenv.MergeFlags(myenv["BOOST_FLAGS"])
 	myenv.MergeFlags(myenv["LIBIDN_FLAGS"])
+	myenv.MergeFlags(env["PLATFORM_FLAGS"])
 
 	tester = myenv.Program("NetworkTest", [
 			"BoostConnectionServerTest.cpp",
