@@ -187,6 +187,7 @@ if env["SCONS_STAGE"] == "build" :
 			File("Parser/UnitTest/MessageParserTest.cpp"),
 			File("Parser/UnitTest/PayloadParserFactoryCollectionTest.cpp"),
 			File("Parser/UnitTest/PresenceParserTest.cpp"),
+			File("Parser/UnitTest/StanzaAckParserTest.cpp"),
 			File("Parser/UnitTest/SerializingParserTest.cpp"),
 			File("Parser/UnitTest/StanzaParserTest.cpp"),
 			File("Parser/UnitTest/StreamFeaturesParserTest.cpp"),

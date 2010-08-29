@@ -26,7 +26,6 @@ namespace Swift {
 				return stanza_;
 			}
 
-		protected:
 			virtual boost::shared_ptr<ElementType> getElementGeneric() const {
 				return stanza_;
 			}
