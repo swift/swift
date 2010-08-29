@@ -5,6 +5,7 @@ Import("env")
 if env["TEST"] :
 	if env["SCONS_STAGE"] == "flags" :
 		env["UNITTEST_SOURCES"] = []
+		env["UNITTEST_OBJECTS"] = []
 	if env["SCONS_STAGE"] == "test" :
 		myenv = env.Clone()
 		myenv.MergeFlags(env.get("CHECKER_FLAGS",""))
@@ -23,7 +24,7 @@ if env["TEST"] :
 			myenv.Append(CPPDEFINES = ["HAVE_LIBXML"])
 		if env.get("HAVE_EXPAT") :
 			myenv.Append(CPPDEFINES = ["HAVE_EXPAT"])
-		checker = myenv.Program("checker", env["UNITTEST_SOURCES"])
+		checker = myenv.Program("checker", env["UNITTEST_SOURCES"] + env["UNITTEST_OBJECTS"])
 		for i in ["HOME", "USERPROFILE", "APPDATA"]:
 			if os.environ.get(i, "") :
 				myenv["ENV"][i] = os.environ[i]

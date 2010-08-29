@@ -28,7 +28,7 @@ class StanzaAckParserTest : public CppUnit::TestFixture {
 			CPPUNIT_ASSERT(parser.parse("<a h=\"12\" xmlns=\"urn:xmpp:sm:2\"/>"));
 
 			CPPUNIT_ASSERT(testling.getElementGeneric()->isValid());
-			CPPUNIT_ASSERT_EQUAL(12, testling.getElementGeneric()->getHandledStanzasCount());
+			CPPUNIT_ASSERT_EQUAL(12U, testling.getElementGeneric()->getHandledStanzasCount());
 		}
 
 		void testParse_Invalid() {

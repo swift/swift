@@ -20,7 +20,6 @@ void StanzaAckParser::handleStartElement(const String&, const String&, const Att
 			getElementGeneric()->setHandledStanzasCount(boost::lexical_cast<int>(handledStanzasString.getUTF8String()));
 		}
 		catch (const boost::bad_lexical_cast &) {
-			getElementGeneric()->setHandledStanzasCount(-1);
 		}
 	}
 	++depth;

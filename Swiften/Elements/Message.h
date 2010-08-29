@@ -9,6 +9,7 @@
 #include <boost/optional.hpp>
 
 #include "Swiften/Base/String.h"
+#include "Swiften/Base/Shared.h"
 #include "Swiften/Elements/Body.h"
 #include "Swiften/Elements/Subject.h"
 #include "Swiften/Elements/ErrorPayload.h"
@@ -16,8 +17,7 @@
 
 namespace Swift
 {
-	class Message : public Stanza
-	{
+	class Message : public Stanza, public Shared<Message> {
 	  public:
 			enum Type { Normal, Chat, Error, Groupchat, Headline };
 

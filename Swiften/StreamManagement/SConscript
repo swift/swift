@@ -1,0 +1,8 @@
+Import("swiften_env")
+
+sources = [
+		"StanzaAckRequester.cpp",
+		"StanzaAckResponder.cpp",
+	]
+
+swiften_env.Append(SWIFTEN_OBJECTS = swiften_env.StaticObject(sources))

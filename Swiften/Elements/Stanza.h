@@ -14,6 +14,7 @@
 #include "Swiften/Elements/Element.h"
 #include "Swiften/Elements/Payload.h"
 #include "Swiften/Base/String.h"
+#include "Swiften/Base/Shared.h"
 #include "Swiften/Base/foreach.h"
 #include "Swiften/JID/JID.h"
 
