@@ -47,6 +47,9 @@ env = Environment(CPPPATH = "#", ENV = {
 
 Help(vars.GenerateHelpText(env))
 
+# Default environment variables
+env["PLATFORM_FLAGS"] = {}
+
 # Default custom tools
 env.Tool("Test", toolpath = ["#/BuildTools/SCons/Tools"])
 env.Tool("WriteVal", toolpath = ["#/BuildTools/SCons/Tools"])
@@ -275,16 +278,15 @@ if not conf.CheckCXX() or not conf.CheckCC() :
 
 env["HAVE_ZLIB"] = True
 if conf.CheckLib("z") :
-	env.Append(LIBS = "z")
-	env["ZLIB_FLAGS"] = ""
+	env["ZLIB_FLAGS"] = {"LIBS": ["z"]}
 else :
 	env["ZLIB_BUNDLED"] = True
 
-if conf.CheckLib("c") :
-	env.Append(LIBS = ["c"])
-
 if conf.CheckLib("resolv") :
-	env.Append(LIBS = ["resolv"])
+	env["PLATFORM_FLAGS"]["LIBS"] = env["PLATFORM_FLAGS"].get("LIBS", []) + ["resolv"]
+
+if conf.CheckLib("c") :
+	env["PLATFORM_FLAGS"]["LIBS"] = env["PLATFORM_FLAGS"].get("LIBS", []) + ["c"]
 
 # LibIDN
 if conf.CheckCHeader("idna.h") and conf.CheckLib("idn") :

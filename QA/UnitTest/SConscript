@@ -20,6 +20,7 @@ if env["TEST"] :
 		myenv.MergeFlags(env.get("LIBXML_FLAGS", ""))
 		myenv.MergeFlags(env.get("EXPAT_FLAGS", ""))
 		myenv.MergeFlags(env.get("ZLIB_FLAGS", ""))
+		myenv.MergeFlags(env["PLATFORM_FLAGS"])
 		if env.get("HAVE_LIBXML") :
 			myenv.Append(CPPDEFINES = ["HAVE_LIBXML"])
 		if env.get("HAVE_EXPAT") :
