@@ -71,22 +71,29 @@ void QtXMLConsoleWidget::closeEvent(QCloseEvent* event) {
 }
 
 void QtXMLConsoleWidget::handleDataRead(const String& data) {
-	textEdit->setTextColor(QColor(33,98,33));
-	appendTextIfEnabled(data);
+	appendTextIfEnabled(data, QColor(33,98,33));
 }
 
 void QtXMLConsoleWidget::handleDataWritten(const String& data) {
-	textEdit->setTextColor(QColor(155,1,0));
-	appendTextIfEnabled(data);
+	appendTextIfEnabled(data, QColor(155,1,0));
 }
 
-void QtXMLConsoleWidget::appendTextIfEnabled(const String& data) {
+void QtXMLConsoleWidget::appendTextIfEnabled(const String& data, const QColor& color) {
 	if (enabled->isChecked()) {
 		QScrollBar* scrollBar = textEdit->verticalScrollBar();
 		bool scrollToBottom = (!scrollBar || scrollBar->value() == scrollBar->maximum());
-		textEdit->append(P2QSTRING(data));
+
+		QTextCursor cursor(textEdit->document());
+		cursor.beginEditBlock();
+		cursor.movePosition(QTextCursor::End);
+		QTextCharFormat format;
+		format.setForeground(QBrush(color));
+		cursor.mergeCharFormat(format);
+		cursor.insertText(P2QSTRING(data));
+		cursor.endEditBlock();
+
 		if (scrollToBottom) {
-			textEdit->ensureCursorVisible();
+			scrollBar->setValue(scrollBar->maximum());
 		}
 	}
 }

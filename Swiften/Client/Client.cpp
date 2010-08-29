@@ -81,9 +81,10 @@ void Client::handleConnectorFinished(boost::shared_ptr<Connection> connection, C
 
 		session_ = ClientSession::create(jid_, sessionStream_);
 		session_->onInitialized.connect(boost::bind(boost::ref(onConnected)));
+		session_->onStanzaAcked.connect(boost::bind(&Client::handleStanzaAcked, this, _1));
 		session_->onFinished.connect(boost::bind(&Client::handleSessionFinished, this, _1));
 		session_->onNeedCredentials.connect(boost::bind(&Client::handleNeedCredentials, this));
-		session_->onElementReceived.connect(boost::bind(&Client::handleElement, this, _1));
+		session_->onStanzaReceived.connect(boost::bind(&Client::handleStanza, this, _1));
 		session_->start();
 	}
 }
@@ -115,7 +116,7 @@ void Client::send(boost::shared_ptr<Stanza> stanza) {
 		std::cerr << "Warning: Client: Trying to send a stanza while disconnected." << std::endl;
 		return;
 	}
-	session_->sendElement(stanza);
+	session_->sendStanza(stanza);
 }
 
 void Client::sendIQ(boost::shared_ptr<IQ> iq) {
@@ -134,20 +135,20 @@ String Client::getNewIQID() {
 	return idGenerator_.generateID();
 }
 
-void Client::handleElement(boost::shared_ptr<Element> element) {
-	boost::shared_ptr<Message> message = boost::dynamic_pointer_cast<Message>(element);
+void Client::handleStanza(boost::shared_ptr<Stanza> stanza) {
+	boost::shared_ptr<Message> message = boost::dynamic_pointer_cast<Message>(stanza);
 	if (message) {
 		onMessageReceived(message);
 		return;
 	}
 
-	boost::shared_ptr<Presence> presence = boost::dynamic_pointer_cast<Presence>(element);
+	boost::shared_ptr<Presence> presence = boost::dynamic_pointer_cast<Presence>(stanza);
 	if (presence) {
 		onPresenceReceived(presence);
 		return;
 	}
 
-	boost::shared_ptr<IQ> iq = boost::dynamic_pointer_cast<IQ>(element);
+	boost::shared_ptr<IQ> iq = boost::dynamic_pointer_cast<IQ>(stanza);
 	if (iq) {
 		onIQReceived(iq);
 		return;
@@ -222,12 +223,23 @@ void Client::handleNeedCredentials() {
 	session_->sendCredentials(password_);
 }
 
+bool Client::getStreamManagementEnabled() const {
+	if (session_) {
+		return session_->getStreamManagementEnabled();
+	}
+	return false;
+}
+
 void Client::handleDataRead(const String& data) {
 	onDataRead(data);
 }
 
 void Client::handleDataWritten(const String& data) {
 	onDataWritten(data);
+}
+
+void Client::handleStanzaAcked(boost::shared_ptr<Stanza> stanza) {
+	onStanzaAcked(stanza);
 }
 
 }

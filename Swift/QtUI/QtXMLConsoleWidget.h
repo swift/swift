@@ -11,6 +11,7 @@
 
 class QTextEdit;
 class QCheckBox;
+class QColor;
 
 namespace Swift {
 	class QtXMLConsoleWidget : public QtTabbable, public XMLConsoleWidget {
@@ -29,7 +30,7 @@ namespace Swift {
 			virtual void closeEvent(QCloseEvent* event);
 			virtual void showEvent(QShowEvent* event);
 
-			void appendTextIfEnabled(const String& data);
+			void appendTextIfEnabled(const String& data, const QColor& color);
 
 		private:
 			QTextEdit* textEdit;

@@ -44,6 +44,8 @@ namespace Swift {
 			
 			bool isAvailable();
 
+			bool getStreamManagementEnabled() const;
+
 			virtual void sendIQ(boost::shared_ptr<IQ>);
 			virtual void sendMessage(boost::shared_ptr<Message>);
 			virtual void sendPresence(boost::shared_ptr<Presence>);
@@ -53,16 +55,18 @@ namespace Swift {
 			boost::signal<void ()> onConnected;
 			boost::signal<void (const String&)> onDataRead;
 			boost::signal<void (const String&)> onDataWritten;
+			boost::signal<void (boost::shared_ptr<Stanza>)> onStanzaAcked;
 
 		private:
 			void handleConnectorFinished(boost::shared_ptr<Connection>, Connector::ref);
 			void send(boost::shared_ptr<Stanza>);
 			virtual String getNewIQID();
-			void handleElement(boost::shared_ptr<Element>);
+			void handleStanza(boost::shared_ptr<Stanza>);
 			void handleSessionFinished(boost::shared_ptr<Error>);
 			void handleNeedCredentials();
 			void handleDataRead(const String&);
 			void handleDataWritten(const String&);
+			void handleStanzaAcked(boost::shared_ptr<Stanza>);
 
 			void closeConnection();
 

@@ -16,6 +16,8 @@
 #include "Swiften/Base/String.h"
 #include "Swiften/JID/JID.h"
 #include "Swiften/Elements/Element.h"
+#include "Swiften/StreamManagement/StanzaAckRequester.h"
+#include "Swiften/StreamManagement/StanzaAckResponder.h"
 
 namespace Swift {
 	class ClientAuthenticator;
@@ -31,6 +33,7 @@ namespace Swift {
 				Encrypting,
 				WaitingForCredentials,
 				Authenticating,
+				EnablingSessionManagement,
 				BindingResource,
 				StartingSession,
 				Initialized,
@@ -65,17 +68,22 @@ namespace Swift {
 				allowPLAINOverNonTLS = b;
 			}
 
+			bool getStreamManagementEnabled() const {
+				return stanzaAckRequester_;
+			}
+
 			void start();
 			void finish();
 
 			void sendCredentials(const String& password);
-			void sendElement(boost::shared_ptr<Element> element);
+			void sendStanza(boost::shared_ptr<Stanza>);
 
 		public:
 			boost::signal<void ()> onNeedCredentials;
 			boost::signal<void ()> onInitialized;
 			boost::signal<void (boost::shared_ptr<Swift::Error>)> onFinished;
-			boost::signal<void (boost::shared_ptr<Element>)> onElementReceived;
+			boost::signal<void (boost::shared_ptr<Stanza>)> onStanzaReceived;
+			boost::signal<void (boost::shared_ptr<Stanza>)> onStanzaAcked;
 		
 		private:
 			ClientSession(
@@ -90,7 +98,6 @@ namespace Swift {
 			}
 
 			void sendStreamHeader();
-			void sendSessionStart();
 
 			void handleElement(boost::shared_ptr<Element>);
 			void handleStreamStart(const ProtocolHeader&);
@@ -99,6 +106,11 @@ namespace Swift {
 			void handleTLSEncrypted();
 
 			bool checkState(State);
+			void continueSessionInitialization();
+
+			void requestAck();
+			void handleStanzaAcked(boost::shared_ptr<Stanza> stanza);
+			void ack(unsigned int handledStanzasCount);
 
 		private:
 			JID localJID;
@@ -106,6 +118,9 @@ namespace Swift {
 			boost::shared_ptr<SessionStream> stream;
 			bool allowPLAINOverNonTLS;
 			bool needSessionStart;
+			bool needResourceBind;
 			ClientAuthenticator* authenticator;
+			boost::shared_ptr<StanzaAckRequester> stanzaAckRequester_;
+			boost::shared_ptr<StanzaAckResponder> stanzaAckResponder_;
 	};
 }

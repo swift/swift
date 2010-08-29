@@ -19,6 +19,11 @@
 #include "Swiften/Elements/AuthRequest.h"
 #include "Swiften/Elements/AuthSuccess.h"
 #include "Swiften/Elements/AuthFailure.h"
+#include "Swiften/Elements/StreamManagementEnabled.h"
+#include "Swiften/Elements/StreamManagementFailed.h"
+#include "Swiften/Elements/EnableStreamManagement.h"
+#include "Swiften/Elements/IQ.h"
+#include "Swiften/Elements/ResourceBind.h"
 
 using namespace Swift;
 
@@ -31,6 +36,8 @@ class ClientSessionTest : public CppUnit::TestFixture {
 		CPPUNIT_TEST(testAuthenticate);
 		CPPUNIT_TEST(testAuthenticate_Unauthorized);
 		CPPUNIT_TEST(testAuthenticate_NoValidAuthMechanisms);
+		CPPUNIT_TEST(testStreamManagement);
+		CPPUNIT_TEST(testStreamManagement_Failed);
 		/*
 		CPPUNIT_TEST(testResourceBind);
 		CPPUNIT_TEST(testResourceBind_ChangeResource);
@@ -163,6 +170,46 @@ class ClientSessionTest : public CppUnit::TestFixture {
 			CPPUNIT_ASSERT(sessionFinishedError);
 		}
 
+		void testStreamManagement() {
+			boost::shared_ptr<ClientSession> session(createSession());
+			session->start();
+			server->receiveStreamStart();
+			server->sendStreamStart();
+			server->sendStreamFeaturesWithPLAINAuthentication();
+			session->sendCredentials("mypass");
+			server->receiveAuthRequest("PLAIN");
+			server->sendAuthSuccess();
+			server->receiveStreamStart();
+			server->sendStreamStart();
+			server->sendStreamFeaturesWithBindAndStreamManagement();
+			server->receiveStreamManagementEnable();
+			server->sendStreamManagementEnabled();
+
+			CPPUNIT_ASSERT(session->getStreamManagementEnabled());
+			server->receiveBind();
+			// TODO: Test if the requesters & responders do their work
+		}
+
+		void testStreamManagement_Failed() {
+			boost::shared_ptr<ClientSession> session(createSession());
+			session->start();
+			server->receiveStreamStart();
+			server->sendStreamStart();
+			server->sendStreamFeaturesWithPLAINAuthentication();
+			session->sendCredentials("mypass");
+			server->receiveAuthRequest("PLAIN");
+			server->sendAuthSuccess();
+			server->receiveStreamStart();
+			server->sendStreamStart();
+			server->sendStreamFeaturesWithBindAndStreamManagement();
+			server->receiveStreamManagementEnable();
+			server->sendStreamManagementFailed();
+
+			CPPUNIT_ASSERT(!session->getStreamManagementEnabled());
+			server->receiveBind();
+		}
+
+
 	private:
 		boost::shared_ptr<ClientSession> createSession() {
 			boost::shared_ptr<ClientSession> session = ClientSession::create(JID("me@foo.com"), server);
@@ -277,12 +324,27 @@ class ClientSessionTest : public CppUnit::TestFixture {
 					onElementReceived(streamFeatures);
 				}
 
+				void sendStreamFeaturesWithBindAndStreamManagement() {
+					boost::shared_ptr<StreamFeatures> streamFeatures(new StreamFeatures());
+					streamFeatures->setHasResourceBind();
+					streamFeatures->setHasStreamManagement();
+					onElementReceived(streamFeatures);
+				}
+
 				void sendAuthSuccess() {
 					onElementReceived(boost::shared_ptr<AuthSuccess>(new AuthSuccess()));
 				}
 
 				void sendAuthFailure() {
 					onElementReceived(boost::shared_ptr<AuthFailure>(new AuthFailure()));
+				}
+
+				void sendStreamManagementEnabled() {
+					onElementReceived(boost::shared_ptr<StreamManagementEnabled>(new StreamManagementEnabled()));
+				}
+
+				void sendStreamManagementFailed() {
+					onElementReceived(boost::shared_ptr<StreamManagementFailed>(new StreamManagementFailed()));
 				}
 
 				void receiveStreamStart() {
@@ -302,6 +364,20 @@ class ClientSessionTest : public CppUnit::TestFixture {
 					boost::shared_ptr<AuthRequest> request(boost::dynamic_pointer_cast<AuthRequest>(event.element));
 					CPPUNIT_ASSERT(request);
 					CPPUNIT_ASSERT_EQUAL(mech, request->getMechanism());
+				}
+
+				void receiveStreamManagementEnable() {
+					Event event = popEvent();
+					CPPUNIT_ASSERT(event.element);
+					CPPUNIT_ASSERT(boost::dynamic_pointer_cast<EnableStreamManagement>(event.element));
+				}
+
+				void receiveBind() {
+					Event event = popEvent();
+					CPPUNIT_ASSERT(event.element);
+					boost::shared_ptr<IQ> iq = boost::dynamic_pointer_cast<IQ>(event.element);
+					CPPUNIT_ASSERT(iq);
+					CPPUNIT_ASSERT(iq->getPayload<ResourceBind>());
 				}
 
 				Event popEvent() {

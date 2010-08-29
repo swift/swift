@@ -13,6 +13,7 @@ namespace Swift {
 	class StanzaAck : public Element, public Shared<StanzaAck> {
 		public:
 			StanzaAck() : valid(false), handledStanzasCount(0) {}
+			StanzaAck(unsigned int handledStanzasCount) : valid(true), handledStanzasCount(handledStanzasCount) {}
 
 			unsigned int getHandledStanzasCount() const {
 				return handledStanzasCount;

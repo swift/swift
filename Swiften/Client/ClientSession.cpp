@@ -24,7 +24,12 @@
 #include "Swiften/Elements/Compressed.h"
 #include "Swiften/Elements/CompressFailure.h"
 #include "Swiften/Elements/CompressRequest.h"
+#include "Swiften/Elements/EnableStreamManagement.h"
+#include "Swiften/Elements/StreamManagementEnabled.h"
+#include "Swiften/Elements/StreamManagementFailed.h"
 #include "Swiften/Elements/StartSession.h"
+#include "Swiften/Elements/StanzaAck.h"
+#include "Swiften/Elements/StanzaAckRequest.h"
 #include "Swiften/Elements/IQ.h"
 #include "Swiften/Elements/ResourceBind.h"
 #include "Swiften/SASL/PLAINClientAuthenticator.h"
@@ -42,6 +47,7 @@ ClientSession::ClientSession(
 			stream(stream),
 			allowPLAINOverNonTLS(false),
 			needSessionStart(false),
+			needResourceBind(false),
 			authenticator(NULL) {
 }
 
@@ -65,8 +71,11 @@ void ClientSession::sendStreamHeader() {
 	stream->writeHeader(header);
 }
 
-void ClientSession::sendElement(boost::shared_ptr<Element> element) {
-	stream->writeElement(element);
+void ClientSession::sendStanza(boost::shared_ptr<Stanza> stanza) {
+	stream->writeElement(stanza);
+	if (stanzaAckRequester_) {
+		stanzaAckRequester_->handleStanzaSent(stanza);
+	}
 }
 
 void ClientSession::handleStreamStart(const ProtocolHeader&) {
@@ -75,8 +84,77 @@ void ClientSession::handleStreamStart(const ProtocolHeader&) {
 }
 
 void ClientSession::handleElement(boost::shared_ptr<Element> element) {
-	if (getState() == Initialized) {
-		onElementReceived(element);
+	if (boost::shared_ptr<Stanza> stanza = boost::dynamic_pointer_cast<Stanza>(element)) {
+		if (stanzaAckResponder_) {
+			stanzaAckResponder_->handleStanzaReceived();
+		}
+		if (getState() == Initialized) {
+			onStanzaReceived(stanza);
+		}
+		else if (boost::shared_ptr<IQ> iq = boost::dynamic_pointer_cast<IQ>(element)) {
+			if (state == BindingResource) {
+				boost::shared_ptr<ResourceBind> resourceBind(iq->getPayload<ResourceBind>());
+				if (iq->getType() == IQ::Error && iq->getID() == "session-bind") {
+					finishSession(Error::ResourceBindError);
+				}
+				else if (!resourceBind) {
+					finishSession(Error::UnexpectedElementError);
+				}
+				else if (iq->getType() == IQ::Result) {
+					localJID = resourceBind->getJID();
+					if (!localJID.isValid()) {
+						finishSession(Error::ResourceBindError);
+					}
+					needResourceBind = false;
+					continueSessionInitialization();
+				}
+				else {
+					finishSession(Error::UnexpectedElementError);
+				}
+			}
+			else if (state == StartingSession) {
+				if (iq->getType() == IQ::Result) {
+					needSessionStart = false;
+					continueSessionInitialization();
+				}
+				else if (iq->getType() == IQ::Error) {
+					finishSession(Error::SessionStartError);
+				}
+				else {
+					finishSession(Error::UnexpectedElementError);
+				}
+			}
+			else {
+				finishSession(Error::UnexpectedElementError);
+			}
+		}
+	}
+	else if (boost::dynamic_pointer_cast<StanzaAckRequest>(element)) {
+		if (stanzaAckResponder_) {
+			stanzaAckResponder_->handleAckRequestReceived();
+		}
+	}
+	else if (boost::shared_ptr<StanzaAck> ack = boost::dynamic_pointer_cast<StanzaAck>(element)) {
+		if (stanzaAckRequester_) {
+			if (ack->isValid()) {
+				stanzaAckRequester_->handleAckReceived(ack->getHandledStanzasCount());
+			}
+			else {
+				std::cerr << "Warning: Got invalid ack from server" << std::endl;
+			}
+		}
+		else {
+			std::cerr << "Warning: Ignoring ack" << std::endl;
+		}
+	}
+	else if (getState() == Initialized) {
+		boost::shared_ptr<Stanza> stanza = boost::dynamic_pointer_cast<Stanza>(element);
+		if (stanza) {
+			if (stanzaAckResponder_) {
+				stanzaAckResponder_->handleStanzaReceived();
+			}
+			onStanzaReceived(stanza);
+		}
 	}
 	else if (StreamFeatures* streamFeatures = dynamic_cast<StreamFeatures*>(element.get())) {
 		if (!checkState(Negotiating)) {
@@ -133,25 +211,14 @@ void ClientSession::handleElement(boost::shared_ptr<Element> element) {
 		else {
 			// Start the session
 			stream->setWhitespacePingEnabled(true);
-
-			if (streamFeatures->hasSession()) {
-				needSessionStart = true;
-			}
-
-			if (streamFeatures->hasResourceBind()) {
-				state = BindingResource;
-				boost::shared_ptr<ResourceBind> resourceBind(new ResourceBind());
-				if (!localJID.getResource().isEmpty()) {
-					resourceBind->setResource(localJID.getResource());
-				}
-				stream->writeElement(IQ::createRequest(IQ::Set, JID(), "session-bind", resourceBind));
-			}
-			else if (needSessionStart) {
-				sendSessionStart();
+			needSessionStart = streamFeatures->hasSession();
+			needResourceBind = streamFeatures->hasResourceBind();
+			if (streamFeatures->hasStreamManagement()) {
+				state = EnablingSessionManagement;
+				stream->writeElement(boost::shared_ptr<EnableStreamManagement>(new EnableStreamManagement()));
 			}
 			else {
-				state = Initialized;
-				onInitialized();
+				continueSessionInitialization();
 			}
 		}
 	}
@@ -164,6 +231,17 @@ void ClientSession::handleElement(boost::shared_ptr<Element> element) {
 	}
 	else if (boost::dynamic_pointer_cast<CompressFailure>(element)) {
 		finishSession(Error::CompressionFailedError);
+	}
+	else if (boost::dynamic_pointer_cast<StreamManagementEnabled>(element)) {
+		stanzaAckRequester_ = boost::shared_ptr<StanzaAckRequester>(new StanzaAckRequester());
+		stanzaAckRequester_->onRequestAck.connect(boost::bind(&ClientSession::requestAck, this));
+		stanzaAckRequester_->onStanzaAcked.connect(boost::bind(&ClientSession::handleStanzaAcked, this, _1));
+		stanzaAckResponder_ = boost::shared_ptr<StanzaAckResponder>(new StanzaAckResponder());
+		stanzaAckResponder_->onAck.connect(boost::bind(&ClientSession::ack, this, _1));
+		continueSessionInitialization();
+	}
+	else if (boost::dynamic_pointer_cast<StreamManagementFailed>(element)) {
+		continueSessionInitialization();
 	}
 	else if (AuthChallenge* challenge = dynamic_cast<AuthChallenge*>(element.get())) {
 		checkState(Authenticating);
@@ -201,47 +279,6 @@ void ClientSession::handleElement(boost::shared_ptr<Element> element) {
 	else if (dynamic_cast<StartTLSFailure*>(element.get())) {
 		finishSession(Error::TLSError);
 	}
-	else if (IQ* iq = dynamic_cast<IQ*>(element.get())) {
-		if (state == BindingResource) {
-			boost::shared_ptr<ResourceBind> resourceBind(iq->getPayload<ResourceBind>());
-			if (iq->getType() == IQ::Error && iq->getID() == "session-bind") {
-				finishSession(Error::ResourceBindError);
-			}
-			else if (!resourceBind) {
-				finishSession(Error::UnexpectedElementError);
-			}
-			else if (iq->getType() == IQ::Result) {
-				localJID = resourceBind->getJID();
-				if (!localJID.isValid()) {
-					finishSession(Error::ResourceBindError);
-				}
-				if (needSessionStart) {
-					sendSessionStart();
-				}
-				else {
-					state = Initialized;
-				}
-			}
-			else {
-				finishSession(Error::UnexpectedElementError);
-			}
-		}
-		else if (state == StartingSession) {
-			if (iq->getType() == IQ::Result) {
-				state = Initialized;
-				onInitialized();
-			}
-			else if (iq->getType() == IQ::Error) {
-				finishSession(Error::SessionStartError);
-			}
-			else {
-				finishSession(Error::UnexpectedElementError);
-			}
-		}
-		else {
-			finishSession(Error::UnexpectedElementError);
-		}
-	}
 	else {
 		// FIXME Not correct?
 		state = Initialized;
@@ -249,9 +286,23 @@ void ClientSession::handleElement(boost::shared_ptr<Element> element) {
 	}
 }
 
-void ClientSession::sendSessionStart() {
-	state = StartingSession;
-	stream->writeElement(IQ::createRequest(IQ::Set, JID(), "session-start", boost::shared_ptr<StartSession>(new StartSession())));
+void ClientSession::continueSessionInitialization() {
+	if (needResourceBind) {
+		state = BindingResource;
+		boost::shared_ptr<ResourceBind> resourceBind(new ResourceBind());
+		if (!localJID.getResource().isEmpty()) {
+			resourceBind->setResource(localJID.getResource());
+		}
+		sendStanza(IQ::createRequest(IQ::Set, JID(), "session-bind", resourceBind));
+	}
+	else if (needSessionStart) {
+		state = StartingSession;
+		sendStanza(IQ::createRequest(IQ::Set, JID(), "session-start", boost::shared_ptr<StartSession>(new StartSession())));
+	}
+	else {
+		state = Initialized;
+		onInitialized();
+	}
 }
 
 bool ClientSession::checkState(State state) {
@@ -297,5 +348,17 @@ void ClientSession::finishSession(boost::shared_ptr<Swift::Error> error) {
 	onFinished(error);
 }
 
+
+void ClientSession::requestAck() {
+	stream->writeElement(boost::shared_ptr<StanzaAckRequest>(new StanzaAckRequest()));
+}
+
+void ClientSession::handleStanzaAcked(boost::shared_ptr<Stanza> stanza) {
+	onStanzaAcked(stanza);
+}
+
+void ClientSession::ack(unsigned int handledStanzasCount) {
+	stream->writeElement(boost::shared_ptr<StanzaAck>(new StanzaAck(handledStanzasCount)));
+}
 
 }

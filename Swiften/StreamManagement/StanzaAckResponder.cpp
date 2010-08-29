@@ -20,5 +20,7 @@ void StanzaAckResponder::handleStanzaReceived() {
 }
 
 void StanzaAckResponder::handleAckRequestReceived() {
-	onAck(handledStanzasCount);}
+	onAck(handledStanzasCount);
+}
+
 }
