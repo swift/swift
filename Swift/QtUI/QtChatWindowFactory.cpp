@@ -11,12 +11,15 @@
 #include "QtChatTabs.h"
 #include "QtChatWindow.h"
 #include "QtSwiftUtil.h"
+#include "QtChatTheme.h"
+#include <qdebug.h>
 
 
 namespace Swift {
-QtChatWindowFactory::QtChatWindowFactory(QSplitter* splitter, QtSettingsProvider* settings, QtChatTabs* tabs) {
+QtChatWindowFactory::QtChatWindowFactory(QSplitter* splitter, QtSettingsProvider* settings, QtChatTabs* tabs, const QString& themePath) : themePath_(themePath) {
 	settings_ = settings;
 	tabs_ = tabs;
+	theme_ = NULL;
 	if (splitter) {
 		splitter->addWidget(tabs_);
 	} else if (tabs_) {
@@ -28,8 +31,19 @@ QtChatWindowFactory::QtChatWindowFactory(QSplitter* splitter, QtSettingsProvider
 	}
 }
 
+QtChatWindowFactory::~QtChatWindowFactory() {
+	delete theme_;
+}
+
 ChatWindow* QtChatWindowFactory::createChatWindow(const JID &contact,UIEventStream* eventStream) {
-	QtChatWindow *chatWindow = new QtChatWindow(P2QSTRING(contact.toString()), eventStream);
+	if (!theme_) {
+		theme_ = new QtChatTheme(themePath_);
+		if (theme_->getIncomingContent().isEmpty()) {
+			delete theme_;
+			theme_ = new QtChatTheme(""); /* Use the inbuilt theme */
+		}
+	}
+	QtChatWindow *chatWindow = new QtChatWindow(P2QSTRING(contact.toString()), theme_, eventStream);
 	if (tabs_) {
 		tabs_->addTab(chatWindow);
 	} else {

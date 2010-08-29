@@ -7,6 +7,7 @@
 #pragma once
 
 #include <QString>
+#include "QtChatTheme.h"
 
 namespace Swift {
 	class ChatSnippet {
@@ -22,7 +23,6 @@ namespace Swift {
 			}
 			
 		protected:
-			QString loadTemplate(const QString& file);
 			static QString escape(const QString&);
 
 		private:

@@ -16,16 +16,6 @@ ChatSnippet::ChatSnippet(bool appendToPrevious) : appendToPrevious_(appendToPrev
 ChatSnippet::~ChatSnippet() {
 }
 
-QString ChatSnippet::loadTemplate(const QString& filename) {
-	QFile file(filename);
-	bool result = file.open(QIODevice::ReadOnly);
-	Q_ASSERT(result);
-	Q_UNUSED(result);
-	QString content = file.readAll();
-	file.close();
-	return content;
-}
-
 QString ChatSnippet::escape(const QString& original) {
 	QString result(original);
 	result.replace("%message%", "&#37;message&#37;");

@@ -9,6 +9,10 @@
 
 #include <QString>
 #include <QWidget>
+#include <QList>
+#include <QWebElement>
+
+#include <boost/shared_ptr.hpp>
 
 #include "ChatSnippet.h"
 
@@ -17,12 +21,13 @@ class QUrl;
 
 namespace Swift {
 	class QtWebView;
+	class QtChatTheme;
 	class QtChatView : public QWidget {
 			Q_OBJECT
 		public:
-			QtChatView(QWidget* parent);
+			QtChatView(QtChatTheme* theme, QWidget* parent);
 
-			void addMessage(const ChatSnippet& snippet);
+			void addMessage(boost::shared_ptr<ChatSnippet> snippet);
 			bool isScrolledToBottom() const;
 
 		signals:
@@ -38,11 +43,22 @@ namespace Swift {
 			void handleViewLoadFinished(bool);
 
 		private:
+			void headerEncode();
+			void messageEncode();
+			void addQueuedSnippets();
+			void addToDOM(boost::shared_ptr<ChatSnippet> snippet);
+			QWebElement snippetToDOM(boost::shared_ptr<ChatSnippet> snippet);
+
 			bool viewReady_;
 			QtWebView* webView_;
 			QWebPage* webPage_;
 			QString previousContinuationElementID_;
-			QString queuedMessages_;
+			QList<boost::shared_ptr<ChatSnippet> > queuedSnippets_;
+
+			QtChatTheme* theme_;
+			QWebElement newInsertPoint_;
+			QWebElement lastElement_;
+			QWebElement document_;
 	};
 }
 

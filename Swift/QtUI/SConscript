@@ -64,6 +64,7 @@ sources = [
     "QtStatusWidget.cpp",
     "QtSwift.cpp",
     "QtChatView.cpp",
+    "QtChatTheme.cpp",
     "QtChatTabs.cpp",
     "QtSoundPlayer.cpp",
     "QtSystemTray.cpp",

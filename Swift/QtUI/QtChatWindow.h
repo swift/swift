@@ -19,13 +19,14 @@ namespace Swift {
 	class QtChatView;
 	class QtTreeWidget;
 	class QtTreeWidgetFactory;
+	class QtChatTheme;
 	class TreeWidget;
 	class QtTextEdit;
 	class UIEventStream;
 	class QtChatWindow : public QtTabbable, public ChatWindow {
 		Q_OBJECT
 		public:
-			QtChatWindow(const QString &contact, UIEventStream* eventStream);
+			QtChatWindow(const QString &contact, QtChatTheme* theme, UIEventStream* eventStream);
 			~QtChatWindow();
 			void addMessage(const String &message, const String &senderName, bool senderIsSelf, const boost::optional<SecurityLabel>& label, const String& avatarPath, const boost::posix_time::ptime& time);
 			void addAction(const String &message, const String &senderName, bool senderIsSelf, const boost::optional<SecurityLabel>& label, const String& avatarPath, const boost::posix_time::ptime& time);
@@ -74,10 +75,11 @@ namespace Swift {
 			int unreadCount_;
 			bool contactIsTyping_;
 			QString contact_;
-			QtChatView *messageLog_;
+			QtChatView* messageLog_;
+			QtChatTheme* theme_;
 			QtTextEdit* input_;
-			QComboBox *labelsWidget_;
-			QtTreeWidget *treeWidget_;
+			QComboBox* labelsWidget_;
+			QtTreeWidget* treeWidget_;
 			TabComplete* completer_;
 			std::vector<SecurityLabel> availableLabels_;
 			bool previousMessageWasSelf_;

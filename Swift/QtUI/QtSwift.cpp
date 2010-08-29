@@ -6,6 +6,8 @@
 
 #include "QtSwift.h"
 
+#include <string>
+
 #include "QtLoginWindowFactory.h"
 #include "QtChatWindowFactory.h"
 #include "QtLoginWindow.h"
@@ -13,6 +15,7 @@
 #include "QtMainWindowFactory.h"
 #include "QtSystemTray.h"
 #include "QtSoundPlayer.h"
+#include "QtSwiftUtil.h"
 #include "QtXMLConsoleWidgetFactory.h"
 #include "ChatList/QtChatListWindowFactory.h"
 #include "EventViewer/QtEventWindowFactory.h"
@@ -81,7 +84,7 @@ QtSwift::QtSwift(po::variables_map options) : autoUpdater_(NULL) {
 	applicationPathProvider_ = new PlatformApplicationPathProvider(SWIFT_APPLICATION_NAME);
 	avatarStorage_ = new AvatarFileStorage(applicationPathProvider_->getAvatarDir());
 	vcardStorageFactory_ = new VCardFileStorageFactory(applicationPathProvider_->getDataDir());
-	chatWindowFactory_ = new QtChatWindowFactory(splitter_, settings_, tabs_);
+	chatWindowFactory_ = new QtChatWindowFactory(splitter_, settings_, tabs_, "");
 	soundPlayer_ = new QtSoundPlayer(applicationPathProvider_);
 	if (splitter_) {
 		splitter_->show();

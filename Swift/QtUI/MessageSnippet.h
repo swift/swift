@@ -15,8 +15,8 @@ class QDateTime;
 namespace Swift {
 	class MessageSnippet : public ChatSnippet {
 		public:
-			MessageSnippet(const QString& message, const QString& sender, const QDateTime& time, const QString& iconURI, bool isIncoming, bool appendToPrevious);
-
+			MessageSnippet(const QString& message, const QString& sender, const QDateTime& time, const QString& iconURI, bool isIncoming, bool appendToPrevious, QtChatTheme* theme);
+			virtual ~MessageSnippet();
 			const QString& getContent() const {
 				return content_;
 			}

@@ -15,10 +15,13 @@
 #include <QStackedWidget>
 
 #include "QtWebView.h"
+#include "QtChatTheme.h"
+
 
 namespace Swift {
 
-QtChatView::QtChatView(QWidget* parent) : QWidget(parent) {
+QtChatView::QtChatView(QtChatTheme* theme, QWidget* parent) : QWidget(parent) {
+	theme_ = theme;
 
 	QVBoxLayout* mainLayout = new QVBoxLayout(this);
 	mainLayout->setSpacing(0);
@@ -46,54 +49,79 @@ QtChatView::QtChatView(QWidget* parent) : QWidget(parent) {
 	webView_->setPage(webPage_);
 	connect(webPage_, SIGNAL(selectionChanged()), SLOT(copySelectionToClipboard()));
 
-	QFile file(":/themes/Default/Template.html");
-	bool result = file.open(QIODevice::ReadOnly);
-	Q_ASSERT(result);
-	Q_UNUSED(result);
-	QString pageHTML = file.readAll();
-	pageHTML.replace("==bodyBackground==", "background-color:#e3e3e3");
-	pageHTML.replace(pageHTML.indexOf("%@"), 2, "qrc:/themes/Default/");
-	pageHTML.replace(pageHTML.indexOf("%@"), 2, "Variants/Blue on Green.css");
-	pageHTML.replace(pageHTML.indexOf("%@"), 2, "");
-	pageHTML.replace(pageHTML.indexOf("%@"), 2, "");
-	file.close();
-
 	viewReady_ = false;
+	QString pageHTML = theme_->getTemplate();
+	pageHTML.replace("==bodyBackground==", "background-color:#e3e3e3");
+	pageHTML.replace(pageHTML.indexOf("%@"), 2, theme_->getBase());
+	if (pageHTML.count("%@") > 3) {
+		pageHTML.replace(pageHTML.indexOf("%@"), 2, theme_->getMainCSS());
+	}
+	pageHTML.replace(pageHTML.indexOf("%@"), 2, "Variants/Blue on Green.css");
+	pageHTML.replace(pageHTML.indexOf("%@"), 2, ""/*headerSnippet.getContent()*/);
+	pageHTML.replace(pageHTML.indexOf("%@"), 2, ""/*footerSnippet.getContent()*/);
 	webPage_->mainFrame()->setHtml(pageHTML);
+	document_ = webPage_->mainFrame()->documentElement();
+	QWebElement chatElement = document_.findFirst("#Chat");
+	newInsertPoint_ = chatElement.clone();
+	newInsertPoint_.setOuterXml("<div id='insert'/>");
+	chatElement.appendInside(newInsertPoint_);
+	if (newInsertPoint_.isNull()) {
+		qWarning() << "Warning, initial insert point element is null!";
+	}
 }
 
 void QtChatView::handleKeyPressEvent(QKeyEvent* event) {
 	webView_->keyPressEvent(event);
 }
 
-void QtChatView::addMessage(const ChatSnippet& snippet) {
-	//bool wasScrolledToBottom = isScrolledToBottom();
-	
-	QString content = snippet.getContent();
-	content.replace("\\", "\\\\");
-	content.replace("\"", "\\\"");
-	content.replace("\n", "\\n");
-	content.replace("\r", "");
-	QString command;
-	if (previousContinuationElementID_.isEmpty() || !snippet.getAppendToPrevious()) {
-		command = "appendMessage(\"" + content + "\");";
-	}
-	else {
-		command = "appendNextMessage(\"" + content + "\");";
-	}
+void QtChatView::addMessage(boost::shared_ptr<ChatSnippet> snippet) {
 	if (viewReady_) {
-		webPage_->mainFrame()->evaluateJavaScript(command);
+		addToDOM(snippet);
+	} else {
+		queuedSnippets_.append(snippet);
 	}
-	else {
-		queuedMessages_ += command;
+//	QString content = snippet.getContent();
+//	content.replace("\\", "\\\\");
+//	content.replace("\"", "\\\"");
+//	content.replace("\n", "\\n");
+//	content.replace("\r", "");
+//	QString command;
+//	if (previousContinuationElementID_.isEmpty() || !snippet.getAppendToPrevious()) {
+//		command = "appendMessage(\"" + content + "\");";
+//	}
+//	else {
+//		command = "appendNextMessage(\"" + content + "\");";
+//	}
+//	if (viewReady_) {
+//		webPage_->mainFrame()->evaluateJavaScript(command);
+//	}
+//	else {
+//		queuedMessages_ += command;
+//	}
+//
+//	previousContinuationElementID_ = snippet.getContinuationElementID();
+
+}
+
+QWebElement QtChatView::snippetToDOM(boost::shared_ptr<ChatSnippet> snippet) {
+	QWebElement newElement = newInsertPoint_.clone();
+	newElement.setInnerXml(snippet->getContent()); /* FIXME: Outer, surely? */
+	if (newElement.isNull()) {
+		qWarning() << "Warning, new element is null!";
 	}
+	return newElement;
+}
 
-	//qDebug() << webPage_->mainFrame()->toHtml();
-	previousContinuationElementID_ = snippet.getContinuationElementID();
-
-	/*if (wasScrolledToBottom) {
-		scrollToBottom();
-	}*/
+void QtChatView::addToDOM(boost::shared_ptr<ChatSnippet> snippet) {
+	QWebElement newElement = snippetToDOM(snippet);
+	QWebElement continuationElement = lastElement_.findFirst("#insert");
+	if (snippet->getAppendToPrevious()) {
+		continuationElement.replace(newElement);
+	} else {
+		continuationElement.removeFromDocument();
+		newInsertPoint_.prependOutside(newElement);
+	}
+	lastElement_ = newElement;
 }
 
 void QtChatView::copySelectionToClipboard() {
@@ -114,11 +142,19 @@ void QtChatView::handleLinkClicked(const QUrl& url) {
 	QDesktopServices::openUrl(url);
 }
 
+void QtChatView::addQueuedSnippets() {
+	for (int i = 0; i < queuedSnippets_.count(); i++) {
+		addToDOM(queuedSnippets_[i]);
+	}
+	queuedSnippets_.clear();
+}
+
 void QtChatView::handleViewLoadFinished(bool ok) {
 	Q_ASSERT(ok);
 	viewReady_ = true;
-	webPage_->mainFrame()->evaluateJavaScript(queuedMessages_);
-	queuedMessages_.clear();
+	addQueuedSnippets();
+//	webPage_->mainFrame()->evaluateJavaScript(queuedMessages_);
+//	queuedMessages_.clear();
 }
 
 }

@@ -11,21 +11,21 @@
 
 namespace Swift {
 
-MessageSnippet::MessageSnippet(const QString& message, const QString& sender, const QDateTime& time, const QString& iconURI, bool isIncoming, bool appendToPrevious) : ChatSnippet(appendToPrevious) {
+MessageSnippet::MessageSnippet(const QString& message, const QString& sender, const QDateTime& time, const QString& iconURI, bool isIncoming, bool appendToPrevious, QtChatTheme* theme) : ChatSnippet(appendToPrevious) {
 	if (isIncoming) {
 		if (appendToPrevious) {
-			content_ = loadTemplate(":/themes/Default/Incoming/NextContent.html");
+			content_ = theme->getIncomingNextContent();
 		}
 		else {
-			content_ = loadTemplate(":/themes/Default/Incoming/Content.html");
+			content_ = theme->getIncomingContent();
 		}
 	}
 	else {
 		if (appendToPrevious) {
-			content_ = loadTemplate(":/themes/Default/Outgoing/NextContent.html");
+			content_ = theme->getOutgoingNextContent();
 		}
 		else {
-			content_ = loadTemplate(":/themes/Default/Outgoing/Content.html");
+			content_ = theme->getOutgoingContent();
 		}
 	}
 
@@ -33,6 +33,10 @@ MessageSnippet::MessageSnippet(const QString& message, const QString& sender, co
 	content_.replace("%sender%", escape(sender));
 	content_.replace("%time%", escape(time.toString("h:mm")));
 	content_.replace("%userIconPath%", escape(iconURI));
+}
+
+MessageSnippet::~MessageSnippet() {
+
 }
 
 }

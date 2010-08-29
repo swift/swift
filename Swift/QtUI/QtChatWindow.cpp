@@ -28,10 +28,11 @@
 #include <QUrl>
 
 namespace Swift {
-QtChatWindow::QtChatWindow(const QString &contact, UIEventStream* eventStream) : QtTabbable(), contact_(contact), previousMessageWasSelf_(false), previousMessageWasSystem_(false), previousMessageWasPresence_(false), eventStream_(eventStream) {
+QtChatWindow::QtChatWindow(const QString &contact, QtChatTheme* theme, UIEventStream* eventStream) : QtTabbable(), contact_(contact), previousMessageWasSelf_(false), previousMessageWasSystem_(false), previousMessageWasPresence_(false), eventStream_(eventStream) {
 	unreadCount_ = 0;
 	inputEnabled_ = true;
 	completer_ = NULL;
+	theme_ = theme;
 	updateTitleWithUnreadCount();
 
 	QBoxLayout *layout = new QBoxLayout(QBoxLayout::TopToBottom, this);
@@ -43,7 +44,7 @@ QtChatWindow::QtChatWindow(const QString &contact, UIEventStream* eventStream) :
 	logRosterSplitter->setAutoFillBackground(true);
 	layout->addWidget(logRosterSplitter);
 
-	messageLog_ = new QtChatView(this);
+	messageLog_ = new QtChatView(theme, this);
 	logRosterSplitter->addWidget(messageLog_);
 
 	treeWidget_ = new QtTreeWidget(eventStream_);
@@ -267,7 +268,7 @@ void QtChatWindow::addMessage(const String &message, const String &senderName, b
 
 	bool appendToPrevious = !previousMessageWasSystem_ && !previousMessageWasPresence_ && ((senderIsSelf && previousMessageWasSelf_) || (!senderIsSelf && !previousMessageWasSelf_ && previousSenderName_ == P2QSTRING(senderName)));
 	QString qAvatarPath =  avatarPath.isEmpty() ? "qrc:/icons/avatar.png" : QUrl::fromLocalFile(P2QSTRING(avatarPath)).toEncoded();
-	messageLog_->addMessage(MessageSnippet(htmlString, Qt::escape(P2QSTRING(senderName)), B2QDATE(time), qAvatarPath, senderIsSelf, appendToPrevious));
+	messageLog_->addMessage(boost::shared_ptr<ChatSnippet>(new MessageSnippet(htmlString, Qt::escape(P2QSTRING(senderName)), B2QDATE(time), qAvatarPath, senderIsSelf, appendToPrevious, theme_)));
 
 	previousMessageWasSelf_ = senderIsSelf;
 	previousSenderName_ = P2QSTRING(senderName);
@@ -290,7 +291,7 @@ void QtChatWindow::addErrorMessage(const String& errorMessage) {
 
 	QString errorMessageHTML(Qt::escape(P2QSTRING(errorMessage)));
 	errorMessageHTML.replace("\n","<br/>");
-	messageLog_->addMessage(SystemMessageSnippet(QString("<span class=\"error\">%1</span>").arg(errorMessageHTML), QDateTime::currentDateTime(),previousMessageWasSystem_));
+	messageLog_->addMessage(boost::shared_ptr<ChatSnippet>(new SystemMessageSnippet(QString("<span class=\"error\">%1</span>").arg(errorMessageHTML), QDateTime::currentDateTime(),previousMessageWasSystem_, theme_)));
 
 	previousMessageWasSelf_ = false;
 	previousMessageWasSystem_ = true;
@@ -304,7 +305,7 @@ void QtChatWindow::addSystemMessage(const String& message) {
 
 	QString messageHTML(Qt::escape(P2QSTRING(message)));
 	messageHTML.replace("\n","<br/>");
-	messageLog_->addMessage(SystemMessageSnippet(messageHTML, QDateTime::currentDateTime(),previousMessageWasSystem_));
+	messageLog_->addMessage(boost::shared_ptr<ChatSnippet>(new SystemMessageSnippet(messageHTML, QDateTime::currentDateTime(),previousMessageWasSystem_, theme_)));
 
 	previousMessageWasSelf_ = false;
 	previousMessageWasSystem_ = true;
@@ -318,7 +319,7 @@ void QtChatWindow::addPresenceMessage(const String& message) {
 
 	QString messageHTML(Qt::escape(P2QSTRING(message)));
 	messageHTML.replace("\n","<br/>");
-	messageLog_->addMessage(SystemMessageSnippet(messageHTML, QDateTime::currentDateTime(), previousMessageWasPresence_));
+	messageLog_->addMessage(boost::shared_ptr<ChatSnippet>(new SystemMessageSnippet(messageHTML, QDateTime::currentDateTime(), previousMessageWasPresence_, theme_)));
 
 	previousMessageWasSelf_ = false;
 	previousMessageWasSystem_ = false;

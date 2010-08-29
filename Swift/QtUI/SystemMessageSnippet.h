@@ -15,11 +15,10 @@ class QDateTime;
 namespace Swift {
 	class SystemMessageSnippet : public ChatSnippet {
 		public:
-			SystemMessageSnippet(const QString& message, const QDateTime& time, bool appendToPrevious);
+			SystemMessageSnippet(const QString& message, const QDateTime& time, bool appendToPrevious, QtChatTheme* theme);
+			virtual ~SystemMessageSnippet();
 
-			const QString& getContent() const {
-				return content_;
-			}
+			const QString& getContent() const {return content_;}
 
 			/*QString getContinuationElementID() const {
 				return "insert";

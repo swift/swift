@@ -14,17 +14,21 @@
 #include <QSplitter>
 namespace Swift {
 	class QtChatTabs;
+	class QtChatTheme;
 	class UIEventStream;
 	class QtChatWindowFactory : public QObject, public ChatWindowFactory {
 		Q_OBJECT
 		public:
-			QtChatWindowFactory(QSplitter* splitter, QtSettingsProvider* settings, QtChatTabs* tabs);
+			QtChatWindowFactory(QSplitter* splitter, QtSettingsProvider* settings, QtChatTabs* tabs, const QString& themePath);
+			~QtChatWindowFactory();
 			ChatWindow* createChatWindow(const JID &contact, UIEventStream* eventStream);
 		private slots:
 			void handleWindowGeometryChanged();
 		private:
+			QString themePath_;
 			QtSettingsProvider* settings_;
 			QtChatTabs* tabs_;
+			QtChatTheme* theme_;
 	};
 }
 
