@@ -17,7 +17,7 @@ namespace Swift {
 	class StreamFeatures : public Element
 	{
 		public:
-			StreamFeatures() : hasStartTLS_(false), hasResourceBind_(false), hasSession_(false) {}
+			StreamFeatures() : hasStartTLS_(false), hasResourceBind_(false), hasSession_(false), hasStreamManagement_(false) {}
 
 			void setHasStartTLS() {
 				hasStartTLS_ = true;
@@ -71,12 +71,21 @@ namespace Swift {
 				return !authenticationMechanisms_.empty();
 			}
 
+			bool hasStreamManagement() const {
+				return hasStreamManagement_;
+			}
+
+			void setHasStreamManagement() {
+				hasStreamManagement_ = true;
+			}
+
 		private:
 			bool hasStartTLS_;
 			std::vector<String> compressionMethods_;
 			std::vector<String> authenticationMechanisms_;
 			bool hasResourceBind_;
 			bool hasSession_;
+			bool hasStreamManagement_;
 	};
 }
 

@@ -22,6 +22,9 @@ void StreamFeaturesParser::handleStartElement(const String& element, const Strin
 		else if (element == "bind" && ns == "urn:ietf:params:xml:ns:xmpp-bind") {
 			getElementGeneric()->setHasResourceBind();
 		}
+		else if (element == "sm" && ns == "urn:xmpp:sm:2") {
+			getElementGeneric()->setHasStreamManagement();
+		}
 		else if (element == "mechanisms" && ns == "urn:ietf:params:xml:ns:xmpp-sasl") {
 			inMechanisms_ = true;
 		}

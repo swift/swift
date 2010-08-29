@@ -46,6 +46,9 @@ String StreamFeaturesSerializer::serialize(boost::shared_ptr<Element> element)  
 	if (streamFeatures->hasSession()) {
 		streamFeaturesElement.addNode(boost::shared_ptr<XMLElement>(new XMLElement("session", "urn:ietf:params:xml:ns:xmpp-session")));
 	}
+	if (streamFeatures->hasStreamManagement()) {
+		streamFeaturesElement.addNode(boost::shared_ptr<XMLElement>(new XMLElement("sm", "urn:xmpp:sm:2")));
+	}
 	return streamFeaturesElement.serialize();
 }
 

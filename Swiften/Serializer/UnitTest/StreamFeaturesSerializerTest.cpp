@@ -31,6 +31,7 @@ class StreamFeaturesSerializerTest : public CppUnit::TestFixture
 			streamFeatures->addAuthenticationMechanism("PLAIN");
 			streamFeatures->setHasResourceBind();
 			streamFeatures->setHasSession();
+			streamFeatures->setHasStreamManagement();
 
 			CPPUNIT_ASSERT_EQUAL(String(
 				"<stream:features>"
@@ -45,6 +46,7 @@ class StreamFeaturesSerializerTest : public CppUnit::TestFixture
 					"</mechanisms>"
 					"<bind xmlns=\"urn:ietf:params:xml:ns:xmpp-bind\"/>"
 					"<session xmlns=\"urn:ietf:params:xml:ns:xmpp-session\"/>"
+					"<sm xmlns=\"urn:xmpp:sm:2\"/>"
 				"</stream:features>"), testling.serialize(streamFeatures));
 		}
 };

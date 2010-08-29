@@ -38,6 +38,7 @@ class StreamFeaturesParserTest : public CppUnit::TestFixture
 						"<mechanism>PLAIN</mechanism>"
 					"</mechanisms>"
 					"<bind xmlns=\"urn:ietf:params:xml:ns:xmpp-bind\"/>"
+					"<sm xmlns='urn:xmpp:sm:2'/>"
 					"<session xmlns=\"urn:ietf:params:xml:ns:xmpp-session\"/>"
 				"</stream:features>"));
 
@@ -50,6 +51,7 @@ class StreamFeaturesParserTest : public CppUnit::TestFixture
 			CPPUNIT_ASSERT(element->hasAuthenticationMechanisms());
 			CPPUNIT_ASSERT(element->hasAuthenticationMechanism("DIGEST-MD5"));
 			CPPUNIT_ASSERT(element->hasAuthenticationMechanism("PLAIN"));
+			CPPUNIT_ASSERT(element->hasStreamManagement());
 		}
 
 		void testParse_Empty() {
