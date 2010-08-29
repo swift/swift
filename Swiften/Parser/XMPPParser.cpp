@@ -25,9 +25,9 @@
 #include "Swiften/Parser/AuthFailureParser.h"
 #include "Swiften/Parser/AuthChallengeParser.h"
 #include "Swiften/Parser/AuthResponseParser.h"
-#include "Swiften/Parser/EnableSessionManagementParser.h"
-#include "Swiften/Parser/SessionManagementEnabledParser.h"
-#include "Swiften/Parser/SessionManagementFailedParser.h"
+#include "Swiften/Parser/EnableStreamManagementParser.h"
+#include "Swiften/Parser/StreamManagementEnabledParser.h"
+#include "Swiften/Parser/StreamManagementFailedParser.h"
 #include "Swiften/Parser/StanzaAckParser.h"
 #include "Swiften/Parser/StanzaAckRequestParser.h"
 #include "Swiften/Parser/StartTLSParser.h"
@@ -165,13 +165,13 @@ ElementParser* XMPPParser::createElementParser(const String& element, const Stri
 		return new TLSProceedParser();
 	}
 	else if (element == "enable" && ns == "urn:xmpp:sm:2") {
-		return new EnableSessionManagementParser();
+		return new EnableStreamManagementParser();
 	}
 	else if (element == "enabled" && ns == "urn:xmpp:sm:2") {
-		return new SessionManagementEnabledParser();
+		return new StreamManagementEnabledParser();
 	}
 	else if (element == "failed" && ns == "urn:xmpp:sm:2") {
-		return new SessionManagementFailedParser();
+		return new StreamManagementFailedParser();
 	}
 	else if (element == "a" && ns == "urn:xmpp:sm:2") {
 		return new StanzaAckParser();

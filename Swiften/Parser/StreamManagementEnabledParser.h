@@ -7,11 +7,11 @@
 #pragma once
 
 #include "Swiften/Parser/GenericElementParser.h"
-#include "Swiften/Elements/SessionManagementFailed.h"
+#include "Swiften/Elements/StreamManagementEnabled.h"
 
 namespace Swift {
-	class SessionManagementFailedParser : public GenericElementParser<SessionManagementFailed> {
+	class StreamManagementEnabledParser : public GenericElementParser<StreamManagementEnabled> {
 		public:
-			SessionManagementFailedParser() : GenericElementParser<SessionManagementFailed>() {}
+			StreamManagementEnabledParser() : GenericElementParser<StreamManagementEnabled>() {}
 	};
 }

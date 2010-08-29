@@ -8,14 +8,14 @@
 
 #include <boost/shared_ptr.hpp>
 
-#include "Swiften/Elements/SessionManagementFailed.h"
+#include "Swiften/Elements/StreamManagementFailed.h"
 #include "Swiften/Serializer/GenericElementSerializer.h"
 #include "Swiften/Serializer/XML/XMLElement.h"
 
 namespace Swift {
-	class SessionManagementFailedSerializer : public GenericElementSerializer<SessionManagementFailed> {
+	class StreamManagementFailedSerializer : public GenericElementSerializer<StreamManagementFailed> {
 		public:
-			SessionManagementFailedSerializer() : GenericElementSerializer<SessionManagementFailed>() {
+			StreamManagementFailedSerializer() : GenericElementSerializer<StreamManagementFailed>() {
 			}
 
 			virtual String serialize(boost::shared_ptr<Element>) const {

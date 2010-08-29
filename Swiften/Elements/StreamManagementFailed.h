@@ -10,8 +10,8 @@
 #include "Swiften/Base/Shared.h"
 
 namespace Swift {
-	class EnableSessionManagement : public Element, public Shared<EnableSessionManagement> {
+	class StreamManagementFailed : public Element, public Shared<StreamManagementFailed> {
 		public:
-			EnableSessionManagement() {}
+			StreamManagementFailed() {}
 	};
 }

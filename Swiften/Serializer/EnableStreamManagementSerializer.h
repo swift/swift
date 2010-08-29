@@ -8,18 +8,18 @@
 
 #include <boost/shared_ptr.hpp>
 
-#include "Swiften/Elements/SessionManagementEnabled.h"
+#include "Swiften/Elements/EnableStreamManagement.h"
 #include "Swiften/Serializer/GenericElementSerializer.h"
 #include "Swiften/Serializer/XML/XMLElement.h"
 
 namespace Swift {
-	class SessionManagementEnabledSerializer : public GenericElementSerializer<SessionManagementEnabled> {
+	class EnableStreamManagementSerializer : public GenericElementSerializer<EnableStreamManagement> {
 		public:
-			SessionManagementEnabledSerializer() : GenericElementSerializer<SessionManagementEnabled>() {
+			EnableStreamManagementSerializer() : GenericElementSerializer<EnableStreamManagement>() {
 			}
 
 			virtual String serialize(boost::shared_ptr<Element>) const {
-				return XMLElement("enabled", "urn:xmpp:sm:2").serialize();
+				return XMLElement("enable", "urn:xmpp:sm:2").serialize();
 			}
 	};
 }
