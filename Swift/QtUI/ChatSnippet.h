@@ -22,7 +22,6 @@ namespace Swift {
 				return appendToPrevious_;
 			}
 			
-		protected:
 			static QString escape(const QString&);
 
 		private:

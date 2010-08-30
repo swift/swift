@@ -28,6 +28,8 @@ namespace Swift {
 			QtChatView(QtChatTheme* theme, QWidget* parent);
 
 			void addMessage(boost::shared_ptr<ChatSnippet> snippet);
+			void correctLastMessage(const QString& newMessage);
+			void correctLastMessage(const QString& newMessage, const QString& note);
 			bool isScrolledToBottom() const;
 
 		signals:
@@ -52,7 +54,6 @@ namespace Swift {
 			bool viewReady_;
 			QtWebView* webView_;
 			QWebPage* webPage_;
-			QString previousContinuationElementID_;
 			QList<boost::shared_ptr<ChatSnippet> > queuedSnippets_;
 
 			QtChatTheme* theme_;

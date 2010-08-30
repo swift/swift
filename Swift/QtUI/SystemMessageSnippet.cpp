@@ -13,9 +13,9 @@ namespace Swift {
 SystemMessageSnippet::SystemMessageSnippet(const QString& message, const QDateTime& time, bool appendToPrevious, QtChatTheme* theme) : ChatSnippet(appendToPrevious) {
 	content_ = theme->getStatus();
 
-	content_.replace("%message%", escape(message));
+	content_.replace("%message%", "<span class='swift_message'>" + escape(message) + "</span>");
 	content_.replace("%shortTime%", escape(time.toString("h:mm")));
-	content_.replace("%time%", escape(time.toString("h:mm")));
+	content_.replace("%time%", "<span class='swift_time'>" + escape(time.toString("h:mm")) + "</span>");
 }
 
 SystemMessageSnippet::~SystemMessageSnippet() {

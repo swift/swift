@@ -291,7 +291,7 @@ void QtChatWindow::addErrorMessage(const String& errorMessage) {
 
 	QString errorMessageHTML(Qt::escape(P2QSTRING(errorMessage)));
 	errorMessageHTML.replace("\n","<br/>");
-	messageLog_->addMessage(boost::shared_ptr<ChatSnippet>(new SystemMessageSnippet(QString("<span class=\"error\">%1</span>").arg(errorMessageHTML), QDateTime::currentDateTime(),previousMessageWasSystem_, theme_)));
+	messageLog_->addMessage(boost::shared_ptr<ChatSnippet>(new SystemMessageSnippet(QString("<span class=\"error\">%1</span>").arg(errorMessageHTML), QDateTime::currentDateTime(), false, theme_)));
 
 	previousMessageWasSelf_ = false;
 	previousMessageWasSystem_ = true;
@@ -305,7 +305,7 @@ void QtChatWindow::addSystemMessage(const String& message) {
 
 	QString messageHTML(Qt::escape(P2QSTRING(message)));
 	messageHTML.replace("\n","<br/>");
-	messageLog_->addMessage(boost::shared_ptr<ChatSnippet>(new SystemMessageSnippet(messageHTML, QDateTime::currentDateTime(),previousMessageWasSystem_, theme_)));
+	messageLog_->addMessage(boost::shared_ptr<ChatSnippet>(new SystemMessageSnippet(messageHTML, QDateTime::currentDateTime(), false, theme_)));
 
 	previousMessageWasSelf_ = false;
 	previousMessageWasSystem_ = true;
@@ -319,7 +319,7 @@ void QtChatWindow::addPresenceMessage(const String& message) {
 
 	QString messageHTML(Qt::escape(P2QSTRING(message)));
 	messageHTML.replace("\n","<br/>");
-	messageLog_->addMessage(boost::shared_ptr<ChatSnippet>(new SystemMessageSnippet(messageHTML, QDateTime::currentDateTime(), previousMessageWasPresence_, theme_)));
+	messageLog_->addMessage(boost::shared_ptr<ChatSnippet>(new SystemMessageSnippet(messageHTML, QDateTime::currentDateTime(), false, theme_)));
 
 	previousMessageWasSelf_ = false;
 	previousMessageWasSystem_ = false;

@@ -63,11 +63,9 @@ QtChatView::QtChatView(QtChatTheme* theme, QWidget* parent) : QWidget(parent) {
 	document_ = webPage_->mainFrame()->documentElement();
 	QWebElement chatElement = document_.findFirst("#Chat");
 	newInsertPoint_ = chatElement.clone();
-	newInsertPoint_.setOuterXml("<div id='insert'/>");
+	newInsertPoint_.setOuterXml("<div id='swift_insert'/>");
 	chatElement.appendInside(newInsertPoint_);
-	if (newInsertPoint_.isNull()) {
-		qWarning() << "Warning, initial insert point element is null!";
-	}
+	Q_ASSERT(!newInsertPoint_.isNull());
 }
 
 void QtChatView::handleKeyPressEvent(QKeyEvent* event) {
@@ -80,35 +78,12 @@ void QtChatView::addMessage(boost::shared_ptr<ChatSnippet> snippet) {
 	} else {
 		queuedSnippets_.append(snippet);
 	}
-//	QString content = snippet.getContent();
-//	content.replace("\\", "\\\\");
-//	content.replace("\"", "\\\"");
-//	content.replace("\n", "\\n");
-//	content.replace("\r", "");
-//	QString command;
-//	if (previousContinuationElementID_.isEmpty() || !snippet.getAppendToPrevious()) {
-//		command = "appendMessage(\"" + content + "\");";
-//	}
-//	else {
-//		command = "appendNextMessage(\"" + content + "\");";
-//	}
-//	if (viewReady_) {
-//		webPage_->mainFrame()->evaluateJavaScript(command);
-//	}
-//	else {
-//		queuedMessages_ += command;
-//	}
-//
-//	previousContinuationElementID_ = snippet.getContinuationElementID();
-
 }
 
 QWebElement QtChatView::snippetToDOM(boost::shared_ptr<ChatSnippet> snippet) {
 	QWebElement newElement = newInsertPoint_.clone();
 	newElement.setInnerXml(snippet->getContent()); /* FIXME: Outer, surely? */
-	if (newElement.isNull()) {
-		qWarning() << "Warning, new element is null!";
-	}
+	Q_ASSERT(!newElement.isNull());
 	return newElement;
 }
 
@@ -116,12 +91,25 @@ void QtChatView::addToDOM(boost::shared_ptr<ChatSnippet> snippet) {
 	QWebElement newElement = snippetToDOM(snippet);
 	QWebElement continuationElement = lastElement_.findFirst("#insert");
 	if (snippet->getAppendToPrevious()) {
+		Q_ASSERT(!continuationElement.isNull());
 		continuationElement.replace(newElement);
 	} else {
 		continuationElement.removeFromDocument();
 		newInsertPoint_.prependOutside(newElement);
 	}
 	lastElement_ = newElement;
+}
+
+void QtChatView::correctLastMessage(const QString& newMessage) {
+	/* FIXME: must be queued */
+	lastElement_.findFirst("swift_message");
+	lastElement_.setPlainText(ChatSnippet::escape(newMessage));
+}
+
+void QtChatView::correctLastMessage(const QString& newMessage, const QString& note) {
+	correctLastMessage(newMessage);
+	lastElement_.findFirst("swift_time");
+	lastElement_.setPlainText(ChatSnippet::escape(note));
 }
 
 void QtChatView::copySelectionToClipboard() {
