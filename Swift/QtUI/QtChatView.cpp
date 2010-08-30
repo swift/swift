@@ -13,6 +13,7 @@
 #include <QWebFrame>
 #include <QKeyEvent>
 #include <QStackedWidget>
+#include <QTimer>
 
 #include "QtWebView.h"
 #include "QtChatTheme.h"
@@ -88,6 +89,8 @@ QWebElement QtChatView::snippetToDOM(boost::shared_ptr<ChatSnippet> snippet) {
 }
 
 void QtChatView::addToDOM(boost::shared_ptr<ChatSnippet> snippet) {
+	bool bottom = isScrolledToBottom();
+	qDebug() << "Appending to the dom - scrolled to bottom? " << bottom;
 	QWebElement newElement = snippetToDOM(snippet);
 	QWebElement continuationElement = lastElement_.findFirst("#insert");
 	if (snippet->getAppendToPrevious()) {
@@ -98,6 +101,10 @@ void QtChatView::addToDOM(boost::shared_ptr<ChatSnippet> snippet) {
 		newInsertPoint_.prependOutside(newElement);
 	}
 	lastElement_ = newElement;
+	if (bottom /* Or was me? */) {
+		QTimer::singleShot(0, this, SLOT(scrollToBottom()));
+	}
+	qDebug() << "Appended, now at bottom? " << isScrolledToBottom();
 }
 
 void QtChatView::correctLastMessage(const QString& newMessage) {
