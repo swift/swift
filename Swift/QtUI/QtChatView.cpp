@@ -100,7 +100,8 @@ void QtChatView::addToDOM(boost::shared_ptr<ChatSnippet> snippet) {
 		newInsertPoint_.prependOutside(newElement);
 	}
 	lastElement_ = newElement;
-	if (bottom /* Or was me? */) {
+	if (bottom) {
+		/* Warning: I'm not confident about this.*/
 		QTimer::singleShot(0, this, SLOT(scrollToBottom()));
 	}
 }
