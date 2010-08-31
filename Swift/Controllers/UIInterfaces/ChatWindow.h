@@ -48,6 +48,7 @@ namespace Swift {
 			virtual void setInputEnabled(bool enabled) = 0;
 			virtual void setRosterModel(Roster* model) = 0;
 			virtual void setTabComplete(TabComplete* completer) = 0;
+			virtual void replaceLastMessage(const String& message) = 0;
 
 			boost::signal<void ()> onClosed;
 			boost::signal<void ()> onAllMessagesRead;

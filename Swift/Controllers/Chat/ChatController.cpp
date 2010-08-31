@@ -25,6 +25,7 @@ namespace Swift {
 ChatController::ChatController(const JID& self, StanzaChannel* stanzaChannel, IQRouter* iqRouter, ChatWindowFactory* chatWindowFactory, const JID &contact, NickResolver* nickResolver, PresenceOracle* presenceOracle, AvatarManager* avatarManager, bool isInMUC, bool useDelayForLatency, UIEventStream* eventStream, EventController* eventController)
 	: ChatControllerBase(self, stanzaChannel, iqRouter, chatWindowFactory, contact, presenceOracle, avatarManager, useDelayForLatency, eventStream, eventController) {
 	isInMUC_ = isInMUC;
+	lastWasPresence_ = false;
 	chatStateNotifier_ = new ChatStateNotifier();
 	chatStateMessageSender_ = new ChatStateMessageSender(chatStateNotifier_, stanzaChannel, contact);
 	chatStateTracker_ = new ChatStateTracker();
@@ -70,6 +71,7 @@ void ChatController::preHandleIncomingMessage(boost::shared_ptr<MessageEvent> me
 	}
 	chatStateNotifier_->receivedMessageFromContact(message->getPayload<ChatState>());
 	chatStateTracker_->handleMessageReceived(message);
+	lastWasPresence_ = false;
 }
 
 void ChatController::preSendMessageRequest(boost::shared_ptr<Message> message) {
@@ -80,6 +82,7 @@ void ChatController::preSendMessageRequest(boost::shared_ptr<Message> message) {
 
 void ChatController::postSendMessage(const String& body) {
 	addMessage(body, "me", true, labelsEnabled_ ? chatWindow_->getSelectedSecurityLabel() : boost::optional<SecurityLabel>(), String(avatarManager_->getAvatarPath(selfJID_).string()), boost::posix_time::microsec_clock::universal_time());
+	lastWasPresence_ = false;
 	chatStateNotifier_->userSentMessage();
 }
 
@@ -113,7 +116,12 @@ void ChatController::handlePresenceChange(boost::shared_ptr<Presence> newPresenc
 	chatStateTracker_->handlePresenceChange(newPresence, previousPresence);
 	String newStatusChangeString = getStatusChangeString(newPresence);
 	if (!previousPresence || newStatusChangeString != getStatusChangeString(previousPresence)) {
-		chatWindow_->addPresenceMessage(newStatusChangeString);
+		if (lastWasPresence_) {
+			chatWindow_->replaceLastMessage(newStatusChangeString);
+		} else {
+			chatWindow_->addPresenceMessage(newStatusChangeString);
+		}
+		lastWasPresence_ = true;
 	}
 }
 

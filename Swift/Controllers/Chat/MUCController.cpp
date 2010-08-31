@@ -10,6 +10,7 @@
 
 #include "Swiften/Network/Timer.h"
 #include "Swiften/Network/TimerFactory.h"
+#include "Swiften/Base/foreach.h"
 #include "SwifTools/TabComplete.h"
 #include "Swiften/Base/foreach.h"
 #include "Swift/Controllers/EventController.h"
@@ -50,6 +51,7 @@ MUCController::MUCController (
 			ChatControllerBase(self, stanzaChannel, iqRouter, chatWindowFactory, muc, presenceOracle, avatarManager, useDelayForLatency, uiEventStream, eventController), muc_(new MUC(stanzaChannel, presenceSender, muc)), nick_(nick) {
 	parting_ = true;
 	joined_ = false;
+	lastWasPresence_ = false;
 	events_ = uiEventStream;
 	
 	roster_ = new Roster(false, true);
@@ -142,6 +144,7 @@ void MUCController::handleJoinComplete(const String& nick) {
 	String joinMessage = "You have joined room " + toJID_.toString() + " as " + nick;
 	nick_ = nick;
 	chatWindow_->addSystemMessage(joinMessage);
+	clearPresenceQueue();
 	setEnabled(true);
 }
 
@@ -170,6 +173,8 @@ void MUCController::handleOccupantJoined(const MUCOccupant& occupant) {
 		realJID = occupant.getRealJID().get();
 	}
 	currentOccupants_.insert(occupant.getNick());
+	NickJoinPart event(occupant.getNick(), Join);
+	appendToJoinParts(joinParts_, event);
 	roster_->addContact(jid, realJID, occupant.getNick(), roleToGroupName(occupant.getRole()));
 	if (joined_) {
 		String joinString = occupant.getNick() + " has joined the room";
@@ -179,11 +184,26 @@ void MUCController::handleOccupantJoined(const MUCOccupant& occupant) {
 
 		}
 		joinString += ".";
-		chatWindow_->addPresenceMessage(joinString);
+		if (shouldUpdateJoinParts()) {
+			updateJoinParts();
+		} else {
+			addPresenceMessage(joinString);
+
+		}
 	}
 	if (avatarManager_ != NULL) {
 		handleAvatarChanged(jid, "dummy");
 	}
+}
+
+void MUCController::addPresenceMessage(const String& message) {
+	lastWasPresence_ = true;
+	chatWindow_->addPresenceMessage(message);
+}
+
+void MUCController::clearPresenceQueue() {
+	lastWasPresence_ = false;
+	joinParts_.clear();
 }
 
 String MUCController::roleToFriendlyName(MUCOccupant::Role role) {
@@ -205,6 +225,7 @@ bool MUCController::messageTargetsMe(boost::shared_ptr<Message> message) {
 }
 
 void MUCController::preHandleIncomingMessage(boost::shared_ptr<MessageEvent> messageEvent) {
+	clearPresenceQueue();
 	boost::shared_ptr<Message> message = messageEvent->getStanza();
 	if (joined_ && messageTargetsMe(message) && !message->getPayload<Delay>()) {
 		eventController_->handleIncomingEvent(messageEvent);
@@ -260,7 +281,13 @@ void MUCController::setEnabled(bool enabled) {
 	}
 }
 
+bool MUCController::shouldUpdateJoinParts() {
+	return lastWasPresence_;
+}
+
 void MUCController::handleOccupantLeft(const MUCOccupant& occupant, MUC::LeavingType, const String& reason) {
+	NickJoinPart event(occupant.getNick(), Part);
+	appendToJoinParts(joinParts_, event);
 	currentOccupants_.erase(occupant.getNick());
 	completer_->removeWord(occupant.getNick());
 	String partMessage = (occupant.getNick() != nick_) ? occupant.getNick() + " has left the room" : "You have left the room";
@@ -268,10 +295,16 @@ void MUCController::handleOccupantLeft(const MUCOccupant& occupant, MUC::Leaving
 		partMessage += " (" + reason + ")";
 	}
 	partMessage += ".";
-	chatWindow_->addPresenceMessage(partMessage);
+
 	if (occupant.getNick() != nick_) {
+		if (shouldUpdateJoinParts()) {
+			updateJoinParts();
+		} else {
+			addPresenceMessage(partMessage);
+		}
 		roster_->removeContact(JID(toJID_.getNode(), toJID_.getDomain(), occupant.getNick()));
 	} else {
+		addPresenceMessage(partMessage);
 		parting_ = true;
 		setEnabled(false);
 	}
@@ -297,6 +330,55 @@ void MUCController::preSendMessageRequest(boost::shared_ptr<Message> message) {
 
 boost::optional<boost::posix_time::ptime> MUCController::getMessageTimestamp(boost::shared_ptr<Message> message) const {
 	return message->getTimestampFrom(toJID_);
+}
+
+void MUCController::updateJoinParts() {
+	chatWindow_->replaceLastMessage(generateJoinPartString(joinParts_));
+}
+
+void MUCController::appendToJoinParts(std::vector<NickJoinPart>& joinParts, const NickJoinPart& newEvent) {
+	std::vector<NickJoinPart>::iterator it = joinParts.begin();
+	bool matched = false;
+	for (; it != joinParts.end(); it++) {
+		if ((*it).nick == newEvent.nick) {
+			matched = true;
+			JoinPart type = (*it).type;
+			switch (newEvent.type) {
+				case Join: type = (type == Part) ? PartThenJoin : Join; break;
+				case Part: type = (type == Join) ? JoinThenPart : Part; break;
+				default: /*Nothing to see here */;break;
+			}
+			(*it).type = type;
+			break;
+		}
+	}
+	if (!matched) {
+		joinParts.push_back(newEvent);
+	}
+}
+
+String MUCController::generateJoinPartString(std::vector<NickJoinPart> joinParts) {
+	String result;
+	for (size_t i = 0; i < joinParts.size(); i++) {
+		if (i > 0) {
+			if (i < joinParts.size() - 1) {
+				result += ", ";
+			} else {
+				result += " and ";
+			}
+		}
+		NickJoinPart event = joinParts[i];
+		result += event.nick;
+		switch (event.type) {
+			case Join: result += " has joined";break;
+			case Part: result += " has left";break;
+			case JoinThenPart: result += " joined then left";break;
+			case PartThenJoin: result += " left then rejoined";break;
+		}
+		result += " the room";
+	}
+	result += ".";
+	return result;
 }
 
 }

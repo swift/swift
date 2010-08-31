@@ -28,8 +28,8 @@ namespace Swift {
 			QtChatView(QtChatTheme* theme, QWidget* parent);
 
 			void addMessage(boost::shared_ptr<ChatSnippet> snippet);
-			void correctLastMessage(const QString& newMessage);
-			void correctLastMessage(const QString& newMessage, const QString& note);
+			void replaceLastMessage(const QString& newMessage);
+			void replaceLastMessage(const QString& newMessage, const QString& note);
 			bool isScrolledToBottom() const;
 
 		signals:

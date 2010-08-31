@@ -370,4 +370,8 @@ void QtChatWindow::moveEvent(QMoveEvent*) {
 	emit geometryChanged();	
 }
 
+void QtChatWindow::replaceLastMessage(const String& message) {
+	messageLog_->replaceLastMessage(P2QSTRING(message));
+}
+
 }

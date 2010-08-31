@@ -49,6 +49,7 @@ namespace Swift {
 			void setRosterModel(Roster* roster);
 			void setTabComplete(TabComplete* completer);
 			int getCount();
+			void replaceLastMessage(const String& message);
 
 		signals:
 			void geometryChanged();

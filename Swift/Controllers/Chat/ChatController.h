@@ -38,6 +38,7 @@ namespace Swift {
 			ChatStateMessageSender* chatStateMessageSender_;
 			ChatStateTracker* chatStateTracker_;
 			bool isInMUC_;
+			bool lastWasPresence_;
 	};
 }
 #endif

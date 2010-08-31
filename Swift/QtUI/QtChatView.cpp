@@ -106,16 +106,21 @@ void QtChatView::addToDOM(boost::shared_ptr<ChatSnippet> snippet) {
 	}
 }
 
-void QtChatView::correctLastMessage(const QString& newMessage) {
+void QtChatView::replaceLastMessage(const QString& newMessage) {
 	/* FIXME: must be queued */
-	lastElement_.findFirst("swift_message");
-	lastElement_.setPlainText(ChatSnippet::escape(newMessage));
+	QWebElement replace = lastElement_.findFirst("span.swift_message");
+	assert(!replace.isNull());
+	QString old = lastElement_.toOuterXml();
+	replace.setInnerXml(ChatSnippet::escape(newMessage));
+	qDebug() << "Replacing old: " << old;
+	qDebug() << "With new: " << lastElement_.toOuterXml();
 }
 
-void QtChatView::correctLastMessage(const QString& newMessage, const QString& note) {
-	correctLastMessage(newMessage);
-	lastElement_.findFirst("swift_time");
-	lastElement_.setPlainText(ChatSnippet::escape(note));
+void QtChatView::replaceLastMessage(const QString& newMessage, const QString& note) {
+	replaceLastMessage(newMessage);
+	QWebElement replace = lastElement_.findFirst("span.swift_time");
+	assert(!replace.isNull());
+	replace.setInnerXml(ChatSnippet::escape(note));
 }
 
 void QtChatView::copySelectionToClipboard() {
@@ -147,8 +152,6 @@ void QtChatView::handleViewLoadFinished(bool ok) {
 	Q_ASSERT(ok);
 	viewReady_ = true;
 	addQueuedSnippets();
-//	webPage_->mainFrame()->evaluateJavaScript(queuedMessages_);
-//	queuedMessages_.clear();
 }
 
 }

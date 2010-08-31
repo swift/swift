@@ -48,5 +48,6 @@ if env["SCONS_STAGE"] == "build" :
 			File("UnitTest/XMPPRosterControllerTest.cpp"),
 			File("UnitTest/PreviousStatusStoreTest.cpp"),
 			File("Chat/UnitTest/ChatsManagerTest.cpp"),
+			File("Chat/UnitTest/MUCControllerTest.cpp"),
 			File("UnitTest/MockChatWindow.cpp"),
 		])

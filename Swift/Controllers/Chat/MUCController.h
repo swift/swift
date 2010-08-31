@@ -31,6 +31,14 @@ namespace Swift {
 	class TimerFactory;
 	class TabComplete;
 
+	enum JoinPart {Join, Part, JoinThenPart, PartThenJoin};
+
+	struct NickJoinPart {
+			NickJoinPart(const String& nick, JoinPart type) : nick(nick), type(type) {};
+			String nick;
+			JoinPart type;
+	};
+
 	class MUCController : public ChatControllerBase {
 		public:
 			MUCController(const JID& self, const JID &muc, const String &nick, StanzaChannel* stanzaChannel, PresenceSender* presenceSender, IQRouter* iqRouter, ChatWindowFactory* chatWindowFactory, PresenceOracle* presenceOracle, AvatarManager* avatarManager, UIEventStream* events, bool useDelayForLatency, TimerFactory* timerFactory, EventController* eventController);
@@ -38,6 +46,8 @@ namespace Swift {
 			boost::signal<void ()> onUserLeft;
 			virtual void setEnabled(bool enabled);
 			void rejoin();
+			static void appendToJoinParts(std::vector<NickJoinPart>& joinParts, const NickJoinPart& newEvent);
+			static String generateJoinPartString(std::vector<NickJoinPart> joinParts);
 		
 		protected:
 			void preSendMessageRequest(boost::shared_ptr<Message> message);
@@ -47,6 +57,8 @@ namespace Swift {
 			void preHandleIncomingMessage(boost::shared_ptr<MessageEvent>);
 
 		private:
+			void clearPresenceQueue();
+			void addPresenceMessage(const String& message);
 			void handleWindowClosed();
 			void handleAvatarChanged(const JID& jid, const String&);
 			void handleOccupantJoined(const MUCOccupant& occupant);
@@ -61,6 +73,8 @@ namespace Swift {
 			String roleToFriendlyName(MUCOccupant::Role role);
 			void receivedActivity();
 			bool messageTargetsMe(boost::shared_ptr<Message> message);
+			void updateJoinParts();
+			bool shouldUpdateJoinParts();
 		private:
 			MUC* muc_;
 			UIEventStream* events_;
@@ -69,9 +83,11 @@ namespace Swift {
 			TabComplete* completer_;
 			bool parting_;
 			bool joined_;
+			bool lastWasPresence_;
 			boost::bsignals::scoped_connection avatarChangedConnection_;
 			boost::shared_ptr<Timer> loginCheckTimer_;
 			std::set<String> currentOccupants_;
+			std::vector<NickJoinPart> joinParts_;
 	};
 }
 

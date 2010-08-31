@@ -33,6 +33,7 @@ namespace Swift {
 			virtual void setInputEnabled(bool /*enabled*/) {};
 			virtual void setRosterModel(Roster* /*roster*/) {};
 			virtual void setTabComplete(TabComplete*) {};
+			virtual void replaceLastMessage(const Swift::String&) {};
 
 			boost::signal<void ()> onClosed;
 			boost::signal<void ()> onAllMessagesRead;
