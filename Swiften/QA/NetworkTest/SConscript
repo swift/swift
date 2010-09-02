@@ -16,4 +16,4 @@ if env["TEST"] :
 			"BoostConnectionTest.cpp",
 			"DomainNameResolverTest.cpp",
 		])
-	myenv.Test(tester, "system")
+	myenv.Test(tester, "system", is_checker = True)

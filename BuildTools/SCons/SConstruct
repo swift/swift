@@ -161,6 +161,7 @@ if env["PLATFORM"] == "darwin" and not env["target"] in ["iphone-device", "iphon
 env["TEST_TYPE"] = env["test"]
 if "check" in ARGUMENTS :
 	env["TEST_TYPE"] = "unit"
+env["checker_report"] = ARGUMENTS.get("checker_report", False)
 env["TEST"] = (env["TEST_TYPE"] != "none") or env.GetOption("clean")
 if env.get("valgrind", 0) :
 	env["TEST_RUNNER"] = "valgrind --suppressions=QA/valgrind.supp -q --leak-check=full --track-origins=yes "

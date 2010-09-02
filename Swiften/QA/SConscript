@@ -1,7 +1,7 @@
 SConscript(dirs = [
 		"NetworkTest",
-		"ReconnectTest",
-		"ClientTest",
-		"DNSSDTest",
+#		"ReconnectTest",
+#		"ClientTest",
+#		"DNSSDTest",
 		"StorageTest",
 	])

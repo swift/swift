@@ -15,4 +15,4 @@ if env["TEST"] :
 	tester = myenv.Program("StorageTest", [
 			"VCardFileStorageTest.cpp",
 		])
-	myenv.Test(tester, "system")
+	myenv.Test(tester, "system", is_checker = True)

@@ -29,4 +29,4 @@ if env["TEST"] :
 		for i in ["HOME", "USERPROFILE", "APPDATA"]:
 			if os.environ.get(i, "") :
 				myenv["ENV"][i] = os.environ[i]
-		myenv.Test(checker)
+		myenv.Test(checker, is_checker = True)

@@ -67,7 +67,7 @@ int main(int argc, char* argv[]) {
 
 	// Output the results
 	if (outputXML) {
-		CppUnit::XmlOutputter outputter(&result, std::cerr);
+		CppUnit::XmlOutputter outputter(&result, std::cout);
 		outputter.write();
 	}
 	else {

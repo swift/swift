@@ -22,4 +22,4 @@ if env["TEST"] :
 			myenv["ENV"][i] = os.environ[i]
 
 	tester = myenv.Program("ReconnectTest", ["ReconnectTest.cpp"])
-	myenv.Test(tester, "system")
+	myenv.Test(tester, "system", is_checker = True)
