@@ -119,6 +119,7 @@ namespace Swift {
 			bool allowPLAINOverNonTLS;
 			bool needSessionStart;
 			bool needResourceBind;
+			bool needAcking;
 			ClientAuthenticator* authenticator;
 			boost::shared_ptr<StanzaAckRequester> stanzaAckRequester_;
 			boost::shared_ptr<StanzaAckResponder> stanzaAckResponder_;

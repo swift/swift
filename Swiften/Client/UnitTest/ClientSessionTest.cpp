@@ -182,12 +182,14 @@ class ClientSessionTest : public CppUnit::TestFixture {
 			server->receiveStreamStart();
 			server->sendStreamStart();
 			server->sendStreamFeaturesWithBindAndStreamManagement();
+			server->receiveBind();
+			server->sendBindResult();
 			server->receiveStreamManagementEnable();
 			server->sendStreamManagementEnabled();
 
 			CPPUNIT_ASSERT(session->getStreamManagementEnabled());
-			server->receiveBind();
 			// TODO: Test if the requesters & responders do their work
+			CPPUNIT_ASSERT_EQUAL(ClientSession::Initialized, session->getState());
 		}
 
 		void testStreamManagement_Failed() {
@@ -202,11 +204,13 @@ class ClientSessionTest : public CppUnit::TestFixture {
 			server->receiveStreamStart();
 			server->sendStreamStart();
 			server->sendStreamFeaturesWithBindAndStreamManagement();
+			server->receiveBind();
+			server->sendBindResult();
 			server->receiveStreamManagementEnable();
 			server->sendStreamManagementFailed();
 
 			CPPUNIT_ASSERT(!session->getStreamManagementEnabled());
-			server->receiveBind();
+			CPPUNIT_ASSERT_EQUAL(ClientSession::Initialized, session->getState());
 		}
 
 
@@ -347,6 +351,13 @@ class ClientSessionTest : public CppUnit::TestFixture {
 					onElementReceived(boost::shared_ptr<StreamManagementFailed>(new StreamManagementFailed()));
 				}
 
+				void sendBindResult() {
+					boost::shared_ptr<ResourceBind> resourceBind(new ResourceBind());
+					resourceBind->setJID(JID("foo@bar.com/bla"));
+					boost::shared_ptr<IQ> iq = IQ::createResult(JID("foo@bar.com"), bindID, resourceBind);
+					onElementReceived(iq);
+				}
+
 				void receiveStreamStart() {
 					Event event = popEvent();
 					CPPUNIT_ASSERT(event.header);
@@ -378,6 +389,7 @@ class ClientSessionTest : public CppUnit::TestFixture {
 					boost::shared_ptr<IQ> iq = boost::dynamic_pointer_cast<IQ>(event.element);
 					CPPUNIT_ASSERT(iq);
 					CPPUNIT_ASSERT(iq->getPayload<ResourceBind>());
+					bindID = iq->getID();
 				}
 
 				Event popEvent() {
@@ -392,6 +404,7 @@ class ClientSessionTest : public CppUnit::TestFixture {
 				bool tlsEncrypted;
 				bool compressed;
 				bool whitespacePingEnabled;
+				String bindID;
 				int resetCount;
 				std::deque<Event> receivedEvents;
 		};

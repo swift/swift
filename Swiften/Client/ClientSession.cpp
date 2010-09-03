@@ -48,6 +48,7 @@ ClientSession::ClientSession(
 			allowPLAINOverNonTLS(false),
 			needSessionStart(false),
 			needResourceBind(false),
+			needAcking(false),
 			authenticator(NULL) {
 }
 
@@ -213,13 +214,8 @@ void ClientSession::handleElement(boost::shared_ptr<Element> element) {
 			stream->setWhitespacePingEnabled(true);
 			needSessionStart = streamFeatures->hasSession();
 			needResourceBind = streamFeatures->hasResourceBind();
-			if (streamFeatures->hasStreamManagement()) {
-				state = EnablingSessionManagement;
-				stream->writeElement(boost::shared_ptr<EnableStreamManagement>(new EnableStreamManagement()));
-			}
-			else {
-				continueSessionInitialization();
-			}
+			needAcking = streamFeatures->hasStreamManagement();
+			continueSessionInitialization();
 		}
 	}
 	else if (boost::dynamic_pointer_cast<Compressed>(element)) {
@@ -238,9 +234,11 @@ void ClientSession::handleElement(boost::shared_ptr<Element> element) {
 		stanzaAckRequester_->onStanzaAcked.connect(boost::bind(&ClientSession::handleStanzaAcked, this, _1));
 		stanzaAckResponder_ = boost::shared_ptr<StanzaAckResponder>(new StanzaAckResponder());
 		stanzaAckResponder_->onAck.connect(boost::bind(&ClientSession::ack, this, _1));
+		needAcking = false;
 		continueSessionInitialization();
 	}
 	else if (boost::dynamic_pointer_cast<StreamManagementFailed>(element)) {
+		needAcking = false;
 		continueSessionInitialization();
 	}
 	else if (AuthChallenge* challenge = dynamic_cast<AuthChallenge*>(element.get())) {
@@ -294,6 +292,10 @@ void ClientSession::continueSessionInitialization() {
 			resourceBind->setResource(localJID.getResource());
 		}
 		sendStanza(IQ::createRequest(IQ::Set, JID(), "session-bind", resourceBind));
+	}
+	else if (needAcking) {
+		state = EnablingSessionManagement;
+		stream->writeElement(boost::shared_ptr<EnableStreamManagement>(new EnableStreamManagement()));
 	}
 	else if (needSessionStart) {
 		state = StartingSession;
