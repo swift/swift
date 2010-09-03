@@ -165,6 +165,7 @@ env["checker_report"] = ARGUMENTS.get("checker_report", False)
 env["TEST"] = (env["TEST_TYPE"] != "none") or env.GetOption("clean")
 if env.get("valgrind", 0) :
 	env["TEST_RUNNER"] = "valgrind --suppressions=QA/valgrind.supp -q --leak-check=full --track-origins=yes "
+env["TEST_IGNORE_RESULT"] = "ignore_test_result" in ARGUMENTS
 
 # Packaging
 env["DIST"] = "dist" in ARGUMENTS or env.GetOption("clean")
