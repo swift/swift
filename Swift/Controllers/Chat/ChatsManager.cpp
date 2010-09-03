@@ -8,8 +8,6 @@
 
 #include <boost/bind.hpp>
 
-#include "Swiften/Client/Client.h"
-
 #include "Swift/Controllers/Chat/ChatController.h"
 #include "Swift/Controllers/EventController.h"
 #include "Swift/Controllers/Chat/MUCController.h"

@@ -11,7 +11,7 @@
 
 namespace Swift {
 
-MessageSnippet::MessageSnippet(const QString& message, const QString& sender, const QDateTime& time, const QString& iconURI, bool isIncoming, bool appendToPrevious, QtChatTheme* theme) : ChatSnippet(appendToPrevious) {
+MessageSnippet::MessageSnippet(const QString& message, const QString& sender, const QDateTime& time, const QString& iconURI, bool isIncoming, bool appendToPrevious, QtChatTheme* theme, const QString& id) : ChatSnippet(appendToPrevious) {
 	if (isIncoming) {
 		if (appendToPrevious) {
 			content_ = theme->getIncomingNextContent();
@@ -29,10 +29,11 @@ MessageSnippet::MessageSnippet(const QString& message, const QString& sender, co
 		}
 	}
 
-	content_.replace("%message%", "<span class='swift_message'>" + escape(message) + "</span>");
+	content_.replace("%message%", "<span class='swift_ack'></span><span class='swift_message'>" + escape(message) + "</span>");
 	content_.replace("%sender%", escape(sender));
 	content_.replace("%time%", "<span class='swift_time'>" + escape(time.toString("h:mm")) + "</span>");
 	content_.replace("%userIconPath%", escape(iconURI));
+	content_ = "<div id='" + id + "'>" + content_ + "</div>";
 }
 
 MessageSnippet::~MessageSnippet() {

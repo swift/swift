@@ -15,6 +15,7 @@
 #include <boost/optional.hpp>
 #include <boost/date_time/posix_time/posix_time.hpp>
 
+#include "Swiften/Elements/Stanza.h"
 #include "Swiften/Base/String.h"
 #include "Swiften/Elements/DiscoInfo.h"
 #include "Swiften/Events/MessageEvent.h"
@@ -40,13 +41,16 @@ namespace Swift {
 			void activateChatWindow();
 			void setAvailableServerFeatures(boost::shared_ptr<DiscoInfo> info);
 			void handleIncomingMessage(boost::shared_ptr<MessageEvent> message);
-			void addMessage(const String& message, const String& senderName, bool senderIsSelf, const boost::optional<SecurityLabel>& label, const String& avatarPath, const boost::posix_time::ptime& time);
+			String addMessage(const String& message, const String& senderName, bool senderIsSelf, const boost::optional<SecurityLabel>& label, const String& avatarPath, const boost::posix_time::ptime& time);
 			virtual void setEnabled(bool enabled);
 			virtual void setToJID(const JID& jid) {toJID_ = jid;};
 		protected:
 			ChatControllerBase(const JID& self, StanzaChannel* stanzaChannel, IQRouter* iqRouter, ChatWindowFactory* chatWindowFactory, const JID &toJID, PresenceOracle* presenceOracle, AvatarManager* avatarManager, bool useDelayForLatency, UIEventStream* eventStream, EventController* eventController);
 
-			virtual void postSendMessage(const String&) {};
+			/**
+			 * Pass the Message appended, and the stanza used to send it.
+			 */
+			virtual void postSendMessage(const String&, boost::shared_ptr<Stanza>) {};
 			virtual String senderDisplayNameFromMessage(const JID& from) = 0;
 			virtual bool isIncomingMessageFromMe(boost::shared_ptr<Message>) = 0;
 			virtual void preHandleIncomingMessage(boost::shared_ptr<MessageEvent>) {};

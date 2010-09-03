@@ -245,11 +245,11 @@ void QtChatWindow::updateTitleWithUnreadCount() {
 	emit titleUpdated();
 }
 
-void QtChatWindow::addMessage(const String &message, const String &senderName, bool senderIsSelf, const boost::optional<SecurityLabel>& label, const String& avatarPath, const boost::posix_time::ptime& time) {
-	addMessage(message, senderName, senderIsSelf, label, avatarPath, "", time);
+String QtChatWindow::addMessage(const String &message, const String &senderName, bool senderIsSelf, const boost::optional<SecurityLabel>& label, const String& avatarPath, const boost::posix_time::ptime& time) {
+	return addMessage(message, senderName, senderIsSelf, label, avatarPath, "", time);
 }
 
-void QtChatWindow::addMessage(const String &message, const String &senderName, bool senderIsSelf, const boost::optional<SecurityLabel>& label, const String& avatarPath, const QString& style, const boost::posix_time::ptime& time) {
+String QtChatWindow::addMessage(const String &message, const String &senderName, bool senderIsSelf, const boost::optional<SecurityLabel>& label, const String& avatarPath, const QString& style, const boost::posix_time::ptime& time) {
 	if (isWidgetSelected()) {
 		onAllMessagesRead();
 	}
@@ -268,20 +268,32 @@ void QtChatWindow::addMessage(const String &message, const String &senderName, b
 
 	bool appendToPrevious = !previousMessageWasSystem_ && !previousMessageWasPresence_ && ((senderIsSelf && previousMessageWasSelf_) || (!senderIsSelf && !previousMessageWasSelf_ && previousSenderName_ == P2QSTRING(senderName)));
 	QString qAvatarPath =  avatarPath.isEmpty() ? "qrc:/icons/avatar.png" : QUrl::fromLocalFile(P2QSTRING(avatarPath)).toEncoded();
-	messageLog_->addMessage(boost::shared_ptr<ChatSnippet>(new MessageSnippet(htmlString, Qt::escape(P2QSTRING(senderName)), B2QDATE(time), qAvatarPath, senderIsSelf, appendToPrevious, theme_)));
+	String id = id_.generateID();
+	messageLog_->addMessage(boost::shared_ptr<ChatSnippet>(new MessageSnippet(htmlString, Qt::escape(P2QSTRING(senderName)), B2QDATE(time), qAvatarPath, senderIsSelf, appendToPrevious, theme_, P2QSTRING(id))));
 
 	previousMessageWasSelf_ = senderIsSelf;
 	previousSenderName_ = P2QSTRING(senderName);
 	previousMessageWasSystem_ = false;
 	previousMessageWasPresence_ = false;
+	return id;
+}
+
+void QtChatWindow::setAckState(String const& id, ChatWindow::AckState state) {
+	QString xml;
+	switch (state) {
+		case ChatWindow::Pending: xml = "<img src='qrc:/icons/throbber.gif' alt='This message has not been received by your server yet.'/>"; break;
+		case ChatWindow::Received: xml = ""; break;
+		case ChatWindow::Failed: xml = "<img src='qrc:/icons/error.png' alt='This message may not have been transmitted.'/>"; break;
+	}
+	messageLog_->setAckXML(P2QSTRING(id), xml);
 }
 
 int QtChatWindow::getCount() {
 	return unreadCount_;
 }
 
-void QtChatWindow::addAction(const String &message, const String &senderName, bool senderIsSelf, const boost::optional<SecurityLabel>& label, const String& avatarPath, const boost::posix_time::ptime& time) {
-	addMessage(" *" + message + "*", senderName, senderIsSelf, label, avatarPath, "font-style:italic ", time);
+String QtChatWindow::addAction(const String &message, const String &senderName, bool senderIsSelf, const boost::optional<SecurityLabel>& label, const String& avatarPath, const boost::posix_time::ptime& time) {
+	return addMessage(" *" + message + "*", senderName, senderIsSelf, label, avatarPath, "font-style:italic ", time);
 }
 
 void QtChatWindow::addErrorMessage(const String& errorMessage) {

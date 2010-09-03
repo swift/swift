@@ -39,6 +39,10 @@ namespace Swift {
 				return true;
 			}
 
+			virtual bool getStreamManagementEnabled() const {
+				return false;
+			}
+
 			template<typename T> bool isRequestAtIndex(int index, const JID& jid, IQ::Type type) {
 				boost::shared_ptr<IQ> iqStanza = boost::dynamic_pointer_cast<IQ>(sentStanzas[index]);
 				return iqStanza && iqStanza->getType() == type && iqStanza->getTo() == jid && iqStanza->getPayload<T>();

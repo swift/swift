@@ -79,7 +79,7 @@ void ChatControllerBase::handleSendMessageRequest(const String &body) {
 		message->addPayload(boost::shared_ptr<Delay>(new Delay(now, selfJID_)));
 	}
 	stanzaChannel_->sendMessage(message);
-	postSendMessage(message->getBody());
+	postSendMessage(message->getBody(), boost::dynamic_pointer_cast<Stanza>(message));
 }
 
 void ChatControllerBase::handleSecurityLabelsCatalogResponse(boost::shared_ptr<SecurityLabelsCatalog> catalog, const boost::optional<ErrorPayload>& error) {
@@ -106,11 +106,11 @@ void ChatControllerBase::activateChatWindow() {
 	chatWindow_->activate();
 }
 
-void ChatControllerBase::addMessage(const String& message, const String& senderName, bool senderIsSelf, const boost::optional<SecurityLabel>& label, const String& avatarPath, const boost::posix_time::ptime& time) {
+String ChatControllerBase::addMessage(const String& message, const String& senderName, bool senderIsSelf, const boost::optional<SecurityLabel>& label, const String& avatarPath, const boost::posix_time::ptime& time) {
 	if (message.beginsWith("/me ")) {
-		chatWindow_->addAction(message.getSplittedAtFirst(' ').second, senderName, senderIsSelf, label, avatarPath, time);
+		return chatWindow_->addAction(message.getSplittedAtFirst(' ').second, senderName, senderIsSelf, label, avatarPath, time);
 	} else {
-		chatWindow_->addMessage(message, senderName, senderIsSelf, label, avatarPath, time);
+		return chatWindow_->addMessage(message, senderName, senderIsSelf, label, avatarPath, time);
 	}
 }
 

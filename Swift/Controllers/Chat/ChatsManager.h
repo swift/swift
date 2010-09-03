@@ -61,7 +61,7 @@ namespace Swift {
 			EventController* eventController_;
 			JID jid_;
 			StanzaChannel* stanzaChannel_;
-			IQRouter* iqRouter_;;
+			IQRouter* iqRouter_;
 			ChatWindowFactory* chatWindowFactory_;
 			NickResolver* nickResolver_;
 			PresenceOracle* presenceOracle_;

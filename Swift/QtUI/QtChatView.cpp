@@ -129,6 +129,15 @@ void QtChatView::copySelectionToClipboard() {
 	}
 }
 
+void QtChatView::setAckXML(const QString& id, const QString& xml) {
+	QWebElement message = document_.findFirst("#" + id);
+	/* Deliberately not asserting here, so that when we start expiring old messages it won't hit us */
+	if (message.isNull()) return;
+	QWebElement ackElement = message.findFirst("span.swift_ack");
+	assert(!ackElement.isNull());
+	ackElement.setInnerXml(xml);
+}
+
 bool QtChatView::isScrolledToBottom() const {
 	return webPage_->mainFrame()->scrollBarValue(Qt::Vertical) == webPage_->mainFrame()->scrollBarMaximum(Qt::Vertical);
 }

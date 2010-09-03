@@ -55,7 +55,6 @@ namespace Swift {
 			boost::signal<void ()> onConnected;
 			boost::signal<void (const String&)> onDataRead;
 			boost::signal<void (const String&)> onDataWritten;
-			boost::signal<void (boost::shared_ptr<Stanza>)> onStanzaAcked;
 
 		private:
 			void handleConnectorFinished(boost::shared_ptr<Connection>, Connector::ref);

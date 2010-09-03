@@ -20,16 +20,18 @@ namespace Swift {
 			ChatController(const JID& self, StanzaChannel* stanzaChannel, IQRouter* iqRouter, ChatWindowFactory* chatWindowFactory, const JID &contact, NickResolver* nickResolver, PresenceOracle* presenceOracle, AvatarManager* avatarManager, bool isInMUC, bool useDelayForLatency, UIEventStream* eventStream, EventController* eventController);
 			virtual ~ChatController();
 			virtual void setToJID(const JID& jid);
+			virtual void setEnabled(bool enabled);
 
 		private:
 			void handlePresenceChange(boost::shared_ptr<Presence> newPresence, boost::shared_ptr<Presence> previousPresence);
 			String getStatusChangeString(boost::shared_ptr<Presence> presence);
 			bool isIncomingMessageFromMe(boost::shared_ptr<Message> message);
-			void postSendMessage(const String &body);
+			void postSendMessage(const String &body, boost::shared_ptr<Stanza> sentStanza);
 			void preHandleIncomingMessage(boost::shared_ptr<MessageEvent> messageEvent);
 			void preSendMessageRequest(boost::shared_ptr<Message>);
 			String senderDisplayNameFromMessage(const JID& from);
 			virtual boost::optional<boost::posix_time::ptime> getMessageTimestamp(boost::shared_ptr<Message>) const;
+			void handleStanzaAcked(boost::shared_ptr<Stanza> stanza);
 
 		private:
 			NickResolver* nickResolver_;
@@ -39,6 +41,7 @@ namespace Swift {
 			ChatStateTracker* chatStateTracker_;
 			bool isInMUC_;
 			bool lastWasPresence_;
+			std::map<boost::shared_ptr<Stanza>, String> unackedStanzas_;
 	};
 }
 #endif

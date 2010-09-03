@@ -12,6 +12,7 @@
 #include "Swiften/Chat/ChatStateNotifier.h"
 #include "Swiften/Chat/ChatStateMessageSender.h"
 #include "Swiften/Chat/ChatStateTracker.h"
+#include "Swiften/Client/StanzaChannel.h"
 #include "Swift/Controllers/UIInterfaces/ChatWindow.h"
 #include "Swift/Controllers/UIInterfaces/ChatWindowFactory.h"
 #include "Swift/Controllers/NickResolver.h"
@@ -32,6 +33,7 @@ ChatController::ChatController(const JID& self, StanzaChannel* stanzaChannel, IQ
 	nickResolver_ = nickResolver;
 	presenceOracle_->onPresenceChange.connect(boost::bind(&ChatController::handlePresenceChange, this, _1, _2));
 	chatStateTracker_->onChatStateChange.connect(boost::bind(&ChatWindow::setContactChatState, chatWindow_, _1));
+	stanzaChannel_->onStanzaAcked.connect(boost::bind(&ChatController::handleStanzaAcked, this, _1));
 	String nick = nickResolver_->jidToNick(toJID_);
 	chatWindow_->setName(nick);
 	String startMessage("Starting chat with " + nick);
@@ -43,6 +45,7 @@ ChatController::ChatController(const JID& self, StanzaChannel* stanzaChannel, IQ
 	chatWindow_->addSystemMessage(startMessage);
 	chatWindow_->onUserTyping.connect(boost::bind(&ChatStateNotifier::setUserIsTyping, chatStateNotifier_));
 	chatWindow_->onUserCancelsTyping.connect(boost::bind(&ChatStateNotifier::userCancelledNewMessage, chatStateNotifier_));
+
 }
 
 ChatController::~ChatController() {
@@ -80,10 +83,33 @@ void ChatController::preSendMessageRequest(boost::shared_ptr<Message> message) {
 	}
 }
 
-void ChatController::postSendMessage(const String& body) {
-	addMessage(body, "me", true, labelsEnabled_ ? chatWindow_->getSelectedSecurityLabel() : boost::optional<SecurityLabel>(), String(avatarManager_->getAvatarPath(selfJID_).string()), boost::posix_time::microsec_clock::universal_time());
+void ChatController::postSendMessage(const String& body, boost::shared_ptr<Stanza> sentStanza) {
+	String id = addMessage(body, "me", true, labelsEnabled_ ? chatWindow_->getSelectedSecurityLabel() : boost::optional<SecurityLabel>(), String(avatarManager_->getAvatarPath(selfJID_).string()), boost::posix_time::microsec_clock::universal_time());
+	if (stanzaChannel_->getStreamManagementEnabled()) {
+		chatWindow_->setAckState(id, ChatWindow::Pending);
+		unackedStanzas_[sentStanza] = id;
+	}
 	lastWasPresence_ = false;
 	chatStateNotifier_->userSentMessage();
+}
+
+void ChatController::handleStanzaAcked(boost::shared_ptr<Stanza> stanza) {
+	String id = unackedStanzas_[stanza];
+	if (id != "") {
+		chatWindow_->setAckState(id, ChatWindow::Received);
+	}
+	unackedStanzas_.erase(unackedStanzas_.find(stanza));
+}
+
+void ChatController::setEnabled(bool enabled) {
+	if (!enabled) {
+		std::map<boost::shared_ptr<Stanza>, String>::iterator it = unackedStanzas_.begin();
+		for ( ; it != unackedStanzas_.end(); it++) {
+			chatWindow_->setAckState(it->second, ChatWindow::Failed);
+		}
+		unackedStanzas_.clear();
+	}
+	ChatControllerBase::setEnabled(enabled);
 }
 
 String ChatController::senderDisplayNameFromMessage(const JID& from) {

@@ -14,8 +14,8 @@ namespace Swift {
 			MockChatWindow() {};
 			virtual ~MockChatWindow();
 
-			virtual void addMessage(const String& message, const String& /*senderName*/, bool /*senderIsSelf*/, const boost::optional<SecurityLabel>& /*label*/, const String& /*avatarPath*/, const boost::posix_time::ptime&) {lastMessageBody_ = message;};
-			virtual void addAction(const String& message, const String& /*senderName*/, bool /*senderIsSelf*/, const boost::optional<SecurityLabel>& /*label*/, const String& /*avatarPath*/, const boost::posix_time::ptime&) {lastMessageBody_ = message;};
+			virtual String addMessage(const String& message, const String& /*senderName*/, bool /*senderIsSelf*/, const boost::optional<SecurityLabel>& /*label*/, const String& /*avatarPath*/, const boost::posix_time::ptime&) {lastMessageBody_ = message; return "";};
+			virtual String addAction(const String& message, const String& /*senderName*/, bool /*senderIsSelf*/, const boost::optional<SecurityLabel>& /*label*/, const String& /*avatarPath*/, const boost::posix_time::ptime&) {lastMessageBody_ = message; return "";};
 			virtual void addSystemMessage(const String& /*message*/) {};
 			virtual void addErrorMessage(const String& /*message*/) {};
 			virtual void addPresenceMessage(const String& /*message*/) {};
@@ -34,6 +34,7 @@ namespace Swift {
 			virtual void setRosterModel(Roster* /*roster*/) {};
 			virtual void setTabComplete(TabComplete*) {};
 			virtual void replaceLastMessage(const Swift::String&) {};
+			void setAckState(const String& /*id*/, AckState /*state*/) {};
 
 			boost::signal<void ()> onClosed;
 			boost::signal<void ()> onAllMessagesRead;

@@ -31,6 +31,7 @@ namespace Swift {
 			void replaceLastMessage(const QString& newMessage);
 			void replaceLastMessage(const QString& newMessage, const QString& note);
 			bool isScrolledToBottom() const;
+			void setAckXML(const QString& id, const QString& xml);
 
 		signals:
 			void gotFocus();

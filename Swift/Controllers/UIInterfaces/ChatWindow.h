@@ -25,11 +25,18 @@ namespace Swift {
 
 	class ChatWindow {
 		public:
+			enum AckState {Pending, Received, Failed};
 			ChatWindow() {}
 			virtual ~ChatWindow() {};
 
-			virtual void addMessage(const String& message, const String& senderName, bool senderIsSelf, const boost::optional<SecurityLabel>& label, const String& avatarPath, const boost::posix_time::ptime& time) = 0;
-			virtual void addAction(const String& message, const String& senderName, bool senderIsSelf, const boost::optional<SecurityLabel>& label, const String& avatarPath, const boost::posix_time::ptime& time) = 0;
+			/** Add message to window.
+			 * @return id of added message (for acks).
+			 */
+			virtual String addMessage(const String& message, const String& senderName, bool senderIsSelf, const boost::optional<SecurityLabel>& label, const String& avatarPath, const boost::posix_time::ptime& time) = 0;
+			/** Adds action to window.
+			 * @return id of added message (for acks);
+			 */
+			virtual String addAction(const String& message, const String& senderName, bool senderIsSelf, const boost::optional<SecurityLabel>& label, const String& avatarPath, const boost::posix_time::ptime& time) = 0;
 			virtual void addSystemMessage(const String& message) = 0;
 			virtual void addPresenceMessage(const String& message) = 0;
 			virtual void addErrorMessage(const String& message) = 0;
@@ -49,6 +56,7 @@ namespace Swift {
 			virtual void setRosterModel(Roster* model) = 0;
 			virtual void setTabComplete(TabComplete* completer) = 0;
 			virtual void replaceLastMessage(const String& message) = 0;
+			virtual void setAckState(const String& id, AckState state) = 0;
 
 			boost::signal<void ()> onClosed;
 			boost::signal<void ()> onAllMessagesRead;

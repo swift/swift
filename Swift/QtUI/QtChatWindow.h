@@ -11,6 +11,8 @@
 
 #include "QtTabbable.h"
 
+#include "Swiften/Base/IDGenerator.h"
+
 class QTextEdit;
 class QLineEdit;
 class QComboBox;
@@ -28,8 +30,8 @@ namespace Swift {
 		public:
 			QtChatWindow(const QString &contact, QtChatTheme* theme, UIEventStream* eventStream);
 			~QtChatWindow();
-			void addMessage(const String &message, const String &senderName, bool senderIsSelf, const boost::optional<SecurityLabel>& label, const String& avatarPath, const boost::posix_time::ptime& time);
-			void addAction(const String &message, const String &senderName, bool senderIsSelf, const boost::optional<SecurityLabel>& label, const String& avatarPath, const boost::posix_time::ptime& time);
+			String addMessage(const String &message, const String &senderName, bool senderIsSelf, const boost::optional<SecurityLabel>& label, const String& avatarPath, const boost::posix_time::ptime& time);
+			String addAction(const String &message, const String &senderName, bool senderIsSelf, const boost::optional<SecurityLabel>& label, const String& avatarPath, const boost::posix_time::ptime& time);
 			void addSystemMessage(const String& message);
 			void addPresenceMessage(const String& message);
 			void addErrorMessage(const String& errorMessage);
@@ -50,6 +52,7 @@ namespace Swift {
 			void setTabComplete(TabComplete* completer);
 			int getCount();
 			void replaceLastMessage(const String& message);
+			void setAckState(const String& id, AckState state);
 
 		signals:
 			void geometryChanged();
@@ -71,7 +74,7 @@ namespace Swift {
 		private:
 			void updateTitleWithUnreadCount();
 			void tabComplete();
-			void addMessage(const String &message, const String &senderName, bool senderIsSelf, const boost::optional<SecurityLabel>& label, const String& avatarPath, const QString& style, const boost::posix_time::ptime& time);
+			String addMessage(const String &message, const String &senderName, bool senderIsSelf, const boost::optional<SecurityLabel>& label, const String& avatarPath, const QString& style, const boost::posix_time::ptime& time);
 
 			int unreadCount_;
 			bool contactIsTyping_;
@@ -90,6 +93,7 @@ namespace Swift {
 			bool inputClearing_;
 			UIEventStream* eventStream_;
 			bool inputEnabled_;
+			IDGenerator id_;
 	};
 }
 
