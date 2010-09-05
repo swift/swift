@@ -15,6 +15,7 @@ class RosterSerializerTest : public CppUnit::TestFixture
 {
 		CPPUNIT_TEST_SUITE(RosterSerializerTest);
 		CPPUNIT_TEST(testSerialize);
+		CPPUNIT_TEST(testSerialize_ItemWithUnknownContent);
 		CPPUNIT_TEST_SUITE_END();
 
 	public:
@@ -45,6 +46,33 @@ class RosterSerializerTest : public CppUnit::TestFixture
 						"<group>Group 2</group>"
 					"</item>"
 					"<item jid=\"baz@blo.com\" name=\"Baz\" subscription=\"none\"/>"
+				"</query>";
+
+			CPPUNIT_ASSERT_EQUAL(expectedResult, testling.serialize(roster));
+		}
+
+		void testSerialize_ItemWithUnknownContent() {
+			RosterSerializer testling;
+			boost::shared_ptr<RosterPayload> roster(new RosterPayload());
+
+			RosterItemPayload item;
+			item.setJID(JID("baz@blo.com"));
+			item.setName("Baz");
+			item.addGroup("Group 1");
+			item.addGroup("Group 2");
+			item.addUnknownContent(String(
+				"<foo xmlns=\"http://example.com\"><bar xmlns=\"http://example.com\">Baz</bar></foo>"
+				"<baz xmlns=\"jabber:iq:roster\"><fum xmlns=\"jabber:iq:roster\">foo</fum></baz>"));
+			roster->addItem(item);
+
+			String expectedResult = 
+				"<query xmlns=\"jabber:iq:roster\">"
+					"<item jid=\"baz@blo.com\" name=\"Baz\" subscription=\"none\">"
+						"<group>Group 1</group>"
+						"<group>Group 2</group>"
+						"<foo xmlns=\"http://example.com\"><bar xmlns=\"http://example.com\">Baz</bar></foo>"
+						"<baz xmlns=\"jabber:iq:roster\"><fum xmlns=\"jabber:iq:roster\">foo</fum></baz>"
+					"</item>"
 				"</query>";
 
 			CPPUNIT_ASSERT_EQUAL(expectedResult, testling.serialize(roster));

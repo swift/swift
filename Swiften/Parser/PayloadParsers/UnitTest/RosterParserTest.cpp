@@ -16,6 +16,7 @@ class RosterParserTest : public CppUnit::TestFixture
 {
 		CPPUNIT_TEST_SUITE(RosterParserTest);
 		CPPUNIT_TEST(testParse);
+		CPPUNIT_TEST(testParse_ItemWithUnknownContent);
 		CPPUNIT_TEST_SUITE_END();
 
 	public:
@@ -50,6 +51,30 @@ class RosterParserTest : public CppUnit::TestFixture
 			CPPUNIT_ASSERT_EQUAL(RosterItemPayload::None, items[1].getSubscription());
 			CPPUNIT_ASSERT(!items[1].getSubscriptionRequested());
 			CPPUNIT_ASSERT_EQUAL(static_cast<size_t>(0), items[1].getGroups().size());
+		}
+
+		void testParse_ItemWithUnknownContent() {
+			PayloadsParserTester parser;
+			parser.parse(
+				"<query xmlns='jabber:iq:roster'>"
+				"	<item jid='foo@bar.com' name='Foo @ Bar' subscription='from' ask='subscribe'>"
+				"		<group>Group 1</group>"
+				"		<foo xmlns=\"http://example.com\"><bar>Baz</bar></foo>"
+				"		<group>Group 2</group>"
+				"		<baz><fum>foo</fum></baz>"
+				"	</item>"
+				"</query>");
+
+			RosterPayload* payload = dynamic_cast<RosterPayload*>(parser.getPayload().get());
+			const RosterPayload::RosterItemPayloads& items = payload->getItems();
+
+			CPPUNIT_ASSERT_EQUAL(static_cast<size_t>(1), items.size());
+			CPPUNIT_ASSERT_EQUAL(String("Group 1"), items[0].getGroups()[0]);
+			CPPUNIT_ASSERT_EQUAL(String("Group 2"), items[0].getGroups()[1]);
+			CPPUNIT_ASSERT_EQUAL(String(
+				"<foo xmlns=\"http://example.com\"><bar xmlns=\"http://example.com\">Baz</bar></foo>"
+				"<baz xmlns=\"jabber:iq:roster\"><fum xmlns=\"jabber:iq:roster\">foo</fum></baz>"
+				), items[0].getUnknownContent());
 		}
 };
 

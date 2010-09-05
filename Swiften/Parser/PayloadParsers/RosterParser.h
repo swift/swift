@@ -11,6 +11,8 @@
 #include "Swiften/Parser/GenericPayloadParser.h"
 
 namespace Swift {
+	class SerializingParser;
+
 	class RosterParser : public GenericPayloadParser<RosterPayload> {
 		public:
 			RosterParser();
@@ -29,6 +31,7 @@ namespace Swift {
 			bool inItem_;
 			RosterItemPayload currentItem_;
 			String currentText_;
+			SerializingParser* unknownContentParser_;
 	};
 }
 

@@ -5,13 +5,14 @@
  */
 
 #include "Swiften/Parser/PayloadParsers/RosterParser.h"
+#include "Swiften/Parser/SerializingParser.h"
 
 namespace Swift {
 
-RosterParser::RosterParser() : level_(TopLevel) {
+RosterParser::RosterParser() : level_(TopLevel), unknownContentParser_(0) {
 }
 
-void RosterParser::handleStartElement(const String& element, const String&, const AttributeMap& attributes) {
+void RosterParser::handleStartElement(const String& element, const String& ns, const AttributeMap& attributes) {
 	if (level_ == PayloadLevel) {
 		if (element == "item") {
 			inItem_ = true;
@@ -46,11 +47,19 @@ void RosterParser::handleStartElement(const String& element, const String&, cons
 		if (element == "group") {
 			currentText_ = "";
 		}
+		else {
+			assert(!unknownContentParser_);
+			unknownContentParser_ = new SerializingParser();
+			unknownContentParser_->handleStartElement(element, ns, attributes);
+		}
+	}
+	else if (unknownContentParser_) {
+		unknownContentParser_->handleStartElement(element, ns, attributes);
 	}
 	++level_;
 }
 
-void RosterParser::handleEndElement(const String& element, const String&) {
+void RosterParser::handleEndElement(const String& element, const String& ns) {
 	--level_;
 	if (level_ == PayloadLevel) {
 		if (inItem_) {
@@ -59,14 +68,27 @@ void RosterParser::handleEndElement(const String& element, const String&) {
 		}
 	}
 	else if (level_ == ItemLevel) {
-		if (element == "group") {
+		if (unknownContentParser_) {
+			unknownContentParser_->handleEndElement(element, ns);
+			currentItem_.addUnknownContent(unknownContentParser_->getResult());
+			unknownContentParser_ = NULL;
+		}
+		else if (element == "group") {
 			currentItem_.addGroup(currentText_);
 		}
+	}
+	else if (unknownContentParser_) {
+		unknownContentParser_->handleEndElement(element, ns);
 	}
 }
 
 void RosterParser::handleCharacterData(const String& data) {
-	currentText_ += data;
+	if (unknownContentParser_) {
+		unknownContentParser_->handleCharacterData(data);
+	}
+	else {
+		currentText_ += data;
+	}
 }
 
 }

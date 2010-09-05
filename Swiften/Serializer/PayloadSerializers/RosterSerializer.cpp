@@ -10,6 +10,7 @@
 
 #include "Swiften/Base/foreach.h"
 #include "Swiften/Serializer/XML/XMLTextNode.h"
+#include "Swiften/Serializer/XML/XMLRawTextNode.h"
 #include "Swiften/Serializer/XML/XMLElement.h"
 
 namespace Swift {
@@ -41,6 +42,11 @@ String RosterSerializer::serializePayload(boost::shared_ptr<RosterPayload> roste
 			groupElement->addNode(boost::shared_ptr<XMLTextNode>(new XMLTextNode(group)));
 			itemElement->addNode(groupElement);
 		}
+
+		if (!item.getUnknownContent().isEmpty()) {
+			itemElement->addNode(boost::shared_ptr<XMLRawTextNode>(new XMLRawTextNode(item.getUnknownContent())));
+		}
+
 
 		queryElement.addNode(itemElement);
 	}

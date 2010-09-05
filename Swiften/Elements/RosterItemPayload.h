@@ -37,12 +37,18 @@ namespace Swift {
 			void setSubscriptionRequested() { ask_ = true; }
 			bool getSubscriptionRequested() const { return ask_; }
 
+			const String& getUnknownContent() const { return unknownContent_; }
+			void addUnknownContent(const String& c) { 
+				unknownContent_ += c;
+			}
+
 		private:
 			JID jid_;
 			String name_;
 			Subscription subscription_;
 			std::vector<String> groups_;
 			bool ask_;
+			String unknownContent_;
 	};
 }
 
