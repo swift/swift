@@ -37,7 +37,7 @@ Client::~Client() {
 }
 
 bool Client::isAvailable() {
-	return session_;
+	return session_ && session_->getState() == ClientSession::Initialized;
 }
 
 void Client::connect() {
@@ -80,7 +80,7 @@ void Client::handleConnectorFinished(boost::shared_ptr<Connection> connection, C
 		sessionStream_->initialize();
 
 		session_ = ClientSession::create(jid_, sessionStream_);
-		session_->onInitialized.connect(boost::bind(boost::ref(onConnected)));
+		session_->onInitialized.connect(boost::bind(&Client::handleSessionInitialized, this));
 		session_->onStanzaAcked.connect(boost::bind(&Client::handleStanzaAcked, this, _1));
 		session_->onFinished.connect(boost::bind(&Client::handleSessionFinished, this, _1));
 		session_->onNeedCredentials.connect(boost::bind(&Client::handleNeedCredentials, this));
@@ -162,6 +162,7 @@ void Client::setCertificate(const String& certificate) {
 void Client::handleSessionFinished(boost::shared_ptr<Error> error) {
 	session_.reset();
 	closeConnection();
+	onAvailableChanged(false);
 	if (error) {
 		ClientError clientError;
 		if (boost::shared_ptr<ClientSession::Error> actualError = boost::dynamic_pointer_cast<ClientSession::Error>(error)) {
@@ -240,6 +241,11 @@ void Client::handleDataWritten(const String& data) {
 
 void Client::handleStanzaAcked(boost::shared_ptr<Stanza> stanza) {
 	onStanzaAcked(stanza);
+}
+
+void Client::handleSessionInitialized() {
+	onConnected();
+	onAvailableChanged(true);
 }
 
 }

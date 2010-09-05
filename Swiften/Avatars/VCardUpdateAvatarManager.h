@@ -35,6 +35,7 @@ namespace Swift {
 
 		private:
 			void handlePresenceReceived(boost::shared_ptr<Presence>);
+			void handleStanzaChannelAvailableChanged(bool);
 			void handleVCardChanged(const JID& from, VCard::ref);
 			void setAvatarHash(const JID& from, const String& hash);
 			JID getAvatarJID(const JID& o) const;

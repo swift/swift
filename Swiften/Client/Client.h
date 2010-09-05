@@ -58,6 +58,7 @@ namespace Swift {
 
 		private:
 			void handleConnectorFinished(boost::shared_ptr<Connection>, Connector::ref);
+			void handleSessionInitialized();
 			void send(boost::shared_ptr<Stanza>);
 			virtual String getNewIQID();
 			void handleStanza(boost::shared_ptr<Stanza>);

@@ -13,10 +13,15 @@
 namespace Swift {
 	class DummyStanzaChannel : public StanzaChannel {
 		public:
-			DummyStanzaChannel() {}
+			DummyStanzaChannel() : available_(true) {}
 
 			virtual void sendStanza(boost::shared_ptr<Stanza> stanza) {
 				sentStanzas.push_back(stanza);
+			}
+
+			void setAvailable(bool available) {
+				available_ = available;
+				onAvailableChanged(available);
 			}
 
 			virtual void sendIQ(boost::shared_ptr<IQ> iq) {
@@ -36,7 +41,7 @@ namespace Swift {
 			}
 			
 			virtual bool isAvailable() {
-				return true;
+				return available_;
 			}
 
 			virtual bool getStreamManagementEnabled() const {
@@ -49,5 +54,6 @@ namespace Swift {
 			}
 
 			std::vector<boost::shared_ptr<Stanza> > sentStanzas;
+			bool available_;
 	};
 }

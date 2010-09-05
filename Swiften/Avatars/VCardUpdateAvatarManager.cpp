@@ -21,6 +21,7 @@ namespace Swift {
 
 VCardUpdateAvatarManager::VCardUpdateAvatarManager(VCardManager* vcardManager, StanzaChannel* stanzaChannel, AvatarStorage* avatarStorage, MUCRegistry* mucRegistry) : vcardManager_(vcardManager), stanzaChannel_(stanzaChannel), avatarStorage_(avatarStorage), mucRegistry_(mucRegistry) {
 	stanzaChannel->onPresenceReceived.connect(boost::bind(&VCardUpdateAvatarManager::handlePresenceReceived, this, _1));
+	stanzaChannel->onAvailableChanged.connect(boost::bind(&VCardUpdateAvatarManager::handleStanzaChannelAvailableChanged, this, _1));
 	vcardManager_->onVCardChanged.connect(boost::bind(&VCardUpdateAvatarManager::handleVCardChanged, this, _1, _2));
 }
 
@@ -90,6 +91,12 @@ boost::filesystem::path VCardUpdateAvatarManager::getAvatarPath(const JID& jid) 
 JID VCardUpdateAvatarManager::getAvatarJID(const JID& jid) const {
 	JID bareFrom = jid.toBare();
 	return (mucRegistry_ && mucRegistry_->isMUC(bareFrom)) ? jid : bareFrom;
+}
+
+void VCardUpdateAvatarManager::handleStanzaChannelAvailableChanged(bool available) {
+	if (available) {
+		avatarHashes_.clear();
+	}
 }
 
 

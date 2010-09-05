@@ -27,22 +27,14 @@ class VCardUpdateAvatarManagerTest : public CppUnit::TestFixture {
 		CPPUNIT_TEST(testUpdate_NewHashStoresAvatarAndEmitsNotificationOnVCardReceive);
 		CPPUNIT_TEST(testUpdate_KnownHash);
 		CPPUNIT_TEST(testUpdate_KnownHashFromDifferentUserDoesNotRequestVCardButTriggersNotification);
-		/*&
-		CPPUNIT_TEST(testUpdate_UpdateNewHashAlreadyHaveAvatar);
-		CPPUNIT_TEST(testUpdate_UpdateNewHashFromMUC);
-		CPPUNIT_TEST(testUpdate_UpdateSameHash);*/
-		//CPPUNIT_TEST(testUpdate_UpdateWithError);
-		/*
-		CPPUNIT_TEST(testUpdate_UpdateNewHashSameThanOtherUser);
-		CPPUNIT_TEST(testReceiveVCard);
-		CPPUNIT_TEST(testGetAvatarPath);
-		CPPUNIT_TEST(testGetAvatarPathFromMUC);*/
+		CPPUNIT_TEST(testStanzaChannelReset);
 		CPPUNIT_TEST_SUITE_END();
 
 	public:
 		void setUp() {
 			ownJID = JID("foo@fum.com/bum");
 			stanzaChannel = new DummyStanzaChannel();
+			stanzaChannel->setAvailable(true);
 			iqRouter = new IQRouter(stanzaChannel);
 			mucRegistry = new DummyMUCRegistry();
 			avatarStorage = new AvatarMemoryStorage();
@@ -111,22 +103,21 @@ class VCardUpdateAvatarManagerTest : public CppUnit::TestFixture {
 			CPPUNIT_ASSERT_EQUAL(avatar1Hash, changes[0].second);
 		}
 
-/*
-		void testUpdate_UpdateNewHashFromMUC() {
+		void testStanzaChannelReset() {
 			std::auto_ptr<VCardUpdateAvatarManager> testling = createManager();
+			stanzaChannel->onPresenceReceived(createPresenceWithPhotoHash(user1, avatar1Hash));
+			stanzaChannel->onIQReceived(createVCardResult(avatar1));
+			changes.clear();
+			stanzaChannel->sentStanzas.clear();
+
+			stanzaChannel->setAvailable(false);
+			stanzaChannel->setAvailable(true);
+			stanzaChannel->onPresenceReceived(createPresenceWithPhotoHash(user1, avatar1Hash));
+
+			CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(changes.size()));
+			CPPUNIT_ASSERT_EQUAL(user1.toBare(), changes[0].first);
+			CPPUNIT_ASSERT_EQUAL(avatar1Hash, changes[0].second);
 		}
-
-		*/
-
-		/*void testUpdate_UpdateWithError() {
-			std::auto_ptr<VCardUpdateAvatarManager> testling = createManager();
-			boost::shared_ptr<Presence> update = createPresenceWithPhotoHash();
-			update->addPayload(boost::shared_ptr<ErrorPayload>(new ErrorPayload()));
-			stanzaChannel_->onPresenceReceived(update);
-
-			CPPUNIT_ASSERT_EQUAL(0, static_cast<int>(stanzaChannel_->sentStanzas.size()));
-		}*/
-
 
 	private:
 		std::auto_ptr<VCardUpdateAvatarManager> createManager() {

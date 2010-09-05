@@ -21,6 +21,7 @@ namespace Swift {
 			virtual bool isAvailable() = 0;
 			virtual bool getStreamManagementEnabled() const = 0;
 
+			boost::signal<void (bool /* isAvailable */)> onAvailableChanged;
 			boost::signal<void (boost::shared_ptr<Message>)> onMessageReceived;
 			boost::signal<void (boost::shared_ptr<Presence>) > onPresenceReceived;
 			boost::signal<void (boost::shared_ptr<Stanza>)> onStanzaAcked;
