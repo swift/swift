@@ -41,6 +41,7 @@ namespace Swift {
 			void scrollToBottom();
 			void handleLinkClicked(const QUrl&);
 			void handleKeyPressEvent(QKeyEvent* event);
+			void resetView();
 
 		private slots:
 			void handleViewLoadFinished(bool);

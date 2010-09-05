@@ -20,6 +20,7 @@ namespace Swift {
 
 		signals:
 			void gotFocus();
+			void clearRequested();
 
 		protected:
 			void focusInEvent(QFocusEvent* event);

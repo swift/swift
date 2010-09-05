@@ -31,17 +31,18 @@ void QtWebView::keyPressEvent(QKeyEvent* event) {
 	delete translatedEvent;
 }
 
-void QtWebView::dragEnterEvent(QDragEnterEvent *event) {
+void QtWebView::dragEnterEvent(QDragEnterEvent*) {
 
 }
 
 void QtWebView::contextMenuEvent(QContextMenuEvent* ev) {
+	QMenu menu(this);
 	QAction* copyLinkAction = pageAction(QWebPage::CopyLinkToClipboard);
 	if (copyLinkAction) {
-		QMenu menu(this);
 		menu.addAction(copyLinkAction);
-		menu.exec(ev->globalPos());
 	}
+	menu.addAction("Clear", this, SIGNAL(clearRequested()));
+	menu.exec(ev->globalPos());
 }
 
 void QtWebView::focusInEvent(QFocusEvent* event) {

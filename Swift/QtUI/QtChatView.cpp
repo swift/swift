@@ -31,6 +31,7 @@ QtChatView::QtChatView(QtChatTheme* theme, QWidget* parent) : QWidget(parent) {
 	connect(webView_, SIGNAL(linkClicked(const QUrl&)), SLOT(handleLinkClicked(const QUrl&)));
 	connect(webView_, SIGNAL(loadFinished(bool)), SLOT(handleViewLoadFinished(bool)));
 	connect(webView_, SIGNAL(gotFocus()), SIGNAL(gotFocus()));
+	connect(webView_, SIGNAL(clearRequested()), SLOT(resetView()));
 #ifdef Q_WS_X11
 	/* To give a border on Linux, where it looks bad without */
 	QStackedWidget* stack = new QStackedWidget(this);
@@ -51,22 +52,7 @@ QtChatView::QtChatView(QtChatTheme* theme, QWidget* parent) : QWidget(parent) {
 	connect(webPage_, SIGNAL(selectionChanged()), SLOT(copySelectionToClipboard()));
 
 	viewReady_ = false;
-	QString pageHTML = theme_->getTemplate();
-	pageHTML.replace("==bodyBackground==", "background-color:#e3e3e3");
-	pageHTML.replace(pageHTML.indexOf("%@"), 2, theme_->getBase());
-	if (pageHTML.count("%@") > 3) {
-		pageHTML.replace(pageHTML.indexOf("%@"), 2, theme_->getMainCSS());
-	}
-	pageHTML.replace(pageHTML.indexOf("%@"), 2, "Variants/Blue on Green.css");
-	pageHTML.replace(pageHTML.indexOf("%@"), 2, ""/*headerSnippet.getContent()*/);
-	pageHTML.replace(pageHTML.indexOf("%@"), 2, ""/*footerSnippet.getContent()*/);
-	webPage_->mainFrame()->setHtml(pageHTML);
-	document_ = webPage_->mainFrame()->documentElement();
-	QWebElement chatElement = document_.findFirst("#Chat");
-	newInsertPoint_ = chatElement.clone();
-	newInsertPoint_.setOuterXml("<div id='swift_insert'/>");
-	chatElement.appendInside(newInsertPoint_);
-	Q_ASSERT(!newInsertPoint_.isNull());
+	resetView();
 }
 
 void QtChatView::handleKeyPressEvent(QKeyEvent* event) {
@@ -161,6 +147,25 @@ void QtChatView::handleViewLoadFinished(bool ok) {
 	Q_ASSERT(ok);
 	viewReady_ = true;
 	addQueuedSnippets();
+}
+
+void QtChatView::resetView() {
+	QString pageHTML = theme_->getTemplate();
+	pageHTML.replace("==bodyBackground==", "background-color:#e3e3e3");
+	pageHTML.replace(pageHTML.indexOf("%@"), 2, theme_->getBase());
+	if (pageHTML.count("%@") > 3) {
+		pageHTML.replace(pageHTML.indexOf("%@"), 2, theme_->getMainCSS());
+	}
+	pageHTML.replace(pageHTML.indexOf("%@"), 2, "Variants/Blue on Green.css");
+	pageHTML.replace(pageHTML.indexOf("%@"), 2, ""/*headerSnippet.getContent()*/);
+	pageHTML.replace(pageHTML.indexOf("%@"), 2, ""/*footerSnippet.getContent()*/);
+	webPage_->mainFrame()->setHtml(pageHTML);
+	document_ = webPage_->mainFrame()->documentElement();
+	QWebElement chatElement = document_.findFirst("#Chat");
+	newInsertPoint_ = chatElement.clone();
+	newInsertPoint_.setOuterXml("<div id='swift_insert'/>");
+	chatElement.appendInside(newInsertPoint_);
+	Q_ASSERT(!newInsertPoint_.isNull());
 }
 
 }
