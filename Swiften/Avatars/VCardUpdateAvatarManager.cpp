@@ -52,9 +52,14 @@ void VCardUpdateAvatarManager::handleVCardChanged(const JID& from, VCard::ref vC
 		return;
 	}
 
-	String hash = Hexify::hexify(SHA1::getHash(vCard->getPhoto()));
-	avatarStorage_->addAvatar(hash, vCard->getPhoto());
-	setAvatarHash(from, hash);
+	if (vCard->getPhoto().isEmpty()) {
+		setAvatarHash(from, "");
+	}
+	else {
+		String hash = Hexify::hexify(SHA1::getHash(vCard->getPhoto()));
+		avatarStorage_->addAvatar(hash, vCard->getPhoto());
+		setAvatarHash(from, hash);
+	}
 }
 
 void VCardUpdateAvatarManager::setAvatarHash(const JID& from, const String& hash) {

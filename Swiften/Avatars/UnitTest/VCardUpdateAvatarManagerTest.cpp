@@ -27,6 +27,7 @@ class VCardUpdateAvatarManagerTest : public CppUnit::TestFixture {
 		CPPUNIT_TEST(testUpdate_NewHashStoresAvatarAndEmitsNotificationOnVCardReceive);
 		CPPUNIT_TEST(testUpdate_KnownHash);
 		CPPUNIT_TEST(testUpdate_KnownHashFromDifferentUserDoesNotRequestVCardButTriggersNotification);
+		CPPUNIT_TEST(testVCardWithEmptyPhoto);
 		CPPUNIT_TEST(testStanzaChannelReset);
 		CPPUNIT_TEST_SUITE_END();
 
@@ -103,6 +104,15 @@ class VCardUpdateAvatarManagerTest : public CppUnit::TestFixture {
 			CPPUNIT_ASSERT_EQUAL(avatar1Hash, changes[0].second);
 		}
 
+		void testVCardWithEmptyPhoto() {
+			std::auto_ptr<VCardUpdateAvatarManager> testling = createManager();
+			vcardManager->requestVCard(JID("foo@bar.com"));
+			stanzaChannel->onIQReceived(createVCardResult(ByteArray()));
+			
+			CPPUNIT_ASSERT(!avatarStorage->hasAvatar(Hexify::hexify(SHA1::getHash(ByteArray()))));
+			CPPUNIT_ASSERT_EQUAL(boost::filesystem::path(), testling->getAvatarPath(JID("foo@bar.com")));
+		}
+
 		void testStanzaChannelReset() {
 			std::auto_ptr<VCardUpdateAvatarManager> testling = createManager();
 			stanzaChannel->onPresenceReceived(createPresenceWithPhotoHash(user1, avatar1Hash));
@@ -135,7 +145,9 @@ class VCardUpdateAvatarManagerTest : public CppUnit::TestFixture {
 
 		IQ::ref createVCardResult(const ByteArray& avatar) {
 			VCard::ref vcard(new VCard());
-			vcard->setPhoto(avatar);
+			if (!avatar.isEmpty()) {
+				vcard->setPhoto(avatar);
+			}
 			return IQ::createResult(JID("baz@fum.com"), stanzaChannel->sentStanzas[0]->getID(), vcard);
 		}
 
