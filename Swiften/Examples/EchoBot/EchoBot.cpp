@@ -5,9 +5,9 @@
  */
 
 #include <boost/bind.hpp>
+#include <iostream>
 
 #include "Swiften/Client/Client.h"
-#include "Swiften/Client/ClientXMLTracer.h"
 #include "Swiften/EventLoop/SimpleEventLoop.h"
 #include "Swiften/Queries/Requests/GetRosterRequest.h"
 
@@ -16,16 +16,14 @@ using namespace boost;
 
 class EchoBot {
 	public:
-		EchoBot(const JID& jid, const String& pass) : tracer(0) {
+		EchoBot(const JID& jid, const String& pass) {
 			client = new Client(jid, pass);
-			tracer = new ClientXMLTracer(client);
 			client->onConnected.connect(bind(&EchoBot::handleConnected, this));
 			client->onMessageReceived.connect(bind(&EchoBot::handleMessageReceived, this, _1));
 			client->connect();
 		}
 
 		~EchoBot() {
-			delete tracer;
 			delete client;
 		}
 
@@ -36,7 +34,7 @@ class EchoBot {
 			rosterRequest->send();
 		}
 
-		void handleRosterReceived(const optional<Error>& error) {
+		void handleRosterReceived(const optional<ErrorPayload>& error) {
 			if (error) {
 				std::cerr << "Error receiving roster. Continuing anyway.";
 			}
@@ -51,12 +49,15 @@ class EchoBot {
 
 	private:
 		Client* client;
-		ClientXMLTracer* tracer;
 };
 
-int main(int, char**) {
+int main(int argc, char* argv[]) {
+	if (argc != 3) {
+		std::cerr << "Usage: " << argv[0] << " <jid> <pass>" << std::endl;
+		return -1;
+	}
 	SimpleEventLoop eventLoop;
-	EchoBot bot(JID("echobot@wonderland.lit"), "mypass");
+	EchoBot bot(JID(argv[1]), argv[2]);
 	eventLoop.run();
 	return 0;
 }
