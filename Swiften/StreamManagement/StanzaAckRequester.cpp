@@ -8,6 +8,8 @@
 
 #include <boost/numeric/conversion/cast.hpp>
 
+#include "Swiften/Elements/Message.h"
+
 namespace Swift {
 
 static const unsigned int MAX_HANDLED_STANZA_COUNT = boost::numeric_cast<unsigned int>((1ULL<<32) - 1);
@@ -18,7 +20,9 @@ StanzaAckRequester::StanzaAckRequester() : lastHandledStanzasCount(0) {
 
 void StanzaAckRequester::handleStanzaSent(boost::shared_ptr<Stanza> stanza) {
 	unackedStanzas.push_back(stanza);
-	onRequestAck();
+	if (boost::dynamic_pointer_cast<Message>(stanza)) {
+		onRequestAck();
+	}
 }
 
 void StanzaAckRequester::handleAckReceived(unsigned int handledStanzasCount) {

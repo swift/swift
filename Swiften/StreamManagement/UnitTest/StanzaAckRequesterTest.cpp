@@ -11,6 +11,8 @@
 
 #include "Swiften/StreamManagement/StanzaAckRequester.h"
 #include "Swiften/Elements/Message.h"
+#include "Swiften/Elements/Presence.h"
+#include "Swiften/Elements/IQ.h"
 
 using namespace Swift;
 
@@ -18,8 +20,11 @@ namespace Swift {
 
 class StanzaAckRequesterTest : public CppUnit::TestFixture {
 		CPPUNIT_TEST_SUITE(StanzaAckRequesterTest);
-		CPPUNIT_TEST(testHandleStanzaSent_RequestsAck);
+		CPPUNIT_TEST(testHandleStanzaSent_MessageRequestsAck);
+		CPPUNIT_TEST(testHandleStanzaSent_IQDoesNotRequestAck);
+		CPPUNIT_TEST(testHandleStanzaSent_PresenceDoesNotRequestAck);
 		CPPUNIT_TEST(testHandleAckReceived_AcksStanza);
+		CPPUNIT_TEST(testHandleAckReceived_AcksMultipleMessages);
 		CPPUNIT_TEST(testHandleAckReceived_AcksMultipleStanzas);
 		CPPUNIT_TEST(testHandleAckReceived_MultipleAcks);
 		CPPUNIT_TEST(testHandleAckReceived_WrapAround);
@@ -30,11 +35,25 @@ class StanzaAckRequesterTest : public CppUnit::TestFixture {
 			acksRequested = 0;
 		}
 
-		void testHandleStanzaSent_RequestsAck() {
+		void testHandleStanzaSent_MessageRequestsAck() {
 			std::auto_ptr<StanzaAckRequester> testling(createRequester());
 			testling->handleStanzaSent(createMessage("m1"));
 
 			CPPUNIT_ASSERT_EQUAL(1, acksRequested);
+		}
+
+		void testHandleStanzaSent_IQDoesNotRequestAck() {
+			std::auto_ptr<StanzaAckRequester> testling(createRequester());
+			testling->handleStanzaSent(createIQ("iq1"));
+
+			CPPUNIT_ASSERT_EQUAL(0, acksRequested);
+		}
+
+		void testHandleStanzaSent_PresenceDoesNotRequestAck() {
+			std::auto_ptr<StanzaAckRequester> testling(createRequester());
+			testling->handleStanzaSent(createPresence("p1"));
+
+			CPPUNIT_ASSERT_EQUAL(0, acksRequested);
 		}
 
 		void testHandleAckReceived_AcksStanza() {
@@ -47,7 +66,7 @@ class StanzaAckRequesterTest : public CppUnit::TestFixture {
 			CPPUNIT_ASSERT_EQUAL(String("m1"), ackedStanzas[0]->getID());
 		}
 
-		void testHandleAckReceived_AcksMultipleStanzas() {
+		void testHandleAckReceived_AcksMultipleMessages() {
 			std::auto_ptr<StanzaAckRequester> testling(createRequester());
 			testling->handleStanzaSent(createMessage("m1"));
 			testling->handleStanzaSent(createMessage("m2"));
@@ -57,6 +76,20 @@ class StanzaAckRequesterTest : public CppUnit::TestFixture {
 			CPPUNIT_ASSERT_EQUAL(2, static_cast<int>(ackedStanzas.size()));
 			CPPUNIT_ASSERT_EQUAL(String("m1"), ackedStanzas[0]->getID());
 			CPPUNIT_ASSERT_EQUAL(String("m2"), ackedStanzas[1]->getID());
+		}
+
+		void testHandleAckReceived_AcksMultipleStanzas() {
+			std::auto_ptr<StanzaAckRequester> testling(createRequester());
+			testling->handleStanzaSent(createIQ("iq1"));
+			testling->handleStanzaSent(createPresence("p1"));
+			testling->handleStanzaSent(createMessage("m1"));
+
+			testling->handleAckReceived(3);
+
+			CPPUNIT_ASSERT_EQUAL(3, static_cast<int>(ackedStanzas.size()));
+			CPPUNIT_ASSERT_EQUAL(String("iq1"), ackedStanzas[0]->getID());
+			CPPUNIT_ASSERT_EQUAL(String("p1"), ackedStanzas[1]->getID());
+			CPPUNIT_ASSERT_EQUAL(String("m1"), ackedStanzas[2]->getID());
 		}
 
 		void testHandleAckReceived_MultipleAcks() {
@@ -91,6 +124,18 @@ class StanzaAckRequesterTest : public CppUnit::TestFixture {
 	private:
 		Message::ref createMessage(const String& id) {
 			Message::ref result(new Message());
+			result->setID(id);
+			return result;
+		}
+
+		IQ::ref createIQ(const String& id) {
+			IQ::ref result(new IQ());
+			result->setID(id);
+			return result;
+		}
+
+		Presence::ref createPresence(const String& id) {
+			Presence::ref result(new Presence());
 			result->setID(id);
 			return result;
 		}

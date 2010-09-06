@@ -6,14 +6,14 @@
 
 #pragma once
 
+#include "Swiften/Base/Shared.h"
 #include "Swiften/Elements/Stanza.h"
 #include "Swiften/Elements/Status.h"
 #include "Swiften/Elements/StatusShow.h"
 #include "Swiften/Elements/Priority.h"
 
 namespace Swift {
-	class Presence : public Stanza
-	{
+	class Presence : public Stanza, public Shared<Presence> {
 		public:
 			enum Type { Available, Error, Probe, Subscribe, Subscribed, Unavailable, Unsubscribe, Unsubscribed };
 
