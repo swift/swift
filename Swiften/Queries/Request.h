@@ -38,6 +38,10 @@ namespace Swift {
 				payload_ = p;
 			}
 
+			boost::shared_ptr<Payload> getPayload() const {
+				return payload_;
+			}
+
 			virtual void handleResponse(boost::shared_ptr<Payload>, boost::optional<ErrorPayload>) = 0;
 
 		private:

@@ -62,6 +62,10 @@ namespace Swift {
 				return boost::shared_ptr<Presence>(new Presence(*this));
 			}
 
+			bool isAvailable() const {
+				return type_ == Available;
+			}
+
 		private:
 			Presence::Type type_;
 	};

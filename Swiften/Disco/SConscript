@@ -1,0 +1,10 @@
+Import("swiften_env")
+
+objects = swiften_env.StaticObject([
+			"CapsInfoGenerator.cpp",
+			"CapsManager.cpp",
+			"EntityCapsManager.cpp",
+			"CapsStorage.cpp",
+			"CapsFileStorage.cpp",
+		])
+swiften_env.Append(SWIFTEN_OBJECTS = [objects])

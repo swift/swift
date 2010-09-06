@@ -26,6 +26,11 @@ namespace Swift {
 				onResponse(boost::dynamic_pointer_cast<PAYLOAD_TYPE>(payload), error);
 			}
 
+		protected:
+			boost::shared_ptr<PAYLOAD_TYPE> getPayloadGeneric() const {
+				return boost::dynamic_pointer_cast<PAYLOAD_TYPE>(getPayload());
+			}
+
 		public:
 			boost::signal<void (boost::shared_ptr<PAYLOAD_TYPE>, const boost::optional<ErrorPayload>&)> onResponse;
 	};

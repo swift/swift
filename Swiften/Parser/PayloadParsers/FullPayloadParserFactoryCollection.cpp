@@ -22,6 +22,7 @@
 #include "Swiften/Parser/PayloadParsers/StorageParserFactory.h"
 #include "Swiften/Parser/PayloadParsers/DiscoInfoParserFactory.h"
 #include "Swiften/Parser/PayloadParsers/DiscoItemsParserFactory.h"
+#include "Swiften/Parser/PayloadParsers/CapsInfoParserFactory.h"
 #include "Swiften/Parser/PayloadParsers/SecurityLabelParserFactory.h"
 #include "Swiften/Parser/PayloadParsers/SecurityLabelsCatalogParserFactory.h"
 #include "Swiften/Parser/PayloadParsers/FormParserFactory.h"
@@ -49,6 +50,7 @@ FullPayloadParserFactoryCollection::FullPayloadParserFactoryCollection() {
 	factories_.push_back(shared_ptr<PayloadParserFactory>(new RosterParserFactory()));
 	factories_.push_back(shared_ptr<PayloadParserFactory>(new DiscoInfoParserFactory()));
 	factories_.push_back(shared_ptr<PayloadParserFactory>(new DiscoItemsParserFactory()));
+	factories_.push_back(shared_ptr<PayloadParserFactory>(new CapsInfoParserFactory()));
 	factories_.push_back(shared_ptr<PayloadParserFactory>(new ResourceBindParserFactory()));
 	factories_.push_back(shared_ptr<PayloadParserFactory>(new StartSessionParserFactory()));
 	factories_.push_back(shared_ptr<PayloadParserFactory>(new SecurityLabelParserFactory()));

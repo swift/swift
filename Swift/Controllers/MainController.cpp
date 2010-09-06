@@ -53,8 +53,11 @@
 #include "Swiften/Disco/CapsInfoGenerator.h"
 #include "Swiften/Queries/Requests/GetDiscoInfoRequest.h"
 #include "Swiften/Queries/Requests/GetVCardRequest.h"
-#include "Swiften/Avatars/AvatarFileStorage.h"
+#include "Swiften/Avatars/AvatarStorage.h"
 #include "Swiften/Avatars/AvatarManager.h"
+#include "Swiften/Disco/CapsFileStorage.h"
+#include "Swiften/Disco/CapsManager.h"
+#include "Swiften/Disco/EntityCapsManager.h"
 #include "Swiften/StringCodecs/SHA1.h"
 #include "Swiften/StringCodecs/Hexify.h"
 
@@ -78,6 +81,7 @@ MainController::MainController(
 		ChatListWindowFactory* chatListWindowFactory,
 		MUCSearchWindowFactory* mucSearchWindowFactory,
 		AvatarStorage* avatarStorage,
+		CapsStorage* capsStorage,
 		VCardStorageFactory* vcardStorageFactory,
 		ApplicationMessageDisplay* applicationMessageDisplay,
 		bool useDelayForLatency) :
@@ -115,6 +119,7 @@ MainController::MainController(
 	uiEventStream_ = new UIEventStream();
 
 	avatarStorage_ = avatarStorage;
+	capsStorage_ = capsStorage;
 	eventController_ = new EventController();
 	eventController_->onEventQueueLengthChange.connect(boost::bind(&MainController::handleEventQueueLengthChange, this, _1));
 
@@ -178,6 +183,10 @@ void MainController::resetClient() {
 	presenceOracle_ = NULL;
 	delete nickResolver_;
 	nickResolver_ = NULL;
+	delete entityCapsManager_;
+	entityCapsManager_ = NULL;
+	delete capsManager_;
+	capsManager_ = NULL;
 	delete avatarManager_;
 	avatarManager_ = NULL;
 	delete vcardManager_;
@@ -235,6 +244,8 @@ void MainController::handleConnected() {
 		vcardManager_ = new VCardManager(jid_, client_, getVCardStorageForProfile(jid_));
 		vcardManager_->onVCardChanged.connect(boost::bind(&MainController::handleVCardReceived, this, _1, _2));
 		avatarManager_ = new AvatarManager(vcardManager_, client_, avatarStorage_, mucRegistry_);
+		capsManager_ = new CapsManager(capsStorage_, client_, client_);
+		entityCapsManager_ = new EntityCapsManager(capsManager_, client_);
 
 		nickResolver_ = new NickResolver(this->jid_.toBare(), xmppRoster_, vcardManager_, mucRegistry_);
 

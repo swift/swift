@@ -4,8 +4,7 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#ifndef SWIFTEN_CapsInfoGenerator_H
-#define SWIFTEN_CapsInfoGenerator_H
+#pragma once
 
 #include "Swiften/Base/String.h"
 #include "Swiften/Elements/CapsInfo.h"
@@ -23,5 +22,3 @@ namespace Swift {
 			String node_;
 	};
 }
-
-#endif

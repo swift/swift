@@ -39,7 +39,12 @@ boost::shared_ptr<VCard> VCardFileStorage::getVCard(const JID& jid) const {
 void VCardFileStorage::setVCard(const JID& jid, boost::shared_ptr<VCard> v) {
 	boost::filesystem::path vcardPath(getVCardPath(jid));
 	if (!boost::filesystem::exists(vcardPath.parent_path())) {
-		boost::filesystem::create_directories(vcardPath.parent_path());
+		try {
+			boost::filesystem::create_directories(vcardPath.parent_path());
+		}
+		catch (const boost::filesystem::filesystem_error& e) {
+			std::cerr << "ERROR: " << e.what() << std::endl;
+		}
 	}
 	boost::filesystem::ofstream file(getVCardPath(jid));
 	file << VCardSerializer().serializePayload(v);

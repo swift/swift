@@ -27,6 +27,7 @@ namespace Swift {
 	class Application;
 	class ApplicationPathProvider;
 	class AvatarStorage;
+	class CapsStorage;
 	class MainController;
 	class QtChatWindowFactory;
 	class QtMainWindowFactory;
@@ -62,6 +63,7 @@ namespace Swift {
 			Application* application_;
 			ApplicationPathProvider* applicationPathProvider_;
 			AvatarStorage* avatarStorage_;
+			CapsStorage* capsStorage_;
 			VCardStorageFactory* vcardStorageFactory_;
 			AutoUpdater* autoUpdater_;
 

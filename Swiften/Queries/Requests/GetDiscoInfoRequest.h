@@ -15,5 +15,10 @@ namespace Swift {
 			GetDiscoInfoRequest(const JID& jid, IQRouter* router) :
 					GenericRequest<DiscoInfo>(IQ::Get, jid, boost::shared_ptr<DiscoInfo>(new DiscoInfo()), router) {
 			}
+
+			GetDiscoInfoRequest(const JID& jid, const String& node, IQRouter* router) :
+					GenericRequest<DiscoInfo>(IQ::Get, jid, boost::shared_ptr<DiscoInfo>(new DiscoInfo()), router) {
+				getPayloadGeneric()->setNode(node);
+			}
 	};
 }

@@ -21,6 +21,7 @@ sources = [
 		"PayloadParsers/BodyParser.cpp",
 		"PayloadParsers/SubjectParser.cpp",
 		"PayloadParsers/ChatStateParser.cpp",
+		"PayloadParsers/CapsInfoParser.cpp",
 		"PayloadParsers/DiscoInfoParser.cpp",
 		"PayloadParsers/DiscoItemsParser.cpp",
 		"PayloadParsers/ErrorParser.cpp",

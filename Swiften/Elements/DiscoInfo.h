@@ -12,9 +12,10 @@
 
 #include "Swiften/Elements/Payload.h"
 #include "Swiften/Base/String.h"
+#include "Swiften/Base/Shared.h"
 
 namespace Swift {
-	class DiscoInfo : public Payload {
+	class DiscoInfo : public Payload, public Shared<DiscoInfo> {
 		public:
 			const static std::string SecurityLabels;
 			class Identity {

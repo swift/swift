@@ -29,6 +29,7 @@
 
 namespace Swift {
 	class AvatarStorage;
+	class CapsStorage;
 	class VCardStorage;
 	class VCardManager;
 	class Application;
@@ -47,6 +48,8 @@ namespace Swift {
 	class DiscoInfoResponder;
 	class ApplicationMessageDisplay;
 	class AvatarManager;
+	class CapsManager;
+	class EntityCapsManager;
 	class LoginWindow;
 	class EventLoop;
 	class SoftwareVersionResponder;
@@ -82,6 +85,7 @@ namespace Swift {
 					ChatListWindowFactory* chatListWindowFactory_,
 					MUCSearchWindowFactory* mucSearchWindowFactory,
 					AvatarStorage* avatarStorage,
+					CapsStorage* capsStorage,
 					VCardStorageFactory* vcardStorageFactory,
 					ApplicationMessageDisplay* applicationMessageDisplay,
 					bool useDelayForLatency);
@@ -126,6 +130,7 @@ namespace Swift {
 			SettingsProvider *settings_;
 			ProfileSettingsProvider* profileSettings_;
 			AvatarStorage* avatarStorage_;
+			CapsStorage* capsStorage_;
 			VCardStorageFactory* vcardStorageFactory_;
 			VCardManager* vcardManager_;
 			ApplicationMessageDisplay* applicationMessageDisplay_;
@@ -149,6 +154,8 @@ namespace Swift {
 			SystemTrayController* systemTrayController_;
 			SoundEventController* soundEventController_;
 			AvatarManager* avatarManager_;
+			CapsManager* capsManager_;
+			EntityCapsManager* entityCapsManager_;
 			String vCardPhotoHash_;
 			String password_;
 			String certificateFile_;
