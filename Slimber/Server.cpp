@@ -407,8 +407,8 @@ LinkLocalServiceInfo Server::getLinkLocalServiceInfo(boost::shared_ptr<Presence>
 	if (!vcard->getNickname().isEmpty()) {
 		info.setNick(vcard->getNickname());
 	}
-	if (!vcard->getEMail().isEmpty()) {
-		info.setEMail(vcard->getEMail());
+	if (!vcard->getPreferredEMailAddress().address.isEmpty()) {
+		info.setEMail(vcard->getPreferredEMailAddress().address);
 	}
 	info.setMessage(presence->getStatus());
 	switch (presence->getShow()) {

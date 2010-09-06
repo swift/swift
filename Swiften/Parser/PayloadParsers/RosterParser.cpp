@@ -71,6 +71,7 @@ void RosterParser::handleEndElement(const String& element, const String& ns) {
 		if (unknownContentParser_) {
 			unknownContentParser_->handleEndElement(element, ns);
 			currentItem_.addUnknownContent(unknownContentParser_->getResult());
+			delete unknownContentParser_;
 			unknownContentParser_ = NULL;
 		}
 		else if (element == "group") {

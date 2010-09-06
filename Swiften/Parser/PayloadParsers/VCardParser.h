@@ -25,6 +25,8 @@ namespace Swift {
 
 		private:
 			std::vector<String> elementStack_;
+			VCard::EMailAddress currentEMailAddress_;
+			SerializingParser* unknownContentParser_;
 			String currentText_;
 	};
 }
