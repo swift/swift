@@ -68,9 +68,10 @@ void Roster::handleChildrenChanged(GroupRosterItem* item) {
 	onChildrenChanged(item);
 }
 
-void Roster::addContact(const JID& jid, const JID& displayJID, const String& name, const String& groupName) {
+void Roster::addContact(const JID& jid, const JID& displayJID, const String& name, const String& groupName, const String& avatarPath) {
 	GroupRosterItem* group(getGroup(groupName));
 	ContactRosterItem *item = new ContactRosterItem(jid, displayJID, name, group);
+	item->setAvatarPath(avatarPath);
 	group->addChild(item);
 	itemMap_[fullJIDMapping_ ? jid : jid.toBare()].push_back(item);
 	item->onDataChanged.connect(boost::bind(&Roster::handleDataChanged, this, item));

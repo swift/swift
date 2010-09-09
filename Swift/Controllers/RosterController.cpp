@@ -53,8 +53,9 @@ RosterController::RosterController(const JID& jid, boost::shared_ptr<XMPPRoster>
 	presenceOracle_->onPresenceSubscriptionRequest.connect(boost::bind(&RosterController::handleSubscriptionRequest, this, _1, _2));
 	presenceOracle_->onPresenceChange.connect(boost::bind(&RosterController::handleIncomingPresence, this, _1, _2));
 	uiEventConnection_ = uiEventStream->onUIEvent.connect(boost::bind(&RosterController::handleUIEvent, this, _1));
-	avatarManager_ = NULL;
-	setAvatarManager(avatarManager);
+	avatarManager_ = avatarManager;
+	avatarManager_->onAvatarChanged.connect(boost::bind(&RosterController::handleAvatarChanged, this, _1));
+	mainWindow_->setMyAvatarPath(avatarManager_->getAvatarPath(myJID_).string());
 	setNickResolver(nickResolver);
 	
 }
@@ -75,17 +76,6 @@ void RosterController::setNickResolver(NickResolver* nickResolver) {
 
 void RosterController::handleOwnNickChanged(const String& nick) {
 	mainWindow_->setMyName(nick);
-}
-
-void RosterController::setAvatarManager(AvatarManager* avatarManager) {
-	if (avatarManager_ != NULL) {
-		//FIXME: disconnect old signal;
-	}
-	avatarManager_ = avatarManager;
-	if (avatarManager != NULL) {
-		avatarManager_->onAvatarChanged.connect(boost::bind(&RosterController::handleAvatarChanged, this, _1));
-		mainWindow_->setMyAvatarPath(avatarManager_->getAvatarPath(myJID_).string());
-	}
 }
 
 void RosterController::setEnabled(bool enabled) {
@@ -111,10 +101,11 @@ void RosterController::handleOnJIDAdded(const JID& jid) {
 	String name = nickResolver_->jidToNick(jid);
 	if (!groups.empty()) {
 		foreach(const String& group, groups) {
-			roster_->addContact(jid, jid, name, group);
+			roster_->addContact(jid, jid, name, group, avatarManager_->getAvatarPath(jid).string());
 		}
-	} else {
-		roster_->addContact(jid, jid, name, "Contacts");
+	} 
+	else {
+		roster_->addContact(jid, jid, name, "Contacts", avatarManager_->getAvatarPath(jid).string());
 	}
 }
 
@@ -143,7 +134,7 @@ void RosterController::handleOnJIDUpdated(const JID& jid, const String& oldName,
 	}
 	foreach(const String& group, groups) {
 		if (std::find(oldGroups.begin(), oldGroups.end(), group) == oldGroups.end()) {
-			roster_->addContact(jid, jid, xmppRoster_->getNameForJID(jid), group);
+			roster_->addContact(jid, jid, xmppRoster_->getNameForJID(jid), group, avatarManager_->getAvatarPath(jid).string());
 		}
 	} 
 	foreach(const String& group, oldGroups) {

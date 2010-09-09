@@ -24,6 +24,7 @@ namespace Swift {
 	class StanzaChannel;
 	class VCardManager;
 	class VCardUpdateAvatarManager;
+	class VCardAvatarManager;
 
 	class AvatarManager {
 		public:
@@ -37,7 +38,8 @@ namespace Swift {
 
 		private:
 			CombinedAvatarProvider combinedAvatarProvider;
-			VCardUpdateAvatarManager* vcardUpdateAvatarManager;
 			AvatarStorage* avatarStorage;
+			VCardUpdateAvatarManager* vcardUpdateAvatarManager;
+			VCardAvatarManager* vcardAvatarManager;
 	};
 }

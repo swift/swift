@@ -22,6 +22,7 @@ namespace Swift {
 		public:
 			VCardManager(const JID& ownJID, IQRouter* iqRouter, VCardStorage* vcardStorage);
 
+			VCard::ref getVCard(const JID& jid) const;
 			VCard::ref getVCardAndRequestWhenNeeded(const JID& jid);
 			void requestVCard(const JID& jid);
 			void requestOwnVCard();

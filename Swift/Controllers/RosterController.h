@@ -37,7 +37,6 @@ namespace Swift {
 			~RosterController();
 			void showRosterWindow();
 			MainWindow* getWindow() {return mainWindow_;};
-			void setAvatarManager(AvatarManager* avatarManager);
 			void setNickResolver(NickResolver* nickResolver);
 			boost::signal<void (StatusShow::Type, const String&)> onChangeStatusRequest;
 			boost::signal<void ()> onSignOutRequest;

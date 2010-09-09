@@ -175,7 +175,7 @@ void MUCController::handleOccupantJoined(const MUCOccupant& occupant) {
 	currentOccupants_.insert(occupant.getNick());
 	NickJoinPart event(occupant.getNick(), Join);
 	appendToJoinParts(joinParts_, event);
-	roster_->addContact(jid, realJID, occupant.getNick(), roleToGroupName(occupant.getRole()));
+	roster_->addContact(jid, realJID, occupant.getNick(), roleToGroupName(occupant.getRole()), avatarManager_->getAvatarPath(jid).string());
 	if (joined_) {
 		String joinString = occupant.getNick() + " has joined the room";
 		MUCOccupant::Role role = occupant.getRole();
@@ -253,7 +253,7 @@ void MUCController::handleOccupantRoleChanged(const String& nick, const MUCOccup
 	if (occupant.getRealJID()) {
 		realJID = occupant.getRealJID().get();
 	}
-	roster_->addContact(jid, realJID, nick, roleToGroupName(occupant.getRole()));
+	roster_->addContact(jid, realJID, nick, roleToGroupName(occupant.getRole()), avatarManager_->getAvatarPath(jid).string());
 	chatWindow_->addSystemMessage(nick + " is now a " + roleToFriendlyName(occupant.getRole()));
 }
 

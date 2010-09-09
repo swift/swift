@@ -24,7 +24,6 @@ namespace Swift {
 	class VCardUpdateAvatarManager : public AvatarProvider, public boost::bsignals::trackable {
 		public:
 			VCardUpdateAvatarManager(VCardManager*, StanzaChannel*, AvatarStorage*, MUCRegistry* = NULL);
-			virtual ~VCardUpdateAvatarManager();
 
 			String getAvatarHash(const JID&) const;
 

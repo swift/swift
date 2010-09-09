@@ -25,10 +25,6 @@ VCardUpdateAvatarManager::VCardUpdateAvatarManager(VCardManager* vcardManager, S
 	vcardManager_->onVCardChanged.connect(boost::bind(&VCardUpdateAvatarManager::handleVCardChanged, this, _1, _2));
 }
 
-VCardUpdateAvatarManager::~VCardUpdateAvatarManager() {
-
-}
-
 void VCardUpdateAvatarManager::handlePresenceReceived(boost::shared_ptr<Presence> presence) {
 	boost::shared_ptr<VCardUpdate> update = presence->getPayload<VCardUpdate>();
 	if (!update || presence->getPayload<ErrorPayload>()) {
@@ -57,7 +53,9 @@ void VCardUpdateAvatarManager::handleVCardChanged(const JID& from, VCard::ref vC
 	}
 	else {
 		String hash = Hexify::hexify(SHA1::getHash(vCard->getPhoto()));
-		avatarStorage_->addAvatar(hash, vCard->getPhoto());
+		if (!avatarStorage_->hasAvatar(hash)) {
+			avatarStorage_->addAvatar(hash, vCard->getPhoto());
+		}
 		setAvatarHash(from, hash);
 	}
 }

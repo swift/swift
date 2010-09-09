@@ -28,7 +28,7 @@ class Roster {
 		Roster(bool sortByStatus = true, bool fullJIDMapping = false);
 		~Roster();
 
-		void addContact(const JID& jid, const JID& displayJID, const String& name, const String& group);
+		void addContact(const JID& jid, const JID& displayJID, const String& name, const String& group, const String& avatarPath);
 		void removeContact(const JID& jid);
 		void removeContactFromGroup(const JID& jid, const String& group);
 		void removeAll();

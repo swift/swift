@@ -141,6 +141,7 @@ if env["SCONS_STAGE"] == "build" :
 	env.Append(UNITTEST_SOURCES = [
 			File("Application/UnitTest/ApplicationPathProviderTest.cpp"),
 			File("Avatars/UnitTest/VCardUpdateAvatarManagerTest.cpp"),
+			File("Avatars/UnitTest/VCardAvatarManagerTest.cpp"),
 			File("Avatars/UnitTest/CombinedAvatarProviderTest.cpp"),
 			File("Base/UnitTest/IDGeneratorTest.cpp"),
 			File("Base/UnitTest/StringTest.cpp"),
