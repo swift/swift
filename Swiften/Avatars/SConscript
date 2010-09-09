@@ -6,5 +6,6 @@ objects = swiften_env.StaticObject([
 			"AvatarManager.cpp",
 			"AvatarStorage.cpp",
 			"AvatarProvider.cpp",
+			"CombinedAvatarProvider.cpp",
 		])
 swiften_env.Append(SWIFTEN_OBJECTS = [objects])

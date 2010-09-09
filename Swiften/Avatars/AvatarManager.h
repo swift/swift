@@ -16,6 +16,7 @@
 #include "Swiften/Elements/Presence.h"
 #include "Swiften/Elements/VCard.h"
 #include "Swiften/Elements/ErrorPayload.h"
+#include "Swiften/Avatars/CombinedAvatarProvider.h"
 
 namespace Swift {
 	class MUCRegistry;
@@ -35,6 +36,7 @@ namespace Swift {
 			boost::signal<void (const JID&)> onAvatarChanged;
 
 		private:
+			CombinedAvatarProvider combinedAvatarProvider;
 			VCardUpdateAvatarManager* vcardUpdateAvatarManager;
 			AvatarStorage* avatarStorage;
 	};

@@ -21,7 +21,7 @@ namespace Swift {
 	class StanzaChannel;
 	class VCardManager;
 
-	class VCardUpdateAvatarManager : public AvatarProvider {
+	class VCardUpdateAvatarManager : public AvatarProvider, public boost::bsignals::trackable {
 		public:
 			VCardUpdateAvatarManager(VCardManager*, StanzaChannel*, AvatarStorage*, MUCRegistry* = NULL);
 			virtual ~VCardUpdateAvatarManager();

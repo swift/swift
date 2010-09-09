@@ -15,15 +15,17 @@ namespace Swift {
 
 AvatarManager::AvatarManager(VCardManager* vcardManager, StanzaChannel* stanzaChannel, AvatarStorage* avatarStorage, MUCRegistry* mucRegistry) : avatarStorage(avatarStorage) {
 	vcardUpdateAvatarManager = new VCardUpdateAvatarManager(vcardManager, stanzaChannel, avatarStorage, mucRegistry);
-	vcardUpdateAvatarManager->onAvatarChanged.connect(boost::ref(onAvatarChanged));
+	combinedAvatarProvider.addProvider(vcardUpdateAvatarManager);
+	combinedAvatarProvider.onAvatarChanged.connect(boost::ref(onAvatarChanged));
 }
 
 AvatarManager::~AvatarManager() {
+	combinedAvatarProvider.removeProvider(vcardUpdateAvatarManager);
 	delete vcardUpdateAvatarManager;
 }
 
 boost::filesystem::path AvatarManager::getAvatarPath(const JID& jid) const {
-	String hash = vcardUpdateAvatarManager->getAvatarHash(jid);
+	String hash = combinedAvatarProvider.getAvatarHash(jid);
 	if (!hash.isEmpty()) {
 		return avatarStorage->getAvatarPath(hash);
 	}
