@@ -75,7 +75,7 @@ MUCController::MUCController (
 	chatWindow_->addSystemMessage("Trying to join room " + toJID_.toString());
 	rejoin();
 	if (avatarManager_ != NULL) {
-		avatarChangedConnection_ = (avatarManager_->onAvatarChanged.connect(boost::bind(&MUCController::handleAvatarChanged, this, _1, _2)));
+		avatarChangedConnection_ = (avatarManager_->onAvatarChanged.connect(boost::bind(&MUCController::handleAvatarChanged, this, _1)));
 	} 
 }
 
@@ -148,7 +148,7 @@ void MUCController::handleJoinComplete(const String& nick) {
 	setEnabled(true);
 }
 
-void MUCController::handleAvatarChanged(const JID& jid, const String&) {
+void MUCController::handleAvatarChanged(const JID& jid) {
 	if (parting_ || !jid.equals(toJID_, JID::WithoutResource)) {
 		return;
 	}
@@ -192,7 +192,7 @@ void MUCController::handleOccupantJoined(const MUCOccupant& occupant) {
 		}
 	}
 	if (avatarManager_ != NULL) {
-		handleAvatarChanged(jid, "dummy");
+		handleAvatarChanged(jid);
 	}
 }
 

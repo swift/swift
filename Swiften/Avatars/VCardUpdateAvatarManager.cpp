@@ -64,7 +64,7 @@ void VCardUpdateAvatarManager::handleVCardChanged(const JID& from, VCard::ref vC
 
 void VCardUpdateAvatarManager::setAvatarHash(const JID& from, const String& hash) {
 	avatarHashes_[from] = hash;
-	onAvatarChanged(from, hash);
+	onAvatarChanged(from);
 }
 
 /*
@@ -83,14 +83,6 @@ String VCardUpdateAvatarManager::getAvatarHash(const JID& jid) const {
 	else {
 		return "";
 	}
-}
-
-boost::filesystem::path VCardUpdateAvatarManager::getAvatarPath(const JID& jid) const {
-	String hash = getAvatarHash(jid);
-	if (!hash.isEmpty()) {
-		return avatarStorage_->getAvatarPath(hash);
-	}
-	return boost::filesystem::path();
 }
 
 JID VCardUpdateAvatarManager::getAvatarJID(const JID& jid) const {

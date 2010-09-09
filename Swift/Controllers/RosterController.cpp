@@ -83,7 +83,7 @@ void RosterController::setAvatarManager(AvatarManager* avatarManager) {
 	}
 	avatarManager_ = avatarManager;
 	if (avatarManager != NULL) {
-		avatarManager_->onAvatarChanged.connect(boost::bind(&RosterController::handleAvatarChanged, this, _1, _2));
+		avatarManager_->onAvatarChanged.connect(boost::bind(&RosterController::handleAvatarChanged, this, _1));
 		mainWindow_->setMyAvatarPath(avatarManager_->getAvatarPath(myJID_).string());
 	}
 }
@@ -221,7 +221,7 @@ void RosterController::handleSubscriptionRequestDeclined(SubscriptionRequestEven
 	presenceOracle_->cancelSubscription(event->getJID());
 }
 
-void RosterController::handleAvatarChanged(const JID& jid, const String&) {
+void RosterController::handleAvatarChanged(const JID& jid) {
 	String path = avatarManager_->getAvatarPath(jid).string();
 	roster_->applyOnItems(SetAvatar(jid, path));
 	if (jid.equals(myJID_, JID::WithoutResource)) {

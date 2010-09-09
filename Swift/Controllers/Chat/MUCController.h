@@ -60,7 +60,7 @@ namespace Swift {
 			void clearPresenceQueue();
 			void addPresenceMessage(const String& message);
 			void handleWindowClosed();
-			void handleAvatarChanged(const JID& jid, const String&);
+			void handleAvatarChanged(const JID& jid);
 			void handleOccupantJoined(const MUCOccupant& occupant);
 			void handleOccupantLeft(const MUCOccupant& occupant, MUC::LeavingType type, const String& reason);
 			void handleOccupantPresenceChange(boost::shared_ptr<Presence> presence);

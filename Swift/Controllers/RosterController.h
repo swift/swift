@@ -41,7 +41,7 @@ namespace Swift {
 			void setNickResolver(NickResolver* nickResolver);
 			boost::signal<void (StatusShow::Type, const String&)> onChangeStatusRequest;
 			boost::signal<void ()> onSignOutRequest;
-			void handleAvatarChanged(const JID& jid, const String& hash);
+			void handleAvatarChanged(const JID& jid);
 			void setEnabled(bool enabled);
 		private:
 			void handleOnJIDAdded(const JID &jid);

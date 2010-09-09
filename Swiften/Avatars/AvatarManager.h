@@ -32,9 +32,10 @@ namespace Swift {
 			virtual boost::filesystem::path getAvatarPath(const JID&) const;
 
 		public:
-			boost::signal<void (const JID&, const String& /*hash*/)> onAvatarChanged;
+			boost::signal<void (const JID&)> onAvatarChanged;
 
 		private:
 			VCardUpdateAvatarManager* vcardUpdateAvatarManager;
+			AvatarStorage* avatarStorage;
 	};
 }

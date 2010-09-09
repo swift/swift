@@ -24,10 +24,6 @@ if env["SCONS_STAGE"] == "build" :
 	myenv.MergeFlags(myenv["ZLIB_FLAGS"])
 	myenv.MergeFlags(myenv["OPENSSL_FLAGS"])
 	sources = [
-			"Avatars/AvatarFileStorage.cpp",
-			"Avatars/VCardUpdateAvatarManager.cpp",
-			"Avatars/AvatarManager.cpp",
-			"Avatars/AvatarStorage.cpp",
 			"Chat/ChatStateTracker.cpp",
 			"Chat/ChatStateNotifier.cpp",
 			"Chat/ChatStateMessageSender.cpp",
@@ -117,6 +113,7 @@ if env["SCONS_STAGE"] == "build" :
 		sources += ["TLS/OpenSSL/OpenSSLContext.cpp"]
 
 	SConscript(dirs = [
+			"Avatars",
 			"Base",
 			"StringPrep",
 			"SASL",

@@ -9,10 +9,11 @@
 #include <boost/bind.hpp>
 
 #include "Swiften/Avatars/VCardUpdateAvatarManager.h"
+#include "Swiften/Avatars/AvatarStorage.h"
 
 namespace Swift {
 
-AvatarManager::AvatarManager(VCardManager* vcardManager, StanzaChannel* stanzaChannel, AvatarStorage* avatarStorage, MUCRegistry* mucRegistry) {
+AvatarManager::AvatarManager(VCardManager* vcardManager, StanzaChannel* stanzaChannel, AvatarStorage* avatarStorage, MUCRegistry* mucRegistry) : avatarStorage(avatarStorage) {
 	vcardUpdateAvatarManager = new VCardUpdateAvatarManager(vcardManager, stanzaChannel, avatarStorage, mucRegistry);
 	vcardUpdateAvatarManager->onAvatarChanged.connect(boost::ref(onAvatarChanged));
 }
@@ -22,7 +23,11 @@ AvatarManager::~AvatarManager() {
 }
 
 boost::filesystem::path AvatarManager::getAvatarPath(const JID& jid) const {
-	return vcardUpdateAvatarManager->getAvatarPath(jid);
+	String hash = vcardUpdateAvatarManager->getAvatarHash(jid);
+	if (!hash.isEmpty()) {
+		return avatarStorage->getAvatarPath(hash);
+	}
+	return boost::filesystem::path();
 }
 
 
