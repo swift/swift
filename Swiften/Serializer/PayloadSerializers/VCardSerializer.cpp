@@ -11,7 +11,7 @@
 #include "Swiften/Serializer/XML/XMLElement.h"
 #include "Swiften/Serializer/XML/XMLTextNode.h"
 #include "Swiften/Serializer/XML/XMLRawTextNode.h"
-#include "Swiften/StringCodecs/Hexify.h"
+#include "Swiften/StringCodecs/Base64.h"
 #include "Swiften/Base/foreach.h"
 
 namespace Swift {
@@ -96,7 +96,7 @@ String VCardSerializer::serializePayload(boost::shared_ptr<VCard> vcard)  const 
 		}
 		if (!vcard->getPhoto().isEmpty()) {
 			XMLElement::ref binvalElement(new XMLElement("BINVAL"));
-			binvalElement->addNode(XMLTextNode::ref(new XMLTextNode(Hexify::hexify(vcard->getPhoto()))));
+			binvalElement->addNode(XMLTextNode::ref(new XMLTextNode(Base64::encode(vcard->getPhoto()))));
 			photoElement->addNode(binvalElement);
 		}
 		queryElement.addNode(photoElement);

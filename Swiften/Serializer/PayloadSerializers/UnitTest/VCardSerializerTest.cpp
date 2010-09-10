@@ -71,7 +71,7 @@ class VCardSerializerTest : public CppUnit::TestFixture
 					"<NICKNAME>DreamGirl</NICKNAME>"
 					"<PHOTO>"
 						"<TYPE>image/png</TYPE>"
-						"<BINVAL>616263646566</BINVAL>"
+						"<BINVAL>YWJjZGVm</BINVAL>"
 					"</PHOTO>"
 					"<BDAY>1234</BDAY>"
 					"<MAILER>mutt</MAILER>"
