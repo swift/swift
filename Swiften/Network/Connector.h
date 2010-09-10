@@ -65,5 +65,6 @@ namespace Swift {
 			std::deque<HostAddress> addressQueryResults;
 			bool queriedAllServices;
 			boost::shared_ptr<Connection> currentConnection;
+			boost::bsignals::connection connectFinishedConnection;
 	};
 };

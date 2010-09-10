@@ -56,10 +56,10 @@ ClientSession::~ClientSession() {
 }
 
 void ClientSession::start() {
-	stream->onStreamStartReceived.connect(boost::bind(&ClientSession::handleStreamStart, shared_from_this(), _1));
-	stream->onElementReceived.connect(boost::bind(&ClientSession::handleElement, shared_from_this(), _1));
-	stream->onError.connect(boost::bind(&ClientSession::handleStreamError, shared_from_this(), _1));
-	stream->onTLSEncrypted.connect(boost::bind(&ClientSession::handleTLSEncrypted, shared_from_this()));
+	streamOnStreamStartReceivedConnection = stream->onStreamStartReceived.connect(boost::bind(&ClientSession::handleStreamStart, shared_from_this(), _1));
+	streamOnElementReceivedConnection = stream->onElementReceived.connect(boost::bind(&ClientSession::handleElement, shared_from_this(), _1));
+	streamOnErrorConnection = stream->onError.connect(boost::bind(&ClientSession::handleStreamError, shared_from_this(), _1));
+	streamOnTLSEncryptedConnection = stream->onTLSEncrypted.connect(boost::bind(&ClientSession::handleTLSEncrypted, shared_from_this()));
 
 	assert(state == Initial);
 	state = WaitingForStreamStart;
@@ -347,6 +347,10 @@ void ClientSession::finishSession(Error::Type error) {
 void ClientSession::finishSession(boost::shared_ptr<Swift::Error> error) {
 	state = Finished;
 	stream->setWhitespacePingEnabled(false);
+	streamOnStreamStartReceivedConnection.disconnect();
+	streamOnElementReceivedConnection.disconnect();
+	streamOnErrorConnection.disconnect();
+	streamOnTLSEncryptedConnection.disconnect();
 	onFinished(error);
 }
 

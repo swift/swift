@@ -112,7 +112,7 @@ void Connector::tryConnect(const HostAddressPort& target) {
 	assert(!currentConnection);
 	//std::cout << "Connector::tryConnect() " << target.getAddress().toString() << " " << target.getPort() << std::endl;
 	currentConnection = connectionFactory->createConnection();
-	currentConnection->onConnectFinished.connect(boost::bind(&Connector::handleConnectionConnectFinished, shared_from_this(), _1));
+	connectFinishedConnection = currentConnection->onConnectFinished.connect(boost::bind(&Connector::handleConnectionConnectFinished, shared_from_this(), _1));
 	currentConnection->connect(target);
 }
 
@@ -140,6 +140,13 @@ void Connector::finish(boost::shared_ptr<Connection> connection) {
 		timer->stop();
 		timer.reset();
 	}
+	if (serviceQuery) {
+		serviceQuery.reset();
+	}
+	if (addressQuery) {
+		addressQuery.reset();
+	}
+	connectFinishedConnection.disconnect();
 	onConnectFinished(connection);
 }
 

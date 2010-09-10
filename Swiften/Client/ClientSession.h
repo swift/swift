@@ -123,5 +123,9 @@ namespace Swift {
 			ClientAuthenticator* authenticator;
 			boost::shared_ptr<StanzaAckRequester> stanzaAckRequester_;
 			boost::shared_ptr<StanzaAckResponder> stanzaAckResponder_;
+			boost::bsignals::connection streamOnStreamStartReceivedConnection;
+			boost::bsignals::connection streamOnElementReceivedConnection;
+			boost::bsignals::connection streamOnErrorConnection;
+			boost::bsignals::connection streamOnTLSEncryptedConnection;
 	};
 }

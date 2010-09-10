@@ -82,6 +82,8 @@ class ClientSessionTest : public CppUnit::TestFixture {
 			server->onTLSEncrypted();
 			server->receiveStreamStart();
 			server->sendStreamStart();
+
+			session->finish();
 		}
 
 		void testStartTLS_ServerError() {
@@ -126,6 +128,8 @@ class ClientSessionTest : public CppUnit::TestFixture {
 			server->receiveAuthRequest("PLAIN");
 			server->sendAuthSuccess();
 			server->receiveStreamStart();
+
+			session->finish();
 		}
 
 		void testAuthenticate_Unauthorized() {
@@ -190,6 +194,8 @@ class ClientSessionTest : public CppUnit::TestFixture {
 			CPPUNIT_ASSERT(session->getStreamManagementEnabled());
 			// TODO: Test if the requesters & responders do their work
 			CPPUNIT_ASSERT_EQUAL(ClientSession::Initialized, session->getState());
+
+			session->finish();
 		}
 
 		void testStreamManagement_Failed() {
@@ -211,6 +217,8 @@ class ClientSessionTest : public CppUnit::TestFixture {
 
 			CPPUNIT_ASSERT(!session->getStreamManagementEnabled());
 			CPPUNIT_ASSERT_EQUAL(ClientSession::Initialized, session->getState());
+
+			session->finish();
 		}
 
 

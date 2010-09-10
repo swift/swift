@@ -57,6 +57,7 @@ class CapsManagerTest : public CppUnit::TestFixture {
 		}
 
 		void tearDown() {
+			delete storage;
 			delete iqRouter;
 			delete stanzaChannel;
 		}
