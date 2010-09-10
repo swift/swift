@@ -20,6 +20,7 @@
 #include "Swiften/Roster/Roster.h"
 #include "Swiften/Roster/GroupRosterItem.h"
 #include "Swiften/Roster/ContactRosterItem.h"
+#include "Swiften/Avatars/NullAvatarManager.h"
 #include "Swift/Controllers/EventController.h"
 #include "Swiften/Presence/PresenceOracle.h"
 #include "Swift/Controllers/NickResolver.h"
@@ -43,7 +44,7 @@ class RosterControllerTest : public CppUnit::TestFixture
 		void setUp() {
 			jid_ = JID("testjid@swift.im/swift");
 			xmppRoster_ = boost::shared_ptr<XMPPRoster>(new XMPPRoster());
-			avatarManager_ = NULL;//new AvatarManager();
+			avatarManager_ = new NullAvatarManager();
 			mainWindowFactory_ = new MockMainWindowFactory();
 			mucRegistry_ = new MUCRegistry();
 			nickResolver_ = new NickResolver(jid_.toBare(), xmppRoster_, NULL, mucRegistry_);

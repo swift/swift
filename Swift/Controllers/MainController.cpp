@@ -54,7 +54,7 @@
 #include "Swiften/Queries/Requests/GetDiscoInfoRequest.h"
 #include "Swiften/Queries/Requests/GetVCardRequest.h"
 #include "Swiften/Avatars/AvatarStorage.h"
-#include "Swiften/Avatars/AvatarManager.h"
+#include "Swiften/Avatars/AvatarManagerImpl.h"
 #include "Swiften/Disco/CapsFileStorage.h"
 #include "Swiften/Disco/CapsManager.h"
 #include "Swiften/Disco/EntityCapsManager.h"
@@ -243,7 +243,7 @@ void MainController::handleConnected() {
 		mucRegistry_ = new MUCRegistry();
 		vcardManager_ = new VCardManager(jid_, client_, getVCardStorageForProfile(jid_));
 		vcardManager_->onVCardChanged.connect(boost::bind(&MainController::handleVCardReceived, this, _1, _2));
-		avatarManager_ = new AvatarManager(vcardManager_, client_, avatarStorage_, mucRegistry_);
+		avatarManager_ = new AvatarManagerImpl(vcardManager_, client_, avatarStorage_, mucRegistry_);
 		capsManager_ = new CapsManager(capsStorage_, client_, client_);
 		entityCapsManager_ = new EntityCapsManager(capsManager_, client_);
 

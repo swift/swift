@@ -5,6 +5,7 @@ objects = swiften_env.StaticObject([
 			"VCardUpdateAvatarManager.cpp",
 			"VCardAvatarManager.cpp",
 			"AvatarManager.cpp",
+			"AvatarManagerImpl.cpp",
 			"AvatarStorage.cpp",
 			"AvatarProvider.cpp",
 			"CombinedAvatarProvider.cpp",

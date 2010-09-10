@@ -10,6 +10,7 @@
 #include "Swiften/JID/JID.h"
 #include "Swiften/Base/String.h"
 #include "Swiften/Elements/Presence.h"
+#include "Swiften/Elements/ErrorPayload.h"
 #include "Swiften/Elements/RosterPayload.h"
 #include "Swiften/Avatars/AvatarManager.h"
 #include "Swift/Controllers/UIEvents/UIEvent.h"

@@ -14,8 +14,7 @@
 
 using namespace Swift;
 
-class RosterTest : public CppUnit::TestFixture
-{
+class RosterTest : public CppUnit::TestFixture {
 		CPPUNIT_TEST_SUITE(RosterTest);
 		CPPUNIT_TEST(testGetGroup);
 		CPPUNIT_TEST(testRemoveContact);
@@ -24,17 +23,11 @@ class RosterTest : public CppUnit::TestFixture
 		CPPUNIT_TEST(testApplyPresenceLikeMUC);
 		CPPUNIT_TEST_SUITE_END();
 
-	private:
-		Roster *roster_;
-		JID jid1_;
-		JID jid2_; 
-		JID jid3_;
-
 	public:
-
-		RosterTest() : jid1_(JID("a@b.c")), jid2_(JID("b@c.d")), jid3_(JID("c@d.e")) {}
-
 		void setUp() {
+			jid1_ = JID("a@b.c");
+			jid2_ = JID("b@c.d");
+			jid3_ = JID("c@d.e");
 			roster_ = new Roster();
 		}
 
@@ -124,6 +117,12 @@ class RosterTest : public CppUnit::TestFixture
 
 		}
 
+	private:
+		Roster *roster_;
+		JID jid1_;
+		JID jid2_; 
+		JID jid3_;
 };
+
 CPPUNIT_TEST_SUITE_REGISTRATION(RosterTest);
 

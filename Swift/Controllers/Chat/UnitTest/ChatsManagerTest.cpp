@@ -18,7 +18,7 @@
 #include "Swift/Controllers/EventController.h"
 #include "Swift/Controllers/Chat/MUCController.h"
 #include "Swiften/Presence/PresenceSender.h"
-#include "Swiften/Avatars/AvatarManager.h"
+#include "Swiften/Avatars/NullAvatarManager.h"
 #include "Swiften/Avatars/AvatarMemoryStorage.h"
 #include "Swiften/VCards/VCardManager.h"
 #include "Swiften/VCards/VCardMemoryStorage.h"
@@ -70,18 +70,12 @@ public:
 		mocks_->ExpectCall(chatListWindowFactory_, ChatListWindowFactory::createWindow).With(uiEventStream_).Return(NULL);
 		manager_ = new ChatsManager(jid_, stanzaChannel_, iqRouter_, eventController_, chatWindowFactory_, nickResolver_, presenceOracle_, serverDiscoInfo_, presenceSender_, uiEventStream_, chatListWindowFactory_, true, NULL, mucRegistry_);
 
-		vcardStorage_ = new VCardMemoryStorage();
-		vcardManager_ = new VCardManager(jid_, iqRouter_, vcardStorage_);
-		avatarStorage_ = new AvatarMemoryStorage();
-		avatarManager_ = new AvatarManager(vcardManager_, stanzaChannel_, avatarStorage_, NULL);
+		avatarManager_ = new NullAvatarManager();
 		manager_->setAvatarManager(avatarManager_);
 	};
 	
 	void tearDown() {
 		delete avatarManager_;
-		delete avatarStorage_;
-		delete vcardManager_;
-		delete vcardStorage_;
 		delete manager_;
 		delete presenceSender_;
 		delete presenceOracle_;
@@ -315,9 +309,6 @@ private:
 	ChatWindowFactory* chatWindowFactory_;
 	NickResolver* nickResolver_;
 	PresenceOracle* presenceOracle_;
-	VCardStorage* vcardStorage_;
-	VCardManager* vcardManager_;
-	AvatarStorage* avatarStorage_;
 	AvatarManager* avatarManager_;
 	boost::shared_ptr<DiscoInfo> serverDiscoInfo_;
 	boost::shared_ptr<XMPPRoster> xmppRoster_;
