@@ -37,7 +37,6 @@ class VCardFileStorageTest : public CppUnit::TestFixture {
 			std::auto_ptr<VCardFileStorage> testling(createTestling());
 			VCard::ref vcard(new VCard());
 			vcard->setFullName("Alice In Wonderland");
-			vcard->setEMail("alice@wonderland.lit");
 
 			testling->setVCard(JID("alice@wonderland.lit/TeaRoom"), vcard);
 
@@ -52,12 +51,10 @@ class VCardFileStorageTest : public CppUnit::TestFixture {
 			std::auto_ptr<VCardFileStorage> testling(createTestling());
 			VCard::ref vcard(new VCard());
 			vcard->setFullName("Alice In Wonderland");
-			vcard->setEMail("alice@wonderland.lit");
 			testling->setVCard(JID("alice@wonderland.lit"), vcard);
 
 			VCard::ref result = testling->getVCard(JID("alice@wonderland.lit"));
 			CPPUNIT_ASSERT_EQUAL(String("Alice In Wonderland"), result->getFullName());
-			CPPUNIT_ASSERT_EQUAL(String("alice@wonderland.lit"), result->getEMail());
 		}
 
 		void testGetVCard_FileDoesNotExist() {
