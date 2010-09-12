@@ -22,14 +22,14 @@ String CombinedAvatarProvider::getAvatarHash(const JID& jid) const {
 }
 
 void CombinedAvatarProvider::addProvider(AvatarProvider* provider) {
-	provider->onAvatarChanged.connect(reinterpret_cast<int>(this), boost::bind(&CombinedAvatarProvider::handleAvatarChanged, this, _1));
+	provider->onAvatarChanged.connect(boost::bind(&CombinedAvatarProvider::handleAvatarChanged, this, _1));
 	providers.push_back(provider);
 }
 
 void CombinedAvatarProvider::removeProvider(AvatarProvider* provider) {
 	std::vector<AvatarProvider*>::iterator i = std::remove(providers.begin(), providers.end(), provider);
 	for(std::vector<AvatarProvider*>::iterator j = i; j < providers.end(); ++j) {
-		provider->onAvatarChanged.disconnect(reinterpret_cast<int>(this));
+		provider->onAvatarChanged.disconnect(boost::bind(&CombinedAvatarProvider::handleAvatarChanged, this, _1));
 	}
 	providers.erase(i, providers.end());
 }
