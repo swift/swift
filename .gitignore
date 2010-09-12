@@ -1,5 +1,6 @@
 .DS_Store
 *.pyc
+*.sloccount
 *.gcov
 *.gcda
 *.gcno

@@ -62,6 +62,7 @@ if env["PLATFORM"] == "win32" :
 	#So we don't need to escalate with UAC
 	if "TMP" is os.environ.keys() :
 		env['ENV']['TMP'] = os.environ['TMP'] 
+env.Tool("SLOCCount", toolpath = ["#/BuildTools/SCons/Tools"])
 
 # Override SConscript to handle tests
 oldSConscript = SConscript
@@ -496,6 +497,11 @@ env["PROJECTS"] = [m for m in modules if m not in ["Documentation", "QA", "SwifT
 for stage in ["flags", "build", "test"] :
 	env["SCONS_STAGE"] = stage
 	SConscript(dirs = map(lambda x : "#/" + x, modules))
+
+# SLOCCount
+if ARGUMENTS.get("sloccount", False) :
+  for project in env["PROJECTS"] :
+    env.SLOCCount("#/" + project)
 
 ################################################################################
 # Print summary
