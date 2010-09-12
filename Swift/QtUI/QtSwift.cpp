@@ -31,7 +31,6 @@
 #include "Swiften/Base/Platform.h"
 #include "Swiften/Elements/Presence.h"
 #include "Swiften/Client/Client.h"
-#include "SwifTools/Dock/PlatformDock.h"
 #include "Swift/Controllers/MainController.h"
 #include "Swift/Controllers/ApplicationInfo.h"
 #include "Swift/Controllers/BuildVersion.h"
