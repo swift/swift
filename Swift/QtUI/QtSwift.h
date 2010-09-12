@@ -11,20 +11,24 @@
 #include <boost/program_options/options_description.hpp>
 
 #include "Swiften/Base/String.h"
+#include "Swiften/Base/Platform.h"
 #include "Swiften/EventLoop/Qt/QtEventLoop.h"
 #include "QtLoginWindowFactory.h"
 #include "QtMainWindowFactory.h"
 #include "QtChatWindowFactory.h"
 #include "QtSettingsProvider.h"
+#if defined(SWIFTEN_PLATFORM_MACOSX)
+#include "Swiften/Application/CocoaApplication.h"
+#endif
 
 namespace po = boost::program_options;
 
 class QSplitter;
 
 namespace Swift {
+	class Dock;
 	class VCardStorageFactory;
 	class AutoUpdater;
-	class Application;
 	class ApplicationPathProvider;
 	class AvatarStorage;
 	class CapsStorage;
@@ -59,14 +63,16 @@ namespace Swift {
 			QtSettingsProvider *settings_;
 			QSplitter* splitter_;
 			QtSoundPlayer* soundPlayer_;
+			Dock* dock_;
 			QtChatTabs* tabs_;
-			Application* application_;
 			ApplicationPathProvider* applicationPathProvider_;
 			AvatarStorage* avatarStorage_;
 			CapsStorage* capsStorage_;
 			VCardStorageFactory* vcardStorageFactory_;
 			AutoUpdater* autoUpdater_;
-
+#if defined(SWIFTEN_PLATFORM_MACOSX)
+			CocoaApplication cocoaApplication_;
+#endif
 	};
 }
 

@@ -1,4 +1,4 @@
-#include "Swiften/Application/MacOSX/MacOSXApplicationMessageDisplay.h"
+#include "SwifTools/Dock/MacOSXDock.h"
 
 #include <AppKit/AppKit.h>
 #include <Cocoa/Cocoa.h>
@@ -7,10 +7,10 @@
 
 namespace Swift {
 
-MacOSXApplicationMessageDisplay::MacOSXApplicationMessageDisplay() {
+MacOSXDock::MacOSXDock(CocoaApplication*) {
 }
 
-void MacOSXApplicationMessageDisplay::setMessage(const String& label) {
+void MacOSXDock::setMessage(const String& label) {
 	NSString *labelString = [[NSString alloc] initWithUTF8String: label.getUTF8Data()];
 	[[NSApp dockTile] setBadgeLabel: labelString];
 	[labelString release];

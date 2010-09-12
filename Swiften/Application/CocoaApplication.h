@@ -4,11 +4,16 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "Swiften/Application/ApplicationMessageDisplay.h"
+#pragma once
 
 namespace Swift {
+	class CocoaApplication {
+		public:
+			CocoaApplication();
+			~CocoaApplication();
 
-ApplicationMessageDisplay::~ApplicationMessageDisplay() {
-}
-
+		private:
+			class Private;
+			Private* d;
+	};
 }

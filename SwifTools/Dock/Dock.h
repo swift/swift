@@ -4,18 +4,15 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#ifndef SWIFTEN_ApplicationMessageDisplay_H
-#define SWIFTEN_ApplicationMessageDisplay_H
+#pragma once
 
 namespace Swift {
 	class String;
 
-	class ApplicationMessageDisplay {
+	class Dock {
 		public:
-			virtual ~ApplicationMessageDisplay();
+			virtual ~Dock();
 
 			virtual void setMessage(const String& message) = 0;
 	};
 }
-
-#endif

@@ -1,16 +1,12 @@
 Import("swiften_env")
 
 sources = [
-		"Application.cpp",
-		"ApplicationMessageDisplay.cpp",
 		"ApplicationPathProvider.cpp",
 	]
 
 if swiften_env["PLATFORM"] == "darwin" and swiften_env["target"] == "native" :
 	sources += [
-			"MacOSX/MacOSXApplication.cpp",
-			"MacOSX/MacOSXApplicationMessageDisplay.mm",
-			"MacOSX/MacOSXApplicationInitializer.mm",
+			"CocoaApplication.mm",
 			"MacOSXApplicationPathProvider.cpp",
 		]
 elif swiften_env["PLATFORM"] == "win32" :

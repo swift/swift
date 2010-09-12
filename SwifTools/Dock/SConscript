@@ -1,0 +1,13 @@
+Import("swiftools_env")
+
+sources = [
+		"Dock.cpp",
+	]
+
+if swiftools_env["PLATFORM"] == "darwin" and swiftools_env["target"] == "native" :
+	sources += [
+			"MacOSXDock.mm",
+		]
+
+objects = swiftools_env.StaticObject(sources)
+swiftools_env.Append(SWIFTOOLS_OBJECTS = objects)

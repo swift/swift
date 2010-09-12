@@ -4,8 +4,6 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "Swiften/Application/Application.h"
-
 #include <boost/filesystem.hpp>
 #include <iostream>
 

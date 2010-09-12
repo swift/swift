@@ -12,8 +12,6 @@
 #include <stdlib.h>
 #include <sstream>
 
-#include "Swiften/Application/Application.h"
-#include "Swiften/Application/ApplicationMessageDisplay.h"
 #include "Swiften/Network/TimerFactory.h"
 #include "Swiften/Network/BoostIOServiceThread.h"
 #include "Swiften/Network/MainBoostIOServiceThread.h"
@@ -40,6 +38,7 @@
 #include "Swift/Controllers/XMLConsoleController.h"
 #include "Swift/Controllers/XMPPRosterController.h"
 #include "Swift/Controllers/UIEvents/UIEventStream.h"
+#include "SwifTools/Dock/Dock.h"
 #include "Swiften/Base/foreach.h"
 #include "Swiften/Base/String.h"
 #include "Swiften/Client/Client.h"
@@ -83,7 +82,7 @@ MainController::MainController(
 		AvatarStorage* avatarStorage,
 		CapsStorage* capsStorage,
 		VCardStorageFactory* vcardStorageFactory,
-		ApplicationMessageDisplay* applicationMessageDisplay,
+		Dock* dock,
 		bool useDelayForLatency) :
 			timerFactory_(&boostIOServiceThread_.getIOService()),
 			idleDetector_(&idleQuerier_, &timerFactory_, 100),
@@ -114,7 +113,7 @@ MainController::MainController(
 	timeBeforeNextReconnect_ = -1;
 	mucSearchWindowFactory_ = mucSearchWindowFactory;
 	eventWindowFactory_ = eventWindowFactory;
-	applicationMessageDisplay_ = applicationMessageDisplay;
+	dock_ = dock;
 	chatListWindowFactory_ = chatListWindowFactory;
 	uiEventStream_ = new UIEventStream();
 
@@ -291,7 +290,7 @@ void MainController::handleConnected() {
 }
 
 void MainController::handleEventQueueLengthChange(int count) {
-	applicationMessageDisplay_->setMessage(count == 0 ? "" : boost::lexical_cast<std::string>(count).c_str());
+	dock_->setMessage(count == 0 ? "" : boost::lexical_cast<std::string>(count).c_str());
 }
 
 void MainController::reconnectAfterError() {

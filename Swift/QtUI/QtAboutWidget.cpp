@@ -16,8 +16,6 @@
 #include <QFile>
 #include <QTextStream>
 
-#include "Swiften/Application/Application.h"
-
 namespace Swift {
 
 QtAboutWidget::QtAboutWidget() : QDialog() {

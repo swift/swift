@@ -23,8 +23,6 @@
 #include <boost/bind.hpp>
 #include <QSplitter>
 
-#include "Swiften/Application/Application.h"
-#include "Swiften/Application/PlatformApplication.h"
 #include "Swiften/Application/PlatformApplicationPathProvider.h"
 #include "Swiften/Avatars/AvatarFileStorage.h"
 #include "Swiften/Disco/CapsFileStorage.h"
@@ -33,11 +31,17 @@
 #include "Swiften/Base/Platform.h"
 #include "Swiften/Elements/Presence.h"
 #include "Swiften/Client/Client.h"
+#include "SwifTools/Dock/PlatformDock.h"
 #include "Swift/Controllers/MainController.h"
 #include "Swift/Controllers/ApplicationInfo.h"
 #include "Swift/Controllers/BuildVersion.h"
 #include "SwifTools/AutoUpdater/AutoUpdater.h"
 #include "SwifTools/AutoUpdater/PlatformAutoUpdaterFactory.h"
+#if defined(SWIFTEN_PLATFORM_MACOSX)
+#include "SwifTools/Dock/MacOSXDock.h"
+#else
+#include "SwifTools/Dock/NullDock.h"
+#endif
 
 namespace Swift{
 
@@ -81,13 +85,19 @@ QtSwift::QtSwift(po::variables_map options) : autoUpdater_(NULL) {
 
 	tabs_ = options.count("no-tabs") && !(splitter_ > 0) ? NULL : new QtChatTabs();
 	settings_ = new QtSettingsProvider();
-	application_ = new PlatformApplication(SWIFT_APPLICATION_NAME);
 	applicationPathProvider_ = new PlatformApplicationPathProvider(SWIFT_APPLICATION_NAME);
 	avatarStorage_ = new AvatarFileStorage(applicationPathProvider_->getAvatarDir());
 	vcardStorageFactory_ = new VCardFileStorageFactory(applicationPathProvider_->getDataDir());
 	capsStorage_ = new CapsFileStorage(applicationPathProvider_->getDataDir() / "caps");
 	chatWindowFactory_ = new QtChatWindowFactory(splitter_, settings_, tabs_, "");
 	soundPlayer_ = new QtSoundPlayer(applicationPathProvider_);
+
+#if defined(SWIFTEN_PLATFORM_MACOSX)
+	dock_ = new MacOSXDock(&cocoaApplication_);
+#else
+	dock_ = new NullDock();
+#endif
+
 	if (splitter_) {
 		splitter_->show();
 	}
@@ -121,7 +131,7 @@ QtSwift::QtSwift(po::variables_map options) : autoUpdater_(NULL) {
 				avatarStorage_,
 				capsStorage_,
 				vcardStorageFactory_,
-				application_->getApplicationMessageDisplay(),
+				dock_,
 				options.count("latency-debug") > 0);
 		mainControllers_.push_back(mainController);
 	}
@@ -150,12 +160,12 @@ QtSwift::~QtSwift() {
 		delete controller;
 	}
 	delete settings_;
-	delete application_;
 	foreach (QtSystemTray* tray, systemTrays_) {
 		delete tray;
 	}
 	delete tabs_;
 	delete splitter_;
+	delete dock_;
 	delete soundPlayer_;
 	foreach (QtXMLConsoleWidgetFactory* factory, xmlConsoleWidgetFactories_) {
 		delete factory;

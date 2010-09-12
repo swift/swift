@@ -46,7 +46,6 @@ namespace Swift {
 	class XMPPRosterController;
 	class PresenceSender;
 	class DiscoInfoResponder;
-	class ApplicationMessageDisplay;
 	class AvatarManager;
 	class CapsManager;
 	class EntityCapsManager;
@@ -70,6 +69,7 @@ namespace Swift {
 	class StatusTracker;
 	class VCardStorageFactory;
 	class MUCRegistry;
+	class Dock;
 
 	class MainController {
 		public:
@@ -87,7 +87,7 @@ namespace Swift {
 					AvatarStorage* avatarStorage,
 					CapsStorage* capsStorage,
 					VCardStorageFactory* vcardStorageFactory,
-					ApplicationMessageDisplay* applicationMessageDisplay,
+					Dock* dock,
 					bool useDelayForLatency);
 			~MainController();
 
@@ -133,7 +133,7 @@ namespace Swift {
 			CapsStorage* capsStorage_;
 			VCardStorageFactory* vcardStorageFactory_;
 			VCardManager* vcardManager_;
-			ApplicationMessageDisplay* applicationMessageDisplay_;
+			Dock* dock_;
 			ChatController* chatController_;
 			XMPPRosterController* xmppRosterController_;
 			RosterController* rosterController_;

@@ -15,8 +15,8 @@ if env["SCONS_STAGE"] == "flags" :
 ################################################################################
 
 if env["SCONS_STAGE"] == "build" :
-	myenv = env.Clone()
-	myenv.MergeFlags(myenv["BOOST_FLAGS"])
+	swiftools_env = env.Clone()
+	swiftools_env.MergeFlags(swiftools_env["BOOST_FLAGS"])
 
 	sources = [
 			"Idle/IdleDetector.cpp",
@@ -29,24 +29,29 @@ if env["SCONS_STAGE"] == "build" :
 			"TabComplete.cpp",
 		]
 
-	if myenv.get("HAVE_SPARKLE", 0) :
-		myenv.MergeFlags(myenv["SPARKLE_FLAGS"])
-		myenv.Append(CPPDEFINES = ["HAVE_SPARKLE"])
+	if swiftools_env.get("HAVE_SPARKLE", 0) :
+		swiftools_env.MergeFlags(swiftools_env["SPARKLE_FLAGS"])
+		swiftools_env.Append(CPPDEFINES = ["HAVE_SPARKLE"])
 		sources += ["AutoUpdater/SparkleAutoUpdater.mm"]
 
-	if myenv["PLATFORM"] == "win32" :
+	if swiftools_env["PLATFORM"] == "win32" :
 		sources += ["Idle/WindowsIdleQuerier.cpp"]
-	elif myenv["PLATFORM"] == "darwin" and myenv.get("HAVE_IOKIT", False) :
-			myenv.Append(CPPDEFINES = ["HAVE_IOKIT"])
+	elif swiftools_env["PLATFORM"] == "darwin" and swiftools_env.get("HAVE_IOKIT", False) :
+			swiftools_env.Append(CPPDEFINES = ["HAVE_IOKIT"])
 			sources += ["Idle/MacOSXIdleQuerier.cpp"]
-	elif myenv["HAVE_XSS"] :
-		myenv.Append(CPPDEFINES = ["HAVE_XSS"])
+	elif swiftools_env["HAVE_XSS"] :
+		swiftools_env.Append(CPPDEFINES = ["HAVE_XSS"])
 		sources += ["Idle/XSSIdleQuerier.cpp"]
-
-	myenv.StaticLibrary("SwifTools", sources)
-
+	
+	swiftools_env["SWIFTOOLS_OBJECTS"] = []
+	Export("swiftools_env")
+	
 	SConscript(dirs = [
+			"Dock",
 			"Idle/IdleQuerierTest",
 			"Idle/UnitTest",
 			"UnitTest"
 		])
+
+	swiftools_env.StaticLibrary("SwifTools", sources + swiftools_env["SWIFTOOLS_OBJECTS"])
+		
