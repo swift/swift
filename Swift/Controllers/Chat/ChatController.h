@@ -23,7 +23,7 @@ namespace Swift {
 			virtual void setEnabled(bool enabled);
 
 		private:
-			void handlePresenceChange(boost::shared_ptr<Presence> newPresence, boost::shared_ptr<Presence> previousPresence);
+			void handlePresenceChange(boost::shared_ptr<Presence> newPresence);
 			String getStatusChangeString(boost::shared_ptr<Presence> presence);
 			bool isIncomingMessageFromMe(boost::shared_ptr<Message> message);
 			void postSendMessage(const String &body, boost::shared_ptr<Stanza> sentStanza);
@@ -41,6 +41,7 @@ namespace Swift {
 			ChatStateTracker* chatStateTracker_;
 			bool isInMUC_;
 			bool lastWasPresence_;
+			String lastStatusChangeString_;
 			std::map<boost::shared_ptr<Stanza>, String> unackedStanzas_;
 	};
 }

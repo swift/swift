@@ -9,6 +9,7 @@
 #include <boost/filesystem.hpp>
 
 #include "Swiften/Base/boost_bsignals.h"
+#include "Swiften/Base/ByteArray.h"
 
 namespace Swift {
 	class JID;
@@ -17,6 +18,7 @@ namespace Swift {
 		public:
 			virtual ~AvatarManager();
 
+			virtual ByteArray getAvatar(const JID&) const = 0;
 			virtual boost::filesystem::path getAvatarPath(const JID&) const = 0;
 
 			boost::signal<void (const JID&)> onAvatarChanged;

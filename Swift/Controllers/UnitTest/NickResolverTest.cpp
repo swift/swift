@@ -35,7 +35,7 @@ class NickResolverTest : public CppUnit::TestFixture {
 	public:
 		void setUp() {
 			ownJID_ = JID("kev@wonderland.lit");
-			xmppRoster_ = boost::shared_ptr<XMPPRoster>(new XMPPRoster());
+			xmppRoster_ = new XMPPRoster();
 			stanzaChannel_ = new DummyStanzaChannel();
 		  iqRouter_ = new IQRouter(stanzaChannel_);
 			vCardStorage_ = new VCardMemoryStorage();
@@ -135,7 +135,7 @@ class NickResolverTest : public CppUnit::TestFixture {
 	
 	private:
 		std::vector<String> groups_;
-		boost::shared_ptr<XMPPRoster> xmppRoster_;
+		XMPPRoster* xmppRoster_;
 		VCardStorage* vCardStorage_;
 		IQRouter* iqRouter_;
 		DummyStanzaChannel* stanzaChannel_;

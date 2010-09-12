@@ -15,7 +15,7 @@
 
 namespace Swift {
 
-NickResolver::NickResolver(const JID& ownJID, boost::shared_ptr<XMPPRoster> xmppRoster, VCardManager* vcardManager, MUCRegistry* mucRegistry) : ownJID_(ownJID) {
+NickResolver::NickResolver(const JID& ownJID, XMPPRoster* xmppRoster, VCardManager* vcardManager, MUCRegistry* mucRegistry) : ownJID_(ownJID) {
 	xmppRoster_ = xmppRoster;
 	vcardManager_ = vcardManager;
 	if (vcardManager_) {

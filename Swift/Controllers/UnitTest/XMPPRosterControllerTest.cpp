@@ -31,7 +31,7 @@ class XMPPRosterControllerTest : public CppUnit::TestFixture
 		void setUp() {
 			channel_ = new DummyIQChannel();
 			router_ = new IQRouter(channel_);
-			xmppRoster_ = boost::shared_ptr<XMPPRoster>(new XMPPRoster());
+			xmppRoster_ = new XMPPRoster();
 		}
 
 		void tearDown() {
@@ -78,7 +78,7 @@ class XMPPRosterControllerTest : public CppUnit::TestFixture
 	private:
 		DummyIQChannel* channel_;
 		IQRouter* router_;
-		boost::shared_ptr<XMPPRoster> xmppRoster_;
+		XMPPRoster* xmppRoster_;
 };
 
 CPPUNIT_TEST_SUITE_REGISTRATION(XMPPRosterControllerTest);

@@ -18,7 +18,7 @@ namespace Swift {
 		public:
 			ChatStateTracker();
 			void handleMessageReceived(boost::shared_ptr<Message> message);
-			void handlePresenceChange(boost::shared_ptr<Presence> newPresence, boost::shared_ptr<Presence> oldPresence);
+			void handlePresenceChange(boost::shared_ptr<Presence> newPresence);
 			boost::signal<void (ChatState::ChatStateType)> onChatStateChange;
 		private:
 			void changeState(ChatState::ChatStateType state);

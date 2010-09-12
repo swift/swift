@@ -15,19 +15,26 @@ namespace Swift {
 
 class DummyTimerFactory::DummyTimer : public Timer {
 	public:
-		DummyTimer(int timeout) : timeout(timeout), isRunning(false) {
+		DummyTimer(int timeout, DummyTimerFactory* factory) : timeout(timeout), factory(factory), isRunning(false), startTime(~0) {
 		}
 
 		virtual void start() {
 			isRunning = true;
+			startTime = factory->currentTime;
 		}
 
 		virtual void stop() {
 			isRunning = false;
 		}
+
+		int getAlarmTime() const {
+			return startTime + timeout;
+		}
 	
 		int timeout;
+		DummyTimerFactory* factory;
 		bool isRunning;
+		int startTime;
 };
 
 
@@ -35,31 +42,18 @@ DummyTimerFactory::DummyTimerFactory() : currentTime(0) {
 }
 
 boost::shared_ptr<Timer> DummyTimerFactory::createTimer(int milliseconds) {
-	boost::shared_ptr<DummyTimer> timer(new DummyTimer(milliseconds));
+	boost::shared_ptr<DummyTimer> timer(new DummyTimer(milliseconds, this));
 	timers.push_back(timer);
 	return timer;
 }
 
-static bool hasZeroTimeout(boost::shared_ptr<DummyTimerFactory::DummyTimer> timer) {
-	return timer->timeout == 0;
-}
-
 void DummyTimerFactory::setTime(int time) {
 	assert(time > currentTime);
-	int increment = time - currentTime;
-	std::vector< boost::shared_ptr<DummyTimer> > notifyTimers(timers.begin(), timers.end());
-	foreach(boost::shared_ptr<DummyTimer> timer, notifyTimers) {
-		if (increment >= timer->timeout) {
-			if (timer->isRunning) {
-				timer->onTick();
-			}
-			timer->timeout = 0;
-		}
-		else {
-			timer->timeout -= increment;
+	foreach(boost::shared_ptr<DummyTimer> timer, timers) {
+		if (timer->getAlarmTime() > currentTime && timer->getAlarmTime() <= time && timer->isRunning) {
+			timer->onTick();
 		}
 	}
-	timers.erase(std::remove_if(timers.begin(), timers.end(), hasZeroTimeout), timers.end());
 	currentTime = time;
 }
 

@@ -6,31 +6,35 @@
 
 #pragma once
 
+#include <map>
+
 #include "Swiften/Base/String.h"
 #include "Swiften/Elements/Presence.h"
 
-#include <map>
 #include "Swiften/Base/boost_bsignals.h"
 
 namespace Swift {
 class StanzaChannel;
+	class PresenceOracle {
+		public:
+			PresenceOracle(StanzaChannel* stanzaChannel);
+			~PresenceOracle();
 
-class PresenceOracle {
-	public:
-		PresenceOracle(StanzaChannel* stanzaChannel);
-		~PresenceOracle() {};
+			Presence::ref getLastPresence(const JID&) const;
 
-		void cancelSubscription(const JID& jid);
-		void confirmSubscription(const JID& jid);
-		void requestSubscription(const JID& jid);
+		public:
+			boost::signal<void (boost::shared_ptr<Presence>)> onPresenceChange;
+			boost::signal<void (const JID&, const String&)> onPresenceSubscriptionRequest;
 
-		boost::signal<void (boost::shared_ptr<Presence>, boost::shared_ptr<Presence>)> onPresenceChange;
-		boost::signal<void (const JID&, const String&)> onPresenceSubscriptionRequest;
+		private:
+			void handleIncomingPresence(boost::shared_ptr<Presence> presence);
+			void handleStanzaChannelAvailableChanged(bool);
 
-	private:
-		void handleIncomingPresence(boost::shared_ptr<Presence> presence);
-		std::map<JID, std::map<JID, boost::shared_ptr<Presence> > > entries_;
-		StanzaChannel* stanzaChannel_;
-};
+		private:
+			typedef std::map<JID, Presence::ref> PresenceMap;
+			typedef std::map<JID, PresenceMap> PresencesMap;
+			PresencesMap entries_;
+			StanzaChannel* stanzaChannel_;
+	};
 }
 

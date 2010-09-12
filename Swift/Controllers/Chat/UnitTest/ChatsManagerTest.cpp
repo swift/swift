@@ -59,7 +59,7 @@ public:
 		iqRouter_ = new IQRouter(iqChannel_);
 		eventController_ = new EventController();
 		chatWindowFactory_ = mocks_->InterfaceMock<ChatWindowFactory>();
-		xmppRoster_ = boost::shared_ptr<XMPPRoster>(new XMPPRoster());
+		xmppRoster_ = new XMPPRoster();
 		mucRegistry_ = new MUCRegistry();
 		nickResolver_ = new NickResolver(jid_.toBare(), xmppRoster_, NULL, mucRegistry_);
 		presenceOracle_ = new PresenceOracle(stanzaChannel_);
@@ -195,7 +195,7 @@ public:
 		boost::shared_ptr<Presence> jid1Offline(new Presence());
 		jid1Offline->setFrom(JID(fullJIDString1));
 		jid1Offline->setType(Presence::Unavailable);
-		presenceOracle_->onPresenceChange(jid1Offline, jid1Online);
+		presenceOracle_->onPresenceChange(jid1Offline);
 
 		boost::shared_ptr<Message> message2(new Message());
 		message2->setFrom(JID(fullJIDString2));
@@ -273,14 +273,14 @@ public:
 		boost::shared_ptr<Presence> jid1Offline(new Presence());
 		jid1Offline->setFrom(JID(messageJID1));
 		jid1Offline->setType(Presence::Unavailable);
-		presenceOracle_->onPresenceChange(jid1Offline, jid1Online);
+		presenceOracle_->onPresenceChange(jid1Offline);
  
 		boost::shared_ptr<Presence> jid2Online(new Presence());
 		jid2Online->setFrom(JID(messageJID2));
 		boost::shared_ptr<Presence> jid2Offline(new Presence());
 		jid2Offline->setFrom(JID(messageJID2));
 		jid2Offline->setType(Presence::Unavailable);
-		presenceOracle_->onPresenceChange(jid2Offline, jid2Online);
+		presenceOracle_->onPresenceChange(jid2Offline);
 
 		JID messageJID3("testling@test.com/resource3");
 
@@ -311,7 +311,7 @@ private:
 	PresenceOracle* presenceOracle_;
 	AvatarManager* avatarManager_;
 	boost::shared_ptr<DiscoInfo> serverDiscoInfo_;
-	boost::shared_ptr<XMPPRoster> xmppRoster_;
+	XMPPRoster* xmppRoster_;
 	PresenceSender* presenceSender_;
 	MockRepository* mocks_;
 	UIEventStream* uiEventStream_;

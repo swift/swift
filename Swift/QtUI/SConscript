@@ -138,6 +138,8 @@ if env["PLATFORM"] == "darwin" :
   frameworks = []
   if env["HAVE_SPARKLE"] :
     frameworks.append(env["SPARKLE_FRAMEWORK"])
+  if env["HAVE_GROWL"] :
+    frameworks.append(env["GROWL_FRAMEWORK"])
   app = myenv.AppBundle("Swift", version = myenv["SWIFT_VERSION"], resources = ["../resources/MacOSX/Swift.icns"] + commonResources, frameworks = frameworks)
   if env["DIST"] :
     myenv.Command(["Swift-${SWIFT_VERSION}.dmg"], [app], [

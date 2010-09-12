@@ -1,0 +1,310 @@
+/*
+ * Copyright (c) 2010 Remko Tronçon
+ * Licensed under the GNU General Public License v3.
+ * See Documentation/Licenses/GPLv3.txt for more information.
+ */
+
+#include <cppunit/extensions/HelperMacros.h>
+#include <cppunit/extensions/TestFactoryRegistry.h>
+#include <vector>
+#include <boost/bind.hpp>
+
+#include "Swift/Controllers/PresenceNotifier.h"
+#include "SwifTools/Notifier/LoggingNotifier.h"
+#include "Swiften/Client/DummyStanzaChannel.h"
+#include "Swiften/MUC/MUCRegistry.h"
+#include "Swiften/Roster/XMPPRoster.h"
+#include "Swiften/Presence/PresenceOracle.h"
+#include "Swiften/Avatars/DummyAvatarManager.h"
+#include "Swiften/Network/DummyTimerFactory.h"
+
+using namespace Swift;
+
+class PresenceNotifierTest : public CppUnit::TestFixture {
+		CPPUNIT_TEST_SUITE(PresenceNotifierTest);
+		CPPUNIT_TEST(testReceiveFirstPresenceCreatesAvailableNotification);
+		CPPUNIT_TEST(testReceiveSecondPresenceCreatesStatusChangeNotification);
+		CPPUNIT_TEST(testReceiveUnavailablePresenceAfterAvailablePresenceCreatesUnavailableNotification);
+		CPPUNIT_TEST(testReceiveUnavailablePresenceWithoutAvailableDoesNotCreateNotification);
+		CPPUNIT_TEST(testReceiveAvailablePresenceAfterUnavailableCreatesAvailableNotification);
+		CPPUNIT_TEST(testReceiveAvailablePresenceAfterReconnectCreatesAvailableNotification);
+		CPPUNIT_TEST(testReceiveAvailablePresenceFromMUCDoesNotCreateNotification);
+		CPPUNIT_TEST(testNotificationSubjectContainsNameForJIDInRoster);
+		CPPUNIT_TEST(testNotificationSubjectContainsJIDForJIDNotInRoster);
+		CPPUNIT_TEST(testNotificationSubjectContainsStatus);
+		CPPUNIT_TEST(testNotificationMessageContainsStatusMessage);
+		CPPUNIT_TEST(testNotificationPicture);
+		CPPUNIT_TEST(testNotificationActivationEmitsSignal);
+		CPPUNIT_TEST(testReceiveFirstPresenceWithQuietPeriodDoesNotNotify);
+		CPPUNIT_TEST(testReceiveFirstPresenceWithQuietPeriodDoesNotCountAsQuietPeriod);
+		CPPUNIT_TEST(testReceivePresenceDuringQuietPeriodDoesNotNotify);
+		CPPUNIT_TEST(testReceivePresenceDuringQuietPeriodResetsTimer);
+		CPPUNIT_TEST(testReceivePresenceAfterQuietPeriodNotifies);
+		CPPUNIT_TEST(testReceiveFirstPresenceAfterReconnectWithQuietPeriodDoesNotNotify);
+		CPPUNIT_TEST_SUITE_END();
+
+	public:
+		void setUp() {
+			stanzaChannel = new DummyStanzaChannel();
+			notifier = new LoggingNotifier();
+			mucRegistry = new MUCRegistry();
+			user1 = JID("user1@bar.com/bla");
+			user2 = JID("user2@foo.com/baz");
+			avatarManager = new DummyAvatarManager();
+			roster = new XMPPRoster();
+			presenceOracle = new PresenceOracle(stanzaChannel);
+			timerFactory = new DummyTimerFactory();
+		}
+
+		void tearDown() {
+			delete presenceOracle;
+			delete roster;
+			delete avatarManager;
+			delete mucRegistry;
+			delete notifier;
+			delete stanzaChannel;
+		}
+
+		void testReceiveFirstPresenceCreatesAvailableNotification() {
+			std::auto_ptr<PresenceNotifier> testling = createNotifier();
+
+			sendPresence(user1, StatusShow::Online);
+
+			CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(notifier->notifications.size()));
+			CPPUNIT_ASSERT_EQUAL(Notifier::ContactAvailable, notifier->notifications[0].type);
+		}
+
+		void testReceiveSecondPresenceCreatesStatusChangeNotification() {
+			std::auto_ptr<PresenceNotifier> testling = createNotifier();
+			sendPresence(user1, StatusShow::Away);
+			notifier->notifications.clear();
+
+			sendPresence(user1, StatusShow::Online);
+
+			CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(notifier->notifications.size()));
+			CPPUNIT_ASSERT_EQUAL(Notifier::ContactStatusChange, notifier->notifications[0].type);
+		}
+
+		void testReceiveUnavailablePresenceAfterAvailablePresenceCreatesUnavailableNotification() {
+			std::auto_ptr<PresenceNotifier> testling = createNotifier();
+			sendPresence(user1, StatusShow::Away);
+			notifier->notifications.clear();
+
+			sendUnavailablePresence(user1);
+
+			CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(notifier->notifications.size()));
+			CPPUNIT_ASSERT_EQUAL(Notifier::ContactUnavailable, notifier->notifications[0].type);
+		}
+
+		void testReceiveUnavailablePresenceWithoutAvailableDoesNotCreateNotification() {
+			std::auto_ptr<PresenceNotifier> testling = createNotifier();
+
+			sendUnavailablePresence(user1);
+
+			CPPUNIT_ASSERT_EQUAL(0, static_cast<int>(notifier->notifications.size()));
+		}
+
+		void testReceiveAvailablePresenceAfterUnavailableCreatesAvailableNotification() {
+			std::auto_ptr<PresenceNotifier> testling = createNotifier();
+			sendPresence(user1, StatusShow::Away);
+			sendUnavailablePresence(user1);
+			notifier->notifications.clear();
+
+			sendPresence(user1, StatusShow::Away);
+
+			CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(notifier->notifications.size()));
+			CPPUNIT_ASSERT_EQUAL(Notifier::ContactAvailable, notifier->notifications[0].type);
+		}
+
+		void testReceiveAvailablePresenceAfterReconnectCreatesAvailableNotification() {
+			std::auto_ptr<PresenceNotifier> testling = createNotifier();
+			sendPresence(user1, StatusShow::Away);
+			stanzaChannel->setAvailable(false);
+			stanzaChannel->setAvailable(true);
+			notifier->notifications.clear();
+
+			sendPresence(user1, StatusShow::Away);
+
+			CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(notifier->notifications.size()));
+			CPPUNIT_ASSERT_EQUAL(Notifier::ContactAvailable, notifier->notifications[0].type);
+		}
+
+		void testReceiveAvailablePresenceFromMUCDoesNotCreateNotification() {
+			std::auto_ptr<PresenceNotifier> testling = createNotifier();
+			mucRegistry->addMUC(JID("teaparty@wonderland.lit"));
+
+			sendPresence(JID("teaparty@wonderland.lit/Alice"), StatusShow::Away);
+
+			CPPUNIT_ASSERT_EQUAL(0, static_cast<int>(notifier->notifications.size()));
+		}
+
+		void testNotificationPicture() {
+			std::auto_ptr<PresenceNotifier> testling = createNotifier();
+			avatarManager->avatars[user1] = ByteArray("abcdef");
+
+			sendPresence(user1, StatusShow::Online);
+
+			CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(notifier->notifications.size()));
+			CPPUNIT_ASSERT_EQUAL(ByteArray("abcdef"), notifier->notifications[0].picture);
+		}
+
+		void testNotificationActivationEmitsSignal() {
+			std::auto_ptr<PresenceNotifier> testling = createNotifier();
+
+			sendPresence(user1, StatusShow::Online);
+			CPPUNIT_ASSERT(notifier->notifications[0].callback);
+			notifier->notifications[0].callback();
+
+			CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(activatedNotifications.size()));
+			CPPUNIT_ASSERT_EQUAL(user1, activatedNotifications[0]);
+		}
+
+		void testNotificationSubjectContainsNameForJIDInRoster() {
+			std::auto_ptr<PresenceNotifier> testling = createNotifier();
+			roster->addContact(user1.toBare(), "User 1", std::vector<String>(), RosterItemPayload::Both);
+
+			sendPresence(user1, StatusShow::Online);
+
+			CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(notifier->notifications.size()));
+			CPPUNIT_ASSERT(notifier->notifications[0].subject.contains("User 1"));
+		}
+
+		void testNotificationSubjectContainsJIDForJIDNotInRoster() {
+			std::auto_ptr<PresenceNotifier> testling = createNotifier();
+
+			sendPresence(user1, StatusShow::Online);
+
+			CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(notifier->notifications.size()));
+			CPPUNIT_ASSERT(notifier->notifications[0].subject.contains(user1.toBare().toString()));
+		}
+
+		void testNotificationSubjectContainsStatus() {
+			std::auto_ptr<PresenceNotifier> testling = createNotifier();
+
+			sendPresence(user1, StatusShow::Away);
+
+			CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(notifier->notifications.size()));
+			CPPUNIT_ASSERT(notifier->notifications[0].subject.contains("Away"));
+		}
+
+		void testNotificationMessageContainsStatusMessage() {
+			std::auto_ptr<PresenceNotifier> testling = createNotifier();
+
+			sendPresence(user1, StatusShow::Away);
+
+			CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(notifier->notifications.size()));
+			CPPUNIT_ASSERT(notifier->notifications[0].description.contains("Status Message"));
+		}
+
+		void testReceiveFirstPresenceWithQuietPeriodDoesNotNotify() {
+			std::auto_ptr<PresenceNotifier> testling = createNotifier();
+			testling->setInitialQuietPeriodMS(10);
+
+			sendPresence(user1, StatusShow::Online);
+
+			CPPUNIT_ASSERT_EQUAL(0, static_cast<int>(notifier->notifications.size()));
+		}
+
+		void testReceivePresenceDuringQuietPeriodDoesNotNotify() {
+			std::auto_ptr<PresenceNotifier> testling = createNotifier();
+			testling->setInitialQuietPeriodMS(10);
+
+			sendPresence(user1, StatusShow::Online);
+			timerFactory->setTime(1);
+			sendPresence(user2, StatusShow::Away);
+
+			CPPUNIT_ASSERT_EQUAL(0, static_cast<int>(notifier->notifications.size()));
+		}
+
+		void testReceivePresenceDuringQuietPeriodResetsTimer() {
+			std::auto_ptr<PresenceNotifier> testling = createNotifier();
+			testling->setInitialQuietPeriodMS(10);
+
+			sendPresence(user1, StatusShow::Online);
+			timerFactory->setTime(9);
+			sendPresence(user2, StatusShow::Away);
+			timerFactory->setTime(18);
+			sendPresence(user1, StatusShow::Away);
+
+			CPPUNIT_ASSERT_EQUAL(0, static_cast<int>(notifier->notifications.size()));
+		}
+
+		void testReceivePresenceAfterQuietPeriodNotifies() {
+			std::auto_ptr<PresenceNotifier> testling = createNotifier();
+			testling->setInitialQuietPeriodMS(10);
+
+			sendPresence(user1, StatusShow::Online);
+			timerFactory->setTime(11);
+			sendPresence(user2, StatusShow::Away);
+
+			CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(notifier->notifications.size()));
+		}
+
+		void testReceiveFirstPresenceWithQuietPeriodDoesNotCountAsQuietPeriod() {
+			std::auto_ptr<PresenceNotifier> testling = createNotifier();
+			testling->setInitialQuietPeriodMS(10);
+
+			timerFactory->setTime(11);
+			sendPresence(user1, StatusShow::Away);
+
+			CPPUNIT_ASSERT_EQUAL(0, static_cast<int>(notifier->notifications.size()));
+		}
+
+		void testReceiveFirstPresenceAfterReconnectWithQuietPeriodDoesNotNotify() {
+			std::auto_ptr<PresenceNotifier> testling = createNotifier();
+			testling->setInitialQuietPeriodMS(10);
+			sendPresence(user1, StatusShow::Online);
+			timerFactory->setTime(15);
+			notifier->notifications.clear();
+
+			stanzaChannel->setAvailable(false);
+			stanzaChannel->setAvailable(true);
+			sendPresence(user1, StatusShow::Online);
+			timerFactory->setTime(21);
+			sendPresence(user2, StatusShow::Online);
+
+			CPPUNIT_ASSERT_EQUAL(0, static_cast<int>(notifier->notifications.size()));
+		}
+
+
+	private:
+		std::auto_ptr<PresenceNotifier> createNotifier() {
+			std::auto_ptr<PresenceNotifier> result(new PresenceNotifier(stanzaChannel, notifier, mucRegistry, avatarManager, roster, presenceOracle, timerFactory));
+			result->onNotificationActivated.connect(boost::bind(&PresenceNotifierTest::handleNotificationActivated, this, _1));
+			result->setInitialQuietPeriodMS(0);
+			return result;
+		}
+
+		void sendPresence(const JID& jid, StatusShow::Type type) {
+			boost::shared_ptr<Presence> presence(new Presence());
+			presence->setFrom(jid);
+			presence->setShow(type);
+			presence->setStatus("Status Message");
+			stanzaChannel->onPresenceReceived(presence);
+		}
+
+		void sendUnavailablePresence(const JID& jid) {
+			boost::shared_ptr<Presence> presence(new Presence());
+			presence->setType(Presence::Unavailable);
+			presence->setFrom(jid);
+			stanzaChannel->onPresenceReceived(presence);
+		}
+
+		void handleNotificationActivated(const JID& j) {
+			activatedNotifications.push_back(j);
+		}
+
+	private:
+		DummyStanzaChannel* stanzaChannel;
+		LoggingNotifier* notifier;
+		MUCRegistry* mucRegistry;
+		DummyAvatarManager* avatarManager;
+		XMPPRoster* roster;
+		PresenceOracle* presenceOracle;
+		DummyTimerFactory* timerFactory;
+		JID user1;
+		JID user2;
+		std::vector<JID> activatedNotifications;
+};
+
+CPPUNIT_TEST_SUITE_REGISTRATION(PresenceNotifierTest);

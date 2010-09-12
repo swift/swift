@@ -42,7 +42,7 @@ ChatsManager::ChatsManager(JID jid, StanzaChannel* stanzaChannel, IQRouter* iqRo
 	mucBookmarkManager_->onBookmarksReady.connect(boost::bind(&ChatsManager::handleBookmarksReady, this));
 	mucBookmarkManager_->onBookmarkAdded.connect(boost::bind(&ChatsManager::handleMUCBookmarkAdded, this, _1));
 	mucBookmarkManager_->onBookmarkRemoved.connect(boost::bind(&ChatsManager::handleMUCBookmarkRemoved, this, _1));
-	presenceOracle_->onPresenceChange.connect(boost::bind(&ChatsManager::handlePresenceChange, this, _1, _2));
+	presenceOracle_->onPresenceChange.connect(boost::bind(&ChatsManager::handlePresenceChange, this, _1));
 	uiEventConnection_ = uiEventStream_->onUIEvent.connect(boost::bind(&ChatsManager::handleUIEvent, this, _1));
 	chatListWindow_ = chatListWindowFactory->createWindow(uiEventStream_);
 	if (chatListWindow_) {
@@ -122,7 +122,7 @@ void ChatsManager::handleUIEvent(boost::shared_ptr<UIEvent> event) {
 /**
  * If a resource goes offline, release bound chatdialog to that resource.
  */
-void ChatsManager::handlePresenceChange(boost::shared_ptr<Presence> newPresence, boost::shared_ptr<Presence> /*lastPresence*/) {
+void ChatsManager::handlePresenceChange(boost::shared_ptr<Presence> newPresence) {
 	if (mucRegistry_->isMUC(newPresence->getFrom().toBare())) return;
 	if (newPresence->getType() != Presence::Unavailable) return;
 	JID fullJID(newPresence->getFrom());

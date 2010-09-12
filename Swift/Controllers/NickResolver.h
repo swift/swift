@@ -21,7 +21,7 @@ namespace Swift {
 	class VCardManager;
 	class NickResolver {
 		public:
-			NickResolver(const JID& ownJID, boost::shared_ptr<XMPPRoster> xmppRoster, VCardManager* vcardManager, MUCRegistry* mucRegistry);
+			NickResolver(const JID& ownJID, XMPPRoster* xmppRoster, VCardManager* vcardManager, MUCRegistry* mucRegistry);
 
 			String jidToNick(const JID& jid);
 			void setMUCRegistry(MUCRegistry* registry);
@@ -33,7 +33,7 @@ namespace Swift {
 			String ownNick_;
 			std::map<JID, String> map_;
 
-			boost::shared_ptr<XMPPRoster> xmppRoster_;
+			XMPPRoster* xmppRoster_;
 			MUCRegistry* mucRegistry_;
 			VCardManager* vcardManager_;
 	};

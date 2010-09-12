@@ -12,11 +12,10 @@
 #include <stdlib.h>
 #include <sstream>
 
-#include "Swiften/Network/TimerFactory.h"
+#include "Swiften/Network/BoostTimerFactory.h"
 #include "Swiften/Network/BoostIOServiceThread.h"
 #include "Swiften/Network/MainBoostIOServiceThread.h"
 #include "Swift/Controllers/BuildVersion.h"
-#include "Swift/Controllers/Chat/ChatController.h"
 #include "Swiften/VCards/VCardStorageFactory.h"
 #include "Swiften/VCards/VCardManager.h"
 #include "Swiften/VCards/VCardStorage.h"
@@ -38,6 +37,7 @@
 #include "Swift/Controllers/XMLConsoleController.h"
 #include "Swift/Controllers/XMPPRosterController.h"
 #include "Swift/Controllers/UIEvents/UIEventStream.h"
+#include "Swift/Controllers/PresenceNotifier.h"
 #include "SwifTools/Dock/Dock.h"
 #include "Swiften/Base/foreach.h"
 #include "Swiften/Base/String.h"
@@ -59,6 +59,7 @@
 #include "Swiften/Disco/EntityCapsManager.h"
 #include "Swiften/StringCodecs/SHA1.h"
 #include "Swiften/StringCodecs/Hexify.h"
+#include "Swift/Controllers/UIEvents/RequestChatUIEvent.h"
 
 namespace Swift {
 
@@ -94,22 +95,27 @@ MainController::MainController(
 			vcardStorageFactory_(vcardStorageFactory),
 			loginWindow_(NULL) ,
 			useDelayForLatency_(useDelayForLatency) {
+
+	statusTracker_ = NULL;
+	client_ = NULL;
+	presenceSender_ = NULL;
 	presenceOracle_ = NULL;
-	chatsManager_ = NULL;
-	eventController_ = NULL;
-	eventWindowController_ = NULL;
-	nickResolver_ = NULL;
 	mucRegistry_ = NULL;
-	avatarManager_ = NULL;
+	xmppRoster_ = NULL;
 	vcardManager_ = NULL;
+	avatarManager_ = NULL;
+	capsManager_ = NULL;
+	entityCapsManager_ = NULL;
+	presenceNotifier_ = NULL;
+	nickResolver_ = NULL;
 	rosterController_ = NULL;
 	xmppRosterController_ = NULL;
+	chatsManager_ = NULL;
+	eventWindowController_ = NULL;
 	clientVersionResponder_ = NULL;
 	discoResponder_ = NULL;
-	presenceSender_ = NULL;
-	client_ = NULL;
 	mucSearchController_ = NULL;
-	statusTracker_ = NULL;
+
 
 	timeBeforeNextReconnect_ = -1;
 	mucSearchWindowFactory_ = mucSearchWindowFactory;
@@ -177,13 +183,24 @@ void MainController::resetClient() {
 	resetCurrentError();
 	resetPendingReconnects();
 	serverDiscoInfo_ = boost::shared_ptr<DiscoInfo>();
-	xmppRoster_ = boost::shared_ptr<XMPPRoster>();
+	delete mucSearchController_;
+	mucSearchController_ = NULL;
+	delete discoResponder_;
+	discoResponder_ = NULL;
+	delete clientVersionResponder_;
+	clientVersionResponder_ = NULL;
+	delete eventWindowController_;
+	eventWindowController_ = NULL;
+	delete xmppRosterController_;
+	xmppRosterController_ = NULL;
 	delete chatsManager_;
 	chatsManager_ = NULL;
-	delete presenceOracle_;
-	presenceOracle_ = NULL;
+	delete rosterController_;
+	rosterController_ = NULL;
 	delete nickResolver_;
 	nickResolver_ = NULL;
+	delete presenceNotifier_;
+	presenceNotifier_ = NULL;
 	delete entityCapsManager_;
 	entityCapsManager_ = NULL;
 	delete capsManager_;
@@ -192,28 +209,20 @@ void MainController::resetClient() {
 	avatarManager_ = NULL;
 	delete vcardManager_;
 	vcardManager_ = NULL;
-	delete eventWindowController_;
-	eventWindowController_ = NULL;
-	delete rosterController_;
-	rosterController_ = NULL;
-	delete xmppRosterController_;
-	xmppRosterController_ = NULL;
-	delete clientVersionResponder_;
-	clientVersionResponder_ = NULL;
-	delete discoResponder_;
-	discoResponder_ = NULL;
+	delete xmppRoster_;
+	xmppRoster_ = NULL;
+	delete mucRegistry_;
+	mucRegistry_ = NULL;
+	delete presenceOracle_;
+	presenceOracle_ = NULL;
 	delete presenceSender_;
 	presenceSender_ = NULL;
 	delete client_;
 	client_ = NULL;
-	delete mucSearchController_;
-	mucSearchController_ = NULL;
 	delete statusTracker_;
 	statusTracker_ = NULL;
 	delete profileSettings_;
 	profileSettings_ = NULL;
-	delete mucRegistry_;
-	mucRegistry_ = NULL;
 }
 
 void MainController::resetPendingReconnects() {
@@ -239,18 +248,10 @@ void MainController::handleConnected() {
 	bool freshLogin = rosterController_ == NULL;
 	if (freshLogin) {
 		serverDiscoInfo_ = boost::shared_ptr<DiscoInfo>(new DiscoInfo());
-		xmppRoster_ = boost::shared_ptr<XMPPRoster>(new XMPPRoster());
-		presenceOracle_ = new PresenceOracle(client_);
-		mucRegistry_ = new MUCRegistry();
-		vcardManager_ = new VCardManager(jid_, client_->getIQRouter(), getVCardStorageForProfile(jid_));
-		vcardManager_->onVCardChanged.connect(boost::bind(&MainController::handleVCardReceived, this, _1, _2));
-		avatarManager_ = new AvatarManagerImpl(vcardManager_, client_, avatarStorage_, mucRegistry_);
-		capsManager_ = new CapsManager(capsStorage_, client_, client_->getIQRouter());
-		entityCapsManager_ = new EntityCapsManager(capsManager_, client_);
 
 		nickResolver_ = new NickResolver(this->jid_.toBare(), xmppRoster_, vcardManager_, mucRegistry_);
 
-		rosterController_ = new RosterController(jid_, xmppRoster_, avatarManager_, mainWindowFactory_, nickResolver_, presenceOracle_, eventController_, uiEventStream_, client_->getIQRouter());
+		rosterController_ = new RosterController(jid_, xmppRoster_, avatarManager_, mainWindowFactory_, nickResolver_, presenceOracle_, presenceSender_, eventController_, uiEventStream_, client_->getIQRouter());
 		rosterController_->onChangeStatusRequest.connect(boost::bind(&MainController::handleChangeStatusRequest, this, _1, _2));
 		rosterController_->onSignOutRequest.connect(boost::bind(&MainController::signOut, this));
 
@@ -384,6 +385,16 @@ void MainController::performLoginFromCachedCredentials() {
 	if (!client_) {
 		client_ = new Swift::Client(jid_, password_);
 		presenceSender_ = new PresenceSender(client_);
+		presenceOracle_ = new PresenceOracle(client_);
+		mucRegistry_ = new MUCRegistry();
+		xmppRoster_ = new XMPPRoster();
+		vcardManager_ = new VCardManager(jid_, client_->getIQRouter(), getVCardStorageForProfile(jid_));
+		vcardManager_->onVCardChanged.connect(boost::bind(&MainController::handleVCardReceived, this, _1, _2));
+		avatarManager_ = new AvatarManagerImpl(vcardManager_, client_, avatarStorage_, mucRegistry_);
+		capsManager_ = new CapsManager(capsStorage_, client_, client_->getIQRouter());
+		entityCapsManager_ = new EntityCapsManager(capsManager_, client_);
+		presenceNotifier_ = new PresenceNotifier(client_, notifier_, mucRegistry_, avatarManager_, xmppRoster_, presenceOracle_, &timerFactory_);
+		presenceNotifier_->onNotificationActivated.connect(boost::bind(&MainController::handleNotificationClicked, this, _1));
 		client_->onDataRead.connect(boost::bind(
 				&XMLConsoleController::handleDataRead, xmlConsoleController_, _1));
 		client_->onDataWritten.connect(boost::bind(
@@ -508,6 +519,11 @@ void MainController::handleVCardReceived(const JID& jid, VCard::ref vCard) {
 	if (client_ && client_->isAvailable()) {
 		sendPresence(statusTracker_->getNextPresence());
 	}
+}
+
+void MainController::handleNotificationClicked(const JID& jid) {
+	assert(chatsManager_);
+	uiEventStream_->send(boost::shared_ptr<UIEvent>(new RequestChatUIEvent(jid)));
 }
 
 VCardStorage* MainController::getVCardStorageForProfile(const JID& jid) {

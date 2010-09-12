@@ -56,6 +56,7 @@ namespace Swift {
 	class MUCController;
 	class Notifier;
 	class PresenceOracle;
+	class PresenceNotifier;
 	class SystemTray;
 	class SystemTrayController;
 	class SoundEventController;
@@ -115,6 +116,7 @@ namespace Swift {
 			void performLoginFromCachedCredentials();
 			void reconnectAfterError();
 			void setManagersEnabled(bool enabled);
+			void handleNotificationClicked(const JID& jid);
 
 			VCardStorage* getVCardStorageForProfile(const JID& jid);
 
@@ -137,7 +139,7 @@ namespace Swift {
 			VCardManager* vcardManager_;
 			Dock* dock_;
 			Notifier* notifier_;
-			ChatController* chatController_;
+			PresenceNotifier* presenceNotifier_;
 			XMPPRosterController* xmppRosterController_;
 			RosterController* rosterController_;
 			EventController* eventController_;
@@ -151,7 +153,7 @@ namespace Swift {
 			ChatsManager* chatsManager_;
 			boost::shared_ptr<CapsInfo> capsInfo_;
 			boost::shared_ptr<DiscoInfo> serverDiscoInfo_;
-			boost::shared_ptr<XMPPRoster> xmppRoster_;;
+			XMPPRoster* xmppRoster_;;
 			JID jid_;
 			PresenceOracle* presenceOracle_;
 			SystemTrayController* systemTrayController_;

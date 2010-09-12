@@ -7,37 +7,26 @@
 #include "PresenceOracle.h"
 
 #include <boost/bind.hpp>
-#include "Swiften/Client/StanzaChannel.h"
-namespace Swift {
 
-typedef std::pair<JID, std::map<JID, boost::shared_ptr<Presence> > > JIDMapPair;
-typedef std::pair<JID, boost::shared_ptr<Presence> > JIDPresencePair;
+#include "Swiften/Client/StanzaChannel.h"
+
+namespace Swift {
 
 PresenceOracle::PresenceOracle(StanzaChannel* stanzaChannel) {
 	stanzaChannel_ = stanzaChannel;
 	stanzaChannel_->onPresenceReceived.connect(boost::bind(&PresenceOracle::handleIncomingPresence, this, _1));
+	stanzaChannel_->onAvailableChanged.connect(boost::bind(&PresenceOracle::handleStanzaChannelAvailableChanged, this, _1));
 }
 
-void PresenceOracle::cancelSubscription(const JID& jid) {
-	boost::shared_ptr<Presence> stanza(new Presence());
-	stanza->setType(Presence::Unsubscribed);
-	stanza->setTo(jid);
-	stanzaChannel_->sendPresence(stanza);
+PresenceOracle::~PresenceOracle() {
+	stanzaChannel_->onPresenceReceived.disconnect(boost::bind(&PresenceOracle::handleIncomingPresence, this, _1));
+	stanzaChannel_->onAvailableChanged.disconnect(boost::bind(&PresenceOracle::handleStanzaChannelAvailableChanged, this, _1));
 }
 
-void PresenceOracle::confirmSubscription(const JID& jid) {
-	boost::shared_ptr<Presence> stanza(new Presence());
-	stanza->setType(Presence::Subscribed);
-	stanza->setTo(jid);
-	stanzaChannel_->sendPresence(stanza);
-}
-
-
-void PresenceOracle::requestSubscription(const JID& jid) {
-	boost::shared_ptr<Presence> stanza(new Presence());
-	stanza->setType(Presence::Subscribe);
-	stanza->setTo(jid);
-	stanzaChannel_->sendPresence(stanza);
+void PresenceOracle::handleStanzaChannelAvailableChanged(bool available) {
+	if (available) {
+		entries_.clear();
+	}
 }
 
 
@@ -46,19 +35,29 @@ void PresenceOracle::handleIncomingPresence(boost::shared_ptr<Presence> presence
 
 	if (presence->getType() == Presence::Subscribe) {
 		onPresenceSubscriptionRequest(bareJID, presence->getStatus());
-	} else {
+	} 
+	else {
 		std::map<JID, boost::shared_ptr<Presence> > jidMap = entries_[bareJID];
-		boost::shared_ptr<Presence> last;
-		foreach(JIDPresencePair pair, jidMap) {
-			if (pair.first == presence->getFrom()) {
-				last = pair.second;
-				break;
-			}
-		}
 		jidMap[presence->getFrom()] = presence;
 		entries_[bareJID] = jidMap;
-		onPresenceChange(presence, last);
+		onPresenceChange(presence);
 	}
 }
+
+Presence::ref PresenceOracle::getLastPresence(const JID& jid) const {
+	PresencesMap::const_iterator i = entries_.find(jid.toBare());
+	if (i == entries_.end()) {
+		return Presence::ref();
+	}
+	PresenceMap presenceMap = i->second;
+	PresenceMap::const_iterator j = presenceMap.find(jid);
+	if (j != presenceMap.end()) {
+		return j->second;
+	}
+	else {
+		return Presence::ref();
+	}
+}
+
 
 }

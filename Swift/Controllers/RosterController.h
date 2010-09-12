@@ -27,6 +27,7 @@ namespace Swift {
 	class OfflineRosterFilter;
 	class NickResolver;
 	class PresenceOracle;
+	class PresenceSender;
 	class EventController;
 	class SubscriptionRequestEvent;
 	class UIEventStream;
@@ -34,7 +35,7 @@ namespace Swift {
 
 	class RosterController {
 		public:
-			RosterController(const JID& jid, boost::shared_ptr<XMPPRoster> xmppRoster, AvatarManager* avatarManager, MainWindowFactory* mainWindowFactory, NickResolver* nickResolver, PresenceOracle* presenceOracle, EventController* eventController, UIEventStream* uiEventStream, IQRouter* iqRouter_);
+			RosterController(const JID& jid, XMPPRoster* xmppRoster, AvatarManager* avatarManager, MainWindowFactory* mainWindowFactory, NickResolver* nickResolver, PresenceOracle* presenceOracle, PresenceSender* presenceSender, EventController* eventController, UIEventStream* uiEventStream, IQRouter* iqRouter_);
 			~RosterController();
 			void showRosterWindow();
 			MainWindow* getWindow() {return mainWindow_;};
@@ -51,7 +52,7 @@ namespace Swift {
 			void handleStartChatRequest(const JID& contact);
 			void handleChangeStatusRequest(StatusShow::Type show, const String &statusText);
 			void handleShowOfflineToggled(bool state);
-			void handleIncomingPresence(boost::shared_ptr<Presence> newPresence, boost::shared_ptr<Presence> oldPresence);
+			void handleIncomingPresence(boost::shared_ptr<Presence> newPresence);
 			void handleSubscriptionRequest(const JID& jid, const String& message);
 			void handleSubscriptionRequestAccepted(SubscriptionRequestEvent* event);
 			void handleSubscriptionRequestDeclined(SubscriptionRequestEvent* event);
@@ -59,7 +60,7 @@ namespace Swift {
 			void handleRosterSetError(boost::optional<ErrorPayload> error, boost::shared_ptr<RosterPayload> rosterPayload);
 			void handleOwnNickChanged(const String& nick);
 			JID myJID_;
-			boost::shared_ptr<XMPPRoster> xmppRoster_;
+			XMPPRoster* xmppRoster_;
 			MainWindowFactory* mainWindowFactory_;
 			MainWindow* mainWindow_;
 			Roster* roster_;
@@ -67,6 +68,7 @@ namespace Swift {
 			AvatarManager* avatarManager_;
 			NickResolver* nickResolver_;
 			PresenceOracle* presenceOracle_;
+			PresenceSender* presenceSender_;
 			EventController* eventController_;
 			IQRouter* iqRouter_;
 			boost::bsignals::scoped_connection changeStatusConnection_;

@@ -23,7 +23,7 @@ namespace Swift {
 /**
  * The controller does not gain ownership of these parameters.
  */
-XMPPRosterController::XMPPRosterController(IQRouter* iqRouter, boost::shared_ptr<XMPPRoster> xmppRoster) : iqRouter_(iqRouter), rosterPushResponder_(iqRouter), xmppRoster_(xmppRoster) {
+XMPPRosterController::XMPPRosterController(IQRouter* iqRouter, XMPPRoster* xmppRoster) : iqRouter_(iqRouter), rosterPushResponder_(iqRouter), xmppRoster_(xmppRoster) {
 	rosterPushResponder_.onRosterReceived.connect(boost::bind(&XMPPRosterController::handleRosterReceived, this, _1));
 }
 

@@ -31,7 +31,7 @@ ChatController::ChatController(const JID& self, StanzaChannel* stanzaChannel, IQ
 	chatStateMessageSender_ = new ChatStateMessageSender(chatStateNotifier_, stanzaChannel, contact);
 	chatStateTracker_ = new ChatStateTracker();
 	nickResolver_ = nickResolver;
-	presenceOracle_->onPresenceChange.connect(boost::bind(&ChatController::handlePresenceChange, this, _1, _2));
+	presenceOracle_->onPresenceChange.connect(boost::bind(&ChatController::handlePresenceChange, this, _1));
 	chatStateTracker_->onChatStateChange.connect(boost::bind(&ChatWindow::setContactChatState, chatWindow_, _1));
 	stanzaChannel_->onStanzaAcked.connect(boost::bind(&ChatController::handleStanzaAcked, this, _1));
 	String nick = nickResolver_->jidToNick(toJID_);
@@ -134,19 +134,20 @@ String ChatController::getStatusChangeString(boost::shared_ptr<Presence> presenc
 	return "";
 }
 
-void ChatController::handlePresenceChange(boost::shared_ptr<Presence> newPresence, boost::shared_ptr<Presence> previousPresence) {
+void ChatController::handlePresenceChange(boost::shared_ptr<Presence> newPresence) {
 	if (!toJID_.equals(newPresence->getFrom(), toJID_.isBare() ? JID::WithoutResource : JID::WithResource)) {
 		return;
 	}
 
-	chatStateTracker_->handlePresenceChange(newPresence, previousPresence);
+	chatStateTracker_->handlePresenceChange(newPresence);
 	String newStatusChangeString = getStatusChangeString(newPresence);
-	if (!previousPresence || newStatusChangeString != getStatusChangeString(previousPresence)) {
+	if (newStatusChangeString != lastStatusChangeString_) {
 		if (lastWasPresence_) {
 			chatWindow_->replaceLastMessage(newStatusChangeString);
 		} else {
 			chatWindow_->addPresenceMessage(newStatusChangeString);
 		}
+		lastStatusChangeString_ = newStatusChangeString;
 		lastWasPresence_ = true;
 	}
 }

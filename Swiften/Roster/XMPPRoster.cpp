@@ -8,6 +8,9 @@
 
 namespace Swift {
 
+XMPPRoster::XMPPRoster() {
+}
+
 void XMPPRoster::addContact(const JID& jid, const String& name, const std::vector<String>& groups, RosterItemPayload::Subscription subscription) {
 	JID bareJID(jid.toBare());
 	bool exists = containsJID(bareJID);
@@ -43,8 +46,14 @@ bool XMPPRoster::containsJID(const JID& jid) {
 	return entries_.find(JID(jid.toBare())) != entries_.end();
 }
 
-const String& XMPPRoster::getNameForJID(const JID& jid) {
-	return entries_[JID(jid.toBare())].name;
+String XMPPRoster::getNameForJID(const JID& jid) const {
+	std::map<JID, XMPPRosterItem>::const_iterator i = entries_.find(jid.toBare());
+	if (i != entries_.end()) {
+		return i->second.name;
+	}
+	else {
+		return "";
+	}
 }
 
 const std::vector<String>& XMPPRoster::getGroupsForJID(const JID& jid) {

@@ -18,7 +18,7 @@ void ChatStateTracker::handleMessageReceived(boost::shared_ptr<Message> message)
 	}
 }
 
-void ChatStateTracker::handlePresenceChange(boost::shared_ptr<Presence> newPresence, boost::shared_ptr<Presence>) {
+void ChatStateTracker::handlePresenceChange(boost::shared_ptr<Presence> newPresence) {
 	if (newPresence->getType() == Presence::Unavailable) {
 		onChatStateChange(ChatState::Gone);
 	}

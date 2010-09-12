@@ -33,6 +33,7 @@ namespace Swift {
 			virtual ~AvatarManagerImpl();
 
 			virtual boost::filesystem::path getAvatarPath(const JID&) const;
+			virtual ByteArray getAvatar(const JID&) const;
 
 		private:
 			CombinedAvatarProvider combinedAvatarProvider;

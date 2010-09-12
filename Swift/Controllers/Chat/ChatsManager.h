@@ -47,7 +47,7 @@ namespace Swift {
 			void handleChatRequest(const String& contact);
 			void handleJoinMUCRequest(const JID& muc, const boost::optional<String>& nick);
 			void rebindControllerJID(const JID& from, const JID& to);
-			void handlePresenceChange(boost::shared_ptr<Presence> newPresence, boost::shared_ptr<Presence> lastPresence);
+			void handlePresenceChange(boost::shared_ptr<Presence> newPresence);
 			void handleUIEvent(boost::shared_ptr<UIEvent> event);
 			void handleMUCBookmarkAdded(const MUCBookmark& bookmark);
 			void handleMUCBookmarkRemoved(const MUCBookmark& bookmark);

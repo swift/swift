@@ -17,22 +17,30 @@
 namespace {
 	struct Context {
 		Context() {}
-		Context(const boost::function<void()>& callback) : callback(callback) {}
+		Context(const boost::function<void()>& callback) : callback(new boost::function<void()>(callback)) {}
 
-		boost::function<void()> callback;
+		boost::function<void()>* callback;
 	};
 
-	void notificationClicked(CFPropertyListRef growlContext) {
+	void processNotification(CFPropertyListRef growlContext, bool activateCallback) {
 		Context context;
 
 		CFDataRef growlContextData = (CFDataRef) CFArrayGetValueAtIndex((CFArrayRef) growlContext, 0);
 		assert(CFDataGetLength(growlContextData) == sizeof(Context));
 		CFDataGetBytes(growlContextData, CFRangeMake(0, CFDataGetLength(growlContextData)), (UInt8*) &context);
 		
-		context.callback();
+		if (activateCallback) {
+			(*context.callback)();
+		}
+		delete context.callback;
 	}
 
-	void notificationTimedout(CFPropertyListRef) {
+	void notificationClicked(CFPropertyListRef growlContext) {
+		processNotification(growlContext, true);
+	}
+
+	void notificationTimedout(CFPropertyListRef growlContext) {
+		processNotification(growlContext, false);
 	}
 }
 

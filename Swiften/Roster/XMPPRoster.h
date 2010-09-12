@@ -4,8 +4,7 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#ifndef SWIFTEN_XMPPRoster_H
-#define SWIFTEN_XMPPRoster_H
+#pragma once
 
 #include "Swiften/Base/String.h"
 #include "Swiften/JID/JID.h"
@@ -16,37 +15,31 @@
 #include "Swiften/Base/boost_bsignals.h"
 
 namespace Swift {
+	class XMPPRoster {
+		public:
+			XMPPRoster();
 
-struct XMPPRosterItem {
-	JID jid;
-	String name;
-	std::vector<String> groups;
-	RosterItemPayload::Subscription subscription;
-};
+			void addContact(const JID& jid, const String& name, const std::vector<String>& groups, const RosterItemPayload::Subscription subscription);
+			void removeContact(const JID& jid);
+			void clear();
 
-class XMPPRoster {
-	public:
-		XMPPRoster() {};
-		~XMPPRoster() {};
+			bool containsJID(const JID& jid);
+			RosterItemPayload::Subscription getSubscriptionStateForJID(const JID& jid);
+			String getNameForJID(const JID& jid) const;
+			const std::vector<String>& getGroupsForJID(const JID& jid);
 
-		void addContact(const JID& jid, const String& name, const std::vector<String>& groups, const RosterItemPayload::Subscription subscription);
-		bool containsJID(const JID& jid); 
-		void removeContact(const JID& jid);
-		void clear();
-		RosterItemPayload::Subscription getSubscriptionStateForJID(const JID& jid);
-		const String& getNameForJID(const JID& jid);
-		const std::vector<String>& getGroupsForJID(const JID& jid);
+			boost::signal<void (const JID&)> onJIDAdded;
+			boost::signal<void (const JID&)> onJIDRemoved;
+			boost::signal<void (const JID&, const String&, const std::vector<String>&)> onJIDUpdated;
+			boost::signal<void ()> onRosterCleared;
 
-		boost::signal<void (const JID&)> onJIDAdded;
-		boost::signal<void (const JID&)> onJIDRemoved;
-		boost::signal<void (const JID&, const String&, const std::vector<String>&)> onJIDUpdated;
-		boost::signal<void ()> onRosterCleared;
-
-	private:
-		//std::map<JID, std::pair<String, std::vector<String> > > entries_;
-		std::map<JID, XMPPRosterItem> entries_;
-};
+		private:
+			struct XMPPRosterItem {
+				JID jid;
+				String name;
+				std::vector<String> groups;
+				RosterItemPayload::Subscription subscription;
+			};
+			std::map<JID, XMPPRosterItem> entries_;
+	};
 }
-
-#endif
-

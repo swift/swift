@@ -11,6 +11,7 @@
 #include "Swiften/Avatars/VCardUpdateAvatarManager.h"
 #include "Swiften/Avatars/VCardAvatarManager.h"
 #include "Swiften/Avatars/AvatarStorage.h"
+#include "Swiften/Base/ByteArray.h"
 
 namespace Swift {
 
@@ -39,5 +40,12 @@ boost::filesystem::path AvatarManagerImpl::getAvatarPath(const JID& jid) const {
 	return boost::filesystem::path();
 }
 
+ByteArray AvatarManagerImpl::getAvatar(const JID& jid) const {
+	String hash = combinedAvatarProvider.getAvatarHash(jid);
+	if (!hash.isEmpty()) {
+		return avatarStorage->getAvatar(hash);
+	}
+	return ByteArray();
+}
 
 }

@@ -23,6 +23,7 @@
 #include "Swiften/Avatars/NullAvatarManager.h"
 #include "Swift/Controllers/EventController.h"
 #include "Swiften/Presence/PresenceOracle.h"
+#include "Swiften/Presence/PresenceSender.h"
 #include "Swift/Controllers/NickResolver.h"
 #include "Swift/Controllers/UIEvents/UIEventStream.h"
 #include "Swiften/MUC/MUCRegistry.h"
@@ -30,6 +31,7 @@
 using namespace Swift;
 
 #define CHILDREN mainWindow_->roster->getRoot()->getChildren()
+
 class RosterControllerTest : public CppUnit::TestFixture
 {
 		CPPUNIT_TEST_SUITE(RosterControllerTest);
@@ -43,7 +45,7 @@ class RosterControllerTest : public CppUnit::TestFixture
 
 		void setUp() {
 			jid_ = JID("testjid@swift.im/swift");
-			xmppRoster_ = boost::shared_ptr<XMPPRoster>(new XMPPRoster());
+			xmppRoster_ = new XMPPRoster();
 			avatarManager_ = new NullAvatarManager();
 			mainWindowFactory_ = new MockMainWindowFactory();
 			mucRegistry_ = new MUCRegistry();
@@ -52,9 +54,10 @@ class RosterControllerTest : public CppUnit::TestFixture
 			router_ = new IQRouter(channel_);
 			stanzaChannel_ = new DummyStanzaChannel();
 			presenceOracle_ = new PresenceOracle(stanzaChannel_);
+			presenceSender_ = new PresenceSender(stanzaChannel_);
 			eventController_ = new EventController();
 			uiEventStream_ = new UIEventStream();
-			rosterController_ = new RosterController(jid_, xmppRoster_, avatarManager_, mainWindowFactory_, nickResolver_, presenceOracle_, eventController_, uiEventStream_, router_);
+			rosterController_ = new RosterController(jid_, xmppRoster_, avatarManager_, mainWindowFactory_, nickResolver_, presenceOracle_, presenceSender_, eventController_, uiEventStream_, router_);
 			mainWindow_ = mainWindowFactory_->last;
 		};
 
@@ -67,6 +70,7 @@ class RosterControllerTest : public CppUnit::TestFixture
 			delete channel_;
 			delete router_;
 			delete eventController_;
+			delete presenceSender_;
 			delete presenceOracle_;
 			delete stanzaChannel_;
 			delete uiEventStream_;
@@ -119,7 +123,7 @@ class RosterControllerTest : public CppUnit::TestFixture
 
 	private:
 		JID jid_;
-		boost::shared_ptr<XMPPRoster> xmppRoster_;
+		XMPPRoster* xmppRoster_;
 		MUCRegistry* mucRegistry_;
 		AvatarManager* avatarManager_;
 		MockMainWindowFactory* mainWindowFactory_;
@@ -129,10 +133,10 @@ class RosterControllerTest : public CppUnit::TestFixture
 		DummyStanzaChannel* stanzaChannel_;	
 		IQRouter* router_;
 		PresenceOracle* presenceOracle_;
+		PresenceSender* presenceSender_;
 		EventController* eventController_;
 		UIEventStream* uiEventStream_;
 		MockMainWindow* mainWindow_;
 };
-#undef children
 
 CPPUNIT_TEST_SUITE_REGISTRATION(RosterControllerTest);

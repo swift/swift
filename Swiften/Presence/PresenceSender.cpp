@@ -52,4 +52,26 @@ void PresenceSender::removeDirectedPresenceReceiver(const JID& jid) {
 	}
 }
 
+void PresenceSender::cancelSubscription(const JID& jid) {
+	boost::shared_ptr<Presence> stanza(new Presence());
+	stanza->setType(Presence::Unsubscribed);
+	stanza->setTo(jid);
+	channel->sendPresence(stanza);
+}
+
+void PresenceSender::confirmSubscription(const JID& jid) {
+	boost::shared_ptr<Presence> stanza(new Presence());
+	stanza->setType(Presence::Subscribed);
+	stanza->setTo(jid);
+	channel->sendPresence(stanza);
+}
+
+
+void PresenceSender::requestSubscription(const JID& jid) {
+	boost::shared_ptr<Presence> stanza(new Presence());
+	stanza->setType(Presence::Subscribe);
+	stanza->setTo(jid);
+	channel->sendPresence(stanza);
+}
+
 }
