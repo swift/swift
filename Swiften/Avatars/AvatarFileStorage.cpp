@@ -12,12 +12,6 @@
 namespace Swift {
 
 AvatarFileStorage::AvatarFileStorage(const boost::filesystem::path& path) : path_(path) {
-	try {
-		boost::filesystem::create_directories(path_);
-	}
-	catch (const boost::filesystem::filesystem_error& e) {
-		std::cerr << "ERROR: " << e.what() << std::endl;
-	}
 }
 
 bool AvatarFileStorage::hasAvatar(const String& hash) const { 
@@ -25,7 +19,16 @@ bool AvatarFileStorage::hasAvatar(const String& hash) const {
 }
 
 void AvatarFileStorage::addAvatar(const String& hash, const ByteArray& avatar) {
-	boost::filesystem::ofstream file(getAvatarPath(hash), boost::filesystem::ofstream::binary|boost::filesystem::ofstream::out);
+	boost::filesystem::path avatarPath = getAvatarPath(hash);
+	if (!boost::filesystem::exists(avatarPath.parent_path())) {
+		try {
+			boost::filesystem::create_directories(avatarPath.parent_path());
+		}
+		catch (const boost::filesystem::filesystem_error& e) {
+			std::cerr << "ERROR: " << e.what() << std::endl;
+		}
+	}
+	boost::filesystem::ofstream file(avatarPath, boost::filesystem::ofstream::binary|boost::filesystem::ofstream::out);
 	file.write(avatar.getData(), avatar.getSize());
 	file.close();
 }
