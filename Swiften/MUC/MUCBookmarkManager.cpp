@@ -18,6 +18,7 @@ namespace Swift {
 
 MUCBookmarkManager::MUCBookmarkManager(IQRouter* iqRouter) {
 	iqRouter_ = iqRouter;
+	ready_ = false;
 	boost::shared_ptr<GetPrivateStorageRequest<Storage> > request(new GetPrivateStorageRequest<Storage>(iqRouter_));
 	request->onResponse.connect(boost::bind(&MUCBookmarkManager::handleBookmarksReceived, this, _1, _2));
 	request->send();
@@ -27,6 +28,10 @@ void MUCBookmarkManager::handleBookmarksReceived(boost::shared_ptr<Storage> payl
 	if (error) {
 		return;
 	}
+
+	ready_ = true;
+	onBookmarksReady();
+
 	storage = payload;
 
 	std::vector<MUCBookmark> receivedBookmarks;
@@ -57,6 +62,7 @@ bool MUCBookmarkManager::containsEquivalent(const std::vector<MUCBookmark>& list
 }
 
 void MUCBookmarkManager::replaceBookmark(const MUCBookmark& oldBookmark, const MUCBookmark& newBookmark) {
+	if (!ready_) return;
 	for (size_t i = 0; i < bookmarks_.size(); i++) {
 		if (bookmarks_[i] == oldBookmark) {
 			bookmarks_[i] = newBookmark;
@@ -69,6 +75,7 @@ void MUCBookmarkManager::replaceBookmark(const MUCBookmark& oldBookmark, const M
 }
 
 void MUCBookmarkManager::addBookmark(const MUCBookmark& bookmark) {
+	if (!ready_) return;
 	bookmarks_.push_back(bookmark);
 	onBookmarkAdded(bookmark);
 	flush();
@@ -76,6 +83,7 @@ void MUCBookmarkManager::addBookmark(const MUCBookmark& bookmark) {
 
 
 void MUCBookmarkManager::removeBookmark(const MUCBookmark& bookmark) {
+	if (!ready_) return;
 	std::vector<MUCBookmark>::iterator it;
 	for (it = bookmarks_.begin(); it != bookmarks_.end(); it++) {
 		if ((*it) == bookmark) {

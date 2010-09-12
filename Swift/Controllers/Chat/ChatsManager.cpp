@@ -39,11 +39,15 @@ ChatsManager::ChatsManager(JID jid, StanzaChannel* stanzaChannel, IQRouter* iqRo
 	presenceSender_ = presenceSender;
 	uiEventStream_ = uiEventStream;
 	mucBookmarkManager_ = new MUCBookmarkManager(iqRouter);
+	mucBookmarkManager_->onBookmarksReady.connect(boost::bind(&ChatsManager::handleBookmarksReady, this));
 	mucBookmarkManager_->onBookmarkAdded.connect(boost::bind(&ChatsManager::handleMUCBookmarkAdded, this, _1));
 	mucBookmarkManager_->onBookmarkRemoved.connect(boost::bind(&ChatsManager::handleMUCBookmarkRemoved, this, _1));
 	presenceOracle_->onPresenceChange.connect(boost::bind(&ChatsManager::handlePresenceChange, this, _1, _2));
 	uiEventConnection_ = uiEventStream_->onUIEvent.connect(boost::bind(&ChatsManager::handleUIEvent, this, _1));
 	chatListWindow_ = chatListWindowFactory->createWindow(uiEventStream_);
+	if (chatListWindow_) {
+		chatListWindow_->setBookmarksEnabled(false);
+	}
 }
 
 ChatsManager::~ChatsManager() {
@@ -54,6 +58,12 @@ ChatsManager::~ChatsManager() {
 		delete controllerPair.second;
 	}
 	delete mucBookmarkManager_;
+}
+
+void ChatsManager::handleBookmarksReady() {
+	if (chatListWindow_) {
+		chatListWindow_->setBookmarksEnabled(true);
+	}
 }
 
 void ChatsManager::handleMUCBookmarkAdded(const MUCBookmark& bookmark) {

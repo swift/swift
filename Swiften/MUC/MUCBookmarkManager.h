@@ -32,6 +32,10 @@ namespace Swift {
 		public:
 			boost::signal<void (const MUCBookmark&)> onBookmarkAdded;
 			boost::signal<void (const MUCBookmark&)> onBookmarkRemoved;
+			/**
+			 * When server bookmarks are ready to be used (request response has been received).
+			 */
+			boost::signal<void ()> onBookmarksReady;
 
 		private:
 			bool containsEquivalent(const std::vector<MUCBookmark>& list, const MUCBookmark& bookmark);
@@ -39,6 +43,7 @@ namespace Swift {
 			void flush();
 
 		private:
+			bool ready_;
 			std::vector<MUCBookmark> bookmarks_;
 			IQRouter* iqRouter_;
 			boost::shared_ptr<Storage> storage;

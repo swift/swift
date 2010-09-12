@@ -23,6 +23,7 @@ namespace Swift {
 			virtual ~QtChatListWindow();
 			void addMUCBookmark(const MUCBookmark& bookmark);
 			void removeMUCBookmark(const MUCBookmark& bookmark);
+			void setBookmarksEnabled(bool enabled);
 		private slots:
 			void handleItemActivated(const QModelIndex&);
 			void handleAddBookmark();
@@ -34,6 +35,7 @@ namespace Swift {
 			void contextMenuEvent(QContextMenuEvent* event);
 		private:
 			void setupContextMenus();
+			bool bookmarksEnabled_;
 			UIEventStream* eventStream_;
 			ChatListModel* model_;
 			ChatListDelegate* delegate_;

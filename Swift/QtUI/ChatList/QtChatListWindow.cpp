@@ -21,6 +21,7 @@ namespace Swift {
 
 QtChatListWindow::QtChatListWindow(UIEventStream *uiEventStream, QWidget* parent) : QTreeView(parent) {
 	eventStream_ = uiEventStream;
+	bookmarksEnabled_ = false;
 	model_ = new ChatListModel();
 	setModel(model_);
 	delegate_ = new ChatListDelegate();
@@ -43,6 +44,10 @@ QtChatListWindow::~QtChatListWindow() {
 	delete delegate_;
 	delete mucMenu_;
 	delete emptyMenu_;
+}
+
+void QtChatListWindow::setBookmarksEnabled(bool enabled) {
+	bookmarksEnabled_ = enabled;
 }
 
 void QtChatListWindow::handleClicked(const QModelIndex& index) {
@@ -99,6 +104,9 @@ void QtChatListWindow::handleEditBookmark() {
 
 
 void QtChatListWindow::contextMenuEvent(QContextMenuEvent* event) {
+	if (!bookmarksEnabled_) {
+		return;
+	}
 	QModelIndex index = indexAt(event->pos());
 	ChatListItem* baseItem = index.isValid() ? static_cast<ChatListItem*>(index.internalPointer()) : NULL;
 	contextMenuItem_ = baseItem;
