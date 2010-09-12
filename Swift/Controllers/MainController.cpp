@@ -83,6 +83,7 @@ MainController::MainController(
 		CapsStorage* capsStorage,
 		VCardStorageFactory* vcardStorageFactory,
 		Dock* dock,
+		Notifier* notifier,
 		bool useDelayForLatency) :
 			timerFactory_(&boostIOServiceThread_.getIOService()),
 			idleDetector_(&idleQuerier_, &timerFactory_, 100),
@@ -114,6 +115,7 @@ MainController::MainController(
 	mucSearchWindowFactory_ = mucSearchWindowFactory;
 	eventWindowFactory_ = eventWindowFactory;
 	dock_ = dock;
+	notifier_ = notifier;
 	chatListWindowFactory_ = chatListWindowFactory;
 	uiEventStream_ = new UIEventStream();
 

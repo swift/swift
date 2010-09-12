@@ -54,6 +54,7 @@ namespace Swift {
 	class SoftwareVersionResponder;
 	class LoginWindowFactory;
 	class MUCController;
+	class Notifier;
 	class PresenceOracle;
 	class SystemTray;
 	class SystemTrayController;
@@ -88,6 +89,7 @@ namespace Swift {
 					CapsStorage* capsStorage,
 					VCardStorageFactory* vcardStorageFactory,
 					Dock* dock,
+					Notifier* notifier,
 					bool useDelayForLatency);
 			~MainController();
 
@@ -134,6 +136,7 @@ namespace Swift {
 			VCardStorageFactory* vcardStorageFactory_;
 			VCardManager* vcardManager_;
 			Dock* dock_;
+			Notifier* notifier_;
 			ChatController* chatController_;
 			XMPPRosterController* xmppRosterController_;
 			RosterController* rosterController_;

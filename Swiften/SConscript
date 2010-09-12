@@ -43,7 +43,6 @@ if env["SCONS_STAGE"] == "build" :
 			"MUC/MUCOccupant.cpp",
 			"MUC/MUCRegistry.cpp",
 			"MUC/MUCBookmarkManager.cpp",
-			"Notifier/Notifier.cpp",
 			"Presence/PresenceOracle.cpp",
 			"Presence/PresenceSender.cpp",
 			"Queries/IQChannel.cpp",
@@ -107,7 +106,6 @@ if env["SCONS_STAGE"] == "build" :
 			"StringCodecs/PBKDF2.cpp",
 			"StringCodecs/Hexify.cpp",
 		]
-# "Notifier/GrowlNotifier.cpp",
 
 	if myenv.get("HAVE_OPENSSL", 0) :
 		sources += ["TLS/OpenSSL/OpenSSLContext.cpp"]

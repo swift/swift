@@ -27,6 +27,7 @@ class QSplitter;
 
 namespace Swift {
 	class Dock;
+	class Notifier;
 	class VCardStorageFactory;
 	class AutoUpdater;
 	class ApplicationPathProvider;
@@ -70,6 +71,7 @@ namespace Swift {
 			CapsStorage* capsStorage_;
 			VCardStorageFactory* vcardStorageFactory_;
 			AutoUpdater* autoUpdater_;
+			Notifier* notifier_;
 #if defined(SWIFTEN_PLATFORM_MACOSX)
 			CocoaApplication cocoaApplication_;
 #endif

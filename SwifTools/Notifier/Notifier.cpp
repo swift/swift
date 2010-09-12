@@ -4,7 +4,7 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "Swiften/Notifier/Notifier.h"
+#include "SwifTools/Notifier/Notifier.h"
 
 namespace Swift {
 

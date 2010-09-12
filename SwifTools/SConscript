@@ -48,6 +48,7 @@ if env["SCONS_STAGE"] == "build" :
 	
 	SConscript(dirs = [
 			"Dock",
+			"Notifier",
 			"Idle/IdleQuerierTest",
 			"Idle/UnitTest",
 			"UnitTest"

@@ -363,6 +363,22 @@ if env["PLATFORM"] == "darwin" :
 		env["SPARKLE_FRAMEWORK"] = "/Library/Frameworks/Sparkle.framework"
 	conf.Finish()
 
+# Growl
+env["HAVE_GROWL"] = 0
+if env["PLATFORM"] == "darwin" :
+	growl_flags = {
+			"FRAMEWORKPATH": ["/Library/Frameworks"],
+			"FRAMEWORKS": ["Growl"]
+		}
+	growl_env = conf_env.Clone()
+	growl_env.MergeFlags(growl_flags)
+	conf = Configure(growl_env, custom_tests = { "CheckObjCHeader" : checkObjCHeader })
+	if conf.CheckObjCHeader("Growl/Growl.h") :
+		env["HAVE_GROWL"] = 1
+		env["GROWL_FLAGS"] = growl_flags
+		env["GROWL_FRAMEWORK"] = "/Library/Frameworks/Growl.framework"
+	conf.Finish()
+
 # LibXML
 conf = Configure(conf_env)
 if conf.CheckCHeader("libxml/parser.h") and conf.CheckLib("xml2") :

@@ -10,7 +10,7 @@
 #include <cassert>
 
 #include "Swiften/Base/ByteArray.h"
-#include "Swiften/Notifier/GrowlNotifier.h"
+#include "SwifTools/Notifier/GrowlNotifier.h"
 
 #pragma GCC diagnostic ignored "-Wold-style-cast"
 

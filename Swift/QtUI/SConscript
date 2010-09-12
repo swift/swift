@@ -35,6 +35,9 @@ myenv.MergeFlags(env["ZLIB_FLAGS"])
 myenv.MergeFlags(env["OPENSSL_FLAGS"])
 myenv.MergeFlags(env.get("LIBXML_FLAGS", ""))
 myenv.MergeFlags(env.get("EXPAT_FLAGS", ""))
+if myenv.get("HAVE_GROWL", False) :
+	myenv.MergeFlags(myenv["GROWL_FLAGS"])
+	myenv.Append(CPPDEFINES = ["HAVE_GROWL"])
 myenv.MergeFlags(myenv["PLATFORM_FLAGS"])
 
 myenv.Tool("qt4", toolpath = ["#/BuildTools/SCons/Tools"])

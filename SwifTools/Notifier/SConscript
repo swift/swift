@@ -1,0 +1,13 @@
+Import("swiftools_env")
+
+sources = [
+		"Notifier.cpp",
+	]
+
+if swiftools_env.get("HAVE_GROWL", False) :
+	sources += [
+			"GrowlNotifier.cpp",
+		]
+
+objects = swiftools_env.StaticObject(sources)
+swiftools_env.Append(SWIFTOOLS_OBJECTS = objects)

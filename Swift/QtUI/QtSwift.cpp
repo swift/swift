@@ -36,6 +36,11 @@
 #include "Swift/Controllers/BuildVersion.h"
 #include "SwifTools/AutoUpdater/AutoUpdater.h"
 #include "SwifTools/AutoUpdater/PlatformAutoUpdaterFactory.h"
+#if defined(HAVE_GROWL)
+#include "SwifTools/Notifier/GrowlNotifier.h"
+#else
+#include "SwifTools/Notifier/NullNotifier.h"
+#endif
 #if defined(SWIFTEN_PLATFORM_MACOSX)
 #include "SwifTools/Dock/MacOSXDock.h"
 #else
@@ -90,6 +95,11 @@ QtSwift::QtSwift(po::variables_map options) : autoUpdater_(NULL) {
 	capsStorage_ = new CapsFileStorage(applicationPathProvider_->getDataDir() / "caps");
 	chatWindowFactory_ = new QtChatWindowFactory(splitter_, settings_, tabs_, "");
 	soundPlayer_ = new QtSoundPlayer(applicationPathProvider_);
+#if defined(HAVE_GROWL)
+	notifier_ = new GrowlNotifier(SWIFT_APPLICATION_NAME);
+#else
+	notifier_ = new NullNotifier();
+#endif
 
 #if defined(SWIFTEN_PLATFORM_MACOSX)
 	dock_ = new MacOSXDock(&cocoaApplication_);
@@ -131,6 +141,7 @@ QtSwift::QtSwift(po::variables_map options) : autoUpdater_(NULL) {
 				capsStorage_,
 				vcardStorageFactory_,
 				dock_,
+				notifier_,
 				options.count("latency-debug") > 0);
 		mainControllers_.push_back(mainController);
 	}

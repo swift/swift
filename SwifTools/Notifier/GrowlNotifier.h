@@ -9,7 +9,7 @@
 #include <CoreFoundation/CoreFoundation.h>
 #include <Growl/Growl.h>
 
-#include "Swiften/Notifier/Notifier.h"
+#include "SwifTools/Notifier/Notifier.h"
 
 namespace Swift {
 	/**
