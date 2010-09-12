@@ -17,11 +17,12 @@
 #include "Swiften/Network/BoostTimerFactory.h"
 #include "Swiften/TLS/PKCS12Certificate.h"
 #include "Swiften/Session/BasicSessionStream.h"
+#include "Swiften/Queries/IQRouter.h"
 
 namespace Swift {
 
-Client::Client(const JID& jid, const String& password) :
-		IQRouter(this), jid_(jid), password_(password) {
+Client::Client(const JID& jid, const String& password) : jid_(jid), password_(password) {
+	iqRouter_ = new IQRouter(this);
 	connectionFactory_ = new BoostConnectionFactory(&MainBoostIOServiceThread::getInstance().getIOService());
 	timerFactory_ = new BoostTimerFactory(&MainBoostIOServiceThread::getInstance().getIOService());
 	tlsLayerFactory_ = new PlatformTLSLayerFactory();
@@ -34,6 +35,7 @@ Client::~Client() {
 	delete tlsLayerFactory_;
 	delete timerFactory_;
 	delete connectionFactory_;
+	delete iqRouter_;
 }
 
 bool Client::isAvailable() {

@@ -240,27 +240,27 @@ void MainController::handleConnected() {
 		xmppRoster_ = boost::shared_ptr<XMPPRoster>(new XMPPRoster());
 		presenceOracle_ = new PresenceOracle(client_);
 		mucRegistry_ = new MUCRegistry();
-		vcardManager_ = new VCardManager(jid_, client_, getVCardStorageForProfile(jid_));
+		vcardManager_ = new VCardManager(jid_, client_->getIQRouter(), getVCardStorageForProfile(jid_));
 		vcardManager_->onVCardChanged.connect(boost::bind(&MainController::handleVCardReceived, this, _1, _2));
 		avatarManager_ = new AvatarManagerImpl(vcardManager_, client_, avatarStorage_, mucRegistry_);
-		capsManager_ = new CapsManager(capsStorage_, client_, client_);
+		capsManager_ = new CapsManager(capsStorage_, client_, client_->getIQRouter());
 		entityCapsManager_ = new EntityCapsManager(capsManager_, client_);
 
 		nickResolver_ = new NickResolver(this->jid_.toBare(), xmppRoster_, vcardManager_, mucRegistry_);
 
-		rosterController_ = new RosterController(jid_, xmppRoster_, avatarManager_, mainWindowFactory_, nickResolver_, presenceOracle_, eventController_, uiEventStream_, client_);
+		rosterController_ = new RosterController(jid_, xmppRoster_, avatarManager_, mainWindowFactory_, nickResolver_, presenceOracle_, eventController_, uiEventStream_, client_->getIQRouter());
 		rosterController_->onChangeStatusRequest.connect(boost::bind(&MainController::handleChangeStatusRequest, this, _1, _2));
 		rosterController_->onSignOutRequest.connect(boost::bind(&MainController::signOut, this));
 
-		chatsManager_ = new ChatsManager(jid_, client_, client_, eventController_, chatWindowFactory_, nickResolver_, presenceOracle_, serverDiscoInfo_, presenceSender_, uiEventStream_, chatListWindowFactory_, useDelayForLatency_, &timerFactory_, mucRegistry_);
+		chatsManager_ = new ChatsManager(jid_, client_, client_->getIQRouter(), eventController_, chatWindowFactory_, nickResolver_, presenceOracle_, serverDiscoInfo_, presenceSender_, uiEventStream_, chatListWindowFactory_, useDelayForLatency_, &timerFactory_, mucRegistry_);
 		client_->onMessageReceived.connect(boost::bind(&ChatsManager::handleIncomingMessage, chatsManager_, _1));
 		chatsManager_->setAvatarManager(avatarManager_);
 
-		xmppRosterController_ = new XMPPRosterController(client_, xmppRoster_);
+		xmppRosterController_ = new XMPPRosterController(client_->getIQRouter(), xmppRoster_);
 
 		eventWindowController_ = new EventWindowController(eventController_, eventWindowFactory_);
 
-		clientVersionResponder_ = new SoftwareVersionResponder(CLIENT_NAME, buildVersion, client_);
+		clientVersionResponder_ = new SoftwareVersionResponder(CLIENT_NAME, buildVersion, client_->getIQRouter());
 		loginWindow_->morphInto(rosterController_->getWindow());
 
 		DiscoInfo discoInfo;
@@ -268,17 +268,17 @@ void MainController::handleConnected() {
 		discoInfo.addFeature("urn:xmpp:sec-label:0");
 		capsInfo_ = boost::shared_ptr<CapsInfo>(new CapsInfo(CapsInfoGenerator(CLIENT_NODE).generateCapsInfo(discoInfo)));
 
-		discoResponder_ = new DiscoInfoResponder(client_);
+		discoResponder_ = new DiscoInfoResponder(client_->getIQRouter());
 		discoResponder_->setDiscoInfo(discoInfo);
 		discoResponder_->setDiscoInfo(capsInfo_->getNode() + "#" + capsInfo_->getVersion(), discoInfo);
 		serverDiscoInfo_ = boost::shared_ptr<DiscoInfo>(new DiscoInfo());
 
-		mucSearchController_ = new MUCSearchController(jid_, uiEventStream_, mucSearchWindowFactory_, client_);
+		mucSearchController_ = new MUCSearchController(jid_, uiEventStream_, mucSearchWindowFactory_, client_->getIQRouter());
 	}
 	
 	xmppRosterController_->requestRoster();
 
-	boost::shared_ptr<GetDiscoInfoRequest> discoInfoRequest(new GetDiscoInfoRequest(JID(), client_));
+	boost::shared_ptr<GetDiscoInfoRequest> discoInfoRequest(new GetDiscoInfoRequest(JID(), client_->getIQRouter()));
 	discoInfoRequest->onResponse.connect(boost::bind(&MainController::handleServerDiscoInfoResponse, this, _1, _2));
 	discoInfoRequest->send();
 

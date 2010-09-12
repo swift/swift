@@ -29,7 +29,7 @@ class EchoBot {
 
 	private:
 		void handleConnected() {
-			shared_ptr<GetRosterRequest> rosterRequest(new GetRosterRequest(client));
+			shared_ptr<GetRosterRequest> rosterRequest(new GetRosterRequest(client->getIQRouter()));
 			rosterRequest->onResponse.connect(bind(&EchoBot::handleRosterReceived, this, _2));
 			rosterRequest->send();
 		}

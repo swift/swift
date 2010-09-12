@@ -20,18 +20,18 @@
 #include "Swiften/Base/String.h"
 #include "Swiften/Base/IDGenerator.h"
 #include "Swiften/Client/StanzaChannel.h"
-#include "Swiften/Queries/IQRouter.h"
 #include "Swiften/Parser/PayloadParsers/FullPayloadParserFactoryCollection.h"
 #include "Swiften/Serializer/PayloadSerializers/FullPayloadSerializerCollection.h"
 
 namespace Swift {
+	class IQRouter;
 	class TLSLayerFactory;
 	class ConnectionFactory;
 	class TimerFactory;
 	class ClientSession;
 	class BasicSessionStream;
 
-	class Client : public StanzaChannel, public IQRouter, public boost::bsignals::trackable {
+	class Client : public StanzaChannel, public boost::bsignals::trackable {
 		public:
 			Client(const JID& jid, const String& password);
 			~Client();
@@ -49,6 +49,10 @@ namespace Swift {
 			virtual void sendIQ(boost::shared_ptr<IQ>);
 			virtual void sendMessage(boost::shared_ptr<Message>);
 			virtual void sendPresence(boost::shared_ptr<Presence>);
+
+			IQRouter* getIQRouter() const {
+				return iqRouter_;
+			}
 
 		public:
 			boost::signal<void (const ClientError&)> onError;
@@ -75,6 +79,7 @@ namespace Swift {
 			JID jid_;
 			String password_;
 			IDGenerator idGenerator_;
+			IQRouter* iqRouter_;
 			Connector::ref connector_;
 			ConnectionFactory* connectionFactory_;
 			TimerFactory* timerFactory_;
