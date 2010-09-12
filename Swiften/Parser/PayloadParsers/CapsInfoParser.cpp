@@ -8,8 +8,6 @@
 
 #include <locale>
 
-#include <boost/date_time/time_facet.hpp>
-
 namespace Swift {
 
 CapsInfoParser::CapsInfoParser() : level(0) {
