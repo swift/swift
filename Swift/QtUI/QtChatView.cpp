@@ -98,8 +98,8 @@ void QtChatView::replaceLastMessage(const QString& newMessage) {
 	assert(!replace.isNull());
 	QString old = lastElement_.toOuterXml();
 	replace.setInnerXml(ChatSnippet::escape(newMessage));
-	qDebug() << "Replacing old: " << old;
-	qDebug() << "With new: " << lastElement_.toOuterXml();
+	//qDebug() << "Replacing old: " << old;
+	//qDebug() << "With new: " << lastElement_.toOuterXml();
 }
 
 void QtChatView::replaceLastMessage(const QString& newMessage, const QString& note) {
