@@ -74,6 +74,7 @@ if env["SCONS_STAGE"] == "build" :
 			"Serializer/PayloadSerializers/FullPayloadSerializerCollection.cpp",
 			"Serializer/PayloadSerializers/MUCPayloadSerializer.cpp",
 			"Serializer/PayloadSerializers/MUCUserPayloadSerializer.cpp",
+			"Serializer/PayloadSerializers/MUCOwnerPayloadSerializer.cpp",
 			"Serializer/PayloadSerializers/ResourceBindSerializer.cpp",
 			"Serializer/PayloadSerializers/RosterSerializer.cpp",
 			"Serializer/PayloadSerializers/SecurityLabelSerializer.cpp",

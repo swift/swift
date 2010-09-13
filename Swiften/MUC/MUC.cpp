@@ -13,15 +13,18 @@
 
 #include "Swiften/Presence/PresenceSender.h"
 #include "Swiften/Client/StanzaChannel.h"
+#include "Swiften/Queries/IQRouter.h"
+#include "Swiften/Elements/Form.h"
 #include "Swiften/Elements/IQ.h"
 #include "Swiften/Elements/MUCUserPayload.h"
+#include "Swiften/Elements/MUCOwnerPayload.h"
 #include "Swiften/Elements/MUCPayload.h"
 
 namespace Swift {
 
 typedef std::pair<String, MUCOccupant> StringMUCOccupantPair;
 
-MUC::MUC(StanzaChannel* stanzaChannel, PresenceSender* presenceSender, const JID &muc) : ownMUCJID(muc), stanzaChannel(stanzaChannel), presenceSender(presenceSender) {
+MUC::MUC(StanzaChannel* stanzaChannel, IQRouter* iqRouter, PresenceSender* presenceSender, const JID &muc) : ownMUCJID(muc), stanzaChannel(stanzaChannel), iqRouter_(iqRouter), presenceSender(presenceSender), muc_(muc) {
 	scopedConnection_ = stanzaChannel->onPresenceReceived.connect(boost::bind(&MUC::handleIncomingPresence, this, _1));
 }
 
@@ -133,6 +136,14 @@ void MUC::handleIncomingPresence(boost::shared_ptr<Presence> presence) {
 				ownMUCJID = presence->getFrom();
 				onJoinComplete(getOwnNick());
 				presenceSender->addDirectedPresenceReceiver(ownMUCJID);
+			}
+			if (status.code == 201) {
+				/* Room is created and locked */
+				/* Currently deal with this by making an instant room */
+				boost::shared_ptr<MUCOwnerPayload> mucPayload(new MUCOwnerPayload());
+				mucPayload->setPayload(boost::shared_ptr<Payload>(new Form(Form::SubmitType)));
+				boost::shared_ptr<IQ> iq(IQ::createRequest(IQ::Set, muc_, iqRouter_->getNewIQID(), mucPayload));
+				iqRouter_->sendIQ(iq);
 			}
 		}
 	}

@@ -20,6 +20,7 @@
 
 namespace Swift {
 	class StanzaChannel;
+	class IQRouter;
 	class PresenceSender;
 
 	class MUC {
@@ -28,7 +29,7 @@ namespace Swift {
 			enum LeavingType { Part, Disconnect };			
 
 		public:
-			MUC(StanzaChannel* stanzaChannel, PresenceSender* presenceSender, const JID &muc);
+			MUC(StanzaChannel* stanzaChannel, IQRouter* iqRouter, PresenceSender* presenceSender, const JID &muc);
 
 			void joinAs(const String &nick);
 			/*void queryRoomInfo(); */
@@ -66,7 +67,9 @@ namespace Swift {
 		private:
 			JID ownMUCJID;
 			StanzaChannel* stanzaChannel;
+			IQRouter* iqRouter_;
 			PresenceSender* presenceSender;
+			JID muc_;
 			std::map<String, MUCOccupant> occupants;
 			bool joinComplete_;
 			boost::bsignals::scoped_connection scopedConnection_;
