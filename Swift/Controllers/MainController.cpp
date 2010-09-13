@@ -35,7 +35,7 @@
 #include "Swift/Controllers/SystemTray.h"
 #include "Swift/Controllers/SystemTrayController.h"
 #include "Swift/Controllers/XMLConsoleController.h"
-#include "Swift/Controllers/XMPPRosterController.h"
+#include "Swiften/Roster/XMPPRosterController.h"
 #include "Swift/Controllers/UIEvents/UIEventStream.h"
 #include "Swift/Controllers/PresenceNotifier.h"
 #include "SwifTools/Dock/Dock.h"

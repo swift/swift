@@ -4,7 +4,7 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "Swift/Controllers/XMPPRosterController.h"
+#include "Swiften/Roster/XMPPRosterController.h"
 
 #include <boost/bind.hpp>
 
