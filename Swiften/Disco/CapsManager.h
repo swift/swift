@@ -26,6 +26,11 @@ namespace Swift {
 
 			DiscoInfo::ref getCaps(const String&) const;
 
+			// Mainly for testing purposes
+			void setWarnOnInvalidHash(bool b) {
+				warnOnInvalidHash = b;
+			}
+
 		private:
 			void handlePresenceReceived(boost::shared_ptr<Presence>);
 			void handleStanzaChannelAvailableChanged(bool);
@@ -35,6 +40,7 @@ namespace Swift {
 		private:
 			IQRouter* iqRouter;
 			CapsStorage* capsStorage;
+			bool warnOnInvalidHash;
 			std::set<String> requestedDiscoInfos;
 			std::set< std::pair<JID, String> > failingCaps;
 			std::map<String, std::set< std::pair<JID, String> > > fallbacks;

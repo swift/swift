@@ -234,6 +234,7 @@ class CapsManagerTest : public CppUnit::TestFixture {
 	private:
 		std::auto_ptr<CapsManager> createManager() {
 			std::auto_ptr<CapsManager> manager(new CapsManager(storage, stanzaChannel, iqRouter));
+			manager->setWarnOnInvalidHash(false);
 			//manager->onCapsChanged.connect(boost::bind(&CapsManagerTest::handleCapsChanged, this, _1));
 			return manager;
 		}

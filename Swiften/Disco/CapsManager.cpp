@@ -16,7 +16,7 @@
 
 namespace Swift {
 
-CapsManager::CapsManager(CapsStorage* capsStorage, StanzaChannel* stanzaChannel, IQRouter* iqRouter) : iqRouter(iqRouter), capsStorage(capsStorage) {
+CapsManager::CapsManager(CapsStorage* capsStorage, StanzaChannel* stanzaChannel, IQRouter* iqRouter) : iqRouter(iqRouter), capsStorage(capsStorage), warnOnInvalidHash(true) {
 	stanzaChannel->onPresenceReceived.connect(boost::bind(&CapsManager::handlePresenceReceived, this, _1));
 	stanzaChannel->onAvailableChanged.connect(boost::bind(&CapsManager::handleStanzaChannelAvailableChanged, this, _1));
 }
@@ -51,6 +51,9 @@ void CapsManager::handleStanzaChannelAvailableChanged(bool available) {
 void CapsManager::handleDiscoInfoReceived(const JID& from, const String& hash, DiscoInfo::ref discoInfo, const boost::optional<ErrorPayload>& error) {
 	requestedDiscoInfos.erase(hash);
 	if (error || CapsInfoGenerator("").generateCapsInfo(*discoInfo.get()).getVersion() != hash) {
+		if (warnOnInvalidHash && !error) {
+			std::cerr << "Warning: Caps from " << from.toString() << " do not verify" << std::endl;
+		}
 		failingCaps.insert(std::make_pair(from, hash));
 		std::map<String, std::set< std::pair<JID, String> > >::iterator i = fallbacks.find(hash);
 		if (i != fallbacks.end() && !i->second.empty()) {
