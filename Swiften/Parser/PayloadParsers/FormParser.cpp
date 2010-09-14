@@ -66,6 +66,9 @@ void FormParser::handleStartElement(const String& element, const String&, const 
 			else if (type == "text-single") {
 				currentFieldParseHelper_ = TextSingleFormFieldParseHelper::create();
 			}
+			else {
+				currentFieldParseHelper_ = UntypedFormFieldParseHelper::create();
+			}
 			if (currentFieldParseHelper_) {
 				currentFieldParseHelper_->getField()->setName(attributes.getAttribute("var"));
 				currentFieldParseHelper_->getField()->setLabel(attributes.getAttribute("label"));

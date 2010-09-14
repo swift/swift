@@ -10,6 +10,8 @@
 
 #include "Swiften/Base/foreach.h"
 #include "Swiften/Serializer/XML/XMLElement.h"
+#include "Swiften/Serializer/XML/XMLRawTextNode.h"
+#include "Swiften/Serializer/PayloadSerializers/FormSerializer.h"
 
 namespace Swift {
 
@@ -35,6 +37,9 @@ String DiscoInfoSerializer::serializePayload(boost::shared_ptr<DiscoInfo> discoI
 		boost::shared_ptr<XMLElement> featureElement(new XMLElement("feature"));
 		featureElement->setAttribute("var", feature);
 		queryElement.addNode(featureElement);
+	}
+	foreach(const Form::ref extension, discoInfo->getExtensions()) {
+		queryElement.addNode(boost::shared_ptr<XMLRawTextNode>(new XMLRawTextNode(FormSerializer().serialize(extension))));
 	}
 	return queryElement.serialize();
 }

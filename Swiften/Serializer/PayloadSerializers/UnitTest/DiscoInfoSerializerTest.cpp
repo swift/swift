@@ -15,6 +15,7 @@ class DiscoInfoSerializerTest : public CppUnit::TestFixture
 {
 		CPPUNIT_TEST_SUITE(DiscoInfoSerializerTest);
 		CPPUNIT_TEST(testSerialize);
+		CPPUNIT_TEST(testSerialize_Form);
 		CPPUNIT_TEST_SUITE_END();
 
 	public:
@@ -35,6 +36,27 @@ class DiscoInfoSerializerTest : public CppUnit::TestFixture
 					"<identity category=\"client\" name=\"Vlug\" type=\"pc\" xml:lang=\"nl\"/>"
 					"<feature var=\"http://jabber.org/protocol/caps\"/>"
 					"<feature var=\"http://jabber.org/protocol/disco#info\"/>"
+				"</query>";
+
+			CPPUNIT_ASSERT_EQUAL(expectedResult, testling.serialize(discoInfo));
+		}
+
+		void testSerialize_Form() {
+			DiscoInfoSerializer testling;
+			boost::shared_ptr<DiscoInfo> discoInfo(new DiscoInfo());
+			discoInfo->addFeature("http://jabber.org/protocol/caps");
+			discoInfo->addFeature("http://jabber.org/protocol/disco#info");
+			boost::shared_ptr<Form> form(new Form(Form::FormType));
+			form->setTitle("Bot Configuration");
+			discoInfo->addExtension(form);
+
+			String expectedResult = 
+				"<query xmlns=\"http://jabber.org/protocol/disco#info\">"
+					"<feature var=\"http://jabber.org/protocol/caps\"/>"
+					"<feature var=\"http://jabber.org/protocol/disco#info\"/>"
+					"<x type=\"form\" xmlns=\"jabber:x:data\">"
+							"<title>Bot Configuration</title>"
+					"</x>"
 				"</query>";
 
 			CPPUNIT_ASSERT_EQUAL(expectedResult, testling.serialize(discoInfo));

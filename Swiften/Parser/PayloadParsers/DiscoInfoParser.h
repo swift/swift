@@ -24,5 +24,6 @@ namespace Swift {
 				PayloadLevel = 1
 			};
 			int level_;
+			FormParser* formParser_;
 	};
 }

@@ -12,15 +12,13 @@
 
 using namespace Swift;
 
-class CapsInfoGeneratorTest : public CppUnit::TestFixture
-{
+class CapsInfoGeneratorTest : public CppUnit::TestFixture {
 		CPPUNIT_TEST_SUITE(CapsInfoGeneratorTest);
 		CPPUNIT_TEST(testGenerate_XEP0115SimpleExample);
+		CPPUNIT_TEST(testGenerate_XEP0115ComplexExample);
 		CPPUNIT_TEST_SUITE_END();
 
 	public:
-		CapsInfoGeneratorTest() {}
-
 		void testGenerate_XEP0115SimpleExample() {
 			DiscoInfo discoInfo;
 			discoInfo.addIdentity(DiscoInfo::Identity("Exodus 0.9.1", "client", "pc"));
@@ -35,6 +33,51 @@ class CapsInfoGeneratorTest : public CppUnit::TestFixture
 			CPPUNIT_ASSERT_EQUAL(String("http://code.google.com/p/exodus"), result.getNode());
 			CPPUNIT_ASSERT_EQUAL(String("sha-1"), result.getHash());
 			CPPUNIT_ASSERT_EQUAL(String("QgayPKawpkPSDYmwT/WM94uAlu0="), result.getVersion());
+		}
+
+		void testGenerate_XEP0115ComplexExample() {
+			DiscoInfo discoInfo;
+			discoInfo.addIdentity(DiscoInfo::Identity("Psi 0.11", "client", "pc", "en"));
+			discoInfo.addIdentity(DiscoInfo::Identity("\xce\xa8 0.11", "client", "pc", "el"));
+			discoInfo.addFeature("http://jabber.org/protocol/disco#items");
+			discoInfo.addFeature("http://jabber.org/protocol/caps");
+			discoInfo.addFeature("http://jabber.org/protocol/disco#info");
+			discoInfo.addFeature("http://jabber.org/protocol/muc");
+
+			Form::ref extension(new Form(Form::ResultType));
+			FormField::ref field = HiddenFormField::create("urn:xmpp:dataforms:softwareinfo");
+			field->setName("FORM_TYPE");
+			extension->addField(field);
+			std::vector<String> ipVersions;
+			ipVersions.push_back("ipv6");
+			ipVersions.push_back("ipv4");
+			field = ListMultiFormField::create(ipVersions);
+			field->addRawValue("ipv6");
+			field->addRawValue("ipv4");
+			field->setName("ip_version");
+			extension->addField(field);
+			field = TextSingleFormField::create("Psi");
+			field->addRawValue("Psi");
+			field->setName("software");
+			extension->addField(field);
+			field = TextSingleFormField::create("0.11");
+			field->addRawValue("0.11");
+			field->setName("software_version");
+			extension->addField(field);
+			field = TextSingleFormField::create("Mac");
+			field->setName("os");
+			field->addRawValue("Mac");
+			extension->addField(field);
+			field = TextSingleFormField::create("10.5.1");
+			field->setName("os_version");
+			field->addRawValue("10.5.1");
+			extension->addField(field);
+			discoInfo.addExtension(extension);
+
+			CapsInfoGenerator testling("http://psi-im.org");
+			CapsInfo result = testling.generateCapsInfo(discoInfo);
+
+			CPPUNIT_ASSERT_EQUAL(String("q07IKJEyjvHSyhy//CH0CxmKi8w="), result.getVersion());
 		}
 };
 

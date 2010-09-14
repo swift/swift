@@ -13,6 +13,7 @@
 
 namespace Swift {
 	class String;
+	class FormParser;
 
 	template<typename PAYLOAD_TYPE>
 	class GenericPayloadParser : public PayloadParser {
@@ -25,7 +26,6 @@ namespace Swift {
 				return payload_;
 			}
 
-		protected:
 			virtual boost::shared_ptr<PAYLOAD_TYPE> getPayloadInternal() const {
 				return payload_;
 			}

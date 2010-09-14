@@ -32,6 +32,7 @@ namespace Swift {
 			class BoolFieldParseHelper : public FieldParseHelper {
 					virtual void addValue(const String& s) {
 						boost::dynamic_pointer_cast< GenericFormField<bool> >(getField())->setValue(s == "1" || s == "true");
+						getField()->addRawValue(s);
 					}
 			};
 			class StringFieldParseHelper : public FieldParseHelper {
@@ -43,6 +44,7 @@ namespace Swift {
 						else {
 							field->setValue(field->getValue() + "\n" + s);
 						}
+						getField()->addRawValue(s);
 					}
 			};
 			class JIDFieldParseHelper : public FieldParseHelper {
@@ -57,6 +59,7 @@ namespace Swift {
 						std::vector<String> l = field->getValue();
 						l.push_back(s);
 						field->setValue(l);
+						getField()->addRawValue(s);
 					}
 			};
 			class JIDListFieldParseHelper : public FieldParseHelper {
@@ -66,6 +69,7 @@ namespace Swift {
 						std::vector<JID> l = field->getValue();
 						l.push_back(JID(s));
 						field->setValue(l);
+						getField()->addRawValue(s);
 					}
 			};
 			
@@ -92,6 +96,7 @@ namespace Swift {
 			SWIFTEN_DECLARE_FORM_FIELD_PARSE_HELPER(JIDSingle, JID);
 			SWIFTEN_DECLARE_FORM_FIELD_PARSE_HELPER(JIDMulti, JIDList);
 			SWIFTEN_DECLARE_FORM_FIELD_PARSE_HELPER(ListMulti, StringList);
+			SWIFTEN_DECLARE_FORM_FIELD_PARSE_HELPER(Untyped, StringList);
 
 			enum Level { 
 				TopLevel = 0, 

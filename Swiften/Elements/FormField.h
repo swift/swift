@@ -4,6 +4,9 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
+// FIXME: We currently keep 2 values: the raw values, and the actual value.
+// We should only store the raw values, and deduce the actual values from this
+
 #pragma once
 
 #include <vector>
@@ -45,6 +48,14 @@ namespace Swift {
 				return options;
 			}
 
+			const std::vector<String> getRawValues() const {
+				return rawValues;
+			}
+
+			void addRawValue(const String& value) {
+				rawValues.push_back(value);
+			}
+
 		protected:
 			FormField() : required(false) {}
 
@@ -54,6 +65,7 @@ namespace Swift {
 			String description;
 			bool required;
 			std::vector<Option> options;
+			std::vector<String> rawValues;
 	};
 
 	template<typename T> class GenericFormField : public FormField {
@@ -99,4 +111,5 @@ namespace Swift {
 	SWIFTEN_DECLARE_FORM_FIELD(JIDSingle, JID);
 	SWIFTEN_DECLARE_FORM_FIELD(JIDMulti, std::vector<JID>);
 	SWIFTEN_DECLARE_FORM_FIELD(ListMulti, std::vector<String>);
+	SWIFTEN_DECLARE_FORM_FIELD(Untyped, std::vector<String>);
 }

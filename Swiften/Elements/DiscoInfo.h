@@ -4,8 +4,7 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#ifndef SWIFTEN_DiscoInfo_H
-#define SWIFTEN_DiscoInfo_H
+#pragma once
 
 #include <vector>
 #include <algorithm>
@@ -13,6 +12,7 @@
 #include "Swiften/Elements/Payload.h"
 #include "Swiften/Base/String.h"
 #include "Swiften/Base/Shared.h"
+#include "Swiften/Elements/Form.h"
 
 namespace Swift {
 	class DiscoInfo : public Payload, public Shared<DiscoInfo> {
@@ -60,7 +60,7 @@ namespace Swift {
 				node_ = node;
 			}
 
-			const std::vector<Identity> getIdentities() const {
+			const std::vector<Identity>& getIdentities() const {
 				return identities_;
 			}
 
@@ -80,11 +80,18 @@ namespace Swift {
 				return std::find(features_.begin(), features_.end(), feature) != features_.end();
 			}
 
+			void addExtension(Form::ref form) {
+				extensions_.push_back(form);
+			}
+
+			const std::vector<Form::ref> getExtensions() const {
+				return extensions_;
+			}
+
 		private:
 			String node_;
 			std::vector<Identity> identities_;
 			std::vector<String> features_;
+			std::vector<Form::ref> extensions_;
 	};
 }
-
-#endif

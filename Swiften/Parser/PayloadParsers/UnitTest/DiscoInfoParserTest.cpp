@@ -16,6 +16,7 @@ class DiscoInfoParserTest : public CppUnit::TestFixture
 {
 		CPPUNIT_TEST_SUITE(DiscoInfoParserTest);
 		CPPUNIT_TEST(testParse);
+		CPPUNIT_TEST(testParse_Form);
 		CPPUNIT_TEST_SUITE_END();
 
 	public:
@@ -47,6 +48,27 @@ class DiscoInfoParserTest : public CppUnit::TestFixture
 			CPPUNIT_ASSERT_EQUAL(String("foo-feature"), payload->getFeatures()[0]);
 			CPPUNIT_ASSERT_EQUAL(String("bar-feature"), payload->getFeatures()[1]);
 			CPPUNIT_ASSERT_EQUAL(String("baz-feature"), payload->getFeatures()[2]);
+		}
+
+		void testParse_Form() {
+			PayloadsParserTester parser;
+
+			CPPUNIT_ASSERT(parser.parse(
+				"<query xmlns=\"http://jabber.org/protocol/disco#info\">"
+					"<feature var=\"foo-feature\"/>"
+					"<x type=\"submit\" xmlns=\"jabber:x:data\">"
+						"<title>Bot Configuration</title>"
+						"<instructions>Hello!</instructions>"
+					"</x>"
+					"<feature var=\"bar-feature\"/>"
+				"</query>"));
+
+			DiscoInfo* payload = dynamic_cast<DiscoInfo*>(parser.getPayload().get());
+			CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(payload->getExtensions().size()));
+			CPPUNIT_ASSERT_EQUAL(String("Bot Configuration"), payload->getExtensions()[0]->getTitle());
+			CPPUNIT_ASSERT_EQUAL(2, static_cast<int>(payload->getFeatures().size()));
+			CPPUNIT_ASSERT_EQUAL(String("foo-feature"), payload->getFeatures()[0]);
+			CPPUNIT_ASSERT_EQUAL(String("bar-feature"), payload->getFeatures()[1]);
 		}
 };
 

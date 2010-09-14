@@ -5,13 +5,14 @@
  */
 
 #include "Swiften/Parser/PayloadParsers/DiscoInfoParser.h"
+#include "Swiften/Parser/PayloadParsers/FormParser.h"
 
 namespace Swift {
 
-DiscoInfoParser::DiscoInfoParser() : level_(TopLevel) {
+DiscoInfoParser::DiscoInfoParser() : level_(TopLevel), formParser_(NULL) {
 }
 
-void DiscoInfoParser::handleStartElement(const String& element, const String&, const AttributeMap& attributes) {
+void DiscoInfoParser::handleStartElement(const String& element, const String& ns, const AttributeMap& attributes) {
 	if (level_ == PayloadLevel) {
 		if (element == "identity") {
 			getPayloadInternal()->addIdentity(DiscoInfo::Identity(attributes.getAttribute("name"), attributes.getAttribute("category"), attributes.getAttribute("type"), attributes.getAttribute("lang")));
@@ -19,15 +20,33 @@ void DiscoInfoParser::handleStartElement(const String& element, const String&, c
 		else if (element == "feature") {
 			getPayloadInternal()->addFeature(attributes.getAttribute("var"));
 		}
+		else if (element == "x" && ns == "jabber:x:data") {
+			assert(!formParser_);
+			formParser_ = new FormParser();
+		}
+	}
+	if (formParser_) {
+		formParser_->handleStartElement(element, ns, attributes);
 	}
 	++level_;
 }
 
-void DiscoInfoParser::handleEndElement(const String&, const String&) {
+void DiscoInfoParser::handleEndElement(const String& element, const String& ns) {
 	--level_;
+	if (formParser_) {
+		formParser_->handleEndElement(element, ns);
+	}
+	if (level_ == PayloadLevel && formParser_) {
+		getPayloadInternal()->addExtension(formParser_->getPayloadInternal());
+		delete formParser_;
+		formParser_ = NULL;
+	}
 }
 
-void DiscoInfoParser::handleCharacterData(const String&) {
+void DiscoInfoParser::handleCharacterData(const String& data) {
+	if (formParser_) {
+		formParser_->handleCharacterData(data);
+	}
 }
 
 }

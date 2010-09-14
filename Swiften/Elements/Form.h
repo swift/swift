@@ -38,6 +38,8 @@ namespace Swift {
 			Type getType() { return type_; }
 			void setType(Type type) { type_ = type; }
 
+			String getFormType() const;
+
 		private:
 			std::vector<boost::shared_ptr<FormField> > fields_;
 			String title_;
