@@ -225,12 +225,12 @@ void QtLoginWindow::handleUsernameTextChanged() {
 		if (username_->currentText() == usernames_[i]) {
 			certificateFile_ == certificateFiles_[i];
 			password_->setText(passwords_[i]);
+			remember_->setChecked(password_->text() != "");
 		}
 	}
 	if (!certificateFile_.isEmpty()) {
 		certificateButton_->setChecked(true);
 	}
-	remember_->setChecked(password_->text() != "");
 }
 
 void QtLoginWindow::loggedOut() {
