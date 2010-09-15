@@ -34,6 +34,10 @@ namespace Swift {
 				conclude();
 			};
 
+			void defer() {
+				conclude();
+			}
+
 		private:
 			JID jid_;
 			String reason_;

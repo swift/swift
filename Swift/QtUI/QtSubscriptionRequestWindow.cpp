@@ -56,6 +56,7 @@ void QtSubscriptionRequestWindow::handleNo() {
 }
 
 void QtSubscriptionRequestWindow::handleDefer() {
+	event_->defer();
 	delete this;
 }
 
