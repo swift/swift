@@ -1,5 +1,7 @@
 Import("swiftools_env")
 
+myenv = swiftools_env.Clone()
+
 sources = [
 		"Notifier.cpp",
 	]
@@ -8,6 +10,11 @@ if swiftools_env.get("HAVE_GROWL", False) :
 	sources += [
 			"GrowlNotifier.cpp",
 		]
-
-objects = swiftools_env.StaticObject(sources)
+if swiftools_env.get("HAVE_SNARL", False) :
+	myenv.MergeFlags(myenv["SNARL_FLAGS"])
+	sources += [
+			"SnarlNotifier.cpp",
+		]
+		
+objects = myenv.StaticObject(sources)
 swiftools_env.Append(SWIFTOOLS_OBJECTS = objects)

@@ -38,6 +38,9 @@
 #include "SwifTools/AutoUpdater/PlatformAutoUpdaterFactory.h"
 #if defined(HAVE_GROWL)
 #include "SwifTools/Notifier/GrowlNotifier.h"
+#elif defined(HAVE_SNARL)
+#include "QtWin32NotifierWindow.h"
+#include "SwifTools/Notifier/SnarlNotifier.h"
 #else
 #include "SwifTools/Notifier/NullNotifier.h"
 #endif
@@ -97,6 +100,9 @@ QtSwift::QtSwift(po::variables_map options) : autoUpdater_(NULL) {
 	soundPlayer_ = new QtSoundPlayer(applicationPathProvider_);
 #if defined(HAVE_GROWL)
 	notifier_ = new GrowlNotifier(SWIFT_APPLICATION_NAME);
+#elif defined(HAVE_SNARL)
+	notifierWindow_ = new QtWin32NotifierWindow();
+	notifier_ = new SnarlNotifier(SWIFT_APPLICATION_NAME, notifierWindow_);
 #else
 	notifier_ = new NullNotifier();
 #endif
@@ -155,6 +161,7 @@ QtSwift::QtSwift(po::variables_map options) : autoUpdater_(NULL) {
 }
 
 QtSwift::~QtSwift() {
+	delete notifier_;
 	delete autoUpdater_;
 	delete chatWindowFactory_;
 	foreach (QtMainWindowFactory* factory, rosterWindowFactories_) {

@@ -90,7 +90,7 @@ void PresenceNotifier::showNotification(const JID& jid, Notifier::Type type) {
 	}
 	String title = name + " (" + getStatusType(jid) + ")";
 	String message = getStatusMessage(jid);
-	notifier->showMessage(type, title, message, avatarManager->getAvatar(jid), boost::bind(&PresenceNotifier::handleNotificationActivated, this, jid));
+	notifier->showMessage(type, title, message, avatarManager->getAvatarPath(jid), boost::bind(&PresenceNotifier::handleNotificationActivated, this, jid));
 }
 
 void PresenceNotifier::handleNotificationActivated(JID jid) {

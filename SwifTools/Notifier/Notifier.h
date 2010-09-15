@@ -7,6 +7,7 @@
 #pragma once
 
 #include <boost/function.hpp>
+#include <boost/filesystem/path.hpp>
 
 #include "Swiften/Base/String.h"
 
@@ -24,7 +25,12 @@ namespace Swift {
 				Type type,
 				const String& subject, 
 				const String& description, 
-				const ByteArray& picture, 
+				const boost::filesystem::path& picture,
 				boost::function<void()> callback) = 0;
+
+		protected:
+			String typeToString(Type type);
+			static std::vector<Type> getAllTypes();
+			static std::vector<Type> getDefaultTypes();
 	};
 }

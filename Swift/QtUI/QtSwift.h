@@ -20,6 +20,9 @@
 #if defined(SWIFTEN_PLATFORM_MACOSX)
 #include "Swiften/Application/CocoaApplication.h"
 #endif
+#if defined(HAVE_SNARL)
+#include "SwifTools/Notifier/Win32NotifierWindow.h"
+#endif
 
 namespace po = boost::program_options;
 
@@ -74,6 +77,9 @@ namespace Swift {
 			Notifier* notifier_;
 #if defined(SWIFTEN_PLATFORM_MACOSX)
 			CocoaApplication cocoaApplication_;
+#endif
+#if defined(HAVE_SNARL)
+			Win32NotifierWindow* notifierWindow_;
 #endif
 	};
 }

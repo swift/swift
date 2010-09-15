@@ -71,7 +71,10 @@ GrowlNotifier::GrowlNotifier(const String& name) {
 	Growl_SetDelegate(&delegate_);
 }
 
-void GrowlNotifier::showMessage(Type type, const String& subject, const String& description, const ByteArray& picture, boost::function<void()> callback) {
+void GrowlNotifier::showMessage(Type type, const String& subject, const String& description, const boost::filesystem::path& picturePath, boost::function<void()> callback) {
+	ByteArray picture;
+	picture.readFromFile(picturePath.string());
+
 	CFStringRef cfSubject = SWIFTEN_STRING_TO_CFSTRING(subject);
 	CFStringRef cfDescription = SWIFTEN_STRING_TO_CFSTRING(description);
 	CFStringRef cfName = SWIFTEN_STRING_TO_CFSTRING(typeToString(type));
@@ -90,18 +93,6 @@ void GrowlNotifier::showMessage(Type type, const String& subject, const String& 
 	CFRelease(cfName);
 	CFRelease(cfDescription);
 	CFRelease(cfSubject);
-}
-
-String GrowlNotifier::typeToString(Type type) {
-	switch (type) {
-		case ContactAvailable: return "Contact Becomes Available";
-		case ContactUnavailable: return "Contact Becomes Unavailable";
-		case ContactStatusChange: return "Contact Changes Status";
-		case IncomingMessage: return "Incoming Message";
-		case SystemMessage: return "System Message";
-	}
-	assert(false);
-	return "";
 }
 
 }

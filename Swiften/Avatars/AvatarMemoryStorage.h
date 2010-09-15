@@ -22,8 +22,8 @@ namespace Swift {
 				return i == avatars.end() ? ByteArray() : i->second;
 			}
 
-			virtual boost::filesystem::path getAvatarPath(const String& /*hash*/) const {
-				return boost::filesystem::path();
+			virtual boost::filesystem::path getAvatarPath(const String& hash) const {
+				return boost::filesystem::path("/avatars") / hash.getUTF8String();
 			}
 
 		private:

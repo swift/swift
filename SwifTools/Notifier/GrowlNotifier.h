@@ -8,6 +8,7 @@
 
 #include <CoreFoundation/CoreFoundation.h>
 #include <Growl/Growl.h>
+#include <boost/filesystem/fstream.hpp>
 
 #include "SwifTools/Notifier/Notifier.h"
 
@@ -23,11 +24,8 @@ namespace Swift {
 		public:
 			GrowlNotifier(const String& name);
 
-			virtual void showMessage(Type type, const String& subject, const String& description, const ByteArray& picture, boost::function<void()> callback);
+			virtual void showMessage(Type type, const String& subject, const String& description, const boost::filesystem::path& picture, boost::function<void()> callback);
 		
-		private:
-			String typeToString(Type type);
-
 		private:
 			Growl_Delegate delegate_;
 	};

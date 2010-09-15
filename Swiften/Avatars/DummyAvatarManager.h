@@ -13,8 +13,8 @@
 namespace Swift {
 	class DummyAvatarManager : public AvatarManager {
 		public:
-			virtual boost::filesystem::path getAvatarPath(const JID&) const {
-				return boost::filesystem::path();
+			virtual boost::filesystem::path getAvatarPath(const JID& j) const {
+				return boost::filesystem::path("/avatars") / j.toString().getUTF8String();
 			}
 
 			virtual ByteArray getAvatar(const JID& jid) const {

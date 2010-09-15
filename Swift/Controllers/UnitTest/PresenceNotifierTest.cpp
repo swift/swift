@@ -145,7 +145,7 @@ class PresenceNotifierTest : public CppUnit::TestFixture {
 			sendPresence(user1, StatusShow::Online);
 
 			CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(notifier->notifications.size()));
-			CPPUNIT_ASSERT_EQUAL(ByteArray("abcdef"), notifier->notifications[0].picture);
+			CPPUNIT_ASSERT_EQUAL(boost::filesystem::path("/avatars/user1@bar.com/bla"), notifier->notifications[0].picture);
 		}
 
 		void testNotificationActivationEmitsSignal() {
