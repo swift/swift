@@ -174,8 +174,8 @@ MainController::~MainController() {
 	delete soundEventController_;
 	delete xmlConsoleController_;
 	delete uiEventStream_;
-	delete eventController_;
 	resetClient();
+	delete eventController_;
 	for(VCardStorageMap::iterator i = vcardStorages_.begin(); i != vcardStorages_.end(); ++i) {
 		delete i->second;
 	}
