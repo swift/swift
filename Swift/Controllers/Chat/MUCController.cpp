@@ -48,7 +48,7 @@ MUCController::MUCController (
 		bool useDelayForLatency,
 		TimerFactory* timerFactory,
 		EventController* eventController) :
-			ChatControllerBase(self, stanzaChannel, iqRouter, chatWindowFactory, muc, presenceOracle, avatarManager, useDelayForLatency, uiEventStream, eventController), muc_(new MUC(stanzaChannel, iqRouter, presenceSender, muc)), nick_(nick) {
+			ChatControllerBase(self, stanzaChannel, iqRouter, chatWindowFactory, muc, presenceOracle, avatarManager, useDelayForLatency, uiEventStream, eventController, timerFactory), muc_(new MUC(stanzaChannel, iqRouter, presenceSender, muc)), nick_(nick) {
 	parting_ = true;
 	joined_ = false;
 	lastWasPresence_ = false;

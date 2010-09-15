@@ -15,6 +15,8 @@
 #include <boost/optional.hpp>
 #include <boost/date_time/posix_time/posix_time.hpp>
 
+#include "Swiften/Network/Timer.h"
+#include "Swiften/Network/TimerFactory.h"
 #include "Swiften/Elements/Stanza.h"
 #include "Swiften/Base/String.h"
 #include "Swiften/Elements/DiscoInfo.h"
@@ -45,7 +47,7 @@ namespace Swift {
 			virtual void setEnabled(bool enabled);
 			virtual void setToJID(const JID& jid) {toJID_ = jid;};
 		protected:
-			ChatControllerBase(const JID& self, StanzaChannel* stanzaChannel, IQRouter* iqRouter, ChatWindowFactory* chatWindowFactory, const JID &toJID, PresenceOracle* presenceOracle, AvatarManager* avatarManager, bool useDelayForLatency, UIEventStream* eventStream, EventController* eventController);
+			ChatControllerBase(const JID& self, StanzaChannel* stanzaChannel, IQRouter* iqRouter, ChatWindowFactory* chatWindowFactory, const JID &toJID, PresenceOracle* presenceOracle, AvatarManager* avatarManager, bool useDelayForLatency, UIEventStream* eventStream, EventController* eventController, TimerFactory* timerFactory);
 
 			/**
 			 * Pass the Message appended, and the stanza used to send it.
@@ -59,10 +61,12 @@ namespace Swift {
 			virtual boost::optional<boost::posix_time::ptime> getMessageTimestamp(boost::shared_ptr<Message>) const = 0;
 
 		private:
+			void createDayChangeTimer();
 			void handleSendMessageRequest(const String &body);
 			void handleAllMessagesRead();
 			void handleSecurityLabelsCatalogResponse(boost::shared_ptr<SecurityLabelsCatalog>, const boost::optional<ErrorPayload>& error);
 			String getErrorMessage(boost::shared_ptr<ErrorPayload>);
+			void handleDayChangeTick();
 
 		protected:
 			JID selfJID_;
@@ -77,6 +81,8 @@ namespace Swift {
 			AvatarManager* avatarManager_;
 			bool useDelayForLatency_;
 			EventController* eventController_;
+			boost::shared_ptr<Timer> dateChangeTimer_;
+			TimerFactory* timerFactory_;
 	};
 }
 

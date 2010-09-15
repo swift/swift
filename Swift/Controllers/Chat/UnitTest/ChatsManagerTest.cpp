@@ -75,6 +75,8 @@ public:
 	};
 	
 	void tearDown() {
+		//delete chatListWindowFactory_;
+		delete mocks_;
 		delete avatarManager_;
 		delete manager_;
 		delete presenceSender_;
@@ -85,8 +87,8 @@ public:
 		delete eventController_;
 		delete iqChannel_;
 		delete iqRouter_;
-		delete mocks_;
 		delete uiEventStream_;
+		delete xmppRoster_;
 	}
 
 	void testFirstOpenWindowIncoming() {

@@ -23,15 +23,34 @@
 
 namespace Swift {
 
-ChatControllerBase::ChatControllerBase(const JID& self, StanzaChannel* stanzaChannel, IQRouter* iqRouter, ChatWindowFactory* chatWindowFactory, const JID &toJID, PresenceOracle* presenceOracle, AvatarManager* avatarManager, bool useDelayForLatency, UIEventStream* eventStream, EventController* eventController) : selfJID_(self), stanzaChannel_(stanzaChannel), iqRouter_(iqRouter), chatWindowFactory_(chatWindowFactory), toJID_(toJID), labelsEnabled_(false), presenceOracle_(presenceOracle), avatarManager_(avatarManager), useDelayForLatency_(useDelayForLatency), eventController_(eventController) {
+ChatControllerBase::ChatControllerBase(const JID& self, StanzaChannel* stanzaChannel, IQRouter* iqRouter, ChatWindowFactory* chatWindowFactory, const JID &toJID, PresenceOracle* presenceOracle, AvatarManager* avatarManager, bool useDelayForLatency, UIEventStream* eventStream, EventController* eventController, TimerFactory* timerFactory) : selfJID_(self), stanzaChannel_(stanzaChannel), iqRouter_(iqRouter), chatWindowFactory_(chatWindowFactory), toJID_(toJID), labelsEnabled_(false), presenceOracle_(presenceOracle), avatarManager_(avatarManager), useDelayForLatency_(useDelayForLatency), eventController_(eventController), timerFactory_(timerFactory) {
 	chatWindow_ = chatWindowFactory_->createChatWindow(toJID, eventStream);
 	chatWindow_->onAllMessagesRead.connect(boost::bind(&ChatControllerBase::handleAllMessagesRead, this));
 	chatWindow_->onSendMessageRequest.connect(boost::bind(&ChatControllerBase::handleSendMessageRequest, this, _1));
 	setEnabled(stanzaChannel->isAvailable() && iqRouter->isAvailable());
+	createDayChangeTimer();
 }
 
 ChatControllerBase::~ChatControllerBase() {
 	delete chatWindow_;
+}
+
+void ChatControllerBase::createDayChangeTimer() {
+	if (timerFactory_) {
+		boost::posix_time::ptime now = boost::posix_time::second_clock::local_time();
+		boost::posix_time::ptime midnight(now.date() + boost::gregorian::days(1));
+		long millisecondsUntilMidnight = (midnight - now).total_milliseconds();
+		dateChangeTimer_ = boost::shared_ptr<Timer>(timerFactory_->createTimer(millisecondsUntilMidnight));
+		dateChangeTimer_->onTick.connect(boost::bind(&ChatControllerBase::handleDayChangeTick, this));
+		dateChangeTimer_->start();
+	}
+}
+
+void ChatControllerBase::handleDayChangeTick() {
+	dateChangeTimer_->stop();
+	boost::posix_time::ptime now = boost::posix_time::second_clock::local_time();
+	chatWindow_->addSystemMessage("The day is now " + String(boost::posix_time::to_iso_extended_string(now)).getSubstring(0,10));
+	createDayChangeTimer();
 }
 
 void ChatControllerBase::setEnabled(bool enabled) {
