@@ -57,6 +57,7 @@ namespace Swift {
 	class Notifier;
 	class PresenceOracle;
 	class PresenceNotifier;
+	class EventNotifier;
 	class SystemTray;
 	class SystemTrayController;
 	class SoundEventController;
@@ -140,6 +141,7 @@ namespace Swift {
 			Dock* dock_;
 			Notifier* notifier_;
 			PresenceNotifier* presenceNotifier_;
+			EventNotifier* eventNotifier_;
 			XMPPRosterController* xmppRosterController_;
 			RosterController* rosterController_;
 			EventController* eventController_;

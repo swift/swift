@@ -38,6 +38,7 @@
 #include "Swiften/Roster/XMPPRosterController.h"
 #include "Swift/Controllers/UIEvents/UIEventStream.h"
 #include "Swift/Controllers/PresenceNotifier.h"
+#include "Swift/Controllers/EventNotifier.h"
 #include "SwifTools/Dock/Dock.h"
 #include "Swiften/Base/foreach.h"
 #include "Swiften/Base/String.h"
@@ -107,6 +108,7 @@ MainController::MainController(
 	capsManager_ = NULL;
 	entityCapsManager_ = NULL;
 	presenceNotifier_ = NULL;
+	eventNotifier_ = NULL;
 	nickResolver_ = NULL;
 	rosterController_ = NULL;
 	xmppRosterController_ = NULL;
@@ -197,6 +199,8 @@ void MainController::resetClient() {
 	chatsManager_ = NULL;
 	delete rosterController_;
 	rosterController_ = NULL;
+	delete eventNotifier_;
+	eventNotifier_ = NULL;
 	delete presenceNotifier_;
 	presenceNotifier_ = NULL;
 	delete entityCapsManager_;
@@ -394,6 +398,8 @@ void MainController::performLoginFromCachedCredentials() {
 		entityCapsManager_ = new EntityCapsManager(capsManager_, client_);
 		presenceNotifier_ = new PresenceNotifier(client_, notifier_, mucRegistry_, avatarManager_, nickResolver_, presenceOracle_, &timerFactory_);
 		presenceNotifier_->onNotificationActivated.connect(boost::bind(&MainController::handleNotificationClicked, this, _1));
+		eventNotifier_ = new EventNotifier(eventController_, notifier_, avatarManager_, nickResolver_);
+		eventNotifier_->onNotificationActivated.connect(boost::bind(&MainController::handleNotificationClicked, this, _1));
 		client_->onDataRead.connect(boost::bind(
 				&XMLConsoleController::handleDataRead, xmlConsoleController_, _1));
 		client_->onDataWritten.connect(boost::bind(

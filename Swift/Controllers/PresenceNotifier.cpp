@@ -86,9 +86,6 @@ void PresenceNotifier::handleStanzaChannelAvailableChanged(bool available) {
 
 void PresenceNotifier::showNotification(const JID& jid, Notifier::Type type) {
 	String name = nickResolver->jidToNick(jid);
-	if (name.isEmpty()) {
-		name = jid.toBare().toString();
-	}
 	String title = name + " (" + getStatusType(jid) + ")";
 	String message = getStatusMessage(jid);
 	notifier->showMessage(type, title, message, avatarManager->getAvatarPath(jid), boost::bind(&PresenceNotifier::handleNotificationActivated, this, jid));

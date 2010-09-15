@@ -36,6 +36,7 @@ if env["SCONS_STAGE"] == "build" :
 			"XMLConsoleController.cpp",
 			"StatusTracker.cpp",
 			"PresenceNotifier.cpp",
+			"EventNotifier.cpp",
 			"UIEvents/UIEvent.cpp",
 			"UIInterfaces/XMLConsoleWidget.cpp",
 			"UIInterfaces/ChatListWindow.cpp",

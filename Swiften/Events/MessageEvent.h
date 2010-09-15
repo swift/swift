@@ -19,7 +19,7 @@ namespace Swift {
 	class MessageEvent : public StanzaEvent {
 		public:
 			MessageEvent(boost::shared_ptr<Message> stanza) : stanza_(stanza){};
-			virtual ~MessageEvent(){};
+
 			boost::shared_ptr<Message> getStanza() {return stanza_;}
 
 			bool isReadable() {
