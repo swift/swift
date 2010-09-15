@@ -15,7 +15,7 @@ namespace Swift {
 		public:
 			virtual ~Notifier();
 
-			enum Type { ContactAvailable, ContactUnavailable, ContactStatusChange, IncomingMessage };
+			enum Type { ContactAvailable, ContactUnavailable, ContactStatusChange, IncomingMessage, SystemMessage };
 
 			/**
 			 * Picture is a PNG image.

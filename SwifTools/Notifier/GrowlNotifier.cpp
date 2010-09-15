@@ -4,7 +4,6 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-// FIXME: Is it safe to pass boost::function<void()> by raw values?
 // FIXME: Should we release the strings created in the constructor?
 
 #include <cassert>
@@ -53,11 +52,13 @@ GrowlNotifier::GrowlNotifier(const String& name) {
 	CFArrayAppendValue(allNotifications, SWIFTEN_STRING_TO_CFSTRING(typeToString(ContactUnavailable)));
 	CFArrayAppendValue(allNotifications, SWIFTEN_STRING_TO_CFSTRING(typeToString(ContactStatusChange)));
 	CFArrayAppendValue(allNotifications, SWIFTEN_STRING_TO_CFSTRING(typeToString(IncomingMessage)));
+	CFArrayAppendValue(allNotifications, SWIFTEN_STRING_TO_CFSTRING(typeToString(SystemMessage)));
 
 	// Default Notifications
 	CFMutableArrayRef defaultNotifications = CFArrayCreateMutable(kCFAllocatorDefault, 0, &kCFTypeArrayCallBacks);
 	CFArrayAppendValue(defaultNotifications, SWIFTEN_STRING_TO_CFSTRING(typeToString(ContactAvailable)));
 	CFArrayAppendValue(defaultNotifications, SWIFTEN_STRING_TO_CFSTRING(typeToString(IncomingMessage)));
+	CFArrayAppendValue(defaultNotifications, SWIFTEN_STRING_TO_CFSTRING(typeToString(SystemMessage)));
 
 	// Initialize delegate
 	InitGrowlDelegate(&delegate_);
@@ -97,6 +98,7 @@ String GrowlNotifier::typeToString(Type type) {
 		case ContactUnavailable: return "Contact Becomes Unavailable";
 		case ContactStatusChange: return "Contact Changes Status";
 		case IncomingMessage: return "Incoming Message";
+		case SystemMessage: return "System Message";
 	}
 	assert(false);
 	return "";
