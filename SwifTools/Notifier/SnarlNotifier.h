@@ -25,7 +25,8 @@ namespace Swift {
 			void handleMessageReceived(MSG* message);
 
 		private:
-			static const int timeout = 3;
+			static const int STATUS_NOTIFICATION_TIMEOUT = 3;
+			static const int MESSAGE_NOTIFICATION_TIMEOUT = 5;
 			Snarl::SnarlInterface snarl;
 			Win32NotifierWindow* window;
 			typedef std::map<int, boost::function<void()> > NotificationsMap;
