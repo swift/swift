@@ -16,7 +16,7 @@ namespace Swift {
 
 	class SnarlNotifier : public Notifier {
 		public:
-			SnarlNotifier(const String& name, Win32NotifierWindow* window);
+			SnarlNotifier(const String& name, Win32NotifierWindow* window, const boost::filesystem::path& icon);
 			~SnarlNotifier();
 
 			virtual void showMessage(Type type, const String& subject, const String& description, const boost::filesystem::path& picture, boost::function<void()> callback);

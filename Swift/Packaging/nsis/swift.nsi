@@ -65,6 +65,9 @@ File "..\..\QtUI\Swift\imageformats\qtiff4.dll"
 SetOutPath $INSTDIR\sounds
 File "..\..\QtUI\Swift\sounds\message-received.wav"
 
+SetOutPath $INSTDIR\images
+File "..\..\QtUI\Swift\images\logo-icon-32.png"
+
 # create start menu item
 !insertmacro MUI_STARTMENU_WRITE_BEGIN Application
 	     CreateDirectory "$SMPROGRAMS\$StartMenuFolder"

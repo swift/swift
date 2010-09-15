@@ -17,9 +17,10 @@
 
 namespace Swift {
 
-SnarlNotifier::SnarlNotifier(const String& name, Win32NotifierWindow* window) : window(window) {
+SnarlNotifier::SnarlNotifier(const String& name, Win32NotifierWindow* window, const boost::filesystem::path& icon) : window(window) {
 	window->onMessageReceived.connect(boost::bind(&SnarlNotifier::handleMessageReceived, this, _1));
-	snarl.RegisterConfig(window->getID(), name.getUTF8Data(), 0);
+	// FIXME: Not sure why the icon doesn't show
+	snarl.RegisterConfig2(window->getID(), name.getUTF8Data(), 0, icon.string().c_str());
 	foreach(Notifier::Type type, getAllTypes()) {
 		snarl.RegisterAlert(name.getUTF8Data(), typeToString(type).getUTF8Data());
 	}

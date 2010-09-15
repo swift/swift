@@ -102,7 +102,7 @@ QtSwift::QtSwift(po::variables_map options) : autoUpdater_(NULL) {
 	notifier_ = new GrowlNotifier(SWIFT_APPLICATION_NAME);
 #elif defined(HAVE_SNARL)
 	notifierWindow_ = new QtWin32NotifierWindow();
-	notifier_ = new SnarlNotifier(SWIFT_APPLICATION_NAME, notifierWindow_);
+	notifier_ = new SnarlNotifier(SWIFT_APPLICATION_NAME, notifierWindow_, applicationPathProvider_->getResourcePath("/images/logo-icon-32.png"));
 #else
 	notifier_ = new NullNotifier();
 #endif
