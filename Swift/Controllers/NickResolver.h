@@ -21,7 +21,6 @@ namespace Swift {
 			NickResolver(const JID& ownJID, XMPPRoster* xmppRoster, VCardManager* vcardManager, MUCRegistry* mucRegistry);
 
 			String jidToNick(const JID& jid);
-			void setMUCRegistry(MUCRegistry* registry);
 
 			boost::signal<void (const String&)> onOwnNickChanged;
 		private:
