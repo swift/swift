@@ -15,7 +15,7 @@
 #include "Swift/Controllers/UIInterfaces/ChatListWindowFactory.h"
 #include "Swiften/Client/Client.h"
 #include "Swift/Controllers/Chat/ChatController.h"
-#include "Swift/Controllers/EventController.h"
+#include "Swift/Controllers/XMPPEvents/EventController.h"
 #include "Swift/Controllers/Chat/MUCController.h"
 #include "Swiften/Presence/PresenceSender.h"
 #include "Swiften/Avatars/NullAvatarManager.h"

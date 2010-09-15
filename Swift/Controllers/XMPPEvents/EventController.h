@@ -12,8 +12,8 @@
 #include <boost/shared_ptr.hpp>
 #include <vector>
 
-#include "Swiften/Events/StanzaEvent.h"
-#include "Swiften/Events/MessageEvent.h"
+#include "Swift/Controllers/XMPPEvents/StanzaEvent.h"
+#include "Swift/Controllers/XMPPEvents/MessageEvent.h"
 
 namespace Swift {
 	class EventController {

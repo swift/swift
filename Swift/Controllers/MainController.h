@@ -24,7 +24,7 @@
 #include "Swiften/Settings/SettingsProvider.h"
 #include "Swift/Controllers/ProfileSettingsProvider.h"
 #include "Swiften/Elements/CapsInfo.h"
-#include "Swiften/Events/ErrorEvent.h"
+#include "Swift/Controllers/XMPPEvents/ErrorEvent.h"
 #include "Swiften/Roster/XMPPRoster.h"
 
 namespace Swift {

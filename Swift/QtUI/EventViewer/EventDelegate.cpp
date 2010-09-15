@@ -8,9 +8,9 @@
 
 #include <QDebug>
 
-#include "Swiften/Events/MessageEvent.h"
-#include "Swiften/Events/ErrorEvent.h"
-#include "Swiften/Events/SubscriptionRequestEvent.h"
+#include "Swift/Controllers/XMPPEvents/MessageEvent.h"
+#include "Swift/Controllers/XMPPEvents/ErrorEvent.h"
+#include "Swift/Controllers/XMPPEvents/SubscriptionRequestEvent.h"
 
 namespace Swift {
 

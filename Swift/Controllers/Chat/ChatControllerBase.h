@@ -20,7 +20,7 @@
 #include "Swiften/Elements/Stanza.h"
 #include "Swiften/Base/String.h"
 #include "Swiften/Elements/DiscoInfo.h"
-#include "Swiften/Events/MessageEvent.h"
+#include "Swift/Controllers/XMPPEvents/MessageEvent.h"
 #include "Swiften/JID/JID.h"
 #include "Swiften/Elements/SecurityLabelsCatalog.h"
 #include "Swiften/Elements/ErrorPayload.h"

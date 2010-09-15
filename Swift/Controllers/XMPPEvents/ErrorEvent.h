@@ -11,7 +11,7 @@
 #include "Swiften/Base/boost_bsignals.h"
 #include <boost/shared_ptr.hpp>
 
-#include "Swiften/Events/StanzaEvent.h"
+#include "Swift/Controllers/XMPPEvents/StanzaEvent.h"
 #include "Swiften/Base/String.h"
 #include "Swiften/JID/JID.h"
 

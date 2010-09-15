@@ -11,10 +11,10 @@
 #include <QBoxLayout>
 #include <QPushButton>
 
-#include "Swiften/Events/MessageEvent.h"
-#include "Swiften/Events/ErrorEvent.h"
+#include "Swift/Controllers/XMPPEvents/MessageEvent.h"
+#include "Swift/Controllers/XMPPEvents/ErrorEvent.h"
 #include "Swift/QtUI/QtSubscriptionRequestWindow.h"
-#include "Swiften/Events/SubscriptionRequestEvent.h"
+#include "Swift/Controllers/XMPPEvents/SubscriptionRequestEvent.h"
 #include "Swift/Controllers/UIEvents/RequestChatUIEvent.h"
 #include "Swift/Controllers/UIEvents/JoinMUCUIEvent.h"
 

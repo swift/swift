@@ -8,14 +8,14 @@
 
 #include <boost/bind.hpp>
 
-#include "Swift/Controllers/EventController.h"
+#include "Swift/Controllers/XMPPEvents/EventController.h"
 #include "SwifTools/Notifier/Notifier.h"
 #include "Swiften/Avatars/AvatarManager.h"
 #include "Swift/Controllers/NickResolver.h"
 #include "Swiften/JID/JID.h"
-#include "Swiften/Events/MessageEvent.h"
-#include "Swiften/Events/SubscriptionRequestEvent.h"
-#include "Swiften/Events/ErrorEvent.h"
+#include "Swift/Controllers/XMPPEvents/MessageEvent.h"
+#include "Swift/Controllers/XMPPEvents/SubscriptionRequestEvent.h"
+#include "Swift/Controllers/XMPPEvents/ErrorEvent.h"
 
 namespace Swift {
 

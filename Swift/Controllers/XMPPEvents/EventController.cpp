@@ -4,14 +4,14 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "Swift/Controllers/EventController.h"
+#include "Swift/Controllers/XMPPEvents/EventController.h"
 
 #include <boost/bind.hpp>
 #include <algorithm>
 
-#include "Swiften/Events/MessageEvent.h"
-#include "Swiften/Events/ErrorEvent.h"
-#include "Swiften/Events/SubscriptionRequestEvent.h"
+#include "Swift/Controllers/XMPPEvents/MessageEvent.h"
+#include "Swift/Controllers/XMPPEvents/ErrorEvent.h"
+#include "Swift/Controllers/XMPPEvents/SubscriptionRequestEvent.h"
 
 namespace Swift {
 

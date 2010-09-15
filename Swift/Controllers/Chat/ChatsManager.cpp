@@ -9,7 +9,7 @@
 #include <boost/bind.hpp>
 
 #include "Swift/Controllers/Chat/ChatController.h"
-#include "Swift/Controllers/EventController.h"
+#include "Swift/Controllers/XMPPEvents/EventController.h"
 #include "Swift/Controllers/Chat/MUCController.h"
 #include "Swift/Controllers/UIEvents/RequestChatUIEvent.h"
 #include "Swift/Controllers/UIEvents/JoinMUCUIEvent.h"

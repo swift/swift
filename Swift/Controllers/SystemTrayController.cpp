@@ -8,7 +8,7 @@
 
 #include <boost/bind.hpp>
 
-#include "Swift/Controllers/EventController.h"
+#include "Swift/Controllers/XMPPEvents/EventController.h"
 #include "Swift/Controllers/SystemTray.h"
 
 namespace Swift {

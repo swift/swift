@@ -8,7 +8,7 @@
 
 #include <boost/bind.hpp>
 
-#include "Swift/Controllers/EventController.h"
+#include "Swift/Controllers/XMPPEvents/EventController.h"
 #include "Swift/Controllers/SoundPlayer.h"
 #include "Swift/Controllers/UIEvents/UIEventStream.h"
 #include "Swift/Controllers/UIEvents/ToggleSoundsUIEvent.h"

@@ -21,7 +21,7 @@
 #include "Swiften/VCards/VCardStorage.h"
 #include "Swift/Controllers/Chat/MUCSearchController.h"
 #include "Swift/Controllers/Chat/ChatsManager.h"
-#include "Swift/Controllers/EventController.h"
+#include "Swift/Controllers/XMPPEvents/EventController.h"
 #include "Swift/Controllers/EventWindowController.h"
 #include "Swift/Controllers/UIInterfaces/LoginWindow.h"
 #include "Swift/Controllers/UIInterfaces/LoginWindowFactory.h"

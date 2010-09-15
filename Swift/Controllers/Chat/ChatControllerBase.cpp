@@ -15,7 +15,7 @@
 #include "Swiften/Client/StanzaChannel.h"
 #include "Swiften/Elements/Delay.h"
 #include "Swiften/Base/foreach.h"
-#include "Swift/Controllers/EventController.h"
+#include "Swift/Controllers/XMPPEvents/EventController.h"
 #include "Swift/Controllers/UIInterfaces/ChatWindow.h"
 #include "Swift/Controllers/UIInterfaces/ChatWindowFactory.h"
 #include "Swiften/Queries/Requests/GetSecurityLabelsCatalogRequest.h"

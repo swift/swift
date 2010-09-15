@@ -10,7 +10,7 @@
 
 #include "SwifTools/Notifier/Notifier.h"
 #include "Swiften/Base/boost_bsignals.h"
-#include "Swiften/Events/StanzaEvent.h"
+#include "Swift/Controllers/XMPPEvents/StanzaEvent.h"
 #include "Swiften/JID/JID.h"
 
 namespace Swift {

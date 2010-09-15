@@ -21,7 +21,7 @@
 #include "Swiften/Roster/GroupRosterItem.h"
 #include "Swiften/Roster/ContactRosterItem.h"
 #include "Swiften/Avatars/NullAvatarManager.h"
-#include "Swift/Controllers/EventController.h"
+#include "Swift/Controllers/XMPPEvents/EventController.h"
 #include "Swiften/Presence/PresenceOracle.h"
 #include "Swiften/Presence/PresenceSender.h"
 #include "Swift/Controllers/NickResolver.h"

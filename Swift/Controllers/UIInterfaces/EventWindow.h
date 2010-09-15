@@ -7,7 +7,7 @@
 #pragma once
 
 #include "boost/shared_ptr.hpp"
-#include "Swiften/Events/StanzaEvent.h"
+#include "Swift/Controllers/XMPPEvents/StanzaEvent.h"
 
 namespace Swift {
 	class EventWindow {

@@ -13,7 +13,7 @@
 #include "Swiften/Base/foreach.h"
 #include "SwifTools/TabComplete.h"
 #include "Swiften/Base/foreach.h"
-#include "Swift/Controllers/EventController.h"
+#include "Swift/Controllers/XMPPEvents/EventController.h"
 #include "Swift/Controllers/UIInterfaces/ChatWindow.h"
 #include "Swift/Controllers/UIInterfaces/ChatWindowFactory.h"
 #include "Swift/Controllers/UIEvents/UIEventStream.h"

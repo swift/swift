@@ -10,7 +10,7 @@
 
 #include <boost/shared_ptr.hpp>
 
-#include "Swiften/Events/SubscriptionRequestEvent.h"
+#include "Swift/Controllers/XMPPEvents/SubscriptionRequestEvent.h"
 
 namespace Swift {
 	class QtSubscriptionRequestWindow : public QDialog {

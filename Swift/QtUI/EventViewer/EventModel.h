@@ -11,7 +11,7 @@
 #include <QAbstractListModel>
 #include <QList>
 
-#include "Swiften/Events/StanzaEvent.h"
+#include "Swift/Controllers/XMPPEvents/StanzaEvent.h"
 
 #include "Swift/QtUI/EventViewer/QtEvent.h"
 
