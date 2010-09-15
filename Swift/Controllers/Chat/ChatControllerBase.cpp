@@ -190,28 +190,28 @@ String ChatControllerBase::getErrorMessage(boost::shared_ptr<ErrorPayload> error
 	}
 	else {
 		switch (error->getCondition()) {
-			case ErrorPayload::BadRequest: return defaultMessage; break;
-			case ErrorPayload::Conflict: return defaultMessage; break;
-			case ErrorPayload::FeatureNotImplemented: return defaultMessage; break;
-			case ErrorPayload::Forbidden: return defaultMessage; break;
+			case ErrorPayload::BadRequest: return "Bad request"; break;
+			case ErrorPayload::Conflict: return "Conflict"; break;
+			case ErrorPayload::FeatureNotImplemented: return "This feature is not implemented"; break;
+			case ErrorPayload::Forbidden: return "Forbidden"; break;
 			case ErrorPayload::Gone: return "Recipient can no longer be contacted"; break;
 			case ErrorPayload::InternalServerError: return "Internal server error"; break;
-			case ErrorPayload::ItemNotFound: return defaultMessage; break;
-			case ErrorPayload::JIDMalformed: return defaultMessage; break;
+			case ErrorPayload::ItemNotFound: return "Item not found"; break;
+			case ErrorPayload::JIDMalformed: return "JID Malformed"; break;
 			case ErrorPayload::NotAcceptable: return "Message was rejected"; break;
-			case ErrorPayload::NotAllowed: return defaultMessage; break;
-			case ErrorPayload::NotAuthorized: return defaultMessage; break;
-			case ErrorPayload::PaymentRequired: return defaultMessage; break;
+			case ErrorPayload::NotAllowed: return "Not allowed"; break;
+			case ErrorPayload::NotAuthorized: return "Not authorized"; break;
+			case ErrorPayload::PaymentRequired: return "Payment is required"; break;
 			case ErrorPayload::RecipientUnavailable: return "Recipient is unavailable."; break;
-			case ErrorPayload::Redirect: return defaultMessage; break;
-			case ErrorPayload::RegistrationRequired: return defaultMessage; break;
+			case ErrorPayload::Redirect: return "Redirect"; break;
+			case ErrorPayload::RegistrationRequired: return "Registration required"; break;
 			case ErrorPayload::RemoteServerNotFound: return "Recipient's server not found."; break;
-			case ErrorPayload::RemoteServerTimeout: return defaultMessage; break;
-			case ErrorPayload::ResourceConstraint: return defaultMessage; break;
-			case ErrorPayload::ServiceUnavailable: return defaultMessage; break;
-			case ErrorPayload::SubscriptionRequired: return defaultMessage; break;
-			case ErrorPayload::UndefinedCondition: return defaultMessage; break;
-			case ErrorPayload::UnexpectedRequest: return defaultMessage; break;
+			case ErrorPayload::RemoteServerTimeout: return "Remote server timeout"; break;
+			case ErrorPayload::ResourceConstraint: return "The server is low on resources"; break;
+			case ErrorPayload::ServiceUnavailable: return "The service is unavailable"; break;
+			case ErrorPayload::SubscriptionRequired: return "A subscription is required"; break;
+			case ErrorPayload::UndefinedCondition: return "Undefined condition"; break;
+			case ErrorPayload::UnexpectedRequest: return "Unexpected request"; break;
 		}
 	}
 	return defaultMessage;
