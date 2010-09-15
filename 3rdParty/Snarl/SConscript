@@ -3,7 +3,8 @@ Import("env")
 ################################################################################
 # Flags
 ################################################################################
-if env.get("HAVE_SNARL", True) :
+
+if env.get("HAVE_SNARL", False) :
 	if env["SCONS_STAGE"] == "flags" :
 		env["SNARL_FLAGS"] = {
 				"CPPPATH": [Dir(".")],
