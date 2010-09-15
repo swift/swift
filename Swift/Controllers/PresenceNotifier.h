@@ -20,12 +20,12 @@ namespace Swift {
 	class TimerFactory;
 	class StanzaChannel;
 	class MUCRegistry;
-	class XMPPRoster;
+	class NickResolver;
 	class PresenceOracle;
 
 	class PresenceNotifier {
 		public:
-			PresenceNotifier(StanzaChannel* stanzaChannel, Notifier* notifier, const MUCRegistry* mucRegistry, AvatarManager* avatarManager, const XMPPRoster* roster, const PresenceOracle* presenceOracle, TimerFactory* timerFactory);
+			PresenceNotifier(StanzaChannel* stanzaChannel, Notifier* notifier, const MUCRegistry* mucRegistry, AvatarManager* avatarManager, NickResolver* nickResolver, const PresenceOracle* presenceOracle, TimerFactory* timerFactory);
 			~PresenceNotifier();
 
 			void setInitialQuietPeriodMS(int ms);
@@ -48,7 +48,7 @@ namespace Swift {
 			Notifier* notifier;
 			const MUCRegistry* mucRegistry;
 			AvatarManager* avatarManager;
-			const XMPPRoster* roster;
+			NickResolver* nickResolver;
 			const PresenceOracle* presenceOracle;
 			TimerFactory* timerFactory;
 			boost::shared_ptr<Timer> timer;

@@ -4,9 +4,6 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#ifndef SWIFTEN_NickResolver_H
-#define SWIFTEN_NickResolver_H
-
 #include <map>
 #include <boost/signals.hpp>
 #include <boost/shared_ptr.hpp>
@@ -29,15 +26,13 @@ namespace Swift {
 			boost::signal<void (const String&)> onOwnNickChanged;
 		private:
 			void handleVCardReceived(const JID& jid, VCard::ref vCard);
+
+		private:
 			JID ownJID_;
 			String ownNick_;
-			std::map<JID, String> map_;
-
 			XMPPRoster* xmppRoster_;
 			MUCRegistry* mucRegistry_;
 			VCardManager* vcardManager_;
 	};
 }
-#endif
-
 

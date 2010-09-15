@@ -42,8 +42,7 @@ String NickResolver::jidToNick(const JID& jid) {
 		return xmppRoster_->getNameForJID(jid);
 	}
 
-	std::map<JID, String>::const_iterator it = map_.find(jid);
-	return (it == map_.end()) ? jid.toBare() : it->second;
+	return jid.toBare();
 }
 
 void NickResolver::handleVCardReceived(const JID& jid, VCard::ref ownVCard) {

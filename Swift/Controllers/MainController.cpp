@@ -197,8 +197,6 @@ void MainController::resetClient() {
 	chatsManager_ = NULL;
 	delete rosterController_;
 	rosterController_ = NULL;
-	delete nickResolver_;
-	nickResolver_ = NULL;
 	delete presenceNotifier_;
 	presenceNotifier_ = NULL;
 	delete entityCapsManager_;
@@ -207,6 +205,8 @@ void MainController::resetClient() {
 	capsManager_ = NULL;
 	delete avatarManager_;
 	avatarManager_ = NULL;
+	delete nickResolver_;
+	nickResolver_ = NULL;
 	delete vcardManager_;
 	vcardManager_ = NULL;
 	delete xmppRoster_;
@@ -248,8 +248,6 @@ void MainController::handleConnected() {
 	bool freshLogin = rosterController_ == NULL;
 	if (freshLogin) {
 		serverDiscoInfo_ = boost::shared_ptr<DiscoInfo>(new DiscoInfo());
-
-		nickResolver_ = new NickResolver(this->jid_.toBare(), xmppRoster_, vcardManager_, mucRegistry_);
 
 		rosterController_ = new RosterController(jid_, xmppRoster_, avatarManager_, mainWindowFactory_, nickResolver_, presenceOracle_, presenceSender_, eventController_, uiEventStream_, client_->getIQRouter());
 		rosterController_->onChangeStatusRequest.connect(boost::bind(&MainController::handleChangeStatusRequest, this, _1, _2));
@@ -390,10 +388,11 @@ void MainController::performLoginFromCachedCredentials() {
 		xmppRoster_ = new XMPPRoster();
 		vcardManager_ = new VCardManager(jid_, client_->getIQRouter(), getVCardStorageForProfile(jid_));
 		vcardManager_->onVCardChanged.connect(boost::bind(&MainController::handleVCardReceived, this, _1, _2));
+		nickResolver_ = new NickResolver(this->jid_.toBare(), xmppRoster_, vcardManager_, mucRegistry_);
 		avatarManager_ = new AvatarManagerImpl(vcardManager_, client_, avatarStorage_, mucRegistry_);
 		capsManager_ = new CapsManager(capsStorage_, client_, client_->getIQRouter());
 		entityCapsManager_ = new EntityCapsManager(capsManager_, client_);
-		presenceNotifier_ = new PresenceNotifier(client_, notifier_, mucRegistry_, avatarManager_, xmppRoster_, presenceOracle_, &timerFactory_);
+		presenceNotifier_ = new PresenceNotifier(client_, notifier_, mucRegistry_, avatarManager_, nickResolver_, presenceOracle_, &timerFactory_);
 		presenceNotifier_->onNotificationActivated.connect(boost::bind(&MainController::handleNotificationClicked, this, _1));
 		client_->onDataRead.connect(boost::bind(
 				&XMLConsoleController::handleDataRead, xmlConsoleController_, _1));

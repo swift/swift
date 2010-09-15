@@ -10,6 +10,7 @@
 #include <boost/bind.hpp>
 
 #include "Swift/Controllers/PresenceNotifier.h"
+#include "Swift/Controllers/NickResolver.h"
 #include "SwifTools/Notifier/LoggingNotifier.h"
 #include "Swiften/Client/DummyStanzaChannel.h"
 #include "Swiften/MUC/MUCRegistry.h"
@@ -52,12 +53,15 @@ class PresenceNotifierTest : public CppUnit::TestFixture {
 			user2 = JID("user2@foo.com/baz");
 			avatarManager = new DummyAvatarManager();
 			roster = new XMPPRoster();
+			nickResolver = new NickResolver(JID("foo@bar.com"), roster, NULL, mucRegistry);
 			presenceOracle = new PresenceOracle(stanzaChannel);
 			timerFactory = new DummyTimerFactory();
 		}
 
 		void tearDown() {
+			delete timerFactory;
 			delete presenceOracle;
+			delete nickResolver;
 			delete roster;
 			delete avatarManager;
 			delete mucRegistry;
@@ -269,7 +273,7 @@ class PresenceNotifierTest : public CppUnit::TestFixture {
 
 	private:
 		std::auto_ptr<PresenceNotifier> createNotifier() {
-			std::auto_ptr<PresenceNotifier> result(new PresenceNotifier(stanzaChannel, notifier, mucRegistry, avatarManager, roster, presenceOracle, timerFactory));
+			std::auto_ptr<PresenceNotifier> result(new PresenceNotifier(stanzaChannel, notifier, mucRegistry, avatarManager, nickResolver, presenceOracle, timerFactory));
 			result->onNotificationActivated.connect(boost::bind(&PresenceNotifierTest::handleNotificationActivated, this, _1));
 			result->setInitialQuietPeriodMS(0);
 			return result;
@@ -300,6 +304,7 @@ class PresenceNotifierTest : public CppUnit::TestFixture {
 		MUCRegistry* mucRegistry;
 		DummyAvatarManager* avatarManager;
 		XMPPRoster* roster;
+		NickResolver* nickResolver;
 		PresenceOracle* presenceOracle;
 		DummyTimerFactory* timerFactory;
 		JID user1;

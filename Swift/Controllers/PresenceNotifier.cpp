@@ -14,10 +14,11 @@
 #include "Swiften/Roster/XMPPRoster.h"
 #include "Swiften/Presence/PresenceOracle.h"
 #include "Swiften/Network/TimerFactory.h"
+#include "Swift/Controllers/NickResolver.h"
 
 namespace Swift {
 
-PresenceNotifier::PresenceNotifier(StanzaChannel* stanzaChannel, Notifier* notifier, const MUCRegistry* mucRegistry, AvatarManager* avatarManager, const XMPPRoster* roster, const PresenceOracle* presenceOracle, TimerFactory* timerFactory) : stanzaChannel(stanzaChannel), notifier(notifier), mucRegistry(mucRegistry), avatarManager(avatarManager), roster(roster), presenceOracle(presenceOracle), timerFactory(timerFactory) {
+PresenceNotifier::PresenceNotifier(StanzaChannel* stanzaChannel, Notifier* notifier, const MUCRegistry* mucRegistry, AvatarManager* avatarManager, NickResolver* nickResolver, const PresenceOracle* presenceOracle, TimerFactory* timerFactory) : stanzaChannel(stanzaChannel), notifier(notifier), mucRegistry(mucRegistry), avatarManager(avatarManager), nickResolver(nickResolver), presenceOracle(presenceOracle), timerFactory(timerFactory) {
 	justInitialized = true;
 	inQuietPeriod = false;
 	stanzaChannel->onPresenceReceived.connect(boost::bind(&PresenceNotifier::handlePresenceReceived, this, _1));
@@ -84,7 +85,7 @@ void PresenceNotifier::handleStanzaChannelAvailableChanged(bool available) {
 }
 
 void PresenceNotifier::showNotification(const JID& jid, Notifier::Type type) {
-	String name = roster->getNameForJID(jid);
+	String name = nickResolver->jidToNick(jid);
 	if (name.isEmpty()) {
 		name = jid.toBare().toString();
 	}
