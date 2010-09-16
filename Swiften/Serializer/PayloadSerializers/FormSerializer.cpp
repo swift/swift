@@ -128,10 +128,20 @@ boost::shared_ptr<XMLElement> FormSerializer::fieldToXML(boost::shared_ptr<FormF
 		fieldType = "text-multi";
 		multiLineify(boost::dynamic_pointer_cast<TextMultiFormField>(field)->getValue(), "value", fieldElement);
 	}
+	else if (boost::dynamic_pointer_cast<UntypedFormField>(field)) {
+		std::vector<String> lines = boost::dynamic_pointer_cast<UntypedFormField>(field)->getValue();
+		foreach(const String& line, lines) {
+			boost::shared_ptr<XMLElement> valueElement(new XMLElement("value"));
+			valueElement->addNode(XMLTextNode::create(line));
+			fieldElement->addNode(valueElement);
+		}
+	}
 	else {
 		assert(false);
 	}
-	fieldElement->setAttribute("type", fieldType);
+	if (!fieldType.isEmpty()) {
+		fieldElement->setAttribute("type", fieldType);
+	}
 
 	foreach (const FormField::Option& option, field->getOptions()) {
 		boost::shared_ptr<XMLElement> optionElement(new XMLElement("option"));

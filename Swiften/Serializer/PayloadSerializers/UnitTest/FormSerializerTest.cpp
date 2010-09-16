@@ -96,6 +96,13 @@ class FormSerializerTest : public CppUnit::TestFixture {
 			field->setDescription("Tell all your friends about your new bot!");
 			form->addField(field);
 
+			std::vector<String> values2;
+			values2.push_back("foo");
+			values2.push_back("bar");
+			field = UntypedFormField::create(values2);
+			field->setName("fum");
+			form->addField(field);
+
 			CPPUNIT_ASSERT_EQUAL(String(
 				"<x type=\"form\" xmlns=\"jabber:x:data\">"
 						"<field type=\"hidden\" var=\"FORM_TYPE\">"
@@ -131,6 +138,10 @@ class FormSerializerTest : public CppUnit::TestFixture {
 							"<desc>Tell all your friends about your new bot!</desc>"
 							"<value>foo@bar.com</value>"
 							"<value>baz@fum.org</value>"
+						"</field>"
+						"<field var=\"fum\">"
+							"<value>foo</value>"
+							"<value>bar</value>"
 						"</field>"
 					"</x>"), testling.serialize(form));
 		}
