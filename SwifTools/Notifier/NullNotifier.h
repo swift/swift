@@ -11,7 +11,7 @@
 namespace Swift {
 	class NullNotifier : public Notifier {
 		public:
-			virtual void showMessage(Type, const String&, const String&, const ByteArray&, boost::function<void()>) {
+			virtual void showMessage(Type, const String&, const String&, const boost::filesystem::path&, boost::function<void()>) {
 			}
 	};
 }
