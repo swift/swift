@@ -49,7 +49,7 @@ XMPPParser::XMPPParser(
 				xmlParser_(0),
 				client_(client), 
 				payloadParserFactories_(payloadParserFactories), 
-				currentDepth_(0),
+				level_(0),
 				currentElementParser_(0),
 				parseErrorOccurred_(false) {
 	xmlParser_ = PlatformXMLParserFactory().createXMLParser(this);
@@ -66,7 +66,7 @@ bool XMPPParser::parse(const String& data) {
 }
 
 void XMPPParser::handleStartElement(const String& element, const String& ns, const AttributeMap& attributes) {
-	if (!inStream()) {
+	if (level_ == TopLevel) {
 		if (element == "stream" && ns == "http://etherx.jabber.org/streams") {
 			ProtocolHeader header;
 			header.setFrom(attributes.getAttribute("from"));
@@ -80,32 +80,30 @@ void XMPPParser::handleStartElement(const String& element, const String& ns, con
 		}
 	}
 	else {
-		if (!inElement()) {
+		if (level_ == StreamLevel) {
 			assert(!currentElementParser_);
-			delete currentElementParser_;
 			currentElementParser_ = createElementParser(element, ns);
 		}
 		currentElementParser_->handleStartElement(element, ns, attributes);
 	}
-	++currentDepth_;
+	++level_;
 }
 
 void XMPPParser::handleEndElement(const String& element, const String& ns) {
-	assert(inStream());
-	if (inElement()) {
-		assert(currentElementParser_);
-		currentElementParser_->handleEndElement(element, ns);
-		--currentDepth_;
-		if (!inElement()) {
-			client_->handleElement(currentElementParser_->getElement());
-			delete currentElementParser_;
-			currentElementParser_ = 0;
-		}
+	assert(level_ > TopLevel);
+	--level_;
+	if (level_ == TopLevel) {
+		assert(element == "stream");
+		client_->handleStreamEnd();
 	}
 	else {
-		assert(element == "stream");
-		--currentDepth_;
-		client_->handleStreamEnd();
+		assert(currentElementParser_);
+		currentElementParser_->handleEndElement(element, ns);
+		if (level_ == StreamLevel) {
+			client_->handleElement(currentElementParser_->getElement());
+			delete currentElementParser_;
+			currentElementParser_ = NULL;
+		}
 	}
 }
 

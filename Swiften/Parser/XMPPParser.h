@@ -37,21 +37,18 @@ namespace Swift {
 			virtual void handleEndElement(const String& element, const String& ns);
 			virtual void handleCharacterData(const String& data);
 
-			bool inStream() const {
-				return currentDepth_ > 0;
-			}
-
-			bool inElement() const {
-				return currentDepth_ > 1;
-			}
-
 			ElementParser* createElementParser(const String& element, const String& xmlns);
 
 		private:
 			XMLParser* xmlParser_;
 			XMPPParserClient* client_;
 			PayloadParserFactoryCollection* payloadParserFactories_;
-			int currentDepth_;
+			enum Level {
+				TopLevel = 0,
+				StreamLevel = 1,
+				ElementLevel = 2
+			};
+			int level_;
 			ElementParser* currentElementParser_;
 			bool parseErrorOccurred_;
 	};
