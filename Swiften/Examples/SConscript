@@ -7,4 +7,5 @@ SConscript(dirs = [
 	"ConnectivityTest",
 	"LinkLocalTool",
 	"EchoBot",
+	"ParserTester",
 ])
