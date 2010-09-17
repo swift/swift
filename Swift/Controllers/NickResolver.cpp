@@ -13,6 +13,10 @@
 #include "Swiften/Roster/XMPPRoster.h"
 #include "Swiften/VCards/VCardManager.h"
 
+// FIXME: The NickResolver currently relies on the vcard being requested by the client on login.
+// The VCardManager should get an onConnected() signal (which is signalled when the stanzachannel is available(, and each time this is emitted,
+// the nickresolver should request the vcard.
+
 namespace Swift {
 
 NickResolver::NickResolver(const JID& ownJID, XMPPRoster* xmppRoster, VCardManager* vcardManager, MUCRegistry* mucRegistry) : ownJID_(ownJID) {
@@ -20,8 +24,6 @@ NickResolver::NickResolver(const JID& ownJID, XMPPRoster* xmppRoster, VCardManag
 	vcardManager_ = vcardManager;
 	if (vcardManager_) {
 		vcardManager_->onVCardChanged.connect(boost::bind(&NickResolver::handleVCardReceived, this, _1, _2));
-		VCard::ref ownVCard = vcardManager_->getVCardAndRequestWhenNeeded(ownJID_);
-		handleVCardReceived(ownJID_, ownVCard);
 	}
 	mucRegistry_ = mucRegistry;
 }
