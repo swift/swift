@@ -10,6 +10,7 @@
 
 #include "Swiften/Base/ByteArray.h"
 #include "SwifTools/Notifier/GrowlNotifier.h"
+#include "Swiften/Base/foreach.h"
 
 #pragma GCC diagnostic ignored "-Wold-style-cast"
 
@@ -48,17 +49,15 @@ namespace Swift {
 GrowlNotifier::GrowlNotifier(const String& name) {
 	// All notifications
 	CFMutableArrayRef allNotifications = CFArrayCreateMutable(kCFAllocatorDefault, 0, &kCFTypeArrayCallBacks);
-	CFArrayAppendValue(allNotifications, SWIFTEN_STRING_TO_CFSTRING(typeToString(ContactAvailable)));
-	CFArrayAppendValue(allNotifications, SWIFTEN_STRING_TO_CFSTRING(typeToString(ContactUnavailable)));
-	CFArrayAppendValue(allNotifications, SWIFTEN_STRING_TO_CFSTRING(typeToString(ContactStatusChange)));
-	CFArrayAppendValue(allNotifications, SWIFTEN_STRING_TO_CFSTRING(typeToString(IncomingMessage)));
-	CFArrayAppendValue(allNotifications, SWIFTEN_STRING_TO_CFSTRING(typeToString(SystemMessage)));
+	foreach(Type type, getAllTypes()) {
+		CFArrayAppendValue(allNotifications, SWIFTEN_STRING_TO_CFSTRING(typeToString(type)));
+	}
 
 	// Default Notifications
 	CFMutableArrayRef defaultNotifications = CFArrayCreateMutable(kCFAllocatorDefault, 0, &kCFTypeArrayCallBacks);
-	CFArrayAppendValue(defaultNotifications, SWIFTEN_STRING_TO_CFSTRING(typeToString(ContactAvailable)));
-	CFArrayAppendValue(defaultNotifications, SWIFTEN_STRING_TO_CFSTRING(typeToString(IncomingMessage)));
-	CFArrayAppendValue(defaultNotifications, SWIFTEN_STRING_TO_CFSTRING(typeToString(SystemMessage)));
+	foreach(Type type, getDefaultTypes()) {
+		CFArrayAppendValue(allNotifications, SWIFTEN_STRING_TO_CFSTRING(typeToString(type)));
+	}
 
 	// Initialize delegate
 	InitGrowlDelegate(&delegate_);

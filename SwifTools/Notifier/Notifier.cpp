@@ -35,7 +35,6 @@ std::vector<Notifier::Type> Notifier::getAllTypes() {
 
 std::vector<Notifier::Type> Notifier::getDefaultTypes() {
 	std::vector<Type> result;
-	result.push_back(ContactAvailable);
 	result.push_back(IncomingMessage);
 	result.push_back(SystemMessage);
 	return result;
