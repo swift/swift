@@ -87,19 +87,21 @@ void QtChatView::addToDOM(boost::shared_ptr<ChatSnippet> snippet) {
 	}
 	lastElement_ = newElement;
 	if (bottom) {
-		/* Warning: I'm not confident about this.*/
+		/* Warning: I'm not confident about this, although it does work.*/
 		QTimer::singleShot(0, this, SLOT(scrollToBottom()));
 	}
 }
 
 void QtChatView::replaceLastMessage(const QString& newMessage) {
-	/* FIXME: must be queued */
+	/* FIXME: must be queued? */
+	bool bottom = isScrolledToBottom();
 	QWebElement replace = lastElement_.findFirst("span.swift_message");
 	assert(!replace.isNull());
 	QString old = lastElement_.toOuterXml();
 	replace.setInnerXml(ChatSnippet::escape(newMessage));
-	//qDebug() << "Replacing old: " << old;
-	//qDebug() << "With new: " << lastElement_.toOuterXml();
+	if (bottom) {
+		QTimer::singleShot(0, this, SLOT(scrollToBottom()));
+	}
 }
 
 void QtChatView::replaceLastMessage(const QString& newMessage, const QString& note) {
