@@ -7,12 +7,14 @@
 #include "Swift/Controllers/Chat/ChatController.h"
 
 #include <boost/bind.hpp>
+#include <stdio.h>
 
 #include "Swiften/Avatars/AvatarManager.h"
 #include "Swiften/Chat/ChatStateNotifier.h"
 #include "Swiften/Chat/ChatStateMessageSender.h"
 #include "Swiften/Chat/ChatStateTracker.h"
 #include "Swiften/Client/StanzaChannel.h"
+#include "Swiften/Disco/EntityCapsManager.h"
 #include "Swift/Controllers/UIInterfaces/ChatWindow.h"
 #include "Swift/Controllers/UIInterfaces/ChatWindowFactory.h"
 #include "Swift/Controllers/NickResolver.h"
@@ -23,11 +25,14 @@ namespace Swift {
 /**
  * The controller does not gain ownership of the stanzaChannel, nor the factory.
  */
-ChatController::ChatController(const JID& self, StanzaChannel* stanzaChannel, IQRouter* iqRouter, ChatWindowFactory* chatWindowFactory, const JID &contact, NickResolver* nickResolver, PresenceOracle* presenceOracle, AvatarManager* avatarManager, bool isInMUC, bool useDelayForLatency, UIEventStream* eventStream, EventController* eventController, TimerFactory* timerFactory)
+ChatController::ChatController(const JID& self, StanzaChannel* stanzaChannel, IQRouter* iqRouter, ChatWindowFactory* chatWindowFactory, const JID &contact, NickResolver* nickResolver, PresenceOracle* presenceOracle, AvatarManager* avatarManager, bool isInMUC, bool useDelayForLatency, UIEventStream* eventStream, EventController* eventController, TimerFactory* timerFactory, EntityCapsManager* entityCapsManager)
 	: ChatControllerBase(self, stanzaChannel, iqRouter, chatWindowFactory, contact, presenceOracle, avatarManager, useDelayForLatency, eventStream, eventController, timerFactory) {
 	isInMUC_ = isInMUC;
 	lastWasPresence_ = false;
+	entityCapsManager_ = entityCapsManager;
 	chatStateNotifier_ = new ChatStateNotifier();
+	entityCapsManager_->onCapsChanged.connect(boost::bind(&ChatController::handleCapsChanged, this, _1));
+	handleCapsChanged(toJID_);
 	chatStateMessageSender_ = new ChatStateMessageSender(chatStateNotifier_, stanzaChannel, contact);
 	chatStateTracker_ = new ChatStateTracker();
 	nickResolver_ = nickResolver;
@@ -62,9 +67,19 @@ ChatController::~ChatController() {
 	delete chatStateTracker_;
 }
 
+void ChatController::handleCapsChanged(const JID& jid) {
+	if (jid == toJID_) {
+		DiscoInfo::ref caps = entityCapsManager_->getCaps(toJID_);
+		bool hasCSN = caps && caps->hasFeature(ChatState::getFeatureNamespace());
+		chatStateNotifier_->setContactHas85Caps(hasCSN);
+	}
+}
+
 void ChatController::setToJID(const JID& jid) {
+	chatStateNotifier_->contactJIDHasChanged();
 	chatStateMessageSender_->setContact(jid);
 	ChatControllerBase::setToJID(jid);
+	handleCapsChanged(jid);
 }
 
 bool ChatController::isIncomingMessageFromMe(boost::shared_ptr<Message>) {
@@ -77,7 +92,7 @@ void ChatController::preHandleIncomingMessage(boost::shared_ptr<MessageEvent> me
 	JID from = message->getFrom();
 	if (!from.equals(toJID_, JID::WithResource)) {
 		if (toJID_.equals(from, JID::WithoutResource)  && toJID_.isBare()){
-			toJID_ = from;
+			setToJID(from);
 		}
 	}
 	chatStateNotifier_->receivedMessageFromContact(message->getPayload<ChatState>());

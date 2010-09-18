@@ -9,18 +9,22 @@
 namespace Swift {
 
 ChatStateNotifier::ChatStateNotifier() {
-	contactHas85Caps_ = false;
-	isInConversation_ = false;
-	contactHasSentActive_ = false;
-	userIsTyping_ = false;
+	contactJIDHasChanged();
 }
 
 void ChatStateNotifier::setContactHas85Caps(bool hasCaps) {
 	contactHas85Caps_ = hasCaps;
 }
 
+void ChatStateNotifier::contactJIDHasChanged() {
+	contactHasSentActive_ = false;
+	contactHas85Caps_ = false;
+	userIsTyping_ = false;
+}
+
 void ChatStateNotifier::setUserIsTyping() {
-	if (contactShouldReceiveStates() && !userIsTyping_) {
+	bool should = contactShouldReceiveStates();
+	if (should && !userIsTyping_) {
 		userIsTyping_ = true;
 		onChatStateChanged(ChatState::Composing);
 	}
@@ -38,14 +42,15 @@ void ChatStateNotifier::userCancelledNewMessage() {
 }
 
 void ChatStateNotifier::receivedMessageFromContact(bool hasActiveElement) {
-	isInConversation_ = true;
 	contactHasSentActive_ = hasActiveElement;
 }
 
 bool ChatStateNotifier::contactShouldReceiveStates() {
 	/* So, yes, the XEP says to look at caps, but it also says that once you've
-	   heard from the contact, the active state overrides this.*/
-	return contactHasSentActive_ || (contactHas85Caps_ && !isInConversation_);;
+	   heard from the contact, the active state overrides this.
+	   *HOWEVER* it says that the MUST NOT send csn if you haven't received
+	   active is OPTIONAL behaviour for if you haven't got caps.*/
+	return contactHasSentActive_ || contactHas85Caps_ ;
 }
 
 }

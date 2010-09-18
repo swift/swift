@@ -14,6 +14,8 @@
 #include "Swift/Controllers/UIInterfaces/ChatWindowFactory.h"
 #include "Swift/Controllers/UIInterfaces/ChatListWindowFactory.h"
 #include "Swiften/Client/Client.h"
+#include "Swiften/Disco/EntityCapsManager.h"
+#include "Swiften/Disco/CapsProvider.h"
 #include "Swift/Controllers/Chat/ChatController.h"
 #include "Swift/Controllers/XMPPEvents/EventController.h"
 #include "Swift/Controllers/Chat/MUCController.h"
@@ -34,6 +36,10 @@
 
 
 using namespace Swift;
+
+class DummyCapsProvider : public CapsProvider {
+		DiscoInfo::ref getCaps(const String&) const {return DiscoInfo::ref(new DiscoInfo());}
+};
 
 class ChatsManagerTest : public CppUnit::TestFixture
 {
@@ -57,6 +63,7 @@ public:
 		stanzaChannel_ = new DummyStanzaChannel();
 		iqChannel_ = new DummyIQChannel();
 		iqRouter_ = new IQRouter(iqChannel_);
+		capsProvider_ = new DummyCapsProvider();
 		eventController_ = new EventController();
 		chatWindowFactory_ = mocks_->InterfaceMock<ChatWindowFactory>();
 		xmppRoster_ = new XMPPRoster();
@@ -66,9 +73,10 @@ public:
 		serverDiscoInfo_ = boost::shared_ptr<DiscoInfo>(new DiscoInfo());
 		presenceSender_ = new PresenceSender(stanzaChannel_);
 		uiEventStream_ = new UIEventStream();
+		entityCapsManager_ = new EntityCapsManager(capsProvider_, stanzaChannel_);
 		chatListWindowFactory_ = mocks_->InterfaceMock<ChatListWindowFactory>();
 		mocks_->ExpectCall(chatListWindowFactory_, ChatListWindowFactory::createWindow).With(uiEventStream_).Return(NULL);
-		manager_ = new ChatsManager(jid_, stanzaChannel_, iqRouter_, eventController_, chatWindowFactory_, nickResolver_, presenceOracle_, serverDiscoInfo_, presenceSender_, uiEventStream_, chatListWindowFactory_, true, NULL, mucRegistry_);
+		manager_ = new ChatsManager(jid_, stanzaChannel_, iqRouter_, eventController_, chatWindowFactory_, nickResolver_, presenceOracle_, serverDiscoInfo_, presenceSender_, uiEventStream_, chatListWindowFactory_, true, NULL, mucRegistry_, entityCapsManager_);
 
 		avatarManager_ = new NullAvatarManager();
 		manager_->setAvatarManager(avatarManager_);
@@ -89,6 +97,8 @@ public:
 		delete iqRouter_;
 		delete uiEventStream_;
 		delete xmppRoster_;
+		delete entityCapsManager_;
+		delete capsProvider_;
 	}
 
 	void testFirstOpenWindowIncoming() {
@@ -319,6 +329,8 @@ private:
 	UIEventStream* uiEventStream_;
 	ChatListWindowFactory* chatListWindowFactory_;
 	MUCRegistry* mucRegistry_;
+	EntityCapsManager* entityCapsManager_;
+	CapsProvider* capsProvider_;
 };
 
 CPPUNIT_TEST_SUITE_REGISTRATION(ChatsManagerTest);

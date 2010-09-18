@@ -114,7 +114,11 @@ public:
 	void testContactShouldReceiveStates_ActiveOverrideOff() {
 		notifier_->setContactHas85Caps(true);
 		notifier_->receivedMessageFromContact(false);
-		CPPUNIT_ASSERT_EQUAL(false, notifier_->contactShouldReceiveStates());
+		/* I originally read the MUST NOT send after receiving without Active and
+		 * thought this should check for false, but I later found it was OPTIONAL
+		 * (MAY) behaviour only for if you didn't receive caps.
+		 */
+		CPPUNIT_ASSERT_EQUAL(true, notifier_->contactShouldReceiveStates());
 	}
 
 

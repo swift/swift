@@ -21,11 +21,11 @@ namespace Swift {
 			void userCancelledNewMessage();
 			void receivedMessageFromContact(bool hasActiveElement);
 			bool contactShouldReceiveStates();
+			void contactJIDHasChanged();
 
 			boost::signal<void (ChatState::ChatStateType)> onChatStateChanged;
 		private:
 			bool contactHas85Caps_;
-			bool isInConversation_;
 			bool contactHasSentActive_;
 			bool userIsTyping_;
 	};

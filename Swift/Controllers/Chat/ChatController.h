@@ -15,9 +15,10 @@ namespace Swift {
 	class ChatStateMessageSender;
 	class ChatStateTracker;
 	class NickResolver;
+	class EntityCapsManager;
 	class ChatController : public ChatControllerBase {
 		public:
-			ChatController(const JID& self, StanzaChannel* stanzaChannel, IQRouter* iqRouter, ChatWindowFactory* chatWindowFactory, const JID &contact, NickResolver* nickResolver, PresenceOracle* presenceOracle, AvatarManager* avatarManager, bool isInMUC, bool useDelayForLatency, UIEventStream* eventStream, EventController* eventController, TimerFactory* timerFactory);
+			ChatController(const JID& self, StanzaChannel* stanzaChannel, IQRouter* iqRouter, ChatWindowFactory* chatWindowFactory, const JID &contact, NickResolver* nickResolver, PresenceOracle* presenceOracle, AvatarManager* avatarManager, bool isInMUC, bool useDelayForLatency, UIEventStream* eventStream, EventController* eventController, TimerFactory* timerFactory, EntityCapsManager* entityCapsManager);
 			virtual ~ChatController();
 			virtual void setToJID(const JID& jid);
 			virtual void setEnabled(bool enabled);
@@ -33,13 +34,14 @@ namespace Swift {
 			virtual boost::optional<boost::posix_time::ptime> getMessageTimestamp(boost::shared_ptr<Message>) const;
 			void handleStanzaAcked(boost::shared_ptr<Stanza> stanza);
 			void dayTicked() {lastWasPresence_ = false;}
+			void handleCapsChanged(const JID& jid);
 
 		private:
 			NickResolver* nickResolver_;
-			JID contact_;
 			ChatStateNotifier* chatStateNotifier_;
 			ChatStateMessageSender* chatStateMessageSender_;
 			ChatStateTracker* chatStateTracker_;
+			EntityCapsManager* entityCapsManager_;
 			bool isInMUC_;
 			bool lastWasPresence_;
 			String lastStatusChangeString_;
