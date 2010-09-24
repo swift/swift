@@ -50,6 +50,7 @@ void ChatControllerBase::handleDayChangeTick() {
 	dateChangeTimer_->stop();
 	boost::posix_time::ptime now = boost::posix_time::second_clock::local_time();
 	chatWindow_->addSystemMessage("The day is now " + String(boost::posix_time::to_iso_extended_string(now)).getSubstring(0,10));
+	dayTicked();
 	createDayChangeTimer();
 }
 

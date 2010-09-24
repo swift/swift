@@ -75,6 +75,7 @@ namespace Swift {
 			bool messageTargetsMe(boost::shared_ptr<Message> message);
 			void updateJoinParts();
 			bool shouldUpdateJoinParts();
+			void dayTicked() {lastWasPresence_ = false;}
 		private:
 			MUC* muc_;
 			UIEventStream* events_;
