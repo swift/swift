@@ -26,7 +26,6 @@ namespace Swift {
 			virtual void setMyStatusType(StatusShow::Type type) = 0;
 			virtual void setRosterModel(Roster* roster) = 0;
 			
-			boost::signal<void (const JID&)> onStartChatRequest;
 			boost::signal<void (StatusShow::Type, const String&)> onChangeStatusRequest;
 			boost::signal<void (bool)> onShowOfflineToggled;
 			boost::signal<void ()> onSignOutRequest;

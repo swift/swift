@@ -29,7 +29,8 @@
 #include "Swiften/Roster/XMPPRoster.h"
 #include "Swift/Controllers/UIEvents/AddContactUIEvent.h"
 #include "Swift/Controllers/UIEvents/RemoveRosterItemUIEvent.h"
-
+#include "Swift/Controllers/UIEvents/RenameRosterItemUIEvent.h"
+#include "Swift/Controllers/UIEvents/RegroupRosterItemUIEvent.h"
 
 namespace Swift {
 	
@@ -172,7 +173,42 @@ void RosterController::handleUIEvent(boost::shared_ptr<UIEvent> event) {
 
 		return;
 	}
-
+	boost::shared_ptr<RenameRosterItemUIEvent> renameEvent = boost::dynamic_pointer_cast<RenameRosterItemUIEvent>(event);
+	if (renameEvent) {
+		JID contact(renameEvent->getJID());
+		RosterItemPayload item(contact, renameEvent->getNewName(), xmppRoster_->getSubscriptionStateForJID(contact));
+		item.setGroups(xmppRoster_->getGroupsForJID(contact));
+		boost::shared_ptr<RosterPayload> roster(new RosterPayload());
+		roster->addItem(item);
+		boost::shared_ptr<SetRosterRequest> request(new SetRosterRequest(roster, iqRouter_));
+		request->onResponse.connect(boost::bind(&RosterController::handleRosterSetError, this, _1, roster));
+		request->send();
+		return;
+	}
+	boost::shared_ptr<RegroupRosterItemUIEvent> regroupEvent = boost::dynamic_pointer_cast<RegroupRosterItemUIEvent>(event);
+	if (regroupEvent) {
+		JID contact(regroupEvent->getJID());
+		RosterItemPayload item(contact, xmppRoster_->getNameForJID(contact), xmppRoster_->getSubscriptionStateForJID(contact));
+		std::vector<String> newGroups;
+		const std::vector<String> addedGroups = regroupEvent->getAddedGroups();
+		const std::vector<String> removedGroups = regroupEvent->getRemovedGroups();
+		foreach (const String& oldGroup, xmppRoster_->getGroupsForJID(contact)) {
+			if (std::find(removedGroups.begin(), removedGroups.end(), oldGroup) == removedGroups.end()
+					&& std::find(addedGroups.begin(), addedGroups.end(), oldGroup) == addedGroups.end()) {
+					newGroups.push_back(oldGroup);
+			}
+		}
+		foreach (const String& newGroup, regroupEvent->getAddedGroups()) {
+			newGroups.push_back(newGroup);
+		}
+		item.setGroups(newGroups);
+		boost::shared_ptr<RosterPayload> roster(new RosterPayload());
+		roster->addItem(item);
+		boost::shared_ptr<SetRosterRequest> request(new SetRosterRequest(roster, iqRouter_));
+		request->onResponse.connect(boost::bind(&RosterController::handleRosterSetError, this, _1, roster));
+		request->send();
+		return;
+	}
 }
 
 void RosterController::handleRosterSetError(boost::optional<ErrorPayload> error, boost::shared_ptr<RosterPayload> rosterPayload) {

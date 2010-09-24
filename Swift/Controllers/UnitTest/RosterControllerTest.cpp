@@ -26,6 +26,8 @@
 #include "Swiften/Presence/PresenceSender.h"
 #include "Swift/Controllers/NickResolver.h"
 #include "Swift/Controllers/UIEvents/UIEventStream.h"
+#include "Swift/Controllers/UIEvents/RenameRosterItemUIEvent.h"
+#include "Swift/Controllers/UIEvents/RegroupRosterItemUIEvent.h"
 #include "Swiften/MUC/MUCRegistry.h"
 
 using namespace Swift;
@@ -37,7 +39,9 @@ class RosterControllerTest : public CppUnit::TestFixture
 		CPPUNIT_TEST_SUITE(RosterControllerTest);
 		CPPUNIT_TEST(testAdd);
 		CPPUNIT_TEST(testAddSubscription);
-		CPPUNIT_TEST(testRename);
+		CPPUNIT_TEST(testReceiveRename);
+		CPPUNIT_TEST(testSendRename);
+		CPPUNIT_TEST(testSendRegroup);
 		CPPUNIT_TEST_SUITE_END();
 
 	public:
@@ -107,7 +111,7 @@ class RosterControllerTest : public CppUnit::TestFixture
 
 		};
 
-		void testRename() {
+		void testReceiveRename() {
 			std::vector<String> groups;
 			JID jid("test@testdomain.com");
 			xmppRoster_->addContact(jid, "name", groups, RosterItemPayload::Both);
@@ -120,6 +124,71 @@ class RosterControllerTest : public CppUnit::TestFixture
 			CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(groupChild(0)->getChildren().size()));
 			CPPUNIT_ASSERT_EQUAL(String("NewName"), groupChild(0)->getChildren()[0]->getDisplayName());
 		};
+
+		void testSendRename() {
+			JID jid("testling@wonderland.lit");
+			std::vector<String> groups;
+			groups.push_back("Friends");
+			groups.push_back("Enemies");
+			xmppRoster_->addContact(jid, "Bob", groups, RosterItemPayload::From);
+			CPPUNIT_ASSERT_EQUAL(groups.size(), xmppRoster_->getGroupsForJID(jid).size());
+			uiEventStream_->send(boost::shared_ptr<UIEvent>(new RenameRosterItemUIEvent(jid, "Robert")));
+			CPPUNIT_ASSERT_EQUAL(static_cast<size_t>(1), channel_->iqs_.size());
+			CPPUNIT_ASSERT_EQUAL(IQ::Set, channel_->iqs_[0]->getType());
+			boost::shared_ptr<RosterPayload> payload = channel_->iqs_[0]->getPayload<RosterPayload>();
+			CPPUNIT_ASSERT_EQUAL(static_cast<size_t>(1), payload->getItems().size());
+			RosterItemPayload item = payload->getItems()[0];
+			CPPUNIT_ASSERT_EQUAL(jid, item.getJID());
+			CPPUNIT_ASSERT_EQUAL(String("Robert"), item.getName());
+
+			CPPUNIT_ASSERT_EQUAL(groups.size(), item.getGroups().size());
+			assertVectorsEqual(groups, item.getGroups(), __LINE__);
+		}
+
+		void testSendRegroup() {
+			JID jid("testling@wonderland.lit");
+			String friends("Friends");
+			String enemies("Ememies");
+			String people("People");
+			String contacts("Contacts");
+			std::vector<String> oldGroups;
+			oldGroups.push_back(friends);
+			oldGroups.push_back(enemies);
+			std::vector<String> newGroups;
+			newGroups.push_back(friends);
+			newGroups.push_back(people);
+			newGroups.push_back(contacts);
+			std::vector<String> addedGroups;
+			addedGroups.push_back(people);
+			addedGroups.push_back(contacts);
+			std::vector<String> removedGroups;
+			removedGroups.push_back(enemies);
+
+
+			xmppRoster_->addContact(jid, "Bob", oldGroups, RosterItemPayload::From);
+			CPPUNIT_ASSERT_EQUAL(oldGroups.size(), xmppRoster_->getGroupsForJID(jid).size());
+			uiEventStream_->send(boost::shared_ptr<UIEvent>(new RegroupRosterItemUIEvent(jid, addedGroups, removedGroups)));
+			CPPUNIT_ASSERT_EQUAL(static_cast<size_t>(1), channel_->iqs_.size());
+			CPPUNIT_ASSERT_EQUAL(IQ::Set, channel_->iqs_[0]->getType());
+			boost::shared_ptr<RosterPayload> payload = channel_->iqs_[0]->getPayload<RosterPayload>();
+			CPPUNIT_ASSERT_EQUAL(static_cast<size_t>(1), payload->getItems().size());
+			RosterItemPayload item = payload->getItems()[0];
+			CPPUNIT_ASSERT_EQUAL(jid, item.getJID());
+			CPPUNIT_ASSERT_EQUAL(String("Bob"), item.getName());
+
+			CPPUNIT_ASSERT_EQUAL(newGroups.size(), item.getGroups().size());
+			assertVectorsEqual(newGroups, item.getGroups(), __LINE__);
+		}
+
+		void assertVectorsEqual(const std::vector<String>& v1, const std::vector<String>& v2, int line) {
+			foreach (const String& entry, v1) {
+				if (std::find(v2.begin(), v2.end(), entry) == v2.end()) {
+					std::stringstream stream;
+					stream <<	"Couldn't find " << entry.getUTF8String() << " in v2 (line " << line << ")";
+					CPPUNIT_FAIL(stream.str());
+				}
+			}
+		}
 
 	private:
 		JID jid_;
