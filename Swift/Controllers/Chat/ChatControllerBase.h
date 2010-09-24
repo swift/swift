@@ -36,7 +36,7 @@ namespace Swift {
 	class UIEventStream;
 	class EventController;
 
-	class ChatControllerBase  {
+	class ChatControllerBase : public boost::bsignals::trackable {
 		public:
 			virtual ~ChatControllerBase();
 			void showChatWindow();
