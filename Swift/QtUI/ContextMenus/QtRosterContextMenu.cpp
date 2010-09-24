@@ -6,6 +6,8 @@
 
 #include "Swift/QtUI/ContextMenus/QtRosterContextMenu.h"
 
+#include <QInputDialog>
+#include <QLineEdit>
 #include <QMenu>
 #include <QDebug>
 
@@ -15,6 +17,7 @@
 #include "Swiften/Base/String.h"
 #include "Swift/Controllers/UIEvents/UIEvent.h"
 #include "Swift/Controllers/UIEvents/RemoveRosterItemUIEvent.h"
+#include "Swift/Controllers/UIEvents/RenameRosterItemUIEvent.h"
 #include "Swift/QtUI/QtSwiftUtil.h"
 
 namespace Swift {
@@ -30,14 +33,25 @@ void QtRosterContextMenu::show(RosterItem* item) {
 	}
 	item_ = item;
 	QMenu* contextMenu = new QMenu();
-	contextMenu->addAction("Remove", this, SLOT(handleRemove()));
+	contextMenu->addAction("Remove", this, SLOT(handleRemoveContact()));
+	contextMenu->addAction("Rename", this, SLOT(handleRenameContact()));
 	contextMenu->exec(QCursor::pos());
 }
 
-void QtRosterContextMenu::handleRemove() {
+void QtRosterContextMenu::handleRemoveContact() {
 	ContactRosterItem* contact = dynamic_cast<ContactRosterItem*>(item_);
 	assert(contact);
 	eventStream_->send(boost::shared_ptr<UIEvent>(new RemoveRosterItemUIEvent(contact->getJID())));
+}
+
+void QtRosterContextMenu::handleRenameContact() {
+	ContactRosterItem* contact = dynamic_cast<ContactRosterItem*>(item_);
+	assert(contact);
+	bool ok;
+	QString newName = QInputDialog::getText(NULL, "Rename contact", "New name for " + P2QSTRING(item_->getDisplayName()), QLineEdit::Normal, P2QSTRING(item_->getDisplayName()), &ok);
+	if (ok) {
+		eventStream_->send(boost::shared_ptr<UIEvent>(new RenameRosterItemUIEvent(contact->getJID(), Q2PSTRING(newName))));
+	}
 }
 
 }

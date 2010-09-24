@@ -20,7 +20,8 @@ namespace Swift {
 			void show(RosterItem* item);
 
 		private slots:
-			void handleRemove();
+			void handleRemoveContact();
+			void handleRenameContact();
 
 		private:
 			RosterItem* item_;
