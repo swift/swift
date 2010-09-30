@@ -118,20 +118,23 @@ String ChatController::senderDisplayNameFromMessage(const JID& from) {
 
 String ChatController::getStatusChangeString(boost::shared_ptr<Presence> presence) {
 	String nick = senderDisplayNameFromMessage(presence->getFrom());
+	String response = nick;
 	if (presence->getType() == Presence::Unavailable) {
-		return nick + " has gone offline.";
+		response += " has gone offline";
 	} else if (presence->getType() == Presence::Available) {
 		StatusShow::Type show = presence->getShow();
 		if (show == StatusShow::Online || show == StatusShow::FFC) {
-			return nick + " has become available.";
+			response += " has become available";
 		} else if (show == StatusShow::Away || show == StatusShow::XA) {
-			return nick + " has gone away.";
+			response += " has gone away";
 		} else if (show == StatusShow::DND) {
-			return nick + " is now busy.";
+			response += " is now busy";
 		} 
 	}
-
-	return "";
+	if (!presence->getStatus().isEmpty()) {
+		response += "(" + presence->getStatus() + ")";
+	}
+	return response + ".";
 }
 
 void ChatController::handlePresenceChange(boost::shared_ptr<Presence> newPresence) {
