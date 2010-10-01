@@ -136,7 +136,12 @@ void MUCSearchController::handleServerItemsResponse(boost::shared_ptr<DiscoItems
 		removeService(jid);
 	}
 	foreach (DiscoItems::Item item, items->getItems()) {
-		handleAddService(item.getJID());
+		if (item.getNode().isEmpty()) {
+			/* Don't look at noded items. It's possible that this will exclude some services,
+			 * but I've never seen one in the wild, and it's an easy fix for not looping.
+			 */
+			handleAddService(item.getJID());
+		}
 	}
 	refreshView();
 }
