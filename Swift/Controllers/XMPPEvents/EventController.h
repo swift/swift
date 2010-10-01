@@ -16,16 +16,19 @@
 #include "Swift/Controllers/XMPPEvents/MessageEvent.h"
 
 namespace Swift {
+	typedef std::vector<boost::shared_ptr<StanzaEvent> > EventList;
 	class EventController {
 		public:
+
 			EventController();
 			void handleIncomingEvent(boost::shared_ptr<StanzaEvent> sourceEvent);
 			boost::signal<void (int)> onEventQueueLengthChange;
 			boost::signal<void (boost::shared_ptr<StanzaEvent>)> onEventQueueEventAdded;
+			const EventList getEvents() const {return events_;}
 
 		private:
 			void handleEventConcluded(boost::shared_ptr<StanzaEvent> event);
-			std::vector<boost::shared_ptr<StanzaEvent> > events_;
+			EventList events_;
 	};
 }
 #endif
