@@ -33,7 +33,13 @@ SetCompressor lzma
 !insertmacro MUI_UNPAGE_CONFIRM
 !insertmacro MUI_UNPAGE_INSTFILES
 
-
+section "isrunning"
+  FindProcDLL::FindProc "Swift.exe"
+  IntCmp $R0 1 0 notRunning
+    MessageBox MB_OK|MB_ICONEXCLAMATION "Swift is running. Please close it first" /SD IDOK
+    Abort
+  notRunning:
+SectionEnd
 
 # default section start
 section "Main install"
@@ -103,6 +109,8 @@ Section -Prerequisites
     Goto endRuntime
   endRuntime:
 SectionEnd
+
+
 
 section "autostart"
   MessageBox MB_YESNO "Would you like Swift to run at startup?" /SD IDYES IDNO endAutostart
