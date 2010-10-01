@@ -137,6 +137,7 @@ void QtMUCSearchWindow::addService(const MUCService& service) {
 		new MUCSearchRoomItem(P2QSTRING(room.getNode()), serviceItem);
 	}
 	model_->addService(serviceItem);
+	results_->expandAll();
 }
 
 }
