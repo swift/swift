@@ -155,7 +155,7 @@ section "Uninstall"
     DeleteRegKey HKEY_CURRENT_USER "Software\Swift\Start Menu Folder"
     DeleteRegKey /ifempty HKEY_CURRENT_USER "Software\Swift"
     DeleteRegKey HKEY_CURRENT_USER "Software\Microsoft\Windows\CurrentVersion\Run\Swift"
-
+    DeleteRegKey HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\Swift"
     Goto endUninstall
   endUninstall: 
 sectionEnd
