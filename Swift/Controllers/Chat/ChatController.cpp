@@ -155,7 +155,7 @@ String ChatController::getStatusChangeString(boost::shared_ptr<Presence> presenc
 		} 
 	}
 	if (!presence->getStatus().isEmpty()) {
-		response += "(" + presence->getStatus() + ")";
+		response += " (" + presence->getStatus() + ")";
 	}
 	return response + ".";
 }
