@@ -37,11 +37,19 @@ ChatController::ChatController(const JID& self, StanzaChannel* stanzaChannel, IQ
 	String nick = nickResolver_->jidToNick(toJID_);
 	chatWindow_->setName(nick);
 	String startMessage("Starting chat with " + nick);
+	Presence::ref theirPresence;
 	if (isInMUC) {
-		startMessage += " in chatroom " + contact.toBare().toString() + ".";
+		startMessage += " in chatroom " + contact.toBare().toString();
+		theirPresence = presenceOracle->getLastPresence(contact);
 	} else {
-		startMessage += " (" + contact.toBare().toString() + ").";
+		startMessage += " - " + contact.toBare().toString();
+		theirPresence = contact.isBare() ? presenceOracle->getHighestPriorityPresence(contact.toBare()) : presenceOracle->getLastPresence(contact);
 	}
+	startMessage += ": " + StatusShow::typeToFriendlyName(theirPresence ? theirPresence->getShow() : StatusShow::None);
+	if (theirPresence && !theirPresence->getStatus().isEmpty()) {
+		startMessage += " (" + theirPresence->getStatus() + ")";
+	}
+	startMessage += ".";
 	chatWindow_->addSystemMessage(startMessage);
 	chatWindow_->onUserTyping.connect(boost::bind(&ChatStateNotifier::setUserIsTyping, chatStateNotifier_));
 	chatWindow_->onUserCancelsTyping.connect(boost::bind(&ChatStateNotifier::userCancelledNewMessage, chatStateNotifier_));

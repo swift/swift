@@ -38,6 +38,22 @@ namespace Swift {
 				return "Unknown";
 			}
 
+			/**
+			 * Can be used for rough ordering of Types.
+			 * Greater magnitude = more available.
+			 */
+			static int typeToAvailabilityOrdering(Type type) {
+				switch (type) {
+				case Online: return 4;
+				case FFC: return 5;
+				case Away: return 2;
+				case XA: return 1;
+				case DND: return 3;
+				case None: return 0;
+				}
+				return -1;
+			}
+
 		private:
 			Type type_;
 	};

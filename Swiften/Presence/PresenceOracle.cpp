@@ -59,5 +59,25 @@ Presence::ref PresenceOracle::getLastPresence(const JID& jid) const {
 	}
 }
 
+Presence::ref PresenceOracle::getHighestPriorityPresence(const JID& bareJID) const {
+	PresencesMap::const_iterator i = entries_.find(bareJID);
+	if (i == entries_.end()) {
+		return Presence::ref();
+	}
+	PresenceMap presenceMap = i->second;
+	PresenceMap::const_iterator j = presenceMap.begin();
+	Presence::ref highest;
+	for (; j != presenceMap.end(); j++) {
+		Presence::ref current = j->second;
+		if (!highest
+				|| current->getPriority() > highest->getPriority()
+				|| (current->getPriority() == highest->getPriority()
+						&& StatusShow::typeToAvailabilityOrdering(current->getShow()) > StatusShow::typeToAvailabilityOrdering(highest->getShow()))) {
+			highest = current;
+		}
+
+	}
+	return highest;
+}
 
 }

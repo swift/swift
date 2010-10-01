@@ -21,6 +21,7 @@ class StanzaChannel;
 			~PresenceOracle();
 
 			Presence::ref getLastPresence(const JID&) const;
+			Presence::ref getHighestPriorityPresence(const JID& bareJID) const;
 
 		public:
 			boost::signal<void (boost::shared_ptr<Presence>)> onPresenceChange;
