@@ -247,6 +247,7 @@ void MainController::resetCurrentError() {
 }
 
 void MainController::handleConnected() {
+	boundJID_ = client_->getBoundJID();
 	loginWindow_->setIsLoggingIn(false);
 	resetCurrentError();
 	resetPendingReconnects();
@@ -419,7 +420,11 @@ void MainController::performLoginFromCachedCredentials() {
 		/* In case we're in the middle of another login, make sure they don't overlap */
 		client_->disconnect();
 	}
-	client_->connect();
+	if (boundJID_.isValid() && jid_.isBare()) {
+		client_->connect(boundJID_);
+	} else {
+		client_->connect();
+	}
 }
 
 void MainController::handleError(const ClientError& error) {

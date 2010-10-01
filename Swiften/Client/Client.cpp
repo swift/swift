@@ -42,8 +42,18 @@ bool Client::isAvailable() {
 	return session_ && session_->getState() == ClientSession::Initialized;
 }
 
+/** FIXME: implement */
+JID Client::getBoundJID() {
+	return JID();
+}
+
 void Client::connect() {
 	connect(jid_.getDomain());
+}
+
+void Client::connect(const JID& jid) {
+	jid_ = jid;
+	connect();
 }
 
 void Client::connect(const String& host) {

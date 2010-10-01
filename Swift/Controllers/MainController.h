@@ -157,6 +157,7 @@ namespace Swift {
 			boost::shared_ptr<DiscoInfo> serverDiscoInfo_;
 			XMPPRoster* xmppRoster_;;
 			JID jid_;
+			JID boundJID_;
 			PresenceOracle* presenceOracle_;
 			SystemTrayController* systemTrayController_;
 			SoundEventController* soundEventController_;

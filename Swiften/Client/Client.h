@@ -39,6 +39,7 @@ namespace Swift {
 			void setCertificate(const String& certificate);
 
 			void connect();
+			void connect(const JID& jid);
 			void connect(const String& host);
 			void disconnect();
 			
@@ -53,6 +54,8 @@ namespace Swift {
 			IQRouter* getIQRouter() const {
 				return iqRouter_;
 			}
+
+			JID getBoundJID();
 
 		public:
 			boost::signal<void (const ClientError&)> onError;
