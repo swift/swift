@@ -31,6 +31,7 @@ QtXMLConsoleWidget::QtXMLConsoleWidget() {
 
 	QWidget* bottom = new QWidget(this);
 	layout->addWidget(bottom);
+	bottom->setAutoFillBackground(true);
 
 	QHBoxLayout* buttonLayout = new QHBoxLayout(bottom);
 	buttonLayout->setContentsMargins(10,0,20,0);
