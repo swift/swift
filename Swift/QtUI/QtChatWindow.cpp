@@ -316,6 +316,7 @@ void QtChatWindow::addSystemMessage(const String& message) {
 	}
 
 	QString messageHTML(Qt::escape(P2QSTRING(message)));
+	messageHTML = P2QSTRING(Linkify::linkify(Q2PSTRING(messageHTML)));
 	messageHTML.replace("\n","<br/>");
 	messageLog_->addMessage(boost::shared_ptr<ChatSnippet>(new SystemMessageSnippet(messageHTML, QDateTime::currentDateTime(), false, theme_)));
 
@@ -330,6 +331,7 @@ void QtChatWindow::addPresenceMessage(const String& message) {
 	}
 
 	QString messageHTML(Qt::escape(P2QSTRING(message)));
+	messageHTML = P2QSTRING(Linkify::linkify(Q2PSTRING(messageHTML)));
 	messageHTML.replace("\n","<br/>");
 	messageLog_->addMessage(boost::shared_ptr<ChatSnippet>(new SystemMessageSnippet(messageHTML, QDateTime::currentDateTime(), false, theme_)));
 
