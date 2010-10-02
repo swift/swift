@@ -31,7 +31,11 @@ bool GroupRosterItem::isExpanded() const {
 	to avoid a loop in this case.
  */
 void GroupRosterItem::setExpanded(bool expanded) {
+	bool old = expanded_;
 	expanded_ = expanded;
+	if (expanded != old) {
+		onExpandedChanged(expanded);
+	}
 }
 
 const std::vector<RosterItem*>& GroupRosterItem::getChildren() const {

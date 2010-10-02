@@ -14,6 +14,7 @@
 #include "Swiften/Elements/RosterPayload.h"
 #include "Swiften/Avatars/AvatarManager.h"
 #include "Swift/Controllers/UIEvents/UIEvent.h"
+#include "Swift/Controllers/RosterGroupExpandinessPersister.h"
 
 #include "Swiften/Base/boost_bsignals.h"
 #include <boost/shared_ptr.hpp>
@@ -32,10 +33,11 @@ namespace Swift {
 	class SubscriptionRequestEvent;
 	class UIEventStream;
 	class IQRouter;
+	class SettingsProvider;
 
 	class RosterController {
 		public:
-			RosterController(const JID& jid, XMPPRoster* xmppRoster, AvatarManager* avatarManager, MainWindowFactory* mainWindowFactory, NickResolver* nickResolver, PresenceOracle* presenceOracle, PresenceSender* presenceSender, EventController* eventController, UIEventStream* uiEventStream, IQRouter* iqRouter_);
+			RosterController(const JID& jid, XMPPRoster* xmppRoster, AvatarManager* avatarManager, MainWindowFactory* mainWindowFactory, NickResolver* nickResolver, PresenceOracle* presenceOracle, PresenceSender* presenceSender, EventController* eventController, UIEventStream* uiEventStream, IQRouter* iqRouter_, SettingsProvider* settings);
 			~RosterController();
 			void showRosterWindow();
 			MainWindow* getWindow() {return mainWindow_;};
@@ -70,6 +72,7 @@ namespace Swift {
 			PresenceOracle* presenceOracle_;
 			PresenceSender* presenceSender_;
 			EventController* eventController_;
+			RosterGroupExpandinessPersister* expandiness_;
 			IQRouter* iqRouter_;
 			boost::bsignals::scoped_connection changeStatusConnection_;
 			boost::bsignals::scoped_connection showOfflineConnection_;

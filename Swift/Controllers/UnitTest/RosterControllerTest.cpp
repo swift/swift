@@ -20,6 +20,7 @@
 #include "Swiften/Roster/Roster.h"
 #include "Swiften/Roster/GroupRosterItem.h"
 #include "Swiften/Roster/ContactRosterItem.h"
+#include "Swiften/Settings/DummySettingsProvider.h"
 #include "Swiften/Avatars/NullAvatarManager.h"
 #include "Swift/Controllers/XMPPEvents/EventController.h"
 #include "Swiften/Presence/PresenceOracle.h"
@@ -61,7 +62,8 @@ class RosterControllerTest : public CppUnit::TestFixture
 			presenceSender_ = new PresenceSender(stanzaChannel_);
 			eventController_ = new EventController();
 			uiEventStream_ = new UIEventStream();
-			rosterController_ = new RosterController(jid_, xmppRoster_, avatarManager_, mainWindowFactory_, nickResolver_, presenceOracle_, presenceSender_, eventController_, uiEventStream_, router_);
+			settings_ = new DummySettingsProvider();
+			rosterController_ = new RosterController(jid_, xmppRoster_, avatarManager_, mainWindowFactory_, nickResolver_, presenceOracle_, presenceSender_, eventController_, uiEventStream_, router_, settings_);
 			mainWindow_ = mainWindowFactory_->last;
 		};
 
@@ -78,6 +80,7 @@ class RosterControllerTest : public CppUnit::TestFixture
 			delete presenceOracle_;
 			delete stanzaChannel_;
 			delete uiEventStream_;
+			delete settings_;
 		};
 
 	GroupRosterItem* groupChild(size_t i) {
@@ -206,6 +209,7 @@ class RosterControllerTest : public CppUnit::TestFixture
 		EventController* eventController_;
 		UIEventStream* uiEventStream_;
 		MockMainWindow* mainWindow_;
+		DummySettingsProvider* settings_;
 };
 
 CPPUNIT_TEST_SUITE_REGISTRATION(RosterControllerTest);

@@ -29,6 +29,7 @@ class GroupRosterItem : public RosterItem {
 		static bool itemLessThanWithoutStatus(const RosterItem* left, const RosterItem* right);
 		void setExpanded(bool expanded);
 		bool isExpanded() const;
+		boost::signal<void (bool)> onExpandedChanged;
 	private:
 		void handleChildrenChanged(GroupRosterItem* group);
 		void handleDataChanged(RosterItem* item);

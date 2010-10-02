@@ -37,12 +37,13 @@ namespace Swift {
 /**
  * The controller does not gain ownership of these parameters.
  */
-RosterController::RosterController(const JID& jid, XMPPRoster* xmppRoster, AvatarManager* avatarManager, MainWindowFactory* mainWindowFactory, NickResolver* nickResolver, PresenceOracle* presenceOracle, PresenceSender* presenceSender, EventController* eventController, UIEventStream* uiEventStream, IQRouter* iqRouter)
+RosterController::RosterController(const JID& jid, XMPPRoster* xmppRoster, AvatarManager* avatarManager, MainWindowFactory* mainWindowFactory, NickResolver* nickResolver, PresenceOracle* presenceOracle, PresenceSender* presenceSender, EventController* eventController, UIEventStream* uiEventStream, IQRouter* iqRouter, SettingsProvider* settings)
  : myJID_(jid), xmppRoster_(xmppRoster), mainWindowFactory_(mainWindowFactory), mainWindow_(mainWindowFactory_->createMainWindow(uiEventStream)), roster_(new Roster()), offlineFilter_(new OfflineRosterFilter()) {
 	iqRouter_ = iqRouter;
 	presenceOracle_ = presenceOracle;
 	presenceSender_ = presenceSender;
 	eventController_ = eventController;
+	expandiness_ = new RosterGroupExpandinessPersister(roster_, settings);
 	roster_->addFilter(offlineFilter_);
 	mainWindow_->setRosterModel(roster_);
 	
@@ -65,7 +66,7 @@ RosterController::RosterController(const JID& jid, XMPPRoster* xmppRoster, Avata
 
 RosterController::~RosterController() {
 	delete offlineFilter_;
-
+	delete expandiness_;
 }
 
 void RosterController::setNickResolver(NickResolver* nickResolver) {
