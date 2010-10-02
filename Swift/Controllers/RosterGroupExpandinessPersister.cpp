@@ -39,7 +39,7 @@ void RosterGroupExpandinessPersister::handleExpandedChanged(GroupRosterItem* gro
 void RosterGroupExpandinessPersister::save() {
 	String setting;
 	foreach (const String& group, collapsed_) {
-		if (setting.isEmpty()) {
+		if (!setting.isEmpty()) {
 			setting += "\n";
 		}
 		setting += group;
