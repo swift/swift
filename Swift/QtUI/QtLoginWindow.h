@@ -63,6 +63,7 @@ namespace Swift {
 			QComboBox* username_;
 			QLineEdit* password_;
 			QPushButton* loginButton_;
+			/* If you add a widget here, change setLoggingIn as well.*/
 			QCheckBox* remember_;
 			QCheckBox* loginAutomatically_;
 			QStackedWidget* stack_;

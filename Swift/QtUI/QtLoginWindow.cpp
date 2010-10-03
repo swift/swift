@@ -240,15 +240,26 @@ void QtLoginWindow::loggedOut() {
 		stack_->removeWidget(current);
 	}
 	setInitialMenus();
-	setEnabled(true);
+	setIsLoggingIn(false);
 }
 
 void QtLoginWindow::setIsLoggingIn(bool loggingIn) {
-	setEnabled(!loggingIn);
+	/* Change the for loop as well if you add to this.*/
+	QWidget* widgets[4] = {username_, password_, remember_, loginAutomatically_};
+	loginButton_->setText(loggingIn ? "Cancel" : "Connect");
+	for (int i = 0; i < 4; i++) {
+		widgets[i]->setEnabled(!loggingIn);
+	}
+
 }
 
 void QtLoginWindow::loginClicked() {
-	onLoginRequest(Q2PSTRING(username_->currentText()), Q2PSTRING(password_->text()), Q2PSTRING(certificateFile_), remember_->isChecked(), loginAutomatically_->isChecked());
+	if (username_->isEnabled()) {
+		onLoginRequest(Q2PSTRING(username_->currentText()), Q2PSTRING(password_->text()), Q2PSTRING(certificateFile_), remember_->isChecked(), loginAutomatically_->isChecked());
+	} else {
+		qDebug() << "Cancelling login";
+		onCancelLoginRequest();
+	}
 }
 
 void QtLoginWindow::setLoginAutomatically(bool loginAutomatically) {
