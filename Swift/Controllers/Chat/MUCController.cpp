@@ -247,6 +247,7 @@ void MUCController::preHandleIncomingMessage(boost::shared_ptr<MessageEvent> mes
 }
 
 void MUCController::handleOccupantRoleChanged(const String& nick, const MUCOccupant& occupant, const MUCOccupant::Role& oldRole) {
+	clearPresenceQueue();
 	receivedActivity();
 	JID jid(nickToJID(nick));
 	roster_->removeContactFromGroup(jid, roleToGroupName(oldRole));
