@@ -30,5 +30,6 @@ namespace Swift {
 			void requestPreviousTab();
 			void requestNextTab();
 			void requestActiveTab();
+			void requestFlash();
 	};
 }

@@ -20,6 +20,7 @@ namespace Swift {
 			enum Affiliation {Owner, Admin, Member, Outcast, NoAffiliation};
 
 			MUCOccupant(const String &nick, Role role, Affiliation affiliation);
+			MUCOccupant(const MUCOccupant& other);
 			~MUCOccupant();
 
 			String getNick() const;
@@ -34,6 +35,7 @@ namespace Swift {
 			Role role_;
 			Affiliation affiliation_;
 			boost::optional<JID> realJID_;
+			/* If you add a field, remember to update the const copy constructor */
 	};
 }
 

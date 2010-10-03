@@ -57,7 +57,6 @@ namespace Swift {
 
 		signals:
 			void geometryChanged();
-			void requestFlash();
 
 		protected slots:
 			void qAppFocusChanged(QWidget* old, QWidget* now);

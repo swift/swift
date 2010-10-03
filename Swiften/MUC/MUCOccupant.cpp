@@ -14,6 +14,10 @@ MUCOccupant::MUCOccupant(const String &nick, Role role, Affiliation affiliation)
 MUCOccupant::~MUCOccupant() {
 }
 
+MUCOccupant::MUCOccupant(const MUCOccupant& other) : nick_(other.getNick()), role_(other.getRole()), affiliation_(other.getAffiliation()), realJID_(other.getRealJID()) {
+
+}
+
 String MUCOccupant::getNick() const {
 	return nick_;
 }

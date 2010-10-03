@@ -6,8 +6,6 @@
 
 #include "Swiften/MUC/MUC.h"
 
-#include <iostream>
-
 #include <boost/bind.hpp>
 #include <boost/shared_ptr.hpp>
 
@@ -110,10 +108,12 @@ void MUC::handleIncomingPresence(boost::shared_ptr<Presence> presence) {
 	} else if (presence->getType() == Presence::Available) {
 		std::map<String, MUCOccupant>::iterator it = occupants.find(nick);
 		MUCOccupant occupant(nick, role, affiliation);
+		bool isJoin = true;
 		if (realJID) {
 			occupant.setRealJID(realJID.get());
 		}
 		if (it != occupants.end()) {
+			isJoin = false;
 			MUCOccupant oldOccupant = it->second;
 			if (oldOccupant.getRole() != role) {
 				onOccupantRoleChanged(nick, occupant, oldOccupant.getRole());
@@ -121,9 +121,10 @@ void MUC::handleIncomingPresence(boost::shared_ptr<Presence> presence) {
 			if (oldOccupant.getAffiliation() != affiliation) {
 				onOccupantAffiliationChanged(nick, affiliation, oldOccupant.getAffiliation());
 			}
+			occupants.erase(it);
 		}
 		std::pair<std::map<String, MUCOccupant>::iterator, bool> result = occupants.insert(std::make_pair(nick, occupant));
-		if (result.second) {
+		if (isJoin) {
 			onOccupantJoined(result.first->second);
 		}
 		onOccupantPresenceChange(presence);
