@@ -278,6 +278,10 @@ String QtChatWindow::addMessage(const String &message, const String &senderName,
 	return id;
 }
 
+void QtChatWindow::flash() {
+	emit requestFlash();
+}
+
 void QtChatWindow::setAckState(String const& id, ChatWindow::AckState state) {
 	QString xml;
 	switch (state) {

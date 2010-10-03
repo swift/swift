@@ -69,6 +69,7 @@ void QtChatTabs::addTab(QtTabbable* tab) {
 	connect(tab, SIGNAL(requestNextTab()), this, SLOT(handleRequestedNextTab()), Qt::UniqueConnection);
 	connect(tab, SIGNAL(requestActiveTab()), this, SLOT(handleRequestedActiveTab()), Qt::UniqueConnection);
 	connect(tab, SIGNAL(requestPreviousTab()), this, SLOT(handleRequestedPreviousTab()), Qt::UniqueConnection);
+	connect(tab, SIGNAL(requestFlash()), this, SLOT(flash()), Qt::UniqueConnection);
 	setSizePolicy(policy);
 }
 
@@ -168,9 +169,8 @@ void QtChatTabs::handleTabTitleUpdated(QWidget* widget) {
 	}
 	tabs_->setTabText(index, tabbable->getCount() > 0 ? QString("(%1) %2").arg(tabbable->getCount()).arg(tabbable->windowTitle()) : tabbable->windowTitle());
 	QColor tabTextColor;
-	bool flash = false;
 	switch (tabbable->getWidgetAlertState()) {
-	case QtTabbable::WaitingActivity : flash = true; tabTextColor = QColor(217, 20, 43); break;
+	case QtTabbable::WaitingActivity : tabTextColor = QColor(217, 20, 43); break;
 	case QtTabbable::ImpendingActivity : tabTextColor = QColor(27, 171, 32); break;
 	default : tabTextColor = QColor();
 	}
@@ -185,12 +185,12 @@ void QtChatTabs::handleTabTitleUpdated(QWidget* widget) {
 	
 	QtTabbable* current = qobject_cast<QtTabbable*>(tabs_->currentWidget());
 	setWindowTitle(unread > 0 ? QString("(%1) %2").arg(unread).arg(current->windowTitle()) : current->windowTitle());
+}
 
-	if (flash) {
+void QtChatTabs::flash() {
 #ifndef SWIFTEN_PLATFORM_MACOSX
-		QApplication::alert(this, 3000);
+	QApplication::alert(this, 3000);
 #endif
-	}
 }
 
 void QtChatTabs::resizeEvent(QResizeEvent*) {

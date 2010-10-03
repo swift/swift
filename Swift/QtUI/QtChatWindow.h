@@ -53,9 +53,11 @@ namespace Swift {
 			int getCount();
 			void replaceLastMessage(const String& message);
 			void setAckState(const String& id, AckState state);
+			void flash();
 
 		signals:
 			void geometryChanged();
+			void requestFlash();
 
 		protected slots:
 			void qAppFocusChanged(QWidget* old, QWidget* now);

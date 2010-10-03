@@ -57,6 +57,7 @@ namespace Swift {
 			virtual void setTabComplete(TabComplete* completer) = 0;
 			virtual void replaceLastMessage(const String& message) = 0;
 			virtual void setAckState(const String& id, AckState state) = 0;
+			virtual void flash() = 0;
 
 			boost::signal<void ()> onClosed;
 			boost::signal<void ()> onAllMessagesRead;
