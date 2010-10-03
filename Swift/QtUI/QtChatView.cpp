@@ -95,6 +95,7 @@ void QtChatView::addToDOM(boost::shared_ptr<ChatSnippet> snippet) {
 void QtChatView::replaceLastMessage(const QString& newMessage) {
 	/* FIXME: must be queued? */
 	bool bottom = isScrolledToBottom();
+	assert(!lastElement_.isNull());
 	QWebElement replace = lastElement_.findFirst("span.swift_message");
 	assert(!replace.isNull());
 	QString old = lastElement_.toOuterXml();
