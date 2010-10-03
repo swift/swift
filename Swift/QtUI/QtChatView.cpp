@@ -7,6 +7,7 @@
 #include "QtChatView.h"
 
 #include <QtDebug>
+#include <QEventLoop>
 #include <QFile>
 #include <QDesktopServices>
 #include <QVBoxLayout>
@@ -163,7 +164,16 @@ void QtChatView::resetView() {
 	pageHTML.replace(pageHTML.indexOf("%@"), 2, "Variants/Blue on Green.css");
 	pageHTML.replace(pageHTML.indexOf("%@"), 2, ""/*headerSnippet.getContent()*/);
 	pageHTML.replace(pageHTML.indexOf("%@"), 2, ""/*footerSnippet.getContent()*/);
+	QEventLoop syncLoop;
+	connect(webView_, SIGNAL(loadFinished(bool)), &syncLoop, SLOT(quit()));
 	webPage_->mainFrame()->setHtml(pageHTML);
+	while (!viewReady_) {
+		QTimer t;
+		t.setSingleShot(true);
+		connect(&t, SIGNAL(timeout()), &syncLoop, SLOT(quit()));
+		t.start(50);
+		syncLoop.exec();
+	}
 	document_ = webPage_->mainFrame()->documentElement();
 	QWebElement chatElement = document_.findFirst("#Chat");
 	newInsertPoint_ = chatElement.clone();
