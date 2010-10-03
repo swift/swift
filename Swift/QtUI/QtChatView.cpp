@@ -93,6 +93,7 @@ void QtChatView::addToDOM(boost::shared_ptr<ChatSnippet> snippet) {
 }
 
 void QtChatView::replaceLastMessage(const QString& newMessage) {
+	assert(viewReady_);
 	/* FIXME: must be queued? */
 	bool bottom = isScrolledToBottom();
 	assert(!lastElement_.isNull());
