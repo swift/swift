@@ -146,7 +146,6 @@ void RosterController::handleOnJIDUpdated(const JID& jid, const String& oldName,
 			roster_->removeContactFromGroup(jid, group);
 		}
 	}
-	
 }
 
 void RosterController::handleUIEvent(boost::shared_ptr<UIEvent> event) {
@@ -225,7 +224,13 @@ void RosterController::handleRosterSetError(boost::optional<ErrorPayload> error,
 }
 
 void RosterController::handleIncomingPresence(boost::shared_ptr<Presence> newPresence) {
-	roster_->applyOnItems(SetPresence(newPresence));
+	boost::shared_ptr<Presence> appliedPresence(newPresence);
+	if (newPresence->getType() == Presence::Unsubscribe) {
+		/* In 3921bis, subscription removal isn't followed by a presence push of unavailable*/
+		appliedPresence = boost::shared_ptr<Presence>(new Presence());
+		appliedPresence->setFrom(newPresence->getFrom().toBare());
+	}
+	roster_->applyOnItems(SetPresence(appliedPresence));
 }
 
 void RosterController::handleSubscriptionRequest(const JID& jid, const String& message) {

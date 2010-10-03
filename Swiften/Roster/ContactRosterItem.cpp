@@ -80,8 +80,13 @@ void ContactRosterItem::applyPresence(const String& resource, boost::shared_ptr<
 		offlinePresence_ = boost::shared_ptr<Presence>();
 	}
 	if (presence->getType() == Presence::Unavailable) {
-		if (presences_.find(resource) != presences_.end()) {
-			presences_.erase(resource);
+		if (resource.isEmpty()) {
+			/* Unavailable from the bare JID means all resources are offline.*/
+			presences_.clear();
+		} else {
+			if (presences_.find(resource) != presences_.end()) {
+				presences_.erase(resource);
+			}
 		}
 		if (presences_.size() > 0) {
 			offlinePresence_ = presence;
