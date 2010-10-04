@@ -72,6 +72,10 @@ namespace Swift {
 				return stanzaAckRequester_;
 			}
 
+			const JID& getLocalJID() const {
+				return localJID;
+			}
+
 			void start();
 			void finish();
 

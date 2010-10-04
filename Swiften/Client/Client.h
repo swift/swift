@@ -55,7 +55,13 @@ namespace Swift {
 				return iqRouter_;
 			}
 
-			JID getBoundJID();
+			/**
+			 * Returns the JID of the client. 
+			 * After the session was initialized, this returns the bound JID.
+			 */
+			const JID& getJID() const {
+				return jid_;
+			}
 
 		public:
 			boost::signal<void (const ClientError&)> onError;

@@ -42,11 +42,6 @@ bool Client::isAvailable() {
 	return session_ && session_->getState() == ClientSession::Initialized;
 }
 
-/** FIXME: implement */
-JID Client::getBoundJID() {
-	return JID();
-}
-
 void Client::connect() {
 	connect(jid_.getDomain());
 }
@@ -256,6 +251,7 @@ void Client::handleStanzaAcked(boost::shared_ptr<Stanza> stanza) {
 }
 
 void Client::handleSessionInitialized() {
+	jid_ = session_->getLocalJID();
 	onConnected();
 	onAvailableChanged(true);
 }

@@ -247,7 +247,7 @@ void MainController::resetCurrentError() {
 }
 
 void MainController::handleConnected() {
-	boundJID_ = client_->getBoundJID();
+	boundJID_ = client_->getJID();
 	loginWindow_->setIsLoggingIn(false);
 	resetCurrentError();
 	resetPendingReconnects();
