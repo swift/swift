@@ -30,7 +30,7 @@ namespace Swift {
 			void addMessage(boost::shared_ptr<ChatSnippet> snippet);
 			void replaceLastMessage(const QString& newMessage);
 			void replaceLastMessage(const QString& newMessage, const QString& note);
-			bool isScrolledToBottom() const;
+			void rememberScrolledToBottom();
 			void setAckXML(const QString& id, const QString& xml);
 
 		signals:
@@ -45,6 +45,7 @@ namespace Swift {
 
 		private slots:
 			void handleViewLoadFinished(bool);
+			void handleFrameSizeChanged();
 
 		private:
 			void headerEncode();
@@ -54,6 +55,7 @@ namespace Swift {
 			QWebElement snippetToDOM(boost::shared_ptr<ChatSnippet> snippet);
 
 			bool viewReady_;
+			bool isAtBottom_;
 			QtWebView* webView_;
 			QWebPage* webPage_;
 			QList<boost::shared_ptr<ChatSnippet> > queuedSnippets_;

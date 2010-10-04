@@ -349,8 +349,8 @@ void QtChatWindow::returnPressed() {
 	if (!inputEnabled_) {
 		return;
 	}
-	onSendMessageRequest(Q2PSTRING(input_->toPlainText()));
 	messageLog_->scrollToBottom();
+	onSendMessageRequest(Q2PSTRING(input_->toPlainText()));
 	inputClearing_ = true;
 	input_->clear();
 	inputClearing_ = false;

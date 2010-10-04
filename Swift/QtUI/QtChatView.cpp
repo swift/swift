@@ -44,15 +44,13 @@ QtChatView::QtChatView(QtChatTheme* theme, QWidget* parent) : QWidget(parent) {
 	mainLayout->addWidget(webView_);
 #endif
 
-
-	
-
 	webPage_ = new QWebPage(this);
 	webPage_->setLinkDelegationPolicy(QWebPage::DelegateAllLinks);
 	webView_->setPage(webPage_);
 	connect(webPage_, SIGNAL(selectionChanged()), SLOT(copySelectionToClipboard()));
 
 	viewReady_ = false;
+	isAtBottom_ = true;
 	resetView();
 }
 
@@ -76,7 +74,7 @@ QWebElement QtChatView::snippetToDOM(boost::shared_ptr<ChatSnippet> snippet) {
 }
 
 void QtChatView::addToDOM(boost::shared_ptr<ChatSnippet> snippet) {
-	bool bottom = isScrolledToBottom();
+	rememberScrolledToBottom();
 	QWebElement newElement = snippetToDOM(snippet);
 	QWebElement continuationElement = lastElement_.findFirst("#insert");
 	if (snippet->getAppendToPrevious()) {
@@ -87,27 +85,21 @@ void QtChatView::addToDOM(boost::shared_ptr<ChatSnippet> snippet) {
 		newInsertPoint_.prependOutside(newElement);
 	}
 	lastElement_ = newElement;
-	if (bottom) {
-		/* Warning: I'm not confident about this, although it does work.*/
-		QTimer::singleShot(0, this, SLOT(scrollToBottom()));
-	}
 }
 
 void QtChatView::replaceLastMessage(const QString& newMessage) {
 	assert(viewReady_);
 	/* FIXME: must be queued? */
-	bool bottom = isScrolledToBottom();
+	rememberScrolledToBottom();
 	assert(!lastElement_.isNull());
 	QWebElement replace = lastElement_.findFirst("span.swift_message");
 	assert(!replace.isNull());
 	QString old = lastElement_.toOuterXml();
 	replace.setInnerXml(ChatSnippet::escape(newMessage));
-	if (bottom) {
-		QTimer::singleShot(0, this, SLOT(scrollToBottom()));
-	}
 }
 
 void QtChatView::replaceLastMessage(const QString& newMessage, const QString& note) {
+	rememberScrolledToBottom();
 	replaceLastMessage(newMessage);
 	QWebElement replace = lastElement_.findFirst("span.swift_time");
 	assert(!replace.isNull());
@@ -129,12 +121,19 @@ void QtChatView::setAckXML(const QString& id, const QString& xml) {
 	ackElement.setInnerXml(xml);
 }
 
-bool QtChatView::isScrolledToBottom() const {
-	return webPage_->mainFrame()->scrollBarValue(Qt::Vertical) == webPage_->mainFrame()->scrollBarMaximum(Qt::Vertical);
+void QtChatView::rememberScrolledToBottom() {
+	isAtBottom_ = webPage_->mainFrame()->scrollBarValue(Qt::Vertical) == webPage_->mainFrame()->scrollBarMaximum(Qt::Vertical);
 }
 
 void QtChatView::scrollToBottom() {
+	isAtBottom_ = true;
 	webPage_->mainFrame()->setScrollBarValue(Qt::Vertical, webPage_->mainFrame()->scrollBarMaximum(Qt::Vertical));
+}
+
+void QtChatView::handleFrameSizeChanged() {
+	if (isAtBottom_) {
+		scrollToBottom();
+	}
 }
 
 void QtChatView::handleLinkClicked(const QUrl& url) {
@@ -180,6 +179,8 @@ void QtChatView::resetView() {
 	newInsertPoint_.setOuterXml("<div id='swift_insert'/>");
 	chatElement.appendInside(newInsertPoint_);
 	Q_ASSERT(!newInsertPoint_.isNull());
+
+	connect(webPage_->mainFrame(), SIGNAL(contentsSizeChanged(const QSize&)), this, SLOT(handleFrameSizeChanged()), Qt::UniqueConnection);
 }
 
 }
