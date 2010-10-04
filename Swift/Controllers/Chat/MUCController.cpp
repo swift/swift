@@ -229,7 +229,9 @@ void MUCController::preHandleIncomingMessage(boost::shared_ptr<MessageEvent> mes
 	boost::shared_ptr<Message> message = messageEvent->getStanza();
 	if (joined_ && messageTargetsMe(message) && !message->getPayload<Delay>()) {
 		eventController_->handleIncomingEvent(messageEvent);
-		chatWindow_->flash();
+		if (messageEvent->isReadable()) {
+			chatWindow_->flash();
+		}
 	}
 	if (joined_) {
 		String nick = message->getFrom().getResource();

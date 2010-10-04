@@ -88,7 +88,9 @@ bool ChatController::isIncomingMessageFromMe(boost::shared_ptr<Message>) {
 
 void ChatController::preHandleIncomingMessage(boost::shared_ptr<MessageEvent> messageEvent) {
 	eventController_->handleIncomingEvent(messageEvent);
-	chatWindow_->flash();
+	if (messageEvent->isReadable()) {
+		chatWindow_->flash();
+	}
 	boost::shared_ptr<Message> message = messageEvent->getStanza();
 	JID from = message->getFrom();
 	if (!from.equals(toJID_, JID::WithResource)) {
