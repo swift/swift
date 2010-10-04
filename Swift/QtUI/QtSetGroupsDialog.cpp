@@ -69,7 +69,7 @@ boost::shared_ptr<RegroupRosterItemUIEvent> QtSetGroupsDialog::getRegroupEvent()
 			if (pair.first == "Contacts") {
 				wantsContacts = true;
 			}
-			if (!existing) {
+			if (!existing && pair.first != "Contacts") {
 				addedGroups.push_back(pair.first);
 			}
 		} else {

@@ -146,6 +146,10 @@ void RosterController::handleOnJIDUpdated(const JID& jid, const String& oldName,
 			roster_->removeContactFromGroup(jid, group);
 		}
 	}
+	Presence::ref presence(presenceOracle_->getHighestPriorityPresence(jid));
+	if (presence) {
+		roster_->applyOnItems(SetPresence(presence));
+	}
 }
 
 void RosterController::handleUIEvent(boost::shared_ptr<UIEvent> event) {
