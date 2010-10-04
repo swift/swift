@@ -35,7 +35,7 @@ void MUC::joinAs(const String &nick) {
 
 	ownMUCJID = JID(ownMUCJID.getNode(), ownMUCJID.getDomain(), nick);
 
-	boost::shared_ptr<Presence> joinPresence(new Presence());
+	boost::shared_ptr<Presence> joinPresence(presenceSender->getLastSentUndirectedPresence());
 	joinPresence->setTo(ownMUCJID);
 	joinPresence->addPayload(boost::shared_ptr<Payload>(new MUCPayload()));
 	presenceSender->sendPresence(joinPresence);

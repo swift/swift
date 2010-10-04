@@ -31,6 +31,14 @@ void PresenceSender::sendPresence(boost::shared_ptr<Presence> presence) {
 	}
 }
 
+/**
+ * Gets either the last broadcast presence, or an empty stanza if none has been sent.
+ */
+boost::shared_ptr<Presence> PresenceSender::getLastSentUndirectedPresence() {
+	boost::shared_ptr<Presence> presenceCopy(lastSentUndirectedPresence ? new Presence(*lastSentUndirectedPresence) : new Presence());
+	return presenceCopy;
+}
+
 void PresenceSender::addDirectedPresenceReceiver(const JID& jid) {
 	directedPresenceReceivers.insert(jid);
 	if (channel->isAvailable()) {

@@ -26,6 +26,8 @@ namespace Swift {
 			void confirmSubscription(const JID& jid);
 			void requestSubscription(const JID& jid);
 
+			boost::shared_ptr<Presence> getLastSentUndirectedPresence();
+
 		private:
 			boost::shared_ptr<Presence> lastSentUndirectedPresence;
 			StanzaChannel* channel;
