@@ -9,6 +9,7 @@
 #include <QObject>
 
 #include "Swift/QtUI/ContextMenus/QtContextMenu.h"
+#include "Swift/QtUI/Roster/QtTreeWidget.h"
 #include "Swift/Controllers/UIEvents/UIEventStream.h"
 
 namespace Swift {
@@ -16,15 +17,17 @@ namespace Swift {
 	class QtRosterContextMenu : public QObject, public QtContextMenu {
 		Q_OBJECT
 		public:
-			QtRosterContextMenu(UIEventStream* eventStream);
+			QtRosterContextMenu(UIEventStream* eventStream, QtTreeWidget* treeWidget);
 			void show(RosterItem* item);
 
 		private slots:
 			void handleRemoveContact();
 			void handleRenameContact();
+			void handleRegroupContact();
 
 		private:
 			RosterItem* item_;
 			UIEventStream* eventStream_;
+			QtTreeWidget* treeWidget_;
 	};
 }

@@ -83,6 +83,7 @@ sources = [
     "QtBookmarkDetailWindow.cpp",
     "QtAddBookmarkWindow.cpp",
     "QtEditBookmarkWindow.cpp",
+    "QtSetGroupsDialog.cpp",
     "ChatSnippet.cpp",
     "MessageSnippet.cpp",
     "SystemMessageSnippet.cpp",

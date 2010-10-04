@@ -98,6 +98,18 @@ void ContactRosterItem::applyPresence(const String& resource, boost::shared_ptr<
 	onDataChanged();
 }
 
+const std::vector<String> ContactRosterItem::getGroups() const {
+	return groups_;
+}
+
+/** Only used so a contact can know about the groups it's in*/
+void ContactRosterItem::addGroup(const String& group) {
+	groups_.push_back(group);
+}
+void ContactRosterItem::removeGroup(const String& group) {
+	groups_.erase(std::find(groups_.begin(), groups_.end(), group));
+}
+
 }
 
 

@@ -46,6 +46,7 @@ QtTreeWidget::~QtTreeWidget() {
 }
 
 void QtTreeWidget::setRosterModel(Roster* roster) {
+	roster_ = roster;
 	model_->setRoster(roster);
 	expandAll();
 }

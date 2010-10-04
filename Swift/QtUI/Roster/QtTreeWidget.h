@@ -26,6 +26,7 @@ class QtTreeWidget : public QTreeView{
 		QtTreeWidgetItem* getRoot();
 		void setContextMenu(QtContextMenu* contextMenu);
 		void setRosterModel(Roster* roster);
+		Roster* getRoster() {return roster_;}
 	private slots:
 		void handleItemActivated(const QModelIndex&);
 		void handleModelItemExpanded(const QModelIndex&, bool expanded);
@@ -38,6 +39,7 @@ class QtTreeWidget : public QTreeView{
 	private:
 		void drawBranches(QPainter*, const QRect&, const QModelIndex&) const;
 		RosterModel* model_;
+		Roster* roster_;
 		RosterDelegate* delegate_;
 		QtTreeWidgetItem* treeRoot_;
 		QtContextMenu* contextMenu_;

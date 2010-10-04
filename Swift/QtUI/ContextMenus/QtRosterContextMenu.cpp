@@ -10,20 +10,26 @@
 #include <QLineEdit>
 #include <QMenu>
 #include <QDebug>
+#include <QDialog>
 
 #include <boost/shared_ptr.hpp>
 
 #include "Swiften/Roster/ContactRosterItem.h"
+#include "Swiften/Roster/GroupRosterItem.h"
 #include "Swiften/Base/String.h"
+#include "Swiften/Roster/Roster.h"
 #include "Swift/Controllers/UIEvents/UIEvent.h"
 #include "Swift/Controllers/UIEvents/RemoveRosterItemUIEvent.h"
 #include "Swift/Controllers/UIEvents/RenameRosterItemUIEvent.h"
 #include "Swift/QtUI/QtSwiftUtil.h"
+#include "Swift/QtUI/QtSetGroupsDialog.h"
+
 
 namespace Swift {
 
-QtRosterContextMenu::QtRosterContextMenu(UIEventStream* eventStream) {
+QtRosterContextMenu::QtRosterContextMenu(UIEventStream* eventStream, QtTreeWidget* treeWidget) {
 	eventStream_ = eventStream;
+	treeWidget_ = treeWidget;
 }
 
 void QtRosterContextMenu::show(RosterItem* item) {
@@ -32,10 +38,36 @@ void QtRosterContextMenu::show(RosterItem* item) {
 		return;
 	}
 	item_ = item;
-	QMenu* contextMenu = new QMenu();
-	contextMenu->addAction("Remove", this, SLOT(handleRemoveContact()));
-	contextMenu->addAction("Rename", this, SLOT(handleRenameContact()));
-	contextMenu->exec(QCursor::pos());
+	QMenu contextMenu;
+	contextMenu.addAction("Remove", this, SLOT(handleRemoveContact()));
+	contextMenu.addAction("Rename", this, SLOT(handleRenameContact()));
+	contextMenu.addAction("Groups", this, SLOT(handleRegroupContact()));
+	/*QMenu* groupsMenu = contextMenu.addMenu("Groups");
+	std::map<QAction, String> groupActions;
+	for (int i = 0; i < 0; i++) {
+		String groupName;
+		groupActions[groupsMenu->addAction(P2QSTRING(groupName))] = groupName;
+	}
+	groupsMenu->addSeparator();
+	groupsMenu->addAction("New Group", this SLOT(handleNewGroup()));*/
+	contextMenu.exec(QCursor::pos());
+}
+
+void QtRosterContextMenu::handleRegroupContact() {
+	QList<QString> allGroups;
+	foreach (RosterItem* item, treeWidget_->getRoster()->getRoot()->getChildren()) {
+		GroupRosterItem* group = dynamic_cast<GroupRosterItem*>(item);
+		if (group) {
+			allGroups.push_back(P2QSTRING(group->getDisplayName()));
+		}
+	}
+	ContactRosterItem* contact = dynamic_cast<ContactRosterItem*>(item_);
+	assert(contact);
+	QtSetGroupsDialog groupDialog(contact, allGroups);
+
+	if (groupDialog.exec() == QDialog::Accepted) {
+		eventStream_->send(groupDialog.getRegroupEvent());
+	}
 }
 
 void QtRosterContextMenu::handleRemoveContact() {

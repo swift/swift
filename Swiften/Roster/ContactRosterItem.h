@@ -36,6 +36,10 @@ class ContactRosterItem : public RosterItem {
 		void applyPresence(const String& resource, boost::shared_ptr<Presence> presence);
 		void clearPresence();
 		void calculateShownPresence();
+		const std::vector<String> getGroups() const;
+		/** Only used so a contact can know about the groups it's in*/
+		void addGroup(const String& group);
+		void removeGroup(const String& group);
 	private:
 		JID jid_;
 		JID displayJID_;
@@ -44,6 +48,7 @@ class ContactRosterItem : public RosterItem {
 		std::map<String, boost::shared_ptr<Presence> > presences_;
 		boost::shared_ptr<Presence> offlinePresence_;
 		boost::shared_ptr<Presence> shownPresence_;
+		std::vector<String> groups_;
 };
 
 }

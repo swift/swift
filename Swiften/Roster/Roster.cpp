@@ -73,9 +73,18 @@ void Roster::addContact(const JID& jid, const JID& displayJID, const String& nam
 	ContactRosterItem *item = new ContactRosterItem(jid, displayJID, name, group);
 	item->setAvatarPath(avatarPath);
 	group->addChild(item);
+	if (itemMap_[fullJIDMapping_ ? jid : jid.toBare()].size() > 0) {
+		foreach (String existingGroup, itemMap_[fullJIDMapping_ ? jid : jid.toBare()][0]->getGroups()) {
+			item->addGroup(existingGroup);
+		}
+	}
 	itemMap_[fullJIDMapping_ ? jid : jid.toBare()].push_back(item);
 	item->onDataChanged.connect(boost::bind(&Roster::handleDataChanged, this, item));
 	filterContact(item, group);
+
+	foreach (ContactRosterItem* item, itemMap_[fullJIDMapping_ ? jid : jid.toBare()]) {
+		item->addGroup(groupName);
+	}
 }
 
 struct JIDEqualsTo {
@@ -112,6 +121,9 @@ void Roster::removeContactFromGroup(const JID& jid, const String& groupName) {
 			items->erase(std::remove(items->begin(), items->end(), deleted), items->end());
 		}
 		it++;
+	}
+	foreach (ContactRosterItem* item, itemMap_[fullJIDMapping_ ? jid : jid.toBare()]) {
+		item->removeGroup(groupName);
 	}
 }
 
