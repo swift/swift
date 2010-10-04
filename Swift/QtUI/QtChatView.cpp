@@ -128,6 +128,7 @@ void QtChatView::rememberScrolledToBottom() {
 void QtChatView::scrollToBottom() {
 	isAtBottom_ = true;
 	webPage_->mainFrame()->setScrollBarValue(Qt::Vertical, webPage_->mainFrame()->scrollBarMaximum(Qt::Vertical));
+	webView_->update(); /* Work around redraw bug in some versions of Qt. */
 }
 
 void QtChatView::handleFrameSizeChanged() {
