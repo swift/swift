@@ -335,6 +335,7 @@ void MainController::sendPresence(boost::shared_ptr<Presence> presence) {
 	rosterController_->getWindow()->setMyStatusType(presence->getShow());
 	rosterController_->getWindow()->setMyStatusText(presence->getStatus());
 	systemTrayController_->setMyStatusType(presence->getShow());
+	notifier_->setEnabled(presence->getShow() != StatusShow::DND);
 
 	// Add information and send
 	if (!vCardPhotoHash_.isEmpty()) {

@@ -8,7 +8,16 @@
 
 namespace Swift {
 
+Notifier::Notifier() : enabled(true) {
+}
+
 Notifier::~Notifier() {
+}
+
+void Notifier::showMessage(Type type, const String& subject, const String& description, const boost::filesystem::path& picture, boost::function<void()> callback) {
+	if (enabled) {
+		doShowMessage(type, subject, description, picture, callback);
+	}
 }
 
 String Notifier::typeToString(Type type) {

@@ -14,6 +14,7 @@
 namespace Swift {
 	class Notifier {
 		public:
+			Notifier();
 			virtual ~Notifier();
 
 			enum Type { ContactAvailable, ContactUnavailable, ContactStatusChange, IncomingMessage, SystemMessage };
@@ -26,11 +27,26 @@ namespace Swift {
 				const String& subject, 
 				const String& description, 
 				const boost::filesystem::path& picture,
+				boost::function<void()> callback);
+
+			void setEnabled(bool b) {
+				enabled = b;
+			}
+
+		private:
+			virtual void doShowMessage(
+				Type type,
+				const String& subject, 
+				const String& description, 
+				const boost::filesystem::path& picture,
 				boost::function<void()> callback) = 0;
 
 		protected:
 			String typeToString(Type type);
 			static std::vector<Type> getAllTypes();
 			static std::vector<Type> getDefaultTypes();
+
+		private:
+			bool enabled;
 	};
 }
