@@ -44,7 +44,10 @@ int main(int argc, char* argv[]) {
 		while (!myfile.eof()) {
 			getline (myfile,line);
 			std::cout << "Parsing: " << line << std::endl;
-			tester.parse(line);
+			if (!tester.parse(line)) {
+				std::cerr << "PARSE ERROR" << std::endl;
+				return -1;
+			}
 		}
 		myfile.close();
 	}
