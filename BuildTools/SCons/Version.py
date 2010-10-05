@@ -1,4 +1,4 @@
-import subprocess, os, datetime, re
+import subprocess, os, datetime, re, os.path
 
 def getGitBuildVersion(project) :
   tag = git("describe --tags --exact --match \"" + project + "-*\"")
@@ -9,11 +9,7 @@ def getGitBuildVersion(project) :
     m = re.match(project + "-(.*)-(.*)-(.*)", tag)
     if m :
       return m.group(1) + "-dev" + m.group(2)
-  log = git("log --oneline")
-  if log :
-    return project + "-0.1-dev" + str(len(log.split("\n")))
-  else :
-    return project + "-0.0-dev"
+  return None
     
 def git(cmd) :
   p = subprocess.Popen("git " + cmd, shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE, close_fds=(os.name != "nt"))
@@ -25,6 +21,13 @@ def getBuildVersion(project) :
   gitVersion = getGitBuildVersion(project) 
   if gitVersion :
     return gitVersion
-  # TODO: Add the current branch
-  # TODO: Pick up a version number from a file (for distributing)
-  return datetime.date.today().strftime("%Y%m%d")
+  else :
+    versionFilename = "VERSION." + project
+    if os.path.isfile(versionFilename) :
+      f = open(versionFilename)
+      version = f.read().strip()
+      f.close()
+      return version
+    else :
+      # TODO: Add the current branch
+      return datetime.date.today().strftime("%Y%m%d")
