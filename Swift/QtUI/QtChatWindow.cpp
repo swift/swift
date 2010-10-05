@@ -389,7 +389,7 @@ void QtChatWindow::moveEvent(QMoveEvent*) {
 }
 
 void QtChatWindow::replaceLastMessage(const String& message) {
-	messageLog_->replaceLastMessage(P2QSTRING(message));
+	messageLog_->replaceLastMessage(P2QSTRING(Linkify::linkify(message)));
 }
 
 }
