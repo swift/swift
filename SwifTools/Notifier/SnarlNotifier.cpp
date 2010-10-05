@@ -34,7 +34,7 @@ SnarlNotifier::~SnarlNotifier() {
 }
 
 void SnarlNotifier::doShowMessage(Type type, const String& subject, const String& description, const boost::filesystem::path& picture, boost::function<void()> callback) {
-	int timeout = (type == Type::IncomingMessage || type == Type::SystemMessage) ? MESSAGE_NOTIFICATION_TIMEOUT : STATUS_NOTIFICATION_TIMEOUT;
+	int timeout = (type == Type::IncomingMessage || type == Type::SystemMessage) ? DEFAULT_MESSAGE_NOTIFICATION_TIMEOUT_SECONDS : DEFAULT_STATUS_NOTIFICATION_TIMEOUT_SECONDS;
 	int notificationID = snarl.ShowMessageEx(typeToString(type).getUTF8Data(), subject.getUTF8Data(), description.getUTF8Data(), timeout, picture.string().c_str(), window->getID(), SWIFT_SNARLNOTIFIER_MESSAGE_ID);
 	if (notificationID > 0) {
 		notifications.insert(std::make_pair(notificationID, callback));

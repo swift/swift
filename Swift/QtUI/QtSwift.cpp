@@ -41,6 +41,8 @@
 #elif defined(HAVE_SNARL)
 #include "QtWin32NotifierWindow.h"
 #include "SwifTools/Notifier/SnarlNotifier.h"
+#elif defined(SWIFTEN_PLATFORM_LINUX)
+#include "FreeDesktopNotifier.h"
 #else
 #include "SwifTools/Notifier/NullNotifier.h"
 #endif
@@ -103,6 +105,8 @@ QtSwift::QtSwift(po::variables_map options) : autoUpdater_(NULL) {
 #elif defined(HAVE_SNARL)
 	notifierWindow_ = new QtWin32NotifierWindow();
 	notifier_ = new SnarlNotifier(SWIFT_APPLICATION_NAME, notifierWindow_, applicationPathProvider_->getResourcePath("/images/logo-icon-32.png"));
+#elif defined(SWIFTEN_PLATFORM_LINUX)
+	notifier_ = new FreeDesktopNotifier(SWIFT_APPLICATION_NAME);
 #else
 	notifier_ = new NullNotifier();
 #endif
