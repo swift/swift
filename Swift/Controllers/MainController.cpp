@@ -402,7 +402,7 @@ void MainController::performLoginFromCachedCredentials() {
 		entityCapsManager_ = new EntityCapsManager(capsManager_, client_);
 		presenceNotifier_ = new PresenceNotifier(client_, notifier_, mucRegistry_, avatarManager_, nickResolver_, presenceOracle_, &timerFactory_);
 		presenceNotifier_->onNotificationActivated.connect(boost::bind(&MainController::handleNotificationClicked, this, _1));
-		eventNotifier_ = new EventNotifier(eventController_, notifier_, avatarManager_, nickResolver_);
+		eventNotifier_ = new EventNotifier(eventController_, notifier_, avatarManager_, nickResolver_, uiEventStream_, settings_);
 		eventNotifier_->onNotificationActivated.connect(boost::bind(&MainController::handleNotificationClicked, this, _1));
 		client_->onDataRead.connect(boost::bind(
 				&XMLConsoleController::handleDataRead, xmlConsoleController_, _1));

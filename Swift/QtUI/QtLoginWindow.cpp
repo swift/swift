@@ -24,6 +24,7 @@
 #include "Swift/Controllers/UIEvents/UIEventStream.h"
 #include "Swift/Controllers/UIEvents/RequestXMLConsoleUIEvent.h"
 #include "Swift/Controllers/UIEvents/ToggleSoundsUIEvent.h"
+#include "Swift/Controllers/UIEvents/ToggleNotificationsUIEvent.h"
 #include "Swiften/Base/Platform.h"
 
 #include "QtAboutWidget.h"
@@ -149,6 +150,14 @@ QtLoginWindow::QtLoginWindow(UIEventStream* uiEventStream) : QMainWindow() {
 	connect(toggleSoundsAction_, SIGNAL(toggled(bool)), SLOT(handleToggleSounds(bool)));
 	generalMenu_->addAction(toggleSoundsAction_);
 
+	toggleNotificationsAction_ = new QAction(tr("Show Notifications"), this);
+	toggleNotificationsAction_->setCheckable(true);
+	toggleNotificationsAction_->setChecked(true);
+	connect(toggleNotificationsAction_, SIGNAL(toggled(bool)), SLOT(handleToggleNotifications(bool)));
+#ifdef SWIFTEN_PLATFORM_LINUX
+	generalMenu_->addAction(toggleNotificationsAction_);
+#endif
+
 	
 	QAction* quitAction = new QAction("Quit", this);
 	connect(quitAction, SIGNAL(triggered()), SLOT(handleQuit()));
@@ -163,6 +172,10 @@ void QtLoginWindow::handleUIEvent(boost::shared_ptr<UIEvent> event) {
 	boost::shared_ptr<ToggleSoundsUIEvent> soundEvent = boost::dynamic_pointer_cast<ToggleSoundsUIEvent>(event);
 	if (soundEvent) {
 		toggleSoundsAction_->setChecked(soundEvent->getEnabled());
+	}
+	boost::shared_ptr<ToggleNotificationsUIEvent> notificationsEvent = boost::dynamic_pointer_cast<ToggleNotificationsUIEvent>(event);
+	if (notificationsEvent) {
+		toggleNotificationsAction_->setChecked(notificationsEvent->getEnabled());
 	}
 }
 
@@ -298,6 +311,9 @@ void QtLoginWindow::handleToggleSounds(bool enabled) {
 	uiEventStream_->send(boost::shared_ptr<ToggleSoundsUIEvent>(new ToggleSoundsUIEvent(enabled)));
 }
 
+void QtLoginWindow::handleToggleNotifications(bool enabled) {
+	uiEventStream_->send(boost::shared_ptr<ToggleNotificationsUIEvent>(new ToggleNotificationsUIEvent(enabled)));
+}
 
 void QtLoginWindow::handleQuit() {
 	QApplication::quit();

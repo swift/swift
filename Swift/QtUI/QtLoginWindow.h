@@ -48,6 +48,7 @@ namespace Swift {
 			void handleQuit();
 			void handleShowXMLConsole();
 			void handleToggleSounds(bool enabled);
+			void handleToggleNotifications(bool enabled);
 			void handleAbout();
 			void bringToFront();
 			void handleUsernameTextChanged();
@@ -75,6 +76,7 @@ namespace Swift {
 			QMenu* generalMenu_;
 			QMenu* toolsMenu_;
 			QAction* toggleSoundsAction_;
+			QAction* toggleNotificationsAction_;
 			UIEventStream* uiEventStream_;
 			QPointer<QtAboutWidget> aboutDialog_;
 	};

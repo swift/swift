@@ -33,6 +33,8 @@ namespace Swift {
 				enabled = b;
 			}
 
+			bool getEnabled() {return enabled;}
+
 		private:
 			virtual void doShowMessage(
 				Type type,
