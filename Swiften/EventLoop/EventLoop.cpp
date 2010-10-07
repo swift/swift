@@ -8,12 +8,13 @@
 
 #include <algorithm>
 #include <boost/bind.hpp>
+#include <iostream>
 
 #include "Swiften/EventLoop/MainEventLoop.h"
 
 namespace Swift {
 
-EventLoop::EventLoop() : nextEventID_(0) {
+EventLoop::EventLoop() : nextEventID_(0), handlingEvents_(false) {
 	MainEventLoop::setInstance(this);
 }
 
@@ -22,6 +23,13 @@ EventLoop::~EventLoop() {
 }
 
 void EventLoop::handleEvent(const Event& event) {
+	if (handlingEvents_) {
+		// We're being called recursively. Push in the list of events to
+		// handle in the parent handleEvent()
+		eventsToHandle_.push_back(event);
+		return;
+	}
+
 	bool doCallback = false;
 	{
 		boost::lock_guard<boost::mutex> lock(eventsMutex_);
@@ -32,7 +40,16 @@ void EventLoop::handleEvent(const Event& event) {
 		}
 	}
 	if (doCallback) {
+		handlingEvents_ = true;
 		event.callback();
+		// Process events that were passed to handleEvent during the callback
+		// (i.e. through recursive calls of handleEvent)
+		while (!eventsToHandle_.empty()) {
+			Event nextEvent = eventsToHandle_.front();
+			eventsToHandle_.pop_front();
+			nextEvent.callback();
+		}
+		handlingEvents_ = false;
 	}
 }
 

@@ -9,6 +9,7 @@
 #include <boost/function.hpp>
 #include <boost/thread/mutex.hpp>
 #include <list>
+#include <deque>
 
 #include "Swiften/EventLoop/Event.h"
 
@@ -40,5 +41,7 @@ namespace Swift {
 			boost::mutex eventsMutex_;
 			unsigned int nextEventID_;
 			std::list<Event> events_;
+			bool handlingEvents_;
+			std::deque<Event> eventsToHandle_;
 	};
 }

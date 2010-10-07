@@ -11,20 +11,19 @@
 
 #include "Swiften/EventLoop/EventOwner.h"
 #include "Swiften/EventLoop/SimpleEventLoop.h"
+#include "Swiften/EventLoop/DummyEventLoop.h"
 #include "Swiften/Base/sleep.h"
 
 using namespace Swift;
 
-class EventLoopTest : public CppUnit::TestFixture
-{
+class EventLoopTest : public CppUnit::TestFixture {
 		CPPUNIT_TEST_SUITE(EventLoopTest);
 		CPPUNIT_TEST(testPost);
 		CPPUNIT_TEST(testRemove);
+		CPPUNIT_TEST(testHandleEvent_Recursive);
 		CPPUNIT_TEST_SUITE_END();
 
 	public:
-		EventLoopTest() {}
-
 		void setUp() {
 			events_.clear();
 		}
@@ -59,11 +58,29 @@ class EventLoopTest : public CppUnit::TestFixture
 			CPPUNIT_ASSERT_EQUAL(1, events_[0]);
 			CPPUNIT_ASSERT_EQUAL(3, events_[1]);
 		}
+
+		void testHandleEvent_Recursive() {
+			DummyEventLoop testling;
+			boost::shared_ptr<MyEventOwner> eventOwner(new MyEventOwner());
+
+			testling.postEvent(boost::bind(&EventLoopTest::runEventLoop, this, &testling, eventOwner), eventOwner);
+			testling.postEvent(boost::bind(&EventLoopTest::logEvent, this, 0), eventOwner);
+			testling.processEvents();
+
+			CPPUNIT_ASSERT_EQUAL(2, static_cast<int>(events_.size()));
+			CPPUNIT_ASSERT_EQUAL(0, events_[0]);
+			CPPUNIT_ASSERT_EQUAL(1, events_[1]);
+		}
 	
 	private:
 		struct MyEventOwner : public EventOwner {};
 		void logEvent(int i) {
 			events_.push_back(i);
+		}
+		void runEventLoop(DummyEventLoop* loop, boost::shared_ptr<MyEventOwner> eventOwner) {
+			loop->processEvents();
+			CPPUNIT_ASSERT_EQUAL(0, static_cast<int>(events_.size()));
+			loop->postEvent(boost::bind(&EventLoopTest::logEvent, this, 1), eventOwner);
 		}
 
 	private:
