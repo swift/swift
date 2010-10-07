@@ -33,6 +33,7 @@ namespace Swift {
 
 			void setTimeoutMilliseconds(int milliseconds);
 			void start();
+			void stop();
 
 			boost::signal<void (boost::shared_ptr<Connection>)> onConnectFinished;
 
@@ -65,6 +66,5 @@ namespace Swift {
 			std::deque<HostAddress> addressQueryResults;
 			bool queriedAllServices;
 			boost::shared_ptr<Connection> currentConnection;
-			boost::bsignals::connection connectFinishedConnection;
 	};
 };

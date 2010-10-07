@@ -34,6 +34,8 @@ class ConnectorTest : public CppUnit::TestFixture {
 		CPPUNIT_TEST(testConnect_TimeoutDuringResolve);
 		CPPUNIT_TEST(testConnect_TimeoutDuringConnect);
 		CPPUNIT_TEST(testConnect_NoTimeout);
+		CPPUNIT_TEST(testStop_DuringSRVQuery);
+		CPPUNIT_TEST(testStop_Timeout);
 		CPPUNIT_TEST_SUITE_END();
 
 	public:
@@ -206,6 +208,35 @@ class ConnectorTest : public CppUnit::TestFixture {
 
 			CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(connections.size()));
 			CPPUNIT_ASSERT(connections[0]);
+		}
+
+		void testStop_DuringSRVQuery() {
+				Connector::ref testling(createConnector());
+				resolver->addXMPPClientService("foo.com", host1);
+
+				testling->start();
+				testling->stop();
+
+				eventLoop->processEvents();
+
+				CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(connections.size()));
+				CPPUNIT_ASSERT(!connections[0]);
+		}
+
+		void testStop_Timeout() {
+			Connector::ref testling(createConnector());
+			testling->setTimeoutMilliseconds(10);
+			resolver->addXMPPClientService("foo.com", host1);
+
+			testling->start();
+			testling->stop();
+
+			eventLoop->processEvents();
+			timerFactory->setTime(10);
+			eventLoop->processEvents();
+
+			CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(connections.size()));
+			CPPUNIT_ASSERT(!connections[0]);
 		}
 
 

@@ -270,7 +270,6 @@ void QtLoginWindow::loginClicked() {
 	if (username_->isEnabled()) {
 		onLoginRequest(Q2PSTRING(username_->currentText()), Q2PSTRING(password_->text()), Q2PSTRING(certificateFile_), remember_->isChecked(), loginAutomatically_->isChecked());
 	} else {
-		qDebug() << "Cancelling login";
 		onCancelLoginRequest();
 	}
 }

@@ -39,6 +39,10 @@ void Connector::start() {
 	serviceQuery->run();
 }
 
+void Connector::stop() {
+	finish(boost::shared_ptr<Connection>());
+}
+
 void Connector::queryAddress(const String& hostname) {
 	assert(!addressQuery);
 	addressQuery = resolver->createAddressQuery(hostname);
@@ -112,7 +116,7 @@ void Connector::tryConnect(const HostAddressPort& target) {
 	assert(!currentConnection);
 	//std::cout << "Connector::tryConnect() " << target.getAddress().toString() << " " << target.getPort() << std::endl;
 	currentConnection = connectionFactory->createConnection();
-	connectFinishedConnection = currentConnection->onConnectFinished.connect(boost::bind(&Connector::handleConnectionConnectFinished, shared_from_this(), _1));
+	currentConnection->onConnectFinished.connect(boost::bind(&Connector::handleConnectionConnectFinished, shared_from_this(), _1));
 	currentConnection->connect(target);
 }
 
@@ -138,15 +142,20 @@ void Connector::handleConnectionConnectFinished(bool error) {
 void Connector::finish(boost::shared_ptr<Connection> connection) {
 	if (timer) {
 		timer->stop();
+		timer->onTick.disconnect(boost::bind(&Connector::handleTimeout, shared_from_this()));
 		timer.reset();
 	}
 	if (serviceQuery) {
+		serviceQuery->onResult.disconnect(boost::bind(&Connector::handleServiceQueryResult, shared_from_this(), _1));
 		serviceQuery.reset();
 	}
 	if (addressQuery) {
+		addressQuery->onResult.disconnect(boost::bind(&Connector::handleAddressQueryResult, shared_from_this(), _1, _2));
 		addressQuery.reset();
 	}
-	connectFinishedConnection.disconnect();
+	if (currentConnection) {
+		currentConnection->onConnectFinished.disconnect(boost::bind(&Connector::handleConnectionConnectFinished, shared_from_this(), _1));
+	}
 	onConnectFinished(connection);
 }
 

@@ -70,7 +70,7 @@ namespace Swift {
 			boost::signal<void (const String&)> onDataWritten;
 
 		private:
-			void handleConnectorFinished(boost::shared_ptr<Connection>, Connector::ref);
+			void handleConnectorFinished(boost::shared_ptr<Connection>);
 			void handleSessionInitialized();
 			void send(boost::shared_ptr<Stanza>);
 			virtual String getNewIQID();
@@ -80,8 +80,6 @@ namespace Swift {
 			void handleDataRead(const String&);
 			void handleDataWritten(const String&);
 			void handleStanzaAcked(boost::shared_ptr<Stanza>);
-
-			void closeConnection();
 
 		private:
 			PlatformDomainNameResolver resolver_;
@@ -99,5 +97,6 @@ namespace Swift {
 			boost::shared_ptr<BasicSessionStream> sessionStream_;
 			boost::shared_ptr<ClientSession> session_;
 			String certificate_;
+			bool disconnectRequested_;
 	};
 }

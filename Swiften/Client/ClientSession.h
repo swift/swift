@@ -56,6 +56,7 @@ namespace Swift {
 			};
 
 			~ClientSession();
+
 			static boost::shared_ptr<ClientSession> create(const JID& jid, boost::shared_ptr<SessionStream> stream) {
 				return boost::shared_ptr<ClientSession>(new ClientSession(jid, stream));
 			}
@@ -127,9 +128,5 @@ namespace Swift {
 			ClientAuthenticator* authenticator;
 			boost::shared_ptr<StanzaAckRequester> stanzaAckRequester_;
 			boost::shared_ptr<StanzaAckResponder> stanzaAckResponder_;
-			boost::bsignals::connection streamOnStreamStartReceivedConnection;
-			boost::bsignals::connection streamOnElementReceivedConnection;
-			boost::bsignals::connection streamOnErrorConnection;
-			boost::bsignals::connection streamOnTLSEncryptedConnection;
 	};
 }

@@ -21,7 +21,7 @@
 
 namespace Swift {
 
-Client::Client(const JID& jid, const String& password) : jid_(jid), password_(password) {
+Client::Client(const JID& jid, const String& password) : jid_(jid), password_(password), disconnectRequested_(false) {
 	iqRouter_ = new IQRouter(this);
 	connectionFactory_ = new BoostConnectionFactory(&MainBoostIOServiceThread::getInstance().getIOService());
 	timerFactory_ = new BoostTimerFactory(&MainBoostIOServiceThread::getInstance().getIOService());
@@ -52,26 +52,20 @@ void Client::connect(const JID& jid) {
 }
 
 void Client::connect(const String& host) {
-	assert(!connector_); // Crash on reconnect is here.
+	assert(!connector_);
 	connector_ = Connector::create(host, &resolver_, connectionFactory_, timerFactory_);
-	connector_->onConnectFinished.connect(boost::bind(&Client::handleConnectorFinished, this, _1, connector_));
+	connector_->onConnectFinished.connect(boost::bind(&Client::handleConnectorFinished, this, _1));
 	connector_->setTimeoutMilliseconds(60*1000);
 	connector_->start();
 }
 
-void Client::handleConnectorFinished(boost::shared_ptr<Connection> connection, Connector::ref connector) {
-	bool currentConnection = connector_ && (connector.get() == connector_.get());
-	// TODO: Add domain name resolver error
-	if (!currentConnection) {
-		/* disconnect() was called, this connection should be thrown away*/
-		if (connection) {
-			connection->disconnect();
-		}
-		return;
-	}
+void Client::handleConnectorFinished(boost::shared_ptr<Connection> connection) {
+	connector_->onConnectFinished.disconnect(boost::bind(&Client::handleConnectorFinished, this, _1));
 	connector_.reset();
 	if (!connection) {
-		onError(ClientError::ConnectionError);
+		if (!disconnectRequested_) {
+			onError(ClientError::ConnectionError);
+		}
 	}
 	else {
 		assert(!connection_);
@@ -97,25 +91,20 @@ void Client::handleConnectorFinished(boost::shared_ptr<Connection> connection, C
 }
 
 void Client::disconnect() {
-	if (connector_) {
-		connector_.reset();
-	}
+	// FIXME: We should be able to do without this boolean. We just have to make sure we can tell the difference between
+	// connector finishing without a connection due to an error or because of a disconnect.
+	disconnectRequested_ = true;
 	if (session_) {
 		session_->finish();
 	}
-	else {
-		closeConnection();
+	else if (connector_) {
+		connector_->stop();
+		assert(!session_);
 	}
-}
-
-void Client::closeConnection() {
-	if (sessionStream_) {
-		sessionStream_.reset();
-	}
-	if (connection_) {
-		connection_->disconnect();
-		connection_.reset();
-	}
+	assert(!session_);
+	assert(!sessionStream_);
+	assert(!connector_);
+	disconnectRequested_ = false;
 }
 
 void Client::send(boost::shared_ptr<Stanza> stanza) {
@@ -167,9 +156,22 @@ void Client::setCertificate(const String& certificate) {
 }
 
 void Client::handleSessionFinished(boost::shared_ptr<Error> error) {
+	session_->onInitialized.disconnect(boost::bind(&Client::handleSessionInitialized, this));
+	session_->onStanzaAcked.disconnect(boost::bind(&Client::handleStanzaAcked, this, _1));
+	session_->onFinished.disconnect(boost::bind(&Client::handleSessionFinished, this, _1));
+	session_->onNeedCredentials.disconnect(boost::bind(&Client::handleNeedCredentials, this));
+	session_->onStanzaReceived.disconnect(boost::bind(&Client::handleStanza, this, _1));
 	session_.reset();
-	closeConnection();
+
+	sessionStream_->onDataRead.disconnect(boost::bind(&Client::handleDataRead, this, _1));
+	sessionStream_->onDataWritten.disconnect(boost::bind(&Client::handleDataWritten, this, _1));
+	sessionStream_.reset();
+
+	connection_->disconnect();
+	connection_.reset();
+
 	onAvailableChanged(false);
+
 	if (error) {
 		ClientError clientError;
 		if (boost::shared_ptr<ClientSession::Error> actualError = boost::dynamic_pointer_cast<ClientSession::Error>(error)) {

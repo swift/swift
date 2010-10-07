@@ -56,10 +56,10 @@ ClientSession::~ClientSession() {
 }
 
 void ClientSession::start() {
-	streamOnStreamStartReceivedConnection = stream->onStreamStartReceived.connect(boost::bind(&ClientSession::handleStreamStart, shared_from_this(), _1));
-	streamOnElementReceivedConnection = stream->onElementReceived.connect(boost::bind(&ClientSession::handleElement, shared_from_this(), _1));
-	streamOnErrorConnection = stream->onError.connect(boost::bind(&ClientSession::handleStreamError, shared_from_this(), _1));
-	streamOnTLSEncryptedConnection = stream->onTLSEncrypted.connect(boost::bind(&ClientSession::handleTLSEncrypted, shared_from_this()));
+	stream->onStreamStartReceived.connect(boost::bind(&ClientSession::handleStreamStart, shared_from_this(), _1));
+	stream->onElementReceived.connect(boost::bind(&ClientSession::handleElement, shared_from_this(), _1));
+	stream->onError.connect(boost::bind(&ClientSession::handleStreamError, shared_from_this(), _1));
+	stream->onTLSEncrypted.connect(boost::bind(&ClientSession::handleTLSEncrypted, shared_from_this()));
 
 	assert(state == Initial);
 	state = WaitingForStreamStart;
@@ -230,10 +230,10 @@ void ClientSession::handleElement(boost::shared_ptr<Element> element) {
 	}
 	else if (boost::dynamic_pointer_cast<StreamManagementEnabled>(element)) {
 		stanzaAckRequester_ = boost::shared_ptr<StanzaAckRequester>(new StanzaAckRequester());
-		stanzaAckRequester_->onRequestAck.connect(boost::bind(&ClientSession::requestAck, this));
-		stanzaAckRequester_->onStanzaAcked.connect(boost::bind(&ClientSession::handleStanzaAcked, this, _1));
+		stanzaAckRequester_->onRequestAck.connect(boost::bind(&ClientSession::requestAck, shared_from_this()));
+		stanzaAckRequester_->onStanzaAcked.connect(boost::bind(&ClientSession::handleStanzaAcked, shared_from_this(), _1));
 		stanzaAckResponder_ = boost::shared_ptr<StanzaAckResponder>(new StanzaAckResponder());
-		stanzaAckResponder_->onAck.connect(boost::bind(&ClientSession::ack, this, _1));
+		stanzaAckResponder_->onAck.connect(boost::bind(&ClientSession::ack, shared_from_this(), _1));
 		needAcking = false;
 		continueSessionInitialization();
 	}
@@ -334,9 +334,6 @@ void ClientSession::handleStreamError(boost::shared_ptr<Swift::Error> error) {
 }
 
 void ClientSession::finish() {
-	if (stream->isAvailable()) {
-		stream->writeFooter();
-	}
 	finishSession(boost::shared_ptr<Error>());
 }
 
@@ -346,11 +343,23 @@ void ClientSession::finishSession(Error::Type error) {
 
 void ClientSession::finishSession(boost::shared_ptr<Swift::Error> error) {
 	state = Finished;
+	if (stanzaAckRequester_) {
+		stanzaAckRequester_->onRequestAck.disconnect(boost::bind(&ClientSession::requestAck, shared_from_this()));
+		stanzaAckRequester_->onStanzaAcked.disconnect(boost::bind(&ClientSession::handleStanzaAcked, shared_from_this(), _1));
+		stanzaAckRequester_.reset();
+	}
+	if (stanzaAckResponder_) {
+		stanzaAckResponder_->onAck.disconnect(boost::bind(&ClientSession::ack, shared_from_this(), _1));
+		stanzaAckResponder_.reset();
+	}
 	stream->setWhitespacePingEnabled(false);
-	streamOnStreamStartReceivedConnection.disconnect();
-	streamOnElementReceivedConnection.disconnect();
-	streamOnErrorConnection.disconnect();
-	streamOnTLSEncryptedConnection.disconnect();
+	stream->onStreamStartReceived.disconnect(boost::bind(&ClientSession::handleStreamStart, shared_from_this(), _1));
+	stream->onElementReceived.disconnect(boost::bind(&ClientSession::handleElement, shared_from_this(), _1));
+	stream->onError.disconnect(boost::bind(&ClientSession::handleStreamError, shared_from_this(), _1));
+	stream->onTLSEncrypted.disconnect(boost::bind(&ClientSession::handleTLSEncrypted, shared_from_this()));
+	if (stream->isAvailable()) {
+		stream->writeFooter();
+	}
 	onFinished(error);
 }
 

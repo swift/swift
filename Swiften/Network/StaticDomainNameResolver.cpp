@@ -15,7 +15,7 @@
 using namespace Swift;
 
 namespace {
-	struct ServiceQuery : public DomainNameServiceQuery, public EventOwner {
+	struct ServiceQuery : public DomainNameServiceQuery, public boost::enable_shared_from_this<ServiceQuery> {
 		ServiceQuery(const String& service, Swift::StaticDomainNameResolver* resolver) : service(service), resolver(resolver) {}
 
 		virtual void run() {
@@ -28,14 +28,18 @@ namespace {
 					results.push_back(i->second);
 				}
 			}
-			MainEventLoop::postEvent(boost::bind(boost::ref(onResult), results)); 
+			MainEventLoop::postEvent(boost::bind(&ServiceQuery::emitOnResult, shared_from_this(), results));
+		}
+
+		void emitOnResult(std::vector<DomainNameServiceQuery::Result> results) {
+			onResult(results);
 		}
 
 		String service;
 		StaticDomainNameResolver* resolver;
 	};
 
-	struct AddressQuery : public DomainNameAddressQuery, public EventOwner {
+	struct AddressQuery : public DomainNameAddressQuery, public boost::enable_shared_from_this<AddressQuery> {
 		AddressQuery(const String& host, StaticDomainNameResolver* resolver) : host(host), resolver(resolver) {}
 
 		virtual void run() {
@@ -45,12 +49,15 @@ namespace {
 			StaticDomainNameResolver::AddressesMap::const_iterator i = resolver->getAddresses().find(host);
 			if (i != resolver->getAddresses().end()) {
 				MainEventLoop::postEvent(
-						boost::bind(boost::ref(onResult), i->second, boost::optional<DomainNameResolveError>()));
+						boost::bind(&AddressQuery::emitOnResult, shared_from_this(), i->second, boost::optional<DomainNameResolveError>()));
 			}
 			else {
-				MainEventLoop::postEvent(boost::bind(boost::ref(onResult), std::vector<HostAddress>(), boost::optional<DomainNameResolveError>(DomainNameResolveError())));
+				MainEventLoop::postEvent(boost::bind(&AddressQuery::emitOnResult, shared_from_this(), std::vector<HostAddress>(), boost::optional<DomainNameResolveError>(DomainNameResolveError())));
 			}
+		}
 
+		void emitOnResult(std::vector<HostAddress> results, boost::optional<DomainNameResolveError> error) {
+			onResult(results, error);
 		}
 
 		String host;
