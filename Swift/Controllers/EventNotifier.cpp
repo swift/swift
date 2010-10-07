@@ -16,17 +16,12 @@
 #include "Swift/Controllers/XMPPEvents/MessageEvent.h"
 #include "Swift/Controllers/XMPPEvents/SubscriptionRequestEvent.h"
 #include "Swift/Controllers/XMPPEvents/ErrorEvent.h"
-#include "Swift/Controllers/UIEvents/UIEventStream.h"
-#include "Swift/Controllers/UIEvents/ToggleNotificationsUIEvent.h"
 #include "Swiften/Settings/SettingsProvider.h"
 
 namespace Swift {
 
-EventNotifier::EventNotifier(EventController* eventController, Notifier* notifier, AvatarManager* avatarManager, NickResolver* nickResolver, UIEventStream* uiEvents, SettingsProvider* settings) : eventController(eventController), notifier(notifier), avatarManager(avatarManager), nickResolver(nickResolver), uiEvents(uiEvents), settings(settings) {
+EventNotifier::EventNotifier(EventController* eventController, Notifier* notifier, AvatarManager* avatarManager, NickResolver* nickResolver) : eventController(eventController), notifier(notifier), avatarManager(avatarManager), nickResolver(nickResolver) {
 	eventController->onEventQueueEventAdded.connect(boost::bind(&EventNotifier::handleEventAdded, this, _1));
-	bool enabled = settings->getBoolSetting("showNotifications", true);
-	notifier->setEnabled(enabled);
-	uiEvents->send(boost::shared_ptr<ToggleNotificationsUIEvent>(new ToggleNotificationsUIEvent(enabled)));
 }
 
 EventNotifier::~EventNotifier() {
@@ -55,14 +50,4 @@ void EventNotifier::handleNotificationActivated(JID jid) {
 	onNotificationActivated(jid);
 }
 
-void EventNotifier::handleUIEvent(boost::shared_ptr<UIEvent> event) {
-	boost::shared_ptr<ToggleNotificationsUIEvent> notificationsEvent = boost::dynamic_pointer_cast<ToggleNotificationsUIEvent>(event);
-	if (notificationsEvent) {
-		bool enabled = notificationsEvent->getEnabled();
-		if (enabled != notifier->getEnabled()) {
-			notifier->setEnabled(enabled);
-			settings->storeBool("showNotifications", enabled);
-		}
-	}
-}
 }

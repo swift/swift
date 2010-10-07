@@ -24,7 +24,7 @@ namespace Swift {
 			void handleIncomingEvent(boost::shared_ptr<StanzaEvent> sourceEvent);
 			boost::signal<void (int)> onEventQueueLengthChange;
 			boost::signal<void (boost::shared_ptr<StanzaEvent>)> onEventQueueEventAdded;
-			const EventList getEvents() const {return events_;}
+			const EventList& getEvents() const {return events_;}
 
 		private:
 			void handleEventConcluded(boost::shared_ptr<StanzaEvent> event);

@@ -62,6 +62,7 @@
 #include "Swiften/StringCodecs/SHA1.h"
 #include "Swiften/StringCodecs/Hexify.h"
 #include "Swift/Controllers/UIEvents/RequestChatUIEvent.h"
+#include "Swift/Controllers/UIEvents/ToggleNotificationsUIEvent.h"
 
 namespace Swift {
 
@@ -162,6 +163,12 @@ MainController::MainController(
 	idleDetector_.onIdleChanged.connect(boost::bind(&MainController::handleInputIdleChanged, this, _1));
 
 	xmlConsoleController_ = new XMLConsoleController(uiEventStream_, xmlConsoleWidgetFactory);
+
+	bool enabled = settings_->getBoolSetting("showNotifications", true);
+	notifier_->setEnabled(enabled);
+	uiEventStream_->send(boost::shared_ptr<ToggleNotificationsUIEvent>(new ToggleNotificationsUIEvent(enabled)));
+	uiEventStream_->onUIEvent.connect(boost::bind(&MainController::handleUIEvent, this, _1));
+
 	if (loginAutomatically) {
 		profileSettings_ = new ProfileSettingsProvider(selectedLoginJID, settings_);
 		handleLoginRequest(selectedLoginJID, cachedPassword, cachedCertificate, true, true);
@@ -228,6 +235,17 @@ void MainController::resetClient() {
 	statusTracker_ = NULL;
 	delete profileSettings_;
 	profileSettings_ = NULL;
+}
+
+void MainController::handleUIEvent(boost::shared_ptr<UIEvent> event) {
+	boost::shared_ptr<ToggleNotificationsUIEvent> notificationsEvent = boost::dynamic_pointer_cast<ToggleNotificationsUIEvent>(event);
+	if (notificationsEvent) {
+		bool enabled = notificationsEvent->getEnabled();
+		if (enabled != notifier_->getEnabled()) {
+			notifier_->setEnabled(enabled);
+			settings_->storeBool("showNotifications", enabled);
+		}
+	}
 }
 
 void MainController::resetPendingReconnects() {
@@ -402,7 +420,7 @@ void MainController::performLoginFromCachedCredentials() {
 		entityCapsManager_ = new EntityCapsManager(capsManager_, client_);
 		presenceNotifier_ = new PresenceNotifier(client_, notifier_, mucRegistry_, avatarManager_, nickResolver_, presenceOracle_, &timerFactory_);
 		presenceNotifier_->onNotificationActivated.connect(boost::bind(&MainController::handleNotificationClicked, this, _1));
-		eventNotifier_ = new EventNotifier(eventController_, notifier_, avatarManager_, nickResolver_, uiEventStream_, settings_);
+		eventNotifier_ = new EventNotifier(eventController_, notifier_, avatarManager_, nickResolver_);
 		eventNotifier_->onNotificationActivated.connect(boost::bind(&MainController::handleNotificationClicked, this, _1));
 		client_->onDataRead.connect(boost::bind(
 				&XMLConsoleController::handleDataRead, xmlConsoleController_, _1));

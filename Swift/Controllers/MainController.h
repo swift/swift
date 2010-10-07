@@ -26,6 +26,7 @@
 #include "Swiften/Elements/CapsInfo.h"
 #include "Swift/Controllers/XMPPEvents/ErrorEvent.h"
 #include "Swiften/Roster/XMPPRoster.h"
+#include "Swift/Controllers/UIEvents/UIEvent.h"
 
 namespace Swift {
 	class AvatarStorage;
@@ -106,6 +107,7 @@ namespace Swift {
 			void handleServerDiscoInfoResponse(boost::shared_ptr<DiscoInfo>, const boost::optional<ErrorPayload>&);
 			void handleEventQueueLengthChange(int count);
 			void handleVCardReceived(const JID& j, VCard::ref vCard);
+			void handleUIEvent(boost::shared_ptr<UIEvent> event);
 			void sendPresence(boost::shared_ptr<Presence> presence);
 			void handleInputIdleChanged(bool);
 			void logout();

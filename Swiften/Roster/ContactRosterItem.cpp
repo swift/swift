@@ -107,7 +107,7 @@ void ContactRosterItem::addGroup(const String& group) {
 	groups_.push_back(group);
 }
 void ContactRosterItem::removeGroup(const String& group) {
-	groups_.erase(std::find(groups_.begin(), groups_.end(), group));
+	groups_.erase(std::remove(groups_.begin(), groups_.end(), group), groups_.end());
 }
 
 }

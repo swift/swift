@@ -11,7 +11,6 @@
 #include "SwifTools/Notifier/Notifier.h"
 #include "Swiften/Base/boost_bsignals.h"
 #include "Swift/Controllers/XMPPEvents/StanzaEvent.h"
-#include "Swift/Controllers/UIEvents/UIEvent.h"
 #include "Swiften/JID/JID.h"
 
 namespace Swift {
@@ -25,7 +24,7 @@ namespace Swift {
 
 	class EventNotifier {
 		public:
-			EventNotifier(EventController* eventController, Notifier* notifier, AvatarManager* avatarManager, NickResolver* nickResolver, UIEventStream* uiEvents, SettingsProvider* settings);
+			EventNotifier(EventController* eventController, Notifier* notifier, AvatarManager* avatarManager, NickResolver* nickResolver);
 			~EventNotifier();
 
 			boost::signal<void (const JID&)> onNotificationActivated;
@@ -33,14 +32,11 @@ namespace Swift {
 		private:
 			void handleEventAdded(boost::shared_ptr<StanzaEvent>);
 			void handleNotificationActivated(JID jid);
-			void handleUIEvent(boost::shared_ptr<UIEvent> event);
 
 		private:
 			EventController* eventController;
 			Notifier* notifier;
 			AvatarManager* avatarManager;
 			NickResolver* nickResolver;
-			UIEventStream* uiEvents;
-			SettingsProvider* settings;
 	};
 }

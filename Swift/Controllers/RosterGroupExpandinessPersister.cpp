@@ -29,7 +29,9 @@ void RosterGroupExpandinessPersister::handleGroupAdded(GroupRosterItem* group) {
 
 void RosterGroupExpandinessPersister::handleExpandedChanged(GroupRosterItem* group, bool expanded) {
 	if (expanded) {
-		collapsed_.erase(collapsed_.find(group->getDisplayName()));
+		String displayName = group->getDisplayName();
+		//collapsed_.erase(std::remove(collapsed_.begin(), collapsed_.end(), displayName), collapsed_.end());
+		collapsed_.erase(displayName);
 	} else {
 		collapsed_.insert(group->getDisplayName());
 	}
@@ -50,9 +52,7 @@ void RosterGroupExpandinessPersister::save() {
 void RosterGroupExpandinessPersister::load() {
 	String saved = settings_->getStringSetting(SettingPath);
 	std::vector<String> collapsed = saved.split('\n');
-	foreach (const String& group, collapsed) {
-		collapsed_.insert(group);
-	}
+	collapsed_.insert(collapsed.begin(), collapsed.end());
 }
 
 const String RosterGroupExpandinessPersister::SettingPath = "GroupExpandiness";
