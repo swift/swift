@@ -48,8 +48,8 @@ namespace Swift {
 			static std::vector<Type> getAllTypes();
 			static std::vector<Type> getDefaultTypes();
 
-			static const int DEFAULT_STATUS_NOTIFICATION_TIMEOUT_SECONDS = 3;
-			static const int DEFAULT_MESSAGE_NOTIFICATION_TIMEOUT_SECONDS = 5;
+			static const int DEFAULT_STATUS_NOTIFICATION_TIMEOUT_SECONDS;
+			static const int DEFAULT_MESSAGE_NOTIFICATION_TIMEOUT_SECONDS;
 
 		private:
 			bool enabled;

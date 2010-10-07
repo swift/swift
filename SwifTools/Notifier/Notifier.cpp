@@ -8,8 +8,8 @@
 
 namespace Swift {
 
-const int Notifier::DEFAULT_STATUS_NOTIFICATION_TIMEOUT_SECONDS;
-const int Notifier::DEFAULT_MESSAGE_NOTIFICATION_TIMEOUT_SECONDS;
+const int Notifier::DEFAULT_STATUS_NOTIFICATION_TIMEOUT_SECONDS = 3;
+const int Notifier::DEFAULT_MESSAGE_NOTIFICATION_TIMEOUT_SECONDS = 5;
 
 Notifier::Notifier() : enabled(true) {
 }
