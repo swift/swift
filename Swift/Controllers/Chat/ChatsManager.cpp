@@ -151,7 +151,7 @@ void ChatsManager::setServerDiscoInfo(boost::shared_ptr<DiscoInfo> info) {
 /**
  * This is to be called on connect/disconnect.
  */ 
-void ChatsManager::setEnabled(bool enabled) {
+void ChatsManager::setOnline(bool enabled) {
 	foreach (JIDChatControllerPair controllerPair, chatControllers_) {
 		controllerPair.second->setEnabled(enabled);
 	}

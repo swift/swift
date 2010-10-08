@@ -134,6 +134,11 @@ void ChatController::setEnabled(bool enabled) {
 			chatWindow_->setAckState(it->second, ChatWindow::Failed);
 		}
 		unackedStanzas_.clear();
+
+		Presence::ref fakeOffline(new Presence());
+		fakeOffline->setFrom(toJID_);
+		fakeOffline->setType(Presence::Unavailable);
+		chatStateTracker_->handlePresenceChange(fakeOffline);
 	}
 	ChatControllerBase::setEnabled(enabled);
 }

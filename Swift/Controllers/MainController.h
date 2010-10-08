@@ -118,7 +118,7 @@ namespace Swift {
 	
 			void performLoginFromCachedCredentials();
 			void reconnectAfterError();
-			void setManagersEnabled(bool enabled);
+			void setManagersOnline(bool enabled);
 			void handleNotificationClicked(const JID& jid);
 
 			VCardStorage* getVCardStorageForProfile(const JID& jid);

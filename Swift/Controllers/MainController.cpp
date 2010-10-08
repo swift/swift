@@ -310,7 +310,7 @@ void MainController::handleConnected() {
 
 	vcardManager_->requestOwnVCard();
 	
-	setManagersEnabled(true);
+	setManagersOnline(true);
 	//Send presence last to catch all the incoming presences.
 	sendPresence(statusTracker_->getNextPresence());
 }
@@ -521,12 +521,12 @@ void MainController::logout() {
 		rosterController_->getWindow()->setMyStatusType(StatusShow::None);
 		rosterController_->getWindow()->setMyStatusText("");
 	}
-	setManagersEnabled(false);
+	setManagersOnline(false);
 }
 
-void MainController::setManagersEnabled(bool enabled) {
+void MainController::setManagersOnline(bool enabled) {
 	if (chatsManager_) {
-		chatsManager_->setEnabled(enabled);
+		chatsManager_->setOnline(enabled);
 	}
 	if (rosterController_) {
 		rosterController_->setEnabled(enabled);
