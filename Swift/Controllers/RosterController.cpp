@@ -140,7 +140,7 @@ void RosterController::handleOnJIDUpdated(const JID& jid, const String& oldName,
 	}
 	foreach(const String& group, groups) {
 		if (std::find(oldGroups.begin(), oldGroups.end(), group) == oldGroups.end()) {
-			roster_->addContact(jid, jid, xmppRoster_->getNameForJID(jid), group, avatarManager_->getAvatarPath(jid).string());
+			roster_->addContact(jid, jid, name, group, avatarManager_->getAvatarPath(jid).string());
 		}
 	} 
 	foreach(const String& group, oldGroups) {
