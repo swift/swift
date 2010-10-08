@@ -73,7 +73,7 @@ QtLoginWindow::QtLoginWindow(UIEventStream* uiEventStream) : QMainWindow() {
 	username_->setToolTip("User address - looks like someuser@someserver.com");
 	layout->addWidget(username_);
 	QLabel* jidHintLabel = new QLabel(this);
-	jidHintLabel->setText("<font size='-2'>(example: alice@wonderland.lit)</font>");
+	jidHintLabel->setText("<font size='-1' color='grey' >Example: alice@wonderland.lit</font>");
 	jidHintLabel->setAlignment(Qt::AlignRight);
 	layout->addWidget(jidHintLabel);
 
