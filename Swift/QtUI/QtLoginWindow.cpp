@@ -138,11 +138,9 @@ QtLoginWindow::QtLoginWindow(UIEventStream* uiEventStream) : QMainWindow() {
 	connect(aboutAction, SIGNAL(triggered()), SLOT(handleAbout()));
 	swiftMenu_->addAction(aboutAction);
 
-	toolsMenu_ = new QMenu(tr("Tools"), this);
-
 	QAction* xmlConsoleAction = new QAction(tr("Show Debug Console"), this);
 	connect(xmlConsoleAction, SIGNAL(triggered()), SLOT(handleShowXMLConsole()));
-	toolsMenu_->addAction(xmlConsoleAction);
+	generalMenu_->addAction(xmlConsoleAction);
 
 	toggleSoundsAction_ = new QAction(tr("Play Sounds"), this);
 	toggleSoundsAction_->setCheckable(true);
@@ -158,6 +156,9 @@ QtLoginWindow::QtLoginWindow(UIEventStream* uiEventStream) : QMainWindow() {
 	generalMenu_->addAction(toggleNotificationsAction_);
 #endif
 
+#ifndef SWIFTEN_PLATFORM_MACOSX
+	swiftMenu_->addSeparator();
+#endif
 	
 	QAction* quitAction = new QAction("Quit", this);
 	connect(quitAction, SIGNAL(triggered()), SLOT(handleQuit()));
@@ -324,7 +325,6 @@ void QtLoginWindow::setInitialMenus() {
 #ifdef SWIFTEN_PLATFORM_MACOSX
 	menuBar_->addMenu(generalMenu_);
 #endif
-	menuBar_->addMenu(toolsMenu_);
 }
 
 void QtLoginWindow::morphInto(MainWindow *mainWindow) {
