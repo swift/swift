@@ -23,6 +23,7 @@ namespace Swift {
 		private slots:
 			void handleRemoveContact();
 			void handleRenameContact();
+			void handleRenameGroup();
 			void handleRegroupContact();
 
 		private:

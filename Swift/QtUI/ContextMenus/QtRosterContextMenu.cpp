@@ -34,22 +34,17 @@ QtRosterContextMenu::QtRosterContextMenu(UIEventStream* eventStream, QtTreeWidge
 
 void QtRosterContextMenu::show(RosterItem* item) {
 	ContactRosterItem* contact = dynamic_cast<ContactRosterItem*>(item);
-	if (!contact) {
-		return;
-	}
 	item_ = item;
 	QMenu contextMenu;
-	contextMenu.addAction("Remove", this, SLOT(handleRemoveContact()));
-	contextMenu.addAction("Rename", this, SLOT(handleRenameContact()));
-	contextMenu.addAction("Groups", this, SLOT(handleRegroupContact()));
-	/*QMenu* groupsMenu = contextMenu.addMenu("Groups");
-	std::map<QAction, String> groupActions;
-	for (int i = 0; i < 0; i++) {
-		String groupName;
-		groupActions[groupsMenu->addAction(P2QSTRING(groupName))] = groupName;
+	if (contact) {
+		contextMenu.addAction("Remove", this, SLOT(handleRemoveContact()));
+		contextMenu.addAction("Rename", this, SLOT(handleRenameContact()));
+		contextMenu.addAction("Groups", this, SLOT(handleRegroupContact()));
 	}
-	groupsMenu->addSeparator();
-	groupsMenu->addAction("New Group", this SLOT(handleNewGroup()));*/
+	GroupRosterItem* group = dynamic_cast<GroupRosterItem*>(item);
+	if (group) {
+		contextMenu.addAction("Rename", this, SLOT(handleRenameGroup()));
+	}
 	contextMenu.exec(QCursor::pos());
 }
 
@@ -83,6 +78,25 @@ void QtRosterContextMenu::handleRenameContact() {
 	QString newName = QInputDialog::getText(NULL, "Rename contact", "New name for " + P2QSTRING(item_->getDisplayName()), QLineEdit::Normal, P2QSTRING(item_->getDisplayName()), &ok);
 	if (ok) {
 		eventStream_->send(boost::shared_ptr<UIEvent>(new RenameRosterItemUIEvent(contact->getJID(), Q2PSTRING(newName))));
+	}
+}
+
+void QtRosterContextMenu::handleRenameGroup() {
+	GroupRosterItem* group = dynamic_cast<GroupRosterItem*>(item_);
+	assert(group);
+	bool ok;
+	QString newName = QInputDialog::getText(NULL, "Rename group", "New name for " + P2QSTRING(item_->getDisplayName()), QLineEdit::Normal, P2QSTRING(item_->getDisplayName()), &ok);
+	if (ok) {
+		std::vector<String> addedGroups;
+		std::vector<String> removedGroups;
+		addedGroups.push_back(Q2PSTRING(newName));
+		removedGroups.push_back(group->getDisplayName());
+		foreach (RosterItem* child, group->getChildren()) {
+			ContactRosterItem* contact = dynamic_cast<ContactRosterItem*>(child);
+			assert(contact);
+			boost::shared_ptr<RegroupRosterItemUIEvent> regroupItem(new RegroupRosterItemUIEvent(contact->getJID(), addedGroups, removedGroups));
+			eventStream_->send(regroupItem);
+		}
 	}
 }
 
