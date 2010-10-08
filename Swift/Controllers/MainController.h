@@ -178,6 +178,7 @@ namespace Swift {
 			Timer::ref reconnectTimer_;
 			StatusTracker* statusTracker_;
 			MUCRegistry* mucRegistry_;
+			bool myStatusLooksOnline_;
 
 			typedef std::map<String, VCardStorage*> VCardStorageMap;
 			VCardStorageMap vcardStorages_;

@@ -270,6 +270,7 @@ void MainController::handleConnected() {
 	resetCurrentError();
 	resetPendingReconnects();
 	bool freshLogin = rosterController_ == NULL;
+	myStatusLooksOnline_ = true;
 	if (freshLogin) {
 		serverDiscoInfo_ = boost::shared_ptr<DiscoInfo>(new DiscoInfo());
 
@@ -329,9 +330,10 @@ void MainController::reconnectAfterError() {
 void MainController::handleChangeStatusRequest(StatusShow::Type show, const String &statusText) {
 	boost::shared_ptr<Presence> presence(new Presence());
 	if (show == StatusShow::None) {
-		// FIXME: This is wrong. None doesn't mean unavailable
+		// Note: this is misleading, None doesn't mean unavailable on the wire.
 		presence->setType(Presence::Unavailable);
 		resetPendingReconnects();
+		myStatusLooksOnline_ = false;
 	}
 	else {
 		presence->setShow(show);
@@ -517,9 +519,10 @@ void MainController::logout() {
 	if (client_ /*&& client_->isAvailable()*/) {
 		client_->disconnect();
 	}
-	if (rosterController_) {
+	if (rosterController_ && myStatusLooksOnline_) {
 		rosterController_->getWindow()->setMyStatusType(StatusShow::None);
 		rosterController_->getWindow()->setMyStatusText("");
+		myStatusLooksOnline_ = false;
 	}
 	setManagersOnline(false);
 }
