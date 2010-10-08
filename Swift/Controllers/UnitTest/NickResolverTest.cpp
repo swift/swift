@@ -51,6 +51,7 @@ class NickResolverTest : public CppUnit::TestFixture {
 			delete stanzaChannel_;
 			delete iqRouter_;
 			delete vCardStorage_;
+			delete xmppRoster_;
 		}
 
 		void testMUCNick() {

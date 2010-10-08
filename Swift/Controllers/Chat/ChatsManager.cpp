@@ -183,6 +183,7 @@ ChatController* ChatsManager::getChatControllerOrFindAnother(const JID &contact)
 }
 
 ChatController* ChatsManager::createNewChatController(const JID& contact) {
+	assert(chatControllers_.find(contact) == chatControllers_.end());
 	ChatController* controller = new ChatController(jid_, stanzaChannel_, iqRouter_, chatWindowFactory_, contact, nickResolver_, presenceOracle_, avatarManager_, mucRegistry_->isMUC(contact.toBare()), useDelayForLatency_, uiEventStream_, eventController_, timerFactory_, entityCapsManager_);
 	chatControllers_[contact] = controller;
 	controller->setAvailableServerFeatures(serverDiscoInfo_);

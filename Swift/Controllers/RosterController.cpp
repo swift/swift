@@ -67,6 +67,8 @@ RosterController::RosterController(const JID& jid, XMPPRoster* xmppRoster, Avata
 RosterController::~RosterController() {
 	delete offlineFilter_;
 	delete expandiness_;
+	delete mainWindow_;
+	delete roster_;
 }
 
 void RosterController::setNickResolver(NickResolver* nickResolver) {

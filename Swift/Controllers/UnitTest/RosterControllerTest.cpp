@@ -81,6 +81,7 @@ class RosterControllerTest : public CppUnit::TestFixture
 			delete stanzaChannel_;
 			delete uiEventStream_;
 			delete settings_;
+			delete xmppRoster_;
 		};
 
 	GroupRosterItem* groupChild(size_t i) {

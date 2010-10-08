@@ -17,7 +17,8 @@ namespace Swift {
 			StanzaEvent() : time_(boost::posix_time::microsec_clock::universal_time()) {concluded_ = false;};
 			virtual ~StanzaEvent() {};
 			void conclude() {concluded_ = true; onConclusion();};
-			/** Do not call this directly from outside the class */
+			/** Do not call this directly from outside the class.
+			 * If you connect to this signal, you *must* disconnect from it manually. */
 			boost::signal<void()> onConclusion;
 			bool getConcluded() {return concluded_;};
 			boost::posix_time::ptime getTime() {return time_;}

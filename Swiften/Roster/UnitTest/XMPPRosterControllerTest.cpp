@@ -37,6 +37,7 @@ class XMPPRosterControllerTest : public CppUnit::TestFixture
 		void tearDown() {
 			delete channel_;
 			delete router_;
+			delete xmppRoster_;
 		}
 
 		void testAdd() {

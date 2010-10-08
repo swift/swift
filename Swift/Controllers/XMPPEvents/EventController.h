@@ -17,7 +17,7 @@
 
 namespace Swift {
 	typedef std::vector<boost::shared_ptr<StanzaEvent> > EventList;
-	class EventController {
+	class EventController : public boost::bsignals::trackable{
 		public:
 
 			EventController();

@@ -31,6 +31,7 @@ void EventController::handleIncomingEvent(boost::shared_ptr<StanzaEvent> sourceE
 }
 
 void EventController::handleEventConcluded(boost::shared_ptr<StanzaEvent> event) {
+	event->onConclusion.disconnect(boost::bind(&EventController::handleEventConcluded, this, event));
 	events_.erase(std::remove(events_.begin(), events_.end(), event), events_.end());
 	onEventQueueLengthChange(events_.size());
 }
