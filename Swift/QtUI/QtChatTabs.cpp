@@ -96,6 +96,7 @@ void QtChatTabs::handleWantsToActivate() {
 	widget->show();
 	tabs_->setCurrentWidget(widget);
 	widget->setFocus();
+	raise();
 	activateWindow();
 }
 
