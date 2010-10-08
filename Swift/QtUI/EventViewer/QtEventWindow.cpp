@@ -94,11 +94,13 @@ void QtEventWindow::handleItemActivated(const QModelIndex& item) {
 }
 
 void QtEventWindow::addEvent(boost::shared_ptr<StanzaEvent> event, bool active) {
+	view_->clearSelection();
 	model_->addEvent(event, active);
 	emit onNewEventCountUpdated(model_->getNewEventCount());
 }
 
 void QtEventWindow::removeEvent(boost::shared_ptr<StanzaEvent> event) {
+	view_->clearSelection();
 	model_->removeEvent(event);
 	emit onNewEventCountUpdated(model_->getNewEventCount());
 }
