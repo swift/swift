@@ -258,9 +258,9 @@ void QtLoginWindow::loggedOut() {
 
 void QtLoginWindow::setIsLoggingIn(bool loggingIn) {
 	/* Change the for loop as well if you add to this.*/
-	QWidget* widgets[4] = {username_, password_, remember_, loginAutomatically_};
+	QWidget* widgets[5] = {username_, password_, remember_, loginAutomatically_, certificateButton_};
 	loginButton_->setText(loggingIn ? "Cancel" : "Connect");
-	for (int i = 0; i < 4; i++) {
+	for (int i = 0; i < 5; i++) {
 		widgets[i]->setEnabled(!loggingIn);
 	}
 
