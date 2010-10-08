@@ -18,12 +18,20 @@
 namespace Swift {
 
 QtSetGroupsDialog::QtSetGroupsDialog(ContactRosterItem* contact, const QList<QString>& allGroups) : contact_(contact) {
+	//resize(300,300);
+	setWindowTitle("Edit contact");
 	QBoxLayout* layout = new QBoxLayout(QBoxLayout::TopToBottom, this);
-	QScrollArea* scroll = new QScrollArea(this);
-	layout->addWidget(scroll);
+	setContentsMargins(0,0,0,0);
+	QScrollArea* scrollArea = new QScrollArea(this);
+	layout->addWidget(scrollArea);
+	scrollArea->setWidgetResizable(true);
+	scrollArea->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
+	scrollArea->setHorizontalScrollBarPolicy(Qt::ScrollBarAsNeeded);
+	QWidget* scroll = new QWidget(scrollArea);
+	scrollArea->setWidget(scroll);
 	QBoxLayout* scrollLayout = new QBoxLayout(QBoxLayout::TopToBottom, scroll);
 	QLabel* label = new QLabel(scroll);
-	label->setText("Choose new groups for " + P2QSTRING(contact->getDisplayName()));
+	label->setText("Choose groups for " + P2QSTRING(contact->getDisplayName()));
 	scrollLayout->addWidget(label);
 	foreach (QString group, allGroups) {
 			QCheckBox* check = new QCheckBox(scroll);
