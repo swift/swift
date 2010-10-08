@@ -35,4 +35,9 @@ void EventController::handleEventConcluded(boost::shared_ptr<StanzaEvent> event)
 	onEventQueueLengthChange(events_.size());
 }
 
+void EventController::disconnectAll() {
+	onEventQueueLengthChange.disconnect_all_slots();
+	onEventQueueEventAdded.disconnect_all_slots();
+}
+
 }

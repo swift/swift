@@ -178,6 +178,7 @@ MainController::MainController(
 }
 
 MainController::~MainController() {
+	eventController_->disconnectAll();
 	delete systemTrayController_;
 	delete soundEventController_;
 	delete xmlConsoleController_;
