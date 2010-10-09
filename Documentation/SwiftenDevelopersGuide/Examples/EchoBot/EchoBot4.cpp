@@ -80,7 +80,7 @@ class EchoBot {
 };
 //...
 
-int main(int, char*) {
+int main(int, char**) {
 	SimpleEventLoop eventLoop;
 	EchoBot bot;
 	eventLoop.run();

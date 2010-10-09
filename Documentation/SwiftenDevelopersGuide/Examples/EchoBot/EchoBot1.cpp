@@ -8,7 +8,7 @@
 
 using namespace Swift;
 
-int main(int, char*) {
+int main(int, char**) {
 	SimpleEventLoop eventLoop;
 
 	Client client(JID("echobot@wonderland.lit"), "mypass");

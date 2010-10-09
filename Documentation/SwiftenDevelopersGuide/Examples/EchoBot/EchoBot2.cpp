@@ -17,7 +17,7 @@ Client* client;
 void handleConnected();
 void handleMessageReceived(Message::ref message);
 
-int main(int, char*) {
+int main(int, char**) {
 	SimpleEventLoop eventLoop;
 
 	client = new Client(JID("echobot@wonderland.lit"), "mypass");
