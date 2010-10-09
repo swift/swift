@@ -62,7 +62,7 @@ void ChatControllerBase::setAvailableServerFeatures(boost::shared_ptr<DiscoInfo>
 	if (iqRouter_->isAvailable() && info->hasFeature(DiscoInfo::SecurityLabels)) {
 		//chatWindow_->setSecurityLabelsEnabled(true);
 		//chatWindow_->setSecurityLabelsError();
-		boost::shared_ptr<GetSecurityLabelsCatalogRequest> request(new GetSecurityLabelsCatalogRequest(JID(toJID_.toBare()), iqRouter_));
+		GetSecurityLabelsCatalogRequest::ref request = GetSecurityLabelsCatalogRequest::create(JID(toJID_.toBare()), iqRouter_);
 		request->onResponse.connect(boost::bind(&ChatControllerBase::handleSecurityLabelsCatalogResponse, this, _1, _2));
 		request->send();
 		//labelsEnabled_ = true;

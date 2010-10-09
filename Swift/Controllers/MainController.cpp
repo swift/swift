@@ -306,7 +306,7 @@ void MainController::handleConnected() {
 	
 	xmppRosterController_->requestRoster();
 
-	boost::shared_ptr<GetDiscoInfoRequest> discoInfoRequest(new GetDiscoInfoRequest(JID(), client_->getIQRouter()));
+	GetDiscoInfoRequest::ref discoInfoRequest = GetDiscoInfoRequest::create(JID(), client_->getIQRouter());
 	discoInfoRequest->onResponse.connect(boost::bind(&MainController::handleServerDiscoInfoResponse, this, _1, _2));
 	discoInfoRequest->send();
 

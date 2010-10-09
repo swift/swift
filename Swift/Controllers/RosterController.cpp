@@ -162,7 +162,7 @@ void RosterController::handleUIEvent(boost::shared_ptr<UIEvent> event) {
 		item.setJID(addContactEvent->getJID());
 		boost::shared_ptr<RosterPayload> roster(new RosterPayload());
 		roster->addItem(item);
-		boost::shared_ptr<SetRosterRequest> request(new SetRosterRequest(roster, iqRouter_));
+		SetRosterRequest::ref request = SetRosterRequest::create(roster, iqRouter_);
 		request->onResponse.connect(boost::bind(&RosterController::handleRosterSetError, this, _1, roster));
 		request->send();
 		presenceSender_->requestSubscription(addContactEvent->getJID());
@@ -173,7 +173,7 @@ void RosterController::handleUIEvent(boost::shared_ptr<UIEvent> event) {
 		RosterItemPayload item(removeEvent->getJID(), "", RosterItemPayload::Remove);
 		boost::shared_ptr<RosterPayload> roster(new RosterPayload());
 		roster->addItem(item);
-		boost::shared_ptr<SetRosterRequest> request(new SetRosterRequest(roster, iqRouter_));
+		SetRosterRequest::ref request = SetRosterRequest::create(roster, iqRouter_);
 		request->onResponse.connect(boost::bind(&RosterController::handleRosterSetError, this, _1, roster));
 		request->send();
 
@@ -186,7 +186,7 @@ void RosterController::handleUIEvent(boost::shared_ptr<UIEvent> event) {
 		item.setGroups(xmppRoster_->getGroupsForJID(contact));
 		boost::shared_ptr<RosterPayload> roster(new RosterPayload());
 		roster->addItem(item);
-		boost::shared_ptr<SetRosterRequest> request(new SetRosterRequest(roster, iqRouter_));
+		SetRosterRequest::ref request = SetRosterRequest::create(roster, iqRouter_);
 		request->onResponse.connect(boost::bind(&RosterController::handleRosterSetError, this, _1, roster));
 		request->send();
 		return;
@@ -210,7 +210,7 @@ void RosterController::handleUIEvent(boost::shared_ptr<UIEvent> event) {
 		item.setGroups(newGroups);
 		boost::shared_ptr<RosterPayload> roster(new RosterPayload());
 		roster->addItem(item);
-		boost::shared_ptr<SetRosterRequest> request(new SetRosterRequest(roster, iqRouter_));
+		SetRosterRequest::ref request = SetRosterRequest::create(roster, iqRouter_);
 		request->onResponse.connect(boost::bind(&RosterController::handleRosterSetError, this, _1, roster));
 		request->send();
 		return;

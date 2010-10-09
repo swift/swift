@@ -22,6 +22,18 @@ namespace Swift {
 				setStatus(status);
 			}
 
+			static ref create() {
+				return ref(new Presence());
+			}
+
+			static ref create(const String& status) {
+				return ref(new Presence(status));
+			}
+
+			static ref create(Presence::ref presence) {
+				return ref(new Presence(*presence));
+			}
+
 			Type getType() const { return type_; }
 			void setType(Type type) { type_ = type; }
 

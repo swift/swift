@@ -19,7 +19,7 @@ namespace Swift {
 MUCBookmarkManager::MUCBookmarkManager(IQRouter* iqRouter) {
 	iqRouter_ = iqRouter;
 	ready_ = false;
-	boost::shared_ptr<GetPrivateStorageRequest<Storage> > request(new GetPrivateStorageRequest<Storage>(iqRouter_));
+	GetPrivateStorageRequest<Storage>::ref request = GetPrivateStorageRequest<Storage>::create(iqRouter_);
 	request->onResponse.connect(boost::bind(&MUCBookmarkManager::handleBookmarksReceived, this, _1, _2));
 	request->send();
 }
@@ -106,7 +106,7 @@ void MUCBookmarkManager::flush() {
 	}
 
 	// Send an iq to save the storage element
-	boost::shared_ptr<SetPrivateStorageRequest<Storage> > request(new SetPrivateStorageRequest<Storage>(storage, iqRouter_));
+	SetPrivateStorageRequest<Storage>::ref request = SetPrivateStorageRequest<Storage>::create(storage, iqRouter_);
 	// FIXME: We should care about the result
 	//request->onResponse.connect(boost::bind(&MUCBookmarkManager::handleBookmarksSet, this, _1, _2));
 	request->send();

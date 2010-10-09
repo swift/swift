@@ -11,10 +11,16 @@
 
 #include "Swiften/Queries/Request.h"
 #include "Swiften/Elements/RosterPayload.h"
+#include "Swiften/Base/Shared.h"
 
 namespace Swift {
-	class SetRosterRequest : public Request {
+	class SetRosterRequest : public Request, public Shared<SetRosterRequest> {
 		public:
+			static ref create(RosterPayload::ref payload, IQRouter* router) {
+				return ref(new SetRosterRequest(payload, router));
+			}
+
+		private:
 			SetRosterRequest(boost::shared_ptr<RosterPayload> payload, IQRouter* router) : Request(IQ::Set, JID(), boost::shared_ptr<RosterPayload>(payload), router) {
 			}
 

@@ -6,44 +6,322 @@
 
   <chapter>
     <title>Introduction</title>
-
-    <para>
-      This is an introduction
-    </para>
-
-    <sect1>
-      <title>Section</title>
-
+    <section>
+      <title>Prerequisites</title>
       <para>
-        This is a section
+        We assume that the reader is familiar with the basics of the
+        XMPP protocol. For an overview of the XMPP protocol and its
+        workings, see
+        <citetitle>XMPP: The Definitive Guide</citetitle> 
+        <citation><biblioref linkend="XMPP-TDG"/></citation>
       </para>
-    </sect1>
+    </section>
+
+    <section>
+      <title>Boost</title>
+      <para>
+        Swiften makes heavy use of <emphasis>Boost</emphasis> (<ulink url="http://boost.org"><uri>http://boost.org</uri></ulink>) libraries, including <emphasis>Signal</emphasis>,
+        <emphasis>Bind</emphasis>, <emphasis>Optional</emphasis>, and 
+        <emphasis>Smart Pointers</emphasis>. We
+        introduce the basic usage of these libraries in our API throughout
+        this manual. For detailed documentation, we refer to the Boost
+        website.
+      </para>
+    </section>
   </chapter>
 
   <chapter>
     <title>Tutorial: Writing an Echo Bot</title>
     
     <para>
-      In this chapter, we build a simple echo bot, illustrating how
-      to use and extend Swiften for your own purposes.
+      In this chapter, we guide you through the Swiften API by building an
+      example XMPP application: an EchoBot. This example program, taken from
+      <citetitle>XMPP: The Definitive Guide</citetitle> 
+      <citation><biblioref linkend="XMPP-TDG"/></citation>, connects to
+      an XMPP server, logs in, and responds to all incoming messages with
+      the exact same message. We build up our application using Swiften's
+      basic building blocks for XMPP development, to help get a good
+      understanding of how Swiften fundamental classes work and can be
+      extended. In the last stage of this example, we 
+      introduce some of Swiften's convenience classes for standard
+      XMPP tasks such as roster management.
     </para>
 
     <sect1>
-      <title>Setting up the build environment</title>
+      <title>Connecting to a server: Clients &amp; event loops</title>
       <para>
+        As a first step, we create an application that connects to a server.
+        The code can be seen in <xref linkend="Example-EchoBot1"/>.
+      </para>
+      <example id="Example-EchoBot1">
+        <title>Connecting to a server</title>
+        <include xmlns="http://www.w3.org/2001/XInclude" href="Examples/EchoBot/EchoBot1.cpp.xml" xpointer="xpointer(//programlisting|//calloutlist)"/>
+      </example>
+      <para>
+        The first thing this program does is construct an 
+        <emphasis>Event Loop</emphasis>. An event loop is a seemingly infinite
+        loop that waits for external events (e.g. incoming network packets,
+        timers being activated, input happening) to happen; when such an event 
+        comes in, it notifies interested parties of this event, and then 
+        continues listening for the next event. Since many application 
+        frameworks (such as Qt, GLib, Cocoa) use their own event loop,
+        Swiften comes prepackaged with classes that integrate with these
+        event loops. These classes can be found in 
+        <literal>Swiften/EventLoop</literal>. 
+        In this example, however, we don't use such a framework,
+        so we use Swiften's own <literal>SimpleEventLoop</literal>. This
+        class is used by simply instantiating it at the beginning of the
+        application, and calling <literal>run()</literal> after everything
+        is set up, which will go into an infinite loop. Apart from constructing
+        and (if necessary) starting the event loop, you will probably have
+        no other contact with it in the rest of the application.
+      </para>
+
+      <para>
+        Swiften's central class for implementing XMPP applications is
+        <literal>Client</literal>. This class handles all the interaction
+        with the XMPP network. After constructing it with the JID and
+        password with which we want to connect, we call 
+        <literal>connect()</literal> to instruct the client to connect to 
+        the XMPP server with the given credentials. Note that this call returns
+        immediately; it is only when starting the event loop that network
+        the actual connection process will start.
       </para>
     </sect1>
 
     <sect1>
-      <title>Connecting to the network</title>
+      <title>Building EchoBot</title>
+      <remark>TODO: Explain linking against the static library.</remark>
+    </sect1>
+
+    <sect1>
+      <title>Reacting to events: Signals, Slots &amp; Bind</title>
       <para>
+        Up to this point, our client doesn't do anything useful. In this
+        section, we make the client react to XMPP events. The code can
+        be seen in <xref linkend="Example-EchoBot2"/>.
+      </para>
+      <example id="Example-EchoBot2">
+        <title>Reacting to events: Notify whenever the client is connected to the network, and echo back incoming messages</title>
+        <include xmlns="http://www.w3.org/2001/XInclude" href="Examples/EchoBot/EchoBot2.cpp.xml" xpointer="xpointer(//programlisting|//calloutlist)"/>
+      </example>
+
+      <para>
+        A first thing we want to do is print out a message when the client
+        is connected to the server. Swiften uses the 
+        <emphasis>signal/slot</emphasis> paradigm for notifying interested
+        parties of events. A <emphasis>signal</emphasis> is an object 
+        representing a type of event. For example, <literal>Client</literal>
+        has an <literal>onConnected</literal> signal for notifying whenever
+        the client is connected to the network. If you are interested in 
+        a particular signal, you connect a <emphasis>slot</emphasis> to the 
+        signal. A slot represents a callback that will be called whenever a 
+        signal is emitted. Since we want to print out a message whenever
+        we're connected to the network, we connect to the client's signal,
+        and tell it to call <literal>handleConnected</literal> (which prints
+        out a message):
+        <programlisting>client->onConnected.connect(&amp;handleConnected)</programlisting>
+      </para>
+
+      <para>
+        Another event we're interested in is whenever a message comes in. 
+        For this purpose, <literal>Client</literal> provides a signal called
+        <literal>onMessageReceived</literal>. The major difference with the
+        previous <literal>onConnected</literal> signal is that this signal
+        also can provide extra information to the callback: the actual
+        message received. A signal can provide this extra information through
+        one or more arguments, which will be passed to the slot's parameters.
+        To be able to handle parameters to slots, there needs to be a more 
+        general representation of callbacks than just function pointers. This
+        is where Boost's <literal>bind</literal> comes in: <literal>bind</literal> 
+        provides a way to construct <emphasis>functors</emphasis> (callbacks, slots, &hellip;), by combining function pointers and parameter values. 
+        For example, to connect the signal to our slot, we call:
+        <programlisting>client->onMessageReceived.connect(bind(&amp;handleMessageReceived, _1))</programlisting>
+        This is essentially saying: when the 
+        <literal>onMessageReceived</literal> signal is emitted, call
+        <literal>handleMessageReceived</literal>, and pass it the first
+        parameter provided by the slot (which, in this case, is the actual
+        message received).
+      </para>
+      
+      <para>
+        The implementation of <literal>handleMessageReceived</literal> should be straightforward: put the <emphasis>To</emphasis> address in place of the <emphasis>From</emphasis> address, and send the message to the server. One
+        thing to note is that <literal>Message::ref</literal> represents a
+        <emphasis>shared pointer</emphasis> to a <literal>Message</literal>
+        stanza. Shared pointers behave the same as regular pointers, except that,
+        when the last copy of the pointer goes away, the object it points to is
+        deleted as well. <literal>Message::ref</literal> is in fact a
+        typedef for <literal>boost::shared_ptr&lt;Message&gt;</literal>. 
+        Although Swiften tends to prefer the use of the <literal>::ref</literal>
+        notation, you will see both forms used intermixed.
+      </para>
+
+      <para>
+        Before moving on to the next step, we are going to rearrange our
+        code a bit, to make it a bit cleaner. Instead of using global 
+        variables, we are going to create an <literal>EchoBot</literal>
+        class with the current code in it. The resulting code can be found
+        in <xref linkend="Example-EchoBot3"/>.
+      </para>
+      <example id="Example-EchoBot3">
+        <title>Creating an EchoBot class</title>
+        <include xmlns="http://www.w3.org/2001/XInclude" href="Examples/EchoBot/EchoBot3.cpp.xml" xpointer="xpointer(//programlisting|//calloutlist)"/>
+      </example>
+      <para>
+        The important thing to consider in this step are the changes to the signal
+        connections. Since we are now passing member variables of a class
+        to the signal, we need to use <literal>bind</literal> to pass
+        in the actual object on which this member variable is called as
+        the first parameter.
+      </para>
+      <para>
+        The only thing we added to this version is the 
+        <literal>ClientXMLTracer</literal>. This class will dump all
+        incoming and outgoing XMPP messages to the console, which can be handy
+        for debugging our bot.
       </para>
     </sect1>
 
     <sect1>
-      <title>T</title>
+      <title>Presence Management: Requests</title>
       <para>
+        The current version of our EchoBot does what it is supposed to do:
+        it answers all incoming messages. However, although users can add
+        the bot to their contact list, they will not see when it is 
+        online, since the bot doesn't do any presence handling yet. In 
+        this section, we explain the different steps involved in adding
+        presence management, resulting in the code in 
+        <xref linkend="Example-EchoBot4"/>.
       </para>
+      <example id="Example-EchoBot4">
+        <title>Adding presence management: Requesting the initial roster, and auto-approving incoming subscription requests.</title>
+        <include xmlns="http://www.w3.org/2001/XInclude" href="Examples/EchoBot/EchoBot4.cpp.xml" xpointer="xpointer(//programlisting|//calloutlist)"/>
+      </example>
+      <para>
+        First of all, our bot needs to listen to incoming subscription requests
+        from users who want to add it to their roster, and automatically 
+        approve them. This is done by connecting to 
+        the <literal>onPresenceReceived</literal> signal, checking whether
+        the incoming presence is a subscription request, and if so, 
+        respond to it with an approval (in <literal>handlePresenceReceived</literal>).
+      </para>
+
+      <para>
+        The first version of the XMPP protocol states that a client will not 
+        get any presence
+        subscriptions until it requests the roster. To make sure we handle
+        this, we want to make sure our bot requests the roster at login.
+        After getting the <literal>onConnected</literal> signal, we 
+        therefore send a 
+        <emphasis>request</emphasis> to retrieve the roster. Swiften's
+        <literal>Request</literal> classes correspond to XMPP IQ Get or
+        Set actions. Swiften provides a set of built-in request classes for
+        the most common tasks in <literal>Swiften/Queries/Requests</literal>,
+        and can be easily extended to use add your own (see <xref linkend="Section-Extending"/>). Requests have an <literal>onResponse</literal> signal,
+        which is emitted when a response comes in. This signal has 2 parameters:
+        the actual response data (the <emphasis>Payload</emphasis>), and an
+        optional error payload in case there was an error executing the
+        request. To use a <literal>Request</literal> class, you construct
+        it with the correct parameters, connect to the 
+        <literal>onResponse</literal> signal, and then send the request by
+        calling <literal>send()</literal> on it. In this case, we're not
+        interested in the actual payload of the response (passed as the
+        first parameter), so we pass it a slot with only the second parameter
+        (the error payload). When we get the roster back, we send initial
+        presence to all our subscribers, announcing them we're online.
+      </para>
+    </sect1>
+
+    <sect1>
+      <title>Publishing version information: Responders</title>
+      <para>
+        Most XMPP clients have support for querying software version information
+        of a client through 
+        <citation><biblioref linkend="XEP-0092"/></citation>. These clients
+        send out an IQ-Get request to an entity, which responds with the
+        requested information. We would like our bot to listen to these 
+        requests, and respond with the correct information. Swiften uses
+        <literal>Responder</literal> classes for the purpose of responding
+        to IQ requests, and are therefore the dual of the 
+        <literal>Request</literal> clients discussed in the previous section.
+      </para>
+
+      <example id="Example-EchoBot5">
+        <title>Adding presence management: Requesting the initial roster, and auto-approving incoming subscription requests.</title>
+        <include xmlns="http://www.w3.org/2001/XInclude" href="Examples/EchoBot/EchoBot5.cpp.xml" xpointer="xpointer(//programlisting|//calloutlist)"/>
+      </example>
+
+      <para>
+        Using <literal>SoftwareVersionResponder</literal> is pretty 
+        straightforward, as can be seen in <xref linkend="Example-EchoBot5"/>: 
+        simply construct the responder with the correct
+        parameters, and it will automatically respond to the incoming 
+        requests. Other <literal>Responder</literal> classes may provide
+        signals to notify of incoming requests, or may have some other
+        behavior. For a detailed explanation of responders, see 
+        <xref linkend="Section-CustomQueries"/>.
+      </para>
+    </sect1>
+
+    <sect1 id="Section-Extending">
+      <title>Extending Swiften with new payloads: Payloads, Parsers, and Serializers</title>
+      <para>
+        Swiften uses abstract datastructures for all the data that is received
+        and sent over the XMPP network. The declaration of these datastructures
+        can all be found in <literal>Swiften/Elements</literal>. For 
+        representing the XMPP stanzas, Swiften uses the 
+        <literal>Message</literal>, <literal>Presence</literal>, and 
+        <literal>IQ</literal> classes. Each stanza can have an arbitrary
+        amount of child <emphasis>payloads</emphasis>, represented by the
+        <literal>Payload</literal> class. A payload typically corresponds
+        to a (namespaced) child XML element of a stanza; for example, the
+        <literal>&lt;query xmlns="jabber:iq:roster"/&gt;</literal> 
+        element used for managing the roster is represented as a
+        <literal>RosterPayload</literal>.
+      </para>
+
+      <remark>TODO</remark>
+    </sect1>
+
+    <sect1 id="Section-CustomQueries">
+      <title>Extending Swiften with new queries and responders</title>
+      <remark>TODO</remark>
+    </sect1>
+
+    <sect1>
+      <title>Using Swiften's convenience classes</title>
+      <remark>TODO</remark>
     </sect1>
   </chapter>
+
+  <bibliography>
+    <title>Bibliography</title>
+
+    <biblioentry id="XMPP-TDG">
+      <abbrev>XMPP-TDG</abbrev>
+      <title><ulink url="http://oreilly.com/catalog/9780596157197/">XMPP: The
+      Definitive Guide</ulink></title>
+      <author>
+        <firstname>Peter</firstname>
+        <surname>Saint-Andre</surname>
+      </author>
+      <author>
+        <firstname>Kevin</firstname>
+        <surname>Smith</surname>
+      </author>
+      <author>
+        <firstname>Remko</firstname>
+        <surname>Tronçon</surname>
+      </author>
+    </biblioentry>
+
+    <biblioentry id='XEP-0092'>
+      <abbrev>XEP-0092</abbrev>
+      <title><ulink url='http://www.xmpp.org/extensions/xep-0092.html'>Software Version</ulink></title>
+      <author>
+        <firstname>Peter</firstname>
+        <surname>Saint-Andre</surname>
+      </author>
+    </biblioentry>
+  </bibliography>
 </book>

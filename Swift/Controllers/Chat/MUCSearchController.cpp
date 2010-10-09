@@ -63,7 +63,7 @@ void MUCSearchController::handleAddService(const JID& jid, bool userTriggered) {
 		//Set Window to say error this isn't valid
 		return;
 	}
-	boost::shared_ptr<GetDiscoInfoRequest> discoInfoRequest(new GetDiscoInfoRequest(jid, iqRouter_));
+	GetDiscoInfoRequest::ref discoInfoRequest = GetDiscoInfoRequest::create(jid, iqRouter_);
 	discoInfoRequest->onResponse.connect(boost::bind(&MUCSearchController::handleDiscoInfoResponse, this, _1, _2, jid));
 	discoInfoRequest->send();
 }
@@ -79,7 +79,7 @@ void MUCSearchController::handleDiscoInfoResponse(boost::shared_ptr<DiscoInfo> i
 		handleDiscoError(jid, error.get());
 		return;
 	}
-	boost::shared_ptr<GetDiscoItemsRequest> discoItemsRequest(new GetDiscoItemsRequest(jid, iqRouter_));
+	GetDiscoItemsRequest::ref discoItemsRequest = GetDiscoItemsRequest::create(jid, iqRouter_);
 	bool mucService = false;
 	bool couldContainServices = false;
 	String name;

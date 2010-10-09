@@ -4,17 +4,17 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#ifndef SWIFTEN_RosterPayload_H
-#define SWIFTEN_RosterPayload_H
+#pragma once
 
 #include <vector>
 #include <boost/optional.hpp>
 
 #include "Swiften/Elements/RosterItemPayload.h"
 #include "Swiften/Elements/Payload.h"
+#include "Swiften/Base/Shared.h"
 
 namespace Swift {
-	class RosterPayload : public Payload {
+	class RosterPayload : public Payload, public Shared<RosterPayload> {
 		public:
 			typedef std::vector<RosterItemPayload> RosterItemPayloads;
 
@@ -35,5 +35,3 @@ namespace Swift {
 			RosterItemPayloads items_;
 	};
 }
-
-#endif

@@ -69,7 +69,7 @@ void CapsManager::handleDiscoInfoReceived(const JID& from, const String& hash, D
 }
 
 void CapsManager::requestDiscoInfo(const JID& jid, const String& node, const String& hash) {
-	boost::shared_ptr<GetDiscoInfoRequest> request(new GetDiscoInfoRequest(jid, node + "#" + hash, iqRouter));
+	GetDiscoInfoRequest::ref request = GetDiscoInfoRequest::create(jid, node + "#" + hash, iqRouter);
 	request->onResponse.connect(boost::bind(&CapsManager::handleDiscoInfoReceived, this, jid, hash, _1, _2));
 	requestedDiscoInfos.insert(hash);
 	request->send();

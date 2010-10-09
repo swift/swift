@@ -21,6 +21,9 @@
 namespace Swift {
 	class Request : public IQHandler, public boost::enable_shared_from_this<Request> {
 		public:
+			void send();
+
+		protected:
 			Request(
 					IQ::Type type, 
 					const JID& receiver, 
@@ -31,9 +34,6 @@ namespace Swift {
 					const JID& receiver, 
 					IQRouter* router);
 
-			void send();
-
-		protected:
 			virtual void setPayload(boost::shared_ptr<Payload> p) {
 				payload_ = p;
 			}

@@ -34,7 +34,7 @@ void VCardManager::requestVCard(const JID& requestedJID) {
 	if (requestedVCards.find(jid) != requestedVCards.end()) {
 		return;
 	}
-	GetVCardRequest::ref request(new GetVCardRequest(jid, iqRouter));
+	GetVCardRequest::ref request = GetVCardRequest::create(jid, iqRouter);
 	request->onResponse.connect(boost::bind(&VCardManager::handleVCardReceived, this, jid, _1, _2));
 	request->send();
 	requestedVCards.insert(jid);

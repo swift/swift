@@ -1,0 +1,40 @@
+/*
+ * Copyright (c) 2010 Remko Tronçon
+ * Licensed under the GNU General Public License v3.
+ * See Documentation/Licenses/GPLv3.txt for more information.
+ */
+
+#include <iostream>
+#include <boost/bind.hpp>
+
+#include "Swiften/Swiften.h"
+
+using namespace Swift;
+using namespace boost;
+
+Client* client;
+
+void handleConnected() {
+	std::cout << "Connected" << std::endl;
+}
+
+void handleMessageReceived(Message::ref message) {
+	// Echo back the incoming message
+	message->setTo(message->getFrom());
+	message->setFrom(JID());
+	client->sendMessage(message);
+}
+
+int main(int, char*) {
+	SimpleEventLoop eventLoop;
+
+	client = new Client(JID("echobot@wonderland.lit"), "mypass");
+	client->onConnected.connect(&handleConnected);
+	client->onMessageReceived.connect(bind(&handleMessageReceived, _1));
+	client->connect();
+
+	eventLoop.run();
+
+	delete client;
+	return 0;
+}

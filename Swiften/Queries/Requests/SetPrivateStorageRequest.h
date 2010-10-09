@@ -17,6 +17,13 @@ namespace Swift {
 	template<typename PAYLOAD_TYPE>
 	class SetPrivateStorageRequest : public Request {
 		public:
+			typedef boost::shared_ptr<SetPrivateStorageRequest<PAYLOAD_TYPE> > ref;
+
+			static ref create(boost::shared_ptr<PAYLOAD_TYPE> payload, IQRouter* router) {
+				return ref(new SetPrivateStorageRequest<PAYLOAD_TYPE>(payload, router));
+			}
+
+		private:
 			SetPrivateStorageRequest(boost::shared_ptr<PAYLOAD_TYPE> payload, IQRouter* router) : Request(IQ::Set, JID(), boost::shared_ptr<PrivateStorage>(new PrivateStorage(payload)), router) {
 			}
 

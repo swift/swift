@@ -45,8 +45,8 @@ class GetPrivateStorageRequestTest : public CppUnit::TestFixture
 		}
 
 		void testSend() {
-			GetPrivateStorageRequest<MyPayload> request(router);
-			request.send();
+			GetPrivateStorageRequest<MyPayload>::ref request = GetPrivateStorageRequest<MyPayload>::create(router);
+			request->send();
 
 			CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(channel->iqs_.size()));
 			CPPUNIT_ASSERT_EQUAL(JID(), channel->iqs_[0]->getTo());
@@ -58,9 +58,9 @@ class GetPrivateStorageRequestTest : public CppUnit::TestFixture
 		}
 
 		void testHandleResponse() {
-			GetPrivateStorageRequest<MyPayload> testling(router);
-			testling.onResponse.connect(boost::bind(&GetPrivateStorageRequestTest::handleResponse, this, _1, _2));
-			testling.send();
+			GetPrivateStorageRequest<MyPayload>::ref testling = GetPrivateStorageRequest<MyPayload>::create(router);
+			testling->onResponse.connect(boost::bind(&GetPrivateStorageRequestTest::handleResponse, this, _1, _2));
+			testling->send();
 			channel->onIQReceived(createResponse("test-id", "foo"));
 
 			CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(responses.size()));
@@ -68,9 +68,9 @@ class GetPrivateStorageRequestTest : public CppUnit::TestFixture
 		}
 
 		void testHandleResponse_Error() {
-			GetPrivateStorageRequest<MyPayload> testling(router);
-			testling.onResponse.connect(boost::bind(&GetPrivateStorageRequestTest::handleResponse, this, _1, _2));
-			testling.send();
+			GetPrivateStorageRequest<MyPayload>::ref testling = GetPrivateStorageRequest<MyPayload>::create(router);
+			testling->onResponse.connect(boost::bind(&GetPrivateStorageRequestTest::handleResponse, this, _1, _2));
+			testling->send();
 			channel->onIQReceived(createError("test-id"));
 
 			CPPUNIT_ASSERT_EQUAL(0, static_cast<int>(responses.size()));

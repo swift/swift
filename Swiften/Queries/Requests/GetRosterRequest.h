@@ -8,10 +8,16 @@
 
 #include "Swiften/Queries/GenericRequest.h"
 #include "Swiften/Elements/RosterPayload.h"
+#include "Swiften/Base/Shared.h"
 
 namespace Swift {
-	class GetRosterRequest : public GenericRequest<RosterPayload> {
+	class GetRosterRequest : public GenericRequest<RosterPayload>, public Shared<GetRosterRequest> {
 		public:
+			static ref create(IQRouter* router) {
+				return ref(new GetRosterRequest(router));
+			}
+
+		private:
 			GetRosterRequest(IQRouter* router) :
 					GenericRequest<RosterPayload>(IQ::Get, JID(), boost::shared_ptr<Payload>(new RosterPayload()), router) {
 			}

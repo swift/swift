@@ -1,3 +1,5 @@
+import os
+
 Import("env")
 
 ################################################################################
@@ -244,3 +246,19 @@ if env["SCONS_STAGE"] == "build" :
 			File("StringCodecs/UnitTest/PBKDF2Test.cpp"),
 			File("VCards/UnitTest/VCardManagerTest.cpp"),
 		])
+	
+	# Generate the Swiften header
+	swiften_header = "#pragma once\n"
+	top_path = env.Dir("..").abspath
+	public_dirs = ["Queries", "Client", "Elements"]
+	for public_dir in public_dirs :
+		for root, dirs, files in os.walk(env.Dir(public_dir).abspath) :
+			if root.endswith("UnitTest") :
+				continue
+			for file in files :
+				if not file.endswith(".h") :
+					continue
+				swiften_header += "#include \"" + os.path.relpath(os.path.join(root, file), top_path) + "\"\n"
+	for file in ["EventLoop/SimpleEventLoop.h"] :
+				swiften_header += "#include \"Swiften/" + file + "\"\n"		
+	swiften_env.WriteVal("Swiften.h", swiften_env.Value(swiften_header))

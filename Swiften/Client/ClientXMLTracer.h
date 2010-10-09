@@ -6,6 +6,8 @@
 
 #pragma once
 
+#include <boost/bind.hpp>
+
 #include "Swiften/Client/Client.h"
 
 namespace Swift {

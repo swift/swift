@@ -13,6 +13,11 @@
 namespace Swift {
 	class GetVCardRequest : public GenericRequest<VCard>, public Shared<GetVCardRequest> {
 		public:
+			static ref create(const JID& jid, IQRouter* router) {
+				return ref(new GetVCardRequest(jid, router));
+			}
+
+		private:
 			GetVCardRequest(const JID& jid, IQRouter* router) : GenericRequest<VCard>(IQ::Get, jid, boost::shared_ptr<Payload>(new VCard()), router) {
 			}
 	};
