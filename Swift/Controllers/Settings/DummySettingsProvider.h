@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include "Swiften/Settings/SettingsProvider.h"
+#include "Swift/Controllers/Settings/SettingsProvider.h"
 
 namespace Swift {
 

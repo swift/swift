@@ -9,7 +9,7 @@
 #include <boost/shared_ptr.hpp>
 
 #include "Swift/Controllers/XMPPEvents/StanzaEvent.h"
-#include "Swiften/Settings/SettingsProvider.h"
+#include "Swift/Controllers/Settings/SettingsProvider.h"
 #include "Swift/Controllers/UIEvents/UIEvent.h"
 
 namespace Swift {

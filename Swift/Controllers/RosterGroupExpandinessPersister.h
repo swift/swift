@@ -8,7 +8,7 @@
 
 #include <set>
 #include "Swiften/Roster/Roster.h"
-#include "Swiften/Settings/SettingsProvider.h"
+#include "Swift/Controllers/Settings/SettingsProvider.h"
 
 namespace Swift {
 	class RosterGroupExpandinessPersister {

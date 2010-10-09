@@ -21,7 +21,7 @@
 #include "Swiften/Elements/DiscoInfo.h"
 #include "Swiften/Elements/ErrorPayload.h"
 #include "Swiften/Elements/Presence.h"
-#include "Swiften/Settings/SettingsProvider.h"
+#include "Swift/Controllers/Settings/SettingsProvider.h"
 #include "Swift/Controllers/ProfileSettingsProvider.h"
 #include "Swiften/Elements/CapsInfo.h"
 #include "Swift/Controllers/XMPPEvents/ErrorEvent.h"

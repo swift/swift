@@ -48,7 +48,7 @@
 #include "Swiften/Elements/Presence.h"
 #include "Swiften/Elements/VCardUpdate.h"
 #include "Swiften/Queries/Responders/SoftwareVersionResponder.h"
-#include "Swiften/Settings/SettingsProvider.h"
+#include "Swift/Controllers/Settings/SettingsProvider.h"
 #include "Swiften/Elements/DiscoInfo.h"
 #include "Swiften/Queries/Responders/DiscoInfoResponder.h"
 #include "Swiften/Disco/CapsInfoGenerator.h"

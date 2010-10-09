@@ -20,7 +20,7 @@
 #include "Swiften/Roster/Roster.h"
 #include "Swiften/Roster/GroupRosterItem.h"
 #include "Swiften/Roster/ContactRosterItem.h"
-#include "Swiften/Settings/DummySettingsProvider.h"
+#include "Swift/Controllers/Settings/DummySettingsProvider.h"
 #include "Swiften/Avatars/NullAvatarManager.h"
 #include "Swift/Controllers/XMPPEvents/EventController.h"
 #include "Swiften/Presence/PresenceOracle.h"

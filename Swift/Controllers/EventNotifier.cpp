@@ -16,7 +16,7 @@
 #include "Swift/Controllers/XMPPEvents/MessageEvent.h"
 #include "Swift/Controllers/XMPPEvents/SubscriptionRequestEvent.h"
 #include "Swift/Controllers/XMPPEvents/ErrorEvent.h"
-#include "Swiften/Settings/SettingsProvider.h"
+#include "Swift/Controllers/Settings/SettingsProvider.h"
 
 namespace Swift {
 

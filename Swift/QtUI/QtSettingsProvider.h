@@ -7,7 +7,7 @@
 #ifndef SWIFT_QtSettingsProvider_H
 #define SWIFT_QtSettingsProvider_H
 
-#include "Swiften/Settings/SettingsProvider.h"
+#include "Swift/Controllers/Settings/SettingsProvider.h"
 
 #include <QSettings>
 
