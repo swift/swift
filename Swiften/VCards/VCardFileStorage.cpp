@@ -36,7 +36,7 @@ boost::shared_ptr<VCard> VCardFileStorage::getVCard(const JID& jid) const {
 	}
 }
 
-void VCardFileStorage::setVCard(const JID& jid, boost::shared_ptr<VCard> v) {
+void VCardFileStorage::setVCard(const JID& jid, VCard::ref v) {
 	boost::filesystem::path vcardPath(getVCardPath(jid));
 	if (!boost::filesystem::exists(vcardPath.parent_path())) {
 		try {
