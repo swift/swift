@@ -6,18 +6,12 @@
 
 #pragma once
 
-#include "Swiften/Application/ApplicationPathProvider.h"
-
-#include <iostream>
-#include <unistd.h>
-
-#include "Swiften/Base/ByteArray.h"
-#include "Swiften/Base/foreach.h"
+#include "SwifTools/Application/ApplicationPathProvider.h"
 
 namespace Swift {
-	class UnixApplicationPathProvider : public ApplicationPathProvider {
+	class MacOSXApplicationPathProvider : public ApplicationPathProvider {
 		public:
-			UnixApplicationPathProvider(const String& name);
+			MacOSXApplicationPathProvider(const String& name);
 
 			virtual boost::filesystem::path getHomeDir() const;
 			boost::filesystem::path getDataDir() const;
@@ -31,4 +25,3 @@ namespace Swift {
 			std::vector<boost::filesystem::path> resourceDirs;
 	};
 }
-

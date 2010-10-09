@@ -7,7 +7,7 @@
 #include <boost/filesystem.hpp>
 #include <iostream>
 
-#include "Swiften/Application/ApplicationPathProvider.h"
+#include "SwifTools/Application/ApplicationPathProvider.h"
 #include "Swiften/Base/foreach.h"
 
 namespace Swift {

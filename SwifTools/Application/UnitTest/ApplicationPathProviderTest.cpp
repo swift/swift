@@ -7,7 +7,7 @@
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/extensions/TestFactoryRegistry.h>
 
-#include "Swiften/Application/PlatformApplicationPathProvider.h"
+#include "SwifTools/Application/PlatformApplicationPathProvider.h"
 #include "Swiften/Base/String.h"
 
 using namespace Swift;

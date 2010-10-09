@@ -11,7 +11,7 @@
 #include <iostream>
 
 #include "Swiften/Base/foreach.h"
-#include "Swiften/Application/PlatformApplicationPathProvider.h"
+#include "SwifTools/Application/PlatformApplicationPathProvider.h"
 #include "Swiften/LinkLocal/LinkLocalService.h"
 #include "Swiften/LinkLocal/LinkLocalServiceBrowser.h"
 #include "Swiften/LinkLocal/DNSSD/PlatformDNSSDQuerierFactory.h"

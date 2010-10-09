@@ -9,7 +9,7 @@
 #include <QSound>
 #include <iostream>
 
-#include "Swiften/Application/ApplicationPathProvider.h"
+#include "SwifTools/Application/ApplicationPathProvider.h"
 
 namespace Swift {
 	

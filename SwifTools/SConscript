@@ -47,6 +47,7 @@ if env["SCONS_STAGE"] == "build" :
 	Export("swiftools_env")
 	
 	SConscript(dirs = [
+			"Application",
 			"Dock",
 			"Notifier",
 			"Idle/IdleQuerierTest",
@@ -55,4 +56,3 @@ if env["SCONS_STAGE"] == "build" :
 		])
 
 	swiftools_env.StaticLibrary("SwifTools", sources + swiftools_env["SWIFTOOLS_OBJECTS"])
-		

@@ -10,7 +10,7 @@
 #include <QLineEdit>
 #include "../QtSwiftUtil.h"
 #include "Swiften/Base/String.h"
-#include "Swiften/Application/Platform/PlatformApplication.h"
+#include "SwifTools/Application/Platform/PlatformApplication.h"
 
 using namespace Swift;
 

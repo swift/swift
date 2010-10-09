@@ -1,0 +1,26 @@
+Import("swiftools_env", "env")
+
+sources = [
+		"ApplicationPathProvider.cpp",
+	]
+
+if swiftools_env["PLATFORM"] == "darwin" and swiftools_env["target"] == "native" :
+	sources += [
+			"CocoaApplication.mm",
+			"MacOSXApplicationPathProvider.cpp",
+		]
+elif swiftools_env["PLATFORM"] == "win32" :
+	sources += [
+			"WindowsApplicationPathProvider.cpp"
+		]
+else :
+	sources += [
+			"UnixApplicationPathProvider.cpp"
+		]
+
+objects = swiftools_env.StaticObject(sources)
+swiftools_env.Append(SWIFTOOLS_OBJECTS = [objects])
+
+env.Append(UNITTEST_SOURCES = [
+		File("UnitTest/ApplicationPathProviderTest.cpp")
+	])

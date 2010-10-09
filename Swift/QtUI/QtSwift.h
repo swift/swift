@@ -18,7 +18,7 @@
 #include "QtChatWindowFactory.h"
 #include "QtSettingsProvider.h"
 #if defined(SWIFTEN_PLATFORM_MACOSX)
-#include "Swiften/Application/CocoaApplication.h"
+#include "SwifTools/Application/CocoaApplication.h"
 #endif
 #if defined(HAVE_SNARL)
 #include "SwifTools/Notifier/Win32NotifierWindow.h"

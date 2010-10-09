@@ -4,7 +4,7 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "Swiften/Application/WindowsApplicationPathProvider.h"
+#include "SwifTools/Application/WindowsApplicationPathProvider.h"
 
 #include <windows.h>
 

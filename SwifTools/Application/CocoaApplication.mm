@@ -1,4 +1,4 @@
-#include "Swiften/Application/CocoaApplication.h"
+#include "SwifTools/Application/CocoaApplication.h"
 
 #include <AppKit/AppKit.h>
 #include <Cocoa/Cocoa.h>

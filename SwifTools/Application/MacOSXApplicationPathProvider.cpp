@@ -4,7 +4,7 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "Swiften/Application/MacOSXApplicationPathProvider.h"
+#include "SwifTools/Application/MacOSXApplicationPathProvider.h"
 
 #include <iostream>
 #include <mach-o/dyld.h>

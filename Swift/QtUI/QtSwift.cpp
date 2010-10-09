@@ -23,7 +23,7 @@
 #include <boost/bind.hpp>
 #include <QSplitter>
 
-#include "Swiften/Application/PlatformApplicationPathProvider.h"
+#include "SwifTools/Application/PlatformApplicationPathProvider.h"
 #include "Swiften/Avatars/AvatarFileStorage.h"
 #include "Swiften/Disco/CapsFileStorage.h"
 #include "Swiften/VCards/VCardFileStorageFactory.h"
