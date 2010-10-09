@@ -1,0 +1,40 @@
+html{
+    font-family: "Lucida Grande", "Segoe UI", sans-serif;
+    color: #111;
+    background: #EEE;
+    font-size: 62.5%;
+}
+
+body{
+    width: 640px;
+    float: left;
+    margin: 20px;
+    padding: 10px 30px;
+    font-size: 1.3em;
+    line-height: 1.5em;
+}
+
+a{
+    color: #669;
+}
+
+a:visited{
+    color: #444;
+}
+
+a:hover{
+    color: #000;
+}
+
+pre {
+	background: #EEE;
+	padding: 5px 20px 5px 20px;
+}
+
+p.remark {
+	background: yellow;
+}
+
+div.toc {
+	border-bottom: thin solid #AAA;
+}

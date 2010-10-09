@@ -7,6 +7,7 @@
   <xsl:include href="../common/inline.xsl" />
   <xsl:output method="html" encoding="UTF-8" indent="no"/>
 
+  <xsl:param name="html.stylesheet" select="'documentation.css'"/>
   <xsl:param name="use.extensions" select="0"/>
   <xsl:param name="section.autolabel" select="'1'"/>
 

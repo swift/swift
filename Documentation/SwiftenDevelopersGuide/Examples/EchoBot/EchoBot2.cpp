@@ -14,16 +14,8 @@ using namespace boost;
 
 Client* client;
 
-void handleConnected() {
-	std::cout << "Connected" << std::endl;
-}
-
-void handleMessageReceived(Message::ref message) {
-	// Echo back the incoming message
-	message->setTo(message->getFrom());
-	message->setFrom(JID());
-	client->sendMessage(message);
-}
+void handleConnected();
+void handleMessageReceived(Message::ref message);
 
 int main(int, char*) {
 	SimpleEventLoop eventLoop;
@@ -37,4 +29,15 @@ int main(int, char*) {
 
 	delete client;
 	return 0;
+}
+
+void handleConnected() {
+	std::cout << "Connected" << std::endl;
+}
+
+void handleMessageReceived(Message::ref message) {
+	// Echo back the incoming message
+	message->setTo(message->getFrom());
+	message->setFrom(JID());
+	client->sendMessage(message);
 }
