@@ -18,11 +18,19 @@
 #include "Swiften/TLS/PKCS12Certificate.h"
 #include "Swiften/Session/BasicSessionStream.h"
 #include "Swiften/Queries/IQRouter.h"
+#include "Swiften/Base/IDGenerator.h"
+#include "Swiften/Client/ClientSessionStanzaChannel.h"
 
 namespace Swift {
 
 Client::Client(const JID& jid, const String& password) : jid_(jid), password_(password), disconnectRequested_(false) {
-	iqRouter_ = new IQRouter(this);
+	stanzaChannel_ = new ClientSessionStanzaChannel();
+	stanzaChannel_->onMessageReceived.connect(boost::ref(onMessageReceived));
+	stanzaChannel_->onPresenceReceived.connect(boost::ref(onPresenceReceived));
+	stanzaChannel_->onStanzaAcked.connect(boost::ref(onStanzaAcked));
+	stanzaChannel_->onAvailableChanged.connect(boost::bind(&Client::handleStanzaChannelAvailableChanged, this, _1));
+
+	iqRouter_ = new IQRouter(stanzaChannel_);
 	connectionFactory_ = new BoostConnectionFactory(&MainBoostIOServiceThread::getInstance().getIOService());
 	timerFactory_ = new BoostTimerFactory(&MainBoostIOServiceThread::getInstance().getIOService());
 	tlsLayerFactory_ = new PlatformTLSLayerFactory();
@@ -36,10 +44,12 @@ Client::~Client() {
 	delete timerFactory_;
 	delete connectionFactory_;
 	delete iqRouter_;
-}
 
-bool Client::isAvailable() {
-	return session_ && session_->getState() == ClientSession::Initialized;
+	stanzaChannel_->onAvailableChanged.disconnect(boost::bind(&Client::handleStanzaChannelAvailableChanged, this, _1));
+	stanzaChannel_->onMessageReceived.disconnect(boost::ref(onMessageReceived));
+	stanzaChannel_->onPresenceReceived.disconnect(boost::ref(onPresenceReceived));
+	stanzaChannel_->onStanzaAcked.disconnect(boost::ref(onStanzaAcked));
+	delete stanzaChannel_;
 }
 
 void Client::connect() {
@@ -81,11 +91,9 @@ void Client::handleConnectorFinished(boost::shared_ptr<Connection> connection) {
 		sessionStream_->initialize();
 
 		session_ = ClientSession::create(jid_, sessionStream_);
-		session_->onInitialized.connect(boost::bind(&Client::handleSessionInitialized, this));
-		session_->onStanzaAcked.connect(boost::bind(&Client::handleStanzaAcked, this, _1));
+		stanzaChannel_->setSession(session_);
 		session_->onFinished.connect(boost::bind(&Client::handleSessionFinished, this, _1));
 		session_->onNeedCredentials.connect(boost::bind(&Client::handleNeedCredentials, this));
-		session_->onStanzaReceived.connect(boost::bind(&Client::handleStanza, this, _1));
 		session_->start();
 	}
 }
@@ -107,60 +115,13 @@ void Client::disconnect() {
 	disconnectRequested_ = false;
 }
 
-void Client::send(boost::shared_ptr<Stanza> stanza) {
-	if (!isAvailable()) {
-		std::cerr << "Warning: Client: Trying to send a stanza while disconnected." << std::endl;
-		return;
-	}
-	session_->sendStanza(stanza);
-}
-
-void Client::sendIQ(boost::shared_ptr<IQ> iq) {
-	send(iq);
-}
-
-void Client::sendMessage(boost::shared_ptr<Message> message) {
-	send(message);
-}
-
-void Client::sendPresence(boost::shared_ptr<Presence> presence) {
-	send(presence);
-}
-
-String Client::getNewIQID() {
-	return idGenerator_.generateID();
-}
-
-void Client::handleStanza(boost::shared_ptr<Stanza> stanza) {
-	boost::shared_ptr<Message> message = boost::dynamic_pointer_cast<Message>(stanza);
-	if (message) {
-		onMessageReceived(message);
-		return;
-	}
-
-	boost::shared_ptr<Presence> presence = boost::dynamic_pointer_cast<Presence>(stanza);
-	if (presence) {
-		onPresenceReceived(presence);
-		return;
-	}
-
-	boost::shared_ptr<IQ> iq = boost::dynamic_pointer_cast<IQ>(stanza);
-	if (iq) {
-		onIQReceived(iq);
-		return;
-	}
-}
-
 void Client::setCertificate(const String& certificate) {
 	certificate_ = certificate;
 }
 
 void Client::handleSessionFinished(boost::shared_ptr<Error> error) {
-	session_->onInitialized.disconnect(boost::bind(&Client::handleSessionInitialized, this));
-	session_->onStanzaAcked.disconnect(boost::bind(&Client::handleStanzaAcked, this, _1));
 	session_->onFinished.disconnect(boost::bind(&Client::handleSessionFinished, this, _1));
 	session_->onNeedCredentials.disconnect(boost::bind(&Client::handleNeedCredentials, this));
-	session_->onStanzaReceived.disconnect(boost::bind(&Client::handleStanza, this, _1));
 	session_.reset();
 
 	sessionStream_->onDataRead.disconnect(boost::bind(&Client::handleDataRead, this, _1));
@@ -169,8 +130,6 @@ void Client::handleSessionFinished(boost::shared_ptr<Error> error) {
 
 	connection_->disconnect();
 	connection_.reset();
-
-	onAvailableChanged(false);
 
 	if (error) {
 		ClientError clientError;
@@ -233,13 +192,6 @@ void Client::handleNeedCredentials() {
 	session_->sendCredentials(password_);
 }
 
-bool Client::getStreamManagementEnabled() const {
-	if (session_) {
-		return session_->getStreamManagementEnabled();
-	}
-	return false;
-}
-
 void Client::handleDataRead(const String& data) {
 	onDataRead(data);
 }
@@ -248,14 +200,18 @@ void Client::handleDataWritten(const String& data) {
 	onDataWritten(data);
 }
 
-void Client::handleStanzaAcked(boost::shared_ptr<Stanza> stanza) {
-	onStanzaAcked(stanza);
+void Client::handleStanzaChannelAvailableChanged(bool available) {
+	if (available) {
+		onConnected();
+	}
 }
 
-void Client::handleSessionInitialized() {
-	jid_ = session_->getLocalJID();
-	onConnected();
-	onAvailableChanged(true);
+void Client::sendMessage(boost::shared_ptr<Message> message) {
+	stanzaChannel_->sendMessage(message);
+}
+
+void Client::sendPresence(boost::shared_ptr<Presence> presence) {
+	stanzaChannel_->sendPresence(presence);
 }
 
 }

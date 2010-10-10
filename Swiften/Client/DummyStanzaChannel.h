@@ -40,7 +40,7 @@ namespace Swift {
 				return "test-id";
 			}
 			
-			virtual bool isAvailable() {
+			virtual bool isAvailable() const {
 				return available_;
 			}
 

@@ -4,8 +4,7 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#ifndef SWIFTEN_DummyIQChannel_H
-#define SWIFTEN_DummyIQChannel_H
+#pragma once
 
 #include <vector>
 
@@ -24,12 +23,10 @@ namespace Swift {
 				return "test-id";
 			}
 
-			virtual bool isAvailable() {
+			virtual bool isAvailable() const {
 				return true;
 			}
 
 			std::vector<boost::shared_ptr<IQ> > iqs_;
 	};
 }
-
-#endif

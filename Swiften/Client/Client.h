@@ -18,11 +18,11 @@
 #include "Swiften/Elements/Message.h"
 #include "Swiften/JID/JID.h"
 #include "Swiften/Base/String.h"
-#include "Swiften/Base/IDGenerator.h"
 #include "Swiften/Client/StanzaChannel.h"
 #include "Swiften/Parser/PayloadParsers/FullPayloadParserFactoryCollection.h"
 #include "Swiften/Serializer/PayloadSerializers/FullPayloadSerializerCollection.h"
 #include "Swiften/Base/Shared.h"
+#include "Swiften/Client/ClientSessionStanzaChannel.h"
 
 namespace Swift {
 	class IQRouter;
@@ -32,7 +32,7 @@ namespace Swift {
 	class ClientSession;
 	class BasicSessionStream;
 
-	class Client : public StanzaChannel, public boost::bsignals::trackable {
+	class Client  {
 		public:
 			Client(const JID& jid, const String& password);
 			~Client();
@@ -44,16 +44,19 @@ namespace Swift {
 			void connect(const String& host);
 			void disconnect();
 			
-			bool isAvailable();
-
-			bool getStreamManagementEnabled() const;
-
-			virtual void sendIQ(boost::shared_ptr<IQ>);
-			virtual void sendMessage(boost::shared_ptr<Message>);
-			virtual void sendPresence(boost::shared_ptr<Presence>);
+			void sendMessage(boost::shared_ptr<Message>);
+			void sendPresence(boost::shared_ptr<Presence>);
 
 			IQRouter* getIQRouter() const {
 				return iqRouter_;
+			}
+
+			StanzaChannel* getStanzaChannel() const {
+				return stanzaChannel_;
+			}
+
+			bool isAvailable() const {
+				return stanzaChannel_->isAvailable();
 			}
 
 			/**
@@ -61,7 +64,12 @@ namespace Swift {
 			 * After the session was initialized, this returns the bound JID.
 			 */
 			const JID& getJID() const {
-				return jid_;
+				if (session_) {
+					return session_->getLocalJID();
+				}
+				else {
+					return jid_;
+				}
 			}
 
 		public:
@@ -70,23 +78,23 @@ namespace Swift {
 			boost::signal<void (const String&)> onDataRead;
 			boost::signal<void (const String&)> onDataWritten;
 
+			boost::signal<void (boost::shared_ptr<Message>)> onMessageReceived;
+			boost::signal<void (boost::shared_ptr<Presence>) > onPresenceReceived;
+			boost::signal<void (boost::shared_ptr<Stanza>)> onStanzaAcked;
+
 		private:
 			void handleConnectorFinished(boost::shared_ptr<Connection>);
-			void handleSessionInitialized();
-			void send(boost::shared_ptr<Stanza>);
-			virtual String getNewIQID();
-			void handleStanza(boost::shared_ptr<Stanza>);
+			void handleStanzaChannelAvailableChanged(bool available);
 			void handleSessionFinished(boost::shared_ptr<Error>);
 			void handleNeedCredentials();
 			void handleDataRead(const String&);
 			void handleDataWritten(const String&);
-			void handleStanzaAcked(boost::shared_ptr<Stanza>);
 
 		private:
 			PlatformDomainNameResolver resolver_;
 			JID jid_;
 			String password_;
-			IDGenerator idGenerator_;
+			ClientSessionStanzaChannel* stanzaChannel_;
 			IQRouter* iqRouter_;
 			Connector::ref connector_;
 			ConnectionFactory* connectionFactory_;
