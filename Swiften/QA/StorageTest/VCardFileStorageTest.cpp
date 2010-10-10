@@ -9,7 +9,7 @@
 
 #include "Swiften/VCards/VCardFileStorage.h"
 #include "Swiften/JID/JID.h"
-#include "Swiften/Application/PlatformApplicationPathProvider.h"
+#include "SwifTools/Application/PlatformApplicationPathProvider.h"
 #include "Swiften/Elements/VCard.h"
 
 using namespace Swift;
