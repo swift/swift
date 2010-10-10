@@ -258,6 +258,7 @@ if int(ARGUMENTS.get("V", 0)) == 0:
 	env["FOCOMSTR"] = colorize("FO", "$TARGET", "blue")
 	env["XSLTCOMSTR"] = colorize("XSLT", "$TARGET", "blue")
 	env["XMLLINTCOMSTR"] = colorize("XMLLINT", "$SOURCE", "blue")
+	env["DOXYCOMSTR"] = colorize("DOXY", "$SOURCE", "blue")
 	#Progress(colorize("DEP", "$TARGET", "red")
 
 def checkObjCHeader(context, header) :

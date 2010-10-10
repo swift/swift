@@ -1,0 +1,7 @@
+Import("env")
+
+myenv = env.Clone()
+
+myenv.Tool("DoxyGen", toolpath = ["#/BuildTools/SCons/Tools"])
+
+myenv.DoxyGen("Doxyfile")
