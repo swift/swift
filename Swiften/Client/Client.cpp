@@ -9,6 +9,7 @@
 #include "Swiften/Queries/Responders/SoftwareVersionResponder.h"
 #include "Swiften/Roster/XMPPRoster.h"
 #include "Swiften/Roster/XMPPRosterController.h"
+#include "Swiften/Presence/PresenceOracle.h"
 
 namespace Swift {
 
@@ -18,9 +19,15 @@ Client::Client(const JID& jid, const String& password) : CoreClient(jid, passwor
 
 	roster = new XMPPRoster();
 	rosterController = new XMPPRosterController(getIQRouter(), roster);
+
+	presenceOracle = new PresenceOracle(getStanzaChannel());
+	presenceOracle->onPresenceChange.connect(boost::ref(onPresenceChange));
+	presenceOracle->onPresenceSubscriptionRequest.connect(boost::ref(onPresenceSubscriptionRequest));
 }
 
 Client::~Client() {
+	delete presenceOracle;
+
 	delete rosterController;
 	delete roster;
 
@@ -36,5 +43,13 @@ void Client::requestRoster() {
 	rosterController->requestRoster();
 }
 
+
+Presence::ref Client::getLastPresence(const JID& jid) const {
+	return presenceOracle->getLastPresence(jid);
+}
+
+Presence::ref Client::getHighestPriorityPresence(const JID& bareJID) const {
+	return presenceOracle->getHighestPriorityPresence(bareJID);
+}
 
 }

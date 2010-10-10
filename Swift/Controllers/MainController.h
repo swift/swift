@@ -53,7 +53,6 @@ namespace Swift {
 	class LoginWindowFactory;
 	class MUCController;
 	class Notifier;
-	class PresenceOracle;
 	class PresenceNotifier;
 	class EventNotifier;
 	class SystemTray;
@@ -153,7 +152,6 @@ namespace Swift {
 			boost::shared_ptr<CapsInfo> capsInfo_;
 			JID jid_;
 			JID boundJID_;
-			PresenceOracle* presenceOracle_;
 			SystemTrayController* systemTrayController_;
 			SoundEventController* soundEventController_;
 			AvatarManager* avatarManager_;

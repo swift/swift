@@ -12,6 +12,7 @@ namespace Swift {
 	class SoftwareVersionResponder;
 	class XMPPRoster;
 	class XMPPRosterController;
+	class PresenceOracle;
 
 	/**
 	 * Provides the core functionality for writing XMPP client software.
@@ -56,9 +57,35 @@ namespace Swift {
 			 */
 			void requestRoster();
 
+			/**
+			 * Returns the last received presence for the given (full) JID.
+			 */
+			Presence::ref getLastPresence(const JID& jid) const;
+
+			/**
+			 * Returns the presence with the highest priority received for the given JID.
+			 */
+			Presence::ref getHighestPriorityPresence(const JID& bareJID) const;
+
+			PresenceOracle* getPresenceOracle() const {
+				return presenceOracle;
+			}
+
+		public:
+			/**
+			 * This signal is emitted when a JID changes presence.
+			 */
+			boost::signal<void (boost::shared_ptr<Presence>)> onPresenceChange;
+
+			/**
+			 * This signal is emitted when a presence subscription request is received.
+			 */
+			boost::signal<void (const JID&, const String&)> onPresenceSubscriptionRequest;
+
 		private:
 			SoftwareVersionResponder* softwareVersionResponder;
 			XMPPRoster* roster;
 			XMPPRosterController* rosterController;
+			PresenceOracle* presenceOracle;
 	};
 }
