@@ -45,7 +45,10 @@ myenv.MergeFlags(myenv["PLATFORM_FLAGS"])
 
 myenv.Tool("qt4", toolpath = ["#/BuildTools/SCons/Tools"])
 myenv.Tool("nsis", toolpath = ["#/BuildTools/SCons/Tools"])
-myenv.EnableQt4Modules(['QtCore', 'QtGui', 'QtWebKit'], debug = False)
+qt4modules = ['QtCore', 'QtGui', 'QtWebKit']
+if env["PLATFORM"] == "posix" :
+	qt4modules += ["QtDBus"]
+myenv.EnableQt4Modules(qt4modules, debug = False)
 
 myenv.Append(CPPPATH = ["."])
 
