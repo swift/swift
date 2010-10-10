@@ -47,7 +47,6 @@
 #include "Swiften/Elements/ChatState.h"
 #include "Swiften/Elements/Presence.h"
 #include "Swiften/Elements/VCardUpdate.h"
-#include "Swiften/Queries/Responders/SoftwareVersionResponder.h"
 #include "Swift/Controllers/Settings/SettingsProvider.h"
 #include "Swiften/Elements/DiscoInfo.h"
 #include "Swiften/Queries/Responders/DiscoInfoResponder.h"
@@ -116,7 +115,6 @@ MainController::MainController(
 	xmppRosterController_ = NULL;
 	chatsManager_ = NULL;
 	eventWindowController_ = NULL;
-	clientVersionResponder_ = NULL;
 	discoResponder_ = NULL;
 	mucSearchController_ = NULL;
 
@@ -200,11 +198,6 @@ void MainController::resetClient() {
 		discoResponder_->stop();
 		delete discoResponder_;
 		discoResponder_ = NULL;
-	}
-	if (clientVersionResponder_) {
-		clientVersionResponder_->stop();
-		delete clientVersionResponder_;
-		clientVersionResponder_ = NULL;
 	}
 	delete eventWindowController_;
 	eventWindowController_ = NULL;
@@ -293,9 +286,6 @@ void MainController::handleConnected() {
 
 		eventWindowController_ = new EventWindowController(eventController_, eventWindowFactory_);
 
-		clientVersionResponder_ = new SoftwareVersionResponder(client_->getIQRouter());
-		clientVersionResponder_->setVersion(CLIENT_NAME, buildVersion);
-		clientVersionResponder_->start();
 		loginWindow_->morphInto(rosterController_->getWindow());
 
 		DiscoInfo discoInfo;
@@ -420,6 +410,9 @@ void MainController::performLoginFromCachedCredentials() {
 	}
 	if (!client_) {
 		client_ = new Swift::Client(jid_, password_);
+
+		client_->setSoftwareVersion(CLIENT_NAME, buildVersion);
+
 		presenceSender_ = new PresenceSender(client_->getStanzaChannel());
 		presenceOracle_ = new PresenceOracle(client_->getStanzaChannel());
 		mucRegistry_ = new MUCRegistry();

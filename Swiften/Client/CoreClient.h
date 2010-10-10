@@ -32,6 +32,15 @@ namespace Swift {
 	class ClientSession;
 	class BasicSessionStream;
 
+	/**
+	 * The central class for communicating with an XMPP server.
+	 *
+	 * This class is responsible for setting up the connection with the XMPP server, authenticating, and
+	 * initializing the session.
+	 *
+	 * This class can be used directly in your application, although the Client subclass provides more
+	 * functionality and interfaces, and is better suited for most needs.
+	 */
 	class CoreClient  {
 		public:
 			CoreClient(const JID& jid, const String& password);

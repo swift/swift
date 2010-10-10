@@ -52,7 +52,6 @@ namespace Swift {
 	class EntityCapsManager;
 	class LoginWindow;
 	class EventLoop;
-	class SoftwareVersionResponder;
 	class LoginWindowFactory;
 	class MUCController;
 	class Notifier;
@@ -149,7 +148,6 @@ namespace Swift {
 			EventController* eventController_;
 			EventWindowController* eventWindowController_;
 			LoginWindow* loginWindow_;
-			SoftwareVersionResponder* clientVersionResponder_;
 			NickResolver* nickResolver_;
 			DiscoInfoResponder* discoResponder_;
 			UIEventStream* uiEventStream_;
