@@ -25,7 +25,6 @@
 #include "Swift/Controllers/ProfileSettingsProvider.h"
 #include "Swiften/Elements/CapsInfo.h"
 #include "Swift/Controllers/XMPPEvents/ErrorEvent.h"
-#include "Swiften/Roster/XMPPRoster.h"
 #include "Swift/Controllers/UIEvents/UIEvent.h"
 
 namespace Swift {
@@ -44,7 +43,6 @@ namespace Swift {
 	class MainWindow;
 	class NickResolver;
 	class RosterController;
-	class XMPPRosterController;
 	class PresenceSender;
 	class DiscoInfoResponder;
 	class AvatarManager;
@@ -143,7 +141,6 @@ namespace Swift {
 			Notifier* notifier_;
 			PresenceNotifier* presenceNotifier_;
 			EventNotifier* eventNotifier_;
-			XMPPRosterController* xmppRosterController_;
 			RosterController* rosterController_;
 			EventController* eventController_;
 			EventWindowController* eventWindowController_;
@@ -154,8 +151,6 @@ namespace Swift {
 			XMLConsoleController* xmlConsoleController_;
 			ChatsManager* chatsManager_;
 			boost::shared_ptr<CapsInfo> capsInfo_;
-			boost::shared_ptr<DiscoInfo> serverDiscoInfo_;
-			XMPPRoster* xmppRoster_;;
 			JID jid_;
 			JID boundJID_;
 			PresenceOracle* presenceOracle_;

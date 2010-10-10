@@ -76,7 +76,7 @@ public:
 		entityCapsManager_ = new EntityCapsManager(capsProvider_, stanzaChannel_);
 		chatListWindowFactory_ = mocks_->InterfaceMock<ChatListWindowFactory>();
 		mocks_->ExpectCall(chatListWindowFactory_, ChatListWindowFactory::createWindow).With(uiEventStream_).Return(NULL);
-		manager_ = new ChatsManager(jid_, stanzaChannel_, iqRouter_, eventController_, chatWindowFactory_, nickResolver_, presenceOracle_, serverDiscoInfo_, presenceSender_, uiEventStream_, chatListWindowFactory_, true, NULL, mucRegistry_, entityCapsManager_);
+		manager_ = new ChatsManager(jid_, stanzaChannel_, iqRouter_, eventController_, chatWindowFactory_, nickResolver_, presenceOracle_, presenceSender_, uiEventStream_, chatListWindowFactory_, true, NULL, mucRegistry_, entityCapsManager_);
 
 		avatarManager_ = new NullAvatarManager();
 		manager_->setAvatarManager(avatarManager_);

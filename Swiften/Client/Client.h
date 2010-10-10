@@ -10,6 +10,8 @@
 
 namespace Swift {
 	class SoftwareVersionResponder;
+	class XMPPRoster;
+	class XMPPRosterController;
 
 	/**
 	 * Provides the core functionality for writing XMPP client software.
@@ -30,8 +32,33 @@ namespace Swift {
 			 */
 			void setSoftwareVersion(const String& name, const String& version);
 
+			/**
+			 * Returns a representation of the roster.
+			 *
+			 * The roster is initially empty. To populate it, call requestRoster(), which
+			 * will request the roster from the server. When the roster has been requested,
+			 * it will also be kept up to date when it is updated on the server side.
+			 *
+			 * This pointer remains the same across the lifetime of Client. All changes
+			 * to the roster (e.g. after the initial roster request, or after subsequent
+			 * roster updates) are notified through the XMPPRoster's signals.
+			 *
+			 * \see requestRoster()
+			 */
+			XMPPRoster* getRoster() const {
+				return roster;
+			}
+
+			/**
+			 * Requests the roster from the server.
+			 *
+			 * \see getRoster()
+			 */
+			void requestRoster();
+
 		private:
 			SoftwareVersionResponder* softwareVersionResponder;
-
+			XMPPRoster* roster;
+			XMPPRosterController* rosterController;
 	};
 }

@@ -26,7 +26,7 @@ namespace Swift {
 typedef std::pair<JID, ChatController*> JIDChatControllerPair;
 typedef std::pair<JID, MUCController*> JIDMUCControllerPair;
 
-ChatsManager::ChatsManager(JID jid, StanzaChannel* stanzaChannel, IQRouter* iqRouter, EventController* eventController, ChatWindowFactory* chatWindowFactory, NickResolver* nickResolver, PresenceOracle* presenceOracle, boost::shared_ptr<DiscoInfo> serverDiscoInfo, PresenceSender* presenceSender, UIEventStream* uiEventStream, ChatListWindowFactory* chatListWindowFactory, bool useDelayForLatency, TimerFactory* timerFactory, MUCRegistry* mucRegistry, EntityCapsManager* entityCapsManager) : jid_(jid), useDelayForLatency_(useDelayForLatency), mucRegistry_(mucRegistry), entityCapsManager_(entityCapsManager) {
+ChatsManager::ChatsManager(JID jid, StanzaChannel* stanzaChannel, IQRouter* iqRouter, EventController* eventController, ChatWindowFactory* chatWindowFactory, NickResolver* nickResolver, PresenceOracle* presenceOracle, PresenceSender* presenceSender, UIEventStream* uiEventStream, ChatListWindowFactory* chatListWindowFactory, bool useDelayForLatency, TimerFactory* timerFactory, MUCRegistry* mucRegistry, EntityCapsManager* entityCapsManager) : jid_(jid), useDelayForLatency_(useDelayForLatency), mucRegistry_(mucRegistry), entityCapsManager_(entityCapsManager) {
 	timerFactory_ = timerFactory;
 	eventController_ = eventController;
 	stanzaChannel_ = stanzaChannel;
@@ -35,7 +35,7 @@ ChatsManager::ChatsManager(JID jid, StanzaChannel* stanzaChannel, IQRouter* iqRo
 	nickResolver_ = nickResolver;
 	presenceOracle_ = presenceOracle;
 	avatarManager_ = NULL;
-	serverDiscoInfo_ = serverDiscoInfo;
+	serverDiscoInfo_ = boost::shared_ptr<DiscoInfo>(new DiscoInfo());
 	presenceSender_ = presenceSender;
 	uiEventStream_ = uiEventStream;
 	mucBookmarkManager_ = new MUCBookmarkManager(iqRouter);

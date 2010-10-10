@@ -35,7 +35,6 @@
 #include "Swift/Controllers/SystemTray.h"
 #include "Swift/Controllers/SystemTrayController.h"
 #include "Swift/Controllers/XMLConsoleController.h"
-#include "Swiften/Roster/XMPPRosterController.h"
 #include "Swift/Controllers/UIEvents/UIEventStream.h"
 #include "Swift/Controllers/PresenceNotifier.h"
 #include "Swift/Controllers/EventNotifier.h"
@@ -103,7 +102,6 @@ MainController::MainController(
 	presenceSender_ = NULL;
 	presenceOracle_ = NULL;
 	mucRegistry_ = NULL;
-	xmppRoster_ = NULL;
 	vcardManager_ = NULL;
 	avatarManager_ = NULL;
 	capsManager_ = NULL;
@@ -112,7 +110,6 @@ MainController::MainController(
 	eventNotifier_ = NULL;
 	nickResolver_ = NULL;
 	rosterController_ = NULL;
-	xmppRosterController_ = NULL;
 	chatsManager_ = NULL;
 	eventWindowController_ = NULL;
 	discoResponder_ = NULL;
@@ -191,7 +188,6 @@ MainController::~MainController() {
 void MainController::resetClient() {
 	resetCurrentError();
 	resetPendingReconnects();
-	serverDiscoInfo_ = boost::shared_ptr<DiscoInfo>();
 	delete mucSearchController_;
 	mucSearchController_ = NULL;
 	if (discoResponder_) {
@@ -201,8 +197,6 @@ void MainController::resetClient() {
 	}
 	delete eventWindowController_;
 	eventWindowController_ = NULL;
-	delete xmppRosterController_;
-	xmppRosterController_ = NULL;
 	delete chatsManager_;
 	chatsManager_ = NULL;
 	delete rosterController_;
@@ -221,8 +215,6 @@ void MainController::resetClient() {
 	nickResolver_ = NULL;
 	delete vcardManager_;
 	vcardManager_ = NULL;
-	delete xmppRoster_;
-	xmppRoster_ = NULL;
 	delete mucRegistry_;
 	mucRegistry_ = NULL;
 	delete presenceOracle_;
@@ -272,17 +264,13 @@ void MainController::handleConnected() {
 	bool freshLogin = rosterController_ == NULL;
 	myStatusLooksOnline_ = true;
 	if (freshLogin) {
-		serverDiscoInfo_ = boost::shared_ptr<DiscoInfo>(new DiscoInfo());
-
-		rosterController_ = new RosterController(jid_, xmppRoster_, avatarManager_, mainWindowFactory_, nickResolver_, presenceOracle_, presenceSender_, eventController_, uiEventStream_, client_->getIQRouter(), settings_);
+		rosterController_ = new RosterController(jid_, client_->getRoster(), avatarManager_, mainWindowFactory_, nickResolver_, presenceOracle_, presenceSender_, eventController_, uiEventStream_, client_->getIQRouter(), settings_);
 		rosterController_->onChangeStatusRequest.connect(boost::bind(&MainController::handleChangeStatusRequest, this, _1, _2));
 		rosterController_->onSignOutRequest.connect(boost::bind(&MainController::signOut, this));
 
-		chatsManager_ = new ChatsManager(jid_, client_->getStanzaChannel(), client_->getIQRouter(), eventController_, chatWindowFactory_, nickResolver_, presenceOracle_, serverDiscoInfo_, presenceSender_, uiEventStream_, chatListWindowFactory_, useDelayForLatency_, &timerFactory_, mucRegistry_, entityCapsManager_);
+		chatsManager_ = new ChatsManager(jid_, client_->getStanzaChannel(), client_->getIQRouter(), eventController_, chatWindowFactory_, nickResolver_, presenceOracle_, presenceSender_, uiEventStream_, chatListWindowFactory_, useDelayForLatency_, &timerFactory_, mucRegistry_, entityCapsManager_);
 		client_->onMessageReceived.connect(boost::bind(&ChatsManager::handleIncomingMessage, chatsManager_, _1));
 		chatsManager_->setAvatarManager(avatarManager_);
-
-		xmppRosterController_ = new XMPPRosterController(client_->getIQRouter(), xmppRoster_);
 
 		eventWindowController_ = new EventWindowController(eventController_, eventWindowFactory_);
 
@@ -298,12 +286,11 @@ void MainController::handleConnected() {
 		discoResponder_->setDiscoInfo(discoInfo);
 		discoResponder_->setDiscoInfo(capsInfo_->getNode() + "#" + capsInfo_->getVersion(), discoInfo);
 		discoResponder_->start();
-		serverDiscoInfo_ = boost::shared_ptr<DiscoInfo>(new DiscoInfo());
 
 		mucSearchController_ = new MUCSearchController(jid_, uiEventStream_, mucSearchWindowFactory_, client_->getIQRouter());
 	}
 	
-	xmppRosterController_->requestRoster();
+	client_->requestRoster();
 
 	GetDiscoInfoRequest::ref discoInfoRequest = GetDiscoInfoRequest::create(JID(), client_->getIQRouter());
 	discoInfoRequest->onResponse.connect(boost::bind(&MainController::handleServerDiscoInfoResponse, this, _1, _2));
@@ -410,16 +397,19 @@ void MainController::performLoginFromCachedCredentials() {
 	}
 	if (!client_) {
 		client_ = new Swift::Client(jid_, password_);
+		client_->onDataRead.connect(boost::bind(&XMLConsoleController::handleDataRead, xmlConsoleController_, _1));
+		client_->onDataWritten.connect(boost::bind(&XMLConsoleController::handleDataWritten, xmlConsoleController_, _1));
+		client_->onError.connect(boost::bind(&MainController::handleError, this, _1));
+		client_->onConnected.connect(boost::bind(&MainController::handleConnected, this));
 
 		client_->setSoftwareVersion(CLIENT_NAME, buildVersion);
 
 		presenceSender_ = new PresenceSender(client_->getStanzaChannel());
 		presenceOracle_ = new PresenceOracle(client_->getStanzaChannel());
 		mucRegistry_ = new MUCRegistry();
-		xmppRoster_ = new XMPPRoster();
 		vcardManager_ = new VCardManager(jid_, client_->getIQRouter(), getVCardStorageForProfile(jid_));
 		vcardManager_->onVCardChanged.connect(boost::bind(&MainController::handleVCardReceived, this, _1, _2));
-		nickResolver_ = new NickResolver(this->jid_.toBare(), xmppRoster_, vcardManager_, mucRegistry_);
+		nickResolver_ = new NickResolver(this->jid_.toBare(), client_->getRoster(), vcardManager_, mucRegistry_);
 		avatarManager_ = new AvatarManagerImpl(vcardManager_, client_->getStanzaChannel(), avatarStorage_, mucRegistry_);
 		capsManager_ = new CapsManager(capsStorage_, client_->getStanzaChannel(), client_->getIQRouter());
 		entityCapsManager_ = new EntityCapsManager(capsManager_, client_->getStanzaChannel());
@@ -427,15 +417,9 @@ void MainController::performLoginFromCachedCredentials() {
 		presenceNotifier_->onNotificationActivated.connect(boost::bind(&MainController::handleNotificationClicked, this, _1));
 		eventNotifier_ = new EventNotifier(eventController_, notifier_, avatarManager_, nickResolver_);
 		eventNotifier_->onNotificationActivated.connect(boost::bind(&MainController::handleNotificationClicked, this, _1));
-		client_->onDataRead.connect(boost::bind(
-				&XMLConsoleController::handleDataRead, xmlConsoleController_, _1));
-		client_->onDataWritten.connect(boost::bind(
-				&XMLConsoleController::handleDataWritten, xmlConsoleController_, _1));
 		if (!certificateFile_.isEmpty()) {
 			client_->setCertificate(certificateFile_);
 		}
-		client_->onError.connect(boost::bind(&MainController::handleError, this, _1));
-		client_->onConnected.connect(boost::bind(&MainController::handleConnected, this));
 		boost::shared_ptr<Presence> presence(new Presence());
 		presence->setShow(static_cast<StatusShow::Type>(profileSettings_->getIntSetting("lastShow", StatusShow::Online)));
 		presence->setStatus(profileSettings_->getStringSetting("lastStatus"));
@@ -543,7 +527,6 @@ void MainController::setManagersOnline(bool enabled) {
 
 void MainController::handleServerDiscoInfoResponse(boost::shared_ptr<DiscoInfo> info, const boost::optional<ErrorPayload>& error) {
 	if (!error) {
-		serverDiscoInfo_ = info;
 		chatsManager_->setServerDiscoInfo(info);
 	}
 }
