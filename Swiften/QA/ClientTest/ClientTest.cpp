@@ -38,7 +38,7 @@ void handleRosterReceived(boost::shared_ptr<Payload>) {
 }
 
 void handleConnected() {
-	boost::shared_ptr<GetRosterRequest> rosterRequest(new GetRosterRequest(client));
+	GetRosterRequest::ref rosterRequest = GetRosterRequest::create(client->getIQRouter());
 	rosterRequest->onResponse.connect(boost::bind(&handleRosterReceived, _1));
 	rosterRequest->send();
 }

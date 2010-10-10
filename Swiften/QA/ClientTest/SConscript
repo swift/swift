@@ -16,7 +16,9 @@ if env["TEST"] :
 	myenv.MergeFlags(myenv["PLATFORM_FLAGS"])
 
 	for i in ["SWIFT_CLIENTTEST_JID", "SWIFT_CLIENTTEST_PASS"]:
-		if os.environ.get(i, "") :
+		if ARGUMENTS.get(i.lower(), False) :
+			myenv["ENV"][i] = ARGUMENTS[i.lower()]
+		elif os.environ.get(i, "") :
 			myenv["ENV"][i] = os.environ[i]
 
 	tester = myenv.Program("ClientTest", ["ClientTest.cpp"])
