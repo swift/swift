@@ -30,6 +30,7 @@ if env["SCONS_STAGE"] == "build" :
 			"Chat/ChatStateNotifier.cpp",
 			"Chat/ChatStateMessageSender.cpp",
 			"Client/ClientSessionStanzaChannel.cpp",
+			"Client/CoreClient.cpp",
 			"Client/Client.cpp",
 			"Client/ClientSession.cpp",
 			"Compress/ZLibCodecompressor.cpp",
