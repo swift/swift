@@ -23,7 +23,7 @@
 
 namespace Swift {
 
-QtEventWindow::QtEventWindow(UIEventStream* eventStream, QWidget* parent) : QWidget(parent) {
+QtEventWindow::QtEventWindow(UIEventStream* eventStream) {
 	QBoxLayout* layout = new QBoxLayout(QBoxLayout::TopToBottom, this);
 	layout->setContentsMargins(0,0,0,0);
 	layout->setSpacing(0);

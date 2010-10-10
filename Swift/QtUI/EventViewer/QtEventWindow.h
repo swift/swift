@@ -22,7 +22,7 @@ namespace Swift {
 	class QtEventWindow : public QWidget, public EventWindow {
 		Q_OBJECT
 		public:
-			QtEventWindow(UIEventStream* eventStream, QWidget* parent = 0);
+			QtEventWindow(UIEventStream* eventStream);
 			~QtEventWindow();
 			void addEvent(boost::shared_ptr<StanzaEvent> event, bool active);
 			void removeEvent(boost::shared_ptr<StanzaEvent> event);
