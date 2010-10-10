@@ -20,6 +20,8 @@ class ResponderTest : public CppUnit::TestFixture
 {
 		CPPUNIT_TEST_SUITE(ResponderTest);
 		CPPUNIT_TEST(testConstructor);
+		CPPUNIT_TEST(testStart);
+		CPPUNIT_TEST(testStop);
 		CPPUNIT_TEST(testHandleIQ_Set);
 		CPPUNIT_TEST(testHandleIQ_Get);
 		CPPUNIT_TEST(testHandleIQ_Error);
@@ -46,7 +48,26 @@ class ResponderTest : public CppUnit::TestFixture
 
 			channel_->onIQReceived(createRequest(IQ::Set));
 
+			CPPUNIT_ASSERT_EQUAL(0, static_cast<int>(testling.setPayloads_.size()));
+		}
+
+		void testStart() {
+			MyResponder testling(router_);
+
+			testling.start();
+			channel_->onIQReceived(createRequest(IQ::Set));
+
 			CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(testling.setPayloads_.size()));
+		}
+
+		void testStop() {
+			MyResponder testling(router_);
+
+			testling.start();
+			testling.stop();
+			channel_->onIQReceived(createRequest(IQ::Set));
+
+			CPPUNIT_ASSERT_EQUAL(0, static_cast<int>(testling.setPayloads_.size()));
 		}
 
 		void testHandleIQ_Set() {

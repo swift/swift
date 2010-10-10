@@ -22,7 +22,7 @@ namespace Swift {
 		private:
 			virtual bool handleSetRequest(const JID& from, const String& id, boost::shared_ptr<RosterPayload> payload) {
 				onRosterReceived(payload);
-				sendResponse(from, id, boost::shared_ptr<Payload>());
+				sendResponse(from, id, boost::shared_ptr<RosterPayload>());
 				return true;
 			}
 	};

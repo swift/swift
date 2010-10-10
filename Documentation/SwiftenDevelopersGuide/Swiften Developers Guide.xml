@@ -254,8 +254,9 @@
       <para>
         Using <literal>SoftwareVersionResponder</literal> is pretty 
         straightforward, as can be seen in <xref linkend="Example-EchoBot5"/>: 
-        simply construct the responder with the correct
-        parameters, and it will automatically respond to the incoming 
+        simply construct the responder, set the correct
+        parameters, call <literal>start()</literal>, and it will automatically respond to 
+        the incoming 
         requests. Other <literal>Responder</literal> classes may provide
         signals to notify of incoming requests, or may have some other
         behavior. For a detailed explanation of responders, see 

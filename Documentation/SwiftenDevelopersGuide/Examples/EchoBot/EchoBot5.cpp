@@ -27,12 +27,14 @@ class EchoBot {
 			//...
 			softwareVersionResponder = new SoftwareVersionResponder(
 					"EchoBot", "1.0", client->getIQRouter());
+			softwareVersionResponder->start();
 			//...
 			client->connect();
 			//...
 		}
 
 		~EchoBot() {
+			softwareVersionResponder->stop();
 			delete softwareVersionResponder;
 			//...
 			delete tracer;

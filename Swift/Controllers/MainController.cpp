@@ -196,10 +196,16 @@ void MainController::resetClient() {
 	serverDiscoInfo_ = boost::shared_ptr<DiscoInfo>();
 	delete mucSearchController_;
 	mucSearchController_ = NULL;
-	delete discoResponder_;
-	discoResponder_ = NULL;
-	delete clientVersionResponder_;
-	clientVersionResponder_ = NULL;
+	if (discoResponder_) {
+		discoResponder_->stop();
+		delete discoResponder_;
+		discoResponder_ = NULL;
+	}
+	if (clientVersionResponder_) {
+		clientVersionResponder_->stop();
+		delete clientVersionResponder_;
+		clientVersionResponder_ = NULL;
+	}
 	delete eventWindowController_;
 	eventWindowController_ = NULL;
 	delete xmppRosterController_;
@@ -288,6 +294,7 @@ void MainController::handleConnected() {
 		eventWindowController_ = new EventWindowController(eventController_, eventWindowFactory_);
 
 		clientVersionResponder_ = new SoftwareVersionResponder(CLIENT_NAME, buildVersion, client_->getIQRouter());
+		clientVersionResponder_->start();
 		loginWindow_->morphInto(rosterController_->getWindow());
 
 		DiscoInfo discoInfo;
@@ -299,6 +306,7 @@ void MainController::handleConnected() {
 		discoResponder_ = new DiscoInfoResponder(client_->getIQRouter());
 		discoResponder_->setDiscoInfo(discoInfo);
 		discoResponder_->setDiscoInfo(capsInfo_->getNode() + "#" + capsInfo_->getVersion(), discoInfo);
+		discoResponder_->start();
 		serverDiscoInfo_ = boost::shared_ptr<DiscoInfo>(new DiscoInfo());
 
 		mucSearchController_ = new MUCSearchController(jid_, uiEventStream_, mucSearchWindowFactory_, client_->getIQRouter());

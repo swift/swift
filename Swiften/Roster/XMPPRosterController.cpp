@@ -25,6 +25,11 @@ namespace Swift {
  */
 XMPPRosterController::XMPPRosterController(IQRouter* iqRouter, XMPPRoster* xmppRoster) : iqRouter_(iqRouter), rosterPushResponder_(iqRouter), xmppRoster_(xmppRoster) {
 	rosterPushResponder_.onRosterReceived.connect(boost::bind(&XMPPRosterController::handleRosterReceived, this, _1));
+	rosterPushResponder_.start();
+}
+
+XMPPRosterController::~XMPPRosterController() {
+	rosterPushResponder_.stop();
 }
 
 void XMPPRosterController::requestRoster() {

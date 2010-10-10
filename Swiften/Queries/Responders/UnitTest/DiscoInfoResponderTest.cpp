@@ -35,7 +35,8 @@ class DiscoInfoResponderTest : public CppUnit::TestFixture {
 		}
 
 		void testHandleRequest_GetToplevelInfo() {
-			DiscoInfoResponder testling(router_); 
+			DiscoInfoResponder testling(router_);
+			testling.start();
 			DiscoInfo discoInfo;
 			discoInfo.addFeature("foo");
 			testling.setDiscoInfo(discoInfo);
@@ -48,10 +49,13 @@ class DiscoInfoResponderTest : public CppUnit::TestFixture {
 			CPPUNIT_ASSERT(payload);
 			CPPUNIT_ASSERT_EQUAL(String(""), payload->getNode());
 			CPPUNIT_ASSERT(payload->hasFeature("foo"));
+
+			testling.stop();
 		}
 
 		void testHandleRequest_GetNodeInfo() {
 			DiscoInfoResponder testling(router_); 
+			testling.start();
 			DiscoInfo discoInfo;
 			discoInfo.addFeature("foo");
 			testling.setDiscoInfo(discoInfo);
@@ -68,6 +72,8 @@ class DiscoInfoResponderTest : public CppUnit::TestFixture {
 			CPPUNIT_ASSERT(payload);
 			CPPUNIT_ASSERT_EQUAL(String("bar-node"), payload->getNode());
 			CPPUNIT_ASSERT(payload->hasFeature("bar"));
+
+			testling.stop();
 		}
 
 		void testHandleRequest_GetInvalidNodeInfo() {

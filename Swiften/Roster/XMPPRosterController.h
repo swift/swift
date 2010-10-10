@@ -22,6 +22,7 @@ namespace Swift {
 	class XMPPRosterController {
 		public:
 			XMPPRosterController(IQRouter *iqRouter, XMPPRoster* xmppRoster);
+			~XMPPRosterController();
 
 			void requestRoster();
 
