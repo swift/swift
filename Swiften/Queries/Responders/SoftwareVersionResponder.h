@@ -4,8 +4,7 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#ifndef SWIFTEN_SoftwareVersionResponder_H
-#define SWIFTEN_SoftwareVersionResponder_H
+#pragma once
 
 #include "Swiften/Queries/GetResponder.h"
 #include "Swiften/Elements/SoftwareVersion.h"
@@ -15,15 +14,15 @@ namespace Swift {
 
 	class SoftwareVersionResponder : public GetResponder<SoftwareVersion> {
 		public:
-			SoftwareVersionResponder(const String& client, const String& version, IQRouter* router);
+			SoftwareVersionResponder(IQRouter* router);
+
+			void setVersion(const String& client, const String& version);
 
 		private:
 			virtual bool handleGetRequest(const JID& from, const String& id, boost::shared_ptr<SoftwareVersion> payload);
 
 		private:
-			String client_;
-			String version_;
+			String client;
+			String version;
 	};
 }
-
-#endif

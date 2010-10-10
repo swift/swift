@@ -25,8 +25,8 @@ class EchoBot {
 					bind(&EchoBot::handlePresenceReceived, this, _1));
 			tracer = new ClientXMLTracer(client);
 			//...
-			softwareVersionResponder = new SoftwareVersionResponder(
-					"EchoBot", "1.0", client->getIQRouter());
+			softwareVersionResponder = new SoftwareVersionResponder(client->getIQRouter());
+			softwareVersionResponder->setVersion("EchoBot", "1.0");
 			softwareVersionResponder->start();
 			//...
 			client->connect();

@@ -1,7 +1,6 @@
 Import("env")
 
-myenv = env.Clone()
-
-myenv.Tool("DoxyGen", toolpath = ["#/BuildTools/SCons/Tools"])
-
-myenv.DoxyGen("Doxyfile")
+if "doc" in ARGUMENTS :
+	myenv = env.Clone()
+	myenv.Tool("DoxyGen", toolpath = ["#/BuildTools/SCons/Tools"])
+	myenv.DoxyGen("Doxyfile")

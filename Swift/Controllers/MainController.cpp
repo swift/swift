@@ -293,7 +293,8 @@ void MainController::handleConnected() {
 
 		eventWindowController_ = new EventWindowController(eventController_, eventWindowFactory_);
 
-		clientVersionResponder_ = new SoftwareVersionResponder(CLIENT_NAME, buildVersion, client_->getIQRouter());
+		clientVersionResponder_ = new SoftwareVersionResponder(client_->getIQRouter());
+		clientVersionResponder_->setVersion(CLIENT_NAME, buildVersion);
 		clientVersionResponder_->start();
 		loginWindow_->morphInto(rosterController_->getWindow());
 

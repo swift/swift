@@ -81,7 +81,8 @@ def generateDocBookCode(env, target, source) :
 
 ################################################################################
 
-env.DocBook("Swiften Developers Guide.xml")
+if "doc" in ARGUMENTS :
+	env.DocBook("Swiften Developers Guide.xml")
 
 for i in range(1, 6) :
 	source = "Examples/EchoBot/EchoBot" + str(i) + ".cpp"

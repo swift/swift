@@ -1,5 +1,4 @@
 Import("env")
 
 if env["SCONS_STAGE"] == "build" :
-	if "doc" in ARGUMENTS :
-		SConscript(dirs = ["SwiftenDevelopersGuide", "API"])
+	SConscript(dirs = ["SwiftenDevelopersGuide", "API"])
