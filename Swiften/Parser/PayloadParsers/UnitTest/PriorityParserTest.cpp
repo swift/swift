@@ -12,15 +12,13 @@
 
 using namespace Swift;
 
-class PriorityParserTest : public CppUnit::TestFixture
-{
+class PriorityParserTest : public CppUnit::TestFixture {
 		CPPUNIT_TEST_SUITE(PriorityParserTest);
 		CPPUNIT_TEST(testParse);
+		CPPUNIT_TEST(testParse_Invalid);
 		CPPUNIT_TEST_SUITE_END();
 
 	public:
-		PriorityParserTest() {}
-
 		void testParse() {
 			PayloadsParserTester parser;
 
@@ -28,6 +26,15 @@ class PriorityParserTest : public CppUnit::TestFixture
 
 			Priority* payload = dynamic_cast<Priority*>(parser.getPayload().get());
 			CPPUNIT_ASSERT_EQUAL(-120, payload->getPriority());
+		}
+
+		void testParse_Invalid() {
+			PayloadsParserTester parser;
+
+			CPPUNIT_ASSERT(parser.parse("<priority>invalid</priority>"));
+
+			Priority* payload = dynamic_cast<Priority*>(parser.getPayload().get());
+			CPPUNIT_ASSERT_EQUAL(0, payload->getPriority());
 		}
 };
 

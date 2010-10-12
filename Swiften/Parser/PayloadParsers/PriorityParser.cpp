@@ -20,7 +20,13 @@ void PriorityParser::handleStartElement(const String&, const String&, const Attr
 void PriorityParser::handleEndElement(const String&, const String&) {
 	--level_;
 	if (level_ == 0) {
-		getPayloadInternal()->setPriority(boost::lexical_cast<int>(text_));
+		int priority = 0;
+		try {
+			priority = boost::lexical_cast<int>(text_);
+		}
+		catch (boost::bad_lexical_cast& e) {
+		}
+		getPayloadInternal()->setPriority(priority);
 	}
 }
 
