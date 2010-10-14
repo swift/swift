@@ -33,6 +33,7 @@
 #include "Swiften/Parser/PayloadParsers/PrivateStorageParserFactory.h"
 #include "Swiften/Parser/PayloadParsers/DelayParserFactory.h"
 #include "Swiften/Parser/PayloadParsers/MUCUserPayloadParserFactory.h"
+#include "Swiften/Parser/PayloadParsers/NicknameParserFactory.h"
 
 using namespace boost;
 
@@ -63,6 +64,7 @@ FullPayloadParserFactoryCollection::FullPayloadParserFactoryCollection() {
 	factories_.push_back(shared_ptr<PayloadParserFactory>(new ChatStateParserFactory()));
 	factories_.push_back(shared_ptr<PayloadParserFactory>(new DelayParserFactory()));
 	factories_.push_back(shared_ptr<PayloadParserFactory>(new MUCUserPayloadParserFactory()));
+	factories_.push_back(shared_ptr<PayloadParserFactory>(new NicknameParserFactory()));
 	foreach(shared_ptr<PayloadParserFactory> factory, factories_) {
 		addFactory(factory.get());
 	}

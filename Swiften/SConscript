@@ -92,6 +92,7 @@ if env["SCONS_STAGE"] == "build" :
 			"Serializer/PayloadSerializers/DelaySerializer.cpp",
 			"Serializer/PayloadSerializers/CommandSerializer.cpp",
 			"Serializer/PayloadSerializers/FormSerializer.cpp",
+			"Serializer/PayloadSerializers/NicknameSerializer.cpp",
 			"Serializer/PresenceSerializer.cpp",
 			"Serializer/StanzaSerializer.cpp",
 			"Serializer/StreamFeaturesSerializer.cpp",

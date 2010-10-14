@@ -43,6 +43,7 @@ sources = [
 		"PayloadParsers/VCardUpdateParser.cpp",
 		"PayloadParsers/DelayParser.cpp",
 		"PayloadParsers/MUCUserPayloadParser.cpp",
+		"PayloadParsers/NicknameParser.cpp",
 		"PlatformXMLParserFactory.cpp",
 		"PresenceParser.cpp",
 		"SerializingParser.cpp",
