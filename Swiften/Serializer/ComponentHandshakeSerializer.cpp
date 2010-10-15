@@ -15,7 +15,7 @@ ComponentHandshakeSerializer::ComponentHandshakeSerializer() {
 
 String ComponentHandshakeSerializer::serialize(boost::shared_ptr<Element> element)  const {
 	boost::shared_ptr<ComponentHandshake> handshake(boost::dynamic_pointer_cast<ComponentHandshake>(element));
-	return "<handshake>" + handshake->getData() + "</challenge>";
+	return "<handshake>" + handshake->getData() + "</handshake>";
 }
 
 }
