@@ -4,6 +4,8 @@ sources = [
 		"ComponentHandshakeGenerator.cpp",
 		"ComponentConnector.cpp",
 		"ComponentSession.cpp",
+		"ComponentSessionStanzaChannel.cpp",
+		"CoreComponent.cpp",
 	]
 
 swiften_env.Append(SWIFTEN_OBJECTS = swiften_env.StaticObject(sources))
