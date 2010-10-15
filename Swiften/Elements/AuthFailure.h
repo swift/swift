@@ -4,16 +4,14 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#ifndef SWIFTEN_AuthFailure_H
-#define SWIFTEN_AuthFailure_H
+#pragma once
 
 #include "Swiften/Elements/Element.h"
+#include "Swiften/Base/Shared.h"
 
 namespace Swift {
-	class AuthFailure : public Element {
+	class AuthFailure : public Element, public Shared<AuthFailure> {
 		public:
 			AuthFailure() {}
 	};
 }
-
-#endif

@@ -8,9 +8,10 @@
 
 #include "Swiften/Elements/Element.h"
 #include "Swiften/Base/String.h"
+#include "Swiften/Base/Shared.h"
 
 namespace Swift {
-	class ComponentHandshake : public Element {
+	class ComponentHandshake : public Element, public Shared<ComponentHandshake> {
 		public:
 			ComponentHandshake(const String& data = "") : data(data) {
 			}

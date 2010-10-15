@@ -3,6 +3,7 @@ Import("swiften_env")
 sources = [
 		"ComponentHandshakeGenerator.cpp",
 		"ComponentConnector.cpp",
+		"ComponentSession.cpp",
 	]
 
 swiften_env.Append(SWIFTEN_OBJECTS = swiften_env.StaticObject(sources))

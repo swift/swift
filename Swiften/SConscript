@@ -159,6 +159,7 @@ if env["SCONS_STAGE"] == "build" :
 			File("Compress/UnitTest/ZLibDecompressorTest.cpp"),
 			File("Component/UnitTest/ComponentHandshakeGeneratorTest.cpp"),
 			File("Component/UnitTest/ComponentConnectorTest.cpp"),
+			File("Component/UnitTest/ComponentSessionTest.cpp"),
 			File("Disco/UnitTest/CapsInfoGeneratorTest.cpp"),
 			File("Disco/UnitTest/CapsManagerTest.cpp"),
 			File("Disco/UnitTest/EntityCapsManagerTest.cpp"),

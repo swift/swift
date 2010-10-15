@@ -12,7 +12,6 @@
 
 #include "Swiften/Base/Error.h"
 #include "Swiften/Session/SessionStream.h"
-#include "Swiften/Session/BasicSessionStream.h"
 #include "Swiften/Base/String.h"
 #include "Swiften/JID/JID.h"
 #include "Swiften/Elements/Element.h"
