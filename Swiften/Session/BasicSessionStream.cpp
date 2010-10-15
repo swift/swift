@@ -18,12 +18,12 @@
 
 namespace Swift {
 
-BasicSessionStream::BasicSessionStream(boost::shared_ptr<Connection> connection, PayloadParserFactoryCollection* payloadParserFactories, PayloadSerializerCollection* payloadSerializers, TLSLayerFactory* tlsLayerFactory, TimerFactory* timerFactory) : available(false), connection(connection), payloadParserFactories(payloadParserFactories), payloadSerializers(payloadSerializers), tlsLayerFactory(tlsLayerFactory), timerFactory(timerFactory) {
+BasicSessionStream::BasicSessionStream(StreamType streamType, boost::shared_ptr<Connection> connection, PayloadParserFactoryCollection* payloadParserFactories, PayloadSerializerCollection* payloadSerializers, TLSLayerFactory* tlsLayerFactory, TimerFactory* timerFactory) : available(false), connection(connection), payloadParserFactories(payloadParserFactories), payloadSerializers(payloadSerializers), tlsLayerFactory(tlsLayerFactory), timerFactory(timerFactory), streamType(streamType) {
 }
 
 void BasicSessionStream::initialize() {
 	xmppLayer = boost::shared_ptr<XMPPLayer>(
-			new XMPPLayer(payloadParserFactories, payloadSerializers));
+			new XMPPLayer(payloadParserFactories, payloadSerializers, streamType));
 	xmppLayer->onStreamStart.connect(boost::bind(&BasicSessionStream::handleStreamStartReceived, shared_from_this(), _1));
 	xmppLayer->onElement.connect(boost::bind(&BasicSessionStream::handleElementReceived, shared_from_this(), _1));
 	xmppLayer->onError.connect(boost::bind(

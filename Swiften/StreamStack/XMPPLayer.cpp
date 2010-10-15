@@ -13,13 +13,14 @@ namespace Swift {
 
 XMPPLayer::XMPPLayer(
 		PayloadParserFactoryCollection* payloadParserFactories,
-		PayloadSerializerCollection* payloadSerializers) : 
+		PayloadSerializerCollection* payloadSerializers,
+		StreamType streamType) :
 			payloadParserFactories_(payloadParserFactories), 
 			payloadSerializers_(payloadSerializers),
 			resetParserAfterParse_(false),
 			inParser_(false) {
 	xmppParser_ = new XMPPParser(this, payloadParserFactories_);
-	xmppSerializer_ = new XMPPSerializer(payloadSerializers_);
+	xmppSerializer_ = new XMPPSerializer(payloadSerializers_, streamType);
 }
 
 XMPPLayer::~XMPPLayer() {

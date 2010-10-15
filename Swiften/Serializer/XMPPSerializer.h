@@ -10,6 +10,7 @@
 #include <vector>
 
 #include "Swiften/Elements/Element.h"
+#include "Swiften/Elements/StreamType.h"
 #include "Swiften/Base/String.h"
 #include "Swiften/Serializer/ElementSerializer.h"
 
@@ -20,13 +21,17 @@ namespace Swift {
 
 	class XMPPSerializer {
 		public:
-			XMPPSerializer(PayloadSerializerCollection*);
+			XMPPSerializer(PayloadSerializerCollection*, StreamType type);
 
 			String serializeHeader(const ProtocolHeader&) const;
 			String serializeElement(boost::shared_ptr<Element> stanza) const;
 			String serializeFooter() const;
 		
 		private:
+			String getDefaultNamespace() const;
+
+		private:
+			StreamType type_;
 			std::vector< boost::shared_ptr<ElementSerializer> > serializers_;
 	};
 }

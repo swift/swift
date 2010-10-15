@@ -33,7 +33,7 @@ class XMPPLayerTest : public CppUnit::TestFixture
 		XMPPLayerTest() {}
 
 		void setUp() {
-			testling_ = new XMPPLayer(&parserFactories_, &serializers_);
+			testling_ = new XMPPLayer(&parserFactories_, &serializers_, ClientStreamType);
 			elementsReceived_ = 0;
 			dataReceived_ = "";
 			errorReceived_ = 0;

@@ -8,6 +8,7 @@
 
 #include <boost/bind.hpp>
 #include <iostream>
+#include <cassert>
 
 #include "Swiften/Elements/ProtocolHeader.h"
 #include "Swiften/Base/foreach.h"
@@ -30,10 +31,11 @@
 #include "Swiften/Serializer/MessageSerializer.h"
 #include "Swiften/Serializer/PresenceSerializer.h"
 #include "Swiften/Serializer/IQSerializer.h"
+#include "Swiften/Serializer/ComponentHandshakeSerializer.h"
 
 namespace Swift {
 
-XMPPSerializer::XMPPSerializer(PayloadSerializerCollection* payloadSerializers) {
+XMPPSerializer::XMPPSerializer(PayloadSerializerCollection* payloadSerializers, StreamType type) : type_(type) {
 	serializers_.push_back(boost::shared_ptr<ElementSerializer>(new PresenceSerializer(payloadSerializers)));
 	serializers_.push_back(boost::shared_ptr<ElementSerializer>(new IQSerializer(payloadSerializers)));
 	serializers_.push_back(boost::shared_ptr<ElementSerializer>(new MessageSerializer(payloadSerializers)));
@@ -53,10 +55,11 @@ XMPPSerializer::XMPPSerializer(PayloadSerializerCollection* payloadSerializers) 
 	serializers_.push_back(boost::shared_ptr<ElementSerializer>(new StreamManagementFailedSerializer()));
 	serializers_.push_back(boost::shared_ptr<ElementSerializer>(new StanzaAckSerializer()));
 	serializers_.push_back(boost::shared_ptr<ElementSerializer>(new StanzaAckRequestSerializer()));
+	serializers_.push_back(boost::shared_ptr<ElementSerializer>(new ComponentHandshakeSerializer()));
 }
 
 String XMPPSerializer::serializeHeader(const ProtocolHeader& header) const {
-	String result = "<?xml version=\"1.0\"?><stream:stream xmlns=\"jabber:client\" xmlns:stream=\"http://etherx.jabber.org/streams\"";
+	String result = "<?xml version=\"1.0\"?><stream:stream xmlns=\"" + getDefaultNamespace() + "\" xmlns:stream=\"http://etherx.jabber.org/streams\"";
 	if (!header.getFrom().isEmpty()) {
 		result += " from=\"" + header.getFrom() + "\"";
 	}
@@ -88,6 +91,16 @@ String XMPPSerializer::serializeElement(boost::shared_ptr<Element> element) cons
 
 String XMPPSerializer::serializeFooter() const {
 	return "</stream:stream>";
+}
+
+String XMPPSerializer::getDefaultNamespace() const {
+	switch (type_) {
+		case ClientStreamType: return "jabber:client";
+		case ServerStreamType: return "jabber:server";
+		case ComponentStreamType: return "jabber:component:accept";
+	}
+	assert(false);
+	return "";
 }
 
 }

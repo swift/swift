@@ -36,7 +36,7 @@ class StreamStackTest : public CppUnit::TestFixture
 
 		void setUp() {
 			physicalStream_ = boost::shared_ptr<TestLowLayer>(new TestLowLayer());
-			xmppStream_ = boost::shared_ptr<XMPPLayer>(new XMPPLayer(&parserFactories_, &serializers_));
+			xmppStream_ = boost::shared_ptr<XMPPLayer>(new XMPPLayer(&parserFactories_, &serializers_, ClientStreamType));
 			elementsReceived_ = 0;
 			dataWriteReceived_ = 0;
 		}

@@ -4,8 +4,7 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#ifndef SWIFTEN_GenericElementSerializer_H
-#define SWIFTEN_GenericElementSerializer_H
+#pragma once
 
 #include "Swiften/Serializer/ElementSerializer.h"
 
@@ -20,5 +19,3 @@ namespace Swift {
 			}
 	};
 }
-
-#endif

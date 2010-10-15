@@ -69,6 +69,7 @@ if env["SCONS_STAGE"] == "build" :
 			"Serializer/CompressRequestSerializer.cpp",
 			"Serializer/ElementSerializer.cpp",
 			"Serializer/MessageSerializer.cpp",
+			"Serializer/ComponentHandshakeSerializer.cpp",
 			"Serializer/PayloadSerializer.cpp",
 			"Serializer/PayloadSerializerCollection.cpp",
 			"Serializer/PayloadSerializers/CapsInfoSerializer.cpp",
@@ -133,6 +134,7 @@ if env["SCONS_STAGE"] == "build" :
 			"StreamStack",
 			"LinkLocal",
 			"StreamManagement",
+			"Component",
 		])
 	SConscript(test_only = True, dirs = [
 			"QA",
@@ -155,6 +157,8 @@ if env["SCONS_STAGE"] == "build" :
 			File("Client/UnitTest/ClientSessionTest.cpp"),
 			File("Compress/UnitTest/ZLibCompressorTest.cpp"),
 			File("Compress/UnitTest/ZLibDecompressorTest.cpp"),
+			File("Component/UnitTest/ComponentHandshakeGeneratorTest.cpp"),
+			File("Component/UnitTest/ComponentConnectorTest.cpp"),
 			File("Disco/UnitTest/CapsInfoGeneratorTest.cpp"),
 			File("Disco/UnitTest/CapsManagerTest.cpp"),
 			File("Disco/UnitTest/EntityCapsManagerTest.cpp"),
@@ -234,6 +238,7 @@ if env["SCONS_STAGE"] == "build" :
 			File("Serializer/UnitTest/AuthChallengeSerializerTest.cpp"),
 			File("Serializer/UnitTest/AuthRequestSerializerTest.cpp"),
 			File("Serializer/UnitTest/AuthResponseSerializerTest.cpp"),
+			File("Serializer/UnitTest/XMPPSerializerTest.cpp"),
 			File("Serializer/XML/UnitTest/XMLElementTest.cpp"),
 			File("StreamManagement/UnitTest/StanzaAckRequesterTest.cpp"),
 			File("StreamManagement/UnitTest/StanzaAckResponderTest.cpp"),

@@ -37,6 +37,7 @@
 #include "Swiften/Parser/CompressedParser.h"
 #include "Swiften/Parser/UnknownElementParser.h"
 #include "Swiften/Parser/TLSProceedParser.h"
+#include "Swiften/Parser/ComponentHandshakeParser.h"
 
 // TODO: Whenever an error occurs in the handlers, stop the parser by returing
 // a bool value, and stopping the XML parser
@@ -176,6 +177,9 @@ ElementParser* XMPPParser::createElementParser(const String& element, const Stri
 	}
 	else if (element == "r" && ns == "urn:xmpp:sm:2") {
 		return new StanzaAckRequestParser();
+	}
+	else if (element == "handshake") {
+		return new ComponentHandshakeParser();
 	}
 	return new UnknownElementParser();
 }

@@ -12,6 +12,7 @@
 
 #include "Swiften/Base/ByteArray.h"
 #include "Swiften/Elements/Element.h"
+#include "Swiften/Elements/StreamType.h"
 #include "Swiften/Parser/XMPPParserClient.h"
 
 namespace Swift {
@@ -25,7 +26,8 @@ namespace Swift {
 		public:
 			XMPPLayer(
 					PayloadParserFactoryCollection* payloadParserFactories,
-					PayloadSerializerCollection* payloadSerializers);
+					PayloadSerializerCollection* payloadSerializers,
+					StreamType streamType);
 			~XMPPLayer();
 
 			void writeHeader(const ProtocolHeader& header);

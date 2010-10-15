@@ -11,6 +11,7 @@
 
 #include "Swiften/Network/Connection.h"
 #include "Swiften/Session/SessionStream.h"
+#include "Swiften/Elements/StreamType.h"
 
 namespace Swift {
 	class TLSLayerFactory;
@@ -29,6 +30,7 @@ namespace Swift {
 			public boost::enable_shared_from_this<BasicSessionStream> {
 		public:
 			BasicSessionStream(
+				StreamType streamType,
 				boost::shared_ptr<Connection> connection,
 				PayloadParserFactoryCollection* payloadParserFactories, 
 				PayloadSerializerCollection* payloadSerializers,
@@ -72,6 +74,7 @@ namespace Swift {
 			PayloadSerializerCollection* payloadSerializers;
 			TLSLayerFactory* tlsLayerFactory;
 			TimerFactory* timerFactory;
+			StreamType streamType;
 			boost::shared_ptr<XMPPLayer> xmppLayer;
 			boost::shared_ptr<ConnectionLayer> connectionLayer;
 			StreamStack* streamStack;
@@ -79,4 +82,5 @@ namespace Swift {
 			boost::shared_ptr<TLSLayer> tlsLayer;
 			boost::shared_ptr<WhitespacePingLayer> whitespacePingLayer;
 	};
+
 }

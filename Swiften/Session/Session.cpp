@@ -51,7 +51,7 @@ void Session::finishSession(const SessionError& error) {
 
 void Session::initializeStreamStack() {
 	xmppLayer = boost::shared_ptr<XMPPLayer>(
-			new XMPPLayer(payloadParserFactories, payloadSerializers));
+			new XMPPLayer(payloadParserFactories, payloadSerializers, ClientStreamType));
 	xmppLayer->onStreamStart.connect(
 			boost::bind(&Session::handleStreamStart, shared_from_this(), _1));
 	xmppLayer->onElement.connect(boost::bind(&Session::handleElement, shared_from_this(), _1));

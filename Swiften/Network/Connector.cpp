@@ -122,6 +122,7 @@ void Connector::tryConnect(const HostAddressPort& target) {
 
 void Connector::handleConnectionConnectFinished(bool error) {
 	//std::cout << "Connector::handleConnectionConnectFinished() " << error << std::endl;
+	currentConnection->onConnectFinished.disconnect(boost::bind(&Connector::handleConnectionConnectFinished, shared_from_this(), _1));
 	if (error) {
 		currentConnection.reset();
 		if (!addressQueryResults.empty()) {
@@ -155,6 +156,7 @@ void Connector::finish(boost::shared_ptr<Connection> connection) {
 	}
 	if (currentConnection) {
 		currentConnection->onConnectFinished.disconnect(boost::bind(&Connector::handleConnectionConnectFinished, shared_from_this(), _1));
+		currentConnection.reset();
 	}
 	onConnectFinished(connection);
 }
