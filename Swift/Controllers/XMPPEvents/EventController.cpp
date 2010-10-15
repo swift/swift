@@ -18,6 +18,12 @@ namespace Swift {
 EventController::EventController() {
 }
 
+EventController::~EventController() {
+	foreach(boost::shared_ptr<StanzaEvent> event, events_) {
+		event->onConclusion.disconnect(boost::bind(&EventController::handleEventConcluded, this, event));
+	}
+}
+
 void EventController::handleIncomingEvent(boost::shared_ptr<StanzaEvent> sourceEvent) {
 	boost::shared_ptr<MessageEvent> messageEvent = boost::dynamic_pointer_cast<MessageEvent>(sourceEvent);
 	boost::shared_ptr<SubscriptionRequestEvent> subscriptionEvent = boost::dynamic_pointer_cast<SubscriptionRequestEvent>(sourceEvent);
