@@ -43,7 +43,7 @@ void ClientSessionStanzaChannel::send(boost::shared_ptr<Stanza> stanza) {
 	session->sendStanza(stanza);
 }
 
-void ClientSessionStanzaChannel::handleSessionFinished(boost::shared_ptr<Error> error) {
+void ClientSessionStanzaChannel::handleSessionFinished(boost::shared_ptr<Error>) {
 	session->onFinished.disconnect(boost::bind(&ClientSessionStanzaChannel::handleSessionFinished, this, _1));
 	session->onStanzaReceived.disconnect(boost::bind(&ClientSessionStanzaChannel::handleStanza, this, _1));
 	session->onStanzaAcked.disconnect(boost::bind(&ClientSessionStanzaChannel::handleStanzaAcked, this, _1));
