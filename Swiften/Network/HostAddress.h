@@ -8,6 +8,7 @@
 
 #include <string>
 #include <vector>
+#include <boost/asio.hpp>
 
 namespace Swift {
 	class String;
@@ -17,10 +18,7 @@ namespace Swift {
 			HostAddress();
 			HostAddress(const String&);
 			HostAddress(const unsigned char* address, int length);
-
-			const std::vector<unsigned char>& getRawAddress() const {
-				return address_;
-			}
+			HostAddress(const boost::asio::ip::address& address);
 
 			std::string toString() const;
 
@@ -28,7 +26,9 @@ namespace Swift {
 				return address_ == o.address_;
 			}
 
+			bool isValid() const;
+
 		private:
-			std::vector<unsigned char> address_;
+			boost::asio::ip::address address_;
 	};
 }

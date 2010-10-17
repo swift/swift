@@ -102,7 +102,7 @@ void BoostConnection::handleSocketRead(const boost::system::error_code& error, s
 
 void BoostConnection::handleDataWritten(const boost::system::error_code& error) {
 	if (!error) {
-		return;
+		MainEventLoop::postEvent(boost::ref(onDataWritten), shared_from_this());
 	}
 	if (error == boost::asio::error::eof) {
 		MainEventLoop::postEvent(boost::bind(boost::ref(onDisconnected), boost::optional<Error>()), shared_from_this());
@@ -111,5 +111,10 @@ void BoostConnection::handleDataWritten(const boost::system::error_code& error) 
 		MainEventLoop::postEvent(boost::bind(boost::ref(onDisconnected), WriteError), shared_from_this());
 	}
 }
+
+HostAddressPort BoostConnection::getLocalAddress() const {
+	return HostAddressPort(socket_.local_endpoint());
+}
+
 
 }

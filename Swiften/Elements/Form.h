@@ -40,6 +40,8 @@ namespace Swift {
 
 			String getFormType() const;
 
+			FormField::ref getField(const String& name) const;
+
 		private:
 			std::vector<boost::shared_ptr<FormField> > fields_;
 			String title_;

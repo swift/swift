@@ -71,4 +71,13 @@ void BoostConnectionServer::handleAccept(boost::shared_ptr<BoostConnection> newC
 	}
 }
 
+HostAddressPort BoostConnectionServer::getAddressPort() const {
+	if (acceptor_) {
+		return HostAddressPort(acceptor_->local_endpoint());
+	}
+	else {
+		return HostAddressPort();
+	}
+}
+
 }

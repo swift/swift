@@ -177,6 +177,7 @@ class ComponentConnectorTest : public CppUnit::TestFixture {
 
 				void disconnect() { assert(false); }
 				void write(const ByteArray&) { assert(false); }
+				HostAddressPort getLocalAddress() const { return HostAddressPort(); }
 
 				boost::optional<HostAddressPort> hostAddressPort;
 				std::vector<HostAddressPort> failingPorts;

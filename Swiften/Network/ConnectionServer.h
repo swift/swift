@@ -10,11 +10,14 @@
 #include "Swiften/Base/boost_bsignals.h"
 
 #include "Swiften/Network/Connection.h"
+#include "Swiften/Network/HostAddressPort.h"
 
 namespace Swift {
 	class ConnectionServer {
 		public:
 			virtual ~ConnectionServer();
+
+			virtual HostAddressPort getAddressPort() const = 0;
 
 			boost::signal<void (boost::shared_ptr<Connection>)> onNewConnection;
 	};

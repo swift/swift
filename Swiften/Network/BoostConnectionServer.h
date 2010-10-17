@@ -28,9 +28,11 @@ namespace Swift {
 			static ref create(int port, boost::asio::io_service* ioService) {
 				return ref(new BoostConnectionServer(port, ioService));
 			}
-			
+
 			void start();
 			void stop();
+
+			virtual HostAddressPort getAddressPort() const;
 
 			boost::signal<void (boost::optional<Error>)> onStopped;
 

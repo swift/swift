@@ -36,6 +36,10 @@ namespace Swift {
 				assert(false);
 			}
 
+			virtual HostAddressPort getLocalAddress() const {
+				return HostAddressPort();
+			}
+
 			void setError(const Error& e) {
 				error = boost::optional<Error>(e);
 				state = DisconnectedWithError;

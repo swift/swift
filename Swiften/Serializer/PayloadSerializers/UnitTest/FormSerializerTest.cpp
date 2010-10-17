@@ -84,7 +84,7 @@ class FormSerializerTest : public CppUnit::TestFixture {
 			field->addOption(FormField::Option("30", "30"));
 			field->addOption(FormField::Option("50", "50"));
 			field->addOption(FormField::Option("100", "100"));
-			field->addOption(FormField::Option("None", "none"));
+			field->addOption(FormField::Option("", "none"));
 			form->addField(field);
 
 			std::vector<JID> jids;
@@ -132,7 +132,7 @@ class FormSerializerTest : public CppUnit::TestFixture {
 							"<option label=\"30\"><value>30</value></option>"
 							"<option label=\"50\"><value>50</value></option>"
 							"<option label=\"100\"><value>100</value></option>"
-							"<option label=\"None\"><value>none</value></option>"
+							"<option><value>none</value></option>"
 						"</field>"
 						"<field label=\"People to invite\" type=\"jid-multi\" var=\"invitelist\">"
 							"<desc>Tell all your friends about your new bot!</desc>"

@@ -106,6 +106,10 @@ namespace Swift {
 
 			void readFromFile(const String& file);
 
+			void clear() {
+				data_.clear();
+			}
+
 		private:
 			std::vector<char> data_;
 	};

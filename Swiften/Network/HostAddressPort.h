@@ -4,16 +4,23 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#ifndef SWIFTEN_HostAddressPort_H
-#define SWIFTEN_HostAddressPort_H
+#pragma once
+
+#include <boost/asio.hpp>
 
 #include "Swiften/Network/HostAddress.h"
 
 namespace Swift {
 	class HostAddressPort {
 		public:
-			HostAddressPort(const HostAddress& address, int port) : address_(address), port_(port) {
+			HostAddressPort(const HostAddress& address = HostAddress(), int port = -1) : address_(address), port_(port) {
 			}
+
+			HostAddressPort(const boost::asio::ip::tcp::endpoint& endpoint) {
+				address_ = HostAddress(endpoint.address());
+				port_ = endpoint.port();
+			}
+
 
 			const HostAddress& getAddress() const {
 				return address_;
@@ -27,10 +34,12 @@ namespace Swift {
 				return address_ == o.address_ && port_ == o.port_;
 			}
 
+			bool isValid() const {
+				return address_.isValid() && port_ > 0;
+			}
+
 		private:
 			HostAddress address_;
 			int port_;
 	};
 }
-
-#endif

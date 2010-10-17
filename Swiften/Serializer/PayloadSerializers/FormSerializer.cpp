@@ -145,7 +145,9 @@ boost::shared_ptr<XMLElement> FormSerializer::fieldToXML(boost::shared_ptr<FormF
 
 	foreach (const FormField::Option& option, field->getOptions()) {
 		boost::shared_ptr<XMLElement> optionElement(new XMLElement("option"));
-		optionElement->setAttribute("label", option.label);
+		if (!option.label.isEmpty()) {
+			optionElement->setAttribute("label", option.label);
+		}
 
 		boost::shared_ptr<XMLElement> valueElement(new XMLElement("value"));
 		valueElement->addNode(XMLTextNode::create(option.value));

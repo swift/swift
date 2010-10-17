@@ -7,6 +7,7 @@
 #include "Swiften/Serializer/PayloadSerializers/FullPayloadSerializerCollection.h"
 #include "Swiften/Base/foreach.h"
 #include "Swiften/Serializer/PayloadSerializer.h"
+#include "Swiften/Serializer/PayloadSerializers/IBBSerializer.h"
 #include "Swiften/Serializer/PayloadSerializers/BodySerializer.h"
 #include "Swiften/Serializer/PayloadSerializers/SubjectSerializer.h"
 #include "Swiften/Serializer/PayloadSerializers/ChatStateSerializer.h"
@@ -26,6 +27,8 @@
 #include "Swiften/Serializer/PayloadSerializers/StartSessionSerializer.h"
 #include "Swiften/Serializer/PayloadSerializers/SecurityLabelSerializer.h"
 #include "Swiften/Serializer/PayloadSerializers/SecurityLabelsCatalogSerializer.h"
+#include "Swiften/Serializer/PayloadSerializers/StreamInitiationSerializer.h"
+#include "Swiften/Serializer/PayloadSerializers/ByteStreamsSerializer.h"
 #include "Swiften/Serializer/PayloadSerializers/VCardSerializer.h"
 #include "Swiften/Serializer/PayloadSerializers/VCardUpdateSerializer.h"
 #include "Swiften/Serializer/PayloadSerializers/RawXMLPayloadSerializer.h"
@@ -39,6 +42,7 @@
 namespace Swift {
 
 FullPayloadSerializerCollection::FullPayloadSerializerCollection() {
+	serializers_.push_back(new IBBSerializer());
 	serializers_.push_back(new BodySerializer());
 	serializers_.push_back(new SubjectSerializer());
 	serializers_.push_back(new ChatStateSerializer());
@@ -58,6 +62,8 @@ FullPayloadSerializerCollection::FullPayloadSerializerCollection() {
 	serializers_.push_back(new StartSessionSerializer());
 	serializers_.push_back(new SecurityLabelSerializer());
 	serializers_.push_back(new SecurityLabelsCatalogSerializer());
+	serializers_.push_back(new StreamInitiationSerializer());
+	serializers_.push_back(new BytestreamsSerializer());
 	serializers_.push_back(new VCardSerializer());
 	serializers_.push_back(new VCardUpdateSerializer());
 	serializers_.push_back(new RawXMLPayloadSerializer());

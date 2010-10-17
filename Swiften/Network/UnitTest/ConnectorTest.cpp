@@ -268,6 +268,7 @@ class ConnectorTest : public CppUnit::TestFixture {
 					}
 				}
 
+				HostAddressPort getLocalAddress() const { return HostAddressPort(); }
 				void disconnect() { assert(false); }
 				void write(const ByteArray&) { assert(false); }
 

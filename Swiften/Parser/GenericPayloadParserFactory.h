@@ -4,8 +4,7 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#ifndef SWIFTEN_GENERICPAYLOADPARSERFACTORY_H
-#define SWIFTEN_GENERICPAYLOADPARSERFACTORY_H
+#pragma once
 
 #include "Swiften/Parser/PayloadParserFactory.h"
 #include "Swiften/Base/String.h"
@@ -18,7 +17,7 @@ namespace Swift {
 			GenericPayloadParserFactory(const String& tag, const String& xmlns = "") : tag_(tag), xmlns_(xmlns) {}
 
 			virtual bool canParse(const String& element, const String& ns, const AttributeMap&) const {
-				return element == tag_ && (xmlns_.isEmpty() ? true : xmlns_ == ns);
+				return (tag_.isEmpty() ? true : element == tag_) && (xmlns_.isEmpty() ? true : xmlns_ == ns);
 			}
 
 			virtual PayloadParser* createPayloadParser() {
@@ -30,5 +29,3 @@ namespace Swift {
 			String xmlns_;
 	};
 }
-
-#endif

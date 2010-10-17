@@ -10,10 +10,9 @@
 
 #include "Swiften/Base/ByteArray.h"
 #include "Swiften/Base/String.h"
+#include "Swiften/Network/HostAddressPort.h"
 
 namespace Swift {
-	class HostAddressPort;
-
 	class Connection {
 		public:
 			enum Error {
@@ -29,9 +28,12 @@ namespace Swift {
 			virtual void disconnect() = 0;
 			virtual void write(const ByteArray& data) = 0;
 
+			virtual HostAddressPort getLocalAddress() const = 0;
+
 		public:
 			boost::signal<void (bool /* error */)> onConnectFinished;
 			boost::signal<void (const boost::optional<Error>&)> onDisconnected;
 			boost::signal<void (const ByteArray&)> onDataRead;
+			boost::signal<void ()> onDataWritten;
 	};
 }

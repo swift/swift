@@ -39,6 +39,8 @@ namespace Swift {
 				return socket_;
 			}
 
+			HostAddressPort getLocalAddress() const;
+
 		private:
 			BoostConnection(boost::asio::io_service* ioService);
 

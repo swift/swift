@@ -15,6 +15,8 @@ using namespace Swift;
 class FormTest : public CppUnit::TestFixture {
 		CPPUNIT_TEST_SUITE(FormTest);
 		CPPUNIT_TEST(testGetFormType);
+		CPPUNIT_TEST(testGetFormType_InvalidFormType);
+		CPPUNIT_TEST(testGetFormType_NoFormType);
 		CPPUNIT_TEST_SUITE_END();
 
 	public:
@@ -30,6 +32,24 @@ class FormTest : public CppUnit::TestFixture {
 			form.addField(FixedFormField::create("Bar"));
 
 			CPPUNIT_ASSERT_EQUAL(String("jabber:bot"), form.getFormType());
+		}
+
+		void testGetFormType_InvalidFormType() {
+			Form form;
+
+			FormField::ref field = FixedFormField::create("jabber:bot");
+			field->setName("FORM_TYPE");
+			form.addField(field);
+
+			CPPUNIT_ASSERT_EQUAL(String(""), form.getFormType());
+		}
+
+		void testGetFormType_NoFormType() {
+			Form form;
+
+			form.addField(FixedFormField::create("Foo"));
+
+			CPPUNIT_ASSERT_EQUAL(String(""), form.getFormType());
 		}
 };
 
