@@ -28,17 +28,31 @@ MUC::MUC(StanzaChannel* stanzaChannel, IQRouter* iqRouter, PresenceSender* prese
 
 //FIXME: discover reserved nickname
 
+/**
+ * Join the MUC with default context.
+ */
 void MUC::joinAs(const String &nick) {
+	internalJoin(nick);
+}
+
+void MUC::internalJoin(const String &nick) {
 	//TODO: password
 	//TODO: history request
 	joinComplete_ = false;
-
 	ownMUCJID = JID(ownMUCJID.getNode(), ownMUCJID.getDomain(), nick);
-
 	boost::shared_ptr<Presence> joinPresence(presenceSender->getLastSentUndirectedPresence());
+	//FIXME: use date
 	joinPresence->setTo(ownMUCJID);
 	joinPresence->addPayload(boost::shared_ptr<Payload>(new MUCPayload()));
 	presenceSender->sendPresence(joinPresence);
+}
+
+/**
+ * Join the MUC with context since date.
+ */
+void MUC::joinWithContextSince(const String &nick) {
+	//FIXME: add date
+	internalJoin(nick);
 }
 
 void MUC::part() {

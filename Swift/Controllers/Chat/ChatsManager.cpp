@@ -153,10 +153,10 @@ void ChatsManager::setServerDiscoInfo(boost::shared_ptr<DiscoInfo> info) {
  */ 
 void ChatsManager::setOnline(bool enabled) {
 	foreach (JIDChatControllerPair controllerPair, chatControllers_) {
-		controllerPair.second->setEnabled(enabled);
+		controllerPair.second->setOnline(enabled);
 	}
 	foreach (JIDMUCControllerPair controllerPair, mucControllers_) {
-		controllerPair.second->setEnabled(enabled);
+		controllerPair.second->setOnline(enabled);
 		if (enabled) {
 			controllerPair.second->rejoin();
 		}

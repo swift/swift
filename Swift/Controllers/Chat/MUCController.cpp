@@ -52,6 +52,7 @@ MUCController::MUCController (
 	parting_ = true;
 	joined_ = false;
 	lastWasPresence_ = false;
+	shouldJoinOnReconnect_ = true;
 	events_ = uiEventStream;
 	
 	roster_ = new Roster(false, true);
@@ -72,8 +73,7 @@ MUCController::MUCController (
 		loginCheckTimer_->start();
 	}
 	chatWindow_->convertToMUC();
-	chatWindow_->addSystemMessage("Trying to join room " + toJID_.toString());
-	rejoin();
+	setOnline(true);
 	if (avatarManager_ != NULL) {
 		avatarChangedConnection_ = (avatarManager_->onAvatarChanged.connect(boost::bind(&MUCController::handleAvatarChanged, this, _1)));
 	} 
@@ -97,7 +97,12 @@ void MUCController::rejoin() {
 	if (parting_) {
 		joined_ = false;
 		parting_ = false;
-		muc_->joinAs(nick_);
+		//FIXME: check for received activity
+		if (/*lastActivityDate_ == none*/true) {
+			muc_->joinAs(nick_);
+		} else {
+			muc_->joinWithContextSince(nick_);
+		}
 	}
 }
 
@@ -145,6 +150,7 @@ void MUCController::handleJoinComplete(const String& nick) {
 	nick_ = nick;
 	chatWindow_->addSystemMessage(joinMessage);
 	clearPresenceQueue();
+	shouldJoinOnReconnect_ = true;
 	setEnabled(true);
 }
 
@@ -158,6 +164,7 @@ void MUCController::handleAvatarChanged(const JID& jid) {
 
 void MUCController::handleWindowClosed() {
 	parting_ = true;
+	shouldJoinOnReconnect_ = false;
 	muc_->part();
 	onUserLeft();
 }
@@ -273,16 +280,30 @@ String MUCController::roleToGroupName(MUCOccupant::Role role) {
 	return result;
 }
 
-void MUCController::setEnabled(bool enabled) {
-	ChatControllerBase::setEnabled(enabled);
-	if (!enabled) {
-		roster_->removeAll();
-		/* handleUserLeft won't throw a part back up unless this is called
-		   when it doesn't yet know we've left - which only happens on
-		   disconnect, so call with disconnect here so if the signal does
-		   bubble back up, it'll be with the right type.*/
-		muc_->handleUserLeft(MUC::Disconnect);
+void MUCController::setOnline(bool online) {
+	ChatControllerBase::setOnline(online);
+	if (!online) {
+		parting_ = true;
+		processUserPart();
+	} else {
+		if (shouldJoinOnReconnect_) {
+			chatWindow_->addSystemMessage("Trying to join room " + toJID_.toString());
+			if (loginCheckTimer_) {
+				loginCheckTimer_->start();
+			}
+			rejoin();
+		}
 	}
+}
+
+void MUCController::processUserPart() {
+	roster_->removeAll();
+	/* handleUserLeft won't throw a part back up unless this is called
+	   when it doesn't yet know we've left - which only happens on
+	   disconnect, so call with disconnect here so if the signal does
+	   bubble back up, it'll be with the right type.*/
+	muc_->handleUserLeft(MUC::Disconnect);
+	setEnabled(false);
 }
 
 bool MUCController::shouldUpdateJoinParts() {
@@ -310,7 +331,7 @@ void MUCController::handleOccupantLeft(const MUCOccupant& occupant, MUC::Leaving
 	} else {
 		addPresenceMessage(partMessage);
 		parting_ = true;
-		setEnabled(false);
+		processUserPart();
 	}
 }
 

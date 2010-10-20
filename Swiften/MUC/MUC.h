@@ -32,6 +32,7 @@ namespace Swift {
 			MUC(StanzaChannel* stanzaChannel, IQRouter* iqRouter, PresenceSender* presenceSender, const JID &muc);
 
 			void joinAs(const String &nick);
+			void joinWithContextSince(const String &nick);
 			/*void queryRoomInfo(); */
 			/*void queryRoomItems(); */
 			String getCurrentNick();
@@ -63,6 +64,7 @@ namespace Swift {
 
 		private:
 			void handleIncomingPresence(boost::shared_ptr<Presence> presence);
+			void internalJoin(const String& nick);
 
 		private:
 			JID ownMUCJID;

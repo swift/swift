@@ -127,8 +127,8 @@ void ChatController::handleStanzaAcked(boost::shared_ptr<Stanza> stanza) {
 	unackedStanzas_.erase(unackedStanzas_.find(stanza));
 }
 
-void ChatController::setEnabled(bool enabled) {
-	if (!enabled) {
+void ChatController::setOnline(bool online) {
+	if (!online) {
 		std::map<boost::shared_ptr<Stanza>, String>::iterator it = unackedStanzas_.begin();
 		for ( ; it != unackedStanzas_.end(); it++) {
 			chatWindow_->setAckState(it->second, ChatWindow::Failed);
@@ -140,7 +140,7 @@ void ChatController::setEnabled(bool enabled) {
 		fakeOffline->setType(Presence::Unavailable);
 		chatStateTracker_->handlePresenceChange(fakeOffline);
 	}
-	ChatControllerBase::setEnabled(enabled);
+	ChatControllerBase::setOnline(online);
 }
 
 String ChatController::senderDisplayNameFromMessage(const JID& from) {

@@ -27,7 +27,7 @@ ChatControllerBase::ChatControllerBase(const JID& self, StanzaChannel* stanzaCha
 	chatWindow_ = chatWindowFactory_->createChatWindow(toJID, eventStream);
 	chatWindow_->onAllMessagesRead.connect(boost::bind(&ChatControllerBase::handleAllMessagesRead, this));
 	chatWindow_->onSendMessageRequest.connect(boost::bind(&ChatControllerBase::handleSendMessageRequest, this, _1));
-	setEnabled(stanzaChannel->isAvailable() && iqRouter->isAvailable());
+	setOnline(stanzaChannel->isAvailable() && iqRouter->isAvailable());
 	createDayChangeTimer();
 }
 
@@ -56,6 +56,10 @@ void ChatControllerBase::handleDayChangeTick() {
 
 void ChatControllerBase::setEnabled(bool enabled) {
 	chatWindow_->setInputEnabled(enabled);
+}
+
+void ChatControllerBase::setOnline(bool online) {
+	setEnabled(online);
 }
 
 void ChatControllerBase::setAvailableServerFeatures(boost::shared_ptr<DiscoInfo> info) {

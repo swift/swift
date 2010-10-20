@@ -44,7 +44,7 @@ namespace Swift {
 			MUCController(const JID& self, const JID &muc, const String &nick, StanzaChannel* stanzaChannel, PresenceSender* presenceSender, IQRouter* iqRouter, ChatWindowFactory* chatWindowFactory, PresenceOracle* presenceOracle, AvatarManager* avatarManager, UIEventStream* events, bool useDelayForLatency, TimerFactory* timerFactory, EventController* eventController);
 			~MUCController();
 			boost::signal<void ()> onUserLeft;
-			virtual void setEnabled(bool enabled);
+			virtual void setOnline(bool online);
 			void rejoin();
 			static void appendToJoinParts(std::vector<NickJoinPart>& joinParts, const NickJoinPart& newEvent);
 			static String generateJoinPartString(std::vector<NickJoinPart> joinParts);
@@ -76,6 +76,7 @@ namespace Swift {
 			void updateJoinParts();
 			bool shouldUpdateJoinParts();
 			void dayTicked() {lastWasPresence_ = false;}
+			void processUserPart();
 		private:
 			MUC* muc_;
 			UIEventStream* events_;
@@ -85,6 +86,7 @@ namespace Swift {
 			bool parting_;
 			bool joined_;
 			bool lastWasPresence_;
+			bool shouldJoinOnReconnect_;
 			boost::bsignals::scoped_connection avatarChangedConnection_;
 			boost::shared_ptr<Timer> loginCheckTimer_;
 			std::set<String> currentOccupants_;
