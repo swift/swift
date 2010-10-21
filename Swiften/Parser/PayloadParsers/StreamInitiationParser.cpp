@@ -53,6 +53,7 @@ void StreamInitiationParser::handleStartElement(const String& element, const Str
 			currentText.clear();
 		}
 		else if (inFeature && formParserFactory->canParse(element, ns, attributes)) {
+			assert(!formParser);
 			formParser = dynamic_cast<FormParser*>(formParserFactory->createPayloadParser());
 		}
 	}
@@ -100,6 +101,8 @@ void StreamInitiationParser::handleEndElement(const String& element, const Strin
 					}
 				}
 			}
+			delete formParser;
+			formParser = NULL;
 		}
 	}
 }
