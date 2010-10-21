@@ -32,7 +32,9 @@ void EventNotifier::handleEventAdded(boost::shared_ptr<StanzaEvent> event) {
 	if (boost::shared_ptr<MessageEvent> messageEvent = boost::dynamic_pointer_cast<MessageEvent>(event)) {
 		JID jid = messageEvent->getStanza()->getFrom();
 		String title = nickResolver->jidToNick(jid);
-		notifier->showMessage(Notifier::IncomingMessage, title, messageEvent->getStanza()->getBody(), avatarManager->getAvatarPath(jid), boost::bind(&EventNotifier::handleNotificationActivated, this, jid));
+		if (!messageEvent->getStanza()->isError() && !messageEvent->getStanza()->getBody().isEmpty()) {
+			notifier->showMessage(Notifier::IncomingMessage, title, messageEvent->getStanza()->getBody(), avatarManager->getAvatarPath(jid), boost::bind(&EventNotifier::handleNotificationActivated, this, jid));
+		}
 	}
 	else if(boost::shared_ptr<SubscriptionRequestEvent> subscriptionEvent = boost::dynamic_pointer_cast<SubscriptionRequestEvent>(event)) {
 		JID jid = subscriptionEvent->getJID();
