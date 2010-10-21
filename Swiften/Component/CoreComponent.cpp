@@ -30,6 +30,7 @@ CoreComponent::CoreComponent(const JID& jid, const String& secret) : jid_(jid), 
 	stanzaChannel_->onAvailableChanged.connect(boost::bind(&CoreComponent::handleStanzaChannelAvailableChanged, this, _1));
 
 	iqRouter_ = new IQRouter(stanzaChannel_);
+	iqRouter_->setFrom(jid);
 	connectionFactory_ = new BoostConnectionFactory(&MainBoostIOServiceThread::getInstance().getIOService());
 	timerFactory_ = new BoostTimerFactory(&MainBoostIOServiceThread::getInstance().getIOService());
 	tlsLayerFactory_ = new NullTLSLayerFactory();

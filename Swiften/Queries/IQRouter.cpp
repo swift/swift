@@ -40,7 +40,7 @@ void IQRouter::handleIQ(boost::shared_ptr<IQ> iq) {
 		}
 	}
 	if (!handled && (iq->getType() == IQ::Get || iq->getType() == IQ::Set) ) {
-		channel_->sendIQ(IQ::createError(iq->getFrom(), iq->getID(), ErrorPayload::FeatureNotImplemented, ErrorPayload::Cancel));
+		sendIQ(IQ::createError(iq->getFrom(), iq->getID(), ErrorPayload::FeatureNotImplemented, ErrorPayload::Cancel));
 	}
 
 	processPendingRemoves();
@@ -77,6 +77,9 @@ void IQRouter::removeHandler(boost::shared_ptr<IQHandler> handler) {
 }
 
 void IQRouter::sendIQ(boost::shared_ptr<IQ> iq) {
+	if (from_.isValid()) {
+		iq->setFrom(from_);
+	}
 	channel_->sendIQ(iq);
 }
 

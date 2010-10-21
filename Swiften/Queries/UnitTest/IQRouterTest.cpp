@@ -24,6 +24,9 @@ class IQRouterTest : public CppUnit::TestFixture
 		CPPUNIT_TEST(testHandleIQ_SuccesfulHandlerLast);
 		CPPUNIT_TEST(testHandleIQ_NoSuccesfulHandler);
 		CPPUNIT_TEST(testHandleIQ_HandlerRemovedDuringHandle);
+		CPPUNIT_TEST(testSendIQ_WithFrom);
+		CPPUNIT_TEST(testSendIQ_WithoutFrom);
+		CPPUNIT_TEST(testHandleIQ_WithFrom);
 		CPPUNIT_TEST_SUITE_END();
 
 	public:
@@ -107,6 +110,33 @@ class IQRouterTest : public CppUnit::TestFixture
 
 			CPPUNIT_ASSERT_EQUAL(1, handler1.called);
 			CPPUNIT_ASSERT_EQUAL(2, handler2.called);
+		}
+
+		void testSendIQ_WithFrom() {
+			IQRouter testling(channel_);
+			testling.setFrom(JID("foo@bar.com/baz"));
+
+			testling.sendIQ(boost::shared_ptr<IQ>(new IQ()));
+
+			CPPUNIT_ASSERT_EQUAL(JID("foo@bar.com/baz"), channel_->iqs_[0]->getFrom());
+		}
+
+		void testSendIQ_WithoutFrom() {
+			IQRouter testling(channel_);
+
+			testling.sendIQ(boost::shared_ptr<IQ>(new IQ()));
+
+			CPPUNIT_ASSERT_EQUAL(JID(), channel_->iqs_[0]->getFrom());
+		}
+
+		void testHandleIQ_WithFrom() {
+			IQRouter testling(channel_);
+			testling.setFrom(JID("foo@bar.com/baz"));
+			DummyIQHandler handler(false, &testling);
+
+			channel_->onIQReceived(boost::shared_ptr<IQ>(new IQ()));
+
+			CPPUNIT_ASSERT_EQUAL(JID("foo@bar.com/baz"), channel_->iqs_[0]->getFrom());
 		}
 
 	private:
