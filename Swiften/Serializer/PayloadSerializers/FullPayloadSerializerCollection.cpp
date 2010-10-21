@@ -28,7 +28,7 @@
 #include "Swiften/Serializer/PayloadSerializers/SecurityLabelSerializer.h"
 #include "Swiften/Serializer/PayloadSerializers/SecurityLabelsCatalogSerializer.h"
 #include "Swiften/Serializer/PayloadSerializers/StreamInitiationSerializer.h"
-#include "Swiften/Serializer/PayloadSerializers/ByteStreamsSerializer.h"
+#include "Swiften/Serializer/PayloadSerializers/BytestreamsSerializer.h"
 #include "Swiften/Serializer/PayloadSerializers/VCardSerializer.h"
 #include "Swiften/Serializer/PayloadSerializers/VCardUpdateSerializer.h"
 #include "Swiften/Serializer/PayloadSerializers/RawXMLPayloadSerializer.h"
