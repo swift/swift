@@ -11,6 +11,7 @@ vars.Add('cc', "C compiler")
 vars.Add('cxx', "C++ compiler")
 vars.Add('ccflags', "Extra C(++) compiler flags")
 vars.Add('linkflags', "Extra linker flags")
+vars.Add(BoolVariable("ccache", "Use CCache", "no"))
 vars.Add(BoolVariable("distcc", "Use DistCC", "no"))
 vars.Add('distcc_hosts', "DistCC hosts (overrides DISTCC_HOSTS)")
 vars.Add(EnumVariable("test", "Compile and run tests", "none", ["none", "all", "unit", "system"]))
@@ -86,6 +87,13 @@ if env.get("distcc", False) :
 		env["ENV"]["DISTCC_HOSTS"] = env["distcc_hosts"]
 	env["CC"] = "distcc gcc"
 	env["CXX"] = "distcc g++"
+if env.get("ccache", False) :
+	env["ENV"]["HOME"] = os.environ["HOME"]
+	for var in os.environ :
+		if var.startswith("CCACHE_") :
+			env["ENV"][var] = os.environ[var]
+	env["CC"] = "ccache gcc"
+	env["CXX"] = "ccache g++"
 if "cc" in env :
 	env["CC"] = env["cc"]
 if "cxx" in env :
