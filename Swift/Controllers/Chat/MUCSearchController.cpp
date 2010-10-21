@@ -11,8 +11,8 @@
 #include <boost/bind.hpp>
 #include <boost/shared_ptr.hpp>
 
-#include "Swiften/Queries/Requests/GetDiscoInfoRequest.h"
-#include "Swiften/Queries/Requests/GetDiscoItemsRequest.h"
+#include "Swiften/Disco/GetDiscoInfoRequest.h"
+#include "Swiften/Disco/GetDiscoItemsRequest.h"
 
 #include "Swift/Controllers/UIEvents/UIEventStream.h"
 #include "Swift/Controllers/UIEvents/RequestMUCSearchUIEvent.h"

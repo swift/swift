@@ -10,7 +10,7 @@
 
 #include "Swiften/JID/JID.h"
 #include "Swiften/VCards/VCardStorage.h"
-#include "Swiften/Queries/Requests/GetVCardRequest.h"
+#include "Swiften/VCards/GetVCardRequest.h"
 
 namespace Swift {
 

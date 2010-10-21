@@ -6,5 +6,6 @@ objects = swiften_env.StaticObject([
 			"EntityCapsManager.cpp",
 			"CapsStorage.cpp",
 			"CapsFileStorage.cpp",
+			"DiscoInfoResponder.cpp",
 		])
 swiften_env.Append(SWIFTEN_OBJECTS = [objects])

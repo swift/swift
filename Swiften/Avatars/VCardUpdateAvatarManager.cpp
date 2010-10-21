@@ -10,7 +10,7 @@
 
 #include "Swiften/Client/StanzaChannel.h"
 #include "Swiften/Elements/VCardUpdate.h"
-#include "Swiften/Queries/Requests/GetVCardRequest.h"
+#include "Swiften/VCards/GetVCardRequest.h"
 #include "Swiften/StringCodecs/SHA1.h"
 #include "Swiften/StringCodecs/Hexify.h"
 #include "Swiften/Avatars/AvatarStorage.h"

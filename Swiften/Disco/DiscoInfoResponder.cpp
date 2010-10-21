@@ -4,7 +4,7 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "Swiften/Queries/Responders/DiscoInfoResponder.h"
+#include "Swiften/Disco/DiscoInfoResponder.h"
 #include "Swiften/Queries/IQRouter.h"
 #include "Swiften/Elements/DiscoInfo.h"
 

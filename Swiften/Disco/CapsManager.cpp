@@ -12,7 +12,7 @@
 #include "Swiften/Disco/CapsStorage.h"
 #include "Swiften/Disco/CapsInfoGenerator.h"
 #include "Swiften/Elements/CapsInfo.h"
-#include "Swiften/Queries/Requests/GetDiscoInfoRequest.h"
+#include "Swiften/Disco/GetDiscoInfoRequest.h"
 
 namespace Swift {
 

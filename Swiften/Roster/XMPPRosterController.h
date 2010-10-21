@@ -12,7 +12,7 @@
 #include "Swiften/Base/String.h"
 #include "Swiften/Elements/IQ.h"
 #include "Swiften/Elements/RosterPayload.h"
-#include "Swiften/Queries/Responders/RosterPushResponder.h"
+#include "Swiften/Roster/RosterPushResponder.h"
 #include "Swiften/Base/boost_bsignals.h"
 
 namespace Swift {

@@ -11,7 +11,7 @@
 #include "Swiften/Network/BoostTimer.h"
 #include "Swiften/EventLoop/MainEventLoop.h"
 #include "Swiften/EventLoop/SimpleEventLoop.h"
-#include "Swiften/Queries/Requests/GetRosterRequest.h"
+#include "Swiften/Roster/GetRosterRequest.h"
 #include "Swiften/Client/ClientXMLTracer.h"
 #include "Swiften/Network/BoostIOServiceThread.h"
 #include "Swiften/Network/MainBoostIOServiceThread.h"

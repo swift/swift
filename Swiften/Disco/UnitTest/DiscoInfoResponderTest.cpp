@@ -8,7 +8,7 @@
 #include <cppunit/extensions/TestFactoryRegistry.h>
 #include <typeinfo>
 
-#include "Swiften/Queries/Responders/DiscoInfoResponder.h"
+#include "Swiften/Disco/DiscoInfoResponder.h"
 #include "Swiften/Queries/IQRouter.h"
 #include "Swiften/Queries/DummyIQChannel.h"
 

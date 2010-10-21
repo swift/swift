@@ -14,7 +14,7 @@
 #include "Swiften/EventLoop/SimpleEventLoop.h"
 #include "Swiften/Network/BoostIOServiceThread.h"
 #include "Swiften/Network/MainBoostIOServiceThread.h"
-#include "Swiften/Queries/Requests/GetDiscoInfoRequest.h"
+#include "Swiften/Disco/GetDiscoInfoRequest.h"
 
 using namespace Swift;
 

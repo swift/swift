@@ -11,7 +11,7 @@
 #include "Swiften/Base/foreach.h"
 #include "Swiften/Elements/RosterItemPayload.h"
 #include "Swiften/Queries/IQRouter.h"
-#include "Swiften/Queries/Requests/GetRosterRequest.h"
+#include "Swiften/Roster/GetRosterRequest.h"
 #include "Swiften/EventLoop/MainEventLoop.h"
 #include "Swiften/Roster/Roster.h"
 #include "Swiften/Roster/SetPresence.h"

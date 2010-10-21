@@ -54,7 +54,6 @@ if env["SCONS_STAGE"] == "build" :
 			"Queries/IQHandler.cpp",
 			"Queries/IQRouter.cpp",
 			"Queries/Request.cpp",
-			"Queries/Responders/DiscoInfoResponder.cpp",
 			"Queries/Responders/SoftwareVersionResponder.cpp",
 			"Roster/ContactRosterItem.cpp",
 			"Roster/GroupRosterItem.cpp",
@@ -217,7 +216,7 @@ if env["SCONS_STAGE"] == "build" :
 			File("Presence/UnitTest/PresenceOracleTest.cpp"),
 			File("Presence/UnitTest/PresenceSenderTest.cpp"),
 			File("Queries/Requests/UnitTest/GetPrivateStorageRequestTest.cpp"),
-			File("Queries/Responders/UnitTest/DiscoInfoResponderTest.cpp"),
+			File("Disco/UnitTest/DiscoInfoResponderTest.cpp"),
 			File("Queries/UnitTest/IQRouterTest.cpp"),
 			File("Queries/UnitTest/RequestTest.cpp"),
 			File("Queries/UnitTest/ResponderTest.cpp"),
@@ -266,7 +265,7 @@ if env["SCONS_STAGE"] == "build" :
 	# Generate the Swiften header
 	swiften_header = "#pragma once\n"
 	top_path = env.Dir("..").abspath
-	public_dirs = ["Queries", "Client", "Component", "Elements"]
+	public_dirs = ["Queries", "Client", "Component", "Elements", "Roster"]
 	for public_dir in public_dirs :
 		for root, dirs, files in os.walk(env.Dir(public_dir).abspath) :
 			if root.endswith("UnitTest") :
