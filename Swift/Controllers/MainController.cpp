@@ -424,7 +424,9 @@ void MainController::performLoginFromCachedCredentials() {
 		/* In case we're in the middle of another login, make sure they don't overlap */
 		client_->disconnect();
 	}
-	if (boundJID_.isValid() && jid_.isBare()) {
+	/* If we logged in with a bare JID, and we have a full bound JID, re-login with the
+	 * bound JID to try and keep dynamically assigned resources */
+	if (boundJID_.isValid() && jid_.isBare() && boundJID_.toBare() == jid_) {
 		client_->connect(boundJID_);
 	} else {
 		client_->connect();
