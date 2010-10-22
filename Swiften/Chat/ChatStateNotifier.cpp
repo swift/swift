@@ -16,10 +16,15 @@ void ChatStateNotifier::setContactHas85Caps(bool hasCaps) {
 	contactHas85Caps_ = hasCaps;
 }
 
+void ChatStateNotifier::setContactIsOnline(bool online) {
+	contactIsOnline_ = online;
+}
+
 void ChatStateNotifier::contactJIDHasChanged() {
 	contactHasSentActive_ = false;
 	contactHas85Caps_ = false;
 	userIsTyping_ = false;
+	contactIsOnline_ = false;
 }
 
 void ChatStateNotifier::setUserIsTyping() {
@@ -50,7 +55,7 @@ bool ChatStateNotifier::contactShouldReceiveStates() {
 	   heard from the contact, the active state overrides this.
 	   *HOWEVER* it says that the MUST NOT send csn if you haven't received
 	   active is OPTIONAL behaviour for if you haven't got caps.*/
-	return contactHasSentActive_ || contactHas85Caps_ ;
+	return contactIsOnline_ && (contactHasSentActive_ || contactHas85Caps_);
 }
 
 }

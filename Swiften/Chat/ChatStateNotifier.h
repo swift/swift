@@ -17,6 +17,7 @@ namespace Swift {
 			ChatStateNotifier();
 			void setContactHas85Caps(bool hasCaps);
 			void setUserIsTyping();
+			void setContactIsOnline(bool online);
 			void userSentMessage();
 			void userCancelledNewMessage();
 			void receivedMessageFromContact(bool hasActiveElement);
@@ -28,5 +29,6 @@ namespace Swift {
 			bool contactHas85Caps_;
 			bool contactHasSentActive_;
 			bool userIsTyping_;
+			bool contactIsOnline_;
 	};
 }

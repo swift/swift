@@ -54,6 +54,7 @@ ChatController::ChatController(const JID& self, StanzaChannel* stanzaChannel, IQ
 	if (theirPresence && !theirPresence->getStatus().isEmpty()) {
 		startMessage += " (" + theirPresence->getStatus() + ")";
 	}
+	chatStateNotifier_->setContactIsOnline(theirPresence && theirPresence->getType() == Presence::Available);
 	startMessage += ".";
 	chatWindow_->addSystemMessage(startMessage);
 	chatWindow_->onUserTyping.connect(boost::bind(&ChatStateNotifier::setUserIsTyping, chatStateNotifier_));
@@ -80,6 +81,13 @@ void ChatController::setToJID(const JID& jid) {
 	chatStateMessageSender_->setContact(jid);
 	ChatControllerBase::setToJID(jid);
 	handleCapsChanged(jid);
+	Presence::ref presence;
+	if (isInMUC_) {
+		presence = presenceOracle_->getLastPresence(jid);
+	} else {
+		presence = jid.isBare() ? presenceOracle_->getHighestPriorityPresence(jid.toBare()) : presenceOracle_->getLastPresence(jid);
+	}
+	chatStateNotifier_->setContactIsOnline(presence && presence->getType() == Presence::Available);
 }
 
 bool ChatController::isIncomingMessageFromMe(boost::shared_ptr<Message>) {
@@ -174,6 +182,7 @@ void ChatController::handlePresenceChange(boost::shared_ptr<Presence> newPresenc
 	}
 
 	chatStateTracker_->handlePresenceChange(newPresence);
+	chatStateNotifier_->setContactIsOnline(newPresence->getType() == Presence::Available);
 	String newStatusChangeString = getStatusChangeString(newPresence);
 	if (newStatusChangeString != lastStatusChangeString_) {
 		if (lastWasPresence_) {

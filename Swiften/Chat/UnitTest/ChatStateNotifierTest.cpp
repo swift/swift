@@ -50,6 +50,7 @@ class ChatStateNotifierTest : public CppUnit::TestFixture {
 	CPPUNIT_TEST(testStartTypingReply_CapsIncluded);
 	CPPUNIT_TEST(testCancelledNewMessage);
 	CPPUNIT_TEST(testContinueTypingReply_CapsIncluded);
+	CPPUNIT_TEST(testTypeReplies_WentOffline);
 	CPPUNIT_TEST(testContactShouldReceiveStates_CapsOnly);
 	CPPUNIT_TEST(testContactShouldReceiveStates_CapsNorActive);
 	CPPUNIT_TEST(testContactShouldReceiveStates_ActiveOverrideOn);	
@@ -63,6 +64,7 @@ private:
 public:
 	void setUp() {
 		notifier_ = new ChatStateNotifier();
+		notifier_->setContactIsOnline(true);
 		monitor_ = new ChatStateMonitor(notifier_);
 	}
 	
@@ -134,8 +136,21 @@ public:
 		notifier_->setUserIsTyping();
 		notifier_->setUserIsTyping();
 		CPPUNIT_ASSERT_EQUAL(1, monitor_->composingCallCount);
+		notifier_->userSentMessage();
+		notifier_->setUserIsTyping();
+		CPPUNIT_ASSERT_EQUAL(2, monitor_->composingCallCount);
+
 	}
 
+	void testTypeReplies_WentOffline() {
+			notifier_->setContactHas85Caps(true);
+			notifier_->setUserIsTyping();
+			CPPUNIT_ASSERT_EQUAL(1, monitor_->composingCallCount);
+			notifier_->setContactIsOnline(false);
+			notifier_->userSentMessage();
+			notifier_->setUserIsTyping();
+			CPPUNIT_ASSERT_EQUAL(1, monitor_->composingCallCount);
+		}
 	
 };
 
