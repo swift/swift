@@ -228,13 +228,13 @@ JID MUCController::nickToJID(const String& nick) {
 }
 
 bool MUCController::messageTargetsMe(boost::shared_ptr<Message> message) {
-	return message->getBody().contains(nick_);
+	return message->getBody().getLowerCase().contains(nick_.getLowerCase());
 }
 
 void MUCController::preHandleIncomingMessage(boost::shared_ptr<MessageEvent> messageEvent) {
 	clearPresenceQueue();
 	boost::shared_ptr<Message> message = messageEvent->getStanza();
-	if (joined_ && messageTargetsMe(message) && !message->getPayload<Delay>()) {
+	if (joined_ && messageEvent->getStanza()->getFrom().getResource() != nick_ && messageTargetsMe(message) && !message->getPayload<Delay>()) {
 		eventController_->handleIncomingEvent(messageEvent);
 		if (messageEvent->isReadable()) {
 			chatWindow_->flash();

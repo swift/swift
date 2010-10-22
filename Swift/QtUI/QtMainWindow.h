@@ -41,7 +41,7 @@ namespace Swift {
 			void setMyName(const String& name);
 			void setMyAvatarPath(const String& path);
 			void setMyStatusText(const String& status);
-			void setMyStatusType(const StatusShow::Type type);
+			void setMyStatusType(StatusShow::Type type);
 			QtEventWindow* getEventWindow();
 			QtChatListWindow* getChatListWindow();
 			void setRosterModel(Roster* roster);

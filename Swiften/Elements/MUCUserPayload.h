@@ -10,11 +10,12 @@
 
 #include "Swiften/JID/JID.h"
 #include "Swiften/Base/String.h"
+#include "Swiften/Base/Shared.h"
 #include "Swiften/Elements/Payload.h"
 #include "Swiften/MUC/MUCOccupant.h"
 
 namespace Swift {
-	class MUCUserPayload : public Payload {
+	class MUCUserPayload : public Payload, public Shared<MUCUserPayload> {
 		public:
 			struct Item {
 				Item() : affiliation(MUCOccupant::NoAffiliation), role(MUCOccupant::NoRole) {}
