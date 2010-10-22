@@ -494,8 +494,6 @@ void MainController::handleCancelLoginRequest() {
 void MainController::signOut() {
 	logout();
 	loginWindow_->loggedOut();
-	delete rosterController_;
-	rosterController_ = NULL;
 	resetClient();
 }
 

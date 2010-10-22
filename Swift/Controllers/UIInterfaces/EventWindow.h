@@ -12,8 +12,17 @@
 namespace Swift {
 	class EventWindow {
 		public:
+			EventWindow(bool candelete = true) : canDelete_(candelete) {}
+
+			bool canDelete() const {
+				return canDelete_;
+			}
+
 			virtual ~EventWindow() {};	
 			virtual void addEvent(boost::shared_ptr<StanzaEvent> event, bool active) = 0;
 			virtual void removeEvent(boost::shared_ptr<StanzaEvent> event) = 0;
+
+		private:
+			bool canDelete_;
 	};
 }

@@ -4,8 +4,7 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#ifndef SWIFTEN_MainWindow_H
-#define SWIFTEN_MainWindow_H
+#pragma once
 
 #include "Swiften/Base/String.h"
 #include "Swiften/JID/JID.h"
@@ -19,7 +18,13 @@ namespace Swift {
 
 	class MainWindow {
 		public:
+			MainWindow(bool candelete = true) : canDelete_(candelete) {}
 			virtual ~MainWindow() {};
+
+			bool canDelete() const {
+				return canDelete_;
+			}
+
 			virtual void setMyName(const String& name) = 0;
 			virtual void setMyAvatarPath(const String& path) = 0;
 			virtual void setMyStatusText(const String& status) = 0;
@@ -29,7 +34,8 @@ namespace Swift {
 			boost::signal<void (StatusShow::Type, const String&)> onChangeStatusRequest;
 			boost::signal<void (bool)> onShowOfflineToggled;
 			boost::signal<void ()> onSignOutRequest;
+
+		private:
+			bool canDelete_;
 	};
 }
-#endif
-

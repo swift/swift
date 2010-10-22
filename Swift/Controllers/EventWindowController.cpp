@@ -18,8 +18,9 @@ EventWindowController::EventWindowController(EventController* eventController, E
 }
 
 EventWindowController::~EventWindowController() {
-	// Don't delete this, since Qt owns it
-	//delete window_;
+	if (window_->canDelete()) {
+		delete window_;
+	}
 }
 
 void EventWindowController::handleEventQueueEventAdded(boost::shared_ptr<StanzaEvent> event) {

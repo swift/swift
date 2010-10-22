@@ -29,7 +29,7 @@
 
 namespace Swift {
 
-QtMainWindow::QtMainWindow(UIEventStream* uiEventStream) : QWidget() {
+QtMainWindow::QtMainWindow(UIEventStream* uiEventStream) : QWidget(), MainWindow(false) {
 	uiEventStream_ = uiEventStream;
 	setSizePolicy(QSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding));
 	QBoxLayout *mainLayout = new QBoxLayout(QBoxLayout::TopToBottom, this);
