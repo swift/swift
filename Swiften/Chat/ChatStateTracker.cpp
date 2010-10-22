@@ -12,6 +12,9 @@ ChatStateTracker::ChatStateTracker() {
 }
 
 void ChatStateTracker::handleMessageReceived(boost::shared_ptr<Message> message) {
+	if (message->getType() == Message::Error) {
+		return;
+	}
 	boost::shared_ptr<ChatState> statePayload = message->getPayload<ChatState>();
 	if (statePayload) {
 		changeState(statePayload->getChatState());;
