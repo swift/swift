@@ -382,7 +382,7 @@ void MUCController::appendToJoinParts(std::vector<NickJoinPart>& joinParts, cons
 	}
 }
 
-String MUCController::generateJoinPartString(std::vector<NickJoinPart> joinParts) {
+String MUCController::concatenateListOfNames(const std::vector<NickJoinPart>& joinParts) {
 	String result;
 	for (size_t i = 0; i < joinParts.size(); i++) {
 		if (i > 0) {
@@ -394,15 +394,43 @@ String MUCController::generateJoinPartString(std::vector<NickJoinPart> joinParts
 		}
 		NickJoinPart event = joinParts[i];
 		result += event.nick;
-		switch (event.type) {
-			case Join: result += " has joined";break;
-			case Part: result += " has left";break;
-			case JoinThenPart: result += " joined then left";break;
-			case PartThenJoin: result += " left then rejoined";break;
-		}
-		result += " the room";
 	}
-	result += ".";
+	return result;
+}
+
+String MUCController::generateJoinPartString(const std::vector<NickJoinPart>& joinParts) {
+	std::vector<NickJoinPart> sorted[4];
+	String eventStrings[4];
+	foreach (NickJoinPart event, joinParts) {
+		sorted[event.type].push_back(event);
+	}
+	String result;
+	std::vector<JoinPart> populatedEvents;
+	for (size_t i = 0; i < 4; i++) {
+		String eventString = concatenateListOfNames(sorted[i]);
+		if (!eventString.isEmpty()) {
+			String haveHas = sorted[i].size() > 1 ? " have" : " has";
+			switch (i) {
+				case Join: eventString += haveHas + " joined";break;
+				case Part: eventString += haveHas + " left";break;
+				case JoinThenPart: eventString += " joined then left";break;
+				case PartThenJoin: eventString += " left then rejoined";break;
+			}
+			populatedEvents.push_back(static_cast<JoinPart>(i));
+			eventStrings[i] = eventString;
+		}
+	}
+	for (size_t i = 0; i < populatedEvents.size(); i++) {
+		if (i > 0) {
+			if (i < populatedEvents.size() - 1) {
+				result += ", ";
+			} else {
+				result += " and ";
+			}
+		}
+		result += eventStrings[populatedEvents[i]];
+	}
+	result += " the room.";
 	return result;
 }
 

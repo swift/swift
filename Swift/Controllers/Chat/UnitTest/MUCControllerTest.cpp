@@ -179,11 +179,11 @@ public:
 		list.push_back(NickJoinPart("Kev", Join));
 		CPPUNIT_ASSERT_EQUAL(String("Kev has joined the room."), MUCController::generateJoinPartString(list));
 		list.push_back(NickJoinPart("Remko", Part));
-		CPPUNIT_ASSERT_EQUAL(String("Kev has joined the room and Remko has left the room."), MUCController::generateJoinPartString(list));
+		CPPUNIT_ASSERT_EQUAL(String("Kev has joined and Remko has left the room."), MUCController::generateJoinPartString(list));
 		list.push_back(NickJoinPart("Bert", Join));
-		CPPUNIT_ASSERT_EQUAL(String("Kev has joined the room, Remko has left the room and Bert has joined the room."), MUCController::generateJoinPartString(list));
+		CPPUNIT_ASSERT_EQUAL(String("Kev and Bert have joined and Remko has left the room."), MUCController::generateJoinPartString(list));
 		list.push_back(NickJoinPart("Ernie", Join));
-		CPPUNIT_ASSERT_EQUAL(String("Kev has joined the room, Remko has left the room, Bert has joined the room and Ernie has joined the room."), MUCController::generateJoinPartString(list));
+		CPPUNIT_ASSERT_EQUAL(String("Kev, Bert and Ernie have joined and Remko has left the room."), MUCController::generateJoinPartString(list));
 	}
 
 	void testJoinPartStringContructionMixed() {
@@ -191,11 +191,11 @@ public:
 		list.push_back(NickJoinPart("Kev", JoinThenPart));
 		CPPUNIT_ASSERT_EQUAL(String("Kev joined then left the room."), MUCController::generateJoinPartString(list));
 		list.push_back(NickJoinPart("Remko", Part));
-		CPPUNIT_ASSERT_EQUAL(String("Kev joined then left the room and Remko has left the room."), MUCController::generateJoinPartString(list));
+		CPPUNIT_ASSERT_EQUAL(String("Remko has left and Kev joined then left the room."), MUCController::generateJoinPartString(list));
 		list.push_back(NickJoinPart("Bert", PartThenJoin));
-		CPPUNIT_ASSERT_EQUAL(String("Kev joined then left the room, Remko has left the room and Bert left then rejoined the room."), MUCController::generateJoinPartString(list));
+		CPPUNIT_ASSERT_EQUAL(String("Remko has left, Kev joined then left and Bert left then rejoined the room."), MUCController::generateJoinPartString(list));
 		list.push_back(NickJoinPart("Ernie", JoinThenPart));
-		CPPUNIT_ASSERT_EQUAL(String("Kev joined then left the room, Remko has left the room, Bert left then rejoined the room and Ernie joined then left the room."), MUCController::generateJoinPartString(list));
+		CPPUNIT_ASSERT_EQUAL(String("Remko has left, Kev and Ernie joined then left and Bert left then rejoined the room."), MUCController::generateJoinPartString(list));
 	}
 
 private:

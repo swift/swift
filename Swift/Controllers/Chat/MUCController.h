@@ -47,7 +47,8 @@ namespace Swift {
 			virtual void setOnline(bool online);
 			void rejoin();
 			static void appendToJoinParts(std::vector<NickJoinPart>& joinParts, const NickJoinPart& newEvent);
-			static String generateJoinPartString(std::vector<NickJoinPart> joinParts);
+			static String generateJoinPartString(const std::vector<NickJoinPart>& joinParts);
+			static String concatenateListOfNames(const std::vector<NickJoinPart>& joinParts);
 		
 		protected:
 			void preSendMessageRequest(boost::shared_ptr<Message> message);
@@ -77,6 +78,7 @@ namespace Swift {
 			bool shouldUpdateJoinParts();
 			void dayTicked() {lastWasPresence_ = false;}
 			void processUserPart();
+
 		private:
 			MUC* muc_;
 			UIEventStream* events_;
