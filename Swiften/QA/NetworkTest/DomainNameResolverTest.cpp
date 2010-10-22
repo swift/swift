@@ -79,7 +79,7 @@ class DomainNameResolverTest : public CppUnit::TestFixture {
 			waitForResults();
 
 			CPPUNIT_ASSERT(!addressQueryError);
-			CPPUNIT_ASSERT_EQUAL(std::string("0000:0000:0000:0000:0000:ffff:0a00:0104"), addressQueryResult[0].toString());
+			CPPUNIT_ASSERT_EQUAL(std::string("::ffff:10.0.1.4"), addressQueryResult[0].toString());
 		}
 
 		void testResolveAddress_IPv4and6() {
@@ -91,7 +91,7 @@ class DomainNameResolverTest : public CppUnit::TestFixture {
 			CPPUNIT_ASSERT(!addressQueryError);
 			CPPUNIT_ASSERT_EQUAL(2, static_cast<int>(addressQueryResult.size()));
 			CPPUNIT_ASSERT_EQUAL(std::string("10.0.0.7"), addressQueryResult[0].toString());
-			CPPUNIT_ASSERT_EQUAL(std::string("1234:5678:9abc:def0:0fed:cba9:8765:4321"), addressQueryResult[1].toString());
+			CPPUNIT_ASSERT_EQUAL(std::string("1234:5678:9abc:def0:fed:cba9:8765:4321"), addressQueryResult[1].toString());
 		}
 
 		void testResolveAddress_International() {
