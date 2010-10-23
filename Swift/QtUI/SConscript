@@ -152,11 +152,8 @@ if env["PLATFORM"] == "darwin" :
     frameworks.append(env["GROWL_FRAMEWORK"])
   app = myenv.AppBundle("Swift", version = myenv["SWIFT_VERSION"], resources = ["../resources/MacOSX/Swift.icns"] + commonResources, frameworks = frameworks)
   if env["DIST"] :
-    myenv.Command(["Swift-${SWIFT_VERSION}.dmg"], [app], [
-        "$QTDIR/bin/macdeployqt $SOURCE -dmg",
-        Move("$TARGET", "$SOURCE.dir/Swift.dmg")
-      ])
-
+    myenv.Command(["Swift-${SWIFT_VERSION}.dmg"], [app], ["Swift/Packaging/MacOSX/package.sh " + app.path + " Swift/Packaging/MacOSX/Swift.dmg.gz $TARGET $QTDIR"])
+    
 if env.get("SWIFT_INSTALLDIR", "") :
   env.Install(os.path.join(env["SWIFT_INSTALLDIR"], "bin"), swiftProgram)
   env.InstallAs(os.path.join(env["SWIFT_INSTALLDIR"], "share", "pixmaps", "swift.xpm"), "../resources/logo/logo-icon-32.xpm")
