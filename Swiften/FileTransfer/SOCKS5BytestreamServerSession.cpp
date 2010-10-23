@@ -41,8 +41,8 @@ void SOCKS5BytestreamServerSession::handleDataRead(const ByteArray& data) {
 void SOCKS5BytestreamServerSession::process() {
 	if (state == WaitingForAuthentication) {
 		if (unprocessedData.getSize() >= 2) {
-			int authCount = unprocessedData[1];
-			int i = 2;
+			size_t authCount = unprocessedData[1];
+			size_t i = 2;
 			while (i < 2 + authCount && i < unprocessedData.getSize()) {
 				// Skip authentication mechanism
 				++i;
@@ -61,8 +61,8 @@ void SOCKS5BytestreamServerSession::process() {
 	else if (state == WaitingForRequest) {
 		if (unprocessedData.getSize() >= 5) {
 			ByteArray requestID;
-			int i = 5;
-			int hostnameSize = unprocessedData[4];
+			size_t i = 5;
+			size_t hostnameSize = unprocessedData[4];
 			while (i < 5 + hostnameSize && i < unprocessedData.getSize()) {
 				requestID += unprocessedData[i];
 				++i;
