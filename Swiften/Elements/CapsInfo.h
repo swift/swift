@@ -6,13 +6,16 @@
 
 #pragma once
 
-#include "Swiften/Base/String.h"
+#include <boost/shared_ptr.hpp>
 
+#include "Swiften/Base/String.h"
 #include "Swiften/Elements/Payload.h"
 
 namespace Swift {
 	class CapsInfo : public Payload {
 		public:
+			typedef boost::shared_ptr<CapsInfo> ref;
+
 			CapsInfo(const String& node = "", const String& version = "", const String& hash = "sha-1") : node_(node), version_(version), hash_(hash) {}
 
 			bool operator==(const CapsInfo& o) const {

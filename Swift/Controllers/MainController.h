@@ -17,8 +17,8 @@
 #include "Swiften/Base/String.h"
 #include "Swiften/Client/ClientError.h"
 #include "Swiften/JID/JID.h"
-#include "Swiften/Elements/VCard.h"
 #include "Swiften/Elements/DiscoInfo.h"
+#include "Swiften/Elements/VCard.h"
 #include "Swiften/Elements/ErrorPayload.h"
 #include "Swiften/Elements/Presence.h"
 #include "Swift/Controllers/Settings/SettingsProvider.h"
@@ -38,7 +38,6 @@ namespace Swift {
 	class MainWindowFactory;
 	class MainWindow;
 	class RosterController;
-	class DiscoInfoResponder;
 	class LoginWindow;
 	class EventLoop;
 	class LoginWindowFactory;
@@ -132,11 +131,9 @@ namespace Swift {
 			EventController* eventController_;
 			EventWindowController* eventWindowController_;
 			LoginWindow* loginWindow_;
-			DiscoInfoResponder* discoResponder_;
 			UIEventStream* uiEventStream_;
 			XMLConsoleController* xmlConsoleController_;
 			ChatsManager* chatsManager_;
-			boost::shared_ptr<CapsInfo> capsInfo_;
 			JID jid_;
 			JID boundJID_;
 			SystemTrayController* systemTrayController_;

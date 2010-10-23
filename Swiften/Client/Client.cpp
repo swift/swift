@@ -20,6 +20,7 @@
 #include "Swiften/Avatars/AvatarManagerImpl.h"
 #include "Swiften/Disco/CapsManager.h"
 #include "Swiften/Disco/EntityCapsManager.h"
+#include "Swiften/Disco/ClientDiscoManager.h"
 #include "Swiften/Client/NickResolver.h"
 #include "Swiften/Presence/SubscriptionManager.h"
 
@@ -41,6 +42,7 @@ Client::Client(EventLoop* eventLoop, const JID& jid, const String& password, Sto
 
 	stanzaChannelPresenceSender = new StanzaChannelPresenceSender(getStanzaChannel());
 	directedPresenceSender = new DirectedPresenceSender(stanzaChannelPresenceSender);
+	discoManager = new ClientDiscoManager(getIQRouter(), directedPresenceSender);
 
 	mucRegistry = new MUCRegistry();
 	mucManager = new MUCManager(getStanzaChannel(), getIQRouter(), directedPresenceSender, mucRegistry);
@@ -64,6 +66,7 @@ Client::~Client() {
 	delete mucManager;
 	delete mucRegistry;
 
+	delete discoManager;
 	delete directedPresenceSender;
 	delete stanzaChannelPresenceSender;
 
@@ -106,7 +109,7 @@ Storages* Client::getStorages() const {
 }
 
 PresenceSender* Client::getPresenceSender() const {
-	return directedPresenceSender;
+	return discoManager->getPresenceSender();
 }
 
 }

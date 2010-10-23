@@ -48,9 +48,9 @@
 #include "Swiften/Elements/VCardUpdate.h"
 #include "Swift/Controllers/Settings/SettingsProvider.h"
 #include "Swiften/Elements/DiscoInfo.h"
-#include "Swiften/Disco/DiscoInfoResponder.h"
 #include "Swiften/Disco/CapsInfoGenerator.h"
 #include "Swiften/Disco/GetDiscoInfoRequest.h"
+#include "Swiften/Disco/ClientDiscoManager.h"
 #include "Swiften/VCards/GetVCardRequest.h"
 #include "Swiften/StringCodecs/SHA1.h"
 #include "Swiften/StringCodecs/Hexify.h"
@@ -99,7 +99,6 @@ MainController::MainController(
 	rosterController_ = NULL;
 	chatsManager_ = NULL;
 	eventWindowController_ = NULL;
-	discoResponder_ = NULL;
 	mucSearchController_ = NULL;
 	quitRequested_ = false;
 
@@ -173,11 +172,6 @@ void MainController::resetClient() {
 	resetPendingReconnects();
 	delete mucSearchController_;
 	mucSearchController_ = NULL;
-	if (discoResponder_) {
-		discoResponder_->stop();
-		delete discoResponder_;
-		discoResponder_ = NULL;
-	}
 	delete eventWindowController_;
 	eventWindowController_ = NULL;
 	delete chatsManager_;
@@ -247,12 +241,8 @@ void MainController::handleConnected() {
 		discoInfo.addIdentity(DiscoInfo::Identity(CLIENT_NAME, "client", "pc"));
 		discoInfo.addFeature("urn:xmpp:sec-label:0");
 		discoInfo.addFeature(ChatState::getFeatureNamespace());
-		capsInfo_ = boost::shared_ptr<CapsInfo>(new CapsInfo(CapsInfoGenerator(CLIENT_NODE).generateCapsInfo(discoInfo)));
-
-		discoResponder_ = new DiscoInfoResponder(client_->getIQRouter());
-		discoResponder_->setDiscoInfo(discoInfo);
-		discoResponder_->setDiscoInfo(capsInfo_->getNode() + "#" + capsInfo_->getVersion(), discoInfo);
-		discoResponder_->start();
+		client_->getDiscoManager()->setCapsNode(CLIENT_NODE);
+		client_->getDiscoManager()->setDiscoInfo(discoInfo);
 
 		mucSearchController_ = new MUCSearchController(jid_, uiEventStream_, mucSearchWindowFactory_, client_->getIQRouter());
 	}
@@ -317,7 +307,6 @@ void MainController::sendPresence(boost::shared_ptr<Presence> presence) {
 	if (!vCardPhotoHash_.isEmpty()) {
 		presence->updatePayload(boost::shared_ptr<VCardUpdate>(new VCardUpdate(vCardPhotoHash_)));
 	}
-	presence->updatePayload(capsInfo_);
 	client_->getPresenceSender()->sendPresence(presence);
 	if (presence->getType() == Presence::Unavailable) {
 		logout();

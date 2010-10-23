@@ -13,6 +13,11 @@ namespace Swift {
 DiscoInfoResponder::DiscoInfoResponder(IQRouter* router) : GetResponder<DiscoInfo>(router) {
 }
 
+void DiscoInfoResponder::clearDiscoInfo() {
+	info_ = DiscoInfo();
+	nodeInfo_.clear();
+}
+
 void DiscoInfoResponder::setDiscoInfo(const DiscoInfo& info) {
 	info_ = info;
 }

@@ -4,8 +4,7 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#ifndef SWIFTEN_Body_H
-#define SWIFTEN_Body_H
+#pragma once
 
 #include "Swiften/Elements/Payload.h"
 #include "Swiften/Base/String.h"
@@ -13,6 +12,8 @@
 namespace Swift {
 	class Body : public Payload {
 		public:
+			typedef boost::shared_ptr<Body> ref;
+
 			Body(const String& text = "") : text_(text) {
 			}
 
@@ -28,5 +29,3 @@ namespace Swift {
 			String text_;
 	};
 }
-
-#endif

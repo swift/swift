@@ -27,6 +27,7 @@ namespace Swift {
 	class EntityCapsManager;
 	class NickResolver;
 	class SubscriptionManager;
+	class ClientDiscoManager;
 
 	/**
 	 * Provides the core functionality for writing XMPP client software.
@@ -122,6 +123,10 @@ namespace Swift {
 				return subscriptionManager;
 			}
 
+			ClientDiscoManager* getDiscoManager() const {
+				return discoManager;
+			}
+
 		public:
 			/**
 			 * This signal is emitted when a JID changes presence.
@@ -151,5 +156,6 @@ namespace Swift {
 			NickResolver* nickResolver;
 			SubscriptionManager* subscriptionManager;
 			MUCManager* mucManager;
+			ClientDiscoManager* discoManager;
 	};
 }

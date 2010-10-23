@@ -4,8 +4,7 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#ifndef SWIFTEN_DiscoInfoResponder_H
-#define SWIFTEN_DiscoInfoResponder_H
+#pragma once
 
 #include <map>
 
@@ -19,6 +18,7 @@ namespace Swift {
 		public:
 			DiscoInfoResponder(IQRouter* router);
 
+			void clearDiscoInfo();
 			void setDiscoInfo(const DiscoInfo& info);
 			void setDiscoInfo(const String& node, const DiscoInfo& info);
 
@@ -30,5 +30,3 @@ namespace Swift {
 			std::map<String, DiscoInfo> nodeInfo_;
 	};
 }
-
-#endif

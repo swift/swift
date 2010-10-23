@@ -4,14 +4,15 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#ifndef SWIFTEN_PAYLOAD_H
-#define SWIFTEN_PAYLOAD_H
+#pragma once
+
+#include <boost/shared_ptr.hpp>
 
 namespace Swift {
 	class Payload {
 		public:
+			typedef boost::shared_ptr<Payload> ref;
+
 			virtual ~Payload();
 	};
 }
-
-#endif
