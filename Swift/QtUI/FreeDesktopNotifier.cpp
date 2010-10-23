@@ -21,7 +21,7 @@ namespace Swift {
 FreeDesktopNotifier::FreeDesktopNotifier(const String& name) : applicationName(name) {
 }
 
-void FreeDesktopNotifier::doShowMessage(Type type, const String& subject, const String& description, const boost::filesystem::path& picture, boost::function<void()>) {
+void FreeDesktopNotifier::showMessage(Type type, const String& subject, const String& description, const boost::filesystem::path& picture, boost::function<void()>) {
 	QDBusConnection bus = QDBusConnection::sessionBus();
 	if (!bus.isConnected()) {
 		return;

@@ -13,7 +13,7 @@ namespace Swift {
 		public:
 			FreeDesktopNotifier(const String& name);
 
-			virtual void doShowMessage(Type type, const String& subject, const String& description, const boost::filesystem::path& picture, boost::function<void()> callback);
+			virtual void showMessage(Type type, const String& subject, const String& description, const boost::filesystem::path& picture, boost::function<void()> callback);
 		
 		private:
 			String applicationName;
