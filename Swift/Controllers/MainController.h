@@ -53,6 +53,7 @@ namespace Swift {
 	class LoginWindowFactory;
 	class MUCController;
 	class Notifier;
+	class TogglableNotifier;
 	class PresenceNotifier;
 	class EventNotifier;
 	class SystemTray;
@@ -137,7 +138,7 @@ namespace Swift {
 			VCardStorageFactory* vcardStorageFactory_;
 			VCardManager* vcardManager_;
 			Dock* dock_;
-			Notifier* notifier_;
+			TogglableNotifier* notifier_;
 			PresenceNotifier* presenceNotifier_;
 			EventNotifier* eventNotifier_;
 			RosterController* rosterController_;

@@ -14,7 +14,6 @@
 namespace Swift {
 	class Notifier {
 		public:
-			Notifier();
 			virtual ~Notifier();
 
 			enum Type { ContactAvailable, ContactUnavailable, ContactStatusChange, IncomingMessage, SystemMessage };
@@ -23,20 +22,6 @@ namespace Swift {
 			 * Picture is a PNG image.
 			 */
 			virtual void showMessage(
-				Type type,
-				const String& subject, 
-				const String& description, 
-				const boost::filesystem::path& picture,
-				boost::function<void()> callback);
-
-			void setEnabled(bool b) {
-				enabled = b;
-			}
-
-			bool getEnabled() const {return enabled;}
-
-		private:
-			virtual void doShowMessage(
 				Type type,
 				const String& subject, 
 				const String& description, 
@@ -50,8 +35,5 @@ namespace Swift {
 
 			static const int DEFAULT_STATUS_NOTIFICATION_TIMEOUT_SECONDS;
 			static const int DEFAULT_MESSAGE_NOTIFICATION_TIMEOUT_SECONDS;
-
-		private:
-			bool enabled;
 	};
 }

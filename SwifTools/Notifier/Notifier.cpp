@@ -11,16 +11,7 @@ namespace Swift {
 const int Notifier::DEFAULT_STATUS_NOTIFICATION_TIMEOUT_SECONDS = 3;
 const int Notifier::DEFAULT_MESSAGE_NOTIFICATION_TIMEOUT_SECONDS = 5;
 
-Notifier::Notifier() : enabled(true) {
-}
-
 Notifier::~Notifier() {
-}
-
-void Notifier::showMessage(Type type, const String& subject, const String& description, const boost::filesystem::path& picture, boost::function<void()> callback) {
-	if (enabled) {
-		doShowMessage(type, subject, description, picture, callback);
-	}
 }
 
 String Notifier::typeToString(Type type) {

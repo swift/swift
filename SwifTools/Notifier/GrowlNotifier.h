@@ -24,7 +24,7 @@ namespace Swift {
 		public:
 			GrowlNotifier(const String& name);
 
-			virtual void doShowMessage(Type type, const String& subject, const String& description, const boost::filesystem::path& picture, boost::function<void()> callback);
+			virtual void showMessage(Type type, const String& subject, const String& description, const boost::filesystem::path& picture, boost::function<void()> callback);
 		
 		private:
 			Growl_Delegate delegate_;

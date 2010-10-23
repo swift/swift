@@ -39,6 +39,7 @@
 #include "Swift/Controllers/PresenceNotifier.h"
 #include "Swift/Controllers/EventNotifier.h"
 #include "SwifTools/Dock/Dock.h"
+#include "SwifTools/Notifier/TogglableNotifier.h"
 #include "Swiften/Base/foreach.h"
 #include "Swiften/Base/String.h"
 #include "Swiften/Client/Client.h"
@@ -69,6 +70,7 @@ static const String CLIENT_NAME = "Swift";
 static const String CLIENT_VERSION = "1.0-devel";
 static const String CLIENT_NODE = "http://swift.im";
 
+static const String SHOW_NOTIFICATIONS = "showNotifications";
 
 MainController::MainController(
 		ChatWindowFactory* chatWindowFactory,
@@ -119,12 +121,12 @@ MainController::MainController(
 	mucSearchWindowFactory_ = mucSearchWindowFactory;
 	eventWindowFactory_ = eventWindowFactory;
 	dock_ = dock;
-	notifier_ = notifier;
 	chatListWindowFactory_ = chatListWindowFactory;
 	uiEventStream_ = new UIEventStream();
 
 	avatarStorage_ = avatarStorage;
 	capsStorage_ = capsStorage;
+	notifier_ = new TogglableNotifier(notifier);
 	eventController_ = new EventController();
 	eventController_->onEventQueueLengthChange.connect(boost::bind(&MainController::handleEventQueueLengthChange, this, _1));
 
@@ -158,10 +160,10 @@ MainController::MainController(
 
 	xmlConsoleController_ = new XMLConsoleController(uiEventStream_, xmlConsoleWidgetFactory);
 
-	bool enabled = settings_->getBoolSetting("showNotifications", true);
-	notifier_->setEnabled(enabled);
-	uiEventStream_->send(boost::shared_ptr<ToggleNotificationsUIEvent>(new ToggleNotificationsUIEvent(enabled)));
 	uiEventStream_->onUIEvent.connect(boost::bind(&MainController::handleUIEvent, this, _1));
+	bool enabled = settings_->getBoolSetting(SHOW_NOTIFICATIONS, true);
+	uiEventStream_->send(boost::shared_ptr<ToggleNotificationsUIEvent>(new ToggleNotificationsUIEvent(enabled)));
+	
 
 	if (loginAutomatically) {
 		profileSettings_ = new ProfileSettingsProvider(selectedLoginJID, settings_);
@@ -179,6 +181,7 @@ MainController::~MainController() {
 	delete uiEventStream_;
 	resetClient();
 	delete eventController_;
+	delete notifier_;
 	for(VCardStorageMap::iterator i = vcardStorages_.begin(); i != vcardStorages_.end(); ++i) {
 		delete i->second;
 	}
@@ -230,10 +233,8 @@ void MainController::handleUIEvent(boost::shared_ptr<UIEvent> event) {
 	boost::shared_ptr<ToggleNotificationsUIEvent> notificationsEvent = boost::dynamic_pointer_cast<ToggleNotificationsUIEvent>(event);
 	if (notificationsEvent) {
 		bool enabled = notificationsEvent->getEnabled();
-		if (enabled != notifier_->getEnabled()) {
-			notifier_->setEnabled(enabled);
-			settings_->storeBool("showNotifications", enabled);
-		}
+		notifier_->setPersistentEnabled(enabled);
+		settings_->storeBool(SHOW_NOTIFICATIONS, enabled);
 	}
 }
 
@@ -339,7 +340,7 @@ void MainController::sendPresence(boost::shared_ptr<Presence> presence) {
 	rosterController_->getWindow()->setMyStatusType(presence->getShow());
 	rosterController_->getWindow()->setMyStatusText(presence->getStatus());
 	systemTrayController_->setMyStatusType(presence->getShow());
-	notifier_->setEnabled(presence->getShow() != StatusShow::DND);
+	notifier_->setTemporarilyDisabled(presence->getShow() == StatusShow::DND);
 
 	// Add information and send
 	if (!vCardPhotoHash_.isEmpty()) {

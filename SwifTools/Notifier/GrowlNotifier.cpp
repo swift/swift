@@ -70,7 +70,7 @@ GrowlNotifier::GrowlNotifier(const String& name) {
 	Growl_SetDelegate(&delegate_);
 }
 
-void GrowlNotifier::doShowMessage(Type type, const String& subject, const String& description, const boost::filesystem::path& picturePath, boost::function<void()> callback) {
+void GrowlNotifier::showMessage(Type type, const String& subject, const String& description, const boost::filesystem::path& picturePath, boost::function<void()> callback) {
 	ByteArray picture;
 	picture.readFromFile(picturePath.string());
 
