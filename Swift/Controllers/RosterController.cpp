@@ -231,8 +231,11 @@ void RosterController::handleRosterSetError(boost::optional<ErrorPayload> error,
 	eventController_->handleIncomingEvent(errorEvent);
 }
 
-void RosterController::handleIncomingPresence(boost::shared_ptr<Presence> newPresence) {
-	boost::shared_ptr<Presence> appliedPresence(newPresence);
+void RosterController::handleIncomingPresence(Presence::ref newPresence) {
+	if (newPresence->getType() == Presence::Error) {
+		return;
+	}
+	Presence::ref appliedPresence(newPresence);
 	if (newPresence->getType() == Presence::Unsubscribe) {
 		/* In 3921bis, subscription removal isn't followed by a presence push of unavailable*/
 		appliedPresence = boost::shared_ptr<Presence>(new Presence());
