@@ -10,6 +10,7 @@ vars = Variables(os.path.join(Dir("#").abspath, "config.py"))
 vars.Add('cc', "C compiler")
 vars.Add('cxx', "C++ compiler")
 vars.Add('ccflags', "Extra C(++) compiler flags")
+vars.Add('link', "Linker")
 vars.Add('linkflags', "Extra linker flags")
 vars.Add(BoolVariable("ccache", "Use CCache", "no"))
 vars.Add(BoolVariable("distcc", "Use DistCC", "no"))
@@ -99,6 +100,9 @@ if "cc" in env :
 if "cxx" in env :
 	env["CXX"] = env["cxx"]
 env["CCFLAGS"] = env.get("ccflags", [])
+if "link" in env :
+	env["SHLINK"] = env["link"]
+	env["LINK"] = env["link"]
 env["LINKFLAGS"] = env.get("linkflags", [])
 # This isn't a real flag (yet) AFAIK. Be sure to append it to the CXXFLAGS
 # where you need it
