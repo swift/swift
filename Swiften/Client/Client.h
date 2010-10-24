@@ -11,6 +11,7 @@
 namespace Swift {
 	class SoftwareVersionResponder;
 	class XMPPRoster;
+	class XMPPRosterImpl;
 	class XMPPRosterController;
 	class PresenceOracle;
 
@@ -46,9 +47,7 @@ namespace Swift {
 			 *
 			 * \see requestRoster()
 			 */
-			XMPPRoster* getRoster() const {
-				return roster;
-			}
+			XMPPRoster* getRoster() const;
 
 			/**
 			 * Requests the roster from the server.
@@ -84,7 +83,7 @@ namespace Swift {
 
 		private:
 			SoftwareVersionResponder* softwareVersionResponder;
-			XMPPRoster* roster;
+			XMPPRosterImpl* roster;
 			XMPPRosterController* rosterController;
 			PresenceOracle* presenceOracle;
 	};

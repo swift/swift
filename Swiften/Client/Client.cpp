@@ -7,7 +7,7 @@
 #include "Swiften/Client/Client.h"
 
 #include "Swiften/Queries/Responders/SoftwareVersionResponder.h"
-#include "Swiften/Roster/XMPPRoster.h"
+#include "Swiften/Roster/XMPPRosterImpl.h"
 #include "Swiften/Roster/XMPPRosterController.h"
 #include "Swiften/Presence/PresenceOracle.h"
 
@@ -17,7 +17,7 @@ Client::Client(const JID& jid, const String& password) : CoreClient(jid, passwor
 	softwareVersionResponder = new SoftwareVersionResponder(getIQRouter());
 	softwareVersionResponder->start();
 
-	roster = new XMPPRoster();
+	roster = new XMPPRosterImpl();
 	rosterController = new XMPPRosterController(getIQRouter(), roster);
 
 	presenceOracle = new PresenceOracle(getStanzaChannel());
@@ -33,6 +33,10 @@ Client::~Client() {
 
 	softwareVersionResponder->stop();
 	delete softwareVersionResponder;
+}
+
+XMPPRoster* Client::getRoster() const {
+	return roster;
 }
 
 void Client::setSoftwareVersion(const String& name, const String& version) {

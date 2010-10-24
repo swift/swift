@@ -25,7 +25,7 @@
 #include "Swiften/VCards/VCardManager.h"
 #include "Swiften/VCards/VCardMemoryStorage.h"
 #include "Swift/Controllers/NickResolver.h"
-#include "Swiften/Roster/XMPPRoster.h"
+#include "Swiften/Roster/XMPPRosterImpl.h"
 #include "Swift/Controllers/UnitTest/MockChatWindow.h"
 #include "Swiften/Client/DummyStanzaChannel.h"
 #include "Swiften/Queries/DummyIQChannel.h"
@@ -66,7 +66,7 @@ public:
 		capsProvider_ = new DummyCapsProvider();
 		eventController_ = new EventController();
 		chatWindowFactory_ = mocks_->InterfaceMock<ChatWindowFactory>();
-		xmppRoster_ = new XMPPRoster();
+		xmppRoster_ = new XMPPRosterImpl();
 		mucRegistry_ = new MUCRegistry();
 		nickResolver_ = new NickResolver(jid_.toBare(), xmppRoster_, NULL, mucRegistry_);
 		presenceOracle_ = new PresenceOracle(stanzaChannel_);
@@ -323,7 +323,7 @@ private:
 	PresenceOracle* presenceOracle_;
 	AvatarManager* avatarManager_;
 	boost::shared_ptr<DiscoInfo> serverDiscoInfo_;
-	XMPPRoster* xmppRoster_;
+	XMPPRosterImpl* xmppRoster_;
 	PresenceSender* presenceSender_;
 	MockRepository* mocks_;
 	UIEventStream* uiEventStream_;

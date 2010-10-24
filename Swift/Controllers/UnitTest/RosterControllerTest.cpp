@@ -16,7 +16,7 @@
 #include "Swiften/Queries/DummyIQChannel.h"
 #include "Swiften/Client/DummyStanzaChannel.h"
 #include "Swiften/Queries/IQRouter.h"
-#include "Swiften/Roster/XMPPRoster.h"
+#include "Swiften/Roster/XMPPRosterImpl.h"
 #include "Swiften/Roster/Roster.h"
 #include "Swiften/Roster/GroupRosterItem.h"
 #include "Swiften/Roster/ContactRosterItem.h"
@@ -50,7 +50,7 @@ class RosterControllerTest : public CppUnit::TestFixture
 
 		void setUp() {
 			jid_ = JID("testjid@swift.im/swift");
-			xmppRoster_ = new XMPPRoster();
+			xmppRoster_ = new XMPPRosterImpl();
 			avatarManager_ = new NullAvatarManager();
 			mainWindowFactory_ = new MockMainWindowFactory();
 			mucRegistry_ = new MUCRegistry();
@@ -196,7 +196,7 @@ class RosterControllerTest : public CppUnit::TestFixture
 
 	private:
 		JID jid_;
-		XMPPRoster* xmppRoster_;
+		XMPPRosterImpl* xmppRoster_;
 		MUCRegistry* mucRegistry_;
 		AvatarManager* avatarManager_;
 		MockMainWindowFactory* mainWindowFactory_;

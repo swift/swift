@@ -14,7 +14,7 @@
 #include "SwifTools/Notifier/LoggingNotifier.h"
 #include "Swiften/Client/DummyStanzaChannel.h"
 #include "Swiften/MUC/MUCRegistry.h"
-#include "Swiften/Roster/XMPPRoster.h"
+#include "Swiften/Roster/XMPPRosterImpl.h"
 #include "Swiften/Presence/PresenceOracle.h"
 #include "Swiften/Avatars/DummyAvatarManager.h"
 #include "Swiften/Network/DummyTimerFactory.h"
@@ -52,7 +52,7 @@ class PresenceNotifierTest : public CppUnit::TestFixture {
 			user1 = JID("user1@bar.com/bla");
 			user2 = JID("user2@foo.com/baz");
 			avatarManager = new DummyAvatarManager();
-			roster = new XMPPRoster();
+			roster = new XMPPRosterImpl();
 			nickResolver = new NickResolver(JID("foo@bar.com"), roster, NULL, mucRegistry);
 			presenceOracle = new PresenceOracle(stanzaChannel);
 			timerFactory = new DummyTimerFactory();
@@ -303,7 +303,7 @@ class PresenceNotifierTest : public CppUnit::TestFixture {
 		LoggingNotifier* notifier;
 		MUCRegistry* mucRegistry;
 		DummyAvatarManager* avatarManager;
-		XMPPRoster* roster;
+		XMPPRosterImpl* roster;
 		NickResolver* nickResolver;
 		PresenceOracle* presenceOracle;
 		DummyTimerFactory* timerFactory;

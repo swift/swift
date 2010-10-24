@@ -13,7 +13,7 @@
 #include "Swiften/Elements/RosterPayload.h"
 #include "Swiften/Queries/DummyIQChannel.h"
 #include "Swiften/Queries/IQRouter.h"
-#include "Swiften/Roster/XMPPRoster.h"
+#include "Swiften/Roster/XMPPRosterImpl.h"
 
 using namespace Swift;
 
@@ -31,7 +31,7 @@ class XMPPRosterControllerTest : public CppUnit::TestFixture
 		void setUp() {
 			channel_ = new DummyIQChannel();
 			router_ = new IQRouter(channel_);
-			xmppRoster_ = new XMPPRoster();
+			xmppRoster_ = new XMPPRosterImpl();
 		}
 
 		void tearDown() {
@@ -79,7 +79,7 @@ class XMPPRosterControllerTest : public CppUnit::TestFixture
 	private:
 		DummyIQChannel* channel_;
 		IQRouter* router_;
-		XMPPRoster* xmppRoster_;
+		XMPPRosterImpl* xmppRoster_;
 };
 
 CPPUNIT_TEST_SUITE_REGISTRATION(XMPPRosterControllerTest);

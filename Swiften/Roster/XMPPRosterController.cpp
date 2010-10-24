@@ -16,14 +16,14 @@
 #include "Swiften/Roster/Roster.h"
 #include "Swiften/Roster/SetPresence.h"
 #include "Swiften/Roster/OfflineRosterFilter.h"
-#include "Swiften/Roster/XMPPRoster.h"
+#include "Swiften/Roster/XMPPRosterImpl.h"
 
 namespace Swift {
 	
 /**
  * The controller does not gain ownership of these parameters.
  */
-XMPPRosterController::XMPPRosterController(IQRouter* iqRouter, XMPPRoster* xmppRoster) : iqRouter_(iqRouter), rosterPushResponder_(iqRouter), xmppRoster_(xmppRoster) {
+XMPPRosterController::XMPPRosterController(IQRouter* iqRouter, XMPPRosterImpl* xmppRoster) : iqRouter_(iqRouter), rosterPushResponder_(iqRouter), xmppRoster_(xmppRoster) {
 	rosterPushResponder_.onRosterReceived.connect(boost::bind(&XMPPRosterController::handleRosterReceived, this, _1));
 	rosterPushResponder_.start();
 }

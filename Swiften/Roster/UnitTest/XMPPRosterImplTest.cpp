@@ -11,7 +11,7 @@
 
 #include <vector>
 
-#include "Swiften/Roster/XMPPRoster.h"
+#include "Swiften/Roster/XMPPRosterImpl.h"
 
 
 using namespace Swift;
@@ -73,16 +73,16 @@ private:
 
 };
 
-class XMPPRosterTest : public CppUnit::TestFixture
+class XMPPRosterImplTest : public CppUnit::TestFixture
 {
-		CPPUNIT_TEST_SUITE(XMPPRosterTest);
+		CPPUNIT_TEST_SUITE(XMPPRosterImplTest);
 		CPPUNIT_TEST(testJIDAdded);
 		CPPUNIT_TEST(testJIDRemoved);
 		CPPUNIT_TEST(testJIDUpdated);
 		CPPUNIT_TEST_SUITE_END();
 
 	private:
-		XMPPRoster* roster_;
+		XMPPRosterImpl* roster_;
 		XMPPRosterSignalHandler* handler_;
 		JID jid1_;
 		JID jid2_; 
@@ -92,11 +92,10 @@ class XMPPRosterTest : public CppUnit::TestFixture
 
 
 	public:
-
-		XMPPRosterTest() : jid1_(JID("a@b.c")), jid2_(JID("b@c.d")), jid3_(JID("c@d.e")) {}
+		XMPPRosterImplTest() : jid1_(JID("a@b.c")), jid2_(JID("b@c.d")), jid3_(JID("c@d.e")) {}
 
 		void setUp() {
-			roster_ = new XMPPRoster();
+			roster_ = new XMPPRosterImpl();
 			handler_ = new XMPPRosterSignalHandler(roster_);
 			groups1_.push_back("bobs");
 			groups1_.push_back("berts");
@@ -167,5 +166,5 @@ class XMPPRosterTest : public CppUnit::TestFixture
 		}
 
 };
-CPPUNIT_TEST_SUITE_REGISTRATION(XMPPRosterTest);
+CPPUNIT_TEST_SUITE_REGISTRATION(XMPPRosterImplTest);
 

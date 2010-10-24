@@ -17,11 +17,11 @@
 
 namespace Swift {
 	class IQRouter;
-	class XMPPRoster;
+	class XMPPRosterImpl;
 
 	class XMPPRosterController {
 		public:
-			XMPPRosterController(IQRouter *iqRouter, XMPPRoster* xmppRoster);
+			XMPPRosterController(IQRouter *iqRouter, XMPPRosterImpl* xmppRoster);
 			~XMPPRosterController();
 
 			void requestRoster();
@@ -31,7 +31,7 @@ namespace Swift {
 		private:
 			IQRouter* iqRouter_;
 			RosterPushResponder rosterPushResponder_;
-			XMPPRoster* xmppRoster_;
+			XMPPRosterImpl* xmppRoster_;
 	};
 }
 

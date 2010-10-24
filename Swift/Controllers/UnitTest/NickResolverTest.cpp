@@ -9,7 +9,7 @@
 
 #include "Swift/Controllers/NickResolver.h"
 #include "Swiften/MUC/MUCRegistry.h"
-#include "Swiften/Roster/XMPPRoster.h"
+#include "Swiften/Roster/XMPPRosterImpl.h"
 #include "Swiften/VCards/VCardManager.h"
 #include "Swiften/VCards/VCardMemoryStorage.h"
 #include "Swiften/Queries/IQRouter.h"
@@ -35,7 +35,7 @@ class NickResolverTest : public CppUnit::TestFixture {
 	public:
 		void setUp() {
 			ownJID_ = JID("kev@wonderland.lit");
-			xmppRoster_ = new XMPPRoster();
+			xmppRoster_ = new XMPPRosterImpl();
 			stanzaChannel_ = new DummyStanzaChannel();
 		  iqRouter_ = new IQRouter(stanzaChannel_);
 			vCardStorage_ = new VCardMemoryStorage();
@@ -136,7 +136,7 @@ class NickResolverTest : public CppUnit::TestFixture {
 	
 	private:
 		std::vector<String> groups_;
-		XMPPRoster* xmppRoster_;
+		XMPPRosterImpl* xmppRoster_;
 		VCardStorage* vCardStorage_;
 		IQRouter* iqRouter_;
 		DummyStanzaChannel* stanzaChannel_;
