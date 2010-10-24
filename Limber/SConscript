@@ -9,5 +9,6 @@ if env["SCONS_STAGE"] == "build" :
 	myenv.MergeFlags(env.get("EXPAT_FLAGS", ""))
 	myenv.MergeFlags(env["OPENSSL_FLAGS"])
 	myenv.MergeFlags(env["BOOST_FLAGS"])
+	myenv.MergeFlags(myenv["PLATFORM_FLAGS"])
 
 	myenv.Program("limber", ["main.cpp"])

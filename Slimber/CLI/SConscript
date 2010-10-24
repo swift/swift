@@ -9,6 +9,7 @@ myenv.MergeFlags(env["BOOST_FLAGS"])
 myenv.MergeFlags(env.get("LIBXML_FLAGS", {}))
 myenv.MergeFlags(env.get("EXPAT_FLAGS", {}))
 myenv.MergeFlags(env.get("AVAHI_FLAGS", {}))
+myenv.MergeFlags(myenv["PLATFORM_FLAGS"])
 
 myenv.Program("slimber", [
 		"main.cpp",
