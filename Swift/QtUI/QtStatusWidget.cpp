@@ -17,6 +17,7 @@
 #include <qdebug.h>
 #include <QListWidget>
 #include <QListWidgetItem>
+#include <QMovie>
 
 #include "Swift/QtUI/QtElidingLabel.h"
 #include "Swift/QtUI/QtLineEdit.h"
@@ -28,7 +29,10 @@ namespace Swift {
 
 QtStatusWidget::QtStatusWidget(QWidget *parent) : QWidget(parent), editCursor_(Qt::IBeamCursor), viewCursor_(Qt::PointingHandCursor) {
 	isClicking_ = false;
+	connecting_ = false;
 	setMaximumHeight(24);
+
+	connectingMovie_ = new QMovie(":/icons/throbber.gif");
 
 	QHBoxLayout* mainLayout = new QHBoxLayout(this);
 	mainLayout->setSpacing(0);
@@ -97,6 +101,7 @@ QtStatusWidget::QtStatusWidget(QWidget *parent) : QWidget(parent), editCursor_(Q
 
 QtStatusWidget::~QtStatusWidget() {
 	delete menu_;
+	delete connectingMovie_;
 }
 
 void QtStatusWidget::handleApplicationFocusChanged(QWidget* /*old*/, QWidget* /*now*/) {
@@ -223,10 +228,15 @@ void QtStatusWidget::handleItemClicked(QListWidgetItem* item) {
 }
 
 void QtStatusWidget::setNewToolTip() {
-	statusTextLabel_->setToolTip(P2QSTRING(StatusShow::typeToFriendlyName(selectedStatusType_)) + ": " + statusTextLabel_->text());
+	if (connecting_) {
+		statusTextLabel_->setToolTip("Connecting");
+	} else {
+		statusTextLabel_->setToolTip(P2QSTRING(StatusShow::typeToFriendlyName(selectedStatusType_)) + ": " + statusTextLabel_->text());
+	}
 }
 
 void QtStatusWidget::setStatusText(const QString& text) {
+	connectingMovie_->stop();
 	statusText_ = text;
 	statusEdit_->setText(text);
 	QString escapedText(text.isEmpty() ? NO_MESSAGE : text);
@@ -236,11 +246,21 @@ void QtStatusWidget::setStatusText(const QString& text) {
 	setNewToolTip();
 }
 
+void QtStatusWidget::setConnecting() {
+	connecting_ = true;
+	statusIcon_->setMovie(connectingMovie_);
+	connectingMovie_->start();
+	setNewToolTip();
+}
+
 void QtStatusWidget::setStatusType(StatusShow::Type type) {
+	connecting_ = false;
 	selectedStatusType_ = icons_.contains(type) ? type : StatusShow::Online;
 	statusIcon_->setPixmap(icons_[selectedStatusType_].pixmap(16, 16));
 	setNewToolTip();
 }
+
+
 
 }
 

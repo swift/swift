@@ -30,6 +30,7 @@ namespace Swift {
 			virtual void setMyStatusText(const String& status) = 0;
 			virtual void setMyStatusType(StatusShow::Type type) = 0;
 			virtual void setRosterModel(Roster* roster) = 0;
+			virtual void setConnecting() = 0;
 			
 			boost::signal<void (StatusShow::Type, const String&)> onChangeStatusRequest;
 			boost::signal<void (bool)> onShowOfflineToggled;

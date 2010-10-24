@@ -91,6 +91,10 @@ void QtRosterHeader::setStatusType(StatusShow::Type type) {
 	statusWidget_->setStatusType(type);
 }
 
+void QtRosterHeader::setConnecting() {
+	statusWidget_->setConnecting();
+}
+
 void QtRosterHeader::setName(const QString& name) {
 	name_ = name;
 	QString escapedName = name_;

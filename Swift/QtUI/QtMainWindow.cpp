@@ -162,5 +162,9 @@ void QtMainWindow::setMyStatusType(StatusShow::Type type) {
 	meView_->setStatusType(type);
 }
 
+void QtMainWindow::setConnecting() {
+	meView_->setConnecting();
+}
+
 }
 

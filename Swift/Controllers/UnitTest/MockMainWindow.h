@@ -19,6 +19,7 @@ namespace Swift {
 			virtual void setMyAvatarPath(const String& /*path*/) {};
 			virtual void setMyStatusText(const String& /*status*/) {};
 			virtual void setMyStatusType(StatusShow::Type /*type*/) {};
+			virtual void setConnecting() {};
 			Roster* roster;
 
 	};

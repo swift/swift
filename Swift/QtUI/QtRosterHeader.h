@@ -31,6 +31,7 @@ namespace Swift {
 		void setName(const QString& name);
 		void setStatusText(const QString& statusMessage);
 		void setStatusType(StatusShow::Type type);
+		void setConnecting();
 	signals:
 		void onChangeStatusRequest(StatusShow::Type showType, const QString &statusMessage);
 	private slots:

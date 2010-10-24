@@ -17,6 +17,7 @@ class QLabel;
 class QStackedWidget;
 class QListWidget;
 class QListWidgetItem;
+class QMovie;
 
 namespace Swift {
 	class QtLineEdit;
@@ -28,6 +29,7 @@ namespace Swift {
 			~QtStatusWidget();
 			StatusShow::Type getSelectedStatusShow();
 			void setStatusType(StatusShow::Type type);
+			void setConnecting();
 		signals:
 			void onChangeStatusRequest(StatusShow::Type showType, const QString& text);
 		public slots:
@@ -58,6 +60,8 @@ namespace Swift {
 			QCursor editCursor_;
 			QCursor viewCursor_;
 			bool editing_;
+			QMovie* connectingMovie_;
+			bool connecting_;
 	};
 }
 
