@@ -304,6 +304,9 @@ if conf.CheckLib("resolv") :
 if conf.CheckLib("c") :
 	env["PLATFORM_FLAGS"]["LIBS"] = env["PLATFORM_FLAGS"].get("LIBS", []) + ["c"]
 
+if conf.CheckLib("stdc++") :
+	env["PLATFORM_FLAGS"]["LIBS"] = env["PLATFORM_FLAGS"].get("LIBS", []) + ["stdc++"]
+
 # LibIDN
 if conf.CheckCHeader("idna.h") and conf.CheckLib("idn") :
 	env["LIBIDN_FLAGS"] = { "LIBS": ["idn"] }
