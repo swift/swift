@@ -28,7 +28,8 @@ class VCardUpdateAvatarManagerTest : public CppUnit::TestFixture {
 		CPPUNIT_TEST(testUpdate_KnownHash);
 		CPPUNIT_TEST(testUpdate_KnownHashFromDifferentUserDoesNotRequestVCardButTriggersNotification);
 		CPPUNIT_TEST(testVCardWithEmptyPhoto);
-		CPPUNIT_TEST(testStanzaChannelReset);
+		CPPUNIT_TEST(testStanzaChannelReset_ClearsHash);
+		CPPUNIT_TEST(testStanzaChannelReset_ReceiveHashAfterResetUpdatesHash);
 		CPPUNIT_TEST_SUITE_END();
 
 	public:
@@ -113,7 +114,22 @@ class VCardUpdateAvatarManagerTest : public CppUnit::TestFixture {
 			CPPUNIT_ASSERT_EQUAL(String(), testling->getAvatarHash(JID("foo@bar.com")));
 		}
 
-		void testStanzaChannelReset() {
+		void testStanzaChannelReset_ClearsHash() {
+			std::auto_ptr<VCardUpdateAvatarManager> testling = createManager();
+			stanzaChannel->onPresenceReceived(createPresenceWithPhotoHash(user1, avatar1Hash));
+			stanzaChannel->onIQReceived(createVCardResult(avatar1));
+			changes.clear();
+			stanzaChannel->sentStanzas.clear();
+
+			stanzaChannel->setAvailable(false);
+			stanzaChannel->setAvailable(true);
+
+			CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(changes.size()));
+			CPPUNIT_ASSERT_EQUAL(user1.toBare(), changes[0]);
+			CPPUNIT_ASSERT_EQUAL(String(""), testling->getAvatarHash(user1.toBare()));
+		}
+
+		void testStanzaChannelReset_ReceiveHashAfterResetUpdatesHash() {
 			std::auto_ptr<VCardUpdateAvatarManager> testling = createManager();
 			stanzaChannel->onPresenceReceived(createPresenceWithPhotoHash(user1, avatar1Hash));
 			stanzaChannel->onIQReceived(createVCardResult(avatar1));
@@ -124,8 +140,8 @@ class VCardUpdateAvatarManagerTest : public CppUnit::TestFixture {
 			stanzaChannel->setAvailable(true);
 			stanzaChannel->onPresenceReceived(createPresenceWithPhotoHash(user1, avatar1Hash));
 
-			CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(changes.size()));
-			CPPUNIT_ASSERT_EQUAL(user1.toBare(), changes[0]);
+			CPPUNIT_ASSERT_EQUAL(2, static_cast<int>(changes.size()));
+			CPPUNIT_ASSERT_EQUAL(user1.toBare(), changes[1]);
 			CPPUNIT_ASSERT_EQUAL(avatar1Hash, testling->getAvatarHash(user1.toBare()));
 		}
 

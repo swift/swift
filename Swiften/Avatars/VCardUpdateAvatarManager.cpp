@@ -90,7 +90,11 @@ JID VCardUpdateAvatarManager::getAvatarJID(const JID& jid) const {
 
 void VCardUpdateAvatarManager::handleStanzaChannelAvailableChanged(bool available) {
 	if (available) {
-		avatarHashes_.clear();
+		std::map<JID, String> oldAvatarHashes;
+		avatarHashes_.swap(oldAvatarHashes);
+		for(std::map<JID, String>::const_iterator i = oldAvatarHashes.begin(); i != oldAvatarHashes.end(); ++i) {
+			onAvatarChanged(i->first);
+		}
 	}
 }
 
