@@ -43,7 +43,6 @@ namespace Swift {
 	class MainWindow;
 	class NickResolver;
 	class RosterController;
-	class PresenceSender;
 	class DiscoInfoResponder;
 	class AvatarManager;
 	class CapsManager;
@@ -69,7 +68,6 @@ namespace Swift {
 	class MUCSearchWindowFactory;
 	class StatusTracker;
 	class VCardStorageFactory;
-	class MUCRegistry;
 	class Dock;
 
 	class MainController {
@@ -126,7 +124,6 @@ namespace Swift {
 			PlatformIdleQuerier idleQuerier_;
 			ActualIdleDetector idleDetector_;
 			Client* client_;
-			PresenceSender* presenceSender_;
 			ChatWindowFactory* chatWindowFactory_;
 			MainWindowFactory* mainWindowFactory_;
 			LoginWindowFactory* loginWindowFactory_;
@@ -169,7 +166,6 @@ namespace Swift {
 			int timeBeforeNextReconnect_;
 			Timer::ref reconnectTimer_;
 			StatusTracker* statusTracker_;
-			MUCRegistry* mucRegistry_;
 			bool myStatusLooksOnline_;
 
 			typedef std::map<String, VCardStorage*> VCardStorageMap;

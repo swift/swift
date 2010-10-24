@@ -11,6 +11,7 @@
 #include "Swiften/Roster/XMPPRosterController.h"
 #include "Swiften/Presence/PresenceOracle.h"
 #include "Swiften/Presence/PresenceSender.h"
+#include "Swiften/MUC/MUCRegistry.h"
 
 namespace Swift {
 
@@ -26,9 +27,13 @@ Client::Client(const JID& jid, const String& password) : CoreClient(jid, passwor
 	presenceOracle->onPresenceSubscriptionRequest.connect(boost::ref(onPresenceSubscriptionRequest));
 
 	presenceSender = new PresenceSender(getStanzaChannel());
+
+	mucRegistry = new MUCRegistry();
 }
 
 Client::~Client() {
+	delete mucRegistry;
+
 	delete presenceSender;
 
 	delete presenceOracle;
