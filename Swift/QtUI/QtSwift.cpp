@@ -26,9 +26,9 @@
 #include "SwifTools/Application/PlatformApplicationPathProvider.h"
 #include "Swiften/Avatars/AvatarFileStorage.h"
 #include "Swiften/Disco/CapsFileStorage.h"
-#include "Swiften/VCards/VCardFileStorageFactory.h"
 #include "Swiften/Base/String.h"
 #include "Swiften/Base/Platform.h"
+#include "Swift/Controllers/FileStoragesFactory.h"
 #include "Swiften/Elements/Presence.h"
 #include "Swiften/Client/Client.h"
 #include "Swift/Controllers/MainController.h"
@@ -95,9 +95,7 @@ QtSwift::QtSwift(po::variables_map options) : autoUpdater_(NULL) {
 	tabs_ = options.count("no-tabs") && !(splitter_ > 0) ? NULL : new QtChatTabs();
 	settings_ = new QtSettingsProvider();
 	applicationPathProvider_ = new PlatformApplicationPathProvider(SWIFT_APPLICATION_NAME);
-	avatarStorage_ = new AvatarFileStorage(applicationPathProvider_->getAvatarDir());
-	vcardStorageFactory_ = new VCardFileStorageFactory(applicationPathProvider_->getDataDir());
-	capsStorage_ = new CapsFileStorage(applicationPathProvider_->getDataDir() / "caps");
+	storagesFactory_ = new FileStoragesFactory(applicationPathProvider_->getDataDir());
 	chatWindowFactory_ = new QtChatWindowFactory(splitter_, settings_, tabs_, "");
 	soundPlayer_ = new QtSoundPlayer(applicationPathProvider_);
 #if defined(HAVE_GROWL)
@@ -147,9 +145,7 @@ QtSwift::QtSwift(po::variables_map options) : autoUpdater_(NULL) {
 				xmlConsoleWidgetFactory,
 				chatListWindowFactory,
 				mucSearchWindowFactory,
-				avatarStorage_,
-				capsStorage_,
-				vcardStorageFactory_,
+				storagesFactory_,
 				dock_,
 				notifier_,
 				options.count("latency-debug") > 0);
@@ -197,9 +193,7 @@ QtSwift::~QtSwift() {
 	foreach (QtChatListWindowFactory* factory, chatListWindowFactories_) {
 		delete factory;
 	}
-	delete capsStorage_;
-	delete avatarStorage_;
-	delete vcardStorageFactory_;
+	delete storagesFactory_;
 }
 
 }

@@ -17,7 +17,6 @@ namespace Swift {
 			ApplicationPathProvider(const String& applicationName);
 			virtual ~ApplicationPathProvider();
 
-			boost::filesystem::path getAvatarDir() const;
 			virtual boost::filesystem::path getHomeDir() const = 0;
 			virtual boost::filesystem::path getDataDir() const = 0;
 			virtual boost::filesystem::path getExecutableDir() const = 0;

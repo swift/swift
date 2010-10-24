@@ -4,6 +4,5 @@ objects = swiften_env.StaticObject([
 			"VCardManager.cpp",
 			"VCardStorage.cpp",
 			"VCardFileStorage.cpp",
-			"VCardStorageFactory.cpp",
 		])
 swiften_env.Append(SWIFTEN_OBJECTS = [objects])

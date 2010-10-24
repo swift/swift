@@ -4,8 +4,7 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#ifndef SWIFT_QtSwift_H
-#define SWIFT_QtSwift_H
+#pragma once
 
 #include <boost/program_options/variables_map.hpp>
 #include <boost/program_options/options_description.hpp>
@@ -31,7 +30,7 @@ class QSplitter;
 namespace Swift {
 	class Dock;
 	class Notifier;
-	class VCardStorageFactory;
+	class StoragesFactory;
 	class AutoUpdater;
 	class ApplicationPathProvider;
 	class AvatarStorage;
@@ -70,9 +69,7 @@ namespace Swift {
 			Dock* dock_;
 			QtChatTabs* tabs_;
 			ApplicationPathProvider* applicationPathProvider_;
-			AvatarStorage* avatarStorage_;
-			CapsStorage* capsStorage_;
-			VCardStorageFactory* vcardStorageFactory_;
+			StoragesFactory* storagesFactory_;
 			AutoUpdater* autoUpdater_;
 			Notifier* notifier_;
 #if defined(SWIFTEN_PLATFORM_MACOSX)
@@ -83,5 +80,3 @@ namespace Swift {
 #endif
 	};
 }
-
-#endif

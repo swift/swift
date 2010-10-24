@@ -12,10 +12,14 @@
 #include "Swiften/Presence/PresenceOracle.h"
 #include "Swiften/Presence/PresenceSender.h"
 #include "Swiften/MUC/MUCRegistry.h"
+#include "Swiften/Client/MemoryStorages.h"
+#include "Swiften/VCards/VCardManager.h"
 
 namespace Swift {
 
-Client::Client(const JID& jid, const String& password) : CoreClient(jid, password) {
+Client::Client(const JID& jid, const String& password, Storages* storages) : CoreClient(jid, password), storages(storages) {
+	memoryStorages = new MemoryStorages();
+
 	softwareVersionResponder = new SoftwareVersionResponder(getIQRouter());
 	softwareVersionResponder->start();
 
@@ -29,9 +33,13 @@ Client::Client(const JID& jid, const String& password) : CoreClient(jid, passwor
 	presenceSender = new PresenceSender(getStanzaChannel());
 
 	mucRegistry = new MUCRegistry();
+
+	vcardManager = new VCardManager(jid, getIQRouter(), getStorages()->getVCardStorage());
 }
 
 Client::~Client() {
+	delete vcardManager;
+
 	delete mucRegistry;
 
 	delete presenceSender;
@@ -42,6 +50,8 @@ Client::~Client() {
 
 	softwareVersionResponder->stop();
 	delete softwareVersionResponder;
+
+	delete memoryStorages;
 }
 
 XMPPRoster* Client::getRoster() const {
@@ -64,5 +74,13 @@ Presence::ref Client::getLastPresence(const JID& jid) const {
 Presence::ref Client::getHighestPriorityPresence(const JID& bareJID) const {
 	return presenceOracle->getHighestPriorityPresence(bareJID);
 }
+
+Storages* Client::getStorages() const {
+	if (storages) {
+		return storages;
+	}
+	return memoryStorages;
+}
+
 
 }

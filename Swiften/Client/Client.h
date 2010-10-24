@@ -16,16 +16,22 @@ namespace Swift {
 	class PresenceOracle;
 	class PresenceSender;
 	class MUCRegistry;
+	class Storages;
+	class MemoryStorages;
+	class VCardManager;
 
 	/**
 	 * Provides the core functionality for writing XMPP client software.
 	 *
 	 * Besides connecting to an XMPP server, this class also provides interfaces for
 	 * performing most tasks on the XMPP network.
+	 *
+	 * \param storages The interfaces for storing cache information etc. If this is NULL,
+	 *    all data will be stored in memory (and be lost on shutdown)
 	 */
 	class Client : public CoreClient {
 		public:
-			Client(const JID& jid, const String& password);
+			Client(const JID& jid, const String& password, Storages* storages = NULL);
 			~Client();
 
 
@@ -80,6 +86,10 @@ namespace Swift {
 				return mucRegistry;
 			}
 
+			VCardManager* getVCardManager() const {
+				return vcardManager;
+			}
+
 		public:
 			/**
 			 * This signal is emitted when a JID changes presence.
@@ -92,11 +102,17 @@ namespace Swift {
 			boost::signal<void (const JID&, const String&)> onPresenceSubscriptionRequest;
 
 		private:
+			Storages* getStorages() const;
+
+		private:
+			Storages* storages;
+			MemoryStorages* memoryStorages;
 			SoftwareVersionResponder* softwareVersionResponder;
 			XMPPRosterImpl* roster;
 			XMPPRosterController* rosterController;
 			PresenceOracle* presenceOracle;
 			PresenceSender* presenceSender;
 			MUCRegistry* mucRegistry;
+			VCardManager* vcardManager;
 	};
 }

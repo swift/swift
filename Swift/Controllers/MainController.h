@@ -28,10 +28,6 @@
 #include "Swift/Controllers/UIEvents/UIEvent.h"
 
 namespace Swift {
-	class AvatarStorage;
-	class CapsStorage;
-	class VCardStorage;
-	class VCardManager;
 	class Application;
 	class Client;
 	class ChatWindowFactory;
@@ -67,8 +63,9 @@ namespace Swift {
 	class MUCSearchController;
 	class MUCSearchWindowFactory;
 	class StatusTracker;
-	class VCardStorageFactory;
 	class Dock;
+	class Storages;
+	class StoragesFactory;
 
 	class MainController {
 		public:
@@ -83,9 +80,7 @@ namespace Swift {
 					XMLConsoleWidgetFactory* xmlConsoleWidgetFactory,
 					ChatListWindowFactory* chatListWindowFactory_,
 					MUCSearchWindowFactory* mucSearchWindowFactory,
-					AvatarStorage* avatarStorage,
-					CapsStorage* capsStorage,
-					VCardStorageFactory* vcardStorageFactory,
+					StoragesFactory* storagesFactory,
 					Dock* dock,
 					Notifier* notifier,
 					bool useDelayForLatency);
@@ -116,13 +111,13 @@ namespace Swift {
 			void setManagersOffline();
 			void handleNotificationClicked(const JID& jid);
 
-			VCardStorage* getVCardStorageForProfile(const JID& jid);
-
 		private:
 			BoostIOServiceThread boostIOServiceThread_;
 			BoostTimerFactory timerFactory_;
 			PlatformIdleQuerier idleQuerier_;
 			ActualIdleDetector idleDetector_;
+			StoragesFactory* storagesFactory_;
+			Storages* storages_;
 			Client* client_;
 			ChatWindowFactory* chatWindowFactory_;
 			MainWindowFactory* mainWindowFactory_;
@@ -130,10 +125,6 @@ namespace Swift {
 			EventWindowFactory* eventWindowFactory_;
 			SettingsProvider *settings_;
 			ProfileSettingsProvider* profileSettings_;
-			AvatarStorage* avatarStorage_;
-			CapsStorage* capsStorage_;
-			VCardStorageFactory* vcardStorageFactory_;
-			VCardManager* vcardManager_;
 			Dock* dock_;
 			TogglableNotifier* notifier_;
 			PresenceNotifier* presenceNotifier_;
@@ -167,8 +158,5 @@ namespace Swift {
 			Timer::ref reconnectTimer_;
 			StatusTracker* statusTracker_;
 			bool myStatusLooksOnline_;
-
-			typedef std::map<String, VCardStorage*> VCardStorageMap;
-			VCardStorageMap vcardStorages_;
 	};
 }

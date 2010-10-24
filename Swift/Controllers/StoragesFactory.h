@@ -4,11 +4,15 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "Swiften/VCards/VCardStorageFactory.h"
+#pragma once
 
 namespace Swift {
+	class Storages;
 
-VCardStorageFactory::~VCardStorageFactory() {
-}
+	class StoragesFactory {
+		public:
+			virtual ~StoragesFactory() {}
 
+			virtual Storages* createStorages(const JID& profile) const = 0;
+	};
 }

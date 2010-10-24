@@ -16,9 +16,9 @@
 #include "Swiften/Network/BoostIOServiceThread.h"
 #include "Swiften/Network/MainBoostIOServiceThread.h"
 #include "Swift/Controllers/BuildVersion.h"
-#include "Swiften/VCards/VCardStorageFactory.h"
+#include "Swift/Controllers/StoragesFactory.h"
+#include "Swiften/Client/Storages.h"
 #include "Swiften/VCards/VCardManager.h"
-#include "Swiften/VCards/VCardStorage.h"
 #include "Swift/Controllers/Chat/MUCSearchController.h"
 #include "Swift/Controllers/Chat/ChatsManager.h"
 #include "Swift/Controllers/XMPPEvents/EventController.h"
@@ -53,9 +53,7 @@
 #include "Swiften/Disco/CapsInfoGenerator.h"
 #include "Swiften/Disco/GetDiscoInfoRequest.h"
 #include "Swiften/VCards/GetVCardRequest.h"
-#include "Swiften/Avatars/AvatarStorage.h"
 #include "Swiften/Avatars/AvatarManagerImpl.h"
-#include "Swiften/Disco/CapsFileStorage.h"
 #include "Swiften/Disco/CapsManager.h"
 #include "Swiften/Disco/EntityCapsManager.h"
 #include "Swiften/StringCodecs/SHA1.h"
@@ -83,25 +81,23 @@ MainController::MainController(
 		XMLConsoleWidgetFactory* xmlConsoleWidgetFactory,
 		ChatListWindowFactory* chatListWindowFactory,
 		MUCSearchWindowFactory* mucSearchWindowFactory,
-		AvatarStorage* avatarStorage,
-		CapsStorage* capsStorage,
-		VCardStorageFactory* vcardStorageFactory,
+		StoragesFactory* storagesFactory,
 		Dock* dock,
 		Notifier* notifier,
 		bool useDelayForLatency) :
 			timerFactory_(&boostIOServiceThread_.getIOService()),
 			idleDetector_(&idleQuerier_, &timerFactory_, 100),
+			storagesFactory_(storagesFactory),
 			chatWindowFactory_(chatWindowFactory),
 			mainWindowFactory_(mainWindowFactory),
 			loginWindowFactory_(loginWindowFactory),
 			settings_(settings),
-			vcardStorageFactory_(vcardStorageFactory),
 			loginWindow_(NULL) ,
 			useDelayForLatency_(useDelayForLatency) {
 
+	storages_ = NULL;
 	statusTracker_ = NULL;
 	client_ = NULL;
-	vcardManager_ = NULL;
 	avatarManager_ = NULL;
 	capsManager_ = NULL;
 	entityCapsManager_ = NULL;
@@ -122,8 +118,6 @@ MainController::MainController(
 	chatListWindowFactory_ = chatListWindowFactory;
 	uiEventStream_ = new UIEventStream();
 
-	avatarStorage_ = avatarStorage;
-	capsStorage_ = capsStorage;
 	notifier_ = new TogglableNotifier(notifier);
 	eventController_ = new EventController();
 	eventController_->onEventQueueLengthChange.connect(boost::bind(&MainController::handleEventQueueLengthChange, this, _1));
@@ -180,9 +174,6 @@ MainController::~MainController() {
 	resetClient();
 	delete eventController_;
 	delete notifier_;
-	for(VCardStorageMap::iterator i = vcardStorages_.begin(); i != vcardStorages_.end(); ++i) {
-		delete i->second;
-	}
 }
 
 void MainController::resetClient() {
@@ -213,10 +204,10 @@ void MainController::resetClient() {
 	avatarManager_ = NULL;
 	delete nickResolver_;
 	nickResolver_ = NULL;
-	delete vcardManager_;
-	vcardManager_ = NULL;
 	delete client_;
 	client_ = NULL;
+	delete storages_;
+	storages_ = NULL;
 	delete statusTracker_;
 	statusTracker_ = NULL;
 	delete profileSettings_;
@@ -288,7 +279,7 @@ void MainController::handleConnected() {
 	discoInfoRequest->onResponse.connect(boost::bind(&MainController::handleServerDiscoInfoResponse, this, _1, _2));
 	discoInfoRequest->send();
 
-	vcardManager_->requestOwnVCard();
+	client_->getVCardManager()->requestOwnVCard();
 	
 	rosterController_->setEnabled(true);
 	/* Send presence later to catch all the incoming presences. */
@@ -390,7 +381,8 @@ void MainController::performLoginFromCachedCredentials() {
 		statusTracker_  = new StatusTracker();
 	}
 	if (!client_) {
-		client_ = new Swift::Client(jid_, password_);
+		storages_ = storagesFactory_->createStorages(jid_);
+		client_ = new Swift::Client(jid_, password_, storages_);
 		client_->onDataRead.connect(boost::bind(&XMLConsoleController::handleDataRead, xmlConsoleController_, _1));
 		client_->onDataWritten.connect(boost::bind(&XMLConsoleController::handleDataWritten, xmlConsoleController_, _1));
 		client_->onError.connect(boost::bind(&MainController::handleError, this, _1));
@@ -398,11 +390,10 @@ void MainController::performLoginFromCachedCredentials() {
 
 		client_->setSoftwareVersion(CLIENT_NAME, buildVersion);
 
-		vcardManager_ = new VCardManager(jid_, client_->getIQRouter(), getVCardStorageForProfile(jid_));
-		vcardManager_->onVCardChanged.connect(boost::bind(&MainController::handleVCardReceived, this, _1, _2));
-		nickResolver_ = new NickResolver(this->jid_.toBare(), client_->getRoster(), vcardManager_, client_->getMUCRegistry());
-		avatarManager_ = new AvatarManagerImpl(vcardManager_, client_->getStanzaChannel(), avatarStorage_, client_->getMUCRegistry());
-		capsManager_ = new CapsManager(capsStorage_, client_->getStanzaChannel(), client_->getIQRouter());
+		client_->getVCardManager()->onVCardChanged.connect(boost::bind(&MainController::handleVCardReceived, this, _1, _2));
+		nickResolver_ = new NickResolver(this->jid_.toBare(), client_->getRoster(), client_->getVCardManager(), client_->getMUCRegistry());
+		avatarManager_ = new AvatarManagerImpl(client_->getVCardManager(), client_->getStanzaChannel(), storages_->getAvatarStorage(), client_->getMUCRegistry());
+		capsManager_ = new CapsManager(storages_->getCapsStorage(), client_->getStanzaChannel(), client_->getIQRouter());
 		entityCapsManager_ = new EntityCapsManager(capsManager_, client_->getStanzaChannel());
 		presenceNotifier_ = new PresenceNotifier(client_->getStanzaChannel(), notifier_, client_->getMUCRegistry(), avatarManager_, nickResolver_, client_->getPresenceOracle(), &timerFactory_);
 		presenceNotifier_->onNotificationActivated.connect(boost::bind(&MainController::handleNotificationClicked, this, _1));
@@ -539,15 +530,6 @@ void MainController::handleVCardReceived(const JID& jid, VCard::ref vCard) {
 void MainController::handleNotificationClicked(const JID& jid) {
 	assert(chatsManager_);
 	uiEventStream_->send(boost::shared_ptr<UIEvent>(new RequestChatUIEvent(jid)));
-}
-
-VCardStorage* MainController::getVCardStorageForProfile(const JID& jid) {
-	String profile = jid.toBare().toString();
-	std::pair<VCardStorageMap::iterator, bool> r = vcardStorages_.insert(std::make_pair<String, VCardStorage*>(profile, NULL));
-	if (r.second) {
-		r.first->second = vcardStorageFactory_->createVCardStorage(profile);
-	}
-	return r.first->second;
 }
 
 

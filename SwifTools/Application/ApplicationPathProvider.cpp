@@ -18,10 +18,6 @@ ApplicationPathProvider::ApplicationPathProvider(const String& applicationName) 
 ApplicationPathProvider::~ApplicationPathProvider() {
 }
 
-boost::filesystem::path ApplicationPathProvider::getAvatarDir() const {
-	return getDataDir() / "avatars";
-}
-
 boost::filesystem::path ApplicationPathProvider::getProfileDir(const String& profile) const {
 	boost::filesystem::path result(getHomeDir() / profile.getUTF8String());
 	try {
