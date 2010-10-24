@@ -11,7 +11,7 @@
 #include "Swiften/Base/foreach.h"
 #include "Swift/Controllers/UIInterfaces/MainWindow.h"
 #include "Swift/Controllers/UIInterfaces/MainWindowFactory.h"
-#include "Swift/Controllers/NickResolver.h"
+#include "Swiften/Client/NickResolver.h"
 #include "Swiften/Roster/GetRosterRequest.h"
 #include "Swiften/Roster/SetRosterRequest.h"
 #include "Swift/Controllers/XMPPEvents/SubscriptionRequestEvent.h"

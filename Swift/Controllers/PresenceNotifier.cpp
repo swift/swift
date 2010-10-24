@@ -14,7 +14,7 @@
 #include "Swiften/Roster/XMPPRoster.h"
 #include "Swiften/Presence/PresenceOracle.h"
 #include "Swiften/Network/TimerFactory.h"
-#include "Swift/Controllers/NickResolver.h"
+#include "Swiften/Client/NickResolver.h"
 
 namespace Swift {
 

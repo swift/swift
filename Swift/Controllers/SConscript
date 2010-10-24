@@ -27,7 +27,6 @@ if env["SCONS_STAGE"] == "build" :
 			"Chat/MUCController.cpp",
 			"Chat/MUCSearchController.cpp",
 			"MainController.cpp",
-			"NickResolver.cpp",
 			"RosterController.cpp",
 			"RosterGroupExpandinessPersister.cpp",
 			"EventWindowController.cpp",
@@ -45,7 +44,6 @@ if env["SCONS_STAGE"] == "build" :
 		])
 
 	env.Append(UNITTEST_SOURCES = [
-			File("UnitTest/NickResolverTest.cpp"),
 			File("UnitTest/RosterControllerTest.cpp"),
 			File("UnitTest/PreviousStatusStoreTest.cpp"),
 			File("UnitTest/PresenceNotifierTest.cpp"),

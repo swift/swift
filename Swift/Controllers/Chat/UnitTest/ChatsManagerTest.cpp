@@ -24,7 +24,7 @@
 #include "Swiften/Avatars/AvatarMemoryStorage.h"
 #include "Swiften/VCards/VCardManager.h"
 #include "Swiften/VCards/VCardMemoryStorage.h"
-#include "Swift/Controllers/NickResolver.h"
+#include "Swiften/Client/NickResolver.h"
 #include "Swiften/Roster/XMPPRosterImpl.h"
 #include "Swift/Controllers/UnitTest/MockChatWindow.h"
 #include "Swiften/Client/DummyStanzaChannel.h"

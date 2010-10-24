@@ -25,7 +25,7 @@
 #include "Swift/Controllers/XMPPEvents/EventController.h"
 #include "Swiften/Presence/PresenceOracle.h"
 #include "Swiften/Presence/PresenceSender.h"
-#include "Swift/Controllers/NickResolver.h"
+#include "Swiften/Client/NickResolver.h"
 #include "Swift/Controllers/UIEvents/UIEventStream.h"
 #include "Swift/Controllers/UIEvents/RenameRosterItemUIEvent.h"
 #include "Swift/Controllers/UIEvents/RegroupRosterItemUIEvent.h"

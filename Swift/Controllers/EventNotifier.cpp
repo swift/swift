@@ -11,7 +11,7 @@
 #include "Swift/Controllers/XMPPEvents/EventController.h"
 #include "SwifTools/Notifier/Notifier.h"
 #include "Swiften/Avatars/AvatarManager.h"
-#include "Swift/Controllers/NickResolver.h"
+#include "Swiften/Client/NickResolver.h"
 #include "Swiften/JID/JID.h"
 #include "Swift/Controllers/XMPPEvents/MessageEvent.h"
 #include "Swift/Controllers/XMPPEvents/SubscriptionRequestEvent.h"

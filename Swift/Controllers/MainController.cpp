@@ -27,7 +27,7 @@
 #include "Swift/Controllers/UIInterfaces/LoginWindowFactory.h"
 #include "Swift/Controllers/UIInterfaces/MainWindow.h"
 #include "Swift/Controllers/Chat/MUCController.h"
-#include "Swift/Controllers/NickResolver.h"
+#include "Swiften/Client/NickResolver.h"
 #include "Swift/Controllers/RosterController.h"
 #include "Swift/Controllers/SoundEventController.h"
 #include "Swift/Controllers/SoundPlayer.h"
@@ -53,9 +53,6 @@
 #include "Swiften/Disco/CapsInfoGenerator.h"
 #include "Swiften/Disco/GetDiscoInfoRequest.h"
 #include "Swiften/VCards/GetVCardRequest.h"
-#include "Swiften/Avatars/AvatarManagerImpl.h"
-#include "Swiften/Disco/CapsManager.h"
-#include "Swiften/Disco/EntityCapsManager.h"
 #include "Swiften/StringCodecs/SHA1.h"
 #include "Swiften/StringCodecs/Hexify.h"
 #include "Swift/Controllers/UIEvents/RequestChatUIEvent.h"
@@ -98,12 +95,8 @@ MainController::MainController(
 	storages_ = NULL;
 	statusTracker_ = NULL;
 	client_ = NULL;
-	avatarManager_ = NULL;
-	capsManager_ = NULL;
-	entityCapsManager_ = NULL;
 	presenceNotifier_ = NULL;
 	eventNotifier_ = NULL;
-	nickResolver_ = NULL;
 	rosterController_ = NULL;
 	chatsManager_ = NULL;
 	eventWindowController_ = NULL;
@@ -196,14 +189,6 @@ void MainController::resetClient() {
 	eventNotifier_ = NULL;
 	delete presenceNotifier_;
 	presenceNotifier_ = NULL;
-	delete entityCapsManager_;
-	entityCapsManager_ = NULL;
-	delete capsManager_;
-	capsManager_ = NULL;
-	delete avatarManager_;
-	avatarManager_ = NULL;
-	delete nickResolver_;
-	nickResolver_ = NULL;
 	delete client_;
 	client_ = NULL;
 	delete storages_;
@@ -247,13 +232,13 @@ void MainController::handleConnected() {
 	bool freshLogin = rosterController_ == NULL;
 	myStatusLooksOnline_ = true;
 	if (freshLogin) {
-		rosterController_ = new RosterController(jid_, client_->getRoster(), avatarManager_, mainWindowFactory_, nickResolver_, client_->getPresenceOracle(), client_->getPresenceSender(), eventController_, uiEventStream_, client_->getIQRouter(), settings_);
+		rosterController_ = new RosterController(jid_, client_->getRoster(), client_->getAvatarManager(), mainWindowFactory_, client_->getNickResolver(), client_->getPresenceOracle(), client_->getPresenceSender(), eventController_, uiEventStream_, client_->getIQRouter(), settings_);
 		rosterController_->onChangeStatusRequest.connect(boost::bind(&MainController::handleChangeStatusRequest, this, _1, _2));
 		rosterController_->onSignOutRequest.connect(boost::bind(&MainController::signOut, this));
 
-		chatsManager_ = new ChatsManager(jid_, client_->getStanzaChannel(), client_->getIQRouter(), eventController_, chatWindowFactory_, nickResolver_, client_->getPresenceOracle(), client_->getPresenceSender(), uiEventStream_, chatListWindowFactory_, useDelayForLatency_, &timerFactory_, client_->getMUCRegistry(), entityCapsManager_);
+		chatsManager_ = new ChatsManager(jid_, client_->getStanzaChannel(), client_->getIQRouter(), eventController_, chatWindowFactory_, client_->getNickResolver(), client_->getPresenceOracle(), client_->getPresenceSender(), uiEventStream_, chatListWindowFactory_, useDelayForLatency_, &timerFactory_, client_->getMUCRegistry(), client_->getEntityCapsManager());
 		client_->onMessageReceived.connect(boost::bind(&ChatsManager::handleIncomingMessage, chatsManager_, _1));
-		chatsManager_->setAvatarManager(avatarManager_);
+		chatsManager_->setAvatarManager(client_->getAvatarManager());
 
 		eventWindowController_ = new EventWindowController(eventController_, eventWindowFactory_);
 
@@ -391,13 +376,9 @@ void MainController::performLoginFromCachedCredentials() {
 		client_->setSoftwareVersion(CLIENT_NAME, buildVersion);
 
 		client_->getVCardManager()->onVCardChanged.connect(boost::bind(&MainController::handleVCardReceived, this, _1, _2));
-		nickResolver_ = new NickResolver(this->jid_.toBare(), client_->getRoster(), client_->getVCardManager(), client_->getMUCRegistry());
-		avatarManager_ = new AvatarManagerImpl(client_->getVCardManager(), client_->getStanzaChannel(), storages_->getAvatarStorage(), client_->getMUCRegistry());
-		capsManager_ = new CapsManager(storages_->getCapsStorage(), client_->getStanzaChannel(), client_->getIQRouter());
-		entityCapsManager_ = new EntityCapsManager(capsManager_, client_->getStanzaChannel());
-		presenceNotifier_ = new PresenceNotifier(client_->getStanzaChannel(), notifier_, client_->getMUCRegistry(), avatarManager_, nickResolver_, client_->getPresenceOracle(), &timerFactory_);
+		presenceNotifier_ = new PresenceNotifier(client_->getStanzaChannel(), notifier_, client_->getMUCRegistry(), client_->getAvatarManager(), client_->getNickResolver(), client_->getPresenceOracle(), &timerFactory_);
 		presenceNotifier_->onNotificationActivated.connect(boost::bind(&MainController::handleNotificationClicked, this, _1));
-		eventNotifier_ = new EventNotifier(eventController_, notifier_, avatarManager_, nickResolver_);
+		eventNotifier_ = new EventNotifier(eventController_, notifier_, client_->getAvatarManager(), client_->getNickResolver());
 		eventNotifier_->onNotificationActivated.connect(boost::bind(&MainController::handleNotificationClicked, this, _1));
 		if (!certificateFile_.isEmpty()) {
 			client_->setCertificate(certificateFile_);

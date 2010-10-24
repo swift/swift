@@ -7,7 +7,7 @@
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/extensions/TestFactoryRegistry.h>
 
-#include "Swift/Controllers/NickResolver.h"
+#include "Swiften/Client/NickResolver.h"
 #include "Swiften/MUC/MUCRegistry.h"
 #include "Swiften/Roster/XMPPRosterImpl.h"
 #include "Swiften/VCards/VCardManager.h"

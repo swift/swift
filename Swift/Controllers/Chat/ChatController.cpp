@@ -17,7 +17,7 @@
 #include "Swiften/Disco/EntityCapsManager.h"
 #include "Swift/Controllers/UIInterfaces/ChatWindow.h"
 #include "Swift/Controllers/UIInterfaces/ChatWindowFactory.h"
-#include "Swift/Controllers/NickResolver.h"
+#include "Swiften/Client/NickResolver.h"
 #include "Swift/Controllers/XMPPEvents/EventController.h"
 
 namespace Swift {

@@ -19,6 +19,10 @@ namespace Swift {
 	class Storages;
 	class MemoryStorages;
 	class VCardManager;
+	class AvatarManager;
+	class CapsManager;
+	class EntityCapsManager;
+	class NickResolver;
 
 	/**
 	 * Provides the core functionality for writing XMPP client software.
@@ -90,6 +94,17 @@ namespace Swift {
 				return vcardManager;
 			}
 
+			AvatarManager* getAvatarManager() const {
+				return avatarManager;
+			}
+			EntityCapsManager* getEntityCapsManager() const {
+				return entityCapsManager;
+			}
+
+			NickResolver* getNickResolver() const {
+				return nickResolver;
+			}
+
 		public:
 			/**
 			 * This signal is emitted when a JID changes presence.
@@ -114,5 +129,9 @@ namespace Swift {
 			PresenceSender* presenceSender;
 			MUCRegistry* mucRegistry;
 			VCardManager* vcardManager;
+			AvatarManager* avatarManager;
+			CapsManager* capsManager;
+			EntityCapsManager* entityCapsManager;
+			NickResolver* nickResolver;
 	};
 }

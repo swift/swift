@@ -10,7 +10,7 @@
 #include <boost/bind.hpp>
 
 #include "Swift/Controllers/PresenceNotifier.h"
-#include "Swift/Controllers/NickResolver.h"
+#include "Swiften/Client/NickResolver.h"
 #include "SwifTools/Notifier/LoggingNotifier.h"
 #include "Swiften/Client/DummyStanzaChannel.h"
 #include "Swiften/MUC/MUCRegistry.h"

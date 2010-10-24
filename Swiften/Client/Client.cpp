@@ -14,6 +14,11 @@
 #include "Swiften/MUC/MUCRegistry.h"
 #include "Swiften/Client/MemoryStorages.h"
 #include "Swiften/VCards/VCardManager.h"
+#include "Swiften/VCards/VCardManager.h"
+#include "Swiften/Avatars/AvatarManagerImpl.h"
+#include "Swiften/Disco/CapsManager.h"
+#include "Swiften/Disco/EntityCapsManager.h"
+#include "Swiften/Client/NickResolver.h"
 
 namespace Swift {
 
@@ -35,9 +40,19 @@ Client::Client(const JID& jid, const String& password, Storages* storages) : Cor
 	mucRegistry = new MUCRegistry();
 
 	vcardManager = new VCardManager(jid, getIQRouter(), getStorages()->getVCardStorage());
+	avatarManager = new AvatarManagerImpl(vcardManager, getStanzaChannel(), getStorages()->getAvatarStorage(), mucRegistry);
+	capsManager = new CapsManager(getStorages()->getCapsStorage(), getStanzaChannel(), getIQRouter());
+	entityCapsManager = new EntityCapsManager(capsManager, getStanzaChannel());
+
+	nickResolver = new NickResolver(jid.toBare(), roster, vcardManager, mucRegistry);
 }
 
 Client::~Client() {
+	delete nickResolver;
+
+	delete entityCapsManager;
+	delete capsManager;
+	delete avatarManager;
 	delete vcardManager;
 
 	delete mucRegistry;

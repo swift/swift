@@ -14,7 +14,7 @@
 #include "Swift/Controllers/Chat/MUCController.h"
 #include "Swift/Controllers/UIInterfaces/ChatWindow.h"
 #include "Swift/Controllers/UIInterfaces/ChatWindowFactory.h"
-#include "Swift/Controllers/NickResolver.h"
+#include "Swiften/Client/NickResolver.h"
 #include "Swiften/Roster/XMPPRoster.h"
 #include "Swift/Controllers/UIEvents/UIEventStream.h"
 #include "Swift/Controllers/UnitTest/MockChatWindow.h"

@@ -28,7 +28,6 @@
 #include "Swift/Controllers/UIEvents/UIEvent.h"
 
 namespace Swift {
-	class Application;
 	class Client;
 	class ChatWindowFactory;
 	class ChatController;
@@ -37,12 +36,8 @@ namespace Swift {
 	class EventController;
 	class MainWindowFactory;
 	class MainWindow;
-	class NickResolver;
 	class RosterController;
 	class DiscoInfoResponder;
-	class AvatarManager;
-	class CapsManager;
-	class EntityCapsManager;
 	class LoginWindow;
 	class EventLoop;
 	class LoginWindowFactory;
@@ -133,7 +128,6 @@ namespace Swift {
 			EventController* eventController_;
 			EventWindowController* eventWindowController_;
 			LoginWindow* loginWindow_;
-			NickResolver* nickResolver_;
 			DiscoInfoResponder* discoResponder_;
 			UIEventStream* uiEventStream_;
 			XMLConsoleController* xmlConsoleController_;
@@ -143,9 +137,6 @@ namespace Swift {
 			JID boundJID_;
 			SystemTrayController* systemTrayController_;
 			SoundEventController* soundEventController_;
-			AvatarManager* avatarManager_;
-			CapsManager* capsManager_;
-			EntityCapsManager* entityCapsManager_;
 			String vCardPhotoHash_;
 			String password_;
 			String certificateFile_;
