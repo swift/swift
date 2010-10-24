@@ -296,9 +296,11 @@ void MainController::handleConnected() {
 
 	vcardManager_->requestOwnVCard();
 	
-	setManagersOnline(true);
-	//Send presence last to catch all the incoming presences.
+	rosterController_->setEnabled(true);
+	/* Send presence later to catch all the incoming presences. */
 	sendPresence(statusTracker_->getNextPresence());
+	/* Enable chats last of all, so rejoining MUCs has the right sent presence */
+	chatsManager_->setOnline(true);
 }
 
 void MainController::handleEventQueueLengthChange(int count) {
@@ -511,15 +513,15 @@ void MainController::logout() {
 		rosterController_->getWindow()->setMyStatusText("");
 		myStatusLooksOnline_ = false;
 	}
-	setManagersOnline(false);
+	setManagersOffline();
 }
 
-void MainController::setManagersOnline(bool enabled) {
+void MainController::setManagersOffline() {
 	if (chatsManager_) {
-		chatsManager_->setOnline(enabled);
+		chatsManager_->setOnline(false);
 	}
 	if (rosterController_) {
-		rosterController_->setEnabled(enabled);
+		rosterController_->setEnabled(false);
 	}
 }
 
