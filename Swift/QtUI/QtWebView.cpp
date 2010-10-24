@@ -13,6 +13,7 @@
 
 namespace Swift {
 QtWebView::QtWebView(QWidget* parent) : QWebView(parent) {
+	setRenderHint(QPainter::SmoothPixmapTransform);
 }
 
 void QtWebView::keyPressEvent(QKeyEvent* event) {

@@ -85,7 +85,8 @@ body {
 }
 
 .chatItem {
-	opacity:0.96;
+	/*Removing opacity, because this causes Qt's WebKit to draw low-quality images */
+	/*opacity:0.96;*/
 }
 
 .tableBubble {
