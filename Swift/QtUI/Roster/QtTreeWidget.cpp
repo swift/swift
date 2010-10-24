@@ -29,6 +29,7 @@ QtTreeWidget::QtTreeWidget(UIEventStream* eventStream, QWidget* parent) : QTreeV
 #ifdef SWIFT_PLATFORM_MACOSX
 	setAlternatingRowColors(true);
 #endif
+	setVerticalScrollMode(QAbstractItemView::ScrollPerPixel);
 	expandAll();
 	setAnimated(true);
 	setIndentation(0);

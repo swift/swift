@@ -55,7 +55,6 @@ QtMainWindow::QtMainWindow(UIEventStream* uiEventStream) : QWidget(), MainWindow
 	treeWidget_ = new QtTreeWidget(uiEventStream_);
 	contextMenu_ = new QtRosterContextMenu(uiEventStream_, treeWidget_);
 	treeWidget_->setContextMenu(contextMenu_);
-	treeWidget_->setVerticalScrollMode(QAbstractItemView::ScrollPerPixel);
 	contactTabLayout->addWidget(treeWidget_);
 
 	tabs_->addTab(contactsTabWidget_, "Contacts");
