@@ -85,11 +85,27 @@ WARN_LOGFILE           =
 #---------------------------------------------------------------------------
 # configuration options related to the input files
 #---------------------------------------------------------------------------
-INPUT                  = Swiften
+INPUT                  = \
+	Swiften/Avatars/AvatarManager.h \
+	Swiften/Base \
+	Swiften/Client/Client.h \
+	Swiften/Client/NickResolver.h \
+	Swiften/Client/Storages.h \
+	Swiften/Client/MemoryStorages.h \
+	Swiften/Client/FileStorages.h \
+	Swiften/Disco/EntityCapsManager.h \
+	Swiften/Elements \
+	Swiften/JID \
+	Swiften/MUC/MUCRegistry.h \
+	Swiften/Queries \
+	Swiften/Presence/PresenceSender.h \
+	Swiften/Roster/XMPPRoster.h \
+	Swiften/StringCodecs \
+	Swiften/VCards/VCardManager.h
 INPUT_ENCODING         = UTF-8
-FILE_PATTERNS          = *.h *.cpp
+FILE_PATTERNS          = *.h
 RECURSIVE              = YES
-EXCLUDE                = Swiften/Parser/PayloadParsers Swiften/Serializer/PayloadSerializers
+EXCLUDE                = 
 EXCLUDE_SYMLINKS       = NO
 EXCLUDE_PATTERNS       = */3rdParty/* */UnitTest/* */QA/*
 EXCLUDE_SYMBOLS        = 
