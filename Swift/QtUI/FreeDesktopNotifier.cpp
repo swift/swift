@@ -39,7 +39,7 @@ void FreeDesktopNotifier::showMessage(Type type, const String& subject, const St
 	QMap<QString, QVariant> hints;
 	msg << P2QSTRING(applicationName);
 	msg << quint32(0); // ID of previous notification to replace
-	msg << picture.string().c_str(); // Icon to display
+	msg << imageScaler.getScaledImage(picture, 48).string().c_str(); // Icon to display
 	msg << P2QSTRING(subject); // Summary / Header of the message to display
 	msg << P2QSTRING(description); // Body of the message to display
 	msg << actions; // Actions from which the user may choose

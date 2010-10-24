@@ -7,6 +7,7 @@
 #pragma once
 
 #include "SwifTools/Notifier/Notifier.h"
+#include "QtCachedImageScaler.h"
 
 namespace Swift {
 	class FreeDesktopNotifier : public Notifier {
@@ -17,5 +18,6 @@ namespace Swift {
 		
 		private:
 			String applicationName;
+			QtCachedImageScaler imageScaler;
 	};
 }

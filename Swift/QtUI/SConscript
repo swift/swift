@@ -77,6 +77,7 @@ sources = [
     "QtChatTabs.cpp",
     "QtSoundPlayer.cpp",
     "QtSystemTray.cpp",
+    "QtCachedImageScaler.cpp",
     "QtTabbable.cpp",
     "QtTabWidget.cpp",
     "QtTextEdit.cpp",
