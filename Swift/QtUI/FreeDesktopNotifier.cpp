@@ -4,7 +4,7 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-//#pragma GCC diagnostic ignored "-Wredundant-decls"
+#pragma GCC diagnostic ignored "-Wredundant-decls"
 
 #include "Swift/QtUI/FreeDesktopNotifier.h"
 
