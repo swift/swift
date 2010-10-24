@@ -16,6 +16,7 @@ namespace Swift {
 		public:
 			SystemTrayController(EventController* eventController, SystemTray* systemTray);
 			void setMyStatusType(StatusShow::Type type);
+			void setConnecting();
 		private:
 			void handleEventQueueLengthChange(int length);
 

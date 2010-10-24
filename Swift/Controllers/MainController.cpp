@@ -427,6 +427,7 @@ void MainController::performLoginFromCachedCredentials() {
 		/* In case we're in the middle of another login, make sure they don't overlap */
 		client_->disconnect();
 	}
+	systemTrayController_->setConnecting();
 	if (rosterController_) {
 		rosterController_->getWindow()->setConnecting();
 	}

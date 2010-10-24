@@ -35,4 +35,8 @@ void SystemTrayController::setMyStatusType(StatusShow::Type type) {
 	systemTray_->setStatusType(type);
 }
 
+void SystemTrayController::setConnecting() {
+	systemTray_->setConnecting();
+}
+
 }

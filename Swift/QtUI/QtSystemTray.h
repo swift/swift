@@ -20,6 +20,7 @@ namespace Swift {
 			~QtSystemTray();
 			void setUnreadMessages(bool some);
 			void setStatusType(StatusShow::Type type);
+			void setConnecting();
 		signals:
 			void clicked();
 		private slots:
@@ -33,6 +34,8 @@ namespace Swift {
 			QIcon dndIcon_;
 			QIcon offlineIcon_;
 			QIcon newMessageIcon_;
+			QIcon throbberIcon_;
 			bool unreadMessages_;
+			bool connecting_;
 	};
 }
