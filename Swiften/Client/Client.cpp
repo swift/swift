@@ -10,6 +10,7 @@
 #include "Swiften/Roster/XMPPRosterImpl.h"
 #include "Swiften/Roster/XMPPRosterController.h"
 #include "Swiften/Presence/PresenceOracle.h"
+#include "Swiften/Presence/PresenceSender.h"
 
 namespace Swift {
 
@@ -23,11 +24,14 @@ Client::Client(const JID& jid, const String& password) : CoreClient(jid, passwor
 	presenceOracle = new PresenceOracle(getStanzaChannel());
 	presenceOracle->onPresenceChange.connect(boost::ref(onPresenceChange));
 	presenceOracle->onPresenceSubscriptionRequest.connect(boost::ref(onPresenceSubscriptionRequest));
+
+	presenceSender = new PresenceSender(getStanzaChannel());
 }
 
 Client::~Client() {
-	delete presenceOracle;
+	delete presenceSender;
 
+	delete presenceOracle;
 	delete rosterController;
 	delete roster;
 

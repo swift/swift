@@ -101,7 +101,6 @@ MainController::MainController(
 
 	statusTracker_ = NULL;
 	client_ = NULL;
-	presenceSender_ = NULL;
 	mucRegistry_ = NULL;
 	vcardManager_ = NULL;
 	avatarManager_ = NULL;
@@ -219,8 +218,6 @@ void MainController::resetClient() {
 	vcardManager_ = NULL;
 	delete mucRegistry_;
 	mucRegistry_ = NULL;
-	delete presenceSender_;
-	presenceSender_ = NULL;
 	delete client_;
 	client_ = NULL;
 	delete statusTracker_;
@@ -262,11 +259,11 @@ void MainController::handleConnected() {
 	bool freshLogin = rosterController_ == NULL;
 	myStatusLooksOnline_ = true;
 	if (freshLogin) {
-		rosterController_ = new RosterController(jid_, client_->getRoster(), avatarManager_, mainWindowFactory_, nickResolver_, client_->getPresenceOracle(), presenceSender_, eventController_, uiEventStream_, client_->getIQRouter(), settings_);
+		rosterController_ = new RosterController(jid_, client_->getRoster(), avatarManager_, mainWindowFactory_, nickResolver_, client_->getPresenceOracle(), client_->getPresenceSender(), eventController_, uiEventStream_, client_->getIQRouter(), settings_);
 		rosterController_->onChangeStatusRequest.connect(boost::bind(&MainController::handleChangeStatusRequest, this, _1, _2));
 		rosterController_->onSignOutRequest.connect(boost::bind(&MainController::signOut, this));
 
-		chatsManager_ = new ChatsManager(jid_, client_->getStanzaChannel(), client_->getIQRouter(), eventController_, chatWindowFactory_, nickResolver_, client_->getPresenceOracle(), presenceSender_, uiEventStream_, chatListWindowFactory_, useDelayForLatency_, &timerFactory_, mucRegistry_, entityCapsManager_);
+		chatsManager_ = new ChatsManager(jid_, client_->getStanzaChannel(), client_->getIQRouter(), eventController_, chatWindowFactory_, nickResolver_, client_->getPresenceOracle(), client_->getPresenceSender(), uiEventStream_, chatListWindowFactory_, useDelayForLatency_, &timerFactory_, mucRegistry_, entityCapsManager_);
 		client_->onMessageReceived.connect(boost::bind(&ChatsManager::handleIncomingMessage, chatsManager_, _1));
 		chatsManager_->setAvatarManager(avatarManager_);
 
@@ -349,7 +346,7 @@ void MainController::sendPresence(boost::shared_ptr<Presence> presence) {
 		presence->updatePayload(boost::shared_ptr<VCardUpdate>(new VCardUpdate(vCardPhotoHash_)));
 	}
 	presence->updatePayload(capsInfo_);
-	presenceSender_->sendPresence(presence);
+	client_->getPresenceSender()->sendPresence(presence);
 	if (presence->getType() == Presence::Unavailable) {
 		logout();
 	}
@@ -404,7 +401,6 @@ void MainController::performLoginFromCachedCredentials() {
 
 		client_->setSoftwareVersion(CLIENT_NAME, buildVersion);
 
-		presenceSender_ = new PresenceSender(client_->getStanzaChannel());
 		mucRegistry_ = new MUCRegistry();
 		vcardManager_ = new VCardManager(jid_, client_->getIQRouter(), getVCardStorageForProfile(jid_));
 		vcardManager_->onVCardChanged.connect(boost::bind(&MainController::handleVCardReceived, this, _1, _2));

@@ -14,6 +14,7 @@ namespace Swift {
 	class XMPPRosterImpl;
 	class XMPPRosterController;
 	class PresenceOracle;
+	class PresenceSender;
 
 	/**
 	 * Provides the core functionality for writing XMPP client software.
@@ -70,6 +71,10 @@ namespace Swift {
 				return presenceOracle;
 			}
 
+			PresenceSender* getPresenceSender() const {
+				return presenceSender;
+			}
+
 		public:
 			/**
 			 * This signal is emitted when a JID changes presence.
@@ -86,5 +91,6 @@ namespace Swift {
 			XMPPRosterImpl* roster;
 			XMPPRosterController* rosterController;
 			PresenceOracle* presenceOracle;
+			PresenceSender* presenceSender;
 	};
 }
