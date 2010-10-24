@@ -28,6 +28,7 @@ void QtSystemTray::setUnreadMessages(bool some) {
 
 void QtSystemTray::setConnecting() {
 	connecting_ = true;
+	updateStatusIcon();
 }
 
 void QtSystemTray::handleIconActivated(QSystemTrayIcon::ActivationReason reason) {
