@@ -11,9 +11,10 @@
 #include <QResource>
 
 namespace Swift {
-QtSystemTray::QtSystemTray() : QObject(), onlineIcon_(":icons/online.png"), awayIcon_(":icons/away.png"), dndIcon_(":icons/dnd.png"), offlineIcon_(":icons/offline.png"), newMessageIcon_(":icons/new-chat.png"), throbberIcon_(":/icons/throbber.gif"), unreadMessages_(false), connecting_(false) {
+QtSystemTray::QtSystemTray() : QObject(), onlineIcon_(":icons/online.png"), awayIcon_(":icons/away.png"), dndIcon_(":icons/dnd.png"), offlineIcon_(":icons/offline.png"), newMessageIcon_(":icons/new-chat.png"), throbberMovie_(":/icons/throbber.gif"), unreadMessages_(false), connecting_(false) {
 	trayIcon_ = new QSystemTrayIcon(offlineIcon_);
 	connect(trayIcon_, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), this, SLOT(handleIconActivated(QSystemTrayIcon::ActivationReason)));
+	connect(&throbberMovie_, SIGNAL(frameChanged(int)), this, SLOT(handleThrobberFrameChanged(int)));
 	trayIcon_->show();
 }
 
@@ -24,6 +25,10 @@ QtSystemTray::~QtSystemTray() {
 void QtSystemTray::setUnreadMessages(bool some) {
 	unreadMessages_ = some;
 	updateStatusIcon();
+}
+
+void QtSystemTray::handleThrobberFrameChanged(int /*frameNumber*/) {
+	trayIcon_->setIcon(QIcon(throbberMovie_.currentPixmap()));
 }
 
 void QtSystemTray::setConnecting() {
@@ -43,10 +48,11 @@ void QtSystemTray::setStatusType(StatusShow::Type type) {
 }
 
 void QtSystemTray::updateStatusIcon() {
+	throbberMovie_.stop();
 	if (unreadMessages_) {
 		trayIcon_->setIcon(newMessageIcon_);
 	} else if (connecting_) {
-		trayIcon_->setIcon(throbberIcon_);
+		throbberMovie_.start();
 	}	else {
 		switch (statusType_) {
 			case StatusShow::Online : trayIcon_->setIcon(onlineIcon_);break;

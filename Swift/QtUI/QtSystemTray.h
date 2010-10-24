@@ -9,6 +9,7 @@
 #include "Swift/Controllers/SystemTray.h"
 
 #include <QSystemTrayIcon>
+#include <QMovie>
 
 class QIcon;
 
@@ -25,6 +26,7 @@ namespace Swift {
 			void clicked();
 		private slots:
 			void handleIconActivated(QSystemTrayIcon::ActivationReason reason);
+			void handleThrobberFrameChanged(int);
 		private:
 			void updateStatusIcon();
 			StatusShow::Type statusType_;
@@ -34,7 +36,7 @@ namespace Swift {
 			QIcon dndIcon_;
 			QIcon offlineIcon_;
 			QIcon newMessageIcon_;
-			QIcon throbberIcon_;
+			QMovie throbberMovie_;
 			bool unreadMessages_;
 			bool connecting_;
 	};
