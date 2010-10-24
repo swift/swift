@@ -236,12 +236,15 @@ void RosterController::handleIncomingPresence(Presence::ref newPresence) {
 		return;
 	}
 	Presence::ref appliedPresence(newPresence);
-	if (newPresence->getType() == Presence::Unsubscribe) {
-		/* In 3921bis, subscription removal isn't followed by a presence push of unavailable*/
-		appliedPresence = boost::shared_ptr<Presence>(new Presence());
-		appliedPresence->setFrom(newPresence->getFrom().toBare());
+	JID newJID(appliedPresence->getFrom());
+	Presence::ref highestPresence = presenceOracle_->getHighestPriorityPresence(appliedPresence->getFrom().toBare());
+	JID highestJID(highestPresence->getFrom());
+	bool highestPriority = (newJID == highestJID || highestPresence->getType() == Presence::Unavailable);
+	if (!highestPriority) {
+		/* Update in case there are full-JID roster entries.*/
+		roster_->applyOnItems(SetPresence(appliedPresence, JID::WithResource));
 	}
-	roster_->applyOnItems(SetPresence(appliedPresence));
+	roster_->applyOnItems(SetPresence(highestPresence));
 }
 
 void RosterController::handleSubscriptionRequest(const JID& jid, const String& message) {

@@ -30,17 +30,31 @@ void PresenceOracle::handleStanzaChannelAvailableChanged(bool available) {
 }
 
 
-void PresenceOracle::handleIncomingPresence(boost::shared_ptr<Presence> presence) {
-	JID bareJID = JID(presence->getFrom().toBare());
-
+void PresenceOracle::handleIncomingPresence(Presence::ref presence) {
+	JID bareJID(presence->getFrom().toBare());
 	if (presence->getType() == Presence::Subscribe) {
 		onPresenceSubscriptionRequest(bareJID, presence->getStatus());
-	} 
-	else {
+	} else {
+		Presence::ref passedPresence = presence;
+		if (presence->getType() == Presence::Unsubscribe) {
+			/* 3921bis says that we don't follow up with an unavailable, so simulate this ourselves */
+			onPresenceSubscriptionRevoked(bareJID, presence->getStatus());
+			passedPresence = Presence::ref(new Presence());
+			passedPresence->setType(Presence::Unavailable);
+			passedPresence->setFrom(bareJID);
+			passedPresence->setStatus(presence->getStatus());
+		}
 		std::map<JID, boost::shared_ptr<Presence> > jidMap = entries_[bareJID];
-		jidMap[presence->getFrom()] = presence;
+		if (passedPresence->getFrom().isBare() && presence->getType() == Presence::Unavailable) {
+			/* Have a bare-JID only presence of offline */
+			jidMap.clear();
+		} else if (passedPresence->getType() == Presence::Available) {
+			/* Don't have a bare-JID only offline presence once there are available presences */
+			jidMap.erase(bareJID);
+		}
+		jidMap[passedPresence->getFrom()] = passedPresence;
 		entries_[bareJID] = jidMap;
-		onPresenceChange(presence);
+		onPresenceChange(passedPresence);
 	}
 }
 

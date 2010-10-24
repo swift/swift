@@ -43,6 +43,9 @@ class RosterControllerTest : public CppUnit::TestFixture
 		CPPUNIT_TEST(testReceiveRename);
 		CPPUNIT_TEST(testSendRename);
 		CPPUNIT_TEST(testSendRegroup);
+		CPPUNIT_TEST(testPresence);
+		CPPUNIT_TEST(testHighestPresence);
+		CPPUNIT_TEST(testNotHighestPresence);
 		CPPUNIT_TEST_SUITE_END();
 
 	public:
@@ -87,6 +90,66 @@ class RosterControllerTest : public CppUnit::TestFixture
 	GroupRosterItem* groupChild(size_t i) {
 		return dynamic_cast<GroupRosterItem*>(CHILDREN[i]);
 	}
+
+	JID withResource(const JID& jid, const String& resource) {
+		return JID(jid.toBare().toString() + "/" + resource);
+	}
+
+	void testPresence() {
+		std::vector<String> groups;
+		groups.push_back("testGroup1");
+		groups.push_back("testGroup2");
+		JID from("test@testdomain.com");
+		xmppRoster_->addContact(from, "name", groups, RosterItemPayload::Both);
+		Presence::ref presence(new Presence());
+		presence->setFrom(withResource(from, "bob"));
+		presence->setPriority(2);
+		presence->setStatus("So totally here");
+		stanzaChannel_->onPresenceReceived(presence);
+		ContactRosterItem* item = dynamic_cast<ContactRosterItem*>(dynamic_cast<GroupRosterItem*>(CHILDREN[0])->getChildren()[0]);
+		CPPUNIT_ASSERT_EQUAL(presence->getStatus(), item->getStatusText());
+		ContactRosterItem* item2 = dynamic_cast<ContactRosterItem*>(dynamic_cast<GroupRosterItem*>(CHILDREN[1])->getChildren()[0]);
+		CPPUNIT_ASSERT_EQUAL(presence->getStatus(), item2->getStatusText());
+
+	};
+
+	void testHighestPresence() {
+		std::vector<String> groups;
+		groups.push_back("testGroup1");
+		JID from("test@testdomain.com");
+		xmppRoster_->addContact(from, "name", groups, RosterItemPayload::Both);
+		Presence::ref lowPresence(new Presence());
+		lowPresence->setFrom(withResource(from, "bob"));
+		lowPresence->setPriority(2);
+		lowPresence->setStatus("Not here");
+		Presence::ref highPresence(new Presence());
+		highPresence->setFrom(withResource(from, "bert"));
+		highPresence->setPriority(10);
+		highPresence->setStatus("So totally here");
+		stanzaChannel_->onPresenceReceived(lowPresence);
+		stanzaChannel_->onPresenceReceived(highPresence);
+		ContactRosterItem* item = dynamic_cast<ContactRosterItem*>(dynamic_cast<GroupRosterItem*>(CHILDREN[0])->getChildren()[0]);
+		CPPUNIT_ASSERT_EQUAL(highPresence->getStatus(), item->getStatusText());
+	};
+
+	void testNotHighestPresence() {
+		std::vector<String> groups;
+		groups.push_back("testGroup1");
+		JID from("test@testdomain.com");
+		xmppRoster_->addContact(from, "name", groups, RosterItemPayload::Both);
+		Presence::ref lowPresence(new Presence());
+		lowPresence->setFrom(withResource(from, "bob"));
+		lowPresence->setPriority(2);
+		lowPresence->setStatus("Not here");
+		Presence::ref highPresence(new Presence());
+		highPresence->setFrom(withResource(from, "bert"));
+		highPresence->setPriority(10);
+		highPresence->setStatus("So totally here");
+		stanzaChannel_->onPresenceReceived(highPresence);
+		stanzaChannel_->onPresenceReceived(lowPresence);
+		ContactRosterItem* item = dynamic_cast<ContactRosterItem*>(dynamic_cast<GroupRosterItem*>(CHILDREN[0])->getChildren()[0]);
+		CPPUNIT_ASSERT_EQUAL(highPresence->getStatus(), item->getStatusText());
+	};
 
 		void testAdd() {
 			std::vector<String> groups;

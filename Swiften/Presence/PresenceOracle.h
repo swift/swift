@@ -26,6 +26,7 @@ class StanzaChannel;
 		public:
 			boost::signal<void (boost::shared_ptr<Presence>)> onPresenceChange;
 			boost::signal<void (const JID&, const String&)> onPresenceSubscriptionRequest;
+			boost::signal<void (const JID&, const String&)> onPresenceSubscriptionRevoked;
 
 		private:
 			void handleIncomingPresence(boost::shared_ptr<Presence> presence);
