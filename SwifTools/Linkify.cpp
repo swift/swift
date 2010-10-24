@@ -10,7 +10,7 @@
 
 namespace Swift {
 
-static const boost::regex linkifyRegexp("(https?://([@:\\-\\w\\.]+)+(:\\d+)?(/([=%~\\-\\w/_#\\.\\+]*(\\?\\S+)?)?)?)");
+static const boost::regex linkifyRegexp("(https?://([@:\\-\\w\\.]+)+(:\\d+)?(/([=%~\\-\\w/_#@\\.\\+]*(\\?\\S+)?)?)?)");
 
 String Linkify::linkify(const String& input) {
 	return String(boost::regex_replace(
