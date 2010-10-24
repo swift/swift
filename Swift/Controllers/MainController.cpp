@@ -10,7 +10,6 @@
 #include <boost/lexical_cast.hpp>
 #include <boost/shared_ptr.hpp>
 #include <stdlib.h>
-#include <sstream>
 
 #include "Swiften/Network/BoostTimerFactory.h"
 #include "Swiften/Network/BoostIOServiceThread.h"
@@ -61,8 +60,6 @@
 namespace Swift {
 
 static const String CLIENT_NAME = "Swift";
-//static const String CLIENT_VERSION = "1.0-beta1";
-static const String CLIENT_VERSION = "1.0-devel";
 static const String CLIENT_NODE = "http://swift.im";
 
 static const String SHOW_NOTIFICATIONS = "showNotifications";
@@ -91,7 +88,6 @@ MainController::MainController(
 			settings_(settings),
 			loginWindow_(NULL) ,
 			useDelayForLatency_(useDelayForLatency) {
-
 	storages_ = NULL;
 	statusTracker_ = NULL;
 	client_ = NULL;
@@ -102,7 +98,6 @@ MainController::MainController(
 	eventWindowController_ = NULL;
 	discoResponder_ = NULL;
 	mucSearchController_ = NULL;
-
 
 	timeBeforeNextReconnect_ = -1;
 	mucSearchWindowFactory_ = mucSearchWindowFactory;
@@ -148,7 +143,6 @@ MainController::MainController(
 	uiEventStream_->onUIEvent.connect(boost::bind(&MainController::handleUIEvent, this, _1));
 	bool enabled = settings_->getBoolSetting(SHOW_NOTIFICATIONS, true);
 	uiEventStream_->send(boost::shared_ptr<ToggleNotificationsUIEvent>(new ToggleNotificationsUIEvent(enabled)));
-	
 
 	if (loginAutomatically) {
 		profileSettings_ = new ProfileSettingsProvider(selectedLoginJID, settings_);
@@ -431,9 +425,7 @@ void MainController::handleError(const ClientError& error) {
 		logout();
 		setReconnectTimer();
 		if (lastDisconnectError_) {
-			std::stringstream ss;
-			ss << "Reconnect to " << jid_.getDomain() << " failed: " << message << ". Will retry in " << timeBeforeNextReconnect_ << " seconds.";
-			message = ss.str();
+			message = "Reconnect to " + jid_.getDomain() + " failed: " + message + ". Will retry in " + boost::lexical_cast<std::string>(timeBeforeNextReconnect_) + " seconds.";
 			lastDisconnectError_->conclude();
 		} else {
 			message = "Disconnected from " + jid_.getDomain() + ": " + message;
@@ -489,8 +481,6 @@ void MainController::setManagersOffline() {
 		rosterController_->setEnabled(false);
 	}
 }
-
-
 
 void MainController::handleServerDiscoInfoResponse(boost::shared_ptr<DiscoInfo> info, const boost::optional<ErrorPayload>& error) {
 	if (!error) {
