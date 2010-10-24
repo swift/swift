@@ -14,6 +14,9 @@
 namespace Swift {
 QtWebView::QtWebView(QWidget* parent) : QWebView(parent) {
 	setRenderHint(QPainter::SmoothPixmapTransform);
+	filteredActions.push_back(QWebPage::CopyLinkToClipboard);
+	filteredActions.push_back(QWebPage::CopyImageToClipboard);
+	filteredActions.push_back(QWebPage::Copy);
 }
 
 void QtWebView::keyPressEvent(QKeyEvent* event) {
@@ -37,13 +40,28 @@ void QtWebView::dragEnterEvent(QDragEnterEvent*) {
 }
 
 void QtWebView::contextMenuEvent(QContextMenuEvent* ev) {
-	QMenu menu(this);
-	QAction* copyLinkAction = pageAction(QWebPage::CopyLinkToClipboard);
-	if (copyLinkAction) {
-		menu.addAction(copyLinkAction);
+	// Filter out the relevant actions from the standard actions
+	QMenu* menu = page()->createStandardContextMenu();
+	QList<QAction*> actions(menu->actions());
+	for (int i = 0; i < actions.size(); ++i) {
+		QAction* action = actions.at(i);
+		bool removeAction = true;
+		for(size_t j = 0; j < filteredActions.size(); ++j) {
+			if (action == pageAction(filteredActions[j])) {
+				removeAction = false;
+				break;
+			}
+		}
+		if (removeAction) {
+			menu->removeAction(action);
+		}
 	}
-	menu.addAction("Clear", this, SIGNAL(clearRequested()));
-	menu.exec(ev->globalPos());
+
+	// Add our own custom actions
+	menu->addAction("Clear", this, SIGNAL(clearRequested()));
+
+	menu->exec(ev->globalPos());
+	delete menu;
 }
 
 void QtWebView::focusInEvent(QFocusEvent* event) {

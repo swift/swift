@@ -8,6 +8,7 @@
 #pragma once
 
 #include <QWebView>
+#include <vector>
 
 namespace Swift {
 	class QtWebView : public QWebView {
@@ -24,5 +25,8 @@ namespace Swift {
 
 		protected:
 			void focusInEvent(QFocusEvent* event);
+
+		private:
+			std::vector<QWebPage::WebAction> filteredActions;
 	};
 }
