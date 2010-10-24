@@ -97,6 +97,7 @@ namespace Swift {
 			AvatarManager* getAvatarManager() const {
 				return avatarManager;
 			}
+
 			EntityCapsManager* getEntityCapsManager() const {
 				return entityCapsManager;
 			}

@@ -15,12 +15,24 @@ namespace Swift {
 	class StanzaChannel;
 	class CapsProvider;
 
+	/**
+	 * This class is responsible for gathering and providing
+	 * information about capabilities of entities on the network.
+	 * This information is provided in the form of service discovery
+	 * information.
+	 */
 	class EntityCapsManager : public boost::bsignals::trackable { 
 		public:
 			EntityCapsManager(CapsProvider*, StanzaChannel*);
 
+			/**
+			 * Returns the service discovery information of the given JID.
+			 */
 			DiscoInfo::ref getCaps(const JID&) const;
 
+			/**
+			 * Emitted when the capabilities of a JID changes.
+			 */
 			boost::signal<void (const JID&)> onCapsChanged;
 
 		private:
