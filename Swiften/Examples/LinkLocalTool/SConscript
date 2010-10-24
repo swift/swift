@@ -10,6 +10,7 @@ myenv.MergeFlags(myenv.get("SQLITE_FLAGS", {}))
 myenv.MergeFlags(myenv.get("LIBXML_FLAGS", {}))
 myenv.MergeFlags(myenv.get("EXPAT_FLAGS", {}))
 myenv.MergeFlags(myenv.get("AVAHI_FLAGS", {}))
+myenv.MergeFlags(myenv["PLATFORM_FLAGS"])
 
 linkLocalTool = myenv.Program("LinkLocalTool", [
 		"main.cpp"
