@@ -103,7 +103,7 @@ INPUT                  = \
 	Swiften/JID \
 	Swiften/MUC/MUCRegistry.h \
 	Swiften/Queries \
-	Swiften/Presence/PresenceSender.h \
+	Swiften/Presence \
 	Swiften/Roster/XMPPRoster.h \
 	Swiften/StringCodecs \
 	Swiften/VCards
