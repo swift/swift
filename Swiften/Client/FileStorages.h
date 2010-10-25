@@ -16,8 +16,25 @@ namespace Swift {
 	class CapsFileStorage;
 	class JID;
 
+	/**
+	 * A storages implementation that stores all controller data on disk.
+	 */
 	class FileStorages : public Storages {
 		public:
+			/**
+			 * Creates the storages interface.
+			 *
+			 * All data will be stored relative to a base directory, and
+			 * for some controllers, in a subdirectory for the given profile.
+			 * The data is stored in the following places:
+			 * - Avatars: <basedir>/avatars
+			 * - VCards: <basedir>/<profile>/vcards
+			 * - Entity capabilities: <basedir>/caps
+			 *
+			 * \param baseDir the base dir to store data relative to
+			 * \param jid the subdir in which profile-specific data will be stored. 
+			 *   The bare JID will be used as the subdir name.
+			 */
 			FileStorages(const boost::filesystem::path& baseDir, const JID& jid);
 			~FileStorages();
 

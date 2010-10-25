@@ -70,11 +70,8 @@ namespace Swift {
 				return a.compare(b, Swift::JID::WithResource) != 0;
 			}
 
-		protected:
-			void nameprepAndSetComponents(const String& node, const String& domain,
-					const String& resource);
-
 		private:
+			void nameprepAndSetComponents(const String& node, const String& domain, const String& resource);
 			void initializeFromString(const String&);
 	
 		private:

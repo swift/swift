@@ -11,6 +11,10 @@ namespace Swift {
 	class AvatarStorage;
 	class CapsStorage;
 
+	/**
+	 * An interface to hold storage classes for different
+	 * controllers.
+	 */
 	class Storages {
 		public:
 			virtual ~Storages() {}

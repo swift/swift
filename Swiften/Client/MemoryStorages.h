@@ -11,6 +11,10 @@
 namespace Swift {
 	class VCardMemoryStorage;
 
+	/**
+	 * An implementation of Storages for storing all
+	 * controller data in memory.
+	 */
 	class MemoryStorages : public Storages {
 		public:
 			MemoryStorages();
