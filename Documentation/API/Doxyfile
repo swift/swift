@@ -90,13 +90,15 @@ INPUT                  = \
 	Swiften/Base \
 	Swiften/Client/Client.h \
 	Swiften/Client/CoreClient.h \
+	Swiften/Client/ClientError.h \
+	Swiften/Client/StanzaChannel.h \
 	Swiften/Client/NickResolver.h \
 	Swiften/Client/Storages.h \
 	Swiften/Client/MemoryStorages.h \
 	Swiften/Client/FileStorages.h \
 	Swiften/Component/Component.h \
 	Swiften/Component/CoreComponent.h \
-	Swiften/Disco/EntityCapsManager.h \
+	Swiften/Disco \
 	Swiften/Elements \
 	Swiften/JID \
 	Swiften/MUC/MUCRegistry.h \
@@ -104,7 +106,7 @@ INPUT                  = \
 	Swiften/Presence/PresenceSender.h \
 	Swiften/Roster/XMPPRoster.h \
 	Swiften/StringCodecs \
-	Swiften/VCards/VCardManager.h
+	Swiften/VCards
 INPUT_ENCODING         = UTF-8
 FILE_PATTERNS          = *.h
 RECURSIVE              = YES

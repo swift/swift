@@ -29,12 +29,16 @@ namespace Swift {
 	 *
 	 * Besides connecting to an XMPP server, this class also provides interfaces for
 	 * performing most tasks on the XMPP network.
-	 *
-	 * \param storages The interfaces for storing cache information etc. If this is NULL,
-	 *    all data will be stored in memory (and be lost on shutdown)
 	 */
 	class Client : public CoreClient {
 		public:
+			/**
+			 * Constructs a client for the given JID with the given password.
+			 *
+			 * \param storages The interfaces for storing cache information etc. If 
+			 *	this is NULL,
+			 *	all data will be stored in memory (and be lost on shutdown)
+			 */
 			Client(const JID& jid, const String& password, Storages* storages = NULL);
 			~Client();
 
@@ -46,16 +50,18 @@ namespace Swift {
 			 */
 			void setSoftwareVersion(const String& name, const String& version);
 
-			/**
+			/** 
 			 * Returns a representation of the roster.
 			 *
-			 * The roster is initially empty. To populate it, call requestRoster(), which
-			 * will request the roster from the server. When the roster has been requested,
-			 * it will also be kept up to date when it is updated on the server side.
+			 * The roster is initially empty. To populate it, call requestRoster(),
+			 * which will request the roster from the server. When the roster has
+			 * been requested, it will also be kept up to date when it is updated on
+			 * the server side.
 			 *
-			 * This pointer remains the same across the lifetime of Client. All changes
-			 * to the roster (e.g. after the initial roster request, or after subsequent
-			 * roster updates) are notified through the XMPPRoster's signals.
+			 * This pointer remains the same across the lifetime of Client. All
+			 * changes to the roster (e.g. after the initial roster request, or after
+			 * subsequent roster updates) are notified through the XMPPRoster's
+			 * signals.
 			 *
 			 * \see requestRoster()
 			 */

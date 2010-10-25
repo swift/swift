@@ -32,38 +32,63 @@ namespace Swift {
 	class ClientSession;
 	class BasicSessionStream;
 
-	/**
+	/** 
 	 * The central class for communicating with an XMPP server.
 	 *
-	 * This class is responsible for setting up the connection with the XMPP server, authenticating, and
-	 * initializing the session.
+	 * This class is responsible for setting up the connection with the XMPP
+	 * server, authenticating, and initializing the session.
 	 *
-	 * This class can be used directly in your application, although the Client subclass provides more
-	 * functionality and interfaces, and is better suited for most needs.
+	 * This class can be used directly in your application, although the Client
+	 * subclass provides more functionality and interfaces, and is better suited
+	 * for most needs.
 	 */
-	class CoreClient  {
-		public:
-			CoreClient(const JID& jid, const String& password);
+	class CoreClient  { 
+		public: 
+			/**
+			 * Constructs a client for the given JID with the given password.
+			 */
+			CoreClient(const JID& jid, const String& password); 
 			~CoreClient();
 
 			void setCertificate(const String& certificate);
 
+			/**
+			 * Connects the client to the server.
+			 *
+			 * After the connection is established, the client will set 
+			 * initialize the stream and authenticate.
+			 */
 			void connect();
+
+			/**
+			 * Disconnects the client from the server.
+			 */
+			void disconnect();
+
 			void connect(const JID& jid);
 			void connect(const String& host);
-			void disconnect();
 			
+			/**
+			 * Sends a message.
+			 */
 			void sendMessage(Message::ref);
+
+			/**
+			 * Sends a presence stanza.
+			 */
 			void sendPresence(Presence::ref);
 
+			/**
+			 * Returns the IQ router for this client.
+			 */
 			IQRouter* getIQRouter() const {
 				return iqRouter_;
 			}
 
-			StanzaChannel* getStanzaChannel() const {
-				return stanzaChannel_;
-			}
-
+			/**
+			 * Checks whether the client is connected to the server,
+			 * and stanzas can be sent.
+			 */
 			bool isAvailable() const {
 				return stanzaChannel_->isAvailable();
 			}
@@ -81,14 +106,66 @@ namespace Swift {
 				}
 			}
 
+			/**
+			 * Checks whether stream management is enabled.
+			 *
+			 * If stream management is enabled, onStanzaAcked will be
+			 * emitted when a stanza is received by the server.
+			 *
+			 * \see onStanzaAcked
+			 */
+			bool getStreamManagementEnabled() const {
+				return stanzaChannel_->getStreamManagementEnabled();
+			}
+
+			StanzaChannel* getStanzaChannel() const {
+				return stanzaChannel_;
+			}
+
 		public:
+			/**
+			 * Emitted when a non-recoverable error occurs.
+			 */
 			boost::signal<void (const ClientError&)> onError;
+
+			/**
+			 * Emitted when the client is connected and authenticated,
+			 * and stanzas can be sent.
+			 */
 			boost::signal<void ()> onConnected;
+
+			/**
+			 * Emitted when the client receives data.
+			 *
+			 * This signal is emitted before the XML data is parsed,
+			 * so this data is unformatted.
+			 */
 			boost::signal<void (const String&)> onDataRead;
+
+			/**
+			 * Emitted when the client sends data.
+			 *
+			 * This signal is emitted after the XML was serialized, and 
+			 * is unformatted.
+			 */
 			boost::signal<void (const String&)> onDataWritten;
 
+			/**
+			 * Emitted when a message is received.
+			 */
 			boost::signal<void (Message::ref)> onMessageReceived;
+
+			/**
+			 * Emitted when a presence stanza is received.
+			 */
 			boost::signal<void (Presence::ref) > onPresenceReceived;
+
+			/**
+			 * Emitted when the server acknowledges receipt of a
+			 * stanza (if acknowledgements are available).
+			 *
+			 * \see getStreamManagementEnabled()
+			 */
 			boost::signal<void (Stanza::ref)> onStanzaAcked;
 
 		private:
