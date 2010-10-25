@@ -86,7 +86,7 @@ WARN_LOGFILE           =
 # configuration options related to the input files
 #---------------------------------------------------------------------------
 INPUT                  = \
-	Swiften/Avatars/AvatarManager.h \
+	Swiften/Avatars \
 	Swiften/Base \
 	Swiften/Client/Client.h \
 	Swiften/Client/CoreClient.h \
@@ -101,7 +101,7 @@ INPUT                  = \
 	Swiften/Disco \
 	Swiften/Elements \
 	Swiften/JID \
-	Swiften/MUC/MUCRegistry.h \
+	Swiften/MUC \
 	Swiften/Queries \
 	Swiften/Presence \
 	Swiften/Roster/XMPPRoster.h \
