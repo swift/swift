@@ -11,12 +11,14 @@
 
 #include "Swiften/Elements/Payload.h"
 #include "Swiften/Base/String.h"
-#include "Swiften/Base/Shared.h"
+
 #include "Swiften/Elements/Form.h"
 
 namespace Swift {
-	class DiscoInfo : public Payload, public Shared<DiscoInfo> {
+	class DiscoInfo : public Payload {
 		public:
+			typedef boost::shared_ptr<DiscoInfo> ref;
+
 			const static std::string SecurityLabels;
 			class Identity {
 				public:

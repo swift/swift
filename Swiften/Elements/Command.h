@@ -6,8 +6,9 @@
 
 #pragma once
 
+#include <boost/shared_ptr.hpp>
+
 #include "Swiften/Base/String.h"
-#include "Swiften/Base/Shared.h"
 #include "Swiften/Elements/Payload.h"
 #include "Swiften/Elements/Form.h"
 
@@ -15,8 +16,10 @@ namespace Swift {
 	/**
 	 * Ad-Hoc Command (XEP-0050).
 	 */
-	class Command : public Payload, public Shared<Command> {
+	class Command : public Payload {
 		public:
+			typedef boost::shared_ptr<Command> ref;
+
 			enum Status {Executing, Completed, Canceled, NoStatus};
 			enum Action {Cancel, Execute, Complete, Prev, Next, NoAction};
 

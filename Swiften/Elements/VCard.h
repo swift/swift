@@ -6,14 +6,17 @@
 
 #pragma once
 
+#include <boost/shared_ptr.hpp>
+
 #include "Swiften/Base/String.h"
-#include "Swiften/Base/Shared.h"
 #include "Swiften/Base/ByteArray.h"
 #include "Swiften/Elements/Payload.h"
 
 namespace Swift {
-	class VCard : public Payload, public Shared<VCard> {
+	class VCard : public Payload {
 		public:
+			typedef boost::shared_ptr<VCard> ref;
+
 			struct EMailAddress {
 				EMailAddress() : isHome(false), isWork(false), isInternet(false), isPreferred(false), isX400(false) {
 				}

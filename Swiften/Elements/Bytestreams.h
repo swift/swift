@@ -8,15 +8,17 @@
 
 #include <vector>
 #include <boost/optional.hpp>
+#include <boost/shared_ptr.hpp>
 
 #include "Swiften/JID/JID.h"
 #include "Swiften/Base/String.h"
-#include "Swiften/Base/Shared.h"
 #include "Swiften/Elements/Payload.h"
 
 namespace Swift {
-	class Bytestreams : public Payload, public Shared<Bytestreams> {
+	class Bytestreams : public Payload {
 		public:
+			typedef boost::shared_ptr<Bytestreams> ref;
+
 			struct StreamHost {
 				StreamHost(const String& host = "", const JID& jid = JID(), int port = -1) : host(host), jid(jid), port(port) {}
 

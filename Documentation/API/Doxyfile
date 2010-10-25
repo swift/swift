@@ -89,10 +89,13 @@ INPUT                  = \
 	Swiften/Avatars/AvatarManager.h \
 	Swiften/Base \
 	Swiften/Client/Client.h \
+	Swiften/Client/CoreClient.h \
 	Swiften/Client/NickResolver.h \
 	Swiften/Client/Storages.h \
 	Swiften/Client/MemoryStorages.h \
 	Swiften/Client/FileStorages.h \
+	Swiften/Component/Component.h \
+	Swiften/Component/CoreComponent.h \
 	Swiften/Disco/EntityCapsManager.h \
 	Swiften/Elements \
 	Swiften/JID \

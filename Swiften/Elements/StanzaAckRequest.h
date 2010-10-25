@@ -7,9 +7,9 @@
 #pragma once
 
 #include "Swiften/Elements/Element.h"
-#include "Swiften/Base/Shared.h"
+
 
 namespace Swift {
-	class StanzaAckRequest : public Element, public Shared<StanzaAckRequest> {
+	class StanzaAckRequest : public Element {
 	};
 }

@@ -8,11 +8,13 @@
 
 #include "Swiften/Queries/GenericRequest.h"
 #include "Swiften/Elements/SecurityLabelsCatalog.h"
-#include "Swiften/Base/Shared.h"
+
 
 namespace Swift {
-	class GetSecurityLabelsCatalogRequest : public GenericRequest<SecurityLabelsCatalog>, public Shared<GetSecurityLabelsCatalogRequest> {
+	class GetSecurityLabelsCatalogRequest : public GenericRequest<SecurityLabelsCatalog> {
 		public:
+			typedef boost::shared_ptr<GetSecurityLabelsCatalogRequest> ref;
+
 			static ref create(const JID& recipient, IQRouter* router) {
 				return ref(new GetSecurityLabelsCatalogRequest(recipient, router));
 			}

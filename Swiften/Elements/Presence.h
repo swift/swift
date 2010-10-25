@@ -6,15 +6,17 @@
 
 #pragma once
 
-#include "Swiften/Base/Shared.h"
+
 #include "Swiften/Elements/Stanza.h"
 #include "Swiften/Elements/Status.h"
 #include "Swiften/Elements/StatusShow.h"
 #include "Swiften/Elements/Priority.h"
 
 namespace Swift {
-	class Presence : public Stanza, public Shared<Presence> {
+	class Presence : public Stanza {
 		public:
+			typedef boost::shared_ptr<Presence> ref;
+
 			enum Type { Available, Error, Probe, Subscribe, Subscribed, Unavailable, Unsubscribe, Unsubscribed };
 
 			Presence() : type_(Available) /*, showType_(Online)*/ {}

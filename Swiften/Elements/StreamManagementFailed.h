@@ -7,10 +7,10 @@
 #pragma once
 
 #include "Swiften/Elements/Element.h"
-#include "Swiften/Base/Shared.h"
+
 
 namespace Swift {
-	class StreamManagementFailed : public Element, public Shared<StreamManagementFailed> {
+	class StreamManagementFailed : public Element {
 		public:
 			StreamManagementFailed() {}
 	};

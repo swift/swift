@@ -6,13 +6,16 @@
 
 #pragma once
 
+#include <boost/shared_ptr.hpp>
+
 #include "Swiften/Elements/Element.h"
 #include "Swiften/Base/String.h"
-#include "Swiften/Base/Shared.h"
 
 namespace Swift {
-	class ComponentHandshake : public Element, public Shared<ComponentHandshake> {
+	class ComponentHandshake : public Element {
 		public:
+			typedef boost::shared_ptr<ComponentHandshake> ref;
+
 			ComponentHandshake(const String& data = "") : data(data) {
 			}
 

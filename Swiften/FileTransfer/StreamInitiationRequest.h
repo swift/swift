@@ -8,11 +8,13 @@
 
 #include "Swiften/Queries/GenericRequest.h"
 #include "Swiften/Elements/StreamInitiation.h"
-#include "Swiften/Base/Shared.h"
+
 
 namespace Swift {
-	class StreamInitiationRequest : public GenericRequest<StreamInitiation>, public Shared<StreamInitiationRequest> {
+	class StreamInitiationRequest : public GenericRequest<StreamInitiation> {
 		public:
+			typedef boost::shared_ptr<StreamInitiationRequest> ref;
+
 			static ref create(const JID& jid, boost::shared_ptr<StreamInitiation> payload, IQRouter* router) {
 				return ref(new StreamInitiationRequest(jid, payload, router));
 			}

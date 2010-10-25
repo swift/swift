@@ -6,13 +6,16 @@
 
 #pragma once
 
+#include <boost/shared_ptr.hpp>
+
 #include "Swiften/Queries/GenericRequest.h"
 #include "Swiften/Elements/Bytestreams.h"
-#include "Swiften/Base/Shared.h"
 
 namespace Swift {
-	class BytestreamsRequest : public GenericRequest<Bytestreams>, public Shared<BytestreamsRequest> {
+	class BytestreamsRequest : public GenericRequest<Bytestreams> {
 		public:
+			typedef boost::shared_ptr<BytestreamsRequest> ref;
+
 			static ref create(const JID& jid, boost::shared_ptr<Bytestreams> payload, IQRouter* router) {
 				return ref(new BytestreamsRequest(jid, payload, router));
 			}

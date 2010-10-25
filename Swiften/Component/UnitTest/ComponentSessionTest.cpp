@@ -162,7 +162,7 @@ class ComponentSessionTest : public CppUnit::TestFixture {
 				void receiveHandshake() {
 					Event event = popEvent();
 					CPPUNIT_ASSERT(event.element);
-					ComponentHandshake::ref handshake(ComponentHandshake::cast(event.element));
+					ComponentHandshake::ref handshake(boost::dynamic_pointer_cast<ComponentHandshake>(event.element));
 					CPPUNIT_ASSERT(handshake);
 					CPPUNIT_ASSERT_EQUAL(String("4c4f8a41141722c8bbfbdd92d827f7b2fc0a542b"), handshake->getData());
 				}

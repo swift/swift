@@ -21,7 +21,7 @@
 #include "Swiften/Client/StanzaChannel.h"
 #include "Swiften/Parser/PayloadParsers/FullPayloadParserFactoryCollection.h"
 #include "Swiften/Serializer/PayloadSerializers/FullPayloadSerializerCollection.h"
-#include "Swiften/Base/Shared.h"
+
 #include "Swiften/Client/ClientSessionStanzaChannel.h"
 
 namespace Swift {
@@ -53,8 +53,8 @@ namespace Swift {
 			void connect(const String& host);
 			void disconnect();
 			
-			void sendMessage(boost::shared_ptr<Message>);
-			void sendPresence(boost::shared_ptr<Presence>);
+			void sendMessage(Message::ref);
+			void sendPresence(Presence::ref);
 
 			IQRouter* getIQRouter() const {
 				return iqRouter_;
@@ -87,9 +87,9 @@ namespace Swift {
 			boost::signal<void (const String&)> onDataRead;
 			boost::signal<void (const String&)> onDataWritten;
 
-			boost::signal<void (boost::shared_ptr<Message>)> onMessageReceived;
-			boost::signal<void (boost::shared_ptr<Presence>) > onPresenceReceived;
-			boost::signal<void (boost::shared_ptr<Stanza>)> onStanzaAcked;
+			boost::signal<void (Message::ref)> onMessageReceived;
+			boost::signal<void (Presence::ref) > onPresenceReceived;
+			boost::signal<void (Stanza::ref)> onStanzaAcked;
 
 		private:
 			void handleConnectorFinished(boost::shared_ptr<Connection>);

@@ -7,11 +7,13 @@
 #pragma once
 
 #include "Swiften/Elements/Element.h"
-#include "Swiften/Base/Shared.h"
+
 
 namespace Swift {
-	class StanzaAck : public Element, public Shared<StanzaAck> {
+	class StanzaAck : public Element {
 		public:
+			typedef boost::shared_ptr<StanzaAck> ref;
+
 			StanzaAck() : valid(false), handledStanzasCount(0) {}
 			StanzaAck(unsigned int handledStanzasCount) : valid(true), handledStanzasCount(handledStanzasCount) {}
 

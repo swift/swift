@@ -8,11 +8,13 @@
 
 #include "Swiften/Queries/GenericRequest.h"
 #include "Swiften/Elements/IBB.h"
-#include "Swiften/Base/Shared.h"
+
 
 namespace Swift {
-	class IBBRequest : public GenericRequest<IBB>, public Shared<IBBRequest> {
+	class IBBRequest : public GenericRequest<IBB> {
 		public:
+			typedef boost::shared_ptr<IBBRequest> ref;
+
 			static ref create(const JID& jid, boost::shared_ptr<IBB> payload, IQRouter* router) {
 				return ref(new IBBRequest(jid, payload, router));
 			}

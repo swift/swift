@@ -6,12 +6,15 @@
 
 #pragma once
 
+#include <boost/shared_ptr.hpp>
+
 #include "Swiften/Elements/Element.h"
-#include "Swiften/Base/Shared.h"
 
 namespace Swift {
-	class AuthFailure : public Element, public Shared<AuthFailure> {
+	class AuthFailure : public Element {
 		public:
+			typedef boost::shared_ptr<AuthFailure> ref;
+
 			AuthFailure() {}
 	};
 }

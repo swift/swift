@@ -20,7 +20,7 @@
 #include "Swiften/Base/String.h"
 #include "Swiften/Parser/PayloadParsers/FullPayloadParserFactoryCollection.h"
 #include "Swiften/Serializer/PayloadSerializers/FullPayloadSerializerCollection.h"
-#include "Swiften/Base/Shared.h"
+
 #include "Swiften/Component/ComponentSessionStanzaChannel.h"
 
 namespace Swift {

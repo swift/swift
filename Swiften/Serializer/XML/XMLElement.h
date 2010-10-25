@@ -11,12 +11,14 @@
 #include <map>
 
 #include "Swiften/Base/String.h"
-#include "Swiften/Base/Shared.h"
+
 #include "Swiften/Serializer/XML/XMLNode.h"
 
 namespace Swift {
-	class XMLElement : public XMLNode, public Shared<XMLElement> {
+	class XMLElement : public XMLNode {
 		public:
+			typedef boost::shared_ptr<XMLElement> ref;
+
 			XMLElement(const String& tag, const String& xmlns = "");
 
 			void setAttribute(const String& attribute, const String& value);

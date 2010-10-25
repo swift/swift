@@ -30,7 +30,7 @@ DiscoInfo::ref CapsFileStorage::getDiscoInfo(const String& hash) const {
 		DiscoInfoParser parser;
 		PayloadParserTester tester(&parser);
 		tester.parse(String(data.getData(), data.getSize()));
-		return DiscoInfo::cast(parser.getPayload());
+		return boost::dynamic_pointer_cast<DiscoInfo>(parser.getPayload());
 	}
 	else {
 		return DiscoInfo::ref();

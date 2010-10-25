@@ -110,7 +110,7 @@ namespace Swift {
 			/**
 			 * This signal is emitted when a JID changes presence.
 			 */
-			boost::signal<void (boost::shared_ptr<Presence>)> onPresenceChange;
+			boost::signal<void (Presence::ref)> onPresenceChange;
 
 			/**
 			 * This signal is emitted when a presence subscription request is received.

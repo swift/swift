@@ -56,7 +56,7 @@ void ComponentSession::handleElement(boost::shared_ptr<Element> element) {
 			finishSession(Error::UnexpectedElementError);
 		}
 	}
-	else if (ComponentHandshake::cast(element)) {
+	else if (boost::dynamic_pointer_cast<ComponentHandshake>(element)) {
 		if (!checkState(Authenticating)) {
 			return;
 		}

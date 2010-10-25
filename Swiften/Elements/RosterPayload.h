@@ -8,14 +8,16 @@
 
 #include <vector>
 #include <boost/optional.hpp>
+#include <boost/shared_ptr.hpp>
 
 #include "Swiften/Elements/RosterItemPayload.h"
 #include "Swiften/Elements/Payload.h"
-#include "Swiften/Base/Shared.h"
+
 
 namespace Swift {
-	class RosterPayload : public Payload, public Shared<RosterPayload> {
+	class RosterPayload : public Payload {
 		public:
+			typedef boost::shared_ptr<RosterPayload> ref;
 			typedef std::vector<RosterItemPayload> RosterItemPayloads;
 
 		public:

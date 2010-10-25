@@ -14,13 +14,14 @@
 #include "Swiften/Elements/Element.h"
 #include "Swiften/Elements/Payload.h"
 #include "Swiften/Base/String.h"
-#include "Swiften/Base/Shared.h"
 #include "Swiften/Base/foreach.h"
 #include "Swiften/JID/JID.h"
 
 namespace Swift {
 	class Stanza : public Element {
 		public:
+			typedef boost::shared_ptr<Stanza> ref;
+
 			virtual ~Stanza();
 
 			template<typename T> 

@@ -7,11 +7,11 @@
 #pragma once
 
 #include "Swiften/Base/String.h"
-#include "Swiften/Base/Shared.h"
+
 #include "Swiften/Elements/Payload.h"
 
 namespace Swift {
-	class CapsInfo : public Payload, public Shared<CapsInfo> {
+	class CapsInfo : public Payload {
 		public:
 			CapsInfo(const String& node = "", const String& version = "", const String& hash = "sha-1") : node_(node), version_(version), hash_(hash) {}
 

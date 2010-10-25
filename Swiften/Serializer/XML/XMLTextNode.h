@@ -7,10 +7,10 @@
 #pragma once
 
 #include "Swiften/Serializer/XML/XMLNode.h"
-#include "Swiften/Base/Shared.h"
+
 
 namespace Swift {
-	class XMLTextNode : public XMLNode, public Shared<XMLTextNode> {
+	class XMLTextNode : public XMLNode {
 		public:
 			typedef boost::shared_ptr<XMLTextNode> ref;
 

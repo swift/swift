@@ -8,14 +8,16 @@
 
 #include <vector>
 #include <boost/optional.hpp>
+#include <boost/shared_ptr.hpp>
 
 #include "Swiften/Base/String.h"
-#include "Swiften/Base/Shared.h"
 #include "Swiften/Elements/Payload.h"
 
 namespace Swift {
-	class StreamInitiation : public Payload, public Shared<StreamInitiation> {
+	class StreamInitiation : public Payload {
 		public:
+			typedef boost::shared_ptr<StreamInitiation> ref;
+
 			struct FileInfo {
 				FileInfo(const String& name = "", const String& description = "", int size = -1) : name(name), description(description), size(size) {}
 

@@ -16,8 +16,10 @@
 #include "Swiften/Elements/Message.h"
 
 namespace Swift {
-	class MessageEvent : public StanzaEvent, public Shared<MessageEvent> {
+	class MessageEvent : public StanzaEvent {
 		public:
+			typedef boost::shared_ptr<MessageEvent> ref;
+
 			MessageEvent(boost::shared_ptr<Message> stanza) : stanza_(stanza){};
 
 			boost::shared_ptr<Message> getStanza() {return stanza_;}

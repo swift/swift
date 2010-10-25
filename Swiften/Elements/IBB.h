@@ -6,14 +6,17 @@
 
 #pragma once
 
+#include <boost/shared_ptr.hpp>
+
 #include "Swiften/Base/String.h"
-#include "Swiften/Base/Shared.h"
 #include "Swiften/Base/ByteArray.h"
 #include "Swiften/Elements/Payload.h"
 
 namespace Swift {
-	class IBB : public Payload, public Shared<IBB> {
+	class IBB : public Payload {
 		public:
+			typedef boost::shared_ptr<IBB> ref;
+
 			enum Action {
 				Open,
 				Close,

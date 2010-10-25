@@ -10,8 +10,10 @@
 #include "Swiften/Elements/DiscoItems.h"
 
 namespace Swift {
-	class GetDiscoItemsRequest : public GenericRequest<DiscoItems>, public Shared<GetDiscoItemsRequest> {
+	class GetDiscoItemsRequest : public GenericRequest<DiscoItems> {
 		public:
+			typedef boost::shared_ptr<GetDiscoItemsRequest> ref;
+
 			static ref create(const JID& jid, IQRouter* router) {
 				return ref(new GetDiscoItemsRequest(jid, router));
 			}

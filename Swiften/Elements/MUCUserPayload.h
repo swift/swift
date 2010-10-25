@@ -7,16 +7,18 @@
 #pragma once
 
 #include <boost/optional.hpp>
+#include <boost/shared_ptr.hpp>
 
 #include "Swiften/JID/JID.h"
 #include "Swiften/Base/String.h"
-#include "Swiften/Base/Shared.h"
 #include "Swiften/Elements/Payload.h"
 #include "Swiften/MUC/MUCOccupant.h"
 
 namespace Swift {
-	class MUCUserPayload : public Payload, public Shared<MUCUserPayload> {
+	class MUCUserPayload : public Payload {
 		public:
+			typedef boost::shared_ptr<MUCUserPayload> ref;
+
 			struct Item {
 				Item() : affiliation(MUCOccupant::NoAffiliation), role(MUCOccupant::NoRole) {}
 				boost::optional<JID> realJID;

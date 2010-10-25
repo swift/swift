@@ -7,18 +7,19 @@
 #pragma once
 
 #include <boost/optional.hpp>
+#include <boost/shared_ptr.hpp>
 
 #include "Swiften/Base/String.h"
-#include "Swiften/Base/Shared.h"
 #include "Swiften/Elements/Body.h"
 #include "Swiften/Elements/Subject.h"
 #include "Swiften/Elements/ErrorPayload.h"
 #include "Swiften/Elements/Stanza.h"
 
-namespace Swift
-{
-	class Message : public Stanza, public Shared<Message> {
+namespace Swift {
+	class Message : public Stanza {
 	  public:
+			typedef boost::shared_ptr<Message> ref;
+
 			enum Type { Normal, Chat, Error, Groupchat, Headline };
 
 			Message() : type_(Chat) { }

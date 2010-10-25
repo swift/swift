@@ -6,15 +6,16 @@
 
 #pragma once
 
+#include <boost/shared_ptr.hpp>
+
 #include "Swiften/Elements/Stanza.h"
 #include "Swiften/Elements/ErrorPayload.h"
-#include "Swiften/Base/Shared.h"
 
-namespace Swift 
-{
-	class IQ : public Stanza, public Shared<IQ>
-	{
-		public: 
+namespace Swift {
+	class IQ : public Stanza {
+		public:
+			typedef boost::shared_ptr<IQ> ref;
+
 			enum Type { Get, Set, Result, Error };
 
 			IQ(Type type = Get) : type_(type) { }
