@@ -13,7 +13,7 @@
 #include "Swiften/Base/foreach.h"
 
 #pragma GCC diagnostic ignored "-Wold-style-cast"
-#pragma GCC diagnostics ignored "-Wdeprecated-declarations"
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
 
 namespace {
 	struct Context {
