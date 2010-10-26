@@ -70,7 +70,7 @@ namespace Swift {
 				unknownContent_ += c;
 			}
 
-			const std::vector<EMailAddress> getEMailAddresses() const {
+			const std::vector<EMailAddress>& getEMailAddresses() const {
 				return emailAddresses_;
 			}
 

@@ -4,6 +4,8 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
+#include "Swiften/Base/ByteArray.h"
+
 #include <vector>
 #include <boost/bind.hpp>
 #include <cppunit/extensions/HelperMacros.h>

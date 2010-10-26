@@ -12,6 +12,7 @@ if env["TEST"] :
 	myenv.MergeFlags(myenv["LIBIDN_FLAGS"])
 	myenv.MergeFlags(myenv.get("EXPAT_FLAGS", {}))
 	myenv.MergeFlags(myenv.get("LIBXML_FLAGS", {}))
+	myenv.MergeFlags(myenv["PLATFORM_FLAGS"])
 
 	tester = myenv.Program("StorageTest", [
 			"VCardFileStorageTest.cpp",
