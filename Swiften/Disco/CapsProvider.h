@@ -4,6 +4,8 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
+#pragma once
+
 #include "Swiften/Base/boost_bsignals.h"
 #include "Swiften/Elements/DiscoInfo.h"
 #include "Swiften/Elements/CapsInfo.h"

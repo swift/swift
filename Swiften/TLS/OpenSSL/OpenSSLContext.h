@@ -4,6 +4,8 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
+#pragma once
+
 #include <openssl/ssl.h>
 #include "Swiften/Base/boost_bsignals.h"
 #include <boost/noncopyable.hpp>
