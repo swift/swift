@@ -32,7 +32,7 @@ QtStatusWidget::QtStatusWidget(QWidget *parent) : QWidget(parent), editCursor_(Q
 	connecting_ = false;
 	setMaximumHeight(24);
 
-	connectingMovie_ = new QMovie(":/icons/throbber.gif");
+	connectingMovie_ = new QMovie(":/icons/connecting.mng");
 
 	QHBoxLayout* mainLayout = new QHBoxLayout(this);
 	mainLayout->setSpacing(0);
