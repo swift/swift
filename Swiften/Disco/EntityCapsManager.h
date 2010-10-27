@@ -12,6 +12,7 @@
 #include "Swiften/Elements/Presence.h"
 #include "Swiften/Elements/DiscoInfo.h"
 #include "Swiften/Elements/ErrorPayload.h"
+#include "Swiften/Disco/EntityCapsProvider.h"
 
 namespace Swift {
 	class StanzaChannel;
@@ -23,7 +24,7 @@ namespace Swift {
 	 * This information is provided in the form of service discovery
 	 * information.
 	 */
-	class EntityCapsManager : public boost::bsignals::trackable { 
+	class EntityCapsManager : public EntityCapsProvider, public boost::bsignals::trackable {
 		public:
 			EntityCapsManager(CapsProvider*, StanzaChannel*);
 
@@ -31,11 +32,6 @@ namespace Swift {
 			 * Returns the service discovery information of the given JID.
 			 */
 			DiscoInfo::ref getCaps(const JID&) const;
-
-			/**
-			 * Emitted when the capabilities of a JID changes.
-			 */
-			boost::signal<void (const JID&)> onCapsChanged;
 
 		private:
 			void handlePresenceReceived(boost::shared_ptr<Presence>);

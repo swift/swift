@@ -9,23 +9,39 @@
 #include "Swiften/Base/boost_bsignals.h"
 #include <boost/shared_ptr.hpp>
 
+#include "Swiften/Elements/Message.h"
 #include "Swiften/Elements/ChatState.h"
+#include "Swiften/JID/JID.h"
 
 namespace Swift {
+	class StanzaChannel;
+	class EntityCapsProvider;
+
 	class ChatStateNotifier {
 		public:
-			ChatStateNotifier();
-			void setContactHas85Caps(bool hasCaps);
+			ChatStateNotifier(StanzaChannel* stanzaChannel, const JID& contact, EntityCapsProvider* entityCapsManager);
+			~ChatStateNotifier();
+
+			void setContact(const JID& contact);
+
+			void addChatStateRequest(Message::ref message);
+
 			void setUserIsTyping();
-			void setContactIsOnline(bool online);
 			void userSentMessage();
 			void userCancelledNewMessage();
-			void receivedMessageFromContact(bool hasActiveElement);
-			bool contactShouldReceiveStates();
-			void contactJIDHasChanged();
 
-			boost::signal<void (ChatState::ChatStateType)> onChatStateChanged;
+			void receivedMessageFromContact(bool hasActiveElement);
+			void setContactIsOnline(bool online);
+
 		private:
+			bool contactShouldReceiveStates();
+			void changeState(ChatState::ChatStateType type);
+			void handleCapsChanged(const JID& contact);
+
+		private:
+			StanzaChannel* stanzaChannel_;
+			EntityCapsProvider* entityCapsManager_;
+			JID contact_;
 			bool contactHas85Caps_;
 			bool contactHasSentActive_;
 			bool userIsTyping_;

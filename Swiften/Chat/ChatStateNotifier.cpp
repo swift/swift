@@ -6,32 +6,41 @@
 
 #include "Swiften/Chat/ChatStateNotifier.h"
 
+#include <boost/bind.hpp>
+
+#include "Swiften/Elements/Message.h"
+#include "Swiften/Elements/ChatState.h"
+#include "Swiften/Client/StanzaChannel.h"
+#include "Swiften/Disco/EntityCapsProvider.h"
+
 namespace Swift {
 
-ChatStateNotifier::ChatStateNotifier() {
-	contactJIDHasChanged();
+ChatStateNotifier::ChatStateNotifier(StanzaChannel* stanzaChannel, const JID& contact, EntityCapsProvider* entityCapsManager) : stanzaChannel_(stanzaChannel), entityCapsManager_(entityCapsManager), contact_(contact) {
+	setContact(contact);
+	entityCapsManager_->onCapsChanged.connect(boost::bind(&ChatStateNotifier::handleCapsChanged, this, _1));
 }
 
-void ChatStateNotifier::setContactHas85Caps(bool hasCaps) {
-	contactHas85Caps_ = hasCaps;
+ChatStateNotifier::~ChatStateNotifier() {
+	entityCapsManager_->onCapsChanged.disconnect(boost::bind(&ChatStateNotifier::handleCapsChanged, this, _1));
+}
+
+void ChatStateNotifier::setContact(const JID& contact) {
+	contactHasSentActive_ = false;
+	userIsTyping_ = false;
+	contactIsOnline_ = false;
+	contact_ = contact;
+	handleCapsChanged(contact_);
 }
 
 void ChatStateNotifier::setContactIsOnline(bool online) {
 	contactIsOnline_ = online;
 }
 
-void ChatStateNotifier::contactJIDHasChanged() {
-	contactHasSentActive_ = false;
-	contactHas85Caps_ = false;
-	userIsTyping_ = false;
-	contactIsOnline_ = false;
-}
-
 void ChatStateNotifier::setUserIsTyping() {
 	bool should = contactShouldReceiveStates();
 	if (should && !userIsTyping_) {
 		userIsTyping_ = true;
-		onChatStateChanged(ChatState::Composing);
+		changeState(ChatState::Composing);
 	}
 }
 
@@ -42,7 +51,7 @@ void ChatStateNotifier::userSentMessage() {
 void ChatStateNotifier::userCancelledNewMessage() {
 	if (userIsTyping_) {
 		userIsTyping_ = false;
-		onChatStateChanged(ChatState::Active);
+		changeState(ChatState::Active);
 	}
 }
 
@@ -52,10 +61,32 @@ void ChatStateNotifier::receivedMessageFromContact(bool hasActiveElement) {
 
 bool ChatStateNotifier::contactShouldReceiveStates() {
 	/* So, yes, the XEP says to look at caps, but it also says that once you've
-	   heard from the contact, the active state overrides this.
-	   *HOWEVER* it says that the MUST NOT send csn if you haven't received
-	   active is OPTIONAL behaviour for if you haven't got caps.*/
+		 heard from the contact, the active state overrides this.
+		 *HOWEVER* it says that the MUST NOT send csn if you haven't received
+		 active is OPTIONAL behaviour for if you haven't got caps.*/
 	return contactIsOnline_ && (contactHasSentActive_ || contactHas85Caps_);
+}
+
+void ChatStateNotifier::changeState(ChatState::ChatStateType state) {
+	boost::shared_ptr<Message> message(new Message());
+	message->setTo(contact_);
+	message->addPayload(boost::shared_ptr<Payload>(new ChatState(state)));
+	stanzaChannel_->sendMessage(message);
+}
+
+void ChatStateNotifier::addChatStateRequest(Message::ref message) {
+	if (contactShouldReceiveStates()) {
+		message->addPayload(boost::shared_ptr<Payload>(new ChatState(ChatState::Active)));
+	}
+}
+
+
+void ChatStateNotifier::handleCapsChanged(const JID& jid) {
+	if (jid == contact_) {
+		DiscoInfo::ref caps = entityCapsManager_->getCaps(contact_);
+		bool hasCSN = caps && caps->hasFeature(ChatState::getFeatureNamespace());
+		contactHas85Caps_ = hasCSN;
+	}
 }
 
 }

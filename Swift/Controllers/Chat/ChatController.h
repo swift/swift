@@ -4,18 +4,17 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#ifndef SWIFTEN_ChatController_H
-#define SWIFTEN_ChatController_H
+#pragma once
 
 #include "Swift/Controllers/Chat/ChatControllerBase.h"
 
 namespace Swift {
 	class AvatarManager;
 	class ChatStateNotifier;
-	class ChatStateMessageSender;
 	class ChatStateTracker;
 	class NickResolver;
 	class EntityCapsManager;
+
 	class ChatController : public ChatControllerBase {
 		public:
 			ChatController(const JID& self, StanzaChannel* stanzaChannel, IQRouter* iqRouter, ChatWindowFactory* chatWindowFactory, const JID &contact, NickResolver* nickResolver, PresenceOracle* presenceOracle, AvatarManager* avatarManager, bool isInMUC, bool useDelayForLatency, UIEventStream* eventStream, EventController* eventController, TimerFactory* timerFactory, EntityCapsManager* entityCapsManager);
@@ -34,19 +33,15 @@ namespace Swift {
 			virtual boost::optional<boost::posix_time::ptime> getMessageTimestamp(boost::shared_ptr<Message>) const;
 			void handleStanzaAcked(boost::shared_ptr<Stanza> stanza);
 			void dayTicked() {lastWasPresence_ = false;}
-			void handleCapsChanged(const JID& jid);
 
 		private:
 			NickResolver* nickResolver_;
 			ChatStateNotifier* chatStateNotifier_;
-			ChatStateMessageSender* chatStateMessageSender_;
 			ChatStateTracker* chatStateTracker_;
-			EntityCapsManager* entityCapsManager_;
 			bool isInMUC_;
 			bool lastWasPresence_;
 			String lastStatusChangeString_;
 			std::map<boost::shared_ptr<Stanza>, String> unackedStanzas_;
 	};
 }
-#endif
 

@@ -4,6 +4,7 @@ objects = swiften_env.StaticObject([
 			"CapsInfoGenerator.cpp",
 			"CapsManager.cpp",
 			"EntityCapsManager.cpp",
+			"EntityCapsProvider.cpp",
 			"CapsStorage.cpp",
 			"CapsFileStorage.cpp",
 			"DiscoInfoResponder.cpp",

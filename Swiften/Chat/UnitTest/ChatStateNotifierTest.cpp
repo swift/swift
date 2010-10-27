@@ -9,40 +9,10 @@
 #include <boost/bind.hpp>
 
 #include "Swiften/Chat/ChatStateNotifier.h"
+#include "Swiften/Client/DummyStanzaChannel.h"
+#include "Swiften/Disco/DummyEntityCapsProvider.h"
 
 using namespace Swift;
-
-
-class ChatStateMonitor {
-public:
-	ChatStateMonitor(ChatStateNotifier* notifier) {
-		notifier_ = notifier;
-		composingCallCount = 0;
-		activeCallCount = 0;
-		notifier->onChatStateChanged.connect(boost::bind(&ChatStateMonitor::handleChatStateChanged, this, _1));
-	};
-
-	int composingCallCount;
-	int activeCallCount;
-	ChatState::ChatStateType currentState;
-
-private:
-	void handleChatStateChanged(ChatState::ChatStateType newState) {
-		switch (newState) {
-			case ChatState::Composing:
-				composingCallCount++;
-				break;
-			case ChatState::Active:
-				activeCallCount++;
-				break;
-			default:
-				break;
-			}
-		currentState = newState;
-	};
-
-	ChatStateNotifier* notifier_;
-};
 
 class ChatStateNotifierTest : public CppUnit::TestFixture {
 	CPPUNIT_TEST_SUITE(ChatStateNotifierTest);
@@ -57,101 +27,140 @@ class ChatStateNotifierTest : public CppUnit::TestFixture {
 	CPPUNIT_TEST(testContactShouldReceiveStates_ActiveOverrideOff);
 	CPPUNIT_TEST_SUITE_END();
 	
-private:
-	ChatStateNotifier* notifier_;
-	ChatStateMonitor* monitor_;
-	
 public:
 	void setUp() {
-		notifier_ = new ChatStateNotifier();
+		stanzaChannel = new DummyStanzaChannel();
+		stanzaChannel->setAvailable(true);
+		entityCapsProvider = new DummyEntityCapsProvider();
+		notifier_ = new ChatStateNotifier(stanzaChannel, JID("foo@bar.com/baz"), entityCapsProvider);
 		notifier_->setContactIsOnline(true);
-		monitor_ = new ChatStateMonitor(notifier_);
 	}
 	
 	void tearDown() {
 		delete notifier_;
-		delete monitor_;
+		delete stanzaChannel;
 	}
 	
 	void testStartTypingReply_CapsNotIncluded() {
-		notifier_->setContactHas85Caps(false);
 		notifier_->setUserIsTyping();
-		CPPUNIT_ASSERT_EQUAL(0, monitor_->composingCallCount);
+		CPPUNIT_ASSERT_EQUAL(0, getComposingCount());
 	}
 
 	void testSendTwoMessages() {
-		notifier_->setContactHas85Caps(true);
+		setContactHas85Caps();
 		notifier_->setUserIsTyping();
 		notifier_->userSentMessage();
 		notifier_->setUserIsTyping();
 		notifier_->userSentMessage();
-		CPPUNIT_ASSERT_EQUAL(2, monitor_->composingCallCount);
+		CPPUNIT_ASSERT_EQUAL(2, getComposingCount());
 	}
 
 	void testCancelledNewMessage() {
-		notifier_->setContactHas85Caps(true);
+		setContactHas85Caps();
 		notifier_->setUserIsTyping();
 		notifier_->userCancelledNewMessage();
-		CPPUNIT_ASSERT_EQUAL(1, monitor_->composingCallCount);
-		CPPUNIT_ASSERT_EQUAL(1, monitor_->activeCallCount);
-		CPPUNIT_ASSERT_EQUAL(ChatState::Active, monitor_->currentState);
+		CPPUNIT_ASSERT_EQUAL(1, getComposingCount());
+		CPPUNIT_ASSERT_EQUAL(1, getActiveCount());
+		CPPUNIT_ASSERT_EQUAL(ChatState::Active, stanzaChannel->sentStanzas[stanzaChannel->sentStanzas.size()-1]->getPayload<ChatState>()->getChatState());
 	}
 
 
 	void testContactShouldReceiveStates_CapsOnly() {
-		notifier_->setContactHas85Caps(true);
-		CPPUNIT_ASSERT_EQUAL(true, notifier_->contactShouldReceiveStates());
+		setContactHas85Caps();
+		boost::shared_ptr<Message> message(new Message());
+		notifier_->addChatStateRequest(message);
+		CPPUNIT_ASSERT(message->getPayload<ChatState>());
+		CPPUNIT_ASSERT_EQUAL(ChatState::Active, message->getPayload<ChatState>()->getChatState());
 	}
 
 	void testContactShouldReceiveStates_CapsNorActive() {
-		CPPUNIT_ASSERT_EQUAL(false, notifier_->contactShouldReceiveStates());
+		boost::shared_ptr<Message> message(new Message());
+		notifier_->addChatStateRequest(message);
+		CPPUNIT_ASSERT(!message->getPayload<ChatState>());
 	}
 
 	void testContactShouldReceiveStates_ActiveOverrideOn() {
-		notifier_->setContactHas85Caps(false);
 		notifier_->receivedMessageFromContact(true);
-		CPPUNIT_ASSERT_EQUAL(true, notifier_->contactShouldReceiveStates());
+		boost::shared_ptr<Message> message(new Message());
+		notifier_->addChatStateRequest(message);
+		CPPUNIT_ASSERT(message->getPayload<ChatState>());
+		CPPUNIT_ASSERT_EQUAL(ChatState::Active, message->getPayload<ChatState>()->getChatState());
 	}
 
 	void testContactShouldReceiveStates_ActiveOverrideOff() {
-		notifier_->setContactHas85Caps(true);
+		setContactHas85Caps();
 		notifier_->receivedMessageFromContact(false);
 		/* I originally read the MUST NOT send after receiving without Active and
 		 * thought this should check for false, but I later found it was OPTIONAL
 		 * (MAY) behaviour only for if you didn't receive caps.
 		 */
-		CPPUNIT_ASSERT_EQUAL(true, notifier_->contactShouldReceiveStates());
+		boost::shared_ptr<Message> message(new Message());
+		notifier_->addChatStateRequest(message);
+		CPPUNIT_ASSERT(message->getPayload<ChatState>());
+		CPPUNIT_ASSERT_EQUAL(ChatState::Active, message->getPayload<ChatState>()->getChatState());
 	}
 
 
 	void testStartTypingReply_CapsIncluded() {
-		notifier_->setContactHas85Caps(true);
+		setContactHas85Caps();
 		notifier_->setUserIsTyping();
-		CPPUNIT_ASSERT_EQUAL(1, monitor_->composingCallCount);
+		CPPUNIT_ASSERT_EQUAL(1, getComposingCount());
 	}
 
 	void testContinueTypingReply_CapsIncluded() {
-		notifier_->setContactHas85Caps(true);
+		setContactHas85Caps();
 		notifier_->setUserIsTyping();
 		notifier_->setUserIsTyping();
 		notifier_->setUserIsTyping();
-		CPPUNIT_ASSERT_EQUAL(1, monitor_->composingCallCount);
+		CPPUNIT_ASSERT_EQUAL(1, getComposingCount());
 		notifier_->userSentMessage();
 		notifier_->setUserIsTyping();
-		CPPUNIT_ASSERT_EQUAL(2, monitor_->composingCallCount);
+		CPPUNIT_ASSERT_EQUAL(2, getComposingCount());
 
 	}
 
 	void testTypeReplies_WentOffline() {
-			notifier_->setContactHas85Caps(true);
+			setContactHas85Caps();
 			notifier_->setUserIsTyping();
-			CPPUNIT_ASSERT_EQUAL(1, monitor_->composingCallCount);
+			CPPUNIT_ASSERT_EQUAL(1, getComposingCount());
 			notifier_->setContactIsOnline(false);
 			notifier_->userSentMessage();
 			notifier_->setUserIsTyping();
-			CPPUNIT_ASSERT_EQUAL(1, monitor_->composingCallCount);
+			CPPUNIT_ASSERT_EQUAL(1, getComposingCount());
 		}
-	
+
+	private:
+		void setContactHas85Caps() {
+			DiscoInfo::ref caps(new DiscoInfo());
+			caps->addFeature(ChatState::getFeatureNamespace());
+			entityCapsProvider->caps[JID("foo@bar.com/baz")] = caps;
+			entityCapsProvider->onCapsChanged(JID("foo@bar.com/baz"));
+		}
+
+		int getComposingCount() const {
+			int result = 0;
+			foreach(boost::shared_ptr<Stanza> stanza, stanzaChannel->sentStanzas) {
+				if (stanza->getPayload<ChatState>() && stanza->getPayload<ChatState>()->getChatState() == ChatState::Composing) {
+					result++;
+				}
+			}
+			return result;
+		}
+
+		int getActiveCount() const {
+			int result = 0;
+			foreach(boost::shared_ptr<Stanza> stanza, stanzaChannel->sentStanzas) {
+				if (stanza->getPayload<ChatState>() && stanza->getPayload<ChatState>()->getChatState() == ChatState::Active) {
+					result++;
+				}
+			}
+			return result;
+		}
+
+	private:
+		DummyStanzaChannel* stanzaChannel;
+		DummyEntityCapsProvider* entityCapsProvider;
+		ChatStateNotifier* notifier_;
 };
 
 CPPUNIT_TEST_SUITE_REGISTRATION(ChatStateNotifierTest);

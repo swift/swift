@@ -28,7 +28,6 @@ if env["SCONS_STAGE"] == "build" :
 	sources = [
 			"Chat/ChatStateTracker.cpp",
 			"Chat/ChatStateNotifier.cpp",
-			"Chat/ChatStateMessageSender.cpp",
 			"Client/ClientSessionStanzaChannel.cpp",
 			"Client/CoreClient.cpp",
 			"Client/Client.cpp",

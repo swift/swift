@@ -11,7 +11,6 @@
 
 #include "Swiften/Avatars/AvatarManager.h"
 #include "Swiften/Chat/ChatStateNotifier.h"
-#include "Swiften/Chat/ChatStateMessageSender.h"
 #include "Swiften/Chat/ChatStateTracker.h"
 #include "Swiften/Client/StanzaChannel.h"
 #include "Swiften/Disco/EntityCapsManager.h"
@@ -29,11 +28,7 @@ ChatController::ChatController(const JID& self, StanzaChannel* stanzaChannel, IQ
 	: ChatControllerBase(self, stanzaChannel, iqRouter, chatWindowFactory, contact, presenceOracle, avatarManager, useDelayForLatency, eventStream, eventController, timerFactory) {
 	isInMUC_ = isInMUC;
 	lastWasPresence_ = false;
-	entityCapsManager_ = entityCapsManager;
-	chatStateNotifier_ = new ChatStateNotifier();
-	entityCapsManager_->onCapsChanged.connect(boost::bind(&ChatController::handleCapsChanged, this, _1));
-	handleCapsChanged(toJID_);
-	chatStateMessageSender_ = new ChatStateMessageSender(chatStateNotifier_, stanzaChannel, contact);
+	chatStateNotifier_ = new ChatStateNotifier(stanzaChannel, contact, entityCapsManager);
 	chatStateTracker_ = new ChatStateTracker();
 	nickResolver_ = nickResolver;
 	presenceOracle_->onPresenceChange.connect(boost::bind(&ChatController::handlePresenceChange, this, _1));
@@ -64,23 +59,12 @@ ChatController::ChatController(const JID& self, StanzaChannel* stanzaChannel, IQ
 
 ChatController::~ChatController() {
 	delete chatStateNotifier_;
-	delete chatStateMessageSender_;
 	delete chatStateTracker_;
 }
 
-void ChatController::handleCapsChanged(const JID& jid) {
-	if (jid == toJID_) {
-		DiscoInfo::ref caps = entityCapsManager_->getCaps(toJID_);
-		bool hasCSN = caps && caps->hasFeature(ChatState::getFeatureNamespace());
-		chatStateNotifier_->setContactHas85Caps(hasCSN);
-	}
-}
-
 void ChatController::setToJID(const JID& jid) {
-	chatStateNotifier_->contactJIDHasChanged();
-	chatStateMessageSender_->setContact(jid);
+	chatStateNotifier_->setContact(jid);
 	ChatControllerBase::setToJID(jid);
-	handleCapsChanged(jid);
 	Presence::ref presence;
 	if (isInMUC_) {
 		presence = presenceOracle_->getLastPresence(jid);
@@ -112,9 +96,7 @@ void ChatController::preHandleIncomingMessage(boost::shared_ptr<MessageEvent> me
 }
 
 void ChatController::preSendMessageRequest(boost::shared_ptr<Message> message) {
-	if (chatStateNotifier_->contactShouldReceiveStates()) {
-		message->addPayload(boost::shared_ptr<Payload>(new ChatState(ChatState::Active)));
-	}
+	chatStateNotifier_->addChatStateRequest(message);
 }
 
 void ChatController::postSendMessage(const String& body, boost::shared_ptr<Stanza> sentStanza) {
