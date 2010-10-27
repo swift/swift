@@ -62,7 +62,7 @@ if env["PLATFORM"] == "darwin" :
 if env["PLATFORM"] == "win32" :
 	env.Tool("WindowsBundle", toolpath = ["#/BuildTools/SCons/Tools"])
 	#So we don't need to escalate with UAC
-	if "TMP" is os.environ.keys() :
+	if "TMP" in os.environ.keys() :
 		env['ENV']['TMP'] = os.environ['TMP'] 
 env.Tool("SLOCCount", toolpath = ["#/BuildTools/SCons/Tools"])
 
@@ -453,7 +453,7 @@ if use_openssl and openssl_conf.CheckCHeader("openssl/ssl.h") :
 	env["HAVE_OPENSSL"] = 1
 	env["OPENSSL_FLAGS"] = openssl_flags
 	if env["PLATFORM"] == "win32" : 
-		env["OPENSSL_FLAGS"]["LIBS"] = ["libeay32MT", "ssleay32MT"]
+		env["OPENSSL_FLAGS"]["LIBS"] = ["libeay32MD", "ssleay32MD"]
 	else:
 		env["OPENSSL_FLAGS"]["LIBS"] = ["ssl", "crypto"]
 elif target in ("iphone-device", "iphone-simulator", "xcode") :
