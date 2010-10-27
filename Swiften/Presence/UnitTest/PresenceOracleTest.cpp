@@ -20,6 +20,7 @@ class PresenceOracleTest : public CppUnit::TestFixture {
 		CPPUNIT_TEST(testReceivePresenceFromDifferentResources);
 		CPPUNIT_TEST(testSubscriptionRequest);
 		CPPUNIT_TEST(testReconnectResetsPresences);
+		CPPUNIT_TEST(testHighestPresence);
 		CPPUNIT_TEST_SUITE_END();
 
 	public:
@@ -36,6 +37,19 @@ class PresenceOracleTest : public CppUnit::TestFixture {
 		void tearDown() {
 			delete oracle_;
 			delete stanzaChannel_;
+		}
+
+		void testHighestPresence() {
+			JID bareJID("alice@wonderland.lit");
+			Presence::ref fiveOn = makeOnline("blah", 5);
+			Presence::ref fiveOff = makeOffline("/blah");
+			Presence::ref tenOn = makeOnline("bert", 10);
+			Presence::ref allOff = makeOffline("");
+			CPPUNIT_ASSERT_EQUAL(Presence::ref(), oracle_->getHighestPriorityPresence(bareJID));
+			stanzaChannel_->onPresenceReceived(fiveOn);
+			CPPUNIT_ASSERT_EQUAL(fiveOn, oracle_->getHighestPriorityPresence(bareJID));
+			stanzaChannel_->onPresenceReceived(fiveOff);
+			CPPUNIT_ASSERT_EQUAL(fiveOff, oracle_->getHighestPriorityPresence(bareJID));
 		}
 
 		void testReceivePresence() {
@@ -84,6 +98,20 @@ class PresenceOracleTest : public CppUnit::TestFixture {
 		}
 	
 	private:
+		Presence::ref makeOnline(const String& resource, int priority) {
+			Presence::ref presence(new Presence());
+			presence->setPriority(priority);
+			presence->setFrom(JID("alice@wonderland.lit/" + resource));
+			return presence;
+		}
+
+		Presence::ref makeOffline(const String& resource) {
+			Presence::ref presence(new Presence());
+			presence->setFrom(JID("alice@wonderland.lit" + resource));
+			presence->setType(Presence::Unavailable);
+			return presence;
+		}
+
 		void handlePresenceChange(boost::shared_ptr<Presence> newPresence) {
 			changes.push_back(newPresence);
 		}
