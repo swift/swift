@@ -14,6 +14,7 @@ using namespace Swift;
 class LinkifyTest : public CppUnit::TestFixture {
 		CPPUNIT_TEST_SUITE(LinkifyTest);
 		CPPUNIT_TEST(testLinkify_URLWithResource);
+		CPPUNIT_TEST(testLinkify_HTTPSURLWithResource);
 		CPPUNIT_TEST(testLinkify_URLWithEmptyResource);
 		CPPUNIT_TEST(testLinkify_BareURL);
 		CPPUNIT_TEST(testLinkify_URLSurroundedByWhitespace);
@@ -26,6 +27,7 @@ class LinkifyTest : public CppUnit::TestFixture {
 		CPPUNIT_TEST(testLinkify_Equal);
 		CPPUNIT_TEST(testLinkify_Authentication);
 		CPPUNIT_TEST(testLinkify_At);
+		CPPUNIT_TEST(testLinkify_Amps);
 		CPPUNIT_TEST_SUITE_END();
 
 	public:
@@ -34,6 +36,14 @@ class LinkifyTest : public CppUnit::TestFixture {
 
 			CPPUNIT_ASSERT_EQUAL(
 					String("<a href=\"http://swift.im/blog\">http://swift.im/blog</a>"),
+					result);
+		}
+
+		void testLinkify_HTTPSURLWithResource() {
+			String result = Linkify::linkify("https://swift.im/blog");
+
+			CPPUNIT_ASSERT_EQUAL(
+					String("<a href=\"https://swift.im/blog\">https://swift.im/blog</a>"),
 					result);
 		}
 
@@ -131,6 +141,14 @@ class LinkifyTest : public CppUnit::TestFixture {
 
 			CPPUNIT_ASSERT_EQUAL(
 					String("<a href=\"http://swift.im/foo@bar\">http://swift.im/foo@bar</a>"),
+					result);
+		}
+
+		void testLinkify_Amps() {
+			String result = Linkify::linkify("http://swift.im/foo&bar&baz");
+
+			CPPUNIT_ASSERT_EQUAL(
+					String("<a href=\"http://swift.im/foo&bar&baz\">http://swift.im/foo&bar&baz</a>"),
 					result);
 		}
 };
