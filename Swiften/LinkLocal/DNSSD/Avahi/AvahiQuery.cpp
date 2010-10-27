@@ -9,7 +9,7 @@
 
 namespace Swift {
 
-AvahiQuery::AvahiQuery(boost::shared_ptr<AvahiQuerier> q) : querier(q) {
+AvahiQuery::AvahiQuery(boost::shared_ptr<AvahiQuerier> q, EventLoop* eventLoop) : querier(q), eventLoop(eventLoop) {
 }
 
 AvahiQuery::~AvahiQuery() {

@@ -19,12 +19,13 @@
 
 namespace Swift {
 	class ByteArray;
+	class EventLoop;
 
 	class AvahiQuerier : 
 			public DNSSDQuerier, 
 			public boost::enable_shared_from_this<AvahiQuerier> {
 		public:
-			AvahiQuerier();
+			AvahiQuerier(EventLoop* eventLoop);
 			~AvahiQuerier();
 
 			boost::shared_ptr<DNSSDBrowseQuery> createBrowseQuery();
@@ -47,6 +48,7 @@ namespace Swift {
 			}
 
 		private:
+			EventLoop* eventLoop;
 			AvahiClient* client;
 			AvahiThreadedPoll* threadedPoll;
 	};

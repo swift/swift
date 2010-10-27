@@ -17,7 +17,7 @@ namespace Swift {
 
 	class AvahiResolveServiceQuery : public DNSSDResolveServiceQuery, public AvahiQuery {
 		public:	
-			AvahiResolveServiceQuery(const DNSSDServiceID& service, boost::shared_ptr<AvahiQuerier> querier) : AvahiQuery(querier), service(service), resolver(NULL) {
+			AvahiResolveServiceQuery(const DNSSDServiceID& service, boost::shared_ptr<AvahiQuerier> querier, EventLoop* eventLoop) : AvahiQuery(querier, eventLoop), service(service), resolver(NULL) {
 			}
 
 			void start() {

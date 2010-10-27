@@ -17,7 +17,7 @@ namespace Swift {
 
 	class AvahiBrowseQuery : public DNSSDBrowseQuery, public AvahiQuery {
 		public:	
-			AvahiBrowseQuery(boost::shared_ptr<AvahiQuerier> q) : AvahiQuery(q), browser(NULL) {
+			AvahiBrowseQuery(boost::shared_ptr<AvahiQuerier> q, EventLoop* eventLoop) : AvahiQuery(q, eventLoop), browser(NULL) {
 			}
 
 			void startBrowsing() {

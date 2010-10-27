@@ -13,16 +13,18 @@
 
 namespace Swift {
 	class AvahiQuerier;
+	class EventLoop;
 
 	class AvahiQuery : 
 			public EventOwner,
 			public boost::enable_shared_from_this<AvahiQuery> {
 		public:
-			AvahiQuery(boost::shared_ptr<AvahiQuerier>);
+			AvahiQuery(boost::shared_ptr<AvahiQuerier>, EventLoop* eventLoop);
 			virtual ~AvahiQuery();
 			
 		protected:
 			boost::shared_ptr<AvahiQuerier> querier;
+			EventLoop* eventLoop;
 	};
 }
 

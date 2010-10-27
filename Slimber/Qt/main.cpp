@@ -29,7 +29,7 @@ QMessageBox::critical(0, QObject::tr("Systray"), QObject::tr("No system tray"));
 	app.setQuitOnLastWindowClosed(false);
 
 	QtMenulet menulet;
-	MainController controller(&menulet);
+	MainController controller(&menulet, &eventLoop);
 
 	return app.exec();
 }

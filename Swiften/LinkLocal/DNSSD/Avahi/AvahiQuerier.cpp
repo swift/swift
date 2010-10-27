@@ -15,26 +15,26 @@
 
 namespace Swift {
 
-AvahiQuerier::AvahiQuerier() : client(NULL), threadedPoll(NULL) {
+AvahiQuerier::AvahiQuerier(EventLoop* eventLoop) : eventLoop(eventLoop), client(NULL), threadedPoll(NULL) {
 }
 
 AvahiQuerier::~AvahiQuerier() {
 }
 
 boost::shared_ptr<DNSSDBrowseQuery> AvahiQuerier::createBrowseQuery() {
-	return boost::shared_ptr<DNSSDBrowseQuery>(new AvahiBrowseQuery(shared_from_this()));
+	return boost::shared_ptr<DNSSDBrowseQuery>(new AvahiBrowseQuery(shared_from_this(), eventLoop));
 }
 
 boost::shared_ptr<DNSSDRegisterQuery> AvahiQuerier::createRegisterQuery(const String& name, int port, const ByteArray& info) {
-	return boost::shared_ptr<DNSSDRegisterQuery>(new AvahiRegisterQuery(name, port, info, shared_from_this()));
+	return boost::shared_ptr<DNSSDRegisterQuery>(new AvahiRegisterQuery(name, port, info, shared_from_this(), eventLoop));
 }
 
 boost::shared_ptr<DNSSDResolveServiceQuery> AvahiQuerier::createResolveServiceQuery(const DNSSDServiceID& service) {
-	return boost::shared_ptr<DNSSDResolveServiceQuery>(new AvahiResolveServiceQuery(service, shared_from_this()));
+	return boost::shared_ptr<DNSSDResolveServiceQuery>(new AvahiResolveServiceQuery(service, shared_from_this(), eventLoop));
 }
 
 boost::shared_ptr<DNSSDResolveHostnameQuery> AvahiQuerier::createResolveHostnameQuery(const String& hostname, int interfaceIndex) {
-	return boost::shared_ptr<DNSSDResolveHostnameQuery>(new AvahiResolveHostnameQuery(hostname, interfaceIndex, shared_from_this()));
+	return boost::shared_ptr<DNSSDResolveHostnameQuery>(new AvahiResolveHostnameQuery(hostname, interfaceIndex, shared_from_this(), eventLoop));
 }
 
 void AvahiQuerier::start() {
