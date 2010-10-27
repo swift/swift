@@ -14,7 +14,7 @@ int main() {
 	SimpleEventLoop eventLoop;
 	
 	DummyMenulet menulet;
-	MainController controller(&menulet);
+	MainController controller(&menulet, &eventLoop);
 
 	eventLoop.run();
 	return 0;

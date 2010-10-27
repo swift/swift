@@ -10,14 +10,14 @@
 #include "Swiften/LinkLocal/DNSSD/DNSSDResolveServiceQuery.h"
 #include "Swiften/LinkLocal/LinkLocalServiceInfo.h"
 #include "Swiften/Base/ByteArray.h"
-#include "Swiften/EventLoop/MainEventLoop.h"
+#include "Swiften/EventLoop/EventLoop.h"
 
 namespace Swift {
 	class BonjourQuerier;
 
 	class BonjourResolveServiceQuery : public DNSSDResolveServiceQuery, public BonjourQuery {
 		public:	
-			BonjourResolveServiceQuery(const DNSSDServiceID& service, boost::shared_ptr<BonjourQuerier> querier) : BonjourQuery(querier) {
+			BonjourResolveServiceQuery(const DNSSDServiceID& service, boost::shared_ptr<BonjourQuerier> querier, EventLoop* eventLoop) : BonjourQuery(querier, eventLoop) {
 				DNSServiceErrorType result = DNSServiceResolve(
 						&sdRef, 0, service.getNetworkInterfaceID(), 
 						service.getName().getUTF8Data(), service.getType().getUTF8Data(), 
@@ -33,7 +33,7 @@ namespace Swift {
 					run();
 				}
 				else {
-					MainEventLoop::postEvent(boost::bind(boost::ref(onServiceResolved), boost::optional<Result>()), shared_from_this());
+					eventLoop->postEvent(boost::bind(boost::ref(onServiceResolved), boost::optional<Result>()), shared_from_this());
 				}
 			}
 
@@ -48,11 +48,11 @@ namespace Swift {
 
 			void handleServiceResolved(DNSServiceErrorType errorCode, const char* fullName, const char* host, uint16_t port, uint16_t txtLen, const unsigned char *txtRecord) {
 				if (errorCode != kDNSServiceErr_NoError) {
-					MainEventLoop::postEvent(boost::bind(boost::ref(onServiceResolved), boost::optional<Result>()), shared_from_this());
+					eventLoop->postEvent(boost::bind(boost::ref(onServiceResolved), boost::optional<Result>()), shared_from_this());
 				}
 				else {
 					//std::cout << "Service resolved: name:" << fullName << " host:" << host << " port:" << port << std::endl;
-					MainEventLoop::postEvent(
+					eventLoop->postEvent(
 							boost::bind(
 								boost::ref(onServiceResolved), 
 								Result(String(fullName), String(host), port, 

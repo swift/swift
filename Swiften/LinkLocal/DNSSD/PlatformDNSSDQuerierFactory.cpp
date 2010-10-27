@@ -15,11 +15,14 @@
 
 namespace Swift {
 
+PlatformDNSSDQuerierFactory::PlatformDNSSDQuerierFactory(EventLoop* eventLoop) : eventLoop(eventLoop) {
+}
+
 boost::shared_ptr<DNSSDQuerier> PlatformDNSSDQuerierFactory::createQuerier() {
 #if defined(HAVE_BONJOUR)
-	return boost::shared_ptr<DNSSDQuerier>(new BonjourQuerier());
+	return boost::shared_ptr<DNSSDQuerier>(new BonjourQuerier(eventLoop));
 #elif defined(HAVE_AVAHI)
-	return boost::shared_ptr<DNSSDQuerier>(new AvahiQuerier());
+	return boost::shared_ptr<DNSSDQuerier>(new AvahiQuerier(eventLoop));
 #else
 	return boost::shared_ptr<DNSSDQuerier>();
 #endif

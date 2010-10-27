@@ -9,7 +9,7 @@
 #include "Swiften/Base/String.h"
 #include "Swiften/LinkLocal/DNSSD/Avahi/AvahiQuery.h"
 #include "Swiften/LinkLocal/DNSSD/DNSSDResolveHostnameQuery.h"
-#include "Swiften/EventLoop/MainEventLoop.h"
+#include "Swiften/EventLoop/EventLoop.h"
 #include "Swiften/Network/HostAddress.h"
 
 #include <netinet/in.h>
@@ -24,7 +24,7 @@ namespace Swift {
 			}
 
 			void run() {
-					MainEventLoop::postEvent(boost::bind(boost::ref(onHostnameResolved), boost::optional<HostAddress>(HostAddress(hostname))), shared_from_this());
+					eventLoop->postEvent(boost::bind(boost::ref(onHostnameResolved), boost::optional<HostAddress>(HostAddress(hostname))), shared_from_this());
 			}
 
 			void finish() {

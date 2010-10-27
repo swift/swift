@@ -22,8 +22,8 @@
 
 using namespace Swift;
 
-MainController::MainController(Menulet* menulet) : menulet(menulet) {
-	dnsSDQuerier = PlatformDNSSDQuerierFactory().createQuerier();
+MainController::MainController(Menulet* menulet, EventLoop* eventLoop) : menulet(menulet) {
+	dnsSDQuerier = PlatformDNSSDQuerierFactory(eventLoop).createQuerier();
 	assert(dnsSDQuerier);
 
 	linkLocalServiceBrowser = new LinkLocalServiceBrowser(dnsSDQuerier);
@@ -37,7 +37,7 @@ MainController::MainController(Menulet* menulet) : menulet(menulet) {
 	vCardCollection = new FileVCardCollection(
 			PlatformApplicationPathProvider("Slimber").getDataDir());
 
-	server = new Server(5222, 5562, linkLocalServiceBrowser, vCardCollection);
+	server = new Server(5222, 5562, linkLocalServiceBrowser, vCardCollection, eventLoop);
 	server->onStopped.connect(
 			boost::bind(&MainController::handleServerStopped, this, _1));
 	server->onSelfConnected.connect(

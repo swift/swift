@@ -9,11 +9,11 @@
 
 namespace Swift {
 
-BoostConnectionFactory::BoostConnectionFactory(boost::asio::io_service* ioService) : ioService(ioService) {
+BoostConnectionFactory::BoostConnectionFactory(boost::asio::io_service* ioService, EventLoop* eventLoop) : ioService(ioService), eventLoop(eventLoop) {
 }
 
 boost::shared_ptr<Connection> BoostConnectionFactory::createConnection() {
-	return BoostConnection::create(ioService);
+	return BoostConnection::create(ioService, eventLoop);
 }
 
 }

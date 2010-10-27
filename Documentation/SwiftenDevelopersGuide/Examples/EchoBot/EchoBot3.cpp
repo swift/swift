@@ -14,8 +14,8 @@ using namespace boost;
 
 class EchoBot {
 	public:
-		EchoBot() {
-			client = new Client(JID("echobot@wonderland.lit"), "mypass");
+		EchoBot(EventLoop* eventLoop) {
+			client = new Client(eventLoop, JID("echobot@wonderland.lit"), "mypass");
 			client->onConnected.connect(bind(&EchoBot::handleConnected, this));
 			client->onMessageReceived.connect(
 					bind(&EchoBot::handleMessageReceived, this, _1));
@@ -47,7 +47,7 @@ class EchoBot {
 
 int main(int, char**) {
 	SimpleEventLoop eventLoop;
-	EchoBot bot;
+	EchoBot bot(&eventLoop);
 	eventLoop.run();
 	return 0;
 }

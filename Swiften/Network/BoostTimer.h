@@ -14,24 +14,27 @@
 #include "Swiften/Network/Timer.h"
 
 namespace Swift {
+	class EventLoop;
+
 	class BoostTimer : public Timer, public EventOwner, public boost::enable_shared_from_this<BoostTimer> {
 		public:
 			typedef boost::shared_ptr<BoostTimer> ref;
 
-			static ref create(int milliseconds, boost::asio::io_service* service) {
-				return ref(new BoostTimer(milliseconds, service));
+			static ref create(int milliseconds, boost::asio::io_service* service, EventLoop* eventLoop) {
+				return ref(new BoostTimer(milliseconds, service, eventLoop));
 			}
 
 			virtual void start();
 			virtual void stop();
 
 		private:
-			BoostTimer(int milliseconds, boost::asio::io_service* service);
+			BoostTimer(int milliseconds, boost::asio::io_service* service, EventLoop* eventLoop);
 
 			void handleTimerTick(const boost::system::error_code& error);
 
 		private:
 			int timeout;
 			boost::asio::deadline_timer timer;
+			EventLoop* eventLoop;
 	};
 }

@@ -12,7 +12,6 @@
 #include "Swiften/Elements/RosterItemPayload.h"
 #include "Swiften/Queries/IQRouter.h"
 #include "Swiften/Roster/GetRosterRequest.h"
-#include "Swiften/EventLoop/MainEventLoop.h"
 #include "Swiften/Roster/Roster.h"
 #include "Swiften/Roster/SetPresence.h"
 #include "Swiften/Roster/OfflineRosterFilter.h"

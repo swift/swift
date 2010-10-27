@@ -32,6 +32,7 @@ namespace Swift {
 	class SessionTracer;
 	class RosterPayload;
 	class Presence;
+	class EventLoop;
 
 	class Server {
 		public:
@@ -39,7 +40,8 @@ namespace Swift {
 					int clientConnectionPort, 
 					int linkLocalConnectionPort, 
 					LinkLocalServiceBrowser* browser, 
-					VCardCollection* vCardCollection);
+					VCardCollection* vCardCollection,
+					EventLoop* eventLoop);
 			~Server();
 
 			void start();
@@ -102,6 +104,7 @@ namespace Swift {
 			int linkLocalConnectionPort;
 			LinkLocalServiceBrowser* linkLocalServiceBrowser;
 			VCardCollection* vCardCollection;
+			EventLoop* eventLoop;
 			LinkLocalPresenceManager* presenceManager;
 			bool stopping;
 			boost::shared_ptr<BoostConnectionServer> serverFromClientConnectionServer;

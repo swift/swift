@@ -16,7 +16,6 @@
 #include "Swiften/Network/HostAddressPort.h"
 #include "Swiften/Network/StaticDomainNameResolver.h"
 #include "Swiften/Network/DummyTimerFactory.h"
-#include "Swiften/EventLoop/MainEventLoop.h"
 #include "Swiften/EventLoop/DummyEventLoop.h"
 
 using namespace Swift;
@@ -38,8 +37,8 @@ class ComponentConnectorTest : public CppUnit::TestFixture {
 		
 		void setUp() {
 			eventLoop = new DummyEventLoop();
-			resolver = new StaticDomainNameResolver();
-			connectionFactory = new MockConnectionFactory();
+			resolver = new StaticDomainNameResolver(eventLoop);
+			connectionFactory = new MockConnectionFactory(eventLoop);
 			timerFactory = new DummyTimerFactory();
 		}
 
@@ -164,14 +163,14 @@ class ComponentConnectorTest : public CppUnit::TestFixture {
 
 		struct MockConnection : public Connection {
 			public:
-				MockConnection(const std::vector<HostAddressPort>& failingPorts, bool isResponsive) : failingPorts(failingPorts), isResponsive(isResponsive) {}
+				MockConnection(const std::vector<HostAddressPort>& failingPorts, bool isResponsive, EventLoop* eventLoop) : eventLoop(eventLoop), failingPorts(failingPorts), isResponsive(isResponsive) {}
 
 				void listen() { assert(false); }
 				void connect(const HostAddressPort& address) {
 					hostAddressPort = address;
 					if (isResponsive) {
 						bool fail = std::find(failingPorts.begin(), failingPorts.end(), address) != failingPorts.end();
-						MainEventLoop::postEvent(boost::bind(boost::ref(onConnectFinished), fail));
+						eventLoop->postEvent(boost::bind(boost::ref(onConnectFinished), fail));
 					}
 				}
 
@@ -179,19 +178,21 @@ class ComponentConnectorTest : public CppUnit::TestFixture {
 				void write(const ByteArray&) { assert(false); }
 				HostAddressPort getLocalAddress() const { return HostAddressPort(); }
 
+				EventLoop* eventLoop;
 				boost::optional<HostAddressPort> hostAddressPort;
 				std::vector<HostAddressPort> failingPorts;
 				bool isResponsive;
 		};
 
 		struct MockConnectionFactory : public ConnectionFactory {
-			MockConnectionFactory() : isResponsive(true) {
+			MockConnectionFactory(EventLoop* eventLoop) : eventLoop(eventLoop), isResponsive(true) {
 			}
 
 			boost::shared_ptr<Connection> createConnection() {
-				return boost::shared_ptr<Connection>(new MockConnection(failingPorts, isResponsive));
+				return boost::shared_ptr<Connection>(new MockConnection(failingPorts, isResponsive, eventLoop));
 			}
 
+			EventLoop* eventLoop;
 			bool isResponsive;
 			std::vector<HostAddressPort> failingPorts;
 		};

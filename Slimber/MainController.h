@@ -16,6 +16,7 @@ namespace Swift {
 	class LinkLocalServiceBrowser;
 	class VCardCollection;
 	class Server;
+	class EventLoop;
 }
 
 class MenuletController;
@@ -23,7 +24,7 @@ class Menulet;
 
 class MainController {
 	public:
-		MainController(Menulet* menulet);
+		MainController(Menulet* menulet, Swift::EventLoop* eventLoop);
 		virtual ~MainController();
 
 	private:

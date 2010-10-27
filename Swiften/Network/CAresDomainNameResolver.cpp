@@ -19,7 +19,7 @@
 #include "Swiften/Network/DomainNameServiceQuery.h"
 #include "Swiften/Network/DomainNameAddressQuery.h"
 #include "Swiften/Base/ByteArray.h"
-#include "Swiften/EventLoop/MainEventLoop.h"
+#include "Swiften/EventLoop/EventLoop.h"
 #include "Swiften/Base/foreach.h"
 
 namespace Swift {
@@ -77,10 +77,10 @@ class CAresDomainNameServiceQuery : public DomainNameServiceQuery, public CAresQ
 					}
 				}
 				std::sort(records.begin(), records.end(), ResultPriorityComparator());
-				MainEventLoop::postEvent(boost::bind(boost::ref(onResult), records)); 
+				eventLoop->postEvent(boost::bind(boost::ref(onResult), records)); 
 			}
 			else if (status != ARES_EDESTRUCTION) {
-				MainEventLoop::postEvent(boost::bind(boost::ref(onResult), std::vector<DomainNameServiceQuery::Result>()), shared_from_this());
+				eventLoop->postEvent(boost::bind(boost::ref(onResult), std::vector<DomainNameServiceQuery::Result>()), shared_from_this());
 			}
 		}
 };
@@ -105,15 +105,15 @@ class CAresDomainNameAddressQuery : public DomainNameAddressQuery, public CAresQ
 					std::vector<HostAddress> results;
 					results.push_back(HostAddress(inet_ntoa(addr)));
 
-					MainEventLoop::postEvent(boost::bind(boost::ref(onResult), results, boost::optional<DomainNameResolveError>()), boost::dynamic_pointer_cast<CAresDomainNameAddressQuery>(shared_from_this())); 
+					eventLoop->postEvent(boost::bind(boost::ref(onResult), results, boost::optional<DomainNameResolveError>()), boost::dynamic_pointer_cast<CAresDomainNameAddressQuery>(shared_from_this())); 
 					ares_free_hostent(hosts);
 				}
 				else {
-					MainEventLoop::postEvent(boost::bind(boost::ref(onResult), std::vector<HostAddress>(), boost::optional<DomainNameResolveError>(DomainNameResolveError())), shared_from_this());
+					eventLoop->postEvent(boost::bind(boost::ref(onResult), std::vector<HostAddress>(), boost::optional<DomainNameResolveError>(DomainNameResolveError())), shared_from_this());
 				}
 			}
 			else if (status != ARES_EDESTRUCTION) {
-				MainEventLoop::postEvent(boost::bind(boost::ref(onResult), std::vector<HostAddress>(), boost::optional<DomainNameResolveError>(DomainNameResolveError())), shared_from_this());
+				eventLoop->postEvent(boost::bind(boost::ref(onResult), std::vector<HostAddress>(), boost::optional<DomainNameResolveError>(DomainNameResolveError())), shared_from_this());
 			}
 		}
 };

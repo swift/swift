@@ -9,14 +9,14 @@
 #include "Swiften/LinkLocal/DNSSD/Bonjour/BonjourQuery.h"
 #include "Swiften/LinkLocal/DNSSD/DNSSDRegisterQuery.h"
 #include "Swiften/Base/ByteArray.h"
-#include "Swiften/EventLoop/MainEventLoop.h"
+#include "Swiften/EventLoop/EventLoop.h"
 
 namespace Swift {
 	class BonjourQuerier;
 
 	class BonjourRegisterQuery : public DNSSDRegisterQuery, public BonjourQuery {
 		public:	
-			BonjourRegisterQuery(const String& name, int port, const ByteArray& txtRecord, boost::shared_ptr<BonjourQuerier> querier) : BonjourQuery(querier) {
+			BonjourRegisterQuery(const String& name, int port, const ByteArray& txtRecord, boost::shared_ptr<BonjourQuerier> querier, EventLoop* eventLoop) : BonjourQuery(querier, eventLoop) {
 				DNSServiceErrorType result = DNSServiceRegister(
 						&sdRef, 0, 0, name.getUTF8Data(), "_presence._tcp", NULL, NULL, port, 
 						txtRecord.getSize(), txtRecord.getData(), 
@@ -31,7 +31,7 @@ namespace Swift {
 					run();
 				}
 				else {
-					MainEventLoop::postEvent(boost::bind(boost::ref(onRegisterFinished), boost::optional<DNSSDServiceID>()), shared_from_this());
+					eventLoop->postEvent(boost::bind(boost::ref(onRegisterFinished), boost::optional<DNSSDServiceID>()), shared_from_this());
 				}
 			}
 
@@ -51,10 +51,10 @@ namespace Swift {
 
 			void handleServiceRegistered(DNSServiceErrorType errorCode, const char *name, const char *regtype, const char *domain) {
 				if (errorCode != kDNSServiceErr_NoError) {
-					MainEventLoop::postEvent(boost::bind(boost::ref(onRegisterFinished), boost::optional<DNSSDServiceID>()), shared_from_this());
+					eventLoop->postEvent(boost::bind(boost::ref(onRegisterFinished), boost::optional<DNSSDServiceID>()), shared_from_this());
 				}
 				else {
-					MainEventLoop::postEvent(boost::bind(boost::ref(onRegisterFinished), boost::optional<DNSSDServiceID>(DNSSDServiceID(name, domain, regtype, 0))), shared_from_this());
+					eventLoop->postEvent(boost::bind(boost::ref(onRegisterFinished), boost::optional<DNSSDServiceID>(DNSSDServiceID(name, domain, regtype, 0))), shared_from_this());
 				}
 			}
 	};

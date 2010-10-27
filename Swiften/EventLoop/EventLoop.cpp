@@ -10,16 +10,12 @@
 #include <boost/bind.hpp>
 #include <iostream>
 
-#include "Swiften/EventLoop/MainEventLoop.h"
-
 namespace Swift {
 
 EventLoop::EventLoop() : nextEventID_(0), handlingEvents_(false) {
-	MainEventLoop::setInstance(this);
 }
 
 EventLoop::~EventLoop() {
-	MainEventLoop::resetInstance();
 }
 
 void EventLoop::handleEvent(const Event& event) {

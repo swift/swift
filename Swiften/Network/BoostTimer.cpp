@@ -9,12 +9,12 @@
 #include <boost/date_time/posix_time/posix_time.hpp>
 #include <boost/asio.hpp>
 
-#include "Swiften/EventLoop/MainEventLoop.h"
+#include "Swiften/EventLoop/EventLoop.h"
 
 namespace Swift {
 
-BoostTimer::BoostTimer(int milliseconds, boost::asio::io_service* service) :
-		timeout(milliseconds), timer(*service) {
+BoostTimer::BoostTimer(int milliseconds, boost::asio::io_service* service, EventLoop* eventLoop) :
+		timeout(milliseconds), timer(*service), eventLoop(eventLoop) {
 }
 
 void BoostTimer::start() {
@@ -31,7 +31,7 @@ void BoostTimer::handleTimerTick(const boost::system::error_code& error) {
 		assert(error == boost::asio::error::operation_aborted);
 	}
 	else {
-		MainEventLoop::postEvent(boost::bind(boost::ref(onTick)), shared_from_this());
+		eventLoop->postEvent(boost::bind(boost::ref(onTick)), shared_from_this());
 		timer.expires_from_now(boost::posix_time::milliseconds(timeout));
 		timer.async_wait(boost::bind(&BoostTimer::handleTimerTick, shared_from_this(), boost::asio::placeholders::error));
 	}

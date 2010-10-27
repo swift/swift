@@ -65,6 +65,7 @@ static const String CLIENT_NODE = "http://swift.im";
 static const String SHOW_NOTIFICATIONS = "showNotifications";
 
 MainController::MainController(
+		EventLoop* eventLoop,
 		ChatWindowFactory* chatWindowFactory,
 		MainWindowFactory *mainWindowFactory,
 		LoginWindowFactory *loginWindowFactory,
@@ -79,7 +80,8 @@ MainController::MainController(
 		Dock* dock,
 		Notifier* notifier,
 		bool useDelayForLatency) :
-			timerFactory_(&boostIOServiceThread_.getIOService()),
+			eventLoop_(eventLoop),
+			timerFactory_(&boostIOServiceThread_.getIOService(), eventLoop),
 			idleDetector_(&idleQuerier_, &timerFactory_, 100),
 			storagesFactory_(storagesFactory),
 			chatWindowFactory_(chatWindowFactory),
@@ -361,7 +363,7 @@ void MainController::performLoginFromCachedCredentials() {
 	}
 	if (!client_) {
 		storages_ = storagesFactory_->createStorages(jid_);
-		client_ = new Swift::Client(jid_, password_, storages_);
+		client_ = new Swift::Client(eventLoop_, jid_, password_, storages_);
 		client_->onDataRead.connect(boost::bind(&XMLConsoleController::handleDataRead, xmlConsoleController_, _1));
 		client_->onDataWritten.connect(boost::bind(&XMLConsoleController::handleDataWritten, xmlConsoleController_, _1));
 		client_->onError.connect(boost::bind(&MainController::handleError, this, _1));

@@ -19,7 +19,7 @@
 
 #include "Swiften/Base/String.h"
 #include "Swiften/Network/HostAddress.h"
-#include "Swiften/EventLoop/MainEventLoop.h"
+#include "Swiften/EventLoop/EventLoop.h"
 #include "Swiften/Network/HostAddressPort.h"
 #include "Swiften/Network/DomainNameAddressQuery.h"
 
@@ -27,7 +27,7 @@ using namespace Swift;
 
 namespace {
 	struct AddressQuery : public DomainNameAddressQuery, public boost::enable_shared_from_this<AddressQuery>, public EventOwner {
-		AddressQuery(const String& host) : hostname(host), thread(NULL), safeToJoin(false) {}
+		AddressQuery(const String& host, EventLoop* eventLoop) : hostname(host), eventLoop(eventLoop), thread(NULL), safeToJoin(false) {}
 
 		~AddressQuery() {
 			if (safeToJoin) {
@@ -64,7 +64,7 @@ namespace {
 					}
 
 					//std::cout << "PlatformDomainNameResolver::doRun(): Success" << std::endl;
-					MainEventLoop::postEvent(
+					eventLoop->postEvent(
 							boost::bind(boost::ref(onResult), results, boost::optional<DomainNameResolveError>()), 
 							shared_from_this());
 				}
@@ -77,11 +77,12 @@ namespace {
 		}
 
 		void emitError() {
-			MainEventLoop::postEvent(boost::bind(boost::ref(onResult), std::vector<HostAddress>(), boost::optional<DomainNameResolveError>(DomainNameResolveError())), shared_from_this());
+			eventLoop->postEvent(boost::bind(boost::ref(onResult), std::vector<HostAddress>(), boost::optional<DomainNameResolveError>(DomainNameResolveError())), shared_from_this());
 		}
 
 		boost::asio::io_service ioService;
 		String hostname;
+		EventLoop* eventLoop;
 		boost::thread* thread;
 		bool safeToJoin;
 	};
@@ -90,15 +91,15 @@ namespace {
 
 namespace Swift {
 
-PlatformDomainNameResolver::PlatformDomainNameResolver() {
+PlatformDomainNameResolver::PlatformDomainNameResolver(EventLoop* eventLoop) : eventLoop(eventLoop) {
 }
 
 boost::shared_ptr<DomainNameServiceQuery> PlatformDomainNameResolver::createServiceQuery(const String& name) {
-	return boost::shared_ptr<DomainNameServiceQuery>(new PlatformDomainNameServiceQuery(getNormalized(name)));
+	return boost::shared_ptr<DomainNameServiceQuery>(new PlatformDomainNameServiceQuery(getNormalized(name), eventLoop));
 }
 
 boost::shared_ptr<DomainNameAddressQuery> PlatformDomainNameResolver::createAddressQuery(const String& name) {
-	return boost::shared_ptr<DomainNameAddressQuery>(new AddressQuery(getNormalized(name)));
+	return boost::shared_ptr<DomainNameAddressQuery>(new AddressQuery(getNormalized(name), eventLoop));
 }
 
 }

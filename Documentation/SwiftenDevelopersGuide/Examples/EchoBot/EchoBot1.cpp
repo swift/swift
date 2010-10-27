@@ -11,7 +11,7 @@ using namespace Swift;
 int main(int, char**) {
 	SimpleEventLoop eventLoop;
 
-	Client client(JID("echobot@wonderland.lit"), "mypass");
+	Client client(&eventLoop, JID("echobot@wonderland.lit"), "mypass");
 	client.connect();
 
 	eventLoop.run();

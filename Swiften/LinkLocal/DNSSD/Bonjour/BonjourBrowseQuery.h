@@ -8,14 +8,14 @@
 
 #include "Swiften/LinkLocal/DNSSD/Bonjour/BonjourQuery.h"
 #include "Swiften/LinkLocal/DNSSD/DNSSDBrowseQuery.h"
-#include "Swiften/EventLoop/MainEventLoop.h"
+#include "Swiften/EventLoop/EventLoop.h"
 
 namespace Swift {
 	class BonjourQuerier;
 
 	class BonjourBrowseQuery : public DNSSDBrowseQuery, public BonjourQuery {
 		public:	
-			BonjourBrowseQuery(boost::shared_ptr<BonjourQuerier> q) : BonjourQuery(q) {
+			BonjourBrowseQuery(boost::shared_ptr<BonjourQuerier> q, EventLoop* eventLoop) : BonjourQuery(q, eventLoop) {
 				DNSServiceErrorType result = DNSServiceBrowse(
 						&sdRef, 0, 0, "_presence._tcp", 0, 
 						&BonjourBrowseQuery::handleServiceDiscoveredStatic, this);
@@ -26,7 +26,7 @@ namespace Swift {
 
 			void startBrowsing() {
 				if (!sdRef) {
-					MainEventLoop::postEvent(boost::bind(boost::ref(onError)), shared_from_this());
+					eventLoop->postEvent(boost::bind(boost::ref(onError)), shared_from_this());
 				}
 				else {
 					run();
@@ -44,16 +44,16 @@ namespace Swift {
 
 			void handleServiceDiscovered(DNSServiceFlags flags, uint32_t interfaceIndex, DNSServiceErrorType errorCode, const char *name, const char *type, const char *domain) {
 				if (errorCode != kDNSServiceErr_NoError) {
-					MainEventLoop::postEvent(boost::bind(boost::ref(onError)), shared_from_this());
+					eventLoop->postEvent(boost::bind(boost::ref(onError)), shared_from_this());
 				}
 				else {
 					//std::cout << "Discovered service: name:" << name << " domain:" << domain << " type: " << type << std::endl;
 					DNSSDServiceID service(name, domain, type, interfaceIndex);
 					if (flags & kDNSServiceFlagsAdd) {
-						MainEventLoop::postEvent(boost::bind(boost::ref(onServiceAdded), service), shared_from_this());
+						eventLoop->postEvent(boost::bind(boost::ref(onServiceAdded), service), shared_from_this());
 					}
 					else {
-						MainEventLoop::postEvent(boost::bind(boost::ref(onServiceRemoved), service), shared_from_this());
+						eventLoop->postEvent(boost::bind(boost::ref(onServiceRemoved), service), shared_from_this());
 					}
 				}
 			}

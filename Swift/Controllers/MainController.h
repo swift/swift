@@ -28,6 +28,7 @@
 #include "Swift/Controllers/UIEvents/UIEvent.h"
 
 namespace Swift {
+	class EventLoop;
 	class Client;
 	class ChatWindowFactory;
 	class ChatController;
@@ -65,6 +66,7 @@ namespace Swift {
 	class MainController {
 		public:
 			MainController(
+					EventLoop* eventLoop,
 					ChatWindowFactory* chatWindowFactory,
 					MainWindowFactory *mainWindowFactory,
 					LoginWindowFactory *loginWindowFactory,
@@ -107,6 +109,7 @@ namespace Swift {
 			void handleNotificationClicked(const JID& jid);
 
 		private:
+			EventLoop* eventLoop_;
 			BoostIOServiceThread boostIOServiceThread_;
 			BoostTimerFactory timerFactory_;
 			PlatformIdleQuerier idleQuerier_;

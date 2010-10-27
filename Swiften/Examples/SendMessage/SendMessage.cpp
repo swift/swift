@@ -9,7 +9,7 @@
 
 #include "Swiften/Client/Client.h"
 #include "Swiften/Network/BoostTimer.h"
-#include "Swiften/EventLoop/MainEventLoop.h"
+#include "Swiften/EventLoop/EventLoop.h"
 #include "Swiften/Client/ClientXMLTracer.h"
 #include "Swiften/EventLoop/SimpleEventLoop.h"
 #include "Swiften/Network/BoostIOServiceThread.h"
@@ -57,7 +57,7 @@ int main(int argc, char* argv[]) {
 		connectHost = argv[argi++];
 	}
 
-	client = new Swift::Client(JID(jid), String(argv[argi++]));
+	client = new Swift::Client(&eventLoop, JID(jid), String(argv[argi++]));
 
 	recipient = JID(argv[argi++]);
 	messageBody = std::string(argv[argi++]);
@@ -72,7 +72,7 @@ int main(int argc, char* argv[]) {
 	}
 
 	{
-		BoostTimer::ref timer(BoostTimer::create(30000, &MainBoostIOServiceThread::getInstance().getIOService()));
+		BoostTimer::ref timer(BoostTimer::create(30000, &MainBoostIOServiceThread::getInstance().getIOService(), &eventLoop));
 		timer->onTick.connect(boost::bind(&SimpleEventLoop::stop, &eventLoop));
 		timer->start();
 

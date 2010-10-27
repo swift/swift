@@ -6,7 +6,6 @@
 
 #include "Swiften/Queries/Request.h"
 #include "Swiften/Queries/IQRouter.h"
-#include "Swiften/EventLoop/MainEventLoop.h"
 
 namespace Swift {
 

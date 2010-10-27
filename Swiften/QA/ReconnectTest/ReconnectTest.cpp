@@ -9,7 +9,7 @@
 
 #include "Swiften/Client/Client.h"
 #include "Swiften/Network/BoostTimer.h"
-#include "Swiften/EventLoop/MainEventLoop.h"
+#include "Swiften/EventLoop/EventLoop.h"
 #include "Swiften/EventLoop/SimpleEventLoop.h"
 #include "Swiften/Roster/GetRosterRequest.h"
 #include "Swiften/Client/ClientXMLTracer.h"

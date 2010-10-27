@@ -10,12 +10,16 @@
 
 namespace Swift {
 	class String;
+	class EventLoop;
 
 	class PlatformDomainNameResolver : public DomainNameResolver {
 		public:
-			PlatformDomainNameResolver();
+			PlatformDomainNameResolver(EventLoop* eventLoop);
 
 			virtual boost::shared_ptr<DomainNameServiceQuery> createServiceQuery(const String& name);
 			virtual boost::shared_ptr<DomainNameAddressQuery> createAddressQuery(const String& name);
+
+		private:
+			EventLoop* eventLoop;
 	};
 }

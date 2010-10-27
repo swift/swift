@@ -14,7 +14,7 @@
 #include "Swiften/Network/Connection.h"
 #include "Swiften/Network/HostAddressPort.h"
 #include "Swiften/EventLoop/EventOwner.h"
-#include "Swiften/EventLoop/MainEventLoop.h"
+#include "Swiften/EventLoop/EventLoop.h"
 
 namespace Swift {
 	class FakeConnection : 
@@ -30,7 +30,7 @@ namespace Swift {
 				DisconnectedWithError
 			};
 
-			FakeConnection() : state(Initial), delayConnect(false) {}
+			FakeConnection(EventLoop* eventLoop) : eventLoop(eventLoop), state(Initial), delayConnect(false) {}
 
 			virtual void listen() {
 				assert(false);
@@ -44,7 +44,7 @@ namespace Swift {
 				error = boost::optional<Error>(e);
 				state = DisconnectedWithError;
 				if (connectedTo) {
-					MainEventLoop::postEvent(
+					eventLoop->postEvent(
 							boost::bind(boost::ref(onDisconnected), error),
 							shared_from_this());
 				}
@@ -62,7 +62,7 @@ namespace Swift {
 					else {
 						state = DisconnectedWithError;
 					}
-					MainEventLoop::postEvent(
+					eventLoop->postEvent(
 							boost::bind(boost::ref(onConnectFinished), error),
 							shared_from_this());
 				}
@@ -76,7 +76,7 @@ namespace Swift {
 					state = DisconnectedWithError;
 				}
 				connectedTo.reset();
-				MainEventLoop::postEvent(
+				eventLoop->postEvent(
 						boost::bind(boost::ref(onDisconnected), error),
 						shared_from_this());
 			}
@@ -89,6 +89,7 @@ namespace Swift {
 				delayConnect = true;
 			}
 
+			EventLoop* eventLoop;
 			boost::optional<HostAddressPort> connectedTo;
 			std::vector<ByteArray> dataWritten;
 			boost::optional<Error> error;

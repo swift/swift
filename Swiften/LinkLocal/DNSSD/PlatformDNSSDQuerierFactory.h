@@ -10,11 +10,17 @@
 
 namespace Swift {
 	class DNSSDQuerier;
+	class EventLoop;
 
 	class PlatformDNSSDQuerierFactory {
 		public:
-			 boost::shared_ptr<DNSSDQuerier> createQuerier();
+			PlatformDNSSDQuerierFactory(EventLoop* eventLoop);
 
-			 bool canCreate();
+			boost::shared_ptr<DNSSDQuerier> createQuerier();
+
+			bool canCreate();
+
+		private:
+			EventLoop* eventLoop;
 	};
 }

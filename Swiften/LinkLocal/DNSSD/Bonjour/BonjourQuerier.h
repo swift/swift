@@ -22,7 +22,7 @@ namespace Swift {
 			public DNSSDQuerier, 
 			public boost::enable_shared_from_this<BonjourQuerier> {
 		public:
-			BonjourQuerier();
+			BonjourQuerier(EventLoop* eventLoop);
 			~BonjourQuerier();
 
 			boost::shared_ptr<DNSSDBrowseQuery> createBrowseQuery();
@@ -45,6 +45,7 @@ namespace Swift {
 			void run();
 
 		private:
+			EventLoop* eventLoop;
 			bool stopRequested;
 			boost::thread* thread;
 			boost::mutex runningQueriesMutex;

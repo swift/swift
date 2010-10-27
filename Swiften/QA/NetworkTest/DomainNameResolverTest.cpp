@@ -43,7 +43,7 @@ class DomainNameResolverTest : public CppUnit::TestFixture {
 
 		void setUp() {
 			eventLoop = new DummyEventLoop();
-			resolver = new PlatformDomainNameResolver();
+			resolver = new PlatformDomainNameResolver(eventLoop);
 			resultsAvailable = false;
 		}
 

@@ -44,7 +44,7 @@ class LinkLocalServiceBrowserTest : public CppUnit::TestFixture {
 
 		void setUp() {
 			eventLoop = new DummyEventLoop();
-			querier = boost::shared_ptr<FakeDNSSDQuerier>(new FakeDNSSDQuerier("wonderland.lit"));
+			querier = boost::shared_ptr<FakeDNSSDQuerier>(new FakeDNSSDQuerier("wonderland.lit", eventLoop));
 			aliceServiceID = new DNSSDServiceID("alice", "wonderland.lit");
 			aliceServiceInfo = new DNSSDResolveServiceQuery::Result("_presence._tcp.wonderland.lit", "xmpp.wonderland.lit", 1234, LinkLocalServiceInfo().toTXTRecord());
 			testServiceID = new DNSSDServiceID("foo", "bar.local");

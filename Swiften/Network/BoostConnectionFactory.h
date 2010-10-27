@@ -16,11 +16,12 @@ namespace Swift {
 
 	class BoostConnectionFactory : public ConnectionFactory {
 		public:
-			BoostConnectionFactory(boost::asio::io_service*);
+			BoostConnectionFactory(boost::asio::io_service*, EventLoop* eventLoop);
 
 			virtual boost::shared_ptr<Connection> createConnection();
 
 		private:
 			boost::asio::io_service* ioService;
+			EventLoop* eventLoop;
 	};
 }

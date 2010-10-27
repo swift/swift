@@ -43,7 +43,7 @@ namespace Swift {
 	 */
 	class CoreComponent  {
 		public:
-			CoreComponent(const JID& jid, const String& secret);
+			CoreComponent(EventLoop* eventLoop, const JID& jid, const String& secret);
 			~CoreComponent();
 
 			void connect(const String& host, int port);
@@ -88,6 +88,7 @@ namespace Swift {
 			void handleDataWritten(const String&);
 
 		private:
+			EventLoop* eventLoop;
 			PlatformDomainNameResolver resolver_;
 			JID jid_;
 			String secret_;

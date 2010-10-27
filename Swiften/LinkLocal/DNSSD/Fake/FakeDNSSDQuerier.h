@@ -22,13 +22,14 @@ namespace Swift {
 	class ByteArray;
 	class FakeDNSSDQuery;
 	class FakeDNSSDBrowseQuery;
+	class EventLoop;
 
 	class FakeDNSSDQuerier : 
 			public DNSSDQuerier, 
 			public EventOwner,
 			public boost::enable_shared_from_this<FakeDNSSDQuerier> {
 		public:
-			FakeDNSSDQuerier(const String& domain);
+			FakeDNSSDQuerier(const String& domain, EventLoop* eventLoop);
 			~FakeDNSSDQuerier();
 
 			void start() {}
@@ -84,6 +85,7 @@ namespace Swift {
 
 		private:
 			String domain;
+			EventLoop* eventLoop;
 			std::list< boost::shared_ptr<FakeDNSSDQuery> > runningQueries;
 			std::list< boost::shared_ptr<FakeDNSSDQuery> > allQueriesEverRun;
 			std::set<DNSSDServiceID> services;

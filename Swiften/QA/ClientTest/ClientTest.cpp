@@ -9,7 +9,7 @@
 
 #include "Swiften/Client/Client.h"
 #include "Swiften/Network/BoostTimer.h"
-#include "Swiften/EventLoop/MainEventLoop.h"
+#include "Swiften/EventLoop/EventLoop.h"
 #include "Swiften/EventLoop/SimpleEventLoop.h"
 #include "Swiften/Roster/GetRosterRequest.h"
 #include "Swiften/Client/ClientXMLTracer.h"
@@ -55,13 +55,13 @@ int main(int, char**) {
 		return -1;
 	}
 
-	client = new Swift::Client(JID(jid), String(pass));
+	client = new Swift::Client(&eventLoop, JID(jid), String(pass));
 	ClientXMLTracer* tracer = new ClientXMLTracer(client);
 	client->onConnected.connect(&handleConnected);
 	client->connect();
 
 	{
-		boost::shared_ptr<BoostTimer> timer(BoostTimer::create(30000, &MainBoostIOServiceThread::getInstance().getIOService()));
+		boost::shared_ptr<BoostTimer> timer(BoostTimer::create(30000, &MainBoostIOServiceThread::getInstance().getIOService(), &eventLoop));
 		timer->onTick.connect(boost::bind(&SimpleEventLoop::stop, &eventLoop));
 		timer->start();
 

@@ -31,6 +31,7 @@ namespace Swift {
 	class TimerFactory;
 	class ClientSession;
 	class BasicSessionStream;
+	class EventLoop;
 
 	/** 
 	 * The central class for communicating with an XMPP server.
@@ -46,8 +47,9 @@ namespace Swift {
 		public: 
 			/**
 			 * Constructs a client for the given JID with the given password.
+			 * The given eventLoop will be used to post events to.
 			 */
-			CoreClient(const JID& jid, const String& password); 
+			CoreClient(EventLoop* eventLoop, const JID& jid, const String& password);
 			~CoreClient();
 
 			void setCertificate(const String& certificate);
@@ -180,6 +182,7 @@ namespace Swift {
 			PlatformDomainNameResolver resolver_;
 			JID jid_;
 			String password_;
+			EventLoop* eventLoop;
 			ClientSessionStanzaChannel* stanzaChannel_;
 			IQRouter* iqRouter_;
 			Connector::ref connector_;

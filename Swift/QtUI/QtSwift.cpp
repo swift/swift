@@ -135,6 +135,7 @@ QtSwift::QtSwift(po::variables_map options) : autoUpdater_(NULL) {
 		QtMUCSearchWindowFactory* mucSearchWindowFactory = new QtMUCSearchWindowFactory();
 		mucSearchWindowFactories_.push_back(mucSearchWindowFactory);
 		MainController* mainController = new MainController(
+				&clientMainThreadCaller_,
 				chatWindowFactory_,
 				rosterWindowFactory,
 				loginWindowFactory,

@@ -14,8 +14,8 @@ using namespace boost;
 
 class EchoComponent {
 	public:
-		EchoComponent() {
-			component = new Component(JID("echo.wonderland.lit"), "EchoSecret");
+		EchoComponent(EventLoop* eventLoop) {
+			component = new Component(eventLoop, JID("echo.wonderland.lit"), "EchoSecret");
 			component->onConnected.connect(bind(&EchoComponent::handleConnected, this));
 			component->onMessageReceived.connect(
 					bind(&EchoComponent::handleMessageReceived, this, _1));
@@ -58,7 +58,7 @@ class EchoComponent {
 
 int main(int, char**) {
 	SimpleEventLoop eventLoop;
-	EchoComponent bot;
+	EchoComponent bot(&eventLoop);
 	eventLoop.run();
 	return 0;
 }

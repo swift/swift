@@ -14,7 +14,7 @@
 #include "Swiften/Network/DomainNameResolver.h"
 #include "Swiften/Network/DomainNameServiceQuery.h"
 #include "Swiften/Network/DomainNameAddressQuery.h"
-#include "Swiften/EventLoop/MainEventLoop.h"
+#include "Swiften/EventLoop/EventLoop.h"
 
 namespace Swift {
 	class String;
@@ -25,7 +25,7 @@ namespace Swift {
 			typedef std::vector< std::pair<String, DomainNameServiceQuery::Result> > ServicesCollection;
 
 		public:
-			StaticDomainNameResolver();
+			StaticDomainNameResolver(EventLoop* eventLoop);
 
 			void addAddress(const String& domain, const HostAddress& address);
 			void addService(const String& service, const DomainNameServiceQuery::Result& result);
@@ -52,6 +52,7 @@ namespace Swift {
 			virtual boost::shared_ptr<DomainNameAddressQuery> createAddressQuery(const String& name);
 			
 		private:
+			EventLoop* eventLoop;
 			bool isResponsive;
 			AddressesMap addresses;
 			ServicesCollection services;

@@ -9,7 +9,7 @@
 
 #include "Swiften/Client/Client.h"
 #include "Swiften/Network/BoostTimer.h"
-#include "Swiften/EventLoop/MainEventLoop.h"
+#include "Swiften/EventLoop/EventLoop.h"
 #include "Swiften/Client/ClientXMLTracer.h"
 #include "Swiften/EventLoop/SimpleEventLoop.h"
 #include "Swiften/Network/MainBoostIOServiceThread.h"
@@ -27,10 +27,10 @@ int exitCode = 2;
 class FileSender {
 	public:
 		FileSender(const JID& jid, const String& password, const JID& recipient, const boost::filesystem::path& file, int port) : jid(jid), password(password), recipient(recipient), file(file), transfer(NULL) {
-			connectionServer = BoostConnectionServer::create(port, &MainBoostIOServiceThread::getInstance().getIOService());
+			connectionServer = BoostConnectionServer::create(port, &MainBoostIOServiceThread::getInstance().getIOService(), &eventLoop);
 			socksBytestreamServer = new SOCKS5BytestreamServer(connectionServer);
 
-			client = new Swift::Client(jid, password);
+			client = new Swift::Client(&eventLoop, jid, password);
 			client->onConnected.connect(boost::bind(&FileSender::handleConnected, this));
 			client->onError.connect(boost::bind(&FileSender::handleError, this, _1));
 			//tracer = new ClientXMLTracer(client);

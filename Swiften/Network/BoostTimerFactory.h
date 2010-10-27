@@ -13,14 +13,16 @@
 
 namespace Swift {
 	class BoostTimer;
+	class EventLoop;
 
 	class BoostTimerFactory : public TimerFactory {
 		public:
-			BoostTimerFactory(boost::asio::io_service*);
+			BoostTimerFactory(boost::asio::io_service*, EventLoop* eventLoop);
 
 			virtual boost::shared_ptr<Timer> createTimer(int milliseconds);
 
 		private:
 			boost::asio::io_service* ioService;
+			EventLoop* eventLoop;
 	};
 }

@@ -23,7 +23,7 @@
 
 namespace Swift {
 
-CoreComponent::CoreComponent(const JID& jid, const String& secret) : jid_(jid), secret_(secret), disconnectRequested_(false) {
+CoreComponent::CoreComponent(EventLoop* eventLoop, const JID& jid, const String& secret) : eventLoop(eventLoop), resolver_(eventLoop), jid_(jid), secret_(secret), disconnectRequested_(false) {
 	stanzaChannel_ = new ComponentSessionStanzaChannel();
 	stanzaChannel_->onMessageReceived.connect(boost::ref(onMessageReceived));
 	stanzaChannel_->onPresenceReceived.connect(boost::ref(onPresenceReceived));
@@ -31,8 +31,8 @@ CoreComponent::CoreComponent(const JID& jid, const String& secret) : jid_(jid), 
 
 	iqRouter_ = new IQRouter(stanzaChannel_);
 	iqRouter_->setFrom(jid);
-	connectionFactory_ = new BoostConnectionFactory(&MainBoostIOServiceThread::getInstance().getIOService());
-	timerFactory_ = new BoostTimerFactory(&MainBoostIOServiceThread::getInstance().getIOService());
+	connectionFactory_ = new BoostConnectionFactory(&MainBoostIOServiceThread::getInstance().getIOService(), eventLoop);
+	timerFactory_ = new BoostTimerFactory(&MainBoostIOServiceThread::getInstance().getIOService(), eventLoop);
 	tlsLayerFactory_ = new NullTLSLayerFactory();
 }
 

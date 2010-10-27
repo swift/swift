@@ -11,12 +11,14 @@
 #include <boost/enable_shared_from_this.hpp>
 
 #include "Swiften/Network/Connection.h"
-#include "Swiften/EventLoop/MainEventLoop.h"
+#include "Swiften/EventLoop/EventLoop.h"
 #include "Swiften/EventLoop/EventOwner.h"
 
 namespace Swift {
 	class DummyConnection : public Connection, public EventOwner,	public boost::enable_shared_from_this<DummyConnection> {
 		public:
+			DummyConnection(EventLoop* eventLoop) : eventLoop(eventLoop) {}
+
 			void listen() {
 				assert(false);
 			}
@@ -30,12 +32,12 @@ namespace Swift {
 			}
 
 			void write(const ByteArray& data) {
-				MainEventLoop::postEvent(boost::ref(onDataWritten), shared_from_this());
+				eventLoop->postEvent(boost::ref(onDataWritten), shared_from_this());
 				onDataSent(data);
 			}
 
 			void receive(const ByteArray& data) {
-				MainEventLoop::postEvent(boost::bind(boost::ref(onDataRead), ByteArray(data)), shared_from_this());
+				eventLoop->postEvent(boost::bind(boost::ref(onDataRead), ByteArray(data)), shared_from_this());
 			}
 
 			HostAddressPort getLocalAddress() const {
@@ -44,6 +46,7 @@ namespace Swift {
 
 			boost::signal<void (const ByteArray&)> onDataSent;
 
+			EventLoop* eventLoop;
 			HostAddressPort localAddress;
 	};
 }

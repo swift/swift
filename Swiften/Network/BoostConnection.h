@@ -20,14 +20,16 @@ namespace boost {
 }
 
 namespace Swift {
+	class EventLoop;
+
 	class BoostConnection : public Connection, public EventOwner, public boost::enable_shared_from_this<BoostConnection> {
 		public:
 			typedef boost::shared_ptr<BoostConnection> ref;
 
 			~BoostConnection();
 
-			static ref create(boost::asio::io_service* ioService) {
-				return ref(new BoostConnection(ioService));
+			static ref create(boost::asio::io_service* ioService, EventLoop* eventLoop) {
+				return ref(new BoostConnection(ioService, eventLoop));
 			}
 
 			virtual void listen();
@@ -42,7 +44,7 @@ namespace Swift {
 			HostAddressPort getLocalAddress() const;
 
 		private:
-			BoostConnection(boost::asio::io_service* ioService);
+			BoostConnection(boost::asio::io_service* ioService, EventLoop* eventLoop);
 
 			void handleConnectFinished(const boost::system::error_code& error);
 			void handleSocketRead(const boost::system::error_code& error, size_t bytesTransferred);
@@ -50,6 +52,7 @@ namespace Swift {
 			void doRead();
 
 		private:
+			EventLoop* eventLoop;
 			boost::asio::ip::tcp::socket socket_;
 			std::vector<char> readBuffer_;
 			bool disconnecting_;

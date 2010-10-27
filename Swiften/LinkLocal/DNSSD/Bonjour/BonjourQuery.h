@@ -15,12 +15,13 @@
 
 namespace Swift {
 	class BonjourQuerier;
+	class EventLoop;
 
 	class BonjourQuery : 
 			public EventOwner,
 			public boost::enable_shared_from_this<BonjourQuery> {
 		public:
-			BonjourQuery(boost::shared_ptr<BonjourQuerier>);
+			BonjourQuery(boost::shared_ptr<BonjourQuerier>, EventLoop* eventLoop);
 			virtual ~BonjourQuery();
 			
 			void processResult();
@@ -31,6 +32,7 @@ namespace Swift {
 			void finish();
 		
 		protected:
+			EventLoop* eventLoop;
 			boost::shared_ptr<BonjourQuerier> querier;
 			mutable boost::mutex sdRefMutex;
 			DNSServiceRef sdRef;

@@ -13,7 +13,7 @@
 #include "Swiften/Elements/VCard.h"
 #include "Swiften/Server/SimpleUserRegistry.h"
 #include "Swiften/Base/IDGenerator.h"
-#include "Swiften/EventLoop/MainEventLoop.h"
+#include "Swiften/EventLoop/EventLoop.h"
 #include "Swiften/EventLoop/SimpleEventLoop.h"
 #include "Swiften/EventLoop/EventOwner.h"
 #include "Swiften/Elements/Stanza.h"
@@ -29,8 +29,8 @@ using namespace Swift;
 
 class Server {
 	public:
-		Server(UserRegistry* userRegistry) : userRegistry_(userRegistry) {
-			serverFromClientConnectionServer_ = BoostConnectionServer::create(5222, &boostIOServiceThread_.getIOService());
+		Server(UserRegistry* userRegistry, EventLoop* eventLoop) : userRegistry_(userRegistry) {
+			serverFromClientConnectionServer_ = BoostConnectionServer::create(5222, &boostIOServiceThread_.getIOService(), eventLoop);
 			serverFromClientConnectionServer_->onNewConnection.connect(boost::bind(&Server::handleNewConnection, this, _1));
 			serverFromClientConnectionServer_->start();
 		}
@@ -96,7 +96,7 @@ int main() {
 	userRegistry.addUser(JID("kevin@localhost"), "kevin");
 	userRegistry.addUser(JID("remko@limber.swift.im"), "remko");
 	userRegistry.addUser(JID("kevin@limber.swift.im"), "kevin");
-	Server server(&userRegistry);
+	Server server(&userRegistry, &eventLoop);
 	eventLoop.run();
 	return 0;
 }

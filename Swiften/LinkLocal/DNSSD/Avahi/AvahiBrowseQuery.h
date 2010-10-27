@@ -10,7 +10,7 @@
 
 #include "Swiften/LinkLocal/DNSSD/Avahi/AvahiQuery.h"
 #include "Swiften/LinkLocal/DNSSD/DNSSDBrowseQuery.h"
-#include "Swiften/EventLoop/MainEventLoop.h"
+#include "Swiften/EventLoop/EventLoop.h"
 
 namespace Swift {
 	class AvahiQuerier;
@@ -27,7 +27,7 @@ namespace Swift {
 				browser = avahi_service_browser_new(querier->getClient(), AVAHI_IF_UNSPEC, AVAHI_PROTO_UNSPEC, "_presence._tcp", NULL, static_cast<AvahiLookupFlags>(0), &handleServiceDiscoveredStatic, this);
 				if (!browser) {
 					std::cout << "Error" << std::endl;
-					MainEventLoop::postEvent(boost::bind(boost::ref(onError)), shared_from_this());
+					eventLoop->postEvent(boost::bind(boost::ref(onError)), shared_from_this());
 				}
 				avahi_threaded_poll_unlock(querier->getThreadedPoll());
 			}
@@ -49,18 +49,18 @@ namespace Swift {
 				switch (event) {
 					case AVAHI_BROWSER_FAILURE:	
 						std::cout << "Service browse error" << std::endl;
-						MainEventLoop::postEvent(boost::bind(boost::ref(onError)), shared_from_this());
+						eventLoop->postEvent(boost::bind(boost::ref(onError)), shared_from_this());
 						break;
 					case AVAHI_BROWSER_NEW: {
 						DNSSDServiceID service(name, domain, type, interfaceIndex);
 						std::cout << "Service discovered " << name << " " << domain << " " << type << " " << interfaceIndex << std::endl;
-						MainEventLoop::postEvent(boost::bind(boost::ref(onServiceAdded), service), shared_from_this());
+						eventLoop->postEvent(boost::bind(boost::ref(onServiceAdded), service), shared_from_this());
 						break;
 					}
 					case AVAHI_BROWSER_REMOVE: {
 						std::cout << "Service went away " << name << " " << domain << " " << type << " " << interfaceIndex << std::endl;
 						DNSSDServiceID service(name, domain, type, interfaceIndex);
-						MainEventLoop::postEvent(boost::bind(boost::ref(onServiceRemoved), service), shared_from_this());
+						eventLoop->postEvent(boost::bind(boost::ref(onServiceRemoved), service), shared_from_this());
 						break;
 					}
 					case AVAHI_BROWSER_ALL_FOR_NOW:

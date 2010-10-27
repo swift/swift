@@ -39,7 +39,7 @@ namespace Swift {
 			 *	this is NULL,
 			 *	all data will be stored in memory (and be lost on shutdown)
 			 */
-			Client(const JID& jid, const String& password, Storages* storages = NULL);
+			Client(EventLoop* eventLoop, const JID& jid, const String& password, Storages* storages = NULL);
 			~Client();
 
 

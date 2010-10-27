@@ -2,6 +2,7 @@
 
 #include "Slimber/MainController.h"
 #include "Slimber/Cocoa/CocoaMenulet.h"
+#include "Slimber/Cocoa/main.h"
 
 @implementation CocoaController
 
@@ -13,7 +14,7 @@
 
 - (void) awakeFromNib {
 	menulet = new CocoaMenulet();
-	main = new MainController(menulet);
+	main = new MainController(menulet, eventLoop);
 }
 
 @end

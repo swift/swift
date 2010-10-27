@@ -23,7 +23,7 @@ int main(int argc, char* argv[]) {
 	}
 
 	SimpleEventLoop eventLoop;
-	PlatformDNSSDQuerierFactory factory;
+	PlatformDNSSDQuerierFactory factory(&eventLoop);
 	boost::shared_ptr<DNSSDQuerier> querier = factory.createQuerier();
 	querier->start();
 

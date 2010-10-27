@@ -10,7 +10,7 @@
 #include "Swiften/LinkLocal/DNSSD/DNSSDResolveServiceQuery.h"
 #include "Swiften/LinkLocal/LinkLocalServiceInfo.h"
 #include "Swiften/Base/ByteArray.h"
-#include "Swiften/EventLoop/MainEventLoop.h"
+#include "Swiften/EventLoop/EventLoop.h"
 
 namespace Swift {
 	class AvahiQuerier;
@@ -27,7 +27,7 @@ namespace Swift {
 				resolver = avahi_service_resolver_new(querier->getClient(), service.getNetworkInterfaceID(), AVAHI_PROTO_UNSPEC, service.getName().getUTF8Data(), service.getType().getUTF8Data(), service.getDomain().getUTF8Data(), AVAHI_PROTO_UNSPEC, static_cast<AvahiLookupFlags>(0), handleServiceResolvedStatic, this);
 				if (!resolver) {
 					std::cout << "Error starting resolver" << std::endl;
-					MainEventLoop::postEvent(boost::bind(boost::ref(onServiceResolved), boost::optional<Result>()), shared_from_this());
+					eventLoop->postEvent(boost::bind(boost::ref(onServiceResolved), boost::optional<Result>()), shared_from_this());
 				}
 				avahi_threaded_poll_unlock(querier->getThreadedPoll());
 			}
@@ -50,7 +50,7 @@ namespace Swift {
 				switch(event) {
 					case AVAHI_RESOLVER_FAILURE:
 						std::cout << "Resolve error " << avahi_strerror(avahi_client_errno(avahi_service_resolver_get_client(resolver))) << std::endl;
-						MainEventLoop::postEvent(boost::bind(boost::ref(onServiceResolved), boost::optional<Result>()), shared_from_this());
+						eventLoop->postEvent(boost::bind(boost::ref(onServiceResolved), boost::optional<Result>()), shared_from_this());
 						break;
 					case AVAHI_RESOLVER_FOUND: {
 						std::cout << "Success" << std::endl;
@@ -64,7 +64,7 @@ namespace Swift {
 						// FIXME: Probably not accurate
 						String fullname = String(name) + "." + String(type) + "." + String(domain) + ".";
 						std::cout << "Result: " << fullname << "->" << String(a) << ":" << port << std::endl;
-						MainEventLoop::postEvent(
+						eventLoop->postEvent(
 								boost::bind(
 									boost::ref(onServiceResolved), 
 									Result(fullname, String(a), port, txtRecord)),

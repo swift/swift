@@ -11,7 +11,7 @@
 #include "Swiften/LinkLocal/DNSSD/Avahi/AvahiQuery.h"
 #include "Swiften/LinkLocal/DNSSD/DNSSDRegisterQuery.h"
 #include "Swiften/Base/ByteArray.h"
-#include "Swiften/EventLoop/MainEventLoop.h"
+#include "Swiften/EventLoop/EventLoop.h"
 
 namespace Swift {
 	class AvahiQuerier;
@@ -29,7 +29,7 @@ namespace Swift {
 					group = avahi_entry_group_new(querier->getClient(), handleEntryGroupChange, this);
 					if (!group) {
 						std::cout << "Error ceating entry group" << std::endl;
-						MainEventLoop::postEvent(boost::bind(boost::ref(onRegisterFinished), boost::optional<DNSSDServiceID>()), shared_from_this());
+						eventLoop->postEvent(boost::bind(boost::ref(onRegisterFinished), boost::optional<DNSSDServiceID>()), shared_from_this());
 					}
 				}
 
@@ -61,7 +61,7 @@ namespace Swift {
 				int result = avahi_entry_group_add_service_strlst(group, AVAHI_IF_UNSPEC, AVAHI_PROTO_UNSPEC, static_cast<AvahiPublishFlags>(0), name.getUTF8Data(), "_presence._tcp", NULL, NULL, port, txtList);
 				if (result < 0) {
 					std::cout << "Error registering service: " << avahi_strerror(result) << std::endl;
-					MainEventLoop::postEvent(boost::bind(boost::ref(onRegisterFinished), boost::optional<DNSSDServiceID>()), shared_from_this());
+					eventLoop->postEvent(boost::bind(boost::ref(onRegisterFinished), boost::optional<DNSSDServiceID>()), shared_from_this());
 				}
 				result = avahi_entry_group_commit(group);
 				if (result < 0) {
@@ -78,7 +78,7 @@ namespace Swift {
 				switch (state) {
 					case AVAHI_ENTRY_GROUP_ESTABLISHED :
 						// Domain is a hack!
-						MainEventLoop::postEvent(boost::bind(boost::ref(onRegisterFinished), boost::optional<DNSSDServiceID>(DNSSDServiceID(name, "local", "_presence._tcp", 0))), shared_from_this());
+						eventLoop->postEvent(boost::bind(boost::ref(onRegisterFinished), boost::optional<DNSSDServiceID>(DNSSDServiceID(name, "local", "_presence._tcp", 0))), shared_from_this());
 						std::cout << "Entry group established" << std::endl;
 						break;
 				case AVAHI_ENTRY_GROUP_COLLISION : {
@@ -106,7 +106,7 @@ namespace Swift {
 				if (result != kDNSServiceErr_NoError) {
 					sdRef = NULL;
 				}*/
-				//MainEventLoop::postEvent(boost::bind(boost::ref(onRegisterFinished), boost::optional<DNSSDServiceID>()), shared_from_this());
+				//eventLoop->postEvent(boost::bind(boost::ref(onRegisterFinished), boost::optional<DNSSDServiceID>()), shared_from_this());
 			}
 		}
 
@@ -117,7 +117,7 @@ namespace Swift {
 
 			void handleServiceRegistered(DNSServiceErrorType errorCode, const char *name, const char *regtype, const char *domain) {
 				if (errorCode != kDNSServiceErr_NoError) {
-					MainEventLoop::postEvent(boost::bind(boost::ref(onRegisterFinished), boost::optional<DNSSDServiceID>()), shared_from_this());
+					eventLoop->postEvent(boost::bind(boost::ref(onRegisterFinished), boost::optional<DNSSDServiceID>()), shared_from_this());
 				}
 				else {
 				}

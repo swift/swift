@@ -33,7 +33,7 @@ class SOCKS5BytestreamServerSessionTest : public CppUnit::TestFixture {
 		void setUp() {
 			receivedDataChunks = 0;
 			eventLoop = new DummyEventLoop();
-			connection = boost::shared_ptr<DummyConnection>(new DummyConnection());
+			connection = boost::shared_ptr<DummyConnection>(new DummyConnection(eventLoop));
 			connection->onDataSent.connect(boost::bind(&SOCKS5BytestreamServerSessionTest::handleDataWritten, this, _1));
 			stream1 = boost::shared_ptr<ByteArrayReadBytestream>(new ByteArrayReadBytestream(ByteArray("abcdefg")));
 		}

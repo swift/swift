@@ -14,9 +14,11 @@
 #include "Swiften/Base/String.h"
 
 namespace Swift {
+	class EventLoop;
+
 	class PlatformDomainNameServiceQuery : public DomainNameServiceQuery, public boost::enable_shared_from_this<PlatformDomainNameServiceQuery>, public EventOwner {
 		public:
-			PlatformDomainNameServiceQuery(const String& service);
+			PlatformDomainNameServiceQuery(const String& service, EventLoop* eventLoop);
 			~PlatformDomainNameServiceQuery();
 
 			virtual void run();
@@ -26,6 +28,7 @@ namespace Swift {
 			void emitError();
 
 		private:
+			EventLoop* eventLoop;
 			boost::thread* thread;
 			String service;
 			bool safeToJoin;

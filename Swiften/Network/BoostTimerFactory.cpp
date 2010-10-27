@@ -9,11 +9,11 @@
 
 namespace Swift {
 
-BoostTimerFactory::BoostTimerFactory(boost::asio::io_service* ioService) : ioService(ioService) {
+BoostTimerFactory::BoostTimerFactory(boost::asio::io_service* ioService, EventLoop* eventLoop) : ioService(ioService), eventLoop(eventLoop) {
 }
 
 boost::shared_ptr<Timer> BoostTimerFactory::createTimer(int milliseconds) {
-	return BoostTimer::create(milliseconds, ioService);
+	return BoostTimer::create(milliseconds, ioService, eventLoop);
 }
 
 }

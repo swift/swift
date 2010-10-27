@@ -25,14 +25,14 @@
 #include <boost/bind.hpp>
 
 #include "Swiften/Base/ByteArray.h"
-#include "Swiften/EventLoop/MainEventLoop.h"
+#include "Swiften/EventLoop/EventLoop.h"
 #include "Swiften/Base/foreach.h"
 
 using namespace Swift;
 
 namespace Swift {
 
-PlatformDomainNameServiceQuery::PlatformDomainNameServiceQuery(const String& service) : thread(NULL), service(service), safeToJoin(true) {
+PlatformDomainNameServiceQuery::PlatformDomainNameServiceQuery(const String& service, EventLoop* eventLoop) : eventLoop(eventLoop), thread(NULL), service(service), safeToJoin(true) {
 }
 
 PlatformDomainNameServiceQuery::~PlatformDomainNameServiceQuery() {
@@ -166,12 +166,12 @@ void PlatformDomainNameServiceQuery::doRun() {
 	safeToJoin = true;
 	std::sort(records.begin(), records.end(), ResultPriorityComparator());
 	//std::cout << "Sending out " << records.size() << " SRV results " << std::endl;
-	MainEventLoop::postEvent(boost::bind(boost::ref(onResult), records)); 
+	eventLoop->postEvent(boost::bind(boost::ref(onResult), records));
 }
 
 void PlatformDomainNameServiceQuery::emitError() {
 	safeToJoin = true;
-	MainEventLoop::postEvent(boost::bind(boost::ref(onResult), std::vector<DomainNameServiceQuery::Result>()), shared_from_this());
+	eventLoop->postEvent(boost::bind(boost::ref(onResult), std::vector<DomainNameServiceQuery::Result>()), shared_from_this());
 }
 
 }

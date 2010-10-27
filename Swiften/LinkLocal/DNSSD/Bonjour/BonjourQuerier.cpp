@@ -18,7 +18,7 @@
 
 namespace Swift {
 
-BonjourQuerier::BonjourQuerier() : stopRequested(false), thread(0) {
+BonjourQuerier::BonjourQuerier(EventLoop* eventLoop) : eventLoop(eventLoop), stopRequested(false), thread(0) {
 	int fds[2];
 	int result = pipe(fds);
 	assert(result == 0);
@@ -32,19 +32,19 @@ BonjourQuerier::~BonjourQuerier() {
 }
 
 boost::shared_ptr<DNSSDBrowseQuery> BonjourQuerier::createBrowseQuery() {
-	return boost::shared_ptr<DNSSDBrowseQuery>(new BonjourBrowseQuery(shared_from_this()));
+	return boost::shared_ptr<DNSSDBrowseQuery>(new BonjourBrowseQuery(shared_from_this(), eventLoop));
 }
 
 boost::shared_ptr<DNSSDRegisterQuery> BonjourQuerier::createRegisterQuery(const String& name, int port, const ByteArray& info) {
-	return boost::shared_ptr<DNSSDRegisterQuery>(new BonjourRegisterQuery(name, port, info, shared_from_this()));
+	return boost::shared_ptr<DNSSDRegisterQuery>(new BonjourRegisterQuery(name, port, info, shared_from_this(), eventLoop));
 }
 
 boost::shared_ptr<DNSSDResolveServiceQuery> BonjourQuerier::createResolveServiceQuery(const DNSSDServiceID& service) {
-	return boost::shared_ptr<DNSSDResolveServiceQuery>(new BonjourResolveServiceQuery(service, shared_from_this()));
+	return boost::shared_ptr<DNSSDResolveServiceQuery>(new BonjourResolveServiceQuery(service, shared_from_this(), eventLoop));
 }
 
 boost::shared_ptr<DNSSDResolveHostnameQuery> BonjourQuerier::createResolveHostnameQuery(const String& hostname, int interfaceIndex) {
-	return boost::shared_ptr<DNSSDResolveHostnameQuery>(new BonjourResolveHostnameQuery(hostname, interfaceIndex, shared_from_this()));
+	return boost::shared_ptr<DNSSDResolveHostnameQuery>(new BonjourResolveHostnameQuery(hostname, interfaceIndex, shared_from_this(), eventLoop));
 }
 
 void BonjourQuerier::addRunningQuery(boost::shared_ptr<BonjourQuery> query) {
