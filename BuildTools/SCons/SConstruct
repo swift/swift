@@ -336,10 +336,9 @@ if boost_prefix :
 	if env["PLATFORM"] == "win32" :
 		if os.path.isdir(os.path.join(boost_prefix, "lib")) :
 			for file in os.listdir(os.path.join(boost_prefix, "lib")) :
-				m = re.match("(lib)?boost_signals(-(.*)-(mt|s)-1(.*)).lib", file)
+				m = re.match("(lib)?boost_signals(-(.*)-mt-(s-)?1(.*)).lib", file)
 				if m :
 					# Give precedence over the dynamic
-					print "Considering " + file
 					if not boost_win32_libsuffix or "-s-" in boost_win32_libsuffix :
 						boost_win32_libsuffix = m.group(2)
 						boost_win32_libprefix = m.group(1) if m.group(1) else ""
