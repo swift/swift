@@ -34,6 +34,7 @@ if os.name == "nt" :
 if os.name == "nt" :
 	vars.Add(PackageVariable("bonjour", "Bonjour SDK location", "yes"))
 vars.Add(PackageVariable("openssl", "OpenSSL location", "yes"))
+vars.Add(PackageVariable("boost", "Boost location location", "yes"))
 vars.Add(PathVariable("qt", "Qt location", "", PathVariable.PathAccept))
 vars.Add(PathVariable("docbook_xml", "DocBook XML", None, PathVariable.PathAccept))
 vars.Add(PathVariable("docbook_xsl", "DocBook XSL", None, PathVariable.PathAccept))
@@ -313,33 +314,6 @@ if conf.CheckCHeader("idna.h") and conf.CheckLib("idn") :
 else :
 	env["LIBIDN_BUNDLED"] = 1
 
-# Boost
-boostLibs = [("signals", None), ("thread", None), ("regex", None), ("program_options", None), ("filesystem", None), ("system", "system/system_error.hpp"), ("date_time", "date_time/date.hpp")]
-allLibsPresent = True
-libNames = []
-for (lib, header) in boostLibs :
-	if header :
-		header = "boost/" + header
-	else :
-		header = "boost/" + lib + ".hpp"
-	if not conf.CheckCXXHeader(header) :
-		allLibsPresent = False
-		break
-	libName = "boost_" + lib
-	if not conf.CheckLib(libName) :
-		libName += "-mt"
-		if not conf.CheckLib(libName) :
-			allLibsPresent = False
-			break
-	libNames.append(libName)
-if allLibsPresent :
-	env["BOOST_FLAGS"] = { "LIBS": libNames }
-	if not conf.CheckCXXHeader("boost/uuid/uuid.hpp") :
-		# FIXME: Remove this workaround when UUID is available in most distros
-		env["BOOST_BUNDLED_UUID_ONLY"] = True
-else :
-	env["BOOST_BUNDLED"] = True
-
 # Avahi
 if env["PLATFORM"] != "darwin" :
 	if conf.CheckCHeader("avahi-client/client.h") and conf.CheckLib("avahi-client") and conf.CheckLib("avahi-common") :
@@ -347,6 +321,46 @@ if env["PLATFORM"] != "darwin" :
 		env["AVAHI_FLAGS"] = { "LIBS": ["avahi-client", "avahi-common"] }
 
 conf.Finish()
+
+# Boost
+env["BOOST_FLAGS"] = {}
+boost_prefix = env.get("boost", None)
+if boost_prefix :
+	env["BOOST_FLAGS"]["CPPPATH"] = [os.path.join(boost_prefix, "include")]
+	env["BOOST_FLAGS"]["LIBPATH"] = [os.path.join(boost_prefix, "lib")]
+boost_env = conf_env.Clone()
+boost_env.MergeFlags(env["BOOST_FLAGS"])
+boost_conf = Configure(boost_env)
+boostLibs = [("signals", None), ("thread", None), ("regex", None), ("program_options", None), ("filesystem", None), ("system", "system/system_error.hpp"), ("date_time", "date_time/date.hpp")]
+allLibsPresent = True
+libNames = []
+for (lib, header) in boostLibs :
+	# Check if we find the header
+	if header :
+		header = "boost/" + header
+	else :
+		header = "boost/" + lib + ".hpp"
+	if not boost_conf.CheckCXXHeader(header) :
+		allLibsPresent = False
+		break
+
+	# Check if we find the lib
+	libName = "boost_" + lib
+	if not boost_conf.CheckLib(libName) :
+		libName += "-mt"
+		if not boost_conf.CheckLib(libName) :
+			allLibsPresent = False
+			break
+	libNames.append(libName)
+if allLibsPresent :
+	env["BOOST_FLAGS"]["LIBS"] = libNames
+	if not boost_conf.CheckCXXHeader("boost/uuid/uuid.hpp") :
+		# FIXME: Remove this workaround when UUID is available in most distros
+		env["BOOST_BUNDLED_UUID_ONLY"] = True
+else :
+	env["BOOST_BUNDLED"] = True
+boost_conf.Finish()
+
 
 # Xss
 env["HAVE_XSS"] = 0
