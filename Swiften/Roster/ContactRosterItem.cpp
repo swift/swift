@@ -73,6 +73,7 @@ void ContactRosterItem::calculateShownPresence() {
 void ContactRosterItem::clearPresence() {
 	presences_.clear();
 	calculateShownPresence();
+	onDataChanged();
 }
 
 void ContactRosterItem::applyPresence(const String& resource, boost::shared_ptr<Presence> presence) {
@@ -88,7 +89,7 @@ void ContactRosterItem::applyPresence(const String& resource, boost::shared_ptr<
 				presences_.erase(resource);
 			}
 		}
-		if (presences_.size() > 0) {
+		if (presences_.size() == 0) {
 			offlinePresence_ = presence;
 		}
 	} else {

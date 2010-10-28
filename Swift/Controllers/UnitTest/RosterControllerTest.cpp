@@ -46,6 +46,7 @@ class RosterControllerTest : public CppUnit::TestFixture
 		CPPUNIT_TEST(testPresence);
 		CPPUNIT_TEST(testHighestPresence);
 		CPPUNIT_TEST(testNotHighestPresence);
+		CPPUNIT_TEST(testUnavailablePresence);
 		CPPUNIT_TEST_SUITE_END();
 
 	public:
@@ -149,6 +150,46 @@ class RosterControllerTest : public CppUnit::TestFixture
 		stanzaChannel_->onPresenceReceived(lowPresence);
 		ContactRosterItem* item = dynamic_cast<ContactRosterItem*>(dynamic_cast<GroupRosterItem*>(CHILDREN[0])->getChildren()[0]);
 		CPPUNIT_ASSERT_EQUAL(highPresence->getStatus(), item->getStatusText());
+	};
+
+	void testUnavailablePresence() {
+		std::vector<String> groups;
+		groups.push_back("testGroup1");
+		JID from("test@testdomain.com");
+		xmppRoster_->addContact(from, "name", groups, RosterItemPayload::Both);
+		Presence::ref lowPresence(new Presence());
+		lowPresence->setFrom(withResource(from, "bob"));
+		lowPresence->setPriority(2);
+		lowPresence->setStatus("Not here");
+		Presence::ref highPresence(new Presence());
+		highPresence->setFrom(withResource(from, "bert"));
+		highPresence->setPriority(10);
+		highPresence->setStatus("So totally here");
+		Presence::ref highPresenceOffline(new Presence());
+		highPresenceOffline->setFrom(withResource(from, "bert"));
+		highPresenceOffline->setType(Presence::Unavailable);
+		Presence::ref lowPresenceOffline(new Presence());
+		lowPresenceOffline->setFrom(withResource(from, "bob"));
+		lowPresenceOffline->setStatus("Signing out");
+		lowPresenceOffline->setType(Presence::Unavailable);
+		stanzaChannel_->onPresenceReceived(lowPresence);
+		stanzaChannel_->onPresenceReceived(highPresence);
+		stanzaChannel_->onPresenceReceived(highPresenceOffline);
+		ContactRosterItem* item = dynamic_cast<ContactRosterItem*>(dynamic_cast<GroupRosterItem*>(CHILDREN[0])->getChildren()[0]);
+		/* A verification that if the test fails, it's the RosterController, not the PresenceOracle. */
+		Presence::ref high = presenceOracle_->getHighestPriorityPresence(from);
+		CPPUNIT_ASSERT_EQUAL(Presence::Available, high->getType());
+		CPPUNIT_ASSERT_EQUAL(lowPresence->getStatus(), high->getStatus());
+		CPPUNIT_ASSERT_EQUAL(StatusShow::Online, item->getStatusShow());
+		CPPUNIT_ASSERT_EQUAL(lowPresence->getStatus(), item->getStatusText());
+		stanzaChannel_->onPresenceReceived(lowPresenceOffline);
+		item = dynamic_cast<ContactRosterItem*>(dynamic_cast<GroupRosterItem*>(CHILDREN[0])->getChildren()[0]);
+		/* A verification that if the test fails, it's the RosterController, not the PresenceOracle. */
+		high = presenceOracle_->getHighestPriorityPresence(from);
+		CPPUNIT_ASSERT_EQUAL(Presence::Unavailable, high->getType());
+		CPPUNIT_ASSERT_EQUAL(lowPresenceOffline->getStatus(), high->getStatus());
+		CPPUNIT_ASSERT_EQUAL(StatusShow::None, item->getStatusShow());
+		CPPUNIT_ASSERT_EQUAL(lowPresenceOffline->getStatus(), item->getStatusText());
 	};
 
 		void testAdd() {

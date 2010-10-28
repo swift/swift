@@ -235,16 +235,7 @@ void RosterController::handleIncomingPresence(Presence::ref newPresence) {
 	if (newPresence->getType() == Presence::Error) {
 		return;
 	}
-	Presence::ref appliedPresence(newPresence);
-	JID newJID(appliedPresence->getFrom());
-	Presence::ref highestPresence = presenceOracle_->getHighestPriorityPresence(appliedPresence->getFrom().toBare());
-	JID highestJID(highestPresence->getFrom());
-	bool highestPriority = (newJID == highestJID || highestPresence->getType() == Presence::Unavailable);
-	if (!highestPriority) {
-		/* Update in case there are full-JID roster entries.*/
-		roster_->applyOnItems(SetPresence(appliedPresence, JID::WithResource));
-	}
-	roster_->applyOnItems(SetPresence(highestPresence));
+	roster_->applyOnItems(SetPresence(newPresence));
 }
 
 void RosterController::handleSubscriptionRequest(const JID& jid, const String& message) {

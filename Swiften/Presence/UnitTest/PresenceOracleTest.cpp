@@ -20,7 +20,10 @@ class PresenceOracleTest : public CppUnit::TestFixture {
 		CPPUNIT_TEST(testReceivePresenceFromDifferentResources);
 		CPPUNIT_TEST(testSubscriptionRequest);
 		CPPUNIT_TEST(testReconnectResetsPresences);
-		CPPUNIT_TEST(testHighestPresence);
+		CPPUNIT_TEST(testHighestPresenceSingle);
+		CPPUNIT_TEST(testHighestPresenceMultiple);
+		CPPUNIT_TEST(testHighestPresenceGlobal);
+		CPPUNIT_TEST(testHighestPresenceChangePriority);
 		CPPUNIT_TEST_SUITE_END();
 
 	public:
@@ -39,17 +42,60 @@ class PresenceOracleTest : public CppUnit::TestFixture {
 			delete stanzaChannel_;
 		}
 
-		void testHighestPresence() {
+		void testHighestPresenceSingle() {
+					JID bareJID("alice@wonderland.lit");
+					Presence::ref fiveOn = makeOnline("blah", 5);
+					Presence::ref fiveOff = makeOffline("/blah");
+					CPPUNIT_ASSERT_EQUAL(Presence::ref(), oracle_->getHighestPriorityPresence(bareJID));
+					stanzaChannel_->onPresenceReceived(fiveOn);
+					CPPUNIT_ASSERT_EQUAL(fiveOn, oracle_->getHighestPriorityPresence(bareJID));
+					stanzaChannel_->onPresenceReceived(fiveOff);
+					CPPUNIT_ASSERT_EQUAL(fiveOff, oracle_->getHighestPriorityPresence(bareJID));
+				}
+
+		void testHighestPresenceMultiple() {
+			JID bareJID("alice@wonderland.lit");
+			Presence::ref fiveOn = makeOnline("blah", 5);
+			Presence::ref fiveOff = makeOffline("/blah");
+			Presence::ref tenOn = makeOnline("bert", 10);
+			Presence::ref tenOff = makeOffline("/bert");
+			stanzaChannel_->onPresenceReceived(fiveOn);
+			stanzaChannel_->onPresenceReceived(tenOn);
+			CPPUNIT_ASSERT_EQUAL(tenOn, oracle_->getHighestPriorityPresence(bareJID));
+			stanzaChannel_->onPresenceReceived(fiveOff);
+			CPPUNIT_ASSERT_EQUAL(tenOn, oracle_->getHighestPriorityPresence(bareJID));
+			stanzaChannel_->onPresenceReceived(fiveOn);
+			stanzaChannel_->onPresenceReceived(tenOff);
+			CPPUNIT_ASSERT_EQUAL(fiveOn, oracle_->getHighestPriorityPresence(bareJID));
+		}
+
+		void testHighestPresenceGlobal() {
 			JID bareJID("alice@wonderland.lit");
 			Presence::ref fiveOn = makeOnline("blah", 5);
 			Presence::ref fiveOff = makeOffline("/blah");
 			Presence::ref tenOn = makeOnline("bert", 10);
 			Presence::ref allOff = makeOffline("");
-			CPPUNIT_ASSERT_EQUAL(Presence::ref(), oracle_->getHighestPriorityPresence(bareJID));
 			stanzaChannel_->onPresenceReceived(fiveOn);
+			stanzaChannel_->onPresenceReceived(tenOn);
+			stanzaChannel_->onPresenceReceived(allOff);
+			CPPUNIT_ASSERT_EQUAL(allOff, oracle_->getHighestPriorityPresence(bareJID));
+		}
+
+		void testHighestPresenceChangePriority() {
+			JID bareJID("alice@wonderland.lit");
+			Presence::ref fiveOn = makeOnline("blah", 5);
+			Presence::ref fiveOff = makeOffline("/blah");
+			Presence::ref tenOn = makeOnline("bert", 10);
+			Presence::ref tenOnThree = makeOnline("bert", 3);
+			Presence::ref tenOff = makeOffline("/bert");
+			stanzaChannel_->onPresenceReceived(fiveOn);
+			stanzaChannel_->onPresenceReceived(tenOn);
+			stanzaChannel_->onPresenceReceived(tenOnThree);
 			CPPUNIT_ASSERT_EQUAL(fiveOn, oracle_->getHighestPriorityPresence(bareJID));
 			stanzaChannel_->onPresenceReceived(fiveOff);
-			CPPUNIT_ASSERT_EQUAL(fiveOff, oracle_->getHighestPriorityPresence(bareJID));
+			CPPUNIT_ASSERT_EQUAL(tenOnThree, oracle_->getHighestPriorityPresence(bareJID));
+			stanzaChannel_->onPresenceReceived(fiveOn);
+			CPPUNIT_ASSERT_EQUAL(fiveOn, oracle_->getHighestPriorityPresence(bareJID));
 		}
 
 		void testReceivePresence() {

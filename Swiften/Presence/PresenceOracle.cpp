@@ -52,7 +52,11 @@ void PresenceOracle::handleIncomingPresence(Presence::ref presence) {
 			/* Don't have a bare-JID only offline presence once there are available presences */
 			jidMap.erase(bareJID);
 		}
-		jidMap[passedPresence->getFrom()] = passedPresence;
+		if (passedPresence->getType() == Presence::Unavailable && jidMap.size() > 1) {
+			jidMap.erase(passedPresence->getFrom());
+		} else {
+			jidMap[passedPresence->getFrom()] = passedPresence;
+		}
 		entries_[bareJID] = jidMap;
 		onPresenceChange(passedPresence);
 	}
