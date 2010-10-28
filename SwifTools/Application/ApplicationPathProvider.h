@@ -19,7 +19,7 @@ namespace Swift {
 
 			virtual boost::filesystem::path getHomeDir() const = 0;
 			virtual boost::filesystem::path getDataDir() const = 0;
-			virtual boost::filesystem::path getExecutableDir() const = 0;
+			virtual boost::filesystem::path getExecutableDir() const;
 			boost::filesystem::path getProfileDir(const String& profile) const;
 			boost::filesystem::path getResourcePath(const String& resource) const;
 

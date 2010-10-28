@@ -48,17 +48,4 @@ boost::filesystem::path UnixApplicationPathProvider::getDataDir() const {
 	return dataPath;
 }
 
-boost::filesystem::path UnixApplicationPathProvider::getExecutableDir() const {
-	ByteArray path;
-	path.resize(4096);
-	size_t size = readlink("/proc/self/exe", path.getData(), path.getSize());
-	if (size > 0) {
-		path.resize(size);
-		return boost::filesystem::path(path.toString().getUTF8Data()).parent_path();
-	}
-	else {
-		return boost::filesystem::path();
-	}
-}
-
 }

@@ -136,7 +136,7 @@ elif sys.argv[1] == "check-all-copyrights" :
   for (path, dirs, files) in os.walk(".") :
     if "3rdParty" in path or ".sconf" in path or "Swift.app" in path :
       continue
-    for filename in [os.path.join(path, file) for file in files if (file.endswith(".cpp") or file.endswith(".h")) and not "ui_" in file and not "moc_" in file and not "qrc_" in file and not "BuildVersion.h" in file and not "Swiften.h" in file ] :
+    for filename in [os.path.join(path, file) for file in files if (file.endswith(".cpp") or file.endswith(".h")) and not "ui_" in file and not "moc_" in file and not "qrc_" in file and not "BuildVersion.h" in file and not "Swiften.h" in file and not "swiften-config.h" in file] :
       ok &= check_copyright(filename) 
   if not ok :
     sys.exit(-1)
@@ -150,7 +150,7 @@ elif sys.argv[1] == "set-all-copyrights" :
   for (path, dirs, files) in os.walk(".") :
     if "3rdParty" in path or ".sconf" in path or "Swift.app" in path :
       continue
-    for filename in [os.path.join(path, file) for file in files if (file.endswith(".cpp") or file.endswith(".h")) and not "ui_" in file and not "moc_" in file and not "qrc_" in file and not "BuildVersion.h" in file] :
+    for filename in [os.path.join(path, file) for file in files if (file.endswith(".cpp") or file.endswith(".h")) and not "ui_" in file and not "moc_" in file and not "qrc_" in file and not "BuildVersion.h" in file and not "swiften-config.h" in file] :
       set_copyright(filename, copyright) 
 else :
   print "Unknown command: " + sys.argv[1]

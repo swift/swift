@@ -1,0 +1,33 @@
+Import("env")
+
+def replaceSwiftenPath(input) :
+	return input.replace(env.Dir("#").abspath, "#")
+
+def cStringVariable(env, cVar, sconsVar) :
+	result = "const char* " + cVar + "[] = {\n"
+	# FIXME: Probably not very robust
+	for var in sconsVar.split(" ") :
+		result += "\t\"" + env.subst(var) + "\",\n"
+	result += "\t0\n"
+	result += "};\n"
+	return result
+
+config_flags = ""
+
+swiften_env = env.Clone()
+swiften_env.MergeFlags(swiften_env["SWIFTEN_FLAGS"])
+swiften_env.MergeFlags(swiften_env["SWIFTEN_DEP_FLAGS"])
+
+cppflags = replaceSwiftenPath(" ".join([swiften_env.subst("$_CPPDEFFLAGS"), swiften_env.subst("$_CPPINCFLAGS")]))
+config_flags += cStringVariable(swiften_env, "CPPFLAGS", cppflags)
+
+libflags = replaceSwiftenPath(" ".join([swiften_env.subst("$_LIBDIRFLAGS"), swiften_env.subst("$_LIBFLAGS")]))
+config_flags += cStringVariable(swiften_env, "LIBFLAGS", libflags)
+
+config_env = env.Clone()
+config_env.MergeFlags(config_env["SWIFTEN_FLAGS"])
+config_env.MergeFlags(config_env["BOOST_FLAGS"])
+config_env.WriteVal("swiften-config.h", config_env.Value(config_flags))
+config_env.Program("swiften-config", [
+		"swiften-config.cpp"
+	])

@@ -157,6 +157,7 @@ if env["SCONS_STAGE"] == "build" :
 			"LinkLocal",
 			"StreamManagement",
 			"Component",
+			"Config",
 		])
 	SConscript(test_only = True, dirs = [
 			"QA",

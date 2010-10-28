@@ -17,11 +17,4 @@ WindowsApplicationPathProvider::WindowsApplicationPathProvider(const String& nam
 	resourceDirs.push_back(getExecutableDir() / "../resources"); // Development
 }
 
-boost::filesystem::path WindowsApplicationPathProvider::getExecutableDir() const {
-	ByteArray data;
-	data.resize(2048);
-	GetModuleFileName(NULL, data.getData(), data.getSize());
-	return boost::filesystem::path(data.toString().getUTF8Data()).parent_path();
-}
-
 }

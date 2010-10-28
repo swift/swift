@@ -3,6 +3,7 @@ Import("swiften_env")
 objects = swiften_env.StaticObject([
 			"ByteArray.cpp",
 			"Error.cpp",
+			"Paths.cpp",
 			"IDGenerator.cpp",
 			"String.cpp",
 			"sleep.cpp",

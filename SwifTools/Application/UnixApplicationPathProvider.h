@@ -21,7 +21,6 @@ namespace Swift {
 
 			virtual boost::filesystem::path getHomeDir() const;
 			boost::filesystem::path getDataDir() const;
-			virtual boost::filesystem::path getExecutableDir() const;
 
 			virtual std::vector<boost::filesystem::path> getResourceDirs() const {
 				return resourceDirs;

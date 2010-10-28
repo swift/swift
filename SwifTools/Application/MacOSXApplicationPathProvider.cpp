@@ -33,17 +33,4 @@ boost::filesystem::path MacOSXApplicationPathProvider::getHomeDir() const {
 	return boost::filesystem::path(getenv("HOME"));
 }
 
-
-boost::filesystem::path MacOSXApplicationPathProvider::getExecutableDir() const {
-	ByteArray path;
-	uint32_t size = 4096;
-	path.resize(size);
-	if (_NSGetExecutablePath(path.getData(), &size) == 0) {
-		return boost::filesystem::path(path.toString().getUTF8Data()).parent_path();
-	}
-	else {
-		return boost::filesystem::path();
-	}
-}
-
 }

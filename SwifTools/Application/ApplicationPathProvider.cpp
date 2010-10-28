@@ -9,6 +9,7 @@
 
 #include "SwifTools/Application/ApplicationPathProvider.h"
 #include "Swiften/Base/foreach.h"
+#include "Swiften/Base/Paths.h"
 
 namespace Swift {
 
@@ -38,6 +39,10 @@ boost::filesystem::path ApplicationPathProvider::getResourcePath(const String& r
 		}
 	}
 	return boost::filesystem::path();
+}
+
+boost::filesystem::path ApplicationPathProvider::getExecutableDir() const {
+	return Paths::getExecutablePath();
 }
 
 }
