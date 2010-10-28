@@ -324,10 +324,13 @@ conf.Finish()
 
 # Boost
 env["BOOST_FLAGS"] = {}
-boost_prefix = env.get("boost", None)
+boost_prefix = env["boost"] if isinstance(env["boost"], str) else None
 if boost_prefix :
-	env["BOOST_FLAGS"]["CPPPATH"] = [os.path.join(boost_prefix, "include")]
+	# FIXME: Only use the include flag that has the includes
+	env["BOOST_FLAGS"]["CPPPATH"] = [os.path.join(boost_prefix, "include"), os.path.join(boost_prefix)]
 	env["BOOST_FLAGS"]["LIBPATH"] = [os.path.join(boost_prefix, "lib")]
+	# Try to auto detect the suffix from the boost libraries
+
 boost_env = conf_env.Clone()
 boost_env.MergeFlags(env["BOOST_FLAGS"])
 boost_conf = Configure(boost_env)
