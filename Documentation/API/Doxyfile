@@ -52,7 +52,7 @@ HIDE_IN_BODY_DOCS      = NO
 INTERNAL_DOCS          = NO
 CASE_SENSE_NAMES       = NO
 HIDE_SCOPE_NAMES       = NO
-SHOW_INCLUDE_FILES     = YES
+SHOW_INCLUDE_FILES     = NO
 INLINE_INFO            = YES
 SORT_MEMBER_DOCS       = YES
 SORT_BRIEF_DOCS        = NO
@@ -64,7 +64,7 @@ GENERATE_BUGLIST       = YES
 GENERATE_DEPRECATEDLIST= YES
 ENABLED_SECTIONS       = 
 MAX_INITIALIZER_LINES  = 30
-SHOW_USED_FILES        = YES
+SHOW_USED_FILES        = NO
 SHOW_DIRECTORIES       = NO
 SHOW_FILES             = NO
 SHOW_NAMESPACES        = NO
@@ -88,6 +88,7 @@ WARN_LOGFILE           =
 INPUT                  = \
 	Swiften/Avatars \
 	Swiften/Base \
+	Swiften/Chat \
 	Swiften/Client/Client.h \
 	Swiften/Client/CoreClient.h \
 	Swiften/Client/ClientError.h \
@@ -100,10 +101,11 @@ INPUT                  = \
 	Swiften/Component/CoreComponent.h \
 	Swiften/Disco \
 	Swiften/Elements \
+	Swiften/EventLoop \
 	Swiften/JID \
 	Swiften/MUC \
-	Swiften/Queries \
 	Swiften/Presence \
+	Swiften/Queries \
 	Swiften/Roster/XMPPRoster.h \
 	Swiften/StringCodecs \
 	Swiften/VCards
