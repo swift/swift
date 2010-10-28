@@ -325,11 +325,25 @@ conf.Finish()
 # Boost
 env["BOOST_FLAGS"] = {}
 boost_prefix = env["boost"] if isinstance(env["boost"], str) else None
+boost_win32_libsuffix = ""
+boost_win32_libprefix = ""
 if boost_prefix :
 	# FIXME: Only use the include flag that has the includes
 	env["BOOST_FLAGS"]["CPPPATH"] = [os.path.join(boost_prefix, "include"), os.path.join(boost_prefix)]
 	env["BOOST_FLAGS"]["LIBPATH"] = [os.path.join(boost_prefix, "lib")]
-	# Try to auto detect the suffix from the boost libraries
+
+	# Try to auto-detect the boost libraries on windows
+	if env["PLATFORM"] == "win32" :
+		if os.path.isdir(os.path.join(boost_prefix, "lib")) :
+			for file in os.listdir(os.path.join(boost_prefix, "lib")) :
+				m = re.match("(lib)?boost_signals(-(.*)).lib", file)
+				if m :
+					# Give precedence over the multi-threaded version
+					if not boost_win32_libsuffix or not "-mt-" in boost_win32_libsuffix :
+						boost_win32_libsuffix = m.group(2)
+						boost_win32_libprefix = m.group(1) if m.group(1) else ""
+		if "-mt" in boost_win32_libsuffix :
+			env["BOOST_FLAGS"]["CPPDEFINES"] = ["BOOST_ALL_DYN_LINK"]
 
 boost_env = conf_env.Clone()
 boost_env.MergeFlags(env["BOOST_FLAGS"])
@@ -349,12 +363,19 @@ for (lib, header) in boostLibs :
 
 	# Check if we find the lib
 	libName = "boost_" + lib
-	if not boost_conf.CheckLib(libName) :
-		libName += "-mt"
+	if env["PLATFORM"] == "win32" :
+		libName = boost_win32_libprefix + libName + boost_win32_libsuffix
 		if not boost_conf.CheckLib(libName) :
 			allLibsPresent = False
 			break
-	libNames.append(libName)
+		libNames.append(libName)
+	else :
+		if not boost_conf.CheckLib(libName) :
+			libName += "-mt"
+			if not boost_conf.CheckLib(libName) :
+				allLibsPresent = False
+				break
+		libNames.append(libName)
 if allLibsPresent :
 	env["BOOST_FLAGS"]["LIBS"] = libNames
 	if not boost_conf.CheckCXXHeader("boost/uuid/uuid.hpp") :
