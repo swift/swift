@@ -527,6 +527,14 @@ if env["PLATFORM"] == "darwin" :
 		env["HAVE_IOKIT"] = True
 	cocoa_conf.Finish()
 
+# Qt
+try :
+	myenv = env.Clone()
+	myenv.Tool("qt4", toolpath = ["#/BuildTools/SCons/Tools"])
+	env["HAVE_QT"] = True
+except :
+	env["HAVE_QT"] = False
+
 ################################################################################
 # DocBook setup
 ################################################################################
