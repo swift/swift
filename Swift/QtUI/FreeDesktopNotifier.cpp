@@ -37,6 +37,7 @@ void FreeDesktopNotifier::showMessage(Type type, const String& subject, const St
 
 	QStringList actions;
 	QMap<QString, QVariant> hints;
+	hints["x-canonical-append"] = QString("allowed");
 	msg << P2QSTRING(applicationName);
 	msg << quint32(0); // ID of previous notification to replace
 	msg << imageScaler.getScaledImage(picture, 48).string().c_str(); // Icon to display
