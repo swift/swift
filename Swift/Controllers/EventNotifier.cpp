@@ -33,7 +33,11 @@ void EventNotifier::handleEventAdded(boost::shared_ptr<StanzaEvent> event) {
 		JID jid = messageEvent->getStanza()->getFrom();
 		String title = nickResolver->jidToNick(jid);
 		if (!messageEvent->getStanza()->isError() && !messageEvent->getStanza()->getBody().isEmpty()) {
-			notifier->showMessage(Notifier::IncomingMessage, title, messageEvent->getStanza()->getBody(), avatarManager->getAvatarPath(jid), boost::bind(&EventNotifier::handleNotificationActivated, this, jid));
+			JID activationJID = jid;
+			if (messageEvent->getStanza()->getType() == Message::Groupchat) {
+				activationJID = jid.toBare();
+			}
+			notifier->showMessage(Notifier::IncomingMessage, title, messageEvent->getStanza()->getBody(), avatarManager->getAvatarPath(jid), boost::bind(&EventNotifier::handleNotificationActivated, this, activationJID));
 		}
 	}
 	else if(boost::shared_ptr<SubscriptionRequestEvent> subscriptionEvent = boost::dynamic_pointer_cast<SubscriptionRequestEvent>(event)) {

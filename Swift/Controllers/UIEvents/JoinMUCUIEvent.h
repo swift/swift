@@ -14,7 +14,7 @@
 namespace Swift {
 	class JoinMUCUIEvent : public UIEvent {
 		public:
-			JoinMUCUIEvent(const JID& jid, const boost::optional<String>& nick) : jid_(jid), nick_(nick) {};
+			JoinMUCUIEvent(const JID& jid, const boost::optional<String>& nick = boost::optional<String>()) : jid_(jid), nick_(nick) {};
 			boost::optional<String> getNick() {return nick_;};
 			JID getJID() {return jid_;};
 		private:

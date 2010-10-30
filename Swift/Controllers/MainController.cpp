@@ -56,6 +56,7 @@
 #include "Swiften/StringCodecs/Hexify.h"
 #include "Swift/Controllers/UIEvents/RequestChatUIEvent.h"
 #include "Swift/Controllers/UIEvents/ToggleNotificationsUIEvent.h"
+#include "Swift/Controllers/UIEvents/JoinMUCUIEvent.h"
 
 namespace Swift {
 
@@ -509,7 +510,14 @@ void MainController::handleVCardReceived(const JID& jid, VCard::ref vCard) {
 
 void MainController::handleNotificationClicked(const JID& jid) {
 	assert(chatsManager_);
-	uiEventStream_->send(boost::shared_ptr<UIEvent>(new RequestChatUIEvent(jid)));
+	if (client_) {
+		if (client_->getMUCRegistry()->isMUC(jid)) {
+			uiEventStream_->send(boost::shared_ptr<JoinMUCUIEvent>(new JoinMUCUIEvent(jid)));
+		}
+		else {
+			uiEventStream_->send(boost::shared_ptr<UIEvent>(new RequestChatUIEvent(jid)));
+		}
+	}
 }
 
 void MainController::handleQuitRequest() {
