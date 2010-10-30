@@ -321,6 +321,10 @@ void QtLoginWindow::handleToggleNotifications(bool enabled) {
 }
 
 void QtLoginWindow::handleQuit() {
+	onQuitRequest();
+}
+
+void QtLoginWindow::quit() {
 	QApplication::quit();
 }
 

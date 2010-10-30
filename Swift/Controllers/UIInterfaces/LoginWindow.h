@@ -25,7 +25,10 @@ namespace Swift {
 			virtual void addAvailableAccount(const String& defaultJID, const String& defaultPassword, const String& defaultCertificate) = 0;
 			boost::signal<void (const String&, const String&, const String& /* certificateFile */, bool /* remember password*/, bool /* login automatically */)> onLoginRequest;
 			virtual void setLoginAutomatically(bool loginAutomatically) = 0;
+			virtual void quit() = 0;
+
 			boost::signal<void ()> onCancelLoginRequest;
+			boost::signal<void ()> onQuitRequest;
 	};
 }
 #endif

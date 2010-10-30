@@ -89,6 +89,7 @@ namespace Swift {
 			void handleConnected();
 			void handleLoginRequest(const String& username, const String& password, const String& certificateFile, bool remember, bool loginAutomatically);
 			void handleCancelLoginRequest();
+			void handleQuitRequest();
 			void handleChangeStatusRequest(StatusShow::Type show, const String &statusText);
 			void handleDisconnected(const boost::optional<ClientError>& error);
 			void handleServerDiscoInfoResponse(boost::shared_ptr<DiscoInfo>, const boost::optional<ErrorPayload>&);
@@ -152,5 +153,6 @@ namespace Swift {
 			Timer::ref reconnectTimer_;
 			StatusTracker* statusTracker_;
 			bool myStatusLooksOnline_;
+			bool quitRequested_;
 	};
 }

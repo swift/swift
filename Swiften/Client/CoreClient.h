@@ -96,6 +96,13 @@ namespace Swift {
 			}
 
 			/**
+			 * Checks whether the client is active.
+			 *
+			 * A client is active when it is connected or connecting to the server.
+			 */
+			bool isActive() const;
+
+			/**
 			 * Returns the JID of the client. 
 			 * After the session was initialized, this returns the bound JID.
 			 */

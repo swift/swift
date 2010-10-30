@@ -62,6 +62,7 @@ void CoreClient::connect(const JID& jid) {
 }
 
 void CoreClient::connect(const String& host) {
+	disconnectRequested_ = false;
 	assert(!connector_);
 	connector_ = Connector::create(host, &resolver_, connectionFactory_, timerFactory_);
 	connector_->onConnectFinished.connect(boost::bind(&CoreClient::handleConnectorFinished, this, _1));
@@ -105,12 +106,7 @@ void CoreClient::disconnect() {
 	}
 	else if (connector_) {
 		connector_->stop();
-		assert(!session_);
 	}
-	assert(!session_);
-	assert(!sessionStream_);
-	assert(!connector_);
-	disconnectRequested_ = false;
 }
 
 void CoreClient::setCertificate(const String& certificate) {
@@ -212,6 +208,10 @@ void CoreClient::sendMessage(boost::shared_ptr<Message> message) {
 
 void CoreClient::sendPresence(boost::shared_ptr<Presence> presence) {
 	stanzaChannel_->sendPresence(presence);
+}
+
+bool CoreClient::isActive() const {
+	return session_ || connector_;
 }
 
 }

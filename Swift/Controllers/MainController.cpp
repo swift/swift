@@ -100,6 +100,7 @@ MainController::MainController(
 	eventWindowController_ = NULL;
 	discoResponder_ = NULL;
 	mucSearchController_ = NULL;
+	quitRequested_ = false;
 
 	timeBeforeNextReconnect_ = -1;
 	mucSearchWindowFactory_ = mucSearchWindowFactory;
@@ -136,6 +137,7 @@ MainController::MainController(
 	loginWindow_->setLoginAutomatically(loginAutomatically);
 	loginWindow_->onLoginRequest.connect(boost::bind(&MainController::handleLoginRequest, this, _1, _2, _3, _4, _5));
 	loginWindow_->onCancelLoginRequest.connect(boost::bind(&MainController::handleCancelLoginRequest, this));
+	loginWindow_->onQuitRequest.connect(boost::bind(&MainController::handleQuitRequest, this));
 
 	idleDetector_.setIdleTimeSeconds(600);
 	idleDetector_.onIdleChanged.connect(boost::bind(&MainController::handleInputIdleChanged, this, _1));
@@ -401,7 +403,11 @@ void MainController::performLoginFromCachedCredentials() {
 }
 
 void MainController::handleDisconnected(const boost::optional<ClientError>& error) {
-	if (error) {
+	if (quitRequested_) {
+		resetClient();
+		loginWindow_->quit();
+	}
+	else if (error) {
 		String message;
 		switch(error->getType()) {
 			case ClientError::UnknownError: message = "Unknown Error"; break;
@@ -506,5 +512,15 @@ void MainController::handleNotificationClicked(const JID& jid) {
 	uiEventStream_->send(boost::shared_ptr<UIEvent>(new RequestChatUIEvent(jid)));
 }
 
+void MainController::handleQuitRequest() {
+	if (client_ && client_->isActive()) {
+		quitRequested_ = true;
+		client_->disconnect();
+	}
+	else {
+		resetClient();
+		loginWindow_->quit();
+	}
+}
 
 }
