@@ -1,9 +1,11 @@
 #!/bin/sh
 
+set -x
+
 export PYTHONPATH=../../../BuildTools/SCons
 VERSION=`../../../BuildTools/GetBuildVersion.py swift`
 DEBIAN_VERSION=`../../../BuildTools/DebianizeVersion.py $VERSION`
-DIRNAME=swift-$DEBIAN_VERSION
+DIRNAME=swift-im-$DEBIAN_VERSION
 
 if [ -z "$DEBIAN_VERSION" ]; then
 	echo "Unable to determine version"
@@ -11,8 +13,8 @@ if [ -z "$DEBIAN_VERSION" ]; then
 fi
 
 echo "Cleaning up old packages ..."
-rm swift_*
-rm -rf swift-*
+rm swift-im_*
+rm -rf swift-im-*
 
 echo "Checking out a fresh copy ..."
 rm -rf $DIRNAME

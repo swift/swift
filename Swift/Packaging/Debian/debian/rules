@@ -13,7 +13,12 @@ install: build
 	dh_testroot
 	dh_prep  
 	dh_installdirs
-	scons qt=/usr/share/qt4 docbook_xsl=/usr/share/xml/docbook/stylesheet/docbook-xsl docbook_xml=/usr/share/xml/docbook/schema/dtd/4.5 SWIFT_INSTALLDIR=$(CURDIR)/debian/swift/usr $(CURDIR)
+	scons qt=/usr/share/qt4 docbook_xsl=/usr/share/xml/docbook/stylesheet/docbook-xsl docbook_xml=/usr/share/xml/docbook/schema/dtd/4.5 SWIFT_INSTALLDIR=$(CURDIR)/debian/swift-im/usr $(CURDIR)/debian/swift-im
+	#mv $(CURDIR)/debian/swift-im/usr/bin/swift $(CURDIR)/debian/swift-im/usr/bin/swift-im
+	#mv $(CURDIR)/debian/swift-im/usr/share/pixmaps/swift.xpm $(CURDIR)/debian/swift-im/usr/share/pixmaps/swift-im.xpm
+	#mv $(CURDIR)/debian/swift-im/usr/share/swift $(CURDIR)/debian/swift-im/usr/share/swift-im
+	#mv $(CURDIR)/debian/swift-im/usr/share/applications/swift.desktop $(CURDIR)/debian/swift-im/usr/share/applications/swift-im.desktop
+
 
 binary-indep: install
 binary-arch: install
@@ -23,7 +28,7 @@ binary-arch: install
 	dh_installdocs
 	dh_installmenu
 	dh_link
-	dh_strip --dbg-package=swift-dbg
+	dh_strip --dbg-package=swift-im-dbg
 	dh_compress
 	dh_fixperms
 	dh_installdeb

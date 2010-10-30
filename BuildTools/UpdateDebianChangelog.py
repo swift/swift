@@ -12,7 +12,7 @@ changelog.close()
 
 project = ""
 last_version = ""
-m = re.match("(\w+) \((.*)-\d+\)", last_version_line)
+m = re.match("([\w-]+) \((.*)-\d+\)", last_version_line)
 if m :
   project = m.group(1)
   last_version = m.group(2)

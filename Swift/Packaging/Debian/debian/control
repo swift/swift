@@ -1,4 +1,4 @@
-Source: swift
+Source: swift-im
 Section: x11
 Priority: optional
 Maintainer: Remko Tronçon <dev@el-tramo.be>
@@ -6,15 +6,15 @@ Build-Depends: debhelper (>= 7), scons (>= 1.2.0), libssl-dev (>= 0.9.8g), libqt
 Standards-Version: 3.8.4
 Homepage: http://swift.im
 
-Package: swift
+Package: swift-im
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}
 Description: XMPP Client.
 	The Swift IM client.
 
-Package: swift-dbg
+Package: swift-im-dbg
 Architecture: any
 Section: debug
-Depends: swift (= ${binary:Version}), ${shlibs:Depends}, ${misc:Depends}
-Description: Debugging symbols for swift.
+Depends: swift-im (= ${binary:Version}), ${shlibs:Depends}, ${misc:Depends}
+Description: Debugging symbols for swift-im.
 	The Swift IM client.
