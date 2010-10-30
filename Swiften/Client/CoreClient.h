@@ -126,9 +126,12 @@ namespace Swift {
 
 		public:
 			/**
-			 * Emitted when a non-recoverable error occurs.
+			 * Emitted when the client was disconnected from the network.
+			 *
+			 * If the connection was due to a non-recoverable error, the type
+			 * of error will be passed as a parameter.
 			 */
-			boost::signal<void (const ClientError&)> onError;
+			boost::signal<void (const boost::optional<ClientError>&)> onDisconnected;
 
 			/**
 			 * Emitted when the client is connected and authenticated,

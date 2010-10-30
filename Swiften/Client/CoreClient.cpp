@@ -73,9 +73,7 @@ void CoreClient::handleConnectorFinished(boost::shared_ptr<Connection> connectio
 	connector_->onConnectFinished.disconnect(boost::bind(&CoreClient::handleConnectorFinished, this, _1));
 	connector_.reset();
 	if (!connection) {
-		if (!disconnectRequested_) {
-			onError(ClientError::ConnectionError);
-		}
+		onDisconnected(disconnectRequested_ ? boost::optional<ClientError>() : boost::optional<ClientError>(ClientError::ConnectionError));
 	}
 	else {
 		assert(!connection_);
@@ -131,6 +129,7 @@ void CoreClient::handleSessionFinished(boost::shared_ptr<Error> error) {
 	connection_->disconnect();
 	connection_.reset();
 
+	boost::optional<ClientError> actualError;
 	if (error) {
 		ClientError clientError;
 		if (boost::shared_ptr<ClientSession::Error> actualError = boost::dynamic_pointer_cast<ClientSession::Error>(error)) {
@@ -183,8 +182,9 @@ void CoreClient::handleSessionFinished(boost::shared_ptr<Error> error) {
 					break;
 			}
 		}
-		onError(clientError);
+		actualError = boost::optional<ClientError>(clientError);
 	}
+	onDisconnected(actualError);
 }
 
 void CoreClient::handleNeedCredentials() {

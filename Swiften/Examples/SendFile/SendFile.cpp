@@ -32,13 +32,13 @@ class FileSender {
 
 			client = new Swift::Client(&eventLoop, jid, password);
 			client->onConnected.connect(boost::bind(&FileSender::handleConnected, this));
-			client->onError.connect(boost::bind(&FileSender::handleError, this, _1));
+			client->onDisconnected.connect(boost::bind(&FileSender::handleDisconnected, this, _1));
 			//tracer = new ClientXMLTracer(client);
 		}
 
 		~FileSender() {
 			//delete tracer;
-			client->onError.disconnect(boost::bind(&FileSender::handleError, this, _1));
+			client->onDisconnected.disconnect(boost::bind(&FileSender::handleDisconnected, this, _1));
 			client->onConnected.disconnect(boost::bind(&FileSender::handleConnected, this));
 			delete client;
 			delete socksBytestreamServer;
@@ -67,7 +67,7 @@ class FileSender {
 			transfer->start();
 		}
 
-		void handleError(const ClientError&) {
+		void handleDisconnected(const boost::optional<ClientError>&) {
 			std::cerr << "Error!" << std::endl;
 			exit(-1);
 		}

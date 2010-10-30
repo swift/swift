@@ -90,7 +90,7 @@ namespace Swift {
 			void handleLoginRequest(const String& username, const String& password, const String& certificateFile, bool remember, bool loginAutomatically);
 			void handleCancelLoginRequest();
 			void handleChangeStatusRequest(StatusShow::Type show, const String &statusText);
-			void handleError(const ClientError& error);
+			void handleDisconnected(const boost::optional<ClientError>& error);
 			void handleServerDiscoInfoResponse(boost::shared_ptr<DiscoInfo>, const boost::optional<ErrorPayload>&);
 			void handleEventQueueLengthChange(int count);
 			void handleVCardReceived(const JID& j, VCard::ref vCard);

@@ -46,7 +46,7 @@ void handleConnected() {
 	discoInfoRequest->send();
 }
 
-void handleError(const ClientError&) {
+void handleDisconnected(const boost::optional<ClientError>&) {
 	exitCode = CANNOT_AUTH;
 	eventLoop.stop();
 }
@@ -73,7 +73,7 @@ int main(int argc, char* argv[]) {
 	timeout = (timeout ? timeout : 30) * 1000;
 	ClientXMLTracer* tracer = new ClientXMLTracer(client);
 	client->onConnected.connect(&handleConnected);
-	errorConnection = client->onError.connect(&handleError);
+	errorConnection = client->onDisconnected.connect(&handleDisconnected);
 	std::cout << "Connecting to JID " << jid << " with timeout " << timeout << "ms on host: "; ;
 	if (!connectHost.isEmpty()) {
 		std::cout << connectHost << std::endl;

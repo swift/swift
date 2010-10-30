@@ -366,7 +366,7 @@ void MainController::performLoginFromCachedCredentials() {
 		client_ = new Swift::Client(eventLoop_, jid_, password_, storages_);
 		client_->onDataRead.connect(boost::bind(&XMLConsoleController::handleDataRead, xmlConsoleController_, _1));
 		client_->onDataWritten.connect(boost::bind(&XMLConsoleController::handleDataWritten, xmlConsoleController_, _1));
-		client_->onError.connect(boost::bind(&MainController::handleError, this, _1));
+		client_->onDisconnected.connect(boost::bind(&MainController::handleDisconnected, this, _1));
 		client_->onConnected.connect(boost::bind(&MainController::handleConnected, this));
 
 		client_->setSoftwareVersion(CLIENT_NAME, buildVersion);
@@ -400,42 +400,43 @@ void MainController::performLoginFromCachedCredentials() {
 	}
 }
 
-void MainController::handleError(const ClientError& error) {
-	String message;
-	switch(error.getType()) {
-		case ClientError::UnknownError: message = "Unknown Error"; break;
-		case ClientError::DomainNameResolveError: message = "Unable to find server"; break;
-		case ClientError::ConnectionError: message = "Error connecting to server"; break;
-		case ClientError::ConnectionReadError: message = "Error while receiving server data"; break;
-		case ClientError::ConnectionWriteError: message = "Error while sending data to the server"; break;
-		case ClientError::XMLError: message = "Error parsing server data"; break;
-		case ClientError::AuthenticationFailedError: message = "Login/password invalid"; break;
-		case ClientError::CompressionFailedError: message = "Error while compressing stream"; break;
-		case ClientError::ServerVerificationFailedError: message = "Server verification failed"; break;
-		case ClientError::NoSupportedAuthMechanismsError: message = "Authentication mechanisms not supported"; break;
-		case ClientError::UnexpectedElementError: message = "Unexpected response"; break;
-		case ClientError::ResourceBindError: message = "Error binding resource"; break;
-		case ClientError::SessionStartError: message = "Error starting session"; break;
-		case ClientError::TLSError: message = "Encryption error"; break;
-		case ClientError::ClientCertificateLoadError: message = "Error loading certificate (Invalid password?)"; break;
-		case ClientError::ClientCertificateError: message = "Certificate not authorized"; break;
-	}
-	if (!rosterController_) { //hasn't been logged in yet
-		signOut();
-		loginWindow_->setMessage(message);
-	} else {
-		logout();
-		setReconnectTimer();
-		if (lastDisconnectError_) {
-			message = "Reconnect to " + jid_.getDomain() + " failed: " + message + ". Will retry in " + boost::lexical_cast<std::string>(timeBeforeNextReconnect_) + " seconds.";
-			lastDisconnectError_->conclude();
-		} else {
-			message = "Disconnected from " + jid_.getDomain() + ": " + message;
+void MainController::handleDisconnected(const boost::optional<ClientError>& error) {
+	if (error) {
+		String message;
+		switch(error->getType()) {
+			case ClientError::UnknownError: message = "Unknown Error"; break;
+			case ClientError::DomainNameResolveError: message = "Unable to find server"; break;
+			case ClientError::ConnectionError: message = "Error connecting to server"; break;
+			case ClientError::ConnectionReadError: message = "Error while receiving server data"; break;
+			case ClientError::ConnectionWriteError: message = "Error while sending data to the server"; break;
+			case ClientError::XMLError: message = "Error parsing server data"; break;
+			case ClientError::AuthenticationFailedError: message = "Login/password invalid"; break;
+			case ClientError::CompressionFailedError: message = "Error while compressing stream"; break;
+			case ClientError::ServerVerificationFailedError: message = "Server verification failed"; break;
+			case ClientError::NoSupportedAuthMechanismsError: message = "Authentication mechanisms not supported"; break;
+			case ClientError::UnexpectedElementError: message = "Unexpected response"; break;
+			case ClientError::ResourceBindError: message = "Error binding resource"; break;
+			case ClientError::SessionStartError: message = "Error starting session"; break;
+			case ClientError::TLSError: message = "Encryption error"; break;
+			case ClientError::ClientCertificateLoadError: message = "Error loading certificate (Invalid password?)"; break;
+			case ClientError::ClientCertificateError: message = "Certificate not authorized"; break;
 		}
-		lastDisconnectError_ = boost::shared_ptr<ErrorEvent>(new ErrorEvent(JID(jid_.getDomain()), message));
-		eventController_->handleIncomingEvent(lastDisconnectError_);
+		if (!rosterController_) { //hasn't been logged in yet
+			signOut();
+			loginWindow_->setMessage(message);
+		} else {
+			logout();
+			setReconnectTimer();
+			if (lastDisconnectError_) {
+				message = "Reconnect to " + jid_.getDomain() + " failed: " + message + ". Will retry in " + boost::lexical_cast<std::string>(timeBeforeNextReconnect_) + " seconds.";
+				lastDisconnectError_->conclude();
+			} else {
+				message = "Disconnected from " + jid_.getDomain() + ": " + message;
+			}
+			lastDisconnectError_ = boost::shared_ptr<ErrorEvent>(new ErrorEvent(JID(jid_.getDomain()), message));
+			eventController_->handleIncomingEvent(lastDisconnectError_);
+		}
 	}
-
 }
 
 void MainController::setReconnectTimer() {

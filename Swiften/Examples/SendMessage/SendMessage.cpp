@@ -37,7 +37,7 @@ void handleConnected() {
 	eventLoop.stop();
 }
 
-void handleError(const ClientError&) {
+void handleDisconnected(const boost::optional<ClientError>&) {
 	std::cerr << "Error!" << std::endl;
 	exitCode = 1;
 	eventLoop.stop();
@@ -64,7 +64,7 @@ int main(int argc, char* argv[]) {
 
 	ClientXMLTracer* tracer = new ClientXMLTracer(client);
 	client->onConnected.connect(&handleConnected);
-	errorConnection = client->onError.connect(&handleError);
+	errorConnection = client->onDisconnected.connect(&handleDisconnected);
 	if (!connectHost.isEmpty()) {
 		client->connect(connectHost);
 	} else {
