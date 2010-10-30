@@ -57,7 +57,7 @@ GrowlNotifier::GrowlNotifier(const String& name) {
 	// Default Notifications
 	CFMutableArrayRef defaultNotifications = CFArrayCreateMutable(kCFAllocatorDefault, 0, &kCFTypeArrayCallBacks);
 	foreach(Type type, getDefaultTypes()) {
-		CFArrayAppendValue(allNotifications, SWIFTEN_STRING_TO_CFSTRING(typeToString(type)));
+		CFArrayAppendValue(defaultNotifications, SWIFTEN_STRING_TO_CFSTRING(typeToString(type)));
 	}
 
 	// Initialize delegate

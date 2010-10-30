@@ -18,7 +18,6 @@ namespace Swift {
 	 * - Must be part a bundle.
 	 * - The Carbon/Cocoa application loop must be running (e.g. through QApplication)
 	 *   such that notifications are coming through.
-	 *   TODO: Find out what the easiest way is to do this without a QApplication.
 	 */
 	class GrowlNotifier : public Notifier {
 		public:
