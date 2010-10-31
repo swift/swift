@@ -11,6 +11,7 @@
 
 #include "Swiften/Presence/PresenceOracle.h"
 #include "Swiften/Client/DummyStanzaChannel.h"
+#include "Swiften/Presence/SubscriptionManager.h"
 
 using namespace Swift;
 
@@ -31,13 +32,15 @@ class PresenceOracleTest : public CppUnit::TestFixture {
 			stanzaChannel_ = new DummyStanzaChannel();
 			oracle_ = new PresenceOracle(stanzaChannel_);
 			oracle_->onPresenceChange.connect(boost::bind(&PresenceOracleTest::handlePresenceChange, this, _1));
-			oracle_->onPresenceSubscriptionRequest.connect(boost::bind(&PresenceOracleTest::handlePresenceSubscriptionRequest, this, _1, _2));
+			subscriptionManager_ = new SubscriptionManager(stanzaChannel_);
+			subscriptionManager_->onPresenceSubscriptionRequest.connect(boost::bind(&PresenceOracleTest::handlePresenceSubscriptionRequest, this, _1, _2));
 			user1 = JID("user1@foo.com/Foo");
 			user1alt = JID("user1@foo.com/Bar");
 			user2 = JID("user2@bar.com/Bar");
 		}
 
 		void tearDown() {
+			delete subscriptionManager_;
 			delete oracle_;
 			delete stanzaChannel_;
 		}
@@ -181,6 +184,7 @@ class PresenceOracleTest : public CppUnit::TestFixture {
 			String reason;
 		};
 		PresenceOracle* oracle_;
+		SubscriptionManager* subscriptionManager_;
 		DummyStanzaChannel* stanzaChannel_;
 		std::vector<Presence::ref> changes;
 		std::vector<SubscriptionRequestInfo> subscriptionRequests;

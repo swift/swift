@@ -11,6 +11,7 @@
 #include "Swiften/Elements/Message.h"
 #include "Swiften/Elements/Presence.h"
 #include "Swiften/MUC/MUCOccupant.h"
+#include "Swiften/MUC/MUCRegistry.h"
 
 #include <boost/shared_ptr.hpp>
 #include "Swiften/Base/boost_bsignals.h"
@@ -21,15 +22,24 @@
 namespace Swift {
 	class StanzaChannel;
 	class IQRouter;
-	class PresenceSender;
+	class DirectedPresenceSender;
 
 	class MUC {
 		public:
+			typedef boost::shared_ptr<MUC> ref;
+
 			enum JoinResult { JoinSucceeded, JoinFailed };
-			enum LeavingType { Part, Disconnect };			
+			enum LeavingType { Part, Disconnect };
 
 		public:
-			MUC(StanzaChannel* stanzaChannel, IQRouter* iqRouter, PresenceSender* presenceSender, const JID &muc);
+			MUC(StanzaChannel* stanzaChannel, IQRouter* iqRouter, DirectedPresenceSender* presenceSender, const JID &muc, MUCRegistry* mucRegistry);
+
+			/**
+			 * Returns the (bare) JID of the MUC.
+			 */
+			JID getJID() const {
+				return ownMUCJID.toBare();
+			}
 
 			void joinAs(const String &nick);
 			void joinWithContextSince(const String &nick);
@@ -70,8 +80,8 @@ namespace Swift {
 			JID ownMUCJID;
 			StanzaChannel* stanzaChannel;
 			IQRouter* iqRouter_;
-			PresenceSender* presenceSender;
-			JID muc_;
+			DirectedPresenceSender* presenceSender;
+			MUCRegistry* mucRegistry;
 			std::map<String, MUCOccupant> occupants;
 			bool joinComplete_;
 			boost::bsignals::scoped_connection scopedConnection_;

@@ -10,8 +10,10 @@
 #include "Swiften/Roster/XMPPRosterImpl.h"
 #include "Swiften/Roster/XMPPRosterController.h"
 #include "Swiften/Presence/PresenceOracle.h"
-#include "Swiften/Presence/PresenceSender.h"
+#include "Swiften/Presence/StanzaChannelPresenceSender.h"
+#include "Swiften/Presence/DirectedPresenceSender.h"
 #include "Swiften/MUC/MUCRegistry.h"
+#include "Swiften/MUC/MUCManager.h"
 #include "Swiften/Client/MemoryStorages.h"
 #include "Swiften/VCards/VCardManager.h"
 #include "Swiften/VCards/VCardManager.h"
@@ -19,6 +21,7 @@
 #include "Swiften/Disco/CapsManager.h"
 #include "Swiften/Disco/EntityCapsManager.h"
 #include "Swiften/Client/NickResolver.h"
+#include "Swiften/Presence/SubscriptionManager.h"
 
 namespace Swift {
 
@@ -31,13 +34,16 @@ Client::Client(EventLoop* eventLoop, const JID& jid, const String& password, Sto
 	roster = new XMPPRosterImpl();
 	rosterController = new XMPPRosterController(getIQRouter(), roster);
 
+	subscriptionManager = new SubscriptionManager(getStanzaChannel());
+
 	presenceOracle = new PresenceOracle(getStanzaChannel());
 	presenceOracle->onPresenceChange.connect(boost::ref(onPresenceChange));
-	presenceOracle->onPresenceSubscriptionRequest.connect(boost::ref(onPresenceSubscriptionRequest));
 
-	presenceSender = new PresenceSender(getStanzaChannel());
+	stanzaChannelPresenceSender = new StanzaChannelPresenceSender(getStanzaChannel());
+	directedPresenceSender = new DirectedPresenceSender(stanzaChannelPresenceSender);
 
 	mucRegistry = new MUCRegistry();
+	mucManager = new MUCManager(getStanzaChannel(), getIQRouter(), directedPresenceSender, mucRegistry);
 
 	vcardManager = new VCardManager(jid, getIQRouter(), getStorages()->getVCardStorage());
 	avatarManager = new AvatarManagerImpl(vcardManager, getStanzaChannel(), getStorages()->getAvatarStorage(), mucRegistry);
@@ -55,11 +61,14 @@ Client::~Client() {
 	delete avatarManager;
 	delete vcardManager;
 
+	delete mucManager;
 	delete mucRegistry;
 
-	delete presenceSender;
+	delete directedPresenceSender;
+	delete stanzaChannelPresenceSender;
 
 	delete presenceOracle;
+	delete subscriptionManager;
 	delete rosterController;
 	delete roster;
 
@@ -81,7 +90,6 @@ void Client::requestRoster() {
 	rosterController->requestRoster();
 }
 
-
 Presence::ref Client::getLastPresence(const JID& jid) const {
 	return presenceOracle->getLastPresence(jid);
 }
@@ -97,5 +105,8 @@ Storages* Client::getStorages() const {
 	return memoryStorages;
 }
 
+PresenceSender* Client::getPresenceSender() const {
+	return directedPresenceSender;
+}
 
 }

@@ -4,8 +4,7 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#ifndef SWIFTEN_RosterController_H
-#define SWIFTEN_RosterController_H
+#pragma once
 
 #include "Swiften/JID/JID.h"
 #include "Swiften/Base/String.h"
@@ -28,7 +27,7 @@ namespace Swift {
 	class OfflineRosterFilter;
 	class NickResolver;
 	class PresenceOracle;
-	class PresenceSender;
+	class SubscriptionManager;
 	class EventController;
 	class SubscriptionRequestEvent;
 	class UIEventStream;
@@ -37,7 +36,7 @@ namespace Swift {
 
 	class RosterController {
 		public:
-			RosterController(const JID& jid, XMPPRoster* xmppRoster, AvatarManager* avatarManager, MainWindowFactory* mainWindowFactory, NickResolver* nickResolver, PresenceOracle* presenceOracle, PresenceSender* presenceSender, EventController* eventController, UIEventStream* uiEventStream, IQRouter* iqRouter_, SettingsProvider* settings);
+			RosterController(const JID& jid, XMPPRoster* xmppRoster, AvatarManager* avatarManager, MainWindowFactory* mainWindowFactory, NickResolver* nickResolver, PresenceOracle* presenceOracle, SubscriptionManager* subscriptionManager, EventController* eventController, UIEventStream* uiEventStream, IQRouter* iqRouter_, SettingsProvider* settings);
 			~RosterController();
 			void showRosterWindow();
 			MainWindow* getWindow() {return mainWindow_;};
@@ -70,7 +69,7 @@ namespace Swift {
 			AvatarManager* avatarManager_;
 			NickResolver* nickResolver_;
 			PresenceOracle* presenceOracle_;
-			PresenceSender* presenceSender_;
+			SubscriptionManager* subscriptionManager_;
 			EventController* eventController_;
 			RosterGroupExpandinessPersister* expandiness_;
 			IQRouter* iqRouter_;
@@ -80,5 +79,3 @@ namespace Swift {
 			boost::bsignals::scoped_connection uiEventConnection_;
 	};
 }
-#endif
-

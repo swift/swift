@@ -16,15 +16,17 @@
 #include "Swiften/Client/Client.h"
 #include "Swiften/Disco/EntityCapsManager.h"
 #include "Swiften/Disco/CapsProvider.h"
+#include "Swiften/MUC/MUCManager.h"
 #include "Swift/Controllers/Chat/ChatController.h"
 #include "Swift/Controllers/XMPPEvents/EventController.h"
 #include "Swift/Controllers/Chat/MUCController.h"
-#include "Swiften/Presence/PresenceSender.h"
+#include "Swiften/Presence/StanzaChannelPresenceSender.h"
 #include "Swiften/Avatars/NullAvatarManager.h"
 #include "Swiften/Avatars/AvatarMemoryStorage.h"
 #include "Swiften/VCards/VCardManager.h"
 #include "Swiften/VCards/VCardMemoryStorage.h"
 #include "Swiften/Client/NickResolver.h"
+#include "Swiften/Presence/DirectedPresenceSender.h"
 #include "Swiften/Roster/XMPPRosterImpl.h"
 #include "Swift/Controllers/UnitTest/MockChatWindow.h"
 #include "Swiften/Client/DummyStanzaChannel.h"
@@ -71,12 +73,14 @@ public:
 		nickResolver_ = new NickResolver(jid_.toBare(), xmppRoster_, NULL, mucRegistry_);
 		presenceOracle_ = new PresenceOracle(stanzaChannel_);
 		serverDiscoInfo_ = boost::shared_ptr<DiscoInfo>(new DiscoInfo());
-		presenceSender_ = new PresenceSender(stanzaChannel_);
+		presenceSender_ = new StanzaChannelPresenceSender(stanzaChannel_);
+		directedPresenceSender_ = new DirectedPresenceSender(presenceSender_);
+		mucManager_ = new MUCManager(stanzaChannel_, iqRouter_, directedPresenceSender_, mucRegistry_);
 		uiEventStream_ = new UIEventStream();
 		entityCapsManager_ = new EntityCapsManager(capsProvider_, stanzaChannel_);
 		chatListWindowFactory_ = mocks_->InterfaceMock<ChatListWindowFactory>();
 		mocks_->ExpectCall(chatListWindowFactory_, ChatListWindowFactory::createWindow).With(uiEventStream_).Return(NULL);
-		manager_ = new ChatsManager(jid_, stanzaChannel_, iqRouter_, eventController_, chatWindowFactory_, nickResolver_, presenceOracle_, presenceSender_, uiEventStream_, chatListWindowFactory_, true, NULL, mucRegistry_, entityCapsManager_);
+		manager_ = new ChatsManager(jid_, stanzaChannel_, iqRouter_, eventController_, chatWindowFactory_, nickResolver_, presenceOracle_, directedPresenceSender_, uiEventStream_, chatListWindowFactory_, true, NULL, mucRegistry_, entityCapsManager_, mucManager_);
 
 		avatarManager_ = new NullAvatarManager();
 		manager_->setAvatarManager(avatarManager_);
@@ -87,6 +91,7 @@ public:
 		delete mocks_;
 		delete avatarManager_;
 		delete manager_;
+		delete directedPresenceSender_;
 		delete presenceSender_;
 		delete presenceOracle_;
 		delete nickResolver_;
@@ -96,6 +101,7 @@ public:
 		delete iqChannel_;
 		delete iqRouter_;
 		delete uiEventStream_;
+		delete mucManager_;
 		delete xmppRoster_;
 		delete entityCapsManager_;
 		delete capsProvider_;
@@ -329,8 +335,10 @@ private:
 	UIEventStream* uiEventStream_;
 	ChatListWindowFactory* chatListWindowFactory_;
 	MUCRegistry* mucRegistry_;
+	DirectedPresenceSender* directedPresenceSender_;
 	EntityCapsManager* entityCapsManager_;
 	CapsProvider* capsProvider_;
+	MUCManager* mucManager_;
 };
 
 CPPUNIT_TEST_SUITE_REGISTRATION(ChatsManagerTest);

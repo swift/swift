@@ -18,6 +18,7 @@
 #include "Swift/Controllers/UIEvents/EditMUCBookmarkUIEvent.h"
 #include "Swift/Controllers/UIInterfaces/ChatListWindowFactory.h"
 #include "Swiften/Presence/PresenceSender.h"
+#include "Swiften/MUC/MUCManager.h"
 #include "Swiften/Elements/ChatState.h"
 #include "Swiften/MUC/MUCBookmarkManager.h"
 
@@ -26,7 +27,7 @@ namespace Swift {
 typedef std::pair<JID, ChatController*> JIDChatControllerPair;
 typedef std::pair<JID, MUCController*> JIDMUCControllerPair;
 
-ChatsManager::ChatsManager(JID jid, StanzaChannel* stanzaChannel, IQRouter* iqRouter, EventController* eventController, ChatWindowFactory* chatWindowFactory, NickResolver* nickResolver, PresenceOracle* presenceOracle, PresenceSender* presenceSender, UIEventStream* uiEventStream, ChatListWindowFactory* chatListWindowFactory, bool useDelayForLatency, TimerFactory* timerFactory, MUCRegistry* mucRegistry, EntityCapsManager* entityCapsManager) : jid_(jid), useDelayForLatency_(useDelayForLatency), mucRegistry_(mucRegistry), entityCapsManager_(entityCapsManager) {
+ChatsManager::ChatsManager(JID jid, StanzaChannel* stanzaChannel, IQRouter* iqRouter, EventController* eventController, ChatWindowFactory* chatWindowFactory, NickResolver* nickResolver, PresenceOracle* presenceOracle, PresenceSender* presenceSender, UIEventStream* uiEventStream, ChatListWindowFactory* chatListWindowFactory, bool useDelayForLatency, TimerFactory* timerFactory, MUCRegistry* mucRegistry, EntityCapsManager* entityCapsManager, MUCManager* mucManager) : jid_(jid), useDelayForLatency_(useDelayForLatency), mucRegistry_(mucRegistry), entityCapsManager_(entityCapsManager), mucManager(mucManager) {
 	timerFactory_ = timerFactory;
 	eventController_ = eventController;
 	stanzaChannel_ = stanzaChannel;
@@ -83,7 +84,6 @@ void ChatsManager::handleUserLeftMUC(MUCController* mucController) {
 	std::map<JID, MUCController*>::iterator it;
 	for (it = mucControllers_.begin(); it != mucControllers_.end(); it++) {
 		if ((*it).second == mucController) {
-			mucRegistry_->removeMUC(it->first);
 			mucControllers_.erase(it);
 			delete mucController;
 			return;
@@ -214,19 +214,19 @@ void ChatsManager::rebindControllerJID(const JID& from, const JID& to) {
 	chatControllers_[to]->setToJID(to);
 }
 
-void ChatsManager::handleJoinMUCRequest(const JID &muc, const boost::optional<String>& nickMaybe) {
-	std::map<JID, MUCController*>::iterator it = mucControllers_.find(muc);
+void ChatsManager::handleJoinMUCRequest(const JID &mucJID, const boost::optional<String>& nickMaybe) {
+	std::map<JID, MUCController*>::iterator it = mucControllers_.find(mucJID);
 	if (it != mucControllers_.end()) {
 		it->second->rejoin();
 	} else {
 		String nick = nickMaybe ? nickMaybe.get() : jid_.getNode();
-		MUCController* controller = new MUCController(jid_, muc, nick, stanzaChannel_, presenceSender_, iqRouter_, chatWindowFactory_, presenceOracle_, avatarManager_, uiEventStream_, false, timerFactory_, eventController_);
-		mucControllers_[muc] = controller;
+		MUC::ref muc = mucManager->createMUC(mucJID);
+		MUCController* controller = new MUCController(jid_, muc, nick, stanzaChannel_, iqRouter_, chatWindowFactory_, presenceOracle_, avatarManager_, uiEventStream_, false, timerFactory_, eventController_);
+		mucControllers_[mucJID] = controller;
 		controller->setAvailableServerFeatures(serverDiscoInfo_);
 		controller->onUserLeft.connect(boost::bind(&ChatsManager::handleUserLeftMUC, this, controller));
-		mucRegistry_->addMUC(muc);
 	}
-	mucControllers_[muc]->activateChatWindow();
+	mucControllers_[mucJID]->activateChatWindow();
 }
 
 void ChatsManager::handleIncomingMessage(boost::shared_ptr<Message> message) {

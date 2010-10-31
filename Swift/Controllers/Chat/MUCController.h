@@ -41,7 +41,7 @@ namespace Swift {
 
 	class MUCController : public ChatControllerBase {
 		public:
-			MUCController(const JID& self, const JID &muc, const String &nick, StanzaChannel* stanzaChannel, PresenceSender* presenceSender, IQRouter* iqRouter, ChatWindowFactory* chatWindowFactory, PresenceOracle* presenceOracle, AvatarManager* avatarManager, UIEventStream* events, bool useDelayForLatency, TimerFactory* timerFactory, EventController* eventController);
+			MUCController(const JID& self, MUC::ref muc, const String &nick, StanzaChannel* stanzaChannel, IQRouter* iqRouter, ChatWindowFactory* chatWindowFactory, PresenceOracle* presenceOracle, AvatarManager* avatarManager, UIEventStream* events, bool useDelayForLatency, TimerFactory* timerFactory, EventController* eventController);
 			~MUCController();
 			boost::signal<void ()> onUserLeft;
 			virtual void setOnline(bool online);
@@ -80,7 +80,7 @@ namespace Swift {
 			void processUserPart();
 
 		private:
-			MUC* muc_;
+			MUC::ref muc_;
 			UIEventStream* events_;
 			String nick_;
 			Roster* roster_;

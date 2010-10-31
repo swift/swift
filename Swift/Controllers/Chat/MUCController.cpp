@@ -36,10 +36,9 @@ namespace Swift {
  */
 MUCController::MUCController (
 		const JID& self,
-		const JID &muc, 
+		MUC::ref muc,
 		const String &nick, 
 		StanzaChannel* stanzaChannel, 
-		PresenceSender* presenceSender,
 		IQRouter* iqRouter, 
 		ChatWindowFactory* chatWindowFactory, 
 		PresenceOracle* presenceOracle,
@@ -48,7 +47,7 @@ MUCController::MUCController (
 		bool useDelayForLatency,
 		TimerFactory* timerFactory,
 		EventController* eventController) :
-			ChatControllerBase(self, stanzaChannel, iqRouter, chatWindowFactory, muc, presenceOracle, avatarManager, useDelayForLatency, uiEventStream, eventController, timerFactory), muc_(new MUC(stanzaChannel, iqRouter, presenceSender, muc)), nick_(nick) {
+			ChatControllerBase(self, stanzaChannel, iqRouter, chatWindowFactory, muc->getJID(), presenceOracle, avatarManager, useDelayForLatency, uiEventStream, eventController, timerFactory), muc_(muc), nick_(nick) {
 	parting_ = true;
 	joined_ = false;
 	lastWasPresence_ = false;
@@ -59,7 +58,7 @@ MUCController::MUCController (
 	completer_ = new TabComplete();
 	chatWindow_->setRosterModel(roster_);
 	chatWindow_->setTabComplete(completer_);
-	chatWindow_->setName(muc.getNode());
+	chatWindow_->setName(muc->getJID().getNode());
 	chatWindow_->onClosed.connect(boost::bind(&MUCController::handleWindowClosed, this));
 	muc_->onJoinComplete.connect(boost::bind(&MUCController::handleJoinComplete, this, _1));
 	muc_->onJoinFailed.connect(boost::bind(&MUCController::handleJoinFailed, this, _1));
@@ -80,7 +79,6 @@ MUCController::MUCController (
 }
 
 MUCController::~MUCController() {
-	delete muc_;
 	chatWindow_->setRosterModel(NULL);
 	delete roster_;
 	if (loginCheckTimer_) {

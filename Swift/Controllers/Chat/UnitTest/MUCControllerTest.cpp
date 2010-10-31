@@ -9,7 +9,8 @@
 #include "3rdParty/hippomocks.h"
 
 #include "Swift/Controllers/XMPPEvents/EventController.h"
-#include "Swiften/Presence/PresenceSender.h"
+#include "Swiften/Presence/DirectedPresenceSender.h"
+#include "Swiften/Presence/StanzaChannelPresenceSender.h"
 #include "Swiften/Avatars/NullAvatarManager.h"
 #include "Swift/Controllers/Chat/MUCController.h"
 #include "Swift/Controllers/UIInterfaces/ChatWindow.h"
@@ -42,7 +43,6 @@ public:
 
 	void setUp() {
 		self_ = JID("girl@wonderland.lit/rabbithole");
-		muc_ = JID("teaparty@rooms.wonderland.lit");
 		nick_ = "aLiCe";
 		mocks_ = new MockRepository();
 		stanzaChannel_ = new DummyStanzaChannel();
@@ -51,14 +51,16 @@ public:
 		eventController_ = new EventController();
 		chatWindowFactory_ = mocks_->InterfaceMock<ChatWindowFactory>();
 		presenceOracle_ = new PresenceOracle(stanzaChannel_);
-		presenceSender_ = new PresenceSender(stanzaChannel_);
+		presenceSender_ = new StanzaChannelPresenceSender(stanzaChannel_);
+		directedPresenceSender_ = new DirectedPresenceSender(presenceSender_);
 		uiEventStream_ = new UIEventStream();
 		avatarManager_ = new NullAvatarManager();
 		TimerFactory* timerFactory = NULL;
 		window_ = new MockChatWindow();//mocks_->InterfaceMock<ChatWindow>();
-		mocks_->ExpectCall(chatWindowFactory_, ChatWindowFactory::createChatWindow).With(muc_, uiEventStream_).Return(window_);
-		controller_ = new MUCController (self_, muc_, nick_, stanzaChannel_, presenceSender_,
-				iqRouter_, chatWindowFactory_, presenceOracle_, avatarManager_, uiEventStream_, false, timerFactory, eventController_);
+		mucRegistry_ = new MUCRegistry();
+		muc_ = MUC::ref(new MUC(stanzaChannel_, iqRouter_, directedPresenceSender_, JID("teaparty@rooms.wonderland.lit"), mucRegistry_));
+		mocks_->ExpectCall(chatWindowFactory_, ChatWindowFactory::createChatWindow).With(muc_->getJID(), uiEventStream_).Return(window_);
+		controller_ = new MUCController (self_, muc_, nick_, stanzaChannel_, iqRouter_, chatWindowFactory_, presenceOracle_, avatarManager_, uiEventStream_, false, timerFactory, eventController_);
 	};
 
 	void tearDown() {
@@ -69,14 +71,16 @@ public:
 		delete uiEventStream_;
 		delete stanzaChannel_;
 		delete presenceSender_;
+		delete directedPresenceSender_;
 		delete iqRouter_;
 		delete iqChannel_;
+		delete mucRegistry_;
 		delete avatarManager_;
 	}
 
 	void finishJoin() {
 		Presence::ref presence(new Presence());
-		presence->setFrom(JID(muc_.toString() + "/" + nick_));
+		presence->setFrom(JID(muc_->getJID().toString() + "/" + nick_));
 		MUCUserPayload::ref status(new MUCUserPayload());
 		MUCUserPayload::StatusCode code;
 		code.code = 110;
@@ -90,20 +94,20 @@ public:
 		Message::ref message(new Message());
 
 		message = Message::ref(new Message());
-		message->setFrom(JID(muc_.toString() + "/otherperson"));
+		message->setFrom(JID(muc_->getJID().toString() + "/otherperson"));
 		message->setBody(nick_ + ": hi there");
 		message->setType(Message::Groupchat);
 		controller_->handleIncomingMessage(MessageEvent::ref(new MessageEvent(message)));
 		CPPUNIT_ASSERT_EQUAL((size_t)1, eventController_->getEvents().size());
 
-		message->setFrom(JID(muc_.toString() + "/other"));
+		message->setFrom(JID(muc_->getJID().toString() + "/other"));
 		message->setBody("Hi there " + nick_);
 		message->setType(Message::Groupchat);
 		controller_->handleIncomingMessage(MessageEvent::ref(new MessageEvent(message)));
 		CPPUNIT_ASSERT_EQUAL((size_t)2, eventController_->getEvents().size());
 
 		message = Message::ref(new Message());
-		message->setFrom(JID(muc_.toString() + "/other2"));
+		message->setFrom(JID(muc_->getJID().toString() + "/other2"));
 		message->setBody("Hi " + nick_.getLowerCase());
 		message->setType(Message::Groupchat);
 		controller_->handleIncomingMessage(MessageEvent::ref(new MessageEvent(message)));
@@ -113,7 +117,7 @@ public:
 	void testNotAddressedToSelf() {
 		finishJoin();
 		Message::ref message(new Message());
-		message->setFrom(JID(muc_.toString() + "/other3"));
+		message->setFrom(JID(muc_->getJID().toString() + "/other3"));
 		message->setBody("Hi there Hatter");
 		message->setType(Message::Groupchat);
 		controller_->handleIncomingMessage(MessageEvent::ref(new MessageEvent(message)));
@@ -123,7 +127,7 @@ public:
 	void testAddressedToSelfBySelf() {
 		finishJoin();
 		Message::ref message(new Message());
-		message->setFrom(JID(muc_.toString() + "/" + nick_));
+		message->setFrom(JID(muc_->getJID().toString() + "/" + nick_));
 		message->setBody("Hi there " + nick_);
 		message->setType(Message::Groupchat);
 		controller_->handleIncomingMessage(MessageEvent::ref(new MessageEvent(message)));
@@ -200,7 +204,7 @@ public:
 
 private:
 	JID self_;
-	JID muc_;
+	MUC::ref muc_;
 	String nick_;
 	StanzaChannel* stanzaChannel_;
 	IQChannel* iqChannel_;
@@ -211,10 +215,12 @@ private:
 //	NickResolver* nickResolver_;
 	PresenceOracle* presenceOracle_;
 	AvatarManager* avatarManager_;
-	PresenceSender* presenceSender_;
+	StanzaChannelPresenceSender* presenceSender_;
+	DirectedPresenceSender* directedPresenceSender_;
 	MockRepository* mocks_;
 	UIEventStream* uiEventStream_;
 	MockChatWindow* window_;
+	MUCRegistry* mucRegistry_;
 };
 
 CPPUNIT_TEST_SUITE_REGISTRATION(MUCControllerTest);

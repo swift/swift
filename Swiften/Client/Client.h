@@ -12,9 +12,12 @@ namespace Swift {
 	class SoftwareVersionResponder;
 	class XMPPRoster;
 	class XMPPRosterImpl;
+	class MUCManager;
 	class XMPPRosterController;
 	class PresenceOracle;
 	class PresenceSender;
+	class DirectedPresenceSender;
+	class StanzaChannelPresenceSender;
 	class MUCRegistry;
 	class Storages;
 	class MemoryStorages;
@@ -23,6 +26,7 @@ namespace Swift {
 	class CapsManager;
 	class EntityCapsManager;
 	class NickResolver;
+	class SubscriptionManager;
 
 	/**
 	 * Provides the core functionality for writing XMPP client software.
@@ -88,8 +92,10 @@ namespace Swift {
 				return presenceOracle;
 			}
 
-			PresenceSender* getPresenceSender() const {
-				return presenceSender;
+			PresenceSender* getPresenceSender() const;
+
+			MUCManager* getMUCManager() const {
+				return mucManager;
 			}
 
 			MUCRegistry* getMUCRegistry() const {
@@ -112,15 +118,17 @@ namespace Swift {
 				return nickResolver;
 			}
 
+			SubscriptionManager* getSubscriptionManager() const {
+				return subscriptionManager;
+			}
+
 		public:
 			/**
 			 * This signal is emitted when a JID changes presence.
 			 */
 			boost::signal<void (Presence::ref)> onPresenceChange;
 
-			/**
-			 * This signal is emitted when a presence subscription request is received.
-			 */
+
 			boost::signal<void (const JID&, const String&)> onPresenceSubscriptionRequest;
 
 		private:
@@ -133,12 +141,15 @@ namespace Swift {
 			XMPPRosterImpl* roster;
 			XMPPRosterController* rosterController;
 			PresenceOracle* presenceOracle;
-			PresenceSender* presenceSender;
+			DirectedPresenceSender* directedPresenceSender;
+			StanzaChannelPresenceSender* stanzaChannelPresenceSender;
 			MUCRegistry* mucRegistry;
 			VCardManager* vcardManager;
 			AvatarManager* avatarManager;
 			CapsManager* capsManager;
 			EntityCapsManager* entityCapsManager;
 			NickResolver* nickResolver;
+			SubscriptionManager* subscriptionManager;
+			MUCManager* mucManager;
 	};
 }

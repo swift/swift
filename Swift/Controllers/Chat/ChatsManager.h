@@ -23,6 +23,7 @@ namespace Swift {
 	class EventController;
 	class ChatController;
 	class MUCController;
+	class MUCManager;
 	class ChatWindowFactory;
 	class NickResolver;
 	class PresenceOracle;
@@ -35,10 +36,11 @@ namespace Swift {
 	class ChatListWindowFactory;
 	class TimerFactory;
 	class EntityCapsManager;
+	class DirectedPresenceSender;
 
 	class ChatsManager {
 		public:
-			ChatsManager(JID jid, StanzaChannel* stanzaChannel, IQRouter* iqRouter, EventController* eventController, ChatWindowFactory* chatWindowFactory, NickResolver* nickResolver, PresenceOracle* presenceOracle, PresenceSender* presenceSender, UIEventStream* uiEventStream, ChatListWindowFactory* chatListWindowFactory, bool useDelayForLatency, TimerFactory* timerFactory, MUCRegistry* mucRegistry, EntityCapsManager* entityCapsManager);
+			ChatsManager(JID jid, StanzaChannel* stanzaChannel, IQRouter* iqRouter, EventController* eventController, ChatWindowFactory* chatWindowFactory, NickResolver* nickResolver, PresenceOracle* presenceOracle, PresenceSender* presenceSender, UIEventStream* uiEventStream, ChatListWindowFactory* chatListWindowFactory, bool useDelayForLatency, TimerFactory* timerFactory, MUCRegistry* mucRegistry, EntityCapsManager* entityCapsManager, MUCManager* mucManager);
 			virtual ~ChatsManager();
 			void setAvatarManager(AvatarManager* avatarManager);
 			void setOnline(bool enabled);
@@ -78,5 +80,6 @@ namespace Swift {
 			TimerFactory* timerFactory_;
 			MUCRegistry* mucRegistry_;
 			EntityCapsManager* entityCapsManager_;
+			MUCManager* mucManager;
 	};
 }

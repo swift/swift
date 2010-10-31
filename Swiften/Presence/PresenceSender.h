@@ -6,31 +6,15 @@
 
 #pragma once
 
-#include <set>
-
 #include "Swiften/Elements/Presence.h"
 
 namespace Swift {
-	class StanzaChannel;
-
 	class PresenceSender {
 		public:
-			PresenceSender(StanzaChannel*);
+			virtual ~PresenceSender();
 
-			void addDirectedPresenceReceiver(const JID&);
-			void removeDirectedPresenceReceiver(const JID&);
+			virtual void sendPresence(Presence::ref) = 0;
 
-			void sendPresence(boost::shared_ptr<Presence>);
-
-			void cancelSubscription(const JID& jid);
-			void confirmSubscription(const JID& jid);
-			void requestSubscription(const JID& jid);
-
-			boost::shared_ptr<Presence> getLastSentUndirectedPresence();
-
-		private:
-			boost::shared_ptr<Presence> lastSentUndirectedPresence;
-			StanzaChannel* channel;
-			std::set<JID> directedPresenceReceivers;
+			virtual bool isAvailable() const = 0;
 	};
 }

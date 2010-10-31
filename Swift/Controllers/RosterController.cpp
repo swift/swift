@@ -17,7 +17,7 @@
 #include "Swift/Controllers/XMPPEvents/SubscriptionRequestEvent.h"
 #include "Swift/Controllers/XMPPEvents/ErrorEvent.h"
 #include "Swiften/Presence/PresenceOracle.h"
-#include "Swiften/Presence/PresenceSender.h"
+#include "Swiften/Presence/SubscriptionManager.h"
 #include "Swift/Controllers/XMPPEvents/EventController.h"
 #include "Swiften/Queries/IQRouter.h"
 #include "Swiften/Roster/Roster.h"
@@ -37,11 +37,11 @@ namespace Swift {
 /**
  * The controller does not gain ownership of these parameters.
  */
-RosterController::RosterController(const JID& jid, XMPPRoster* xmppRoster, AvatarManager* avatarManager, MainWindowFactory* mainWindowFactory, NickResolver* nickResolver, PresenceOracle* presenceOracle, PresenceSender* presenceSender, EventController* eventController, UIEventStream* uiEventStream, IQRouter* iqRouter, SettingsProvider* settings)
+RosterController::RosterController(const JID& jid, XMPPRoster* xmppRoster, AvatarManager* avatarManager, MainWindowFactory* mainWindowFactory, NickResolver* nickResolver, PresenceOracle* presenceOracle, SubscriptionManager* subscriptionManager, EventController* eventController, UIEventStream* uiEventStream, IQRouter* iqRouter, SettingsProvider* settings)
  : myJID_(jid), xmppRoster_(xmppRoster), mainWindowFactory_(mainWindowFactory), mainWindow_(mainWindowFactory_->createMainWindow(uiEventStream)), roster_(new Roster()), offlineFilter_(new OfflineRosterFilter()) {
 	iqRouter_ = iqRouter;
 	presenceOracle_ = presenceOracle;
-	presenceSender_ = presenceSender;
+	subscriptionManager_ = subscriptionManager;
 	eventController_ = eventController;
 	expandiness_ = new RosterGroupExpandinessPersister(roster_, settings);
 	roster_->addFilter(offlineFilter_);
@@ -54,7 +54,7 @@ RosterController::RosterController(const JID& jid, XMPPRoster* xmppRoster, Avata
 	xmppRoster_->onJIDUpdated.connect(boost::bind(&RosterController::handleOnJIDUpdated, this, _1, _2, _3));
 	xmppRoster_->onJIDRemoved.connect(boost::bind(&RosterController::handleOnJIDRemoved, this, _1));
 	xmppRoster_->onRosterCleared.connect(boost::bind(&RosterController::handleRosterCleared, this));
-	presenceOracle_->onPresenceSubscriptionRequest.connect(boost::bind(&RosterController::handleSubscriptionRequest, this, _1, _2));
+	subscriptionManager_->onPresenceSubscriptionRequest.connect(boost::bind(&RosterController::handleSubscriptionRequest, this, _1, _2));
 	presenceOracle_->onPresenceChange.connect(boost::bind(&RosterController::handleIncomingPresence, this, _1));
 	uiEventConnection_ = uiEventStream->onUIEvent.connect(boost::bind(&RosterController::handleUIEvent, this, _1));
 	avatarManager_ = avatarManager;
@@ -167,7 +167,7 @@ void RosterController::handleUIEvent(boost::shared_ptr<UIEvent> event) {
 		SetRosterRequest::ref request = SetRosterRequest::create(roster, iqRouter_);
 		request->onResponse.connect(boost::bind(&RosterController::handleRosterSetError, this, _1, roster));
 		request->send();
-		presenceSender_->requestSubscription(addContactEvent->getJID());
+		subscriptionManager_->requestSubscription(addContactEvent->getJID());
 		return;
 	}
 	boost::shared_ptr<RemoveRosterItemUIEvent> removeEvent = boost::dynamic_pointer_cast<RemoveRosterItemUIEvent>(event);
@@ -240,7 +240,7 @@ void RosterController::handleIncomingPresence(Presence::ref newPresence) {
 
 void RosterController::handleSubscriptionRequest(const JID& jid, const String& message) {
 	if (xmppRoster_->containsJID(jid) && (xmppRoster_->getSubscriptionStateForJID(jid) == RosterItemPayload::To || xmppRoster_->getSubscriptionStateForJID(jid) == RosterItemPayload::Both)) {
-		presenceSender_->confirmSubscription(jid);
+		subscriptionManager_->confirmSubscription(jid);
 		return;
 	}
 	SubscriptionRequestEvent* eventPointer = new SubscriptionRequestEvent(jid, message);
@@ -251,14 +251,14 @@ void RosterController::handleSubscriptionRequest(const JID& jid, const String& m
 }
 
 void RosterController::handleSubscriptionRequestAccepted(SubscriptionRequestEvent* event) {
-	presenceSender_->confirmSubscription(event->getJID());
+	subscriptionManager_->confirmSubscription(event->getJID());
 	if (!xmppRoster_->containsJID(event->getJID()) || xmppRoster_->getSubscriptionStateForJID(event->getJID()) == RosterItemPayload::None || xmppRoster_->getSubscriptionStateForJID(event->getJID()) == RosterItemPayload::From) {
-		presenceSender_->requestSubscription(event->getJID());
+		subscriptionManager_->requestSubscription(event->getJID());
 	}
 }
 
 void RosterController::handleSubscriptionRequestDeclined(SubscriptionRequestEvent* event) {
-	presenceSender_->cancelSubscription(event->getJID());
+	subscriptionManager_->cancelSubscription(event->getJID());
 }
 
 void RosterController::handleAvatarChanged(const JID& jid) {

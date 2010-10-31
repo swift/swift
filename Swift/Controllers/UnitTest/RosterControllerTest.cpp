@@ -24,7 +24,7 @@
 #include "Swiften/Avatars/NullAvatarManager.h"
 #include "Swift/Controllers/XMPPEvents/EventController.h"
 #include "Swiften/Presence/PresenceOracle.h"
-#include "Swiften/Presence/PresenceSender.h"
+#include "Swiften/Presence/SubscriptionManager.h"
 #include "Swiften/Client/NickResolver.h"
 #include "Swift/Controllers/UIEvents/UIEventStream.h"
 #include "Swift/Controllers/UIEvents/RenameRosterItemUIEvent.h"
@@ -63,11 +63,11 @@ class RosterControllerTest : public CppUnit::TestFixture
 			router_ = new IQRouter(channel_);
 			stanzaChannel_ = new DummyStanzaChannel();
 			presenceOracle_ = new PresenceOracle(stanzaChannel_);
-			presenceSender_ = new PresenceSender(stanzaChannel_);
+			subscriptionManager_ = new SubscriptionManager(stanzaChannel_);
 			eventController_ = new EventController();
 			uiEventStream_ = new UIEventStream();
 			settings_ = new DummySettingsProvider();
-			rosterController_ = new RosterController(jid_, xmppRoster_, avatarManager_, mainWindowFactory_, nickResolver_, presenceOracle_, presenceSender_, eventController_, uiEventStream_, router_, settings_);
+			rosterController_ = new RosterController(jid_, xmppRoster_, avatarManager_, mainWindowFactory_, nickResolver_, presenceOracle_, subscriptionManager_, eventController_, uiEventStream_, router_, settings_);
 			mainWindow_ = mainWindowFactory_->last;
 		};
 
@@ -80,7 +80,7 @@ class RosterControllerTest : public CppUnit::TestFixture
 			delete channel_;
 			delete router_;
 			delete eventController_;
-			delete presenceSender_;
+			delete subscriptionManager_;
 			delete presenceOracle_;
 			delete stanzaChannel_;
 			delete uiEventStream_;
@@ -310,7 +310,7 @@ class RosterControllerTest : public CppUnit::TestFixture
 		DummyStanzaChannel* stanzaChannel_;	
 		IQRouter* router_;
 		PresenceOracle* presenceOracle_;
-		PresenceSender* presenceSender_;
+		SubscriptionManager* subscriptionManager_;
 		EventController* eventController_;
 		UIEventStream* uiEventStream_;
 		MockMainWindow* mainWindow_;

@@ -9,7 +9,7 @@
 #include <boost/bind.hpp>
 #include <boost/shared_ptr.hpp>
 
-#include "Swiften/Presence/PresenceSender.h"
+#include "Swiften/Presence/DirectedPresenceSender.h"
 #include "Swiften/Client/StanzaChannel.h"
 #include "Swiften/Queries/IQRouter.h"
 #include "Swiften/Elements/Form.h"
@@ -17,13 +17,15 @@
 #include "Swiften/Elements/MUCUserPayload.h"
 #include "Swiften/Elements/MUCOwnerPayload.h"
 #include "Swiften/Elements/MUCPayload.h"
+#include "Swiften/MUC/MUCRegistry.h"
 
 namespace Swift {
 
 typedef std::pair<String, MUCOccupant> StringMUCOccupantPair;
 
-MUC::MUC(StanzaChannel* stanzaChannel, IQRouter* iqRouter, PresenceSender* presenceSender, const JID &muc) : ownMUCJID(muc), stanzaChannel(stanzaChannel), iqRouter_(iqRouter), presenceSender(presenceSender), muc_(muc) {
+MUC::MUC(StanzaChannel* stanzaChannel, IQRouter* iqRouter, DirectedPresenceSender* presenceSender, const JID &muc, MUCRegistry* mucRegistry) : ownMUCJID(muc), stanzaChannel(stanzaChannel), iqRouter_(iqRouter), presenceSender(presenceSender), mucRegistry(mucRegistry) {
 	scopedConnection_ = stanzaChannel->onPresenceReceived.connect(boost::bind(&MUC::handleIncomingPresence, this, _1));
+	mucRegistry->addMUC(getJID());
 }
 
 //FIXME: discover reserved nickname
@@ -57,6 +59,7 @@ void MUC::joinWithContextSince(const String &nick) {
 
 void MUC::part() {
 	presenceSender->removeDirectedPresenceReceiver(ownMUCJID);
+	mucRegistry->removeMUC(getJID());
 }
 
 void MUC::handleUserLeft(LeavingType type) {
@@ -157,7 +160,7 @@ void MUC::handleIncomingPresence(boost::shared_ptr<Presence> presence) {
 				/* Currently deal with this by making an instant room */
 				boost::shared_ptr<MUCOwnerPayload> mucPayload(new MUCOwnerPayload());
 				mucPayload->setPayload(boost::shared_ptr<Payload>(new Form(Form::SubmitType)));
-				boost::shared_ptr<IQ> iq(IQ::createRequest(IQ::Set, muc_, iqRouter_->getNewIQID(), mucPayload));
+				boost::shared_ptr<IQ> iq(IQ::createRequest(IQ::Set, getJID(), iqRouter_->getNewIQID(), mucPayload));
 				iqRouter_->sendIQ(iq);
 			}
 		}

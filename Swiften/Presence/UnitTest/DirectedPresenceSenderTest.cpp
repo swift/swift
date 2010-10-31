@@ -8,12 +8,13 @@
 #include <cppunit/extensions/TestFactoryRegistry.h>
 
 #include "Swiften/Client/DummyStanzaChannel.h"
-#include "Swiften/Presence/PresenceSender.h"
+#include "Swiften/Presence/DirectedPresenceSender.h"
+#include "Swiften/Presence/StanzaChannelPresenceSender.h"
 
 using namespace Swift;
 
-class PresenceSenderTest : public CppUnit::TestFixture {
-		CPPUNIT_TEST_SUITE(PresenceSenderTest);
+class DirectedPresenceSenderTest : public CppUnit::TestFixture {
+		CPPUNIT_TEST_SUITE(DirectedPresenceSenderTest);
 		CPPUNIT_TEST(testSendPresence);
 		CPPUNIT_TEST(testSendPresence_UndirectedPresenceWithDirectedPresenceReceivers);
 		CPPUNIT_TEST(testSendPresence_DirectedPresenceWithDirectedPresenceReceivers);
@@ -29,14 +30,16 @@ class PresenceSenderTest : public CppUnit::TestFixture {
 			testPresence->setStatus("Foo");
 			secondTestPresence = boost::shared_ptr<Presence>(new Presence());
 			secondTestPresence->setStatus("Bar");
+			stanzaChannelPresenceSender = new StanzaChannelPresenceSender(channel);
 		}
 
 		void tearDown() {
+			delete stanzaChannelPresenceSender;
 			delete channel;
 		}
 
 		void testSendPresence() {
-			std::auto_ptr<PresenceSender> testling(createPresenceSender());
+			std::auto_ptr<DirectedPresenceSender> testling(createPresenceSender());
 			testling->sendPresence(testPresence);
 
 			CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(channel->sentStanzas.size()));
@@ -45,7 +48,7 @@ class PresenceSenderTest : public CppUnit::TestFixture {
 		}
 
 		void testSendPresence_UndirectedPresenceWithDirectedPresenceReceivers() {
-			std::auto_ptr<PresenceSender> testling(createPresenceSender());
+			std::auto_ptr<DirectedPresenceSender> testling(createPresenceSender());
 			testling->addDirectedPresenceReceiver(JID("alice@wonderland.lit/teaparty"));
 
 			testling->sendPresence(testPresence);
@@ -59,7 +62,7 @@ class PresenceSenderTest : public CppUnit::TestFixture {
 		}
 
 		void testSendPresence_DirectedPresenceWithDirectedPresenceReceivers() {
-			std::auto_ptr<PresenceSender> testling(createPresenceSender());
+			std::auto_ptr<DirectedPresenceSender> testling(createPresenceSender());
 			testling->addDirectedPresenceReceiver(JID("alice@wonderland.lit/teaparty"));
 			channel->sentStanzas.clear();
 
@@ -72,7 +75,7 @@ class PresenceSenderTest : public CppUnit::TestFixture {
 		}
 
 		void testAddDirectedPresenceReceiver() {
-			std::auto_ptr<PresenceSender> testling(createPresenceSender());
+			std::auto_ptr<DirectedPresenceSender> testling(createPresenceSender());
 			testling->sendPresence(testPresence);
 			channel->sentStanzas.clear();
 
@@ -85,7 +88,7 @@ class PresenceSenderTest : public CppUnit::TestFixture {
 		}
 
 		void testAddDirectedPresenceReceiver_AfterSendingDirectedPresence() {
-			std::auto_ptr<PresenceSender> testling(createPresenceSender());
+			std::auto_ptr<DirectedPresenceSender> testling(createPresenceSender());
 			testling->sendPresence(testPresence);
 			secondTestPresence->setTo(JID("foo@bar.com"));
 			testling->sendPresence(secondTestPresence);
@@ -100,7 +103,7 @@ class PresenceSenderTest : public CppUnit::TestFixture {
 		}
 
 		void testRemoveDirectedPresenceReceiver() {
-			std::auto_ptr<PresenceSender> testling(createPresenceSender());
+			std::auto_ptr<DirectedPresenceSender> testling(createPresenceSender());
 			testling->addDirectedPresenceReceiver(JID("alice@wonderland.lit/teaparty"));
 			channel->sentStanzas.clear();
 
@@ -113,14 +116,15 @@ class PresenceSenderTest : public CppUnit::TestFixture {
 		}
 
 	private:
-		PresenceSender* createPresenceSender() {
-			return new PresenceSender(channel);
+		DirectedPresenceSender* createPresenceSender() {
+			return new DirectedPresenceSender(stanzaChannelPresenceSender);
 		}
 	
 	private:
 		DummyStanzaChannel* channel;
+		StanzaChannelPresenceSender* stanzaChannelPresenceSender;
 		boost::shared_ptr<Presence> testPresence;
 		boost::shared_ptr<Presence> secondTestPresence;
 };
 
-CPPUNIT_TEST_SUITE_REGISTRATION(PresenceSenderTest);
+CPPUNIT_TEST_SUITE_REGISTRATION(DirectedPresenceSenderTest);

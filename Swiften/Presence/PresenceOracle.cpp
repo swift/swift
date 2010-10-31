@@ -33,12 +33,11 @@ void PresenceOracle::handleStanzaChannelAvailableChanged(bool available) {
 void PresenceOracle::handleIncomingPresence(Presence::ref presence) {
 	JID bareJID(presence->getFrom().toBare());
 	if (presence->getType() == Presence::Subscribe) {
-		onPresenceSubscriptionRequest(bareJID, presence->getStatus());
-	} else {
+	}
+	else {
 		Presence::ref passedPresence = presence;
 		if (presence->getType() == Presence::Unsubscribe) {
 			/* 3921bis says that we don't follow up with an unavailable, so simulate this ourselves */
-			onPresenceSubscriptionRevoked(bareJID, presence->getStatus());
 			passedPresence = Presence::ref(new Presence());
 			passedPresence->setType(Presence::Unavailable);
 			passedPresence->setFrom(bareJID);
