@@ -24,6 +24,7 @@ void BoostTimer::start() {
 
 void BoostTimer::stop() {
 	timer.cancel();
+	eventLoop->removeEventsFromOwner(shared_from_this());
 }
 
 void BoostTimer::handleTimerTick(const boost::system::error_code& error) {
