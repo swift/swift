@@ -42,11 +42,12 @@ void GroupItemDelegate::paint(QPainter* painter, const QStyleOptionViewItem& opt
 	painter->fillPath(fillPath, backgroundBrush);
 	painter->drawPath(linePath);
 	
+	int triangleHorizontalOffset = 1;
 	int triangleWidth = 9;
 	int triangleHeight = 5;
-	paintExpansionTriangle(painter, region.adjusted(common_.horizontalMargin +  1, 0, 0, 0), triangleWidth, triangleHeight, expanded);
+	paintExpansionTriangle(painter, region.adjusted(common_.horizontalMargin +  triangleHorizontalOffset + 1, 0, 0, 0), triangleWidth, triangleHeight, expanded);
 	
-	int textLeftOffset = 3 * common_.horizontalMargin + 1 + triangleWidth;
+	int textLeftOffset = 3 * common_.horizontalMargin + 1 + triangleWidth + triangleHorizontalOffset;
 	QFontMetrics fontMetrics(groupFont_);
 	int textTopOffset = (region.height() - fontMetrics.height()) / 2;
 	painter->setFont(groupFont_);
@@ -76,9 +77,12 @@ void GroupItemDelegate::paintExpansionTriangle(QPainter* painter, const QRect& r
 		triangle << triangleTopLeft;
 		triangle << triangleTopLeft + QPointF(width, 0);
 		triangle << triangleTopLeft + QPointF(width / 2, height);
+		// The expanded triangle should be a little lower, because its pointy shape makes it feel
+		// as if it's too high.
+		triangle.translate(QPointF(0,1));
 	}
 	else {
-		QPointF triangleTopLeft(region.left(), region.top() + region.height() / 2 - width / 2);
+		QPointF triangleTopLeft(region.left() + ((width - height) / 2), region.top() + region.height() / 2 - width / 2);
 		triangle << triangleTopLeft;
 		triangle << triangleTopLeft + QPointF(height, width / 2);
 		triangle << triangleTopLeft + QPointF(0, width);
