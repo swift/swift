@@ -64,7 +64,7 @@ QtLoginWindow::QtLoginWindow(UIEventStream* uiEventStream) : QMainWindow() {
 	layout->addStretch(2);
 
 	QLabel* jidLabel = new QLabel(this);
-	jidLabel->setText("<font size='-1'>User address</font>");
+	jidLabel->setText("<font size='-1'>User address:</font>");
 	layout->addWidget(jidLabel);
 
 	username_ = new QComboBox(this);
@@ -79,7 +79,7 @@ QtLoginWindow::QtLoginWindow(UIEventStream* uiEventStream) : QMainWindow() {
 
 
 	QLabel* passwordLabel = new QLabel();
-	passwordLabel->setText("<font size='-1'>Password</font>");
+	passwordLabel->setText("<font size='-1'>Password:</font>");
 	layout->addWidget(passwordLabel);
 
 
