@@ -29,7 +29,9 @@ void WhitespacePingLayer::handleDataRead(const ByteArray& data) {
 }
 
 void WhitespacePingLayer::handleTimerTick() {
+	timer->stop();
 	onWriteData(" ");
+	timer->start();
 }
 
 void WhitespacePingLayer::setActive() {

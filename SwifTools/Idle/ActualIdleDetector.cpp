@@ -26,7 +26,9 @@ ActualIdleDetector::~ActualIdleDetector() {
 }
 
 void ActualIdleDetector::handleTimerTick() {
+	timer->stop();
 	setIdle(querier->getIdleTimeSeconds() >= getIdleTimeSeconds());
+	timer->start();
 }
 
 }
