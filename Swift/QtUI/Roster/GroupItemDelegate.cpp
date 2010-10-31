@@ -8,6 +8,7 @@
 
 #include <QPainter>
 #include <QPen>
+#include <QtDebug>
 
 namespace Swift {
 
@@ -18,7 +19,7 @@ GroupItemDelegate::GroupItemDelegate() : groupFont_(QApplication::font()) {
 
 QSize GroupItemDelegate::sizeHint(const QStyleOptionViewItem& /*option*/, const QModelIndex& /*index*/) const {
 	QFontMetrics groupMetrics(groupFont_);
-	return QSize(150, groupMetrics.height() + 4);
+	return QSize(150, groupMetrics.height() + common_.verticalMargin + 2);
 }
 
 void GroupItemDelegate::paint(QPainter* painter, const QStyleOptionViewItem& option, const QString& name, int rowCount, bool expanded) const {
@@ -47,7 +48,7 @@ void GroupItemDelegate::paint(QPainter* painter, const QStyleOptionViewItem& opt
 	
 	int textLeftOffset = 3 * common_.horizontalMargin + 1 + triangleWidth;
 	QFontMetrics fontMetrics(groupFont_);
-	int textTopOffset = (option.rect.height() - fontMetrics.height()) / 2;
+	int textTopOffset = (region.height() - fontMetrics.height()) / 2;
 	painter->setFont(groupFont_);
 	int contactCountWidth = 0;
 	QRect textRect = region.adjusted(textLeftOffset, textTopOffset, -1 * textLeftOffset, -1 * textTopOffset);
