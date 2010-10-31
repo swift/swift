@@ -69,30 +69,29 @@ void GroupItemDelegate::paint(QPainter* painter, const QStyleOptionViewItem& opt
 }
 
 void GroupItemDelegate::paintExpansionTriangle(QPainter* painter, const QRect& region, int width, int height, bool expanded) const {
-	QBrush triangleBrush(QColor(110, 110, 110));
-	QBrush triangleShadowBrush(QColor(47, 47, 47));
+	// height is the height of the downward pointing triangle
+	QPolygonF triangle;
+	if (expanded) {
+		QPointF triangleTopLeft(region.left(), region.top() + region.height() / 2 - height / 2);
+		triangle << triangleTopLeft;
+		triangle << triangleTopLeft + QPointF(width, 0);
+		triangle << triangleTopLeft + QPointF(width / 2, height);
+	}
+	else {
+		QPointF triangleTopLeft(region.left(), region.top() + region.height() / 2 - width / 2);
+		triangle << triangleTopLeft;
+		triangle << triangleTopLeft + QPointF(height, width / 2);
+		triangle << triangleTopLeft + QPointF(0, width);
+	}
+	//qDebug() << "Painting triangle: " << triangle;
+
+	QPolygonF triangleShadow(triangle);
+	triangleShadow.translate(QPointF(0, -1));
+
 	QPainterPath trianglePath;
 	QPainterPath triangleShadowPath;
-	QPolygonF triangle;
-	QPolygonF triangleShadow;
-	QPointF triangleTopLeft(region.left(), region.top() + region.height() / 2 - height / 2);
-	QPointF shadowOffset(0,-1);
-	QPointF trianglePoint2;
-	QPointF trianglePoint3;
-	
-	if (expanded) {
-		triangleTopLeft += QPoint(0, 1);
-		trianglePoint2 = triangleTopLeft + QPointF(width, 0);
-		trianglePoint3 = trianglePoint2 + QPointF(-1 * (width / 2), height);
-		//qDebug() << "Plotting expanded" << triangleTopLeft << ", " << trianglePoint2 << ", " << trianglePoint3;
-	} else {
-		trianglePoint2 = triangleTopLeft + QPointF(0, width);
-		trianglePoint3 = trianglePoint2 + QPointF(height, -1 * (width / 2));
-		//qDebug() << "Plotting collapsed" << triangleTopLeft << ", " << trianglePoint2 << ", " << trianglePoint3;
-	}
-	triangle << triangleTopLeft << trianglePoint2 << trianglePoint3 << triangleTopLeft;
-	triangleShadow << triangleTopLeft + shadowOffset << trianglePoint2 + shadowOffset << trianglePoint3 + shadowOffset << triangleTopLeft + shadowOffset;
-	
+	QBrush triangleBrush(QColor(110, 110, 110));
+	QBrush triangleShadowBrush(QColor(47, 47, 47));
 	trianglePath.addPolygon(triangle);
 	triangleShadowPath.addPolygon(triangleShadow);
 	painter->fillPath(triangleShadowPath, triangleShadowBrush);
