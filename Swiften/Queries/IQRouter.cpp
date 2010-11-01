@@ -33,8 +33,9 @@ void IQRouter::handleIQ(boost::shared_ptr<IQ> iq) {
 	queueRemoves_ = true;
 
 	bool handled = false;
-	foreach(boost::shared_ptr<IQHandler> handler, handlers_) {
-		handled |= handler->handleIQ(iq);
+	// Go through the handlers in reverse order, to give precedence to the last added handler
+	for (std::vector<boost::shared_ptr<IQHandler> >::const_reverse_iterator i = handlers_.rbegin(); i != handlers_.rend(); ++i) {
+		handled |= (*i)->handleIQ(iq);
 		if (handled) {
 			break;
 		}

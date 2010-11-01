@@ -54,8 +54,8 @@ class IQRouterTest : public CppUnit::TestFixture
 
 		void testRemoveHandler_AfterHandleIQ() {
 			IQRouter testling(channel_);
-			DummyIQHandler handler1(true, &testling);
 			DummyIQHandler handler2(true, &testling);
+			DummyIQHandler handler1(true, &testling);
 
 			channel_->onIQReceived(boost::shared_ptr<IQ>(new IQ()));
 			testling.removeHandler(&handler1);
@@ -67,8 +67,8 @@ class IQRouterTest : public CppUnit::TestFixture
 
 		void testHandleIQ_SuccesfulHandlerFirst() {
 			IQRouter testling(channel_);
-			DummyIQHandler handler1(true, &testling);
 			DummyIQHandler handler2(false, &testling);
+			DummyIQHandler handler1(true, &testling);
 
 			channel_->onIQReceived(boost::shared_ptr<IQ>(new IQ()));
 
@@ -79,8 +79,8 @@ class IQRouterTest : public CppUnit::TestFixture
 
 		void testHandleIQ_SuccesfulHandlerLast() {
 			IQRouter testling(channel_);
-			DummyIQHandler handler1(false, &testling);
 			DummyIQHandler handler2(true, &testling);
+			DummyIQHandler handler1(false, &testling);
 
 			channel_->onIQReceived(boost::shared_ptr<IQ>(new IQ()));
 
@@ -102,8 +102,8 @@ class IQRouterTest : public CppUnit::TestFixture
 
 		void testHandleIQ_HandlerRemovedDuringHandle() {
 			IQRouter testling(channel_);
-			RemovingIQHandler handler1(&testling);
 			DummyIQHandler handler2(true, &testling);
+			RemovingIQHandler handler1(&testling);
 
 			channel_->onIQReceived(boost::shared_ptr<IQ>(new IQ()));
 			channel_->onIQReceived(boost::shared_ptr<IQ>(new IQ()));
