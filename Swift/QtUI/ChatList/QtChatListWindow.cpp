@@ -68,6 +68,9 @@ void QtChatListWindow::setupContextMenus() {
 }
 
 void QtChatListWindow::handleItemActivated(const QModelIndex& index) {
+	if (!bookmarksEnabled_) {
+		return;
+	}
 	ChatListItem* item = model_->getItemForIndex(index);
 	ChatListMUCItem* mucItem = dynamic_cast<ChatListMUCItem*>(item);
 	if (mucItem) {

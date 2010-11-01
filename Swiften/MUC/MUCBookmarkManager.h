@@ -27,7 +27,7 @@ namespace Swift {
 			void removeBookmark(const MUCBookmark& bookmark);
 			void replaceBookmark(const MUCBookmark& oldBookmark, const MUCBookmark& newBookmark);
 
-			const std::vector<MUCBookmark>& getBookmarks() const; 
+			const std::vector<MUCBookmark>& getBookmarks() const;
 
 		public:
 			boost::signal<void (const MUCBookmark&)> onBookmarkAdded;

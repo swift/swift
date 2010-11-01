@@ -161,7 +161,7 @@ void ChatsManager::setOnline(bool enabled) {
 			controllerPair.second->rejoin();
 		}
 	}
-
+	chatListWindow_->setBookmarksEnabled(enabled);
 }
 
 void ChatsManager::handleChatRequest(const String &contact) {
