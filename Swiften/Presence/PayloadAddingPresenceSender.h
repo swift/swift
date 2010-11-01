@@ -15,7 +15,7 @@ namespace Swift {
 	/**
 	 * This presence sender adds payloads to outgoing presences.
 	 *
-	 *
+	 * This class isn't meant to be used with directed presence.
 	 */
 	class PayloadAddingPresenceSender : public PresenceSender {
 		public:
@@ -24,6 +24,12 @@ namespace Swift {
 			void sendPresence(Presence::ref);
 			bool isAvailable() const;
 
+			/**
+			 * Sets the payload to be added to outgoing presences.
+			 * If initial presence has been sent, this will resend the last sent presence
+			 * with an updated payload. Initial presence is reset when unavailable presence is
+			 * sent.
+			 */
 			void setPayload(Payload::ref);
 
 		private:

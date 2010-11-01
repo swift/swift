@@ -57,14 +57,14 @@ namespace Swift {
 			 *
 			 * This method is implemented in the concrete subclasses.
 			 */
-			virtual bool handleGetRequest(const JID& from, const String& id, boost::shared_ptr<PAYLOAD_TYPE> payload) = 0;
+			virtual bool handleGetRequest(const JID& from, const JID& to, const String& id, boost::shared_ptr<PAYLOAD_TYPE> payload) = 0;
 
 			/**
 			 * Handle an incoming IQ-Set request containing a payload of class PAYLOAD_TYPE.
 			 *
 			 * This method is implemented in the concrete subclasses.
 			 */
-			virtual bool handleSetRequest(const JID& from, const String& id, boost::shared_ptr<PAYLOAD_TYPE> payload) = 0;
+			virtual bool handleSetRequest(const JID& from, const JID& to, const String& id, boost::shared_ptr<PAYLOAD_TYPE> payload) = 0;
 
 			/**
 			 * Convenience function for sending an IQ response.
@@ -74,10 +74,24 @@ namespace Swift {
 			}
 
 			/**
+			 * Convenience function for sending an IQ response, with a specific from address.
+			 */
+			void sendResponse(const JID& to, const JID& from, const String& id, boost::shared_ptr<PAYLOAD_TYPE> payload) {
+				router_->sendIQ(IQ::createResult(to, from, id, payload));
+			}
+
+			/**
 			 * Convenience function for responding with an error.
 			 */
 			void sendError(const JID& to, const String& id, ErrorPayload::Condition condition, ErrorPayload::Type type) {
 				router_->sendIQ(IQ::createError(to, id, condition, type));
+			}
+
+			/**
+			 * Convenience function for responding with an error from a specific from address.
+			 */
+			void sendError(const JID& to, const JID& from, const String& id, ErrorPayload::Condition condition, ErrorPayload::Type type) {
+				router_->sendIQ(IQ::createError(to, from, id, condition, type));
 			}
 
 		private:
@@ -87,10 +101,10 @@ namespace Swift {
 					if (payload) {
 						bool result;
 						if (iq->getType() == IQ::Set) {
-							result = handleSetRequest(iq->getFrom(), iq->getID(), payload);
+							result = handleSetRequest(iq->getFrom(), iq->getTo(), iq->getID(), payload);
 						}
 						else {
-							result = handleGetRequest(iq->getFrom(), iq->getID(), payload);
+							result = handleGetRequest(iq->getFrom(), iq->getTo(), iq->getID(), payload);
 						}
 						if (!result) {
 							router_->sendIQ(IQ::createError(iq->getFrom(), iq->getID(), ErrorPayload::NotAllowed, ErrorPayload::Cancel));

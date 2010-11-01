@@ -23,7 +23,7 @@ namespace Swift {
 			void setDiscoInfo(const String& node, const DiscoInfo& info);
 
 		private:
-			virtual bool handleGetRequest(const JID& from, const String& id, boost::shared_ptr<DiscoInfo> payload);
+			virtual bool handleGetRequest(const JID& from, const JID& to, const String& id, boost::shared_ptr<DiscoInfo> payload);
 
 		private:
 			DiscoInfo info_;

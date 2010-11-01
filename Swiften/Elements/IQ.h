@@ -32,8 +32,19 @@ namespace Swift {
 					const JID& to, 
 					const String& id, 
 					boost::shared_ptr<Payload> payload = boost::shared_ptr<Payload>());
+			static boost::shared_ptr<IQ> createResult(
+					const JID& to,
+					const JID& from,
+					const String& id,
+					boost::shared_ptr<Payload> payload = boost::shared_ptr<Payload>());
 			static boost::shared_ptr<IQ> createError(
 					const JID& to,
+					const String& id,
+					ErrorPayload::Condition condition = ErrorPayload::BadRequest,
+					ErrorPayload::Type type = ErrorPayload::Cancel);
+			static boost::shared_ptr<IQ> createError(
+					const JID& to,
+					const JID& from,
 					const String& id,
 					ErrorPayload::Condition condition = ErrorPayload::BadRequest,
 					ErrorPayload::Type type = ErrorPayload::Cancel);

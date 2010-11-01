@@ -28,7 +28,7 @@ void DiscoInfoResponder::setDiscoInfo(const String& node, const DiscoInfo& info)
 	nodeInfo_[node] = newInfo;
 }
 
-bool DiscoInfoResponder::handleGetRequest(const JID& from, const String& id, boost::shared_ptr<DiscoInfo> info) {
+bool DiscoInfoResponder::handleGetRequest(const JID& from, const JID&, const String& id, boost::shared_ptr<DiscoInfo> info) {
 	if (info->getNode().isEmpty()) {
 		sendResponse(from, id, boost::shared_ptr<DiscoInfo>(new DiscoInfo(info_)));
 	}

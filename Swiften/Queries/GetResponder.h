@@ -15,6 +15,6 @@ namespace Swift {
 			GetResponder(IQRouter* router) : Responder<T>(router) {}
 
 		private:
-			virtual bool handleSetRequest(const JID&, const String&, boost::shared_ptr<T>) { return false; }
+			virtual bool handleSetRequest(const JID&, const JID&, const String&, boost::shared_ptr<T>) { return false; }
 	};
 }
