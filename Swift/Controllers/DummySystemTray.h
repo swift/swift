@@ -13,5 +13,6 @@ namespace Swift {
 	public:
 		void setUnreadMessages(bool some) {};
 		void setStatusType(StatusShow::Type type) {};
+		void setConnecting() {}
 	};
 }
