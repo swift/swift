@@ -13,6 +13,7 @@ namespace Swift {
 				UnknownError,
 				PeerError,
 				ReadError,
+				ClosedError,
 			};
 
 			FileTransferError(Type type = UnknownError) : type(type) {}
