@@ -132,7 +132,7 @@ public:
 	private:
 		void setContactHas85Caps() {
 			DiscoInfo::ref caps(new DiscoInfo());
-			caps->addFeature(ChatState::getFeatureNamespace());
+			caps->addFeature(DiscoInfo::ChatStatesFeature);
 			entityCapsProvider->caps[JID("foo@bar.com/baz")] = caps;
 			entityCapsProvider->onCapsChanged(JID("foo@bar.com/baz"));
 		}

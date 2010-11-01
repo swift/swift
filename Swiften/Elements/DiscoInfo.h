@@ -19,6 +19,9 @@ namespace Swift {
 		public:
 			typedef boost::shared_ptr<DiscoInfo> ref;
 
+			static const String ChatStatesFeature;
+			static const String SecurityLabelsFeature;
+
 			const static std::string SecurityLabels;
 			class Identity {
 				public:

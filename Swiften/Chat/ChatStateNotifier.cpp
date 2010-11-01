@@ -84,7 +84,7 @@ void ChatStateNotifier::addChatStateRequest(Message::ref message) {
 void ChatStateNotifier::handleCapsChanged(const JID& jid) {
 	if (jid == contact_) {
 		DiscoInfo::ref caps = entityCapsManager_->getCaps(contact_);
-		bool hasCSN = caps && caps->hasFeature(ChatState::getFeatureNamespace());
+		bool hasCSN = caps && caps->hasFeature(DiscoInfo::ChatStatesFeature);
 		contactHas85Caps_ = hasCSN;
 	}
 }

@@ -19,7 +19,7 @@ namespace Swift {
 
 			ChatStateType getChatState() { return state_; }
 			void setChatState(ChatStateType state) {state_ = state;}
-			static String getFeatureNamespace() {return "http://jabber.org/protocol/chatstates";}
+
 		private:
 			ChatStateType state_;
 	};

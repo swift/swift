@@ -239,8 +239,8 @@ void MainController::handleConnected() {
 
 		DiscoInfo discoInfo;
 		discoInfo.addIdentity(DiscoInfo::Identity(CLIENT_NAME, "client", "pc"));
-		discoInfo.addFeature("urn:xmpp:sec-label:0");
-		discoInfo.addFeature(ChatState::getFeatureNamespace());
+		discoInfo.addFeature(DiscoInfo::ChatStatesFeature);
+		discoInfo.addFeature(DiscoInfo::SecurityLabelsFeature);
 		client_->getDiscoManager()->setCapsNode(CLIENT_NODE);
 		client_->getDiscoManager()->setDiscoInfo(discoInfo);
 

@@ -8,6 +8,10 @@
 
 namespace Swift {
 
+const String DiscoInfo::ChatStatesFeature = String("http://jabber.org/protocol/chatstates");
+const String DiscoInfo::SecurityLabelsFeature = String("urn:xmpp:sec-label:0");
+
+
 bool DiscoInfo::Identity::operator<(const Identity& other) const {
 	if (category_ == other.category_) {
 		if (type_ == other.type_) {
