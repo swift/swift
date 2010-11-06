@@ -13,11 +13,11 @@ namespace Swift {
 	class ChatStateNotifier;
 	class ChatStateTracker;
 	class NickResolver;
-	class EntityCapsManager;
+	class EntityCapsProvider;
 
 	class ChatController : public ChatControllerBase {
 		public:
-			ChatController(const JID& self, StanzaChannel* stanzaChannel, IQRouter* iqRouter, ChatWindowFactory* chatWindowFactory, const JID &contact, NickResolver* nickResolver, PresenceOracle* presenceOracle, AvatarManager* avatarManager, bool isInMUC, bool useDelayForLatency, UIEventStream* eventStream, EventController* eventController, TimerFactory* timerFactory, EntityCapsManager* entityCapsManager);
+			ChatController(const JID& self, StanzaChannel* stanzaChannel, IQRouter* iqRouter, ChatWindowFactory* chatWindowFactory, const JID &contact, NickResolver* nickResolver, PresenceOracle* presenceOracle, AvatarManager* avatarManager, bool isInMUC, bool useDelayForLatency, UIEventStream* eventStream, EventController* eventController, TimerFactory* timerFactory, EntityCapsProvider* entityCapsProvider);
 			virtual ~ChatController();
 			virtual void setToJID(const JID& jid);
 			virtual void setOnline(bool online);

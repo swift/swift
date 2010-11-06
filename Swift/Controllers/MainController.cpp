@@ -229,7 +229,7 @@ void MainController::handleConnected() {
 		rosterController_->onChangeStatusRequest.connect(boost::bind(&MainController::handleChangeStatusRequest, this, _1, _2));
 		rosterController_->onSignOutRequest.connect(boost::bind(&MainController::signOut, this));
 
-		chatsManager_ = new ChatsManager(jid_, client_->getStanzaChannel(), client_->getIQRouter(), eventController_, chatWindowFactory_, client_->getNickResolver(), client_->getPresenceOracle(), client_->getPresenceSender(), uiEventStream_, chatListWindowFactory_, useDelayForLatency_, &timerFactory_, client_->getMUCRegistry(), client_->getEntityCapsManager(), client_->getMUCManager());
+		chatsManager_ = new ChatsManager(jid_, client_->getStanzaChannel(), client_->getIQRouter(), eventController_, chatWindowFactory_, client_->getNickResolver(), client_->getPresenceOracle(), client_->getPresenceSender(), uiEventStream_, chatListWindowFactory_, useDelayForLatency_, &timerFactory_, client_->getMUCRegistry(), client_->getEntityCapsProvider(), client_->getMUCManager());
 		client_->onMessageReceived.connect(boost::bind(&ChatsManager::handleIncomingMessage, chatsManager_, _1));
 		chatsManager_->setAvatarManager(client_->getAvatarManager());
 

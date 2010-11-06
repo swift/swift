@@ -112,4 +112,8 @@ PresenceSender* Client::getPresenceSender() const {
 	return discoManager->getPresenceSender();
 }
 
+EntityCapsProvider* Client::getEntityCapsProvider() const {
+	return entityCapsManager;
+}
+
 }

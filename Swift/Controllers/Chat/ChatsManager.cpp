@@ -27,7 +27,7 @@ namespace Swift {
 typedef std::pair<JID, ChatController*> JIDChatControllerPair;
 typedef std::pair<JID, MUCController*> JIDMUCControllerPair;
 
-ChatsManager::ChatsManager(JID jid, StanzaChannel* stanzaChannel, IQRouter* iqRouter, EventController* eventController, ChatWindowFactory* chatWindowFactory, NickResolver* nickResolver, PresenceOracle* presenceOracle, PresenceSender* presenceSender, UIEventStream* uiEventStream, ChatListWindowFactory* chatListWindowFactory, bool useDelayForLatency, TimerFactory* timerFactory, MUCRegistry* mucRegistry, EntityCapsManager* entityCapsManager, MUCManager* mucManager) : jid_(jid), useDelayForLatency_(useDelayForLatency), mucRegistry_(mucRegistry), entityCapsManager_(entityCapsManager), mucManager(mucManager) {
+ChatsManager::ChatsManager(JID jid, StanzaChannel* stanzaChannel, IQRouter* iqRouter, EventController* eventController, ChatWindowFactory* chatWindowFactory, NickResolver* nickResolver, PresenceOracle* presenceOracle, PresenceSender* presenceSender, UIEventStream* uiEventStream, ChatListWindowFactory* chatListWindowFactory, bool useDelayForLatency, TimerFactory* timerFactory, MUCRegistry* mucRegistry, EntityCapsProvider* entityCapsProvider, MUCManager* mucManager) : jid_(jid), useDelayForLatency_(useDelayForLatency), mucRegistry_(mucRegistry), entityCapsProvider_(entityCapsProvider), mucManager(mucManager) {
 	timerFactory_ = timerFactory;
 	eventController_ = eventController;
 	stanzaChannel_ = stanzaChannel;
@@ -184,7 +184,7 @@ ChatController* ChatsManager::getChatControllerOrFindAnother(const JID &contact)
 
 ChatController* ChatsManager::createNewChatController(const JID& contact) {
 	assert(chatControllers_.find(contact) == chatControllers_.end());
-	ChatController* controller = new ChatController(jid_, stanzaChannel_, iqRouter_, chatWindowFactory_, contact, nickResolver_, presenceOracle_, avatarManager_, mucRegistry_->isMUC(contact.toBare()), useDelayForLatency_, uiEventStream_, eventController_, timerFactory_, entityCapsManager_);
+	ChatController* controller = new ChatController(jid_, stanzaChannel_, iqRouter_, chatWindowFactory_, contact, nickResolver_, presenceOracle_, avatarManager_, mucRegistry_->isMUC(contact.toBare()), useDelayForLatency_, uiEventStream_, eventController_, timerFactory_, entityCapsProvider_);
 	chatControllers_[contact] = controller;
 	controller->setAvailableServerFeatures(serverDiscoInfo_);
 	return controller;

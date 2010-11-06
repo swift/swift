@@ -13,7 +13,7 @@
 #include "Swiften/Chat/ChatStateNotifier.h"
 #include "Swiften/Chat/ChatStateTracker.h"
 #include "Swiften/Client/StanzaChannel.h"
-#include "Swiften/Disco/EntityCapsManager.h"
+#include "Swiften/Disco/EntityCapsProvider.h"
 #include "Swift/Controllers/UIInterfaces/ChatWindow.h"
 #include "Swift/Controllers/UIInterfaces/ChatWindowFactory.h"
 #include "Swiften/Client/NickResolver.h"
@@ -24,11 +24,11 @@ namespace Swift {
 /**
  * The controller does not gain ownership of the stanzaChannel, nor the factory.
  */
-ChatController::ChatController(const JID& self, StanzaChannel* stanzaChannel, IQRouter* iqRouter, ChatWindowFactory* chatWindowFactory, const JID &contact, NickResolver* nickResolver, PresenceOracle* presenceOracle, AvatarManager* avatarManager, bool isInMUC, bool useDelayForLatency, UIEventStream* eventStream, EventController* eventController, TimerFactory* timerFactory, EntityCapsManager* entityCapsManager)
+ChatController::ChatController(const JID& self, StanzaChannel* stanzaChannel, IQRouter* iqRouter, ChatWindowFactory* chatWindowFactory, const JID &contact, NickResolver* nickResolver, PresenceOracle* presenceOracle, AvatarManager* avatarManager, bool isInMUC, bool useDelayForLatency, UIEventStream* eventStream, EventController* eventController, TimerFactory* timerFactory, EntityCapsProvider* entityCapsProvider)
 	: ChatControllerBase(self, stanzaChannel, iqRouter, chatWindowFactory, contact, presenceOracle, avatarManager, useDelayForLatency, eventStream, eventController, timerFactory) {
 	isInMUC_ = isInMUC;
 	lastWasPresence_ = false;
-	chatStateNotifier_ = new ChatStateNotifier(stanzaChannel, contact, entityCapsManager);
+	chatStateNotifier_ = new ChatStateNotifier(stanzaChannel, contact, entityCapsProvider);
 	chatStateTracker_ = new ChatStateTracker();
 	nickResolver_ = nickResolver;
 	presenceOracle_->onPresenceChange.connect(boost::bind(&ChatController::handlePresenceChange, this, _1));

@@ -25,6 +25,7 @@ namespace Swift {
 	class AvatarManager;
 	class CapsManager;
 	class EntityCapsManager;
+	class EntityCapsProvider;
 	class NickResolver;
 	class SubscriptionManager;
 	class ClientDiscoManager;
@@ -111,9 +112,7 @@ namespace Swift {
 				return avatarManager;
 			}
 
-			EntityCapsManager* getEntityCapsManager() const {
-				return entityCapsManager;
-			}
+			EntityCapsProvider* getEntityCapsProvider() const;
 
 			NickResolver* getNickResolver() const {
 				return nickResolver;
