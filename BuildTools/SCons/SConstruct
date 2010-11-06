@@ -34,7 +34,9 @@ if os.name == "nt" :
 if os.name == "nt" :
 	vars.Add(PackageVariable("bonjour", "Bonjour SDK location", "yes"))
 vars.Add(PackageVariable("openssl", "OpenSSL location", "yes"))
-vars.Add(PackageVariable("boost", "Boost location location", "yes"))
+vars.Add(PackageVariable("boost", "Boost location", "yes"))
+vars.Add(PathVariable("expat_libdir", "Expat library location", None, PathVariable.PathAccept))
+vars.Add(PathVariable("expat_includedir", "Expat headers location", None, PathVariable.PathAccept))
 vars.Add(PathVariable("qt", "Qt location", "", PathVariable.PathAccept))
 vars.Add(PathVariable("docbook_xml", "DocBook XML", None, PathVariable.PathAccept))
 vars.Add(PathVariable("docbook_xsl", "DocBook XSL", None, PathVariable.PathAccept))
@@ -454,11 +456,24 @@ if not env.get("HAVE_LIBXML", 0) :
 	conf.Finish()
 
 # Expat
-conf = Configure(conf_env)
-if not env.get("HAVE_LIBXML",0) and conf.CheckCHeader("expat.h") and conf.CheckLib("expat") :
-	env["HAVE_EXPAT"] = 1
-	env["EXPAT_FLAGS"] = { "LIBS": ["expat"] }
-conf.Finish()
+if not env.get("HAVE_LIBXML",0) :
+	expat_conf_env = conf_env.Clone()
+	expat_flags = {}
+	if env.get("expat_libdir", None) :
+		expat_flags["LIBPATH"] = [env["expat_libdir"]]
+	if env.get("expat_includedir", None) :
+		expat_flags["CPPPATH"] = [env["expat_includedir"]]
+	if env["PLATFORM"] == "win32" :
+		expat_libname = "libexpat"
+	else :
+		expat_libname = "expat"
+	expat_conf_env.MergeFlags(expat_flags)
+	conf = Configure(expat_conf_env)
+	if conf.CheckCHeader("expat.h") and conf.CheckLib(expat_libname) :
+		env["HAVE_EXPAT"] = 1
+		env["EXPAT_FLAGS"] = { "LIBS": [expat_libname] }
+		env["EXPAT_FLAGS"].update(expat_flags)
+	conf.Finish()
 
 # Bundled expat
 bundledExpat = False
