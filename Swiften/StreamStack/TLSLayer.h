@@ -8,6 +8,8 @@
 
 #include "Swiften/Base/ByteArray.h"
 #include "Swiften/StreamStack/StreamLayer.h"
+#include "Swiften/TLS/Certificate.h"
+#include "Swiften/TLS/CertificateVerificationError.h"
 
 namespace Swift {
 	class TLSContext;
@@ -19,11 +21,14 @@ namespace Swift {
 			TLSLayer(TLSContextFactory*);
 			~TLSLayer();
 
-			virtual void connect();
-			virtual bool setClientCertificate(const PKCS12Certificate&);
+			void connect();
+			bool setClientCertificate(const PKCS12Certificate&);
 
-			virtual void writeData(const ByteArray& data);
-			virtual void handleDataRead(const ByteArray& data);
+			Certificate::ref getPeerCertificate() const;
+			boost::optional<CertificateVerificationError> getPeerCertificateVerificationError() const;
+
+			void writeData(const ByteArray& data);
+			void handleDataRead(const ByteArray& data);
 
 		public:
 			boost::signal<void ()> onError;

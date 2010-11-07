@@ -9,6 +9,8 @@
 #include "Swiften/Base/boost_bsignals.h"
 
 #include "Swiften/Base/ByteArray.h"
+#include "Swiften/TLS/Certificate.h"
+#include "Swiften/TLS/CertificateVerificationError.h"
 
 namespace Swift {
 	class PKCS12Certificate;
@@ -18,10 +20,18 @@ namespace Swift {
 			virtual ~TLSContext();
 
 			virtual void connect() = 0;
+
 			virtual bool setClientCertificate(const PKCS12Certificate& cert) = 0;
 
 			virtual void handleDataFromNetwork(const ByteArray&) = 0;
 			virtual void handleDataFromApplication(const ByteArray&) = 0;
+
+			virtual Certificate::ref getPeerCertificate() const = 0;
+			virtual boost::optional<CertificateVerificationError> getPeerCertificateVerificationError() const = 0;
+
+		protected:
+			static const char* ID_ON_XMPPADDR_OID;
+			static const char* ID_ON_DNSSRV_OID;
 
 		public:
 			boost::signal<void (const ByteArray&)> onDataForNetwork;

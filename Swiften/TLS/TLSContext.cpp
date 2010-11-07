@@ -8,6 +8,9 @@
 
 namespace Swift {
 
+const char* TLSContext::ID_ON_XMPPADDR_OID = "1.3.6.1.5.5.7.8.5";
+const char* TLSContext::ID_ON_DNSSRV_OID = "1.3.6.1.5.5.7.8.7";
+
 TLSContext::~TLSContext() {
 }
 

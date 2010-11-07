@@ -7,6 +7,7 @@
 #include <vector>
 #include <openssl/err.h>
 #include <openssl/pkcs12.h>
+#include <openssl/x509v3.h>
 
 #include "Swiften/TLS/OpenSSL/OpenSSLContext.h"
 #include "Swiften/TLS/PKCS12Certificate.h"
@@ -56,14 +57,14 @@ void OpenSSLContext::doConnect() {
 	int connectResult = SSL_connect(handle_);
 	int error = SSL_get_error(handle_, connectResult);
 	switch (error) {
-		case SSL_ERROR_NONE:
+		case SSL_ERROR_NONE: {
 			state_ = Connected;
-			onConnected();
-			//X509* x = SSL_get_peer_certificate(handle_);
 			//std::cout << x->name << std::endl;
 			//const char* comp = SSL_get_current_compression(handle_);
 			//std::cout << "Compression: " << SSL_COMP_get_name(comp) << std::endl;
+			onConnected();
 			break;
+		}
 		case SSL_ERROR_WANT_READ:
 			sendPendingDataToNetwork();
 			break;
@@ -160,6 +161,73 @@ bool OpenSSLContext::setClientCertificate(const PKCS12Certificate& certificate) 
 		SSL_CTX_add_extra_chain_cert(context_, sk_X509_value(caCerts.get(), i));
 	}
 	return true;
+}
+
+Certificate::ref OpenSSLContext::getPeerCertificate() const {
+	boost::shared_ptr<X509> x509Cert(SSL_get_peer_certificate(handle_), X509_free);
+	if (x509Cert) {
+		Certificate::ref certificate(new Certificate());
+
+		// Common name
+		X509_NAME* subjectName = X509_get_subject_name(x509Cert.get());
+		if (subjectName) {
+			int cnLoc = X509_NAME_get_index_by_NID(subjectName, NID_commonName, -1);
+			if (cnLoc != -1) {
+				X509_NAME_ENTRY* cnEntry = X509_NAME_get_entry(subjectName, cnLoc);
+				ASN1_STRING* cnData = X509_NAME_ENTRY_get_data(cnEntry);
+				certificate->setCommonName(ByteArray(cnData->data, cnData->length).toString());
+			}
+		}
+
+		// subjectAltNames
+		int subjectAltNameLoc = X509_get_ext_by_NID(x509Cert.get(), NID_subject_alt_name, -1);
+		if(subjectAltNameLoc != -1) {
+			X509_EXTENSION* extension = X509_get_ext(x509Cert.get(), subjectAltNameLoc);
+			boost::shared_ptr<GENERAL_NAMES> generalNames(reinterpret_cast<GENERAL_NAMES*>(X509V3_EXT_d2i(extension)), GENERAL_NAMES_free);
+			boost::shared_ptr<ASN1_OBJECT> xmppAddrObject(OBJ_txt2obj(ID_ON_XMPPADDR_OID, 1), ASN1_OBJECT_free);
+			boost::shared_ptr<ASN1_OBJECT> dnsSRVObject(OBJ_txt2obj(ID_ON_DNSSRV_OID, 1), ASN1_OBJECT_free);
+			for (int i = 0; i < sk_GENERAL_NAME_num(generalNames.get()); ++i) {
+				GENERAL_NAME* generalName = sk_GENERAL_NAME_value(generalNames.get(), i);
+				if (generalName->type == GEN_OTHERNAME) {
+					OTHERNAME* otherName = generalName->d.otherName;
+					if (OBJ_cmp(otherName->type_id, xmppAddrObject.get()) == 0) {
+						// XmppAddr
+						if (otherName->value->type != V_ASN1_UTF8STRING) {
+							continue;
+						}
+						ASN1_UTF8STRING* xmppAddrValue = otherName->value->value.utf8string;
+						certificate->addXMPPAddress(ByteArray(ASN1_STRING_data(xmppAddrValue), ASN1_STRING_length(xmppAddrValue)).toString());
+					}
+					else if (OBJ_cmp(otherName->type_id, dnsSRVObject.get()) == 0) {
+						// SRVName
+						if (otherName->value->type != V_ASN1_IA5STRING) {
+							continue;
+						}
+						ASN1_IA5STRING* srvNameValue = otherName->value->value.ia5string;
+						certificate->addSRVName(ByteArray(ASN1_STRING_data(srvNameValue), ASN1_STRING_length(srvNameValue)).toString());
+					}
+				}
+				else if (generalName->type == GEN_DNS) {
+					// DNSName
+					certificate->addDNSName(ByteArray(ASN1_STRING_data(generalName->d.dNSName), ASN1_STRING_length(generalName->d.dNSName)).toString());
+				}
+			}
+		}
+		return certificate;
+	}
+	else {
+		return Certificate::ref();
+	}
+}
+
+boost::optional<CertificateVerificationError> OpenSSLContext::getPeerCertificateVerificationError() const {
+	long verifyResult = SSL_get_verify_result(handle_);
+	if (verifyResult != X509_V_OK) {
+		return CertificateVerificationError();
+	}
+	else {
+		return boost::optional<CertificateVerificationError>();
+	}
 }
 
 }

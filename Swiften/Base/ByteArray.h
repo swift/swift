@@ -36,6 +36,13 @@ namespace Swift {
 				}
 			}
 
+			ByteArray(const unsigned char* c, size_t n) {
+				if (n > 0) {
+					data_.resize(n);
+					memcpy(&data_[0], c, n);
+				}
+			}
+
 			const char* getData() const {
 				return data_.empty() ? NULL : &data_[0];
 			}

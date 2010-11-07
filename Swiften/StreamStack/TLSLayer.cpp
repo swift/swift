@@ -38,4 +38,12 @@ bool TLSLayer::setClientCertificate(const PKCS12Certificate& certificate) {
 	return context->setClientCertificate(certificate);
 }
 
+Certificate::ref TLSLayer::getPeerCertificate() const {
+	return context->getPeerCertificate();
+}
+
+boost::optional<CertificateVerificationError> TLSLayer::getPeerCertificateVerificationError() const {
+	return context->getPeerCertificateVerificationError();
+}
+
 }
