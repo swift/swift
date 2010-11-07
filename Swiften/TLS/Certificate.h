@@ -49,7 +49,6 @@ namespace Swift {
 
 		private:
 			String commonName;
-			String srvName;
 			std::vector<String> dnsNames;
 			std::vector<String> xmppAddresses;
 			std::vector<String> srvNames;
