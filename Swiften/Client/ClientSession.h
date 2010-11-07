@@ -20,7 +20,7 @@
 
 namespace Swift {
 	class ClientAuthenticator;
-	class SecurityError;
+	class CertificateTrustChecker;
 
 	class ClientSession : public boost::enable_shared_from_this<ClientSession> {
 		public:
@@ -31,7 +31,6 @@ namespace Swift {
 				Compressing,
 				WaitingForEncrypt,
 				Encrypting,
-				WaitingForContinueAfterSecurityError,
 				WaitingForCredentials,
 				Authenticating,
 				EnablingSessionManagement,
@@ -83,11 +82,13 @@ namespace Swift {
 
 			void sendCredentials(const String& password);
 			void sendStanza(boost::shared_ptr<Stanza>);
-			void continueAfterSecurityError();
+
+			void setCertificateTrustChecker(CertificateTrustChecker* checker) {
+				certificateTrustChecker = checker;
+			}
 
 		public:
 			boost::signal<void ()> onNeedCredentials;
-			boost::signal<void (const SecurityError&)> onSecurityError;
 			boost::signal<void ()> onInitialized;
 			boost::signal<void (boost::shared_ptr<Swift::Error>)> onFinished;
 			boost::signal<void (boost::shared_ptr<Stanza>)> onStanzaReceived;
@@ -132,5 +133,6 @@ namespace Swift {
 			ClientAuthenticator* authenticator;
 			boost::shared_ptr<StanzaAckRequester> stanzaAckRequester_;
 			boost::shared_ptr<StanzaAckResponder> stanzaAckResponder_;
+			CertificateTrustChecker* certificateTrustChecker;
 	};
 }

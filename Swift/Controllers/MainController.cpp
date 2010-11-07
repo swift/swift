@@ -356,6 +356,7 @@ void MainController::performLoginFromCachedCredentials() {
 	if (!client_) {
 		storages_ = storagesFactory_->createStorages(jid_);
 		client_ = new Swift::Client(eventLoop_, jid_, password_, storages_);
+		client_->setAlwaysTrustCertificates();
 		client_->onDataRead.connect(boost::bind(&XMLConsoleController::handleDataRead, xmlConsoleController_, _1));
 		client_->onDataWritten.connect(boost::bind(&XMLConsoleController::handleDataWritten, xmlConsoleController_, _1));
 		client_->onDisconnected.connect(boost::bind(&MainController::handleDisconnected, this, _1));
@@ -416,6 +417,19 @@ void MainController::handleDisconnected(const boost::optional<ClientError>& erro
 			case ClientError::TLSError: message = "Encryption error"; break;
 			case ClientError::ClientCertificateLoadError: message = "Error loading certificate (Invalid password?)"; break;
 			case ClientError::ClientCertificateError: message = "Certificate not authorized"; break;
+
+			case ClientError::UnknownCertificateError:
+			case ClientError::CertificateExpiredError:
+			case ClientError::CertificateNotYetValidError:
+			case ClientError::CertificateSelfSignedError:
+			case ClientError::CertificateRejectedError:
+			case ClientError::CertificateUntrustedError:
+			case ClientError::InvalidCertificatePurposeError:
+			case ClientError::CertificatePathLengthExceededError:
+			case ClientError::InvalidCertificateSignatureError:
+			case ClientError::InvalidCAError:
+				// TODO
+				message = "Certificate error"; break;
 		}
 		if (!rosterController_) { //hasn't been logged in yet
 			signOut();

@@ -10,6 +10,7 @@
 
 namespace Swift {
 	class SoftwareVersionResponder;
+	class BlindCertificateTrustChecker;
 	class XMPPRoster;
 	class XMPPRosterImpl;
 	class MUCManager;
@@ -126,6 +127,8 @@ namespace Swift {
 				return discoManager;
 			}
 
+			void setAlwaysTrustCertificates();
+		
 		public:
 			/**
 			 * This signal is emitted when a JID changes presence.
@@ -156,5 +159,6 @@ namespace Swift {
 			SubscriptionManager* subscriptionManager;
 			MUCManager* mucManager;
 			ClientDiscoManager* discoManager;
+			BlindCertificateTrustChecker* blindCertificateTrustChecker;
 	};
 }

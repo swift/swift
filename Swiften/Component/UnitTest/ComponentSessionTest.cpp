@@ -127,8 +127,8 @@ class ComponentSessionTest : public CppUnit::TestFixture {
 					return Certificate::ref();
 				}
 
-				virtual boost::optional<CertificateVerificationError> getPeerCertificateVerificationError() const {
-					return boost::optional<CertificateVerificationError>();
+				virtual boost::shared_ptr<CertificateVerificationError> getPeerCertificateVerificationError() const {
+					return boost::shared_ptr<CertificateVerificationError>();
 				}
 
 				virtual void addZLibCompression() {

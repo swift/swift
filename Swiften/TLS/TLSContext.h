@@ -7,6 +7,7 @@
 #pragma once
 
 #include "Swiften/Base/boost_bsignals.h"
+#include <boost/shared_ptr.hpp>
 
 #include "Swiften/Base/ByteArray.h"
 #include "Swiften/TLS/Certificate.h"
@@ -27,11 +28,7 @@ namespace Swift {
 			virtual void handleDataFromApplication(const ByteArray&) = 0;
 
 			virtual Certificate::ref getPeerCertificate() const = 0;
-			virtual boost::optional<CertificateVerificationError> getPeerCertificateVerificationError() const = 0;
-
-		protected:
-			static const char* ID_ON_XMPPADDR_OID;
-			static const char* ID_ON_DNSSRV_OID;
+			virtual boost::shared_ptr<CertificateVerificationError> getPeerCertificateVerificationError() const = 0;
 
 		public:
 			boost::signal<void (const ByteArray&)> onDataForNetwork;

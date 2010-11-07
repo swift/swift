@@ -42,7 +42,7 @@ Certificate::ref TLSLayer::getPeerCertificate() const {
 	return context->getPeerCertificate();
 }
 
-boost::optional<CertificateVerificationError> TLSLayer::getPeerCertificateVerificationError() const {
+boost::shared_ptr<CertificateVerificationError> TLSLayer::getPeerCertificateVerificationError() const {
 	return context->getPeerCertificateVerificationError();
 }
 

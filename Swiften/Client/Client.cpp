@@ -23,6 +23,7 @@
 #include "Swiften/Disco/ClientDiscoManager.h"
 #include "Swiften/Client/NickResolver.h"
 #include "Swiften/Presence/SubscriptionManager.h"
+#include "Swiften/TLS/BlindCertificateTrustChecker.h"
 
 namespace Swift {
 
@@ -53,9 +54,13 @@ Client::Client(EventLoop* eventLoop, const JID& jid, const String& password, Sto
 	entityCapsManager = new EntityCapsManager(capsManager, getStanzaChannel());
 
 	nickResolver = new NickResolver(jid.toBare(), roster, vcardManager, mucRegistry);
+
+	blindCertificateTrustChecker = new BlindCertificateTrustChecker();
 }
 
 Client::~Client() {
+	delete blindCertificateTrustChecker;
+
 	delete nickResolver;
 
 	delete entityCapsManager;
@@ -114,6 +119,10 @@ PresenceSender* Client::getPresenceSender() const {
 
 EntityCapsProvider* Client::getEntityCapsProvider() const {
 	return entityCapsManager;
+}
+
+void Client::setAlwaysTrustCertificates() {
+	setCertificateTrustChecker(blindCertificateTrustChecker);
 }
 
 }

@@ -11,7 +11,6 @@
 #include <boost/uuid/uuid_io.hpp>
 #include <boost/uuid/uuid_generators.hpp>
 
-#include "Swiften/TLS/SecurityError.h"
 #include "Swiften/Elements/ProtocolHeader.h"
 #include "Swiften/Elements/StreamFeatures.h"
 #include "Swiften/Elements/StartTLSRequest.h"
@@ -37,6 +36,7 @@
 #include "Swiften/SASL/SCRAMSHA1ClientAuthenticator.h"
 #include "Swiften/SASL/DIGESTMD5ClientAuthenticator.h"
 #include "Swiften/Session/SessionStream.h"
+#include "Swiften/TLS/CertificateTrustChecker.h"
 
 namespace Swift {
 
@@ -50,7 +50,8 @@ ClientSession::ClientSession(
 			needSessionStart(false),
 			needResourceBind(false),
 			needAcking(false),
-			authenticator(NULL) {
+			authenticator(NULL),
+			certificateTrustChecker(NULL) {
 }
 
 ClientSession::~ClientSession() {
@@ -323,19 +324,18 @@ void ClientSession::sendCredentials(const String& password) {
 	stream->writeElement(boost::shared_ptr<AuthRequest>(new AuthRequest(authenticator->getName(), authenticator->getResponse())));
 }
 
-void ClientSession::continueAfterSecurityError() {
-	checkState(WaitingForContinueAfterSecurityError);
-	continueAfterTLSEncrypted();
-}
-
 void ClientSession::handleTLSEncrypted() {
 	checkState(Encrypting);
 
 	Certificate::ref certificate = stream->getPeerCertificate();
-	boost::optional<CertificateVerificationError> verificationError = stream->getPeerCertificateVerificationError();
+	boost::shared_ptr<CertificateVerificationError> verificationError = stream->getPeerCertificateVerificationError();
 	if (verificationError) {
-		state = WaitingForContinueAfterSecurityError;
-		onSecurityError(SecurityError(*verificationError));
+		if (certificateTrustChecker && certificateTrustChecker->isCertificateTrusted(certificate, localJID.getDomain())) {
+			continueAfterTLSEncrypted();
+		}
+		else {
+			finishSession(verificationError);
+		}
 	}
 	else {
 		continueAfterTLSEncrypted();

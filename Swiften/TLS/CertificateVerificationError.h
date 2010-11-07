@@ -6,8 +6,10 @@
 
 #pragma once
 
+#include "Swiften/Base/Error.h"
+
 namespace Swift {
-	class CertificateVerificationError {
+	class CertificateVerificationError : public Error {
 		public:
 			enum Type {
 				UnknownError,

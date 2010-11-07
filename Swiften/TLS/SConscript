@@ -1,14 +1,16 @@
 Import("swiften_env")
 
 objects = swiften_env.StaticObject([
+			"Certificate.cpp",
+			"CertificateTrustChecker.cpp",
 			"TLSContext.cpp",
 			"TLSContextFactory.cpp",
-			"SecurityError.cpp",
 		])
 		
 if swiften_env.get("HAVE_OPENSSL", 0) :
 	objects += swiften_env.StaticObject([
 			"OpenSSL/OpenSSLContext.cpp",
+			"OpenSSL/OpenSSLCertificate.cpp",
 			"OpenSSL/OpenSSLContextFactory.cpp",
 		])
 		

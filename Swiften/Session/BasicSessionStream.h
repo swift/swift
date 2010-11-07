@@ -53,7 +53,7 @@ namespace Swift {
 			virtual void addTLSEncryption();
 			virtual bool isTLSEncrypted();
 			virtual Certificate::ref getPeerCertificate() const;
-			virtual boost::optional<CertificateVerificationError> getPeerCertificateVerificationError() const;
+			virtual boost::shared_ptr<CertificateVerificationError> getPeerCertificateVerificationError() const;
 
 			virtual void setWhitespacePingEnabled(bool);
 

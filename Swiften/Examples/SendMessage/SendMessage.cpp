@@ -58,6 +58,7 @@ int main(int argc, char* argv[]) {
 	}
 
 	client = new Swift::Client(&eventLoop, JID(jid), String(argv[argi++]));
+	client->setAlwaysTrustCertificates();
 
 	recipient = JID(argv[argi++]);
 	messageBody = std::string(argv[argi++]);

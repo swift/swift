@@ -89,7 +89,7 @@ Certificate::ref BasicSessionStream::getPeerCertificate() const {
 	return tlsLayer->getPeerCertificate();
 }
 
-boost::optional<CertificateVerificationError> BasicSessionStream::getPeerCertificateVerificationError() const {
+boost::shared_ptr<CertificateVerificationError> BasicSessionStream::getPeerCertificateVerificationError() const {
 	return tlsLayer->getPeerCertificateVerificationError();
 }
 

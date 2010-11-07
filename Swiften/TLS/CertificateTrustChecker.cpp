@@ -4,11 +4,11 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "Swiften/TLS/TLSContext.h"
+#include "Swiften/TLS/CertificateTrustChecker.h"
 
 namespace Swift {
 
-TLSContext::~TLSContext() {
+CertificateTrustChecker::~CertificateTrustChecker() {
 }
 
 }

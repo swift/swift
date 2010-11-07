@@ -25,7 +25,7 @@ namespace Swift {
 			bool setClientCertificate(const PKCS12Certificate&);
 
 			Certificate::ref getPeerCertificate() const;
-			boost::optional<CertificateVerificationError> getPeerCertificateVerificationError() const;
+			boost::shared_ptr<CertificateVerificationError> getPeerCertificateVerificationError() const;
 
 			void writeData(const ByteArray& data);
 			void handleDataRead(const ByteArray& data);

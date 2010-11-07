@@ -61,7 +61,7 @@ namespace Swift {
 			}
 
 			virtual Certificate::ref getPeerCertificate() const = 0;
-			virtual boost::optional<CertificateVerificationError> getPeerCertificateVerificationError() const = 0;
+			virtual boost::shared_ptr<CertificateVerificationError> getPeerCertificateVerificationError() const = 0;
 
 			boost::signal<void (const ProtocolHeader&)> onStreamStartReceived;
 			boost::signal<void (boost::shared_ptr<Element>)> onElementReceived;

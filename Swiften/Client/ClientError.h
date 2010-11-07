@@ -25,7 +25,19 @@ namespace Swift {
 				SessionStartError,
 				TLSError,
 				ClientCertificateLoadError,
-				ClientCertificateError
+				ClientCertificateError,
+
+				// Certificate verification errors
+				UnknownCertificateError,
+				CertificateExpiredError,
+				CertificateNotYetValidError,
+				CertificateSelfSignedError,
+				CertificateRejectedError,
+				CertificateUntrustedError,
+				InvalidCertificatePurposeError,
+				CertificatePathLengthExceededError,
+				InvalidCertificateSignatureError,
+				InvalidCAError,
 			};
 
 			ClientError(Type type = UnknownError) : type_(type) {}

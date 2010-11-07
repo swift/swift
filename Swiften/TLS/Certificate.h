@@ -15,42 +15,16 @@ namespace Swift {
 		public:
 			typedef boost::shared_ptr<Certificate> ref;
 
-			const String& getCommonName() const {
-				return commonName;
-			}
+			virtual ~Certificate();
 
-			void setCommonName(const String& commonName) {
-				this->commonName = commonName;
-			}
+			virtual String getCommonName() const = 0;
+			virtual std::vector<String> getSRVNames() const = 0;
+			virtual std::vector<String> getDNSNames() const = 0;
+			virtual std::vector<String> getXMPPAddresses() const = 0;
 
-			const std::vector<String>& getSRVNames() const {
-				return srvNames;
-			}
+		protected:
+			static const char* ID_ON_XMPPADDR_OID;
+			static const char* ID_ON_DNSSRV_OID;
 
-			void addSRVName(const String& name) {
-				srvNames.push_back(name);
-			}
-
-			const std::vector<String>& getDNSNames() const {
-				return dnsNames;
-			}
-
-			void addDNSName(const String& name) {
-				dnsNames.push_back(name);
-			}
-
-			const std::vector<String>& getXMPPAddresses() const {
-				return xmppAddresses;
-			}
-
-			void addXMPPAddress(const String& addr) {
-				xmppAddresses.push_back(addr);
-			}
-
-		private:
-			String commonName;
-			std::vector<String> dnsNames;
-			std::vector<String> xmppAddresses;
-			std::vector<String> srvNames;
 	};
 }

@@ -12,6 +12,7 @@
 #include "Swiften/Network/BoostIOServiceThread.h"
 #include "Swiften/Client/ClientSession.h"
 #include "Swiften/TLS/PlatformTLSContextFactory.h"
+#include "Swiften/TLS/CertificateVerificationError.h"
 #include "Swiften/Network/Connector.h"
 #include "Swiften/Network/BoostConnectionFactory.h"
 #include "Swiften/Network/BoostTimerFactory.h"
@@ -23,7 +24,7 @@
 
 namespace Swift {
 
-CoreClient::CoreClient(EventLoop* eventLoop, const JID& jid, const String& password) : resolver_(eventLoop), jid_(jid), password_(password), eventLoop(eventLoop), disconnectRequested_(false), ignoreSecurityErrors(true) {
+CoreClient::CoreClient(EventLoop* eventLoop, const JID& jid, const String& password) : resolver_(eventLoop), jid_(jid), password_(password), eventLoop(eventLoop), disconnectRequested_(false), certificateTrustChecker(NULL) {
 	stanzaChannel_ = new ClientSessionStanzaChannel();
 	stanzaChannel_->onMessageReceived.connect(boost::ref(onMessageReceived));
 	stanzaChannel_->onPresenceReceived.connect(boost::ref(onPresenceReceived));
@@ -90,10 +91,10 @@ void CoreClient::handleConnectorFinished(boost::shared_ptr<Connection> connectio
 		sessionStream_->initialize();
 
 		session_ = ClientSession::create(jid_, sessionStream_);
+		session_->setCertificateTrustChecker(certificateTrustChecker);
 		stanzaChannel_->setSession(session_);
 		session_->onFinished.connect(boost::bind(&CoreClient::handleSessionFinished, this, _1));
 		session_->onNeedCredentials.connect(boost::bind(&CoreClient::handleNeedCredentials, this));
-		session_->onSecurityError.connect(boost::bind(&CoreClient::handleSecurityError, this, _1));
 		session_->start();
 	}
 }
@@ -115,7 +116,6 @@ void CoreClient::setCertificate(const String& certificate) {
 }
 
 void CoreClient::handleSessionFinished(boost::shared_ptr<Error> error) {
-	session_->onSecurityError.disconnect(boost::bind(&CoreClient::handleSecurityError, this, _1));
 	session_->onFinished.disconnect(boost::bind(&CoreClient::handleSessionFinished, this, _1));
 	session_->onNeedCredentials.disconnect(boost::bind(&CoreClient::handleNeedCredentials, this));
 	session_.reset();
@@ -180,6 +180,30 @@ void CoreClient::handleSessionFinished(boost::shared_ptr<Error> error) {
 					break;
 			}
 		}
+		else if (boost::shared_ptr<CertificateVerificationError> verificationError = boost::dynamic_pointer_cast<CertificateVerificationError>(error)) {
+			switch(verificationError->getType()) {
+				case CertificateVerificationError::UnknownError: 
+					clientError = ClientError(ClientError::UnknownCertificateError);
+				case CertificateVerificationError::Expired: 
+					clientError = ClientError(ClientError::CertificateExpiredError);
+				case CertificateVerificationError::NotYetValid: 
+					clientError = ClientError(ClientError::CertificateNotYetValidError);
+				case CertificateVerificationError::SelfSigned: 
+					clientError = ClientError(ClientError::CertificateSelfSignedError);
+				case CertificateVerificationError::Rejected: 
+					clientError = ClientError(ClientError::CertificateRejectedError);
+				case CertificateVerificationError::Untrusted: 
+					clientError = ClientError(ClientError::CertificateUntrustedError);
+				case CertificateVerificationError::InvalidPurpose: 
+					clientError = ClientError(ClientError::InvalidCertificatePurposeError);
+				case CertificateVerificationError::PathLengthExceeded: 
+					clientError = ClientError(ClientError::CertificatePathLengthExceededError);
+				case CertificateVerificationError::InvalidSignature: 
+					clientError = ClientError(ClientError::InvalidCertificateSignatureError);
+				case CertificateVerificationError::InvalidCA: 
+					clientError = ClientError(ClientError::InvalidCAError);
+			}
+		}
 		actualError = boost::optional<ClientError>(clientError);
 	}
 	onDisconnected(actualError);
@@ -216,17 +240,8 @@ bool CoreClient::isActive() const {
 	return session_ || connector_;
 }
 
-void CoreClient::handleSecurityError(const SecurityError& error) {
-	if (ignoreSecurityErrors) {
-		session_->continueAfterSecurityError();
-	}
-	else {
-		onSecurityError(error);
-	}
-}
-
-void CoreClient::continueAfterSecurityError() {
-	session_->continueAfterSecurityError();
+void CoreClient::setCertificateTrustChecker(CertificateTrustChecker* checker) {
+	certificateTrustChecker = checker;
 }
 
 }

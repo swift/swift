@@ -58,6 +58,7 @@ int main(int, char**) {
 	client = new Swift::Client(&eventLoop, JID(jid), String(pass));
 	ClientXMLTracer* tracer = new ClientXMLTracer(client);
 	client->onConnected.connect(&handleConnected);
+	client->setAlwaysTrustCertificates();
 	client->connect();
 
 	{
