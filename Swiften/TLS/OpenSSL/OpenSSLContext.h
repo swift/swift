@@ -10,12 +10,13 @@
 #include "Swiften/Base/boost_bsignals.h"
 #include <boost/noncopyable.hpp>
 
+#include "Swiften/TLS/TLSContext.h"
 #include "Swiften/Base/ByteArray.h"
 
 namespace Swift {
 	class PKCS12Certificate;
 
-	class OpenSSLContext : boost::noncopyable {
+	class OpenSSLContext : public TLSContext, boost::noncopyable {
 		public:
 			OpenSSLContext();
 			~OpenSSLContext();
@@ -25,12 +26,6 @@ namespace Swift {
 
 			void handleDataFromNetwork(const ByteArray&);
 			void handleDataFromApplication(const ByteArray&);
-
-		public:
-			boost::signal<void (const ByteArray&)> onDataForNetwork;
-			boost::signal<void (const ByteArray&)> onDataForApplication;
-			boost::signal<void ()> onError;
-			boost::signal<void ()> onConnected;
 
 		private:
 			static void ensureLibraryInitialized();	

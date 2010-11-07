@@ -11,7 +11,7 @@
 #include "Swiften/Network/MainBoostIOServiceThread.h"
 #include "Swiften/Network/BoostIOServiceThread.h"
 #include "Swiften/Client/ClientSession.h"
-#include "Swiften/StreamStack/PlatformTLSLayerFactory.h"
+#include "Swiften/TLS/PlatformTLSContextFactory.h"
 #include "Swiften/Network/Connector.h"
 #include "Swiften/Network/BoostConnectionFactory.h"
 #include "Swiften/Network/BoostTimerFactory.h"
@@ -33,14 +33,14 @@ CoreClient::CoreClient(EventLoop* eventLoop, const JID& jid, const String& passw
 	iqRouter_ = new IQRouter(stanzaChannel_);
 	connectionFactory_ = new BoostConnectionFactory(&MainBoostIOServiceThread::getInstance().getIOService(), eventLoop);
 	timerFactory_ = new BoostTimerFactory(&MainBoostIOServiceThread::getInstance().getIOService(), eventLoop);
-	tlsLayerFactory_ = new PlatformTLSLayerFactory();
+	tlsContextFactory_ = new PlatformTLSContextFactory();
 }
 
 CoreClient::~CoreClient() {
 	if (session_ || connection_) {
 		std::cerr << "Warning: Client not disconnected properly" << std::endl;
 	}
-	delete tlsLayerFactory_;
+	delete tlsContextFactory_;
 	delete timerFactory_;
 	delete connectionFactory_;
 	delete iqRouter_;
@@ -81,7 +81,7 @@ void CoreClient::handleConnectorFinished(boost::shared_ptr<Connection> connectio
 		connection_ = connection;
 
 		assert(!sessionStream_);
-		sessionStream_ = boost::shared_ptr<BasicSessionStream>(new BasicSessionStream(ClientStreamType, connection_, &payloadParserFactories_, &payloadSerializers_, tlsLayerFactory_, timerFactory_));
+		sessionStream_ = boost::shared_ptr<BasicSessionStream>(new BasicSessionStream(ClientStreamType, connection_, &payloadParserFactories_, &payloadSerializers_, tlsContextFactory_, timerFactory_));
 		if (!certificate_.isEmpty()) {
 			sessionStream_->setTLSCertificate(PKCS12Certificate(certificate_, password_));
 		}

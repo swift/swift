@@ -4,11 +4,11 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "Swiften/StreamStack/TLSLayerFactory.h"
+#include "Swiften/TLS/TLSContext.h"
 
 namespace Swift {
 
-TLSLayerFactory::~TLSLayerFactory() {
+TLSContext::~TLSContext() {
 }
 
 }

@@ -14,11 +14,11 @@
 #include "Swiften/StreamStack/WhitespacePingLayer.h"
 #include "Swiften/StreamStack/CompressionLayer.h"
 #include "Swiften/StreamStack/TLSLayer.h"
-#include "Swiften/StreamStack/TLSLayerFactory.h"
+#include "Swiften/TLS/TLSContextFactory.h"
 
 namespace Swift {
 
-BasicSessionStream::BasicSessionStream(StreamType streamType, boost::shared_ptr<Connection> connection, PayloadParserFactoryCollection* payloadParserFactories, PayloadSerializerCollection* payloadSerializers, TLSLayerFactory* tlsLayerFactory, TimerFactory* timerFactory) : available(false), connection(connection), payloadParserFactories(payloadParserFactories), payloadSerializers(payloadSerializers), tlsLayerFactory(tlsLayerFactory), timerFactory(timerFactory), streamType(streamType) {
+BasicSessionStream::BasicSessionStream(StreamType streamType, boost::shared_ptr<Connection> connection, PayloadParserFactoryCollection* payloadParserFactories, PayloadSerializerCollection* payloadSerializers, TLSContextFactory* tlsContextFactory, TimerFactory* timerFactory) : available(false), connection(connection), payloadParserFactories(payloadParserFactories), payloadSerializers(payloadSerializers), tlsContextFactory(tlsContextFactory), timerFactory(timerFactory), streamType(streamType) {
 }
 
 void BasicSessionStream::initialize() {
@@ -64,12 +64,12 @@ bool BasicSessionStream::isAvailable() {
 }
 
 bool BasicSessionStream::supportsTLSEncryption() {
-	return tlsLayerFactory && tlsLayerFactory->canCreate();
+	return tlsContextFactory && tlsContextFactory->canCreate();
 }
 
 void BasicSessionStream::addTLSEncryption() {
 	assert(available);
-	tlsLayer = tlsLayerFactory->createTLSLayer();
+	tlsLayer = boost::shared_ptr<TLSLayer>(new TLSLayer(tlsContextFactory));
 	if (hasTLSCertificate() && !tlsLayer->setClientCertificate(getTLSCertificate())) {
 		onError(boost::shared_ptr<Error>(new Error(Error::InvalidTLSCertificateError)));
 	}

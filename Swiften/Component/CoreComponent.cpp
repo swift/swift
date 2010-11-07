@@ -11,7 +11,6 @@
 #include "Swiften/Network/MainBoostIOServiceThread.h"
 #include "Swiften/Network/BoostIOServiceThread.h"
 #include "Swiften/Component/ComponentSession.h"
-#include "Swiften/StreamStack/NullTLSLayerFactory.h"
 #include "Swiften/Network/Connector.h"
 #include "Swiften/Network/BoostConnectionFactory.h"
 #include "Swiften/Network/BoostTimerFactory.h"
@@ -33,14 +32,12 @@ CoreComponent::CoreComponent(EventLoop* eventLoop, const JID& jid, const String&
 	iqRouter_->setFrom(jid);
 	connectionFactory_ = new BoostConnectionFactory(&MainBoostIOServiceThread::getInstance().getIOService(), eventLoop);
 	timerFactory_ = new BoostTimerFactory(&MainBoostIOServiceThread::getInstance().getIOService(), eventLoop);
-	tlsLayerFactory_ = new NullTLSLayerFactory();
 }
 
 CoreComponent::~CoreComponent() {
 	if (session_ || connection_) {
 		std::cerr << "Warning: Component not disconnected properly" << std::endl;
 	}
-	delete tlsLayerFactory_;
 	delete timerFactory_;
 	delete connectionFactory_;
 	delete iqRouter_;
@@ -72,7 +69,7 @@ void CoreComponent::handleConnectorFinished(boost::shared_ptr<Connection> connec
 		connection_ = connection;
 
 		assert(!sessionStream_);
-		sessionStream_ = boost::shared_ptr<BasicSessionStream>(new BasicSessionStream(ComponentStreamType, connection_, &payloadParserFactories_, &payloadSerializers_, tlsLayerFactory_, timerFactory_));
+		sessionStream_ = boost::shared_ptr<BasicSessionStream>(new BasicSessionStream(ComponentStreamType, connection_, &payloadParserFactories_, &payloadSerializers_, NULL, timerFactory_));
 		sessionStream_->onDataRead.connect(boost::bind(&CoreComponent::handleDataRead, this, _1));
 		sessionStream_->onDataWritten.connect(boost::bind(&CoreComponent::handleDataWritten, this, _1));
 		sessionStream_->initialize();

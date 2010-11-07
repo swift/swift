@@ -1,21 +1,15 @@
 Import("swiften_env")
 
 myenv = swiften_env.Clone()
-myenv.MergeFlags(swiften_env["OPENSSL_FLAGS"])
 
 sources = [
 		"HighLayer.cpp",
 		"LowLayer.cpp",
-		"PlatformTLSLayerFactory.cpp",
 		"StreamStack.cpp",
-		"TLSLayerFactory.cpp",
+		"TLSLayer.cpp",
 		"WhitespacePingLayer.cpp",
 		"XMPPLayer.cpp",
 	]
-
-if myenv.get("HAVE_OPENSSL", 0) :
-	myenv.Append(CPPDEFINES = "HAVE_OPENSSL")
-	sources += ["OpenSSLLayer.cpp"]
 
 objects = myenv.StaticObject(sources)
 swiften_env.Append(SWIFTEN_OBJECTS = [objects])

@@ -25,7 +25,6 @@
 
 namespace Swift {
 	class IQRouter;
-	class TLSLayerFactory;
 	class ConnectionFactory;
 	class TimerFactory;
 	class ComponentSession;
@@ -97,7 +96,6 @@ namespace Swift {
 			ComponentConnector::ref connector_;
 			ConnectionFactory* connectionFactory_;
 			TimerFactory* timerFactory_;
-			TLSLayerFactory* tlsLayerFactory_;
 			FullPayloadParserFactoryCollection payloadParserFactories_;
 			FullPayloadSerializerCollection payloadSerializers_;
 			boost::shared_ptr<Connection> connection_;

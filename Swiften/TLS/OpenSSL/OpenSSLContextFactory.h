@@ -6,14 +6,12 @@
 
 #pragma once
 
-#include "Swiften/StreamStack/TLSLayerFactory.h"
+#include "Swiften/TLS/TLSContextFactory.h"
 
 namespace Swift {
-	class PlatformTLSLayerFactory : public TLSLayerFactory {
+	class OpenSSLContextFactory : public TLSContextFactory {
 		public:
-			PlatformTLSLayerFactory();
-
 			bool canCreate() const;
-			virtual boost::shared_ptr<TLSLayer> createTLSLayer();
+			virtual TLSContext* createTLSContext();
 	};
 }

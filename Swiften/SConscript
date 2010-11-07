@@ -24,7 +24,6 @@ if env["SCONS_STAGE"] == "build" :
 # TODO: Move all this to a submodule SConscript
 	myenv = swiften_env.Clone()
 	myenv.MergeFlags(myenv["ZLIB_FLAGS"])
-	myenv.MergeFlags(myenv["OPENSSL_FLAGS"])
 	sources = [
 			"Chat/ChatStateTracker.cpp",
 			"Chat/ChatStateNotifier.cpp",
@@ -120,14 +119,12 @@ if env["SCONS_STAGE"] == "build" :
 			"StringCodecs/Hexify.cpp",
 		]
 
-	if myenv.get("HAVE_OPENSSL", 0) :
-		sources += ["TLS/OpenSSL/OpenSSLContext.cpp"]
-
 	SConscript(dirs = [
 			"Avatars",
 			"Base",
 			"StringPrep",
 			"SASL",
+			"TLS",
 			"EventLoop",
 			"Parser",
 			"JID",

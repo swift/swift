@@ -14,7 +14,7 @@
 #include "Swiften/Elements/StreamType.h"
 
 namespace Swift {
-	class TLSLayerFactory;
+	class TLSContextFactory;
 	class TLSLayer;
 	class TimerFactory;
 	class WhitespacePingLayer;
@@ -34,7 +34,7 @@ namespace Swift {
 				boost::shared_ptr<Connection> connection,
 				PayloadParserFactoryCollection* payloadParserFactories, 
 				PayloadSerializerCollection* payloadSerializers,
-				TLSLayerFactory* tlsLayerFactory,
+				TLSContextFactory* tlsContextFactory,
 				TimerFactory* whitespacePingLayerFactory
 			);
 			~BasicSessionStream();
@@ -72,7 +72,7 @@ namespace Swift {
 			boost::shared_ptr<Connection> connection;
 			PayloadParserFactoryCollection* payloadParserFactories;
 			PayloadSerializerCollection* payloadSerializers;
-			TLSLayerFactory* tlsLayerFactory;
+			TLSContextFactory* tlsContextFactory;
 			TimerFactory* timerFactory;
 			StreamType streamType;
 			boost::shared_ptr<XMPPLayer> xmppLayer;

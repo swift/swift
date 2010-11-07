@@ -6,16 +6,15 @@
 
 #pragma once
 
-#include <boost/shared_ptr.hpp>
-
 namespace Swift {
-	class TLSLayer;
+	class TLSContext;
 
-	class TLSLayerFactory {
+	class TLSContextFactory {
 		public:
-			virtual ~TLSLayerFactory();
+			virtual ~TLSContextFactory();
+
 			virtual bool canCreate() const = 0;
 
-			virtual boost::shared_ptr<TLSLayer> createTLSLayer() = 0;
+			virtual TLSContext* createTLSContext() = 0;
 	};
 }
