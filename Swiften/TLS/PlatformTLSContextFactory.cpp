@@ -6,6 +6,7 @@
 
 #include "Swiften/TLS/PlatformTLSContextFactory.h"
 
+#include <cstring>
 #include <cassert>
 
 #ifdef HAVE_OPENSSL
