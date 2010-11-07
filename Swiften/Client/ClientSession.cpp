@@ -11,6 +11,7 @@
 #include <boost/uuid/uuid_io.hpp>
 #include <boost/uuid/uuid_generators.hpp>
 
+#include "Swiften/TLS/SecurityError.h"
 #include "Swiften/Elements/ProtocolHeader.h"
 #include "Swiften/Elements/StreamFeatures.h"
 #include "Swiften/Elements/StartTLSRequest.h"
@@ -322,8 +323,26 @@ void ClientSession::sendCredentials(const String& password) {
 	stream->writeElement(boost::shared_ptr<AuthRequest>(new AuthRequest(authenticator->getName(), authenticator->getResponse())));
 }
 
+void ClientSession::continueAfterSecurityError() {
+	checkState(WaitingForContinueAfterSecurityError);
+	continueAfterTLSEncrypted();
+}
+
 void ClientSession::handleTLSEncrypted() {
 	checkState(Encrypting);
+
+	Certificate::ref certificate = stream->getPeerCertificate();
+	boost::optional<CertificateVerificationError> verificationError = stream->getPeerCertificateVerificationError();
+	if (verificationError) {
+		state = WaitingForContinueAfterSecurityError;
+		onSecurityError(SecurityError(*verificationError));
+	}
+	else {
+		continueAfterTLSEncrypted();
+	}
+}
+
+void ClientSession::continueAfterTLSEncrypted() {
 	state = WaitingForStreamStart;
 	stream->resetXMPPParser();
 	sendStreamHeader();

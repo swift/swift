@@ -221,12 +221,73 @@ Certificate::ref OpenSSLContext::getPeerCertificate() const {
 }
 
 boost::optional<CertificateVerificationError> OpenSSLContext::getPeerCertificateVerificationError() const {
-	long verifyResult = SSL_get_verify_result(handle_);
+	int verifyResult = SSL_get_verify_result(handle_);
 	if (verifyResult != X509_V_OK) {
-		return CertificateVerificationError();
+		return CertificateVerificationError(getVerificationErrorTypeForResult(verifyResult));
 	}
 	else {
 		return boost::optional<CertificateVerificationError>();
+	}
+}
+
+CertificateVerificationError::Type OpenSSLContext::getVerificationErrorTypeForResult(int result) {
+	assert(result != 0);
+	switch (result) {
+		case X509_V_ERR_CERT_NOT_YET_VALID:
+		case X509_V_ERR_ERROR_IN_CERT_NOT_BEFORE_FIELD:
+			return CertificateVerificationError::NotYetValid;
+
+		case X509_V_ERR_CERT_HAS_EXPIRED:
+		case X509_V_ERR_ERROR_IN_CERT_NOT_AFTER_FIELD:
+			return CertificateVerificationError::Expired;
+
+		case X509_V_ERR_DEPTH_ZERO_SELF_SIGNED_CERT:
+		case X509_V_ERR_SELF_SIGNED_CERT_IN_CHAIN:
+			return CertificateVerificationError::SelfSigned;
+
+		case X509_V_ERR_CERT_UNTRUSTED:
+			return CertificateVerificationError::Untrusted;
+
+		case X509_V_ERR_CERT_REJECTED:
+			return CertificateVerificationError::Rejected;
+
+		case X509_V_ERR_INVALID_PURPOSE:
+			return CertificateVerificationError::InvalidPurpose;
+
+		case X509_V_ERR_PATH_LENGTH_EXCEEDED:
+			return CertificateVerificationError::PathLengthExceeded;
+
+		case X509_V_ERR_UNABLE_TO_DECRYPT_CERT_SIGNATURE:
+		case X509_V_ERR_CERT_SIGNATURE_FAILURE:
+		case X509_V_ERR_UNABLE_TO_VERIFY_LEAF_SIGNATURE:
+			return CertificateVerificationError::InvalidSignature;
+
+		case X509_V_ERR_INVALID_CA:
+		case X509_V_ERR_UNABLE_TO_GET_ISSUER_CERT:
+		case X509_V_ERR_UNABLE_TO_DECODE_ISSUER_PUBLIC_KEY:
+		case X509_V_ERR_UNABLE_TO_GET_ISSUER_CERT_LOCALLY:
+			return CertificateVerificationError::InvalidCA;
+
+		case X509_V_ERR_SUBJECT_ISSUER_MISMATCH:
+		case X509_V_ERR_AKID_SKID_MISMATCH:
+		case X509_V_ERR_AKID_ISSUER_SERIAL_MISMATCH:
+		case X509_V_ERR_KEYUSAGE_NO_CERTSIGN:
+			return CertificateVerificationError::UnknownError;
+
+		// Unused / should not happen
+		case X509_V_ERR_CERT_REVOKED:
+		case X509_V_ERR_OUT_OF_MEM:
+		case X509_V_ERR_UNABLE_TO_GET_CRL:
+		case X509_V_ERR_UNABLE_TO_DECRYPT_CRL_SIGNATURE:
+		case X509_V_ERR_CRL_SIGNATURE_FAILURE:
+		case X509_V_ERR_CRL_NOT_YET_VALID:
+		case X509_V_ERR_CRL_HAS_EXPIRED:
+		case X509_V_ERR_ERROR_IN_CRL_LAST_UPDATE_FIELD:
+		case X509_V_ERR_ERROR_IN_CRL_NEXT_UPDATE_FIELD:
+		case X509_V_ERR_CERT_CHAIN_TOO_LONG:
+		case X509_V_ERR_APPLICATION_VERIFICATION:
+		default:
+			return CertificateVerificationError::UnknownError;
 	}
 }
 

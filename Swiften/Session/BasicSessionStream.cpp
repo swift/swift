@@ -85,6 +85,15 @@ bool BasicSessionStream::isTLSEncrypted() {
 	return tlsLayer;
 }
 
+Certificate::ref BasicSessionStream::getPeerCertificate() const {
+	return tlsLayer->getPeerCertificate();
+}
+
+boost::optional<CertificateVerificationError> BasicSessionStream::getPeerCertificateVerificationError() const {
+	return tlsLayer->getPeerCertificateVerificationError();
+}
+
+
 void BasicSessionStream::addZLibCompression() {
 	boost::shared_ptr<CompressionLayer> compressionLayer(new CompressionLayer());
 	streamStack->addLayer(compressionLayer);

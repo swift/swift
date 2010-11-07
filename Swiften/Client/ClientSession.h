@@ -20,6 +20,7 @@
 
 namespace Swift {
 	class ClientAuthenticator;
+	class SecurityError;
 
 	class ClientSession : public boost::enable_shared_from_this<ClientSession> {
 		public:
@@ -30,6 +31,7 @@ namespace Swift {
 				Compressing,
 				WaitingForEncrypt,
 				Encrypting,
+				WaitingForContinueAfterSecurityError,
 				WaitingForCredentials,
 				Authenticating,
 				EnablingSessionManagement,
@@ -81,9 +83,11 @@ namespace Swift {
 
 			void sendCredentials(const String& password);
 			void sendStanza(boost::shared_ptr<Stanza>);
+			void continueAfterSecurityError();
 
 		public:
 			boost::signal<void ()> onNeedCredentials;
+			boost::signal<void (const SecurityError&)> onSecurityError;
 			boost::signal<void ()> onInitialized;
 			boost::signal<void (boost::shared_ptr<Swift::Error>)> onFinished;
 			boost::signal<void (boost::shared_ptr<Stanza>)> onStanzaReceived;
@@ -115,6 +119,7 @@ namespace Swift {
 			void requestAck();
 			void handleStanzaAcked(boost::shared_ptr<Stanza> stanza);
 			void ack(unsigned int handledStanzasCount);
+			void continueAfterTLSEncrypted();
 
 		private:
 			JID localJID;

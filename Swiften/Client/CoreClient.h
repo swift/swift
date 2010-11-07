@@ -32,6 +32,7 @@ namespace Swift {
 	class ClientSession;
 	class BasicSessionStream;
 	class EventLoop;
+	class SecurityError;
 
 	/** 
 	 * The central class for communicating with an XMPP server.
@@ -70,6 +71,14 @@ namespace Swift {
 			void connect(const JID& jid);
 			void connect(const String& host);
 			
+			/**
+			 * Instructs the client to continue initializing the session
+			 * after a security error has occurred (and as such ignoring the error)
+			 *
+			 * \see onSecurityError
+			 */
+			void continueAfterSecurityError();
+
 			/**
 			 * Sends a message.
 			 */
@@ -131,7 +140,28 @@ namespace Swift {
 				return stanzaChannel_;
 			}
 
+			/**
+			 * Sets whether security errors should be ignored or not.
+			 *
+			 * If this is set to 'true', onSecurityError will not be called when a security
+			 * error occurs, and connecting will continue.
+			 *
+			 * Defaults to true.
+			 */
+			void setIgnoreSecurityErrors(bool b) {
+				ignoreSecurityErrors = b;
+			}
+
 		public:
+			/**
+			 * Emitted when an error occurred while establishing a secure connection.
+			 *
+			 * If the error is to be ignored, call continueAfterSecurityError(), otherwise call
+			 * finish().
+			 * This signal is not emitted when setIgnoreSecurityErrors() is set to true.
+			 */
+			boost::signal<void (const SecurityError&)> onSecurityError;
+
 			/**
 			 * Emitted when the client was disconnected from the network.
 			 *
@@ -187,6 +217,7 @@ namespace Swift {
 			void handleNeedCredentials();
 			void handleDataRead(const String&);
 			void handleDataWritten(const String&);
+			void handleSecurityError(const SecurityError& securityError);
 
 		private:
 			PlatformDomainNameResolver resolver_;
@@ -206,5 +237,6 @@ namespace Swift {
 			boost::shared_ptr<ClientSession> session_;
 			String certificate_;
 			bool disconnectRequested_;
+			bool ignoreSecurityErrors;
 	};
 }

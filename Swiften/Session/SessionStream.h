@@ -8,11 +8,14 @@
 
 #include "Swiften/Base/boost_bsignals.h"
 #include <boost/shared_ptr.hpp>
+#include <boost/optional.hpp>
 
 #include "Swiften/Elements/ProtocolHeader.h"
 #include "Swiften/Elements/Element.h"
 #include "Swiften/Base/Error.h"
 #include "Swiften/TLS/PKCS12Certificate.h"
+#include "Swiften/TLS/Certificate.h"
+#include "Swiften/TLS/CertificateVerificationError.h"
 
 namespace Swift {
 	class SessionStream {
@@ -57,6 +60,8 @@ namespace Swift {
 				return !certificate.isNull();
 			}
 
+			virtual Certificate::ref getPeerCertificate() const = 0;
+			virtual boost::optional<CertificateVerificationError> getPeerCertificateVerificationError() const = 0;
 
 			boost::signal<void (const ProtocolHeader&)> onStreamStartReceived;
 			boost::signal<void (boost::shared_ptr<Element>)> onElementReceived;

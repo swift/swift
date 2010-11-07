@@ -23,7 +23,7 @@
 
 namespace Swift {
 
-CoreClient::CoreClient(EventLoop* eventLoop, const JID& jid, const String& password) : resolver_(eventLoop), jid_(jid), password_(password), eventLoop(eventLoop), disconnectRequested_(false) {
+CoreClient::CoreClient(EventLoop* eventLoop, const JID& jid, const String& password) : resolver_(eventLoop), jid_(jid), password_(password), eventLoop(eventLoop), disconnectRequested_(false), ignoreSecurityErrors(true) {
 	stanzaChannel_ = new ClientSessionStanzaChannel();
 	stanzaChannel_->onMessageReceived.connect(boost::ref(onMessageReceived));
 	stanzaChannel_->onPresenceReceived.connect(boost::ref(onPresenceReceived));
@@ -93,6 +93,7 @@ void CoreClient::handleConnectorFinished(boost::shared_ptr<Connection> connectio
 		stanzaChannel_->setSession(session_);
 		session_->onFinished.connect(boost::bind(&CoreClient::handleSessionFinished, this, _1));
 		session_->onNeedCredentials.connect(boost::bind(&CoreClient::handleNeedCredentials, this));
+		session_->onSecurityError.connect(boost::bind(&CoreClient::handleSecurityError, this, _1));
 		session_->start();
 	}
 }
@@ -114,6 +115,7 @@ void CoreClient::setCertificate(const String& certificate) {
 }
 
 void CoreClient::handleSessionFinished(boost::shared_ptr<Error> error) {
+	session_->onSecurityError.disconnect(boost::bind(&CoreClient::handleSecurityError, this, _1));
 	session_->onFinished.disconnect(boost::bind(&CoreClient::handleSessionFinished, this, _1));
 	session_->onNeedCredentials.disconnect(boost::bind(&CoreClient::handleNeedCredentials, this));
 	session_.reset();
@@ -212,6 +214,19 @@ void CoreClient::sendPresence(boost::shared_ptr<Presence> presence) {
 
 bool CoreClient::isActive() const {
 	return session_ || connector_;
+}
+
+void CoreClient::handleSecurityError(const SecurityError& error) {
+	if (ignoreSecurityErrors) {
+		session_->continueAfterSecurityError();
+	}
+	else {
+		onSecurityError(error);
+	}
+}
+
+void CoreClient::continueAfterSecurityError() {
+	session_->continueAfterSecurityError();
 }
 
 }

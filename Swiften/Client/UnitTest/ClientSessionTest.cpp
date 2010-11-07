@@ -283,6 +283,14 @@ class ClientSessionTest : public CppUnit::TestFixture {
 					return tlsEncrypted;
 				}
 
+				virtual Certificate::ref getPeerCertificate() const {
+					return Certificate::ref();
+				}
+
+				virtual boost::optional<CertificateVerificationError> getPeerCertificateVerificationError() const {
+					return boost::optional<CertificateVerificationError>();
+				}
+
 				virtual void addZLibCompression() {
 					compressed = true;
 				}

@@ -33,6 +33,8 @@ namespace Swift {
 		private:
 			static void ensureLibraryInitialized();	
 
+			static CertificateVerificationError::Type getVerificationErrorTypeForResult(int);
+
 			void doConnect();
 			void sendPendingDataToNetwork();
 			void sendPendingDataToApplication();

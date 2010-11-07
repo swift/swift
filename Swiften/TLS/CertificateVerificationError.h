@@ -11,6 +11,15 @@ namespace Swift {
 		public:
 			enum Type {
 				UnknownError,
+				Expired,
+				NotYetValid,
+				SelfSigned,
+				Rejected,
+				Untrusted,
+				InvalidPurpose,
+				PathLengthExceeded,
+				InvalidSignature,
+				InvalidCA,
 			};
 
 			CertificateVerificationError(Type type = UnknownError) : type(type) {}

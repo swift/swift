@@ -3,6 +3,7 @@ Import("swiften_env")
 objects = swiften_env.StaticObject([
 			"TLSContext.cpp",
 			"TLSContextFactory.cpp",
+			"SecurityError.cpp",
 		])
 		
 if swiften_env.get("HAVE_OPENSSL", 0) :
