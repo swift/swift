@@ -22,6 +22,7 @@ class StanzaChannel;
 
 			Presence::ref getLastPresence(const JID&) const;
 			Presence::ref getHighestPriorityPresence(const JID& bareJID) const;
+			std::vector<Presence::ref> getAllPresence(const JID& bareJID) const;
 
 		public:
 			boost::signal<void (Presence::ref)> onPresenceChange;

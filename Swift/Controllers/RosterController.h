@@ -60,6 +60,7 @@ namespace Swift {
 			void handleUIEvent(boost::shared_ptr<UIEvent> event);
 			void handleRosterSetError(boost::optional<ErrorPayload> error, boost::shared_ptr<RosterPayload> rosterPayload);
 			void handleOwnNickChanged(const String& nick);
+			void applyAllPresenceTo(const JID& jid);
 			JID myJID_;
 			XMPPRoster* xmppRoster_;
 			MainWindowFactory* mainWindowFactory_;

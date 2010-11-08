@@ -115,6 +115,13 @@ void RosterController::handleOnJIDAdded(const JID& jid) {
 	else {
 		roster_->addContact(jid, jid, name, "Contacts", avatarManager_->getAvatarPath(jid).string());
 	}
+	applyAllPresenceTo(jid);
+}
+
+void RosterController::applyAllPresenceTo(const JID& jid) {
+	foreach (Presence::ref presence, presenceOracle_->getAllPresence(jid)) {
+		roster_->applyOnItems(SetPresence(presence));
+	}
 }
 
 void RosterController::handleRosterCleared() {
@@ -150,10 +157,7 @@ void RosterController::handleOnJIDUpdated(const JID& jid, const String& oldName,
 			roster_->removeContactFromGroup(jid, group);
 		}
 	}
-	Presence::ref presence(presenceOracle_->getHighestPriorityPresence(jid));
-	if (presence) {
-		roster_->applyOnItems(SetPresence(presence));
-	}
+	applyAllPresenceTo(jid);
 }
 
 void RosterController::handleUIEvent(boost::shared_ptr<UIEvent> event) {

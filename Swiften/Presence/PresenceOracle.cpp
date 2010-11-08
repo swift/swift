@@ -76,6 +76,21 @@ Presence::ref PresenceOracle::getLastPresence(const JID& jid) const {
 	}
 }
 
+std::vector<Presence::ref> PresenceOracle::getAllPresence(const JID& bareJID) const {
+	std::vector<Presence::ref> results;
+	PresencesMap::const_iterator i = entries_.find(bareJID);
+	if (i == entries_.end()) {
+		return results;
+	}
+	PresenceMap presenceMap = i->second;
+	PresenceMap::const_iterator j = presenceMap.begin();
+	for (; j != presenceMap.end(); j++) {
+		Presence::ref current = j->second;
+		results.push_back(current);
+	}
+	return results;
+}
+
 Presence::ref PresenceOracle::getHighestPriorityPresence(const JID& bareJID) const {
 	PresencesMap::const_iterator i = entries_.find(bareJID);
 	if (i == entries_.end()) {
