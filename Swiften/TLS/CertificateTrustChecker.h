@@ -12,10 +12,18 @@
 #include "Swiften/TLS/Certificate.h"
 
 namespace Swift {
+	/**
+	 * A class to implement a check for certificate trust.
+	 */
 	class CertificateTrustChecker {
 		public:
 			virtual ~CertificateTrustChecker();
 
+			/**
+			 * This method is called to find out whether a certificate is
+			 * trusted. This usually happens when a certificate's validation
+			 * fails, to check whether to proceed with the connection or not.
+			 */
 			virtual bool isCertificateTrusted(Certificate::ref certificate, const String& domain) = 0;
 	};
 }

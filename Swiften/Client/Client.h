@@ -127,6 +127,12 @@ namespace Swift {
 				return discoManager;
 			}
 
+			/**
+			 * Configures the client to always trust a non-validating
+			 * TLS certificate from the server.
+			 * This is equivalent to setting a BlindCertificateTrustChecker
+			 * using setCertificateTrustChecker().
+			 */
 			void setAlwaysTrustCertificates();
 		
 		public:

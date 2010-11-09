@@ -9,6 +9,14 @@
 #include "Swiften/TLS/CertificateTrustChecker.h"
 
 namespace Swift {
+	/**
+	 * A certificate trust checker that trusts any ceritficate.
+	 *
+	 * This can be used to ignore any TLS certificate errors occurring 
+	 * during connection.
+	 *
+	 * \see Client::setAlwaysTrustCertificates()
+	 */
 	class BlindCertificateTrustChecker : public CertificateTrustChecker {
 		public:
 			virtual bool isCertificateTrusted(Certificate::ref, const String&) {

@@ -133,6 +133,14 @@ namespace Swift {
 				return stanzaChannel_;
 			}
 
+			/**
+			 * Sets the certificate trust checker.
+			 *
+			 * This checker will be called when the server sends a
+			 * TLS certificate that does not validate. If the trust checker
+			 * says the certificate is trusted, then connecting will proceed;
+			 * if not, the connection will end with an error.
+			 */
 			void setCertificateTrustChecker(CertificateTrustChecker*);
 
 		public:

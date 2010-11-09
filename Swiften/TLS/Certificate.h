@@ -18,6 +18,10 @@ namespace Swift {
 
 			virtual ~Certificate();
 
+			/**
+			 * Returns the textual representation of the full Subject
+			 * name.
+			 */
 			virtual String getSubjectName() const = 0;
 
 			virtual std::vector<String> getCommonNames() const = 0;
