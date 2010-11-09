@@ -35,14 +35,22 @@ ByteArray OpenSSLCertificate::toDER() const {
 }
 
 void OpenSSLCertificate::parse() {
-	// Common name
+	// Subject name
 	X509_NAME* subjectName = X509_get_subject_name(cert.get());
 	if (subjectName) {
+		// Subject name
+		ByteArray subjectNameData;
+		subjectNameData.resize(256);
+		X509_NAME_oneline(X509_get_subject_name(cert.get()), subjectNameData.getData(), subjectNameData.getSize());
+		this->subjectName = String(subjectNameData.getData());
+
+		// Common name
 		int cnLoc = X509_NAME_get_index_by_NID(subjectName, NID_commonName, -1);
-		if (cnLoc != -1) {
+		while (cnLoc != -1) {
 			X509_NAME_ENTRY* cnEntry = X509_NAME_get_entry(subjectName, cnLoc);
 			ASN1_STRING* cnData = X509_NAME_ENTRY_get_data(cnEntry);
-			setCommonName(ByteArray(cnData->data, cnData->length).toString());
+			commonNames.push_back(ByteArray(cnData->data, cnData->length).toString());
+			cnLoc = X509_NAME_get_index_by_NID(subjectName, NID_commonName, cnLoc);
 		}
 	}
 

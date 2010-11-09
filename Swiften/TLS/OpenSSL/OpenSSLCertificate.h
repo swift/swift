@@ -18,8 +18,12 @@ namespace Swift {
 			OpenSSLCertificate(boost::shared_ptr<X509>);
 			OpenSSLCertificate(const ByteArray& der);
 
-			String getCommonName() const {
-				return commonName;
+			String getSubjectName() const {
+				return subjectName;
+			}
+
+			std::vector<String> getCommonNames() const {
+				return commonNames;
 			}
 
 			std::vector<String> getSRVNames() const {
@@ -51,13 +55,10 @@ namespace Swift {
 				xmppAddresses.push_back(addr);
 			}
 
-			void setCommonName(const String& commonName) {
-				this->commonName = commonName;
-			}
-
 		private:
 			boost::shared_ptr<X509> cert;
-			String commonName;
+			String subjectName;
+			std::vector<String> commonNames;
 			std::vector<String> dnsNames;
 			std::vector<String> xmppAddresses;
 			std::vector<String> srvNames;

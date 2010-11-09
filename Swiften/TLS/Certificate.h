@@ -18,7 +18,9 @@ namespace Swift {
 
 			virtual ~Certificate();
 
-			virtual String getCommonName() const = 0;
+			virtual String getSubjectName() const = 0;
+
+			virtual std::vector<String> getCommonNames() const = 0;
 			virtual std::vector<String> getSRVNames() const = 0;
 			virtual std::vector<String> getDNSNames() const = 0;
 			virtual std::vector<String> getXMPPAddresses() const = 0;

@@ -17,11 +17,13 @@ class OpenSSLCertificateTest : public CppUnit::TestFixture {
 		CPPUNIT_TEST_SUITE(OpenSSLCertificateTest);
 		CPPUNIT_TEST(testConstructFromDER);
 		CPPUNIT_TEST(testToDER);
+		CPPUNIT_TEST(testGetSubjectName);
 		CPPUNIT_TEST_SUITE_END();
 
 	public:
 		void setUp() {
 			pathProvider = new PlatformApplicationPathProvider("FileReadBytestreamTest");
+			certificateData.readFromFile((pathProvider->getExecutableDir() / "jabber_org.crt").string());
 		}
 
 		void tearDown() {
@@ -29,23 +31,26 @@ class OpenSSLCertificateTest : public CppUnit::TestFixture {
 		}
 
 		void testConstructFromDER() {
-			ByteArray in;
-			in.readFromFile((pathProvider->getExecutableDir() / "jabber_org.crt").string());
-			OpenSSLCertificate testling(in);
+			OpenSSLCertificate testling(certificateData);
 
-			CPPUNIT_ASSERT_EQUAL(String("*.jabber.org"), testling.getCommonName());
+			CPPUNIT_ASSERT_EQUAL(String("*.jabber.org"), testling.getCommonNames()[0]);
 		}
 		
 		void testToDER() {
-			ByteArray in;
-			in.readFromFile((pathProvider->getExecutableDir() / "jabber_org.crt").string());
-			OpenSSLCertificate testling(in);
+			OpenSSLCertificate testling(certificateData);
 
-			CPPUNIT_ASSERT_EQUAL(in, testling.toDER());
+			CPPUNIT_ASSERT_EQUAL(certificateData, testling.toDER());
+		}
+
+		void testGetSubjectName() {
+			OpenSSLCertificate testling(certificateData);
+
+			CPPUNIT_ASSERT_EQUAL(String("/description=114072-VMk8pdi1aj5kTXxO/C=US/ST=Colorado/L=Denver/O=Peter Saint-Andre/OU=StartCom Trusted Certificate Member/CN=*.jabber.org/emailAddress=hostmaster@jabber.org"), testling.getSubjectName());
 		}
 	
 	private:
 		PlatformApplicationPathProvider* pathProvider;
+		ByteArray certificateData;
 };
 
 CPPUNIT_TEST_SUITE_REGISTRATION(OpenSSLCertificateTest);
