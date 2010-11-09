@@ -32,6 +32,7 @@ namespace Swift {
 	class ClientSession;
 	class BasicSessionStream;
 	class EventLoop;
+	class PlatformTLSFactories;
 	class CertificateTrustChecker;
 
 	/** 
@@ -201,7 +202,7 @@ namespace Swift {
 			Connector::ref connector_;
 			ConnectionFactory* connectionFactory_;
 			TimerFactory* timerFactory_;
-			TLSContextFactory* tlsContextFactory_;
+			PlatformTLSFactories* tlsFactories;
 			FullPayloadParserFactoryCollection payloadParserFactories_;
 			FullPayloadSerializerCollection payloadSerializers_;
 			boost::shared_ptr<Connection> connection_;

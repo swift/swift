@@ -2,6 +2,7 @@ Import("swiften_env")
 
 objects = swiften_env.StaticObject([
 			"Certificate.cpp",
+			"CertificateFactory.cpp",
 			"CertificateTrustChecker.cpp",
 			"TLSContext.cpp",
 			"TLSContextFactory.cpp",
@@ -17,7 +18,7 @@ if myenv.get("HAVE_OPENSSL", 0) :
 		])
 	myenv.Append(CPPDEFINES = "HAVE_OPENSSL")
 
-objects += myenv.StaticObject(["PlatformTLSContextFactory.cpp"])
+objects += myenv.StaticObject(["PlatformTLSFactories.cpp"])
 
 		
 
