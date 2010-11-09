@@ -268,7 +268,7 @@ if env["SCONS_STAGE"] == "build" :
 	# Generate the Swiften header
 	swiften_header = "#pragma once\n"
 	top_path = env.Dir("..").abspath
-	public_dirs = ["Queries", "Client", "Component", "Elements", "Roster"]
+	public_dirs = ["Avatars", "Base", "Chat", "Client", "Component", "Disco", "Elements", "JID", "MUC", "Presence", "Queries", "Roster", "StringCodecs", "TLS", "VCards"]
 	for public_dir in public_dirs :
 		for root, dirs, files in os.walk(env.Dir(public_dir).abspath) :
 			if root.endswith("UnitTest") :

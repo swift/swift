@@ -6,9 +6,10 @@
 
 #include "Swiften/TLS/OpenSSL/OpenSSLCertificate.h"
 
-#include <openssl/x509v3.h>
-
 #include "Swiften/Base/ByteArray.h"
+
+#undef X509_NAME // Windows.h defines this, and  for some reason, it doesn't get undeffed properly in x509.h
+#include <openssl/x509v3.h>
 
 #pragma GCC diagnostic ignored "-Wold-style-cast"
 

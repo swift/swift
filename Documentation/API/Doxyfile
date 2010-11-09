@@ -108,6 +108,9 @@ INPUT                  = \
 	Swiften/Queries \
 	Swiften/Roster/XMPPRoster.h \
 	Swiften/StringCodecs \
+	Swiften/TLS/BlindCertificateTrustChecker.h \
+	Swiften/TLS/Certificate.h \
+	Swiften/TLS/CertificateTrustChecker.h \
 	Swiften/VCards
 INPUT_ENCODING         = UTF-8
 FILE_PATTERNS          = *.h
