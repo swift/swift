@@ -96,10 +96,10 @@ void MUCController::rejoin() {
 		joined_ = false;
 		parting_ = false;
 		//FIXME: check for received activity
-		if (/*lastActivityDate_ == none*/true) {
+		if (lastActivity_ == boost::posix_time::not_a_date_time) {
 			muc_->joinAs(nick_);
 		} else {
-			muc_->joinWithContextSince(nick_);
+			muc_->joinWithContextSince(nick_, lastActivity_);
 		}
 	}
 }
@@ -230,6 +230,9 @@ bool MUCController::messageTargetsMe(boost::shared_ptr<Message> message) {
 }
 
 void MUCController::preHandleIncomingMessage(boost::shared_ptr<MessageEvent> messageEvent) {
+	if (messageEvent->getStanza()->getType() == Message::Groupchat) {
+		lastActivity_ = boost::posix_time::microsec_clock::universal_time();
+	}
 	clearPresenceQueue();
 	boost::shared_ptr<Message> message = messageEvent->getStanza();
 	if (joined_ && messageEvent->getStanza()->getFrom().getResource() != nick_ && messageTargetsMe(message) && !message->getPayload<Delay>()) {

@@ -42,7 +42,7 @@ namespace Swift {
 			}
 
 			void joinAs(const String &nick);
-			void joinWithContextSince(const String &nick);
+			void joinWithContextSince(const String &nick, const boost::posix_time::ptime& since);
 			/*void queryRoomInfo(); */
 			/*void queryRoomItems(); */
 			String getCurrentNick();
@@ -85,5 +85,6 @@ namespace Swift {
 			std::map<String, MUCOccupant> occupants;
 			bool joinComplete_;
 			boost::bsignals::scoped_connection scopedConnection_;
+			boost::posix_time::ptime joinSince_;
 	};
 }

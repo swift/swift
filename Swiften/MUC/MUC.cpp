@@ -34,6 +34,7 @@ MUC::MUC(StanzaChannel* stanzaChannel, IQRouter* iqRouter, DirectedPresenceSende
  * Join the MUC with default context.
  */
 void MUC::joinAs(const String &nick) {
+	joinSince_ = boost::posix_time::not_a_date_time;
 	internalJoin(nick);
 }
 
@@ -43,17 +44,20 @@ void MUC::internalJoin(const String &nick) {
 	joinComplete_ = false;
 	ownMUCJID = JID(ownMUCJID.getNode(), ownMUCJID.getDomain(), nick);
 	boost::shared_ptr<Presence> joinPresence(presenceSender->getLastSentUndirectedPresence());
-	//FIXME: use date
 	joinPresence->setTo(ownMUCJID);
-	joinPresence->addPayload(boost::shared_ptr<Payload>(new MUCPayload()));
+	boost::shared_ptr<MUCPayload> mucPayload(new MUCPayload());
+	if (joinSince_ != boost::posix_time::not_a_date_time) {
+		mucPayload->setSince(joinSince_);
+	}
+	joinPresence->addPayload(mucPayload);
 	presenceSender->sendPresence(joinPresence);
 }
 
 /**
  * Join the MUC with context since date.
  */
-void MUC::joinWithContextSince(const String &nick) {
-	//FIXME: add date
+void MUC::joinWithContextSince(const String &nick, const boost::posix_time::ptime& since) {
+	joinSince_ = since;
 	internalJoin(nick);
 }
 

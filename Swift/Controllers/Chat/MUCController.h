@@ -93,6 +93,7 @@ namespace Swift {
 			boost::shared_ptr<Timer> loginCheckTimer_;
 			std::set<String> currentOccupants_;
 			std::vector<NickJoinPart> joinParts_;
+			boost::posix_time::ptime lastActivity_;
 	};
 }
 
