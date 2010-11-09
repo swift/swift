@@ -16,6 +16,7 @@ namespace Swift {
 	class OpenSSLCertificate : public Certificate {
 		public:
 			OpenSSLCertificate(boost::shared_ptr<X509>);
+			OpenSSLCertificate(const ByteArray& der);
 
 			String getCommonName() const {
 				return commonName;
@@ -33,7 +34,11 @@ namespace Swift {
 				return xmppAddresses;
 			}
 
+			ByteArray toDER() const;
+
 		private:
+			void parse();
+
 			void addSRVName(const String& name) {
 				srvNames.push_back(name);
 			}

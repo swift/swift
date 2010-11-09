@@ -16,6 +16,25 @@
 namespace Swift {
 
 OpenSSLCertificate::OpenSSLCertificate(boost::shared_ptr<X509> cert) : cert(cert) {
+	parse();
+}
+
+
+OpenSSLCertificate::OpenSSLCertificate(const ByteArray& der) {
+	const unsigned char* p = reinterpret_cast<const unsigned char*>(der.getData());
+	cert = boost::shared_ptr<X509>(d2i_X509(NULL, &p, der.getSize()), X509_free);
+	parse();
+}
+
+ByteArray OpenSSLCertificate::toDER() const {
+	ByteArray result;
+	result.resize(i2d_X509(cert.get(), NULL));
+	unsigned char* p = reinterpret_cast<unsigned char*>(result.getData());
+	i2d_X509(cert.get(), &p);
+	return result;
+}
+
+void OpenSSLCertificate::parse() {
 	// Common name
 	X509_NAME* subjectName = X509_get_subject_name(cert.get());
 	if (subjectName) {

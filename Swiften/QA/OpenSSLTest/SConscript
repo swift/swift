@@ -1,0 +1,18 @@
+import os
+
+Import("env")
+
+if env["TEST"] :
+	myenv = env.Clone()
+	myenv.MergeFlags(myenv["CHECKER_FLAGS"])
+	myenv.MergeFlags(myenv["SWIFTOOLS_FLAGS"])
+	myenv.MergeFlags(myenv["SWIFTEN_FLAGS"])
+	myenv.MergeFlags(myenv["CPPUNIT_FLAGS"])
+	myenv.MergeFlags(myenv["BOOST_FLAGS"])
+	myenv.MergeFlags(myenv["LIBIDN_FLAGS"])
+	myenv.MergeFlags(myenv["OPENSSL_FLAGS"])
+
+	tester = myenv.Program("OpenSSLTest", [
+			"OpenSSLCertificateTest.cpp",
+		])
+	myenv.Test(tester, "system")

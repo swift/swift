@@ -1,3 +1,5 @@
+Import("swiften_env")
+
 SConscript(dirs = [
 		"NetworkTest",
 #		"ReconnectTest",
@@ -5,3 +7,6 @@ SConscript(dirs = [
 #		"DNSSDTest",
 		"StorageTest",
 	])
+
+if swiften_env.get("HAVE_OPENSSL", False) :
+	SConscript(dirs = ["OpenSSLTest"])

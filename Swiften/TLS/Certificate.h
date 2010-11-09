@@ -9,6 +9,7 @@
 #include <boost/shared_ptr.hpp>
 
 #include "Swiften/Base/String.h"
+#include "Swiften/Base/ByteArray.h"
 
 namespace Swift {
 	class Certificate {
@@ -21,6 +22,8 @@ namespace Swift {
 			virtual std::vector<String> getSRVNames() const = 0;
 			virtual std::vector<String> getDNSNames() const = 0;
 			virtual std::vector<String> getXMPPAddresses() const = 0;
+
+			virtual ByteArray toDER() const = 0;
 
 		protected:
 			static const char* ID_ON_XMPPADDR_OID;
