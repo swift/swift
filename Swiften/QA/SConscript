@@ -6,7 +6,5 @@ SConscript(dirs = [
 		"ClientTest",
 #		"DNSSDTest",
 		"StorageTest",
+		"TLSTest",
 	])
-
-if swiften_env.get("HAVE_OPENSSL", False) :
-	SConscript(dirs = ["OpenSSLTest"])
