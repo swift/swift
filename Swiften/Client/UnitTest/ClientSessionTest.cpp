@@ -24,6 +24,8 @@
 #include "Swiften/Elements/EnableStreamManagement.h"
 #include "Swiften/Elements/IQ.h"
 #include "Swiften/Elements/ResourceBind.h"
+#include "Swiften/TLS/SimpleCertificate.h"
+#include "Swiften/TLS/BlindCertificateTrustChecker.h"
 
 using namespace Swift;
 
@@ -33,6 +35,7 @@ class ClientSessionTest : public CppUnit::TestFixture {
 		CPPUNIT_TEST(testStartTLS);
 		CPPUNIT_TEST(testStartTLS_ServerError);
 		CPPUNIT_TEST(testStartTLS_ConnectError);
+		CPPUNIT_TEST(testStartTLS_InvalidIdentity);
 		CPPUNIT_TEST(testAuthenticate);
 		CPPUNIT_TEST(testAuthenticate_Unauthorized);
 		CPPUNIT_TEST(testAuthenticate_NoValidAuthMechanisms);
@@ -57,6 +60,11 @@ class ClientSessionTest : public CppUnit::TestFixture {
 			server = boost::shared_ptr<MockSessionStream>(new MockSessionStream());
 			sessionFinishedReceived = false;
 			needCredentials = false;
+			blindCertificateTrustChecker = new BlindCertificateTrustChecker();
+		}
+
+		void tearDown() {
+			delete blindCertificateTrustChecker;
 		}
 
 		void testStart_Error() {
@@ -71,6 +79,7 @@ class ClientSessionTest : public CppUnit::TestFixture {
 
 		void testStartTLS() {
 			boost::shared_ptr<ClientSession> session(createSession());
+			session->setCertificateTrustChecker(blindCertificateTrustChecker);
 			session->start();
 			server->receiveStreamStart();
 			server->sendStreamStart();
@@ -114,6 +123,24 @@ class ClientSessionTest : public CppUnit::TestFixture {
 			CPPUNIT_ASSERT_EQUAL(ClientSession::Finished, session->getState());
 			CPPUNIT_ASSERT(sessionFinishedReceived);
 			CPPUNIT_ASSERT(sessionFinishedError);
+		}
+
+		void testStartTLS_InvalidIdentity() {
+			boost::shared_ptr<ClientSession> session(createSession());
+			session->start();
+			server->receiveStreamStart();
+			server->sendStreamStart();
+			server->sendStreamFeaturesWithStartTLS();
+			server->receiveStartTLS();
+			CPPUNIT_ASSERT(!server->tlsEncrypted);
+			server->sendTLSProceed();
+			CPPUNIT_ASSERT(server->tlsEncrypted);
+			server->onTLSEncrypted();
+
+			CPPUNIT_ASSERT_EQUAL(ClientSession::Finished, session->getState());
+			CPPUNIT_ASSERT(sessionFinishedReceived);
+			CPPUNIT_ASSERT(sessionFinishedError);
+			CPPUNIT_ASSERT_EQUAL(CertificateVerificationError::InvalidServerIdentity, boost::dynamic_pointer_cast<CertificateVerificationError>(sessionFinishedError)->getType());
 		}
 
 		void testAuthenticate() {
@@ -284,7 +311,7 @@ class ClientSessionTest : public CppUnit::TestFixture {
 				}
 
 				virtual Certificate::ref getPeerCertificate() const {
-					return Certificate::ref();
+					return Certificate::ref(new SimpleCertificate());
 				}
 
 				virtual boost::shared_ptr<CertificateVerificationError> getPeerCertificateVerificationError() const {
@@ -429,6 +456,7 @@ class ClientSessionTest : public CppUnit::TestFixture {
 		bool sessionFinishedReceived;
 		bool needCredentials;
 		boost::shared_ptr<Error> sessionFinishedError;
+		BlindCertificateTrustChecker* blindCertificateTrustChecker;
 };
 
 CPPUNIT_TEST_SUITE_REGISTRATION(ClientSessionTest);

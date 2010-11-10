@@ -4,11 +4,13 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "Swiften/Network/DomainNameResolver.h"
+#pragma once
+
+#include "Swiften/Base/String.h"
 
 namespace Swift {
-
-DomainNameResolver::~DomainNameResolver() {
-}
-
+	class IDNA {
+		public:
+			static String getEncoded(const String& s);
+	};
 }

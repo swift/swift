@@ -9,7 +9,7 @@
 #include <iostream>
 
 #include "Swiften/JID/JID.h"
-#include "Swiften/StringPrep/StringPrep.h"
+#include "Swiften/IDN/StringPrep.h"
 
 namespace Swift {
 

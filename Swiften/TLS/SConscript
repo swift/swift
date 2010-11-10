@@ -4,6 +4,7 @@ objects = swiften_env.StaticObject([
 			"Certificate.cpp",
 			"CertificateFactory.cpp",
 			"CertificateTrustChecker.cpp",
+			"ServerIdentityVerifier.cpp",
 			"TLSContext.cpp",
 			"TLSContextFactory.cpp",
 		])

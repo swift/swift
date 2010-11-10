@@ -14,7 +14,7 @@
 #include "Swiften/StringCodecs/Base64.h"
 #include "Swiften/StringCodecs/HMACSHA1.h"
 #include "Swiften/StringCodecs/PBKDF2.h"
-#include "Swiften/StringPrep/StringPrep.h"
+#include "Swiften/IDN/StringPrep.h"
 
 namespace Swift {
 

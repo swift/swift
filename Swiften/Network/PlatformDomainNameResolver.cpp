@@ -18,6 +18,7 @@
 #include <algorithm>
 
 #include "Swiften/Base/String.h"
+#include "Swiften/IDN/IDNA.h"
 #include "Swiften/Network/HostAddress.h"
 #include "Swiften/EventLoop/EventLoop.h"
 #include "Swiften/Network/HostAddressPort.h"
@@ -95,11 +96,11 @@ PlatformDomainNameResolver::PlatformDomainNameResolver(EventLoop* eventLoop) : e
 }
 
 boost::shared_ptr<DomainNameServiceQuery> PlatformDomainNameResolver::createServiceQuery(const String& name) {
-	return boost::shared_ptr<DomainNameServiceQuery>(new PlatformDomainNameServiceQuery(getNormalized(name), eventLoop));
+	return boost::shared_ptr<DomainNameServiceQuery>(new PlatformDomainNameServiceQuery(IDNA::getEncoded(name), eventLoop));
 }
 
 boost::shared_ptr<DomainNameAddressQuery> PlatformDomainNameResolver::createAddressQuery(const String& name) {
-	return boost::shared_ptr<DomainNameAddressQuery>(new AddressQuery(getNormalized(name), eventLoop));
+	return boost::shared_ptr<DomainNameAddressQuery>(new AddressQuery(IDNA::getEncoded(name), eventLoop));
 }
 
 }

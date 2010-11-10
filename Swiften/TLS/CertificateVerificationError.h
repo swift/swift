@@ -22,6 +22,7 @@ namespace Swift {
 				PathLengthExceeded,
 				InvalidSignature,
 				InvalidCA,
+				InvalidServerIdentity,
 			};
 
 			CertificateVerificationError(Type type = UnknownError) : type(type) {}

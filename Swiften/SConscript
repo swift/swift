@@ -125,7 +125,7 @@ if env["SCONS_STAGE"] == "build" :
 	SConscript(dirs = [
 			"Avatars",
 			"Base",
-			"StringPrep",
+			"IDN",
 			"SASL",
 			"TLS",
 			"EventLoop",
@@ -266,6 +266,7 @@ if env["SCONS_STAGE"] == "build" :
 			File("StringCodecs/UnitTest/HexifyTest.cpp"),
 			File("StringCodecs/UnitTest/HMACSHA1Test.cpp"),
 			File("StringCodecs/UnitTest/PBKDF2Test.cpp"),
+			File("TLS/UnitTest/ServerIdentityVerifierTest.cpp"),
 			File("VCards/UnitTest/VCardManagerTest.cpp"),
 		])
 	

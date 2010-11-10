@@ -4,6 +4,7 @@ myenv = swiften_env.Clone()
 myenv.MergeFlags(swiften_env["LIBIDN_FLAGS"])
 
 objects = myenv.StaticObject([
-			"StringPrep.cpp"
+			"StringPrep.cpp",
+			"IDNA.cpp",
 		])
 swiften_env.Append(SWIFTEN_OBJECTS = [objects])

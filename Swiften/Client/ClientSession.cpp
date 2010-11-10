@@ -37,6 +37,7 @@
 #include "Swiften/SASL/DIGESTMD5ClientAuthenticator.h"
 #include "Swiften/Session/SessionStream.h"
 #include "Swiften/TLS/CertificateTrustChecker.h"
+#include "Swiften/TLS/ServerIdentityVerifier.h"
 
 namespace Swift {
 
@@ -330,15 +331,26 @@ void ClientSession::handleTLSEncrypted() {
 	Certificate::ref certificate = stream->getPeerCertificate();
 	boost::shared_ptr<CertificateVerificationError> verificationError = stream->getPeerCertificateVerificationError();
 	if (verificationError) {
-		if (certificateTrustChecker && certificateTrustChecker->isCertificateTrusted(certificate, localJID.getDomain())) {
+		checkTrustOrFinish(certificate, verificationError);
+	}
+	else {
+		ServerIdentityVerifier identityVerifier(localJID);
+		if (identityVerifier.certificateVerifies(certificate)) {
 			continueAfterTLSEncrypted();
 		}
 		else {
-			finishSession(verificationError);
+			boost::shared_ptr<CertificateVerificationError> identityError(new CertificateVerificationError(CertificateVerificationError::InvalidServerIdentity));
+			checkTrustOrFinish(certificate, identityError);
 		}
 	}
-	else {
+}
+
+void ClientSession::checkTrustOrFinish(Certificate::ref certificate, boost::shared_ptr<CertificateVerificationError> error) {
+	if (certificateTrustChecker && certificateTrustChecker->isCertificateTrusted(certificate, localJID.getDomain())) {
 		continueAfterTLSEncrypted();
+	}
+	else {
+		finishSession(error);
 	}
 }
 
