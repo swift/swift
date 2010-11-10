@@ -7,13 +7,16 @@
 #include "Swiften/Serializer/XML/XMLElement.h"
 
 #include "Swiften/Base/foreach.h"
+#include "Swiften/Serializer/XML/XMLTextNode.h"
 
 namespace Swift {
 
-XMLElement::XMLElement(const String& tag, const String& xmlns) : 
-		tag_(tag) {
+XMLElement::XMLElement(const String& tag, const String& xmlns, const String& text) : tag_(tag) {
 	if (!xmlns.isEmpty()) {
 		setAttribute("xmlns", xmlns);
+	}
+	if (!text.isEmpty()) {
+		addNode(XMLTextNode::ref(new XMLTextNode(text)));
 	}
 }
 

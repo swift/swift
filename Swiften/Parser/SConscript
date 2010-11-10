@@ -29,6 +29,7 @@ sources = [
 		"PayloadParsers/FormParser.cpp",
 		"PayloadParsers/IBBParser.cpp",
 		"PayloadParsers/CommandParser.cpp",
+		"PayloadParsers/InBandRegistrationPayloadParser.cpp",
 		"PayloadParsers/FullPayloadParserFactoryCollection.cpp",
 		"PayloadParsers/PriorityParser.cpp",
 		"PayloadParsers/PrivateStorageParser.cpp",

@@ -19,7 +19,7 @@ namespace Swift {
 		public:
 			typedef boost::shared_ptr<XMLElement> ref;
 
-			XMLElement(const String& tag, const String& xmlns = "");
+			XMLElement(const String& tag, const String& xmlns = "", const String& text = "");
 
 			void setAttribute(const String& attribute, const String& value);
 			void addNode(boost::shared_ptr<XMLNode> node);

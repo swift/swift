@@ -37,6 +37,7 @@
 #include "Swiften/Serializer/PayloadSerializers/DelaySerializer.h"
 #include "Swiften/Serializer/PayloadSerializers/FormSerializer.h"
 #include "Swiften/Serializer/PayloadSerializers/CommandSerializer.h"
+#include "Swiften/Serializer/PayloadSerializers/InBandRegistrationPayloadSerializer.h"
 #include "Swiften/Serializer/PayloadSerializers/NicknameSerializer.h"
 
 namespace Swift {
@@ -72,6 +73,7 @@ FullPayloadSerializerCollection::FullPayloadSerializerCollection() {
 	serializers_.push_back(new FormSerializer());
 	serializers_.push_back(new PrivateStorageSerializer(this));
 	serializers_.push_back(new CommandSerializer());
+	serializers_.push_back(new InBandRegistrationPayloadSerializer());
 	serializers_.push_back(new NicknameSerializer());
 	foreach(PayloadSerializer* serializer, serializers_) {
 		addSerializer(serializer);
