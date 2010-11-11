@@ -202,6 +202,8 @@ void CoreClient::handleSessionFinished(boost::shared_ptr<Error> error) {
 					clientError = ClientError(ClientError::InvalidCertificateSignatureError);
 				case CertificateVerificationError::InvalidCA: 
 					clientError = ClientError(ClientError::InvalidCAError);
+				case CertificateVerificationError::InvalidServerIdentity:
+					clientError = ClientError(ClientError::InvalidServerIdentityError);
 			}
 		}
 		actualError = boost::optional<ClientError>(clientError);

@@ -428,6 +428,7 @@ void MainController::handleDisconnected(const boost::optional<ClientError>& erro
 			case ClientError::CertificatePathLengthExceededError:
 			case ClientError::InvalidCertificateSignatureError:
 			case ClientError::InvalidCAError:
+			case ClientError::InvalidServerIdentityError:
 				// TODO
 				message = "Certificate error"; break;
 		}

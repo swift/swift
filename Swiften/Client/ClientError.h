@@ -38,6 +38,7 @@ namespace Swift {
 				CertificatePathLengthExceededError,
 				InvalidCertificateSignatureError,
 				InvalidCAError,
+				InvalidServerIdentityError,
 			};
 
 			ClientError(Type type = UnknownError) : type_(type) {}
