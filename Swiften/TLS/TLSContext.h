@@ -28,7 +28,7 @@ namespace Swift {
 			virtual void handleDataFromApplication(const ByteArray&) = 0;
 
 			virtual Certificate::ref getPeerCertificate() const = 0;
-			virtual boost::shared_ptr<CertificateVerificationError> getPeerCertificateVerificationError() const = 0;
+			virtual CertificateVerificationError::ref getPeerCertificateVerificationError() const = 0;
 
 		public:
 			boost::signal<void (const ByteArray&)> onDataForNetwork;

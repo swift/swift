@@ -11,6 +11,8 @@
 namespace Swift {
 	class CertificateVerificationError : public Error {
 		public:
+			typedef boost::shared_ptr<CertificateVerificationError> ref;
+
 			enum Type {
 				UnknownError,
 				Expired,
