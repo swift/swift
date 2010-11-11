@@ -32,7 +32,7 @@ class ServerIdentityVerifierTest : public CppUnit::TestFixture {
 		CPPUNIT_TEST(testCertificateVerifies_WithMatchingXmppAddrWithWildcard);
 		CPPUNIT_TEST(testCertificateVerifies_WithMatchingInternationalXmppAddr);
 		CPPUNIT_TEST(testCertificateVerifies_WithMatchingCNWithoutSAN);
-		CPPUNIT_TEST(testCertificateVerifies_WithMatchingCNWithMatchingSAN);
+		CPPUNIT_TEST(testCertificateVerifies_WithMatchingCNWithSAN);
 		CPPUNIT_TEST_SUITE_END();
 
 	public:
@@ -157,7 +157,7 @@ class ServerIdentityVerifierTest : public CppUnit::TestFixture {
 			CPPUNIT_ASSERT(testling.certificateVerifies(certificate));
 		}
 
-		void testCertificateVerifies_WithMatchingCNWithMatchingSAN() {
+		void testCertificateVerifies_WithMatchingCNWithSAN() {
 			ServerIdentityVerifier testling(JID("foo@bar.com/baz"));
 			SimpleCertificate::ref certificate(new SimpleCertificate());
 			certificate->addSRVName("foo.com");
