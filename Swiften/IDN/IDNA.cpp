@@ -8,6 +8,7 @@
 
 #include <stringprep.h>
 #include <vector>
+#include <cstdlib>
 #include <idna.h>
 
 namespace Swift {
