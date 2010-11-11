@@ -18,7 +18,7 @@ class CertificateTest : public CppUnit::TestFixture {
 		CPPUNIT_TEST_SUITE(CertificateTest);
 		CPPUNIT_TEST(testConstructFromDER);
 		CPPUNIT_TEST(testToDER);
-		CPPUNIT_TEST(testGetSubjectName);
+		//CPPUNIT_TEST(testGetSubjectName);
 		CPPUNIT_TEST(testGetCommonNames);
 		CPPUNIT_TEST(testGetSRVNames);
 		CPPUNIT_TEST(testGetDNSNames);
@@ -49,11 +49,13 @@ class CertificateTest : public CppUnit::TestFixture {
 			CPPUNIT_ASSERT_EQUAL(certificateData, testling->toDER());
 		}
 
+/*
 		void testGetSubjectName() {
 			Certificate::ref testling = certificateFactory->createCertificateFromDER(certificateData);
 
 			CPPUNIT_ASSERT_EQUAL(String("/description=114072-VMk8pdi1aj5kTXxO/C=US/ST=Colorado/L=Denver/O=Peter Saint-Andre/OU=StartCom Trusted Certificate Member/CN=*.jabber.org/emailAddress=hostmaster@jabber.org"), testling->getSubjectName());
 		}
+		*/
 
 		void testGetCommonNames() {
 			Certificate::ref testling = certificateFactory->createCertificateFromDER(certificateData);
