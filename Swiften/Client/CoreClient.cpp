@@ -184,26 +184,37 @@ void CoreClient::handleSessionFinished(boost::shared_ptr<Error> error) {
 			switch(verificationError->getType()) {
 				case CertificateVerificationError::UnknownError: 
 					clientError = ClientError(ClientError::UnknownCertificateError);
+					break;
 				case CertificateVerificationError::Expired: 
 					clientError = ClientError(ClientError::CertificateExpiredError);
+					break;
 				case CertificateVerificationError::NotYetValid: 
 					clientError = ClientError(ClientError::CertificateNotYetValidError);
+					break;
 				case CertificateVerificationError::SelfSigned: 
 					clientError = ClientError(ClientError::CertificateSelfSignedError);
+					break;
 				case CertificateVerificationError::Rejected: 
 					clientError = ClientError(ClientError::CertificateRejectedError);
+					break;
 				case CertificateVerificationError::Untrusted: 
 					clientError = ClientError(ClientError::CertificateUntrustedError);
+					break;
 				case CertificateVerificationError::InvalidPurpose: 
 					clientError = ClientError(ClientError::InvalidCertificatePurposeError);
+					break;
 				case CertificateVerificationError::PathLengthExceeded: 
 					clientError = ClientError(ClientError::CertificatePathLengthExceededError);
+					break;
 				case CertificateVerificationError::InvalidSignature: 
 					clientError = ClientError(ClientError::InvalidCertificateSignatureError);
+					break;
 				case CertificateVerificationError::InvalidCA: 
 					clientError = ClientError(ClientError::InvalidCAError);
+					break;
 				case CertificateVerificationError::InvalidServerIdentity:
 					clientError = ClientError(ClientError::InvalidServerIdentityError);
+					break;
 			}
 		}
 		actualError = boost::optional<ClientError>(clientError);
