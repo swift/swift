@@ -33,7 +33,6 @@ namespace Swift {
 			virtual void setConnecting() = 0;
 			
 			boost::signal<void (StatusShow::Type, const String&)> onChangeStatusRequest;
-			boost::signal<void (bool)> onShowOfflineToggled;
 			boost::signal<void ()> onSignOutRequest;
 
 		private:

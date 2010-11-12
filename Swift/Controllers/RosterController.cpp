@@ -31,9 +31,12 @@
 #include "Swift/Controllers/UIEvents/RemoveRosterItemUIEvent.h"
 #include "Swift/Controllers/UIEvents/RenameRosterItemUIEvent.h"
 #include "Swift/Controllers/UIEvents/RegroupRosterItemUIEvent.h"
+#include "Swift/Controllers/UIEvents/ToggleShowOfflineUIEvent.h"
 
 namespace Swift {
-	
+
+static const String SHOW_OFFLINE = "showOffline";
+
 /**
  * The controller does not gain ownership of these parameters.
  */
@@ -43,12 +46,12 @@ RosterController::RosterController(const JID& jid, XMPPRoster* xmppRoster, Avata
 	presenceOracle_ = presenceOracle;
 	subscriptionManager_ = subscriptionManager;
 	eventController_ = eventController;
+	settings_ = settings;
 	expandiness_ = new RosterGroupExpandinessPersister(roster_, settings);
 	roster_->addFilter(offlineFilter_);
 	mainWindow_->setRosterModel(roster_);
 	
 	changeStatusConnection_ = mainWindow_->onChangeStatusRequest.connect(boost::bind(&RosterController::handleChangeStatusRequest, this, _1, _2));
-	showOfflineConnection_ = mainWindow_->onShowOfflineToggled.connect(boost::bind(&RosterController::handleShowOfflineToggled, this, _1));
 	signOutConnection_ = mainWindow_->onSignOutRequest.connect(boost::bind(boost::ref(onSignOutRequest)));
 	xmppRoster_->onJIDAdded.connect(boost::bind(&RosterController::handleOnJIDAdded, this, _1));
 	xmppRoster_->onJIDUpdated.connect(boost::bind(&RosterController::handleOnJIDUpdated, this, _1, _2, _3));
@@ -61,7 +64,9 @@ RosterController::RosterController(const JID& jid, XMPPRoster* xmppRoster, Avata
 	avatarManager_->onAvatarChanged.connect(boost::bind(&RosterController::handleAvatarChanged, this, _1));
 	mainWindow_->setMyAvatarPath(avatarManager_->getAvatarPath(myJID_).string());
 	setNickResolver(nickResolver);
-	
+	if (settings->getBoolSetting(SHOW_OFFLINE, false)) {
+		uiEventStream->onUIEvent(boost::shared_ptr<UIEvent>(new ToggleShowOfflineUIEvent(true)));
+	}
 }
 
 RosterController::~RosterController() {
@@ -93,6 +98,9 @@ void RosterController::setEnabled(bool enabled) {
 }
 
 void RosterController::handleShowOfflineToggled(bool state) {
+	if (state != settings_->getBoolSetting(SHOW_OFFLINE, false)) {
+		settings_->storeBool(SHOW_OFFLINE, state);
+	}
 	if (state) {
 		roster_->removeFilter(offlineFilter_);
 	} else {
@@ -161,6 +169,10 @@ void RosterController::handleOnJIDUpdated(const JID& jid, const String& oldName,
 }
 
 void RosterController::handleUIEvent(boost::shared_ptr<UIEvent> event) {
+	boost::shared_ptr<ToggleShowOfflineUIEvent> showOfflineEvent = boost::dynamic_pointer_cast<ToggleShowOfflineUIEvent>(event);
+	if (showOfflineEvent) {
+		handleShowOfflineToggled(showOfflineEvent->getShow());
+	}
 	boost::shared_ptr<AddContactUIEvent> addContactEvent = boost::dynamic_pointer_cast<AddContactUIEvent>(event);
 	if (addContactEvent) {
 		RosterItemPayload item;

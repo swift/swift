@@ -48,6 +48,7 @@ namespace Swift {
 			void setRosterModel(Roster* roster);
 		private slots:
 			void handleStatusChanged(StatusShow::Type showType, const QString &statusMessage);
+			void handleUIEvent(boost::shared_ptr<UIEvent> event);
 			void handleShowOfflineToggled(bool);
 			void handleJoinMUCAction();
 			void handleSignOutAction();
@@ -59,6 +60,7 @@ namespace Swift {
 			QtTreeWidget* treeWidget_;
 			QtRosterHeader* meView_;
 			QAction* addAction_;
+			QAction* showOfflineAction_;
 			QtTabWidget* tabs_;
 			QWidget* contactsTabWidget_;
 			QWidget* eventsTabWidget_;
@@ -66,6 +68,7 @@ namespace Swift {
 			QtChatListWindow* chatListWindow_;
 			UIEventStream* uiEventStream_;
 			QtRosterContextMenu* contextMenu_;
+			bool lastOfflineState_;
 	};
 }
 

@@ -74,8 +74,8 @@ namespace Swift {
 			EventController* eventController_;
 			RosterGroupExpandinessPersister* expandiness_;
 			IQRouter* iqRouter_;
+			SettingsProvider* settings_;
 			boost::bsignals::scoped_connection changeStatusConnection_;
-			boost::bsignals::scoped_connection showOfflineConnection_;
 			boost::bsignals::scoped_connection signOutConnection_;
 			boost::bsignals::scoped_connection uiEventConnection_;
 	};

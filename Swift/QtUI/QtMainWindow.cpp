@@ -7,6 +7,7 @@
 #include "QtMainWindow.h"
 
 #include <boost/optional.hpp>
+#include <boost/bind.hpp>
 
 #include <QBoxLayout>
 #include <QComboBox>
@@ -26,6 +27,7 @@
 #include "Swift/Controllers/UIEvents/AddContactUIEvent.h"
 #include "Swift/Controllers/UIEvents/RequestMUCSearchUIEvent.h"
 #include "Swift/Controllers/UIEvents/JoinMUCUIEvent.h"
+#include "Swift/Controllers/UIEvents/ToggleShowOfflineUIEvent.h"
 
 namespace Swift {
 
@@ -71,11 +73,11 @@ QtMainWindow::QtMainWindow(UIEventStream* uiEventStream) : QWidget(), MainWindow
 	
 	QMenu* viewMenu = new QMenu(tr("View"), this);
 	menus_.push_back(viewMenu);
-	QAction* showOfflineAction = new QAction("Show offline contacts", this);
-	showOfflineAction->setCheckable(true);
-	showOfflineAction->setChecked(false);
-	connect(showOfflineAction, SIGNAL(toggled(bool)), SLOT(handleShowOfflineToggled(bool)));
-	viewMenu->addAction(showOfflineAction);
+	showOfflineAction_ = new QAction("Show offline contacts", this);
+	showOfflineAction_->setCheckable(true);
+	showOfflineAction_->setChecked(false);
+	connect(showOfflineAction_, SIGNAL(toggled(bool)), SLOT(handleShowOfflineToggled(bool)));
+	viewMenu->addAction(showOfflineAction_);
 
 	QMenu* actionsMenu = new QMenu(tr("Actions"), this);
 	menus_.push_back(actionsMenu);
@@ -88,9 +90,13 @@ QtMainWindow::QtMainWindow(UIEventStream* uiEventStream) : QWidget(), MainWindow
 	QAction* signOutAction = new QAction("Sign Out", this);
 	connect(signOutAction, SIGNAL(triggered()), SLOT(handleSignOutAction()));
 	actionsMenu->addAction(signOutAction);
+
+	lastOfflineState_ = false;
+	uiEventStream_->onUIEvent.connect(boost::bind(&QtMainWindow::handleUIEvent, this, _1));
 }
 
 QtMainWindow::~QtMainWindow() {
+	uiEventStream_->onUIEvent.disconnect(boost::bind(&QtMainWindow::handleUIEvent, this, _1));
 	delete contextMenu_;
 }
 
@@ -141,8 +147,19 @@ void QtMainWindow::handleStatusChanged(StatusShow::Type showType, const QString 
 	onChangeStatusRequest(showType, Q2PSTRING(statusMessage));
 }
 
+void QtMainWindow::handleUIEvent(boost::shared_ptr<UIEvent> event) {
+	boost::shared_ptr<ToggleShowOfflineUIEvent> toggleEvent = boost::dynamic_pointer_cast<ToggleShowOfflineUIEvent>(event);
+	if (toggleEvent) {
+		handleShowOfflineToggled(toggleEvent->getShow());
+	}
+}
+
 void QtMainWindow::handleShowOfflineToggled(bool state) {
-	onShowOfflineToggled(state);
+	if (state != lastOfflineState_) {
+		lastOfflineState_ = state;
+		showOfflineAction_->setChecked(state);
+		uiEventStream_->onUIEvent(boost::shared_ptr<UIEvent>(new ToggleShowOfflineUIEvent(state)));
+	}
 }
 
 void QtMainWindow::setMyName(const String& name) {
