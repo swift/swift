@@ -6,7 +6,11 @@
 
 #include <Swiften/IDN/StringPrep.h>
 
-#include <stringprep.h>
+extern "C"
+{
+	#include <stringprep.h>
+};
+
 #include <vector>
 #include <cassert>
 #include <Swiften/Base/SafeAllocator.h>

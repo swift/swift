@@ -6,6 +6,7 @@ sources = [
 		"Event.cpp",
 		"SimpleEventLoop.cpp",
 		"DummyEventLoop.cpp",
+		"SingleThreadedEventLoop.cpp",
 	]
 
 objects = swiften_env.SwiftenObject(sources)

@@ -35,10 +35,6 @@ OpenSSLCertificate::OpenSSLCertificate(const ByteArray& der) {
 }
 
 ByteArray OpenSSLCertificate::toDER() const {
-	if (!cert) {
-		return ByteArray();
-	}
-
 	ByteArray result;
 	result.resize(i2d_X509(cert.get(), NULL));
 	unsigned char* p = vecptr(result);
@@ -47,10 +43,6 @@ ByteArray OpenSSLCertificate::toDER() const {
 }
 
 void OpenSSLCertificate::parse() {
-	if (!cert) {
-		return;
-	}
-
 	// Subject name
 	X509_NAME* subjectName = X509_get_subject_name(cert.get());
 	if (subjectName) {

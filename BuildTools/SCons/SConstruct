@@ -411,6 +411,9 @@ elif env["target"] in ("iphone-device", "iphone-simulator", "xcode") :
 	env["HAVE_OPENSSL"] = True
 else :
 	env["OPENSSL_FLAGS"] = ""
+	if env["PLATFORM"] == "win32" : 
+		# If we're compiling for Windows and OpenSSL isn't being used, use Schannel
+		env.Append(LIBS = ["secur32"])
 
 openssl_conf.Finish()
 

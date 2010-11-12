@@ -4,14 +4,18 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
+#include <Swiften/Base/Platform.h>
 #include <Swiften/TLS/PlatformTLSFactories.h>
 
 #include <cstring>
 #include <cassert>
 
 #ifdef HAVE_OPENSSL
-#include <Swiften/TLS/OpenSSL/OpenSSLContextFactory.h>
-#include <Swiften/TLS/OpenSSL/OpenSSLCertificateFactory.h>
+	#include "Swiften/TLS/OpenSSL/OpenSSLContextFactory.h"
+	#include "Swiften/TLS/OpenSSL/OpenSSLCertificateFactory.h"
+#elif defined SWIFTEN_PLATFORM_WINDOWS
+	#include "Swiften/TLS/Schannel/SchannelContextFactory.h"
+#include "Swiften/TLS/Schannel/SchannelCertificateFactory.h"
 #endif
 
 namespace Swift {
@@ -20,6 +24,9 @@ PlatformTLSFactories::PlatformTLSFactories() : contextFactory(NULL), certificate
 #ifdef HAVE_OPENSSL
 	contextFactory = new OpenSSLContextFactory();
 	certificateFactory = new OpenSSLCertificateFactory();
+#elif defined SWIFTEN_PLATFORM_WINDOWS
+	contextFactory = new SchannelContextFactory();
+	certificateFactory = new SchannelCertificateFactory();
 #endif
 }
 

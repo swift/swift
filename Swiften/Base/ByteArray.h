@@ -36,7 +36,7 @@ namespace Swift {
 	static T* vecptr(std::vector<T, A>& v) {
 		return v.empty() ? NULL : &v[0];
 	}
-
+			
 	std::string byteArrayToString(const ByteArray& b);
 
 	void readByteArrayFromFile(ByteArray&, const std::string& file);
