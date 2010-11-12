@@ -278,6 +278,8 @@ if env["SCONS_STAGE"] == "build" :
 		for root, dirs, files in os.walk(env.Dir(public_dir).abspath) :
 			if root.endswith("UnitTest") :
 				continue
+			if root.endswith("OpenSSL") :
+				continue
 			for file in files :
 				if not file.endswith(".h") :
 					continue
