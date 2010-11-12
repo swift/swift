@@ -40,6 +40,10 @@ namespace Swift {
 
 			ByteArray toDER() const;
 
+			boost::shared_ptr<X509> getInternalX509() const {
+				return cert;
+			}
+
 		private:
 			void parse();
 

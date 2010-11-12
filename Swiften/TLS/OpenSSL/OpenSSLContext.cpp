@@ -3,10 +3,17 @@
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
+#include "Swiften/Base/Platform.h"
+
+#ifdef SWIFTEN_PLATFORM_WINDOWS
+#include <windows.h>
+#include <wincrypt.h>
+#endif
 
 #include <vector>
 #include <openssl/err.h>
 #include <openssl/pkcs12.h>
+
 
 #include "Swiften/TLS/OpenSSL/OpenSSLContext.h"
 #include "Swiften/TLS/OpenSSL/OpenSSLCertificate.h"
@@ -25,6 +32,26 @@ void freeX509Stack(STACK_OF(X509)* stack) {
 OpenSSLContext::OpenSSLContext() : state_(Start), context_(0), handle_(0), readBIO_(0), writeBIO_(0) {
 	ensureLibraryInitialized();
 	context_ = SSL_CTX_new(TLSv1_client_method());
+
+	// Load system certs
+#ifdef SWIFTEN_PLATFORM_WINDOWS
+	X509_STORE* store = SSL_CTX_get_cert_store(context_);
+	HCERTSTORE systemStore = CertOpenSystemStore(0, "ROOT");
+	if (systemStore) {
+		PCCERT_CONTEXT certContext = NULL;
+		while (true) {
+			certContext = CertFindCertificateInStore(systemStore, X509_ASN_ENCODING | PKCS_7_ASN_ENCODING, 0, CERT_FIND_ANY, NULL, certContext);
+			if (!certContext) {
+				break;
+			}
+			ByteArray certData(certContext->pbCertEncoded, certContext->cbCertEncoded);
+			OpenSSLCertificate cert(certData);
+			if (store && cert.getInternalX509()) {
+				X509_STORE_add_cert(store, cert.getInternalX509().get());
+			}
+		}
+	}
+#endif
 }
 
 OpenSSLContext::~OpenSSLContext() {

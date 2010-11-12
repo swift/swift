@@ -165,7 +165,7 @@ if env.get("coverage", 0) :
 	env.Append(LINKFLAGS = ["-fprofile-arcs", "-ftest-coverage"])
 
 if env["PLATFORM"] == "win32" :
-	env.Append(LIBS = ["user32", "dnsapi", "ws2_32", "wsock32"])
+	env.Append(LIBS = ["user32", "crypt32", "dnsapi", "ws2_32", "wsock32"])
 	env.Append(CCFLAGS = ["/EHsc", "/nologo"])
 	# FIXME: We should find a decent solution for MSVS 10
 	if int(env["MSVS_VERSION"].split(".")[0]) < 10 :
