@@ -18,12 +18,12 @@ namespace Swift {
 		public:
 			typedef boost::shared_ptr<SetInBandRegistrationRequest> ref;
 
-			static ref create(InBandRegistrationPayload::ref payload, IQRouter* router) {
-				return ref(new SetInBandRegistrationRequest(payload, router));
+			static ref create(const JID& to, InBandRegistrationPayload::ref payload, IQRouter* router) {
+				return ref(new SetInBandRegistrationRequest(to, payload, router));
 			}
 
 		private:
-			SetInBandRegistrationRequest(InBandRegistrationPayload::ref payload, IQRouter* router) : Request(IQ::Set, JID(), InBandRegistrationPayload::ref(payload), router) {
+			SetInBandRegistrationRequest(const JID& to, InBandRegistrationPayload::ref payload, IQRouter* router) : Request(IQ::Set, to, InBandRegistrationPayload::ref(payload), router) {
 			}
 
 			virtual void handleResponse(Payload::ref payload, boost::optional<ErrorPayload> error) {

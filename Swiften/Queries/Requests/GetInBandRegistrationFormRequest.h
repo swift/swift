@@ -15,12 +15,12 @@ namespace Swift {
 		public:
 			typedef boost::shared_ptr<GetInBandRegistrationFormRequest> ref;
 
-			static ref create(IQRouter* router) {
-				return ref(new GetInBandRegistrationFormRequest(router));
+			static ref create(const JID& to, IQRouter* router) {
+				return ref(new GetInBandRegistrationFormRequest(to, router));
 			}
 
 		private:
-			GetInBandRegistrationFormRequest(IQRouter* router) : GenericRequest<InBandRegistrationPayload>(IQ::Get, JID(), InBandRegistrationPayload::ref(new InBandRegistrationPayload()), router) {
+			GetInBandRegistrationFormRequest(const JID& to, IQRouter* router) : GenericRequest<InBandRegistrationPayload>(IQ::Get, to, InBandRegistrationPayload::ref(new InBandRegistrationPayload()), router) {
 			}
 	};
 }
