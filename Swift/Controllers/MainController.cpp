@@ -469,6 +469,7 @@ void MainController::handleCancelLoginRequest() {
 }
 
 void MainController::signOut() {
+	eventController_->clear();
 	logout();
 	loginWindow_->loggedOut();
 	resetClient();

@@ -47,4 +47,9 @@ void EventController::disconnectAll() {
 	onEventQueueEventAdded.disconnect_all_slots();
 }
 
+void EventController::clear() {
+	events_.clear();
+	onEventQueueLengthChange(0);
+}
+
 }
