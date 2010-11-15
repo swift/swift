@@ -4,13 +4,11 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#pragma once
+#include "Swiften/Network/NetworkFactories.h"
 
 namespace Swift {
-	class BoostIOServiceThread;
 
-	class MainBoostIOServiceThread {
-		public:
-			static BoostIOServiceThread& getInstance();
-	};
+NetworkFactories::~NetworkFactories() {
+}
+
 }

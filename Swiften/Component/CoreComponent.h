@@ -25,8 +25,7 @@
 
 namespace Swift {
 	class IQRouter;
-	class ConnectionFactory;
-	class TimerFactory;
+	class NetworkFactories;
 	class ComponentSession;
 	class BasicSessionStream;
 
@@ -42,7 +41,7 @@ namespace Swift {
 	 */
 	class CoreComponent  {
 		public:
-			CoreComponent(EventLoop* eventLoop, const JID& jid, const String& secret);
+			CoreComponent(EventLoop* eventLoop, NetworkFactories* networkFactories, const JID& jid, const String& secret);
 			~CoreComponent();
 
 			void connect(const String& host, int port);
@@ -88,14 +87,13 @@ namespace Swift {
 
 		private:
 			EventLoop* eventLoop;
+			NetworkFactories* networkFactories;
 			PlatformDomainNameResolver resolver_;
 			JID jid_;
 			String secret_;
 			ComponentSessionStanzaChannel* stanzaChannel_;
 			IQRouter* iqRouter_;
 			ComponentConnector::ref connector_;
-			ConnectionFactory* connectionFactory_;
-			TimerFactory* timerFactory_;
 			FullPayloadParserFactoryCollection payloadParserFactories_;
 			FullPayloadSerializerCollection payloadSerializers_;
 			boost::shared_ptr<Connection> connection_;

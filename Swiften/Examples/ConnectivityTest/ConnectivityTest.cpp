@@ -8,12 +8,12 @@
 #include <boost/thread.hpp>
 
 #include "Swiften/Client/Client.h"
-#include "Swiften/Network/BoostTimer.h"
+#include "Swiften/Network/Timer.h"
+#include "Swiften/Network/TimerFactory.h"
+#include "Swiften/Network/BoostNetworkFactories.h"
 #include "Swiften/EventLoop/EventLoop.h"
 #include "Swiften/Client/ClientXMLTracer.h"
 #include "Swiften/EventLoop/SimpleEventLoop.h"
-#include "Swiften/Network/BoostIOServiceThread.h"
-#include "Swiften/Network/MainBoostIOServiceThread.h"
 #include "Swiften/Disco/GetDiscoInfoRequest.h"
 
 using namespace Swift;
@@ -21,6 +21,7 @@ using namespace Swift;
 enum ExitCodes {OK = 0, CANNOT_CONNECT, CANNOT_AUTH, NO_RESPONSE, DISCO_ERROR};
 
 SimpleEventLoop eventLoop;
+BoostNetworkFactories networkFactories(&eventLoop);
 
 Client* client = 0;
 JID recipient;
@@ -67,7 +68,7 @@ int main(int argc, char* argv[]) {
 		connectHost = argv[argi++];
 	}
 
-	client = new Swift::Client(&eventLoop, JID(jid), String(argv[argi++]));
+	client = new Swift::Client(&eventLoop, &networkFactories, JID(jid), String(argv[argi++]));
 	char* timeoutChar = argv[argi++];
 	int timeout = atoi(timeoutChar);
 	timeout = (timeout ? timeout : 30) * 1000;
@@ -84,7 +85,7 @@ int main(int argc, char* argv[]) {
 	}
 
 	{
-		BoostTimer::ref timer(BoostTimer::create(timeout, &MainBoostIOServiceThread::getInstance().getIOService(), &eventLoop));
+		Timer::ref timer = networkFactories.getTimerFactory()->createTimer(timeout);
 		timer->onTick.connect(boost::bind(&SimpleEventLoop::stop, &eventLoop));
 		timer->start();
 

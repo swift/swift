@@ -9,7 +9,6 @@ sourceList = [
 			"BoostConnection.cpp",
 			"BoostConnectionFactory.cpp",
 			"BoostConnectionServer.cpp",
-			"MainBoostIOServiceThread.cpp",
 			"BoostIOServiceThread.cpp",
 			"ConnectionFactory.cpp",
 			"ConnectionServer.cpp",
@@ -24,6 +23,8 @@ sourceList = [
 			"PlatformDomainNameServiceQuery.cpp",
 			"StaticDomainNameResolver.cpp",
 			"HostAddress.cpp",
+			"NetworkFactories.cpp",
+			"BoostNetworkFactories.cpp",
 			"Timer.cpp",
 			"BoostTimer.cpp"]
 if myenv.get("HAVE_CARES", False) :

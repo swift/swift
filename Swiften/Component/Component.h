@@ -19,7 +19,7 @@ namespace Swift {
 	 */
 	class Component : public CoreComponent {
 		public:
-			Component(EventLoop* eventLoop, const JID& jid, const String& secret);
+			Component(EventLoop* eventLoop, NetworkFactories* networkFactories, const JID& jid, const String& secret);
 			~Component();
 
 			/**

@@ -27,7 +27,7 @@
 
 namespace Swift {
 
-Client::Client(EventLoop* eventLoop, const JID& jid, const String& password, Storages* storages) : CoreClient(eventLoop, jid, password), storages(storages) {
+Client::Client(EventLoop* eventLoop, NetworkFactories* networkFactories, const JID& jid, const String& password, Storages* storages) : CoreClient(eventLoop, networkFactories, jid, password), storages(storages) {
 	memoryStorages = new MemoryStorages();
 
 	softwareVersionResponder = new SoftwareVersionResponder(getIQRouter());

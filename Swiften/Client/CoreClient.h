@@ -34,6 +34,7 @@ namespace Swift {
 	class EventLoop;
 	class PlatformTLSFactories;
 	class CertificateTrustChecker;
+	class NetworkFactories;
 
 	/** 
 	 * The central class for communicating with an XMPP server.
@@ -51,7 +52,7 @@ namespace Swift {
 			 * Constructs a client for the given JID with the given password.
 			 * The given eventLoop will be used to post events to.
 			 */
-			CoreClient(EventLoop* eventLoop, const JID& jid, const String& password);
+			CoreClient(EventLoop* eventLoop, NetworkFactories* networkFactories, const JID& jid, const String& password);
 			~CoreClient();
 
 			void setCertificate(const String& certificate);
@@ -205,11 +206,10 @@ namespace Swift {
 			JID jid_;
 			String password_;
 			EventLoop* eventLoop;
+			NetworkFactories* networkFactories;
 			ClientSessionStanzaChannel* stanzaChannel_;
 			IQRouter* iqRouter_;
 			Connector::ref connector_;
-			ConnectionFactory* connectionFactory_;
-			TimerFactory* timerFactory_;
 			PlatformTLSFactories* tlsFactories;
 			FullPayloadParserFactoryCollection payloadParserFactories_;
 			FullPayloadSerializerCollection payloadSerializers_;

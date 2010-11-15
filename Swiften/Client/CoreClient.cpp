@@ -8,14 +8,11 @@
 
 #include <boost/bind.hpp>
 
-#include "Swiften/Network/MainBoostIOServiceThread.h"
-#include "Swiften/Network/BoostIOServiceThread.h"
 #include "Swiften/Client/ClientSession.h"
 #include "Swiften/TLS/PlatformTLSFactories.h"
 #include "Swiften/TLS/CertificateVerificationError.h"
 #include "Swiften/Network/Connector.h"
-#include "Swiften/Network/BoostConnectionFactory.h"
-#include "Swiften/Network/BoostTimerFactory.h"
+#include "Swiften/Network/NetworkFactories.h"
 #include "Swiften/TLS/PKCS12Certificate.h"
 #include "Swiften/Session/BasicSessionStream.h"
 #include "Swiften/Queries/IQRouter.h"
@@ -24,7 +21,7 @@
 
 namespace Swift {
 
-CoreClient::CoreClient(EventLoop* eventLoop, const JID& jid, const String& password) : resolver_(eventLoop), jid_(jid), password_(password), eventLoop(eventLoop), disconnectRequested_(false), certificateTrustChecker(NULL) {
+CoreClient::CoreClient(EventLoop* eventLoop, NetworkFactories* networkFactories, const JID& jid, const String& password) : resolver_(eventLoop), jid_(jid), password_(password), eventLoop(eventLoop), networkFactories(networkFactories), disconnectRequested_(false), certificateTrustChecker(NULL) {
 	stanzaChannel_ = new ClientSessionStanzaChannel();
 	stanzaChannel_->onMessageReceived.connect(boost::ref(onMessageReceived));
 	stanzaChannel_->onPresenceReceived.connect(boost::ref(onPresenceReceived));
@@ -32,8 +29,6 @@ CoreClient::CoreClient(EventLoop* eventLoop, const JID& jid, const String& passw
 	stanzaChannel_->onAvailableChanged.connect(boost::bind(&CoreClient::handleStanzaChannelAvailableChanged, this, _1));
 
 	iqRouter_ = new IQRouter(stanzaChannel_);
-	connectionFactory_ = new BoostConnectionFactory(&MainBoostIOServiceThread::getInstance().getIOService(), eventLoop);
-	timerFactory_ = new BoostTimerFactory(&MainBoostIOServiceThread::getInstance().getIOService(), eventLoop);
 	tlsFactories = new PlatformTLSFactories();
 }
 
@@ -42,8 +37,6 @@ CoreClient::~CoreClient() {
 		std::cerr << "Warning: Client not disconnected properly" << std::endl;
 	}
 	delete tlsFactories;
-	delete timerFactory_;
-	delete connectionFactory_;
 	delete iqRouter_;
 
 	stanzaChannel_->onAvailableChanged.disconnect(boost::bind(&CoreClient::handleStanzaChannelAvailableChanged, this, _1));
@@ -65,7 +58,7 @@ void CoreClient::connect(const JID& jid) {
 void CoreClient::connect(const String& host) {
 	disconnectRequested_ = false;
 	assert(!connector_);
-	connector_ = Connector::create(host, &resolver_, connectionFactory_, timerFactory_);
+	connector_ = Connector::create(host, &resolver_, networkFactories->getConnectionFactory(), networkFactories->getTimerFactory());
 	connector_->onConnectFinished.connect(boost::bind(&CoreClient::handleConnectorFinished, this, _1));
 	connector_->setTimeoutMilliseconds(60*1000);
 	connector_->start();
@@ -82,7 +75,7 @@ void CoreClient::handleConnectorFinished(boost::shared_ptr<Connection> connectio
 		connection_ = connection;
 
 		assert(!sessionStream_);
-		sessionStream_ = boost::shared_ptr<BasicSessionStream>(new BasicSessionStream(ClientStreamType, connection_, &payloadParserFactories_, &payloadSerializers_, tlsFactories->getTLSContextFactory(), timerFactory_));
+		sessionStream_ = boost::shared_ptr<BasicSessionStream>(new BasicSessionStream(ClientStreamType, connection_, &payloadParserFactories_, &payloadSerializers_, tlsFactories->getTLSContextFactory(), networkFactories->getTimerFactory()));
 		if (!certificate_.isEmpty()) {
 			sessionStream_->setTLSCertificate(PKCS12Certificate(certificate_, password_));
 		}

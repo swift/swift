@@ -10,8 +10,8 @@
 #include <boost/shared_ptr.hpp>
 #include <vector>
 
-#include "Swiften/Network/BoostIOServiceThread.h"
-#include "Swiften/Network/BoostTimerFactory.h"
+#include "Swiften/Network/BoostNetworkFactories.h"
+#include "Swiften/Network/Timer.h"
 #include "SwifTools/Idle/PlatformIdleQuerier.h"
 #include "SwifTools/Idle/ActualIdleDetector.h"
 #include "Swiften/Base/String.h"
@@ -110,8 +110,7 @@ namespace Swift {
 
 		private:
 			EventLoop* eventLoop_;
-			BoostIOServiceThread boostIOServiceThread_;
-			BoostTimerFactory timerFactory_;
+			BoostNetworkFactories networkFactories_;
 			PlatformIdleQuerier idleQuerier_;
 			ActualIdleDetector idleDetector_;
 			StoragesFactory* storagesFactory_;

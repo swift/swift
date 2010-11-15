@@ -8,12 +8,9 @@
 
 #include <boost/bind.hpp>
 
-#include "Swiften/Network/MainBoostIOServiceThread.h"
-#include "Swiften/Network/BoostIOServiceThread.h"
 #include "Swiften/Component/ComponentSession.h"
 #include "Swiften/Network/Connector.h"
-#include "Swiften/Network/BoostConnectionFactory.h"
-#include "Swiften/Network/BoostTimerFactory.h"
+#include "Swiften/Network/NetworkFactories.h"
 #include "Swiften/TLS/PKCS12Certificate.h"
 #include "Swiften/Session/BasicSessionStream.h"
 #include "Swiften/Queries/IQRouter.h"
@@ -22,7 +19,7 @@
 
 namespace Swift {
 
-CoreComponent::CoreComponent(EventLoop* eventLoop, const JID& jid, const String& secret) : eventLoop(eventLoop), resolver_(eventLoop), jid_(jid), secret_(secret), disconnectRequested_(false) {
+CoreComponent::CoreComponent(EventLoop* eventLoop, NetworkFactories* networkFactories, const JID& jid, const String& secret) : eventLoop(eventLoop), networkFactories(networkFactories), resolver_(eventLoop), jid_(jid), secret_(secret), disconnectRequested_(false) {
 	stanzaChannel_ = new ComponentSessionStanzaChannel();
 	stanzaChannel_->onMessageReceived.connect(boost::ref(onMessageReceived));
 	stanzaChannel_->onPresenceReceived.connect(boost::ref(onPresenceReceived));
@@ -30,16 +27,12 @@ CoreComponent::CoreComponent(EventLoop* eventLoop, const JID& jid, const String&
 
 	iqRouter_ = new IQRouter(stanzaChannel_);
 	iqRouter_->setFrom(jid);
-	connectionFactory_ = new BoostConnectionFactory(&MainBoostIOServiceThread::getInstance().getIOService(), eventLoop);
-	timerFactory_ = new BoostTimerFactory(&MainBoostIOServiceThread::getInstance().getIOService(), eventLoop);
 }
 
 CoreComponent::~CoreComponent() {
 	if (session_ || connection_) {
 		std::cerr << "Warning: Component not disconnected properly" << std::endl;
 	}
-	delete timerFactory_;
-	delete connectionFactory_;
 	delete iqRouter_;
 
 	stanzaChannel_->onAvailableChanged.disconnect(boost::bind(&CoreComponent::handleStanzaChannelAvailableChanged, this, _1));
@@ -50,7 +43,7 @@ CoreComponent::~CoreComponent() {
 
 void CoreComponent::connect(const String& host, int port) {
 	assert(!connector_);
-	connector_ = ComponentConnector::create(host, port, &resolver_, connectionFactory_, timerFactory_);
+	connector_ = ComponentConnector::create(host, port, &resolver_, networkFactories->getConnectionFactory(), networkFactories->getTimerFactory());
 	connector_->onConnectFinished.connect(boost::bind(&CoreComponent::handleConnectorFinished, this, _1));
 	connector_->setTimeoutMilliseconds(60*1000);
 	connector_->start();
@@ -69,7 +62,7 @@ void CoreComponent::handleConnectorFinished(boost::shared_ptr<Connection> connec
 		connection_ = connection;
 
 		assert(!sessionStream_);
-		sessionStream_ = boost::shared_ptr<BasicSessionStream>(new BasicSessionStream(ComponentStreamType, connection_, &payloadParserFactories_, &payloadSerializers_, NULL, timerFactory_));
+		sessionStream_ = boost::shared_ptr<BasicSessionStream>(new BasicSessionStream(ComponentStreamType, connection_, &payloadParserFactories_, &payloadSerializers_, NULL, networkFactories->getTimerFactory()));
 		sessionStream_->onDataRead.connect(boost::bind(&CoreComponent::handleDataRead, this, _1));
 		sessionStream_->onDataWritten.connect(boost::bind(&CoreComponent::handleDataWritten, this, _1));
 		sessionStream_->initialize();

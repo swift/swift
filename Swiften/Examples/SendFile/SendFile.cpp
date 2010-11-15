@@ -9,28 +9,30 @@
 
 #include "Swiften/Client/Client.h"
 #include "Swiften/Network/BoostTimer.h"
+#include "Swiften/Network/TimerFactory.h"
+#include "Swiften/Network/BoostNetworkFactories.h"
 #include "Swiften/EventLoop/EventLoop.h"
 #include "Swiften/Client/ClientXMLTracer.h"
 #include "Swiften/EventLoop/SimpleEventLoop.h"
-#include "Swiften/Network/MainBoostIOServiceThread.h"
 #include "Swiften/FileTransfer/OutgoingFileTransfer.h"
 #include "Swiften/FileTransfer/FileReadBytestream.h"
 #include "Swiften/FileTransfer/SOCKS5BytestreamServer.h"
 #include "Swiften/Network/BoostConnectionServer.h"
-#include "Swiften/Network/BoostIOServiceThread.h"
 
 using namespace Swift;
 
 SimpleEventLoop eventLoop;
+BoostNetworkFactories networkFactories(&eventLoop);
+
 int exitCode = 2;
 
 class FileSender {
 	public:
 		FileSender(const JID& jid, const String& password, const JID& recipient, const boost::filesystem::path& file, int port) : jid(jid), password(password), recipient(recipient), file(file), transfer(NULL) {
-			connectionServer = BoostConnectionServer::create(port, &MainBoostIOServiceThread::getInstance().getIOService(), &eventLoop);
+			connectionServer = BoostConnectionServer::create(port, &networkFactories.getIOServiceThread()->getIOService(), &eventLoop);
 			socksBytestreamServer = new SOCKS5BytestreamServer(connectionServer);
 
-			client = new Swift::Client(&eventLoop, jid, password);
+			client = new Swift::Client(&eventLoop, &networkFactories, jid, password);
 			client->onConnected.connect(boost::bind(&FileSender::handleConnected, this));
 			client->onDisconnected.connect(boost::bind(&FileSender::handleDisconnected, this, _1));
 			//tracer = new ClientXMLTracer(client);

@@ -8,16 +8,16 @@
 #include <boost/thread.hpp>
 
 #include "Swiften/Client/Client.h"
-#include "Swiften/Network/BoostTimer.h"
+#include "Swiften/Network/BoostNetworkFactories.h"
+#include "Swiften/Network/TimerFactory.h"
 #include "Swiften/EventLoop/EventLoop.h"
 #include "Swiften/Client/ClientXMLTracer.h"
 #include "Swiften/EventLoop/SimpleEventLoop.h"
-#include "Swiften/Network/BoostIOServiceThread.h"
-#include "Swiften/Network/MainBoostIOServiceThread.h"
 
 using namespace Swift;
 
 SimpleEventLoop eventLoop;
+BoostNetworkFactories networkFactories(&eventLoop);
 
 Client* client = 0;
 JID recipient;
@@ -57,7 +57,7 @@ int main(int argc, char* argv[]) {
 		connectHost = argv[argi++];
 	}
 
-	client = new Swift::Client(&eventLoop, JID(jid), String(argv[argi++]));
+	client = new Swift::Client(&eventLoop, &networkFactories, JID(jid), String(argv[argi++]));
 	client->setAlwaysTrustCertificates();
 
 	recipient = JID(argv[argi++]);
@@ -73,7 +73,7 @@ int main(int argc, char* argv[]) {
 	}
 
 	{
-		BoostTimer::ref timer(BoostTimer::create(30000, &MainBoostIOServiceThread::getInstance().getIOService(), &eventLoop));
+		Timer::ref timer = networkFactories.getTimerFactory()->createTimer(30000);
 		timer->onTick.connect(boost::bind(&SimpleEventLoop::stop, &eventLoop));
 		timer->start();
 

@@ -11,9 +11,7 @@
 #include <boost/shared_ptr.hpp>
 #include <stdlib.h>
 
-#include "Swiften/Network/BoostTimerFactory.h"
-#include "Swiften/Network/BoostIOServiceThread.h"
-#include "Swiften/Network/MainBoostIOServiceThread.h"
+#include "Swiften/Network/TimerFactory.h"
 #include "Swift/Controllers/BuildVersion.h"
 #include "Swift/Controllers/StoragesFactory.h"
 #include "Swiften/Client/Storages.h"
@@ -82,8 +80,8 @@ MainController::MainController(
 		Notifier* notifier,
 		bool useDelayForLatency) :
 			eventLoop_(eventLoop),
-			timerFactory_(&boostIOServiceThread_.getIOService(), eventLoop),
-			idleDetector_(&idleQuerier_, &timerFactory_, 100),
+			networkFactories_(eventLoop),
+			idleDetector_(&idleQuerier_, networkFactories_.getTimerFactory(), 100),
 			storagesFactory_(storagesFactory),
 			chatWindowFactory_(chatWindowFactory),
 			mainWindowFactory_(mainWindowFactory),
@@ -229,7 +227,7 @@ void MainController::handleConnected() {
 		rosterController_->onChangeStatusRequest.connect(boost::bind(&MainController::handleChangeStatusRequest, this, _1, _2));
 		rosterController_->onSignOutRequest.connect(boost::bind(&MainController::signOut, this));
 
-		chatsManager_ = new ChatsManager(jid_, client_->getStanzaChannel(), client_->getIQRouter(), eventController_, chatWindowFactory_, client_->getNickResolver(), client_->getPresenceOracle(), client_->getPresenceSender(), uiEventStream_, chatListWindowFactory_, useDelayForLatency_, &timerFactory_, client_->getMUCRegistry(), client_->getEntityCapsProvider(), client_->getMUCManager());
+		chatsManager_ = new ChatsManager(jid_, client_->getStanzaChannel(), client_->getIQRouter(), eventController_, chatWindowFactory_, client_->getNickResolver(), client_->getPresenceOracle(), client_->getPresenceSender(), uiEventStream_, chatListWindowFactory_, useDelayForLatency_, networkFactories_.getTimerFactory(), client_->getMUCRegistry(), client_->getEntityCapsProvider(), client_->getMUCManager());
 		client_->onMessageReceived.connect(boost::bind(&ChatsManager::handleIncomingMessage, chatsManager_, _1));
 		chatsManager_->setAvatarManager(client_->getAvatarManager());
 
@@ -355,7 +353,7 @@ void MainController::performLoginFromCachedCredentials() {
 	}
 	if (!client_) {
 		storages_ = storagesFactory_->createStorages(jid_);
-		client_ = new Swift::Client(eventLoop_, jid_, password_, storages_);
+		client_ = new Swift::Client(eventLoop_, &networkFactories_, jid_, password_, storages_);
 		client_->setAlwaysTrustCertificates();
 		client_->onDataRead.connect(boost::bind(&XMLConsoleController::handleDataRead, xmlConsoleController_, _1));
 		client_->onDataWritten.connect(boost::bind(&XMLConsoleController::handleDataWritten, xmlConsoleController_, _1));
@@ -365,7 +363,7 @@ void MainController::performLoginFromCachedCredentials() {
 		client_->setSoftwareVersion(CLIENT_NAME, buildVersion);
 
 		client_->getVCardManager()->onVCardChanged.connect(boost::bind(&MainController::handleVCardReceived, this, _1, _2));
-		presenceNotifier_ = new PresenceNotifier(client_->getStanzaChannel(), notifier_, client_->getMUCRegistry(), client_->getAvatarManager(), client_->getNickResolver(), client_->getPresenceOracle(), &timerFactory_);
+		presenceNotifier_ = new PresenceNotifier(client_->getStanzaChannel(), notifier_, client_->getMUCRegistry(), client_->getAvatarManager(), client_->getNickResolver(), client_->getPresenceOracle(), networkFactories_.getTimerFactory());
 		presenceNotifier_->onNotificationActivated.connect(boost::bind(&MainController::handleNotificationClicked, this, _1));
 		eventNotifier_ = new EventNotifier(eventController_, notifier_, client_->getAvatarManager(), client_->getNickResolver());
 		eventNotifier_->onNotificationActivated.connect(boost::bind(&MainController::handleNotificationClicked, this, _1));
@@ -459,7 +457,7 @@ void MainController::setReconnectTimer() {
 	if (reconnectTimer_) {
 		reconnectTimer_->stop();
 	}
-	reconnectTimer_ = timerFactory_.createTimer(timeBeforeNextReconnect_ * 1000);
+	reconnectTimer_ = networkFactories_.getTimerFactory()->createTimer(timeBeforeNextReconnect_ * 1000);
 	reconnectTimer_->onTick.connect(boost::bind(&MainController::reconnectAfterError, this));
 	reconnectTimer_->start();
 }

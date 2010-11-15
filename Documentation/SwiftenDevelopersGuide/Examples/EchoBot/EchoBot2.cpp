@@ -19,8 +19,9 @@ void handleMessageReceived(Message::ref message);
 
 int main(int, char**) {
 	SimpleEventLoop eventLoop;
+	BoostNetworkFactories networkFactories(&eventLoop);
 
-	client = new Client(&eventLoop, JID("echobot@wonderland.lit"), "mypass");
+	client = new Client(&eventLoop, &networkFactories, JID("echobot@wonderland.lit"), "mypass");
 	client->onConnected.connect(&handleConnected);
 	client->onMessageReceived.connect(bind(&handleMessageReceived, _1));
 	client->connect();

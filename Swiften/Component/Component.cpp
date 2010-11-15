@@ -10,7 +10,7 @@
 
 namespace Swift {
 
-Component::Component(EventLoop* eventLoop, const JID& jid, const String& secret) : CoreComponent(eventLoop, jid, secret) {
+Component::Component(EventLoop* eventLoop, NetworkFactories* networkFactories, const JID& jid, const String& secret) : CoreComponent(eventLoop, networkFactories, jid, secret) {
 	softwareVersionResponder = new SoftwareVersionResponder(getIQRouter());
 	softwareVersionResponder->start();
 }
