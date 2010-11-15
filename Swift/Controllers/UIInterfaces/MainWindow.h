@@ -29,6 +29,7 @@ namespace Swift {
 			virtual void setMyAvatarPath(const String& path) = 0;
 			virtual void setMyStatusText(const String& status) = 0;
 			virtual void setMyStatusType(StatusShow::Type type) = 0;
+			/** Must be able to cope with NULL to clear the roster */
 			virtual void setRosterModel(Roster* roster) = 0;
 			virtual void setConnecting() = 0;
 			

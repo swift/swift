@@ -30,15 +30,19 @@ RosterModel::~RosterModel() {
 
 void RosterModel::setRoster(Roster* roster) {
 	roster_ = roster;
-	if (!roster_) return;
-	roster->onChildrenChanged.connect(boost::bind(&RosterModel::handleChildrenChanged, this, _1));
-	roster->onDataChanged.connect(boost::bind(&RosterModel::handleDataChanged, this, _1));
+	if (roster_) {
+		roster->onChildrenChanged.connect(boost::bind(&RosterModel::handleChildrenChanged, this, _1));
+		roster->onDataChanged.connect(boost::bind(&RosterModel::handleDataChanged, this, _1));
+	}
 	reLayout();
 }
 
 void RosterModel::reLayout() {
 	//emit layoutChanged();
 	reset();
+	if (!roster_) {
+		return;
+	}
 	foreach (RosterItem* item, roster_->getRoot()->getDisplayedChildren()) {
 		GroupRosterItem* child = dynamic_cast<GroupRosterItem*>(item);
 		if (!child) continue;
@@ -161,6 +165,9 @@ QIcon RosterModel::getPresenceIcon(RosterItem* item) const {
 
 
 QModelIndex RosterModel::index(int row, int column, const QModelIndex& parent) const {
+	if (!roster_) {
+		return QModelIndex();
+	}
 	GroupRosterItem* parentItem;
 	if (!parent.isValid()) {
 		//top level
@@ -177,7 +184,7 @@ QModelIndex RosterModel::index(RosterItem* item) const {
 	/* Recursive check that it's ok to create such an item 
 		Assuming there are more contacts in a group than groups in a 
 		group, this could save a decent chunk of search time at startup.*/
-	if (parent == NULL || (parent != roster_->getRoot() && !index(parent).isValid())) {
+	if (parent == NULL || roster_ == NULL || (parent != roster_->getRoot() && !index(parent).isValid())) {
 		return QModelIndex();
 	}
 	for (size_t i = 0; i < parent->getDisplayedChildren().size(); i++) {
@@ -189,7 +196,7 @@ QModelIndex RosterModel::index(RosterItem* item) const {
 }
 
 QModelIndex RosterModel::parent(const QModelIndex& child) const {
-	if (!child.isValid()) {
+	if (!roster_ || !child.isValid()) {
 		return QModelIndex();
 	}
 	

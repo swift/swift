@@ -72,6 +72,7 @@ RosterController::RosterController(const JID& jid, XMPPRoster* xmppRoster, Avata
 RosterController::~RosterController() {
 	delete offlineFilter_;
 	delete expandiness_;
+	mainWindow_->setRosterModel(NULL);
 	if (mainWindow_->canDelete()) {
 		delete mainWindow_;
 	}
