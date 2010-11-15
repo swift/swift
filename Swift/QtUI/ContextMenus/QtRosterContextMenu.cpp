@@ -11,6 +11,7 @@
 #include <QMenu>
 #include <QDebug>
 #include <QDialog>
+#include <QMessageBox>
 
 #include <boost/shared_ptr.hpp>
 
@@ -37,9 +38,10 @@ void QtRosterContextMenu::show(RosterItem* item) {
 	item_ = item;
 	QMenu contextMenu;
 	if (contact) {
-		contextMenu.addAction("Remove", this, SLOT(handleRemoveContact()));
 		contextMenu.addAction("Rename", this, SLOT(handleRenameContact()));
 		contextMenu.addAction("Groups", this, SLOT(handleRegroupContact()));
+		contextMenu.addSeparator();
+		contextMenu.addAction("Remove", this, SLOT(handleRemoveContact()));
 	}
 	GroupRosterItem* group = dynamic_cast<GroupRosterItem*>(item);
 	if (group) {
@@ -68,7 +70,16 @@ void QtRosterContextMenu::handleRegroupContact() {
 void QtRosterContextMenu::handleRemoveContact() {
 	ContactRosterItem* contact = dynamic_cast<ContactRosterItem*>(item_);
 	assert(contact);
-	eventStream_->send(boost::shared_ptr<UIEvent>(new RemoveRosterItemUIEvent(contact->getJID())));
+	QMessageBox msgBox;
+	msgBox.setWindowTitle("Confirm contact deletion");
+	msgBox.setText("Are you sure you want to delete this contact?");
+	msgBox.setInformativeText("This will remove the contact from all groups they may be in.");
+	msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
+	msgBox.setDefaultButton(QMessageBox::Yes);
+	int ret = msgBox.exec();
+	if (ret == QMessageBox::Yes) {
+		eventStream_->send(boost::shared_ptr<UIEvent>(new RemoveRosterItemUIEvent(contact->getJID())));
+	}
 }
 
 void QtRosterContextMenu::handleRenameContact() {
