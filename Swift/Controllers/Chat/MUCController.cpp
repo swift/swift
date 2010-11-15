@@ -284,6 +284,7 @@ String MUCController::roleToGroupName(MUCOccupant::Role role) {
 void MUCController::setOnline(bool online) {
 	ChatControllerBase::setOnline(online);
 	if (!online) {
+		muc_->part();
 		parting_ = true;
 		processUserPart();
 	} else {

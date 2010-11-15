@@ -28,6 +28,7 @@ namespace Swift {
 			QModelIndex parent(const QModelIndex& index) const;
 			int rowCount(const QModelIndex& parent = QModelIndex()) const;
 			ChatListItem* getItemForIndex(const QModelIndex& index) const;
+			void clear();
 		private:
 			ChatListGroupItem* mucBookmarks_;
 			ChatListGroupItem* root_;

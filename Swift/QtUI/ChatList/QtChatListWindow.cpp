@@ -79,6 +79,10 @@ void QtChatListWindow::handleItemActivated(const QModelIndex& index) {
 	}
 }
 
+void QtChatListWindow::clear() {
+	model_->clear();
+}
+
 void QtChatListWindow::addMUCBookmark(const MUCBookmark& bookmark) {
 	model_->addMUCBookmark(bookmark);
 }

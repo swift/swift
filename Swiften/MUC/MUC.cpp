@@ -15,9 +15,9 @@
 #include "Swiften/Elements/Form.h"
 #include "Swiften/Elements/IQ.h"
 #include "Swiften/Elements/MUCUserPayload.h"
-#include "Swiften/Elements/MUCOwnerPayload.h"
 #include "Swiften/Elements/MUCPayload.h"
 #include "Swiften/MUC/MUCRegistry.h"
+#include "Swiften/Queries/GenericRequest.h"
 
 namespace Swift {
 
@@ -44,6 +44,7 @@ void MUC::internalJoin(const String &nick) {
 	joinComplete_ = false;
 	ownMUCJID = JID(ownMUCJID.getNode(), ownMUCJID.getDomain(), nick);
 	boost::shared_ptr<Presence> joinPresence(presenceSender->getLastSentUndirectedPresence());
+	assert(joinPresence->getType() == Presence::Available);
 	joinPresence->setTo(ownMUCJID);
 	boost::shared_ptr<MUCPayload> mucPayload(new MUCPayload());
 	if (joinSince_ != boost::posix_time::not_a_date_time) {
@@ -162,14 +163,26 @@ void MUC::handleIncomingPresence(boost::shared_ptr<Presence> presence) {
 			if (status.code == 201) {
 				/* Room is created and locked */
 				/* Currently deal with this by making an instant room */
+				ownMUCJID = presence->getFrom();
 				boost::shared_ptr<MUCOwnerPayload> mucPayload(new MUCOwnerPayload());
 				mucPayload->setPayload(boost::shared_ptr<Payload>(new Form(Form::SubmitType)));
-				boost::shared_ptr<IQ> iq(IQ::createRequest(IQ::Set, getJID(), iqRouter_->getNewIQID(), mucPayload));
-				iqRouter_->sendIQ(iq);
+				GenericRequest<MUCOwnerPayload>* request = new GenericRequest<MUCOwnerPayload>(IQ::Set, getJID(), mucPayload, iqRouter_);
+				request->onResponse.connect(boost::bind(&MUC::handleCreationConfigResponse, this, _1, _2));
+				request->send();
 			}
 		}
 	}
 
+}
+
+void MUC::handleCreationConfigResponse(boost::shared_ptr<MUCOwnerPayload> /*unused*/, const boost::optional<ErrorPayload>& error) {
+	if (error) {
+		boost::shared_ptr<ErrorPayload> errorCopy(new ErrorPayload(*error));
+		onJoinFailed(errorCopy);
+	} else {
+		/* onJoinComplete(getOwnNick()); isn't needed here, the presence will cause an emit elsewhere. */
+		presenceSender->addDirectedPresenceReceiver(ownMUCJID);
+	}
 }
 
 //FIXME: Recognise Topic changes

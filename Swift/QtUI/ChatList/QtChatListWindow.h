@@ -24,6 +24,7 @@ namespace Swift {
 			void addMUCBookmark(const MUCBookmark& bookmark);
 			void removeMUCBookmark(const MUCBookmark& bookmark);
 			void setBookmarksEnabled(bool enabled);
+			void clear();
 		private slots:
 			void handleItemActivated(const QModelIndex&);
 			void handleAddBookmark();

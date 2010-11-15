@@ -20,6 +20,7 @@ namespace Swift {
 			ChatListItem* item(int i) {return items_[i];};
 			int row(ChatListItem* item) {return items_.indexOf(item);};
 			QVariant data(int role) const {return (role == Qt::DisplayRole) ? name_ : QVariant();};
+			void clear() {items_.clear();};
 		private:
 			static bool pointerItemLessThan(const ChatListItem* first, const ChatListItem* second) {
 				QString myName = first->data(Qt::DisplayRole).toString().toLower();

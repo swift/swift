@@ -16,6 +16,12 @@ ChatListModel::ChatListModel() {
 	root_->addItem(mucBookmarks_);
 }
 
+void ChatListModel::clear() {
+	emit layoutAboutToBeChanged();
+	mucBookmarks_->clear();
+	emit layoutChanged();
+}
+
 void ChatListModel::addMUCBookmark(const Swift::MUCBookmark& bookmark) {
 	emit layoutAboutToBeChanged();
 	mucBookmarks_->addItem(new ChatListMUCItem(bookmark, mucBookmarks_));

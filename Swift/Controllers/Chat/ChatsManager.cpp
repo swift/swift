@@ -39,16 +39,11 @@ ChatsManager::ChatsManager(JID jid, StanzaChannel* stanzaChannel, IQRouter* iqRo
 	serverDiscoInfo_ = boost::shared_ptr<DiscoInfo>(new DiscoInfo());
 	presenceSender_ = presenceSender;
 	uiEventStream_ = uiEventStream;
-	mucBookmarkManager_ = new MUCBookmarkManager(iqRouter);
-	mucBookmarkManager_->onBookmarksReady.connect(boost::bind(&ChatsManager::handleBookmarksReady, this));
-	mucBookmarkManager_->onBookmarkAdded.connect(boost::bind(&ChatsManager::handleMUCBookmarkAdded, this, _1));
-	mucBookmarkManager_->onBookmarkRemoved.connect(boost::bind(&ChatsManager::handleMUCBookmarkRemoved, this, _1));
+	mucBookmarkManager_ = NULL;
 	presenceOracle_->onPresenceChange.connect(boost::bind(&ChatsManager::handlePresenceChange, this, _1));
 	uiEventConnection_ = uiEventStream_->onUIEvent.connect(boost::bind(&ChatsManager::handleUIEvent, this, _1));
 	chatListWindow_ = chatListWindowFactory->createWindow(uiEventStream_);
-	if (chatListWindow_) {
-		chatListWindow_->setBookmarksEnabled(false);
-	}
+	setupBookmarks();
 }
 
 ChatsManager::~ChatsManager() {
@@ -59,6 +54,20 @@ ChatsManager::~ChatsManager() {
 		delete controllerPair.second;
 	}
 	delete mucBookmarkManager_;
+}
+
+void ChatsManager::setupBookmarks() {
+	if (!mucBookmarkManager_) {
+		mucBookmarkManager_ = new MUCBookmarkManager(iqRouter_);
+		mucBookmarkManager_->onBookmarksReady.connect(boost::bind(&ChatsManager::handleBookmarksReady, this));
+		mucBookmarkManager_->onBookmarkAdded.connect(boost::bind(&ChatsManager::handleMUCBookmarkAdded, this, _1));
+		mucBookmarkManager_->onBookmarkRemoved.connect(boost::bind(&ChatsManager::handleMUCBookmarkRemoved, this, _1));
+
+		if (chatListWindow_) {
+			chatListWindow_->setBookmarksEnabled(false);
+			chatListWindow_->clear();
+		}
+	}
 }
 
 void ChatsManager::handleBookmarksReady() {
@@ -161,7 +170,14 @@ void ChatsManager::setOnline(bool enabled) {
 			controllerPair.second->rejoin();
 		}
 	}
-	chatListWindow_->setBookmarksEnabled(enabled);
+	if (!enabled) {
+		delete mucBookmarkManager_;
+		mucBookmarkManager_ = NULL;
+		chatListWindow_->setBookmarksEnabled(false);
+	} else {
+		setupBookmarks();
+	}
+
 }
 
 void ChatsManager::handleChatRequest(const String &contact) {

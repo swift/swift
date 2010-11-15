@@ -12,6 +12,7 @@
 #include "Swiften/Elements/Presence.h"
 #include "Swiften/MUC/MUCOccupant.h"
 #include "Swiften/MUC/MUCRegistry.h"
+#include "Swiften/Elements/MUCOwnerPayload.h"
 
 #include <boost/shared_ptr.hpp>
 #include "Swiften/Base/boost_bsignals.h"
@@ -75,6 +76,7 @@ namespace Swift {
 		private:
 			void handleIncomingPresence(boost::shared_ptr<Presence> presence);
 			void internalJoin(const String& nick);
+			void handleCreationConfigResponse(boost::shared_ptr<MUCOwnerPayload>, const boost::optional<ErrorPayload>&);
 
 		private:
 			JID ownMUCJID;

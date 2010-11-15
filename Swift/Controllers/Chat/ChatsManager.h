@@ -56,6 +56,7 @@ namespace Swift {
 			void handleMUCBookmarkRemoved(const MUCBookmark& bookmark);
 			void handleUserLeftMUC(MUCController* mucController);
 			void handleBookmarksReady();
+			void setupBookmarks();
 			ChatController* getChatControllerOrFindAnother(const JID &contact);
 			ChatController* createNewChatController(const JID &contact);
 			ChatController* getChatControllerOrCreate(const JID &contact);
