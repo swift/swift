@@ -56,6 +56,9 @@ void InBandRegistrationPayloadParser::handleEndElement(const String& element, co
 		else if (element == "registered") {
 			getPayloadInternal()->setRegistered(true);
 		}
+		else if (element == "remove") {
+			getPayloadInternal()->setRemove(true);
+		}
 		else if (element == "instructions") {
 			getPayloadInternal()->setInstructions(currentText);
 		}

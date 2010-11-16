@@ -18,7 +18,7 @@ namespace Swift {
 		public:
 			typedef boost::shared_ptr<InBandRegistrationPayload> ref;
 
-			InBandRegistrationPayload() : registered(false) {}
+			InBandRegistrationPayload() : registered(false), remove(false) {}
 
 			Form::ref getForm() const { return form; }
 			void setForm(Form::ref f) { form = f; }
@@ -29,6 +29,14 @@ namespace Swift {
 
 			void setRegistered(bool b) {
 				registered = b;
+			}
+
+			bool isRemove() const {
+				return remove;
+			}
+
+			void setRemove(bool b) {
+				remove = b;
 			}
 
 			const boost::optional<String>& getInstructions() const {
@@ -175,10 +183,10 @@ namespace Swift {
 				this->key = v;
 			}
 
-
 		private:
 			Form::ref form;
 			bool registered;
+			bool remove;
 			boost::optional<String> instructions;
 			boost::optional<String> username;
 			boost::optional<String> nick;

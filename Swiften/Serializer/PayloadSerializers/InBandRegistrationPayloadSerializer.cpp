@@ -25,6 +25,10 @@ String InBandRegistrationPayloadSerializer::serializePayload(boost::shared_ptr<I
 		registerElement.addNode(XMLElement::ref(new XMLElement("registered")));
 	}
 
+	if (registration->isRemove()) {
+		registerElement.addNode(XMLElement::ref(new XMLElement("remove")));
+	}
+
 	if (registration->getInstructions()) {
 		registerElement.addNode(XMLElement::ref(new XMLElement("instructions", "", *registration->getInstructions())));
 	}
