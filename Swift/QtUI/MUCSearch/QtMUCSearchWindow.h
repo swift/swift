@@ -24,9 +24,11 @@ namespace Swift {
 			virtual void setMUC(const String& nick);
 			virtual void clearList();
 			virtual void addService(const MUCService& service);
+			virtual void addSavedServices(const std::vector<JID>& services);
 
 			virtual void show();
 		private slots:
+			void handleSearch(const QString& text);
 			void handleSearch();
 			void handleJoin();
 			void handleSelected(const QModelIndex& current);

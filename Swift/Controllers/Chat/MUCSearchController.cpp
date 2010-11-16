@@ -21,12 +21,16 @@
 
 namespace Swift {
 
-MUCSearchController::MUCSearchController(const JID& jid, UIEventStream* uiEventStream, MUCSearchWindowFactory* factory, IQRouter* iqRouter) : jid_(jid) {
+static const String SEARCHED_SERVICES = "searchedServices";
+
+MUCSearchController::MUCSearchController(const JID& jid, UIEventStream* uiEventStream, MUCSearchWindowFactory* factory, IQRouter* iqRouter, SettingsProvider* settings) : jid_(jid) {
 	iqRouter_ = iqRouter;
+	settings_ = settings;
 	uiEventStream_ = uiEventStream;
 	uiEventConnection_ = uiEventStream_->onUIEvent.connect(boost::bind(&MUCSearchController::handleUIEvent, this, _1));
 	window_ = NULL;
 	factory_ = factory;
+	loadServices();
 }
 
 MUCSearchController::~MUCSearchController() {
@@ -39,6 +43,7 @@ void MUCSearchController::handleUIEvent(boost::shared_ptr<UIEvent> event) {
 		if (!window_) {
 			window_ = factory_->createMUCSearchWindow(uiEventStream_);
 			window_->onAddService.connect(boost::bind(&MUCSearchController::handleAddService, this, _1, true));
+			window_->addSavedServices(savedServices_);
 			handleAddService(JID(jid_.getDomain()), true);
 		}
 		window_->setMUC("");
@@ -48,7 +53,36 @@ void MUCSearchController::handleUIEvent(boost::shared_ptr<UIEvent> event) {
 	}
 }
 
+void MUCSearchController::loadServices() {
+	savedServices_.clear();
+	foreach (String stringItem, settings_->getStringSetting(SEARCHED_SERVICES).split('\n')) {
+		savedServices_.push_back(JID(stringItem));
+	}
+}
+
+void MUCSearchController::addAndSaveServices(const JID& jid) {
+	savedServices_.erase(std::remove(savedServices_.begin(), savedServices_.end(), jid), savedServices_.end());
+	savedServices_.push_back(jid);
+	String collapsed;
+	bool storeThis = savedServices_.size() < 15;
+	foreach (JID jidItem, savedServices_) {
+		if (!storeThis) {
+			storeThis = true;
+			continue;
+		}
+		if (!collapsed.isEmpty()) {
+			collapsed += "\n";
+		}
+		collapsed += jidItem.toString();
+	}
+	settings_->storeString(SEARCHED_SERVICES, collapsed);
+	window_->addSavedServices(savedServices_);
+}
+
 void MUCSearchController::handleAddService(const JID& jid, bool userTriggered) {
+	if (userTriggered) {
+		addAndSaveServices(jid);
+	}
 	if (std::find(services_.begin(), services_.end(), jid) != services_.end()) {
 		if (!userTriggered) {
 			/* No infinite recursion. (Some buggy servers do infinitely deep disco of themselves)*/

@@ -34,7 +34,7 @@ QtMUCSearchWindow::QtMUCSearchWindow(UIEventStream* eventStream) {
 #ifdef SWIFT_PLATFORM_MACOSX
 	results_->setAlternatingRowColors(true);
 #endif
-	connect(service_, SIGNAL(returnPressed()), this, SLOT(handleSearch()));
+	connect(service_, SIGNAL(activated(const QString&)), this, SLOT(handleSearch(const QString&)));
 	connect(room_, SIGNAL(returnPressed()), this, SLOT(handleJoin()));
 	connect(nickName_, SIGNAL(returnPressed()), room_, SLOT(setFocus()));
 	connect(searchButton_, SIGNAL(clicked()), this, SLOT(handleSearch()));
@@ -45,6 +45,14 @@ QtMUCSearchWindow::QtMUCSearchWindow(UIEventStream* eventStream) {
 
 QtMUCSearchWindow::~QtMUCSearchWindow() {
 
+}
+
+void QtMUCSearchWindow::addSavedServices(const std::vector<JID>& services) {
+	service_->clear();
+	foreach (JID jid, services) {
+		service_->addItem(P2QSTRING(jid.toString()));
+	}
+	service_->clearEditText();
 }
 
 void QtMUCSearchWindow::handleActivated(const QModelIndex& index) {
@@ -69,12 +77,17 @@ void QtMUCSearchWindow::handleSelected(const QModelIndex& current) {
 
 }
 
-void QtMUCSearchWindow::handleSearch() {
-	if (service_->text().isEmpty()) {
+void QtMUCSearchWindow::handleSearch(const QString& text) {
+	if (text.isEmpty()) {
 		return;
 	}
-	onAddService(JID(Q2PSTRING(service_->text())));
+	onAddService(JID(Q2PSTRING(text)));
 }
+
+void QtMUCSearchWindow::handleSearch() {
+	handleSearch(service_->currentText());
+}
+
 
 void QtMUCSearchWindow::handleJoin() {
 	if (room_->text().isEmpty()) {

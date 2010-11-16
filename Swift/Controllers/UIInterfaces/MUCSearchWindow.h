@@ -8,6 +8,8 @@
 
 #include "Swiften/Base/boost_bsignals.h"
 
+#include <vector>
+
 #include "Swiften/Base/String.h"
 #include "Swiften/JID/JID.h"
 
@@ -23,6 +25,7 @@ namespace Swift {
 			virtual void setMUC(const String& nick) = 0;
 			virtual void clearList() = 0;
 			virtual void addService(const MUCService& service) = 0;
+			virtual void addSavedServices(const std::vector<JID>& services) = 0;
 
 			virtual void show() = 0;
 
