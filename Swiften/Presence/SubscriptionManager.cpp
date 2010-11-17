@@ -46,7 +46,7 @@ void SubscriptionManager::requestSubscription(const JID& jid) {
 void SubscriptionManager::handleIncomingPresence(Presence::ref presence) {
 	JID bareJID(presence->getFrom().toBare());
 	if (presence->getType() == Presence::Subscribe) {
-		onPresenceSubscriptionRequest(bareJID, presence->getStatus());
+		onPresenceSubscriptionRequest(bareJID, presence->getStatus(), presence);
 	}
 	else if (presence->getType() == Presence::Unsubscribe) {
 		onPresenceSubscriptionRevoked(bareJID, presence->getStatus());

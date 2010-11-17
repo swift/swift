@@ -141,9 +141,6 @@ namespace Swift {
 			 */
 			boost::signal<void (Presence::ref)> onPresenceChange;
 
-
-			boost::signal<void (const JID&, const String&)> onPresenceSubscriptionRequest;
-
 		private:
 			Storages* getStorages() const;
 
