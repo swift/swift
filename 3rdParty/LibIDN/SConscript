@@ -15,6 +15,8 @@ if env.get("LIBIDN_BUNDLED", False) :
 			}
 		if env["PLATFORM"] == "win32" :
 			env["LIBIDN_FLAGS"]["CPPPATH"] += [Dir("stubs/win32")]
+			if env["MSVC_VERSION"][:3] == "9.0" :
+				env["LIBIDN_FLAGS"]["CPPPATH"] += [Dir("stubs/win32/VC2008")]
 
 ################################################################################
 # Build
@@ -46,6 +48,8 @@ if env.get("LIBIDN_BUNDLED", False) :
 		myenv.Append(CPPPATH = ["src", "stubs"])
 		if myenv["PLATFORM"] == "win32" :
 			myenv.Append(CPPPATH = "stubs/win32")
+			if myenv["MSVC_VERSION"][:3] == "9.0" :
+				myenv.Append(CPPPATH = "stubs/win32/VC2008")
 
 		myenv.StaticLibrary("IDN", [
 				"src/stringprep.c",
