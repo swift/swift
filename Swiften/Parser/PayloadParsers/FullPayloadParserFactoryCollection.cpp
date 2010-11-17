@@ -28,6 +28,7 @@
 #include "Swiften/Parser/PayloadParsers/FormParserFactory.h"
 #include "Swiften/Parser/PayloadParsers/CommandParserFactory.h"
 #include "Swiften/Parser/PayloadParsers/InBandRegistrationPayloadParserFactory.h"
+#include "Swiften/Parser/PayloadParsers/SearchPayloadParserFactory.h"
 #include "Swiften/Parser/PayloadParsers/StreamInitiationParserFactory.h"
 #include "Swiften/Parser/PayloadParsers/BytestreamsParserFactory.h"
 #include "Swiften/Parser/PayloadParsers/IBBParserFactory.h"
@@ -64,6 +65,7 @@ FullPayloadParserFactoryCollection::FullPayloadParserFactoryCollection() {
 	factories_.push_back(shared_ptr<PayloadParserFactory>(new FormParserFactory()));
 	factories_.push_back(shared_ptr<PayloadParserFactory>(new CommandParserFactory()));
 	factories_.push_back(shared_ptr<PayloadParserFactory>(new InBandRegistrationPayloadParserFactory()));
+	factories_.push_back(shared_ptr<PayloadParserFactory>(new SearchPayloadParserFactory()));
 	factories_.push_back(shared_ptr<PayloadParserFactory>(new StreamInitiationParserFactory()));
 	factories_.push_back(shared_ptr<PayloadParserFactory>(new BytestreamsParserFactory()));
 	factories_.push_back(shared_ptr<PayloadParserFactory>(new VCardUpdateParserFactory()));
