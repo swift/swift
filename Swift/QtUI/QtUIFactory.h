@@ -33,6 +33,7 @@ namespace Swift {
 			virtual ChatListWindow* createChatListWindow(UIEventStream*);
 			virtual MUCSearchWindow* createMUCSearchWindow(UIEventStream* eventStream);
 			virtual ChatWindow* createChatWindow(const JID &contact, UIEventStream* eventStream);
+			virtual UserSearchWindow* createUserSearchWindow(UIEventStream* eventStream);
 
 		private slots:
 			void handleLoginWindowGeometryChanged();

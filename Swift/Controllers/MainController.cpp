@@ -18,6 +18,7 @@
 #include "Swiften/Client/Storages.h"
 #include "Swiften/VCards/VCardManager.h"
 #include "Swift/Controllers/Chat/MUCSearchController.h"
+#include "Swift/Controllers/Chat/UserSearchController.h"
 #include "Swift/Controllers/Chat/ChatsManager.h"
 #include "Swift/Controllers/XMPPEvents/EventController.h"
 #include "Swift/Controllers/EventWindowController.h"
@@ -98,6 +99,7 @@ MainController::MainController(
 	chatsManager_ = NULL;
 	eventWindowController_ = NULL;
 	mucSearchController_ = NULL;
+	userSearchController_ = NULL;
 	quitRequested_ = false;
 
 	timeBeforeNextReconnect_ = -1;
@@ -188,6 +190,8 @@ void MainController::resetClient() {
 	statusTracker_ = NULL;
 	delete profileSettings_;
 	profileSettings_ = NULL;
+	delete userSearchController_;
+	userSearchController_ = NULL;
 }
 
 void MainController::handleUIEvent(boost::shared_ptr<UIEvent> event) {
@@ -242,7 +246,9 @@ void MainController::handleConnected() {
 		client_->getDiscoManager()->setCapsNode(CLIENT_NODE);
 		client_->getDiscoManager()->setDiscoInfo(discoInfo);
 
-		mucSearchController_ = new MUCSearchController(jid_, uiEventStream_, uiFactory_, client_->getIQRouter(), settings_);
+
+		mucSearchController_ = new MUCSearchController(jid_, uiEventStream_, uiFactory_, client_->getIQRouter(), settings_, client_->getNickResolver());
+		userSearchController_ = new UserSearchController(jid_, uiEventStream_, uiFactory_, client_->getIQRouter());
 	}
 	
 	client_->requestRoster();

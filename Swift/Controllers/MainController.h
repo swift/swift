@@ -54,6 +54,7 @@ namespace Swift {
 	class EventWindowFactory;
 	class EventWindowController;
 	class MUCSearchController;
+	class UserSearchController;
 	class StatusTracker;
 	class Dock;
 	class Storages;
@@ -137,6 +138,7 @@ namespace Swift {
 			boost::shared_ptr<ErrorEvent> lastDisconnectError_;
 			bool useDelayForLatency_;
 			MUCSearchController* mucSearchController_;
+			UserSearchController* userSearchController_;
 			int timeBeforeNextReconnect_;
 			Timer::ref reconnectTimer_;
 			StatusTracker* statusTracker_;

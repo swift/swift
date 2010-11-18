@@ -7,6 +7,9 @@
 #include "Swift/QtUI/MUCSearch/QtMUCSearchWindow.h"
 
 #include <qdebug.h>
+#include <QMovie>
+#include <QScrollBar>
+#include <QTimer>
 
 #include "Swift/Controllers/UIEvents/UIEventStream.h"
 #include "Swift/Controllers/UIEvents/JoinMUCUIEvent.h"
@@ -41,10 +44,39 @@ QtMUCSearchWindow::QtMUCSearchWindow(UIEventStream* eventStream) {
 	connect(joinButton_, SIGNAL(clicked()), this, SLOT(handleJoin()));
 	connect(results_, SIGNAL(clicked(const QModelIndex&)), this, SLOT(handleSelected(const QModelIndex&)));
 	connect(results_, SIGNAL(activated(const QModelIndex&)), this, SLOT(handleActivated(const QModelIndex&)));
+	throbber_ = new QLabel("Searching", results_);
+	throbber_->setMovie(new QMovie(":/icons/throbber.gif", QByteArray(), throbber_));
+	throbber_->setToolTip("Searching");
+	hasHadScrollBars_ = false;
+	updateThrobberPosition();
+	setSearchInProgress(false);
 }
 
 QtMUCSearchWindow::~QtMUCSearchWindow() {
 
+}
+
+void QtMUCSearchWindow::resizeEvent(QResizeEvent* /*event*/) {
+	updateThrobberPosition();
+}
+
+void QtMUCSearchWindow::updateThrobberPosition() {
+	bool isShown = throbber_->isVisible();
+	int resultWidth = results_->width();
+	int resultHeight = results_->height();
+	//throbberWidth = throbber_->movie()->scaledSize().width();
+	//throbberHeight = throbber_->movie()->scaledSize().height();
+	int throbberWidth = 16; /* This is nasty, but the above doesn't work! */
+	int throbberHeight = 16;
+	/* It's difficult (or I spent a while trying) to work out whether the scrollbars are currently shown and their appropriate size,
+	 * because if you listen for the expanded/collapsed signals, you seem to get them before the scrollbars are updated.
+	 * This seems an acceptable workaround.
+	 */
+	hasHadScrollBars_ |= results_->verticalScrollBar()->isVisible();
+	int hMargin = hasHadScrollBars_ ? results_->verticalScrollBar()->width() + 2 : 2;
+	int vMargin = 2; /* We don't get horizontal scrollbars */
+	throbber_->setGeometry(QRect(resultWidth - throbberWidth - hMargin, resultHeight - throbberHeight - vMargin, throbberWidth, throbberHeight)); /* include margins */
+	throbber_->setVisible(isShown);
 }
 
 void QtMUCSearchWindow::addSavedServices(const std::vector<JID>& services) {
@@ -145,12 +177,22 @@ void QtMUCSearchWindow::clearList() {
 }
 
 void QtMUCSearchWindow::addService(const MUCService& service) {
+	updateThrobberPosition();
 	MUCSearchServiceItem* serviceItem = new MUCSearchServiceItem(P2QSTRING(service.getJID().toString()));
 	foreach (MUCService::MUCRoom room, service.getRooms()) {
 		new MUCSearchRoomItem(P2QSTRING(room.getNode()), serviceItem);
 	}
 	model_->addService(serviceItem);
 	results_->expandAll();
+}
+
+void QtMUCSearchWindow::setSearchInProgress(bool searching) {
+	if (searching) {
+		throbber_->movie()->start();
+	} else {
+		throbber_->movie()->stop();
+	}
+	throbber_->setVisible(searching);
 }
 
 }

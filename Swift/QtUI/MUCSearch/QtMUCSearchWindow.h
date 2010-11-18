@@ -25,19 +25,25 @@ namespace Swift {
 			virtual void clearList();
 			virtual void addService(const MUCService& service);
 			virtual void addSavedServices(const std::vector<JID>& services);
+			virtual void setSearchInProgress(bool searching);
 
 			virtual void show();
+		protected:
+			virtual void resizeEvent(QResizeEvent* event);
 		private slots:
 			void handleSearch(const QString& text);
 			void handleSearch();
 			void handleJoin();
 			void handleSelected(const QModelIndex& current);
 			void handleActivated(const QModelIndex& index);
+			void updateThrobberPosition();
 		private:
 			void createAutoJoin(const JID& room, boost::optional<String> passedNick);
 			MUCSearchModel* model_;
 			MUCSearchDelegate* delegate_;
 			UIEventStream* eventStream_;
+			QLabel* throbber_;
 			String lastSetNick_;
+			bool hasHadScrollBars_;
 	};
 }

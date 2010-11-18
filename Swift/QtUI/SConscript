@@ -111,6 +111,9 @@ sources = [
     "MUCSearch/MUCSearchModel.cpp",
     "MUCSearch/MUCSearchRoomItem.cpp",
     "MUCSearch/MUCSearchDelegate.cpp",
+    "UserSearch/QtUserSearchWindow.cpp",
+    "UserSearch/UserSearchModel.cpp",
+    "UserSearch/UserSearchDelegate.cpp",
     "ContextMenus/QtRosterContextMenu.cpp",
     "ContextMenus/QtContextMenu.cpp",
     "QtSubscriptionRequestWindow.cpp",
@@ -138,6 +141,7 @@ else :
   swiftProgram = myenv.Program("swift", sources)
 
 myenv.Uic4("MUCSearch/QtMUCSearchWindow.ui")
+myenv.Uic4("UserSearch/QtUserSearchWindow.ui")
 myenv.Uic4("QtAddContactDialog.ui")
 myenv.Uic4("QtBookmarkDetailWindow.ui")
 myenv.Qrc("DefaultTheme.qrc")

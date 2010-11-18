@@ -26,6 +26,7 @@ namespace Swift {
 			virtual void clearList() = 0;
 			virtual void addService(const MUCService& service) = 0;
 			virtual void addSavedServices(const std::vector<JID>& services) = 0;
+			virtual void setSearchInProgress(bool searching) = 0;
 
 			virtual void show() = 0;
 

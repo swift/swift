@@ -42,6 +42,7 @@ namespace Swift {
 	class QtChatWindowFactory;
 	class QtSoundPlayer;
 	class QtMUCSearchWindowFactory;
+	class QtUserSearchWindowFactory;
 	class EventLoop;
 		
 	class QtSwift : public QObject {

@@ -19,6 +19,7 @@
 #include "QtChatWindowFactory.h"
 #include "QtSwiftUtil.h"
 #include "MUCSearch/QtMUCSearchWindow.h"
+#include "UserSearch/QtUserSearchWindow.h"
 
 namespace Swift {
 
@@ -76,5 +77,9 @@ MUCSearchWindow* QtUIFactory::createMUCSearchWindow(UIEventStream* eventStream) 
 ChatWindow* QtUIFactory::createChatWindow(const JID& contact, UIEventStream* eventStream) {
 	return chatWindowFactory->createChatWindow(contact, eventStream);
 }
+
+UserSearchWindow* QtUIFactory::createUserSearchWindow(UIEventStream* eventStream) {
+	return new QtUserSearchWindow(eventStream);
+};
 
 }

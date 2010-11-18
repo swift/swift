@@ -39,6 +39,7 @@
 #include "Swiften/Serializer/PayloadSerializers/CommandSerializer.h"
 #include "Swiften/Serializer/PayloadSerializers/InBandRegistrationPayloadSerializer.h"
 #include "Swiften/Serializer/PayloadSerializers/NicknameSerializer.h"
+#include "Swiften/Serializer/PayloadSerializers/SearchPayloadSerializer.h"
 
 namespace Swift {
 
@@ -75,6 +76,7 @@ FullPayloadSerializerCollection::FullPayloadSerializerCollection() {
 	serializers_.push_back(new CommandSerializer());
 	serializers_.push_back(new InBandRegistrationPayloadSerializer());
 	serializers_.push_back(new NicknameSerializer());
+	serializers_.push_back(new SearchPayloadSerializer());
 	foreach(PayloadSerializer* serializer, serializers_) {
 		addSerializer(serializer);
 	}

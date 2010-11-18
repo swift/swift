@@ -24,7 +24,7 @@
 #include "QtSwiftUtil.h"
 #include "QtTabWidget.h"
 #include "Roster/QtTreeWidget.h"
-#include "Swift/Controllers/UIEvents/AddContactUIEvent.h"
+#include "Swift/Controllers/UIEvents/RequestUserSearchUIEvent.h"
 #include "Swift/Controllers/UIEvents/RequestMUCSearchUIEvent.h"
 #include "Swift/Controllers/UIEvents/JoinMUCUIEvent.h"
 #include "Swift/Controllers/UIEvents/ToggleShowOfflineUIEvent.h"
@@ -84,9 +84,9 @@ QtMainWindow::QtMainWindow(QtSettingsProvider* settings, UIEventStream* uiEventS
 	QAction* joinMUCAction = new QAction("Join Room", this);
 	connect(joinMUCAction, SIGNAL(triggered()), SLOT(handleJoinMUCAction()));
 	actionsMenu->addAction(joinMUCAction);
-	addAction_ = new QAction("Add Contact", this);
-	connect(addAction_, SIGNAL(triggered(bool)), this, SLOT(handleAddActionTriggered(bool)));
-	actionsMenu->addAction(addAction_);
+	otherUserAction_ = new QAction("Find Other Contact", this);
+	connect(otherUserAction_, SIGNAL(triggered(bool)), this, SLOT(handleOtherUserActionTriggered(bool)));
+	actionsMenu->addAction(otherUserAction_);
 	QAction* signOutAction = new QAction("Sign Out", this);
 	connect(signOutAction, SIGNAL(triggered()), SLOT(handleSignOutAction()));
 	actionsMenu->addAction(signOutAction);
@@ -123,20 +123,13 @@ void QtMainWindow::handleEventCountUpdated(int count) {
 	tabs_->setTabText(eventIndex, text);
 }
 
-void QtMainWindow::handleAddActionTriggered(bool checked) {
-	Q_UNUSED(checked);
-	QtAddContactDialog* addContact = new QtAddContactDialog(this);
-	connect(addContact, SIGNAL(onAddCommand(const JID&, const QString&)), SLOT(handleAddContactDialogComplete(const JID&, const QString&)));
-	addContact->show();
+void QtMainWindow::handleOtherUserActionTriggered(bool /*checked*/) {
+	boost::shared_ptr<UIEvent> event(new RequestUserSearchUIEvent());
+	uiEventStream_->send(event);
 }
 
 void QtMainWindow::handleSignOutAction() {
 	onSignOutRequest();
-}
-
-void QtMainWindow::handleAddContactDialogComplete(const JID& contact, const QString& name) {
-	boost::shared_ptr<UIEvent> event(new AddContactUIEvent(contact, Q2PSTRING(name)));
-	uiEventStream_->send(event);
 }
 
 void QtMainWindow::handleJoinMUCAction() {

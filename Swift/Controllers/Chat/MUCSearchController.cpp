@@ -11,22 +11,26 @@
 #include <boost/bind.hpp>
 #include <boost/shared_ptr.hpp>
 
-#include "Swiften/Disco/GetDiscoInfoRequest.h"
-#include "Swiften/Disco/GetDiscoItemsRequest.h"
+#include <Swiften/Disco/GetDiscoInfoRequest.h>
+#include <Swiften/Disco/GetDiscoItemsRequest.h>
 
-#include "Swift/Controllers/UIEvents/UIEventStream.h"
-#include "Swift/Controllers/UIEvents/RequestMUCSearchUIEvent.h"
-#include "Swift/Controllers/UIInterfaces/MUCSearchWindow.h"
-#include "Swift/Controllers/UIInterfaces/MUCSearchWindowFactory.h"
+#include <Swift/Controllers/UIEvents/UIEventStream.h>
+#include <Swift/Controllers/UIEvents/RequestMUCSearchUIEvent.h>
+#include <Swift/Controllers/UIInterfaces/MUCSearchWindow.h>
+#include <Swift/Controllers/UIInterfaces/MUCSearchWindowFactory.h>
+#include <Swift/Controllers/DiscoServiceWalker.h>
+#include <Swiften/Client/NickResolver.h>
 
 namespace Swift {
 
 static const String SEARCHED_SERVICES = "searchedServices";
 
-MUCSearchController::MUCSearchController(const JID& jid, UIEventStream* uiEventStream, MUCSearchWindowFactory* factory, IQRouter* iqRouter, SettingsProvider* settings) : jid_(jid) {
+MUCSearchController::MUCSearchController(const JID& jid, UIEventStream* uiEventStream, MUCSearchWindowFactory* factory, IQRouter* iqRouter, SettingsProvider* settings, NickResolver *nickResolver) : jid_(jid) {
 	iqRouter_ = iqRouter;
 	settings_ = settings;
 	uiEventStream_ = uiEventStream;
+	nickResolver_ = nickResolver;
+	itemsInProgress_ = 0;
 	uiEventConnection_ = uiEventStream_->onUIEvent.connect(boost::bind(&MUCSearchController::handleUIEvent, this, _1));
 	window_ = NULL;
 	factory_ = factory;
@@ -34,6 +38,9 @@ MUCSearchController::MUCSearchController(const JID& jid, UIEventStream* uiEventS
 }
 
 MUCSearchController::~MUCSearchController() {
+	foreach (DiscoServiceWalker* walker, walksInProgress_) {
+		delete walker;
+	}
 	delete window_;
 }
 
@@ -42,12 +49,12 @@ void MUCSearchController::handleUIEvent(boost::shared_ptr<UIEvent> event) {
 	if (searchEvent) {
 		if (!window_) {
 			window_ = factory_->createMUCSearchWindow(uiEventStream_);
-			window_->onAddService.connect(boost::bind(&MUCSearchController::handleAddService, this, _1, true));
+			window_->onAddService.connect(boost::bind(&MUCSearchController::handleAddService, this, _1));
 			window_->addSavedServices(savedServices_);
-			handleAddService(JID(jid_.getDomain()), true);
+			handleAddService(JID(jid_.getDomain()));
 		}
 		window_->setMUC("");
-		window_->setNick(jid_.getNode());
+		window_->setNick(nickResolver_->jidToNick(jid_));
 		window_->show();
 		return;
 	}
@@ -79,27 +86,55 @@ void MUCSearchController::addAndSaveServices(const JID& jid) {
 	window_->addSavedServices(savedServices_);
 }
 
-void MUCSearchController::handleAddService(const JID& jid, bool userTriggered) {
-	if (userTriggered) {
-		addAndSaveServices(jid);
-	}
-	if (std::find(services_.begin(), services_.end(), jid) != services_.end()) {
-		if (!userTriggered) {
-			/* No infinite recursion. (Some buggy servers do infinitely deep disco of themselves)*/
-			return;
-		}
-	} else if (userTriggered) {
-		services_.push_back(jid);
-		serviceDetails_[jid].setComplete(false);
-		refreshView();
-	}
+void MUCSearchController::handleAddService(const JID& jid) {
 	if (!jid.isValid()) {
 		//Set Window to say error this isn't valid
 		return;
 	}
-	GetDiscoInfoRequest::ref discoInfoRequest = GetDiscoInfoRequest::create(jid, iqRouter_);
-	discoInfoRequest->onResponse.connect(boost::bind(&MUCSearchController::handleDiscoInfoResponse, this, _1, _2, jid));
-	discoInfoRequest->send();
+	addAndSaveServices(jid);
+	services_.push_back(jid);
+	serviceDetails_[jid].setComplete(false);
+	window_->setSearchInProgress(true);
+	refreshView();
+	DiscoServiceWalker* walker = new DiscoServiceWalker(jid, iqRouter_);
+	walker->onServiceFound.connect(boost::bind(&MUCSearchController::handleDiscoServiceFound, this, _1, _2));
+	walker->onWalkComplete.connect(boost::bind(&MUCSearchController::handleDiscoWalkFinished, this, walker));
+	walksInProgress_.push_back(walker);
+	walker->beginWalk();
+}
+
+void MUCSearchController::handleDiscoServiceFound(const JID& jid, boost::shared_ptr<DiscoInfo> info) {
+	bool isMUC;
+	String name;
+	foreach (DiscoInfo::Identity identity, info->getIdentities()) {
+			if ((identity.getCategory() == "directory"
+				&& identity.getType() == "chatroom")
+				|| (identity.getCategory() == "conference"
+				&& identity.getType() == "text")) {
+				isMUC = true;
+				name = identity.getName();
+			}
+	}
+	if (isMUC) {
+		services_.erase(std::remove(services_.begin(), services_.end(), jid), services_.end()); /* Bring it back to the end on a refresh */
+		services_.push_back(jid);
+		serviceDetails_[jid].setName(name);
+		serviceDetails_[jid].setJID(jid);
+		serviceDetails_[jid].setComplete(false);
+		itemsInProgress_++;
+		GetDiscoItemsRequest::ref discoItemsRequest = GetDiscoItemsRequest::create(jid, iqRouter_);
+		discoItemsRequest->onResponse.connect(boost::bind(&MUCSearchController::handleRoomsItemsResponse, this, _1, _2, jid));
+		discoItemsRequest->send();
+	} else {
+		removeService(jid);
+	}
+	refreshView();
+}
+
+void MUCSearchController::handleDiscoWalkFinished(DiscoServiceWalker* walker) {
+	walksInProgress_.erase(std::remove(walksInProgress_.begin(), walksInProgress_.end(), walker), walksInProgress_.end());
+	updateInProgressness();
+	delete walker;
 }
 
 void MUCSearchController::removeService(const JID& jid) {
@@ -108,47 +143,9 @@ void MUCSearchController::removeService(const JID& jid) {
 	refreshView();
 }
 
-void MUCSearchController::handleDiscoInfoResponse(boost::shared_ptr<DiscoInfo> info, ErrorPayload::ref error, const JID& jid) {
-	if (error) {
-		handleDiscoError(jid, error);
-		return;
-	}
-	GetDiscoItemsRequest::ref discoItemsRequest = GetDiscoItemsRequest::create(jid, iqRouter_);
-	bool mucService = false;
-	bool couldContainServices = false;
-	String name;
-	foreach (DiscoInfo::Identity identity, info->getIdentities()) {
-		if ((identity.getCategory() == "directory" 
-			&& identity.getType() == "chatroom")
-			|| (identity.getCategory() == "conference" 
-			&& identity.getType() == "text")) {
-			mucService = true;
-			name = identity.getName();
-		}
-		if (identity.getCategory() == "server") {
-			couldContainServices = true;
-			name = identity.getName();
-		}
-	}
-	services_.erase(std::remove(services_.begin(), services_.end(), jid), services_.end()); /* Bring it back to the end on a refresh */
-	services_.push_back(jid);
-	serviceDetails_[jid].setName(name);
-	serviceDetails_[jid].setJID(jid);
-	serviceDetails_[jid].setComplete(false);
-
-	if (mucService) {
-		discoItemsRequest->onResponse.connect(boost::bind(&MUCSearchController::handleRoomsItemsResponse, this, _1, _2, jid));
-	} else if (couldContainServices) {
-		discoItemsRequest->onResponse.connect(boost::bind(&MUCSearchController::handleServerItemsResponse, this, _1, _2, jid));
-	} else {
-		removeService(jid);
-		return;
-	}
-	discoItemsRequest->send();
-	refreshView();
-}
-
 void MUCSearchController::handleRoomsItemsResponse(boost::shared_ptr<DiscoItems> items, ErrorPayload::ref error, const JID& jid) {
+	itemsInProgress_--;
+	updateInProgressness();
 	if (error) {
 		handleDiscoError(jid, error);
 		return;
@@ -158,25 +155,6 @@ void MUCSearchController::handleRoomsItemsResponse(boost::shared_ptr<DiscoItems>
 		serviceDetails_[jid].addRoom(MUCService::MUCRoom(item.getJID().getNode(), item.getName(), -1));
 	}
 	serviceDetails_[jid].setComplete(true);
-	refreshView();
-}
-
-void MUCSearchController::handleServerItemsResponse(boost::shared_ptr<DiscoItems> items, ErrorPayload::ref error, const JID& jid) {
-	if (error) {
-		handleDiscoError(jid, error);
-		return;
-	}
-	if (jid.isValid()) {
-		removeService(jid);
-	}
-	foreach (DiscoItems::Item item, items->getItems()) {
-		if (item.getNode().isEmpty()) {
-			/* Don't look at noded items. It's possible that this will exclude some services,
-			 * but I've never seen one in the wild, and it's an easy fix for not looping.
-			 */
-			handleAddService(item.getJID());
-		}
-	}
 	refreshView();
 }
 
@@ -190,6 +168,10 @@ void MUCSearchController::refreshView() {
 	foreach (JID jid, services_) {
 		window_->addService(serviceDetails_[jid]);
 	}
+}
+
+void MUCSearchController::updateInProgressness() {
+	window_->setSearchInProgress(walksInProgress_.size() + itemsInProgress_ > 0);
 }
 
 }
