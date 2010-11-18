@@ -1,0 +1,6 @@
+Import("swiften_env")
+
+objects = swiften_env.SwiftenObject([
+			"OutgoingAdHocCommandSession.cpp",
+		])
+swiften_env.Append(SWIFTEN_OBJECTS = [objects])

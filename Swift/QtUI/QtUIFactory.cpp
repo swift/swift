@@ -23,6 +23,7 @@
 #include "UserSearch/QtUserSearchWindow.h"
 #include "QtProfileWindow.h"
 #include "QtContactEditWindow.h"
+#include "QtAdHocCommandWindow.h"
 
 namespace Swift {
 
@@ -99,5 +100,8 @@ ContactEditWindow* QtUIFactory::createContactEditWindow() {
 	return new QtContactEditWindow();
 }
 
+void QtUIFactory::createAdHocCommandWindow(boost::shared_ptr<OutgoingAdHocCommandSession> command) {
+	new QtAdHocCommandWindow(command);
+}
 
 }

@@ -8,6 +8,7 @@
 
 #include <QWidget>
 #include <QMenu>
+#include <QList>
 #include "Swift/Controllers/UIInterfaces/MainWindow.h"
 #include "Swift/QtUI/QtRosterHeader.h"
 #include "Swift/QtUI/EventViewer/QtEventWindow.h"
@@ -20,7 +21,7 @@ class QLineEdit;
 class QPushButton;
 class QToolBar;
 class QAction;
-
+class QMenu;
 class QTabWidget;
 
 namespace Swift {
@@ -46,6 +47,7 @@ namespace Swift {
 			QtEventWindow* getEventWindow();
 			QtChatListWindow* getChatListWindow();
 			void setRosterModel(Roster* roster);
+			void setAvailableAdHocCommands(const std::vector<DiscoItems::Item>& commands);
 		private slots:
 			void handleStatusChanged(StatusShow::Type showType, const QString &statusMessage);
 			void handleUIEvent(boost::shared_ptr<UIEvent> event);
@@ -55,6 +57,7 @@ namespace Swift {
 			void handleEditProfileAction();
 			void handleAddUserActionTriggered(bool checked);
 			void handleChatUserActionTriggered(bool checked);
+			void handleAdHocActionTriggered(bool checked);
 			void handleEventCountUpdated(int count);
 			void handleEditProfileRequest();
 
@@ -66,6 +69,7 @@ namespace Swift {
 			QAction* editUserAction_;
 			QAction* chatUserAction_;
 			QAction* showOfflineAction_;
+			QMenu* serverAdHocMenu_;
 			QtTabWidget* tabs_;
 			QWidget* contactsTabWidget_;
 			QWidget* eventsTabWidget_;
@@ -73,5 +77,7 @@ namespace Swift {
 			QtChatListWindow* chatListWindow_;
 			UIEventStream* uiEventStream_;
 			bool lastOfflineState_;
+			std::vector<DiscoItems::Item> serverAdHocCommands_;
+			QList<QAction*> serverAdHocCommandActions_;
 	};
 }

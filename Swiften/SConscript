@@ -190,6 +190,7 @@ if env["SCONS_STAGE"] == "build" :
 			"StreamManagement",
 			"Component",
 			"Config",
+			"AdHoc"
 		])
 	SConscript(test_only = True, dirs = [
 			"QA",

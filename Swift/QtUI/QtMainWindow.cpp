@@ -30,6 +30,7 @@
 #include "Swift/Controllers/UIEvents/RequestProfileEditorUIEvent.h"
 #include "Swift/Controllers/UIEvents/JoinMUCUIEvent.h"
 #include "Swift/Controllers/UIEvents/ToggleShowOfflineUIEvent.h"
+#include "Swift/Controllers/UIEvents/RequestAdHocUIEvent.h"
 
 namespace Swift {
 
@@ -99,12 +100,20 @@ QtMainWindow::QtMainWindow(QtSettingsProvider* settings, UIEventStream* uiEventS
 	chatUserAction_ = new QAction(tr("Start &Chat"), this);
 	connect(chatUserAction_, SIGNAL(triggered(bool)), this, SLOT(handleChatUserActionTriggered(bool)));
 	actionsMenu->addAction(chatUserAction_);
+	serverAdHocMenu_ = new QMenu("Server Commands", this);
+	actionsMenu->addMenu(serverAdHocMenu_);
 	actionsMenu->addSeparator();
 	QAction* signOutAction = new QAction(tr("&Sign Out"), this);
 	connect(signOutAction, SIGNAL(triggered()), SLOT(handleSignOutAction()));
 	actionsMenu->addAction(signOutAction);
 
 	connect(treeWidget_, SIGNAL(onSomethingSelectedChanged(bool)), editUserAction_, SLOT(setEnabled(bool)));
+
+	setAvailableAdHocCommands(std::vector<DiscoItems::Item>());
+	QAction* adHocAction = new QAction("Populating commands..", this);
+	adHocAction->setEnabled(false);
+	serverAdHocMenu_->addAction(adHocAction);
+	serverAdHocCommandActions_.append(adHocAction);
 
 	lastOfflineState_ = false;
 	uiEventStream_->onUIEvent.connect(boost::bind(&QtMainWindow::handleUIEvent, this, _1));
@@ -206,6 +215,33 @@ void QtMainWindow::setConnecting() {
 	meView_->setConnecting();
 }
 
+void QtMainWindow::handleAdHocActionTriggered(bool /*checked*/) {
+	QAction* action = qobject_cast<QAction*>(sender());
+	assert(action);
+	DiscoItems::Item command = serverAdHocCommands_[serverAdHocCommandActions_.indexOf(action)];
+	uiEventStream_->send(boost::shared_ptr<UIEvent>(new RequestAdHocUIEvent(command)));
+}
+
+void QtMainWindow::setAvailableAdHocCommands(const std::vector<DiscoItems::Item>& commands) {
+	serverAdHocCommands_ = commands;
+	foreach (QAction* action, serverAdHocCommandActions_) {
+		delete action;
+	}
+	serverAdHocMenu_->clear();
+	serverAdHocCommandActions_.clear();
+	foreach (DiscoItems::Item command, commands) {
+		QAction* action = new QAction(P2QSTRING(command.getName()), this);
+		connect(action, SIGNAL(triggered(bool)), this, SLOT(handleAdHocActionTriggered(bool)));
+		serverAdHocMenu_->addAction(action);
+		serverAdHocCommandActions_.append(action);
+	}
+	if (serverAdHocCommandActions_.isEmpty()) {
+		QAction* action = new QAction("No available commands", this);
+		action->setEnabled(false);
+		serverAdHocMenu_->addAction(action);
+		serverAdHocCommandActions_.append(action);
+	}
+}
 
 }
 

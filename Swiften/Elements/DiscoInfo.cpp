@@ -14,6 +14,7 @@ const std::string DiscoInfo::ChatStatesFeature = std::string("http://jabber.org/
 const std::string DiscoInfo::SecurityLabelsFeature = std::string("urn:xmpp:sec-label:0");
 const std::string DiscoInfo::SecurityLabelsCatalogFeature = std::string("urn:xmpp:sec-label:catalog:2");
 const std::string DiscoInfo::JabberSearchFeature = std::string("jabber:iq:search");
+const std::string DiscoInfo::CommandsFeature = std::string("http://jabber.org/protocol/commands");
 
 
 bool DiscoInfo::Identity::operator<(const Identity& other) const {

@@ -64,6 +64,8 @@ namespace Swift {
 	class NetworkFactories;
 	class URIHandler;
 	class XMPPURIController;
+	class AdHocManager;
+	class AdHocCommandWindowFactory;
 
 	class MainController {
 		public:
@@ -133,6 +135,7 @@ namespace Swift {
 			RosterController* rosterController_;
 			EventController* eventController_;
 			EventWindowController* eventWindowController_;
+			AdHocManager* adHocManager_;
 			LoginWindow* loginWindow_;
 			UIEventStream* uiEventStream_;
 			XMLConsoleController* xmlConsoleController_;

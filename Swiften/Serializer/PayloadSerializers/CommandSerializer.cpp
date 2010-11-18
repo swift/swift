@@ -21,7 +21,7 @@ CommandSerializer::CommandSerializer() {
 }
 
 std::string CommandSerializer::serializePayload(boost::shared_ptr<Command> command)	const {
-	XMLElement commandElement("command", "http://jabber.org/protocol/comands");
+	XMLElement commandElement("command", "http://jabber.org/protocol/commands");
 	commandElement.setAttribute("node", command->getNode());
 
 	if (!command->getSessionID().empty()) {

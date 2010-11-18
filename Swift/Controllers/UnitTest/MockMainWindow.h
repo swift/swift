@@ -20,6 +20,7 @@ namespace Swift {
 			virtual void setMyAvatarPath(const std::string& /*path*/) {};
 			virtual void setMyStatusText(const std::string& /*status*/) {};
 			virtual void setMyStatusType(StatusShow::Type /*type*/) {};
+			virtual void setAvailableAdHocCommands(const std::vector<DiscoItems::Item>& /*commands*/) {};
 			virtual void setConnecting() {};
 			Roster* roster;
 

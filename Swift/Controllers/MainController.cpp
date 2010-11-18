@@ -21,7 +21,6 @@
 #include "Swift/Controllers/StoragesFactory.h"
 #include "Swiften/Client/Storages.h"
 #include "Swiften/VCards/VCardManager.h"
-#include "Swift/Controllers/Chat/MUCSearchController.h"
 #include "Swift/Controllers/Chat/UserSearchController.h"
 #include "Swift/Controllers/Chat/ChatsManager.h"
 #include "Swift/Controllers/XMPPEvents/EventController.h"
@@ -66,6 +65,7 @@
 #include <Swift/Controllers/ProfileController.h>
 #include <Swift/Controllers/ContactEditController.h>
 #include <Swift/Controllers/XMPPURIController.h>
+#include "Swift/Controllers/AdHocManager.h"
 
 namespace Swift {
 
@@ -268,14 +268,14 @@ void MainController::handleConnected() {
 		client_->getDiscoManager()->setCapsNode(CLIENT_NODE);
 		client_->getDiscoManager()->setDiscoInfo(discoInfo);
 
-
 		userSearchControllerChat_ = new UserSearchController(UserSearchController::StartChat, jid_, uiEventStream_, uiFactory_, client_->getIQRouter(), rosterController_);
 		userSearchControllerAdd_ = new UserSearchController(UserSearchController::AddContact, jid_, uiEventStream_, uiFactory_, client_->getIQRouter(), rosterController_);
+		adHocManager_ = new AdHocManager(boundJID_, uiFactory_, client_->getIQRouter(), uiEventStream_, rosterController_->getWindow());
 	}
 	
 	client_->requestRoster();
 
-	GetDiscoInfoRequest::ref discoInfoRequest = GetDiscoInfoRequest::create(JID(), client_->getIQRouter());
+	GetDiscoInfoRequest::ref discoInfoRequest = GetDiscoInfoRequest::create(boundJID_.toBare(), client_->getIQRouter());
 	discoInfoRequest->onResponse.connect(boost::bind(&MainController::handleServerDiscoInfoResponse, this, _1, _2));
 	discoInfoRequest->send();
 
@@ -560,6 +560,7 @@ void MainController::setManagersOffline() {
 void MainController::handleServerDiscoInfoResponse(boost::shared_ptr<DiscoInfo> info, ErrorPayload::ref error) {
 	if (!error) {
 		chatsManager_->setServerDiscoInfo(info);
+		adHocManager_->setServerDiscoInfo(info);
 	}
 }
 

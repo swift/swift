@@ -37,6 +37,7 @@ namespace Swift {
 			virtual JoinMUCWindow* createJoinMUCWindow();
 			virtual ProfileWindow* createProfileWindow();
 			virtual ContactEditWindow* createContactEditWindow();
+			virtual void createAdHocCommandWindow(boost::shared_ptr<OutgoingAdHocCommandSession> command);
 
 		private slots:
 			void handleLoginWindowGeometryChanged();

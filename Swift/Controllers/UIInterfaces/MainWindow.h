@@ -9,6 +9,7 @@
 #include <string>
 #include "Swiften/JID/JID.h"
 #include "Swiften/Elements/StatusShow.h"
+#include "Swiften/Elements/DiscoItems.h"
 
 #include "Swiften/Base/boost_bsignals.h"
 #include <boost/shared_ptr.hpp>
@@ -33,6 +34,7 @@ namespace Swift {
 			/** Must be able to cope with NULL to clear the roster */
 			virtual void setRosterModel(Roster* roster) = 0;
 			virtual void setConnecting() = 0;
+			virtual void setAvailableAdHocCommands(const std::vector<DiscoItems::Item>& commands) = 0;
 			
 			boost::signal<void (StatusShow::Type, const std::string&)> onChangeStatusRequest;
 			boost::signal<void ()> onSignOutRequest;
