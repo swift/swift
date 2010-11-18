@@ -20,11 +20,16 @@ String DelaySerializer::serializePayload(boost::shared_ptr<Delay> delay)  const 
 	if (delay->getFrom()) {
 		delayElement.setAttribute("from", delay->getFrom()->toString());
 	}
-	String stampString = String(boost::posix_time::to_iso_extended_string(delay->getStamp()));
-	stampString.replaceAll(',', ".");
-	stampString += "Z";
+	String stampString = boostPTimeToXEP0082(delay->getStamp());
 	delayElement.setAttribute("stamp", stampString);
 	return delayElement.serialize();
+}
+
+String DelaySerializer::boostPTimeToXEP0082(const boost::posix_time::ptime& time) {
+	String stampString = String(boost::posix_time::to_iso_extended_string(time));
+	stampString.replaceAll(',', ".");
+	stampString += "Z";
+	return stampString;
 }
 
 }
