@@ -19,6 +19,7 @@
 #include <QToolButton>
 #include <QLabel>
 #include <QMenuBar>
+#include <QHBoxLayout>
 #include <qdebug.h>
 
 #include "Swift/Controllers/UIEvents/UIEventStream.h"
@@ -60,7 +61,16 @@ QtLoginWindow::QtLoginWindow(UIEventStream* uiEventStream) : QMainWindow() {
 	logo->setPixmap(QPixmap(":/logo-shaded-text.256.png"));
 	logo->setScaledContents(true);
 	logo->setFixedSize(192,192);
-	layout->addWidget(logo);
+
+	QWidget *logoWidget = new QWidget(this);
+	QHBoxLayout *logoLayout = new QHBoxLayout();
+	logoLayout->setMargin(0);
+	logoLayout->addStretch(0);
+	logoLayout->addWidget(logo);
+	logoLayout->addStretch(0);
+	logoWidget->setLayout(logoLayout);
+	layout->addWidget(logoWidget);
+
 	layout->addStretch(2);
 
 	QLabel* jidLabel = new QLabel(this);
