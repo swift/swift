@@ -26,4 +26,23 @@ QString ChatSnippet::escape(const QString& original) {
 	return result;
 }
 
+QString ChatSnippet::timeToEscapedString(const QDateTime& time) {
+	QDate now(QDate::currentDate());
+	QString date = "";
+	if (time.date().daysTo(now) > 0) {
+		date = "ddd ";
+	}
+	if (time.date().month() != now.month()) {
+		date = date + "MMMM ";
+	}
+	if (time.date().daysTo(now) > 6) {
+		date = date + "d ";
+	}
+	if (time.date().year() != now.year()) {
+		date = date + "yy ";
+	}
+	date += "h:mm";
+	return escape(time.toString(date));
+}
+
 };

@@ -7,6 +7,7 @@
 #pragma once
 
 #include <QString>
+#include <QDateTime>
 #include "QtChatTheme.h"
 
 namespace Swift {
@@ -24,6 +25,8 @@ namespace Swift {
 			
 			static QString escape(const QString&);
 
+		protected:
+			static QString timeToEscapedString(const QDateTime& time);
 		private:
 			bool appendToPrevious_;
 	};

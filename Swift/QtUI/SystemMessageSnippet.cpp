@@ -15,7 +15,7 @@ SystemMessageSnippet::SystemMessageSnippet(const QString& message, const QDateTi
 
 	content_.replace("%message%", "<span class='swift_message'>" + escape(message) + "</span>");
 	content_.replace("%shortTime%", escape(time.toString("h:mm")));
-	content_.replace("%time%", "<span class='swift_time'>" + escape(time.toString("h:mm")) + "</span>");
+	content_.replace("%time%", "<span class='swift_time'>" + timeToEscapedString(time) + "</span>");
 }
 
 SystemMessageSnippet::~SystemMessageSnippet() {
