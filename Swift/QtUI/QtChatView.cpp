@@ -75,9 +75,12 @@ QWebElement QtChatView::snippetToDOM(boost::shared_ptr<ChatSnippet> snippet) {
 
 void QtChatView::addToDOM(boost::shared_ptr<ChatSnippet> snippet) {
 	rememberScrolledToBottom();
-	QWebElement newElement = snippetToDOM(snippet);
+	bool insert = snippet->getAppendToPrevious();
 	QWebElement continuationElement = lastElement_.findFirst("#insert");
-	if (snippet->getAppendToPrevious()) {
+	bool fallback = insert && continuationElement.isNull();
+	boost::shared_ptr<ChatSnippet> newSnippet = (insert && fallback) ? snippet->getContinuationFallbackSnippet() : snippet;
+	QWebElement newElement = snippetToDOM(newSnippet);
+	if (insert && !fallback) {
 		Q_ASSERT(!continuationElement.isNull());
 		continuationElement.replace(newElement);
 	} else {
@@ -155,6 +158,7 @@ void QtChatView::handleViewLoadFinished(bool ok) {
 }
 
 void QtChatView::resetView() {
+	lastElement_ = QWebElement();
 	QString pageHTML = theme_->getTemplate();
 	pageHTML.replace("==bodyBackground==", "background-color:#e3e3e3");
 	pageHTML.replace(pageHTML.indexOf("%@"), 2, theme_->getBase());

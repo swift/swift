@@ -11,6 +11,9 @@
 namespace Swift {
 
 SystemMessageSnippet::SystemMessageSnippet(const QString& message, const QDateTime& time, bool appendToPrevious, QtChatTheme* theme) : ChatSnippet(appendToPrevious) {
+	if (appendToPrevious) {
+		setContinuationFallbackSnippet(boost::shared_ptr<ChatSnippet>(new SystemMessageSnippet(message, time, false, theme)));
+	}
 	content_ = theme->getStatus();
 
 	content_.replace("%message%", "<span class='swift_message'>" + escape(message) + "</span>");
