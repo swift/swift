@@ -24,7 +24,7 @@ if last_version != version :
   changelog = open(sys.argv[1], "w")
   changelog.write(project + " (" + version + "-1)" + " unstable; urgency=low\n\n")
   changelog.write("  * Upstream development snapshot\n\n")
-  changelog.write(" -- Remko Tron\xc3\xa7on <dev@el-tramo.be>  " + email.utils.formatdate() + "\n")
+  changelog.write(" -- Swift Package Maintainer <packages@swift.im>  " + email.utils.formatdate() + "\n")
   changelog.write("\n")
   changelog.write(changelog_data)
   changelog.close()
