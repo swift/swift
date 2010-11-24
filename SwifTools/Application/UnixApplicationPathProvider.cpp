@@ -6,8 +6,6 @@
 
 #include "SwifTools/Application/UnixApplicationPathProvider.h"
 
-#include <boost/filesystem/convenience.hpp>
-
 namespace Swift {
 
 UnixApplicationPathProvider::UnixApplicationPathProvider(const String& name) : ApplicationPathProvider(name) {
