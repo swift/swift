@@ -1,6 +1,6 @@
 //
-// pop_options.hpp
-// ~~~~~~~~~~~~~~~
+// detail/pop_options.hpp
+// ~~~~~~~~~~~~~~~~~~~~~~
 //
 // Copyright (c) 2003-2010 Christopher M. Kohlhoff (chris at kohlhoff dot com)
 //
@@ -29,6 +29,16 @@
 
 # if defined(__MINGW32__) || defined(__CYGWIN__)
 #  pragma pack (pop)
+# endif
+
+# if defined(__OBJC__)
+#  if !defined(__APPLE_CC__) || (__APPLE_CC__ <= 1)
+#   if defined(BOOST_ASIO_OBJC_WORKAROUND)
+#    undef Protocol
+#    undef id
+#    undef BOOST_ASIO_OBJC_WORKAROUND
+#   endif
+#  endif
 # endif
 
 #elif defined(__KCC)

@@ -71,10 +71,11 @@ void bcp_implementation::add_directory(const fs::path& p)
       std::string s(i->string());
       if(m_boost_path.string().size())
          s.erase(0, m_boost_path.string().size() + 1);
-      if(!m_dependencies.count(fs::path(s))) 
+      fs::path np = s;
+      if(!m_dependencies.count(np)) 
       {
-         m_dependencies[fs::path(s)] = p; // set up dependency tree
-         add_path(fs::path(s));
+         m_dependencies[np] = p; // set up dependency tree
+         add_path(np);
       }
       ++i;
    }
@@ -290,6 +291,24 @@ void bcp_implementation::add_file_dependencies(const fs::path& p, bool scanfile)
             continue;
          }
          include_file = i->str();
+         fs::path test_file(m_boost_path / p.branch_path() / include_file);
+         if(fs::exists(test_file) && !fs::is_directory(test_file) && (p.branch_path().string() != "boost"))
+         {
+            if(!m_dependencies.count(p.branch_path() / include_file)) 
+            {
+               m_dependencies[p.branch_path() / include_file] = p;
+               add_path(p.branch_path() / include_file);
+            }
+         }
+         else if(fs::exists(m_boost_path / include_file))
+         {
+            if(!m_dependencies.count(include_file)) 
+            {
+               m_dependencies[include_file] = p;
+               add_path(include_file);
+            }
+         }
+         ++i;
       }
       catch(const fs::filesystem_error&)
       {
@@ -297,24 +316,6 @@ void bcp_implementation::add_file_dependencies(const fs::path& p, bool scanfile)
          ++i;
          continue;
       }
-      fs::path test_file(m_boost_path / p.branch_path() / include_file);
-      if(fs::exists(test_file) && !fs::is_directory(test_file) && (p.branch_path().string() != "boost"))
-      {
-         if(!m_dependencies.count(p.branch_path() / include_file)) 
-         {
-            m_dependencies[p.branch_path() / include_file] = p;
-            add_path(p.branch_path() / include_file);
-         }
-      }
-      else if(fs::exists(m_boost_path / include_file))
-      {
-         if(!m_dependencies.count(include_file)) 
-         {
-            m_dependencies[include_file] = p;
-            add_path(include_file);
-         }
-      }
-      ++i;
    }
    //
    // Now we need to scan for Boost.Preprocessor includes that

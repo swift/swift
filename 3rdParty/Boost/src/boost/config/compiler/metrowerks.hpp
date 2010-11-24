@@ -48,7 +48,7 @@
 #   define BOOST_NO_INTRINSIC_WCHAR_T
 #endif
 
-#if !__option(exceptions)
+#if !__option(exceptions) && !defined(BOOST_NO_EXCEPTIONS)
 #   define BOOST_NO_EXCEPTIONS
 #endif
 
@@ -114,6 +114,7 @@
 #define BOOST_NO_TEMPLATE_ALIASES
 #define BOOST_NO_UNICODE_LITERALS
 #define BOOST_NO_VARIADIC_TEMPLATES
+#define BOOST_NO_VARIADIC_MACROS
 
 #define BOOST_COMPILER "Metrowerks CodeWarrior C++ version " BOOST_STRINGIZE(BOOST_COMPILER_VERSION)
 

@@ -73,7 +73,7 @@ void fileview::open(const boost::filesystem::path& p)
 // iterators:
 fileview::const_iterator         fileview::begin() const
 {
-   return &(pimpl->m_data[0]);
+   return pimpl->m_data.size() ? &(pimpl->m_data[0]) : 0;
 }
 
 fileview::const_iterator         fileview::end() const

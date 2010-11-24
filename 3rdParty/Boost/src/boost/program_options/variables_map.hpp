@@ -16,6 +16,11 @@
 #include <map>
 #include <set>
 
+#if defined(BOOST_MSVC)
+#   pragma warning (push)
+#   pragma warning (disable:4251) // 'boost::program_options::variable_value::v' : class 'boost::any' needs to have dll-interface to be used by clients of class 'boost::program_options::variable_value
+#endif
+
 namespace boost { namespace program_options {
 
     template<class charT>
@@ -53,8 +58,8 @@ namespace boost { namespace program_options {
     class BOOST_PROGRAM_OPTIONS_DECL variable_value {
     public:
         variable_value() : m_defaulted(false) {}
-        variable_value(const boost::any& v, bool defaulted) 
-        : v(v), m_defaulted(defaulted) 
+        variable_value(const boost::any& xv, bool xdefaulted) 
+        : v(xv), m_defaulted(xdefaulted) 
         {}
 
         /** If stored value if of type T, returns that value. Otherwise,

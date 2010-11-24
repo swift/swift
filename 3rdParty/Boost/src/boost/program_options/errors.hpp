@@ -13,14 +13,18 @@
 #include <stdexcept>
 #include <vector>
 
-
+#if defined(BOOST_MSVC)
+#   pragma warning (push)
+#   pragma warning (disable:4275) // non dll-interface class 'std::logic_error' used as base for dll-interface class 'boost::program_options::error'
+#   pragma warning (disable:4251) // class 'std::vector<_Ty>' needs to have dll-interface to be used by clients of class 'boost::program_options::ambiguous_option'
+#endif
 
 namespace boost { namespace program_options {
 
     /** Base class for all errors in the library. */
     class BOOST_PROGRAM_OPTIONS_DECL error : public std::logic_error {
     public:
-        error(const std::string& what) : std::logic_error(what) {}
+        error(const std::string& xwhat) : std::logic_error(xwhat) {}
     };
 
     class BOOST_PROGRAM_OPTIONS_DECL invalid_syntax : public error {
@@ -78,9 +82,9 @@ namespace boost { namespace program_options {
     class BOOST_PROGRAM_OPTIONS_DECL ambiguous_option : public error {
     public:
         ambiguous_option(const std::string& name, 
-                         const std::vector<std::string>& alternatives)
+                         const std::vector<std::string>& xalternatives)
         : error(std::string("ambiguous option ").append(name))
-        , m_alternatives(alternatives)
+        , m_alternatives(xalternatives)
         , m_option_name(name)
         {}
 
@@ -232,5 +236,8 @@ namespace boost { namespace program_options {
      };
 }}
 
+#if defined(BOOST_MSVC)
+#   pragma warning (pop)
+#endif
 
 #endif

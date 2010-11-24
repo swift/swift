@@ -1,6 +1,6 @@
 //
-// serial_port_base.ipp
-// ~~~~~~~~~~~~~~~~~~~~
+// impl/serial_port_base.ipp
+// ~~~~~~~~~~~~~~~~~~~~~~~~~
 //
 // Copyright (c) 2003-2010 Christopher M. Kohlhoff (chris at kohlhoff dot com)
 // Copyright (c) 2008 Rep Invariant Systems, Inc. (info@repinvariant.com)
@@ -9,33 +9,36 @@
 // file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
 
-#ifndef BOOST_ASIO_SERIAL_PORT_BASE_IPP
-#define BOOST_ASIO_SERIAL_PORT_BASE_IPP
+#ifndef BOOST_ASIO_IMPL_SERIAL_PORT_BASE_IPP
+#define BOOST_ASIO_IMPL_SERIAL_PORT_BASE_IPP
 
 #if defined(_MSC_VER) && (_MSC_VER >= 1200)
 # pragma once
 #endif // defined(_MSC_VER) && (_MSC_VER >= 1200)
 
-#include <boost/asio/detail/push_options.hpp>
+#include <boost/asio/detail/config.hpp>
+
+#if defined(BOOST_ASIO_HAS_SERIAL_PORT)
+
+#include <stdexcept>
+#include <boost/throw_exception.hpp>
+#include <boost/asio/error.hpp>
+#include <boost/asio/serial_port_base.hpp>
+
+#if defined(GENERATING_DOCUMENTATION)
+# define BOOST_ASIO_OPTION_STORAGE implementation_defined
+#elif defined(BOOST_WINDOWS) || defined(__CYGWIN__)
+# define BOOST_ASIO_OPTION_STORAGE DCB
+#else
+# define BOOST_ASIO_OPTION_STORAGE termios
+#endif
 
 #include <boost/asio/detail/push_options.hpp>
-#include <boost/throw_exception.hpp>
-#include <boost/asio/detail/pop_options.hpp>
 
 namespace boost {
 namespace asio {
 
-inline serial_port_base::baud_rate::baud_rate(unsigned int rate)
-  : value_(rate)
-{
-}
-
-inline unsigned int serial_port_base::baud_rate::value() const
-{
-  return value_;
-}
-
-inline boost::system::error_code serial_port_base::baud_rate::store(
+boost::system::error_code serial_port_base::baud_rate::store(
     BOOST_ASIO_OPTION_STORAGE& storage, boost::system::error_code& ec) const
 {
 #if defined(BOOST_WINDOWS) || defined(__CYGWIN__)
@@ -123,7 +126,7 @@ inline boost::system::error_code serial_port_base::baud_rate::store(
   return ec;
 }
 
-inline boost::system::error_code serial_port_base::baud_rate::load(
+boost::system::error_code serial_port_base::baud_rate::load(
     const BOOST_ASIO_OPTION_STORAGE& storage, boost::system::error_code& ec)
 {
 #if defined(BOOST_WINDOWS) || defined(__CYGWIN__)
@@ -205,7 +208,7 @@ inline boost::system::error_code serial_port_base::baud_rate::load(
   return ec;
 }
 
-inline serial_port_base::flow_control::flow_control(
+serial_port_base::flow_control::flow_control(
     serial_port_base::flow_control::type t)
   : value_(t)
 {
@@ -216,13 +219,7 @@ inline serial_port_base::flow_control::flow_control(
   }
 }
 
-inline serial_port_base::flow_control::type
-serial_port_base::flow_control::value() const
-{
-  return value_;
-}
-
-inline boost::system::error_code serial_port_base::flow_control::store(
+boost::system::error_code serial_port_base::flow_control::store(
     BOOST_ASIO_OPTION_STORAGE& storage, boost::system::error_code& ec) const
 {
 #if defined(BOOST_WINDOWS) || defined(__CYGWIN__)
@@ -256,18 +253,26 @@ inline boost::system::error_code serial_port_base::flow_control::store(
     storage.c_iflag &= ~(IXOFF | IXON);
 # if defined(_BSD_SOURCE)
     storage.c_cflag &= ~CRTSCTS;
+# elif defined(__QNXNTO__)
+    storage.c_cflag &= ~(IHFLOW | OHFLOW);
 # endif
     break;
   case software:
     storage.c_iflag |= IXOFF | IXON;
 # if defined(_BSD_SOURCE)
     storage.c_cflag &= ~CRTSCTS;
+# elif defined(__QNXNTO__)
+    storage.c_cflag &= ~(IHFLOW | OHFLOW);
 # endif
     break;
   case hardware:
 # if defined(_BSD_SOURCE)
     storage.c_iflag &= ~(IXOFF | IXON);
     storage.c_cflag |= CRTSCTS;
+    break;
+# elif defined(__QNXNTO__)
+    storage.c_iflag &= ~(IXOFF | IXON);
+    storage.c_cflag |= (IHFLOW | OHFLOW);
     break;
 # else
     ec = boost::asio::error::operation_not_supported;
@@ -281,7 +286,7 @@ inline boost::system::error_code serial_port_base::flow_control::store(
   return ec;
 }
 
-inline boost::system::error_code serial_port_base::flow_control::load(
+boost::system::error_code serial_port_base::flow_control::load(
     const BOOST_ASIO_OPTION_STORAGE& storage, boost::system::error_code& ec)
 {
 #if defined(BOOST_WINDOWS) || defined(__CYGWIN__)
@@ -307,6 +312,11 @@ inline boost::system::error_code serial_port_base::flow_control::load(
   {
     value_ = hardware;
   }
+# elif defined(__QNXNTO__)
+  else if (storage.c_cflag & IHFLOW && storage.c_cflag & OHFLOW)
+  {
+    value_ = hardware;
+  }
 # endif
   else
   {
@@ -317,7 +327,7 @@ inline boost::system::error_code serial_port_base::flow_control::load(
   return ec;
 }
 
-inline serial_port_base::parity::parity(serial_port_base::parity::type t)
+serial_port_base::parity::parity(serial_port_base::parity::type t)
   : value_(t)
 {
   if (t != none && t != odd && t != even)
@@ -327,12 +337,7 @@ inline serial_port_base::parity::parity(serial_port_base::parity::type t)
   }
 }
 
-inline serial_port_base::parity::type serial_port_base::parity::value() const
-{
-  return value_;
-}
-
-inline boost::system::error_code serial_port_base::parity::store(
+boost::system::error_code serial_port_base::parity::store(
     BOOST_ASIO_OPTION_STORAGE& storage, boost::system::error_code& ec) const
 {
 #if defined(BOOST_WINDOWS) || defined(__CYGWIN__)
@@ -379,7 +384,7 @@ inline boost::system::error_code serial_port_base::parity::store(
   return ec;
 }
 
-inline boost::system::error_code serial_port_base::parity::load(
+boost::system::error_code serial_port_base::parity::load(
     const BOOST_ASIO_OPTION_STORAGE& storage, boost::system::error_code& ec)
 {
 #if defined(BOOST_WINDOWS) || defined(__CYGWIN__)
@@ -416,7 +421,7 @@ inline boost::system::error_code serial_port_base::parity::load(
   return ec;
 }
 
-inline serial_port_base::stop_bits::stop_bits(
+serial_port_base::stop_bits::stop_bits(
     serial_port_base::stop_bits::type t)
   : value_(t)
 {
@@ -427,13 +432,7 @@ inline serial_port_base::stop_bits::stop_bits(
   }
 }
 
-inline serial_port_base::stop_bits::type
-serial_port_base::stop_bits::value() const
-{
-  return value_;
-}
-
-inline boost::system::error_code serial_port_base::stop_bits::store(
+boost::system::error_code serial_port_base::stop_bits::store(
     BOOST_ASIO_OPTION_STORAGE& storage, boost::system::error_code& ec) const
 {
 #if defined(BOOST_WINDOWS) || defined(__CYGWIN__)
@@ -469,7 +468,7 @@ inline boost::system::error_code serial_port_base::stop_bits::store(
   return ec;
 }
 
-inline boost::system::error_code serial_port_base::stop_bits::load(
+boost::system::error_code serial_port_base::stop_bits::load(
     const BOOST_ASIO_OPTION_STORAGE& storage, boost::system::error_code& ec)
 {
 #if defined(BOOST_WINDOWS) || defined(__CYGWIN__)
@@ -496,7 +495,7 @@ inline boost::system::error_code serial_port_base::stop_bits::load(
   return ec;
 }
 
-inline serial_port_base::character_size::character_size(unsigned int t)
+serial_port_base::character_size::character_size(unsigned int t)
   : value_(t)
 {
   if (t < 5 || t > 8)
@@ -506,12 +505,7 @@ inline serial_port_base::character_size::character_size(unsigned int t)
   }
 }
 
-inline unsigned int serial_port_base::character_size::value() const
-{
-  return value_;
-}
-
-inline boost::system::error_code serial_port_base::character_size::store(
+boost::system::error_code serial_port_base::character_size::store(
     BOOST_ASIO_OPTION_STORAGE& storage, boost::system::error_code& ec) const
 {
 #if defined(BOOST_WINDOWS) || defined(__CYGWIN__)
@@ -531,7 +525,7 @@ inline boost::system::error_code serial_port_base::character_size::store(
   return ec;
 }
 
-inline boost::system::error_code serial_port_base::character_size::load(
+boost::system::error_code serial_port_base::character_size::load(
     const BOOST_ASIO_OPTION_STORAGE& storage, boost::system::error_code& ec)
 {
 #if defined(BOOST_WINDOWS) || defined(__CYGWIN__)
@@ -556,4 +550,8 @@ inline boost::system::error_code serial_port_base::character_size::load(
 
 #include <boost/asio/detail/pop_options.hpp>
 
-#endif // BOOST_ASIO_SERIAL_PORT_BASE_IPP
+#undef BOOST_ASIO_OPTION_STORAGE
+
+#endif // defined(BOOST_ASIO_HAS_SERIAL_PORT)
+
+#endif // BOOST_ASIO_IMPL_SERIAL_PORT_BASE_IPP

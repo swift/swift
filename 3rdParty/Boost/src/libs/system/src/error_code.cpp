@@ -29,8 +29,9 @@ using namespace boost::system::errc;
 
 # if defined( BOOST_WINDOWS_API )
 #   include <windows.h>
+#   include "local_free_on_destruction.hpp"
 #   ifndef ERROR_INCORRECT_SIZE
-#    define ERROR_INCORRECT_SIZE ERROR_BAD_ARGUMENTS
+#     define ERROR_INCORRECT_SIZE ERROR_BAD_ARGUMENTS
 #   endif
 # endif
 
@@ -159,7 +160,7 @@ namespace
     switch ( ev )
     {
     case 0: return make_error_condition( success );
-  # if defined(BOOST_POSIX_API)
+# if defined(BOOST_POSIX_API)
     // POSIX-like O/S -> posix_errno decode table  ---------------------------//
     case E2BIG: return make_error_condition( argument_list_too_long );
     case EACCES: return make_error_condition( permission_denied );
@@ -221,7 +222,9 @@ namespace
   # if ENOTEMPTY != EEXIST // AIX treats ENOTEMPTY and EEXIST as the same value
     case ENOTEMPTY: return make_error_condition( directory_not_empty );
   # endif // ENOTEMPTY != EEXIST
-    case ENOTRECOVERABLE: return make_error_condition( state_not_recoverable );
+  # if ENOTRECOVERABLE != ECONNRESET // the same on some Broadcom chips 
+    case ENOTRECOVERABLE: return make_error_condition( state_not_recoverable ); 
+  # endif // ENOTRECOVERABLE != ECONNRESET 
     case ENOTSOCK: return make_error_condition( not_a_socket );
     case ENOTSUP: return make_error_condition( not_supported );
     case ENOTTY: return make_error_condition( inappropriate_io_control_operation );
@@ -230,7 +233,9 @@ namespace
     case EOPNOTSUPP: return make_error_condition( operation_not_supported );
   # endif // EOPNOTSUPP != ENOTSUP
     case EOVERFLOW: return make_error_condition( value_too_large );
-    case EOWNERDEAD: return make_error_condition( owner_dead );
+  # if EOWNERDEAD != ECONNABORTED // the same on some Broadcom chips 
+    case EOWNERDEAD: return make_error_condition( owner_dead ); 
+  # endif // EOWNERDEAD != ECONNABORTED 
     case EPERM: return make_error_condition( operation_not_permitted );
     case EPIPE: return make_error_condition( broken_pipe );
     case EPROTO: return make_error_condition( protocol_error );
@@ -325,7 +330,7 @@ namespace
     case WSAETIMEDOUT: return make_error_condition( timed_out );
     case WSAEWOULDBLOCK: return make_error_condition( operation_would_block );
   #endif
-    default: return error_condition( ev, system_category );
+    default: return error_condition( ev, system_category() );
     }
   }
 
@@ -333,28 +338,14 @@ namespace
 
   std::string system_error_category::message( int ev ) const
   {
-    return generic_category.message( ev );
+    return generic_category().message( ev );
   }
 # else
-// TODO:
-  
-//Some quick notes on the implementation (sorry for the noise if
-//someone has already mentioned them):
-//
-//- The ::LocalFree() usage isn't exception safe.
-//
-//See:
-//
-//<http://boost.cvs.sourceforge.net/boost/boost/boost/asio/system_exception.hpp?revision=1.1&view=markup>
-//
-//in the implementation of what() for an example.
-//
-//Cheers,
-//Chris
+
   std::string system_error_category::message( int ev ) const
   {
 # ifndef BOOST_NO_ANSI_APIS  
-    LPVOID lpMsgBuf;
+    LPVOID lpMsgBuf = 0;
     DWORD retval = ::FormatMessageA( 
         FORMAT_MESSAGE_ALLOCATE_BUFFER | 
         FORMAT_MESSAGE_FROM_SYSTEM | 
@@ -366,13 +357,13 @@ namespace
         0,
         NULL 
     );
+    detail::local_free_on_destruction lfod(lpMsgBuf);
     if (retval == 0)
         return std::string("Unknown error");
         
     std::string str( static_cast<LPCSTR>(lpMsgBuf) );
-    ::LocalFree( lpMsgBuf ); // free the buffer
 # else  // WinCE workaround
-    LPVOID lpMsgBuf;
+    LPVOID lpMsgBuf = 0;
     DWORD retval = ::FormatMessageW( 
         FORMAT_MESSAGE_ALLOCATE_BUFFER | 
         FORMAT_MESSAGE_FROM_SYSTEM | 
@@ -384,6 +375,7 @@ namespace
         0,
         NULL 
     );
+    detail::local_free_on_destruction lfod(lpMsgBuf);
     if (retval == 0)
         return std::string("Unknown error");
     
@@ -393,7 +385,6 @@ namespace
         return std::string("Unknown error");
 
     std::string str( narrow_buffer );
-    ::LocalFree( lpMsgBuf ); // free the buffer
 # endif
     while ( str.size()
       && (str[str.size()-1] == '\n' || str[str.size()-1] == '\r') )
@@ -419,13 +410,13 @@ namespace boost
                                          //  address for comparison purposes
 # endif
 
-    BOOST_SYSTEM_DECL const error_category & get_system_category()
+    BOOST_SYSTEM_DECL const error_category & system_category()
     {
       static const system_error_category  system_category_const;
       return system_category_const;
     }
 
-    BOOST_SYSTEM_DECL const error_category & get_generic_category()
+    BOOST_SYSTEM_DECL const error_category & generic_category()
     {
       static const generic_error_category generic_category_const;
       return generic_category_const;

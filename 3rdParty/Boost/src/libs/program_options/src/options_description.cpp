@@ -306,6 +306,7 @@ namespace boost { namespace program_options {
                                       bool short_ignore_case) const
     {
         shared_ptr<option_description> found;
+        bool had_full_match = false;
         vector<string> approximate_matches;
         vector<string> full_matches;
         
@@ -323,15 +324,17 @@ namespace boost { namespace program_options {
             if (r == option_description::full_match)
             {                
                 full_matches.push_back(m_options[i]->key(name));
+                found = m_options[i];
+                had_full_match = true;
             } 
             else 
             {                        
                 // FIXME: the use of 'key' here might not
                 // be the best approach.
                 approximate_matches.push_back(m_options[i]->key(name));
+                if (!had_full_match)
+                    found = m_options[i];
             }
-
-            found = m_options[i];
         }
         if (full_matches.size() > 1) 
             boost::throw_exception(

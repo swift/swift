@@ -25,6 +25,12 @@
 
 #include <iosfwd>
 
+#if defined(BOOST_MSVC)
+#   pragma warning (push)
+#   pragma warning (disable:4251) // class 'boost::shared_ptr<T>' needs to have dll-interface to be used by clients of class 'boost::program_options::option_description'
+#endif
+
+
 /** Boost namespace */
 namespace boost { 
 /** Namespace for the library. */
@@ -65,7 +71,7 @@ namespace program_options {
             The 'name' parameter is interpreted by the following rules:
             - if there's no "," character in 'name', it specifies long name
             - otherwise, the part before "," specifies long name and the part
-            after -- long name.
+            after -- short name.
         */
         option_description(const char* name,
                            const value_semantic* s);
@@ -81,12 +87,12 @@ namespace program_options {
         enum match_result { no_match, full_match, approximate_match };
 
         /** Given 'option', specified in the input source,
-            return 'true' is 'option' specifies *this.
+            returns 'true' if 'option' specifies *this.
         */
         match_result match(const std::string& option, bool approx,
                            bool long_ignore_case, bool short_ignore_case) const;
 
-        /** Return the key that should identify the option, in
+        /** Returns the key that should identify the option, in
             particular in the variables_map class.
             The 'option' parameter is the option spelling from the
             input source.
@@ -107,7 +113,7 @@ namespace program_options {
         /// Returns the option name, formatted suitably for usage message. 
         std::string format_name() const;
 
-        /** Return the parameter name and properties, formatted suitably for
+        /** Returns the parameter name and properties, formatted suitably for
             usage message. */
         std::string format_parameter() const;
 
@@ -211,7 +217,7 @@ namespace program_options {
         friend BOOST_PROGRAM_OPTIONS_DECL std::ostream& operator<<(std::ostream& os, 
                                              const options_description& desc);
 
-        /** Output 'desc' to the specified stream, calling 'f' to output each
+        /** Outputs 'desc' to the specified stream, calling 'f' to output each
             option_description element. */
         void print(std::ostream& os) const;
 
@@ -247,8 +253,12 @@ namespace program_options {
     /** Class thrown when duplicate option description is found. */
     class BOOST_PROGRAM_OPTIONS_DECL duplicate_option_error : public error {
     public:
-        duplicate_option_error(const std::string& what) : error(what) {}
+        duplicate_option_error(const std::string& xwhat) : error(xwhat) {}
     };
 }}
+
+#if defined(BOOST_MSVC)
+#   pragma warning (pop)
+#endif
 
 #endif
