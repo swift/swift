@@ -1,6 +1,6 @@
 #!/bin/sh
 
-set -x
+set -e -x
 
 export PYTHONPATH=../../../BuildTools/SCons
 VERSION=`../../../BuildTools/GetBuildVersion.py swift`
@@ -13,7 +13,7 @@ if [ -z "$DEBIAN_VERSION" ]; then
 fi
 
 echo "Cleaning up old packages ..."
-rm swift-im_*
+rm -f swift-im_*
 rm -rf swift-im-*
 
 echo "Checking out a fresh copy ..."

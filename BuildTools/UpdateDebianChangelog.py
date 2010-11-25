@@ -17,12 +17,19 @@ if m :
   project = m.group(1)
   last_version = m.group(2)
 
+if "dev" in version :
+  distribution = "development"
+elif "beta" in version :
+  distribution = "beta development"
+else :
+  distribution = "release beta development"
+
 if last_version != version :
   changelog = open(sys.argv[1])
   changelog_data = changelog.read()
   changelog.close()
   changelog = open(sys.argv[1], "w")
-  changelog.write(project + " (" + version + "-1)" + " unstable; urgency=low\n\n")
+  changelog.write(project + " (" + version + "-1)" + " " + distribution + "; urgency=low\n\n")
   changelog.write("  * Upstream development snapshot\n\n")
   changelog.write(" -- Swift Package Maintainer <packages@swift.im>  " + email.utils.formatdate() + "\n")
   changelog.write("\n")
