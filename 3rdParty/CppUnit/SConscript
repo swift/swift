@@ -16,7 +16,7 @@ if env["TEST"] :
 				"CPPPATH": [env.Dir(".")],
 				"CPPFLAGS": cppflags,
 				"LIBPATH": [env.Dir(".")],
-				"LIBS": ["CppUnit"]
+				"LIBS": ["Swiften_CppUnit"]
 			}
 
 ################################################################################
@@ -61,4 +61,4 @@ if env["TEST"] :
 				"src/src/cppunit/Test.cpp",
 				"src/src/cppunit/TestPath.cpp"
 			]
-		myenv.StaticLibrary("CppUnit", sources)
+		myenv.StaticLibrary("Swiften_CppUnit", sources)

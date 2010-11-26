@@ -6,7 +6,7 @@ if env.get("EXPAT_BUNDLED", False) :
 				"CPPDEFINES": ["XML_STATIC"],
 				"CPPPATH": [Dir("src")],
 				"LIBPATH": [Dir(".")],
-				"LIBS": ["Expat"],
+				"LIBS": ["Swiften_Expat"],
 			}
 
 	if env["SCONS_STAGE"] == "build" :
@@ -19,7 +19,7 @@ if env.get("EXPAT_BUNDLED", False) :
 			myenv.Append(CPPDEFINES = ["HAVE_MEMMOVE"])
 		conf.Finish()
 
-		myenv.StaticLibrary("Expat", [
+		myenv.StaticLibrary("Swiften_Expat", [
 				"src/xmltok.c",
 				"src/xmlparse.c",
 				"src/xmlrole.c"

@@ -5,11 +5,11 @@ if env.get("ZLIB_BUNDLED", False) :
 		env["ZLIB_FLAGS"] = {
 				"CPPPATH": [Dir("src")],
 				"LIBPATH": [Dir(".")],
-				"LIBS": ["Z"],
+				"LIBS": ["Swiften_Z"],
 			}
 
 	if env["SCONS_STAGE"] == "build" :
-		env.StaticLibrary("Z", [
+		env.StaticLibrary("Swiften_Z", [
 				"src/adler32.c",
 				"src/compress.c",
 				"src/crc32.c",
