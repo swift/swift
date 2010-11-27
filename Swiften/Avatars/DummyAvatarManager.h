@@ -8,7 +8,8 @@
 
 #include <map>
 
-#include "Swiften/Avatars/AvatarManager.h"
+#include <Swiften/JID/JID.h>
+#include <Swiften/Avatars/AvatarManager.h>
 
 namespace Swift {
 	class DummyAvatarManager : public AvatarManager {
