@@ -104,7 +104,13 @@ if "cc" in env :
 	env["CC"] = env["cc"]
 if "cxx" in env :
 	env["CXX"] = env["cxx"]
-env["CCFLAGS"] = env.get("ccflags", [])
+ccflags = env.get("ccflags", [])
+if isinstance(ccflags, str) :
+	# FIXME: Make the splitting more robust
+	env["CCFLAGS"] = ccflags.split(" ")
+else :
+	env["CCFLAGS"] = ccflags
+print env["ccflags"]
 if "link" in env :
 	env["SHLINK"] = env["link"]
 	env["LINK"] = env["link"]
@@ -113,7 +119,7 @@ env["LINKFLAGS"] = env.get("linkflags", [])
 # where you need it
 env["OBJCCFLAGS"] = []
 if env["optimize"] :
-	env.Append(CCFLAGS = "-O2")
+	env.Append(CCFLAGS = ["-O2"])
 	if env["PLATFORM"] == "win32" :
 		env.Append(CCFLAGS = ["GL"])
 		env.Append(LINKFLAGS = ["/INCREMENTAL:NO", "/LTCG"])
