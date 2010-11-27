@@ -7,10 +7,25 @@ Import("env")
 ################################################################################
 
 if env["SCONS_STAGE"] == "flags" :
-	env["SWIFTEN_FLAGS"] = {
-			"LIBPATH": [Dir(".")],
-			"LIBS": ["Swiften"]
-		}
+	swiften_env = env.Clone()
+	swiften_env["LIBPATH"] = [Dir(".")]
+	swiften_env["LIBS"] = ["Swiften"]
+	dep_env = env.Clone()
+	dep_env.MergeFlags(dep_env["PLATFORM_FLAGS"])
+	for module in ["BOOST", "LIBIDN", "ZLIB", "OPENSSL", "LIBXML", "EXPAT"] :
+		if env.get(module + "_BUNDLED", False) :
+			swiften_env.MergeFlags(env.get(module + "_FLAGS", {}))
+		else :
+			dep_env.MergeFlags(env.get(module + "_FLAGS", {}))
+
+	for var, e in [("SWIFTEN_FLAGS", swiften_env), ("SWIFTEN_DEP_FLAGS", dep_env)] : 
+		env[var] = {
+				"CPPDEFINES": e.get("CPPDEFINES", []),
+				"CPPPATH": e.get("CPPPATH", []),
+				"CPPFLAGS": e.get("CPPFLAGS", []),
+				"LIBPATH": e.get("LIBPATH", []),
+				"LIBS": e.get("LIBS", []),
+			}
 
 ################################################################################
 # Build

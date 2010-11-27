@@ -2,14 +2,7 @@ Import("env")
 
 example_env = env.Clone()
 example_env.MergeFlags(example_env["SWIFTEN_FLAGS"])
-example_env.MergeFlags(example_env["LIBIDN_FLAGS"])
-example_env.MergeFlags(example_env["BOOST_FLAGS"])
-example_env.MergeFlags(example_env.get("SQLITE_FLAGS", {}))
-example_env.MergeFlags(example_env["ZLIB_FLAGS"])
-example_env.MergeFlags(example_env["OPENSSL_FLAGS"])
-example_env.MergeFlags(example_env.get("LIBXML_FLAGS", ""))
-example_env.MergeFlags(example_env.get("EXPAT_FLAGS", ""))
-example_env.MergeFlags(example_env["PLATFORM_FLAGS"])
+example_env.MergeFlags(example_env["SWIFTEN_DEP_FLAGS"])
 
 for i in range(1,6) :
 	example_env.Program("EchoBot" + str(i), ["EchoBot" + str(i) + ".cpp"])

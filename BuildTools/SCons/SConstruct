@@ -553,13 +553,6 @@ if env.Dir("#/.git").exists() :
 
 # Modules
 modules = []
-for dir in os.listdir(Dir("#").abspath) :
-	full_dir = os.path.join(Dir("#").abspath, dir)
-	if not os.path.isdir(full_dir) :
-		continue
-	sconscript = os.path.join(full_dir, "SConscript")
-	if os.path.isfile(sconscript) :
-		modules.append(dir)
 for dir in os.listdir(Dir("#/3rdParty").abspath) :
 	full_dir = os.path.join(Dir("#/3rdParty").abspath, dir)
 	if not os.path.isdir(full_dir) :
@@ -567,6 +560,13 @@ for dir in os.listdir(Dir("#/3rdParty").abspath) :
 	sconscript = os.path.join(full_dir, "SConscript")
 	if os.path.isfile(sconscript) :
 		modules.append("3rdParty/" + dir)
+for dir in os.listdir(Dir("#").abspath) :
+	full_dir = os.path.join(Dir("#").abspath, dir)
+	if not os.path.isdir(full_dir) :
+		continue
+	sconscript = os.path.join(full_dir, "SConscript")
+	if os.path.isfile(sconscript) :
+		modules.append(dir)
 
 # Flags
 env["PROJECTS"] = [m for m in modules if m not in ["Documentation", "QA", "SwifTools"] and not m.startswith("3rdParty")]
