@@ -110,7 +110,6 @@ if isinstance(ccflags, str) :
 	env["CCFLAGS"] = ccflags.split(" ")
 else :
 	env["CCFLAGS"] = ccflags
-print env["ccflags"]
 if "link" in env :
 	env["SHLINK"] = env["link"]
 	env["LINK"] = env["link"]
