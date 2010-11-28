@@ -136,15 +136,15 @@ public:
 
 		JID messageJID2("testling@test.com/resource2");
 		
-		MockChatWindow* window2 = new MockChatWindow();//mocks_->InterfaceMock<ChatWindow>();
-		mocks_->ExpectCall(chatWindowFactory_, ChatWindowFactory::createChatWindow).With(messageJID2, uiEventStream_).Return(window2);
+		//MockChatWindow* window2 = new MockChatWindow();//mocks_->InterfaceMock<ChatWindow>();
+		//mocks_->ExpectCall(chatWindowFactory_, ChatWindowFactory::createChatWindow).With(messageJID2, uiEventStream_).Return(window2);
 
 		boost::shared_ptr<Message> message2(new Message());
 		message2->setFrom(messageJID2);
 		String body2("This is a legible message. .cmaulm.chul");
 		message2->setBody(body2);
 		manager_->handleIncomingMessage(message2);
-		CPPUNIT_ASSERT_EQUAL(body2, window2->lastMessageBody_);
+		CPPUNIT_ASSERT_EQUAL(body2, window1->lastMessageBody_);
 	}
 
 	void testFirstOpenWindowOutgoing() {
@@ -239,14 +239,14 @@ public:
 		uiEventStream_->send(boost::shared_ptr<UIEvent>(new RequestChatUIEvent(JID(messageJIDString1))));
 
 		String messageJIDString2("testling@test.com/2");
-		ChatWindow* window2 = new MockChatWindow();//mocks_->InterfaceMock<ChatWindow>();
-		mocks_->ExpectCall(chatWindowFactory_, ChatWindowFactory::createChatWindow).With(JID(messageJIDString2), uiEventStream_).Return(window2);
+		//ChatWindow* window2 = new MockChatWindow();//mocks_->InterfaceMock<ChatWindow>();
+		//mocks_->ExpectCall(chatWindowFactory_, ChatWindowFactory::createChatWindow).With(JID(messageJIDString2), uiEventStream_).Return(window2);
 
 		uiEventStream_->send(boost::shared_ptr<UIEvent>(new RequestChatUIEvent(JID(messageJIDString2))));
 
 		String messageJIDString3("testling@test.com/3");
-		ChatWindow* window3 = new MockChatWindow();//mocks_->InterfaceMock<ChatWindow>();
-		mocks_->ExpectCall(chatWindowFactory_, ChatWindowFactory::createChatWindow).With(JID(messageJIDString3), uiEventStream_).Return(window3);
+		//ChatWindow* window3 = new MockChatWindow();//mocks_->InterfaceMock<ChatWindow>();
+		//mocks_->ExpectCall(chatWindowFactory_, ChatWindowFactory::createChatWindow).With(JID(messageJIDString3), uiEventStream_).Return(window3);
 
 		uiEventStream_->send(boost::shared_ptr<UIEvent>(new RequestChatUIEvent(JID(messageJIDString3))));
 
@@ -278,8 +278,8 @@ public:
 
 		JID messageJID2("testling@test.com/resource2");
 		
-		MockChatWindow* window2 = new MockChatWindow();//mocks_->InterfaceMock<ChatWindow>();
-		mocks_->ExpectCall(chatWindowFactory_, ChatWindowFactory::createChatWindow).With(messageJID2, uiEventStream_).Return(window2);
+		//MockChatWindow* window2 = new MockChatWindow();//mocks_->InterfaceMock<ChatWindow>();
+		//mocks_->ExpectCall(chatWindowFactory_, ChatWindowFactory::createChatWindow).With(messageJID2, uiEventStream_).Return(window2);
 
 		boost::shared_ptr<Message> message2(new Message());
 		message2->setFrom(messageJID2);
@@ -314,7 +314,7 @@ public:
 		String body2b("This is a legible message2b.");
 		message2b->setBody(body2b);
 		manager_->handleIncomingMessage(message2b);
-		CPPUNIT_ASSERT_EQUAL(body2b, window2->lastMessageBody_);
+		CPPUNIT_ASSERT_EQUAL(body2b, window1->lastMessageBody_);
 	}
 	
 private:

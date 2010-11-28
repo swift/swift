@@ -133,7 +133,7 @@ void ChatsManager::handleUIEvent(boost::shared_ptr<UIEvent> event) {
  */
 void ChatsManager::handlePresenceChange(boost::shared_ptr<Presence> newPresence) {
 	if (mucRegistry_->isMUC(newPresence->getFrom().toBare())) return;
-	if (newPresence->getType() != Presence::Unavailable) return;
+	//if (newPresence->getType() != Presence::Unavailable) return;
 	JID fullJID(newPresence->getFrom());
 	std::map<JID, ChatController*>::iterator it = chatControllers_.find(fullJID);
 	if (it == chatControllers_.end()) return;
@@ -218,6 +218,12 @@ ChatController* ChatsManager::getChatControllerIfExists(const JID &contact) {
 		if (chatControllers_.find(bare) != chatControllers_.end()) {
 			rebindControllerJID(bare, contact);
 		} else {
+			foreach (JIDChatControllerPair pair, chatControllers_) {
+				if (pair.first.toBare() == contact.toBare()) {
+					rebindControllerJID(pair.first, contact);
+					return chatControllers_[contact];
+				}
+			}
 			return NULL;
 		}
 	}
