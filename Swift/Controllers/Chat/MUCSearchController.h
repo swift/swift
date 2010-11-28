@@ -91,10 +91,10 @@ namespace Swift {
 		private:
 			void handleUIEvent(boost::shared_ptr<UIEvent> event);
 			void handleAddService(const JID& jid, bool userTriggered=false);
-			void handleDiscoInfoResponse(boost::shared_ptr<DiscoInfo> info, const boost::optional<ErrorPayload>& error, const JID& jid);
-			void handleRoomsItemsResponse(boost::shared_ptr<DiscoItems> items, const boost::optional<ErrorPayload>& error, const JID& jid);
-			void handleServerItemsResponse(boost::shared_ptr<DiscoItems> items, const boost::optional<ErrorPayload>& error, const JID& jid);
-			void handleDiscoError(const JID& jid, const ErrorPayload& error);
+			void handleDiscoInfoResponse(boost::shared_ptr<DiscoInfo> info, ErrorPayload::ref error, const JID& jid);
+			void handleRoomsItemsResponse(boost::shared_ptr<DiscoItems> items, ErrorPayload::ref error, const JID& jid);
+			void handleServerItemsResponse(boost::shared_ptr<DiscoItems> items, ErrorPayload::ref error, const JID& jid);
+			void handleDiscoError(const JID& jid, ErrorPayload::ref error);
 			void removeService(const JID& jid);
 			void refreshView();
 			void loadServices();

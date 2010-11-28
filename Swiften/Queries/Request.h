@@ -42,7 +42,7 @@ namespace Swift {
 				return payload_;
 			}
 
-			virtual void handleResponse(boost::shared_ptr<Payload>, boost::optional<ErrorPayload>) = 0;
+			virtual void handleResponse(boost::shared_ptr<Payload>, ErrorPayload::ref) = 0;
 
 		private:
 			bool handleIQ(boost::shared_ptr<IQ>);

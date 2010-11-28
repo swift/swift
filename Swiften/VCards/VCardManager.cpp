@@ -45,7 +45,7 @@ void VCardManager::requestOwnVCard() {
 }
 
 
-void VCardManager::handleVCardReceived(const JID& actualJID, VCard::ref vcard, const boost::optional<ErrorPayload>& error) {
+void VCardManager::handleVCardReceived(const JID& actualJID, VCard::ref vcard, ErrorPayload::ref error) {
 	if (error) {
 		vcard = VCard::ref(new VCard());
 	}

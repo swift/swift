@@ -108,9 +108,9 @@ void MUCSearchController::removeService(const JID& jid) {
 	refreshView();
 }
 
-void MUCSearchController::handleDiscoInfoResponse(boost::shared_ptr<DiscoInfo> info, const boost::optional<ErrorPayload>& error, const JID& jid) {
+void MUCSearchController::handleDiscoInfoResponse(boost::shared_ptr<DiscoInfo> info, ErrorPayload::ref error, const JID& jid) {
 	if (error) {
-		handleDiscoError(jid, error.get());
+		handleDiscoError(jid, error);
 		return;
 	}
 	GetDiscoItemsRequest::ref discoItemsRequest = GetDiscoItemsRequest::create(jid, iqRouter_);
@@ -148,9 +148,9 @@ void MUCSearchController::handleDiscoInfoResponse(boost::shared_ptr<DiscoInfo> i
 	refreshView();
 }
 
-void MUCSearchController::handleRoomsItemsResponse(boost::shared_ptr<DiscoItems> items, const boost::optional<ErrorPayload>& error, const JID& jid) {
+void MUCSearchController::handleRoomsItemsResponse(boost::shared_ptr<DiscoItems> items, ErrorPayload::ref error, const JID& jid) {
 	if (error) {
-		handleDiscoError(jid, error.get());
+		handleDiscoError(jid, error);
 		return;
 	}
 	serviceDetails_[jid].clearRooms();
@@ -161,9 +161,9 @@ void MUCSearchController::handleRoomsItemsResponse(boost::shared_ptr<DiscoItems>
 	refreshView();
 }
 
-void MUCSearchController::handleServerItemsResponse(boost::shared_ptr<DiscoItems> items, const boost::optional<ErrorPayload>& error, const JID& jid) {
+void MUCSearchController::handleServerItemsResponse(boost::shared_ptr<DiscoItems> items, ErrorPayload::ref error, const JID& jid) {
 	if (error) {
-		handleDiscoError(jid, error.get());
+		handleDiscoError(jid, error);
 		return;
 	}
 	if (jid.isValid()) {
@@ -180,9 +180,9 @@ void MUCSearchController::handleServerItemsResponse(boost::shared_ptr<DiscoItems
 	refreshView();
 }
 
-void MUCSearchController::handleDiscoError(const JID& jid, const ErrorPayload& error) {
+void MUCSearchController::handleDiscoError(const JID& jid, ErrorPayload::ref error) {
 	serviceDetails_[jid].setComplete(true);
-	serviceDetails_[jid].setError(error.getText());
+	serviceDetails_[jid].setError(error->getText());
 }
 
 void MUCSearchController::refreshView() {

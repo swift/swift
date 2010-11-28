@@ -76,7 +76,7 @@ namespace Swift {
 		private:
 			void handleIncomingPresence(boost::shared_ptr<Presence> presence);
 			void internalJoin(const String& nick);
-			void handleCreationConfigResponse(boost::shared_ptr<MUCOwnerPayload>, const boost::optional<ErrorPayload>&);
+			void handleCreationConfigResponse(boost::shared_ptr<MUCOwnerPayload>, ErrorPayload::ref);
 
 		private:
 			JID ownMUCJID;

@@ -106,7 +106,7 @@ void ChatControllerBase::handleSendMessageRequest(const String &body) {
 	postSendMessage(message->getBody(), boost::dynamic_pointer_cast<Stanza>(message));
 }
 
-void ChatControllerBase::handleSecurityLabelsCatalogResponse(boost::shared_ptr<SecurityLabelsCatalog> catalog, const boost::optional<ErrorPayload>& error) {
+void ChatControllerBase::handleSecurityLabelsCatalogResponse(boost::shared_ptr<SecurityLabelsCatalog> catalog, ErrorPayload::ref error) {
 	if (!error) {
 		if (catalog->getLabels().size() == 0) {
 			chatWindow_->setSecurityLabelsEnabled(false);

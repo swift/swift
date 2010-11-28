@@ -236,7 +236,7 @@ void RosterController::handleUIEvent(boost::shared_ptr<UIEvent> event) {
 	}
 }
 
-void RosterController::handleRosterSetError(boost::optional<ErrorPayload> error, boost::shared_ptr<RosterPayload> rosterPayload) {
+void RosterController::handleRosterSetError(ErrorPayload::ref error, boost::shared_ptr<RosterPayload> rosterPayload) {
 	if (!error) {
 		return;
 	}

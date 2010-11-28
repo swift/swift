@@ -175,10 +175,9 @@ void MUC::handleIncomingPresence(boost::shared_ptr<Presence> presence) {
 
 }
 
-void MUC::handleCreationConfigResponse(boost::shared_ptr<MUCOwnerPayload> /*unused*/, const boost::optional<ErrorPayload>& error) {
+void MUC::handleCreationConfigResponse(boost::shared_ptr<MUCOwnerPayload> /*unused*/, ErrorPayload::ref error) {
 	if (error) {
-		boost::shared_ptr<ErrorPayload> errorCopy(new ErrorPayload(*error));
-		onJoinFailed(errorCopy);
+		onJoinFailed(error);
 	} else {
 		/* onJoinComplete(getOwnNick()); isn't needed here, the presence will cause an emit elsewhere. */
 		presenceSender->addDirectedPresenceReceiver(ownMUCJID);

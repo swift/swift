@@ -495,7 +495,7 @@ void MainController::setManagersOffline() {
 	}
 }
 
-void MainController::handleServerDiscoInfoResponse(boost::shared_ptr<DiscoInfo> info, const boost::optional<ErrorPayload>& error) {
+void MainController::handleServerDiscoInfoResponse(boost::shared_ptr<DiscoInfo> info, ErrorPayload::ref error) {
 	if (!error) {
 		chatsManager_->setServerDiscoInfo(info);
 	}

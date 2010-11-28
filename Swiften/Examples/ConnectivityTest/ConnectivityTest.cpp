@@ -28,7 +28,7 @@ JID recipient;
 int exitCode = CANNOT_CONNECT;
 boost::bsignals::connection errorConnection;
 
-void handleServerDiscoInfoResponse(boost::shared_ptr<DiscoInfo> /*info*/, const boost::optional<ErrorPayload>& error) {
+void handleServerDiscoInfoResponse(boost::shared_ptr<DiscoInfo> /*info*/, ErrorPayload::ref error) {
 	if (!error) {
 		errorConnection.disconnect();
 		client->disconnect();

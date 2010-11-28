@@ -32,7 +32,7 @@ void OutgoingFileTransfer::start() {
 void OutgoingFileTransfer::stop() {
 }
 
-void OutgoingFileTransfer::handleStreamInitiationRequestResponse(StreamInitiation::ref response, const boost::optional<ErrorPayload>& error) {
+void OutgoingFileTransfer::handleStreamInitiationRequestResponse(StreamInitiation::ref response, ErrorPayload::ref error) {
 	if (error) {
 		finish(FileTransferError());
 	}
@@ -55,7 +55,7 @@ void OutgoingFileTransfer::handleStreamInitiationRequestResponse(StreamInitiatio
 	}
 }
 
-void OutgoingFileTransfer::handleBytestreamsRequestResponse(Bytestreams::ref, const boost::optional<ErrorPayload>& error) {
+void OutgoingFileTransfer::handleBytestreamsRequestResponse(Bytestreams::ref, ErrorPayload::ref error) {
 	if (error) {
 		finish(FileTransferError());
 	}

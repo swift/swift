@@ -39,7 +39,7 @@ namespace Swift {
 
 		private:
 			bool containsEquivalent(const std::vector<MUCBookmark>& list, const MUCBookmark& bookmark);
-			void handleBookmarksReceived(boost::shared_ptr<Storage> payload, const boost::optional<ErrorPayload>& error);
+			void handleBookmarksReceived(boost::shared_ptr<Storage> payload, ErrorPayload::ref error);
 			void flush();
 
 		private:

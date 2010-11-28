@@ -6,12 +6,16 @@
 
 #pragma once
 
+#include <boost/shared_ptr.hpp>
+
 #include "Swiften/Elements/Payload.h"
 #include "Swiften/Base/String.h"
 
 namespace Swift {
 	class ErrorPayload : public Payload {
 		public:
+			typedef boost::shared_ptr<ErrorPayload> ref;
+
 			enum Type { Cancel, Continue, Modify, Auth, Wait };
 
 			enum Condition {
@@ -40,10 +44,6 @@ namespace Swift {
 			};
 
 			ErrorPayload(Condition condition = UndefinedCondition, Type type = Cancel, const String& text = String()) : type_(type), condition_(condition), text_(text) { }
-
-			ErrorPayload(const ErrorPayload& other) : Payload(), type_(other.getType()), condition_(other.getCondition()), text_(other.getText()) {
-
-			}
 
 			Type getType() const {
 				return type_; 

@@ -34,7 +34,7 @@ namespace Swift {
 			boost::signal<void (const JID&, VCard::ref)> onVCardChanged;
 
 		private:
-			void handleVCardReceived(const JID& from, VCard::ref, const boost::optional<ErrorPayload>&);
+			void handleVCardReceived(const JID& from, VCard::ref, ErrorPayload::ref);
 
 		private:
 			JID ownJID;

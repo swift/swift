@@ -34,7 +34,7 @@ void IBBSendSession::stop() {
 	finish(boost::optional<FileTransferError>());
 }
 
-void IBBSendSession::handleIBBResponse(IBB::ref, const boost::optional<ErrorPayload>& error) {
+void IBBSendSession::handleIBBResponse(IBB::ref, ErrorPayload::ref error) {
 	if (!error) {
 		if (!bytestream->isFinished()) {
 			try {

@@ -22,7 +22,7 @@ namespace Swift {
 						Request(type, receiver, payload, router) {
 			}
 
-			virtual void handleResponse(boost::shared_ptr<Payload> payload, boost::optional<ErrorPayload> error) {
+			virtual void handleResponse(boost::shared_ptr<Payload> payload, ErrorPayload::ref error) {
 				onResponse(boost::dynamic_pointer_cast<PAYLOAD_TYPE>(payload), error);
 			}
 
@@ -32,6 +32,6 @@ namespace Swift {
 			}
 
 		public:
-			boost::signal<void (boost::shared_ptr<PAYLOAD_TYPE>, const boost::optional<ErrorPayload>&)> onResponse;
+			boost::signal<void (boost::shared_ptr<PAYLOAD_TYPE>, ErrorPayload::ref)> onResponse;
 	};
 }

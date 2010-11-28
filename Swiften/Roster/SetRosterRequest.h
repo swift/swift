@@ -26,11 +26,11 @@ namespace Swift {
 			SetRosterRequest(boost::shared_ptr<RosterPayload> payload, IQRouter* router) : Request(IQ::Set, JID(), boost::shared_ptr<RosterPayload>(payload), router) {
 			}
 
-			virtual void handleResponse(boost::shared_ptr<Payload> /*payload*/, boost::optional<ErrorPayload> error) {
+			virtual void handleResponse(boost::shared_ptr<Payload> /*payload*/, ErrorPayload::ref error) {
 				onResponse(error);
 			}
 
 		public:
-			boost::signal<void (const boost::optional<ErrorPayload>&)> onResponse;
+			boost::signal<void (ErrorPayload::ref)> onResponse;
 	};
 }

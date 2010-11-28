@@ -48,7 +48,7 @@ void CapsManager::handleStanzaChannelAvailableChanged(bool available) {
 	}
 }
 
-void CapsManager::handleDiscoInfoReceived(const JID& from, const String& hash, DiscoInfo::ref discoInfo, const boost::optional<ErrorPayload>& error) {
+void CapsManager::handleDiscoInfoReceived(const JID& from, const String& hash, DiscoInfo::ref discoInfo, ErrorPayload::ref error) {
 	requestedDiscoInfos.erase(hash);
 	if (error || CapsInfoGenerator("").generateCapsInfo(*discoInfo.get()).getVersion() != hash) {
 		if (warnOnInvalidHash && !error) {

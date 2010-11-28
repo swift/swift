@@ -36,7 +36,7 @@ namespace Swift {
 		private:
 			void handlePresenceReceived(boost::shared_ptr<Presence>);
 			void handleStanzaChannelAvailableChanged(bool);
-			void handleDiscoInfoReceived(const JID&, const String& hash, DiscoInfo::ref, const boost::optional<ErrorPayload>&);
+			void handleDiscoInfoReceived(const JID&, const String& hash, DiscoInfo::ref, ErrorPayload::ref);
 			void requestDiscoInfo(const JID& jid, const String& node, const String& hash);
 
 		private:

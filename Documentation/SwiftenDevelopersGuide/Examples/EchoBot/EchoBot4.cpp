@@ -57,7 +57,7 @@ class EchoBot {
 			rosterRequest->send();
 		}
 
-		void handleRosterReceived(const optional<ErrorPayload>& error) {
+		void handleRosterReceived(ErrorPayload::ref error) {
 			if (error) {
 				std::cerr << "Error receiving roster. Continuing anyway.";
 			}

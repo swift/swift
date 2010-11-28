@@ -32,8 +32,8 @@ namespace Swift {
 			boost::signal<void (const boost::optional<FileTransferError>&)> onFinished;
 
 		private:
-			void handleStreamInitiationRequestResponse(StreamInitiation::ref, const boost::optional<ErrorPayload>&);
-			void handleBytestreamsRequestResponse(Bytestreams::ref, const boost::optional<ErrorPayload>&);
+			void handleStreamInitiationRequestResponse(StreamInitiation::ref, ErrorPayload::ref);
+			void handleBytestreamsRequestResponse(Bytestreams::ref, ErrorPayload::ref);
 			void finish(boost::optional<FileTransferError> error);
 			void handleIBBSessionFinished(boost::optional<FileTransferError> error);
 

@@ -66,7 +66,7 @@ namespace Swift {
 			void createDayChangeTimer();
 			void handleSendMessageRequest(const String &body);
 			void handleAllMessagesRead();
-			void handleSecurityLabelsCatalogResponse(boost::shared_ptr<SecurityLabelsCatalog>, const boost::optional<ErrorPayload>& error);
+			void handleSecurityLabelsCatalogResponse(boost::shared_ptr<SecurityLabelsCatalog>, ErrorPayload::ref error);
 			String getErrorMessage(boost::shared_ptr<ErrorPayload>);
 			void handleDayChangeTick();
 

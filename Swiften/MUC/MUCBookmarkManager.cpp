@@ -24,7 +24,7 @@ MUCBookmarkManager::MUCBookmarkManager(IQRouter* iqRouter) {
 	request->send();
 }
 
-void MUCBookmarkManager::handleBookmarksReceived(boost::shared_ptr<Storage> payload, const boost::optional<ErrorPayload>& error) {
+void MUCBookmarkManager::handleBookmarksReceived(boost::shared_ptr<Storage> payload, ErrorPayload::ref error) {
 	if (error) {
 		return;
 	}

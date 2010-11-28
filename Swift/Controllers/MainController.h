@@ -91,7 +91,7 @@ namespace Swift {
 			void handleQuitRequest();
 			void handleChangeStatusRequest(StatusShow::Type show, const String &statusText);
 			void handleDisconnected(const boost::optional<ClientError>& error);
-			void handleServerDiscoInfoResponse(boost::shared_ptr<DiscoInfo>, const boost::optional<ErrorPayload>&);
+			void handleServerDiscoInfoResponse(boost::shared_ptr<DiscoInfo>, ErrorPayload::ref);
 			void handleEventQueueLengthChange(int count);
 			void handleVCardReceived(const JID& j, VCard::ref vCard);
 			void handleUIEvent(boost::shared_ptr<UIEvent> event);

@@ -40,15 +40,15 @@ bool Request::handleIQ(boost::shared_ptr<IQ> iq) {
 	bool handled = false;
 	if (sent_ && iq->getID() == id_) {
 		if (iq->getType() == IQ::Result) {
-			handleResponse(iq->getPayloadOfSameType(payload_), boost::optional<ErrorPayload>());
+			handleResponse(iq->getPayloadOfSameType(payload_), ErrorPayload::ref());
 		}
 		else {
-			boost::shared_ptr<ErrorPayload> errorPayload = iq->getPayload<ErrorPayload>();
+			ErrorPayload::ref errorPayload = iq->getPayload<ErrorPayload>();
 			if (errorPayload) {
-				handleResponse(boost::shared_ptr<Payload>(), boost::optional<ErrorPayload>(*errorPayload));
+				handleResponse(boost::shared_ptr<Payload>(), errorPayload);
 			}
 			else {
-				handleResponse(boost::shared_ptr<Payload>(), boost::optional<ErrorPayload>(ErrorPayload::UndefinedCondition));
+				handleResponse(boost::shared_ptr<Payload>(), ErrorPayload::ref(new ErrorPayload(ErrorPayload::UndefinedCondition)));
 			}
 		}
 		router_->removeHandler(this);
