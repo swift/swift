@@ -33,6 +33,7 @@ namespace Swift {
 			virtual boost::optional<boost::posix_time::ptime> getMessageTimestamp(boost::shared_ptr<Message>) const;
 			void handleStanzaAcked(boost::shared_ptr<Stanza> stanza);
 			void dayTicked() {lastWasPresence_ = false;}
+			void handleContactNickChanged(const JID& jid, const String& /*oldNick*/);
 
 		private:
 			NickResolver* nickResolver_;

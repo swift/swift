@@ -34,6 +34,7 @@ ChatController::ChatController(const JID& self, StanzaChannel* stanzaChannel, IQ
 	presenceOracle_->onPresenceChange.connect(boost::bind(&ChatController::handlePresenceChange, this, _1));
 	chatStateTracker_->onChatStateChange.connect(boost::bind(&ChatWindow::setContactChatState, chatWindow_, _1));
 	stanzaChannel_->onStanzaAcked.connect(boost::bind(&ChatController::handleStanzaAcked, this, _1));
+	nickResolver_->onNickChanged.connect(boost::bind(&ChatController::handleContactNickChanged, this, _1, _2));
 	String nick = nickResolver_->jidToNick(toJID_);
 	chatWindow_->setName(nick);
 	String startMessage("Starting chat with " + nick);
@@ -57,7 +58,14 @@ ChatController::ChatController(const JID& self, StanzaChannel* stanzaChannel, IQ
 
 }
 
+void ChatController::handleContactNickChanged(const JID& jid, const String& /*oldNick*/) {
+	if (jid.toBare() == toJID_.toBare()) {
+		chatWindow_->setName(nickResolver_->jidToNick(jid));
+	}
+}
+
 ChatController::~ChatController() {
+	nickResolver_->onNickChanged.disconnect(boost::bind(&ChatController::handleContactNickChanged, this, _1, _2));
 	delete chatStateNotifier_;
 	delete chatStateTracker_;
 }
