@@ -47,7 +47,7 @@ vars.Add(PathVariable("docbook_xsl", "DocBook XSL", None, PathVariable.PathAccep
 # Set up default build & configure environment
 ################################################################################
 
-env = Environment(CPPPATH = "#", ENV = {
+env = Environment(CPPPATH = ["#"], ENV = {
 		'PATH' : os.environ['PATH'], 
 		'LD_LIBRARY_PATH' : os.environ.get("LD_LIBRARY_PATH", ""),
 	}, variables = vars)
@@ -61,6 +61,7 @@ env["PLATFORM_FLAGS"] = {}
 env.Tool("Test", toolpath = ["#/BuildTools/SCons/Tools"])
 env.Tool("WriteVal", toolpath = ["#/BuildTools/SCons/Tools"])
 env.Tool("BuildVersion", toolpath = ["#/BuildTools/SCons/Tools"])
+env.Tool("Flags", toolpath = ["#/BuildTools/SCons/Tools"])
 if env["PLATFORM"] == "darwin" :
 	env.Tool("Nib", toolpath = ["#/BuildTools/SCons/Tools"])
 	env.Tool("AppBundle", toolpath = ["#/BuildTools/SCons/Tools"])

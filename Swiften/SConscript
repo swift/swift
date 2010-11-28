@@ -11,12 +11,12 @@ if env["SCONS_STAGE"] == "flags" :
 	swiften_env["LIBPATH"] = [Dir(".")]
 	swiften_env["LIBS"] = ["Swiften"]
 	dep_env = env.Clone()
-	dep_env.MergeFlags(dep_env["PLATFORM_FLAGS"])
 	for module in ["BOOST", "LIBIDN", "ZLIB", "OPENSSL", "LIBXML", "EXPAT"] :
 		if env.get(module + "_BUNDLED", False) :
-			swiften_env.MergeFlags(env.get(module + "_FLAGS", {}))
+			swiften_env.UseFlags(env.get(module + "_FLAGS", {}))
 		else :
-			dep_env.MergeFlags(env.get(module + "_FLAGS", {}))
+			dep_env.UseFlags(env.get(module + "_FLAGS", {}))
+	dep_env.UseFlags(dep_env["PLATFORM_FLAGS"])
 
 	for var, e in [("SWIFTEN_FLAGS", swiften_env), ("SWIFTEN_DEP_FLAGS", dep_env)] : 
 		env[var] = {
