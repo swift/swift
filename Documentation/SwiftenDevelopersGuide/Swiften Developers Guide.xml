@@ -24,8 +24,7 @@
         <emphasis>Bind</emphasis>, <emphasis>Optional</emphasis>, and 
         <emphasis>Smart Pointers</emphasis>. We
         introduce the basic usage of these libraries in our API throughout
-        this manual. For detailed documentation, we refer to the Boost
-        website.
+        this manual. For detailed documentation, we refer to the <ulink url="http://boost.org">Boost</ulink> website.
       </para>
     </section>
   </chapter>
@@ -72,9 +71,19 @@
         so we use Swiften's own <literal>SimpleEventLoop</literal>. This
         class is used by simply instantiating it at the beginning of the
         application, and calling <literal>run()</literal> after everything
-        is set up, which will go into an infinite loop. Apart from constructing
-        and (if necessary) starting the event loop, you will probably have
-        no other contact with it in the rest of the application.
+        is set up, which will go into an infinite loop. Apart from constructing,
+        passing, and (if necessary) starting the event loop, you will probably 
+        have no other contact with it in the rest of the application.
+      </para>
+
+      <para>
+        Another prerequisite of Swiften's classes is an implementation of 
+        network interaction, provided through the
+        <literal>NetworkFactories</literal> class. Swiften comes with a
+        Boost-based network implementation, implemented in
+        <literal>BoostNetworkFactories</literal>. As with the event loop,
+        you probably will have no need to interact with this class apart
+        from constructing it.
       </para>
 
       <para>
@@ -91,7 +100,18 @@
 
     <sect1>
       <title>Building EchoBot</title>
-      <remark>TODO: Explain linking against the static library.</remark>
+      <para>
+        To build your application, you will need to set up your build 
+        environment to use the correct include and library paths for
+        Swiften, and link against the Swiften library. This depends
+        on both the compiler you are using, and the flags you used to build 
+        Swiften. To get the list of compiler options, Swiften comes with
+        a program <literal>swiften-config</literal> (located in 
+        <literal>Swiften/Config</literal> in the Swiften tree). Calling this
+        with the <literal>--libs</literal> option will return the list of link flags, 
+        whereas calling it with the <literal>--cflags</literal> option will return the
+        list of C(++) compiler flags.
+      </para>
     </sect1>
 
     <sect1>
@@ -291,7 +311,18 @@
 
     <sect1>
       <title>Using Swiften's convenience classes</title>
-      <remark>TODO</remark>
+      <para>
+      	Swiften comes with flavors of the Client class: <literal>CoreClient</literal>, which 
+      	implements only the basics of connecting to the XMPP server, without any built-in 
+      	responders. If you want to build a client from scratch, this class is probably your
+      	preferred Swiften interface. However, most users of Swiften will not want to bother with
+      	explicitly instantiating responders to basic functionality such as software version
+      	information etc., and will want to have the convenience of built-in responders and 
+      	utility classes. In this case, you can use the <literal>Client</literal> class (a
+      	subclass of <literal>CoreClient</literal>, which
+      	implements most of the common XMPP client functionality, including roster and subscription
+      	management, VCards, Avatars, Service Discovery, Multi-User Chats, ...
+      </para>
     </sect1>
   </chapter>
 
