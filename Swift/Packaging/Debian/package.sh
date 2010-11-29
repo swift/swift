@@ -31,6 +31,6 @@ ln -s Swift/Packaging/Debian/debian $DIRNAME/debian
 
 echo "Building ..."
 cd $DIRNAME
-echo $PWD
+set +e
 dpkg-buildpackage -S -rfakeroot -i -I
 dpkg-buildpackage -b -rfakeroot -i -I
