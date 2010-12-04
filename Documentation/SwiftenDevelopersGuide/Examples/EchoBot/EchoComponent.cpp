@@ -7,7 +7,7 @@
 #include <iostream>
 #include <boost/bind.hpp>
 
-#include "Swiften/Swiften.h"
+#include <Swiften/Swiften.h>
 
 using namespace Swift;
 using namespace boost;

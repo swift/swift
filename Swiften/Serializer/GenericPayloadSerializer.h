@@ -4,8 +4,7 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#ifndef SWIFTEN_GenericPayloadSerializer_H
-#define SWIFTEN_GenericPayloadSerializer_H
+#pragma once
 
 #include <boost/shared_ptr.hpp>
 
@@ -27,5 +26,3 @@ namespace Swift {
 			virtual String serializePayload(boost::shared_ptr<PAYLOAD_TYPE>) const = 0;
 	};
 }
-
-#endif

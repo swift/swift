@@ -84,8 +84,11 @@ def generateDocBookCode(env, target, source) :
 if "doc" in ARGUMENTS :
 	env.DocBook("Swiften Developers Guide.xml")
 
-for i in range(1, 6) :
-	source = "Examples/EchoBot/EchoBot" + str(i) + ".cpp"
+sources = []
+for i in range(1, 7) :
+	sources.append("Examples/EchoBot/EchoBot" + str(i) + ".cpp")
+sources += ["Examples/EchoBot/" + i for i in ["EchoPayloadParserFactory.h", "EchoPayloadSerializer.h", "EchoPayload.h"]]
+for source in sources :
 	env.Command(source + ".xml", source, Action(generateDocBookCode, cmdstr = "$GENCOMSTR"))
 
 SConscript(dirs = ["Examples"])

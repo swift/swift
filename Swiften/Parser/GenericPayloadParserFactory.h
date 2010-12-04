@@ -11,9 +11,15 @@
 
 namespace Swift {
 
+	/**
+	 * A generic class for PayloadParserFactories that parse a specific payload (given as the template parameter of the class).
+	 */
 	template<typename PARSER_TYPE>
 	class GenericPayloadParserFactory : public PayloadParserFactory {
 		public:
+			/**
+			 * Construct a parser factory that can parse the given top-level tag in the given namespace.
+			 */
 			GenericPayloadParserFactory(const String& tag, const String& xmlns = "") : tag_(tag), xmlns_(xmlns) {}
 
 			virtual bool canParse(const String& element, const String& ns, const AttributeMap&) const {

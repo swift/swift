@@ -293,7 +293,7 @@ if env["SCONS_STAGE"] == "build" :
 	# Generate the Swiften header
 	swiften_header = "#pragma once\n"
 	top_path = env.Dir("..").abspath
-	public_dirs = ["Avatars", "Base", "Chat", "Client", "Component", "Disco", "Entity", "Elements", "JID", "MUC", "Network", "Presence", "Queries", "Roster", "StringCodecs", "TLS", "VCards"]
+	public_dirs = ["Avatars", "Base", "Chat", "Client", "Component", "Disco", "Entity", "Elements", "JID", "MUC", "Network", "Parser", "Presence", "Queries", "Roster", "Serializer", "StringCodecs", "TLS", "VCards"]
 	for public_dir in public_dirs :
 		for root, dirs, files in os.walk(env.Dir(public_dir).abspath) :
 			if root.endswith("UnitTest") :
@@ -303,7 +303,7 @@ if env["SCONS_STAGE"] == "build" :
 			for file in files :
 				if not file.endswith(".h") :
 					continue
-				if file.startswith("CAres") :
+				if file.startswith("CAres") or file.startswith("LibXML") or file.startswith("Expat") :
 					continue
 				swiften_header += "#include \"" + os.path.relpath(os.path.join(root, file), top_path) + "\"\n"
 	for file in ["EventLoop/SimpleEventLoop.h"] :

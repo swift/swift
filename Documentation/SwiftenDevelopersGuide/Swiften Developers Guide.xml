@@ -301,7 +301,78 @@
         <literal>RosterPayload</literal>.
       </para>
 
-      <remark>TODO</remark>
+      <para>
+        If you want to extend Swiften with your own XMPP extension, you will first
+        need to create a payload for this extension. For example, suppose we want to
+        reate an extension for use in our Echo bot that contains a special textual
+        message, and add this to all our outgoing messages,
+        we create the <literal>EchoPayload</literal> illustrated in
+        <xref linkend="Example-EchoPayload"/>. We can then append or retrieve this
+        payload from the stanzas using <literal>Stanza::getPayload()</literal> and 
+        <literal>Stanza::addPayload()</literal>. For example, the version of our
+        bot in <xref linkend="Example-EchoBot6"/> checks whether an incoming 
+        message contains the <literal>EchoPayload</literal>, and if not, 
+        echoes back the message, and adds an extension to the message with a 
+        descriptive text.
+      </para>
+      
+      <example id="Example-EchoPayload">
+        <title>Extending Swiften with a new payload: <literal>EchoPayload</literal></title>
+        <include xmlns="http://www.w3.org/2001/XInclude" href="Examples/EchoBot/EchoPayload.h.xml" xpointer="xpointer(//programlisting|//calloutlist)"/>
+      </example>
+      
+      <example id="Example-EchoBot6">
+        <title>Adding a custom extension: Using a custom element, and registering a parser (factory) and serializer for the element.</title>
+        <include xmlns="http://www.w3.org/2001/XInclude" href="Examples/EchoBot/EchoBot6.cpp.xml" xpointer="xpointer(//programlisting|//calloutlist)"/>
+      </example>
+
+      <para>
+        However, having the element is not enough; Swiften also needs to know how to
+        extract this payload from the incoming stanzas, and know how to send it on
+        outgoing stanzas. In order to do this, Swiften uses XML parsers and serializers
+        for the payload. We therefore need to create a parser and serializer for our
+        new payload, and register it with <literal>Client</literal>. Serializers are
+        implemented as subclasses from <literal>PayloadSerializer</literal>, and provide
+        the basic methods <literal>canSerialize()</literal> and 
+        <literal>serialize()</literal>.  The serializer
+        is registered using <literal>Client::addPayloadSerializer()</literal> 
+        (and unregistered using <literal>Client::removePayloadSerializer()</literal>).
+        Parsers consist of 2 parts: a subclass of <literal>PayloadParser</literal>, which
+        parses incoming XML in an event-driven way and builds up the payload, and
+        a subclass of <literal>PayloadParserFactory</literal>, which is responsible
+        for detecting whether a given parser can parse an incoming element, and 
+        creates a parser. The parser factory is registered with the client using
+        <literal>Client::addPayloadParserFactory()</literal> (and unregistered
+        using <literal>Client::removePayloadParserFactory()</literal>).
+      </para>
+
+      <para>
+        Although you can subclass the base classes for parsers and serializers
+        directly, Swiften comes with utility classes that contain common
+        functionality for parsers and serializers. For example, for our EchoBot,
+        the parser and serializer using these utility classes is shown in 
+        <xref linkend="Example-EchoPayloadParser"/> and 
+        <xref linkend="Example-EchoPayloadSerializer"/> respectively. Registration
+        of the parser and serializer is shown in the constructor of our EchoBot in
+        <xref linkend="Example-EchoBot6"/>. 
+      </para>
+      
+      <example id="Example-EchoPayloadParser">
+        <title>The parser and parser factory for <literal>EchoPayload</literal></title>
+        <include xmlns="http://www.w3.org/2001/XInclude" href="Examples/EchoBot/EchoPayloadParserFactory.h.xml" xpointer="xpointer(//programlisting|//calloutlist)"/>
+      </example>
+            
+      <example id="Example-EchoPayloadSerializer">
+        <title>The serializer for <literal>EchoPayload</literal></title>
+        <include xmlns="http://www.w3.org/2001/XInclude" href="Examples/EchoBot/EchoPayloadSerializer.h.xml" xpointer="xpointer(//programlisting|//calloutlist)"/>
+      </example>
+
+      <para>
+        If you want to create your own parser and serializers, you can look at the
+        built-in parsers and serializers in the Swiften library, located in
+        <literal>Swiften/Parser/PayloadParsers</literal> and <literal>Swiften/Serializer/PayloadSerializers</literal>.
+      </para>
+      
     </sect1>
 
     <sect1 id="Section-CustomQueries">

@@ -13,6 +13,10 @@
 using namespace Swift;
 using namespace boost;
 //...
+#include "EchoPayload.h"
+#include "EchoPayloadParserFactory.h"
+#include "EchoPayloadSerializer.h"
+
 class EchoBot {
 	public:
 		EchoBot(EventLoop* eventLoop, NetworkFactories* networkFactories) {
@@ -21,23 +25,34 @@ class EchoBot {
 			client->onConnected.connect(bind(&EchoBot::handleConnected, this));
 			client->onMessageReceived.connect(
 					bind(&EchoBot::handleMessageReceived, this, _1));
-			//...
 			client->onPresenceReceived.connect(
 					bind(&EchoBot::handlePresenceReceived, this, _1));
-			//...
 			tracer = new ClientXMLTracer(client);
+
+			softwareVersionResponder = new SoftwareVersionResponder(client->getIQRouter());
+			softwareVersionResponder->setVersion("EchoBot", "1.0");
+			softwareVersionResponder->start();
+			//...
+			client->addPayloadParserFactory(&echoPayloadParserFactory);
+			client->addPayloadSerializer(&echoPayloadSerializer);
+			//...
 			client->connect();
 			//...
 		}
 
-		//...
 		~EchoBot() {
+			client->removePayloadSerializer(&echoPayloadSerializer);
+			client->removePayloadParserFactory(&echoPayloadParserFactory);
+			//...
+			softwareVersionResponder->stop();
+			delete softwareVersionResponder;
 			delete tracer;
 			delete client;
+			//...
 		}
+		//...
 	
 	private:
-		//...
 		void handlePresenceReceived(Presence::ref presence) {
 			// Automatically approve subscription requests
 			if (presence->getType() == Presence::Subscribe) {
@@ -64,19 +79,32 @@ class EchoBot {
 			// Send initial available presence
 			client->sendPresence(Presence::create("Send me a message"));
 		}
+
 		//...
-		
 		void handleMessageReceived(Message::ref message) {
+			//...
 			// Echo back the incoming message
 			message->setTo(message->getFrom());
 			message->setFrom(JID());
-			client->sendMessage(message);
+			//...
+			if (!message->getPayload<EchoPayload>()) {
+				boost::shared_ptr<EchoPayload> echoPayload(new EchoPayload());
+				echoPayload->setMessage("This is an echoed message");
+				message->addPayload(echoPayload);
+				client->sendMessage(message);
+			}
 		}
+		//...
 
+		//...
 	private:
+		//...
 		Client* client;
 		ClientXMLTracer* tracer;
+		SoftwareVersionResponder* softwareVersionResponder;
 		//...
+		EchoPayloadParserFactory echoPayloadParserFactory;
+		EchoPayloadSerializer echoPayloadSerializer;
 };
 //...
 

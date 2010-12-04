@@ -4,8 +4,7 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#ifndef GENERICPAYLOADPARSER_H
-#define GENERICPAYLOADPARSER_H
+#pragma once
 
 #include <boost/shared_ptr.hpp>
 
@@ -15,6 +14,12 @@ namespace Swift {
 	class String;
 	class FormParser;
 
+	/**
+	 * A generic payload parser for payloads of the given type.
+	 *
+	 * This class provides getPayloadInternal() for retrieving the actual
+	 * payload.
+	 */
 	template<typename PAYLOAD_TYPE>
 	class GenericPayloadParser : public PayloadParser {
 		public:
@@ -34,5 +39,3 @@ namespace Swift {
 			boost::shared_ptr<PAYLOAD_TYPE> payload_;
 	};
 }
-
-#endif
