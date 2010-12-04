@@ -21,6 +21,7 @@
 #include "Swiften/Client/StanzaChannel.h"
 #include "Swiften/Parser/PayloadParsers/FullPayloadParserFactoryCollection.h"
 #include "Swiften/Serializer/PayloadSerializers/FullPayloadSerializerCollection.h"
+#include <Swiften/Entity/Entity.h>
 
 #include "Swiften/Client/ClientSessionStanzaChannel.h"
 
@@ -46,7 +47,7 @@ namespace Swift {
 	 * subclass provides more functionality and interfaces, and is better suited
 	 * for most needs.
 	 */
-	class CoreClient  { 
+	class CoreClient : public Entity {
 		public: 
 			/**
 			 * Constructs a client for the given JID with the given password.
@@ -211,8 +212,6 @@ namespace Swift {
 			IQRouter* iqRouter_;
 			Connector::ref connector_;
 			PlatformTLSFactories* tlsFactories;
-			FullPayloadParserFactoryCollection payloadParserFactories_;
-			FullPayloadSerializerCollection payloadSerializers_;
 			boost::shared_ptr<Connection> connection_;
 			boost::shared_ptr<BasicSessionStream> sessionStream_;
 			boost::shared_ptr<ClientSession> session_;

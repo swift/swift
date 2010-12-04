@@ -60,6 +60,7 @@ if env["SCONS_STAGE"] == "build" :
 			"Elements/RosterPayload.cpp",
 			"Elements/Stanza.cpp",
 			"Elements/VCard.cpp",
+			"Entity/Entity.cpp",
 			"MUC/MUC.cpp",
 			"MUC/MUCManager.cpp",
 			"MUC/MUCOccupant.cpp",
@@ -292,7 +293,7 @@ if env["SCONS_STAGE"] == "build" :
 	# Generate the Swiften header
 	swiften_header = "#pragma once\n"
 	top_path = env.Dir("..").abspath
-	public_dirs = ["Avatars", "Base", "Chat", "Client", "Component", "Disco", "Elements", "JID", "MUC", "Network", "Presence", "Queries", "Roster", "StringCodecs", "TLS", "VCards"]
+	public_dirs = ["Avatars", "Base", "Chat", "Client", "Component", "Disco", "Entity", "Elements", "JID", "MUC", "Network", "Presence", "Queries", "Roster", "StringCodecs", "TLS", "VCards"]
 	for public_dir in public_dirs :
 		for root, dirs, files in os.walk(env.Dir(public_dir).abspath) :
 			if root.endswith("UnitTest") :

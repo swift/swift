@@ -20,8 +20,8 @@
 #include "Swiften/Base/String.h"
 #include "Swiften/Parser/PayloadParsers/FullPayloadParserFactoryCollection.h"
 #include "Swiften/Serializer/PayloadSerializers/FullPayloadSerializerCollection.h"
-
 #include "Swiften/Component/ComponentSessionStanzaChannel.h"
+#include <Swiften/Entity/Entity.h>
 
 namespace Swift {
 	class IQRouter;
@@ -39,7 +39,7 @@ namespace Swift {
 	 * subclass provides more functionality and interfaces, and is better suited 
 	 * for most needs.
 	 */
-	class CoreComponent  {
+	class CoreComponent : public Entity {
 		public:
 			CoreComponent(EventLoop* eventLoop, NetworkFactories* networkFactories, const JID& jid, const String& secret);
 			~CoreComponent();
@@ -94,8 +94,6 @@ namespace Swift {
 			ComponentSessionStanzaChannel* stanzaChannel_;
 			IQRouter* iqRouter_;
 			ComponentConnector::ref connector_;
-			FullPayloadParserFactoryCollection payloadParserFactories_;
-			FullPayloadSerializerCollection payloadSerializers_;
 			boost::shared_ptr<Connection> connection_;
 			boost::shared_ptr<BasicSessionStream> sessionStream_;
 			boost::shared_ptr<ComponentSession> session_;
