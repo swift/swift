@@ -202,7 +202,7 @@
       </para>
     </sect1>
 
-    <sect1>
+    <sect1 id="Section-Requests">
       <title>Presence Management: Requests</title>
       <para>
         The current version of our EchoBot does what it is supposed to do:
@@ -252,7 +252,7 @@
       </para>
     </sect1>
 
-    <sect1>
+    <sect1 id="Section-Responders">
       <title>Publishing version information: Responders</title>
       <para>
         Most XMPP clients have support for querying software version information
@@ -377,7 +377,16 @@
 
     <sect1 id="Section-CustomQueries">
       <title>Extending Swiften with new queries and responders</title>
-      <remark>TODO</remark>
+      <para>
+        <xref linkend="Section-Requests"/> and <xref linkend="Section-Responders"/> 
+        explained that Swiften provides Requests and Responder classes for querying
+        or responding to queries of specific payloads. If you extend Swiften with your
+        own payloads, you can use these to create your own <literal>Request</literal>
+        or <literal>Responder</literal> subclasses. Swiften also provides convenience
+        classes such as <literal>GenericRequest</literal>, <literal>GetResponder</literal>
+        and <literal>SetResponder</literal> for creating your requests and responders
+        for your custom payloads.
+      </para>
     </sect1>
 
     <sect1>
@@ -394,6 +403,24 @@
       	implements most of the common XMPP client functionality, including roster and subscription
       	management, VCards, Avatars, Service Discovery, Multi-User Chats, ...
       </para>
+    </sect1>
+
+    <sect1>
+      <title>Writing server components</title>
+      <para>
+        Swiften also provides classes for creating server components. The 
+        <literal>Component</literal> class has a similar interface
+        as <literal>Client</literal>, but uses the component protocol to connect with
+        the XMPP server. Except for a few classes, the same techniques and classes for 
+        writing clients can be applied to write components. 
+        <xref linkend="Example-EchoComponent"/> illustrates how we would build a
+        component version of our Echo bot.
+      </para>
+
+      <example id="Example-EchoComponent">
+        <title>EchoBot as a server component</title>
+        <include xmlns="http://www.w3.org/2001/XInclude" href="Examples/EchoBot/EchoComponent.cpp.xml" xpointer="xpointer(//programlisting|//calloutlist)"/>
+      </example>
     </sect1>
   </chapter>
 

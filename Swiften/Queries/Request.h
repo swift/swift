@@ -19,30 +19,40 @@
 #include "Swiften/JID/JID.h"
 
 namespace Swift {
+	/**
+	 * An IQ get/set request query.
+	 */
 	class Request : public IQHandler, public boost::enable_shared_from_this<Request> {
 		public:
 			void send();
 
 		protected:
+			/**
+			 * Constructs a request of a certain type to a specific receiver, and attaches the given
+			 * payload.
+			 */
 			Request(
 					IQ::Type type, 
 					const JID& receiver, 
 					boost::shared_ptr<Payload> payload, 
 					IQRouter* router);
+			/**
+			 * Constructs a request of a certain type to a specific receiver.
+			 */
 			Request(
 					IQ::Type type, 
 					const JID& receiver, 
 					IQRouter* router);
 
-			virtual void setPayload(boost::shared_ptr<Payload> p) {
-				payload_ = p;
+			virtual void setPayload(Payload::ref payload) {
+				payload_ = payload;
 			}
 
-			boost::shared_ptr<Payload> getPayload() const {
+			Payload::ref getPayload() const {
 				return payload_;
 			}
 
-			virtual void handleResponse(boost::shared_ptr<Payload>, ErrorPayload::ref) = 0;
+			virtual void handleResponse(Payload::ref, ErrorPayload::ref) = 0;
 
 		private:
 			bool handleIQ(boost::shared_ptr<IQ>);
