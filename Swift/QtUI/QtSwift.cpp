@@ -23,6 +23,7 @@
 #include <boost/bind.hpp>
 #include <QSplitter>
 
+#include <Swiften/Base/Log.h>
 #include "SwifTools/Application/PlatformApplicationPathProvider.h"
 #include "Swiften/Avatars/AvatarFileStorage.h"
 #include "Swiften/Disco/CapsFileStorage.h"
@@ -63,6 +64,7 @@ namespace Swift{
 po::options_description QtSwift::getOptionsDescription() {
 	po::options_description result("Options");
 	result.add_options()
+		("debug", "Turn on debug logging")
 		("help", "produce help message")
 		("netbook-mode", "use netbook mode display")
 		("no-tabs", "don't manage chat windows in tabs")
@@ -90,6 +92,10 @@ QtSwift::QtSwift(po::variables_map options) : autoUpdater_(NULL) {
 	} catch (...) {
 		/* This seems to fail on a Mac when the .app is launched directly (the usual path).*/
 		numberOfAccounts = 1;
+	}
+
+	if (options.count("debug")) {
+		Swift::logging = true;
 	}
 
 	tabs_ = options.count("no-tabs") && !(splitter_ > 0) ? NULL : new QtChatTabs();
