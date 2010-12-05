@@ -25,7 +25,6 @@ typedef std::pair<String, MUCOccupant> StringMUCOccupantPair;
 
 MUC::MUC(StanzaChannel* stanzaChannel, IQRouter* iqRouter, DirectedPresenceSender* presenceSender, const JID &muc, MUCRegistry* mucRegistry) : ownMUCJID(muc), stanzaChannel(stanzaChannel), iqRouter_(iqRouter), presenceSender(presenceSender), mucRegistry(mucRegistry) {
 	scopedConnection_ = stanzaChannel->onPresenceReceived.connect(boost::bind(&MUC::handleIncomingPresence, this, _1));
-	mucRegistry->addMUC(getJID());
 }
 
 //FIXME: discover reserved nickname
@@ -41,6 +40,7 @@ void MUC::joinAs(const String &nick) {
 void MUC::internalJoin(const String &nick) {
 	//TODO: password
 	//TODO: history request
+	mucRegistry->addMUC(getJID());
 	joinComplete_ = false;
 	ownMUCJID = JID(ownMUCJID.getNode(), ownMUCJID.getDomain(), nick);
 	boost::shared_ptr<Presence> joinPresence(presenceSender->getLastSentUndirectedPresence());
