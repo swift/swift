@@ -4,12 +4,12 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#ifndef SWIFTEN_GenericStanzaParser_H
-#define SWIFTEN_GenericStanzaParser_H
+#pragma once
 
 #include <boost/shared_ptr.hpp>
+#include <boost/smart_ptr/make_shared.hpp>
 
-#include "Swiften/Parser/StanzaParser.h"
+#include <Swiften/Parser/StanzaParser.h>
 
 namespace Swift {
 	class String;
@@ -20,7 +20,7 @@ namespace Swift {
 		public:
 			GenericStanzaParser(PayloadParserFactoryCollection* collection) : 
 						StanzaParser(collection) {
-				stanza_ = boost::shared_ptr<STANZA_TYPE>(new STANZA_TYPE());
+				stanza_ = boost::make_shared<STANZA_TYPE>();
 			}
 
 			virtual boost::shared_ptr<Element> getElement() const {
@@ -35,5 +35,3 @@ namespace Swift {
 			boost::shared_ptr<STANZA_TYPE> stanza_;
 	};
 }
-
-#endif

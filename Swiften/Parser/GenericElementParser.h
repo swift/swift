@@ -4,12 +4,12 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#ifndef SWIFTEN_GenericElementParser_H
-#define SWIFTEN_GenericElementParser_H
+#pragma once
 
 #include <boost/shared_ptr.hpp>
+#include <boost/smart_ptr/make_shared.hpp>
 
-#include "Swiften/Parser/ElementParser.h"
+#include <Swiften/Parser/ElementParser.h>
 
 namespace Swift {
 	class String;
@@ -19,7 +19,7 @@ namespace Swift {
 	class GenericElementParser : public ElementParser {
 		public:
 			GenericElementParser() {
-				stanza_ = boost::shared_ptr<ElementType>(new ElementType());
+				stanza_ = boost::make_shared<ElementType>();
 			}
 
 			virtual boost::shared_ptr<Element> getElement() const {
@@ -44,5 +44,3 @@ namespace Swift {
 			boost::shared_ptr<ElementType> stanza_;
 	};
 }
-
-#endif

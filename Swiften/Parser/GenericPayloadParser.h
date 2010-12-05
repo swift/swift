@@ -7,8 +7,9 @@
 #pragma once
 
 #include <boost/shared_ptr.hpp>
+#include <boost/smart_ptr/make_shared.hpp>
 
-#include "Swiften/Parser/PayloadParser.h"
+#include <Swiften/Parser/PayloadParser.h>
 
 namespace Swift {
 	class String;
@@ -24,7 +25,7 @@ namespace Swift {
 	class GenericPayloadParser : public PayloadParser {
 		public:
 			GenericPayloadParser() : PayloadParser() {
-				payload_ = boost::shared_ptr<PAYLOAD_TYPE>(new PAYLOAD_TYPE());
+				payload_ = boost::make_shared<PAYLOAD_TYPE>();
 			}
 
 			virtual boost::shared_ptr<Payload> getPayload() const {
