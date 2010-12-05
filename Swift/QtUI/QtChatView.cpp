@@ -15,6 +15,7 @@
 #include <QKeyEvent>
 #include <QStackedWidget>
 #include <QTimer>
+#include <QMessageBox>
 
 #include "QtWebView.h"
 #include "QtChatTheme.h"
@@ -32,7 +33,7 @@ QtChatView::QtChatView(QtChatTheme* theme, QWidget* parent) : QWidget(parent) {
 	connect(webView_, SIGNAL(linkClicked(const QUrl&)), SLOT(handleLinkClicked(const QUrl&)));
 	connect(webView_, SIGNAL(loadFinished(bool)), SLOT(handleViewLoadFinished(bool)));
 	connect(webView_, SIGNAL(gotFocus()), SIGNAL(gotFocus()));
-	connect(webView_, SIGNAL(clearRequested()), SLOT(resetView()));
+	connect(webView_, SIGNAL(clearRequested()), SLOT(handleClearRequested()));
 #ifdef Q_WS_X11
 	/* To give a border on Linux, where it looks bad without */
 	QStackedWidget* stack = new QStackedWidget(this);
@@ -52,6 +53,18 @@ QtChatView::QtChatView(QtChatTheme* theme, QWidget* parent) : QWidget(parent) {
 	viewReady_ = false;
 	isAtBottom_ = true;
 	resetView();
+}
+
+void QtChatView::handleClearRequested() {
+	QMessageBox messageBox(this);
+	messageBox.setText("Clear log.");
+	messageBox.setInformativeText("Are you sure you want to clear your chat log?");
+	messageBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
+	messageBox.setDefaultButton(QMessageBox::Yes);
+	int button = messageBox.exec();
+	if (button == QMessageBox::Yes) {
+		resetView();
+	}
 }
 
 void QtChatView::handleKeyPressEvent(QKeyEvent* event) {

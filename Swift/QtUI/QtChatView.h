@@ -46,6 +46,7 @@ namespace Swift {
 		private slots:
 			void handleViewLoadFinished(bool);
 			void handleFrameSizeChanged();
+			void handleClearRequested();
 
 		private:
 			void headerEncode();
