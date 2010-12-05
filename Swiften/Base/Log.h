@@ -11,10 +11,5 @@ namespace Swift {
 	extern bool logging;
 }
 
-#ifndef SWIFTEN_PLATFORM_WINDOWS
 #define SWIFT_LOG(severity) \
-	if (!Swift::logging) {} else std::cerr << __FILE__ << ":" << __LINE__ << " " << __FUNCTION__ << ": "
-#else
-#define SWIFT_LOG(severity) \
-	if (!Swift::logging) {} else std::cerr
-#endif
+	if (!Swift::logging) {} else std::cerr << "[" << #severity << "] " << __FILE__ << ":" << __LINE__ << " " << __FUNCTION__ << ": "
