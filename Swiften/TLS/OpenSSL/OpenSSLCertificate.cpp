@@ -4,9 +4,10 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "Swiften/TLS/OpenSSL/OpenSSLCertificate.h"
+#include <Swiften/TLS/OpenSSL/OpenSSLCertificate.h>
 
-#include "Swiften/Base/ByteArray.h"
+#include <Swiften/Base/ByteArray.h>
+#include <Swiften/Base/Log.h>
 
 #undef X509_NAME // Windows.h defines this, and  for some reason, it doesn't get undeffed properly in x509.h
 #include <openssl/x509v3.h>
@@ -27,6 +28,9 @@ OpenSSLCertificate::OpenSSLCertificate(const ByteArray& der) {
 	const unsigned char* p = reinterpret_cast<const unsigned char*>(der.getData());
 #endif
 	cert = boost::shared_ptr<X509>(d2i_X509(NULL, &p, der.getSize()), X509_free);
+	if (!cert) {
+		SWIFT_LOG(warning) << "Error creating certificate from DER data" << std::endl;
+	}
 	parse();
 }
 

@@ -41,6 +41,9 @@ if env["SCONS_STAGE"] == "build" :
 			"UIInterfaces/XMLConsoleWidget.cpp",
 			"UIInterfaces/ChatListWindow.cpp",
 			"PreviousStatusStore.cpp",
+			"CertificateStorageFactory.cpp",
+			"CertificateStorage.cpp",
+			"CertificateFileStorage.cpp",
 		])
 
 	env.Append(UNITTEST_SOURCES = [

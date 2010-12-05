@@ -33,6 +33,9 @@ namespace Swift {
 	class ChatWindowFactory;
 	class ChatController;
 	class ChatsManager;
+	class CertificateStorageFactory;
+	class CertificateStorage;
+	class CertificateStorageTrustChecker;
 	class ChatListWindowFactory;
 	class EventController;
 	class MainWindowFactory;
@@ -77,6 +80,7 @@ namespace Swift {
 					ChatListWindowFactory* chatListWindowFactory_,
 					MUCSearchWindowFactory* mucSearchWindowFactory,
 					StoragesFactory* storagesFactory,
+					CertificateStorageFactory* certificateStorageFactory,
 					Dock* dock,
 					Notifier* notifier,
 					bool useDelayForLatency);
@@ -115,6 +119,9 @@ namespace Swift {
 			ActualIdleDetector idleDetector_;
 			StoragesFactory* storagesFactory_;
 			Storages* storages_;
+			CertificateStorageFactory* certificateStorageFactory_;
+			CertificateStorage* certificateStorage_;
+			CertificateStorageTrustChecker* certificateTrustChecker_;
 			Client* client_;
 			ChatWindowFactory* chatWindowFactory_;
 			MainWindowFactory* mainWindowFactory_;

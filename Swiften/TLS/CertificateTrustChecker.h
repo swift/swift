@@ -24,6 +24,6 @@ namespace Swift {
 			 * trusted. This usually happens when a certificate's validation
 			 * fails, to check whether to proceed with the connection or not.
 			 */
-			virtual bool isCertificateTrusted(Certificate::ref certificate, const String& domain) = 0;
+			virtual bool isCertificateTrusted(Certificate::ref certificate) = 0;
 	};
 }

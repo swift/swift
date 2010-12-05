@@ -24,6 +24,7 @@
 #include <QSplitter>
 
 #include <Swiften/Base/Log.h>
+#include <Swift/Controllers/CertificateFileStorageFactory.h>
 #include "SwifTools/Application/PlatformApplicationPathProvider.h"
 #include "Swiften/Avatars/AvatarFileStorage.h"
 #include "Swiften/Disco/CapsFileStorage.h"
@@ -102,6 +103,7 @@ QtSwift::QtSwift(po::variables_map options) : autoUpdater_(NULL) {
 	settings_ = new QtSettingsProvider();
 	applicationPathProvider_ = new PlatformApplicationPathProvider(SWIFT_APPLICATION_NAME);
 	storagesFactory_ = new FileStoragesFactory(applicationPathProvider_->getDataDir());
+	certificateStorageFactory_ = new CertificateFileStorageFactory(applicationPathProvider_->getDataDir(), tlsFactories_.getCertificateFactory());
 	chatWindowFactory_ = new QtChatWindowFactory(splitter_, settings_, tabs_, "");
 	soundPlayer_ = new QtSoundPlayer(applicationPathProvider_);
 #if defined(HAVE_GROWL)
@@ -153,6 +155,7 @@ QtSwift::QtSwift(po::variables_map options) : autoUpdater_(NULL) {
 				chatListWindowFactory,
 				mucSearchWindowFactory,
 				storagesFactory_,
+				certificateStorageFactory_,
 				dock_,
 				notifier_,
 				options.count("latency-debug") > 0);
@@ -200,6 +203,7 @@ QtSwift::~QtSwift() {
 	foreach (QtChatListWindowFactory* factory, chatListWindowFactories_) {
 		delete factory;
 	}
+	delete certificateStorageFactory_;
 	delete storagesFactory_;
 }
 

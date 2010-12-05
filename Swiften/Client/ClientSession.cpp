@@ -346,7 +346,7 @@ void ClientSession::handleTLSEncrypted() {
 }
 
 void ClientSession::checkTrustOrFinish(Certificate::ref certificate, boost::shared_ptr<CertificateVerificationError> error) {
-	if (certificateTrustChecker && certificateTrustChecker->isCertificateTrusted(certificate, localJID.getDomain())) {
+	if (certificateTrustChecker && certificateTrustChecker->isCertificateTrusted(certificate)) {
 		continueAfterTLSEncrypted();
 	}
 	else {

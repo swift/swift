@@ -55,6 +55,8 @@
 #include "Swift/Controllers/UIEvents/RequestChatUIEvent.h"
 #include "Swift/Controllers/UIEvents/ToggleNotificationsUIEvent.h"
 #include "Swift/Controllers/UIEvents/JoinMUCUIEvent.h"
+#include "Swift/Controllers/CertificateStorageFactory.h"
+#include "Swift/Controllers/CertificateStorageTrustChecker.h"
 
 namespace Swift {
 
@@ -76,6 +78,7 @@ MainController::MainController(
 		ChatListWindowFactory* chatListWindowFactory,
 		MUCSearchWindowFactory* mucSearchWindowFactory,
 		StoragesFactory* storagesFactory,
+		CertificateStorageFactory* certificateStorageFactory,
 		Dock* dock,
 		Notifier* notifier,
 		bool useDelayForLatency) :
@@ -83,6 +86,7 @@ MainController::MainController(
 			networkFactories_(eventLoop),
 			idleDetector_(&idleQuerier_, networkFactories_.getTimerFactory(), 100),
 			storagesFactory_(storagesFactory),
+			certificateStorageFactory_(certificateStorageFactory),
 			chatWindowFactory_(chatWindowFactory),
 			mainWindowFactory_(mainWindowFactory),
 			loginWindowFactory_(loginWindowFactory),
@@ -90,6 +94,7 @@ MainController::MainController(
 			loginWindow_(NULL) ,
 			useDelayForLatency_(useDelayForLatency) {
 	storages_ = NULL;
+	certificateStorage_ = NULL;
 	statusTracker_ = NULL;
 	client_ = NULL;
 	presenceNotifier_ = NULL;
@@ -182,6 +187,8 @@ void MainController::resetClient() {
 	presenceNotifier_ = NULL;
 	delete client_;
 	client_ = NULL;
+	delete certificateStorage_;
+	certificateStorage_ = NULL;
 	delete storages_;
 	storages_ = NULL;
 	delete statusTracker_;
@@ -353,7 +360,11 @@ void MainController::performLoginFromCachedCredentials() {
 	}
 	if (!client_) {
 		storages_ = storagesFactory_->createStorages(jid_);
+		certificateStorage_ = certificateStorageFactory_->createCertificateStorage(jid_);
+		certificateTrustChecker_ = new CertificateStorageTrustChecker(certificateStorage_);
 		client_ = new Swift::Client(eventLoop_, &networkFactories_, jid_, password_, storages_);
+		client_->setCertificateTrustChecker(certificateTrustChecker_);
+		// FIXME: Remove this line to activate the trust checker
 		client_->setAlwaysTrustCertificates();
 		client_->onDataRead.connect(boost::bind(&XMLConsoleController::handleDataRead, xmlConsoleController_, _1));
 		client_->onDataWritten.connect(boost::bind(&XMLConsoleController::handleDataWritten, xmlConsoleController_, _1));
@@ -427,8 +438,11 @@ void MainController::handleDisconnected(const boost::optional<ClientError>& erro
 			case ClientError::InvalidCertificateSignatureError:
 			case ClientError::InvalidCAError:
 			case ClientError::InvalidServerIdentityError:
-				// TODO
-				message = "Certificate error"; break;
+				// FIXME: Popup a dialog
+				message = "Certificate error";
+				// FIXME: Only do this if the user accepts the certificate
+				//certificateStorage_->addCertificate(certificateTrustChecker_->getLastCertificate());
+				break;
 		}
 		if (!rosterController_) { //hasn't been logged in yet
 			signOut();

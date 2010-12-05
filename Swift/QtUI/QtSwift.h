@@ -9,6 +9,7 @@
 #include <boost/program_options/variables_map.hpp>
 #include <boost/program_options/options_description.hpp>
 
+#include <Swiften/TLS/PlatformTLSFactories.h>
 #include "Swiften/Base/String.h"
 #include "Swiften/Base/Platform.h"
 #include "Swiften/EventLoop/Qt/QtEventLoop.h"
@@ -28,6 +29,7 @@ namespace po = boost::program_options;
 class QSplitter;
 
 namespace Swift {
+	class CertificateStorageFactory;
 	class Dock;
 	class Notifier;
 	class StoragesFactory;
@@ -54,6 +56,7 @@ namespace Swift {
 			static po::options_description getOptionsDescription();
 			~QtSwift();
 		private:
+			PlatformTLSFactories tlsFactories_;
 			std::vector<MainController*> mainControllers_;
 			QtChatWindowFactory *chatWindowFactory_;
 			std::vector<QtMainWindowFactory*> rosterWindowFactories_;
@@ -71,6 +74,7 @@ namespace Swift {
 			QtChatTabs* tabs_;
 			ApplicationPathProvider* applicationPathProvider_;
 			StoragesFactory* storagesFactory_;
+			CertificateStorageFactory* certificateStorageFactory_;
 			AutoUpdater* autoUpdater_;
 			Notifier* notifier_;
 #if defined(SWIFTEN_PLATFORM_MACOSX)
