@@ -19,6 +19,7 @@ fi
 	noncopyable.hpp \
 	numeric/conversion/cast.hpp \
 	shared_ptr.hpp \
+	smart_ptr/make_shared.hpp \
 	optional.hpp \
 	signals.hpp \
 	program_options.hpp \
