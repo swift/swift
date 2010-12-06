@@ -14,9 +14,9 @@ using namespace boost;
 
 class EchoComponent {
 	public:
-		EchoComponent(EventLoop* eventLoop, NetworkFactories* networkFactories) {
+		EchoComponent(EventLoop* eventLoop, NetworkFactories* networkFactories) : jid("echo.wonderland.lit") {
 			component = new Component(eventLoop, networkFactories,
-					JID("echo.wonderland.lit"), "EchoSecret");
+					jid, "EchoSecret");
 			component->onConnected.connect(bind(&EchoComponent::handleConnected, this));
 			component->onMessageReceived.connect(
 					bind(&EchoComponent::handleMessageReceived, this, _1));
@@ -48,11 +48,12 @@ class EchoComponent {
 		void handleMessageReceived(Message::ref message) {
 			// Echo back the incoming message
 			message->setTo(message->getFrom());
-			message->setFrom(JID());
+			message->setFrom(jid);
 			component->sendMessage(message);
 		}
 
 	private:
+		JID jid;
 		Component* component;
 		ComponentXMLTracer* tracer;
 };
