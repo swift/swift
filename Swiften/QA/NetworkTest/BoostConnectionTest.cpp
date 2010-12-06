@@ -25,6 +25,9 @@ class BoostConnectionTest : public CppUnit::TestFixture {
 		CPPUNIT_TEST(testDestructor);
 		CPPUNIT_TEST(testDestructor_PendingEvents);
 		CPPUNIT_TEST(testWrite);
+#ifdef TEST_IPV6
+		CPPUNIT_TEST(testWrite_IPv6);
+#endif
 		CPPUNIT_TEST_SUITE_END();
 
 	public:
@@ -65,6 +68,19 @@ class BoostConnectionTest : public CppUnit::TestFixture {
 			testling->onDataRead.connect(boost::bind(&BoostConnectionTest::handleDataRead, this, _1));
 			testling->onDisconnected.connect(boost::bind(&BoostConnectionTest::handleDisconnected, this));
 			testling->connect(HostAddressPort(HostAddress("65.99.222.137"), 5222));
+			while (receivedData.isEmpty()) {
+				Swift::sleep(10);
+				eventLoop_->processEvents();
+			}
+			testling->disconnect();
+		}
+
+		void testWrite_IPv6() {
+			BoostConnection::ref testling(BoostConnection::create(&boostIOServiceThread_->getIOService(), eventLoop_));
+			testling->onConnectFinished.connect(boost::bind(&BoostConnectionTest::doWrite, this, testling.get()));
+			testling->onDataRead.connect(boost::bind(&BoostConnectionTest::handleDataRead, this, _1));
+			testling->onDisconnected.connect(boost::bind(&BoostConnectionTest::handleDisconnected, this));
+			testling->connect(HostAddressPort(HostAddress("2001:470:1f0e:852::2"), 80));
 			while (receivedData.isEmpty()) {
 				Swift::sleep(10);
 				eventLoop_->processEvents();

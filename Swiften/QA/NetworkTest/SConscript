@@ -4,6 +4,8 @@ Import("env")
 
 if env["TEST"] :
 	myenv = env.Clone()
+	if "test_ipv6" in ARGUMENTS :
+		myenv.Append(CPPDEFINES = ["TEST_IPV6"])
 	myenv.MergeFlags(myenv["CHECKER_FLAGS"])
 	myenv.MergeFlags(myenv["SWIFTEN_FLAGS"])
 	myenv.MergeFlags(myenv["CPPUNIT_FLAGS"])
