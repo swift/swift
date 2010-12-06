@@ -33,6 +33,7 @@ class XMPPParserTest : public CppUnit::TestFixture {
 		CPPUNIT_TEST(testParse_UnknownElement);
 		CPPUNIT_TEST(testParse_StrayCharacterData);
 		CPPUNIT_TEST(testParse_InvalidStreamStart);
+		CPPUNIT_TEST(testParse_ElementEndAfterInvalidStreamStart);
 		CPPUNIT_TEST_SUITE_END();
 
 	public:
@@ -147,6 +148,12 @@ class XMPPParserTest : public CppUnit::TestFixture {
 			XMPPParser testling(&client_, &factories_);
 
 			CPPUNIT_ASSERT(!testling.parse("<tream>"));
+		}
+
+		void testParse_ElementEndAfterInvalidStreamStart() {
+			XMPPParser testling(&client_, &factories_);
+
+			CPPUNIT_ASSERT(!testling.parse("<tream/>"));
 		}
 
 	private:

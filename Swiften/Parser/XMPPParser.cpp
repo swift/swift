@@ -67,25 +67,27 @@ bool XMPPParser::parse(const String& data) {
 }
 
 void XMPPParser::handleStartElement(const String& element, const String& ns, const AttributeMap& attributes) {
-	if (level_ == TopLevel) {
-		if (element == "stream" && ns == "http://etherx.jabber.org/streams") {
-			ProtocolHeader header;
-			header.setFrom(attributes.getAttribute("from"));
-			header.setTo(attributes.getAttribute("to"));
-			header.setID(attributes.getAttribute("id"));
-			header.setVersion(attributes.getAttribute("version"));
-			client_->handleStreamStart(header);
+	if (!parseErrorOccurred_) {
+		if (level_ == TopLevel) {
+			if (element == "stream" && ns == "http://etherx.jabber.org/streams") {
+				ProtocolHeader header;
+				header.setFrom(attributes.getAttribute("from"));
+				header.setTo(attributes.getAttribute("to"));
+				header.setID(attributes.getAttribute("id"));
+				header.setVersion(attributes.getAttribute("version"));
+				client_->handleStreamStart(header);
+			}
+			else {
+				parseErrorOccurred_ = true;
+			}
 		}
 		else {
-			parseErrorOccurred_ = true;
+			if (level_ == StreamLevel) {
+				assert(!currentElementParser_);
+				currentElementParser_ = createElementParser(element, ns);
+			}
+			currentElementParser_->handleStartElement(element, ns, attributes);
 		}
-	}
-	else {
-		if (level_ == StreamLevel) {
-			assert(!currentElementParser_);
-			currentElementParser_ = createElementParser(element, ns);
-		}
-		currentElementParser_->handleStartElement(element, ns, attributes);
 	}
 	++level_;
 }
@@ -93,28 +95,32 @@ void XMPPParser::handleStartElement(const String& element, const String& ns, con
 void XMPPParser::handleEndElement(const String& element, const String& ns) {
 	assert(level_ > TopLevel);
 	--level_;
-	if (level_ == TopLevel) {
-		assert(element == "stream");
-		client_->handleStreamEnd();
-	}
-	else {
-		assert(currentElementParser_);
-		currentElementParser_->handleEndElement(element, ns);
-		if (level_ == StreamLevel) {
-			client_->handleElement(currentElementParser_->getElement());
-			delete currentElementParser_;
-			currentElementParser_ = NULL;
+	if (!parseErrorOccurred_) {
+		if (level_ == TopLevel) {
+			assert(element == "stream");
+			client_->handleStreamEnd();
+		}
+		else {
+			assert(currentElementParser_);
+			currentElementParser_->handleEndElement(element, ns);
+			if (level_ == StreamLevel) {
+				client_->handleElement(currentElementParser_->getElement());
+				delete currentElementParser_;
+				currentElementParser_ = NULL;
+			}
 		}
 	}
 }
 
 void XMPPParser::handleCharacterData(const String& data) {
-	if (currentElementParser_) {
-		currentElementParser_->handleCharacterData(data);
-	}
+	if (!parseErrorOccurred_) {
+		if (currentElementParser_) {
+			currentElementParser_->handleCharacterData(data);
+		}
 	//else {
 	//	std::cerr << "XMPPParser: Ignoring stray character data: " << data << std::endl;
 	//}
+	}
 }
 
 ElementParser* XMPPParser::createElementParser(const String& element, const String& ns) {
