@@ -25,7 +25,7 @@ namespace Swift {
 			void handleMessageReceived(MSG* message);
 
 		private:
-			Snarl::SnarlInterface snarl;
+			Snarl::V41::SnarlInterface snarl;
 			Win32NotifierWindow* window;
 			typedef std::map<int, boost::function<void()> > NotificationsMap;
 			NotificationsMap notifications;

@@ -1,218 +1,276 @@
-#ifndef SNARL_INTERFACE
-#define SNARL_INTERFACE
+﻿#ifndef SNARL_INTERFACE_V41
+#define SNARL_INTERFACE_V41
 
 #include <tchar.h>
 #include <windows.h>
-#include <strsafe.h>
+#include <cstdio>
+
+#ifndef SMTO_NOTIMEOUTIFNOTHUNG
+	#define SMTO_NOTIMEOUTIFNOTHUNG 8
+#endif
 
 
 namespace Snarl {
+	namespace V41 {
 
-	static const LPCTSTR SNARL_GLOBAL_MSG = _T("SnarlGlobalEvent");
-	static const LPCTSTR SNARL_APP_MSG    = _T("SnarlAppMessage");
+	static const LPCTSTR SnarlWindowClass = _T("w>Snarl");
+	static const LPCTSTR SnarlWindowTitle = _T("Snarl");
 
-	static const int SNARL_STRING_LENGTH = 1024;
-	static const int SNARL_UNICODE_LENGTH = SNARL_STRING_LENGTH / 2;
+	static const LPCTSTR SnarlGlobalMsg = _T("SnarlGlobalEvent");
+	static const LPCTSTR SnarlAppMsg = _T("SnarlAppMessage");
 
-	static const LONG32 SNARL_LAUNCHED = 1;                // Snarl has just started running
-	static const LONG32 SNARL_QUIT = 2;                    // Snarl is about to stop running
-	static const LONG32 SNARL_ASK_APPLET_VER = 3;          // (R1.5) Reserved for future use
-	static const LONG32 SNARL_SHOW_APP_UI = 4;             // (R1.6) Application should show its UI
+	static const int SnarlPacketDataSize = 4096;
 
-	static const LONG32 SNARL_NOTIFICATION_CLICKED = 32;   // notification was right-clicked by user
-	static const LONG32 SNARL_NOTIFICATION_TIMED_OUT = 33;
-	static const LONG32 SNARL_NOTIFICATION_ACK = 34;       // notification was left-clicked by user
-	static const LONG32 SNARL_NOTIFICATION_MENU = 35;           // V39 - menu item selected
-	static const LONG32 SNARL_NOTIFICATION_MIDDLE_BUTTON = 36;  // V39 - notification middle-clicked by user
-	static const LONG32 SNARL_NOTIFICATION_CLOSED = 37;         // V39 - user clicked the close gadget
+	// Enums put in own namespace, because ANSI C++ doesn't decorate enums with tagname :(
+	namespace SnarlEnums {
 
-	static const LONG32 SNARL_NOTIFICATION_CANCELLED = SNARL_NOTIFICATION_CLICKED;  // Added in R1.6
+		/// <summary>
+		/// Global event identifiers.
+		/// Identifiers marked with a '*' are sent by Snarl in two ways:
+		///   1. As a broadcast message (uMsg = 'SNARL_GLOBAL_MSG')
+		///   2. To the window registered in snRegisterConfig() or snRegisterConfig2()
+		///      (uMsg = reply message specified at the time of registering)
+		/// In both cases these values appear in wParam.
+		///   
+		/// Identifiers not marked are not broadcast; they are simply sent to the application's registered window.
+		/// </summary>
+		enum GlobalEvent
+		{
+			SnarlLaunched = 1,      // Snarl has just started running*
+			SnarlQuit = 2,          // Snarl is about to stop running*
+			SnarlAskAppletVer = 3,  // (R1.5) Reserved for future use
+			SnarlShowAppUi = 4      // (R1.6) Application should show its UI
+		};
 
-	static const DWORD WM_SNARLTEST = WM_USER + 237;    // note hardcoded WM_USER value!
+		/// <summary>
+		/// Message event identifiers.
+		/// These are sent by Snarl to the window specified in RegisterApp() when the
+		/// Snarl Notification raised times out or the user clicks on it.
+		/// </summary>
+		enum MessageEvent
+		{
+			NotificationClicked = 32,      // Notification was right-clicked by user
+			NotificationCancelled = 32,    // Added in V37 (R1.6) -- same value, just improved the meaning of it
+			NotificationTimedOut = 33,     // 
+			NotificationAck = 34,          // Notification was left-clicked by user
+			NotificationMenu = 35,         // Menu item selected (V39)
+			NotificationMiddleButton = 36, // Notification middle-clicked by user (V39)
+			NotificationClosed = 37        // User clicked the close gadget (V39)
+		};
 
-	// --------------------------------------------------------------------
-	
-	typedef enum M_RESULT {
-		M_ABORTED         = 0x80000007,
-		M_ACCESS_DENIED   = 0x80000009,
-		M_ALREADY_EXISTS  = 0x8000000C,
-		M_BAD_HANDLE      = 0x80000006,
-		M_BAD_POINTER     = 0x80000005,
-		M_FAILED          = 0x80000008,
-		M_INVALID_ARGS    = 0x80000003,
-		M_NO_INTERFACE    = 0x80000004,
-		M_NOT_FOUND       = 0x8000000B,
-		M_NOT_IMPLEMENTED = 0x80000001,
-		M_OK              = 0x00000000,
-		M_OUT_OF_MEMORY   = 0x80000002,
-		M_TIMED_OUT       = 0x8000000A
+		/// <summary>
+		/// Error values returned by calls to GetLastError().
+		/// </summary>
+		enum SnarlStatus
+		{
+			Success = 0,
+
+			ErrorFailed = 101,        // miscellaneous failure
+			ErrorUnknownCommand,      // specified command not recognised
+			ErrorTimedOut,            // Snarl took too long to respond
+
+			ErrorArgMissing = 109,    // required argument missing
+			ErrorSystem,              // internal system error
+
+			ErrorNotRunning = 201,    // Snarl handling window not found
+			ErrorNotRegistered,       // 
+			ErrorAlreadyRegistered,   // not used yet; RegisterApp() returns existing token
+			ErrorClassAlreadyExists,  // not used yet; AddClass() returns existing token
+			ErrorClassBlocked,
+			ErrorClassNotFound,
+			ErrorNotificationNotFound
+		};
+
+		/// <summary>
+		/// Application flags - features this app supports.
+		/// </summary>
+		enum AppFlags
+		{
+			AppDefault = 0,
+			AppHasPrefs = 1,
+			AppHasAbout = 2,
+			AppIsWindowless = 0x8000
+		};
+
+		enum SnarlCommand
+		{
+			RegisterApp = 1,
+			UnregisterApp,
+			UpdateApp,
+			SetCallback,
+			AddClass,
+			RemoveClass,
+			Notify,
+			UpdateNotification,
+			HideNotification,
+			IsNotificationVisible,
+			LastError                  // deprecated but retained for backwards compatability
+		};
+	}
+
+	struct SnarlMessage
+	{
+		SnarlEnums::SnarlCommand Command;
+		LONG32 Token;
+		BYTE PacketData[SnarlPacketDataSize];
 	};
 
-	enum SNARL_COMMANDS {
-		SNARL_SHOW = 1,
-		SNARL_HIDE,
-		SNARL_UPDATE,
-		SNARL_IS_VISIBLE,
-		SNARL_GET_VERSION,
-		SNARL_REGISTER_CONFIG_WINDOW,
-		SNARL_REVOKE_CONFIG_WINDOW,
-
-		/* R1.6 onwards */
-		SNARL_REGISTER_ALERT,
-		SNARL_REVOKE_ALERT,   // for future use
-		SNARL_REGISTER_CONFIG_WINDOW_2,
-		SNARL_GET_VERSION_EX,
-		SNARL_SET_TIMEOUT,
-		
-		/* following introduced in Snarl V39 (R2.1) */
-		SNARL_SET_CLASS_DEFAULT,
-		SNARL_CHANGE_ATTR,
-		SNARL_REGISTER_APP,
-		SNARL_UNREGISTER_APP,
-		SNARL_ADD_CLASS,
-
-		/* extended commands (all use SNARLSTRUCTEX) */
-		SNARL_EX_SHOW = 0x20,
-		SNARL_SHOW_NOTIFICATION                // V39
-	};
-	
-	static const SNARL_COMMANDS SNARL_GET_REVISION = SNARL_REVOKE_ALERT;
-	
-	typedef enum SNARL_APP_FLAGS {
-		SNARL_APP_HAS_PREFS = 1,
-		SNARL_APP_HAS_ABOUT = 2
-	};
-	
-	static const LONG32 SNARL_APP_PREFS = 1;
-	static const LONG32 SNARL_APP_ABOUT = 2;
-
-	
-	/* --------------- V39 additions --------------- */
-	
-	/* snAddClass() flags */
-	enum SNARL_CLASS_FLAGS {
-		SNARL_CLASS_ENABLED = 0,
-		SNARL_CLASS_DISABLED = 1,
-		SNARL_CLASS_NO_DUPLICATES = 2,         // means Snarl will suppress duplicate notifications
-		SNARL_CLASS_DELAY_DUPLICATES = 4       // means Snarl will suppress duplicate notifications within a pre-set time period
-	};
-
-	/* Class attributes */
-	typedef enum SNARL_ATTRIBUTES {
-		SNARL_ATTRIBUTE_TITLE = 1,
-		SNARL_ATTRIBUTE_TEXT,
-		SNARL_ATTRIBUTE_ICON,
-		SNARL_ATTRIBUTE_TIMEOUT,
-		SNARL_ATTRIBUTE_SOUND,
-		SNARL_ATTRIBUTE_ACK,               // file to run on ACK
-		SNARL_ATTRIBUTE_MENU
-	};
-
-	/* ------------------- end of V39 additions ------------------ */
-	
-	struct SNARLSTRUCT {
-		SNARL_COMMANDS Cmd;
-		LONG32 Id;
-		LONG32 Timeout;
-		LONG32 LngData2;
-		char Title[SNARL_STRING_LENGTH];
-		char Text[SNARL_STRING_LENGTH];
-		char Icon[SNARL_STRING_LENGTH];
-	};
-
-	struct SNARLSTRUCTEX {
-		SNARL_COMMANDS Cmd;
-		LONG32 Id;
-		LONG32 Timeout;
-		LONG32 LngData2;
-		char Title[SNARL_STRING_LENGTH];
-		char Text[SNARL_STRING_LENGTH];
-		char Icon[SNARL_STRING_LENGTH];
-
-		char Class[SNARL_STRING_LENGTH];
-		char Extra[SNARL_STRING_LENGTH];
-		char Extra2[SNARL_STRING_LENGTH];
-		LONG32 Reserved1;
-		LONG32 Reserved2;
-	};
-
+	static const DWORD WM_SNARLTEST = WM_USER + 237;
 
 	
 	// ------------------------------------------------------------------------
-	// SnarlInterface class definition
+	/// SnarlInterface class definition
 	// ------------------------------------------------------------------------
-	
 	class SnarlInterface {
 		public:
 			SnarlInterface();
 			~SnarlInterface();
-
-			static HWND   GetSnarlWindow();		
-			static LONG32 GetGlobalMsg();
-
 			
 			LPTSTR AllocateString(size_t n) { return new TCHAR[n]; }
-			void FreeString(LPCTSTR str)    { delete [] str; str = NULL; }
-			
+			void FreeString(LPTSTR str)     { delete [] str; str = NULL; }
+			void FreeString(LPCTSTR str)    { delete [] str; }
 
-			LONG32  ShowMessage(LPCSTR szTitle, LPCSTR szText, LONG32 timeout = 0, LPCSTR szIconPath = "", HWND hWndReply = NULL, WPARAM uReplyMsg = 0);
-			LONG32  ShowMessage(LPCWSTR szTitle, LPCWSTR szText, LONG32 timeout = 0, LPCWSTR szIconPath = L"", HWND hWndReply = NULL, WPARAM uReplyMsg = 0);
-			LONG32  ShowMessageEx(LPCSTR szClass, LPCSTR szTitle, LPCSTR szText, LONG32 timeout = 0, LPCSTR szIconPath = "", HWND hWndReply = NULL, WPARAM uReplyMsg = 0, LPCSTR szSoundFile = "");
-			LONG32  ShowMessageEx(LPCWSTR szClass, LPCWSTR szTitle, LPCWSTR szText, LONG32 timeout = 0, LPCWSTR szIconPath = L"", HWND hWndReply = NULL, WPARAM uReplyMsg = 0, LPCWSTR szSoundFile = L"");
+			/// <summary>Register application with Snarl.</summary>
+			/// <returns>The application token or 0 on failure.</returns>
+			/// <remarks>The application token is saved in SnarlInterface member variable, so just use return value to check for error.</remarks>
+			LONG32 RegisterApp(LPCSTR signature, LPCSTR title, LPCSTR icon, HWND hWndReply = NULL, LONG32 msgReply = 0, SnarlEnums::AppFlags flags = SnarlEnums::AppDefault);
+			LONG32 RegisterApp(LPCWSTR  signature, LPCWSTR title, LPCWSTR icon, HWND hWndReply = NULL, LONG32 msgReply = 0, SnarlEnums::AppFlags flags = SnarlEnums::AppDefault);
 
-			LPCTSTR GetAppPath();    // ** Remember to FreeString when finished with the string !
-			LPCTSTR GetIconsPath();  // ** Remember to FreeString when finished with the string !
+			/// <summary>Unregister application with Snarl when application is closing.</summary>
+			/// <returns>0 on failure.</returns>
+			LONG32 UnregisterApp();
 
-			BOOL      GetVersion(WORD* Major, WORD* Minor);
-			LONG32    GetVersionEx();
-			BOOL      HideMessage();
-			BOOL      HideMessage(LONG32 Id);
-			BOOL      IsMessageVisible();
-			BOOL      IsMessageVisible(LONG32 Id);
-			M_RESULT  RegisterAlert(LPCSTR szAppName, LPCSTR szClass);
-			M_RESULT  RegisterAlert(LPCWSTR szAppName, LPCWSTR szClass);
-			M_RESULT  RegisterConfig(HWND hWnd, LPCSTR szAppName, LONG32 replyMsg);
-			M_RESULT  RegisterConfig(HWND hWnd, LPCWSTR szAppName, LONG32 replyMsg);
-			M_RESULT  RegisterConfig2(HWND hWnd, LPCSTR szAppName, LONG32 replyMsg, LPCSTR szIcon);
-			M_RESULT  RegisterConfig2(HWND hWnd, LPCWSTR szAppName, LONG32 replyMsg, LPCWSTR szIcon);
-			M_RESULT  RevokeConfig(HWND hWnd);
-			M_RESULT  SetTimeout(LONG32 Timeout);
-			M_RESULT  SetTimeout(LONG32 Id, LONG32 Timeout);
-			M_RESULT  UpdateMessage(LPCSTR szTitle, LPCSTR szText, LPCSTR szIconPath = "");
-			M_RESULT  UpdateMessage(LPCWSTR szTitle, LPCWSTR szText, LPCWSTR szIconPath = L"");
-			M_RESULT  UpdateMessage(LONG32 Id, LPCSTR szTitle, LPCSTR szText, LPCSTR szIconPath = "");
-			M_RESULT  UpdateMessage(LONG32 Id, LPCWSTR szTitle, LPCWSTR szText, LPCWSTR szIconPath = L"");
-			
-			/* V39 */
-			M_RESULT  AddClass(LPCSTR Class, LPCSTR Description = NULL, SNARL_CLASS_FLAGS Flags = SNARL_CLASS_ENABLED, LPCSTR DefaultTitle = NULL, LPCSTR DefaultIcon = NULL, LONG32 DefaultTimeout = 0);
-			M_RESULT  AddClass(LPCWSTR Class, LPCWSTR Description = NULL, SNARL_CLASS_FLAGS Flags = SNARL_CLASS_ENABLED, LPCWSTR DefaultTitle = NULL, LPCWSTR DefaultIcon = NULL, LONG32 DefaultTimeout = 0);
-			M_RESULT  ChangeAttribute(SNARL_ATTRIBUTES Attr, LPCSTR Value);
-			M_RESULT  ChangeAttribute(SNARL_ATTRIBUTES Attr, LPCWSTR Value);
-			M_RESULT  ChangeAttribute(LONG32 Id, SNARL_ATTRIBUTES Attr, LPCSTR Value);			
-			M_RESULT  ChangeAttribute(LONG32 Id, SNARL_ATTRIBUTES Attr, LPCWSTR Value);			
-			LONG32    GetAppMsg();
-			LONG32    GetRevision();
-			
-			M_RESULT  RegisterApp(LPCSTR Application, LPCSTR SmallIcon, LPCSTR LargeIcon, HWND hWnd = 0, LONG32 ReplyMsg = 0);
-			M_RESULT  RegisterApp(LPCWSTR Application, LPCWSTR SmallIcon, LPCWSTR LargeIcon, HWND hWnd = 0, LONG32 ReplyMsg = 0);
-			void      SetAsSnarlApp(HWND hWndOwner, SNARL_APP_FLAGS Flags = (SNARL_APP_FLAGS)(SNARL_APP_HAS_ABOUT | SNARL_APP_HAS_PREFS));
-			M_RESULT  SetClassDefault(LPCSTR Class, SNARL_ATTRIBUTES Attr, LPCSTR Value);
-			M_RESULT  SetClassDefault(LPCWSTR Class, SNARL_ATTRIBUTES Attr, LPCWSTR Value);
-			LONG32    ShowNotification(LPCSTR Class, LPCSTR Title = NULL, LPCSTR Text = NULL, LONG32 Timeout = 0, LPCSTR Icon = NULL, HWND hWndReply = NULL, LONG32 uReplyMsg = 0, LPCSTR Sound = NULL);
-			LONG32    ShowNotification(LPCWSTR Class, LPCWSTR Title = NULL, LPCWSTR Text = NULL, LONG32 Timeout = 0, LPCWSTR Icon = NULL, HWND hWndReply = NULL, LONG32 uReplyMsg = 0, LPCWSTR Sound = NULL);
-			M_RESULT  UnregisterApp();
-			
-			LONG32    GetLastMessageId() { return m_nLastMessageId; }
+			/// <summary>Update information provided when calling RegisterApp.</summary>
+			/// <returns>0 on failure.</returns>
+			LONG32 UpdateApp(LPCSTR title = NULL, LPCSTR icon = NULL);
+			LONG32 UpdateApp(LPCWSTR title = NULL, LPCWSTR icon = NULL);
 
+			/// <summary>Add a notification class to Snarl.</summary>
+			/// <returns>0 on failure.</returns>
+			LONG32 AddClass(LPCSTR className, LPCSTR description, bool enabled = true);
+			LONG32 AddClass(LPCWSTR className, LPCWSTR description, bool enabled = true);
+			
+			/// <summary>Remove a notification class added with AddClass().</summary>
+			/// <returns>0 on failure.</returns>
+			LONG32 RemoveClass(LPCSTR className, bool forgetSettings = false);
+			LONG32 RemoveClass(LPCWSTR className, bool forgetSettings = false);
+
+			/// <summary>Remove all notification classes in one call.</summary>
+			/// <returns>0 on failure.</returns>
+			LONG32 RemoveAllClasses(bool forgetSettings = false);
+			
+			/// <summary>Show a Snarl notification.</summary>
+			/// <returns>Returns the notification token or 0 on failure.</returns>
+			/// <remarks>You can use <see cref="GetLastMsgToken()" /> to get the last token.</remarks>
+			LONG32 EZNotify(LPCSTR className, LPCSTR title, LPCSTR text, LONG32 timeout = -1, LPCSTR icon = NULL, LONG32 priority = 0, LPCSTR acknowledge = NULL, LPCSTR value = NULL);
+			LONG32 EZNotify(LPCWSTR className, LPCWSTR title, LPCWSTR text, LONG32 timeout = -1, LPCWSTR icon = NULL, LONG32 priority = 0, LPCWSTR acknowledge = NULL, LPCWSTR value = NULL);
+
+			/// <summary>
+			///     Show a Snarl notification.
+			///     This function requires that you write your own packet data.
+			/// </summary>
+			/// <returns>Returns the notification token or 0 on failure.</returns>
+			/// <remarks>You can use <see cref="GetLastMsgToken()" /> to get the last token.</remarks>
+			LONG32 Notify(LPCSTR className, LPCSTR packetData);
+			LONG32 Notify(LPCWSTR className, LPCWSTR packetData);
+
+			/// <summary>Update the text or other parameters of a visible Snarl notification.</summary>
+			/// <returns>0 on failure.</returns>
+			LONG32 EZUpdate(LONG32 msgToken, LPCSTR title = NULL, LPCSTR text = NULL, LONG32 timeout = -1, LPCSTR icon = NULL);
+			LONG32 EZUpdate(LONG32 msgToken, LPCWSTR title = NULL, LPCWSTR text = NULL, LONG32 timeout = -1, LPCWSTR icon = NULL);
+			
+			/// <summary>
+			///     Update the text or other parameters of a visible Snarl notification.
+			///     This function requires that you write your own packet data.
+			/// </summary>
+			/// <returns>0 on failure.</returns>
+			LONG32 Update(LONG32 msgToken, LPCSTR packetData);
+			LONG32 Update(LONG32 msgToken, LPCWSTR packetData);
+
+			/// <summary>Hide a Snarl notification.</summary>
+			/// <returns>0 on failure.</returns>
+			LONG32 Hide(LONG32 msgToken);
+
+			/// <summary>Test if a Snarl notification is visible.</summary>
+			/// <returns>Returns -1 if message is visible. 0 if not visible or if an error occured.</returns>
+			LONG32 IsVisible(LONG32 msgToken);
+
+			/// <summary>Get the last error from Snarl. Call after other functions return 0 to know why it failed.</summary>
+			/// <returns>Returns one of the SnarlEnums::SnarlStatus values.</returns>
+			SnarlEnums::SnarlStatus GetLastError();
+
+			/// <summary>Get Snarl version, if it is running.</summary>
+			/// <returns>Returns a number indicating Snarl version.</returns>
+			LONG32 GetVersion();
+
+			/// <summary>
+			///     Get the path to where Snarl is installed.
+			///     ** Remember to call <see cref="FreeString(LPCTSTR)" /> on the returned string !!!
+			/// </summary>
+			/// <returns>Returns the path to where Snarl is installed.</returns>
+			/// <remarks>This is a V39 API method.</remarks>
+			LPCTSTR  GetAppPath();
+
+			/// <summary>
+			///     Get the path to where the default Snarl icons are located.
+			///     <para>** Remember to call <see cref="FreeString(LPCTSTR)" /> on the returned string !!!</para>
+			/// </summary>
+			/// <returns>Returns the path to where the default Snarl icons are located.</returns>
+			/// <remarks>This is a V39 API method.</remarks>
+			LPCTSTR  GetIconsPath();
+
+			/// <summary>GetLastMsgToken() returns token of the last message sent to Snarl.</summary>
+			/// <returns>Returns message token of last message.</returns>
+			/// <remarks>This function is not in the official API!</remarks>
+			LONG32 GetLastMsgToken() const;
+			
+			/// <summary>Check whether Snarl is running</summary>
+			/// <returns>Returns true if Snarl system was found running.</returns>
+			static BOOL IsSnarlRunning();
+
+			/// <summary>
+			///     Returns the value of Snarl's global registered message.
+			///     Notes:
+			///       Snarl registers SNARL_GLOBAL_MSG during startup which it then uses to communicate
+			///       with all running applications through a Windows broadcast message. This function can
+			///       only fail if for some reason the Windows RegisterWindowMessage() function fails
+			///       - given this, this function *cannnot* be used to test for the presence of Snarl.
+			/// </summary>
+			/// <returns>A 16-bit value (translated to 32-bit) which is the registered Windows message for Snarl.</returns>
+			static UINT Broadcast();
+
+			/// <summary>Returns the global Snarl Application message  (V39)</summary>
+			/// <returns>Returns Snarl application registered message.</returns>
+			static UINT AppMsg();
+
+			/// <summary>Returns a handle to the Snarl Dispatcher window  (V37)</summary>
+			/// <returns>Returns handle to Snarl Dispatcher window, or zero if it's not found.</returns>
+			/// <remarks>This is now the preferred way to test if Snarl is actually running.</remarks>
+			static HWND GetSnarlWindow();
+		
 		private:
-			template <class T> LONG32 Send(T ss);
+			/// <summary>Send message to Snarl.</summary>
+			/// <returns>Return zero on failure.</returns>
+			LONG32 Send(SnarlMessage msg);
+
+			/// <summary>Convert a unicode string to UTF8</summary>
+			/// <returns>Returns pointer to the new string - Remember to delete [] returned string !</returns>
+			/// <remarks>Remember to delete [] returned string !!!</remarks>
 			LPSTR  WideToUTF8(LPCWSTR szWideStr);
-			
-			LONG32 m_nLastMessageId;
-			HWND   m_hwndFrom; // set during snRegisterConfig() or snRegisterConfig2()
 
-	};
+			/// <summary>Pack data into the PackedData member field.</summary>
+			/// <param name="data">Should always be a pointer to the PackedData field</param>
+			/// <param name="format">The format string. Can be NULL or "" to just zero PackedData!</param>
+			/// <param name="...">Variable number of objects to convert</param>
+			void   PackData(BYTE* data, LPCSTR format, ...);
 
-}
+			LONG32 appToken;
+			LONG32 lastMsgToken;
+			SnarlEnums::SnarlStatus localError;
 
-#endif // SNARL_INTERFACE
+	}; // class
+
+	} // namespace V41
+} // namespace Snarl
+
+#endif // SNARL_INTERFACE_V41

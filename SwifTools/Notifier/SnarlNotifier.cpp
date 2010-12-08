@@ -19,14 +19,14 @@ namespace Swift {
 
 SnarlNotifier::SnarlNotifier(const String& name, Win32NotifierWindow* window, const boost::filesystem::path& icon) : window(window) {
 	window->onMessageReceived.connect(boost::bind(&SnarlNotifier::handleMessageReceived, this, _1));
-	snarl.RegisterConfig2(window->getID(), name.getUTF8Data(), 0, icon.string().c_str());
+	snarl.RegisterApp(name.getUTF8Data(), name.getUTF8Data(), icon.string().c_str(), window->getID(), SWIFT_SNARLNOTIFIER_MESSAGE_ID);
 	foreach(Notifier::Type type, getAllTypes()) {
-		snarl.RegisterAlert(name.getUTF8Data(), typeToString(type).getUTF8Data());
+		snarl.AddClass(typeToString(type).getUTF8Data(), typeToString(type).getUTF8Data());
 	}
 }
 
 SnarlNotifier::~SnarlNotifier() {
-	snarl.RevokeConfig(window->getID());
+	snarl.UnregisterApp();
 	window->onMessageReceived.disconnect(boost::bind(&SnarlNotifier::handleMessageReceived, this, _1));
 	if (!notifications.empty()) {
 		std::cerr << "Warning: " << notifications.size() << " Snarl notifications pending" << std::endl;
@@ -34,8 +34,13 @@ SnarlNotifier::~SnarlNotifier() {
 }
 
 void SnarlNotifier::showMessage(Type type, const String& subject, const String& description, const boost::filesystem::path& picture, boost::function<void()> callback) {
-	int timeout = (type == Type::IncomingMessage || type == Type::SystemMessage) ? DEFAULT_MESSAGE_NOTIFICATION_TIMEOUT_SECONDS : DEFAULT_STATUS_NOTIFICATION_TIMEOUT_SECONDS;
-	int notificationID = snarl.ShowMessageEx(typeToString(type).getUTF8Data(), subject.getUTF8Data(), description.getUTF8Data(), timeout, picture.string().c_str(), window->getID(), SWIFT_SNARLNOTIFIER_MESSAGE_ID);
+	int timeout = (type == IncomingMessage || type == SystemMessage) ? DEFAULT_MESSAGE_NOTIFICATION_TIMEOUT_SECONDS : DEFAULT_STATUS_NOTIFICATION_TIMEOUT_SECONDS;
+	int notificationID = snarl.EZNotify(
+			typeToString(type).getUTF8Data(),
+			subject.getUTF8Data(),
+			description.getUTF8Data(),
+			timeout,
+			picture.string().c_str());
 	if (notificationID > 0) {
 		notifications.insert(std::make_pair(notificationID, callback));
 	}
@@ -44,11 +49,11 @@ void SnarlNotifier::showMessage(Type type, const String& subject, const String& 
 void SnarlNotifier::handleMessageReceived(MSG* message) {
 	if (message->message == SWIFT_SNARLNOTIFIER_MESSAGE_ID) {
 		int action = message->wParam;
-		if (action == Snarl::SNARL_NOTIFICATION_TIMED_OUT || action == Snarl::SNARL_NOTIFICATION_ACK || action == Snarl::SNARL_NOTIFICATION_CLOSED) {
+		if (action == Snarl::V41::SnarlEnums::NotificationTimedOut || action == Snarl::V41::SnarlEnums::NotificationAck || action == Snarl::V41::SnarlEnums::NotificationClosed) {
 			int notificationID = message->lParam;
 			NotificationsMap::iterator i = notifications.find(notificationID);
 			if (i != notifications.end()) {
-				if (action == Snarl::SNARL_NOTIFICATION_ACK) {
+				if (action == Snarl::V41::SnarlEnums::NotificationAck) {
 					i->second();
 				}
 				notifications.erase(i);
