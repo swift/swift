@@ -39,6 +39,9 @@ vars.Add(PathVariable("boost_libdir", "Boost library location", None, PathVariab
 vars.Add(PathVariable("expat_includedir", "Expat headers location", None, PathVariable.PathAccept))
 vars.Add(PathVariable("expat_libdir", "Expat library location", None, PathVariable.PathAccept))
 vars.Add("expat_libname", "Expat library name", "libexpat" if os.name == "nt" else "expat")
+vars.Add(PathVariable("libidn_includedir", "LibIDN headers location", None, PathVariable.PathAccept))
+vars.Add(PathVariable("libidn_libdir", "LibIDN library location", None, PathVariable.PathAccept))
+vars.Add("libidn_libname", "LibIDN library name", "libidn" if os.name == "nt" else "idn")
 vars.Add(PathVariable("qt", "Qt location", "", PathVariable.PathAccept))
 vars.Add(PathVariable("docbook_xml", "DocBook XML", None, PathVariable.PathAccept))
 vars.Add(PathVariable("docbook_xsl", "DocBook XSL", None, PathVariable.PathAccept))
@@ -318,12 +321,6 @@ if conf.CheckLib("c") :
 if conf.CheckLib("stdc++") :
 	env["PLATFORM_FLAGS"]["LIBS"] = env["PLATFORM_FLAGS"].get("LIBS", []) + ["stdc++"]
 
-# LibIDN
-if conf.CheckCHeader("idna.h") and conf.CheckLib("idn") :
-	env["LIBIDN_FLAGS"] = { "LIBS": ["idn"] }
-else :
-	env["LIBIDN_BUNDLED"] = 1
-
 # Avahi
 if env["PLATFORM"] != "darwin" :
 	if conf.CheckCHeader("avahi-client/client.h") and conf.CheckLib("avahi-client") and conf.CheckLib("avahi-common") :
@@ -462,6 +459,23 @@ if not env.get("HAVE_EXPAT", 0) and not env.get("HAVE_LIBXML", 0) :
 	SConscript("#/3rdParty/Expat/SConscript")
 	env["HAVE_EXPAT"] = 1
 	env["EXPAT_BUNDLED"] = True
+
+# LibIDN
+libidn_conf_env = conf_env.Clone()
+libidn_flags = {}
+if env.get("libidn_libdir", None) :
+	libidn_flags["LIBPATH"] = [env["libidn_libdir"]]
+if env.get("libidn_includedir", None) :
+	libidn_flags["CPPPATH"] = [env["libidn_includedir"]]
+libidn_conf_env.MergeFlags(libidn_flags)
+conf = Configure(libidn_conf_env)
+if conf.CheckCHeader("idna.h") and conf.CheckLib(env["libidn_libname"]) :
+	env["HAVE_LIBIDN"] = 1
+	env["LIBIDN_FLAGS"] = { "LIBS": [env["libidn_libname"]] }
+	env["LIBIDN_FLAGS"].update(libidn_flags)
+else :
+	env["LIBIDN_BUNDLED"] = 1
+conf.Finish()
 
 # Qt
 if env["qt"] :
