@@ -7,7 +7,7 @@ def cStringVariable(env, cVar, sconsVar) :
 	result = "const char* " + cVar + "[] = {\n"
 	# FIXME: Probably not very robust
 	for var in sconsVar.split(" ") :
-		result += "\t\"" + env.subst(var) + "\",\n"
+		result += "\t\"" + env.subst(var).replace("\\", "\\\\") + "\",\n"
 	result += "\t0\n"
 	result += "};\n"
 	return result
