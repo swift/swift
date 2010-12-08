@@ -59,7 +59,7 @@ void QtAboutWidget::handleLicenseClicked() {
 	QFile file(":/COPYING");
 	file.open(QIODevice::ReadOnly);
 	QTextStream in(&file);
-	in.setAutoDetectUnicode(true);
+	in.setCodec("UTF-8");
 	text->setPlainText(in.readAll());
 	file.close();
 	text->resize(500, 600);
