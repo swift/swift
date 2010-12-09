@@ -137,7 +137,7 @@ ElementParser* XMPPParser::createElementParser(const String& element, const Stri
 	else if (element == "features"  && ns == "http://etherx.jabber.org/streams") {
 		return new StreamFeaturesParser();
 	}
-	else if (element == "error" && ns == "urn:ietf:params:xml:ns:xmpp-streams") {
+	else if (element == "error" && ns == "http://etherx.jabber.org/streams") {
 		return new StreamErrorParser();
 	}
 	else if (element == "auth") {
