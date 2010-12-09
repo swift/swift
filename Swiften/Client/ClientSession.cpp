@@ -13,6 +13,7 @@
 
 #include "Swiften/Elements/ProtocolHeader.h"
 #include "Swiften/Elements/StreamFeatures.h"
+#include "Swiften/Elements/StreamError.h"
 #include "Swiften/Elements/StartTLSRequest.h"
 #include "Swiften/Elements/StartTLSFailure.h"
 #include "Swiften/Elements/TLSProceed.h"
@@ -150,6 +151,9 @@ void ClientSession::handleElement(boost::shared_ptr<Element> element) {
 		else {
 			std::cerr << "Warning: Ignoring ack" << std::endl;
 		}
+	}
+	else if (StreamError::ref streamError = boost::dynamic_pointer_cast<StreamError>(element)) {
+		finishSession(Error::StreamError);
 	}
 	else if (getState() == Initialized) {
 		boost::shared_ptr<Stanza> stanza = boost::dynamic_pointer_cast<Stanza>(element);

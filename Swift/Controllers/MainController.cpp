@@ -423,6 +423,7 @@ void MainController::handleDisconnected(const boost::optional<ClientError>& erro
 			case ClientError::UnexpectedElementError: message = "Unexpected response"; break;
 			case ClientError::ResourceBindError: message = "Error binding resource"; break;
 			case ClientError::SessionStartError: message = "Error starting session"; break;
+			case ClientError::StreamError: message = "Stream error"; break;
 			case ClientError::TLSError: message = "Encryption error"; break;
 			case ClientError::ClientCertificateLoadError: message = "Error loading certificate (Invalid password?)"; break;
 			case ClientError::ClientCertificateError: message = "Certificate not authorized"; break;

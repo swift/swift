@@ -9,11 +9,13 @@
 #include <deque>
 #include <boost/bind.hpp>
 #include <boost/optional.hpp>
+#include <boost/smart_ptr/make_shared.hpp>
 
 #include "Swiften/Session/SessionStream.h"
 #include "Swiften/Client/ClientSession.h"
 #include "Swiften/Elements/StartTLSRequest.h"
 #include "Swiften/Elements/StreamFeatures.h"
+#include "Swiften/Elements/StreamError.h"
 #include "Swiften/Elements/TLSProceed.h"
 #include "Swiften/Elements/StartTLSFailure.h"
 #include "Swiften/Elements/AuthRequest.h"
@@ -32,6 +34,7 @@ using namespace Swift;
 class ClientSessionTest : public CppUnit::TestFixture {
 		CPPUNIT_TEST_SUITE(ClientSessionTest);
 		CPPUNIT_TEST(testStart_Error);
+		CPPUNIT_TEST(testStart_StreamError);
 		CPPUNIT_TEST(testStartTLS);
 		CPPUNIT_TEST(testStartTLS_ServerError);
 		CPPUNIT_TEST(testStartTLS_ConnectError);
@@ -71,6 +74,17 @@ class ClientSessionTest : public CppUnit::TestFixture {
 			boost::shared_ptr<ClientSession> session(createSession());
 			session->start();
 			server->breakConnection();
+
+			CPPUNIT_ASSERT_EQUAL(ClientSession::Finished, session->getState());
+			CPPUNIT_ASSERT(sessionFinishedReceived);
+			CPPUNIT_ASSERT(sessionFinishedError);
+		}
+
+		void testStart_StreamError() {
+			boost::shared_ptr<ClientSession> session(createSession());
+			session->start();
+			server->sendStreamStart();
+			server->sendStreamError();
 
 			CPPUNIT_ASSERT_EQUAL(ClientSession::Finished, session->getState());
 			CPPUNIT_ASSERT(sessionFinishedReceived);
@@ -349,6 +363,10 @@ class ClientSessionTest : public CppUnit::TestFixture {
 					boost::shared_ptr<StreamFeatures> streamFeatures(new StreamFeatures());
 					streamFeatures->setHasStartTLS();
 					onElementReceived(streamFeatures);
+				}
+
+				void sendStreamError() {
+					onElementReceived(boost::make_shared<StreamError>());
 				}
 
 				void sendTLSProceed() {

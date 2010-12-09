@@ -152,6 +152,9 @@ void CoreClient::handleSessionFinished(boost::shared_ptr<Error> error) {
 				case ClientSession::Error::TLSClientCertificateError:
 					clientError = ClientError(ClientError::ClientCertificateError);
 					break;
+				case ClientSession::Error::StreamError:
+					clientError = ClientError(ClientError::StreamError);
+					break;
 			}
 		}
 		else if (boost::shared_ptr<SessionStream::Error> actualError = boost::dynamic_pointer_cast<SessionStream::Error>(error)) {

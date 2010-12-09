@@ -23,6 +23,7 @@ namespace Swift {
 				UnexpectedElementError,
 				ResourceBindError,
 				SessionStartError,
+				StreamError,
 				TLSError,
 				ClientCertificateLoadError,
 				ClientCertificateError,
