@@ -7,6 +7,7 @@
 #include "Swiften/Serializer/XMPPSerializer.h"
 
 #include <boost/bind.hpp>
+#include <boost/smart_ptr/make_shared.hpp>
 #include <iostream>
 #include <cassert>
 
@@ -14,6 +15,7 @@
 #include "Swiften/Base/foreach.h"
 #include "Swiften/Serializer/CompressRequestSerializer.h"
 #include "Swiften/Serializer/CompressFailureSerializer.h"
+#include "Swiften/Serializer/StreamErrorSerializer.h"
 #include "Swiften/Serializer/StreamFeaturesSerializer.h"
 #include "Swiften/Serializer/AuthRequestSerializer.h"
 #include "Swiften/Serializer/AuthFailureSerializer.h"
@@ -36,26 +38,27 @@
 namespace Swift {
 
 XMPPSerializer::XMPPSerializer(PayloadSerializerCollection* payloadSerializers, StreamType type) : type_(type) {
-	serializers_.push_back(boost::shared_ptr<ElementSerializer>(new PresenceSerializer(payloadSerializers)));
-	serializers_.push_back(boost::shared_ptr<ElementSerializer>(new IQSerializer(payloadSerializers)));
-	serializers_.push_back(boost::shared_ptr<ElementSerializer>(new MessageSerializer(payloadSerializers)));
-	serializers_.push_back(boost::shared_ptr<ElementSerializer>(new CompressRequestSerializer()));
-	serializers_.push_back(boost::shared_ptr<ElementSerializer>(new CompressFailureSerializer()));
-	serializers_.push_back(boost::shared_ptr<ElementSerializer>(new AuthRequestSerializer()));
-	serializers_.push_back(boost::shared_ptr<ElementSerializer>(new AuthFailureSerializer()));
-	serializers_.push_back(boost::shared_ptr<ElementSerializer>(new AuthSuccessSerializer()));
-	serializers_.push_back(boost::shared_ptr<ElementSerializer>(new AuthChallengeSerializer()));
-	serializers_.push_back(boost::shared_ptr<ElementSerializer>(new AuthResponseSerializer()));
-	serializers_.push_back(boost::shared_ptr<ElementSerializer>(new StartTLSRequestSerializer()));
-	serializers_.push_back(boost::shared_ptr<ElementSerializer>(new StartTLSFailureSerializer()));
-	serializers_.push_back(boost::shared_ptr<ElementSerializer>(new TLSProceedSerializer()));
-	serializers_.push_back(boost::shared_ptr<ElementSerializer>(new StreamFeaturesSerializer()));
-	serializers_.push_back(boost::shared_ptr<ElementSerializer>(new EnableStreamManagementSerializer()));
-	serializers_.push_back(boost::shared_ptr<ElementSerializer>(new StreamManagementEnabledSerializer()));
-	serializers_.push_back(boost::shared_ptr<ElementSerializer>(new StreamManagementFailedSerializer()));
-	serializers_.push_back(boost::shared_ptr<ElementSerializer>(new StanzaAckSerializer()));
-	serializers_.push_back(boost::shared_ptr<ElementSerializer>(new StanzaAckRequestSerializer()));
-	serializers_.push_back(boost::shared_ptr<ElementSerializer>(new ComponentHandshakeSerializer()));
+	serializers_.push_back(boost::make_shared<PresenceSerializer>(payloadSerializers));
+	serializers_.push_back(boost::make_shared<IQSerializer>(payloadSerializers));
+	serializers_.push_back(boost::make_shared<MessageSerializer>(payloadSerializers));
+	serializers_.push_back(boost::make_shared<CompressRequestSerializer>());
+	serializers_.push_back(boost::make_shared<CompressFailureSerializer>());
+	serializers_.push_back(boost::make_shared<AuthRequestSerializer>());
+	serializers_.push_back(boost::make_shared<AuthFailureSerializer>());
+	serializers_.push_back(boost::make_shared<AuthSuccessSerializer>());
+	serializers_.push_back(boost::make_shared<AuthChallengeSerializer>());
+	serializers_.push_back(boost::make_shared<AuthResponseSerializer>());
+	serializers_.push_back(boost::make_shared<StartTLSRequestSerializer>());
+	serializers_.push_back(boost::make_shared<StartTLSFailureSerializer>());
+	serializers_.push_back(boost::make_shared<TLSProceedSerializer>());
+	serializers_.push_back(boost::make_shared<StreamFeaturesSerializer>());
+	serializers_.push_back(boost::make_shared<StreamErrorSerializer>());
+	serializers_.push_back(boost::make_shared<EnableStreamManagementSerializer>());
+	serializers_.push_back(boost::make_shared<StreamManagementEnabledSerializer>());
+	serializers_.push_back(boost::make_shared<StreamManagementFailedSerializer>());
+	serializers_.push_back(boost::make_shared<StanzaAckSerializer>());
+	serializers_.push_back(boost::make_shared<StanzaAckRequestSerializer>());
+	serializers_.push_back(boost::make_shared<ComponentHandshakeSerializer>());
 }
 
 String XMPPSerializer::serializeHeader(const ProtocolHeader& header) const {

@@ -20,6 +20,7 @@
 #include "Swiften/Parser/IQParser.h"
 #include "Swiften/Parser/MessageParser.h"
 #include "Swiften/Parser/StreamFeaturesParser.h"
+#include "Swiften/Parser/StreamErrorParser.h"
 #include "Swiften/Parser/AuthRequestParser.h"
 #include "Swiften/Parser/AuthSuccessParser.h"
 #include "Swiften/Parser/AuthFailureParser.h"
@@ -135,6 +136,9 @@ ElementParser* XMPPParser::createElementParser(const String& element, const Stri
 	}
 	else if (element == "features"  && ns == "http://etherx.jabber.org/streams") {
 		return new StreamFeaturesParser();
+	}
+	else if (element == "error" && ns == "urn:ietf:params:xml:ns:xmpp-streams") {
+		return new StreamErrorParser();
 	}
 	else if (element == "auth") {
 		return new AuthRequestParser();

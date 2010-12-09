@@ -8,8 +8,7 @@
 
 #include <boost/shared_ptr.hpp>
 
-#include "Swiften/Serializer/PayloadSerializer.h"
-#include "Swiften/Elements/Body.h"
+#include <Swiften/Serializer/PayloadSerializer.h>
 
 namespace Swift {
 	template<typename PAYLOAD_TYPE>
@@ -20,7 +19,7 @@ namespace Swift {
 			}
 
 			virtual bool canSerialize(boost::shared_ptr<Payload> element) const {
-				return dynamic_cast<PAYLOAD_TYPE*>(element.get());
+				return boost::dynamic_pointer_cast<PAYLOAD_TYPE>(element);
 			}
 
 			virtual String serializePayload(boost::shared_ptr<PAYLOAD_TYPE>) const = 0;

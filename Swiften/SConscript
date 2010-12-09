@@ -119,6 +119,7 @@ if env["SCONS_STAGE"] == "build" :
 			"Serializer/PayloadSerializers/NicknameSerializer.cpp",
 			"Serializer/PresenceSerializer.cpp",
 			"Serializer/StanzaSerializer.cpp",
+			"Serializer/StreamErrorSerializer.cpp",
 			"Serializer/StreamFeaturesSerializer.cpp",
 			"Serializer/XML/XMLElement.cpp",
 			"Serializer/XML/XMLNode.cpp",

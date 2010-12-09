@@ -6,7 +6,9 @@
 
 #pragma once
 
-#include "Swiften/Serializer/ElementSerializer.h"
+#include <boost/shared_ptr.hpp>
+
+#include <Swiften/Serializer/ElementSerializer.h>
 
 namespace Swift {
 	template<typename T>
@@ -15,7 +17,7 @@ namespace Swift {
 			virtual String serialize(boost::shared_ptr<Element> element) const = 0;
 
 			virtual bool canSerialize(boost::shared_ptr<Element> element) const {
-				return dynamic_cast<T*>(element.get()) != 0;
+				return boost::dynamic_pointer_cast<T>(element);
 			}
 	};
 }

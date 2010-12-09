@@ -54,6 +54,7 @@ sources = [
 		"PresenceParser.cpp",
 		"SerializingParser.cpp",
 		"StanzaParser.cpp",
+		"StreamErrorParser.cpp",
 		"StreamFeaturesParser.cpp",
 		"XMLParser.cpp",
 		"XMLParserClient.cpp",
