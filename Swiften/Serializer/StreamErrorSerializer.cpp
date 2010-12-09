@@ -34,8 +34,10 @@ String StreamErrorSerializer::serialize(boost::shared_ptr<Element> element)  con
 		case StreamError::InvalidNamespace: typeTag = "invalid-namespace"; break;
 		case StreamError::InvalidXML: typeTag = "invalid-xml"; break;
 		case StreamError::NotAuthorized: typeTag = "not-authorized"; break;
+		case StreamError::NotWellFormed: typeTag = "not-well-formed"; break;
 		case StreamError::PolicyViolation: typeTag = "policy-violation"; break;
 		case StreamError::RemoteConnectionFailed: typeTag = "remote-connection-failed"; break;
+		case StreamError::Reset: typeTag = "reset"; break;
 		case StreamError::ResourceConstraint: typeTag = "resource-constraint"; break;
 		case StreamError::RestrictedXML: typeTag = "restricted-xml"; break;
 		case StreamError::SeeOtherHost: typeTag = "see-other-host"; break;
@@ -44,7 +46,6 @@ String StreamErrorSerializer::serialize(boost::shared_ptr<Element> element)  con
 		case StreamError::UnsupportedEncoding: typeTag = "unsupported-encoding"; break;
 		case StreamError::UnsupportedStanzaType: typeTag = "unsupported-stanza-type"; break;
 		case StreamError::UnsupportedVersion: typeTag = "unsupported-version"; break;
-		case StreamError::XMLNotWellFormed: typeTag = "xml-not-well-formed"; break;
 	}
 	errorElement.addNode(boost::make_shared<XMLElement>(typeTag, "urn:ietf:params:xml:ns:xmpp-streams"));	
 

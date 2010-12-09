@@ -60,11 +60,17 @@ void StreamErrorParser::handleEndElement(const String& element, const String& ns
 		else if(element == "not-authorized") {
 			getElementGeneric()->setType(StreamError::NotAuthorized);
 		}
+		else if(element == "not-well-formed") {
+			getElementGeneric()->setType(StreamError::NotWellFormed);
+		}
 		else if(element == "policy-violation") {
 			getElementGeneric()->setType(StreamError::PolicyViolation);
 		}
 		else if(element == "remote-connection-failed") {
 			getElementGeneric()->setType(StreamError::RemoteConnectionFailed);
+		}
+		else if(element == "reset") {
+			getElementGeneric()->setType(StreamError::Reset);
 		}
 		else if(element == "resource-constraint") {
 			getElementGeneric()->setType(StreamError::ResourceConstraint);
@@ -89,9 +95,6 @@ void StreamErrorParser::handleEndElement(const String& element, const String& ns
 		}
 		else if(element == "unsupported-version") {
 			getElementGeneric()->setType(StreamError::UnsupportedVersion);
-		}
-		else if(element == "xml-not-well-formed") {
-			getElementGeneric()->setType(StreamError::XMLNotWellFormed);
 		}
 		else {
 			getElementGeneric()->setType(StreamError::UndefinedCondition);

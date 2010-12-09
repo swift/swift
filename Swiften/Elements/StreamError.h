@@ -30,8 +30,10 @@ namespace Swift {
 				InvalidNamespace,
 				InvalidXML,
 				NotAuthorized,
+				NotWellFormed,
 				PolicyViolation,
 				RemoteConnectionFailed,
+				Reset,
 				ResourceConstraint,
 				RestrictedXML,
 				SeeOtherHost,
@@ -40,7 +42,6 @@ namespace Swift {
 				UnsupportedEncoding,
 				UnsupportedStanzaType,
 				UnsupportedVersion,
-				XMLNotWellFormed,
 			};
 
 			StreamError(Type type = UndefinedCondition, const String& text = String()) : type_(type), text_(text) { }
