@@ -46,10 +46,10 @@ String StreamErrorSerializer::serialize(boost::shared_ptr<Element> element)  con
 		case StreamError::UnsupportedVersion: typeTag = "unsupported-version"; break;
 		case StreamError::XMLNotWellFormed: typeTag = "xml-not-well-formed"; break;
 	}
-	errorElement.addNode(boost::make_shared<XMLElement>(typeTag, ""));	
+	errorElement.addNode(boost::make_shared<XMLElement>(typeTag, "urn:ietf:params:xml:ns:xmpp-streams"));	
 
 	if (!error->getText().isEmpty()) {
-		errorElement.addNode(boost::make_shared<XMLElement>("text", "", error->getText()));
+		errorElement.addNode(boost::make_shared<XMLElement>("text", "urn:ietf:params:xml:ns:xmpp-streams", error->getText()));
 	}
 
 	return errorElement.serialize();

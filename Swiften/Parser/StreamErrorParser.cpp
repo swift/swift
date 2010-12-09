@@ -15,9 +15,9 @@ void StreamErrorParser::handleStartElement(const String&, const String&, const A
 	++level;
 }
 
-void StreamErrorParser::handleEndElement(const String& element, const String&) {
+void StreamErrorParser::handleEndElement(const String& element, const String& ns) {
 	--level;
-	if (level == ElementLevel) {
+	if (level == ElementLevel && ns == "urn:ietf:params:xml:ns:xmpp-streams") {
 		if (element == "text") {
 			getElementGeneric()->setText(currentText);
 		}
