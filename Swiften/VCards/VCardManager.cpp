@@ -46,7 +46,7 @@ void VCardManager::requestOwnVCard() {
 
 
 void VCardManager::handleVCardReceived(const JID& actualJID, VCard::ref vcard, ErrorPayload::ref error) {
-	if (error) {
+	if (error || !vcard) {
 		vcard = VCard::ref(new VCard());
 	}
 	requestedVCards.erase(actualJID);
