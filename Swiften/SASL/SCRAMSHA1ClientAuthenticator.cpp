@@ -35,7 +35,7 @@ static String escape(const String& s) {
 }
 
 
-SCRAMSHA1ClientAuthenticator::SCRAMSHA1ClientAuthenticator(const String& nonce) : ClientAuthenticator("SCRAM-SHA-1"), step(Initial), clientnonce(nonce) {
+SCRAMSHA1ClientAuthenticator::SCRAMSHA1ClientAuthenticator(const String& nonce, bool useChannelBinding) : ClientAuthenticator("SCRAM-SHA-1"), step(Initial), clientnonce(nonce), useChannelBinding(useChannelBinding) {
 }
 
 boost::optional<ByteArray> SCRAMSHA1ClientAuthenticator::getResponse() const {
@@ -50,7 +50,11 @@ boost::optional<ByteArray> SCRAMSHA1ClientAuthenticator::getResponse() const {
 		for (unsigned int i = 0; i < clientProof.getSize(); ++i) {
 			clientProof[i] ^= clientSignature[i];
 		}
-		ByteArray result = ByteArray("c=") + Base64::encode(getGS2Header()) + ",r=" + clientnonce + serverNonce + ",p=" + Base64::encode(clientProof);
+		ByteArray channelBindData;
+		if (useChannelBinding && tlsChannelBindingData) {
+			channelBindData = *tlsChannelBindingData;
+		}
+		ByteArray result = ByteArray("c=") + Base64::encode(getGS2Header() + channelBindData) + ",r=" + clientnonce + serverNonce + ",p=" + Base64::encode(clientProof);
 		return result;
 	}
 	else {
@@ -146,7 +150,20 @@ ByteArray SCRAMSHA1ClientAuthenticator::getInitialBareClientMessage() const {
 }
 
 ByteArray SCRAMSHA1ClientAuthenticator::getGS2Header() const {
-	return ByteArray("n,") + (getAuthorizationID().isEmpty() ? "" : "a=" + escape(getAuthorizationID())) + ",";
+	ByteArray channelBindingHeader("n");
+	if (tlsChannelBindingData) {
+		if (useChannelBinding) {
+			channelBindingHeader = ByteArray("p=tls-server-end-point");
+		}
+		else {
+			channelBindingHeader = ByteArray("y");
+		}
+	}
+	return channelBindingHeader + ByteArray(",") + (getAuthorizationID().isEmpty() ? "" : "a=" + escape(getAuthorizationID())) + ",";
+}
+
+void SCRAMSHA1ClientAuthenticator::setTLSChannelBindingData(const ByteArray& channelBindingData) {
+	this->tlsChannelBindingData = channelBindingData;
 }
 
 }

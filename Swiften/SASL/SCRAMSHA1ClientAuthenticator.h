@@ -7,6 +7,7 @@
 #pragma once
 
 #include <map>
+#include <boost/optional.hpp>
 
 #include "Swiften/Base/String.h"
 #include "Swiften/Base/ByteArray.h"
@@ -15,7 +16,9 @@
 namespace Swift {
 	class SCRAMSHA1ClientAuthenticator : public ClientAuthenticator {
 		public:
-			SCRAMSHA1ClientAuthenticator(const String& nonce);
+			SCRAMSHA1ClientAuthenticator(const String& nonce, bool useChannelBinding = false);
+
+			void setTLSChannelBindingData(const ByteArray& channelBindingData);
 			
 			virtual boost::optional<ByteArray> getResponse() const;
 			virtual bool setChallenge(const boost::optional<ByteArray>&);
@@ -38,5 +41,7 @@ namespace Swift {
 			ByteArray authMessage;
 			ByteArray saltedPassword;
 			ByteArray serverSignature;
+			bool useChannelBinding;
+			boost::optional<ByteArray> tlsChannelBindingData;
 	};
 }

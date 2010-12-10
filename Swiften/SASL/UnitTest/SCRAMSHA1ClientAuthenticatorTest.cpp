@@ -18,7 +18,11 @@ class SCRAMSHA1ClientAuthenticatorTest : public CppUnit::TestFixture {
 		CPPUNIT_TEST(testGetInitialResponse_UsernameHasSpecialChars);
 		CPPUNIT_TEST(testGetInitialResponse_WithAuthorizationID);
 		CPPUNIT_TEST(testGetInitialResponse_WithAuthorizationIDWithSpecialChars);
+		CPPUNIT_TEST(testGetInitialResponse_WithoutChannelBindingWithTLSChannelBindingData);
+		CPPUNIT_TEST(testGetInitialResponse_WithChannelBindingWithTLSChannelBindingData);
 		CPPUNIT_TEST(testGetFinalResponse);
+		CPPUNIT_TEST(testGetFinalResponse_WithoutChannelBindingWithTLSChannelBindingData);
+		CPPUNIT_TEST(testGetFinalResponse_WithChannelBindingWithTLSChannelBindingData);
 		CPPUNIT_TEST(testSetChallenge);
 		CPPUNIT_TEST(testSetChallenge_InvalidClientNonce);
 		CPPUNIT_TEST(testSetChallenge_OnlyClientNonce);
@@ -71,6 +75,26 @@ class SCRAMSHA1ClientAuthenticatorTest : public CppUnit::TestFixture {
 			CPPUNIT_ASSERT_EQUAL(String("n,a=a=3Du=2Cth,n=user,r=abcdefghABCDEFGH"), response.toString());
 		}
 
+		void testGetInitialResponse_WithoutChannelBindingWithTLSChannelBindingData() {
+			SCRAMSHA1ClientAuthenticator testling("abcdefghABCDEFGH", false);
+			testling.setTLSChannelBindingData("xyza");
+			testling.setCredentials("user", "pass", "");
+
+			ByteArray response = *testling.getResponse();
+
+			CPPUNIT_ASSERT_EQUAL(String("y,,n=user,r=abcdefghABCDEFGH"), response.toString());
+		}
+
+		void testGetInitialResponse_WithChannelBindingWithTLSChannelBindingData() {
+			SCRAMSHA1ClientAuthenticator testling("abcdefghABCDEFGH", true);
+			testling.setTLSChannelBindingData("xyza");
+			testling.setCredentials("user", "pass", "");
+
+			ByteArray response = *testling.getResponse();
+
+			CPPUNIT_ASSERT_EQUAL(String("p=tls-server-end-point,,n=user,r=abcdefghABCDEFGH"), response.toString());
+		}
+
 		void testGetFinalResponse() {
 			SCRAMSHA1ClientAuthenticator testling("abcdefgh");
 			testling.setCredentials("user", "pass", "");
@@ -79,6 +103,28 @@ class SCRAMSHA1ClientAuthenticatorTest : public CppUnit::TestFixture {
 			ByteArray response = *testling.getResponse();
 
 			CPPUNIT_ASSERT_EQUAL(String("c=biws,r=abcdefghABCDEFGH,p=CZbjGDpIteIJwQNBgO0P8pKkMGY="), response.toString());
+		}
+
+		void testGetFinalResponse_WithoutChannelBindingWithTLSChannelBindingData() {
+			SCRAMSHA1ClientAuthenticator testling("abcdefgh", false);
+			testling.setCredentials("user", "pass", "");
+			testling.setTLSChannelBindingData("xyza");
+			testling.setChallenge(ByteArray("r=abcdefghABCDEFGH,s=MTIzNDU2NzgK,i=4096"));
+
+			ByteArray response = *testling.getResponse();
+
+			CPPUNIT_ASSERT_EQUAL(String("c=eSws,r=abcdefghABCDEFGH,p=JNpsiFEcxZvNZ1+FFBBqrYvYxMk="), response.toString());
+		}
+
+		void testGetFinalResponse_WithChannelBindingWithTLSChannelBindingData() {
+			SCRAMSHA1ClientAuthenticator testling("abcdefgh", true);
+			testling.setCredentials("user", "pass", "");
+			testling.setTLSChannelBindingData("xyza");
+			testling.setChallenge(ByteArray("r=abcdefghABCDEFGH,s=MTIzNDU2NzgK,i=4096"));
+
+			ByteArray response = *testling.getResponse();
+
+			CPPUNIT_ASSERT_EQUAL(String("c=cD10bHMtc2VydmVyLWVuZC1wb2ludCwseHl6YQ==,r=abcdefghABCDEFGH,p=ycZyNs03w1HlRzFmXl8dlKx3NAU="), response.toString());
 		}
 
 		void testSetFinalChallenge() {
