@@ -359,8 +359,8 @@ void MainController::performLoginFromCachedCredentials() {
 		statusTracker_  = new StatusTracker();
 	}
 	if (!client_) {
-		storages_ = storagesFactory_->createStorages(jid_);
-		certificateStorage_ = certificateStorageFactory_->createCertificateStorage(jid_);
+		storages_ = storagesFactory_->createStorages(jid_.toBare());
+		certificateStorage_ = certificateStorageFactory_->createCertificateStorage(jid_.toBare());
 		certificateTrustChecker_ = new CertificateStorageTrustChecker(certificateStorage_);
 		client_ = new Swift::Client(eventLoop_, &networkFactories_, jid_, password_, storages_);
 		client_->setCertificateTrustChecker(certificateTrustChecker_);
@@ -440,7 +440,7 @@ void MainController::handleDisconnected(const boost::optional<ClientError>& erro
 			case ClientError::InvalidCAError:
 			case ClientError::InvalidServerIdentityError:
 				// FIXME: Popup a dialog
-				message = "Certificate error";
+				message = "Certificate error (" + boost::lexical_cast<std::string>(error->getType()) + ")";
 				// FIXME: Only do this if the user accepts the certificate
 				//certificateStorage_->addCertificate(certificateTrustChecker_->getLastCertificate());
 				break;
