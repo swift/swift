@@ -30,6 +30,8 @@ namespace Swift {
 			Certificate::ref getPeerCertificate() const;
 			boost::shared_ptr<CertificateVerificationError> getPeerCertificateVerificationError() const;
 
+			virtual ByteArray getFinishMessage() const;
+
 		private:
 			static void ensureLibraryInitialized();	
 

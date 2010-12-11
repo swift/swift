@@ -26,6 +26,7 @@ namespace Swift {
 		private:
 			ByteArray getInitialBareClientMessage() const;
 			ByteArray getGS2Header() const;
+			ByteArray getFinalMessageWithoutProof() const;
 
 			static std::map<char, String> parseMap(const String&);
 

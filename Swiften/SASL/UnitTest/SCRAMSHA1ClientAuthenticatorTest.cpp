@@ -92,7 +92,7 @@ class SCRAMSHA1ClientAuthenticatorTest : public CppUnit::TestFixture {
 
 			ByteArray response = *testling.getResponse();
 
-			CPPUNIT_ASSERT_EQUAL(String("p=tls-server-end-point,,n=user,r=abcdefghABCDEFGH"), response.toString());
+			CPPUNIT_ASSERT_EQUAL(String("p=tls-unique,,n=user,r=abcdefghABCDEFGH"), response.toString());
 		}
 
 		void testGetFinalResponse() {
@@ -124,7 +124,7 @@ class SCRAMSHA1ClientAuthenticatorTest : public CppUnit::TestFixture {
 
 			ByteArray response = *testling.getResponse();
 
-			CPPUNIT_ASSERT_EQUAL(String("c=cD10bHMtc2VydmVyLWVuZC1wb2ludCwseHl6YQ==,r=abcdefghABCDEFGH,p=ycZyNs03w1HlRzFmXl8dlKx3NAU="), response.toString());
+			CPPUNIT_ASSERT_EQUAL(String("c=cD10bHMtdW5pcXVlLCx4eXph,r=abcdefghABCDEFGH,p=i6Rghite81P1ype8XxaVAa5l7v0="), response.toString());
 		}
 
 		void testSetFinalChallenge() {

@@ -324,6 +324,10 @@ class ClientSessionTest : public CppUnit::TestFixture {
 					return tlsEncrypted;
 				}
 
+				virtual ByteArray getTLSFinishMessage() const {
+					return ByteArray();
+				}
+
 				virtual Certificate::ref getPeerCertificate() const {
 					return Certificate::ref(new SimpleCertificate());
 				}

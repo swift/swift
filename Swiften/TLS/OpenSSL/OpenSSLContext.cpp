@@ -23,6 +23,7 @@
 
 namespace Swift {
 
+static const int MAX_FINISHED_SIZE = 4096;
 static const int SSL_READ_BUFFERSIZE = 8192;
 
 void freeX509Stack(STACK_OF(X509)* stack) {
@@ -208,6 +209,14 @@ boost::shared_ptr<CertificateVerificationError> OpenSSLContext::getPeerCertifica
 	else {
 		return boost::shared_ptr<CertificateVerificationError>();
 	}
+}
+
+ByteArray OpenSSLContext::getFinishMessage() const {
+	ByteArray data;
+	data.resize(MAX_FINISHED_SIZE);
+	size_t size = SSL_get_finished(handle_, data.getData(), data.getSize());
+	data.resize(size);
+	return data;
 }
 
 CertificateVerificationError::Type OpenSSLContext::getVerificationErrorTypeForResult(int result) {

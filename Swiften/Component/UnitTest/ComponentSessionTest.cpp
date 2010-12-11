@@ -123,6 +123,10 @@ class ComponentSessionTest : public CppUnit::TestFixture {
 					return false;
 				}
 
+				virtual ByteArray getTLSFinishMessage() const {
+					return ByteArray();
+				}
+
 				virtual Certificate::ref getPeerCertificate() const {
 					return Certificate::ref();
 				}

@@ -15,6 +15,7 @@
 #include "Swiften/StreamStack/CompressionLayer.h"
 #include "Swiften/StreamStack/TLSLayer.h"
 #include "Swiften/TLS/TLSContextFactory.h"
+#include "Swiften/TLS/TLSContext.h"
 
 namespace Swift {
 
@@ -93,6 +94,9 @@ boost::shared_ptr<CertificateVerificationError> BasicSessionStream::getPeerCerti
 	return tlsLayer->getPeerCertificateVerificationError();
 }
 
+ByteArray BasicSessionStream::getTLSFinishMessage() const {
+	return tlsLayer->getContext()->getFinishMessage();
+}
 
 void BasicSessionStream::addZLibCompression() {
 	boost::shared_ptr<CompressionLayer> compressionLayer(new CompressionLayer());

@@ -30,6 +30,10 @@ namespace Swift {
 			void writeData(const ByteArray& data);
 			void handleDataRead(const ByteArray& data);
 
+			TLSContext* getContext() const {
+				return context;
+			}
+
 		public:
 			boost::signal<void ()> onError;
 			boost::signal<void ()> onConnected;

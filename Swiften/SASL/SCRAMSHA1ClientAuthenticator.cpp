@@ -35,7 +35,7 @@ static String escape(const String& s) {
 }
 
 
-SCRAMSHA1ClientAuthenticator::SCRAMSHA1ClientAuthenticator(const String& nonce, bool useChannelBinding) : ClientAuthenticator("SCRAM-SHA-1"), step(Initial), clientnonce(nonce), useChannelBinding(useChannelBinding) {
+SCRAMSHA1ClientAuthenticator::SCRAMSHA1ClientAuthenticator(const String& nonce, bool useChannelBinding) : ClientAuthenticator(useChannelBinding ? "SCRAM-SHA-1-PLUS" : "SCRAM-SHA-1"), step(Initial), clientnonce(nonce), useChannelBinding(useChannelBinding) {
 }
 
 boost::optional<ByteArray> SCRAMSHA1ClientAuthenticator::getResponse() const {
@@ -50,11 +50,7 @@ boost::optional<ByteArray> SCRAMSHA1ClientAuthenticator::getResponse() const {
 		for (unsigned int i = 0; i < clientProof.getSize(); ++i) {
 			clientProof[i] ^= clientSignature[i];
 		}
-		ByteArray channelBindData;
-		if (useChannelBinding && tlsChannelBindingData) {
-			channelBindData = *tlsChannelBindingData;
-		}
-		ByteArray result = ByteArray("c=") + Base64::encode(getGS2Header() + channelBindData) + ",r=" + clientnonce + serverNonce + ",p=" + Base64::encode(clientProof);
+		ByteArray result = getFinalMessageWithoutProof() + ",p=" + Base64::encode(clientProof);
 		return result;
 	}
 	else {
@@ -97,9 +93,14 @@ bool SCRAMSHA1ClientAuthenticator::setChallenge(const boost::optional<ByteArray>
 			return false;
 		}
 
+		ByteArray channelBindData;
+		if (useChannelBinding && tlsChannelBindingData) {
+			channelBindData = *tlsChannelBindingData;
+		}
+
 		// Compute all the values needed for the server signature
 		saltedPassword = PBKDF2::encode(StringPrep::getPrepared(getPassword(), StringPrep::SASLPrep), salt, iterations);
-		authMessage = getInitialBareClientMessage() + "," + initialServerMessage + "," + "c=" + Base64::encode(getGS2Header()) + ",r=" + clientnonce + serverNonce;
+		authMessage = getInitialBareClientMessage() + "," + initialServerMessage + "," + getFinalMessageWithoutProof();
 		ByteArray serverKey = HMACSHA1::getResult(saltedPassword, "Server Key");
 		serverSignature = HMACSHA1::getResult(serverKey, authMessage);
 
@@ -153,7 +154,7 @@ ByteArray SCRAMSHA1ClientAuthenticator::getGS2Header() const {
 	ByteArray channelBindingHeader("n");
 	if (tlsChannelBindingData) {
 		if (useChannelBinding) {
-			channelBindingHeader = ByteArray("p=tls-server-end-point");
+			channelBindingHeader = ByteArray("p=tls-unique");
 		}
 		else {
 			channelBindingHeader = ByteArray("y");
@@ -165,5 +166,14 @@ ByteArray SCRAMSHA1ClientAuthenticator::getGS2Header() const {
 void SCRAMSHA1ClientAuthenticator::setTLSChannelBindingData(const ByteArray& channelBindingData) {
 	this->tlsChannelBindingData = channelBindingData;
 }
+
+ByteArray SCRAMSHA1ClientAuthenticator::getFinalMessageWithoutProof() const {
+	ByteArray channelBindData;
+	if (useChannelBinding && tlsChannelBindingData) {
+		channelBindData = *tlsChannelBindingData;
+	}
+	return ByteArray("c=") + Base64::encode(getGS2Header() + channelBindData) + ",r=" + clientnonce + serverNonce;
+}
+
 
 }
