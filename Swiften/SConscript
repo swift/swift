@@ -49,6 +49,8 @@ if env["SCONS_STAGE"] == "build" :
 			"Client/MemoryStorages.cpp",
 			"Client/FileStorages.cpp",
 			"Client/NickResolver.cpp",
+			"Client/NickManager.cpp",
+			"Client/NickManagerImpl.cpp",
 			"Compress/ZLibCodecompressor.cpp",
 			"Compress/ZLibDecompressor.cpp",
 			"Compress/ZLibCompressor.cpp",

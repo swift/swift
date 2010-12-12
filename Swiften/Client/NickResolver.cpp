@@ -16,6 +16,7 @@
 // FIXME: The NickResolver currently relies on the vcard being requested by the client on login.
 // The VCardManager should get an onConnected() signal (which is signalled when the stanzachannel is available(, and each time this is emitted,
 // the nickresolver should request the vcard.
+// FIXME: The ownJID functionality should probably be removed, and NickManager should be used directly.
 
 namespace Swift {
 
@@ -66,9 +67,6 @@ void NickResolver::handleVCardReceived(const JID& jid, VCard::ref ownVCard) {
 		} else if (!ownVCard->getFullName().isEmpty()) {
 			ownNick_ = ownVCard->getFullName();
 		}
-	}
-	if (ownNick_ != initialNick) {
-		onOwnNickChanged(ownNick_);
 	}
 }
 

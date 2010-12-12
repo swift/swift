@@ -24,6 +24,7 @@
 #include "Swiften/Client/NickResolver.h"
 #include "Swiften/Presence/SubscriptionManager.h"
 #include "Swiften/TLS/BlindCertificateTrustChecker.h"
+#include <Swiften/Client/NickManagerImpl.h>
 
 namespace Swift {
 
@@ -53,6 +54,7 @@ Client::Client(EventLoop* eventLoop, NetworkFactories* networkFactories, const J
 	capsManager = new CapsManager(getStorages()->getCapsStorage(), getStanzaChannel(), getIQRouter());
 	entityCapsManager = new EntityCapsManager(capsManager, getStanzaChannel());
 
+	nickManager = new NickManagerImpl(jid.toBare(), vcardManager);
 	nickResolver = new NickResolver(jid.toBare(), roster, vcardManager, mucRegistry);
 
 	blindCertificateTrustChecker = new BlindCertificateTrustChecker();
@@ -62,6 +64,7 @@ Client::~Client() {
 	delete blindCertificateTrustChecker;
 
 	delete nickResolver;
+	delete nickManager;
 
 	delete entityCapsManager;
 	delete capsManager;
@@ -121,8 +124,13 @@ EntityCapsProvider* Client::getEntityCapsProvider() const {
 	return entityCapsManager;
 }
 
+
 void Client::setAlwaysTrustCertificates() {
 	setCertificateTrustChecker(blindCertificateTrustChecker);
+}
+
+NickManager* Client::getNickManager() const {
+	return nickManager;
 }
 
 }

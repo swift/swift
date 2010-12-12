@@ -40,6 +40,7 @@ QtMainWindow::QtMainWindow(UIEventStream* uiEventStream) : QWidget(), MainWindow
 	meView_ = new QtRosterHeader(this);
 	mainLayout->addWidget(meView_);
 	connect(meView_, SIGNAL(onChangeStatusRequest(StatusShow::Type, const QString&)), this, SLOT(handleStatusChanged(StatusShow::Type, const QString&)));
+	connect(meView_, SIGNAL(onChangeNickRequest(const QString&)), this, SLOT(handleChangeNickRequest(const QString&)));
 
 	tabs_ = new QtTabWidget(this);
 #if QT_VERSION >= 0x040500
@@ -162,8 +163,12 @@ void QtMainWindow::handleShowOfflineToggled(bool state) {
 	}
 }
 
-void QtMainWindow::setMyName(const String& name) {
-	meView_->setName(P2QSTRING(name));
+void QtMainWindow::setMyNick(const String& nick) {
+	meView_->setNick(P2QSTRING(nick));
+}
+
+void QtMainWindow::setMyJID(const JID& jid) {
+	meView_->setJID(P2QSTRING(jid.toBare().toString()));
 }
 
 void QtMainWindow::setMyAvatarPath(const String& path) {
@@ -180,6 +185,10 @@ void QtMainWindow::setMyStatusType(StatusShow::Type type) {
 
 void QtMainWindow::setConnecting() {
 	meView_->setConnecting();
+}
+
+void QtMainWindow::handleChangeNickRequest(const QString& nick) {
+	onChangeNickRequest(Q2PSTRING(nick));
 }
 
 }

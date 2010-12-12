@@ -69,6 +69,7 @@ sources = [
     "QtLoginWindowFactory.cpp",
     "QtMainWindow.cpp",
     "QtMainWindowFactory.cpp",
+    "QtNameWidget.cpp",
     "QtSettingsProvider.cpp",
     "QtStatusWidget.cpp",
     "QtSwift.cpp",

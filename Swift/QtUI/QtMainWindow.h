@@ -38,7 +38,8 @@ namespace Swift {
 			QtMainWindow(UIEventStream* eventStream);
 			~QtMainWindow();
 			std::vector<QMenu*> getMenus() {return menus_;}
-			void setMyName(const String& name);
+			void setMyNick(const String& name);
+			void setMyJID(const JID& jid);
 			void setMyAvatarPath(const String& path);
 			void setMyStatusText(const String& status);
 			void setMyStatusType(StatusShow::Type type);
@@ -55,6 +56,8 @@ namespace Swift {
 			void handleAddContactDialogComplete(const JID& contact, const QString& name);
 			void handleAddActionTriggered(bool checked);
 			void handleEventCountUpdated(int count);
+			void handleChangeNickRequest(const QString& nick);
+
 		private:
 			std::vector<QMenu*> menus_;
 			QtTreeWidget* treeWidget_;

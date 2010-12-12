@@ -30,6 +30,7 @@ namespace Swift {
 	class NickResolver;
 	class SubscriptionManager;
 	class ClientDiscoManager;
+	class NickManager;
 
 	/**
 	 * Provides the core functionality for writing XMPP client software.
@@ -115,6 +116,8 @@ namespace Swift {
 
 			EntityCapsProvider* getEntityCapsProvider() const;
 
+			NickManager* getNickManager() const;
+
 			NickResolver* getNickResolver() const {
 				return nickResolver;
 			}
@@ -158,6 +161,7 @@ namespace Swift {
 			AvatarManager* avatarManager;
 			CapsManager* capsManager;
 			EntityCapsManager* entityCapsManager;
+			NickManager* nickManager;
 			NickResolver* nickResolver;
 			SubscriptionManager* subscriptionManager;
 			MUCManager* mucManager;

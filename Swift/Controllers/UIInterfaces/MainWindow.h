@@ -25,7 +25,8 @@ namespace Swift {
 				return canDelete_;
 			}
 
-			virtual void setMyName(const String& name) = 0;
+			virtual void setMyNick(const String& name) = 0;
+			virtual void setMyJID(const JID& jid) = 0;
 			virtual void setMyAvatarPath(const String& path) = 0;
 			virtual void setMyStatusText(const String& status) = 0;
 			virtual void setMyStatusType(StatusShow::Type type) = 0;
@@ -35,6 +36,7 @@ namespace Swift {
 			
 			boost::signal<void (StatusShow::Type, const String&)> onChangeStatusRequest;
 			boost::signal<void ()> onSignOutRequest;
+			boost::signal<void (const String&)> onChangeNickRequest;
 
 		private:
 			bool canDelete_;

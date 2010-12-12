@@ -32,6 +32,7 @@
 #include "Swift/Controllers/UIEvents/RenameRosterItemUIEvent.h"
 #include "Swift/Controllers/UIEvents/RegroupRosterItemUIEvent.h"
 #include "Swift/Controllers/UIEvents/ToggleShowOfflineUIEvent.h"
+#include <Swiften/Client/NickManager.h>
 
 namespace Swift {
 
@@ -40,8 +41,8 @@ static const String SHOW_OFFLINE = "showOffline";
 /**
  * The controller does not gain ownership of these parameters.
  */
-RosterController::RosterController(const JID& jid, XMPPRoster* xmppRoster, AvatarManager* avatarManager, MainWindowFactory* mainWindowFactory, NickResolver* nickResolver, PresenceOracle* presenceOracle, SubscriptionManager* subscriptionManager, EventController* eventController, UIEventStream* uiEventStream, IQRouter* iqRouter, SettingsProvider* settings)
- : myJID_(jid), xmppRoster_(xmppRoster), mainWindowFactory_(mainWindowFactory), mainWindow_(mainWindowFactory_->createMainWindow(uiEventStream)), roster_(new Roster()), offlineFilter_(new OfflineRosterFilter()) {
+RosterController::RosterController(const JID& jid, XMPPRoster* xmppRoster, AvatarManager* avatarManager, MainWindowFactory* mainWindowFactory, NickManager* nickManager, NickResolver* nickResolver, PresenceOracle* presenceOracle, SubscriptionManager* subscriptionManager, EventController* eventController, UIEventStream* uiEventStream, IQRouter* iqRouter, SettingsProvider* settings)
+ : myJID_(jid), xmppRoster_(xmppRoster), mainWindowFactory_(mainWindowFactory), mainWindow_(mainWindowFactory_->createMainWindow(uiEventStream)), roster_(new Roster()), offlineFilter_(new OfflineRosterFilter()), nickManager_(nickManager), nickResolver_(nickResolver) {
 	iqRouter_ = iqRouter;
 	presenceOracle_ = presenceOracle;
 	subscriptionManager_ = subscriptionManager;
@@ -63,13 +64,21 @@ RosterController::RosterController(const JID& jid, XMPPRoster* xmppRoster, Avata
 	avatarManager_ = avatarManager;
 	avatarManager_->onAvatarChanged.connect(boost::bind(&RosterController::handleAvatarChanged, this, _1));
 	mainWindow_->setMyAvatarPath(avatarManager_->getAvatarPath(myJID_).string());
-	setNickResolver(nickResolver);
+
+	nickManager_->onOwnNickChanged.connect(boost::bind(&MainWindow::setMyNick, mainWindow_, _1));
+	mainWindow_->setMyJID(jid);
+	mainWindow_->setMyNick(nickManager_->getOwnNick());
+
+	mainWindow_->onChangeNickRequest.connect(boost::bind(&NickManager::setOwnNick, nickManager_, _1));
+
 	if (settings->getBoolSetting(SHOW_OFFLINE, false)) {
 		uiEventStream->onUIEvent(boost::shared_ptr<UIEvent>(new ToggleShowOfflineUIEvent(true)));
 	}
 }
 
 RosterController::~RosterController() {
+	nickManager_->onOwnNickChanged.disconnect(boost::bind(&MainWindow::setMyNick, mainWindow_, _1));
+
 	delete offlineFilter_;
 	delete expandiness_;
 	mainWindow_->setRosterModel(NULL);
@@ -77,19 +86,6 @@ RosterController::~RosterController() {
 		delete mainWindow_;
 	}
 	delete roster_;
-}
-
-void RosterController::setNickResolver(NickResolver* nickResolver) {
-	nickResolver_ = nickResolver;
-	if (nickResolver_ != NULL) {
-		handleOwnNickChanged(nickResolver_->jidToNick(myJID_));
-
-		nickResolver_->onOwnNickChanged.connect(boost::bind(&RosterController::handleOwnNickChanged, this, _1));
-	}
-}
-
-void RosterController::handleOwnNickChanged(const String& nick) {
-	mainWindow_->setMyName(nick);
 }
 
 void RosterController::setEnabled(bool enabled) {

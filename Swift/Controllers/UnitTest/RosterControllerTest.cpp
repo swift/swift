@@ -30,6 +30,7 @@
 #include "Swift/Controllers/UIEvents/RenameRosterItemUIEvent.h"
 #include "Swift/Controllers/UIEvents/RegroupRosterItemUIEvent.h"
 #include "Swiften/MUC/MUCRegistry.h"
+#include <Swiften/Client/DummyNickManager.h>
 
 using namespace Swift;
 
@@ -67,12 +68,14 @@ class RosterControllerTest : public CppUnit::TestFixture
 			eventController_ = new EventController();
 			uiEventStream_ = new UIEventStream();
 			settings_ = new DummySettingsProvider();
-			rosterController_ = new RosterController(jid_, xmppRoster_, avatarManager_, mainWindowFactory_, nickResolver_, presenceOracle_, subscriptionManager_, eventController_, uiEventStream_, router_, settings_);
+			nickManager_ = new DummyNickManager();
+			rosterController_ = new RosterController(jid_, xmppRoster_, avatarManager_, mainWindowFactory_, nickManager_, nickResolver_, presenceOracle_, subscriptionManager_, eventController_, uiEventStream_, router_, settings_);
 			mainWindow_ = mainWindowFactory_->last;
 		};
 
 		void tearDown() {
 			delete rosterController_;
+			delete nickManager_;
 			delete nickResolver_;
 			delete mucRegistry_;
 			delete mainWindowFactory_;
@@ -304,6 +307,7 @@ class RosterControllerTest : public CppUnit::TestFixture
 		MUCRegistry* mucRegistry_;
 		AvatarManager* avatarManager_;
 		MockMainWindowFactory* mainWindowFactory_;
+		NickManager* nickManager_;
 		NickResolver* nickResolver_;
 		RosterController* rosterController_;
 		DummyIQChannel* channel_;

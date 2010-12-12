@@ -22,8 +22,8 @@ namespace Swift {
 
 			String jidToNick(const JID& jid);
 
-			boost::signal<void (const String&)> onOwnNickChanged;
 			boost::signal<void (const JID&, const String& /*previousNick*/)> onNickChanged;
+
 		private:
 			void handleVCardReceived(const JID& jid, VCard::ref vCard);
 			void handleJIDUpdated(const JID& jid, const String& previousNick, const std::vector<String>& groups);

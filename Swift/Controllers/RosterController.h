@@ -33,14 +33,14 @@ namespace Swift {
 	class UIEventStream;
 	class IQRouter;
 	class SettingsProvider;
+	class NickManager;
 
 	class RosterController {
 		public:
-			RosterController(const JID& jid, XMPPRoster* xmppRoster, AvatarManager* avatarManager, MainWindowFactory* mainWindowFactory, NickResolver* nickResolver, PresenceOracle* presenceOracle, SubscriptionManager* subscriptionManager, EventController* eventController, UIEventStream* uiEventStream, IQRouter* iqRouter_, SettingsProvider* settings);
+			RosterController(const JID& jid, XMPPRoster* xmppRoster, AvatarManager* avatarManager, MainWindowFactory* mainWindowFactory, NickManager* nickManager, NickResolver* nickResolver, PresenceOracle* presenceOracle, SubscriptionManager* subscriptionManager, EventController* eventController, UIEventStream* uiEventStream, IQRouter* iqRouter_, SettingsProvider* settings);
 			~RosterController();
 			void showRosterWindow();
 			MainWindow* getWindow() {return mainWindow_;};
-			void setNickResolver(NickResolver* nickResolver);
 			boost::signal<void (StatusShow::Type, const String&)> onChangeStatusRequest;
 			boost::signal<void ()> onSignOutRequest;
 			void handleAvatarChanged(const JID& jid);
@@ -59,7 +59,6 @@ namespace Swift {
 			void handleSubscriptionRequestDeclined(SubscriptionRequestEvent* event);
 			void handleUIEvent(boost::shared_ptr<UIEvent> event);
 			void handleRosterSetError(ErrorPayload::ref error, boost::shared_ptr<RosterPayload> rosterPayload);
-			void handleOwnNickChanged(const String& nick);
 			void applyAllPresenceTo(const JID& jid);
 			JID myJID_;
 			XMPPRoster* xmppRoster_;
@@ -68,6 +67,7 @@ namespace Swift {
 			Roster* roster_;
 			OfflineRosterFilter* offlineFilter_;
 			AvatarManager* avatarManager_;
+			NickManager* nickManager_;
 			NickResolver* nickResolver_;
 			PresenceOracle* presenceOracle_;
 			SubscriptionManager* subscriptionManager_;

@@ -14,8 +14,8 @@
 #include <QMouseEvent>
 
 #include "QtStatusWidget.h"
-#include "Swift/QtUI/QtElidingLabel.h"
-
+#include <Swift/QtUI/QtElidingLabel.h>
+#include <Swift/QtUI/QtNameWidget.h>
 
 namespace Swift {
 QtRosterHeader::QtRosterHeader(QWidget* parent) : QWidget(parent) {
@@ -39,12 +39,9 @@ QtRosterHeader::QtRosterHeader(QWidget* parent) : QWidget(parent) {
 	rightLayout->setContentsMargins(4,0,0,0);
 	topLayout->addLayout(rightLayout);
 
-	nameLabel_ = new QtElidingLabel(this);
-	setName("Me");
-	QFont font = nameLabel_->font();
-	font.setBold(true);
-	nameLabel_->setFont(font);
-	rightLayout->addWidget(nameLabel_);
+	nameWidget_ = new QtNameWidget(this);
+	connect(nameWidget_, SIGNAL(onChangeNickRequest(const QString&)), this, SIGNAL(onChangeNickRequest(const QString&)));
+	rightLayout->addWidget(nameWidget_);
 
 
 	statusWidget_ = new QtStatusWidget(this);
@@ -95,40 +92,6 @@ void QtRosterHeader::setConnecting() {
 	statusWidget_->setConnecting();
 }
 
-void QtRosterHeader::setName(const QString& name) {
-	name_ = name;
-	QString escapedName = name_;
-	escapedName.replace("<","&lt;");
-// 	nameLabel_->setText("<b>" + escapedName + "</b>");
- 	nameLabel_->setText(escapedName);
-//	resizeNameLabel();
-}
-
-// void QtRosterHeader::resizeNameLabel() {	
-// 	QString escapedName = name_;
-// 	escapedName.replace("<","&lt;");
-// 	nameLabel_->setText("<b>" + escapedName + "</b>");
-// 	return;
-// 	//FIXME: Make this not an infinite loop, so it can be continued.
-	
-// 	int reductionCount = 0;
-// 	while (nameLabel_->sizeHint().width() + statusWidget_->width() + 30 > width()) {
-// 		//qDebug() << nameLabel_->sizeHint().width() << " " << statusWidget_->width() << " " << width();
-// 		reductionCount++;
-// 		QString reducedName = name_;
-// 		reducedName.remove(name_.length() - reductionCount, reductionCount);
-// 		reducedName.replace("<","&lt;");
-// 		nameLabel_->setText("<b>" + reducedName +  + "...</b>");
-// 	//	qDebug() << "Shrunk " << escapedName << " down to " << reducedName;
-// 	}
-// 	nameLabel_->setToolTip(name_);
-// }
-
-//void QtRosterHeader::resizeEvent(QResizeEvent* event) {
-//	QWidget::resizeEvent(event);
-//	resizeNameLabel();
-//}
-
 void QtRosterHeader::setAvatar(const QString& path) {
 	QIcon avatar(path);
 	if (avatar.isNull()) {
@@ -138,9 +101,15 @@ void QtRosterHeader::setAvatar(const QString& path) {
 	avatarLabel_->setPixmap(avatar.pixmap(avatarSize_, avatarSize_));
 }
 
-//QSize QtRosterHeader::sizeHint() const {
-//	return minimumSizeHint();
-//}
+void QtRosterHeader::setNick(const QString& nick) {
+	nameWidget_->setNick(nick);
+}
+
+void QtRosterHeader::setJID(const QString& jid) {
+	nameWidget_->setJID(jid);
+}
+
+
 
 const int QtRosterHeader::avatarSize_ = 40;
 
