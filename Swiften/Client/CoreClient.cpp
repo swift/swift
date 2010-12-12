@@ -50,11 +50,6 @@ void CoreClient::connect() {
 	connect(jid_.getDomain());
 }
 
-void CoreClient::connect(const JID& jid) {
-	jid_ = jid;
-	connect();
-}
-
 void CoreClient::connect(const String& host) {
 	disconnectRequested_ = false;
 	assert(!connector_);

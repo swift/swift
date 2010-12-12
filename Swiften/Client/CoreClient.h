@@ -71,7 +71,6 @@ namespace Swift {
 			 */
 			void disconnect();
 
-			void connect(const JID& jid);
 			void connect(const String& host);
 			
 			/**
