@@ -61,7 +61,7 @@ void QtNameWidget::mousePressEvent(QMouseEvent* event) {
 	if (result == showAsJID) {
 		mode = ShowJID;
 	}
-	else {
+	else if (result == showAsNick) {
 		mode = ShowNick;
 	}
 	settings->storeBool("showNickInRosterHeader", mode == ShowNick);
