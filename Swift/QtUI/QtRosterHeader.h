@@ -37,7 +37,6 @@ namespace Swift {
 		void setConnecting();
 	signals:
 		void onChangeStatusRequest(StatusShow::Type showType, const QString &statusMessage);
-		void onChangeNickRequest(const QString &nick);
 
 	private slots:
 		void handleChangeStatusRequest(StatusShow::Type type, const QString &statusMessage);

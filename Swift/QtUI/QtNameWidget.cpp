@@ -6,52 +6,25 @@
 
 #include "QtNameWidget.h"
 
-#include <QStackedWidget>
 #include <QHBoxLayout>
+#include <QMenu>
 #include <QMouseEvent>
+#include <QtDebug>
 
 #include <Swift/QtUI/QtElidingLabel.h>
-#include <Swift/QtUI/QtSwiftUtil.h>
-#include <Swift/QtUI/QtLineEdit.h>
 
 namespace Swift {
 
-QtNameWidget::QtNameWidget(QWidget *parent) : QWidget(parent) {
+QtNameWidget::QtNameWidget(QWidget *parent) : QWidget(parent), mode(ShowNick) {
 	QHBoxLayout* mainLayout = new QHBoxLayout(this);
 	mainLayout->setSpacing(0);
 	mainLayout->setContentsMargins(0,0,0,0);
-
-	stack = new QStackedWidget(this);
-	mainLayout->addWidget(stack);
 
 	textLabel = new QtElidingLabel(this);
 	QFont font = textLabel->font();
 	font.setBold(true);
 	textLabel->setFont(font);
-	stack->addWidget(textLabel);
-
-	nickEdit = new QtLineEdit(this);
-	connect(nickEdit, SIGNAL(returnPressed()), this, SLOT(handleEditComplete()));
-	connect(nickEdit, SIGNAL(escapePressed()), this, SLOT(handleEditCancelled()));
-	stack->addWidget(nickEdit);
-}
-
-void QtNameWidget::mouseDoubleClickEvent(QMouseEvent* event) {
-	if (stack->currentWidget() != nickEdit) {
-		if (event->button() == Qt::LeftButton) {
-			nickEdit->setText(nick);
-			stack->setCurrentWidget(nickEdit);
-		}
-	}
-}
-
-void QtNameWidget::handleEditComplete() {
-	stack->setCurrentWidget(textLabel);
-	emit onChangeNickRequest(nickEdit->text());
-}
-
-void QtNameWidget::handleEditCancelled() {
-	stack->setCurrentWidget(textLabel);
+	mainLayout->addWidget(textLabel);
 }
 
 void QtNameWidget::setNick(const QString& nick) {
@@ -64,13 +37,40 @@ void QtNameWidget::setJID(const QString& jid) {
 	updateText();
 }
 
-void QtNameWidget::updateText() {
-	QString text;
-	if (nick.isEmpty()) {
-		text = jid;
+void QtNameWidget::mousePressEvent(QMouseEvent* event) {
+	QMenu menu;
+
+	QAction* showAsNick = new QAction("Show nickname", this);
+	showAsNick->setCheckable(true);
+	if (mode == ShowNick) {
+		showAsNick->setChecked(true);
+	}
+	menu.addAction(showAsNick);
+
+	QAction* showAsJID = new QAction("Show ID", this);
+	showAsJID->setCheckable(true);
+	if (mode == ShowJID) {
+		showAsJID->setChecked(true);
+	}
+	menu.addAction(showAsJID);
+
+	QAction* result = menu.exec(event->globalPos());
+	if (result == showAsJID) {
+		mode = ShowJID;
 	}
 	else {
-		text = nick + " (" + jid + ")";
+		mode = ShowNick;
+	}
+	updateText();
+}
+
+void QtNameWidget::updateText() {
+	QString text;
+	if (mode == ShowNick && !nick.isEmpty()) {
+		text = nick;
+	}
+	else {
+		text = jid;
 	}
 	text.replace("<","&lt;");
 	textLabel->setText(text);

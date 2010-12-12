@@ -56,7 +56,6 @@ namespace Swift {
 			void handleAddContactDialogComplete(const JID& contact, const QString& name);
 			void handleAddActionTriggered(bool checked);
 			void handleEventCountUpdated(int count);
-			void handleChangeNickRequest(const QString& nick);
 
 		private:
 			std::vector<QMenu*> menus_;

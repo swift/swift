@@ -40,7 +40,6 @@ QtRosterHeader::QtRosterHeader(QWidget* parent) : QWidget(parent) {
 	topLayout->addLayout(rightLayout);
 
 	nameWidget_ = new QtNameWidget(this);
-	connect(nameWidget_, SIGNAL(onChangeNickRequest(const QString&)), this, SIGNAL(onChangeNickRequest(const QString&)));
 	rightLayout->addWidget(nameWidget_);
 
 

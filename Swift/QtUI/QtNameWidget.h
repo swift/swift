@@ -8,12 +8,8 @@
 
 #include <QWidget>
 
-class QLabel;
-class QStackedWidget;
-
 namespace Swift {
 	class QtElidingLabel;
-	class QtLineEdit;
 
 	class QtNameWidget : public QWidget {
 			Q_OBJECT
@@ -24,25 +20,18 @@ namespace Swift {
 			void setNick(const QString& text);
 			void setJID(const QString& jid);
 
-		signals:
-			/**
-			 * When this is emitted, the widget is disabled until
-			 * setNick() is called.
-			 */
-			void onChangeNickRequest(const QString& nick);
-
-		private slots:
-			void handleEditComplete();
-			void handleEditCancelled();
-			virtual void mouseDoubleClickEvent(QMouseEvent* event);
-
 		private:
 			void updateText();
+			virtual void mousePressEvent(QMouseEvent* event);
 
 		private:
-			QStackedWidget* stack;
+			enum Mode {
+				ShowNick,
+				ShowJID,
+			};
+
+			Mode mode;
 			QtElidingLabel* textLabel;
-			QtLineEdit* nickEdit;
 			QString jid;
 			QString nick;
 	};

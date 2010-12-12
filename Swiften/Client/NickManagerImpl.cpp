@@ -14,6 +14,8 @@ namespace Swift {
 
 NickManagerImpl::NickManagerImpl(const JID& ownJID, VCardManager* vcardManager) : ownJID(ownJID), vcardManager(vcardManager) {
 	vcardManager->onVCardChanged.connect(boost::bind(&NickManagerImpl::handleVCardReceived, this, _1, _2));
+
+	updateOwnNickFromVCard(vcardManager->getVCard(ownJID.toBare()));
 }
 
 NickManagerImpl::~NickManagerImpl() {
@@ -21,7 +23,7 @@ NickManagerImpl::~NickManagerImpl() {
 }
 
 String NickManagerImpl::getOwnNick() const {
-	return ownJID;
+	return ownNick;
 }
 
 void NickManagerImpl::setOwnNick(const String&) {
@@ -31,9 +33,12 @@ void NickManagerImpl::handleVCardReceived(const JID& jid, VCard::ref vcard) {
 	if (!jid.equals(ownJID, JID::WithoutResource)) {
 		return;
 	}
+	updateOwnNickFromVCard(vcard);
+}
 
+void NickManagerImpl::updateOwnNickFromVCard(VCard::ref vcard) {
 	String nick;
-	if (!vcard->getNickname().isEmpty()) {
+	if (vcard && !vcard->getNickname().isEmpty()) {
 		nick = vcard->getNickname();
 	}
 	if (ownNick != nick) {

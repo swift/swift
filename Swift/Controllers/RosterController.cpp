@@ -69,8 +69,6 @@ RosterController::RosterController(const JID& jid, XMPPRoster* xmppRoster, Avata
 	mainWindow_->setMyJID(jid);
 	mainWindow_->setMyNick(nickManager_->getOwnNick());
 
-	mainWindow_->onChangeNickRequest.connect(boost::bind(&NickManager::setOwnNick, nickManager_, _1));
-
 	if (settings->getBoolSetting(SHOW_OFFLINE, false)) {
 		uiEventStream->onUIEvent(boost::shared_ptr<UIEvent>(new ToggleShowOfflineUIEvent(true)));
 	}
