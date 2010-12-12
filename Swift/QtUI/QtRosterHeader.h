@@ -22,11 +22,12 @@ class QHBoxLayout;
 namespace Swift {
 	class QtStatusWidget;
 	class QtNameWidget;
+	class QtSettingsProvider;
 	
 	class QtRosterHeader : public QWidget {
 		Q_OBJECT
 	public:
-		QtRosterHeader(QWidget* parent = NULL);
+		QtRosterHeader(QtSettingsProvider* settings, QWidget* parent = NULL);
 		void setAvatar(const QString& path);
 
 		void setJID(const QString& jid);

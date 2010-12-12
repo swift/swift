@@ -132,7 +132,7 @@ QtSwift::QtSwift(po::variables_map options) : autoUpdater_(NULL) {
 		systemTrays_.push_back(systemTray);
 		QtLoginWindowFactory* loginWindowFactory = new QtLoginWindowFactory(splitter_, systemTray, settings_);
 		loginWindowFactories_.push_back(loginWindowFactory);
-		QtMainWindowFactory* rosterWindowFactory = new QtMainWindowFactory();
+		QtMainWindowFactory* rosterWindowFactory = new QtMainWindowFactory(settings_);
 		rosterWindowFactories_.push_back(rosterWindowFactory);
 		QtEventWindowFactory* eventWindowFactory = new QtEventWindowFactory(rosterWindowFactory);
 		eventWindowFactories_.push_back(eventWindowFactory);

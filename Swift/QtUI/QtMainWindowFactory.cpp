@@ -9,12 +9,13 @@
 
 namespace Swift {
 
-QtMainWindowFactory::QtMainWindowFactory() {
+QtMainWindowFactory::QtMainWindowFactory(QtSettingsProvider* settings) {
+	settings_ = settings;
 	lastWindow_ = NULL;
 }
 
 MainWindow* QtMainWindowFactory::createMainWindow(UIEventStream* eventStream) {
-	lastWindow_  = new QtMainWindow(eventStream);
+	lastWindow_  = new QtMainWindow(settings_, eventStream);
 	return lastWindow_;
 }
 

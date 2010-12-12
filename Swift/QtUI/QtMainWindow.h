@@ -31,11 +31,12 @@ namespace Swift {
 	class TreeWidget;
 	class UIEventStream;
 	class QtTabWidget;
+	class QtSettingsProvider;
 
 	class QtMainWindow : public QWidget, public MainWindow {
 		Q_OBJECT
 		public:
-			QtMainWindow(UIEventStream* eventStream);
+			QtMainWindow(QtSettingsProvider*, UIEventStream* eventStream);
 			~QtMainWindow();
 			std::vector<QMenu*> getMenus() {return menus_;}
 			void setMyNick(const String& name);

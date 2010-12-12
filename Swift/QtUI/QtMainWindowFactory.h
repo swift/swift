@@ -4,21 +4,21 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#ifndef SWIFT_QtMainWindowFactory_H
-#define SWIFT_QtMainWindowFactory_H
+#pragma once
 
 #include "Swift/Controllers/UIInterfaces/MainWindowFactory.h"
 
 namespace Swift {
 	class QtTreeWidgetFactory;
+	class QtSettingsProvider;
+
 	class QtMainWindowFactory : public MainWindowFactory{
 		public:
-			QtMainWindowFactory();
+			QtMainWindowFactory(QtSettingsProvider* settings);
 			MainWindow* createMainWindow(UIEventStream* eventStream);
 			MainWindow* getLastCreatedWindow();
 		private:
+			QtSettingsProvider* settings_;
 			MainWindow* lastWindow_;
 	};
 }
-
-#endif

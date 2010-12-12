@@ -17,7 +17,7 @@ namespace Swift {
 				return "";
 			}
 
-			void setOwnNick(const String& nick) {
+			void setOwnNick(const String&) {
 			}
 	};
 }

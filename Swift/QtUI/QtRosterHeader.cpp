@@ -18,7 +18,7 @@
 #include <Swift/QtUI/QtNameWidget.h>
 
 namespace Swift {
-QtRosterHeader::QtRosterHeader(QWidget* parent) : QWidget(parent) {
+QtRosterHeader::QtRosterHeader(QtSettingsProvider* settings, QWidget* parent) : QWidget(parent) {
 	QHBoxLayout* topLayout = new QHBoxLayout();
 	topLayout->setSpacing(0);
 	topLayout->setContentsMargins(4,4,4,4);
@@ -39,7 +39,7 @@ QtRosterHeader::QtRosterHeader(QWidget* parent) : QWidget(parent) {
 	rightLayout->setContentsMargins(4,0,0,0);
 	topLayout->addLayout(rightLayout);
 
-	nameWidget_ = new QtNameWidget(this);
+	nameWidget_ = new QtNameWidget(settings, this);
 	rightLayout->addWidget(nameWidget_);
 
 

@@ -31,13 +31,13 @@
 
 namespace Swift {
 
-QtMainWindow::QtMainWindow(UIEventStream* uiEventStream) : QWidget(), MainWindow(false) {
+QtMainWindow::QtMainWindow(QtSettingsProvider* settings, UIEventStream* uiEventStream) : QWidget(), MainWindow(false) {
 	uiEventStream_ = uiEventStream;
 	setSizePolicy(QSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding));
 	QBoxLayout *mainLayout = new QBoxLayout(QBoxLayout::TopToBottom, this);
 	mainLayout->setContentsMargins(0,0,0,0);
 	mainLayout->setSpacing(0);
-	meView_ = new QtRosterHeader(this);
+	meView_ = new QtRosterHeader(settings, this);
 	mainLayout->addWidget(meView_);
 	connect(meView_, SIGNAL(onChangeStatusRequest(StatusShow::Type, const QString&)), this, SLOT(handleStatusChanged(StatusShow::Type, const QString&)));
 

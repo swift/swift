@@ -12,13 +12,16 @@
 #include <QtDebug>
 
 #include <Swift/QtUI/QtElidingLabel.h>
+#include <Swift/QtUI/QtSettingsProvider.h>
 
 namespace Swift {
 
-QtNameWidget::QtNameWidget(QWidget *parent) : QWidget(parent), mode(ShowNick) {
+QtNameWidget::QtNameWidget(QtSettingsProvider* settings, QWidget *parent) : QWidget(parent), settings(settings) {
 	QHBoxLayout* mainLayout = new QHBoxLayout(this);
 	mainLayout->setSpacing(0);
 	mainLayout->setContentsMargins(0,0,0,0);
+
+	mode = settings->getBoolSetting("showNickInRosterHeader", true) ? ShowNick : ShowJID;
 
 	textLabel = new QtElidingLabel(this);
 	QFont font = textLabel->font();
@@ -61,6 +64,7 @@ void QtNameWidget::mousePressEvent(QMouseEvent* event) {
 	else {
 		mode = ShowNick;
 	}
+	settings->storeBool("showNickInRosterHeader", mode == ShowNick);
 	updateText();
 }
 
