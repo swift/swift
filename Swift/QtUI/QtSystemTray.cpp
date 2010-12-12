@@ -38,9 +38,7 @@ void QtSystemTray::setConnecting() {
 
 void QtSystemTray::handleIconActivated(QSystemTrayIcon::ActivationReason reason) {
 	if (reason == QSystemTrayIcon::Trigger) {
-#ifndef Q_WS_MAC
 		emit clicked();
-#endif
 	}
 }
 void QtSystemTray::setStatusType(StatusShow::Type type) {
