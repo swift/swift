@@ -39,6 +39,7 @@ namespace Swift {
 			static QRect defaultPosition();
 			void setGentleGeometry(const QRect&);
 			void selectUser(const String& user);
+
 			virtual void quit();
 
 		signals:

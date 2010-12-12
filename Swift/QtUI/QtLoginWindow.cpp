@@ -21,6 +21,7 @@
 #include <QMenuBar>
 #include <QHBoxLayout>
 #include <qdebug.h>
+#include <QCloseEvent>
 
 #include "Swift/Controllers/UIEvents/UIEventStream.h"
 #include "Swift/Controllers/UIEvents/RequestXMLConsoleUIEvent.h"
@@ -374,7 +375,10 @@ void QtLoginWindow::bringToFront() {
 		window()->activateWindow();
 	}
 	else {
+#ifndef Q_WS_MAC
+		// FIXME: Remove this when we can bring the window back to the front using the dock on OS X
 		window()->hide();
+#endif
 	}
 }
 
@@ -385,6 +389,5 @@ void QtLoginWindow::resizeEvent(QResizeEvent*) {
 void QtLoginWindow::moveEvent(QMoveEvent*) {
 	emit geometryChanged();	
 }
-
 
 }
