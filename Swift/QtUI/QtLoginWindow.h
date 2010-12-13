@@ -59,6 +59,9 @@ namespace Swift {
 			void moveEvent(QMoveEvent* event);
 			void handleUIEvent(boost::shared_ptr<UIEvent> event);
 
+		protected:
+			bool eventFilter(QObject *obj, QEvent *event);
+
 		private:
 			void setInitialMenus();
 			QStringList usernames_;

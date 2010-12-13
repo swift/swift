@@ -22,8 +22,10 @@
 #include <QHBoxLayout>
 #include <qdebug.h>
 #include <QCloseEvent>
+#include <QCursor>
 #include <QMessageBox>
-
+#include <QKeyEvent>
+ 
 #include "Swift/Controllers/UIEvents/UIEventStream.h"
 #include "Swift/Controllers/UIEvents/RequestXMLConsoleUIEvent.h"
 #include "Swift/Controllers/UIEvents/ToggleSoundsUIEvent.h"
@@ -83,6 +85,7 @@ QtLoginWindow::QtLoginWindow(UIEventStream* uiEventStream) : QMainWindow() {
 	username_->setEditable(true);
 	username_->setWhatsThis("User address - looks like someuser@someserver.com");
 	username_->setToolTip("User address - looks like someuser@someserver.com");
+	username_->view()->installEventFilter(this);
 	layout->addWidget(username_);
 	QLabel* jidHintLabel = new QLabel(this);
 	jidHintLabel->setText("<font size='-1' color='grey' >Example: alice@wonderland.lit</font>");
@@ -184,6 +187,18 @@ QtLoginWindow::QtLoginWindow(UIEventStream* uiEventStream) : QMainWindow() {
 	setInitialMenus();
 	uiEventStream_->onUIEvent.connect(boost::bind(&QtLoginWindow::handleUIEvent, this, _1));
 	this->show();
+}
+
+bool QtLoginWindow::eventFilter(QObject *obj, QEvent *event) {
+	if (obj == username_->view() && event->type() == QEvent::KeyPress) {
+		QKeyEvent *keyEvent = static_cast<QKeyEvent *>(event);
+		if(keyEvent->key() == Qt::Key_Delete || Qt::Key_Backspace) {
+			QMessageBox::information(this, "Delete this login data?", "Remove the save login data regarding the jid: " + username_->view()->currentIndex().data().toString());
+			return true;
+		}
+	}
+	// standard event processing
+	return QObject::eventFilter(obj, event);
 }
 
 void QtLoginWindow::handleUIEvent(boost::shared_ptr<UIEvent> event) {
