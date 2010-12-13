@@ -365,7 +365,7 @@ void MainController::performLoginFromCachedCredentials() {
 		client_ = new Swift::Client(eventLoop_, &networkFactories_, jid_, password_, storages_);
 		client_->setCertificateTrustChecker(certificateTrustChecker_);
 		// FIXME: Remove this line to activate the trust checker
-		client_->setAlwaysTrustCertificates();
+		//client_->setAlwaysTrustCertificates();
 		client_->onDataRead.connect(boost::bind(&XMLConsoleController::handleDataRead, xmlConsoleController_, _1));
 		client_->onDataWritten.connect(boost::bind(&XMLConsoleController::handleDataWritten, xmlConsoleController_, _1));
 		client_->onDisconnected.connect(boost::bind(&MainController::handleDisconnected, this, _1));
@@ -441,8 +441,10 @@ void MainController::handleDisconnected(const boost::optional<ClientError>& erro
 			case ClientError::InvalidServerIdentityError:
 				// FIXME: Popup a dialog
 				message = "Certificate error (" + boost::lexical_cast<std::string>(error->getType()) + ")";
-				// FIXME: Only do this if the user accepts the certificate
-				//certificateStorage_->addCertificate(certificateTrustChecker_->getLastCertificate());
+				if (loginWindow_->askUserToTrustCertificatePermanently(message)) {
+					// FIXME: Only do this if the user accepts the certificate
+					certificateStorage_->addCertificate(certificateTrustChecker_->getLastCertificate());
+				}
 				break;
 		}
 		if (!rosterController_) { //hasn't been logged in yet

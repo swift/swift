@@ -22,6 +22,7 @@
 #include <QHBoxLayout>
 #include <qdebug.h>
 #include <QCloseEvent>
+#include <QMessageBox>
 
 #include "Swift/Controllers/UIEvents/UIEventStream.h"
 #include "Swift/Controllers/UIEvents/RequestXMLConsoleUIEvent.h"
@@ -388,6 +389,15 @@ void QtLoginWindow::resizeEvent(QResizeEvent*) {
 
 void QtLoginWindow::moveEvent(QMoveEvent*) {
 	emit geometryChanged();	
+}
+
+bool QtLoginWindow::askUserToTrustCertificatePermanently(const String& message) {
+	QMessageBox dialog(this);
+	dialog.setText("Invalid server certificate.");
+	dialog.setInformativeText("The certificate presented by the server is not valid. " + P2QSTRING(message) + " Would you like to permanently trust this certificate? This must only be done if you know it is correct.");
+	dialog.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
+	dialog.setDefaultButton(QMessageBox::No);
+	return dialog.exec() == QMessageBox::Yes;
 }
 
 }
