@@ -4,13 +4,13 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#ifndef SWIFTEN_LoginWindow_H
-#define SWIFTEN_LoginWindow_H
-
-#include "Swiften/Base/String.h"
+#pragma once
 
 #include "Swiften/Base/boost_bsignals.h"
 #include <boost/shared_ptr.hpp>
+
+#include <Swiften/Base/String.h>
+#include <Swiften/TLS/Certificate.h>
 
 namespace Swift {
 	class MainWindow;
@@ -27,11 +27,9 @@ namespace Swift {
 			virtual void setLoginAutomatically(bool loginAutomatically) = 0;
 			virtual void quit() = 0;
 			/** Blocking request whether a cert should be permanently trusted.*/
-			virtual bool askUserToTrustCertificatePermanently(const String& message) = 0;
+			virtual bool askUserToTrustCertificatePermanently(const String& message, Certificate::ref) = 0;
 
 			boost::signal<void ()> onCancelLoginRequest;
 			boost::signal<void ()> onQuitRequest;
 	};
 }
-#endif
-

@@ -39,7 +39,7 @@ namespace Swift {
 			static QRect defaultPosition();
 			void setGentleGeometry(const QRect&);
 			void selectUser(const String& user);
-			bool askUserToTrustCertificatePermanently(const String& message);
+			bool askUserToTrustCertificatePermanently(const String& message, Certificate::ref certificate);
 
 			virtual void quit();
 

@@ -409,6 +409,7 @@ void MainController::handleDisconnected(const boost::optional<ClientError>& erro
 	}
 	else if (error) {
 		String message;
+		String certificateErrorMessage;
 		switch(error->getType()) {
 			case ClientError::UnknownError: message = "Unknown Error"; break;
 			case ClientError::DomainNameResolveError: message = "Unable to find server"; break;
@@ -428,26 +429,35 @@ void MainController::handleDisconnected(const boost::optional<ClientError>& erro
 			case ClientError::ClientCertificateLoadError: message = "Error loading certificate (Invalid password?)"; break;
 			case ClientError::ClientCertificateError: message = "Certificate not authorized"; break;
 
-			case ClientError::UnknownCertificateError:
-			case ClientError::CertificateExpiredError:
-			case ClientError::CertificateNotYetValidError:
-			case ClientError::CertificateSelfSignedError:
-			case ClientError::CertificateRejectedError:
-			case ClientError::CertificateUntrustedError:
-			case ClientError::InvalidCertificatePurposeError:
-			case ClientError::CertificatePathLengthExceededError:
-			case ClientError::InvalidCertificateSignatureError:
-			case ClientError::InvalidCAError:
-			case ClientError::InvalidServerIdentityError:
-				// FIXME: Popup a dialog
-				message = "Certificate error (" + boost::lexical_cast<std::string>(error->getType()) + ")";
-				if (loginWindow_->askUserToTrustCertificatePermanently(message)) {
-					// FIXME: Only do this if the user accepts the certificate
-					certificateStorage_->addCertificate(certificateTrustChecker_->getLastCertificate());
-				}
-				break;
+			case ClientError::UnknownCertificateError: certificateErrorMessage = "Unknown certificate"; break;
+			case ClientError::CertificateExpiredError: certificateErrorMessage = "Certificate has expired"; break;
+			case ClientError::CertificateNotYetValidError: certificateErrorMessage = "Certificate is not yet valid"; break;
+			case ClientError::CertificateSelfSignedError: certificateErrorMessage = "Certificate is self-signed"; break;
+			case ClientError::CertificateRejectedError: certificateErrorMessage = "Certificate has been rejected"; break;
+			case ClientError::CertificateUntrustedError: certificateErrorMessage = "Certificate is not trusted"; break;
+			case ClientError::InvalidCertificatePurposeError: certificateErrorMessage = "Certificate cannot be used for encryptig your connection"; break;
+			case ClientError::CertificatePathLengthExceededError: certificateErrorMessage = "Certificate path length constraint exceeded"; break;
+			case ClientError::InvalidCertificateSignatureError: certificateErrorMessage = "Invalid certificate signature"; break;
+			case ClientError::InvalidCAError: certificateErrorMessage = "Invalid Certificate Authority"; break;
+			case ClientError::InvalidServerIdentityError: certificateErrorMessage = "Certificate does not match the host identity"; break;
+
 		}
-		if (!rosterController_) { //hasn't been logged in yet
+		bool forceReconnectAfterCertificateTrust = false;
+		if (!certificateErrorMessage.isEmpty()) {
+			Certificate::ref certificate = certificateTrustChecker_->getLastCertificate();
+			if (loginWindow_->askUserToTrustCertificatePermanently(certificateErrorMessage, certificate)) {
+				certificateStorage_->addCertificate(certificate);
+				forceReconnectAfterCertificateTrust = true;
+			}
+			else {
+				message = "Certificate error";
+			}
+		}
+
+		if (forceReconnectAfterCertificateTrust) {
+			performLoginFromCachedCredentials();
+		}
+		else if (!rosterController_) { //hasn't been logged in yet
 			signOut();
 			loginWindow_->setMessage(message);
 		} else {
