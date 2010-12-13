@@ -57,8 +57,9 @@ QtChatView::QtChatView(QtChatTheme* theme, QWidget* parent) : QWidget(parent) {
 
 void QtChatView::handleClearRequested() {
 	QMessageBox messageBox(this);
-	messageBox.setText("Clear log.");
-	messageBox.setInformativeText("Are you sure you want to clear your chat log?");
+	messageBox.setWindowTitle("Clear log");
+	messageBox.setText("You are about to clear the contents of your chat log.");
+	messageBox.setInformativeText("Are you sure?");
 	messageBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
 	messageBox.setDefaultButton(QMessageBox::Yes);
 	int button = messageBox.exec();
