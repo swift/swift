@@ -355,6 +355,13 @@ void MainController::handleLoginRequest(const String &username, const String &pa
 }
 
 void MainController::performLoginFromCachedCredentials() {
+	/* If we logged in with a bare JID, and we have a full bound JID, re-login with the
+	 * bound JID to try and keep dynamically assigned resources */
+	JID clientJID = jid_;
+	if (boundJID_.isValid() && jid_.isBare() && boundJID_.toBare() == jid_) {
+		clientJID = boundJID_;
+	}
+
 	if (!statusTracker_) {
 		statusTracker_  = new StatusTracker();
 	}
@@ -362,7 +369,7 @@ void MainController::performLoginFromCachedCredentials() {
 		storages_ = storagesFactory_->createStorages(jid_.toBare());
 		certificateStorage_ = certificateStorageFactory_->createCertificateStorage(jid_.toBare());
 		certificateTrustChecker_ = new CertificateStorageTrustChecker(certificateStorage_);
-		client_ = new Swift::Client(eventLoop_, &networkFactories_, jid_, password_, storages_);
+		client_ = new Swift::Client(eventLoop_, &networkFactories_, clientJID, password_, storages_);
 		client_->setCertificateTrustChecker(certificateTrustChecker_);
 		// FIXME: Remove this line to activate the trust checker
 		//client_->setAlwaysTrustCertificates();
@@ -393,13 +400,8 @@ void MainController::performLoginFromCachedCredentials() {
 	if (rosterController_) {
 		rosterController_->getWindow()->setConnecting();
 	}
-	/* If we logged in with a bare JID, and we have a full bound JID, re-login with the
-	 * bound JID to try and keep dynamically assigned resources */
-	if (boundJID_.isValid() && jid_.isBare() && boundJID_.toBare() == jid_) {
-		client_->connect(boundJID_);
-	} else {
-		client_->connect();
-	}
+
+	client_->connect();
 }
 
 void MainController::handleDisconnected(const boost::optional<ClientError>& error) {
