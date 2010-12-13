@@ -27,6 +27,7 @@
 #include "Swiften/Base/ByteArray.h"
 #include "Swiften/EventLoop/EventLoop.h"
 #include "Swiften/Base/foreach.h"
+#include <Swiften/Base/Log.h>
 
 using namespace Swift;
 
@@ -51,6 +52,8 @@ void PlatformDomainNameServiceQuery::run() {
 }
 
 void PlatformDomainNameServiceQuery::doRun() {
+	SWIFT_LOG(debug) << "Querying " << service << std::endl;
+
 	std::vector<DomainNameServiceQuery::Result> records;
 
 #if defined(SWIFTEN_PLATFORM_WINDOWS)
@@ -84,11 +87,11 @@ void PlatformDomainNameServiceQuery::doRun() {
 	// Make sure we reinitialize the domain list every time
 	res_init();
 
-	//std::cout << "SRV: Querying " << service << std::endl;
 	ByteArray response;
 	response.resize(NS_PACKETSZ);
 	int responseLength = res_query(const_cast<char*>(service.getUTF8Data()), ns_c_in, ns_t_srv, reinterpret_cast<u_char*>(response.getData()), response.getSize());
 	if (responseLength == -1) {
+		SWIFT_LOG(debug) << "Error" << std::endl;
 		emitError();
 		return;
 	}

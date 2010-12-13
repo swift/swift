@@ -18,6 +18,7 @@
 #include "Swiften/Queries/IQRouter.h"
 #include "Swiften/Base/IDGenerator.h"
 #include "Swiften/Client/ClientSessionStanzaChannel.h"
+#include <Swiften/Base/Log.h>
 
 namespace Swift {
 
@@ -47,10 +48,12 @@ CoreClient::~CoreClient() {
 }
 
 void CoreClient::connect() {
+	SWIFT_LOG(debug) << "Connecting" << std::endl;
 	connect(jid_.getDomain());
 }
 
 void CoreClient::connect(const String& host) {
+	SWIFT_LOG(debug) << "Connecting to host " << host << std::endl;
 	disconnectRequested_ = false;
 	assert(!connector_);
 	connector_ = Connector::create(host, &resolver_, networkFactories->getConnectionFactory(), networkFactories->getTimerFactory());

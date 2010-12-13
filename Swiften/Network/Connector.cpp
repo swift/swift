@@ -13,6 +13,7 @@
 #include "Swiften/Network/DomainNameResolver.h"
 #include "Swiften/Network/DomainNameAddressQuery.h"
 #include "Swiften/Network/TimerFactory.h"
+#include <Swiften/Base/Log.h>
 
 namespace Swift {
 
@@ -24,6 +25,7 @@ void Connector::setTimeoutMilliseconds(int milliseconds) {
 }
 
 void Connector::start() {
+	SWIFT_LOG(debug) << "Starting connector for " << hostname << std::endl;
 	//std::cout << "Connector::start()" << std::endl;
 	assert(!currentConnection);
 	assert(!serviceQuery);
@@ -51,7 +53,7 @@ void Connector::queryAddress(const String& hostname) {
 }
 
 void Connector::handleServiceQueryResult(const std::vector<DomainNameServiceQuery::Result>& result) {
-	//std::cout << "Received SRV results" << std::endl;
+	SWIFT_LOG(debug) << result.size() << " SRV result(s)" << std::endl;
 	serviceQueryResults = std::deque<DomainNameServiceQuery::Result>(result.begin(), result.end());
 	serviceQuery.reset();
 	tryNextServiceOrFallback();
@@ -59,23 +61,23 @@ void Connector::handleServiceQueryResult(const std::vector<DomainNameServiceQuer
 
 void Connector::tryNextServiceOrFallback() {
 	if (queriedAllServices) {
-		//std::cout << "Connector::tryNextServiceOrCallback(): Queried all hosts. Error." << std::endl;
+		SWIFT_LOG(debug) << "Queried all services" << std::endl;
 		finish(boost::shared_ptr<Connection>());
 	}
 	else if (serviceQueryResults.empty()) {
-		//std::cout << "Connector::tryNextHostName(): Falling back on A resolution" << std::endl;
+		SWIFT_LOG(debug) << "Falling back on A resolution" << std::endl;
 		// Fall back on simple address resolving
 		queriedAllServices = true;
 		queryAddress(hostname);
 	}
 	else {
-		//std::cout << "Connector::tryNextHostName(): Querying next address" << std::endl;
+		SWIFT_LOG(debug) << "Querying next address" << std::endl;
 		queryAddress(serviceQueryResults.front().hostname);
 	}
 }
 
 void Connector::handleAddressQueryResult(const std::vector<HostAddress>& addresses, boost::optional<DomainNameResolveError> error) {
-	//std::cout << "Connector::handleAddressQueryResult(): Start" << std::endl;
+	SWIFT_LOG(debug) << addresses.size() << " addresses" << std::endl;
 	addressQuery.reset();
 	if (error || addresses.empty()) {
 		if (!serviceQueryResults.empty()) {
@@ -91,7 +93,7 @@ void Connector::handleAddressQueryResult(const std::vector<HostAddress>& address
 
 void Connector::tryNextAddress() {
 	if (addressQueryResults.empty()) {
-		//std::cout << "Connector::tryNextAddress(): Done trying addresses. Moving on" << std::endl;
+		SWIFT_LOG(debug) << "Done trying addresses. Moving on." << std::endl;
 		// Done trying all addresses. Move on to the next host.
 		if (!serviceQueryResults.empty()) {
 			serviceQueryResults.pop_front();
@@ -99,7 +101,7 @@ void Connector::tryNextAddress() {
 		tryNextServiceOrFallback();
 	}
 	else {
-		//std::cout << "Connector::tryNextAddress(): trying next address." << std::endl;
+		SWIFT_LOG(debug) << "Trying next address" << std::endl;
 		HostAddress address = addressQueryResults.front();
 		addressQueryResults.pop_front();
 
@@ -114,14 +116,14 @@ void Connector::tryNextAddress() {
 
 void Connector::tryConnect(const HostAddressPort& target) {
 	assert(!currentConnection);
-	//std::cout << "Connector::tryConnect() " << target.getAddress().toString() << " " << target.getPort() << std::endl;
+	SWIFT_LOG(debug) << "Trying to connect to " << target.getAddress().toString() << ":" << target.getPort() << std::endl;
 	currentConnection = connectionFactory->createConnection();
 	currentConnection->onConnectFinished.connect(boost::bind(&Connector::handleConnectionConnectFinished, shared_from_this(), _1));
 	currentConnection->connect(target);
 }
 
 void Connector::handleConnectionConnectFinished(bool error) {
-	//std::cout << "Connector::handleConnectionConnectFinished() " << error << std::endl;
+	SWIFT_LOG(debug) << "ConnectFinished: " << (error ? "error" : "success") << std::endl;
 	currentConnection->onConnectFinished.disconnect(boost::bind(&Connector::handleConnectionConnectFinished, shared_from_this(), _1));
 	if (error) {
 		currentConnection.reset();
@@ -162,6 +164,7 @@ void Connector::finish(boost::shared_ptr<Connection> connection) {
 }
 
 void Connector::handleTimeout() {
+	SWIFT_LOG(debug) << "Timeout" << std::endl;
 	finish(boost::shared_ptr<Connection>());
 }
 
