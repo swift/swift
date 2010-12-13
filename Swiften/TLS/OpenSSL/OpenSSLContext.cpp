@@ -35,7 +35,7 @@ OpenSSLContext::OpenSSLContext() : state_(Start), context_(0), handle_(0), readB
 	context_ = SSL_CTX_new(TLSv1_client_method());
 
 	// Load system certs
-#ifdef SWIFTEN_PLATFORM_WINDOWS
+#if defined(SWIFTEN_PLATFORM_WINDOWS)
 	X509_STORE* store = SSL_CTX_get_cert_store(context_);
 	HCERTSTORE systemStore = CertOpenSystemStore(0, "ROOT");
 	if (systemStore) {
@@ -52,6 +52,8 @@ OpenSSLContext::OpenSSLContext() : state_(Start), context_(0), handle_(0), readB
 			}
 		}
 	}
+#elif !defined(SWIFTEN_PLATFORM_MACOSX)
+	SSL_CTX_load_verify_locations(context_, NULL, "/etc/ssl/certs");
 #endif
 }
 
