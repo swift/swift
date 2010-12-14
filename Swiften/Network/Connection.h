@@ -6,8 +6,9 @@
 
 #pragma once
 
-#include "Swiften/Base/boost_bsignals.h"
+#include <boost/shared_ptr.hpp>
 
+#include "Swiften/Base/boost_bsignals.h"
 #include "Swiften/Base/ByteArray.h"
 #include "Swiften/Base/String.h"
 #include "Swiften/Network/HostAddressPort.h"
@@ -15,6 +16,8 @@
 namespace Swift {
 	class Connection {
 		public:
+			typedef boost::shared_ptr<Connection> ref;
+
 			enum Error {
 				ReadError,
 				WriteError

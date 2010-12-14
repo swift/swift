@@ -4,6 +4,7 @@ myenv = swiftools_env.Clone()
 
 sources = [
 		"Notifier.cpp",
+		"GNTPNotifier.cpp",
 	]
 
 if swiftools_env.get("HAVE_GROWL", False) :

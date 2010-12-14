@@ -42,7 +42,7 @@
 #include "SwifTools/Notifier/GrowlNotifier.h"
 #elif defined(HAVE_SNARL)
 #include "QtWin32NotifierWindow.h"
-#include "SwifTools/Notifier/SnarlNotifier.h"
+#include "SwifTools/Notifier/GNTPNotifier.h"
 #elif defined(SWIFTEN_PLATFORM_LINUX)
 #include "FreeDesktopNotifier.h"
 #else
@@ -76,7 +76,7 @@ po::options_description QtSwift::getOptionsDescription() {
 }
 
 
-QtSwift::QtSwift(po::variables_map options) : autoUpdater_(NULL) {
+QtSwift::QtSwift(po::variables_map options) : networkFactories_(&clientMainThreadCaller_), autoUpdater_(NULL) {
 	if (options.count("netbook-mode")) {
 		splitter_ = new QSplitter();
 	} else {
@@ -109,8 +109,7 @@ QtSwift::QtSwift(po::variables_map options) : autoUpdater_(NULL) {
 #if defined(HAVE_GROWL)
 	notifier_ = new GrowlNotifier(SWIFT_APPLICATION_NAME);
 #elif defined(HAVE_SNARL)
-	notifierWindow_ = new QtWin32NotifierWindow();
-	notifier_ = new SnarlNotifier(SWIFT_APPLICATION_NAME, notifierWindow_, applicationPathProvider_->getResourcePath("/images/logo-icon-32.png"));
+	notifier_ = new GNTPNotifier(SWIFT_APPLICATION_NAME, applicationPathProvider_->getResourcePath("/images/logo-icon-128.png"), networkFactories_.getConnectionFactory());
 #elif defined(SWIFTEN_PLATFORM_LINUX)
 	notifier_ = new FreeDesktopNotifier(SWIFT_APPLICATION_NAME);
 #else
@@ -144,6 +143,7 @@ QtSwift::QtSwift(po::variables_map options) : autoUpdater_(NULL) {
 		mucSearchWindowFactories_.push_back(mucSearchWindowFactory);
 		MainController* mainController = new MainController(
 				&clientMainThreadCaller_,
+				&networkFactories_,
 				chatWindowFactory_,
 				rosterWindowFactory,
 				loginWindowFactory,

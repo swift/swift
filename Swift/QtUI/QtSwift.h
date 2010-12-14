@@ -10,6 +10,7 @@
 #include <boost/program_options/options_description.hpp>
 
 #include <Swiften/TLS/PlatformTLSFactories.h>
+#include <Swiften/Network/BoostNetworkFactories.h>
 #include "Swiften/Base/String.h"
 #include "Swiften/Base/Platform.h"
 #include "Swiften/EventLoop/Qt/QtEventLoop.h"
@@ -56,7 +57,9 @@ namespace Swift {
 			static po::options_description getOptionsDescription();
 			~QtSwift();
 		private:
+			QtEventLoop clientMainThreadCaller_;
 			PlatformTLSFactories tlsFactories_;
+			BoostNetworkFactories networkFactories_;
 			std::vector<MainController*> mainControllers_;
 			QtChatWindowFactory *chatWindowFactory_;
 			std::vector<QtMainWindowFactory*> rosterWindowFactories_;
@@ -66,7 +69,6 @@ namespace Swift {
 			std::vector<QtSystemTray*> systemTrays_;
 			std::vector<QtChatListWindowFactory*> chatListWindowFactories_;
 			std::vector<QtMUCSearchWindowFactory*> mucSearchWindowFactories_;
-			QtEventLoop clientMainThreadCaller_;
 			QtSettingsProvider *settings_;
 			QSplitter* splitter_;
 			QtSoundPlayer* soundPlayer_;
@@ -79,9 +81,6 @@ namespace Swift {
 			Notifier* notifier_;
 #if defined(SWIFTEN_PLATFORM_MACOSX)
 			CocoaApplication cocoaApplication_;
-#endif
-#if defined(HAVE_SNARL)
-			Win32NotifierWindow* notifierWindow_;
 #endif
 	};
 }

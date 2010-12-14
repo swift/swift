@@ -10,7 +10,6 @@
 #include <boost/shared_ptr.hpp>
 #include <vector>
 
-#include "Swiften/Network/BoostNetworkFactories.h"
 #include "Swiften/Network/Timer.h"
 #include "SwifTools/Idle/PlatformIdleQuerier.h"
 #include "SwifTools/Idle/ActualIdleDetector.h"
@@ -64,11 +63,13 @@ namespace Swift {
 	class Dock;
 	class Storages;
 	class StoragesFactory;
+	class NetworkFactories;
 
 	class MainController {
 		public:
 			MainController(
 					EventLoop* eventLoop,
+					NetworkFactories* networkFactories,
 					ChatWindowFactory* chatWindowFactory,
 					MainWindowFactory *mainWindowFactory,
 					LoginWindowFactory *loginWindowFactory,
@@ -114,7 +115,7 @@ namespace Swift {
 
 		private:
 			EventLoop* eventLoop_;
-			BoostNetworkFactories networkFactories_;
+			NetworkFactories* networkFactories_;
 			PlatformIdleQuerier idleQuerier_;
 			ActualIdleDetector idleDetector_;
 			StoragesFactory* storagesFactory_;
