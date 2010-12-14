@@ -39,8 +39,6 @@ GNTPNotifier::~GNTPNotifier() {
 }
 
 void GNTPNotifier::send(const std::string& message) {
-	std::cout << "Send " << currentConnection << std::endl;
-
 	if (currentConnection) {
 		return;
 	}
@@ -52,7 +50,6 @@ void GNTPNotifier::send(const std::string& message) {
 }
 
 void GNTPNotifier::showMessage(Type type, const String& subject, const String& description, const boost::filesystem::path& picture, boost::function<void()> callback) {
-	std::cout << "showMessage " << registered << std::endl;
 	if (registered) {
 		std::ostringstream message;
 		message << "GNTP/1.0 NOTIFY NONE\r\n";
@@ -71,16 +68,13 @@ void GNTPNotifier::handleConnectFinished(bool error) {
 		initialized = true;
 		registered = !error;
 	}
-	std::cout << "Connect: " << initialized << " " << registered << std::endl;
 
 	if (!error) {
-		std::cout << "Write data: " << currentMessage << std::endl;
 		currentConnection->write(currentMessage.c_str());
 	}
 }
 
 void GNTPNotifier::handleDataRead(const ByteArray& data) {
-	std::cout << "Data read: " << data.getData() << std::endl;
 	currentConnection->onDataRead.disconnect(boost::bind(&GNTPNotifier::handleDataRead, this, _1));
 	currentConnection->onConnectFinished.disconnect(boost::bind(&GNTPNotifier::handleConnectFinished, this, _1));
 	currentConnection.reset();
