@@ -72,11 +72,11 @@ void QtXMLConsoleWidget::closeEvent(QCloseEvent* event) {
 }
 
 void QtXMLConsoleWidget::handleDataRead(const String& data) {
-	appendTextIfEnabled(data, QColor(33,98,33));
+	appendTextIfEnabled("<!-- IN -->\n" + data + "\n", QColor(33,98,33));
 }
 
 void QtXMLConsoleWidget::handleDataWritten(const String& data) {
-	appendTextIfEnabled(data, QColor(155,1,0));
+	appendTextIfEnabled("<!-- OUT -->\n" + data + "\n", QColor(155,1,0));
 }
 
 void QtXMLConsoleWidget::appendTextIfEnabled(const String& data, const QColor& color) {
