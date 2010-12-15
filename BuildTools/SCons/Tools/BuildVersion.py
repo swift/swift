@@ -7,6 +7,7 @@ def generate(env) :
     buildVersion = """#pragma once
 
 static const char* buildVersion = \"%(buildVersion)s\";\n
+#define SWIFT_VERSION_STRING \"%(buildVersion)s\";\n
 """ % { "buildVersion" : Version.getBuildVersion(project) }
     env.WriteVal(target, env.Value(buildVersion))
 
