@@ -28,10 +28,16 @@ NickResolver::NickResolver(const JID& ownJID, XMPPRoster* xmppRoster, VCardManag
 	}
 	mucRegistry_ = mucRegistry;
 	xmppRoster_->onJIDUpdated.connect(boost::bind(&NickResolver::handleJIDUpdated, this, _1, _2, _3));
+	xmppRoster_->onJIDAdded.connect(boost::bind(&NickResolver::handleJIDAdded, this, _1));
 }
 
 void NickResolver::handleJIDUpdated(const JID& jid, const String& previousNick, const std::vector<String>& /*groups*/) {
 	onNickChanged(jid, previousNick);
+}
+
+void NickResolver::handleJIDAdded(const JID& jid) {
+	String oldNick(jidToNick(jid));
+	onNickChanged(jid, oldNick);
 }
 
 String NickResolver::jidToNick(const JID& jid) {

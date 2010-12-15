@@ -27,6 +27,7 @@ namespace Swift {
 		private:
 			void handleVCardReceived(const JID& jid, VCard::ref vCard);
 			void handleJIDUpdated(const JID& jid, const String& previousNick, const std::vector<String>& groups);
+			void handleJIDAdded(const JID& jid);
 
 		private:
 			JID ownJID_;
