@@ -14,9 +14,6 @@
 #include "Swiften/Base/String.h"
 #include "Swiften/Base/Platform.h"
 #include "Swiften/EventLoop/Qt/QtEventLoop.h"
-#include "QtLoginWindowFactory.h"
-#include "QtMainWindowFactory.h"
-#include "QtChatWindowFactory.h"
 #include "QtSettingsProvider.h"
 #if defined(SWIFTEN_PLATFORM_MACOSX)
 #include "SwifTools/Application/CocoaApplication.h"
@@ -30,6 +27,7 @@ namespace po = boost::program_options;
 class QSplitter;
 
 namespace Swift {
+	class QtUIFactory;
 	class CertificateStorageFactory;
 	class Dock;
 	class Notifier;
@@ -39,14 +37,10 @@ namespace Swift {
 	class AvatarStorage;
 	class CapsStorage;
 	class MainController;
-	class QtChatWindowFactory;
-	class QtMainWindowFactory;
-	class QtLoginWindowFactory;
-	class QtXMLConsoleWidgetFactory;
 	class QtSystemTray;
+	class QtChatTabs;
+	class QtChatWindowFactory;
 	class QtSoundPlayer;
-	class QtEventWindowFactory;
-	class QtChatListWindowFactory;
 	class QtMUCSearchWindowFactory;
 	class EventLoop;
 		
@@ -60,15 +54,10 @@ namespace Swift {
 			QtEventLoop clientMainThreadCaller_;
 			PlatformTLSFactories tlsFactories_;
 			BoostNetworkFactories networkFactories_;
+			QtChatWindowFactory* chatWindowFactory_;
 			std::vector<MainController*> mainControllers_;
-			QtChatWindowFactory *chatWindowFactory_;
-			std::vector<QtMainWindowFactory*> rosterWindowFactories_;
-			std::vector<QtLoginWindowFactory*> loginWindowFactories_;
-			std::vector<QtXMLConsoleWidgetFactory*> xmlConsoleWidgetFactories_;
-			std::vector<QtEventWindowFactory*> eventWindowFactories_;
 			std::vector<QtSystemTray*> systemTrays_;
-			std::vector<QtChatListWindowFactory*> chatListWindowFactories_;
-			std::vector<QtMUCSearchWindowFactory*> mucSearchWindowFactories_;
+			std::vector<QtUIFactory*> uiFactories_;
 			QtSettingsProvider *settings_;
 			QSplitter* splitter_;
 			QtSoundPlayer* soundPlayer_;

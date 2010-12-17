@@ -4,13 +4,14 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "Swift/Controllers/MainController.h"
+#include <Swift/Controllers/MainController.h>
 
 #include <boost/bind.hpp>
 #include <boost/lexical_cast.hpp>
 #include <boost/shared_ptr.hpp>
 #include <stdlib.h>
 
+#include <Swift/Controllers/UIInterfaces/UIFactory.h>
 #include "Swiften/Network/TimerFactory.h"
 #include "Swift/Controllers/BuildVersion.h"
 #include "Swift/Controllers/StoragesFactory.h"
@@ -69,16 +70,10 @@ static const String SHOW_NOTIFICATIONS = "showNotifications";
 MainController::MainController(
 		EventLoop* eventLoop,
 		NetworkFactories* networkFactories,
-		ChatWindowFactory* chatWindowFactory,
-		MainWindowFactory *mainWindowFactory,
-		LoginWindowFactory *loginWindowFactory,
-		EventWindowFactory* eventWindowFactory,
+		UIFactory* uiFactories,
 		SettingsProvider *settings,
 		SystemTray* systemTray,
 		SoundPlayer* soundPlayer,
-		XMLConsoleWidgetFactory* xmlConsoleWidgetFactory,
-		ChatListWindowFactory* chatListWindowFactory,
-		MUCSearchWindowFactory* mucSearchWindowFactory,
 		StoragesFactory* storagesFactory,
 		CertificateStorageFactory* certificateStorageFactory,
 		Dock* dock,
@@ -86,12 +81,10 @@ MainController::MainController(
 		bool useDelayForLatency) :
 			eventLoop_(eventLoop),
 			networkFactories_(networkFactories),
+			uiFactory_(uiFactories),
 			idleDetector_(&idleQuerier_, networkFactories_->getTimerFactory(), 100),
 			storagesFactory_(storagesFactory),
 			certificateStorageFactory_(certificateStorageFactory),
-			chatWindowFactory_(chatWindowFactory),
-			mainWindowFactory_(mainWindowFactory),
-			loginWindowFactory_(loginWindowFactory),
 			settings_(settings),
 			loginWindow_(NULL) ,
 			useDelayForLatency_(useDelayForLatency) {
@@ -108,10 +101,7 @@ MainController::MainController(
 	quitRequested_ = false;
 
 	timeBeforeNextReconnect_ = -1;
-	mucSearchWindowFactory_ = mucSearchWindowFactory;
-	eventWindowFactory_ = eventWindowFactory;
 	dock_ = dock;
-	chatListWindowFactory_ = chatListWindowFactory;
 	uiEventStream_ = new UIEventStream();
 
 	notifier_ = new TogglableNotifier(notifier);
@@ -119,7 +109,7 @@ MainController::MainController(
 	eventController_->onEventQueueLengthChange.connect(boost::bind(&MainController::handleEventQueueLengthChange, this, _1));
 
 	systemTrayController_ = new SystemTrayController(eventController_, systemTray);
-	loginWindow_ = loginWindowFactory_->createLoginWindow(uiEventStream_);
+	loginWindow_ = uiFactory_->createLoginWindow(uiEventStream_);
 	soundEventController_ = new SoundEventController(eventController_, soundPlayer, settings, uiEventStream_);
 
 	String selectedLoginJID = settings_->getStringSetting("lastLoginJID");
@@ -147,7 +137,7 @@ MainController::MainController(
 	idleDetector_.setIdleTimeSeconds(600);
 	idleDetector_.onIdleChanged.connect(boost::bind(&MainController::handleInputIdleChanged, this, _1));
 
-	xmlConsoleController_ = new XMLConsoleController(uiEventStream_, xmlConsoleWidgetFactory);
+	xmlConsoleController_ = new XMLConsoleController(uiEventStream_, uiFactory_);
 
 	uiEventStream_->onUIEvent.connect(boost::bind(&MainController::handleUIEvent, this, _1));
 	bool enabled = settings_->getBoolSetting(SHOW_NOTIFICATIONS, true);
@@ -232,15 +222,15 @@ void MainController::handleConnected() {
 	bool freshLogin = rosterController_ == NULL;
 	myStatusLooksOnline_ = true;
 	if (freshLogin) {
-		rosterController_ = new RosterController(jid_, client_->getRoster(), client_->getAvatarManager(), mainWindowFactory_, client_->getNickManager(), client_->getNickResolver(), client_->getPresenceOracle(), client_->getSubscriptionManager(), eventController_, uiEventStream_, client_->getIQRouter(), settings_);
+		rosterController_ = new RosterController(jid_, client_->getRoster(), client_->getAvatarManager(), uiFactory_, client_->getNickManager(), client_->getNickResolver(), client_->getPresenceOracle(), client_->getSubscriptionManager(), eventController_, uiEventStream_, client_->getIQRouter(), settings_);
 		rosterController_->onChangeStatusRequest.connect(boost::bind(&MainController::handleChangeStatusRequest, this, _1, _2));
 		rosterController_->onSignOutRequest.connect(boost::bind(&MainController::signOut, this));
 
-		chatsManager_ = new ChatsManager(jid_, client_->getStanzaChannel(), client_->getIQRouter(), eventController_, chatWindowFactory_, client_->getNickResolver(), client_->getPresenceOracle(), client_->getPresenceSender(), uiEventStream_, chatListWindowFactory_, useDelayForLatency_, networkFactories_->getTimerFactory(), client_->getMUCRegistry(), client_->getEntityCapsProvider(), client_->getMUCManager());
+		chatsManager_ = new ChatsManager(jid_, client_->getStanzaChannel(), client_->getIQRouter(), eventController_, uiFactory_, client_->getNickResolver(), client_->getPresenceOracle(), client_->getPresenceSender(), uiEventStream_, uiFactory_, useDelayForLatency_, networkFactories_->getTimerFactory(), client_->getMUCRegistry(), client_->getEntityCapsProvider(), client_->getMUCManager());
 		client_->onMessageReceived.connect(boost::bind(&ChatsManager::handleIncomingMessage, chatsManager_, _1));
 		chatsManager_->setAvatarManager(client_->getAvatarManager());
 
-		eventWindowController_ = new EventWindowController(eventController_, eventWindowFactory_);
+		eventWindowController_ = new EventWindowController(eventController_, uiFactory_);
 
 		loginWindow_->morphInto(rosterController_->getWindow());
 
@@ -251,7 +241,7 @@ void MainController::handleConnected() {
 		client_->getDiscoManager()->setCapsNode(CLIENT_NODE);
 		client_->getDiscoManager()->setDiscoInfo(discoInfo);
 
-		mucSearchController_ = new MUCSearchController(jid_, uiEventStream_, mucSearchWindowFactory_, client_->getIQRouter(), settings_);
+		mucSearchController_ = new MUCSearchController(jid_, uiEventStream_, uiFactory_, client_->getIQRouter(), settings_);
 	}
 	
 	client_->requestRoster();

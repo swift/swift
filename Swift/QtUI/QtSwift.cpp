@@ -7,22 +7,16 @@
 #include "QtSwift.h"
 
 #include <string>
+#include <QSplitter>
+#include <boost/bind.hpp>
 
-#include "QtLoginWindowFactory.h"
-#include "QtChatWindowFactory.h"
 #include "QtLoginWindow.h"
 #include "QtChatTabs.h"
-#include "QtMainWindowFactory.h"
 #include "QtSystemTray.h"
 #include "QtSoundPlayer.h"
 #include "QtSwiftUtil.h"
-#include "QtXMLConsoleWidgetFactory.h"
-#include "ChatList/QtChatListWindowFactory.h"
-#include "EventViewer/QtEventWindowFactory.h"
-#include "MUCSearch/QtMUCSearchWindowFactory.h"
-#include <boost/bind.hpp>
-#include <QSplitter>
-
+#include "QtUIFactory.h"
+#include "QtChatWindowFactory.h"
 #include <Swiften/Base/Log.h>
 #include <Swift/Controllers/CertificateFileStorageFactory.h>
 #include "SwifTools/Application/PlatformApplicationPathProvider.h"
@@ -129,31 +123,15 @@ QtSwift::QtSwift(po::variables_map options) : networkFactories_(&clientMainThrea
 	for (int i = 0; i < numberOfAccounts; i++) {
 		QtSystemTray* systemTray = new QtSystemTray();
 		systemTrays_.push_back(systemTray);
-		QtLoginWindowFactory* loginWindowFactory = new QtLoginWindowFactory(splitter_, systemTray, settings_);
-		loginWindowFactories_.push_back(loginWindowFactory);
-		QtMainWindowFactory* rosterWindowFactory = new QtMainWindowFactory(settings_);
-		rosterWindowFactories_.push_back(rosterWindowFactory);
-		QtEventWindowFactory* eventWindowFactory = new QtEventWindowFactory(rosterWindowFactory);
-		eventWindowFactories_.push_back(eventWindowFactory);
-		QtXMLConsoleWidgetFactory* xmlConsoleWidgetFactory = new QtXMLConsoleWidgetFactory(tabs_);
-		xmlConsoleWidgetFactories_.push_back(xmlConsoleWidgetFactory);
-		QtChatListWindowFactory* chatListWindowFactory = new QtChatListWindowFactory(rosterWindowFactory);
-		chatListWindowFactories_.push_back(chatListWindowFactory);
-		QtMUCSearchWindowFactory* mucSearchWindowFactory = new QtMUCSearchWindowFactory();
-		mucSearchWindowFactories_.push_back(mucSearchWindowFactory);
+		QtUIFactory* uiFactory = new QtUIFactory(settings_, tabs_, splitter_, systemTray, chatWindowFactory_);
+		uiFactories_.push_back(uiFactory);
 		MainController* mainController = new MainController(
 				&clientMainThreadCaller_,
 				&networkFactories_,
-				chatWindowFactory_,
-				rosterWindowFactory,
-				loginWindowFactory,
-				eventWindowFactory,
+				uiFactory,
 				settings_,
 				systemTray,
 				soundPlayer_,
-				xmlConsoleWidgetFactory,
-				chatListWindowFactory,
-				mucSearchWindowFactory,
 				storagesFactory_,
 				certificateStorageFactory_,
 				dock_,
@@ -173,14 +151,7 @@ QtSwift::QtSwift(po::variables_map options) : networkFactories_(&clientMainThrea
 QtSwift::~QtSwift() {
 	delete notifier_;
 	delete autoUpdater_;
-	delete chatWindowFactory_;
-	foreach (QtMainWindowFactory* factory, rosterWindowFactories_) {
-		delete factory;
-	}
-	foreach (QtLoginWindowFactory* factory, loginWindowFactories_) {
-		delete factory;
-	}
-	foreach (MUCSearchWindowFactory* factory, mucSearchWindowFactories_) {
+	foreach (QtUIFactory* factory, uiFactories_) {
 		delete factory;
 	}
 	foreach (MainController* controller, mainControllers_) {
@@ -194,15 +165,7 @@ QtSwift::~QtSwift() {
 	delete splitter_;
 	delete dock_;
 	delete soundPlayer_;
-	foreach (QtXMLConsoleWidgetFactory* factory, xmlConsoleWidgetFactories_) {
-		delete factory;
-	}
-	foreach (QtEventWindowFactory* factory, eventWindowFactories_) {
-		delete factory;
-	}
-	foreach (QtChatListWindowFactory* factory, chatListWindowFactories_) {
-		delete factory;
-	}
+	delete chatWindowFactory_;
 	delete certificateStorageFactory_;
 	delete storagesFactory_;
 }

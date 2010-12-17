@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include "Swiften/Base/boost_bsignals.h"
+#include <Swiften/Base/boost_bsignals.h>
 #include <boost/shared_ptr.hpp>
 #include <vector>
 
@@ -27,22 +27,19 @@
 #include "Swift/Controllers/UIEvents/UIEvent.h"
 
 namespace Swift {
+	class UIFactory;
 	class EventLoop;
 	class Client;
-	class ChatWindowFactory;
 	class ChatController;
 	class ChatsManager;
 	class CertificateStorageFactory;
 	class CertificateStorage;
 	class CertificateStorageTrustChecker;
-	class ChatListWindowFactory;
 	class EventController;
-	class MainWindowFactory;
 	class MainWindow;
 	class RosterController;
 	class LoginWindow;
 	class EventLoop;
-	class LoginWindowFactory;
 	class MUCController;
 	class Notifier;
 	class TogglableNotifier;
@@ -54,11 +51,9 @@ namespace Swift {
 	class SoundPlayer;
 	class XMLConsoleController;
 	class UIEventStream;
-	class XMLConsoleWidgetFactory;
 	class EventWindowFactory;
 	class EventWindowController;
 	class MUCSearchController;
-	class MUCSearchWindowFactory;
 	class StatusTracker;
 	class Dock;
 	class Storages;
@@ -70,16 +65,10 @@ namespace Swift {
 			MainController(
 					EventLoop* eventLoop,
 					NetworkFactories* networkFactories,
-					ChatWindowFactory* chatWindowFactory,
-					MainWindowFactory *mainWindowFactory,
-					LoginWindowFactory *loginWindowFactory,
-					EventWindowFactory* eventWindowFactory,
+					UIFactory* uiFactories,
 					SettingsProvider *settings,
 					SystemTray* systemTray,
 					SoundPlayer* soundPlayer,
-					XMLConsoleWidgetFactory* xmlConsoleWidgetFactory,
-					ChatListWindowFactory* chatListWindowFactory_,
-					MUCSearchWindowFactory* mucSearchWindowFactory,
 					StoragesFactory* storagesFactory,
 					CertificateStorageFactory* certificateStorageFactory,
 					Dock* dock,
@@ -116,6 +105,7 @@ namespace Swift {
 		private:
 			EventLoop* eventLoop_;
 			NetworkFactories* networkFactories_;
+			UIFactory* uiFactory_;
 			PlatformIdleQuerier idleQuerier_;
 			ActualIdleDetector idleDetector_;
 			StoragesFactory* storagesFactory_;
@@ -124,10 +114,6 @@ namespace Swift {
 			CertificateStorage* certificateStorage_;
 			CertificateStorageTrustChecker* certificateTrustChecker_;
 			Client* client_;
-			ChatWindowFactory* chatWindowFactory_;
-			MainWindowFactory* mainWindowFactory_;
-			LoginWindowFactory* loginWindowFactory_;
-			EventWindowFactory* eventWindowFactory_;
 			SettingsProvider *settings_;
 			ProfileSettingsProvider* profileSettings_;
 			Dock* dock_;
@@ -148,11 +134,9 @@ namespace Swift {
 			String vCardPhotoHash_;
 			String password_;
 			String certificateFile_;
-			ChatListWindowFactory* chatListWindowFactory_;
 			boost::shared_ptr<ErrorEvent> lastDisconnectError_;
 			bool useDelayForLatency_;
 			MUCSearchController* mucSearchController_;
-			MUCSearchWindowFactory* mucSearchWindowFactory_;
 			int timeBeforeNextReconnect_;
 			Timer::ref reconnectTimer_;
 			StatusTracker* statusTracker_;
