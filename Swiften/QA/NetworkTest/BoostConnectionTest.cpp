@@ -90,6 +90,7 @@ class BoostConnectionTest : public CppUnit::TestFixture {
 
 		void doWrite(BoostConnection* connection) {
 			connection->write(ByteArray("<stream:stream>"));
+			connection->write(ByteArray("\r\n\r\n")); // Temporarily, while we don't have an xmpp server running on ipv6
 		}
 
 		void handleDataRead(const ByteArray& data) {
