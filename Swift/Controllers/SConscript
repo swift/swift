@@ -29,6 +29,7 @@ if env["SCONS_STAGE"] == "build" :
 			"Chat/UserSearchController.cpp",
 			"DiscoServiceWalker.cpp",
 			"MainController.cpp",
+			"ProfileController.cpp",
 			"RosterController.cpp",
 			"RosterGroupExpandinessPersister.cpp",
 			"EventWindowController.cpp",

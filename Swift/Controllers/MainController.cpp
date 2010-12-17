@@ -61,6 +61,7 @@
 #include "Swift/Controllers/CertificateStorageFactory.h"
 #include "Swift/Controllers/CertificateStorageTrustChecker.h"
 #include "Swiften/Network/NetworkFactories.h"
+#include <Swift/Controllers/ProfileController.h>
 
 namespace Swift {
 
@@ -98,6 +99,7 @@ MainController::MainController(
 	rosterController_ = NULL;
 	chatsManager_ = NULL;
 	eventWindowController_ = NULL;
+	profileController_ = NULL;
 	userSearchControllerChat_ = NULL;
 	userSearchControllerAdd_ = NULL;
 	quitRequested_ = false;
@@ -170,6 +172,8 @@ MainController::~MainController() {
 void MainController::resetClient() {
 	resetCurrentError();
 	resetPendingReconnects();
+	delete profileController_;
+	profileController_ = NULL;
 	delete eventWindowController_;
 	eventWindowController_ = NULL;
 	delete chatsManager_;
@@ -228,6 +232,8 @@ void MainController::handleConnected() {
 	bool freshLogin = rosterController_ == NULL;
 	myStatusLooksOnline_ = true;
 	if (freshLogin) {
+		profileController_ = new ProfileController(client_->getVCardManager(), uiFactory_, uiEventStream_);
+
 		rosterController_ = new RosterController(jid_, client_->getRoster(), client_->getAvatarManager(), uiFactory_, client_->getNickManager(), client_->getNickResolver(), client_->getPresenceOracle(), client_->getSubscriptionManager(), eventController_, uiEventStream_, client_->getIQRouter(), settings_);
 		rosterController_->onChangeStatusRequest.connect(boost::bind(&MainController::handleChangeStatusRequest, this, _1, _2));
 		rosterController_->onSignOutRequest.connect(boost::bind(&MainController::signOut, this));
@@ -261,6 +267,7 @@ void MainController::handleConnected() {
 	client_->getVCardManager()->requestOwnVCard();
 	
 	rosterController_->setEnabled(true);
+	profileController_->setAvailable(true);
 	/* Send presence later to catch all the incoming presences. */
 	sendPresence(statusTracker_->getNextPresence());
 	/* Enable chats last of all, so rejoining MUCs has the right sent presence */
@@ -521,6 +528,9 @@ void MainController::setManagersOffline() {
 	}
 	if (rosterController_) {
 		rosterController_->setEnabled(false);
+	}
+	if (profileController_) {
+		profileController_->setAvailable(false);
 	}
 }
 

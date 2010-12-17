@@ -36,6 +36,7 @@ namespace Swift {
 			
 			boost::signal<void (StatusShow::Type, const String&)> onChangeStatusRequest;
 			boost::signal<void ()> onSignOutRequest;
+			boost::signal<void ()> onEditProfileRequest;
 
 		private:
 			bool canDelete_;

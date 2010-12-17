@@ -17,6 +17,9 @@ namespace Swift {
 VCardManager::VCardManager(const JID& ownJID, IQRouter* iqRouter, VCardStorage* vcardStorage) : ownJID(ownJID), iqRouter(iqRouter), storage(vcardStorage) {
 }
 
+VCardManager::~VCardManager() {
+}
+
 VCard::ref VCardManager::getVCard(const JID& jid) const {
 	return storage->getVCard(jid);
 }
@@ -51,8 +54,27 @@ void VCardManager::handleVCardReceived(const JID& actualJID, VCard::ref vcard, E
 	}
 	requestedVCards.erase(actualJID);
 	JID jid = actualJID.isValid() ? actualJID : ownJID.toBare();
+	setVCard(jid, vcard);
+}
+
+SetVCardRequest::ref VCardManager::createSetVCardRequest(VCard::ref vcard) {
+	SetVCardRequest::ref request = SetVCardRequest::create(vcard, iqRouter);
+	request->onResponse.connect(boost::bind(&VCardManager::handleSetVCardResponse, this, vcard, _2));
+	return request;
+}
+
+void VCardManager::handleSetVCardResponse(VCard::ref vcard, ErrorPayload::ref error) {
+	if (!error) {
+		setVCard(ownJID.toBare(), vcard);
+	}
+}
+
+void VCardManager::setVCard(const JID& jid, VCard::ref vcard) {
 	storage->setVCard(jid, vcard);
 	onVCardChanged(jid, vcard);
+	if (jid.compare(ownJID, JID::WithoutResource) == 0) {
+		onOwnVCardChanged(vcard);
+	}
 }
 
 }

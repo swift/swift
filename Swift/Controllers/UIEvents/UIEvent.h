@@ -6,9 +6,13 @@
 
 #pragma once
 
+#include <boost/shared_ptr.hpp>
+
 namespace Swift {
 	class UIEvent {
 		public:
+			typedef boost::shared_ptr<UIEvent> ref;
+
 			virtual ~UIEvent();
 	};
 }

@@ -83,6 +83,9 @@ QtMainWindow::QtMainWindow(QtSettingsProvider* settings, UIEventStream* uiEventS
 
 	QMenu* actionsMenu = new QMenu(tr("&Actions"), this);
 	menus_.push_back(actionsMenu);
+	QAction* editProfileAction = new QAction("Edit Profile", this);
+	connect(editProfileAction, SIGNAL(triggered()), SLOT(handleEditProfileAction()));
+	actionsMenu->addAction(editProfileAction);
 	QAction* joinMUCAction = new QAction("&Join Room", this);
 	connect(joinMUCAction, SIGNAL(triggered()), SLOT(handleJoinMUCAction()));
 	actionsMenu->addAction(joinMUCAction);
@@ -143,6 +146,10 @@ void QtMainWindow::handleSignOutAction() {
 	onSignOutRequest();
 }
 
+void QtMainWindow::handleEditProfileAction() {
+	onEditProfileRequest();
+}
+
 void QtMainWindow::handleJoinMUCAction() {
 	uiEventStream_->send(boost::make_shared<RequestJoinMUCUIEvent>());
 }
@@ -189,6 +196,7 @@ void QtMainWindow::setMyStatusType(StatusShow::Type type) {
 void QtMainWindow::setConnecting() {
 	meView_->setConnecting();
 }
+
 
 }
 

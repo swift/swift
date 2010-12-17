@@ -10,6 +10,7 @@
 #include <cppunit/extensions/TestFactoryRegistry.h>
 #include <vector>
 #include <boost/bind.hpp>
+#include <boost/smart_ptr/make_shared.hpp>
 
 #include "Swiften/VCards/VCardManager.h"
 #include "Swiften/VCards/VCardMemoryStorage.h"
@@ -28,6 +29,8 @@ class VCardManagerTest : public CppUnit::TestFixture {
 		CPPUNIT_TEST(testRequest_VCardAlreadyRequested);
 		CPPUNIT_TEST(testRequest_AfterPreviousRequest);
 		CPPUNIT_TEST(testRequestOwnVCard);
+		CPPUNIT_TEST(testCreateSetVCardRequest);
+		CPPUNIT_TEST(testCreateSetVCardRequest_Error);
 		CPPUNIT_TEST_SUITE_END();
 
 	public:
@@ -82,6 +85,8 @@ class VCardManagerTest : public CppUnit::TestFixture {
 			CPPUNIT_ASSERT_EQUAL(JID("foo@bar.com/baz"), changes[0].first);
 			CPPUNIT_ASSERT_EQUAL(String("Foo Bar"), changes[0].second->getFullName());
 			CPPUNIT_ASSERT_EQUAL(String("Foo Bar"), vcardStorage->getVCard(JID("foo@bar.com/baz"))->getFullName());
+
+			CPPUNIT_ASSERT_EQUAL(0, static_cast<int>(ownChanges.size()));
 		}
 
 		void testRequest_Error() {
@@ -125,17 +130,51 @@ class VCardManagerTest : public CppUnit::TestFixture {
 			CPPUNIT_ASSERT_EQUAL(ownJID.toBare(), changes[0].first);
 			CPPUNIT_ASSERT_EQUAL(String("Myself"), changes[0].second->getFullName());
 			CPPUNIT_ASSERT_EQUAL(String("Myself"), vcardStorage->getVCard(ownJID.toBare())->getFullName());
+
+			CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(ownChanges.size()));
+			CPPUNIT_ASSERT_EQUAL(String("Myself"), ownChanges[0]->getFullName());
+		}
+
+		void testCreateSetVCardRequest() {
+			std::auto_ptr<VCardManager> testling = createManager();
+			VCard::ref vcard = boost::make_shared<VCard>();
+			vcard->setFullName("New Name");
+			SetVCardRequest::ref request = testling->createSetVCardRequest(vcard);
+			request->send();
+
+			stanzaChannel->onIQReceived(createSetVCardResult());
+
+			CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(changes.size()));
+			CPPUNIT_ASSERT_EQUAL(ownJID.toBare(), changes[0].first);
+			CPPUNIT_ASSERT_EQUAL(String("New Name"), changes[0].second->getFullName());
+		}
+
+		void testCreateSetVCardRequest_Error() {
+			std::auto_ptr<VCardManager> testling = createManager();
+			VCard::ref vcard = boost::make_shared<VCard>();
+			vcard->setFullName("New Name");
+			SetVCardRequest::ref request = testling->createSetVCardRequest(vcard);
+			request->send();
+
+			stanzaChannel->onIQReceived(IQ::createError(JID("baz@fum.com/foo"), stanzaChannel->sentStanzas[0]->getID()));
+
+			CPPUNIT_ASSERT_EQUAL(0, static_cast<int>(changes.size()));
 		}
 
 	private:
 		std::auto_ptr<VCardManager> createManager() {
 			std::auto_ptr<VCardManager> manager(new VCardManager(ownJID, iqRouter, vcardStorage));
 			manager->onVCardChanged.connect(boost::bind(&VCardManagerTest::handleVCardChanged, this, _1, _2));
+			manager->onOwnVCardChanged.connect(boost::bind(&VCardManagerTest::handleOwnVCardChanged, this, _1));
 			return manager;
 		}
 
 		void handleVCardChanged(const JID& jid, VCard::ref vcard) {
 			changes.push_back(std::pair<JID, VCard::ref>(jid, vcard));
+		}
+
+		void handleOwnVCardChanged(VCard::ref vcard) {
+			ownChanges.push_back(vcard);
 		}
 
 		IQ::ref createVCardResult() {
@@ -150,12 +189,18 @@ class VCardManagerTest : public CppUnit::TestFixture {
 			return IQ::createResult(JID(), stanzaChannel->sentStanzas[0]->getID(), vcard);
 		}
 
+		IQ::ref createSetVCardResult() {
+			return IQ::createResult(JID("baz@fum.com/dum"), stanzaChannel->sentStanzas[0]->getID(), VCard::ref());
+		}
+
+
 	private:
 		JID ownJID;
 		DummyStanzaChannel* stanzaChannel;
 		IQRouter* iqRouter;
 		VCardMemoryStorage* vcardStorage;
 		std::vector< std::pair<JID, VCard::ref> > changes;
+		std::vector<VCard::ref> ownChanges;
 };
 
 CPPUNIT_TEST_SUITE_REGISTRATION(VCardManagerTest);

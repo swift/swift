@@ -60,6 +60,8 @@ namespace Swift {
 			void handleUIEvent(boost::shared_ptr<UIEvent> event);
 			void handleRosterSetError(ErrorPayload::ref error, boost::shared_ptr<RosterPayload> rosterPayload);
 			void applyAllPresenceTo(const JID& jid);
+			void handleEditProfileRequest();
+
 			JID myJID_;
 			XMPPRoster* xmppRoster_;
 			MainWindowFactory* mainWindowFactory_;
@@ -75,6 +77,7 @@ namespace Swift {
 			RosterGroupExpandinessPersister* expandiness_;
 			IQRouter* iqRouter_;
 			SettingsProvider* settings_;
+			UIEventStream* uiEventStream_;
 			boost::bsignals::scoped_connection changeStatusConnection_;
 			boost::bsignals::scoped_connection signOutConnection_;
 			boost::bsignals::scoped_connection uiEventConnection_;

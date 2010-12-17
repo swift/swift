@@ -54,6 +54,7 @@ namespace Swift {
 			void handleShowOfflineToggled(bool);
 			void handleJoinMUCAction();
 			void handleSignOutAction();
+			void handleEditProfileAction();
 			void handleAddUserActionTriggered(bool checked);
 			void handleChatUserActionTriggered(bool checked);
 			void handleEventCountUpdated(int count);

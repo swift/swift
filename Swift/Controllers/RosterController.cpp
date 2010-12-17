@@ -7,6 +7,7 @@
 #include "Swift/Controllers/RosterController.h"
 
 #include <boost/bind.hpp>
+#include <boost/smart_ptr/make_shared.hpp>
 
 #include "Swiften/Base/foreach.h"
 #include "Swift/Controllers/UIInterfaces/MainWindow.h"
@@ -32,6 +33,7 @@
 #include "Swift/Controllers/UIEvents/RenameRosterItemUIEvent.h"
 #include "Swift/Controllers/UIEvents/RegroupRosterItemUIEvent.h"
 #include "Swift/Controllers/UIEvents/ToggleShowOfflineUIEvent.h"
+#include "Swift/Controllers/UIEvents/RequestProfileEditorUIEvent.h"
 #include <Swiften/Client/NickManager.h>
 
 namespace Swift {
@@ -42,7 +44,7 @@ static const String SHOW_OFFLINE = "showOffline";
  * The controller does not gain ownership of these parameters.
  */
 RosterController::RosterController(const JID& jid, XMPPRoster* xmppRoster, AvatarManager* avatarManager, MainWindowFactory* mainWindowFactory, NickManager* nickManager, NickResolver* nickResolver, PresenceOracle* presenceOracle, SubscriptionManager* subscriptionManager, EventController* eventController, UIEventStream* uiEventStream, IQRouter* iqRouter, SettingsProvider* settings)
- : myJID_(jid), xmppRoster_(xmppRoster), mainWindowFactory_(mainWindowFactory), mainWindow_(mainWindowFactory_->createMainWindow(uiEventStream)), roster_(new Roster()), offlineFilter_(new OfflineRosterFilter()), nickManager_(nickManager), nickResolver_(nickResolver) {
+ : myJID_(jid), xmppRoster_(xmppRoster), mainWindowFactory_(mainWindowFactory), mainWindow_(mainWindowFactory_->createMainWindow(uiEventStream)), roster_(new Roster()), offlineFilter_(new OfflineRosterFilter()), nickManager_(nickManager), nickResolver_(nickResolver), uiEventStream_(uiEventStream) {
 	iqRouter_ = iqRouter;
 	presenceOracle_ = presenceOracle;
 	subscriptionManager_ = subscriptionManager;
@@ -54,6 +56,7 @@ RosterController::RosterController(const JID& jid, XMPPRoster* xmppRoster, Avata
 	
 	changeStatusConnection_ = mainWindow_->onChangeStatusRequest.connect(boost::bind(&RosterController::handleChangeStatusRequest, this, _1, _2));
 	signOutConnection_ = mainWindow_->onSignOutRequest.connect(boost::bind(boost::ref(onSignOutRequest)));
+	mainWindow_->onEditProfileRequest.connect(boost::bind(&RosterController::handleEditProfileRequest, this));
 	xmppRoster_->onJIDAdded.connect(boost::bind(&RosterController::handleOnJIDAdded, this, _1));
 	xmppRoster_->onJIDUpdated.connect(boost::bind(&RosterController::handleOnJIDUpdated, this, _1, _2, _3));
 	xmppRoster_->onJIDRemoved.connect(boost::bind(&RosterController::handleOnJIDRemoved, this, _1));
@@ -79,6 +82,8 @@ RosterController::~RosterController() {
 
 	delete offlineFilter_;
 	delete expandiness_;
+
+	mainWindow_->onEditProfileRequest.disconnect(boost::bind(&RosterController::handleEditProfileRequest, this));
 	mainWindow_->setRosterModel(NULL);
 	if (mainWindow_->canDelete()) {
 		delete mainWindow_;
@@ -278,6 +283,10 @@ void RosterController::handleAvatarChanged(const JID& jid) {
 	if (jid.equals(myJID_, JID::WithoutResource)) {
 		mainWindow_->setMyAvatarPath(path);
 	}
+}
+
+void RosterController::handleEditProfileRequest() {
+	uiEventStream_->onUIEvent(boost::make_shared<RequestProfileEditorUIEvent>());
 }
 
 }

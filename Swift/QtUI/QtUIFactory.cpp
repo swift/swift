@@ -21,6 +21,7 @@
 #include "QtSwiftUtil.h"
 #include "MUCSearch/QtMUCSearchWindow.h"
 #include "UserSearch/QtUserSearchWindow.h"
+#include "QtProfileWindow.h"
 
 namespace Swift {
 
@@ -85,6 +86,10 @@ UserSearchWindow* QtUIFactory::createUserSearchWindow(UserSearchWindow::Type typ
 
 JoinMUCWindow* QtUIFactory::createJoinMUCWindow() {
 	return new QtJoinMUCWindow();
+}
+
+ProfileWindow* QtUIFactory::createProfileWindow() {
+	return new QtProfileWindow();
 }
 
 }

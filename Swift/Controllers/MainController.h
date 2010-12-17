@@ -42,6 +42,7 @@ namespace Swift {
 	class EventLoop;
 	class MUCController;
 	class Notifier;
+	class ProfileController;
 	class TogglableNotifier;
 	class PresenceNotifier;
 	class EventNotifier;
@@ -130,6 +131,7 @@ namespace Swift {
 			UIEventStream* uiEventStream_;
 			XMLConsoleController* xmlConsoleController_;
 			ChatsManager* chatsManager_;
+			ProfileController* profileController_;
 			JID jid_;
 			JID boundJID_;
 			SystemTrayController* systemTrayController_;
