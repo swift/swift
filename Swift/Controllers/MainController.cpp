@@ -152,6 +152,7 @@ MainController::MainController(
 }
 
 MainController::~MainController() {
+	setManagersOffline();
 	eventController_->disconnectAll();
 	delete systemTrayController_;
 	delete soundEventController_;
