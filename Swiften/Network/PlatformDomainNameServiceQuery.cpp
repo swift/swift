@@ -28,30 +28,20 @@
 #include "Swiften/EventLoop/EventLoop.h"
 #include "Swiften/Base/foreach.h"
 #include <Swiften/Base/Log.h>
+#include <Swiften/Network/PlatformDomainNameResolver.h>
 
 using namespace Swift;
 
 namespace Swift {
 
-PlatformDomainNameServiceQuery::PlatformDomainNameServiceQuery(const String& service, EventLoop* eventLoop) : eventLoop(eventLoop), thread(NULL), service(service), safeToJoin(true) {
-}
-
-PlatformDomainNameServiceQuery::~PlatformDomainNameServiceQuery() {
-	if (safeToJoin) {
-		thread->join();
-	}
-	else {
-		// FIXME: UGLYYYYY
-	}
-	delete thread;
+PlatformDomainNameServiceQuery::PlatformDomainNameServiceQuery(const String& service, EventLoop* eventLoop, PlatformDomainNameResolver* resolver) : PlatformDomainNameQuery(resolver), eventLoop(eventLoop), service(service) {
 }
 
 void PlatformDomainNameServiceQuery::run() {
-	safeToJoin = false;
-	thread = new boost::thread(boost::bind(&PlatformDomainNameServiceQuery::doRun, shared_from_this()));
+	getResolver()->addQueryToQueue(shared_from_this());
 }
 
-void PlatformDomainNameServiceQuery::doRun() {
+void PlatformDomainNameServiceQuery::runBlocking() {
 	SWIFT_LOG(debug) << "Querying " << service << std::endl;
 
 	std::vector<DomainNameServiceQuery::Result> records;
@@ -166,14 +156,12 @@ void PlatformDomainNameServiceQuery::doRun() {
 	}
 #endif
 
-	safeToJoin = true;
 	std::sort(records.begin(), records.end(), ResultPriorityComparator());
 	//std::cout << "Sending out " << records.size() << " SRV results " << std::endl;
 	eventLoop->postEvent(boost::bind(boost::ref(onResult), records));
 }
 
 void PlatformDomainNameServiceQuery::emitError() {
-	safeToJoin = true;
 	eventLoop->postEvent(boost::bind(boost::ref(onResult), std::vector<DomainNameServiceQuery::Result>()), shared_from_this());
 }
 

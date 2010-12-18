@@ -22,6 +22,8 @@ using namespace Swift;
 SimpleEventLoop eventLoop;
 BoostNetworkFactories networkFactories(&eventLoop);
 int numberOfConnectedClients = 0;
+int numberOfInstances = 100;
+
 
 void handleConnected() {
 	numberOfConnectedClients++;
@@ -29,8 +31,6 @@ void handleConnected() {
 }
 
 int main(int, char**) {
-	int numberOfInstances = 1000;
-
 	char* jid = getenv("SWIFT_BENCHTOOL_JID");
 	if (!jid) {
 		std::cerr << "Please set the SWIFT_BENCHTOOL_JID environment variable" << std::endl;

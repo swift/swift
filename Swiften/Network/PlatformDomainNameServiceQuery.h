@@ -6,31 +6,28 @@
 
 #pragma once
 
-#include <boost/thread.hpp>
 #include <boost/enable_shared_from_this.hpp>
 
 #include "Swiften/Network/DomainNameServiceQuery.h"
 #include "Swiften/EventLoop/EventOwner.h"
 #include "Swiften/Base/String.h"
+#include <Swiften/Network/PlatformDomainNameQuery.h>
 
 namespace Swift {
 	class EventLoop;
 
-	class PlatformDomainNameServiceQuery : public DomainNameServiceQuery, public boost::enable_shared_from_this<PlatformDomainNameServiceQuery>, public EventOwner {
+	class PlatformDomainNameServiceQuery : public DomainNameServiceQuery, public PlatformDomainNameQuery, public boost::enable_shared_from_this<PlatformDomainNameServiceQuery>, public EventOwner {
 		public:
-			PlatformDomainNameServiceQuery(const String& service, EventLoop* eventLoop);
-			~PlatformDomainNameServiceQuery();
+			PlatformDomainNameServiceQuery(const String& service, EventLoop* eventLoop, PlatformDomainNameResolver* resolver);
 
 			virtual void run();
 
 		private:
-			void doRun();
+			void runBlocking();
 			void emitError();
 
 		private:
 			EventLoop* eventLoop;
-			boost::thread* thread;
 			String service;
-			bool safeToJoin;
 	};
 }

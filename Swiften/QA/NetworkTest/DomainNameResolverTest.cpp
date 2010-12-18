@@ -34,6 +34,7 @@ class DomainNameResolverTest : public CppUnit::TestFixture {
 		CPPUNIT_TEST(testResolveAddress_IPv4and6);
 		CPPUNIT_TEST(testResolveAddress_International);
 		CPPUNIT_TEST(testResolveAddress_Localhost);
+		CPPUNIT_TEST(testResolveAddress_Parallel);
 		CPPUNIT_TEST(testResolveService);
 		CPPUNIT_TEST(testResolveService_Error);
 		CPPUNIT_TEST_SUITE_END();
@@ -115,6 +116,31 @@ class DomainNameResolverTest : public CppUnit::TestFixture {
 			CPPUNIT_ASSERT(std::find(addressQueryResult.begin(), addressQueryResult.end(), HostAddress("127.0.0.1")) != addressQueryResult.end());
 		}
 
+		void testResolveAddress_Parallel() {
+			std::vector<DomainNameAddressQuery::ref> queries;
+			static const size_t numQueries = 100;
+			for (size_t i = 0; i < numQueries; ++i) {
+				DomainNameAddressQuery::ref query(createAddressQuery("xmpp.test.swift.im"));
+				queries.push_back(query);
+				query->run();
+			}
+
+			eventLoop->processEvents();
+			int ticks = 0;
+			while (allAddressQueryResults.size() < numQueries) {
+				ticks++;
+				if (ticks > 1000) {
+					CPPUNIT_ASSERT(false);
+				}
+				Swift::sleep(10);
+				eventLoop->processEvents();
+			}
+
+			CPPUNIT_ASSERT_EQUAL(numQueries, allAddressQueryResults.size());
+			for (size_t i = 0; i < numQueries; ++i) {
+				CPPUNIT_ASSERT_EQUAL(std::string("10.0.0.0"), allAddressQueryResults[i].toString());
+			}
+		}
 
 		void testResolveService() {
 			boost::shared_ptr<DomainNameServiceQuery> query(createServiceQuery("_xmpp-client._tcp.xmpp-srv.test.swift.im"));
@@ -144,10 +170,6 @@ class DomainNameResolverTest : public CppUnit::TestFixture {
 		void testResolveService_Error() {
 		}
 
-/*
-		}
-		*/
-
 	private:
 			boost::shared_ptr<DomainNameAddressQuery> createAddressQuery(const String& domain) {
 				boost::shared_ptr<DomainNameAddressQuery> result = resolver->createAddressQuery(domain);
@@ -158,6 +180,7 @@ class DomainNameResolverTest : public CppUnit::TestFixture {
 			void handleAddressQueryResult(const std::vector<HostAddress>& addresses, boost::optional<DomainNameResolveError> error) {
 				addressQueryResult = addresses;
 				std::sort(addressQueryResult.begin(), addressQueryResult.end(), CompareHostAddresses());
+				allAddressQueryResults.insert(allAddressQueryResults.begin(), addresses.begin(), addresses.end());
 				addressQueryError = error;
 				resultsAvailable = true;
 			}
@@ -190,6 +213,7 @@ class DomainNameResolverTest : public CppUnit::TestFixture {
 		DummyEventLoop* eventLoop;
 		bool resultsAvailable;
 		std::vector<HostAddress> addressQueryResult;
+		std::vector<HostAddress> allAddressQueryResults;
 		boost::optional<DomainNameResolveError> addressQueryError;
 		std::vector<DomainNameServiceQuery::Result> serviceQueryResult;
 		PlatformDomainNameResolver* resolver;

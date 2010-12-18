@@ -16,6 +16,8 @@
 namespace Swift {
 	class DomainNameAddressQuery {
 		public:
+			typedef boost::shared_ptr<DomainNameAddressQuery> ref;
+
 			virtual ~DomainNameAddressQuery();
 
 			virtual void run() = 0;

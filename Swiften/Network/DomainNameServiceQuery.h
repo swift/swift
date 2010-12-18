@@ -9,6 +9,7 @@
 #include "Swiften/Base/boost_bsignals.h"
 #include <boost/optional.hpp>
 #include <vector>
+#include <boost/shared_ptr.hpp>
 
 #include "Swiften/Base/String.h"
 #include "Swiften/Network/DomainNameResolveError.h"
@@ -16,6 +17,8 @@
 namespace Swift {
 	class DomainNameServiceQuery {
 		public:
+			typedef boost::shared_ptr<DomainNameServiceQuery> ref;
+
 			struct Result {
 				Result(const String& hostname = "", int port = -1, int priority = -1, int weight = -1) : hostname(hostname), port(port), priority(priority), weight(weight) {}
 				String hostname;

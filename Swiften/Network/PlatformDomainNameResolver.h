@@ -6,7 +6,15 @@
 
 #pragma once
 
-#include "Swiften/Network/DomainNameResolver.h"
+#include <deque>
+#include <boost/thread.hpp>
+#include <boost/thread/mutex.hpp>
+#include <boost/thread/condition_variable.hpp>
+
+#include <Swiften/Network/DomainNameResolver.h>
+#include <Swiften/Network/PlatformDomainNameQuery.h>
+#include <Swiften/Network/DomainNameServiceQuery.h>
+#include <Swiften/Network/DomainNameAddressQuery.h>
 
 namespace Swift {
 	class String;
@@ -15,11 +23,23 @@ namespace Swift {
 	class PlatformDomainNameResolver : public DomainNameResolver {
 		public:
 			PlatformDomainNameResolver(EventLoop* eventLoop);
+			~PlatformDomainNameResolver();
 
-			virtual boost::shared_ptr<DomainNameServiceQuery> createServiceQuery(const String& name);
-			virtual boost::shared_ptr<DomainNameAddressQuery> createAddressQuery(const String& name);
+			virtual DomainNameServiceQuery::ref createServiceQuery(const String& name);
+			virtual DomainNameAddressQuery::ref createAddressQuery(const String& name);
 
 		private:
+			void run();
+			void addQueryToQueue(PlatformDomainNameQuery::ref);
+
+		private:
+			friend class PlatformDomainNameServiceQuery;
+			friend class PlatformDomainNameAddressQuery;
 			EventLoop* eventLoop;
+			bool stopRequested;
+			boost::thread* thread;
+			std::deque<PlatformDomainNameQuery::ref> queue;
+			boost::mutex queueMutex;
+			boost::condition_variable queueNonEmpty;
 	};
 }

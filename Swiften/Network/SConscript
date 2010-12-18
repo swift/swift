@@ -21,6 +21,7 @@ sourceList = [
 			"DomainNameServiceQuery.cpp",
 			"PlatformDomainNameResolver.cpp",
 			"PlatformDomainNameServiceQuery.cpp",
+			"PlatformDomainNameAddressQuery.cpp",
 			"StaticDomainNameResolver.cpp",
 			"HostAddress.cpp",
 			"NetworkFactories.cpp",
