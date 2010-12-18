@@ -1,0 +1,9 @@
+import os
+
+Import("env")
+
+myenv = env.Clone()
+myenv.UseFlags(myenv["SWIFTEN_FLAGS"])
+myenv.UseFlags(myenv["SWIFTEN_DEP_FLAGS"])
+
+myenv.Program("BenchTool", ["BenchTool.cpp"])

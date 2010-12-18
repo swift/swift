@@ -8,12 +8,12 @@
 
 #include <boost/bind.hpp>
 
-#include "Swiften/Client/Client.h"
+#include <Swiften/Client/CoreClient.h>
 
 namespace Swift {
 	class ClientXMLTracer {
 		public:
-			ClientXMLTracer(Client* client) {
+			ClientXMLTracer(CoreClient* client) {
 				client->onDataRead.connect(boost::bind(&ClientXMLTracer::printData, '<', _1));
 				client->onDataWritten.connect(boost::bind(&ClientXMLTracer::printData, '>', _1));
 			}
