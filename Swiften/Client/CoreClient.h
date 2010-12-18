@@ -202,7 +202,6 @@ namespace Swift {
 			void handleDataWritten(const String&);
 
 		private:
-			PlatformDomainNameResolver resolver_;
 			JID jid_;
 			String password_;
 			EventLoop* eventLoop;

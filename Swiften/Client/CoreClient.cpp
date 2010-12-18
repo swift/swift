@@ -22,7 +22,7 @@
 
 namespace Swift {
 
-CoreClient::CoreClient(EventLoop* eventLoop, NetworkFactories* networkFactories, const JID& jid, const String& password) : resolver_(eventLoop), jid_(jid), password_(password), eventLoop(eventLoop), networkFactories(networkFactories), disconnectRequested_(false), certificateTrustChecker(NULL) {
+CoreClient::CoreClient(EventLoop* eventLoop, NetworkFactories* networkFactories, const JID& jid, const String& password) : jid_(jid), password_(password), eventLoop(eventLoop), networkFactories(networkFactories), disconnectRequested_(false), certificateTrustChecker(NULL) {
 	stanzaChannel_ = new ClientSessionStanzaChannel();
 	stanzaChannel_->onMessageReceived.connect(boost::ref(onMessageReceived));
 	stanzaChannel_->onPresenceReceived.connect(boost::ref(onPresenceReceived));
@@ -56,7 +56,7 @@ void CoreClient::connect(const String& host) {
 	SWIFT_LOG(debug) << "Connecting to host " << host << std::endl;
 	disconnectRequested_ = false;
 	assert(!connector_);
-	connector_ = Connector::create(host, &resolver_, networkFactories->getConnectionFactory(), networkFactories->getTimerFactory());
+	connector_ = Connector::create(host, networkFactories->getDomainNameResolver(), networkFactories->getConnectionFactory(), networkFactories->getTimerFactory());
 	connector_->onConnectFinished.connect(boost::bind(&CoreClient::handleConnectorFinished, this, _1));
 	connector_->setTimeoutMilliseconds(60*1000);
 	connector_->start();

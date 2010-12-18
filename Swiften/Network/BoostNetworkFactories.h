@@ -29,9 +29,14 @@ namespace Swift {
 				return &ioServiceThread;
 			}
 
+			DomainNameResolver* getDomainNameResolver() const {
+				return domainNameResolver;
+			}
+
 		private:
 			BoostIOServiceThread ioServiceThread;
 			TimerFactory* timerFactory;
 			ConnectionFactory* connectionFactory;
+			DomainNameResolver* domainNameResolver;
 	};
 }
