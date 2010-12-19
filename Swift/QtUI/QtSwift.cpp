@@ -61,10 +61,11 @@ po::options_description QtSwift::getOptionsDescription() {
 	result.add_options()
 		("debug", "Turn on debug logging")
 		("help", "produce help message")
-		("netbook-mode", "use netbook mode display")
-		("no-tabs", "don't manage chat windows in tabs")
-		("latency-debug", "use latency debugging")
-		("multi-account", po::value<int>()->default_value(1), "number of accounts to open windows for")
+		("netbook-mode", "use netbook mode display (unsupported)")
+		("no-tabs", "don't manage chat windows in tabs (unsupported)")
+		("latency-debug", "use latency debugging (unsupported)")
+		("multi-account", po::value<int>()->default_value(1), "number of accounts to open windows for (unsupported)")
+		("start-minimized", "don't show the login/roster window at startup")
 		;
 	return result;
 }
@@ -94,6 +95,7 @@ QtSwift::QtSwift(po::variables_map options) : networkFactories_(&clientMainThrea
 	}
 
 	tabs_ = options.count("no-tabs") && !(splitter_ > 0) ? NULL : new QtChatTabs();
+	bool startMinimized = options.count("start-minimized") > 0;
 	settings_ = new QtSettingsProvider();
 	applicationPathProvider_ = new PlatformApplicationPathProvider(SWIFT_APPLICATION_NAME);
 	storagesFactory_ = new FileStoragesFactory(applicationPathProvider_->getDataDir());
@@ -123,7 +125,7 @@ QtSwift::QtSwift(po::variables_map options) : networkFactories_(&clientMainThrea
 	for (int i = 0; i < numberOfAccounts; i++) {
 		QtSystemTray* systemTray = new QtSystemTray();
 		systemTrays_.push_back(systemTray);
-		QtUIFactory* uiFactory = new QtUIFactory(settings_, tabs_, splitter_, systemTray, chatWindowFactory_);
+		QtUIFactory* uiFactory = new QtUIFactory(settings_, tabs_, splitter_, systemTray, chatWindowFactory_, startMinimized);
 		uiFactories_.push_back(uiFactory);
 		MainController* mainController = new MainController(
 				&clientMainThreadCaller_,

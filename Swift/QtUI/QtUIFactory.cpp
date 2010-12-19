@@ -22,7 +22,7 @@
 
 namespace Swift {
 
-QtUIFactory::QtUIFactory(QtSettingsProvider* settings, QtChatTabs* tabs, QSplitter* netbookSplitter, QtSystemTray* systemTray, QtChatWindowFactory* chatWindowFactory) : settings(settings), tabs(tabs), netbookSplitter(netbookSplitter), systemTray(systemTray), chatWindowFactory(chatWindowFactory), lastMainWindow(NULL), loginWindow(NULL)  {
+QtUIFactory::QtUIFactory(QtSettingsProvider* settings, QtChatTabs* tabs, QSplitter* netbookSplitter, QtSystemTray* systemTray, QtChatWindowFactory* chatWindowFactory, bool startMinimized) : settings(settings), tabs(tabs), netbookSplitter(netbookSplitter), systemTray(systemTray), chatWindowFactory(chatWindowFactory), lastMainWindow(NULL), loginWindow(NULL), startMinimized(startMinimized)  {
 }
 
 XMLConsoleWidget* QtUIFactory::createXMLConsoleWidget() {
@@ -53,6 +53,7 @@ LoginWindow* QtUIFactory::createLoginWindow(UIEventStream* eventStream) {
 		loginWindow->restoreGeometry(loginWindowGeometryVariant.toByteArray());
 	}
 	connect(loginWindow, SIGNAL(geometryChanged()), this, SLOT(handleLoginWindowGeometryChanged()));
+	if (startMinimized) loginWindow->hide();
 	return loginWindow;
 }
 
