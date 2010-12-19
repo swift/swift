@@ -68,6 +68,11 @@ void OpenSSLContext::ensureLibraryInitialized() {
 		SSL_load_error_strings();
 		SSL_library_init();
 		OpenSSL_add_all_algorithms();
+
+		// Disable compression
+		/*STACK_OF(SSL_COMP)* compressionMethods = SSL_COMP_get_compression_methods();
+		sk_SSL_COMP_zero(compressionMethods);*/
+
 		isLibraryInitialized = true;
 	}
 }

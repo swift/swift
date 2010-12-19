@@ -55,13 +55,7 @@ int main(int, char**) {
 		clients[i]->connect();
 	}
 
-	{
-		Timer::ref timer = networkFactories.getTimerFactory()->createTimer(30000);
-		timer->onTick.connect(boost::bind(&SimpleEventLoop::stop, &eventLoop));
-		timer->start();
-
-		eventLoop.run();
-	}
+	eventLoop.run();
 
 	for (size_t i = 0; i < clients.size(); ++i) {
 		delete clients[i];
