@@ -40,6 +40,7 @@ namespace Swift {
 			void setGentleGeometry(const QRect&);
 			void selectUser(const String& user);
 			bool askUserToTrustCertificatePermanently(const String& message, Certificate::ref certificate);
+			void hide();
 
 			virtual void quit();
 

@@ -383,6 +383,10 @@ void QtLoginWindow::bringToFront() {
 	}
 }
 
+void QtLoginWindow::hide() {
+	window()->hide();
+}
+
 void QtLoginWindow::resizeEvent(QResizeEvent*) {
 	emit geometryChanged();
 }
