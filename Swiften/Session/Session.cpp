@@ -20,12 +20,16 @@ Session::Session(
 			connection(connection),
 			payloadParserFactories(payloadParserFactories),
 			payloadSerializers(payloadSerializers),
+			xmppLayer(NULL),
+			connectionLayer(NULL),
 			streamStack(0),
 			finishing(false) {
 }
 
 Session::~Session() {
 	delete streamStack;
+	delete connectionLayer;
+	delete xmppLayer;
 }
 
 void Session::startSession() {
@@ -50,8 +54,7 @@ void Session::finishSession(const SessionError& error) {
 }
 
 void Session::initializeStreamStack() {
-	xmppLayer = boost::shared_ptr<XMPPLayer>(
-			new XMPPLayer(payloadParserFactories, payloadSerializers, ClientStreamType));
+	xmppLayer = new XMPPLayer(payloadParserFactories, payloadSerializers, ClientStreamType);
 	xmppLayer->onStreamStart.connect(
 			boost::bind(&Session::handleStreamStart, shared_from_this(), _1));
 	xmppLayer->onElement.connect(boost::bind(&Session::handleElement, shared_from_this(), _1));
@@ -61,7 +64,7 @@ void Session::initializeStreamStack() {
 	xmppLayer->onWriteData.connect(boost::bind(boost::ref(onDataWritten), _1));
 	connection->onDisconnected.connect(
 			boost::bind(&Session::handleDisconnected, shared_from_this(), _1));
-	connectionLayer = boost::shared_ptr<ConnectionLayer>(new ConnectionLayer(connection));
+	connectionLayer = new ConnectionLayer(connection);
 	streamStack = new StreamStack(xmppLayer, connectionLayer);
 }
 

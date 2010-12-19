@@ -84,7 +84,7 @@ namespace Swift {
 
 			void initializeStreamStack();
 
-			boost::shared_ptr<XMPPLayer> getXMPPLayer() const {
+			XMPPLayer* getXMPPLayer() const {
 				return xmppLayer;
 			}
 
@@ -103,8 +103,8 @@ namespace Swift {
 			boost::shared_ptr<Connection> connection;
 			PayloadParserFactoryCollection* payloadParserFactories;
 			PayloadSerializerCollection* payloadSerializers;
-			boost::shared_ptr<XMPPLayer> xmppLayer;
-			boost::shared_ptr<ConnectionLayer> connectionLayer;
+			XMPPLayer* xmppLayer;
+			ConnectionLayer* connectionLayer;
 			StreamStack* streamStack;
 			bool finishing;
 	};

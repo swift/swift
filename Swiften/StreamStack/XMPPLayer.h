@@ -10,6 +10,7 @@
 #include "Swiften/Base/boost_bsignals.h"
 #include <boost/noncopyable.hpp>
 
+#include <Swiften/StreamStack/HighLayer.h>
 #include "Swiften/Base/ByteArray.h"
 #include "Swiften/Elements/Element.h"
 #include "Swiften/Elements/StreamType.h"
@@ -22,7 +23,7 @@ namespace Swift {
 	class XMPPSerializer;
 	class PayloadSerializerCollection;
 
-	class XMPPLayer : public XMPPParserClient, boost::noncopyable {
+	class XMPPLayer : public XMPPParserClient, public HighLayer, boost::noncopyable {
 		public:
 			XMPPLayer(
 					PayloadParserFactoryCollection* payloadParserFactories,
@@ -35,8 +36,11 @@ namespace Swift {
 			void writeElement(boost::shared_ptr<Element>);
 			void writeData(const String& data);
 
-			void parseData(ByteArray data);
 			void resetParser();
+
+		private:
+			void handleDataRead(const ByteArray& data);
+			void writeDataInternal(const ByteArray& data);
 
 		public:
 			boost::signal<void (const ProtocolHeader&)> onStreamStart;

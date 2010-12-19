@@ -8,6 +8,7 @@
 
 #include "Swiften/Base/boost_bsignals.h"
 #include <boost/shared_ptr.hpp>
+#include <boost/bind.hpp>
 
 #include "Swiften/StreamStack/LowLayer.h"
 #include "Swiften/Network/Connection.h"
@@ -16,7 +17,7 @@ namespace Swift {
 	class ConnectionLayer : public LowLayer {
 		public:
 			ConnectionLayer(boost::shared_ptr<Connection> connection) : connection(connection) {
-				connection->onDataRead.connect(onDataRead);
+				connection->onDataRead.connect(boost::bind(&ConnectionLayer::writeDataToParentLayer, this, _1));
 			}
 
 			void writeData(const ByteArray& data) {

@@ -4,11 +4,21 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "Swiften/StreamStack/HighLayer.h"
+#include <Swiften/StreamStack/HighLayer.h>
+
+#include <Swiften/StreamStack/LowLayer.h>
 
 namespace Swift {
 
+HighLayer::HighLayer() : childLayer(NULL) {
+}
+
 HighLayer::~HighLayer() {
+}
+
+void HighLayer::writeDataToChildLayer(const ByteArray& data) {
+	assert(childLayer);
+	childLayer->writeData(data);
 }
 
 }

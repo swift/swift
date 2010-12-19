@@ -20,31 +20,28 @@ namespace Swift {
 
 	class StreamStack {
 		public:
-			StreamStack(boost::shared_ptr<XMPPLayer> xmppLayer, boost::shared_ptr<LowLayer> physicalLayer);
+			StreamStack(XMPPLayer* xmppLayer, LowLayer* physicalLayer);
 			~StreamStack();
 
-			void addLayer(boost::shared_ptr<StreamLayer>);
+			void addLayer(StreamLayer*);
 
-			boost::shared_ptr<XMPPLayer> getXMPPLayer() const {
+			XMPPLayer* getXMPPLayer() const {
 				return xmppLayer_;
 			}
 
-			template<typename T> boost::shared_ptr<T> getLayer() {
-				foreach(const boost::shared_ptr<StreamLayer>& streamLayer, layers_) {
-					boost::shared_ptr<T> layer = boost::dynamic_pointer_cast<T>(streamLayer);
+			template<typename T> T* getLayer() {
+				foreach(StreamLayer* streamLayer, layers_) {
+					T* layer = dynamic_cast<T*>(streamLayer);
 					if (layer) {
 						return layer;
 					}
 				}
-				return boost::shared_ptr<T>();
+				return NULL;
 			}
 
 		private:
-			boost::shared_ptr<XMPPLayer> xmppLayer_;
-			boost::shared_ptr<LowLayer> physicalLayer_;
-			std::vector< boost::shared_ptr<StreamLayer> > layers_;
-			boost::bsignals::connection xmppReadSlotConnection_;
-			boost::bsignals::connection xmppWriteSignalConnection_;
-			std::vector< boost::bsignals::connection > writeSignalConnections_;
+			XMPPLayer* xmppLayer_;
+			LowLayer* physicalLayer_;
+			std::vector<StreamLayer*> layers_;
 	};
 }

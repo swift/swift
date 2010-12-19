@@ -5,6 +5,9 @@
  */
 
 #include "Swiften/StreamStack/TLSLayer.h"
+
+#include <boost/bind.hpp>
+
 #include "Swiften/TLS/TLSContextFactory.h"
 #include "Swiften/TLS/TLSContext.h"
 
@@ -12,8 +15,8 @@ namespace Swift {
 
 TLSLayer::TLSLayer(TLSContextFactory* factory) {
 	context = factory->createTLSContext();
-	context->onDataForNetwork.connect(onWriteData);
-	context->onDataForApplication.connect(onDataRead);
+	context->onDataForNetwork.connect(boost::bind(&TLSLayer::writeDataToChildLayer, this, _1));
+	context->onDataForApplication.connect(boost::bind(&TLSLayer::writeDataToParentLayer, this, _1));
 	context->onConnected.connect(onConnected);
 	context->onError.connect(onError);
 }

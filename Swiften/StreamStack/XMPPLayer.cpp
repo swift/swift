@@ -29,22 +29,27 @@ XMPPLayer::~XMPPLayer() {
 }
 
 void XMPPLayer::writeHeader(const ProtocolHeader& header) {
-	onWriteData(ByteArray(xmppSerializer_->serializeHeader(header)));
+	writeDataInternal(ByteArray(xmppSerializer_->serializeHeader(header)));
 }
 
 void XMPPLayer::writeFooter() {
-	onWriteData(ByteArray(xmppSerializer_->serializeFooter()));
+	writeDataInternal(ByteArray(xmppSerializer_->serializeFooter()));
 }
 
 void XMPPLayer::writeElement(boost::shared_ptr<Element> element) {
-	onWriteData(ByteArray(xmppSerializer_->serializeElement(element)));
+	writeDataInternal(ByteArray(xmppSerializer_->serializeElement(element)));
 }
 
 void XMPPLayer::writeData(const String& data) {
-	onWriteData(ByteArray(data));
+	writeDataInternal(ByteArray(data));
 }
 
-void XMPPLayer::parseData(ByteArray data) {
+void XMPPLayer::writeDataInternal(const ByteArray& data) {
+	onWriteData(data);
+	writeDataToChildLayer(data);
+}
+
+void XMPPLayer::handleDataRead(const ByteArray& data) {
 	onDataRead(data);
 	inParser_ = true;
 	if (!xmppParser_->parse(String(data.getData(), data.getSize()))) {

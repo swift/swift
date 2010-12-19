@@ -4,8 +4,7 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#ifndef SWIFTEN_COMPRESSIONLAYER_H
-#define SWIFTEN_COMPRESSIONLAYER_H
+#pragma once
 
 #include <boost/noncopyable.hpp>
 #include "Swiften/Base/boost_bsignals.h"
@@ -26,7 +25,7 @@ namespace Swift {
 
 			virtual void writeData(const ByteArray& data) {
 				try {
-					onWriteData(compressor_.process(data));
+					writeDataToChildLayer(compressor_.process(data));
 				}
 				catch (const ZLibException& e) {
 					onError();
@@ -35,7 +34,7 @@ namespace Swift {
 
 			virtual void handleDataRead(const ByteArray& data) {
 				try {
-					onDataRead(decompressor_.process(data));
+					writeDataToParentLayer(decompressor_.process(data));
 				}
 				catch (const ZLibException& e) {
 					onError();
@@ -50,5 +49,3 @@ namespace Swift {
 			ZLibDecompressor decompressor_;
 	};
 }
-
-#endif

@@ -21,16 +21,16 @@ WhitespacePingLayer::WhitespacePingLayer(TimerFactory* timerFactory) : isActive(
 }
 
 void WhitespacePingLayer::writeData(const ByteArray& data) {
-	onWriteData(data);
+	writeDataToChildLayer(data);
 }
 
 void WhitespacePingLayer::handleDataRead(const ByteArray& data) {
-	onDataRead(data);
+	writeDataToParentLayer(data);
 }
 
 void WhitespacePingLayer::handleTimerTick() {
 	timer->stop();
-	onWriteData(" ");
+	writeDataToChildLayer(" ");
 	timer->start();
 }
 

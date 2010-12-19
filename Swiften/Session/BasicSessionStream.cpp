@@ -19,12 +19,29 @@
 
 namespace Swift {
 
-BasicSessionStream::BasicSessionStream(StreamType streamType, boost::shared_ptr<Connection> connection, PayloadParserFactoryCollection* payloadParserFactories, PayloadSerializerCollection* payloadSerializers, TLSContextFactory* tlsContextFactory, TimerFactory* timerFactory) : available(false), connection(connection), payloadParserFactories(payloadParserFactories), payloadSerializers(payloadSerializers), tlsContextFactory(tlsContextFactory), timerFactory(timerFactory), streamType(streamType) {
+BasicSessionStream::BasicSessionStream(
+		StreamType streamType, 
+		boost::shared_ptr<Connection> connection, 
+		PayloadParserFactoryCollection* payloadParserFactories, 
+		PayloadSerializerCollection* payloadSerializers, 
+		TLSContextFactory* tlsContextFactory, 
+		TimerFactory* timerFactory) : 
+			available(false), 
+			connection(connection), 
+			payloadParserFactories(payloadParserFactories), 
+			payloadSerializers(payloadSerializers), 
+			tlsContextFactory(tlsContextFactory), 
+			timerFactory(timerFactory), 
+			streamType(streamType),
+			xmppLayer(NULL),
+			connectionLayer(NULL),
+			compressionLayer(NULL),
+			tlsLayer(NULL),
+			whitespacePingLayer(NULL) {
 }
 
 void BasicSessionStream::initialize() {
-	xmppLayer = boost::shared_ptr<XMPPLayer>(
-			new XMPPLayer(payloadParserFactories, payloadSerializers, streamType));
+	xmppLayer = new XMPPLayer(payloadParserFactories, payloadSerializers, streamType);
 	xmppLayer->onStreamStart.connect(boost::bind(&BasicSessionStream::handleStreamStartReceived, shared_from_this(), _1));
 	xmppLayer->onElement.connect(boost::bind(&BasicSessionStream::handleElementReceived, shared_from_this(), _1));
 	xmppLayer->onError.connect(boost::bind(
@@ -33,8 +50,7 @@ void BasicSessionStream::initialize() {
 	xmppLayer->onWriteData.connect(boost::bind(&BasicSessionStream::handleDataWritten, shared_from_this(), _1));
 
 	connection->onDisconnected.connect(boost::bind(&BasicSessionStream::handleConnectionError, shared_from_this(), _1));
-	connectionLayer = boost::shared_ptr<ConnectionLayer>(
-			new ConnectionLayer(connection));
+	connectionLayer = new ConnectionLayer(connection);
 
 	streamStack = new StreamStack(xmppLayer, connectionLayer);
 
@@ -42,7 +58,12 @@ void BasicSessionStream::initialize() {
 }
 
 BasicSessionStream::~BasicSessionStream() {
+	delete compressionLayer;
+	delete tlsLayer;
+	delete whitespacePingLayer;
 	delete streamStack;
+	delete connectionLayer;
+	delete xmppLayer;
 }
 
 void BasicSessionStream::writeHeader(const ProtocolHeader& header) {
@@ -70,7 +91,7 @@ bool BasicSessionStream::supportsTLSEncryption() {
 
 void BasicSessionStream::addTLSEncryption() {
 	assert(available);
-	tlsLayer = boost::shared_ptr<TLSLayer>(new TLSLayer(tlsContextFactory));
+	tlsLayer = new TLSLayer(tlsContextFactory);
 	if (hasTLSCertificate() && !tlsLayer->setClientCertificate(getTLSCertificate())) {
 		onError(boost::shared_ptr<Error>(new Error(Error::InvalidTLSCertificateError)));
 	}
@@ -99,14 +120,14 @@ ByteArray BasicSessionStream::getTLSFinishMessage() const {
 }
 
 void BasicSessionStream::addZLibCompression() {
-	boost::shared_ptr<CompressionLayer> compressionLayer(new CompressionLayer());
+	compressionLayer = new CompressionLayer();
 	streamStack->addLayer(compressionLayer);
 }
 
 void BasicSessionStream::setWhitespacePingEnabled(bool enabled) {
 	if (enabled) {
 		if (!whitespacePingLayer) {
-			whitespacePingLayer = boost::shared_ptr<WhitespacePingLayer>(new WhitespacePingLayer(timerFactory));
+			whitespacePingLayer = new WhitespacePingLayer(timerFactory);
 			streamStack->addLayer(whitespacePingLayer);
 		}
 		whitespacePingLayer->setActive();

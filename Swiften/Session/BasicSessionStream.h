@@ -78,12 +78,12 @@ namespace Swift {
 			TLSContextFactory* tlsContextFactory;
 			TimerFactory* timerFactory;
 			StreamType streamType;
-			boost::shared_ptr<XMPPLayer> xmppLayer;
-			boost::shared_ptr<ConnectionLayer> connectionLayer;
+			XMPPLayer* xmppLayer;
+			ConnectionLayer* connectionLayer;
+			CompressionLayer* compressionLayer;
+			TLSLayer* tlsLayer;
+			WhitespacePingLayer* whitespacePingLayer;
 			StreamStack* streamStack;
-			boost::shared_ptr<CompressionLayer> compressionLayer;
-			boost::shared_ptr<TLSLayer> tlsLayer;
-			boost::shared_ptr<WhitespacePingLayer> whitespacePingLayer;
 	};
 
 }

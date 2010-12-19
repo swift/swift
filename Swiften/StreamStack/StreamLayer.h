@@ -4,10 +4,7 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#ifndef SWIFTEN_STREAMLAYER_H
-#define SWIFTEN_STREAMLAYER_H
-
-#include "Swiften/Base/boost_bsignals.h"
+#pragma once
 
 #include "Swiften/StreamStack/LowLayer.h"
 #include "Swiften/StreamStack/HighLayer.h"
@@ -18,5 +15,3 @@ namespace Swift {
 			StreamLayer() {}
 	};
 }
-
-#endif

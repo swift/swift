@@ -4,22 +4,34 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#ifndef SWIFTEN_LOWLAYER_H
-#define SWIFTEN_LOWLAYER_H
-
-#include "Swiften/Base/boost_bsignals.h"
+#pragma once
 
 #include "Swiften/Base/ByteArray.h"
 
 namespace Swift {
+	class HighLayer;
+
 	class LowLayer {
+			friend class StreamStack;
+
 		public:
+			LowLayer();
 			virtual ~LowLayer();
 
 			virtual void writeData(const ByteArray& data) = 0;
+	
+		protected:
+			HighLayer* getParentLayer() {
+				return parentLayer;
+			}
 
-			boost::signal<void (const ByteArray&)> onDataRead;
+			void setParentLayer(HighLayer* parentLayer) {
+				this->parentLayer = parentLayer;
+			}
+
+			void writeDataToParentLayer(const ByteArray& data);
+
+		private:
+			HighLayer* parentLayer;
 	};
 }
-
-#endif
