@@ -142,9 +142,12 @@ section "Uninstall"
     delete $INSTDIR\imageformats\qsvg4.dll
     delete $INSTDIR\imageformats\qtiff4.dll
     delete $INSTDIR\sounds\message-received.wav
+    delete $INSTDIR\images\logo-icon-32.png"
 
     RmDir $INSTDIR\Prerequisites
     RmDir $INSTDIR\imageformats
+    RmDir $INSTDIR\images
+    RmDir $INSTDIR\sounds
     RmDir $INSTDIR
 
     !insertmacro MUI_STARTMENU_GETFOLDER Application $StartMenuFolder
