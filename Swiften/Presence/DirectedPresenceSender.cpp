@@ -38,9 +38,14 @@ boost::shared_ptr<Presence> DirectedPresenceSender::getLastSentUndirectedPresenc
 	return presenceCopy;
 }
 
-void DirectedPresenceSender::addDirectedPresenceReceiver(const JID& jid) {
+/**
+ * Send future broadcast presence also to this JID.
+ * @param jid Non-roster JID to receive global presence updates.
+ * @param sendPresence Also send the current global presence immediately.
+ */
+void DirectedPresenceSender::addDirectedPresenceReceiver(const JID& jid, SendPresence sendPresence) {
 	directedPresenceReceivers.insert(jid);
-	if (sender->isAvailable()) {
+	if (sendPresence == AndSendPresence && sender->isAvailable()) {
 		if (lastSentUndirectedPresence && lastSentUndirectedPresence->getType() == Presence::Available) {
 			boost::shared_ptr<Presence> presenceCopy(new Presence(*lastSentUndirectedPresence));
 			presenceCopy->setTo(jid);
@@ -49,9 +54,14 @@ void DirectedPresenceSender::addDirectedPresenceReceiver(const JID& jid) {
 	}
 }
 
-void DirectedPresenceSender::removeDirectedPresenceReceiver(const JID& jid) {
+/**
+ * Send future broadcast presence also to this JID.
+ * @param jid Non-roster JID to stop receiving global presence updates.
+ * @param sendPresence Also send presence type=unavailable immediately to jid.
+ */
+void DirectedPresenceSender::removeDirectedPresenceReceiver(const JID& jid, SendPresence sendPresence) {
 	directedPresenceReceivers.erase(jid);
-	if (sender->isAvailable()) {
+	if (sendPresence == AndSendPresence && sender->isAvailable()) {
 		boost::shared_ptr<Presence> presence(new Presence());
 		presence->setType(Presence::Unavailable);
 		presence->setTo(jid);

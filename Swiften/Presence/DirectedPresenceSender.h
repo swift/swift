@@ -14,10 +14,11 @@
 namespace Swift {
 	class DirectedPresenceSender : public PresenceSender {
 		public:
+			enum SendPresence {AndSendPresence, DontSendPresence};
 			DirectedPresenceSender(PresenceSender*);
 
-			void addDirectedPresenceReceiver(const JID&);
-			void removeDirectedPresenceReceiver(const JID&);
+			void addDirectedPresenceReceiver(const JID&, SendPresence);
+			void removeDirectedPresenceReceiver(const JID&, SendPresence);
 
 			void sendPresence(Presence::ref);
 

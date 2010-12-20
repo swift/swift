@@ -63,7 +63,7 @@ void MUC::joinWithContextSince(const String &nick, const boost::posix_time::ptim
 }
 
 void MUC::part() {
-	presenceSender->removeDirectedPresenceReceiver(ownMUCJID);
+	presenceSender->removeDirectedPresenceReceiver(ownMUCJID, DirectedPresenceSender::AndSendPresence);
 	mucRegistry->removeMUC(getJID());
 }
 
@@ -76,7 +76,7 @@ void MUC::handleUserLeft(LeavingType type) {
 	}
 	occupants.clear();
 	joinComplete_ = false;
-	presenceSender->removeDirectedPresenceReceiver(ownMUCJID);
+	presenceSender->removeDirectedPresenceReceiver(ownMUCJID, DirectedPresenceSender::DontSendPresence);
 }
 
 void MUC::handleIncomingPresence(boost::shared_ptr<Presence> presence) {
@@ -158,7 +158,7 @@ void MUC::handleIncomingPresence(boost::shared_ptr<Presence> presence) {
 				joinComplete_ = true;
 				ownMUCJID = presence->getFrom();
 				onJoinComplete(getOwnNick());
-				presenceSender->addDirectedPresenceReceiver(ownMUCJID);
+				presenceSender->addDirectedPresenceReceiver(ownMUCJID, DirectedPresenceSender::DontSendPresence);
 			}
 			if (status.code == 201) {
 				/* Room is created and locked */
@@ -179,8 +179,8 @@ void MUC::handleCreationConfigResponse(boost::shared_ptr<MUCOwnerPayload> /*unus
 	if (error) {
 		onJoinFailed(error);
 	} else {
-		/* onJoinComplete(getOwnNick()); isn't needed here, the presence will cause an emit elsewhere. */
-		presenceSender->addDirectedPresenceReceiver(ownMUCJID);
+		onJoinComplete(getOwnNick()); /* Previously, this wasn't needed here, as the presence duplication bug caused an emit elsewhere. */
+		presenceSender->addDirectedPresenceReceiver(ownMUCJID, DirectedPresenceSender::DontSendPresence);
 	}
 }
 

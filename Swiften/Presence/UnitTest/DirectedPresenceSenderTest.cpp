@@ -19,8 +19,10 @@ class DirectedPresenceSenderTest : public CppUnit::TestFixture {
 		CPPUNIT_TEST(testSendPresence_UndirectedPresenceWithDirectedPresenceReceivers);
 		CPPUNIT_TEST(testSendPresence_DirectedPresenceWithDirectedPresenceReceivers);
 		CPPUNIT_TEST(testAddDirectedPresenceReceiver);
+		CPPUNIT_TEST(testAddDirectedPresenceReceiver_WithoutSendingPresence);
 		CPPUNIT_TEST(testAddDirectedPresenceReceiver_AfterSendingDirectedPresence);
 		CPPUNIT_TEST(testRemoveDirectedPresenceReceiver);
+		CPPUNIT_TEST(testRemoveDirectedPresenceReceiver_WithoutSendingPresence);
 		CPPUNIT_TEST_SUITE_END();
 
 	public:
@@ -49,7 +51,7 @@ class DirectedPresenceSenderTest : public CppUnit::TestFixture {
 
 		void testSendPresence_UndirectedPresenceWithDirectedPresenceReceivers() {
 			std::auto_ptr<DirectedPresenceSender> testling(createPresenceSender());
-			testling->addDirectedPresenceReceiver(JID("alice@wonderland.lit/teaparty"));
+			testling->addDirectedPresenceReceiver(JID("alice@wonderland.lit/teaparty"), DirectedPresenceSender::AndSendPresence);
 
 			testling->sendPresence(testPresence);
 
@@ -63,7 +65,7 @@ class DirectedPresenceSenderTest : public CppUnit::TestFixture {
 
 		void testSendPresence_DirectedPresenceWithDirectedPresenceReceivers() {
 			std::auto_ptr<DirectedPresenceSender> testling(createPresenceSender());
-			testling->addDirectedPresenceReceiver(JID("alice@wonderland.lit/teaparty"));
+			testling->addDirectedPresenceReceiver(JID("alice@wonderland.lit/teaparty"), DirectedPresenceSender::AndSendPresence);
 			channel->sentStanzas.clear();
 
 			testPresence->setTo(JID("foo@bar.com"));
@@ -79,12 +81,22 @@ class DirectedPresenceSenderTest : public CppUnit::TestFixture {
 			testling->sendPresence(testPresence);
 			channel->sentStanzas.clear();
 
-			testling->addDirectedPresenceReceiver(JID("alice@wonderland.lit/teaparty"));
+			testling->addDirectedPresenceReceiver(JID("alice@wonderland.lit/teaparty"), DirectedPresenceSender::AndSendPresence);
 
 			CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(channel->sentStanzas.size()));
 			boost::shared_ptr<Presence> presence = boost::dynamic_pointer_cast<Presence>(channel->sentStanzas[0]);
 			CPPUNIT_ASSERT_EQUAL(testPresence->getStatus(), presence->getStatus());
 			CPPUNIT_ASSERT_EQUAL(JID("alice@wonderland.lit/teaparty"), presence->getTo());
+		}
+
+		void testAddDirectedPresenceReceiver_WithoutSendingPresence() {
+			std::auto_ptr<DirectedPresenceSender> testling(createPresenceSender());
+			testling->sendPresence(testPresence);
+			channel->sentStanzas.clear();
+
+			testling->addDirectedPresenceReceiver(JID("alice@wonderland.lit/teaparty"), DirectedPresenceSender::DontSendPresence);
+
+			CPPUNIT_ASSERT_EQUAL(0, static_cast<int>(channel->sentStanzas.size()));
 		}
 
 		void testAddDirectedPresenceReceiver_AfterSendingDirectedPresence() {
@@ -94,7 +106,7 @@ class DirectedPresenceSenderTest : public CppUnit::TestFixture {
 			testling->sendPresence(secondTestPresence);
 			channel->sentStanzas.clear();
 
-			testling->addDirectedPresenceReceiver(JID("alice@wonderland.lit/teaparty"));
+			testling->addDirectedPresenceReceiver(JID("alice@wonderland.lit/teaparty"), DirectedPresenceSender::AndSendPresence);
 
 			CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(channel->sentStanzas.size()));
 			boost::shared_ptr<Presence> presence = boost::dynamic_pointer_cast<Presence>(channel->sentStanzas[0]);
@@ -104,15 +116,26 @@ class DirectedPresenceSenderTest : public CppUnit::TestFixture {
 
 		void testRemoveDirectedPresenceReceiver() {
 			std::auto_ptr<DirectedPresenceSender> testling(createPresenceSender());
-			testling->addDirectedPresenceReceiver(JID("alice@wonderland.lit/teaparty"));
-			channel->sentStanzas.clear();
+			testling->addDirectedPresenceReceiver(JID("alice@wonderland.lit/teaparty"), DirectedPresenceSender::DontSendPresence);
 
-			testling->removeDirectedPresenceReceiver(JID("alice@wonderland.lit/teaparty"));
+			testling->removeDirectedPresenceReceiver(JID("alice@wonderland.lit/teaparty"), DirectedPresenceSender::AndSendPresence);
 			testling->sendPresence(testPresence);
 
 			CPPUNIT_ASSERT_EQUAL(2, static_cast<int>(channel->sentStanzas.size()));
 			CPPUNIT_ASSERT_EQUAL(boost::dynamic_pointer_cast<Presence>(channel->sentStanzas[0])->getType(), Presence::Unavailable);
 			CPPUNIT_ASSERT(channel->sentStanzas[1] == testPresence);
+		}
+
+		void testRemoveDirectedPresenceReceiver_WithoutSendingPresence() {
+			std::auto_ptr<DirectedPresenceSender> testling(createPresenceSender());
+			testling->addDirectedPresenceReceiver(JID("alice@wonderland.lit/teaparty"), DirectedPresenceSender::AndSendPresence);
+			channel->sentStanzas.clear();
+
+			testling->removeDirectedPresenceReceiver(JID("alice@wonderland.lit/teaparty"), DirectedPresenceSender::DontSendPresence);
+			testling->sendPresence(testPresence);
+
+			CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(channel->sentStanzas.size()));
+			CPPUNIT_ASSERT(channel->sentStanzas[0] == testPresence);
 		}
 
 	private:
