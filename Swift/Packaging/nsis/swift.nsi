@@ -33,12 +33,20 @@ SetCompressor lzma
 !insertmacro MUI_UNPAGE_CONFIRM
 !insertmacro MUI_UNPAGE_INSTFILES
 
-Function .onInit
+!macro checkNotRunning
   FindProcDLL::FindProc "Swift.exe"
   IntCmp $R0 1 0 notRunning
     MessageBox MB_OK|MB_ICONEXCLAMATION "Swift is running. Please close it first" /SD IDOK
     Abort
   notRunning:
+!macroend
+
+Function .onInit
+!insertmacro checkNotRunning
+FunctionEnd
+
+Function un.onInit
+!insertmacro checkNotRunning
 FunctionEnd
 
 # default section start
@@ -122,6 +130,7 @@ sectionEnd
 # create a section to define what the uninstaller does.
 # the section will always be named "Uninstall"
 section "Uninstall"
+    
     # Always delete uninstaller first
     delete $INSTDIR\uninstaller.exe
  
