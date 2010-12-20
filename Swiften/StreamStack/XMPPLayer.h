@@ -38,7 +38,7 @@ namespace Swift {
 
 			void resetParser();
 
-		private:
+		protected:
 			void handleDataRead(const ByteArray& data);
 			void writeDataInternal(const ByteArray& data);
 
