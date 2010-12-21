@@ -4,6 +4,8 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
+#include <boost/asio.hpp>
+
 #include "Swiften/Network/PlatformDomainNameServiceQuery.h"
 
 #pragma GCC diagnostic ignored "-Wold-style-cast"
