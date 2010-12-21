@@ -16,6 +16,6 @@ namespace Swift {
 		public:
 			MacOSXDock(CocoaApplication* application);
 
-			void setMessage(const String& label);
+			virtual void setNumberOfPendingMessages(int i);
 	};
 }

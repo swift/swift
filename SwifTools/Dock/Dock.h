@@ -13,6 +13,6 @@ namespace Swift {
 		public:
 			virtual ~Dock();
 
-			virtual void setMessage(const String& message) = 0;
+			virtual void setNumberOfPendingMessages(int i) = 0;
 	};
 }

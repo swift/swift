@@ -261,7 +261,7 @@ void MainController::handleConnected() {
 }
 
 void MainController::handleEventQueueLengthChange(int count) {
-	dock_->setMessage(count == 0 ? "" : boost::lexical_cast<std::string>(count).c_str());
+	dock_->setNumberOfPendingMessages(count);
 }
 
 void MainController::reconnectAfterError() {
