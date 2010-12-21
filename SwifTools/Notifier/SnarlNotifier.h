@@ -20,6 +20,7 @@ namespace Swift {
 			~SnarlNotifier();
 
 			virtual void showMessage(Type type, const String& subject, const String& description, const boost::filesystem::path& picture, boost::function<void()> callback);
+			virtual bool isAvailable() const;
 		
 		private:
 			void handleMessageReceived(MSG* message);

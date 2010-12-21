@@ -71,5 +71,8 @@ namespace Swift {
 #if defined(SWIFTEN_PLATFORM_MACOSX)
 			CocoaApplication cocoaApplication_;
 #endif
+#if defined(HAVE_SNARL)
+			Win32NotifierWindow* notifierWindow_;
+#endif
 	};
 }

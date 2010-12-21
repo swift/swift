@@ -28,6 +28,10 @@ namespace Swift {
 				const boost::filesystem::path& picture,
 				boost::function<void()> callback) = 0;
 
+			virtual bool isAvailable() const {
+				return true;
+			}
+
 		protected:
 			String typeToString(Type type);
 			static std::vector<Type> getAllTypes();

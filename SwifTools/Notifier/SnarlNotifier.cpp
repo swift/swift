@@ -33,6 +33,11 @@ SnarlNotifier::~SnarlNotifier() {
 	}
 }
 
+bool SnarlNotifier::isAvailable() const {
+	return false;
+}
+
+
 void SnarlNotifier::showMessage(Type type, const String& subject, const String& description, const boost::filesystem::path& picture, boost::function<void()> callback) {
 	int timeout = (type == IncomingMessage || type == SystemMessage) ? DEFAULT_MESSAGE_NOTIFICATION_TIMEOUT_SECONDS : DEFAULT_STATUS_NOTIFICATION_TIMEOUT_SECONDS;
 	int notificationID = snarl.EZNotify(

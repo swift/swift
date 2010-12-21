@@ -36,7 +36,7 @@
 #include "SwifTools/Notifier/GrowlNotifier.h"
 #elif defined(HAVE_SNARL)
 #include "QtWin32NotifierWindow.h"
-#include "SwifTools/Notifier/GNTPNotifier.h"
+#include "SwifTools/Notifier/SnarlNotifier.h"
 #elif defined(SWIFTEN_PLATFORM_LINUX)
 #include "FreeDesktopNotifier.h"
 #else
@@ -44,6 +44,8 @@
 #endif
 #if defined(SWIFTEN_PLATFORM_MACOSX)
 #include "SwifTools/Dock/MacOSXDock.h"
+#elif defined(SWIFTEN_PLATFORM_WINDOWS)
+#include "SwifTools/Dock/WindowsDock.h"
 #else
 #include "SwifTools/Dock/NullDock.h"
 #endif
@@ -105,15 +107,23 @@ QtSwift::QtSwift(po::variables_map options) : networkFactories_(&clientMainThrea
 #if defined(HAVE_GROWL)
 	notifier_ = new GrowlNotifier(SWIFT_APPLICATION_NAME);
 #elif defined(HAVE_SNARL)
-	notifier_ = new GNTPNotifier(SWIFT_APPLICATION_NAME, applicationPathProvider_->getResourcePath("/images/logo-icon-128.png"), networkFactories_.getConnectionFactory());
+	notifierWindow_ = new QtWin32NotifierWindow();
+	notifier_ = new SnarlNotifier(SWIFT_APPLICATION_NAME, notifierWindow_, applicationPathProvider_->getResourcePath("/images/logo-icon-32.png"));
 #elif defined(SWIFTEN_PLATFORM_LINUX)
 	notifier_ = new FreeDesktopNotifier(SWIFT_APPLICATION_NAME);
 #else
 	notifier_ = new NullNotifier();
 #endif
 
+	// Ugly, because the dock depends on the tray, but the temporary
+	// multi-account hack creates one tray per account.
+	QtSystemTray* systemTray = new QtSystemTray();
+	systemTrays_.push_back(systemTray);
+
 #if defined(SWIFTEN_PLATFORM_MACOSX)
 	dock_ = new MacOSXDock(&cocoaApplication_);
+#elif defined(SWIFTEN_PLATFORM_WINDOWS)
+	dock_ = new WindowsDock(systemTray->getQSystemTrayIcon(), notifier_);
 #else
 	dock_ = new NullDock();
 #endif
@@ -123,9 +133,11 @@ QtSwift::QtSwift(po::variables_map options) : networkFactories_(&clientMainThrea
 	}
 
 	for (int i = 0; i < numberOfAccounts; i++) {
-		QtSystemTray* systemTray = new QtSystemTray();
-		systemTrays_.push_back(systemTray);
-		QtUIFactory* uiFactory = new QtUIFactory(settings_, tabs_, splitter_, systemTray, chatWindowFactory_, startMinimized);
+		if (i > 0) {
+			// Don't add the first tray (see note above)
+			systemTrays_.push_back(new QtSystemTray());
+		}
+		QtUIFactory* uiFactory = new QtUIFactory(settings_, tabs_, splitter_, systemTrays_[i], chatWindowFactory_, startMinimized);
 		uiFactories_.push_back(uiFactory);
 		MainController* mainController = new MainController(
 				&clientMainThreadCaller_,
@@ -152,6 +164,9 @@ QtSwift::QtSwift(po::variables_map options) : networkFactories_(&clientMainThrea
 
 QtSwift::~QtSwift() {
 	delete notifier_;
+#if defined(HAVE_SNARL)
+	delete notifierWindow_;
+#endif
 	delete autoUpdater_;
 	foreach (QtUIFactory* factory, uiFactories_) {
 		delete factory;

@@ -22,6 +22,10 @@ namespace Swift {
 			void setUnreadMessages(bool some);
 			void setStatusType(StatusShow::Type type);
 			void setConnecting();
+			QSystemTrayIcon* getQSystemTrayIcon() {
+				return trayIcon_;
+			}
+
 		signals:
 			void clicked();
 		private slots:
