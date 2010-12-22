@@ -92,7 +92,6 @@ sources = [
     "SystemMessageSnippet.cpp",
     "QtElidingLabel.cpp",
     "QtLineEdit.cpp",
-    "WindowsNotifier.cpp",
     "Roster/RosterModel.cpp",
     "Roster/QtTreeWidget.cpp",
 #    "Roster/QtTreeWidgetItem.cpp",
@@ -125,7 +124,10 @@ myenv["SWIFT_VERSION"] = Version.getBuildVersion("swift")
 
 if env["PLATFORM"] == "win32" :
   myenv.RES("../resources/Windows/Swift.rc")
-  sources += ["../resources/Windows/Swift.res"]
+  sources += [
+			"WindowsNotifier.cpp",
+			"../resources/Windows/Swift.res"
+		]
 
 if env["PLATFORM"] == "posix" :
 	sources += ["FreeDesktopNotifier.cpp"]

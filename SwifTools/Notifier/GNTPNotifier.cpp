@@ -4,6 +4,8 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
+// FIXME: This notifier needs finishing (handling callbacks etc.)
+
 #include "SwifTools/Notifier/GNTPNotifier.h"
 
 #include <cassert>
@@ -49,7 +51,7 @@ void GNTPNotifier::send(const std::string& message) {
 	currentConnection->connect(HostAddressPort(HostAddress("127.0.0.1"), 23053));
 }
 
-void GNTPNotifier::showMessage(Type type, const String& subject, const String& description, const boost::filesystem::path& picture, boost::function<void()> callback) {
+void GNTPNotifier::showMessage(Type type, const String& subject, const String& description, const boost::filesystem::path& picture, boost::function<void()>) {
 	if (registered) {
 		std::ostringstream message;
 		message << "GNTP/1.0 NOTIFY NONE\r\n";
@@ -74,7 +76,7 @@ void GNTPNotifier::handleConnectFinished(bool error) {
 	}
 }
 
-void GNTPNotifier::handleDataRead(const ByteArray& data) {
+void GNTPNotifier::handleDataRead(const ByteArray&) {
 	currentConnection->onDataRead.disconnect(boost::bind(&GNTPNotifier::handleDataRead, this, _1));
 	currentConnection->onConnectFinished.disconnect(boost::bind(&GNTPNotifier::handleConnectFinished, this, _1));
 	currentConnection.reset();
