@@ -169,7 +169,7 @@ QtLoginWindow::QtLoginWindow(UIEventStream* uiEventStream) : QMainWindow() {
 	toggleNotificationsAction_->setCheckable(true);
 	toggleNotificationsAction_->setChecked(true);
 	connect(toggleNotificationsAction_, SIGNAL(toggled(bool)), SLOT(handleToggleNotifications(bool)));
-#ifdef SWIFTEN_PLATFORM_LINUX
+#if defined(SWIFTEN_PLATFORM_LINUX) || defined(SWIFTEN_PLATFORM_WINDOWS)
 	generalMenu_->addAction(toggleNotificationsAction_);
 #endif
 

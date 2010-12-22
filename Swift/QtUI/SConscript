@@ -92,6 +92,7 @@ sources = [
     "SystemMessageSnippet.cpp",
     "QtElidingLabel.cpp",
     "QtLineEdit.cpp",
+    "WindowsNotifier.cpp",
     "Roster/RosterModel.cpp",
     "Roster/QtTreeWidget.cpp",
 #    "Roster/QtTreeWidgetItem.cpp",

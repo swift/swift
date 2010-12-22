@@ -17,9 +17,9 @@
 
 namespace Swift {
 
-SnarlNotifier::SnarlNotifier(const String& name, Win32NotifierWindow* window, const boost::filesystem::path& icon) : window(window) {
+SnarlNotifier::SnarlNotifier(const String& name, Win32NotifierWindow* window, const boost::filesystem::path& icon) : window(window), available(false) {
 	window->onMessageReceived.connect(boost::bind(&SnarlNotifier::handleMessageReceived, this, _1));
-	snarl.RegisterApp(name.getUTF8Data(), name.getUTF8Data(), icon.string().c_str(), window->getID(), SWIFT_SNARLNOTIFIER_MESSAGE_ID);
+	available = snarl.RegisterApp(name.getUTF8Data(), name.getUTF8Data(), icon.string().c_str(), window->getID(), SWIFT_SNARLNOTIFIER_MESSAGE_ID);
 	foreach(Notifier::Type type, getAllTypes()) {
 		snarl.AddClass(typeToString(type).getUTF8Data(), typeToString(type).getUTF8Data());
 	}
@@ -34,7 +34,7 @@ SnarlNotifier::~SnarlNotifier() {
 }
 
 bool SnarlNotifier::isAvailable() const {
-	return false;
+	return available;
 }
 
 

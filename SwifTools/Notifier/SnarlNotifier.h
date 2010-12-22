@@ -28,6 +28,7 @@ namespace Swift {
 		private:
 			Snarl::V41::SnarlInterface snarl;
 			Win32NotifierWindow* window;
+			bool available;
 			typedef std::map<int, boost::function<void()> > NotificationsMap;
 			NotificationsMap notifications;
 	};
