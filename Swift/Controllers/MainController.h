@@ -102,6 +102,7 @@ namespace Swift {
 			void reconnectAfterError();
 			void setManagersOffline();
 			void handleNotificationClicked(const JID& jid);
+			void handleForceQuit();
 
 		private:
 			EventLoop* eventLoop_;
@@ -141,8 +142,10 @@ namespace Swift {
 			UserSearchController* userSearchController_;
 			int timeBeforeNextReconnect_;
 			Timer::ref reconnectTimer_;
+			Timer::ref quitTimer_;
 			StatusTracker* statusTracker_;
 			bool myStatusLooksOnline_;
 			bool quitRequested_;
+			static const int SecondsToWaitBeforeForceQuitting;
 	};
 }
