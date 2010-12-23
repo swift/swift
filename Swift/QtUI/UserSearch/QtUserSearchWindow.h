@@ -6,9 +6,14 @@
 
 #pragma once
 
-#include "Swift/QtUI/UserSearch/ui_QtUserSearchWindow.h"
+#include <QWizard>
 
-#include "Swift/Controllers/UIInterfaces/UserSearchWindow.h"
+#include <Swift/QtUI/UserSearch/ui_QtUserSearchWizard.h>
+#include <Swift/QtUI/UserSearch/ui_QtUserSearchFirstPage.h>
+#include <Swift/QtUI/UserSearch/ui_QtUserSearchFieldsPage.h>
+#include <Swift/QtUI/UserSearch/ui_QtUserSearchResultsPage.h>
+
+#include <Swift/Controllers/UIInterfaces/UserSearchWindow.h>
 
 
 namespace Swift {
@@ -16,10 +21,35 @@ namespace Swift {
 	class UserSearchDelegate;
 	class UserSearchResult;
 	class UIEventStream;
-	class QtUserSearchWindow : public QWidget, public UserSearchWindow, private Ui::QtUserSearchWindow {
+
+	class QtUserSearchFirstPage : public QWizardPage, public Ui::QtUserSearchFirstPage {
 		Q_OBJECT
 		public:
-			QtUserSearchWindow(UIEventStream* eventStream);
+			QtUserSearchFirstPage() {
+				setupUi(this);
+			}
+	};
+
+	class QtUserSearchFieldsPage : public QWizardPage, public Ui::QtUserSearchFieldsPage {
+		Q_OBJECT
+		public:
+			QtUserSearchFieldsPage() {
+				setupUi(this);
+			}
+	};
+
+	class QtUserSearchResultsPage : public QWizardPage, public Ui::QtUserSearchResultsPage {
+		Q_OBJECT
+		public:
+			QtUserSearchResultsPage() {
+				setupUi(this);
+			}
+	};
+
+	class QtUserSearchWindow : public QWizard, public UserSearchWindow, private Ui::QtUserSearchWizard {
+		Q_OBJECT
+		public:
+			QtUserSearchWindow(UIEventStream* eventStream, UserSearchWindow::Type type);
 			virtual ~QtUserSearchWindow();
 
 			virtual void addSavedServices(const std::vector<JID>& services);
@@ -31,18 +61,25 @@ namespace Swift {
 			virtual void setServerSupportsSearch(bool error);
 			virtual void setSearchError(bool error);
 			virtual void setSearchFields(boost::shared_ptr<SearchPayload> fields) ;
+		protected:
+			virtual int nextId() const;
 		private slots:
-			void handleGetForm();
-			void handleSelected(const QModelIndex& current);
-			void handleSearch();
-			void handleActivated(const QModelIndex& index);
-			void handleOkClicked();
-			void handleCancelClicked();
-			void enableCorrectButtons();
+			void handleFirstPageRadioChange();
+			virtual void handleCurrentChanged(int);
+			virtual void handleAccepted();
 		private:
+			void clearForm();
+			void setError(const QString& error);
+			JID searchServer();
+			void handleSearch();
+			UserSearchWindow::Type type_;
 			UserSearchModel* model_;
 			UserSearchDelegate* delegate_;
+			QtUserSearchFirstPage* firstPage_;
+			QtUserSearchFieldsPage* fieldsPage_;
+			QtUserSearchResultsPage* resultsPage_;
 			UIEventStream* eventStream_;
-			JID lastServiceJID_;
+			JID myServer_;
+			int lastPage_;
 	};
 }

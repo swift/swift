@@ -99,7 +99,8 @@ MainController::MainController(
 	chatsManager_ = NULL;
 	eventWindowController_ = NULL;
 	mucSearchController_ = NULL;
-	userSearchController_ = NULL;
+	userSearchControllerChat_ = NULL;
+	userSearchControllerAdd_ = NULL;
 	quitRequested_ = false;
 
 	timeBeforeNextReconnect_ = -1;
@@ -190,8 +191,10 @@ void MainController::resetClient() {
 	statusTracker_ = NULL;
 	delete profileSettings_;
 	profileSettings_ = NULL;
-	delete userSearchController_;
-	userSearchController_ = NULL;
+	delete userSearchControllerChat_;
+	userSearchControllerChat_ = NULL;
+	delete userSearchControllerAdd_;
+	userSearchControllerAdd_ = NULL;
 }
 
 void MainController::handleUIEvent(boost::shared_ptr<UIEvent> event) {
@@ -248,7 +251,8 @@ void MainController::handleConnected() {
 
 
 		mucSearchController_ = new MUCSearchController(jid_, uiEventStream_, uiFactory_, client_->getIQRouter(), settings_, client_->getNickResolver());
-		userSearchController_ = new UserSearchController(jid_, uiEventStream_, uiFactory_, client_->getIQRouter());
+		userSearchControllerChat_ = new UserSearchController(UserSearchController::StartChat, jid_, uiEventStream_, uiFactory_, client_->getIQRouter());
+		userSearchControllerAdd_ = new UserSearchController(UserSearchController::AddContact, jid_, uiEventStream_, uiFactory_, client_->getIQRouter());
 	}
 	
 	client_->requestRoster();

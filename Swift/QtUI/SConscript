@@ -141,7 +141,10 @@ else :
   swiftProgram = myenv.Program("swift", sources)
 
 myenv.Uic4("MUCSearch/QtMUCSearchWindow.ui")
-myenv.Uic4("UserSearch/QtUserSearchWindow.ui")
+myenv.Uic4("UserSearch/QtUserSearchWizard.ui")
+myenv.Uic4("UserSearch/QtUserSearchFirstPage.ui")
+myenv.Uic4("UserSearch/QtUserSearchFieldsPage.ui")
+myenv.Uic4("UserSearch/QtUserSearchResultsPage.ui")
 myenv.Uic4("QtAddContactDialog.ui")
 myenv.Uic4("QtBookmarkDetailWindow.ui")
 myenv.Qrc("DefaultTheme.qrc")

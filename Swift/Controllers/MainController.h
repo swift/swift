@@ -139,7 +139,8 @@ namespace Swift {
 			boost::shared_ptr<ErrorEvent> lastDisconnectError_;
 			bool useDelayForLatency_;
 			MUCSearchController* mucSearchController_;
-			UserSearchController* userSearchController_;
+			UserSearchController* userSearchControllerChat_;
+			UserSearchController* userSearchControllerAdd_;
 			int timeBeforeNextReconnect_;
 			Timer::ref reconnectTimer_;
 			Timer::ref quitTimer_;

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>QtUserSearchWizard</class>
+ <widget class="QWizard" name="QtUserSearchWizard">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>711</width>
+    <height>524</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Find User</string>
+  </property>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

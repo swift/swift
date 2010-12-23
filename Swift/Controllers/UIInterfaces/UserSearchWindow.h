@@ -18,6 +18,7 @@ namespace Swift {
 
 	class UserSearchWindow {
 		public:
+			enum Type {AddContact, ChatToContact};
 			virtual ~UserSearchWindow() {};
 
 			virtual void clear() = 0;

@@ -38,7 +38,8 @@ namespace Swift {
 
 	class UserSearchController {
 		public:
-			UserSearchController(const JID& jid, UIEventStream* uiEventStream, UserSearchWindowFactory* userSearchWindowFactory, IQRouter* iqRouter);
+			enum Type {AddContact, StartChat};
+			UserSearchController(Type type, const JID& jid, UIEventStream* uiEventStream, UserSearchWindowFactory* userSearchWindowFactory, IQRouter* iqRouter);
 			~UserSearchController();
 		private:
 			void handleUIEvent(boost::shared_ptr<UIEvent> event);
@@ -48,6 +49,7 @@ namespace Swift {
 			void handleFormResponse(boost::shared_ptr<SearchPayload> items, ErrorPayload::ref error, const JID& jid);
 			void handleSearch(boost::shared_ptr<SearchPayload> fields, const JID& jid);
 			void handleSearchResponse(boost::shared_ptr<SearchPayload> results, ErrorPayload::ref error, const JID& jid);
+			Type type_;
 			UIEventStream* uiEventStream_;
 			UserSearchWindow* window_;
 			UserSearchWindowFactory* factory_;

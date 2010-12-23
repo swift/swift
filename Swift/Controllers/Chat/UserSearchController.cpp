@@ -14,12 +14,13 @@
 
 #include <Swift/Controllers/DiscoServiceWalker.h>
 #include <Swift/Controllers/UIEvents/UIEventStream.h>
-#include <Swift/Controllers/UIEvents/RequestUserSearchUIEvent.h>
+#include <Swift/Controllers/UIEvents/RequestChatWithUserDialogUIEvent.h>
+#include <Swift/Controllers/UIEvents/RequestAddUserDialogUIEvent.h>
 #include <Swift/Controllers/UIInterfaces/UserSearchWindow.h>
 #include <Swift/Controllers/UIInterfaces/UserSearchWindowFactory.h>
 
 namespace Swift {
-UserSearchController::UserSearchController(const JID& jid, UIEventStream* uiEventStream, UserSearchWindowFactory* factory, IQRouter* iqRouter) : jid_(jid) {
+UserSearchController::UserSearchController(Type type, const JID& jid, UIEventStream* uiEventStream, UserSearchWindowFactory* factory, IQRouter* iqRouter) : type_(type), jid_(jid) {
 	iqRouter_ = iqRouter;
 	uiEventStream_ = uiEventStream;
 	uiEventConnection_ = uiEventStream_->onUIEvent.connect(boost::bind(&UserSearchController::handleUIEvent, this, _1));
@@ -34,10 +35,17 @@ UserSearchController::~UserSearchController() {
 }
 
 void UserSearchController::handleUIEvent(boost::shared_ptr<UIEvent> event) {
-	boost::shared_ptr<RequestUserSearchUIEvent> searchEvent = boost::dynamic_pointer_cast<RequestUserSearchUIEvent>(event);
-	if (searchEvent) {
+	bool handle = false;
+	if (type_ == AddContact) {
+		boost::shared_ptr<RequestAddUserDialogUIEvent> searchEvent = boost::dynamic_pointer_cast<RequestAddUserDialogUIEvent>(event);
+		if (searchEvent) handle = true;
+	} else {
+		boost::shared_ptr<RequestChatWithUserDialogUIEvent> searchEvent = boost::dynamic_pointer_cast<RequestChatWithUserDialogUIEvent>(event);
+		if (searchEvent) handle = true;
+	}
+	if (handle) {
 		if (!window_) {
-			window_ = factory_->createUserSearchWindow(uiEventStream_);
+			window_ = factory_->createUserSearchWindow(type_ == AddContact ? UserSearchWindow::AddContact : UserSearchWindow::ChatToContact, uiEventStream_);
 			window_->onFormRequested.connect(boost::bind(&UserSearchController::handleFormRequested, this, _1));
 			window_->onSearchRequested.connect(boost::bind(&UserSearchController::handleSearch, this, _1, _2));
 			window_->setSelectedService(JID(jid_.getDomain()));

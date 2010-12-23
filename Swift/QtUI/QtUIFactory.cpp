@@ -78,8 +78,8 @@ ChatWindow* QtUIFactory::createChatWindow(const JID& contact, UIEventStream* eve
 	return chatWindowFactory->createChatWindow(contact, eventStream);
 }
 
-UserSearchWindow* QtUIFactory::createUserSearchWindow(UIEventStream* eventStream) {
-	return new QtUserSearchWindow(eventStream);
+UserSearchWindow* QtUIFactory::createUserSearchWindow(UserSearchWindow::Type type, UIEventStream* eventStream) {
+	return new QtUserSearchWindow(eventStream, type);
 };
 
 }

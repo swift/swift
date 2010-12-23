@@ -14,6 +14,6 @@ namespace Swift {
 		public:
 			virtual ~UserSearchWindowFactory() {};
 
-			virtual UserSearchWindow* createUserSearchWindow(UIEventStream* eventStream) = 0;
+			virtual UserSearchWindow* createUserSearchWindow(UserSearchWindow::Type type, UIEventStream* eventStream) = 0;
 	};
 }
