@@ -91,6 +91,7 @@ QtMainWindow::QtMainWindow(QtSettingsProvider* settings, UIEventStream* uiEventS
 	chatUserAction_ = new QAction("Start Chat", this);
 	connect(chatUserAction_, SIGNAL(triggered(bool)), this, SLOT(handleChatUserActionTriggered(bool)));
 	actionsMenu->addAction(chatUserAction_);
+	actionsMenu->addSeparator();
 	QAction* signOutAction = new QAction("Sign Out", this);
 	connect(signOutAction, SIGNAL(triggered()), SLOT(handleSignOutAction()));
 	actionsMenu->addAction(signOutAction);

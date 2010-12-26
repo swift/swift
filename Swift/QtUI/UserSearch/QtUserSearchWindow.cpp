@@ -32,6 +32,9 @@ QtUserSearchWindow::QtUserSearchWindow(UIEventStream* eventStream, UserSearchWin
 	connect(firstPage_->byJID_, SIGNAL(toggled(bool)), this, SLOT(handleFirstPageRadioChange()));
 	connect(firstPage_->byLocalSearch_, SIGNAL(toggled(bool)), this, SLOT(handleFirstPageRadioChange()));
 	connect(firstPage_->byRemoteSearch_, SIGNAL(toggled(bool)), this, SLOT(handleFirstPageRadioChange()));
+#if QT_VERSION >= 0x040700
+		firstPage_->jid_->setPlaceholderText("alice@wonderland.lit");
+#endif
 	fieldsPage_ = new QtUserSearchFieldsPage();
 	fieldsPage_->fetchingThrobber_->setMovie(new QMovie(":/icons/throbber.gif", QByteArray(), this));
 	fieldsPage_->fetchingThrobber_->movie()->stop();
@@ -42,7 +45,6 @@ QtUserSearchWindow::QtUserSearchWindow(UIEventStream* eventStream, UserSearchWin
 	setPage(1, firstPage_);
 	setPage(2, fieldsPage_);
 	setPage(3, resultsPage_);
-
 #ifdef SWIFT_PLATFORM_MACOSX
 	resultsPage_->results_->setAlternatingRowColors(true);
 #endif
@@ -104,7 +106,7 @@ int QtUserSearchWindow::nextId() const {
 
 void QtUserSearchWindow::handleFirstPageRadioChange() {
 	if (firstPage_->byJID_->isChecked()) {
-		firstPage_->jidLabel_->setText("What is their JID? (This has the form 'alice@wonderland.lit')");
+		firstPage_->jidLabel_->setText("What is their JID?");
 		firstPage_->jidLabel_->show();
 		firstPage_->service_->hide();
 		firstPage_->jid_->setText("");
