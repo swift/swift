@@ -35,6 +35,7 @@ QtUserSearchWindow::QtUserSearchWindow(UIEventStream* eventStream, UserSearchWin
 #if QT_VERSION >= 0x040700
 		firstPage_->jid_->setPlaceholderText("alice@wonderland.lit");
 #endif
+	firstPage_->service_->setEnabled(false);
 	fieldsPage_ = new QtUserSearchFieldsPage();
 	fieldsPage_->fetchingThrobber_->setMovie(new QMovie(":/icons/throbber.gif", QByteArray(), this));
 	fieldsPage_->fetchingThrobber_->movie()->stop();
@@ -106,24 +107,19 @@ int QtUserSearchWindow::nextId() const {
 
 void QtUserSearchWindow::handleFirstPageRadioChange() {
 	if (firstPage_->byJID_->isChecked()) {
-		firstPage_->jidLabel_->setText("What is their JID?");
-		firstPage_->jidLabel_->show();
-		firstPage_->service_->hide();
 		firstPage_->jid_->setText("");
-		firstPage_->jid_->show();
+		firstPage_->jid_->setEnabled(true);
+		firstPage_->service_->setEnabled(false);
 		restart();
 	} else if (firstPage_->byRemoteSearch_->isChecked()) {
-		firstPage_->jidLabel_->setText("Which server do you want to search? (This has the form 'wonderland.lit')");
-		firstPage_->jidLabel_->hide();
-		firstPage_->service_->show();
 		firstPage_->service_->setEditText("");
+		firstPage_->jid_->setEnabled(false);
+		firstPage_->service_->setEnabled(true);
 		//firstPage_->jid_->setText("");
-		firstPage_->jid_->hide();
 		restart();
 	} else {
-		firstPage_->jid_->hide();
-		firstPage_->jidLabel_->hide();
-		firstPage_->service_->hide();
+		firstPage_->jid_->setEnabled(false);
+		firstPage_->service_->setEnabled(false);
 		restart();
 	}
 }

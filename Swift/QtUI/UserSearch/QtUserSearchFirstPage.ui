@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>400</width>
-    <height>300</height>
+    <width>422</width>
+    <height>315</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -21,13 +21,6 @@
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
-    <widget class="QLabel" name="errorLabel_">
-     <property name="text">
-      <string>&lt;font color='red'&gt;errorLabel_&lt;/font&gt;</string>
-     </property>
-    </widget>
-   </item>
-   <item>
     <widget class="QLabel" name="howLabel_">
      <property name="text">
       <string>howLabel_</string>
@@ -35,11 +28,18 @@
     </widget>
    </item>
    <item>
-    <widget class="QRadioButton" name="byJID_">
-     <property name="text">
-      <string>I know their JID</string>
-     </property>
-    </widget>
+    <layout class="QHBoxLayout" name="horizontalLayout_2">
+     <item>
+      <widget class="QRadioButton" name="byJID_">
+       <property name="text">
+        <string>I know their JID:</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLineEdit" name="jid_"/>
+     </item>
+    </layout>
    </item>
    <item>
     <widget class="QRadioButton" name="byLocalSearch_">
@@ -49,26 +49,49 @@
     </widget>
    </item>
    <item>
-    <widget class="QRadioButton" name="byRemoteSearch_">
-     <property name="text">
-      <string>I'd like to search another server</string>
+    <layout class="QHBoxLayout" name="horizontalLayout">
+     <item>
+      <widget class="QRadioButton" name="byRemoteSearch_">
+       <property name="text">
+        <string>I'd like to search another server:</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QComboBox" name="service_">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="editable">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <spacer name="verticalSpacer_2">
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
      </property>
-    </widget>
-   </item>
-   <item>
-    <widget class="QLabel" name="jidLabel_">
-     <property name="text">
-      <string>jidLabel_</string>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>20</width>
+       <height>77</height>
+      </size>
      </property>
-    </widget>
+    </spacer>
    </item>
    <item>
-    <widget class="QLineEdit" name="jid_"/>
-   </item>
-   <item>
-    <widget class="QComboBox" name="service_">
-     <property name="editable">
-      <bool>true</bool>
+    <widget class="QLabel" name="errorLabel_">
+     <property name="text">
+      <string>&lt;font color='red'&gt;errorLabel_&lt;/font&gt;</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
      </property>
     </widget>
    </item>
