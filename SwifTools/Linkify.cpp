@@ -21,7 +21,7 @@ String Linkify::linkify(const String& input) {
 	for (size_t i = 0; i < input.getUTF8Size(); ++i) {
 		char c = input[i];
 		if (inURL) {
-			if (c >= 33 && c != '\\' && c != '"') {
+			if (c != ' ' && c != '\t') {
 				currentURL.push_back(c);
 			}
 			else {
