@@ -79,8 +79,6 @@ void UserSearchController::endDiscoWalker() {
 		discoWalker_->endWalk();
 		discoWalker_->onServiceFound.disconnect(boost::bind(&UserSearchController::handleDiscoServiceFound, this, _1, _2));
 		discoWalker_->onWalkComplete.disconnect(boost::bind(&UserSearchController::handleDiscoWalkFinished, this));
-		delete discoWalker_;
-		discoWalker_ = NULL;
 	}
 }
 
