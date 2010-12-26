@@ -64,7 +64,7 @@ elif env.get("BOOST_BUNDLED", False) :
 				"src/libs/filesystem/v2/src/v2_operations.cpp",
 				"src/libs/filesystem/v2/src/v2_path.cpp",
 				"src/libs/filesystem/v2/src/v2_portability.cpp",
-				"src/libs/filesystem/v3/src/utf8_codecvt_facet.cpp",
+				"src/libs/filesystem/v3/src/filesystem_utf8_codecvt_facet.cpp",
 				"src/libs/regex/src/c_regex_traits.cpp",
 				"src/libs/regex/src/cpp_regex_traits.cpp",
 				"src/libs/regex/src/cregex.cpp",
@@ -89,7 +89,7 @@ elif env.get("BOOST_BUNDLED", False) :
 				"src/libs/program_options/src/parsers.cpp",
 				"src/libs/program_options/src/positional_options.cpp",
 				"src/libs/program_options/src/split.cpp",
-				"src/libs/program_options/src/utf8_codecvt_facet.cpp",
+				"src/libs/program_options/src/program_options_utf8_codecvt_facet.cpp",
 				"src/libs/program_options/src/value_semantic.cpp",
 				"src/libs/program_options/src/variables_map.cpp",
 				"src/libs/program_options/src/winmain.cpp"]

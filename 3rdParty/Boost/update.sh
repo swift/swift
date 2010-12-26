@@ -42,6 +42,9 @@ done
 rm -rf $TARGET_DIR/tools/bcp/*.html $TARGET_DIR/libs/test $TARGET_DIR/doc $TARGET_DIR/boost.png $TARGET_DIR/boost/test $TARGET_DIR/tools/bcp/Jamfile.v2 $TARGET_DIR/tools/bcp/doc $TARGET_DIR/tools/bcp/test $TARGET_DIR/Jamroot
 rm -rf $TARGET_DIR/libs/filesystem/v2/build $TARGET_DIR/libs/filesystem/v3/build
 
+mv $TARGET_DIR/libs/filesystem/v3/src/utf8_codecvt_facet.cpp $TARGET_DIR/libs/filesystem/v3/src/filesystem_utf8_codecvt_facet.cpp 
+mv $TARGET_DIR/libs/program_options/src/utf8_codecvt_facet.cpp $TARGET_DIR/libs/program_options/src/program_options_utf8_codecvt_facet.cpp
+
 for diff in *.diff; do
 	patch -p3 < $diff
 done
