@@ -43,7 +43,7 @@ QModelIndex UserSearchModel::index(int row, int column, const QModelIndex & pare
 	if (!hasIndex(row, column, parent)) {
 		return QModelIndex();
 	}
-	return row < (int)results_.size() ? createIndex(row, column, (void*)&(results_[row])) : QModelIndex();
+	return row < static_cast<int>(results_.size()) ? createIndex(row, column, reinterpret_cast<void*>(const_cast<UserSearchResult*>(&(results_[row])))) : QModelIndex();
 }
 
 QModelIndex UserSearchModel::parent(const QModelIndex& /*index*/) const {

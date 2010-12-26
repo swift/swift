@@ -7,6 +7,7 @@
 #pragma once
 
 #include <vector>
+#include <set>
 
 #include <boost/shared_ptr.hpp>
 #include <Swiften/Base/boost_bsignals.h>
@@ -15,6 +16,8 @@
 #include <Swiften/Elements/DiscoInfo.h>
 #include <Swiften/Elements/DiscoItems.h>
 #include <Swiften/Elements/ErrorPayload.h>
+#include <Swiften/Disco/GetDiscoInfoRequest.h>
+#include <Swiften/Disco/GetDiscoItemsRequest.h>
 
 namespace Swift {
 	class IQRouter;
@@ -22,26 +25,44 @@ namespace Swift {
 	 * Recursively walk service discovery trees to find all services offered.
 	 * This stops on any disco item that's not reporting itself as a server.
 	 */
-	class DiscoServiceWalker : public boost::signals::trackable {
+	class DiscoServiceWalker {
 		public:
 			DiscoServiceWalker(const JID& service, IQRouter* iqRouter, size_t maxSteps = 200);
-			/** Start the walk. Call this exactly once.*/
+
+			/**
+			 * Start the walk.
+			 *
+			 * Call this exactly once.
+			 */
 			void beginWalk();
+
+			/**
+			 * End the walk.
+			 */
+			void endWalk();
+
 			/** Emitted for each service found. */
 			boost::signal<void(const JID&, boost::shared_ptr<DiscoInfo>)> onServiceFound;
+
 			/** Emitted when walking is complete.*/
 			boost::signal<void()> onWalkComplete;
+
 		private:
 			void handleReceivedDiscoItem(const JID& item);
 			void walkNode(const JID& jid);
 			void markNodeCompleted(const JID& jid);
-			void handleDiscoInfoResponse(boost::shared_ptr<DiscoInfo> info, ErrorPayload::ref error, const JID& jid);
-			void handleDiscoItemsResponse(boost::shared_ptr<DiscoItems> items, ErrorPayload::ref error, const JID& jid);
+			void handleDiscoInfoResponse(boost::shared_ptr<DiscoInfo> info, ErrorPayload::ref error, GetDiscoInfoRequest::ref request);
+			void handleDiscoItemsResponse(boost::shared_ptr<DiscoItems> items, ErrorPayload::ref error, GetDiscoItemsRequest::ref request);
 			void handleDiscoError(const JID& jid, ErrorPayload::ref error);
+
+		private:
 			JID service_;
 			IQRouter* iqRouter_;
 			size_t maxSteps_;
-			std::vector<JID> servicesBeingSearched_;
-			std::vector<JID> searchedServices_;
+			bool active_;
+			std::set<JID> servicesBeingSearched_;
+			std::set<JID> searchedServices_;
+			std::set<GetDiscoInfoRequest::ref> pendingDiscoInfoRequests_;
+			std::set<GetDiscoItemsRequest::ref> pendingDiscoItemsRequests_;
 	};
 }

@@ -13,7 +13,7 @@ namespace Swift {
 		public:
 			NullDock() {}
 
-			virtual void setNumberOfPendingMessages(int i) {
+			virtual void setNumberOfPendingMessages(int) {
 			}
 	};
 }

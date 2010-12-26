@@ -5,32 +5,55 @@
  */
 
 #include <Swift/Controllers/DiscoServiceWalker.h>
+#include <Swiften/Base/Log.h>
 
 #include <boost/bind.hpp>
 
-#include "Swiften/Disco/GetDiscoInfoRequest.h"
-#include "Swiften/Disco/GetDiscoItemsRequest.h"
-
 namespace Swift {
 
-DiscoServiceWalker::DiscoServiceWalker(const JID& service, IQRouter* iqRouter, size_t maxSteps) : service_(service), iqRouter_(iqRouter), maxSteps_(maxSteps) {
+DiscoServiceWalker::DiscoServiceWalker(const JID& service, IQRouter* iqRouter, size_t maxSteps) : service_(service), iqRouter_(iqRouter), maxSteps_(maxSteps), active_(false) {
 
 }
 
 void DiscoServiceWalker::beginWalk() {
-	assert(servicesBeingSearched_.size() == 0);
+	SWIFT_LOG(debug) << "Starting walk to " << service_ << std::endl;
+	assert(!active_);
+	assert(servicesBeingSearched_.empty());
+	active_ = true;
 	walkNode(service_);
 }
 
+void DiscoServiceWalker::endWalk() {
+	if (active_) {
+		SWIFT_LOG(debug) << "Ending walk to " << service_ << std::endl;
+		foreach (GetDiscoInfoRequest::ref request, pendingDiscoInfoRequests_) {
+			request->onResponse.disconnect(boost::bind(&DiscoServiceWalker::handleDiscoInfoResponse, this, _1, _2, request));
+		}
+		foreach (GetDiscoItemsRequest::ref request, pendingDiscoItemsRequests_) {
+			request->onResponse.disconnect(boost::bind(&DiscoServiceWalker::handleDiscoItemsResponse, this, _1, _2, request));
+		}
+		active_ = false;
+	}
+}
+
 void DiscoServiceWalker::walkNode(const JID& jid) {
-	servicesBeingSearched_.push_back(jid);
-	searchedServices_.push_back(jid);
+	SWIFT_LOG(debug) << "Walking node " << jid << std::endl;
+	servicesBeingSearched_.insert(jid);
+	searchedServices_.insert(jid);
 	GetDiscoInfoRequest::ref discoInfoRequest = GetDiscoInfoRequest::create(jid, iqRouter_);
-	discoInfoRequest->onResponse.connect(boost::bind(&DiscoServiceWalker::handleDiscoInfoResponse, this, _1, _2, jid));
+	discoInfoRequest->onResponse.connect(boost::bind(&DiscoServiceWalker::handleDiscoInfoResponse, this, _1, _2, discoInfoRequest));
+	pendingDiscoInfoRequests_.insert(discoInfoRequest);
 	discoInfoRequest->send();
 }
 
 void DiscoServiceWalker::handleReceivedDiscoItem(const JID& item) {
+	SWIFT_LOG(debug) << "Received disco item " << item << std::endl;
+
+	/* If we got canceled, don't do anything */
+	if (!active_) {
+		return;
+	}
+
 	if (std::find(searchedServices_.begin(), searchedServices_.end(), item) != searchedServices_.end()) {
 		/* Don't recurse infinitely */
 		return;
@@ -38,9 +61,17 @@ void DiscoServiceWalker::handleReceivedDiscoItem(const JID& item) {
 	walkNode(item);
 }
 
-void DiscoServiceWalker::handleDiscoInfoResponse(boost::shared_ptr<DiscoInfo> info, ErrorPayload::ref error, const JID& jid) {
+void DiscoServiceWalker::handleDiscoInfoResponse(boost::shared_ptr<DiscoInfo> info, ErrorPayload::ref error, GetDiscoInfoRequest::ref request) {
+	/* If we got canceled, don't do anything */
+	if (!active_) {
+		return;
+	}
+
+	SWIFT_LOG(debug) << "Disco info response from " << request->getReceiver() << std::endl;
+
+	pendingDiscoInfoRequests_.erase(request);
 	if (error) {
-		handleDiscoError(jid, error);
+		handleDiscoError(request->getReceiver(), error);
 		return;
 	}
 
@@ -52,21 +83,30 @@ void DiscoServiceWalker::handleDiscoInfoResponse(boost::shared_ptr<DiscoInfo> in
 	}
 	bool completed = false;
 	if (couldContainServices) {
-		GetDiscoItemsRequest::ref discoItemsRequest = GetDiscoItemsRequest::create(jid, iqRouter_);
-		discoItemsRequest->onResponse.connect(boost::bind(&DiscoServiceWalker::handleDiscoItemsResponse, this, _1, _2, jid));
+		GetDiscoItemsRequest::ref discoItemsRequest = GetDiscoItemsRequest::create(request->getReceiver(), iqRouter_);
+		discoItemsRequest->onResponse.connect(boost::bind(&DiscoServiceWalker::handleDiscoItemsResponse, this, _1, _2, discoItemsRequest));
+		pendingDiscoItemsRequests_.insert(discoItemsRequest);
 		discoItemsRequest->send();
 	} else {
 		completed = true;
 	}
-	onServiceFound(jid, info);
+	onServiceFound(request->getReceiver(), info);
 	if (completed) {
-		markNodeCompleted(jid);
+		markNodeCompleted(request->getReceiver());
 	}
 }
 
-void DiscoServiceWalker::handleDiscoItemsResponse(boost::shared_ptr<DiscoItems> items, ErrorPayload::ref error, const JID& jid) {
+void DiscoServiceWalker::handleDiscoItemsResponse(boost::shared_ptr<DiscoItems> items, ErrorPayload::ref error, GetDiscoItemsRequest::ref request) {
+	/* If we got canceled, don't do anything */
+	if (!active_) {
+		return;
+	}
+
+	SWIFT_LOG(debug) << "Received disco item from " << request->getReceiver() << std::endl;
+
+	pendingDiscoItemsRequests_.erase(request);
 	if (error) {
-		handleDiscoError(jid, error);
+		handleDiscoError(request->getReceiver(), error);
 		return;
 	}
 	foreach (DiscoItems::Item item, items->getItems()) {
@@ -77,15 +117,28 @@ void DiscoServiceWalker::handleDiscoItemsResponse(boost::shared_ptr<DiscoItems> 
 			handleReceivedDiscoItem(item.getJID());
 		}
 	}
-	markNodeCompleted(jid);
+	markNodeCompleted(request->getReceiver());
 }
 
 void DiscoServiceWalker::handleDiscoError(const JID& jid, ErrorPayload::ref /*error*/) {
+	/* If we got canceled, don't do anything */
+	if (!active_) {
+		return;
+	}
+
+	SWIFT_LOG(debug) << "Disco error from " << jid << std::endl;
+
 	markNodeCompleted(jid);
 }
 
 void DiscoServiceWalker::markNodeCompleted(const JID& jid) {
-	servicesBeingSearched_.erase(std::remove(servicesBeingSearched_.begin(), servicesBeingSearched_.end(), jid), servicesBeingSearched_.end());
+	// Check whether we weren't canceled in between a 'emit result' and this call
+	if (!active_) {
+		return;
+	}
+	SWIFT_LOG(debug) << "Node completed " << jid << std::endl;
+
+	servicesBeingSearched_.erase(jid);
 	/* All results are in */
 	if (servicesBeingSearched_.size() == 0) {
 		onWalkComplete();

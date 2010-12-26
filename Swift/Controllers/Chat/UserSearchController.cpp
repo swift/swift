@@ -4,7 +4,7 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "Swift/Controllers/Chat/UserSearchController.h"
+#include <Swift/Controllers/Chat/UserSearchController.h>
 
 #include <boost/bind.hpp>
 #include <boost/shared_ptr.hpp>
@@ -20,28 +20,33 @@
 #include <Swift/Controllers/UIInterfaces/UserSearchWindowFactory.h>
 
 namespace Swift {
-UserSearchController::UserSearchController(Type type, const JID& jid, UIEventStream* uiEventStream, UserSearchWindowFactory* factory, IQRouter* iqRouter) : type_(type), jid_(jid) {
-	iqRouter_ = iqRouter;
-	uiEventStream_ = uiEventStream;
-	uiEventConnection_ = uiEventStream_->onUIEvent.connect(boost::bind(&UserSearchController::handleUIEvent, this, _1));
+UserSearchController::UserSearchController(Type type, const JID& jid, UIEventStream* uiEventStream, UserSearchWindowFactory* factory, IQRouter* iqRouter) : type_(type), jid_(jid), uiEventStream_(uiEventStream), factory_(factory), iqRouter_(iqRouter) {
+	uiEventStream_->onUIEvent.connect(boost::bind(&UserSearchController::handleUIEvent, this, _1));
 	window_ = NULL;
-	factory_ = factory;
 	discoWalker_ = NULL;
 }
 
 UserSearchController::~UserSearchController() {
-	delete window_;
+	endDiscoWalker();
 	delete discoWalker_;
+	if (window_) {
+		window_->onFormRequested.disconnect(boost::bind(&UserSearchController::handleFormRequested, this, _1));
+		window_->onSearchRequested.disconnect(boost::bind(&UserSearchController::handleSearch, this, _1, _2));
+		delete window_;
+	}
+	uiEventStream_->onUIEvent.disconnect(boost::bind(&UserSearchController::handleUIEvent, this, _1));
 }
 
 void UserSearchController::handleUIEvent(boost::shared_ptr<UIEvent> event) {
 	bool handle = false;
 	if (type_ == AddContact) {
-		boost::shared_ptr<RequestAddUserDialogUIEvent> searchEvent = boost::dynamic_pointer_cast<RequestAddUserDialogUIEvent>(event);
-		if (searchEvent) handle = true;
+		if (boost::dynamic_pointer_cast<RequestAddUserDialogUIEvent>(event)) {
+			handle = true;
+		}
 	} else {
-		boost::shared_ptr<RequestChatWithUserDialogUIEvent> searchEvent = boost::dynamic_pointer_cast<RequestChatWithUserDialogUIEvent>(event);
-		if (searchEvent) handle = true;
+		if (boost::dynamic_pointer_cast<RequestChatWithUserDialogUIEvent>(event)) {
+			handle = true;
+		}
 	}
 	if (handle) {
 		if (!window_) {
@@ -59,15 +64,28 @@ void UserSearchController::handleUIEvent(boost::shared_ptr<UIEvent> event) {
 void UserSearchController::handleFormRequested(const JID& service) {
 	window_->setSearchError(false);
 	window_->setServerSupportsSearch(true);
+
 	//Abort a previous search if is active
+	endDiscoWalker();
 	delete discoWalker_;
 	discoWalker_ = new DiscoServiceWalker(service, iqRouter_);
-	discoWalker_->onServiceFound.connect(boost::bind(&UserSearchController::handleDiscoServiceFound, this, _1, _2, discoWalker_));
-	discoWalker_->onWalkComplete.connect(boost::bind(&UserSearchController::handleDiscoWalkFinished, this, discoWalker_));
+	discoWalker_->onServiceFound.connect(boost::bind(&UserSearchController::handleDiscoServiceFound, this, _1, _2));
+	discoWalker_->onWalkComplete.connect(boost::bind(&UserSearchController::handleDiscoWalkFinished, this));
 	discoWalker_->beginWalk();
 }
 
-void UserSearchController::handleDiscoServiceFound(const JID& jid, boost::shared_ptr<DiscoInfo> info, DiscoServiceWalker* walker) {
+void UserSearchController::endDiscoWalker() {
+	if (discoWalker_) {
+		discoWalker_->endWalk();
+		discoWalker_->onServiceFound.disconnect(boost::bind(&UserSearchController::handleDiscoServiceFound, this, _1, _2));
+		discoWalker_->onWalkComplete.disconnect(boost::bind(&UserSearchController::handleDiscoWalkFinished, this));
+		delete discoWalker_;
+		discoWalker_ = NULL;
+	}
+}
+
+
+void UserSearchController::handleDiscoServiceFound(const JID& jid, boost::shared_ptr<DiscoInfo> info) {
 	bool isUserDirectory = false;
 	bool supports55 = false;
 	foreach (DiscoInfo::Identity identity, info->getIdentities()) {
@@ -80,15 +98,14 @@ void UserSearchController::handleDiscoServiceFound(const JID& jid, boost::shared
 	supports55 = std::find(features.begin(), features.end(), DiscoInfo::JabberSearchFeature) != features.end();
 	if (/*isUserDirectory && */supports55) { //FIXME: once M-Link correctly advertises directoryness.
 		/* Abort further searches.*/
-		delete discoWalker_;
-		discoWalker_ = NULL;
+		endDiscoWalker();
 		boost::shared_ptr<GenericRequest<SearchPayload> > searchRequest(new GenericRequest<SearchPayload>(IQ::Get, jid, boost::shared_ptr<SearchPayload>(new SearchPayload()), iqRouter_));
-		searchRequest->onResponse.connect(boost::bind(&UserSearchController::handleFormResponse, this, _1, _2, jid));
+		searchRequest->onResponse.connect(boost::bind(&UserSearchController::handleFormResponse, this, _1, _2));
 		searchRequest->send();
 	}
 }
 
-void UserSearchController::handleFormResponse(boost::shared_ptr<SearchPayload> fields, ErrorPayload::ref error, const JID& jid) {
+void UserSearchController::handleFormResponse(boost::shared_ptr<SearchPayload> fields, ErrorPayload::ref error) {
 	if (error || !fields) {
 		window_->setServerSupportsSearch(false);
 		return;
@@ -98,11 +115,11 @@ void UserSearchController::handleFormResponse(boost::shared_ptr<SearchPayload> f
 
 void UserSearchController::handleSearch(boost::shared_ptr<SearchPayload> fields, const JID& jid) {
 	boost::shared_ptr<GenericRequest<SearchPayload> > searchRequest(new GenericRequest<SearchPayload>(IQ::Set, jid, fields, iqRouter_));
-	searchRequest->onResponse.connect(boost::bind(&UserSearchController::handleSearchResponse, this, _1, _2, jid));
+	searchRequest->onResponse.connect(boost::bind(&UserSearchController::handleSearchResponse, this, _1, _2));
 	searchRequest->send();
 }
 
-void UserSearchController::handleSearchResponse(boost::shared_ptr<SearchPayload> resultsPayload, ErrorPayload::ref error, const JID& jid) {
+void UserSearchController::handleSearchResponse(boost::shared_ptr<SearchPayload> resultsPayload, ErrorPayload::ref error) {
 	if (error || !resultsPayload) {
 		window_->setSearchError(true);
 		return;
@@ -121,10 +138,9 @@ void UserSearchController::handleSearchResponse(boost::shared_ptr<SearchPayload>
 	window_->setResults(results);
 }
 
-void UserSearchController::handleDiscoWalkFinished(DiscoServiceWalker* walker) {
+void UserSearchController::handleDiscoWalkFinished() {
 	window_->setServerSupportsSearch(false);
-	delete discoWalker_;
-	discoWalker_ = NULL;
+	endDiscoWalker();
 }
 
 }

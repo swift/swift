@@ -26,6 +26,10 @@ namespace Swift {
 		public:
 			void send();
 
+			const JID& getReceiver() const {
+				return receiver_;
+			}
+
 		protected:
 			/**
 			 * Constructs a request of a certain type to a specific receiver, and attaches the given

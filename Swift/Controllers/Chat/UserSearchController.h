@@ -41,21 +41,24 @@ namespace Swift {
 			enum Type {AddContact, StartChat};
 			UserSearchController(Type type, const JID& jid, UIEventStream* uiEventStream, UserSearchWindowFactory* userSearchWindowFactory, IQRouter* iqRouter);
 			~UserSearchController();
+
 		private:
 			void handleUIEvent(boost::shared_ptr<UIEvent> event);
 			void handleFormRequested(const JID& service);
-			void handleDiscoServiceFound(const JID& jid, boost::shared_ptr<DiscoInfo> info, DiscoServiceWalker* walker);
-			void handleDiscoWalkFinished(DiscoServiceWalker* walker);
-			void handleFormResponse(boost::shared_ptr<SearchPayload> items, ErrorPayload::ref error, const JID& jid);
+			void handleDiscoServiceFound(const JID& jid, boost::shared_ptr<DiscoInfo> info);
+			void handleDiscoWalkFinished();
+			void handleFormResponse(boost::shared_ptr<SearchPayload> items, ErrorPayload::ref error);
 			void handleSearch(boost::shared_ptr<SearchPayload> fields, const JID& jid);
-			void handleSearchResponse(boost::shared_ptr<SearchPayload> results, ErrorPayload::ref error, const JID& jid);
+			void handleSearchResponse(boost::shared_ptr<SearchPayload> results, ErrorPayload::ref error);
+			void endDiscoWalker();
+
+		private:
 			Type type_;
-			UIEventStream* uiEventStream_;
-			UserSearchWindow* window_;
-			UserSearchWindowFactory* factory_;
-			boost::bsignals::scoped_connection uiEventConnection_;
-			IQRouter* iqRouter_;
 			JID jid_;
+			UIEventStream* uiEventStream_;
+			UserSearchWindowFactory* factory_;
+			IQRouter* iqRouter_;
+			UserSearchWindow* window_;
 			DiscoServiceWalker* discoWalker_;
 	};
 }

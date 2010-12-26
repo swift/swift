@@ -59,7 +59,6 @@ QtUserSearchWindow::~QtUserSearchWindow() {
 }
 
 void QtUserSearchWindow::handleCurrentChanged(int page) {
-	qDebug() << "Next called, currently, was " << currentId() << ", " << lastPage_;
 	if (page == 2 && lastPage_ == 1) {
 		setError("");
 		/* next won't be called if JID is selected */
