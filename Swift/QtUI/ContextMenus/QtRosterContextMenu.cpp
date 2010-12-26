@@ -73,7 +73,7 @@ void QtRosterContextMenu::handleRemoveContact() {
 	QMessageBox msgBox;
 	msgBox.setWindowTitle("Confirm contact deletion");
 	msgBox.setText("Are you sure you want to delete this contact?");
-	msgBox.setInformativeText("This will remove the contact from all groups they may be in.");
+	msgBox.setInformativeText(QString("This will remove the contact '%1' from all groups they may be in.").arg(P2QSTRING(contact->getJID().toString())));
 	msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
 	msgBox.setDefaultButton(QMessageBox::Yes);
 	int ret = msgBox.exec();
