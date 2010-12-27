@@ -7,7 +7,6 @@
 #pragma once
 
 #include <boost/shared_ptr.hpp>
-#include <boost/enable_shared_from_this.hpp>
 
 #include "Swiften/Network/Connection.h"
 #include "Swiften/Session/SessionStream.h"
@@ -25,9 +24,7 @@ namespace Swift {
 	class ConnectionLayer;
 	class CompressionLayer;
 
-	class BasicSessionStream : 
-			public SessionStream, 
-			public boost::enable_shared_from_this<BasicSessionStream> {
+	class BasicSessionStream : public SessionStream {
 		public:
 			BasicSessionStream(
 				StreamType streamType,
@@ -38,8 +35,6 @@ namespace Swift {
 				TimerFactory* whitespacePingLayerFactory
 			);
 			~BasicSessionStream();
-
-			void initialize();
 
 			virtual bool isAvailable();
 

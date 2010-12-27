@@ -65,7 +65,6 @@ void CoreComponent::handleConnectorFinished(boost::shared_ptr<Connection> connec
 		sessionStream_ = boost::shared_ptr<BasicSessionStream>(new BasicSessionStream(ComponentStreamType, connection_, getPayloadParserFactories(), getPayloadSerializers(), NULL, networkFactories->getTimerFactory()));
 		sessionStream_->onDataRead.connect(boost::bind(&CoreComponent::handleDataRead, this, _1));
 		sessionStream_->onDataWritten.connect(boost::bind(&CoreComponent::handleDataWritten, this, _1));
-		sessionStream_->initialize();
 
 		session_ = ComponentSession::create(jid_, secret_, sessionStream_);
 		stanzaChannel_->setSession(session_);

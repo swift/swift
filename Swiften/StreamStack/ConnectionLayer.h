@@ -20,6 +20,10 @@ namespace Swift {
 				connection->onDataRead.connect(boost::bind(&ConnectionLayer::writeDataToParentLayer, this, _1));
 			}
 
+			~ConnectionLayer() {
+				connection->onDataRead.disconnect(boost::bind(&ConnectionLayer::writeDataToParentLayer, this, _1));
+			}
+
 			void writeData(const ByteArray& data) {
 				connection->write(data);
 			}

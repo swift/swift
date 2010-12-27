@@ -33,23 +33,17 @@ BasicSessionStream::BasicSessionStream(
 			tlsContextFactory(tlsContextFactory), 
 			timerFactory(timerFactory), 
 			streamType(streamType),
-			xmppLayer(NULL),
-			connectionLayer(NULL),
 			compressionLayer(NULL),
 			tlsLayer(NULL),
 			whitespacePingLayer(NULL) {
-}
-
-void BasicSessionStream::initialize() {
 	xmppLayer = new XMPPLayer(payloadParserFactories, payloadSerializers, streamType);
-	xmppLayer->onStreamStart.connect(boost::bind(&BasicSessionStream::handleStreamStartReceived, shared_from_this(), _1));
-	xmppLayer->onElement.connect(boost::bind(&BasicSessionStream::handleElementReceived, shared_from_this(), _1));
-	xmppLayer->onError.connect(boost::bind(
-			&BasicSessionStream::handleXMPPError, shared_from_this()));
-	xmppLayer->onDataRead.connect(boost::bind(&BasicSessionStream::handleDataRead, shared_from_this(), _1));
-	xmppLayer->onWriteData.connect(boost::bind(&BasicSessionStream::handleDataWritten, shared_from_this(), _1));
+	xmppLayer->onStreamStart.connect(boost::bind(&BasicSessionStream::handleStreamStartReceived, this, _1));
+	xmppLayer->onElement.connect(boost::bind(&BasicSessionStream::handleElementReceived, this, _1));
+	xmppLayer->onError.connect(boost::bind(&BasicSessionStream::handleXMPPError, this));
+	xmppLayer->onDataRead.connect(boost::bind(&BasicSessionStream::handleDataRead, this, _1));
+	xmppLayer->onWriteData.connect(boost::bind(&BasicSessionStream::handleDataWritten, this, _1));
 
-	connection->onDisconnected.connect(boost::bind(&BasicSessionStream::handleConnectionError, shared_from_this(), _1));
+	connection->onDisconnected.connect(boost::bind(&BasicSessionStream::handleConnectionError, this, _1));
 	connectionLayer = new ConnectionLayer(connection);
 
 	streamStack = new StreamStack(xmppLayer, connectionLayer);
@@ -59,10 +53,23 @@ void BasicSessionStream::initialize() {
 
 BasicSessionStream::~BasicSessionStream() {
 	delete compressionLayer;
-	delete tlsLayer;
+
+	if (tlsLayer) {
+		tlsLayer->onError.disconnect(boost::bind(&BasicSessionStream::handleTLSError, this));
+		tlsLayer->onConnected.disconnect(boost::bind(&BasicSessionStream::handleTLSConnected, this));
+		delete tlsLayer;
+	}
 	delete whitespacePingLayer;
 	delete streamStack;
+
+	connection->onDisconnected.disconnect(boost::bind(&BasicSessionStream::handleConnectionError, this, _1));
 	delete connectionLayer;
+
+	xmppLayer->onStreamStart.disconnect(boost::bind(&BasicSessionStream::handleStreamStartReceived, this, _1));
+	xmppLayer->onElement.disconnect(boost::bind(&BasicSessionStream::handleElementReceived, this, _1));
+	xmppLayer->onError.disconnect(boost::bind(&BasicSessionStream::handleXMPPError, this));
+	xmppLayer->onDataRead.disconnect(boost::bind(&BasicSessionStream::handleDataRead, this, _1));
+	xmppLayer->onWriteData.disconnect(boost::bind(&BasicSessionStream::handleDataWritten, this, _1));
 	delete xmppLayer;
 }
 
@@ -97,8 +104,8 @@ void BasicSessionStream::addTLSEncryption() {
 	}
 	else {
 		streamStack->addLayer(tlsLayer);
-		tlsLayer->onError.connect(boost::bind(&BasicSessionStream::handleTLSError, shared_from_this()));
-		tlsLayer->onConnected.connect(boost::bind(&BasicSessionStream::handleTLSConnected, shared_from_this()));
+		tlsLayer->onError.connect(boost::bind(&BasicSessionStream::handleTLSError, this));
+		tlsLayer->onConnected.connect(boost::bind(&BasicSessionStream::handleTLSConnected, this));
 		tlsLayer->connect();
 	}
 }

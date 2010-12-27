@@ -34,7 +34,7 @@ CoreClient::CoreClient(EventLoop* eventLoop, NetworkFactories* networkFactories,
 }
 
 CoreClient::~CoreClient() {
-	if (session_ || connection_) {
+	if ((session_ && !session_->isFinished()) || connection_) {
 		std::cerr << "Warning: Client not disconnected properly" << std::endl;
 	}
 	delete tlsFactories;
@@ -79,7 +79,6 @@ void CoreClient::handleConnectorFinished(boost::shared_ptr<Connection> connectio
 		}
 		sessionStream_->onDataRead.connect(boost::bind(&CoreClient::handleDataRead, this, _1));
 		sessionStream_->onDataWritten.connect(boost::bind(&CoreClient::handleDataWritten, this, _1));
-		sessionStream_->initialize();
 
 		session_ = ClientSession::create(jid_, sessionStream_);
 		session_->setCertificateTrustChecker(certificateTrustChecker);
@@ -94,7 +93,7 @@ void CoreClient::disconnect() {
 	// FIXME: We should be able to do without this boolean. We just have to make sure we can tell the difference between
 	// connector finishing without a connection due to an error or because of a disconnect.
 	disconnectRequested_ = true;
-	if (session_) {
+	if (!session_->isFinished()) {
 		session_->finish();
 	}
 	else if (connector_) {
@@ -109,7 +108,6 @@ void CoreClient::setCertificate(const String& certificate) {
 void CoreClient::handleSessionFinished(boost::shared_ptr<Error> error) {
 	session_->onFinished.disconnect(boost::bind(&CoreClient::handleSessionFinished, this, _1));
 	session_->onNeedCredentials.disconnect(boost::bind(&CoreClient::handleNeedCredentials, this));
-	session_.reset();
 
 	sessionStream_->onDataRead.disconnect(boost::bind(&CoreClient::handleDataRead, this, _1));
 	sessionStream_->onDataWritten.disconnect(boost::bind(&CoreClient::handleDataWritten, this, _1));
@@ -244,7 +242,7 @@ void CoreClient::sendPresence(boost::shared_ptr<Presence> presence) {
 }
 
 bool CoreClient::isActive() const {
-	return session_ || connector_;
+	return (session_ && !session_->isFinished()) || connector_;
 }
 
 void CoreClient::setCertificateTrustChecker(CertificateTrustChecker* checker) {

@@ -81,6 +81,10 @@ namespace Swift {
 			void start();
 			void finish();
 
+			bool isFinished() const {
+				return getState() == Finished;
+			}
+
 			void sendCredentials(const String& password);
 			void sendStanza(boost::shared_ptr<Stanza>);
 

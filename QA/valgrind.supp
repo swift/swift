@@ -90,3 +90,10 @@
    Memcheck:Cond
    fun:*mersenne_twister*
 }
+
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   fun:malloc
+   fun:__cxa_get_globals
+}

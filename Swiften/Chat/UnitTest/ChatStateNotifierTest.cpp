@@ -38,6 +38,7 @@ public:
 	
 	void tearDown() {
 		delete notifier_;
+		delete entityCapsProvider;
 		delete stanzaChannel;
 	}
 	
