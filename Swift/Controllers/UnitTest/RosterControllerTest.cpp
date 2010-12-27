@@ -80,8 +80,8 @@ class RosterControllerTest : public CppUnit::TestFixture
 			delete mucRegistry_;
 			delete mainWindowFactory_;
 			delete avatarManager_;
-			delete channel_;
 			delete router_;
+			delete channel_;
 			delete eventController_;
 			delete subscriptionManager_;
 			delete presenceOracle_;

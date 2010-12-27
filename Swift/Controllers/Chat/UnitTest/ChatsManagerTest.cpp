@@ -98,8 +98,8 @@ public:
 		delete mucRegistry_;
 		delete stanzaChannel_;
 		delete eventController_;
-		delete iqChannel_;
 		delete iqRouter_;
+		delete iqChannel_;
 		delete uiEventStream_;
 		delete mucManager_;
 		delete xmppRoster_;

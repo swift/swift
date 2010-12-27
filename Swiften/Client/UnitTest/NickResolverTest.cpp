@@ -48,8 +48,8 @@ class NickResolverTest : public CppUnit::TestFixture {
 			delete resolver_;
 			delete registry_;
 			delete vCardManager_;
-			delete stanzaChannel_;
 			delete iqRouter_;
+			delete stanzaChannel_;
 			delete vCardStorage_;
 			delete xmppRoster_;
 		}
