@@ -559,9 +559,6 @@ void MainController::handleNotificationClicked(const JID& jid) {
 void MainController::handleQuitRequest() {
 	if (client_ && client_->isActive()) {
 		quitRequested_ = true;
-		quitTimer_ = networkFactories_->getTimerFactory()->createTimer(SecondsToWaitBeforeForceQuitting * 1000);
-		quitTimer_->onTick.connect(boost::bind(&MainController::handleForceQuit, this));
-		quitTimer_->start();
 		client_->disconnect();
 	}
 	else {
@@ -569,14 +566,5 @@ void MainController::handleQuitRequest() {
 		loginWindow_->quit();
 	}
 }
-
-void MainController::handleForceQuit() {
-	/*
-	delete client_;
-	client_ = NULL;*/
-	handleQuitRequest();
-}
-
-const int MainController::SecondsToWaitBeforeForceQuitting = 20;
 
 }

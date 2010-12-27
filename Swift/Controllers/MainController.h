@@ -144,7 +144,6 @@ namespace Swift {
 			UserSearchController* userSearchControllerAdd_;
 			int timeBeforeNextReconnect_;
 			Timer::ref reconnectTimer_;
-			Timer::ref quitTimer_;
 			StatusTracker* statusTracker_;
 			bool myStatusLooksOnline_;
 			bool quitRequested_;

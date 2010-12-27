@@ -29,6 +29,7 @@
 #include <boost/asio/detail/pipe_select_interrupter.hpp>
 #include <boost/asio/detail/throw_error.hpp>
 #include <boost/asio/error.hpp>
+#include <iostream>
 
 #include <boost/asio/detail/push_options.hpp>
 
@@ -56,10 +57,17 @@ pipe_select_interrupter::pipe_select_interrupter()
 
 pipe_select_interrupter::~pipe_select_interrupter()
 {
-  if (read_descriptor_ != -1)
+	std::cout << "Destroying pipe select interrupter" << std::endl;
+  if (read_descriptor_ != -1) {
+		std::cout << "Close read" << std::endl;
     ::close(read_descriptor_);
-  if (write_descriptor_ != -1)
+		std::cout << "Done close read" << std::endl;
+	}
+  if (write_descriptor_ != -1) {
+		std::cout << "Close write" << std::endl;
     ::close(write_descriptor_);
+		std::cout << "Done close write" << std::endl;
+	}
 }
 
 void pipe_select_interrupter::interrupt()
