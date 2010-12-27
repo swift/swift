@@ -61,11 +61,11 @@ void GroupItemDelegate::paint(QPainter* painter, const QStyleOptionViewItem& opt
 		contactCountWidth = groupMetrics.width(countString) + 2 * common_.horizontalMargin;
 		int offsetAmount = textRect.width() - contactCountWidth + common_.horizontalMargin;
 		QRect countRect = textRect.adjusted(offsetAmount, 0, 0/*-1 * offsetAmount*/, 0);
-		//qDebug() << "Painting count string " << countString << " at " << countRect << " from offset " << offsetAmount;
 		paintShadowText(painter, countRect, countString);
 	}
-	QRect nameTextRect = textRect.adjusted(0, 0, contactCountWidth, 0);
-	paintShadowText(painter, nameTextRect, name);
+	QRect nameTextRect = expanded ? textRect : textRect.adjusted(0, 0, -contactCountWidth, 0);
+	QString elidedName = fontMetrics.elidedText(name, Qt::ElideRight, nameTextRect.width(), Qt::TextShowMnemonic);
+	paintShadowText(painter, nameTextRect, elidedName);
 	painter->restore();
 }
 
