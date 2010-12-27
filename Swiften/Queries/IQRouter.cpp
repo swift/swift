@@ -23,6 +23,7 @@ IQRouter::IQRouter(IQChannel* channel) : channel_(channel), queueRemoves_(false)
 }
 
 IQRouter::~IQRouter() {
+	channel_->onIQReceived.disconnect(boost::bind(&IQRouter::handleIQ, this, _1));
 }
 
 bool IQRouter::isAvailable() {
