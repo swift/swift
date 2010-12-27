@@ -9,6 +9,7 @@
 #include <boost/bind.hpp>
 #include <boost/lexical_cast.hpp>
 #include <boost/shared_ptr.hpp>
+#include <boost/smart_ptr/make_shared.hpp>
 #include <stdlib.h>
 
 #include <Swift/Controllers/UIInterfaces/UIFactory.h>
@@ -92,7 +93,6 @@ MainController::MainController(
 	storages_ = NULL;
 	certificateStorage_ = NULL;
 	statusTracker_ = NULL;
-	client_ = NULL;
 	presenceNotifier_ = NULL;
 	eventNotifier_ = NULL;
 	rosterController_ = NULL;
@@ -102,6 +102,7 @@ MainController::MainController(
 	userSearchControllerChat_ = NULL;
 	userSearchControllerAdd_ = NULL;
 	quitRequested_ = false;
+	clientInitialized_ = false;
 
 	timeBeforeNextReconnect_ = -1;
 	dock_ = dock;
@@ -120,16 +121,15 @@ MainController::MainController(
 	String cachedPassword;
 	String cachedCertificate;
 	foreach (String profile, settings->getAvailableProfiles()) {
-		ProfileSettingsProvider* profileSettings = new ProfileSettingsProvider(profile, settings);
-		String password = profileSettings->getStringSetting("pass");
-		String certificate = profileSettings->getStringSetting("certificate");
-		String jid = profileSettings->getStringSetting("jid");
+		ProfileSettingsProvider profileSettings(profile, settings);
+		String password = profileSettings.getStringSetting("pass");
+		String certificate = profileSettings.getStringSetting("certificate");
+		String jid = profileSettings.getStringSetting("jid");
 		loginWindow_->addAvailableAccount(jid, password, certificate);
 		if (jid == selectedLoginJID) {
 			cachedPassword = password;
 			cachedCertificate = certificate;
 		}
-		delete profileSettings;
 	}
 	loginWindow_->selectUser(selectedLoginJID);
 	loginWindow_->setLoginAutomatically(loginAutomatically);
@@ -157,10 +157,12 @@ MainController::MainController(
 MainController::~MainController() {
 	setManagersOffline();
 	eventController_->disconnectAll();
-	delete systemTrayController_;
-	delete soundEventController_;
-	delete xmlConsoleController_;
+
 	resetClient();
+
+	delete xmlConsoleController_;
+	delete soundEventController_;
+	delete systemTrayController_;
 	delete eventController_;
 	delete notifier_;
 	delete uiEventStream_;
@@ -181,8 +183,6 @@ void MainController::resetClient() {
 	eventNotifier_ = NULL;
 	delete presenceNotifier_;
 	presenceNotifier_ = NULL;
-	delete client_;
-	client_ = NULL;
 	delete certificateStorage_;
 	certificateStorage_ = NULL;
 	delete storages_;
@@ -195,6 +195,7 @@ void MainController::resetClient() {
 	userSearchControllerChat_ = NULL;
 	delete userSearchControllerAdd_;
 	userSearchControllerAdd_ = NULL;
+	clientInitialized_ = false;
 }
 
 void MainController::handleUIEvent(boost::shared_ptr<UIEvent> event) {
@@ -368,14 +369,14 @@ void MainController::performLoginFromCachedCredentials() {
 	if (!statusTracker_) {
 		statusTracker_  = new StatusTracker();
 	}
-	if (!client_) {
+	if (!clientInitialized_) {
 		storages_ = storagesFactory_->createStorages(jid_.toBare());
 		certificateStorage_ = certificateStorageFactory_->createCertificateStorage(jid_.toBare());
 		certificateTrustChecker_ = new CertificateStorageTrustChecker(certificateStorage_);
-		client_ = new Swift::Client(eventLoop_, networkFactories_, clientJID, password_, storages_);
+
+		client_ = boost::make_shared<Swift::Client>(eventLoop_, networkFactories_, clientJID, password_, storages_);
+		clientInitialized_ = true;
 		client_->setCertificateTrustChecker(certificateTrustChecker_);
-		// FIXME: Remove this line to activate the trust checker
-		//client_->setAlwaysTrustCertificates();
 		client_->onDataRead.connect(boost::bind(&XMLConsoleController::handleDataRead, xmlConsoleController_, _1));
 		client_->onDataWritten.connect(boost::bind(&XMLConsoleController::handleDataWritten, xmlConsoleController_, _1));
 		client_->onDisconnected.connect(boost::bind(&MainController::handleDisconnected, this, _1));
@@ -507,7 +508,7 @@ void MainController::signOut() {
 
 void MainController::logout() {
 	systemTrayController_->setMyStatusType(StatusShow::None);
-	if (client_ /*&& client_->isAvailable()*/) {
+	if (clientInitialized_ /*&& client_->isAvailable()*/) {
 		client_->disconnect();
 	}
 	if (rosterController_ && myStatusLooksOnline_) {
@@ -545,7 +546,7 @@ void MainController::handleVCardReceived(const JID& jid, VCard::ref vCard) {
 
 void MainController::handleNotificationClicked(const JID& jid) {
 	assert(chatsManager_);
-	if (client_) {
+	if (clientInitialized_) {
 		if (client_->getMUCRegistry()->isMUC(jid)) {
 			uiEventStream_->send(boost::shared_ptr<JoinMUCUIEvent>(new JoinMUCUIEvent(jid)));
 		}
@@ -570,8 +571,9 @@ void MainController::handleQuitRequest() {
 }
 
 void MainController::handleForceQuit() {
+	/*
 	delete client_;
-	client_ = NULL;
+	client_ = NULL;*/
 	handleQuitRequest();
 }
 

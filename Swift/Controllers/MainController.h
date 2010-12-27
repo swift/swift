@@ -115,7 +115,8 @@ namespace Swift {
 			CertificateStorageFactory* certificateStorageFactory_;
 			CertificateStorage* certificateStorage_;
 			CertificateStorageTrustChecker* certificateTrustChecker_;
-			Client* client_;
+			bool clientInitialized_;
+			boost::shared_ptr<Client> client_;
 			SettingsProvider *settings_;
 			ProfileSettingsProvider* profileSettings_;
 			Dock* dock_;
