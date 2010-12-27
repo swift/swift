@@ -160,10 +160,10 @@ MainController::~MainController() {
 	delete systemTrayController_;
 	delete soundEventController_;
 	delete xmlConsoleController_;
-	delete uiEventStream_;
 	resetClient();
 	delete eventController_;
 	delete notifier_;
+	delete uiEventStream_;
 }
 
 void MainController::resetClient() {
