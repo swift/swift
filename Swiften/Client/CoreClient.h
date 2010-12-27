@@ -200,6 +200,9 @@ namespace Swift {
 			void handleNeedCredentials();
 			void handleDataRead(const String&);
 			void handleDataWritten(const String&);
+			void handlePresenceReceived(Presence::ref);
+			void handleMessageReceived(Message::ref);
+			void handleStanzaAcked(Stanza::ref);
 
 		private:
 			JID jid_;

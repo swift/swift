@@ -24,9 +24,9 @@ namespace Swift {
 
 CoreClient::CoreClient(EventLoop* eventLoop, NetworkFactories* networkFactories, const JID& jid, const String& password) : jid_(jid), password_(password), eventLoop(eventLoop), networkFactories(networkFactories), disconnectRequested_(false), certificateTrustChecker(NULL) {
 	stanzaChannel_ = new ClientSessionStanzaChannel();
-	stanzaChannel_->onMessageReceived.connect(boost::ref(onMessageReceived));
-	stanzaChannel_->onPresenceReceived.connect(boost::ref(onPresenceReceived));
-	stanzaChannel_->onStanzaAcked.connect(boost::ref(onStanzaAcked));
+	stanzaChannel_->onMessageReceived.connect(boost::bind(&CoreClient::handleMessageReceived, this, _1));
+	stanzaChannel_->onPresenceReceived.connect(boost::bind(&CoreClient::handlePresenceReceived, this, _1));
+	stanzaChannel_->onStanzaAcked.connect(boost::bind(&CoreClient::handleStanzaAcked, this, _1));
 	stanzaChannel_->onAvailableChanged.connect(boost::bind(&CoreClient::handleStanzaChannelAvailableChanged, this, _1));
 
 	iqRouter_ = new IQRouter(stanzaChannel_);
@@ -41,9 +41,9 @@ CoreClient::~CoreClient() {
 	delete iqRouter_;
 
 	stanzaChannel_->onAvailableChanged.disconnect(boost::bind(&CoreClient::handleStanzaChannelAvailableChanged, this, _1));
-	stanzaChannel_->onMessageReceived.disconnect(boost::ref(onMessageReceived));
-	stanzaChannel_->onPresenceReceived.disconnect(boost::ref(onPresenceReceived));
-	stanzaChannel_->onStanzaAcked.disconnect(boost::ref(onStanzaAcked));
+	stanzaChannel_->onMessageReceived.disconnect(boost::bind(&CoreClient::handleMessageReceived, this, _1));
+	stanzaChannel_->onPresenceReceived.disconnect(boost::bind(&CoreClient::handlePresenceReceived, this, _1));
+	stanzaChannel_->onStanzaAcked.disconnect(boost::bind(&CoreClient::handleStanzaAcked, this, _1));
 	delete stanzaChannel_;
 }
 
@@ -250,5 +250,19 @@ bool CoreClient::isActive() const {
 void CoreClient::setCertificateTrustChecker(CertificateTrustChecker* checker) {
 	certificateTrustChecker = checker;
 }
+
+
+void CoreClient::handlePresenceReceived(Presence::ref presence) {
+	onPresenceReceived(presence);
+}
+
+void CoreClient::handleMessageReceived(Message::ref message) {
+	onMessageReceived(message);
+}
+
+void CoreClient::handleStanzaAcked(Stanza::ref stanza) {
+	onStanzaAcked(stanza);
+}
+
 
 }
