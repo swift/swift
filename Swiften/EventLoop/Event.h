@@ -27,3 +27,5 @@ namespace Swift {
 			boost::function<void()> callback;
 	};
 }
+
+std::ostream& operator<<(std::ostream& os, const Swift::Event& e);

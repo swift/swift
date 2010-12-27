@@ -3,6 +3,7 @@ Import("swiften_env")
 sources = [
 		"EventLoop.cpp",
 		"EventOwner.cpp",
+		"Event.cpp",
 		"SimpleEventLoop.cpp",
 	]
 
