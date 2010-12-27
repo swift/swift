@@ -24,11 +24,15 @@ Client* client = 0;
 bool reconnected = false;
 bool rosterReceived = false;
 
+void handleDisconnected(boost::optional<ClientError>) {
+	eventLoop.stop();
+}
+
 void handleRosterReceived(boost::shared_ptr<Payload>) {
 	if (reconnected) {
 		rosterReceived = true;
+		client->onDisconnected.connect(boost::bind(&handleDisconnected, _1));
 		client->disconnect();
-		eventLoop.stop();
 	}
 	else {
 		reconnected = true;
@@ -62,7 +66,7 @@ int main(int, char**) {
 	client->connect();
 
 	{
-		Timer::ref timer = networkFactories.getTimerFactory()->createTimer(30000);
+		Timer::ref timer = networkFactories.getTimerFactory()->createTimer(60000);
 		timer->onTick.connect(boost::bind(&SimpleEventLoop::stop, &eventLoop));
 		timer->start();
 
