@@ -28,6 +28,7 @@ namespace Swift {
 			QtUserSearchFirstPage() {
 				setupUi(this);
 			}
+			virtual bool isComplete();
 	};
 
 	class QtUserSearchFieldsPage : public QWizardPage, public Ui::QtUserSearchFieldsPage {
@@ -36,6 +37,7 @@ namespace Swift {
 			QtUserSearchFieldsPage() {
 				setupUi(this);
 			}
+			virtual bool isComplete();
 	};
 
 	class QtUserSearchResultsPage : public QWizardPage, public Ui::QtUserSearchResultsPage {
@@ -44,6 +46,7 @@ namespace Swift {
 			QtUserSearchResultsPage() {
 				setupUi(this);
 			}
+			virtual bool isComplete();
 	};
 
 	class QtUserSearchWindow : public QWizard, public UserSearchWindow, private Ui::QtUserSearchWizard {

@@ -20,6 +20,18 @@
 
 namespace Swift {
 
+bool QtUserSearchFirstPage::isComplete() {
+ return true;
+}
+
+bool QtUserSearchFieldsPage::isComplete() {
+ return true;
+}
+
+bool QtUserSearchResultsPage::isComplete() {
+	return true;
+}
+
 QtUserSearchWindow::QtUserSearchWindow(UIEventStream* eventStream, UserSearchWindow::Type type) : type_(type) {
 #ifndef Q_WS_MAC
 	setWindowIcon(QIcon(":/logo-icon-16.png"));
