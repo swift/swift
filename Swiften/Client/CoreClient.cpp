@@ -93,7 +93,7 @@ void CoreClient::disconnect() {
 	// FIXME: We should be able to do without this boolean. We just have to make sure we can tell the difference between
 	// connector finishing without a connection due to an error or because of a disconnect.
 	disconnectRequested_ = true;
-	if (!session_->isFinished()) {
+	if (session_ && !session_->isFinished()) {
 		session_->finish();
 	}
 	else if (connector_) {
