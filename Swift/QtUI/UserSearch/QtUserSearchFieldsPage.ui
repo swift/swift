@@ -15,9 +15,9 @@
   </property>
   <layout class="QGridLayout" name="gridLayout">
    <item row="0" column="0" colspan="2">
-    <widget class="QLabel" name="label_4">
+    <widget class="QLabel" name="instructionsLabel_">
      <property name="text">
-      <string>Enter search terms</string>
+      <string/>
      </property>
     </widget>
    </item>

@@ -180,6 +180,7 @@ void QtUserSearchWindow::setSearchFields(boost::shared_ptr<SearchPayload> fields
 	fieldsPage_->fetchingThrobber_->hide();
 	fieldsPage_->fetchingThrobber_->movie()->stop();
 	fieldsPage_->fetchingLabel_->hide();
+	fieldsPage_->instructionsLabel_->setText(fields->getInstructions() ? P2QSTRING(fields->getInstructions().get()) : "Enter search terms");
 	bool enabled[8] = {fields->getNick(), fields->getNick(), fields->getFirst(), fields->getFirst(), fields->getLast(), fields->getLast(), fields->getEMail(), fields->getEMail()};
 	QWidget* legacySearchWidgets[8] = {fieldsPage_->nickInputLabel_, fieldsPage_->nickInput_, fieldsPage_->firstInputLabel_, fieldsPage_->firstInput_, fieldsPage_->lastInputLabel_, fieldsPage_->lastInput_, fieldsPage_->emailInputLabel_, fieldsPage_->emailInput_};
 	for (int i = 0; i < 8; i++) {
