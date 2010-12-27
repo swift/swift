@@ -35,6 +35,7 @@ PlatformDomainNameResolver::~PlatformDomainNameResolver() {
 	stopRequested = true;
 	addQueryToQueue(boost::shared_ptr<PlatformDomainNameQuery>());
 	thread->join();
+	delete thread;
 }
 
 boost::shared_ptr<DomainNameServiceQuery> PlatformDomainNameResolver::createServiceQuery(const String& name) {

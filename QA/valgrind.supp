@@ -53,6 +53,12 @@
 }
 
 {
+	<insert_a_suppression_name_here>
+	Memcheck:Cond
+	fun:BN_num_bits
+}
+
+{
    <insert a suppression name here>
    Memcheck:Value4
    fun:BN_mod_exp_mont_consttime
@@ -67,4 +73,20 @@
    fun:BN_mod_exp_mont
 }
 
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Value8
+   fun:BN_num_bits
+}
 
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Value8
+   fun:BN_mod_exp_mont_consttime
+}
+
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Cond
+   fun:*mersenne_twister*
+}
