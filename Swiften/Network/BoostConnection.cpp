@@ -92,10 +92,10 @@ void BoostConnection::handleSocketRead(const boost::system::error_code& error, s
 		eventLoop->postEvent(boost::bind(boost::ref(onDataRead), ByteArray(&readBuffer_[0], bytesTransferred)), shared_from_this());
 		doRead();
 	}
-	else if (error == boost::asio::error::eof) {
+	else if (error == boost::asio::error::eof || error == boost::asio::error::operation_aborted) {
 		eventLoop->postEvent(boost::bind(boost::ref(onDisconnected), boost::optional<Error>()), shared_from_this());
 	}
-	else if (error != boost::asio::error::operation_aborted) {
+	else {
 		eventLoop->postEvent(boost::bind(boost::ref(onDisconnected), ReadError), shared_from_this());
 	}
 }
@@ -104,10 +104,10 @@ void BoostConnection::handleDataWritten(const boost::system::error_code& error) 
 	if (!error) {
 		eventLoop->postEvent(boost::ref(onDataWritten), shared_from_this());
 	}
-	if (error == boost::asio::error::eof) {
+	else if (error == boost::asio::error::eof || error == boost::asio::error::operation_aborted) {
 		eventLoop->postEvent(boost::bind(boost::ref(onDisconnected), boost::optional<Error>()), shared_from_this());
 	}
-	else if (error && error != boost::asio::error::operation_aborted) {
+	else {
 		eventLoop->postEvent(boost::bind(boost::ref(onDisconnected), WriteError), shared_from_this());
 	}
 }
