@@ -12,6 +12,7 @@ namespace Swift {
 
 	class Hexify {
 		public:
+			static String hexify(unsigned char byte);
 			static String hexify(const ByteArray& data);
 	};
 }

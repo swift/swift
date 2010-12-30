@@ -55,7 +55,11 @@ namespace Swift {
 			}
 
 			ByteArray toDER() const {
-				return ByteArray();
+				return der;
+			}
+
+			void setDER(const ByteArray& der) {
+				this->der = der;
 			}
 
 		private:
@@ -63,6 +67,7 @@ namespace Swift {
 
 		private:
 			String subjectName;
+			ByteArray der;
 			std::vector<String> commonNames;
 			std::vector<String> dnsNames;
 			std::vector<String> xmppAddresses;

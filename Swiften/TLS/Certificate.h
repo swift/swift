@@ -31,6 +31,8 @@ namespace Swift {
 
 			virtual ByteArray toDER() const = 0;
 
+			virtual String getSHA1Fingerprint() const;
+
 		protected:
 			static const char* ID_ON_XMPPADDR_OID;
 			static const char* ID_ON_DNSSRV_OID;

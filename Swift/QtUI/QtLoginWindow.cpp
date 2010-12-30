@@ -401,7 +401,8 @@ bool QtLoginWindow::askUserToTrustCertificatePermanently(const String& message, 
 	dialog.setText("The certificate presented by the server is not valid.");
 	dialog.setInformativeText(P2QSTRING(message) + "\n\nWould you like to permanently trust this certificate? This must only be done if you know it is correct.");
 
-	QString detailedText = "Subject: " + P2QSTRING(certificate->getSubjectName());
+	QString detailedText = "Subject: " + P2QSTRING(certificate->getSubjectName()) + "\n";
+	detailedText += "SHA-1 Fingerprint: " + P2QSTRING(certificate->getSHA1Fingerprint());
 	dialog.setDetailedText(detailedText);
 
 	dialog.setStandardButtons(QMessageBox::Yes | QMessageBox::No);

@@ -15,6 +15,12 @@
 
 namespace Swift {
 
+String Hexify::hexify(unsigned char byte) {
+	std::ostringstream result;
+	result << std::hex << std::setw(2) << std::setfill('0') << boost::numeric_cast<unsigned int>(byte);
+	return String(result.str());
+}
+
 String Hexify::hexify(const ByteArray& data) {
 	std::ostringstream result;
 	result << std::hex;
