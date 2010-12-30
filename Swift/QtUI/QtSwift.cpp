@@ -139,7 +139,7 @@ QtSwift::QtSwift(po::variables_map options) : networkFactories_(&clientMainThrea
 				&networkFactories_,
 				uiFactory,
 				settings_,
-				systemTray,
+				systemTrays_[i],
 				soundPlayer_,
 				storagesFactory_,
 				certificateStorageFactory_,
