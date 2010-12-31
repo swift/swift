@@ -33,10 +33,39 @@ int UserSearchModel::columnCount(const QModelIndex& /*parent*/) const {
 QVariant UserSearchModel::data(const QModelIndex& index, int role) const {
 	if (!index.isValid()) return QVariant();
 	UserSearchResult* result = static_cast<UserSearchResult*>(index.internalPointer());
+	return data(result, role);
+}
+
+QVariant UserSearchModel::data(UserSearchResult* item, int role) {
 	switch (role) {
-		case Qt::DisplayRole: return QVariant(P2QSTRING(result->getJID().toString()));
+		case Qt::DisplayRole: return QVariant(nameLine(item));
+		case DetailTextRole: return QVariant(detailLine(item));
 		default: return QVariant();
 	}
+}
+
+QString UserSearchModel::nameLine(UserSearchResult* item) {
+	QString result;
+	const std::map<String, String> fields = item->getFields();
+	std::map<String, String>::const_iterator first = fields.find("first");
+	if (first != fields.end()) {
+		result += P2QSTRING((*first).second);
+	}
+	std::map<String, String>::const_iterator last = fields.find("last");
+	if (last != fields.end()) {
+		if (!result.isEmpty()) {
+			result += " ";
+		}
+		result += P2QSTRING((*last).second);
+	}
+	if (result.isEmpty()) {
+		result = P2QSTRING(item->getJID().toString());
+	}
+	return result;
+}
+
+QString UserSearchModel::detailLine(UserSearchResult* item) {
+	return P2QSTRING(item->getJID().toString());
 }
 
 QModelIndex UserSearchModel::index(int row, int column, const QModelIndex & parent) const {
