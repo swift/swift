@@ -25,28 +25,28 @@ namespace Swift {
 	class QtUserSearchFirstPage : public QWizardPage, public Ui::QtUserSearchFirstPage {
 		Q_OBJECT
 		public:
-			QtUserSearchFirstPage() {
-				setupUi(this);
-			}
-			virtual bool isComplete();
+			QtUserSearchFirstPage();
+			virtual bool isComplete() const;
+		public slots:
+			void emitCompletenessCheck();
 	};
 
 	class QtUserSearchFieldsPage : public QWizardPage, public Ui::QtUserSearchFieldsPage {
 		Q_OBJECT
 		public:
-			QtUserSearchFieldsPage() {
-				setupUi(this);
-			}
-			virtual bool isComplete();
+			QtUserSearchFieldsPage();
+			virtual bool isComplete() const;
+		public slots:
+			void emitCompletenessCheck();
 	};
 
 	class QtUserSearchResultsPage : public QWizardPage, public Ui::QtUserSearchResultsPage {
 		Q_OBJECT
 		public:
-			QtUserSearchResultsPage() {
-				setupUi(this);
-			}
-			virtual bool isComplete();
+			QtUserSearchResultsPage();
+			virtual bool isComplete() const;
+		public slots:
+			void emitCompletenessCheck();
 	};
 
 	class QtUserSearchWindow : public QWizard, public UserSearchWindow, private Ui::QtUserSearchWizard {

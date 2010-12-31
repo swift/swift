@@ -20,16 +20,53 @@
 
 namespace Swift {
 
-bool QtUserSearchFirstPage::isComplete() {
- return true;
+QtUserSearchFirstPage::QtUserSearchFirstPage() {
+	setupUi(this);
+	connect(jid_, SIGNAL(textChanged(const QString&)), this, SLOT(emitCompletenessCheck()));
+	connect(service_, SIGNAL(textChanged(const QString&)), this, SLOT(emitCompletenessCheck()));
 }
 
-bool QtUserSearchFieldsPage::isComplete() {
- return true;
+QtUserSearchFieldsPage::QtUserSearchFieldsPage() {
+	setupUi(this);
 }
 
-bool QtUserSearchResultsPage::isComplete() {
-	return true;
+QtUserSearchResultsPage::QtUserSearchResultsPage() {
+	setupUi(this);
+	connect(results_, SIGNAL(activated(const QModelIndex&)), this, SLOT(emitCompletenessCheck()));
+	connect(results_, SIGNAL(clicked(const QModelIndex&)), this, SLOT(emitCompletenessCheck()));
+	connect(results_, SIGNAL(entered(const QModelIndex&)), this, SLOT(emitCompletenessCheck()));
+}
+
+bool QtUserSearchFirstPage::isComplete() const {
+	bool complete = false;
+	if (byJID_->isChecked()) {
+		complete = JID(Q2PSTRING(jid_->text())).isValid();
+	} else if (byLocalSearch_->isChecked()) {
+		complete = true;
+	} else if (byRemoteSearch_->isChecked()) {
+		complete = JID(Q2PSTRING(service_->currentText())).isValid();
+	}
+	return complete;
+}
+
+bool QtUserSearchFieldsPage::isComplete() const {
+	return nickInput_->isEnabled() || firstInput_->isEnabled() || lastInput_->isEnabled() || emailInput_->isEnabled();
+}
+
+bool QtUserSearchResultsPage::isComplete() const {
+	return results_->currentIndex().isValid();
+}
+
+void QtUserSearchFirstPage::emitCompletenessCheck() {
+	emit completeChanged();
+}
+
+void QtUserSearchFieldsPage::emitCompletenessCheck() {
+	emit completeChanged();
+}
+
+void QtUserSearchResultsPage::emitCompletenessCheck() {
+	emit completeChanged();
 }
 
 QtUserSearchWindow::QtUserSearchWindow(UIEventStream* eventStream, UserSearchWindow::Type type) : type_(type) {
@@ -199,6 +236,7 @@ void QtUserSearchWindow::setSearchFields(boost::shared_ptr<SearchPayload> fields
 		legacySearchWidgets[i]->setVisible(enabled[i]);
 		legacySearchWidgets[i]->setEnabled(enabled[i]);
 	}
+	fieldsPage_->emitCompletenessCheck();
 }
 //
 //void QtUserSearchWindow::handleActivated(const QModelIndex& index) {
@@ -238,6 +276,7 @@ void QtUserSearchWindow::clearForm() {
 	for (int i = 0; i < 8; i++) {
 		legacySearchWidgets[i]->hide();
 	}
+	fieldsPage_->emitCompletenessCheck();
 }
 
 void QtUserSearchWindow::clear() {
