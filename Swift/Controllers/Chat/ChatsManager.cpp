@@ -213,6 +213,9 @@ ChatController* ChatsManager::getChatControllerOrCreate(const JID &contact) {
 
 ChatController* ChatsManager::getChatControllerIfExists(const JID &contact) {
 	if (chatControllers_.find(contact) == chatControllers_.end()) {
+		if (mucRegistry_->isMUC(contact.toBare())) {
+			return NULL;
+		}
 		//Need to look for an unbound window to bind first
 		JID bare(contact.toBare());
 		if (chatControllers_.find(bare) != chatControllers_.end()) {

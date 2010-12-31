@@ -239,14 +239,14 @@ public:
 		uiEventStream_->send(boost::shared_ptr<UIEvent>(new RequestChatUIEvent(JID(messageJIDString1))));
 
 		String messageJIDString2("testling@test.com/2");
-		//ChatWindow* window2 = new MockChatWindow();//mocks_->InterfaceMock<ChatWindow>();
-		//mocks_->ExpectCall(chatWindowFactory_, ChatWindowFactory::createChatWindow).With(JID(messageJIDString2), uiEventStream_).Return(window2);
+		ChatWindow* window2 = new MockChatWindow();//mocks_->InterfaceMock<ChatWindow>();
+		mocks_->ExpectCall(chatWindowFactory_, ChatWindowFactory::createChatWindow).With(JID(messageJIDString2), uiEventStream_).Return(window2);
 
 		uiEventStream_->send(boost::shared_ptr<UIEvent>(new RequestChatUIEvent(JID(messageJIDString2))));
 
 		String messageJIDString3("testling@test.com/3");
-		//ChatWindow* window3 = new MockChatWindow();//mocks_->InterfaceMock<ChatWindow>();
-		//mocks_->ExpectCall(chatWindowFactory_, ChatWindowFactory::createChatWindow).With(JID(messageJIDString3), uiEventStream_).Return(window3);
+		ChatWindow* window3 = new MockChatWindow();//mocks_->InterfaceMock<ChatWindow>();
+		mocks_->ExpectCall(chatWindowFactory_, ChatWindowFactory::createChatWindow).With(JID(messageJIDString3), uiEventStream_).Return(window3);
 
 		uiEventStream_->send(boost::shared_ptr<UIEvent>(new RequestChatUIEvent(JID(messageJIDString3))));
 
