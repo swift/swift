@@ -90,6 +90,7 @@ void ChatController::preHandleIncomingMessage(boost::shared_ptr<MessageEvent> me
 	eventController_->handleIncomingEvent(messageEvent);
 	if (messageEvent->isReadable()) {
 		chatWindow_->flash();
+		lastWasPresence_ = false;
 	}
 	boost::shared_ptr<Message> message = messageEvent->getStanza();
 	JID from = message->getFrom();
@@ -100,7 +101,6 @@ void ChatController::preHandleIncomingMessage(boost::shared_ptr<MessageEvent> me
 	}
 	chatStateNotifier_->receivedMessageFromContact(message->getPayload<ChatState>());
 	chatStateTracker_->handleMessageReceived(message);
-	lastWasPresence_ = false;
 }
 
 void ChatController::preSendMessageRequest(boost::shared_ptr<Message> message) {
@@ -148,7 +148,7 @@ String ChatController::senderDisplayNameFromMessage(const JID& from) {
 String ChatController::getStatusChangeString(boost::shared_ptr<Presence> presence) {
 	String nick = senderDisplayNameFromMessage(presence->getFrom());
 	String response = nick;
-	if (presence->getType() == Presence::Unavailable) {
+	if (presence->getType() == Presence::Unavailable || presence->getType() == Presence::Error) {
 		response += " has gone offline";
 	} else if (presence->getType() == Presence::Available) {
 		StatusShow::Type show = presence->getShow();
@@ -167,7 +167,9 @@ String ChatController::getStatusChangeString(boost::shared_ptr<Presence> presenc
 }
 
 void ChatController::handlePresenceChange(boost::shared_ptr<Presence> newPresence) {
-	if (!toJID_.equals(newPresence->getFrom(), toJID_.isBare() ? JID::WithoutResource : JID::WithResource)) {
+	if ((!toJID_.equals(newPresence->getFrom(), toJID_.isBare() ? JID::WithoutResource : JID::WithResource))
+			||
+			(newPresence->getType() != Presence::Unavailable && newPresence->getType() != Presence::Error)) {
 		return;
 	}
 
