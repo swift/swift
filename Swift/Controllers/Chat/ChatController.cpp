@@ -169,7 +169,7 @@ String ChatController::getStatusChangeString(boost::shared_ptr<Presence> presenc
 void ChatController::handlePresenceChange(boost::shared_ptr<Presence> newPresence) {
 	if ((!toJID_.equals(newPresence->getFrom(), toJID_.isBare() ? JID::WithoutResource : JID::WithResource))
 			||
-			(newPresence->getType() != Presence::Unavailable && newPresence->getType() != Presence::Error)) {
+			(newPresence->getType() != Presence::Available && newPresence->getType() != Presence::Unavailable && newPresence->getType() != Presence::Error)) {
 		return;
 	}
 
