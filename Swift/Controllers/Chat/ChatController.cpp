@@ -50,6 +50,7 @@ ChatController::ChatController(const JID& self, StanzaChannel* stanzaChannel, IQ
 	if (theirPresence && !theirPresence->getStatus().isEmpty()) {
 		startMessage += " (" + theirPresence->getStatus() + ")";
 	}
+	lastShownStatus_ = theirPresence ? theirPresence->getShow() : StatusShow::None;
 	chatStateNotifier_->setContactIsOnline(theirPresence && theirPresence->getType() == Presence::Available);
 	startMessage += ".";
 	chatWindow_->addSystemMessage(startMessage);
@@ -148,7 +149,7 @@ String ChatController::senderDisplayNameFromMessage(const JID& from) {
 String ChatController::getStatusChangeString(boost::shared_ptr<Presence> presence) {
 	String nick = senderDisplayNameFromMessage(presence->getFrom());
 	String response = nick;
-	if (presence->getType() == Presence::Unavailable || presence->getType() == Presence::Error) {
+	if (!presence || presence->getType() == Presence::Unavailable || presence->getType() == Presence::Error) {
 		response += " has gone offline";
 	} else if (presence->getType() == Presence::Available) {
 		StatusShow::Type show = presence->getShow();
@@ -167,11 +168,19 @@ String ChatController::getStatusChangeString(boost::shared_ptr<Presence> presenc
 }
 
 void ChatController::handlePresenceChange(boost::shared_ptr<Presence> newPresence) {
-	if ((!toJID_.equals(newPresence->getFrom(), toJID_.isBare() ? JID::WithoutResource : JID::WithResource))
-			||
-			(newPresence->getType() != Presence::Available && newPresence->getType() != Presence::Unavailable && newPresence->getType() != Presence::Error)) {
+	bool me = false;
+	if (toJID_.isBare()) {
+		newPresence = presenceOracle_->getHighestPriorityPresence(toJID_);
+		if ((newPresence ? newPresence->getShow() : StatusShow::None) != lastShownStatus_) {
+			me = true;
+		}
+	} else if (toJID_.equals(newPresence->getFrom(), JID::WithResource)) {
+		me = true;
+	}
+	if (!me) {
 		return;
 	}
+	lastShownStatus_ = newPresence->getShow();
 
 	chatStateTracker_->handlePresenceChange(newPresence);
 	chatStateNotifier_->setContactIsOnline(newPresence->getType() == Presence::Available);

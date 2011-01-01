@@ -43,6 +43,7 @@ namespace Swift {
 			bool lastWasPresence_;
 			String lastStatusChangeString_;
 			std::map<boost::shared_ptr<Stanza>, String> unackedStanzas_;
+			StatusShow::Type lastShownStatus_;
 	};
 }
 
