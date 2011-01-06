@@ -54,25 +54,25 @@ QtMainWindow::QtMainWindow(QtSettingsProvider* settings, UIEventStream* uiEventS
 	contactsTabWidget_->setLayout(contactTabLayout);
 	contactTabLayout->setSpacing(0);
 	contactTabLayout->setContentsMargins(0, 0, 0, 0);
-	
+
 	treeWidget_ = new QtTreeWidget(uiEventStream_);
 	contextMenu_ = new QtRosterContextMenu(uiEventStream_, treeWidget_);
 	treeWidget_->setContextMenu(contextMenu_);
 	contactTabLayout->addWidget(treeWidget_);
 
-	tabs_->addTab(contactsTabWidget_, "Contacts");
-	
+	tabs_->addTab(contactsTabWidget_, "&Contacts");
+
 	eventWindow_ = new QtEventWindow(uiEventStream_);
 	connect(eventWindow_, SIGNAL(onNewEventCountUpdated(int)), this, SLOT(handleEventCountUpdated(int)));
-	
+
 	chatListWindow_ = new QtChatListWindow(uiEventStream_);
 
-	tabs_->addTab(eventWindow_, "Notices");
-	tabs_->addTab(chatListWindow_, "Chats");
+	tabs_->addTab(eventWindow_, "&Notices");
+	tabs_->addTab(chatListWindow_, "C&hats");
 
 	this->setLayout(mainLayout);
-	
-	QMenu* viewMenu = new QMenu(tr("View"), this);
+
+	QMenu* viewMenu = new QMenu(tr("&View"), this);
 	menus_.push_back(viewMenu);
 	showOfflineAction_ = new QAction("Show offline contacts", this);
 	showOfflineAction_->setCheckable(true);
@@ -80,19 +80,19 @@ QtMainWindow::QtMainWindow(QtSettingsProvider* settings, UIEventStream* uiEventS
 	connect(showOfflineAction_, SIGNAL(toggled(bool)), SLOT(handleShowOfflineToggled(bool)));
 	viewMenu->addAction(showOfflineAction_);
 
-	QMenu* actionsMenu = new QMenu(tr("Actions"), this);
+	QMenu* actionsMenu = new QMenu(tr("&Actions"), this);
 	menus_.push_back(actionsMenu);
-	QAction* joinMUCAction = new QAction("Join Room", this);
+	QAction* joinMUCAction = new QAction("&Join Room", this);
 	connect(joinMUCAction, SIGNAL(triggered()), SLOT(handleJoinMUCAction()));
 	actionsMenu->addAction(joinMUCAction);
-	addUserAction_ = new QAction("Add Contact", this);
+	addUserAction_ = new QAction("&Add Contact", this);
 	connect(addUserAction_, SIGNAL(triggered(bool)), this, SLOT(handleAddUserActionTriggered(bool)));
 	actionsMenu->addAction(addUserAction_);
-	chatUserAction_ = new QAction("Start Chat", this);
+	chatUserAction_ = new QAction("Start &Chat", this);
 	connect(chatUserAction_, SIGNAL(triggered(bool)), this, SLOT(handleChatUserActionTriggered(bool)));
 	actionsMenu->addAction(chatUserAction_);
 	actionsMenu->addSeparator();
-	QAction* signOutAction = new QAction("Sign Out", this);
+	QAction* signOutAction = new QAction("&Sign Out", this);
 	connect(signOutAction, SIGNAL(triggered()), SLOT(handleSignOutAction()));
 	actionsMenu->addAction(signOutAction);
 

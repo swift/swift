@@ -114,7 +114,7 @@ QtLoginWindow::QtLoginWindow(UIEventStream* uiEventStream) : QMainWindow() {
 	certificateButton_->setIcon(QIcon(":/icons/certificate.png"));
 	certificateButton_->setToolTip("Click if you have a personal certificate used for login to the service.");
 	certificateButton_->setWhatsThis("Click if you have a personal certificate used for login to the service.");
-	
+
 	credentialsLayout->addWidget(certificateButton_);
 	connect(certificateButton_, SIGNAL(clicked(bool)), SLOT(handleCertficateChecked(bool)));
 
@@ -143,29 +143,29 @@ QtLoginWindow::QtLoginWindow(UIEventStream* uiEventStream) : QMainWindow() {
 	menuBar_ = menuBar();
 #endif
 	QApplication::setQuitOnLastWindowClosed(false);
-	
-	swiftMenu_ = new QMenu(tr("Swift"), this);
+
+	swiftMenu_ = new QMenu(tr("&Swift"), this);
 #ifdef SWIFTEN_PLATFORM_MACOSX
-	generalMenu_ = new QMenu(tr("General"), this);
+	generalMenu_ = new QMenu(tr("&General"), this);
 #else
 	generalMenu_ = swiftMenu_;
 #endif
-	
-	QAction* aboutAction = new QAction("About Swift", this);
+
+	QAction* aboutAction = new QAction("&About Swift", this);
 	connect(aboutAction, SIGNAL(triggered()), SLOT(handleAbout()));
 	swiftMenu_->addAction(aboutAction);
 
-	QAction* xmlConsoleAction = new QAction(tr("Show Debug Console"), this);
+	QAction* xmlConsoleAction = new QAction(tr("&Show Debug Console"), this);
 	connect(xmlConsoleAction, SIGNAL(triggered()), SLOT(handleShowXMLConsole()));
 	generalMenu_->addAction(xmlConsoleAction);
 
-	toggleSoundsAction_ = new QAction(tr("Play Sounds"), this);
+	toggleSoundsAction_ = new QAction(tr("&Play Sounds"), this);
 	toggleSoundsAction_->setCheckable(true);
 	toggleSoundsAction_->setChecked(true);
 	connect(toggleSoundsAction_, SIGNAL(toggled(bool)), SLOT(handleToggleSounds(bool)));
 	generalMenu_->addAction(toggleSoundsAction_);
 
-	toggleNotificationsAction_ = new QAction(tr("Show Notifications"), this);
+	toggleNotificationsAction_ = new QAction(tr("Show &Notifications"), this);
 	toggleNotificationsAction_->setCheckable(true);
 	toggleNotificationsAction_->setChecked(true);
 	connect(toggleNotificationsAction_, SIGNAL(toggled(bool)), SLOT(handleToggleNotifications(bool)));
@@ -176,8 +176,8 @@ QtLoginWindow::QtLoginWindow(UIEventStream* uiEventStream) : QMainWindow() {
 #ifndef SWIFTEN_PLATFORM_MACOSX
 	swiftMenu_->addSeparator();
 #endif
-	
-	QAction* quitAction = new QAction("Quit", this);
+
+	QAction* quitAction = new QAction("&Quit", this);
 	connect(quitAction, SIGNAL(triggered()), SLOT(handleQuit()));
 	swiftMenu_->addAction(quitAction);
 
@@ -392,7 +392,7 @@ void QtLoginWindow::resizeEvent(QResizeEvent*) {
 }
 
 void QtLoginWindow::moveEvent(QMoveEvent*) {
-	emit geometryChanged();	
+	emit geometryChanged();
 }
 
 bool QtLoginWindow::askUserToTrustCertificatePermanently(const String& message, Certificate::ref certificate) {
