@@ -168,22 +168,75 @@ void QtChatTabs::handleTabTitleUpdated(QWidget* widget) {
 	if (index < 0) {
 		return;
 	}
-	tabs_->setTabText(index, tabbable->getCount() > 0 ? QString("(%1) %2").arg(tabbable->getCount()).arg(tabbable->windowTitle()) : tabbable->windowTitle());
+
+	QString tabText = tabbable->windowTitle().simplified();
+
+	// look for spectrum-generated and other long JID localparts, and
+	// try to abbreviate the resulting long tab texts
+	QRegExp hasTrailingGarbage( "^(.[-\\w\\s&]+)([^\\s\\w].*)$" );
+	if (hasTrailingGarbage.exactMatch(tabText) &&
+	    hasTrailingGarbage.cap(1).simplified().length() >= 2 &&
+	    hasTrailingGarbage.cap(2).length() >= 7) {
+		// there may be some trailing garbage, and it's long
+		// enough to be worth removing, and we'd leave at
+		// least a couple of characters.
+		tabText = hasTrailingGarbage.cap(1).simplified();
+	}
+
+	// QTabBar interprets &, so escape that
+	tabText.replace( "&", "&&" );
+
+	// see which alt[a-z] keys other tabs use
+	bool accelsTaken[26];
+	int i = 0;
+	while (i < 26)
+		accelsTaken[i++] = false;
+	int other = tabs_->tabBar()->count();
+	while (other >= 0) {
+		other--;
+		if ( other != index ) {
+			QString t = tabs_->tabBar()->tabText(other).toLower();
+			int r = t.indexOf( '&' );
+			if ( r >= 0 && t[r+1] >= 'a' && t[r+1] <= 'z' )
+				accelsTaken[t[r+1].unicode()-'a'] = true;
+		}
+	}
+	// then look to see which letters in tabText may be used
+	i = 0;
+	int accelPos = -1;
+	while (i < tabText.length() && accelPos < 0) {
+		if ( tabText[i] >= 'A' && tabText[i] <= 'Z' &&
+		     !accelsTaken[tabText[i].unicode()-'A'] )
+			accelPos = i;
+		if ( tabText[i] >= 'a' && tabText[i] <= 'z' &&
+		     !accelsTaken[tabText[i].unicode()-'a'] )
+			accelPos = i;
+		++i;
+	}
+	if (accelPos >= 0)
+		tabText = tabText.mid(0, accelPos) + "&" +
+			  tabText.mid(accelPos);
+	// this could be improved on some european keyboards, such as
+	// the German one (where alt-ß is available) and basically
+	// doesn't work on Arabic/Indic keyboards (where Latin letters
+	// aren't available), but I don't care to deal with those.
+
+	tabs_->setTabText(index, tabbable->getCount() > 0 ? QString("(%1) %2").arg(tabbable->getCount()).arg(tabText) : tabText);
 	QColor tabTextColor;
 	switch (tabbable->getWidgetAlertState()) {
 	case QtTabbable::WaitingActivity : tabTextColor = QColor(217, 20, 43); break;
 	case QtTabbable::ImpendingActivity : tabTextColor = QColor(27, 171, 32); break;
 	default : tabTextColor = QColor();
 	}
-	tabs_->tabBar()->setTabTextColor(index, tabTextColor); 
+	tabs_->tabBar()->setTabTextColor(index, tabTextColor);
 	int unread = 0;
 	for (int i = 0; i < tabs_->count(); i++) {
 		QtTabbable* tab = qobject_cast<QtTabbable*>(tabs_->widget(i));
 		if (tab) {
-			unread += tab->getCount(); 
+			unread += tab->getCount();
 		}
 	}
-	
+
 	QtTabbable* current = qobject_cast<QtTabbable*>(tabs_->currentWidget());
 	setWindowTitle(unread > 0 ? QString("(%1) %2").arg(unread).arg(current->windowTitle()) : current->windowTitle());
 }
@@ -199,7 +252,7 @@ void QtChatTabs::resizeEvent(QResizeEvent*) {
 }
 
 void QtChatTabs::moveEvent(QMoveEvent*) {
-	emit geometryChanged();	
+	emit geometryChanged();
 }
 
 void QtChatTabs::checkForFirstShow() {
