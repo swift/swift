@@ -8,7 +8,7 @@
 
 #include <boost/lexical_cast.hpp>
 
-#include "Swiften/MUC/MUCOccupant.h"
+#include "Swiften/Elements/MUCOccupant.h"
 
 #include <cassert>
 #include <iostream>

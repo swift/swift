@@ -43,6 +43,7 @@ void MUC::internalJoin(const String &nick) {
 	mucRegistry->addMUC(getJID());
 	joinComplete_ = false;
 	ownMUCJID = JID(ownMUCJID.getNode(), ownMUCJID.getDomain(), nick);
+	presenceSender->addDirectedPresenceReceiver(ownMUCJID, DirectedPresenceSender::DontSendPresence);
 	boost::shared_ptr<Presence> joinPresence(presenceSender->getLastSentUndirectedPresence());
 	assert(joinPresence->getType() == Presence::Available);
 	joinPresence->setTo(ownMUCJID);
@@ -93,6 +94,7 @@ void MUC::handleIncomingPresence(boost::shared_ptr<Presence> presence) {
 	if (!joinComplete_) {
 		if (presence->getType() == Presence::Error) {
 			String reason;
+			presenceSender->removeDirectedPresenceReceiver(ownMUCJID, DirectedPresenceSender::AndSendPresence);
 			onJoinFailed(presence->getPayload<ErrorPayload>());
 			return;
 		}
@@ -156,15 +158,18 @@ void MUC::handleIncomingPresence(boost::shared_ptr<Presence> presence) {
 			if (status.code == 110) {
 				/* Simply knowing this is your presence is enough, 210 doesn't seem to be necessary. */
 				joinComplete_ = true;
+				presenceSender->removeDirectedPresenceReceiver(ownMUCJID, DirectedPresenceSender::DontSendPresence);
 				ownMUCJID = presence->getFrom();
-				onJoinComplete(getOwnNick());
 				presenceSender->addDirectedPresenceReceiver(ownMUCJID, DirectedPresenceSender::DontSendPresence);
+				onJoinComplete(getOwnNick());
 			}
 			if (status.code == 201) {
 				/* Room is created and locked */
 				/* Currently deal with this by making an instant room */
+				presenceSender->removeDirectedPresenceReceiver(ownMUCJID, DirectedPresenceSender::DontSendPresence);
 				ownMUCJID = presence->getFrom();
 				boost::shared_ptr<MUCOwnerPayload> mucPayload(new MUCOwnerPayload());
+				presenceSender->addDirectedPresenceReceiver(ownMUCJID, DirectedPresenceSender::DontSendPresence);
 				mucPayload->setPayload(boost::shared_ptr<Payload>(new Form(Form::SubmitType)));
 				GenericRequest<MUCOwnerPayload>* request = new GenericRequest<MUCOwnerPayload>(IQ::Set, getJID(), mucPayload, iqRouter_);
 				request->onResponse.connect(boost::bind(&MUC::handleCreationConfigResponse, this, _1, _2));
@@ -177,10 +182,10 @@ void MUC::handleIncomingPresence(boost::shared_ptr<Presence> presence) {
 
 void MUC::handleCreationConfigResponse(boost::shared_ptr<MUCOwnerPayload> /*unused*/, ErrorPayload::ref error) {
 	if (error) {
+		presenceSender->removeDirectedPresenceReceiver(ownMUCJID, DirectedPresenceSender::AndSendPresence);
 		onJoinFailed(error);
 	} else {
 		onJoinComplete(getOwnNick()); /* Previously, this wasn't needed here, as the presence duplication bug caused an emit elsewhere. */
-		presenceSender->addDirectedPresenceReceiver(ownMUCJID, DirectedPresenceSender::DontSendPresence);
 	}
 }
 

@@ -57,6 +57,9 @@ namespace Swift {
 			}
 
 			template<typename T> boost::shared_ptr<T> getStanzaAtIndex(size_t index) {
+				if (sentStanzas.size() <= index) {
+					return boost::shared_ptr<T>();
+				}
 				return boost::dynamic_pointer_cast<T>(sentStanzas[index]);
 			}
 

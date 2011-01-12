@@ -10,7 +10,7 @@
 #include "Swiften/Base/String.h"
 #include "Swiften/Elements/Message.h"
 #include "Swiften/Elements/Presence.h"
-#include "Swiften/MUC/MUCOccupant.h"
+#include "Swiften/Elements/MUCOccupant.h"
 #include "Swiften/MUC/MUCRegistry.h"
 #include "Swiften/Elements/MUCOwnerPayload.h"
 

@@ -1,0 +1,116 @@
+/*
+ * Copyright (c) 2010 Remko Tronçon
+ * Licensed under the GNU General Public License v3.
+ * See Documentation/Licenses/GPLv3.txt for more information.
+ */
+
+#include <cppunit/extensions/HelperMacros.h>
+#include <cppunit/extensions/TestFactoryRegistry.h>
+#include <boost/shared_ptr.hpp>
+#include <boost/smart_ptr/make_shared.hpp>
+#include <boost/bind.hpp>
+
+#include <Swiften/MUC/MUC.h>
+#include <Swiften/Client/DummyStanzaChannel.h>
+#include <Swiften/Presence/StanzaChannelPresenceSender.h>
+#include <Swiften/Presence/DirectedPresenceSender.h>
+#include <Swiften/Queries/IQRouter.h>
+
+using namespace Swift;
+
+class MUCTest : public CppUnit::TestFixture {
+		CPPUNIT_TEST_SUITE(MUCTest);
+		CPPUNIT_TEST(testJoin);
+		CPPUNIT_TEST(testJoin_ChangePresenceDuringJoin);
+		/*CPPUNIT_TEST(testJoin_Success);
+		CPPUNIT_TEST(testJoin_Fail);*/
+		CPPUNIT_TEST_SUITE_END();
+
+	public:
+		void setUp() {
+			channel = new DummyStanzaChannel();
+			router = new IQRouter(channel);
+			mucRegistry = new MUCRegistry();
+			stanzaChannelPresenceSender = new StanzaChannelPresenceSender(channel);
+			presenceSender = new DirectedPresenceSender(stanzaChannelPresenceSender);
+		}
+
+		void tearDown() {
+			delete presenceSender;
+			delete stanzaChannelPresenceSender;
+			delete mucRegistry;
+			delete router;
+			delete channel;
+		}
+
+		void testJoin() {
+			MUC::ref testling = createMUC(JID("foo@bar.com"));
+			testling->joinAs("Alice");
+
+			CPPUNIT_ASSERT(mucRegistry->isMUC(JID("foo@bar.com")));
+			Presence::ref p = channel->getStanzaAtIndex<Presence>(0);
+			CPPUNIT_ASSERT(p);
+			CPPUNIT_ASSERT_EQUAL(JID("foo@bar.com/Alice"), p->getTo());
+		}
+
+		void testJoin_ChangePresenceDuringJoin() {
+			MUC::ref testling = createMUC(JID("foo@bar.com"));
+			testling->joinAs("Alice");
+
+			presenceSender->sendPresence(Presence::create("Test"));
+			CPPUNIT_ASSERT_EQUAL(3, static_cast<int>(channel->sentStanzas.size()));
+			Presence::ref p = channel->getStanzaAtIndex<Presence>(2);
+			CPPUNIT_ASSERT(p);
+			CPPUNIT_ASSERT_EQUAL(JID("foo@bar.com/Alice"), p->getTo());
+		}
+
+		/*void testJoin_Success() {
+			MUC::ref testling = createMUC(JID("foo@bar.com"));
+			testling->onJoinFinished.connect(boost::bind(&MUCTest::handleJoinFinished, this, _1, _2));
+			testling->joinAs("Alice");
+			receivePresence(JID("foo@bar.com/Rabbit"), "Here");
+
+			CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(joinResults.size()));
+			CPPUNIT_ASSERT_EQUAL(String("Alice"), joinResults[0].nick);
+			CPPUNIT_ASSERT(joinResults[0].error);
+		}
+
+		void testJoin_Fail() {
+			//CPPUNIT_ASSERT(!mucRegistry->isMUC(JID("foo@bar.com")));
+		}*/
+
+	private:
+		MUC::ref createMUC(const JID& jid) {
+			return boost::make_shared<MUC>(channel, router, presenceSender, jid, mucRegistry);
+		}
+
+		void handleJoinFinished(const String& nick, ErrorPayload::ref error) {
+			JoinResult r;
+			r.nick = nick;
+			r.error = error;
+			joinResults.push_back(r);
+		}
+
+		/*void receivePresence(const JID& jid, const String& status, const MUCUserPayload::Item& item) {
+			Presence::ref p = Presence::create(status);
+			p->setFrom(jid);
+			MUCUserPayload::ref mucUserPayload = boost::make_shared<MUCUserPayload>();
+			mucUserPayload->addItem(item);
+			p->addPayload(mucUserPayload);
+			channel->onPresenceReceived(p);
+		}*/
+
+	private:
+		DummyStanzaChannel* channel;
+		IQRouter* router;
+		MUCRegistry* mucRegistry;
+		StanzaChannelPresenceSender* stanzaChannelPresenceSender;
+		DirectedPresenceSender* presenceSender;
+		struct JoinResult {
+			String nick;
+			ErrorPayload::ref error;
+		};
+		std::vector<JoinResult> joinResults;
+};
+
+CPPUNIT_TEST_SUITE_REGISTRATION(MUCTest);

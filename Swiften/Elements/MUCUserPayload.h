@@ -12,7 +12,7 @@
 #include "Swiften/JID/JID.h"
 #include "Swiften/Base/String.h"
 #include "Swiften/Elements/Payload.h"
-#include "Swiften/MUC/MUCOccupant.h"
+#include "Swiften/Elements/MUCOccupant.h"
 
 namespace Swift {
 	class MUCUserPayload : public Payload {
@@ -20,7 +20,7 @@ namespace Swift {
 			typedef boost::shared_ptr<MUCUserPayload> ref;
 
 			struct Item {
-				Item() : affiliation(MUCOccupant::NoAffiliation), role(MUCOccupant::NoRole) {}
+				Item(MUCOccupant::Affiliation affiliation = MUCOccupant::NoAffiliation, MUCOccupant::Role role = MUCOccupant::NoRole) : affiliation(affiliation), role(role) {}
 				boost::optional<JID> realJID;
 				boost::optional<String> nick;
 				MUCOccupant::Affiliation affiliation;

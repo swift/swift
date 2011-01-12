@@ -18,7 +18,7 @@
 #include "Swiften/Elements/DiscoInfo.h"
 #include "Swiften/JID/JID.h"
 #include "Swiften/MUC/MUC.h"
-#include "Swiften/MUC/MUCOccupant.h"
+#include "Swiften/Elements/MUCOccupant.h"
 
 namespace Swift {
 	class StanzaChannel;
