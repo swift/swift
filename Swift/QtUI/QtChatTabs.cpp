@@ -173,7 +173,7 @@ void QtChatTabs::handleTabTitleUpdated(QWidget* widget) {
 
 	// look for spectrum-generated and other long JID localparts, and
 	// try to abbreviate the resulting long tab texts
-	QRegExp hasTrailingGarbage( "^(.[-\\w\\s&]+)([^\\s\\w].*)$" );
+	QRegExp hasTrailingGarbage("^(.[-\\w\\s&]+)([^\\s\\w].*)$");
 	if (hasTrailingGarbage.exactMatch(tabText) &&
 	    hasTrailingGarbage.cap(1).simplified().length() >= 2 &&
 	    hasTrailingGarbage.cap(2).length() >= 7) {
@@ -184,38 +184,42 @@ void QtChatTabs::handleTabTitleUpdated(QWidget* widget) {
 	}
 
 	// QTabBar interprets &, so escape that
-	tabText.replace( "&", "&&" );
+	tabText.replace("&", "&&");
 
 	// see which alt[a-z] keys other tabs use
 	bool accelsTaken[26];
 	int i = 0;
-	while (i < 26)
+	while (i < 26) {
 		accelsTaken[i++] = false;
+	}
 	int other = tabs_->tabBar()->count();
 	while (other >= 0) {
 		other--;
-		if ( other != index ) {
+		if (other != index) {
 			QString t = tabs_->tabBar()->tabText(other).toLower();
-			int r = t.indexOf( '&' );
-			if ( r >= 0 && t[r+1] >= 'a' && t[r+1] <= 'z' )
+			int r = t.indexOf('&');
+			if (r >= 0 && t[r+1] >= 'a' && t[r+1] <= 'z') {
 				accelsTaken[t[r+1].unicode()-'a'] = true;
+			}
 		}
 	}
 	// then look to see which letters in tabText may be used
 	i = 0;
 	int accelPos = -1;
 	while (i < tabText.length() && accelPos < 0) {
-		if ( tabText[i] >= 'A' && tabText[i] <= 'Z' &&
-		     !accelsTaken[tabText[i].unicode()-'A'] )
+		if (tabText[i] >= 'A' && tabText[i] <= 'Z' &&
+		     !accelsTaken[tabText[i].unicode()-'A']) {
 			accelPos = i;
-		if ( tabText[i] >= 'a' && tabText[i] <= 'z' &&
-		     !accelsTaken[tabText[i].unicode()-'a'] )
+		}
+		if (tabText[i] >= 'a' && tabText[i] <= 'z' &&
+		     !accelsTaken[tabText[i].unicode()-'a']) {
 			accelPos = i;
+		}
 		++i;
 	}
-	if (accelPos >= 0)
-		tabText = tabText.mid(0, accelPos) + "&" +
-			  tabText.mid(accelPos);
+	if (accelPos >= 0) {
+		tabText = tabText.mid(0, accelPos) + "&" + tabText.mid(accelPos);
+	}
 	// this could be improved on some european keyboards, such as
 	// the German one (where alt-ß is available) and basically
 	// doesn't work on Arabic/Indic keyboards (where Latin letters
