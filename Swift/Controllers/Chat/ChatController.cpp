@@ -180,6 +180,10 @@ void ChatController::handlePresenceChange(boost::shared_ptr<Presence> newPresenc
 	if (!me) {
 		return;
 	}
+	if (!newPresence) {
+		newPresence = boost::shared_ptr<Presence>(new Presence());
+		newPresence->setType(Presence::Unavailable);
+	}
 	lastShownStatus_ = newPresence->getShow();
 
 	chatStateTracker_->handlePresenceChange(newPresence);
