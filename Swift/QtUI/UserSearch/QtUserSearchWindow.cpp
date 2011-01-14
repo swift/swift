@@ -20,8 +20,10 @@
 
 namespace Swift {
 
-QtUserSearchFirstPage::QtUserSearchFirstPage() {
+QtUserSearchFirstPage::QtUserSearchFirstPage(UserSearchWindow::Type type) {
 	setupUi(this);
+	setTitle(type == UserSearchWindow::AddContact ? "Add User" : "Chat to User");
+	setSubTitle(QString("%1. If you know their JID you can enter it directly, or you can search for them.").arg(type == UserSearchWindow::AddContact ? "Add another user to your roster" : "Chat to another user"));
 	connect(jid_, SIGNAL(textChanged(const QString&)), this, SLOT(emitCompletenessCheck()));
 	connect(service_, SIGNAL(textChanged(const QString&)), this, SLOT(emitCompletenessCheck()));
 }
@@ -77,7 +79,7 @@ QtUserSearchWindow::QtUserSearchWindow(UIEventStream* eventStream, UserSearchWin
 	setupUi(this);
 	model_ = new UserSearchModel();
 	delegate_ = new UserSearchDelegate();
-	firstPage_ = new QtUserSearchFirstPage();
+	firstPage_ = new QtUserSearchFirstPage(type);
 	connect(firstPage_->byJID_, SIGNAL(toggled(bool)), this, SLOT(handleFirstPageRadioChange()));
 	connect(firstPage_->byLocalSearch_, SIGNAL(toggled(bool)), this, SLOT(handleFirstPageRadioChange()));
 	connect(firstPage_->byRemoteSearch_, SIGNAL(toggled(bool)), this, SLOT(handleFirstPageRadioChange()));
