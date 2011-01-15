@@ -43,7 +43,7 @@ class SharedBuffer {
 // -----------------------------------------------------------------------------
 
 BoostConnection::BoostConnection(boost::asio::io_service* ioService, EventLoop* eventLoop) :
-		eventLoop(eventLoop), socket_(*ioService), readBuffer_(BUFFER_SIZE) {
+		eventLoop(eventLoop), socket_(*ioService), readBuffer_(BUFFER_SIZE), writing_(false) {
 }
 
 BoostConnection::~BoostConnection() {
@@ -67,6 +67,17 @@ void BoostConnection::disconnect() {
 }
 
 void BoostConnection::write(const ByteArray& data) {
+	boost::lock_guard<boost::mutex> lock(writeMutex_);
+	if (!writing_) {
+		writing_ = true;
+		doWrite(data);
+	}
+	else {
+		writeQueue_ += data;
+	}
+}
+
+void BoostConnection::doWrite(const ByteArray& data) {
 	boost::asio::async_write(socket_, SharedBuffer(data),
 			boost::bind(&BoostConnection::handleDataWritten, shared_from_this(), boost::asio::placeholders::error));
 }
@@ -109,6 +120,16 @@ void BoostConnection::handleDataWritten(const boost::system::error_code& error) 
 	}
 	else {
 		eventLoop->postEvent(boost::bind(boost::ref(onDisconnected), WriteError), shared_from_this());
+	}
+	{
+		boost::lock_guard<boost::mutex> lock(writeMutex_);
+		if (writeQueue_.isEmpty()) {
+			writing_ = false;
+		}
+		else {
+			doWrite(writeQueue_);
+			writeQueue_.clear();
+		}
 	}
 }
 

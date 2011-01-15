@@ -8,6 +8,7 @@
 
 #include <boost/asio.hpp>
 #include <boost/enable_shared_from_this.hpp>
+#include <boost/thread/mutex.hpp>
 
 #include "Swiften/Network/Connection.h"
 #include "Swiften/EventLoop/EventOwner.h"
@@ -50,11 +51,14 @@ namespace Swift {
 			void handleSocketRead(const boost::system::error_code& error, size_t bytesTransferred);
 			void handleDataWritten(const boost::system::error_code& error);
 			void doRead();
+			void doWrite(const ByteArray& data);
 
 		private:
 			EventLoop* eventLoop;
 			boost::asio::ip::tcp::socket socket_;
 			std::vector<char> readBuffer_;
-			bool disconnecting_;
+			boost::mutex writeMutex_;
+			bool writing_;
+			ByteArray writeQueue_;
 	};
 }

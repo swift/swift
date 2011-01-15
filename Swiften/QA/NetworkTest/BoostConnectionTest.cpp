@@ -25,6 +25,7 @@ class BoostConnectionTest : public CppUnit::TestFixture {
 		CPPUNIT_TEST(testDestructor);
 		CPPUNIT_TEST(testDestructor_PendingEvents);
 		CPPUNIT_TEST(testWrite);
+		CPPUNIT_TEST(testWriteMultipleSimultaniouslyQueuesWrites);
 #ifdef TEST_IPV6
 		CPPUNIT_TEST(testWrite_IPv6);
 #endif
@@ -37,6 +38,7 @@ class BoostConnectionTest : public CppUnit::TestFixture {
 			boostIOServiceThread_ = new BoostIOServiceThread();
 			eventLoop_ = new DummyEventLoop();
 			disconnected = false;
+			connectFinished = false;
 		}
 
 		void tearDown() {
@@ -88,6 +90,41 @@ class BoostConnectionTest : public CppUnit::TestFixture {
 			testling->disconnect();
 		}
 
+
+		void testWriteMultipleSimultaniouslyQueuesWrites() {
+			BoostConnection::ref testling(BoostConnection::create(&boostIOService, eventLoop_));
+			testling->onConnectFinished.connect(boost::bind(&BoostConnectionTest::handleConnectFinished, this));
+			testling->onDataRead.connect(boost::bind(&BoostConnectionTest::handleDataRead, this, _1));
+			testling->onDisconnected.connect(boost::bind(&BoostConnectionTest::handleDisconnected, this));
+			testling->connect(HostAddressPort(HostAddress("65.99.222.137"), 5222));
+			while (!connectFinished) {
+				boostIOService.run_one();
+				eventLoop_->processEvents();
+			}
+
+			testling->write(ByteArray("<stream:strea"));
+			testling->write(ByteArray("m"));
+			testling->write(ByteArray(">"));
+
+			 // Check that we only did one write event, the others are queued
+			/*int runHandlers = */boostIOService.poll();
+			// Disabling this test, because poll runns all handlers that are added during poll() as well, so
+			// this test doesn't really work any more. We'll have to trust that things are queued.
+			//CPPUNIT_ASSERT_EQUAL(1, runHandlers);
+			// Process the other events
+			while (receivedData.isEmpty()) {
+				boostIOService.run_one();
+				eventLoop_->processEvents();
+			}
+
+			// Disconnect & clean up
+			testling->disconnect();
+			while (!disconnected) {
+				boostIOService.run_one();
+				eventLoop_->processEvents();
+			}
+		}
+
 		void doWrite(BoostConnection* connection) {
 			connection->write(ByteArray("<stream:stream>"));
 			connection->write(ByteArray("\r\n\r\n")); // Temporarily, while we don't have an xmpp server running on ipv6
@@ -101,11 +138,17 @@ class BoostConnectionTest : public CppUnit::TestFixture {
 			disconnected = true;
 		}
 
+		void handleConnectFinished() {
+			connectFinished = true;
+		}
+
 	private:
 		BoostIOServiceThread* boostIOServiceThread_;
+		boost::asio::io_service boostIOService;
 		DummyEventLoop* eventLoop_;
 		ByteArray receivedData;
 		bool disconnected;
+		bool connectFinished;
 };
 
 CPPUNIT_TEST_SUITE_REGISTRATION(BoostConnectionTest);
