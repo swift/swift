@@ -14,6 +14,7 @@
 #include "Swiften/Base/String.h"
 #include "Swiften/Base/ByteArray.h"
 #include "Swiften/Network/HostAddressPort.h"
+#include "Swiften/Base/sleep.h"
 
 namespace Swift {
 
@@ -63,6 +64,14 @@ void BoostConnection::connect(const HostAddressPort& addressPort) {
 
 void BoostConnection::disconnect() {
 	//MainEventLoop::removeEventsFromOwner(shared_from_this());
+
+	// Mac OS X apparently exhibits a problem where closing a socket during a write could potentially go into uninterruptable sleep.
+	// See e.g. http://bugs.python.org/issue7401
+	// We therefore wait until any pending write finishes, which hopefully should fix our hang on exit during close().
+	while (writing_) {
+		std::cerr << "Write in progress ... waiting to quit" << std::endl;
+		Swift::sleep(10);
+	}
 	socket_.close();
 }
 
