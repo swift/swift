@@ -141,10 +141,12 @@ void DiscoServiceWalker::markNodeCompleted(const JID& jid) {
 	servicesBeingSearched_.erase(jid);
 	/* All results are in */
 	if (servicesBeingSearched_.size() == 0) {
+		active_ = false;
 		onWalkComplete();
 	}
 	/* Check if we're on a rampage */
-	if (searchedServices_.size() >= maxSteps_) {
+	else if (searchedServices_.size() >= maxSteps_) {
+		active_ = false;
 		onWalkComplete();
 	}
 }

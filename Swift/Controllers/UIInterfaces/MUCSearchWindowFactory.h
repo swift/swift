@@ -14,6 +14,6 @@ namespace Swift {
 		public:
 			virtual ~MUCSearchWindowFactory() {};
 
-			virtual MUCSearchWindow* createMUCSearchWindow(UIEventStream* eventStream) = 0;
+			virtual MUCSearchWindow* createMUCSearchWindow() = 0;
 	};
 }

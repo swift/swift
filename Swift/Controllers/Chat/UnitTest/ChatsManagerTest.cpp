@@ -11,8 +11,11 @@
 #include "Swift/Controllers/Chat/ChatsManager.h"
 
 #include "Swift/Controllers/UIInterfaces/ChatWindow.h"
+#include "Swift/Controllers/Settings/DummySettingsProvider.h"
 #include "Swift/Controllers/UIInterfaces/ChatWindowFactory.h"
 #include "Swift/Controllers/UIInterfaces/ChatListWindowFactory.h"
+#include "Swift/Controllers/UIInterfaces/JoinMUCWindowFactory.h"
+#include "Swift/Controllers/UIInterfaces/MUCSearchWindowFactory.h"
 #include "Swiften/Client/Client.h"
 #include "Swiften/Disco/EntityCapsManager.h"
 #include "Swiften/Disco/CapsProvider.h"
@@ -68,6 +71,7 @@ public:
 		capsProvider_ = new DummyCapsProvider();
 		eventController_ = new EventController();
 		chatWindowFactory_ = mocks_->InterfaceMock<ChatWindowFactory>();
+		joinMUCWindowFactory_ = mocks_->InterfaceMock<JoinMUCWindowFactory>();
 		xmppRoster_ = new XMPPRosterImpl();
 		mucRegistry_ = new MUCRegistry();
 		nickResolver_ = new NickResolver(jid_.toBare(), xmppRoster_, NULL, mucRegistry_);
@@ -79,8 +83,10 @@ public:
 		uiEventStream_ = new UIEventStream();
 		entityCapsManager_ = new EntityCapsManager(capsProvider_, stanzaChannel_);
 		chatListWindowFactory_ = mocks_->InterfaceMock<ChatListWindowFactory>();
+		mucSearchWindowFactory_ = mocks_->InterfaceMock<MUCSearchWindowFactory>();
+		settings_ = new DummySettingsProvider();
 		mocks_->ExpectCall(chatListWindowFactory_, ChatListWindowFactory::createChatListWindow).With(uiEventStream_).Return(NULL);
-		manager_ = new ChatsManager(jid_, stanzaChannel_, iqRouter_, eventController_, chatWindowFactory_, nickResolver_, presenceOracle_, directedPresenceSender_, uiEventStream_, chatListWindowFactory_, true, NULL, mucRegistry_, entityCapsManager_, mucManager_);
+		manager_ = new ChatsManager(jid_, stanzaChannel_, iqRouter_, eventController_, chatWindowFactory_, joinMUCWindowFactory_, nickResolver_, presenceOracle_, directedPresenceSender_, uiEventStream_, chatListWindowFactory_, true, NULL, mucRegistry_, entityCapsManager_, mucManager_, mucSearchWindowFactory_, settings_);
 
 		avatarManager_ = new NullAvatarManager();
 		manager_->setAvatarManager(avatarManager_);
@@ -88,6 +94,7 @@ public:
 	
 	void tearDown() {
 		//delete chatListWindowFactory_;
+		delete settings_;
 		delete mocks_;
 		delete avatarManager_;
 		delete manager_;
@@ -325,6 +332,7 @@ private:
 	IQRouter* iqRouter_;
 	EventController* eventController_;
 	ChatWindowFactory* chatWindowFactory_;
+	JoinMUCWindowFactory* joinMUCWindowFactory_;
 	NickResolver* nickResolver_;
 	PresenceOracle* presenceOracle_;
 	AvatarManager* avatarManager_;
@@ -334,11 +342,13 @@ private:
 	MockRepository* mocks_;
 	UIEventStream* uiEventStream_;
 	ChatListWindowFactory* chatListWindowFactory_;
+	MUCSearchWindowFactory* mucSearchWindowFactory_;
 	MUCRegistry* mucRegistry_;
 	DirectedPresenceSender* directedPresenceSender_;
 	EntityCapsManager* entityCapsManager_;
 	CapsProvider* capsProvider_;
 	MUCManager* mucManager_;
+	DummySettingsProvider* settings_;
 };
 
 CPPUNIT_TEST_SUITE_REGISTRATION(ChatsManagerTest);

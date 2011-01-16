@@ -10,10 +10,10 @@
 
 #include <vector>
 
+#include <boost/optional.hpp>
 #include "Swiften/Base/String.h"
 #include "Swiften/JID/JID.h"
-
-#include "Swift/Controllers/Chat/MUCSearchController.h"
+#include <Swift/Controllers/Chat/MUCSearchController.h>
 
 namespace Swift {
 
@@ -21,15 +21,14 @@ namespace Swift {
 		public:
 			virtual ~MUCSearchWindow() {};
 
-			virtual void setNick(const String& nick) = 0;
-			virtual void setMUC(const String& nick) = 0;
 			virtual void clearList() = 0;
 			virtual void addService(const MUCService& service) = 0;
-			virtual void addSavedServices(const std::vector<JID>& services) = 0;
+			virtual void addSavedServices(const std::list<JID>& services) = 0;
 			virtual void setSearchInProgress(bool searching) = 0;
 
 			virtual void show() = 0;
 
-			boost::signal<void (const JID&)> onAddService;
+			boost::signal<void (const JID&)> onSearchService;
+			boost::signal<void (const boost::optional<JID>&)> onFinished;
 	};
 }

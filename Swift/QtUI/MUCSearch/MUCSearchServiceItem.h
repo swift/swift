@@ -15,9 +15,9 @@ namespace Swift {
 	class MUCSearchServiceItem : public MUCSearchItem {
 		public:
 			MUCSearchServiceItem(const QString& jidString) : jidString_(jidString) {}
-			void addRoom(MUCSearchRoomItem* room) {rooms_.push_back(room);}
+			void addRoom(MUCSearchItem* room) {rooms_.push_back(room);}
 			int rowCount() {return rooms_.count();}
-			MUCSearchRoomItem* getItem(int i) {return rooms_[i];}
+			MUCSearchItem* getItem(int i) {return rooms_[i];}
 			QVariant data(int role) {
 				switch (role) {
 					case Qt::DisplayRole: return QVariant(jidString_); 
@@ -26,7 +26,7 @@ namespace Swift {
 			}
 			QString getHost() {return jidString_;}
 		private:
-			QList<MUCSearchRoomItem*> rooms_;
+			QList<MUCSearchItem*> rooms_;
 			QString jidString_;
 	};
 }

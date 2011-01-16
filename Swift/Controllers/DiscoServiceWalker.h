@@ -41,6 +41,10 @@ namespace Swift {
 			 */
 			void endWalk();
 
+			bool isActive() const {
+				return active_;
+			}
+
 			/** Emitted for each service found. */
 			boost::signal<void(const JID&, boost::shared_ptr<DiscoInfo>)> onServiceFound;
 

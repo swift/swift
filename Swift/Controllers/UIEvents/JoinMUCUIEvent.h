@@ -7,6 +7,7 @@
 #pragma once
 
 #include <boost/optional.hpp>
+#include <boost/shared_ptr.hpp>
 #include "Swiften/Base/String.h"
 
 #include "Swift/Controllers/UIEvents/UIEvent.h"
@@ -14,6 +15,7 @@
 namespace Swift {
 	class JoinMUCUIEvent : public UIEvent {
 		public:
+			typedef boost::shared_ptr<JoinMUCUIEvent> ref;
 			JoinMUCUIEvent(const JID& jid, const boost::optional<String>& nick = boost::optional<String>()) : jid_(jid), nick_(nick) {};
 			boost::optional<String> getNick() {return nick_;};
 			JID getJID() {return jid_;};

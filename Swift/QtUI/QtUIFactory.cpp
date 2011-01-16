@@ -16,6 +16,7 @@
 #include "QtSettingsProvider.h"
 #include "QtMainWindow.h"
 #include "QtChatWindow.h"
+#include "QtJoinMUCWindow.h"
 #include "QtChatWindowFactory.h"
 #include "QtSwiftUtil.h"
 #include "MUCSearch/QtMUCSearchWindow.h"
@@ -70,8 +71,8 @@ ChatListWindow* QtUIFactory::createChatListWindow(UIEventStream*) {
 	return lastMainWindow->getChatListWindow();
 }
 
-MUCSearchWindow* QtUIFactory::createMUCSearchWindow(UIEventStream* eventStream) {
-		return new QtMUCSearchWindow(eventStream);
+MUCSearchWindow* QtUIFactory::createMUCSearchWindow() {
+		return new QtMUCSearchWindow();
 }
 
 ChatWindow* QtUIFactory::createChatWindow(const JID& contact, UIEventStream* eventStream) {
@@ -81,5 +82,9 @@ ChatWindow* QtUIFactory::createChatWindow(const JID& contact, UIEventStream* eve
 UserSearchWindow* QtUIFactory::createUserSearchWindow(UserSearchWindow::Type type, UIEventStream* eventStream) {
 	return new QtUserSearchWindow(eventStream, type);
 };
+
+JoinMUCWindow* QtUIFactory::createJoinMUCWindow() {
+	return new QtJoinMUCWindow();
+}
 
 }

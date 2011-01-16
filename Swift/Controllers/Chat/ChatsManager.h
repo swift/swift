@@ -25,6 +25,8 @@ namespace Swift {
 	class MUCController;
 	class MUCManager;
 	class ChatWindowFactory;
+	class JoinMUCWindow;
+	class JoinMUCWindowFactory;
 	class NickResolver;
 	class PresenceOracle;
 	class AvatarManager;
@@ -37,10 +39,13 @@ namespace Swift {
 	class TimerFactory;
 	class EntityCapsProvider;
 	class DirectedPresenceSender;
+	class MUCSearchWindowFactory;
+	class SettingsProvider;
+	class MUCSearchController;
 
 	class ChatsManager {
 		public:
-			ChatsManager(JID jid, StanzaChannel* stanzaChannel, IQRouter* iqRouter, EventController* eventController, ChatWindowFactory* chatWindowFactory, NickResolver* nickResolver, PresenceOracle* presenceOracle, PresenceSender* presenceSender, UIEventStream* uiEventStream, ChatListWindowFactory* chatListWindowFactory, bool useDelayForLatency, TimerFactory* timerFactory, MUCRegistry* mucRegistry, EntityCapsProvider* entityCapsProvider, MUCManager* mucManager);
+			ChatsManager(JID jid, StanzaChannel* stanzaChannel, IQRouter* iqRouter, EventController* eventController, ChatWindowFactory* chatWindowFactory, JoinMUCWindowFactory* joinMUCWindowFactory, NickResolver* nickResolver, PresenceOracle* presenceOracle, PresenceSender* presenceSender, UIEventStream* uiEventStream, ChatListWindowFactory* chatListWindowFactory, bool useDelayForLatency, TimerFactory* timerFactory, MUCRegistry* mucRegistry, EntityCapsProvider* entityCapsProvider, MUCManager* mucManager, MUCSearchWindowFactory* mucSearchWindowFactory, SettingsProvider* settings);
 			virtual ~ChatsManager();
 			void setAvatarManager(AvatarManager* avatarManager);
 			void setOnline(bool enabled);
@@ -48,7 +53,9 @@ namespace Swift {
 			void handleIncomingMessage(boost::shared_ptr<Message> message);
 		private:
 			void handleChatRequest(const String& contact);
-			void handleJoinMUCRequest(const JID& muc, const boost::optional<String>& nick);
+			void handleJoinMUCRequest(const JID& muc, const boost::optional<String>& nick, bool autoJoin);
+			void handleSearchMUCRequest();
+			void handleMUCSelectedAfterSearch(const JID&);
 			void rebindControllerJID(const JID& from, const JID& to);
 			void handlePresenceChange(boost::shared_ptr<Presence> newPresence);
 			void handleUIEvent(boost::shared_ptr<UIEvent> event);
@@ -68,6 +75,7 @@ namespace Swift {
 			StanzaChannel* stanzaChannel_;
 			IQRouter* iqRouter_;
 			ChatWindowFactory* chatWindowFactory_;
+			JoinMUCWindowFactory* joinMUCWindowFactory_;
 			NickResolver* nickResolver_;
 			PresenceOracle* presenceOracle_;
 			AvatarManager* avatarManager_;
@@ -76,11 +84,13 @@ namespace Swift {
 			MUCBookmarkManager* mucBookmarkManager_;
 			boost::shared_ptr<DiscoInfo> serverDiscoInfo_;
 			ChatListWindow* chatListWindow_;
+			JoinMUCWindow* joinMUCWindow_;
 			boost::bsignals::scoped_connection uiEventConnection_;
 			bool useDelayForLatency_;
 			TimerFactory* timerFactory_;
 			MUCRegistry* mucRegistry_;
 			EntityCapsProvider* entityCapsProvider_;
 			MUCManager* mucManager;
+			MUCSearchController* mucSearchController_;
 	};
 }

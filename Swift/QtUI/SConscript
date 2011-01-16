@@ -92,6 +92,7 @@ sources = [
     "SystemMessageSnippet.cpp",
     "QtElidingLabel.cpp",
     "QtLineEdit.cpp",
+    "QtJoinMUCWindow.cpp",
     "Roster/RosterModel.cpp",
     "Roster/QtTreeWidget.cpp",
 #    "Roster/QtTreeWidgetItem.cpp",
@@ -110,6 +111,7 @@ sources = [
     "MUCSearch/QtMUCSearchWindow.cpp",
     "MUCSearch/MUCSearchModel.cpp",
     "MUCSearch/MUCSearchRoomItem.cpp",
+    "MUCSearch/MUCSearchEmptyItem.cpp",
     "MUCSearch/MUCSearchDelegate.cpp",
     "UserSearch/QtUserSearchWindow.cpp",
     "UserSearch/UserSearchModel.cpp",
@@ -147,6 +149,7 @@ myenv.Uic4("UserSearch/QtUserSearchFieldsPage.ui")
 myenv.Uic4("UserSearch/QtUserSearchResultsPage.ui")
 myenv.Uic4("QtAddContactDialog.ui")
 myenv.Uic4("QtBookmarkDetailWindow.ui")
+myenv.Uic4("QtJoinMUCWindow.ui")
 myenv.Qrc("DefaultTheme.qrc")
 myenv.Qrc("Swift.qrc")
 

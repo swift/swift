@@ -9,15 +9,20 @@
 #include <boost/bind.hpp>
 
 #include "Swift/Controllers/Chat/ChatController.h"
+#include "Swift/Controllers/Chat/MUCSearchController.h"
 #include "Swift/Controllers/XMPPEvents/EventController.h"
 #include "Swift/Controllers/Chat/MUCController.h"
 #include "Swift/Controllers/UIEvents/RequestChatUIEvent.h"
 #include "Swift/Controllers/UIEvents/JoinMUCUIEvent.h"
+#include "Swift/Controllers/UIEvents/RequestJoinMUCUIEvent.h"
 #include "Swift/Controllers/UIEvents/AddMUCBookmarkUIEvent.h"
 #include "Swift/Controllers/UIEvents/RemoveMUCBookmarkUIEvent.h"
 #include "Swift/Controllers/UIEvents/EditMUCBookmarkUIEvent.h"
 #include "Swift/Controllers/UIInterfaces/ChatListWindowFactory.h"
+#include "Swift/Controllers/UIInterfaces/JoinMUCWindow.h"
+#include "Swift/Controllers/UIInterfaces/JoinMUCWindowFactory.h"
 #include "Swiften/Presence/PresenceSender.h"
+#include "Swiften/Client/NickResolver.h"
 #include "Swiften/MUC/MUCManager.h"
 #include "Swiften/Elements/ChatState.h"
 #include "Swiften/MUC/MUCBookmarkManager.h"
@@ -27,7 +32,30 @@ namespace Swift {
 typedef std::pair<JID, ChatController*> JIDChatControllerPair;
 typedef std::pair<JID, MUCController*> JIDMUCControllerPair;
 
-ChatsManager::ChatsManager(JID jid, StanzaChannel* stanzaChannel, IQRouter* iqRouter, EventController* eventController, ChatWindowFactory* chatWindowFactory, NickResolver* nickResolver, PresenceOracle* presenceOracle, PresenceSender* presenceSender, UIEventStream* uiEventStream, ChatListWindowFactory* chatListWindowFactory, bool useDelayForLatency, TimerFactory* timerFactory, MUCRegistry* mucRegistry, EntityCapsProvider* entityCapsProvider, MUCManager* mucManager) : jid_(jid), useDelayForLatency_(useDelayForLatency), mucRegistry_(mucRegistry), entityCapsProvider_(entityCapsProvider), mucManager(mucManager) {
+ChatsManager::ChatsManager(
+		JID jid, StanzaChannel* stanzaChannel, 
+		IQRouter* iqRouter, 
+		EventController* eventController, 
+		ChatWindowFactory* chatWindowFactory, 
+		JoinMUCWindowFactory* joinMUCWindowFactory, 
+		NickResolver* nickResolver, 
+		PresenceOracle* presenceOracle, 
+		PresenceSender* presenceSender, 
+		UIEventStream* uiEventStream, 
+		ChatListWindowFactory* chatListWindowFactory, 
+		bool useDelayForLatency, 
+		TimerFactory* timerFactory, 
+		MUCRegistry* mucRegistry, 
+		EntityCapsProvider* entityCapsProvider, 
+		MUCManager* mucManager,
+		MUCSearchWindowFactory* mucSearchWindowFactory,
+		SettingsProvider* settings) : 
+			jid_(jid), 
+			joinMUCWindowFactory_(joinMUCWindowFactory), 
+			useDelayForLatency_(useDelayForLatency), 
+			mucRegistry_(mucRegistry), 
+			entityCapsProvider_(entityCapsProvider), 
+			mucManager(mucManager)  {
 	timerFactory_ = timerFactory;
 	eventController_ = eventController;
 	stanzaChannel_ = stanzaChannel;
@@ -43,10 +71,14 @@ ChatsManager::ChatsManager(JID jid, StanzaChannel* stanzaChannel, IQRouter* iqRo
 	presenceOracle_->onPresenceChange.connect(boost::bind(&ChatsManager::handlePresenceChange, this, _1));
 	uiEventConnection_ = uiEventStream_->onUIEvent.connect(boost::bind(&ChatsManager::handleUIEvent, this, _1));
 	chatListWindow_ = chatListWindowFactory->createChatListWindow(uiEventStream_);
+	joinMUCWindow_ = NULL;
+	mucSearchController_ = new MUCSearchController(jid_, mucSearchWindowFactory, iqRouter, settings);
+	mucSearchController_->onMUCSelected.connect(boost::bind(&ChatsManager::handleMUCSelectedAfterSearch, this, _1));
 	setupBookmarks();
 }
 
 ChatsManager::~ChatsManager() {
+	delete joinMUCWindow_;
 	foreach (JIDChatControllerPair controllerPair, chatControllers_) {
 		delete controllerPair.second;
 	}
@@ -54,6 +86,7 @@ ChatsManager::~ChatsManager() {
 		delete controllerPair.second;
 	}
 	delete mucBookmarkManager_;
+	delete mucSearchController_;
 }
 
 void ChatsManager::setupBookmarks() {
@@ -80,7 +113,7 @@ void ChatsManager::handleMUCBookmarkAdded(const MUCBookmark& bookmark) {
 	std::map<JID, MUCController*>::iterator it = mucControllers_.find(bookmark.getRoom());
 	if (it == mucControllers_.end() && bookmark.getAutojoin()) {
 		//FIXME: need vcard stuff here to get a nick
-		handleJoinMUCRequest(bookmark.getRoom(), bookmark.getNick());
+		handleJoinMUCRequest(bookmark.getRoom(), bookmark.getNick(), false);
 	}
 	chatListWindow_->addMUCBookmark(bookmark);
 }
@@ -106,11 +139,6 @@ void ChatsManager::handleUIEvent(boost::shared_ptr<UIEvent> event) {
 		handleChatRequest(chatEvent->getContact());
 		return;
 	}
-	boost::shared_ptr<JoinMUCUIEvent> joinMUCEvent = boost::dynamic_pointer_cast<JoinMUCUIEvent>(event);
-	if (joinMUCEvent) {
-		handleJoinMUCRequest(joinMUCEvent->getJID(), joinMUCEvent->getNick());
-		return;
-	}
 	boost::shared_ptr<RemoveMUCBookmarkUIEvent> removeMUCBookmarkEvent = boost::dynamic_pointer_cast<RemoveMUCBookmarkUIEvent>(event);
 	if (removeMUCBookmarkEvent) {
 		mucBookmarkManager_->removeBookmark(removeMUCBookmarkEvent->getBookmark());
@@ -121,10 +149,23 @@ void ChatsManager::handleUIEvent(boost::shared_ptr<UIEvent> event) {
 		mucBookmarkManager_->addBookmark(addMUCBookmarkEvent->getBookmark());
 		return;
 	}
+
 	boost::shared_ptr<EditMUCBookmarkUIEvent> editMUCBookmarkEvent = boost::dynamic_pointer_cast<EditMUCBookmarkUIEvent>(event);
 	if (editMUCBookmarkEvent) {
 		mucBookmarkManager_->replaceBookmark(editMUCBookmarkEvent->getOldBookmark(), editMUCBookmarkEvent->getNewBookmark());
-		return;
+	}
+	else if (JoinMUCUIEvent::ref joinEvent = boost::dynamic_pointer_cast<JoinMUCUIEvent>(event)) {
+		handleJoinMUCRequest(joinEvent->getJID(), joinEvent->getNick(), false);
+	}
+	else if (boost::dynamic_pointer_cast<RequestJoinMUCUIEvent>(event)) {
+		if (!joinMUCWindow_) {
+			joinMUCWindow_ = joinMUCWindowFactory_->createJoinMUCWindow();
+			joinMUCWindow_->onJoinMUC.connect(boost::bind(&ChatsManager::handleJoinMUCRequest, this, _1, _2, _3));
+			joinMUCWindow_->onSearchMUC.connect(boost::bind(&ChatsManager::handleSearchMUCRequest, this));
+		}
+		joinMUCWindow_->setMUC("");
+		joinMUCWindow_->setNick(nickResolver_->jidToNick(jid_));
+		joinMUCWindow_->show();
 	}
 }
 
@@ -239,7 +280,16 @@ void ChatsManager::rebindControllerJID(const JID& from, const JID& to) {
 	chatControllers_[to]->setToJID(to);
 }
 
-void ChatsManager::handleJoinMUCRequest(const JID &mucJID, const boost::optional<String>& nickMaybe) {
+void ChatsManager::handleJoinMUCRequest(const JID &mucJID, const boost::optional<String>& nickMaybe, bool autoJoin) {
+	if (autoJoin) {
+		MUCBookmark bookmark(mucJID, mucJID.getNode());
+		bookmark.setAutojoin(true);
+		if (nickMaybe) {
+			bookmark.setNick(*nickMaybe);
+		}
+		mucBookmarkManager_->addBookmark(bookmark);
+	}
+
 	std::map<JID, MUCController*>::iterator it = mucControllers_.find(mucJID);
 	if (it != mucControllers_.end()) {
 		it->second->rejoin();
@@ -252,6 +302,10 @@ void ChatsManager::handleJoinMUCRequest(const JID &mucJID, const boost::optional
 		controller->onUserLeft.connect(boost::bind(&ChatsManager::handleUserLeftMUC, this, controller));
 	}
 	mucControllers_[mucJID]->activateChatWindow();
+}
+
+void ChatsManager::handleSearchMUCRequest() {
+	mucSearchController_->openSearchWindow();
 }
 
 void ChatsManager::handleIncomingMessage(boost::shared_ptr<Message> message) {
@@ -277,5 +331,12 @@ void ChatsManager::handleIncomingMessage(boost::shared_ptr<Message> message) {
 	//if not a mucroom
 	getChatControllerOrCreate(jid)->handleIncomingMessage(event);
 }
+
+void ChatsManager::handleMUCSelectedAfterSearch(const JID& muc) {
+	if (joinMUCWindow_) {
+		joinMUCWindow_->setMUC(muc.toString());
+	}
+}
+
 
 }

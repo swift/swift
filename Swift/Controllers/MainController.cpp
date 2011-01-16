@@ -98,7 +98,6 @@ MainController::MainController(
 	rosterController_ = NULL;
 	chatsManager_ = NULL;
 	eventWindowController_ = NULL;
-	mucSearchController_ = NULL;
 	userSearchControllerChat_ = NULL;
 	userSearchControllerAdd_ = NULL;
 	quitRequested_ = false;
@@ -171,8 +170,6 @@ MainController::~MainController() {
 void MainController::resetClient() {
 	resetCurrentError();
 	resetPendingReconnects();
-	delete mucSearchController_;
-	mucSearchController_ = NULL;
 	delete eventWindowController_;
 	eventWindowController_ = NULL;
 	delete chatsManager_;
@@ -235,7 +232,7 @@ void MainController::handleConnected() {
 		rosterController_->onChangeStatusRequest.connect(boost::bind(&MainController::handleChangeStatusRequest, this, _1, _2));
 		rosterController_->onSignOutRequest.connect(boost::bind(&MainController::signOut, this));
 
-		chatsManager_ = new ChatsManager(jid_, client_->getStanzaChannel(), client_->getIQRouter(), eventController_, uiFactory_, client_->getNickResolver(), client_->getPresenceOracle(), client_->getPresenceSender(), uiEventStream_, uiFactory_, useDelayForLatency_, networkFactories_->getTimerFactory(), client_->getMUCRegistry(), client_->getEntityCapsProvider(), client_->getMUCManager());
+		chatsManager_ = new ChatsManager(jid_, client_->getStanzaChannel(), client_->getIQRouter(), eventController_, uiFactory_, uiFactory_, client_->getNickResolver(), client_->getPresenceOracle(), client_->getPresenceSender(), uiEventStream_, uiFactory_, useDelayForLatency_, networkFactories_->getTimerFactory(), client_->getMUCRegistry(), client_->getEntityCapsProvider(), client_->getMUCManager(), uiFactory_, settings_);
 		client_->onMessageReceived.connect(boost::bind(&ChatsManager::handleIncomingMessage, chatsManager_, _1));
 		chatsManager_->setAvatarManager(client_->getAvatarManager());
 
@@ -251,7 +248,6 @@ void MainController::handleConnected() {
 		client_->getDiscoManager()->setDiscoInfo(discoInfo);
 
 
-		mucSearchController_ = new MUCSearchController(jid_, uiEventStream_, uiFactory_, client_->getIQRouter(), settings_, client_->getNickResolver());
 		userSearchControllerChat_ = new UserSearchController(UserSearchController::StartChat, jid_, uiEventStream_, uiFactory_, client_->getIQRouter());
 		userSearchControllerAdd_ = new UserSearchController(UserSearchController::AddContact, jid_, uiEventStream_, uiFactory_, client_->getIQRouter());
 	}

@@ -8,6 +8,7 @@
 
 #include <boost/optional.hpp>
 #include <boost/bind.hpp>
+#include <boost/smart_ptr/make_shared.hpp>
 
 #include <QBoxLayout>
 #include <QComboBox>
@@ -24,9 +25,9 @@
 #include "QtSwiftUtil.h"
 #include "QtTabWidget.h"
 #include "Roster/QtTreeWidget.h"
+#include "Swift/Controllers/UIEvents/RequestJoinMUCUIEvent.h"
 #include "Swift/Controllers/UIEvents/RequestAddUserDialogUIEvent.h"
 #include "Swift/Controllers/UIEvents/RequestChatWithUserDialogUIEvent.h"
-#include "Swift/Controllers/UIEvents/RequestMUCSearchUIEvent.h"
 #include "Swift/Controllers/UIEvents/JoinMUCUIEvent.h"
 #include "Swift/Controllers/UIEvents/ToggleShowOfflineUIEvent.h"
 
@@ -143,7 +144,7 @@ void QtMainWindow::handleSignOutAction() {
 }
 
 void QtMainWindow::handleJoinMUCAction() {
-	uiEventStream_->send(boost::shared_ptr<UIEvent>(new RequestMUCSearchUIEvent()));
+	uiEventStream_->send(boost::make_shared<RequestJoinMUCUIEvent>());
 }
 
 void QtMainWindow::handleStatusChanged(StatusShow::Type showType, const QString &statusMessage) {

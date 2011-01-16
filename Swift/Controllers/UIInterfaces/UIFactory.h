@@ -12,11 +12,21 @@
 #include <Swift/Controllers/UIInterfaces/LoginWindowFactory.h>
 #include <Swift/Controllers/UIInterfaces/MainWindowFactory.h>
 #include <Swift/Controllers/UIInterfaces/MUCSearchWindowFactory.h>
+#include <Swift/Controllers/UIInterfaces/JoinMUCWindowFactory.h>
 #include <Swift/Controllers/UIInterfaces/UserSearchWindowFactory.h>
 #include <Swift/Controllers/UIInterfaces/XMLConsoleWidgetFactory.h>
 
 namespace Swift {
-	class UIFactory : public ChatListWindowFactory, public ChatWindowFactory, public EventWindowFactory, public LoginWindowFactory, public MainWindowFactory, public MUCSearchWindowFactory, public XMLConsoleWidgetFactory, public UserSearchWindowFactory {
+	class UIFactory : 
+			public ChatListWindowFactory, 
+			public ChatWindowFactory, 
+			public EventWindowFactory, 
+			public LoginWindowFactory, 
+			public MainWindowFactory, 
+			public MUCSearchWindowFactory, 
+			public XMLConsoleWidgetFactory, 
+			public UserSearchWindowFactory, 
+			public JoinMUCWindowFactory {
 		public:
 			virtual ~UIFactory() {}
 	};

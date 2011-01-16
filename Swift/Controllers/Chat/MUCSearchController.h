@@ -88,32 +88,38 @@ namespace Swift {
 
 	class MUCSearchController {
 		public:
-			MUCSearchController(const JID& jid, UIEventStream* uiEventStream, MUCSearchWindowFactory* mucSearchWindowFactory, IQRouter* iqRouter, SettingsProvider* settings, NickResolver* nickResolver);
+			MUCSearchController(const JID& jid, MUCSearchWindowFactory* mucSearchWindowFactory, IQRouter* iqRouter, SettingsProvider* settings);
 			~MUCSearchController();
+
+			void openSearchWindow();
+
+		public:
+			boost::signal<void (const JID&)> onMUCSelected;
+
 		private:
-			void handleUIEvent(boost::shared_ptr<UIEvent> event);
-			void handleAddService(const JID& jid);
+			void handleSearchService(const JID& jid);
 			void handleRoomsItemsResponse(boost::shared_ptr<DiscoItems> items, ErrorPayload::ref error, const JID& jid);
 			void handleDiscoError(const JID& jid, ErrorPayload::ref error);
 			void handleDiscoServiceFound(const JID&, boost::shared_ptr<DiscoInfo>);
-			void handleDiscoWalkFinished(DiscoServiceWalker* walker);
+			void handleDiscoWalkFinished();
+			void handleMUCSearchFinished(const boost::optional<JID>& result);
 			void removeService(const JID& jid);
 			void refreshView();
-			void loadServices();
-			void addAndSaveServices(const JID& jid);
+			void loadSavedServices();
+			void addToSavedServices(const JID& jid);
 			void updateInProgressness();
-			UIEventStream* uiEventStream_;
-			MUCSearchWindow* window_;
+
+		private:
+			JID jid_;
 			MUCSearchWindowFactory* factory_;
+			IQRouter* iqRouter_;
 			SettingsProvider* settings_;
-			NickResolver* nickResolver_;
-			boost::bsignals::scoped_connection uiEventConnection_;
-			std::vector<JID> services_;
-			std::vector<JID> savedServices_;
+			MUCSearchWindow* window_;
+			DiscoServiceWalker* walker_;
+			std::list<JID> services_;
+			std::list<JID> savedServices_;
 			std::map<JID, MUCService> serviceDetails_;
 			std::vector<DiscoServiceWalker*> walksInProgress_;
-			IQRouter* iqRouter_;
-			JID jid_;
 			int itemsInProgress_;
 	};
 }

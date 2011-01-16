@@ -139,7 +139,6 @@ namespace Swift {
 			String certificateFile_;
 			boost::shared_ptr<ErrorEvent> lastDisconnectError_;
 			bool useDelayForLatency_;
-			MUCSearchController* mucSearchController_;
 			UserSearchController* userSearchControllerChat_;
 			UserSearchController* userSearchControllerAdd_;
 			int timeBeforeNextReconnect_;
