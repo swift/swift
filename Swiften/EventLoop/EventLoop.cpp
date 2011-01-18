@@ -10,6 +10,8 @@
 #include <boost/bind.hpp>
 #include <iostream>
 
+#include <Swiften/Base/Log.h>
+
 namespace Swift {
 
 EventLoop::EventLoop() : nextEventID_(0), handlingEvents_(false) {
@@ -37,13 +39,24 @@ void EventLoop::handleEvent(const Event& event) {
 	}
 	if (doCallback) {
 		handlingEvents_ = true;
-		event.callback();
+		try {
+			event.callback();
+		}
+		catch (const boost::bad_function_call&) {
+			SWIFT_LOG(error) << "Invalid function call" << std::endl;
+		}
+
 		// Process events that were passed to handleEvent during the callback
 		// (i.e. through recursive calls of handleEvent)
 		while (!eventsToHandle_.empty()) {
 			Event nextEvent = eventsToHandle_.front();
 			eventsToHandle_.pop_front();
-			nextEvent.callback();
+			try {
+				nextEvent.callback();
+			}
+			catch (const boost::bad_function_call&) {
+				SWIFT_LOG(error) << "Invalid function call" << std::endl;
+			}
 		}
 		handlingEvents_ = false;
 	}

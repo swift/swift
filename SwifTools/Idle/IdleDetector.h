@@ -12,7 +12,7 @@
 namespace Swift {
 	class IdleDetector {
 		public:
-			IdleDetector() : idle(false) {}
+			IdleDetector() : idle(false), idleTimeSeconds(300) {}
 			virtual ~IdleDetector();
 
 			void setIdleTimeSeconds(int time) {
@@ -38,7 +38,7 @@ namespace Swift {
 			}
 
 		private:
-			int idleTimeSeconds;
 			bool idle;
+			int idleTimeSeconds;
 	};
 }

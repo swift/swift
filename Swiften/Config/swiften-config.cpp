@@ -40,14 +40,19 @@ int main(int argc, char* argv[]) {
 	boost::program_options::variables_map vm;
 	try {
 		boost::program_options::store(boost::program_options::parse_command_line(argc, argv, desc), vm);
-	} catch (boost::program_options::unknown_option option) {
+		boost::program_options::notify(vm);
+	}
+	catch (const boost::program_options::unknown_option& option) {
 #if BOOST_VERSION >= 104200
-		std::cout << "Ignoring unknown option " << option.get_option_name() << " but continuing." <<  std::endl;
+		std::cout << "Ignoring unknown option " << option.get_option_name() << std::endl;
 #else
-		std::cout << "Error: " << option.what() << " (continuing)" <<  std::endl;
+		std::cout << "Error: " << option.what() << std::endl;
 #endif
 	}
-	boost::program_options::notify(vm);
+	catch (const boost::program_options::error& e) {
+		std::cout << "Error: " << e.what() << std::endl;
+		return -1;
+	}
 
 	if (vm.count("help") > 0) {
 		std::cout << desc << "\n";

@@ -70,7 +70,7 @@ po::options_description QtSwift::getOptionsDescription() {
 }
 
 
-QtSwift::QtSwift(po::variables_map options) : networkFactories_(&clientMainThreadCaller_), autoUpdater_(NULL) {
+QtSwift::QtSwift(const po::variables_map& options) : networkFactories_(&clientMainThreadCaller_), autoUpdater_(NULL) {
 	if (options.count("netbook-mode")) {
 		splitter_ = new QSplitter();
 	} else {

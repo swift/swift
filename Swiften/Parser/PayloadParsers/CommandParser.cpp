@@ -10,7 +10,7 @@
 
 namespace Swift {
 
-CommandParser::CommandParser() : level_(TopLevel), inNote_(false), inActions_(false), formParser_(0)  {
+CommandParser::CommandParser() : level_(TopLevel), inNote_(false), inActions_(false), noteType_(Command::Note::Info), formParser_(0)  {
 	formParserFactory_ = new FormParserFactory();
 }
 

@@ -62,9 +62,9 @@ String CommandSerializer::serializePayload(boost::shared_ptr<Command> command)	c
 		boost::shared_ptr<XMLElement> noteElement(new XMLElement("note"));
 		String type;
 		switch (note.type) {
-			case Command::Note::Info: type = "info";
-			case Command::Note::Warn: type = "warn";
-			case Command::Note::Error: type = "error";
+			case Command::Note::Info: type = "info"; break;
+			case Command::Note::Warn: type = "warn"; break;
+			case Command::Note::Error: type = "error"; break;
 		}
 		if (!type.isEmpty()) {
 			noteElement->setAttribute("type", type);

@@ -23,7 +23,7 @@ namespace Swift {
 				autojoin_ = room.autoJoin;
 			}
 
-			MUCBookmark(const JID& room, const String& bookmarkName) : room_(room), name_(bookmarkName) {
+			MUCBookmark(const JID& room, const String& bookmarkName) : room_(room), name_(bookmarkName), autojoin_(false) {
 			}
 
 			void setAutojoin(bool enabled) {

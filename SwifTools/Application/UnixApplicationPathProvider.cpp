@@ -25,7 +25,8 @@ UnixApplicationPathProvider::UnixApplicationPathProvider(const String& name) : A
 }
 
 boost::filesystem::path UnixApplicationPathProvider::getHomeDir() const {
-	return boost::filesystem::path(getenv("HOME"));
+	char* home = getenv("HOME");
+	return home ? boost::filesystem::path(home) : boost::filesystem::path();
 }
 
 boost::filesystem::path UnixApplicationPathProvider::getDataDir() const {

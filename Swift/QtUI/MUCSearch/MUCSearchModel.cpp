@@ -59,8 +59,13 @@ QModelIndex MUCSearchModel::parent(const QModelIndex& index) const {
 		return QModelIndex();
 	}
 	MUCSearchServiceItem* parent = dynamic_cast<MUCSearchRoomItem*>(item)->getParent();
-	int row = services_.indexOf(parent);
-	return parent ? createIndex(row, 1, parent) : QModelIndex();
+	if (parent) {
+		int row = services_.indexOf(parent);
+		return createIndex(row, 1, parent);
+	}
+	else {
+		return QModelIndex();
+	}
 }
 
 int MUCSearchModel::rowCount(const QModelIndex& parentIndex) const {

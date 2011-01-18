@@ -33,7 +33,8 @@ ServerFromClientSession::ServerFromClientSession(
 			id_(id),
 			userRegistry_(userRegistry),
 			authenticated_(false),
-			initialized(false) {
+			initialized(false),
+			allowSASLEXTERNAL(false) {
 }
 
 

@@ -48,7 +48,7 @@ namespace Swift {
 	class QtSwift : public QObject {
 		Q_OBJECT
 		public:
-			QtSwift(po::variables_map options);
+			QtSwift(const po::variables_map& options);
 			static po::options_description getOptionsDescription();
 			~QtSwift();
 		private:

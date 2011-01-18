@@ -14,8 +14,7 @@
 namespace Swift {
 	class Event {
 		public:
-			Event(boost::shared_ptr<EventOwner> owner, const boost::function<void()>& callback) :
-					owner(owner), callback(callback) {
+			Event(boost::shared_ptr<EventOwner> owner, const boost::function<void()>& callback) : id(~0U), owner(owner), callback(callback) {
 			}
 
 			bool operator==(const Event& o) const {

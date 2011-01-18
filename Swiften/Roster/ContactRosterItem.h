@@ -44,7 +44,6 @@ class ContactRosterItem : public RosterItem {
 		JID jid_;
 		JID displayJID_;
 		String avatarPath_;
-		bool hidden_;
 		std::map<String, boost::shared_ptr<Presence> > presences_;
 		boost::shared_ptr<Presence> offlinePresence_;
 		boost::shared_ptr<Presence> shownPresence_;

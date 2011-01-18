@@ -28,7 +28,7 @@ namespace Swift {
 			};
 
 			struct StatusCode {
-				StatusCode() {}
+				StatusCode() : code(0) {}
 				int code;
 			};
 

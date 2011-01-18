@@ -9,7 +9,7 @@
 
 namespace Swift {
 
-RosterParser::RosterParser() : level_(TopLevel), unknownContentParser_(0) {
+RosterParser::RosterParser() : level_(TopLevel), inItem_(false), unknownContentParser_(0) {
 }
 
 void RosterParser::handleStartElement(const String& element, const String& ns, const AttributeMap& attributes) {

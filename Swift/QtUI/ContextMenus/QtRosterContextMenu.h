@@ -27,8 +27,8 @@ namespace Swift {
 			void handleRegroupContact();
 
 		private:
-			RosterItem* item_;
 			UIEventStream* eventStream_;
 			QtTreeWidget* treeWidget_;
+			RosterItem* item_;
 	};
 }

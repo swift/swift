@@ -79,7 +79,7 @@ namespace Swift {
 			}
 
 		protected:
-			GenericFormField() {}
+			GenericFormField() : value() {}
 			GenericFormField(const T& value) : value(value) {}
 
 		private:

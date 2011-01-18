@@ -28,9 +28,7 @@
 
 namespace Swift {
 
-QtRosterContextMenu::QtRosterContextMenu(UIEventStream* eventStream, QtTreeWidget* treeWidget) {
-	eventStream_ = eventStream;
-	treeWidget_ = treeWidget;
+QtRosterContextMenu::QtRosterContextMenu(UIEventStream* eventStream, QtTreeWidget* treeWidget) : eventStream_(eventStream), treeWidget_(treeWidget), item_(NULL) {
 }
 
 void QtRosterContextMenu::show(RosterItem* item) {
