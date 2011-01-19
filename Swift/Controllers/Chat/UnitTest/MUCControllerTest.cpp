@@ -95,23 +95,44 @@ public:
 
 		message = Message::ref(new Message());
 		message->setFrom(JID(muc_->getJID().toString() + "/otherperson"));
-		message->setBody(nick_ + ": hi there");
+		message->setBody("basic " + nick_ + " test.");
 		message->setType(Message::Groupchat);
 		controller_->handleIncomingMessage(MessageEvent::ref(new MessageEvent(message)));
 		CPPUNIT_ASSERT_EQUAL((size_t)1, eventController_->getEvents().size());
+
+		message = Message::ref(new Message());
+		message->setFrom(JID(muc_->getJID().toString() + "/otherperson"));
+		message->setBody(nick_ + ": hi there");
+		message->setType(Message::Groupchat);
+		controller_->handleIncomingMessage(MessageEvent::ref(new MessageEvent(message)));
+		CPPUNIT_ASSERT_EQUAL((size_t)2, eventController_->getEvents().size());
 
 		message->setFrom(JID(muc_->getJID().toString() + "/other"));
 		message->setBody("Hi there " + nick_);
 		message->setType(Message::Groupchat);
 		controller_->handleIncomingMessage(MessageEvent::ref(new MessageEvent(message)));
-		CPPUNIT_ASSERT_EQUAL((size_t)2, eventController_->getEvents().size());
+		CPPUNIT_ASSERT_EQUAL((size_t)3, eventController_->getEvents().size());
 
 		message = Message::ref(new Message());
 		message->setFrom(JID(muc_->getJID().toString() + "/other2"));
-		message->setBody("Hi " + nick_.getLowerCase());
+		message->setBody("Hi " + nick_.getLowerCase() + ".");
 		message->setType(Message::Groupchat);
 		controller_->handleIncomingMessage(MessageEvent::ref(new MessageEvent(message)));
-		CPPUNIT_ASSERT_EQUAL((size_t)3, eventController_->getEvents().size());
+		CPPUNIT_ASSERT_EQUAL((size_t)4, eventController_->getEvents().size());
+
+		message = Message::ref(new Message());
+		message->setFrom(JID(muc_->getJID().toString() + "/other3"));
+		message->setBody("Hi bert.");
+		message->setType(Message::Groupchat);
+		controller_->handleIncomingMessage(MessageEvent::ref(new MessageEvent(message)));
+		CPPUNIT_ASSERT_EQUAL((size_t)4, eventController_->getEvents().size());
+
+		message = Message::ref(new Message());
+		message->setFrom(JID(muc_->getJID().toString() + "/other2"));
+		message->setBody("Hi " + nick_.getLowerCase() + "ie.");
+		message->setType(Message::Groupchat);
+		controller_->handleIncomingMessage(MessageEvent::ref(new MessageEvent(message)));
+		CPPUNIT_ASSERT_EQUAL((size_t)4, eventController_->getEvents().size());
 	}
 
 	void testNotAddressedToSelf() {

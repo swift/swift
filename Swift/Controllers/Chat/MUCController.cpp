@@ -7,6 +7,7 @@
 #include "Swift/Controllers/Chat/MUCController.h"
 
 #include <boost/bind.hpp>
+#include <boost/regex.hpp>
 
 #include "Swiften/Network/Timer.h"
 #include "Swiften/Network/TimerFactory.h"
@@ -226,7 +227,9 @@ JID MUCController::nickToJID(const String& nick) {
 }
 
 bool MUCController::messageTargetsMe(boost::shared_ptr<Message> message) {
-	return message->getBody().getLowerCase().contains(nick_.getLowerCase());
+	String stringRegexp(".*\\b" + nick_.getLowerCase() + "\\b.*");
+	boost::regex myRegexp(stringRegexp.getUTF8String());
+	return boost::regex_match(message->getBody().getLowerCase().getUTF8String(), myRegexp);
 }
 
 void MUCController::preHandleIncomingMessage(boost::shared_ptr<MessageEvent> messageEvent) {
