@@ -17,7 +17,7 @@
 
 #include <boost/asio/detail/config.hpp>
 
-#if defined(BOOST_WINDOWS) \
+#if defined(__APPLE__) || defined(BOOST_WINDOWS) \
   || defined(__CYGWIN__) \
   || defined(__SYMBIAN32__)
 
