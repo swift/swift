@@ -56,7 +56,6 @@ pipe_select_interrupter::pipe_select_interrupter()
 
 pipe_select_interrupter::~pipe_select_interrupter()
 {
-	reset();
   if (read_descriptor_ != -1)
     ::close(read_descriptor_);
   if (write_descriptor_ != -1)
