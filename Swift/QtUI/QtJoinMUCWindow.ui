@@ -6,12 +6,12 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>398</width>
-    <height>172</height>
+    <width>377</width>
+    <height>169</height>
    </rect>
   </property>
   <property name="sizePolicy">
-   <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+   <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
     <horstretch>0</horstretch>
     <verstretch>0</verstretch>
    </sizepolicy>
@@ -50,9 +50,6 @@
       <widget class="QLineEdit" name="room">
        <property name="text">
         <string/>
-       </property>
-       <property name="placeholderText">
-        <string>swift@rooms.swift.im</string>
        </property>
       </widget>
      </item>

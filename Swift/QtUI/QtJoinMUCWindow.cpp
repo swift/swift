@@ -11,9 +11,13 @@ namespace Swift {
 
 QtJoinMUCWindow::QtJoinMUCWindow() {
 	ui.setupUi(this);
+#if QT_VERSION >= 0x040700
+	ui.room->setPlaceholderText("swift@rooms.swift.im");
+#endif
 	connect(ui.room, SIGNAL(returnPressed()), this, SLOT(handleJoin()));
 	connect(ui.searchButton, SIGNAL(clicked()), this, SLOT(handleSearch()));
 	connect(ui.joinButton, SIGNAL(clicked()), this, SLOT(handleJoin()));
+	resize(200, 100);
 }
 
 void QtJoinMUCWindow::handleJoin() {
