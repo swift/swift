@@ -12,16 +12,13 @@
 
 using namespace Swift;
 
-class DiscoInfoParserTest : public CppUnit::TestFixture
-{
+class DiscoInfoParserTest : public CppUnit::TestFixture {
 		CPPUNIT_TEST_SUITE(DiscoInfoParserTest);
 		CPPUNIT_TEST(testParse);
 		CPPUNIT_TEST(testParse_Form);
 		CPPUNIT_TEST_SUITE_END();
 
 	public:
-		DiscoInfoParserTest() {}
-
 		void testParse() {
 			PayloadsParserTester parser;
 
@@ -34,7 +31,7 @@ class DiscoInfoParserTest : public CppUnit::TestFixture
 					"<feature var=\"baz-feature\"/>"
 				"</query>"));
 
-			DiscoInfo* payload = dynamic_cast<DiscoInfo*>(parser.getPayload().get());
+			DiscoInfo::ref payload = boost::dynamic_pointer_cast<DiscoInfo>(parser.getPayload());
 			CPPUNIT_ASSERT_EQUAL(2, static_cast<int>(payload->getIdentities().size()));
 			CPPUNIT_ASSERT_EQUAL(String("Swift"), payload->getIdentities()[0].getName());
 			CPPUNIT_ASSERT_EQUAL(String("pc"), payload->getIdentities()[0].getType());
@@ -63,7 +60,7 @@ class DiscoInfoParserTest : public CppUnit::TestFixture
 					"<feature var=\"bar-feature\"/>"
 				"</query>"));
 
-			DiscoInfo* payload = dynamic_cast<DiscoInfo*>(parser.getPayload().get());
+			DiscoInfo::ref payload = boost::dynamic_pointer_cast<DiscoInfo>(parser.getPayload());
 			CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(payload->getExtensions().size()));
 			CPPUNIT_ASSERT_EQUAL(String("Bot Configuration"), payload->getExtensions()[0]->getTitle());
 			CPPUNIT_ASSERT_EQUAL(2, static_cast<int>(payload->getFeatures().size()));

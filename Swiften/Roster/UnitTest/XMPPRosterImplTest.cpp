@@ -73,28 +73,18 @@ private:
 
 };
 
-class XMPPRosterImplTest : public CppUnit::TestFixture
-{
+class XMPPRosterImplTest : public CppUnit::TestFixture {
 		CPPUNIT_TEST_SUITE(XMPPRosterImplTest);
 		CPPUNIT_TEST(testJIDAdded);
 		CPPUNIT_TEST(testJIDRemoved);
 		CPPUNIT_TEST(testJIDUpdated);
 		CPPUNIT_TEST_SUITE_END();
 
-	private:
-		XMPPRosterImpl* roster_;
-		XMPPRosterSignalHandler* handler_;
-		JID jid1_;
-		JID jid2_; 
-		JID jid3_;
-		std::vector<String> groups1_;
-		std::vector<String> groups2_;
-
-
 	public:
-		XMPPRosterImplTest() : jid1_(JID("a@b.c")), jid2_(JID("b@c.d")), jid3_(JID("c@d.e")) {}
-
 		void setUp() {
+			jid1_ = JID("a@b.c");
+			jid2_ = JID("b@c.d");
+			jid3_ = JID("c@d.e");
 			roster_ = new XMPPRosterImpl();
 			handler_ = new XMPPRosterSignalHandler(roster_);
 			groups1_.push_back("bobs");
@@ -165,6 +155,14 @@ class XMPPRosterImplTest : public CppUnit::TestFixture
 			CPPUNIT_ASSERT(groups2_ == roster_->getGroupsForJID(jid1_));
 		}
 
+	private:
+		XMPPRosterImpl* roster_;
+		XMPPRosterSignalHandler* handler_;
+		JID jid1_;
+		JID jid2_;
+		JID jid3_;
+		std::vector<String> groups1_;
+		std::vector<String> groups2_;
 };
 CPPUNIT_TEST_SUITE_REGISTRATION(XMPPRosterImplTest);
 

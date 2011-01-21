@@ -22,8 +22,7 @@
 
 using namespace Swift;
 
-class StreamStackTest : public CppUnit::TestFixture
-{
+class StreamStackTest : public CppUnit::TestFixture {
 		CPPUNIT_TEST_SUITE(StreamStackTest);
 		CPPUNIT_TEST(testWriteData_NoIntermediateStreamStack);
 		CPPUNIT_TEST(testWriteData_OneIntermediateStream);
@@ -35,8 +34,6 @@ class StreamStackTest : public CppUnit::TestFixture
 		CPPUNIT_TEST_SUITE_END();
 
 	public:
-		StreamStackTest() {}
-
 		void setUp() {
 			physicalStream_ = new TestLowLayer();
 			xmppStream_ = new XMPPLayer(&parserFactories_, &serializers_, ClientStreamType);

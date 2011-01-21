@@ -13,8 +13,7 @@
 
 using namespace Swift;
 
-class IQParserTest : public CppUnit::TestFixture
-{
+class IQParserTest : public CppUnit::TestFixture {
 		CPPUNIT_TEST_SUITE(IQParserTest);
 		CPPUNIT_TEST(testParse_Set);
 		CPPUNIT_TEST(testParse_Get);
@@ -23,8 +22,6 @@ class IQParserTest : public CppUnit::TestFixture
 		CPPUNIT_TEST_SUITE_END();
 
 	public:
-		IQParserTest() {}
-
 		void setUp() {
 			factoryCollection_ = new PayloadParserFactoryCollection();
 		}

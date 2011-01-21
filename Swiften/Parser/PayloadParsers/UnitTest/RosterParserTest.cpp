@@ -20,18 +20,16 @@ class RosterParserTest : public CppUnit::TestFixture
 		CPPUNIT_TEST_SUITE_END();
 
 	public:
-		RosterParserTest() {}
-
 		void testParse() {
 			PayloadsParserTester parser;
-			parser.parse(
+			CPPUNIT_ASSERT(parser.parse(
 				"<query xmlns='jabber:iq:roster'>"
 				"	<item jid='foo@bar.com' name='Foo @ Bar' subscription='from' ask='subscribe'>"
 				"		<group>Group 1</group>"
 				"		<group>Group 2</group>"
 				"	</item>"
 				" <item jid='baz@blo.com' name='Baz'/>"
-				"</query>");
+				"</query>"));
 
 			RosterPayload* payload = dynamic_cast<RosterPayload*>(parser.getPayload().get());
 			const RosterPayload::RosterItemPayloads& items = payload->getItems();
@@ -55,7 +53,7 @@ class RosterParserTest : public CppUnit::TestFixture
 
 		void testParse_ItemWithUnknownContent() {
 			PayloadsParserTester parser;
-			parser.parse(
+			CPPUNIT_ASSERT(parser.parse(
 				"<query xmlns='jabber:iq:roster'>"
 				"	<item jid='foo@bar.com' name='Foo @ Bar' subscription='from' ask='subscribe'>"
 				"		<group>Group 1</group>"
@@ -63,7 +61,7 @@ class RosterParserTest : public CppUnit::TestFixture
 				"		<group>Group 2</group>"
 				"		<baz><fum>foo</fum></baz>"
 				"	</item>"
-				"</query>");
+				"</query>"));
 
 			RosterPayload* payload = dynamic_cast<RosterPayload*>(parser.getPayload().get());
 			const RosterPayload::RosterItemPayloads& items = payload->getItems();

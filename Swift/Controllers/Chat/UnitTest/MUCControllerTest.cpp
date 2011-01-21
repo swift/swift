@@ -27,8 +27,7 @@
 
 using namespace Swift;
 
-class MUCControllerTest : public CppUnit::TestFixture
-{
+class MUCControllerTest : public CppUnit::TestFixture {
 	CPPUNIT_TEST_SUITE(MUCControllerTest);
 	CPPUNIT_TEST(testJoinPartStringContructionSimple);
 	CPPUNIT_TEST(testJoinPartStringContructionMixed);
@@ -39,8 +38,6 @@ class MUCControllerTest : public CppUnit::TestFixture
 	CPPUNIT_TEST_SUITE_END();
 
 public:
-	MUCControllerTest() {};
-
 	void setUp() {
 		self_ = JID("girl@wonderland.lit/rabbithole");
 		nick_ = "aLiCe";

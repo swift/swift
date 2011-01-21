@@ -11,8 +11,7 @@
 
 using namespace Swift;
 
-class PreviousStatusStoreTest : public CppUnit::TestFixture
-{
+class PreviousStatusStoreTest : public CppUnit::TestFixture {
 	CPPUNIT_TEST_SUITE(PreviousStatusStoreTest);
 	CPPUNIT_TEST(testGetAll);
 	//CPPUNIT_TEST(testGetAllLimited);
@@ -21,8 +20,6 @@ class PreviousStatusStoreTest : public CppUnit::TestFixture
 	CPPUNIT_TEST_SUITE_END();
 
 public:
-	PreviousStatusStoreTest() {};
-
 	void setUp() {
 		store_ = new PreviousStatusStore();
 		store_->addStatus(StatusShow::Online, "At home in the study");

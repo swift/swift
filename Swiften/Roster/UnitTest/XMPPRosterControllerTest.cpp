@@ -17,8 +17,7 @@
 
 using namespace Swift;
 
-class XMPPRosterControllerTest : public CppUnit::TestFixture
-{
+class XMPPRosterControllerTest : public CppUnit::TestFixture {
 		CPPUNIT_TEST_SUITE(XMPPRosterControllerTest);
 		CPPUNIT_TEST(testAdd);
 		CPPUNIT_TEST(testModify);
@@ -26,8 +25,6 @@ class XMPPRosterControllerTest : public CppUnit::TestFixture
 		CPPUNIT_TEST_SUITE_END();
 
 	public:
-		XMPPRosterControllerTest() {}
-
 		void setUp() {
 			channel_ = new DummyIQChannel();
 			router_ = new IQRouter(channel_);

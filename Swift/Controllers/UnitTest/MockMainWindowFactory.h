@@ -13,8 +13,10 @@ namespace Swift {
 
 	class MockMainWindowFactory : public MainWindowFactory {
 		public:
-			MockMainWindowFactory() {};
+			MockMainWindowFactory() : last(NULL) {};
+
 			virtual ~MockMainWindowFactory() {};
+
 			/**
 			 * Transfers ownership of result.
 			 */

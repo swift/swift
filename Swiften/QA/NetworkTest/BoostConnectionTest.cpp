@@ -32,8 +32,6 @@ class BoostConnectionTest : public CppUnit::TestFixture {
 		CPPUNIT_TEST_SUITE_END();
 
 	public:
-		BoostConnectionTest() {}
-
 		void setUp() {
 			boostIOServiceThread_ = new BoostIOServiceThread();
 			eventLoop_ = new DummyEventLoop();

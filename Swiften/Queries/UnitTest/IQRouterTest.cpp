@@ -15,8 +15,7 @@
 
 using namespace Swift;
 
-class IQRouterTest : public CppUnit::TestFixture
-{
+class IQRouterTest : public CppUnit::TestFixture {
 		CPPUNIT_TEST_SUITE(IQRouterTest);
 		CPPUNIT_TEST(testRemoveHandler);
 		CPPUNIT_TEST(testRemoveHandler_AfterHandleIQ);
@@ -30,8 +29,6 @@ class IQRouterTest : public CppUnit::TestFixture
 		CPPUNIT_TEST_SUITE_END();
 
 	public:
-		IQRouterTest() {}
-
 		void setUp() {
 			channel_ = new DummyIQChannel();
 		}

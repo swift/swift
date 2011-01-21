@@ -16,8 +16,7 @@
 
 using namespace Swift;
 
-class StanzaParserTest : public CppUnit::TestFixture
-{
+class StanzaParserTest : public CppUnit::TestFixture {
 		CPPUNIT_TEST_SUITE(StanzaParserTest);
 		CPPUNIT_TEST(testHandleEndElement_OnePayload);
 		CPPUNIT_TEST(testHandleEndElement_MultiplePayloads);
@@ -27,8 +26,6 @@ class StanzaParserTest : public CppUnit::TestFixture
 		CPPUNIT_TEST_SUITE_END();
 
 	public:
-		StanzaParserTest() {}
-
 		void setUp() {
 			factoryCollection_ = new PayloadParserFactoryCollection();
 			factoryCollection_->addFactory(&factory1_);

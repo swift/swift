@@ -13,8 +13,7 @@
 
 using namespace Swift;
 
-class PresenceParserTest : public CppUnit::TestFixture
-{
+class PresenceParserTest : public CppUnit::TestFixture {
 		CPPUNIT_TEST_SUITE(PresenceParserTest);
 		CPPUNIT_TEST(testParse_Available);
 		CPPUNIT_TEST(testParse_Unavailable);
@@ -27,8 +26,6 @@ class PresenceParserTest : public CppUnit::TestFixture
 		CPPUNIT_TEST_SUITE_END();
 
 	public:
-		PresenceParserTest() {}
-
 		void setUp() {
 			factoryCollection_ = new PayloadParserFactoryCollection();
 		}

@@ -38,10 +38,10 @@ class ConnectorTest : public CppUnit::TestFixture {
 		CPPUNIT_TEST_SUITE_END();
 
 	public:
-		ConnectorTest() : host1(HostAddress("1.1.1.1"), 1234), host2(HostAddress("2.2.2.2"), 2345), host3(HostAddress("3.3.3.3"), 5222) {
-		}
-		
 		void setUp() {
+			host1 = HostAddressPort(HostAddress("1.1.1.1"), 1234);
+			host2 = HostAddressPort(HostAddress("2.2.2.2"), 2345);
+			host3 = HostAddressPort(HostAddress("3.3.3.3"), 5222);
 			eventLoop = new DummyEventLoop();
 			resolver = new StaticDomainNameResolver(eventLoop);
 			connectionFactory = new MockConnectionFactory(eventLoop);

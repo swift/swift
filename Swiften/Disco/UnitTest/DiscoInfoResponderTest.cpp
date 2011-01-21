@@ -22,8 +22,6 @@ class DiscoInfoResponderTest : public CppUnit::TestFixture {
 		CPPUNIT_TEST_SUITE_END();
 
 	public:
-		DiscoInfoResponderTest() {}
-
 		void setUp() {
 			channel_ = new DummyIQChannel();
 			router_ = new IQRouter(channel_);

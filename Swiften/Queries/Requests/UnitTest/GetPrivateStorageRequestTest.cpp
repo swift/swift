@@ -16,8 +16,7 @@
 
 using namespace Swift;
 
-class GetPrivateStorageRequestTest : public CppUnit::TestFixture
-{
+class GetPrivateStorageRequestTest : public CppUnit::TestFixture {
 		CPPUNIT_TEST_SUITE(GetPrivateStorageRequestTest);
 		CPPUNIT_TEST(testSend);
 		CPPUNIT_TEST(testHandleResponse);
@@ -32,8 +31,6 @@ class GetPrivateStorageRequestTest : public CppUnit::TestFixture
 		};
 
 	public:
-		GetPrivateStorageRequestTest() {}
-
 		void setUp() {
 			channel = new DummyIQChannel();
 			router = new IQRouter(channel);

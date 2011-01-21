@@ -4,8 +4,7 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#ifndef SWIFTEN_StreamFeatures_H
-#define SWIFTEN_StreamFeatures_H
+#pragma once
 
 #include <vector>
 #include <algorithm>
@@ -14,9 +13,10 @@
 #include "Swiften/Elements/Element.h"
 
 namespace Swift {
-	class StreamFeatures : public Element
-	{
+	class StreamFeatures : public Element	{
 		public:
+			typedef boost::shared_ptr<StreamFeatures> ref;
+
 			StreamFeatures() : hasStartTLS_(false), hasResourceBind_(false), hasSession_(false), hasStreamManagement_(false) {}
 
 			void setHasStartTLS() {
@@ -88,5 +88,3 @@ namespace Swift {
 			bool hasStreamManagement_;
 	};
 }
-
-#endif

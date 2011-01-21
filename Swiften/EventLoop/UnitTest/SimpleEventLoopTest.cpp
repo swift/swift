@@ -14,16 +14,13 @@
 
 using namespace Swift;
 
-class SimpleEventLoopTest : public CppUnit::TestFixture
-{
+class SimpleEventLoopTest : public CppUnit::TestFixture {
 		CPPUNIT_TEST_SUITE(SimpleEventLoopTest);
 		CPPUNIT_TEST(testRun);
 		CPPUNIT_TEST(testPostFromMainThread);
 		CPPUNIT_TEST_SUITE_END();
 
 	public:
-		SimpleEventLoopTest() {}
-
 		void setUp() {
 			counter_ = 0;
 		}

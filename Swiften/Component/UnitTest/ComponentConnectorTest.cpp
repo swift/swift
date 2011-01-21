@@ -32,10 +32,9 @@ class ComponentConnectorTest : public CppUnit::TestFixture {
 		CPPUNIT_TEST_SUITE_END();
 
 	public:
-		ComponentConnectorTest() : host1("1.1.1.1"), host2("2.2.2.2") {
-		}
-		
 		void setUp() {
+			host1 = HostAddress("1.1.1.1");
+			host2 = HostAddress("2.2.2.2");
 			eventLoop = new DummyEventLoop();
 			resolver = new StaticDomainNameResolver(eventLoop);
 			connectionFactory = new MockConnectionFactory(eventLoop);

@@ -12,15 +12,12 @@
 
 using namespace Swift;
 
-class ErrorParserTest : public CppUnit::TestFixture
-{
+class ErrorParserTest : public CppUnit::TestFixture {
 		CPPUNIT_TEST_SUITE(ErrorParserTest);
 		CPPUNIT_TEST(testParse);
 		CPPUNIT_TEST_SUITE_END();
 
 	public:
-		ErrorParserTest() {}
-
 		void testParse() {
 			PayloadsParserTester parser;
 
@@ -30,7 +27,7 @@ class ErrorParserTest : public CppUnit::TestFixture
 					"<text xmlns=\"urn:ietf:params:xml:ns:xmpp-stanzas\">boo</text>"
 				"</error>"));
 
-			ErrorPayload* payload = dynamic_cast<ErrorPayload*>(parser.getPayload().get());
+			ErrorPayload::ref payload = boost::dynamic_pointer_cast<ErrorPayload>(parser.getPayload());
 			CPPUNIT_ASSERT_EQUAL(ErrorPayload::BadRequest, payload->getCondition());
 			CPPUNIT_ASSERT_EQUAL(ErrorPayload::Modify, payload->getType());
 			CPPUNIT_ASSERT_EQUAL(String("boo"), payload->getText());

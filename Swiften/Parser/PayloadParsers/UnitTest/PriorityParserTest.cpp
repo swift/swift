@@ -24,7 +24,7 @@ class PriorityParserTest : public CppUnit::TestFixture {
 
 			CPPUNIT_ASSERT(parser.parse("<priority>-120</priority>"));
 
-			Priority* payload = dynamic_cast<Priority*>(parser.getPayload().get());
+			Priority::ref payload = boost::dynamic_pointer_cast<Priority>(parser.getPayload());
 			CPPUNIT_ASSERT_EQUAL(-120, payload->getPriority());
 		}
 
@@ -33,7 +33,7 @@ class PriorityParserTest : public CppUnit::TestFixture {
 
 			CPPUNIT_ASSERT(parser.parse("<priority>invalid</priority>"));
 
-			Priority* payload = dynamic_cast<Priority*>(parser.getPayload().get());
+			Priority::ref payload = boost::dynamic_pointer_cast<Priority>(parser.getPayload());
 			CPPUNIT_ASSERT_EQUAL(0, payload->getPriority());
 		}
 };

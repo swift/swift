@@ -12,16 +12,13 @@
 
 using namespace Swift;
 
-class StreamFeaturesParserTest : public CppUnit::TestFixture
-{
+class StreamFeaturesParserTest : public CppUnit::TestFixture {
 		CPPUNIT_TEST_SUITE(StreamFeaturesParserTest);
 		CPPUNIT_TEST(testParse);
 		CPPUNIT_TEST(testParse_Empty);
 		CPPUNIT_TEST_SUITE_END();
 
 	public:
-		StreamFeaturesParserTest() {}
-
 		void testParse() {
 			StreamFeaturesParser testling;
 			ElementParserTester parser(&testling);
@@ -42,7 +39,7 @@ class StreamFeaturesParserTest : public CppUnit::TestFixture
 					"<session xmlns=\"urn:ietf:params:xml:ns:xmpp-session\"/>"
 				"</stream:features>"));
 
-			StreamFeatures* element = dynamic_cast<StreamFeatures*>(testling.getElement().get());
+			StreamFeatures::ref element = boost::dynamic_pointer_cast<StreamFeatures>(testling.getElement());
 			CPPUNIT_ASSERT(element->hasStartTLS());
 			CPPUNIT_ASSERT(element->hasSession());
 			CPPUNIT_ASSERT(element->hasResourceBind());
@@ -58,9 +55,9 @@ class StreamFeaturesParserTest : public CppUnit::TestFixture
 			StreamFeaturesParser testling;
 			ElementParserTester parser(&testling);
 
-			parser.parse("<stream:features xmlns:stream='http://etherx.jabber.org/streams'/>");
+			CPPUNIT_ASSERT(parser.parse("<stream:features xmlns:stream='http://etherx.jabber.org/streams'/>"));
 
-			StreamFeatures* element = dynamic_cast<StreamFeatures*>(testling.getElement().get());
+			StreamFeatures::ref element = boost::dynamic_pointer_cast<StreamFeatures>(testling.getElement());
 			CPPUNIT_ASSERT(!element->hasStartTLS());
 			CPPUNIT_ASSERT(!element->hasSession());
 			CPPUNIT_ASSERT(!element->hasResourceBind());

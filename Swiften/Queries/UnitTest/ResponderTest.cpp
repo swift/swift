@@ -16,8 +16,7 @@
 
 using namespace Swift;
 
-class ResponderTest : public CppUnit::TestFixture
-{
+class ResponderTest : public CppUnit::TestFixture {
 		CPPUNIT_TEST_SUITE(ResponderTest);
 		CPPUNIT_TEST(testConstructor);
 		CPPUNIT_TEST(testStart);
@@ -30,8 +29,6 @@ class ResponderTest : public CppUnit::TestFixture
 		CPPUNIT_TEST_SUITE_END();
 
 	public:
-		ResponderTest() {}
-
 		void setUp() {
 			channel_ = new DummyIQChannel();
 			router_ = new IQRouter(channel_);

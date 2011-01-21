@@ -40,8 +40,6 @@ class LinkLocalServiceBrowserTest : public CppUnit::TestFixture {
 		CPPUNIT_TEST_SUITE_END();
 
 	public:
-		LinkLocalServiceBrowserTest() {}
-
 		void setUp() {
 			eventLoop = new DummyEventLoop();
 			querier = boost::shared_ptr<FakeDNSSDQuerier>(new FakeDNSSDQuerier("wonderland.lit", eventLoop));

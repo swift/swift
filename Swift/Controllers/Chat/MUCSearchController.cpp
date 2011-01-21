@@ -64,6 +64,7 @@ void MUCSearchController::addToSavedServices(const JID& jid) {
 			collapsed += "\n";
 		}
 		collapsed += jidItem.toString();
+		++i;
 	}
 	settings_->storeString(SEARCHED_SERVICES, collapsed);
 	window_->addSavedServices(savedServices_);

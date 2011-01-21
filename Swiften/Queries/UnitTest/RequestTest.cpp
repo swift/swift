@@ -16,8 +16,7 @@
 
 using namespace Swift;
 
-class RequestTest : public CppUnit::TestFixture
-{
+class RequestTest : public CppUnit::TestFixture {
 		CPPUNIT_TEST_SUITE(RequestTest);
 		CPPUNIT_TEST(testSendGet);
 		CPPUNIT_TEST(testSendSet);
@@ -38,8 +37,6 @@ class RequestTest : public CppUnit::TestFixture
 		typedef GenericRequest<MyPayload> MyRequest;
 
 	public:
-		RequestTest() {}
-
 		void setUp() {
 			channel_ = new DummyIQChannel();
 			router_ = new IQRouter(channel_);

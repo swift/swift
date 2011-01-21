@@ -13,8 +13,7 @@
 
 using namespace Swift;
 
-class MessageParserTest : public CppUnit::TestFixture
-{
+class MessageParserTest : public CppUnit::TestFixture {
 		CPPUNIT_TEST_SUITE(MessageParserTest);
 		CPPUNIT_TEST(testParse_Normal);
 		CPPUNIT_TEST(testParse_Chat);
@@ -24,8 +23,6 @@ class MessageParserTest : public CppUnit::TestFixture
 		CPPUNIT_TEST_SUITE_END();
 
 	public:
-		MessageParserTest() {}
-
 		void setUp() {
 			factoryCollection_ = new PayloadParserFactoryCollection();
 		}

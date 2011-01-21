@@ -36,8 +36,7 @@ using namespace Swift;
 
 #define CHILDREN mainWindow_->roster->getRoot()->getChildren()
 
-class RosterControllerTest : public CppUnit::TestFixture
-{
+class RosterControllerTest : public CppUnit::TestFixture {
 		CPPUNIT_TEST_SUITE(RosterControllerTest);
 		CPPUNIT_TEST(testAdd);
 		CPPUNIT_TEST(testAddSubscription);
@@ -51,8 +50,6 @@ class RosterControllerTest : public CppUnit::TestFixture
 		CPPUNIT_TEST_SUITE_END();
 
 	public:
-		RosterControllerTest() {};
-
 		void setUp() {
 			jid_ = JID("testjid@swift.im/swift");
 			xmppRoster_ = new XMPPRosterImpl();
@@ -111,8 +108,10 @@ class RosterControllerTest : public CppUnit::TestFixture
 		presence->setStatus("So totally here");
 		stanzaChannel_->onPresenceReceived(presence);
 		ContactRosterItem* item = dynamic_cast<ContactRosterItem*>(dynamic_cast<GroupRosterItem*>(CHILDREN[0])->getChildren()[0]);
+		CPPUNIT_ASSERT(item);
 		CPPUNIT_ASSERT_EQUAL(presence->getStatus(), item->getStatusText());
 		ContactRosterItem* item2 = dynamic_cast<ContactRosterItem*>(dynamic_cast<GroupRosterItem*>(CHILDREN[1])->getChildren()[0]);
+		CPPUNIT_ASSERT(item2);
 		CPPUNIT_ASSERT_EQUAL(presence->getStatus(), item2->getStatusText());
 
 	};
@@ -133,6 +132,7 @@ class RosterControllerTest : public CppUnit::TestFixture
 		stanzaChannel_->onPresenceReceived(lowPresence);
 		stanzaChannel_->onPresenceReceived(highPresence);
 		ContactRosterItem* item = dynamic_cast<ContactRosterItem*>(dynamic_cast<GroupRosterItem*>(CHILDREN[0])->getChildren()[0]);
+		CPPUNIT_ASSERT(item);
 		CPPUNIT_ASSERT_EQUAL(highPresence->getStatus(), item->getStatusText());
 	};
 
@@ -152,6 +152,7 @@ class RosterControllerTest : public CppUnit::TestFixture
 		stanzaChannel_->onPresenceReceived(highPresence);
 		stanzaChannel_->onPresenceReceived(lowPresence);
 		ContactRosterItem* item = dynamic_cast<ContactRosterItem*>(dynamic_cast<GroupRosterItem*>(CHILDREN[0])->getChildren()[0]);
+		CPPUNIT_ASSERT(item);
 		CPPUNIT_ASSERT_EQUAL(highPresence->getStatus(), item->getStatusText());
 	};
 
@@ -179,6 +180,7 @@ class RosterControllerTest : public CppUnit::TestFixture
 		stanzaChannel_->onPresenceReceived(highPresence);
 		stanzaChannel_->onPresenceReceived(highPresenceOffline);
 		ContactRosterItem* item = dynamic_cast<ContactRosterItem*>(dynamic_cast<GroupRosterItem*>(CHILDREN[0])->getChildren()[0]);
+		CPPUNIT_ASSERT(item);
 		/* A verification that if the test fails, it's the RosterController, not the PresenceOracle. */
 		Presence::ref high = presenceOracle_->getHighestPriorityPresence(from);
 		CPPUNIT_ASSERT_EQUAL(Presence::Available, high->getType());
@@ -187,6 +189,7 @@ class RosterControllerTest : public CppUnit::TestFixture
 		CPPUNIT_ASSERT_EQUAL(lowPresence->getStatus(), item->getStatusText());
 		stanzaChannel_->onPresenceReceived(lowPresenceOffline);
 		item = dynamic_cast<ContactRosterItem*>(dynamic_cast<GroupRosterItem*>(CHILDREN[0])->getChildren()[0]);
+		CPPUNIT_ASSERT(item);
 		/* A verification that if the test fails, it's the RosterController, not the PresenceOracle. */
 		high = presenceOracle_->getHighestPriorityPresence(from);
 		CPPUNIT_ASSERT_EQUAL(Presence::Unavailable, high->getType());

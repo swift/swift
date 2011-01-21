@@ -46,8 +46,7 @@ class DummyCapsProvider : public CapsProvider {
 		DiscoInfo::ref getCaps(const String&) const {return DiscoInfo::ref(new DiscoInfo());}
 };
 
-class ChatsManagerTest : public CppUnit::TestFixture
-{
+class ChatsManagerTest : public CppUnit::TestFixture {
 	CPPUNIT_TEST_SUITE(ChatsManagerTest);
 	CPPUNIT_TEST(testFirstOpenWindowIncoming);
 	CPPUNIT_TEST(testSecondOpenWindowIncoming);
@@ -60,8 +59,6 @@ class ChatsManagerTest : public CppUnit::TestFixture
 	CPPUNIT_TEST_SUITE_END();
 	
 public:
-	ChatsManagerTest() {};
-	
 	void setUp() {
 		mocks_ = new MockRepository();
 		jid_ = JID("test@test.com/resource");

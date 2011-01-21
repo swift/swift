@@ -40,8 +40,6 @@ class DomainNameResolverTest : public CppUnit::TestFixture {
 		CPPUNIT_TEST_SUITE_END();
 
 	public:
-		DomainNameResolverTest() {}
-
 		void setUp() {
 			eventLoop = new DummyEventLoop();
 			resolver = new PlatformDomainNameResolver(eventLoop);

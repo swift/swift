@@ -12,7 +12,7 @@ namespace Swift {
 	class Roster;
 	class MockMainWindow : public MainWindow {
 		public:
-			MockMainWindow() {};
+			MockMainWindow() : roster(NULL) {};
 			virtual ~MockMainWindow() {};
 			virtual void setRosterModel(Roster* roster) {this->roster = roster;};
 			virtual void setMyNick(const String& /*name*/) {};;
