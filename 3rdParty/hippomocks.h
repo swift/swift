@@ -531,6 +531,7 @@ public:
 	virtual int f1012() { return 1012; }	virtual int f1013() { return 1013; }	virtual int f1014() { return 1014; }	virtual int f1015() { return 1015; }
 	virtual int f1016() { return 1016; }	virtual int f1017() { return 1017; }	virtual int f1018() { return 1018; }	virtual int f1019() { return 1019; }
 	virtual int f1020() { return 1020; }	virtual int f1021() { return 1021; }	virtual int f1022() { return 1022; }	virtual int f1023() { return 1023; }
+	virtual ~func_index() {}
 };
 
 template <typename T, typename U>
