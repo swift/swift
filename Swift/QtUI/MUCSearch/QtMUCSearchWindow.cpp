@@ -38,9 +38,12 @@ QtMUCSearchWindow::QtMUCSearchWindow() {
 	ui_.results_->setAnimated(true);
 	ui_.results_->setAlternatingRowColors(true);
 	connect(ui_.service_, SIGNAL(activated(const QString&)), this, SLOT(handleSearch(const QString&)));
+	connect(ui_.results_->selectionModel(), SIGNAL(selectionChanged (const QItemSelection&, const QItemSelection&)), this, SLOT(handleSelectionChanged (const QItemSelection&, const QItemSelection&)));
+	connect(ui_.results_, SIGNAL(activated(const QModelIndex&)), this, SLOT(handleActivated(const QModelIndex&)));
 	connect(ui_.results_, SIGNAL(activated(const QModelIndex&)), this, SLOT(handleActivated(const QModelIndex&)));
 	// Not using a button box, because i can't seem to be able to make the ok button non-default (on mac)
 	connect(ui_.okButton, SIGNAL(clicked()), this, SLOT(accept()));
+	ui_.okButton->setEnabled(false);
 	connect(ui_.cancelButton, SIGNAL(clicked()), this, SLOT(reject()));
 
 	throbber_ = new QLabel("Searching", ui_.results_);
@@ -163,5 +166,15 @@ void QtMUCSearchWindow::reject() {
 	onFinished(boost::optional<JID>());
 	QDialog::reject();
 }
+
+void QtMUCSearchWindow::handleSelectionChanged(const QItemSelection& selection, const QItemSelection&) {
+	if (selection.indexes().size() > 0) {
+		ui_.okButton->setEnabled(dynamic_cast<MUCSearchRoomItem*>(static_cast<MUCSearchItem*>(selection.indexes()[0].internalPointer())));
+	}
+	else {
+		ui_.okButton->setEnabled(false);
+	}
+}
+
 
 }

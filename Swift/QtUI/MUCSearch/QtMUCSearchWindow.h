@@ -37,6 +37,7 @@ namespace Swift {
 			void handleSearch(const QString&);
 			void handleActivated(const QModelIndex& index);
 			void updateThrobberPosition();
+			void handleSelectionChanged (const QItemSelection&, const QItemSelection&);
 
 		private:
 			Ui::QtMUCSearchWindow ui_;
