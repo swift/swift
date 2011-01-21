@@ -37,6 +37,7 @@ QtMUCSearchWindow::QtMUCSearchWindow() {
 	ui_.results_->setRootIsDecorated(true);
 	ui_.results_->setAnimated(true);
 	ui_.results_->setAlternatingRowColors(true);
+	connect(ui_.searchButton, SIGNAL(clicked()), this, SLOT(handleSearch()));
 	connect(ui_.service_, SIGNAL(activated(const QString&)), this, SLOT(handleSearch(const QString&)));
 	connect(ui_.results_->selectionModel(), SIGNAL(selectionChanged (const QItemSelection&, const QItemSelection&)), this, SLOT(handleSelectionChanged (const QItemSelection&, const QItemSelection&)));
 	connect(ui_.results_, SIGNAL(activated(const QModelIndex&)), this, SLOT(handleActivated(const QModelIndex&)));
