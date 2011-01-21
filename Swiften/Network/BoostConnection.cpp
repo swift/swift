@@ -69,7 +69,6 @@ void BoostConnection::disconnect() {
 	// See e.g. http://bugs.python.org/issue7401
 	// We therefore wait until any pending write finishes, which hopefully should fix our hang on exit during close().
 	while (writing_) {
-		std::cerr << "Write in progress ... waiting to quit" << std::endl;
 		Swift::sleep(10);
 	}
 	socket_.close();
