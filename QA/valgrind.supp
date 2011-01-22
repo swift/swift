@@ -97,3 +97,11 @@
    fun:malloc
    fun:__cxa_get_globals
 }
+
+{
+	ZLib
+   Memcheck:Cond
+   fun:deflateEnd
+   fun:deflateSetDictionary
+   fun:deflate
+}
