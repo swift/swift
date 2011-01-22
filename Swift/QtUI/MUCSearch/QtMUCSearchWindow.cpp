@@ -165,7 +165,7 @@ void QtMUCSearchWindow::reject() {
 	QDialog::reject();
 }
 
-void QtMUCSearchWindow::handleSelectionChanged(const QItemSelection& selection, const QItemSelection&) {
+void QtMUCSearchWindow::handleSelectionChanged(const QItemSelection&, const QItemSelection&) {
 	ui_.okButton->setEnabled(getSelectedRoom());
 }
 
