@@ -115,7 +115,7 @@ namespace Swift {
 
 			void handleElement(boost::shared_ptr<Element>);
 			void handleStreamStart(const ProtocolHeader&);
-			void handleStreamError(boost::shared_ptr<Swift::Error>);
+			void handleStreamFinished(boost::shared_ptr<Swift::Error>);
 
 			void handleTLSEncrypted();
 

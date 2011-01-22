@@ -56,7 +56,7 @@ namespace Swift {
 			virtual void resetXMPPParser();
 
 		private:
-			void handleConnectionError(const boost::optional<Connection::Error>& error);
+			void handleConnectionFinished(const boost::optional<Connection::Error>& error);
 			void handleXMPPError();
 			void handleTLSConnected();
 			void handleTLSError();

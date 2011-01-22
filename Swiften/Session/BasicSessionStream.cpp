@@ -43,7 +43,7 @@ BasicSessionStream::BasicSessionStream(
 	xmppLayer->onDataRead.connect(boost::bind(&BasicSessionStream::handleDataRead, this, _1));
 	xmppLayer->onWriteData.connect(boost::bind(&BasicSessionStream::handleDataWritten, this, _1));
 
-	connection->onDisconnected.connect(boost::bind(&BasicSessionStream::handleConnectionError, this, _1));
+	connection->onDisconnected.connect(boost::bind(&BasicSessionStream::handleConnectionFinished, this, _1));
 	connectionLayer = new ConnectionLayer(connection);
 
 	streamStack = new StreamStack(xmppLayer, connectionLayer);
@@ -62,7 +62,7 @@ BasicSessionStream::~BasicSessionStream() {
 	delete whitespacePingLayer;
 	delete streamStack;
 
-	connection->onDisconnected.disconnect(boost::bind(&BasicSessionStream::handleConnectionError, this, _1));
+	connection->onDisconnected.disconnect(boost::bind(&BasicSessionStream::handleConnectionFinished, this, _1));
 	delete connectionLayer;
 
 	xmppLayer->onStreamStart.disconnect(boost::bind(&BasicSessionStream::handleStreamStartReceived, this, _1));
@@ -100,7 +100,7 @@ void BasicSessionStream::addTLSEncryption() {
 	assert(available);
 	tlsLayer = new TLSLayer(tlsContextFactory);
 	if (hasTLSCertificate() && !tlsLayer->setClientCertificate(getTLSCertificate())) {
-		onError(boost::shared_ptr<Error>(new Error(Error::InvalidTLSCertificateError)));
+		onClosed(boost::shared_ptr<Error>(new Error(Error::InvalidTLSCertificateError)));
 	}
 	else {
 		streamStack->addLayer(tlsLayer);
@@ -158,7 +158,7 @@ void BasicSessionStream::handleElementReceived(boost::shared_ptr<Element> elemen
 
 void BasicSessionStream::handleXMPPError() {
 	available = false;
-	onError(boost::shared_ptr<Error>(new Error(Error::ParseError)));
+	onClosed(boost::shared_ptr<Error>(new Error(Error::ParseError)));
 }
 
 void BasicSessionStream::handleTLSConnected() {
@@ -167,16 +167,19 @@ void BasicSessionStream::handleTLSConnected() {
 
 void BasicSessionStream::handleTLSError() {
 	available = false;
-	onError(boost::shared_ptr<Error>(new Error(Error::TLSError)));
+	onClosed(boost::shared_ptr<Error>(new Error(Error::TLSError)));
 }
 
-void BasicSessionStream::handleConnectionError(const boost::optional<Connection::Error>& error) {
+void BasicSessionStream::handleConnectionFinished(const boost::optional<Connection::Error>& error) {
 	available = false;
 	if (error == Connection::ReadError) {
-		onError(boost::shared_ptr<Error>(new Error(Error::ConnectionReadError)));
+		onClosed(boost::shared_ptr<Error>(new Error(Error::ConnectionReadError)));
+	}
+	else if (error) {
+		onClosed(boost::shared_ptr<Error>(new Error(Error::ConnectionWriteError)));
 	}
 	else {
-		onError(boost::shared_ptr<Error>(new Error(Error::ConnectionWriteError)));
+		onClosed(boost::shared_ptr<Error>());
 	}
 }
 

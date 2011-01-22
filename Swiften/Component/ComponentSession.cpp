@@ -24,7 +24,7 @@ ComponentSession::~ComponentSession() {
 void ComponentSession::start() {
 	stream->onStreamStartReceived.connect(boost::bind(&ComponentSession::handleStreamStart, shared_from_this(), _1));
 	stream->onElementReceived.connect(boost::bind(&ComponentSession::handleElement, shared_from_this(), _1));
-	stream->onError.connect(boost::bind(&ComponentSession::handleStreamError, shared_from_this(), _1));
+	stream->onClosed.connect(boost::bind(&ComponentSession::handleStreamError, shared_from_this(), _1));
 
 	assert(state == Initial);
 	state = WaitingForStreamStart;
@@ -98,7 +98,7 @@ void ComponentSession::finishSession(boost::shared_ptr<Swift::Error> error) {
 	stream->setWhitespacePingEnabled(false);
 	stream->onStreamStartReceived.disconnect(boost::bind(&ComponentSession::handleStreamStart, shared_from_this(), _1));
 	stream->onElementReceived.disconnect(boost::bind(&ComponentSession::handleElement, shared_from_this(), _1));
-	stream->onError.disconnect(boost::bind(&ComponentSession::handleStreamError, shared_from_this(), _1));
+	stream->onClosed.disconnect(boost::bind(&ComponentSession::handleStreamError, shared_from_this(), _1));
 	if (stream->isAvailable()) {
 		stream->writeFooter();
 	}

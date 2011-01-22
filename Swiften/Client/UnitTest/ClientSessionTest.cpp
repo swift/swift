@@ -349,11 +349,11 @@ class ClientSessionTest : public CppUnit::TestFixture {
 				}
 
 				void breakConnection() {
-					onError(boost::shared_ptr<SessionStream::Error>(new SessionStream::Error(SessionStream::Error::ConnectionReadError)));
+					onClosed(boost::shared_ptr<SessionStream::Error>(new SessionStream::Error(SessionStream::Error::ConnectionReadError)));
 				}
 
 				void breakTLS() {
-					onError(boost::shared_ptr<SessionStream::Error>(new SessionStream::Error(SessionStream::Error::TLSError)));
+					onClosed(boost::shared_ptr<SessionStream::Error>(new SessionStream::Error(SessionStream::Error::TLSError)));
 				}
 
 
