@@ -469,8 +469,8 @@ def enable_modules(self, modules, debug=False, crosscompiling=False) :
 			modules.remove("QtAssistant")
 			modules.append("QtAssistantClient")
 		# FIXME: Phonon Hack
-		self.AppendUnique(LIBS=['phonon4'+debugSuffix])
-		self.AppendUnique(LIBS=[lib+'4'+debugSuffix for lib in modules if lib not in staticModules])
+		self.AppendUnique(LIBS=['phonon'+debugSuffix+'4'])
+		self.AppendUnique(LIBS=[lib+debugSuffix+'4' for lib in modules if lib not in staticModules])
 		self.PrependUnique(LIBS=[lib+debugSuffix for lib in modules if lib in staticModules])
 		if 'QtOpenGL' in modules:
 			self.AppendUnique(LIBS=['opengl32'])

@@ -137,6 +137,7 @@ void QtMUCSearchWindow::addService(const MUCService& service) {
 	}
 	model_->addService(serviceItem);
 	ui_.results_->expandAll();
+
 }
 
 void QtMUCSearchWindow::setSearchInProgress(bool searching) {

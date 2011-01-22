@@ -48,7 +48,7 @@ myenv.Tool("nsis", toolpath = ["#/BuildTools/SCons/Tools"])
 qt4modules = ['QtCore', 'QtGui', 'QtWebKit']
 if env["PLATFORM"] == "posix" :
 	qt4modules += ["QtDBus"]
-myenv.EnableQt4Modules(qt4modules, debug = False)
+myenv.EnableQt4Modules(qt4modules, debug = env["debug"])
 
 myenv.Append(CPPPATH = ["."])
 
