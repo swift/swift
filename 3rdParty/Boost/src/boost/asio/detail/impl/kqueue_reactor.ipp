@@ -55,10 +55,6 @@ kqueue_reactor::kqueue_reactor(boost::asio::io_service& io_service)
 
 kqueue_reactor::~kqueue_reactor()
 {
-	struct kevent event;
-	BOOST_ASIO_KQUEUE_EV_SET(&event, interrupter_.read_descriptor(),
-		EVFILT_READ, EV_DELETE, 0, 0, &interrupter_);
-	::kevent(kqueue_fd_, &event, 1, 0, 0, 0);
   close(kqueue_fd_);
 }
 
