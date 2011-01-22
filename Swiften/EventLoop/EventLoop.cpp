@@ -21,6 +21,8 @@ EventLoop::~EventLoop() {
 }
 
 void EventLoop::handleEvent(const Event& event) {
+	//SWIFT_LOG(debug) << "Handling event " << event.id << std::endl;
+
 	if (handlingEvents_) {
 		// We're being called recursively. Push in the list of events to
 		// handle in the parent handleEvent()
@@ -70,6 +72,7 @@ void EventLoop::postEvent(boost::function<void ()> callback, boost::shared_ptr<E
 		nextEventID_++;
 		events_.push_back(event);
 	}
+	//SWIFT_LOG(debug) << "Posting event " << event.id << std::endl;
 	post(event);
 }
 

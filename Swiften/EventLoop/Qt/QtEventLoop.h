@@ -15,6 +15,9 @@
 class QtEventLoop : public QObject, public Swift::EventLoop {
 	public:
 		QtEventLoop() {}
+		~QtEventLoop() {
+			QCoreApplication::removePostedEvents(this);
+		}
 
 		virtual void post(const Swift::Event& event) {
 			QCoreApplication::postEvent(this, new Event(event));
