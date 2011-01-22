@@ -36,7 +36,8 @@ namespace Swift {
 			);
 			~BasicSessionStream();
 
-			virtual bool isAvailable();
+			virtual void close();
+			virtual bool isOpen();
 
 			virtual void writeHeader(const ProtocolHeader& header);
 			virtual void writeElement(boost::shared_ptr<Element>);

@@ -24,7 +24,7 @@ ComponentSession::~ComponentSession() {
 void ComponentSession::start() {
 	stream->onStreamStartReceived.connect(boost::bind(&ComponentSession::handleStreamStart, shared_from_this(), _1));
 	stream->onElementReceived.connect(boost::bind(&ComponentSession::handleElement, shared_from_this(), _1));
-	stream->onClosed.connect(boost::bind(&ComponentSession::handleStreamError, shared_from_this(), _1));
+	stream->onClosed.connect(boost::bind(&ComponentSession::handleStreamClosed, shared_from_this(), _1));
 
 	assert(state == Initial);
 	state = WaitingForStreamStart;
@@ -81,8 +81,19 @@ bool ComponentSession::checkState(State state) {
 	return true;
 }
 
-void ComponentSession::handleStreamError(boost::shared_ptr<Swift::Error> error) {
-	finishSession(error);
+void ComponentSession::handleStreamClosed(boost::shared_ptr<Swift::Error> streamError) {
+	State oldState = state;
+	state = Finished;
+	stream->setWhitespacePingEnabled(false);
+	stream->onStreamStartReceived.disconnect(boost::bind(&ComponentSession::handleStreamStart, shared_from_this(), _1));
+	stream->onElementReceived.disconnect(boost::bind(&ComponentSession::handleElement, shared_from_this(), _1));
+	stream->onClosed.disconnect(boost::bind(&ComponentSession::handleStreamClosed, shared_from_this(), _1));
+	if (oldState == Finishing) {
+		onFinished(error);
+	}
+	else {
+		onFinished(streamError);
+	}
 }
 
 void ComponentSession::finish() {
@@ -93,16 +104,12 @@ void ComponentSession::finishSession(Error::Type error) {
 	finishSession(boost::shared_ptr<Swift::ComponentSession::Error>(new Swift::ComponentSession::Error(error)));
 }
 
-void ComponentSession::finishSession(boost::shared_ptr<Swift::Error> error) {
-	state = Finished;
-	stream->setWhitespacePingEnabled(false);
-	stream->onStreamStartReceived.disconnect(boost::bind(&ComponentSession::handleStreamStart, shared_from_this(), _1));
-	stream->onElementReceived.disconnect(boost::bind(&ComponentSession::handleElement, shared_from_this(), _1));
-	stream->onClosed.disconnect(boost::bind(&ComponentSession::handleStreamError, shared_from_this(), _1));
-	if (stream->isAvailable()) {
-		stream->writeFooter();
-	}
-	onFinished(error);
+void ComponentSession::finishSession(boost::shared_ptr<Swift::Error> finishError) {
+	state = Finishing;
+	error = finishError;
+	assert(stream->isOpen());
+	stream->writeFooter();
+	stream->close();
 }
 
 }

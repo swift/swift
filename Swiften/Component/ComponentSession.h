@@ -27,6 +27,7 @@ namespace Swift {
 				WaitingForStreamStart,
 				Authenticating,
 				Initialized,
+				Finishing,
 				Finished
 			};
 
@@ -68,7 +69,7 @@ namespace Swift {
 
 			void handleElement(boost::shared_ptr<Element>);
 			void handleStreamStart(const ProtocolHeader&);
-			void handleStreamError(boost::shared_ptr<Swift::Error>);
+			void handleStreamClosed(boost::shared_ptr<Swift::Error>);
 
 			bool checkState(State);
 
@@ -76,6 +77,7 @@ namespace Swift {
 			JID jid;
 			String secret;
 			boost::shared_ptr<SessionStream> stream;
+			boost::shared_ptr<Swift::Error> error;
 			State state;
 	};
 }

@@ -37,6 +37,7 @@ namespace Swift {
 				BindingResource,
 				StartingSession,
 				Initialized,
+				Finishing,
 				Finished
 			};
 
@@ -115,7 +116,7 @@ namespace Swift {
 
 			void handleElement(boost::shared_ptr<Element>);
 			void handleStreamStart(const ProtocolHeader&);
-			void handleStreamFinished(boost::shared_ptr<Swift::Error>);
+			void handleStreamClosed(boost::shared_ptr<Swift::Error>);
 
 			void handleTLSEncrypted();
 
@@ -139,6 +140,7 @@ namespace Swift {
 			ClientAuthenticator* authenticator;
 			boost::shared_ptr<StanzaAckRequester> stanzaAckRequester_;
 			boost::shared_ptr<StanzaAckResponder> stanzaAckResponder_;
+			boost::shared_ptr<Swift::Error> error_;
 			CertificateTrustChecker* certificateTrustChecker;
 	};
 }

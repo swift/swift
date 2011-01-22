@@ -88,7 +88,11 @@ void BasicSessionStream::writeFooter() {
 	xmppLayer->writeFooter();
 }
 
-bool BasicSessionStream::isAvailable() {
+void BasicSessionStream::close() {
+	connection->disconnect();
+}
+
+bool BasicSessionStream::isOpen() {
 	return available;
 }
 

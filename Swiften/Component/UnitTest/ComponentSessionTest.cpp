@@ -95,7 +95,11 @@ class ComponentSessionTest : public CppUnit::TestFixture {
 				MockSessionStream() : available(true), whitespacePingEnabled(false), resetCount(0) {
 				}
 
-				virtual bool isAvailable() {
+				virtual void close() {
+					onClosed(boost::shared_ptr<Error>());
+				}
+
+				virtual bool isOpen() {
 					return available;
 				}
 

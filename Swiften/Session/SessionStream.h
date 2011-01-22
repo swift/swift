@@ -37,7 +37,8 @@ namespace Swift {
 
 			virtual ~SessionStream();
 
-			virtual bool isAvailable() = 0;
+			virtual void close() = 0;
+			virtual bool isOpen() = 0;
 
 			virtual void writeHeader(const ProtocolHeader& header) = 0;
 			virtual void writeFooter() = 0;

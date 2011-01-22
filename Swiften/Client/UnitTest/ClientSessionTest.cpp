@@ -296,7 +296,11 @@ class ClientSessionTest : public CppUnit::TestFixture {
 				MockSessionStream() : available(true), canTLSEncrypt(true), tlsEncrypted(false), compressed(false), whitespacePingEnabled(false), resetCount(0) {
 				}
 
-				virtual bool isAvailable() {
+				virtual void close() {
+					onClosed(boost::shared_ptr<Error>());
+				}
+
+				virtual bool isOpen() {
 					return available;
 				}
 
