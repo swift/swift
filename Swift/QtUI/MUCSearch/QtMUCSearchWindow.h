@@ -13,6 +13,7 @@
 namespace Swift {
 	class MUCSearchModel;
 	class MUCSearchDelegate;
+	class MUCSearchRoomItem;
 
 	class QtMUCSearchWindow : public QDialog, public MUCSearchWindow {
 		Q_OBJECT
@@ -38,6 +39,7 @@ namespace Swift {
 			void handleActivated(const QModelIndex& index);
 			void updateThrobberPosition();
 			void handleSelectionChanged (const QItemSelection&, const QItemSelection&);
+			MUCSearchRoomItem* getSelectedRoom() const;
 
 		private:
 			Ui::QtMUCSearchWindow ui_;

@@ -150,16 +150,12 @@ void QtMUCSearchWindow::setSearchInProgress(bool searching) {
 }
 
 void QtMUCSearchWindow::accept() {
-	QModelIndexList selection = ui_.results_->selectionModel()->selectedIndexes();
-	if (selection.isEmpty()) {
-		onFinished(boost::optional<JID>());
+	MUCSearchRoomItem* room = getSelectedRoom();
+	if (room) {
+		onFinished(JID(Q2PSTRING(room->getNode()), Q2PSTRING(room->getParent()->getHost())));
 	}
 	else {
-		QModelIndex selectedItem = selection[0];
-		MUCSearchRoomItem* item = dynamic_cast<MUCSearchRoomItem*>(static_cast<MUCSearchItem*>(selectedItem.internalPointer()));
-		if (item) {
-			onFinished(JID(Q2PSTRING(item->getNode()), Q2PSTRING(item->getParent()->getHost())));
-		}
+		onFinished(boost::optional<JID>());
 	}
 	QDialog::accept();
 }
@@ -170,13 +166,31 @@ void QtMUCSearchWindow::reject() {
 }
 
 void QtMUCSearchWindow::handleSelectionChanged(const QItemSelection& selection, const QItemSelection&) {
-	if (selection.indexes().size() > 0) {
-		ui_.okButton->setEnabled(dynamic_cast<MUCSearchRoomItem*>(static_cast<MUCSearchItem*>(selection.indexes()[0].internalPointer())));
-	}
-	else {
-		ui_.okButton->setEnabled(false);
-	}
+	ui_.okButton->setEnabled(getSelectedRoom());
 }
 
+MUCSearchRoomItem* QtMUCSearchWindow::getSelectedRoom() const {
+	QItemSelection ranges = ui_.results_->selectionModel()->selection();
+	// Not using selectedIndexes(), because this seems to cause a crash in Qt (4.7.0) in the
+	// QModelIndexList destructor.
+	// This is a workaround posted in http://www.qtcentre.org/threads/16933 (although this case
+	// was resolved by linking against the debug libs, ours isn't, and we're not alone)
+	QModelIndexList lstIndex;
+	for (int i = 0; i < ranges.count(); ++i) {
+		QModelIndex parent = ranges.at(i).parent();
+		int right = ranges.at(i).model()->columnCount(parent) - 1;
+		if (ranges.at(i).left() == 0 && ranges.at(i).right() == right) {
+			for (int r = ranges.at(i).top(); r <= ranges.at(i).bottom(); ++r) {
+				lstIndex.append(ranges.at(i).model()->index(r, 0, parent));
+			}
+		}
+	}
+	if (lstIndex.empty()) {
+		return NULL;
+	}
+	else {
+		return dynamic_cast<MUCSearchRoomItem*>(static_cast<MUCSearchItem*>(lstIndex.first().internalPointer()));
+	}
+}
 
 }
