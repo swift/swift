@@ -16,10 +16,11 @@ elif env.get("BOOST_BUNDLED", False) :
 ################################################################################
 
 	cppdefines = ["BOOST_ALL_NO_LIB", "BOOST_SYSTEM_NO_DEPRECATED"]
+	# Workaround for hang on exit on OS X
+	#if env["PLATFORM"] == "darwin" :
+	#	cppdefines += ["BOOST_ASIO_DISABLE_KQUEUE"]
 	if env["PLATFORM"] == "win32" :
 		cppflags = ["/I" + Dir("src").abspath]
-	elif env["PLATFORM"] == "darwin" :
-		cppdefines += ["BOOST_ASIO_DISABLE_KQUEUE"]
 	else :
 		cppflags = [("-isystem", Dir("src").abspath)]
 
