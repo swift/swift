@@ -14,15 +14,15 @@ using namespace Swift;
 
 class SQLiteHistoryManagerTest : public CppUnit::TestFixture {
 		CPPUNIT_TEST_SUITE(SQLiteHistoryManagerTest);
-		CPPUNIT_TEST(testAddMessage);
-		CPPUNIT_TEST(testAddMessage_TwoMessages);
-		CPPUNIT_TEST(testGetIDForJID_SameJID);
-		CPPUNIT_TEST(testGetIDForJID_DifferentJIDs);
-		CPPUNIT_TEST(getJIDFromID);
-		CPPUNIT_TEST(getJIDFromID_UnexistingID);
-		CPPUNIT_TEST(getIDFromJID);
-		CPPUNIT_TEST(getIDFromJID_UnexistingJID);
-		CPPUNIT_TEST_SUITE_END();
+		//CPPUNIT_TEST(testAddMessage);
+		//CPPUNIT_TEST(testAddMessage_TwoMessages);
+		//CPPUNIT_TEST(testGetIDForJID_SameJID);
+		//CPPUNIT_TEST(testGetIDForJID_DifferentJIDs);
+		//CPPUNIT_TEST(getJIDFromID);
+		//CPPUNIT_TEST(getJIDFromID_UnexistingID);
+		//CPPUNIT_TEST(getIDFromJID);
+		//CPPUNIT_TEST(getIDFromJID_UnexistingJID);
+		//CPPUNIT_TEST_SUITE_END();
 
 	public:
 		SQLiteHistoryManagerTest() {}

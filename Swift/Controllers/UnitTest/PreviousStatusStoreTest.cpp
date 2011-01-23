@@ -40,3 +40,5 @@ public:
 private:
 	PreviousStatusStore* store_;
 };
+
+CPPUNIT_TEST_SUITE_REGISTRATION(PreviousStatusStoreTest);

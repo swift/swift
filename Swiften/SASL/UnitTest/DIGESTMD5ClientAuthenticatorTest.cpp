@@ -17,8 +17,7 @@ class DIGESTMD5ClientAuthenticatorTest : public CppUnit::TestFixture {
 		CPPUNIT_TEST(testGetInitialResponse);
 		CPPUNIT_TEST(testGetResponse);
 		CPPUNIT_TEST(testGetResponse_WithAuthorizationID);
-		/*CPPUNIT_TEST(testSetChallenge);
-		CPPUNIT_TEST(testSetChallenge_InvalidBlabBla);*/
+		//CPPUNIT_TEST(testSetChallenge);
 		CPPUNIT_TEST_SUITE_END();
 
 	public:
