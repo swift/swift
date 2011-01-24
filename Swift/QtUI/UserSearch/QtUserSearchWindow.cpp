@@ -79,7 +79,7 @@ QtUserSearchWindow::QtUserSearchWindow(UIEventStream* eventStream, UserSearchWin
 	setupUi(this);
 	model_ = new UserSearchModel();
 	delegate_ = new UserSearchDelegate();
-	QString title(type == UserSearchWindow::AddContact ? "Add User" : "Chat to User");
+	QString title(type == UserSearchWindow::AddContact ? "Add Contact" : "Chat to User");
 	setWindowTitle(title);
 	firstPage_ = new QtUserSearchFirstPage(type, title);
 	connect(firstPage_->byJID_, SIGNAL(toggled(bool)), this, SLOT(handleFirstPageRadioChange()));
