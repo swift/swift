@@ -25,7 +25,7 @@ namespace Swift {
 	class QtUserSearchFirstPage : public QWizardPage, public Ui::QtUserSearchFirstPage {
 		Q_OBJECT
 		public:
-			QtUserSearchFirstPage(UserSearchWindow::Type type);
+			QtUserSearchFirstPage(UserSearchWindow::Type type, const QString& title);
 			virtual bool isComplete() const;
 		public slots:
 			void emitCompletenessCheck();
