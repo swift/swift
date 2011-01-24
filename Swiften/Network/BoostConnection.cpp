@@ -10,6 +10,7 @@
 #include <boost/bind.hpp>
 #include <boost/thread.hpp>
 
+#include <Swiften/Base/Log.h>
 #include "Swiften/EventLoop/EventLoop.h"
 #include "Swiften/Base/String.h"
 #include "Swiften/Base/ByteArray.h"
@@ -91,6 +92,7 @@ void BoostConnection::doWrite(const ByteArray& data) {
 }
 
 void BoostConnection::handleConnectFinished(const boost::system::error_code& error) {
+	SWIFT_LOG(debug) << "Connect finished: " << error << std::endl;
 	if (!error) {
 		eventLoop->postEvent(boost::bind(boost::ref(onConnectFinished), false), shared_from_this());
 		doRead();
@@ -107,6 +109,7 @@ void BoostConnection::doRead() {
 }
 
 void BoostConnection::handleSocketRead(const boost::system::error_code& error, size_t bytesTransferred) {
+	SWIFT_LOG(debug) << "Socket read " << error << std::endl;
 	if (!error) {
 		eventLoop->postEvent(boost::bind(boost::ref(onDataRead), ByteArray(&readBuffer_[0], bytesTransferred)), shared_from_this());
 		doRead();
@@ -120,6 +123,7 @@ void BoostConnection::handleSocketRead(const boost::system::error_code& error, s
 }
 
 void BoostConnection::handleDataWritten(const boost::system::error_code& error) {
+	SWIFT_LOG(debug) << "Data written " << error << std::endl;
 	if (!error) {
 		eventLoop->postEvent(boost::ref(onDataWritten), shared_from_this());
 	}
