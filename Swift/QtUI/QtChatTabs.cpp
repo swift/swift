@@ -190,7 +190,7 @@ void QtChatTabs::handleTabTitleUpdated(QWidget* widget) {
 	bool accelsTaken[26];
 	int i = 0;
 	while (i < 26) {
-		accelsTaken[i++] = false;
+		accelsTaken[i++] = (i == 0); //A is used for 'switch to active tab'
 	}
 	int other = tabs_->tabBar()->count();
 	while (other >= 0) {
