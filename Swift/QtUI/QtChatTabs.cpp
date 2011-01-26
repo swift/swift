@@ -190,7 +190,8 @@ void QtChatTabs::handleTabTitleUpdated(QWidget* widget) {
 	bool accelsTaken[26];
 	int i = 0;
 	while (i < 26) {
-		accelsTaken[i++] = (i == 0); //A is used for 'switch to active tab'
+		accelsTaken[i] = (i == 0); //A is used for 'switch to active tab'
+		i++;
 	}
 	int other = tabs_->tabBar()->count();
 	while (other >= 0) {
@@ -221,7 +222,7 @@ void QtChatTabs::handleTabTitleUpdated(QWidget* widget) {
 		tabText = tabText.mid(0, accelPos) + "&" + tabText.mid(accelPos);
 	}
 	// this could be improved on some european keyboards, such as
-	// the German one (where alt-ß is available) and basically
+	// the German one (where alt-B is available) and basically
 	// doesn't work on Arabic/Indic keyboards (where Latin letters
 	// aren't available), but I don't care to deal with those.
 
