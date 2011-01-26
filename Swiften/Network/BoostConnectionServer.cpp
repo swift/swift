@@ -13,7 +13,7 @@
 
 namespace Swift {
 
-BoostConnectionServer::BoostConnectionServer(int port, boost::asio::io_service* ioService, EventLoop* eventLoop) : port_(port), ioService_(ioService), eventLoop(eventLoop), acceptor_(NULL) {
+BoostConnectionServer::BoostConnectionServer(int port, boost::shared_ptr<boost::asio::io_service> ioService, EventLoop* eventLoop) : port_(port), ioService_(ioService), eventLoop(eventLoop), acceptor_(NULL) {
 }
 
 
@@ -50,7 +50,7 @@ void BoostConnectionServer::stop(boost::optional<Error> e) {
 }
 
 void BoostConnectionServer::acceptNextConnection() {
-	BoostConnection::ref newConnection(BoostConnection::create(&acceptor_->io_service(), eventLoop));
+	BoostConnection::ref newConnection(BoostConnection::create(ioService_, eventLoop));
 	acceptor_->async_accept(newConnection->getSocket(), 
 		boost::bind(&BoostConnectionServer::handleAccept, shared_from_this(), newConnection, boost::asio::placeholders::error));
 }

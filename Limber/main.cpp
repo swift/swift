@@ -30,7 +30,7 @@ using namespace Swift;
 class Server {
 	public:
 		Server(UserRegistry* userRegistry, EventLoop* eventLoop) : userRegistry_(userRegistry) {
-			serverFromClientConnectionServer_ = BoostConnectionServer::create(5222, &boostIOServiceThread_.getIOService(), eventLoop);
+			serverFromClientConnectionServer_ = BoostConnectionServer::create(5222, boostIOServiceThread_.getIOService(), eventLoop);
 			serverFromClientConnectionServer_->onNewConnection.connect(boost::bind(&Server::handleNewConnection, this, _1));
 			serverFromClientConnectionServer_->start();
 		}

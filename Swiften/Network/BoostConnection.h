@@ -29,7 +29,7 @@ namespace Swift {
 
 			~BoostConnection();
 
-			static ref create(boost::asio::io_service* ioService, EventLoop* eventLoop) {
+			static ref create(boost::shared_ptr<boost::asio::io_service> ioService, EventLoop* eventLoop) {
 				return ref(new BoostConnection(ioService, eventLoop));
 			}
 
@@ -45,7 +45,7 @@ namespace Swift {
 			HostAddressPort getLocalAddress() const;
 
 		private:
-			BoostConnection(boost::asio::io_service* ioService, EventLoop* eventLoop);
+			BoostConnection(boost::shared_ptr<boost::asio::io_service> ioService, EventLoop* eventLoop);
 
 			void handleConnectFinished(const boost::system::error_code& error);
 			void handleSocketRead(const boost::system::error_code& error, size_t bytesTransferred);
@@ -55,6 +55,7 @@ namespace Swift {
 
 		private:
 			EventLoop* eventLoop;
+			boost::shared_ptr<boost::asio::io_service> ioService;
 			boost::asio::ip::tcp::socket socket_;
 			std::vector<char> readBuffer_;
 			boost::mutex writeMutex_;

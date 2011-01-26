@@ -20,7 +20,7 @@ namespace Swift {
 		public:
 			typedef boost::shared_ptr<BoostTimer> ref;
 
-			static ref create(int milliseconds, boost::asio::io_service* service, EventLoop* eventLoop) {
+			static ref create(int milliseconds, boost::shared_ptr<boost::asio::io_service> service, EventLoop* eventLoop) {
 				return ref(new BoostTimer(milliseconds, service, eventLoop));
 			}
 
@@ -28,12 +28,13 @@ namespace Swift {
 			virtual void stop();
 
 		private:
-			BoostTimer(int milliseconds, boost::asio::io_service* service, EventLoop* eventLoop);
+			BoostTimer(int milliseconds, boost::shared_ptr<boost::asio::io_service> service, EventLoop* eventLoop);
 
 			void handleTimerTick(const boost::system::error_code& error);
 
 		private:
 			int timeout;
+			boost::shared_ptr<boost::asio::io_service> ioService;
 			boost::asio::deadline_timer timer;
 			EventLoop* eventLoop;
 	};

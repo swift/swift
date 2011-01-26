@@ -29,7 +29,7 @@ int exitCode = 2;
 class FileSender {
 	public:
 		FileSender(const JID& jid, const String& password, const JID& recipient, const boost::filesystem::path& file, int port) : jid(jid), password(password), recipient(recipient), file(file), transfer(NULL) {
-			connectionServer = BoostConnectionServer::create(port, &networkFactories.getIOServiceThread()->getIOService(), &eventLoop);
+			connectionServer = BoostConnectionServer::create(port, networkFactories.getIOServiceThread()->getIOService(), &eventLoop);
 			socksBytestreamServer = new SOCKS5BytestreamServer(connectionServer);
 
 			client = new Swift::Client(&eventLoop, &networkFactories, jid, password);

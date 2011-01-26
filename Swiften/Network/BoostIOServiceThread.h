@@ -8,6 +8,7 @@
 
 #include <boost/asio.hpp>
 #include <boost/thread.hpp>
+#include <boost/shared_ptr.hpp>
 
 namespace Swift {
 	class BoostIOServiceThread {
@@ -15,7 +16,7 @@ namespace Swift {
 			BoostIOServiceThread();
 			~BoostIOServiceThread();
 
-			boost::asio::io_service& getIOService() {
+			boost::shared_ptr<boost::asio::io_service> getIOService() {
 				return ioService_;
 			}
 
@@ -23,7 +24,7 @@ namespace Swift {
 			void doRun();
 
 		private:
-			boost::asio::io_service ioService_;
-			boost::thread thread_;
+			boost::shared_ptr<boost::asio::io_service> ioService_;
+			boost::thread* thread_;
 	};
 }

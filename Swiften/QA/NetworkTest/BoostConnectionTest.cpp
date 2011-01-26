@@ -7,6 +7,7 @@
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/extensions/TestFactoryRegistry.h>
 #include <boost/shared_ptr.hpp>
+#include <boost/smart_ptr/make_shared.hpp>
 
 #include "Swiften/Base/String.h"
 #include "Swiften/Base/sleep.h"
@@ -34,6 +35,7 @@ class BoostConnectionTest : public CppUnit::TestFixture {
 	public:
 		void setUp() {
 			boostIOServiceThread_ = new BoostIOServiceThread();
+			boostIOService = boost::make_shared<boost::asio::io_service>();
 			eventLoop_ = new DummyEventLoop();
 			disconnected = false;
 			connectFinished = false;
@@ -46,14 +48,14 @@ class BoostConnectionTest : public CppUnit::TestFixture {
 
 		void testDestructor() {
 			{
-				BoostConnection::ref testling(BoostConnection::create(&boostIOServiceThread_->getIOService(), eventLoop_));
+				BoostConnection::ref testling(BoostConnection::create(boostIOServiceThread_->getIOService(), eventLoop_));
 				testling->connect(HostAddressPort(HostAddress(address, 4), 5222));
 			}
 		}
 
 		void testDestructor_PendingEvents() {
 			{
-				BoostConnection::ref testling(BoostConnection::create(&boostIOServiceThread_->getIOService(), eventLoop_));
+				BoostConnection::ref testling(BoostConnection::create(boostIOServiceThread_->getIOService(), eventLoop_));
 				testling->connect(HostAddressPort(HostAddress(address, 4), 5222));
 				while (!eventLoop_->hasEvents()) {
 					Swift::sleep(10);
@@ -63,7 +65,7 @@ class BoostConnectionTest : public CppUnit::TestFixture {
 		}
 
 		void testWrite() {
-			BoostConnection::ref testling(BoostConnection::create(&boostIOServiceThread_->getIOService(), eventLoop_));
+			BoostConnection::ref testling(BoostConnection::create(boostIOServiceThread_->getIOService(), eventLoop_));
 			testling->onConnectFinished.connect(boost::bind(&BoostConnectionTest::doWrite, this, testling.get()));
 			testling->onDataRead.connect(boost::bind(&BoostConnectionTest::handleDataRead, this, _1));
 			testling->onDisconnected.connect(boost::bind(&BoostConnectionTest::handleDisconnected, this));
@@ -76,7 +78,7 @@ class BoostConnectionTest : public CppUnit::TestFixture {
 		}
 
 		void testWrite_IPv6() {
-			BoostConnection::ref testling(BoostConnection::create(&boostIOServiceThread_->getIOService(), eventLoop_));
+			BoostConnection::ref testling(BoostConnection::create(boostIOServiceThread_->getIOService(), eventLoop_));
 			testling->onConnectFinished.connect(boost::bind(&BoostConnectionTest::doWrite, this, testling.get()));
 			testling->onDataRead.connect(boost::bind(&BoostConnectionTest::handleDataRead, this, _1));
 			testling->onDisconnected.connect(boost::bind(&BoostConnectionTest::handleDisconnected, this));
@@ -90,13 +92,13 @@ class BoostConnectionTest : public CppUnit::TestFixture {
 
 
 		void testWriteMultipleSimultaniouslyQueuesWrites() {
-			BoostConnection::ref testling(BoostConnection::create(&boostIOService, eventLoop_));
+			BoostConnection::ref testling(BoostConnection::create(boostIOService, eventLoop_));
 			testling->onConnectFinished.connect(boost::bind(&BoostConnectionTest::handleConnectFinished, this));
 			testling->onDataRead.connect(boost::bind(&BoostConnectionTest::handleDataRead, this, _1));
 			testling->onDisconnected.connect(boost::bind(&BoostConnectionTest::handleDisconnected, this));
 			testling->connect(HostAddressPort(HostAddress("65.99.222.137"), 5222));
 			while (!connectFinished) {
-				boostIOService.run_one();
+				boostIOService->run_one();
 				eventLoop_->processEvents();
 			}
 
@@ -105,20 +107,20 @@ class BoostConnectionTest : public CppUnit::TestFixture {
 			testling->write(ByteArray(">"));
 
 			 // Check that we only did one write event, the others are queued
-			/*int runHandlers = */boostIOService.poll();
+			/*int runHandlers = */boostIOService->poll();
 			// Disabling this test, because poll runns all handlers that are added during poll() as well, so
 			// this test doesn't really work any more. We'll have to trust that things are queued.
 			//CPPUNIT_ASSERT_EQUAL(1, runHandlers);
 			// Process the other events
 			while (receivedData.isEmpty()) {
-				boostIOService.run_one();
+				boostIOService->run_one();
 				eventLoop_->processEvents();
 			}
 
 			// Disconnect & clean up
 			testling->disconnect();
 			while (!disconnected) {
-				boostIOService.run_one();
+				boostIOService->run_one();
 				eventLoop_->processEvents();
 			}
 		}
@@ -142,7 +144,7 @@ class BoostConnectionTest : public CppUnit::TestFixture {
 
 	private:
 		BoostIOServiceThread* boostIOServiceThread_;
-		boost::asio::io_service boostIOService;
+		boost::shared_ptr<boost::asio::io_service> boostIOService;
 		DummyEventLoop* eventLoop_;
 		ByteArray receivedData;
 		bool disconnected;

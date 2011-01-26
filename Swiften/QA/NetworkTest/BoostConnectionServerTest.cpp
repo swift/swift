@@ -39,15 +39,15 @@ class BoostConnectionServerTest : public CppUnit::TestFixture {
 		}
 
 		void testConstructor_TwoServersOnSamePort() {
-			BoostConnectionServer::ref testling(BoostConnectionServer::create(9999, &boostIOServiceThread_->getIOService(), eventLoop_));
-			BoostConnectionServer::ref testling2(BoostConnectionServer::create(9999, &boostIOServiceThread_->getIOService(), eventLoop_));
+			BoostConnectionServer::ref testling(BoostConnectionServer::create(9999, boostIOServiceThread_->getIOService(), eventLoop_));
+			BoostConnectionServer::ref testling2(BoostConnectionServer::create(9999, boostIOServiceThread_->getIOService(), eventLoop_));
 		}
 
 		void testStart_Conflict() {
-			BoostConnectionServer::ref testling(BoostConnectionServer::create(9999, &boostIOServiceThread_->getIOService(), eventLoop_));
+			BoostConnectionServer::ref testling(BoostConnectionServer::create(9999, boostIOServiceThread_->getIOService(), eventLoop_));
 			testling->start();
 
-			BoostConnectionServer::ref testling2(BoostConnectionServer::create(9999, &boostIOServiceThread_->getIOService(), eventLoop_));
+			BoostConnectionServer::ref testling2(BoostConnectionServer::create(9999, boostIOServiceThread_->getIOService(), eventLoop_));
 			testling2->onStopped.connect(
 					boost::bind(&BoostConnectionServerTest::handleStopped, this, _1));
 
@@ -55,12 +55,12 @@ class BoostConnectionServerTest : public CppUnit::TestFixture {
 		}
 
 		void testStop() {
-			BoostConnectionServer::ref testling(BoostConnectionServer::create(9999, &boostIOServiceThread_->getIOService(), eventLoop_));
+			BoostConnectionServer::ref testling(BoostConnectionServer::create(9999, boostIOServiceThread_->getIOService(), eventLoop_));
 			testling->start();
 
 			testling->stop();
 
-			BoostConnectionServer::ref testling2(BoostConnectionServer::create(9999, &boostIOServiceThread_->getIOService(), eventLoop_));
+			BoostConnectionServer::ref testling2(BoostConnectionServer::create(9999, boostIOServiceThread_->getIOService(), eventLoop_));
 			testling2->start();
 
 			testling2->stop();

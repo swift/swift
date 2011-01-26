@@ -13,8 +13,8 @@
 
 namespace Swift {
 
-BoostTimer::BoostTimer(int milliseconds, boost::asio::io_service* service, EventLoop* eventLoop) :
-		timeout(milliseconds), timer(*service), eventLoop(eventLoop) {
+BoostTimer::BoostTimer(int milliseconds, boost::shared_ptr<boost::asio::io_service> service, EventLoop* eventLoop) :
+		timeout(milliseconds), ioService(service), timer(*service), eventLoop(eventLoop) {
 }
 
 void BoostTimer::start() {

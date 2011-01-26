@@ -25,7 +25,7 @@ namespace Swift {
 				UnknownError
 			};
 
-			static ref create(int port, boost::asio::io_service* ioService, EventLoop* eventLoop) {
+			static ref create(int port, boost::shared_ptr<boost::asio::io_service> ioService, EventLoop* eventLoop) {
 				return ref(new BoostConnectionServer(port, ioService, eventLoop));
 			}
 
@@ -37,7 +37,7 @@ namespace Swift {
 			boost::signal<void (boost::optional<Error>)> onStopped;
 
 		private:
-			BoostConnectionServer(int port, boost::asio::io_service* ioService, EventLoop* eventLoop);
+			BoostConnectionServer(int port, boost::shared_ptr<boost::asio::io_service> ioService, EventLoop* eventLoop);
 
 			void stop(boost::optional<Error> e);
 			void acceptNextConnection();
@@ -45,7 +45,7 @@ namespace Swift {
 
 		private:
 			int port_;
-			boost::asio::io_service* ioService_;
+			boost::shared_ptr<boost::asio::io_service> ioService_;
 			EventLoop* eventLoop;
 			boost::asio::ip::tcp::acceptor* acceptor_;
 	};

@@ -59,7 +59,7 @@ Server::~Server() {
 void Server::start() {
 	assert(!serverFromClientConnectionServer);
 	serverFromClientConnectionServer = BoostConnectionServer::create(
-					clientConnectionPort, &boostIOServiceThread.getIOService(), eventLoop);
+					clientConnectionPort, boostIOServiceThread.getIOService(), eventLoop);
 	serverFromClientConnectionServerSignalConnections.push_back(
 		serverFromClientConnectionServer->onNewConnection.connect(
 				boost::bind(&Server::handleNewClientConnection, this, _1)));
@@ -69,7 +69,7 @@ void Server::start() {
 
 	assert(!serverFromNetworkConnectionServer);
 	serverFromNetworkConnectionServer = BoostConnectionServer::create(
-			linkLocalConnectionPort, &boostIOServiceThread.getIOService(), eventLoop);
+			linkLocalConnectionPort, boostIOServiceThread.getIOService(), eventLoop);
 	serverFromNetworkConnectionServerSignalConnections.push_back(
 		serverFromNetworkConnectionServer->onNewConnection.connect(
 				boost::bind(&Server::handleNewLinkLocalConnection, this, _1)));
@@ -256,7 +256,7 @@ void Server::handleElementReceived(boost::shared_ptr<Element> element, boost::sh
 							new LinkLocalConnector(
 								*service,
 								linkLocalServiceBrowser->getQuerier(),
-								BoostConnection::create(&boostIOServiceThread.getIOService(), eventLoop)));
+								BoostConnection::create(boostIOServiceThread.getIOService(), eventLoop)));
 					connector->onConnectFinished.connect(
 							boost::bind(&Server::handleConnectFinished, this, connector, _1));
 					connectors.push_back(connector);

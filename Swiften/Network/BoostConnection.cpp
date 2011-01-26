@@ -44,8 +44,8 @@ class SharedBuffer {
 
 // -----------------------------------------------------------------------------
 
-BoostConnection::BoostConnection(boost::asio::io_service* ioService, EventLoop* eventLoop) :
-		eventLoop(eventLoop), socket_(*ioService), readBuffer_(BUFFER_SIZE), writing_(false) {
+BoostConnection::BoostConnection(boost::shared_ptr<boost::asio::io_service> ioService, EventLoop* eventLoop) :
+		eventLoop(eventLoop), ioService(ioService), socket_(*ioService), readBuffer_(BUFFER_SIZE), writing_(false) {
 }
 
 BoostConnection::~BoostConnection() {
