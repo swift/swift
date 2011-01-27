@@ -99,7 +99,7 @@ void MUCSearchController::handleSearchService(const JID& jid) {
 }
 
 void MUCSearchController::handleDiscoServiceFound(const JID& jid, boost::shared_ptr<DiscoInfo> info) {
-	bool isMUC;
+	bool isMUC = false;
 	String name;
 	foreach (DiscoInfo::Identity identity, info->getIdentities()) {
 			if ((identity.getCategory() == "directory"

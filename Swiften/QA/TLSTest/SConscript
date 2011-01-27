@@ -13,6 +13,7 @@ if env["TEST"] :
 	if myenv.get("HAVE_OPENSSL") :
 		myenv.MergeFlags(myenv["OPENSSL_FLAGS"])
 		myenv.Append(CPPDEFINES = ["HAVE_OPENSSL"])
+	myenv.MergeFlags(myenv["PLATFORM_FLAGS"])
 	
 	tester = myenv.Program("TLSTest", [
 			"CertificateTest.cpp",

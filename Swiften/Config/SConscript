@@ -27,6 +27,7 @@ config_flags += cStringVariable(swiften_env, "LIBFLAGS", libflags)
 config_env = env.Clone()
 config_env.MergeFlags(config_env["SWIFTEN_FLAGS"])
 config_env.MergeFlags(config_env["BOOST_FLAGS"])
+config_env.MergeFlags(config_env["PLATFORM_FLAGS"])
 config_env.WriteVal("swiften-config.h", config_env.Value(config_flags))
 config_env.Program("swiften-config", [
 		"swiften-config.cpp"
