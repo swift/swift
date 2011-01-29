@@ -29,29 +29,32 @@ QtSetGroupsDialog::QtSetGroupsDialog(ContactRosterItem* contact, const QList<QSt
 	scrollArea->setHorizontalScrollBarPolicy(Qt::ScrollBarAsNeeded);
 	QWidget* scroll = new QWidget(scrollArea);
 	scrollArea->setWidget(scroll);
-	QBoxLayout* scrollLayout = new QBoxLayout(QBoxLayout::TopToBottom, scroll);
+	QVBoxLayout* scrollLayout = new QVBoxLayout(scroll);
 	QLabel* label = new QLabel(scroll);
 	label->setText("Choose groups for " + P2QSTRING(contact->getDisplayName()) + " (" + P2QSTRING(contact->getJID().toString()) + ")");
 	scrollLayout->addWidget(label);
 	foreach (QString group, allGroups) {
-			QCheckBox* check = new QCheckBox(scroll);
-			check->setText(group);
-			check->setCheckState(Qt::Unchecked);
-			checkBoxes_[Q2PSTRING(group)] = check;
-			scrollLayout->addWidget(check);
-		}
+		QCheckBox* check = new QCheckBox(scroll);
+		check->setText(group);
+		check->setCheckState(Qt::Unchecked);
+		checkBoxes_[Q2PSTRING(group)] = check;
+		scrollLayout->addWidget(check);
+	}
 	foreach (String group, contact->getGroups()) {
 		checkBoxes_[group]->setCheckState(Qt::Checked);
 	}
-	QWidget* newGroupWidget = new QWidget(scroll);
-	QBoxLayout* newGroupLayout = new QBoxLayout(QBoxLayout::LeftToRight, newGroupWidget);
-	scrollLayout->addWidget(newGroupWidget);
-	newGroup_ = new QCheckBox(newGroupWidget);
+
+	QHBoxLayout* newGroupLayout = new QHBoxLayout();
+	newGroup_ = new QCheckBox(scroll);
 	newGroup_->setText("New Group:");
 	newGroup_->setCheckState(Qt::Unchecked);
 	newGroupLayout->addWidget(newGroup_);
-	newGroupName_ = new QLineEdit(newGroupWidget);
+	newGroupName_ = new QLineEdit(scroll);
 	newGroupLayout->addWidget(newGroupName_);
+	scrollLayout->addLayout(newGroupLayout);
+
+	scrollLayout->addItem(new QSpacerItem(20, 73, QSizePolicy::Minimum, QSizePolicy::Expanding));
+
 	QDialogButtonBox* buttons = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel, Qt::Horizontal, this);
 	layout->addWidget(buttons);
 	connect(buttons, SIGNAL(accepted()), this, SLOT(accept()));
