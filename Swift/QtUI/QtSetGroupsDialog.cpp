@@ -31,7 +31,7 @@ QtSetGroupsDialog::QtSetGroupsDialog(ContactRosterItem* contact, const QList<QSt
 	scrollArea->setWidget(scroll);
 	QBoxLayout* scrollLayout = new QBoxLayout(QBoxLayout::TopToBottom, scroll);
 	QLabel* label = new QLabel(scroll);
-	label->setText("Choose groups for " + P2QSTRING(contact->getDisplayName()));
+	label->setText("Choose groups for " + P2QSTRING(contact->getDisplayName()) + " (" + P2QSTRING(contact->getJID().toString()) + ")");
 	scrollLayout->addWidget(label);
 	foreach (QString group, allGroups) {
 			QCheckBox* check = new QCheckBox(scroll);
