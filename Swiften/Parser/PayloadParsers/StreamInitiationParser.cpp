@@ -36,7 +36,7 @@ void StreamInitiationParser::handleStartElement(const String& element, const Str
 	else if (level == PayloadLevel) {
 		if (element == "file") {
 			inFile = true;
-			currentFile = StreamInitiation::FileInfo();
+			currentFile = StreamInitiationFileInfo();
 			currentFile.name = attributes.getAttribute("name");
 			try {
 				currentFile.size = boost::lexical_cast<int>(attributes.getAttribute("size"));

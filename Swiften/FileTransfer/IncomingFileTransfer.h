@@ -16,6 +16,8 @@ namespace Swift {
 		public:
 			typedef boost::shared_ptr<IncomingFileTransfer> ref;
 
-			void accept(WriteBytestream::ref);
+			virtual ~IncomingFileTransfer();
+			
+			virtual void accept(WriteBytestream::ref) = 0;
 	};
 }

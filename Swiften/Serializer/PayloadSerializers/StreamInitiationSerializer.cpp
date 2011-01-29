@@ -35,7 +35,7 @@ String StreamInitiationSerializer::serializePayload(boost::shared_ptr<StreamInit
 	siElement.setAttribute("profile", FILE_TRANSFER_NS);
 
 	if (streamInitiation->getFileInfo()) {
-		StreamInitiation::FileInfo file = *streamInitiation->getFileInfo();
+		StreamInitiationFileInfo file = *streamInitiation->getFileInfo();
 		boost::shared_ptr<XMLElement> fileElement(new XMLElement("file", "http://jabber.org/protocol/si/profile/file-transfer"));
 		fileElement->setAttribute("name", file.name);
 		if (file.size != -1) {

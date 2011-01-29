@@ -8,8 +8,16 @@
 
 namespace Swift {
 
-void IncomingFileTransfer::accept(WriteBytestream::ref) {
+IncomingFileTransfer::~IncomingFileTransfer() {
 
 }
+
+/*void IncomingFileTransfer::accept(WriteBytestream::ref) {
+
+}
+
+void IncomingFileTransfer::stop() {
+
+}*/
 
 }

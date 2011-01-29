@@ -21,7 +21,7 @@ class StreamInitiationSerializerTest : public CppUnit::TestFixture{
 		void testSerialize_Request() {
 			StreamInitiationSerializer testling;
 			boost::shared_ptr<StreamInitiation> streamInitiation(new StreamInitiation());
-			StreamInitiation::FileInfo fileInfo("test.txt", "This is info about the file.", 1022);
+			StreamInitiationFileInfo fileInfo("test.txt", "This is info about the file.", 1022);
 			streamInitiation->setID("a0");
 			streamInitiation->setFileInfo(fileInfo);
 			streamInitiation->addProvidedMethod("http://jabber.org/protocol/bytestreams");

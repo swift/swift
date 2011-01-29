@@ -10,4 +10,6 @@ myenv.MergeFlags(myenv.get("SQLITE_FLAGS", {}))
 myenv.MergeFlags(myenv.get("LIBXML_FLAGS", ""))
 myenv.MergeFlags(myenv.get("EXPAT_FLAGS", ""))
 myenv.MergeFlags(myenv["PLATFORM_FLAGS"])
-tester = myenv.Program("SendFile", ["SendFile.cpp"])
+
+myenv.Program("SendFile", ["SendFile.cpp"])
+myenv.Program("ReceiveFile", ["ReceiveFile.cpp"])

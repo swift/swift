@@ -21,7 +21,7 @@ OutgoingFileTransfer::OutgoingFileTransfer(const String& id, const JID& from, co
 void OutgoingFileTransfer::start() {
 	StreamInitiation::ref streamInitiation(new StreamInitiation());
 	streamInitiation->setID(id);
-	streamInitiation->setFileInfo(StreamInitiation::FileInfo(name, description, size));
+	streamInitiation->setFileInfo(StreamInitiationFileInfo(name, description, size));
 	//streamInitiation->addProvidedMethod("http://jabber.org/protocol/bytestreams");
 	streamInitiation->addProvidedMethod("http://jabber.org/protocol/ibb");
 	StreamInitiationRequest::ref request = StreamInitiationRequest::create(to, streamInitiation, iqRouter);

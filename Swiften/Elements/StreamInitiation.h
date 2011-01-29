@@ -12,19 +12,12 @@
 
 #include "Swiften/Base/String.h"
 #include "Swiften/Elements/Payload.h"
+#include <Swiften/Elements/StreamInitiationFileInfo.h>
 
 namespace Swift {
 	class StreamInitiation : public Payload {
 		public:
 			typedef boost::shared_ptr<StreamInitiation> ref;
-
-			struct FileInfo {
-				FileInfo(const String& name = "", const String& description = "", int size = -1) : name(name), description(description), size(size) {}
-
-				String name;
-				String description;
-				int size;
-			};
 
 			StreamInitiation() : isFileTransfer(true) {}
 
@@ -36,11 +29,11 @@ namespace Swift {
 				this->id = id;
 			}
 
-			const boost::optional<FileInfo>& getFileInfo() const {
+			const boost::optional<StreamInitiationFileInfo>& getFileInfo() const {
 				return fileInfo;
 			}
 
-			void setFileInfo(const FileInfo& info) {
+			void setFileInfo(const StreamInitiationFileInfo& info) {
 				fileInfo = info;
 			}
 
@@ -71,7 +64,7 @@ namespace Swift {
 		private:
 			bool isFileTransfer;
 			String id;
-			boost::optional<FileInfo> fileInfo;
+			boost::optional<StreamInitiationFileInfo> fileInfo;
 			std::vector<String> providedMethods;
 			String requestedMethod;
 	};

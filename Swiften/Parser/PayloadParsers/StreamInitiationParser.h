@@ -36,7 +36,7 @@ namespace Swift {
 			FormParser* formParser;
 			bool inFile;
 			bool inFeature;
-			StreamInitiation::FileInfo currentFile;
+			StreamInitiationFileInfo currentFile;
 			String currentText;
 	};
 }
