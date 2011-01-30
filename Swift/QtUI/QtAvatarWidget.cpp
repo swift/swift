@@ -55,6 +55,9 @@ void QtAvatarWidget::setAvatar(const ByteArray& data, const String& type) {
 		image = QImage(":/icons/no-avatar.png");
 		QPainter painter(&image);
 		painter.setPen(Qt::gray);
+		QFont font = painter.font();
+		font.setPointSize(14);
+		painter.setFont(font);
 		painter.drawText(0, 0, image.height(), image.width(), Qt::AlignHCenter | Qt::AlignVCenter, "No picture");
 	}
 
