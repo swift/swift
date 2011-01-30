@@ -28,6 +28,7 @@
 #include "Swift/Controllers/UIEvents/RequestJoinMUCUIEvent.h"
 #include "Swift/Controllers/UIEvents/RequestAddUserDialogUIEvent.h"
 #include "Swift/Controllers/UIEvents/RequestChatWithUserDialogUIEvent.h"
+#include "Swift/Controllers/UIEvents/RequestProfileEditorUIEvent.h"
 #include "Swift/Controllers/UIEvents/JoinMUCUIEvent.h"
 #include "Swift/Controllers/UIEvents/ToggleShowOfflineUIEvent.h"
 
@@ -42,6 +43,7 @@ QtMainWindow::QtMainWindow(QtSettingsProvider* settings, UIEventStream* uiEventS
 	meView_ = new QtRosterHeader(settings, this);
 	mainLayout->addWidget(meView_);
 	connect(meView_, SIGNAL(onChangeStatusRequest(StatusShow::Type, const QString&)), this, SLOT(handleStatusChanged(StatusShow::Type, const QString&)));
+	connect(meView_, SIGNAL(onEditProfileRequest()), this, SLOT(handleEditProfileRequest()));
 
 	tabs_ = new QtTabWidget(this);
 #if QT_VERSION >= 0x040500
@@ -121,6 +123,10 @@ void QtMainWindow::setRosterModel(Roster* roster) {
 	treeWidget_->setRosterModel(roster);
 }
 
+void QtMainWindow::handleEditProfileRequest() {
+	uiEventStream_->send(boost::make_shared<RequestProfileEditorUIEvent>());
+}
+
 void QtMainWindow::handleEventCountUpdated(int count) {
 	QColor eventTabColor = (count == 0) ? QColor() : QColor(255, 0, 0); // invalid resets to default
 	int eventIndex = 1;
@@ -147,7 +153,7 @@ void QtMainWindow::handleSignOutAction() {
 }
 
 void QtMainWindow::handleEditProfileAction() {
-	onEditProfileRequest();
+	uiEventStream_->send(boost::make_shared<RequestProfileEditorUIEvent>());
 }
 
 void QtMainWindow::handleJoinMUCAction() {

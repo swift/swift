@@ -58,6 +58,7 @@ namespace Swift {
 			void handleAddUserActionTriggered(bool checked);
 			void handleChatUserActionTriggered(bool checked);
 			void handleEventCountUpdated(int count);
+			void handleEditProfileRequest();
 
 		private:
 			std::vector<QMenu*> menus_;

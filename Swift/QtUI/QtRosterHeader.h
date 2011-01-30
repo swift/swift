@@ -38,6 +38,7 @@ namespace Swift {
 		void setConnecting();
 	signals:
 		void onChangeStatusRequest(StatusShow::Type showType, const QString &statusMessage);
+		void onEditProfileRequest();
 
 	private slots:
 		void handleChangeStatusRequest(StatusShow::Type type, const QString &statusMessage);

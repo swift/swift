@@ -57,12 +57,18 @@ void QtNameWidget::mousePressEvent(QMouseEvent* event) {
 	}
 	menu.addAction(showAsJID);
 
+	QAction* editProfile = new QAction("Edit Profile", this);
+	menu.addAction(editProfile);
+
 	QAction* result = menu.exec(event->globalPos());
 	if (result == showAsJID) {
 		mode = ShowJID;
 	}
 	else if (result == showAsNick) {
 		mode = ShowNick;
+	}
+	else if (result == editProfile) {
+		emit onChangeNickRequest();
 	}
 	settings->storeBool("showNickInRosterHeader", mode == ShowNick);
 	updateText();

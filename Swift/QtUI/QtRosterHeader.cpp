@@ -33,6 +33,7 @@ QtRosterHeader::QtRosterHeader(QtSettingsProvider* settings, QWidget* parent) : 
 	setAvatar(":/icons/avatar.png");
 	avatarLabel_->setScaledContents(false);
 	topLayout->addWidget(avatarLabel_);
+	//connect(avatarLabel_, SIGNAL(clicked()), this, SIGNAL(onEditProfileRequest())); /* FIXME: clickableish signal for label */
 
 	QVBoxLayout* rightLayout = new QVBoxLayout();
 	rightLayout->setSpacing(4);
@@ -40,6 +41,7 @@ QtRosterHeader::QtRosterHeader(QtSettingsProvider* settings, QWidget* parent) : 
 	topLayout->addLayout(rightLayout);
 
 	nameWidget_ = new QtNameWidget(settings, this);
+	connect(nameWidget_, SIGNAL(onChangeNickRequest()), this, SIGNAL(onEditProfileRequest()));
 	rightLayout->addWidget(nameWidget_);
 
 

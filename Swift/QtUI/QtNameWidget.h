@@ -21,6 +21,9 @@ namespace Swift {
 			void setNick(const QString& text);
 			void setJID(const QString& jid);
 
+		signals:
+			void onChangeNickRequest();
+
 		private:
 			void updateText();
 			virtual void mousePressEvent(QMouseEvent* event);
