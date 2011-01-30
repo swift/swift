@@ -76,6 +76,9 @@ void ProfileController::handleOwnVCardChanged(VCard::ref vcard) {
 
 void ProfileController::setAvailable(bool b) {
 	available = b;
+	if (!available) {
+		pendingSetVCardRequest.reset();
+	}
 	updateDialogStatus();
 }
 
