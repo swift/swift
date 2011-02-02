@@ -68,7 +68,7 @@ int main(int argc, char* argv[]) {
 		connectHost = argv[argi++];
 	}
 
-	client = new Swift::Client(&eventLoop, &networkFactories, JID(jid), String(argv[argi++]));
+	client = new Swift::Client(JID(jid), String(argv[argi++]), &networkFactories);
 	char* timeoutChar = argv[argi++];
 	int timeout = atoi(timeoutChar);
 	timeout = (timeout ? timeout : 30) * 1000;

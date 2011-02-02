@@ -20,9 +20,9 @@ using namespace boost;
 
 class EchoBot {
 	public:
-		EchoBot(EventLoop* eventLoop, NetworkFactories* networkFactories) {
+		EchoBot(NetworkFactories* networkFactories) {
 			//...
-			client = new Client(eventLoop, networkFactories, JID("echobot@wonderland.lit"), "mypass");
+			client = new Client(JID("echobot@wonderland.lit"), "mypass", networkFactories);
 			client->onConnected.connect(bind(&EchoBot::handleConnected, this));
 			client->onMessageReceived.connect(
 					bind(&EchoBot::handleMessageReceived, this, _1));
@@ -113,7 +113,7 @@ int main(int, char**) {
 	SimpleEventLoop eventLoop;
 	BoostNetworkFactories networkFactories(&eventLoop);
 
-	EchoBot bot(&eventLoop, &networkFactories);
+	EchoBot bot(&networkFactories);
 
 	eventLoop.run();
 	return 0;

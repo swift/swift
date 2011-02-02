@@ -26,7 +26,7 @@ int exitCode = 2;
 class FileReceiver {
 	public:
 		FileReceiver(const JID& jid, const String& password) : jid(jid), password(password), jingleSessionManager(NULL), incomingFileTransferManager(NULL) {
-			client = new Swift::Client(&eventLoop, &networkFactories, jid, password);
+			client = new Swift::Client(jid, password, &networkFactories);
 			client->onConnected.connect(boost::bind(&FileReceiver::handleConnected, this));
 			client->onDisconnected.connect(boost::bind(&FileReceiver::handleDisconnected, this, _1));
 			//tracer = new ClientXMLTracer(client);

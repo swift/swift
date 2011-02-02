@@ -32,7 +32,7 @@ class FileSender {
 			connectionServer = BoostConnectionServer::create(port, networkFactories.getIOServiceThread()->getIOService(), &eventLoop);
 			socksBytestreamServer = new SOCKS5BytestreamServer(connectionServer);
 
-			client = new Swift::Client(&eventLoop, &networkFactories, jid, password);
+			client = new Swift::Client(jid, password, &networkFactories);
 			client->onConnected.connect(boost::bind(&FileSender::handleConnected, this));
 			client->onDisconnected.connect(boost::bind(&FileSender::handleDisconnected, this, _1));
 			//tracer = new ClientXMLTracer(client);

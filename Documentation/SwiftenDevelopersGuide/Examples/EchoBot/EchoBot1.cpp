@@ -12,7 +12,7 @@ int main(int, char**) {
 	SimpleEventLoop eventLoop;
 	BoostNetworkFactories networkFactories(&eventLoop);
 
-	Client client(&eventLoop, &networkFactories, JID("echobot@wonderland.lit"), "mypass");
+	Client client(JID("echobot@wonderland.lit"), "mypass", &networkFactories);
 	client.connect();
 
 	eventLoop.run();

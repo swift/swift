@@ -59,7 +59,7 @@ int main(int, char**) {
 		return -1;
 	}
 
-	client = new Swift::Client(&eventLoop, &networkFactories, JID(jid), String(pass));
+	client = new Swift::Client(JID(jid), String(pass), &networkFactories);
 	ClientXMLTracer* tracer = new ClientXMLTracer(client);
 	client->onConnected.connect(&handleConnected);
 	client->setAlwaysTrustCertificates();

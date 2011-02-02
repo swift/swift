@@ -57,7 +57,7 @@ int main(int argc, char* argv[]) {
 		connectHost = argv[argi++];
 	}
 
-	client = new Swift::Client(&eventLoop, &networkFactories, JID(jid), String(argv[argi++]));
+	client = new Swift::Client(JID(jid), String(argv[argi++]), &networkFactories);
 	client->setAlwaysTrustCertificates();
 
 	recipient = JID(argv[argi++]);

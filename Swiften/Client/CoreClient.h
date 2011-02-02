@@ -32,7 +32,6 @@ namespace Swift {
 	class TimerFactory;
 	class ClientSession;
 	class BasicSessionStream;
-	class EventLoop;
 	class PlatformTLSFactories;
 	class CertificateTrustChecker;
 	class NetworkFactories;
@@ -53,7 +52,7 @@ namespace Swift {
 			 * Constructs a client for the given JID with the given password.
 			 * The given eventLoop will be used to post events to.
 			 */
-			CoreClient(EventLoop* eventLoop, NetworkFactories* networkFactories, const JID& jid, const String& password);
+			CoreClient(const JID& jid, const String& password, NetworkFactories* networkFactories);
 			~CoreClient();
 
 			void setCertificate(const String& certificate);
@@ -207,7 +206,6 @@ namespace Swift {
 		private:
 			JID jid_;
 			String password_;
-			EventLoop* eventLoop;
 			NetworkFactories* networkFactories;
 			ClientSessionStanzaChannel* stanzaChannel_;
 			IQRouter* iqRouter_;
