@@ -36,8 +36,6 @@ namespace Swift {
 			virtual void addAvailableAccount(const String& defaultJID, const String& defaultPassword, const String& defaultCertificate);
 			virtual void setLoginAutomatically(bool loginAutomatically);
 			virtual void setIsLoggingIn(bool loggingIn);
-			static QRect defaultPosition();
-			void setGentleGeometry(const QRect&);
 			void selectUser(const String& user);
 			bool askUserToTrustCertificatePermanently(const String& message, Certificate::ref certificate);
 			void hide();

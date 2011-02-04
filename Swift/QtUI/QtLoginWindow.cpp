@@ -197,17 +197,6 @@ void QtLoginWindow::handleUIEvent(boost::shared_ptr<UIEvent> event) {
 	}
 }
 
-/**
- * Move and resize the window, but respect minimum sizes.
- * (Like QWidget::setGeometry, only that will truncate the window
- *  the setGeometry docs say that it shouldn't do this, but I've just seen it
- *  maybe we can remove this method if that's a Qt bug (or I'm misusing it)).
- */
-void QtLoginWindow::setGentleGeometry(const QRect& rect) {
-	resize(rect.size());
-	move(rect.topLeft());
-}
-
 void QtLoginWindow::selectUser(const String& username) {
 	for (int i = 0; i < usernames_.count(); i++) {
 		if (P2QSTRING(username) == usernames_[i]) {
@@ -216,18 +205,6 @@ void QtLoginWindow::selectUser(const String& username) {
 			break;
 		}
 	}
-}
-
-QRect QtLoginWindow::defaultPosition() {
-	QDesktopWidget desktop;
-	int windowWidth = 200;
-	int windowHeight = 500;
-	QRect screen = desktop.screenGeometry(-1); //appear on default screen
-	windowWidth = std::min(windowWidth, screen.width());
-	windowHeight = std::min(windowHeight, screen.height());
-	int left = (screen.width() - windowWidth) / 2;
-	int height = (screen.height() - windowHeight) / 2;
-	return QRect(left, height, windowWidth, windowHeight);
 }
 
 void QtLoginWindow::addAvailableAccount(const String& defaultJID, const String& defaultPassword, const String& defaultCertificate) {

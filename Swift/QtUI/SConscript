@@ -38,6 +38,8 @@ myenv.MergeFlags(env.get("EXPAT_FLAGS", ""))
 if myenv.get("HAVE_GROWL", False) :
 	myenv.MergeFlags(myenv["GROWL_FLAGS"])
 	myenv.Append(CPPDEFINES = ["HAVE_GROWL"])
+if myenv["swift_mobile"] :
+	myenv.Append(CPPDEFINES = ["SWIFT_MOBILE"])
 if myenv.get("HAVE_SNARL", False) :
 	myenv.MergeFlags(myenv["SNARL_FLAGS"])
 	myenv.Append(CPPDEFINES = ["HAVE_SNARL"])

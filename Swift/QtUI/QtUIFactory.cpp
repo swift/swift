@@ -51,12 +51,14 @@ LoginWindow* QtUIFactory::createLoginWindow(UIEventStream* eventStream) {
 	}
 	connect(systemTray, SIGNAL(clicked()), loginWindow, SLOT(bringToFront()));
 
+#ifndef SWIFT_MOBILE
 	QVariant loginWindowGeometryVariant = settings->getQSettings()->value("loginWindowGeometry");
 	if (loginWindowGeometryVariant.isValid()) {
 		loginWindow->restoreGeometry(loginWindowGeometryVariant.toByteArray());
 	}
 	connect(loginWindow, SIGNAL(geometryChanged()), this, SLOT(handleLoginWindowGeometryChanged()));
 	if (startMinimized) loginWindow->hide();
+#endif
 	return loginWindow;
 }
 
