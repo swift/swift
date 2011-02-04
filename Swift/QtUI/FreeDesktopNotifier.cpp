@@ -52,7 +52,7 @@ void FreeDesktopNotifier::showMessage(Type type, const String& subject, const St
 	msg << hints; // Hints to the server displaying the message
 	msg << qint32(timeout*1000); // Timeout in milliseconds
 
-	bus.call(msg);
+	bus.asyncCall(msg);
 }
 
 }
