@@ -13,6 +13,8 @@
 namespace Swift {
 	class MUCOwnerPayload : public Payload {
 		public:
+			typedef boost::shared_ptr<MUCOwnerPayload> ref;
+
 			MUCOwnerPayload() {
 			}
 

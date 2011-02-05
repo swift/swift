@@ -8,6 +8,7 @@
 
 #include <boost/bind.hpp>
 #include <boost/shared_ptr.hpp>
+#include <boost/smart_ptr/make_shared.hpp>
 
 #include "Swiften/Presence/DirectedPresenceSender.h"
 #include "Swiften/Client/StanzaChannel.h"
@@ -37,30 +38,34 @@ void MUC::joinAs(const String &nick) {
 	internalJoin(nick);
 }
 
-void MUC::internalJoin(const String &nick) {
-	//TODO: password
-	//TODO: history request
-	mucRegistry->addMUC(getJID());
-	joinComplete_ = false;
-	ownMUCJID = JID(ownMUCJID.getNode(), ownMUCJID.getDomain(), nick);
-	presenceSender->addDirectedPresenceReceiver(ownMUCJID, DirectedPresenceSender::DontSendPresence);
-	boost::shared_ptr<Presence> joinPresence(presenceSender->getLastSentUndirectedPresence());
-	assert(joinPresence->getType() == Presence::Available);
-	joinPresence->setTo(ownMUCJID);
-	boost::shared_ptr<MUCPayload> mucPayload(new MUCPayload());
-	if (joinSince_ != boost::posix_time::not_a_date_time) {
-		mucPayload->setSince(joinSince_);
-	}
-	joinPresence->addPayload(mucPayload);
-	presenceSender->sendPresence(joinPresence);
-}
-
 /**
  * Join the MUC with context since date.
  */
 void MUC::joinWithContextSince(const String &nick, const boost::posix_time::ptime& since) {
 	joinSince_ = since;
 	internalJoin(nick);
+}
+
+void MUC::internalJoin(const String &nick) {
+	//TODO: password
+	//TODO: history request
+	joinComplete_ = false;
+	joinSucceeded_ = false;
+
+	mucRegistry->addMUC(getJID());
+
+	ownMUCJID = JID(ownMUCJID.getNode(), ownMUCJID.getDomain(), nick);
+
+	Presence::ref joinPresence = boost::make_shared<Presence>(*presenceSender->getLastSentUndirectedPresence());
+	assert(joinPresence->getType() == Presence::Available);
+	joinPresence->setTo(ownMUCJID);
+	MUCPayload::ref mucPayload = boost::make_shared<MUCPayload>();
+	if (joinSince_ != boost::posix_time::not_a_date_time) {
+		mucPayload->setSince(joinSince_);
+	}
+	joinPresence->addPayload(mucPayload);
+
+	presenceSender->sendPresence(joinPresence);
 }
 
 void MUC::part() {
@@ -77,26 +82,33 @@ void MUC::handleUserLeft(LeavingType type) {
 	}
 	occupants.clear();
 	joinComplete_ = false;
+	joinSucceeded_ = false;
 	presenceSender->removeDirectedPresenceReceiver(ownMUCJID, DirectedPresenceSender::DontSendPresence);
 }
 
-void MUC::handleIncomingPresence(boost::shared_ptr<Presence> presence) {
+void MUC::handleIncomingPresence(Presence::ref presence) {
 	if (!isFromMUC(presence->getFrom())) {
 		return;
 	}
-	boost::shared_ptr<MUCUserPayload> mucPayload;
-	foreach (boost::shared_ptr<MUCUserPayload> payload, presence->getPayloads<MUCUserPayload>()) {
+
+	MUCUserPayload::ref mucPayload;
+	foreach (MUCUserPayload::ref payload, presence->getPayloads<MUCUserPayload>()) {
 		if (payload->getItems().size() > 0 || payload->getStatusCodes().size() > 0) {
 			mucPayload = payload;
 		}
 	}
 	
-	if (!joinComplete_) {
+	// On the first incoming presence, check if our join has succeeded 
+	// (i.e. we start getting non-error presence from the MUC) or not
+	if (!joinSucceeded_) {
 		if (presence->getType() == Presence::Error) {
 			String reason;
-			presenceSender->removeDirectedPresenceReceiver(ownMUCJID, DirectedPresenceSender::AndSendPresence);
 			onJoinFailed(presence->getPayload<ErrorPayload>());
 			return;
+		}
+		else {
+			joinSucceeded_ = true;
+			presenceSender->addDirectedPresenceReceiver(ownMUCJID, DirectedPresenceSender::AndSendPresence);
 		}
 	}
 
@@ -121,7 +133,8 @@ void MUC::handleIncomingPresence(boost::shared_ptr<Presence> presence) {
 		if (presence->getFrom() == ownMUCJID) {
 			handleUserLeft(Part);
 			return;
-		} else {
+		} 
+		else {
 			std::map<String,MUCOccupant>::iterator i = occupants.find(nick);
 			if (i != occupants.end()) {
 				//TODO: part type
@@ -129,7 +142,8 @@ void MUC::handleIncomingPresence(boost::shared_ptr<Presence> presence) {
 				occupants.erase(i);
 			}
 		}
-	} else if (presence->getType() == Presence::Available) {
+	} 
+	else if (presence->getType() == Presence::Available) {
 		std::map<String, MUCOccupant>::iterator it = occupants.find(nick);
 		MUCOccupant occupant(nick, role, affiliation);
 		bool isJoin = true;
@@ -158,19 +172,24 @@ void MUC::handleIncomingPresence(boost::shared_ptr<Presence> presence) {
 			if (status.code == 110) {
 				/* Simply knowing this is your presence is enough, 210 doesn't seem to be necessary. */
 				joinComplete_ = true;
-				presenceSender->removeDirectedPresenceReceiver(ownMUCJID, DirectedPresenceSender::DontSendPresence);
-				ownMUCJID = presence->getFrom();
-				presenceSender->addDirectedPresenceReceiver(ownMUCJID, DirectedPresenceSender::DontSendPresence);
+				if (ownMUCJID != presence->getFrom()) {
+					presenceSender->removeDirectedPresenceReceiver(ownMUCJID, DirectedPresenceSender::DontSendPresence);
+					ownMUCJID = presence->getFrom();
+					presenceSender->addDirectedPresenceReceiver(ownMUCJID, DirectedPresenceSender::AndSendPresence);
+				}
 				onJoinComplete(getOwnNick());
 			}
 			if (status.code == 201) {
 				/* Room is created and locked */
 				/* Currently deal with this by making an instant room */
-				presenceSender->removeDirectedPresenceReceiver(ownMUCJID, DirectedPresenceSender::DontSendPresence);
-				ownMUCJID = presence->getFrom();
-				boost::shared_ptr<MUCOwnerPayload> mucPayload(new MUCOwnerPayload());
+				if (ownMUCJID != presence->getFrom()) {
+					presenceSender->removeDirectedPresenceReceiver(ownMUCJID, DirectedPresenceSender::DontSendPresence);
+					ownMUCJID = presence->getFrom();
+					presenceSender->addDirectedPresenceReceiver(ownMUCJID, DirectedPresenceSender::AndSendPresence);
+				}
+				MUCOwnerPayload::ref mucPayload(new MUCOwnerPayload());
 				presenceSender->addDirectedPresenceReceiver(ownMUCJID, DirectedPresenceSender::DontSendPresence);
-				mucPayload->setPayload(boost::shared_ptr<Payload>(new Form(Form::SubmitType)));
+				mucPayload->setPayload(boost::make_shared<Form>(Form::SubmitType));
 				GenericRequest<MUCOwnerPayload>* request = new GenericRequest<MUCOwnerPayload>(IQ::Set, getJID(), mucPayload, iqRouter_);
 				request->onResponse.connect(boost::bind(&MUC::handleCreationConfigResponse, this, _1, _2));
 				request->send();
@@ -180,7 +199,7 @@ void MUC::handleIncomingPresence(boost::shared_ptr<Presence> presence) {
 
 }
 
-void MUC::handleCreationConfigResponse(boost::shared_ptr<MUCOwnerPayload> /*unused*/, ErrorPayload::ref error) {
+void MUC::handleCreationConfigResponse(MUCOwnerPayload::ref /*unused*/, ErrorPayload::ref error) {
 	if (error) {
 		presenceSender->removeDirectedPresenceReceiver(ownMUCJID, DirectedPresenceSender::AndSendPresence);
 		onJoinFailed(error);

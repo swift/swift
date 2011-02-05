@@ -48,14 +48,14 @@ namespace Swift {
 			/*void queryRoomItems(); */
 			String getCurrentNick();
 			void part();
-			void handleIncomingMessage(boost::shared_ptr<Message> message);
+			void handleIncomingMessage(Message::ref message);
 			/** Expose public so it can be called when e.g. user goes offline */
 			void handleUserLeft(LeavingType);
 
 		public:
 			boost::signal<void (const String& /*nick*/)> onJoinComplete;
-			boost::signal<void (boost::shared_ptr<ErrorPayload>)> onJoinFailed;
-			boost::signal<void (boost::shared_ptr<Presence>)> onOccupantPresenceChange;
+			boost::signal<void (ErrorPayload::ref)> onJoinFailed;
+			boost::signal<void (Presence::ref)> onOccupantPresenceChange;
 			boost::signal<void (const String&, const MUCOccupant& /*now*/, const MUCOccupant::Role& /*old*/)> onOccupantRoleChanged;
 			boost::signal<void (const String&, const MUCOccupant::Affiliation& /*new*/, const MUCOccupant::Affiliation& /*old*/)> onOccupantAffiliationChanged;
 			boost::signal<void (const MUCOccupant&)> onOccupantJoined;
@@ -74,9 +74,9 @@ namespace Swift {
 			}
 
 		private:
-			void handleIncomingPresence(boost::shared_ptr<Presence> presence);
+			void handleIncomingPresence(Presence::ref presence);
 			void internalJoin(const String& nick);
-			void handleCreationConfigResponse(boost::shared_ptr<MUCOwnerPayload>, ErrorPayload::ref);
+			void handleCreationConfigResponse(MUCOwnerPayload::ref, ErrorPayload::ref);
 
 		private:
 			JID ownMUCJID;
@@ -85,6 +85,7 @@ namespace Swift {
 			DirectedPresenceSender* presenceSender;
 			MUCRegistry* mucRegistry;
 			std::map<String, MUCOccupant> occupants;
+			bool joinSucceeded_;
 			bool joinComplete_;
 			boost::bsignals::scoped_connection scopedConnection_;
 			boost::posix_time::ptime joinSince_;

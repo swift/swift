@@ -16,6 +16,8 @@
 namespace Swift {
 	class MUCPayload : public Payload {
 		public:
+			typedef boost::shared_ptr<MUCPayload> ref;
+
 			MUCPayload() {
 				maxChars_ = -1;
 				maxStanzas_ = -1;

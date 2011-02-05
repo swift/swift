@@ -21,7 +21,8 @@ using namespace Swift;
 class MUCTest : public CppUnit::TestFixture {
 		CPPUNIT_TEST_SUITE(MUCTest);
 		CPPUNIT_TEST(testJoin);
-		CPPUNIT_TEST(testJoin_ChangePresenceDuringJoin);
+		CPPUNIT_TEST(testJoin_ChangePresenceDuringJoinDoesNotSendPresenceBeforeJoinSuccess);
+		CPPUNIT_TEST(testJoin_ChangePresenceDuringJoinResendsPresenceAfterJoinSuccess);
 		/*CPPUNIT_TEST(testJoin_Success);
 		CPPUNIT_TEST(testJoin_Fail);*/
 		CPPUNIT_TEST_SUITE_END();
@@ -53,15 +54,26 @@ class MUCTest : public CppUnit::TestFixture {
 			CPPUNIT_ASSERT_EQUAL(JID("foo@bar.com/Alice"), p->getTo());
 		}
 
-		void testJoin_ChangePresenceDuringJoin() {
+		void testJoin_ChangePresenceDuringJoinDoesNotSendPresenceBeforeJoinSuccess() {
 			MUC::ref testling = createMUC(JID("foo@bar.com"));
 			testling->joinAs("Alice");
 
 			presenceSender->sendPresence(Presence::create("Test"));
+			CPPUNIT_ASSERT_EQUAL(2, static_cast<int>(channel->sentStanzas.size()));
+		}
+
+		void testJoin_ChangePresenceDuringJoinResendsPresenceAfterJoinSuccess() {
+			MUC::ref testling = createMUC(JID("foo@bar.com"));
+			testling->joinAs("Alice");
+
+			presenceSender->sendPresence(Presence::create("Test"));
+			receivePresence(JID("foo@bar.com/Rabbit"), "Here");
+
 			CPPUNIT_ASSERT_EQUAL(3, static_cast<int>(channel->sentStanzas.size()));
 			Presence::ref p = channel->getStanzaAtIndex<Presence>(2);
 			CPPUNIT_ASSERT(p);
 			CPPUNIT_ASSERT_EQUAL(JID("foo@bar.com/Alice"), p->getTo());
+			CPPUNIT_ASSERT_EQUAL(String("Test"), p->getStatus());
 		}
 
 		/*void testJoin_Success() {
@@ -91,14 +103,14 @@ class MUCTest : public CppUnit::TestFixture {
 			joinResults.push_back(r);
 		}
 
-		/*void receivePresence(const JID& jid, const String& status, const MUCUserPayload::Item& item) {
+		void receivePresence(const JID& jid, const String& status) {
 			Presence::ref p = Presence::create(status);
 			p->setFrom(jid);
-			MUCUserPayload::ref mucUserPayload = boost::make_shared<MUCUserPayload>();
-			mucUserPayload->addItem(item);
-			p->addPayload(mucUserPayload);
+			//MUCUserPayload::ref mucUserPayload = boost::make_shared<MUCUserPayload>();
+			//mucUserPayload->addItem(item);
+			//p->addPayload(mucUserPayload);
 			channel->onPresenceReceived(p);
-		}*/
+		}
 
 	private:
 		DummyStanzaChannel* channel;
