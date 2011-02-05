@@ -26,6 +26,7 @@ namespace Swift {
 
 			void requestRoster();
 
+		private:
 			void handleRosterReceived(boost::shared_ptr<RosterPayload> rosterPayload);
 
 		private:

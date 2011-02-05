@@ -39,12 +39,14 @@ void XMPPRosterController::requestRoster() {
 }
 
 void XMPPRosterController::handleRosterReceived(boost::shared_ptr<RosterPayload> rosterPayload) {
-	foreach(const RosterItemPayload& item, rosterPayload->getItems()) {
-		//Don't worry about the updated case, the XMPPRoster sorts that out.
-		if (item.getSubscription() == RosterItemPayload::Remove) {
-			xmppRoster_->removeContact(item.getJID());
-		} else {
-			xmppRoster_->addContact(item.getJID(), item.getName(), item.getGroups(), item.getSubscription());
+	if (rosterPayload) {
+		foreach(const RosterItemPayload& item, rosterPayload->getItems()) {
+			//Don't worry about the updated case, the XMPPRoster sorts that out.
+			if (item.getSubscription() == RosterItemPayload::Remove) {
+				xmppRoster_->removeContact(item.getJID());
+			} else {
+				xmppRoster_->addContact(item.getJID(), item.getName(), item.getGroups(), item.getSubscription());
+			}
 		}
 	}
 }

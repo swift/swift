@@ -6,12 +6,13 @@
 
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/extensions/TestFactoryRegistry.h>
+#include <boost/smart_ptr/make_shared.hpp>
 
 #include "Swiften/Roster/XMPPRosterController.h"
 #include "Swiften/Elements/Payload.h"
 #include "Swiften/Elements/RosterItemPayload.h"
 #include "Swiften/Elements/RosterPayload.h"
-#include "Swiften/Queries/DummyIQChannel.h"
+#include "Swiften/Client/DummyStanzaChannel.h"
 #include "Swiften/Queries/IQRouter.h"
 #include "Swiften/Roster/XMPPRosterImpl.h"
 
@@ -19,6 +20,7 @@ using namespace Swift;
 
 class XMPPRosterControllerTest : public CppUnit::TestFixture {
 		CPPUNIT_TEST_SUITE(XMPPRosterControllerTest);
+		CPPUNIT_TEST(testGet_EmptyResponse);
 		CPPUNIT_TEST(testAdd);
 		CPPUNIT_TEST(testModify);
 		CPPUNIT_TEST(testRemove);
@@ -26,7 +28,7 @@ class XMPPRosterControllerTest : public CppUnit::TestFixture {
 
 	public:
 		void setUp() {
-			channel_ = new DummyIQChannel();
+			channel_ = new DummyStanzaChannel();
 			router_ = new IQRouter(channel_);
 			xmppRoster_ = new XMPPRosterImpl();
 		}
@@ -35,6 +37,14 @@ class XMPPRosterControllerTest : public CppUnit::TestFixture {
 			delete xmppRoster_;
 			delete router_;
 			delete channel_;
+		}
+
+		void testGet_EmptyResponse() {
+			XMPPRosterController controller(router_, xmppRoster_);
+
+			controller.requestRoster();
+
+			channel_->onIQReceived(IQ::createResult(JID("baz@fum.com/dum"), channel_->sentStanzas[0]->getID(), boost::shared_ptr<RosterPayload>()));
 		}
 
 		void testAdd() {
@@ -74,7 +84,7 @@ class XMPPRosterControllerTest : public CppUnit::TestFixture {
 		}
 
 	private:
-		DummyIQChannel* channel_;
+		DummyStanzaChannel* channel_;
 		IQRouter* router_;
 		XMPPRosterImpl* xmppRoster_;
 };
