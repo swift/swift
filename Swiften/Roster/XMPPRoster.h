@@ -6,12 +6,15 @@
 
 #pragma once
 
+#include <boost/optional.hpp>
+#include <vector>
+#include <set>
+#include "Swiften/Base/boost_bsignals.h"
+
 #include "Swiften/Base/String.h"
 #include "Swiften/JID/JID.h"
 #include "Swiften/Elements/RosterItemPayload.h"
-
-#include <vector>
-#include "Swiften/Base/boost_bsignals.h"
+#include <Swiften/Roster/XMPPRosterItem.h>
 
 namespace Swift {
 	/**
@@ -43,7 +46,22 @@ namespace Swift {
 			/**
 			 * Returns the list of groups for the given JID.
 			 */
-			virtual const std::vector<String>& getGroupsForJID(const JID& jid) = 0;
+			virtual std::vector<String> getGroupsForJID(const JID& jid) = 0;
+
+			/**
+			 * Retrieve the items in the roster.
+			 */
+			virtual std::vector<XMPPRosterItem> getItems() const = 0;
+
+			/**
+			 * Retrieve the item with the given JID.
+			 */
+			virtual boost::optional<XMPPRosterItem> getItem(const JID&) const = 0;
+
+			/**
+			 * Retrieve the list of (existing) groups.
+			 */
+			virtual std::set<String> getGroups() const = 0;
 
 		public:
 			/**

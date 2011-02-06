@@ -6,15 +6,19 @@
 
 #include "Roster/QtTreeWidget.h"
 
+#include <QMenu>
+#include <QContextMenuEvent>
+#include <QInputDialog>
+#include <boost/smart_ptr/make_shared.hpp>
+
 #include "Swiften/Base/Platform.h"
 #include "Swiften/Roster/ContactRosterItem.h"
 #include "Swiften/Roster/GroupRosterItem.h"
 #include "Swift/Controllers/UIEvents/UIEventStream.h"
 #include "Swift/Controllers/UIEvents/RequestChatUIEvent.h"
-
-#include <qdebug.h>
-#include <QMenu>
-#include <QContextMenuEvent>
+#include "Swift/Controllers/UIEvents/RequestContactEditorUIEvent.h"
+#include "Swift/Controllers/UIEvents/RenameGroupUIEvent.h"
+#include "QtSwiftUtil.h"
 
 namespace Swift {
 
@@ -25,7 +29,6 @@ QtTreeWidget::QtTreeWidget(UIEventStream* eventStream, QWidget* parent) : QTreeV
 	delegate_ = new RosterDelegate(this);
 	setItemDelegate(delegate_);
 	setHeaderHidden(true);
-	contextMenu_ = NULL;
 #ifdef SWIFT_PLATFORM_MACOSX
 	setAlternatingRowColors(true);
 #endif
@@ -52,10 +55,6 @@ void QtTreeWidget::setRosterModel(Roster* roster) {
 	expandAll();
 }
 
-void QtTreeWidget::setContextMenu(QtContextMenu* contextMenu) {
-	contextMenu_ = contextMenu;
-}
-
 QtTreeWidgetItem* QtTreeWidget::getRoot() {
 	return treeRoot_;
 }
@@ -77,13 +76,29 @@ void QtTreeWidget::handleItemActivated(const QModelIndex& index) {
 }
 
 void QtTreeWidget::contextMenuEvent(QContextMenuEvent* event) {
-	if (!contextMenu_) {
+	QModelIndex index = indexAt(event->pos());
+	if (!index.isValid()) {
 		return;
 	}
-	QModelIndex index = indexAt(event->pos());
-	RosterItem* item = index.isValid() ? static_cast<RosterItem*>(index.internalPointer()) : NULL;
-	if (item) {
-		contextMenu_->show(item);
+	RosterItem* item = static_cast<RosterItem*>(index.internalPointer());
+	QMenu contextMenu;
+	if (ContactRosterItem* contact = dynamic_cast<ContactRosterItem*>(item)) {
+		QAction* editContact = contextMenu.addAction("Edit");
+		QAction* result = contextMenu.exec(event->globalPos());
+		if (result == editContact) {
+			eventStream_->send(boost::make_shared<RequestContactEditorUIEvent>(contact->getJID()));
+		}
+	}
+	else if (GroupRosterItem* group = dynamic_cast<GroupRosterItem*>(item)) {
+		QAction* renameGroup = contextMenu.addAction("Rename");
+		QAction* result = contextMenu.exec(event->globalPos());
+		if (result == renameGroup) {
+			bool ok;
+			QString newName = QInputDialog::getText(NULL, "Rename group", "New name for " + P2QSTRING(group->getDisplayName()), QLineEdit::Normal, P2QSTRING(group->getDisplayName()), &ok);
+			if (ok) {
+				eventStream_->send(boost::make_shared<RenameGroupUIEvent>(group->getDisplayName(), Q2PSTRING(newName)));
+			}
+		}
 	}
 }
 

@@ -62,6 +62,7 @@
 #include "Swift/Controllers/CertificateStorageTrustChecker.h"
 #include "Swiften/Network/NetworkFactories.h"
 #include <Swift/Controllers/ProfileController.h>
+#include <Swift/Controllers/ContactEditController.h>
 
 namespace Swift {
 
@@ -100,6 +101,7 @@ MainController::MainController(
 	chatsManager_ = NULL;
 	eventWindowController_ = NULL;
 	profileController_ = NULL;
+	contactEditController_ = NULL;
 	userSearchControllerChat_ = NULL;
 	userSearchControllerAdd_ = NULL;
 	quitRequested_ = false;
@@ -172,6 +174,8 @@ MainController::~MainController() {
 void MainController::resetClient() {
 	resetCurrentError();
 	resetPendingReconnects();
+	delete contactEditController_;
+	contactEditController_ = NULL;
 	delete profileController_;
 	profileController_ = NULL;
 	delete eventWindowController_;
@@ -233,10 +237,11 @@ void MainController::handleConnected() {
 	myStatusLooksOnline_ = true;
 	if (freshLogin) {
 		profileController_ = new ProfileController(client_->getVCardManager(), uiFactory_, uiEventStream_);
-
 		rosterController_ = new RosterController(jid_, client_->getRoster(), client_->getAvatarManager(), uiFactory_, client_->getNickManager(), client_->getNickResolver(), client_->getPresenceOracle(), client_->getSubscriptionManager(), eventController_, uiEventStream_, client_->getIQRouter(), settings_);
 		rosterController_->onChangeStatusRequest.connect(boost::bind(&MainController::handleChangeStatusRequest, this, _1, _2));
 		rosterController_->onSignOutRequest.connect(boost::bind(&MainController::signOut, this));
+
+		contactEditController_ = new ContactEditController(rosterController_, uiFactory_, uiEventStream_);
 
 		chatsManager_ = new ChatsManager(jid_, client_->getStanzaChannel(), client_->getIQRouter(), eventController_, uiFactory_, uiFactory_, client_->getNickResolver(), client_->getPresenceOracle(), client_->getPresenceSender(), uiEventStream_, uiFactory_, useDelayForLatency_, networkFactories_->getTimerFactory(), client_->getMUCRegistry(), client_->getEntityCapsProvider(), client_->getMUCManager(), uiFactory_, settings_);
 		client_->onMessageReceived.connect(boost::bind(&ChatsManager::handleIncomingMessage, chatsManager_, _1));
@@ -268,6 +273,7 @@ void MainController::handleConnected() {
 	
 	rosterController_->setEnabled(true);
 	profileController_->setAvailable(true);
+	contactEditController_->setAvailable(true);
 	/* Send presence later to catch all the incoming presences. */
 	sendPresence(statusTracker_->getNextPresence());
 	/* Enable chats last of all, so rejoining MUCs has the right sent presence */
@@ -531,6 +537,9 @@ void MainController::setManagersOffline() {
 	}
 	if (profileController_) {
 		profileController_->setAvailable(false);
+	}
+	if (contactEditController_) {
+		contactEditController_->setAvailable(false);
 	}
 }
 

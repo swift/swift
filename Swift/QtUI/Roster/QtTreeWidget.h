@@ -12,7 +12,6 @@
 #include "Swift/QtUI/Roster/QtTreeWidget.h"
 #include "Swift/QtUI/Roster/RosterModel.h"
 #include "Swift/QtUI/Roster/RosterDelegate.h"
-#include "Swift/QtUI/ContextMenus/QtContextMenu.h"
 
 namespace Swift {
 class UIEventStream;
@@ -24,7 +23,6 @@ class QtTreeWidget : public QTreeView{
 		~QtTreeWidget();
 		void show();
 		QtTreeWidgetItem* getRoot();
-		void setContextMenu(QtContextMenu* contextMenu);
 		void setRosterModel(Roster* roster);
 		Roster* getRoster() {return roster_;}
 	private slots:
@@ -42,7 +40,6 @@ class QtTreeWidget : public QTreeView{
 		Roster* roster_;
 		RosterDelegate* delegate_;
 		QtTreeWidgetItem* treeRoot_;
-		QtContextMenu* contextMenu_;
 		UIEventStream* eventStream_;
 };
 

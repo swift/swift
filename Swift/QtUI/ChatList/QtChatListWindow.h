@@ -12,7 +12,6 @@
 #include "Swift/Controllers/UIEvents/UIEventStream.h"
 #include "Swift/QtUI/ChatList/ChatListModel.h"
 #include "Swift/QtUI/ChatList/ChatListDelegate.h"
-#include "Swift/QtUI/ContextMenus/QtContextMenu.h"
 
 namespace Swift {
 
@@ -34,13 +33,13 @@ namespace Swift {
 
 		protected:
 			void contextMenuEvent(QContextMenuEvent* event);
+
 		private:
 			void setupContextMenus();
 			bool bookmarksEnabled_;
 			UIEventStream* eventStream_;
 			ChatListModel* model_;
 			ChatListDelegate* delegate_;
-			QtContextMenu* contextMenu_;
 			QMenu* mucMenu_;
 			QMenu* emptyMenu_;
 			ChatListItem* contextMenuItem_;

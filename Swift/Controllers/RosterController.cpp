@@ -7,6 +7,7 @@
 #include "Swift/Controllers/RosterController.h"
 
 #include <boost/bind.hpp>
+#include <boost/smart_ptr/make_shared.hpp>
 
 #include "Swiften/Base/foreach.h"
 #include "Swift/Controllers/UIInterfaces/MainWindow.h"
@@ -27,10 +28,11 @@
 #include "Swiften/Roster/SetName.h"
 #include "Swiften/Roster/OfflineRosterFilter.h"
 #include "Swiften/Roster/XMPPRoster.h"
+#include "Swiften/Roster/XMPPRosterItem.h"
 #include "Swift/Controllers/UIEvents/AddContactUIEvent.h"
 #include "Swift/Controllers/UIEvents/RemoveRosterItemUIEvent.h"
 #include "Swift/Controllers/UIEvents/RenameRosterItemUIEvent.h"
-#include "Swift/Controllers/UIEvents/RegroupRosterItemUIEvent.h"
+#include "Swift/Controllers/UIEvents/RenameGroupUIEvent.h"
 #include "Swift/Controllers/UIEvents/ToggleShowOfflineUIEvent.h"
 #include <Swiften/Client/NickManager.h>
 
@@ -165,12 +167,10 @@ void RosterController::handleOnJIDUpdated(const JID& jid, const String& oldName,
 }
 
 void RosterController::handleUIEvent(boost::shared_ptr<UIEvent> event) {
-	boost::shared_ptr<ToggleShowOfflineUIEvent> showOfflineEvent = boost::dynamic_pointer_cast<ToggleShowOfflineUIEvent>(event);
-	if (showOfflineEvent) {
+	if (boost::shared_ptr<ToggleShowOfflineUIEvent> showOfflineEvent = boost::dynamic_pointer_cast<ToggleShowOfflineUIEvent>(event)) {
 		handleShowOfflineToggled(showOfflineEvent->getShow());
 	}
-	boost::shared_ptr<AddContactUIEvent> addContactEvent = boost::dynamic_pointer_cast<AddContactUIEvent>(event);
-	if (addContactEvent) {
+	else if (boost::shared_ptr<AddContactUIEvent> addContactEvent = boost::dynamic_pointer_cast<AddContactUIEvent>(event)) {
 		RosterItemPayload item;
 		item.setName(addContactEvent->getName());
 		item.setJID(addContactEvent->getJID());
@@ -180,10 +180,8 @@ void RosterController::handleUIEvent(boost::shared_ptr<UIEvent> event) {
 		request->onResponse.connect(boost::bind(&RosterController::handleRosterSetError, this, _1, roster));
 		request->send();
 		subscriptionManager_->requestSubscription(addContactEvent->getJID());
-		return;
 	}
-	boost::shared_ptr<RemoveRosterItemUIEvent> removeEvent = boost::dynamic_pointer_cast<RemoveRosterItemUIEvent>(event);
-	if (removeEvent) {
+	else if (boost::shared_ptr<RemoveRosterItemUIEvent> removeEvent = boost::dynamic_pointer_cast<RemoveRosterItemUIEvent>(event)) {
 		RosterItemPayload item(removeEvent->getJID(), "", RosterItemPayload::Remove);
 		boost::shared_ptr<RosterPayload> roster(new RosterPayload());
 		roster->addItem(item);
@@ -191,10 +189,8 @@ void RosterController::handleUIEvent(boost::shared_ptr<UIEvent> event) {
 		request->onResponse.connect(boost::bind(&RosterController::handleRosterSetError, this, _1, roster));
 		request->send();
 
-		return;
 	}
-	boost::shared_ptr<RenameRosterItemUIEvent> renameEvent = boost::dynamic_pointer_cast<RenameRosterItemUIEvent>(event);
-	if (renameEvent) {
+	else if (boost::shared_ptr<RenameRosterItemUIEvent> renameEvent = boost::dynamic_pointer_cast<RenameRosterItemUIEvent>(event)) {
 		JID contact(renameEvent->getJID());
 		RosterItemPayload item(contact, renameEvent->getNewName(), xmppRoster_->getSubscriptionStateForJID(contact));
 		item.setGroups(xmppRoster_->getGroupsForJID(contact));
@@ -203,32 +199,42 @@ void RosterController::handleUIEvent(boost::shared_ptr<UIEvent> event) {
 		SetRosterRequest::ref request = SetRosterRequest::create(roster, iqRouter_);
 		request->onResponse.connect(boost::bind(&RosterController::handleRosterSetError, this, _1, roster));
 		request->send();
-		return;
 	}
-	boost::shared_ptr<RegroupRosterItemUIEvent> regroupEvent = boost::dynamic_pointer_cast<RegroupRosterItemUIEvent>(event);
-	if (regroupEvent) {
-		JID contact(regroupEvent->getJID());
-		RosterItemPayload item(contact, xmppRoster_->getNameForJID(contact), xmppRoster_->getSubscriptionStateForJID(contact));
-		std::vector<String> newGroups;
-		const std::vector<String> addedGroups = regroupEvent->getAddedGroups();
-		const std::vector<String> removedGroups = regroupEvent->getRemovedGroups();
-		foreach (const String& oldGroup, xmppRoster_->getGroupsForJID(contact)) {
-			if (std::find(removedGroups.begin(), removedGroups.end(), oldGroup) == removedGroups.end()
-					&& std::find(addedGroups.begin(), addedGroups.end(), oldGroup) == addedGroups.end()) {
-					newGroups.push_back(oldGroup);
+	else if (boost::shared_ptr<RenameGroupUIEvent> renameGroupEvent = boost::dynamic_pointer_cast<RenameGroupUIEvent>(event)) {
+		std::vector<XMPPRosterItem> items = xmppRoster_->getItems();
+		String group = renameGroupEvent->getGroup();
+		// FIXME: We should handle contacts groups specially to avoid clashes
+		if (group == "Contacts") {
+			group = "";
+		}
+		foreach(XMPPRosterItem& item, items) {
+			std::vector<String> groups = item.getGroups();
+			if ( (group.isEmpty() && groups.empty()) || std::find(groups.begin(), groups.end(), group) != groups.end()) {
+				groups.erase(std::remove(groups.begin(), groups.end(), group), groups.end());
+				if (std::find(groups.begin(), groups.end(), renameGroupEvent->getNewName()) == groups.end()) {
+					groups.push_back(renameGroupEvent->getNewName());
+				}
+				item.setGroups(groups);
+				updateItem(item);
 			}
 		}
-		foreach (const String& newGroup, regroupEvent->getAddedGroups()) {
-			newGroups.push_back(newGroup);
-		}
-		item.setGroups(newGroups);
-		boost::shared_ptr<RosterPayload> roster(new RosterPayload());
-		roster->addItem(item);
-		SetRosterRequest::ref request = SetRosterRequest::create(roster, iqRouter_);
-		request->onResponse.connect(boost::bind(&RosterController::handleRosterSetError, this, _1, roster));
-		request->send();
-		return;
 	}
+}
+
+void RosterController::setContactGroups(const JID& jid, const std::vector<String>& groups) {
+	updateItem(XMPPRosterItem(jid, xmppRoster_->getNameForJID(jid), groups, xmppRoster_->getSubscriptionStateForJID(jid)));
+}
+
+void RosterController::updateItem(const XMPPRosterItem& item) {
+	RosterItemPayload itemPayload(item.getJID(), item.getName(), item.getSubscription());
+	itemPayload.setGroups(item.getGroups());
+
+	RosterPayload::ref roster = boost::make_shared<RosterPayload>();
+	roster->addItem(itemPayload);
+
+	SetRosterRequest::ref request = SetRosterRequest::create(roster, iqRouter_);
+	request->onResponse.connect(boost::bind(&RosterController::handleRosterSetError, this, _1, roster));
+	request->send();
 }
 
 void RosterController::handleRosterSetError(ErrorPayload::ref error, boost::shared_ptr<RosterPayload> rosterPayload) {
@@ -279,6 +285,14 @@ void RosterController::handleAvatarChanged(const JID& jid) {
 	if (jid.equals(myJID_, JID::WithoutResource)) {
 		mainWindow_->setMyAvatarPath(path);
 	}
+}
+
+boost::optional<XMPPRosterItem> RosterController::getItem(const JID& jid) const {
+	return xmppRoster_->getItem(jid);
+}
+
+std::set<String> RosterController::getGroups() const {
+	return xmppRoster_->getGroups();
 }
 
 }

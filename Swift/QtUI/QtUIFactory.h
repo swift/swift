@@ -36,6 +36,7 @@ namespace Swift {
 			virtual UserSearchWindow* createUserSearchWindow(UserSearchWindow::Type type, UIEventStream* eventStream);
 			virtual JoinMUCWindow* createJoinMUCWindow();
 			virtual ProfileWindow* createProfileWindow();
+			virtual ContactEditWindow* createContactEditWindow();
 
 		private slots:
 			void handleLoginWindowGeometryChanged();

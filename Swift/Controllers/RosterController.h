@@ -22,6 +22,7 @@ namespace Swift {
 	class IQRouter;
 	class Roster;
 	class XMPPRoster;
+	class XMPPRosterItem;
 	class MainWindow;
 	class MainWindowFactory;
 	class OfflineRosterFilter;
@@ -45,6 +46,13 @@ namespace Swift {
 			boost::signal<void ()> onSignOutRequest;
 			void handleAvatarChanged(const JID& jid);
 			void setEnabled(bool enabled);
+
+			boost::optional<XMPPRosterItem> getItem(const JID&) const;
+			std::set<String> getGroups() const;
+
+			void setContactGroups(const JID& jid, const std::vector<String>& groups);
+			void updateItem(const XMPPRosterItem&);
+
 		private:
 			void handleOnJIDAdded(const JID &jid);
 			void handleRosterCleared();

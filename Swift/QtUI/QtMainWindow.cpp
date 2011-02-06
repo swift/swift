@@ -59,8 +59,6 @@ QtMainWindow::QtMainWindow(QtSettingsProvider* settings, UIEventStream* uiEventS
 	contactTabLayout->setContentsMargins(0, 0, 0, 0);
 
 	treeWidget_ = new QtTreeWidget(uiEventStream_);
-	contextMenu_ = new QtRosterContextMenu(uiEventStream_, treeWidget_);
-	treeWidget_->setContextMenu(contextMenu_);
 	contactTabLayout->addWidget(treeWidget_);
 
 	tabs_->addTab(contactsTabWidget_, "&Contacts");
@@ -108,7 +106,6 @@ QtMainWindow::QtMainWindow(QtSettingsProvider* settings, UIEventStream* uiEventS
 
 QtMainWindow::~QtMainWindow() {
 	uiEventStream_->onUIEvent.disconnect(boost::bind(&QtMainWindow::handleUIEvent, this, _1));
-	delete contextMenu_;
 }
 
 QtEventWindow* QtMainWindow::getEventWindow() {

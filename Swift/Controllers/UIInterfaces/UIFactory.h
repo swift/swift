@@ -16,6 +16,7 @@
 #include <Swift/Controllers/UIInterfaces/UserSearchWindowFactory.h>
 #include <Swift/Controllers/UIInterfaces/XMLConsoleWidgetFactory.h>
 #include <Swift/Controllers/UIInterfaces/ProfileWindowFactory.h>
+#include <Swift/Controllers/UIInterfaces/ContactEditWindowFactory.h>
 
 namespace Swift {
 	class UIFactory : 
@@ -28,7 +29,8 @@ namespace Swift {
 			public XMLConsoleWidgetFactory, 
 			public UserSearchWindowFactory, 
 			public JoinMUCWindowFactory,
-			public ProfileWindowFactory {
+			public ProfileWindowFactory,
+			public ContactEditWindowFactory {
 		public:
 			virtual ~UIFactory() {}
 	};

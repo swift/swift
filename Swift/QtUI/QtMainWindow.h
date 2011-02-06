@@ -4,8 +4,7 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#ifndef SWIFT_QtMainWindow_H
-#define SWIFT_QtMainWindow_H
+#pragma once
 
 #include <QWidget>
 #include <QMenu>
@@ -13,7 +12,6 @@
 #include "Swift/QtUI/QtRosterHeader.h"
 #include "Swift/QtUI/EventViewer/QtEventWindow.h"
 #include "Swift/QtUI/ChatList/QtChatListWindow.h"
-#include "Swift/QtUI/ContextMenus/QtRosterContextMenu.h"
 
 #include <vector>
 
@@ -73,10 +71,6 @@ namespace Swift {
 			QtEventWindow* eventWindow_;
 			QtChatListWindow* chatListWindow_;
 			UIEventStream* uiEventStream_;
-			QtRosterContextMenu* contextMenu_;
 			bool lastOfflineState_;
 	};
 }
-
-#endif
-

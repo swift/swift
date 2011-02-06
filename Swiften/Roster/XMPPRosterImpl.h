@@ -7,6 +7,7 @@
 #pragma once
 
 #include <map>
+#include <set>
 
 #include "Swiften/Roster/XMPPRoster.h"
 
@@ -22,15 +23,14 @@ namespace Swift {
 			bool containsJID(const JID& jid);
 			RosterItemPayload::Subscription getSubscriptionStateForJID(const JID& jid);
 			String getNameForJID(const JID& jid) const;
-			const std::vector<String>& getGroupsForJID(const JID& jid);
+			std::vector<String> getGroupsForJID(const JID& jid);
+
+			virtual std::vector<XMPPRosterItem> getItems() const;
+			virtual boost::optional<XMPPRosterItem> getItem(const JID&) const;
+			virtual std::set<String> getGroups() const;
 
 		private:
-			struct XMPPRosterItem {
-				JID jid;
-				String name;
-				std::vector<String> groups;
-				RosterItemPayload::Subscription subscription;
-			};
-			std::map<JID, XMPPRosterItem> entries_;
+			typedef std::map<JID, XMPPRosterItem> RosterMap;
+			RosterMap entries_;
 	};
 }

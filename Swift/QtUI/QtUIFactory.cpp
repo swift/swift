@@ -22,6 +22,7 @@
 #include "MUCSearch/QtMUCSearchWindow.h"
 #include "UserSearch/QtUserSearchWindow.h"
 #include "QtProfileWindow.h"
+#include "QtContactEditWindow.h"
 
 namespace Swift {
 
@@ -93,5 +94,10 @@ JoinMUCWindow* QtUIFactory::createJoinMUCWindow() {
 ProfileWindow* QtUIFactory::createProfileWindow() {
 	return new QtProfileWindow();
 }
+
+ContactEditWindow* QtUIFactory::createContactEditWindow() {
+	return new QtContactEditWindow();
+}
+
 
 }
