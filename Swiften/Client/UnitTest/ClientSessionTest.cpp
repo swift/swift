@@ -39,6 +39,7 @@ class ClientSessionTest : public CppUnit::TestFixture {
 		CPPUNIT_TEST(testStartTLS_ServerError);
 		CPPUNIT_TEST(testStartTLS_ConnectError);
 		CPPUNIT_TEST(testStartTLS_InvalidIdentity);
+		CPPUNIT_TEST(testStart_StreamFeaturesWithoutResourceBindingFails);
 		CPPUNIT_TEST(testAuthenticate);
 		CPPUNIT_TEST(testAuthenticate_Unauthorized);
 		CPPUNIT_TEST(testAuthenticate_NoValidAuthMechanisms);
@@ -155,6 +156,18 @@ class ClientSessionTest : public CppUnit::TestFixture {
 			CPPUNIT_ASSERT(sessionFinishedReceived);
 			CPPUNIT_ASSERT(sessionFinishedError);
 			CPPUNIT_ASSERT_EQUAL(CertificateVerificationError::InvalidServerIdentity, boost::dynamic_pointer_cast<CertificateVerificationError>(sessionFinishedError)->getType());
+		}
+
+		void testStart_StreamFeaturesWithoutResourceBindingFails() {
+			boost::shared_ptr<ClientSession> session(createSession());
+			session->start();
+			server->receiveStreamStart();
+			server->sendStreamStart();
+			server->sendEmptyStreamFeatures();
+
+			CPPUNIT_ASSERT_EQUAL(ClientSession::Finished, session->getState());
+			CPPUNIT_ASSERT(sessionFinishedReceived);
+			CPPUNIT_ASSERT(sessionFinishedError);
 		}
 
 		void testAuthenticate() {
@@ -402,6 +415,10 @@ class ClientSessionTest : public CppUnit::TestFixture {
 					streamFeatures->setHasResourceBind();
 					streamFeatures->setHasStreamManagement();
 					onElementReceived(streamFeatures);
+				}
+
+				void sendEmptyStreamFeatures() {
+					onElementReceived(boost::make_shared<StreamFeatures>());
 				}
 
 				void sendAuthSuccess() {

@@ -225,7 +225,13 @@ void ClientSession::handleElement(boost::shared_ptr<Element> element) {
 			needSessionStart = streamFeatures->hasSession();
 			needResourceBind = streamFeatures->hasResourceBind();
 			needAcking = streamFeatures->hasStreamManagement();
-			continueSessionInitialization();
+			if (!needResourceBind) {
+				// Resource binding is a MUST
+				finishSession(Error::ResourceBindError);
+			}
+			else {
+				continueSessionInitialization();
+			}
 		}
 	}
 	else if (boost::dynamic_pointer_cast<Compressed>(element)) {
