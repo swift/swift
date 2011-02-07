@@ -64,7 +64,6 @@ myenv.WriteVal("DefaultTheme.qrc", myenv.Value(generateDefaultTheme(myenv.Dir(".
 sources = [
     "main.cpp",
     "QtAboutWidget.cpp",
-    "QtAddContactDialog.cpp",
     "QtAvatarWidget.cpp",
     "QtUIFactory.cpp",
     "QtChatWindowFactory.cpp",
@@ -150,7 +149,6 @@ myenv.Uic4("UserSearch/QtUserSearchWizard.ui")
 myenv.Uic4("UserSearch/QtUserSearchFirstPage.ui")
 myenv.Uic4("UserSearch/QtUserSearchFieldsPage.ui")
 myenv.Uic4("UserSearch/QtUserSearchResultsPage.ui")
-myenv.Uic4("QtAddContactDialog.ui")
 myenv.Uic4("QtBookmarkDetailWindow.ui")
 myenv.Uic4("QtJoinMUCWindow.ui")
 myenv.Qrc("DefaultTheme.qrc")

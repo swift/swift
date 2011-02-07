@@ -21,7 +21,6 @@
 #include <QAction>
 #include <QTabWidget>
 
-#include "QtAddContactDialog.h"
 #include "QtSwiftUtil.h"
 #include "QtTabWidget.h"
 #include "Roster/QtTreeWidget.h"
