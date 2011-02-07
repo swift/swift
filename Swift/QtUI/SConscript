@@ -69,6 +69,7 @@ sources = [
     "QtUIFactory.cpp",
     "QtChatWindowFactory.cpp",
     "QtChatWindow.cpp",
+    "QtClickableLabel.cpp",
     "QtLoginWindow.cpp",
     "QtMainWindow.cpp",
     "QtProfileWindow.cpp",

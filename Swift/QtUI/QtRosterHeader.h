@@ -20,6 +20,7 @@
 class QHBoxLayout;
 
 namespace Swift {
+	class QtClickableLabel;
 	class QtStatusWidget;
 	class QtNameWidget;
 	class QtSettingsProvider;
@@ -44,7 +45,7 @@ namespace Swift {
 		void handleChangeStatusRequest(StatusShow::Type type, const QString &statusMessage);
 	private:
 		QString name_;
-		QLabel* avatarLabel_;
+		QtClickableLabel* avatarLabel_;
 		QtNameWidget* nameWidget_;
 		QtTextEdit* statusEdit_;
 		QToolBar* toolBar_;
