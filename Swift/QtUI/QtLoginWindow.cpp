@@ -191,13 +191,12 @@ QtLoginWindow::QtLoginWindow(UIEventStream* uiEventStream) : QMainWindow() {
 
 bool QtLoginWindow::eventFilter(QObject *obj, QEvent *event) {
 	if (obj == username_->view() && event->type() == QEvent::KeyPress) {
-		QKeyEvent *keyEvent = static_cast<QKeyEvent *>(event);
-		if(keyEvent->key() == Qt::Key_Delete || Qt::Key_Backspace) {
-			QMessageBox::information(this, "Delete this login data?", "Remove the save login data regarding the jid: " + username_->view()->currentIndex().data().toString());
+		QKeyEvent *keyEvent = static_cast<QKeyEvent*>(event);
+		if (keyEvent->key() == Qt::Key_Delete || keyEvent->key() == Qt::Key_Backspace) {
+			QMessageBox::information(this, "Remove profile", "Remove the profile '" + username_->view()->currentIndex().data().toString() + "'?");
 			return true;
 		}
 	}
-	// standard event processing
 	return QObject::eventFilter(obj, event);
 }
 
