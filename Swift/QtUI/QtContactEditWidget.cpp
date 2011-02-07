@@ -21,6 +21,7 @@ namespace Swift {
 QtContactEditWidget::QtContactEditWidget(const std::set<String>& allGroups, QWidget* parent) : QWidget(parent), groups_(NULL) {
 	QBoxLayout* layout = new QVBoxLayout(this);
 	setContentsMargins(0,0,0,0);
+	layout->setContentsMargins(0,0,0,0);
 
 	QHBoxLayout* nameLayout = new QHBoxLayout();
 	

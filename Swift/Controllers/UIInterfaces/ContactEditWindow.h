@@ -28,6 +28,6 @@ namespace Swift {
 			virtual void hide() = 0;
 
 			boost::signal<void ()> onRemoveContactRequest;
-			boost::signal<void (const String& /* name */, const std::vector<String>& /* groups */)> onChangeContactRequest;
+			boost::signal<void (const String& /* name */, const std::set<String>& /* groups */)> onChangeContactRequest;
 	};
 }

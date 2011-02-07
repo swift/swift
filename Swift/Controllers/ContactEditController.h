@@ -7,6 +7,7 @@
 #pragma once
 
 #include <vector>
+#include <set>
 #include <boost/optional.hpp>
 
 #include <Swiften/JID/JID.h>
@@ -29,7 +30,7 @@ namespace Swift {
 
 		private:
 			void handleRemoveContactRequest();
-			void handleChangeContactRequest(const String& name, const std::vector<String>& groups);
+			void handleChangeContactRequest(const String& name, const std::set<String>& groups);
 
 		private:
 			void handleUIEvent(UIEvent::ref event);

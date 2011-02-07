@@ -28,17 +28,6 @@ QtUserSearchFirstPage::QtUserSearchFirstPage(UserSearchWindow::Type type, const 
 	connect(service_, SIGNAL(textChanged(const QString&)), this, SLOT(emitCompletenessCheck()));
 }
 
-QtUserSearchFieldsPage::QtUserSearchFieldsPage() {
-	setupUi(this);
-}
-
-QtUserSearchResultsPage::QtUserSearchResultsPage() {
-	setupUi(this);
-	connect(results_, SIGNAL(activated(const QModelIndex&)), this, SLOT(emitCompletenessCheck()));
-	connect(results_, SIGNAL(clicked(const QModelIndex&)), this, SLOT(emitCompletenessCheck()));
-	connect(results_, SIGNAL(entered(const QModelIndex&)), this, SLOT(emitCompletenessCheck()));
-}
-
 bool QtUserSearchFirstPage::isComplete() const {
 	bool complete = false;
 	if (byJID_->isChecked()) {
@@ -51,20 +40,32 @@ bool QtUserSearchFirstPage::isComplete() const {
 	return complete;
 }
 
-bool QtUserSearchFieldsPage::isComplete() const {
-	return nickInput_->isEnabled() || firstInput_->isEnabled() || lastInput_->isEnabled() || emailInput_->isEnabled();
-}
-
-bool QtUserSearchResultsPage::isComplete() const {
-	return results_->currentIndex().isValid();
-}
-
 void QtUserSearchFirstPage::emitCompletenessCheck() {
 	emit completeChanged();
 }
 
+
+QtUserSearchFieldsPage::QtUserSearchFieldsPage() {
+	setupUi(this);
+}
+
+bool QtUserSearchFieldsPage::isComplete() const {
+	return nickInput_->isEnabled() || firstInput_->isEnabled() || lastInput_->isEnabled() || emailInput_->isEnabled();
+}
+
 void QtUserSearchFieldsPage::emitCompletenessCheck() {
 	emit completeChanged();
+}
+
+QtUserSearchResultsPage::QtUserSearchResultsPage() {
+	setupUi(this);
+	connect(results_, SIGNAL(activated(const QModelIndex&)), this, SLOT(emitCompletenessCheck()));
+	connect(results_, SIGNAL(clicked(const QModelIndex&)), this, SLOT(emitCompletenessCheck()));
+	connect(results_, SIGNAL(entered(const QModelIndex&)), this, SLOT(emitCompletenessCheck()));
+}
+
+bool QtUserSearchResultsPage::isComplete() const {
+	return results_->currentIndex().isValid();
 }
 
 void QtUserSearchResultsPage::emitCompletenessCheck() {

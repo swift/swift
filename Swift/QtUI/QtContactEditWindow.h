@@ -6,21 +6,18 @@
 
 #pragma once
 
-#include <map>
-#include <boost/shared_ptr.hpp>
-
 #include <QWidget>
 
 #include <Swift/Controllers/UIInterfaces/ContactEditWindow.h>
 #include <Swiften/Base/String.h>
 #include <Swiften/JID/JID.h>
 
-class QScrollArea;
 class QLabel;
-class QLineEdit;
-class QCheckBox;
+class QVBoxLayout;
 
 namespace Swift {
+	class QtContactEditWidget;
+
 	class QtContactEditWindow : public QWidget, public ContactEditWindow {
 			Q_OBJECT
 
@@ -38,15 +35,10 @@ namespace Swift {
 			void handleUpdateContact();
 
 		private:
-			typedef std::map<String, QCheckBox*> CheckBoxMap;
 			JID jid_;
+			QVBoxLayout* groupsLayout_;
 			QLabel* jidLabel_;
-			CheckBoxMap checkBoxes_;
-			QLineEdit* name_;
-			QScrollArea* groupsArea_;
-			QWidget* groups_;
-			QCheckBox* newGroup_;
-			QLineEdit* newGroupName_;
+			QtContactEditWidget* contactEditWidget_;
 	};
 }
 

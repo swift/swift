@@ -91,6 +91,7 @@ sources = [
     "QtAddBookmarkWindow.cpp",
     "QtEditBookmarkWindow.cpp",
     "QtContactEditWindow.cpp",
+    "QtContactEditWidget.cpp",
     "ChatSnippet.cpp",
     "MessageSnippet.cpp",
     "SystemMessageSnippet.cpp",

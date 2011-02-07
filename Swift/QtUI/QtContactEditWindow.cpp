@@ -13,40 +13,28 @@
 #include <QLabel>
 #include <QCheckBox>
 #include <QLineEdit>
-#include <QDialogButtonBox>
 #include <QMessageBox>
 #include <QPushButton>
 
 #include "Swift/QtUI/QtSwiftUtil.h"
+#include "QtContactEditWidget.h"
 
 namespace Swift {
 
-QtContactEditWindow::QtContactEditWindow() : groups_(NULL) {
+QtContactEditWindow::QtContactEditWindow() : contactEditWidget_(NULL) {
 	resize(300,300);
 	setWindowTitle("Edit contact");
+	setContentsMargins(0,0,0,0);
 
 	QBoxLayout* layout = new QVBoxLayout(this);
-	setContentsMargins(0,0,0,0);
 
 	jidLabel_ = new QLabel(this);
 	jidLabel_->setAlignment(Qt::AlignHCenter);
 	layout->addWidget(jidLabel_);
 
-	QHBoxLayout* nameLayout = new QHBoxLayout();
-	
-	QLabel* label = new QLabel("Name:", this);
-	nameLayout->addWidget(label);
-	name_ = new QLineEdit(this);
-	nameLayout->addWidget(name_);
-	layout->addLayout(nameLayout);
-
-	layout->addWidget(new QLabel("Groups:", this));
-
-	groupsArea_ = new QScrollArea(this);
-	layout->addWidget(groupsArea_);
-	groupsArea_->setWidgetResizable(true);
-	groupsArea_->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
-	groupsArea_->setHorizontalScrollBarPolicy(Qt::ScrollBarAsNeeded);
+	groupsLayout_ = new QVBoxLayout();
+	groupsLayout_->setContentsMargins(0,0,0,0);
+	layout->addLayout(groupsLayout_);
 
 	QHBoxLayout* buttonLayout = new QHBoxLayout();
 	layout->addLayout(buttonLayout);
@@ -60,38 +48,14 @@ QtContactEditWindow::QtContactEditWindow() : groups_(NULL) {
 }
 
 void QtContactEditWindow::setContact(const JID& jid, const String& name, const std::vector<String>& groups, const std::set<String>& allGroups) {
+	delete contactEditWidget_;
 	jid_ = jid;
-	
 	jidLabel_->setText("<b>" + P2QSTRING(jid.toString()) + "</b>");
-	name_->setText(P2QSTRING(name));
 
-	delete groups_;
-	checkBoxes_.clear();
-	groups_ = new QWidget(groupsArea_);
-	groupsArea_->setWidget(groups_);
-	QVBoxLayout* scrollLayout = new QVBoxLayout(groups_);
-
-	foreach (String group, allGroups) {
-		QCheckBox* check = new QCheckBox(groups_);
-		check->setText(P2QSTRING(group));
-		check->setCheckState(Qt::Unchecked);
-		checkBoxes_[group] = check;
-		scrollLayout->addWidget(check);
-	}
-	foreach (String group, groups) {
-		checkBoxes_[group]->setCheckState(Qt::Checked);
-	}
-
-	QHBoxLayout* newGroupLayout = new QHBoxLayout();
-	newGroup_ = new QCheckBox(groups_);
-	newGroup_->setText("New Group:");
-	newGroup_->setCheckState(Qt::Unchecked);
-	newGroupLayout->addWidget(newGroup_);
-	newGroupName_ = new QLineEdit(groups_);
-	newGroupLayout->addWidget(newGroupName_);
-	scrollLayout->addLayout(newGroupLayout);
-
-	scrollLayout->addItem(new QSpacerItem(20, 73, QSizePolicy::Minimum, QSizePolicy::Expanding));
+	contactEditWidget_ = new QtContactEditWidget(allGroups, this);
+	groupsLayout_->addWidget(contactEditWidget_);
+	contactEditWidget_->setName(name);
+	contactEditWidget_->setSelectedGroups(groups);
 }
 
 void QtContactEditWindow::setEnabled(bool b) {
@@ -121,16 +85,7 @@ void QtContactEditWindow::handleRemoveContact() {
 }
 
 void QtContactEditWindow::handleUpdateContact() {
-	std::vector<String> groups;
-	foreach(const CheckBoxMap::value_type& group, checkBoxes_) {
-		if (group.second->checkState() == Qt::Checked) {
-			groups.push_back(group.first);
-		}
-	}
-	if (newGroup_->checkState() == Qt::Checked && !newGroupName_->text().isEmpty()) {
-		groups.push_back(Q2PSTRING(newGroupName_->text()));
-	}
-	onChangeContactRequest(Q2PSTRING(name_->text()), groups);
+	onChangeContactRequest(contactEditWidget_->getName(), contactEditWidget_->getSelectedGroups());
 }
 
 }
