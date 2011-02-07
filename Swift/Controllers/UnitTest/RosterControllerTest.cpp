@@ -28,7 +28,6 @@
 #include "Swiften/Client/NickResolver.h"
 #include "Swift/Controllers/UIEvents/UIEventStream.h"
 #include "Swift/Controllers/UIEvents/RenameRosterItemUIEvent.h"
-#include "Swift/Controllers/UIEvents/RegroupRosterItemUIEvent.h"
 #include "Swiften/MUC/MUCRegistry.h"
 #include <Swiften/Client/DummyNickManager.h>
 
@@ -42,7 +41,6 @@ class RosterControllerTest : public CppUnit::TestFixture {
 		CPPUNIT_TEST(testAddSubscription);
 		CPPUNIT_TEST(testReceiveRename);
 		CPPUNIT_TEST(testSendRename);
-		CPPUNIT_TEST(testSendRegroup);
 		CPPUNIT_TEST(testPresence);
 		CPPUNIT_TEST(testHighestPresence);
 		CPPUNIT_TEST(testNotHighestPresence);
@@ -257,41 +255,6 @@ class RosterControllerTest : public CppUnit::TestFixture {
 
 			CPPUNIT_ASSERT_EQUAL(groups.size(), item.getGroups().size());
 			assertVectorsEqual(groups, item.getGroups(), __LINE__);
-		}
-
-		void testSendRegroup() {
-			JID jid("testling@wonderland.lit");
-			String friends("Friends");
-			String enemies("Ememies");
-			String people("People");
-			String contacts("Contacts");
-			std::vector<String> oldGroups;
-			oldGroups.push_back(friends);
-			oldGroups.push_back(enemies);
-			std::vector<String> newGroups;
-			newGroups.push_back(friends);
-			newGroups.push_back(people);
-			newGroups.push_back(contacts);
-			std::vector<String> addedGroups;
-			addedGroups.push_back(people);
-			addedGroups.push_back(contacts);
-			std::vector<String> removedGroups;
-			removedGroups.push_back(enemies);
-
-
-			xmppRoster_->addContact(jid, "Bob", oldGroups, RosterItemPayload::From);
-			CPPUNIT_ASSERT_EQUAL(oldGroups.size(), xmppRoster_->getGroupsForJID(jid).size());
-			uiEventStream_->send(boost::shared_ptr<UIEvent>(new RegroupRosterItemUIEvent(jid, addedGroups, removedGroups)));
-			CPPUNIT_ASSERT_EQUAL(static_cast<size_t>(1), channel_->iqs_.size());
-			CPPUNIT_ASSERT_EQUAL(IQ::Set, channel_->iqs_[0]->getType());
-			boost::shared_ptr<RosterPayload> payload = channel_->iqs_[0]->getPayload<RosterPayload>();
-			CPPUNIT_ASSERT_EQUAL(static_cast<size_t>(1), payload->getItems().size());
-			RosterItemPayload item = payload->getItems()[0];
-			CPPUNIT_ASSERT_EQUAL(jid, item.getJID());
-			CPPUNIT_ASSERT_EQUAL(String("Bob"), item.getName());
-
-			CPPUNIT_ASSERT_EQUAL(newGroups.size(), item.getGroups().size());
-			assertVectorsEqual(newGroups, item.getGroups(), __LINE__);
 		}
 
 		void assertVectorsEqual(const std::vector<String>& v1, const std::vector<String>& v2, int line) {
