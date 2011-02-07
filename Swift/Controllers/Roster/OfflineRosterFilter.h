@@ -4,12 +4,11 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#ifndef SWIFTEN_OfflineRosterFilter_H
-#define SWIFTEN_OfflineRosterFilter_H
+#pragma once
 
-#include "Swiften/Roster/ContactRosterItem.h"
-#include "Swiften/Roster/RosterItem.h"
-#include "Swiften/Roster/RosterFilter.h"
+#include "Swift/Controllers/Roster/ContactRosterItem.h"
+#include "Swift/Controllers/Roster/RosterItem.h"
+#include "Swift/Controllers/Roster/RosterFilter.h"
 #include "Swiften/Elements/StatusShow.h"
 
 namespace Swift {
@@ -24,7 +23,5 @@ class OfflineRosterFilter : public RosterFilter {
 };
 
 }
-#endif
-
 
 

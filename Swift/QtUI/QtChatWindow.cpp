@@ -6,7 +6,7 @@
 
 #include "QtChatWindow.h"
 #include "QtSwiftUtil.h"
-#include "Swiften/Roster/Roster.h"
+#include "Swift/Controllers/Roster/Roster.h"
 #include "Roster/QtTreeWidget.h"
 #include "SwifTools/Linkify.h"
 #include "QtChatView.h"

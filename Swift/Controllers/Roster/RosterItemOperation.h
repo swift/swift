@@ -4,10 +4,9 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#ifndef SWIFTEN_RosterItemOperation_H
-#define SWIFTEN_RosterItemOperation_H
+#pragma once
 
-#include "Swiften/Roster/RosterItem.h"
+#include "Swift/Controllers/Roster/RosterItem.h"
 
 namespace Swift {
 
@@ -29,5 +28,3 @@ class RosterItemOperation {
 };
 
 }
-#endif
-

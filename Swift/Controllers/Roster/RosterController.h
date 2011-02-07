@@ -13,7 +13,7 @@
 #include "Swiften/Elements/RosterPayload.h"
 #include "Swiften/Avatars/AvatarManager.h"
 #include "Swift/Controllers/UIEvents/UIEvent.h"
-#include "Swift/Controllers/RosterGroupExpandinessPersister.h"
+#include "RosterGroupExpandinessPersister.h"
 
 #include "Swiften/Base/boost_bsignals.h"
 #include <boost/shared_ptr.hpp>

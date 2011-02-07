@@ -28,7 +28,7 @@
 #include "Swift/Controllers/UIInterfaces/MainWindow.h"
 #include "Swift/Controllers/Chat/MUCController.h"
 #include "Swiften/Client/NickResolver.h"
-#include "Swift/Controllers/RosterController.h"
+#include "Swift/Controllers/Roster/RosterController.h"
 #include "Swift/Controllers/SoundEventController.h"
 #include "Swift/Controllers/SoundPlayer.h"
 #include "Swift/Controllers/StatusTracker.h"

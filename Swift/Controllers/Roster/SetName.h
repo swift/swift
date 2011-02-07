@@ -7,8 +7,8 @@
 #pragma once
 
 #include "Swiften/JID/JID.h"
-#include "Swiften/Roster/RosterItemOperation.h"
-#include "Swiften/Roster/ContactRosterItem.h"
+#include "Swift/Controllers/Roster/RosterItemOperation.h"
+#include "Swift/Controllers/Roster/ContactRosterItem.h"
 
 namespace Swift {
 

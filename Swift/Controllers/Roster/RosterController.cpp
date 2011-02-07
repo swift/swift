@@ -4,7 +4,7 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "Swift/Controllers/RosterController.h"
+#include "Swift/Controllers/Roster/RosterController.h"
 
 #include <boost/bind.hpp>
 #include <boost/smart_ptr/make_shared.hpp>
@@ -21,12 +21,12 @@
 #include "Swiften/Presence/SubscriptionManager.h"
 #include "Swift/Controllers/XMPPEvents/EventController.h"
 #include "Swiften/Queries/IQRouter.h"
-#include "Swiften/Roster/Roster.h"
-#include "Swiften/Roster/SetPresence.h"
-#include "Swiften/Roster/AppearOffline.h"
-#include "Swiften/Roster/SetAvatar.h"
-#include "Swiften/Roster/SetName.h"
-#include "Swiften/Roster/OfflineRosterFilter.h"
+#include "Swift/Controllers/Roster/Roster.h"
+#include "Swift/Controllers/Roster/SetPresence.h"
+#include "Swift/Controllers/Roster/AppearOffline.h"
+#include "Swift/Controllers/Roster/SetAvatar.h"
+#include "Swift/Controllers/Roster/SetName.h"
+#include "Swift/Controllers/Roster/OfflineRosterFilter.h"
 #include "Swiften/Roster/XMPPRoster.h"
 #include "Swiften/Roster/XMPPRosterItem.h"
 #include "Swift/Controllers/UIEvents/AddContactUIEvent.h"

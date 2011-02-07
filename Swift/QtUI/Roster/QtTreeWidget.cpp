@@ -12,8 +12,8 @@
 #include <boost/smart_ptr/make_shared.hpp>
 
 #include "Swiften/Base/Platform.h"
-#include "Swiften/Roster/ContactRosterItem.h"
-#include "Swiften/Roster/GroupRosterItem.h"
+#include "Swift/Controllers/Roster/ContactRosterItem.h"
+#include "Swift/Controllers/Roster/GroupRosterItem.h"
 #include "Swift/Controllers/UIEvents/UIEventStream.h"
 #include "Swift/Controllers/UIEvents/RequestChatUIEvent.h"
 #include "Swift/Controllers/UIEvents/RequestContactEditorUIEvent.h"

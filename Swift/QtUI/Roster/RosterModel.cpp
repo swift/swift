@@ -13,8 +13,8 @@
 #include <qdebug.h>
 
 #include "Swiften/Elements/StatusShow.h"
-#include "Swiften/Roster/ContactRosterItem.h"
-#include "Swiften/Roster/GroupRosterItem.h"
+#include "Swift/Controllers/Roster/ContactRosterItem.h"
+#include "Swift/Controllers/Roster/GroupRosterItem.h"
 
 #include "QtSwiftUtil.h"
 #include "Swift/QtUI/Roster/QtTreeWidget.h"

@@ -4,12 +4,12 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "Swift/Controllers/RosterGroupExpandinessPersister.h"
+#include "RosterGroupExpandinessPersister.h"
 
 #include <boost/bind.hpp>
 #include <vector>
 
-#include "Swiften/Roster/GroupRosterItem.h"
+#include "Swift/Controllers/Roster/GroupRosterItem.h"
 
 namespace Swift {
 

@@ -4,9 +4,9 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "Swiften/Roster/RosterItem.h"
+#include "Swift/Controllers/Roster/RosterItem.h"
 
-#include "Swiften/Roster/GroupRosterItem.h"
+#include "Swift/Controllers/Roster/GroupRosterItem.h"
 
 namespace Swift {
 

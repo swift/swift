@@ -7,7 +7,7 @@
 #pragma once
 
 #include <set>
-#include "Swiften/Roster/Roster.h"
+#include "Swift/Controllers/Roster/Roster.h"
 #include "Swift/Controllers/Settings/SettingsProvider.h"
 
 namespace Swift {

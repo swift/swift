@@ -13,7 +13,7 @@
 #include <Swift/Controllers/UIEvents/UIEventStream.h>
 #include <Swift/Controllers/UIEvents/RemoveRosterItemUIEvent.h>
 #include <Swift/Controllers/UIInterfaces/ContactEditWindowFactory.h>
-#include <Swift/Controllers/RosterController.h>
+#include <Swift/Controllers/Roster/RosterController.h>
 
 
 namespace Swift {

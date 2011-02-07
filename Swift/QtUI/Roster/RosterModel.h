@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include "Swiften/Roster/Roster.h"
+#include "Swift/Controllers/Roster/Roster.h"
 
 #include <QAbstractItemModel>
 #include <QList>

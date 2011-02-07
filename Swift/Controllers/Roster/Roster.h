@@ -4,13 +4,12 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#ifndef SWIFTEN_Roster_H
-#define SWIFTEN_Roster_H
+#pragma once
 
 #include "Swiften/Base/String.h"
 #include "Swiften/JID/JID.h"
-#include "Swiften/Roster/RosterItemOperation.h"
-#include "Swiften/Roster/RosterFilter.h"
+#include "Swift/Controllers/Roster/RosterItemOperation.h"
+#include "Swift/Controllers/Roster/RosterFilter.h"
 
 #include <vector>
 #include <map>
@@ -55,6 +54,5 @@ class Roster {
 		bool fullJIDMapping_;
 		bool sortByStatus_;
 };
-}
 
-#endif
+}

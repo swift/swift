@@ -4,7 +4,7 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "Swiften/Roster/GroupRosterItem.h"
+#include "Swift/Controllers/Roster/GroupRosterItem.h"
 
 #include <boost/bind.hpp>
 //#include <boost/algorithm.hpp>

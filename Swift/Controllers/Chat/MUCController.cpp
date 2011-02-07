@@ -23,9 +23,9 @@
 #include "Swiften/Elements/Delay.h"
 #include "Swiften/MUC/MUC.h"
 #include "Swiften/Client/StanzaChannel.h"
-#include "Swiften/Roster/Roster.h"
-#include "Swiften/Roster/SetAvatar.h"
-#include "Swiften/Roster/SetPresence.h"
+#include "Swift/Controllers/Roster/Roster.h"
+#include "Swift/Controllers/Roster/SetAvatar.h"
+#include "Swift/Controllers/Roster/SetPresence.h"
 
 
 #define MUC_JOIN_WARNING_TIMEOUT_MILLISECONDS 60000

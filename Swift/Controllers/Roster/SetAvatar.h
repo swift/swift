@@ -4,13 +4,12 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#ifndef SWIFTEN_SetAvatar_H
-#define SWIFTEN_SetAvatar_H
+#pragma once
 
 #include "Swiften/Elements/Presence.h"
 #include "Swiften/JID/JID.h"
-#include "Swiften/Roster/RosterItemOperation.h"
-#include "Swiften/Roster/ContactRosterItem.h"
+#include "Swift/Controllers/Roster/RosterItemOperation.h"
+#include "Swift/Controllers/Roster/ContactRosterItem.h"
 
 namespace Swift {
 
@@ -35,5 +34,3 @@ class SetAvatar : public RosterItemOperation {
 };
 
 }
-#endif
-

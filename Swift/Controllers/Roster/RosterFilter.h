@@ -4,10 +4,9 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#ifndef SWIFTEN_RosterFilter_H
-#define SWIFTEN_RosterFilter_H
+#pragma once
 
-#include "Swiften/Roster/RosterItem.h"
+#include "Swift/Controllers/Roster/RosterItem.h"
 
 namespace Swift {
 
@@ -18,6 +17,5 @@ class RosterFilter {
 };
 
 }
-#endif
 
 

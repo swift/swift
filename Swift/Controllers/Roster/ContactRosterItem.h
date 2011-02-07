@@ -8,7 +8,7 @@
 
 #include "Swiften/Base/String.h"
 #include "Swiften/JID/JID.h"
-#include "Swiften/Roster/RosterItem.h"
+#include "Swift/Controllers/Roster/RosterItem.h"
 #include "Swiften/Elements/StatusShow.h"
 #include "Swiften/Elements/Presence.h"
 

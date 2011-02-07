@@ -8,7 +8,7 @@
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/extensions/TestFactoryRegistry.h>
 
-#include "Swift/Controllers/RosterController.h"
+#include "Swift/Controllers/Roster/RosterController.h"
 #include "Swift/Controllers/UnitTest/MockMainWindowFactory.h"
 // #include "Swiften/Elements/Payload.h"
 // #include "Swiften/Elements/RosterItemPayload.h"
@@ -17,9 +17,9 @@
 #include "Swiften/Client/DummyStanzaChannel.h"
 #include "Swiften/Queries/IQRouter.h"
 #include "Swiften/Roster/XMPPRosterImpl.h"
-#include "Swiften/Roster/Roster.h"
-#include "Swiften/Roster/GroupRosterItem.h"
-#include "Swiften/Roster/ContactRosterItem.h"
+#include "Swift/Controllers/Roster/Roster.h"
+#include "Swift/Controllers/Roster/GroupRosterItem.h"
+#include "Swift/Controllers/Roster/ContactRosterItem.h"
 #include "Swift/Controllers/Settings/DummySettingsProvider.h"
 #include "Swiften/Avatars/NullAvatarManager.h"
 #include "Swift/Controllers/XMPPEvents/EventController.h"

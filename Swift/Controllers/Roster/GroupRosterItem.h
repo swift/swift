@@ -6,9 +6,9 @@
 
 #pragma once
 
-#include "Swiften/Roster/RosterItem.h"
+#include "Swift/Controllers/Roster/RosterItem.h"
 #include "Swiften/Base/String.h"
-#include "Swiften/Roster/ContactRosterItem.h"
+#include "Swift/Controllers/Roster/ContactRosterItem.h"
 
 #include <vector>
 

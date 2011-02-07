@@ -8,9 +8,9 @@
 #include <cppunit/extensions/TestFactoryRegistry.h>
 #include <boost/shared_ptr.hpp>
 
-#include "Swiften/Roster/Roster.h"
-#include "Swiften/Roster/GroupRosterItem.h"
-#include "Swiften/Roster/SetPresence.h"
+#include "Swift/Controllers/Roster/Roster.h"
+#include "Swift/Controllers/Roster/GroupRosterItem.h"
+#include "Swift/Controllers/Roster/SetPresence.h"
 
 using namespace Swift;
 

@@ -4,15 +4,15 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "Swiften/Roster/Roster.h"
+#include "Swift/Controllers/Roster/Roster.h"
 
 #include "Swiften/Base/foreach.h"
 #include "Swiften/Base/String.h"
 #include "Swiften/JID/JID.h"
-#include "Swiften/Roster/ContactRosterItem.h"
-#include "Swiften/Roster/RosterItem.h"
-#include "Swiften/Roster/GroupRosterItem.h"
-#include "Swiften/Roster/RosterItemOperation.h"
+#include "Swift/Controllers/Roster/ContactRosterItem.h"
+#include "Swift/Controllers/Roster/RosterItem.h"
+#include "Swift/Controllers/Roster/GroupRosterItem.h"
+#include "Swift/Controllers/Roster/RosterItemOperation.h"
 
 #include <boost/bind.hpp>
 
