@@ -120,7 +120,7 @@ bool SCRAMSHA1ClientAuthenticator::setChallenge(const boost::optional<ByteArray>
 std::map<char, String> SCRAMSHA1ClientAuthenticator::parseMap(const String& s) {
 	std::map<char, String> result;
 	if (s.getUTF8Size() > 0) {
-		char key;
+		char key = 0;
 		String value;
 		size_t i = 0;
 		bool expectKey = true;
