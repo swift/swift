@@ -42,17 +42,19 @@ void QtNameWidget::setJID(const QString& jid) {
 
 void QtNameWidget::mousePressEvent(QMouseEvent* event) {
 	QMenu menu;
+	bool hasNick = !nick.isEmpty();
 
-	QAction* showAsNick = new QAction("Show nickname", this);
+	QAction* showAsNick = new QAction(hasNick ? "Show nickname" : "(No Nickname Set)", this);
 	showAsNick->setCheckable(true);
-	if (mode == ShowNick) {
+	showAsNick->setEnabled(hasNick);
+	if (mode == ShowNick && hasNick) {
 		showAsNick->setChecked(true);
 	}
 	menu.addAction(showAsNick);
 
 	QAction* showAsJID = new QAction("Show ID", this);
 	showAsJID->setCheckable(true);
-	if (mode == ShowJID) {
+	if (mode == ShowJID || !hasNick) {
 		showAsJID->setChecked(true);
 	}
 	menu.addAction(showAsJID);
