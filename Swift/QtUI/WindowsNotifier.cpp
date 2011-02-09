@@ -12,6 +12,7 @@
 #include <boost/bind.hpp>
 
 #include "QtWin32NotifierWindow.h"
+#include "QtSwiftUtil.h"
 
 namespace Swift {
 
@@ -37,7 +38,7 @@ void WindowsNotifier::showMessage(Type type, const String& subject, const String
 	}
 	lastCallback = callback;
 	int timeout = (type == IncomingMessage || type == SystemMessage) ? DEFAULT_MESSAGE_NOTIFICATION_TIMEOUT_SECONDS : DEFAULT_STATUS_NOTIFICATION_TIMEOUT_SECONDS;
-	tray->showMessage(subject.getUTF8Data(), description.getUTF8Data(), type == SystemMessage ? QSystemTrayIcon::Information : QSystemTrayIcon::NoIcon, timeout * 1000);
+	tray->showMessage(P2QSTRING(subject), P2QSTRING(description), type == SystemMessage ? QSystemTrayIcon::Information : QSystemTrayIcon::NoIcon, timeout * 1000);
 }
 
 void WindowsNotifier::handleMessageClicked() {
