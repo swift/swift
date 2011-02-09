@@ -16,6 +16,7 @@
 #include <QStackedWidget>
 #include <QTimer>
 #include <QMessageBox>
+#include <QApplication>
 
 #include "QtWebView.h"
 #include "QtChatTheme.h"
@@ -102,6 +103,7 @@ void QtChatView::addToDOM(boost::shared_ptr<ChatSnippet> snippet) {
 		newInsertPoint_.prependOutside(newElement);
 	}
 	lastElement_ = newElement;
+	qApp->processEvents();
 }
 
 void QtChatView::replaceLastMessage(const QString& newMessage) {
