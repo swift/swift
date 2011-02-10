@@ -29,6 +29,8 @@ class LinkifyTest : public CppUnit::TestFixture {
 		CPPUNIT_TEST(testLinkify_At);
 		CPPUNIT_TEST(testLinkify_Amps);
 		CPPUNIT_TEST(testLinkify_UnicodeCharacter);
+		CPPUNIT_TEST(testLinkify_NewLine);
+		CPPUNIT_TEST(testLinkify_Tab);
 		CPPUNIT_TEST_SUITE_END();
 
 	public:
@@ -158,6 +160,22 @@ class LinkifyTest : public CppUnit::TestFixture {
 
 			CPPUNIT_ASSERT_EQUAL(
 					String("<a href=\"http://\xe2\x98\x83.net\">http://\xe2\x98\x83.net</a>"),
+					result);
+		}
+
+		void testLinkify_NewLine() {
+			String result = Linkify::linkify("http://swift.im\nfoo");
+
+			CPPUNIT_ASSERT_EQUAL(
+					String("<a href=\"http://swift.im\">http://swift.im</a>\nfoo"),
+					result);
+		}
+
+		void testLinkify_Tab() {
+			String result = Linkify::linkify("http://swift.im\tfoo");
+
+			CPPUNIT_ASSERT_EQUAL(
+					String("<a href=\"http://swift.im\">http://swift.im</a>\tfoo"),
 					result);
 		}
 };
