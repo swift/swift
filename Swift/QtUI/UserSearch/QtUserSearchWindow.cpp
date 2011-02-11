@@ -25,7 +25,7 @@ QtUserSearchFirstPage::QtUserSearchFirstPage(UserSearchWindow::Type type, const 
 	setTitle(title);
 	setSubTitle(QString("%1. If you know their JID you can enter it directly, or you can search for them.").arg(type == UserSearchWindow::AddContact ? "Add another user to your roster" : "Chat to another user"));
 	connect(jid_, SIGNAL(textChanged(const QString&)), this, SLOT(emitCompletenessCheck()));
-	connect(service_, SIGNAL(textChanged(const QString&)), this, SLOT(emitCompletenessCheck()));
+	connect(service_->lineEdit(), SIGNAL(textChanged(const QString&)), this, SLOT(emitCompletenessCheck()));
 }
 
 bool QtUserSearchFirstPage::isComplete() const {
@@ -60,8 +60,10 @@ void QtUserSearchFieldsPage::emitCompletenessCheck() {
 QtUserSearchResultsPage::QtUserSearchResultsPage() {
 	setupUi(this);
 	connect(results_, SIGNAL(activated(const QModelIndex&)), this, SLOT(emitCompletenessCheck()));
+	connect(results_, SIGNAL(activated(const QModelIndex&)), this, SIGNAL(onUserTriggersFinish()));
 	connect(results_, SIGNAL(clicked(const QModelIndex&)), this, SLOT(emitCompletenessCheck()));
 	connect(results_, SIGNAL(entered(const QModelIndex&)), this, SLOT(emitCompletenessCheck()));
+	results_->setExpandsOnDoubleClick(false);
 }
 
 bool QtUserSearchResultsPage::isComplete() const {
@@ -105,6 +107,7 @@ QtUserSearchWindow::QtUserSearchWindow(UIEventStream* eventStream, UserSearchWin
 #endif
 	connect(this, SIGNAL(currentIdChanged(int)), this, SLOT(handleCurrentChanged(int)));
 	connect(this, SIGNAL(accepted()), this, SLOT(handleAccepted()));
+	connect(resultsPage_, SIGNAL(onUserTriggersFinish()), this, SLOT(accept()));
 	clear();
 }
 

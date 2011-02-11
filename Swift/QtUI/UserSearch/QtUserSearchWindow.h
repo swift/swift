@@ -45,6 +45,8 @@ namespace Swift {
 		public:
 			QtUserSearchResultsPage();
 			virtual bool isComplete() const;
+		signals:
+		  void onUserTriggersFinish();
 		public slots:
 			void emitCompletenessCheck();
 	};
