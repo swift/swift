@@ -22,6 +22,7 @@ class GroupRosterItem : public RosterItem {
 		const std::vector<RosterItem*>& getDisplayedChildren() const;
 		void addChild(RosterItem* item);
 		ContactRosterItem* removeChild(const JID& jid);
+		GroupRosterItem* removeGroupChild(const String& group);
 		void removeAll();
 		void setDisplayed(RosterItem* item, bool displayed);
 		boost::signal<void ()> onChildrenChanged;

@@ -30,6 +30,7 @@ class Roster {
 		void addContact(const JID& jid, const JID& displayJID, const String& name, const String& group, const String& avatarPath);
 		void removeContact(const JID& jid);
 		void removeContactFromGroup(const JID& jid, const String& group);
+		void removeGroup(const String& group);
 		void removeAll();
 		void applyOnItems(const RosterItemOperation& operation);
 		void applyOnAllItems(const RosterItemOperation& operation);
@@ -41,8 +42,8 @@ class Roster {
 		boost::signal<void (GroupRosterItem*)> onChildrenChanged;
 		boost::signal<void (GroupRosterItem*)> onGroupAdded;
 		boost::signal<void (RosterItem*)> onDataChanged;
-	private:
 		GroupRosterItem* getGroup(const String& groupName);
+	private:
 		void handleDataChanged(RosterItem* item);
 		void handleChildrenChanged(GroupRosterItem* item);
 		void filterGroup(GroupRosterItem* item);

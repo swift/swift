@@ -60,6 +60,10 @@ GroupRosterItem* Roster::getGroup(const String& groupName) {
 	return group;
 }
 
+void Roster::removeGroup(const String& group) {
+	root_->removeGroupChild(group);
+}
+
 void Roster::handleDataChanged(RosterItem* item) {
 	onDataChanged(item);
 }

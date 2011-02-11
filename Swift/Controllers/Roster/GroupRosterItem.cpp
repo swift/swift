@@ -110,6 +110,25 @@ ContactRosterItem* GroupRosterItem::removeChild(const JID& jid) {
 	return removed;
 }
 
+GroupRosterItem* GroupRosterItem::removeGroupChild(const String& groupName) {
+	std::vector<RosterItem*>::iterator it = children_.begin();
+	GroupRosterItem* removed = NULL;
+	while (it != children_.end()) {
+		GroupRosterItem* group = dynamic_cast<GroupRosterItem*>(*it);
+		if (group && group->getDisplayName() == groupName) {
+			displayedChildren_.erase(std::remove(displayedChildren_.begin(), displayedChildren_.end(), group), displayedChildren_.end());
+			removed = group;
+			delete group;
+			it = children_.erase(it);
+			continue;
+		}
+		it++;
+	}
+	onChildrenChanged();
+	onDataChanged();
+	return removed;
+}
+
 /**
  * Returns false if the list didn't need a resort
  */

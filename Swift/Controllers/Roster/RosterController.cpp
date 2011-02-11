@@ -27,6 +27,7 @@
 #include "Swift/Controllers/Roster/SetAvatar.h"
 #include "Swift/Controllers/Roster/SetName.h"
 #include "Swift/Controllers/Roster/OfflineRosterFilter.h"
+#include "Swift/Controllers/Roster/GroupRosterItem.h"
 #include "Swiften/Roster/XMPPRoster.h"
 #include "Swiften/Roster/XMPPRosterItem.h"
 #include "Swift/Controllers/UIEvents/AddContactUIEvent.h"
@@ -141,7 +142,6 @@ void RosterController::handleOnJIDRemoved(const JID& jid) {
 void RosterController::handleOnJIDUpdated(const JID& jid, const String& oldName, const std::vector<String> passedOldGroups) {
 	if (oldName != xmppRoster_->getNameForJID(jid)) {
 		roster_->applyOnItems(SetName(nickResolver_->jidToNick(jid), jid));
-		return;
 	}
 	std::vector<String> groups = xmppRoster_->getGroupsForJID(jid);
 	std::vector<String> oldGroups = passedOldGroups;
@@ -161,6 +161,9 @@ void RosterController::handleOnJIDUpdated(const JID& jid, const String& oldName,
 	foreach(const String& group, oldGroups) {
 		if (std::find(groups.begin(), groups.end(), group) == groups.end()) {
 			roster_->removeContactFromGroup(jid, group);
+			if (roster_->getGroup(group)->getChildren().size() == 0) {
+				roster_->removeGroup(group);
+			}
 		}
 	}
 	applyAllPresenceTo(jid);

@@ -40,6 +40,7 @@ class RosterControllerTest : public CppUnit::TestFixture {
 		CPPUNIT_TEST(testAdd);
 		CPPUNIT_TEST(testAddSubscription);
 		CPPUNIT_TEST(testReceiveRename);
+		CPPUNIT_TEST(testReceiveRegroup);
 		CPPUNIT_TEST(testSendRename);
 		CPPUNIT_TEST(testPresence);
 		CPPUNIT_TEST(testHighestPresence);
@@ -236,6 +237,32 @@ class RosterControllerTest : public CppUnit::TestFixture {
 			CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(groupChild(0)->getChildren().size()));
 			CPPUNIT_ASSERT_EQUAL(String("NewName"), groupChild(0)->getChildren()[0]->getDisplayName());
 		};
+
+	void testReceiveRegroup() {
+		std::vector<String> oldGroups;
+		std::vector<String> newGroups;
+		newGroups.push_back("A Group");
+		std::vector<String> newestGroups;
+		newestGroups.push_back("Best Group");
+		JID jid("test@testdomain.com");
+		xmppRoster_->addContact(jid, "", oldGroups, RosterItemPayload::Both);
+
+		CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(CHILDREN.size()));
+		CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(groupChild(0)->getChildren().size()));
+		CPPUNIT_ASSERT_EQUAL(jid.toString(), groupChild(0)->getChildren()[0]->getDisplayName());
+
+		xmppRoster_->addContact(jid, "new name", newGroups, RosterItemPayload::Both);
+		CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(CHILDREN.size()));
+		CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(groupChild(0)->getChildren().size()));
+		CPPUNIT_ASSERT_EQUAL(String("new name"), groupChild(0)->getChildren()[0]->getDisplayName());
+		CPPUNIT_ASSERT_EQUAL(String("A Group"), groupChild(0)->getDisplayName());
+
+		xmppRoster_->addContact(jid, "new name", newestGroups, RosterItemPayload::Both);
+		CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(CHILDREN.size()));
+		CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(groupChild(0)->getChildren().size()));
+		CPPUNIT_ASSERT_EQUAL(String("new name"), groupChild(0)->getChildren()[0]->getDisplayName());
+		CPPUNIT_ASSERT_EQUAL(String("Best Group"), groupChild(0)->getDisplayName());
+	};
 
 		void testSendRename() {
 			JID jid("testling@wonderland.lit");
