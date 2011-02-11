@@ -143,13 +143,10 @@ bool ChatControllerBase::isFromContact(const JID& from) {
 }
 
 void ChatControllerBase::handleIncomingMessage(boost::shared_ptr<MessageEvent> messageEvent) {
-	if (messageEvent->isReadable()) {
+	preHandleIncomingMessage(messageEvent);
+	if (messageEvent->isReadable() && !messageEvent->getConcluded()) {
 		unreadMessages_.push_back(messageEvent);
 	}
-
-
-
-	preHandleIncomingMessage(messageEvent);	
 	boost::shared_ptr<Message> message = messageEvent->getStanza();
 	String body = message->getBody();
 	if (message->isError()) {

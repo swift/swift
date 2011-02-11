@@ -90,6 +90,7 @@ namespace Swift {
 			bool joined_;
 			bool lastWasPresence_;
 			bool shouldJoinOnReconnect_;
+			bool doneGettingHistory_;
 			boost::bsignals::scoped_connection avatarChangedConnection_;
 			boost::shared_ptr<Timer> loginCheckTimer_;
 			std::set<String> currentOccupants_;

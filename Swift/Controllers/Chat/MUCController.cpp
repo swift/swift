@@ -53,6 +53,7 @@ MUCController::MUCController (
 	joined_ = false;
 	lastWasPresence_ = false;
 	shouldJoinOnReconnect_ = true;
+	doneGettingHistory_ = false;
 	events_ = uiEventStream;
 	
 	roster_ = new Roster(false, true);
@@ -96,6 +97,7 @@ void MUCController::rejoin() {
 	if (parting_) {
 		joined_ = false;
 		parting_ = false;
+		doneGettingHistory_ = false;
 		//FIXME: check for received activity
 		if (lastActivity_ == boost::posix_time::not_a_date_time) {
 			muc_->joinAs(nick_);
@@ -256,6 +258,15 @@ void MUCController::preHandleIncomingMessage(boost::shared_ptr<MessageEvent> mes
 
 	if (!message->getSubject().isEmpty() && message->getBody().isEmpty()) {
 		chatWindow_->addSystemMessage("The room subject is now: " + message->getSubject());
+		doneGettingHistory_ = true;
+	}
+
+	if (!doneGettingHistory_ && !message->getPayload<Delay>()) {
+		doneGettingHistory_ = true;
+	}
+
+	if (!doneGettingHistory_) {
+		messageEvent->conclude();
 	}
 }
 
