@@ -24,6 +24,7 @@ class SettingsProvider {
 		virtual void storeInt(const String &settingPath, int settingValue) = 0;
 		virtual std::vector<String> getAvailableProfiles() = 0;
 		virtual void createProfile(const String& profile) = 0;
+		virtual void removeProfile(const String& profile) = 0;
 };
 
 }

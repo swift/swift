@@ -193,7 +193,11 @@ bool QtLoginWindow::eventFilter(QObject *obj, QEvent *event) {
 	if (obj == username_->view() && event->type() == QEvent::KeyPress) {
 		QKeyEvent *keyEvent = static_cast<QKeyEvent*>(event);
 		if (keyEvent->key() == Qt::Key_Delete || keyEvent->key() == Qt::Key_Backspace) {
-			QMessageBox::information(this, "Remove profile", "Remove the profile '" + username_->view()->currentIndex().data().toString() + "'?");
+			QString jid(username_->view()->currentIndex().data().toString());
+			int result = QMessageBox::question(this, "Remove profile", "Remove the profile '" + jid + "'?", QMessageBox::Yes | QMessageBox::No);
+			if (result == QMessageBox::Yes) {
+				onPurgeSavedLoginRequest(Q2PSTRING(jid));
+			}
 			return true;
 		}
 	}
@@ -218,6 +222,22 @@ void QtLoginWindow::selectUser(const String& username) {
 			password_->setFocus();
 			break;
 		}
+	}
+}
+
+void QtLoginWindow::removeAvailableAccount(const String& jid) {
+	QString username = P2QSTRING(jid);
+	int index = -1;
+	for (int i = 0; i < usernames_.count(); i++) {
+		if (username == usernames_[i]) {
+			index = i;
+		}
+	}
+	if (index >= 0) {
+		usernames_.removeAt(index);
+		passwords_.removeAt(index);
+		certificateFiles_.removeAt(index);
+		username_->removeItem(index);
 	}
 }
 

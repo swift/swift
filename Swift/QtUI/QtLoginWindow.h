@@ -34,6 +34,7 @@ namespace Swift {
 			virtual void loggedOut();
 			virtual void setMessage(const String& message);
 			virtual void addAvailableAccount(const String& defaultJID, const String& defaultPassword, const String& defaultCertificate);
+			virtual void removeAvailableAccount(const String& jid);
 			virtual void setLoginAutomatically(bool loginAutomatically);
 			virtual void setIsLoggingIn(bool loggingIn);
 			void selectUser(const String& user);

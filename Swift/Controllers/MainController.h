@@ -92,6 +92,7 @@ namespace Swift {
 			void handleEventQueueLengthChange(int count);
 			void handleVCardReceived(const JID& j, VCard::ref vCard);
 			void handleUIEvent(boost::shared_ptr<UIEvent> event);
+			void handlePurgeSavedLoginRequest(const String& username);
 			void sendPresence(boost::shared_ptr<Presence> presence);
 			void handleInputIdleChanged(bool);
 			void logout();

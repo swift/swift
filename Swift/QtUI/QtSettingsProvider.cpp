@@ -60,6 +60,18 @@ void QtSettingsProvider::createProfile(const String& profile) {
 	settings_.setValue("profileList", stringList);
 }
 
+void QtSettingsProvider::removeProfile(const String& profile) {
+	QString profileStart(P2QSTRING(profile) + ":");
+	foreach (QString key, settings_.allKeys()) {
+		if (key.startsWith(profileStart)) {
+			settings_.remove(key);
+		}
+	}
+	QStringList stringList = settings_.value("profileList").toStringList();
+	stringList.removeAll(P2QSTRING(profile));
+	settings_.setValue("profileList", stringList);
+}
+
 QSettings* QtSettingsProvider::getQSettings() {
 	return &settings_;
 }

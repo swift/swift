@@ -137,6 +137,7 @@ MainController::MainController(
 	loginWindow_->selectUser(selectedLoginJID);
 	loginWindow_->setLoginAutomatically(loginAutomatically);
 	loginWindow_->onLoginRequest.connect(boost::bind(&MainController::handleLoginRequest, this, _1, _2, _3, _4, _5));
+	loginWindow_->onPurgeSavedLoginRequest.connect(boost::bind(&MainController::handlePurgeSavedLoginRequest, this, _1));
 	loginWindow_->onCancelLoginRequest.connect(boost::bind(&MainController::handleCancelLoginRequest, this));
 	loginWindow_->onQuitRequest.connect(boost::bind(&MainController::handleQuitRequest, this));
 
@@ -365,6 +366,11 @@ void MainController::handleLoginRequest(const String &username, const String &pa
 	password_ = password;
 	certificateFile_ = certificateFile;
 	performLoginFromCachedCredentials();
+}
+
+void MainController::handlePurgeSavedLoginRequest(const String& username) {
+	settings_->removeProfile(username);
+	loginWindow_->removeAvailableAccount(username);
 }
 
 void MainController::performLoginFromCachedCredentials() {

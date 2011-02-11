@@ -21,6 +21,7 @@ class DummySettingsProvider : public SettingsProvider {
 		virtual void storeInt(const String &, int ) {}
 		virtual std::vector<String> getAvailableProfiles() {return std::vector<String>();}
 		virtual void createProfile(const String& ) {}
+		virtual void removeProfile(const String& ) {}
 };
 
 }
