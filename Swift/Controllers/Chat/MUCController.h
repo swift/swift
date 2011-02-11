@@ -83,6 +83,7 @@ namespace Swift {
 			MUC::ref muc_;
 			UIEventStream* events_;
 			String nick_;
+			String desiredNick_;
 			Roster* roster_;
 			TabComplete* completer_;
 			bool parting_;

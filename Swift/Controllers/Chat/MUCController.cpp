@@ -48,7 +48,7 @@ MUCController::MUCController (
 		bool useDelayForLatency,
 		TimerFactory* timerFactory,
 		EventController* eventController) :
-			ChatControllerBase(self, stanzaChannel, iqRouter, chatWindowFactory, muc->getJID(), presenceOracle, avatarManager, useDelayForLatency, uiEventStream, eventController, timerFactory), muc_(muc), nick_(nick) {
+			ChatControllerBase(self, stanzaChannel, iqRouter, chatWindowFactory, muc->getJID(), presenceOracle, avatarManager, useDelayForLatency, uiEventStream, eventController, timerFactory), muc_(muc), nick_(nick), desiredNick_(nick) {
 	parting_ = true;
 	joined_ = false;
 	lastWasPresence_ = false;
@@ -296,6 +296,7 @@ void MUCController::setOnline(bool online) {
 			if (loginCheckTimer_) {
 				loginCheckTimer_->start();
 			}
+			nick_ = desiredNick_;
 			rejoin();
 		}
 	}
