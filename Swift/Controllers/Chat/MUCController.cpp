@@ -97,7 +97,6 @@ void MUCController::rejoin() {
 	if (parting_) {
 		joined_ = false;
 		parting_ = false;
-		doneGettingHistory_ = false;
 		//FIXME: check for received activity
 		if (lastActivity_ == boost::posix_time::not_a_date_time) {
 			muc_->joinAs(nick_);
