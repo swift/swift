@@ -211,9 +211,11 @@ void QtChatWindow::showEvent(QShowEvent* event) {
 }
 
 void QtChatWindow::setUnreadMessageCount(int count) {
-	unreadCount_ = count;
-	updateTitleWithUnreadCount();
-	emit countUpdated();
+	if (unreadCount_ != count) {
+		unreadCount_ = count;
+		updateTitleWithUnreadCount();
+		emit countUpdated();
+	}
 }
 
 void QtChatWindow::setContactChatState(ChatState::ChatStateType state) {
