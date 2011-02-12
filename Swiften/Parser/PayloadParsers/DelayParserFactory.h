@@ -14,16 +14,17 @@ namespace Swift {
 
 	class DelayParserFactory : public PayloadParserFactory {
 		public:
-			DelayParserFactory() {
-			}
+			DelayParserFactory();
 
 			virtual bool canParse(const String& /*element*/, const String& ns, const AttributeMap&) const {
 				return ns == "urn:xmpp:delay";
 			}
 
 			virtual PayloadParser* createPayloadParser() {
-				return new DelayParser();
+				return new DelayParser(locale);
 			}
 
+		private:
+			std::locale locale;
 	};
 }

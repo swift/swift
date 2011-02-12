@@ -12,15 +12,13 @@
 
 namespace Swift {
 
-DelayParser::DelayParser() : level_(0) {
+DelayParser::DelayParser(const std::locale& locale) : locale(locale), level_(0) {
 }
 
 boost::posix_time::ptime DelayParser::dateFromString(const String& string) {
-	boost::posix_time::time_input_facet* facet = new boost::posix_time::time_input_facet("%Y-%m-%d %H:%M:%S%F%Q");
-	boost::posix_time::ptime result(boost::posix_time::not_a_date_time);
-	std::locale dateLocale(std::locale::classic(), facet);
 	std::istringstream stream(string.getUTF8String()); 
-	stream.imbue(dateLocale);
+	stream.imbue(locale);
+	boost::posix_time::ptime result(boost::posix_time::not_a_date_time);
 	stream >> result;
 	return result;
 }

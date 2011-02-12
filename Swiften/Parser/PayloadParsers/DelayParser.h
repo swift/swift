@@ -12,7 +12,7 @@
 namespace Swift {
 	class DelayParser : public GenericPayloadParser<Delay> {
 		public:
-			DelayParser();
+			DelayParser(const std::locale& locale);
 
 			virtual void handleStartElement(const String& element, const String&, const AttributeMap& attributes);
 			virtual void handleEndElement(const String& element, const String&);
@@ -20,6 +20,9 @@ namespace Swift {
 
 		private:
 			boost::posix_time::ptime dateFromString(const String& string);
+
+		private:
+			std::locale locale;
 			int level_;
 	};
 }
