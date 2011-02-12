@@ -103,7 +103,7 @@ void QtChatView::addToDOM(boost::shared_ptr<ChatSnippet> snippet) {
 		newInsertPoint_.prependOutside(newElement);
 	}
 	lastElement_ = newElement;
-	qApp->processEvents();
+	//qApp->processEvents();
 }
 
 void QtChatView::replaceLastMessage(const QString& newMessage) {
