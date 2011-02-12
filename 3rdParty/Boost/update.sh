@@ -30,6 +30,7 @@ fi
 	uuid/uuid_generators.hpp \
 	variant.hpp \
 	regex.hpp \
+	boost/unordered_map.hpp \
 	$TARGET_DIR
 
 rm -rf $TARGET_DIR/libs/config

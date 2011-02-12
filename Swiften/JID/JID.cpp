@@ -4,12 +4,27 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include <stringprep.h>
+#define SWIFTEN_CACHE_JID_PREP
+
 #include <vector>
 #include <iostream>
 
+#include <Swiften/Base/String.h>
+#ifdef SWIFTEN_CACHE_JID_PREP
+#include <boost/unordered_map.hpp>
+#endif
+#include <stringprep.h>
+
 #include "Swiften/JID/JID.h"
 #include "Swiften/IDN/StringPrep.h"
+
+#ifdef SWIFTEN_CACHE_JID_PREP
+typedef boost::unordered_map<std::string, Swift::String> PrepCache;
+
+static PrepCache nodePrepCache;
+static PrepCache domainPrepCache;
+static PrepCache resourcePrepCache;
+#endif
 
 namespace Swift {
 
@@ -56,9 +71,31 @@ void JID::initializeFromString(const String& jid) {
 
 
 void JID::nameprepAndSetComponents(const String& node, const String& domain, const String& resource) {
+#ifndef SWIFTEN_CACHE_JID_PREP
 	node_ = StringPrep::getPrepared(node, StringPrep::NamePrep);
 	domain_ = StringPrep::getPrepared(domain, StringPrep::XMPPNodePrep);
 	resource_ = StringPrep::getPrepared(resource, StringPrep::XMPPResourcePrep);
+#else
+	std::pair<PrepCache::iterator, bool> r;
+
+	r = nodePrepCache.insert(std::make_pair(node.getUTF8String(), String()));
+	if (r.second) {
+		r.first->second = StringPrep::getPrepared(node, StringPrep::NamePrep);
+	}
+	node_ = r.first->second;
+
+	r = domainPrepCache.insert(std::make_pair(domain.getUTF8String(), String()));
+	if (r.second) {
+		r.first->second = StringPrep::getPrepared(domain, StringPrep::XMPPNodePrep);
+	}
+	domain_ = r.first->second;
+
+	r = resourcePrepCache.insert(std::make_pair(resource.getUTF8String(), String()));
+	if (r.second) {
+		r.first->second = StringPrep::getPrepared(resource, StringPrep::XMPPResourcePrep);
+	}
+	resource_ = r.first->second;
+#endif
 }
 
 String JID::toString() const {
