@@ -38,7 +38,10 @@ namespace Swift {
 			}
 
 			JID toBare() const {
-				return JID(getNode(), getDomain()); /* FIXME: Duplicate unnecessary nameprepping. Probably ok. */
+				JID result(*this);
+				result.hasResource_ = false;
+				result.resource_ = "";
+				return result;
 			}
 
 			String toString() const;
