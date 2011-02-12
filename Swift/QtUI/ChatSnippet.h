@@ -27,7 +27,15 @@ namespace Swift {
 				return appendToPrevious_;
 			}
 			
-			static QString escape(const QString&);
+			static QString escape(const QString& original) {
+				QString result(original);
+				result.replace("%message%", "&#37;message&#37;");
+				result.replace("%sender%", "&#37;sender&#37;");
+				result.replace("%time%", "%&#37;time&#37;");
+				result.replace("%shortTime%", "%&#37;shortTime&#37;");
+				result.replace("%userIconPath%", "&#37;userIconPath&#37;");
+				return result;
+			}
 
 		protected:
 			void setContinuationFallbackSnippet(boost::shared_ptr<ChatSnippet> continuationFallback) {
