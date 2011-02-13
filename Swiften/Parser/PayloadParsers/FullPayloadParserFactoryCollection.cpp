@@ -8,21 +8,21 @@
 #include "Swiften/Base/foreach.h"
 #include "Swiften/Parser/GenericPayloadParser.h"
 #include "Swiften/Parser/PayloadParserFactory.h"
-#include "Swiften/Parser/PayloadParsers/ErrorParserFactory.h"
-#include "Swiften/Parser/PayloadParsers/BodyParserFactory.h"
-#include "Swiften/Parser/PayloadParsers/SubjectParserFactory.h"
+#include "Swiften/Parser/PayloadParsers/ErrorParser.h"
+#include "Swiften/Parser/PayloadParsers/BodyParser.h"
+#include "Swiften/Parser/PayloadParsers/SubjectParser.h"
 #include "Swiften/Parser/PayloadParsers/ChatStateParserFactory.h"
-#include "Swiften/Parser/PayloadParsers/PriorityParserFactory.h"
-#include "Swiften/Parser/PayloadParsers/ResourceBindParserFactory.h"
-#include "Swiften/Parser/PayloadParsers/StartSessionParserFactory.h"
-#include "Swiften/Parser/PayloadParsers/StatusParserFactory.h"
-#include "Swiften/Parser/PayloadParsers/StatusShowParserFactory.h"
-#include "Swiften/Parser/PayloadParsers/RosterParserFactory.h"
-#include "Swiften/Parser/PayloadParsers/SoftwareVersionParserFactory.h"
-#include "Swiften/Parser/PayloadParsers/StorageParserFactory.h"
-#include "Swiften/Parser/PayloadParsers/DiscoInfoParserFactory.h"
-#include "Swiften/Parser/PayloadParsers/DiscoItemsParserFactory.h"
-#include "Swiften/Parser/PayloadParsers/CapsInfoParserFactory.h"
+#include "Swiften/Parser/PayloadParsers/PriorityParser.h"
+#include "Swiften/Parser/PayloadParsers/ResourceBindParser.h"
+#include "Swiften/Parser/PayloadParsers/StartSessionParser.h"
+#include "Swiften/Parser/PayloadParsers/StatusParser.h"
+#include "Swiften/Parser/PayloadParsers/StatusShowParser.h"
+#include "Swiften/Parser/PayloadParsers/RosterParser.h"
+#include "Swiften/Parser/PayloadParsers/SoftwareVersionParser.h"
+#include "Swiften/Parser/PayloadParsers/StorageParser.h"
+#include "Swiften/Parser/PayloadParsers/DiscoInfoParser.h"
+#include "Swiften/Parser/PayloadParsers/DiscoItemsParser.h"
+#include "Swiften/Parser/PayloadParsers/CapsInfoParser.h"
 #include "Swiften/Parser/PayloadParsers/SecurityLabelParserFactory.h"
 #include "Swiften/Parser/PayloadParsers/SecurityLabelsCatalogParserFactory.h"
 #include "Swiften/Parser/PayloadParsers/FormParserFactory.h"
@@ -31,7 +31,7 @@
 #include "Swiften/Parser/PayloadParsers/SearchPayloadParserFactory.h"
 #include "Swiften/Parser/PayloadParsers/StreamInitiationParserFactory.h"
 #include "Swiften/Parser/PayloadParsers/BytestreamsParserFactory.h"
-#include "Swiften/Parser/PayloadParsers/IBBParserFactory.h"
+#include "Swiften/Parser/PayloadParsers/IBBParser.h"
 #include "Swiften/Parser/PayloadParsers/VCardUpdateParserFactory.h"
 #include "Swiften/Parser/PayloadParsers/VCardParserFactory.h"
 #include "Swiften/Parser/PayloadParsers/RawXMLPayloadParserFactory.h"
@@ -45,21 +45,21 @@ using namespace boost;
 namespace Swift {
 
 FullPayloadParserFactoryCollection::FullPayloadParserFactoryCollection() {
-	factories_.push_back(shared_ptr<PayloadParserFactory>(new IBBParserFactory()));
-	factories_.push_back(shared_ptr<PayloadParserFactory>(new StatusParserFactory()));
-	factories_.push_back(shared_ptr<PayloadParserFactory>(new StatusShowParserFactory()));
-	factories_.push_back(shared_ptr<PayloadParserFactory>(new BodyParserFactory()));
-	factories_.push_back(shared_ptr<PayloadParserFactory>(new SubjectParserFactory()));
-	factories_.push_back(shared_ptr<PayloadParserFactory>(new PriorityParserFactory()));
-	factories_.push_back(shared_ptr<PayloadParserFactory>(new ErrorParserFactory()));
-	factories_.push_back(shared_ptr<PayloadParserFactory>(new SoftwareVersionParserFactory()));
-	factories_.push_back(shared_ptr<PayloadParserFactory>(new StorageParserFactory()));
-	factories_.push_back(shared_ptr<PayloadParserFactory>(new RosterParserFactory()));
-	factories_.push_back(shared_ptr<PayloadParserFactory>(new DiscoInfoParserFactory()));
-	factories_.push_back(shared_ptr<PayloadParserFactory>(new DiscoItemsParserFactory()));
-	factories_.push_back(shared_ptr<PayloadParserFactory>(new CapsInfoParserFactory()));
-	factories_.push_back(shared_ptr<PayloadParserFactory>(new ResourceBindParserFactory()));
-	factories_.push_back(shared_ptr<PayloadParserFactory>(new StartSessionParserFactory()));
+	factories_.push_back(shared_ptr<PayloadParserFactory>(new GenericPayloadParserFactory<IBBParser>("", "http://jabber.org/protocol/ibb")));
+	factories_.push_back(shared_ptr<PayloadParserFactory>(new GenericPayloadParserFactory<StatusShowParser>("show")));
+	factories_.push_back(shared_ptr<PayloadParserFactory>(new GenericPayloadParserFactory<StatusParser>("status")));
+	factories_.push_back(shared_ptr<PayloadParserFactory>(new GenericPayloadParserFactory<BodyParser>("body")));
+	factories_.push_back(shared_ptr<PayloadParserFactory>(new GenericPayloadParserFactory<SubjectParser>("subject")));
+	factories_.push_back(shared_ptr<PayloadParserFactory>(new GenericPayloadParserFactory<PriorityParser>("priority")));
+	factories_.push_back(shared_ptr<PayloadParserFactory>(new GenericPayloadParserFactory<ErrorParser>("error")));
+	factories_.push_back(shared_ptr<PayloadParserFactory>(new GenericPayloadParserFactory<SoftwareVersionParser>("query", "jabber:iq:version")));
+	factories_.push_back(shared_ptr<PayloadParserFactory>(new GenericPayloadParserFactory<StorageParser>("storage", "storage:bookmarks")));
+	factories_.push_back(shared_ptr<PayloadParserFactory>(new GenericPayloadParserFactory<RosterParser>("query", "jabber:iq:roster")));
+	factories_.push_back(shared_ptr<PayloadParserFactory>(new GenericPayloadParserFactory<DiscoInfoParser>("query", "http://jabber.org/protocol/disco#info")));
+	factories_.push_back(shared_ptr<PayloadParserFactory>(new GenericPayloadParserFactory<DiscoItemsParser>("query", "http://jabber.org/protocol/disco#items")));
+	factories_.push_back(shared_ptr<PayloadParserFactory>(new GenericPayloadParserFactory<CapsInfoParser>("c", "http://jabber.org/protocol/caps")));
+	factories_.push_back(shared_ptr<PayloadParserFactory>(new GenericPayloadParserFactory<ResourceBindParser>("bind", "urn:ietf:params:xml:ns:xmpp-bind")));
+	factories_.push_back(shared_ptr<PayloadParserFactory>(new GenericPayloadParserFactory<StartSessionParser>("session", "urn:ietf:params:xml:ns:xmpp-session")));
 	factories_.push_back(shared_ptr<PayloadParserFactory>(new SecurityLabelParserFactory()));
 	factories_.push_back(shared_ptr<PayloadParserFactory>(new SecurityLabelsCatalogParserFactory()));
 	factories_.push_back(shared_ptr<PayloadParserFactory>(new FormParserFactory()));
