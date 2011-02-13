@@ -31,6 +31,7 @@ fi
 	variant.hpp \
 	regex.hpp \
 	boost/unordered_map.hpp \
+	boost/algorithm/string.hpp \
 	$TARGET_DIR
 
 rm -rf $TARGET_DIR/libs/config

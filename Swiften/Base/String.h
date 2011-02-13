@@ -4,8 +4,9 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#ifndef SWIFTEN_STRING_H
-#define SWIFTEN_STRING_H
+#pragma once
+
+#include <boost/algorithm/string.hpp>
 
 #include <ostream>
 #include <string>
@@ -48,7 +49,10 @@ namespace Swift {
 			std::vector<String> split(char c) const;
 
 			size_t getLength() const;
-			String getLowerCase() const;
+
+			String getLowerCase() const {
+				return boost::to_lower_copy(data_);
+			}
 
 			void removeAll(char c);
 
@@ -59,7 +63,7 @@ namespace Swift {
 			}
 
 			bool beginsWith(const String& s) const {
-				return data_.substr(0, s.data_.size()) == s;
+				return boost::starts_with(data_, s.data_);
 			}
 
 			bool endsWith(char c) const { 
@@ -67,7 +71,7 @@ namespace Swift {
 			}
 
 			bool endsWith(const String& s) const {
-				return data_.substr(data_.size() - s.data_.size(), data_.npos) == s;
+				return boost::ends_with(data_, s.data_);
 			}
 
 			String getSubstring(size_t begin, size_t end) const {
@@ -139,5 +143,3 @@ namespace Swift {
 			std::string data_;
 	};
 }
-
-#endif
