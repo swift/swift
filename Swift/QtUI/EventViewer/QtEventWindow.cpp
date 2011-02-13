@@ -10,6 +10,7 @@
 #include <QtDebug>
 #include <QBoxLayout>
 #include <QPushButton>
+#include <QMessageBox>
 
 #include "Swift/Controllers/XMPPEvents/MessageEvent.h"
 #include "Swift/Controllers/XMPPEvents/ErrorEvent.h"
@@ -85,10 +86,13 @@ void QtEventWindow::handleItemActivated(const QModelIndex& item) {
 	} else if (subscriptionEvent) {
 		QtSubscriptionRequestWindow* window = QtSubscriptionRequestWindow::getWindow(subscriptionEvent, this);
 		window->show();
-	} else if (errorEvent) {
-		errorEvent->conclude();
 	} else {
-		qWarning() << "Trying to activate an unexpected event";
+		if (errorEvent) {
+			errorEvent->conclude();
+		}
+		QMessageBox msgBox;
+		msgBox.setText(model_->data(item, Qt::DisplayRole).toString());
+		msgBox.exec();
 	}
 
 }
