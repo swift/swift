@@ -14,8 +14,6 @@
 #include <QtDBus/QtDBus>
 #include <algorithm>
 
-#include "QtSwiftUtil.h"
-
 namespace Swift {
 
 FreeDesktopNotifier::FreeDesktopNotifier(const std::string& name) : applicationName(name) {
@@ -31,7 +29,7 @@ void FreeDesktopNotifier::showMessage(Type type, const std::string& subject, con
 		return;
 	}
 
-	QString body = P2QSTRING(description);
+	QString body = description.c_str();
 	body = body.replace("&", "&amp;");
 	body = body.replace("<", "&lt;");
 	body = body.replace(">", "&gt;");
@@ -43,10 +41,10 @@ void FreeDesktopNotifier::showMessage(Type type, const std::string& subject, con
 	QStringList actions;
 	QMap<QString, QVariant> hints;
 	hints["x-canonical-append"] = QString("allowed");
-	msg << P2QSTRING(applicationName);
+	msg << applicationName.c_str();
 	msg << quint32(0); // ID of previous notification to replace
 	msg << imageScaler.getScaledImage(picture, 48).string().c_str(); // Icon to display
-	msg << P2QSTRING(subject); // Summary / Header of the message to display
+	msg << subject.c_str(); // Summary / Header of the message to display
 	msg << body; // Body of the message to display
 	msg << actions; // Actions from which the user may choose
 	msg << hints; // Hints to the server displaying the message
