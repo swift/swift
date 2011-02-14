@@ -46,7 +46,6 @@ ByteArray LinkLocalServiceInfo::toTXTRecord() const {
 ByteArray LinkLocalServiceInfo::getEncoded(const String& s) {
 	ByteArray sizeByte;
 	sizeByte.resize(1);
-	assert(s.getLength() < 256);
 	sizeByte[0] = s.getUTF8Size();
 	return sizeByte + ByteArray(s);
 }

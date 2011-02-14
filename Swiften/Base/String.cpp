@@ -69,24 +69,6 @@ std::pair<String,String> String::getSplittedAtFirst(char c) const {
 	}
 }
 
-size_t String::getLength() const {
-	size_t size = 0, current = 0, end = data_.size();
-	while (current < end) {
-		size++;
-		current += sequenceLength(data_[current]);
-	}
-	return size;
-}
-
-void String::removeAll(char c) {
-	size_t lastPos = 0;
-	size_t matchingIndex = 0;
-	while ((matchingIndex = data_.find(c, lastPos)) != data_.npos) {
-		data_.erase(matchingIndex, 1);
-		lastPos = matchingIndex;
-	}
-}
-
 void String::replaceAll(char c, const String& s) {
 	size_t lastPos = 0;
 	size_t matchingIndex = 0;

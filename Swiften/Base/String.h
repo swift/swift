@@ -13,6 +13,7 @@
 #include <utility>
 #include <vector>
 #include <cassert>
+#include <algorithm>
 
 #define SWIFTEN_STRING_TO_CFSTRING(a) \
 	CFStringCreateWithBytes(NULL, reinterpret_cast<const UInt8*>(a.getUTF8Data()), a.getUTF8Size(), kCFStringEncodingUTF8, false)
@@ -48,13 +49,13 @@ namespace Swift {
 
 			std::vector<String> split(char c) const;
 
-			size_t getLength() const;
-
 			String getLowerCase() const {
 				return boost::to_lower_copy(data_);
 			}
 
-			void removeAll(char c);
+			void removeAll(char c) {
+				data_.erase(std::remove(data_.begin(), data_.end(), c), data_.end());
+			}
 
 			void replaceAll(char c, const String& s);
 

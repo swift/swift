@@ -23,7 +23,7 @@ namespace Swift {
 		private:
 			void printData(char direction, const ByteArray& data) {
 				std::cerr << direction << direction << " " << session->getLocalJID() << " ";
-				for (unsigned int i = 0; i < 72 - session->getLocalJID().toString().getLength() - session->getRemoteJID().toString().getLength(); ++i) {
+				for (unsigned int i = 0; i < 72 - session->getLocalJID().toString().getUTF8Size() - session->getRemoteJID().toString().getUTF8Size(); ++i) {
 					std::cerr << direction;
 				}
 				std::cerr << " " << session->getRemoteJID()<< " " << direction << direction << std::endl;

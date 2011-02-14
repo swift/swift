@@ -14,10 +14,6 @@ using namespace Swift;
 class StringTest : public CppUnit::TestFixture
 {
 		CPPUNIT_TEST_SUITE(StringTest);
-		CPPUNIT_TEST(testGetLength);
-		CPPUNIT_TEST(testGetLength_EncodedLength2);
-		CPPUNIT_TEST(testGetLength_EncodedLength3);
-		CPPUNIT_TEST(testGetLength_EncodedLength4);
 		CPPUNIT_TEST(testGetUnicodeCodePoints);
 		CPPUNIT_TEST(testGetSplittedAtFirst);
 		CPPUNIT_TEST(testGetSplittedAtFirst_CharacterAtEnd);
@@ -39,30 +35,6 @@ class StringTest : public CppUnit::TestFixture
 		CPPUNIT_TEST_SUITE_END();
 
 	public:
-		void testGetLength() {
-			String testling("xyz$xyz");
-
-			CPPUNIT_ASSERT_EQUAL(static_cast<size_t>(7), testling.getLength());
-		}
-
-		void testGetLength_EncodedLength2() {
-			String testling("xyz\xC2\xA2xyz");
-
-			CPPUNIT_ASSERT_EQUAL(static_cast<size_t>(7), testling.getLength());
-		}
-
-		void testGetLength_EncodedLength3() {
-			String testling("xyz\xE2\x82\xACxyz");
-
-			CPPUNIT_ASSERT_EQUAL(static_cast<size_t>(7), testling.getLength());
-		}
-
-		void testGetLength_EncodedLength4() {
-			String testling("xyz\xf4\x8a\xaf\x8dxyz");
-
-			CPPUNIT_ASSERT_EQUAL(static_cast<size_t>(7), testling.getLength());
-		}
-
 		void testGetUnicodeCodePoints() {
 			String testling("$\xc2\xa2\xe2\x82\xac\xf4\x8a\xaf\x8d");
 			std::vector<unsigned int> points = testling.getUnicodeCodePoints();
