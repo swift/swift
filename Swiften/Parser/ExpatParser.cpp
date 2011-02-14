@@ -7,8 +7,9 @@
 #include "Swiften/Parser/ExpatParser.h"
 
 #include <iostream>
-
 #include <string>
+
+#include <Swiften/Base/String.h>
 #include "Swiften/Parser/XMLParserClient.h"
 
 namespace Swift {
@@ -16,7 +17,7 @@ namespace Swift {
 static const char NAMESPACE_SEPARATOR = '\x01';
 
 static void handleStartElement(void* client, const XML_Char* name, const XML_Char** attributes) {
-	std::pair<std::string,std::string> nsTagPair = std::string(name).getSplittedAtFirst(NAMESPACE_SEPARATOR);
+	std::pair<std::string,std::string> nsTagPair = String::getSplittedAtFirst(name, NAMESPACE_SEPARATOR);
 	if (nsTagPair.second == "") {
 		nsTagPair.second = nsTagPair.first;
 		nsTagPair.first = "";
@@ -24,7 +25,7 @@ static void handleStartElement(void* client, const XML_Char* name, const XML_Cha
 	AttributeMap attributeValues;
 	const XML_Char** currentAttribute = attributes;
 	while (*currentAttribute) {
-		std::pair<std::string,std::string> nsAttributePair = std::string(*currentAttribute).getSplittedAtFirst(NAMESPACE_SEPARATOR);
+		std::pair<std::string,std::string> nsAttributePair = String::getSplittedAtFirst(*currentAttribute, NAMESPACE_SEPARATOR);
 		if (nsAttributePair.second == "") {
 			nsAttributePair.second = nsAttributePair.first;
 			nsAttributePair.first = "";
@@ -37,7 +38,7 @@ static void handleStartElement(void* client, const XML_Char* name, const XML_Cha
 }
 
 static void handleEndElement(void* client, const XML_Char* name) {
-	std::pair<std::string,std::string> nsTagPair = std::string(name).getSplittedAtFirst(NAMESPACE_SEPARATOR);
+	std::pair<std::string,std::string> nsTagPair = String::getSplittedAtFirst(name, NAMESPACE_SEPARATOR);
 	if (nsTagPair.second == "") {
 		nsTagPair.second = nsTagPair.first;
 		nsTagPair.first = "";
