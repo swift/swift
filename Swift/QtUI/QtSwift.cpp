@@ -8,6 +8,7 @@
 
 #include <string>
 #include <QSplitter>
+#include <QTextCodec>
 #include <boost/bind.hpp>
 
 #include "QtLoginWindow.h"
@@ -71,6 +72,8 @@ po::options_description QtSwift::getOptionsDescription() {
 
 
 QtSwift::QtSwift(const po::variables_map& options) : networkFactories_(&clientMainThreadCaller_), autoUpdater_(NULL) {
+	QTextCodec::setCodecForCStrings(QTextCodec::codecForName("UTF-8"));
+
 	if (options.count("netbook-mode")) {
 		splitter_ = new QSplitter();
 	} else {
