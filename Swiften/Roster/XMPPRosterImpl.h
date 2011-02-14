@@ -16,18 +16,18 @@ namespace Swift {
 		public:
 			XMPPRosterImpl();
 
-			void addContact(const JID& jid, const String& name, const std::vector<String>& groups, const RosterItemPayload::Subscription subscription);
+			void addContact(const JID& jid, const std::string& name, const std::vector<std::string>& groups, const RosterItemPayload::Subscription subscription);
 			void removeContact(const JID& jid);
 			void clear();
 
 			bool containsJID(const JID& jid);
 			RosterItemPayload::Subscription getSubscriptionStateForJID(const JID& jid);
-			String getNameForJID(const JID& jid) const;
-			std::vector<String> getGroupsForJID(const JID& jid);
+			std::string getNameForJID(const JID& jid) const;
+			std::vector<std::string> getGroupsForJID(const JID& jid);
 
 			virtual std::vector<XMPPRosterItem> getItems() const;
 			virtual boost::optional<XMPPRosterItem> getItem(const JID&) const;
-			virtual std::set<String> getGroups() const;
+			virtual std::set<std::string> getGroups() const;
 
 		private:
 			typedef std::map<JID, XMPPRosterItem> RosterMap;

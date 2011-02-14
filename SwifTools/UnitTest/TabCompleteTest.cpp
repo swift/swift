@@ -31,7 +31,7 @@ public:
 	}
 	
 	void testEmpty() {
-		String blah("Blah");
+		std::string blah("Blah");
 		CPPUNIT_ASSERT_EQUAL(
 			blah,
 			completer_.completeWord(blah));
@@ -42,7 +42,7 @@ public:
 
 	void testNoMatch() {
 		completer_.addWord("Bleh");
-		String blah("Blah");
+		std::string blah("Blah");
 		CPPUNIT_ASSERT_EQUAL(
 			blah,
 			completer_.completeWord(blah));
@@ -52,8 +52,8 @@ public:
 	}
 
 	void testOneMatch() {
-		String short1("Bl");
-		String long1("Blehling");
+		std::string short1("Bl");
+		std::string long1("Blehling");
 		completer_.addWord(long1);
 		CPPUNIT_ASSERT_EQUAL(
 			long1,
@@ -64,9 +64,9 @@ public:
 	}
 	
 	void testTwoMatch() {
-		String short1("Hur");
-		String long1("Hurgle");
-		String long2("Hurdler");
+		std::string short1("Hur");
+		std::string long1("Hurgle");
+		std::string long2("Hurdler");
 		completer_.addWord(long1);
 		completer_.addWord("Blah");
 		completer_.addWord(long2);
@@ -83,10 +83,10 @@ public:
 	}
 
 	void testChangeMatch() {
-		String short1("Hur");
-		String short2("Rub");
-		String long1("Hurgle");
-		String long2("Rubbish");
+		std::string short1("Hur");
+		std::string short2("Rub");
+		std::string long1("Hurgle");
+		std::string long2("Rubbish");
 		completer_.addWord(long2);
 		completer_.addWord("Blah");
 		completer_.addWord(long1);
@@ -106,9 +106,9 @@ public:
 	}
 
 	void testRemoveDuringComplete() {
-		String short1("Kev");
-		String long1("Kevin");
-		String long2("Kevlar");
+		std::string short1("Kev");
+		std::string long1("Kevin");
+		std::string long2("Kevlar");
 		completer_.addWord(long1);
 		completer_.addWord("Blah");
 		completer_.addWord(long2);
@@ -126,10 +126,10 @@ public:
 	}
 
 	void testAddDuringComplete() {
-		String short1("Rem");
-		String long1("Remko");
-		String long2("Remove");
-		String long3("Remedial");
+		std::string short1("Rem");
+		std::string long1("Remko");
+		std::string long2("Remove");
+		std::string long3("Remedial");
 		completer_.addWord(long1);
 		completer_.addWord("Blah");
 		completer_.addWord(long2);
@@ -147,16 +147,16 @@ public:
 	}
 
 	void testSwiftRoomSample() {
-		String t("t");
-		String Anpan("Anpan");
-		String cdubouloz("cdubouloz");
-		String Tobias("Tobias");
-		String Zash("Zash");
-		String lastsky("lastsky");
-		String Steve("Steve Kille");
-		String Flo("Flo");
-		String Test("Test");
-		String test("test");
+		std::string t("t");
+		std::string Anpan("Anpan");
+		std::string cdubouloz("cdubouloz");
+		std::string Tobias("Tobias");
+		std::string Zash("Zash");
+		std::string lastsky("lastsky");
+		std::string Steve("Steve Kille");
+		std::string Flo("Flo");
+		std::string Test("Test");
+		std::string test("test");
 		completer_.addWord(Anpan);
 		completer_.addWord(cdubouloz);
 		completer_.addWord(Tobias);

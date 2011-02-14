@@ -14,11 +14,11 @@ namespace Swift {
 AvatarFileStorage::AvatarFileStorage(const boost::filesystem::path& path) : path_(path) {
 }
 
-bool AvatarFileStorage::hasAvatar(const String& hash) const { 
+bool AvatarFileStorage::hasAvatar(const std::string& hash) const { 
 	return boost::filesystem::exists(getAvatarPath(hash));
 }
 
-void AvatarFileStorage::addAvatar(const String& hash, const ByteArray& avatar) {
+void AvatarFileStorage::addAvatar(const std::string& hash, const ByteArray& avatar) {
 	boost::filesystem::path avatarPath = getAvatarPath(hash);
 	if (!boost::filesystem::exists(avatarPath.parent_path())) {
 		try {
@@ -33,11 +33,11 @@ void AvatarFileStorage::addAvatar(const String& hash, const ByteArray& avatar) {
 	file.close();
 }
 
-boost::filesystem::path AvatarFileStorage::getAvatarPath(const String& hash) const {
-	return path_ / hash.getUTF8String();
+boost::filesystem::path AvatarFileStorage::getAvatarPath(const std::string& hash) const {
+	return path_ / hash;
 }
 
-ByteArray AvatarFileStorage::getAvatar(const String& hash) const {
+ByteArray AvatarFileStorage::getAvatar(const std::string& hash) const {
 	ByteArray data;
 	data.readFromFile(getAvatarPath(hash).string());
 	return data;

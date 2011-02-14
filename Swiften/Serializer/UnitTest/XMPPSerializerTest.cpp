@@ -38,7 +38,7 @@ class XMPPSerializerTest : public CppUnit::TestFixture {
 			protocolHeader.setID("myid");
 			protocolHeader.setVersion("0.99");
 
-			CPPUNIT_ASSERT_EQUAL(String("<?xml version=\"1.0\"?><stream:stream xmlns=\"jabber:client\" xmlns:stream=\"http://etherx.jabber.org/streams\" from=\"bla@foo.com\" to=\"foo.com\" id=\"myid\" version=\"0.99\">"), testling->serializeHeader(protocolHeader));
+			CPPUNIT_ASSERT_EQUAL(std::string("<?xml version=\"1.0\"?><stream:stream xmlns=\"jabber:client\" xmlns:stream=\"http://etherx.jabber.org/streams\" from=\"bla@foo.com\" to=\"foo.com\" id=\"myid\" version=\"0.99\">"), testling->serializeHeader(protocolHeader));
 		}
 
 		void testSerializeHeader_Component() {
@@ -49,7 +49,7 @@ class XMPPSerializerTest : public CppUnit::TestFixture {
 			protocolHeader.setID("myid");
 			protocolHeader.setVersion("0.99");
 
-			CPPUNIT_ASSERT_EQUAL(String("<?xml version=\"1.0\"?><stream:stream xmlns=\"jabber:component:accept\" xmlns:stream=\"http://etherx.jabber.org/streams\" from=\"bla@foo.com\" to=\"foo.com\" id=\"myid\" version=\"0.99\">"), testling->serializeHeader(protocolHeader));
+			CPPUNIT_ASSERT_EQUAL(std::string("<?xml version=\"1.0\"?><stream:stream xmlns=\"jabber:component:accept\" xmlns:stream=\"http://etherx.jabber.org/streams\" from=\"bla@foo.com\" to=\"foo.com\" id=\"myid\" version=\"0.99\">"), testling->serializeHeader(protocolHeader));
 		}
 
 		void testSerializeHeader_Server() {
@@ -60,7 +60,7 @@ class XMPPSerializerTest : public CppUnit::TestFixture {
 			protocolHeader.setID("myid");
 			protocolHeader.setVersion("0.99");
 
-			CPPUNIT_ASSERT_EQUAL(String("<?xml version=\"1.0\"?><stream:stream xmlns=\"jabber:server\" xmlns:stream=\"http://etherx.jabber.org/streams\" from=\"bla@foo.com\" to=\"foo.com\" id=\"myid\" version=\"0.99\">"), testling->serializeHeader(protocolHeader));
+			CPPUNIT_ASSERT_EQUAL(std::string("<?xml version=\"1.0\"?><stream:stream xmlns=\"jabber:server\" xmlns:stream=\"http://etherx.jabber.org/streams\" from=\"bla@foo.com\" to=\"foo.com\" id=\"myid\" version=\"0.99\">"), testling->serializeHeader(protocolHeader));
 		}
 
 	private:

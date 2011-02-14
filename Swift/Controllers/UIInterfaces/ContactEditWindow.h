@@ -11,7 +11,7 @@
 #include <set>
 #include <vector>
 
-#include <Swiften/Base/String.h>
+#include <string>
 
 namespace Swift {
 	class JID;
@@ -22,12 +22,12 @@ namespace Swift {
 
 			virtual void setEnabled(bool b) = 0;
 
-			virtual void setContact(const JID& jid, const String& name, const std::vector<String>& groups, const std::set<String>& allGroups) = 0;
+			virtual void setContact(const JID& jid, const std::string& name, const std::vector<std::string>& groups, const std::set<std::string>& allGroups) = 0;
 
 			virtual void show() = 0;
 			virtual void hide() = 0;
 
 			boost::signal<void ()> onRemoveContactRequest;
-			boost::signal<void (const String& /* name */, const std::set<String>& /* groups */)> onChangeContactRequest;
+			boost::signal<void (const std::string& /* name */, const std::set<std::string>& /* groups */)> onChangeContactRequest;
 	};
 }

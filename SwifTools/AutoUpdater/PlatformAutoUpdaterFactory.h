@@ -4,7 +4,7 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "Swiften/Base/String.h"
+#include <string>
 
 namespace Swift {
 	class AutoUpdater;
@@ -13,6 +13,6 @@ namespace Swift {
 		public:
 			bool isSupported() const;
 
-			AutoUpdater* createAutoUpdater(const String& appcastURL);
+			AutoUpdater* createAutoUpdater(const std::string& appcastURL);
 	};
 }

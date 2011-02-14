@@ -8,45 +8,45 @@
 #define SWIFTEN_SoftwareVersion_H
 
 #include "Swiften/Elements/Payload.h"
-#include "Swiften/Base/String.h"
+#include <string>
 
 namespace Swift {
 	class SoftwareVersion : public Payload {
 		public:
 			SoftwareVersion(
-					const String& name = "", 
-					const String& version = "",
-					const String& os = "") : 
+					const std::string& name = "", 
+					const std::string& version = "",
+					const std::string& os = "") : 
 						name_(name), version_(version), os_(os) {}
 			
-			const String& getName() const {
+			const std::string& getName() const {
 				return name_;
 			}
 
-			void setName(const String& name) {
+			void setName(const std::string& name) {
 				name_ = name;
 			}
 
-			const String& getVersion() const {
+			const std::string& getVersion() const {
 				return version_;
 			}
 
-			void setVersion(const String& version) {
+			void setVersion(const std::string& version) {
 				version_ = version;
 			}
 
-			const String& getOS() const {
+			const std::string& getOS() const {
 				return os_;
 			}
 
-			void setOS(const String& os) {
+			void setOS(const std::string& os) {
 				os_ = os;
 			}
 
 		private:
-			String name_;
-			String version_;
-			String os_;
+			std::string name_;
+			std::string version_;
+			std::string os_;
 	};
 }
 

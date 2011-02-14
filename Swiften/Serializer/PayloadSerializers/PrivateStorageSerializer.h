@@ -16,7 +16,7 @@ namespace Swift {
 		public:
 			PrivateStorageSerializer(PayloadSerializerCollection* serializers);
 
-			virtual String serializePayload(boost::shared_ptr<PrivateStorage>)  const;
+			virtual std::string serializePayload(boost::shared_ptr<PrivateStorage>)  const;
 
 		private:
 			PayloadSerializerCollection* serializers;

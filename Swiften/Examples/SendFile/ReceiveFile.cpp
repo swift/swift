@@ -25,7 +25,7 @@ int exitCode = 2;
 
 class FileReceiver {
 	public:
-		FileReceiver(const JID& jid, const String& password) : jid(jid), password(password), jingleSessionManager(NULL), incomingFileTransferManager(NULL) {
+		FileReceiver(const JID& jid, const std::string& password) : jid(jid), password(password), jingleSessionManager(NULL), incomingFileTransferManager(NULL) {
 			client = new Swift::Client(jid, password, &networkFactories);
 			client->onConnected.connect(boost::bind(&FileReceiver::handleConnected, this));
 			client->onDisconnected.connect(boost::bind(&FileReceiver::handleDisconnected, this, _1));
@@ -91,7 +91,7 @@ class FileReceiver {
 	
 	private:
 		JID jid;
-		String password;
+		std::string password;
 		Client* client;
 		ClientXMLTracer* tracer;
 		JingleSessionManager* jingleSessionManager;
@@ -107,7 +107,7 @@ int main(int argc, char* argv[]) {
 	}
 
 	JID jid(argv[1]);
-	FileReceiver fileReceiver(jid, String(argv[2]));
+	FileReceiver fileReceiver(jid, std::string(argv[2]));
 	fileReceiver.start();
 
 	eventLoop.run();

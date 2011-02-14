@@ -7,23 +7,23 @@
 #ifndef SWIFTEN_STANZAS_VERSION_H
 #define SWIFTEN_STANZAS_VERSION_H
 
-#include "Swiften/Base/String.h"
+#include <string>
 #include "Swiften/Elements/Payload.h"
 
 namespace Swift {
 	class Version : public Payload
 	{
 		public:
-			Version(const String& name = "", const String& version = "", const String& os = "") : name_(name), version_(version), os_(os) { }
+			Version(const std::string& name = "", const std::string& version = "", const std::string& os = "") : name_(name), version_(version), os_(os) { }
 
-			const String& getName() const { return name_; }
-			const String& getVersion() const { return version_; }
-			const String& getOS() const { return os_; }
+			const std::string& getName() const { return name_; }
+			const std::string& getVersion() const { return version_; }
+			const std::string& getOS() const { return os_; }
 
 		private:
-			String name_;
-			String version_;
-			String os_;
+			std::string name_;
+			std::string version_;
+			std::string os_;
 	};
 }
 

@@ -8,14 +8,14 @@
 
 namespace Swift {
 
-UnixApplicationPathProvider::UnixApplicationPathProvider(const String& name) : ApplicationPathProvider(name) {
+UnixApplicationPathProvider::UnixApplicationPathProvider(const std::string& name) : ApplicationPathProvider(name) {
 	resourceDirs.push_back(getExecutableDir() / "../resources"); // Development
 	char* xdgDataDirs = getenv("XDG_DATA_DIRS");
 	if (xdgDataDirs) {
-		std::vector<String> dataDirs = String(xdgDataDirs).split(':');
+		std::vector<std::string> dataDirs = std::string(xdgDataDirs).split(':');
 		if (!dataDirs.empty()) {
-			foreach(const String& dir, dataDirs) {
-				resourceDirs.push_back(boost::filesystem::path(dir.getUTF8String()) / "swift");
+			foreach(const std::string& dir, dataDirs) {
+				resourceDirs.push_back(boost::filesystem::path(dir) / "swift");
 			}
 			return;
 		}
@@ -31,14 +31,14 @@ boost::filesystem::path UnixApplicationPathProvider::getHomeDir() const {
 
 boost::filesystem::path UnixApplicationPathProvider::getDataDir() const {
 	char* xdgDataHome = getenv("XDG_DATA_HOME");
-	String dataDir;
+	std::string dataDir;
 	if (xdgDataHome) {
-		dataDir = String(xdgDataHome);
+		dataDir = std::string(xdgDataHome);
 	}
 
-	boost::filesystem::path dataPath = (dataDir.isEmpty() ? 
+	boost::filesystem::path dataPath = (dataDir.empty() ? 
 			getHomeDir() / ".local" / "share" 
-			: boost::filesystem::path(dataDir.getUTF8String())) / getApplicationName().getLowerCase().getUTF8String();
+			: boost::filesystem::path(dataDir)) / getApplicationName().getLowerCase();
 
 	try {
 		boost::filesystem::create_directories(dataPath);

@@ -9,7 +9,7 @@
 #include <boost/shared_ptr.hpp>
 #include <openssl/ssl.h>
 
-#include "Swiften/Base/String.h"
+#include <string>
 #include "Swiften/TLS/Certificate.h"
 
 namespace Swift {
@@ -18,23 +18,23 @@ namespace Swift {
 			OpenSSLCertificate(boost::shared_ptr<X509>);
 			OpenSSLCertificate(const ByteArray& der);
 
-			String getSubjectName() const {
+			std::string getSubjectName() const {
 				return subjectName;
 			}
 
-			std::vector<String> getCommonNames() const {
+			std::vector<std::string> getCommonNames() const {
 				return commonNames;
 			}
 
-			std::vector<String> getSRVNames() const {
+			std::vector<std::string> getSRVNames() const {
 				return srvNames;
 			}
 
-			std::vector<String> getDNSNames() const {
+			std::vector<std::string> getDNSNames() const {
 				return dnsNames;
 			}
 
-			std::vector<String> getXMPPAddresses() const {
+			std::vector<std::string> getXMPPAddresses() const {
 				return xmppAddresses;
 			}
 
@@ -47,24 +47,24 @@ namespace Swift {
 		private:
 			void parse();
 
-			void addSRVName(const String& name) {
+			void addSRVName(const std::string& name) {
 				srvNames.push_back(name);
 			}
 
-			void addDNSName(const String& name) {
+			void addDNSName(const std::string& name) {
 				dnsNames.push_back(name);
 			}
 
-			void addXMPPAddress(const String& addr) {
+			void addXMPPAddress(const std::string& addr) {
 				xmppAddresses.push_back(addr);
 			}
 
 		private:
 			boost::shared_ptr<X509> cert;
-			String subjectName;
-			std::vector<String> commonNames;
-			std::vector<String> dnsNames;
-			std::vector<String> xmppAddresses;
-			std::vector<String> srvNames;
+			std::string subjectName;
+			std::vector<std::string> commonNames;
+			std::vector<std::string> dnsNames;
+			std::vector<std::string> xmppAddresses;
+			std::vector<std::string> srvNames;
 	};
 }

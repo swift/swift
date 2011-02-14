@@ -24,18 +24,18 @@ class Base64Test : public CppUnit::TestFixture {
 
 	public:
 		void testEncode() {
-			String result(Base64::encode("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890"));
-			CPPUNIT_ASSERT_EQUAL(String("QUJDREVGR0hJSktMTU5PUFFSU1RVVldYWVphYmNkZWZnaGlqa2xtbm9wcXJzdHV2d3h5ejEyMzQ1Njc4OTA="), result);
+			std::string result(Base64::encode("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890"));
+			CPPUNIT_ASSERT_EQUAL(std::string("QUJDREVGR0hJSktMTU5PUFFSU1RVVldYWVphYmNkZWZnaGlqa2xtbm9wcXJzdHV2d3h5ejEyMzQ1Njc4OTA="), result);
 		}
 
 		void testEncode_NonAscii() {
-			String result(Base64::encode(ByteArray("\x42\x06\xb2\x3c\xa6\xb0\xa6\x43\xd2\x0d\x89\xb0\x4f\xf5\x8c\xf7\x8b\x80\x96\xed")));
-			CPPUNIT_ASSERT_EQUAL(String("QgayPKawpkPSDYmwT/WM94uAlu0="), result);
+			std::string result(Base64::encode(ByteArray("\x42\x06\xb2\x3c\xa6\xb0\xa6\x43\xd2\x0d\x89\xb0\x4f\xf5\x8c\xf7\x8b\x80\x96\xed")));
+			CPPUNIT_ASSERT_EQUAL(std::string("QgayPKawpkPSDYmwT/WM94uAlu0="), result);
 		}
 
 		void testEncode_NoData() {
-			String result(Base64::encode(ByteArray()));
-			CPPUNIT_ASSERT_EQUAL(String(""), result);
+			std::string result(Base64::encode(ByteArray()));
+			CPPUNIT_ASSERT_EQUAL(std::string(""), result);
 		}
 
 		void testDecode() {

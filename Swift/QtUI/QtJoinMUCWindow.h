@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include <Swiften/Base/String.h>
+#include <string>
 #include <Swift/Controllers/UIInterfaces/JoinMUCWindow.h>
 #include <Swift/QtUI/ui_QtJoinMUCWindow.h>
 
@@ -16,8 +16,8 @@ namespace Swift {
 		public:
 			QtJoinMUCWindow();
 
-			virtual void setNick(const String& nick);
-			virtual void setMUC(const String& nick);
+			virtual void setNick(const std::string& nick);
+			virtual void setMUC(const std::string& nick);
 
 			virtual void show();
 
@@ -27,6 +27,6 @@ namespace Swift {
 
 		private:
 			Ui::QtJoinMUCWindow ui;
-			String lastSetNick;
+			std::string lastSetNick;
 	};
 }

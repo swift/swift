@@ -8,7 +8,7 @@
 
 #include <boost/shared_ptr.hpp>
 
-#include "Swiften/Base/String.h"
+#include <string>
 #include "Swiften/Base/ByteArray.h"
 #include "Swiften/Elements/Payload.h"
 
@@ -26,47 +26,47 @@ namespace Swift {
 				bool isInternet;
 				bool isPreferred;
 				bool isX400;
-				String address;
+				std::string address;
 			};
 
 			VCard() {}
 
-			void setVersion(const String& version) { version_ = version; }
-			const String& getVersion() const { return version_; }
+			void setVersion(const std::string& version) { version_ = version; }
+			const std::string& getVersion() const { return version_; }
 
-			void setFullName(const String& fullName) { fullName_ = fullName; }
-			const String& getFullName() const { return fullName_; }
+			void setFullName(const std::string& fullName) { fullName_ = fullName; }
+			const std::string& getFullName() const { return fullName_; }
 
-			void setFamilyName(const String& familyName) { familyName_ = familyName; }
-			const String& getFamilyName() const { return familyName_; }
+			void setFamilyName(const std::string& familyName) { familyName_ = familyName; }
+			const std::string& getFamilyName() const { return familyName_; }
 
-			void setGivenName(const String& givenName) { givenName_ = givenName; }
-			const String& getGivenName() const { return givenName_; }
+			void setGivenName(const std::string& givenName) { givenName_ = givenName; }
+			const std::string& getGivenName() const { return givenName_; }
 
-			void setMiddleName(const String& middleName) { middleName_ = middleName; }
-			const String& getMiddleName() const { return middleName_; }
+			void setMiddleName(const std::string& middleName) { middleName_ = middleName; }
+			const std::string& getMiddleName() const { return middleName_; }
 
-			void setPrefix(const String& prefix) { prefix_ = prefix; }
-			const String& getPrefix() const { return prefix_; }
+			void setPrefix(const std::string& prefix) { prefix_ = prefix; }
+			const std::string& getPrefix() const { return prefix_; }
 
-			void setSuffix(const String& suffix) { suffix_ = suffix; }
-			const String& getSuffix() const { return suffix_; }
+			void setSuffix(const std::string& suffix) { suffix_ = suffix; }
+			const std::string& getSuffix() const { return suffix_; }
 
 
-			//void setEMailAddress(const String& email) { email_ = email; }
-			//const String& getEMailAddress() const { return email_; }
+			//void setEMailAddress(const std::string& email) { email_ = email; }
+			//const std::string& getEMailAddress() const { return email_; }
 
-			void setNickname(const String& nick) { nick_ = nick; }
-			const String& getNickname() const { return nick_; }
+			void setNickname(const std::string& nick) { nick_ = nick; }
+			const std::string& getNickname() const { return nick_; }
 
 			void setPhoto(const ByteArray& photo) { photo_ = photo; }
 			const ByteArray& getPhoto() { return photo_; }
 
-			void setPhotoType(const String& photoType) { photoType_ = photoType; }
-			const String& getPhotoType() { return photoType_; }
+			void setPhotoType(const std::string& photoType) { photoType_ = photoType; }
+			const std::string& getPhotoType() { return photoType_; }
 
-			const String& getUnknownContent() const { return unknownContent_; }
-			void addUnknownContent(const String& c) { 
+			const std::string& getUnknownContent() const { return unknownContent_; }
+			void addUnknownContent(const std::string& c) { 
 				unknownContent_ += c;
 			}
 
@@ -81,18 +81,18 @@ namespace Swift {
 			EMailAddress getPreferredEMailAddress() const;
 
 		private:
-			String version_;
-			String fullName_;
-			String familyName_;
-			String givenName_;
-			String middleName_;
-			String prefix_;
-			String suffix_;
-			//String email_;
+			std::string version_;
+			std::string fullName_;
+			std::string familyName_;
+			std::string givenName_;
+			std::string middleName_;
+			std::string prefix_;
+			std::string suffix_;
+			//std::string email_;
 			ByteArray photo_;
-			String photoType_;
-			String nick_;
-			String unknownContent_;
+			std::string photoType_;
+			std::string nick_;
+			std::string unknownContent_;
 			std::vector<EMailAddress> emailAddresses_;
 	};
 }

@@ -10,7 +10,7 @@
 namespace Swift {
 
 
-ContactRosterItem::ContactRosterItem(const JID& jid, const JID& displayJID, const String& name, GroupRosterItem* parent) : RosterItem(name, parent), jid_(jid), displayJID_(displayJID) {
+ContactRosterItem::ContactRosterItem(const JID& jid, const JID& displayJID, const std::string& name, GroupRosterItem* parent) : RosterItem(name, parent), jid_(jid), displayJID_(displayJID) {
 }
 
 ContactRosterItem::~ContactRosterItem() {
@@ -33,15 +33,15 @@ StatusShow::Type ContactRosterItem::getSimplifiedStatusShow() const {
 	return StatusShow::None;
 }
 
-String ContactRosterItem::getStatusText() const {
+std::string ContactRosterItem::getStatusText() const {
 	return shownPresence_ ? shownPresence_->getStatus() : "";
 }
 
-void ContactRosterItem::setAvatarPath(const String& path) {
+void ContactRosterItem::setAvatarPath(const std::string& path) {
 	avatarPath_ = path;
 	onDataChanged();
 }
-const String& ContactRosterItem::getAvatarPath() const {
+const std::string& ContactRosterItem::getAvatarPath() const {
 	return avatarPath_;
 }
 
@@ -58,7 +58,7 @@ const JID& ContactRosterItem::getDisplayJID() const {
 }
 
 
-typedef std::pair<String, boost::shared_ptr<Presence> > StringPresencePair;
+typedef std::pair<std::string, boost::shared_ptr<Presence> > StringPresencePair;
 
 void ContactRosterItem::calculateShownPresence() {
 	shownPresence_ = offlinePresence_;
@@ -76,12 +76,12 @@ void ContactRosterItem::clearPresence() {
 	onDataChanged();
 }
 
-void ContactRosterItem::applyPresence(const String& resource, boost::shared_ptr<Presence> presence) {
+void ContactRosterItem::applyPresence(const std::string& resource, boost::shared_ptr<Presence> presence) {
 	if (offlinePresence_) {
 		offlinePresence_ = boost::shared_ptr<Presence>();
 	}
 	if (presence->getType() == Presence::Unavailable) {
-		if (resource.isEmpty()) {
+		if (resource.empty()) {
 			/* Unavailable from the bare JID means all resources are offline.*/
 			presences_.clear();
 		} else {
@@ -99,15 +99,15 @@ void ContactRosterItem::applyPresence(const String& resource, boost::shared_ptr<
 	onDataChanged();
 }
 
-const std::vector<String> ContactRosterItem::getGroups() const {
+const std::vector<std::string> ContactRosterItem::getGroups() const {
 	return groups_;
 }
 
 /** Only used so a contact can know about the groups it's in*/
-void ContactRosterItem::addGroup(const String& group) {
+void ContactRosterItem::addGroup(const std::string& group) {
 	groups_.push_back(group);
 }
-void ContactRosterItem::removeGroup(const String& group) {
+void ContactRosterItem::removeGroup(const std::string& group) {
 	groups_.erase(std::remove(groups_.begin(), groups_.end(), group), groups_.end());
 }
 

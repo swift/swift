@@ -6,12 +6,12 @@
 
 #pragma once
 
-#include "Swiften/Base/String.h"
+#include <string>
 
 namespace Swift {
 	class ComponentHandshakeGenerator {
 		public:
-			static String getHandshake(const String& streamID, const String& secret);
+			static std::string getHandshake(const std::string& streamID, const std::string& secret);
 	};
 
 }

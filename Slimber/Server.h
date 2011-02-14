@@ -23,7 +23,7 @@
 
 namespace Swift {
 	class DNSSDServiceID;
-	class String;
+	
 	class VCardCollection;
 	class LinkLocalConnector;
 	class LinkLocalServiceBrowser;
@@ -87,7 +87,7 @@ namespace Swift {
 				public:
 					DummyUserRegistry() {}
 
-					virtual bool isValidUserPassword(const JID&, const String&) const {
+					virtual bool isValidUserPassword(const JID&, const std::string&) const {
 						return true;
 					}
 			};

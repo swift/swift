@@ -8,7 +8,7 @@
 
 namespace Swift {
 
-ClientAuthenticator::ClientAuthenticator(const String& name) : name(name) {
+ClientAuthenticator::ClientAuthenticator(const std::string& name) : name(name) {
 }
 
 ClientAuthenticator::~ClientAuthenticator() {

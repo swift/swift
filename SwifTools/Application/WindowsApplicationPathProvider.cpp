@@ -12,7 +12,7 @@
 
 namespace Swift {
 
-WindowsApplicationPathProvider::WindowsApplicationPathProvider(const String& name) : ApplicationPathProvider(name) {
+WindowsApplicationPathProvider::WindowsApplicationPathProvider(const std::string& name) : ApplicationPathProvider(name) {
 	resourceDirs.push_back(getExecutableDir());
 	resourceDirs.push_back(getExecutableDir() / "../resources"); // Development
 }

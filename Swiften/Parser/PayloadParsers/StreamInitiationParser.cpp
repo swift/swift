@@ -26,10 +26,10 @@ StreamInitiationParser::~StreamInitiationParser() {
 	delete formParserFactory;
 }
 
-void StreamInitiationParser::handleStartElement(const String& element, const String& ns, const AttributeMap& attributes) {
+void StreamInitiationParser::handleStartElement(const std::string& element, const std::string& ns, const AttributeMap& attributes) {
 	if (level == TopLevel) {
 		getPayloadInternal()->setID(attributes.getAttribute("id"));
-		if (!attributes.getAttribute("profile").isEmpty()) {
+		if (!attributes.getAttribute("profile").empty()) {
 			getPayloadInternal()->setIsFileTransfer(attributes.getAttribute("profile") == FILE_TRANSFER_NS);
 		}
 	}
@@ -64,7 +64,7 @@ void StreamInitiationParser::handleStartElement(const String& element, const Str
 	++level;
 }
 
-void StreamInitiationParser::handleEndElement(const String& element, const String& ns) {
+void StreamInitiationParser::handleEndElement(const std::string& element, const std::string& ns) {
 	--level;
 	if (formParser) {
 		formParser->handleEndElement(element, ns);
@@ -107,7 +107,7 @@ void StreamInitiationParser::handleEndElement(const String& element, const Strin
 	}
 }
 
-void StreamInitiationParser::handleCharacterData(const String& data) {
+void StreamInitiationParser::handleCharacterData(const std::string& data) {
 	if (formParser) {
 		formParser->handleCharacterData(data);
 	}

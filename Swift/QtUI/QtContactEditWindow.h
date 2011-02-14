@@ -9,7 +9,7 @@
 #include <QWidget>
 
 #include <Swift/Controllers/UIInterfaces/ContactEditWindow.h>
-#include <Swiften/Base/String.h>
+#include <string>
 #include <Swiften/JID/JID.h>
 
 class QLabel;
@@ -24,7 +24,7 @@ namespace Swift {
 		public:
 			QtContactEditWindow();
 
-			virtual void setContact(const JID& jid, const String& name, const std::vector<String>& groups, const std::set<String>& allGroups);
+			virtual void setContact(const JID& jid, const std::string& name, const std::vector<std::string>& groups, const std::set<std::string>& allGroups);
 
 			void setEnabled(bool);
 			void show();

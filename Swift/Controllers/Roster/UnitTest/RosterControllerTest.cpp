@@ -91,12 +91,12 @@ class RosterControllerTest : public CppUnit::TestFixture {
 		return dynamic_cast<GroupRosterItem*>(CHILDREN[i]);
 	}
 
-	JID withResource(const JID& jid, const String& resource) {
+	JID withResource(const JID& jid, const std::string& resource) {
 		return JID(jid.toBare().toString() + "/" + resource);
 	}
 
 	void testPresence() {
-		std::vector<String> groups;
+		std::vector<std::string> groups;
 		groups.push_back("testGroup1");
 		groups.push_back("testGroup2");
 		JID from("test@testdomain.com");
@@ -116,7 +116,7 @@ class RosterControllerTest : public CppUnit::TestFixture {
 	};
 
 	void testHighestPresence() {
-		std::vector<String> groups;
+		std::vector<std::string> groups;
 		groups.push_back("testGroup1");
 		JID from("test@testdomain.com");
 		xmppRoster_->addContact(from, "name", groups, RosterItemPayload::Both);
@@ -136,7 +136,7 @@ class RosterControllerTest : public CppUnit::TestFixture {
 	};
 
 	void testNotHighestPresence() {
-		std::vector<String> groups;
+		std::vector<std::string> groups;
 		groups.push_back("testGroup1");
 		JID from("test@testdomain.com");
 		xmppRoster_->addContact(from, "name", groups, RosterItemPayload::Both);
@@ -156,7 +156,7 @@ class RosterControllerTest : public CppUnit::TestFixture {
 	};
 
 	void testUnavailablePresence() {
-		std::vector<String> groups;
+		std::vector<std::string> groups;
 		groups.push_back("testGroup1");
 		JID from("test@testdomain.com");
 		xmppRoster_->addContact(from, "name", groups, RosterItemPayload::Both);
@@ -198,17 +198,17 @@ class RosterControllerTest : public CppUnit::TestFixture {
 	};
 
 		void testAdd() {
-			std::vector<String> groups;
+			std::vector<std::string> groups;
 			groups.push_back("testGroup1");
 			groups.push_back("testGroup2");
 			xmppRoster_->addContact(JID("test@testdomain.com/bob"), "name", groups, RosterItemPayload::Both);
 			
 			CPPUNIT_ASSERT_EQUAL(2, static_cast<int>(CHILDREN.size()));
-			//CPPUNIT_ASSERT_EQUAL(String("Bob"), xmppRoster_->getNameForJID(JID("foo@bar.com")));
+			//CPPUNIT_ASSERT_EQUAL(std::string("Bob"), xmppRoster_->getNameForJID(JID("foo@bar.com")));
 		};
 
  		void testAddSubscription() {
-			std::vector<String> groups;
+			std::vector<std::string> groups;
 			JID jid("test@testdomain.com");
 			xmppRoster_->addContact(jid, "name", groups, RosterItemPayload::None);
 			
@@ -225,24 +225,24 @@ class RosterControllerTest : public CppUnit::TestFixture {
 		};
 
 		void testReceiveRename() {
-			std::vector<String> groups;
+			std::vector<std::string> groups;
 			JID jid("test@testdomain.com");
 			xmppRoster_->addContact(jid, "name", groups, RosterItemPayload::Both);
 			
 			CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(CHILDREN.size()));
 			CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(groupChild(0)->getChildren().size()));
-			CPPUNIT_ASSERT_EQUAL(String("name"), groupChild(0)->getChildren()[0]->getDisplayName());
+			CPPUNIT_ASSERT_EQUAL(std::string("name"), groupChild(0)->getChildren()[0]->getDisplayName());
 			xmppRoster_->addContact(jid, "NewName", groups, RosterItemPayload::Both);
 			CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(CHILDREN.size()));
 			CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(groupChild(0)->getChildren().size()));
-			CPPUNIT_ASSERT_EQUAL(String("NewName"), groupChild(0)->getChildren()[0]->getDisplayName());
+			CPPUNIT_ASSERT_EQUAL(std::string("NewName"), groupChild(0)->getChildren()[0]->getDisplayName());
 		};
 
 	void testReceiveRegroup() {
-		std::vector<String> oldGroups;
-		std::vector<String> newGroups;
+		std::vector<std::string> oldGroups;
+		std::vector<std::string> newGroups;
 		newGroups.push_back("A Group");
-		std::vector<String> newestGroups;
+		std::vector<std::string> newestGroups;
 		newestGroups.push_back("Best Group");
 		JID jid("test@testdomain.com");
 		xmppRoster_->addContact(jid, "", oldGroups, RosterItemPayload::Both);
@@ -254,19 +254,19 @@ class RosterControllerTest : public CppUnit::TestFixture {
 		xmppRoster_->addContact(jid, "new name", newGroups, RosterItemPayload::Both);
 		CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(CHILDREN.size()));
 		CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(groupChild(0)->getChildren().size()));
-		CPPUNIT_ASSERT_EQUAL(String("new name"), groupChild(0)->getChildren()[0]->getDisplayName());
-		CPPUNIT_ASSERT_EQUAL(String("A Group"), groupChild(0)->getDisplayName());
+		CPPUNIT_ASSERT_EQUAL(std::string("new name"), groupChild(0)->getChildren()[0]->getDisplayName());
+		CPPUNIT_ASSERT_EQUAL(std::string("A Group"), groupChild(0)->getDisplayName());
 
 		xmppRoster_->addContact(jid, "new name", newestGroups, RosterItemPayload::Both);
 		CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(CHILDREN.size()));
 		CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(groupChild(0)->getChildren().size()));
-		CPPUNIT_ASSERT_EQUAL(String("new name"), groupChild(0)->getChildren()[0]->getDisplayName());
-		CPPUNIT_ASSERT_EQUAL(String("Best Group"), groupChild(0)->getDisplayName());
+		CPPUNIT_ASSERT_EQUAL(std::string("new name"), groupChild(0)->getChildren()[0]->getDisplayName());
+		CPPUNIT_ASSERT_EQUAL(std::string("Best Group"), groupChild(0)->getDisplayName());
 	};
 
 		void testSendRename() {
 			JID jid("testling@wonderland.lit");
-			std::vector<String> groups;
+			std::vector<std::string> groups;
 			groups.push_back("Friends");
 			groups.push_back("Enemies");
 			xmppRoster_->addContact(jid, "Bob", groups, RosterItemPayload::From);
@@ -278,17 +278,17 @@ class RosterControllerTest : public CppUnit::TestFixture {
 			CPPUNIT_ASSERT_EQUAL(static_cast<size_t>(1), payload->getItems().size());
 			RosterItemPayload item = payload->getItems()[0];
 			CPPUNIT_ASSERT_EQUAL(jid, item.getJID());
-			CPPUNIT_ASSERT_EQUAL(String("Robert"), item.getName());
+			CPPUNIT_ASSERT_EQUAL(std::string("Robert"), item.getName());
 
 			CPPUNIT_ASSERT_EQUAL(groups.size(), item.getGroups().size());
 			assertVectorsEqual(groups, item.getGroups(), __LINE__);
 		}
 
-		void assertVectorsEqual(const std::vector<String>& v1, const std::vector<String>& v2, int line) {
-			foreach (const String& entry, v1) {
+		void assertVectorsEqual(const std::vector<std::string>& v1, const std::vector<std::string>& v2, int line) {
+			foreach (const std::string& entry, v1) {
 				if (std::find(v2.begin(), v2.end(), entry) == v2.end()) {
 					std::stringstream stream;
-					stream <<	"Couldn't find " << entry.getUTF8String() << " in v2 (line " << line << ")";
+					stream <<	"Couldn't find " << entry << " in v2 (line " << line << ")";
 					CPPUNIT_FAIL(stream.str());
 				}
 			}

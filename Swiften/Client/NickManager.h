@@ -7,16 +7,16 @@
 #pragma once
 
 #include <Swiften/Base/boost_bsignals.h>
-#include <Swiften/Base/String.h>
+#include <string>
 
 namespace Swift {
 	class NickManager {
 		public:
 			virtual ~NickManager();
 
-			virtual String getOwnNick() const = 0;
-			virtual void setOwnNick(const String& nick) = 0;
+			virtual std::string getOwnNick() const = 0;
+			virtual void setOwnNick(const std::string& nick) = 0;
 
-			boost::signal<void (const String&)> onOwnNickChanged;
+			boost::signal<void (const std::string&)> onOwnNickChanged;
 	};
 }

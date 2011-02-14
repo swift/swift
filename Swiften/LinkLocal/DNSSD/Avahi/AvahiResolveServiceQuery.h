@@ -24,7 +24,7 @@ namespace Swift {
 				std::cout << "Start resolving " << service.getName() << " " << service.getType() << " " << service.getDomain() << std::endl;
 				avahi_threaded_poll_lock(querier->getThreadedPoll());
 				assert(!resolver);
-				resolver = avahi_service_resolver_new(querier->getClient(), service.getNetworkInterfaceID(), AVAHI_PROTO_UNSPEC, service.getName().getUTF8Data(), service.getType().getUTF8Data(), service.getDomain().getUTF8Data(), AVAHI_PROTO_UNSPEC, static_cast<AvahiLookupFlags>(0), handleServiceResolvedStatic, this);
+				resolver = avahi_service_resolver_new(querier->getClient(), service.getNetworkInterfaceID(), AVAHI_PROTO_UNSPEC, service.getName().c_str(), service.getType().c_str(), service.getDomain().c_str(), AVAHI_PROTO_UNSPEC, static_cast<AvahiLookupFlags>(0), handleServiceResolvedStatic, this);
 				if (!resolver) {
 					std::cout << "Error starting resolver" << std::endl;
 					eventLoop->postEvent(boost::bind(boost::ref(onServiceResolved), boost::optional<Result>()), shared_from_this());
@@ -62,12 +62,12 @@ namespace Swift {
 						avahi_string_list_serialize(txt, txtRecord.getData(), txtRecord.getSize());
 
 						// FIXME: Probably not accurate
-						String fullname = String(name) + "." + String(type) + "." + String(domain) + ".";
-						std::cout << "Result: " << fullname << "->" << String(a) << ":" << port << std::endl;
+						std::string fullname = std::string(name) + "." + std::string(type) + "." + std::string(domain) + ".";
+						std::cout << "Result: " << fullname << "->" << std::string(a) << ":" << port << std::endl;
 						eventLoop->postEvent(
 								boost::bind(
 									boost::ref(onServiceResolved), 
-									Result(fullname, String(a), port, txtRecord)),
+									Result(fullname, std::string(a), port, txtRecord)),
 								shared_from_this());
 						break;
 					}

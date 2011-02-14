@@ -10,13 +10,13 @@
 #include <boost/lexical_cast.hpp>
 
 #include "Swiften/Network/DomainNameResolveError.h"
-#include "Swiften/Base/String.h"
+#include <string>
 
 using namespace Swift;
 
 namespace {
 	struct ServiceQuery : public DomainNameServiceQuery, public boost::enable_shared_from_this<ServiceQuery> {
-		ServiceQuery(const String& service, Swift::StaticDomainNameResolver* resolver, EventLoop* eventLoop) : eventLoop(eventLoop), service(service), resolver(resolver) {}
+		ServiceQuery(const std::string& service, Swift::StaticDomainNameResolver* resolver, EventLoop* eventLoop) : eventLoop(eventLoop), service(service), resolver(resolver) {}
 
 		virtual void run() {
 			if (!resolver->getIsResponsive()) {
@@ -36,12 +36,12 @@ namespace {
 		}
 
 		EventLoop* eventLoop;
-		String service;
+		std::string service;
 		StaticDomainNameResolver* resolver;
 	};
 
 	struct AddressQuery : public DomainNameAddressQuery, public boost::enable_shared_from_this<AddressQuery> {
-		AddressQuery(const String& host, StaticDomainNameResolver* resolver, EventLoop* eventLoop) : eventLoop(eventLoop), host(host), resolver(resolver) {}
+		AddressQuery(const std::string& host, StaticDomainNameResolver* resolver, EventLoop* eventLoop) : eventLoop(eventLoop), host(host), resolver(resolver) {}
 
 		virtual void run() {
 			if (!resolver->getIsResponsive()) {
@@ -62,7 +62,7 @@ namespace {
 		}
 
 		EventLoop* eventLoop;
-		String host;
+		std::string host;
 		StaticDomainNameResolver* resolver;
 	};
 }
@@ -72,32 +72,32 @@ namespace Swift {
 StaticDomainNameResolver::StaticDomainNameResolver(EventLoop* eventLoop) : eventLoop(eventLoop), isResponsive(true) {
 }
 
-void StaticDomainNameResolver::addAddress(const String& domain, const HostAddress& address) {
+void StaticDomainNameResolver::addAddress(const std::string& domain, const HostAddress& address) {
 	addresses[domain].push_back(address);
 }
 
-void StaticDomainNameResolver::addService(const String& service, const DomainNameServiceQuery::Result& result) {
+void StaticDomainNameResolver::addService(const std::string& service, const DomainNameServiceQuery::Result& result) {
 	services.push_back(std::make_pair(service, result));
 }
 
-void StaticDomainNameResolver::addXMPPClientService(const String& domain, const HostAddressPort& address) {
+void StaticDomainNameResolver::addXMPPClientService(const std::string& domain, const HostAddressPort& address) {
 	static int hostid = 0;
-	String hostname(std::string("host-") + boost::lexical_cast<std::string>(hostid));
+	std::string hostname(std::string("host-") + boost::lexical_cast<std::string>(hostid));
 	hostid++;
 
 	addService("_xmpp-client._tcp." + domain, ServiceQuery::Result(hostname, address.getPort(), 0, 0));
 	addAddress(hostname, address.getAddress());
 }
 
-void StaticDomainNameResolver::addXMPPClientService(const String& domain, const String& hostname, int port) {
+void StaticDomainNameResolver::addXMPPClientService(const std::string& domain, const std::string& hostname, int port) {
 	addService("_xmpp-client._tcp." + domain, ServiceQuery::Result(hostname, port, 0, 0));
 }
 
-boost::shared_ptr<DomainNameServiceQuery> StaticDomainNameResolver::createServiceQuery(const String& name) {
+boost::shared_ptr<DomainNameServiceQuery> StaticDomainNameResolver::createServiceQuery(const std::string& name) {
 	return boost::shared_ptr<DomainNameServiceQuery>(new ServiceQuery(name, this, eventLoop));
 }
 
-boost::shared_ptr<DomainNameAddressQuery> StaticDomainNameResolver::createAddressQuery(const String& name) {
+boost::shared_ptr<DomainNameAddressQuery> StaticDomainNameResolver::createAddressQuery(const std::string& name) {
 	return boost::shared_ptr<DomainNameAddressQuery>(new AddressQuery(name, this, eventLoop));
 }
 

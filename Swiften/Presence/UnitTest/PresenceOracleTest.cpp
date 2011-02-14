@@ -122,7 +122,7 @@ class PresenceOracleTest : public CppUnit::TestFixture {
 		}
 		
 		void testSubscriptionRequest() {
-			String reasonText = "Because I want to";
+			std::string reasonText = "Because I want to";
 			JID sentJID = JID("me@example.com");
 
 			boost::shared_ptr<Presence> sentPresence(new Presence());
@@ -147,14 +147,14 @@ class PresenceOracleTest : public CppUnit::TestFixture {
 		}
 	
 	private:
-		Presence::ref makeOnline(const String& resource, int priority) {
+		Presence::ref makeOnline(const std::string& resource, int priority) {
 			Presence::ref presence(new Presence());
 			presence->setPriority(priority);
 			presence->setFrom(JID("alice@wonderland.lit/" + resource));
 			return presence;
 		}
 
-		Presence::ref makeOffline(const String& resource) {
+		Presence::ref makeOffline(const std::string& resource) {
 			Presence::ref presence(new Presence());
 			presence->setFrom(JID("alice@wonderland.lit" + resource));
 			presence->setType(Presence::Unavailable);
@@ -165,7 +165,7 @@ class PresenceOracleTest : public CppUnit::TestFixture {
 			changes.push_back(newPresence);
 		}
 		
-		void handlePresenceSubscriptionRequest(const JID& jid, const String& reason) {
+		void handlePresenceSubscriptionRequest(const JID& jid, const std::string& reason) {
 			SubscriptionRequestInfo subscriptionRequest;
 			subscriptionRequest.jid = jid;
 			subscriptionRequest.reason = reason;
@@ -181,7 +181,7 @@ class PresenceOracleTest : public CppUnit::TestFixture {
 	private:
 		struct SubscriptionRequestInfo {
 			JID jid;
-			String reason;
+			std::string reason;
 		};
 		PresenceOracle* oracle_;
 		SubscriptionManager* subscriptionManager_;

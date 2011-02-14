@@ -34,7 +34,7 @@ namespace Swift {
 			void writeHeader(const ProtocolHeader& header);
 			void writeFooter();
 			void writeElement(boost::shared_ptr<Element>);
-			void writeData(const String& data);
+			void writeData(const std::string& data);
 
 			void resetParser();
 

@@ -4,8 +4,6 @@
 
 #include <boost/function.hpp>
 
-using namespace Swift;
-
 CocoaMenulet::CocoaMenulet() {
 	restartAction = [[CocoaAction alloc] initWithFunction: 
 			new boost::function<void()>(boost::ref(onRestartClicked))];
@@ -25,9 +23,9 @@ CocoaMenulet::~CocoaMenulet() {
 	[restartAction release];
 }
 
-void CocoaMenulet::setIcon(const String& icon) {
+void CocoaMenulet::setIcon(const std::string& icon) {
 	NSString* path = [[NSBundle mainBundle] pathForResource: 
-			[NSString stringWithUTF8String: icon.getUTF8Data()] ofType:@"png"];
+			[NSString stringWithUTF8String: icon.c_str()] ofType:@"png"];
 	NSImage* image = [[NSImage alloc] initWithContentsOfFile: path];
 	[statusItem setImage: image];
 	[image release];
@@ -39,13 +37,13 @@ void CocoaMenulet::clear() {
 	}
 }
 
-void CocoaMenulet::addItem(const Swift::String& name, const String& icon) {
+void CocoaMenulet::addItem(const std::string& name, const std::string& icon) {
 	NSMenuItem* item = [[NSMenuItem alloc] initWithTitle: 
-		[NSString stringWithUTF8String: name.getUTF8Data()]
+		[NSString stringWithUTF8String: name.c_str()]
 		action: NULL keyEquivalent: @""];
-	if (!icon.isEmpty()) {
+	if (!icon.empty()) {
 		NSString* path = [[NSBundle mainBundle] pathForResource: 
-				[NSString stringWithUTF8String: icon.getUTF8Data()] ofType:@"png"];
+				[NSString stringWithUTF8String: icon.c_str()] ofType:@"png"];
 		NSImage* image = [[NSImage alloc] initWithContentsOfFile: path];
 		[item setImage: [[NSImage alloc] initWithContentsOfFile: path]];
 		[image release];

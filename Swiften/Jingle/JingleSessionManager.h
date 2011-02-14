@@ -23,7 +23,7 @@ namespace Swift {
 			JingleSessionManager(IQRouter* router);
 			~JingleSessionManager();
 
-			JingleSession::ref getSession(const JID& jid, const String& id) const;
+			JingleSession::ref getSession(const JID& jid, const std::string& id) const;
 
 			void addIncomingSessionHandler(IncomingJingleSessionHandler* handler);
 			void removeIncomingSessionHandler(IncomingJingleSessionHandler* handler);
@@ -36,12 +36,12 @@ namespace Swift {
 			JingleResponder* responder;
 			std::vector<IncomingJingleSessionHandler*> incomingSessionHandlers;
 			struct JIDSession {
-				JIDSession(const JID& jid, const String& session) : jid(jid), session(session) {}
+				JIDSession(const JID& jid, const std::string& session) : jid(jid), session(session) {}
 				bool operator<(const JIDSession& o) const {
 					return jid == o.jid ? session < o.session : jid < o.jid;
 				}
 				JID jid;
-				String session;
+				std::string session;
 			};
 			typedef std::map<JIDSession, JingleSession::ref> SessionMap;
 			SessionMap incomingSessions;

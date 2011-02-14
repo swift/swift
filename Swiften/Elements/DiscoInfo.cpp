@@ -8,9 +8,9 @@
 
 namespace Swift {
 
-const String DiscoInfo::ChatStatesFeature = String("http://jabber.org/protocol/chatstates");
-const String DiscoInfo::SecurityLabelsFeature = String("urn:xmpp:sec-label:0");
-const String DiscoInfo::JabberSearchFeature = String("jabber:iq:search");
+const std::string DiscoInfo::ChatStatesFeature = std::string("http://jabber.org/protocol/chatstates");
+const std::string DiscoInfo::SecurityLabelsFeature = std::string("urn:xmpp:sec-label:0");
+const std::string DiscoInfo::JabberSearchFeature = std::string("jabber:iq:search");
 
 
 bool DiscoInfo::Identity::operator<(const Identity& other) const {

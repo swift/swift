@@ -9,7 +9,7 @@
 #include <boost/shared_ptr.hpp>
 
 namespace Swift {
-	class String;
+	
 	class ByteArray;
 	class DNSSDServiceID;
 	class DNSSDBrowseQuery;
@@ -26,10 +26,10 @@ namespace Swift {
 
 			virtual boost::shared_ptr<DNSSDBrowseQuery> createBrowseQuery() = 0;
 			virtual boost::shared_ptr<DNSSDRegisterQuery> createRegisterQuery(
-					const String& name, int port, const ByteArray& info) = 0;
+					const std::string& name, int port, const ByteArray& info) = 0;
 			virtual boost::shared_ptr<DNSSDResolveServiceQuery> createResolveServiceQuery(
 					const DNSSDServiceID&) = 0;
 			virtual boost::shared_ptr<DNSSDResolveHostnameQuery> createResolveHostnameQuery(
-					const String& hostname, int interfaceIndex) = 0;
+					const std::string& hostname, int interfaceIndex) = 0;
 	};
 }

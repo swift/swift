@@ -32,9 +32,9 @@ class SoftwareVersionParserTest : public CppUnit::TestFixture
 				"</query>"));
 
 			SoftwareVersion* payload = dynamic_cast<SoftwareVersion*>(parser.getPayload().get());
-			CPPUNIT_ASSERT_EQUAL(String("myclient"), payload->getName());
-			CPPUNIT_ASSERT_EQUAL(String("1.0"), payload->getVersion());
-			CPPUNIT_ASSERT_EQUAL(String("Mac OS X"), payload->getOS());
+			CPPUNIT_ASSERT_EQUAL(std::string("myclient"), payload->getName());
+			CPPUNIT_ASSERT_EQUAL(std::string("1.0"), payload->getVersion());
+			CPPUNIT_ASSERT_EQUAL(std::string("Mac OS X"), payload->getOS());
 		}
 };
 

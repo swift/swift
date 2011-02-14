@@ -33,7 +33,7 @@ class StreamFeaturesSerializerTest : public CppUnit::TestFixture
 			streamFeatures->setHasSession();
 			streamFeatures->setHasStreamManagement();
 
-			CPPUNIT_ASSERT_EQUAL(String(
+			CPPUNIT_ASSERT_EQUAL(std::string(
 				"<stream:features>"
 					"<starttls xmlns=\"urn:ietf:params:xml:ns:xmpp-tls\"/>"
 					"<compression xmlns=\"http://jabber.org/features/compress\">"

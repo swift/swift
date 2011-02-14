@@ -11,7 +11,7 @@
 #include "Swiften/Elements/Element.h"
 
 namespace Swift {
-	class String;
+	
 	class ProtocolHeader;
 
 	class XMPPParserClient {

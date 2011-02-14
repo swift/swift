@@ -17,7 +17,7 @@ namespace Swift {
 		public:
 			StreamFeaturesSerializer();
 
-			virtual String serialize(boost::shared_ptr<Element> element)  const;
+			virtual std::string serialize(boost::shared_ptr<Element> element)  const;
 	};
 }
 

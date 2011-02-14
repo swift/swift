@@ -25,19 +25,19 @@ namespace Swift {
 				delete xmlParser_;
 			}
 
-			bool parse(const String& data) {
+			bool parse(const std::string& data) {
 				return xmlParser_->parse(data);
 			}
 
-			virtual void handleStartElement(const String& element, const String& ns, const AttributeMap& attributes) {
+			virtual void handleStartElement(const std::string& element, const std::string& ns, const AttributeMap& attributes) {
 				parser_->handleStartElement(element, ns, attributes);
 			}
 
-			virtual void handleEndElement(const String& element, const String& ns) {
+			virtual void handleEndElement(const std::string& element, const std::string& ns) {
 				parser_->handleEndElement(element, ns);
 			}
 
-			virtual void handleCharacterData(const String& data) {
+			virtual void handleCharacterData(const std::string& data) {
 				parser_->handleCharacterData(data);
 			}
 

@@ -9,7 +9,7 @@
 #include <Swiften/Client/NickManager.h>
 #include <Swiften/Elements/VCard.h>
 #include <Swiften/JID/JID.h>
-#include <Swiften/Base/String.h>
+#include <string>
 
 namespace Swift {
 	class VCardManager;
@@ -19,8 +19,8 @@ namespace Swift {
 			NickManagerImpl(const JID& ownJID, VCardManager* vcardManager);
 			~NickManagerImpl();
 
-			String getOwnNick() const;
-			void setOwnNick(const String& nick);
+			std::string getOwnNick() const;
+			void setOwnNick(const std::string& nick);
 
 		private:
 			void handleVCardReceived(const JID& jid, VCard::ref vCard);
@@ -29,6 +29,6 @@ namespace Swift {
 		private:
 			JID ownJID;
 			VCardManager* vcardManager;
-			String ownNick;
+			std::string ownNick;
 	};
 }

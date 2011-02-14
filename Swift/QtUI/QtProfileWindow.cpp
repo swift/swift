@@ -118,8 +118,8 @@ void QtProfileWindow::handleSave() {
 	onVCardChangeRequest(vcard);
 }
 
-void QtProfileWindow::setError(const String& error) {
-	if (!error.isEmpty()) {
+void QtProfileWindow::setError(const std::string& error) {
+	if (!error.empty()) {
 		errorLabel->setText("<font color='red'>" + P2QSTRING(error) + "</font>");
 	}
 	else {

@@ -29,8 +29,8 @@ class CommandParserTest : public CppUnit::TestFixture {
 
 			Command::ref payload = parser.getPayload<Command>();
 			CPPUNIT_ASSERT_EQUAL(Command::Prev, payload->getAction());
-			CPPUNIT_ASSERT_EQUAL(String("list"), payload->getNode());
-			CPPUNIT_ASSERT_EQUAL(String("myid"), payload->getSessionID());
+			CPPUNIT_ASSERT_EQUAL(std::string("list"), payload->getNode());
+			CPPUNIT_ASSERT_EQUAL(std::string("myid"), payload->getSessionID());
 		}
 
 		void testParse_Result() {
@@ -52,9 +52,9 @@ class CommandParserTest : public CppUnit::TestFixture {
 			std::vector<Command::Note> notes = payload->getNotes();
 			CPPUNIT_ASSERT_EQUAL(2, static_cast<int>(notes.size()));
 			CPPUNIT_ASSERT_EQUAL(Command::Note::Warn, notes[0].type);
-			CPPUNIT_ASSERT_EQUAL(String("Service 'httpd' has been configured."), notes[0].note);
+			CPPUNIT_ASSERT_EQUAL(std::string("Service 'httpd' has been configured."), notes[0].note);
 			CPPUNIT_ASSERT_EQUAL(Command::Note::Error, notes[1].type);
-			CPPUNIT_ASSERT_EQUAL(String("I lied."), notes[1].note);
+			CPPUNIT_ASSERT_EQUAL(std::string("I lied."), notes[1].note);
 			std::vector<Command::Action> actions = payload->getAvailableActions();
 			CPPUNIT_ASSERT_EQUAL(2, static_cast<int>(actions.size()));
 			CPPUNIT_ASSERT_EQUAL(Command::Prev, actions[0]);
@@ -77,8 +77,8 @@ class CommandParserTest : public CppUnit::TestFixture {
 
 			Command::ref payload = parser.getPayload<Command>();
 			Form::ref form = payload->getForm();
-			CPPUNIT_ASSERT_EQUAL(String("Bot Configuration"), form->getTitle());
-			CPPUNIT_ASSERT_EQUAL(String("Hello!\nFill out this form to configure your new bot!"), form->getInstructions());
+			CPPUNIT_ASSERT_EQUAL(std::string("Bot Configuration"), form->getTitle());
+			CPPUNIT_ASSERT_EQUAL(std::string("Hello!\nFill out this form to configure your new bot!"), form->getInstructions());
 			CPPUNIT_ASSERT_EQUAL(Form::ResultType, form->getType());
 		}
 };

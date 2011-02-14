@@ -6,38 +6,29 @@
 
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/extensions/TestFactoryRegistry.h>
+#include <string>
 
-#include "Swiften/Base/String.h"
+#include <Swiften/Base/String.h>
 
 using namespace Swift;
 
-class StringTest : public CppUnit::TestFixture
-{
+class StringTest : public CppUnit::TestFixture {
 		CPPUNIT_TEST_SUITE(StringTest);
 		CPPUNIT_TEST(testGetUnicodeCodePoints);
 		CPPUNIT_TEST(testGetSplittedAtFirst);
 		CPPUNIT_TEST(testGetSplittedAtFirst_CharacterAtEnd);
 		CPPUNIT_TEST(testGetSplittedAtFirst_NoSuchCharacter);
-		CPPUNIT_TEST(testRemoveAll);
-		CPPUNIT_TEST(testRemoveAll_LastChar);
-		CPPUNIT_TEST(testRemoveAll_ConsecutiveChars);
 		CPPUNIT_TEST(testReplaceAll);
 		CPPUNIT_TEST(testReplaceAll_LastChar);
 		CPPUNIT_TEST(testReplaceAll_ConsecutiveChars);
 		CPPUNIT_TEST(testReplaceAll_MatchingReplace);
-		CPPUNIT_TEST(testGetLowerCase);
 		CPPUNIT_TEST(testSplit);
- 		CPPUNIT_TEST(testContains);
-		CPPUNIT_TEST(testContainsFalse);
-		CPPUNIT_TEST(testContainsExact);
-		CPPUNIT_TEST(testEndsWith);
-		CPPUNIT_TEST(testEndsWith_DoesNotEndWith);
 		CPPUNIT_TEST_SUITE_END();
 
 	public:
 		void testGetUnicodeCodePoints() {
-			String testling("$\xc2\xa2\xe2\x82\xac\xf4\x8a\xaf\x8d");
-			std::vector<unsigned int> points = testling.getUnicodeCodePoints();
+			std::string testling("$\xc2\xa2\xe2\x82\xac\xf4\x8a\xaf\x8d");
+			std::vector<unsigned int> points = String::getUnicodeCodePoints(testling);
 
 			CPPUNIT_ASSERT_EQUAL(0x24U, points[0]);
 			CPPUNIT_ASSERT_EQUAL(0xA2U, points[1]);
@@ -46,120 +37,69 @@ class StringTest : public CppUnit::TestFixture
 		}
 
 		void testGetSplittedAtFirst() {
-			String testling("ab@cd@ef");
+			std::string testling("ab@cd@ef");
 
-			std::pair<String,String> result = testling.getSplittedAtFirst('@');
-			CPPUNIT_ASSERT_EQUAL(String("ab"), result.first);
-			CPPUNIT_ASSERT_EQUAL(String("cd@ef"), result.second);
+			std::pair<std::string,std::string> result = String::getSplittedAtFirst(testling, '@');
+			CPPUNIT_ASSERT_EQUAL(std::string("ab"), result.first);
+			CPPUNIT_ASSERT_EQUAL(std::string("cd@ef"), result.second);
 		}
 
 		void testGetSplittedAtFirst_CharacterAtEnd() {
-			String testling("ab@");
+			std::string testling("ab@");
 
-			std::pair<String,String> result = testling.getSplittedAtFirst('@');
-			CPPUNIT_ASSERT_EQUAL(String("ab"), result.first);
-			CPPUNIT_ASSERT(result.second.isEmpty());
+			std::pair<std::string,std::string> result = String::getSplittedAtFirst(testling, '@');
+			CPPUNIT_ASSERT_EQUAL(std::string("ab"), result.first);
+			CPPUNIT_ASSERT(result.second.empty());
 		}
 
 		void testGetSplittedAtFirst_NoSuchCharacter() {
-			String testling("ab");
+			std::string testling("ab");
 
-			std::pair<String,String> result = testling.getSplittedAtFirst('@');
-			CPPUNIT_ASSERT_EQUAL(String("ab"), result.first);
-			CPPUNIT_ASSERT(result.second.isEmpty());
-		}
-
-		void testRemoveAll() {
-			String testling("ab c de");
-
-			testling.removeAll(' ');
-			
-			CPPUNIT_ASSERT_EQUAL(String("abcde"), testling);
-		}
-
-		void testRemoveAll_LastChar() {
-			String testling("abcde ");
-
-			testling.removeAll(' ');
-			
-			CPPUNIT_ASSERT_EQUAL(String("abcde"), testling);
-		}
-
-		void testRemoveAll_ConsecutiveChars() {
-			String testling("ab  cde");
-
-			testling.removeAll(' ');
-			
-			CPPUNIT_ASSERT_EQUAL(String("abcde"), testling);
+			std::pair<std::string,std::string> result = String::getSplittedAtFirst(testling, '@');
+			CPPUNIT_ASSERT_EQUAL(std::string("ab"), result.first);
+			CPPUNIT_ASSERT(result.second.empty());
 		}
 
 		void testReplaceAll() {
-			String testling("abcbd");
+			std::string testling("abcbd");
 
-			testling.replaceAll('b', "xyz");
+			String::replaceAll(testling, 'b', "xyz");
 			
-			CPPUNIT_ASSERT_EQUAL(String("axyzcxyzd"), testling);
+			CPPUNIT_ASSERT_EQUAL(std::string("axyzcxyzd"), testling);
 		}
 
 		void testReplaceAll_LastChar() {
-			String testling("abc");
+			std::string testling("abc");
 
-			testling.replaceAll('c', "xyz");
+			String::replaceAll(testling, 'c', "xyz");
 			
-			CPPUNIT_ASSERT_EQUAL(String("abxyz"), testling);
+			CPPUNIT_ASSERT_EQUAL(std::string("abxyz"), testling);
 		}
 
 		void testReplaceAll_ConsecutiveChars() {
-			String testling("abbc");
+			std::string testling("abbc");
 
-			testling.replaceAll('b',"xyz");
+			String::replaceAll(testling, 'b',"xyz");
 			
-			CPPUNIT_ASSERT_EQUAL(String("axyzxyzc"), testling);
+			CPPUNIT_ASSERT_EQUAL(std::string("axyzxyzc"), testling);
 		}
 
 		void testReplaceAll_MatchingReplace() {
-			String testling("abc");
+			std::string testling("abc");
 
-			testling.replaceAll('b',"bbb");
+			String::replaceAll(testling, 'b',"bbb");
 			
-			CPPUNIT_ASSERT_EQUAL(String("abbbc"), testling);
-		}
-
-		void testGetLowerCase() {
-			String testling("aBcD e");
-
-			CPPUNIT_ASSERT_EQUAL(String("abcd e"), testling.getLowerCase());
+			CPPUNIT_ASSERT_EQUAL(std::string("abbbc"), testling);
 		}
 
 		void testSplit() {
-			std::vector<String> result = String("abc def ghi").split(' ');
+			std::vector<std::string> result = String::split("abc def ghi", ' ');
 
 			CPPUNIT_ASSERT_EQUAL(3, static_cast<int>(result.size()));
-			CPPUNIT_ASSERT_EQUAL(String("abc"), result[0]);
-			CPPUNIT_ASSERT_EQUAL(String("def"), result[1]);
-			CPPUNIT_ASSERT_EQUAL(String("ghi"), result[2]);
+			CPPUNIT_ASSERT_EQUAL(std::string("abc"), result[0]);
+			CPPUNIT_ASSERT_EQUAL(std::string("def"), result[1]);
+			CPPUNIT_ASSERT_EQUAL(std::string("ghi"), result[2]);
 		}
-
-		void testContains() {
-			CPPUNIT_ASSERT(String("abcde").contains(String("bcd")));
-		}
-
-		void testContainsFalse() {
-			CPPUNIT_ASSERT(!String("abcde").contains(String("abcdef")));
-		}
-
-		void testContainsExact() {
-			CPPUNIT_ASSERT(String("abcde").contains(String("abcde")));
-		}
-
-		void testEndsWith() {
-			CPPUNIT_ASSERT(String("abcdef").endsWith("cdef"));
-		}
-
-		void testEndsWith_DoesNotEndWith() {
-			CPPUNIT_ASSERT(!String("abcdef").endsWith("ddef"));
-		}
-
 };
 
 CPPUNIT_TEST_SUITE_REGISTRATION(StringTest);

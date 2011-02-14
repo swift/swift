@@ -36,7 +36,7 @@ using namespace Swift;
 
 namespace Swift {
 
-PlatformDomainNameServiceQuery::PlatformDomainNameServiceQuery(const String& service, EventLoop* eventLoop, PlatformDomainNameResolver* resolver) : PlatformDomainNameQuery(resolver), eventLoop(eventLoop), service(service) {
+PlatformDomainNameServiceQuery::PlatformDomainNameServiceQuery(const std::string& service, EventLoop* eventLoop, PlatformDomainNameResolver* resolver) : PlatformDomainNameQuery(resolver), eventLoop(eventLoop), service(service) {
 }
 
 void PlatformDomainNameServiceQuery::run() {
@@ -51,7 +51,7 @@ void PlatformDomainNameServiceQuery::runBlocking() {
 #if defined(SWIFTEN_PLATFORM_WINDOWS)
 	DNS_RECORD* responses;
 	// FIXME: This conversion doesn't work if unicode is deffed above
-	if (DnsQuery(service.getUTF8Data(), DNS_TYPE_SRV, DNS_QUERY_STANDARD, NULL, &responses, NULL) != ERROR_SUCCESS) {
+	if (DnsQuery(service.c_str(), DNS_TYPE_SRV, DNS_QUERY_STANDARD, NULL, &responses, NULL) != ERROR_SUCCESS) {
 		emitError();
 		return;
 	}
@@ -68,7 +68,7 @@ void PlatformDomainNameServiceQuery::runBlocking() {
 			// conversion to not work at all, but it does.
 			// Actually, it doesn't. Fix this and remove explicit cast
 			// Remove unicode undef above as well
-			record.hostname = String((const char*) currentEntry->Data.SRV.pNameTarget);
+			record.hostname = std::string((const char*) currentEntry->Data.SRV.pNameTarget);
 			records.push_back(record);
 		}
 		currentEntry = currentEntry->pNext;
@@ -81,7 +81,7 @@ void PlatformDomainNameServiceQuery::runBlocking() {
 
 	ByteArray response;
 	response.resize(NS_PACKETSZ);
-	int responseLength = res_query(const_cast<char*>(service.getUTF8Data()), ns_c_in, ns_t_srv, reinterpret_cast<u_char*>(response.getData()), response.getSize());
+	int responseLength = res_query(const_cast<char*>(service.c_str()), ns_c_in, ns_t_srv, reinterpret_cast<u_char*>(response.getData()), response.getSize());
 	if (responseLength == -1) {
 		SWIFT_LOG(debug) << "Error" << std::endl;
 		emitError();
@@ -151,7 +151,7 @@ void PlatformDomainNameServiceQuery::runBlocking() {
 			emitError();
 			return;
 		}
-		record.hostname = String(entry.getData());
+		record.hostname = std::string(entry.getData());
 		records.push_back(record);
 		currentEntry += entryLength;
 		answersCount--;

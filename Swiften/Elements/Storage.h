@@ -9,7 +9,7 @@
 #include <vector>
 
 #include "Swiften/Elements/Payload.h"
-#include "Swiften/Base/String.h"
+#include <string>
 #include "Swiften/JID/JID.h"
 
 namespace Swift {
@@ -18,18 +18,18 @@ namespace Swift {
 			struct Room {
 				Room() : autoJoin(false) {}
 
-				String name;
+				std::string name;
 				JID jid;
 				bool autoJoin;
-				String nick;
-				String password;
+				std::string nick;
+				std::string password;
 			};
 
 			struct URL {
 				URL() {}
 
-				String name;
-				String url;
+				std::string name;
+				std::string url;
 			};
 
 			Storage() {

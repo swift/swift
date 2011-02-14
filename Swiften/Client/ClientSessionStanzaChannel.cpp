@@ -31,7 +31,7 @@ void ClientSessionStanzaChannel::sendPresence(boost::shared_ptr<Presence> presen
 	send(presence);
 }
 
-String ClientSessionStanzaChannel::getNewIQID() {
+std::string ClientSessionStanzaChannel::getNewIQID() {
 	return idGenerator.generateID();
 }
 

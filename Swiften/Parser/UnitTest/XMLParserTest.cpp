@@ -8,7 +8,7 @@
 #include <cppunit/extensions/TestFactoryRegistry.h>
 #include <vector>
 
-#include "Swiften/Base/String.h"
+#include <string>
 #include "Swiften/Parser/XMLParserClient.h"
 #ifdef HAVE_EXPAT
 #include "Swiften/Parser/ExpatParser.h"
@@ -45,23 +45,23 @@ class XMLParserTest : public CppUnit::TestFixture {
 			CPPUNIT_ASSERT_EQUAL(static_cast<size_t>(4), client_.events.size());
 
 			CPPUNIT_ASSERT_EQUAL(Client::StartElement, client_.events[0].type);
-			CPPUNIT_ASSERT_EQUAL(String("iq"), client_.events[0].data);
+			CPPUNIT_ASSERT_EQUAL(std::string("iq"), client_.events[0].data);
 			CPPUNIT_ASSERT_EQUAL(static_cast<size_t>(1), client_.events[0].attributes.size());
-			CPPUNIT_ASSERT_EQUAL(String("get"), client_.events[0].attributes["type"]);
-			CPPUNIT_ASSERT_EQUAL(String(), client_.events[0].ns);
+			CPPUNIT_ASSERT_EQUAL(std::string("get"), client_.events[0].attributes["type"]);
+			CPPUNIT_ASSERT_EQUAL(std::string(), client_.events[0].ns);
 
 			CPPUNIT_ASSERT_EQUAL(Client::StartElement, client_.events[1].type);
-			CPPUNIT_ASSERT_EQUAL(String("query"), client_.events[1].data);
+			CPPUNIT_ASSERT_EQUAL(std::string("query"), client_.events[1].data);
 			CPPUNIT_ASSERT_EQUAL(static_cast<size_t>(0), client_.events[1].attributes.size());
-			CPPUNIT_ASSERT_EQUAL(String("jabber:iq:version"), client_.events[1].ns);
+			CPPUNIT_ASSERT_EQUAL(std::string("jabber:iq:version"), client_.events[1].ns);
 
 			CPPUNIT_ASSERT_EQUAL(Client::EndElement, client_.events[2].type);
-			CPPUNIT_ASSERT_EQUAL(String("query"), client_.events[2].data);
-			CPPUNIT_ASSERT_EQUAL(String("jabber:iq:version"), client_.events[2].ns);
+			CPPUNIT_ASSERT_EQUAL(std::string("query"), client_.events[2].data);
+			CPPUNIT_ASSERT_EQUAL(std::string("jabber:iq:version"), client_.events[2].ns);
 
 			CPPUNIT_ASSERT_EQUAL(Client::EndElement, client_.events[3].type);
-			CPPUNIT_ASSERT_EQUAL(String("iq"), client_.events[3].data);
-			CPPUNIT_ASSERT_EQUAL(String(), client_.events[3].ns);
+			CPPUNIT_ASSERT_EQUAL(std::string("iq"), client_.events[3].data);
+			CPPUNIT_ASSERT_EQUAL(std::string(), client_.events[3].ns);
 		}
 
 		void testParse_ElementInNamespacedElement() {
@@ -75,24 +75,24 @@ class XMLParserTest : public CppUnit::TestFixture {
 			CPPUNIT_ASSERT_EQUAL(static_cast<size_t>(5), client_.events.size());
 
 			CPPUNIT_ASSERT_EQUAL(Client::StartElement, client_.events[0].type);
-			CPPUNIT_ASSERT_EQUAL(String("query"), client_.events[0].data);
+			CPPUNIT_ASSERT_EQUAL(std::string("query"), client_.events[0].data);
 			CPPUNIT_ASSERT_EQUAL(static_cast<size_t>(0), client_.events[0].attributes.size());
-			CPPUNIT_ASSERT_EQUAL(String("jabber:iq:version"), client_.events[0].ns);
+			CPPUNIT_ASSERT_EQUAL(std::string("jabber:iq:version"), client_.events[0].ns);
 
 			CPPUNIT_ASSERT_EQUAL(Client::StartElement, client_.events[1].type);
-			CPPUNIT_ASSERT_EQUAL(String("name"), client_.events[1].data);
-			CPPUNIT_ASSERT_EQUAL(String("jabber:iq:version"), client_.events[1].ns);
+			CPPUNIT_ASSERT_EQUAL(std::string("name"), client_.events[1].data);
+			CPPUNIT_ASSERT_EQUAL(std::string("jabber:iq:version"), client_.events[1].ns);
 
 			CPPUNIT_ASSERT_EQUAL(Client::CharacterData, client_.events[2].type);
-			CPPUNIT_ASSERT_EQUAL(String("Swift"), client_.events[2].data);
+			CPPUNIT_ASSERT_EQUAL(std::string("Swift"), client_.events[2].data);
 
 			CPPUNIT_ASSERT_EQUAL(Client::EndElement, client_.events[3].type);
-			CPPUNIT_ASSERT_EQUAL(String("name"), client_.events[3].data);
-			CPPUNIT_ASSERT_EQUAL(String("jabber:iq:version"), client_.events[3].ns);
+			CPPUNIT_ASSERT_EQUAL(std::string("name"), client_.events[3].data);
+			CPPUNIT_ASSERT_EQUAL(std::string("jabber:iq:version"), client_.events[3].ns);
 
 			CPPUNIT_ASSERT_EQUAL(Client::EndElement, client_.events[4].type);
-			CPPUNIT_ASSERT_EQUAL(String("query"), client_.events[4].data);
-			CPPUNIT_ASSERT_EQUAL(String("jabber:iq:version"), client_.events[4].ns);
+			CPPUNIT_ASSERT_EQUAL(std::string("query"), client_.events[4].data);
+			CPPUNIT_ASSERT_EQUAL(std::string("jabber:iq:version"), client_.events[4].ns);
 		}
 
 		void testParse_CharacterData() {
@@ -103,25 +103,25 @@ class XMLParserTest : public CppUnit::TestFixture {
 			CPPUNIT_ASSERT_EQUAL(static_cast<size_t>(7), client_.events.size());
 
 			CPPUNIT_ASSERT_EQUAL(Client::StartElement, client_.events[0].type);
-			CPPUNIT_ASSERT_EQUAL(String("html"), client_.events[0].data);
+			CPPUNIT_ASSERT_EQUAL(std::string("html"), client_.events[0].data);
 
 			CPPUNIT_ASSERT_EQUAL(Client::CharacterData, client_.events[1].type);
-			CPPUNIT_ASSERT_EQUAL(String("bla"), client_.events[1].data);
+			CPPUNIT_ASSERT_EQUAL(std::string("bla"), client_.events[1].data);
 
 			CPPUNIT_ASSERT_EQUAL(Client::StartElement, client_.events[2].type);
-			CPPUNIT_ASSERT_EQUAL(String("i"), client_.events[2].data);
+			CPPUNIT_ASSERT_EQUAL(std::string("i"), client_.events[2].data);
 
 			CPPUNIT_ASSERT_EQUAL(Client::CharacterData, client_.events[3].type);
-			CPPUNIT_ASSERT_EQUAL(String("bli"), client_.events[3].data);
+			CPPUNIT_ASSERT_EQUAL(std::string("bli"), client_.events[3].data);
 
 			CPPUNIT_ASSERT_EQUAL(Client::EndElement, client_.events[4].type);
-			CPPUNIT_ASSERT_EQUAL(String("i"), client_.events[4].data);
+			CPPUNIT_ASSERT_EQUAL(std::string("i"), client_.events[4].data);
 
 			CPPUNIT_ASSERT_EQUAL(Client::CharacterData, client_.events[5].type);
-			CPPUNIT_ASSERT_EQUAL(String("blo"), client_.events[5].data);
+			CPPUNIT_ASSERT_EQUAL(std::string("blo"), client_.events[5].data);
 
 			CPPUNIT_ASSERT_EQUAL(Client::EndElement, client_.events[6].type);
-			CPPUNIT_ASSERT_EQUAL(String("html"), client_.events[6].data);
+			CPPUNIT_ASSERT_EQUAL(std::string("html"), client_.events[6].data);
 		}
 
 		void testParse_NamespacePrefix() {
@@ -132,20 +132,20 @@ class XMLParserTest : public CppUnit::TestFixture {
 			CPPUNIT_ASSERT_EQUAL(static_cast<size_t>(4), client_.events.size());
 
 			CPPUNIT_ASSERT_EQUAL(Client::StartElement, client_.events[0].type);
-			CPPUNIT_ASSERT_EQUAL(String("x"), client_.events[0].data);
-			CPPUNIT_ASSERT_EQUAL(String("bla"), client_.events[0].ns);
+			CPPUNIT_ASSERT_EQUAL(std::string("x"), client_.events[0].data);
+			CPPUNIT_ASSERT_EQUAL(std::string("bla"), client_.events[0].ns);
 
 			CPPUNIT_ASSERT_EQUAL(Client::StartElement, client_.events[1].type);
-			CPPUNIT_ASSERT_EQUAL(String("y"), client_.events[1].data);
-			CPPUNIT_ASSERT_EQUAL(String("bla"), client_.events[1].ns);
+			CPPUNIT_ASSERT_EQUAL(std::string("y"), client_.events[1].data);
+			CPPUNIT_ASSERT_EQUAL(std::string("bla"), client_.events[1].ns);
 
 			CPPUNIT_ASSERT_EQUAL(Client::EndElement, client_.events[2].type);
-			CPPUNIT_ASSERT_EQUAL(String("y"), client_.events[2].data);
-			CPPUNIT_ASSERT_EQUAL(String("bla"), client_.events[2].ns);
+			CPPUNIT_ASSERT_EQUAL(std::string("y"), client_.events[2].data);
+			CPPUNIT_ASSERT_EQUAL(std::string("bla"), client_.events[2].ns);
 
 			CPPUNIT_ASSERT_EQUAL(Client::EndElement, client_.events[3].type);
-			CPPUNIT_ASSERT_EQUAL(String("x"), client_.events[3].data);
-			CPPUNIT_ASSERT_EQUAL(String("bla"), client_.events[3].ns);
+			CPPUNIT_ASSERT_EQUAL(std::string("x"), client_.events[3].data);
+			CPPUNIT_ASSERT_EQUAL(std::string("bla"), client_.events[3].ns);
 		}
 
 		void testParse_UnhandledXML() {
@@ -156,10 +156,10 @@ class XMLParserTest : public CppUnit::TestFixture {
 			CPPUNIT_ASSERT_EQUAL(static_cast<size_t>(2), client_.events.size());
 
 			CPPUNIT_ASSERT_EQUAL(Client::StartElement, client_.events[0].type);
-			CPPUNIT_ASSERT_EQUAL(String("iq"), client_.events[0].data);
+			CPPUNIT_ASSERT_EQUAL(std::string("iq"), client_.events[0].data);
 
 			CPPUNIT_ASSERT_EQUAL(Client::EndElement, client_.events[1].type);
-			CPPUNIT_ASSERT_EQUAL(String("iq"), client_.events[1].data);
+			CPPUNIT_ASSERT_EQUAL(std::string("iq"), client_.events[1].data);
 		}
 
 		void testParse_InvalidXML() {
@@ -184,10 +184,10 @@ class XMLParserTest : public CppUnit::TestFixture {
 			CPPUNIT_ASSERT_EQUAL(static_cast<size_t>(2), client_.events.size());
 
 			CPPUNIT_ASSERT_EQUAL(Client::StartElement, client_.events[0].type);
-			CPPUNIT_ASSERT_EQUAL(String("iq"), client_.events[0].data);
+			CPPUNIT_ASSERT_EQUAL(std::string("iq"), client_.events[0].data);
 
 			CPPUNIT_ASSERT_EQUAL(Client::EndElement, client_.events[1].type);
-			CPPUNIT_ASSERT_EQUAL(String("iq"), client_.events[1].data);
+			CPPUNIT_ASSERT_EQUAL(std::string("iq"), client_.events[1].data);
 		}
 
 		void testParse_WhitespaceInAttribute() {
@@ -199,11 +199,11 @@ class XMLParserTest : public CppUnit::TestFixture {
 				"<presence/>"));
 			CPPUNIT_ASSERT_EQUAL(static_cast<size_t>(3), client_.events.size());
 			CPPUNIT_ASSERT_EQUAL(Client::StartElement, client_.events[0].type);
-			CPPUNIT_ASSERT_EQUAL(String("query"), client_.events[0].data);
+			CPPUNIT_ASSERT_EQUAL(std::string("query"), client_.events[0].data);
 			CPPUNIT_ASSERT_EQUAL(Client::StartElement, client_.events[1].type);
-			CPPUNIT_ASSERT_EQUAL(String("presence"), client_.events[1].data);
+			CPPUNIT_ASSERT_EQUAL(std::string("presence"), client_.events[1].data);
 			CPPUNIT_ASSERT_EQUAL(Client::EndElement, client_.events[2].type);
-			CPPUNIT_ASSERT_EQUAL(String("presence"), client_.events[2].data);
+			CPPUNIT_ASSERT_EQUAL(std::string("presence"), client_.events[2].data);
 		}
 	
 	private:
@@ -213,30 +213,30 @@ class XMLParserTest : public CppUnit::TestFixture {
 				struct Event {
 					Event(
 							Type type, 
-							const String& data, 
-							const String& ns,
+							const std::string& data, 
+							const std::string& ns,
 							const AttributeMap& attributes)
 								: type(type), data(data), ns(ns), attributes(attributes) {}
-					Event(Type type, const String& data, const String& ns = String())
+					Event(Type type, const std::string& data, const std::string& ns = std::string())
 								: type(type), data(data), ns(ns) {}
 
 					Type type;
-					String data;
-					String ns;
+					std::string data;
+					std::string ns;
 					AttributeMap attributes;
 				};
 
 				Client() {}
 
-				virtual void handleStartElement(const String& element, const String& ns, const AttributeMap& attributes) {
+				virtual void handleStartElement(const std::string& element, const std::string& ns, const AttributeMap& attributes) {
 					events.push_back(Event(StartElement, element, ns, attributes));
 				}
 
-				virtual void handleEndElement(const String& element, const String& ns) {
+				virtual void handleEndElement(const std::string& element, const std::string& ns) {
 					events.push_back(Event(EndElement, element, ns));
 				}
 
-				virtual void handleCharacterData(const String& data) {
+				virtual void handleCharacterData(const std::string& data) {
 					events.push_back(Event(CharacterData, data));
 				}
 

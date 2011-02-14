@@ -30,13 +30,13 @@ void XMLConsoleController::handleUIEvent(boost::shared_ptr<UIEvent> rawEvent) {
 	}
 }
 
-void XMLConsoleController::handleDataRead(const String& data) {
+void XMLConsoleController::handleDataRead(const std::string& data) {
 	if (xmlConsoleWidget) {
 		xmlConsoleWidget->handleDataRead(data);
 	}
 }
 
-void XMLConsoleController::handleDataWritten(const String& data) {
+void XMLConsoleController::handleDataWritten(const std::string& data) {
 	if (xmlConsoleWidget) {
 		xmlConsoleWidget->handleDataWritten(data);
 	}

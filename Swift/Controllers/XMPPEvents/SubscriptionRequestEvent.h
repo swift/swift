@@ -12,16 +12,16 @@
 #include <boost/shared_ptr.hpp>
 
 #include "Swift/Controllers/XMPPEvents/StanzaEvent.h"
-#include "Swiften/Base/String.h"
+#include <string>
 #include "Swiften/JID/JID.h"
 
 namespace Swift {
 	class SubscriptionRequestEvent : public StanzaEvent {
 		public:
-			SubscriptionRequestEvent(const JID& jid, const String& reason) : jid_(jid), reason_(reason){};
+			SubscriptionRequestEvent(const JID& jid, const std::string& reason) : jid_(jid), reason_(reason){};
 			virtual ~SubscriptionRequestEvent(){};
 			const JID& getJID() const {return jid_;};
-			const String& getReason() const {return reason_;};
+			const std::string& getReason() const {return reason_;};
 			boost::signal<void()> onAccept;
 			boost::signal<void()> onDecline;
 			void accept() {
@@ -40,7 +40,7 @@ namespace Swift {
 
 		private:
 			JID jid_;
-			String reason_;
+			std::string reason_;
 	};
 }
 

@@ -8,24 +8,24 @@
 #define SWIFTEN_Status_H
 
 #include "Swiften/Elements/Payload.h"
-#include "Swiften/Base/String.h"
+#include <string>
 
 namespace Swift {
 	class Status : public Payload {
 		public:
-			Status(const String& text = "") : text_(text) {
+			Status(const std::string& text = "") : text_(text) {
 			}
 
-			void setText(const String& text) {
+			void setText(const std::string& text) {
 				text_ = text;
 			}
 
-			const String& getText() const {
+			const std::string& getText() const {
 				return text_;
 			}
 
 		private:
-			String text_;
+			std::string text_;
 	};
 }
 

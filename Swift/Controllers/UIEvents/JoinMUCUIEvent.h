@@ -8,7 +8,7 @@
 
 #include <boost/optional.hpp>
 #include <boost/shared_ptr.hpp>
-#include "Swiften/Base/String.h"
+#include <string>
 
 #include "Swift/Controllers/UIEvents/UIEvent.h"
 
@@ -16,11 +16,11 @@ namespace Swift {
 	class JoinMUCUIEvent : public UIEvent {
 		public:
 			typedef boost::shared_ptr<JoinMUCUIEvent> ref;
-			JoinMUCUIEvent(const JID& jid, const boost::optional<String>& nick = boost::optional<String>()) : jid_(jid), nick_(nick) {};
-			boost::optional<String> getNick() {return nick_;};
+			JoinMUCUIEvent(const JID& jid, const boost::optional<std::string>& nick = boost::optional<std::string>()) : jid_(jid), nick_(nick) {};
+			boost::optional<std::string> getNick() {return nick_;};
 			JID getJID() {return jid_;};
 		private:
 			JID jid_;
-			boost::optional<String> nick_;
+			boost::optional<std::string> nick_;
 	};
 }

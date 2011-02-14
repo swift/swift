@@ -11,9 +11,9 @@ namespace Swift {
 ErrorParser::ErrorParser() : level_(TopLevel) {
 }
 
-void ErrorParser::handleStartElement(const String&, const String&, const AttributeMap& attributes) {
+void ErrorParser::handleStartElement(const std::string&, const std::string&, const AttributeMap& attributes) {
 	if (level_ == TopLevel) {
-		String type = attributes.getAttribute("type");
+		std::string type = attributes.getAttribute("type");
 		if (type == "continue") {
 			getPayloadInternal()->setType(ErrorPayload::Continue);
 		}
@@ -33,7 +33,7 @@ void ErrorParser::handleStartElement(const String&, const String&, const Attribu
 	++level_;
 }
 
-void ErrorParser::handleEndElement(const String& element, const String&) {
+void ErrorParser::handleEndElement(const std::string& element, const std::string&) {
 	--level_;
 	if (level_ == PayloadLevel) {
 		if (element == "text") {
@@ -108,7 +108,7 @@ void ErrorParser::handleEndElement(const String& element, const String&) {
 	}
 }
 
-void ErrorParser::handleCharacterData(const String& data) {
+void ErrorParser::handleCharacterData(const std::string& data) {
 	currentText_ += data;
 }
 

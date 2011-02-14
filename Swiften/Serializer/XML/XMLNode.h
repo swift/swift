@@ -7,14 +7,14 @@
 #ifndef SWIFTEN_XMLNode_H
 #define SWIFTEN_XMLNode_H
 
-#include "Swiften/Base/String.h"
+#include <string>
 
 namespace Swift {
 	class XMLNode {
 		public:
 			virtual ~XMLNode();
 
-			virtual String serialize() = 0;
+			virtual std::string serialize() = 0;
 	};
 }
 

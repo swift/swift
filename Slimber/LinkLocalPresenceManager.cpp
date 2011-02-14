@@ -70,19 +70,19 @@ RosterItemPayload LinkLocalPresenceManager::getRosterItem(const LinkLocalService
  return RosterItemPayload(service.getJID(), getRosterName(service), RosterItemPayload::Both);
 }
 
-String LinkLocalPresenceManager::getRosterName(const LinkLocalService& service) const {
+std::string LinkLocalPresenceManager::getRosterName(const LinkLocalService& service) const {
 	LinkLocalServiceInfo info = service.getInfo();
-	if (!info.getNick().isEmpty()) {
+	if (!info.getNick().empty()) {
 		return info.getNick();
 	}
-	else if (!info.getFirstName().isEmpty()) {
-		String result = info.getFirstName();
-		if (!info.getLastName().isEmpty()) {
+	else if (!info.getFirstName().empty()) {
+		std::string result = info.getFirstName();
+		if (!info.getLastName().empty()) {
 			result += " " + info.getLastName();
 		}
 		return result;
 	}
-	else if (!info.getLastName().isEmpty()) {
+	else if (!info.getLastName().empty()) {
 		return info.getLastName();
 	}
 	return "";

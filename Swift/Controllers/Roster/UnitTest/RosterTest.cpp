@@ -41,17 +41,17 @@ class RosterTest : public CppUnit::TestFixture {
 			roster_->addContact(jid3_, JID(), "Cookie", "group1", "");
 
 			CPPUNIT_ASSERT_EQUAL(2, static_cast<int>(roster_->getRoot()->getChildren().size()));
-			CPPUNIT_ASSERT_EQUAL(String("group1"), roster_->getRoot()->getChildren()[0]->getDisplayName());
-			CPPUNIT_ASSERT_EQUAL(String("group2"), roster_->getRoot()->getChildren()[1]->getDisplayName());
-			CPPUNIT_ASSERT_EQUAL(String("Bert"), static_cast<GroupRosterItem*>(roster_->getRoot()->getChildren()[0])->getChildren()[0]->getDisplayName());
-			CPPUNIT_ASSERT_EQUAL(String("Cookie"), static_cast<GroupRosterItem*>(roster_->getRoot()->getChildren()[0])->getChildren()[1]->getDisplayName());
-			CPPUNIT_ASSERT_EQUAL(String("Ernie"), static_cast<GroupRosterItem*>(roster_->getRoot()->getChildren()[1])->getChildren()[0]->getDisplayName());
+			CPPUNIT_ASSERT_EQUAL(std::string("group1"), roster_->getRoot()->getChildren()[0]->getDisplayName());
+			CPPUNIT_ASSERT_EQUAL(std::string("group2"), roster_->getRoot()->getChildren()[1]->getDisplayName());
+			CPPUNIT_ASSERT_EQUAL(std::string("Bert"), static_cast<GroupRosterItem*>(roster_->getRoot()->getChildren()[0])->getChildren()[0]->getDisplayName());
+			CPPUNIT_ASSERT_EQUAL(std::string("Cookie"), static_cast<GroupRosterItem*>(roster_->getRoot()->getChildren()[0])->getChildren()[1]->getDisplayName());
+			CPPUNIT_ASSERT_EQUAL(std::string("Ernie"), static_cast<GroupRosterItem*>(roster_->getRoot()->getChildren()[1])->getChildren()[0]->getDisplayName());
 
 		}
 
 		void testRemoveContact() {
 			roster_->addContact(jid1_, jid1_, "Bert", "group1", "");
-			CPPUNIT_ASSERT_EQUAL(String("Bert"), static_cast<GroupRosterItem*>(roster_->getRoot()->getChildren()[0])->getChildren()[0]->getDisplayName());
+			CPPUNIT_ASSERT_EQUAL(std::string("Bert"), static_cast<GroupRosterItem*>(roster_->getRoot()->getChildren()[0])->getChildren()[0]->getDisplayName());
 
 			roster_->removeContact(jid1_);
 			CPPUNIT_ASSERT_EQUAL(0, static_cast<int>(static_cast<GroupRosterItem*>(roster_->getRoot()->getChildren()[0])->getChildren().size()));
@@ -60,11 +60,11 @@ class RosterTest : public CppUnit::TestFixture {
 		void testRemoveSecondContact() {
 			roster_->addContact(jid1_, jid1_, "Bert", "group1", "");
 			roster_->addContact(jid2_, jid2_, "Cookie", "group1", "");
-			CPPUNIT_ASSERT_EQUAL(String("Cookie"), static_cast<GroupRosterItem*>(roster_->getRoot()->getChildren()[0])->getChildren()[1]->getDisplayName());
+			CPPUNIT_ASSERT_EQUAL(std::string("Cookie"), static_cast<GroupRosterItem*>(roster_->getRoot()->getChildren()[0])->getChildren()[1]->getDisplayName());
 
 			roster_->removeContact(jid2_);
 			CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(static_cast<GroupRosterItem*>(roster_->getRoot()->getChildren()[0])->getChildren().size()));
-			CPPUNIT_ASSERT_EQUAL(String("Bert"), static_cast<GroupRosterItem*>(roster_->getRoot()->getChildren()[0])->getChildren()[0]->getDisplayName());
+			CPPUNIT_ASSERT_EQUAL(std::string("Bert"), static_cast<GroupRosterItem*>(roster_->getRoot()->getChildren()[0])->getChildren()[0]->getDisplayName());
 		}
 
 		void testRemoveSecondContactSameBare() {
@@ -72,11 +72,11 @@ class RosterTest : public CppUnit::TestFixture {
 			JID jid4b("a@b/d");
 			roster_->addContact(jid4a, JID(), "Bert", "group1", "");
 			roster_->addContact(jid4b, JID(), "Cookie", "group1", "");
-			CPPUNIT_ASSERT_EQUAL(String("Cookie"), static_cast<GroupRosterItem*>(roster_->getRoot()->getChildren()[0])->getChildren()[1]->getDisplayName());
+			CPPUNIT_ASSERT_EQUAL(std::string("Cookie"), static_cast<GroupRosterItem*>(roster_->getRoot()->getChildren()[0])->getChildren()[1]->getDisplayName());
 
 			roster_->removeContact(jid4b);
 			CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(static_cast<GroupRosterItem*>(roster_->getRoot()->getChildren()[0])->getChildren().size()));
-			CPPUNIT_ASSERT_EQUAL(String("Bert"), static_cast<GroupRosterItem*>(roster_->getRoot()->getChildren()[0])->getChildren()[0]->getDisplayName());
+			CPPUNIT_ASSERT_EQUAL(std::string("Bert"), static_cast<GroupRosterItem*>(roster_->getRoot()->getChildren()[0])->getChildren()[0]->getDisplayName());
 		}
 
 		void testApplyPresenceLikeMUC() {
@@ -105,9 +105,9 @@ class RosterTest : public CppUnit::TestFixture {
 			CPPUNIT_ASSERT_EQUAL(3, static_cast<int>(children.size()));
 			
 			/* Check order */
-			CPPUNIT_ASSERT_EQUAL(String("Ernie"), children[0]->getDisplayName());
-			CPPUNIT_ASSERT_EQUAL(String("Bert"), children[1]->getDisplayName());
-			CPPUNIT_ASSERT_EQUAL(String("Bird"), children[2]->getDisplayName());
+			CPPUNIT_ASSERT_EQUAL(std::string("Ernie"), children[0]->getDisplayName());
+			CPPUNIT_ASSERT_EQUAL(std::string("Bert"), children[1]->getDisplayName());
+			CPPUNIT_ASSERT_EQUAL(std::string("Bird"), children[2]->getDisplayName());
 
 			presence = boost::shared_ptr<Presence>(new Presence());
 			presence->setFrom(jid4c);

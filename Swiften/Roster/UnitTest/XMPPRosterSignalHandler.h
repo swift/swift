@@ -34,11 +34,11 @@ public:
 		return lastJID_;
 	}
 
-	String getLastOldName() {
+	std::string getLastOldName() {
 		return lastOldName_;
 	}
 
-	std::vector<String> getLastOldGroups() {
+	std::vector<std::string> getLastOldGroups() {
 		return lastOldGroups_;
 	}
 
@@ -57,7 +57,7 @@ private:
 		lastEvent_ = Remove;
 	}
 
-	void handleJIDUpdated(const JID& jid, const String& oldName, const std::vector<String>& oldGroups) {
+	void handleJIDUpdated(const JID& jid, const std::string& oldName, const std::vector<std::string>& oldGroups) {
 		CPPUNIT_ASSERT_EQUAL(None, lastEvent_);
 		lastJID_ = jid;
 		lastOldName_ = oldName;
@@ -67,7 +67,7 @@ private:
 
 	XMPPRosterEvents lastEvent_;
 	JID lastJID_;
-	String lastOldName_;
-	std::vector<String> lastOldGroups_;
+	std::string lastOldName_;
+	std::vector<std::string> lastOldGroups_;
 
 };

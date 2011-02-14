@@ -17,11 +17,11 @@
 
 namespace Swift {
 
-SnarlNotifier::SnarlNotifier(const String& name, Win32NotifierWindow* window, const boost::filesystem::path& icon) : window(window), available(false) {
+SnarlNotifier::SnarlNotifier(const std::string& name, Win32NotifierWindow* window, const boost::filesystem::path& icon) : window(window), available(false) {
 	window->onMessageReceived.connect(boost::bind(&SnarlNotifier::handleMessageReceived, this, _1));
-	available = snarl.RegisterApp(name.getUTF8Data(), name.getUTF8Data(), icon.string().c_str(), window->getID(), SWIFT_SNARLNOTIFIER_MESSAGE_ID);
+	available = snarl.RegisterApp(name.c_str(), name.c_str(), icon.string().c_str(), window->getID(), SWIFT_SNARLNOTIFIER_MESSAGE_ID);
 	foreach(Notifier::Type type, getAllTypes()) {
-		snarl.AddClass(typeToString(type).getUTF8Data(), typeToString(type).getUTF8Data());
+		snarl.AddClass(typeToString(type).c_str(), typeToString(type).c_str());
 	}
 }
 
@@ -38,12 +38,12 @@ bool SnarlNotifier::isAvailable() const {
 }
 
 
-void SnarlNotifier::showMessage(Type type, const String& subject, const String& description, const boost::filesystem::path& picture, boost::function<void()> callback) {
+void SnarlNotifier::showMessage(Type type, const std::string& subject, const std::string& description, const boost::filesystem::path& picture, boost::function<void()> callback) {
 	int timeout = (type == IncomingMessage || type == SystemMessage) ? DEFAULT_MESSAGE_NOTIFICATION_TIMEOUT_SECONDS : DEFAULT_STATUS_NOTIFICATION_TIMEOUT_SECONDS;
 	int notificationID = snarl.EZNotify(
-			typeToString(type).getUTF8Data(),
-			subject.getUTF8Data(),
-			description.getUTF8Data(),
+			typeToString(type).c_str(),
+			subject.c_str(),
+			description.c_str(),
 			timeout,
 			picture.string().c_str());
 	if (notificationID > 0) {

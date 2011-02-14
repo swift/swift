@@ -14,15 +14,15 @@ namespace Swift {
 		public:
 			FormParser();
 
-			virtual void handleStartElement(const String& element, const String&, const AttributeMap& attributes);
-			virtual void handleEndElement(const String& element, const String&);
-			virtual void handleCharacterData(const String& data);
+			virtual void handleStartElement(const std::string& element, const std::string&, const AttributeMap& attributes);
+			virtual void handleEndElement(const std::string& element, const std::string&);
+			virtual void handleCharacterData(const std::string& data);
 
 		private:
 			class FieldParseHelper {
 				public:
 					virtual ~FieldParseHelper() {}
-					virtual void addValue(const String&) = 0;
+					virtual void addValue(const std::string&) = 0;
 					virtual boost::shared_ptr<FormField> getField() const {
 						return field;
 					}
@@ -30,15 +30,15 @@ namespace Swift {
 					boost::shared_ptr<FormField> field;
 			};
 			class BoolFieldParseHelper : public FieldParseHelper {
-					virtual void addValue(const String& s) {
+					virtual void addValue(const std::string& s) {
 						boost::dynamic_pointer_cast< GenericFormField<bool> >(getField())->setValue(s == "1" || s == "true");
 						getField()->addRawValue(s);
 					}
 			};
 			class StringFieldParseHelper : public FieldParseHelper {
-					virtual void addValue(const String& s) {
-						boost::shared_ptr<GenericFormField<String> > field = boost::dynamic_pointer_cast< GenericFormField<String> >(getField());
-						if (field->getValue().isEmpty()) {
+					virtual void addValue(const std::string& s) {
+						boost::shared_ptr<GenericFormField<std::string> > field = boost::dynamic_pointer_cast< GenericFormField<std::string> >(getField());
+						if (field->getValue().empty()) {
 							field->setValue(s);
 						}
 						else {
@@ -48,22 +48,22 @@ namespace Swift {
 					}
 			};
 			class JIDFieldParseHelper : public FieldParseHelper {
-					virtual void addValue(const String& s) {
+					virtual void addValue(const std::string& s) {
 						boost::dynamic_pointer_cast< GenericFormField<JID> >(getField())->setValue(JID(s));
 					}
 			};
 			class StringListFieldParseHelper : public FieldParseHelper {
-					virtual void addValue(const String& s) {
+					virtual void addValue(const std::string& s) {
 						// FIXME: Inefficient, but too much hassle to do efficiently
-						boost::shared_ptr<GenericFormField< std::vector<String> > > field = boost::dynamic_pointer_cast< GenericFormField<std::vector<String > > >(getField());
-						std::vector<String> l = field->getValue();
+						boost::shared_ptr<GenericFormField< std::vector<std::string> > > field = boost::dynamic_pointer_cast< GenericFormField<std::vector<std::string > > >(getField());
+						std::vector<std::string> l = field->getValue();
 						l.push_back(s);
 						field->setValue(l);
 						getField()->addRawValue(s);
 					}
 			};
 			class JIDListFieldParseHelper : public FieldParseHelper {
-					virtual void addValue(const String& s) {
+					virtual void addValue(const std::string& s) {
 						// FIXME: Inefficient, but too much hassle to do efficiently
 						boost::shared_ptr< GenericFormField< std::vector<JID> > > field = boost::dynamic_pointer_cast< GenericFormField<std::vector<JID > > >(getField());
 						std::vector<JID> l = field->getValue();
@@ -104,8 +104,8 @@ namespace Swift {
 				FieldLevel = 2
 			};
 			int level_;
-			String currentText_;
-			String currentOptionLabel_;
+			std::string currentText_;
+			std::string currentOptionLabel_;
 			boost::shared_ptr<FieldParseHelper> currentFieldParseHelper_;
 	};
 }

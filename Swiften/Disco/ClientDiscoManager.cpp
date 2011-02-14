@@ -24,7 +24,7 @@ ClientDiscoManager::~ClientDiscoManager() {
 	delete discoInfoResponder;
 }
 
-void ClientDiscoManager::setCapsNode(const String& node) {
+void ClientDiscoManager::setCapsNode(const std::string& node) {
 	capsNode = node;
 }
 

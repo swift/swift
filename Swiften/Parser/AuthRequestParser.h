@@ -9,19 +9,19 @@
 
 #include "Swiften/Parser/GenericElementParser.h"
 #include "Swiften/Elements/AuthRequest.h"
-#include "Swiften/Base/String.h"
+#include <string>
 
 namespace Swift {
 	class AuthRequestParser : public GenericElementParser<AuthRequest> {
 		public:
 			AuthRequestParser();
 
-			virtual void handleStartElement(const String&, const String& ns, const AttributeMap&);
-			virtual void handleEndElement(const String&, const String& ns);
-			virtual void handleCharacterData(const String&);
+			virtual void handleStartElement(const std::string&, const std::string& ns, const AttributeMap&);
+			virtual void handleEndElement(const std::string&, const std::string& ns);
+			virtual void handleCharacterData(const std::string&);
 
 		private:
-			String text_;
+			std::string text_;
 			int depth_;
 	};
 }

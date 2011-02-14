@@ -15,7 +15,7 @@
 namespace Swift {
 	class CombinedAvatarProvider : public AvatarProvider {
 		public:
-			virtual String getAvatarHash(const JID&) const;
+			virtual std::string getAvatarHash(const JID&) const;
 
 			void addProvider(AvatarProvider*);
 			void removeProvider(AvatarProvider*);
@@ -25,6 +25,6 @@ namespace Swift {
 
 		private:
 			std::vector<AvatarProvider*> providers;
-			std::map<JID, String> avatars;
+			std::map<JID, std::string> avatars;
 	};
 }

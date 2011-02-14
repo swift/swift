@@ -7,7 +7,7 @@
 #ifndef SWIFTEN_SerializingParser_H
 #define SWIFTEN_SerializingParser_H
 
-#include "Swiften/Base/String.h"
+#include <string>
 #include "Swiften/Parser/AttributeMap.h"
 #include "Swiften/Serializer/XML/XMLElement.h"
 
@@ -16,11 +16,11 @@ namespace Swift {
 		public:
 			SerializingParser();
 
-			void handleStartElement(const String& element, const String& ns, const AttributeMap& attributes);
-			void handleEndElement(const String& element, const String& ns);
-			void handleCharacterData(const String& data);
+			void handleStartElement(const std::string& element, const std::string& ns, const AttributeMap& attributes);
+			void handleEndElement(const std::string& element, const std::string& ns);
+			void handleCharacterData(const std::string& data);
 
-			String getResult() const;
+			std::string getResult() const;
 
 		private:
 			std::vector< boost::shared_ptr<XMLElement> > elementStack_;

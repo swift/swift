@@ -13,7 +13,7 @@ namespace Swift {
 CapsInfoParser::CapsInfoParser() : level(0) {
 }
 
-void CapsInfoParser::handleStartElement(const String&, const String& /*ns*/, const AttributeMap& attributes) {
+void CapsInfoParser::handleStartElement(const std::string&, const std::string& /*ns*/, const AttributeMap& attributes) {
 	if (level == 0) {
 		getPayloadInternal()->setHash(attributes.getAttribute("hash"));
 		getPayloadInternal()->setNode(attributes.getAttribute("node"));
@@ -22,11 +22,11 @@ void CapsInfoParser::handleStartElement(const String&, const String& /*ns*/, con
 	++level;
 }
 
-void CapsInfoParser::handleEndElement(const String&, const String&) {
+void CapsInfoParser::handleEndElement(const std::string&, const std::string&) {
 	--level;
 }
 
-void CapsInfoParser::handleCharacterData(const String&) {
+void CapsInfoParser::handleCharacterData(const std::string&) {
 
 }
 

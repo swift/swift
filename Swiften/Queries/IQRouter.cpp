@@ -87,7 +87,7 @@ void IQRouter::sendIQ(boost::shared_ptr<IQ> iq) {
 	channel_->sendIQ(iq);
 }
 
-String IQRouter::getNewIQID() {
+std::string IQRouter::getNewIQID() {
 	return channel_->getNewIQID();
 }
 

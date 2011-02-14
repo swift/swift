@@ -12,7 +12,7 @@
 #include <Swiften/Base/boost_bsignals.h>
 
 #include <Swiften/Elements/SearchPayload.h>
-#include <Swiften/Base/String.h>
+#include <string>
 #include <Swiften/JID/JID.h>
 #include <Swiften/Elements/DiscoInfo.h>
 #include <Swiften/Elements/DiscoItems.h>
@@ -28,12 +28,12 @@ namespace Swift {
 
 	class UserSearchResult {
 		public:
-			UserSearchResult(const JID& jid, const std::map<String, String>& fields) : jid_(jid), fields_(fields) {}
+			UserSearchResult(const JID& jid, const std::map<std::string, std::string>& fields) : jid_(jid), fields_(fields) {}
 			const JID& getJID() const {return jid_;}
-			const std::map<String, String>& getFields() const {return fields_;}
+			const std::map<std::string, std::string>& getFields() const {return fields_;}
 		private:
 			JID jid_;
-			std::map<String, String> fields_;
+			std::map<std::string, std::string> fields_;
 	};
 
 	class UserSearchController {

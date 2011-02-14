@@ -12,7 +12,7 @@
 
 namespace Swift {
 	class ApplicationPathProvider;
-	class String;
+	
 
 	class QtSoundPlayer : public QObject, public SoundPlayer {
 			Q_OBJECT
@@ -22,7 +22,7 @@ namespace Swift {
 			void playSound(SoundEffect sound);
 
 		private:
-			void playSound(const String& soundResource);
+			void playSound(const std::string& soundResource);
 
 		private:
 			ApplicationPathProvider* applicationPathProvider;

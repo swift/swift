@@ -12,8 +12,8 @@
 namespace Swift {
 
 FileStorages::FileStorages(const boost::filesystem::path& baseDir, const JID& jid) {
-	String profile = jid.toBare();
-	vcardStorage = new VCardFileStorage(baseDir / profile.getUTF8String() / "vcards");
+	std::string profile = jid.toBare();
+	vcardStorage = new VCardFileStorage(baseDir / profile / "vcards");
 	capsStorage = new CapsFileStorage(baseDir / "caps");
 	avatarStorage = new AvatarFileStorage(baseDir / "avatars");
 }

@@ -11,12 +11,12 @@
 #include <boost/asio.hpp>
 
 namespace Swift {
-	class String;
+	
 
 	class HostAddress {
 		public:
 			HostAddress();
-			HostAddress(const String&);
+			HostAddress(const std::string&);
 			HostAddress(const unsigned char* address, int length);
 			HostAddress(const boost::asio::ip::address& address);
 

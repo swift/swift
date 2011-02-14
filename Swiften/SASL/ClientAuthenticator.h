@@ -8,20 +8,20 @@
 
 #include <boost/optional.hpp>
 
-#include "Swiften/Base/String.h"
+#include <string>
 #include "Swiften/Base/ByteArray.h"
 
 namespace Swift {
 	class ClientAuthenticator {
 		public:
-			ClientAuthenticator(const String& name);
+			ClientAuthenticator(const std::string& name);
 			virtual ~ClientAuthenticator();
 
-			const String& getName() const {
+			const std::string& getName() const {
 				return name;
 			}
 
-			void setCredentials(const String& authcid, const String& password, const String& authzid = String()) {
+			void setCredentials(const std::string& authcid, const std::string& password, const std::string& authzid = std::string()) {
 				this->authcid = authcid;
 				this->password = password;
 				this->authzid = authzid;
@@ -30,22 +30,22 @@ namespace Swift {
 			virtual boost::optional<ByteArray> getResponse() const = 0;
 			virtual bool setChallenge(const boost::optional<ByteArray>&) = 0;
 
-			const String& getAuthenticationID() const {
+			const std::string& getAuthenticationID() const {
 				return authcid;
 			}
 
-			const String& getAuthorizationID() const {
+			const std::string& getAuthorizationID() const {
 				return authzid;
 			}
 
-			const String& getPassword() const {
+			const std::string& getPassword() const {
 				return password;
 			}
 		
 		private:
-			String name;
-			String authcid;
-			String password;
-			String authzid;
+			std::string name;
+			std::string authcid;
+			std::string password;
+			std::string authzid;
 	};
 }

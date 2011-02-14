@@ -10,8 +10,6 @@
 #include "Slimber/Menulet.h"
 #include "Slimber/MenuletController.h"
 
-using namespace Swift;
-
 class MenuletControllerTest : public CppUnit::TestFixture {
 		CPPUNIT_TEST_SUITE(MenuletControllerTest);
 		CPPUNIT_TEST(testConstructor);
@@ -36,14 +34,14 @@ class MenuletControllerTest : public CppUnit::TestFixture {
 
 			CPPUNIT_ASSERT_EQUAL(8, static_cast<int>(menulet->items.size()));
 			int i = 0;
-			CPPUNIT_ASSERT_EQUAL(String("No online users"), menulet->items[i++]);
-			CPPUNIT_ASSERT_EQUAL(String("-"), menulet->items[i++]);
-			CPPUNIT_ASSERT_EQUAL(String("[Offline] "), menulet->items[i++]);
-			CPPUNIT_ASSERT_EQUAL(String("-"), menulet->items[i++]);
-			CPPUNIT_ASSERT_EQUAL(String("*About*"), menulet->items[i++]);
-			CPPUNIT_ASSERT_EQUAL(String("-"), menulet->items[i++]);
-			CPPUNIT_ASSERT_EQUAL(String("*Restart*"), menulet->items[i++]);
-			CPPUNIT_ASSERT_EQUAL(String("*Exit*"), menulet->items[i++]);
+			CPPUNIT_ASSERT_EQUAL(std::string("No online users"), menulet->items[i++]);
+			CPPUNIT_ASSERT_EQUAL(std::string("-"), menulet->items[i++]);
+			CPPUNIT_ASSERT_EQUAL(std::string("[Offline] "), menulet->items[i++]);
+			CPPUNIT_ASSERT_EQUAL(std::string("-"), menulet->items[i++]);
+			CPPUNIT_ASSERT_EQUAL(std::string("*About*"), menulet->items[i++]);
+			CPPUNIT_ASSERT_EQUAL(std::string("-"), menulet->items[i++]);
+			CPPUNIT_ASSERT_EQUAL(std::string("*Restart*"), menulet->items[i++]);
+			CPPUNIT_ASSERT_EQUAL(std::string("*Exit*"), menulet->items[i++]);
 		}
 
 		void testUpdate() {
@@ -53,14 +51,14 @@ class MenuletControllerTest : public CppUnit::TestFixture {
 
 			CPPUNIT_ASSERT_EQUAL(8, static_cast<int>(menulet->items.size()));
 			int i = 0;
-			CPPUNIT_ASSERT_EQUAL(String("No online users"), menulet->items[i++]);
-			CPPUNIT_ASSERT_EQUAL(String("-"), menulet->items[i++]);
-			CPPUNIT_ASSERT_EQUAL(String("[Online] You are connected"), menulet->items[i++]);
-			CPPUNIT_ASSERT_EQUAL(String("-"), menulet->items[i++]);
-			CPPUNIT_ASSERT_EQUAL(String("*About*"), menulet->items[i++]);
-			CPPUNIT_ASSERT_EQUAL(String("-"), menulet->items[i++]);
-			CPPUNIT_ASSERT_EQUAL(String("*Restart*"), menulet->items[i++]);
-			CPPUNIT_ASSERT_EQUAL(String("*Exit*"), menulet->items[i++]);
+			CPPUNIT_ASSERT_EQUAL(std::string("No online users"), menulet->items[i++]);
+			CPPUNIT_ASSERT_EQUAL(std::string("-"), menulet->items[i++]);
+			CPPUNIT_ASSERT_EQUAL(std::string("[Online] You are connected"), menulet->items[i++]);
+			CPPUNIT_ASSERT_EQUAL(std::string("-"), menulet->items[i++]);
+			CPPUNIT_ASSERT_EQUAL(std::string("*About*"), menulet->items[i++]);
+			CPPUNIT_ASSERT_EQUAL(std::string("-"), menulet->items[i++]);
+			CPPUNIT_ASSERT_EQUAL(std::string("*Restart*"), menulet->items[i++]);
+			CPPUNIT_ASSERT_EQUAL(std::string("*Exit*"), menulet->items[i++]);
 		}
 
 		void testSetXMPPStatus_Online() {
@@ -69,9 +67,9 @@ class MenuletControllerTest : public CppUnit::TestFixture {
 			testling.setXMPPStatus("You are connected", MenuletController::Online);
 
 			int i = 0;
-			CPPUNIT_ASSERT_EQUAL(String("No online users"), menulet->items[i++]);
-			CPPUNIT_ASSERT_EQUAL(String("-"), menulet->items[i++]);
-			CPPUNIT_ASSERT_EQUAL(String("[Online] You are connected"), menulet->items[i++]);
+			CPPUNIT_ASSERT_EQUAL(std::string("No online users"), menulet->items[i++]);
+			CPPUNIT_ASSERT_EQUAL(std::string("-"), menulet->items[i++]);
+			CPPUNIT_ASSERT_EQUAL(std::string("[Online] You are connected"), menulet->items[i++]);
 		}
 
 
@@ -81,35 +79,35 @@ class MenuletControllerTest : public CppUnit::TestFixture {
 			testling.setXMPPStatus("You are not connected", MenuletController::Offline);
 
 			int i = 0;
-			CPPUNIT_ASSERT_EQUAL(String("No online users"), menulet->items[i++]);
-			CPPUNIT_ASSERT_EQUAL(String("-"), menulet->items[i++]);
-			CPPUNIT_ASSERT_EQUAL(String("[Offline] You are not connected"), menulet->items[i++]);
+			CPPUNIT_ASSERT_EQUAL(std::string("No online users"), menulet->items[i++]);
+			CPPUNIT_ASSERT_EQUAL(std::string("-"), menulet->items[i++]);
+			CPPUNIT_ASSERT_EQUAL(std::string("[Offline] You are not connected"), menulet->items[i++]);
 		}
 
 		void testSetUserNames() {
 			MenuletController testling(menulet);
 
-			std::vector<String> users;
+			std::vector<std::string> users;
 			users.push_back("Alice In Wonderland");
 			users.push_back("The Mad Hatter");
 			testling.setUserNames(users);
 
 			int i = 0;
-			CPPUNIT_ASSERT_EQUAL(String("Online users:"), menulet->items[i++]);
-			CPPUNIT_ASSERT_EQUAL(String("  Alice In Wonderland"), menulet->items[i++]);
-			CPPUNIT_ASSERT_EQUAL(String("  The Mad Hatter"), menulet->items[i++]);
-			CPPUNIT_ASSERT_EQUAL(String("-"), menulet->items[i++]);
+			CPPUNIT_ASSERT_EQUAL(std::string("Online users:"), menulet->items[i++]);
+			CPPUNIT_ASSERT_EQUAL(std::string("  Alice In Wonderland"), menulet->items[i++]);
+			CPPUNIT_ASSERT_EQUAL(std::string("  The Mad Hatter"), menulet->items[i++]);
+			CPPUNIT_ASSERT_EQUAL(std::string("-"), menulet->items[i++]);
 		}
 
 		void testSetUserNames_NoUsers() {
 			MenuletController testling(menulet);
 
-			std::vector<String> users;
+			std::vector<std::string> users;
 			testling.setUserNames(users);
 
 			int i = 0;
-			CPPUNIT_ASSERT_EQUAL(String("No online users"), menulet->items[i++]);
-			CPPUNIT_ASSERT_EQUAL(String("-"), menulet->items[i++]);
+			CPPUNIT_ASSERT_EQUAL(std::string("No online users"), menulet->items[i++]);
+			CPPUNIT_ASSERT_EQUAL(std::string("-"), menulet->items[i++]);
 		}
 	
 	private:
@@ -118,9 +116,9 @@ class MenuletControllerTest : public CppUnit::TestFixture {
 				items.clear();
 			}
 
-			virtual void addItem(const String& name, const String& icon = String()) {
-				String result;
-				if (!icon.isEmpty()) {
+			virtual void addItem(const std::string& name, const std::string& icon = std::string()) {
+				std::string result;
+				if (!icon.empty()) {
 					result += "[" + icon + "] ";
 				}
 				result += name;
@@ -143,12 +141,12 @@ class MenuletControllerTest : public CppUnit::TestFixture {
 				items.push_back("-");
 			}
 
-			virtual void setIcon(const String& i) {
+			virtual void setIcon(const std::string& i) {
 				icon = i;
 			}
 
-			std::vector<String> items;
-			String icon;
+			std::vector<std::string> items;
+			std::string icon;
 		};
 
 		FakeMenulet* menulet;

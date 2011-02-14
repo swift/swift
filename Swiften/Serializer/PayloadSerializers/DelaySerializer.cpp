@@ -8,6 +8,7 @@
 
 #include <boost/shared_ptr.hpp>
 
+#include <Swiften/Base/String.h>
 #include "Swiften/Serializer/XML/XMLElement.h"
 
 namespace Swift {
@@ -15,19 +16,19 @@ namespace Swift {
 DelaySerializer::DelaySerializer() : GenericPayloadSerializer<Delay>() {
 }
 
-String DelaySerializer::serializePayload(boost::shared_ptr<Delay> delay)  const {
+std::string DelaySerializer::serializePayload(boost::shared_ptr<Delay> delay)  const {
 	XMLElement delayElement("delay", "urn:xmpp:delay");
 	if (delay->getFrom()) {
 		delayElement.setAttribute("from", delay->getFrom()->toString());
 	}
-	String stampString = boostPTimeToXEP0082(delay->getStamp());
+	std::string stampString = boostPTimeToXEP0082(delay->getStamp());
 	delayElement.setAttribute("stamp", stampString);
 	return delayElement.serialize();
 }
 
-String DelaySerializer::boostPTimeToXEP0082(const boost::posix_time::ptime& time) {
-	String stampString = String(boost::posix_time::to_iso_extended_string(time));
-	stampString.replaceAll(',', ".");
+std::string DelaySerializer::boostPTimeToXEP0082(const boost::posix_time::ptime& time) {
+	std::string stampString = std::string(boost::posix_time::to_iso_extended_string(time));
+	String::replaceAll(stampString, ',', ".");
 	stampString += "Z";
 	return stampString;
 }

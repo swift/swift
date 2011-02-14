@@ -16,24 +16,24 @@ class EchoPayloadParser : public GenericPayloadParser<EchoPayload> {
 		EchoPayloadParser() : currentDepth(0) {}
 
 		void handleStartElement(
-				const String& /* element */, const String& /* ns */, const AttributeMap&) {
+				const std::string& /* element */, const std::string& /* ns */, const AttributeMap&) {
 			currentDepth++;
 		}
 
-		void handleEndElement(const String& /* element */, const String& /* ns */) {
+		void handleEndElement(const std::string& /* element */, const std::string& /* ns */) {
 			currentDepth--;
 			if (currentDepth == 0) {
 				getPayloadInternal()->setMessage(currentText);
 			}
 		}
 
-		void handleCharacterData(const String& data) {
+		void handleCharacterData(const std::string& data) {
 			currentText += data;
 		}
 
 	private:
 		int currentDepth;
-		String currentText;
+		std::string currentText;
 };
 
 class EchoPayloadParserFactory : public GenericPayloadParserFactory<EchoPayloadParser> {

@@ -13,7 +13,7 @@ namespace Swift {
 PrivateStorageParser::PrivateStorageParser(PayloadParserFactoryCollection* factories) : factories(factories), level(0) {
 }
 
-void PrivateStorageParser::handleStartElement(const String& element, const String& ns, const AttributeMap& attributes) {
+void PrivateStorageParser::handleStartElement(const std::string& element, const std::string& ns, const AttributeMap& attributes) {
 	if (level == 1) {
 		PayloadParserFactory* payloadParserFactory = factories->getPayloadParserFactory(element, ns, attributes);
 		if (payloadParserFactory) {
@@ -27,7 +27,7 @@ void PrivateStorageParser::handleStartElement(const String& element, const Strin
 	++level;
 }
 
-void PrivateStorageParser::handleEndElement(const String& element, const String& ns) {
+void PrivateStorageParser::handleEndElement(const std::string& element, const std::string& ns) {
 	--level;
 	if (currentPayloadParser.get()) {
 		if (level >= 1) {
@@ -40,7 +40,7 @@ void PrivateStorageParser::handleEndElement(const String& element, const String&
 	}
 }
 
-void PrivateStorageParser::handleCharacterData(const String& data) {
+void PrivateStorageParser::handleCharacterData(const std::string& data) {
 	if (level > 1 && currentPayloadParser.get()) {
 		currentPayloadParser->handleCharacterData(data);
 	}

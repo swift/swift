@@ -36,7 +36,7 @@ namespace Swift {
 				sentStanzas.push_back(presence);
 			}
 
-			virtual String getNewIQID() {
+			virtual std::string getNewIQID() {
 				return "test-id";
 			}
 			

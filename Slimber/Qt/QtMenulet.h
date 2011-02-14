@@ -30,8 +30,8 @@ class QtMenulet : public QObject, public Menulet {
 			menu.clear();
 		}
 
-		void addItem(const Swift::String& name, const Swift::String& icon) {
-			menu.addAction(getIcon(icon), QString::fromUtf8(name.getUTF8Data()));
+		void addItem(const std::string& name, const std::string& icon) {
+			menu.addAction(getIcon(icon), QString::fromUtf8(name.c_str()));
 		}
 
 		void addAboutItem() {
@@ -50,13 +50,13 @@ class QtMenulet : public QObject, public Menulet {
 			menu.addSeparator();
 		}
 
-		void setIcon(const Swift::String& icon) {
+		void setIcon(const std::string& icon) {
 			trayIcon.setIcon(getIcon(icon));
 		}
 
 	private:
-		QPixmap getIcon(const Swift::String& name) {
-			return QPixmap(":/icons/" + QString::fromUtf8(name.getUTF8Data()) + ".png");
+		QPixmap getIcon(const std::string& name) {
+			return QPixmap(":/icons/" + QString::fromUtf8(name.c_str()) + ".png");
 		}
 
 	private slots:

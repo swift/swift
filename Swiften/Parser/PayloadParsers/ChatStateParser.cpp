@@ -11,7 +11,7 @@ namespace Swift {
 ChatStateParser::ChatStateParser() : level_(0) {
 }
 
-void ChatStateParser::handleStartElement(const String& element, const String&, const AttributeMap&) {
+void ChatStateParser::handleStartElement(const std::string& element, const std::string&, const AttributeMap&) {
 	if (level_ == 0) {
 		ChatState::ChatStateType state = ChatState::Active;
 		if (element == "active") {
@@ -30,11 +30,11 @@ void ChatStateParser::handleStartElement(const String& element, const String&, c
 	++level_;
 }
 
-void ChatStateParser::handleEndElement(const String&, const String&) {
+void ChatStateParser::handleEndElement(const std::string&, const std::string&) {
 	--level_;
 }
 
-void ChatStateParser::handleCharacterData(const String&) {
+void ChatStateParser::handleCharacterData(const std::string&) {
 
 }
 

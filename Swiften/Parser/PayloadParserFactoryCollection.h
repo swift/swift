@@ -13,7 +13,7 @@
 
 namespace Swift {
 	class PayloadParserFactory;
-	class String;
+	
 
 	class PayloadParserFactoryCollection {
 		public:
@@ -23,7 +23,7 @@ namespace Swift {
 			void removeFactory(PayloadParserFactory* factory);
 			void setDefaultFactory(PayloadParserFactory* factory);
 
-			PayloadParserFactory* getPayloadParserFactory(const String& element, const String& ns, const AttributeMap& attributes);
+			PayloadParserFactory* getPayloadParserFactory(const std::string& element, const std::string& ns, const AttributeMap& attributes);
 
 		private:
 			std::vector<PayloadParserFactory*> factories_;

@@ -8,25 +8,25 @@
 
 #include <map>
 
-#include "Swiften/Base/String.h"
+#include <string>
 #include "Swiften/Base/ByteArray.h"
 #include "Swiften/Avatars/AvatarStorage.h"
 
 namespace Swift {
 	class AvatarMemoryStorage : public AvatarStorage {
 		public:
-			virtual bool hasAvatar(const String& hash) const { return avatars.find(hash) != avatars.end(); }
-			virtual void addAvatar(const String& hash, const ByteArray& avatar) { avatars[hash] = avatar; }
-			virtual ByteArray getAvatar(const String& hash) const {
-				std::map<String, ByteArray>::const_iterator i = avatars.find(hash);
+			virtual bool hasAvatar(const std::string& hash) const { return avatars.find(hash) != avatars.end(); }
+			virtual void addAvatar(const std::string& hash, const ByteArray& avatar) { avatars[hash] = avatar; }
+			virtual ByteArray getAvatar(const std::string& hash) const {
+				std::map<std::string, ByteArray>::const_iterator i = avatars.find(hash);
 				return i == avatars.end() ? ByteArray() : i->second;
 			}
 
-			virtual boost::filesystem::path getAvatarPath(const String& hash) const {
-				return boost::filesystem::path("/avatars") / hash.getUTF8String();
+			virtual boost::filesystem::path getAvatarPath(const std::string& hash) const {
+				return boost::filesystem::path("/avatars") / hash;
 			}
 
 		private:
-			std::map<String, ByteArray> avatars;
+			std::map<std::string, ByteArray> avatars;
 	};
 }

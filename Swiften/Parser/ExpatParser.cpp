@@ -8,7 +8,7 @@
 
 #include <iostream>
 
-#include "Swiften/Base/String.h"
+#include <string>
 #include "Swiften/Parser/XMLParserClient.h"
 
 namespace Swift {
@@ -16,7 +16,7 @@ namespace Swift {
 static const char NAMESPACE_SEPARATOR = '\x01';
 
 static void handleStartElement(void* client, const XML_Char* name, const XML_Char** attributes) {
-	std::pair<String,String> nsTagPair = String(name).getSplittedAtFirst(NAMESPACE_SEPARATOR);
+	std::pair<std::string,std::string> nsTagPair = std::string(name).getSplittedAtFirst(NAMESPACE_SEPARATOR);
 	if (nsTagPair.second == "") {
 		nsTagPair.second = nsTagPair.first;
 		nsTagPair.first = "";
@@ -24,12 +24,12 @@ static void handleStartElement(void* client, const XML_Char* name, const XML_Cha
 	AttributeMap attributeValues;
 	const XML_Char** currentAttribute = attributes;
 	while (*currentAttribute) {
-		std::pair<String,String> nsAttributePair = String(*currentAttribute).getSplittedAtFirst(NAMESPACE_SEPARATOR);
+		std::pair<std::string,std::string> nsAttributePair = std::string(*currentAttribute).getSplittedAtFirst(NAMESPACE_SEPARATOR);
 		if (nsAttributePair.second == "") {
 			nsAttributePair.second = nsAttributePair.first;
 			nsAttributePair.first = "";
 		}
-		attributeValues[nsAttributePair.second] = String(*(currentAttribute+1));
+		attributeValues[nsAttributePair.second] = std::string(*(currentAttribute+1));
 		currentAttribute += 2;
 	}
 
@@ -37,7 +37,7 @@ static void handleStartElement(void* client, const XML_Char* name, const XML_Cha
 }
 
 static void handleEndElement(void* client, const XML_Char* name) {
-	std::pair<String,String> nsTagPair = String(name).getSplittedAtFirst(NAMESPACE_SEPARATOR);
+	std::pair<std::string,std::string> nsTagPair = std::string(name).getSplittedAtFirst(NAMESPACE_SEPARATOR);
 	if (nsTagPair.second == "") {
 		nsTagPair.second = nsTagPair.first;
 		nsTagPair.first = "";
@@ -46,7 +46,7 @@ static void handleEndElement(void* client, const XML_Char* name) {
 }
 
 static void handleCharacterData(void* client, const XML_Char* data, int len) {
-	static_cast<XMLParserClient*>(client)->handleCharacterData(String(data, len));
+	static_cast<XMLParserClient*>(client)->handleCharacterData(std::string(data, len));
 }
 
 static void handleXMLDeclaration(void*, const XML_Char*, const XML_Char*, int) {
@@ -65,8 +65,8 @@ ExpatParser::~ExpatParser() {
 	XML_ParserFree(parser_);
 }
 
-bool ExpatParser::parse(const String& data) {
-	bool success = XML_Parse(parser_, data.getUTF8Data(), data.getUTF8Size(), false) == XML_STATUS_OK;
+bool ExpatParser::parse(const std::string& data) {
+	bool success = XML_Parse(parser_, data.c_str(), data.size(), false) == XML_STATUS_OK;
 	/*if (!success) {
 		std::cout << "ERROR: " << XML_ErrorString(XML_GetErrorCode(parser_)) << " while parsing " << data << std::endl;
 	}*/

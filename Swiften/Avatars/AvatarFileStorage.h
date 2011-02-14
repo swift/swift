@@ -9,7 +9,7 @@
 #include <map>
 #include <boost/filesystem.hpp>
 
-#include "Swiften/Base/String.h"
+#include <string>
 #include "Swiften/Base/ByteArray.h"
 #include "Swiften/Avatars/AvatarStorage.h"
 
@@ -18,11 +18,11 @@ namespace Swift {
 		public:
 			AvatarFileStorage(const boost::filesystem::path& path);
 
-			virtual bool hasAvatar(const String& hash) const;
-			virtual void addAvatar(const String& hash, const ByteArray& avatar);
-			virtual ByteArray getAvatar(const String& hash) const;
+			virtual bool hasAvatar(const std::string& hash) const;
+			virtual void addAvatar(const std::string& hash, const ByteArray& avatar);
+			virtual ByteArray getAvatar(const std::string& hash) const;
 
-			virtual boost::filesystem::path getAvatarPath(const String& hash) const;
+			virtual boost::filesystem::path getAvatarPath(const std::string& hash) const;
 
 		private:
 			boost::filesystem::path path_;

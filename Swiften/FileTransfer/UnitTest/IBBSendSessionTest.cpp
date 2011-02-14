@@ -52,7 +52,7 @@ class IBBSendSessionTest : public CppUnit::TestFixture {
 			IBB::ref ibb = stanzaChannel->sentStanzas[0]->getPayload<IBB>();
 			CPPUNIT_ASSERT_EQUAL(IBB::Open, ibb->getAction());
 			CPPUNIT_ASSERT_EQUAL(1234, ibb->getBlockSize());
-			CPPUNIT_ASSERT_EQUAL(String("myid"), ibb->getStreamID());
+			CPPUNIT_ASSERT_EQUAL(std::string("myid"), ibb->getStreamID());
 		}
 
 		void testStart_ResponseStartsSending() {
@@ -68,7 +68,7 @@ class IBBSendSessionTest : public CppUnit::TestFixture {
 			CPPUNIT_ASSERT_EQUAL(IBB::Data, ibb->getAction());
 			CPPUNIT_ASSERT_EQUAL(ByteArray("abc"), ibb->getData());
 			CPPUNIT_ASSERT_EQUAL(0, ibb->getSequenceNumber());
-			CPPUNIT_ASSERT_EQUAL(String("myid"), ibb->getStreamID());
+			CPPUNIT_ASSERT_EQUAL(std::string("myid"), ibb->getStreamID());
 		}
 
 		void testResponseContinuesSending() {
@@ -84,7 +84,7 @@ class IBBSendSessionTest : public CppUnit::TestFixture {
 			CPPUNIT_ASSERT_EQUAL(IBB::Data, ibb->getAction());
 			CPPUNIT_ASSERT_EQUAL(ByteArray("def"), ibb->getData());
 			CPPUNIT_ASSERT_EQUAL(1, ibb->getSequenceNumber());
-			CPPUNIT_ASSERT_EQUAL(String("myid"), ibb->getStreamID());
+			CPPUNIT_ASSERT_EQUAL(std::string("myid"), ibb->getStreamID());
 		}
 
 		void testRespondToAllFinishes() {
@@ -120,7 +120,7 @@ class IBBSendSessionTest : public CppUnit::TestFixture {
 			CPPUNIT_ASSERT(stanzaChannel->isRequestAtIndex<IBB>(1, JID("foo@bar.com/baz"), IQ::Set));
 			IBB::ref ibb = stanzaChannel->sentStanzas[1]->getPayload<IBB>();
 			CPPUNIT_ASSERT_EQUAL(IBB::Close, ibb->getAction());
-			CPPUNIT_ASSERT_EQUAL(String("myid"), ibb->getStreamID());
+			CPPUNIT_ASSERT_EQUAL(std::string("myid"), ibb->getStreamID());
 			CPPUNIT_ASSERT(finished);
 			CPPUNIT_ASSERT(!error);
 		}
@@ -144,7 +144,7 @@ class IBBSendSessionTest : public CppUnit::TestFixture {
 		}
 
 	private:
-		std::auto_ptr<IBBSendSession> createSession(const String& to) {
+		std::auto_ptr<IBBSendSession> createSession(const std::string& to) {
 			std::auto_ptr<IBBSendSession> session(new IBBSendSession("myid", JID(to), bytestream, iqRouter));
 			session->onFinished.connect(boost::bind(&IBBSendSessionTest::handleFinished, this, _1));
 			return session;

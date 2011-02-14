@@ -6,9 +6,10 @@
 
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/extensions/TestFactoryRegistry.h>
+#include <string>
+#include <boost/algorithm/string.hpp>
 
 #include "SwifTools/Application/PlatformApplicationPathProvider.h"
-#include "Swiften/Base/String.h"
 
 using namespace Swift;
 
@@ -39,7 +40,7 @@ class ApplicationPathProviderTest : public CppUnit::TestFixture {
 		void testGetExecutableDir() {
 			boost::filesystem::path dir = testling_->getExecutableDir();
 			CPPUNIT_ASSERT(boost::filesystem::is_directory(dir));
-			CPPUNIT_ASSERT(String(dir.string()).endsWith("UnitTest"));
+			CPPUNIT_ASSERT(boost::ends_with(dir.string(), "UnitTest"));
 		}
 	
 	private:

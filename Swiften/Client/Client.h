@@ -47,7 +47,7 @@ namespace Swift {
 			 *	this is NULL,
 			 *	all data will be stored in memory (and be lost on shutdown)
 			 */
-			Client(const JID& jid, const String& password, NetworkFactories* networkFactories, Storages* storages = NULL);
+			Client(const JID& jid, const std::string& password, NetworkFactories* networkFactories, Storages* storages = NULL);
 			~Client();
 
 
@@ -56,7 +56,7 @@ namespace Swift {
 			 *
 			 * This will be used to respond to version queries from other entities.
 			 */
-			void setSoftwareVersion(const String& name, const String& version);
+			void setSoftwareVersion(const std::string& name, const std::string& version);
 
 			/** 
 			 * Returns a representation of the roster.

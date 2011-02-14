@@ -14,7 +14,7 @@ const int Notifier::DEFAULT_MESSAGE_NOTIFICATION_TIMEOUT_SECONDS = 5;
 Notifier::~Notifier() {
 }
 
-String Notifier::typeToString(Type type) {
+std::string Notifier::typeToString(Type type) {
 	switch (type) {
 		case ContactAvailable: return "Contact Becomes Available";
 		case ContactUnavailable: return "Contact Becomes Unavailable";

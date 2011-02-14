@@ -30,7 +30,7 @@ class ErrorParserTest : public CppUnit::TestFixture {
 			ErrorPayload::ref payload = boost::dynamic_pointer_cast<ErrorPayload>(parser.getPayload());
 			CPPUNIT_ASSERT_EQUAL(ErrorPayload::BadRequest, payload->getCondition());
 			CPPUNIT_ASSERT_EQUAL(ErrorPayload::Modify, payload->getType());
-			CPPUNIT_ASSERT_EQUAL(String("boo"), payload->getText());
+			CPPUNIT_ASSERT_EQUAL(std::string("boo"), payload->getText());
 		}
 };
 

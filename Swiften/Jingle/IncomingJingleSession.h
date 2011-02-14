@@ -13,7 +13,7 @@
 namespace Swift {
 	class IncomingJingleSession : public JingleSession {
 		public:
-			IncomingJingleSession(const String& id, const std::vector<JingleContent::ref>& contents);
+			IncomingJingleSession(const std::string& id, const std::vector<JingleContent::ref>& contents);
 
 			typedef boost::shared_ptr<IncomingJingleSession> ref;
 	};

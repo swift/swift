@@ -7,7 +7,7 @@
 #pragma once
 
 #include "Swiften/Parser/PayloadParserFactory.h"
-#include "Swiften/Base/String.h"
+#include <string>
 
 namespace Swift {
 
@@ -20,10 +20,10 @@ namespace Swift {
 			/**
 			 * Construct a parser factory that can parse the given top-level tag in the given namespace.
 			 */
-			GenericPayloadParserFactory(const String& tag, const String& xmlns = "") : tag_(tag), xmlns_(xmlns) {}
+			GenericPayloadParserFactory(const std::string& tag, const std::string& xmlns = "") : tag_(tag), xmlns_(xmlns) {}
 
-			virtual bool canParse(const String& element, const String& ns, const AttributeMap&) const {
-				return (tag_.isEmpty() ? true : element == tag_) && (xmlns_.isEmpty() ? true : xmlns_ == ns);
+			virtual bool canParse(const std::string& element, const std::string& ns, const AttributeMap&) const {
+				return (tag_.empty() ? true : element == tag_) && (xmlns_.empty() ? true : xmlns_ == ns);
 			}
 
 			virtual PayloadParser* createPayloadParser() {
@@ -31,7 +31,7 @@ namespace Swift {
 			}
 
 		private:
-			String tag_;
-			String xmlns_;
+			std::string tag_;
+			std::string xmlns_;
 	};
 }

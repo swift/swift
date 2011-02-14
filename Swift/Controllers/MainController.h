@@ -13,7 +13,7 @@
 #include "Swiften/Network/Timer.h"
 #include "SwifTools/Idle/PlatformIdleQuerier.h"
 #include "SwifTools/Idle/ActualIdleDetector.h"
-#include "Swiften/Base/String.h"
+#include <string>
 #include "Swiften/Client/ClientError.h"
 #include "Swiften/JID/JID.h"
 #include "Swiften/Elements/DiscoInfo.h"
@@ -83,16 +83,16 @@ namespace Swift {
 		private:
 			void resetClient();
 			void handleConnected();
-			void handleLoginRequest(const String& username, const String& password, const String& certificateFile, bool remember, bool loginAutomatically);
+			void handleLoginRequest(const std::string& username, const std::string& password, const std::string& certificateFile, bool remember, bool loginAutomatically);
 			void handleCancelLoginRequest();
 			void handleQuitRequest();
-			void handleChangeStatusRequest(StatusShow::Type show, const String &statusText);
+			void handleChangeStatusRequest(StatusShow::Type show, const std::string &statusText);
 			void handleDisconnected(const boost::optional<ClientError>& error);
 			void handleServerDiscoInfoResponse(boost::shared_ptr<DiscoInfo>, ErrorPayload::ref);
 			void handleEventQueueLengthChange(int count);
 			void handleVCardReceived(const JID& j, VCard::ref vCard);
 			void handleUIEvent(boost::shared_ptr<UIEvent> event);
-			void handlePurgeSavedLoginRequest(const String& username);
+			void handlePurgeSavedLoginRequest(const std::string& username);
 			void sendPresence(boost::shared_ptr<Presence> presence);
 			void handleInputIdleChanged(bool);
 			void logout();
@@ -139,9 +139,9 @@ namespace Swift {
 			JID boundJID_;
 			SystemTrayController* systemTrayController_;
 			SoundEventController* soundEventController_;
-			String vCardPhotoHash_;
-			String password_;
-			String certificateFile_;
+			std::string vCardPhotoHash_;
+			std::string password_;
+			std::string certificateFile_;
 			boost::shared_ptr<ErrorEvent> lastDisconnectError_;
 			bool useDelayForLatency_;
 			UserSearchController* userSearchControllerChat_;

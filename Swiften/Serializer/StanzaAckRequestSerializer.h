@@ -18,7 +18,7 @@ namespace Swift {
 			StanzaAckRequestSerializer() : GenericElementSerializer<StanzaAckRequest>() {
 			}
 
-			virtual String serialize(boost::shared_ptr<Element>) const {
+			virtual std::string serialize(boost::shared_ptr<Element>) const {
 				return XMLElement("r", "urn:xmpp:sm:2").serialize();
 			}
 	};

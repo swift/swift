@@ -134,7 +134,7 @@ class StreamStackTest : public CppUnit::TestFixture {
 	private:
 		class MyStreamLayer : public StreamLayer {
 			public:
-				MyStreamLayer(const String& prepend) : prepend_(prepend) {
+				MyStreamLayer(const std::string& prepend) : prepend_(prepend) {
 				}
 
 				virtual void writeData(const ByteArray& data) {
@@ -146,7 +146,7 @@ class StreamStackTest : public CppUnit::TestFixture {
 				}
 
 			private:
-				String prepend_;
+				std::string prepend_;
 		};
 
 		class TestLowLayer : public LowLayer {

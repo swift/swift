@@ -24,7 +24,7 @@ void QtSoundPlayer::playSound(SoundEffect sound) {
 	}
 }
 
-void QtSoundPlayer::playSound(const String& soundResource) {
+void QtSoundPlayer::playSound(const std::string& soundResource) {
 	boost::filesystem::path resourcePath = applicationPathProvider->getResourcePath(soundResource);
 	if (boost::filesystem::exists(resourcePath)) {
 		QSound::play(resourcePath.string().c_str());

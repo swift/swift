@@ -33,16 +33,16 @@ AvatarManagerImpl::~AvatarManagerImpl() {
 }
 
 boost::filesystem::path AvatarManagerImpl::getAvatarPath(const JID& jid) const {
-	String hash = combinedAvatarProvider.getAvatarHash(jid);
-	if (!hash.isEmpty()) {
+	std::string hash = combinedAvatarProvider.getAvatarHash(jid);
+	if (!hash.empty()) {
 		return avatarStorage->getAvatarPath(hash);
 	}
 	return boost::filesystem::path();
 }
 
 ByteArray AvatarManagerImpl::getAvatar(const JID& jid) const {
-	String hash = combinedAvatarProvider.getAvatarHash(jid);
-	if (!hash.isEmpty()) {
+	std::string hash = combinedAvatarProvider.getAvatarHash(jid);
+	if (!hash.empty()) {
 		return avatarStorage->getAvatar(hash);
 	}
 	return ByteArray();

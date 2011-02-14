@@ -13,7 +13,7 @@
 
 #include "Swiften/Elements/Element.h"
 #include "Swiften/Elements/Payload.h"
-#include "Swiften/Base/String.h"
+#include <string>
 #include "Swiften/Base/foreach.h"
 #include "Swiften/JID/JID.h"
 
@@ -66,8 +66,8 @@ namespace Swift {
 			const JID& getTo() const { return to_; }
 			void setTo(const JID& to) { to_ = to; }
 
-			const String& getID() const { return id_; }
-			void setID(const String& id) { id_ = id; }
+			const std::string& getID() const { return id_; }
+			void setID(const std::string& id) { id_ = id; }
 
 			boost::optional<boost::posix_time::ptime> getTimestamp() const;
 
@@ -75,7 +75,7 @@ namespace Swift {
 			boost::optional<boost::posix_time::ptime> getTimestampFrom(const JID& jid) const;
 	
 		private:
-			String id_;
+			std::string id_;
 			JID from_;
 			JID to_;
 

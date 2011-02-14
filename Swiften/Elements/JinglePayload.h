@@ -9,7 +9,7 @@
 #include <vector>
 #include <boost/optional.hpp>
 
-#include <Swiften/Base/String.h>
+#include <string>
 #include <Swiften/JID/JID.h>
 #include <Swiften/Elements/Payload.h>
 #include <Swiften/Elements/JingleContent.h>
@@ -40,9 +40,9 @@ namespace Swift {
 						UnsupportedTransports
 					};
 					
-					Reason(Type type, const String& text = "") : type(type), text(text) {}
+					Reason(Type type, const std::string& text = "") : type(type), text(text) {}
 					Type type;
-					String text;
+					std::string text;
 			};
 
 			enum Action {
@@ -63,7 +63,7 @@ namespace Swift {
 				TransportReplace
 			};
 
-			JinglePayload(Action action, const String& sessionID) : action(action), sessionID(sessionID) {
+			JinglePayload(Action action, const std::string& sessionID) : action(action), sessionID(sessionID) {
 			}
 
 			void setAction(Action action) {
@@ -90,11 +90,11 @@ namespace Swift {
 				return responder;
 			}
 
-			void setSessionID(const String& id) {
+			void setSessionID(const std::string& id) {
 				sessionID = id;
 			}
 
-			const String& getSessionID() const {
+			const std::string& getSessionID() const {
 				return sessionID;
 			}
 
@@ -118,7 +118,7 @@ namespace Swift {
 			Action action;
 			JID initiator;
 			JID responder;
-			String sessionID;
+			std::string sessionID;
 			std::vector<JingleContent::ref> contents;
 			boost::optional<Reason> reason;
 	};

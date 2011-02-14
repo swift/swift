@@ -40,7 +40,7 @@ void XMPPLayer::writeElement(boost::shared_ptr<Element> element) {
 	writeDataInternal(ByteArray(xmppSerializer_->serializeElement(element)));
 }
 
-void XMPPLayer::writeData(const String& data) {
+void XMPPLayer::writeData(const std::string& data) {
 	writeDataInternal(ByteArray(data));
 }
 
@@ -52,7 +52,7 @@ void XMPPLayer::writeDataInternal(const ByteArray& data) {
 void XMPPLayer::handleDataRead(const ByteArray& data) {
 	onDataRead(data);
 	inParser_ = true;
-	if (!xmppParser_->parse(String(data.getData(), data.getSize()))) {
+	if (!xmppParser_->parse(std::string(data.getData(), data.getSize()))) {
 		inParser_ = false;
 		onError();
 		return;

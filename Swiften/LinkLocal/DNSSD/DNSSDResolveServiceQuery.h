@@ -16,10 +16,10 @@ namespace Swift {
 	class DNSSDResolveServiceQuery {
 		public:
 			struct Result {
-				Result(const String& fullName, const String& host, int port, const ByteArray& info) : 
+				Result(const std::string& fullName, const std::string& host, int port, const ByteArray& info) : 
 							fullName(fullName), host(host), port(port), info(info) {}
-				String fullName;
-				String host;
+				std::string fullName;
+				std::string host;
 				int port;
 				ByteArray info;
 			};

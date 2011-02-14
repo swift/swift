@@ -20,13 +20,13 @@ namespace Swift {
 
 			void clearDiscoInfo();
 			void setDiscoInfo(const DiscoInfo& info);
-			void setDiscoInfo(const String& node, const DiscoInfo& info);
+			void setDiscoInfo(const std::string& node, const DiscoInfo& info);
 
 		private:
-			virtual bool handleGetRequest(const JID& from, const JID& to, const String& id, boost::shared_ptr<DiscoInfo> payload);
+			virtual bool handleGetRequest(const JID& from, const JID& to, const std::string& id, boost::shared_ptr<DiscoInfo> payload);
 
 		private:
 			DiscoInfo info_;
-			std::map<String, DiscoInfo> nodeInfo_;
+			std::map<std::string, DiscoInfo> nodeInfo_;
 	};
 }

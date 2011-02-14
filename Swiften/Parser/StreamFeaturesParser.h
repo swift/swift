@@ -7,7 +7,7 @@
 #ifndef SWIFTEN_STREAMFEATURESPARSER_H
 #define SWIFTEN_STREAMFEATURESPARSER_H
 
-#include "Swiften/Base/String.h"
+#include <string>
 #include "Swiften/Parser/GenericElementParser.h"
 #include "Swiften/Elements/StreamFeatures.h"
 
@@ -17,13 +17,13 @@ namespace Swift {
 			StreamFeaturesParser();
 
 		private:
-			void handleStartElement(const String& element, const String& ns, const AttributeMap& attributes);
-			void handleEndElement(const String& element, const String& ns);
-			void handleCharacterData(const String& data);
+			void handleStartElement(const std::string& element, const std::string& ns, const AttributeMap& attributes);
+			void handleEndElement(const std::string& element, const std::string& ns);
+			void handleCharacterData(const std::string& data);
 
 		private:
 			int currentDepth_;
-			String currentText_;
+			std::string currentText_;
 			bool inMechanisms_;
 			bool inMechanism_;
 			bool inCompression_;

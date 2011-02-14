@@ -16,7 +16,7 @@
 
 namespace Swift {
 
-ComponentConnector::ComponentConnector(const String& hostname, int port, DomainNameResolver* resolver, ConnectionFactory* connectionFactory, TimerFactory* timerFactory) : hostname(hostname), port(port), resolver(resolver), connectionFactory(connectionFactory), timerFactory(timerFactory), timeoutMilliseconds(0) {
+ComponentConnector::ComponentConnector(const std::string& hostname, int port, DomainNameResolver* resolver, ConnectionFactory* connectionFactory, TimerFactory* timerFactory) : hostname(hostname), port(port), resolver(resolver), connectionFactory(connectionFactory), timerFactory(timerFactory), timeoutMilliseconds(0) {
 }
 
 void ComponentConnector::setTimeoutMilliseconds(int milliseconds) {

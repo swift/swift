@@ -17,7 +17,7 @@
 
 namespace Swift {
 
-Connector::Connector(const String& hostname, DomainNameResolver* resolver, ConnectionFactory* connectionFactory, TimerFactory* timerFactory) : hostname(hostname), resolver(resolver), connectionFactory(connectionFactory), timerFactory(timerFactory), timeoutMilliseconds(0), queriedAllServices(true) {
+Connector::Connector(const std::string& hostname, DomainNameResolver* resolver, ConnectionFactory* connectionFactory, TimerFactory* timerFactory) : hostname(hostname), resolver(resolver), connectionFactory(connectionFactory), timerFactory(timerFactory), timeoutMilliseconds(0), queriedAllServices(true) {
 }
 
 void Connector::setTimeoutMilliseconds(int milliseconds) {
@@ -45,7 +45,7 @@ void Connector::stop() {
 	finish(boost::shared_ptr<Connection>());
 }
 
-void Connector::queryAddress(const String& hostname) {
+void Connector::queryAddress(const std::string& hostname) {
 	assert(!addressQuery);
 	addressQuery = resolver->createAddressQuery(hostname);
 	addressQuery->onResult.connect(boost::bind(&Connector::handleAddressQueryResult, shared_from_this(), _1, _2));

@@ -14,7 +14,7 @@
 
 namespace Swift {
 
-IBBReceiveSession::IBBReceiveSession(const String& id, const JID& from, size_t size, WriteBytestream::ref bytestream, IQRouter* router) : SetResponder<IBB>(router), id(id), from(from), size(size), bytestream(bytestream), router(router), sequenceNumber(0), active(false), receivedSize(0) {
+IBBReceiveSession::IBBReceiveSession(const std::string& id, const JID& from, size_t size, WriteBytestream::ref bytestream, IQRouter* router) : SetResponder<IBB>(router), id(id), from(from), size(size), bytestream(bytestream), router(router), sequenceNumber(0), active(false), receivedSize(0) {
 }
 
 IBBReceiveSession::~IBBReceiveSession() {
@@ -36,7 +36,7 @@ void IBBReceiveSession::finish(boost::optional<FileTransferError> error) {
 	onFinished(error);
 }
 
-bool IBBReceiveSession::handleSetRequest(const JID& from, const JID&, const String& id, IBB::ref ibb) {
+bool IBBReceiveSession::handleSetRequest(const JID& from, const JID&, const std::string& id, IBB::ref ibb) {
 	if (from == this->from && ibb->getStreamID() == id) {
 		if (ibb->getAction() == IBB::Data) {
 			if (sequenceNumber == ibb->getSequenceNumber()) {

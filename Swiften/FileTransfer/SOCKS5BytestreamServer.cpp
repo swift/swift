@@ -25,15 +25,15 @@ void SOCKS5BytestreamServer::stop() {
 	connectionServer->onNewConnection.disconnect(boost::bind(&SOCKS5BytestreamServer::handleNewConnection, this, _1));
 }
 
-void SOCKS5BytestreamServer::addBytestream(const String& id, const JID& from, const JID& to, boost::shared_ptr<ReadBytestream> byteStream) {
+void SOCKS5BytestreamServer::addBytestream(const std::string& id, const JID& from, const JID& to, boost::shared_ptr<ReadBytestream> byteStream) {
 	bytestreams.addBytestream(getSOCKSDestinationAddress(id, from, to), byteStream);
 }
 
-void SOCKS5BytestreamServer::removeBytestream(const String& id, const JID& from, const JID& to) {
+void SOCKS5BytestreamServer::removeBytestream(const std::string& id, const JID& from, const JID& to) {
 	bytestreams.removeBytestream(getSOCKSDestinationAddress(id, from, to));
 }
 
-String SOCKS5BytestreamServer::getSOCKSDestinationAddress(const String& id, const JID& from, const JID& to) {
+std::string SOCKS5BytestreamServer::getSOCKSDestinationAddress(const std::string& id, const JID& from, const JID& to) {
 	return Hexify::hexify(SHA1::getHash(ByteArray(id + from.toString() + to.toString())));
 }
 

@@ -17,7 +17,7 @@ namespace Swift {
 		public:
 			StatusSerializer() : GenericPayloadSerializer<Status>() {}
 
-			virtual String serializePayload(boost::shared_ptr<Status> status)  const {
+			virtual std::string serializePayload(boost::shared_ptr<Status> status)  const {
 				XMLElement element("status");
 				element.addNode(boost::shared_ptr<XMLTextNode>(new XMLTextNode(status->getText())));
 				return element.serialize();

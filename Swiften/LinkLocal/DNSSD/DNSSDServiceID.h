@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include "Swiften/Base/String.h"
+#include <string>
 
 namespace Swift {
 	class DNSSDServiceID {
@@ -14,9 +14,9 @@ namespace Swift {
 			static const char* PresenceServiceType;
 
 			DNSSDServiceID(
-				const String& name, 
-				const String& domain, 
-				const String& type = PresenceServiceType, 
+				const std::string& name, 
+				const std::string& domain, 
+				const std::string& type = PresenceServiceType, 
 				int networkInterface = -1) : 
 					name(name), 
 					domain(domain), 
@@ -47,15 +47,15 @@ namespace Swift {
 				}
 			}
 
-			const String& getName() const {
+			const std::string& getName() const {
 				return name;
 			}
 
-			const String& getDomain() const {
+			const std::string& getDomain() const {
 				return domain;
 			}
 
-			const String& getType() const {
+			const std::string& getType() const {
 				return type;
 			}
 
@@ -64,9 +64,9 @@ namespace Swift {
 			}
 
 		private:
-			String name;
-			String domain;
-			String type;
+			std::string name;
+			std::string domain;
+			std::string type;
 			int networkInterface;
 	};
 }

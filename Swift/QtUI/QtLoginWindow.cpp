@@ -215,7 +215,7 @@ void QtLoginWindow::handleUIEvent(boost::shared_ptr<UIEvent> event) {
 	}
 }
 
-void QtLoginWindow::selectUser(const String& username) {
+void QtLoginWindow::selectUser(const std::string& username) {
 	for (int i = 0; i < usernames_.count(); i++) {
 		if (P2QSTRING(username) == usernames_[i]) {
 			username_->setCurrentIndex(i);
@@ -225,7 +225,7 @@ void QtLoginWindow::selectUser(const String& username) {
 	}
 }
 
-void QtLoginWindow::removeAvailableAccount(const String& jid) {
+void QtLoginWindow::removeAvailableAccount(const std::string& jid) {
 	QString username = P2QSTRING(jid);
 	int index = -1;
 	for (int i = 0; i < usernames_.count(); i++) {
@@ -241,7 +241,7 @@ void QtLoginWindow::removeAvailableAccount(const String& jid) {
 	}
 }
 
-void QtLoginWindow::addAvailableAccount(const String& defaultJID, const String& defaultPassword, const String& defaultCertificate) {
+void QtLoginWindow::addAvailableAccount(const std::string& defaultJID, const std::string& defaultPassword, const std::string& defaultCertificate) {
 	QString username = P2QSTRING(defaultJID);
 	int index = -1;
 	for (int i = 0; i < usernames_.count(); i++) {
@@ -371,8 +371,8 @@ void QtLoginWindow::morphInto(MainWindow *mainWindow) {
 	}
 }
 
-void QtLoginWindow::setMessage(const String& message) {
-	if (!message.isEmpty()) {
+void QtLoginWindow::setMessage(const std::string& message) {
+	if (!message.empty()) {
 		message_->setText("<center><font color=\"red\">" + P2QSTRING(message) + "</font></center>");
 	}
 	else {
@@ -406,7 +406,7 @@ void QtLoginWindow::moveEvent(QMoveEvent*) {
 	emit geometryChanged();
 }
 
-bool QtLoginWindow::askUserToTrustCertificatePermanently(const String& message, Certificate::ref certificate) {
+bool QtLoginWindow::askUserToTrustCertificatePermanently(const std::string& message, Certificate::ref certificate) {
 	QMessageBox dialog(this);
 
 	dialog.setText("The certificate presented by the server is not valid.");

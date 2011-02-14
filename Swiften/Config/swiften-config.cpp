@@ -10,17 +10,18 @@
 #include <boost/program_options/variables_map.hpp>
 #include <boost/program_options.hpp>
 #include <boost/version.hpp>
+#include <string>
 
-#include <Swiften/Base/String.h>
 #include <Swiften/Base/foreach.h>
 #include <Swiften/Base/Platform.h>
 #include <Swiften/Base/Paths.h>
+#include <Swiften/Base/String.h>
 
 #include "swiften-config.h"
 
 using namespace Swift;
 
-void printFlags(const std::vector<String>& flags) {
+void printFlags(const std::vector<std::string>& flags) {
 	for (size_t i = 0; i < flags.size(); ++i) {
 		if (i > 0) {
 			std::cout << " ";
@@ -60,11 +61,11 @@ int main(int argc, char* argv[]) {
 	}
 
 	// Read in all variables
-	std::vector<String> libs;
+	std::vector<std::string> libs;
 	for (size_t i = 0; LIBFLAGS[i]; ++i) {
 		libs.push_back(LIBFLAGS[i]);
 	}
-	std::vector<String> cflags;
+	std::vector<std::string> cflags;
 	for (size_t i = 0; CPPFLAGS[i]; ++i) {
 		cflags.push_back(CPPFLAGS[i]);
 	}
@@ -77,8 +78,8 @@ int main(int argc, char* argv[]) {
 	// Replace "#" variables with the correct path
 	for(size_t i = 0; i < libs.size(); ++i) {
 		if (inPlace) {
-			String lib = libs[i];
-			lib.replaceAll('#', topPath.string());
+			std::string lib = libs[i];
+			String::replaceAll(lib, '#', topPath.string());
 			libs[i] = lib;
 		}
 		else {
@@ -87,8 +88,8 @@ int main(int argc, char* argv[]) {
 	}
 	for(size_t i = 0; i < cflags.size(); ++i) {
 		if (inPlace) {
-			String cflag = cflags[i];
-			cflag.replaceAll('#', topPath.string());
+			std::string cflag = cflags[i];
+			String::replaceAll(cflag, '#', topPath.string());
 			cflags[i] = cflag;
 		}
 		else {

@@ -10,7 +10,7 @@
 #include <cassert>
 
 #include "Swiften/Elements/ProtocolHeader.h"
-#include "Swiften/Base/String.h"
+#include <string>
 #include "Swiften/Parser/XMLParser.h"
 #include "Swiften/Parser/PlatformXMLParserFactory.h"
 #include "Swiften/Parser/XMPPParserClient.h"
@@ -62,12 +62,12 @@ XMPPParser::~XMPPParser() {
 	delete xmlParser_;
 }
 
-bool XMPPParser::parse(const String& data) {
+bool XMPPParser::parse(const std::string& data) {
 	bool xmlParseResult = xmlParser_->parse(data);
 	return xmlParseResult && !parseErrorOccurred_;
 }
 
-void XMPPParser::handleStartElement(const String& element, const String& ns, const AttributeMap& attributes) {
+void XMPPParser::handleStartElement(const std::string& element, const std::string& ns, const AttributeMap& attributes) {
 	if (!parseErrorOccurred_) {
 		if (level_ == TopLevel) {
 			if (element == "stream" && ns == "http://etherx.jabber.org/streams") {
@@ -93,7 +93,7 @@ void XMPPParser::handleStartElement(const String& element, const String& ns, con
 	++level_;
 }
 
-void XMPPParser::handleEndElement(const String& element, const String& ns) {
+void XMPPParser::handleEndElement(const std::string& element, const std::string& ns) {
 	assert(level_ > TopLevel);
 	--level_;
 	if (!parseErrorOccurred_) {
@@ -113,7 +113,7 @@ void XMPPParser::handleEndElement(const String& element, const String& ns) {
 	}
 }
 
-void XMPPParser::handleCharacterData(const String& data) {
+void XMPPParser::handleCharacterData(const std::string& data) {
 	if (!parseErrorOccurred_) {
 		if (currentElementParser_) {
 			currentElementParser_->handleCharacterData(data);
@@ -124,7 +124,7 @@ void XMPPParser::handleCharacterData(const String& data) {
 	}
 }
 
-ElementParser* XMPPParser::createElementParser(const String& element, const String& ns) {
+ElementParser* XMPPParser::createElementParser(const std::string& element, const std::string& ns) {
 	if (element == "presence") {
 		return new PresenceParser(payloadParserFactories_);
 	}

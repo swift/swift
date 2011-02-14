@@ -22,7 +22,7 @@
 
 namespace Swift {
 
-typedef std::pair<String, MUCOccupant> StringMUCOccupantPair;
+typedef std::pair<std::string, MUCOccupant> StringMUCOccupantPair;
 
 MUC::MUC(StanzaChannel* stanzaChannel, IQRouter* iqRouter, DirectedPresenceSender* presenceSender, const JID &muc, MUCRegistry* mucRegistry) : ownMUCJID(muc), stanzaChannel(stanzaChannel), iqRouter_(iqRouter), presenceSender(presenceSender), mucRegistry(mucRegistry) {
 	scopedConnection_ = stanzaChannel->onPresenceReceived.connect(boost::bind(&MUC::handleIncomingPresence, this, _1));
@@ -33,7 +33,7 @@ MUC::MUC(StanzaChannel* stanzaChannel, IQRouter* iqRouter, DirectedPresenceSende
 /**
  * Join the MUC with default context.
  */
-void MUC::joinAs(const String &nick) {
+void MUC::joinAs(const std::string &nick) {
 	joinSince_ = boost::posix_time::not_a_date_time;
 	internalJoin(nick);
 }
@@ -41,12 +41,12 @@ void MUC::joinAs(const String &nick) {
 /**
  * Join the MUC with context since date.
  */
-void MUC::joinWithContextSince(const String &nick, const boost::posix_time::ptime& since) {
+void MUC::joinWithContextSince(const std::string &nick, const boost::posix_time::ptime& since) {
 	joinSince_ = since;
 	internalJoin(nick);
 }
 
-void MUC::internalJoin(const String &nick) {
+void MUC::internalJoin(const std::string &nick) {
 	//TODO: password
 	//TODO: history request
 	joinComplete_ = false;
@@ -74,7 +74,7 @@ void MUC::part() {
 }
 
 void MUC::handleUserLeft(LeavingType type) {
-	std::map<String,MUCOccupant>::iterator i = occupants.find(ownMUCJID.getResource());
+	std::map<std::string,MUCOccupant>::iterator i = occupants.find(ownMUCJID.getResource());
 	if (i != occupants.end()) {
 		MUCOccupant me = i->second;
 		occupants.erase(i);
@@ -102,7 +102,7 @@ void MUC::handleIncomingPresence(Presence::ref presence) {
 	// (i.e. we start getting non-error presence from the MUC) or not
 	if (!joinSucceeded_) {
 		if (presence->getType() == Presence::Error) {
-			String reason;
+			std::string reason;
 			onJoinFailed(presence->getPayload<ErrorPayload>());
 			return;
 		}
@@ -112,8 +112,8 @@ void MUC::handleIncomingPresence(Presence::ref presence) {
 		}
 	}
 
-	String nick = presence->getFrom().getResource();
-	if (nick.isEmpty()) {
+	std::string nick = presence->getFrom().getResource();
+	if (nick.empty()) {
 		return;
 	}
 	MUCOccupant::Role role(MUCOccupant::NoRole);
@@ -135,7 +135,7 @@ void MUC::handleIncomingPresence(Presence::ref presence) {
 			return;
 		} 
 		else {
-			std::map<String,MUCOccupant>::iterator i = occupants.find(nick);
+			std::map<std::string,MUCOccupant>::iterator i = occupants.find(nick);
 			if (i != occupants.end()) {
 				//TODO: part type
 				onOccupantLeft(i->second, Part, "");
@@ -144,7 +144,7 @@ void MUC::handleIncomingPresence(Presence::ref presence) {
 		}
 	} 
 	else if (presence->getType() == Presence::Available) {
-		std::map<String, MUCOccupant>::iterator it = occupants.find(nick);
+		std::map<std::string, MUCOccupant>::iterator it = occupants.find(nick);
 		MUCOccupant occupant(nick, role, affiliation);
 		bool isJoin = true;
 		if (realJID) {
@@ -161,7 +161,7 @@ void MUC::handleIncomingPresence(Presence::ref presence) {
 			}
 			occupants.erase(it);
 		}
-		std::pair<std::map<String, MUCOccupant>::iterator, bool> result = occupants.insert(std::make_pair(nick, occupant));
+		std::pair<std::map<std::string, MUCOccupant>::iterator, bool> result = occupants.insert(std::make_pair(nick, occupant));
 		if (isJoin) {
 			onOccupantJoined(result.first->second);
 		}

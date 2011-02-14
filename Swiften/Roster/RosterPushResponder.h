@@ -20,7 +20,7 @@ namespace Swift {
 			boost::signal<void (boost::shared_ptr<RosterPayload>)> onRosterReceived;
 
 		private:
-			virtual bool handleSetRequest(const JID& from, const JID&, const String& id, boost::shared_ptr<RosterPayload> payload) {
+			virtual bool handleSetRequest(const JID& from, const JID&, const std::string& id, boost::shared_ptr<RosterPayload> payload) {
 				onRosterReceived(payload);
 				sendResponse(from, id, boost::shared_ptr<RosterPayload>());
 				return true;

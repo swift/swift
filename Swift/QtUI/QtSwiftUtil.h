@@ -7,8 +7,8 @@
 #ifndef SWIFT_QtSwiftUtil_H
 #define SWIFT_QtSwiftUtil_H
 
-#define P2QSTRING(a) QString::fromUtf8(a.getUTF8Data())
-#define Q2PSTRING(a) Swift::String(a.toUtf8())
+#define P2QSTRING(a) QString::fromUtf8(a.c_str())
+#define Q2PSTRING(a) std::string(a.toUtf8())
 
 #define B2QDATE(a) QDateTime::fromTime_t((a - boost::posix_time::from_time_t(0)).total_seconds())
 

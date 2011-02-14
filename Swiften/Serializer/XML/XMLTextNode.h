@@ -7,28 +7,28 @@
 #pragma once
 
 #include "Swiften/Serializer/XML/XMLNode.h"
-
+#include <Swiften/Base/String.h>
 
 namespace Swift {
 	class XMLTextNode : public XMLNode {
 		public:
 			typedef boost::shared_ptr<XMLTextNode> ref;
 
-			XMLTextNode(const String& text) : text_(text) {
-				text_.replaceAll('&', "&amp;"); // Should come first
-				text_.replaceAll('<', "&lt;");
-				text_.replaceAll('>', "&gt;");
+			XMLTextNode(const std::string& text) : text_(text) {
+				String::replaceAll(text_, '&', "&amp;"); // Should come first
+				String::replaceAll(text_, '<', "&lt;");
+				String::replaceAll(text_, '>', "&gt;");
 			}
 
-			String serialize() {
+			std::string serialize() {
 				return text_;
 			}
 
-			static ref create(const String& text) {
+			static ref create(const std::string& text) {
 				return ref(new XMLTextNode(text));
 			}
 
 		private:
-			String text_;
+			std::string text_;
 	};
 }

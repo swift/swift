@@ -18,7 +18,7 @@
 
 namespace Swift {
 
-QtContactEditWidget::QtContactEditWidget(const std::set<String>& allGroups, QWidget* parent) : QWidget(parent), groups_(NULL) {
+QtContactEditWidget::QtContactEditWidget(const std::set<std::string>& allGroups, QWidget* parent) : QWidget(parent), groups_(NULL) {
 	QBoxLayout* layout = new QVBoxLayout(this);
 	setContentsMargins(0,0,0,0);
 	layout->setContentsMargins(0,0,0,0);
@@ -43,7 +43,7 @@ QtContactEditWidget::QtContactEditWidget(const std::set<String>& allGroups, QWid
 	groupsArea->setWidget(groups);
 	QVBoxLayout* scrollLayout = new QVBoxLayout(groups);
 
-	foreach (String group, allGroups) {
+	foreach (std::string group, allGroups) {
 		QCheckBox* check = new QCheckBox(groups);
 		check->setText(P2QSTRING(group));
 		check->setCheckState(Qt::Unchecked);
@@ -63,22 +63,22 @@ QtContactEditWidget::QtContactEditWidget(const std::set<String>& allGroups, QWid
 	scrollLayout->addItem(new QSpacerItem(20, 73, QSizePolicy::Minimum, QSizePolicy::Expanding));
 }
 
-void QtContactEditWidget::setName(const String& name) {
+void QtContactEditWidget::setName(const std::string& name) {
 	name_->setText(P2QSTRING(name));
 }
 
-String QtContactEditWidget::getName() const {
+std::string QtContactEditWidget::getName() const {
 	return Q2PSTRING(name_->text());
 }
 
-void QtContactEditWidget::setSelectedGroups(const std::vector<String>& groups) {
-	foreach (String group, groups) {
+void QtContactEditWidget::setSelectedGroups(const std::vector<std::string>& groups) {
+	foreach (std::string group, groups) {
 		checkBoxes_[group]->setCheckState(Qt::Checked);
 	}
 }
 
-std::set<String> QtContactEditWidget::getSelectedGroups() const {
-	std::set<String> groups;
+std::set<std::string> QtContactEditWidget::getSelectedGroups() const {
+	std::set<std::string> groups;
 	foreach(const CheckBoxMap::value_type& group, checkBoxes_) {
 		if (group.second->checkState() == Qt::Checked) {
 			groups.insert(group.first);

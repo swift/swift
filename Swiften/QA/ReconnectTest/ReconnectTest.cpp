@@ -61,7 +61,7 @@ int main(int, char**) {
 	}
 	
 	JID jid(jidChars);
-	String pass(passChars);
+	std::string pass(passChars);
 
 	client_ = new Swift::Client(jid, pass);
 	handleTick(boost::shared_ptr<BoostTimer>());

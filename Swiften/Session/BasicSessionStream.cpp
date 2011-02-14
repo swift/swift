@@ -188,11 +188,11 @@ void BasicSessionStream::handleConnectionFinished(const boost::optional<Connecti
 }
 
 void BasicSessionStream::handleDataRead(const ByteArray& data) {
-	onDataRead(String(data.getData(), data.getSize()));
+	onDataRead(std::string(data.getData(), data.getSize()));
 }
 
 void BasicSessionStream::handleDataWritten(const ByteArray& data) {
-	onDataWritten(String(data.getData(), data.getSize()));
+	onDataWritten(std::string(data.getData(), data.getSize()));
 }
 
 };

@@ -13,11 +13,11 @@ namespace Swift {
 
 	class DummyNickManager : public NickManager {
 		public:
-			String getOwnNick() const {
+			std::string getOwnNick() const {
 				return "";
 			}
 
-			void setOwnNick(const String&) {
+			void setOwnNick(const std::string&) {
 			}
 	};
 }

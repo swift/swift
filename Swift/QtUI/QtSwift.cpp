@@ -22,7 +22,7 @@
 #include "SwifTools/Application/PlatformApplicationPathProvider.h"
 #include "Swiften/Avatars/AvatarFileStorage.h"
 #include "Swiften/Disco/CapsFileStorage.h"
-#include "Swiften/Base/String.h"
+#include <string>
 #include "Swiften/Base/Platform.h"
 #include "Swift/Controllers/FileStoragesFactory.h"
 #include "Swiften/Elements/Presence.h"

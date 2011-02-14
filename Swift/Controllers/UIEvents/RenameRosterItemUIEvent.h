@@ -14,13 +14,13 @@
 namespace Swift {
 	class RenameRosterItemUIEvent : public UIEvent {
 		public:
-			RenameRosterItemUIEvent(const JID& jid, const String& newName) : jid_(jid), newName_(newName) {}
+			RenameRosterItemUIEvent(const JID& jid, const std::string& newName) : jid_(jid), newName_(newName) {}
 
 			const JID& getJID() const {return jid_;}
-			const String& getNewName() const {return newName_;}
+			const std::string& getNewName() const {return newName_;}
 
 		private:
 			JID jid_;
-			String newName_;
+			std::string newName_;
 	};
 }

@@ -19,7 +19,7 @@ namespace Swift {
 			TLSProceedSerializer() : GenericElementSerializer<TLSProceed>() {
 			}
 
-			virtual String serialize(boost::shared_ptr<Element>) const {
+			virtual std::string serialize(boost::shared_ptr<Element>) const {
 				return XMLElement("proceed", "urn:ietf:params:xml:ns:xmpp-tls").serialize();
 			}
 	};

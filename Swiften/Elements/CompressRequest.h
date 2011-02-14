@@ -13,18 +13,18 @@ namespace Swift {
 	class CompressRequest : public Element
 	{
 		public:
-			CompressRequest(const String& method = "") : method_(method) {}
+			CompressRequest(const std::string& method = "") : method_(method) {}
 
-			const String& getMethod() const {
+			const std::string& getMethod() const {
 				return method_;
 			}
 
-			void setMethod(const String& method) { 
+			void setMethod(const std::string& method) { 
 				method_ = method;
 			}
 
 		private:
-			String method_;
+			std::string method_;
 	};
 }
 

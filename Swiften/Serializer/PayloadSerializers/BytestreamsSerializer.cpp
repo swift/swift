@@ -19,7 +19,7 @@ namespace Swift {
 BytestreamsSerializer::BytestreamsSerializer() {
 }
 
-String BytestreamsSerializer::serializePayload(boost::shared_ptr<Bytestreams> bytestreams)	const {
+std::string BytestreamsSerializer::serializePayload(boost::shared_ptr<Bytestreams> bytestreams)	const {
 	XMLElement queryElement("query", "http://jabber.org/protocol/bytestreams");
 	queryElement.setAttribute("sid", bytestreams->getStreamID());
 	foreach(const Bytestreams::StreamHost& streamHost, bytestreams->getStreamHosts()) {

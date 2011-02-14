@@ -4,11 +4,12 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#ifndef SWIFTEN_XMLParser_H
-#define SWIFTEN_XMLParser_H
+#pragma once
+
+#include <string>
 
 namespace Swift {
-	class String;
+	
 	class XMLParserClient;
 
 	class XMLParser {
@@ -16,7 +17,7 @@ namespace Swift {
 			XMLParser(XMLParserClient* client);
 			virtual ~XMLParser();
 
-			virtual bool parse(const String& data) = 0;
+			virtual bool parse(const std::string& data) = 0;
 
 		protected:
 			XMLParserClient* getClient() const {
@@ -27,5 +28,3 @@ namespace Swift {
 			XMLParserClient* client_;
 	};
 }
-
-#endif

@@ -14,14 +14,14 @@ class EchoPayload : public Payload {
 	public:
 		EchoPayload() {}
 
-		const String& getMessage() const {
+		const std::string& getMessage() const {
 			return message;
 		}
 
-		void setMessage(const String& message) {
+		void setMessage(const std::string& message) {
 			this->message = message;
 		}
 
 	private:
-		String message;
+		std::string message;
 };

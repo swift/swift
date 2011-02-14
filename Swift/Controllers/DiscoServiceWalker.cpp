@@ -110,7 +110,7 @@ void DiscoServiceWalker::handleDiscoItemsResponse(boost::shared_ptr<DiscoItems> 
 		return;
 	}
 	foreach (DiscoItems::Item item, items->getItems()) {
-		if (item.getNode().isEmpty()) {
+		if (item.getNode().empty()) {
 			/* Don't look at noded items. It's possible that this will exclude some services,
 			 * but I've never seen one in the wild, and it's an easy fix for not looping.
 			 */

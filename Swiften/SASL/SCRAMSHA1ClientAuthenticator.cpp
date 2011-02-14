@@ -18,9 +18,9 @@
 
 namespace Swift {
 
-static String escape(const String& s) {
-	String result;
-	for (size_t i = 0; i < s.getUTF8Size(); ++i) {
+static std::string escape(const std::string& s) {
+	std::string result;
+	for (size_t i = 0; i < s.size(); ++i) {
 		if (s[i] == ',') {
 			result += "=2C";
 		}
@@ -35,7 +35,7 @@ static String escape(const String& s) {
 }
 
 
-SCRAMSHA1ClientAuthenticator::SCRAMSHA1ClientAuthenticator(const String& nonce, bool useChannelBinding) : ClientAuthenticator(useChannelBinding ? "SCRAM-SHA-1-PLUS" : "SCRAM-SHA-1"), step(Initial), clientnonce(nonce), useChannelBinding(useChannelBinding) {
+SCRAMSHA1ClientAuthenticator::SCRAMSHA1ClientAuthenticator(const std::string& nonce, bool useChannelBinding) : ClientAuthenticator(useChannelBinding ? "SCRAM-SHA-1-PLUS" : "SCRAM-SHA-1"), step(Initial), clientnonce(nonce), useChannelBinding(useChannelBinding) {
 }
 
 boost::optional<ByteArray> SCRAMSHA1ClientAuthenticator::getResponse() const {
@@ -65,26 +65,26 @@ bool SCRAMSHA1ClientAuthenticator::setChallenge(const boost::optional<ByteArray>
 		}
 		initialServerMessage = *challenge;
 
-		std::map<char, String> keys = parseMap(String(initialServerMessage.getData(), initialServerMessage.getSize()));
+		std::map<char, std::string> keys = parseMap(std::string(initialServerMessage.getData(), initialServerMessage.getSize()));
 
 		// Extract the salt
 		ByteArray salt = Base64::decode(keys['s']);
 
 		// Extract the server nonce
-		String clientServerNonce = keys['r'];
-		if (clientServerNonce.getUTF8Size() <= clientnonce.getUTF8Size()) {
+		std::string clientServerNonce = keys['r'];
+		if (clientServerNonce.size() <= clientnonce.size()) {
 			return false;
 		}
-		String receivedClientNonce = clientServerNonce.getSubstring(0, clientnonce.getUTF8Size());
+		std::string receivedClientNonce = clientServerNonce.substr(0, clientnonce.size());
 		if (receivedClientNonce != clientnonce) {
 			return false;
 		}
-		serverNonce = clientServerNonce.getSubstring(clientnonce.getUTF8Size(), clientServerNonce.npos());
+		serverNonce = clientServerNonce.substr(clientnonce.size(), clientServerNonce.npos);
 
 		// Extract the number of iterations
 		int iterations = 0;
 		try {
-			iterations = boost::lexical_cast<int>(keys['i'].getUTF8String());
+			iterations = boost::lexical_cast<int>(keys['i']);
 		}
 		catch (const boost::bad_lexical_cast&) {
 			return false;
@@ -117,14 +117,14 @@ bool SCRAMSHA1ClientAuthenticator::setChallenge(const boost::optional<ByteArray>
 	}
 }
 
-std::map<char, String> SCRAMSHA1ClientAuthenticator::parseMap(const String& s) {
-	std::map<char, String> result;
-	if (s.getUTF8Size() > 0) {
+std::map<char, std::string> SCRAMSHA1ClientAuthenticator::parseMap(const std::string& s) {
+	std::map<char, std::string> result;
+	if (s.size() > 0) {
 		char key = 0;
-		String value;
+		std::string value;
 		size_t i = 0;
 		bool expectKey = true;
-		while (i < s.getUTF8Size()) {
+		while (i < s.size()) {
 			if (expectKey) {
 				key = s[i];
 				expectKey = false;
@@ -146,8 +146,8 @@ std::map<char, String> SCRAMSHA1ClientAuthenticator::parseMap(const String& s) {
 }
 
 ByteArray SCRAMSHA1ClientAuthenticator::getInitialBareClientMessage() const {
-	String authenticationID = StringPrep::getPrepared(getAuthenticationID(), StringPrep::SASLPrep);
-	return ByteArray(String("n=" + escape(authenticationID) + ",r=" + clientnonce));
+	std::string authenticationID = StringPrep::getPrepared(getAuthenticationID(), StringPrep::SASLPrep);
+	return ByteArray(std::string("n=" + escape(authenticationID) + ",r=" + clientnonce));
 }
 
 ByteArray SCRAMSHA1ClientAuthenticator::getGS2Header() const {
@@ -160,7 +160,7 @@ ByteArray SCRAMSHA1ClientAuthenticator::getGS2Header() const {
 			channelBindingHeader = ByteArray("y");
 		}
 	}
-	return channelBindingHeader + ByteArray(",") + (getAuthorizationID().isEmpty() ? "" : "a=" + escape(getAuthorizationID())) + ",";
+	return channelBindingHeader + ByteArray(",") + (getAuthorizationID().empty() ? "" : "a=" + escape(getAuthorizationID())) + ",";
 }
 
 void SCRAMSHA1ClientAuthenticator::setTLSChannelBindingData(const ByteArray& channelBindingData) {

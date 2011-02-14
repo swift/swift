@@ -9,7 +9,7 @@
 #include <QVBoxLayout>
 #include <QLineEdit>
 #include "../QtSwiftUtil.h"
-#include "Swiften/Base/String.h"
+#include <string>
 #include "SwifTools/Application/Platform/PlatformApplication.h"
 
 using namespace Swift;

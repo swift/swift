@@ -24,7 +24,7 @@
 namespace Swift {
 
 ServerFromClientSession::ServerFromClientSession(
-		const String& id,
+		const std::string& id,
 		boost::shared_ptr<Connection> connection, 
 		PayloadParserFactoryCollection* payloadParserFactories, 
 		PayloadSerializerCollection* payloadSerializers,

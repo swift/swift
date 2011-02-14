@@ -8,6 +8,7 @@
 
 #include <boost/filesystem/fstream.hpp>
 
+#include <Swiften/Base/String.h>
 #include "Swiften/JID/JID.h"
 #include "Swiften/Base/ByteArray.h"
 #include "Swiften/Elements/VCard.h"
@@ -28,7 +29,7 @@ boost::shared_ptr<VCard> VCardFileStorage::getVCard(const JID& jid) const {
 
 		VCardParser parser;
 		PayloadParserTester tester(&parser);
-		tester.parse(String(data.getData(), data.getSize()));
+		tester.parse(std::string(data.getData(), data.getSize()));
 		return boost::dynamic_pointer_cast<VCard>(parser.getPayload());
 	}
 	else {
@@ -52,9 +53,9 @@ void VCardFileStorage::setVCard(const JID& jid, VCard::ref v) {
 }
 
 boost::filesystem::path VCardFileStorage::getVCardPath(const JID& jid) const {
-	String file(jid.toString());
-	file.replaceAll('/', "%2f");
-	return boost::filesystem::path(vcardsPath / (file.getUTF8String() + ".xml"));
+	std::string file(jid.toString());
+	String::replaceAll(file, '/', "%2f");
+	return boost::filesystem::path(vcardsPath / (file + ".xml"));
 }
 
 }

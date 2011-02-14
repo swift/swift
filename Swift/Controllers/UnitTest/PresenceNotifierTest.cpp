@@ -165,12 +165,13 @@ class PresenceNotifierTest : public CppUnit::TestFixture {
 
 		void testNotificationSubjectContainsNameForJIDInRoster() {
 			std::auto_ptr<PresenceNotifier> testling = createNotifier();
-			roster->addContact(user1.toBare(), "User 1", std::vector<String>(), RosterItemPayload::Both);
+			roster->addContact(user1.toBare(), "User 1", std::vector<std::string>(), RosterItemPayload::Both);
 
 			sendPresence(user1, StatusShow::Online);
 
 			CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(notifier->notifications.size()));
-			CPPUNIT_ASSERT(notifier->notifications[0].subject.contains("User 1"));
+			std::string subject = notifier->notifications[0].subject;
+			CPPUNIT_ASSERT(subject.find("User 1") != std::string::npos);
 		}
 
 		void testNotificationSubjectContainsJIDForJIDNotInRoster() {
@@ -179,7 +180,8 @@ class PresenceNotifierTest : public CppUnit::TestFixture {
 			sendPresence(user1, StatusShow::Online);
 
 			CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(notifier->notifications.size()));
-			CPPUNIT_ASSERT(notifier->notifications[0].subject.contains(user1.toBare().toString()));
+			std::string subject = notifier->notifications[0].subject;
+			CPPUNIT_ASSERT(subject.find(user1.toBare().toString()) != std::string::npos);
 		}
 
 		void testNotificationSubjectContainsStatus() {
@@ -188,7 +190,8 @@ class PresenceNotifierTest : public CppUnit::TestFixture {
 			sendPresence(user1, StatusShow::Away);
 
 			CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(notifier->notifications.size()));
-			CPPUNIT_ASSERT(notifier->notifications[0].subject.contains("Away"));
+			std::string subject = notifier->notifications[0].subject;
+			CPPUNIT_ASSERT(subject.find("Away") != std::string::npos);
 		}
 
 		void testNotificationMessageContainsStatusMessage() {
@@ -197,7 +200,7 @@ class PresenceNotifierTest : public CppUnit::TestFixture {
 			sendPresence(user1, StatusShow::Away);
 
 			CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(notifier->notifications.size()));
-			CPPUNIT_ASSERT(notifier->notifications[0].description.contains("Status Message"));
+			CPPUNIT_ASSERT(notifier->notifications[0].description.find("Status Message") != std::string::npos);
 		}
 
 		void testReceiveFirstPresenceWithQuietPeriodDoesNotNotify() {

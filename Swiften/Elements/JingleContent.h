@@ -9,7 +9,7 @@
 #include <vector>
 #include <boost/optional.hpp>
 
-#include <Swiften/Base/String.h>
+#include <string>
 #include <Swiften/JID/JID.h>
 #include <Swiften/Elements/Payload.h>
 #include <Swiften/Elements/JingleDescription.h>
@@ -37,7 +37,7 @@ namespace Swift {
 				this->creator = creator;
 			}
 
-			void setName(const String& name) {
+			void setName(const std::string& name) {
 				this->name = name;
 			}
 
@@ -81,7 +81,7 @@ namespace Swift {
 
 		private:
 			Creator creator;
-			String name;
+			std::string name;
 			//Senders senders;
 			std::vector<JingleDescription::ref> descriptions;
 			std::vector<JingleTransport::ref> transports;

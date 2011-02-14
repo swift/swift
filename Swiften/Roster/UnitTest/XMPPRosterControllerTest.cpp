@@ -65,7 +65,7 @@ class XMPPRosterControllerTest : public CppUnit::TestFixture {
 			CPPUNIT_ASSERT_EQUAL(jid1_, handler_->getLastJID());
 			CPPUNIT_ASSERT_EQUAL(static_cast<size_t>(0), xmppRoster_->getGroupsForJID(jid1_).size());
 			CPPUNIT_ASSERT(xmppRoster_->containsJID(jid1_));
-			CPPUNIT_ASSERT_EQUAL(String("Bob"), xmppRoster_->getNameForJID(jid1_));
+			CPPUNIT_ASSERT_EQUAL(std::string("Bob"), xmppRoster_->getNameForJID(jid1_));
 		}
 
 		void testModify() {
@@ -85,7 +85,7 @@ class XMPPRosterControllerTest : public CppUnit::TestFixture {
 			CPPUNIT_ASSERT_EQUAL(Update, handler_->getLastEvent());
 			CPPUNIT_ASSERT_EQUAL(jid1_, handler_->getLastJID());
 
-			CPPUNIT_ASSERT_EQUAL(String("Bob2"), xmppRoster_->getNameForJID(jid1_));
+			CPPUNIT_ASSERT_EQUAL(std::string("Bob2"), xmppRoster_->getNameForJID(jid1_));
 		}
 
 		void testRemove() {
@@ -135,7 +135,7 @@ class XMPPRosterControllerTest : public CppUnit::TestFixture {
 
 			boost::shared_ptr<RosterPayload> payload4(new RosterPayload());
 			RosterItemPayload item(jid3_, "Jane", RosterItemPayload::Both);
-			String janesGroup("Jane's Group");
+			std::string janesGroup("Jane's Group");
 			item.addGroup(janesGroup);
 			payload4->addItem(item);
 			channel_->onIQReceived(IQ::createRequest(IQ::Set, JID(), "id4", payload4));
@@ -156,14 +156,14 @@ class XMPPRosterControllerTest : public CppUnit::TestFixture {
 
 			boost::shared_ptr<RosterPayload> payload6(new RosterPayload());
 			RosterItemPayload item2(jid2_, "Little Alice", RosterItemPayload::Both);
-			String alicesGroup("Alice's Group");
+			std::string alicesGroup("Alice's Group");
 			item2.addGroup(alicesGroup);
 			payload6->addItem(item2);
 			channel_->onIQReceived(IQ::createRequest(IQ::Set, JID(), "id6", payload6));
 			CPPUNIT_ASSERT_EQUAL(Update, handler_->getLastEvent());
 			CPPUNIT_ASSERT_EQUAL(jid2_, handler_->getLastJID());
-			CPPUNIT_ASSERT_EQUAL(String("Little Alice"), xmppRoster_->getNameForJID(jid2_));
-			CPPUNIT_ASSERT_EQUAL(String("Jane"), xmppRoster_->getNameForJID(jid3_));
+			CPPUNIT_ASSERT_EQUAL(std::string("Little Alice"), xmppRoster_->getNameForJID(jid2_));
+			CPPUNIT_ASSERT_EQUAL(std::string("Jane"), xmppRoster_->getNameForJID(jid3_));
 			CPPUNIT_ASSERT_EQUAL(static_cast<size_t>(1), xmppRoster_->getGroupsForJID(jid2_).size());
 			CPPUNIT_ASSERT_EQUAL(alicesGroup, xmppRoster_->getGroupsForJID(jid2_)[0]);
 			CPPUNIT_ASSERT_EQUAL(static_cast<size_t>(1), xmppRoster_->getGroupsForJID(jid3_).size());

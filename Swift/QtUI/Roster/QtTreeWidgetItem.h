@@ -10,7 +10,7 @@
 #include <QColor>
 #include <QVariant>
 
-#include "Swiften/Base/String.h"
+#include <string>
 #include "Swiften/Roster/TreeWidgetFactory.h"
 #include "Swiften/Roster/TreeWidget.h"
 #include "Swiften/Roster/TreeWidgetItem.h"
@@ -43,9 +43,9 @@ class QtTreeWidgetItem : public QObject, public TreeWidgetItem {
 			QVariant data(int role);
 			QIcon getPresenceIcon(); 
 			QtTreeWidgetItem(QtTreeWidgetItem* parentItem);
-			void setText(const String& text);
-			void setAvatarPath(const String& path);
-			void setStatusText(const String& text);
+			void setText(const std::string& text);
+			void setAvatarPath(const std::string& path);
+			void setStatusText(const std::string& text);
 			void setStatusShow(StatusShow::Type show);
 			void setTextColor(unsigned long color);
 			void setBackgroundColor(unsigned long color);

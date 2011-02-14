@@ -9,7 +9,7 @@
 
 #include <vector>
 
-#include "Swiften/Base/String.h"
+#include <string>
 #include "Swiften/Elements/Payload.h"
 
 namespace Swift {
@@ -17,46 +17,46 @@ namespace Swift {
 		public:
 			SecurityLabel() {}
 
-			const String& getDisplayMarking() const { return displayMarking_; }
+			const std::string& getDisplayMarking() const { return displayMarking_; }
 
-			void setDisplayMarking(const String& displayMarking) { 
+			void setDisplayMarking(const std::string& displayMarking) { 
 				displayMarking_ = displayMarking;
 			}
 
-			const String& getForegroundColor() const { 
+			const std::string& getForegroundColor() const { 
 				return foregroundColor_; 
 			}
 
-			void setForegroundColor(const String& foregroundColor) { 
+			void setForegroundColor(const std::string& foregroundColor) { 
 				foregroundColor_ = foregroundColor;
 			}
 
-			const String& getBackgroundColor() const { 
+			const std::string& getBackgroundColor() const { 
 				return backgroundColor_; 
 			}
 
-			void setBackgroundColor(const String& backgroundColor) { 
+			void setBackgroundColor(const std::string& backgroundColor) { 
 				backgroundColor_ = backgroundColor;
 			}
 
-			const String& getLabel() const { return label_; }
+			const std::string& getLabel() const { return label_; }
 
-			void setLabel(const String& label) {
+			void setLabel(const std::string& label) {
 				label_ = label;
 			}
 
-			const std::vector<String>& getEquivalentLabels() const { return equivalentLabels_; }
+			const std::vector<std::string>& getEquivalentLabels() const { return equivalentLabels_; }
 
-			void addEquivalentLabel(const String& label) {
+			void addEquivalentLabel(const std::string& label) {
 				equivalentLabels_.push_back(label);
 			}
 
 		private:
-			String displayMarking_;
-			String foregroundColor_;
-			String backgroundColor_;
-			String label_;
-			std::vector<String> equivalentLabels_;
+			std::string displayMarking_;
+			std::string foregroundColor_;
+			std::string backgroundColor_;
+			std::string label_;
+			std::vector<std::string> equivalentLabels_;
 	};
 }
 

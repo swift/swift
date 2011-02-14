@@ -12,15 +12,15 @@
 #include "Swiften/Parser/PayloadParser.h"
 
 namespace Swift {
-	class String;
+	
 
 	class UnknownPayloadParser : public PayloadParser {
 		public:
 			UnknownPayloadParser() {}
 
-			virtual void handleStartElement(const String&, const String&, const AttributeMap&) {}
-			virtual void handleEndElement(const String&, const String&) {}
-			virtual void handleCharacterData(const String&) {}
+			virtual void handleStartElement(const std::string&, const std::string&, const AttributeMap&) {}
+			virtual void handleEndElement(const std::string&, const std::string&) {}
+			virtual void handleCharacterData(const std::string&) {}
 
 			virtual boost::shared_ptr<Payload> getPayload() const {
 				return boost::shared_ptr<Payload>();

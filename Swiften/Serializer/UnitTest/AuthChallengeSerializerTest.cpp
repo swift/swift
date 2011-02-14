@@ -25,7 +25,7 @@ class AuthChallengeSerializerTest : public CppUnit::TestFixture {
 			boost::shared_ptr<AuthChallenge> authChallenge(new AuthChallenge());
 			authChallenge->setValue("foo");
 
-			CPPUNIT_ASSERT_EQUAL(String(
+			CPPUNIT_ASSERT_EQUAL(std::string(
 				"<challenge xmlns=\"urn:ietf:params:xml:ns:xmpp-sasl\">"
 					"Zm9v"
 				"</challenge>"), testling.serialize(authChallenge));
@@ -35,7 +35,7 @@ class AuthChallengeSerializerTest : public CppUnit::TestFixture {
 			AuthChallengeSerializer testling;
 			boost::shared_ptr<AuthChallenge> authChallenge(new AuthChallenge());
 
-			CPPUNIT_ASSERT_EQUAL(String(
+			CPPUNIT_ASSERT_EQUAL(std::string(
 				"<challenge xmlns=\"urn:ietf:params:xml:ns:xmpp-sasl\">"
 				"</challenge>"), testling.serialize(authChallenge));
 		}
@@ -45,7 +45,7 @@ class AuthChallengeSerializerTest : public CppUnit::TestFixture {
 			boost::shared_ptr<AuthChallenge> authChallenge(new AuthChallenge());
 			authChallenge->setValue(ByteArray());
 
-			CPPUNIT_ASSERT_EQUAL(String(
+			CPPUNIT_ASSERT_EQUAL(std::string(
 				"<challenge xmlns=\"urn:ietf:params:xml:ns:xmpp-sasl\">"
 					"="
 				"</challenge>"), testling.serialize(authChallenge));

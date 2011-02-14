@@ -10,7 +10,7 @@
 #include <map>
 
 #include "Swiften/Network/ConnectionServer.h"
-#include "Swiften/Base/String.h"
+#include <string>
 #include "Swiften/JID/JID.h"
 #include "Swiften/FileTransfer/ReadBytestream.h"
 #include "Swiften/FileTransfer/SOCKS5BytestreamRegistry.h"
@@ -27,16 +27,16 @@ namespace Swift {
 			void start();
 			void stop();
 
-			void addBytestream(const String& id, const JID& from, const JID& to, boost::shared_ptr<ReadBytestream> byteStream);
-			void removeBytestream(const String& id, const JID& from, const JID& to);
+			void addBytestream(const std::string& id, const JID& from, const JID& to, boost::shared_ptr<ReadBytestream> byteStream);
+			void removeBytestream(const std::string& id, const JID& from, const JID& to);
 
 		/*protected:
-			boost::shared_ptr<ReadBytestream> getBytestream(const String& dest);*/
+			boost::shared_ptr<ReadBytestream> getBytestream(const std::string& dest);*/
 
 		private:
 			void handleNewConnection(boost::shared_ptr<Connection> connection);
 
-			static String getSOCKSDestinationAddress(const String& id, const JID& from, const JID& to);
+			static std::string getSOCKSDestinationAddress(const std::string& id, const JID& from, const JID& to);
 
 		private:
 			friend class SOCKS5BytestreamServerSession;

@@ -6,6 +6,8 @@
 
 #include "Swiften/TLS/ServerIdentityVerifier.h"
 
+#include <boost/algorithm/string.hpp>
+
 #include "Swiften/Base/foreach.h"
 #include "Swiften/IDN/IDNA.h"
 
@@ -20,8 +22,8 @@ bool ServerIdentityVerifier::certificateVerifies(Certificate::ref certificate) {
 	bool hasSAN = false;
 
 	// DNS names
-	std::vector<String> dnsNames = certificate->getDNSNames();
-	foreach (const String& dnsName, dnsNames) {
+	std::vector<std::string> dnsNames = certificate->getDNSNames();
+	foreach (const std::string& dnsName, dnsNames) {
 		if (matchesDomain(dnsName)) {
 			return true;
 		}
@@ -29,19 +31,19 @@ bool ServerIdentityVerifier::certificateVerifies(Certificate::ref certificate) {
 	hasSAN |= !dnsNames.empty();
 
 	// SRV names
-	std::vector<String> srvNames = certificate->getSRVNames();
-	foreach (const String& srvName, srvNames) {
+	std::vector<std::string> srvNames = certificate->getSRVNames();
+	foreach (const std::string& srvName, srvNames) {
 		// Only match SRV names that begin with the service; this isn't required per
 		// spec, but we're being purist about this.
-		if (srvName.beginsWith("_xmpp-client.") && matchesDomain(srvName.getSubstring(String("_xmpp-client.").getUTF8Size(), srvName.npos()))) {
+		if (boost::starts_with(srvName, "_xmpp-client.") && matchesDomain(srvName.substr(std::string("_xmpp-client.").size(), srvName.npos))) {
 			return true;
 		}
 	}
 	hasSAN |= !srvNames.empty();
 
 	// XmppAddr
-	std::vector<String> xmppAddresses = certificate->getXMPPAddresses();
-	foreach (const String& xmppAddress, xmppAddresses) {
+	std::vector<std::string> xmppAddresses = certificate->getXMPPAddresses();
+	foreach (const std::string& xmppAddress, xmppAddresses) {
 		if (matchesAddress(xmppAddress)) {
 			return true;
 		}
@@ -50,8 +52,8 @@ bool ServerIdentityVerifier::certificateVerifies(Certificate::ref certificate) {
 
 	// CommonNames. Only check this if there was no SAN (according to spec).
 	if (!hasSAN) {
-		std::vector<String> commonNames = certificate->getCommonNames();
-		foreach (const String& commonName, commonNames) {
+		std::vector<std::string> commonNames = certificate->getCommonNames();
+		foreach (const std::string& commonName, commonNames) {
 			if (matchesDomain(commonName)) {
 				return true;
 			}
@@ -61,13 +63,13 @@ bool ServerIdentityVerifier::certificateVerifies(Certificate::ref certificate) {
 	return false;
 }
 
-bool ServerIdentityVerifier::matchesDomain(const String& s) {
-	if (s.beginsWith("*.")) {
-		String matchString(s.getSubstring(2, s.npos()));
-		String matchDomain = encodedDomain;
+bool ServerIdentityVerifier::matchesDomain(const std::string& s) {
+	if (boost::starts_with(s, "*.")) {
+		std::string matchString(s.substr(2, s.npos));
+		std::string matchDomain = encodedDomain;
 		int dotIndex = matchDomain.find('.');
 		if (dotIndex >= 0) {
-			matchDomain = matchDomain.getSubstring(dotIndex + 1, matchDomain.npos());
+			matchDomain = matchDomain.substr(dotIndex + 1, matchDomain.npos);
 		}
 		return matchString == matchDomain;
 	}
@@ -76,7 +78,7 @@ bool ServerIdentityVerifier::matchesDomain(const String& s) {
 	}
 }
 
-bool ServerIdentityVerifier::matchesAddress(const String& s) {
+bool ServerIdentityVerifier::matchesAddress(const std::string& s) {
 	return s == domain;
 }
 

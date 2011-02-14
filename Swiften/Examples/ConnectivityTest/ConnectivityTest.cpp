@@ -62,13 +62,13 @@ int main(int argc, char* argv[]) {
 
 	int argi = 1;
 	
-	String jid = argv[argi++];
-	String connectHost = "";
+	std::string jid = argv[argi++];
+	std::string connectHost = "";
 	if (argc == 5) {
 		connectHost = argv[argi++];
 	}
 
-	client = new Swift::Client(JID(jid), String(argv[argi++]), &networkFactories);
+	client = new Swift::Client(JID(jid), std::string(argv[argi++]), &networkFactories);
 	char* timeoutChar = argv[argi++];
 	int timeout = atoi(timeoutChar);
 	timeout = (timeout ? timeout : 30) * 1000;
@@ -76,7 +76,7 @@ int main(int argc, char* argv[]) {
 	client->onConnected.connect(&handleConnected);
 	errorConnection = client->onDisconnected.connect(&handleDisconnected);
 	std::cout << "Connecting to JID " << jid << " with timeout " << timeout << "ms on host: "; ;
-	if (!connectHost.isEmpty()) {
+	if (!connectHost.empty()) {
 		std::cout << connectHost << std::endl;
 		client->connect(connectHost);
 	} else {

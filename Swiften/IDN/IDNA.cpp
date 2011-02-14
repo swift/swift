@@ -13,10 +13,10 @@
 
 namespace Swift {
 
-String IDNA::getEncoded(const String& domain) {
+std::string IDNA::getEncoded(const std::string& domain) {
 	char* output;
-	if (idna_to_ascii_8z(domain.getUTF8Data(), &output, 0) == IDNA_SUCCESS) {
-		String result(output);
+	if (idna_to_ascii_8z(domain.c_str(), &output, 0) == IDNA_SUCCESS) {
+		std::string result(output);
 		free(output);
 		return result;
 	}

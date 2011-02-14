@@ -8,6 +8,7 @@
 
 #include <boost/bind.hpp>
 #include <boost/regex.hpp>
+#include <boost/algorithm/string.hpp>
 
 #include "Swiften/Network/Timer.h"
 #include "Swiften/Network/TimerFactory.h"
@@ -38,7 +39,7 @@ namespace Swift {
 MUCController::MUCController (
 		const JID& self,
 		MUC::ref muc,
-		const String &nick, 
+		const std::string &nick, 
 		StanzaChannel* stanzaChannel, 
 		IQRouter* iqRouter, 
 		ChatWindowFactory* chatWindowFactory, 
@@ -119,8 +120,8 @@ void MUCController::receivedActivity() {
 
 void MUCController::handleJoinFailed(boost::shared_ptr<ErrorPayload> error) {
 	receivedActivity();
-	String errorMessage = "Unable to join this room";
-	String rejoinNick;
+	std::string errorMessage = "Unable to join this room";
+	std::string rejoinNick;
 	if (error) {
 		switch (error->getCondition()) {
 		case ErrorPayload::Conflict: rejoinNick = nick_ + "_"; errorMessage += " as " + nick_ + ", retrying as " + rejoinNick; break;
@@ -136,17 +137,17 @@ void MUCController::handleJoinFailed(boost::shared_ptr<ErrorPayload> error) {
 	}
 	errorMessage += ".";
 	chatWindow_->addErrorMessage(errorMessage);
-	if (!rejoinNick.isEmpty()) {
+	if (!rejoinNick.empty()) {
 		nick_ = rejoinNick;
 		parting_ = true;
 		rejoin();
 	}
 }
 
-void MUCController::handleJoinComplete(const String& nick) {
+void MUCController::handleJoinComplete(const std::string& nick) {
 	receivedActivity();
 	joined_ = true;
-	String joinMessage = "You have joined room " + toJID_.toString() + " as " + nick;
+	std::string joinMessage = "You have joined room " + toJID_.toString() + " as " + nick;
 	nick_ = nick;
 	chatWindow_->addSystemMessage(joinMessage);
 	clearPresenceQueue();
@@ -158,7 +159,7 @@ void MUCController::handleAvatarChanged(const JID& jid) {
 	if (parting_ || !jid.equals(toJID_, JID::WithoutResource)) {
 		return;
 	}
-	String path = avatarManager_->getAvatarPath(jid).string();
+	std::string path = avatarManager_->getAvatarPath(jid).string();
 	roster_->applyOnItems(SetAvatar(jid, path, JID::WithResource));
 }
 
@@ -184,7 +185,7 @@ void MUCController::handleOccupantJoined(const MUCOccupant& occupant) {
 	appendToJoinParts(joinParts_, event);
 	roster_->addContact(jid, realJID, occupant.getNick(), roleToGroupName(occupant.getRole()), avatarManager_->getAvatarPath(jid).string());
 	if (joined_) {
-		String joinString = occupant.getNick() + " has joined the room";
+		std::string joinString = occupant.getNick() + " has joined the room";
 		MUCOccupant::Role role = occupant.getRole();
 		if (role != MUCOccupant::NoRole && role != MUCOccupant::Participant) {
 			joinString += " as a " + roleToFriendlyName(role);
@@ -203,7 +204,7 @@ void MUCController::handleOccupantJoined(const MUCOccupant& occupant) {
 	}
 }
 
-void MUCController::addPresenceMessage(const String& message) {
+void MUCController::addPresenceMessage(const std::string& message) {
 	lastWasPresence_ = true;
 	chatWindow_->addPresenceMessage(message);
 }
@@ -213,7 +214,7 @@ void MUCController::clearPresenceQueue() {
 	joinParts_.clear();
 }
 
-String MUCController::roleToFriendlyName(MUCOccupant::Role role) {
+std::string MUCController::roleToFriendlyName(MUCOccupant::Role role) {
 	switch (role) {
 	case MUCOccupant::Moderator: return "moderator";
 	case MUCOccupant::Participant: return "participant";
@@ -223,14 +224,14 @@ String MUCController::roleToFriendlyName(MUCOccupant::Role role) {
 	return "";
 }
 
-JID MUCController::nickToJID(const String& nick) {
+JID MUCController::nickToJID(const std::string& nick) {
 	return JID(toJID_.getNode(), toJID_.getDomain(), nick);
 }
 
 bool MUCController::messageTargetsMe(boost::shared_ptr<Message> message) {
-	String stringRegexp(".*\\b" + nick_.getLowerCase() + "\\b.*");
-	boost::regex myRegexp(stringRegexp.getUTF8String());
-	return boost::regex_match(message->getBody().getLowerCase().getUTF8String(), myRegexp);
+	std::string stringRegexp(".*\\b" + boost::to_lower_copy(nick_) + "\\b.*");
+	boost::regex myRegexp(stringRegexp);
+	return boost::regex_match(boost::to_lower_copy(message->getBody()), myRegexp);
 }
 
 void MUCController::preHandleIncomingMessage(boost::shared_ptr<MessageEvent> messageEvent) {
@@ -246,7 +247,7 @@ void MUCController::preHandleIncomingMessage(boost::shared_ptr<MessageEvent> mes
 		}
 	}
 	if (joined_) {
-		String nick = message->getFrom().getResource();
+		std::string nick = message->getFrom().getResource();
 		if (nick != nick_ && currentOccupants_.find(nick) != currentOccupants_.end()) {
 			completer_->addWord(nick);
 		}
@@ -255,7 +256,7 @@ void MUCController::preHandleIncomingMessage(boost::shared_ptr<MessageEvent> mes
 	receivedActivity();
 	joined_ = true;
 
-	if (!message->getSubject().isEmpty() && message->getBody().isEmpty()) {
+	if (!message->getSubject().empty() && message->getBody().empty()) {
 		chatWindow_->addSystemMessage("The room subject is now: " + message->getSubject());
 		doneGettingHistory_ = true;
 	}
@@ -269,7 +270,7 @@ void MUCController::preHandleIncomingMessage(boost::shared_ptr<MessageEvent> mes
 	}
 }
 
-void MUCController::handleOccupantRoleChanged(const String& nick, const MUCOccupant& occupant, const MUCOccupant::Role& oldRole) {
+void MUCController::handleOccupantRoleChanged(const std::string& nick, const MUCOccupant& occupant, const MUCOccupant::Role& oldRole) {
 	clearPresenceQueue();
 	receivedActivity();
 	JID jid(nickToJID(nick));
@@ -282,8 +283,8 @@ void MUCController::handleOccupantRoleChanged(const String& nick, const MUCOccup
 	chatWindow_->addSystemMessage(nick + " is now a " + roleToFriendlyName(occupant.getRole()));
 }
 
-String MUCController::roleToGroupName(MUCOccupant::Role role) {
-	String result;
+std::string MUCController::roleToGroupName(MUCOccupant::Role role) {
+	std::string result;
 	switch (role) {
 	case MUCOccupant::Moderator: result = "Moderators"; break;
 	case MUCOccupant::Participant: result = "Participants"; break;
@@ -326,13 +327,13 @@ bool MUCController::shouldUpdateJoinParts() {
 	return lastWasPresence_;
 }
 
-void MUCController::handleOccupantLeft(const MUCOccupant& occupant, MUC::LeavingType, const String& reason) {
+void MUCController::handleOccupantLeft(const MUCOccupant& occupant, MUC::LeavingType, const std::string& reason) {
 	NickJoinPart event(occupant.getNick(), Part);
 	appendToJoinParts(joinParts_, event);
 	currentOccupants_.erase(occupant.getNick());
 	completer_->removeWord(occupant.getNick());
-	String partMessage = (occupant.getNick() != nick_) ? occupant.getNick() + " has left the room" : "You have left the room";
-	if (!reason.isEmpty()) {
+	std::string partMessage = (occupant.getNick() != nick_) ? occupant.getNick() + " has left the room" : "You have left the room";
+	if (!reason.empty()) {
 		partMessage += " (" + reason + ")";
 	}
 	partMessage += ".";
@@ -361,7 +362,7 @@ bool MUCController::isIncomingMessageFromMe(boost::shared_ptr<Message> message) 
 	return nick_ == from.getResource();
 }
 
-String MUCController::senderDisplayNameFromMessage(const JID& from) {
+std::string MUCController::senderDisplayNameFromMessage(const JID& from) {
 	return from.getResource();
 }
 
@@ -398,8 +399,8 @@ void MUCController::appendToJoinParts(std::vector<NickJoinPart>& joinParts, cons
 	}
 }
 
-String MUCController::concatenateListOfNames(const std::vector<NickJoinPart>& joinParts) {
-	String result;
+std::string MUCController::concatenateListOfNames(const std::vector<NickJoinPart>& joinParts) {
+	std::string result;
 	for (size_t i = 0; i < joinParts.size(); i++) {
 		if (i > 0) {
 			if (i < joinParts.size() - 1) {
@@ -414,18 +415,18 @@ String MUCController::concatenateListOfNames(const std::vector<NickJoinPart>& jo
 	return result;
 }
 
-String MUCController::generateJoinPartString(const std::vector<NickJoinPart>& joinParts) {
+std::string MUCController::generateJoinPartString(const std::vector<NickJoinPart>& joinParts) {
 	std::vector<NickJoinPart> sorted[4];
-	String eventStrings[4];
+	std::string eventStrings[4];
 	foreach (NickJoinPart event, joinParts) {
 		sorted[event.type].push_back(event);
 	}
-	String result;
+	std::string result;
 	std::vector<JoinPart> populatedEvents;
 	for (size_t i = 0; i < 4; i++) {
-		String eventString = concatenateListOfNames(sorted[i]);
-		if (!eventString.isEmpty()) {
-			String haveHas = sorted[i].size() > 1 ? " have" : " has";
+		std::string eventString = concatenateListOfNames(sorted[i]);
+		if (!eventString.empty()) {
+			std::string haveHas = sorted[i].size() > 1 ? " have" : " has";
 			switch (i) {
 				case Join: eventString += haveHas + " joined";break;
 				case Part: eventString += haveHas + " left";break;

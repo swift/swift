@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include "Swiften/Base/String.h"
+#include <string>
 #include "Swiften/JID/JID.h"
 #include "Swift/Controllers/Roster/RosterItem.h"
 #include "Swiften/Elements/StatusShow.h"
@@ -22,32 +22,32 @@ namespace Swift {
 class GroupRosterItem;
 class ContactRosterItem : public RosterItem {
 	public:
-		ContactRosterItem(const JID& jid, const JID& displayJID, const String& name, GroupRosterItem* parent);
+		ContactRosterItem(const JID& jid, const JID& displayJID, const std::string& name, GroupRosterItem* parent);
 		virtual ~ContactRosterItem();
 
 		StatusShow::Type getStatusShow() const;
 		StatusShow::Type getSimplifiedStatusShow() const;
-		String getStatusText() const;
-		void setAvatarPath(const String& path);
-		const String& getAvatarPath() const;
+		std::string getStatusText() const;
+		void setAvatarPath(const std::string& path);
+		const std::string& getAvatarPath() const;
 		const JID& getJID() const;
 		void setDisplayJID(const JID& jid);
 		const JID& getDisplayJID() const;
-		void applyPresence(const String& resource, boost::shared_ptr<Presence> presence);
+		void applyPresence(const std::string& resource, boost::shared_ptr<Presence> presence);
 		void clearPresence();
 		void calculateShownPresence();
-		const std::vector<String> getGroups() const;
+		const std::vector<std::string> getGroups() const;
 		/** Only used so a contact can know about the groups it's in*/
-		void addGroup(const String& group);
-		void removeGroup(const String& group);
+		void addGroup(const std::string& group);
+		void removeGroup(const std::string& group);
 	private:
 		JID jid_;
 		JID displayJID_;
-		String avatarPath_;
-		std::map<String, boost::shared_ptr<Presence> > presences_;
+		std::string avatarPath_;
+		std::map<std::string, boost::shared_ptr<Presence> > presences_;
 		boost::shared_ptr<Presence> offlinePresence_;
 		boost::shared_ptr<Presence> shownPresence_;
-		std::vector<String> groups_;
+		std::vector<std::string> groups_;
 };
 
 }

@@ -15,7 +15,7 @@
 
 namespace Swift {
 	class ProtocolHeader;
-	class String;
+	
 	class Element;
 	class PayloadParserFactoryCollection;
 	class PayloadSerializerCollection;

@@ -30,11 +30,11 @@ namespace Swift {
 		public:
 			QtChatWindow(const QString &contact, QtChatTheme* theme, UIEventStream* eventStream);
 			~QtChatWindow();
-			String addMessage(const String &message, const String &senderName, bool senderIsSelf, const boost::optional<SecurityLabel>& label, const String& avatarPath, const boost::posix_time::ptime& time);
-			String addAction(const String &message, const String &senderName, bool senderIsSelf, const boost::optional<SecurityLabel>& label, const String& avatarPath, const boost::posix_time::ptime& time);
-			void addSystemMessage(const String& message);
-			void addPresenceMessage(const String& message);
-			void addErrorMessage(const String& errorMessage);
+			std::string addMessage(const std::string &message, const std::string &senderName, bool senderIsSelf, const boost::optional<SecurityLabel>& label, const std::string& avatarPath, const boost::posix_time::ptime& time);
+			std::string addAction(const std::string &message, const std::string &senderName, bool senderIsSelf, const boost::optional<SecurityLabel>& label, const std::string& avatarPath, const boost::posix_time::ptime& time);
+			void addSystemMessage(const std::string& message);
+			void addPresenceMessage(const std::string& message);
+			void addErrorMessage(const std::string& errorMessage);
 			void show();
 			void activate();
 			void setUnreadMessageCount(int count);
@@ -44,15 +44,15 @@ namespace Swift {
 			void setSecurityLabelsEnabled(bool enabled);
 			void setSecurityLabelsError();
 			SecurityLabel getSelectedSecurityLabel();
-			void setName(const String& name);
+			void setName(const std::string& name);
 			void setInputEnabled(bool enabled);
 			QtTabbable::AlertType getWidgetAlertState();
 			void setContactChatState(ChatState::ChatStateType state);
 			void setRosterModel(Roster* roster);
 			void setTabComplete(TabComplete* completer);
 			int getCount();
-			void replaceLastMessage(const String& message);
-			void setAckState(const String& id, AckState state);
+			void replaceLastMessage(const std::string& message);
+			void setAckState(const std::string& id, AckState state);
 			void flash();
 
 		signals:
@@ -75,7 +75,7 @@ namespace Swift {
 		private:
 			void updateTitleWithUnreadCount();
 			void tabComplete();
-			String addMessage(const String &message, const String &senderName, bool senderIsSelf, const boost::optional<SecurityLabel>& label, const String& avatarPath, const QString& style, const boost::posix_time::ptime& time);
+			std::string addMessage(const std::string &message, const std::string &senderName, bool senderIsSelf, const boost::optional<SecurityLabel>& label, const std::string& avatarPath, const QString& style, const boost::posix_time::ptime& time);
 
 			int unreadCount_;
 			bool contactIsTyping_;

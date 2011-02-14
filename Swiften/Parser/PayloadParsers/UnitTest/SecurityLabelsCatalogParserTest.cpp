@@ -37,14 +37,14 @@ class SecurityLabelsCatalogParserTest : public CppUnit::TestFixture
 				"</catalog>"));
 
 			SecurityLabelsCatalog* payload = dynamic_cast<SecurityLabelsCatalog*>(parser.getPayload().get());
-			CPPUNIT_ASSERT_EQUAL(String("Default"), payload->getName());
-			CPPUNIT_ASSERT_EQUAL(String("an example set of labels"), payload->getDescription());
+			CPPUNIT_ASSERT_EQUAL(std::string("Default"), payload->getName());
+			CPPUNIT_ASSERT_EQUAL(std::string("an example set of labels"), payload->getDescription());
 			CPPUNIT_ASSERT_EQUAL(JID("example.com"), payload->getTo());
 			CPPUNIT_ASSERT_EQUAL(2, static_cast<int>(payload->getLabels().size()));
-			CPPUNIT_ASSERT_EQUAL(String("SECRET"), payload->getLabels()[0].getDisplayMarking());
-			CPPUNIT_ASSERT_EQUAL(String("<esssecuritylabel xmlns=\"urn:xmpp:sec-label:ess:0\">MQYCAQQGASk=</esssecuritylabel>"), payload->getLabels()[0].getLabel());
-			CPPUNIT_ASSERT_EQUAL(String("CONFIDENTIAL"), payload->getLabels()[1].getDisplayMarking());
-			CPPUNIT_ASSERT_EQUAL(String("<esssecuritylabel xmlns=\"urn:xmpp:sec-label:ess:0\">MQMGASk=</esssecuritylabel>"), payload->getLabels()[1].getLabel());
+			CPPUNIT_ASSERT_EQUAL(std::string("SECRET"), payload->getLabels()[0].getDisplayMarking());
+			CPPUNIT_ASSERT_EQUAL(std::string("<esssecuritylabel xmlns=\"urn:xmpp:sec-label:ess:0\">MQYCAQQGASk=</esssecuritylabel>"), payload->getLabels()[0].getLabel());
+			CPPUNIT_ASSERT_EQUAL(std::string("CONFIDENTIAL"), payload->getLabels()[1].getDisplayMarking());
+			CPPUNIT_ASSERT_EQUAL(std::string("<esssecuritylabel xmlns=\"urn:xmpp:sec-label:ess:0\">MQMGASk=</esssecuritylabel>"), payload->getLabels()[1].getLabel());
 		}
 };
 

@@ -7,7 +7,7 @@
 #include <cassert>
 #include <algorithm>
 
-#include "Swiften/Base/String.h"
+#include <Swiften/Base/String.h>
 
 namespace Swift {
 
@@ -34,11 +34,11 @@ static inline size_t sequenceLength(char firstByte) {
 	return 1;
 }
 
-std::vector<unsigned int> String::getUnicodeCodePoints() const {
+std::vector<unsigned int> String::getUnicodeCodePoints(const std::string& s) {
 	std::vector<unsigned int> result;
-	for (size_t i = 0; i < data_.size();) {
+	for (size_t i = 0; i < s.size();) {
 		unsigned int codePoint = 0;
-		char firstChar = data_[i];
+		char firstChar = s[i];
 		size_t length = sequenceLength(firstChar);
 
 		// First character is special
@@ -49,7 +49,7 @@ std::vector<unsigned int> String::getUnicodeCodePoints() const {
 		codePoint = firstChar & ((1<<(firstCharBitSize+1)) - 1);
 
 		for (size_t j = 1; j < length; ++j) {
-			codePoint = (codePoint<<6) | (data_[i+j] & 0x3F);
+			codePoint = (codePoint<<6) | (s[i+j] & 0x3F);
 		}
 		result.push_back(codePoint);
 		i += length;
@@ -58,37 +58,37 @@ std::vector<unsigned int> String::getUnicodeCodePoints() const {
 }
 
 
-std::pair<String,String> String::getSplittedAtFirst(char c) const {
+std::pair<std::string,std::string> String::getSplittedAtFirst(const std::string& s, char c) {
 	assert((c & 0x80) == 0);
-	size_t firstMatch = data_.find(c);
-	if (firstMatch != data_.npos) {
-		return std::make_pair(data_.substr(0,firstMatch),data_.substr(firstMatch+1,data_.npos));
+	size_t firstMatch = s.find(c);
+	if (firstMatch != s.npos) {
+		return std::make_pair(s.substr(0,firstMatch),s.substr(firstMatch+1,s.npos));
 	}
 	else {
-		return std::make_pair(*this, "");
+		return std::make_pair(s, "");
 	}
 }
 
-void String::replaceAll(char c, const String& s) {
+void String::replaceAll(std::string& src, char c, const std::string& s) {
 	size_t lastPos = 0;
 	size_t matchingIndex = 0;
-	while ((matchingIndex = data_.find(c, lastPos)) != data_.npos) {
-		data_.replace(matchingIndex, 1, s.data_);
-		lastPos = matchingIndex + s.data_.size();
+	while ((matchingIndex = src.find(c, lastPos)) != src.npos) {
+		src.replace(matchingIndex, 1, s);
+		lastPos = matchingIndex + s.size();
 	}
 }
 
-std::vector<String> String::split(char c) const {
+std::vector<std::string> String::split(const std::string& s, char c) {
 	assert((c & 0x80) == 0);
-	std::vector<String> result;
-	String accumulator;
-	for (size_t i = 0; i < data_.size(); ++i) {
-		if (data_[i] == c) {
+	std::vector<std::string> result;
+	std::string accumulator;
+	for (size_t i = 0; i < s.size(); ++i) {
+		if (s[i] == c) {
 			result.push_back(accumulator);
 			accumulator = "";
 		}
 		else {
-			accumulator += data_[i];
+			accumulator += s[i];
 		}
 	}
 	result.push_back(accumulator);

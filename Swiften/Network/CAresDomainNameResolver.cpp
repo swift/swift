@@ -26,7 +26,7 @@ namespace Swift {
 
 class CAresQuery : public boost::enable_shared_from_this<CAresQuery>, public EventOwner {
 	public:
-		CAresQuery(const String& query, int dnsclass, int type, CAresDomainNameResolver* resolver) : query(query), dnsclass(dnsclass), type(type), resolver(resolver) {
+		CAresQuery(const std::string& query, int dnsclass, int type, CAresDomainNameResolver* resolver) : query(query), dnsclass(dnsclass), type(type), resolver(resolver) {
 		}
 
 		virtual ~CAresQuery() {
@@ -37,7 +37,7 @@ class CAresQuery : public boost::enable_shared_from_this<CAresQuery>, public Eve
 		}
 
 		void doRun(ares_channel* channel) {
-			ares_query(*channel, query.getUTF8Data(), dnsclass, type, &CAresQuery::handleResult, this);
+			ares_query(*channel, query.c_str(), dnsclass, type, &CAresQuery::handleResult, this);
 		}
 
 		static void handleResult(void* arg, int status, int timeouts, unsigned char* buffer, int len) {
@@ -47,7 +47,7 @@ class CAresQuery : public boost::enable_shared_from_this<CAresQuery>, public Eve
 		virtual void handleResult(int status, int, unsigned char* buffer, int len) = 0;
 	
 	private:
-		String query;
+		std::string query;
 		int dnsclass;
 		int type;
 		CAresDomainNameResolver* resolver;
@@ -55,7 +55,7 @@ class CAresQuery : public boost::enable_shared_from_this<CAresQuery>, public Eve
 
 class CAresDomainNameServiceQuery : public DomainNameServiceQuery, public CAresQuery {
 	public:
-		CAresDomainNameServiceQuery(const String& service, CAresDomainNameResolver* resolver) : CAresQuery(service, 1, 33, resolver) {
+		CAresDomainNameServiceQuery(const std::string& service, CAresDomainNameResolver* resolver) : CAresQuery(service, 1, 33, resolver) {
 		}
 
 		virtual void run() {
@@ -72,7 +72,7 @@ class CAresDomainNameServiceQuery : public DomainNameServiceQuery, public CAresQ
 						record.priority = rawRecords->priority;
 						record.weight = rawRecords->weight;
 						record.port = rawRecords->port;
-						record.hostname = String(rawRecords->host);
+						record.hostname = std::string(rawRecords->host);
 						records.push_back(record);
 					}
 				}
@@ -87,7 +87,7 @@ class CAresDomainNameServiceQuery : public DomainNameServiceQuery, public CAresQ
 
 class CAresDomainNameAddressQuery : public DomainNameAddressQuery, public CAresQuery {
 	public:
-		CAresDomainNameAddressQuery(const String& host, CAresDomainNameResolver* resolver) : CAresQuery(host, 1, 1, resolver)  {
+		CAresDomainNameAddressQuery(const std::string& host, CAresDomainNameResolver* resolver) : CAresQuery(host, 1, 1, resolver)  {
 		}
 	
 		virtual void run() {
@@ -129,11 +129,11 @@ CAresDomainNameResolver::~CAresDomainNameResolver() {
 	ares_destroy(channel);
 }
 
-boost::shared_ptr<DomainNameServiceQuery> CAresDomainNameResolver::createServiceQuery(const String& name) {
+boost::shared_ptr<DomainNameServiceQuery> CAresDomainNameResolver::createServiceQuery(const std::string& name) {
 	return boost::shared_ptr<DomainNameServiceQuery>(new CAresDomainNameServiceQuery(getNormalized(name), this));
 }
 
-boost::shared_ptr<DomainNameAddressQuery> CAresDomainNameResolver::createAddressQuery(const String& name) {
+boost::shared_ptr<DomainNameAddressQuery> CAresDomainNameResolver::createAddressQuery(const std::string& name) {
 	return boost::shared_ptr<DomainNameAddressQuery>(new CAresDomainNameAddressQuery(getNormalized(name), this));
 }
 

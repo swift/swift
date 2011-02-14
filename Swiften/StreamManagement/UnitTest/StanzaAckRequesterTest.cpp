@@ -63,7 +63,7 @@ class StanzaAckRequesterTest : public CppUnit::TestFixture {
 			testling->handleAckReceived(1);
 
 			CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(ackedStanzas.size()));
-			CPPUNIT_ASSERT_EQUAL(String("m1"), ackedStanzas[0]->getID());
+			CPPUNIT_ASSERT_EQUAL(std::string("m1"), ackedStanzas[0]->getID());
 		}
 
 		void testHandleAckReceived_AcksMultipleMessages() {
@@ -74,8 +74,8 @@ class StanzaAckRequesterTest : public CppUnit::TestFixture {
 			testling->handleAckReceived(2);
 
 			CPPUNIT_ASSERT_EQUAL(2, static_cast<int>(ackedStanzas.size()));
-			CPPUNIT_ASSERT_EQUAL(String("m1"), ackedStanzas[0]->getID());
-			CPPUNIT_ASSERT_EQUAL(String("m2"), ackedStanzas[1]->getID());
+			CPPUNIT_ASSERT_EQUAL(std::string("m1"), ackedStanzas[0]->getID());
+			CPPUNIT_ASSERT_EQUAL(std::string("m2"), ackedStanzas[1]->getID());
 		}
 
 		void testHandleAckReceived_AcksMultipleStanzas() {
@@ -87,9 +87,9 @@ class StanzaAckRequesterTest : public CppUnit::TestFixture {
 			testling->handleAckReceived(3);
 
 			CPPUNIT_ASSERT_EQUAL(3, static_cast<int>(ackedStanzas.size()));
-			CPPUNIT_ASSERT_EQUAL(String("iq1"), ackedStanzas[0]->getID());
-			CPPUNIT_ASSERT_EQUAL(String("p1"), ackedStanzas[1]->getID());
-			CPPUNIT_ASSERT_EQUAL(String("m1"), ackedStanzas[2]->getID());
+			CPPUNIT_ASSERT_EQUAL(std::string("iq1"), ackedStanzas[0]->getID());
+			CPPUNIT_ASSERT_EQUAL(std::string("p1"), ackedStanzas[1]->getID());
+			CPPUNIT_ASSERT_EQUAL(std::string("m1"), ackedStanzas[2]->getID());
 		}
 
 		void testHandleAckReceived_MultipleAcks() {
@@ -102,9 +102,9 @@ class StanzaAckRequesterTest : public CppUnit::TestFixture {
 			testling->handleAckReceived(3);
 
 			CPPUNIT_ASSERT_EQUAL(3, static_cast<int>(ackedStanzas.size()));
-			CPPUNIT_ASSERT_EQUAL(String("m1"), ackedStanzas[0]->getID());
-			CPPUNIT_ASSERT_EQUAL(String("m2"), ackedStanzas[1]->getID());
-			CPPUNIT_ASSERT_EQUAL(String("m3"), ackedStanzas[2]->getID());
+			CPPUNIT_ASSERT_EQUAL(std::string("m1"), ackedStanzas[0]->getID());
+			CPPUNIT_ASSERT_EQUAL(std::string("m2"), ackedStanzas[1]->getID());
+			CPPUNIT_ASSERT_EQUAL(std::string("m3"), ackedStanzas[2]->getID());
 		}
 
 		// Handle stanza ack count wrapping, as per the XEP
@@ -117,24 +117,24 @@ class StanzaAckRequesterTest : public CppUnit::TestFixture {
 			testling->handleAckReceived(1);
 
 			CPPUNIT_ASSERT_EQUAL(2, static_cast<int>(ackedStanzas.size()));
-			CPPUNIT_ASSERT_EQUAL(String("m1"), ackedStanzas[0]->getID());
-			CPPUNIT_ASSERT_EQUAL(String("m2"), ackedStanzas[1]->getID());
+			CPPUNIT_ASSERT_EQUAL(std::string("m1"), ackedStanzas[0]->getID());
+			CPPUNIT_ASSERT_EQUAL(std::string("m2"), ackedStanzas[1]->getID());
 		}
 
 	private:
-		Message::ref createMessage(const String& id) {
+		Message::ref createMessage(const std::string& id) {
 			Message::ref result(new Message());
 			result->setID(id);
 			return result;
 		}
 
-		IQ::ref createIQ(const String& id) {
+		IQ::ref createIQ(const std::string& id) {
 			IQ::ref result(new IQ());
 			result->setID(id);
 			return result;
 		}
 
-		Presence::ref createPresence(const String& id) {
+		Presence::ref createPresence(const std::string& id) {
 			Presence::ref result(new Presence());
 			result->setID(id);
 			return result;

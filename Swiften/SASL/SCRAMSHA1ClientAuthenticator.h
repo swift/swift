@@ -9,14 +9,14 @@
 #include <map>
 #include <boost/optional.hpp>
 
-#include "Swiften/Base/String.h"
+#include <string>
 #include "Swiften/Base/ByteArray.h"
 #include "Swiften/SASL/ClientAuthenticator.h"
 
 namespace Swift {
 	class SCRAMSHA1ClientAuthenticator : public ClientAuthenticator {
 		public:
-			SCRAMSHA1ClientAuthenticator(const String& nonce, bool useChannelBinding = false);
+			SCRAMSHA1ClientAuthenticator(const std::string& nonce, bool useChannelBinding = false);
 
 			void setTLSChannelBindingData(const ByteArray& channelBindingData);
 			
@@ -28,7 +28,7 @@ namespace Swift {
 			ByteArray getGS2Header() const;
 			ByteArray getFinalMessageWithoutProof() const;
 
-			static std::map<char, String> parseMap(const String&);
+			static std::map<char, std::string> parseMap(const std::string&);
 
 		private:
 			enum Step {
@@ -36,7 +36,7 @@ namespace Swift {
 				Proof,
 				Final
 			} step;
-			String clientnonce;
+			std::string clientnonce;
 			ByteArray initialServerMessage;
 			ByteArray serverNonce;
 			ByteArray authMessage;

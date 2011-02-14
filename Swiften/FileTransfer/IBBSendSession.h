@@ -21,7 +21,7 @@ namespace Swift {
 
 	class IBBSendSession {
 		public:
-			IBBSendSession(const String& id, const JID& to, boost::shared_ptr<ReadBytestream> bytestream, IQRouter* router);
+			IBBSendSession(const std::string& id, const JID& to, boost::shared_ptr<ReadBytestream> bytestream, IQRouter* router);
 			~IBBSendSession();
 
 			void start();
@@ -38,7 +38,7 @@ namespace Swift {
 			void finish(boost::optional<FileTransferError>);
 
 		private:
-			String id;
+			std::string id;
 			JID to;
 			boost::shared_ptr<ReadBytestream> bytestream;
 			IQRouter* router;

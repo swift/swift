@@ -128,15 +128,15 @@ class ResponderTest : public CppUnit::TestFixture {
 			public:
 				MyResponder(IQRouter* router) : Responder<SoftwareVersion>(router), getRequestResponse_(true), setRequestResponse_(true) {}
 
-				virtual bool handleGetRequest(const JID& from, const JID&, const String& id, boost::shared_ptr<SoftwareVersion> payload) {
+				virtual bool handleGetRequest(const JID& from, const JID&, const std::string& id, boost::shared_ptr<SoftwareVersion> payload) {
 					CPPUNIT_ASSERT_EQUAL(JID("foo@bar.com/baz"), from);
-					CPPUNIT_ASSERT_EQUAL(String("myid"), id);
+					CPPUNIT_ASSERT_EQUAL(std::string("myid"), id);
 					getPayloads_.push_back(payload);
 					return getRequestResponse_;
 				}
-				virtual bool handleSetRequest(const JID& from, const JID&, const String& id, boost::shared_ptr<SoftwareVersion> payload) {
+				virtual bool handleSetRequest(const JID& from, const JID&, const std::string& id, boost::shared_ptr<SoftwareVersion> payload) {
 					CPPUNIT_ASSERT_EQUAL(JID("foo@bar.com/baz"), from);
-					CPPUNIT_ASSERT_EQUAL(String("myid"), id);
+					CPPUNIT_ASSERT_EQUAL(std::string("myid"), id);
 					setPayloads_.push_back(payload);
 					return setRequestResponse_;
 				}

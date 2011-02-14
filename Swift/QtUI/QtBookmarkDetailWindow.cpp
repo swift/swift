@@ -27,23 +27,23 @@ boost::optional<MUCBookmark> QtBookmarkDetailWindow::createBookmarkFromForm() {
 	//check room
 	//check bookmarkName
 	JID room(Q2PSTRING(room_->text()));
-	if (!room.isValid() || room.getNode().isEmpty() || !room.getResource().isEmpty()) {
+	if (!room.isValid() || room.getNode().empty() || !room.getResource().empty()) {
 		QMessageBox::warning(this, "Bookmark not valid", "You must specify a valid room address (e.g. myroom@chats.example.com).");
 		return boost::optional<MUCBookmark>();
 	}
-	String name(Q2PSTRING(name_->text()));
-	if (name.isEmpty()) {
+	std::string name(Q2PSTRING(name_->text()));
+	if (name.empty()) {
 		name = room.toString();
 	}
 
 	MUCBookmark bookmark(room, name);
-	String nick(Q2PSTRING(nick_->text()));
-	String password(Q2PSTRING(password_->text()));
+	std::string nick(Q2PSTRING(nick_->text()));
+	std::string password(Q2PSTRING(password_->text()));
 	bookmark.setAutojoin(autojoin_->isChecked());
-	if (!nick.isEmpty()) {
+	if (!nick.empty()) {
 		bookmark.setNick(nick);
 	}
-	if (!password.isEmpty()) {
+	if (!password.empty()) {
 		bookmark.setPassword(password);
 	}
 	return bookmark;

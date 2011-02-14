@@ -60,13 +60,13 @@ void ContactEditController::handleRemoveContactRequest() {
 	contactEditWindow->hide();
 }
 
-void ContactEditController::handleChangeContactRequest(const String& name, const std::set<String>& newGroups) {
-	std::vector<String> oldGroupsVector = currentContact->getGroups();
-	std::set<String> oldGroups(oldGroupsVector.begin(), oldGroupsVector.end());
+void ContactEditController::handleChangeContactRequest(const std::string& name, const std::set<std::string>& newGroups) {
+	std::vector<std::string> oldGroupsVector = currentContact->getGroups();
+	std::set<std::string> oldGroups(oldGroupsVector.begin(), oldGroupsVector.end());
 	if (oldGroups != newGroups || currentContact->getName() != name) {
 		XMPPRosterItem newContact(*currentContact);
 		newContact.setName(name);
-		newContact.setGroups(std::vector<String>(newGroups.begin(), newGroups.end()));
+		newContact.setGroups(std::vector<std::string>(newGroups.begin(), newGroups.end()));
 		rosterController->updateItem(newContact);
 	}
 	contactEditWindow->hide();

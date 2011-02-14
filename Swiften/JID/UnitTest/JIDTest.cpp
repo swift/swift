@@ -59,18 +59,18 @@ class JIDTest : public CppUnit::TestFixture
 		void testConstructorWithString() {
 			JID testling("foo@bar/baz");
 
-			CPPUNIT_ASSERT_EQUAL(String("foo"), testling.getNode());
-			CPPUNIT_ASSERT_EQUAL(String("bar"), testling.getDomain());
-			CPPUNIT_ASSERT_EQUAL(String("baz"), testling.getResource());
+			CPPUNIT_ASSERT_EQUAL(std::string("foo"), testling.getNode());
+			CPPUNIT_ASSERT_EQUAL(std::string("bar"), testling.getDomain());
+			CPPUNIT_ASSERT_EQUAL(std::string("baz"), testling.getResource());
 			CPPUNIT_ASSERT(!testling.isBare());
 		}
 
 		void testConstructorWithString_NoResource() {
 			JID testling("foo@bar");
 
-			CPPUNIT_ASSERT_EQUAL(String("foo"), testling.getNode());
-			CPPUNIT_ASSERT_EQUAL(String("bar"), testling.getDomain());
-			CPPUNIT_ASSERT_EQUAL(String(""), testling.getResource());
+			CPPUNIT_ASSERT_EQUAL(std::string("foo"), testling.getNode());
+			CPPUNIT_ASSERT_EQUAL(std::string("bar"), testling.getDomain());
+			CPPUNIT_ASSERT_EQUAL(std::string(""), testling.getResource());
 			CPPUNIT_ASSERT(testling.isBare());
 		}
 
@@ -84,38 +84,38 @@ class JIDTest : public CppUnit::TestFixture
 		void testConstructorWithString_NoNode() {
 			JID testling("bar/baz");
 
-			CPPUNIT_ASSERT_EQUAL(String(""), testling.getNode());
-			CPPUNIT_ASSERT_EQUAL(String("bar"), testling.getDomain());
-			CPPUNIT_ASSERT_EQUAL(String("baz"), testling.getResource());
+			CPPUNIT_ASSERT_EQUAL(std::string(""), testling.getNode());
+			CPPUNIT_ASSERT_EQUAL(std::string("bar"), testling.getDomain());
+			CPPUNIT_ASSERT_EQUAL(std::string("baz"), testling.getResource());
 			CPPUNIT_ASSERT(!testling.isBare());
 		}
 
 		void testConstructorWithString_OnlyDomain() {
 			JID testling("bar");
 
-			CPPUNIT_ASSERT_EQUAL(String(""), testling.getNode());
-			CPPUNIT_ASSERT_EQUAL(String("bar"), testling.getDomain());
-			CPPUNIT_ASSERT_EQUAL(String(""), testling.getResource());
+			CPPUNIT_ASSERT_EQUAL(std::string(""), testling.getNode());
+			CPPUNIT_ASSERT_EQUAL(std::string("bar"), testling.getDomain());
+			CPPUNIT_ASSERT_EQUAL(std::string(""), testling.getResource());
 			CPPUNIT_ASSERT(testling.isBare());
 		}
 
 		void testConstructorWithString_UpperCaseNode() {
 			JID testling("Fo\xCE\xA9@bar");
 
-			CPPUNIT_ASSERT_EQUAL(String("fo\xCF\x89"), testling.getNode());
-			CPPUNIT_ASSERT_EQUAL(String("bar"), testling.getDomain());
+			CPPUNIT_ASSERT_EQUAL(std::string("fo\xCF\x89"), testling.getNode());
+			CPPUNIT_ASSERT_EQUAL(std::string("bar"), testling.getDomain());
 		}
 
 		void testConstructorWithString_UpperCaseDomain() {
 			JID testling("Fo\xCE\xA9");
 
-			CPPUNIT_ASSERT_EQUAL(String("fo\xCF\x89"), testling.getDomain());
+			CPPUNIT_ASSERT_EQUAL(std::string("fo\xCF\x89"), testling.getDomain());
 		}
 
 		void testConstructorWithString_UpperCaseResource() {
 			JID testling("bar/Fo\xCE\xA9");
 
-			CPPUNIT_ASSERT_EQUAL(testling.getResource(), String("Fo\xCE\xA9"));
+			CPPUNIT_ASSERT_EQUAL(testling.getResource(), std::string("Fo\xCE\xA9"));
 		}
 
 		void testConstructorWithString_EmptyNode() {
@@ -127,9 +127,9 @@ class JIDTest : public CppUnit::TestFixture
 		void testConstructorWithStrings() {
 			JID testling("foo", "bar", "baz");
 
-			CPPUNIT_ASSERT_EQUAL(String("foo"), testling.getNode());
-			CPPUNIT_ASSERT_EQUAL(String("bar"), testling.getDomain());
-			CPPUNIT_ASSERT_EQUAL(String("baz"), testling.getResource());
+			CPPUNIT_ASSERT_EQUAL(std::string("foo"), testling.getNode());
+			CPPUNIT_ASSERT_EQUAL(std::string("bar"), testling.getDomain());
+			CPPUNIT_ASSERT_EQUAL(std::string("baz"), testling.getResource());
 		}
 
 		void testIsBare() {
@@ -143,49 +143,49 @@ class JIDTest : public CppUnit::TestFixture
 		void testToBare() {
 			JID testling("foo@bar/baz");
 
-			CPPUNIT_ASSERT_EQUAL(String("foo"), testling.toBare().getNode());
-			CPPUNIT_ASSERT_EQUAL(String("bar"), testling.toBare().getDomain());
+			CPPUNIT_ASSERT_EQUAL(std::string("foo"), testling.toBare().getNode());
+			CPPUNIT_ASSERT_EQUAL(std::string("bar"), testling.toBare().getDomain());
 			CPPUNIT_ASSERT(testling.toBare().isBare());
 		}
 
 		void testToBare_EmptyNode() {
 			JID testling("bar/baz");
 
-			CPPUNIT_ASSERT_EQUAL(String(""), testling.toBare().getNode());
-			CPPUNIT_ASSERT_EQUAL(String("bar"), testling.toBare().getDomain());
+			CPPUNIT_ASSERT_EQUAL(std::string(""), testling.toBare().getNode());
+			CPPUNIT_ASSERT_EQUAL(std::string("bar"), testling.toBare().getDomain());
 			CPPUNIT_ASSERT(testling.toBare().isBare());
 		}
 
 		void testToBare_EmptyResource() {
 			JID testling("bar/");
 
-			CPPUNIT_ASSERT_EQUAL(String(""), testling.toBare().getNode());
-			CPPUNIT_ASSERT_EQUAL(String("bar"), testling.toBare().getDomain());
+			CPPUNIT_ASSERT_EQUAL(std::string(""), testling.toBare().getNode());
+			CPPUNIT_ASSERT_EQUAL(std::string("bar"), testling.toBare().getDomain());
 			CPPUNIT_ASSERT(testling.toBare().isBare());
 		}
 
 		void testToString() {
 			JID testling("foo@bar/baz");
 
-			CPPUNIT_ASSERT_EQUAL(String("foo@bar/baz"), testling.toString());
+			CPPUNIT_ASSERT_EQUAL(std::string("foo@bar/baz"), testling.toString());
 		}
 
 		void testToString_EmptyNode() {
 			JID testling("bar/baz");
 
-			CPPUNIT_ASSERT_EQUAL(String("bar/baz"), testling.toString());
+			CPPUNIT_ASSERT_EQUAL(std::string("bar/baz"), testling.toString());
 		}
 
 		void testToString_NoResource() {
 			JID testling("foo@bar");
 
-			CPPUNIT_ASSERT_EQUAL(String("foo@bar"), testling.toString());
+			CPPUNIT_ASSERT_EQUAL(std::string("foo@bar"), testling.toString());
 		}
 
 		void testToString_EmptyResource() {
 			JID testling("foo@bar/");
 
-			CPPUNIT_ASSERT_EQUAL(String("foo@bar/"), testling.toString());
+			CPPUNIT_ASSERT_EQUAL(std::string("foo@bar/"), testling.toString());
 		}
 
 		void testCompare_SmallerNode() {

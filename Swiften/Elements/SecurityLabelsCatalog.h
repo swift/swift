@@ -10,7 +10,7 @@
 #include <vector>
 
 #include "Swiften/JID/JID.h"
-#include "Swiften/Base/String.h"
+#include <string>
 #include "Swiften/Elements/Payload.h"
 #include "Swiften/Elements/SecurityLabel.h"
 
@@ -35,26 +35,26 @@ namespace Swift {
 				to_ = to;
 			}
 
-			const String& getName() const {
+			const std::string& getName() const {
 				return name_;
 			}
 
-			void setName(const String& name) {
+			void setName(const std::string& name) {
 				name_ = name;
 			}
 
-			const String& getDescription() const {
+			const std::string& getDescription() const {
 				return description_;
 			}
 
-			void setDescription(const String& description) {
+			void setDescription(const std::string& description) {
 				description_ = description;
 			}
 
 		private:
 			JID to_;
-			String name_;
-			String description_;
+			std::string name_;
+			std::string description_;
 			std::vector<SecurityLabel> labels_;
 	};
 }

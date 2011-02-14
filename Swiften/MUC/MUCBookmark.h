@@ -8,7 +8,7 @@
 
 #include <boost/optional.hpp>
 
-#include "Swiften/Base/String.h"
+#include <string>
 #include "Swiften/JID/JID.h"
 #include "Swiften/Elements/Storage.h"
 
@@ -23,7 +23,7 @@ namespace Swift {
 				autojoin_ = room.autoJoin;
 			}
 
-			MUCBookmark(const JID& room, const String& bookmarkName) : room_(room), name_(bookmarkName), autojoin_(false) {
+			MUCBookmark(const JID& room, const std::string& bookmarkName) : room_(room), name_(bookmarkName), autojoin_(false) {
 			}
 
 			void setAutojoin(bool enabled) {
@@ -34,23 +34,23 @@ namespace Swift {
 				return autojoin_;
 			}
 
-			void setNick(const boost::optional<String>& nick) {
+			void setNick(const boost::optional<std::string>& nick) {
 				nick_ = nick;
 			}
 
-			void setPassword(const boost::optional<String>& password) {
+			void setPassword(const boost::optional<std::string>& password) {
 				password_ = password;
 			}
 
-			const boost::optional<String>& getNick() const {
+			const boost::optional<std::string>& getNick() const {
 				return nick_;
 			}
 
-			const boost::optional<String>& getPassword() const {
+			const boost::optional<std::string>& getPassword() const {
 				return password_;
 			}
 
-			const String& getName() const {
+			const std::string& getName() const {
 				return name_;
 			}
 
@@ -78,9 +78,9 @@ namespace Swift {
 
 		private:
 			JID room_;
-			String name_;
-			boost::optional<String> nick_;
-			boost::optional<String> password_;
+			std::string name_;
+			boost::optional<std::string> nick_;
+			boost::optional<std::string> password_;
 			bool autojoin_;
 	};
 }

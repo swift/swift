@@ -27,7 +27,7 @@ class ResourceBindSerializerTest : public CppUnit::TestFixture
 			boost::shared_ptr<ResourceBind> resourceBind(new ResourceBind());
 			resourceBind->setJID(JID("somenode@example.com/someresource"));
 
-			CPPUNIT_ASSERT_EQUAL(String(
+			CPPUNIT_ASSERT_EQUAL(std::string(
 				"<bind xmlns=\"urn:ietf:params:xml:ns:xmpp-bind\">"
 					"<jid>somenode@example.com/someresource</jid>"
 				"</bind>"), testling.serialize(resourceBind));
@@ -38,7 +38,7 @@ class ResourceBindSerializerTest : public CppUnit::TestFixture
 			boost::shared_ptr<ResourceBind> resourceBind(new ResourceBind());
 			resourceBind->setResource("someresource");
 
-			CPPUNIT_ASSERT_EQUAL(String(
+			CPPUNIT_ASSERT_EQUAL(std::string(
 				"<bind xmlns=\"urn:ietf:params:xml:ns:xmpp-bind\">"
 					"<resource>someresource</resource>"
 				"</bind>"), testling.serialize(resourceBind));
@@ -48,7 +48,7 @@ class ResourceBindSerializerTest : public CppUnit::TestFixture
 			ResourceBindSerializer testling;
 			boost::shared_ptr<ResourceBind> resourceBind(new ResourceBind());
 
-			CPPUNIT_ASSERT_EQUAL(String("<bind xmlns=\"urn:ietf:params:xml:ns:xmpp-bind\"/>"), testling.serialize(resourceBind));
+			CPPUNIT_ASSERT_EQUAL(std::string("<bind xmlns=\"urn:ietf:params:xml:ns:xmpp-bind\"/>"), testling.serialize(resourceBind));
 		}
 };
 

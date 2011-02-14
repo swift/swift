@@ -7,7 +7,7 @@
 #include "Swift/Controllers/Roster/Roster.h"
 
 #include "Swiften/Base/foreach.h"
-#include "Swiften/Base/String.h"
+#include <string>
 #include "Swiften/JID/JID.h"
 #include "Swift/Controllers/Roster/ContactRosterItem.h"
 #include "Swift/Controllers/Roster/RosterItem.h"
@@ -46,7 +46,7 @@ GroupRosterItem* Roster::getRoot() {
 	return root_;
 }
 
-GroupRosterItem* Roster::getGroup(const String& groupName) {
+GroupRosterItem* Roster::getGroup(const std::string& groupName) {
 	foreach (RosterItem *item, root_->getChildren()) {
 		GroupRosterItem *group = dynamic_cast<GroupRosterItem*>(item);
 		if (group && group->getDisplayName() == groupName) {
@@ -60,7 +60,7 @@ GroupRosterItem* Roster::getGroup(const String& groupName) {
 	return group;
 }
 
-void Roster::removeGroup(const String& group) {
+void Roster::removeGroup(const std::string& group) {
 	root_->removeGroupChild(group);
 }
 
@@ -72,13 +72,13 @@ void Roster::handleChildrenChanged(GroupRosterItem* item) {
 	onChildrenChanged(item);
 }
 
-void Roster::addContact(const JID& jid, const JID& displayJID, const String& name, const String& groupName, const String& avatarPath) {
+void Roster::addContact(const JID& jid, const JID& displayJID, const std::string& name, const std::string& groupName, const std::string& avatarPath) {
 	GroupRosterItem* group(getGroup(groupName));
 	ContactRosterItem *item = new ContactRosterItem(jid, displayJID, name, group);
 	item->setAvatarPath(avatarPath);
 	group->addChild(item);
 	if (itemMap_[fullJIDMapping_ ? jid : jid.toBare()].size() > 0) {
-		foreach (String existingGroup, itemMap_[fullJIDMapping_ ? jid : jid.toBare()][0]->getGroups()) {
+		foreach (std::string existingGroup, itemMap_[fullJIDMapping_ ? jid : jid.toBare()][0]->getGroups()) {
 			item->addGroup(existingGroup);
 		}
 	}
@@ -114,7 +114,7 @@ void Roster::removeContact(const JID& jid) {
 	root_->removeChild(jid);
 }
 
-void Roster::removeContactFromGroup(const JID& jid, const String& groupName) {
+void Roster::removeContactFromGroup(const JID& jid, const std::string& groupName) {
 	std::vector<RosterItem*> children = root_->getChildren();
 	std::vector<RosterItem*>::iterator it = children.begin();
 	while (it != children.end()) {

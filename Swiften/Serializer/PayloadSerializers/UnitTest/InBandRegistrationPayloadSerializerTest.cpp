@@ -23,7 +23,7 @@ class InBandRegistrationPayloadSerializerTest : public CppUnit::TestFixture {
 			boost::shared_ptr<InBandRegistrationPayload> registration(new InBandRegistrationPayload());
 			registration->setRegistered(true);
 
-			String expectedResult = 
+			std::string expectedResult = 
 				"<query xmlns=\"jabber:iq:register\">"
 					"<registered/>"
 				"</query>";
@@ -43,7 +43,7 @@ class InBandRegistrationPayloadSerializerTest : public CppUnit::TestFixture {
 			form->addField(field);
 			registration->setForm(form);
 
-			String expectedResult = 
+			std::string expectedResult = 
 				"<query xmlns=\"jabber:iq:register\">"
 					"<instructions>Use the enclosed form to register.</instructions>"
 					"<x type=\"form\" xmlns=\"jabber:x:data\">"

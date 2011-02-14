@@ -9,6 +9,7 @@
 #include <string>
 #include <boost/bind.hpp>
 
+#include "Swiften/Base/String.h"
 #include "Swiften/LinkLocal/LinkLocalConnector.h"
 #include "Swiften/Network/Connection.h"
 #include "Swiften/Session/SessionTracer.h"
@@ -21,7 +22,7 @@
 #include "Swiften/Elements/IQ.h"
 #include "Swiften/Elements/VCard.h"
 #include "Swiften/Server/UserRegistry.h"
-#include "Swiften/Base/String.h"
+#include <string>
 #include "Swiften/LinkLocal/LinkLocalServiceInfo.h"
 #include "Swiften/LinkLocal/OutgoingLinkLocalSession.h"
 #include "Swiften/LinkLocal/IncomingLinkLocalSession.h"
@@ -397,19 +398,19 @@ void Server::handleLinkLocalConnectionServerStopped(boost::optional<BoostConnect
 LinkLocalServiceInfo Server::getLinkLocalServiceInfo(boost::shared_ptr<Presence> presence) {
 	LinkLocalServiceInfo info;
 	boost::shared_ptr<VCard> vcard = vCardCollection->getOwnVCard();
-	if (!vcard->getFamilyName().isEmpty() || !vcard->getGivenName().isEmpty()) {
+	if (!vcard->getFamilyName().empty() || !vcard->getGivenName().empty()) {
 		info.setFirstName(vcard->getGivenName());
 		info.setLastName(vcard->getFamilyName());
 	}
-	else if (!vcard->getFullName().isEmpty()) {
-		std::pair<String,String> p = vcard->getFullName().getSplittedAtFirst(' ');
+	else if (!vcard->getFullName().empty()) {
+		std::pair<std::string,std::string> p = String::getSplittedAtFirst(vcard->getFullName(), ' ');
 		info.setFirstName(p.first);
 		info.setLastName(p.second);
 	}
-	if (!vcard->getNickname().isEmpty()) {
+	if (!vcard->getNickname().empty()) {
 		info.setNick(vcard->getNickname());
 	}
-	if (!vcard->getPreferredEMailAddress().address.isEmpty()) {
+	if (!vcard->getPreferredEMailAddress().address.empty()) {
 		info.setEMail(vcard->getPreferredEMailAddress().address);
 	}
 	info.setMessage(presence->getStatus());

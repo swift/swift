@@ -21,8 +21,8 @@ namespace Swift {
 			CAresDomainNameResolver();
 			~CAresDomainNameResolver();
 
-			virtual boost::shared_ptr<DomainNameServiceQuery> createServiceQuery(const String& name);
-			virtual boost::shared_ptr<DomainNameAddressQuery> createAddressQuery(const String& name);
+			virtual boost::shared_ptr<DomainNameServiceQuery> createServiceQuery(const std::string& name);
+			virtual boost::shared_ptr<DomainNameAddressQuery> createAddressQuery(const std::string& name);
 
 		private:
 			friend class CAresQuery;

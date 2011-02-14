@@ -27,7 +27,7 @@ void PayloadParserFactoryCollection::setDefaultFactory(PayloadParserFactory* fac
 	defaultFactory_ = factory;
 }
 
-PayloadParserFactory* PayloadParserFactoryCollection::getPayloadParserFactory(const String& element, const String& ns, const AttributeMap& attributes) {
+PayloadParserFactory* PayloadParserFactoryCollection::getPayloadParserFactory(const std::string& element, const std::string& ns, const AttributeMap& attributes) {
 	std::vector<PayloadParserFactory*>::reverse_iterator i = std::find_if(
 			factories_.rbegin(), factories_.rend(), 
 			boost::bind(&PayloadParserFactory::canParse, _1, element, ns, attributes));

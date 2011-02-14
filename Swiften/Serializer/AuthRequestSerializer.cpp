@@ -14,9 +14,9 @@ namespace Swift {
 AuthRequestSerializer::AuthRequestSerializer() {
 }
 
-String AuthRequestSerializer::serialize(boost::shared_ptr<Element> element)  const {
+std::string AuthRequestSerializer::serialize(boost::shared_ptr<Element> element)  const {
 	boost::shared_ptr<AuthRequest> authRequest(boost::dynamic_pointer_cast<AuthRequest>(element));
-	String value;
+	std::string value;
 	boost::optional<ByteArray> message = authRequest->getMessage();
 	if (message) {
 		if ((*message).isEmpty()) {

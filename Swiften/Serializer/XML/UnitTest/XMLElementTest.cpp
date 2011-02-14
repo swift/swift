@@ -34,8 +34,8 @@ class XMLElementTest : public CppUnit::TestFixture
 			bazElement->addNode(boost::shared_ptr<XMLTextNode>(new XMLTextNode("Bli")));
 			testling.addNode(bazElement);
 
-			String result = testling.serialize();
-			String expectedResult = 
+			std::string result = testling.serialize();
+			std::string expectedResult = 
 				"<foo myatt=\"myval\" xmlns=\"http://example.com\">"
 					"<bar>Blo</bar>"
 					"<baz>Bli</baz>"
@@ -47,21 +47,21 @@ class XMLElementTest : public CppUnit::TestFixture
 		void testSerialize_NoChildren() {
 			XMLElement testling("foo", "http://example.com");
 
-			CPPUNIT_ASSERT_EQUAL(String("<foo xmlns=\"http://example.com\"/>"), testling.serialize());
+			CPPUNIT_ASSERT_EQUAL(std::string("<foo xmlns=\"http://example.com\"/>"), testling.serialize());
 		}
 
 		void testSerialize_SpecialAttributeCharacters() {
 			XMLElement testling("foo");
 			testling.setAttribute("myatt", "<\"'&>");
 
-			CPPUNIT_ASSERT_EQUAL(String("<foo myatt=\"&lt;&quot;&apos;&amp;&gt;\"/>"), testling.serialize());
+			CPPUNIT_ASSERT_EQUAL(std::string("<foo myatt=\"&lt;&quot;&apos;&amp;&gt;\"/>"), testling.serialize());
 		}
 
 		void testSerialize_EmptyAttributeValue() {
 			XMLElement testling("foo");
 			testling.setAttribute("myatt", "");
 
-			CPPUNIT_ASSERT_EQUAL(String("<foo myatt=\"\"/>"), testling.serialize());
+			CPPUNIT_ASSERT_EQUAL(std::string("<foo myatt=\"\"/>"), testling.serialize());
 		}
 };
 

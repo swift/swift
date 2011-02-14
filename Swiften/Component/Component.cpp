@@ -10,7 +10,7 @@
 
 namespace Swift {
 
-Component::Component(EventLoop* eventLoop, NetworkFactories* networkFactories, const JID& jid, const String& secret) : CoreComponent(eventLoop, networkFactories, jid, secret) {
+Component::Component(EventLoop* eventLoop, NetworkFactories* networkFactories, const JID& jid, const std::string& secret) : CoreComponent(eventLoop, networkFactories, jid, secret) {
 	softwareVersionResponder = new SoftwareVersionResponder(getIQRouter());
 	softwareVersionResponder->start();
 }
@@ -20,7 +20,7 @@ Component::~Component() {
 	delete softwareVersionResponder;
 }
 
-void Component::setSoftwareVersion(const String& name, const String& version) {
+void Component::setSoftwareVersion(const std::string& name, const std::string& version) {
 	softwareVersionResponder->setVersion(name, version);
 }
 

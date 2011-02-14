@@ -73,7 +73,7 @@ class MUCTest : public CppUnit::TestFixture {
 			Presence::ref p = channel->getStanzaAtIndex<Presence>(2);
 			CPPUNIT_ASSERT(p);
 			CPPUNIT_ASSERT_EQUAL(JID("foo@bar.com/Alice"), p->getTo());
-			CPPUNIT_ASSERT_EQUAL(String("Test"), p->getStatus());
+			CPPUNIT_ASSERT_EQUAL(std::string("Test"), p->getStatus());
 		}
 
 		/*void testJoin_Success() {
@@ -83,7 +83,7 @@ class MUCTest : public CppUnit::TestFixture {
 			receivePresence(JID("foo@bar.com/Rabbit"), "Here");
 
 			CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(joinResults.size()));
-			CPPUNIT_ASSERT_EQUAL(String("Alice"), joinResults[0].nick);
+			CPPUNIT_ASSERT_EQUAL(std::string("Alice"), joinResults[0].nick);
 			CPPUNIT_ASSERT(joinResults[0].error);
 		}
 
@@ -96,14 +96,14 @@ class MUCTest : public CppUnit::TestFixture {
 			return boost::make_shared<MUC>(channel, router, presenceSender, jid, mucRegistry);
 		}
 
-		void handleJoinFinished(const String& nick, ErrorPayload::ref error) {
+		void handleJoinFinished(const std::string& nick, ErrorPayload::ref error) {
 			JoinResult r;
 			r.nick = nick;
 			r.error = error;
 			joinResults.push_back(r);
 		}
 
-		void receivePresence(const JID& jid, const String& status) {
+		void receivePresence(const JID& jid, const std::string& status) {
 			Presence::ref p = Presence::create(status);
 			p->setFrom(jid);
 			//MUCUserPayload::ref mucUserPayload = boost::make_shared<MUCUserPayload>();
@@ -119,7 +119,7 @@ class MUCTest : public CppUnit::TestFixture {
 		StanzaChannelPresenceSender* stanzaChannelPresenceSender;
 		DirectedPresenceSender* presenceSender;
 		struct JoinResult {
-			String nick;
+			std::string nick;
 			ErrorPayload::ref error;
 		};
 		std::vector<JoinResult> joinResults;

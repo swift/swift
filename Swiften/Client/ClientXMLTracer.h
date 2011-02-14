@@ -19,7 +19,7 @@ namespace Swift {
 			}
 
 		private:
-			static void printData(char direction, const String& data) {
+			static void printData(char direction, const std::string& data) {
 				printLine(direction);
 				std::cerr << data << std::endl;
 			}

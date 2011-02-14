@@ -6,10 +6,10 @@
 
 #pragma once
 
-#include "Swiften/Base/String.h"
+#include <string>
 
 namespace Swift {
 	namespace Linkify {
-		String linkify(const String&);
+		std::string linkify(const std::string&);
 	}
 }

@@ -12,7 +12,7 @@ namespace Swift {
 DiscoInfoParser::DiscoInfoParser() : level_(TopLevel), formParser_(NULL) {
 }
 
-void DiscoInfoParser::handleStartElement(const String& element, const String& ns, const AttributeMap& attributes) {
+void DiscoInfoParser::handleStartElement(const std::string& element, const std::string& ns, const AttributeMap& attributes) {
 	if (level_ == PayloadLevel) {
 		if (element == "identity") {
 			getPayloadInternal()->addIdentity(DiscoInfo::Identity(attributes.getAttribute("name"), attributes.getAttribute("category"), attributes.getAttribute("type"), attributes.getAttribute("lang")));
@@ -31,7 +31,7 @@ void DiscoInfoParser::handleStartElement(const String& element, const String& ns
 	++level_;
 }
 
-void DiscoInfoParser::handleEndElement(const String& element, const String& ns) {
+void DiscoInfoParser::handleEndElement(const std::string& element, const std::string& ns) {
 	--level_;
 	if (formParser_) {
 		formParser_->handleEndElement(element, ns);
@@ -43,7 +43,7 @@ void DiscoInfoParser::handleEndElement(const String& element, const String& ns) 
 	}
 }
 
-void DiscoInfoParser::handleCharacterData(const String& data) {
+void DiscoInfoParser::handleCharacterData(const std::string& data) {
 	if (formParser_) {
 		formParser_->handleCharacterData(data);
 	}

@@ -178,7 +178,7 @@ bool OpenSSLContext::setClientCertificate(const PKCS12Certificate& certificate) 
 	X509 *certPtr = 0;
 	EVP_PKEY* privateKeyPtr = 0;
 	STACK_OF(X509)* caCertsPtr = 0;
-	int result = PKCS12_parse(pkcs12.get(), certificate.getPassword().getUTF8Data(), &privateKeyPtr, &certPtr, &caCertsPtr);
+	int result = PKCS12_parse(pkcs12.get(), certificate.getPassword().c_str(), &privateKeyPtr, &certPtr, &caCertsPtr);
 	if (result != 1) { 
 		return false;
 	}

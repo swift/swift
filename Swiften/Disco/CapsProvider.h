@@ -11,14 +11,14 @@
 #include "Swiften/Elements/CapsInfo.h"
 
 namespace Swift {
-	class String;
+	
 
 	class CapsProvider { 
 		public:
 			virtual ~CapsProvider() {}
 
-			virtual DiscoInfo::ref getCaps(const String&) const = 0;
+			virtual DiscoInfo::ref getCaps(const std::string&) const = 0;
 
-			boost::signal<void (const String&)> onCapsAvailable;
+			boost::signal<void (const std::string&)> onCapsAvailable;
 	};
 }

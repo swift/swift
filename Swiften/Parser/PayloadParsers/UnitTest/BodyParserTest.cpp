@@ -27,7 +27,7 @@ class BodyParserTest : public CppUnit::TestFixture
 			CPPUNIT_ASSERT(parser.parse("<body>foo<baz>bar</baz>fum</body>"));
 
 			Body* payload = dynamic_cast<Body*>(parser.getPayload().get());
-			CPPUNIT_ASSERT_EQUAL(String("foobarfum"), payload->getText());
+			CPPUNIT_ASSERT_EQUAL(std::string("foobarfum"), payload->getText());
 		}
 };
 

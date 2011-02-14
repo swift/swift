@@ -18,7 +18,7 @@ namespace Swift {
 				return ref(new GetDiscoInfoRequest(jid, router));
 			}
 
-			static ref create(const JID& jid, const String& node, IQRouter* router) {
+			static ref create(const JID& jid, const std::string& node, IQRouter* router) {
 				return ref(new GetDiscoInfoRequest(jid, node, router));
 			}
 
@@ -27,7 +27,7 @@ namespace Swift {
 					GenericRequest<DiscoInfo>(IQ::Get, jid, boost::shared_ptr<DiscoInfo>(new DiscoInfo()), router) {
 			}
 
-			GetDiscoInfoRequest(const JID& jid, const String& node, IQRouter* router) :
+			GetDiscoInfoRequest(const JID& jid, const std::string& node, IQRouter* router) :
 					GenericRequest<DiscoInfo>(IQ::Get, jid, boost::shared_ptr<DiscoInfo>(new DiscoInfo()), router) {
 				getPayloadGeneric()->setNode(node);
 			}

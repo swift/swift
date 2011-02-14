@@ -12,7 +12,7 @@ namespace Swift {
 SecurityLabelParser::SecurityLabelParser() : level_(TopLevel), labelParser_(0) {
 }
 
-void SecurityLabelParser::handleStartElement(const String& element, const String& ns, const AttributeMap& attributes) {
+void SecurityLabelParser::handleStartElement(const std::string& element, const std::string& ns, const AttributeMap& attributes) {
 	++level_;
 	if (level_ == DisplayMarkingOrLabelLevel) {
 		if (element == "displaymarking") {
@@ -30,7 +30,7 @@ void SecurityLabelParser::handleStartElement(const String& element, const String
 	}
 }
 
-void SecurityLabelParser::handleEndElement(const String& element, const String& ns) {
+void SecurityLabelParser::handleEndElement(const std::string& element, const std::string& ns) {
 	if (level_ == DisplayMarkingOrLabelLevel) {
 		if (element == "displaymarking") {
 			getPayloadInternal()->setDisplayMarking(currentText_);
@@ -53,7 +53,7 @@ void SecurityLabelParser::handleEndElement(const String& element, const String& 
 
 }
 
-void SecurityLabelParser::handleCharacterData(const String& data) {
+void SecurityLabelParser::handleCharacterData(const std::string& data) {
 	if (labelParser_) {
 		labelParser_->handleCharacterData(data);
 	}

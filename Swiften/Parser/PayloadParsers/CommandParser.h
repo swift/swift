@@ -20,12 +20,12 @@ namespace Swift {
 			CommandParser();
 			~CommandParser();
 
-			virtual void handleStartElement(const String& element, const String&, const AttributeMap& attributes);
-			virtual void handleEndElement(const String& element, const String&);
-			virtual void handleCharacterData(const String& data);
+			virtual void handleStartElement(const std::string& element, const std::string&, const AttributeMap& attributes);
+			virtual void handleEndElement(const std::string& element, const std::string&);
+			virtual void handleCharacterData(const std::string& data);
 
 		private:
-			static boost::optional<Command::Action> parseAction(const String& action);
+			static boost::optional<Command::Action> parseAction(const std::string& action);
 
 		private:
 			enum Level { 
@@ -40,6 +40,6 @@ namespace Swift {
 			Command::Note::Type noteType_;
 			FormParserFactory* formParserFactory_;
 			FormParser* formParser_;
-			String currentText_;
+			std::string currentText_;
 	};
 }

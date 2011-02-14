@@ -6,13 +6,13 @@
 
 #pragma once
 
-#include "Swiften/Base/String.h"
+#include <string>
 #include "SwifTools/AutoUpdater/AutoUpdater.h"
 
 namespace Swift {
 	class SparkleAutoUpdater : public AutoUpdater {
 		public:
-			SparkleAutoUpdater(const String& url);
+			SparkleAutoUpdater(const std::string& url);
 			~SparkleAutoUpdater();
 
 			void checkForUpdates();

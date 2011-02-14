@@ -24,7 +24,7 @@ class SoftwareVersionSerializerTest : public CppUnit::TestFixture
 			SoftwareVersionSerializer testling;
 			boost::shared_ptr<SoftwareVersion> softwareVersion(new SoftwareVersion("Swift", "0.1", "Mac OS X"));
 
-			CPPUNIT_ASSERT_EQUAL(String("<query xmlns=\"jabber:iq:version\"><name>Swift</name><version>0.1</version><os>Mac OS X</os></query>"), testling.serialize(softwareVersion));
+			CPPUNIT_ASSERT_EQUAL(std::string("<query xmlns=\"jabber:iq:version\"><name>Swift</name><version>0.1</version><os>Mac OS X</os></query>"), testling.serialize(softwareVersion));
 		}
 };
 

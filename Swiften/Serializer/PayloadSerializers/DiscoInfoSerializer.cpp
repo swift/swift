@@ -18,14 +18,14 @@ namespace Swift {
 DiscoInfoSerializer::DiscoInfoSerializer() : GenericPayloadSerializer<DiscoInfo>() {
 }
 
-String DiscoInfoSerializer::serializePayload(boost::shared_ptr<DiscoInfo> discoInfo)  const {
+std::string DiscoInfoSerializer::serializePayload(boost::shared_ptr<DiscoInfo> discoInfo)  const {
 	XMLElement queryElement("query", "http://jabber.org/protocol/disco#info");
-	if (!discoInfo->getNode().isEmpty()) {
+	if (!discoInfo->getNode().empty()) {
 		queryElement.setAttribute("node", discoInfo->getNode());
 	}
 	foreach(const DiscoInfo::Identity& identity, discoInfo->getIdentities()) {
 		boost::shared_ptr<XMLElement> identityElement(new XMLElement("identity"));
-		if (!identity.getLanguage().isEmpty()) {
+		if (!identity.getLanguage().empty()) {
 			identityElement->setAttribute("xml:lang", identity.getLanguage());
 		}
 		identityElement->setAttribute("category", identity.getCategory());
@@ -33,7 +33,7 @@ String DiscoInfoSerializer::serializePayload(boost::shared_ptr<DiscoInfo> discoI
 		identityElement->setAttribute("type", identity.getType());
 		queryElement.addNode(identityElement);
 	}
-	foreach(const String& feature, discoInfo->getFeatures()) {
+	foreach(const std::string& feature, discoInfo->getFeatures()) {
 		boost::shared_ptr<XMLElement> featureElement(new XMLElement("feature"));
 		featureElement->setAttribute("var", feature);
 		queryElement.addNode(featureElement);

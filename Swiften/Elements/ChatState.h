@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include "Swiften/Base/String.h"
+#include <string>
 #include "Swiften/Elements/Payload.h"
 
 namespace Swift {

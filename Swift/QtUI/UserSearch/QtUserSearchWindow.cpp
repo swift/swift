@@ -209,7 +209,7 @@ void QtUserSearchWindow::show() {
 //
 //void QtUserSearchWindow::handleOkClicked() {
 //	JID contact = JID(Q2PSTRING(jid_->text()));
-//	String nick = Q2PSTRING(nickName_->text());
+//	std::string nick = Q2PSTRING(nickName_->text());
 //	if (addToRoster_->isChecked()) {
 //		boost::shared_ptr<UIEvent> event(new AddContactUIEvent(contact, nick));
 //		eventStream_->send(event);

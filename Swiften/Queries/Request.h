@@ -11,7 +11,7 @@
 #include <boost/optional.hpp>
 #include <boost/enable_shared_from_this.hpp>
 
-#include "Swiften/Base/String.h"
+#include <string>
 #include "Swiften/Queries/IQHandler.h"
 #include "Swiften/Elements/IQ.h"
 #include "Swiften/Elements/Payload.h"
@@ -66,7 +66,7 @@ namespace Swift {
 			IQ::Type type_;
 			JID receiver_;
 			boost::shared_ptr<Payload> payload_;
-			String id_;
+			std::string id_;
 			bool sent_;
 	};
 }

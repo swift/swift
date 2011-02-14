@@ -7,7 +7,7 @@
 #pragma once
 
 #include "Swiften/JID/JID.h"
-#include "Swiften/Base/String.h"
+#include <string>
 #include "Swiften/Elements/Message.h"
 #include "Swiften/Elements/Presence.h"
 #include "Swiften/Elements/MUCOccupant.h"
@@ -42,24 +42,24 @@ namespace Swift {
 				return ownMUCJID.toBare();
 			}
 
-			void joinAs(const String &nick);
-			void joinWithContextSince(const String &nick, const boost::posix_time::ptime& since);
+			void joinAs(const std::string &nick);
+			void joinWithContextSince(const std::string &nick, const boost::posix_time::ptime& since);
 			/*void queryRoomInfo(); */
 			/*void queryRoomItems(); */
-			String getCurrentNick();
+			std::string getCurrentNick();
 			void part();
 			void handleIncomingMessage(Message::ref message);
 			/** Expose public so it can be called when e.g. user goes offline */
 			void handleUserLeft(LeavingType);
 
 		public:
-			boost::signal<void (const String& /*nick*/)> onJoinComplete;
+			boost::signal<void (const std::string& /*nick*/)> onJoinComplete;
 			boost::signal<void (ErrorPayload::ref)> onJoinFailed;
 			boost::signal<void (Presence::ref)> onOccupantPresenceChange;
-			boost::signal<void (const String&, const MUCOccupant& /*now*/, const MUCOccupant::Role& /*old*/)> onOccupantRoleChanged;
-			boost::signal<void (const String&, const MUCOccupant::Affiliation& /*new*/, const MUCOccupant::Affiliation& /*old*/)> onOccupantAffiliationChanged;
+			boost::signal<void (const std::string&, const MUCOccupant& /*now*/, const MUCOccupant::Role& /*old*/)> onOccupantRoleChanged;
+			boost::signal<void (const std::string&, const MUCOccupant::Affiliation& /*new*/, const MUCOccupant::Affiliation& /*old*/)> onOccupantAffiliationChanged;
 			boost::signal<void (const MUCOccupant&)> onOccupantJoined;
-			boost::signal<void (const MUCOccupant&, LeavingType, const String& /*reason*/)> onOccupantLeft;
+			boost::signal<void (const MUCOccupant&, LeavingType, const std::string& /*reason*/)> onOccupantLeft;
 			/* boost::signal<void (const MUCInfo&)> onInfoResult; */
 			/* boost::signal<void (const blah&)> onItemsResult; */
 			
@@ -69,13 +69,13 @@ namespace Swift {
 				return ownMUCJID.equals(j, JID::WithoutResource);
 			}
 
-			const String& getOwnNick() const {
+			const std::string& getOwnNick() const {
 				return ownMUCJID.getResource();
 			}
 
 		private:
 			void handleIncomingPresence(Presence::ref presence);
-			void internalJoin(const String& nick);
+			void internalJoin(const std::string& nick);
 			void handleCreationConfigResponse(MUCOwnerPayload::ref, ErrorPayload::ref);
 
 		private:
@@ -84,7 +84,7 @@ namespace Swift {
 			IQRouter* iqRouter_;
 			DirectedPresenceSender* presenceSender;
 			MUCRegistry* mucRegistry;
-			std::map<String, MUCOccupant> occupants;
+			std::map<std::string, MUCOccupant> occupants;
 			bool joinSucceeded_;
 			bool joinComplete_;
 			boost::bsignals::scoped_connection scopedConnection_;

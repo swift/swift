@@ -8,7 +8,7 @@
 
 #include <boost/shared_ptr.hpp>
 
-#include "Swiften/Base/String.h"
+#include <string>
 #include "Swiften/Elements/Payload.h"
 #include "Swiften/Elements/Form.h"
 
@@ -26,21 +26,21 @@ namespace Swift {
 			struct Note {
 				enum Type {Info, Warn, Error};
 
-				Note(String note, Type type) : note(note), type(type) {};
+				Note(std::string note, Type type) : note(note), type(type) {};
 
-				String note;
+				std::string note;
 				Type type;
 			};
 
 		public:
-			Command(const String& node, const String& sessionID, Status status) { constructor(node, sessionID, NoAction, status);}
-			Command(const String& node = "", const String& sessionID = "", Action action = Execute) { constructor(node, sessionID, action, NoStatus); }
+			Command(const std::string& node, const std::string& sessionID, Status status) { constructor(node, sessionID, NoAction, status);}
+			Command(const std::string& node = "", const std::string& sessionID = "", Action action = Execute) { constructor(node, sessionID, action, NoStatus); }
 
-			const String& getNode() const { return node_; }
-			void setNode(const String& node) { node_ = node; }
+			const std::string& getNode() const { return node_; }
+			void setNode(const std::string& node) { node_ = node; }
 
-			const String& getSessionID() const { return sessionID_; }
-			void setSessionID(const String& id) { sessionID_ = id; }
+			const std::string& getSessionID() const { return sessionID_; }
+			void setSessionID(const std::string& id) { sessionID_ = id; }
 
 			Action getAction() const { return action_; }
 			void setAction(Action action) { action_ = action; }
@@ -60,7 +60,7 @@ namespace Swift {
 			void setForm(Form::ref payload) { form_ = payload; }
 
 		private:
-			void constructor(const String& node, const String& sessionID, Action action, Status status) {
+			void constructor(const std::string& node, const std::string& sessionID, Action action, Status status) {
 				node_ = node;
 				sessionID_ = sessionID;
 				action_ = action;
@@ -69,8 +69,8 @@ namespace Swift {
 			}
 
 		private:
-			String node_;
-			String sessionID_;
+			std::string node_;
+			std::string sessionID_;
 			Action action_;
 			Status status_;
 			Action executeAction_;

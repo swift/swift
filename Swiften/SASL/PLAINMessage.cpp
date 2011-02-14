@@ -8,7 +8,7 @@
 
 namespace Swift {
 
-PLAINMessage::PLAINMessage(const String& authcid, const String& password, const String& authzid) : authcid(authcid), authzid(authzid), password(password) {
+PLAINMessage::PLAINMessage(const std::string& authcid, const std::string& password, const std::string& authzid) : authcid(authcid), authzid(authzid), password(password) {
 }
 
 PLAINMessage::PLAINMessage(const ByteArray& value) {
@@ -37,8 +37,8 @@ PLAINMessage::PLAINMessage(const ByteArray& value) {
 }
 
 ByteArray PLAINMessage::getValue() const {
-	String s = authzid + '\0' + authcid + '\0' + password;
-	return ByteArray(s.getUTF8Data(), s.getUTF8Size());
+	std::string s = authzid + '\0' + authcid + '\0' + password;
+	return ByteArray(s.c_str(), s.size());
 }
 
 }

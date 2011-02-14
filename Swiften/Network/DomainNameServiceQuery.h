@@ -11,7 +11,7 @@
 #include <vector>
 #include <boost/shared_ptr.hpp>
 
-#include "Swiften/Base/String.h"
+#include <string>
 #include "Swiften/Network/DomainNameResolveError.h"
 
 namespace Swift {
@@ -20,8 +20,8 @@ namespace Swift {
 			typedef boost::shared_ptr<DomainNameServiceQuery> ref;
 
 			struct Result {
-				Result(const String& hostname = "", int port = -1, int priority = -1, int weight = -1) : hostname(hostname), port(port), priority(priority), weight(weight) {}
-				String hostname;
+				Result(const std::string& hostname = "", int port = -1, int priority = -1, int weight = -1) : hostname(hostname), port(port), priority(priority), weight(weight) {}
+				std::string hostname;
 				int port;
 				int priority;
 				int weight;

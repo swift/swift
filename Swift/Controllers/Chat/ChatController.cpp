@@ -35,9 +35,9 @@ ChatController::ChatController(const JID& self, StanzaChannel* stanzaChannel, IQ
 	chatStateTracker_->onChatStateChange.connect(boost::bind(&ChatWindow::setContactChatState, chatWindow_, _1));
 	stanzaChannel_->onStanzaAcked.connect(boost::bind(&ChatController::handleStanzaAcked, this, _1));
 	nickResolver_->onNickChanged.connect(boost::bind(&ChatController::handleContactNickChanged, this, _1, _2));
-	String nick = nickResolver_->jidToNick(toJID_);
+	std::string nick = nickResolver_->jidToNick(toJID_);
 	chatWindow_->setName(nick);
-	String startMessage("Starting chat with " + nick);
+	std::string startMessage("Starting chat with " + nick);
 	Presence::ref theirPresence;
 	if (isInMUC) {
 		startMessage += " in chatroom " + contact.toBare().toString();
@@ -47,7 +47,7 @@ ChatController::ChatController(const JID& self, StanzaChannel* stanzaChannel, IQ
 		theirPresence = contact.isBare() ? presenceOracle->getHighestPriorityPresence(contact.toBare()) : presenceOracle->getLastPresence(contact);
 	}
 	startMessage += ": " + StatusShow::typeToFriendlyName(theirPresence ? theirPresence->getShow() : StatusShow::None);
-	if (theirPresence && !theirPresence->getStatus().isEmpty()) {
+	if (theirPresence && !theirPresence->getStatus().empty()) {
 		startMessage += " (" + theirPresence->getStatus() + ")";
 	}
 	lastShownStatus_ = theirPresence ? theirPresence->getShow() : StatusShow::None;
@@ -59,7 +59,7 @@ ChatController::ChatController(const JID& self, StanzaChannel* stanzaChannel, IQ
 
 }
 
-void ChatController::handleContactNickChanged(const JID& jid, const String& /*oldNick*/) {
+void ChatController::handleContactNickChanged(const JID& jid, const std::string& /*oldNick*/) {
 	if (jid.toBare() == toJID_.toBare()) {
 		chatWindow_->setName(nickResolver_->jidToNick(jid));
 	}
@@ -108,8 +108,8 @@ void ChatController::preSendMessageRequest(boost::shared_ptr<Message> message) {
 	chatStateNotifier_->addChatStateRequest(message);
 }
 
-void ChatController::postSendMessage(const String& body, boost::shared_ptr<Stanza> sentStanza) {
-	String id = addMessage(body, "me", true, labelsEnabled_ ? chatWindow_->getSelectedSecurityLabel() : boost::optional<SecurityLabel>(), String(avatarManager_->getAvatarPath(selfJID_).string()), boost::posix_time::microsec_clock::universal_time());
+void ChatController::postSendMessage(const std::string& body, boost::shared_ptr<Stanza> sentStanza) {
+	std::string id = addMessage(body, "me", true, labelsEnabled_ ? chatWindow_->getSelectedSecurityLabel() : boost::optional<SecurityLabel>(), std::string(avatarManager_->getAvatarPath(selfJID_).string()), boost::posix_time::microsec_clock::universal_time());
 	if (stanzaChannel_->getStreamManagementEnabled()) {
 		chatWindow_->setAckState(id, ChatWindow::Pending);
 		unackedStanzas_[sentStanza] = id;
@@ -119,7 +119,7 @@ void ChatController::postSendMessage(const String& body, boost::shared_ptr<Stanz
 }
 
 void ChatController::handleStanzaAcked(boost::shared_ptr<Stanza> stanza) {
-	String id = unackedStanzas_[stanza];
+	std::string id = unackedStanzas_[stanza];
 	if (id != "") {
 		chatWindow_->setAckState(id, ChatWindow::Received);
 	}
@@ -128,7 +128,7 @@ void ChatController::handleStanzaAcked(boost::shared_ptr<Stanza> stanza) {
 
 void ChatController::setOnline(bool online) {
 	if (!online) {
-		std::map<boost::shared_ptr<Stanza>, String>::iterator it = unackedStanzas_.begin();
+		std::map<boost::shared_ptr<Stanza>, std::string>::iterator it = unackedStanzas_.begin();
 		for ( ; it != unackedStanzas_.end(); it++) {
 			chatWindow_->setAckState(it->second, ChatWindow::Failed);
 		}
@@ -142,13 +142,13 @@ void ChatController::setOnline(bool online) {
 	ChatControllerBase::setOnline(online);
 }
 
-String ChatController::senderDisplayNameFromMessage(const JID& from) {
+std::string ChatController::senderDisplayNameFromMessage(const JID& from) {
 	return nickResolver_->jidToNick(from);
 }
 
-String ChatController::getStatusChangeString(boost::shared_ptr<Presence> presence) {
-	String nick = senderDisplayNameFromMessage(presence->getFrom());
-	String response = nick;
+std::string ChatController::getStatusChangeString(boost::shared_ptr<Presence> presence) {
+	std::string nick = senderDisplayNameFromMessage(presence->getFrom());
+	std::string response = nick;
 	if (!presence || presence->getType() == Presence::Unavailable || presence->getType() == Presence::Error) {
 		response += " has gone offline";
 	} else if (presence->getType() == Presence::Available) {
@@ -161,7 +161,7 @@ String ChatController::getStatusChangeString(boost::shared_ptr<Presence> presenc
 			response += " is now busy";
 		} 
 	}
-	if (!presence->getStatus().isEmpty()) {
+	if (!presence->getStatus().empty()) {
 		response += " (" + presence->getStatus() + ")";
 	}
 	return response + ".";
@@ -188,7 +188,7 @@ void ChatController::handlePresenceChange(boost::shared_ptr<Presence> newPresenc
 
 	chatStateTracker_->handlePresenceChange(newPresence);
 	chatStateNotifier_->setContactIsOnline(newPresence->getType() == Presence::Available);
-	String newStatusChangeString = getStatusChangeString(newPresence);
+	std::string newStatusChangeString = getStatusChangeString(newPresence);
 	if (newStatusChangeString != lastStatusChangeString_) {
 		if (lastWasPresence_) {
 			chatWindow_->replaceLastMessage(newStatusChangeString);

@@ -18,7 +18,7 @@ BytestreamsParser::BytestreamsParser() : level(TopLevel) {
 BytestreamsParser::~BytestreamsParser() {
 }
 
-void BytestreamsParser::handleStartElement(const String& element, const String&, const AttributeMap& attributes) {
+void BytestreamsParser::handleStartElement(const std::string& element, const std::string&, const AttributeMap& attributes) {
 	if (level == TopLevel) {
 		getPayloadInternal()->setStreamID(attributes.getAttribute("sid"));
 	}
@@ -37,11 +37,11 @@ void BytestreamsParser::handleStartElement(const String& element, const String&,
 	++level;
 }
 
-void BytestreamsParser::handleEndElement(const String&, const String&) {
+void BytestreamsParser::handleEndElement(const std::string&, const std::string&) {
 	--level;
 }
 
-void BytestreamsParser::handleCharacterData(const String&) {
+void BytestreamsParser::handleCharacterData(const std::string&) {
 }
 
 

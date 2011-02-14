@@ -31,8 +31,8 @@ EventNotifier::~EventNotifier() {
 void EventNotifier::handleEventAdded(boost::shared_ptr<StanzaEvent> event) {
 	if (boost::shared_ptr<MessageEvent> messageEvent = boost::dynamic_pointer_cast<MessageEvent>(event)) {
 		JID jid = messageEvent->getStanza()->getFrom();
-		String title = nickResolver->jidToNick(jid);
-		if (!messageEvent->getStanza()->isError() && !messageEvent->getStanza()->getBody().isEmpty()) {
+		std::string title = nickResolver->jidToNick(jid);
+		if (!messageEvent->getStanza()->isError() && !messageEvent->getStanza()->getBody().empty()) {
 			JID activationJID = jid;
 			if (messageEvent->getStanza()->getType() == Message::Groupchat) {
 				activationJID = jid.toBare();
@@ -42,8 +42,8 @@ void EventNotifier::handleEventAdded(boost::shared_ptr<StanzaEvent> event) {
 	}
 	else if(boost::shared_ptr<SubscriptionRequestEvent> subscriptionEvent = boost::dynamic_pointer_cast<SubscriptionRequestEvent>(event)) {
 		JID jid = subscriptionEvent->getJID();
-		String title = "";
-		String message = nickResolver->jidToNick(jid) + " wants to add you to his/her roster";
+		std::string title = "";
+		std::string message = nickResolver->jidToNick(jid) + " wants to add you to his/her roster";
 		notifier->showMessage(Notifier::SystemMessage, title, message, boost::filesystem::path(), boost::function<void()>());
 	}
 	else if(boost::shared_ptr<ErrorEvent> errorEvent = boost::dynamic_pointer_cast<ErrorEvent>(event)) {

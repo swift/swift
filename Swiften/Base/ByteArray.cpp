@@ -26,8 +26,8 @@ namespace Swift {
 
 static const int BUFFER_SIZE = 4096;
 
-void ByteArray::readFromFile(const String& file) {
-	std::ifstream input(file.getUTF8Data(), std::ios_base::in|std::ios_base::binary);
+void ByteArray::readFromFile(const std::string& file) {
+	std::ifstream input(file.c_str(), std::ios_base::in|std::ios_base::binary);
 	while (input.good()) {
 		size_t oldSize = data_.size();
 		data_.resize(oldSize + BUFFER_SIZE);

@@ -37,8 +37,8 @@ namespace Swift {
 			void handleStanzaChannelAvailableChanged(bool);
 			void handleNotificationActivated(JID jid);
 			void handleTimerTick();
-			String getStatusType(const JID&) const;
-			String getStatusMessage(const JID&) const;
+			std::string getStatusType(const JID&) const;
+			std::string getStatusMessage(const JID&) const;
 
 		private:
 			void showNotification(const JID& jid, Notifier::Type type);

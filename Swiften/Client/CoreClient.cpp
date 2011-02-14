@@ -22,7 +22,7 @@
 
 namespace Swift {
 
-CoreClient::CoreClient(const JID& jid, const String& password, NetworkFactories* networkFactories) : jid_(jid), password_(password), networkFactories(networkFactories), disconnectRequested_(false), certificateTrustChecker(NULL) {
+CoreClient::CoreClient(const JID& jid, const std::string& password, NetworkFactories* networkFactories) : jid_(jid), password_(password), networkFactories(networkFactories), disconnectRequested_(false), certificateTrustChecker(NULL) {
 	stanzaChannel_ = new ClientSessionStanzaChannel();
 	stanzaChannel_->onMessageReceived.connect(boost::bind(&CoreClient::handleMessageReceived, this, _1));
 	stanzaChannel_->onPresenceReceived.connect(boost::bind(&CoreClient::handlePresenceReceived, this, _1));
@@ -52,7 +52,7 @@ void CoreClient::connect() {
 	connect(jid_.getDomain());
 }
 
-void CoreClient::connect(const String& host) {
+void CoreClient::connect(const std::string& host) {
 	SWIFT_LOG(debug) << "Connecting to host " << host << std::endl;
 	disconnectRequested_ = false;
 	assert(!connector_);
@@ -74,7 +74,7 @@ void CoreClient::handleConnectorFinished(boost::shared_ptr<Connection> connectio
 
 		assert(!sessionStream_);
 		sessionStream_ = boost::shared_ptr<BasicSessionStream>(new BasicSessionStream(ClientStreamType, connection_, getPayloadParserFactories(), getPayloadSerializers(), tlsFactories->getTLSContextFactory(), networkFactories->getTimerFactory()));
-		if (!certificate_.isEmpty()) {
+		if (!certificate_.empty()) {
 			sessionStream_->setTLSCertificate(PKCS12Certificate(certificate_, password_));
 		}
 		sessionStream_->onDataRead.connect(boost::bind(&CoreClient::handleDataRead, this, _1));
@@ -101,7 +101,7 @@ void CoreClient::disconnect() {
 	}
 }
 
-void CoreClient::setCertificate(const String& certificate) {
+void CoreClient::setCertificate(const std::string& certificate) {
 	certificate_ = certificate;
 }
 
@@ -219,11 +219,11 @@ void CoreClient::handleNeedCredentials() {
 	session_->sendCredentials(password_);
 }
 
-void CoreClient::handleDataRead(const String& data) {
+void CoreClient::handleDataRead(const std::string& data) {
 	onDataRead(data);
 }
 
-void CoreClient::handleDataWritten(const String& data) {
+void CoreClient::handleDataWritten(const std::string& data) {
 	onDataWritten(data);
 }
 

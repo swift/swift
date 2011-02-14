@@ -11,7 +11,7 @@
 
 #include <boost/shared_ptr.hpp>
 #include <Swiften/Base/boost_bsignals.h>
-#include <Swiften/Base/String.h>
+#include <string>
 #include <Swiften/JID/JID.h>
 #include <Swiften/Elements/DiscoInfo.h>
 #include <Swiften/Elements/DiscoItems.h>

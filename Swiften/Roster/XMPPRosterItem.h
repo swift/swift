@@ -9,33 +9,33 @@
 
 #include <vector>
 
-#include <Swiften/Base/String.h>
+#include <string>
 #include <Swiften/JID/JID.h>
 #include <Swiften/Elements/RosterItemPayload.h>
 
 namespace Swift {
 	class XMPPRosterItem {
 		public:
-			XMPPRosterItem(const JID& jid, const String& name, const std::vector<String>& groups, RosterItemPayload::Subscription subscription) : jid(jid), name(name), groups(groups), subscription(subscription) {
+			XMPPRosterItem(const JID& jid, const std::string& name, const std::vector<std::string>& groups, RosterItemPayload::Subscription subscription) : jid(jid), name(name), groups(groups), subscription(subscription) {
 			}
 
 			const JID& getJID() const {
 				return jid;
 			}
 
-			const String& getName() const {
+			const std::string& getName() const {
 				return name;
 			}
 
-			void setName(const String& name) {
+			void setName(const std::string& name) {
 				this->name = name;
 			}
 
-			const std::vector<String>& getGroups() const {
+			const std::vector<std::string>& getGroups() const {
 				return groups;
 			}
 
-			void setGroups(const std::vector<String>& groups) {
+			void setGroups(const std::vector<std::string>& groups) {
 				this->groups = groups;
 			}
 
@@ -45,8 +45,8 @@ namespace Swift {
 
 		private:
 			JID jid;
-			String name;
-			std::vector<String> groups;
+			std::string name;
+			std::vector<std::string> groups;
 			RosterItemPayload::Subscription subscription;
 	};
 }

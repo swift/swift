@@ -14,8 +14,8 @@ namespace Swift {
 		public:
 			StanzaAckParser();
 
-			virtual void handleStartElement(const String&, const String& ns, const AttributeMap&);
-			virtual void handleEndElement(const String&, const String& ns);
+			virtual void handleStartElement(const std::string&, const std::string& ns, const AttributeMap&);
+			virtual void handleEndElement(const std::string&, const std::string& ns);
 
 		private:
 			int depth;

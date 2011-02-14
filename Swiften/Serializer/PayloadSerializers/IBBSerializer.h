@@ -16,6 +16,6 @@ namespace Swift {
 		public:
 			IBBSerializer();
 
-			virtual String serializePayload(boost::shared_ptr<IBB>)  const;
+			virtual std::string serializePayload(boost::shared_ptr<IBB>)  const;
 	};
 }

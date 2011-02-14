@@ -20,7 +20,7 @@ namespace Swift {
 			enum Type { Available, Error, Probe, Subscribe, Subscribed, Unavailable, Unsubscribe, Unsubscribed };
 
 			Presence() : type_(Available) /*, showType_(Online)*/ {}
-			Presence(const String& status) : type_(Available) {
+			Presence(const std::string& status) : type_(Available) {
 				setStatus(status);
 			}
 
@@ -28,7 +28,7 @@ namespace Swift {
 				return ref(new Presence());
 			}
 
-			static ref create(const String& status) {
+			static ref create(const std::string& status) {
 				return ref(new Presence(status));
 			}
 
@@ -51,7 +51,7 @@ namespace Swift {
 				updatePayload(boost::shared_ptr<StatusShow>(new StatusShow(show)));
 			}
 
-			String getStatus() const { 
+			std::string getStatus() const { 
 				boost::shared_ptr<Status> status(getPayload<Status>());
 				if (status) {
 					return status->getText();
@@ -59,7 +59,7 @@ namespace Swift {
 				return "";
 			}
 
-			void setStatus(const String& status) { 
+			void setStatus(const std::string& status) { 
 				updatePayload(boost::shared_ptr<Status>(new Status(status)));
 			}
 

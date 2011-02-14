@@ -12,7 +12,7 @@
 #include <Swiften/Parser/StanzaParser.h>
 
 namespace Swift {
-	class String;
+	
 	class PayloadParserFactoryCollection;
 
 	template<typename STANZA_TYPE>

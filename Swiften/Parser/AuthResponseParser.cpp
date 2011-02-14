@@ -12,18 +12,18 @@ namespace Swift {
 AuthResponseParser::AuthResponseParser() : GenericElementParser<AuthResponse>(), depth(0) {
 }
 
-void AuthResponseParser::handleStartElement(const String&, const String&, const AttributeMap&) {
+void AuthResponseParser::handleStartElement(const std::string&, const std::string&, const AttributeMap&) {
 	++depth;
 }
 
-void AuthResponseParser::handleEndElement(const String&, const String&) {
+void AuthResponseParser::handleEndElement(const std::string&, const std::string&) {
 	--depth;
 	if (depth == 0) {
 		getElementGeneric()->setValue(Base64::decode(text));
 	}
 }
 
-void AuthResponseParser::handleCharacterData(const String& text) {
+void AuthResponseParser::handleCharacterData(const std::string& text) {
 	this->text += text;
 }
 

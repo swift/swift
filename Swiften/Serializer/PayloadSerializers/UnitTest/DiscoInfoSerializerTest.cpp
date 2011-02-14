@@ -30,7 +30,7 @@ class DiscoInfoSerializerTest : public CppUnit::TestFixture
 			discoInfo->addFeature("http://jabber.org/protocol/disco#info");
 			discoInfo->setNode("http://swift.im#bla");
 
-			String expectedResult = 
+			std::string expectedResult = 
 				"<query node=\"http://swift.im#bla\" xmlns=\"http://jabber.org/protocol/disco#info\">"
 					"<identity category=\"client\" name=\"Swift\" type=\"pc\"/>"
 					"<identity category=\"client\" name=\"Vlug\" type=\"pc\" xml:lang=\"nl\"/>"
@@ -50,7 +50,7 @@ class DiscoInfoSerializerTest : public CppUnit::TestFixture
 			form->setTitle("Bot Configuration");
 			discoInfo->addExtension(form);
 
-			String expectedResult = 
+			std::string expectedResult = 
 				"<query xmlns=\"http://jabber.org/protocol/disco#info\">"
 					"<feature var=\"http://jabber.org/protocol/caps\"/>"
 					"<feature var=\"http://jabber.org/protocol/disco#info\"/>"

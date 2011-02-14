@@ -9,7 +9,7 @@
 #include <boost/shared_ptr.hpp>
 
 #include "Swiften/JID/JID.h"
-#include "Swiften/Base/String.h"
+#include <string>
 #include "Swiften/Elements/IQ.h"
 #include "Swiften/Elements/RosterPayload.h"
 #include "Swiften/Roster/RosterPushResponder.h"

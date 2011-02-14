@@ -24,35 +24,35 @@ class LinkLocalServiceTest : public CppUnit::TestFixture {
 		void testGetDescription_WithNick() {
 			LinkLocalService testling = createService("alice@wonderland", "Alice", "Alice In", "Wonderland");
 
-			CPPUNIT_ASSERT_EQUAL(String("Alice"), testling.getDescription());
+			CPPUNIT_ASSERT_EQUAL(std::string("Alice"), testling.getDescription());
 		}
 
 		void testGetDescription_WithFirstName() {
 			LinkLocalService testling = createService("alice@wonderland", "", "Alice In");
 
-			CPPUNIT_ASSERT_EQUAL(String("Alice In"), testling.getDescription());
+			CPPUNIT_ASSERT_EQUAL(std::string("Alice In"), testling.getDescription());
 		}
 
 		void testGetDescription_WithLastName() {
 			LinkLocalService testling = createService("alice@wonderland", "", "", "Wonderland");
 
-			CPPUNIT_ASSERT_EQUAL(String("Wonderland"), testling.getDescription());
+			CPPUNIT_ASSERT_EQUAL(std::string("Wonderland"), testling.getDescription());
 		}
 
 		void testGetDescription_WithFirstAndLastName() {
 			LinkLocalService testling = createService("alice@wonderland", "", "Alice In", "Wonderland");
 
-			CPPUNIT_ASSERT_EQUAL(String("Alice In Wonderland"), testling.getDescription());
+			CPPUNIT_ASSERT_EQUAL(std::string("Alice In Wonderland"), testling.getDescription());
 		}
 
 		void testGetDescription_NoInfo() {
 			LinkLocalService testling = createService("alice@wonderland");
 
-			CPPUNIT_ASSERT_EQUAL(String("alice@wonderland"), testling.getDescription());
+			CPPUNIT_ASSERT_EQUAL(std::string("alice@wonderland"), testling.getDescription());
 		}
 	
 	private:
-		LinkLocalService createService(const String& name, const String& nickName = String(), const String& firstName = String(), const String& lastName = String()) {
+		LinkLocalService createService(const std::string& name, const std::string& nickName = std::string(), const std::string& firstName = std::string(), const std::string& lastName = std::string()) {
 			DNSSDServiceID service(name, "local.");
 			LinkLocalServiceInfo info;
 			info.setFirstName(firstName);

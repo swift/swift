@@ -10,7 +10,7 @@
 #include <algorithm>
 
 #include "Swiften/Elements/Payload.h"
-#include "Swiften/Base/String.h"
+#include <string>
 #include "Swiften/JID/JID.h"
 
 namespace Swift {
@@ -18,14 +18,14 @@ namespace Swift {
 		public:
 			class Item {
 				public:
-					Item(const String& name, const JID& jid, const String& node="") : name_(name), jid_(jid), node_(node) {
+					Item(const std::string& name, const JID& jid, const std::string& node="") : name_(name), jid_(jid), node_(node) {
 					}
 
-					const String& getName() const {
+					const std::string& getName() const {
 						return name_;
 					}
 
-					const String& getNode() const {
+					const std::string& getNode() const {
 						return node_;
 					}					
 
@@ -34,19 +34,19 @@ namespace Swift {
 					}
 
 				private:
-					String name_;
+					std::string name_;
 					JID jid_;
-					String node_;
+					std::string node_;
 			};
 
 			DiscoItems() {
 			}
 
-			const String& getNode() const {
+			const std::string& getNode() const {
 				return node_;
 			}
 
-			void setNode(const String& node) {
+			void setNode(const std::string& node) {
 				node_ = node;
 			}
 
@@ -59,7 +59,7 @@ namespace Swift {
 			}
 
 		private:
-			String node_;
+			std::string node_;
 			std::vector<Item> items_;
 	};
 }

@@ -62,7 +62,7 @@ class VCardAvatarManagerTest : public CppUnit::TestFixture {
 			storeVCardWithPhoto(user1.toBare(), avatar1);
 			avatarStorage->addAvatar(avatar1Hash, avatar1);
 
-			String result = testling->getAvatarHash(user1);
+			std::string result = testling->getAvatarHash(user1);
 
 			CPPUNIT_ASSERT_EQUAL(avatar1Hash, result);
 		}
@@ -71,16 +71,16 @@ class VCardAvatarManagerTest : public CppUnit::TestFixture {
 			std::auto_ptr<VCardAvatarManager> testling = createManager();
 			storeEmptyVCard(user1.toBare());
 
-			String result = testling->getAvatarHash(user1);
+			std::string result = testling->getAvatarHash(user1);
 
-			CPPUNIT_ASSERT_EQUAL(String(), result);
+			CPPUNIT_ASSERT_EQUAL(std::string(), result);
 		}
 
 		void testGetAvatarHashUnknownAvatarKnownVCardStoresAvatar() {
 			std::auto_ptr<VCardAvatarManager> testling = createManager();
 			storeVCardWithPhoto(user1.toBare(), avatar1);
 
-			String result = testling->getAvatarHash(user1);
+			std::string result = testling->getAvatarHash(user1);
 
 			CPPUNIT_ASSERT_EQUAL(avatar1Hash, result);
 			CPPUNIT_ASSERT(avatarStorage->hasAvatar(avatar1Hash));
@@ -90,9 +90,9 @@ class VCardAvatarManagerTest : public CppUnit::TestFixture {
 		void testGetAvatarHashUnknownAvatarUnknownVCard() {
 			std::auto_ptr<VCardAvatarManager> testling = createManager();
 
-			String result = testling->getAvatarHash(user1);
+			std::string result = testling->getAvatarHash(user1);
 
-			CPPUNIT_ASSERT_EQUAL(String(), result);
+			CPPUNIT_ASSERT_EQUAL(std::string(), result);
 		}
 
 		void testVCardUpdateTriggersUpdate() {
@@ -145,7 +145,7 @@ class VCardAvatarManagerTest : public CppUnit::TestFixture {
 		VCardManager* vcardManager;
 		VCardMemoryStorage* vcardStorage;
 		ByteArray avatar1;
-		String avatar1Hash;
+		std::string avatar1Hash;
 		std::vector<JID> changes;
 		JID user1;
 		JID user2;

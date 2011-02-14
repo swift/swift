@@ -10,7 +10,7 @@
 #include "Swiften/Base/boost_bsignals.h"
 #include <boost/shared_ptr.hpp>
 
-#include "Swiften/Base/String.h"
+#include <string>
 #include "Swiften/Elements/IQ.h"
 
 namespace Swift {
@@ -19,7 +19,7 @@ namespace Swift {
 			virtual ~IQChannel();
 
 			virtual void sendIQ(boost::shared_ptr<IQ>) = 0;
-			virtual String getNewIQID() = 0;
+			virtual std::string getNewIQID() = 0;
 			
 			virtual bool isAvailable() const = 0;
 

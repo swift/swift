@@ -70,8 +70,8 @@ namespace Swift {
 			boost::signal<void (boost::shared_ptr<Element>)> onElementReceived;
 			boost::signal<void (boost::shared_ptr<Error>)> onClosed;
 			boost::signal<void ()> onTLSEncrypted;
-			boost::signal<void (const String&)> onDataRead;
-			boost::signal<void (const String&)> onDataWritten;
+			boost::signal<void (const std::string&)> onDataRead;
+			boost::signal<void (const std::string&)> onDataWritten;
 
 		protected:
 			const PKCS12Certificate& getTLSCertificate() const {

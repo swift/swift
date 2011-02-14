@@ -13,7 +13,7 @@
 #include "Swift/Controllers/UIEvents/UIEventStream.h"
 
 namespace Swift {
-	class String;
+	
 	class XMLConsoleWidgetFactory;
 	class XMLConsoleWidget;
 
@@ -23,8 +23,8 @@ namespace Swift {
 			~XMLConsoleController();
 
 		public:
-			void handleDataRead(const String& data);
-			void handleDataWritten(const String& data);
+			void handleDataRead(const std::string& data);
+			void handleDataWritten(const std::string& data);
 
 		private:
 			void handleUIEvent(boost::shared_ptr<UIEvent> event);

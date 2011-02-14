@@ -15,7 +15,7 @@ struct sqlite3;
 namespace Swift {
 	class SQLiteHistoryManager : public HistoryManager {
 		public:
-			SQLiteHistoryManager(const String& file);
+			SQLiteHistoryManager(const std::string& file);
 			~SQLiteHistoryManager();
 
 			virtual void addMessage(const HistoryMessage& message);

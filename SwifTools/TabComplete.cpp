@@ -7,25 +7,26 @@
 #include "SwifTools/TabComplete.h"
 
 #include <algorithm>
+#include <boost/algorithm/string.hpp>
 
 #include "Swiften/Base/foreach.h"
 
 namespace Swift {
 
-void TabComplete::addWord(const String& word) {
+void TabComplete::addWord(const std::string& word) {
 	words_.erase(std::remove(words_.begin(), words_.end(), word), words_.end());
 	words_.insert(words_.begin(), word);
-	if (word.getLowerCase().beginsWith(lastShort_)) {
+	if (boost::starts_with(boost::to_lower_copy(word), lastShort_)) {
 		lastCompletionCandidates_.insert(lastCompletionCandidates_.begin(), word);
 	}
 }
 
-void TabComplete::removeWord(const String& word) {
+void TabComplete::removeWord(const std::string& word) {
 	words_.erase(std::remove(words_.begin(), words_.end(), word), words_.end());
 	lastCompletionCandidates_.erase(std::remove(lastCompletionCandidates_.begin(), lastCompletionCandidates_.end(), word), lastCompletionCandidates_.end());
 }
 
-String TabComplete::completeWord(const String& word) {
+std::string TabComplete::completeWord(const std::string& word) {
 	if (word == lastCompletion_) {
 		if (lastCompletionCandidates_.size() != 0) {
 			size_t match = 0;
@@ -39,10 +40,10 @@ String TabComplete::completeWord(const String& word) {
 			lastCompletion_ = lastCompletionCandidates_[nextIndex];
 		}		
 	} else {
-		lastShort_ = word.getLowerCase();
+		lastShort_ = boost::to_lower_copy(word);
 		lastCompletionCandidates_.clear();
-		foreach (String candidate, words_) {
-			if (candidate.getLowerCase().beginsWith(word.getLowerCase())) {
+		foreach (std::string candidate, words_) {
+			if (boost::starts_with(boost::to_lower_copy(candidate), boost::to_lower_copy(word))) {
 				lastCompletionCandidates_.push_back(candidate);
 			}
 		}

@@ -26,7 +26,7 @@ namespace Swift {
 			void setVCard(Swift::VCard::ref);
 			void setEnabled(bool);
 			void setProcessing(bool);
-			virtual void setError(const String&);
+			virtual void setError(const std::string&);
 			void show();
 			void hide();
 

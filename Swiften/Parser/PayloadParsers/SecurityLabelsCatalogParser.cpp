@@ -18,7 +18,7 @@ SecurityLabelsCatalogParser::~SecurityLabelsCatalogParser() {
 	delete labelParserFactory_;
 }
 
-void SecurityLabelsCatalogParser::handleStartElement(const String& element, const String& ns, const AttributeMap& attributes) {
+void SecurityLabelsCatalogParser::handleStartElement(const std::string& element, const std::string& ns, const AttributeMap& attributes) {
 	++level_;
 	if (level_ == PayloadLevel) {
 		getPayloadInternal()->setTo(JID(attributes.getAttribute("to")));
@@ -38,7 +38,7 @@ void SecurityLabelsCatalogParser::handleStartElement(const String& element, cons
 	}
 }
 
-void SecurityLabelsCatalogParser::handleEndElement(const String& element, const String& ns) {
+void SecurityLabelsCatalogParser::handleEndElement(const std::string& element, const std::string& ns) {
 	if (labelParser_) {
 		labelParser_->handleEndElement(element, ns);
 	}
@@ -52,7 +52,7 @@ void SecurityLabelsCatalogParser::handleEndElement(const String& element, const 
 	--level_;
 }
 
-void SecurityLabelsCatalogParser::handleCharacterData(const String& data) {
+void SecurityLabelsCatalogParser::handleCharacterData(const std::string& data) {
 	if (labelParser_) {
 		labelParser_->handleCharacterData(data);
 	}

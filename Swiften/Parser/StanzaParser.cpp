@@ -23,7 +23,7 @@ StanzaParser::StanzaParser(PayloadParserFactoryCollection* factories) :
 StanzaParser::~StanzaParser() {
 }
 
-void StanzaParser::handleStartElement(const String& element, const String& ns, const AttributeMap& attributes) {
+void StanzaParser::handleStartElement(const std::string& element, const std::string& ns, const AttributeMap& attributes) {
 	if (inStanza()) {
 		if (!inPayload()) {
 			assert(!currentPayloadParser_.get());
@@ -56,7 +56,7 @@ void StanzaParser::handleStartElement(const String& element, const String& ns, c
 	++currentDepth_;
 }
 
-void StanzaParser::handleEndElement(const String& element, const String& ns) {
+void StanzaParser::handleEndElement(const std::string& element, const std::string& ns) {
 	assert(inStanza());
 	if (inPayload()) {
 		assert(currentPayloadParser_.get());
@@ -75,7 +75,7 @@ void StanzaParser::handleEndElement(const String& element, const String& ns) {
 	}
 }
 
-void StanzaParser::handleCharacterData(const String& data) {
+void StanzaParser::handleCharacterData(const std::string& data) {
 	if (currentPayloadParser_.get()) {
 		currentPayloadParser_->handleCharacterData(data);
 	}

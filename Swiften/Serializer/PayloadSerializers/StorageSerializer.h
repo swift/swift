@@ -14,6 +14,6 @@ namespace Swift {
 		public:
 			StorageSerializer();
 
-			virtual String serializePayload(boost::shared_ptr<Storage>)  const;
+			virtual std::string serializePayload(boost::shared_ptr<Storage>)  const;
 	};
 }

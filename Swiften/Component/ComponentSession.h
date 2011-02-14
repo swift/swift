@@ -12,7 +12,7 @@
 #include "Swiften/JID/JID.h"
 #include "Swiften/Base/boost_bsignals.h"
 #include "Swiften/Base/Error.h"
-#include "Swiften/Base/String.h"
+#include <string>
 #include "Swiften/Elements/Element.h"
 #include "Swiften/Elements/Stanza.h"
 #include "Swiften/Session/SessionStream.h"
@@ -41,7 +41,7 @@ namespace Swift {
 
 			~ComponentSession();
 
-			static boost::shared_ptr<ComponentSession> create(const JID& jid, const String& secret, boost::shared_ptr<SessionStream> stream) {
+			static boost::shared_ptr<ComponentSession> create(const JID& jid, const std::string& secret, boost::shared_ptr<SessionStream> stream) {
 				return boost::shared_ptr<ComponentSession>(new ComponentSession(jid, secret, stream));
 			}
 
@@ -60,7 +60,7 @@ namespace Swift {
 			boost::signal<void (boost::shared_ptr<Stanza>)> onStanzaReceived;
 		
 		private:
-			ComponentSession(const JID& jid, const String& secret, boost::shared_ptr<SessionStream>);
+			ComponentSession(const JID& jid, const std::string& secret, boost::shared_ptr<SessionStream>);
 
 			void finishSession(Error::Type error);
 			void finishSession(boost::shared_ptr<Swift::Error> error);
@@ -75,7 +75,7 @@ namespace Swift {
 
 		private:
 			JID jid;
-			String secret;
+			std::string secret;
 			boost::shared_ptr<SessionStream> stream;
 			boost::shared_ptr<Swift::Error> error;
 			State state;

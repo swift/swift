@@ -33,18 +33,18 @@ class DiscoInfoParserTest : public CppUnit::TestFixture {
 
 			DiscoInfo::ref payload = boost::dynamic_pointer_cast<DiscoInfo>(parser.getPayload());
 			CPPUNIT_ASSERT_EQUAL(2, static_cast<int>(payload->getIdentities().size()));
-			CPPUNIT_ASSERT_EQUAL(String("Swift"), payload->getIdentities()[0].getName());
-			CPPUNIT_ASSERT_EQUAL(String("pc"), payload->getIdentities()[0].getType());
-			CPPUNIT_ASSERT_EQUAL(String("client"), payload->getIdentities()[0].getCategory());
-			CPPUNIT_ASSERT_EQUAL(String("en"), payload->getIdentities()[0].getLanguage());
-			CPPUNIT_ASSERT_EQUAL(String("Vlug"), payload->getIdentities()[1].getName());
-			CPPUNIT_ASSERT_EQUAL(String("pc"), payload->getIdentities()[1].getType());
-			CPPUNIT_ASSERT_EQUAL(String("client"), payload->getIdentities()[1].getCategory());
-			CPPUNIT_ASSERT_EQUAL(String("nl"), payload->getIdentities()[1].getLanguage());
+			CPPUNIT_ASSERT_EQUAL(std::string("Swift"), payload->getIdentities()[0].getName());
+			CPPUNIT_ASSERT_EQUAL(std::string("pc"), payload->getIdentities()[0].getType());
+			CPPUNIT_ASSERT_EQUAL(std::string("client"), payload->getIdentities()[0].getCategory());
+			CPPUNIT_ASSERT_EQUAL(std::string("en"), payload->getIdentities()[0].getLanguage());
+			CPPUNIT_ASSERT_EQUAL(std::string("Vlug"), payload->getIdentities()[1].getName());
+			CPPUNIT_ASSERT_EQUAL(std::string("pc"), payload->getIdentities()[1].getType());
+			CPPUNIT_ASSERT_EQUAL(std::string("client"), payload->getIdentities()[1].getCategory());
+			CPPUNIT_ASSERT_EQUAL(std::string("nl"), payload->getIdentities()[1].getLanguage());
 			CPPUNIT_ASSERT_EQUAL(3, static_cast<int>(payload->getFeatures().size()));
-			CPPUNIT_ASSERT_EQUAL(String("foo-feature"), payload->getFeatures()[0]);
-			CPPUNIT_ASSERT_EQUAL(String("bar-feature"), payload->getFeatures()[1]);
-			CPPUNIT_ASSERT_EQUAL(String("baz-feature"), payload->getFeatures()[2]);
+			CPPUNIT_ASSERT_EQUAL(std::string("foo-feature"), payload->getFeatures()[0]);
+			CPPUNIT_ASSERT_EQUAL(std::string("bar-feature"), payload->getFeatures()[1]);
+			CPPUNIT_ASSERT_EQUAL(std::string("baz-feature"), payload->getFeatures()[2]);
 		}
 
 		void testParse_Form() {
@@ -62,10 +62,10 @@ class DiscoInfoParserTest : public CppUnit::TestFixture {
 
 			DiscoInfo::ref payload = boost::dynamic_pointer_cast<DiscoInfo>(parser.getPayload());
 			CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(payload->getExtensions().size()));
-			CPPUNIT_ASSERT_EQUAL(String("Bot Configuration"), payload->getExtensions()[0]->getTitle());
+			CPPUNIT_ASSERT_EQUAL(std::string("Bot Configuration"), payload->getExtensions()[0]->getTitle());
 			CPPUNIT_ASSERT_EQUAL(2, static_cast<int>(payload->getFeatures().size()));
-			CPPUNIT_ASSERT_EQUAL(String("foo-feature"), payload->getFeatures()[0]);
-			CPPUNIT_ASSERT_EQUAL(String("bar-feature"), payload->getFeatures()[1]);
+			CPPUNIT_ASSERT_EQUAL(std::string("foo-feature"), payload->getFeatures()[0]);
+			CPPUNIT_ASSERT_EQUAL(std::string("bar-feature"), payload->getFeatures()[1]);
 		}
 };
 

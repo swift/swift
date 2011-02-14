@@ -9,7 +9,7 @@
 #include <boost/bind.hpp>
 
 #include "Swiften/JID/JID.h"
-#include "Swiften/Base/String.h"
+#include <string>
 #include "Swiften/Avatars/CombinedAvatarProvider.h"
 
 using namespace Swift;
@@ -47,7 +47,7 @@ class CombinedAvatarProviderTest : public CppUnit::TestFixture {
 		void testGetAvatarWithNoAvatarProviderReturnsEmpty() {
 			std::auto_ptr<CombinedAvatarProvider> testling(createProvider());
 
-			CPPUNIT_ASSERT(testling->getAvatarHash(user1).isEmpty());
+			CPPUNIT_ASSERT(testling->getAvatarHash(user1).empty());
 		}
 
 		void testGetAvatarWithSingleAvatarProvider() {
@@ -168,26 +168,26 @@ class CombinedAvatarProviderTest : public CppUnit::TestFixture {
 
 	private:
 		struct DummyAvatarProvider : public AvatarProvider {
-			String getAvatarHash(const JID& jid) const {
-				std::map<JID, String>::const_iterator i = avatars.find(jid);
+			std::string getAvatarHash(const JID& jid) const {
+				std::map<JID, std::string>::const_iterator i = avatars.find(jid);
 				if (i != avatars.end()) {
 					return i->second;
 				}
 				else {
-					return String();
+					return std::string();
 				}
 			}
 
-			std::map<JID, String> avatars;
+			std::map<JID, std::string> avatars;
 		};
 
 		DummyAvatarProvider* avatarProvider1;
 		DummyAvatarProvider* avatarProvider2;
 		JID user1;
 		JID user2;
-		String avatarHash1;
-		String avatarHash2;
-		String avatarHash3;
+		std::string avatarHash1;
+		std::string avatarHash2;
+		std::string avatarHash3;
 		std::vector<JID> changes;
 };
 

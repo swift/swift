@@ -15,11 +15,11 @@ namespace Swift {
 StreamErrorSerializer::StreamErrorSerializer() : GenericElementSerializer<StreamError>() {
 }
 
-String StreamErrorSerializer::serialize(boost::shared_ptr<Element> element)  const {
+std::string StreamErrorSerializer::serialize(boost::shared_ptr<Element> element)  const {
 	StreamError::ref error = boost::dynamic_pointer_cast<StreamError>(element);
 	XMLElement errorElement("error", "http://etherx.jabber.org/streams");
 
-	String typeTag;
+	std::string typeTag;
 	switch (error->getType()) {
 		case StreamError::BadFormat: typeTag = "bad-format"; break;
 		case StreamError::BadNamespacePrefix: typeTag = "bad-namespace-prefix"; break;
@@ -49,7 +49,7 @@ String StreamErrorSerializer::serialize(boost::shared_ptr<Element> element)  con
 	}
 	errorElement.addNode(boost::make_shared<XMLElement>(typeTag, "urn:ietf:params:xml:ns:xmpp-streams"));	
 
-	if (!error->getText().isEmpty()) {
+	if (!error->getText().empty()) {
 		errorElement.addNode(boost::make_shared<XMLElement>("text", "urn:ietf:params:xml:ns:xmpp-streams", error->getText()));
 	}
 

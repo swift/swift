@@ -51,13 +51,13 @@ int main(int argc, char* argv[]) {
 
 	int argi = 1;
 	
-	String jid = argv[argi++];
-	String connectHost = "";
+	std::string jid = argv[argi++];
+	std::string connectHost = "";
 	if (argc == 6) {
 		connectHost = argv[argi++];
 	}
 
-	client = new Swift::Client(JID(jid), String(argv[argi++]), &networkFactories);
+	client = new Swift::Client(JID(jid), std::string(argv[argi++]), &networkFactories);
 	client->setAlwaysTrustCertificates();
 
 	recipient = JID(argv[argi++]);
@@ -66,7 +66,7 @@ int main(int argc, char* argv[]) {
 	ClientXMLTracer* tracer = new ClientXMLTracer(client);
 	client->onConnected.connect(&handleConnected);
 	errorConnection = client->onDisconnected.connect(&handleDisconnected);
-	if (!connectHost.isEmpty()) {
+	if (!connectHost.empty()) {
 		client->connect(connectHost);
 	} else {
 		client->connect();

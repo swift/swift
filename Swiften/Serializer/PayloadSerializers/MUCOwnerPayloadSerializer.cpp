@@ -15,7 +15,7 @@ namespace Swift {
 MUCOwnerPayloadSerializer::MUCOwnerPayloadSerializer(PayloadSerializerCollection* serializers) : GenericPayloadSerializer<MUCOwnerPayload>(), serializers(serializers) {
 }
 
-String MUCOwnerPayloadSerializer::serializePayload(boost::shared_ptr<MUCOwnerPayload> mucOwner)  const {
+std::string MUCOwnerPayloadSerializer::serializePayload(boost::shared_ptr<MUCOwnerPayload> mucOwner)  const {
 	XMLElement mucElement("query", "http://jabber.org/protocol/muc#owner");
 	boost::shared_ptr<Payload> payload = mucOwner->getPayload();
 	if (payload) {

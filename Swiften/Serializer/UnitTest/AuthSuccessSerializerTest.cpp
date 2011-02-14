@@ -25,7 +25,7 @@ class AuthSuccessSerializerTest : public CppUnit::TestFixture {
 			boost::shared_ptr<AuthSuccess> authSuccess(new AuthSuccess());
 			authSuccess->setValue("foo");
 
-			CPPUNIT_ASSERT_EQUAL(String(
+			CPPUNIT_ASSERT_EQUAL(std::string(
 				"<success xmlns=\"urn:ietf:params:xml:ns:xmpp-sasl\">"
 					"Zm9v"
 				"</success>"), testling.serialize(authSuccess));
@@ -35,7 +35,7 @@ class AuthSuccessSerializerTest : public CppUnit::TestFixture {
 			AuthSuccessSerializer testling;
 			boost::shared_ptr<AuthSuccess> authSuccess(new AuthSuccess());
 
-			CPPUNIT_ASSERT_EQUAL(String(
+			CPPUNIT_ASSERT_EQUAL(std::string(
 				"<success xmlns=\"urn:ietf:params:xml:ns:xmpp-sasl\">"
 				"</success>"), testling.serialize(authSuccess));
 		}
@@ -45,7 +45,7 @@ class AuthSuccessSerializerTest : public CppUnit::TestFixture {
 			boost::shared_ptr<AuthSuccess> authSuccess(new AuthSuccess());
 			authSuccess->setValue(ByteArray());
 
-			CPPUNIT_ASSERT_EQUAL(String(
+			CPPUNIT_ASSERT_EQUAL(std::string(
 				"<success xmlns=\"urn:ietf:params:xml:ns:xmpp-sasl\">"
 					"="
 				"</success>"), testling.serialize(authSuccess));

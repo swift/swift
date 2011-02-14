@@ -15,7 +15,7 @@ namespace Swift {
 StreamFeaturesSerializer::StreamFeaturesSerializer() {
 }
 
-String StreamFeaturesSerializer::serialize(boost::shared_ptr<Element> element)  const {
+std::string StreamFeaturesSerializer::serialize(boost::shared_ptr<Element> element)  const {
 	boost::shared_ptr<StreamFeatures> streamFeatures(boost::dynamic_pointer_cast<StreamFeatures>(element));
 
 	XMLElement streamFeaturesElement("stream:features");
@@ -24,7 +24,7 @@ String StreamFeaturesSerializer::serialize(boost::shared_ptr<Element> element)  
 	}
 	if (!streamFeatures->getCompressionMethods().empty()) {
 		boost::shared_ptr<XMLElement> compressionElement(new XMLElement("compression", "http://jabber.org/features/compress"));
-		foreach(const String& method, streamFeatures->getCompressionMethods()) {
+		foreach(const std::string& method, streamFeatures->getCompressionMethods()) {
 			boost::shared_ptr<XMLElement> methodElement(new XMLElement("method"));
 			methodElement->addNode(boost::shared_ptr<XMLTextNode>(new XMLTextNode(method)));
 			compressionElement->addNode(methodElement);
@@ -33,7 +33,7 @@ String StreamFeaturesSerializer::serialize(boost::shared_ptr<Element> element)  
 	}
 	if (!streamFeatures->getAuthenticationMechanisms().empty()) {
 		boost::shared_ptr<XMLElement> mechanismsElement(new XMLElement("mechanisms", "urn:ietf:params:xml:ns:xmpp-sasl"));
-		foreach(const String& mechanism, streamFeatures->getAuthenticationMechanisms()) {
+		foreach(const std::string& mechanism, streamFeatures->getAuthenticationMechanisms()) {
 			boost::shared_ptr<XMLElement> mechanismElement(new XMLElement("mechanism"));
 			mechanismElement->addNode(boost::shared_ptr<XMLTextNode>(new XMLTextNode(mechanism)));
 			mechanismsElement->addNode(mechanismElement);

@@ -40,7 +40,7 @@ class PrivateStorageParserTest : public CppUnit::TestFixture {
 			CPPUNIT_ASSERT(payload);
 			boost::shared_ptr<Storage> storage = boost::dynamic_pointer_cast<Storage>(payload->getPayload());
 			CPPUNIT_ASSERT(storage);
-			CPPUNIT_ASSERT_EQUAL(String("Alice"), storage->getRooms()[0].nick);
+			CPPUNIT_ASSERT_EQUAL(std::string("Alice"), storage->getRooms()[0].nick);
 			CPPUNIT_ASSERT_EQUAL(JID("swift@rooms.swift.im"), storage->getRooms()[0].jid);
 		}
 
@@ -75,7 +75,7 @@ class PrivateStorageParserTest : public CppUnit::TestFixture {
 			CPPUNIT_ASSERT(payload);
 			boost::shared_ptr<Storage> storage = boost::dynamic_pointer_cast<Storage>(payload->getPayload());
 			CPPUNIT_ASSERT(storage);
-			CPPUNIT_ASSERT_EQUAL(String("Rabbit"), storage->getRooms()[0].nick);
+			CPPUNIT_ASSERT_EQUAL(std::string("Rabbit"), storage->getRooms()[0].nick);
 		}
 
 		void testParse_UnsupportedPayload() {

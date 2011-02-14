@@ -12,8 +12,8 @@ namespace Swift {
 ErrorSerializer::ErrorSerializer() : GenericPayloadSerializer<ErrorPayload>() {
 }
 
-String ErrorSerializer::serializePayload(boost::shared_ptr<ErrorPayload> error)  const {
-	String result("<error type=\"");
+std::string ErrorSerializer::serializePayload(boost::shared_ptr<ErrorPayload> error)  const {
+	std::string result("<error type=\"");
 	switch (error->getType()) {
 		case ErrorPayload::Continue: result += "continue"; break;
 		case ErrorPayload::Modify: result += "modify"; break;
@@ -23,7 +23,7 @@ String ErrorSerializer::serializePayload(boost::shared_ptr<ErrorPayload> error) 
 	}
 	result += "\">";
 
-	String conditionElement;
+	std::string conditionElement;
 	switch (error->getCondition()) {
 		case ErrorPayload::BadRequest: conditionElement = "bad-request"; break;
 		case ErrorPayload::Conflict: conditionElement = "conflict"; break;
@@ -50,7 +50,7 @@ String ErrorSerializer::serializePayload(boost::shared_ptr<ErrorPayload> error) 
 	}
 	result += "<" + conditionElement + " xmlns=\"urn:ietf:params:xml:ns:xmpp-stanzas\"/>";
 
-	if (!error->getText().isEmpty()) {
+	if (!error->getText().empty()) {
 		XMLTextNode textNode(error->getText());
 		result += "<text xmlns=\"urn:ietf:params:xml:ns:xmpp-stanzas\">" + textNode.serialize() + "</text>";
 	}

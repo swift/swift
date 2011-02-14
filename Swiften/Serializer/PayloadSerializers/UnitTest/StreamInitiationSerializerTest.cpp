@@ -28,7 +28,7 @@ class StreamInitiationSerializerTest : public CppUnit::TestFixture{
 			streamInitiation->addProvidedMethod("jabber:iq:oob");
 			streamInitiation->addProvidedMethod("http://jabber.org/protocol/ibb");
 
-			CPPUNIT_ASSERT_EQUAL(String(
+			CPPUNIT_ASSERT_EQUAL(std::string(
 					"<si id=\"a0\" profile=\"http://jabber.org/protocol/si/profile/file-transfer\" xmlns=\"http://jabber.org/protocol/si\">"
 						"<file name=\"test.txt\" size=\"1022\" xmlns=\"http://jabber.org/protocol/si/profile/file-transfer\">"
 							"<desc>This is info about the file.</desc>"
@@ -51,7 +51,7 @@ class StreamInitiationSerializerTest : public CppUnit::TestFixture{
 			boost::shared_ptr<StreamInitiation> streamInitiation(new StreamInitiation());
 			streamInitiation->setRequestedMethod("http://jabber.org/protocol/bytestreams");
 
-			CPPUNIT_ASSERT_EQUAL(String(
+			CPPUNIT_ASSERT_EQUAL(std::string(
 					"<si profile=\"http://jabber.org/protocol/si/profile/file-transfer\" xmlns=\"http://jabber.org/protocol/si\">"
 						"<feature xmlns=\"http://jabber.org/protocol/feature-neg\">"
 							"<x type=\"submit\" xmlns=\"jabber:x:data\">"

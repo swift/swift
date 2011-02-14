@@ -11,7 +11,7 @@ namespace Swift {
 DiscoItemsParser::DiscoItemsParser() : level_(TopLevel) {
 }
 
-void DiscoItemsParser::handleStartElement(const String& element, const String&, const AttributeMap& attributes) {
+void DiscoItemsParser::handleStartElement(const std::string& element, const std::string&, const AttributeMap& attributes) {
 	if (level_ == PayloadLevel) {
 		if (element == "item") {
 			getPayloadInternal()->addItem(DiscoItems::Item(attributes.getAttribute("name"), JID(attributes.getAttribute("jid")), attributes.getAttribute("node")));
@@ -20,11 +20,11 @@ void DiscoItemsParser::handleStartElement(const String& element, const String&, 
 	++level_;
 }
 
-void DiscoItemsParser::handleEndElement(const String&, const String&) {
+void DiscoItemsParser::handleEndElement(const std::string&, const std::string&) {
 	--level_;
 }
 
-void DiscoItemsParser::handleCharacterData(const String&) {
+void DiscoItemsParser::handleCharacterData(const std::string&) {
 }
 
 }

@@ -15,9 +15,9 @@ namespace Swift {
 		public:
 			StartSessionParser() {}
 
-			virtual void handleStartElement(const String&, const String&, const AttributeMap&) {}
-			virtual void handleEndElement(const String&, const String&) {}
-			virtual void handleCharacterData(const String&) {}
+			virtual void handleStartElement(const std::string&, const std::string&, const AttributeMap&) {}
+			virtual void handleEndElement(const std::string&, const std::string&) {}
+			virtual void handleCharacterData(const std::string&) {}
 	};
 }
 

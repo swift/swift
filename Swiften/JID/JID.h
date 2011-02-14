@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include "Swiften/Base/String.h"
+#include <string>
 
 namespace Swift {
 	class JID {
@@ -15,22 +15,22 @@ namespace Swift {
 				WithResource, WithoutResource
 			};
 
-			explicit JID(const String& = String());
+			explicit JID(const std::string& = std::string());
 			explicit JID(const char*);
-			JID(const String& node, const String& domain);
-			JID(const String& node, const String& domain, const String& resource);
+			JID(const std::string& node, const std::string& domain);
+			JID(const std::string& node, const std::string& domain, const std::string& resource);
 
 			bool isValid() const {
-				return !domain_.isEmpty(); /* FIXME */
+				return !domain_.empty(); /* FIXME */
 			}
 
-			const String& getNode() const {
+			const std::string& getNode() const {
 				return node_;
 			}
-			const String& getDomain() const {
+			const std::string& getDomain() const {
 				return domain_;
 			}
-			const String& getResource() const {
+			const std::string& getResource() const {
 				return resource_;
 			}
 			bool isBare() const {
@@ -44,7 +44,7 @@ namespace Swift {
 				return result;
 			}
 
-			String toString() const;
+			std::string toString() const;
 
 			bool equals(const JID& o, CompareType compareType) const {
 				return compare(o, compareType) == 0;
@@ -52,7 +52,7 @@ namespace Swift {
 
 			int compare(const JID& o, CompareType compareType) const;
 
-			operator String() const {
+			operator std::string() const {
 				return toString();
 			}
 
@@ -74,13 +74,13 @@ namespace Swift {
 			}
 
 		private:
-			void nameprepAndSetComponents(const String& node, const String& domain, const String& resource);
-			void initializeFromString(const String&);
+			void nameprepAndSetComponents(const std::string& node, const std::string& domain, const std::string& resource);
+			void initializeFromString(const std::string&);
 	
 		private:
-			String node_;
-			String domain_;
+			std::string node_;
+			std::string domain_;
 			bool hasResource_;
-			String resource_;
+			std::string resource_;
 	};
 }

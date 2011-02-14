@@ -14,7 +14,7 @@
 #include <QCheckBox>
 
 #include "QtSwiftUtil.h"
-#include "Swiften/Base/String.h"
+#include <string>
 
 namespace Swift {
 
@@ -71,15 +71,15 @@ void QtXMLConsoleWidget::closeEvent(QCloseEvent* event) {
 	event->accept();
 }
 
-void QtXMLConsoleWidget::handleDataRead(const String& data) {
+void QtXMLConsoleWidget::handleDataRead(const std::string& data) {
 	appendTextIfEnabled("<!-- IN -->\n" + data + "\n", QColor(33,98,33));
 }
 
-void QtXMLConsoleWidget::handleDataWritten(const String& data) {
+void QtXMLConsoleWidget::handleDataWritten(const std::string& data) {
 	appendTextIfEnabled("<!-- OUT -->\n" + data + "\n", QColor(155,1,0));
 }
 
-void QtXMLConsoleWidget::appendTextIfEnabled(const String& data, const QColor& color) {
+void QtXMLConsoleWidget::appendTextIfEnabled(const std::string& data, const QColor& color) {
 	if (enabled->isChecked()) {
 		QScrollBar* scrollBar = textEdit->verticalScrollBar();
 		bool scrollToBottom = (!scrollBar || scrollBar->value() == scrollBar->maximum());

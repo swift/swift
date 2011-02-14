@@ -29,7 +29,7 @@ class IQTest : public CppUnit::TestFixture
 			boost::shared_ptr<IQ> iq(IQ::createResult(JID("foo@bar/fum"), "myid", payload));
 
 			CPPUNIT_ASSERT_EQUAL(JID("foo@bar/fum"), iq->getTo());
-			CPPUNIT_ASSERT_EQUAL(String("myid"), iq->getID());
+			CPPUNIT_ASSERT_EQUAL(std::string("myid"), iq->getID());
 			CPPUNIT_ASSERT(iq->getPayload<SoftwareVersion>());
 			CPPUNIT_ASSERT(payload == iq->getPayload<SoftwareVersion>());
 		}
@@ -38,7 +38,7 @@ class IQTest : public CppUnit::TestFixture
 			boost::shared_ptr<IQ> iq(IQ::createResult(JID("foo@bar/fum"), "myid"));
 
 			CPPUNIT_ASSERT_EQUAL(JID("foo@bar/fum"), iq->getTo());
-			CPPUNIT_ASSERT_EQUAL(String("myid"), iq->getID());
+			CPPUNIT_ASSERT_EQUAL(std::string("myid"), iq->getID());
 			CPPUNIT_ASSERT(!iq->getPayload<SoftwareVersion>());
 		}
 
@@ -46,7 +46,7 @@ class IQTest : public CppUnit::TestFixture
 			boost::shared_ptr<IQ> iq(IQ::createError(JID("foo@bar/fum"), "myid", ErrorPayload::BadRequest, ErrorPayload::Modify));
 
 			CPPUNIT_ASSERT_EQUAL(JID("foo@bar/fum"), iq->getTo());
-			CPPUNIT_ASSERT_EQUAL(String("myid"), iq->getID());
+			CPPUNIT_ASSERT_EQUAL(std::string("myid"), iq->getID());
 			boost::shared_ptr<ErrorPayload> error(iq->getPayload<ErrorPayload>());
 			CPPUNIT_ASSERT(error);
 			CPPUNIT_ASSERT_EQUAL(ErrorPayload::BadRequest, error->getCondition());

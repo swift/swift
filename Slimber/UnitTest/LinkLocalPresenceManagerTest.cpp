@@ -71,7 +71,7 @@ class LinkLocalPresenceManagerTest : public CppUnit::TestFixture {
 			CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(rosterChanges[0]->getItems().size()));
 			boost::optional<RosterItemPayload> item = rosterChanges[0]->getItem(JID("alice@wonderland"));
 			CPPUNIT_ASSERT(item);
-			CPPUNIT_ASSERT_EQUAL(String("Alice"), item->getName());
+			CPPUNIT_ASSERT_EQUAL(std::string("Alice"), item->getName());
 			CPPUNIT_ASSERT_EQUAL(RosterItemPayload::Both, item->getSubscription());
 			CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(presenceChanges.size()));
 			CPPUNIT_ASSERT(StatusShow::Online == presenceChanges[0]->getShow());
@@ -101,7 +101,7 @@ class LinkLocalPresenceManagerTest : public CppUnit::TestFixture {
 			CPPUNIT_ASSERT_EQUAL(2, static_cast<int>(presenceChanges.size()));
 			CPPUNIT_ASSERT(StatusShow::Away == presenceChanges[1]->getShow());
 			CPPUNIT_ASSERT(JID("alice@wonderland") == presenceChanges[1]->getFrom());
-			CPPUNIT_ASSERT_EQUAL(String("I'm Away"), presenceChanges[1]->getStatus());
+			CPPUNIT_ASSERT_EQUAL(std::string("I'm Away"), presenceChanges[1]->getStatus());
 		}
 
 		void testGetAllPresence() {
@@ -131,11 +131,11 @@ class LinkLocalPresenceManagerTest : public CppUnit::TestFixture {
 			boost::optional<RosterItemPayload> item;
 			item = roster->getItem(JID("alice@wonderland"));
 			CPPUNIT_ASSERT(item);
-			CPPUNIT_ASSERT_EQUAL(String("Alice"), item->getName());
+			CPPUNIT_ASSERT_EQUAL(std::string("Alice"), item->getName());
 			CPPUNIT_ASSERT_EQUAL(RosterItemPayload::Both, item->getSubscription());
 			item = roster->getItem(JID("rabbit@teaparty"));
 			CPPUNIT_ASSERT(item);
-			CPPUNIT_ASSERT_EQUAL(String("Rabbit"), item->getName());
+			CPPUNIT_ASSERT_EQUAL(std::string("Rabbit"), item->getName());
 			CPPUNIT_ASSERT_EQUAL(RosterItemPayload::Both, item->getSubscription());
 		}
 
@@ -145,7 +145,7 @@ class LinkLocalPresenceManagerTest : public CppUnit::TestFixture {
 			addService("alice@wonderland", "Alice", "Alice In", "Wonderland");
 
 			boost::optional<RosterItemPayload> item = testling->getRoster()->getItem(JID("alice@wonderland"));
-			CPPUNIT_ASSERT_EQUAL(String("Alice"), item->getName());
+			CPPUNIT_ASSERT_EQUAL(std::string("Alice"), item->getName());
 		}
 
 		void testGetRoster_InfoWithFirstName() {
@@ -154,7 +154,7 @@ class LinkLocalPresenceManagerTest : public CppUnit::TestFixture {
 			addService("alice@wonderland", "", "Alice In", "");
 
 			boost::optional<RosterItemPayload> item = testling->getRoster()->getItem(JID("alice@wonderland"));
-			CPPUNIT_ASSERT_EQUAL(String("Alice In"), item->getName());
+			CPPUNIT_ASSERT_EQUAL(std::string("Alice In"), item->getName());
 		}
 
 		void testGetRoster_InfoWithLastName() {
@@ -163,7 +163,7 @@ class LinkLocalPresenceManagerTest : public CppUnit::TestFixture {
 			addService("alice@wonderland", "", "", "Wonderland");
 
 			boost::optional<RosterItemPayload> item = testling->getRoster()->getItem(JID("alice@wonderland"));
-			CPPUNIT_ASSERT_EQUAL(String("Wonderland"), item->getName());
+			CPPUNIT_ASSERT_EQUAL(std::string("Wonderland"), item->getName());
 		}
 
 		void testGetRoster_InfoWithFirstAndLastName() {
@@ -172,7 +172,7 @@ class LinkLocalPresenceManagerTest : public CppUnit::TestFixture {
 			addService("alice@wonderland", "", "Alice In", "Wonderland");
 
 			boost::optional<RosterItemPayload> item = testling->getRoster()->getItem(JID("alice@wonderland"));
-			CPPUNIT_ASSERT_EQUAL(String("Alice In Wonderland"), item->getName());
+			CPPUNIT_ASSERT_EQUAL(std::string("Alice In Wonderland"), item->getName());
 		}
 
 		void testGetRoster_NoInfo() {
@@ -181,7 +181,7 @@ class LinkLocalPresenceManagerTest : public CppUnit::TestFixture {
 			addService("alice@wonderland");
 
 			boost::optional<RosterItemPayload> item = testling->getRoster()->getItem(JID("alice@wonderland"));
-			CPPUNIT_ASSERT_EQUAL(String(""), item->getName());
+			CPPUNIT_ASSERT_EQUAL(std::string(""), item->getName());
 		}
 
 		void testGetServiceForJID() {
@@ -193,7 +193,7 @@ class LinkLocalPresenceManagerTest : public CppUnit::TestFixture {
 
 			boost::optional<LinkLocalService> service = testling->getServiceForJID(JID("rabbit@teaparty"));
 			CPPUNIT_ASSERT(service);
-			CPPUNIT_ASSERT_EQUAL(String("rabbit@teaparty"), service->getID().getName());
+			CPPUNIT_ASSERT_EQUAL(std::string("rabbit@teaparty"), service->getID().getName());
 		}
 
 		void testGetServiceForJID_NoMatch() {
@@ -216,7 +216,7 @@ class LinkLocalPresenceManagerTest : public CppUnit::TestFixture {
 			return testling;
 		}
 
-		void addService(const String& name, const String& nickName = String(), const String& firstName = String(), const String& lastName = String()) {
+		void addService(const std::string& name, const std::string& nickName = std::string(), const std::string& firstName = std::string(), const std::string& lastName = std::string()) {
 			DNSSDServiceID service(name, "local.");
 			LinkLocalServiceInfo info;
 			info.setFirstName(firstName);
@@ -227,13 +227,13 @@ class LinkLocalPresenceManagerTest : public CppUnit::TestFixture {
 			eventLoop->processEvents();
 		}
 
-		void removeService(const String& name) {
+		void removeService(const std::string& name) {
 			DNSSDServiceID service(name, "local.");
 			querier->removeService(DNSSDServiceID(name, "local."));
 			eventLoop->processEvents();
 		}
 
-		void updateServicePresence(const String& name, LinkLocalServiceInfo::Status status, const String& message) {
+		void updateServicePresence(const std::string& name, LinkLocalServiceInfo::Status status, const std::string& message) {
 			DNSSDServiceID service(name, "local.");
 			LinkLocalServiceInfo info;
 			info.setStatus(status);

@@ -10,7 +10,7 @@ class SparkleAutoUpdater::Private {
 		SUUpdater* updater;
 };
 
-SparkleAutoUpdater::SparkleAutoUpdater(const String& url) {
+SparkleAutoUpdater::SparkleAutoUpdater(const std::string& url) {
 	d = new Private;
 
 	d->updater = [SUUpdater sharedUpdater];
@@ -18,7 +18,7 @@ SparkleAutoUpdater::SparkleAutoUpdater(const String& url) {
 	[d->updater setAutomaticallyChecksForUpdates: true];
 
 	NSURL* nsurl = [NSURL URLWithString:
-			[NSString stringWithUTF8String: url.getUTF8Data()]];
+			[NSString stringWithUTF8String: url.c_str()]];
 	[d->updater setFeedURL: nsurl];
 }
 

@@ -32,13 +32,13 @@ namespace Swift {
 
 			void morphInto(MainWindow *mainWindow);
 			virtual void loggedOut();
-			virtual void setMessage(const String& message);
-			virtual void addAvailableAccount(const String& defaultJID, const String& defaultPassword, const String& defaultCertificate);
-			virtual void removeAvailableAccount(const String& jid);
+			virtual void setMessage(const std::string& message);
+			virtual void addAvailableAccount(const std::string& defaultJID, const std::string& defaultPassword, const std::string& defaultCertificate);
+			virtual void removeAvailableAccount(const std::string& jid);
 			virtual void setLoginAutomatically(bool loginAutomatically);
 			virtual void setIsLoggingIn(bool loggingIn);
-			void selectUser(const String& user);
-			bool askUserToTrustCertificatePermanently(const String& message, Certificate::ref certificate);
+			void selectUser(const std::string& user);
+			bool askUserToTrustCertificatePermanently(const std::string& message, Certificate::ref certificate);
 			void hide();
 
 			virtual void quit();

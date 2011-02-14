@@ -11,14 +11,14 @@
 
 namespace Swift {
 
-String CombinedAvatarProvider::getAvatarHash(const JID& jid) const {
+std::string CombinedAvatarProvider::getAvatarHash(const JID& jid) const {
 	for (size_t i = 0; i < providers.size(); ++i) {
-		String hash = providers[i]->getAvatarHash(jid);
-		if (!hash.isEmpty()) {
+		std::string hash = providers[i]->getAvatarHash(jid);
+		if (!hash.empty()) {
 			return hash;
 		}
 	}
-	return String();
+	return std::string();
 }
 
 void CombinedAvatarProvider::addProvider(AvatarProvider* provider) {
@@ -35,11 +35,11 @@ void CombinedAvatarProvider::removeProvider(AvatarProvider* provider) {
 }
 
 void CombinedAvatarProvider::handleAvatarChanged(const JID& jid) {
-	String hash = getAvatarHash(jid);
-	std::map<JID, String>::iterator i = avatars.find(jid);
+	std::string hash = getAvatarHash(jid);
+	std::map<JID, std::string>::iterator i = avatars.find(jid);
 	if (i != avatars.end()) {
 		if (i->second != hash) {
-			if (hash.isEmpty()) {
+			if (hash.empty()) {
 				avatars.erase(i);
 			}
 			else {
@@ -48,7 +48,7 @@ void CombinedAvatarProvider::handleAvatarChanged(const JID& jid) {
 			onAvatarChanged(jid);
 		}
 	}
-	else if (!hash.isEmpty()) {
+	else if (!hash.empty()) {
 		avatars.insert(std::make_pair(jid, hash));
 		onAvatarChanged(jid);
 	}

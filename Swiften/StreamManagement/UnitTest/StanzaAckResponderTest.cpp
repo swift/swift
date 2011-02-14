@@ -73,7 +73,7 @@ class StanzaAckResponderTest : public CppUnit::TestFixture {
 		}
 
 	private:
-		Message::ref createMessage(const String& id) {
+		Message::ref createMessage(const std::string& id) {
 			Message::ref result(new Message());
 			result->setID(id);
 			return result;

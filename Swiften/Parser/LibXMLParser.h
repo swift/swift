@@ -17,7 +17,7 @@ namespace Swift {
 			LibXMLParser(XMLParserClient* client);
 			~LibXMLParser();
 
-			bool parse(const String& data);
+			bool parse(const std::string& data);
 
 		private:
 			xmlSAXHandler handler_;

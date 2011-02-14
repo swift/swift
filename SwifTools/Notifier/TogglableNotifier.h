@@ -40,7 +40,7 @@ namespace Swift {
 				return persistentEnabled && !temporarilyDisabled;
 			}
  
-			virtual void showMessage(Type type, const String& subject, const String& description, const boost::filesystem::path& picture, boost::function<void()> callback) {
+			virtual void showMessage(Type type, const std::string& subject, const std::string& description, const boost::filesystem::path& picture, boost::function<void()> callback) {
 				if (getCurrentlyEnabled()) {
 					notifier->showMessage(type, subject, description, picture, callback);
 				}

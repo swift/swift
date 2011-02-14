@@ -12,7 +12,7 @@
 #include <set>
 
 #include "Swiften/Base/foreach.h"
-#include "Swiften/Base/String.h"
+#include <string>
 #include "Swiften/EventLoop/EventOwner.h"
 #include "Swiften/LinkLocal/DNSSD/DNSSDQuerier.h"
 #include "Swiften/LinkLocal/DNSSD/DNSSDResolveServiceQuery.h"
@@ -29,7 +29,7 @@ namespace Swift {
 			public EventOwner,
 			public boost::enable_shared_from_this<FakeDNSSDQuerier> {
 		public:
-			FakeDNSSDQuerier(const String& domain, EventLoop* eventLoop);
+			FakeDNSSDQuerier(const std::string& domain, EventLoop* eventLoop);
 			~FakeDNSSDQuerier();
 
 			void start() {}
@@ -41,11 +41,11 @@ namespace Swift {
 
 			boost::shared_ptr<DNSSDBrowseQuery> createBrowseQuery();
 			boost::shared_ptr<DNSSDRegisterQuery> createRegisterQuery(
-					const String& name, int port, const ByteArray& info);
+					const std::string& name, int port, const ByteArray& info);
 			boost::shared_ptr<DNSSDResolveServiceQuery> createResolveServiceQuery(
 					const DNSSDServiceID&);
 			boost::shared_ptr<DNSSDResolveHostnameQuery> createResolveHostnameQuery(
-					const String& hostname, int interfaceIndex);
+					const std::string& hostname, int interfaceIndex);
 
 			void addRunningQuery(boost::shared_ptr<FakeDNSSDQuery>);
 			void removeRunningQuery(boost::shared_ptr<FakeDNSSDQuery>);
@@ -53,8 +53,8 @@ namespace Swift {
 			void addService(const DNSSDServiceID& id);
 			void removeService(const DNSSDServiceID& id);
 			void setServiceInfo(const DNSSDServiceID& id, const DNSSDResolveServiceQuery::Result& info);
-			bool isServiceRegistered(const String& name, int port, const ByteArray& info);
-			void setAddress(const String& hostname, boost::optional<HostAddress> address);
+			bool isServiceRegistered(const std::string& name, int port, const ByteArray& info);
+			void setAddress(const std::string& hostname, boost::optional<HostAddress> address);
 
 			void setBrowseError();
 			void setRegisterError();
@@ -84,13 +84,13 @@ namespace Swift {
 			}
 
 		private:
-			String domain;
+			std::string domain;
 			EventLoop* eventLoop;
 			std::list< boost::shared_ptr<FakeDNSSDQuery> > runningQueries;
 			std::list< boost::shared_ptr<FakeDNSSDQuery> > allQueriesEverRun;
 			std::set<DNSSDServiceID> services;
 			typedef std::map<DNSSDServiceID,DNSSDResolveServiceQuery::Result> ServiceInfoMap;
 			ServiceInfoMap serviceInfo;
-			std::map<String, boost::optional<HostAddress> > addresses;
+			std::map<std::string, boost::optional<HostAddress> > addresses;
 	};
 }

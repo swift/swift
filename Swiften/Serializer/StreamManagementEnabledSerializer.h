@@ -18,7 +18,7 @@ namespace Swift {
 			StreamManagementEnabledSerializer() : GenericElementSerializer<StreamManagementEnabled>() {
 			}
 
-			virtual String serialize(boost::shared_ptr<Element>) const {
+			virtual std::string serialize(boost::shared_ptr<Element>) const {
 				return XMLElement("enabled", "urn:xmpp:sm:2").serialize();
 			}
 	};

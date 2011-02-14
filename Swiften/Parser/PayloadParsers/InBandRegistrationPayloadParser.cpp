@@ -18,7 +18,7 @@ InBandRegistrationPayloadParser::~InBandRegistrationPayloadParser() {
 	delete formParserFactory;
 }
 
-void InBandRegistrationPayloadParser::handleStartElement(const String& element, const String& ns, const AttributeMap& attributes) {
+void InBandRegistrationPayloadParser::handleStartElement(const std::string& element, const std::string& ns, const AttributeMap& attributes) {
 	if (level == TopLevel) {
 	}
 	else if (level == PayloadLevel) {
@@ -38,7 +38,7 @@ void InBandRegistrationPayloadParser::handleStartElement(const String& element, 
 	++level;
 }
 
-void InBandRegistrationPayloadParser::handleEndElement(const String& element, const String& ns) {
+void InBandRegistrationPayloadParser::handleEndElement(const std::string& element, const std::string& ns) {
 	--level;
 
 	if (formParser) {
@@ -116,7 +116,7 @@ void InBandRegistrationPayloadParser::handleEndElement(const String& element, co
 	}
 }
 
-void InBandRegistrationPayloadParser::handleCharacterData(const String& data) {
+void InBandRegistrationPayloadParser::handleCharacterData(const std::string& data) {
 	if (formParser) {
 		formParser->handleCharacterData(data);
 	}

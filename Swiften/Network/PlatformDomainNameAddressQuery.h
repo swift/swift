@@ -12,7 +12,7 @@
 #include <Swiften/Network/DomainNameAddressQuery.h>
 #include <Swiften/Network/PlatformDomainNameQuery.h>
 #include <Swiften/EventLoop/EventOwner.h>
-#include <Swiften/Base/String.h>
+#include <string>
 
 namespace Swift {
 	class PlatformDomainNameResolver;
@@ -20,7 +20,7 @@ namespace Swift {
 
 	class PlatformDomainNameAddressQuery : public DomainNameAddressQuery, public PlatformDomainNameQuery, public boost::enable_shared_from_this<PlatformDomainNameAddressQuery>, public EventOwner {
 		public:
-			PlatformDomainNameAddressQuery(const String& host, EventLoop* eventLoop, PlatformDomainNameResolver*);
+			PlatformDomainNameAddressQuery(const std::string& host, EventLoop* eventLoop, PlatformDomainNameResolver*);
 
 			void run();
 
@@ -30,7 +30,7 @@ namespace Swift {
 
 		private:
 			boost::asio::io_service ioService;
-			String hostname;
+			std::string hostname;
 			EventLoop* eventLoop;
 	};
 }

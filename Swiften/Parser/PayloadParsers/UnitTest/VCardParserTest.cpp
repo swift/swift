@@ -53,23 +53,23 @@ class VCardParserTest : public CppUnit::TestFixture {
 				"</vCard>"));
 
 			boost::shared_ptr<VCard> payload = boost::dynamic_pointer_cast<VCard>(parser.getPayload());
-			CPPUNIT_ASSERT_EQUAL(String("2.0"), payload->getVersion());
-			CPPUNIT_ASSERT_EQUAL(String("Alice In Wonderland"), payload->getFullName());
-			CPPUNIT_ASSERT_EQUAL(String("Alice"), payload->getGivenName());
-			CPPUNIT_ASSERT_EQUAL(String("In"), payload->getMiddleName());
-			CPPUNIT_ASSERT_EQUAL(String("Wonderland"), payload->getFamilyName());
-			CPPUNIT_ASSERT_EQUAL(String("Mrs"), payload->getPrefix());
-			CPPUNIT_ASSERT_EQUAL(String("PhD"), payload->getSuffix());
-			CPPUNIT_ASSERT_EQUAL(String("DreamGirl"), payload->getNickname());
-			CPPUNIT_ASSERT_EQUAL(String("<BDAY xmlns=\"vcard-temp\">1234</BDAY><MAILER xmlns=\"vcard-temp\">mutt</MAILER>"), payload->getUnknownContent());
+			CPPUNIT_ASSERT_EQUAL(std::string("2.0"), payload->getVersion());
+			CPPUNIT_ASSERT_EQUAL(std::string("Alice In Wonderland"), payload->getFullName());
+			CPPUNIT_ASSERT_EQUAL(std::string("Alice"), payload->getGivenName());
+			CPPUNIT_ASSERT_EQUAL(std::string("In"), payload->getMiddleName());
+			CPPUNIT_ASSERT_EQUAL(std::string("Wonderland"), payload->getFamilyName());
+			CPPUNIT_ASSERT_EQUAL(std::string("Mrs"), payload->getPrefix());
+			CPPUNIT_ASSERT_EQUAL(std::string("PhD"), payload->getSuffix());
+			CPPUNIT_ASSERT_EQUAL(std::string("DreamGirl"), payload->getNickname());
+			CPPUNIT_ASSERT_EQUAL(std::string("<BDAY xmlns=\"vcard-temp\">1234</BDAY><MAILER xmlns=\"vcard-temp\">mutt</MAILER>"), payload->getUnknownContent());
 			CPPUNIT_ASSERT_EQUAL(2, static_cast<int>(payload->getEMailAddresses().size()));
-			CPPUNIT_ASSERT_EQUAL(String("alice@wonderland.lit"), payload->getEMailAddresses()[0].address);
+			CPPUNIT_ASSERT_EQUAL(std::string("alice@wonderland.lit"), payload->getEMailAddresses()[0].address);
 			CPPUNIT_ASSERT(payload->getEMailAddresses()[0].isHome);
 			CPPUNIT_ASSERT(payload->getEMailAddresses()[0].isInternet);
 			CPPUNIT_ASSERT(payload->getEMailAddresses()[0].isPreferred);
 			CPPUNIT_ASSERT(!payload->getEMailAddresses()[0].isWork);
 			CPPUNIT_ASSERT(!payload->getEMailAddresses()[0].isX400);
-			CPPUNIT_ASSERT_EQUAL(String("alice@teaparty.lit"), payload->getEMailAddresses()[1].address);
+			CPPUNIT_ASSERT_EQUAL(std::string("alice@teaparty.lit"), payload->getEMailAddresses()[1].address);
 			CPPUNIT_ASSERT(!payload->getEMailAddresses()[1].isHome);
 			CPPUNIT_ASSERT(!payload->getEMailAddresses()[1].isInternet);
 			CPPUNIT_ASSERT(!payload->getEMailAddresses()[1].isPreferred);
@@ -92,7 +92,7 @@ class VCardParserTest : public CppUnit::TestFixture {
 				"</vCard>"));
 
 			VCard* payload = dynamic_cast<VCard*>(parser.getPayload().get());
-			CPPUNIT_ASSERT_EQUAL(String("image/jpeg"), payload->getPhotoType());
+			CPPUNIT_ASSERT_EQUAL(std::string("image/jpeg"), payload->getPhotoType());
 			CPPUNIT_ASSERT_EQUAL(ByteArray("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890"), payload->getPhoto());
 		}
 
@@ -105,7 +105,7 @@ class VCardParserTest : public CppUnit::TestFixture {
 				"</vCard>"));
 
 			VCard* payload = dynamic_cast<VCard*>(parser.getPayload().get());
-			CPPUNIT_ASSERT_EQUAL(String("mynick"), payload->getNickname());
+			CPPUNIT_ASSERT_EQUAL(std::string("mynick"), payload->getNickname());
 		}
 };
 

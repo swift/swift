@@ -30,8 +30,8 @@ class RequestTest : public CppUnit::TestFixture {
 	public:
 		class MyPayload : public Payload {
 			public:
-				MyPayload(const String& s = "") : text_(s) {}
-				String text_;
+				MyPayload(const std::string& s = "") : text_(s) {}
+				std::string text_;
 		};
 
 		typedef GenericRequest<MyPayload> MyRequest;
@@ -57,7 +57,7 @@ class RequestTest : public CppUnit::TestFixture {
 			CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(channel_->iqs_.size()));
 			CPPUNIT_ASSERT_EQUAL(JID("foo@bar.com/baz"), channel_->iqs_[0]->getTo());
 			CPPUNIT_ASSERT_EQUAL(IQ::Set, channel_->iqs_[0]->getType());
-			CPPUNIT_ASSERT_EQUAL(String("test-id"), channel_->iqs_[0]->getID());
+			CPPUNIT_ASSERT_EQUAL(std::string("test-id"), channel_->iqs_[0]->getID());
 		}
 
 		void testSendGet() {
@@ -140,19 +140,19 @@ class RequestTest : public CppUnit::TestFixture {
 			else {
 				boost::shared_ptr<MyPayload> payload(boost::dynamic_pointer_cast<MyPayload>(p));
 				CPPUNIT_ASSERT(payload);
-				CPPUNIT_ASSERT_EQUAL(String("bar"), payload->text_);
+				CPPUNIT_ASSERT_EQUAL(std::string("bar"), payload->text_);
 				++responsesReceived_;
 			}
 		}
 
-		boost::shared_ptr<IQ> createResponse(const String& id) {
+		boost::shared_ptr<IQ> createResponse(const std::string& id) {
 			boost::shared_ptr<IQ> iq(new IQ(IQ::Result));
 			iq->addPayload(responsePayload_);
 			iq->setID(id);
 			return iq;
 		}
 
-		boost::shared_ptr<IQ> createError(const String& id) {
+		boost::shared_ptr<IQ> createError(const std::string& id) {
 			boost::shared_ptr<IQ> iq(new IQ(IQ::Error));
 			iq->setID(id);
 			return iq;

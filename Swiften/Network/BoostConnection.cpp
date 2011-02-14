@@ -12,7 +12,7 @@
 
 #include <Swiften/Base/Log.h>
 #include "Swiften/EventLoop/EventLoop.h"
-#include "Swiften/Base/String.h"
+#include <string>
 #include "Swiften/Base/ByteArray.h"
 #include "Swiften/Network/HostAddressPort.h"
 #include "Swiften/Base/sleep.h"

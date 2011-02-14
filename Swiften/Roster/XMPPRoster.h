@@ -11,7 +11,7 @@
 #include <set>
 #include "Swiften/Base/boost_bsignals.h"
 
-#include "Swiften/Base/String.h"
+#include <string>
 #include "Swiften/JID/JID.h"
 #include "Swiften/Elements/RosterItemPayload.h"
 #include <Swiften/Roster/XMPPRosterItem.h>
@@ -41,12 +41,12 @@ namespace Swift {
 			/**
 			 * Retrieves the stored roster name for the given jid.
 			 */
-			virtual String getNameForJID(const JID& jid) const = 0;
+			virtual std::string getNameForJID(const JID& jid) const = 0;
 
 			/**
 			 * Returns the list of groups for the given JID.
 			 */
-			virtual std::vector<String> getGroupsForJID(const JID& jid) = 0;
+			virtual std::vector<std::string> getGroupsForJID(const JID& jid) = 0;
 
 			/**
 			 * Retrieve the items in the roster.
@@ -61,7 +61,7 @@ namespace Swift {
 			/**
 			 * Retrieve the list of (existing) groups.
 			 */
-			virtual std::set<String> getGroups() const = 0;
+			virtual std::set<std::string> getGroups() const = 0;
 
 		public:
 			/**
@@ -78,7 +78,7 @@ namespace Swift {
 			 * Emitted when the name or the groups of the roster item with the
 			 * given JID changes.
 			 */
-			boost::signal<void (const JID&, const String&, const std::vector<String>&)> onJIDUpdated;
+			boost::signal<void (const JID&, const std::string&, const std::vector<std::string>&)> onJIDUpdated;
 
 			/**
 			 * Emitted when the roster is reset (e.g. due to logging in/logging out).

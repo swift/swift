@@ -25,7 +25,7 @@ class RawXMLPayloadParserTest : public CppUnit::TestFixture
 			RawXMLPayloadParser testling;
 			PayloadParserTester parser(&testling);
 
-			String xml = 
+			std::string xml = 
 				"<foo foo-attr=\"foo-val\" xmlns=\"ns:foo\">"
 					"<bar bar-attr=\"bar-val\" xmlns=\"ns:bar\"/>"
 					"<baz baz-attr=\"baz-val\" xmlns=\"ns:baz\"/>"

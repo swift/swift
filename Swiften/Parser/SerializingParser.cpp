@@ -14,7 +14,7 @@ namespace Swift {
 SerializingParser::SerializingParser() {
 }
 
-void SerializingParser::handleStartElement(const String& tag, const String&  ns, const AttributeMap& attributes) {
+void SerializingParser::handleStartElement(const std::string& tag, const std::string&  ns, const AttributeMap& attributes) {
 	boost::shared_ptr<XMLElement> element(new XMLElement(tag, ns));
 	for (AttributeMap::const_iterator i = attributes.begin(); i != attributes.end(); ++i) {
 		element->setAttribute((*i).first, (*i).second);
@@ -29,18 +29,18 @@ void SerializingParser::handleStartElement(const String& tag, const String&  ns,
 	elementStack_.push_back(element);
 }
 
-void SerializingParser::handleEndElement(const String&, const String&) {
+void SerializingParser::handleEndElement(const std::string&, const std::string&) {
 	assert(!elementStack_.empty());
 	elementStack_.pop_back();
 }
 
-void SerializingParser::handleCharacterData(const String& data) {
+void SerializingParser::handleCharacterData(const std::string& data) {
 	if (!elementStack_.empty()) {
 		(*(elementStack_.end()-1))->addNode(boost::shared_ptr<XMLTextNode>(new XMLTextNode(data)));
 	}
 }
 
-String SerializingParser::getResult() const {
+std::string SerializingParser::getResult() const {
 	return (rootElement_ ? rootElement_->serialize() : "");
 }
 

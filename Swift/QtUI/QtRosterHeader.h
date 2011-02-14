@@ -12,7 +12,7 @@
 #include <QSize>
 #include <QToolBar>
 
-#include "Swiften/Base/String.h"
+#include <string>
 #include "Swiften/Elements/StatusShow.h"
 
 #include "QtTextEdit.h"

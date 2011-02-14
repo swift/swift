@@ -39,12 +39,12 @@ void QtJoinMUCWindow::handleSearch() {
 	onSearchMUC();
 }
 
-void QtJoinMUCWindow::setNick(const String& nick) {
+void QtJoinMUCWindow::setNick(const std::string& nick) {
 	ui.nickName->setText(P2QSTRING(nick));
 	lastSetNick = nick;
 }
 
-void QtJoinMUCWindow::setMUC(const String& nick) {
+void QtJoinMUCWindow::setMUC(const std::string& nick) {
 	ui.room->setText(P2QSTRING(nick));
 }
 

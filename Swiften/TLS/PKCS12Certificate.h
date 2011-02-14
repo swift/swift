@@ -14,7 +14,7 @@ namespace Swift {
 		public:
 			PKCS12Certificate() {}
 
-			PKCS12Certificate(const String& filename, const String& password) : password_(password) {
+			PKCS12Certificate(const std::string& filename, const std::string& password) : password_(password) {
 				data_.readFromFile(filename);
 			}
 
@@ -30,13 +30,13 @@ namespace Swift {
 				data_ = data;
 			}
 
-			const String& getPassword() const {
+			const std::string& getPassword() const {
 				return password_;
 			}
 
 		private:
 			ByteArray data_;
-			String password_;
+			std::string password_;
 	};
 }
 

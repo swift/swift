@@ -10,7 +10,7 @@
 
 #include "Swiften/Network/DomainNameServiceQuery.h"
 #include "Swiften/EventLoop/EventOwner.h"
-#include "Swiften/Base/String.h"
+#include <string>
 #include <Swiften/Network/PlatformDomainNameQuery.h>
 
 namespace Swift {
@@ -18,7 +18,7 @@ namespace Swift {
 
 	class PlatformDomainNameServiceQuery : public DomainNameServiceQuery, public PlatformDomainNameQuery, public boost::enable_shared_from_this<PlatformDomainNameServiceQuery>, public EventOwner {
 		public:
-			PlatformDomainNameServiceQuery(const String& service, EventLoop* eventLoop, PlatformDomainNameResolver* resolver);
+			PlatformDomainNameServiceQuery(const std::string& service, EventLoop* eventLoop, PlatformDomainNameResolver* resolver);
 
 			virtual void run();
 
@@ -28,6 +28,6 @@ namespace Swift {
 
 		private:
 			EventLoop* eventLoop;
-			String service;
+			std::string service;
 	};
 }

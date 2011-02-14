@@ -7,7 +7,7 @@
 #ifndef SWIFTEN_StartSession_H
 #define SWIFTEN_StartSession_H
 
-#include "Swiften/Base/String.h"
+#include <string>
 #include "Swiften/Elements/Payload.h"
 
 namespace Swift {

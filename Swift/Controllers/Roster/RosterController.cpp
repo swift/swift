@@ -9,6 +9,7 @@
 #include <boost/bind.hpp>
 #include <boost/smart_ptr/make_shared.hpp>
 
+#include "Swiften/JID/JID.h"
 #include "Swiften/Base/foreach.h"
 #include "Swift/Controllers/UIInterfaces/MainWindow.h"
 #include "Swift/Controllers/UIInterfaces/MainWindowFactory.h"
@@ -39,7 +40,7 @@
 
 namespace Swift {
 
-static const String SHOW_OFFLINE = "showOffline";
+static const std::string SHOW_OFFLINE = "showOffline";
 
 /**
  * The controller does not gain ownership of these parameters.
@@ -107,15 +108,15 @@ void RosterController::handleShowOfflineToggled(bool state) {
 	}
 }
 
-void RosterController::handleChangeStatusRequest(StatusShow::Type show, const String &statusText) {
+void RosterController::handleChangeStatusRequest(StatusShow::Type show, const std::string &statusText) {
 	onChangeStatusRequest(show, statusText);
 }
 
 void RosterController::handleOnJIDAdded(const JID& jid) {
-	std::vector<String> groups = xmppRoster_->getGroupsForJID(jid);
-	String name = nickResolver_->jidToNick(jid);
+	std::vector<std::string> groups = xmppRoster_->getGroupsForJID(jid);
+	std::string name = nickResolver_->jidToNick(jid);
 	if (!groups.empty()) {
-		foreach(const String& group, groups) {
+		foreach(const std::string& group, groups) {
 			roster_->addContact(jid, jid, name, group, avatarManager_->getAvatarPath(jid).string());
 		}
 	} 
@@ -139,26 +140,26 @@ void RosterController::handleOnJIDRemoved(const JID& jid) {
 	roster_->removeContact(jid);
 }
 
-void RosterController::handleOnJIDUpdated(const JID& jid, const String& oldName, const std::vector<String> passedOldGroups) {
+void RosterController::handleOnJIDUpdated(const JID& jid, const std::string& oldName, const std::vector<std::string> passedOldGroups) {
 	if (oldName != xmppRoster_->getNameForJID(jid)) {
 		roster_->applyOnItems(SetName(nickResolver_->jidToNick(jid), jid));
 	}
-	std::vector<String> groups = xmppRoster_->getGroupsForJID(jid);
-	std::vector<String> oldGroups = passedOldGroups;
-	String name = nickResolver_->jidToNick(jid);
-	String contactsGroup = "Contacts";
+	std::vector<std::string> groups = xmppRoster_->getGroupsForJID(jid);
+	std::vector<std::string> oldGroups = passedOldGroups;
+	std::string name = nickResolver_->jidToNick(jid);
+	std::string contactsGroup = "Contacts";
 	if (oldGroups.empty()) {
 		oldGroups.push_back(contactsGroup);
 	}
 	if (groups.empty()) {
 		groups.push_back(contactsGroup);
 	}
-	foreach(const String& group, groups) {
+	foreach(const std::string& group, groups) {
 		if (std::find(oldGroups.begin(), oldGroups.end(), group) == oldGroups.end()) {
 			roster_->addContact(jid, jid, name, group, avatarManager_->getAvatarPath(jid).string());
 		}
 	} 
-	foreach(const String& group, oldGroups) {
+	foreach(const std::string& group, oldGroups) {
 		if (std::find(groups.begin(), groups.end(), group) == groups.end()) {
 			roster_->removeContactFromGroup(jid, group);
 			if (roster_->getGroup(group)->getChildren().size() == 0) {
@@ -205,14 +206,14 @@ void RosterController::handleUIEvent(boost::shared_ptr<UIEvent> event) {
 	}
 	else if (boost::shared_ptr<RenameGroupUIEvent> renameGroupEvent = boost::dynamic_pointer_cast<RenameGroupUIEvent>(event)) {
 		std::vector<XMPPRosterItem> items = xmppRoster_->getItems();
-		String group = renameGroupEvent->getGroup();
+		std::string group = renameGroupEvent->getGroup();
 		// FIXME: We should handle contacts groups specially to avoid clashes
 		if (group == "Contacts") {
 			group = "";
 		}
 		foreach(XMPPRosterItem& item, items) {
-			std::vector<String> groups = item.getGroups();
-			if ( (group.isEmpty() && groups.empty()) || std::find(groups.begin(), groups.end(), group) != groups.end()) {
+			std::vector<std::string> groups = item.getGroups();
+			if ( (group.empty() && groups.empty()) || std::find(groups.begin(), groups.end(), group) != groups.end()) {
 				groups.erase(std::remove(groups.begin(), groups.end(), group), groups.end());
 				if (std::find(groups.begin(), groups.end(), renameGroupEvent->getNewName()) == groups.end()) {
 					groups.push_back(renameGroupEvent->getNewName());
@@ -224,7 +225,7 @@ void RosterController::handleUIEvent(boost::shared_ptr<UIEvent> event) {
 	}
 }
 
-void RosterController::setContactGroups(const JID& jid, const std::vector<String>& groups) {
+void RosterController::setContactGroups(const JID& jid, const std::vector<std::string>& groups) {
 	updateItem(XMPPRosterItem(jid, xmppRoster_->getNameForJID(jid), groups, xmppRoster_->getSubscriptionStateForJID(jid)));
 }
 
@@ -244,8 +245,8 @@ void RosterController::handleRosterSetError(ErrorPayload::ref error, boost::shar
 	if (!error) {
 		return;
 	}
-	String text = "Server " + myJID_.getDomain() + " rejected roster change to item '" + rosterPayload->getItems()[0].getJID() + "'";
-	if (!error->getText().isEmpty()) {
+	std::string text = "Server " + myJID_.getDomain() + " rejected roster change to item '" + rosterPayload->getItems()[0].getJID().toString() + "'";
+	if (!error->getText().empty()) {
 		text += ": " + error->getText();
 	}
 	boost::shared_ptr<ErrorEvent> errorEvent(new ErrorEvent(JID(myJID_.getDomain()), text));
@@ -259,7 +260,7 @@ void RosterController::handleIncomingPresence(Presence::ref newPresence) {
 	roster_->applyOnItems(SetPresence(newPresence));
 }
 
-void RosterController::handleSubscriptionRequest(const JID& jid, const String& message) {
+void RosterController::handleSubscriptionRequest(const JID& jid, const std::string& message) {
 	if (xmppRoster_->containsJID(jid) && (xmppRoster_->getSubscriptionStateForJID(jid) == RosterItemPayload::To || xmppRoster_->getSubscriptionStateForJID(jid) == RosterItemPayload::Both)) {
 		subscriptionManager_->confirmSubscription(jid);
 		return;
@@ -283,7 +284,7 @@ void RosterController::handleSubscriptionRequestDeclined(SubscriptionRequestEven
 }
 
 void RosterController::handleAvatarChanged(const JID& jid) {
-	String path = avatarManager_->getAvatarPath(jid).string();
+	std::string path = avatarManager_->getAvatarPath(jid).string();
 	roster_->applyOnItems(SetAvatar(jid, path));
 	if (jid.equals(myJID_, JID::WithoutResource)) {
 		mainWindow_->setMyAvatarPath(path);
@@ -294,7 +295,7 @@ boost::optional<XMPPRosterItem> RosterController::getItem(const JID& jid) const 
 	return xmppRoster_->getItem(jid);
 }
 
-std::set<String> RosterController::getGroups() const {
+std::set<std::string> RosterController::getGroups() const {
 	return xmppRoster_->getGroups();
 }
 

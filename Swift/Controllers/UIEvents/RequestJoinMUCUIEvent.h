@@ -9,7 +9,7 @@
 #include <boost/optional.hpp>
 #include <boost/shared_ptr.hpp>
 
-#include <Swiften/Base/String.h>
+#include <string>
 #include <Swift/Controllers/UIEvents/UIEvent.h>
 
 namespace Swift {

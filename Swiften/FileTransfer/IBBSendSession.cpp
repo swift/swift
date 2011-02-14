@@ -14,7 +14,7 @@
 
 namespace Swift {
 
-IBBSendSession::IBBSendSession(const String& id, const JID& to, boost::shared_ptr<ReadBytestream> bytestream, IQRouter* router) : id(id), to(to), bytestream(bytestream), router(router), blockSize(4096), sequenceNumber(0), active(false) {
+IBBSendSession::IBBSendSession(const std::string& id, const JID& to, boost::shared_ptr<ReadBytestream> bytestream, IQRouter* router) : id(id), to(to), bytestream(bytestream), router(router), blockSize(4096), sequenceNumber(0), active(false) {
 }
 
 IBBSendSession::~IBBSendSession() {

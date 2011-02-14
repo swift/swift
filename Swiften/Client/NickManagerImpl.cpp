@@ -22,11 +22,11 @@ NickManagerImpl::~NickManagerImpl() {
 	vcardManager->onVCardChanged.disconnect(boost::bind(&NickManagerImpl::handleVCardReceived, this, _1, _2));
 }
 
-String NickManagerImpl::getOwnNick() const {
+std::string NickManagerImpl::getOwnNick() const {
 	return ownNick;
 }
 
-void NickManagerImpl::setOwnNick(const String&) {
+void NickManagerImpl::setOwnNick(const std::string&) {
 }
 
 void NickManagerImpl::handleVCardReceived(const JID& jid, VCard::ref vcard) {
@@ -37,8 +37,8 @@ void NickManagerImpl::handleVCardReceived(const JID& jid, VCard::ref vcard) {
 }
 
 void NickManagerImpl::updateOwnNickFromVCard(VCard::ref vcard) {
-	String nick;
-	if (vcard && !vcard->getNickname().isEmpty()) {
+	std::string nick;
+	if (vcard && !vcard->getNickname().empty()) {
 		nick = vcard->getNickname();
 	}
 	if (ownNick != nick) {

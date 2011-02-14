@@ -13,7 +13,7 @@
 
 namespace Swift {
 	class PayloadSerializer;
-	class String;
+	
 
 	class PayloadSerializerCollection {
 		public:

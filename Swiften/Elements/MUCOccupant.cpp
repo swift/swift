@@ -8,7 +8,7 @@
 
 namespace Swift {
 
-MUCOccupant::MUCOccupant(const String &nick, Role role, Affiliation affiliation) : nick_(nick), role_(role), affiliation_(affiliation) {
+MUCOccupant::MUCOccupant(const std::string &nick, Role role, Affiliation affiliation) : nick_(nick), role_(role), affiliation_(affiliation) {
 }
 
 MUCOccupant::~MUCOccupant() {
@@ -18,7 +18,7 @@ MUCOccupant::MUCOccupant(const MUCOccupant& other) : nick_(other.getNick()), rol
 
 }
 
-String MUCOccupant::getNick() const {
+std::string MUCOccupant::getNick() const {
 	return nick_;
 }
 
@@ -34,7 +34,7 @@ void MUCOccupant::setRealJID(const JID& realJID) {
 	realJID_ = realJID;
 }
 
-void MUCOccupant::setNick(const String& nick) {
+void MUCOccupant::setNick(const std::string& nick) {
 	nick_ = nick;
 }
 

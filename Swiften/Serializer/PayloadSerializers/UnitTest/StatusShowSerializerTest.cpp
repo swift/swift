@@ -27,37 +27,37 @@ class StatusShowSerializerTest : public CppUnit::TestFixture
 		void testSerialize_Online() {
 			StatusShowSerializer testling;
 			boost::shared_ptr<StatusShow> statusShow(new StatusShow(StatusShow::Online));
-			CPPUNIT_ASSERT_EQUAL(String(""), testling.serialize(statusShow));
+			CPPUNIT_ASSERT_EQUAL(std::string(""), testling.serialize(statusShow));
 		}
 
 		void testSerialize_Away() {
 			StatusShowSerializer testling;
 			boost::shared_ptr<StatusShow> statusShow(new StatusShow(StatusShow::Away));
-			CPPUNIT_ASSERT_EQUAL(String("<show>away</show>"), testling.serialize(statusShow));
+			CPPUNIT_ASSERT_EQUAL(std::string("<show>away</show>"), testling.serialize(statusShow));
 		}
 
 		void testSerialize_FFC() {
 			StatusShowSerializer testling;
 			boost::shared_ptr<StatusShow> statusShow(new StatusShow(StatusShow::FFC));
-			CPPUNIT_ASSERT_EQUAL(String("<show>chat</show>"), testling.serialize(statusShow));
+			CPPUNIT_ASSERT_EQUAL(std::string("<show>chat</show>"), testling.serialize(statusShow));
 		}
 
 		void testSerialize_XA() {
 			StatusShowSerializer testling;
 			boost::shared_ptr<StatusShow> statusShow(new StatusShow(StatusShow::XA));
-			CPPUNIT_ASSERT_EQUAL(String("<show>xa</show>"), testling.serialize(statusShow));
+			CPPUNIT_ASSERT_EQUAL(std::string("<show>xa</show>"), testling.serialize(statusShow));
 		}
 
 		void testSerialize_DND() {
 			StatusShowSerializer testling;
 			boost::shared_ptr<StatusShow> statusShow(new StatusShow(StatusShow::DND));
-			CPPUNIT_ASSERT_EQUAL(String("<show>dnd</show>"), testling.serialize(statusShow));
+			CPPUNIT_ASSERT_EQUAL(std::string("<show>dnd</show>"), testling.serialize(statusShow));
 		}
 
 		void testSerialize_None() {
 			StatusShowSerializer testling;
 			boost::shared_ptr<StatusShow> statusShow(new StatusShow(StatusShow::None));
-			CPPUNIT_ASSERT_EQUAL(String(""), testling.serialize(statusShow));
+			CPPUNIT_ASSERT_EQUAL(std::string(""), testling.serialize(statusShow));
 		}
 };
 

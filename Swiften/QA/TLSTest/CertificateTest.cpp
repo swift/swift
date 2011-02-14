@@ -42,7 +42,7 @@ class CertificateTest : public CppUnit::TestFixture {
 		void testConstructFromDER() {
 			Certificate::ref testling = certificateFactory->createCertificateFromDER(certificateData);
 
-			CPPUNIT_ASSERT_EQUAL(String("*.jabber.org"), testling->getCommonNames()[0]);
+			CPPUNIT_ASSERT_EQUAL(std::string("*.jabber.org"), testling->getCommonNames()[0]);
 		}
 		
 		void testToDER() {
@@ -55,7 +55,7 @@ class CertificateTest : public CppUnit::TestFixture {
 		void testGetSubjectName() {
 			Certificate::ref testling = certificateFactory->createCertificateFromDER(certificateData);
 
-			CPPUNIT_ASSERT_EQUAL(String("/description=114072-VMk8pdi1aj5kTXxO/C=US/ST=Colorado/L=Denver/O=Peter Saint-Andre/OU=StartCom Trusted Certificate Member/CN=*.jabber.org/emailAddress=hostmaster@jabber.org"), testling->getSubjectName());
+			CPPUNIT_ASSERT_EQUAL(std::string("/description=114072-VMk8pdi1aj5kTXxO/C=US/ST=Colorado/L=Denver/O=Peter Saint-Andre/OU=StartCom Trusted Certificate Member/CN=*.jabber.org/emailAddress=hostmaster@jabber.org"), testling->getSubjectName());
 		}
 		*/
 
@@ -63,29 +63,29 @@ class CertificateTest : public CppUnit::TestFixture {
 			Certificate::ref testling = certificateFactory->createCertificateFromDER(certificateData);
 
 			CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(testling->getCommonNames().size()));
-			CPPUNIT_ASSERT_EQUAL(String("*.jabber.org"), testling->getCommonNames()[0]);
+			CPPUNIT_ASSERT_EQUAL(std::string("*.jabber.org"), testling->getCommonNames()[0]);
 		}
 
 		void testGetSRVNames() {
 			Certificate::ref testling = certificateFactory->createCertificateFromDER(certificateData);
 
 			CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(testling->getSRVNames().size()));
-			CPPUNIT_ASSERT_EQUAL(String("*.jabber.org"), testling->getSRVNames()[0]);
+			CPPUNIT_ASSERT_EQUAL(std::string("*.jabber.org"), testling->getSRVNames()[0]);
 		}
 
 		void testGetDNSNames() {
 			Certificate::ref testling = certificateFactory->createCertificateFromDER(certificateData);
 
 			CPPUNIT_ASSERT_EQUAL(2, static_cast<int>(testling->getDNSNames().size()));
-			CPPUNIT_ASSERT_EQUAL(String("*.jabber.org"), testling->getDNSNames()[0]);
-			CPPUNIT_ASSERT_EQUAL(String("jabber.org"), testling->getDNSNames()[1]);
+			CPPUNIT_ASSERT_EQUAL(std::string("*.jabber.org"), testling->getDNSNames()[0]);
+			CPPUNIT_ASSERT_EQUAL(std::string("jabber.org"), testling->getDNSNames()[1]);
 		}
 
 		void testGetXMPPAddresses() {
 			Certificate::ref testling = certificateFactory->createCertificateFromDER(certificateData);
 
 			CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(testling->getXMPPAddresses().size()));
-			CPPUNIT_ASSERT_EQUAL(String("*.jabber.org"), testling->getXMPPAddresses()[0]);
+			CPPUNIT_ASSERT_EQUAL(std::string("*.jabber.org"), testling->getXMPPAddresses()[0]);
 		}
 	
 	private:

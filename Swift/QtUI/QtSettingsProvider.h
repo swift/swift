@@ -17,15 +17,15 @@ class QtSettingsProvider : public SettingsProvider {
 	public:
 		QtSettingsProvider();
 		virtual ~QtSettingsProvider();
-		virtual String getStringSetting(const String &settingPath);
-		virtual void storeString(const String &settingPath, const String &settingValue);
-		virtual bool getBoolSetting(const String &settingPath, bool defaultValue);
-		virtual void storeBool(const String &settingPath, bool settingValue);
-		virtual int getIntSetting(const String &settingPath, int defaultValue);
-		virtual void storeInt(const String &settingPath, int settingValue);
-		virtual std::vector<String> getAvailableProfiles();
-		virtual void createProfile(const String& profile);
-		virtual void removeProfile(const String& profile);
+		virtual std::string getStringSetting(const std::string &settingPath);
+		virtual void storeString(const std::string &settingPath, const std::string &settingValue);
+		virtual bool getBoolSetting(const std::string &settingPath, bool defaultValue);
+		virtual void storeBool(const std::string &settingPath, bool settingValue);
+		virtual int getIntSetting(const std::string &settingPath, int defaultValue);
+		virtual void storeInt(const std::string &settingPath, int settingValue);
+		virtual std::vector<std::string> getAvailableProfiles();
+		virtual void createProfile(const std::string& profile);
+		virtual void removeProfile(const std::string& profile);
 		QSettings* getQSettings();
 	private:
 		QSettings settings_;

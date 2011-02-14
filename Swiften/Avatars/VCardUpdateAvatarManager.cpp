@@ -52,7 +52,7 @@ void VCardUpdateAvatarManager::handleVCardChanged(const JID& from, VCard::ref vC
 		setAvatarHash(from, "");
 	}
 	else {
-		String hash = Hexify::hexify(SHA1::getHash(vCard->getPhoto()));
+		std::string hash = Hexify::hexify(SHA1::getHash(vCard->getPhoto()));
 		if (!avatarStorage_->hasAvatar(hash)) {
 			avatarStorage_->addAvatar(hash, vCard->getPhoto());
 		}
@@ -60,21 +60,21 @@ void VCardUpdateAvatarManager::handleVCardChanged(const JID& from, VCard::ref vC
 	}
 }
 
-void VCardUpdateAvatarManager::setAvatarHash(const JID& from, const String& hash) {
+void VCardUpdateAvatarManager::setAvatarHash(const JID& from, const std::string& hash) {
 	avatarHashes_[from] = hash;
 	onAvatarChanged(from);
 }
 
 /*
 void VCardUpdateAvatarManager::setAvatar(const JID& jid, const ByteArray& avatar) {
-	String hash = Hexify::hexify(SHA1::getHash(avatar));
+	std::string hash = Hexify::hexify(SHA1::getHash(avatar));
 	avatarStorage_->addAvatar(hash, avatar);
 	setAvatarHash(getAvatarJID(jid), hash);
 }
 */
 
-String VCardUpdateAvatarManager::getAvatarHash(const JID& jid) const {
-	std::map<JID, String>::const_iterator i = avatarHashes_.find(getAvatarJID(jid));
+std::string VCardUpdateAvatarManager::getAvatarHash(const JID& jid) const {
+	std::map<JID, std::string>::const_iterator i = avatarHashes_.find(getAvatarJID(jid));
 	if (i != avatarHashes_.end()) {
 		return i->second;
 	}
@@ -90,9 +90,9 @@ JID VCardUpdateAvatarManager::getAvatarJID(const JID& jid) const {
 
 void VCardUpdateAvatarManager::handleStanzaChannelAvailableChanged(bool available) {
 	if (available) {
-		std::map<JID, String> oldAvatarHashes;
+		std::map<JID, std::string> oldAvatarHashes;
 		avatarHashes_.swap(oldAvatarHashes);
-		for(std::map<JID, String>::const_iterator i = oldAvatarHashes.begin(); i != oldAvatarHashes.end(); ++i) {
+		for(std::map<JID, std::string>::const_iterator i = oldAvatarHashes.begin(); i != oldAvatarHashes.end(); ++i) {
 			onAvatarChanged(i->first);
 		}
 	}

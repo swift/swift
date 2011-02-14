@@ -9,17 +9,18 @@
 #include <vector>
 #include <iostream>
 
-#include <Swiften/Base/String.h>
+#include <string>
 #ifdef SWIFTEN_CACHE_JID_PREP
 #include <boost/unordered_map.hpp>
 #endif
 #include <stringprep.h>
 
+#include <Swiften/Base/String.h>
 #include "Swiften/JID/JID.h"
 #include "Swiften/IDN/StringPrep.h"
 
 #ifdef SWIFTEN_CACHE_JID_PREP
-typedef boost::unordered_map<std::string, Swift::String> PrepCache;
+typedef boost::unordered_map<std::string, std::string> PrepCache;
 
 static PrepCache nodePrepCache;
 static PrepCache domainPrepCache;
@@ -29,39 +30,39 @@ static PrepCache resourcePrepCache;
 namespace Swift {
 
 JID::JID(const char* jid) {
-	initializeFromString(String(jid));
+	initializeFromString(std::string(jid));
 }
 
-JID::JID(const String& jid) {
+JID::JID(const std::string& jid) {
 	initializeFromString(jid);
 }
 
-JID::JID(const String& node, const String& domain) : hasResource_(false) {
+JID::JID(const std::string& node, const std::string& domain) : hasResource_(false) {
 	nameprepAndSetComponents(node, domain, "");
 }
 
-JID::JID(const String& node, const String& domain, const String& resource) : hasResource_(true) {
+JID::JID(const std::string& node, const std::string& domain, const std::string& resource) : hasResource_(true) {
 	nameprepAndSetComponents(node, domain, resource);
 }
 
-void JID::initializeFromString(const String& jid) {
-	if (jid.beginsWith('@')) {
+void JID::initializeFromString(const std::string& jid) {
+	if (String::beginsWith(jid, '@')) {
 		return;
 	}
 
-	String bare, resource;
+	std::string bare, resource;
 	size_t slashIndex = jid.find('/');
-	if (slashIndex != jid.npos()) {
+	if (slashIndex != jid.npos) {
 		hasResource_ = true;
-		bare = jid.getSubstring(0, slashIndex);
-		resource = jid.getSubstring(slashIndex + 1, jid.npos());
+		bare = jid.substr(0, slashIndex);
+		resource = jid.substr(slashIndex + 1, jid.npos);
 	}
 	else {
 		hasResource_ = false;
 		bare = jid;
 	}
-	std::pair<String,String> nodeAndDomain = bare.getSplittedAtFirst('@');
-	if (nodeAndDomain.second.isEmpty()) {
+	std::pair<std::string,std::string> nodeAndDomain = String::getSplittedAtFirst(bare, '@');
+	if (nodeAndDomain.second.empty()) {
 		nameprepAndSetComponents("", nodeAndDomain.first, resource);
 	}
 	else {
@@ -70,7 +71,7 @@ void JID::initializeFromString(const String& jid) {
 }
 
 
-void JID::nameprepAndSetComponents(const String& node, const String& domain, const String& resource) {
+void JID::nameprepAndSetComponents(const std::string& node, const std::string& domain, const std::string& resource) {
 #ifndef SWIFTEN_CACHE_JID_PREP
 	node_ = StringPrep::getPrepared(node, StringPrep::NamePrep);
 	domain_ = StringPrep::getPrepared(domain, StringPrep::XMPPNodePrep);
@@ -78,19 +79,19 @@ void JID::nameprepAndSetComponents(const String& node, const String& domain, con
 #else
 	std::pair<PrepCache::iterator, bool> r;
 
-	r = nodePrepCache.insert(std::make_pair(node.getUTF8String(), String()));
+	r = nodePrepCache.insert(std::make_pair(node, std::string()));
 	if (r.second) {
 		r.first->second = StringPrep::getPrepared(node, StringPrep::NamePrep);
 	}
 	node_ = r.first->second;
 
-	r = domainPrepCache.insert(std::make_pair(domain.getUTF8String(), String()));
+	r = domainPrepCache.insert(std::make_pair(domain, std::string()));
 	if (r.second) {
 		r.first->second = StringPrep::getPrepared(domain, StringPrep::XMPPNodePrep);
 	}
 	domain_ = r.first->second;
 
-	r = resourcePrepCache.insert(std::make_pair(resource.getUTF8String(), String()));
+	r = resourcePrepCache.insert(std::make_pair(resource, std::string()));
 	if (r.second) {
 		r.first->second = StringPrep::getPrepared(resource, StringPrep::XMPPResourcePrep);
 	}
@@ -98,9 +99,9 @@ void JID::nameprepAndSetComponents(const String& node, const String& domain, con
 #endif
 }
 
-String JID::toString() const {
-	String string;
-	if (!node_.isEmpty()) {
+std::string JID::toString() const {
+	std::string string;
+	if (!node_.empty()) {
 		string += node_ + "@";
 	}
 	string += domain_;

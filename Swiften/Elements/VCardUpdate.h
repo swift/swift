@@ -6,18 +6,18 @@
 
 #pragma once
 
-#include "Swiften/Base/String.h"
+#include <string>
 #include "Swiften/Elements/Payload.h"
 
 namespace Swift {
 	class VCardUpdate : public Payload {
 		public:
-			VCardUpdate(const String& photoHash = "") : photoHash_(photoHash) {}
+			VCardUpdate(const std::string& photoHash = "") : photoHash_(photoHash) {}
 
-			void setPhotoHash(const String& photoHash) { photoHash_ = photoHash; }
-			const String& getPhotoHash() { return photoHash_; }
+			void setPhotoHash(const std::string& photoHash) { photoHash_ = photoHash; }
+			const std::string& getPhotoHash() { return photoHash_; }
 
 		private:
-			String photoHash_;
+			std::string photoHash_;
 	};
 }

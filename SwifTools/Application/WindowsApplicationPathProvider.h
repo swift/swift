@@ -11,11 +11,11 @@
 namespace Swift {
 	class WindowsApplicationPathProvider : public ApplicationPathProvider {
 		public:
-			WindowsApplicationPathProvider(const String& name);
+			WindowsApplicationPathProvider(const std::string& name);
 
 			boost::filesystem::path getDataDir() const {
 				char* appDirRaw = getenv("APPDATA");
-				boost::filesystem::path result(boost::filesystem::path(appDirRaw) / getApplicationName().getUTF8String());
+				boost::filesystem::path result(boost::filesystem::path(appDirRaw) / getApplicationName());
 				boost::filesystem::create_directory(result);
 				return result;
 			}

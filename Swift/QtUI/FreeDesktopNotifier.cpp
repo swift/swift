@@ -18,10 +18,10 @@
 
 namespace Swift {
 
-FreeDesktopNotifier::FreeDesktopNotifier(const String& name) : applicationName(name) {
+FreeDesktopNotifier::FreeDesktopNotifier(const std::string& name) : applicationName(name) {
 }
 
-void FreeDesktopNotifier::showMessage(Type type, const String& subject, const String& description, const boost::filesystem::path& picture, boost::function<void()>) {
+void FreeDesktopNotifier::showMessage(Type type, const std::string& subject, const std::string& description, const boost::filesystem::path& picture, boost::function<void()>) {
 	QDBusConnection bus = QDBusConnection::sessionBus();
 	if (!bus.isConnected()) {
 		return;

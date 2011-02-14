@@ -25,7 +25,7 @@ class VCardUpdateSerializerTest : public CppUnit::TestFixture
 			boost::shared_ptr<VCardUpdate> update(new VCardUpdate());
 			update->setPhotoHash("sha1-hash-of-image");
 
-			String expectedResult = 
+			std::string expectedResult = 
 				"<x xmlns=\"vcard-temp:x:update\">"
 					"<photo>sha1-hash-of-image</photo>"
 				"</x>";

@@ -22,7 +22,7 @@ bool PlatformAutoUpdaterFactory::isSupported() const {
 #endif
 }
 
-AutoUpdater* PlatformAutoUpdaterFactory::createAutoUpdater(const String& appcastURL) {
+AutoUpdater* PlatformAutoUpdaterFactory::createAutoUpdater(const std::string& appcastURL) {
 #ifdef HAVE_SPARKLE
 	return new SparkleAutoUpdater(appcastURL);
 #else

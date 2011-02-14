@@ -38,11 +38,11 @@ class StorageParserTest : public CppUnit::TestFixture {
 			Storage* payload = dynamic_cast<Storage*>(parser.getPayload().get());
 			std::vector<Storage::Room> rooms = payload->getRooms();
 			CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(rooms.size()));
-			CPPUNIT_ASSERT_EQUAL(String("Council of Oberon"), rooms[0].name);
+			CPPUNIT_ASSERT_EQUAL(std::string("Council of Oberon"), rooms[0].name);
 			CPPUNIT_ASSERT_EQUAL(JID("council@conference.underhill.org"), rooms[0].jid);
 			CPPUNIT_ASSERT(rooms[0].autoJoin);
-			CPPUNIT_ASSERT_EQUAL(String("Puck"), rooms[0].nick);
-			CPPUNIT_ASSERT_EQUAL(String("MyPass"), rooms[0].password);
+			CPPUNIT_ASSERT_EQUAL(std::string("Puck"), rooms[0].nick);
+			CPPUNIT_ASSERT_EQUAL(std::string("MyPass"), rooms[0].password);
 		}
 
 		void testParse_MultipleRooms() {
@@ -61,9 +61,9 @@ class StorageParserTest : public CppUnit::TestFixture {
 			Storage* payload = dynamic_cast<Storage*>(parser.getPayload().get());
 			std::vector<Storage::Room> rooms = payload->getRooms();
 			CPPUNIT_ASSERT_EQUAL(2, static_cast<int>(rooms.size()));
-			CPPUNIT_ASSERT_EQUAL(String("Council of Oberon"), rooms[0].name);
+			CPPUNIT_ASSERT_EQUAL(std::string("Council of Oberon"), rooms[0].name);
 			CPPUNIT_ASSERT_EQUAL(JID("council@conference.underhill.org"), rooms[0].jid);
-			CPPUNIT_ASSERT_EQUAL(String("Tea party"), rooms[1].name);
+			CPPUNIT_ASSERT_EQUAL(std::string("Tea party"), rooms[1].name);
 			CPPUNIT_ASSERT_EQUAL(JID("teaparty@wonderland.lit"), rooms[1].jid);
 		}
 
@@ -78,8 +78,8 @@ class StorageParserTest : public CppUnit::TestFixture {
 			Storage* payload = dynamic_cast<Storage*>(parser.getPayload().get());
 			std::vector<Storage::URL> urls = payload->getURLs();
 			CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(urls.size()));
-			CPPUNIT_ASSERT_EQUAL(String("Complete Works of Shakespeare"), urls[0].name);
-			CPPUNIT_ASSERT_EQUAL(String("http://the-tech.mit.edu/Shakespeare/"), urls[0].url);
+			CPPUNIT_ASSERT_EQUAL(std::string("Complete Works of Shakespeare"), urls[0].name);
+			CPPUNIT_ASSERT_EQUAL(std::string("http://the-tech.mit.edu/Shakespeare/"), urls[0].url);
 		}
 
 };

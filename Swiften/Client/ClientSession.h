@@ -12,7 +12,7 @@
 
 #include "Swiften/Base/Error.h"
 #include "Swiften/Session/SessionStream.h"
-#include "Swiften/Base/String.h"
+#include <string>
 #include "Swiften/JID/JID.h"
 #include "Swiften/Elements/Element.h"
 #include "Swiften/StreamManagement/StanzaAckRequester.h"
@@ -86,7 +86,7 @@ namespace Swift {
 				return getState() == Finished;
 			}
 
-			void sendCredentials(const String& password);
+			void sendCredentials(const std::string& password);
 			void sendStanza(boost::shared_ptr<Stanza>);
 
 			void setCertificateTrustChecker(CertificateTrustChecker* checker) {

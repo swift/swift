@@ -27,7 +27,7 @@ class StatusParserTest : public CppUnit::TestFixture
 			CPPUNIT_ASSERT(parser.parse("<status>foo<baz>bar</baz>fum</status>"));
 
 			Status* payload = dynamic_cast<Status*>(parser.getPayload().get());
-			CPPUNIT_ASSERT_EQUAL(String("foobarfum"), payload->getText());
+			CPPUNIT_ASSERT_EQUAL(std::string("foobarfum"), payload->getText());
 		}
 };
 

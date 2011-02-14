@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include "Swiften/Base/String.h"
+#include <string>
 #include "Swiften/LinkLocal/DNSSD/Avahi/AvahiQuery.h"
 #include "Swiften/LinkLocal/DNSSD/DNSSDResolveHostnameQuery.h"
 #include "Swiften/EventLoop/EventLoop.h"
@@ -19,7 +19,7 @@ namespace Swift {
 
 	class AvahiResolveHostnameQuery : public DNSSDResolveHostnameQuery, public AvahiQuery {
 		public: 
-			AvahiResolveHostnameQuery(const String& hostname, int, boost::shared_ptr<AvahiQuerier> querier, EventLoop* eventLoop) : AvahiQuery(querier, eventLoop), hostname(hostname) {
+			AvahiResolveHostnameQuery(const std::string& hostname, int, boost::shared_ptr<AvahiQuerier> querier, EventLoop* eventLoop) : AvahiQuery(querier, eventLoop), hostname(hostname) {
 				std::cout << "Resolving hostname " << hostname << std::endl;
 			}
 
@@ -32,6 +32,6 @@ namespace Swift {
 
 		private:
 			HostAddress hostAddress;
-			String hostname;
+			std::string hostname;
 	};
 }

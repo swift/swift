@@ -17,7 +17,7 @@ namespace Swift {
 			PrivateStorageParserFactory(PayloadParserFactoryCollection* factories) : factories(factories) {
 			}
 
-			virtual bool canParse(const String& element, const String& ns, const AttributeMap&) const {
+			virtual bool canParse(const std::string& element, const std::string& ns, const AttributeMap&) const {
 				return element == "query" && ns == "jabber:iq:private";
 			}
 

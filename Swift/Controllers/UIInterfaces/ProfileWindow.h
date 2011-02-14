@@ -20,7 +20,7 @@ namespace Swift {
 
 			virtual void setEnabled(bool b) = 0;
 			virtual void setProcessing(bool b) = 0;
-			virtual void setError(const String&) = 0;
+			virtual void setError(const std::string&) = 0;
 
 			virtual void show() = 0;
 			virtual void hide() = 0;

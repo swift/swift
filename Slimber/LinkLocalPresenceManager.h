@@ -10,7 +10,7 @@
 #include "Swiften/Base/boost_bsignals.h"
 
 #include "Swiften/Elements/RosterItemPayload.h"
-#include "Swiften/Base/String.h"
+#include <string>
 #include "Swiften/JID/JID.h"
 
 namespace Swift {
@@ -37,7 +37,7 @@ namespace Swift {
 			void handleServiceRemoved(const LinkLocalService&);
 
 			RosterItemPayload getRosterItem(const LinkLocalService& service) const;
-			String getRosterName(const LinkLocalService& service) const;
+			std::string getRosterName(const LinkLocalService& service) const;
 			boost::shared_ptr<Presence> getPresence(const LinkLocalService& service) const;
 
 		private:

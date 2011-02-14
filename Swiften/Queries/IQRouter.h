@@ -9,7 +9,7 @@
 #include <boost/shared_ptr.hpp>
 #include <vector>
 
-#include "Swiften/Base/String.h"
+#include <string>
 #include "Swiften/Elements/IQ.h"
 
 namespace Swift {
@@ -45,7 +45,7 @@ namespace Swift {
 			 * it.
 			 */
 			void sendIQ(boost::shared_ptr<IQ> iq);
-			String getNewIQID();
+			std::string getNewIQID();
 			
 			bool isAvailable();
 

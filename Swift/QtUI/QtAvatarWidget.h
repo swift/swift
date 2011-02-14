@@ -18,13 +18,13 @@ namespace Swift {
 		public:
 			QtAvatarWidget(QWidget* parent);
 
-			void setAvatar(const ByteArray& data, const String& type);
+			void setAvatar(const ByteArray& data, const std::string& type);
 
 			const ByteArray& getAvatarData() const {
 				return data;
 			}
 
-			const String& getAvatarType() const {
+			const std::string& getAvatarType() const {
 				return type;
 			}
 
@@ -32,7 +32,7 @@ namespace Swift {
 
 		private:
 			ByteArray data;
-			String type;
+			std::string type;
 			QLabel* label;
 	};
 }

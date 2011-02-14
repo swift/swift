@@ -10,7 +10,7 @@
 #include <boost/date_time/posix_time/posix_time.hpp>
 
 #include "Swiften/JID/JID.h"
-#include "Swiften/Base/String.h"
+#include <string>
 #include "Swiften/Elements/Payload.h"
 
 namespace Swift {

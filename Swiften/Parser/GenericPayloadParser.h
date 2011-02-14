@@ -12,7 +12,7 @@
 #include <Swiften/Parser/PayloadParser.h>
 
 namespace Swift {
-	class String;
+	
 	class FormParser;
 
 	/**

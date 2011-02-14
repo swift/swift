@@ -21,7 +21,7 @@ namespace Swift {
 CapsFileStorage::CapsFileStorage(const boost::filesystem::path& path) : path(path) {
 }
 
-DiscoInfo::ref CapsFileStorage::getDiscoInfo(const String& hash) const {
+DiscoInfo::ref CapsFileStorage::getDiscoInfo(const std::string& hash) const {
 	boost::filesystem::path capsPath(getCapsPath(hash));
 	if (boost::filesystem::exists(capsPath)) {
 		ByteArray data;
@@ -29,7 +29,7 @@ DiscoInfo::ref CapsFileStorage::getDiscoInfo(const String& hash) const {
 
 		DiscoInfoParser parser;
 		PayloadParserTester tester(&parser);
-		tester.parse(String(data.getData(), data.getSize()));
+		tester.parse(std::string(data.getData(), data.getSize()));
 		return boost::dynamic_pointer_cast<DiscoInfo>(parser.getPayload());
 	}
 	else {
@@ -37,7 +37,7 @@ DiscoInfo::ref CapsFileStorage::getDiscoInfo(const String& hash) const {
 	}
 }
 
-void CapsFileStorage::setDiscoInfo(const String& hash, DiscoInfo::ref discoInfo) {
+void CapsFileStorage::setDiscoInfo(const std::string& hash, DiscoInfo::ref discoInfo) {
 	boost::filesystem::path capsPath(getCapsPath(hash));
 	if (!boost::filesystem::exists(capsPath.parent_path())) {
 		try {
@@ -54,8 +54,8 @@ void CapsFileStorage::setDiscoInfo(const String& hash, DiscoInfo::ref discoInfo)
 	file.close();
 }
 
-boost::filesystem::path CapsFileStorage::getCapsPath(const String& hash) const {
-	return path / (Hexify::hexify(Base64::decode(hash)) + ".xml").getUTF8String();
+boost::filesystem::path CapsFileStorage::getCapsPath(const std::string& hash) const {
+	return path / (Hexify::hexify(Base64::decode(hash)) + ".xml");
 }
 
 }

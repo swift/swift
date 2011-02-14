@@ -8,32 +8,32 @@
 //
 #pragma once
 
-#include "Swiften/Base/String.h"
+#include <string>
 #include "Swiften/Base/ByteArray.h"
 
 namespace Swift {
 	class PLAINMessage {
 		public:
-			PLAINMessage(const String& authcid, const String& password, const String& authzid = "");
+			PLAINMessage(const std::string& authcid, const std::string& password, const std::string& authzid = "");
 			PLAINMessage(const ByteArray& value);
 
 			ByteArray getValue() const;
 
-			const String& getAuthenticationID() const {
+			const std::string& getAuthenticationID() const {
 				return authcid;
 			}
 
-			const String& getPassword() const {
+			const std::string& getPassword() const {
 				return password;
 			}
 
-			const String& getAuthorizationID() const {
+			const std::string& getAuthorizationID() const {
 				return authzid;
 			}
 
 		private:
-			String authcid;
-			String authzid;
-			String password;
+			std::string authcid;
+			std::string authzid;
+			std::string password;
 	};
 }

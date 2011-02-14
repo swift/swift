@@ -14,18 +14,18 @@ namespace Swift {
 
 static boost::regex linkifyRegexp("^https?://.*");
 
-String Linkify::linkify(const String& input) {
+std::string Linkify::linkify(const std::string& input) {
 	std::ostringstream result;
 	std::vector<char> currentURL;
 	bool inURL = false;
-	for (size_t i = 0; i < input.getUTF8Size(); ++i) {
+	for (size_t i = 0; i < input.size(); ++i) {
 		char c = input[i];
 		if (inURL) {
 			if (c != ' ' && c != '\t' && c != '\n') {
 				currentURL.push_back(c);
 			}
 			else {
-				String url(&currentURL[0], currentURL.size());
+				std::string url(&currentURL[0], currentURL.size());
 				result << "<a href=\"" << url << "\">" <<  url << "</a>";
 				currentURL.clear();
 				inURL = false;
@@ -33,7 +33,7 @@ String Linkify::linkify(const String& input) {
 			}
 		}
 		else {
-			if (boost::regex_match(input.getSubstring(i, 8).getUTF8String(), linkifyRegexp)) {
+			if (boost::regex_match(input.substr(i, 8), linkifyRegexp)) {
 				currentURL.push_back(c);
 				inURL = true;
 			}
@@ -43,10 +43,10 @@ String Linkify::linkify(const String& input) {
 		}
 	}
 	if (currentURL.size() > 0) {
-		String url(&currentURL[0], currentURL.size());
+		std::string url(&currentURL[0], currentURL.size());
 		result << "<a href=\"" << url << "\">" <<  url << "</a>";
 	}
-	return String(result.str());
+	return std::string(result.str());
 }
 
 }

@@ -17,20 +17,20 @@
 #include "Swiften/EventLoop/EventLoop.h"
 
 namespace Swift {
-	class String;
+	
 
 	class StaticDomainNameResolver : public DomainNameResolver {
 		public:
-			typedef std::map<String, std::vector<HostAddress> > AddressesMap;
-			typedef std::vector< std::pair<String, DomainNameServiceQuery::Result> > ServicesCollection;
+			typedef std::map<std::string, std::vector<HostAddress> > AddressesMap;
+			typedef std::vector< std::pair<std::string, DomainNameServiceQuery::Result> > ServicesCollection;
 
 		public:
 			StaticDomainNameResolver(EventLoop* eventLoop);
 
-			void addAddress(const String& domain, const HostAddress& address);
-			void addService(const String& service, const DomainNameServiceQuery::Result& result);
-			void addXMPPClientService(const String& domain, const HostAddressPort&);
-			void addXMPPClientService(const String& domain, const String& host, int port);
+			void addAddress(const std::string& domain, const HostAddress& address);
+			void addService(const std::string& service, const DomainNameServiceQuery::Result& result);
+			void addXMPPClientService(const std::string& domain, const HostAddressPort&);
+			void addXMPPClientService(const std::string& domain, const std::string& host, int port);
 
 			const AddressesMap& getAddresses() const {
 				return addresses;
@@ -48,8 +48,8 @@ namespace Swift {
 				isResponsive = b;
 			}
 
-			virtual boost::shared_ptr<DomainNameServiceQuery> createServiceQuery(const String& name);
-			virtual boost::shared_ptr<DomainNameAddressQuery> createAddressQuery(const String& name);
+			virtual boost::shared_ptr<DomainNameServiceQuery> createServiceQuery(const std::string& name);
+			virtual boost::shared_ptr<DomainNameAddressQuery> createAddressQuery(const std::string& name);
 			
 		private:
 			EventLoop* eventLoop;

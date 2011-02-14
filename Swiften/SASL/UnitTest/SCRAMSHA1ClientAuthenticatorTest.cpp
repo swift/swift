@@ -45,7 +45,7 @@ class SCRAMSHA1ClientAuthenticatorTest : public CppUnit::TestFixture {
 
 			ByteArray response = *testling.getResponse();
 
-			CPPUNIT_ASSERT_EQUAL(String("n,,n=user,r=abcdefghABCDEFGH"), response.toString());
+			CPPUNIT_ASSERT_EQUAL(std::string("n,,n=user,r=abcdefghABCDEFGH"), response.toString());
 		}
 
 		void testGetInitialResponse_UsernameHasSpecialChars() {
@@ -54,7 +54,7 @@ class SCRAMSHA1ClientAuthenticatorTest : public CppUnit::TestFixture {
 
 			ByteArray response = *testling.getResponse();
 
-			CPPUNIT_ASSERT_EQUAL(String("n,,n==2Cus=3D=2Cer=3D,r=abcdefghABCDEFGH"), response.toString());
+			CPPUNIT_ASSERT_EQUAL(std::string("n,,n==2Cus=3D=2Cer=3D,r=abcdefghABCDEFGH"), response.toString());
 		}
 
 		void testGetInitialResponse_WithAuthorizationID() {
@@ -63,7 +63,7 @@ class SCRAMSHA1ClientAuthenticatorTest : public CppUnit::TestFixture {
 
 			ByteArray response = *testling.getResponse();
 
-			CPPUNIT_ASSERT_EQUAL(String("n,a=auth,n=user,r=abcdefghABCDEFGH"), response.toString());
+			CPPUNIT_ASSERT_EQUAL(std::string("n,a=auth,n=user,r=abcdefghABCDEFGH"), response.toString());
 		}
 
 		void testGetInitialResponse_WithAuthorizationIDWithSpecialChars() {
@@ -72,7 +72,7 @@ class SCRAMSHA1ClientAuthenticatorTest : public CppUnit::TestFixture {
 
 			ByteArray response = *testling.getResponse();
 
-			CPPUNIT_ASSERT_EQUAL(String("n,a=a=3Du=2Cth,n=user,r=abcdefghABCDEFGH"), response.toString());
+			CPPUNIT_ASSERT_EQUAL(std::string("n,a=a=3Du=2Cth,n=user,r=abcdefghABCDEFGH"), response.toString());
 		}
 
 		void testGetInitialResponse_WithoutChannelBindingWithTLSChannelBindingData() {
@@ -82,7 +82,7 @@ class SCRAMSHA1ClientAuthenticatorTest : public CppUnit::TestFixture {
 
 			ByteArray response = *testling.getResponse();
 
-			CPPUNIT_ASSERT_EQUAL(String("y,,n=user,r=abcdefghABCDEFGH"), response.toString());
+			CPPUNIT_ASSERT_EQUAL(std::string("y,,n=user,r=abcdefghABCDEFGH"), response.toString());
 		}
 
 		void testGetInitialResponse_WithChannelBindingWithTLSChannelBindingData() {
@@ -92,7 +92,7 @@ class SCRAMSHA1ClientAuthenticatorTest : public CppUnit::TestFixture {
 
 			ByteArray response = *testling.getResponse();
 
-			CPPUNIT_ASSERT_EQUAL(String("p=tls-unique,,n=user,r=abcdefghABCDEFGH"), response.toString());
+			CPPUNIT_ASSERT_EQUAL(std::string("p=tls-unique,,n=user,r=abcdefghABCDEFGH"), response.toString());
 		}
 
 		void testGetFinalResponse() {
@@ -102,7 +102,7 @@ class SCRAMSHA1ClientAuthenticatorTest : public CppUnit::TestFixture {
 
 			ByteArray response = *testling.getResponse();
 
-			CPPUNIT_ASSERT_EQUAL(String("c=biws,r=abcdefghABCDEFGH,p=CZbjGDpIteIJwQNBgO0P8pKkMGY="), response.toString());
+			CPPUNIT_ASSERT_EQUAL(std::string("c=biws,r=abcdefghABCDEFGH,p=CZbjGDpIteIJwQNBgO0P8pKkMGY="), response.toString());
 		}
 
 		void testGetFinalResponse_WithoutChannelBindingWithTLSChannelBindingData() {
@@ -113,7 +113,7 @@ class SCRAMSHA1ClientAuthenticatorTest : public CppUnit::TestFixture {
 
 			ByteArray response = *testling.getResponse();
 
-			CPPUNIT_ASSERT_EQUAL(String("c=eSws,r=abcdefghABCDEFGH,p=JNpsiFEcxZvNZ1+FFBBqrYvYxMk="), response.toString());
+			CPPUNIT_ASSERT_EQUAL(std::string("c=eSws,r=abcdefghABCDEFGH,p=JNpsiFEcxZvNZ1+FFBBqrYvYxMk="), response.toString());
 		}
 
 		void testGetFinalResponse_WithChannelBindingWithTLSChannelBindingData() {
@@ -124,7 +124,7 @@ class SCRAMSHA1ClientAuthenticatorTest : public CppUnit::TestFixture {
 
 			ByteArray response = *testling.getResponse();
 
-			CPPUNIT_ASSERT_EQUAL(String("c=cD10bHMtdW5pcXVlLCx4eXph,r=abcdefghABCDEFGH,p=i6Rghite81P1ype8XxaVAa5l7v0="), response.toString());
+			CPPUNIT_ASSERT_EQUAL(std::string("c=cD10bHMtdW5pcXVlLCx4eXph,r=abcdefghABCDEFGH,p=i6Rghite81P1ype8XxaVAa5l7v0="), response.toString());
 		}
 
 		void testSetFinalChallenge() {

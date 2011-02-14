@@ -19,7 +19,7 @@
 
 namespace Swift {
 
-CoreComponent::CoreComponent(EventLoop* eventLoop, NetworkFactories* networkFactories, const JID& jid, const String& secret) : eventLoop(eventLoop), networkFactories(networkFactories), resolver_(eventLoop), jid_(jid), secret_(secret), disconnectRequested_(false) {
+CoreComponent::CoreComponent(EventLoop* eventLoop, NetworkFactories* networkFactories, const JID& jid, const std::string& secret) : eventLoop(eventLoop), networkFactories(networkFactories), resolver_(eventLoop), jid_(jid), secret_(secret), disconnectRequested_(false) {
 	stanzaChannel_ = new ComponentSessionStanzaChannel();
 	stanzaChannel_->onMessageReceived.connect(boost::ref(onMessageReceived));
 	stanzaChannel_->onPresenceReceived.connect(boost::ref(onPresenceReceived));
@@ -41,7 +41,7 @@ CoreComponent::~CoreComponent() {
 	delete stanzaChannel_;
 }
 
-void CoreComponent::connect(const String& host, int port) {
+void CoreComponent::connect(const std::string& host, int port) {
 	assert(!connector_);
 	connector_ = ComponentConnector::create(host, port, &resolver_, networkFactories->getConnectionFactory(), networkFactories->getTimerFactory());
 	connector_->onConnectFinished.connect(boost::bind(&CoreComponent::handleConnectorFinished, this, _1));
@@ -138,11 +138,11 @@ void CoreComponent::handleSessionFinished(boost::shared_ptr<Error> error) {
 	}
 }
 
-void CoreComponent::handleDataRead(const String& data) {
+void CoreComponent::handleDataRead(const std::string& data) {
 	onDataRead(data);
 }
 
-void CoreComponent::handleDataWritten(const String& data) {
+void CoreComponent::handleDataWritten(const std::string& data) {
 	onDataWritten(data);
 }
 

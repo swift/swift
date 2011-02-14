@@ -9,7 +9,7 @@
 #include <boost/shared_ptr.hpp>
 
 #include <Swiften/Base/boost_bsignals.h>
-#include <Swiften/Base/String.h>
+#include <string>
 #include <Swiften/Elements/JinglePayload.h>
 #include <Swiften/Elements/JingleContent.h>
 #include <Swiften/Base/foreach.h>
@@ -20,10 +20,10 @@ namespace Swift {
 		public:
 			typedef boost::shared_ptr<JingleSession> ref;
 
-			JingleSession(const String& id, const std::vector<JingleContent::ref>& contents);
+			JingleSession(const std::string& id, const std::vector<JingleContent::ref>& contents);
 			virtual ~JingleSession();
 
-			String getID() const {
+			std::string getID() const {
 				return id;
 			}
 
@@ -47,7 +47,7 @@ namespace Swift {
 			void handleIncomingAction(JinglePayload::ref);
 
 		private:
-			String id;
+			std::string id;
 			std::vector<JingleContent::ref> contents;
 	};
 }

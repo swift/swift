@@ -11,7 +11,7 @@
 #include <boost/optional.hpp>
 
 #include <Swiften/JID/JID.h>
-#include <Swiften/Base/String.h>
+#include <string>
 #include <Swift/Controllers/UIEvents/UIEvent.h>
 #include <Swiften/Roster/XMPPRosterItem.h>
 
@@ -30,7 +30,7 @@ namespace Swift {
 
 		private:
 			void handleRemoveContactRequest();
-			void handleChangeContactRequest(const String& name, const std::set<String>& groups);
+			void handleChangeContactRequest(const std::string& name, const std::set<std::string>& groups);
 
 		private:
 			void handleUIEvent(UIEvent::ref event);

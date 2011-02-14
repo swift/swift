@@ -9,25 +9,25 @@
 #include <boost/shared_ptr.hpp>
 
 #include "Swiften/Elements/Element.h"
-#include "Swiften/Base/String.h"
+#include <string>
 
 namespace Swift {
 	class ComponentHandshake : public Element {
 		public:
 			typedef boost::shared_ptr<ComponentHandshake> ref;
 
-			ComponentHandshake(const String& data = "") : data(data) {
+			ComponentHandshake(const std::string& data = "") : data(data) {
 			}
 
-			void setData(const String& d) {
+			void setData(const std::string& d) {
 				data = d;
 			}
 
-			const String& getData() const {
+			const std::string& getData() const {
 				return data;
 			}
 
 		private:
-			String data;
+			std::string data;
 	};
 }

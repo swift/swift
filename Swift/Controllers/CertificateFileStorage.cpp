@@ -55,7 +55,7 @@ void CertificateFileStorage::addCertificate(Certificate::ref certificate) {
 }
 
 boost::filesystem::path CertificateFileStorage::getCertificatePath(Certificate::ref certificate) const {
-	return path / Hexify::hexify(SHA1::getHash(certificate->toDER())).getUTF8String();
+	return path / Hexify::hexify(SHA1::getHash(certificate->toDER()));
 }
 
 }

@@ -185,7 +185,7 @@ MUCSearchRoomItem* QtMUCSearchWindow::getSelectedRoom() const {
 			}
 		}
 	}
-	if (lstIndex.empty()) {
+	if (lstIndex.isEmpty()) {
 		return NULL;
 	}
 	else {

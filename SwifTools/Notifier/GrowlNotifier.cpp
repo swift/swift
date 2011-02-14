@@ -8,6 +8,7 @@
 
 #include <cassert>
 
+#include "Swiften/Base/String.h"
 #include "Swiften/Base/ByteArray.h"
 #include "SwifTools/Notifier/GrowlNotifier.h"
 #include "Swiften/Base/foreach.h"
@@ -47,7 +48,7 @@ namespace {
 
 namespace Swift {
 
-GrowlNotifier::GrowlNotifier(const String& name) {
+GrowlNotifier::GrowlNotifier(const std::string& name) {
 	// All notifications
 	CFMutableArrayRef allNotifications = CFArrayCreateMutable(kCFAllocatorDefault, 0, &kCFTypeArrayCallBacks);
 	foreach(Type type, getAllTypes()) {
@@ -71,7 +72,7 @@ GrowlNotifier::GrowlNotifier(const String& name) {
 	Growl_SetDelegate(&delegate_);
 }
 
-void GrowlNotifier::showMessage(Type type, const String& subject, const String& description, const boost::filesystem::path& picturePath, boost::function<void()> callback) {
+void GrowlNotifier::showMessage(Type type, const std::string& subject, const std::string& description, const boost::filesystem::path& picturePath, boost::function<void()> callback) {
 	ByteArray picture;
 	picture.readFromFile(picturePath.string());
 

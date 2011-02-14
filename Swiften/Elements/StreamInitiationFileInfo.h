@@ -6,14 +6,14 @@
 
 #pragma once
 
-#include <Swiften/Base/String.h>
+#include <string>
 
 namespace Swift {
 	struct StreamInitiationFileInfo {
-		StreamInitiationFileInfo(const String& name = "", const String& description = "", int size = -1) : name(name), description(description), size(size) {}
+		StreamInitiationFileInfo(const std::string& name = "", const std::string& description = "", int size = -1) : name(name), description(description), size(size) {}
 
-		String name;
-		String description;
+		std::string name;
+		std::string description;
 		int size;
 	};
 }

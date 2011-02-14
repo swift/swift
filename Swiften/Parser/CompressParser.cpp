@@ -11,7 +11,7 @@ namespace Swift {
 CompressParser::CompressParser() : GenericElementParser<CompressRequest>(), currentDepth_(0), inMethod_(false) {
 }
 
-void CompressParser::handleStartElement(const String& element, const String&, const AttributeMap&) {
+void CompressParser::handleStartElement(const std::string& element, const std::string&, const AttributeMap&) {
 	if (currentDepth_ == 1 && element == "method") {
 		inMethod_ = true;
 		currentText_ = "";
@@ -19,7 +19,7 @@ void CompressParser::handleStartElement(const String& element, const String&, co
 	++currentDepth_;
 }
 
-void CompressParser::handleEndElement(const String&, const String&) {
+void CompressParser::handleEndElement(const std::string&, const std::string&) {
 	--currentDepth_;
 	if (currentDepth_ == 1 && inMethod_) {
 		getElementGeneric()->setMethod(currentText_);
@@ -27,7 +27,7 @@ void CompressParser::handleEndElement(const String&, const String&) {
 	}
 }
 
-void CompressParser::handleCharacterData(const String& data) {
+void CompressParser::handleCharacterData(const std::string& data) {
 	currentText_ += data;
 }
 

@@ -12,7 +12,7 @@
 #include <vector>
 #include <boost/shared_ptr.hpp>
 
-#include "Swiften/Base/String.h"
+#include <string>
 #include "Swiften/JID/JID.h"
 
 namespace Swift {
@@ -23,19 +23,19 @@ namespace Swift {
 			virtual ~FormField() {}
 
 			struct Option {
-				Option(const String& label, const String& value) : label(label), value(value) {}
-				String label;
-				String value;
+				Option(const std::string& label, const std::string& value) : label(label), value(value) {}
+				std::string label;
+				std::string value;
 			};
 
-			void setName(const String& name) { this->name = name; }
-			const String& getName() const { return name; }
+			void setName(const std::string& name) { this->name = name; }
+			const std::string& getName() const { return name; }
 
-			void setLabel(const String& label) { this->label = label; }
-			const String& getLabel() const { return label; }
+			void setLabel(const std::string& label) { this->label = label; }
+			const std::string& getLabel() const { return label; }
 
-			void setDescription(const String& description) { this->description = description; }
-			const String& getDescription() const { return description; }
+			void setDescription(const std::string& description) { this->description = description; }
+			const std::string& getDescription() const { return description; }
 
 			void setRequired(bool required) { this->required = required; }
 			bool getRequired() const { return required; }
@@ -48,11 +48,11 @@ namespace Swift {
 				return options;
 			}
 
-			const std::vector<String> getRawValues() const {
+			const std::vector<std::string> getRawValues() const {
 				return rawValues;
 			}
 
-			void addRawValue(const String& value) {
+			void addRawValue(const std::string& value) {
 				rawValues.push_back(value);
 			}
 
@@ -60,12 +60,12 @@ namespace Swift {
 			FormField() : required(false) {}
 
 		private:
-			String name;
-			String label;
-			String description;
+			std::string name;
+			std::string label;
+			std::string description;
 			bool required;
 			std::vector<Option> options;
-			std::vector<String> rawValues;
+			std::vector<std::string> rawValues;
 	};
 
 	template<typename T> class GenericFormField : public FormField {
@@ -102,14 +102,14 @@ namespace Swift {
 	};
 
 	SWIFTEN_DECLARE_FORM_FIELD(Boolean, bool);
-	SWIFTEN_DECLARE_FORM_FIELD(Fixed, String);
-	SWIFTEN_DECLARE_FORM_FIELD(Hidden, String);
-	SWIFTEN_DECLARE_FORM_FIELD(ListSingle, String);
-	SWIFTEN_DECLARE_FORM_FIELD(TextMulti, String);
-	SWIFTEN_DECLARE_FORM_FIELD(TextPrivate, String);
-	SWIFTEN_DECLARE_FORM_FIELD(TextSingle, String);
+	SWIFTEN_DECLARE_FORM_FIELD(Fixed, std::string);
+	SWIFTEN_DECLARE_FORM_FIELD(Hidden, std::string);
+	SWIFTEN_DECLARE_FORM_FIELD(ListSingle, std::string);
+	SWIFTEN_DECLARE_FORM_FIELD(TextMulti, std::string);
+	SWIFTEN_DECLARE_FORM_FIELD(TextPrivate, std::string);
+	SWIFTEN_DECLARE_FORM_FIELD(TextSingle, std::string);
 	SWIFTEN_DECLARE_FORM_FIELD(JIDSingle, JID);
 	SWIFTEN_DECLARE_FORM_FIELD(JIDMulti, std::vector<JID>);
-	SWIFTEN_DECLARE_FORM_FIELD(ListMulti, std::vector<String>);
-	SWIFTEN_DECLARE_FORM_FIELD(Untyped, std::vector<String>);
+	SWIFTEN_DECLARE_FORM_FIELD(ListMulti, std::vector<std::string>);
+	SWIFTEN_DECLARE_FORM_FIELD(Untyped, std::vector<std::string>);
 }

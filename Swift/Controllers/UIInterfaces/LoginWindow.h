@@ -9,7 +9,7 @@
 #include "Swiften/Base/boost_bsignals.h"
 #include <boost/shared_ptr.hpp>
 
-#include <Swiften/Base/String.h>
+#include <string>
 #include <Swiften/TLS/Certificate.h>
 
 namespace Swift {
@@ -17,21 +17,21 @@ namespace Swift {
 	class LoginWindow {
 		public:
 			virtual ~LoginWindow() {};
-			virtual void selectUser(const String&) = 0;
+			virtual void selectUser(const std::string&) = 0;
 			virtual void morphInto(MainWindow *mainWindow) = 0;
 			virtual void loggedOut() = 0;
-			virtual void setMessage(const String&) = 0;
+			virtual void setMessage(const std::string&) = 0;
 			virtual void setIsLoggingIn(bool loggingIn) = 0;
-			virtual void addAvailableAccount(const String& defaultJID, const String& defaultPassword, const String& defaultCertificate) = 0;
-			virtual void removeAvailableAccount(const String& jid) = 0;
-			boost::signal<void (const String&, const String&, const String& /* certificateFile */, bool /* remember password*/, bool /* login automatically */)> onLoginRequest;
+			virtual void addAvailableAccount(const std::string& defaultJID, const std::string& defaultPassword, const std::string& defaultCertificate) = 0;
+			virtual void removeAvailableAccount(const std::string& jid) = 0;
+			boost::signal<void (const std::string&, const std::string&, const std::string& /* certificateFile */, bool /* remember password*/, bool /* login automatically */)> onLoginRequest;
 			virtual void setLoginAutomatically(bool loginAutomatically) = 0;
 			virtual void quit() = 0;
 			/** Blocking request whether a cert should be permanently trusted.*/
-			virtual bool askUserToTrustCertificatePermanently(const String& message, Certificate::ref) = 0;
+			virtual bool askUserToTrustCertificatePermanently(const std::string& message, Certificate::ref) = 0;
 
 			boost::signal<void ()> onCancelLoginRequest;
 			boost::signal<void ()> onQuitRequest;
-			boost::signal<void (const String&)> onPurgeSavedLoginRequest;
+			boost::signal<void (const std::string&)> onPurgeSavedLoginRequest;
 	};
 }

@@ -13,13 +13,13 @@
 
 namespace Swift {
 
-MacOSXApplicationPathProvider::MacOSXApplicationPathProvider(const String& name) : ApplicationPathProvider(name) {
+MacOSXApplicationPathProvider::MacOSXApplicationPathProvider(const std::string& name) : ApplicationPathProvider(name) {
 	resourceDirs.push_back(getExecutableDir() / "../Resources");
 	resourceDirs.push_back(getExecutableDir() / "../resources"); // Development
 }
 
 boost::filesystem::path MacOSXApplicationPathProvider::getDataDir() const {
-	boost::filesystem::path result(getHomeDir() / "Library/Application Support" / getApplicationName().getUTF8String());
+	boost::filesystem::path result(getHomeDir() / "Library/Application Support" / getApplicationName());
 	try {
 		boost::filesystem::create_directory(result);
 	}

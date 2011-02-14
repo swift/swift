@@ -17,7 +17,7 @@ namespace Swift {
 			CertificateFileStorageFactory(const boost::filesystem::path& basePath, CertificateFactory* certificateFactory) : basePath(basePath), certificateFactory(certificateFactory) {}
 
 			virtual CertificateStorage* createCertificateStorage(const JID& profile) const {
-				boost::filesystem::path profilePath = basePath / profile.toString().getUTF8String();
+				boost::filesystem::path profilePath = basePath / profile.toString();
 				return new CertificateFileStorage(profilePath / "certificates", certificateFactory);
 			}
 

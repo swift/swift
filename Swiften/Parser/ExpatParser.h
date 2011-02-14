@@ -18,7 +18,7 @@ namespace Swift {
 			ExpatParser(XMLParserClient* client);
 			~ExpatParser();
 
-			bool parse(const String& data);
+			bool parse(const std::string& data);
 
 		private:
 			XML_Parser parser_;

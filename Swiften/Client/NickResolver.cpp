@@ -31,28 +31,28 @@ NickResolver::NickResolver(const JID& ownJID, XMPPRoster* xmppRoster, VCardManag
 	xmppRoster_->onJIDAdded.connect(boost::bind(&NickResolver::handleJIDAdded, this, _1));
 }
 
-void NickResolver::handleJIDUpdated(const JID& jid, const String& previousNick, const std::vector<String>& /*groups*/) {
+void NickResolver::handleJIDUpdated(const JID& jid, const std::string& previousNick, const std::vector<std::string>& /*groups*/) {
 	onNickChanged(jid, previousNick);
 }
 
 void NickResolver::handleJIDAdded(const JID& jid) {
-	String oldNick(jidToNick(jid));
+	std::string oldNick(jidToNick(jid));
 	onNickChanged(jid, oldNick);
 }
 
-String NickResolver::jidToNick(const JID& jid) {
+std::string NickResolver::jidToNick(const JID& jid) {
 	if (jid.toBare() == ownJID_) {
-		if (!ownNick_.isEmpty()) {
+		if (!ownNick_.empty()) {
 			return ownNick_;
 		}
 	}
-	String nick;
+	std::string nick;
 
 	if (mucRegistry_ && mucRegistry_->isMUC(jid.toBare()) ) {
-		return jid.getResource().isEmpty() ? jid.toBare().toString() : jid.getResource();
+		return jid.getResource().empty() ? jid.toBare().toString() : jid.getResource();
 	}
 
-	if (xmppRoster_->containsJID(jid) && !xmppRoster_->getNameForJID(jid).isEmpty()) {
+	if (xmppRoster_->containsJID(jid) && !xmppRoster_->getNameForJID(jid).empty()) {
 		return xmppRoster_->getNameForJID(jid);
 	}
 
@@ -63,14 +63,14 @@ void NickResolver::handleVCardReceived(const JID& jid, VCard::ref ownVCard) {
 	if (!jid.equals(ownJID_, JID::WithoutResource)) {
 		return;
 	}
-	String initialNick = ownNick_;
+	std::string initialNick = ownNick_;
 	ownNick_ = ownJID_.toString();
 	if (ownVCard) {
-		if (!ownVCard->getNickname().isEmpty()) {
+		if (!ownVCard->getNickname().empty()) {
 			ownNick_ = ownVCard->getNickname();
-		} else if (!ownVCard->getGivenName().isEmpty()) {
+		} else if (!ownVCard->getGivenName().empty()) {
 			ownNick_ = ownVCard->getGivenName();
-		} else if (!ownVCard->getFullName().isEmpty()) {
+		} else if (!ownVCard->getFullName().empty()) {
 			ownNick_ = ownVCard->getFullName();
 		}
 	}

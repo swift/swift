@@ -16,7 +16,7 @@ namespace Swift {
 NicknameSerializer::NicknameSerializer() : GenericPayloadSerializer<Nickname>() {
 }
 
-String NicknameSerializer::serializePayload(boost::shared_ptr<Nickname> nick)  const {
+std::string NicknameSerializer::serializePayload(boost::shared_ptr<Nickname> nick)  const {
 	XMLElement nickElement("nick", "http://jabber.org/protocol/nick");
 	nickElement.addNode(boost::shared_ptr<XMLTextNode>(new XMLTextNode(nick->getNickname())));
 	return nickElement.serialize();

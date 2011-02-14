@@ -10,7 +10,7 @@
 
 #include "Swiften/Base/boost_bsignals.h"
 #include "Swiften/Base/ByteArray.h"
-#include "Swiften/Base/String.h"
+#include <string>
 #include "Swiften/Network/HostAddressPort.h"
 
 namespace Swift {

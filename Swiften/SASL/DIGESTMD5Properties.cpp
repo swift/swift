@@ -58,7 +58,7 @@ DIGESTMD5Properties DIGESTMD5Properties::parse(const ByteArray& data) {
 		}
 		else {
 			if (c == ',' && !insideQuotes(currentValue)) {
-				String key = currentKey.toString();
+				std::string key = currentKey.toString();
 				if (isQuoted(key)) {
 					result.setValue(key, stripQuotes(currentValue).toString());
 				}
@@ -76,7 +76,7 @@ DIGESTMD5Properties DIGESTMD5Properties::parse(const ByteArray& data) {
 	}
 
 	if (!currentKey.isEmpty()) {
-		String key = currentKey.toString();
+		std::string key = currentKey.toString();
 		if (isQuoted(key)) {
 			result.setValue(key, stripQuotes(currentValue).toString());
 		}
@@ -106,21 +106,21 @@ ByteArray DIGESTMD5Properties::serialize() const {
 	return result;
 }
 
-boost::optional<String> DIGESTMD5Properties::getValue(const String& key) const {
+boost::optional<std::string> DIGESTMD5Properties::getValue(const std::string& key) const {
 	DIGESTMD5PropertiesMap::const_iterator i = properties.find(key);
 	if (i != properties.end()) {
 		return i->second.toString();
 	}
 	else {
-		return boost::optional<String>();
+		return boost::optional<std::string>();
 	}
 }
 
-void DIGESTMD5Properties::setValue(const String& key, const String& value) {
+void DIGESTMD5Properties::setValue(const std::string& key, const std::string& value) {
 	properties.insert(DIGESTMD5PropertiesMap::value_type(key, ByteArray(value)));
 }
 
-bool DIGESTMD5Properties::isQuoted(const String& p) {
+bool DIGESTMD5Properties::isQuoted(const std::string& p) {
 	return p == "authzid" || p == "cnonce" || p == "digest-uri" || p == "nonce" || p == "realm" || p == "username";
 }
 

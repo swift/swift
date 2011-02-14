@@ -17,6 +17,6 @@ namespace Swift {
 		public:
 			InBandRegistrationPayloadSerializer();
 
-			virtual String serializePayload(boost::shared_ptr<InBandRegistrationPayload>)  const;
+			virtual std::string serializePayload(boost::shared_ptr<InBandRegistrationPayload>)  const;
 	};
 }

@@ -46,7 +46,7 @@ class JIDDiscoInfoResponderTest : public CppUnit::TestFixture {
 			CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(channel_->iqs_.size()));
 			boost::shared_ptr<DiscoInfo> payload(channel_->iqs_[0]->getPayload<DiscoInfo>());
 			CPPUNIT_ASSERT(payload);
-			CPPUNIT_ASSERT_EQUAL(String(""), payload->getNode());
+			CPPUNIT_ASSERT_EQUAL(std::string(""), payload->getNode());
 			CPPUNIT_ASSERT(payload->hasFeature("foo"));
 
 			testling.stop();
@@ -69,7 +69,7 @@ class JIDDiscoInfoResponderTest : public CppUnit::TestFixture {
 			CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(channel_->iqs_.size()));
 			boost::shared_ptr<DiscoInfo> payload(channel_->iqs_[0]->getPayload<DiscoInfo>());
 			CPPUNIT_ASSERT(payload);
-			CPPUNIT_ASSERT_EQUAL(String("bar-node"), payload->getNode());
+			CPPUNIT_ASSERT_EQUAL(std::string("bar-node"), payload->getNode());
 			CPPUNIT_ASSERT(payload->hasFeature("bar"));
 
 			testling.stop();

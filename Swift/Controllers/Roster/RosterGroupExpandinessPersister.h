@@ -19,9 +19,9 @@ namespace Swift {
 			void handleGroupAdded(GroupRosterItem* group);
 			void load();
 			void save();
-			std::set<String> collapsed_;
+			std::set<std::string> collapsed_;
 			Roster* roster_;
 			SettingsProvider* settings_;
-			static const String SettingPath;
+			static const std::string SettingPath;
 	};
 }

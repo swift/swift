@@ -11,7 +11,7 @@
 #include <vector>
 
 #include <boost/optional.hpp>
-#include "Swiften/Base/String.h"
+#include <string>
 #include "Swiften/JID/JID.h"
 #include <Swift/Controllers/Chat/MUCSearchController.h>
 

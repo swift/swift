@@ -24,13 +24,13 @@ class DIGESTMD5PropertiesTest : public CppUnit::TestFixture {
 					"algorithm=md5-sess,charset=utf-8"));
 
 			CPPUNIT_ASSERT(properties.getValue("realm"));
-			CPPUNIT_ASSERT_EQUAL(String("myrealm1"), *properties.getValue("realm"));
+			CPPUNIT_ASSERT_EQUAL(std::string("myrealm1"), *properties.getValue("realm"));
 			CPPUNIT_ASSERT(properties.getValue("nonce"));
-			CPPUNIT_ASSERT_EQUAL(String("mynonce"), *properties.getValue("nonce"));
+			CPPUNIT_ASSERT_EQUAL(std::string("mynonce"), *properties.getValue("nonce"));
 			CPPUNIT_ASSERT(properties.getValue("algorithm"));
-			CPPUNIT_ASSERT_EQUAL(String("md5-sess"), *properties.getValue("algorithm"));
+			CPPUNIT_ASSERT_EQUAL(std::string("md5-sess"), *properties.getValue("algorithm"));
 			CPPUNIT_ASSERT(properties.getValue("charset"));
-			CPPUNIT_ASSERT_EQUAL(String("utf-8"), *properties.getValue("charset"));
+			CPPUNIT_ASSERT_EQUAL(std::string("utf-8"), *properties.getValue("charset"));
 		}
 
 		void testSerialize() {

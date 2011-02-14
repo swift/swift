@@ -13,6 +13,7 @@
 
 #include <Swiften/Disco/GetDiscoItemsRequest.h>
 #include <Swiften/Base/Log.h>
+#include <Swiften/Base/String.h>
 #include <Swift/Controllers/UIEvents/UIEventStream.h>
 #include <Swift/Controllers/UIInterfaces/MUCSearchWindowFactory.h>
 #include <Swift/Controllers/DiscoServiceWalker.h>
@@ -20,7 +21,7 @@
 
 namespace Swift {
 
-static const String SEARCHED_SERVICES = "searchedServices";
+static const std::string SEARCHED_SERVICES = "searchedServices";
 
 MUCSearchController::MUCSearchController(const JID& jid, MUCSearchWindowFactory* factory, IQRouter* iqRouter, SettingsProvider* settings) : jid_(jid), factory_(factory), iqRouter_(iqRouter), settings_(settings), window_(NULL), walker_(NULL) {
 	itemsInProgress_ = 0;
@@ -45,7 +46,7 @@ void MUCSearchController::openSearchWindow() {
 
 void MUCSearchController::loadSavedServices() {
 	savedServices_.clear();
-	foreach (String stringItem, settings_->getStringSetting(SEARCHED_SERVICES).split('\n')) {
+	foreach (std::string stringItem, String::split(settings_->getStringSetting(SEARCHED_SERVICES), '\n')) {
 		savedServices_.push_back(JID(stringItem));
 	}
 }
@@ -54,13 +55,13 @@ void MUCSearchController::addToSavedServices(const JID& jid) {
 	savedServices_.erase(std::remove(savedServices_.begin(), savedServices_.end(), jid), savedServices_.end());
 	savedServices_.push_front(jid);
 
-	String collapsed;
+	std::string collapsed;
 	int i = 0;
 	foreach (JID jidItem, savedServices_) {
 		if (i >= 15) {
 			break;
 		}
-		if (!collapsed.isEmpty()) {
+		if (!collapsed.empty()) {
 			collapsed += "\n";
 		}
 		collapsed += jidItem.toString();
@@ -100,7 +101,7 @@ void MUCSearchController::handleSearchService(const JID& jid) {
 
 void MUCSearchController::handleDiscoServiceFound(const JID& jid, boost::shared_ptr<DiscoInfo> info) {
 	bool isMUC = false;
-	String name;
+	std::string name;
 	foreach (DiscoInfo::Identity identity, info->getIdentities()) {
 			if ((identity.getCategory() == "directory"
 				&& identity.getType() == "chatroom")

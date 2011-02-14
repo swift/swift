@@ -9,7 +9,7 @@
 
 #include "Swiften/Elements/Stanza.h"
 #include "Swiften/Serializer/ElementSerializer.h"
-#include "Swiften/Base/String.h"
+#include <string>
 
 namespace Swift {
 	class PayloadSerializerCollection;
@@ -17,13 +17,13 @@ namespace Swift {
 
 	class StanzaSerializer : public ElementSerializer {
 		public:
-			StanzaSerializer(const String& tag, PayloadSerializerCollection* payloadSerializers);
+			StanzaSerializer(const std::string& tag, PayloadSerializerCollection* payloadSerializers);
 
-			virtual String serialize(boost::shared_ptr<Element>) const;
+			virtual std::string serialize(boost::shared_ptr<Element>) const;
 			virtual void setStanzaSpecificAttributes(boost::shared_ptr<Element>, XMLElement&) const = 0;
 
 		private:
-			String tag_;
+			std::string tag_;
 			PayloadSerializerCollection* payloadSerializers_;
 	};
 }

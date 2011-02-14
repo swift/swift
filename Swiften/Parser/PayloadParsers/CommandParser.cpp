@@ -18,7 +18,7 @@ CommandParser::~CommandParser() {
 	delete formParserFactory_;
 }
 
-void CommandParser::handleStartElement(const String& element, const String& ns, const AttributeMap& attributes) {
+void CommandParser::handleStartElement(const std::string& element, const std::string& ns, const AttributeMap& attributes) {
 	++level_;
 	if (level_ == PayloadLevel) {
 		boost::optional<Command::Action> action = parseAction(attributes.getAttribute("action"));
@@ -26,7 +26,7 @@ void CommandParser::handleStartElement(const String& element, const String& ns, 
 			getPayloadInternal()->setAction(*action);
 		}
 
-		String status = attributes.getAttribute("status");
+		std::string status = attributes.getAttribute("status");
 		if (status == "executing") {
 			getPayloadInternal()->setStatus(Command::Executing);
 		}
@@ -49,7 +49,7 @@ void CommandParser::handleStartElement(const String& element, const String& ns, 
 		else if (element == "note") {
 			inNote_ = true;
 			currentText_.clear();
-			String noteType = attributes.getAttribute("type");
+			std::string noteType = attributes.getAttribute("type");
 			if (noteType == "info") {
 				noteType_ = Command::Note::Info;
 			}
@@ -79,7 +79,7 @@ void CommandParser::handleStartElement(const String& element, const String& ns, 
 	}
 }
 
-void CommandParser::handleEndElement(const String& element, const String& ns) {
+void CommandParser::handleEndElement(const std::string& element, const std::string& ns) {
 	if (formParser_) {
 		formParser_->handleEndElement(element, ns);
 	}
@@ -109,7 +109,7 @@ void CommandParser::handleEndElement(const String& element, const String& ns) {
 	--level_;
 }
 
-void CommandParser::handleCharacterData(const String& data) {
+void CommandParser::handleCharacterData(const std::string& data) {
 	if (formParser_) {
 		formParser_->handleCharacterData(data);
 	}
@@ -118,7 +118,7 @@ void CommandParser::handleCharacterData(const String& data) {
 	}
 }
 
-boost::optional<Command::Action> CommandParser::parseAction(const String& action) {
+boost::optional<Command::Action> CommandParser::parseAction(const std::string& action) {
 	if (action == "execute") {
 		return Command::Execute;
 	}

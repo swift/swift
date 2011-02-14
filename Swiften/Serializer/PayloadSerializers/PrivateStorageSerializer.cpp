@@ -19,7 +19,7 @@ namespace Swift {
 PrivateStorageSerializer::PrivateStorageSerializer(PayloadSerializerCollection* serializers) : serializers(serializers) {
 }
 
-String PrivateStorageSerializer::serializePayload(boost::shared_ptr<PrivateStorage> storage)	const {
+std::string PrivateStorageSerializer::serializePayload(boost::shared_ptr<PrivateStorage> storage)	const {
 	XMLElement storageElement("query", "jabber:iq:private");
 	boost::shared_ptr<Payload> payload = storage->getPayload();
 	if (payload) {

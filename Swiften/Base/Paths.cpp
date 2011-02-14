@@ -25,7 +25,7 @@ boost::filesystem::path Paths::getExecutablePath() {
 	uint32_t size = 4096;
 	path.resize(size);
 	if (_NSGetExecutablePath(path.getData(), &size) == 0) {
-		return boost::filesystem::path(path.toString().getUTF8Data()).parent_path();
+		return boost::filesystem::path(path.toString().c_str()).parent_path();
 	}
 #elif defined(SWIFTEN_PLATFORM_LINUX)
 	ByteArray path;
@@ -33,13 +33,13 @@ boost::filesystem::path Paths::getExecutablePath() {
 	size_t size = readlink("/proc/self/exe", path.getData(), path.getSize());
 	if (size > 0) {
 		path.resize(size);
-		return boost::filesystem::path(path.toString().getUTF8Data()).parent_path();
+		return boost::filesystem::path(path.toString().c_str()).parent_path();
 	}
 #elif defined(SWIFTEN_PLATFORM_WINDOWS)
 	ByteArray data;
 	data.resize(2048);
 	GetModuleFileName(NULL, data.getData(), data.getSize());
-	return boost::filesystem::path(data.toString().getUTF8Data()).parent_path();
+	return boost::filesystem::path(data.toString().c_str()).parent_path();
 #endif
 	return boost::filesystem::path();
 }

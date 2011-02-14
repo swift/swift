@@ -31,7 +31,7 @@ class FormTest : public CppUnit::TestFixture {
 
 			form.addField(FixedFormField::create("Bar"));
 
-			CPPUNIT_ASSERT_EQUAL(String("jabber:bot"), form.getFormType());
+			CPPUNIT_ASSERT_EQUAL(std::string("jabber:bot"), form.getFormType());
 		}
 
 		void testGetFormType_InvalidFormType() {
@@ -41,7 +41,7 @@ class FormTest : public CppUnit::TestFixture {
 			field->setName("FORM_TYPE");
 			form.addField(field);
 
-			CPPUNIT_ASSERT_EQUAL(String(""), form.getFormType());
+			CPPUNIT_ASSERT_EQUAL(std::string(""), form.getFormType());
 		}
 
 		void testGetFormType_NoFormType() {
@@ -49,7 +49,7 @@ class FormTest : public CppUnit::TestFixture {
 
 			form.addField(FixedFormField::create("Foo"));
 
-			CPPUNIT_ASSERT_EQUAL(String(""), form.getFormType());
+			CPPUNIT_ASSERT_EQUAL(std::string(""), form.getFormType());
 		}
 };
 

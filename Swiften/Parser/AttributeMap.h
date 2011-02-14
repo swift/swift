@@ -9,14 +9,14 @@
 
 #include <map>
 
-#include "Swiften/Base/String.h"
+#include <string>
 
 namespace Swift {
-	class AttributeMap : public std::map<String,String> {
+	class AttributeMap : public std::map<std::string,std::string> {
 		public:
 			AttributeMap() {}
 
-			String getAttribute(const String& attribute) const {
+			std::string getAttribute(const std::string& attribute) const {
 				AttributeMap::const_iterator i = find(attribute);
 				if (i == end()) {
 					return "";
@@ -26,7 +26,7 @@ namespace Swift {
 				}
 			}
 
-			bool getBoolAttribute(const String& attribute, bool defaultValue = false) const {
+			bool getBoolAttribute(const std::string& attribute, bool defaultValue = false) const {
 				AttributeMap::const_iterator i = find(attribute);
 				if (i == end()) {
 					return defaultValue;

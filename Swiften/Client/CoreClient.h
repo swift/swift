@@ -17,7 +17,7 @@
 #include "Swiften/Elements/Presence.h"
 #include "Swiften/Elements/Message.h"
 #include "Swiften/JID/JID.h"
-#include "Swiften/Base/String.h"
+#include <string>
 #include "Swiften/Client/StanzaChannel.h"
 #include "Swiften/Parser/PayloadParsers/FullPayloadParserFactoryCollection.h"
 #include "Swiften/Serializer/PayloadSerializers/FullPayloadSerializerCollection.h"
@@ -52,10 +52,10 @@ namespace Swift {
 			 * Constructs a client for the given JID with the given password.
 			 * The given eventLoop will be used to post events to.
 			 */
-			CoreClient(const JID& jid, const String& password, NetworkFactories* networkFactories);
+			CoreClient(const JID& jid, const std::string& password, NetworkFactories* networkFactories);
 			~CoreClient();
 
-			void setCertificate(const String& certificate);
+			void setCertificate(const std::string& certificate);
 
 			/**
 			 * Connects the client to the server.
@@ -70,7 +70,7 @@ namespace Swift {
 			 */
 			void disconnect();
 
-			void connect(const String& host);
+			void connect(const std::string& host);
 			
 			/**
 			 * Sends a message.
@@ -164,7 +164,7 @@ namespace Swift {
 			 * This signal is emitted before the XML data is parsed,
 			 * so this data is unformatted.
 			 */
-			boost::signal<void (const String&)> onDataRead;
+			boost::signal<void (const std::string&)> onDataRead;
 
 			/**
 			 * Emitted when the client sends data.
@@ -172,7 +172,7 @@ namespace Swift {
 			 * This signal is emitted after the XML was serialized, and 
 			 * is unformatted.
 			 */
-			boost::signal<void (const String&)> onDataWritten;
+			boost::signal<void (const std::string&)> onDataWritten;
 
 			/**
 			 * Emitted when a message is received.
@@ -197,15 +197,15 @@ namespace Swift {
 			void handleStanzaChannelAvailableChanged(bool available);
 			void handleSessionFinished(boost::shared_ptr<Error>);
 			void handleNeedCredentials();
-			void handleDataRead(const String&);
-			void handleDataWritten(const String&);
+			void handleDataRead(const std::string&);
+			void handleDataWritten(const std::string&);
 			void handlePresenceReceived(Presence::ref);
 			void handleMessageReceived(Message::ref);
 			void handleStanzaAcked(Stanza::ref);
 
 		private:
 			JID jid_;
-			String password_;
+			std::string password_;
 			NetworkFactories* networkFactories;
 			ClientSessionStanzaChannel* stanzaChannel_;
 			IQRouter* iqRouter_;
@@ -214,7 +214,7 @@ namespace Swift {
 			boost::shared_ptr<Connection> connection_;
 			boost::shared_ptr<BasicSessionStream> sessionStream_;
 			boost::shared_ptr<ClientSession> session_;
-			String certificate_;
+			std::string certificate_;
 			bool disconnectRequested_;
 			CertificateTrustChecker* certificateTrustChecker;
 	};

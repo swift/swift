@@ -15,7 +15,7 @@ namespace Swift {
 		public:
 			ResourceBindSerializer();
 
-			virtual String serializePayload(boost::shared_ptr<ResourceBind>)  const;
+			virtual std::string serializePayload(boost::shared_ptr<ResourceBind>)  const;
 	};
 }
 

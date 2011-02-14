@@ -18,7 +18,7 @@
 #include "Swiften/Network/Timer.h"
 #include "Swiften/Network/TimerFactory.h"
 #include "Swiften/Elements/Stanza.h"
-#include "Swiften/Base/String.h"
+#include <string>
 #include "Swiften/Elements/DiscoInfo.h"
 #include "Swift/Controllers/XMPPEvents/MessageEvent.h"
 #include "Swiften/JID/JID.h"
@@ -43,7 +43,7 @@ namespace Swift {
 			void activateChatWindow();
 			void setAvailableServerFeatures(boost::shared_ptr<DiscoInfo> info);
 			void handleIncomingMessage(boost::shared_ptr<MessageEvent> message);
-			String addMessage(const String& message, const String& senderName, bool senderIsSelf, const boost::optional<SecurityLabel>& label, const String& avatarPath, const boost::posix_time::ptime& time);
+			std::string addMessage(const std::string& message, const std::string& senderName, bool senderIsSelf, const boost::optional<SecurityLabel>& label, const std::string& avatarPath, const boost::posix_time::ptime& time);
 			virtual void setOnline(bool online);
 			virtual void setEnabled(bool enabled);
 			virtual void setToJID(const JID& jid) {toJID_ = jid;};
@@ -53,8 +53,8 @@ namespace Swift {
 			/**
 			 * Pass the Message appended, and the stanza used to send it.
 			 */
-			virtual void postSendMessage(const String&, boost::shared_ptr<Stanza>) {};
-			virtual String senderDisplayNameFromMessage(const JID& from) = 0;
+			virtual void postSendMessage(const std::string&, boost::shared_ptr<Stanza>) {};
+			virtual std::string senderDisplayNameFromMessage(const JID& from) = 0;
 			virtual bool isIncomingMessageFromMe(boost::shared_ptr<Message>) = 0;
 			virtual void preHandleIncomingMessage(boost::shared_ptr<MessageEvent>) {};
 			virtual void preSendMessageRequest(boost::shared_ptr<Message>) {};
@@ -64,10 +64,10 @@ namespace Swift {
 
 		private:
 			void createDayChangeTimer();
-			void handleSendMessageRequest(const String &body);
+			void handleSendMessageRequest(const std::string &body);
 			void handleAllMessagesRead();
 			void handleSecurityLabelsCatalogResponse(boost::shared_ptr<SecurityLabelsCatalog>, ErrorPayload::ref error);
-			String getErrorMessage(boost::shared_ptr<ErrorPayload>);
+			std::string getErrorMessage(boost::shared_ptr<ErrorPayload>);
 			void handleDayChangeTick();
 
 		protected:

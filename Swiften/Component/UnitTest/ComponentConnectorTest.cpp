@@ -146,7 +146,7 @@ class ComponentConnectorTest : public CppUnit::TestFixture {
 		}
 
 	private:
-		ComponentConnector::ref createConnector(const String& hostname, int port) {
+		ComponentConnector::ref createConnector(const std::string& hostname, int port) {
 			ComponentConnector::ref connector = ComponentConnector::create(hostname, port, resolver, connectionFactory, timerFactory);
 			connector->onConnectFinished.connect(boost::bind(&ComponentConnectorTest::handleConnectorFinished, this, _1));
 			return connector;

@@ -24,7 +24,7 @@ class StatusSerializerTest : public CppUnit::TestFixture
 			StatusSerializer testling;
 			boost::shared_ptr<Status> status(new Status("I am away"));
 
-			CPPUNIT_ASSERT_EQUAL(String("<status>I am away</status>"), testling.serialize(status));
+			CPPUNIT_ASSERT_EQUAL(std::string("<status>I am away</status>"), testling.serialize(status));
 		}
 };
 

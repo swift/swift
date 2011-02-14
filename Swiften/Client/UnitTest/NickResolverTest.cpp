@@ -58,34 +58,34 @@ class NickResolverTest : public CppUnit::TestFixture {
 			registry_->addMUC(JID("foo@bar"));
 			JID testJID("foo@bar/baz");
 
-			CPPUNIT_ASSERT_EQUAL(String("baz"), resolver_->jidToNick(testJID));
+			CPPUNIT_ASSERT_EQUAL(std::string("baz"), resolver_->jidToNick(testJID));
 		}
 
 		void testMUCNoNick() {
 			registry_->addMUC(JID("foo@bar"));
 			JID testJID("foo@bar");
 
-			CPPUNIT_ASSERT_EQUAL(String("foo@bar"), resolver_->jidToNick(testJID));
+			CPPUNIT_ASSERT_EQUAL(std::string("foo@bar"), resolver_->jidToNick(testJID));
 		}
 
 
 		void testNoMatch() {
 			JID testJID("foo@bar/baz");
 
-			CPPUNIT_ASSERT_EQUAL(String("foo@bar"), resolver_->jidToNick(testJID));
+			CPPUNIT_ASSERT_EQUAL(std::string("foo@bar"), resolver_->jidToNick(testJID));
 		}
 		
 		void testZeroLengthMatch() {
 			JID testJID("foo@bar/baz");
 			xmppRoster_->addContact(testJID, "", groups_, RosterItemPayload::Both);
-			CPPUNIT_ASSERT_EQUAL(String("foo@bar"), resolver_->jidToNick(testJID));
+			CPPUNIT_ASSERT_EQUAL(std::string("foo@bar"), resolver_->jidToNick(testJID));
 		}
 
 		void testMatch() {
 			JID testJID("foo@bar/baz");
 			xmppRoster_->addContact(testJID, "Test", groups_, RosterItemPayload::Both);
 
-			CPPUNIT_ASSERT_EQUAL(String("Test"), resolver_->jidToNick(testJID));
+			CPPUNIT_ASSERT_EQUAL(std::string("Test"), resolver_->jidToNick(testJID));
 		}
 
 		void testOverwrittenMatch() {
@@ -93,40 +93,40 @@ class NickResolverTest : public CppUnit::TestFixture {
 			xmppRoster_->addContact(testJID, "FailTest", groups_, RosterItemPayload::Both);
 			xmppRoster_->addContact(testJID, "Test", groups_, RosterItemPayload::Both);
 
-			CPPUNIT_ASSERT_EQUAL(String("Test"), resolver_->jidToNick(testJID));
+			CPPUNIT_ASSERT_EQUAL(std::string("Test"), resolver_->jidToNick(testJID));
 		}
 
 		void testRemovedMatch() {
 			JID testJID("foo@bar/baz");
 			xmppRoster_->addContact(testJID, "FailTest", groups_, RosterItemPayload::Both);
 			xmppRoster_->removeContact(testJID);
-			CPPUNIT_ASSERT_EQUAL(String("foo@bar"), resolver_->jidToNick(testJID));
+			CPPUNIT_ASSERT_EQUAL(std::string("foo@bar"), resolver_->jidToNick(testJID));
 		}
 
 		void testOwnNickFullOnly() {
 			populateOwnVCard("", "", "Kevin Smith");
-			CPPUNIT_ASSERT_EQUAL(String("Kevin Smith"), resolver_->jidToNick(ownJID_));
+			CPPUNIT_ASSERT_EQUAL(std::string("Kevin Smith"), resolver_->jidToNick(ownJID_));
 		}
 
 		void testOwnNickGivenAndFull() {
 			populateOwnVCard("", "Kevin", "Kevin Smith");
-			CPPUNIT_ASSERT_EQUAL(String("Kevin"), resolver_->jidToNick(ownJID_));
+			CPPUNIT_ASSERT_EQUAL(std::string("Kevin"), resolver_->jidToNick(ownJID_));
 		}
 
 		void testOwnNickNickEtAl() {
 			populateOwnVCard("Kev", "Kevin", "Kevin Smith");
-			CPPUNIT_ASSERT_EQUAL(String("Kev"), resolver_->jidToNick(ownJID_));
+			CPPUNIT_ASSERT_EQUAL(std::string("Kev"), resolver_->jidToNick(ownJID_));
 		}
 
-		void populateOwnVCard(const String& nick, const String& given, const String& full) {
+		void populateOwnVCard(const std::string& nick, const std::string& given, const std::string& full) {
 			VCard::ref vcard(new VCard());
-			if (!nick.isEmpty()) {
+			if (!nick.empty()) {
 				vcard->setNickname(nick);
 			}
-			if (!given.isEmpty()) {
+			if (!given.empty()) {
 				vcard->setGivenName(given);
 			}
-			if (!full.isEmpty()) {
+			if (!full.empty()) {
 				vcard->setFullName(full);
 			}
 			vCardManager_->requestVCard(ownJID_);
@@ -135,7 +135,7 @@ class NickResolverTest : public CppUnit::TestFixture {
 		}
 	
 	private:
-		std::vector<String> groups_;
+		std::vector<std::string> groups_;
 		XMPPRosterImpl* xmppRoster_;
 		VCardStorage* vCardStorage_;
 		IQRouter* iqRouter_;

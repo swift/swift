@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include "Swiften/Base/String.h"
+#include <string>
 #include "Swiften/LinkLocal/DNSSD/Fake/FakeDNSSDQuery.h"
 #include "Swiften/LinkLocal/DNSSD/DNSSDResolveHostnameQuery.h"
 #include "Swiften/Network/HostAddress.h"
@@ -16,7 +16,7 @@ namespace Swift {
 
 	class FakeDNSSDResolveHostnameQuery : public DNSSDResolveHostnameQuery, public FakeDNSSDQuery {
 		public:	
-			FakeDNSSDResolveHostnameQuery(const String& hostname, int interfaceIndex, boost::shared_ptr<FakeDNSSDQuerier> querier) : FakeDNSSDQuery(querier), hostname(hostname), interfaceIndex(interfaceIndex) {
+			FakeDNSSDResolveHostnameQuery(const std::string& hostname, int interfaceIndex, boost::shared_ptr<FakeDNSSDQuerier> querier) : FakeDNSSDQuery(querier), hostname(hostname), interfaceIndex(interfaceIndex) {
 			}
 
 			void run() {
@@ -27,7 +27,7 @@ namespace Swift {
 				FakeDNSSDQuery::finish();
 			}
 
-			String hostname;
+			std::string hostname;
 			int interfaceIndex;
 	};
 }

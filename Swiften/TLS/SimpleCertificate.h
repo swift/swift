@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include "Swiften/Base/String.h"
+#include <string>
 #include "Swiften/TLS/Certificate.h"
 
 namespace Swift {
@@ -14,43 +14,43 @@ namespace Swift {
 		public:
 			typedef boost::shared_ptr<SimpleCertificate> ref;
 
-			void setSubjectName(const String& name) {
+			void setSubjectName(const std::string& name) {
 				subjectName = name;
 			}
 
-			String getSubjectName() const {
+			std::string getSubjectName() const {
 				return subjectName;
 			}
 
-			std::vector<String> getCommonNames() const {
+			std::vector<std::string> getCommonNames() const {
 				return commonNames;
 			}
 
-			void addCommonName(const String& name) {
+			void addCommonName(const std::string& name) {
 				commonNames.push_back(name);
 			}
 
-			void addSRVName(const String& name) {
+			void addSRVName(const std::string& name) {
 				srvNames.push_back(name);
 			}
 
-			void addDNSName(const String& name) {
+			void addDNSName(const std::string& name) {
 				dnsNames.push_back(name);
 			}
 
-			void addXMPPAddress(const String& addr) {
+			void addXMPPAddress(const std::string& addr) {
 				xmppAddresses.push_back(addr);
 			}
 
-			std::vector<String> getSRVNames() const {
+			std::vector<std::string> getSRVNames() const {
 				return srvNames;
 			}
 
-			std::vector<String> getDNSNames() const {
+			std::vector<std::string> getDNSNames() const {
 				return dnsNames;
 			}
 
-			std::vector<String> getXMPPAddresses() const {
+			std::vector<std::string> getXMPPAddresses() const {
 				return xmppAddresses;
 			}
 
@@ -66,11 +66,11 @@ namespace Swift {
 			void parse();
 
 		private:
-			String subjectName;
+			std::string subjectName;
 			ByteArray der;
-			std::vector<String> commonNames;
-			std::vector<String> dnsNames;
-			std::vector<String> xmppAddresses;
-			std::vector<String> srvNames;
+			std::vector<std::string> commonNames;
+			std::vector<std::string> dnsNames;
+			std::vector<std::string> xmppAddresses;
+			std::vector<std::string> srvNames;
 	};
 }

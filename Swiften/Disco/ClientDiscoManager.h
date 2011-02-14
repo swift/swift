@@ -41,7 +41,7 @@ namespace Swift {
 			/**
 			 * Needs to be called before calling setDiscoInfo().
 			 */
-			void setCapsNode(const String& node);
+			void setCapsNode(const std::string& node);
 
 			/**
 			 * Sets the capabilities of the client.
@@ -61,7 +61,7 @@ namespace Swift {
 		private:
 			PayloadAddingPresenceSender* presenceSender;
 			DiscoInfoResponder* discoInfoResponder;
-			String capsNode;
+			std::string capsNode;
 			CapsInfo::ref capsInfo;
 	};
 }

@@ -13,11 +13,11 @@ namespace Swift {
 PriorityParser::PriorityParser() : level_(0) {
 }
 
-void PriorityParser::handleStartElement(const String&, const String&, const AttributeMap&) {
+void PriorityParser::handleStartElement(const std::string&, const std::string&, const AttributeMap&) {
 	++level_;
 }
 
-void PriorityParser::handleEndElement(const String&, const String&) {
+void PriorityParser::handleEndElement(const std::string&, const std::string&) {
 	--level_;
 	if (level_ == 0) {
 		int priority = 0;
@@ -30,7 +30,7 @@ void PriorityParser::handleEndElement(const String&, const String&) {
 	}
 }
 
-void PriorityParser::handleCharacterData(const String& data) {
+void PriorityParser::handleCharacterData(const std::string& data) {
 	text_ += data;
 }
 

@@ -11,15 +11,15 @@ namespace Swift {
 SOCKS5BytestreamRegistry::SOCKS5BytestreamRegistry() {
 }
 
-void SOCKS5BytestreamRegistry::addBytestream(const String& destination, boost::shared_ptr<ReadBytestream> byteStream) {
+void SOCKS5BytestreamRegistry::addBytestream(const std::string& destination, boost::shared_ptr<ReadBytestream> byteStream) {
 	byteStreams[destination] = byteStream;
 }
 
-void SOCKS5BytestreamRegistry::removeBytestream(const String& destination) {
+void SOCKS5BytestreamRegistry::removeBytestream(const std::string& destination) {
 	byteStreams.erase(destination);
 }
 
-boost::shared_ptr<ReadBytestream> SOCKS5BytestreamRegistry::getBytestream(const String& destination) const {
+boost::shared_ptr<ReadBytestream> SOCKS5BytestreamRegistry::getBytestream(const std::string& destination) const {
 	BytestreamMap::const_iterator i = byteStreams.find(destination);
 	if (i != byteStreams.end()) {
 		return i->second;

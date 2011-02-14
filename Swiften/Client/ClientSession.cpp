@@ -304,7 +304,7 @@ void ClientSession::continueSessionInitialization() {
 	if (needResourceBind) {
 		state = BindingResource;
 		boost::shared_ptr<ResourceBind> resourceBind(new ResourceBind());
-		if (!localJID.getResource().isEmpty()) {
+		if (!localJID.getResource().empty()) {
 			resourceBind->setResource(localJID.getResource());
 		}
 		sendStanza(IQ::createRequest(IQ::Set, JID(), "session-bind", resourceBind));
@@ -331,7 +331,7 @@ bool ClientSession::checkState(State state) {
 	return true;
 }
 
-void ClientSession::sendCredentials(const String& password) {
+void ClientSession::sendCredentials(const std::string& password) {
 	assert(WaitingForCredentials);
 	state = Authenticating;
 	authenticator->setCredentials(localJID.getNode(), password);

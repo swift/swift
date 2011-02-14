@@ -15,14 +15,14 @@ namespace Swift {
 SecurityLabelSerializer::SecurityLabelSerializer() : GenericPayloadSerializer<SecurityLabel>() {
 }
 
-String SecurityLabelSerializer::serializePayload(boost::shared_ptr<SecurityLabel> label)  const {
+std::string SecurityLabelSerializer::serializePayload(boost::shared_ptr<SecurityLabel> label)  const {
 	XMLElement element("securitylabel", "urn:xmpp:sec-label:0");
-	if (!label->getDisplayMarking().isEmpty()) {
+	if (!label->getDisplayMarking().empty()) {
 		boost::shared_ptr<XMLElement> displayMarking(new XMLElement("displaymarking"));
-		if (!label->getForegroundColor().isEmpty()) {
+		if (!label->getForegroundColor().empty()) {
 			displayMarking->setAttribute("fgcolor", label->getForegroundColor());
 		}
-		if (!label->getBackgroundColor().isEmpty()) {
+		if (!label->getBackgroundColor().empty()) {
 			displayMarking->setAttribute("bgcolor", label->getBackgroundColor());
 		}
 		displayMarking->addNode(boost::shared_ptr<XMLTextNode>(new XMLTextNode(label->getDisplayMarking())));
@@ -33,7 +33,7 @@ String SecurityLabelSerializer::serializePayload(boost::shared_ptr<SecurityLabel
 	labelElement->addNode(boost::shared_ptr<XMLRawTextNode>(new XMLRawTextNode(label->getLabel())));
 	element.addNode(labelElement);
 	
-	foreach(const String& equivalentLabel, label->getEquivalentLabels()) {
+	foreach(const std::string& equivalentLabel, label->getEquivalentLabels()) {
 		boost::shared_ptr<XMLElement> equivalentLabelElement(new XMLElement("equivalentlabel"));
 		equivalentLabelElement->addNode(boost::shared_ptr<XMLRawTextNode>(new XMLRawTextNode(equivalentLabel)));
 		element.addNode(equivalentLabelElement);

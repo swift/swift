@@ -17,7 +17,7 @@
 #include <Swiften/Network/DomainNameAddressQuery.h>
 
 namespace Swift {
-	class String;
+	
 	class EventLoop;
 
 	class PlatformDomainNameResolver : public DomainNameResolver {
@@ -25,8 +25,8 @@ namespace Swift {
 			PlatformDomainNameResolver(EventLoop* eventLoop);
 			~PlatformDomainNameResolver();
 
-			virtual DomainNameServiceQuery::ref createServiceQuery(const String& name);
-			virtual DomainNameAddressQuery::ref createAddressQuery(const String& name);
+			virtual DomainNameServiceQuery::ref createServiceQuery(const std::string& name);
+			virtual DomainNameAddressQuery::ref createAddressQuery(const std::string& name);
 
 		private:
 			void run();

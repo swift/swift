@@ -8,19 +8,19 @@
 
 namespace Swift {
 
-String LinkLocalService::getDescription() const {
+std::string LinkLocalService::getDescription() const {
 	LinkLocalServiceInfo info = getInfo();
-	if (!info.getNick().isEmpty()) {
+	if (!info.getNick().empty()) {
 		return info.getNick();
 	}
-	else if (!info.getFirstName().isEmpty()) {
-		String result = info.getFirstName();
-		if (!info.getLastName().isEmpty()) {
+	else if (!info.getFirstName().empty()) {
+		std::string result = info.getFirstName();
+		if (!info.getLastName().empty()) {
 			result += " " + info.getLastName();
 		}
 		return result;
 	}
-	else if (!info.getLastName().isEmpty()) {
+	else if (!info.getLastName().empty()) {
 		return info.getLastName();
 	}
 	return getName();

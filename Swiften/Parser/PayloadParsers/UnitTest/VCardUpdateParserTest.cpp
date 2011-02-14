@@ -30,7 +30,7 @@ class VCardUpdateParserTest : public CppUnit::TestFixture
 				"</x>"));
 
 			VCardUpdate* payload = dynamic_cast<VCardUpdate*>(parser.getPayload().get());
-			CPPUNIT_ASSERT_EQUAL(String("sha1-hash-of-image"), payload->getPhotoHash());
+			CPPUNIT_ASSERT_EQUAL(std::string("sha1-hash-of-image"), payload->getPhotoHash());
 		}
 };
 

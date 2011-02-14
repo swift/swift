@@ -28,7 +28,7 @@
 
 namespace Swift {
 
-Client::Client(const JID& jid, const String& password, NetworkFactories* networkFactories, Storages* storages) : CoreClient(jid, password, networkFactories), storages(storages) {
+Client::Client(const JID& jid, const std::string& password, NetworkFactories* networkFactories, Storages* storages) : CoreClient(jid, password, networkFactories), storages(storages) {
 	memoryStorages = new MemoryStorages();
 
 	softwareVersionResponder = new SoftwareVersionResponder(getIQRouter());
@@ -93,7 +93,7 @@ XMPPRoster* Client::getRoster() const {
 	return roster;
 }
 
-void Client::setSoftwareVersion(const String& name, const String& version) {
+void Client::setSoftwareVersion(const std::string& name, const std::string& version) {
 	softwareVersionResponder->setVersion(name, version);
 }
 

@@ -39,7 +39,7 @@ class RosterSerializerTest : public CppUnit::TestFixture
 			item2.setName("Baz");
 			roster->addItem(item2);
 
-			String expectedResult = 
+			std::string expectedResult = 
 				"<query xmlns=\"jabber:iq:roster\">"
 					"<item ask=\"subscribe\" jid=\"foo@bar.com\" name=\"Foo @ Bar\" subscription=\"from\">"
 						"<group>Group 1</group>"
@@ -60,12 +60,12 @@ class RosterSerializerTest : public CppUnit::TestFixture
 			item.setName("Baz");
 			item.addGroup("Group 1");
 			item.addGroup("Group 2");
-			item.addUnknownContent(String(
+			item.addUnknownContent(std::string(
 				"<foo xmlns=\"http://example.com\"><bar xmlns=\"http://example.com\">Baz</bar></foo>"
 				"<baz xmlns=\"jabber:iq:roster\"><fum xmlns=\"jabber:iq:roster\">foo</fum></baz>"));
 			roster->addItem(item);
 
-			String expectedResult = 
+			std::string expectedResult = 
 				"<query xmlns=\"jabber:iq:roster\">"
 					"<item jid=\"baz@blo.com\" name=\"Baz\" subscription=\"none\">"
 						"<group>Group 1</group>"

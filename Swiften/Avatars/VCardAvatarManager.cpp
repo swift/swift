@@ -28,10 +28,10 @@ void VCardAvatarManager::handleVCardChanged(const JID& from) {
 	onAvatarChanged(from);
 }
 
-String VCardAvatarManager::getAvatarHash(const JID& jid) const {
+std::string VCardAvatarManager::getAvatarHash(const JID& jid) const {
 	VCard::ref vCard = vcardManager_->getVCard(getAvatarJID(jid));
 	if (vCard && !vCard->getPhoto().isEmpty()) {
-		String hash = Hexify::hexify(SHA1::getHash(vCard->getPhoto()));
+		std::string hash = Hexify::hexify(SHA1::getHash(vCard->getPhoto()));
 		if (!avatarStorage_->hasAvatar(hash)) {
 			avatarStorage_->addAvatar(hash, vCard->getPhoto());
 		}

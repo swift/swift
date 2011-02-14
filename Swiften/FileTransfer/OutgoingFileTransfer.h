@@ -24,7 +24,7 @@ namespace Swift {
 
 	class OutgoingFileTransfer {
 		public:
-			OutgoingFileTransfer(const String& id, const JID& from, const JID& to, const String& name, int size, const String& description, boost::shared_ptr<ReadBytestream> bytestream, IQRouter* iqRouter, SOCKS5BytestreamServer* socksServer);
+			OutgoingFileTransfer(const std::string& id, const JID& from, const JID& to, const std::string& name, int size, const std::string& description, boost::shared_ptr<ReadBytestream> bytestream, IQRouter* iqRouter, SOCKS5BytestreamServer* socksServer);
 
 			void start();
 			void stop();
@@ -38,12 +38,12 @@ namespace Swift {
 			void handleIBBSessionFinished(boost::optional<FileTransferError> error);
 
 		private:
-			String id;
+			std::string id;
 			JID from;
 			JID to;
-			String name;
+			std::string name;
 			int size;
-			String description;
+			std::string description;
 			boost::shared_ptr<ReadBytestream> bytestream;
 			IQRouter* iqRouter;
 			SOCKS5BytestreamServer* socksServer;

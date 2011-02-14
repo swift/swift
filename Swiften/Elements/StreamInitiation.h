@@ -10,7 +10,7 @@
 #include <boost/optional.hpp>
 #include <boost/shared_ptr.hpp>
 
-#include "Swiften/Base/String.h"
+#include <string>
 #include "Swiften/Elements/Payload.h"
 #include <Swiften/Elements/StreamInitiationFileInfo.h>
 
@@ -21,11 +21,11 @@ namespace Swift {
 
 			StreamInitiation() : isFileTransfer(true) {}
 
-			const String& getID() const {
+			const std::string& getID() const {
 				return id;
 			}
 
-			void setID(const String& id) {
+			void setID(const std::string& id) {
 				this->id = id;
 			}
 
@@ -37,19 +37,19 @@ namespace Swift {
 				fileInfo = info;
 			}
 
-			const std::vector<String>& getProvidedMethods() const {
+			const std::vector<std::string>& getProvidedMethods() const {
 				return providedMethods;
 			}
 
-			void addProvidedMethod(const String& method) {
+			void addProvidedMethod(const std::string& method) {
 				providedMethods.push_back(method);
 			}
 
-			void setRequestedMethod(const String& method) {
+			void setRequestedMethod(const std::string& method) {
 				requestedMethod = method;
 			}
 
-			const String& getRequestedMethod() const {
+			const std::string& getRequestedMethod() const {
 				return requestedMethod;
 			}
 
@@ -63,9 +63,9 @@ namespace Swift {
 
 		private:
 			bool isFileTransfer;
-			String id;
+			std::string id;
 			boost::optional<StreamInitiationFileInfo> fileInfo;
-			std::vector<String> providedMethods;
-			String requestedMethod;
+			std::vector<std::string> providedMethods;
+			std::string requestedMethod;
 	};
 }

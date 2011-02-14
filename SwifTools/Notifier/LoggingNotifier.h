@@ -12,15 +12,15 @@
 namespace Swift {
 	class LoggingNotifier : public Notifier {
 		public:
-			virtual void showMessage(Type type, const String& subject, const String& description, const boost::filesystem::path& picture, boost::function<void()> callback) {
+			virtual void showMessage(Type type, const std::string& subject, const std::string& description, const boost::filesystem::path& picture, boost::function<void()> callback) {
 				notifications.push_back(Notification(type, subject, description, picture, callback));
 			}
 
 			struct Notification {
-					Notification(Type type, const String& subject, const String& description, const boost::filesystem::path& picture, boost::function<void()> callback) : type(type), subject(subject), description(description), picture(picture), callback(callback) {}
+					Notification(Type type, const std::string& subject, const std::string& description, const boost::filesystem::path& picture, boost::function<void()> callback) : type(type), subject(subject), description(description), picture(picture), callback(callback) {}
 					Type type;
-					String subject;
-					String description;
+					std::string subject;
+					std::string description;
 					boost::filesystem::path picture;
 					boost::function<void()> callback;
 			};

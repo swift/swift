@@ -11,7 +11,7 @@
 
 namespace Swift {
 	class LoginWindow;
-	class String;
+	
 	class UIEventStream;
 		
 	class LoginWindowFactory {

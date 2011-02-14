@@ -16,10 +16,10 @@ namespace Swift {
 
 	class GNTPNotifier : public Notifier {
 		public:
-			GNTPNotifier(const String& name, const boost::filesystem::path& icon, ConnectionFactory* connectionFactory);
+			GNTPNotifier(const std::string& name, const boost::filesystem::path& icon, ConnectionFactory* connectionFactory);
 			~GNTPNotifier();
 
-			virtual void showMessage(Type type, const String& subject, const String& description, const boost::filesystem::path& picture, boost::function<void()> callback);
+			virtual void showMessage(Type type, const std::string& subject, const std::string& description, const boost::filesystem::path& picture, boost::function<void()> callback);
 		
 		private:
 			void handleConnectFinished(bool error);
@@ -27,7 +27,7 @@ namespace Swift {
 			void send(const std::string& message);
 
 		private:
-			String name;
+			std::string name;
 			boost::filesystem::path icon;
 			ConnectionFactory* connectionFactory;
 			bool initialized;

@@ -11,7 +11,7 @@
 namespace Swift {
 	class MacOSXApplicationPathProvider : public ApplicationPathProvider {
 		public:
-			MacOSXApplicationPathProvider(const String& name);
+			MacOSXApplicationPathProvider(const std::string& name);
 
 			virtual boost::filesystem::path getHomeDir() const;
 			boost::filesystem::path getDataDir() const;

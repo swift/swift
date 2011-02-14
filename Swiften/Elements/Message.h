@@ -9,7 +9,7 @@
 #include <boost/optional.hpp>
 #include <boost/shared_ptr.hpp>
 
-#include "Swiften/Base/String.h"
+#include <string>
 #include "Swiften/Elements/Body.h"
 #include "Swiften/Elements/Subject.h"
 #include "Swiften/Elements/ErrorPayload.h"
@@ -24,7 +24,7 @@ namespace Swift {
 
 			Message() : type_(Chat) { }
 
-			String getSubject() const { 
+			std::string getSubject() const { 
 				boost::shared_ptr<Subject> subject(getPayload<Subject>());
 				if (subject) {
 					return subject->getText();
@@ -32,11 +32,11 @@ namespace Swift {
 				return "";
 			}
 
-			void setSubject(const String& subject) { 
+			void setSubject(const std::string& subject) { 
 				updatePayload(boost::shared_ptr<Subject>(new Subject(subject)));
 			}
 
-			String getBody() const { 
+			std::string getBody() const { 
 				boost::shared_ptr<Body> body(getPayload<Body>());
 				if (body) {
 					return body->getText();
@@ -44,7 +44,7 @@ namespace Swift {
 				return "";
 			}
 
-			void setBody(const String& body) { 
+			void setBody(const std::string& body) { 
 				updatePayload(boost::shared_ptr<Body>(new Body(body)));
 			}
 

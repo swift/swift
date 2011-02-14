@@ -33,7 +33,7 @@ class PrivateStorageSerializerTest : public CppUnit::TestFixture {
 			storage->addRoom(room);
 			privateStorage->setPayload(storage);
 
-			CPPUNIT_ASSERT_EQUAL(String(
+			CPPUNIT_ASSERT_EQUAL(std::string(
 				"<query xmlns=\"jabber:iq:private\">"	
 					"<storage xmlns=\"storage:bookmarks\">"
 						"<conference "

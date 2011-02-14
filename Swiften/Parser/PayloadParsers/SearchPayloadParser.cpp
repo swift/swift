@@ -18,7 +18,7 @@ SearchPayloadParser::~SearchPayloadParser() {
 	delete formParserFactory;
 }
 
-void SearchPayloadParser::handleStartElement(const String& element, const String& ns, const AttributeMap& attributes) {
+void SearchPayloadParser::handleStartElement(const std::string& element, const std::string& ns, const AttributeMap& attributes) {
 	if (level == TopLevel) {
 	}
 	else if (level == PayloadLevel) {
@@ -46,7 +46,7 @@ void SearchPayloadParser::handleStartElement(const String& element, const String
 	++level;
 }
 
-void SearchPayloadParser::handleEndElement(const String& element, const String& ns) {
+void SearchPayloadParser::handleEndElement(const std::string& element, const std::string& ns) {
 	--level;
 
 	if (formParser) {
@@ -98,7 +98,7 @@ void SearchPayloadParser::handleEndElement(const String& element, const String& 
 	}
 }
 
-void SearchPayloadParser::handleCharacterData(const String& data) {
+void SearchPayloadParser::handleCharacterData(const std::string& data) {
 	if (formParser) {
 		formParser->handleCharacterData(data);
 	}

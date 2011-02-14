@@ -14,7 +14,7 @@
 #include "Swiften/Network/Connection.h"
 #include "Swiften/Network/Timer.h"
 #include "Swiften/Network/HostAddressPort.h"
-#include "Swiften/Base/String.h"
+#include <string>
 #include "Swiften/Network/DomainNameResolveError.h"
 
 namespace Swift {
@@ -27,7 +27,7 @@ namespace Swift {
 		public:
 			typedef boost::shared_ptr<Connector> ref;
 
-			static Connector::ref create(const String& hostname, DomainNameResolver* resolver, ConnectionFactory* connectionFactory, TimerFactory* timerFactory) {
+			static Connector::ref create(const std::string& hostname, DomainNameResolver* resolver, ConnectionFactory* connectionFactory, TimerFactory* timerFactory) {
 				return Connector::ref(new Connector(hostname, resolver, connectionFactory, timerFactory));
 			}
 
@@ -38,11 +38,11 @@ namespace Swift {
 			boost::signal<void (boost::shared_ptr<Connection>)> onConnectFinished;
 
 		private:
-			Connector(const String& hostname, DomainNameResolver*, ConnectionFactory*, TimerFactory*);
+			Connector(const std::string& hostname, DomainNameResolver*, ConnectionFactory*, TimerFactory*);
 
 			void handleServiceQueryResult(const std::vector<DomainNameServiceQuery::Result>& result);
 			void handleAddressQueryResult(const std::vector<HostAddress>& address, boost::optional<DomainNameResolveError> error);
-			void queryAddress(const String& hostname);
+			void queryAddress(const std::string& hostname);
 
 			void tryNextServiceOrFallback();
 			void tryNextAddress();
@@ -54,7 +54,7 @@ namespace Swift {
 
 
 		private:
-			String hostname;
+			std::string hostname;
 			DomainNameResolver* resolver;
 			ConnectionFactory* connectionFactory;
 			TimerFactory* timerFactory;

@@ -18,7 +18,7 @@ namespace Swift {
 SearchPayloadSerializer::SearchPayloadSerializer() {
 }
 
-String SearchPayloadSerializer::serializePayload(boost::shared_ptr<SearchPayload> searchPayload)	const {
+std::string SearchPayloadSerializer::serializePayload(boost::shared_ptr<SearchPayload> searchPayload)	const {
 	XMLElement searchElement("query", "jabber:iq:search");
 
 	if (searchPayload->getInstructions()) {

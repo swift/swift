@@ -11,9 +11,9 @@ namespace Swift {
 FormParser::FormParser() : level_(TopLevel) {
 }
 
-void FormParser::handleStartElement(const String& element, const String&, const AttributeMap& attributes) {
+void FormParser::handleStartElement(const std::string& element, const std::string&, const AttributeMap& attributes) {
 	if (level_ == TopLevel) {
-		String type = attributes.getAttribute("type");
+		std::string type = attributes.getAttribute("type");
 		if (type == "form") {
 			getPayloadInternal()->setType(Form::FormType);
 		}
@@ -35,7 +35,7 @@ void FormParser::handleStartElement(const String& element, const String&, const 
 			currentText_.clear();
 		}
 		else if (element == "field") {
-			String type = attributes.getAttribute("type");
+			std::string type = attributes.getAttribute("type");
 			if (type == "boolean") {
 				currentFieldParseHelper_ = BooleanFormFieldParseHelper::create();
 			}
@@ -84,12 +84,12 @@ void FormParser::handleStartElement(const String& element, const String&, const 
 	++level_;
 }
 
-void FormParser::handleEndElement(const String& element, const String&) {
+void FormParser::handleEndElement(const std::string& element, const std::string&) {
 	--level_;
 	if (level_ == PayloadLevel) {
 		if (element == "title") {
-			String currentTitle = getPayloadInternal()->getTitle();
-			if (currentTitle.isEmpty()) {
+			std::string currentTitle = getPayloadInternal()->getTitle();
+			if (currentTitle.empty()) {
 				getPayloadInternal()->setTitle(currentText_);
 			}
 			else {
@@ -97,8 +97,8 @@ void FormParser::handleEndElement(const String& element, const String&) {
 			}
 		}
 		else if (element == "instructions") {
-			String currentInstructions = getPayloadInternal()->getInstructions();
-			if (currentInstructions.isEmpty()) {
+			std::string currentInstructions = getPayloadInternal()->getInstructions();
+			if (currentInstructions.empty()) {
 				getPayloadInternal()->setInstructions(currentText_);
 			}
 			else {
@@ -128,7 +128,7 @@ void FormParser::handleEndElement(const String& element, const String&) {
 	}
 }
 
-void FormParser::handleCharacterData(const String& text) {
+void FormParser::handleCharacterData(const std::string& text) {
 	currentText_ += text;
 }
 

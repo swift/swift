@@ -9,7 +9,7 @@
 #include <boost/shared_ptr.hpp>
 #include <map>
 
-#include "Swiften/Base/String.h"
+#include <string>
 #include "Swiften/FileTransfer/ReadBytestream.h"
 
 namespace Swift {
@@ -17,12 +17,12 @@ namespace Swift {
 		public:
 			SOCKS5BytestreamRegistry();
 
-			boost::shared_ptr<ReadBytestream> getBytestream(const String& destination) const;
-			void addBytestream(const String& destination, boost::shared_ptr<ReadBytestream> byteStream);
-			void removeBytestream(const String& destination);
+			boost::shared_ptr<ReadBytestream> getBytestream(const std::string& destination) const;
+			void addBytestream(const std::string& destination, boost::shared_ptr<ReadBytestream> byteStream);
+			void removeBytestream(const std::string& destination);
 
 		private:
-			typedef std::map<String, boost::shared_ptr<ReadBytestream> > BytestreamMap;
+			typedef std::map<std::string, boost::shared_ptr<ReadBytestream> > BytestreamMap;
 			BytestreamMap byteStreams;
 	};
 }

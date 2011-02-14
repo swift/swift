@@ -18,7 +18,7 @@
 
 namespace Swift {
 
-GNTPNotifier::GNTPNotifier(const String& name, const boost::filesystem::path& icon, ConnectionFactory* connectionFactory) : name(name), icon(icon), connectionFactory(connectionFactory), initialized(false), registered(false) {
+GNTPNotifier::GNTPNotifier(const std::string& name, const boost::filesystem::path& icon, ConnectionFactory* connectionFactory) : name(name), icon(icon), connectionFactory(connectionFactory), initialized(false), registered(false) {
 	// Registration message
 	std::ostringstream message;
 	message << "GNTP/1.0 REGISTER NONE\r\n";
@@ -51,7 +51,7 @@ void GNTPNotifier::send(const std::string& message) {
 	currentConnection->connect(HostAddressPort(HostAddress("127.0.0.1"), 23053));
 }
 
-void GNTPNotifier::showMessage(Type type, const String& subject, const String& description, const boost::filesystem::path& picture, boost::function<void()>) {
+void GNTPNotifier::showMessage(Type type, const std::string& subject, const std::string& description, const boost::filesystem::path& picture, boost::function<void()>) {
 	if (registered) {
 		std::ostringstream message;
 		message << "GNTP/1.0 NOTIFY NONE\r\n";

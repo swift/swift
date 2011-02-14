@@ -14,9 +14,9 @@ namespace Swift {
 VCardParser::VCardParser() : unknownContentParser_(NULL) {
 }
 
-void VCardParser::handleStartElement(const String& element, const String& ns, const AttributeMap& attributes) {
+void VCardParser::handleStartElement(const std::string& element, const std::string& ns, const AttributeMap& attributes) {
 	elementStack_.push_back(element);
-	String elementHierarchy = getElementHierarchy();
+	std::string elementHierarchy = getElementHierarchy();
 	if (elementHierarchy == "/vCard/EMAIL") {
 		currentEMailAddress_ = VCard::EMailAddress();
 	}
@@ -32,12 +32,12 @@ void VCardParser::handleStartElement(const String& element, const String& ns, co
 	currentText_ = "";
 }
 
-void VCardParser::handleEndElement(const String& element, const String& ns) {
+void VCardParser::handleEndElement(const std::string& element, const std::string& ns) {
 	if (unknownContentParser_) {
 		unknownContentParser_->handleEndElement(element, ns);
 	}
 
-	String elementHierarchy = getElementHierarchy();
+	std::string elementHierarchy = getElementHierarchy();
 	if (elementHierarchy == "/vCard/VERSION") {
 		getPayloadInternal()->setVersion(currentText_);
 	}
@@ -104,16 +104,16 @@ void VCardParser::handleEndElement(const String& element, const String& ns) {
 	elementStack_.pop_back();
 }
 
-void VCardParser::handleCharacterData(const String& text) {
+void VCardParser::handleCharacterData(const std::string& text) {
 	if (unknownContentParser_) {
 		unknownContentParser_->handleCharacterData(text);
 	}
 	currentText_ += text;
 }
 
-String VCardParser::getElementHierarchy() const {
-	String result;
-	foreach(const String& element, elementStack_) {
+std::string VCardParser::getElementHierarchy() const {
+	std::string result;
+	foreach(const std::string& element, elementStack_) {
 		result += "/" + element;
 	}
 	return result;

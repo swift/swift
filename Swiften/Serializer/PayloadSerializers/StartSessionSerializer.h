@@ -17,7 +17,7 @@ namespace Swift {
 		public:
 			StartSessionSerializer() : GenericPayloadSerializer<StartSession>() {}
 
-			virtual String serializePayload(boost::shared_ptr<StartSession>)  const {
+			virtual std::string serializePayload(boost::shared_ptr<StartSession>)  const {
 				return XMLElement("session", "urn:ietf:params:xml:ns:xmpp-session").serialize();
 			}
 	};

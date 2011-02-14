@@ -11,7 +11,7 @@ namespace Swift {
 ResourceBindParser::ResourceBindParser() : level_(0), inJID_(false), inResource_(false) {
 }
 
-void ResourceBindParser::handleStartElement(const String& element, const String&, const AttributeMap&) {
+void ResourceBindParser::handleStartElement(const std::string& element, const std::string&, const AttributeMap&) {
 	if (level_ == 1) {
 		text_ = "";
 		if (element == "resource") {
@@ -24,7 +24,7 @@ void ResourceBindParser::handleStartElement(const String& element, const String&
 	++level_;
 }
 
-void ResourceBindParser::handleEndElement(const String&, const String&) {
+void ResourceBindParser::handleEndElement(const std::string&, const std::string&) {
 	--level_;
 	if (level_ == 1) {
 		if (inJID_) {
@@ -36,7 +36,7 @@ void ResourceBindParser::handleEndElement(const String&, const String&) {
 	}
 }
 
-void ResourceBindParser::handleCharacterData(const String& data) {
+void ResourceBindParser::handleCharacterData(const std::string& data) {
 	text_ += data;
 }
 

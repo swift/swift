@@ -115,7 +115,7 @@ class StanzaParserTest : public CppUnit::TestFixture {
 
 			CPPUNIT_ASSERT_EQUAL(JID("foo@example.com/blo"), testling.getStanza()->getTo());
 			CPPUNIT_ASSERT_EQUAL(JID("bar@example.com/baz"), testling.getStanza()->getFrom());
-			CPPUNIT_ASSERT_EQUAL(String("id-123"), testling.getStanza()->getID());
+			CPPUNIT_ASSERT_EQUAL(std::string("id-123"), testling.getStanza()->getID());
 		}
 
 	private:
@@ -132,14 +132,14 @@ class StanzaParserTest : public CppUnit::TestFixture {
 			public:	
 				MyPayload1Parser() {}
 
-			virtual void handleStartElement(const String& element, const String&, const AttributeMap&) { 
+			virtual void handleStartElement(const std::string& element, const std::string&, const AttributeMap&) { 
 				if (element != "mypayload1") {
 					getPayloadInternal()->hasChild = true;
 				}
 			}
 
-			virtual void handleEndElement(const String&, const String&) {}
-			virtual void handleCharacterData(const String&) {}
+			virtual void handleEndElement(const std::string&, const std::string&) {}
+			virtual void handleCharacterData(const std::string&) {}
 		};
 
 		class MyPayload1ParserFactory : public PayloadParserFactory
@@ -149,7 +149,7 @@ class StanzaParserTest : public CppUnit::TestFixture {
 
 				PayloadParser* createPayloadParser() { return new MyPayload1Parser(); }
 
-				bool canParse(const String& element, const String&, const AttributeMap&) const {
+				bool canParse(const std::string& element, const std::string&, const AttributeMap&) const {
 					return element == "mypayload1";
 				}
 		};
@@ -165,9 +165,9 @@ class StanzaParserTest : public CppUnit::TestFixture {
 			public:	
 				MyPayload2Parser() {}
 
-			virtual void handleStartElement(const String&, const String&, const AttributeMap&) {}
-			virtual void handleEndElement(const String&, const String&) {}
-			virtual void handleCharacterData(const String&) {}
+			virtual void handleStartElement(const std::string&, const std::string&, const AttributeMap&) {}
+			virtual void handleEndElement(const std::string&, const std::string&) {}
+			virtual void handleCharacterData(const std::string&) {}
 		};
 
 
@@ -177,7 +177,7 @@ class StanzaParserTest : public CppUnit::TestFixture {
 				MyPayload2ParserFactory() {}
 
 				PayloadParser* createPayloadParser() { return new MyPayload2Parser(); }
-				bool canParse(const String& element, const String&, const AttributeMap&) const {
+				bool canParse(const std::string& element, const std::string&, const AttributeMap&) const {
 					return element == "mypayload2";
 				}
 		};

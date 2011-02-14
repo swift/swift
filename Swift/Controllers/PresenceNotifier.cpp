@@ -85,9 +85,9 @@ void PresenceNotifier::handleStanzaChannelAvailableChanged(bool available) {
 }
 
 void PresenceNotifier::showNotification(const JID& jid, Notifier::Type type) {
-	String name = nickResolver->jidToNick(jid);
-	String title = name + " (" + getStatusType(jid) + ")";
-	String message = getStatusMessage(jid);
+	std::string name = nickResolver->jidToNick(jid);
+	std::string title = name + " (" + getStatusType(jid) + ")";
+	std::string message = getStatusMessage(jid);
 	notifier->showMessage(type, title, message, avatarManager->getAvatarPath(jid), boost::bind(&PresenceNotifier::handleNotificationActivated, this, jid));
 }
 
@@ -95,7 +95,7 @@ void PresenceNotifier::handleNotificationActivated(JID jid) {
 	onNotificationActivated(jid);
 }
 
-String PresenceNotifier::getStatusType(const JID& jid) const {
+std::string PresenceNotifier::getStatusType(const JID& jid) const {
 	Presence::ref presence = presenceOracle->getLastPresence(jid);
 	if (presence) {
 		return StatusShow::typeToFriendlyName(presence->getShow());
@@ -105,13 +105,13 @@ String PresenceNotifier::getStatusType(const JID& jid) const {
 	}
 }
 
-String PresenceNotifier::getStatusMessage(const JID& jid) const {
+std::string PresenceNotifier::getStatusMessage(const JID& jid) const {
 	Presence::ref presence = presenceOracle->getLastPresence(jid);
 	if (presence) {
 		return presence->getStatus();
 	}
 	else {
-		return String();
+		return std::string();
 	}
 }
 

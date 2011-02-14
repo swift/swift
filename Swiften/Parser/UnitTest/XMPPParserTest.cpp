@@ -9,7 +9,7 @@
 #include <vector>
 
 #include "Swiften/Elements/ProtocolHeader.h"
-#include "Swiften/Base/String.h"
+#include <string>
 #include "Swiften/Parser/XMPPParser.h"
 #include "Swiften/Parser/ElementParser.h"
 #include "Swiften/Parser/XMPPParserClient.h"
@@ -49,7 +49,7 @@ class XMPPParserTest : public CppUnit::TestFixture {
 
 			CPPUNIT_ASSERT_EQUAL(5, static_cast<int>(client_.events.size()));
 			CPPUNIT_ASSERT_EQUAL(Client::StreamStart, client_.events[0].type);
-			CPPUNIT_ASSERT_EQUAL(String("example.com"), client_.events[0].header->getTo());
+			CPPUNIT_ASSERT_EQUAL(std::string("example.com"), client_.events[0].header->getTo());
 			CPPUNIT_ASSERT_EQUAL(Client::ElementEvent, client_.events[1].type);
 			CPPUNIT_ASSERT_EQUAL(Client::ElementEvent, client_.events[2].type);
 			CPPUNIT_ASSERT_EQUAL(Client::ElementEvent, client_.events[3].type);
@@ -64,8 +64,8 @@ class XMPPParserTest : public CppUnit::TestFixture {
 
 			CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(client_.events.size()));
 			CPPUNIT_ASSERT_EQUAL(Client::StreamStart, client_.events[0].type);
-			CPPUNIT_ASSERT_EQUAL(String("example.com"), client_.events[0].header->getFrom());
-			CPPUNIT_ASSERT_EQUAL(String("aeab"), client_.events[0].header->getID());
+			CPPUNIT_ASSERT_EQUAL(std::string("example.com"), client_.events[0].header->getFrom());
+			CPPUNIT_ASSERT_EQUAL(std::string("aeab"), client_.events[0].header->getID());
 		}
 
 

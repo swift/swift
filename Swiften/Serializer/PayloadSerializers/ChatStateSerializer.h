@@ -14,6 +14,6 @@ namespace Swift {
 		public:
 			ChatStateSerializer();
 
-			virtual String serializePayload(boost::shared_ptr<ChatState> error)  const;
+			virtual std::string serializePayload(boost::shared_ptr<ChatState> error)  const;
 	};
 }

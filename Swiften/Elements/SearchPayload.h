@@ -11,7 +11,7 @@
 
 #include "Swiften/Elements/Payload.h"
 #include "Swiften/Elements/Form.h"
-#include "Swiften/Base/String.h"
+#include <string>
 
 namespace Swift {
 	/**
@@ -22,10 +22,10 @@ namespace Swift {
 			typedef boost::shared_ptr<SearchPayload> ref;
 
 			struct Item {
-				String first;
-				String last;
-				String nick;
-				String email;
+				std::string first;
+				std::string last;
+				std::string nick;
+				std::string email;
 				JID jid;
 			};
 
@@ -34,43 +34,43 @@ namespace Swift {
 			Form::ref getForm() const { return form; }
 			void setForm(Form::ref f) { form = f; }
 
-			const boost::optional<String>& getInstructions() const {
+			const boost::optional<std::string>& getInstructions() const {
 				return instructions;
 			}
 
-			const boost::optional<String>& getNick() const {
+			const boost::optional<std::string>& getNick() const {
 				return nick;
 			}
 
-			const boost::optional<String>& getFirst() const {
+			const boost::optional<std::string>& getFirst() const {
 				return first;
 			}
 
-			const boost::optional<String>& getLast() const {
+			const boost::optional<std::string>& getLast() const {
 				return last;
 			}
 
-			const boost::optional<String>& getEMail() const {
+			const boost::optional<std::string>& getEMail() const {
 				return email;
 			}
 
-			void setInstructions(const String& v) {
+			void setInstructions(const std::string& v) {
 				this->instructions = v;
 			}
 
-			void setNick(const String& v) {
+			void setNick(const std::string& v) {
 				this->nick = v;
 			}
 
-			void setFirst(const String& v) {
+			void setFirst(const std::string& v) {
 				this->first = v;
 			}
 
-			void setLast(const String& v) {
+			void setLast(const std::string& v) {
 				this->last = v;
 			}
 
-			void setEMail(const String& v) {
+			void setEMail(const std::string& v) {
 				this->email = v;
 			}
 
@@ -84,11 +84,11 @@ namespace Swift {
 
 		private:
 			Form::ref form;
-			boost::optional<String> instructions;
-			boost::optional<String> nick;
-			boost::optional<String> first;
-			boost::optional<String> last;
-			boost::optional<String> email;
+			boost::optional<std::string> instructions;
+			boost::optional<std::string> nick;
+			boost::optional<std::string> first;
+			boost::optional<std::string> last;
+			boost::optional<std::string> email;
 			std::vector<Item> items;
 	};
 }

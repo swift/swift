@@ -14,14 +14,14 @@
 namespace Swift {
 	class AuthRequest : public Element {
 		public:
-			AuthRequest(const String& mechanism = "") : mechanism_(mechanism) {
+			AuthRequest(const std::string& mechanism = "") : mechanism_(mechanism) {
 			}
 
-			AuthRequest(const String& mechanism, const ByteArray& message) : 
+			AuthRequest(const std::string& mechanism, const ByteArray& message) : 
 					mechanism_(mechanism), message_(message) {
 			}
 
-			AuthRequest(const String& mechanism, const boost::optional<ByteArray>& message) : 
+			AuthRequest(const std::string& mechanism, const boost::optional<ByteArray>& message) : 
 					mechanism_(mechanism), message_(message) {
 			}
 
@@ -33,16 +33,16 @@ namespace Swift {
 				message_ = boost::optional<ByteArray>(message);
 			}
 
-			const String& getMechanism() const {
+			const std::string& getMechanism() const {
 				return mechanism_;
 			}
 
-			void setMechanism(const String& mechanism) {
+			void setMechanism(const std::string& mechanism) {
 				mechanism_ = mechanism;
 			}
 
 		private:
-			String mechanism_;
+			std::string mechanism_;
 			boost::optional<ByteArray> message_;
 	};
 }

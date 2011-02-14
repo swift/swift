@@ -35,7 +35,7 @@ boost::shared_ptr<DNSSDBrowseQuery> BonjourQuerier::createBrowseQuery() {
 	return boost::shared_ptr<DNSSDBrowseQuery>(new BonjourBrowseQuery(shared_from_this(), eventLoop));
 }
 
-boost::shared_ptr<DNSSDRegisterQuery> BonjourQuerier::createRegisterQuery(const String& name, int port, const ByteArray& info) {
+boost::shared_ptr<DNSSDRegisterQuery> BonjourQuerier::createRegisterQuery(const std::string& name, int port, const ByteArray& info) {
 	return boost::shared_ptr<DNSSDRegisterQuery>(new BonjourRegisterQuery(name, port, info, shared_from_this(), eventLoop));
 }
 
@@ -43,7 +43,7 @@ boost::shared_ptr<DNSSDResolveServiceQuery> BonjourQuerier::createResolveService
 	return boost::shared_ptr<DNSSDResolveServiceQuery>(new BonjourResolveServiceQuery(service, shared_from_this(), eventLoop));
 }
 
-boost::shared_ptr<DNSSDResolveHostnameQuery> BonjourQuerier::createResolveHostnameQuery(const String& hostname, int interfaceIndex) {
+boost::shared_ptr<DNSSDResolveHostnameQuery> BonjourQuerier::createResolveHostnameQuery(const std::string& hostname, int interfaceIndex) {
 	return boost::shared_ptr<DNSSDResolveHostnameQuery>(new BonjourResolveHostnameQuery(hostname, interfaceIndex, shared_from_this(), eventLoop));
 }
 

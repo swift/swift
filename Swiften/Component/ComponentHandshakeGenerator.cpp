@@ -7,16 +7,17 @@
 #include "Swiften/Component/ComponentHandshakeGenerator.h"
 #include "Swiften/StringCodecs/Hexify.h"
 #include "Swiften/StringCodecs/SHA1.h"
+#include <Swiften/Base/String.h>
 
 namespace Swift {
 
-String ComponentHandshakeGenerator::getHandshake(const String& streamID, const String& secret) {
-	String concatenatedString = streamID + secret;
-	concatenatedString.replaceAll('&', "&amp;");
-	concatenatedString.replaceAll('<', "&lt;");
-	concatenatedString.replaceAll('>', "&gt;");
-	concatenatedString.replaceAll('\'', "&apos;");
-	concatenatedString.replaceAll('"', "&quot;");
+std::string ComponentHandshakeGenerator::getHandshake(const std::string& streamID, const std::string& secret) {
+	std::string concatenatedString = streamID + secret;
+	String::replaceAll(concatenatedString, '&', "&amp;");
+	String::replaceAll(concatenatedString, '<', "&lt;");
+	String::replaceAll(concatenatedString, '>', "&gt;");
+	String::replaceAll(concatenatedString, '\'', "&apos;");
+	String::replaceAll(concatenatedString, '"', "&quot;");
 	return Hexify::hexify(SHA1::getHash(ByteArray(concatenatedString)));
 }
 

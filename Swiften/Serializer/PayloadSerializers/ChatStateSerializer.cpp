@@ -11,8 +11,8 @@ namespace Swift {
 ChatStateSerializer::ChatStateSerializer() : GenericPayloadSerializer<ChatState>() {
 }
 
-String ChatStateSerializer::serializePayload(boost::shared_ptr<ChatState> chatState)  const {
-	String result("<");
+std::string ChatStateSerializer::serializePayload(boost::shared_ptr<ChatState> chatState)  const {
+	std::string result("<");
 	switch (chatState->getChatState()) {
 		case ChatState::Active: result += "active"; break;
 		case ChatState::Composing: result += "composing"; break;

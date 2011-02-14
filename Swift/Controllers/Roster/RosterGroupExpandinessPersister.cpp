@@ -9,6 +9,7 @@
 #include <boost/bind.hpp>
 #include <vector>
 
+#include "Swiften/Base/String.h"
 #include "Swift/Controllers/Roster/GroupRosterItem.h"
 
 namespace Swift {
@@ -29,7 +30,7 @@ void RosterGroupExpandinessPersister::handleGroupAdded(GroupRosterItem* group) {
 
 void RosterGroupExpandinessPersister::handleExpandedChanged(GroupRosterItem* group, bool expanded) {
 	if (expanded) {
-		String displayName = group->getDisplayName();
+		std::string displayName = group->getDisplayName();
 		//collapsed_.erase(std::remove(collapsed_.begin(), collapsed_.end(), displayName), collapsed_.end());
 		collapsed_.erase(displayName);
 	} else {
@@ -39,9 +40,9 @@ void RosterGroupExpandinessPersister::handleExpandedChanged(GroupRosterItem* gro
 }
 
 void RosterGroupExpandinessPersister::save() {
-	String setting;
-	foreach (const String& group, collapsed_) {
-		if (!setting.isEmpty()) {
+	std::string setting;
+	foreach (const std::string& group, collapsed_) {
+		if (!setting.empty()) {
 			setting += "\n";
 		}
 		setting += group;
@@ -50,11 +51,11 @@ void RosterGroupExpandinessPersister::save() {
 }
 
 void RosterGroupExpandinessPersister::load() {
-	String saved = settings_->getStringSetting(SettingPath);
-	std::vector<String> collapsed = saved.split('\n');
+	std::string saved = settings_->getStringSetting(SettingPath);
+	std::vector<std::string> collapsed = String::split(saved, '\n');
 	collapsed_.insert(collapsed.begin(), collapsed.end());
 }
 
-const String RosterGroupExpandinessPersister::SettingPath = "GroupExpandiness";
+const std::string RosterGroupExpandinessPersister::SettingPath = "GroupExpandiness";
 
 }

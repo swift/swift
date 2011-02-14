@@ -16,7 +16,7 @@
 
 namespace Swift {
 
-FakeDNSSDQuerier::FakeDNSSDQuerier(const String& domain, EventLoop* eventLoop) : domain(domain), eventLoop(eventLoop) {
+FakeDNSSDQuerier::FakeDNSSDQuerier(const std::string& domain, EventLoop* eventLoop) : domain(domain), eventLoop(eventLoop) {
 }
 
 FakeDNSSDQuerier::~FakeDNSSDQuerier() {
@@ -29,7 +29,7 @@ boost::shared_ptr<DNSSDBrowseQuery> FakeDNSSDQuerier::createBrowseQuery() {
 	return boost::shared_ptr<DNSSDBrowseQuery>(new FakeDNSSDBrowseQuery(shared_from_this()));
 }
 
-boost::shared_ptr<DNSSDRegisterQuery> FakeDNSSDQuerier::createRegisterQuery(const String& name, int port, const ByteArray& info) {
+boost::shared_ptr<DNSSDRegisterQuery> FakeDNSSDQuerier::createRegisterQuery(const std::string& name, int port, const ByteArray& info) {
 	return boost::shared_ptr<DNSSDRegisterQuery>(new FakeDNSSDRegisterQuery(name, port, info, shared_from_this()));
 }
 
@@ -37,7 +37,7 @@ boost::shared_ptr<DNSSDResolveServiceQuery> FakeDNSSDQuerier::createResolveServi
 	return boost::shared_ptr<DNSSDResolveServiceQuery>(new FakeDNSSDResolveServiceQuery(service, shared_from_this()));
 }
 
-boost::shared_ptr<DNSSDResolveHostnameQuery> FakeDNSSDQuerier::createResolveHostnameQuery(const String& hostname, int interfaceIndex) {
+boost::shared_ptr<DNSSDResolveHostnameQuery> FakeDNSSDQuerier::createResolveHostnameQuery(const std::string& hostname, int interfaceIndex) {
 	return boost::shared_ptr<DNSSDResolveHostnameQuery>(new FakeDNSSDResolveHostnameQuery(hostname, interfaceIndex, shared_from_this()));
 }
 
@@ -61,7 +61,7 @@ void FakeDNSSDQuerier::addRunningQuery(boost::shared_ptr<FakeDNSSDQuery> query) 
 		eventLoop->postEvent(boost::bind(boost::ref(registerQuery->onRegisterFinished), service), shared_from_this());
 	}
 	else if (boost::shared_ptr<FakeDNSSDResolveHostnameQuery> resolveHostnameQuery = boost::dynamic_pointer_cast<FakeDNSSDResolveHostnameQuery>(query)) {
-		std::map<String,boost::optional<HostAddress> >::const_iterator i = addresses.find(resolveHostnameQuery->hostname);
+		std::map<std::string,boost::optional<HostAddress> >::const_iterator i = addresses.find(resolveHostnameQuery->hostname);
 		if (i != addresses.end()) {
 			eventLoop->postEvent(
 					boost::bind(
@@ -103,7 +103,7 @@ void FakeDNSSDQuerier::setServiceInfo(const DNSSDServiceID& id, const DNSSDResol
 	}
 }
 
-bool FakeDNSSDQuerier::isServiceRegistered(const String& name, int port, const ByteArray& info) {
+bool FakeDNSSDQuerier::isServiceRegistered(const std::string& name, int port, const ByteArray& info) {
 	foreach(const boost::shared_ptr<FakeDNSSDRegisterQuery>& query, getQueries<FakeDNSSDRegisterQuery>()) {
 		if (query->name == name && query->port == port && query->info == info) {
 			return true;
@@ -124,7 +124,7 @@ void FakeDNSSDQuerier::setRegisterError() {
 	}
 }
 
-void FakeDNSSDQuerier::setAddress(const String& hostname, boost::optional<HostAddress> address) {
+void FakeDNSSDQuerier::setAddress(const std::string& hostname, boost::optional<HostAddress> address) {
 	addresses[hostname] = address;
 	foreach(const boost::shared_ptr<FakeDNSSDResolveHostnameQuery>& query, getQueries<FakeDNSSDResolveHostnameQuery>()) {
 		if (query->hostname == hostname) {

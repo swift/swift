@@ -16,7 +16,7 @@
 namespace Swift {
 	class XMLParser;
 	class XMPPParserClient;
-	class String;
+	
 	class ElementParser;
 	class PayloadParserFactoryCollection;
 
@@ -27,17 +27,17 @@ namespace Swift {
 					PayloadParserFactoryCollection* payloadParserFactories);
 			~XMPPParser();
 
-			bool parse(const String&);
+			bool parse(const std::string&);
 
 		private:
 			virtual void handleStartElement(
-					const String& element, 
-					const String& ns, 
+					const std::string& element, 
+					const std::string& ns, 
 					const AttributeMap& attributes);
-			virtual void handleEndElement(const String& element, const String& ns);
-			virtual void handleCharacterData(const String& data);
+			virtual void handleEndElement(const std::string& element, const std::string& ns);
+			virtual void handleCharacterData(const std::string& data);
 
-			ElementParser* createElementParser(const String& element, const String& xmlns);
+			ElementParser* createElementParser(const std::string& element, const std::string& xmlns);
 
 		private:
 			XMLParser* xmlParser_;

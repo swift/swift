@@ -20,7 +20,7 @@ namespace Swift {
 MUCUserPayloadSerializer::MUCUserPayloadSerializer() : GenericPayloadSerializer<MUCUserPayload>() {
 }
 
-String MUCUserPayloadSerializer::serializePayload(boost::shared_ptr<MUCUserPayload> payload)  const {
+std::string MUCUserPayloadSerializer::serializePayload(boost::shared_ptr<MUCUserPayload> payload)  const {
 	XMLElement mucElement("x", "http://jabber.org/protocol/muc");
 	foreach (const MUCUserPayload::StatusCode statusCode, payload->getStatusCodes()) {
 		boost::shared_ptr<XMLElement> statusElement(new XMLElement("status"));
@@ -44,8 +44,8 @@ String MUCUserPayloadSerializer::serializePayload(boost::shared_ptr<MUCUserPaylo
 	return mucElement.serialize();
 }
 
-String MUCUserPayloadSerializer::affiliationToString(MUCOccupant::Affiliation affiliation) const {
-	String result;
+std::string MUCUserPayloadSerializer::affiliationToString(MUCOccupant::Affiliation affiliation) const {
+	std::string result;
 	switch (affiliation) {
 	case MUCOccupant::Owner: result = "owner"; break;
 	case MUCOccupant::Admin: result = "admin"; break;
@@ -57,8 +57,8 @@ String MUCUserPayloadSerializer::affiliationToString(MUCOccupant::Affiliation af
 	return result;
 }
 
-String MUCUserPayloadSerializer::roleToString(MUCOccupant::Role role) const {
-	String result;
+std::string MUCUserPayloadSerializer::roleToString(MUCOccupant::Role role) const {
+	std::string result;
 	switch (role) {
 	case MUCOccupant::Moderator: result = "moderator"; break;
 	case MUCOccupant::NoRole: result = "none"; break;

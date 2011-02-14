@@ -10,7 +10,7 @@
 #include <algorithm>
 
 #include "Swiften/Elements/Payload.h"
-#include "Swiften/Base/String.h"
+#include <string>
 
 #include "Swiften/Elements/Form.h"
 
@@ -19,29 +19,29 @@ namespace Swift {
 		public:
 			typedef boost::shared_ptr<DiscoInfo> ref;
 
-			static const String ChatStatesFeature;
-			static const String SecurityLabelsFeature;
-			static const String JabberSearchFeature;
+			static const std::string ChatStatesFeature;
+			static const std::string SecurityLabelsFeature;
+			static const std::string JabberSearchFeature;
 
 			const static std::string SecurityLabels;
 			class Identity {
 				public:
-					Identity(const String& name, const String& category = "client", const String& type = "pc", const String& lang = "") : name_(name), category_(category), type_(type), lang_(lang) {
+					Identity(const std::string& name, const std::string& category = "client", const std::string& type = "pc", const std::string& lang = "") : name_(name), category_(category), type_(type), lang_(lang) {
 					}
 
-					const String& getCategory() const {
+					const std::string& getCategory() const {
 						return category_;
 					}
 					
-					const String& getType() const {
+					const std::string& getType() const {
 						return type_;
 					}
 
-					const String& getLanguage() const {
+					const std::string& getLanguage() const {
 						return lang_;
 					}
 
-					const String& getName() const {
+					const std::string& getName() const {
 						return name_;
 					}
 
@@ -49,20 +49,20 @@ namespace Swift {
 					bool operator<(const Identity& other) const;
 
 				private:
-					String name_;
-					String category_;
-					String type_;
-					String lang_;
+					std::string name_;
+					std::string category_;
+					std::string type_;
+					std::string lang_;
 			};
 
 			DiscoInfo() {
 			}
 
-			const String& getNode() const {
+			const std::string& getNode() const {
 				return node_;
 			}
 
-			void setNode(const String& node) {
+			void setNode(const std::string& node) {
 				node_ = node;
 			}
 
@@ -74,15 +74,15 @@ namespace Swift {
 				identities_.push_back(identity);
 			}
 
-			const std::vector<String>& getFeatures() const {
+			const std::vector<std::string>& getFeatures() const {
 				return features_;
 			}
 
-			void addFeature(const String& feature) {
+			void addFeature(const std::string& feature) {
 				features_.push_back(feature);
 			}
 
-			bool hasFeature(const String& feature) const {
+			bool hasFeature(const std::string& feature) const {
 				return std::find(features_.begin(), features_.end(), feature) != features_.end();
 			}
 
@@ -95,9 +95,9 @@ namespace Swift {
 			}
 
 		private:
-			String node_;
+			std::string node_;
 			std::vector<Identity> identities_;
-			std::vector<String> features_;
+			std::vector<std::string> features_;
 			std::vector<Form::ref> extensions_;
 	};
 }

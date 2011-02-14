@@ -12,7 +12,7 @@
 #include <boost/shared_ptr.hpp>
 #include "Swiften/Base/boost_bsignals.h"
 
-#include "Swiften/Base/String.h"
+#include <string>
 #include "Swiften/JID/JID.h"
 
 #include "Swift/Controllers/UIEvents/UIEvent.h"
@@ -34,13 +34,13 @@ namespace Swift {
 		public:
 			class MUCRoom {
 				public:
-					MUCRoom(const String& node, const String& name, int occupants) : node_(node), name_(name), occupants_(occupants) {}
-					String getNode() {return node_;}
-					String getName() {return name_;}
+					MUCRoom(const std::string& node, const std::string& name, int occupants) : node_(node), name_(name), occupants_(occupants) {}
+					std::string getNode() {return node_;}
+					std::string getName() {return name_;}
 					int getOccupantCount() {return occupants_;}
 				private:
-					String node_;
-					String name_;
+					std::string node_;
+					std::string name_;
 					int occupants_;
 			};
 
@@ -50,7 +50,7 @@ namespace Swift {
 				complete_ = complete;
 			}
 
-			void setName(const String& name) {
+			void setName(const std::string& name) {
 				name_ = name;
 			}
 
@@ -66,11 +66,11 @@ namespace Swift {
 				return jid_;
 			}
 
-			String getName() const {
+			std::string getName() const {
 				return name_;
 			}
 
-			void setError(const String& errorText) {error_ = true; errorText_ = errorText;}
+			void setError(const std::string& errorText) {error_ = true; errorText_ = errorText;}
 
 			void clearRooms() {rooms_.clear();}
 
@@ -78,12 +78,12 @@ namespace Swift {
 
 			std::vector<MUCRoom> getRooms() const {return rooms_;}
 		private:
-			String name_;
+			std::string name_;
 			JID jid_;
 			std::vector<MUCRoom> rooms_;
 			bool complete_;
 			bool error_;
-			String errorText_;
+			std::string errorText_;
 	};
 
 	class MUCSearchController {

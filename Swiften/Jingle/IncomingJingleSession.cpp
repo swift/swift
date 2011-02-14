@@ -8,7 +8,7 @@
 
 namespace Swift {
 
-IncomingJingleSession::IncomingJingleSession(const String& id, const std::vector<JingleContent::ref>& contents) : JingleSession(id, contents) {
+IncomingJingleSession::IncomingJingleSession(const std::string& id, const std::vector<JingleContent::ref>& contents) : JingleSession(id, contents) {
 
 }
 

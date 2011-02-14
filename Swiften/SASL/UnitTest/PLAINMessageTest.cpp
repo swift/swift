@@ -40,29 +40,29 @@ class PLAINMessageTest : public CppUnit::TestFixture
 		void testConstructor_WithoutAuthzID() {
 			PLAINMessage message(ByteArray("\0user\0pass", 10));
 
-			CPPUNIT_ASSERT_EQUAL(String(""), message.getAuthorizationID());
-			CPPUNIT_ASSERT_EQUAL(String("user"), message.getAuthenticationID());
-			CPPUNIT_ASSERT_EQUAL(String("pass"), message.getPassword());
+			CPPUNIT_ASSERT_EQUAL(std::string(""), message.getAuthorizationID());
+			CPPUNIT_ASSERT_EQUAL(std::string("user"), message.getAuthenticationID());
+			CPPUNIT_ASSERT_EQUAL(std::string("pass"), message.getPassword());
 		}
 
 		void testConstructor_WithAuthzID() {
 			PLAINMessage message(ByteArray("authz\0user\0pass", 15));
 
-			CPPUNIT_ASSERT_EQUAL(String("authz"), message.getAuthorizationID());
-			CPPUNIT_ASSERT_EQUAL(String("user"), message.getAuthenticationID());
-			CPPUNIT_ASSERT_EQUAL(String("pass"), message.getPassword());
+			CPPUNIT_ASSERT_EQUAL(std::string("authz"), message.getAuthorizationID());
+			CPPUNIT_ASSERT_EQUAL(std::string("user"), message.getAuthenticationID());
+			CPPUNIT_ASSERT_EQUAL(std::string("pass"), message.getPassword());
 		}
 
 		void testConstructor_NoAuthcid() {
 			PLAINMessage message(ByteArray("authzid", 7));
 
-			CPPUNIT_ASSERT_EQUAL(String(""), message.getAuthenticationID());
+			CPPUNIT_ASSERT_EQUAL(std::string(""), message.getAuthenticationID());
 		}
 
 		void testConstructor_NoPassword() {
 			PLAINMessage message(ByteArray("authzid\0authcid", 15));
 
-			CPPUNIT_ASSERT_EQUAL(String(""), message.getAuthenticationID());
+			CPPUNIT_ASSERT_EQUAL(std::string(""), message.getAuthenticationID());
 		}
 };
 

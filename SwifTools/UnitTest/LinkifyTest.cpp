@@ -35,147 +35,147 @@ class LinkifyTest : public CppUnit::TestFixture {
 
 	public:
 		void testLinkify_URLWithResource() {
-			String result = Linkify::linkify("http://swift.im/blog");
+			std::string result = Linkify::linkify("http://swift.im/blog");
 
 			CPPUNIT_ASSERT_EQUAL(
-					String("<a href=\"http://swift.im/blog\">http://swift.im/blog</a>"),
+					std::string("<a href=\"http://swift.im/blog\">http://swift.im/blog</a>"),
 					result);
 		}
 
 		void testLinkify_HTTPSURLWithResource() {
-			String result = Linkify::linkify("https://swift.im/blog");
+			std::string result = Linkify::linkify("https://swift.im/blog");
 
 			CPPUNIT_ASSERT_EQUAL(
-					String("<a href=\"https://swift.im/blog\">https://swift.im/blog</a>"),
+					std::string("<a href=\"https://swift.im/blog\">https://swift.im/blog</a>"),
 					result);
 		}
 
 		void testLinkify_URLWithEmptyResource() {
-			String result = Linkify::linkify("http://swift.im/");
+			std::string result = Linkify::linkify("http://swift.im/");
 
 			CPPUNIT_ASSERT_EQUAL(
-					String("<a href=\"http://swift.im/\">http://swift.im/</a>"),
+					std::string("<a href=\"http://swift.im/\">http://swift.im/</a>"),
 					result);
 		}
 
 
 		void testLinkify_BareURL() {
-			String result = Linkify::linkify("http://swift.im");
+			std::string result = Linkify::linkify("http://swift.im");
 
 			CPPUNIT_ASSERT_EQUAL(
-					String("<a href=\"http://swift.im\">http://swift.im</a>"),
+					std::string("<a href=\"http://swift.im\">http://swift.im</a>"),
 					result);
 		}
 
 		void testLinkify_URLSurroundedByWhitespace() {
-			String result = Linkify::linkify("Foo http://swift.im/blog Bar");
+			std::string result = Linkify::linkify("Foo http://swift.im/blog Bar");
 
 			CPPUNIT_ASSERT_EQUAL(
-					String("Foo <a href=\"http://swift.im/blog\">http://swift.im/blog</a> Bar"),
+					std::string("Foo <a href=\"http://swift.im/blog\">http://swift.im/blog</a> Bar"),
 					result);
 		}
 
 		void testLinkify_MultipleURLs() {
-			String result = Linkify::linkify("Foo http://swift.im/blog Bar http://el-tramo.be/about Baz");
+			std::string result = Linkify::linkify("Foo http://swift.im/blog Bar http://el-tramo.be/about Baz");
 
 			CPPUNIT_ASSERT_EQUAL(
-					String("Foo <a href=\"http://swift.im/blog\">http://swift.im/blog</a> Bar <a href=\"http://el-tramo.be/about\">http://el-tramo.be/about</a> Baz"),
+					std::string("Foo <a href=\"http://swift.im/blog\">http://swift.im/blog</a> Bar <a href=\"http://el-tramo.be/about\">http://el-tramo.be/about</a> Baz"),
 					result);
 		}
 
 		void testLinkify_CamelCase() {
-			String result = Linkify::linkify("http://fOo.cOm/bAz");
+			std::string result = Linkify::linkify("http://fOo.cOm/bAz");
 
 			CPPUNIT_ASSERT_EQUAL(
-					String("<a href=\"http://fOo.cOm/bAz\">http://fOo.cOm/bAz</a>"),
+					std::string("<a href=\"http://fOo.cOm/bAz\">http://fOo.cOm/bAz</a>"),
 					result);
 		}
 
 		void testLinkify_HierarchicalResource() {
-			String result = Linkify::linkify("http://foo.com/bar/baz/");
+			std::string result = Linkify::linkify("http://foo.com/bar/baz/");
 
 			CPPUNIT_ASSERT_EQUAL(
-					String("<a href=\"http://foo.com/bar/baz/\">http://foo.com/bar/baz/</a>"),
+					std::string("<a href=\"http://foo.com/bar/baz/\">http://foo.com/bar/baz/</a>"),
 					result);
 		}
 
 		void testLinkify_Anchor() {
-			String result = Linkify::linkify("http://foo.com/bar#baz");
+			std::string result = Linkify::linkify("http://foo.com/bar#baz");
 
 			CPPUNIT_ASSERT_EQUAL(
-					String("<a href=\"http://foo.com/bar#baz\">http://foo.com/bar#baz</a>"),
+					std::string("<a href=\"http://foo.com/bar#baz\">http://foo.com/bar#baz</a>"),
 					result);
 		}
 
 		void testLinkify_Plus() {
-			String result = Linkify::linkify("http://foo.com/bar+baz");
+			std::string result = Linkify::linkify("http://foo.com/bar+baz");
 
 			CPPUNIT_ASSERT_EQUAL(
-					String("<a href=\"http://foo.com/bar+baz\">http://foo.com/bar+baz</a>"),
+					std::string("<a href=\"http://foo.com/bar+baz\">http://foo.com/bar+baz</a>"),
 					result);
 		}
 
 		void testLinkify_Tilde() {
-			String result = Linkify::linkify("http://foo.com/~kev/");
+			std::string result = Linkify::linkify("http://foo.com/~kev/");
 
 			CPPUNIT_ASSERT_EQUAL(
-					String("<a href=\"http://foo.com/~kev/\">http://foo.com/~kev/</a>"),
+					std::string("<a href=\"http://foo.com/~kev/\">http://foo.com/~kev/</a>"),
 					result);
 		}
 
 		void testLinkify_Equal() {
-			String result = Linkify::linkify("http://www.amazon.co.uk/s/ref=nb_sb_noss?url=search-alias%3Daps&field-keywords=xmpp+definitive+guide&x=0&y=0");
+			std::string result = Linkify::linkify("http://www.amazon.co.uk/s/ref=nb_sb_noss?url=search-alias%3Daps&field-keywords=xmpp+definitive+guide&x=0&y=0");
 
 			CPPUNIT_ASSERT_EQUAL(
-					String("<a href=\"http://www.amazon.co.uk/s/ref=nb_sb_noss?url=search-alias%3Daps&field-keywords=xmpp+definitive+guide&x=0&y=0\">http://www.amazon.co.uk/s/ref=nb_sb_noss?url=search-alias%3Daps&field-keywords=xmpp+definitive+guide&x=0&y=0</a>"),
+					std::string("<a href=\"http://www.amazon.co.uk/s/ref=nb_sb_noss?url=search-alias%3Daps&field-keywords=xmpp+definitive+guide&x=0&y=0\">http://www.amazon.co.uk/s/ref=nb_sb_noss?url=search-alias%3Daps&field-keywords=xmpp+definitive+guide&x=0&y=0</a>"),
 					result);
 		}
 
 		void testLinkify_Authentication() {
-			String result = Linkify::linkify("http://bob:bla@swift.im/foo/bar");
+			std::string result = Linkify::linkify("http://bob:bla@swift.im/foo/bar");
 
 			CPPUNIT_ASSERT_EQUAL(
-					String("<a href=\"http://bob:bla@swift.im/foo/bar\">http://bob:bla@swift.im/foo/bar</a>"),
+					std::string("<a href=\"http://bob:bla@swift.im/foo/bar\">http://bob:bla@swift.im/foo/bar</a>"),
 					result);
 		}
 
 		void testLinkify_At() {
-			String result = Linkify::linkify("http://swift.im/foo@bar");
+			std::string result = Linkify::linkify("http://swift.im/foo@bar");
 
 			CPPUNIT_ASSERT_EQUAL(
-					String("<a href=\"http://swift.im/foo@bar\">http://swift.im/foo@bar</a>"),
+					std::string("<a href=\"http://swift.im/foo@bar\">http://swift.im/foo@bar</a>"),
 					result);
 		}
 
 		void testLinkify_Amps() {
-			String result = Linkify::linkify("http://swift.im/foo&bar&baz");
+			std::string result = Linkify::linkify("http://swift.im/foo&bar&baz");
 
 			CPPUNIT_ASSERT_EQUAL(
-					String("<a href=\"http://swift.im/foo&bar&baz\">http://swift.im/foo&bar&baz</a>"),
+					std::string("<a href=\"http://swift.im/foo&bar&baz\">http://swift.im/foo&bar&baz</a>"),
 					result);
 		}
 
 		void testLinkify_UnicodeCharacter() {
-			String result = Linkify::linkify("http://\xe2\x98\x83.net");
+			std::string result = Linkify::linkify("http://\xe2\x98\x83.net");
 
 			CPPUNIT_ASSERT_EQUAL(
-					String("<a href=\"http://\xe2\x98\x83.net\">http://\xe2\x98\x83.net</a>"),
+					std::string("<a href=\"http://\xe2\x98\x83.net\">http://\xe2\x98\x83.net</a>"),
 					result);
 		}
 
 		void testLinkify_NewLine() {
-			String result = Linkify::linkify("http://swift.im\nfoo");
+			std::string result = Linkify::linkify("http://swift.im\nfoo");
 
 			CPPUNIT_ASSERT_EQUAL(
-					String("<a href=\"http://swift.im\">http://swift.im</a>\nfoo"),
+					std::string("<a href=\"http://swift.im\">http://swift.im</a>\nfoo"),
 					result);
 		}
 
 		void testLinkify_Tab() {
-			String result = Linkify::linkify("http://swift.im\tfoo");
+			std::string result = Linkify::linkify("http://swift.im\tfoo");
 
 			CPPUNIT_ASSERT_EQUAL(
-					String("<a href=\"http://swift.im\">http://swift.im</a>\tfoo"),
+					std::string("<a href=\"http://swift.im\">http://swift.im</a>\tfoo"),
 					result);
 		}
 };

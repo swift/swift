@@ -9,7 +9,7 @@
 namespace Swift {
 
 boost::shared_ptr<IQ> IQ::createRequest(
-		Type type, const JID& to, const String& id, boost::shared_ptr<Payload> payload) {
+		Type type, const JID& to, const std::string& id, boost::shared_ptr<Payload> payload) {
 	boost::shared_ptr<IQ> iq(new IQ(type));
 	if (to.isValid()) {
 		iq->setTo(to);
@@ -21,7 +21,7 @@ boost::shared_ptr<IQ> IQ::createRequest(
 	return iq;
 }
 
-boost::shared_ptr<IQ> IQ::createResult(const JID& to, const String& id, boost::shared_ptr<Payload> payload) {
+boost::shared_ptr<IQ> IQ::createResult(const JID& to, const std::string& id, boost::shared_ptr<Payload> payload) {
 	boost::shared_ptr<IQ> iq(new IQ(Result));
 	iq->setTo(to);
 	iq->setID(id);
@@ -31,7 +31,7 @@ boost::shared_ptr<IQ> IQ::createResult(const JID& to, const String& id, boost::s
 	return iq;
 }
 
-boost::shared_ptr<IQ> IQ::createResult(const JID& to, const JID& from, const String& id, boost::shared_ptr<Payload> payload) {
+boost::shared_ptr<IQ> IQ::createResult(const JID& to, const JID& from, const std::string& id, boost::shared_ptr<Payload> payload) {
 	boost::shared_ptr<IQ> iq(new IQ(Result));
 	iq->setTo(to);
 	iq->setFrom(from);
@@ -42,7 +42,7 @@ boost::shared_ptr<IQ> IQ::createResult(const JID& to, const JID& from, const Str
 	return iq;
 }
 
-boost::shared_ptr<IQ> IQ::createError(const JID& to, const String& id, ErrorPayload::Condition condition, ErrorPayload::Type type) {
+boost::shared_ptr<IQ> IQ::createError(const JID& to, const std::string& id, ErrorPayload::Condition condition, ErrorPayload::Type type) {
 	boost::shared_ptr<IQ> iq(new IQ(IQ::Error));
 	iq->setTo(to);
 	iq->setID(id);
@@ -50,7 +50,7 @@ boost::shared_ptr<IQ> IQ::createError(const JID& to, const String& id, ErrorPayl
 	return iq;
 }
 
-boost::shared_ptr<IQ> IQ::createError(const JID& to, const JID& from, const String& id, ErrorPayload::Condition condition, ErrorPayload::Type type) {
+boost::shared_ptr<IQ> IQ::createError(const JID& to, const JID& from, const std::string& id, ErrorPayload::Condition condition, ErrorPayload::Type type) {
 	boost::shared_ptr<IQ> iq(new IQ(IQ::Error));
 	iq->setTo(to);
 	iq->setFrom(from);

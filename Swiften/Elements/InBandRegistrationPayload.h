@@ -11,7 +11,7 @@
 
 #include "Swiften/Elements/Payload.h"
 #include "Swiften/Elements/Form.h"
-#include "Swiften/Base/String.h"
+#include <string>
 
 namespace Swift {
 	class InBandRegistrationPayload : public Payload {
@@ -39,147 +39,147 @@ namespace Swift {
 				remove = b;
 			}
 
-			const boost::optional<String>& getInstructions() const {
+			const boost::optional<std::string>& getInstructions() const {
 				return instructions;
 			}
 
-			const boost::optional<String>& getUsername() const {
+			const boost::optional<std::string>& getUsername() const {
 				return username;
 			}
 
-			const boost::optional<String>& getNick() const {
+			const boost::optional<std::string>& getNick() const {
 				return nick;
 			}
 
-			const boost::optional<String>& getPassword() const {
+			const boost::optional<std::string>& getPassword() const {
 				return password;
 			}
 
-			const boost::optional<String>& getName() const {
+			const boost::optional<std::string>& getName() const {
 				return name;
 			}
 
-			const boost::optional<String>& getFirst() const {
+			const boost::optional<std::string>& getFirst() const {
 				return first;
 			}
 
-			const boost::optional<String>& getLast() const {
+			const boost::optional<std::string>& getLast() const {
 				return last;
 			}
 
-			const boost::optional<String>& getEMail() const {
+			const boost::optional<std::string>& getEMail() const {
 				return email;
 			}
 
-			const boost::optional<String>& getAddress() const {
+			const boost::optional<std::string>& getAddress() const {
 				return address;
 			}
 
-			const boost::optional<String>& getCity() const {
+			const boost::optional<std::string>& getCity() const {
 				return city;
 			}
 
-			const boost::optional<String>& getState() const {
+			const boost::optional<std::string>& getState() const {
 				return state;
 			}
 
-			const boost::optional<String>& getZip() const {
+			const boost::optional<std::string>& getZip() const {
 				return zip;
 			}
 
-			const boost::optional<String>& getPhone() const {
+			const boost::optional<std::string>& getPhone() const {
 				return phone;
 			}
 
-			const boost::optional<String>& getURL() const {
+			const boost::optional<std::string>& getURL() const {
 				return url;
 			}
 
-			const boost::optional<String>& getDate() const {
+			const boost::optional<std::string>& getDate() const {
 				return date;
 			}
 
-			const boost::optional<String>& getMisc() const {
+			const boost::optional<std::string>& getMisc() const {
 				return misc;
 			}
 
-			const boost::optional<String>& getText() const {
+			const boost::optional<std::string>& getText() const {
 				return text;
 			}
 
-			const boost::optional<String>& getKey() const {
+			const boost::optional<std::string>& getKey() const {
 				return key;
 			}
 
-			void setInstructions(const String& v) {
+			void setInstructions(const std::string& v) {
 				this->instructions = v;
 			}
 
-			void setUsername(const String& v) {
+			void setUsername(const std::string& v) {
 				this->username = v;
 			}
 
-			void setNick(const String& v) {
+			void setNick(const std::string& v) {
 				this->nick = v;
 			}
 
-			void setPassword(const String& v) {
+			void setPassword(const std::string& v) {
 				this->password = v;
 			}
 
-			void setName(const String& v) {
+			void setName(const std::string& v) {
 				this->name = v;
 			}
 
-			void setFirst(const String& v) {
+			void setFirst(const std::string& v) {
 				this->first = v;
 			}
 
-			void setLast(const String& v) {
+			void setLast(const std::string& v) {
 				this->last = v;
 			}
 
-			void setEMail(const String& v) {
+			void setEMail(const std::string& v) {
 				this->email = v;
 			}
 
-			void setAddress(const String& v) {
+			void setAddress(const std::string& v) {
 				this->address = v;
 			}
 
-			void setCity(const String& v) {
+			void setCity(const std::string& v) {
 				this->city = v;
 			}
 
-			void setState(const String& v) {
+			void setState(const std::string& v) {
 				this->state = v;
 			}
 
-			void setZip(const String& v) {
+			void setZip(const std::string& v) {
 				this->zip = v;
 			}
 
-			void setPhone(const String& v) {
+			void setPhone(const std::string& v) {
 				this->phone = v;
 			}
 
-			void setURL(const String& v) {
+			void setURL(const std::string& v) {
 				this->url = v;
 			}
 
-			void setDate(const String& v) {
+			void setDate(const std::string& v) {
 				this->date = v;
 			}
 
-			void setMisc(const String& v) {
+			void setMisc(const std::string& v) {
 				this->misc = v;
 			}
 
-			void setText(const String& v) {
+			void setText(const std::string& v) {
 				this->text = v;
 			}
 
-			void setKey(const String& v) {
+			void setKey(const std::string& v) {
 				this->key = v;
 			}
 
@@ -187,23 +187,23 @@ namespace Swift {
 			Form::ref form;
 			bool registered;
 			bool remove;
-			boost::optional<String> instructions;
-			boost::optional<String> username;
-			boost::optional<String> nick;
-			boost::optional<String> password;
-			boost::optional<String> name;
-			boost::optional<String> first;
-			boost::optional<String> last;
-			boost::optional<String> email;
-			boost::optional<String> address;
-			boost::optional<String> city;
-			boost::optional<String> state;
-			boost::optional<String> zip;
-			boost::optional<String> phone;
-			boost::optional<String> url;
-			boost::optional<String> date;
-			boost::optional<String> misc;
-			boost::optional<String> text;
-			boost::optional<String> key;
+			boost::optional<std::string> instructions;
+			boost::optional<std::string> username;
+			boost::optional<std::string> nick;
+			boost::optional<std::string> password;
+			boost::optional<std::string> name;
+			boost::optional<std::string> first;
+			boost::optional<std::string> last;
+			boost::optional<std::string> email;
+			boost::optional<std::string> address;
+			boost::optional<std::string> city;
+			boost::optional<std::string> state;
+			boost::optional<std::string> zip;
+			boost::optional<std::string> phone;
+			boost::optional<std::string> url;
+			boost::optional<std::string> date;
+			boost::optional<std::string> misc;
+			boost::optional<std::string> text;
+			boost::optional<std::string> key;
 	};
 }

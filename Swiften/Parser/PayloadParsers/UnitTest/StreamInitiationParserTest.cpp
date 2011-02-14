@@ -42,13 +42,13 @@ class StreamInitiationParserTest : public CppUnit::TestFixture {
 			StreamInitiation::ref si = parser.getPayload<StreamInitiation>();
 			CPPUNIT_ASSERT(si->getIsFileTransfer());
 			CPPUNIT_ASSERT(si->getFileInfo());
-			CPPUNIT_ASSERT_EQUAL(String("test.txt"), si->getFileInfo()->name);
+			CPPUNIT_ASSERT_EQUAL(std::string("test.txt"), si->getFileInfo()->name);
 			CPPUNIT_ASSERT_EQUAL(1022, si->getFileInfo()->size);
-			CPPUNIT_ASSERT_EQUAL(String("This is info about the file."), si->getFileInfo()->description);
+			CPPUNIT_ASSERT_EQUAL(std::string("This is info about the file."), si->getFileInfo()->description);
 			CPPUNIT_ASSERT_EQUAL(3, static_cast<int>(si->getProvidedMethods().size()));
-			CPPUNIT_ASSERT_EQUAL(String("http://jabber.org/protocol/bytestreams"), si->getProvidedMethods()[0]);
-			CPPUNIT_ASSERT_EQUAL(String("jabber:iq:oob"), si->getProvidedMethods()[1]);
-			CPPUNIT_ASSERT_EQUAL(String("http://jabber.org/protocol/ibb"), si->getProvidedMethods()[2]);
+			CPPUNIT_ASSERT_EQUAL(std::string("http://jabber.org/protocol/bytestreams"), si->getProvidedMethods()[0]);
+			CPPUNIT_ASSERT_EQUAL(std::string("jabber:iq:oob"), si->getProvidedMethods()[1]);
+			CPPUNIT_ASSERT_EQUAL(std::string("http://jabber.org/protocol/ibb"), si->getProvidedMethods()[2]);
 		}
 
 		void testParse_Response() {
@@ -68,7 +68,7 @@ class StreamInitiationParserTest : public CppUnit::TestFixture {
 
 			StreamInitiation::ref si = parser.getPayload<StreamInitiation>();
 			CPPUNIT_ASSERT(si->getIsFileTransfer());
-			CPPUNIT_ASSERT_EQUAL(String("http://jabber.org/protocol/bytestreams"), si->getRequestedMethod());
+			CPPUNIT_ASSERT_EQUAL(std::string("http://jabber.org/protocol/bytestreams"), si->getRequestedMethod());
 		}
 };
 

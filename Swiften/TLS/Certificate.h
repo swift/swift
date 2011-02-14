@@ -8,7 +8,7 @@
 
 #include <boost/shared_ptr.hpp>
 
-#include "Swiften/Base/String.h"
+#include <string>
 #include "Swiften/Base/ByteArray.h"
 
 namespace Swift {
@@ -22,16 +22,16 @@ namespace Swift {
 			 * Returns the textual representation of the full Subject
 			 * name.
 			 */
-			virtual String getSubjectName() const = 0;
+			virtual std::string getSubjectName() const = 0;
 
-			virtual std::vector<String> getCommonNames() const = 0;
-			virtual std::vector<String> getSRVNames() const = 0;
-			virtual std::vector<String> getDNSNames() const = 0;
-			virtual std::vector<String> getXMPPAddresses() const = 0;
+			virtual std::vector<std::string> getCommonNames() const = 0;
+			virtual std::vector<std::string> getSRVNames() const = 0;
+			virtual std::vector<std::string> getDNSNames() const = 0;
+			virtual std::vector<std::string> getXMPPAddresses() const = 0;
 
 			virtual ByteArray toDER() const = 0;
 
-			virtual String getSHA1Fingerprint() const;
+			virtual std::string getSHA1Fingerprint() const;
 
 		protected:
 			static const char* ID_ON_XMPPADDR_OID;

@@ -18,7 +18,7 @@ namespace Swift {
 			JingleResponder(JingleSessionManager* sessionManager, IQRouter* router);
 
 		private:
-			virtual bool handleSetRequest(const JID& from, const JID& to, const String& id, boost::shared_ptr<JinglePayload> payload);
+			virtual bool handleSetRequest(const JID& from, const JID& to, const std::string& id, boost::shared_ptr<JinglePayload> payload);
 
 		private:
 			JingleSessionManager* sessionManager;

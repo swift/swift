@@ -24,7 +24,7 @@ class PrioritySerializerTest : public CppUnit::TestFixture
 			PrioritySerializer testling;
 			boost::shared_ptr<Priority> priority(new Priority(-113));
 
-			CPPUNIT_ASSERT_EQUAL(String("<priority>-113</priority>"), testling.serialize(priority));
+			CPPUNIT_ASSERT_EQUAL(std::string("<priority>-113</priority>"), testling.serialize(priority));
 		}
 };
 

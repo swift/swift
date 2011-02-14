@@ -6,11 +6,13 @@
 
 #include "Swift/Controllers/Roster/RosterItem.h"
 
+#include <boost/algorithm/string.hpp>
+
 #include "Swift/Controllers/Roster/GroupRosterItem.h"
 
 namespace Swift {
 
-RosterItem::RosterItem(const String& name, GroupRosterItem* parent) : name_(name), sortableDisplayName_(name_.getLowerCase()), parent_(parent) {
+RosterItem::RosterItem(const std::string& name, GroupRosterItem* parent) : name_(name), sortableDisplayName_(boost::to_lower_copy(name_)), parent_(parent) {
 	/* The following would be good, but because of C++'s inheritance not working in constructors, it's not going to work. */
 	//if (parent) {
 	//	parent_->addChild(this);
@@ -25,17 +27,17 @@ GroupRosterItem* RosterItem::getParent() const {
 	return parent_;
 }
 
-void RosterItem::setDisplayName(const String& name) {
+void RosterItem::setDisplayName(const std::string& name) {
 	name_ = name;
-	sortableDisplayName_ = name_.getLowerCase();
+	sortableDisplayName_ = boost::to_lower_copy(name_);
 	onDataChanged();
 }
 
-String RosterItem::getDisplayName() const {
+std::string RosterItem::getDisplayName() const {
 	return name_;
 }
 
-String RosterItem::getSortableDisplayName() const {
+std::string RosterItem::getSortableDisplayName() const {
 	return sortableDisplayName_;
 }
 

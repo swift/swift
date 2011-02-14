@@ -11,16 +11,16 @@ namespace Swift {
 IDGenerator::IDGenerator() {
 }
 
-String IDGenerator::generateID() {
+std::string IDGenerator::generateID() {
 	bool carry = true;
 	size_t i = 0;
-	while (carry && i < currentID_.getUTF8Size()) {
-		char c = currentID_.getUTF8String()[i];
+	while (carry && i < currentID_.size()) {
+		char c = currentID_[i];
 		if (c >= 'z') {
-			currentID_.getUTF8String()[i] = 'a';
+			currentID_[i] = 'a';
 		}
 		else {
-			currentID_.getUTF8String()[i] = c+1;
+			currentID_[i] = c+1;
 			carry = false;
 		}
 		++i;

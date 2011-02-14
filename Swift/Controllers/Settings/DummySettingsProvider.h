@@ -13,15 +13,15 @@ namespace Swift {
 class DummySettingsProvider : public SettingsProvider {
 	public:
 		virtual ~DummySettingsProvider() {}
-		virtual String getStringSetting(const String&) {return "";}
-		virtual void storeString(const String &, const String &) {}
-		virtual bool getBoolSetting(const String &, bool ) {return true;}
-		virtual void storeBool(const String &, bool ) {}
-		virtual int getIntSetting(const String &, int ) {return 0;}
-		virtual void storeInt(const String &, int ) {}
-		virtual std::vector<String> getAvailableProfiles() {return std::vector<String>();}
-		virtual void createProfile(const String& ) {}
-		virtual void removeProfile(const String& ) {}
+		virtual std::string getStringSetting(const std::string&) {return "";}
+		virtual void storeString(const std::string &, const std::string &) {}
+		virtual bool getBoolSetting(const std::string &, bool ) {return true;}
+		virtual void storeBool(const std::string &, bool ) {}
+		virtual int getIntSetting(const std::string &, int ) {return 0;}
+		virtual void storeInt(const std::string &, int ) {}
+		virtual std::vector<std::string> getAvailableProfiles() {return std::vector<std::string>();}
+		virtual void createProfile(const std::string& ) {}
+		virtual void removeProfile(const std::string& ) {}
 };
 
 }

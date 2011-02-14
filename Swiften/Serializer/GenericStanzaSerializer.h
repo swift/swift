@@ -13,7 +13,7 @@ namespace Swift {
 	template<typename STANZA_TYPE>
 	class GenericStanzaSerializer : public StanzaSerializer {
 		public:
-			GenericStanzaSerializer(const String& tag, PayloadSerializerCollection* payloadSerializers) : StanzaSerializer(tag, payloadSerializers) {}
+			GenericStanzaSerializer(const std::string& tag, PayloadSerializerCollection* payloadSerializers) : StanzaSerializer(tag, payloadSerializers) {}
 
 			virtual bool canSerialize(boost::shared_ptr<Element> element) const {
 				return dynamic_cast<STANZA_TYPE*>(element.get()) != 0;

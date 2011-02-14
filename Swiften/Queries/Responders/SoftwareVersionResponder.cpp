@@ -12,12 +12,12 @@ namespace Swift {
 SoftwareVersionResponder::SoftwareVersionResponder(IQRouter* router) : GetResponder<SoftwareVersion>(router) {
 }
 
-void SoftwareVersionResponder::setVersion(const String& client, const String& version) {
+void SoftwareVersionResponder::setVersion(const std::string& client, const std::string& version) {
 	this->client = client;
 	this->version = version;
 }
 
-bool SoftwareVersionResponder::handleGetRequest(const JID& from, const JID&, const String& id, boost::shared_ptr<SoftwareVersion>) {
+bool SoftwareVersionResponder::handleGetRequest(const JID& from, const JID&, const std::string& id, boost::shared_ptr<SoftwareVersion>) {
 	sendResponse(from, id, boost::shared_ptr<SoftwareVersion>(new SoftwareVersion(client, version)));
 	return true;
 }

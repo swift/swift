@@ -8,7 +8,7 @@
 
 #include <boost/optional.hpp>
 
-#include "Swiften/Base/String.h"
+#include <string>
 #include "Swiften/JID/JID.h"
 
 namespace Swift {
@@ -19,19 +19,19 @@ namespace Swift {
 			enum Role {Moderator, Participant, Visitor, NoRole};
 			enum Affiliation {Owner, Admin, Member, Outcast, NoAffiliation};
 
-			MUCOccupant(const String &nick, Role role, Affiliation affiliation);
+			MUCOccupant(const std::string &nick, Role role, Affiliation affiliation);
 			MUCOccupant(const MUCOccupant& other);
 			~MUCOccupant();
 
-			String getNick() const;
+			std::string getNick() const;
 			Role getRole() const;
 			Affiliation getAffiliation() const;
 			boost::optional<JID> getRealJID() const;
 			void setRealJID(const JID& jid);
-			void setNick(const String& nick);
+			void setNick(const std::string& nick);
 
 		private:
-			String nick_;
+			std::string nick_;
 			Role role_;
 			Affiliation affiliation_;
 			boost::optional<JID> realJID_;

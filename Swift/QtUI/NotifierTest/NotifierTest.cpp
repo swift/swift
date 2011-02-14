@@ -7,14 +7,14 @@
 #include <iostream>
 #include <boost/bind.hpp>
 
-#include "Swiften/Base/String.h"
+#include <string>
 #include "Swiften/Base/ByteArray.h"
 #include "Swiften/Notifier/GrowlNotifier.h"
 #include <QApplication>
 
 using namespace Swift;
 
-void notificationClicked(const String& message) {
+void notificationClicked(const std::string& message) {
 	std::cout << "Notification clicked: " << message << std::endl;
 }
 

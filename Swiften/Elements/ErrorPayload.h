@@ -9,7 +9,7 @@
 #include <boost/shared_ptr.hpp>
 
 #include "Swiften/Elements/Payload.h"
-#include "Swiften/Base/String.h"
+#include <string>
 
 namespace Swift {
 	class ErrorPayload : public Payload {
@@ -43,7 +43,7 @@ namespace Swift {
 				UnexpectedRequest
 			};
 
-			ErrorPayload(Condition condition = UndefinedCondition, Type type = Cancel, const String& text = String()) : type_(type), condition_(condition), text_(text) { }
+			ErrorPayload(Condition condition = UndefinedCondition, Type type = Cancel, const std::string& text = std::string()) : type_(type), condition_(condition), text_(text) { }
 
 			Type getType() const {
 				return type_; 
@@ -61,17 +61,17 @@ namespace Swift {
 				condition_ = condition;
 			}
 
-			void setText(const String& text) {
+			void setText(const std::string& text) {
 				text_ = text;
 			}
 
-			const String& getText() const { 
+			const std::string& getText() const { 
 				return text_; 
 			}
 
 		private:
 			Type type_;
 			Condition condition_;
-			String text_;
+			std::string text_;
 	};
 }

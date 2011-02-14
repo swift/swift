@@ -7,24 +7,24 @@
 #pragma once
 
 #include <Swift/Controllers/UIEvents/UIEvent.h>
-#include <Swiften/Base/String.h>
+#include <string>
 
 namespace Swift {
 	class RenameGroupUIEvent : public UIEvent {
 		public:
-			RenameGroupUIEvent(const String& group, const String& newName) : group(group), newName(newName) {
+			RenameGroupUIEvent(const std::string& group, const std::string& newName) : group(group), newName(newName) {
 			}
 
-			const String& getGroup() const {
+			const std::string& getGroup() const {
 				return group;
 			}
 
-			const String& getNewName() const {
+			const std::string& getNewName() const {
 				return newName;
 			}
 
 		private:
-			String group;
-			String newName;
+			std::string group;
+			std::string newName;
 	};
 }

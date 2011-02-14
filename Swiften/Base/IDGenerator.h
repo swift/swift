@@ -7,17 +7,17 @@
 #ifndef SWIFTEN_IDGenerator_H
 #define SWIFTEN_IDGenerator_H
 
-#include "Swiften/Base/String.h"
+#include <string>
 
 namespace Swift {
 	class IDGenerator {
 		public:
 			IDGenerator();
 
-			String generateID();
+			std::string generateID();
 
 		private:
-			String currentID_;
+			std::string currentID_;
 	};
 }
 

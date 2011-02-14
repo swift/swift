@@ -17,7 +17,7 @@ class RosterItem;
 
 class SetAvatar : public RosterItemOperation {
 	public:
-		SetAvatar(const JID& jid, const String& path, JID::CompareType compareType = JID::WithoutResource) : RosterItemOperation(true, jid), jid_(jid), path_(path), compareType_(compareType) {
+		SetAvatar(const JID& jid, const std::string& path, JID::CompareType compareType = JID::WithoutResource) : RosterItemOperation(true, jid), jid_(jid), path_(path), compareType_(compareType) {
 		}
 
 		virtual void operator() (RosterItem* item) const {
@@ -29,7 +29,7 @@ class SetAvatar : public RosterItemOperation {
 	
 	private:
 		JID jid_;
-		String path_;
+		std::string path_;
 		JID::CompareType compareType_;
 };
 

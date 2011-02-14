@@ -51,7 +51,7 @@ class LinkLocalConnectorTest : public CppUnit::TestFixture {
 			CPPUNIT_ASSERT(connectFinished);
 			CPPUNIT_ASSERT(!connectError);
 			CPPUNIT_ASSERT(connection->connectedTo);
-			CPPUNIT_ASSERT_EQUAL(String(connection->connectedTo->getAddress().toString()), String("192.168.1.1"));
+			CPPUNIT_ASSERT_EQUAL(std::string(connection->connectedTo->getAddress().toString()), std::string("192.168.1.1"));
 			CPPUNIT_ASSERT_EQUAL(connection->connectedTo->getPort(), 1234);
 		}
 
@@ -113,7 +113,7 @@ class LinkLocalConnectorTest : public CppUnit::TestFixture {
 		}
 	
 	private:
-		boost::shared_ptr<LinkLocalConnector> createConnector(const String& hostname, int port) {
+		boost::shared_ptr<LinkLocalConnector> createConnector(const std::string& hostname, int port) {
 			LinkLocalService service(
 					DNSSDServiceID("myname", "local."),
 					DNSSDResolveServiceQuery::Result(

@@ -47,7 +47,7 @@ QtContactEditWindow::QtContactEditWindow() : contactEditWidget_(NULL) {
 	buttonLayout->addWidget(okButton);
 }
 
-void QtContactEditWindow::setContact(const JID& jid, const String& name, const std::vector<String>& groups, const std::set<String>& allGroups) {
+void QtContactEditWindow::setContact(const JID& jid, const std::string& name, const std::vector<std::string>& groups, const std::set<std::string>& allGroups) {
 	delete contactEditWidget_;
 	jid_ = jid;
 	jidLabel_->setText("<b>" + P2QSTRING(jid.toString()) + "</b>");

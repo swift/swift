@@ -11,7 +11,7 @@
 #include <algorithm>
 
 #include "Swiften/Base/sleep.h"
-#include "Swiften/Base/String.h"
+#include <string>
 #include "Swiften/Base/ByteArray.h"
 #include "Swiften/Network/PlatformDomainNameResolver.h"
 #include "Swiften/Network/DomainNameAddressQuery.h"
@@ -147,19 +147,19 @@ class DomainNameResolverTest : public CppUnit::TestFixture {
 			waitForResults();
 
 			CPPUNIT_ASSERT_EQUAL(4, static_cast<int>(serviceQueryResult.size()));
-			CPPUNIT_ASSERT_EQUAL(String("xmpp1.test.swift.im"), serviceQueryResult[0].hostname);
+			CPPUNIT_ASSERT_EQUAL(std::string("xmpp1.test.swift.im"), serviceQueryResult[0].hostname);
 			CPPUNIT_ASSERT_EQUAL(5000, serviceQueryResult[0].port);
 			CPPUNIT_ASSERT_EQUAL(0, serviceQueryResult[0].priority);
 			CPPUNIT_ASSERT_EQUAL(1, serviceQueryResult[0].weight);
-			CPPUNIT_ASSERT_EQUAL(String("xmpp-invalid.test.swift.im"), serviceQueryResult[1].hostname);
+			CPPUNIT_ASSERT_EQUAL(std::string("xmpp-invalid.test.swift.im"), serviceQueryResult[1].hostname);
 			CPPUNIT_ASSERT_EQUAL(5000, serviceQueryResult[1].port);
 			CPPUNIT_ASSERT_EQUAL(1, serviceQueryResult[1].priority);
 			CPPUNIT_ASSERT_EQUAL(100, serviceQueryResult[1].weight);
-			CPPUNIT_ASSERT_EQUAL(String("xmpp3.test.swift.im"), serviceQueryResult[2].hostname);
+			CPPUNIT_ASSERT_EQUAL(std::string("xmpp3.test.swift.im"), serviceQueryResult[2].hostname);
 			CPPUNIT_ASSERT_EQUAL(5000, serviceQueryResult[2].port);
 			CPPUNIT_ASSERT_EQUAL(3, serviceQueryResult[2].priority);
 			CPPUNIT_ASSERT_EQUAL(100, serviceQueryResult[2].weight);
-			CPPUNIT_ASSERT_EQUAL(String("xmpp2.test.swift.im"), serviceQueryResult[3].hostname);
+			CPPUNIT_ASSERT_EQUAL(std::string("xmpp2.test.swift.im"), serviceQueryResult[3].hostname);
 			CPPUNIT_ASSERT_EQUAL(5000, serviceQueryResult[3].port);
 			CPPUNIT_ASSERT_EQUAL(5, serviceQueryResult[3].priority);
 			CPPUNIT_ASSERT_EQUAL(100, serviceQueryResult[3].weight);
@@ -169,7 +169,7 @@ class DomainNameResolverTest : public CppUnit::TestFixture {
 		}
 
 	private:
-			boost::shared_ptr<DomainNameAddressQuery> createAddressQuery(const String& domain) {
+			boost::shared_ptr<DomainNameAddressQuery> createAddressQuery(const std::string& domain) {
 				boost::shared_ptr<DomainNameAddressQuery> result = resolver->createAddressQuery(domain);
 				result->onResult.connect(boost::bind(&DomainNameResolverTest::handleAddressQueryResult, this, _1, _2));
 				return result;
@@ -183,7 +183,7 @@ class DomainNameResolverTest : public CppUnit::TestFixture {
 				resultsAvailable = true;
 			}
 
-			boost::shared_ptr<DomainNameServiceQuery> createServiceQuery(const String& domain) {
+			boost::shared_ptr<DomainNameServiceQuery> createServiceQuery(const std::string& domain) {
 				boost::shared_ptr<DomainNameServiceQuery> result = resolver->createServiceQuery(domain);
 				result->onResult.connect(boost::bind(&DomainNameResolverTest::handleServiceQueryResult, this, _1));
 				return result;

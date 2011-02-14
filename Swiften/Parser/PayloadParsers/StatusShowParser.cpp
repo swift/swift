@@ -11,11 +11,11 @@ namespace Swift {
 StatusShowParser::StatusShowParser() : level_(0) {
 }
 
-void StatusShowParser::handleStartElement(const String&, const String&, const AttributeMap&) {
+void StatusShowParser::handleStartElement(const std::string&, const std::string&, const AttributeMap&) {
 	++level_;
 }
 
-void StatusShowParser::handleEndElement(const String&, const String&) {
+void StatusShowParser::handleEndElement(const std::string&, const std::string&) {
 	--level_;
 	if (level_ == 0) {
 		if (text_ == "away") {
@@ -36,7 +36,7 @@ void StatusShowParser::handleEndElement(const String&, const String&) {
 	}
 }
 
-void StatusShowParser::handleCharacterData(const String& data) {
+void StatusShowParser::handleCharacterData(const std::string& data) {
 	text_ += data;
 }
 

@@ -9,7 +9,7 @@
 #include "SwifTools/Dock/Dock.h"
 
 namespace Swift {
-	class String;
+	
 	class CocoaApplication;
 
 	class MacOSXDock : public Dock {

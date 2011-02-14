@@ -12,7 +12,7 @@
 
 #include <QWidget>
 
-#include <Swiften/Base/String.h>
+#include <string>
 
 class QLineEdit;
 class QCheckBox;
@@ -22,16 +22,16 @@ namespace Swift {
 			Q_OBJECT
 
 		public:
-			QtContactEditWidget(const std::set<String>& allGroups, QWidget* parent);
+			QtContactEditWidget(const std::set<std::string>& allGroups, QWidget* parent);
 
-			void setName(const String&);
-			String getName() const;
+			void setName(const std::string&);
+			std::string getName() const;
 
-			void setSelectedGroups(const std::vector<String>& groups);
-			std::set<String> getSelectedGroups() const;
+			void setSelectedGroups(const std::vector<std::string>& groups);
+			std::set<std::string> getSelectedGroups() const;
 
 		private:
-			typedef std::map<String, QCheckBox*> CheckBoxMap;
+			typedef std::map<std::string, QCheckBox*> CheckBoxMap;
 			CheckBoxMap checkBoxes_;
 			QLineEdit* name_;
 			QWidget* groups_;

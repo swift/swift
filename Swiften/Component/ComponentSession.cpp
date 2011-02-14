@@ -15,7 +15,7 @@
 
 namespace Swift {
 
-ComponentSession::ComponentSession(const JID& jid, const String& secret, boost::shared_ptr<SessionStream> stream) : jid(jid), secret(secret), stream(stream), state(Initial) {
+ComponentSession::ComponentSession(const JID& jid, const std::string& secret, boost::shared_ptr<SessionStream> stream) : jid(jid), secret(secret), stream(stream), state(Initial) {
 }
 
 ComponentSession::~ComponentSession() {

@@ -18,7 +18,7 @@ namespace Swift {
 
 	class AvahiRegisterQuery : public DNSSDRegisterQuery, public AvahiQuery {
 		public:	
-			AvahiRegisterQuery(const String& name, int port, const ByteArray& txtRecord, boost::shared_ptr<AvahiQuerier> querier, EventLoop* eventLoop) : AvahiQuery(querier, eventLoop), name(name), port(port), txtRecord(txtRecord), group(0) {
+			AvahiRegisterQuery(const std::string& name, int port, const ByteArray& txtRecord, boost::shared_ptr<AvahiQuerier> querier, EventLoop* eventLoop) : AvahiQuery(querier, eventLoop), name(name), port(port), txtRecord(txtRecord), group(0) {
 			}
 
 			void registerService() {
@@ -58,7 +58,7 @@ namespace Swift {
 				AvahiStringList* txtList;
 				avahi_string_list_parse(txtRecord.getData(), txtRecord.getSize(), &txtList);
 
-				int result = avahi_entry_group_add_service_strlst(group, AVAHI_IF_UNSPEC, AVAHI_PROTO_UNSPEC, static_cast<AvahiPublishFlags>(0), name.getUTF8Data(), "_presence._tcp", NULL, NULL, port, txtList);
+				int result = avahi_entry_group_add_service_strlst(group, AVAHI_IF_UNSPEC, AVAHI_PROTO_UNSPEC, static_cast<AvahiPublishFlags>(0), name.c_str(), "_presence._tcp", NULL, NULL, port, txtList);
 				if (result < 0) {
 					std::cout << "Error registering service: " << avahi_strerror(result) << std::endl;
 					eventLoop->postEvent(boost::bind(boost::ref(onRegisterFinished), boost::optional<DNSSDServiceID>()), shared_from_this());
@@ -100,7 +100,7 @@ namespace Swift {
 
 				/*
 				DNSServiceErrorType result = DNSServiceRegister(
-						&sdRef, 0, 0, name.getUTF8Data(), "_presence._tcp", NULL, NULL, port, 
+						&sdRef, 0, 0, name.c_str(), "_presence._tcp", NULL, NULL, port, 
 						txtRecord.getSize(), txtRecord.getData(), 
 						&AvahiRegisterQuery::handleServiceRegisteredStatic, this);
 				if (result != kDNSServiceErr_NoError) {
@@ -125,7 +125,7 @@ namespace Swift {
 			*/
 
 		private:
-			String name;
+			std::string name;
 			int port;
 			ByteArray txtRecord;
 			AvahiEntryGroup* group;

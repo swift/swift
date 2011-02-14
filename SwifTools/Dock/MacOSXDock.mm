@@ -12,8 +12,8 @@ MacOSXDock::MacOSXDock(CocoaApplication*) {
 }
 
 void MacOSXDock::setNumberOfPendingMessages(int i) {
-	String label(i > 0 ? boost::lexical_cast<std::string>(i) : "");
-	NSString *labelString = [[NSString alloc] initWithUTF8String: label.getUTF8Data()];
+	std::string label(i > 0 ? boost::lexical_cast<std::string>(i) : "");
+	NSString *labelString = [[NSString alloc] initWithUTF8String: label.c_str()];
 	[[NSApp dockTile] setBadgeLabel: labelString];
 	[labelString release];
 	[NSApp requestUserAttention: NSInformationalRequest];

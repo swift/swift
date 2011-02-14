@@ -10,7 +10,7 @@
 
 #include <vector>
 
-#include "Swiften/Base/String.h"
+#include <string>
 #include "Swiften/JID/JID.h"
 #include "Swift/Controllers/Chat/UserSearchController.h"
 

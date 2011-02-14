@@ -65,18 +65,18 @@ class DNSSDTest : public CppUnit::TestFixture {
 
 			// Check that our registered queries are correct
 			CPPUNIT_ASSERT_EQUAL(1, static_cast<int>((registered.size())));
-			CPPUNIT_ASSERT_EQUAL(String("DNSSDTest"), registered[0].getName());
-			CPPUNIT_ASSERT_EQUAL(String("local"), registered[0].getDomain());
-			CPPUNIT_ASSERT_EQUAL(String("_presence._tcp"), registered[0].getType());
+			CPPUNIT_ASSERT_EQUAL(std::string("DNSSDTest"), registered[0].getName());
+			CPPUNIT_ASSERT_EQUAL(std::string("local"), registered[0].getDomain());
+			CPPUNIT_ASSERT_EQUAL(std::string("_presence._tcp"), registered[0].getType());
 
 			// Check that our browse query discovered us
 			std::sort(added.begin(), added.end());
 			CPPUNIT_ASSERT(added.size() >= 1);
 			//for (size_t i = 0; i < added.size(); ++i) {
 			for (size_t i = 0; i < added.size(); ++i) {
-				CPPUNIT_ASSERT_EQUAL(String("DNSSDTest"), added[i].getName());
-				CPPUNIT_ASSERT_EQUAL(String("local"), added[i].getDomain());
-				CPPUNIT_ASSERT_EQUAL(String("_presence._tcp"), added[i].getType());
+				CPPUNIT_ASSERT_EQUAL(std::string("DNSSDTest"), added[i].getName());
+				CPPUNIT_ASSERT_EQUAL(std::string("local"), added[i].getDomain());
+				CPPUNIT_ASSERT_EQUAL(std::string("_presence._tcp"), added[i].getType());
 				CPPUNIT_ASSERT(added[i].getNetworkInterfaceID() != 0);
 			}
 

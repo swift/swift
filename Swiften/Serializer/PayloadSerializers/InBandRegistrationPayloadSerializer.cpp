@@ -18,7 +18,7 @@ namespace Swift {
 InBandRegistrationPayloadSerializer::InBandRegistrationPayloadSerializer() {
 }
 
-String InBandRegistrationPayloadSerializer::serializePayload(boost::shared_ptr<InBandRegistrationPayload> registration)	const {
+std::string InBandRegistrationPayloadSerializer::serializePayload(boost::shared_ptr<InBandRegistrationPayload> registration)	const {
 	XMLElement registerElement("query", "jabber:iq:register");
 
 	if (registration->isRegistered()) {

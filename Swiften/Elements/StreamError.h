@@ -9,7 +9,7 @@
 #include <boost/shared_ptr.hpp>
 
 #include <Swiften/Elements/Element.h>
-#include <Swiften/Base/String.h>
+#include <string>
 
 namespace Swift {
 	class StreamError : public Element {
@@ -44,7 +44,7 @@ namespace Swift {
 				UnsupportedVersion,
 			};
 
-			StreamError(Type type = UndefinedCondition, const String& text = String()) : type_(type), text_(text) { }
+			StreamError(Type type = UndefinedCondition, const std::string& text = std::string()) : type_(type), text_(text) { }
 
 			Type getType() const {
 				return type_; 
@@ -54,16 +54,16 @@ namespace Swift {
 				type_ = type;
 			}
 
-			void setText(const String& text) {
+			void setText(const std::string& text) {
 				text_ = text;
 			}
 
-			const String& getText() const { 
+			const std::string& getText() const { 
 				return text_; 
 			}
 
 		private:
 			Type type_;
-			String text_;
+			std::string text_;
 	};
 }

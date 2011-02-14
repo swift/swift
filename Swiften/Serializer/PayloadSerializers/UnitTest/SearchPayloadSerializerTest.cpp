@@ -25,7 +25,7 @@ class SearchPayloadSerializerTest : public CppUnit::TestFixture {
 			payload->setFirst("Juliet");
 			payload->setLast("Capulet");
 
-			CPPUNIT_ASSERT_EQUAL(String(
+			CPPUNIT_ASSERT_EQUAL(std::string(
 					"<query xmlns=\"jabber:iq:search\">"
 						"<first>Juliet</first>"
 						"<last>Capulet</last>"
@@ -53,7 +53,7 @@ class SearchPayloadSerializerTest : public CppUnit::TestFixture {
 			item2.email = "tybalt@shakespeare.lit";
 			payload->addItem(item2);
 
-			CPPUNIT_ASSERT_EQUAL(String(
+			CPPUNIT_ASSERT_EQUAL(std::string(
 					"<query xmlns=\"jabber:iq:search\">"
 						"<item jid=\"juliet@capulet.com\">"
 							"<first>Juliet</first>"

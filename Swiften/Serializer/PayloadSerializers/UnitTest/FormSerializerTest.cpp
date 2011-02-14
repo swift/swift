@@ -24,7 +24,7 @@ class FormSerializerTest : public CppUnit::TestFixture {
 			form->setTitle("Bot Configuration");
 			form->setInstructions("Hello!\nFill out this form to configure your new bot!");
 
-			CPPUNIT_ASSERT_EQUAL(String(
+			CPPUNIT_ASSERT_EQUAL(std::string(
 				"<x type=\"form\" xmlns=\"jabber:x:data\">"
 						"<title>Bot Configuration</title>"
 						"<instructions>Hello!</instructions>"
@@ -63,7 +63,7 @@ class FormSerializerTest : public CppUnit::TestFixture {
 			field->setLabel("Password for special access");
 			form->addField(field);
 
-			std::vector<String> values;
+			std::vector<std::string> values;
 			values.push_back("news");
 			values.push_back("search");
 			field = ListMultiFormField::create(values);
@@ -96,14 +96,14 @@ class FormSerializerTest : public CppUnit::TestFixture {
 			field->setDescription("Tell all your friends about your new bot!");
 			form->addField(field);
 
-			std::vector<String> values2;
+			std::vector<std::string> values2;
 			values2.push_back("foo");
 			values2.push_back("bar");
 			field = UntypedFormField::create(values2);
 			field->setName("fum");
 			form->addField(field);
 
-			CPPUNIT_ASSERT_EQUAL(String(
+			CPPUNIT_ASSERT_EQUAL(std::string(
 				"<x type=\"form\" xmlns=\"jabber:x:data\">"
 						"<field type=\"hidden\" var=\"FORM_TYPE\">"
 							"<value>jabber:bot</value>"

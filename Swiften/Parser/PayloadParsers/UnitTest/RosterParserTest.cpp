@@ -37,15 +37,15 @@ class RosterParserTest : public CppUnit::TestFixture
 			CPPUNIT_ASSERT_EQUAL(static_cast<size_t>(2), items.size());
 
 			CPPUNIT_ASSERT_EQUAL(JID("foo@bar.com"), items[0].getJID());
-			CPPUNIT_ASSERT_EQUAL(String("Foo @ Bar"), items[0].getName());
+			CPPUNIT_ASSERT_EQUAL(std::string("Foo @ Bar"), items[0].getName());
 			CPPUNIT_ASSERT_EQUAL(RosterItemPayload::From, items[0].getSubscription());
 			CPPUNIT_ASSERT(items[0].getSubscriptionRequested());
 			CPPUNIT_ASSERT_EQUAL(static_cast<size_t>(2), items[0].getGroups().size());
-			CPPUNIT_ASSERT_EQUAL(String("Group 1"), items[0].getGroups()[0]);
-			CPPUNIT_ASSERT_EQUAL(String("Group 2"), items[0].getGroups()[1]);
+			CPPUNIT_ASSERT_EQUAL(std::string("Group 1"), items[0].getGroups()[0]);
+			CPPUNIT_ASSERT_EQUAL(std::string("Group 2"), items[0].getGroups()[1]);
 
 			CPPUNIT_ASSERT_EQUAL(JID("baz@blo.com"), items[1].getJID());
-			CPPUNIT_ASSERT_EQUAL(String("Baz"), items[1].getName());
+			CPPUNIT_ASSERT_EQUAL(std::string("Baz"), items[1].getName());
 			CPPUNIT_ASSERT_EQUAL(RosterItemPayload::None, items[1].getSubscription());
 			CPPUNIT_ASSERT(!items[1].getSubscriptionRequested());
 			CPPUNIT_ASSERT_EQUAL(static_cast<size_t>(0), items[1].getGroups().size());
@@ -67,9 +67,9 @@ class RosterParserTest : public CppUnit::TestFixture
 			const RosterPayload::RosterItemPayloads& items = payload->getItems();
 
 			CPPUNIT_ASSERT_EQUAL(static_cast<size_t>(1), items.size());
-			CPPUNIT_ASSERT_EQUAL(String("Group 1"), items[0].getGroups()[0]);
-			CPPUNIT_ASSERT_EQUAL(String("Group 2"), items[0].getGroups()[1]);
-			CPPUNIT_ASSERT_EQUAL(String(
+			CPPUNIT_ASSERT_EQUAL(std::string("Group 1"), items[0].getGroups()[0]);
+			CPPUNIT_ASSERT_EQUAL(std::string("Group 2"), items[0].getGroups()[1]);
+			CPPUNIT_ASSERT_EQUAL(std::string(
 				"<foo xmlns=\"http://example.com\"><bar xmlns=\"http://example.com\">Baz</bar></foo>"
 				"<baz xmlns=\"jabber:iq:roster\"><fum xmlns=\"jabber:iq:roster\">foo</fum></baz>"
 				), items[0].getUnknownContent());

@@ -16,11 +16,11 @@ namespace Swift {
 		public:
 			MUCUserPayloadParser();
 
-			virtual void handleStartElement(const String& element, const String&, const AttributeMap& attributes);
-			virtual void handleEndElement(const String& element, const String&);
-			virtual void handleCharacterData(const String& data);
-			MUCOccupant::Role parseRole(const String& itemString) const;
-			MUCOccupant::Affiliation parseAffiliation(const String& statusString) const;
+			virtual void handleStartElement(const std::string& element, const std::string&, const AttributeMap& attributes);
+			virtual void handleEndElement(const std::string& element, const std::string&);
+			virtual void handleCharacterData(const std::string& data);
+			MUCOccupant::Role parseRole(const std::string& itemString) const;
+			MUCOccupant::Affiliation parseAffiliation(const std::string& statusString) const;
 		private:
 			enum Level { 
 				TopLevel = 0, 

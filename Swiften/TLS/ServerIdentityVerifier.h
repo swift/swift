@@ -8,7 +8,7 @@
 
 #include <boost/shared_ptr.hpp>
 
-#include "Swiften/Base/String.h"
+#include <string>
 #include "Swiften/JID/JID.h"
 #include "Swiften/TLS/Certificate.h"
 
@@ -20,11 +20,11 @@ namespace Swift {
 			bool certificateVerifies(Certificate::ref);
 
 		private:
-			bool matchesDomain(const String&);
-			bool matchesAddress(const String&);
+			bool matchesDomain(const std::string&);
+			bool matchesAddress(const std::string&);
 
 		private:
-			String domain;
-			String encodedDomain;
+			std::string domain;
+			std::string encodedDomain;
 	};
 }

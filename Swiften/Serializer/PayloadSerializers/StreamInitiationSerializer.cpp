@@ -25,11 +25,11 @@ namespace Swift {
 StreamInitiationSerializer::StreamInitiationSerializer() {
 }
 
-String StreamInitiationSerializer::serializePayload(boost::shared_ptr<StreamInitiation> streamInitiation)	const {
+std::string StreamInitiationSerializer::serializePayload(boost::shared_ptr<StreamInitiation> streamInitiation)	const {
 	assert(streamInitiation->getIsFileTransfer());
 
 	XMLElement siElement("si", "http://jabber.org/protocol/si");
-	if (!streamInitiation->getID().isEmpty()) {
+	if (!streamInitiation->getID().empty()) {
 		siElement.setAttribute("id", streamInitiation->getID());
 	}
 	siElement.setAttribute("profile", FILE_TRANSFER_NS);
@@ -41,7 +41,7 @@ String StreamInitiationSerializer::serializePayload(boost::shared_ptr<StreamInit
 		if (file.size != -1) {
 			fileElement->setAttribute("size", boost::lexical_cast<std::string>(file.size));
 		}
-		if (!file.description.isEmpty()) {
+		if (!file.description.empty()) {
 			boost::shared_ptr<XMLElement> descElement(new XMLElement("desc"));
 			descElement->addNode(boost::shared_ptr<XMLTextNode>(new XMLTextNode(file.description)));
 			fileElement->addNode(descElement);
@@ -54,13 +54,13 @@ String StreamInitiationSerializer::serializePayload(boost::shared_ptr<StreamInit
 		Form::ref form(new Form(Form::FormType));
 		ListSingleFormField::ref field = ListSingleFormField::create();
 		field->setName("stream-method");
-		foreach(const String& method, streamInitiation->getProvidedMethods()) {
+		foreach(const std::string& method, streamInitiation->getProvidedMethods()) {
 			field->addOption(FormField::Option("", method));
 		}
 		form->addField(field);
 		featureElement->addNode(boost::shared_ptr<XMLRawTextNode>(new XMLRawTextNode(FormSerializer().serialize(form))));
 	}
-	else if (!streamInitiation->getRequestedMethod().isEmpty()) {
+	else if (!streamInitiation->getRequestedMethod().empty()) {
 		Form::ref form(new Form(Form::SubmitType));
 		ListSingleFormField::ref field = ListSingleFormField::create(streamInitiation->getRequestedMethod());
 		field->setName("stream-method");

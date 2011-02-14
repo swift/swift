@@ -13,16 +13,16 @@
 #include <boost/array.hpp>
 
 #include "Swiften/Base/foreach.h"
-#include "Swiften/Base/String.h"
+#include <string>
 
 namespace Swift {
 
 HostAddress::HostAddress() {
 }
 
-HostAddress::HostAddress(const String& address) {
+HostAddress::HostAddress(const std::string& address) {
 	try {
-		address_ = boost::asio::ip::address::from_string(address.getUTF8String());
+		address_ = boost::asio::ip::address::from_string(address);
 	}
 	catch (const std::exception& t) {
 	}

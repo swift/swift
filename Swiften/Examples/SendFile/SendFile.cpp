@@ -28,7 +28,7 @@ int exitCode = 2;
 
 class FileSender {
 	public:
-		FileSender(const JID& jid, const String& password, const JID& recipient, const boost::filesystem::path& file, int port) : jid(jid), password(password), recipient(recipient), file(file), transfer(NULL) {
+		FileSender(const JID& jid, const std::string& password, const JID& recipient, const boost::filesystem::path& file, int port) : jid(jid), password(password), recipient(recipient), file(file), transfer(NULL) {
 			connectionServer = BoostConnectionServer::create(port, networkFactories.getIOServiceThread()->getIOService(), &eventLoop);
 			socksBytestreamServer = new SOCKS5BytestreamServer(connectionServer);
 
@@ -94,7 +94,7 @@ class FileSender {
 		BoostConnectionServer::ref connectionServer;
 		SOCKS5BytestreamServer* socksBytestreamServer;
 		JID jid;
-		String password;
+		std::string password;
 		JID recipient;
 		boost::filesystem::path file;
 		Client* client;
@@ -111,7 +111,7 @@ int main(int argc, char* argv[]) {
 
 	JID sender(argv[1]);
 	JID recipient(argv[3]);
-	FileSender fileSender(sender, String(argv[2]), recipient, boost::filesystem::path(argv[4]), 8888);
+	FileSender fileSender(sender, std::string(argv[2]), recipient, boost::filesystem::path(argv[4]), 8888);
 	fileSender.start();
 
 	{

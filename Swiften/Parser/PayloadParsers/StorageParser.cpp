@@ -13,7 +13,7 @@ namespace Swift {
 StorageParser::StorageParser() : level(TopLevel) {
 }
 
-void StorageParser::handleStartElement(const String& element, const String&, const AttributeMap& attributes) {
+void StorageParser::handleStartElement(const std::string& element, const std::string&, const AttributeMap& attributes) {
 	if (level == BookmarkLevel) {
 		if (element == "conference") {
 			assert(!room);
@@ -35,7 +35,7 @@ void StorageParser::handleStartElement(const String& element, const String&, con
 	++level;
 }
 
-void StorageParser::handleEndElement(const String& element, const String&) {
+void StorageParser::handleEndElement(const std::string& element, const std::string&) {
 	--level;
 	if (level == BookmarkLevel) {
 		if (element == "conference") {
@@ -59,7 +59,7 @@ void StorageParser::handleEndElement(const String& element, const String&) {
 	}
 }
 
-void StorageParser::handleCharacterData(const String& data) {
+void StorageParser::handleCharacterData(const std::string& data) {
 	currentText += data;
 }
 

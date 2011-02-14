@@ -8,7 +8,7 @@
 #include <boost/signals.hpp>
 #include <boost/shared_ptr.hpp>
 
-#include "Swiften/Base/String.h"
+#include <string>
 #include "Swiften/JID/JID.h"
 #include "Swiften/Elements/VCard.h"
 
@@ -20,18 +20,18 @@ namespace Swift {
 		public:
 			NickResolver(const JID& ownJID, XMPPRoster* xmppRoster, VCardManager* vcardManager, MUCRegistry* mucRegistry);
 
-			String jidToNick(const JID& jid);
+			std::string jidToNick(const JID& jid);
 
-			boost::signal<void (const JID&, const String& /*previousNick*/)> onNickChanged;
+			boost::signal<void (const JID&, const std::string& /*previousNick*/)> onNickChanged;
 
 		private:
 			void handleVCardReceived(const JID& jid, VCard::ref vCard);
-			void handleJIDUpdated(const JID& jid, const String& previousNick, const std::vector<String>& groups);
+			void handleJIDUpdated(const JID& jid, const std::string& previousNick, const std::vector<std::string>& groups);
 			void handleJIDAdded(const JID& jid);
 
 		private:
 			JID ownJID_;
-			String ownNick_;
+			std::string ownNick_;
 			XMPPRoster* xmppRoster_;
 			MUCRegistry* mucRegistry_;
 			VCardManager* vcardManager_;

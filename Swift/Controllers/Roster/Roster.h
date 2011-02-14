@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include "Swiften/Base/String.h"
+#include <string>
 #include "Swiften/JID/JID.h"
 #include "Swift/Controllers/Roster/RosterItemOperation.h"
 #include "Swift/Controllers/Roster/RosterFilter.h"
@@ -27,10 +27,10 @@ class Roster {
 		Roster(bool sortByStatus = true, bool fullJIDMapping = false);
 		~Roster();
 
-		void addContact(const JID& jid, const JID& displayJID, const String& name, const String& group, const String& avatarPath);
+		void addContact(const JID& jid, const JID& displayJID, const std::string& name, const std::string& group, const std::string& avatarPath);
 		void removeContact(const JID& jid);
-		void removeContactFromGroup(const JID& jid, const String& group);
-		void removeGroup(const String& group);
+		void removeContactFromGroup(const JID& jid, const std::string& group);
+		void removeGroup(const std::string& group);
 		void removeAll();
 		void applyOnItems(const RosterItemOperation& operation);
 		void applyOnAllItems(const RosterItemOperation& operation);
@@ -42,7 +42,7 @@ class Roster {
 		boost::signal<void (GroupRosterItem*)> onChildrenChanged;
 		boost::signal<void (GroupRosterItem*)> onGroupAdded;
 		boost::signal<void (RosterItem*)> onDataChanged;
-		GroupRosterItem* getGroup(const String& groupName);
+		GroupRosterItem* getGroup(const std::string& groupName);
 	private:
 		void handleDataChanged(RosterItem* item);
 		void handleChildrenChanged(GroupRosterItem* item);

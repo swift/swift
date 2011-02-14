@@ -12,18 +12,18 @@ namespace Swift {
 ComponentHandshakeParser::ComponentHandshakeParser() : GenericElementParser<ComponentHandshake>(), depth(0) {
 }
 
-void ComponentHandshakeParser::handleStartElement(const String&, const String&, const AttributeMap&) {
+void ComponentHandshakeParser::handleStartElement(const std::string&, const std::string&, const AttributeMap&) {
 	++depth;
 }
 
-void ComponentHandshakeParser::handleEndElement(const String&, const String&) {
+void ComponentHandshakeParser::handleEndElement(const std::string&, const std::string&) {
 	--depth;
 	if (depth == 0) {
 		getElementGeneric()->setData(text);
 	}
 }
 
-void ComponentHandshakeParser::handleCharacterData(const String& text) {
+void ComponentHandshakeParser::handleCharacterData(const std::string& text) {
 	this->text += text;
 }
 

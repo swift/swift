@@ -9,13 +9,13 @@
 
 namespace Swift {
 
-String Form::getFormType() const {
+std::string Form::getFormType() const {
 	FormField::ref field = getField("FORM_TYPE");
 	boost::shared_ptr<HiddenFormField> f = boost::dynamic_pointer_cast<HiddenFormField>(field);
 	return (f ? f->getValue() : "");
 }
 
-FormField::ref Form::getField(const String& name) const {
+FormField::ref Form::getField(const std::string& name) const {
 	foreach(FormField::ref field, fields_) {
 		if (field->getName() == name) {
 			return field;

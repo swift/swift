@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include "Swiften/Base/String.h"
+#include <string>
 #include "Swiften/Elements/Payload.h"
 
 namespace Swift {
@@ -14,15 +14,15 @@ namespace Swift {
 		public:
 			RawXMLPayload() {}
 
-			void setRawXML(const String& data) {
+			void setRawXML(const std::string& data) {
 				rawXML_ = data;
 			}
 
-			const String& getRawXML() const {
+			const std::string& getRawXML() const {
 				return rawXML_;
 			}
 
 		private:
-			String rawXML_;
+			std::string rawXML_;
 	};
 }

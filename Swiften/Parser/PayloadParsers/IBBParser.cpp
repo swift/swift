@@ -19,7 +19,7 @@ IBBParser::IBBParser() : level(TopLevel) {
 IBBParser::~IBBParser() {
 }
 
-void IBBParser::handleStartElement(const String& element, const String&, const AttributeMap& attributes) {
+void IBBParser::handleStartElement(const std::string& element, const std::string&, const AttributeMap& attributes) {
 	if (level == TopLevel) {
 		if (element == "data") {
 			getPayloadInternal()->setAction(IBB::Data);
@@ -53,23 +53,23 @@ void IBBParser::handleStartElement(const String& element, const String&, const A
 	++level;
 }
 
-void IBBParser::handleEndElement(const String& element, const String&) {
+void IBBParser::handleEndElement(const std::string& element, const std::string&) {
 	--level;
 	if (level == TopLevel) {
 		if (element == "data") {
 			std::vector<char> data;
-			for (size_t i = 0; i < currentText.getUTF8Size(); ++i) {
+			for (size_t i = 0; i < currentText.size(); ++i) {
 				char c = currentText[i];
 				if (c >= 48 && c <= 122) {
 					data.push_back(c);
 				}
 			}
-			getPayloadInternal()->setData(Base64::decode(String(&data[0], data.size())));
+			getPayloadInternal()->setData(Base64::decode(std::string(&data[0], data.size())));
 		}
 	}
 }
 
-void IBBParser::handleCharacterData(const String& data) {
+void IBBParser::handleCharacterData(const std::string& data) {
 	currentText += data;
 }
 

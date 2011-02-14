@@ -9,7 +9,7 @@
 #include <boost/shared_ptr.hpp>
 #include <map>
 
-#include "Swiften/Base/String.h"
+#include <string>
 #include "Swiften/Disco/CapsStorage.h"
 
 namespace Swift {
@@ -17,7 +17,7 @@ namespace Swift {
 		public:
 			CapsMemoryStorage() {}
 
-			virtual DiscoInfo::ref getDiscoInfo(const String& hash) const {
+			virtual DiscoInfo::ref getDiscoInfo(const std::string& hash) const {
 				CapsMap::const_iterator i = caps.find(hash);
 				if (i != caps.end()) {
 					return i->second;
@@ -27,12 +27,12 @@ namespace Swift {
 				}
 			}
 
-			virtual void setDiscoInfo(const String& hash, DiscoInfo::ref discoInfo) {
+			virtual void setDiscoInfo(const std::string& hash, DiscoInfo::ref discoInfo) {
 				caps[hash] = discoInfo;
 			}
 
 		private:
-			typedef std::map<String, DiscoInfo::ref> CapsMap;
+			typedef std::map<std::string, DiscoInfo::ref> CapsMap;
 			CapsMap caps;
 	};
 }

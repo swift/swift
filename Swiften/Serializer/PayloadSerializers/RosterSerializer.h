@@ -15,7 +15,7 @@ namespace Swift {
 		public:
 			RosterSerializer();
 
-			virtual String serializePayload(boost::shared_ptr<RosterPayload>)  const;
+			virtual std::string serializePayload(boost::shared_ptr<RosterPayload>)  const;
 	};
 }
 

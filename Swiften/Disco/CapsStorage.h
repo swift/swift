@@ -11,13 +11,13 @@
 #include "Swiften/Elements/DiscoInfo.h"
 
 namespace Swift {
-	class String;
+	
 
 	class CapsStorage {
 		public:
 			virtual ~CapsStorage();
 
-			virtual DiscoInfo::ref getDiscoInfo(const String&) const = 0;
-			virtual void setDiscoInfo(const String&, DiscoInfo::ref) = 0;
+			virtual DiscoInfo::ref getDiscoInfo(const std::string&) const = 0;
+			virtual void setDiscoInfo(const std::string&, DiscoInfo::ref) = 0;
 	};
 }

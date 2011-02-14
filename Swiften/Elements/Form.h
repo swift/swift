@@ -10,7 +10,7 @@
 
 #include "Swiften/Elements/Payload.h"
 #include "Swiften/Elements/FormField.h"
-#include "Swiften/Base/String.h"
+#include <string>
 
 #include "Swiften/JID/JID.h"
 
@@ -31,23 +31,23 @@ namespace Swift {
 
 			void addField(boost::shared_ptr<FormField> field) { fields_.push_back(field); }
 			const std::vector<boost::shared_ptr<FormField> >& getFields() const { return fields_; }
-			void setTitle(const String& title) { title_ = title; }
-			const String& getTitle() { return title_; }
+			void setTitle(const std::string& title) { title_ = title; }
+			const std::string& getTitle() { return title_; }
 
-			void setInstructions(const String& instructions) { instructions_ = instructions; }
-			const String& getInstructions() { return instructions_; }
+			void setInstructions(const std::string& instructions) { instructions_ = instructions; }
+			const std::string& getInstructions() { return instructions_; }
 
 			Type getType() { return type_; }
 			void setType(Type type) { type_ = type; }
 
-			String getFormType() const;
+			std::string getFormType() const;
 
-			FormField::ref getField(const String& name) const;
+			FormField::ref getField(const std::string& name) const;
 
 		private:
 			std::vector<boost::shared_ptr<FormField> > fields_;
-			String title_;
-			String instructions_;
+			std::string title_;
+			std::string instructions_;
 			Type type_;
 	};
 }

@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include "Swiften/Base/String.h"
+#include <string>
 
 namespace Swift {
 	class ServerError {
@@ -18,7 +18,7 @@ namespace Swift {
 				LinkLocalError
 			};
 
-			ServerError(Type type, const String& message = String()) :
+			ServerError(Type type, const std::string& message = std::string()) :
 					type(type), message(message) {
 			}
 
@@ -26,12 +26,12 @@ namespace Swift {
 				return type;
 			}
 
-			const String& getMessage() const {
+			const std::string& getMessage() const {
 				return message;
 			}
 
 		private:
 			Type type;
-			String message;
+			std::string message;
 	};
 }

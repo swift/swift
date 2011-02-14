@@ -12,7 +12,7 @@ namespace Swift {
 RosterParser::RosterParser() : level_(TopLevel), inItem_(false), unknownContentParser_(0) {
 }
 
-void RosterParser::handleStartElement(const String& element, const String& ns, const AttributeMap& attributes) {
+void RosterParser::handleStartElement(const std::string& element, const std::string& ns, const AttributeMap& attributes) {
 	if (level_ == PayloadLevel) {
 		if (element == "item") {
 			inItem_ = true;
@@ -21,7 +21,7 @@ void RosterParser::handleStartElement(const String& element, const String& ns, c
 			currentItem_.setJID(JID(attributes.getAttribute("jid")));
 			currentItem_.setName(attributes.getAttribute("name"));
 
-			String subscription = attributes.getAttribute("subscription");
+			std::string subscription = attributes.getAttribute("subscription");
 			if (subscription == "both") {
 				currentItem_.setSubscription(RosterItemPayload::Both);
 			}
@@ -59,7 +59,7 @@ void RosterParser::handleStartElement(const String& element, const String& ns, c
 	++level_;
 }
 
-void RosterParser::handleEndElement(const String& element, const String& ns) {
+void RosterParser::handleEndElement(const std::string& element, const std::string& ns) {
 	--level_;
 	if (level_ == PayloadLevel) {
 		if (inItem_) {
@@ -83,7 +83,7 @@ void RosterParser::handleEndElement(const String& element, const String& ns) {
 	}
 }
 
-void RosterParser::handleCharacterData(const String& data) {
+void RosterParser::handleCharacterData(const std::string& data) {
 	if (unknownContentParser_) {
 		unknownContentParser_->handleCharacterData(data);
 	}

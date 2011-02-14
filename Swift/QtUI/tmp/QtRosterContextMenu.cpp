@@ -18,7 +18,7 @@
 
 #include "Swiften/Roster/ContactRosterItem.h"
 #include "Swiften/Roster/GroupRosterItem.h"
-#include "Swiften/Base/String.h"
+#include <string>
 #include "Swiften/Roster/Roster.h"
 #include "Swift/Controllers/UIEvents/UIEvent.h"
 #include "Swift/Controllers/UIEvents/RemoveRosterItemUIEvent.h"
@@ -92,8 +92,8 @@ void QtRosterContextMenu::handleRenameGroup() {
 	bool ok;
 	QString newName = QInputDialog::getText(NULL, "Rename group", "New name for " + P2QSTRING(item_->getDisplayName()), QLineEdit::Normal, P2QSTRING(item_->getDisplayName()), &ok);
 	if (ok) {
-		std::vector<String> addedGroups;
-		std::vector<String> removedGroups;
+		std::vector<std::string> addedGroups;
+		std::vector<std::string> removedGroups;
 		addedGroups.push_back(Q2PSTRING(newName));
 		removedGroups.push_back(group->getDisplayName());
 		foreach (RosterItem* child, group->getChildren()) {

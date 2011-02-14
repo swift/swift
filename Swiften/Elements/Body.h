@@ -7,25 +7,25 @@
 #pragma once
 
 #include "Swiften/Elements/Payload.h"
-#include "Swiften/Base/String.h"
+#include <string>
 
 namespace Swift {
 	class Body : public Payload {
 		public:
 			typedef boost::shared_ptr<Body> ref;
 
-			Body(const String& text = "") : text_(text) {
+			Body(const std::string& text = "") : text_(text) {
 			}
 
-			void setText(const String& text) {
+			void setText(const std::string& text) {
 				text_ = text;
 			}
 
-			const String& getText() const {
+			const std::string& getText() const {
 				return text_;
 			}
 
 		private:
-			String text_;
+			std::string text_;
 	};
 }

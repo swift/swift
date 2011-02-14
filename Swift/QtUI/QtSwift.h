@@ -11,7 +11,7 @@
 
 #include <Swiften/TLS/PlatformTLSFactories.h>
 #include <Swiften/Network/BoostNetworkFactories.h>
-#include "Swiften/Base/String.h"
+#include <string>
 #include "Swiften/Base/Platform.h"
 #include "Swiften/EventLoop/Qt/QtEventLoop.h"
 #include "QtSettingsProvider.h"

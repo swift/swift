@@ -16,9 +16,9 @@ namespace Swift {
 
 	class BonjourRegisterQuery : public DNSSDRegisterQuery, public BonjourQuery {
 		public:	
-			BonjourRegisterQuery(const String& name, int port, const ByteArray& txtRecord, boost::shared_ptr<BonjourQuerier> querier, EventLoop* eventLoop) : BonjourQuery(querier, eventLoop) {
+			BonjourRegisterQuery(const std::string& name, int port, const ByteArray& txtRecord, boost::shared_ptr<BonjourQuerier> querier, EventLoop* eventLoop) : BonjourQuery(querier, eventLoop) {
 				DNSServiceErrorType result = DNSServiceRegister(
-						&sdRef, 0, 0, name.getUTF8Data(), "_presence._tcp", NULL, NULL, port, 
+						&sdRef, 0, 0, name.c_str(), "_presence._tcp", NULL, NULL, port, 
 						txtRecord.getSize(), txtRecord.getData(), 
 						&BonjourRegisterQuery::handleServiceRegisteredStatic, this);
 				if (result != kDNSServiceErr_NoError) {

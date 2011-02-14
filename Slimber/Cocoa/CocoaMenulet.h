@@ -18,9 +18,9 @@ class CocoaMenulet : public Menulet {
 	
 	private:
 		virtual void clear();
-		virtual void addItem(const Swift::String& name, const Swift::String& icon);
+		virtual void addItem(const std::string& name, const std::string& icon);
 		virtual void addSeparator();
-		void setIcon(const Swift::String& icon);
+		void setIcon(const std::string& icon);
 		virtual void addAboutItem();
 		virtual void addRestartItem();
 		virtual void addExitItem();

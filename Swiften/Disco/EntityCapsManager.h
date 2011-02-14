@@ -36,10 +36,10 @@ namespace Swift {
 		private:
 			void handlePresenceReceived(boost::shared_ptr<Presence>);
 			void handleStanzaChannelAvailableChanged(bool);
-			void handleCapsAvailable(const String&);
+			void handleCapsAvailable(const std::string&);
 
 		private:
 			CapsProvider* capsProvider;
-			std::map<JID, String> caps;
+			std::map<JID, std::string> caps;
 	};
 }

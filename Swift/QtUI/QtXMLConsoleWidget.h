@@ -23,14 +23,14 @@ namespace Swift {
 			void show();
 			void activate();
 
-			virtual void handleDataRead(const String& data);
-			virtual void handleDataWritten(const String& data);
+			virtual void handleDataRead(const std::string& data);
+			virtual void handleDataWritten(const std::string& data);
 
 		private:
 			virtual void closeEvent(QCloseEvent* event);
 			virtual void showEvent(QShowEvent* event);
 
-			void appendTextIfEnabled(const String& data, const QColor& color);
+			void appendTextIfEnabled(const std::string& data, const QColor& color);
 
 		private:
 			QTextEdit* textEdit;

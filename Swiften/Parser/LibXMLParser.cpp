@@ -10,7 +10,7 @@
 #include <cassert>
 #include <cstring>
 
-#include "Swiften/Base/String.h"
+#include <string>
 #include "Swiften/Parser/XMLParserClient.h"
 
 namespace Swift {
@@ -18,17 +18,17 @@ namespace Swift {
 static void handleStartElement(void *client, const xmlChar* name, const xmlChar*, const xmlChar* xmlns, int, const xmlChar**, int nbAttributes, int, const xmlChar ** attributes) {
 	AttributeMap attributeValues;
 	for (int i = 0; i < nbAttributes*5; i += 5) {
-		attributeValues[String(reinterpret_cast<const char*>(attributes[i]))] = String(reinterpret_cast<const char*>(attributes[i+3]), attributes[i+4]-attributes[i+3]);
+		attributeValues[std::string(reinterpret_cast<const char*>(attributes[i]))] = std::string(reinterpret_cast<const char*>(attributes[i+3]), attributes[i+4]-attributes[i+3]);
 	}
-	static_cast<XMLParserClient*>(client)->handleStartElement(reinterpret_cast<const char*>(name), (xmlns ? reinterpret_cast<const char*>(xmlns) : String()), attributeValues);
+	static_cast<XMLParserClient*>(client)->handleStartElement(reinterpret_cast<const char*>(name), (xmlns ? reinterpret_cast<const char*>(xmlns) : std::string()), attributeValues);
 }
 
 static void handleEndElement(void *client, const xmlChar* name, const xmlChar*, const xmlChar* xmlns) {
-	static_cast<XMLParserClient*>(client)->handleEndElement(reinterpret_cast<const char*>(name), (xmlns ? reinterpret_cast<const char*>(xmlns) : String()));
+	static_cast<XMLParserClient*>(client)->handleEndElement(reinterpret_cast<const char*>(name), (xmlns ? reinterpret_cast<const char*>(xmlns) : std::string()));
 }
 
 static void handleCharacterData(void* client, const xmlChar* data, int len) {
-	static_cast<XMLParserClient*>(client)->handleCharacterData(String(reinterpret_cast<const char*>(data), len));
+	static_cast<XMLParserClient*>(client)->handleCharacterData(std::string(reinterpret_cast<const char*>(data), len));
 }
 
 static void handleError(void*, const char* /*m*/, ... ) {
@@ -64,8 +64,8 @@ LibXMLParser::~LibXMLParser() {
 	}
 }
 
-bool LibXMLParser::parse(const String& data) {
-	if (xmlParseChunk(context_, data.getUTF8Data(), data.getUTF8Size(), false) == XML_ERR_OK) {
+bool LibXMLParser::parse(const std::string& data) {
+	if (xmlParseChunk(context_, data.c_str(), data.size(), false) == XML_ERR_OK) {
 		return true;
 	}
 	xmlError* error = xmlCtxtGetLastError(context_);

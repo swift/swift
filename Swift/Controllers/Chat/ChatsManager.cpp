@@ -221,7 +221,7 @@ void ChatsManager::setOnline(bool enabled) {
 
 }
 
-void ChatsManager::handleChatRequest(const String &contact) {
+void ChatsManager::handleChatRequest(const std::string &contact) {
 	ChatController* controller = getChatControllerOrFindAnother(JID(contact));
 	controller->activateChatWindow();
 }
@@ -280,7 +280,7 @@ void ChatsManager::rebindControllerJID(const JID& from, const JID& to) {
 	chatControllers_[to]->setToJID(to);
 }
 
-void ChatsManager::handleJoinMUCRequest(const JID &mucJID, const boost::optional<String>& nickMaybe, bool autoJoin) {
+void ChatsManager::handleJoinMUCRequest(const JID &mucJID, const boost::optional<std::string>& nickMaybe, bool autoJoin) {
 	if (autoJoin) {
 		MUCBookmark bookmark(mucJID, mucJID.getNode());
 		bookmark.setAutojoin(true);
@@ -294,7 +294,7 @@ void ChatsManager::handleJoinMUCRequest(const JID &mucJID, const boost::optional
 	if (it != mucControllers_.end()) {
 		it->second->rejoin();
 	} else {
-		String nick = nickMaybe ? nickMaybe.get() : jid_.getNode();
+		std::string nick = nickMaybe ? nickMaybe.get() : jid_.getNode();
 		MUC::ref muc = mucManager->createMUC(mucJID);
 		MUCController* controller = new MUCController(jid_, muc, nick, stanzaChannel_, iqRouter_, chatWindowFactory_, presenceOracle_, avatarManager_, uiEventStream_, false, timerFactory_, eventController_);
 		mucControllers_[mucJID] = controller;
@@ -311,7 +311,7 @@ void ChatsManager::handleSearchMUCRequest() {
 void ChatsManager::handleIncomingMessage(boost::shared_ptr<Message> message) {
 	JID jid = message->getFrom();
 	boost::shared_ptr<MessageEvent> event(new MessageEvent(message));
-	if (!event->isReadable() && !message->getPayload<ChatState>() && message->getSubject().isEmpty()) {
+	if (!event->isReadable() && !message->getPayload<ChatState>() && message->getSubject().empty()) {
 		return;
 	}
 

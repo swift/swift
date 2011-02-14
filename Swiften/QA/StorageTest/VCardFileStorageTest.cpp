@@ -6,6 +6,7 @@
 
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/extensions/TestFactoryRegistry.h>
+#include <boost/algorithm/string.hpp>
 
 #include "Swiften/VCards/VCardFileStorage.h"
 #include "Swiften/JID/JID.h"
@@ -44,7 +45,7 @@ class VCardFileStorageTest : public CppUnit::TestFixture {
 			CPPUNIT_ASSERT(boost::filesystem::exists(vcardFile));
 			ByteArray data;
 			data.readFromFile(vcardFile.string());
-			CPPUNIT_ASSERT(data.toString().beginsWith("<vCard xmlns=\"vcard-temp\">"));
+			CPPUNIT_ASSERT(boost::starts_with(data.toString(), "<vCard xmlns=\"vcard-temp\">"));
 		}
 
 		void testGetVCard() {
@@ -54,7 +55,7 @@ class VCardFileStorageTest : public CppUnit::TestFixture {
 			testling->setVCard(JID("alice@wonderland.lit"), vcard);
 
 			VCard::ref result = testling->getVCard(JID("alice@wonderland.lit"));
-			CPPUNIT_ASSERT_EQUAL(String("Alice In Wonderland"), result->getFullName());
+			CPPUNIT_ASSERT_EQUAL(std::string("Alice In Wonderland"), result->getFullName());
 		}
 
 		void testGetVCard_FileDoesNotExist() {

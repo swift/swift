@@ -19,7 +19,7 @@ namespace Swift {
 	 */
 	class Component : public CoreComponent {
 		public:
-			Component(EventLoop* eventLoop, NetworkFactories* networkFactories, const JID& jid, const String& secret);
+			Component(EventLoop* eventLoop, NetworkFactories* networkFactories, const JID& jid, const std::string& secret);
 			~Component();
 
 			/**
@@ -27,7 +27,7 @@ namespace Swift {
 			 *
 			 * This will be used to respond to version queries from other entities.
 			 */
-			void setSoftwareVersion(const String& name, const String& version);
+			void setSoftwareVersion(const std::string& name, const std::string& version);
 
 		private:
 			SoftwareVersionResponder* softwareVersionResponder;

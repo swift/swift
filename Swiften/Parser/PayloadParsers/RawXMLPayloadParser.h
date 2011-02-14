@@ -17,9 +17,9 @@ namespace Swift {
 		public:
 			RawXMLPayloadParser();
 
-			virtual void handleStartElement(const String& element, const String&, const AttributeMap& attributes);
-			virtual void handleEndElement(const String& element, const String&);
-			virtual void handleCharacterData(const String& data);
+			virtual void handleStartElement(const std::string& element, const std::string&, const AttributeMap& attributes);
+			virtual void handleEndElement(const std::string& element, const std::string&);
+			virtual void handleCharacterData(const std::string& data);
 
 		private:
 			int level_;

@@ -10,7 +10,7 @@
 #include "Swiften/Base/boost_bsignals.h"
 #include <boost/enable_shared_from_this.hpp>
 
-#include "Swiften/Base/String.h"
+#include <string>
 #include "Swiften/Session/Session.h"
 #include "Swiften/JID/JID.h"
 #include "Swiften/Network/Connection.h"
@@ -31,7 +31,7 @@ namespace Swift {
 	class ServerFromClientSession : public Session {
 		public:
 			ServerFromClientSession(
-					const String& id,
+					const std::string& id,
 					boost::shared_ptr<Connection> connection, 
 					PayloadParserFactoryCollection* payloadParserFactories, 
 					PayloadSerializerCollection* payloadSerializers,
@@ -50,11 +50,11 @@ namespace Swift {
 			}
 
 		private:
-			String id_;
+			std::string id_;
 			UserRegistry* userRegistry_;
 			bool authenticated_;
 			bool initialized;
 			bool allowSASLEXTERNAL;
-			String user_;
+			std::string user_;
 	};
 }

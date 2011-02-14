@@ -159,15 +159,15 @@ class EntityCapsManagerTest : public CppUnit::TestFixture {
 	
 	private:
 		struct DummyCapsProvider : public CapsProvider {
-			virtual DiscoInfo::ref getCaps(const String& hash) const {
-				std::map<String, DiscoInfo::ref>::const_iterator i = caps.find(hash);
+			virtual DiscoInfo::ref getCaps(const std::string& hash) const {
+				std::map<std::string, DiscoInfo::ref>::const_iterator i = caps.find(hash);
 				if (i != caps.end()) {
 					return i->second;
 				}
 				return DiscoInfo::ref();
 			}
 
-			std::map<String, DiscoInfo::ref> caps;
+			std::map<std::string, DiscoInfo::ref> caps;
 		};
 
 	private:

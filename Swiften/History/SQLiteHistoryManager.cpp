@@ -12,9 +12,9 @@
 
 namespace {
 
-inline Swift::String getEscapedString(const Swift::String& s) {
-	Swift::String result(s);
-	result.replaceAll('\'', Swift::String("\\'"));
+inline Swift::std::string getEscapedString(const Swift::std::string& s) {
+	Swift::std::string result(s);
+	result.replaceAll('\'', Swift::std::string("\\'"));
 	return result;
 }
 
@@ -23,8 +23,8 @@ inline Swift::String getEscapedString(const Swift::String& s) {
 
 namespace Swift {
 
-SQLiteHistoryManager::SQLiteHistoryManager(const String& file) : db_(0) {
-	sqlite3_open(file.getUTF8Data(), &db_);
+SQLiteHistoryManager::SQLiteHistoryManager(const std::string& file) : db_(0) {
+	sqlite3_open(file.c_str(), &db_);
 	if (!db_) {
 		std::cerr << "Error opening database " << file << std::endl; // FIXME
 	}
@@ -49,9 +49,9 @@ SQLiteHistoryManager::~SQLiteHistoryManager() {
 
 void SQLiteHistoryManager::addMessage(const HistoryMessage& message) {
 	int secondsSinceEpoch = (message.getTime() - boost::posix_time::ptime(boost::gregorian::date(1970, 1, 1))).total_seconds();
-	String statement = String("INSERT INTO messages('from', 'to', 'message', 'time') VALUES(") + boost::lexical_cast<std::string>(getIDForJID(message.getFrom())) + ", " + boost::lexical_cast<std::string>(getIDForJID(message.getTo())) + ", '" + getEscapedString(message.getMessage()) + "', " + boost::lexical_cast<std::string>(secondsSinceEpoch) + ")";
+	std::string statement = std::string("INSERT INTO messages('from', 'to', 'message', 'time') VALUES(") + boost::lexical_cast<std::string>(getIDForJID(message.getFrom())) + ", " + boost::lexical_cast<std::string>(getIDForJID(message.getTo())) + ", '" + getEscapedString(message.getMessage()) + "', " + boost::lexical_cast<std::string>(secondsSinceEpoch) + ")";
 	char* errorMessage;
-	int result = sqlite3_exec(db_, statement.getUTF8Data(), 0, 0, &errorMessage);
+	int result = sqlite3_exec(db_, statement.c_str(), 0, 0, &errorMessage);
 	if (result != SQLITE_OK) {
 		std::cerr << "SQL Error: " << errorMessage << std::endl;
 		sqlite3_free(errorMessage);
@@ -61,8 +61,8 @@ void SQLiteHistoryManager::addMessage(const HistoryMessage& message) {
 std::vector<HistoryMessage> SQLiteHistoryManager::getMessages() const {
 	std::vector<HistoryMessage> result;
 	sqlite3_stmt* selectStatement;
-	String selectQuery("SELECT messages.'from', messages.'to', messages.'message', messages.'time' FROM messages");
-	int r = sqlite3_prepare(db_, selectQuery.getUTF8Data(), selectQuery.getUTF8Size(), &selectStatement, NULL);
+	std::string selectQuery("SELECT messages.'from', messages.'to', messages.'message', messages.'time' FROM messages");
+	int r = sqlite3_prepare(db_, selectQuery.c_str(), selectQuery.size(), &selectStatement, NULL);
 	if (r != SQLITE_OK) {
 		std::cout << "Error: " << sqlite3_errmsg(db_) << std::endl;
 	}
@@ -70,7 +70,7 @@ std::vector<HistoryMessage> SQLiteHistoryManager::getMessages() const {
 	while (r == SQLITE_ROW) {
 		boost::optional<JID> from(getJIDFromID(sqlite3_column_int(selectStatement, 0)));
 		boost::optional<JID> to(getJIDFromID(sqlite3_column_int(selectStatement, 1)));
-		String message(reinterpret_cast<const char*>(sqlite3_column_text(selectStatement, 2)));
+		std::string message(reinterpret_cast<const char*>(sqlite3_column_text(selectStatement, 2)));
 		int secondsSinceEpoch(sqlite3_column_int(selectStatement, 3));
 		boost::posix_time::ptime time(boost::gregorian::date(1970, 1, 1), boost::posix_time::seconds(secondsSinceEpoch));
 
@@ -95,9 +95,9 @@ int SQLiteHistoryManager::getIDForJID(const JID& jid) {
 }
 
 int SQLiteHistoryManager::addJID(const JID& jid) {
-	String statement = String("INSERT INTO jids('jid') VALUES('") + getEscapedString(jid.toString()) + "')";
+	std::string statement = std::string("INSERT INTO jids('jid') VALUES('") + getEscapedString(jid.toString()) + "')";
 	char* errorMessage;
-	int result = sqlite3_exec(db_, statement.getUTF8Data(), 0, 0, &errorMessage);
+	int result = sqlite3_exec(db_, statement.c_str(), 0, 0, &errorMessage);
 	if (result != SQLITE_OK) {
 		std::cerr << "SQL Error: " << errorMessage << std::endl;
 		sqlite3_free(errorMessage);
@@ -108,8 +108,8 @@ int SQLiteHistoryManager::addJID(const JID& jid) {
 boost::optional<JID> SQLiteHistoryManager::getJIDFromID(int id) const {
 	boost::optional<JID> result;
 	sqlite3_stmt* selectStatement;
-	String selectQuery("SELECT jid FROM jids WHERE id=" + boost::lexical_cast<std::string>(id));
-	int r = sqlite3_prepare(db_, selectQuery.getUTF8Data(), selectQuery.getUTF8Size(), &selectStatement, NULL);
+	std::string selectQuery("SELECT jid FROM jids WHERE id=" + boost::lexical_cast<std::string>(id));
+	int r = sqlite3_prepare(db_, selectQuery.c_str(), selectQuery.size(), &selectStatement, NULL);
 	if (r != SQLITE_OK) {
 		std::cout << "Error: " << sqlite3_errmsg(db_) << std::endl;
 	}
@@ -124,8 +124,8 @@ boost::optional<JID> SQLiteHistoryManager::getJIDFromID(int id) const {
 boost::optional<int> SQLiteHistoryManager::getIDFromJID(const JID& jid) const {
 	boost::optional<int> result;
 	sqlite3_stmt* selectStatement;
-	String selectQuery("SELECT id FROM jids WHERE jid='" + jid.toString() + "'");
-	int r = sqlite3_prepare(db_, selectQuery.getUTF8Data(), selectQuery.getUTF8Size(), &selectStatement, NULL);
+	std::string selectQuery("SELECT id FROM jids WHERE jid='" + jid.toString() + "'");
+	int r = sqlite3_prepare(db_, selectQuery.c_str(), selectQuery.size(), &selectStatement, NULL);
 	if (r != SQLITE_OK) {
 		std::cout << "Error: " << sqlite3_errmsg(db_) << std::endl;
 	}

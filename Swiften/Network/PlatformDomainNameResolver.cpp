@@ -15,7 +15,7 @@
 #include <boost/thread.hpp>
 #include <algorithm>
 
-#include "Swiften/Base/String.h"
+#include <string>
 #include "Swiften/IDN/IDNA.h"
 #include "Swiften/Network/HostAddress.h"
 #include "Swiften/EventLoop/EventLoop.h"
@@ -38,11 +38,11 @@ PlatformDomainNameResolver::~PlatformDomainNameResolver() {
 	delete thread;
 }
 
-boost::shared_ptr<DomainNameServiceQuery> PlatformDomainNameResolver::createServiceQuery(const String& name) {
+boost::shared_ptr<DomainNameServiceQuery> PlatformDomainNameResolver::createServiceQuery(const std::string& name) {
 	return boost::shared_ptr<DomainNameServiceQuery>(new PlatformDomainNameServiceQuery(IDNA::getEncoded(name), eventLoop, this));
 }
 
-boost::shared_ptr<DomainNameAddressQuery> PlatformDomainNameResolver::createAddressQuery(const String& name) {
+boost::shared_ptr<DomainNameAddressQuery> PlatformDomainNameResolver::createAddressQuery(const std::string& name) {
 	return boost::shared_ptr<DomainNameAddressQuery>(new PlatformDomainNameAddressQuery(IDNA::getEncoded(name), eventLoop, this));
 }
 

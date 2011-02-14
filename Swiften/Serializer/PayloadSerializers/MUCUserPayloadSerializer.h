@@ -13,10 +13,10 @@ namespace Swift {
 	class MUCUserPayloadSerializer : public GenericPayloadSerializer<MUCUserPayload> {
 		public:
 			MUCUserPayloadSerializer();
-			String affiliationToString(MUCOccupant::Affiliation affiliation) const;
-			String roleToString(MUCOccupant::Role role) const;
+			std::string affiliationToString(MUCOccupant::Affiliation affiliation) const;
+			std::string roleToString(MUCOccupant::Role role) const;
 
-			virtual String serializePayload(boost::shared_ptr<MUCUserPayload> version)  const;
+			virtual std::string serializePayload(boost::shared_ptr<MUCUserPayload> version)  const;
 	};
 }
 

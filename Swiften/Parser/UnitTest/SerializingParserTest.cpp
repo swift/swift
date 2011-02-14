@@ -35,7 +35,7 @@ class SerializingParserTest : public CppUnit::TestFixture
 					"</html>"
 				"</message>"));
 
-			CPPUNIT_ASSERT_EQUAL(String(
+			CPPUNIT_ASSERT_EQUAL(std::string(
 				"<message to=\"me@foo.com\" type=\"chat\">"
 					"<body>Hello&lt;&amp;World</body>"
 					"<html xmlns=\"http://www.w3.org/1999/xhtml\">foo<b xmlns=\"http://www.w3.org/1999/xhtml\">bar</b>baz</html>"
@@ -45,7 +45,7 @@ class SerializingParserTest : public CppUnit::TestFixture
 		void testParse_Empty() {
 			SerializingParser testling;
 
-			CPPUNIT_ASSERT_EQUAL(String(""), testling.getResult());
+			CPPUNIT_ASSERT_EQUAL(std::string(""), testling.getResult());
 		}
 
 		void testParse_ToplevelCharacterData() {
@@ -57,7 +57,7 @@ class SerializingParserTest : public CppUnit::TestFixture
 			testling.handleEndElement("message", "");
 			testling.handleCharacterData("bar");
 
-			CPPUNIT_ASSERT_EQUAL(String("<message/>"), testling.getResult());
+			CPPUNIT_ASSERT_EQUAL(std::string("<message/>"), testling.getResult());
 		}
 };
 

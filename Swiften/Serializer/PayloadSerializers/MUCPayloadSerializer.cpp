@@ -7,13 +7,14 @@
 #include "Swiften/Serializer/PayloadSerializers/MUCPayloadSerializer.h"
 
 #include "Swiften/Serializer/XML/XMLElement.h"
+#include <Swiften/Base/String.h>
 
 namespace Swift {
 
 MUCPayloadSerializer::MUCPayloadSerializer() : GenericPayloadSerializer<MUCPayload>() {
 }
 
-String MUCPayloadSerializer::serializePayload(boost::shared_ptr<MUCPayload> muc)  const {
+std::string MUCPayloadSerializer::serializePayload(boost::shared_ptr<MUCPayload> muc)  const {
 	XMLElement mucElement("x", "http://jabber.org/protocol/muc");
 	boost::shared_ptr<XMLElement> historyElement(new XMLElement("history"));
 	bool history = false;
@@ -30,8 +31,8 @@ String MUCPayloadSerializer::serializePayload(boost::shared_ptr<MUCPayload> muc)
 		history = true;
 	}
 	if (muc->getSince() != boost::posix_time::not_a_date_time) {
-		String sinceString = String(boost::posix_time::to_iso_extended_string(muc->getSince()));
-		sinceString.replaceAll(',', ".");
+		std::string sinceString = std::string(boost::posix_time::to_iso_extended_string(muc->getSince()));
+		String::replaceAll(sinceString, ',', ".");
 		sinceString += "Z";
 		historyElement->setAttribute("since", sinceString);
 		history = true;

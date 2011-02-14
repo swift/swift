@@ -20,34 +20,34 @@ namespace Swift {
 CommandSerializer::CommandSerializer() {
 }
 
-String CommandSerializer::serializePayload(boost::shared_ptr<Command> command)	const {
+std::string CommandSerializer::serializePayload(boost::shared_ptr<Command> command)	const {
 	XMLElement commandElement("command", "http://jabber.org/protocol/comands");
 	commandElement.setAttribute("node", command->getNode());
 
-	if (!command->getSessionID().isEmpty()) {
+	if (!command->getSessionID().empty()) {
 		commandElement.setAttribute("sessionid", command->getSessionID());
 	}
 
-	String action = actionToString(command->getAction());
-	if (!action.isEmpty()) {
+	std::string action = actionToString(command->getAction());
+	if (!action.empty()) {
 		commandElement.setAttribute("action", action);
 	}
 
-	String status;
+	std::string status;
 	switch (command->getStatus()) {
 		case Command::Executing: status = "executing";break;
 		case Command::Completed: status = "completed";break;
 		case Command::Canceled: status = "canceled";break;
 		case Command::NoStatus: break;
 	}
-	if (!status.isEmpty()) {
+	if (!status.empty()) {
 		commandElement.setAttribute("status", status);
 	}
 
 	if (command->getAvailableActions().size() > 0) {
-		String actions = "<actions";
-		String executeAction = actionToString(command->getExecuteAction());
-		if (!executeAction.isEmpty()) {
+		std::string actions = "<actions";
+		std::string executeAction = actionToString(command->getExecuteAction());
+		if (!executeAction.empty()) {
 			actions += " execute='" + executeAction + "'";
 		}
 		actions += ">";
@@ -60,13 +60,13 @@ String CommandSerializer::serializePayload(boost::shared_ptr<Command> command)	c
 
 	foreach (Command::Note note, command->getNotes()) {
 		boost::shared_ptr<XMLElement> noteElement(new XMLElement("note"));
-		String type;
+		std::string type;
 		switch (note.type) {
 			case Command::Note::Info: type = "info"; break;
 			case Command::Note::Warn: type = "warn"; break;
 			case Command::Note::Error: type = "error"; break;
 		}
-		if (!type.isEmpty()) {
+		if (!type.empty()) {
 			noteElement->setAttribute("type", type);
 		}
 		noteElement->addNode(boost::shared_ptr<XMLTextNode>(new XMLTextNode(note.note)));
@@ -80,8 +80,8 @@ String CommandSerializer::serializePayload(boost::shared_ptr<Command> command)	c
 	return commandElement.serialize();
 }
 
-String CommandSerializer::actionToString(Command::Action action) const {
-	String string;
+std::string CommandSerializer::actionToString(Command::Action action) const {
+	std::string string;
 	switch (action) {
 		case Command::Cancel: string = "cancel"; break;
 		case Command::Execute: string = "execute"; break;

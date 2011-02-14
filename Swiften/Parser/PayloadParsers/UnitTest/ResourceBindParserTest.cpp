@@ -37,7 +37,7 @@ class ResourceBindParserTest : public CppUnit::TestFixture
 			CPPUNIT_ASSERT(parser.parse("<bind xmlns='urn:ietf:params:xml:ns:xmpp-bind'><resource>someresource</resource></bind>"));
 
 			ResourceBind* payload = dynamic_cast<ResourceBind*>(parser.getPayload().get());
-			CPPUNIT_ASSERT_EQUAL(String("someresource"), payload->getResource());
+			CPPUNIT_ASSERT_EQUAL(std::string("someresource"), payload->getResource());
 		}
 };
 

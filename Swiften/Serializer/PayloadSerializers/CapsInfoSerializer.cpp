@@ -15,7 +15,7 @@ namespace Swift {
 CapsInfoSerializer::CapsInfoSerializer() : GenericPayloadSerializer<CapsInfo>() {
 }
 
-String CapsInfoSerializer::serializePayload(boost::shared_ptr<CapsInfo> capsInfo)  const {
+std::string CapsInfoSerializer::serializePayload(boost::shared_ptr<CapsInfo> capsInfo)  const {
 	XMLElement capsElement("c", "http://jabber.org/protocol/caps");
 	capsElement.setAttribute("node", capsInfo->getNode());
 	capsElement.setAttribute("hash", capsInfo->getHash());

@@ -9,7 +9,7 @@
 #include <boost/shared_ptr.hpp>
 #include <boost/smart_ptr/make_shared.hpp>
 
-#include "Swiften/Base/String.h"
+#include <string>
 #include "Swiften/Base/sleep.h"
 #include "Swiften/Network/BoostConnection.h"
 #include "Swiften/Network/HostAddress.h"

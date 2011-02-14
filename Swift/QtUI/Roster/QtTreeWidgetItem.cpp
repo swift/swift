@@ -20,18 +20,18 @@ QtTreeWidgetItem::QtTreeWidgetItem(QtTreeWidgetItem* parentItem) : QObject(), te
 }
 
 
-void QtTreeWidgetItem::setText(const String& text) {
+void QtTreeWidgetItem::setText(const std::string& text) {
 	displayName_ = P2QSTRING(text);
 	displayNameLower_ = displayName_.toLower();
 	emit changed(this);
 }
 
-void QtTreeWidgetItem::setStatusText(const String& text) {
+void QtTreeWidgetItem::setStatusText(const std::string& text) {
 	statusText_ = P2QSTRING(text);
 	emit changed(this);
 }
 
-void QtTreeWidgetItem::setAvatarPath(const String& path) {
+void QtTreeWidgetItem::setAvatarPath(const std::string& path) {
 	avatar_ = QIcon(P2QSTRING(path));
 	emit changed(this);
 }

@@ -91,12 +91,12 @@ class PayloadParserFactoryCollectionTest : public CppUnit::TestFixture
 	
 	private:
 		struct DummyFactory : public PayloadParserFactory {
-			DummyFactory(const String& element = "") : element(element) {}
-			virtual bool canParse(const String& e, const String&, const AttributeMap&) const {
-				return element.isEmpty() ? true : element == e;
+			DummyFactory(const std::string& element = "") : element(element) {}
+			virtual bool canParse(const std::string& e, const std::string&, const AttributeMap&) const {
+				return element.empty() ? true : element == e;
 			}
 			virtual PayloadParser* createPayloadParser() { return NULL; }
-			String element;
+			std::string element;
 		};
 };
 

@@ -7,7 +7,7 @@
 #pragma once
 
 namespace Swift {
-	class String;
+	
 
 	class Dock {
 		public:

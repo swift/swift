@@ -7,7 +7,7 @@
 #pragma once
 
 #include "Swiften/Base/boost_bsignals.h"
-#include "Swiften/Base/String.h"
+#include <string>
 
 namespace Swift {
 	class JID;
@@ -16,7 +16,7 @@ namespace Swift {
 		public:
 			virtual ~AvatarProvider();
 
-			virtual String getAvatarHash(const JID&) const = 0;
+			virtual std::string getAvatarHash(const JID&) const = 0;
 
 			boost::signal<void (const JID&)> onAvatarChanged;
 	};

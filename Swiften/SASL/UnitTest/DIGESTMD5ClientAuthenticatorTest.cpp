@@ -38,7 +38,7 @@ class DIGESTMD5ClientAuthenticatorTest : public CppUnit::TestFixture {
 
 			ByteArray response = *testling.getResponse();
 
-			CPPUNIT_ASSERT_EQUAL(String("charset=utf-8,cnonce=\"abcdefgh\",digest-uri=\"xmpp/xmpp.example.com\",nc=00000001,nonce=\"O6skKPuaCZEny3hteI19qXMBXSadoWs840MchORo\",qop=auth,realm=\"example.com\",response=088891c800ecff1b842159ad6459104a,username=\"user\""), response.toString());
+			CPPUNIT_ASSERT_EQUAL(std::string("charset=utf-8,cnonce=\"abcdefgh\",digest-uri=\"xmpp/xmpp.example.com\",nc=00000001,nonce=\"O6skKPuaCZEny3hteI19qXMBXSadoWs840MchORo\",qop=auth,realm=\"example.com\",response=088891c800ecff1b842159ad6459104a,username=\"user\""), response.toString());
 		}
 
 		void testGetResponse_WithAuthorizationID() {
@@ -52,7 +52,7 @@ class DIGESTMD5ClientAuthenticatorTest : public CppUnit::TestFixture {
 
 			ByteArray response = *testling.getResponse();
 
-			CPPUNIT_ASSERT_EQUAL(String("authzid=\"myauthzid\",charset=utf-8,cnonce=\"abcdefgh\",digest-uri=\"xmpp/xmpp.example.com\",nc=00000001,nonce=\"O6skKPuaCZEny3hteI19qXMBXSadoWs840MchORo\",qop=auth,realm=\"example.com\",response=4293834432b6e7889a2dee7e8fe7dd06,username=\"user\""), response.toString());
+			CPPUNIT_ASSERT_EQUAL(std::string("authzid=\"myauthzid\",charset=utf-8,cnonce=\"abcdefgh\",digest-uri=\"xmpp/xmpp.example.com\",nc=00000001,nonce=\"O6skKPuaCZEny3hteI19qXMBXSadoWs840MchORo\",qop=auth,realm=\"example.com\",response=4293834432b6e7889a2dee7e8fe7dd06,username=\"user\""), response.toString());
 		}
 };
 

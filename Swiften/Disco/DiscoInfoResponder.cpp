@@ -22,18 +22,18 @@ void DiscoInfoResponder::setDiscoInfo(const DiscoInfo& info) {
 	info_ = info;
 }
 
-void DiscoInfoResponder::setDiscoInfo(const String& node, const DiscoInfo& info) {
+void DiscoInfoResponder::setDiscoInfo(const std::string& node, const DiscoInfo& info) {
 	DiscoInfo newInfo(info);
 	newInfo.setNode(node);
 	nodeInfo_[node] = newInfo;
 }
 
-bool DiscoInfoResponder::handleGetRequest(const JID& from, const JID&, const String& id, boost::shared_ptr<DiscoInfo> info) {
-	if (info->getNode().isEmpty()) {
+bool DiscoInfoResponder::handleGetRequest(const JID& from, const JID&, const std::string& id, boost::shared_ptr<DiscoInfo> info) {
+	if (info->getNode().empty()) {
 		sendResponse(from, id, boost::shared_ptr<DiscoInfo>(new DiscoInfo(info_)));
 	}
 	else {
-		std::map<String,DiscoInfo>::const_iterator i = nodeInfo_.find(info->getNode());
+		std::map<std::string,DiscoInfo>::const_iterator i = nodeInfo_.find(info->getNode());
 		if (i != nodeInfo_.end()) {
 			sendResponse(from, id, boost::shared_ptr<DiscoInfo>(new DiscoInfo((*i).second)));
 		}

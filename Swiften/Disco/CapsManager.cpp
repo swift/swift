@@ -26,7 +26,7 @@ void CapsManager::handlePresenceReceived(boost::shared_ptr<Presence> presence) {
 	if (!capsInfo || capsInfo->getHash() != "sha-1" || presence->getPayload<ErrorPayload>()) {
 		return;
 	}
-	String hash = capsInfo->getVersion();
+	std::string hash = capsInfo->getVersion();
 	if (capsStorage->getDiscoInfo(hash)) {
 		return;
 	}
@@ -48,16 +48,16 @@ void CapsManager::handleStanzaChannelAvailableChanged(bool available) {
 	}
 }
 
-void CapsManager::handleDiscoInfoReceived(const JID& from, const String& hash, DiscoInfo::ref discoInfo, ErrorPayload::ref error) {
+void CapsManager::handleDiscoInfoReceived(const JID& from, const std::string& hash, DiscoInfo::ref discoInfo, ErrorPayload::ref error) {
 	requestedDiscoInfos.erase(hash);
 	if (error || CapsInfoGenerator("").generateCapsInfo(*discoInfo.get()).getVersion() != hash) {
 		if (warnOnInvalidHash && !error) {
 			std::cerr << "Warning: Caps from " << from.toString() << " do not verify" << std::endl;
 		}
 		failingCaps.insert(std::make_pair(from, hash));
-		std::map<String, std::set< std::pair<JID, String> > >::iterator i = fallbacks.find(hash);
+		std::map<std::string, std::set< std::pair<JID, std::string> > >::iterator i = fallbacks.find(hash);
 		if (i != fallbacks.end() && !i->second.empty()) {
-			std::pair<JID,String> fallbackAndNode = *i->second.begin();
+			std::pair<JID,std::string> fallbackAndNode = *i->second.begin();
 			i->second.erase(i->second.begin());
 			requestDiscoInfo(fallbackAndNode.first, fallbackAndNode.second, hash);
 		}
@@ -68,14 +68,14 @@ void CapsManager::handleDiscoInfoReceived(const JID& from, const String& hash, D
 	onCapsAvailable(hash);
 }
 
-void CapsManager::requestDiscoInfo(const JID& jid, const String& node, const String& hash) {
+void CapsManager::requestDiscoInfo(const JID& jid, const std::string& node, const std::string& hash) {
 	GetDiscoInfoRequest::ref request = GetDiscoInfoRequest::create(jid, node + "#" + hash, iqRouter);
 	request->onResponse.connect(boost::bind(&CapsManager::handleDiscoInfoReceived, this, jid, hash, _1, _2));
 	requestedDiscoInfos.insert(hash);
 	request->send();
 }
 
-DiscoInfo::ref CapsManager::getCaps(const String& hash) const {
+DiscoInfo::ref CapsManager::getCaps(const std::string& hash) const {
 	return capsStorage->getDiscoInfo(hash);
 }
 

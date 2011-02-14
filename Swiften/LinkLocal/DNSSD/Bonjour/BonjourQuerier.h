@@ -27,11 +27,11 @@ namespace Swift {
 
 			boost::shared_ptr<DNSSDBrowseQuery> createBrowseQuery();
 			boost::shared_ptr<DNSSDRegisterQuery> createRegisterQuery(
-					const String& name, int port, const ByteArray& info);
+					const std::string& name, int port, const ByteArray& info);
 			boost::shared_ptr<DNSSDResolveServiceQuery> createResolveServiceQuery(
 					const DNSSDServiceID&);
 			boost::shared_ptr<DNSSDResolveHostnameQuery> createResolveHostnameQuery(
-					const String& hostname, int interfaceIndex);
+					const std::string& hostname, int interfaceIndex);
 
 			void start();
 			void stop();

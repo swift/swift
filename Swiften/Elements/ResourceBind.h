@@ -7,7 +7,7 @@
 #ifndef SWIFTEN_ResourceBind_H
 #define SWIFTEN_ResourceBind_H
 
-#include "Swiften/Base/String.h"
+#include <string>
 #include "Swiften/Elements/Payload.h"
 #include "Swiften/JID/JID.h"
 
@@ -25,17 +25,17 @@ namespace Swift {
 				return jid_; 
 			}
 
-			void setResource(const String& resource) {
+			void setResource(const std::string& resource) {
 				resource_ = resource;
 			}
 
-			const String& getResource() const {
+			const std::string& getResource() const {
 				return resource_; 
 			}
 
 		private:
 			JID jid_;
-			String resource_;
+			std::string resource_;
 	};
 }
 

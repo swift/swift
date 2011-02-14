@@ -33,7 +33,7 @@ namespace Swift {
 			}
 
 		private:
-			String getNewIQID();
+			std::string getNewIQID();
 			void send(boost::shared_ptr<Stanza> stanza);
 			void handleSessionFinished(boost::shared_ptr<Error> error);
 			void handleStanza(boost::shared_ptr<Stanza> stanza);

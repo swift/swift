@@ -86,9 +86,9 @@ void MainController::handleSelfConnected(bool b) {
 }
 
 void MainController::handleServicesChanged() {
-	std::vector<String> names;
+	std::vector<std::string> names;
 	foreach(const LinkLocalService& service, linkLocalServiceBrowser->getServices()) {
-		String description = service.getDescription();
+		std::string description = service.getDescription();
 		if (description != service.getName()) {
 			description += " (" + service.getName() + ")";
 		}
@@ -99,19 +99,19 @@ void MainController::handleServicesChanged() {
 
 void MainController::handleServerStopped(boost::optional<ServerError> error) {
 	if (error) {
-		String message;
+		std::string message;
 		switch (error->getType()) {
 			case ServerError::C2SPortConflict: 
-				message = String("Error: Port ") + boost::lexical_cast<std::string>(server->getClientToServerPort()) + String(" in use");
+				message = std::string("Error: Port ") + boost::lexical_cast<std::string>(server->getClientToServerPort()) + std::string(" in use");
 				break;
 			case ServerError::C2SError:
-				message = String("Local connection server error");
+				message = std::string("Local connection server error");
 			 break;
 			case ServerError::LinkLocalPortConflict: 
-				message = String("Error: Port ") + boost::lexical_cast<std::string>(server->getLinkLocalPort()) + String(" in use");
+				message = std::string("Error: Port ") + boost::lexical_cast<std::string>(server->getLinkLocalPort()) + std::string(" in use");
 				break;
 			case ServerError::LinkLocalError: 
-				message = String("External connection server error");
+				message = std::string("External connection server error");
 				break;
 		}
 		menuletController->setXMPPStatus(message, MenuletController::Offline);

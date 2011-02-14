@@ -19,7 +19,7 @@ namespace Swift {
 				iqs_.push_back(iq);
 			}
 
-			virtual String getNewIQID() {
+			virtual std::string getNewIQID() {
 				return "test-id";
 			}
 

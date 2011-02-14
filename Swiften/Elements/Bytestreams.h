@@ -11,7 +11,7 @@
 #include <boost/shared_ptr.hpp>
 
 #include "Swiften/JID/JID.h"
-#include "Swiften/Base/String.h"
+#include <string>
 #include "Swiften/Elements/Payload.h"
 
 namespace Swift {
@@ -20,20 +20,20 @@ namespace Swift {
 			typedef boost::shared_ptr<Bytestreams> ref;
 
 			struct StreamHost {
-				StreamHost(const String& host = "", const JID& jid = JID(), int port = -1) : host(host), jid(jid), port(port) {}
+				StreamHost(const std::string& host = "", const JID& jid = JID(), int port = -1) : host(host), jid(jid), port(port) {}
 
-				String host;
+				std::string host;
 				JID jid;
 				int port;
 			};
 
 			Bytestreams() {}
 
-			const String& getStreamID() const {
+			const std::string& getStreamID() const {
 				return id;
 			}
 
-			void setStreamID(const String& id) {
+			void setStreamID(const std::string& id) {
 				this->id = id;
 			}
 
@@ -54,7 +54,7 @@ namespace Swift {
 			}
 
 		private:
-			String id;
+			std::string id;
 			boost::optional<JID> usedStreamHost;
 			std::vector<StreamHost> streamHosts;
 	};

@@ -175,7 +175,7 @@ void QtMainWindow::handleShowOfflineToggled(bool state) {
 	}
 }
 
-void QtMainWindow::setMyNick(const String& nick) {
+void QtMainWindow::setMyNick(const std::string& nick) {
 	meView_->setNick(P2QSTRING(nick));
 }
 
@@ -183,11 +183,11 @@ void QtMainWindow::setMyJID(const JID& jid) {
 	meView_->setJID(P2QSTRING(jid.toBare().toString()));
 }
 
-void QtMainWindow::setMyAvatarPath(const String& path) {
+void QtMainWindow::setMyAvatarPath(const std::string& path) {
 	meView_->setAvatar(P2QSTRING(path));
 }
 
-void QtMainWindow::setMyStatusText(const String& status) {
+void QtMainWindow::setMyStatusText(const std::string& status) {
 	meView_->setStatusText(P2QSTRING(status));
 }
 

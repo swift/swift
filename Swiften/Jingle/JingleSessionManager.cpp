@@ -18,7 +18,7 @@ JingleSessionManager::~JingleSessionManager() {
 	delete responder;
 }
 
-JingleSession::ref JingleSessionManager::getSession(const JID& jid, const String& id) const {
+JingleSession::ref JingleSessionManager::getSession(const JID& jid, const std::string& id) const {
 	SessionMap::const_iterator i = incomingSessions.find(JIDSession(jid, id));
 	return i != incomingSessions.end() ? i->second : JingleSession::ref();
 }

@@ -13,14 +13,14 @@
 
 namespace Swift {
 
-ApplicationPathProvider::ApplicationPathProvider(const String& applicationName) : applicationName(applicationName) {
+ApplicationPathProvider::ApplicationPathProvider(const std::string& applicationName) : applicationName(applicationName) {
 }
 
 ApplicationPathProvider::~ApplicationPathProvider() {
 }
 
-boost::filesystem::path ApplicationPathProvider::getProfileDir(const String& profile) const {
-	boost::filesystem::path result(getHomeDir() / profile.getUTF8String());
+boost::filesystem::path ApplicationPathProvider::getProfileDir(const std::string& profile) const {
+	boost::filesystem::path result(getHomeDir() / profile);
 	try {
 		boost::filesystem::create_directory(result);
 	}
@@ -30,10 +30,10 @@ boost::filesystem::path ApplicationPathProvider::getProfileDir(const String& pro
 	return result;
 }
 
-boost::filesystem::path ApplicationPathProvider::getResourcePath(const String& resource) const {
+boost::filesystem::path ApplicationPathProvider::getResourcePath(const std::string& resource) const {
 	std::vector<boost::filesystem::path> resourcePaths = getResourceDirs();
 	foreach(const boost::filesystem::path& resourcePath, resourcePaths) {
-		boost::filesystem::path r(resourcePath / resource.getUTF8String());
+		boost::filesystem::path r(resourcePath / resource);
 		if (boost::filesystem::exists(r)) {
 			return r;
 		}

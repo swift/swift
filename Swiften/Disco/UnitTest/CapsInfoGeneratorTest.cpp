@@ -30,9 +30,9 @@ class CapsInfoGeneratorTest : public CppUnit::TestFixture {
 			CapsInfoGenerator testling("http://code.google.com/p/exodus");
 			CapsInfo result = testling.generateCapsInfo(discoInfo);
 
-			CPPUNIT_ASSERT_EQUAL(String("http://code.google.com/p/exodus"), result.getNode());
-			CPPUNIT_ASSERT_EQUAL(String("sha-1"), result.getHash());
-			CPPUNIT_ASSERT_EQUAL(String("QgayPKawpkPSDYmwT/WM94uAlu0="), result.getVersion());
+			CPPUNIT_ASSERT_EQUAL(std::string("http://code.google.com/p/exodus"), result.getNode());
+			CPPUNIT_ASSERT_EQUAL(std::string("sha-1"), result.getHash());
+			CPPUNIT_ASSERT_EQUAL(std::string("QgayPKawpkPSDYmwT/WM94uAlu0="), result.getVersion());
 		}
 
 		void testGenerate_XEP0115ComplexExample() {
@@ -48,7 +48,7 @@ class CapsInfoGeneratorTest : public CppUnit::TestFixture {
 			FormField::ref field = HiddenFormField::create("urn:xmpp:dataforms:softwareinfo");
 			field->setName("FORM_TYPE");
 			extension->addField(field);
-			std::vector<String> ipVersions;
+			std::vector<std::string> ipVersions;
 			ipVersions.push_back("ipv6");
 			ipVersions.push_back("ipv4");
 			field = ListMultiFormField::create(ipVersions);
@@ -77,7 +77,7 @@ class CapsInfoGeneratorTest : public CppUnit::TestFixture {
 			CapsInfoGenerator testling("http://psi-im.org");
 			CapsInfo result = testling.generateCapsInfo(discoInfo);
 
-			CPPUNIT_ASSERT_EQUAL(String("q07IKJEyjvHSyhy//CH0CxmKi8w="), result.getVersion());
+			CPPUNIT_ASSERT_EQUAL(std::string("q07IKJEyjvHSyhy//CH0CxmKi8w="), result.getVersion());
 		}
 };
 

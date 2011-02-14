@@ -25,7 +25,7 @@ namespace Swift {
 			boost::shared_ptr<Message> getStanza() {return stanza_;}
 
 			bool isReadable() {
-				return getStanza()->isError() || !getStanza()->getBody().isEmpty();
+				return getStanza()->isError() || !getStanza()->getBody().empty();
 			}
 
 			void read() {

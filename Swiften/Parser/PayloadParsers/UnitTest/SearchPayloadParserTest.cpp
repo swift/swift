@@ -31,7 +31,7 @@ class SearchPayloadParserTest : public CppUnit::TestFixture {
 				));
 
 			SearchPayload::ref payload = parser.getPayload<SearchPayload>();
-			CPPUNIT_ASSERT_EQUAL(String("Foo"), *payload->getInstructions());
+			CPPUNIT_ASSERT_EQUAL(std::string("Foo"), *payload->getInstructions());
 			CPPUNIT_ASSERT(payload->getFirst());
 			CPPUNIT_ASSERT(payload->getLast());
 			CPPUNIT_ASSERT(!payload->getNick());
@@ -60,10 +60,10 @@ class SearchPayloadParserTest : public CppUnit::TestFixture {
 			SearchPayload::ref payload = parser.getPayload<SearchPayload>();
 			CPPUNIT_ASSERT_EQUAL(2, static_cast<int>(payload->getItems().size()));
 			CPPUNIT_ASSERT_EQUAL(JID("juliet@capulet.com"), payload->getItems()[0].jid);
-			CPPUNIT_ASSERT_EQUAL(String("Juliet"), payload->getItems()[0].first);
-			CPPUNIT_ASSERT_EQUAL(String("Capulet"), payload->getItems()[0].last);
-			CPPUNIT_ASSERT_EQUAL(String("JuliC"), payload->getItems()[0].nick);
-			CPPUNIT_ASSERT_EQUAL(String("juliet@shakespeare.lit"), payload->getItems()[0].email);
+			CPPUNIT_ASSERT_EQUAL(std::string("Juliet"), payload->getItems()[0].first);
+			CPPUNIT_ASSERT_EQUAL(std::string("Capulet"), payload->getItems()[0].last);
+			CPPUNIT_ASSERT_EQUAL(std::string("JuliC"), payload->getItems()[0].nick);
+			CPPUNIT_ASSERT_EQUAL(std::string("juliet@shakespeare.lit"), payload->getItems()[0].email);
 			CPPUNIT_ASSERT_EQUAL(JID("tybalt@shakespeare.lit"), payload->getItems()[1].jid);
 		}
 };

@@ -12,7 +12,7 @@
 
 namespace Swift {
 
-GroupRosterItem::GroupRosterItem(const String& name, GroupRosterItem* parent, bool sortByStatus) : RosterItem(name, parent), sortByStatus_(sortByStatus) {
+GroupRosterItem::GroupRosterItem(const std::string& name, GroupRosterItem* parent, bool sortByStatus) : RosterItem(name, parent), sortByStatus_(sortByStatus) {
 	expanded_ = true;
 }
 
@@ -110,7 +110,7 @@ ContactRosterItem* GroupRosterItem::removeChild(const JID& jid) {
 	return removed;
 }
 
-GroupRosterItem* GroupRosterItem::removeGroupChild(const String& groupName) {
+GroupRosterItem* GroupRosterItem::removeGroupChild(const std::string& groupName) {
 	std::vector<RosterItem*>::iterator it = children_.begin();
 	GroupRosterItem* removed = NULL;
 	while (it != children_.end()) {

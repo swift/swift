@@ -17,7 +17,7 @@ namespace Swift {
 StorageSerializer::StorageSerializer() : GenericPayloadSerializer<Storage>() {
 }
 
-String StorageSerializer::serializePayload(boost::shared_ptr<Storage> storage)	const {
+std::string StorageSerializer::serializePayload(boost::shared_ptr<Storage> storage)	const {
 	XMLElement storageElement("storage", "storage:bookmarks");
 
 	foreach(const Storage::Room& room, storage->getRooms()) {
@@ -25,12 +25,12 @@ String StorageSerializer::serializePayload(boost::shared_ptr<Storage> storage)	c
 		conferenceElement->setAttribute("name", room.name);
 		conferenceElement->setAttribute("jid", room.jid);
 		conferenceElement->setAttribute("autojoin", room.autoJoin ? "1" : "0");
-		if (!room.nick.isEmpty()) {
+		if (!room.nick.empty()) {
 			boost::shared_ptr<XMLElement> nickElement(new XMLElement("nick"));
 			nickElement->addNode(boost::shared_ptr<XMLTextNode>(new XMLTextNode(room.nick)));
 			conferenceElement->addNode(nickElement);
 		}
-		if (!room.password.isEmpty()) {
+		if (!room.password.empty()) {
 			boost::shared_ptr<XMLElement> passwordElement(new XMLElement("password"));
 			passwordElement->addNode(boost::shared_ptr<XMLTextNode>(new XMLTextNode(room.password)));
 			conferenceElement->addNode(passwordElement);

@@ -11,7 +11,7 @@ namespace Swift {
 StreamFeaturesParser::StreamFeaturesParser() : GenericElementParser<StreamFeatures>(), currentDepth_(0), inMechanisms_(false), inMechanism_(false), inCompression_(false), inCompressionMethod_(false) {
 }
 
-void StreamFeaturesParser::handleStartElement(const String& element, const String& ns, const AttributeMap&) {
+void StreamFeaturesParser::handleStartElement(const std::string& element, const std::string& ns, const AttributeMap&) {
 	if (currentDepth_ == 1) {
 		if (element == "starttls" && ns == "urn:ietf:params:xml:ns:xmpp-tls") {
 			getElementGeneric()->setHasStartTLS();
@@ -45,7 +45,7 @@ void StreamFeaturesParser::handleStartElement(const String& element, const Strin
 	++currentDepth_;
 }
 
-void StreamFeaturesParser::handleEndElement(const String&, const String&) {
+void StreamFeaturesParser::handleEndElement(const std::string&, const std::string&) {
 	--currentDepth_;
 	if (currentDepth_ == 1) {
 		inCompression_ = false;
@@ -63,7 +63,7 @@ void StreamFeaturesParser::handleEndElement(const String&, const String&) {
 	}
 }
 
-void StreamFeaturesParser::handleCharacterData(const String& data) {
+void StreamFeaturesParser::handleCharacterData(const std::string& data) {
 	currentText_ += data;
 }
 

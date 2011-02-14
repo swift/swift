@@ -19,16 +19,16 @@ const char* Certificate::ID_ON_DNSSRV_OID = "1.3.6.1.5.5.7.8.7";
 Certificate::~Certificate() {
 }
 
-String Certificate::getSHA1Fingerprint() const {
+std::string Certificate::getSHA1Fingerprint() const {
 	ByteArray hash = SHA1::getHash(toDER());
 	std::ostringstream s;
 	for (size_t i = 0; i < hash.getSize(); ++i) {
 		if (i > 0) {
 			s << ":";
 		}
-		s << Hexify::hexify(hash[i]).getUTF8String();
+		s << Hexify::hexify(hash[i]);
 	}
-	return String(s.str());
+	return std::string(s.str());
 }
 
 }

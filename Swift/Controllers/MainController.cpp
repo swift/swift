@@ -41,7 +41,7 @@
 #include "SwifTools/Dock/Dock.h"
 #include "SwifTools/Notifier/TogglableNotifier.h"
 #include "Swiften/Base/foreach.h"
-#include "Swiften/Base/String.h"
+#include <string>
 #include "Swiften/Client/Client.h"
 #include "Swiften/Presence/PresenceSender.h"
 #include "Swiften/Elements/ChatState.h"
@@ -66,10 +66,10 @@
 
 namespace Swift {
 
-static const String CLIENT_NAME = "Swift";
-static const String CLIENT_NODE = "http://swift.im";
+static const std::string CLIENT_NAME = "Swift";
+static const std::string CLIENT_NODE = "http://swift.im";
 
-static const String SHOW_NOTIFICATIONS = "showNotifications";
+static const std::string SHOW_NOTIFICATIONS = "showNotifications";
 
 MainController::MainController(
 		EventLoop* eventLoop,
@@ -119,15 +119,15 @@ MainController::MainController(
 	loginWindow_ = uiFactory_->createLoginWindow(uiEventStream_);
 	soundEventController_ = new SoundEventController(eventController_, soundPlayer, settings, uiEventStream_);
 
-	String selectedLoginJID = settings_->getStringSetting("lastLoginJID");
+	std::string selectedLoginJID = settings_->getStringSetting("lastLoginJID");
 	bool loginAutomatically = settings_->getBoolSetting("loginAutomatically", false);
-	String cachedPassword;
-	String cachedCertificate;
-	foreach (String profile, settings->getAvailableProfiles()) {
+	std::string cachedPassword;
+	std::string cachedCertificate;
+	foreach (std::string profile, settings->getAvailableProfiles()) {
 		ProfileSettingsProvider profileSettings(profile, settings);
-		String password = profileSettings.getStringSetting("pass");
-		String certificate = profileSettings.getStringSetting("certificate");
-		String jid = profileSettings.getStringSetting("jid");
+		std::string password = profileSettings.getStringSetting("pass");
+		std::string certificate = profileSettings.getStringSetting("certificate");
+		std::string jid = profileSettings.getStringSetting("jid");
 		loginWindow_->addAvailableAccount(jid, password, certificate);
 		if (jid == selectedLoginJID) {
 			cachedPassword = password;
@@ -292,7 +292,7 @@ void MainController::reconnectAfterError() {
 	performLoginFromCachedCredentials();
 }
 
-void MainController::handleChangeStatusRequest(StatusShow::Type show, const String &statusText) {
+void MainController::handleChangeStatusRequest(StatusShow::Type show, const std::string &statusText) {
 	boost::shared_ptr<Presence> presence(new Presence());
 	if (show == StatusShow::None) {
 		// Note: this is misleading, None doesn't mean unavailable on the wire.
@@ -323,7 +323,7 @@ void MainController::sendPresence(boost::shared_ptr<Presence> presence) {
 	notifier_->setTemporarilyDisabled(presence->getShow() == StatusShow::DND);
 
 	// Add information and send
-	if (!vCardPhotoHash_.isEmpty()) {
+	if (!vCardPhotoHash_.empty()) {
 		presence->updatePayload(boost::shared_ptr<VCardUpdate>(new VCardUpdate(vCardPhotoHash_)));
 	}
 	client_->getPresenceSender()->sendPresence(presence);
@@ -352,7 +352,7 @@ void MainController::handleInputIdleChanged(bool idle) {
 	}
 }
 
-void MainController::handleLoginRequest(const String &username, const String &password, const String& certificateFile, bool remember, bool loginAutomatically) {
+void MainController::handleLoginRequest(const std::string &username, const std::string &password, const std::string& certificateFile, bool remember, bool loginAutomatically) {
 	loginWindow_->setMessage("");
 	loginWindow_->setIsLoggingIn(true);
 	profileSettings_ = new ProfileSettingsProvider(username, settings_);
@@ -368,7 +368,7 @@ void MainController::handleLoginRequest(const String &username, const String &pa
 	performLoginFromCachedCredentials();
 }
 
-void MainController::handlePurgeSavedLoginRequest(const String& username) {
+void MainController::handlePurgeSavedLoginRequest(const std::string& username) {
 	settings_->removeProfile(username);
 	loginWindow_->removeAvailableAccount(username);
 }
@@ -404,7 +404,7 @@ void MainController::performLoginFromCachedCredentials() {
 		presenceNotifier_->onNotificationActivated.connect(boost::bind(&MainController::handleNotificationClicked, this, _1));
 		eventNotifier_ = new EventNotifier(eventController_, notifier_, client_->getAvatarManager(), client_->getNickResolver());
 		eventNotifier_->onNotificationActivated.connect(boost::bind(&MainController::handleNotificationClicked, this, _1));
-		if (!certificateFile_.isEmpty()) {
+		if (!certificateFile_.empty()) {
 			client_->setCertificate(certificateFile_);
 		}
 		boost::shared_ptr<Presence> presence(new Presence());
@@ -429,8 +429,8 @@ void MainController::handleDisconnected(const boost::optional<ClientError>& erro
 		loginWindow_->quit();
 	}
 	else if (error) {
-		String message;
-		String certificateErrorMessage;
+		std::string message;
+		std::string certificateErrorMessage;
 		switch(error->getType()) {
 			case ClientError::UnknownError: message = "Unknown Error"; break;
 			case ClientError::DomainNameResolveError: message = "Unable to find server"; break;
@@ -464,7 +464,7 @@ void MainController::handleDisconnected(const boost::optional<ClientError>& erro
 
 		}
 		bool forceReconnectAfterCertificateTrust = false;
-		if (!certificateErrorMessage.isEmpty()) {
+		if (!certificateErrorMessage.empty()) {
 			Certificate::ref certificate = certificateTrustChecker_->getLastCertificate();
 			if (loginWindow_->askUserToTrustCertificatePermanently(certificateErrorMessage, certificate)) {
 				certificateStorage_->addCertificate(certificate);

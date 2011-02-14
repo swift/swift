@@ -11,18 +11,18 @@ namespace Swift {
 NicknameParser::NicknameParser() : level(0) {
 }
 
-void NicknameParser::handleStartElement(const String&, const String&, const AttributeMap&) {
+void NicknameParser::handleStartElement(const std::string&, const std::string&, const AttributeMap&) {
 	++level;
 }
 
-void NicknameParser::handleEndElement(const String&, const String&) {
+void NicknameParser::handleEndElement(const std::string&, const std::string&) {
 	--level;
 	if (level == 0) {
 		getPayloadInternal()->setNickname(text);
 	}
 }
 
-void NicknameParser::handleCharacterData(const String& data) {
+void NicknameParser::handleCharacterData(const std::string& data) {
 	text += data;
 }
 

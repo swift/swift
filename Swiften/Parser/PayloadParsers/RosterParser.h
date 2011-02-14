@@ -17,9 +17,9 @@ namespace Swift {
 		public:
 			RosterParser();
 
-			virtual void handleStartElement(const String& element, const String&, const AttributeMap& attributes);
-			virtual void handleEndElement(const String& element, const String&);
-			virtual void handleCharacterData(const String& data);
+			virtual void handleStartElement(const std::string& element, const std::string&, const AttributeMap& attributes);
+			virtual void handleEndElement(const std::string& element, const std::string&);
+			virtual void handleCharacterData(const std::string& data);
 
 		private:
 			enum Level { 
@@ -30,7 +30,7 @@ namespace Swift {
 			int level_;
 			bool inItem_;
 			RosterItemPayload currentItem_;
-			String currentText_;
+			std::string currentText_;
 			SerializingParser* unknownContentParser_;
 	};
 }

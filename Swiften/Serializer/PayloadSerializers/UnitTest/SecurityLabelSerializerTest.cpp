@@ -28,7 +28,7 @@ class SecurityLabelSerializerTest : public CppUnit::TestFixture {
 			securityLabel->addEquivalentLabel("<icismlabel xmlns=\"http://example.gov/IC-ISM/0\" classification=\"S\" ownerProducer=\"USA\" disseminationControls=\"FOUO\"/>");
 			securityLabel->addEquivalentLabel("<esssecuritylabel xmlns=\"urn:xmpp:sec-label:ess:0\">MRUCAgD9DA9BcXVhIChvYnNvbGV0ZSk=</esssecuritylabel>");
 
-			CPPUNIT_ASSERT_EQUAL(String(
+			CPPUNIT_ASSERT_EQUAL(std::string(
 				"<securitylabel xmlns=\"urn:xmpp:sec-label:0\">"
 					"<displaymarking bgcolor=\"red\" fgcolor=\"black\">SECRET</displaymarking>"
 					"<label>"
@@ -49,7 +49,7 @@ class SecurityLabelSerializerTest : public CppUnit::TestFixture {
 			securityLabel->setDisplayMarking("SECRET");
 			securityLabel->setLabel("");
 
-			CPPUNIT_ASSERT_EQUAL(String(
+			CPPUNIT_ASSERT_EQUAL(std::string(
 				"<securitylabel xmlns=\"urn:xmpp:sec-label:0\">"
 					"<displaymarking>SECRET</displaymarking>"
 					"<label></label>"

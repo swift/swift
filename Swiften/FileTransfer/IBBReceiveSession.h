@@ -22,7 +22,7 @@ namespace Swift {
 
 	class IBBReceiveSession : public SetResponder<IBB> {
 		public:
-			IBBReceiveSession(const String& id, const JID& from, size_t size, WriteBytestream::ref bytestream, IQRouter* router);
+			IBBReceiveSession(const std::string& id, const JID& from, size_t size, WriteBytestream::ref bytestream, IQRouter* router);
 			~IBBReceiveSession();
 
 			void start();
@@ -31,11 +31,11 @@ namespace Swift {
 			boost::signal<void (boost::optional<FileTransferError>)> onFinished;
 
 		private:
-			bool handleSetRequest(const JID& from, const JID& to, const String& id, IBB::ref payload);
+			bool handleSetRequest(const JID& from, const JID& to, const std::string& id, IBB::ref payload);
 			void finish(boost::optional<FileTransferError>);
 
 		private:
-			String id;
+			std::string id;
 			JID from;
 			size_t size;
 			WriteBytestream::ref bytestream;

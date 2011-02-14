@@ -137,9 +137,9 @@ QString RosterModel::getToolTip(RosterItem* item) const {
 QIcon RosterModel::getAvatar(RosterItem* item) const {
 	ContactRosterItem* contact = dynamic_cast<ContactRosterItem*>(item);
 	if (!contact) return QIcon();
-	String path = contact->getAvatarPath();
+	std::string path = contact->getAvatarPath();
 	
-	return path.isEmpty() ? QIcon() : QIcon(P2QSTRING(path));
+	return path.empty() ? QIcon() : QIcon(P2QSTRING(path));
 }
 
 QString RosterModel::getStatusText(RosterItem* item) const {

@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include "Swiften/Base/String.h"
+#include <string>
 #include "Swiften/JID/JID.h"
 #include "Swiften/LinkLocal/DNSSD/DNSSDServiceID.h"
 #include "Swiften/LinkLocal/DNSSD/DNSSDResolveServiceQuery.h"
@@ -25,7 +25,7 @@ namespace Swift {
 				return id;
 			}
 
-			const String& getName() const {
+			const std::string& getName() const {
 				return id.getName();
 			}
 
@@ -33,7 +33,7 @@ namespace Swift {
 				return info.port;
 			}
 
-			const String& getHostname() const {
+			const std::string& getHostname() const {
 				return info.host;
 			}
 
@@ -41,7 +41,7 @@ namespace Swift {
 				return LinkLocalServiceInfo::createFromTXTRecord(info.info);
 			}
 
-			String getDescription() const;
+			std::string getDescription() const;
 
 			JID getJID() const;
 

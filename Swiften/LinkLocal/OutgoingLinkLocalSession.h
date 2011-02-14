@@ -16,7 +16,7 @@
 
 namespace Swift {
 	class ConnectionFactory;
-	class String;
+	
 	class Element;
 	class PayloadParserFactoryCollection;
 	class PayloadSerializerCollection;

@@ -14,9 +14,9 @@ namespace Swift {
 AuthChallengeSerializer::AuthChallengeSerializer() {
 }
 
-String AuthChallengeSerializer::serialize(boost::shared_ptr<Element> element)  const {
+std::string AuthChallengeSerializer::serialize(boost::shared_ptr<Element> element)  const {
 	boost::shared_ptr<AuthChallenge> authChallenge(boost::dynamic_pointer_cast<AuthChallenge>(element));
-	String value;
+	std::string value;
 	boost::optional<ByteArray> message = authChallenge->getValue();
 	if (message) {
 		if ((*message).isEmpty()) {

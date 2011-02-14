@@ -8,9 +8,10 @@
 
 #include <boost/optional.hpp>
 #include <boost/shared_ptr.hpp>
+#include <string>
+#include <vector>
 
 #include "Swiften/JID/JID.h"
-#include "Swiften/Base/String.h"
 #include "Swiften/Elements/Payload.h"
 #include "Swiften/Elements/MUCOccupant.h"
 
@@ -22,7 +23,7 @@ namespace Swift {
 			struct Item {
 				Item(MUCOccupant::Affiliation affiliation = MUCOccupant::NoAffiliation, MUCOccupant::Role role = MUCOccupant::NoRole) : affiliation(affiliation), role(role) {}
 				boost::optional<JID> realJID;
-				boost::optional<String> nick;
+				boost::optional<std::string> nick;
 				MUCOccupant::Affiliation affiliation;
 				MUCOccupant::Role role;
 			};

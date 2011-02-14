@@ -8,7 +8,7 @@
 
 #include <boost/shared_ptr.hpp>
 
-#include "Swiften/Base/String.h"
+#include <string>
 #include "Swiften/Elements/Payload.h"
 
 namespace Swift {
@@ -16,7 +16,7 @@ namespace Swift {
 		public:
 			typedef boost::shared_ptr<CapsInfo> ref;
 
-			CapsInfo(const String& node = "", const String& version = "", const String& hash = "sha-1") : node_(node), version_(version), hash_(hash) {}
+			CapsInfo(const std::string& node = "", const std::string& version = "", const std::string& hash = "sha-1") : node_(node), version_(version), hash_(hash) {}
 
 			bool operator==(const CapsInfo& o) const {
 				return o.node_ == node_ && o.version_ == version_ && o.hash_ == hash_;
@@ -36,24 +36,24 @@ namespace Swift {
 				}
 			}
 
-			const String& getNode() const { return node_; }
-			void setNode(const String& node) {
+			const std::string& getNode() const { return node_; }
+			void setNode(const std::string& node) {
 				node_ = node;
 			}
 
-			const String& getVersion() const { return version_; }
-			void setVersion(const String& version) {
+			const std::string& getVersion() const { return version_; }
+			void setVersion(const std::string& version) {
 				version_ = version;
 			}
 
-			const String& getHash() const { return hash_; }
-			void setHash(const String& hash) {
+			const std::string& getHash() const { return hash_; }
+			void setHash(const std::string& hash) {
 				hash_ = hash;
 			}
 
 		private:
-			String node_;
-			String version_;
-			String hash_;
+			std::string node_;
+			std::string version_;
+			std::string hash_;
 	};
 }

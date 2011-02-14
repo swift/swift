@@ -18,10 +18,10 @@
 
 namespace Swift {
 
-StanzaSerializer::StanzaSerializer(const String& tag, PayloadSerializerCollection* payloadSerializers) : tag_(tag), payloadSerializers_(payloadSerializers) {
+StanzaSerializer::StanzaSerializer(const std::string& tag, PayloadSerializerCollection* payloadSerializers) : tag_(tag), payloadSerializers_(payloadSerializers) {
 }
 
-String StanzaSerializer::serialize(boost::shared_ptr<Element> element) const {
+std::string StanzaSerializer::serialize(boost::shared_ptr<Element> element) const {
 	boost::shared_ptr<Stanza> stanza(boost::dynamic_pointer_cast<Stanza>(element));
 
 	XMLElement stanzaElement(tag_);
@@ -31,12 +31,12 @@ String StanzaSerializer::serialize(boost::shared_ptr<Element> element) const {
 	if (stanza->getTo().isValid()) {
 		stanzaElement.setAttribute("to", stanza->getTo());
 	}
-	if (!stanza->getID().isEmpty()) {
+	if (!stanza->getID().empty()) {
 		stanzaElement.setAttribute("id", stanza->getID());
 	}
 	setStanzaSpecificAttributes(stanza, stanzaElement);
 
-	String serializedPayloads;
+	std::string serializedPayloads;
 	foreach (const boost::shared_ptr<Payload>& payload, stanza->getPayloads()) {
 		PayloadSerializer* serializer = payloadSerializers_->getPayloadSerializer(payload);
 		if (serializer) {
@@ -46,7 +46,7 @@ String StanzaSerializer::serialize(boost::shared_ptr<Element> element) const {
 			std::cerr << "Could not find serializer for " << typeid(*(payload.get())).name() << std::endl;
 		}
 	}
-	if (!serializedPayloads.isEmpty()) {
+	if (!serializedPayloads.empty()) {
 		stanzaElement.addNode(boost::shared_ptr<XMLNode>(new XMLRawTextNode(serializedPayloads)));
 	}
 

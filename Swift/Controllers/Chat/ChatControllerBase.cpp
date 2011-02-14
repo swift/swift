@@ -11,7 +11,9 @@
 #include <boost/bind.hpp>
 #include <boost/shared_ptr.hpp>
 #include <boost/date_time/posix_time/posix_time.hpp>
+#include <boost/algorithm/string.hpp>
 
+#include "Swiften/Base/String.h"
 #include "Swiften/Client/StanzaChannel.h"
 #include "Swiften/Elements/Delay.h"
 #include "Swiften/Base/foreach.h"
@@ -49,7 +51,7 @@ void ChatControllerBase::createDayChangeTimer() {
 void ChatControllerBase::handleDayChangeTick() {
 	dateChangeTimer_->stop();
 	boost::posix_time::ptime now = boost::posix_time::second_clock::local_time();
-	chatWindow_->addSystemMessage("The day is now " + String(boost::posix_time::to_iso_extended_string(now)).getSubstring(0,10));
+	chatWindow_->addSystemMessage("The day is now " + std::string(boost::posix_time::to_iso_extended_string(now)).substr(0,10));
 	dayTicked();
 	createDayChangeTimer();
 }
@@ -84,8 +86,8 @@ void ChatControllerBase::handleAllMessagesRead() {
 	chatWindow_->setUnreadMessageCount(0);
 }
 
-void ChatControllerBase::handleSendMessageRequest(const String &body) {
-	if (!stanzaChannel_->isAvailable() || body.isEmpty()) {
+void ChatControllerBase::handleSendMessageRequest(const std::string &body) {
+	if (!stanzaChannel_->isAvailable() || body.empty()) {
 		return;
 	}
 	boost::shared_ptr<Message> message(new Message());
@@ -130,9 +132,9 @@ void ChatControllerBase::activateChatWindow() {
 	chatWindow_->activate();
 }
 
-String ChatControllerBase::addMessage(const String& message, const String& senderName, bool senderIsSelf, const boost::optional<SecurityLabel>& label, const String& avatarPath, const boost::posix_time::ptime& time) {
-	if (message.beginsWith("/me ")) {
-		return chatWindow_->addAction(message.getSplittedAtFirst(' ').second, senderName, senderIsSelf, label, avatarPath, time);
+std::string ChatControllerBase::addMessage(const std::string& message, const std::string& senderName, bool senderIsSelf, const boost::optional<SecurityLabel>& label, const std::string& avatarPath, const boost::posix_time::ptime& time) {
+	if (boost::starts_with(message, "/me ")) {
+		return chatWindow_->addAction(String::getSplittedAtFirst(message, ' ').second, senderName, senderIsSelf, label, avatarPath, time);
 	} else {
 		return chatWindow_->addMessage(message, senderName, senderIsSelf, label, avatarPath, time);
 	}
@@ -148,9 +150,9 @@ void ChatControllerBase::handleIncomingMessage(boost::shared_ptr<MessageEvent> m
 		unreadMessages_.push_back(messageEvent);
 	}
 	boost::shared_ptr<Message> message = messageEvent->getStanza();
-	String body = message->getBody();
+	std::string body = message->getBody();
 	if (message->isError()) {
-		String errorMessage = getErrorMessage(message->getPayload<ErrorPayload>());
+		std::string errorMessage = getErrorMessage(message->getPayload<ErrorPayload>());
 		chatWindow_->addErrorMessage(errorMessage);
 	}
 	else {
@@ -167,7 +169,7 @@ void ChatControllerBase::handleIncomingMessage(boost::shared_ptr<MessageEvent> m
 			boost::posix_time::ptime now = boost::posix_time::microsec_clock::universal_time();
 			std::ostringstream s;
 			s << "The following message took " << (now - delayPayloads[i]->getStamp()).total_milliseconds() / 1000.0 <<  " seconds to be delivered from " << delayPayloads[i]->getFrom()->toString() << ".";
-			chatWindow_->addSystemMessage(String(s.str()));
+			chatWindow_->addSystemMessage(std::string(s.str()));
 		}
 		boost::shared_ptr<SecurityLabel> label = message->getPayload<SecurityLabel>();
 		boost::optional<SecurityLabel> maybeLabel = label ? boost::optional<SecurityLabel>(*label) : boost::optional<SecurityLabel>();
@@ -179,15 +181,15 @@ void ChatControllerBase::handleIncomingMessage(boost::shared_ptr<MessageEvent> m
 			timeStamp = *messageTimeStamp;
 		}
 
-		addMessage(body, senderDisplayNameFromMessage(from), isIncomingMessageFromMe(message), maybeLabel, String(avatarManager_->getAvatarPath(from).string()), timeStamp);
+		addMessage(body, senderDisplayNameFromMessage(from), isIncomingMessageFromMe(message), maybeLabel, std::string(avatarManager_->getAvatarPath(from).string()), timeStamp);
 	}
 	chatWindow_->show();
 	chatWindow_->setUnreadMessageCount(unreadMessages_.size());
 }
 
-String ChatControllerBase::getErrorMessage(boost::shared_ptr<ErrorPayload> error) {
-	String defaultMessage = "Error sending message";
-	if (!error->getText().isEmpty()) {
+std::string ChatControllerBase::getErrorMessage(boost::shared_ptr<ErrorPayload> error) {
+	std::string defaultMessage = "Error sending message";
+	if (!error->getText().empty()) {
 		return error->getText();
 	}
 	else {

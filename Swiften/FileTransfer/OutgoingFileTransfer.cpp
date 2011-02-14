@@ -15,7 +15,7 @@
 
 namespace Swift {
 
-OutgoingFileTransfer::OutgoingFileTransfer(const String& id, const JID& from, const JID& to, const String& name, int size, const String& description, boost::shared_ptr<ReadBytestream> bytestream, IQRouter* iqRouter, SOCKS5BytestreamServer* socksServer) : id(id), from(from), to(to), name(name), size(size), description(description), bytestream(bytestream), iqRouter(iqRouter), socksServer(socksServer) {
+OutgoingFileTransfer::OutgoingFileTransfer(const std::string& id, const JID& from, const JID& to, const std::string& name, int size, const std::string& description, boost::shared_ptr<ReadBytestream> bytestream, IQRouter* iqRouter, SOCKS5BytestreamServer* socksServer) : id(id), from(from), to(to), name(name), size(size), description(description), bytestream(bytestream), iqRouter(iqRouter), socksServer(socksServer) {
 }
 
 void OutgoingFileTransfer::start() {

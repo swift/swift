@@ -5,6 +5,7 @@
  */
 
 #include <boost/numeric/conversion/cast.hpp>
+#include <algorithm>
 
 #include "Swiften/StringCodecs/Base64.h"
 
@@ -12,7 +13,7 @@ namespace Swift {
 
 #pragma GCC diagnostic ignored "-Wold-style-cast"
 
-String Base64::encode(const ByteArray &s) {
+std::string Base64::encode(const ByteArray &s) {
 	int i;
 	int len = s.getSize();
 	char tbl[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";
@@ -45,11 +46,11 @@ String Base64::encode(const ByteArray &s) {
 	return p;
 }
 
-ByteArray Base64::decode(const String& input) {
-	String inputWithoutNewlines(input);
-	inputWithoutNewlines.removeAll('\n');
+ByteArray Base64::decode(const std::string& input) {
+	std::string inputWithoutNewlines(input);
+	inputWithoutNewlines.erase(std::remove(inputWithoutNewlines.begin(), inputWithoutNewlines.end(), '\n'), inputWithoutNewlines.end());
 
-	const std::string& s = inputWithoutNewlines.getUTF8String();
+	const std::string& s = inputWithoutNewlines;
 	ByteArray p;
 
 	// -1 specifies invalid

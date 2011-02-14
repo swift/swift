@@ -44,7 +44,7 @@ class PayloadAddingPresenceSenderTest : public CppUnit::TestFixture {
 			testling->sendPresence(Presence::create("bar"));
 
 			CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(stanzaChannel->sentStanzas.size()));
-			CPPUNIT_ASSERT_EQUAL(String("bar"), stanzaChannel->getStanzaAtIndex<Presence>(0)->getStatus());
+			CPPUNIT_ASSERT_EQUAL(std::string("bar"), stanzaChannel->getStanzaAtIndex<Presence>(0)->getStatus());
 			CPPUNIT_ASSERT(stanzaChannel->getStanzaAtIndex<Presence>(0)->getPayload<MyPayload>());
 		}
 
@@ -55,7 +55,7 @@ class PayloadAddingPresenceSenderTest : public CppUnit::TestFixture {
 			testling->sendPresence(Presence::create("bar"));
 
 			CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(stanzaChannel->sentStanzas.size()));
-			CPPUNIT_ASSERT_EQUAL(String("bar"), stanzaChannel->getStanzaAtIndex<Presence>(0)->getStatus());
+			CPPUNIT_ASSERT_EQUAL(std::string("bar"), stanzaChannel->getStanzaAtIndex<Presence>(0)->getStatus());
 			CPPUNIT_ASSERT(!stanzaChannel->getStanzaAtIndex<Presence>(0)->getPayload<MyPayload>());
 		}
 
@@ -76,7 +76,7 @@ class PayloadAddingPresenceSenderTest : public CppUnit::TestFixture {
 			testling->setPayload(MyPayload::create("foo"));
 
 			CPPUNIT_ASSERT_EQUAL(2, static_cast<int>(stanzaChannel->sentStanzas.size()));
-			CPPUNIT_ASSERT_EQUAL(String("bar"), stanzaChannel->getStanzaAtIndex<Presence>(1)->getStatus());
+			CPPUNIT_ASSERT_EQUAL(std::string("bar"), stanzaChannel->getStanzaAtIndex<Presence>(1)->getStatus());
 			CPPUNIT_ASSERT(stanzaChannel->getStanzaAtIndex<Presence>(1)->getPayload<MyPayload>());
 		}
 
@@ -102,7 +102,7 @@ class PayloadAddingPresenceSenderTest : public CppUnit::TestFixture {
 			testling->setPayload(MyPayload::create("foo"));
 
 			CPPUNIT_ASSERT_EQUAL(3, static_cast<int>(stanzaChannel->sentStanzas.size()));
-			CPPUNIT_ASSERT_EQUAL(String("bar"), stanzaChannel->getStanzaAtIndex<Presence>(2)->getStatus());
+			CPPUNIT_ASSERT_EQUAL(std::string("bar"), stanzaChannel->getStanzaAtIndex<Presence>(2)->getStatus());
 		}
 
 	private:
@@ -114,13 +114,13 @@ class PayloadAddingPresenceSenderTest : public CppUnit::TestFixture {
 		struct MyPayload : public Payload {
 				typedef boost::shared_ptr<MyPayload> ref;
 
-				MyPayload(const String& body) : body(body) {}
+				MyPayload(const std::string& body) : body(body) {}
 
-				static ref create(const String& body) {
+				static ref create(const std::string& body) {
 					return ref(new MyPayload(body));
 				}
 
-				String body;
+				std::string body;
 		};
 
 	private:

@@ -16,7 +16,7 @@ class DummyMenulet : public Menulet {
 		void clear() {
 		}
 
-		void addItem(const Swift::String&, const Swift::String&) {
+		void addItem(const std::string&, const std::string&) {
 		}
 
 		void addAboutItem() {
@@ -31,6 +31,6 @@ class DummyMenulet : public Menulet {
 		void addSeparator() {
 		}
 
-		void setIcon(const Swift::String&) {
+		void setIcon(const std::string&) {
 		}
 };

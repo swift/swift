@@ -20,8 +20,8 @@ namespace Swift {
 			BonjourResolveServiceQuery(const DNSSDServiceID& service, boost::shared_ptr<BonjourQuerier> querier, EventLoop* eventLoop) : BonjourQuery(querier, eventLoop) {
 				DNSServiceErrorType result = DNSServiceResolve(
 						&sdRef, 0, service.getNetworkInterfaceID(), 
-						service.getName().getUTF8Data(), service.getType().getUTF8Data(), 
-						service.getDomain().getUTF8Data(), 
+						service.getName().c_str(), service.getType().c_str(), 
+						service.getDomain().c_str(), 
 						&BonjourResolveServiceQuery::handleServiceResolvedStatic, this);
 				if (result != kDNSServiceErr_NoError) {
 					sdRef = NULL;
@@ -55,7 +55,7 @@ namespace Swift {
 					eventLoop->postEvent(
 							boost::bind(
 								boost::ref(onServiceResolved), 
-								Result(String(fullName), String(host), port, 
+								Result(std::string(fullName), std::string(host), port, 
 									ByteArray(reinterpret_cast<const char*>(txtRecord), txtLen))), 
 							shared_from_this());
 				}

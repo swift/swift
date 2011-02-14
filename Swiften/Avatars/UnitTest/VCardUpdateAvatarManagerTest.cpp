@@ -113,7 +113,7 @@ class VCardUpdateAvatarManagerTest : public CppUnit::TestFixture {
 			stanzaChannel->onIQReceived(createVCardResult(ByteArray()));
 			
 			CPPUNIT_ASSERT(!avatarStorage->hasAvatar(Hexify::hexify(SHA1::getHash(ByteArray()))));
-			CPPUNIT_ASSERT_EQUAL(String(), testling->getAvatarHash(JID("foo@bar.com")));
+			CPPUNIT_ASSERT_EQUAL(std::string(), testling->getAvatarHash(JID("foo@bar.com")));
 		}
 
 		void testStanzaChannelReset_ClearsHash() {
@@ -128,7 +128,7 @@ class VCardUpdateAvatarManagerTest : public CppUnit::TestFixture {
 
 			CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(changes.size()));
 			CPPUNIT_ASSERT_EQUAL(user1.toBare(), changes[0]);
-			CPPUNIT_ASSERT_EQUAL(String(""), testling->getAvatarHash(user1.toBare()));
+			CPPUNIT_ASSERT_EQUAL(std::string(""), testling->getAvatarHash(user1.toBare()));
 		}
 
 		void testStanzaChannelReset_ReceiveHashAfterResetUpdatesHash() {
@@ -154,7 +154,7 @@ class VCardUpdateAvatarManagerTest : public CppUnit::TestFixture {
 			return result;
 		}
 
-		boost::shared_ptr<Presence> createPresenceWithPhotoHash(const JID& jid, const String& hash) {
+		boost::shared_ptr<Presence> createPresenceWithPhotoHash(const JID& jid, const std::string& hash) {
 			boost::shared_ptr<Presence> presence(new Presence());
 			presence->setFrom(jid);
 			presence->addPayload(boost::shared_ptr<VCardUpdate>(new VCardUpdate(hash)));
@@ -187,7 +187,7 @@ class VCardUpdateAvatarManagerTest : public CppUnit::TestFixture {
 		VCardManager* vcardManager;
 		VCardMemoryStorage* vcardStorage;
 		ByteArray avatar1;
-		String avatar1Hash;
+		std::string avatar1Hash;
 		std::vector<JID> changes;
 		JID user1;
 		JID user2;

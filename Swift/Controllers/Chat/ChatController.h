@@ -24,16 +24,16 @@ namespace Swift {
 
 		private:
 			void handlePresenceChange(boost::shared_ptr<Presence> newPresence);
-			String getStatusChangeString(boost::shared_ptr<Presence> presence);
+			std::string getStatusChangeString(boost::shared_ptr<Presence> presence);
 			bool isIncomingMessageFromMe(boost::shared_ptr<Message> message);
-			void postSendMessage(const String &body, boost::shared_ptr<Stanza> sentStanza);
+			void postSendMessage(const std::string &body, boost::shared_ptr<Stanza> sentStanza);
 			void preHandleIncomingMessage(boost::shared_ptr<MessageEvent> messageEvent);
 			void preSendMessageRequest(boost::shared_ptr<Message>);
-			String senderDisplayNameFromMessage(const JID& from);
+			std::string senderDisplayNameFromMessage(const JID& from);
 			virtual boost::optional<boost::posix_time::ptime> getMessageTimestamp(boost::shared_ptr<Message>) const;
 			void handleStanzaAcked(boost::shared_ptr<Stanza> stanza);
 			void dayTicked() {lastWasPresence_ = false;}
-			void handleContactNickChanged(const JID& jid, const String& /*oldNick*/);
+			void handleContactNickChanged(const JID& jid, const std::string& /*oldNick*/);
 
 		private:
 			NickResolver* nickResolver_;
@@ -41,8 +41,8 @@ namespace Swift {
 			ChatStateTracker* chatStateTracker_;
 			bool isInMUC_;
 			bool lastWasPresence_;
-			String lastStatusChangeString_;
-			std::map<boost::shared_ptr<Stanza>, String> unackedStanzas_;
+			std::string lastStatusChangeString_;
+			std::map<boost::shared_ptr<Stanza>, std::string> unackedStanzas_;
 			StatusShow::Type lastShownStatus_;
 	};
 }

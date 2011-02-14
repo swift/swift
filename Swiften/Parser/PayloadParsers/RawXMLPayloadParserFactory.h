@@ -8,14 +8,14 @@
 
 #include "Swiften/Parser/PayloadParserFactory.h"
 #include "Swiften/Parser/PayloadParsers/RawXMLPayloadParser.h"
-#include "Swiften/Base/String.h"
+#include <string>
 
 namespace Swift {
 	class RawXMLPayloadParserFactory : public PayloadParserFactory {
 		public:
 			RawXMLPayloadParserFactory() {}
 
-			virtual bool canParse(const String&, const String&, const AttributeMap&) const {
+			virtual bool canParse(const std::string&, const std::string&, const AttributeMap&) const {
 				return true;
 			}
 

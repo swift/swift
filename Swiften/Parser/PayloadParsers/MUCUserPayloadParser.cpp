@@ -18,27 +18,27 @@ namespace Swift {
 MUCUserPayloadParser::MUCUserPayloadParser() : level(TopLevel) {
 }
 
-void MUCUserPayloadParser::handleStartElement(const String& element, const String&, const AttributeMap& attributes) {
+void MUCUserPayloadParser::handleStartElement(const std::string& element, const std::string&, const AttributeMap& attributes) {
 	if (level == ItemLevel) {
 		if (element == "item") {
 			MUCUserPayload::Item item;
-			String affiliation = attributes.getAttribute("affiliation");
-			String role = attributes.getAttribute("role");
-			String nick = attributes.getAttribute("nick");
-			String jid = attributes.getAttribute("jid");
+			std::string affiliation = attributes.getAttribute("affiliation");
+			std::string role = attributes.getAttribute("role");
+			std::string nick = attributes.getAttribute("nick");
+			std::string jid = attributes.getAttribute("jid");
 			item.affiliation = parseAffiliation(affiliation);
 			item.role = parseRole(role);
-			if (!jid.isEmpty()) {
+			if (!jid.empty()) {
 				item.realJID = JID(jid);
 			}
-			if (!nick.isEmpty()) {
+			if (!nick.empty()) {
 				item.nick = nick;
 			}
 			getPayloadInternal()->addItem(item);
 		} else if (element == "status") {
 			MUCUserPayload::StatusCode status;
 			try {
-				status.code = boost::lexical_cast<int>(attributes.getAttribute("code").getUTF8Data());
+				status.code = boost::lexical_cast<int>(attributes.getAttribute("code").c_str());
 				getPayloadInternal()->addStatusCode(status);
 			} catch (boost::bad_lexical_cast&) {
 			}
@@ -47,7 +47,7 @@ void MUCUserPayloadParser::handleStartElement(const String& element, const Strin
 	++level;
 }
 
-MUCOccupant::Role MUCUserPayloadParser::parseRole(const String& roleString) const {
+MUCOccupant::Role MUCUserPayloadParser::parseRole(const std::string& roleString) const {
 	if (roleString == "moderator") {
 		return MUCOccupant::Moderator;
 	}
@@ -63,7 +63,7 @@ MUCOccupant::Role MUCUserPayloadParser::parseRole(const String& roleString) cons
 	return MUCOccupant::NoRole;
 }
 
-MUCOccupant::Affiliation MUCUserPayloadParser::parseAffiliation(const String& affiliationString) const {
+MUCOccupant::Affiliation MUCUserPayloadParser::parseAffiliation(const std::string& affiliationString) const {
 	if (affiliationString == "owner") {
 		return MUCOccupant::Owner;
 	}
@@ -83,11 +83,11 @@ MUCOccupant::Affiliation MUCUserPayloadParser::parseAffiliation(const String& af
 }
 
 
-void MUCUserPayloadParser::handleEndElement(const String& /*element*/, const String&) {
+void MUCUserPayloadParser::handleEndElement(const std::string& /*element*/, const std::string&) {
 	--level;
 }
 
-void MUCUserPayloadParser::handleCharacterData(const String& /*data*/) {
+void MUCUserPayloadParser::handleCharacterData(const std::string& /*data*/) {
 
 }
 

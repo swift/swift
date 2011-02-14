@@ -28,13 +28,13 @@ class IDGeneratorTest : public CppUnit::TestFixture
 		void testGenerate() {
 			IDGenerator testling;
 			for (unsigned int i = 0; i < 26*4; ++i) {
-				String id = testling.generateID();
+				std::string id = testling.generateID();
 				CPPUNIT_ASSERT(generatedIDs_.insert(id).second);
 			}
 		}
 	
 	private:
-		std::set<String> generatedIDs_;
+		std::set<std::string> generatedIDs_;
 };
 
 CPPUNIT_TEST_SUITE_REGISTRATION(IDGeneratorTest);

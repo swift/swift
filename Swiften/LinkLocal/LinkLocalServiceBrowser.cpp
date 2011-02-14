@@ -63,7 +63,7 @@ bool LinkLocalServiceBrowser::isRegistered() const {
 	return registerQuery;
 }
 
-void LinkLocalServiceBrowser::registerService(const String& name, int port, const LinkLocalServiceInfo& info) {
+void LinkLocalServiceBrowser::registerService(const std::string& name, int port, const LinkLocalServiceInfo& info) {
 	assert(!registerQuery);
 	registerQuery = querier->createRegisterQuery(name, port, info.toTXTRecord());
 	registerQuery->onRegisterFinished.connect(

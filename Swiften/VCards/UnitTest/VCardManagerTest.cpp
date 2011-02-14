@@ -64,7 +64,7 @@ class VCardManagerTest : public CppUnit::TestFixture {
 
 			VCard::ref result = testling->getVCardAndRequestWhenNeeded(JID("foo@bar.com/baz"));
 
-			CPPUNIT_ASSERT_EQUAL(String("Foo Bar"), result->getFullName());
+			CPPUNIT_ASSERT_EQUAL(std::string("Foo Bar"), result->getFullName());
 			CPPUNIT_ASSERT_EQUAL(0, static_cast<int>(stanzaChannel->sentStanzas.size()));
 		}
 
@@ -83,8 +83,8 @@ class VCardManagerTest : public CppUnit::TestFixture {
 
 			CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(changes.size()));
 			CPPUNIT_ASSERT_EQUAL(JID("foo@bar.com/baz"), changes[0].first);
-			CPPUNIT_ASSERT_EQUAL(String("Foo Bar"), changes[0].second->getFullName());
-			CPPUNIT_ASSERT_EQUAL(String("Foo Bar"), vcardStorage->getVCard(JID("foo@bar.com/baz"))->getFullName());
+			CPPUNIT_ASSERT_EQUAL(std::string("Foo Bar"), changes[0].second->getFullName());
+			CPPUNIT_ASSERT_EQUAL(std::string("Foo Bar"), vcardStorage->getVCard(JID("foo@bar.com/baz"))->getFullName());
 
 			CPPUNIT_ASSERT_EQUAL(0, static_cast<int>(ownChanges.size()));
 		}
@@ -96,8 +96,8 @@ class VCardManagerTest : public CppUnit::TestFixture {
 
 			CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(changes.size()));
 			CPPUNIT_ASSERT_EQUAL(JID("foo@bar.com/baz"), changes[0].first);
-			CPPUNIT_ASSERT_EQUAL(String(""), changes[0].second->getFullName());
-			CPPUNIT_ASSERT_EQUAL(String(""), vcardStorage->getVCard(JID("foo@bar.com/baz"))->getFullName());
+			CPPUNIT_ASSERT_EQUAL(std::string(""), changes[0].second->getFullName());
+			CPPUNIT_ASSERT_EQUAL(std::string(""), vcardStorage->getVCard(JID("foo@bar.com/baz"))->getFullName());
 		}
 
 		void testRequest_VCardAlreadyRequested() {
@@ -128,11 +128,11 @@ class VCardManagerTest : public CppUnit::TestFixture {
 			CPPUNIT_ASSERT(stanzaChannel->isRequestAtIndex<VCard>(0, JID(), IQ::Get));
 			CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(changes.size()));
 			CPPUNIT_ASSERT_EQUAL(ownJID.toBare(), changes[0].first);
-			CPPUNIT_ASSERT_EQUAL(String("Myself"), changes[0].second->getFullName());
-			CPPUNIT_ASSERT_EQUAL(String("Myself"), vcardStorage->getVCard(ownJID.toBare())->getFullName());
+			CPPUNIT_ASSERT_EQUAL(std::string("Myself"), changes[0].second->getFullName());
+			CPPUNIT_ASSERT_EQUAL(std::string("Myself"), vcardStorage->getVCard(ownJID.toBare())->getFullName());
 
 			CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(ownChanges.size()));
-			CPPUNIT_ASSERT_EQUAL(String("Myself"), ownChanges[0]->getFullName());
+			CPPUNIT_ASSERT_EQUAL(std::string("Myself"), ownChanges[0]->getFullName());
 		}
 
 		void testCreateSetVCardRequest() {
@@ -146,7 +146,7 @@ class VCardManagerTest : public CppUnit::TestFixture {
 
 			CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(changes.size()));
 			CPPUNIT_ASSERT_EQUAL(ownJID.toBare(), changes[0].first);
-			CPPUNIT_ASSERT_EQUAL(String("New Name"), changes[0].second->getFullName());
+			CPPUNIT_ASSERT_EQUAL(std::string("New Name"), changes[0].second->getFullName());
 		}
 
 		void testCreateSetVCardRequest_Error() {

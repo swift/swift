@@ -36,7 +36,7 @@ class StorageSerializerTest : public CppUnit::TestFixture {
 			url.url = "http://the-tech.mit.edu/Shakespeare/";
 			storage->addURL(url);
 
-			CPPUNIT_ASSERT_EQUAL(String(
+			CPPUNIT_ASSERT_EQUAL(std::string(
 				"<storage xmlns=\"storage:bookmarks\">"
 					"<conference "
 							"autojoin=\"1\" "
@@ -58,7 +58,7 @@ class StorageSerializerTest : public CppUnit::TestFixture {
 			room.jid = JID("council@conference.underhill.org");
 			storage->addRoom(room);
 
-			CPPUNIT_ASSERT_EQUAL(String(
+			CPPUNIT_ASSERT_EQUAL(std::string(
 				"<storage xmlns=\"storage:bookmarks\">"
 					"<conference "
 							"autojoin=\"1\" "

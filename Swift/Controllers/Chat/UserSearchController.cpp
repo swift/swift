@@ -92,7 +92,7 @@ void UserSearchController::handleDiscoServiceFound(const JID& jid, boost::shared
 			isUserDirectory = true;
 		}
 	}
-	std::vector<String> features = info->getFeatures();
+	std::vector<std::string> features = info->getFeatures();
 	supports55 = std::find(features.begin(), features.end(), DiscoInfo::JabberSearchFeature) != features.end();
 	if (/*isUserDirectory && */supports55) { //FIXME: once M-Link correctly advertises directoryness.
 		/* Abort further searches.*/
@@ -125,7 +125,7 @@ void UserSearchController::handleSearchResponse(boost::shared_ptr<SearchPayload>
 	std::vector<UserSearchResult> results;
 	foreach (SearchPayload::Item item, resultsPayload->getItems()) {
 		JID jid(item.jid);
-		std::map<String, String> fields;
+		std::map<std::string, std::string> fields;
 		fields["first"] = item.first;
 		fields["last"] = item.last;
 		fields["nick"] = item.nick;

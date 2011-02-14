@@ -17,7 +17,7 @@
 #include "Swiften/Elements/Presence.h"
 #include "Swiften/Elements/Message.h"
 #include "Swiften/JID/JID.h"
-#include "Swiften/Base/String.h"
+#include <string>
 #include "Swiften/Parser/PayloadParsers/FullPayloadParserFactoryCollection.h"
 #include "Swiften/Serializer/PayloadSerializers/FullPayloadSerializerCollection.h"
 #include "Swiften/Component/ComponentSessionStanzaChannel.h"
@@ -41,10 +41,10 @@ namespace Swift {
 	 */
 	class CoreComponent : public Entity {
 		public:
-			CoreComponent(EventLoop* eventLoop, NetworkFactories* networkFactories, const JID& jid, const String& secret);
+			CoreComponent(EventLoop* eventLoop, NetworkFactories* networkFactories, const JID& jid, const std::string& secret);
 			~CoreComponent();
 
-			void connect(const String& host, int port);
+			void connect(const std::string& host, int port);
 			void disconnect();
 			
 			void sendMessage(boost::shared_ptr<Message>);
@@ -72,8 +72,8 @@ namespace Swift {
 		public:
 			boost::signal<void (const ComponentError&)> onError;
 			boost::signal<void ()> onConnected;
-			boost::signal<void (const String&)> onDataRead;
-			boost::signal<void (const String&)> onDataWritten;
+			boost::signal<void (const std::string&)> onDataRead;
+			boost::signal<void (const std::string&)> onDataWritten;
 
 			boost::signal<void (boost::shared_ptr<Message>)> onMessageReceived;
 			boost::signal<void (boost::shared_ptr<Presence>) > onPresenceReceived;
@@ -82,15 +82,15 @@ namespace Swift {
 			void handleConnectorFinished(boost::shared_ptr<Connection>);
 			void handleStanzaChannelAvailableChanged(bool available);
 			void handleSessionFinished(boost::shared_ptr<Error>);
-			void handleDataRead(const String&);
-			void handleDataWritten(const String&);
+			void handleDataRead(const std::string&);
+			void handleDataWritten(const std::string&);
 
 		private:
 			EventLoop* eventLoop;
 			NetworkFactories* networkFactories;
 			PlatformDomainNameResolver resolver_;
 			JID jid_;
-			String secret_;
+			std::string secret_;
 			ComponentSessionStanzaChannel* stanzaChannel_;
 			IQRouter* iqRouter_;
 			ComponentConnector::ref connector_;

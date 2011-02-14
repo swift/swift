@@ -14,7 +14,7 @@ namespace Swift {
 		public:
 			DiscoItemsSerializer();
 
-			virtual String serializePayload(boost::shared_ptr<DiscoItems>)  const;
+			virtual std::string serializePayload(boost::shared_ptr<DiscoItems>)  const;
 	};
 }
 

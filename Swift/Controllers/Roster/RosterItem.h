@@ -9,22 +9,22 @@
 #include "Swiften/Base/boost_bsignals.h"
 #include <boost/shared_ptr.hpp>
 
-#include "Swiften/Base/String.h"
+#include <string>
 
 namespace Swift {
 class GroupRosterItem;
 class RosterItem {
 	public:
-		RosterItem(const String& name, GroupRosterItem* parent);
+		RosterItem(const std::string& name, GroupRosterItem* parent);
 		virtual ~RosterItem();
 		boost::signal<void ()> onDataChanged;
 		GroupRosterItem* getParent() const;
-		void setDisplayName(const String& name);
-		String getDisplayName() const;
-		String getSortableDisplayName() const;
+		void setDisplayName(const std::string& name);
+		std::string getDisplayName() const;
+		std::string getSortableDisplayName() const;
 	private:
-		String name_;
-		String sortableDisplayName_;
+		std::string name_;
+		std::string sortableDisplayName_;
 		GroupRosterItem* parent_;
 };
 

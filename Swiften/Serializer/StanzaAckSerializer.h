@@ -19,11 +19,11 @@ namespace Swift {
 			StanzaAckSerializer() : GenericElementSerializer<StanzaAck>() {
 			}
 
-			virtual String serialize(boost::shared_ptr<Element> element) const {
+			virtual std::string serialize(boost::shared_ptr<Element> element) const {
 				StanzaAck::ref stanzaAck(boost::dynamic_pointer_cast<StanzaAck>(element));
 				assert(stanzaAck->isValid());
 				XMLElement result("a", "urn:xmpp:sm:2");
-				result.setAttribute("h", String(boost::lexical_cast<std::string>(stanzaAck->getHandledStanzasCount())));
+				result.setAttribute("h", std::string(boost::lexical_cast<std::string>(stanzaAck->getHandledStanzasCount())));
 				return result.serialize();
 			}
 	};

@@ -7,12 +7,10 @@
 #include "Slimber/MenuletController.h"
 
 #include "Swiften/Base/foreach.h"
-#include "Swiften/Base/String.h"
+#include <string>
 #include "Slimber/Menulet.h"
 
 #include <iostream>
-
-using namespace Swift;
 
 MenuletController::MenuletController(Menulet* menulet) : 
 		menulet(menulet), xmppStatus(Offline) {
@@ -23,13 +21,13 @@ MenuletController::MenuletController(Menulet* menulet) :
 MenuletController::~MenuletController() {
 }
 
-void MenuletController::setXMPPStatus(const String& message, Status status) {
+void MenuletController::setXMPPStatus(const std::string& message, Status status) {
 	xmppStatus = status;
 	xmppStatusMessage = message;
 	update();
 }
 
-void MenuletController::setUserNames(const std::vector<String>& users) {
+void MenuletController::setUserNames(const std::vector<std::string>& users) {
 	linkLocalUsers = users;
 	update();
 }
@@ -43,8 +41,8 @@ void MenuletController::update() {
 	else {
 		menulet->setIcon("UsersOnline");
 		menulet->addItem("Online users:");
-		foreach(const String& user, linkLocalUsers) {
-			menulet->addItem(String("  ") + user);
+		foreach(const std::string& user, linkLocalUsers) {
+			menulet->addItem(std::string("  ") + user);
 		}
 	}
 	menulet->addSeparator();

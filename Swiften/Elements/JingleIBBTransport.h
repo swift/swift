@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include <Swiften/Base/String.h>
+#include <string>
 #include <Swiften/Elements/JingleTransport.h>
 
 namespace Swift {
@@ -25,11 +25,11 @@ namespace Swift {
 				return stanzaType;
 			}
 
-			void setSessionID(const String& id) {
+			void setSessionID(const std::string& id) {
 				sessionID = id;
 			}
 
-			const String& getSessionID() const {
+			const std::string& getSessionID() const {
 				return sessionID;
 			}
 
@@ -42,7 +42,7 @@ namespace Swift {
 			}
 
 		private:
-			String sessionID;
+			std::string sessionID;
 			int blockSize;
 			StanzaType stanzaType;
 	};

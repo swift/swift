@@ -22,11 +22,11 @@ namespace {
 
 namespace Swift {
 
-CapsInfoGenerator::CapsInfoGenerator(const String& node) : node_(node) {
+CapsInfoGenerator::CapsInfoGenerator(const std::string& node) : node_(node) {
 }
 
 CapsInfo CapsInfoGenerator::generateCapsInfo(const DiscoInfo& discoInfo) const {
-	String serializedCaps;
+	std::string serializedCaps;
 
 	std::vector<DiscoInfo::Identity> identities(discoInfo.getIdentities());
 	std::sort(identities.begin(), identities.end());
@@ -34,9 +34,9 @@ CapsInfo CapsInfoGenerator::generateCapsInfo(const DiscoInfo& discoInfo) const {
 		serializedCaps += identity.getCategory() + "/" + identity.getType() + "/" + identity.getLanguage() + "/" + identity.getName() + "<";
 	}
 
-	std::vector<String> features(discoInfo.getFeatures());
+	std::vector<std::string> features(discoInfo.getFeatures());
 	std::sort(features.begin(), features.end());
-	foreach (const String& feature, features) {
+	foreach (const std::string& feature, features) {
 		serializedCaps += feature + "<";
 	}
 
@@ -49,15 +49,15 @@ CapsInfo CapsInfoGenerator::generateCapsInfo(const DiscoInfo& discoInfo) const {
 				continue;
 			}
 			serializedCaps += field->getName() + "<";
-			std::vector<String> values(field->getRawValues());
+			std::vector<std::string> values(field->getRawValues());
 			std::sort(values.begin(), values.end());
-			foreach(const String& value, values) {
+			foreach(const std::string& value, values) {
 				serializedCaps += value + "<";
 			}
 		}
 	}
 
-	String version(Base64::encode(SHA1::getHash(serializedCaps)));
+	std::string version(Base64::encode(SHA1::getHash(serializedCaps)));
 	return CapsInfo(node_, version, "sha-1");
 }
 

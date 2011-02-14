@@ -58,7 +58,7 @@ void OpenSSLCertificate::parse() {
 		ByteArray subjectNameData;
 		subjectNameData.resize(256);
 		X509_NAME_oneline(X509_get_subject_name(cert.get()), subjectNameData.getData(), subjectNameData.getSize());
-		this->subjectName = String(subjectNameData.getData());
+		this->subjectName = std::string(subjectNameData.getData());
 
 		// Common name
 		int cnLoc = X509_NAME_get_index_by_NID(subjectName, NID_commonName, -1);

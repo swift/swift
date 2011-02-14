@@ -11,19 +11,19 @@
 
 namespace Swift {
 
-XMLElement::XMLElement(const String& tag, const String& xmlns, const String& text) : tag_(tag) {
-	if (!xmlns.isEmpty()) {
+XMLElement::XMLElement(const std::string& tag, const std::string& xmlns, const std::string& text) : tag_(tag) {
+	if (!xmlns.empty()) {
 		setAttribute("xmlns", xmlns);
 	}
-	if (!text.isEmpty()) {
+	if (!text.empty()) {
 		addNode(XMLTextNode::ref(new XMLTextNode(text)));
 	}
 }
 
-String XMLElement::serialize() {
-	String result;
+std::string XMLElement::serialize() {
+	std::string result;
 	result += "<" + tag_;
-	typedef std::pair<String,String> Pair;
+	typedef std::pair<std::string,std::string> Pair;
 	foreach(const Pair& p, attributes_) {
 		result += " " + p.first + "=\"" + p.second + "\"";
 	}
@@ -41,13 +41,13 @@ String XMLElement::serialize() {
 	return result;
 }
 
-void XMLElement::setAttribute(const String& attribute, const String& value) {
-	String escapedValue(value);
-	escapedValue.replaceAll('&', "&amp;");
-	escapedValue.replaceAll('<', "&lt;");
-	escapedValue.replaceAll('>', "&gt;");
-	escapedValue.replaceAll('\'', "&apos;");
-	escapedValue.replaceAll('"', "&quot;");
+void XMLElement::setAttribute(const std::string& attribute, const std::string& value) {
+	std::string escapedValue(value);
+	String::replaceAll(escapedValue, '&', "&amp;");
+	String::replaceAll(escapedValue, '<', "&lt;");
+	String::replaceAll(escapedValue, '>', "&gt;");
+	String::replaceAll(escapedValue, '\'', "&apos;");
+	String::replaceAll(escapedValue, '"', "&quot;");
 	attributes_[attribute] = escapedValue;
 }
 

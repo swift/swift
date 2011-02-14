@@ -6,11 +6,11 @@
 
 #pragma once
 
-#include "Swiften/Base/String.h"
+#include <string>
 
 namespace Swift {
 	class IDNA {
 		public:
-			static String getEncoded(const String& s);
+			static std::string getEncoded(const std::string& s);
 	};
 }

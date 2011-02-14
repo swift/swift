@@ -13,11 +13,11 @@ namespace Swift {
 StanzaAckParser::StanzaAckParser() : GenericElementParser<StanzaAck>(), depth(0) {
 }
 
-void StanzaAckParser::handleStartElement(const String&, const String&, const AttributeMap& attributes) {
+void StanzaAckParser::handleStartElement(const std::string&, const std::string&, const AttributeMap& attributes) {
 	if (depth == 0) {
-		String handledStanzasString = attributes.getAttribute("h");
+		std::string handledStanzasString = attributes.getAttribute("h");
 		try {
-			getElementGeneric()->setHandledStanzasCount(boost::lexical_cast<int>(handledStanzasString.getUTF8String()));
+			getElementGeneric()->setHandledStanzasCount(boost::lexical_cast<int>(handledStanzasString));
 		}
 		catch (const boost::bad_lexical_cast &) {
 		}
@@ -25,7 +25,7 @@ void StanzaAckParser::handleStartElement(const String&, const String&, const Att
 	++depth;
 }
 
-void StanzaAckParser::handleEndElement(const String&, const String&) {
+void StanzaAckParser::handleEndElement(const std::string&, const std::string&) {
 	--depth;
 }
 

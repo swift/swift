@@ -61,25 +61,25 @@ XMPPSerializer::XMPPSerializer(PayloadSerializerCollection* payloadSerializers, 
 	serializers_.push_back(boost::make_shared<ComponentHandshakeSerializer>());
 }
 
-String XMPPSerializer::serializeHeader(const ProtocolHeader& header) const {
-	String result = "<?xml version=\"1.0\"?><stream:stream xmlns=\"" + getDefaultNamespace() + "\" xmlns:stream=\"http://etherx.jabber.org/streams\"";
-	if (!header.getFrom().isEmpty()) {
+std::string XMPPSerializer::serializeHeader(const ProtocolHeader& header) const {
+	std::string result = "<?xml version=\"1.0\"?><stream:stream xmlns=\"" + getDefaultNamespace() + "\" xmlns:stream=\"http://etherx.jabber.org/streams\"";
+	if (!header.getFrom().empty()) {
 		result += " from=\"" + header.getFrom() + "\"";
 	}
-	if (!header.getTo().isEmpty()) {
+	if (!header.getTo().empty()) {
 		result += " to=\"" + header.getTo() + "\"";
 	}
-	if (!header.getID().isEmpty()) {
+	if (!header.getID().empty()) {
 		result += " id=\"" + header.getID() + "\"";
 	}
-	if (!header.getVersion().isEmpty()) {
+	if (!header.getVersion().empty()) {
 		result += " version=\"" + header.getVersion() + "\"";
 	}
 	result += ">";
 	return result;
 }
 
-String XMPPSerializer::serializeElement(boost::shared_ptr<Element> element) const {
+std::string XMPPSerializer::serializeElement(boost::shared_ptr<Element> element) const {
 	std::vector< boost::shared_ptr<ElementSerializer> >::const_iterator i = std::find_if(
 			serializers_.begin(), serializers_.end(), 
 			boost::bind(&ElementSerializer::canSerialize, _1, element));
@@ -92,11 +92,11 @@ String XMPPSerializer::serializeElement(boost::shared_ptr<Element> element) cons
 	}
 }
 
-String XMPPSerializer::serializeFooter() const {
+std::string XMPPSerializer::serializeFooter() const {
 	return "</stream:stream>";
 }
 
-String XMPPSerializer::getDefaultNamespace() const {
+std::string XMPPSerializer::getDefaultNamespace() const {
 	switch (type_) {
 		case ClientStreamType: return "jabber:client";
 		case ServerStreamType: return "jabber:server";

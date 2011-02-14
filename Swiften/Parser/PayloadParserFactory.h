@@ -9,7 +9,7 @@
 #include "Swiften/Parser/AttributeMap.h"
 
 namespace Swift {
-	class String;
+	
 	class PayloadParser;
 
 	/**
@@ -22,7 +22,7 @@ namespace Swift {
 			/**
 			 * Checks whether this factory can parse the given top-level element in the given namespace (with the given attributes).
 			 */
-			virtual bool canParse(const String& element, const String& ns, const AttributeMap& attributes) const = 0;
+			virtual bool canParse(const std::string& element, const std::string& ns, const AttributeMap& attributes) const = 0;
 
 			/**
 			 * Creates a new payload parser.

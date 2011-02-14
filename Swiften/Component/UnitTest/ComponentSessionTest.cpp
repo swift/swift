@@ -180,7 +180,7 @@ class ComponentSessionTest : public CppUnit::TestFixture {
 					CPPUNIT_ASSERT(event.element);
 					ComponentHandshake::ref handshake(boost::dynamic_pointer_cast<ComponentHandshake>(event.element));
 					CPPUNIT_ASSERT(handshake);
-					CPPUNIT_ASSERT_EQUAL(String("4c4f8a41141722c8bbfbdd92d827f7b2fc0a542b"), handshake->getData());
+					CPPUNIT_ASSERT_EQUAL(std::string("4c4f8a41141722c8bbfbdd92d827f7b2fc0a542b"), handshake->getData());
 				}
 
 				Event popEvent() {
@@ -192,7 +192,7 @@ class ComponentSessionTest : public CppUnit::TestFixture {
 
 				bool available;
 				bool whitespacePingEnabled;
-				String bindID;
+				std::string bindID;
 				int resetCount;
 				std::deque<Event> receivedEvents;
 		};

@@ -15,7 +15,7 @@ namespace Swift {
 		public:
 			CapsInfoSerializer();
 
-			virtual String serializePayload(boost::shared_ptr<CapsInfo>)  const;
+			virtual std::string serializePayload(boost::shared_ptr<CapsInfo>)  const;
 	};
 }
 

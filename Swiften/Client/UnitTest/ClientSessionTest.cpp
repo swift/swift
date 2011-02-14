@@ -455,7 +455,7 @@ class ClientSessionTest : public CppUnit::TestFixture {
 					CPPUNIT_ASSERT(boost::dynamic_pointer_cast<StartTLSRequest>(event.element));
 				}
 
-				void receiveAuthRequest(const String& mech) {
+				void receiveAuthRequest(const std::string& mech) {
 					Event event = popEvent();
 					CPPUNIT_ASSERT(event.element);
 					boost::shared_ptr<AuthRequest> request(boost::dynamic_pointer_cast<AuthRequest>(event.element));
@@ -490,7 +490,7 @@ class ClientSessionTest : public CppUnit::TestFixture {
 				bool tlsEncrypted;
 				bool compressed;
 				bool whitespacePingEnabled;
-				String bindID;
+				std::string bindID;
 				int resetCount;
 				std::deque<Event> receivedEvents;
 		};

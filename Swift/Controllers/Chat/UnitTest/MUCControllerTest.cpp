@@ -6,6 +6,7 @@
 
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/extensions/TestFactoryRegistry.h>
+#include <boost/algorithm/string.hpp>
 #include "3rdParty/hippomocks.h"
 
 #include "Swift/Controllers/XMPPEvents/EventController.h"
@@ -112,7 +113,7 @@ public:
 
 		message = Message::ref(new Message());
 		message->setFrom(JID(muc_->getJID().toString() + "/other2"));
-		message->setBody("Hi " + nick_.getLowerCase() + ".");
+		message->setBody("Hi " + boost::to_lower_copy(nick_) + ".");
 		message->setType(Message::Groupchat);
 		controller_->handleIncomingMessage(MessageEvent::ref(new MessageEvent(message)));
 		CPPUNIT_ASSERT_EQUAL((size_t)4, eventController_->getEvents().size());
@@ -126,7 +127,7 @@ public:
 
 		message = Message::ref(new Message());
 		message->setFrom(JID(muc_->getJID().toString() + "/other2"));
-		message->setBody("Hi " + nick_.getLowerCase() + "ie.");
+		message->setBody("Hi " + boost::to_lower_copy(nick_) + "ie.");
 		message->setType(Message::Groupchat);
 		controller_->handleIncomingMessage(MessageEvent::ref(new MessageEvent(message)));
 		CPPUNIT_ASSERT_EQUAL((size_t)4, eventController_->getEvents().size());
@@ -199,31 +200,31 @@ public:
 	void testJoinPartStringContructionSimple() {
 		std::vector<NickJoinPart> list;
 		list.push_back(NickJoinPart("Kev", Join));
-		CPPUNIT_ASSERT_EQUAL(String("Kev has joined the room."), MUCController::generateJoinPartString(list));
+		CPPUNIT_ASSERT_EQUAL(std::string("Kev has joined the room."), MUCController::generateJoinPartString(list));
 		list.push_back(NickJoinPart("Remko", Part));
-		CPPUNIT_ASSERT_EQUAL(String("Kev has joined and Remko has left the room."), MUCController::generateJoinPartString(list));
+		CPPUNIT_ASSERT_EQUAL(std::string("Kev has joined and Remko has left the room."), MUCController::generateJoinPartString(list));
 		list.push_back(NickJoinPart("Bert", Join));
-		CPPUNIT_ASSERT_EQUAL(String("Kev and Bert have joined and Remko has left the room."), MUCController::generateJoinPartString(list));
+		CPPUNIT_ASSERT_EQUAL(std::string("Kev and Bert have joined and Remko has left the room."), MUCController::generateJoinPartString(list));
 		list.push_back(NickJoinPart("Ernie", Join));
-		CPPUNIT_ASSERT_EQUAL(String("Kev, Bert and Ernie have joined and Remko has left the room."), MUCController::generateJoinPartString(list));
+		CPPUNIT_ASSERT_EQUAL(std::string("Kev, Bert and Ernie have joined and Remko has left the room."), MUCController::generateJoinPartString(list));
 	}
 
 	void testJoinPartStringContructionMixed() {
 		std::vector<NickJoinPart> list;
 		list.push_back(NickJoinPart("Kev", JoinThenPart));
-		CPPUNIT_ASSERT_EQUAL(String("Kev joined then left the room."), MUCController::generateJoinPartString(list));
+		CPPUNIT_ASSERT_EQUAL(std::string("Kev joined then left the room."), MUCController::generateJoinPartString(list));
 		list.push_back(NickJoinPart("Remko", Part));
-		CPPUNIT_ASSERT_EQUAL(String("Remko has left and Kev joined then left the room."), MUCController::generateJoinPartString(list));
+		CPPUNIT_ASSERT_EQUAL(std::string("Remko has left and Kev joined then left the room."), MUCController::generateJoinPartString(list));
 		list.push_back(NickJoinPart("Bert", PartThenJoin));
-		CPPUNIT_ASSERT_EQUAL(String("Remko has left, Kev joined then left and Bert left then rejoined the room."), MUCController::generateJoinPartString(list));
+		CPPUNIT_ASSERT_EQUAL(std::string("Remko has left, Kev joined then left and Bert left then rejoined the room."), MUCController::generateJoinPartString(list));
 		list.push_back(NickJoinPart("Ernie", JoinThenPart));
-		CPPUNIT_ASSERT_EQUAL(String("Remko has left, Kev and Ernie joined then left and Bert left then rejoined the room."), MUCController::generateJoinPartString(list));
+		CPPUNIT_ASSERT_EQUAL(std::string("Remko has left, Kev and Ernie joined then left and Bert left then rejoined the room."), MUCController::generateJoinPartString(list));
 	}
 
 private:
 	JID self_;
 	MUC::ref muc_;
-	String nick_;
+	std::string nick_;
 	StanzaChannel* stanzaChannel_;
 	IQChannel* iqChannel_;
 	IQRouter* iqRouter_;

@@ -5,8 +5,8 @@ objects = swiften_env.StaticObject([
 			"Error.cpp",
 			"Log.cpp",
 			"Paths.cpp",
-			"IDGenerator.cpp",
 			"String.cpp",
+			"IDGenerator.cpp",
 			"sleep.cpp",
 		])
 swiften_env.Append(SWIFTEN_OBJECTS = [objects])

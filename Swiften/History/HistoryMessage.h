@@ -11,10 +11,10 @@
 namespace Swift {
 	class HistoryMessage {
 		public:
-			HistoryMessage(const String& message, const JID& from, const JID& to, const boost::posix_time::ptime time) : message_(message), from_(from), to_(to), time_(time) {
+			HistoryMessage(const std::string& message, const JID& from, const JID& to, const boost::posix_time::ptime time) : message_(message), from_(from), to_(to), time_(time) {
 			}
 
-			const String& getMessage() const {
+			const std::string& getMessage() const {
 				return message_;
 			}
 
@@ -35,7 +35,7 @@ namespace Swift {
 			}
 
 		private:
-			String message_;
+			std::string message_;
 			JID from_;
 			JID to_;
 			boost::posix_time::ptime time_;

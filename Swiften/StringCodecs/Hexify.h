@@ -6,13 +6,15 @@
 
 #pragma once
 
+#include <string>
+
 namespace Swift {
-	class String;
+	
 	class ByteArray;
 
 	class Hexify {
 		public:
-			static String hexify(unsigned char byte);
-			static String hexify(const ByteArray& data);
+			static std::string hexify(unsigned char byte);
+			static std::string hexify(const ByteArray& data);
 	};
 }

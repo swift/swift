@@ -15,10 +15,10 @@ namespace Swift {
 			MockMainWindow() : roster(NULL) {};
 			virtual ~MockMainWindow() {};
 			virtual void setRosterModel(Roster* roster) {this->roster = roster;};
-			virtual void setMyNick(const String& /*name*/) {};;
+			virtual void setMyNick(const std::string& /*name*/) {};;
 			virtual void setMyJID(const JID& /*jid*/) {};;
-			virtual void setMyAvatarPath(const String& /*path*/) {};
-			virtual void setMyStatusText(const String& /*status*/) {};
+			virtual void setMyAvatarPath(const std::string& /*path*/) {};
+			virtual void setMyStatusText(const std::string& /*status*/) {};
 			virtual void setMyStatusType(StatusShow::Type /*type*/) {};
 			virtual void setConnecting() {};
 			Roster* roster;

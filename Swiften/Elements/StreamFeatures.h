@@ -9,7 +9,7 @@
 #include <vector>
 #include <algorithm>
 
-#include "Swiften/Base/String.h"
+#include <string>
 #include "Swiften/Elements/Element.h"
 
 namespace Swift {
@@ -43,27 +43,27 @@ namespace Swift {
 				return hasResourceBind_;
 			}
 
-			const std::vector<String>& getCompressionMethods() const {
+			const std::vector<std::string>& getCompressionMethods() const {
 				return compressionMethods_;
 			}
 
-			void addCompressionMethod(const String& mechanism) {
+			void addCompressionMethod(const std::string& mechanism) {
 				compressionMethods_.push_back(mechanism);
 			}
 
-			bool hasCompressionMethod(const String& mechanism) const {
+			bool hasCompressionMethod(const std::string& mechanism) const {
 				return std::find(compressionMethods_.begin(), compressionMethods_.end(), mechanism) != compressionMethods_.end();
 			}
 
-			const std::vector<String>& getAuthenticationMechanisms() const {
+			const std::vector<std::string>& getAuthenticationMechanisms() const {
 				return authenticationMechanisms_;
 			}
 
-			void addAuthenticationMechanism(const String& mechanism) {
+			void addAuthenticationMechanism(const std::string& mechanism) {
 				authenticationMechanisms_.push_back(mechanism);
 			}
 
-			bool hasAuthenticationMechanism(const String& mechanism) const {
+			bool hasAuthenticationMechanism(const std::string& mechanism) const {
 				return std::find(authenticationMechanisms_.begin(), authenticationMechanisms_.end(), mechanism) != authenticationMechanisms_.end();
 			}
 
@@ -81,8 +81,8 @@ namespace Swift {
 
 		private:
 			bool hasStartTLS_;
-			std::vector<String> compressionMethods_;
-			std::vector<String> authenticationMechanisms_;
+			std::vector<std::string> compressionMethods_;
+			std::vector<std::string> authenticationMechanisms_;
 			bool hasResourceBind_;
 			bool hasSession_;
 			bool hasStreamManagement_;

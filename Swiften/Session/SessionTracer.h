@@ -9,7 +9,7 @@
 #include <iostream>
 
 #include "Swiften/Session/Session.h"
-#include "Swiften/Base/String.h"
+#include <string>
 #include "Swiften/Base/ByteArray.h"
 
 namespace Swift {
@@ -23,11 +23,11 @@ namespace Swift {
 		private:
 			void printData(char direction, const ByteArray& data) {
 				std::cerr << direction << direction << " " << session->getLocalJID() << " ";
-				for (unsigned int i = 0; i < 72 - session->getLocalJID().toString().getUTF8Size() - session->getRemoteJID().toString().getUTF8Size(); ++i) {
+				for (unsigned int i = 0; i < 72 - session->getLocalJID().toString().size() - session->getRemoteJID().toString().size(); ++i) {
 					std::cerr << direction;
 				}
 				std::cerr << " " << session->getRemoteJID()<< " " << direction << direction << std::endl;
-				std::cerr << String(data.getData(), data.getSize()) << std::endl;
+				std::cerr << std::string(data.getData(), data.getSize()) << std::endl;
 			}
 
 			boost::shared_ptr<Session> session;

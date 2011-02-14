@@ -11,11 +11,11 @@ namespace Swift {
 StreamErrorParser::StreamErrorParser() : level(TopLevel) {
 }
 
-void StreamErrorParser::handleStartElement(const String&, const String&, const AttributeMap&) {
+void StreamErrorParser::handleStartElement(const std::string&, const std::string&, const AttributeMap&) {
 	++level;
 }
 
-void StreamErrorParser::handleEndElement(const String& element, const String& ns) {
+void StreamErrorParser::handleEndElement(const std::string& element, const std::string& ns) {
 	--level;
 	if (level == ElementLevel && ns == "urn:ietf:params:xml:ns:xmpp-streams") {
 		if (element == "text") {
@@ -102,7 +102,7 @@ void StreamErrorParser::handleEndElement(const String& element, const String& ns
 	}
 }
 
-void StreamErrorParser::handleCharacterData(const String& data) {
+void StreamErrorParser::handleCharacterData(const std::string& data) {
 	currentText += data;
 }
 

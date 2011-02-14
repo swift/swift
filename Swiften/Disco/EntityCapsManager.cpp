@@ -26,8 +26,8 @@ void EntityCapsManager::handlePresenceReceived(boost::shared_ptr<Presence> prese
 		if (!capsInfo || capsInfo->getHash() != "sha-1" || presence->getPayload<ErrorPayload>()) {
 			return;
 		}
-		String hash = capsInfo->getVersion();
-		std::map<JID, String>::iterator i = caps.find(from);
+		std::string hash = capsInfo->getVersion();
+		std::map<JID, std::string>::iterator i = caps.find(from);
 		if (i == caps.end() || i->second != hash) {
 			caps.insert(std::make_pair(from, hash));
 			DiscoInfo::ref disco = capsProvider->getCaps(hash);
@@ -41,7 +41,7 @@ void EntityCapsManager::handlePresenceReceived(boost::shared_ptr<Presence> prese
 		}
 	}
 	else {
-		std::map<JID, String>::iterator i = caps.find(from);
+		std::map<JID, std::string>::iterator i = caps.find(from);
 		if (i != caps.end()) {
 			caps.erase(i);
 			onCapsChanged(from);
@@ -51,17 +51,17 @@ void EntityCapsManager::handlePresenceReceived(boost::shared_ptr<Presence> prese
 
 void EntityCapsManager::handleStanzaChannelAvailableChanged(bool available) {
 	if (available) {
-		std::map<JID, String> capsCopy;
+		std::map<JID, std::string> capsCopy;
 		capsCopy.swap(caps);
-		for (std::map<JID,String>::const_iterator i = capsCopy.begin(); i != capsCopy.end(); ++i) {
+		for (std::map<JID,std::string>::const_iterator i = capsCopy.begin(); i != capsCopy.end(); ++i) {
 			onCapsChanged(i->first);
 		}
 	}
 }
 
-void EntityCapsManager::handleCapsAvailable(const String& hash) {
+void EntityCapsManager::handleCapsAvailable(const std::string& hash) {
 	// TODO: Use Boost.Bimap ?
-	for (std::map<JID,String>::const_iterator i = caps.begin(); i != caps.end(); ++i) {
+	for (std::map<JID,std::string>::const_iterator i = caps.begin(); i != caps.end(); ++i) {
 		if (i->second == hash) {
 			onCapsChanged(i->first);
 		}
@@ -69,7 +69,7 @@ void EntityCapsManager::handleCapsAvailable(const String& hash) {
 }
 
 DiscoInfo::ref EntityCapsManager::getCaps(const JID& jid) const {
-	std::map<JID, String>::const_iterator i = caps.find(jid);
+	std::map<JID, std::string>::const_iterator i = caps.find(jid);
 	if (i != caps.end()) {
 		return capsProvider->getCaps(i->second);
 	}

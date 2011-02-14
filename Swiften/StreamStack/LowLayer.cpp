@@ -6,6 +6,8 @@
 
 #include <Swiften/StreamStack/LowLayer.h>
 
+#include <cassert>
+
 #include <Swiften/StreamStack/HighLayer.h>
 
 namespace Swift {

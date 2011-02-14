@@ -10,7 +10,7 @@
 #include <vector>
 #include <iostream>
 
-#include "Swiften/Base/String.h"
+#include <string>
 
 namespace Swift {
 	class ByteArray
@@ -20,7 +20,7 @@ namespace Swift {
 
 			ByteArray() : data_() {}
 
-			ByteArray(const String& s) : data_(s.getUTF8String().begin(), s.getUTF8String().end()) {}
+			ByteArray(const std::string& s) : data_(s.begin(), s.end()) {}
 
 			ByteArray(const char* c) {
 				while (*c) {
@@ -107,11 +107,11 @@ namespace Swift {
 				return data_.end(); 
 			}
 
-			String toString() const {
-				return String(getData(), getSize());
+			std::string toString() const {
+				return std::string(getData(), getSize());
 			}
 
-			void readFromFile(const String& file);
+			void readFromFile(const std::string& file);
 
 			void clear() {
 				data_.clear();

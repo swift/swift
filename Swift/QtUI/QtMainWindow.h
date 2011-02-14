@@ -37,10 +37,10 @@ namespace Swift {
 			QtMainWindow(QtSettingsProvider*, UIEventStream* eventStream);
 			~QtMainWindow();
 			std::vector<QMenu*> getMenus() {return menus_;}
-			void setMyNick(const String& name);
+			void setMyNick(const std::string& name);
 			void setMyJID(const JID& jid);
-			void setMyAvatarPath(const String& path);
-			void setMyStatusText(const String& status);
+			void setMyAvatarPath(const std::string& path);
+			void setMyStatusText(const std::string& status);
 			void setMyStatusType(StatusShow::Type type);
 			void setConnecting();
 			QtEventWindow* getEventWindow();

@@ -9,27 +9,27 @@
 #include <boost/filesystem.hpp>
 #include <vector>
 
-#include "Swiften/Base/String.h"
+#include <string>
 
 namespace Swift {
 	class ApplicationPathProvider {
 		public:
-			ApplicationPathProvider(const String& applicationName);
+			ApplicationPathProvider(const std::string& applicationName);
 			virtual ~ApplicationPathProvider();
 
 			virtual boost::filesystem::path getHomeDir() const = 0;
 			virtual boost::filesystem::path getDataDir() const = 0;
 			virtual boost::filesystem::path getExecutableDir() const;
-			boost::filesystem::path getProfileDir(const String& profile) const;
-			boost::filesystem::path getResourcePath(const String& resource) const;
+			boost::filesystem::path getProfileDir(const std::string& profile) const;
+			boost::filesystem::path getResourcePath(const std::string& resource) const;
 
 		protected:
 			virtual std::vector<boost::filesystem::path> getResourceDirs() const = 0;
-			const String& getApplicationName() const {
+			const std::string& getApplicationName() const {
 				return applicationName;
 			}
 
 		private:
-			String applicationName;
+			std::string applicationName;
 	};
 }

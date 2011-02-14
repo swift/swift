@@ -8,8 +8,8 @@
 
 #include <boost/function.hpp>
 #include <boost/filesystem/path.hpp>
-
-#include "Swiften/Base/String.h"
+#include <string>
+#include <vector>
 
 namespace Swift {
 	class Notifier {
@@ -23,8 +23,8 @@ namespace Swift {
 			 */
 			virtual void showMessage(
 				Type type,
-				const String& subject, 
-				const String& description, 
+				const std::string& subject, 
+				const std::string& description, 
 				const boost::filesystem::path& picture,
 				boost::function<void()> callback) = 0;
 
@@ -33,7 +33,7 @@ namespace Swift {
 			}
 
 		protected:
-			String typeToString(Type type);
+			std::string typeToString(Type type);
 			static std::vector<Type> getAllTypes();
 			static std::vector<Type> getDefaultTypes();
 

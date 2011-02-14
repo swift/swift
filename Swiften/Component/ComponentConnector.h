@@ -13,7 +13,7 @@
 #include "Swiften/Network/Connection.h"
 #include "Swiften/Network/Timer.h"
 #include "Swiften/Network/HostAddressPort.h"
-#include "Swiften/Base/String.h"
+#include <string>
 #include "Swiften/Network/DomainNameResolveError.h"
 
 namespace Swift {
@@ -26,7 +26,7 @@ namespace Swift {
 		public:
 			typedef boost::shared_ptr<ComponentConnector> ref;
 
-			static ComponentConnector::ref create(const String& hostname, int port, DomainNameResolver* resolver, ConnectionFactory* connectionFactory, TimerFactory* timerFactory) {
+			static ComponentConnector::ref create(const std::string& hostname, int port, DomainNameResolver* resolver, ConnectionFactory* connectionFactory, TimerFactory* timerFactory) {
 				return ComponentConnector::ref(new ComponentConnector(hostname, port, resolver, connectionFactory, timerFactory));
 			}
 
@@ -38,7 +38,7 @@ namespace Swift {
 			boost::signal<void (boost::shared_ptr<Connection>)> onConnectFinished;
 
 		private:
-			ComponentConnector(const String& hostname, int port, DomainNameResolver*, ConnectionFactory*, TimerFactory*);
+			ComponentConnector(const std::string& hostname, int port, DomainNameResolver*, ConnectionFactory*, TimerFactory*);
 
 			void handleAddressQueryResult(const std::vector<HostAddress>& address, boost::optional<DomainNameResolveError> error);
 			void tryNextAddress();
@@ -50,7 +50,7 @@ namespace Swift {
 
 
 		private:
-			String hostname;
+			std::string hostname;
 			int port;
 			DomainNameResolver* resolver;
 			ConnectionFactory* connectionFactory;

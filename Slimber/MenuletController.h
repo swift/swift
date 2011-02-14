@@ -9,7 +9,7 @@
 #include <vector>
 #include <boost/signal.hpp>
 
-#include "Swiften/Base/String.h"
+#include <string>
 
 class Menulet;
 
@@ -23,8 +23,8 @@ class MenuletController {
 		MenuletController(Menulet*);
 		virtual ~MenuletController();
 
-		void setXMPPStatus(const Swift::String& message, Status status);
-		void setUserNames(const std::vector<Swift::String>&);
+		void setXMPPStatus(const std::string& message, Status status);
+		void setUserNames(const std::vector<std::string>&);
 	
 		boost::signal<void ()> onRestartRequested;
 
@@ -34,6 +34,6 @@ class MenuletController {
 	private:
 		Menulet* menulet;
 		Status xmppStatus;
-		Swift::String xmppStatusMessage;
-		std::vector<Swift::String> linkLocalUsers;
+		std::string xmppStatusMessage;
+		std::vector<std::string> linkLocalUsers;
 };

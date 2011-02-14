@@ -10,7 +10,7 @@
 
 #include <boost/shared_ptr.hpp>
 
-#include "Swiften/Base/String.h"
+#include <string>
 #include "Swiften/Elements/DiscoInfo.h"
 #include "Swiften/Elements/Message.h"
 #include "Swiften/Elements/Presence.h"
@@ -52,8 +52,8 @@ namespace Swift {
 			void setServerDiscoInfo(boost::shared_ptr<DiscoInfo> info);
 			void handleIncomingMessage(boost::shared_ptr<Message> message);
 		private:
-			void handleChatRequest(const String& contact);
-			void handleJoinMUCRequest(const JID& muc, const boost::optional<String>& nick, bool autoJoin);
+			void handleChatRequest(const std::string& contact);
+			void handleJoinMUCRequest(const JID& muc, const boost::optional<std::string>& nick, bool autoJoin);
 			void handleSearchMUCRequest();
 			void handleMUCSelectedAfterSearch(const JID&);
 			void rebindControllerJID(const JID& from, const JID& to);

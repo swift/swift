@@ -42,7 +42,7 @@ QtAvatarWidget::QtAvatarWidget(QWidget* parent) : QWidget(parent) {
 	layout->addWidget(label);
 }
 
-void QtAvatarWidget::setAvatar(const ByteArray& data, const String& type) {
+void QtAvatarWidget::setAvatar(const ByteArray& data, const std::string& type) {
 	this->data = data;
 	this->type = type;
 

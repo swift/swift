@@ -12,10 +12,10 @@ namespace Swift {
 
 class ProfileSettingsProvider {
 	public:
-		ProfileSettingsProvider(const String& profile, SettingsProvider* provider) : profile_(profile) {
+		ProfileSettingsProvider(const std::string& profile, SettingsProvider* provider) : profile_(profile) {
 			provider_ = provider;
 			bool found = false;
-			foreach (String existingProfile, provider->getAvailableProfiles()) {
+			foreach (std::string existingProfile, provider->getAvailableProfiles()) {
 				if (existingProfile == profile) {
 					found = true;
 				}
@@ -25,15 +25,15 @@ class ProfileSettingsProvider {
 			}
 		};
 		virtual ~ProfileSettingsProvider() {};
-		virtual String getStringSetting(const String &settingPath) {return provider_->getStringSetting(profileSettingPath(settingPath));};
-		virtual void storeString(const String &settingPath, const String &settingValue) {provider_->storeString(profileSettingPath(settingPath), settingValue);};
-		virtual int getIntSetting(const String& settingPath, int defaultValue) {return provider_->getIntSetting(settingPath, defaultValue);}
-		virtual void storeInt(const String& settingPath, int settingValue) {provider_->storeInt(settingPath, settingValue);}
+		virtual std::string getStringSetting(const std::string &settingPath) {return provider_->getStringSetting(profileSettingPath(settingPath));};
+		virtual void storeString(const std::string &settingPath, const std::string &settingValue) {provider_->storeString(profileSettingPath(settingPath), settingValue);};
+		virtual int getIntSetting(const std::string& settingPath, int defaultValue) {return provider_->getIntSetting(settingPath, defaultValue);}
+		virtual void storeInt(const std::string& settingPath, int settingValue) {provider_->storeInt(settingPath, settingValue);}
 		
 	private:
-		String profileSettingPath(const String &settingPath) {return profile_ + ":" + settingPath;};
+		std::string profileSettingPath(const std::string &settingPath) {return profile_ + ":" + settingPath;};
 		SettingsProvider* provider_; 
-		String profile_;
+		std::string profile_;
 };
 
 }

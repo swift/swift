@@ -10,7 +10,7 @@
 #include <vector>
 #include <map>
 
-#include "Swiften/Base/String.h"
+#include <string>
 
 #include "Swiften/Serializer/XML/XMLNode.h"
 
@@ -19,16 +19,16 @@ namespace Swift {
 		public:
 			typedef boost::shared_ptr<XMLElement> ref;
 
-			XMLElement(const String& tag, const String& xmlns = "", const String& text = "");
+			XMLElement(const std::string& tag, const std::string& xmlns = "", const std::string& text = "");
 
-			void setAttribute(const String& attribute, const String& value);
+			void setAttribute(const std::string& attribute, const std::string& value);
 			void addNode(boost::shared_ptr<XMLNode> node);
 
-			virtual String serialize();
+			virtual std::string serialize();
 
 		private:
-			String tag_;
-			std::map<String, String> attributes_;
+			std::string tag_;
+			std::map<std::string, std::string> attributes_;
 			std::vector< boost::shared_ptr<XMLNode> > childNodes_;
 	};
 }

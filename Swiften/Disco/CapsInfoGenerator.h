@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include "Swiften/Base/String.h"
+#include <string>
 #include "Swiften/Elements/CapsInfo.h"
 
 namespace Swift {
@@ -14,11 +14,11 @@ namespace Swift {
 
 	class CapsInfoGenerator {
 		public:
-			CapsInfoGenerator(const String& node);
+			CapsInfoGenerator(const std::string& node);
 
 			CapsInfo generateCapsInfo(const DiscoInfo& discoInfo) const;
 
 		private:
-			String node_;
+			std::string node_;
 	};
 }

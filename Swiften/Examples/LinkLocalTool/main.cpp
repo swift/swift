@@ -27,13 +27,13 @@ int main(int argc, char* argv[]) {
 	boost::shared_ptr<DNSSDQuerier> querier = factory.createQuerier();
 	querier->start();
 
-	if (String(argv[1]) == "browse") {
+	if (std::string(argv[1]) == "browse") {
 		boost::shared_ptr<DNSSDBrowseQuery> browseQuery = querier->createBrowseQuery();
 		browseQuery->startBrowsing();
 		eventLoop.run();
 		browseQuery->stopBrowsing();
 	}
-	else if (String(argv[1]) == "resolve-service") {
+	else if (std::string(argv[1]) == "resolve-service") {
 		if (argc < 5) {
 			std::cerr << "Invalid parameters" << std::endl;
 			return -1;

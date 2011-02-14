@@ -46,7 +46,7 @@ class VCardSerializerTest : public CppUnit::TestFixture
 			address2.isX400 = true;
 			vcard->addEMailAddress(address2);
 
-			String expectedResult = 
+			std::string expectedResult = 
 				"<vCard xmlns=\"vcard-temp\">"
 					"<VERSION>2.0</VERSION>"
 					"<FN>Alice In Wonderland</FN>"

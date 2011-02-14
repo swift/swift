@@ -8,7 +8,7 @@
 
 #include <boost/shared_ptr.hpp>
 
-#include "Swiften/Base/String.h"
+#include <string>
 #include "Swiften/Base/ByteArray.h"
 #include "Swiften/Elements/Payload.h"
 
@@ -27,23 +27,23 @@ namespace Swift {
 				MessageStanza,
 			};
 
-			IBB(Action action = Open, const String& streamID = "") : action(action), streamID(streamID), stanzaType(IQStanza), blockSize(-1), sequenceNumber(-1) {
+			IBB(Action action = Open, const std::string& streamID = "") : action(action), streamID(streamID), stanzaType(IQStanza), blockSize(-1), sequenceNumber(-1) {
 			}
 
-			static IBB::ref createIBBOpen(const String& streamID, int blockSize) {
+			static IBB::ref createIBBOpen(const std::string& streamID, int blockSize) {
 				IBB::ref result(new IBB(Open, streamID));
 				result->setBlockSize(blockSize);
 				return result;
 			}
 
-			static IBB::ref createIBBData(const String& streamID, int sequenceNumber, const ByteArray& data) {
+			static IBB::ref createIBBData(const std::string& streamID, int sequenceNumber, const ByteArray& data) {
 				IBB::ref result(new IBB(Data, streamID));
 				result->setSequenceNumber(sequenceNumber);
 				result->setData(data);
 				return result;
 			}
 
-			static IBB::ref createIBBClose(const String& streamID) {
+			static IBB::ref createIBBClose(const std::string& streamID) {
 				return IBB::ref(new IBB(Close, streamID));
 			}
 
@@ -63,11 +63,11 @@ namespace Swift {
 				return stanzaType;
 			}
 
-			void setStreamID(const String& id) {
+			void setStreamID(const std::string& id) {
 				streamID = id;
 			}
 
-			const String& getStreamID() const {
+			const std::string& getStreamID() const {
 				return streamID;
 			}
 
@@ -97,7 +97,7 @@ namespace Swift {
 
 		private:
 			Action action;
-			String streamID;
+			std::string streamID;
 			ByteArray data;
 			StanzaType stanzaType;
 			int blockSize;

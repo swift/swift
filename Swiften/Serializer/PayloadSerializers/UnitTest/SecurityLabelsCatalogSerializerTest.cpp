@@ -41,7 +41,7 @@ class SecurityLabelsCatalogSerializerTest : public CppUnit::TestFixture
 			securityLabel2.setLabel("<esssecuritylabel xmlns=\"urn:xmpp:sec-label:ess:0\">MQMGASk=</esssecuritylabel>");
 			catalog->addLabel(securityLabel2);
 
-			CPPUNIT_ASSERT_EQUAL(String(
+			CPPUNIT_ASSERT_EQUAL(std::string(
 				"<catalog desc=\"an example set of labels\" name=\"Default\" to=\"example.com\" xmlns=\"urn:xmpp:sec-label:catalog:0\">"
 					"<securitylabel xmlns=\"urn:xmpp:sec-label:0\">"
 						"<displaymarking bgcolor=\"red\" fgcolor=\"black\">SECRET</displaymarking>"

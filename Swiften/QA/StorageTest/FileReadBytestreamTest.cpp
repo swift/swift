@@ -34,7 +34,7 @@ class FileReadBytestreamTest : public CppUnit::TestFixture {
 
 			ByteArray result = testling->read(10);
 
-			CPPUNIT_ASSERT_EQUAL(String("/*\n * Copy"), result.toString());
+			CPPUNIT_ASSERT_EQUAL(std::string("/*\n * Copy"), result.toString());
 		}
 
 		void testRead_Twice() {
@@ -43,7 +43,7 @@ class FileReadBytestreamTest : public CppUnit::TestFixture {
 			testling->read(10);
 			ByteArray result = testling->read(10);
 
-			CPPUNIT_ASSERT_EQUAL(String("right (c) "), result.toString());
+			CPPUNIT_ASSERT_EQUAL(std::string("right (c) "), result.toString());
 		}
 
 		void testIsFinished_NotFinished() {

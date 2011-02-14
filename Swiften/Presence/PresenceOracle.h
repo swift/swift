@@ -8,7 +8,7 @@
 
 #include <map>
 
-#include "Swiften/Base/String.h"
+#include <string>
 #include "Swiften/Elements/Presence.h"
 
 #include "Swiften/Base/boost_bsignals.h"

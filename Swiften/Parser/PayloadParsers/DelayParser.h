@@ -14,12 +14,12 @@ namespace Swift {
 		public:
 			DelayParser(const std::locale& locale);
 
-			virtual void handleStartElement(const String& element, const String&, const AttributeMap& attributes);
-			virtual void handleEndElement(const String& element, const String&);
-			virtual void handleCharacterData(const String& data);
+			virtual void handleStartElement(const std::string& element, const std::string&, const AttributeMap& attributes);
+			virtual void handleEndElement(const std::string& element, const std::string&);
+			virtual void handleCharacterData(const std::string& data);
 
 		private:
-			boost::posix_time::ptime dateFromString(const String& string);
+			boost::posix_time::ptime dateFromString(const std::string& string);
 
 		private:
 			std::locale locale;

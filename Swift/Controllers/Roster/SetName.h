@@ -16,7 +16,7 @@ class RosterItem;
 
 class SetName : public RosterItemOperation {
 	public:
-		SetName(const String& name, const JID& jid, JID::CompareType compareType = JID::WithoutResource) : RosterItemOperation(true, jid), name_(name), jid_(jid), compareType_(compareType) {
+		SetName(const std::string& name, const JID& jid, JID::CompareType compareType = JID::WithoutResource) : RosterItemOperation(true, jid), name_(name), jid_(jid), compareType_(compareType) {
 		}
 
 		virtual void operator() (RosterItem* item) const {
@@ -27,7 +27,7 @@ class SetName : public RosterItemOperation {
 		}
 	
 	private:
-		String name_;
+		std::string name_;
 		JID jid_;
 		JID::CompareType compareType_;
 };

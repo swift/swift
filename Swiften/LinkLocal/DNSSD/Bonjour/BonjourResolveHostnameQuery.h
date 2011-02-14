@@ -8,7 +8,7 @@
 
 #pragma GCC diagnostic ignored "-Wold-style-cast"
 
-#include "Swiften/Base/String.h"
+#include <string>
 #include "Swiften/LinkLocal/DNSSD/Bonjour/BonjourQuery.h"
 #include "Swiften/LinkLocal/DNSSD/DNSSDResolveHostnameQuery.h"
 #include "Swiften/EventLoop/EventLoop.h"
@@ -21,10 +21,10 @@ namespace Swift {
 
 	class BonjourResolveHostnameQuery : public DNSSDResolveHostnameQuery, public BonjourQuery {
 		public: 
-			BonjourResolveHostnameQuery(const String& hostname, int interfaceIndex, boost::shared_ptr<BonjourQuerier> querier, EventLoop* eventLoop) : BonjourQuery(querier, eventLoop) {
+			BonjourResolveHostnameQuery(const std::string& hostname, int interfaceIndex, boost::shared_ptr<BonjourQuerier> querier, EventLoop* eventLoop) : BonjourQuery(querier, eventLoop) {
 				DNSServiceErrorType result = DNSServiceGetAddrInfo(
 						&sdRef, 0, interfaceIndex, kDNSServiceProtocol_IPv4, 
-						hostname.getUTF8Data(), 
+						hostname.c_str(), 
 						&BonjourResolveHostnameQuery::handleHostnameResolvedStatic, this);
 				if (result != kDNSServiceErr_NoError) {
 					sdRef = NULL;

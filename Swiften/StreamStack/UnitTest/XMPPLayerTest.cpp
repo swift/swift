@@ -78,19 +78,19 @@ class XMPPLayerTest : public CppUnit::TestFixture {
 			header.setTo("example.com");
 			testling_->writeHeader(header);
 
-			CPPUNIT_ASSERT_EQUAL(String("<?xml version=\"1.0\"?><stream:stream xmlns=\"jabber:client\" xmlns:stream=\"http://etherx.jabber.org/streams\" to=\"example.com\" version=\"1.0\">"), lowLayer_->writtenData);
+			CPPUNIT_ASSERT_EQUAL(std::string("<?xml version=\"1.0\"?><stream:stream xmlns=\"jabber:client\" xmlns:stream=\"http://etherx.jabber.org/streams\" to=\"example.com\" version=\"1.0\">"), lowLayer_->writtenData);
 		}
 
 		void testWriteElement() {
 			testling_->writeElement(boost::shared_ptr<Presence>(new Presence()));
 
-			CPPUNIT_ASSERT_EQUAL(String("<presence/>"), lowLayer_->writtenData);
+			CPPUNIT_ASSERT_EQUAL(std::string("<presence/>"), lowLayer_->writtenData);
 		}
 
 		void testWriteFooter() {
 			testling_->writeFooter();
 
-			CPPUNIT_ASSERT_EQUAL(String("</stream:stream>"), lowLayer_->writtenData);
+			CPPUNIT_ASSERT_EQUAL(std::string("</stream:stream>"), lowLayer_->writtenData);
 		}
 
 		void handleElement(boost::shared_ptr<Element>) {
@@ -124,7 +124,7 @@ class XMPPLayerTest : public CppUnit::TestFixture {
 					writtenData += std::string(data.getData(), data.getSize());
 				}
 				
-				String writtenData;
+				std::string writtenData;
 		};
 
 		FullPayloadParserFactoryCollection parserFactories_;

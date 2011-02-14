@@ -17,7 +17,7 @@ namespace Swift {
 		public:
 			PrioritySerializer() : GenericPayloadSerializer<Priority>() {}
 
-			virtual String serializePayload(boost::shared_ptr<Priority> priority)  const {
+			virtual std::string serializePayload(boost::shared_ptr<Priority> priority)  const {
 				return "<priority>" + boost::lexical_cast<std::string>(priority->getPriority()) + "</priority>";
 			}
 	};

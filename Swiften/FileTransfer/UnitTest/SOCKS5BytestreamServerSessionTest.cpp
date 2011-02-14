@@ -123,12 +123,12 @@ class SOCKS5BytestreamServerSessionTest : public CppUnit::TestFixture {
 			receivedDataChunks = 0;
 		}
 
-		void request(const String& hostname) {
-			receive(ByteArray("\x05\x01\x00\x03", 4) + hostname.getUTF8Size() + hostname + ByteArray("\x00\x00", 2));
+		void request(const std::string& hostname) {
+			receive(ByteArray("\x05\x01\x00\x03", 4) + hostname.size() + hostname + ByteArray("\x00\x00", 2));
 		}
 
-		void skipHeader(const String& hostname) {
-			int headerSize = 7 + hostname.getUTF8Size();
+		void skipHeader(const std::string& hostname) {
+			int headerSize = 7 + hostname.size();
 			receivedData = ByteArray(receivedData.getData() + headerSize, receivedData.getSize() - headerSize);
 		}
 

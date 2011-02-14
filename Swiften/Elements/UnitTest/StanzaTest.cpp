@@ -43,9 +43,9 @@ class StanzaTest : public CppUnit::TestFixture
 
 		class MyPayload2 : public Payload {
 			public:
-				MyPayload2(const String& s = "") : text_(s) {}
+				MyPayload2(const std::string& s = "") : text_(s) {}
 
-				String text_;
+				std::string text_;
 		};
 
 		class MyPayload3 : public Payload {
@@ -143,7 +143,7 @@ class StanzaTest : public CppUnit::TestFixture
 
 			CPPUNIT_ASSERT_EQUAL(static_cast<size_t>(3), m.getPayloads().size());
 			boost::shared_ptr<MyPayload2> p(m.getPayload<MyPayload2>());
-			CPPUNIT_ASSERT_EQUAL(String("bar"), p->text_);
+			CPPUNIT_ASSERT_EQUAL(std::string("bar"), p->text_);
 		}
 
 		void testUpdatePayload_NewPayload() {
@@ -155,7 +155,7 @@ class StanzaTest : public CppUnit::TestFixture
 
 			CPPUNIT_ASSERT_EQUAL(static_cast<size_t>(3), m.getPayloads().size());
 			boost::shared_ptr<MyPayload2> p(m.getPayload<MyPayload2>());
-			CPPUNIT_ASSERT_EQUAL(String("bar"), p->text_);
+			CPPUNIT_ASSERT_EQUAL(std::string("bar"), p->text_);
 		}
 
 		void testGetPayloadOfSameType() {
@@ -166,7 +166,7 @@ class StanzaTest : public CppUnit::TestFixture
 
 			boost::shared_ptr<MyPayload2> payload(boost::dynamic_pointer_cast<MyPayload2>(m.getPayloadOfSameType(boost::shared_ptr<MyPayload2>(new MyPayload2("bar")))));
 			CPPUNIT_ASSERT(payload);
-			CPPUNIT_ASSERT_EQUAL(String("foo"), payload->text_);
+			CPPUNIT_ASSERT_EQUAL(std::string("foo"), payload->text_);
 		}
 
 		void testGetPayloadOfSameType_NoSuchPayload() {

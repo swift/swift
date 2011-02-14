@@ -19,13 +19,13 @@ class ComponentHandshakeGeneratorTest : public CppUnit::TestFixture {
 
 	public:
 		void testGetHandshake() {
-			String result = ComponentHandshakeGenerator::getHandshake("myid", "mysecret");
-			CPPUNIT_ASSERT_EQUAL(String("4011cd31f9b99ac089a0cd7ce297da7323fa2525"), result);
+			std::string result = ComponentHandshakeGenerator::getHandshake("myid", "mysecret");
+			CPPUNIT_ASSERT_EQUAL(std::string("4011cd31f9b99ac089a0cd7ce297da7323fa2525"), result);
 		}
 
 		void testGetHandshake_SpecialChars() {
-			String result = ComponentHandshakeGenerator::getHandshake("&<", ">'\"");
-			CPPUNIT_ASSERT_EQUAL(String("33631b3e0aaeb2a11c4994c917919324028873fe"), result);
+			std::string result = ComponentHandshakeGenerator::getHandshake("&<", ">'\"");
+			CPPUNIT_ASSERT_EQUAL(std::string("33631b3e0aaeb2a11c4994c917919324028873fe"), result);
 		}
 
 };

@@ -9,7 +9,7 @@
 
 #include <boost/noncopyable.hpp>
 
-#include "Swiften/Base/String.h"
+#include <string>
 #include "Swiften/Elements/Stanza.h"
 #include "Swiften/Parser/ElementParser.h"
 #include "Swiften/Parser/AttributeMap.h"
@@ -23,9 +23,9 @@ namespace Swift {
 			StanzaParser(PayloadParserFactoryCollection* factories);
 			~StanzaParser();
 
-			void handleStartElement(const String& element, const String& ns, const AttributeMap& attributes);
-			void handleEndElement(const String& element, const String& ns);
-			void handleCharacterData(const String& data);
+			void handleStartElement(const std::string& element, const std::string& ns, const AttributeMap& attributes);
+			void handleEndElement(const std::string& element, const std::string& ns);
+			void handleCharacterData(const std::string& data);
 
 			virtual boost::shared_ptr<Element> getElement() const = 0;
 			virtual void handleStanzaAttributes(const AttributeMap&) {}

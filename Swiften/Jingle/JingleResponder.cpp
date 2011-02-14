@@ -16,7 +16,7 @@ namespace Swift {
 JingleResponder::JingleResponder(JingleSessionManager* sessionManager, IQRouter* router) : SetResponder<JinglePayload>(router), sessionManager(sessionManager) {
 }
 
-bool JingleResponder::handleSetRequest(const JID& from, const JID&, const String& id, boost::shared_ptr<JinglePayload> payload) {
+bool JingleResponder::handleSetRequest(const JID& from, const JID&, const std::string& id, boost::shared_ptr<JinglePayload> payload) {
 	if (payload->getAction() == JinglePayload::SessionInitiate) {
 		if (sessionManager->getSession(from, payload->getSessionID())) {
 			// TODO: Add tie-break error

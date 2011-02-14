@@ -9,7 +9,7 @@
 
 #include <boost/shared_ptr.hpp>
 
-#include "Swiften/Base/String.h"
+#include <string>
 #include "Swiften/Elements/Element.h"
 #include "Swiften/Parser/AttributeMap.h"
 
@@ -18,9 +18,9 @@ namespace Swift {
 		public:
 			virtual ~ElementParser();
 
-			virtual void handleStartElement(const String& element, const String& ns, const AttributeMap& attributes) = 0;
-			virtual void handleEndElement(const String& element, const String& ns) = 0;
-			virtual void handleCharacterData(const String& data) = 0;
+			virtual void handleStartElement(const std::string& element, const std::string& ns, const AttributeMap& attributes) = 0;
+			virtual void handleEndElement(const std::string& element, const std::string& ns) = 0;
+			virtual void handleCharacterData(const std::string& data) = 0;
 
 			virtual boost::shared_ptr<Element> getElement() const = 0;
 	};

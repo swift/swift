@@ -10,7 +10,7 @@
 
 namespace Swift {
 
-JingleSession::JingleSession(const String& id, const std::vector<JingleContent::ref>& contents) : id(id), contents(contents) {
+JingleSession::JingleSession(const std::string& id, const std::vector<JingleContent::ref>& contents) : id(id), contents(contents) {
 
 }
 

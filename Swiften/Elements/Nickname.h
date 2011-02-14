@@ -7,23 +7,23 @@
 #pragma once
 
 #include "Swiften/Elements/Payload.h"
-#include "Swiften/Base/String.h"
+#include <string>
 
 namespace Swift {
 	class Nickname : public Payload {
 		public:
-			Nickname(const String& nickname = "") : nickname(nickname) {
+			Nickname(const std::string& nickname = "") : nickname(nickname) {
 			}
 
-			void setNickname(const String& nickname) {
+			void setNickname(const std::string& nickname) {
 				this->nickname = nickname;
 			}
 
-			const String& getNickname() const {
+			const std::string& getNickname() const {
 				return nickname;
 			}
 
 		private:
-			String nickname;
+			std::string nickname;
 	};
 }

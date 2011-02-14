@@ -7,7 +7,7 @@
 #pragma once
 
 #include "Swiften/JID/JID.h"
-#include "Swiften/Base/String.h"
+#include <string>
 #include "Swiften/Elements/Presence.h"
 #include "Swiften/Elements/ErrorPayload.h"
 #include "Swiften/Elements/RosterPayload.h"
@@ -42,27 +42,27 @@ namespace Swift {
 			~RosterController();
 			void showRosterWindow();
 			MainWindow* getWindow() {return mainWindow_;};
-			boost::signal<void (StatusShow::Type, const String&)> onChangeStatusRequest;
+			boost::signal<void (StatusShow::Type, const std::string&)> onChangeStatusRequest;
 			boost::signal<void ()> onSignOutRequest;
 			void handleAvatarChanged(const JID& jid);
 			void setEnabled(bool enabled);
 
 			boost::optional<XMPPRosterItem> getItem(const JID&) const;
-			std::set<String> getGroups() const;
+			std::set<std::string> getGroups() const;
 
-			void setContactGroups(const JID& jid, const std::vector<String>& groups);
+			void setContactGroups(const JID& jid, const std::vector<std::string>& groups);
 			void updateItem(const XMPPRosterItem&);
 
 		private:
 			void handleOnJIDAdded(const JID &jid);
 			void handleRosterCleared();
 			void handleOnJIDRemoved(const JID &jid);
-			void handleOnJIDUpdated(const JID &jid, const String& oldName, const std::vector<String> oldGroups);
+			void handleOnJIDUpdated(const JID &jid, const std::string& oldName, const std::vector<std::string> oldGroups);
 			void handleStartChatRequest(const JID& contact);
-			void handleChangeStatusRequest(StatusShow::Type show, const String &statusText);
+			void handleChangeStatusRequest(StatusShow::Type show, const std::string &statusText);
 			void handleShowOfflineToggled(bool state);
 			void handleIncomingPresence(boost::shared_ptr<Presence> newPresence);
-			void handleSubscriptionRequest(const JID& jid, const String& message);
+			void handleSubscriptionRequest(const JID& jid, const std::string& message);
 			void handleSubscriptionRequestAccepted(SubscriptionRequestEvent* event);
 			void handleSubscriptionRequestDeclined(SubscriptionRequestEvent* event);
 			void handleUIEvent(boost::shared_ptr<UIEvent> event);

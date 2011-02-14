@@ -10,7 +10,7 @@
 #include <vector>
 
 #include "Swiften/JID/JID.h"
-#include "Swiften/Base/String.h"
+#include <string>
 
 namespace Swift {
 	class RosterItemPayload
@@ -19,36 +19,36 @@ namespace Swift {
 			enum Subscription { None, To, From, Both, Remove };
 
 			RosterItemPayload() : subscription_(None), ask_(false) {}
-			RosterItemPayload(const JID& jid, const String& name, Subscription subscription) : jid_(jid), name_(name), subscription_(subscription), ask_(false) { }
+			RosterItemPayload(const JID& jid, const std::string& name, Subscription subscription) : jid_(jid), name_(name), subscription_(subscription), ask_(false) { }
 			
 			void setJID(const JID& jid) { jid_ = jid; }
 			const JID& getJID() const { return jid_; }
 
-			void setName(const String& name) { name_ = name; }
-			const String& getName() const { return name_; }
+			void setName(const std::string& name) { name_ = name; }
+			const std::string& getName() const { return name_; }
 
 			void setSubscription(Subscription subscription) { subscription_ = subscription; }
 			const Subscription& getSubscription() const { return subscription_; }
 
-			void addGroup(const String& group) { groups_.push_back(group); }
-			void setGroups(const std::vector<String>& groups) { groups_ = groups; }
-			const std::vector<String>& getGroups() const { return groups_; }
+			void addGroup(const std::string& group) { groups_.push_back(group); }
+			void setGroups(const std::vector<std::string>& groups) { groups_ = groups; }
+			const std::vector<std::string>& getGroups() const { return groups_; }
 
 			void setSubscriptionRequested() { ask_ = true; }
 			bool getSubscriptionRequested() const { return ask_; }
 
-			const String& getUnknownContent() const { return unknownContent_; }
-			void addUnknownContent(const String& c) { 
+			const std::string& getUnknownContent() const { return unknownContent_; }
+			void addUnknownContent(const std::string& c) { 
 				unknownContent_ += c;
 			}
 
 		private:
 			JID jid_;
-			String name_;
+			std::string name_;
 			Subscription subscription_;
-			std::vector<String> groups_;
+			std::vector<std::string> groups_;
 			bool ask_;
-			String unknownContent_;
+			std::string unknownContent_;
 	};
 }
 

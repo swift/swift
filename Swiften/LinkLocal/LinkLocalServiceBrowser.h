@@ -12,7 +12,7 @@
 #include <map>
 #include <vector>
 
-#include "Swiften/Base/String.h"
+#include <string>
 #include "Swiften/LinkLocal/DNSSD/DNSSDQuerier.h"
 #include "Swiften/LinkLocal/DNSSD/DNSSDResolveServiceQuery.h"
 #include "Swiften/LinkLocal/DNSSD/DNSSDRegisterQuery.h"
@@ -32,7 +32,7 @@ namespace Swift {
 			bool hasError() const;
 
 			void registerService(
-					const String& name, 
+					const std::string& name, 
 					int port, 
 					const LinkLocalServiceInfo& info = LinkLocalServiceInfo());
 			void updateService(

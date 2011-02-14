@@ -12,7 +12,7 @@
 #include "Swiften/Elements/Payload.h"
 
 namespace Swift {
-	class String;
+	
 
 	/**
 	 * A parser for XMPP stanza payloads.
@@ -29,17 +29,17 @@ namespace Swift {
 			/**
 			 * Handle the start of an XML element.
 			 */
-			virtual void handleStartElement(const String& element, const String& ns, const AttributeMap& attributes) = 0;
+			virtual void handleStartElement(const std::string& element, const std::string& ns, const AttributeMap& attributes) = 0;
 
 			/**
 			 * Handle the end of an XML element.
 			 */
-			virtual void handleEndElement(const String& element, const String& ns) = 0;
+			virtual void handleEndElement(const std::string& element, const std::string& ns) = 0;
 
 			/**
 			 * Handle character data.
 			 */
-			virtual void handleCharacterData(const String& data) = 0;
+			virtual void handleCharacterData(const std::string& data) = 0;
 
 			/**
 			 * Retrieve a pointer to the payload.

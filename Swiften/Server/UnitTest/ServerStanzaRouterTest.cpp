@@ -124,7 +124,7 @@ class ServerStanzaRouterTest : public CppUnit::TestFixture {
 		}
 
 	private:
-		boost::shared_ptr<Message> createMessageTo(const String& recipient) {
+		boost::shared_ptr<Message> createMessageTo(const std::string& recipient) {
 			boost::shared_ptr<Message> message(new Message());
 			message->setTo(JID(recipient));
 			return message;

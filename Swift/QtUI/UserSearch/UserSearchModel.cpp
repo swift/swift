@@ -46,12 +46,12 @@ QVariant UserSearchModel::data(UserSearchResult* item, int role) {
 
 QString UserSearchModel::nameLine(UserSearchResult* item) {
 	QString result;
-	const std::map<String, String> fields = item->getFields();
-	std::map<String, String>::const_iterator first = fields.find("first");
+	const std::map<std::string, std::string> fields = item->getFields();
+	std::map<std::string, std::string>::const_iterator first = fields.find("first");
 	if (first != fields.end()) {
 		result += P2QSTRING((*first).second);
 	}
-	std::map<String, String>::const_iterator last = fields.find("last");
+	std::map<std::string, std::string>::const_iterator last = fields.find("last");
 	if (last != fields.end()) {
 		if (!result.isEmpty()) {
 			result += " ";

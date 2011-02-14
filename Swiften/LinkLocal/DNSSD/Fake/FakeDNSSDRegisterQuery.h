@@ -9,14 +9,14 @@
 #include "Swiften/LinkLocal/DNSSD/Fake/FakeDNSSDQuery.h"
 #include "Swiften/LinkLocal/DNSSD/DNSSDRegisterQuery.h"
 #include "Swiften/Base/ByteArray.h"
-#include "Swiften/Base/String.h"
+#include <string>
 
 namespace Swift {
 	class FakeDNSSDQuerier;
 
 	class FakeDNSSDRegisterQuery : public DNSSDRegisterQuery, public FakeDNSSDQuery {
 		public:	
-			FakeDNSSDRegisterQuery(const String& name, int port, const ByteArray& info, boost::shared_ptr<FakeDNSSDQuerier> querier) : FakeDNSSDQuery(querier), name(name), port(port), info(info) {
+			FakeDNSSDRegisterQuery(const std::string& name, int port, const ByteArray& info, boost::shared_ptr<FakeDNSSDQuerier> querier) : FakeDNSSDQuery(querier), name(name), port(port), info(info) {
 			}
 
 			void registerService() {
@@ -31,7 +31,7 @@ namespace Swift {
 				finish();
 			}
 
-			String name;
+			std::string name;
 			int port;
 			ByteArray info;
 	};

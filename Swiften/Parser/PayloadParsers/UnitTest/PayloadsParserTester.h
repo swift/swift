@@ -26,11 +26,11 @@ namespace Swift {
 				delete xmlParser;
 			}
 
-			bool parse(const String& data) {
+			bool parse(const std::string& data) {
 				return xmlParser->parse(data);
 			}
 
-			virtual void handleStartElement(const String& element, const String& ns, const AttributeMap& attributes) {
+			virtual void handleStartElement(const std::string& element, const std::string& ns, const AttributeMap& attributes) {
 				if (level == 0) {
 					CPPUNIT_ASSERT(!payloadParser.get());
 					PayloadParserFactory* payloadParserFactory = factories.getPayloadParserFactory(element, ns, attributes);
@@ -41,12 +41,12 @@ namespace Swift {
 				level++;
 			}
 
-			virtual void handleEndElement(const String& element, const String& ns) {
+			virtual void handleEndElement(const std::string& element, const std::string& ns) {
 				level--;
 				payloadParser->handleEndElement(element, ns);
 			}
 
-			virtual void handleCharacterData(const String& data) {
+			virtual void handleCharacterData(const std::string& data) {
 				payloadParser->handleCharacterData(data);
 			}
 

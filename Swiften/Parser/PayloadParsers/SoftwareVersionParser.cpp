@@ -11,11 +11,11 @@ namespace Swift {
 SoftwareVersionParser::SoftwareVersionParser() : level_(TopLevel) {
 }
 
-void SoftwareVersionParser::handleStartElement(const String&, const String&, const AttributeMap&) {
+void SoftwareVersionParser::handleStartElement(const std::string&, const std::string&, const AttributeMap&) {
 	++level_;
 }
 
-void SoftwareVersionParser::handleEndElement(const String& element, const String&) {
+void SoftwareVersionParser::handleEndElement(const std::string& element, const std::string&) {
 	--level_;
 	if (level_ == PayloadLevel) {
 		if (element == "name") {
@@ -31,7 +31,7 @@ void SoftwareVersionParser::handleEndElement(const String& element, const String
 	}
 }
 
-void SoftwareVersionParser::handleCharacterData(const String& data) {
+void SoftwareVersionParser::handleCharacterData(const std::string& data) {
 	currentText_ += data;
 }
 

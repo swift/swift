@@ -12,15 +12,15 @@
 namespace Swift {
 	class XMLRawTextNode : public XMLNode {
 		public:
-			XMLRawTextNode(const String& text) : text_(text) {
+			XMLRawTextNode(const std::string& text) : text_(text) {
 			}
 
-			String serialize() {
+			std::string serialize() {
 				return text_;
 			}
 
 		private:
-			String text_;
+			std::string text_;
 	};
 }
 

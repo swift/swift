@@ -25,13 +25,13 @@ namespace Swift {
 		public:
 			VCardUpdateAvatarManager(VCardManager*, StanzaChannel*, AvatarStorage*, MUCRegistry* = NULL);
 
-			String getAvatarHash(const JID&) const;
+			std::string getAvatarHash(const JID&) const;
 
 		private:
 			void handlePresenceReceived(boost::shared_ptr<Presence>);
 			void handleStanzaChannelAvailableChanged(bool);
 			void handleVCardChanged(const JID& from, VCard::ref);
-			void setAvatarHash(const JID& from, const String& hash);
+			void setAvatarHash(const JID& from, const std::string& hash);
 			JID getAvatarJID(const JID& o) const;
 
 		private:
@@ -39,6 +39,6 @@ namespace Swift {
 			StanzaChannel* stanzaChannel_;
 			AvatarStorage* avatarStorage_;
 			MUCRegistry* mucRegistry_;
-			std::map<JID, String> avatarHashes_;
+			std::map<JID, std::string> avatarHashes_;
 	};
 }

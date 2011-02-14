@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include "Swiften/Base/String.h"
+#include <string>
 
 namespace Swift {
 	class StringPrep {
@@ -18,6 +18,6 @@ namespace Swift {
 				SASLPrep,
 			};
 
-			static String getPrepared(const String& s, Profile profile);
+			static std::string getPrepared(const std::string& s, Profile profile);
 	};
 }

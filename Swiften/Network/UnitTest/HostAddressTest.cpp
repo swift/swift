@@ -8,7 +8,7 @@
 #include <cppunit/extensions/TestFactoryRegistry.h>
 
 #include "Swiften/Network/HostAddress.h"
-#include "Swiften/Base/String.h"
+#include <string>
 
 using namespace Swift;
 

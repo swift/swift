@@ -20,7 +20,7 @@ namespace Swift {
 IBBSerializer::IBBSerializer() {
 }
 
-String IBBSerializer::serializePayload(boost::shared_ptr<IBB> ibb) const {
+std::string IBBSerializer::serializePayload(boost::shared_ptr<IBB> ibb) const {
 	switch(ibb->getAction()) {
 		case IBB::Data: {
 			XMLElement ibbElement("data", "http://jabber.org/protocol/ibb");

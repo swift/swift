@@ -13,7 +13,7 @@ namespace Swift {
 	class MUCPayloadSerializer : public GenericPayloadSerializer<MUCPayload> {
 		public:
 			MUCPayloadSerializer();
-			virtual String serializePayload(boost::shared_ptr<MUCPayload> version)  const;
+			virtual std::string serializePayload(boost::shared_ptr<MUCPayload> version)  const;
 	};
 }
 

@@ -12,26 +12,26 @@ namespace Swift {
 
 ByteArray LinkLocalServiceInfo::toTXTRecord() const {
 	ByteArray result(getEncoded("txtvers=1"));
-	if (!firstName.isEmpty()) {
+	if (!firstName.empty()) {
 		result += getEncoded("1st=" + firstName);
 	}
-	if (!lastName.isEmpty()) {
+	if (!lastName.empty()) {
 		result += getEncoded("last=" + lastName);
 	}
-	if (!email.isEmpty()) {
+	if (!email.empty()) {
 		result += getEncoded("email=" + email);
 	}
 	if (jid.isValid()) {
 		result += getEncoded("jid=" + jid.toString());
 	}
-	if (!message.isEmpty()) {
+	if (!message.empty()) {
 		result += getEncoded("msg=" + message);
 	}
-	if (!nick.isEmpty()) {
+	if (!nick.empty()) {
 		result += getEncoded("nick=" + nick);
 	}
 	if (port) {
-		result += getEncoded("port.p2pj=" + String(boost::lexical_cast<std::string>(*port)));
+		result += getEncoded("port.p2pj=" + std::string(boost::lexical_cast<std::string>(*port)));
 	}
 
 	switch (status) {
@@ -43,10 +43,10 @@ ByteArray LinkLocalServiceInfo::toTXTRecord() const {
 	return result;
 }
 
-ByteArray LinkLocalServiceInfo::getEncoded(const String& s) {
+ByteArray LinkLocalServiceInfo::getEncoded(const std::string& s) {
 	ByteArray sizeByte;
 	sizeByte.resize(1);
-	sizeByte[0] = s.getUTF8Size();
+	sizeByte[0] = s.size();
 	return sizeByte + ByteArray(s);
 }
 
@@ -54,8 +54,8 @@ LinkLocalServiceInfo LinkLocalServiceInfo::createFromTXTRecord(const ByteArray& 
 	LinkLocalServiceInfo info;
 	size_t i = 0;
 	while (i < record.getSize()) {
-		std::pair<String,String> entry = readEntry(record, &i);
-		if (entry.first.isEmpty()) {
+		std::pair<std::string,std::string> entry = readEntry(record, &i);
+		if (entry.first.empty()) {
 			break;
 		}
 		else if (entry.first == "1st") {
@@ -91,10 +91,10 @@ LinkLocalServiceInfo LinkLocalServiceInfo::createFromTXTRecord(const ByteArray& 
 	return info;
 }
 
-std::pair<String,String> LinkLocalServiceInfo::readEntry(const ByteArray& record, size_t* index) {
+std::pair<std::string,std::string> LinkLocalServiceInfo::readEntry(const ByteArray& record, size_t* index) {
 	size_t& i = *index;
-	String key;
-	String value;
+	std::string key;
+	std::string value;
 
 	size_t entryEnd = i + 1 + record[i];
 	++i;
