@@ -6,13 +6,17 @@
 
 #include "SwifTools/Application/UnixApplicationPathProvider.h"
 
+#include <boost/algorithm/string.hpp>
+
+#include <Swiften/Base/String.h>
+
 namespace Swift {
 
 UnixApplicationPathProvider::UnixApplicationPathProvider(const std::string& name) : ApplicationPathProvider(name) {
 	resourceDirs.push_back(getExecutableDir() / "../resources"); // Development
 	char* xdgDataDirs = getenv("XDG_DATA_DIRS");
 	if (xdgDataDirs) {
-		std::vector<std::string> dataDirs = std::string(xdgDataDirs).split(':');
+		std::vector<std::string> dataDirs = String::split(xdgDataDirs, ':');
 		if (!dataDirs.empty()) {
 			foreach(const std::string& dir, dataDirs) {
 				resourceDirs.push_back(boost::filesystem::path(dir) / "swift");
@@ -38,7 +42,7 @@ boost::filesystem::path UnixApplicationPathProvider::getDataDir() const {
 
 	boost::filesystem::path dataPath = (dataDir.empty() ? 
 			getHomeDir() / ".local" / "share" 
-			: boost::filesystem::path(dataDir)) / getApplicationName().getLowerCase();
+			: boost::filesystem::path(dataDir)) / boost::to_lower_copy(getApplicationName());
 
 	try {
 		boost::filesystem::create_directories(dataPath);
