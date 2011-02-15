@@ -123,10 +123,11 @@ env["LINKFLAGS"] = env.get("linkflags", [])
 # where you need it
 env["OBJCCFLAGS"] = []
 if env["optimize"] :
-	env.Append(CCFLAGS = ["-O2"])
 	if env["PLATFORM"] == "win32" :
-		env.Append(CCFLAGS = ["GL"])
+		env.Append(CCFLAGS = ["/O2", "/GL"])
 		env.Append(LINKFLAGS = ["/INCREMENTAL:NO", "/LTCG"])
+	else :
+		env.Append(CCFLAGS = ["-O2"])
 
 if env["debug"] :
 	if env["PLATFORM"] == "win32" :
@@ -336,7 +337,12 @@ boost_flags = {}
 if env.get("boost_libdir", None) :
 	boost_flags["LIBPATH"] = [env["boost_libdir"]]
 if env.get("boost_includedir", None) :
-	boost_flags["CPPPATH"] = [env["boost_includedir"]]
+	if env["PLATFORM"] == "win32" :
+		boost_flags["CPPPATH"] = [env["boost_includedir"]]
+	else :
+		# Using isystem to avoid getting warnings from a system boost
+		# Unfortunately, this also disables dependency tracking
+		boost_flags["CPPFLAGS"] = [("-isystem", env["boost_includedir"])]
 boost_conf_env.MergeFlags(boost_flags)
 conf = Configure(boost_conf_env)
 boostLibs = [("signals", None), ("thread", None), ("regex", None), ("program_options", None), ("filesystem", None), ("system", "system/system_error.hpp"), ("date_time", "date_time/date.hpp")]
