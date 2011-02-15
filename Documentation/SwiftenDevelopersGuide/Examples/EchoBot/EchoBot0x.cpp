@@ -14,8 +14,7 @@ int main(int, char**) {
 	BoostNetworkFactories networkFactories(&eventLoop);
 
 	// Initialize the client with the JID and password
-	Client client(
-		JID("echobot@wonderland.lit"), "mypass", &networkFactories);
+	Client client("echobot@wonderland.lit", "mypass", &networkFactories);
 
 	// When the client is convnected, send out initial presence
 	client.onConnected.connect([&] {

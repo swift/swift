@@ -15,8 +15,8 @@ namespace Swift {
 				WithResource, WithoutResource
 			};
 
-			explicit JID(const std::string& = std::string());
-			explicit JID(const char*);
+			JID(const std::string& = std::string());
+			JID(const char*);
 			JID(const std::string& node, const std::string& domain);
 			JID(const std::string& node, const std::string& domain, const std::string& resource);
 

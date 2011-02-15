@@ -21,7 +21,7 @@ int main(int, char**) {
 	SimpleEventLoop eventLoop;
 	BoostNetworkFactories networkFactories(&eventLoop);
 
-	client = new Client(JID("echobot@wonderland.lit"), "mypass", &networkFactories);
+	client = new Client("echobot@wonderland.lit", "mypass", &networkFactories);
 	client->onConnected.connect(&handleConnected);
 	client->onMessageReceived.connect(bind(&handleMessageReceived, _1));
 	client->connect();
