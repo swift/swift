@@ -48,7 +48,7 @@ std::vector<std::string> QtSettingsProvider::getAvailableProfiles() {
 	std::vector<std::string> profiles;
 	QVariant profilesVariant = settings_.value("profileList");
 	foreach(QString profileQString, profilesVariant.toStringList()) {
-		profiles.push_back(Q2PSTRING(profileQString));
+		profiles.push_back(std::string(profileQString.toUtf8()));
 	}
 	return profiles;
 }
