@@ -16,7 +16,7 @@
 
 int main(int argc, char* argv[]) {
 	QApplication app(argc, argv);
-	QtEventLoop eventLoop;
+	Swift::QtEventLoop eventLoop;
 
 	QCoreApplication::setApplicationName("Slimber");
 	QCoreApplication::setApplicationVersion(QString(buildVersion));
