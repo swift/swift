@@ -18,8 +18,7 @@ vars.Add('distcc_hosts', "DistCC hosts (overrides DISTCC_HOSTS)")
 vars.Add(EnumVariable("test", "Compile and run tests", "none", ["none", "all", "unit", "system"]))
 vars.Add(BoolVariable("optimize", "Compile with optimizations turned on", "no"))
 vars.Add(BoolVariable("debug", "Compile with debug information", "yes"))
-vars.Add(BoolVariable("warnings", "Compile with warnings turned on", 
-		"yes" if os.name != "nt" else "no"))
+vars.Add(BoolVariable("allow_warnings", "Allow compilation warnings during compilation", "no"))
 vars.Add(BoolVariable("max_jobs", "Build with maximum number of parallel jobs", "no"))
 vars.Add(EnumVariable("target", "Choose a target platform for compilation", "native", ["native", "iphone-simulator", "iphone-device", "xcode"]))
 vars.Add(BoolVariable("swift_mobile", "Build mobile Swift", "no"))
@@ -43,6 +42,8 @@ vars.Add("expat_libname", "Expat library name", "libexpat" if os.name == "nt" el
 vars.Add(PathVariable("libidn_includedir", "LibIDN headers location", None, PathVariable.PathAccept))
 vars.Add(PathVariable("libidn_libdir", "LibIDN library location", None, PathVariable.PathAccept))
 vars.Add("libidn_libname", "LibIDN library name", "libidn" if os.name == "nt" else "idn")
+vars.Add(PathVariable("avahi_includedir", "Avahi headers location", None, PathVariable.PathAccept))
+vars.Add(PathVariable("avahi_libdir", "Avahi library location", None, PathVariable.PathAccept))
 vars.Add(PathVariable("qt", "Qt location", "", PathVariable.PathAccept))
 vars.Add(PathVariable("docbook_xml", "DocBook XML", None, PathVariable.PathAccept))
 vars.Add(PathVariable("docbook_xsl", "DocBook XSL", None, PathVariable.PathAccept))
@@ -161,14 +162,18 @@ if env.get("mac105", 0) :
 			"-arch", "i386"])
 
 
-if env["warnings"] :
-	if env["PLATFORM"] == "win32" :
-		env.Append(CCFLAGS = ["/Wall"])
-	else :
-		env.Append(CXXFLAGS = ["-Werror", "-Wextra", "-Wall", "-Wnon-virtual-dtor", "-Wundef", "-Wold-style-cast", "-Wno-long-long", "-Woverloaded-virtual", "-Wfloat-equal", "-Wredundant-decls"])
-		gccVersion = env["CCVERSION"].split(".")
-		if gccVersion >= ["4", "5", "0"] :
-			env.Append(CCFLAGS = ["-Wlogical-op"])
+# Warnings
+if env["PLATFORM"] == "win32" :
+	# TODO: Find the ideal set of warnings
+	#env.Append(CCFLAGS = ["/Wall"])
+	pass
+else :
+	env.Append(CXXFLAGS = ["-Wextra", "-Wall", "-Wnon-virtual-dtor", "-Wundef", "-Wold-style-cast", "-Wno-long-long", "-Woverloaded-virtual", "-Wfloat-equal", "-Wredundant-decls"])
+	if not env.get("allow_warnings", False) :
+		env.Append(CXXFLAGS = ["-Werror"])
+	gccVersion = env["CCVERSION"].split(".")
+	if gccVersion >= ["4", "5", "0"] :
+		env.Append(CCFLAGS = ["-Wlogical-op"])
 
 if env.get("coverage", 0) :
 	assert(env["PLATFORM"] != "win32")
@@ -323,12 +328,6 @@ if conf.CheckLib("c") :
 if conf.CheckLib("stdc++") :
 	env["PLATFORM_FLAGS"]["LIBS"] = env["PLATFORM_FLAGS"].get("LIBS", []) + ["stdc++"]
 
-# Avahi
-if env["PLATFORM"] != "darwin" :
-	if conf.CheckCHeader("avahi-client/client.h") and conf.CheckLib("avahi-client") and conf.CheckLib("avahi-common") :
-		env["HAVE_AVAHI"] = True
-		env["AVAHI_FLAGS"] = { "LIBS": ["avahi-client", "avahi-common"] }
-
 conf.Finish()
 
 # Boost
@@ -482,6 +481,21 @@ if conf.CheckCHeader("idna.h") and conf.CheckLib(env["libidn_libname"]) :
 	env["LIBIDN_FLAGS"].update(libidn_flags)
 else :
 	env["LIBIDN_BUNDLED"] = 1
+conf.Finish()
+
+# Avahi
+avahi_conf_env = conf_env.Clone()
+avahi_flags = {}
+if env.get("avahi_libdir", None) :
+	avahi_flags["LIBPATH"] = [env["avahi_libdir"]]
+if env.get("avahi_includedir", None) :
+	avahi_flags["CPPPATH"] = [env["avahi_includedir"]]
+avahi_conf_env.MergeFlags(avahi_flags)
+conf = Configure(avahi_conf_env)
+if conf.CheckCHeader("avahi-client/client.h") and conf.CheckLib("avahi-client") and conf.CheckLib("avahi-common") :
+	env["HAVE_AVAHI"] = True
+	env["AVAHI_FLAGS"] = { "LIBS": ["avahi-client", "avahi-common"] }
+	env["AVAHI_FLAGS"].update(avahi_flags)
 conf.Finish()
 
 # Qt
