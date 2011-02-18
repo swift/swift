@@ -29,7 +29,7 @@ $SCRIPT_DIR/FilterLCovData.py $OUTPUT_DIR/all.info
 
 # Generate HTML
 $LCOVDIR/gendesc -o $OUTPUT_DIR/descriptions $SCRIPT_DIR/descriptions.txt
-$LCOVDIR/genhtml --no-function-coverage --title "Swift Coverage" --output-directory $OUTPUT_DIR $OUTPUT_DIR/all.info
+$LCOVDIR/genhtml --prefix $PWD --no-function-coverage --title "Swift Coverage" --output-directory $OUTPUT_DIR $OUTPUT_DIR/all.info
 
 # Generate summary
 $SCRIPT_DIR/GenerateSummary.py $OUTPUT_DIR/all.info $OUTPUT_DIR/summary

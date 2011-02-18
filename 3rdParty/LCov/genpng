@@ -35,7 +35,7 @@ use Getopt::Long;
 
 
 # Constants
-our $lcov_version	= "LCOV version 1.7";
+our $lcov_version	= 'LCOV version 1.9';
 our $lcov_url		= "http://ltp.sourceforge.net/coverage/lcov.php";
 our $tool_name		= basename($0);
 
@@ -45,13 +45,16 @@ sub gen_png($$$@);
 sub check_and_load_module($);
 sub genpng_print_usage(*);
 sub genpng_process_file($$$$);
-sub warn_handler($);
-sub die_handler($);
+sub genpng_warn_handler($);
+sub genpng_die_handler($);
 
 
 #
 # Code entry point
 #
+
+# Prettify version string
+$lcov_version =~ s/\$\s*Revision\s*:?\s*(\S+)\s*\$/$1/;
 
 # Check whether required module GD.pm is installed
 if (check_and_load_module("GD"))
@@ -75,8 +78,8 @@ if (!caller)
 	my $help;
 	my $version;
 
-	$SIG{__WARN__} = \&warn_handler;
-	$SIG{__DIE__} = \&die_handler;
+	$SIG{__WARN__} = \&genpng_warn_handler;
+	$SIG{__DIE__} = \&genpng_die_handler;
 
 	# Parse command line options
 	if (!GetOptions("tab-size=i" => \$tab_size,
@@ -366,14 +369,14 @@ sub gen_png($$$@)
 	close(PNG_HANDLE);
 }
 
-sub warn_handler($)
+sub genpng_warn_handler($)
 {
 	my ($msg) = @_;
 
 	warn("$tool_name: $msg");
 }
 
-sub die_handler($)
+sub genpng_die_handler($)
 {
 	my ($msg) = @_;
 
