@@ -14,6 +14,7 @@ namespace Swift {
 
 UnixApplicationPathProvider::UnixApplicationPathProvider(const std::string& name) : ApplicationPathProvider(name) {
 	resourceDirs.push_back(getExecutableDir() / "../resources"); // Development
+	resourceDirs.push_back(getExecutableDir() / ".." / "share" / boost::to_lower_copy(getApplicationName())); // Local install
 	char* xdgDataDirs = getenv("XDG_DATA_DIRS");
 	if (xdgDataDirs) {
 		std::vector<std::string> dataDirs = String::split(xdgDataDirs, ':');
@@ -24,8 +25,8 @@ UnixApplicationPathProvider::UnixApplicationPathProvider(const std::string& name
 			return;
 		}
 	}
-	resourceDirs.push_back("/usr/local/share/swift");
-	resourceDirs.push_back("/usr/share/swift");
+	resourceDirs.push_back("/usr/local/share/" + boost::to_lower_copy(getApplicationName()));
+	resourceDirs.push_back("/usr/share/" + boost::to_lower_copy(getApplicationName()));
 }
 
 boost::filesystem::path UnixApplicationPathProvider::getHomeDir() const {

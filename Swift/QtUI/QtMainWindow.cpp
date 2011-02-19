@@ -85,7 +85,7 @@ QtMainWindow::QtMainWindow(QtSettingsProvider* settings, UIEventStream* uiEventS
 	QAction* editProfileAction = new QAction(tr("Edit Profile"), this);
 	connect(editProfileAction, SIGNAL(triggered()), SLOT(handleEditProfileAction()));
 	actionsMenu->addAction(editProfileAction);
-	QAction* joinMUCAction = new QAction(tr("&Join Room"), this);
+	QAction* joinMUCAction = new QAction(tr("&Enter Room"), this);
 	connect(joinMUCAction, SIGNAL(triggered()), SLOT(handleJoinMUCAction()));
 	actionsMenu->addAction(joinMUCAction);
 	addUserAction_ = new QAction(tr("&Add Contact"), this);

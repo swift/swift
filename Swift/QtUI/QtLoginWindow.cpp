@@ -154,7 +154,11 @@ QtLoginWindow::QtLoginWindow(UIEventStream* uiEventStream) : QMainWindow() {
 	generalMenu_ = swiftMenu_;
 #endif
 
+#ifdef SWIFTEN_PLATFORM_MACOSX
+	QAction* aboutAction = new QAction(QString("&About %1").arg("Swift"), this);
+#else
 	QAction* aboutAction = new QAction(QString(tr("&About %1")).arg("Swift"), this);
+#endif
 	connect(aboutAction, SIGNAL(triggered()), SLOT(handleAbout()));
 	swiftMenu_->addAction(aboutAction);
 
@@ -180,7 +184,11 @@ QtLoginWindow::QtLoginWindow(UIEventStream* uiEventStream) : QMainWindow() {
 	swiftMenu_->addSeparator();
 #endif
 
+#ifdef SWIFTEN_PLATFORM_MACOSX
+	QAction* quitAction = new QAction("&Quit", this);
+#else
 	QAction* quitAction = new QAction(tr("&Quit"), this);
+#endif
 	connect(quitAction, SIGNAL(triggered()), SLOT(handleQuit()));
 	swiftMenu_->addAction(quitAction);
 

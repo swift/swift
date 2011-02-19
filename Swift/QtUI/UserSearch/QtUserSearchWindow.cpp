@@ -23,7 +23,7 @@ namespace Swift {
 QtUserSearchFirstPage::QtUserSearchFirstPage(UserSearchWindow::Type type, const QString& title) {
 	setupUi(this);
 	setTitle(title);
-	setSubTitle(QString(tr("%1. If you know their JID you can enter it directly, or you can search for them.")).arg(type == UserSearchWindow::AddContact ? tr("Add another user to your roster") : tr("Chat to another user")));
+	setSubTitle(QString(tr("%1. If you know their address you can enter it directly, or you can search for them.")).arg(type == UserSearchWindow::AddContact ? tr("Add another user to your contact list") : tr("Chat to another user")));
 	connect(jid_, SIGNAL(textChanged(const QString&)), this, SLOT(emitCompletenessCheck()));
 	connect(service_->lineEdit(), SIGNAL(textChanged(const QString&)), this, SLOT(emitCompletenessCheck()));
 }
@@ -291,10 +291,10 @@ void QtUserSearchWindow::clear() {
 	firstPage_->errorLabel_->setVisible(false);
 	QString howText;
 	if (type_ == AddContact) {
-		howText = QString("How would you like to find the user to add?");
+		howText = QString(tr("How would you like to find the user to add?"));
 	}
 	else {
-		howText = QString("How would you like to find the user to chat to?");
+		howText = QString(tr("How would you like to find the user to chat to?"));
 	}
 	firstPage_->howLabel_->setText(howText);
 	firstPage_->byJID_->setChecked(true);

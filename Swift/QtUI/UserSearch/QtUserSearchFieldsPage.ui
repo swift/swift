@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>WizardPage</string>
+   <string></string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
    <item row="0" column="0" colspan="2">
@@ -77,7 +77,7 @@
    <item row="5" column="0">
     <widget class="QLabel" name="fetchingThrobber_">
      <property name="text">
-      <string>TextLabel</string>
+      <string></string>
      </property>
     </widget>
    </item>

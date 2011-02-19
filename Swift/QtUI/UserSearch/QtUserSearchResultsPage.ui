@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>WizardPage</string>
+   <string></string>
   </property>
   <layout class="QHBoxLayout" name="horizontalLayout">
    <item>

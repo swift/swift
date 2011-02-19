@@ -58,7 +58,7 @@ void QtAvatarWidget::setAvatar(const ByteArray& data, const std::string& type) {
 		QFont font = painter.font();
 		font.setPointSize(14);
 		painter.setFont(font);
-		painter.drawText(0, 0, image.height(), image.width(), Qt::AlignHCenter | Qt::AlignVCenter, "No picture");
+		painter.drawText(0, 0, image.height(), image.width(), Qt::AlignHCenter | Qt::AlignVCenter, tr("No picture"));
 	}
 
 	if (image.height() > label->height() || image.width() > label->width()) {

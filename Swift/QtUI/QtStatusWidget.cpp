@@ -26,8 +26,6 @@
 
 namespace Swift {
 
-const QString QtStatusWidget::NO_MESSAGE = QString(QT_TRANSLATE_NOOP("QtStatusWidget", "(No message)"));
-
 QtStatusWidget::QtStatusWidget(QWidget *parent) : QWidget(parent), editCursor_(Qt::IBeamCursor), viewCursor_(Qt::PointingHandCursor) {
 	isClicking_ = false;
 	connecting_ = false;
@@ -130,7 +128,7 @@ void QtStatusWidget::generateList() {
 	newStatusText_ = text;
 	menu_->clear();
 	foreach (StatusShow::Type type, icons_.keys()) {
-		QListWidgetItem* item = new QListWidgetItem(text == "" ? NO_MESSAGE : text, menu_);
+		QListWidgetItem* item = new QListWidgetItem(text == "" ? getNoMessage() : text, menu_);
 		item->setIcon(icons_[type]);
 		item->setToolTip(P2QSTRING(statusShowTypeToFriendlyName(type)) + ": " + item->text());
 		item->setStatusTip(item->toolTip());
@@ -223,7 +221,7 @@ void QtStatusWidget::handleItemClicked(QListWidgetItem* item) {
 	editing_ = false;
 	selectedStatusType_ = static_cast<StatusShow::Type>(item->data(Qt::UserRole).toInt());
 	QString message = item->data(Qt::DisplayRole).toString();
-	newStatusText_ = message == NO_MESSAGE ? "" : message;
+	newStatusText_ = message == getNoMessage() ? "" : message;
 	statusEdit_->setText(newStatusText_);
 	handleEditComplete();
 }
@@ -240,7 +238,7 @@ void QtStatusWidget::setStatusText(const QString& text) {
 	connectingMovie_->stop();
 	statusText_ = text;
 	statusEdit_->setText(text);
-	QString escapedText(text.isEmpty() ? NO_MESSAGE : text);
+	QString escapedText(text.isEmpty() ? getNoMessage() : text);
 	escapedText.replace("<","&lt;");
 //	statusTextLabel_->setText("<i>" + escapedText + "</i>");
 	statusTextLabel_->setText(escapedText);
@@ -261,10 +259,8 @@ void QtStatusWidget::setStatusType(StatusShow::Type type) {
 	setNewToolTip();
 }
 
-
-
+QString QtStatusWidget::getNoMessage() {
+	return QString(tr("(No message)"));
 }
 
-
-
-
+}

@@ -27,7 +27,6 @@ QtMUCSearchWindow::QtMUCSearchWindow() {
 	setWindowIcon(QIcon(":/logo-icon-16.png"));
 #endif
 	setModal(true);
-	setWindowTitle(tr("Search Room"));
 	ui_.filter_->hide();
 	model_ = new MUCSearchModel();
 	delegate_ = new MUCSearchDelegate();

@@ -43,6 +43,7 @@ namespace Swift {
 		protected slots:
 			virtual void mousePressEvent(QMouseEvent* event);
 			void handleItemClicked(QListWidgetItem* item);
+			static QString getNoMessage();
 		private:
 			void viewMode();
 			void setNewToolTip();

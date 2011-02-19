@@ -32,7 +32,7 @@ int main(int argc, char* argv[]) {
 	QTranslator qtTranslator;
 	if (!someTranslationPath.empty()) {
 		//std::cout << "Loading " << std::string(QLocale::system().name().toUtf8()) << std::endl;
-		qtTranslator.load("Swift_" + QLocale::system().name(), someTranslationPath.parent_path().string().c_str());
+		qtTranslator.load(QString(SWIFT_APPLICATION_NAME).toLower() + "_" + QLocale::system().name(), someTranslationPath.parent_path().string().c_str());
 	}
 	app.installTranslator(&qtTranslator);
 	QtTranslator swiftTranslator;

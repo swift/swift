@@ -247,7 +247,7 @@ void RosterController::handleRosterSetError(ErrorPayload::ref error, boost::shar
 	if (!error) {
 		return;
 	}
-	std::string text = str(format(QT_TRANSLATE_NOOP("", "Server %1% rejected roster change to item '%2%'")) % myJID_.getDomain() % rosterPayload->getItems()[0].getJID().toString());
+	std::string text = str(format(QT_TRANSLATE_NOOP("", "Server %1% rejected contact list change to item '%2%'")) % myJID_.getDomain() % rosterPayload->getItems()[0].getJID().toString());
 	if (!error->getText().empty()) {
 		text += ": " + error->getText();
 	}

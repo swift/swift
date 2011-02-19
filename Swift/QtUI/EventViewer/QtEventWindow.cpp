@@ -44,7 +44,7 @@ QtEventWindow::QtEventWindow(UIEventStream* eventStream) : EventWindow(false) {
 	view_->setIndentation(0);
 	view_->setRootIsDecorated(true);
 	
-	readButton_ = new QPushButton("Display Notice", this);
+	readButton_ = new QPushButton(tr("Display Notice"), this);
 	layout->addWidget(readButton_);
 	readButton_->setEnabled(false);
 	connect(readButton_, SIGNAL(clicked()), this, SLOT(handleReadClicked()));

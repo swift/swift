@@ -17,7 +17,7 @@
    </sizepolicy>
   </property>
   <property name="windowTitle">
-   <string>Join Room</string>
+   <string>Enter Room</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
@@ -86,14 +86,14 @@
      <item>
       <widget class="QCheckBox" name="joinAutomatically">
        <property name="text">
-        <string>Join automatically in future</string>
+        <string>Enter automatically in future</string>
        </property>
       </widget>
      </item>
      <item>
       <widget class="QPushButton" name="joinButton">
        <property name="text">
-        <string>Join Room</string>
+        <string>Enter Room</string>
        </property>
       </widget>
      </item>

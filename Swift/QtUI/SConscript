@@ -161,17 +161,18 @@ commonResources = {
 }
 
 # Translation
-translation_sources = [env.File("../Translations/Swift.ts").abspath]
+translation_sources = [env.File("../Translations/swift.ts").abspath]
 for file in os.listdir(Dir("../Translations").abspath) :
-	if file.startswith("Swift_") and file.endswith(".ts") :
+	if file.startswith("swift_") and file.endswith(".ts") :
 		lang = file[6:-3]
-		translation_resource = "../resources/translations/Swift_" + lang + ".qm"
-		translation_source = "../Translations/Swift_" + lang + ".ts"
+		translation_resource = "../resources/translations/swift_" + lang + ".qm"
+		translation_source = "../Translations/swift_" + lang + ".ts"
 		translation_sources.append(env.File(translation_source).abspath)
 		myenv.Qm(translation_resource, translation_source)
 		commonResources["translations"] = commonResources.get("translations", []) + [translation_resource]
 if ARGUMENTS.get("update_translations", False) :
-	t = myenv.Command(translation_sources, [], [myenv.Action("$QT4_LUPDATE -I " + env.Dir("#").abspath + " -silent -codecfortr utf-8  -recursive Swift -ts " + " ".join(translation_sources), cmdstr = "$QT4_LUPDATECOMSTR")])
+	myenv.Precious(translation_sources)
+	t = myenv.Command(translation_sources, [], [myenv.Action("$QT4_LUPDATE -I " + env.Dir("#").abspath + " -silent -no-ui-lines -codecfortr utf-8  -recursive Swift -ts " + " ".join(translation_sources), cmdstr = "$QT4_LUPDATECOMSTR")])
 	myenv.AlwaysBuild(t)
 
 if env["PLATFORM"] == "darwin" :

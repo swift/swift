@@ -11,19 +11,19 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>WizardPage</string>
+   <string></string>
   </property>
   <property name="title">
    <string>Add a user</string>
   </property>
   <property name="subTitle">
-   <string>Add another user to your roster. If you know their JID you can add them directly, or you can search for them.</string>
+   <string>Add another user to your contact list. If you know their address you can add them directly, or you can search for them.</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
     <widget class="QLabel" name="howLabel_">
      <property name="text">
-      <string>howLabel_</string>
+      <string></string>
      </property>
     </widget>
    </item>
@@ -32,7 +32,7 @@
      <item>
       <widget class="QRadioButton" name="byJID_">
        <property name="text">
-        <string>I know their JID:</string>
+        <string>I know their address:</string>
        </property>
       </widget>
      </item>
@@ -88,7 +88,7 @@
    <item>
     <widget class="QLabel" name="errorLabel_">
      <property name="text">
-      <string>&lt;font color='red'&gt;errorLabel_&lt;/font&gt;</string>
+      <string></string>
      </property>
      <property name="alignment">
       <set>Qt::AlignCenter</set>

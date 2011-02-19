@@ -122,13 +122,13 @@ void MUCController::receivedActivity() {
 
 void MUCController::handleJoinFailed(boost::shared_ptr<ErrorPayload> error) {
 	receivedActivity();
-	std::string errorMessage = QT_TRANSLATE_NOOP("", "Unable to join this room");
+	std::string errorMessage = QT_TRANSLATE_NOOP("", "Unable to enter this room");
 	std::string rejoinNick;
 	if (error) {
 		switch (error->getCondition()) {
 		case ErrorPayload::Conflict:
 			rejoinNick = nick_ + "_";
-			errorMessage = str(format(QT_TRANSLATE_NOOP("", "Unable to join this room as %1%, retrying as %2%")) % nick_ % rejoinNick);
+			errorMessage = str(format(QT_TRANSLATE_NOOP("", "Unable to enter this room as %1%, retrying as %2%")) % nick_ % rejoinNick);
 			break;
 		case ErrorPayload::JIDMalformed: 
 			errorMessage += ": ";
@@ -140,7 +140,7 @@ void MUCController::handleJoinFailed(boost::shared_ptr<ErrorPayload> error) {
 			break;
 		case ErrorPayload::RegistrationRequired: 
 			errorMessage += ": ";
-			errorMessage += QT_TRANSLATE_NOOP("", "Only members may join"); 
+			errorMessage += QT_TRANSLATE_NOOP("", "Only members may enter"); 
 			break;
 		case ErrorPayload::Forbidden: 
 			errorMessage += ": ";
@@ -170,7 +170,7 @@ void MUCController::handleJoinFailed(boost::shared_ptr<ErrorPayload> error) {
 void MUCController::handleJoinComplete(const std::string& nick) {
 	receivedActivity();
 	joined_ = true;
-	std::string joinMessage = str(format(QT_TRANSLATE_NOOP("", "You have joined room %1% as %2%")) % toJID_.toString() % nick);
+	std::string joinMessage = str(format(QT_TRANSLATE_NOOP("", "You have entered room %1% as a %2%.")) % toJID_.toString() % nick);
 	nick_ = nick;
 	chatWindow_->addSystemMessage(joinMessage);
 	clearPresenceQueue();
@@ -211,10 +211,10 @@ void MUCController::handleOccupantJoined(const MUCOccupant& occupant) {
 		std::string joinString;
 		MUCOccupant::Role role = occupant.getRole();
 		if (role != MUCOccupant::NoRole && role != MUCOccupant::Participant) {
-			joinString = str(format(QT_TRANSLATE_NOOP("", "%1% has joined the room as a %2%.")) % occupant.getNick() % roleToFriendlyName(role));
+			joinString = str(format(QT_TRANSLATE_NOOP("", "%1% has entered the room as a %2%.")) % occupant.getNick() % roleToFriendlyName(role));
 		}
 		else {
-			joinString = str(format(QT_TRANSLATE_NOOP("", "%1% has joined the room.")) % occupant.getNick());
+			joinString = str(format(QT_TRANSLATE_NOOP("", "%1% has entered the room.")) % occupant.getNick());
 		}
 		if (shouldUpdateJoinParts()) {
 			updateJoinParts();
@@ -327,7 +327,7 @@ void MUCController::setOnline(bool online) {
 		processUserPart();
 	} else {
 		if (shouldJoinOnReconnect_) {
-			chatWindow_->addSystemMessage(str(format(QT_TRANSLATE_NOOP("", "Trying to join room %1%")) % toJID_.toString()));
+			chatWindow_->addSystemMessage(str(format(QT_TRANSLATE_NOOP("", "Trying to enter room %1%")) % toJID_.toString()));
 			if (loginCheckTimer_) {
 				loginCheckTimer_->start();
 			}
@@ -454,10 +454,10 @@ std::string MUCController::generateJoinPartString(const std::vector<NickJoinPart
 			switch (i) {
 				case Join: 
 					if (sorted[i].size() > 1) {
-						eventString = QT_TRANSLATE_NOOP("", "%1% have joined the room");
+						eventString = QT_TRANSLATE_NOOP("", "%1% have entered the room");
 					}
 					else {
-						eventString = QT_TRANSLATE_NOOP("", "%1% has joined the room");
+						eventString = QT_TRANSLATE_NOOP("", "%1% has entered the room");
 					}
 					break;
 				case Part: 
@@ -470,18 +470,18 @@ std::string MUCController::generateJoinPartString(const std::vector<NickJoinPart
 					break;
 				case JoinThenPart: 
 					if (sorted[i].size() > 1) {
-						eventString = QT_TRANSLATE_NOOP("", "%1% have joined then left the room");
+						eventString = QT_TRANSLATE_NOOP("", "%1% have entered then left the room");
 					}
 					else {
-						eventString = QT_TRANSLATE_NOOP("", "%1% has joined then left the room");
+						eventString = QT_TRANSLATE_NOOP("", "%1% has entered then left the room");
 					}
 					break;
 				case PartThenJoin: 
 					if (sorted[i].size() > 1) {
-						eventString = QT_TRANSLATE_NOOP("", "%1% have left then rejoined the room");
+						eventString = QT_TRANSLATE_NOOP("", "%1% have left then returned to the room");
 					}
 					else {
-						eventString = QT_TRANSLATE_NOOP("", "%1% has left then rejoined the room");
+						eventString = QT_TRANSLATE_NOOP("", "%1% has left then returned to the room");
 					}
 					break;
 			}
