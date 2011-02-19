@@ -4,21 +4,16 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#ifndef SWIFT_QtTreeWidgetItem_H
-#define SWIFT_QtTreeWidgetItem_H
+#pragma once
 
 #include <QColor>
 #include <QVariant>
-
 #include <string>
+
 #include "Swiften/Roster/TreeWidgetFactory.h"
 #include "Swiften/Roster/TreeWidget.h"
 #include "Swiften/Roster/TreeWidgetItem.h"
-#include "Swift/QtUI/Roster/QtTreeWidgetItem.h"
-
-
 #include "Swift/QtUI/QtSwiftUtil.h"
-
 
 namespace Swift {
 	enum RosterRoles {
@@ -89,5 +84,3 @@ class QtTreeWidgetItem : public QObject, public TreeWidgetItem {
 bool itemLessThan(QtTreeWidgetItem* left, QtTreeWidgetItem* right);
 
 }
-#endif
-

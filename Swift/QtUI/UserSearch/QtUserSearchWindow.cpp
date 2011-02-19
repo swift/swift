@@ -23,7 +23,7 @@ namespace Swift {
 QtUserSearchFirstPage::QtUserSearchFirstPage(UserSearchWindow::Type type, const QString& title) {
 	setupUi(this);
 	setTitle(title);
-	setSubTitle(QString("%1. If you know their JID you can enter it directly, or you can search for them.").arg(type == UserSearchWindow::AddContact ? "Add another user to your roster" : "Chat to another user"));
+	setSubTitle(QString(tr("%1. If you know their JID you can enter it directly, or you can search for them.")).arg(type == UserSearchWindow::AddContact ? tr("Add another user to your roster") : tr("Chat to another user")));
 	connect(jid_, SIGNAL(textChanged(const QString&)), this, SLOT(emitCompletenessCheck()));
 	connect(service_->lineEdit(), SIGNAL(textChanged(const QString&)), this, SLOT(emitCompletenessCheck()));
 }
@@ -82,7 +82,7 @@ QtUserSearchWindow::QtUserSearchWindow(UIEventStream* eventStream, UserSearchWin
 	setupUi(this);
 	model_ = new UserSearchModel();
 	delegate_ = new UserSearchDelegate();
-	QString title(type == UserSearchWindow::AddContact ? "Add Contact" : "Chat to User");
+	QString title(type == UserSearchWindow::AddContact ? tr("Add Contact") : tr("Chat to User"));
 	setWindowTitle(title);
 	firstPage_ = new QtUserSearchFirstPage(type, title);
 	connect(firstPage_->byJID_, SIGNAL(toggled(bool)), this, SLOT(handleFirstPageRadioChange()));
@@ -289,7 +289,14 @@ void QtUserSearchWindow::clearForm() {
 
 void QtUserSearchWindow::clear() {
 	firstPage_->errorLabel_->setVisible(false);
-	firstPage_->howLabel_->setText(QString("How would you like to find the user to %1?").arg(type_ == AddContact ? "add" : "chat to"));
+	QString howText;
+	if (type_ == AddContact) {
+		howText = QString("How would you like to find the user to add?");
+	}
+	else {
+		howText = QString("How would you like to find the user to chat to?");
+	}
+	firstPage_->howLabel_->setText(howText);
 	firstPage_->byJID_->setChecked(true);
 	clearForm();
 	model_->clear();
@@ -311,13 +318,13 @@ void QtUserSearchWindow::setError(const QString& error) {
 
 void QtUserSearchWindow::setSearchError(bool error) {
 	if (error) {
-		setError("Error while searching");
+		setError(tr("Error while searching"));
 	}
 }
 
 void QtUserSearchWindow::setServerSupportsSearch(bool support) {
 	if (!support) {
-		setError("This server doesn't support searching for users.");
+		setError(tr("This server doesn't support searching for users."));
 	}
 }
 

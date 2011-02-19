@@ -60,21 +60,21 @@ QtMainWindow::QtMainWindow(QtSettingsProvider* settings, UIEventStream* uiEventS
 	treeWidget_ = new QtTreeWidget(uiEventStream_);
 	contactTabLayout->addWidget(treeWidget_);
 
-	tabs_->addTab(contactsTabWidget_, "&Contacts");
+	tabs_->addTab(contactsTabWidget_, tr("&Contacts"));
 
 	eventWindow_ = new QtEventWindow(uiEventStream_);
 	connect(eventWindow_, SIGNAL(onNewEventCountUpdated(int)), this, SLOT(handleEventCountUpdated(int)));
 
 	chatListWindow_ = new QtChatListWindow(uiEventStream_);
 
-	tabs_->addTab(eventWindow_, "&Notices");
-	tabs_->addTab(chatListWindow_, "C&hats");
+	tabs_->addTab(eventWindow_, tr("&Notices"));
+	tabs_->addTab(chatListWindow_, tr("C&hats"));
 
 	this->setLayout(mainLayout);
 
 	QMenu* viewMenu = new QMenu(tr("&View"), this);
 	menus_.push_back(viewMenu);
-	showOfflineAction_ = new QAction("Show offline contacts", this);
+	showOfflineAction_ = new QAction(tr("Show offline contacts"), this);
 	showOfflineAction_->setCheckable(true);
 	showOfflineAction_->setChecked(false);
 	connect(showOfflineAction_, SIGNAL(toggled(bool)), SLOT(handleShowOfflineToggled(bool)));
@@ -82,20 +82,20 @@ QtMainWindow::QtMainWindow(QtSettingsProvider* settings, UIEventStream* uiEventS
 
 	QMenu* actionsMenu = new QMenu(tr("&Actions"), this);
 	menus_.push_back(actionsMenu);
-	QAction* editProfileAction = new QAction("Edit Profile", this);
+	QAction* editProfileAction = new QAction(tr("Edit Profile"), this);
 	connect(editProfileAction, SIGNAL(triggered()), SLOT(handleEditProfileAction()));
 	actionsMenu->addAction(editProfileAction);
-	QAction* joinMUCAction = new QAction("&Join Room", this);
+	QAction* joinMUCAction = new QAction(tr("&Join Room"), this);
 	connect(joinMUCAction, SIGNAL(triggered()), SLOT(handleJoinMUCAction()));
 	actionsMenu->addAction(joinMUCAction);
-	addUserAction_ = new QAction("&Add Contact", this);
+	addUserAction_ = new QAction(tr("&Add Contact"), this);
 	connect(addUserAction_, SIGNAL(triggered(bool)), this, SLOT(handleAddUserActionTriggered(bool)));
 	actionsMenu->addAction(addUserAction_);
-	chatUserAction_ = new QAction("Start &Chat", this);
+	chatUserAction_ = new QAction(tr("Start &Chat"), this);
 	connect(chatUserAction_, SIGNAL(triggered(bool)), this, SLOT(handleChatUserActionTriggered(bool)));
 	actionsMenu->addAction(chatUserAction_);
 	actionsMenu->addSeparator();
-	QAction* signOutAction = new QAction("&Sign Out", this);
+	QAction* signOutAction = new QAction(tr("&Sign Out"), this);
 	connect(signOutAction, SIGNAL(triggered()), SLOT(handleSignOutAction()));
 	actionsMenu->addAction(signOutAction);
 
@@ -127,7 +127,7 @@ void QtMainWindow::handleEventCountUpdated(int count) {
 	QColor eventTabColor = (count == 0) ? QColor() : QColor(255, 0, 0); // invalid resets to default
 	int eventIndex = 1;
 	tabs_->tabBar()->setTabTextColor(eventIndex, eventTabColor);
-	QString text = "Notices";
+	QString text = tr("Notices");
 	if (count > 0) {
 		text += QString(" (%1)").arg(count);
 	}

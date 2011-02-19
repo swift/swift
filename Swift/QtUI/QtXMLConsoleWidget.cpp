@@ -19,7 +19,7 @@
 namespace Swift {
 
 QtXMLConsoleWidget::QtXMLConsoleWidget() {
-	setWindowTitle("Console");
+	setWindowTitle(tr("Console"));
 
 	QVBoxLayout* layout = new QVBoxLayout(this);
 	layout->setSpacing(0);
@@ -37,17 +37,17 @@ QtXMLConsoleWidget::QtXMLConsoleWidget() {
 	buttonLayout->setContentsMargins(10,0,20,0);
 	buttonLayout->setSpacing(0);
 
-	enabled = new QCheckBox("Trace input/output", bottom);
+	enabled = new QCheckBox(tr("Trace input/output"), bottom);
 	enabled->setChecked(true);
 	buttonLayout->addWidget(enabled);
 
 	buttonLayout->addStretch();
 
-	QPushButton* clearButton = new QPushButton("Clear", bottom);
+	QPushButton* clearButton = new QPushButton(tr("Clear"), bottom);
 	connect(clearButton, SIGNAL(clicked()), textEdit, SLOT(clear()));
 	buttonLayout->addWidget(clearButton);
 
-	setWindowTitle("Debug Console");
+	setWindowTitle(tr("Debug Console"));
 	emit titleUpdated();
 }
 
@@ -72,11 +72,11 @@ void QtXMLConsoleWidget::closeEvent(QCloseEvent* event) {
 }
 
 void QtXMLConsoleWidget::handleDataRead(const std::string& data) {
-	appendTextIfEnabled("<!-- IN -->\n" + data + "\n", QColor(33,98,33));
+	appendTextIfEnabled(std::string(tr("<!-- IN -->").toUtf8()) + "\n" + data + "\n", QColor(33,98,33));
 }
 
 void QtXMLConsoleWidget::handleDataWritten(const std::string& data) {
-	appendTextIfEnabled("<!-- OUT -->\n" + data + "\n", QColor(155,1,0));
+	appendTextIfEnabled(std::string(tr("<!-- OUT -->").toUtf8()) + "\n" + data + "\n", QColor(155,1,0));
 }
 
 void QtXMLConsoleWidget::appendTextIfEnabled(const std::string& data, const QColor& color) {

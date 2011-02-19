@@ -291,7 +291,7 @@ def generate(env):
 			'$QT4_MOC $QT4_MOCFROMCXXFLAGS $QT4_MOCINCFLAGS -o $TARGET $SOURCE',
 			Action(checkMocIncluded,None)],
 		QT4_LUPDATECOM = '$QT4_LUPDATE $SOURCE -ts $TARGET',
-		QT4_LRELEASECOM = '$QT4_LRELEASE $SOURCE',
+		QT4_LRELEASECOM = '$QT4_LRELEASE -silent $SOURCE -qm $TARGET',
 		QT4_RCCCOM = '$QT4_RCC $QT4_QRCFLAGS -name $SOURCE $SOURCE -o $TARGET',
 		)
 	if len(env["QTDIR"]) > 0 :
@@ -304,7 +304,7 @@ def generate(env):
 		)
 	env.Append( BUILDERS = { 'Ts': tsbuilder } )
 	qmbuilder = Builder(
-		action = SCons.Action.Action('$QT4_LRELEASECOM'),# , '$QT4_LRELEASECOMSTR'),
+		action = SCons.Action.Action('$QT4_LRELEASECOM', cmdstr = '$QT4_LRELEASECOMSTR'),
 		src_suffix = '.ts',
 		suffix = '.qm',
 		single_source = True

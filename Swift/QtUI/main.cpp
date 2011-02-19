@@ -8,14 +8,37 @@
 #include <boost/program_options/variables_map.hpp>
 #include <boost/program_options.hpp>
 #include <boost/version.hpp>
-
 #include <iostream>
-
 #include <QApplication>
+#include <QTextCodec>
+#include <QTranslator>
+#include <QLocale>
+
+#include <Swift/Controllers/Translator.h>
+#include <Swift/Controllers/ApplicationInfo.h>
+#include <SwifTools/Application/PlatformApplicationPathProvider.h>
 
 #include "QtSwift.h"
+#include "QtTranslator.h"
 
 int main(int argc, char* argv[]) {
+	QApplication app(argc, argv);
+
+	QTextCodec::setCodecForCStrings(QTextCodec::codecForName("UTF-8"));
+
+	// Translation
+	QTextCodec::setCodecForTr(QTextCodec::codecForName("UTF-8"));
+	boost::filesystem::path someTranslationPath = Swift::PlatformApplicationPathProvider(SWIFT_APPLICATION_NAME).getResourcePath("/translations/Swift_nl.qm");
+	QTranslator qtTranslator;
+	if (!someTranslationPath.empty()) {
+		//std::cout << "Loading " << std::string(QLocale::system().name().toUtf8()) << std::endl;
+		qtTranslator.load("Swift_" + QLocale::system().name(), someTranslationPath.parent_path().string().c_str());
+	}
+	app.installTranslator(&qtTranslator);
+	QtTranslator swiftTranslator;
+	Swift::Translator::setInstance(&swiftTranslator);
+
+	// Parse program options
 	boost::program_options::options_description desc = Swift::QtSwift::getOptionsDescription();
 	boost::program_options::variables_map vm;
 	try {
@@ -32,7 +55,11 @@ int main(int argc, char* argv[]) {
 		std::cout << desc << "\n";
 		return 1;
 	}
-	QApplication app(argc, argv);
+
 	Swift::QtSwift swift(vm);
-	return app.exec();
+	int result = app.exec();
+
+	Swift::Translator::setInstance(NULL);
+
+	return result;
 }

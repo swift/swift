@@ -287,9 +287,9 @@ void QtChatWindow::flash() {
 void QtChatWindow::setAckState(std::string const& id, ChatWindow::AckState state) {
 	QString xml;
 	switch (state) {
-		case ChatWindow::Pending: xml = "<img src='qrc:/icons/throbber.gif' alt='This message has not been received by your server yet.'/>"; break;
+		case ChatWindow::Pending: xml = "<img src='qrc:/icons/throbber.gif' alt='" + tr("This message has not been received by your server yet.") + "'/>"; break;
 		case ChatWindow::Received: xml = ""; break;
-		case ChatWindow::Failed: xml = "<img src='qrc:/icons/error.png' alt='This message may not have been transmitted.'/>"; break;
+		case ChatWindow::Failed: xml = "<img src='qrc:/icons/error.png' alt='" + tr("This message may not have been transmitted.'") + "/>"; break;
 	}
 	messageLog_->setAckXML(P2QSTRING(id), xml);
 }
@@ -309,7 +309,7 @@ void QtChatWindow::addErrorMessage(const std::string& errorMessage) {
 
 	QString errorMessageHTML(Qt::escape(P2QSTRING(errorMessage)));
 	errorMessageHTML.replace("\n","<br/>");
-	messageLog_->addMessage(boost::shared_ptr<ChatSnippet>(new SystemMessageSnippet(QString("<span class=\"error\">Couldn't send message: %1</span>").arg(errorMessageHTML), QDateTime::currentDateTime(), false, theme_)));
+	messageLog_->addMessage(boost::shared_ptr<ChatSnippet>(new SystemMessageSnippet(QString("<span class=\"error\">" + tr("Couldn't send message: %1") + "</span>").arg(errorMessageHTML), QDateTime::currentDateTime(), false, theme_)));
 
 	previousMessageWasSelf_ = false;
 	previousMessageWasSystem_ = true;

@@ -200,25 +200,25 @@ public:
 	void testJoinPartStringContructionSimple() {
 		std::vector<NickJoinPart> list;
 		list.push_back(NickJoinPart("Kev", Join));
-		CPPUNIT_ASSERT_EQUAL(std::string("Kev has joined the room."), MUCController::generateJoinPartString(list));
+		CPPUNIT_ASSERT_EQUAL(std::string("Kev has joined the room"), MUCController::generateJoinPartString(list));
 		list.push_back(NickJoinPart("Remko", Part));
-		CPPUNIT_ASSERT_EQUAL(std::string("Kev has joined and Remko has left the room."), MUCController::generateJoinPartString(list));
+		CPPUNIT_ASSERT_EQUAL(std::string("Kev has joined the room and Remko has left the room"), MUCController::generateJoinPartString(list));
 		list.push_back(NickJoinPart("Bert", Join));
-		CPPUNIT_ASSERT_EQUAL(std::string("Kev and Bert have joined and Remko has left the room."), MUCController::generateJoinPartString(list));
+		CPPUNIT_ASSERT_EQUAL(std::string("Kev and Bert have joined the room and Remko has left the room"), MUCController::generateJoinPartString(list));
 		list.push_back(NickJoinPart("Ernie", Join));
-		CPPUNIT_ASSERT_EQUAL(std::string("Kev, Bert and Ernie have joined and Remko has left the room."), MUCController::generateJoinPartString(list));
+		CPPUNIT_ASSERT_EQUAL(std::string("Kev, Bert and Ernie have joined the room and Remko has left the room"), MUCController::generateJoinPartString(list));
 	}
 
 	void testJoinPartStringContructionMixed() {
 		std::vector<NickJoinPart> list;
 		list.push_back(NickJoinPart("Kev", JoinThenPart));
-		CPPUNIT_ASSERT_EQUAL(std::string("Kev joined then left the room."), MUCController::generateJoinPartString(list));
+		CPPUNIT_ASSERT_EQUAL(std::string("Kev has joined then left the room"), MUCController::generateJoinPartString(list));
 		list.push_back(NickJoinPart("Remko", Part));
-		CPPUNIT_ASSERT_EQUAL(std::string("Remko has left and Kev joined then left the room."), MUCController::generateJoinPartString(list));
+		CPPUNIT_ASSERT_EQUAL(std::string("Remko has left the room and Kev has joined then left the room"), MUCController::generateJoinPartString(list));
 		list.push_back(NickJoinPart("Bert", PartThenJoin));
-		CPPUNIT_ASSERT_EQUAL(std::string("Remko has left, Kev joined then left and Bert left then rejoined the room."), MUCController::generateJoinPartString(list));
+		CPPUNIT_ASSERT_EQUAL(std::string("Remko has left the room, Kev has joined then left the room and Bert has left then rejoined the room"), MUCController::generateJoinPartString(list));
 		list.push_back(NickJoinPart("Ernie", JoinThenPart));
-		CPPUNIT_ASSERT_EQUAL(std::string("Remko has left, Kev and Ernie joined then left and Bert left then rejoined the room."), MUCController::generateJoinPartString(list));
+		CPPUNIT_ASSERT_EQUAL(std::string("Remko has left the room, Kev and Ernie have joined then left the room and Bert has left then rejoined the room"), MUCController::generateJoinPartString(list));
 	}
 
 private:

@@ -10,8 +10,11 @@
 #include <boost/lexical_cast.hpp>
 #include <boost/shared_ptr.hpp>
 #include <boost/smart_ptr/make_shared.hpp>
+#include <string>
 #include <stdlib.h>
 
+#include <Swiften/Base/format.h>
+#include <Swift/Controllers/Intl.h>
 #include <Swift/Controllers/UIInterfaces/UIFactory.h>
 #include "Swiften/Network/TimerFactory.h"
 #include "Swift/Controllers/BuildVersion.h"
@@ -41,7 +44,6 @@
 #include "SwifTools/Dock/Dock.h"
 #include "SwifTools/Notifier/TogglableNotifier.h"
 #include "Swiften/Base/foreach.h"
-#include <string>
 #include "Swiften/Client/Client.h"
 #include "Swiften/Presence/PresenceSender.h"
 #include "Swiften/Elements/ChatState.h"
@@ -432,36 +434,35 @@ void MainController::handleDisconnected(const boost::optional<ClientError>& erro
 		std::string message;
 		std::string certificateErrorMessage;
 		switch(error->getType()) {
-			case ClientError::UnknownError: message = "Unknown Error"; break;
-			case ClientError::DomainNameResolveError: message = "Unable to find server"; break;
-			case ClientError::ConnectionError: message = "Error connecting to server"; break;
-			case ClientError::ConnectionReadError: message = "Error while receiving server data"; break;
-			case ClientError::ConnectionWriteError: message = "Error while sending data to the server"; break;
-			case ClientError::XMLError: message = "Error parsing server data"; break;
-			case ClientError::AuthenticationFailedError: message = "Login/password invalid"; break;
-			case ClientError::CompressionFailedError: message = "Error while compressing stream"; break;
-			case ClientError::ServerVerificationFailedError: message = "Server verification failed"; break;
-			case ClientError::NoSupportedAuthMechanismsError: message = "Authentication mechanisms not supported"; break;
-			case ClientError::UnexpectedElementError: message = "Unexpected response"; break;
-			case ClientError::ResourceBindError: message = "Error binding resource"; break;
-			case ClientError::SessionStartError: message = "Error starting session"; break;
-			case ClientError::StreamError: message = "Stream error"; break;
-			case ClientError::TLSError: message = "Encryption error"; break;
-			case ClientError::ClientCertificateLoadError: message = "Error loading certificate (Invalid password?)"; break;
-			case ClientError::ClientCertificateError: message = "Certificate not authorized"; break;
+			case ClientError::UnknownError: message = QT_TRANSLATE_NOOP("", "Unknown Error"); break;
+			case ClientError::DomainNameResolveError: message = QT_TRANSLATE_NOOP("", "Unable to find server"); break;
+			case ClientError::ConnectionError: message = QT_TRANSLATE_NOOP("", "Error connecting to server"); break;
+			case ClientError::ConnectionReadError: message = QT_TRANSLATE_NOOP("", "Error while receiving server data"); break;
+			case ClientError::ConnectionWriteError: message = QT_TRANSLATE_NOOP("", "Error while sending data to the server"); break;
+			case ClientError::XMLError: message = QT_TRANSLATE_NOOP("", "Error parsing server data"); break;
+			case ClientError::AuthenticationFailedError: message = QT_TRANSLATE_NOOP("", "Login/password invalid"); break;
+			case ClientError::CompressionFailedError: message = QT_TRANSLATE_NOOP("", "Error while compressing stream"); break;
+			case ClientError::ServerVerificationFailedError: message = QT_TRANSLATE_NOOP("", "Server verification failed"); break;
+			case ClientError::NoSupportedAuthMechanismsError: message = QT_TRANSLATE_NOOP("", "Authentication mechanisms not supported"); break;
+			case ClientError::UnexpectedElementError: message = QT_TRANSLATE_NOOP("", "Unexpected response"); break;
+			case ClientError::ResourceBindError: message = QT_TRANSLATE_NOOP("", "Error binding resource"); break;
+			case ClientError::SessionStartError: message = QT_TRANSLATE_NOOP("", "Error starting session"); break;
+			case ClientError::StreamError: message = QT_TRANSLATE_NOOP("", "Stream error"); break;
+			case ClientError::TLSError: message = QT_TRANSLATE_NOOP("", "Encryption error"); break;
+			case ClientError::ClientCertificateLoadError: message = QT_TRANSLATE_NOOP("", "Error loading certificate (Invalid password?)"); break;
+			case ClientError::ClientCertificateError: message = QT_TRANSLATE_NOOP("", "Certificate not authorized"); break;
 
-			case ClientError::UnknownCertificateError: certificateErrorMessage = "Unknown certificate"; break;
-			case ClientError::CertificateExpiredError: certificateErrorMessage = "Certificate has expired"; break;
-			case ClientError::CertificateNotYetValidError: certificateErrorMessage = "Certificate is not yet valid"; break;
-			case ClientError::CertificateSelfSignedError: certificateErrorMessage = "Certificate is self-signed"; break;
-			case ClientError::CertificateRejectedError: certificateErrorMessage = "Certificate has been rejected"; break;
-			case ClientError::CertificateUntrustedError: certificateErrorMessage = "Certificate is not trusted"; break;
-			case ClientError::InvalidCertificatePurposeError: certificateErrorMessage = "Certificate cannot be used for encryptig your connection"; break;
-			case ClientError::CertificatePathLengthExceededError: certificateErrorMessage = "Certificate path length constraint exceeded"; break;
-			case ClientError::InvalidCertificateSignatureError: certificateErrorMessage = "Invalid certificate signature"; break;
-			case ClientError::InvalidCAError: certificateErrorMessage = "Invalid Certificate Authority"; break;
-			case ClientError::InvalidServerIdentityError: certificateErrorMessage = "Certificate does not match the host identity"; break;
-
+			case ClientError::UnknownCertificateError: certificateErrorMessage = QT_TRANSLATE_NOOP("", "Unknown certificate"); break;
+			case ClientError::CertificateExpiredError: certificateErrorMessage = QT_TRANSLATE_NOOP("", "Certificate has expired"); break;
+			case ClientError::CertificateNotYetValidError: certificateErrorMessage = QT_TRANSLATE_NOOP("", "Certificate is not yet valid"); break;
+			case ClientError::CertificateSelfSignedError: certificateErrorMessage = QT_TRANSLATE_NOOP("", "Certificate is self-signed"); break;
+			case ClientError::CertificateRejectedError: certificateErrorMessage = QT_TRANSLATE_NOOP("", "Certificate has been rejected"); break;
+			case ClientError::CertificateUntrustedError: certificateErrorMessage = QT_TRANSLATE_NOOP("", "Certificate is not trusted"); break;
+			case ClientError::InvalidCertificatePurposeError: certificateErrorMessage = QT_TRANSLATE_NOOP("", "Certificate cannot be used for encryptig your connection"); break;
+			case ClientError::CertificatePathLengthExceededError: certificateErrorMessage = QT_TRANSLATE_NOOP("", "Certificate path length constraint exceeded"); break;
+			case ClientError::InvalidCertificateSignatureError: certificateErrorMessage = QT_TRANSLATE_NOOP("", "Invalid certificate signature"); break;
+			case ClientError::InvalidCAError: certificateErrorMessage = QT_TRANSLATE_NOOP("", "Invalid Certificate Authority"); break;
+			case ClientError::InvalidServerIdentityError: certificateErrorMessage = QT_TRANSLATE_NOOP("", "Certificate does not match the host identity"); break;
 		}
 		bool forceReconnectAfterCertificateTrust = false;
 		if (!certificateErrorMessage.empty()) {
@@ -471,7 +472,7 @@ void MainController::handleDisconnected(const boost::optional<ClientError>& erro
 				forceReconnectAfterCertificateTrust = true;
 			}
 			else {
-				message = "Certificate error";
+				message = QT_TRANSLATE_NOOP("", "Certificate error");
 			}
 		}
 
@@ -485,10 +486,10 @@ void MainController::handleDisconnected(const boost::optional<ClientError>& erro
 			logout();
 			setReconnectTimer();
 			if (lastDisconnectError_) {
-				message = "Reconnect to " + jid_.getDomain() + " failed: " + message + ". Will retry in " + boost::lexical_cast<std::string>(timeBeforeNextReconnect_) + " seconds.";
+				message = str(format(QT_TRANSLATE_NOOP("", "Reconnect to %1% failed: %2%. Will retry in %3% seconds.")) % jid_.getDomain() % message % boost::lexical_cast<std::string>(timeBeforeNextReconnect_));
 				lastDisconnectError_->conclude();
 			} else {
-				message = "Disconnected from " + jid_.getDomain() + ": " + message;
+				message = str(format(QT_TRANSLATE_NOOP("", "Disconnected from %1%: %2%.")) % jid_.getDomain() % message);
 			}
 			lastDisconnectError_ = boost::shared_ptr<ErrorEvent>(new ErrorEvent(JID(jid_.getDomain()), message));
 			eventController_->handleIncomingEvent(lastDisconnectError_);

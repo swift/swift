@@ -25,13 +25,13 @@ QtContactEditWidget::QtContactEditWidget(const std::set<std::string>& allGroups,
 
 	QHBoxLayout* nameLayout = new QHBoxLayout();
 	
-	QLabel* label = new QLabel("Name:", this);
+	QLabel* label = new QLabel(tr("Name:"), this);
 	nameLayout->addWidget(label);
 	name_ = new QLineEdit(this);
 	nameLayout->addWidget(name_);
 	layout->addLayout(nameLayout);
 
-	layout->addWidget(new QLabel("Groups:", this));
+	layout->addWidget(new QLabel(tr("Groups:"), this));
 
 	QScrollArea* groupsArea = new QScrollArea(this);
 	layout->addWidget(groupsArea);
@@ -53,7 +53,7 @@ QtContactEditWidget::QtContactEditWidget(const std::set<std::string>& allGroups,
 
 	QHBoxLayout* newGroupLayout = new QHBoxLayout();
 	newGroup_ = new QCheckBox(groups);
-	newGroup_->setText("New Group:");
+	newGroup_->setText(tr("New Group:"));
 	newGroup_->setCheckState(Qt::Unchecked);
 	newGroupLayout->addWidget(newGroup_);
 	newGroupName_ = new QLineEdit(groups);

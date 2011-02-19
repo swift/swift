@@ -15,6 +15,7 @@
 #include "Swiften/Elements/StatusShow.h"
 #include "Swift/Controllers/Roster/ContactRosterItem.h"
 #include "Swift/Controllers/Roster/GroupRosterItem.h"
+#include <Swift/Controllers/StatusUtil.h>
 
 #include "QtSwiftUtil.h"
 #include "Swift/QtUI/Roster/QtTreeWidget.h"
@@ -126,7 +127,7 @@ QString RosterModel::getToolTip(RosterItem* item) const {
 		if (contact->getDisplayJID().isValid()) {
 			tip += "\n" + P2QSTRING(contact->getDisplayJID().toBare().toString());
 		}
-		tip += "\n " + P2QSTRING(StatusShow::typeToFriendlyName(contact->getStatusShow()));
+		tip += "\n " + P2QSTRING(statusShowTypeToFriendlyName(contact->getStatusShow()));
 		if (!getStatusText(item).isEmpty()) {
 			tip += ": " + getStatusText(item);
 		}

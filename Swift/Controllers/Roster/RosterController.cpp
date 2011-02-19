@@ -37,6 +37,8 @@
 #include "Swift/Controllers/UIEvents/RenameGroupUIEvent.h"
 #include "Swift/Controllers/UIEvents/ToggleShowOfflineUIEvent.h"
 #include <Swiften/Client/NickManager.h>
+#include <Swift/Controllers/Intl.h>
+#include <Swiften/Base/format.h>
 
 namespace Swift {
 
@@ -121,7 +123,7 @@ void RosterController::handleOnJIDAdded(const JID& jid) {
 		}
 	} 
 	else {
-		roster_->addContact(jid, jid, name, "Contacts", avatarManager_->getAvatarPath(jid).string());
+		roster_->addContact(jid, jid, name, QT_TRANSLATE_NOOP("", "Contacts"), avatarManager_->getAvatarPath(jid).string());
 	}
 	applyAllPresenceTo(jid);
 }
@@ -147,7 +149,7 @@ void RosterController::handleOnJIDUpdated(const JID& jid, const std::string& old
 	std::vector<std::string> groups = xmppRoster_->getGroupsForJID(jid);
 	std::vector<std::string> oldGroups = passedOldGroups;
 	std::string name = nickResolver_->jidToNick(jid);
-	std::string contactsGroup = "Contacts";
+	std::string contactsGroup = QT_TRANSLATE_NOOP("", "Contacts");
 	if (oldGroups.empty()) {
 		oldGroups.push_back(contactsGroup);
 	}
@@ -208,7 +210,7 @@ void RosterController::handleUIEvent(boost::shared_ptr<UIEvent> event) {
 		std::vector<XMPPRosterItem> items = xmppRoster_->getItems();
 		std::string group = renameGroupEvent->getGroup();
 		// FIXME: We should handle contacts groups specially to avoid clashes
-		if (group == "Contacts") {
+		if (group == QT_TRANSLATE_NOOP("", "Contacts")) {
 			group = "";
 		}
 		foreach(XMPPRosterItem& item, items) {
@@ -245,7 +247,7 @@ void RosterController::handleRosterSetError(ErrorPayload::ref error, boost::shar
 	if (!error) {
 		return;
 	}
-	std::string text = "Server " + myJID_.getDomain() + " rejected roster change to item '" + rosterPayload->getItems()[0].getJID().toString() + "'";
+	std::string text = str(format(QT_TRANSLATE_NOOP("", "Server %1% rejected roster change to item '%2%'")) % myJID_.getDomain() % rosterPayload->getItems()[0].getJID().toString());
 	if (!error->getText().empty()) {
 		text += ": " + error->getText();
 	}

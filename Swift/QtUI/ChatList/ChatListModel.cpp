@@ -12,7 +12,7 @@ namespace Swift {
 
 ChatListModel::ChatListModel() {
 	root_ = new ChatListGroupItem("", NULL);
-	mucBookmarks_ = new ChatListGroupItem("Bookmarked Rooms", root_);
+	mucBookmarks_ = new ChatListGroupItem(tr("Bookmarked Rooms"), root_);
 	root_->addItem(mucBookmarks_);
 }
 

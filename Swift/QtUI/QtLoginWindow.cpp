@@ -78,23 +78,23 @@ QtLoginWindow::QtLoginWindow(UIEventStream* uiEventStream) : QMainWindow() {
 	layout->addStretch(2);
 
 	QLabel* jidLabel = new QLabel(this);
-	jidLabel->setText("<font size='-1'>User address:</font>");
+	jidLabel->setText("<font size='-1'>" + tr("User address:") + "</font>");
 	layout->addWidget(jidLabel);
 
 	username_ = new QComboBox(this);
 	username_->setEditable(true);
-	username_->setWhatsThis("User address - looks like someuser@someserver.com");
-	username_->setToolTip("User address - looks like someuser@someserver.com");
+	username_->setWhatsThis(tr("User address - looks like someuser@someserver.com"));
+	username_->setToolTip(tr("User address - looks like someuser@someserver.com"));
 	username_->view()->installEventFilter(this);
 	layout->addWidget(username_);
 	QLabel* jidHintLabel = new QLabel(this);
-	jidHintLabel->setText("<font size='-1' color='grey' >Example: alice@wonderland.lit</font>");
+	jidHintLabel->setText("<font size='-1' color='grey' >" + tr("Example: alice@wonderland.lit") + "</font>");
 	jidHintLabel->setAlignment(Qt::AlignRight);
 	layout->addWidget(jidHintLabel);
 
 
 	QLabel* passwordLabel = new QLabel();
-	passwordLabel->setText("<font size='-1'>Password:</font>");
+	passwordLabel->setText("<font size='-1'>" + tr("Password:") + "</font>");
 	layout->addWidget(passwordLabel);
 
 
@@ -115,8 +115,8 @@ QtLoginWindow::QtLoginWindow(UIEventStream* uiEventStream) : QMainWindow() {
 	certificateButton_ = new QToolButton(this);
 	certificateButton_->setCheckable(true);
 	certificateButton_->setIcon(QIcon(":/icons/certificate.png"));
-	certificateButton_->setToolTip("Click if you have a personal certificate used for login to the service.");
-	certificateButton_->setWhatsThis("Click if you have a personal certificate used for login to the service.");
+	certificateButton_->setToolTip(tr("Click if you have a personal certificate used for login to the service."));
+	certificateButton_->setWhatsThis(tr("Click if you have a personal certificate used for login to the service."));
 
 	credentialsLayout->addWidget(certificateButton_);
 	connect(certificateButton_, SIGNAL(clicked(bool)), SLOT(handleCertficateChecked(bool)));
@@ -154,7 +154,7 @@ QtLoginWindow::QtLoginWindow(UIEventStream* uiEventStream) : QMainWindow() {
 	generalMenu_ = swiftMenu_;
 #endif
 
-	QAction* aboutAction = new QAction("&About Swift", this);
+	QAction* aboutAction = new QAction(QString(tr("&About %1")).arg("Swift"), this);
 	connect(aboutAction, SIGNAL(triggered()), SLOT(handleAbout()));
 	swiftMenu_->addAction(aboutAction);
 
@@ -180,7 +180,7 @@ QtLoginWindow::QtLoginWindow(UIEventStream* uiEventStream) : QMainWindow() {
 	swiftMenu_->addSeparator();
 #endif
 
-	QAction* quitAction = new QAction("&Quit", this);
+	QAction* quitAction = new QAction(tr("&Quit"), this);
 	connect(quitAction, SIGNAL(triggered()), SLOT(handleQuit()));
 	swiftMenu_->addAction(quitAction);
 
@@ -194,7 +194,7 @@ bool QtLoginWindow::eventFilter(QObject *obj, QEvent *event) {
 		QKeyEvent *keyEvent = static_cast<QKeyEvent*>(event);
 		if (keyEvent->key() == Qt::Key_Delete || keyEvent->key() == Qt::Key_Backspace) {
 			QString jid(username_->view()->currentIndex().data().toString());
-			int result = QMessageBox::question(this, "Remove profile", "Remove the profile '" + jid + "'?", QMessageBox::Yes | QMessageBox::No);
+			int result = QMessageBox::question(this, tr("Remove profile"), tr("Remove the profile '%1'?").arg(jid), QMessageBox::Yes | QMessageBox::No);
 			if (result == QMessageBox::Yes) {
 				onPurgeSavedLoginRequest(Q2PSTRING(jid));
 			}
@@ -288,7 +288,7 @@ void QtLoginWindow::loggedOut() {
 void QtLoginWindow::setIsLoggingIn(bool loggingIn) {
 	/* Change the for loop as well if you add to this.*/
 	QWidget* widgets[5] = {username_, password_, remember_, loginAutomatically_, certificateButton_};
-	loginButton_->setText(loggingIn ? "Cancel" : "Connect");
+	loginButton_->setText(loggingIn ? tr("Cancel") : tr("Connect"));
 	for (int i = 0; i < 5; i++) {
 		widgets[i]->setEnabled(!loggingIn);
 	}
@@ -309,7 +309,7 @@ void QtLoginWindow::setLoginAutomatically(bool loginAutomatically) {
 
 void QtLoginWindow::handleCertficateChecked(bool checked) {
 	if (checked) {
-		 certificateFile_ = QFileDialog::getOpenFileName(this, "Select an authentication certificate", QString(), QString("*.cert"));
+		 certificateFile_ = QFileDialog::getOpenFileName(this, tr("Select an authentication certificate"), QString(), QString("*.cert"));
 		 if (certificateFile_.isEmpty()) {
 			 certificateButton_->setChecked(false);
 		 }
@@ -409,11 +409,11 @@ void QtLoginWindow::moveEvent(QMoveEvent*) {
 bool QtLoginWindow::askUserToTrustCertificatePermanently(const std::string& message, Certificate::ref certificate) {
 	QMessageBox dialog(this);
 
-	dialog.setText("The certificate presented by the server is not valid.");
-	dialog.setInformativeText(P2QSTRING(message) + "\n\nWould you like to permanently trust this certificate? This must only be done if you know it is correct.");
+	dialog.setText(tr("The certificate presented by the server is not valid."));
+	dialog.setInformativeText(P2QSTRING(message) + "\n\n" + tr("Would you like to permanently trust this certificate? This must only be done if you know it is correct."));
 
-	QString detailedText = "Subject: " + P2QSTRING(certificate->getSubjectName()) + "\n";
-	detailedText += "SHA-1 Fingerprint: " + P2QSTRING(certificate->getSHA1Fingerprint());
+	QString detailedText = tr("Subject: %1").arg(P2QSTRING(certificate->getSubjectName())) + "\n";
+	detailedText += tr("SHA-1 Fingerprint: %1").arg(P2QSTRING(certificate->getSHA1Fingerprint()));
 	dialog.setDetailedText(detailedText);
 
 	dialog.setStandardButtons(QMessageBox::Yes | QMessageBox::No);

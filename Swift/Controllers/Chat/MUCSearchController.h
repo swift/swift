@@ -16,7 +16,6 @@
 #include "Swiften/JID/JID.h"
 
 #include "Swift/Controllers/UIEvents/UIEvent.h"
-#include "Swift/Controllers/Chat/MUCSearchController.h"
 #include "Swift/Controllers/Settings/SettingsProvider.h"
 #include "Swiften/Elements/DiscoInfo.h"
 #include "Swiften/Elements/DiscoItems.h"

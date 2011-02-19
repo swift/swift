@@ -62,6 +62,7 @@ namespace Swift {
 			bool editing_;
 			QMovie* connectingMovie_;
 			bool connecting_;
+			static const QString NO_MESSAGE;
 	};
 }
 

@@ -22,10 +22,11 @@
 #include "Swift/QtUI/QtElidingLabel.h"
 #include "Swift/QtUI/QtLineEdit.h"
 #include "Swift/QtUI/QtSwiftUtil.h"
-
-const QString NO_MESSAGE = QString("(No message)");
+#include <Swift/Controllers/StatusUtil.h>
 
 namespace Swift {
+
+const QString QtStatusWidget::NO_MESSAGE = QString(QT_TRANSLATE_NOOP("QtStatusWidget", "(No message)"));
 
 QtStatusWidget::QtStatusWidget(QWidget *parent) : QWidget(parent), editCursor_(Qt::IBeamCursor), viewCursor_(Qt::PointingHandCursor) {
 	isClicking_ = false;
@@ -131,12 +132,12 @@ void QtStatusWidget::generateList() {
 	foreach (StatusShow::Type type, icons_.keys()) {
 		QListWidgetItem* item = new QListWidgetItem(text == "" ? NO_MESSAGE : text, menu_);
 		item->setIcon(icons_[type]);
-		item->setToolTip(P2QSTRING(StatusShow::typeToFriendlyName(type)) + ": " + item->text());
+		item->setToolTip(P2QSTRING(statusShowTypeToFriendlyName(type)) + ": " + item->text());
 		item->setStatusTip(item->toolTip());
 		item->setData(Qt::UserRole, QVariant(type));
 	}
 	foreach (StatusShow::Type type, icons_.keys()) {
-		QListWidgetItem* item = new QListWidgetItem(P2QSTRING(StatusShow::typeToFriendlyName(type)), menu_);
+		QListWidgetItem* item = new QListWidgetItem(P2QSTRING(statusShowTypeToFriendlyName(type)), menu_);
 		item->setIcon(icons_[type]);
 		item->setToolTip(item->text());
 		item->setStatusTip(item->toolTip());
@@ -168,7 +169,7 @@ void QtStatusWidget::handleClicked() {
 	types.push_back(StatusShow::DND);
 	types.push_back(StatusShow::None);
 	foreach (StatusShow::Type type, types) {
-		if (statusEdit_->text() == P2QSTRING(StatusShow::typeToFriendlyName(type))) {
+		if (statusEdit_->text() == P2QSTRING(statusShowTypeToFriendlyName(type))) {
 			statusEdit_->setText("");
 		}
 	}
@@ -229,9 +230,9 @@ void QtStatusWidget::handleItemClicked(QListWidgetItem* item) {
 
 void QtStatusWidget::setNewToolTip() {
 	if (connecting_) {
-		statusTextLabel_->setToolTip("Connecting");
+		statusTextLabel_->setToolTip(tr("Connecting"));
 	} else {
-		statusTextLabel_->setToolTip(P2QSTRING(StatusShow::typeToFriendlyName(selectedStatusType_)) + ": " + statusTextLabel_->text());
+		statusTextLabel_->setToolTip(P2QSTRING(statusShowTypeToFriendlyName(selectedStatusType_)) + ": " + statusTextLabel_->text());
 	}
 }
 

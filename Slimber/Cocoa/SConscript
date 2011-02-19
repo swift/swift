@@ -21,7 +21,7 @@ myenv.Program("Slimber", [
 
 myenv.Nib("MainMenu")
 
-myenv.AppBundle("Slimber", resources = [
+myenv.AppBundle("Slimber", resources = { "": [
 		"MainMenu.nib",
 		"../Resources/Slimber.icns",
 		"../Resources/Credits.html",
@@ -29,7 +29,7 @@ myenv.AppBundle("Slimber", resources = [
 		"../Resources/Offline.png",
 		"../Resources/UsersOnline.png",
 		"../Resources/UsersOffline.png"
-	], info = {
+	]}, info = {
 		"NSMainNibFile" : "MainMenu",
 		"LSUIElement" : "1",
 	})

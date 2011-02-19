@@ -21,7 +21,7 @@
 namespace Swift {
 
 QtProfileWindow::QtProfileWindow() {
-	setWindowTitle("Edit Profile");
+	setWindowTitle(tr("Edit Profile"));
 
 	QSizePolicy sizePolicy(QSizePolicy::Preferred, QSizePolicy::Minimum);
 	sizePolicy.setHorizontalStretch(0);
@@ -40,7 +40,7 @@ QtProfileWindow::QtProfileWindow() {
 	QVBoxLayout* fieldsLayout = new QVBoxLayout();
 
 	QHBoxLayout* horizontalLayout_2 = new QHBoxLayout();
-	nicknameLabel = new QLabel("Nickname: ", this);
+	nicknameLabel = new QLabel(tr("Nickname:"), this);
 	horizontalLayout_2->addWidget(nicknameLabel);
 	nickname = new QLineEdit(this);
 	horizontalLayout_2->addWidget(nickname);
@@ -64,7 +64,7 @@ QtProfileWindow::QtProfileWindow() {
 	throbberLabel->setMovie(new QMovie(":/icons/throbber.gif", QByteArray(), this));
 	horizontalLayout->addWidget(throbberLabel);
 
-	saveButton = new QPushButton("Save", this);
+	saveButton = new QPushButton(tr("Save"), this);
 	connect(saveButton, SIGNAL(clicked()), SLOT(handleSave()));
 	horizontalLayout->addWidget(saveButton);
 

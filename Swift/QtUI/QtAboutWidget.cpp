@@ -20,7 +20,7 @@ namespace Swift {
 
 QtAboutWidget::QtAboutWidget() : QDialog() {
 #ifndef Q_WS_MAC
-	setWindowTitle("About Swift");
+	setWindowTitle(QString(tr("About %1")).arg("Swift"));
 #endif
 	setWindowIcon(QIcon(":/logo-icon-16.png"));
 
@@ -39,13 +39,13 @@ QtAboutWidget::QtAboutWidget() : QDialog() {
 	
 	QLabel* versionLabel = new QLabel(QString("<center><font size='-1'>Version ") + QCoreApplication::applicationVersion() + "</font></center>", this);
 	mainLayout->addWidget(versionLabel);
-	QString buildString = QString("<center><font size='-1'>Built with: Qt version ") + QT_VERSION_STR;
-	buildString += QString("<br/>Running with Qt version ") + qVersion();
+	QString buildString = QString("<center><font size='-1'>") + QString(tr("Built with: Qt version %1")).arg(QT_VERSION_STR);
+	buildString += QString("<br/>") + QString(tr("Running with Qt version ")).arg(qVersion());
 	buildString += "</font></center>";
 	QLabel* buildLabel = new QLabel(buildString, this);
 	mainLayout->addWidget(buildLabel);
 
-	QPushButton* licenseButton = new QPushButton("View License", this);
+	QPushButton* licenseButton = new QPushButton(tr("View License"), this);
 	mainLayout->addWidget(licenseButton);
 	connect(licenseButton, SIGNAL(clicked()), this, SLOT(handleLicenseClicked()));
 

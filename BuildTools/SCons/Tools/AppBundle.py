@@ -1,4 +1,4 @@
-import SCons.Util
+import SCons.Util, os.path
 
 def generate(env) :
   def createAppBundle(env, bundle, version = "1.0", resources = [], frameworks = [], info = {}) :
@@ -37,8 +37,8 @@ def generate(env) :
   """
     env.WriteVal(bundleContentsDir + "/Info.plist", env.Value(plist))
 
-    for resource in resources :
-      env.Install(resourcesDir, resource)
+    for (target, resource) in resources.items() :
+      env.Install(os.path.join(resourcesDir, target), resource)
 
     for framework in frameworks :
       env.Install(frameworksDir, framework)

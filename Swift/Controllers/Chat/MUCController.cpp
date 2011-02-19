@@ -10,6 +10,8 @@
 #include <boost/regex.hpp>
 #include <boost/algorithm/string.hpp>
 
+#include <Swift/Controllers/Intl.h>
+#include <Swiften/Base/format.h>
 #include "Swiften/Network/Timer.h"
 #include "Swiften/Network/TimerFactory.h"
 #include "Swiften/Base/foreach.h"
@@ -109,7 +111,7 @@ void MUCController::rejoin() {
 
 void MUCController::handleJoinTimeoutTick() {
 	receivedActivity();
-	chatWindow_->addSystemMessage("Room " + toJID_.toString() + " is not responding. This operation may never complete");
+	chatWindow_->addSystemMessage(str(format(QT_TRANSLATE_NOOP("", "Room %1% is not responding. This operation may never complete.")) % toJID_.toString()));
 }
 
 void MUCController::receivedActivity() {
@@ -120,17 +122,38 @@ void MUCController::receivedActivity() {
 
 void MUCController::handleJoinFailed(boost::shared_ptr<ErrorPayload> error) {
 	receivedActivity();
-	std::string errorMessage = "Unable to join this room";
+	std::string errorMessage = QT_TRANSLATE_NOOP("", "Unable to join this room");
 	std::string rejoinNick;
 	if (error) {
 		switch (error->getCondition()) {
-		case ErrorPayload::Conflict: rejoinNick = nick_ + "_"; errorMessage += " as " + nick_ + ", retrying as " + rejoinNick; break;
-		case ErrorPayload::JIDMalformed: errorMessage += ", no nickname specified";break;
-		case ErrorPayload::NotAuthorized: errorMessage += ", a password needed";break;
-		case ErrorPayload::RegistrationRequired: errorMessage += ", only members may join"; break;
-		case ErrorPayload::Forbidden: errorMessage += ", you are banned from the room"; break;
-		case ErrorPayload::ServiceUnavailable: errorMessage += ", the room is full";break;
-		case ErrorPayload::ItemNotFound: errorMessage += ", the room does not exist";break;
+		case ErrorPayload::Conflict:
+			rejoinNick = nick_ + "_";
+			errorMessage = str(format(QT_TRANSLATE_NOOP("", "Unable to join this room as %1%, retrying as %2%")) % nick_ % rejoinNick);
+			break;
+		case ErrorPayload::JIDMalformed: 
+			errorMessage += ": ";
+			errorMessage += QT_TRANSLATE_NOOP("", "No nickname specified");
+			break;
+		case ErrorPayload::NotAuthorized: 
+			errorMessage += ": ";
+			errorMessage += QT_TRANSLATE_NOOP("", "A password needed");
+			break;
+		case ErrorPayload::RegistrationRequired: 
+			errorMessage += ": ";
+			errorMessage += QT_TRANSLATE_NOOP("", "Only members may join"); 
+			break;
+		case ErrorPayload::Forbidden: 
+			errorMessage += ": ";
+			errorMessage += QT_TRANSLATE_NOOP("", "You are banned from the room"); 
+			break;
+		case ErrorPayload::ServiceUnavailable: 
+			errorMessage += ": ";
+			errorMessage += QT_TRANSLATE_NOOP("", "The room is full");
+			break;
+		case ErrorPayload::ItemNotFound: 
+			errorMessage += ": ";
+			errorMessage += QT_TRANSLATE_NOOP("", "The room does not exist");
+			break;
 			
 		default: break;
 		}
@@ -147,7 +170,7 @@ void MUCController::handleJoinFailed(boost::shared_ptr<ErrorPayload> error) {
 void MUCController::handleJoinComplete(const std::string& nick) {
 	receivedActivity();
 	joined_ = true;
-	std::string joinMessage = "You have joined room " + toJID_.toString() + " as " + nick;
+	std::string joinMessage = str(format(QT_TRANSLATE_NOOP("", "You have joined room %1% as %2%")) % toJID_.toString() % nick);
 	nick_ = nick;
 	chatWindow_->addSystemMessage(joinMessage);
 	clearPresenceQueue();
@@ -185,13 +208,14 @@ void MUCController::handleOccupantJoined(const MUCOccupant& occupant) {
 	appendToJoinParts(joinParts_, event);
 	roster_->addContact(jid, realJID, occupant.getNick(), roleToGroupName(occupant.getRole()), avatarManager_->getAvatarPath(jid).string());
 	if (joined_) {
-		std::string joinString = occupant.getNick() + " has joined the room";
+		std::string joinString;
 		MUCOccupant::Role role = occupant.getRole();
 		if (role != MUCOccupant::NoRole && role != MUCOccupant::Participant) {
-			joinString += " as a " + roleToFriendlyName(role);
-
+			joinString = str(format(QT_TRANSLATE_NOOP("", "%1% has joined the room as a %2%.")) % occupant.getNick() % roleToFriendlyName(role));
 		}
-		joinString += ".";
+		else {
+			joinString = str(format(QT_TRANSLATE_NOOP("", "%1% has joined the room.")) % occupant.getNick());
+		}
 		if (shouldUpdateJoinParts()) {
 			updateJoinParts();
 		} else {
@@ -216,9 +240,9 @@ void MUCController::clearPresenceQueue() {
 
 std::string MUCController::roleToFriendlyName(MUCOccupant::Role role) {
 	switch (role) {
-	case MUCOccupant::Moderator: return "moderator";
-	case MUCOccupant::Participant: return "participant";
-	case MUCOccupant::Visitor: return "visitor";
+	case MUCOccupant::Moderator: return QT_TRANSLATE_NOOP("", "moderator");
+	case MUCOccupant::Participant: return QT_TRANSLATE_NOOP("", "participant");
+	case MUCOccupant::Visitor: return QT_TRANSLATE_NOOP("", "visitor");
 	case MUCOccupant::NoRole: return "";
 	}
 	return "";
@@ -257,7 +281,7 @@ void MUCController::preHandleIncomingMessage(boost::shared_ptr<MessageEvent> mes
 	joined_ = true;
 
 	if (!message->getSubject().empty() && message->getBody().empty()) {
-		chatWindow_->addSystemMessage("The room subject is now: " + message->getSubject());
+		chatWindow_->addSystemMessage(str(format(QT_TRANSLATE_NOOP("", "The room subject is now: %1%")) % message->getSubject()));;
 		doneGettingHistory_ = true;
 	}
 
@@ -280,16 +304,16 @@ void MUCController::handleOccupantRoleChanged(const std::string& nick, const MUC
 		realJID = occupant.getRealJID().get();
 	}
 	roster_->addContact(jid, realJID, nick, roleToGroupName(occupant.getRole()), avatarManager_->getAvatarPath(jid).string());
-	chatWindow_->addSystemMessage(nick + " is now a " + roleToFriendlyName(occupant.getRole()));
+	chatWindow_->addSystemMessage(str(format(QT_TRANSLATE_NOOP("", "%1% is now a %2%")) % nick % roleToFriendlyName(occupant.getRole())));
 }
 
 std::string MUCController::roleToGroupName(MUCOccupant::Role role) {
 	std::string result;
 	switch (role) {
-	case MUCOccupant::Moderator: result = "Moderators"; break;
-	case MUCOccupant::Participant: result = "Participants"; break;
-	case MUCOccupant::Visitor: result = "Visitors"; break;
-	case MUCOccupant::NoRole: result = "Occupants"; break;
+	case MUCOccupant::Moderator: result = QT_TRANSLATE_NOOP("", "Moderators"); break;
+	case MUCOccupant::Participant: result = QT_TRANSLATE_NOOP("", "Participants"); break;
+	case MUCOccupant::Visitor: result = QT_TRANSLATE_NOOP("", "Visitors"); break;
+	case MUCOccupant::NoRole: result = QT_TRANSLATE_NOOP("", "Occupants"); break;
 	default: assert(false);
 	}
 	return result;
@@ -303,7 +327,7 @@ void MUCController::setOnline(bool online) {
 		processUserPart();
 	} else {
 		if (shouldJoinOnReconnect_) {
-			chatWindow_->addSystemMessage("Trying to join room " + toJID_.toString());
+			chatWindow_->addSystemMessage(str(format(QT_TRANSLATE_NOOP("", "Trying to join room %1%")) % toJID_.toString()));
 			if (loginCheckTimer_) {
 				loginCheckTimer_->start();
 			}
@@ -332,7 +356,7 @@ void MUCController::handleOccupantLeft(const MUCOccupant& occupant, MUC::Leaving
 	appendToJoinParts(joinParts_, event);
 	currentOccupants_.erase(occupant.getNick());
 	completer_->removeWord(occupant.getNick());
-	std::string partMessage = (occupant.getNick() != nick_) ? occupant.getNick() + " has left the room" : "You have left the room";
+	std::string partMessage = (occupant.getNick() != nick_) ? str(format(QT_TRANSLATE_NOOP("", "%1% has left the room")) % occupant.getNick()) : QT_TRANSLATE_NOOP("", "You have left the room");
 	if (!reason.empty()) {
 		partMessage += " (" + reason + ")";
 	}
@@ -406,7 +430,7 @@ std::string MUCController::concatenateListOfNames(const std::vector<NickJoinPart
 			if (i < joinParts.size() - 1) {
 				result += ", ";
 			} else {
-				result += " and ";
+				result += QT_TRANSLATE_NOOP("", " and ");
 			}
 		}
 		NickJoinPart event = joinParts[i];
@@ -424,17 +448,45 @@ std::string MUCController::generateJoinPartString(const std::vector<NickJoinPart
 	std::string result;
 	std::vector<JoinPart> populatedEvents;
 	for (size_t i = 0; i < 4; i++) {
-		std::string eventString = concatenateListOfNames(sorted[i]);
-		if (!eventString.empty()) {
-			std::string haveHas = sorted[i].size() > 1 ? " have" : " has";
+		std::string names = concatenateListOfNames(sorted[i]);
+		if (!names.empty()) {
+			std::string eventString;
 			switch (i) {
-				case Join: eventString += haveHas + " joined";break;
-				case Part: eventString += haveHas + " left";break;
-				case JoinThenPart: eventString += " joined then left";break;
-				case PartThenJoin: eventString += " left then rejoined";break;
+				case Join: 
+					if (sorted[i].size() > 1) {
+						eventString = QT_TRANSLATE_NOOP("", "%1% have joined the room");
+					}
+					else {
+						eventString = QT_TRANSLATE_NOOP("", "%1% has joined the room");
+					}
+					break;
+				case Part: 
+					if (sorted[i].size() > 1) {
+						eventString = QT_TRANSLATE_NOOP("", "%1% have left the room");
+					}
+					else {
+						eventString = QT_TRANSLATE_NOOP("", "%1% has left the room");
+					}
+					break;
+				case JoinThenPart: 
+					if (sorted[i].size() > 1) {
+						eventString = QT_TRANSLATE_NOOP("", "%1% have joined then left the room");
+					}
+					else {
+						eventString = QT_TRANSLATE_NOOP("", "%1% has joined then left the room");
+					}
+					break;
+				case PartThenJoin: 
+					if (sorted[i].size() > 1) {
+						eventString = QT_TRANSLATE_NOOP("", "%1% have left then rejoined the room");
+					}
+					else {
+						eventString = QT_TRANSLATE_NOOP("", "%1% has left then rejoined the room");
+					}
+					break;
 			}
 			populatedEvents.push_back(static_cast<JoinPart>(i));
-			eventStrings[i] = eventString;
+			eventStrings[i] = str(boost::format(eventString) % names);
 		}
 	}
 	for (size_t i = 0; i < populatedEvents.size(); i++) {
@@ -442,12 +494,11 @@ std::string MUCController::generateJoinPartString(const std::vector<NickJoinPart
 			if (i < populatedEvents.size() - 1) {
 				result += ", ";
 			} else {
-				result += " and ";
+				result += QT_TRANSLATE_NOOP("", " and ");
 			}
 		}
 		result += eventStrings[populatedEvents[i]];
 	}
-	result += " the room.";
 	return result;
 }
 

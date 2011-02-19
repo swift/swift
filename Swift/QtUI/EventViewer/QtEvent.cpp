@@ -58,8 +58,14 @@ QString QtEvent::text() {
 	boost::shared_ptr<SubscriptionRequestEvent> subscriptionRequestEvent = boost::dynamic_pointer_cast<SubscriptionRequestEvent>(event_);
 	if (subscriptionRequestEvent) {
 		std::string reason = subscriptionRequestEvent->getReason();
-		std::string message = subscriptionRequestEvent->getJID().toBare().toString() + " would like to add you to their roster" + (reason.empty() ? "." : ", saying '" + reason + "'.");
-		return P2QSTRING(message);
+		QString message;
+		if (reason.empty()) {
+			message = QString("%1 would like to add you to their roster.").arg(subscriptionRequestEvent->getJID().toBare().toString().c_str());
+		}
+		else {
+			message = QString("%1 would like to add you to their roster, saying '%2'").arg(subscriptionRequestEvent->getJID().toBare().toString().c_str()).arg(reason.c_str());
+		}
+		return message;
 	}
 	boost::shared_ptr<ErrorEvent> errorEvent = boost::dynamic_pointer_cast<ErrorEvent>(event_);
 	if (errorEvent) {

@@ -9,6 +9,8 @@
 #include <boost/bind.hpp>
 #include <stdio.h>
 
+#include <Swift/Controllers/Intl.h>
+#include <Swiften/Base/format.h>
 #include "Swiften/Avatars/AvatarManager.h"
 #include "Swiften/Chat/ChatStateNotifier.h"
 #include "Swiften/Chat/ChatStateTracker.h"
@@ -18,6 +20,7 @@
 #include "Swift/Controllers/UIInterfaces/ChatWindowFactory.h"
 #include "Swiften/Client/NickResolver.h"
 #include "Swift/Controllers/XMPPEvents/EventController.h"
+#include <Swift/Controllers/StatusUtil.h>
 
 namespace Swift {
 	
@@ -37,16 +40,16 @@ ChatController::ChatController(const JID& self, StanzaChannel* stanzaChannel, IQ
 	nickResolver_->onNickChanged.connect(boost::bind(&ChatController::handleContactNickChanged, this, _1, _2));
 	std::string nick = nickResolver_->jidToNick(toJID_);
 	chatWindow_->setName(nick);
-	std::string startMessage("Starting chat with " + nick);
+	std::string startMessage;
 	Presence::ref theirPresence;
 	if (isInMUC) {
-		startMessage += " in chatroom " + contact.toBare().toString();
+		startMessage = str(format(QT_TRANSLATE_NOOP("", "Starting chat with %1% in chatroom %2%")) % nick % contact.toBare().toString());
 		theirPresence = presenceOracle->getLastPresence(contact);
 	} else {
-		startMessage += " - " + contact.toBare().toString();
+		startMessage = str(format(QT_TRANSLATE_NOOP("", "Starting chat with %1% - %2%")) % nick % contact.toBare().toString());
 		theirPresence = contact.isBare() ? presenceOracle->getHighestPriorityPresence(contact.toBare()) : presenceOracle->getLastPresence(contact);
 	}
-	startMessage += ": " + StatusShow::typeToFriendlyName(theirPresence ? theirPresence->getShow() : StatusShow::None);
+	startMessage += ": " + statusShowTypeToFriendlyName(theirPresence ? theirPresence->getShow() : StatusShow::None);
 	if (theirPresence && !theirPresence->getStatus().empty()) {
 		startMessage += " (" + theirPresence->getStatus() + ")";
 	}
@@ -109,7 +112,7 @@ void ChatController::preSendMessageRequest(boost::shared_ptr<Message> message) {
 }
 
 void ChatController::postSendMessage(const std::string& body, boost::shared_ptr<Stanza> sentStanza) {
-	std::string id = addMessage(body, "me", true, labelsEnabled_ ? chatWindow_->getSelectedSecurityLabel() : boost::optional<SecurityLabel>(), std::string(avatarManager_->getAvatarPath(selfJID_).string()), boost::posix_time::microsec_clock::universal_time());
+	std::string id = addMessage(body, QT_TRANSLATE_NOOP("", "me"), true, labelsEnabled_ ? chatWindow_->getSelectedSecurityLabel() : boost::optional<SecurityLabel>(), std::string(avatarManager_->getAvatarPath(selfJID_).string()), boost::posix_time::microsec_clock::universal_time());
 	if (stanzaChannel_->getStreamManagementEnabled()) {
 		chatWindow_->setAckState(id, ChatWindow::Pending);
 		unackedStanzas_[sentStanza] = id;
@@ -148,19 +151,23 @@ std::string ChatController::senderDisplayNameFromMessage(const JID& from) {
 
 std::string ChatController::getStatusChangeString(boost::shared_ptr<Presence> presence) {
 	std::string nick = senderDisplayNameFromMessage(presence->getFrom());
-	std::string response = nick;
+	std::string response;
 	if (!presence || presence->getType() == Presence::Unavailable || presence->getType() == Presence::Error) {
-		response += " has gone offline";
+		response = QT_TRANSLATE_NOOP("", "%1% has gone offline");
 	} else if (presence->getType() == Presence::Available) {
 		StatusShow::Type show = presence->getShow();
 		if (show == StatusShow::Online || show == StatusShow::FFC) {
-			response += " has become available";
+			response = QT_TRANSLATE_NOOP("", "%1% has become available");
 		} else if (show == StatusShow::Away || show == StatusShow::XA) {
-			response += " has gone away";
+			response = QT_TRANSLATE_NOOP("", "%1% has gone away");
 		} else if (show == StatusShow::DND) {
-			response += " is now busy";
+			response = QT_TRANSLATE_NOOP("", "%1% is now busy");
 		} 
 	}
+	if (!response.empty()) {
+		response = str(format(response) % nick);
+	}
+
 	if (!presence->getStatus().empty()) {
 		response += " (" + presence->getStatus() + ")";
 	}

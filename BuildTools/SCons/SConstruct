@@ -281,6 +281,8 @@ if int(ARGUMENTS.get("V", 0)) == 0:
 	env["QT4_UICCOMSTR"] = colorize("UIC", "$TARGET", "blue")
 	env["QT4_MOCFROMHCOMSTR"] = colorize("MOC", "$TARGET", "blue")
 	env["QT4_MOCFROMCXXCOMSTR"] = colorize("MOC", "$TARGET", "blue")
+	env["QT4_LRELEASECOMSTR"] = colorize("LRELEASE", "$TARGET", "blue")
+	env["QT4_LUPDATECOMSTR"] = colorize("LUPDATE", "$TARGET", "blue")
 	env["GENCOMSTR"] = colorize("GEN", "$TARGET", "blue")
 	env["RCCOMSTR"] = colorize("RC", "$TARGET", "blue")
 	env["BUNDLECOMSTR"] = colorize("BUNDLE", "$TARGET", "blue")

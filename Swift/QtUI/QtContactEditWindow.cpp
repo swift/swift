@@ -23,7 +23,7 @@ namespace Swift {
 
 QtContactEditWindow::QtContactEditWindow() : contactEditWidget_(NULL) {
 	resize(300,300);
-	setWindowTitle("Edit contact");
+	setWindowTitle(tr("Edit contact"));
 	setContentsMargins(0,0,0,0);
 
 	QBoxLayout* layout = new QVBoxLayout(this);
@@ -38,10 +38,10 @@ QtContactEditWindow::QtContactEditWindow() : contactEditWidget_(NULL) {
 
 	QHBoxLayout* buttonLayout = new QHBoxLayout();
 	layout->addLayout(buttonLayout);
-	QPushButton* removeButton = new QPushButton("Remove contact", this);
+	QPushButton* removeButton = new QPushButton(tr("Remove contact"), this);
 	connect(removeButton, SIGNAL(clicked()), this, SLOT(handleRemoveContact()));
 	buttonLayout->addWidget(removeButton);
-	QPushButton* okButton = new QPushButton("Ok", this);
+	QPushButton* okButton = new QPushButton(tr("Ok"), this);
 	connect(okButton, SIGNAL(clicked()), this, SLOT(handleUpdateContact()));
 	buttonLayout->addStretch();
 	buttonLayout->addWidget(okButton);
@@ -73,9 +73,9 @@ void QtContactEditWindow::hide() {
 
 void QtContactEditWindow::handleRemoveContact() {
 	QMessageBox msgBox;
-	msgBox.setWindowTitle("Confirm contact deletion");
-	msgBox.setText("Are you sure you want to delete this contact?");
-	msgBox.setInformativeText(QString("This will remove the contact '%1' from all groups they may be in.").arg(P2QSTRING(jid_.toString())));
+	msgBox.setWindowTitle(tr("Confirm contact deletion"));
+	msgBox.setText(tr("Are you sure you want to delete this contact?"));
+	msgBox.setInformativeText(QString(tr("This will remove the contact '%1' from all groups they may be in.")).arg(P2QSTRING(jid_.toString())));
 	msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
 	msgBox.setDefaultButton(QMessageBox::Yes);
 	int ret = msgBox.exec();

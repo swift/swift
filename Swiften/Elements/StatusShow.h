@@ -26,18 +26,6 @@ namespace Swift {
 				return type_;
 			}
 
-			static std::string typeToFriendlyName(Type type) {
-				switch (type) {
-				case Online: return "Available";
-				case FFC: return "Available";
-				case Away: return "Away";
-				case XA: return "Away";
-				case DND: return "Busy";
-				case None: return "Offline";
-				}
-				return "Unknown";
-			}
-
 			/**
 			 * Can be used for rough ordering of Types.
 			 * Greater magnitude = more available.

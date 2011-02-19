@@ -27,7 +27,7 @@ QtMUCSearchWindow::QtMUCSearchWindow() {
 	setWindowIcon(QIcon(":/logo-icon-16.png"));
 #endif
 	setModal(true);
-	setWindowTitle("Search Room");
+	setWindowTitle(tr("Search Room"));
 	ui_.filter_->hide();
 	model_ = new MUCSearchModel();
 	delegate_ = new MUCSearchDelegate();
@@ -47,9 +47,9 @@ QtMUCSearchWindow::QtMUCSearchWindow() {
 	ui_.okButton->setEnabled(false);
 	connect(ui_.cancelButton, SIGNAL(clicked()), this, SLOT(reject()));
 
-	throbber_ = new QLabel("Searching", ui_.results_);
+	throbber_ = new QLabel(tr("Searching"), ui_.results_);
 	throbber_->setMovie(new QMovie(":/icons/throbber.gif", QByteArray(), throbber_));
-	throbber_->setToolTip("Searching");
+	throbber_->setToolTip(tr("Searching"));
 
 	hasHadScrollBars_ = false;
 	updateThrobberPosition();

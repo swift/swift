@@ -5,7 +5,7 @@
  */
 
 
-#include "Swift/QtUI/QtWebView.h"
+#include "QtWebView.h"
 
 #include <QKeyEvent>
 #include <QFocusEvent>
@@ -58,7 +58,7 @@ void QtWebView::contextMenuEvent(QContextMenuEvent* ev) {
 	}
 
 	// Add our own custom actions
-	menu->addAction("Clear", this, SIGNAL(clearRequested()));
+	menu->addAction(tr("Clear"), this, SIGNAL(clearRequested()));
 
 	menu->exec(ev->globalPos());
 	delete menu;

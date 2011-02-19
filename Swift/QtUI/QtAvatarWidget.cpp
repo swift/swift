@@ -70,10 +70,10 @@ void QtAvatarWidget::setAvatar(const ByteArray& data, const std::string& type) {
 void QtAvatarWidget::mousePressEvent(QMouseEvent* event) {
 	QMenu menu;
 
-	QAction* selectPicture = new QAction("Select picture ...", this);
+	QAction* selectPicture = new QAction(tr("Select picture ..."), this);
 	menu.addAction(selectPicture);
 
-	QAction* clearPicture = new QAction("Clear picture", this);
+	QAction* clearPicture = new QAction(tr("Clear picture"), this);
 	menu.addAction(clearPicture);
 
 	QAction* result = menu.exec(event->globalPos());
@@ -92,7 +92,7 @@ void QtAvatarWidget::mousePressEvent(QMouseEvent* event) {
 				setAvatar(data, Q2PSTRING(type));
 			}
 			else {
-				QMessageBox::critical(this, "Error", "The selected picture is in an unrecognized format");
+				QMessageBox::critical(this, tr("Error"), tr("The selected picture is in an unrecognized format"));
 			}
 		}
 	}

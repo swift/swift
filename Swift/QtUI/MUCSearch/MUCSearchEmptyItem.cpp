@@ -22,7 +22,7 @@ MUCSearchServiceItem* MUCSearchEmptyItem::getParent() {
 QVariant MUCSearchEmptyItem::data(int role) {
 	switch (role) {
 		case Qt::DisplayRole:
-			return QVariant("No rooms found");
+			return QVariant(QObject::tr("No rooms found"));
 		case Qt::FontRole: {
 			QFont font;
 			font.setItalic(true);

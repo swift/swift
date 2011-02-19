@@ -52,6 +52,8 @@ if env["SCONS_STAGE"] == "build" :
 			"CertificateStorageFactory.cpp",
 			"CertificateStorage.cpp",
 			"CertificateFileStorage.cpp",
+			"StatusUtil.cpp",
+			"Translator.cpp",
 		])
 
 	env.Append(UNITTEST_SOURCES = [

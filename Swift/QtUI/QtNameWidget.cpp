@@ -44,7 +44,7 @@ void QtNameWidget::mousePressEvent(QMouseEvent* event) {
 	QMenu menu;
 	bool hasNick = !nick.isEmpty();
 
-	QAction* showAsNick = new QAction(hasNick ? "Show nickname" : "(No Nickname Set)", this);
+	QAction* showAsNick = new QAction(hasNick ? tr("Show nickname") : tr("(No Nickname Set)"), this);
 	showAsNick->setCheckable(true);
 	showAsNick->setEnabled(hasNick);
 	if (mode == ShowNick && hasNick) {
@@ -52,14 +52,14 @@ void QtNameWidget::mousePressEvent(QMouseEvent* event) {
 	}
 	menu.addAction(showAsNick);
 
-	QAction* showAsJID = new QAction("Show ID", this);
+	QAction* showAsJID = new QAction(tr("Show ID"), this);
 	showAsJID->setCheckable(true);
 	if (mode == ShowJID || !hasNick) {
 		showAsJID->setChecked(true);
 	}
 	menu.addAction(showAsJID);
 
-	QAction* editProfile = new QAction("Edit Profile", this);
+	QAction* editProfile = new QAction(tr("Edit Profile"), this);
 	menu.addAction(editProfile);
 
 	QAction* result = menu.exec(event->globalPos());

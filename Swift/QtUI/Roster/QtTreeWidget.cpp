@@ -83,18 +83,18 @@ void QtTreeWidget::contextMenuEvent(QContextMenuEvent* event) {
 	RosterItem* item = static_cast<RosterItem*>(index.internalPointer());
 	QMenu contextMenu;
 	if (ContactRosterItem* contact = dynamic_cast<ContactRosterItem*>(item)) {
-		QAction* editContact = contextMenu.addAction("Edit");
+		QAction* editContact = contextMenu.addAction(tr("Edit"));
 		QAction* result = contextMenu.exec(event->globalPos());
 		if (result == editContact) {
 			eventStream_->send(boost::make_shared<RequestContactEditorUIEvent>(contact->getJID()));
 		}
 	}
 	else if (GroupRosterItem* group = dynamic_cast<GroupRosterItem*>(item)) {
-		QAction* renameGroup = contextMenu.addAction("Rename");
+		QAction* renameGroup = contextMenu.addAction(tr("Rename"));
 		QAction* result = contextMenu.exec(event->globalPos());
 		if (result == renameGroup) {
 			bool ok;
-			QString newName = QInputDialog::getText(NULL, "Rename group", "New name for " + P2QSTRING(group->getDisplayName()), QLineEdit::Normal, P2QSTRING(group->getDisplayName()), &ok);
+			QString newName = QInputDialog::getText(NULL, tr("Rename group"), tr("New name for %1").arg(P2QSTRING(group->getDisplayName())), QLineEdit::Normal, P2QSTRING(group->getDisplayName()), &ok);
 			if (ok) {
 				eventStream_->send(boost::make_shared<RenameGroupUIEvent>(group->getDisplayName(), Q2PSTRING(newName)));
 			}

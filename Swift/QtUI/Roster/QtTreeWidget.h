@@ -4,12 +4,10 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#ifndef SWIFT_QtTreeWidget_H
-#define SWIFT_QtTreeWidget_H
+#pragma once
 
 #include <QTreeView>
 #include <QModelIndex>
-#include "Swift/QtUI/Roster/QtTreeWidget.h"
 #include "Swift/QtUI/Roster/RosterModel.h"
 #include "Swift/QtUI/Roster/RosterDelegate.h"
 
@@ -44,5 +42,3 @@ class QtTreeWidget : public QTreeView{
 };
 
 }
-#endif
-

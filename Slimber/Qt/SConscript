@@ -44,7 +44,7 @@ else :
 
 if env["PLATFORM"] == "win32" :
 	if "dist" in COMMAND_LINE_TARGETS or env.GetOption("clean") :
-		myenv.WindowsBundle("Slimber", resources = [], qtlibs = ["QtCore4", "QtGui4"])
+		myenv.WindowsBundle("Slimber", resources = {}, qtlibs = ["QtCore4", "QtGui4"])
 		myenv.Append(NSIS_OPTIONS = [
 				"/DmsvccRedistributableDir=\"" + env["vcredist"] + "\"", 
 				"/DbuildDate=" + datetime.date.today().strftime("%Y%m%d")

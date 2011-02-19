@@ -59,11 +59,11 @@ void QtChatListWindow::handleClicked(const QModelIndex& index) {
 
 void QtChatListWindow::setupContextMenus() {
 	mucMenu_ = new QMenu();
-	mucMenu_->addAction("Add New Bookmark", this, SLOT(handleAddBookmark()));
-	mucMenu_->addAction("Edit Bookmark", this, SLOT(handleEditBookmark()));
-	mucMenu_->addAction("Remove Bookmark", this, SLOT(handleRemoveBookmark()));
+	mucMenu_->addAction(tr("Add New Bookmark"), this, SLOT(handleAddBookmark()));
+	mucMenu_->addAction(tr("Edit Bookmark"), this, SLOT(handleEditBookmark()));
+	mucMenu_->addAction(tr("Remove Bookmark"), this, SLOT(handleRemoveBookmark()));
 	emptyMenu_ = new QMenu();
-	emptyMenu_->addAction("Add New Bookmark", this, SLOT(handleAddBookmark()));
+	emptyMenu_->addAction(tr("Add New Bookmark"), this, SLOT(handleAddBookmark()));
 	
 }
 

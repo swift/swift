@@ -15,6 +15,7 @@
 #include "Swiften/Presence/PresenceOracle.h"
 #include "Swiften/Network/TimerFactory.h"
 #include "Swiften/Client/NickResolver.h"
+#include <Swift/Controllers/StatusUtil.h>
 
 namespace Swift {
 
@@ -98,7 +99,7 @@ void PresenceNotifier::handleNotificationActivated(JID jid) {
 std::string PresenceNotifier::getStatusType(const JID& jid) const {
 	Presence::ref presence = presenceOracle->getLastPresence(jid);
 	if (presence) {
-		return StatusShow::typeToFriendlyName(presence->getShow());
+		return statusShowTypeToFriendlyName(presence->getShow());
 	}
 	else {
 		return "Unavailable";
