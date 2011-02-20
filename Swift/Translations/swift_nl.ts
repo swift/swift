@@ -27,12 +27,12 @@
     <message>
         <location filename="../Controllers/Chat/ChatController.cpp" line="160"/>
         <source>%1% has become available</source>
-        <translation>%1% is beschikbaar geworden</translation>
+        <translation>%1% is nu beschikbaar</translation>
     </message>
     <message>
         <location filename="../Controllers/Chat/ChatController.cpp" line="162"/>
         <source>%1% has gone away</source>
-        <translation>%1% is afwezig</translation>
+        <translation>%1% is nu afwezig</translation>
     </message>
     <message>
         <location filename="../Controllers/Chat/ChatController.cpp" line="164"/>
