@@ -28,7 +28,7 @@ int main(int argc, char* argv[]) {
 
 	// Translation
 	QTextCodec::setCodecForTr(QTextCodec::codecForName("UTF-8"));
-	boost::filesystem::path someTranslationPath = Swift::PlatformApplicationPathProvider(SWIFT_APPLICATION_NAME).getResourcePath("/translations/Swift_nl.qm");
+	boost::filesystem::path someTranslationPath = Swift::PlatformApplicationPathProvider(SWIFT_APPLICATION_NAME).getResourcePath("/translations/swift_nl.qm");
 	QTranslator qtTranslator;
 	if (!someTranslationPath.empty()) {
 		//std::cout << "Loading " << std::string(QLocale::system().name().toUtf8()) << std::endl;
