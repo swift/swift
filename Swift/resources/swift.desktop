@@ -5,9 +5,12 @@ Version=1.0
 
 Type=Application
 Name=Swift
-GenericName=Jabber/XMPP Client
-Comment=Client for the Jabber/XMPP network
+GenericName=Jabber/XMPP Messenger
+Comment=Communicate over the Jabber/XMPP network
 Icon=swift
 Exec=swift
 Terminal=false
 Categories=Network;InstantMessaging;Qt;
+
+GenericName[nl]=Jabber/XMPP Boodschapper
+Comment[nl]=Communiceer over het Jabber/XMPP netwerk
