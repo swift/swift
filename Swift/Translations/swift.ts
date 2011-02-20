@@ -716,6 +716,11 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="../QtUI/QtAboutWidget.cpp" line="40"/>
+        <source>Version %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <location filename="../QtUI/QtAboutWidget.cpp" line="42"/>
         <source>Built with Qt %1</source>
         <translation type="unfinished"></translation>
@@ -1133,12 +1138,12 @@
 <context>
     <name>Swift::QtStatusWidget</name>
     <message>
-        <location filename="../QtUI/QtStatusWidget.cpp" line="232"/>
+        <location filename="../QtUI/QtStatusWidget.cpp" line="231"/>
         <source>Connecting</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../QtUI/QtStatusWidget.cpp" line="264"/>
+        <location filename="../QtUI/QtStatusWidget.cpp" line="263"/>
         <source>(No message)</source>
         <translation type="unfinished"></translation>
     </message>

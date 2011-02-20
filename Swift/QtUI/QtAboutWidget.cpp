@@ -37,7 +37,7 @@ QtAboutWidget::QtAboutWidget() : QDialog() {
 	QLabel* appNameLabel = new QLabel("<center><font size='+1'><b>" + QCoreApplication::applicationName() + "</b></font></center>", this);
 	mainLayout->addWidget(appNameLabel);
 	
-	QLabel* versionLabel = new QLabel(QString("<center><font size='-1'>Version ") + QCoreApplication::applicationVersion() + "</font></center>", this);
+	QLabel* versionLabel = new QLabel(QString("<center><font size='-1'>") + tr("Version %1").arg(QCoreApplication::applicationVersion()) + "</font></center>", this);
 	mainLayout->addWidget(versionLabel);
 	QString buildString = QString("<center><font size='-1'>") + QString(tr("Built with Qt %1")).arg(QT_VERSION_STR);
 	buildString += QString("<br/>") + QString(tr("Running with Qt %1")).arg(qVersion());

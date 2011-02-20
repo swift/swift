@@ -716,6 +716,11 @@
         <translation>Over %1</translation>
     </message>
     <message>
+        <location filename="../QtUI/QtAboutWidget.cpp" line="40"/>
+        <source>Version %1</source>
+        <translation>Versie %1</translation>
+    </message>
+    <message>
         <location filename="../QtUI/QtAboutWidget.cpp" line="42"/>
         <source>Built with Qt %1</source>
         <translation>Gebouwd met Qt %1</translation>
@@ -1134,12 +1139,12 @@ afbeelding</translation>
 <context>
     <name>Swift::QtStatusWidget</name>
     <message>
-        <location filename="../QtUI/QtStatusWidget.cpp" line="232"/>
+        <location filename="../QtUI/QtStatusWidget.cpp" line="231"/>
         <source>Connecting</source>
         <translation>Aan het verbinden</translation>
     </message>
     <message>
-        <location filename="../QtUI/QtStatusWidget.cpp" line="264"/>
+        <location filename="../QtUI/QtStatusWidget.cpp" line="263"/>
         <source>(No message)</source>
         <translation>(Geen boodschap)</translation>
     </message>
