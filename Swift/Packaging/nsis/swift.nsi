@@ -82,6 +82,9 @@ File "..\..\QtUI\Swift\sounds\message-received.wav"
 SetOutPath $INSTDIR\images
 File "..\..\QtUI\Swift\images\logo-icon-32.png"
 
+SetOutPath $INSTDIR\translations
+!include translations-install.nsh
+
 # create start menu item
 !insertmacro MUI_STARTMENU_WRITE_BEGIN Application
 	     CreateDirectory "$SMPROGRAMS\$StartMenuFolder"
@@ -152,7 +155,9 @@ section "Uninstall"
     delete $INSTDIR\imageformats\qtiff4.dll
     delete $INSTDIR\sounds\message-received.wav
     delete $INSTDIR\images\logo-icon-32.png"
+    !include translations-uninstall.nsh
 
+    RmDir $INSTDIR\translations
     RmDir $INSTDIR\Prerequisites
     RmDir $INSTDIR\imageformats
     RmDir $INSTDIR\images
