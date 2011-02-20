@@ -42,7 +42,7 @@
     <message>
         <location filename="../Controllers/Chat/ChatControllerBase.cpp" line="56"/>
         <source>The day is now %1%</source>
-        <translation>Vandaag is nu %1%</translation>
+        <translation>De huidige dag is nu %1%</translation>
     </message>
     <message>
         <location filename="../Controllers/Chat/ChatControllerBase.cpp" line="193"/>
@@ -525,25 +525,25 @@
         <location filename="../QtUI/QtBookmarkDetailWindow.ui"/>
         <location filename="../QtUI/ui_QtBookmarkDetailWindow.h" line="137"/>
         <source>Edit Bookmark Details</source>
-        <translation>Bladwijzerdetails Aanpassen</translation>
+        <translation>Bladwijzerdetails aanpassen</translation>
     </message>
     <message>
         <location filename="../QtUI/QtBookmarkDetailWindow.ui"/>
         <location filename="../QtUI/ui_QtBookmarkDetailWindow.h" line="138"/>
         <source>Bookmark Name:</source>
-        <translation>Naam Bladwijzer:</translation>
+        <translation>Naam bladwijzer:</translation>
     </message>
     <message>
         <location filename="../QtUI/QtBookmarkDetailWindow.ui"/>
         <location filename="../QtUI/ui_QtBookmarkDetailWindow.h" line="140"/>
         <source>Your Nickname:</source>
-        <translation>Uw Roepnaam:</translation>
+        <translation>Uw roepnaam:</translation>
     </message>
     <message>
         <location filename="../QtUI/QtBookmarkDetailWindow.ui"/>
         <location filename="../QtUI/ui_QtBookmarkDetailWindow.h" line="141"/>
         <source>Room password:</source>
-        <translation>Wachtwoord Kamer:</translation>
+        <translation>Wachtwoord kamer:</translation>
     </message>
     <message>
         <location filename="../QtUI/QtBookmarkDetailWindow.ui"/>
@@ -555,7 +555,7 @@
         <location filename="../QtUI/QtBookmarkDetailWindow.ui"/>
         <location filename="../QtUI/ui_QtBookmarkDetailWindow.h" line="139"/>
         <source>Room Address:</source>
-        <translation>Adres Kamer:</translation>
+        <translation>Adres kamer:</translation>
     </message>
 </context>
 <context>
@@ -598,7 +598,7 @@
         <location filename="../QtUI/MUCSearch/QtMUCSearchWindow.ui"/>
         <location filename="../QtUI/MUCSearch/ui_QtMUCSearchWindow.h" line="118"/>
         <source>Search Room</source>
-        <translation>Zoek Kamer</translation>
+        <translation>Zoek kamer</translation>
     </message>
     <message>
         <location filename="../QtUI/MUCSearch/QtMUCSearchWindow.ui"/>
@@ -697,7 +697,7 @@
         <location filename="../QtUI/UserSearch/QtUserSearchWizard.ui"/>
         <location filename="../QtUI/UserSearch/ui_QtUserSearchWizard.h" line="39"/>
         <source>Find User</source>
-        <translation>Zoek Gebruiker</translation>
+        <translation>Zoek gebruiker</translation>
     </message>
 </context>
 <context>
@@ -737,7 +737,7 @@
         <location filename="../QtUI/QtAvatarWidget.cpp" line="61"/>
         <source>No picture</source>
         <translation>Geen
-Afbeelding</translation>
+afbeelding</translation>
     </message>
     <message>
         <location filename="../QtUI/QtAvatarWidget.cpp" line="73"/>
@@ -767,7 +767,7 @@ Afbeelding</translation>
     <message>
         <location filename="../QtUI/QtAvatarWidget.cpp" line="95"/>
         <source>The selected picture is in an unrecognized format</source>
-        <translation>De geselecteerde afbeelding is in een ongekend formaat</translation>
+        <translation>Het formaat van de geselecteerde afbeelding werd niet herkend</translation>
     </message>
 </context>
 <context>
@@ -789,17 +789,17 @@ Afbeelding</translation>
         <location filename="../QtUI/ChatList/QtChatListWindow.cpp" line="62"/>
         <location filename="../QtUI/ChatList/QtChatListWindow.cpp" line="66"/>
         <source>Add New Bookmark</source>
-        <translation>Nieuwe Bladwijzer</translation>
+        <translation>Voeg bladwijzer toe</translation>
     </message>
     <message>
         <location filename="../QtUI/ChatList/QtChatListWindow.cpp" line="63"/>
         <source>Edit Bookmark</source>
-        <translation>Bewerk Bladwijzer</translation>
+        <translation>Bewerk bladwijzer</translation>
     </message>
     <message>
         <location filename="../QtUI/ChatList/QtChatListWindow.cpp" line="64"/>
         <source>Remove Bookmark</source>
-        <translation>Verwijder Bladwijzer</translation>
+        <translation>Verwijder bladwijzer</translation>
     </message>
 </context>
 <context>
@@ -807,7 +807,7 @@ Afbeelding</translation>
     <message>
         <location filename="../QtUI/QtChatView.cpp" line="61"/>
         <source>Clear log</source>
-        <translation>Inhoud wissen</translation>
+        <translation>Wis inhoud</translation>
     </message>
     <message>
         <location filename="../QtUI/QtChatView.cpp" line="62"/>
@@ -848,12 +848,12 @@ Afbeelding</translation>
     <message>
         <location filename="../QtUI/QtContactEditWidget.cpp" line="34"/>
         <source>Groups:</source>
-        <translation>Groupen:</translation>
+        <translation>Groepen:</translation>
     </message>
     <message>
         <location filename="../QtUI/QtContactEditWidget.cpp" line="56"/>
         <source>New Group:</source>
-        <translation>Nieuwe Groep:</translation>
+        <translation>Nieuwe groep:</translation>
     </message>
 </context>
 <context>
@@ -894,7 +894,7 @@ Afbeelding</translation>
     <message>
         <location filename="../QtUI/EventViewer/QtEventWindow.cpp" line="47"/>
         <source>Display Notice</source>
-        <translation>Toon Bericht</translation>
+        <translation>Toon bericht</translation>
     </message>
 </context>
 <context>
@@ -908,7 +908,7 @@ Afbeelding</translation>
         <location filename="../QtUI/QtLoginWindow.cpp" line="86"/>
         <location filename="../QtUI/QtLoginWindow.cpp" line="87"/>
         <source>User address - looks like someuser@someserver.com</source>
-        <translation>Gebruikersadres van de vorm iemand@ergens.com</translation>
+        <translation>Gebruikersadres (van de vorm &apos;iemand@ergens.com&apos;)</translation>
     </message>
     <message>
         <location filename="../QtUI/QtLoginWindow.cpp" line="91"/>
@@ -935,12 +935,12 @@ Afbeelding</translation>
     <message>
         <location filename="../QtUI/QtLoginWindow.cpp" line="136"/>
         <source>Remember Password?</source>
-        <translation>Wachtwoord Onthouden?</translation>
+        <translation>Wachtwoord onthouden?</translation>
     </message>
     <message>
         <location filename="../QtUI/QtLoginWindow.cpp" line="138"/>
         <source>Login Automatically?</source>
-        <translation>Automatisch Inloggen?</translation>
+        <translation>Automatisch inloggen?</translation>
     </message>
     <message>
         <location filename="../QtUI/QtLoginWindow.cpp" line="150"/>
@@ -960,17 +960,17 @@ Afbeelding</translation>
     <message>
         <location filename="../QtUI/QtLoginWindow.cpp" line="165"/>
         <source>&amp;Show Debug Console</source>
-        <translation>Toon &amp;Debug Console</translation>
+        <translation>Toon &amp;debug console</translation>
     </message>
     <message>
         <location filename="../QtUI/QtLoginWindow.cpp" line="169"/>
         <source>&amp;Play Sounds</source>
-        <translation>&amp;Geluid Aan</translation>
+        <translation>&amp;Geluid aan</translation>
     </message>
     <message>
         <location filename="../QtUI/QtLoginWindow.cpp" line="175"/>
         <source>Show &amp;Notifications</source>
-        <translation>Toon &amp;Schermboodschappen</translation>
+        <translation>Toon &amp;schermboodschappen</translation>
     </message>
     <message>
         <location filename="../QtUI/QtLoginWindow.cpp" line="190"/>
@@ -1015,7 +1015,7 @@ Afbeelding</translation>
     <message>
         <location filename="../QtUI/QtLoginWindow.cpp" line="424"/>
         <source>SHA-1 Fingerprint: %1</source>
-        <translation>SHA-1 Vingerafdruk: %1</translation>
+        <translation>SHA-1 vingerafdruk: %1</translation>
     </message>
 </context>
 <context>
@@ -1024,7 +1024,7 @@ Afbeelding</translation>
         <location filename="../QtUI/MUCSearch/QtMUCSearchWindow.cpp" line="49"/>
         <location filename="../QtUI/MUCSearch/QtMUCSearchWindow.cpp" line="51"/>
         <source>Searching</source>
-        <translation>Zoeken</translation>
+        <translation>Aan het zoeken</translation>
     </message>
 </context>
 <context>
@@ -1062,22 +1062,22 @@ Afbeelding</translation>
     <message>
         <location filename="../QtUI/QtMainWindow.cpp" line="85"/>
         <source>Edit Profile</source>
-        <translation>Bewerk Profiel</translation>
+        <translation>Bewerk profiel</translation>
     </message>
     <message>
         <location filename="../QtUI/QtMainWindow.cpp" line="88"/>
         <source>&amp;Enter Room</source>
-        <translation>&amp;Kamer Betreden</translation>
+        <translation>&amp;Kamer betreden</translation>
     </message>
     <message>
         <location filename="../QtUI/QtMainWindow.cpp" line="91"/>
         <source>&amp;Add Contact</source>
-        <translation>Contact &amp;Toevoegen</translation>
+        <translation>Contact &amp;toevoegen</translation>
     </message>
     <message>
         <location filename="../QtUI/QtMainWindow.cpp" line="94"/>
         <source>Start &amp;Chat</source>
-        <translation>&amp;Conversatie Starten</translation>
+        <translation>&amp;Conversatie starten</translation>
     </message>
     <message>
         <location filename="../QtUI/QtMainWindow.cpp" line="98"/>
@@ -1095,22 +1095,22 @@ Afbeelding</translation>
     <message>
         <location filename="../QtUI/QtNameWidget.cpp" line="47"/>
         <source>(No Nickname Set)</source>
-        <translation>(Geen Roepnaam Ingesteld)</translation>
+        <translation>(Geen roepnaam ingesteld)</translation>
     </message>
     <message>
         <location filename="../QtUI/QtNameWidget.cpp" line="47"/>
         <source>Show Nickname</source>
-        <translation>Toon Roepnaam</translation>
+        <translation>Toon roepnaam</translation>
     </message>
     <message>
         <location filename="../QtUI/QtNameWidget.cpp" line="55"/>
         <source>Show Address</source>
-        <translation>Toon Gebruikersadres</translation>
+        <translation>Toon gebruikersadres</translation>
     </message>
     <message>
         <location filename="../QtUI/QtNameWidget.cpp" line="62"/>
         <source>Edit Profile</source>
-        <translation>Bewerk Profiel</translation>
+        <translation>Bewerk profiel</translation>
     </message>
 </context>
 <context>
@@ -1118,7 +1118,7 @@ Afbeelding</translation>
     <message>
         <location filename="../QtUI/QtProfileWindow.cpp" line="24"/>
         <source>Edit Profile</source>
-        <translation>Bewerk Profiel</translation>
+        <translation>Bewerk profiel</translation>
     </message>
     <message>
         <location filename="../QtUI/QtProfileWindow.cpp" line="43"/>
@@ -1218,12 +1218,12 @@ Afbeelding</translation>
     <message>
         <location filename="../QtUI/UserSearch/QtUserSearchWindow.cpp" line="85"/>
         <source>Add Contact</source>
-        <translation>Voeg Contact Toe</translation>
+        <translation>Contact toevoegen</translation>
     </message>
     <message>
         <location filename="../QtUI/UserSearch/QtUserSearchWindow.cpp" line="85"/>
         <source>Chat to User</source>
-        <translation>Start Conversatie met Gebruiker</translation>
+        <translation>Start conversatie met gebruiker</translation>
     </message>
     <message>
         <location filename="../QtUI/UserSearch/QtUserSearchWindow.cpp" line="294"/>
@@ -1274,7 +1274,7 @@ Afbeelding</translation>
     <message>
         <location filename="../QtUI/QtXMLConsoleWidget.cpp" line="50"/>
         <source>Debug Console</source>
-        <translation>Debug Console</translation>
+        <translation>Debug console</translation>
     </message>
     <message>
         <location filename="../QtUI/QtXMLConsoleWidget.cpp" line="75"/>
