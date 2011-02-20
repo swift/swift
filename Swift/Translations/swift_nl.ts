@@ -894,7 +894,7 @@ Afbeelding</translation>
     <message>
         <location filename="../QtUI/EventViewer/QtEventWindow.cpp" line="47"/>
         <source>Display Notice</source>
-        <translation>Toon Boodschap</translation>
+        <translation>Toon Bericht</translation>
     </message>
 </context>
 <context>
@@ -1037,7 +1037,7 @@ Afbeelding</translation>
     <message>
         <location filename="../QtUI/QtMainWindow.cpp" line="70"/>
         <source>&amp;Notices</source>
-        <translation>&amp;Boodschappen</translation>
+        <translation>&amp;Berichten</translation>
     </message>
     <message>
         <location filename="../QtUI/QtMainWindow.cpp" line="71"/>
@@ -1087,7 +1087,7 @@ Afbeelding</translation>
     <message>
         <location filename="../QtUI/QtMainWindow.cpp" line="130"/>
         <source>Notices</source>
-        <translation>Boodschappen</translation>
+        <translation>Berichten</translation>
     </message>
 </context>
 <context>
