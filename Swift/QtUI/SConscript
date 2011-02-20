@@ -160,20 +160,46 @@ commonResources = {
 	"": ["../resources/sounds"]
 }
 
+################################################################################
 # Translation
-translation_sources = [env.File("../Translations/swift.ts").abspath]
+################################################################################
+
+# Collect available languages
+translation_languages = []
 for file in os.listdir(Dir("../Translations").abspath) :
 	if file.startswith("swift_") and file.endswith(".ts") :
-		lang = file[6:-3]
-		translation_resource = "../resources/translations/swift_" + lang + ".qm"
-		translation_source = "../Translations/swift_" + lang + ".ts"
-		translation_sources.append(env.File(translation_source).abspath)
-		myenv.Qm(translation_resource, translation_source)
-		commonResources["translations"] = commonResources.get("translations", []) + [translation_resource]
+		translation_languages.append(file[6:-3])
+
+# Generate translation modules
+translation_sources = [env.File("../Translations/swift.ts").abspath]
+translation_modules = []
+for lang in translation_languages :
+	lang = file[6:-3]
+	translation_resource = "../resources/translations/swift_" + lang + ".qm"
+	translation_source = "../Translations/swift_" + lang + ".ts"
+	translation_sources.append(env.File(translation_source).abspath)
+	translation_modules.append(env.File(translation_resource).abspath)
+	myenv.Qm(translation_resource, translation_source)
+	commonResources["translations"] = commonResources.get("translations", []) + [translation_resource]
+
+# LUpdate translation (if requested)
 if ARGUMENTS.get("update_translations", False) :
 	myenv.Precious(translation_sources)
 	t = myenv.Command(translation_sources, [], [myenv.Action("$QT4_LUPDATE -I " + env.Dir("#").abspath + " -silent -no-ui-lines -codecfortr utf-8  -recursive Swift -ts " + " ".join(translation_sources), cmdstr = "$QT4_LUPDATECOMSTR")])
 	myenv.AlwaysBuild(t)
+
+# NSIS installation script
+if env["PLATFORM"] == "win32" :
+	nsis_translation_install_script = ""
+	nsis_translation_uninstall_script = ""
+	for lang in translation_languages :
+		nsis_translation_install_script += "File \"..\\..\\QtUI\\Swift\\translations\\swift_" + lang + ".qm\""
+		nsis_translation_uninstall_script += "delete $INSTDIR\\translations\\swift_" + lang + ".qm"
+	myenv.WriteVal("../Packaging/nsis/translations-install.nsh", myenv.Value(nsis_translation_install_script))
+	myenv.WriteVal("../Packaging/nsis/translations-uninstall.nsh", myenv.Value(nsis_translation_uninstall_script))
+	
+
+################################################################################
 
 if env["PLATFORM"] == "darwin" :
   frameworks = []
