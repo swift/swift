@@ -294,7 +294,7 @@
         <location filename="../Controllers/Chat/MUCController.cpp" line="433"/>
         <location filename="../Controllers/Chat/MUCController.cpp" line="497"/>
         <source> and </source>
-        <translation>en</translation>
+        <translation> en </translation>
     </message>
     <message>
         <location filename="../Controllers/Chat/MUCController.cpp" line="457"/>
