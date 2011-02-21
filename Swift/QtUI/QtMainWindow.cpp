@@ -58,6 +58,7 @@ QtMainWindow::QtMainWindow(QtSettingsProvider* settings, UIEventStream* uiEventS
 	contactTabLayout->setContentsMargins(0, 0, 0, 0);
 
 	treeWidget_ = new QtTreeWidget(uiEventStream_);
+	treeWidget_->setEditable(true);
 	contactTabLayout->addWidget(treeWidget_);
 
 	tabs_->addTab(contactsTabWidget_, tr("&Contacts"));

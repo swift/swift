@@ -72,16 +72,19 @@ void QtContactEditWindow::hide() {
 }
 
 void QtContactEditWindow::handleRemoveContact() {
+	if (confirmContactDeletion(jid_)) {
+		onRemoveContactRequest();
+	}
+}
+
+bool QtContactEditWindow::confirmContactDeletion(const JID& jid) {
 	QMessageBox msgBox;
 	msgBox.setWindowTitle(tr("Confirm contact deletion"));
 	msgBox.setText(tr("Are you sure you want to delete this contact?"));
-	msgBox.setInformativeText(QString(tr("This will remove the contact '%1' from all groups they may be in.")).arg(P2QSTRING(jid_.toString())));
+	msgBox.setInformativeText(QString(tr("This will remove the contact '%1' from all groups they may be in.")).arg(P2QSTRING(jid.toString())));
 	msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
 	msgBox.setDefaultButton(QMessageBox::Yes);
-	int ret = msgBox.exec();
-	if (ret == QMessageBox::Yes) {
-		onRemoveContactRequest();
-	}
+	return msgBox.exec() == QMessageBox::Yes;
 }
 
 void QtContactEditWindow::handleUpdateContact() {

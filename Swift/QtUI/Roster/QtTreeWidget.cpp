@@ -17,8 +17,10 @@
 #include "Swift/Controllers/UIEvents/UIEventStream.h"
 #include "Swift/Controllers/UIEvents/RequestChatUIEvent.h"
 #include "Swift/Controllers/UIEvents/RequestContactEditorUIEvent.h"
+#include "Swift/Controllers/UIEvents/RemoveRosterItemUIEvent.h"
 #include "Swift/Controllers/UIEvents/RenameGroupUIEvent.h"
 #include "QtSwiftUtil.h"
+#include "QtContactEditWindow.h"
 
 namespace Swift {
 
@@ -87,9 +89,15 @@ void QtTreeWidget::contextMenuEvent(QContextMenuEvent* event) {
 	QMenu contextMenu;
 	if (ContactRosterItem* contact = dynamic_cast<ContactRosterItem*>(item)) {
 		QAction* editContact = contextMenu.addAction(tr("Edit"));
+		QAction* removeContact = contextMenu.addAction(tr("Remove"));
 		QAction* result = contextMenu.exec(event->globalPos());
 		if (result == editContact) {
 			eventStream_->send(boost::make_shared<RequestContactEditorUIEvent>(contact->getJID()));
+		}
+		else if (result == removeContact) {
+			if (QtContactEditWindow::confirmContactDeletion(contact->getJID())) {
+				eventStream_->send(boost::make_shared<RemoveRosterItemUIEvent>(contact->getJID()));
+			}
 		}
 	}
 	else if (GroupRosterItem* group = dynamic_cast<GroupRosterItem*>(item)) {

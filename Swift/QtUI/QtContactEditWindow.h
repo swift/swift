@@ -30,6 +30,8 @@ namespace Swift {
 			void show();
 			void hide();
 
+			static bool confirmContactDeletion(const JID& jid);
+
 		private slots:
 			void handleRemoveContact();
 			void handleUpdateContact();
