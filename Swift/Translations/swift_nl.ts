@@ -699,7 +699,7 @@
         <location filename="../QtUI/MUCSearch/QtMUCSearchWindow.ui"/>
         <location filename="../QtUI/MUCSearch/ui_QtMUCSearchWindow.h" line="123"/>
         <source>List rooms</source>
-        <translation>Kamerlijst</translation>
+        <translation>Kamers ophalen</translation>
     </message>
 </context>
 <context>
