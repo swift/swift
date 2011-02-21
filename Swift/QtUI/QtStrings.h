@@ -29,3 +29,5 @@ QT_TRANSLATE_NOOP("QWizard", "Cancel");
 QT_TRANSLATE_NOOP("QWizard", "&Next");
 QT_TRANSLATE_NOOP("QWizard", "&Next >");
 
+QT_TRANSLATE_NOOP("QDialogButtonBox", "&Yes");
+QT_TRANSLATE_NOOP("QDialogButtonBox", "&No");
