@@ -22,7 +22,7 @@
 
 namespace Swift {
 
-QtTreeWidget::QtTreeWidget(UIEventStream* eventStream, QWidget* parent) : QTreeView(parent) {
+QtTreeWidget::QtTreeWidget(UIEventStream* eventStream, QWidget* parent) : QTreeView(parent), editable_(false) {
 	eventStream_ = eventStream;
 	model_ = new RosterModel(this);
 	setModel(model_);
@@ -76,6 +76,9 @@ void QtTreeWidget::handleItemActivated(const QModelIndex& index) {
 }
 
 void QtTreeWidget::contextMenuEvent(QContextMenuEvent* event) {
+	if (!editable_) {
+		return;
+	}
 	QModelIndex index = indexAt(event->pos());
 	if (!index.isValid()) {
 		return;

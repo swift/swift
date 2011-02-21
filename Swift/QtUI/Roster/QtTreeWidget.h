@@ -23,6 +23,8 @@ class QtTreeWidget : public QTreeView{
 		QtTreeWidgetItem* getRoot();
 		void setRosterModel(Roster* roster);
 		Roster* getRoster() {return roster_;}
+		void setEditable(bool b) { editable_ = b; }
+
 	private slots:
 		void handleItemActivated(const QModelIndex&);
 		void handleModelItemExpanded(const QModelIndex&, bool expanded);
@@ -39,6 +41,7 @@ class QtTreeWidget : public QTreeView{
 		RosterDelegate* delegate_;
 		QtTreeWidgetItem* treeRoot_;
 		UIEventStream* eventStream_;
+		bool editable_;
 };
 
 }
