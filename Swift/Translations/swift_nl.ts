@@ -526,6 +526,19 @@
     </message>
 </context>
 <context>
+    <name>QDialogButtonBox</name>
+    <message>
+        <location filename="../QtUI/QtStrings.h" line="32"/>
+        <source>&amp;Yes</source>
+        <translation>&amp;Ja</translation>
+    </message>
+    <message>
+        <location filename="../QtUI/QtStrings.h" line="33"/>
+        <source>&amp;No</source>
+        <translation>&amp;Nee</translation>
+    </message>
+</context>
+<context>
     <name>QObject</name>
     <message>
         <location filename="../QtUI/MUCSearch/MUCSearchEmptyItem.cpp" line="25"/>
@@ -905,17 +918,17 @@ afbeelding</translation>
 <context>
     <name>Swift::QtChatWindow</name>
     <message>
-        <location filename="../QtUI/QtChatWindow.cpp" line="290"/>
+        <location filename="../QtUI/QtChatWindow.cpp" line="291"/>
         <source>This message has not been received by your server yet.</source>
         <translation>Deze boodschap werd nog niet door uw server ontvangen.</translation>
     </message>
     <message>
-        <location filename="../QtUI/QtChatWindow.cpp" line="292"/>
+        <location filename="../QtUI/QtChatWindow.cpp" line="293"/>
         <source>This message may not have been transmitted.</source>
         <translation>Dit bericht kan mogelijk niet verzonden zijn.</translation>
     </message>
     <message>
-        <location filename="../QtUI/QtChatWindow.cpp" line="312"/>
+        <location filename="../QtUI/QtChatWindow.cpp" line="313"/>
         <source>Couldn&apos;t send message: %1</source>
         <translation>Kon boodschap niet verzenden: %1</translation>
     </message>
@@ -956,19 +969,19 @@ afbeelding</translation>
         <translation>Ok</translation>
     </message>
     <message>
-        <location filename="../QtUI/QtContactEditWindow.cpp" line="76"/>
+        <location filename="../QtUI/QtContactEditWindow.cpp" line="82"/>
         <source>Confirm contact deletion</source>
         <translation>Bevestig verwijderen van contact</translation>
     </message>
     <message>
-        <location filename="../QtUI/QtContactEditWindow.cpp" line="77"/>
+        <location filename="../QtUI/QtContactEditWindow.cpp" line="83"/>
         <source>Are you sure you want to delete this contact?</source>
         <translation>Bent u zeker dat u diet contact wil verwijderen?</translation>
     </message>
     <message>
-        <location filename="../QtUI/QtContactEditWindow.cpp" line="78"/>
+        <location filename="../QtUI/QtContactEditWindow.cpp" line="84"/>
         <source>This will remove the contact &apos;%1&apos; from all groups they may be in.</source>
-        <translation>Dit zal het contact &apos;%1&apos; uit alle groepen verwijderen waar deze zich in bevindt.</translation>
+        <translation>Dit zal het contact &apos;%1&apos; uit alle groepen verwijderen.</translation>
     </message>
 </context>
 <context>
@@ -1112,62 +1125,62 @@ afbeelding</translation>
 <context>
     <name>Swift::QtMainWindow</name>
     <message>
-        <location filename="../QtUI/QtMainWindow.cpp" line="63"/>
+        <location filename="../QtUI/QtMainWindow.cpp" line="64"/>
         <source>&amp;Contacts</source>
         <translation>&amp;Contacten</translation>
     </message>
     <message>
-        <location filename="../QtUI/QtMainWindow.cpp" line="70"/>
+        <location filename="../QtUI/QtMainWindow.cpp" line="71"/>
         <source>&amp;Notices</source>
         <translation>&amp;Berichten</translation>
     </message>
     <message>
-        <location filename="../QtUI/QtMainWindow.cpp" line="71"/>
+        <location filename="../QtUI/QtMainWindow.cpp" line="72"/>
         <source>C&amp;hats</source>
         <translation>C&amp;onversaties</translation>
     </message>
     <message>
-        <location filename="../QtUI/QtMainWindow.cpp" line="75"/>
+        <location filename="../QtUI/QtMainWindow.cpp" line="76"/>
         <source>&amp;View</source>
         <translation>&amp;Beeld</translation>
     </message>
     <message>
-        <location filename="../QtUI/QtMainWindow.cpp" line="77"/>
+        <location filename="../QtUI/QtMainWindow.cpp" line="78"/>
         <source>Show offline contacts</source>
         <translation>Toon offline contacten</translation>
     </message>
     <message>
-        <location filename="../QtUI/QtMainWindow.cpp" line="83"/>
+        <location filename="../QtUI/QtMainWindow.cpp" line="84"/>
         <source>&amp;Actions</source>
         <translation>&amp;Acties</translation>
     </message>
     <message>
-        <location filename="../QtUI/QtMainWindow.cpp" line="85"/>
+        <location filename="../QtUI/QtMainWindow.cpp" line="86"/>
         <source>Edit Profile</source>
         <translation>Bewerk profiel</translation>
     </message>
     <message>
-        <location filename="../QtUI/QtMainWindow.cpp" line="88"/>
+        <location filename="../QtUI/QtMainWindow.cpp" line="89"/>
         <source>&amp;Enter Room</source>
         <translation>&amp;Kamer betreden</translation>
     </message>
     <message>
-        <location filename="../QtUI/QtMainWindow.cpp" line="91"/>
+        <location filename="../QtUI/QtMainWindow.cpp" line="92"/>
         <source>&amp;Add Contact</source>
         <translation>Contact &amp;toevoegen</translation>
     </message>
     <message>
-        <location filename="../QtUI/QtMainWindow.cpp" line="94"/>
+        <location filename="../QtUI/QtMainWindow.cpp" line="95"/>
         <source>Start &amp;Chat</source>
         <translation>&amp;Conversatie starten</translation>
     </message>
     <message>
-        <location filename="../QtUI/QtMainWindow.cpp" line="98"/>
+        <location filename="../QtUI/QtMainWindow.cpp" line="99"/>
         <source>&amp;Sign Out</source>
         <translation>&amp;Afmelden</translation>
     </message>
     <message>
-        <location filename="../QtUI/QtMainWindow.cpp" line="130"/>
+        <location filename="../QtUI/QtMainWindow.cpp" line="131"/>
         <source>Notices</source>
         <translation>Berichten</translation>
     </message>
@@ -1257,22 +1270,27 @@ afbeelding</translation>
 <context>
     <name>Swift::QtTreeWidget</name>
     <message>
-        <location filename="../QtUI/Roster/QtTreeWidget.cpp" line="86"/>
+        <location filename="../QtUI/Roster/QtTreeWidget.cpp" line="91"/>
         <source>Edit</source>
         <translation>Bewerk</translation>
     </message>
     <message>
-        <location filename="../QtUI/Roster/QtTreeWidget.cpp" line="93"/>
+        <location filename="../QtUI/Roster/QtTreeWidget.cpp" line="92"/>
+        <source>Remove</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../QtUI/Roster/QtTreeWidget.cpp" line="104"/>
         <source>Rename</source>
         <translation>Naam wijzigen</translation>
     </message>
     <message>
-        <location filename="../QtUI/Roster/QtTreeWidget.cpp" line="97"/>
+        <location filename="../QtUI/Roster/QtTreeWidget.cpp" line="108"/>
         <source>Rename group</source>
         <translation>Groepsnaam wijzigen</translation>
     </message>
     <message>
-        <location filename="../QtUI/Roster/QtTreeWidget.cpp" line="97"/>
+        <location filename="../QtUI/Roster/QtTreeWidget.cpp" line="108"/>
         <source>New name for %1</source>
         <translation>Niewe naam voor %1</translation>
     </message>
