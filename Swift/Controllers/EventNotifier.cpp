@@ -8,6 +8,7 @@
 
 #include <boost/bind.hpp>
 
+#include <Swift/Controllers/Intl.h>
 #include "Swift/Controllers/XMPPEvents/EventController.h"
 #include "SwifTools/Notifier/Notifier.h"
 #include "Swiften/Avatars/AvatarManager.h"
@@ -47,7 +48,7 @@ void EventNotifier::handleEventAdded(boost::shared_ptr<StanzaEvent> event) {
 		notifier->showMessage(Notifier::SystemMessage, title, message, boost::filesystem::path(), boost::function<void()>());
 	}
 	else if(boost::shared_ptr<ErrorEvent> errorEvent = boost::dynamic_pointer_cast<ErrorEvent>(event)) {
-		notifier->showMessage(Notifier::SystemMessage, "Error", errorEvent->getText(), boost::filesystem::path(), boost::function<void()>());
+		notifier->showMessage(Notifier::SystemMessage, QT_TRANSLATE_NOOP("", "Error"), errorEvent->getText(), boost::filesystem::path(), boost::function<void()>());
 	}
 }
 

@@ -510,6 +510,20 @@
         <source>Offline</source>
         <translation>Offline</translation>
     </message>
+    <message>
+        <location filename="../Controllers/EventNotifier.cpp" line="51"/>
+        <source>Error</source>
+        <translation>Fout</translation>
+    </message>
+</context>
+<context>
+    <name>QApplication</name>
+    <message>
+        <location filename="../QtUI/QtStrings.h" line="17"/>
+        <source>QT_LAYOUT_DIRECTION</source>
+        <comment>Translate this to LTR for left-to-right or RTL for right-to-left languages</comment>
+        <translation>LTR</translation>
+    </message>
 </context>
 <context>
     <name>QObject</name>
@@ -517,6 +531,69 @@
         <location filename="../QtUI/MUCSearch/MUCSearchEmptyItem.cpp" line="25"/>
         <source>No rooms found</source>
         <translation>Geen kamers gevonden</translation>
+    </message>
+</context>
+<context>
+    <name>QWizard</name>
+    <message>
+        <location filename="../QtUI/QtStrings.h" line="19"/>
+        <source>&lt; &amp;Back</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../QtUI/QtStrings.h" line="20"/>
+        <source>&amp;Finish</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../QtUI/QtStrings.h" line="21"/>
+        <source>&amp;Help</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../QtUI/QtStrings.h" line="22"/>
+        <source>Go Back</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../QtUI/QtStrings.h" line="23"/>
+        <source>Continue</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../QtUI/QtStrings.h" line="24"/>
+        <source>Commit</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../QtUI/QtStrings.h" line="25"/>
+        <source>Done</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../QtUI/QtStrings.h" line="26"/>
+        <source>Quit</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../QtUI/QtStrings.h" line="27"/>
+        <source>Help</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../QtUI/QtStrings.h" line="28"/>
+        <source>Cancel</source>
+        <translation type="unfinished">Annuleren</translation>
+    </message>
+    <message>
+        <location filename="../QtUI/QtStrings.h" line="29"/>
+        <source>&amp;Next</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../QtUI/QtStrings.h" line="30"/>
+        <source>&amp;Next &gt;</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -583,13 +660,13 @@
         <location filename="../QtUI/ui_QtJoinMUCWindow.h" line="124"/>
         <location filename="../QtUI/ui_QtJoinMUCWindow.h" line="130"/>
         <source>Enter Room</source>
-        <translation>Kamer Betreden</translation>
+        <translation>Kamer betreden</translation>
     </message>
     <message>
         <location filename="../QtUI/QtJoinMUCWindow.ui"/>
         <location filename="../QtUI/ui_QtJoinMUCWindow.h" line="129"/>
         <source>Enter automatically in future</source>
-        <translation>Automatisch Betreden</translation>
+        <translation>Automatisch betreden</translation>
     </message>
 </context>
 <context>
