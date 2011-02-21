@@ -543,7 +543,7 @@
     <message>
         <location filename="../QtUI/QtStrings.h" line="20"/>
         <source>&amp;Finish</source>
-        <translation>&amp;Beëindig</translation>
+        <translation>&amp;Beëindigen</translation>
     </message>
     <message>
         <location filename="../QtUI/QtStrings.h" line="21"/>
