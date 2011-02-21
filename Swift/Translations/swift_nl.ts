@@ -538,62 +538,62 @@
     <message>
         <location filename="../QtUI/QtStrings.h" line="19"/>
         <source>&lt; &amp;Back</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt; &amp;Terug</translation>
     </message>
     <message>
         <location filename="../QtUI/QtStrings.h" line="20"/>
         <source>&amp;Finish</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Beëindig</translation>
     </message>
     <message>
         <location filename="../QtUI/QtStrings.h" line="21"/>
         <source>&amp;Help</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Help</translation>
     </message>
     <message>
         <location filename="../QtUI/QtStrings.h" line="22"/>
         <source>Go Back</source>
-        <translation type="unfinished"></translation>
+        <translation>Terug</translation>
     </message>
     <message>
         <location filename="../QtUI/QtStrings.h" line="23"/>
         <source>Continue</source>
-        <translation type="unfinished"></translation>
+        <translation>Verder</translation>
     </message>
     <message>
         <location filename="../QtUI/QtStrings.h" line="24"/>
         <source>Commit</source>
-        <translation type="unfinished"></translation>
+        <translation>Bevestig</translation>
     </message>
     <message>
         <location filename="../QtUI/QtStrings.h" line="25"/>
         <source>Done</source>
-        <translation type="unfinished"></translation>
+        <translation>Klaar</translation>
     </message>
     <message>
         <location filename="../QtUI/QtStrings.h" line="26"/>
         <source>Quit</source>
-        <translation type="unfinished"></translation>
+        <translation>Afsluiten</translation>
     </message>
     <message>
         <location filename="../QtUI/QtStrings.h" line="27"/>
         <source>Help</source>
-        <translation type="unfinished"></translation>
+        <translation>Help</translation>
     </message>
     <message>
         <location filename="../QtUI/QtStrings.h" line="28"/>
         <source>Cancel</source>
-        <translation type="unfinished">Annuleren</translation>
+        <translation>Annuleren</translation>
     </message>
     <message>
         <location filename="../QtUI/QtStrings.h" line="29"/>
         <source>&amp;Next</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Volgende</translation>
     </message>
     <message>
         <location filename="../QtUI/QtStrings.h" line="30"/>
         <source>&amp;Next &gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Volgende &gt;</translation>
     </message>
 </context>
 <context>
