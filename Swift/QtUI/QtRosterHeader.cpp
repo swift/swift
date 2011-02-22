@@ -12,6 +12,8 @@
 #include <QSizePolicy>
 #include <qdebug.h>
 #include <QMouseEvent>
+#include <QPainter>
+#include <QBitmap>
 
 #include "QtStatusWidget.h"
 #include <Swift/QtUI/QtElidingLabel.h>
@@ -74,7 +76,19 @@ void QtRosterHeader::setAvatar(const QString& path) {
 		//qDebug() << "Setting null avatar";
 		avatar = QIcon(":/icons/avatar.png");
 	} 
-	avatarLabel_->setPixmap(avatar.pixmap(avatarSize_, avatarSize_));
+
+	// Apply a rounded rectangle mask
+	// FIXME: We shouldn't go via a 128x128 pixmap
+	QPixmap avatarPixmap = avatar.pixmap(128, 128);
+	QPixmap mask(avatarPixmap.size());
+	QPainter maskPainter(&mask);
+	maskPainter.fillRect(mask.rect(), Qt::white);
+	maskPainter.setBrush(Qt::black);
+	maskPainter.drawRoundedRect(mask.rect(), 13, 13);
+	avatarPixmap.setMask(mask.createMaskFromColor(Qt::white));
+	avatarPixmap = avatarPixmap.scaled(avatarSize_, avatarSize_, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+
+	avatarLabel_->setPixmap(avatarPixmap);
 }
 
 void QtRosterHeader::setNick(const QString& nick) {

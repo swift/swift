@@ -14,6 +14,7 @@
 #include <QPainterPath>
 #include <QPolygon>
 #include <qdebug.h>
+#include <QBitmap>
 
 #include "Swift/Controllers/Roster/ContactRosterItem.h"
 #include "Swift/Controllers/Roster/GroupRosterItem.h"
@@ -88,7 +89,19 @@ void RosterDelegate::paintContact(QPainter* painter, const QStyleOptionViewItem&
 	QIcon avatar = index.data(AvatarRole).isValid() && !index.data(AvatarRole).value<QIcon>().isNull()
 		? index.data(AvatarRole).value<QIcon>()
 		: QIcon(":/icons/avatar.png");
-	avatar.paint(painter, avatarRegion, Qt::AlignVCenter | Qt::AlignHCenter);
+
+	// Apply a rounded rectangle mask
+	// FIXME: We shouldn't go via a 128x128 pixmap
+	QPixmap avatarPixmap = avatar.pixmap(128, 128);
+	QPixmap mask(avatarPixmap.size());
+	QPainter maskPainter(&mask);
+	maskPainter.fillRect(mask.rect(), Qt::white);
+	maskPainter.setBrush(Qt::black);
+	maskPainter.drawRoundedRect(mask.rect(), 13, 13);
+	avatarPixmap.setMask(mask.createMaskFromColor(Qt::white));
+	avatarPixmap = avatarPixmap.scaled(avatarRegion.height(), avatarRegion.width(), Qt::KeepAspectRatio, Qt::SmoothTransformation);
+
+	painter->drawPixmap(avatarRegion.topLeft() + QPoint(((avatarRegion.width() - avatarPixmap.width()) / 2), (avatarRegion.height() - avatarPixmap.height()) / 2), avatarPixmap);
 
 	//Paint the presence icon over the top of the avatar
 	QIcon presenceIcon = index.data(PresenceIconRole).isValid() && !index.data(PresenceIconRole).value<QIcon>().isNull()
