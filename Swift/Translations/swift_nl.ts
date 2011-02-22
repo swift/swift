@@ -1277,7 +1277,7 @@ afbeelding</translation>
     <message>
         <location filename="../QtUI/Roster/QtTreeWidget.cpp" line="92"/>
         <source>Remove</source>
-        <translation type="unfinished"></translation>
+        <translation>Verwijder</translation>
     </message>
     <message>
         <location filename="../QtUI/Roster/QtTreeWidget.cpp" line="104"/>
