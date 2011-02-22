@@ -78,17 +78,21 @@ void QtRosterHeader::setAvatar(const QString& path) {
 	} 
 
 	// Apply a rounded rectangle mask
-	// FIXME: We shouldn't go via a 128x128 pixmap
+	// FIXME:
+	// - We shouldn't go via a 128x128 pixmap
+	// - Something tells me we can do this with clever composition mode +
+	//   1 drawRectangle on the avatarPixmap, but i haven't figured it out yet.
 	QPixmap avatarPixmap = avatar.pixmap(128, 128);
-	QPixmap mask(avatarPixmap.size());
-	QPainter maskPainter(&mask);
-	maskPainter.fillRect(mask.rect(), Qt::white);
+	QPixmap maskedAvatar(avatarPixmap.size());
+	maskedAvatar.fill(QColor(0, 0, 0, 0));
+	QPainter maskPainter(&maskedAvatar);
 	maskPainter.setBrush(Qt::black);
-	maskPainter.drawRoundedRect(mask.rect(), 13, 13);
-	avatarPixmap.setMask(mask.createMaskFromColor(Qt::white));
-	avatarPixmap = avatarPixmap.scaled(avatarSize_, avatarSize_, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+	maskPainter.drawRoundedRect(maskedAvatar.rect(), 13, 13);
+	maskPainter.setCompositionMode(QPainter::CompositionMode_SourceIn);
+	maskPainter.drawPixmap(0, 0, avatarPixmap);
+	maskPainter.end();
 
-	avatarLabel_->setPixmap(avatarPixmap);
+	avatarLabel_->setPixmap(maskedAvatar.scaled(avatarSize_, avatarSize_, Qt::KeepAspectRatio, Qt::SmoothTransformation));
 }
 
 void QtRosterHeader::setNick(const QString& nick) {
