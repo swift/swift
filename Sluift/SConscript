@@ -1,0 +1,16 @@
+Import("env")
+
+if env["SCONS_STAGE"] == "build" :
+	myenv = env.Clone()
+	myenv.UseFlags(env["LUA_FLAGS"])
+	myenv.UseFlags(env["SWIFTEN_FLAGS"])
+	myenv.UseFlags(env["SWIFTEN_DEP_FLAGS"])
+
+	myenv["SHLIBPREFIX"] = ""
+	if myenv["PLATFORM"] == "win32" :
+		myenv.Append(CPPDEFINES = ["SLUIFT_BUILD_DLL"])
+	elif myenv["PLATFORM"] == "darwin" :
+		myenv["SHLIBSUFFIX"] = ".so"
+	myenv.SharedLibrary("sluift", [
+			"sluift.cpp",
+		])

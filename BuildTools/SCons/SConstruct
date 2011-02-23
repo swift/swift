@@ -273,8 +273,11 @@ def colorize(command, target, color) :
 
 if int(ARGUMENTS.get("V", 0)) == 0:
 	env["CCCOMSTR"] = colorize("CC", "$TARGET", "green")
+	env["SHCCCOMSTR"] = colorize("CC", "$TARGET", "green")
 	env["CXXCOMSTR"] = colorize("CXX", "$TARGET", "green")
+	env["SHCXXCOMSTR"] = colorize("CXX", "$TARGET", "green")
 	env["LINKCOMSTR"] = colorize("LINK", "$TARGET", "red")
+	env["SHLINKCOMSTR"] = colorize("LINK", "$TARGET", "red")
 	env["ARCOMSTR"] = colorize("AR", "$TARGET", "red")
 	env["RANLIBCOMSTR"] = colorize("RANLIB", "$TARGET", "red")
 	env["QT4_RCCCOMSTR"] = colorize("RCC", "$TARGET", "blue")
@@ -484,6 +487,9 @@ if conf.CheckCHeader("idna.h") and conf.CheckLib(env["libidn_libname"]) :
 else :
 	env["LIBIDN_BUNDLED"] = 1
 conf.Finish()
+
+# Lua
+env["LUA_BUNDLED"] = 1
 
 # Avahi
 avahi_conf_env = conf_env.Clone()

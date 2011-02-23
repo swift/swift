@@ -7,8 +7,10 @@
 *.gcno
 *.app
 *.o
+*.os
 *.obj
 *.a
+*.so
 *.pdb
 *.swp
 *.nib
