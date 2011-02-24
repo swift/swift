@@ -93,8 +93,8 @@ XMPPRoster* Client::getRoster() const {
 	return roster;
 }
 
-void Client::setSoftwareVersion(const std::string& name, const std::string& version) {
-	softwareVersionResponder->setVersion(name, version);
+void Client::setSoftwareVersion(const std::string& name, const std::string& version, const std::string& os) {
+	softwareVersionResponder->setVersion(name, version, os);
 }
 
 void Client::requestRoster() {

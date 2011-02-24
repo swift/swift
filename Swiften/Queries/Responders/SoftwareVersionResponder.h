@@ -16,7 +16,7 @@ namespace Swift {
 		public:
 			SoftwareVersionResponder(IQRouter* router);
 
-			void setVersion(const std::string& client, const std::string& version);
+			void setVersion(const std::string& client, const std::string& version, const std::string& os = "");
 
 		private:
 			virtual bool handleGetRequest(const JID& from, const JID& to, const std::string& id, boost::shared_ptr<SoftwareVersion> payload);
@@ -24,5 +24,6 @@ namespace Swift {
 		private:
 			std::string client;
 			std::string version;
+			std::string os;
 	};
 }

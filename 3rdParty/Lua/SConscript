@@ -8,12 +8,14 @@ if env.get("LUA_BUNDLED", False) :
 
 	if env["SCONS_STAGE"] == "flags" :
 		cppdefines = []
+		if not env["optimize"] :
+			cppdefines.append("LUA_USE_APICHECK")
 		if env["PLATFORM"] == "win32" :
 			pass
 		elif env["PLATFORM"] == "darwin" :
-			cppdefines = ["LUA_USE_POSIX", "LUA_USE_DLOPEN"]
+			cppdefines += ["LUA_USE_POSIX", "LUA_USE_DLOPEN"]
 		else :
-			cppdefines = ["LUA_USE_POSIX", "LUA_USE_DLOPEN"]
+			cppdefines += ["LUA_USE_POSIX", "LUA_USE_DLOPEN"]
 
 		env["LUA_FLAGS"] = {
 				"CPPDEFINES": cppdefines,

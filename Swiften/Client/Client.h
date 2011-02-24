@@ -56,7 +56,7 @@ namespace Swift {
 			 *
 			 * This will be used to respond to version queries from other entities.
 			 */
-			void setSoftwareVersion(const std::string& name, const std::string& version);
+			void setSoftwareVersion(const std::string& name, const std::string& version, const std::string& os);
 
 			/** 
 			 * Returns a representation of the roster.
