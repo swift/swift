@@ -35,6 +35,7 @@ if env.get("LUA_BUNDLED", False) :
 		myenv.Replace(CCFLAGS = [flag for flag in env["CCFLAGS"] if flag not in ["-W", "-Wall"]])
 
 		myenv.MergeFlags(myenv["LUA_FLAGS"])
+		myenv.MergeFlags(myenv["PLATFORM_FLAGS"])
 		myenv.StaticLibrary("Swiften_Lua", [
 			"src/lapi.c",
 			"src/lcode.c",
