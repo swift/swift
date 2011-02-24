@@ -327,6 +327,10 @@ else :
 if conf.CheckLib("resolv") :
 	env["PLATFORM_FLAGS"]["LIBS"] = env["PLATFORM_FLAGS"].get("LIBS", []) + ["resolv"]
 
+if conf.CheckLib("dl") :
+	env["PLATFORM_FLAGS"]["LIBS"] = env["PLATFORM_FLAGS"].get("LIBS", []) + ["dl"]
+
+
 if conf.CheckLib("c") :
 	env["PLATFORM_FLAGS"]["LIBS"] = env["PLATFORM_FLAGS"].get("LIBS", []) + ["c"]
 
