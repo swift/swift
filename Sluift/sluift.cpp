@@ -15,7 +15,7 @@ extern "C" {
 #include <Swiften/Client/Client.h>
 #include <Swiften/Client/ClientXMLTracer.h>
 #include <Swiften/JID/JID.h>
-#include <Swiften/EventLoop/DummyEventLoop.h>
+#include <Swiften/EventLoop/SimpleEventLoop.h>
 #include <Swiften/Network/BoostNetworkFactories.h>
 #include <Swiften/Base/sleep.h>
 #include <Swiften/Elements/SoftwareVersion.h>
@@ -26,18 +26,34 @@ using namespace Swift;
 #define SLUIFT_CLIENT "SluiftClient*"
 
 /*******************************************************************************
+ * Forward declarations
+ ******************************************************************************/
+
+static int debugRef = 0;
+
+static bool debug(lua_State* L) {
+	lua_rawgeti(L, LUA_REGISTRYINDEX, debugRef);
+	lua_getfield(L, -1, "debug");
+	bool b = lua_toboolean(L, -1);
+	lua_pop(L, 2);
+	return b;
+}
+
+/*******************************************************************************
  * Helper classes
  ******************************************************************************/
 
-DummyEventLoop eventLoop;
+SimpleEventLoop eventLoop;
 BoostNetworkFactories networkFactories(&eventLoop);
 
 class SluiftClient {
 	public:
-		SluiftClient(const JID& jid, const std::string& password) {
+		SluiftClient(const JID& jid, const std::string& password, bool debug = false) : tracer(NULL) {
 			client = new Client(jid, password, &networkFactories);
 			client->setAlwaysTrustCertificates();
-			tracer = new ClientXMLTracer(client);
+			if (debug) {
+				tracer = new ClientXMLTracer(client);
+			}
 		}
 
 		~SluiftClient() {
@@ -84,8 +100,7 @@ class SluiftClient {
 
 	private:
 		void processEvents() {
-			Swift::sleep(100);
-			eventLoop.processEvents();
+			eventLoop.runUntilEvents();
 		}
 
 		void handleSoftwareVersionResponse(boost::shared_ptr<SoftwareVersion> version, ErrorPayload::ref error) {
@@ -180,7 +195,7 @@ static int sluift_connect(lua_State *L) {
 	luaL_getmetatable(L, SLUIFT_CLIENT);
 	lua_setmetatable(L, -2);
 
-	*client = new SluiftClient(jid, password);
+	*client = new SluiftClient(jid, password, debug(L));
 	(*client)->connect();
 	if (!(*client)->isConnected()) {
 		lua_pushnil(L);
@@ -201,6 +216,12 @@ static const luaL_reg sluift_functions[] = {
 SLUIFT_API int luaopen_sluift(lua_State *L) {
 	// Register functions
 	luaL_register(L, "sluift", sluift_functions);
+	lua_pushboolean(L, false);
+	lua_setfield(L, -2, "debug");
+	
+	lua_pushvalue(L, -1);
+	debugRef = luaL_ref(L, LUA_REGISTRYINDEX);
+
 
 	// Register the client metatable
 	luaL_newmetatable(L, SLUIFT_CLIENT);

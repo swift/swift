@@ -25,7 +25,7 @@ SimpleEventLoop::~SimpleEventLoop() {
 	}
 }
 
-void SimpleEventLoop::run() {
+void SimpleEventLoop::doRun(bool breakAfterEvents) {
 	while (isRunning_) {
 		std::vector<Event> events;
 		{
@@ -37,6 +37,9 @@ void SimpleEventLoop::run() {
 		}
 		foreach(const Event& event, events) {
 			handleEvent(event);
+		}
+		if (breakAfterEvents) {
+			return;
 		}
 	}
 }

@@ -19,12 +19,20 @@ namespace Swift {
 			SimpleEventLoop();
 			~SimpleEventLoop();
 
-			void run();
+			void run() {
+				doRun(false);
+			}
+
+			void runUntilEvents() {
+				doRun(true);
+			}
+
 			void stop();
 
 			virtual void post(const Event& event);
 
 		private:
+			void doRun(bool breakAfterEvents);
 			void doStop();
 
 		private:
