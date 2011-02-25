@@ -1,5 +1,3 @@
-import platform
-
 Import("env")
 
 if env["SCONS_STAGE"] == "build" :
@@ -14,9 +12,6 @@ if env["SCONS_STAGE"] == "build" :
 	elif myenv["PLATFORM"] == "darwin" :
 		myenv["SHLIBSUFFIX"] = ".so"
 
-	# Temporarily not building plugin on amd64, because it
-	# requires the whole build to be done with -fPIC
-	if myenv["PLATFORM"] != "posix" or platform.machine() != "x86_64" :
-		myenv.SharedLibrary("sluift", [
-				"sluift.cpp",
-			])
+	myenv.SharedLibrary("sluift", [
+			"sluift.cpp",
+		])

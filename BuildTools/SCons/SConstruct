@@ -1,4 +1,4 @@
-import sys, os, re
+import sys, os, re, platform
 sys.path.append(Dir("BuildTools/SCons").abspath)
 import SCons.SConf
 
@@ -161,6 +161,10 @@ if env.get("mac105", 0) :
 			"-isysroot", "/Developer/SDKs/MacOSX10.5.sdk", 
 			"-arch", "i386"])
 
+# If we build shared libs on AMD64, we need -fPIC.
+# This should have no performance impact om AMD64
+if env["PLATFORM"] == "posix" and platform.machine() == "x86_64" :
+	env.Append(CCFLAGS = ["-fPIC"])
 
 # Warnings
 if env["PLATFORM"] == "win32" :
