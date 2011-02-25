@@ -11,6 +11,8 @@ if env["SCONS_STAGE"] == "build" :
 		myenv.Append(CPPDEFINES = ["SLUIFT_BUILD_DLL"])
 	elif myenv["PLATFORM"] == "darwin" :
 		myenv["SHLIBSUFFIX"] = ".so"
+	elif myenv["PLATFORM"] == "posix" :
+		myenv.Append(CCFLAGS = ["-fPIC"])
 	myenv.SharedLibrary("sluift", [
 			"sluift.cpp",
 		])
