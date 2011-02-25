@@ -16,7 +16,7 @@ if env["SCONS_STAGE"] == "build" :
 
 	# Temporarily not building plugin on amd64, because it
 	# requires the whole build to be done with -fPIC
-	if myenv["PLATFORM"] != "posix" or platform.machine() != "amd64" :
+	if myenv["PLATFORM"] != "posix" or platform.machine() != "x86_64" :
 		myenv.SharedLibrary("sluift", [
 				"sluift.cpp",
 			])
