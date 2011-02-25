@@ -6,11 +6,13 @@ client2_jid = os.getenv("SWIFT_CLIENTTEST_JID") .. "/Client2"
 password = os.getenv("SWIFT_CLIENTTEST_PASS")
 
 print "Connecting client 1"
-client1 = sluift.connect(client1_jid, password)
+client1 = sluift.new_client(client1_jid, password)
+client1:connect()
 client1:send_presence("I'm here")
 
 print "Connecting client 2"
-client2 = sluift.connect(client2_jid, password)
+client2 = sluift.new_client(client2_jid, password)
+client2:connect()
 client2:send_presence("I'm here")
 
 print "Checking version of client 2 from client 1"
@@ -27,6 +29,10 @@ received_message = client2:for_event(function(event)
 		end
 	end)
 assert(received_message == "Hello")
+
+print "Retrieving the roster"
+roster = client1:get_roster()
+table.foreach(roster, print)
 
 client1:disconnect()
 client2:disconnect()

@@ -27,7 +27,7 @@ namespace Swift {
 			void requestRoster();
 
 		private:
-			void handleRosterReceived(boost::shared_ptr<RosterPayload> rosterPayload);
+			void handleRosterReceived(boost::shared_ptr<RosterPayload> rosterPayload, bool initial);
 
 		private:
 			IQRouter* iqRouter_;

@@ -86,5 +86,11 @@ namespace Swift {
 			 * onJIDAdded and onJIDRemoved events.
 			 */
 			boost::signal<void ()> onRosterCleared;
+
+			/**
+			 * Emitted after the last contact of the initial roster request response
+			 * was added.
+			 */
+			boost::signal<void ()> onInitialRosterPopulated;
 	};
 }

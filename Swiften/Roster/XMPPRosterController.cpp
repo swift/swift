@@ -20,7 +20,7 @@ namespace Swift {
  * The controller does not gain ownership of these parameters.
  */
 XMPPRosterController::XMPPRosterController(IQRouter* iqRouter, XMPPRosterImpl* xmppRoster) : iqRouter_(iqRouter), rosterPushResponder_(iqRouter), xmppRoster_(xmppRoster) {
-	rosterPushResponder_.onRosterReceived.connect(boost::bind(&XMPPRosterController::handleRosterReceived, this, _1));
+	rosterPushResponder_.onRosterReceived.connect(boost::bind(&XMPPRosterController::handleRosterReceived, this, _1, false));
 	rosterPushResponder_.start();
 }
 
@@ -31,11 +31,11 @@ XMPPRosterController::~XMPPRosterController() {
 void XMPPRosterController::requestRoster() {
 	xmppRoster_->clear();
 	GetRosterRequest::ref rosterRequest = GetRosterRequest::create(iqRouter_);
-	rosterRequest->onResponse.connect(boost::bind(&XMPPRosterController::handleRosterReceived, this, _1));
+	rosterRequest->onResponse.connect(boost::bind(&XMPPRosterController::handleRosterReceived, this, _1, true));
 	rosterRequest->send();
 }
 
-void XMPPRosterController::handleRosterReceived(boost::shared_ptr<RosterPayload> rosterPayload) {
+void XMPPRosterController::handleRosterReceived(boost::shared_ptr<RosterPayload> rosterPayload, bool initial) {
 	if (rosterPayload) {
 		foreach(const RosterItemPayload& item, rosterPayload->getItems()) {
 			//Don't worry about the updated case, the XMPPRoster sorts that out.
@@ -45,6 +45,9 @@ void XMPPRosterController::handleRosterReceived(boost::shared_ptr<RosterPayload>
 				xmppRoster_->addContact(item.getJID(), item.getName(), item.getGroups(), item.getSubscription());
 			}
 		}
+	}
+	if (initial) {
+		xmppRoster_->onInitialRosterPopulated();
 	}
 }
 
