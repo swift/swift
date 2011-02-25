@@ -68,6 +68,9 @@ if env.get("LUA_BUNDLED", False) :
 
 		lua_env = myenv.Clone()
 		lua_env.MergeFlags(lua_env["LUA_FLAGS"])
+		if lua_env.get("HAVE_READLINE", False) :
+			lua_env.Append(CPPDEFINES = ["LUA_USE_READLINE"])
+			lua_env.MergeFlags(lua_env["READLINE_FLAGS"])
 		lua_env.Program("lua", [
 				"src/linit.c",
 				"src/lua.c",

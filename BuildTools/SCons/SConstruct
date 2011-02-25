@@ -499,6 +499,13 @@ conf.Finish()
 # Lua
 env["LUA_BUNDLED"] = 1
 
+# Readline
+conf = Configure(conf_env)
+if conf.CheckCHeader(["stdio.h", "readline/readline.h"]) and conf.CheckLib("readline") :
+	env["HAVE_READLINE"] = True
+	env["READLINE_FLAGS"] = { "LIBS": ["readline"] }
+conf.Finish()
+
 # Avahi
 avahi_conf_env = conf_env.Clone()
 avahi_flags = {}

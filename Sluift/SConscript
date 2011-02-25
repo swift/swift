@@ -1,4 +1,4 @@
-Import("env")
+Import(["env", "conf_env"])
 
 if env["SCONS_STAGE"] == "build" :
 	myenv = env.Clone()
@@ -14,4 +14,15 @@ if env["SCONS_STAGE"] == "build" :
 
 	myenv.SharedLibrary("sluift", [
 			"sluift.cpp",
+		])
+
+	sluift_bin_env = myenv.Clone()
+	sluift_bin_env.Install(".", "#/3rdParty/Lua/src/lua.c")
+	if sluift_bin_env.get("HAVE_READLINE", False) :
+		sluift_bin_env.Append(CPPDEFINES = ["LUA_USE_READLINE"])
+		sluift_bin_env.MergeFlags(sluift_bin_env["READLINE_FLAGS"])
+	sluift_bin_env.Program("sluift", [
+			"sluift.cpp",
+			"lua.c",
+			"linit.c",
 		])
