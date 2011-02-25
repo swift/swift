@@ -1,6 +1,6 @@
 require "sluift"
 
---sluift.debug = true
+-- sluift.debug = true
 client1_jid = os.getenv("SWIFT_CLIENTTEST_JID") .. "/Client1"
 client2_jid = os.getenv("SWIFT_CLIENTTEST_JID") .. "/Client2"
 password = os.getenv("SWIFT_CLIENTTEST_PASS")

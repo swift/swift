@@ -30,15 +30,7 @@ using namespace Swift;
  * Forward declarations
  ******************************************************************************/
 
-static int debugRef = 0;
-
-static bool debug(lua_State* L) {
-	lua_rawgeti(L, LUA_REGISTRYINDEX, debugRef);
-	lua_getfield(L, -1, "debug");
-	bool b = lua_toboolean(L, -1);
-	lua_pop(L, 2);
-	return b;
-}
+bool debug = false;
 
 /*******************************************************************************
  * Helper classes
@@ -49,7 +41,7 @@ BoostNetworkFactories networkFactories(&eventLoop);
 
 class SluiftClient {
 	public:
-		SluiftClient(const JID& jid, const std::string& password, bool debug = false) : tracer(NULL) {
+		SluiftClient(const JID& jid, const std::string& password) : tracer(NULL) {
 			client = new Client(jid, password, &networkFactories);
 			client->setAlwaysTrustCertificates();
 			client->onMessageReceived.connect(boost::bind(&SluiftClient::handleIncomingEvent, this, _1));
@@ -309,12 +301,34 @@ static int sluift_connect(lua_State *L) {
 	luaL_getmetatable(L, SLUIFT_CLIENT);
 	lua_setmetatable(L, -2);
 
-	*client = new SluiftClient(jid, password, debug(L));
+	*client = new SluiftClient(jid, password);
 	(*client)->connect();
 	if (!(*client)->isConnected()) {
 		lua_pushnil(L);
 	}
 	return 1;
+}
+
+static int sluift_index(lua_State *L) {
+	luaL_checkstring(L, 2);
+	if (std::string(lua_tostring(L, 2)) == "debug") {
+		lua_pushboolean(L, debug);
+		return 1;
+	}
+	else {
+		return luaL_error(L, "Invalid index");
+	}
+}
+
+static int sluift_newindex(lua_State *L) {
+	luaL_checkstring(L, 2);
+	if (std::string(lua_tostring(L, 2)) == "debug") {
+		debug = lua_toboolean(L, 3);
+		return 0;
+	}
+	else {
+		return luaL_error(L, "Invalid index");
+	}
 }
 
 static const luaL_reg sluift_functions[] = {
@@ -330,12 +344,12 @@ static const luaL_reg sluift_functions[] = {
 SLUIFT_API int luaopen_sluift(lua_State *L) {
 	// Register functions
 	luaL_register(L, "sluift", sluift_functions);
-	lua_pushboolean(L, false);
-	lua_setfield(L, -2, "debug");
-	
-	lua_pushvalue(L, -1);
-	debugRef = luaL_ref(L, LUA_REGISTRYINDEX);
-
+	lua_createtable(L, 0, 0);
+	lua_pushcclosure(L, sluift_index, 0);
+	lua_setfield(L, -2, "__index");
+	lua_pushcclosure(L, sluift_newindex, 0);
+	lua_setfield(L, -2, "__newindex");
+	lua_setmetatable(L, -2);
 
 	// Register the client metatable
 	luaL_newmetatable(L, SLUIFT_CLIENT);
