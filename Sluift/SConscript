@@ -12,8 +12,18 @@ if env["SCONS_STAGE"] == "build" :
 	elif myenv["PLATFORM"] == "darwin" :
 		myenv["SHLIBSUFFIX"] = ".so"
 
+	def patchLua(env, target, source) :
+		f = open(source[0].abspath, "r")
+		contents = f.read()
+		f.close()
+		contents = contents.replace("LUA_RELEASE", "\"Sluift XMPP Console\"")
+		contents = contents.replace("LUA_COPYRIGHT", "")
+		f = open(target[0].abspath, "w")
+		f.write(contents)
+		f.close()
+
 	sluift_bin_env = myenv.Clone()
-	sluift_bin_env.Install(".", "#/3rdParty/Lua/src/lua.c")
+	sluift_bin_env.Command("lua.c", ["#/3rdParty/Lua/src/lua.c"], env.Action(patchLua, cmdstr = "$GENCOMSTR"))
 	if sluift_bin_env.get("HAVE_READLINE", False) :
 		sluift_bin_env.Append(CPPDEFINES = ["LUA_USE_READLINE"])
 		sluift_bin_env.MergeFlags(sluift_bin_env["READLINE_FLAGS"])
