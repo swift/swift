@@ -17,73 +17,23 @@
 #include "Swift/QtUI/UserSearch/UserSearchModel.h"
 #include "Swift/QtUI/UserSearch/UserSearchDelegate.h"
 #include "Swift/QtUI/QtSwiftUtil.h"
+#include "QtUserSearchFirstPage.h"
+#include "QtUserSearchFieldsPage.h"
+#include "QtUserSearchResultsPage.h"
 
 namespace Swift {
 
-QtUserSearchFirstPage::QtUserSearchFirstPage(UserSearchWindow::Type type, const QString& title) {
+QtUserSearchWindow::QtUserSearchWindow(UIEventStream* eventStream, UserSearchWindow::Type type) : eventStream_(eventStream), type_(type) {
 	setupUi(this);
-	setTitle(title);
-	setSubTitle(QString(tr("%1. If you know their address you can enter it directly, or you can search for them.")).arg(type == UserSearchWindow::AddContact ? tr("Add another user to your contact list") : tr("Chat to another user")));
-	connect(jid_, SIGNAL(textChanged(const QString&)), this, SLOT(emitCompletenessCheck()));
-	connect(service_->lineEdit(), SIGNAL(textChanged(const QString&)), this, SLOT(emitCompletenessCheck()));
-}
-
-bool QtUserSearchFirstPage::isComplete() const {
-	bool complete = false;
-	if (byJID_->isChecked()) {
-		complete = JID(Q2PSTRING(jid_->text())).isValid();
-	} else if (byLocalSearch_->isChecked()) {
-		complete = true;
-	} else if (byRemoteSearch_->isChecked()) {
-		complete = JID(Q2PSTRING(service_->currentText())).isValid();
-	}
-	return complete;
-}
-
-void QtUserSearchFirstPage::emitCompletenessCheck() {
-	emit completeChanged();
-}
-
-
-QtUserSearchFieldsPage::QtUserSearchFieldsPage() {
-	setupUi(this);
-}
-
-bool QtUserSearchFieldsPage::isComplete() const {
-	return nickInput_->isEnabled() || firstInput_->isEnabled() || lastInput_->isEnabled() || emailInput_->isEnabled();
-}
-
-void QtUserSearchFieldsPage::emitCompletenessCheck() {
-	emit completeChanged();
-}
-
-QtUserSearchResultsPage::QtUserSearchResultsPage() {
-	setupUi(this);
-	connect(results_, SIGNAL(activated(const QModelIndex&)), this, SLOT(emitCompletenessCheck()));
-	connect(results_, SIGNAL(activated(const QModelIndex&)), this, SIGNAL(onUserTriggersFinish()));
-	connect(results_, SIGNAL(clicked(const QModelIndex&)), this, SLOT(emitCompletenessCheck()));
-	connect(results_, SIGNAL(entered(const QModelIndex&)), this, SLOT(emitCompletenessCheck()));
-	results_->setExpandsOnDoubleClick(false);
-}
-
-bool QtUserSearchResultsPage::isComplete() const {
-	return results_->currentIndex().isValid();
-}
-
-void QtUserSearchResultsPage::emitCompletenessCheck() {
-	emit completeChanged();
-}
-
-QtUserSearchWindow::QtUserSearchWindow(UIEventStream* eventStream, UserSearchWindow::Type type) : type_(type) {
 #ifndef Q_WS_MAC
 	setWindowIcon(QIcon(":/logo-icon-16.png"));
 #endif
-	eventStream_ = eventStream;
-	setupUi(this);
-	model_ = new UserSearchModel();
-	delegate_ = new UserSearchDelegate();
 	QString title(type == UserSearchWindow::AddContact ? tr("Add Contact") : tr("Chat to User"));
 	setWindowTitle(title);
+
+	model_ = new UserSearchModel();
+	delegate_ = new UserSearchDelegate();
+
 	firstPage_ = new QtUserSearchFirstPage(type, title);
 	connect(firstPage_->byJID_, SIGNAL(toggled(bool)), this, SLOT(handleFirstPageRadioChange()));
 	connect(firstPage_->byLocalSearch_, SIGNAL(toggled(bool)), this, SLOT(handleFirstPageRadioChange()));
@@ -92,22 +42,25 @@ QtUserSearchWindow::QtUserSearchWindow(UIEventStream* eventStream, UserSearchWin
 		firstPage_->jid_->setPlaceholderText("alice@wonderland.lit");
 #endif
 	firstPage_->service_->setEnabled(false);
+	setPage(1, firstPage_);
+
 	fieldsPage_ = new QtUserSearchFieldsPage();
 	fieldsPage_->fetchingThrobber_->setMovie(new QMovie(":/icons/throbber.gif", QByteArray(), this));
 	fieldsPage_->fetchingThrobber_->movie()->stop();
+	setPage(2, fieldsPage_);
+
 	resultsPage_ = new QtUserSearchResultsPage();
 	resultsPage_->results_->setModel(model_);
 	resultsPage_->results_->setItemDelegate(delegate_);
 	resultsPage_->results_->setHeaderHidden(true);
-	setPage(1, firstPage_);
-	setPage(2, fieldsPage_);
-	setPage(3, resultsPage_);
 #ifdef SWIFT_PLATFORM_MACOSX
 	resultsPage_->results_->setAlternatingRowColors(true);
 #endif
+	setPage(3, resultsPage_);
+	connect(resultsPage_, SIGNAL(onUserTriggersFinish()), this, SLOT(accept()));
+
 	connect(this, SIGNAL(currentIdChanged(int)), this, SLOT(handleCurrentChanged(int)));
 	connect(this, SIGNAL(accepted()), this, SLOT(handleAccepted()));
-	connect(resultsPage_, SIGNAL(onUserTriggersFinish()), this, SLOT(accept()));
 	clear();
 }
 
@@ -119,16 +72,17 @@ void QtUserSearchWindow::handleCurrentChanged(int page) {
 	if (page == 2 && lastPage_ == 1) {
 		setError("");
 		/* next won't be called if JID is selected */
-		JID server = searchServer();
+		JID server = getServerToSearch();
 		clearForm();
 		onFormRequested(server);
-	} else if (page == 3 && lastPage_ == 2) {
+	}
+	else if (page == 3 && lastPage_ == 2) {
 		handleSearch();
 	}
 	lastPage_ = page;
 }
 
-JID QtUserSearchWindow::searchServer() {
+JID QtUserSearchWindow::getServerToSearch() {
 	return firstPage_->byRemoteSearch_->isChecked() ? JID(Q2PSTRING(firstPage_->service_->currentText())) : myServer_;
 }
 
@@ -139,14 +93,16 @@ void QtUserSearchWindow::handleAccepted() {
 		if (userItem) { /* Remember to leave this if we change to dynamic cast */
 			jid = userItem->getJID();
 		}
-	} else {
+	}
+	else {
 		jid = JID(Q2PSTRING(firstPage_->jid_->text()));
 	}
 	if (type_ == AddContact) {
 		/* FIXME: allow specifying a nick */
 		boost::shared_ptr<UIEvent> event(new AddContactUIEvent(jid, jid.toString()));
 		eventStream_->send(event);
-	} else {
+	}
+	else {
 		boost::shared_ptr<UIEvent> event(new RequestChatUIEvent(jid));
 		eventStream_->send(event);
 	}
@@ -156,7 +112,8 @@ int QtUserSearchWindow::nextId() const {
 	switch (currentId()) {
 		case 1: return firstPage_->byJID_->isChecked() ? -1 : 2;
 		case 2: return 3;
-		case 3: return -1;
+		case 3: return 4;
+		case 4: return -1;
 		default: return -1;
 	}
 }
@@ -167,13 +124,15 @@ void QtUserSearchWindow::handleFirstPageRadioChange() {
 		firstPage_->jid_->setEnabled(true);
 		firstPage_->service_->setEnabled(false);
 		restart();
-	} else if (firstPage_->byRemoteSearch_->isChecked()) {
+	}
+	else if (firstPage_->byRemoteSearch_->isChecked()) {
 		firstPage_->service_->setEditText("");
 		firstPage_->jid_->setEnabled(false);
 		firstPage_->service_->setEnabled(true);
 		//firstPage_->jid_->setText("");
 		restart();
-	} else {
+	}
+	else {
 		firstPage_->jid_->setEnabled(false);
 		firstPage_->service_->setEnabled(false);
 		restart();
@@ -194,37 +153,14 @@ void QtUserSearchWindow::handleSearch() {
 	if (fieldsPage_->emailInput_->isEnabled()) {
 		search->setEMail(Q2PSTRING(fieldsPage_->emailInput_->text()));
 	}
-	onSearchRequested(search, searchServer());
+	onSearchRequested(search, getServerToSearch());
 }
 
 void QtUserSearchWindow::show() {
 	clear();
 	QWidget::show();
 }
-//
-//void QtUserSearchWindow::enableCorrectButtons() {
-//	bool enable = !jid_->text().isEmpty() && (startChat_->isChecked() || (addToRoster_->isChecked() && !nickName_->text().isEmpty()));
-//	buttonBox_->button(QDialogButtonBox::Ok)->setEnabled(enable);
-//}
-//
-//void QtUserSearchWindow::handleOkClicked() {
-//	JID contact = JID(Q2PSTRING(jid_->text()));
-//	std::string nick = Q2PSTRING(nickName_->text());
-//	if (addToRoster_->isChecked()) {
-//		boost::shared_ptr<UIEvent> event(new AddContactUIEvent(contact, nick));
-//		eventStream_->send(event);
-//	}
-//	if (startChat_->isChecked()) {
-//		boost::shared_ptr<UIEvent> event(new RequestChatUIEvent(contact));
-//		eventStream_->send(event);
-//	}
-//	hide();
-//}
-//
-//void QtUserSearchWindow::handleCancelClicked() {
-//	hide();
-//}
-//
+
 void QtUserSearchWindow::addSavedServices(const std::vector<JID>& services) {
 	firstPage_->service_->clear();
 	foreach (JID jid, services) {
@@ -246,28 +182,7 @@ void QtUserSearchWindow::setSearchFields(boost::shared_ptr<SearchPayload> fields
 	}
 	fieldsPage_->emitCompletenessCheck();
 }
-//
-//void QtUserSearchWindow::handleActivated(const QModelIndex& index) {
-//	if (!index.isValid()) {
-//		return;
-//	}
-//	UserSearchResult* userItem = static_cast<UserSearchResult*>(index.internalPointer());
-//	if (userItem) { /* static cast, so always will be, but if we change to be like mucsearch, remember the check.*/
-//		handleSelected(index);
-//		//handleJoin(); /* Don't do anything automatically on selection.*/
-//	}
-//}
-//
-//void QtUserSearchWindow::handleSelected(const QModelIndex& current) {
-//	if (!current.isValid()) {
-//		return;
-//	}
-//	UserSearchResult* userItem = static_cast<UserSearchResult*>(current.internalPointer());
-//	if (userItem) { /* Remember to leave this if we change to dynamic cast */
-//		jid_->setText(P2QSTRING(userItem->getJID().toString()));
-//	}
-//}
-//
+
 void QtUserSearchWindow::setResults(const std::vector<UserSearchResult>& results) {
 	model_->setResults(results);
 }
@@ -308,7 +223,8 @@ void QtUserSearchWindow::clear() {
 void QtUserSearchWindow::setError(const QString& error) {
 	if (error.isEmpty()) {
 		firstPage_->errorLabel_->hide();
-	} else {
+	}
+	else {
 		firstPage_->errorLabel_->setText(QString("<font color='red'>%1</font>").arg(error));
 		firstPage_->errorLabel_->show();
 		restart();
