@@ -21,7 +21,7 @@ if env["SCONS_STAGE"] == "build" :
 	if sluift_bin_env.get("HAVE_READLINE", False) :
 		sluift_bin_env.Append(CPPDEFINES = ["LUA_USE_READLINE"])
 		sluift_bin_env.MergeFlags(sluift_bin_env["READLINE_FLAGS"])
-	sluift_bin_env.Program("sluift", [
+	env["SLUIFT"] = sluift_bin_env.Program("sluift", [
 			"sluift.cpp",
 			"lua.c",
 			"linit.c",

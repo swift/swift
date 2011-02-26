@@ -7,4 +7,5 @@ SConscript(dirs = [
 #		"DNSSDTest",
 		"StorageTest",
 		"TLSTest",
+		"ScriptedTests",
 	])

@@ -1,0 +1,7 @@
+Import("env")
+
+if env["TEST"] :
+	env.ScriptTests([
+			"SendMessage.lua",
+			"MultipleClients.lua",
+		], "Swiften.QA.ScriptedTests", "system")

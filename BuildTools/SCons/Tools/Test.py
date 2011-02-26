@@ -16,7 +16,12 @@ def generate(env) :
       env.Command("**dummy**", target, 
           SCons.Action.Action(ignore_prefix + env.get("TEST_RUNNER", "") + cmd + " " + params, cmdstr = "$TESTCOMSTR"))
 
+  def registerScriptTests(env, scripts, name, type) :
+    if env["TEST_TYPE"] == "all" or env["TEST_TYPE"] == type :
+      pass
+
   env.AddMethod(registerTest, "Test")
+  env.AddMethod(registerScriptTests, "ScriptTests")
 
 def exists(env) :
   return True
