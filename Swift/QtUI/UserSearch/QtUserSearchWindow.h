@@ -7,6 +7,7 @@
 #pragma once
 
 #include <QWizard>
+#include <set>
 
 #include <Swift/QtUI/UserSearch/ui_QtUserSearchWizard.h>
 #include <Swift/Controllers/UIInterfaces/UserSearchWindow.h>
@@ -19,11 +20,12 @@ namespace Swift {
 	class QtUserSearchFirstPage;
 	class QtUserSearchFieldsPage;
 	class QtUserSearchResultsPage;
+	class QtUserSearchDetailsPage;
 
 	class QtUserSearchWindow : public QWizard, public UserSearchWindow, private Ui::QtUserSearchWizard {
 		Q_OBJECT
 		public:
-			QtUserSearchWindow(UIEventStream* eventStream, UserSearchWindow::Type type);
+			QtUserSearchWindow(UIEventStream* eventStream, UserSearchWindow::Type type, const std::set<std::string>& groups);
 			virtual ~QtUserSearchWindow();
 
 			virtual void addSavedServices(const std::vector<JID>& services);
@@ -55,6 +57,7 @@ namespace Swift {
 			QtUserSearchFirstPage* firstPage_;
 			QtUserSearchFieldsPage* fieldsPage_;
 			QtUserSearchResultsPage* resultsPage_;
+			QtUserSearchDetailsPage* detailsPage_;
 			JID myServer_;
 			int lastPage_;
 	};

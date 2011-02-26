@@ -6,6 +6,8 @@
 
 #pragma once
 
+#include <set>
+
 #include "Swift/Controllers/UIInterfaces/UserSearchWindow.h"
 
 namespace Swift {
@@ -14,6 +16,6 @@ namespace Swift {
 		public:
 			virtual ~UserSearchWindowFactory() {};
 
-			virtual UserSearchWindow* createUserSearchWindow(UserSearchWindow::Type type, UIEventStream* eventStream) = 0;
+			virtual UserSearchWindow* createUserSearchWindow(UserSearchWindow::Type type, UIEventStream* eventStream, const std::set<std::string>& groups) = 0;
 	};
 }

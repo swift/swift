@@ -17,7 +17,7 @@ namespace Swift {
 			QtUserSearchResultsPage();
 			virtual bool isComplete() const;
 		signals:
-		  void onUserTriggersFinish();
+		  void onUserTriggersContinue();
 		public slots:
 			void emitCompletenessCheck();
 	};

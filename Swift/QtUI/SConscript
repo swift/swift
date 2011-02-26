@@ -121,6 +121,7 @@ sources = [
     "UserSearch/QtUserSearchFirstPage.cpp",
     "UserSearch/QtUserSearchFieldsPage.cpp",
     "UserSearch/QtUserSearchResultsPage.cpp",
+    "UserSearch/QtUserSearchDetailsPage.cpp",
     "UserSearch/QtUserSearchWindow.cpp",
     "UserSearch/UserSearchModel.cpp",
     "UserSearch/UserSearchDelegate.cpp",

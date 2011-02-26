@@ -90,4 +90,11 @@ std::set<std::string> QtContactEditWidget::getSelectedGroups() const {
 	return groups;
 }
 
+void QtContactEditWidget::clear() {
+	name_->clear();
+	setSelectedGroups(std::vector<std::string>());
+	newGroup_->setChecked(false);
+	newGroupName_->clear();
+}
+
 }

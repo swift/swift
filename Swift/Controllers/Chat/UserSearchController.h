@@ -25,6 +25,7 @@ namespace Swift {
 	class UserSearchWindowFactory;
 	class IQRouter;
 	class DiscoServiceWalker;
+	class RosterController;
 
 	class UserSearchResult {
 		public:
@@ -39,7 +40,7 @@ namespace Swift {
 	class UserSearchController {
 		public:
 			enum Type {AddContact, StartChat};
-			UserSearchController(Type type, const JID& jid, UIEventStream* uiEventStream, UserSearchWindowFactory* userSearchWindowFactory, IQRouter* iqRouter);
+			UserSearchController(Type type, const JID& jid, UIEventStream* uiEventStream, UserSearchWindowFactory* userSearchWindowFactory, IQRouter* iqRouter, RosterController* rosterController);
 			~UserSearchController();
 
 		private:
@@ -58,6 +59,7 @@ namespace Swift {
 			UIEventStream* uiEventStream_;
 			UserSearchWindowFactory* factory_;
 			IQRouter* iqRouter_;
+			RosterController* rosterController_;
 			UserSearchWindow* window_;
 			DiscoServiceWalker* discoWalker_;
 	};

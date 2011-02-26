@@ -30,6 +30,8 @@ namespace Swift {
 			void setSelectedGroups(const std::vector<std::string>& groups);
 			std::set<std::string> getSelectedGroups() const;
 
+			void clear();
+
 		private:
 			typedef std::map<std::string, QCheckBox*> CheckBoxMap;
 			CheckBoxMap checkBoxes_;

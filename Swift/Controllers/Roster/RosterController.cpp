@@ -180,6 +180,7 @@ void RosterController::handleUIEvent(boost::shared_ptr<UIEvent> event) {
 		RosterItemPayload item;
 		item.setName(addContactEvent->getName());
 		item.setJID(addContactEvent->getJID());
+		item.setGroups(std::vector<std::string>(addContactEvent->getGroups().begin(), addContactEvent->getGroups().end()));
 		boost::shared_ptr<RosterPayload> roster(new RosterPayload());
 		roster->addItem(item);
 		SetRosterRequest::ref request = SetRosterRequest::create(roster, iqRouter_);

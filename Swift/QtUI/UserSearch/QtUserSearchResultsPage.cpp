@@ -11,7 +11,7 @@ namespace Swift {
 QtUserSearchResultsPage::QtUserSearchResultsPage() {
 	setupUi(this);
 	connect(results_, SIGNAL(activated(const QModelIndex&)), this, SLOT(emitCompletenessCheck()));
-	connect(results_, SIGNAL(activated(const QModelIndex&)), this, SIGNAL(onUserTriggersFinish()));
+	connect(results_, SIGNAL(activated(const QModelIndex&)), this, SIGNAL(onUserTriggersContinue()));
 	connect(results_, SIGNAL(clicked(const QModelIndex&)), this, SLOT(emitCompletenessCheck()));
 	connect(results_, SIGNAL(entered(const QModelIndex&)), this, SLOT(emitCompletenessCheck()));
 	results_->setExpandsOnDoubleClick(false);

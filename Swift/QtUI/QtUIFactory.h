@@ -33,7 +33,7 @@ namespace Swift {
 			virtual ChatListWindow* createChatListWindow(UIEventStream*);
 			virtual MUCSearchWindow* createMUCSearchWindow();
 			virtual ChatWindow* createChatWindow(const JID &contact, UIEventStream* eventStream);
-			virtual UserSearchWindow* createUserSearchWindow(UserSearchWindow::Type type, UIEventStream* eventStream);
+			virtual UserSearchWindow* createUserSearchWindow(UserSearchWindow::Type type, UIEventStream* eventStream, const std::set<std::string>& groups);
 			virtual JoinMUCWindow* createJoinMUCWindow();
 			virtual ProfileWindow* createProfileWindow();
 			virtual ContactEditWindow* createContactEditWindow();

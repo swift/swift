@@ -262,8 +262,8 @@ void MainController::handleConnected() {
 		client_->getDiscoManager()->setDiscoInfo(discoInfo);
 
 
-		userSearchControllerChat_ = new UserSearchController(UserSearchController::StartChat, jid_, uiEventStream_, uiFactory_, client_->getIQRouter());
-		userSearchControllerAdd_ = new UserSearchController(UserSearchController::AddContact, jid_, uiEventStream_, uiFactory_, client_->getIQRouter());
+		userSearchControllerChat_ = new UserSearchController(UserSearchController::StartChat, jid_, uiEventStream_, uiFactory_, client_->getIQRouter(), rosterController_);
+		userSearchControllerAdd_ = new UserSearchController(UserSearchController::AddContact, jid_, uiEventStream_, uiFactory_, client_->getIQRouter(), rosterController_);
 	}
 	
 	client_->requestRoster();

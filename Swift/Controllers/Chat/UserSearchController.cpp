@@ -18,9 +18,10 @@
 #include <Swift/Controllers/UIEvents/RequestAddUserDialogUIEvent.h>
 #include <Swift/Controllers/UIInterfaces/UserSearchWindow.h>
 #include <Swift/Controllers/UIInterfaces/UserSearchWindowFactory.h>
+#include <Swift/Controllers/Roster/RosterController.h>
 
 namespace Swift {
-UserSearchController::UserSearchController(Type type, const JID& jid, UIEventStream* uiEventStream, UserSearchWindowFactory* factory, IQRouter* iqRouter) : type_(type), jid_(jid), uiEventStream_(uiEventStream), factory_(factory), iqRouter_(iqRouter) {
+UserSearchController::UserSearchController(Type type, const JID& jid, UIEventStream* uiEventStream, UserSearchWindowFactory* factory, IQRouter* iqRouter, RosterController* rosterController) : type_(type), jid_(jid), uiEventStream_(uiEventStream), factory_(factory), iqRouter_(iqRouter), rosterController_(rosterController) {
 	uiEventStream_->onUIEvent.connect(boost::bind(&UserSearchController::handleUIEvent, this, _1));
 	window_ = NULL;
 	discoWalker_ = NULL;
@@ -50,7 +51,7 @@ void UserSearchController::handleUIEvent(boost::shared_ptr<UIEvent> event) {
 	}
 	if (handle) {
 		if (!window_) {
-			window_ = factory_->createUserSearchWindow(type_ == AddContact ? UserSearchWindow::AddContact : UserSearchWindow::ChatToContact, uiEventStream_);
+			window_ = factory_->createUserSearchWindow(type_ == AddContact ? UserSearchWindow::AddContact : UserSearchWindow::ChatToContact, uiEventStream_, rosterController_->getGroups());
 			window_->onFormRequested.connect(boost::bind(&UserSearchController::handleFormRequested, this, _1));
 			window_->onSearchRequested.connect(boost::bind(&UserSearchController::handleSearch, this, _1, _2));
 			window_->setSelectedService(JID(jid_.getDomain()));

@@ -6,10 +6,10 @@
 
 #include "Swift/QtUI/UserSearch/QtUserSearchWindow.h"
 
-#include <qdebug.h>
 #include <QModelIndex>
 #include <QWizardPage>
 #include <QMovie>
+#include <boost/smart_ptr/make_shared.hpp>
 
 #include "Swift/Controllers/UIEvents/UIEventStream.h"
 #include "Swift/Controllers/UIEvents/RequestChatUIEvent.h"
@@ -20,10 +20,11 @@
 #include "QtUserSearchFirstPage.h"
 #include "QtUserSearchFieldsPage.h"
 #include "QtUserSearchResultsPage.h"
+#include "QtUserSearchDetailsPage.h"
 
 namespace Swift {
 
-QtUserSearchWindow::QtUserSearchWindow(UIEventStream* eventStream, UserSearchWindow::Type type) : eventStream_(eventStream), type_(type) {
+QtUserSearchWindow::QtUserSearchWindow(UIEventStream* eventStream, UserSearchWindow::Type type, const std::set<std::string>& groups) : eventStream_(eventStream), type_(type) {
 	setupUi(this);
 #ifndef Q_WS_MAC
 	setWindowIcon(QIcon(":/logo-icon-16.png"));
@@ -56,8 +57,16 @@ QtUserSearchWindow::QtUserSearchWindow(UIEventStream* eventStream, UserSearchWin
 #ifdef SWIFT_PLATFORM_MACOSX
 	resultsPage_->results_->setAlternatingRowColors(true);
 #endif
+	if (type == AddContact) {
+		connect(resultsPage_, SIGNAL(onUserTriggersContinue()), this, SLOT(next()));
+	}
+	else {
+		connect(resultsPage_, SIGNAL(onUserTriggersContinue()), this, SLOT(accept()));
+	}
 	setPage(3, resultsPage_);
-	connect(resultsPage_, SIGNAL(onUserTriggersFinish()), this, SLOT(accept()));
+
+	detailsPage_ = new QtUserSearchDetailsPage(groups);
+	setPage(4, detailsPage_);
 
 	connect(this, SIGNAL(currentIdChanged(int)), this, SLOT(handleCurrentChanged(int)));
 	connect(this, SIGNAL(accepted()), this, SLOT(handleAccepted()));
@@ -79,6 +88,9 @@ void QtUserSearchWindow::handleCurrentChanged(int page) {
 	else if (page == 3 && lastPage_ == 2) {
 		handleSearch();
 	}
+	else if (page == 4) {
+		detailsPage_->clear();
+	}
 	lastPage_ = page;
 }
 
@@ -97,10 +109,9 @@ void QtUserSearchWindow::handleAccepted() {
 	else {
 		jid = JID(Q2PSTRING(firstPage_->jid_->text()));
 	}
+
 	if (type_ == AddContact) {
-		/* FIXME: allow specifying a nick */
-		boost::shared_ptr<UIEvent> event(new AddContactUIEvent(jid, jid.toString()));
-		eventStream_->send(event);
+		eventStream_->send(boost::make_shared<AddContactUIEvent>(jid, detailsPage_->getName(), detailsPage_->getSelectedGroups()));
 	}
 	else {
 		boost::shared_ptr<UIEvent> event(new RequestChatUIEvent(jid));
@@ -110,9 +121,9 @@ void QtUserSearchWindow::handleAccepted() {
 
 int QtUserSearchWindow::nextId() const {
 	switch (currentId()) {
-		case 1: return firstPage_->byJID_->isChecked() ? -1 : 2;
+		case 1: return firstPage_->byJID_->isChecked() ? (type_ == AddContact ? 4 : -1) : 2;
 		case 2: return 3;
-		case 3: return 4;
+		case 3: return type_ == AddContact ? 4 : -1;
 		case 4: return -1;
 		default: return -1;
 	}
