@@ -25,6 +25,8 @@ static const char tprint[] =
 	"            tostring (key), tostring(value)))\n"
 	"      end\n"
 	"    end\n"
+	"  elseif type(tt) == \"nil\" then\n"
+	"    io.write(\"nil\\n\")\n"
 	"  else\n"
 	"    io.write(tt .. \"\\n\")\n"
 	"  end\n"

@@ -27,6 +27,8 @@ namespace Swift {
 				doRun(true);
 			}
 
+			void runOnce();
+
 			void stop();
 
 			virtual void post(const Event& event);

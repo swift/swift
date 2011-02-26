@@ -33,12 +33,12 @@ received_message = client2:for_event(function(event)
 		if event["type"] == "message" and event["from"] == client1_jid then
 			return event["body"]
 		end
-	end)
+	end, 10000)
 assert(received_message == "Hello")
 
 print "Retrieving the roster"
 roster = client1:get_roster()
-table.foreach(roster, print)
+tprint(roster)
 
 client1:disconnect()
 client2:disconnect()

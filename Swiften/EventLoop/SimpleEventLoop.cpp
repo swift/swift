@@ -44,6 +44,17 @@ void SimpleEventLoop::doRun(bool breakAfterEvents) {
 	}
 }
 
+void SimpleEventLoop::runOnce() {
+	std::vector<Event> events;
+	{
+		boost::unique_lock<boost::mutex> lock(eventsMutex_);
+		events.swap(events_);
+	}
+	foreach(const Event& event, events) {
+		handleEvent(event);
+	}
+}
+
 void SimpleEventLoop::stop() {
 	postEvent(boost::bind(&SimpleEventLoop::doStop, this));
 }

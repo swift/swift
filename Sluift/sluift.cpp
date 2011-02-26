@@ -18,6 +18,8 @@ extern "C" {
 #include <Swiften/JID/JID.h>
 #include <Swiften/EventLoop/SimpleEventLoop.h>
 #include <Swiften/Network/BoostNetworkFactories.h>
+#include <Swiften/Network/TimerFactory.h>
+#include <Swiften/Network/Timer.h>
 #include <Swiften/Base/sleep.h>
 #include <Swiften/Elements/SoftwareVersion.h>
 #include <Swiften/Queries/Requests/GetSoftwareVersionRequest.h>
@@ -39,6 +41,39 @@ bool debug = false;
 
 SimpleEventLoop eventLoop;
 BoostNetworkFactories networkFactories(&eventLoop);
+
+class Watchdog {
+	public:
+		Watchdog(int timeout) : timedOut(false) {
+			if (timeout > 0) {
+				timer = networkFactories.getTimerFactory()->createTimer(timeout);
+				timer->start();
+				timer->onTick.connect(boost::bind(&Watchdog::handleTimerTick, this));
+			}
+			else if (timeout == 0) {
+				timedOut = true;
+			}
+		}
+
+		~Watchdog() {
+			if (timer) {
+				timer->stop();
+			}
+		}
+
+		bool getTimedOut() const {
+			return timedOut;
+		}
+	
+	private:
+		void handleTimerTick() {
+			timedOut = true;
+		}
+	
+	private:
+		Timer::ref timer;
+		bool timedOut;
+};
 
 class SluiftException {
 	public:
@@ -83,7 +118,7 @@ class SluiftClient {
 
 		void waitConnected() {
 			while (client->isActive() && !client->isAvailable()) {
-				processEvents();
+				eventLoop.runUntilEvents();
 			}
 		}
 
@@ -105,7 +140,7 @@ class SluiftClient {
 		void disconnect() {
 			client->disconnect();
 			while (client->isActive()) {
-				processEvents();
+				eventLoop.runUntilEvents();
 			}
 		}
 
@@ -120,35 +155,36 @@ class SluiftClient {
 			error.reset();
 			request->send();
 			while (!softwareVersion && !error) {
-				processEvents();
+				eventLoop.runUntilEvents();
 			}
 			return softwareVersion;
 		}
 
-		Stanza::ref getNextEvent() {
-			if (client->isActive() && !pendingEvents.empty()) {
+		Stanza::ref getNextEvent(int timeout) {
+			eventLoop.runOnce();
+			if (!pendingEvents.empty()) {
 				Stanza::ref event = pendingEvents.front();
 				pendingEvents.pop_front();
 				return event;
 			}
-			while (client->isActive() && pendingEvents.empty()) {
-				processEvents();
+			Watchdog watchdog(timeout);
+			while (!watchdog.getTimedOut() && pendingEvents.empty()) {
+				eventLoop.runUntilEvents();
 			}
-			if (client->isActive()) {
-				assert(!pendingEvents.empty());
-				Stanza::ref event = pendingEvents.front();
-				pendingEvents.pop_front();
-				return event;
+			if (watchdog.getTimedOut()) {
+				return Stanza::ref();
 			}
 			else {
-				return Stanza::ref();
+				Stanza::ref event = pendingEvents.front();
+				pendingEvents.pop_front();
+				return event;
 			}
 		}
 
 		std::vector<XMPPRosterItem> getRoster() {
 			client->requestRoster();
 			while (!rosterReceived) {
-				processEvents();
+				eventLoop.runUntilEvents();
 			}
 			return client->getRoster()->getItems();
 		}
@@ -160,10 +196,6 @@ class SluiftClient {
 
 		void handleInitialRosterPopulated() {
 			rosterReceived = true;
-		}
-
-		void processEvents() {
-			eventLoop.runUntilEvents();
 		}
 
 		void handleSoftwareVersionResponse(boost::shared_ptr<SoftwareVersion> version, ErrorPayload::ref error) {
@@ -223,11 +255,6 @@ class SluiftClient {
 		ErrorPayload::ref error;
 		std::deque<Stanza::ref> pendingEvents;
 };
-
-#define CHECK_CLIENT_CONNECTED(client, L) \
-	if (!(*client)->isConnected()) { \
-		lua_pushnil(L); \
-	} 
 
 /*******************************************************************************
  * Client functions.
@@ -331,17 +358,6 @@ static int sluift_client_get_roster(lua_State *L) {
 
 			lua_setfield(L, -2, item.getJID().toString().c_str());
 		}
-		/*boost::optional<SoftwareVersion> version = client->getSoftwareVersion(jid);
-		if (version) {
-		lua_pushstring(L, version->getName().c_str());
-			lua_pushstring(L, version->getName().c_str());
-			lua_setfield(L, -2, "name");
-			lua_pushstring(L, version->getVersion().c_str());
-			lua_setfield(L, -2, "version");
-			lua_pushstring(L, version->getOS().c_str());
-			lua_setfield(L, -2, "os");
-		}
-		*/
 		return 1;
 	}
 	catch (const SluiftException& e) {
@@ -395,23 +411,25 @@ static int sluift_client_set_options(lua_State* L) {
 	return 0;
 }
 
-static int sluift_client_for_event (lua_State *L) {
+static int sluift_client_for_event(lua_State *L) {
 	try {
 		SluiftClient* client = getClient(L);
 		luaL_checktype(L, 2, LUA_TFUNCTION);
+		int timeout = -1;
+		if (lua_type(L, 3) != LUA_TNONE) {
+			timeout = lua_tonumber(L, 3);
+		}
+
 		while (true) {
-			Stanza::ref event = client->getNextEvent();
+			Stanza::ref event = client->getNextEvent(timeout);
 			if (!event) {
-				// We got disconnected
+				// We got a timeout
 				lua_pushnil(L);
-				lua_pushliteral(L, "disconnected");
-				return 2;
+				return 1;
 			}
 			else {
-				// Push the function on the stack
+				// Push the function and event on the stack
 				lua_pushvalue(L, 2);
-
-				bool emitEvent = false;
 				if (Message::ref message = boost::dynamic_pointer_cast<Message>(event)) {
 					lua_createtable(L, 0, 3);
 					lua_pushliteral(L, "message");
@@ -420,7 +438,6 @@ static int sluift_client_for_event (lua_State *L) {
 					lua_setfield(L, -2, "from");
 					lua_pushstring(L, message->getBody().c_str());
 					lua_setfield(L, -2, "body");
-					emitEvent = true;
 				}
 				else if (Presence::ref presence = boost::dynamic_pointer_cast<Presence>(event)) {
 					lua_createtable(L, 0, 3);
@@ -430,24 +447,17 @@ static int sluift_client_for_event (lua_State *L) {
 					lua_setfield(L, -2, "from");
 					lua_pushstring(L, presence->getStatus().c_str());
 					lua_setfield(L, -2, "status");
-					emitEvent = true;
 				}
 				else {
 					assert(false);
+					lua_pushnil(L);
 				}
-				if (emitEvent) {
-					int oldTop = lua_gettop(L) - 2;
-					lua_call(L, 1, LUA_MULTRET);
-					int returnValues = lua_gettop(L) - oldTop;
-					if (returnValues > 0) {
-						lua_remove(L, -1 - returnValues);
-						return returnValues;
-					}
-				}
-				else {
-					// Remove the function from the stack again, since
-					// we're not calling the function
-					lua_pop(L, 1);
+				int oldTop = lua_gettop(L) - 2;
+				lua_call(L, 1, LUA_MULTRET);
+				int returnValues = lua_gettop(L) - oldTop;
+				if (returnValues > 0) {
+					lua_remove(L, -1 - returnValues);
+					return returnValues;
 				}
 			}
 		}
