@@ -22,7 +22,7 @@
 
 namespace Swift {
 
-CoreClient::CoreClient(const JID& jid, const std::string& password, NetworkFactories* networkFactories) : jid_(jid), password_(password), networkFactories(networkFactories), disconnectRequested_(false), certificateTrustChecker(NULL) {
+CoreClient::CoreClient(const JID& jid, const std::string& password, NetworkFactories* networkFactories) : jid_(jid), password_(password), networkFactories(networkFactories), useStreamCompression(true), disconnectRequested_(false), certificateTrustChecker(NULL) {
 	stanzaChannel_ = new ClientSessionStanzaChannel();
 	stanzaChannel_->onMessageReceived.connect(boost::bind(&CoreClient::handleMessageReceived, this, _1));
 	stanzaChannel_->onPresenceReceived.connect(boost::bind(&CoreClient::handlePresenceReceived, this, _1));
@@ -82,6 +82,7 @@ void CoreClient::handleConnectorFinished(boost::shared_ptr<Connection> connectio
 
 		session_ = ClientSession::create(jid_, sessionStream_);
 		session_->setCertificateTrustChecker(certificateTrustChecker);
+		session_->setUseStreamCompression(useStreamCompression);
 		stanzaChannel_->setSession(session_);
 		session_->onFinished.connect(boost::bind(&CoreClient::handleSessionFinished, this, _1));
 		session_->onNeedCredentials.connect(boost::bind(&CoreClient::handleNeedCredentials, this));
@@ -260,6 +261,10 @@ void CoreClient::handleMessageReceived(Message::ref message) {
 
 void CoreClient::handleStanzaAcked(Stanza::ref stanza) {
 	onStanzaAcked(stanza);
+}
+
+void CoreClient::setUseStreamCompression(bool b) {
+	useStreamCompression = b;
 }
 
 

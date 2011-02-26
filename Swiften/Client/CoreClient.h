@@ -143,6 +143,11 @@ namespace Swift {
 			 */
 			void setCertificateTrustChecker(CertificateTrustChecker*);
 
+			/**
+			 * Sets whether ZLib stream compression should be used when available.
+			 */
+			void setUseStreamCompression(bool b);
+
 		public:
 			/**
 			 * Emitted when the client was disconnected from the network.
@@ -207,6 +212,7 @@ namespace Swift {
 			JID jid_;
 			std::string password_;
 			NetworkFactories* networkFactories;
+			bool useStreamCompression;
 			ClientSessionStanzaChannel* stanzaChannel_;
 			IQRouter* iqRouter_;
 			Connector::ref connector_;

@@ -72,6 +72,10 @@ class SluiftClient {
 			delete client;
 		}
 
+		Client* getClient() {
+			return client;
+		}
+
 		void connect() {
 			rosterReceived = false;
 			client->connect();
@@ -380,6 +384,17 @@ static int sluift_client_send_presence(lua_State *L) {
 	return 0;
 }
 
+static int sluift_client_set_options(lua_State* L) {
+	SluiftClient* client = getClient(L);
+	luaL_checktype(L, 2, LUA_TTABLE);
+	lua_getfield(L, 2, "compress");
+	if (!lua_isnil(L, -1)) {
+		client->getClient()->setUseStreamCompression(lua_toboolean(L, -1));
+	}
+	lua_pop(L, -1);
+	return 0;
+}
+
 static int sluift_client_for_event (lua_State *L) {
 	try {
 		SluiftClient* client = getClient(L);
@@ -460,6 +475,7 @@ static const luaL_reg sluift_client_functions[] = {
 	{"set_version", sluift_client_set_version},
 	{"get_roster", sluift_client_get_roster},
 	{"get_version", sluift_client_get_version},
+	{"set_options", sluift_client_set_options},
 	{"for_event", sluift_client_for_event},
 	{"__gc", sluift_client_gc},
 	{NULL, NULL}

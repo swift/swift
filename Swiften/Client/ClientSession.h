@@ -71,6 +71,10 @@ namespace Swift {
 				allowPLAINOverNonTLS = b;
 			}
 
+			void setUseStreamCompression(bool b) {
+				useStreamCompression = b;
+			}
+
 			bool getStreamManagementEnabled() const {
 				return stanzaAckRequester_;
 			}
@@ -134,6 +138,7 @@ namespace Swift {
 			State state;
 			boost::shared_ptr<SessionStream> stream;
 			bool allowPLAINOverNonTLS;
+			bool useStreamCompression;
 			bool needSessionStart;
 			bool needResourceBind;
 			bool needAcking;

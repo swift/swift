@@ -49,6 +49,7 @@ ClientSession::ClientSession(
 			state(Initial), 
 			stream(stream),
 			allowPLAINOverNonTLS(false),
+			useStreamCompression(true),
 			needSessionStart(false),
 			needResourceBind(false),
 			needAcking(false),
@@ -173,7 +174,7 @@ void ClientSession::handleElement(boost::shared_ptr<Element> element) {
 			state = WaitingForEncrypt;
 			stream->writeElement(boost::shared_ptr<StartTLSRequest>(new StartTLSRequest()));
 		}
-		else if (streamFeatures->hasCompressionMethod("zlib")) {
+		else if (useStreamCompression && streamFeatures->hasCompressionMethod("zlib")) {
 			state = Compressing;
 			stream->writeElement(boost::shared_ptr<CompressRequest>(new CompressRequest("zlib")));
 		}

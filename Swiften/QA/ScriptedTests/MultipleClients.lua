@@ -14,6 +14,7 @@ clients = {}
 for i = 1, num_clients do
 	jid = os.getenv("SWIFT_CLIENTTEST_JID") .. "/Client" .. i
 	client = sluift.new_client(jid, os.getenv("SWIFT_CLIENTTEST_PASS"))
+	client:set_options({compress = false})
 	client:async_connect()
 	table.insert(clients, client)
 end
