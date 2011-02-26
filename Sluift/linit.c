@@ -53,8 +53,7 @@ LUALIB_API void luaL_openlibs (lua_State *L) {
     lua_pushstring(L, lib->name);
     lua_call(L, 1, 0);
   }
-	int result = luaL_loadstring(L, tprint) || lua_pcall(L, 0, 0, 0);
-	if (result != 0) {
+	if (luaL_dostring(L, tprint) != 0) {
 		fprintf(stderr, "%s\n", lua_tostring(L, -1));
 		lua_pop(L, 1);	
 	}
