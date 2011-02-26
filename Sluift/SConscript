@@ -12,10 +12,6 @@ if env["SCONS_STAGE"] == "build" :
 	elif myenv["PLATFORM"] == "darwin" :
 		myenv["SHLIBSUFFIX"] = ".so"
 
-	myenv.SharedLibrary("sluift", [
-			"sluift.cpp",
-		])
-
 	sluift_bin_env = myenv.Clone()
 	sluift_bin_env.Install(".", "#/3rdParty/Lua/src/lua.c")
 	if sluift_bin_env.get("HAVE_READLINE", False) :
@@ -26,3 +22,11 @@ if env["SCONS_STAGE"] == "build" :
 			"lua.c",
 			"linit.c",
 		])
+
+	# Create a copy of sluift.cpp to avoid conflicting targets
+	# Ideally, we would use variants for this
+	myenv.InstallAs("sluift_dll.cpp", "sluift.cpp")
+	myenv.SharedLibrary("sluift", [
+			"sluift_dll.cpp",
+		])
+
