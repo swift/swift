@@ -208,6 +208,14 @@ void MUC::handleCreationConfigResponse(MUCOwnerPayload::ref /*unused*/, ErrorPay
 	}
 }
 
+bool MUC::hasOccupant(const std::string& nick) {
+	return occupants.find(nick) != occupants.end();
+}
+
+MUCOccupant MUC::getOccupant(const std::string& nick) {
+	return occupants.find(nick)->second;
+}
+
 //FIXME: Recognise Topic changes
 
 //TODO: Invites(direct/mediated)

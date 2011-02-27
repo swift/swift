@@ -1,0 +1,26 @@
+Import("env")
+
+
+if env["SCONS_STAGE"] == "build":
+	myenv = env.Clone()
+	myenv.MergeFlags(myenv["SWIFTEN_FLAGS"])
+	myenv.MergeFlags(myenv["LIBIDN_FLAGS"])
+	myenv.MergeFlags(myenv["BOOST_FLAGS"])
+	myenv.MergeFlags(myenv["ZLIB_FLAGS"])
+	myenv.MergeFlags(myenv["OPENSSL_FLAGS"])
+	myenv.MergeFlags(myenv.get("SQLITE_FLAGS", {}))
+	myenv.MergeFlags(myenv.get("LIBXML_FLAGS", ""))
+	myenv.MergeFlags(myenv.get("EXPAT_FLAGS", ""))
+	myenv.MergeFlags(myenv["PLATFORM_FLAGS"])
+	myenv.MergeFlags(myenv["LUA_FLAGS"])
+	sources = [
+		"linit.c", # This is horrible!
+		"Swiftob.cpp",
+		"Users.cpp",
+		"Commands.cpp",
+		"MUCs.cpp",
+		"Storage.cpp",
+		"LuaCommands.cpp",
+		"main.cpp"
+	]
+	swiftob = myenv.Program("swiftob", sources)

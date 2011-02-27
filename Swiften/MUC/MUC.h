@@ -51,7 +51,9 @@ namespace Swift {
 			void handleIncomingMessage(Message::ref message);
 			/** Expose public so it can be called when e.g. user goes offline */
 			void handleUserLeft(LeavingType);
-
+			/** Get occupant information*/
+			MUCOccupant getOccupant(const std::string& nick);
+			bool hasOccupant(const std::string& nick);
 		public:
 			boost::signal<void (const std::string& /*nick*/)> onJoinComplete;
 			boost::signal<void (ErrorPayload::ref)> onJoinFailed;
