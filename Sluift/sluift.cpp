@@ -411,6 +411,30 @@ static int sluift_client_set_options(lua_State* L) {
 	return 0;
 }
 
+static void pushEvent(lua_State* L, Stanza::ref event) {
+	if (Message::ref message = boost::dynamic_pointer_cast<Message>(event)) {
+		lua_createtable(L, 0, 3);
+		lua_pushliteral(L, "message");
+		lua_setfield(L, -2, "type");
+		lua_pushstring(L, message->getFrom().toString().c_str());
+		lua_setfield(L, -2, "from");
+		lua_pushstring(L, message->getBody().c_str());
+		lua_setfield(L, -2, "body");
+	}
+	else if (Presence::ref presence = boost::dynamic_pointer_cast<Presence>(event)) {
+		lua_createtable(L, 0, 3);
+		lua_pushliteral(L, "presence");
+		lua_setfield(L, -2, "type");
+		lua_pushstring(L, presence->getFrom().toString().c_str());
+		lua_setfield(L, -2, "from");
+		lua_pushstring(L, presence->getStatus().c_str());
+		lua_setfield(L, -2, "status");
+	}
+	else {
+		lua_pushnil(L);
+	}
+}
+
 static int sluift_client_for_event(lua_State *L) {
 	try {
 		SluiftClient* client = getClient(L);
@@ -430,28 +454,7 @@ static int sluift_client_for_event(lua_State *L) {
 			else {
 				// Push the function and event on the stack
 				lua_pushvalue(L, 2);
-				if (Message::ref message = boost::dynamic_pointer_cast<Message>(event)) {
-					lua_createtable(L, 0, 3);
-					lua_pushliteral(L, "message");
-					lua_setfield(L, -2, "type");
-					lua_pushstring(L, message->getFrom().toString().c_str());
-					lua_setfield(L, -2, "from");
-					lua_pushstring(L, message->getBody().c_str());
-					lua_setfield(L, -2, "body");
-				}
-				else if (Presence::ref presence = boost::dynamic_pointer_cast<Presence>(event)) {
-					lua_createtable(L, 0, 3);
-					lua_pushliteral(L, "presence");
-					lua_setfield(L, -2, "type");
-					lua_pushstring(L, presence->getFrom().toString().c_str());
-					lua_setfield(L, -2, "from");
-					lua_pushstring(L, presence->getStatus().c_str());
-					lua_setfield(L, -2, "status");
-				}
-				else {
-					assert(false);
-					lua_pushnil(L);
-				}
+				pushEvent(L, event);
 				int oldTop = lua_gettop(L) - 2;
 				lua_call(L, 1, LUA_MULTRET);
 				int returnValues = lua_gettop(L) - oldTop;
@@ -461,6 +464,21 @@ static int sluift_client_for_event(lua_State *L) {
 				}
 			}
 		}
+	}
+	catch (const SluiftException& e) {
+		return luaL_error(L, e.getReason().c_str());
+	}
+}
+
+static int sluift_client_get_next_event(lua_State *L) {
+	try {
+		SluiftClient* client = getClient(L);
+		int timeout = -1;
+		if (lua_type(L, 2) != LUA_TNONE) {
+			timeout = lua_tonumber(L, 2);
+		}
+		pushEvent(L, client->getNextEvent(timeout));
+		return 1;
 	}
 	catch (const SluiftException& e) {
 		return luaL_error(L, e.getReason().c_str());
@@ -487,6 +505,7 @@ static const luaL_reg sluift_client_functions[] = {
 	{"get_version", sluift_client_get_version},
 	{"set_options", sluift_client_set_options},
 	{"for_event", sluift_client_for_event},
+	{"get_next_event", sluift_client_get_next_event},
 	{"__gc", sluift_client_gc},
 	{NULL, NULL}
 };

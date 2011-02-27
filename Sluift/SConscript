@@ -16,7 +16,7 @@ if env["SCONS_STAGE"] == "build" :
 		f = open(source[0].abspath, "r")
 		contents = f.read()
 		f.close()
-		contents = contents.replace("LUA_RELEASE", "\"Sluift XMPP Console\"")
+		contents = contents.replace("LUA_RELEASE", "\"== Sluift XMPP Console ==\"")
 		contents = contents.replace("LUA_COPYRIGHT", "")
 		f = open(target[0].abspath, "w")
 		f.write(contents)
