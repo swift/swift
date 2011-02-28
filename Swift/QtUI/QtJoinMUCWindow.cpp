@@ -12,11 +12,15 @@ namespace Swift {
 QtJoinMUCWindow::QtJoinMUCWindow() {
 	ui.setupUi(this);
 #if QT_VERSION >= 0x040700
-	ui.room->setPlaceholderText("swift@rooms.swift.im");
+	ui.room->setPlaceholderText("someroom@rooms.example.com");
 #endif
 	connect(ui.room, SIGNAL(returnPressed()), this, SLOT(handleJoin()));
 	connect(ui.searchButton, SIGNAL(clicked()), this, SLOT(handleSearch()));
 	connect(ui.joinButton, SIGNAL(clicked()), this, SLOT(handleJoin()));
+	// FIXME: Temporarily set focus on the nickName field first, so that the
+	// placeholder for the room is visible. This is just because Qt hides 
+	// the placeholder when a widget is focused for some reason.
+	ui.nickName->setFocus();
 }
 
 void QtJoinMUCWindow::handleJoin() {
