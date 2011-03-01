@@ -6,6 +6,7 @@ if env["SCONS_STAGE"] == "build" :
 	lib_env.UseFlags(env["SWIFTEN_FLAGS"])
 	lib_env.UseFlags(env["SWIFTEN_DEP_FLAGS"])
 	sluift_lib = lib_env.StaticLibrary("SluiftCore", [
+			"Lua/Value.cpp",
 			"sluift.cpp"
 		]);
 

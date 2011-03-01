@@ -33,6 +33,7 @@ fi
 	boost/unordered_map.hpp \
 	boost/algorithm/string.hpp \
 	boost/format.hpp \
+	assign/list_of.hpp \
 	$TARGET_DIR
 
 rm -rf $TARGET_DIR/libs/config

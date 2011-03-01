@@ -12,6 +12,7 @@ extern "C" {
 #include <iostream>
 #include <string>
 #include <deque>
+#include <boost/assign/list_of.hpp>
 
 #include <Swiften/Client/Client.h>
 #include <Swiften/Client/ClientXMLTracer.h>
@@ -28,6 +29,7 @@ extern "C" {
 #include "Watchdog.h"
 #include "SluiftException.h"
 #include "ResponseSink.h"
+#include "Lua/Value.h"
 
 using namespace Swift;
 
@@ -118,7 +120,7 @@ class SluiftClient {
 			client->setSoftwareVersion(name, version, os);
 		}
 
-		boost::optional<SoftwareVersion> getSoftwareVersion(const JID& jid) {
+		SoftwareVersion::ref getSoftwareVersion(const JID& jid) {
 			ResponseSink<SoftwareVersion> sink;
 			GetSoftwareVersionRequest::ref request = GetSoftwareVersionRequest::create(jid, client->getIQRouter());
 			request->onResponse.connect(boost::ref(sink));
@@ -126,7 +128,7 @@ class SluiftClient {
 			while (!sink.hasResponse()) {
 				eventLoop.runUntilEvents();
 			}
-			return sink.getResponsePayload() ? *sink.getResponsePayload() : boost::optional<SoftwareVersion>();
+			return sink.getResponsePayload();
 		}
 
 		Stanza::ref getNextEvent(int timeout) {
@@ -256,15 +258,8 @@ static int sluift_client_set_version(lua_State *L) {
 static int sluift_client_get_roster(lua_State *L) {
 	try {
 		SluiftClient* client = getClient(L);
-		std::vector<XMPPRosterItem> items = client->getRoster();
-
-		lua_createtable(L, 0, items.size());
-		foreach(const XMPPRosterItem& item, items) {
-			lua_createtable(L, 0, 3);
-
-			lua_pushstring(L, item.getName().c_str());
-			lua_setfield(L, -2, "name");
-
+		Lua::Table rosterTable;
+		foreach(const XMPPRosterItem& item, client->getRoster()) {
 			std::string subscription;
 			switch(item.getSubscription()) {
 				case RosterItemPayload::None: subscription = "none"; break;
@@ -273,19 +268,14 @@ static int sluift_client_get_roster(lua_State *L) {
 				case RosterItemPayload::Both: subscription = "both"; break;
 				case RosterItemPayload::Remove: subscription = "remove"; break;
 			}
-			lua_pushstring(L, subscription.c_str());
-			lua_setfield(L, -2, "subscription");
-
-			std::vector<std::string> groups = item.getGroups();
-			lua_createtable(L, groups.size(), 0);
-			for (size_t i = 0; i < groups.size(); ++i) {
-				lua_pushstring(L, groups[i].c_str());
-				lua_rawseti(L, -2, i + 1);
-			}
-			lua_setfield(L, -2, "groups");
-
-			lua_setfield(L, -2, item.getJID().toString().c_str());
+			Lua::Value groups(std::vector<Lua::Value>(item.getGroups().begin(), item.getGroups().end()));
+			Lua::Table itemTable = boost::assign::map_list_of
+				("name", boost::make_shared<Lua::Value>(item.getName()))
+				("subscription", boost::make_shared<Lua::Value>(subscription))
+				("groups", boost::make_shared<Lua::Value>(std::vector<Lua::Value>(item.getGroups().begin(), item.getGroups().end())));
+			rosterTable[item.getJID().toString()] = boost::make_shared<Lua::Value>(itemTable);
 		}
+		pushValue(L, rosterTable);
 		return 1;
 	}
 	catch (const SluiftException& e) {
@@ -297,16 +287,13 @@ static int sluift_client_get_version(lua_State *L) {
 	try {
 		SluiftClient* client = getClient(L);
 		JID jid(std::string(luaL_checkstring(L, 2)));
-
-		boost::optional<SoftwareVersion> version = client->getSoftwareVersion(jid);
+		SoftwareVersion::ref version = client->getSoftwareVersion(jid);
 		if (version) {
-			lua_createtable(L, 0, 3);
-			lua_pushstring(L, version->getName().c_str());
-			lua_setfield(L, -2, "name");
-			lua_pushstring(L, version->getVersion().c_str());
-			lua_setfield(L, -2, "version");
-			lua_pushstring(L, version->getOS().c_str());
-			lua_setfield(L, -2, "os");
+			Lua::Table result = boost::assign::map_list_of
+				("name", boost::make_shared<Lua::Value>(version->getName()))
+				("version", boost::make_shared<Lua::Value>(version->getVersion()))
+				("os", boost::make_shared<Lua::Value>(version->getOS()));
+			Lua::pushValue(L, result);
 		}
 		else {
 			lua_pushnil(L);
@@ -382,22 +369,18 @@ static int sluift_client_set_options(lua_State* L) {
 
 static void pushEvent(lua_State* L, Stanza::ref event) {
 	if (Message::ref message = boost::dynamic_pointer_cast<Message>(event)) {
-		lua_createtable(L, 0, 3);
-		lua_pushliteral(L, "message");
-		lua_setfield(L, -2, "type");
-		lua_pushstring(L, message->getFrom().toString().c_str());
-		lua_setfield(L, -2, "from");
-		lua_pushstring(L, message->getBody().c_str());
-		lua_setfield(L, -2, "body");
+		Lua::Table result = boost::assign::map_list_of
+			("type", boost::make_shared<Lua::Value>("message"))
+			("from", boost::make_shared<Lua::Value>(message->getFrom().toString()))
+			("body", boost::make_shared<Lua::Value>(message->getBody()));
+		Lua::pushValue(L, result);
 	}
 	else if (Presence::ref presence = boost::dynamic_pointer_cast<Presence>(event)) {
-		lua_createtable(L, 0, 3);
-		lua_pushliteral(L, "presence");
-		lua_setfield(L, -2, "type");
-		lua_pushstring(L, presence->getFrom().toString().c_str());
-		lua_setfield(L, -2, "from");
-		lua_pushstring(L, presence->getStatus().c_str());
-		lua_setfield(L, -2, "status");
+		Lua::Table result = boost::assign::map_list_of
+			("type", boost::make_shared<Lua::Value>("presence"))
+			("from", boost::make_shared<Lua::Value>(presence->getFrom().toString()))
+			("status", boost::make_shared<Lua::Value>(presence->getStatus()));
+		Lua::pushValue(L, result);
 	}
 	else {
 		lua_pushnil(L);

@@ -4,8 +4,7 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#ifndef SWIFTEN_SoftwareVersion_H
-#define SWIFTEN_SoftwareVersion_H
+#pragma once
 
 #include "Swiften/Elements/Payload.h"
 #include <string>
@@ -13,6 +12,8 @@
 namespace Swift {
 	class SoftwareVersion : public Payload {
 		public:
+			typedef boost::shared_ptr<SoftwareVersion> ref;
+
 			SoftwareVersion(
 					const std::string& name = "", 
 					const std::string& version = "",
@@ -49,5 +50,3 @@ namespace Swift {
 			std::string os_;
 	};
 }
-
-#endif
