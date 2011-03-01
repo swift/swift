@@ -48,6 +48,11 @@ namespace Swift {
 	 */
 	class CoreClient : public Entity {
 		public: 
+			enum UseTLS {
+				NeverUseTLS,
+				UseTLSWhenAvailable
+			};
+
 			/**
 			 * Constructs a client for the given JID with the given password.
 			 * The given eventLoop will be used to post events to.
@@ -81,6 +86,11 @@ namespace Swift {
 			 * Sends a presence stanza.
 			 */
 			void sendPresence(Presence::ref);
+
+			/**
+			 * Sends raw, unchecked data.
+			 */
+			void sendData(const std::string& data);
 
 			/**
 			 * Returns the IQ router for this client.
@@ -148,6 +158,11 @@ namespace Swift {
 			 */
 			void setUseStreamCompression(bool b);
 
+			/**
+			 * Sets whether TLS encryption should be used.
+			 */
+			void setUseTLS(UseTLS useTLS);
+
 		public:
 			/**
 			 * Emitted when the client was disconnected from the network.
@@ -213,6 +228,7 @@ namespace Swift {
 			std::string password_;
 			NetworkFactories* networkFactories;
 			bool useStreamCompression;
+			UseTLS useTLS;
 			ClientSessionStanzaChannel* stanzaChannel_;
 			IQRouter* iqRouter_;
 			Connector::ref connector_;

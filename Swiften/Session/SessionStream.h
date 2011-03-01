@@ -43,6 +43,7 @@ namespace Swift {
 			virtual void writeHeader(const ProtocolHeader& header) = 0;
 			virtual void writeFooter() = 0;
 			virtual void writeElement(boost::shared_ptr<Element>) = 0;
+			virtual void writeData(const std::string& data) = 0;
 
 			virtual void addZLibCompression() = 0;
 

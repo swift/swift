@@ -329,6 +329,9 @@ class ClientSessionTest : public CppUnit::TestFixture {
 					receivedEvents.push_back(Event(element));
 				}
 
+				virtual void writeData(const std::string&) {
+				}
+
 				virtual bool supportsTLSEncryption() {
 					return canTLSEncrypt;
 				}

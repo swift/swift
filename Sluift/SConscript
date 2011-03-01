@@ -6,11 +6,14 @@ if env["SCONS_STAGE"] == "build" :
 	myenv.UseFlags(env["SWIFTEN_FLAGS"])
 	myenv.UseFlags(env["SWIFTEN_DEP_FLAGS"])
 	myenv["SHLIBPREFIX"] = ""
-
 	if myenv["PLATFORM"] == "win32" :
 		myenv.Append(CPPDEFINES = ["SLUIFT_BUILD_DLL"])
 	elif myenv["PLATFORM"] == "darwin" :
 		myenv["SHLIBSUFFIX"] = ".so"
+
+	sluift_lib = myenv.StaticLibrary("SluiftCore", [
+			"sluift.cpp"
+		]);
 
 	def patchLua(env, target, source) :
 		f = open(source[0].abspath, "r")
@@ -23,20 +26,16 @@ if env["SCONS_STAGE"] == "build" :
 		f.close()
 
 	sluift_bin_env = myenv.Clone()
+	sluift_bin_env.Append(LIBS = sluift_lib)
 	sluift_bin_env.Command("lua.c", ["#/3rdParty/Lua/src/lua.c"], env.Action(patchLua, cmdstr = "$GENCOMSTR"))
 	if sluift_bin_env.get("HAVE_READLINE", False) :
 		sluift_bin_env.Append(CPPDEFINES = ["LUA_USE_READLINE"])
 		sluift_bin_env.MergeFlags(sluift_bin_env["READLINE_FLAGS"])
 	env["SLUIFT"] = sluift_bin_env.Program("sluift", [
-			"sluift.cpp",
 			"lua.c",
 			"linit.c",
 		])
 
-	# Create a copy of sluift.cpp to avoid conflicting targets
-	# Ideally, we would use variants for this
-	myenv.InstallAs("sluift_dll.cpp", "sluift.cpp")
-	myenv.SharedLibrary("sluift", [
-			"sluift_dll.cpp",
-		])
-
+	sluift_dll_env = myenv.Clone()
+	sluift_dll_env.Append(LIBS = sluift_lib)
+	sluift_dll_env.SharedLibrary("sluift", []);

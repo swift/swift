@@ -57,6 +57,11 @@ namespace Swift {
 				Error(Type type) : type(type) {}
 			};
 
+			enum UseTLS {
+				NeverUseTLS,
+				UseTLSWhenAvailable
+			};
+
 			~ClientSession();
 
 			static boost::shared_ptr<ClientSession> create(const JID& jid, boost::shared_ptr<SessionStream> stream) {
@@ -74,6 +79,11 @@ namespace Swift {
 			void setUseStreamCompression(bool b) {
 				useStreamCompression = b;
 			}
+
+			void setUseTLS(UseTLS b) {
+				useTLS = b;
+			}
+
 
 			bool getStreamManagementEnabled() const {
 				return stanzaAckRequester_;
@@ -139,6 +149,7 @@ namespace Swift {
 			boost::shared_ptr<SessionStream> stream;
 			bool allowPLAINOverNonTLS;
 			bool useStreamCompression;
+			UseTLS useTLS;
 			bool needSessionStart;
 			bool needResourceBind;
 			bool needAcking;

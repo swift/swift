@@ -88,6 +88,11 @@ void BasicSessionStream::writeFooter() {
 	xmppLayer->writeFooter();
 }
 
+void BasicSessionStream::writeData(const std::string& data) {
+	assert(available);
+	xmppLayer->writeData(data);
+}
+
 void BasicSessionStream::close() {
 	connection->disconnect();
 }

@@ -20,10 +20,14 @@ extern "C" {
 #include <Swiften/Network/BoostNetworkFactories.h>
 #include <Swiften/Network/TimerFactory.h>
 #include <Swiften/Network/Timer.h>
-#include <Swiften/Base/sleep.h>
 #include <Swiften/Elements/SoftwareVersion.h>
 #include <Swiften/Queries/Requests/GetSoftwareVersionRequest.h>
+#include <Swiften/Queries/RawRequest.h>
 #include <Swiften/Roster/XMPPRoster.h>
+#include <Swiften/Base/sleep.h>
+#include "Watchdog.h"
+#include "SluiftException.h"
+#include "ResponseSink.h"
 
 using namespace Swift;
 
@@ -42,51 +46,6 @@ bool debug = false;
 SimpleEventLoop eventLoop;
 BoostNetworkFactories networkFactories(&eventLoop);
 
-class Watchdog {
-	public:
-		Watchdog(int timeout) : timedOut(false) {
-			if (timeout > 0) {
-				timer = networkFactories.getTimerFactory()->createTimer(timeout);
-				timer->start();
-				timer->onTick.connect(boost::bind(&Watchdog::handleTimerTick, this));
-			}
-			else if (timeout == 0) {
-				timedOut = true;
-			}
-		}
-
-		~Watchdog() {
-			if (timer) {
-				timer->stop();
-			}
-		}
-
-		bool getTimedOut() const {
-			return timedOut;
-		}
-	
-	private:
-		void handleTimerTick() {
-			timedOut = true;
-		}
-	
-	private:
-		Timer::ref timer;
-		bool timedOut;
-};
-
-class SluiftException {
-	public:
-		SluiftException(const std::string& reason) : reason(reason) {
-		}
-
-		const std::string& getReason() const {
-			return reason;
-		}
-	
-	private:
-		std::string reason;
-};
 
 class SluiftClient {
 	public:
@@ -137,6 +96,17 @@ class SluiftClient {
 			client->sendPresence(boost::make_shared<Presence>(status));
 		}
 
+		std::string sendQuery(const JID& jid, IQ::Type type, const std::string& data) {
+			rawRequestResponse.reset();
+			RawRequest::ref request = RawRequest::create(type, jid, data, client->getIQRouter());
+			request->onResponse.connect(boost::bind(&SluiftClient::handleRawRequestResponse, this, _1));
+			request->send();
+			while (!rawRequestResponse) {
+				eventLoop.runUntilEvents();
+			}
+			return *rawRequestResponse;
+		}
+
 		void disconnect() {
 			client->disconnect();
 			while (client->isActive()) {
@@ -149,25 +119,23 @@ class SluiftClient {
 		}
 
 		boost::optional<SoftwareVersion> getSoftwareVersion(const JID& jid) {
+			ResponseSink<SoftwareVersion> sink;
 			GetSoftwareVersionRequest::ref request = GetSoftwareVersionRequest::create(jid, client->getIQRouter());
-			request->onResponse.connect(boost::bind(&SluiftClient::handleSoftwareVersionResponse, this, _1, _2));
-			softwareVersion.reset();
-			error.reset();
+			request->onResponse.connect(boost::ref(sink));
 			request->send();
-			while (!softwareVersion && !error) {
+			while (!sink.hasResponse()) {
 				eventLoop.runUntilEvents();
 			}
-			return softwareVersion;
+			return sink.getResponsePayload() ? *sink.getResponsePayload() : boost::optional<SoftwareVersion>();
 		}
 
 		Stanza::ref getNextEvent(int timeout) {
-			eventLoop.runOnce();
 			if (!pendingEvents.empty()) {
 				Stanza::ref event = pendingEvents.front();
 				pendingEvents.pop_front();
 				return event;
 			}
-			Watchdog watchdog(timeout);
+			Watchdog watchdog(timeout, networkFactories.getTimerFactory());
 			while (!watchdog.getTimedOut() && pendingEvents.empty()) {
 				eventLoop.runUntilEvents();
 			}
@@ -198,52 +166,13 @@ class SluiftClient {
 			rosterReceived = true;
 		}
 
-		void handleSoftwareVersionResponse(boost::shared_ptr<SoftwareVersion> version, ErrorPayload::ref error) {
-			if (error) {
-				this->error = error;
-			}
-			else if (version) {
-				this->softwareVersion = *version;
-			}
-			else {
-				this->softwareVersion = SoftwareVersion("", "", "");
-			}
+		void handleRawRequestResponse(const std::string& response) {
+			rawRequestResponse = response;
 		}
 
 		void handleDisconnected(const boost::optional<ClientError>& error) {
 			if (error) {
-				std::string reason("Disconnected: ");
-				switch(error->getType()) {
-					case ClientError::UnknownError: reason += "Unknown Error"; break;
-					case ClientError::DomainNameResolveError: reason += "Unable to find server"; break;
-					case ClientError::ConnectionError: reason += "Error connecting to server"; break;
-					case ClientError::ConnectionReadError: reason += "Error while receiving server data"; break;
-					case ClientError::ConnectionWriteError: reason += "Error while sending data to the server"; break;
-					case ClientError::XMLError: reason += "Error parsing server data"; break;
-					case ClientError::AuthenticationFailedError: reason += "Login/password invalid"; break;
-					case ClientError::CompressionFailedError: reason += "Error while compressing stream"; break;
-					case ClientError::ServerVerificationFailedError: reason += "Server verification failed"; break;
-					case ClientError::NoSupportedAuthMechanismsError: reason += "Authentication mechanisms not supported"; break;
-					case ClientError::UnexpectedElementError: reason += "Unexpected response"; break;
-					case ClientError::ResourceBindError: reason += "Error binding resource"; break;
-					case ClientError::SessionStartError: reason += "Error starting session"; break;
-					case ClientError::StreamError: reason += "Stream error"; break;
-					case ClientError::TLSError: reason += "Encryption error"; break;
-					case ClientError::ClientCertificateLoadError: reason += "Error loading certificate (Invalid password?)"; break;
-					case ClientError::ClientCertificateError: reason += "Certificate not authorized"; break;
-					case ClientError::UnknownCertificateError: reason += "Unknown certificate"; break;
-					case ClientError::CertificateExpiredError: reason += "Certificate has expired"; break;
-					case ClientError::CertificateNotYetValidError: reason += "Certificate is not yet valid"; break;
-					case ClientError::CertificateSelfSignedError: reason += "Certificate is self-signed"; break;
-					case ClientError::CertificateRejectedError: reason += "Certificate has been rejected"; break;
-					case ClientError::CertificateUntrustedError: reason += "Certificate is not trusted"; break;
-					case ClientError::InvalidCertificatePurposeError: reason += "Certificate cannot be used for encrypting your connection"; break;
-					case ClientError::CertificatePathLengthExceededError: reason += "Certificate path length constraint exceeded"; break;
-					case ClientError::InvalidCertificateSignatureError: reason += "Invalid certificate signature"; break;
-					case ClientError::InvalidCAError: reason += "Invalid Certificate Authority"; break;
-					case ClientError::InvalidServerIdentityError: reason += "Certificate does not match the host identity"; break;
-				}
-				throw SluiftException(reason);
+				throw SluiftException(*error);
 			}
 		}
 	
@@ -251,9 +180,8 @@ class SluiftClient {
 		Client* client;
 		ClientXMLTracer* tracer;
 		bool rosterReceived;
-		boost::optional<SoftwareVersion> softwareVersion;
-		ErrorPayload::ref error;
 		std::deque<Stanza::ref> pendingEvents;
+		boost::optional<std::string> rawRequestResponse;
 };
 
 /*******************************************************************************
@@ -400,6 +328,43 @@ static int sluift_client_send_presence(lua_State *L) {
 	return 0;
 }
 
+static int sluift_client_get(lua_State *L) {
+	SluiftClient* client = getClient(L);
+	JID jid;
+	std::string data;
+	if (lua_type(L, 3) != LUA_TNONE) {
+		jid = JID(std::string(luaL_checkstring(L, 2)));
+		data = std::string(luaL_checkstring(L, 3));
+	}
+	else {
+		data = std::string(luaL_checkstring(L, 2));
+	}
+	std::string result = client->sendQuery(jid, IQ::Get, data);
+	lua_pushstring(L, result.c_str());
+	return 1;
+}
+
+static int sluift_client_set(lua_State *L) {
+	SluiftClient* client = getClient(L);
+	JID jid;
+	std::string data;
+	if (lua_type(L, 3) != LUA_TNONE) {
+		jid = JID(std::string(luaL_checkstring(L, 2)));
+		data = std::string(luaL_checkstring(L, 3));
+	}
+	else {
+		data = std::string(luaL_checkstring(L, 2));
+	}
+	std::string result = client->sendQuery(jid, IQ::Set, data);
+	lua_pushstring(L, result.c_str());
+	return 1;
+}
+
+static int sluift_client_send(lua_State *L) {
+	getClient(L)->getClient()->sendData(std::string(luaL_checkstring(L, 2)));
+	return 0;
+}
+
 static int sluift_client_set_options(lua_State* L) {
 	SluiftClient* client = getClient(L);
 	luaL_checktype(L, 2, LUA_TTABLE);
@@ -407,7 +372,11 @@ static int sluift_client_set_options(lua_State* L) {
 	if (!lua_isnil(L, -1)) {
 		client->getClient()->setUseStreamCompression(lua_toboolean(L, -1));
 	}
-	lua_pop(L, -1);
+	lua_getfield(L, 2, "tls");
+	if (!lua_isnil(L, -1)) {
+		bool useTLS = lua_toboolean(L, -1);
+		client->getClient()->setUseTLS(useTLS ? Client::UseTLSWhenAvailable : Client::NeverUseTLS);
+	}
 	return 0;
 }
 
@@ -437,6 +406,8 @@ static void pushEvent(lua_State* L, Stanza::ref event) {
 
 static int sluift_client_for_event(lua_State *L) {
 	try {
+		eventLoop.runOnce();
+
 		SluiftClient* client = getClient(L);
 		luaL_checktype(L, 2, LUA_TFUNCTION);
 		int timeout = -1;
@@ -472,6 +443,8 @@ static int sluift_client_for_event(lua_State *L) {
 
 static int sluift_client_get_next_event(lua_State *L) {
 	try {
+		eventLoop.runOnce();
+
 		SluiftClient* client = getClient(L);
 		int timeout = -1;
 		if (lua_type(L, 2) != LUA_TNONE) {
@@ -500,6 +473,9 @@ static const luaL_reg sluift_client_functions[] = {
 	{"disconnect",  sluift_client_disconnect},
 	{"send_message", sluift_client_send_message},
 	{"send_presence", sluift_client_send_presence},
+	{"get", sluift_client_get},
+	{"set", sluift_client_set},
+	{"send", sluift_client_send},
 	{"set_version", sluift_client_set_version},
 	{"get_roster", sluift_client_get_roster},
 	{"get_version", sluift_client_get_version},
@@ -515,15 +491,37 @@ static const luaL_reg sluift_client_functions[] = {
  ******************************************************************************/
 
 static int sluift_new_client(lua_State *L) {
-	JID jid(std::string(luaL_checkstring(L, 1)));
-	std::string password(luaL_checkstring(L, 2));
+	try {
+		JID jid(std::string(luaL_checkstring(L, 1)));
+		std::string password(luaL_checkstring(L, 2));
 
-	SluiftClient** client = reinterpret_cast<SluiftClient**>(lua_newuserdata(L, sizeof(SluiftClient*)));
-	luaL_getmetatable(L, SLUIFT_CLIENT);
-	lua_setmetatable(L, -2);
+		SluiftClient** client = reinterpret_cast<SluiftClient**>(lua_newuserdata(L, sizeof(SluiftClient*)));
+		luaL_getmetatable(L, SLUIFT_CLIENT);
+		lua_setmetatable(L, -2);
 
-	*client = new SluiftClient(jid, password);
-	return 1;
+		*client = new SluiftClient(jid, password);
+		return 1;
+	}
+	catch (const SluiftException& e) {
+		return luaL_error(L, e.getReason().c_str());
+	}
+}
+
+static int sluift_sleep(lua_State *L) {
+	try {
+		eventLoop.runOnce();
+
+		int timeout = luaL_checknumber(L, 1);
+		Watchdog watchdog(timeout, networkFactories.getTimerFactory());
+		while (!watchdog.getTimedOut()) {
+			Swift::sleep(std::min(100, timeout));
+			eventLoop.runOnce();
+		}
+		return 0;
+	}
+	catch (const SluiftException& e) {
+		return luaL_error(L, e.getReason().c_str());
+	}
 }
 
 static int sluift_index(lua_State *L) {
@@ -550,6 +548,7 @@ static int sluift_newindex(lua_State *L) {
 
 static const luaL_reg sluift_functions[] = {
 	{"new_client", sluift_new_client},
+	{"sleep", sluift_sleep},
 	{NULL, NULL}
 };
 

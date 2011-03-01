@@ -5,7 +5,8 @@
 --
 
 -- This script logs into an XMPP server, and sends initial presence
--- Useful as initialization script for an interactive session ('-i')
+-- Useful as initialization script for an interactive session ('-i'),
+-- or as a starting point for scripts.
 -- 
 -- The following environment variables are used:
 -- * SLUIFT_JID, SWIFT_PASS: JID and password to log in with
@@ -17,7 +18,7 @@ sluift.debug = os.getenv("SLUIFT_DEBUG") or false
 
 print("Connecting " .. os.getenv("SLUIFT_JID") .. " ...")
 c = sluift.new_client(os.getenv("SLUIFT_JID"), os.getenv("SLUIFT_PASS"))
-c:set_options(os.getenv("SLUIFT_OPTIONS") or {})
+c:set_options({compress = false, tls = false})
 c:connect()
 c:send_presence("")
 

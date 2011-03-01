@@ -50,6 +50,7 @@ ClientSession::ClientSession(
 			stream(stream),
 			allowPLAINOverNonTLS(false),
 			useStreamCompression(true),
+			useTLS(UseTLSWhenAvailable),
 			needSessionStart(false),
 			needResourceBind(false),
 			needAcking(false),
@@ -170,7 +171,7 @@ void ClientSession::handleElement(boost::shared_ptr<Element> element) {
 			return;
 		}
 
-		if (streamFeatures->hasStartTLS() && stream->supportsTLSEncryption()) {
+		if (streamFeatures->hasStartTLS() && stream->supportsTLSEncryption() && useTLS != NeverUseTLS) {
 			state = WaitingForEncrypt;
 			stream->writeElement(boost::shared_ptr<StartTLSRequest>(new StartTLSRequest()));
 		}

@@ -6,6 +6,7 @@
 
 #include "Swiften/Queries/Request.h"
 #include "Swiften/Queries/IQRouter.h"
+#include <Swiften/Elements/RawXMLPayload.h>
 
 namespace Swift {
 
@@ -40,7 +41,11 @@ bool Request::handleIQ(boost::shared_ptr<IQ> iq) {
 	bool handled = false;
 	if (sent_ && iq->getID() == id_) {
 		if (iq->getType() == IQ::Result) {
-			handleResponse(iq->getPayloadOfSameType(payload_), ErrorPayload::ref());
+			boost::shared_ptr<Payload> payload = iq->getPayloadOfSameType(payload_);
+			if (!payload && boost::dynamic_pointer_cast<RawXMLPayload>(payload_) && !iq->getPayloads().empty()) {
+				payload = iq->getPayloads().front();
+			}
+			handleResponse(payload, ErrorPayload::ref());
 		}
 		else {
 			ErrorPayload::ref errorPayload = iq->getPayload<ErrorPayload>();

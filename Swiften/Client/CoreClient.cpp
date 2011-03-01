@@ -22,7 +22,7 @@
 
 namespace Swift {
 
-CoreClient::CoreClient(const JID& jid, const std::string& password, NetworkFactories* networkFactories) : jid_(jid), password_(password), networkFactories(networkFactories), useStreamCompression(true), disconnectRequested_(false), certificateTrustChecker(NULL) {
+CoreClient::CoreClient(const JID& jid, const std::string& password, NetworkFactories* networkFactories) : jid_(jid), password_(password), networkFactories(networkFactories), useStreamCompression(true), useTLS(UseTLSWhenAvailable), disconnectRequested_(false), certificateTrustChecker(NULL) {
 	stanzaChannel_ = new ClientSessionStanzaChannel();
 	stanzaChannel_->onMessageReceived.connect(boost::bind(&CoreClient::handleMessageReceived, this, _1));
 	stanzaChannel_->onPresenceReceived.connect(boost::bind(&CoreClient::handlePresenceReceived, this, _1));
@@ -83,6 +83,14 @@ void CoreClient::handleConnectorFinished(boost::shared_ptr<Connection> connectio
 		session_ = ClientSession::create(jid_, sessionStream_);
 		session_->setCertificateTrustChecker(certificateTrustChecker);
 		session_->setUseStreamCompression(useStreamCompression);
+		switch(useTLS) {
+			case UseTLSWhenAvailable:
+				session_->setUseTLS(ClientSession::UseTLSWhenAvailable);
+				break;
+			case NeverUseTLS:
+				session_->setUseTLS(ClientSession::NeverUseTLS);
+				break;
+		}
 		stanzaChannel_->setSession(session_);
 		session_->onFinished.connect(boost::bind(&CoreClient::handleSessionFinished, this, _1));
 		session_->onNeedCredentials.connect(boost::bind(&CoreClient::handleNeedCredentials, this));
@@ -242,6 +250,10 @@ void CoreClient::sendPresence(boost::shared_ptr<Presence> presence) {
 	stanzaChannel_->sendPresence(presence);
 }
 
+void CoreClient::sendData(const std::string& data) {
+	sessionStream_->writeData(data);
+}
+
 bool CoreClient::isActive() const {
 	return (session_ && !session_->isFinished()) || connector_;
 }
@@ -265,6 +277,10 @@ void CoreClient::handleStanzaAcked(Stanza::ref stanza) {
 
 void CoreClient::setUseStreamCompression(bool b) {
 	useStreamCompression = b;
+}
+
+void CoreClient::setUseTLS(UseTLS b) {
+	useTLS = b;
 }
 
 
