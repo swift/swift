@@ -253,6 +253,7 @@ static int sluift_client_get_roster(lua_State *L) {
 			}
 			Lua::Value groups(std::vector<Lua::Value>(item.getGroups().begin(), item.getGroups().end()));
 			Lua::Table itemTable = boost::assign::map_list_of
+				("jid", boost::make_shared<Lua::Value>(item.getJID().toString()))
 				("name", boost::make_shared<Lua::Value>(item.getName()))
 				("subscription", boost::make_shared<Lua::Value>(subscription))
 				("groups", boost::make_shared<Lua::Value>(std::vector<Lua::Value>(item.getGroups().begin(), item.getGroups().end())));
@@ -504,6 +505,32 @@ static int sluift_client_remove_contact(lua_State* L) {
 	}
 }
 
+static int sluift_client_confirm_subscription(lua_State* L) {
+	try {
+		eventLoop.runOnce();
+		SluiftClient* client = getClient(L);
+		JID jid(luaL_checkstring(L, 2));
+		client->getClient()->getSubscriptionManager()->confirmSubscription(jid);
+		return 0;
+	}
+	catch (const SluiftException& e) {
+		return luaL_error(L, e.getReason().c_str());
+	}
+}
+
+static int sluift_client_cancel_subscription(lua_State* L) {
+	try {
+		eventLoop.runOnce();
+		SluiftClient* client = getClient(L);
+		JID jid(luaL_checkstring(L, 2));
+		client->getClient()->getSubscriptionManager()->cancelSubscription(jid);
+		return 0;
+	}
+	catch (const SluiftException& e) {
+		return luaL_error(L, e.getReason().c_str());
+	}
+}
+
 static int sluift_client_gc (lua_State *L) {
 	SluiftClient* client = getClient(L);
 	delete client;
@@ -529,6 +556,8 @@ static const luaL_reg sluift_client_functions[] = {
 	{"get_next_event", sluift_client_get_next_event},
 	{"add_contact", sluift_client_add_contact},
 	{"remove_contact", sluift_client_remove_contact},
+	{"confirm_subscription", sluift_client_confirm_subscription},
+	{"cancel_subscription", sluift_client_cancel_subscription},
 	{"__gc", sluift_client_gc},
 	{NULL, NULL}
 };
