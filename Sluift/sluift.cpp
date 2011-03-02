@@ -199,7 +199,7 @@ static int sluift_client_connect(lua_State *L) {
 		SluiftClient* client = getClient(L);
 		client->connect();
 		client->waitConnected();
-		return 0;
+		return 1;
 	}
 	catch (const SluiftException& e) {
 		return luaL_error(L, e.getReason().c_str());
@@ -209,7 +209,7 @@ static int sluift_client_connect(lua_State *L) {
 static int sluift_client_async_connect(lua_State *L) {
 	try {
 		getClient(L)->connect();
-		return 0;
+		return 1;
 	}
 	catch (const SluiftException& e) {
 		return luaL_error(L, e.getReason().c_str());
@@ -219,7 +219,7 @@ static int sluift_client_async_connect(lua_State *L) {
 static int sluift_client_wait_connected(lua_State *L) {
 	try {
 		getClient(L)->waitConnected();
-		return 0;
+		return 1;
 	}
 	catch (const SluiftException& e) {
 		return luaL_error(L, e.getReason().c_str());
@@ -234,7 +234,7 @@ static int sluift_client_is_connected(lua_State *L) {
 static int sluift_client_disconnect(lua_State *L) {
 	try {
 		getClient(L)->disconnect();
-		return 0;
+		return 1;
 	}
 	catch (const SluiftException& e) {
 		return luaL_error(L, e.getReason().c_str());
@@ -252,7 +252,8 @@ static int sluift_client_set_version(lua_State *L) {
 	const char* rawOS = lua_tostring(L, -1);
 	client->setSoftwareVersion(rawName ? rawName : "", rawVersion ? rawVersion : "", rawOS ? rawOS : "");
 	lua_pop(L, 3);
-	return 0;
+	lua_pushvalue(L, 1);
+	return 1;
 }
 
 static int sluift_client_get_roster(lua_State *L) {
@@ -307,11 +308,13 @@ static int sluift_client_get_version(lua_State *L) {
 
 static int sluift_client_send_message(lua_State *L) {
 	getClient(L)->sendMessage(std::string(luaL_checkstring(L, 2)), luaL_checkstring(L, 3));
-	return 0;
+	lua_pushvalue(L, 1);
+	return 1;
 }
 
 static int sluift_client_send_presence(lua_State *L) {
 	getClient(L)->sendPresence(std::string(luaL_checkstring(L, 2)));
+	lua_pushvalue(L, 1);
 	return 0;
 }
 
@@ -349,6 +352,7 @@ static int sluift_client_set(lua_State *L) {
 
 static int sluift_client_send(lua_State *L) {
 	getClient(L)->getClient()->sendData(std::string(luaL_checkstring(L, 2)));
+	lua_pushvalue(L, 1);
 	return 0;
 }
 
@@ -364,6 +368,7 @@ static int sluift_client_set_options(lua_State* L) {
 		bool useTLS = lua_toboolean(L, -1);
 		client->getClient()->setUseTLS(useTLS ? Client::UseTLSWhenAvailable : Client::NeverUseTLS);
 	}
+	lua_pushvalue(L, 1);
 	return 0;
 }
 

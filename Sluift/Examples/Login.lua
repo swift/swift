@@ -19,7 +19,6 @@ sluift.debug = os.getenv("SLUIFT_DEBUG") or false
 print("Connecting " .. os.getenv("SLUIFT_JID") .. " ...")
 c = sluift.new_client(os.getenv("SLUIFT_JID"), os.getenv("SLUIFT_PASS"))
 c:set_options({compress = false, tls = false})
-c:connect()
-c:send_presence("")
+c:connect():send_presence("")
 
 print("Connected ...")
