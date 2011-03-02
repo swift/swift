@@ -35,6 +35,11 @@ namespace Swift {
 				this->responseReceived = true;
 			}
 
+			void operator()(ErrorPayload::ref error) {
+				this->error = error;
+				this->responseReceived = true;
+			}
+
 		private:
 			bool responseReceived;
 			boost::shared_ptr<T> payload;

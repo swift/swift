@@ -14,18 +14,8 @@ extern "C" {
 #include <deque>
 #include <boost/assign/list_of.hpp>
 
-#include <Swiften/Client/Client.h>
-#include <Swiften/Client/ClientXMLTracer.h>
-#include <Swiften/JID/JID.h>
-#include <Swiften/EventLoop/SimpleEventLoop.h>
-#include <Swiften/Network/BoostNetworkFactories.h>
-#include <Swiften/Network/TimerFactory.h>
-#include <Swiften/Network/Timer.h>
-#include <Swiften/Elements/SoftwareVersion.h>
-#include <Swiften/Queries/Requests/GetSoftwareVersionRequest.h>
-#include <Swiften/Queries/RawRequest.h>
-#include <Swiften/Roster/XMPPRoster.h>
-#include <Swiften/Base/sleep.h>
+#include <Swiften/Swiften.h>
+
 #include "Watchdog.h"
 #include "SluiftException.h"
 #include "ResponseSink.h"
@@ -120,17 +110,6 @@ class SluiftClient {
 			client->setSoftwareVersion(name, version, os);
 		}
 
-		SoftwareVersion::ref getSoftwareVersion(const JID& jid) {
-			ResponseSink<SoftwareVersion> sink;
-			GetSoftwareVersionRequest::ref request = GetSoftwareVersionRequest::create(jid, client->getIQRouter());
-			request->onResponse.connect(boost::ref(sink));
-			request->send();
-			while (!sink.hasResponse()) {
-				eventLoop.runUntilEvents();
-			}
-			return sink.getResponsePayload();
-		}
-
 		Stanza::ref getNextEvent(int timeout) {
 			if (!pendingEvents.empty()) {
 				Stanza::ref event = pendingEvents.front();
@@ -152,7 +131,10 @@ class SluiftClient {
 		}
 
 		std::vector<XMPPRosterItem> getRoster() {
-			client->requestRoster();
+			if (!rosterReceived) {
+				// If we haven't requested it yet, request it for the first time
+				client->requestRoster();
+			}
 			while (!rosterReceived) {
 				eventLoop.runUntilEvents();
 			}
@@ -287,9 +269,27 @@ static int sluift_client_get_roster(lua_State *L) {
 static int sluift_client_get_version(lua_State *L) {
 	try {
 		SluiftClient* client = getClient(L);
-		JID jid(std::string(luaL_checkstring(L, 2)));
-		SoftwareVersion::ref version = client->getSoftwareVersion(jid);
-		if (version) {
+
+		ResponseSink<SoftwareVersion> sink;
+		GetSoftwareVersionRequest::ref request = GetSoftwareVersionRequest::create(std::string(luaL_checkstring(L, 2)), client->getClient()->getIQRouter());
+		request->onResponse.connect(boost::ref(sink));
+		request->send();
+		while (!sink.hasResponse()) {
+			eventLoop.runUntilEvents();
+		}
+
+		if (ErrorPayload::ref error = sink.getResponseError()) {
+			lua_pushnil(L);
+			// TODO
+			if (error->getCondition() == ErrorPayload::RemoteServerNotFound) {
+				lua_pushstring(L, "Remote server not found");
+			}
+			else {
+				lua_pushstring(L, "Error");
+			}
+			return 2;
+		}
+		else if (SoftwareVersion::ref version = sink.getResponsePayload()) {
 			Lua::Table result = boost::assign::map_list_of
 				("name", boost::make_shared<Lua::Value>(version->getName()))
 				("version", boost::make_shared<Lua::Value>(version->getVersion()))
@@ -446,12 +446,69 @@ static int sluift_client_get_next_event(lua_State *L) {
 	}
 }
 
+
+static int sluift_client_add_contact(lua_State* L) {
+	try {
+		eventLoop.runOnce();
+		SluiftClient* client = getClient(L);
+		JID jid(luaL_checkstring(L, 2));
+
+		client->getRoster();
+		if (!client->getClient()->getRoster()->containsJID(jid)) {
+			RosterItemPayload item;
+			item.setJID(jid);
+			RosterPayload::ref roster = boost::make_shared<RosterPayload>();
+			roster->addItem(item);
+
+			ResponseSink<RosterPayload> sink;
+			SetRosterRequest::ref request = SetRosterRequest::create(roster, client->getClient()->getIQRouter());
+			request->onResponse.connect(boost::ref(sink));
+			request->send();
+			while (!sink.hasResponse()) {
+				eventLoop.runUntilEvents();
+			}
+			if (sink.getResponseError()) {
+				lua_pushboolean(L, false);
+				return 1;
+			}
+		}
+		client->getClient()->getSubscriptionManager()->requestSubscription(jid);
+		lua_pushboolean(L, true);
+		return 1;
+	}
+	catch (const SluiftException& e) {
+		return luaL_error(L, e.getReason().c_str());
+	}
+}
+
+static int sluift_client_remove_contact(lua_State* L) {
+	try {
+		eventLoop.runOnce();
+		SluiftClient* client = getClient(L);
+		JID jid(luaL_checkstring(L, 2));
+
+		RosterPayload::ref roster = boost::make_shared<RosterPayload>();
+		roster->addItem(RosterItemPayload(JID(luaL_checkstring(L, 2)), "", RosterItemPayload::Remove));
+		ResponseSink<RosterPayload> sink;
+		SetRosterRequest::ref request = SetRosterRequest::create(roster, client->getClient()->getIQRouter());
+		request->onResponse.connect(boost::ref(sink));
+		request->send();
+		while (!sink.hasResponse()) {
+			eventLoop.runUntilEvents();
+		}
+		lua_pushboolean(L, !sink.getResponseError());
+		return 1;
+	}
+	catch (const SluiftException& e) {
+		return luaL_error(L, e.getReason().c_str());
+	}
+}
+
 static int sluift_client_gc (lua_State *L) {
 	SluiftClient* client = getClient(L);
 	delete client;
 	return 0;
 }
-
 
 static const luaL_reg sluift_client_functions[] = {
 	{"connect",  sluift_client_connect},
@@ -470,6 +527,8 @@ static const luaL_reg sluift_client_functions[] = {
 	{"set_options", sluift_client_set_options},
 	{"for_event", sluift_client_for_event},
 	{"get_next_event", sluift_client_get_next_event},
+	{"add_contact", sluift_client_add_contact},
+	{"remove_contact", sluift_client_remove_contact},
 	{"__gc", sluift_client_gc},
 	{NULL, NULL}
 };
