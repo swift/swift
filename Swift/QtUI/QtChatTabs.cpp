@@ -80,6 +80,7 @@ void QtChatTabs::handleWidgetShown() {
 	}
 	checkForFirstShow();
 	if (tabs_->indexOf(widget) >= 0) {
+		handleTabTitleUpdated(widget);
 		return;
 	}
 	addTab(widget);
@@ -95,6 +96,7 @@ void QtChatTabs::handleWantsToActivate() {
 	show();
 	widget->show();
 	tabs_->setCurrentWidget(widget);
+	handleTabTitleUpdated(widget);
 	widget->setFocus();
 	raise();
 	activateWindow();
