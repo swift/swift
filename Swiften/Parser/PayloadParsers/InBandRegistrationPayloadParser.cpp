@@ -5,6 +5,9 @@
  */
 
 #include "Swiften/Parser/PayloadParsers/InBandRegistrationPayloadParser.h"
+
+#include <boost/cast.hpp>
+
 #include "Swiften/Parser/PayloadParsers/FormParserFactory.h"
 #include "Swiften/Parser/PayloadParsers/FormParser.h"
 
@@ -24,7 +27,7 @@ void InBandRegistrationPayloadParser::handleStartElement(const std::string& elem
 	else if (level == PayloadLevel) {
 		if (element == "x" && ns == "jabber:x:data") {
 			assert(!formParser);
-			formParser = dynamic_cast<FormParser*>(formParserFactory->createPayloadParser());
+			formParser = boost::polymorphic_downcast<FormParser*>(formParserFactory->createPayloadParser());
 		}
 		else {
 			currentText.clear();

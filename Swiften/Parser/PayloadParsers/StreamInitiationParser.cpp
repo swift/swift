@@ -7,6 +7,7 @@
 #include "Swiften/Parser/PayloadParsers/StreamInitiationParser.h"
 
 #include <boost/lexical_cast.hpp>
+#include <boost/cast.hpp>
 
 #include "Swiften/Parser/PayloadParsers/FormParserFactory.h"
 #include "Swiften/Parser/PayloadParsers/FormParser.h"
@@ -54,7 +55,7 @@ void StreamInitiationParser::handleStartElement(const std::string& element, cons
 		}
 		else if (inFeature && formParserFactory->canParse(element, ns, attributes)) {
 			assert(!formParser);
-			formParser = dynamic_cast<FormParser*>(formParserFactory->createPayloadParser());
+			formParser = boost::polymorphic_downcast<FormParser*>(formParserFactory->createPayloadParser());
 		}
 	}
 

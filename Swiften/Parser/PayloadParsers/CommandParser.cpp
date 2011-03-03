@@ -5,6 +5,9 @@
  */
 
 #include "Swiften/Parser/PayloadParsers/CommandParser.h"
+
+#include <boost/cast.hpp>
+
 #include "Swiften/Parser/PayloadParsers/FormParserFactory.h"
 #include "Swiften/Parser/PayloadParsers/FormParser.h"
 
@@ -43,7 +46,7 @@ void CommandParser::handleStartElement(const std::string& element, const std::st
 	else if (level_ == FormOrNoteOrActionsLevel) {
 		assert(!formParser_);
 		if (formParserFactory_->canParse(element, ns, attributes)) {
-			formParser_ = dynamic_cast<FormParser*>(formParserFactory_->createPayloadParser());
+			formParser_ = boost::polymorphic_downcast<FormParser*>(formParserFactory_->createPayloadParser());
 			assert(formParser_);
 		}
 		else if (element == "note") {

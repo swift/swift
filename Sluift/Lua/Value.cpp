@@ -36,11 +36,10 @@ namespace {
 			lua_pushstring(state, s.c_str());
 		}
 
-		void operator()(const std::vector<Value>& list) const {
-			lua_newtable(state);
-			int i = 0;
-			foreach(const Value& value, list) {
-				boost::apply_visitor(PushVisitor(state), value);
+		void operator()(const std::vector<Value>& values) const {
+			lua_createtable(state, values.size(), 0);
+			for(size_t i = 0; i < values.size(); ++i) {
+				boost::apply_visitor(PushVisitor(state), values[i]);
 				lua_rawseti(state, -2, i + 1);
 			}
 		}

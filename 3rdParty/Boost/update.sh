@@ -12,6 +12,7 @@ fi
 ./bcp --boost="$1" \
 	tools/bcp \
 	bind.hpp \
+	cast.hpp \
 	date_time/posix_time/posix_time.hpp \
 	foreach.hpp \
 	filesystem.hpp \

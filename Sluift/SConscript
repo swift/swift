@@ -1,3 +1,5 @@
+import Version
+
 Import(["env", "conf_env"])
 
 if env["SCONS_STAGE"] == "build" :
@@ -21,17 +23,22 @@ if env["SCONS_STAGE"] == "build" :
 	elif myenv["PLATFORM"] == "darwin" :
 		myenv["SHLIBSUFFIX"] = ".so"
 
+	myenv["SLUIFT_VERSION"] = Version.getBuildVersion("sluift")
 	def patchLua(env, target, source) :
 		f = open(source[0].abspath, "r")
 		contents = f.read()
 		f.close()
-		contents = contents.replace("LUA_RELEASE", "\"== Sluift XMPP Console ==\"")
+		if env["PLATFORM"] == "windows" :
+			key = "Z"
+		else :
+			key = "D"
+		contents = contents.replace("LUA_RELEASE", "\"== Sluift XMPP Console (%(version)s) == \\nPress Ctrl-%(key)s to exit\"" % {"version": source[1].get_contents(), "key" : key})
 		contents = contents.replace("LUA_COPYRIGHT", "")
 		f = open(target[0].abspath, "w")
 		f.write(contents)
 		f.close()
 
-	myenv.Command("lua.c", ["#/3rdParty/Lua/src/lua.c"], env.Action(patchLua, cmdstr = "$GENCOMSTR"))
+	myenv.Command("lua.c", ["#/3rdParty/Lua/src/lua.c", myenv.Value(myenv["SLUIFT_VERSION"])], env.Action(patchLua, cmdstr = "$GENCOMSTR"))
 	if myenv.get("HAVE_READLINE", False) :
 		myenv.Append(CPPDEFINES = ["LUA_USE_READLINE"])
 		myenv.MergeFlags(myenv["READLINE_FLAGS"])
@@ -40,4 +47,5 @@ if env["SCONS_STAGE"] == "build" :
 			"linit.c",
 		])
 
-	myenv.SharedLibrary("sluift", []);
+	myenv.WriteVal("dll.c", myenv.Value(""))
+	myenv.SharedLibrary("sluift", ["dll.c"])

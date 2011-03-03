@@ -320,35 +320,45 @@ static int sluift_client_send_presence(lua_State *L) {
 }
 
 static int sluift_client_get(lua_State *L) {
-	SluiftClient* client = getClient(L);
-	JID jid;
-	std::string data;
-	if (lua_type(L, 3) != LUA_TNONE) {
-		jid = JID(std::string(luaL_checkstring(L, 2)));
-		data = std::string(luaL_checkstring(L, 3));
+	try {
+		SluiftClient* client = getClient(L);
+		JID jid;
+		std::string data;
+		if (lua_type(L, 3) != LUA_TNONE) {
+			jid = JID(std::string(luaL_checkstring(L, 2)));
+			data = std::string(luaL_checkstring(L, 3));
+		}
+		else {
+			data = std::string(luaL_checkstring(L, 2));
+		}
+		std::string result = client->sendQuery(jid, IQ::Get, data);
+		lua_pushstring(L, result.c_str());
+		return 1;
 	}
-	else {
-		data = std::string(luaL_checkstring(L, 2));
+	catch (const SluiftException& e) {
+		return luaL_error(L, e.getReason().c_str());
 	}
-	std::string result = client->sendQuery(jid, IQ::Get, data);
-	lua_pushstring(L, result.c_str());
-	return 1;
 }
 
 static int sluift_client_set(lua_State *L) {
-	SluiftClient* client = getClient(L);
-	JID jid;
-	std::string data;
-	if (lua_type(L, 3) != LUA_TNONE) {
-		jid = JID(std::string(luaL_checkstring(L, 2)));
-		data = std::string(luaL_checkstring(L, 3));
+	try {
+		SluiftClient* client = getClient(L);
+		JID jid;
+		std::string data;
+		if (lua_type(L, 3) != LUA_TNONE) {
+			jid = JID(std::string(luaL_checkstring(L, 2)));
+			data = std::string(luaL_checkstring(L, 3));
+		}
+		else {
+			data = std::string(luaL_checkstring(L, 2));
+		}
+		std::string result = client->sendQuery(jid, IQ::Set, data);
+		lua_pushstring(L, result.c_str());
+		return 1;
 	}
-	else {
-		data = std::string(luaL_checkstring(L, 2));
+	catch (const SluiftException& e) {
+		return luaL_error(L, e.getReason().c_str());
 	}
-	std::string result = client->sendQuery(jid, IQ::Set, data);
-	lua_pushstring(L, result.c_str());
-	return 1;
 }
 
 static int sluift_client_send(lua_State *L) {
@@ -452,12 +462,41 @@ static int sluift_client_add_contact(lua_State* L) {
 	try {
 		eventLoop.runOnce();
 		SluiftClient* client = getClient(L);
-		JID jid(luaL_checkstring(L, 2));
+		RosterItemPayload item;
+		if (lua_type(L, 2) == LUA_TTABLE) {
+			lua_getfield(L, 2, "jid");
+			const char* rawJID = lua_tostring(L, -1);
+			if (rawJID) {
+				item.setJID(std::string(rawJID));
+			}
+			lua_getfield(L, 2, "name");
+			const char* rawName = lua_tostring(L, -1);
+			if (rawName) {
+				item.setName(rawName);
+			}
+			lua_getfield(L, 2, "groups");
+			if (!lua_isnil(L, -1)) {
+				if (lua_type(L, -1) == LUA_TTABLE) {
+					for (size_t i = 1; i <= lua_objlen(L, -1); ++i) {
+						lua_rawgeti(L, -1, i);
+						const char* rawGroup = lua_tostring(L, -1);
+						if (rawGroup) {
+							item.addGroup(rawGroup);
+						}
+						lua_pop(L, 1);
+					}
+				}
+				else {
+					return luaL_error(L, "Groups should be a table");
+				}
+			}
+		}
+		else {
+			item.setJID(luaL_checkstring(L, 2));
+		}
 
 		client->getRoster();
-		if (!client->getClient()->getRoster()->containsJID(jid)) {
-			RosterItemPayload item;
-			item.setJID(jid);
+		if (!client->getClient()->getRoster()->containsJID(item.getJID())) {
 			RosterPayload::ref roster = boost::make_shared<RosterPayload>();
 			roster->addItem(item);
 
@@ -473,7 +512,7 @@ static int sluift_client_add_contact(lua_State* L) {
 				return 1;
 			}
 		}
-		client->getClient()->getSubscriptionManager()->requestSubscription(jid);
+		client->getClient()->getSubscriptionManager()->requestSubscription(item.getJID());
 		lua_pushboolean(L, true);
 		return 1;
 	}
