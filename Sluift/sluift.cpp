@@ -224,22 +224,31 @@ static int sluift_client_disconnect(lua_State *L) {
 }
 
 static int sluift_client_set_version(lua_State *L) {
-	SluiftClient* client = getClient(L);
-	luaL_checktype(L, 2, LUA_TTABLE);
-	lua_getfield(L, 2, "name");
-	const char* rawName = lua_tostring(L, -1);
-	lua_getfield(L, 2, "version");
-	const char* rawVersion = lua_tostring(L, -1);
-	lua_getfield(L, 2, "os");
-	const char* rawOS = lua_tostring(L, -1);
-	client->setSoftwareVersion(rawName ? rawName : "", rawVersion ? rawVersion : "", rawOS ? rawOS : "");
-	lua_pop(L, 3);
-	lua_pushvalue(L, 1);
-	return 1;
+	try {
+		eventLoop.runUntilEvents();
+
+		SluiftClient* client = getClient(L);
+		luaL_checktype(L, 2, LUA_TTABLE);
+		lua_getfield(L, 2, "name");
+		const char* rawName = lua_tostring(L, -1);
+		lua_getfield(L, 2, "version");
+		const char* rawVersion = lua_tostring(L, -1);
+		lua_getfield(L, 2, "os");
+		const char* rawOS = lua_tostring(L, -1);
+		client->setSoftwareVersion(rawName ? rawName : "", rawVersion ? rawVersion : "", rawOS ? rawOS : "");
+		lua_pop(L, 3);
+		lua_pushvalue(L, 1);
+		return 1;
+	}
+	catch (const SluiftException& e) {
+		return luaL_error(L, e.getReason().c_str());
+	}
 }
 
 static int sluift_client_get_roster(lua_State *L) {
 	try {
+		eventLoop.runUntilEvents();
+
 		SluiftClient* client = getClient(L);
 		Lua::Table rosterTable;
 		foreach(const XMPPRosterItem& item, client->getRoster()) {
