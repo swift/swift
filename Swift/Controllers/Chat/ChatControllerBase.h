@@ -57,6 +57,7 @@ namespace Swift {
 			virtual std::string senderDisplayNameFromMessage(const JID& from) = 0;
 			virtual bool isIncomingMessageFromMe(boost::shared_ptr<Message>) = 0;
 			virtual void preHandleIncomingMessage(boost::shared_ptr<MessageEvent>) {};
+			virtual void postHandleIncomingMessage(boost::shared_ptr<MessageEvent>) {};
 			virtual void preSendMessageRequest(boost::shared_ptr<Message>) {};
 			virtual bool isFromContact(const JID& from);
 			virtual boost::optional<boost::posix_time::ptime> getMessageTimestamp(boost::shared_ptr<Message>) const = 0;

@@ -56,6 +56,7 @@ namespace Swift {
 			std::string senderDisplayNameFromMessage(const JID& from);
 			boost::optional<boost::posix_time::ptime> getMessageTimestamp(boost::shared_ptr<Message> message) const;
 			void preHandleIncomingMessage(boost::shared_ptr<MessageEvent>);
+			void postHandleIncomingMessage(boost::shared_ptr<MessageEvent>);
 
 		private:
 			void clearPresenceQueue();

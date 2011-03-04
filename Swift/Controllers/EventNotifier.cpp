@@ -30,6 +30,9 @@ EventNotifier::~EventNotifier() {
 }
 
 void EventNotifier::handleEventAdded(boost::shared_ptr<StanzaEvent> event) {
+	if (event->getConcluded()) {
+		return;
+	}
 	if (boost::shared_ptr<MessageEvent> messageEvent = boost::dynamic_pointer_cast<MessageEvent>(event)) {
 		JID jid = messageEvent->getStanza()->getFrom();
 		std::string title = nickResolver->jidToNick(jid);

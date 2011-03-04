@@ -91,7 +91,6 @@ bool ChatController::isIncomingMessageFromMe(boost::shared_ptr<Message>) {
 }
 
 void ChatController::preHandleIncomingMessage(boost::shared_ptr<MessageEvent> messageEvent) {
-	eventController_->handleIncomingEvent(messageEvent);
 	if (messageEvent->isReadable()) {
 		chatWindow_->flash();
 		lastWasPresence_ = false;
@@ -106,6 +105,11 @@ void ChatController::preHandleIncomingMessage(boost::shared_ptr<MessageEvent> me
 	chatStateNotifier_->receivedMessageFromContact(message->getPayload<ChatState>());
 	chatStateTracker_->handleMessageReceived(message);
 }
+
+void ChatController::postHandleIncomingMessage(boost::shared_ptr<MessageEvent> messageEvent) {
+	eventController_->handleIncomingEvent(messageEvent);
+}
+
 
 void ChatController::preSendMessageRequest(boost::shared_ptr<Message> message) {
 	chatStateNotifier_->addChatStateRequest(message);

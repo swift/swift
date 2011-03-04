@@ -184,6 +184,7 @@ void ChatControllerBase::handleIncomingMessage(boost::shared_ptr<MessageEvent> m
 	}
 	chatWindow_->show();
 	chatWindow_->setUnreadMessageCount(unreadMessages_.size());
+	postHandleIncomingMessage(messageEvent);
 }
 
 std::string ChatControllerBase::getErrorMessage(boost::shared_ptr<ErrorPayload> error) {
