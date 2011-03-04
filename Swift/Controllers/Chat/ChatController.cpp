@@ -112,7 +112,7 @@ void ChatController::preSendMessageRequest(boost::shared_ptr<Message> message) {
 }
 
 void ChatController::postSendMessage(const std::string& body, boost::shared_ptr<Stanza> sentStanza) {
-	std::string id = addMessage(body, QT_TRANSLATE_NOOP("", "me"), true, labelsEnabled_ ? chatWindow_->getSelectedSecurityLabel() : boost::optional<SecurityLabel>(), std::string(avatarManager_->getAvatarPath(selfJID_).string()), boost::posix_time::microsec_clock::universal_time());
+	std::string id = addMessage(body, QT_TRANSLATE_NOOP("", "me"), true, labelsEnabled_ ? chatWindow_->getSelectedSecurityLabel().getLabel() : boost::shared_ptr<SecurityLabel>(), std::string(avatarManager_->getAvatarPath(selfJID_).string()), boost::posix_time::microsec_clock::universal_time());
 	if (stanzaChannel_->getStreamManagementEnabled()) {
 		chatWindow_->setAckState(id, ChatWindow::Pending);
 		unackedStanzas_[sentStanza] = id;

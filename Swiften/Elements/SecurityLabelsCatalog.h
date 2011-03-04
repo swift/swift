@@ -17,14 +17,41 @@
 namespace Swift {
 	class SecurityLabelsCatalog : public Payload {
 		public:
+			class Item {
+				public:
+					Item() : default_(false) {}
+					const boost::shared_ptr<SecurityLabel> getLabel() const {
+						return label_;
+					}
+
+					void setLabel(boost::shared_ptr<SecurityLabel> label) {
+						label_ = label;
+					}
+
+					const std::string& getSelector() const { return selector_; }
+
+					void setSelector(const std::string& selector) {
+						selector_ = selector;
+					}
+
+					bool getIsDefault() const { return default_; }
+
+					void setIsDefault(bool isDefault) {
+						default_ = isDefault;
+					}
+				private:
+					boost::shared_ptr<SecurityLabel> label_;
+					std::string selector_;
+					bool default_;
+			};
 			SecurityLabelsCatalog(const JID& to = JID()) : to_(to) {}
 
-			const std::vector<SecurityLabel>& getLabels() const {
-				return labels_;
+			const std::vector<Item>& getItems() const {
+				return items_;
 			}
 
-			void addLabel(const SecurityLabel& label) {
-				labels_.push_back(label);
+			void addItem(const Item& item) {
+				items_.push_back(item);
 			}
 
 			const JID& getTo() const {
@@ -55,7 +82,7 @@ namespace Swift {
 			JID to_;
 			std::string name_;
 			std::string description_;
-			std::vector<SecurityLabel> labels_;
+			std::vector<Item> items_;
 	};
 }
 

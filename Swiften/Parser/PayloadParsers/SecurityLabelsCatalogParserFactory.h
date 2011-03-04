@@ -13,7 +13,7 @@
 namespace Swift {
 	class SecurityLabelsCatalogParserFactory : public GenericPayloadParserFactory<SecurityLabelsCatalogParser> {
 		public:
-			SecurityLabelsCatalogParserFactory() : GenericPayloadParserFactory<SecurityLabelsCatalogParser>("catalog", "urn:xmpp:sec-label:catalog:0") {}
+			SecurityLabelsCatalogParserFactory() : GenericPayloadParserFactory<SecurityLabelsCatalogParser>("catalog", "urn:xmpp:sec-label:catalog:2") {}
 	};
 }
 

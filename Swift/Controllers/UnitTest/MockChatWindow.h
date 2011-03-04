@@ -14,8 +14,8 @@ namespace Swift {
 			MockChatWindow() {};
 			virtual ~MockChatWindow();
 
-			virtual std::string addMessage(const std::string& message, const std::string& /*senderName*/, bool /*senderIsSelf*/, const boost::optional<SecurityLabel>& /*label*/, const std::string& /*avatarPath*/, const boost::posix_time::ptime&) {lastMessageBody_ = message; return "";};
-			virtual std::string addAction(const std::string& message, const std::string& /*senderName*/, bool /*senderIsSelf*/, const boost::optional<SecurityLabel>& /*label*/, const std::string& /*avatarPath*/, const boost::posix_time::ptime&) {lastMessageBody_ = message; return "";};
+			virtual std::string addMessage(const std::string& message, const std::string& /*senderName*/, bool /*senderIsSelf*/, boost::shared_ptr<SecurityLabel> /*label*/, const std::string& /*avatarPath*/, const boost::posix_time::ptime&) {lastMessageBody_ = message; return "";};
+			virtual std::string addAction(const std::string& message, const std::string& /*senderName*/, bool /*senderIsSelf*/, boost::shared_ptr<SecurityLabel> /*label*/, const std::string& /*avatarPath*/, const boost::posix_time::ptime&) {lastMessageBody_ = message; return "";};
 			virtual void addSystemMessage(const std::string& /*message*/) {};
 			virtual void addErrorMessage(const std::string& /*message*/) {};
 			virtual void addPresenceMessage(const std::string& /*message*/) {};
@@ -24,12 +24,12 @@ namespace Swift {
 			virtual void setName(const std::string& name) {name_ = name;};
 			virtual void show() {};
 			virtual void activate() {};
-			virtual void setAvailableSecurityLabels(const std::vector<SecurityLabel>& labels) {labels_ = labels;};
+			virtual void setAvailableSecurityLabels(const std::vector<SecurityLabelsCatalog::Item>& labels) {labels_ = labels;};
 			virtual void setSecurityLabelsEnabled(bool enabled) {labelsEnabled_ = enabled;};
 			virtual void setUnreadMessageCount(int /*count*/) {};
 			virtual void convertToMUC() {};
 			virtual void setSecurityLabelsError() {};
-			virtual SecurityLabel getSelectedSecurityLabel() {return SecurityLabel();};
+			virtual SecurityLabelsCatalog::Item getSelectedSecurityLabel() {return SecurityLabelsCatalog::Item();};
 			virtual void setInputEnabled(bool /*enabled*/) {};
 			virtual void setRosterModel(Roster* /*roster*/) {};
 			virtual void setTabComplete(TabComplete*) {};
@@ -43,7 +43,7 @@ namespace Swift {
 
 			std::string name_;
 			std::string lastMessageBody_;
-			std::vector<SecurityLabel> labels_;
+			std::vector<SecurityLabelsCatalog::Item> labels_;
 			bool labelsEnabled_;
 	};
 }

@@ -16,7 +16,7 @@ SecurityLabelsCatalogSerializer::SecurityLabelsCatalogSerializer() : GenericPayl
 }
 
 std::string SecurityLabelsCatalogSerializer::serializePayload(boost::shared_ptr<SecurityLabelsCatalog> catalog)  const {
-	XMLElement element("catalog", "urn:xmpp:sec-label:catalog:0");
+	XMLElement element("catalog", "urn:xmpp:sec-label:catalog:2");
 	if (!catalog->getName().empty()) {
 		element.setAttribute("name", catalog->getName());
 	}
@@ -26,9 +26,17 @@ std::string SecurityLabelsCatalogSerializer::serializePayload(boost::shared_ptr<
 	if (!catalog->getDescription().empty()) {
 		element.setAttribute("desc", catalog->getDescription());
 	}
-	foreach (const SecurityLabel& label, catalog->getLabels()) {
-		std::string serializedLabel = SecurityLabelSerializer().serialize(boost::shared_ptr<SecurityLabel>(new SecurityLabel(label)));
-		element.addNode(boost::shared_ptr<XMLRawTextNode>(new XMLRawTextNode(serializedLabel)));
+	foreach (const SecurityLabelsCatalog::Item& item, catalog->getItems()) {
+		boost::shared_ptr<XMLElement> itemElement(new XMLElement("item"));
+		itemElement->setAttribute("selector", item.getSelector());
+		if (item.getIsDefault()) {
+			itemElement->setAttribute("default", "true");
+		}
+		if (item.getLabel()) {
+			std::string serializedLabel = SecurityLabelSerializer().serialize(item.getLabel());
+			itemElement->addNode(boost::shared_ptr<XMLRawTextNode>(new XMLRawTextNode(serializedLabel)));
+		}
+		element.addNode(itemElement);
 	}
 	return element.serialize();
 }

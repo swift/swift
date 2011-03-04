@@ -67,7 +67,7 @@ void ChatControllerBase::setOnline(bool online) {
 }
 
 void ChatControllerBase::setAvailableServerFeatures(boost::shared_ptr<DiscoInfo> info) {
-	if (iqRouter_->isAvailable() && info->hasFeature(DiscoInfo::SecurityLabels)) {
+	if (iqRouter_->isAvailable() && info->hasFeature(DiscoInfo::SecurityLabelsCatalogueFeature)) {
 		//chatWindow_->setSecurityLabelsEnabled(true);
 		//chatWindow_->setSecurityLabelsError();
 		GetSecurityLabelsCatalogRequest::ref request = GetSecurityLabelsCatalogRequest::create(JID(toJID_.toBare()), iqRouter_);
@@ -96,10 +96,8 @@ void ChatControllerBase::handleSendMessageRequest(const std::string &body) {
 	message->setTo(toJID_);
 	message->setType(Swift::Message::Chat);
 	message->setBody(body);
-	boost::optional<SecurityLabel> label;
 	if (labelsEnabled_) {
-		message->addPayload(boost::shared_ptr<SecurityLabel>(new SecurityLabel(chatWindow_->getSelectedSecurityLabel())));
-		label = boost::optional<SecurityLabel>(chatWindow_->getSelectedSecurityLabel());
+		message->addPayload(chatWindow_->getSelectedSecurityLabel().getLabel());
 	}
 	preSendMessageRequest(message);
 	if (useDelayForLatency_) {
@@ -112,12 +110,12 @@ void ChatControllerBase::handleSendMessageRequest(const std::string &body) {
 
 void ChatControllerBase::handleSecurityLabelsCatalogResponse(boost::shared_ptr<SecurityLabelsCatalog> catalog, ErrorPayload::ref error) {
 	if (!error) {
-		if (catalog->getLabels().size() == 0) {
+		if (catalog->getItems().size() == 0) {
 			chatWindow_->setSecurityLabelsEnabled(false);
 			labelsEnabled_ = false;
 		} else {
 			labelsEnabled_ = true;
-			chatWindow_->setAvailableSecurityLabels(catalog->getLabels());
+			chatWindow_->setAvailableSecurityLabels(catalog->getItems());
 			chatWindow_->setSecurityLabelsEnabled(true);
 		}
 	} else {
@@ -134,7 +132,7 @@ void ChatControllerBase::activateChatWindow() {
 	chatWindow_->activate();
 }
 
-std::string ChatControllerBase::addMessage(const std::string& message, const std::string& senderName, bool senderIsSelf, const boost::optional<SecurityLabel>& label, const std::string& avatarPath, const boost::posix_time::ptime& time) {
+std::string ChatControllerBase::addMessage(const std::string& message, const std::string& senderName, bool senderIsSelf, const boost::shared_ptr<SecurityLabel> label, const std::string& avatarPath, const boost::posix_time::ptime& time) {
 	if (boost::starts_with(message, "/me ")) {
 		return chatWindow_->addAction(String::getSplittedAtFirst(message, ' ').second, senderName, senderIsSelf, label, avatarPath, time);
 	} else {
@@ -174,7 +172,6 @@ void ChatControllerBase::handleIncomingMessage(boost::shared_ptr<MessageEvent> m
 			chatWindow_->addSystemMessage(std::string(s.str()));
 		}
 		boost::shared_ptr<SecurityLabel> label = message->getPayload<SecurityLabel>();
-		boost::optional<SecurityLabel> maybeLabel = label ? boost::optional<SecurityLabel>(*label) : boost::optional<SecurityLabel>();
 
 		// Determine the timestamp
 		boost::posix_time::ptime timeStamp = boost::posix_time::microsec_clock::universal_time();
@@ -183,7 +180,7 @@ void ChatControllerBase::handleIncomingMessage(boost::shared_ptr<MessageEvent> m
 			timeStamp = *messageTimeStamp;
 		}
 
-		addMessage(body, senderDisplayNameFromMessage(from), isIncomingMessageFromMe(message), maybeLabel, std::string(avatarManager_->getAvatarPath(from).string()), timeStamp);
+		addMessage(body, senderDisplayNameFromMessage(from), isIncomingMessageFromMe(message), label, std::string(avatarManager_->getAvatarPath(from).string()), timeStamp);
 	}
 	chatWindow_->show();
 	chatWindow_->setUnreadMessageCount(unreadMessages_.size());

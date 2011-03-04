@@ -151,15 +151,22 @@ void QtChatWindow::setRosterModel(Roster* roster) {
 	treeWidget_->setRosterModel(roster);	
 }
 
-void QtChatWindow::setAvailableSecurityLabels(const std::vector<SecurityLabel>& labels) {
+void QtChatWindow::setAvailableSecurityLabels(const std::vector<SecurityLabelsCatalog::Item>& labels) {
 	availableLabels_ = labels;
 	labelsWidget_->clear();
 	int i = 0;
-	foreach (SecurityLabel label, labels) {
-		QString labelName = P2QSTRING(label.getDisplayMarking());
+	int defaultIndex = 0;
+	foreach (SecurityLabelsCatalog::Item label, labels) {
+		std::string selector = label.getSelector();
+		std::string displayMarking = label.getLabel() ? label.getLabel()->getDisplayMarking() : "";
+		QString labelName = selector.empty() ? displayMarking.c_str() : selector.c_str();
 		labelsWidget_->addItem(labelName, QVariant(i));
+		if (label.getIsDefault()) {
+			defaultIndex = i;
+		}
 		i++;
 	}
+	labelsWidget_->setCurrentIndex(defaultIndex);
 }
 
 
@@ -176,7 +183,7 @@ void QtChatWindow::setSecurityLabelsEnabled(bool enabled) {
 	}
 }
 
-SecurityLabel QtChatWindow::getSelectedSecurityLabel() {
+SecurityLabelsCatalog::Item QtChatWindow::getSelectedSecurityLabel() {
 	assert(labelsWidget_->isEnabled());
 	return availableLabels_[labelsWidget_->currentIndex()];
 }
@@ -248,11 +255,11 @@ void QtChatWindow::updateTitleWithUnreadCount() {
 	emit titleUpdated();
 }
 
-std::string QtChatWindow::addMessage(const std::string &message, const std::string &senderName, bool senderIsSelf, const boost::optional<SecurityLabel>& label, const std::string& avatarPath, const boost::posix_time::ptime& time) {
+std::string QtChatWindow::addMessage(const std::string &message, const std::string &senderName, bool senderIsSelf, boost::shared_ptr<SecurityLabel> label, const std::string& avatarPath, const boost::posix_time::ptime& time) {
 	return addMessage(message, senderName, senderIsSelf, label, avatarPath, "", time);
 }
 
-std::string QtChatWindow::addMessage(const std::string &message, const std::string &senderName, bool senderIsSelf, const boost::optional<SecurityLabel>& label, const std::string& avatarPath, const QString& style, const boost::posix_time::ptime& time) {
+std::string QtChatWindow::addMessage(const std::string &message, const std::string &senderName, bool senderIsSelf, boost::shared_ptr<SecurityLabel> label, const std::string& avatarPath, const QString& style, const boost::posix_time::ptime& time) {
 	if (isWidgetSelected()) {
 		onAllMessagesRead();
 	}
@@ -299,7 +306,7 @@ int QtChatWindow::getCount() {
 	return unreadCount_;
 }
 
-std::string QtChatWindow::addAction(const std::string &message, const std::string &senderName, bool senderIsSelf, const boost::optional<SecurityLabel>& label, const std::string& avatarPath, const boost::posix_time::ptime& time) {
+std::string QtChatWindow::addAction(const std::string &message, const std::string &senderName, bool senderIsSelf, boost::shared_ptr<SecurityLabel> label, const std::string& avatarPath, const boost::posix_time::ptime& time) {
 	return addMessage(" *" + message + "*", senderName, senderIsSelf, label, avatarPath, "font-style:italic ", time);
 }
 

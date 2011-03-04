@@ -15,6 +15,7 @@ SecurityLabelsCatalogParser::SecurityLabelsCatalogParser() : level_(TopLevel), l
 }
 
 SecurityLabelsCatalogParser::~SecurityLabelsCatalogParser() {
+	//delete currentLabel_;
 	delete labelParserFactory_;
 }
 
@@ -24,6 +25,11 @@ void SecurityLabelsCatalogParser::handleStartElement(const std::string& element,
 		getPayloadInternal()->setTo(JID(attributes.getAttribute("to")));
 		getPayloadInternal()->setName(attributes.getAttribute("name"));
 		getPayloadInternal()->setDescription(attributes.getAttribute("desc"));
+	}
+	else if (level_ == ItemLevel && element == "item" && ns == "urn:xmpp:sec-label:catalog:2") {
+		currentItem_ = boost::shared_ptr<SecurityLabelsCatalog::Item>(new SecurityLabelsCatalog::Item());
+		currentItem_->setSelector(attributes.getAttribute("selector"));
+		currentItem_->setIsDefault(attributes.getBoolAttribute("default", false));
 	}
 	else if (level_ == LabelLevel) {
 		assert(!labelParser_);
@@ -42,12 +48,18 @@ void SecurityLabelsCatalogParser::handleEndElement(const std::string& element, c
 	if (labelParser_) {
 		labelParser_->handleEndElement(element, ns);
 	}
-	if (level_ == LabelLevel && labelParser_) {
-		SecurityLabel* label = dynamic_cast<SecurityLabel*>(labelParser_->getPayload().get());
-		assert(label);
-		getPayloadInternal()->addLabel(SecurityLabel(*label));
+	if (level_ == LabelLevel && labelParser_ && currentItem_) {
+		boost::shared_ptr<SecurityLabel> currentLabel = labelParser_->getLabelPayload();
+		assert(currentLabel);
+		currentItem_->setLabel(currentLabel);
 		delete labelParser_;
 		labelParser_ = 0;
+	}
+	else if (level_ == ItemLevel && element == "item" && ns == "urn:xmpp:sec-label:catalog:2") {
+		if (currentItem_) {
+			getPayloadInternal()->addItem(SecurityLabelsCatalog::Item(*currentItem_));
+			currentItem_.reset();
+		}
 	}
 	--level_;
 }

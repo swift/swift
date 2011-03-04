@@ -43,7 +43,7 @@ namespace Swift {
 			void activateChatWindow();
 			void setAvailableServerFeatures(boost::shared_ptr<DiscoInfo> info);
 			void handleIncomingMessage(boost::shared_ptr<MessageEvent> message);
-			std::string addMessage(const std::string& message, const std::string& senderName, bool senderIsSelf, const boost::optional<SecurityLabel>& label, const std::string& avatarPath, const boost::posix_time::ptime& time);
+			std::string addMessage(const std::string& message, const std::string& senderName, bool senderIsSelf, boost::shared_ptr<SecurityLabel> label, const std::string& avatarPath, const boost::posix_time::ptime& time);
 			virtual void setOnline(bool online);
 			virtual void setEnabled(bool enabled);
 			virtual void setToJID(const JID& jid) {toJID_ = jid;};

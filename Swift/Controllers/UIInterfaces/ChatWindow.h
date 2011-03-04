@@ -14,7 +14,7 @@
 #include <vector>
 
 #include <string>
-#include "Swiften/Elements/SecurityLabel.h"
+#include "Swiften/Elements/SecurityLabelsCatalog.h"
 #include "Swiften/Elements/ChatState.h"
 
 namespace Swift {
@@ -32,11 +32,11 @@ namespace Swift {
 			/** Add message to window.
 			 * @return id of added message (for acks).
 			 */
-			virtual std::string addMessage(const std::string& message, const std::string& senderName, bool senderIsSelf, const boost::optional<SecurityLabel>& label, const std::string& avatarPath, const boost::posix_time::ptime& time) = 0;
+			virtual std::string addMessage(const std::string& message, const std::string& senderName, bool senderIsSelf, boost::shared_ptr<SecurityLabel> label, const std::string& avatarPath, const boost::posix_time::ptime& time) = 0;
 			/** Adds action to window.
 			 * @return id of added message (for acks);
 			 */
-			virtual std::string addAction(const std::string& message, const std::string& senderName, bool senderIsSelf, const boost::optional<SecurityLabel>& label, const std::string& avatarPath, const boost::posix_time::ptime& time) = 0;
+			virtual std::string addAction(const std::string& message, const std::string& senderName, bool senderIsSelf, boost::shared_ptr<SecurityLabel> label, const std::string& avatarPath, const boost::posix_time::ptime& time) = 0;
 			virtual void addSystemMessage(const std::string& message) = 0;
 			virtual void addPresenceMessage(const std::string& message) = 0;
 			virtual void addErrorMessage(const std::string& message) = 0;
@@ -45,13 +45,13 @@ namespace Swift {
 			virtual void setName(const std::string& name) = 0;
 			virtual void show() = 0;
 			virtual void activate() = 0;
-			virtual void setAvailableSecurityLabels(const std::vector<SecurityLabel>& labels) = 0;
+			virtual void setAvailableSecurityLabels(const std::vector<SecurityLabelsCatalog::Item>& labels) = 0;
 			virtual void setSecurityLabelsEnabled(bool enabled) = 0;
 			virtual void setUnreadMessageCount(int count) = 0;
 			virtual void convertToMUC() = 0;
 //			virtual TreeWidget *getTreeWidget() = 0;
 			virtual void setSecurityLabelsError() = 0;
-			virtual SecurityLabel getSelectedSecurityLabel() = 0;
+			virtual SecurityLabelsCatalog::Item getSelectedSecurityLabel() = 0;
 			virtual void setInputEnabled(bool enabled) = 0;
 			virtual void setRosterModel(Roster* model) = 0;
 			virtual void setTabComplete(TabComplete* completer) = 0;

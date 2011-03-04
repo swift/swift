@@ -27,11 +27,13 @@ namespace Swift {
 			enum Level { 
 				TopLevel = 0, 
 				PayloadLevel = 1,
-				LabelLevel = 2
+				ItemLevel = 2,
+				LabelLevel = 3
 			};
 			int level_;
 			SecurityLabelParserFactory* labelParserFactory_;
 			SecurityLabelParser* labelParser_;
+			boost::shared_ptr<SecurityLabelsCatalog::Item> currentItem_;
 	};
 }
 

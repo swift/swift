@@ -30,8 +30,8 @@ namespace Swift {
 		public:
 			QtChatWindow(const QString &contact, QtChatTheme* theme, UIEventStream* eventStream);
 			~QtChatWindow();
-			std::string addMessage(const std::string &message, const std::string &senderName, bool senderIsSelf, const boost::optional<SecurityLabel>& label, const std::string& avatarPath, const boost::posix_time::ptime& time);
-			std::string addAction(const std::string &message, const std::string &senderName, bool senderIsSelf, const boost::optional<SecurityLabel>& label, const std::string& avatarPath, const boost::posix_time::ptime& time);
+			std::string addMessage(const std::string &message, const std::string &senderName, bool senderIsSelf, boost::shared_ptr<SecurityLabel> label, const std::string& avatarPath, const boost::posix_time::ptime& time);
+			std::string addAction(const std::string &message, const std::string &senderName, bool senderIsSelf, boost::shared_ptr<SecurityLabel> label, const std::string& avatarPath, const boost::posix_time::ptime& time);
 			void addSystemMessage(const std::string& message);
 			void addPresenceMessage(const std::string& message);
 			void addErrorMessage(const std::string& errorMessage);
@@ -40,10 +40,10 @@ namespace Swift {
 			void setUnreadMessageCount(int count);
 			void convertToMUC();
 //			TreeWidget *getTreeWidget();
-			void setAvailableSecurityLabels(const std::vector<SecurityLabel>& labels);
+			void setAvailableSecurityLabels(const std::vector<SecurityLabelsCatalog::Item>& labels);
 			void setSecurityLabelsEnabled(bool enabled);
 			void setSecurityLabelsError();
-			SecurityLabel getSelectedSecurityLabel();
+			SecurityLabelsCatalog::Item getSelectedSecurityLabel();
 			void setName(const std::string& name);
 			void setInputEnabled(bool enabled);
 			QtTabbable::AlertType getWidgetAlertState();
@@ -75,7 +75,7 @@ namespace Swift {
 		private:
 			void updateTitleWithUnreadCount();
 			void tabComplete();
-			std::string addMessage(const std::string &message, const std::string &senderName, bool senderIsSelf, const boost::optional<SecurityLabel>& label, const std::string& avatarPath, const QString& style, const boost::posix_time::ptime& time);
+			std::string addMessage(const std::string &message, const std::string &senderName, bool senderIsSelf, boost::shared_ptr<SecurityLabel> label, const std::string& avatarPath, const QString& style, const boost::posix_time::ptime& time);
 
 			int unreadCount_;
 			bool contactIsTyping_;
@@ -86,7 +86,7 @@ namespace Swift {
 			QComboBox* labelsWidget_;
 			QtTreeWidget* treeWidget_;
 			TabComplete* completer_;
-			std::vector<SecurityLabel> availableLabels_;
+			std::vector<SecurityLabelsCatalog::Item> availableLabels_;
 			bool previousMessageWasSelf_;
 			bool previousMessageWasSystem_;
 			bool previousMessageWasPresence_;
