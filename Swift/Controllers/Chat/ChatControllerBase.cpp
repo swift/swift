@@ -67,7 +67,7 @@ void ChatControllerBase::setOnline(bool online) {
 }
 
 void ChatControllerBase::setAvailableServerFeatures(boost::shared_ptr<DiscoInfo> info) {
-	if (iqRouter_->isAvailable() && info->hasFeature(DiscoInfo::SecurityLabelsCatalogueFeature)) {
+	if (iqRouter_->isAvailable() && info->hasFeature(DiscoInfo::SecurityLabelsCatalogFeature)) {
 		//chatWindow_->setSecurityLabelsEnabled(true);
 		//chatWindow_->setSecurityLabelsError();
 		GetSecurityLabelsCatalogRequest::ref request = GetSecurityLabelsCatalogRequest::create(JID(toJID_.toBare()), iqRouter_);

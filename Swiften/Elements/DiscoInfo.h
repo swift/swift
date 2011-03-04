@@ -21,7 +21,7 @@ namespace Swift {
 
 			static const std::string ChatStatesFeature;
 			static const std::string SecurityLabelsFeature;
-			static const std::string SecurityLabelsCatalogueFeature;
+			static const std::string SecurityLabelsCatalogFeature;
 			static const std::string JabberSearchFeature;
 
 			class Identity {

@@ -209,6 +209,9 @@ void QtUserSearchWindow::clearForm() {
 	QWidget* legacySearchWidgets[8] = {fieldsPage_->nickInputLabel_, fieldsPage_->nickInput_, fieldsPage_->firstInputLabel_, fieldsPage_->firstInput_, fieldsPage_->lastInputLabel_, fieldsPage_->lastInput_, fieldsPage_->emailInputLabel_, fieldsPage_->emailInput_};
 	for (int i = 0; i < 8; i++) {
 		legacySearchWidgets[i]->hide();
+		if (QLineEdit* edit = qobject_cast<QLineEdit*>(legacySearchWidgets[i])) {
+			edit->clear();
+		}
 	}
 	fieldsPage_->emitCompletenessCheck();
 }

@@ -15,7 +15,6 @@ SecurityLabelsCatalogParser::SecurityLabelsCatalogParser() : level_(TopLevel), l
 }
 
 SecurityLabelsCatalogParser::~SecurityLabelsCatalogParser() {
-	//delete currentLabel_;
 	delete labelParserFactory_;
 }
 
