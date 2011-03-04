@@ -66,14 +66,46 @@ void QtTreeWidget::handleClicked(const QModelIndex& index) {
 	if (item) {
 		setExpanded(index, !isExpanded(index));
 	}
+	currentChanged(index, QModelIndex());
 }
 
+void QtTreeWidget::currentChanged(const QModelIndex& current, const QModelIndex& previous) {
+	bool valid = false;
+	if (!editable_ || selectedIndexes().empty() || !selectedIndexes()[0].isValid()) {
+		/* I didn't quite understand why using current didn't seem to work here.*/
+	}
+	else if (current.isValid()) {
+		RosterItem* item = static_cast<RosterItem*>(current.internalPointer());
+		if (dynamic_cast<ContactRosterItem*>(item)) {
+			valid = true;
+		}
+	}
+	onSomethingSelectedChanged(valid);
+	QTreeView::currentChanged(current, previous);
+}
 
 void QtTreeWidget::handleItemActivated(const QModelIndex& index) {
 	RosterItem* item = static_cast<RosterItem*>(index.internalPointer());
 	ContactRosterItem* contact = dynamic_cast<ContactRosterItem*>(item);
 	if (contact) {
 		eventStream_->send(boost::shared_ptr<UIEvent>(new RequestChatUIEvent(contact->getJID())));
+	}
+}
+
+void QtTreeWidget::handleEditUserActionTriggered(bool /*checked*/) {
+	if (!editable_) {
+		return;
+	}
+	if (selectedIndexes().empty()) {
+		return;
+	}
+	QModelIndex index = selectedIndexes()[0];
+	if (!index.isValid()) {
+		return;
+	}
+	RosterItem* item = static_cast<RosterItem*>(index.internalPointer());
+	if (ContactRosterItem* contact = dynamic_cast<ContactRosterItem*>(item)) {
+		eventStream_->send(boost::make_shared<RequestContactEditorUIEvent>(contact->getJID()));
 	}
 }
 
@@ -101,15 +133,19 @@ void QtTreeWidget::contextMenuEvent(QContextMenuEvent* event) {
 		}
 	}
 	else if (GroupRosterItem* group = dynamic_cast<GroupRosterItem*>(item)) {
-		QAction* renameGroup = contextMenu.addAction(tr("Rename"));
+		QAction* renameGroupAction = contextMenu.addAction(tr("Rename"));
 		QAction* result = contextMenu.exec(event->globalPos());
-		if (result == renameGroup) {
-			bool ok;
-			QString newName = QInputDialog::getText(NULL, tr("Rename group"), tr("New name for %1").arg(P2QSTRING(group->getDisplayName())), QLineEdit::Normal, P2QSTRING(group->getDisplayName()), &ok);
-			if (ok) {
-				eventStream_->send(boost::make_shared<RenameGroupUIEvent>(group->getDisplayName(), Q2PSTRING(newName)));
-			}
+		if (result == renameGroupAction) {
+			renameGroup(group);
 		}
+	}
+}
+
+void QtTreeWidget::renameGroup(GroupRosterItem* group) {
+	bool ok;
+	QString newName = QInputDialog::getText(NULL, tr("Rename group"), tr("New name for %1").arg(P2QSTRING(group->getDisplayName())), QLineEdit::Normal, P2QSTRING(group->getDisplayName()), &ok);
+	if (ok) {
+		eventStream_->send(boost::make_shared<RenameGroupUIEvent>(group->getDisplayName(), Q2PSTRING(newName)));
 	}
 }
 

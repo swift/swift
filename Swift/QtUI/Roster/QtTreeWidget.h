@@ -25,6 +25,12 @@ class QtTreeWidget : public QTreeView{
 		Roster* getRoster() {return roster_;}
 		void setEditable(bool b) { editable_ = b; }
 
+	signals:
+		void onSomethingSelectedChanged(bool);
+
+	public slots:
+		void handleEditUserActionTriggered(bool checked);
+
 	private slots:
 		void handleItemActivated(const QModelIndex&);
 		void handleModelItemExpanded(const QModelIndex&, bool expanded);
@@ -33,8 +39,11 @@ class QtTreeWidget : public QTreeView{
 		void handleClicked(const QModelIndex&);
 	protected:
 		void contextMenuEvent(QContextMenuEvent* event);
+	protected slots:
+		virtual void currentChanged(const QModelIndex& current, const QModelIndex& previous);
 
 	private:
+		void renameGroup(GroupRosterItem* group);
 		void drawBranches(QPainter*, const QRect&, const QModelIndex&) const;
 		RosterModel* model_;
 		Roster* roster_;

@@ -92,6 +92,10 @@ QtMainWindow::QtMainWindow(QtSettingsProvider* settings, UIEventStream* uiEventS
 	addUserAction_ = new QAction(tr("&Add Contact"), this);
 	connect(addUserAction_, SIGNAL(triggered(bool)), this, SLOT(handleAddUserActionTriggered(bool)));
 	actionsMenu->addAction(addUserAction_);
+	editUserAction_ = new QAction(tr("&Edit Selected Contact"), this);
+	connect(editUserAction_, SIGNAL(triggered(bool)), treeWidget_, SLOT(handleEditUserActionTriggered(bool)));
+	actionsMenu->addAction(editUserAction_);
+	editUserAction_->setEnabled(false);
 	chatUserAction_ = new QAction(tr("Start &Chat"), this);
 	connect(chatUserAction_, SIGNAL(triggered(bool)), this, SLOT(handleChatUserActionTriggered(bool)));
 	actionsMenu->addAction(chatUserAction_);
@@ -99,6 +103,8 @@ QtMainWindow::QtMainWindow(QtSettingsProvider* settings, UIEventStream* uiEventS
 	QAction* signOutAction = new QAction(tr("&Sign Out"), this);
 	connect(signOutAction, SIGNAL(triggered()), SLOT(handleSignOutAction()));
 	actionsMenu->addAction(signOutAction);
+
+	connect(treeWidget_, SIGNAL(onSomethingSelectedChanged(bool)), editUserAction_, SLOT(setEnabled(bool)));
 
 	lastOfflineState_ = false;
 	uiEventStream_->onUIEvent.connect(boost::bind(&QtMainWindow::handleUIEvent, this, _1));

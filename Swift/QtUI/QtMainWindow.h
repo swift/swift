@@ -63,6 +63,7 @@ namespace Swift {
 			QtTreeWidget* treeWidget_;
 			QtRosterHeader* meView_;
 			QAction* addUserAction_;
+			QAction* editUserAction_;
 			QAction* chatUserAction_;
 			QAction* showOfflineAction_;
 			QtTabWidget* tabs_;
