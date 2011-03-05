@@ -39,9 +39,7 @@ elif env.get("BOOST_BUNDLED", False) :
 				"LIBPATH": [Dir(".")],
 				"LIBS": ["Swiften_Boost"]
 			}
-		if env["PLATFORM"] != "win32" :
-			env["BOOST_FLAGS"]["LIBS"] += ["pthread"]
-		else :
+		if env["PLATFORM"] == "win32" :
 			env["BOOST_FLAGS"]["CPPDEFINES"] += [("_WIN32_WINNT", "0x0501")]
 			if env["PLATFORM"] == "cygwin" :
 				env["BOOST_FLAGS"]["CPPDEFINES"] += ["__USE_W32_SOCKETS"]
