@@ -245,12 +245,12 @@ static int sluift_client_set_version(lua_State *L) {
 	}
 }
 
-static int sluift_client_get_roster(lua_State *L) {
+static int sluift_client_get_contacts(lua_State *L) {
 	try {
 		eventLoop.runUntilEvents();
 
 		SluiftClient* client = getClient(L);
-		Lua::Table rosterTable;
+		Lua::Table contactsTable;
 		foreach(const XMPPRosterItem& item, client->getRoster()) {
 			std::string subscription;
 			switch(item.getSubscription()) {
@@ -266,9 +266,9 @@ static int sluift_client_get_roster(lua_State *L) {
 				("name", boost::make_shared<Lua::Value>(item.getName()))
 				("subscription", boost::make_shared<Lua::Value>(subscription))
 				("groups", boost::make_shared<Lua::Value>(std::vector<Lua::Value>(item.getGroups().begin(), item.getGroups().end())));
-			rosterTable[item.getJID().toString()] = boost::make_shared<Lua::Value>(itemTable);
+			contactsTable[item.getJID().toString()] = boost::make_shared<Lua::Value>(itemTable);
 		}
-		pushValue(L, rosterTable);
+		pushValue(L, contactsTable);
 		return 1;
 	}
 	catch (const SluiftException& e) {
@@ -597,7 +597,7 @@ static const luaL_reg sluift_client_functions[] = {
 	{"set", sluift_client_set},
 	{"send", sluift_client_send},
 	{"set_version", sluift_client_set_version},
-	{"get_roster", sluift_client_get_roster},
+	{"get_contacts", sluift_client_get_contacts},
 	{"get_version", sluift_client_get_version},
 	{"set_options", sluift_client_set_options},
 	{"for_event", sluift_client_for_event},
