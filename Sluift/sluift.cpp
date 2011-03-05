@@ -395,14 +395,14 @@ static int sluift_client_set_options(lua_State* L) {
 static void pushEvent(lua_State* L, Stanza::ref event) {
 	if (Message::ref message = boost::dynamic_pointer_cast<Message>(event)) {
 		Lua::Table result = boost::assign::map_list_of
-			("type", boost::make_shared<Lua::Value>("message"))
+			("type", boost::make_shared<Lua::Value>(std::string("message")))
 			("from", boost::make_shared<Lua::Value>(message->getFrom().toString()))
 			("body", boost::make_shared<Lua::Value>(message->getBody()));
 		Lua::pushValue(L, result);
 	}
 	else if (Presence::ref presence = boost::dynamic_pointer_cast<Presence>(event)) {
 		Lua::Table result = boost::assign::map_list_of
-			("type", boost::make_shared<Lua::Value>("presence"))
+			("type", boost::make_shared<Lua::Value>(std::string("presence")))
 			("from", boost::make_shared<Lua::Value>(presence->getFrom().toString()))
 			("status", boost::make_shared<Lua::Value>(presence->getStatus()));
 		Lua::pushValue(L, result);

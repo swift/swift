@@ -28,7 +28,7 @@ if env["SCONS_STAGE"] == "build" :
 		f = open(source[0].abspath, "r")
 		contents = f.read()
 		f.close()
-		if env["PLATFORM"] == "windows" :
+		if env["PLATFORM"] == "win32" :
 			key = "Z"
 		else :
 			key = "D"
