@@ -10,7 +10,6 @@
 -- 
 -- The following environment variables are used:
 -- * SLUIFT_JID, SWIFT_PASS: JID and password to log in with
--- * SLUIFT_OPTIONS: Client options to use (e.g. "{compress = false}")
 -- * SLUIFT_DEBUG: Sets whether debugging should be turned on
 
 require "sluift"

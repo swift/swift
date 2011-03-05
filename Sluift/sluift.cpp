@@ -631,6 +631,30 @@ static int sluift_new_client(lua_State *L) {
 	}
 }
 
+static int sluift_jid_to_bare(lua_State *L) {
+	JID jid(std::string(luaL_checkstring(L, 1)));
+	lua_pushstring(L, jid.toBare().toString().c_str());
+	return 1;
+}
+
+static int sluift_jid_node(lua_State *L) {
+	JID jid(std::string(luaL_checkstring(L, 1)));
+	lua_pushstring(L, jid.getNode().c_str());
+	return 1;
+}
+
+static int sluift_jid_domain(lua_State *L) {
+	JID jid(std::string(luaL_checkstring(L, 1)));
+	lua_pushstring(L, jid.getDomain().c_str());
+	return 1;
+}
+
+static int sluift_jid_resource(lua_State *L) {
+	JID jid(std::string(luaL_checkstring(L, 1)));
+	lua_pushstring(L, jid.getResource().c_str());
+	return 1;
+}
+
 static int sluift_sleep(lua_State *L) {
 	try {
 		eventLoop.runOnce();
@@ -672,6 +696,10 @@ static int sluift_newindex(lua_State *L) {
 
 static const luaL_reg sluift_functions[] = {
 	{"new_client", sluift_new_client},
+	{"jid_to_bare", sluift_jid_to_bare},
+	{"jid_node", sluift_jid_node},
+	{"jid_domain", sluift_jid_domain},
+	{"jid_resource", sluift_jid_resource},
 	{"sleep", sluift_sleep},
 	{NULL, NULL}
 };
