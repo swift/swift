@@ -1,4 +1,4 @@
-import Version
+import Version, os.path
 
 Import(["env", "conf_env"])
 
@@ -49,3 +49,10 @@ if env["SCONS_STAGE"] == "build" :
 
 	myenv.WriteVal("dll.c", myenv.Value(""))
 	myenv.SharedLibrary("sluift", ["dll.c"])
+
+	if env["PLATFORM"] == "win32" :
+		myenv.WindowsBundle("Sluift", 
+			resources = {"": [
+				os.path.join(env["OPENSSL_DIR"], "bin", "ssleay32.dll"),  
+				os.path.join(env["OPENSSL_DIR"], "bin", "libeay32.dll")
+			]})
