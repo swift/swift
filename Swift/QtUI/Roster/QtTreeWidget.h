@@ -45,6 +45,9 @@ class QtTreeWidget : public QTreeView{
 	private:
 		void renameGroup(GroupRosterItem* group);
 		void drawBranches(QPainter*, const QRect&, const QModelIndex&) const;
+		QModelIndexList getSelectedIndexes() const;
+	
+	private:
 		RosterModel* model_;
 		Roster* roster_;
 		RosterDelegate* delegate_;

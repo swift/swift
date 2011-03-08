@@ -69,9 +69,29 @@ void QtTreeWidget::handleClicked(const QModelIndex& index) {
 	currentChanged(index, QModelIndex());
 }
 
+QModelIndexList QtTreeWidget::getSelectedIndexes() const {
+	// Not using selectedIndexes(), because this seems to cause a crash in Qt (4.7.0) in the
+	// QModelIndexList destructor.
+	// This is a workaround posted in http://www.qtcentre.org/threads/16933 (although this case
+	// was resolved by linking against the debug libs, ours isn't, and we're not alone)
+	QItemSelection ranges = selectionModel()->selection();
+	QModelIndexList selectedIndexList;
+	for (int i = 0; i < ranges.count(); ++i) {
+		QModelIndex parent = ranges.at(i).parent();
+		int right = ranges.at(i).model()->columnCount(parent) - 1;
+		if (ranges.at(i).left() == 0 && ranges.at(i).right() == right) {
+			for (int r = ranges.at(i).top(); r <= ranges.at(i).bottom(); ++r) {
+				selectedIndexList.append(ranges.at(i).model()->index(r, 0, parent));
+			}
+		}
+	}
+	return selectedIndexList;
+}
+
 void QtTreeWidget::currentChanged(const QModelIndex& current, const QModelIndex& previous) {
 	bool valid = false;
-	if (!editable_ || selectedIndexes().empty() || !selectedIndexes()[0].isValid()) {
+	QModelIndexList selectedIndexList = getSelectedIndexes();
+	if (!editable_ || selectedIndexList.empty() || !selectedIndexList[0].isValid()) {
 		/* I didn't quite understand why using current didn't seem to work here.*/
 	}
 	else if (current.isValid()) {
@@ -96,10 +116,11 @@ void QtTreeWidget::handleEditUserActionTriggered(bool /*checked*/) {
 	if (!editable_) {
 		return;
 	}
-	if (selectedIndexes().empty()) {
+	QModelIndexList selectedIndexList = getSelectedIndexes();
+	if (selectedIndexList.empty()) {
 		return;
 	}
-	QModelIndex index = selectedIndexes()[0];
+	QModelIndex index = selectedIndexList[0];
 	if (!index.isValid()) {
 		return;
 	}

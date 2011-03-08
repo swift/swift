@@ -169,11 +169,11 @@ void QtMUCSearchWindow::handleSelectionChanged(const QItemSelection&, const QIte
 }
 
 MUCSearchRoomItem* QtMUCSearchWindow::getSelectedRoom() const {
-	QItemSelection ranges = ui_.results_->selectionModel()->selection();
 	// Not using selectedIndexes(), because this seems to cause a crash in Qt (4.7.0) in the
 	// QModelIndexList destructor.
 	// This is a workaround posted in http://www.qtcentre.org/threads/16933 (although this case
 	// was resolved by linking against the debug libs, ours isn't, and we're not alone)
+	QItemSelection ranges = ui_.results_->selectionModel()->selection();
 	QModelIndexList lstIndex;
 	for (int i = 0; i < ranges.count(); ++i) {
 		QModelIndex parent = ranges.at(i).parent();
