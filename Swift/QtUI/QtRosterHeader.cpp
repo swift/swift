@@ -8,6 +8,7 @@
 
 #include <QHBoxLayout>
 #include <QVBoxLayout>
+#include <QFileInfo>
 #include <QIcon>
 #include <QSizePolicy>
 #include <qdebug.h>
@@ -19,6 +20,7 @@
 #include <Swift/QtUI/QtElidingLabel.h>
 #include <Swift/QtUI/QtClickableLabel.h>
 #include <Swift/QtUI/QtNameWidget.h>
+#include "QtScaledAvatarCache.h"
 
 namespace Swift {
 QtRosterHeader::QtRosterHeader(QtSettingsProvider* settings, QWidget* parent) : QWidget(parent) {
@@ -71,28 +73,15 @@ void QtRosterHeader::setConnecting() {
 }
 
 void QtRosterHeader::setAvatar(const QString& path) {
-	QIcon avatar(path);
-	if (avatar.isNull()) {
-		//qDebug() << "Setting null avatar";
-		avatar = QIcon(":/icons/avatar.png");
-	} 
-
-	// Apply a rounded rectangle mask
-	// FIXME:
-	// - We shouldn't go via a 128x128 pixmap
-	// - Something tells me we can do this with clever composition mode +
-	//   1 drawRectangle on the avatarPixmap, but i haven't figured it out yet.
-	QPixmap avatarPixmap = avatar.pixmap(128, 128);
-	QPixmap maskedAvatar(avatarPixmap.size());
-	maskedAvatar.fill(QColor(0, 0, 0, 0));
-	QPainter maskPainter(&maskedAvatar);
-	maskPainter.setBrush(Qt::black);
-	maskPainter.drawRoundedRect(maskedAvatar.rect(), 13, 13);
-	maskPainter.setCompositionMode(QPainter::CompositionMode_SourceIn);
-	maskPainter.drawPixmap(0, 0, avatarPixmap);
-	maskPainter.end();
-
-	avatarLabel_->setPixmap(maskedAvatar.scaled(avatarSize_, avatarSize_, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+	QString scaledAvatarPath = QtScaledAvatarCache(avatarSize_).getScaledAvatarPath(path);
+	QPixmap avatar;
+	if (QFileInfo(scaledAvatarPath).exists()) {
+		avatar.load(scaledAvatarPath);
+	}
+	else {
+		avatar = QPixmap(":/icons/avatar.png").scaled(avatarSize_, avatarSize_, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+	}
+	avatarLabel_->setPixmap(avatar);
 }
 
 void QtRosterHeader::setNick(const QString& nick) {

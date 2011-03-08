@@ -75,6 +75,7 @@ sources = [
     "QtNameWidget.cpp",
     "QtSettingsProvider.cpp",
     "QtStatusWidget.cpp",
+		"QtScaledAvatarCache.cpp",
     "QtSwift.cpp",
     "QtChatView.cpp",
     "QtChatTheme.cpp",

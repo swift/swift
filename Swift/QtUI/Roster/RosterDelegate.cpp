@@ -12,6 +12,7 @@
 #include <QBrush>
 #include <QFontMetrics>
 #include <QPainterPath>
+#include <QFileInfo>
 #include <QPolygon>
 #include <qdebug.h>
 #include <QBitmap>
@@ -21,6 +22,7 @@
 
 #include "QtTreeWidget.h"
 #include "RosterModel.h"
+#include "QtScaledAvatarCache.h"
 
 namespace Swift {
 
@@ -86,23 +88,18 @@ void RosterDelegate::paintContact(QPainter* painter, const QStyleOptionViewItem&
 	int calculatedAvatarSize = presenceIconRegion.height();
 	//This overlaps the presenceIcon, so must be painted first
 	QRect avatarRegion(QPoint(presenceIconRegion.right() - presenceIconWidth_ / 2, presenceIconRegion.top()), QSize(calculatedAvatarSize, calculatedAvatarSize));
-	QIcon avatar = index.data(AvatarRole).isValid() && !index.data(AvatarRole).value<QIcon>().isNull()
-		? index.data(AvatarRole).value<QIcon>()
-		: QIcon(":/icons/avatar.png");
 
-	// Apply a rounded rectangle mask
-	// FIXME: We shouldn't go via a 128x128 pixmap
-	QPixmap avatarPixmap = avatar.pixmap(128, 128);
-	QPixmap maskedAvatar(avatarPixmap.size());
-	maskedAvatar.fill(QColor(0, 0, 0, 0));
-	QPainter maskPainter(&maskedAvatar);
-	maskPainter.setBrush(Qt::black);
-	maskPainter.drawRoundedRect(maskedAvatar.rect(), 13, 13);
-	maskPainter.setCompositionMode(QPainter::CompositionMode_SourceIn);
-	maskPainter.drawPixmap(0, 0, avatarPixmap);
-	maskPainter.end();
-
-	avatarPixmap = maskedAvatar.scaled(avatarRegion.height(), avatarRegion.width(), Qt::KeepAspectRatio, Qt::SmoothTransformation);
+	QPixmap avatarPixmap;
+	if (index.data(AvatarRole).isValid() && !index.data(AvatarRole).value<QString>().isNull()) {
+		QString avatarPath = index.data(AvatarRole).value<QString>();
+		QString scaledAvatarPath = QtScaledAvatarCache(avatarRegion.height()).getScaledAvatarPath(avatarPath);
+		if (QFileInfo(scaledAvatarPath).exists()) {
+			avatarPixmap.load(scaledAvatarPath);
+		}
+	}
+	if (avatarPixmap.isNull()) {
+		avatarPixmap = QPixmap(":/icons/avatar.png").scaled(avatarRegion.height(), avatarRegion.width(), Qt::KeepAspectRatio, Qt::SmoothTransformation);
+	}
 
 	painter->drawPixmap(avatarRegion.topLeft() + QPoint(((avatarRegion.width() - avatarPixmap.width()) / 2), (avatarRegion.height() - avatarPixmap.height()) / 2), avatarPixmap);
 

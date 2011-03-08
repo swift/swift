@@ -135,12 +135,12 @@ QString RosterModel::getToolTip(RosterItem* item) const {
 	return tip;
 }
 
-QIcon RosterModel::getAvatar(RosterItem* item) const {
+QString RosterModel::getAvatar(RosterItem* item) const {
 	ContactRosterItem* contact = dynamic_cast<ContactRosterItem*>(item);
-	if (!contact) return QIcon();
-	std::string path = contact->getAvatarPath();
-	
-	return path.empty() ? QIcon() : QIcon(P2QSTRING(path));
+	if (!contact) {
+		return "";
+	}
+	return QString(contact->getAvatarPath().c_str());
 }
 
 QString RosterModel::getStatusText(RosterItem* item) const {

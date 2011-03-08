@@ -44,7 +44,7 @@ namespace Swift {
 			QColor getTextColor(RosterItem* item) const;
 			QColor getBackgroundColor(RosterItem* item) const;
 			QString getToolTip(RosterItem* item) const;
-			QIcon getAvatar(RosterItem* item) const;
+			QString getAvatar(RosterItem* item) const;
 			QString getStatusText(RosterItem* item) const;
 			QIcon getPresenceIcon(RosterItem* item) const;
 			int getChildCount(RosterItem* item) const;

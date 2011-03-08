@@ -13,6 +13,7 @@
 #include "MessageSnippet.h"
 #include "SystemMessageSnippet.h"
 #include "QtTextEdit.h"
+#include "QtScaledAvatarCache.h"
 
 #include "SwifTools/TabComplete.h"
 
@@ -20,6 +21,7 @@
 #include <QBoxLayout>
 #include <QCloseEvent>
 #include <QComboBox>
+#include <QFileInfo>
 #include <QLineEdit>
 #include <QSplitter>
 #include <QString>
@@ -264,6 +266,8 @@ std::string QtChatWindow::addMessage(const std::string &message, const std::stri
 		onAllMessagesRead();
 	}
 
+	QString scaledAvatarPath = QtScaledAvatarCache(32).getScaledAvatarPath(avatarPath.c_str());
+
 	QString htmlString;
 	if (label) {
 		htmlString = QString("<span style=\"border: thin dashed grey; padding-left: .5em; padding-right: .5em; color: %1; background-color: %2; font-size: 90%; margin-right: .5em; \">").arg(Qt::escape(P2QSTRING(label->getForegroundColor()))).arg(Qt::escape(P2QSTRING(label->getBackgroundColor())));
@@ -277,7 +281,7 @@ std::string QtChatWindow::addMessage(const std::string &message, const std::stri
 	htmlString += styleSpanStart + messageHTML + styleSpanEnd;
 
 	bool appendToPrevious = !previousMessageWasSystem_ && !previousMessageWasPresence_ && ((senderIsSelf && previousMessageWasSelf_) || (!senderIsSelf && !previousMessageWasSelf_ && previousSenderName_ == P2QSTRING(senderName)));
-	QString qAvatarPath =  avatarPath.empty() ? "qrc:/icons/avatar.png" : QUrl::fromLocalFile(P2QSTRING(avatarPath)).toEncoded();
+	QString qAvatarPath =  scaledAvatarPath.isEmpty() ? "qrc:/icons/avatar.png" : QUrl::fromLocalFile(scaledAvatarPath).toEncoded();
 	std::string id = id_.generateID();
 	messageLog_->addMessage(boost::shared_ptr<ChatSnippet>(new MessageSnippet(htmlString, Qt::escape(P2QSTRING(senderName)), B2QDATE(time), qAvatarPath, senderIsSelf, appendToPrevious, theme_, P2QSTRING(id))));
 
