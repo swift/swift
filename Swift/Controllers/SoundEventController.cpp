@@ -28,8 +28,10 @@ SoundEventController::SoundEventController(EventController* eventController, Sou
 	setPlaySounds(playSounds);	
 }
 
-void SoundEventController::handleEventQueueEventAdded(boost::shared_ptr<StanzaEvent>) {
-	if (playSounds_) soundPlayer_->playSound(SoundPlayer::MessageReceived);
+void SoundEventController::handleEventQueueEventAdded(boost::shared_ptr<StanzaEvent> event) {
+	if (playSounds_ && !event->getConcluded()) {
+		soundPlayer_->playSound(SoundPlayer::MessageReceived);
+	}
 }
 
 void SoundEventController::setPlaySounds(bool playSounds) {

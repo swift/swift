@@ -30,6 +30,9 @@ void EventController::handleIncomingEvent(boost::shared_ptr<StanzaEvent> sourceE
 	boost::shared_ptr<ErrorEvent> errorEvent = boost::dynamic_pointer_cast<ErrorEvent>(sourceEvent);
 	if ((messageEvent && messageEvent->isReadable()) || subscriptionEvent || errorEvent) {
 		events_.push_back(sourceEvent);
+		if (sourceEvent->getConcluded()) {
+			handleEventConcluded(sourceEvent);
+		}
 		sourceEvent->onConclusion.connect(boost::bind(&EventController::handleEventConcluded, this, sourceEvent));
 		onEventQueueLengthChange(events_.size());
 		onEventQueueEventAdded(sourceEvent);

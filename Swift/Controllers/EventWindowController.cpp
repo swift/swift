@@ -25,7 +25,7 @@ EventWindowController::~EventWindowController() {
 
 void EventWindowController::handleEventQueueEventAdded(boost::shared_ptr<StanzaEvent> event) {
 	event->onConclusion.connect(boost::bind(&EventWindowController::handleEventConcluded, this, event));
-	window_->addEvent(event, true);
+	window_->addEvent(event, event->getConcluded());
 }
 
 void EventWindowController::handleEventConcluded(boost::shared_ptr<StanzaEvent> event) {
