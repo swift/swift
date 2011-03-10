@@ -75,7 +75,7 @@ QtMainWindow::QtMainWindow(QtSettingsProvider* settings, UIEventStream* uiEventS
 
 	QMenu* viewMenu = new QMenu(tr("&View"), this);
 	menus_.push_back(viewMenu);
-	showOfflineAction_ = new QAction(tr("Show offline contacts"), this);
+	showOfflineAction_ = new QAction(tr("&Show offline contacts"), this);
 	showOfflineAction_->setCheckable(true);
 	showOfflineAction_->setChecked(false);
 	connect(showOfflineAction_, SIGNAL(toggled(bool)), SLOT(handleShowOfflineToggled(bool)));
@@ -83,7 +83,7 @@ QtMainWindow::QtMainWindow(QtSettingsProvider* settings, UIEventStream* uiEventS
 
 	QMenu* actionsMenu = new QMenu(tr("&Actions"), this);
 	menus_.push_back(actionsMenu);
-	QAction* editProfileAction = new QAction(tr("Edit Profile"), this);
+	QAction* editProfileAction = new QAction(tr("&Edit Profile"), this);
 	connect(editProfileAction, SIGNAL(triggered()), SLOT(handleEditProfileAction()));
 	actionsMenu->addAction(editProfileAction);
 	QAction* joinMUCAction = new QAction(tr("&Enter Room"), this);
