@@ -65,6 +65,7 @@ QtProfileWindow::QtProfileWindow() {
 	horizontalLayout->addWidget(throbberLabel);
 
 	saveButton = new QPushButton(tr("Save"), this);
+	saveButton->setDefault( true );
 	connect(saveButton, SIGNAL(clicked()), SLOT(handleSave()));
 	horizontalLayout->addWidget(saveButton);
 
