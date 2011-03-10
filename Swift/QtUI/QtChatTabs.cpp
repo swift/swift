@@ -224,7 +224,7 @@ void QtChatTabs::handleTabTitleUpdated(QWidget* widget) {
 		tabText = tabText.mid(0, accelPos) + "&" + tabText.mid(accelPos);
 	}
 	// this could be improved on some european keyboards, such as
-	// the German one (where alt-B is available) and basically
+	// the German one (where alt-Sz-Ligature is available) and basically
 	// doesn't work on Arabic/Indic keyboards (where Latin letters
 	// aren't available), but I don't care to deal with those.
 
