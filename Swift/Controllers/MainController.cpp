@@ -177,6 +177,7 @@ MainController::~MainController() {
 void MainController::resetClient() {
 	resetCurrentError();
 	resetPendingReconnects();
+	vCardPhotoHash_.clear();
 	delete contactEditController_;
 	contactEditController_ = NULL;
 	delete profileController_;
