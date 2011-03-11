@@ -11,6 +11,7 @@
 #include "Swiften/Avatars/VCardUpdateAvatarManager.h"
 #include "Swiften/Avatars/VCardAvatarManager.h"
 #include "Swiften/Avatars/AvatarStorage.h"
+#include <Swiften/Avatars/OfflineAvatarManager.h>
 #include "Swiften/Base/ByteArray.h"
 
 namespace Swift {
@@ -22,10 +23,17 @@ AvatarManagerImpl::AvatarManagerImpl(VCardManager* vcardManager, StanzaChannel* 
 	vcardAvatarManager = new VCardAvatarManager(vcardManager, avatarStorage, mucRegistry);
 	combinedAvatarProvider.addProvider(vcardAvatarManager);
 
-	combinedAvatarProvider.onAvatarChanged.connect(boost::ref(onAvatarChanged));
+	offlineAvatarManager = new OfflineAvatarManager(avatarStorage);
+	combinedAvatarProvider.addProvider(offlineAvatarManager);
+
+	combinedAvatarProvider.onAvatarChanged.connect(boost::bind(&AvatarManagerImpl::handleCombinedAvatarChanged, this, _1));
 }
 
 AvatarManagerImpl::~AvatarManagerImpl() {
+	combinedAvatarProvider.onAvatarChanged.disconnect(boost::bind(&AvatarManagerImpl::handleCombinedAvatarChanged, this, _1));
+
+	combinedAvatarProvider.removeProvider(offlineAvatarManager);
+	delete offlineAvatarManager;
 	combinedAvatarProvider.removeProvider(vcardAvatarManager);
 	delete vcardAvatarManager;
 	combinedAvatarProvider.removeProvider(vcardUpdateAvatarManager);
@@ -46,6 +54,11 @@ ByteArray AvatarManagerImpl::getAvatar(const JID& jid) const {
 		return avatarStorage->getAvatar(hash);
 	}
 	return ByteArray();
+}
+
+void AvatarManagerImpl::handleCombinedAvatarChanged(const JID& jid) {
+	offlineAvatarManager->setAvatar(jid, combinedAvatarProvider.getAvatarHash(jid));
+	onAvatarChanged(jid);
 }
 
 }

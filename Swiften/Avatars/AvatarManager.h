@@ -8,8 +8,8 @@
 
 #include <boost/filesystem.hpp>
 
-#include "Swiften/Base/boost_bsignals.h"
-#include "Swiften/Base/ByteArray.h"
+#include <Swiften/Base/boost_bsignals.h>
+#include <Swiften/Base/ByteArray.h>
 
 namespace Swift {
 	class JID;

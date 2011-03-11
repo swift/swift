@@ -9,15 +9,20 @@
 #include <algorithm>
 #include <boost/bind.hpp>
 
+#include <Swiften/Base/Log.h>
+
 namespace Swift {
 
 std::string CombinedAvatarProvider::getAvatarHash(const JID& jid) const {
+	SWIFT_LOG(debug) << "JID: " << jid << std::endl;
 	for (size_t i = 0; i < providers.size(); ++i) {
 		std::string hash = providers[i]->getAvatarHash(jid);
+		SWIFT_LOG(debug) << "Provider " << providers[i] << ": " << hash << std::endl;
 		if (!hash.empty()) {
 			return hash;
 		}
 	}
+	SWIFT_LOG(debug) << "No hash found" << std::endl;
 	return std::string();
 }
 

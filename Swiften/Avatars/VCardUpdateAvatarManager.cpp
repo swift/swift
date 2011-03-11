@@ -16,6 +16,7 @@
 #include "Swiften/Avatars/AvatarStorage.h"
 #include "Swiften/MUC/MUCRegistry.h"
 #include "Swiften/VCards/VCardManager.h"
+#include <Swiften/Base/Log.h>
 
 namespace Swift {
 
@@ -34,6 +35,7 @@ void VCardUpdateAvatarManager::handlePresenceReceived(boost::shared_ptr<Presence
 	if (getAvatarHash(from) == update->getPhotoHash()) {
 		return;
 	}
+	SWIFT_LOG(debug) << "Updated hash: " << from << " -> " << update->getPhotoHash() << std::endl;
 	if (avatarStorage_->hasAvatar(update->getPhotoHash())) {
 		setAvatarHash(from, update->getPhotoHash());
 	}
@@ -61,6 +63,7 @@ void VCardUpdateAvatarManager::handleVCardChanged(const JID& from, VCard::ref vC
 }
 
 void VCardUpdateAvatarManager::setAvatarHash(const JID& from, const std::string& hash) {
+	SWIFT_LOG(debug) << "Updating hash: " << from << " -> " << hash << std::endl;
 	avatarHashes_[from] = hash;
 	onAvatarChanged(from);
 }

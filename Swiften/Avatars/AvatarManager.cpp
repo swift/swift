@@ -4,7 +4,7 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "Swiften/Avatars/AvatarManager.h"
+#include <Swiften/Avatars/AvatarManager.h>
 
 namespace Swift {
 

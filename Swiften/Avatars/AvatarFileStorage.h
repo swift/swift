@@ -7,16 +7,17 @@
 #pragma once
 
 #include <map>
+#include <string>
 #include <boost/filesystem.hpp>
 
-#include <string>
+#include <Swiften/JID/JID.h>
 #include "Swiften/Base/ByteArray.h"
 #include "Swiften/Avatars/AvatarStorage.h"
 
 namespace Swift {
 	class AvatarFileStorage : public AvatarStorage {
 		public:
-			AvatarFileStorage(const boost::filesystem::path& path);
+			AvatarFileStorage(const boost::filesystem::path& avatarsDir, const boost::filesystem::path& avatarsFile);
 
 			virtual bool hasAvatar(const std::string& hash) const;
 			virtual void addAvatar(const std::string& hash, const ByteArray& avatar);
@@ -24,8 +25,17 @@ namespace Swift {
 
 			virtual boost::filesystem::path getAvatarPath(const std::string& hash) const;
 
+			virtual void setAvatarForJID(const JID& jid, const std::string& hash);
+			virtual std::string getAvatarForJID(const JID& jid) const;
+
 		private:
-			boost::filesystem::path path_;
+			void saveJIDAvatars();
+
+		private:
+			boost::filesystem::path avatarsDir;
+			boost::filesystem::path avatarsFile;
+			typedef std::map<JID, std::string> JIDAvatarMap;
+			JIDAvatarMap jidAvatars;
 	};
 
 }

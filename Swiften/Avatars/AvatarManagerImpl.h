@@ -6,18 +6,8 @@
 
 #pragma once
 
-#include <boost/filesystem.hpp>
-#include <boost/shared_ptr.hpp>
-#include <boost/optional.hpp>
-#include <map>
-
-#include "Swiften/Avatars/AvatarManager.h"
-#include "Swiften/Base/boost_bsignals.h"
-#include "Swiften/JID/JID.h"
-#include "Swiften/Elements/Presence.h"
-#include "Swiften/Elements/VCard.h"
-#include "Swiften/Elements/ErrorPayload.h"
-#include "Swiften/Avatars/CombinedAvatarProvider.h"
+#include <Swiften/Avatars/AvatarManager.h>
+#include <Swiften/Avatars/CombinedAvatarProvider.h>
 
 namespace Swift {
 	class MUCRegistry;
@@ -26,6 +16,7 @@ namespace Swift {
 	class VCardManager;
 	class VCardUpdateAvatarManager;
 	class VCardAvatarManager;
+	class OfflineAvatarManager;
 
 	class AvatarManagerImpl : public AvatarManager {
 		public:
@@ -36,9 +27,14 @@ namespace Swift {
 			virtual ByteArray getAvatar(const JID&) const;
 
 		private:
+			void handleCombinedAvatarChanged(const JID& jid);
+
+
+		private:
 			CombinedAvatarProvider combinedAvatarProvider;
 			AvatarStorage* avatarStorage;
 			VCardUpdateAvatarManager* vcardUpdateAvatarManager;
 			VCardAvatarManager* vcardAvatarManager;
+			OfflineAvatarManager* offlineAvatarManager;
 	};
 }

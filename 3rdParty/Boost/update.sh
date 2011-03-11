@@ -35,6 +35,8 @@ fi
 	boost/algorithm/string.hpp \
 	boost/format.hpp \
 	assign/list_of.hpp \
+	property_tree/ptree.hpp \
+	property_tree/xml_parser.hpp \
 	$TARGET_DIR
 
 rm -rf $TARGET_DIR/libs/config

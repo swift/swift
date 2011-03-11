@@ -7,9 +7,10 @@
 #pragma once
 
 #include <boost/filesystem.hpp>
+#include <string>
 
 namespace Swift {
-	
+	class JID;
 	class ByteArray;
 
 	class AvatarStorage {
@@ -20,6 +21,9 @@ namespace Swift {
 			virtual void addAvatar(const std::string& hash, const ByteArray& avatar) = 0;
 			virtual ByteArray getAvatar(const std::string& hash) const = 0;
 			virtual boost::filesystem::path getAvatarPath(const std::string& hash) const = 0;
+
+			virtual void setAvatarForJID(const JID& jid, const std::string& hash) = 0;
+			virtual std::string getAvatarForJID(const JID& jid) const = 0;
 	};
 
 }

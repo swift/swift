@@ -6,7 +6,8 @@
 
 #pragma once
 
-#include "Swiften/Base/Platform.h"
+#include <iostream>
+
 namespace Swift {
 	extern bool logging;
 }
