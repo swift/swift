@@ -15,27 +15,27 @@
         <translation>Conversatie begonnen met %1% - %2%</translation>
     </message>
     <message>
-        <location filename="../Controllers/Chat/ChatController.cpp" line="115"/>
+        <location filename="../Controllers/Chat/ChatController.cpp" line="119"/>
         <source>me</source>
         <translation>ik</translation>
     </message>
     <message>
-        <location filename="../Controllers/Chat/ChatController.cpp" line="156"/>
+        <location filename="../Controllers/Chat/ChatController.cpp" line="160"/>
         <source>%1% has gone offline</source>
         <translation>%1% is offline gegaan</translation>
     </message>
     <message>
-        <location filename="../Controllers/Chat/ChatController.cpp" line="160"/>
+        <location filename="../Controllers/Chat/ChatController.cpp" line="164"/>
         <source>%1% has become available</source>
         <translation>%1% is nu beschikbaar</translation>
     </message>
     <message>
-        <location filename="../Controllers/Chat/ChatController.cpp" line="162"/>
+        <location filename="../Controllers/Chat/ChatController.cpp" line="166"/>
         <source>%1% has gone away</source>
         <translation>%1% is nu afwezig</translation>
     </message>
     <message>
-        <location filename="../Controllers/Chat/ChatController.cpp" line="164"/>
+        <location filename="../Controllers/Chat/ChatController.cpp" line="168"/>
         <source>%1% is now busy</source>
         <translation>%1% is nu bezet</translation>
     </message>
@@ -45,117 +45,117 @@
         <translation>De huidige dag is nu %1%</translation>
     </message>
     <message>
-        <location filename="../Controllers/Chat/ChatControllerBase.cpp" line="193"/>
+        <location filename="../Controllers/Chat/ChatControllerBase.cpp" line="191"/>
         <source>Error sending message</source>
         <translation>Fout tijdens het versturen van bericht</translation>
     </message>
     <message>
-        <location filename="../Controllers/Chat/ChatControllerBase.cpp" line="199"/>
+        <location filename="../Controllers/Chat/ChatControllerBase.cpp" line="197"/>
         <source>Bad request</source>
         <translation>Ongeldig verzoek</translation>
     </message>
     <message>
-        <location filename="../Controllers/Chat/ChatControllerBase.cpp" line="200"/>
+        <location filename="../Controllers/Chat/ChatControllerBase.cpp" line="198"/>
         <source>Conflict</source>
         <translation>Conflict</translation>
     </message>
     <message>
-        <location filename="../Controllers/Chat/ChatControllerBase.cpp" line="201"/>
+        <location filename="../Controllers/Chat/ChatControllerBase.cpp" line="199"/>
         <source>This feature is not implemented</source>
         <translation>Deze functie is niet geïmplementeerd</translation>
     </message>
     <message>
-        <location filename="../Controllers/Chat/ChatControllerBase.cpp" line="202"/>
+        <location filename="../Controllers/Chat/ChatControllerBase.cpp" line="200"/>
         <source>Forbidden</source>
         <translation>Verboden</translation>
     </message>
     <message>
-        <location filename="../Controllers/Chat/ChatControllerBase.cpp" line="203"/>
+        <location filename="../Controllers/Chat/ChatControllerBase.cpp" line="201"/>
         <source>Recipient can no longer be contacted</source>
         <translation>Begunstigde is onbereikbaar</translation>
     </message>
     <message>
-        <location filename="../Controllers/Chat/ChatControllerBase.cpp" line="204"/>
+        <location filename="../Controllers/Chat/ChatControllerBase.cpp" line="202"/>
         <source>Internal server error</source>
         <translation>Interne serverfout</translation>
     </message>
     <message>
-        <location filename="../Controllers/Chat/ChatControllerBase.cpp" line="205"/>
+        <location filename="../Controllers/Chat/ChatControllerBase.cpp" line="203"/>
         <source>Item not found</source>
         <translation>Element niet gevonden</translation>
     </message>
     <message>
-        <location filename="../Controllers/Chat/ChatControllerBase.cpp" line="206"/>
+        <location filename="../Controllers/Chat/ChatControllerBase.cpp" line="204"/>
         <source>JID Malformed</source>
         <translation>JID misvormd</translation>
     </message>
     <message>
-        <location filename="../Controllers/Chat/ChatControllerBase.cpp" line="207"/>
+        <location filename="../Controllers/Chat/ChatControllerBase.cpp" line="205"/>
         <source>Message was rejected</source>
         <translation>Bericht geweigerd</translation>
     </message>
     <message>
-        <location filename="../Controllers/Chat/ChatControllerBase.cpp" line="208"/>
+        <location filename="../Controllers/Chat/ChatControllerBase.cpp" line="206"/>
         <source>Not allowed</source>
         <translation>Niet toegelaten</translation>
     </message>
     <message>
-        <location filename="../Controllers/Chat/ChatControllerBase.cpp" line="209"/>
+        <location filename="../Controllers/Chat/ChatControllerBase.cpp" line="207"/>
         <source>Not authorized</source>
         <translation>Niet toegestaan</translation>
     </message>
     <message>
-        <location filename="../Controllers/Chat/ChatControllerBase.cpp" line="210"/>
+        <location filename="../Controllers/Chat/ChatControllerBase.cpp" line="208"/>
         <source>Payment is required</source>
         <translation>Betaling is vereist</translation>
     </message>
     <message>
-        <location filename="../Controllers/Chat/ChatControllerBase.cpp" line="211"/>
+        <location filename="../Controllers/Chat/ChatControllerBase.cpp" line="209"/>
         <source>Recipient is unavailable</source>
         <translation>Begunstigde is niet beschikbaar</translation>
     </message>
     <message>
-        <location filename="../Controllers/Chat/ChatControllerBase.cpp" line="212"/>
+        <location filename="../Controllers/Chat/ChatControllerBase.cpp" line="210"/>
         <source>Redirect</source>
         <translation>Omleiding</translation>
     </message>
     <message>
-        <location filename="../Controllers/Chat/ChatControllerBase.cpp" line="213"/>
+        <location filename="../Controllers/Chat/ChatControllerBase.cpp" line="211"/>
         <source>Registration required</source>
         <translation>Registratie vereist</translation>
     </message>
     <message>
-        <location filename="../Controllers/Chat/ChatControllerBase.cpp" line="214"/>
+        <location filename="../Controllers/Chat/ChatControllerBase.cpp" line="212"/>
         <source>Recipient&apos;s server not found</source>
         <translation>Server begunstigde niet gevonden</translation>
     </message>
     <message>
-        <location filename="../Controllers/Chat/ChatControllerBase.cpp" line="215"/>
+        <location filename="../Controllers/Chat/ChatControllerBase.cpp" line="213"/>
         <source>Remote server timeout</source>
         <translation>Server time-out</translation>
     </message>
     <message>
-        <location filename="../Controllers/Chat/ChatControllerBase.cpp" line="216"/>
+        <location filename="../Controllers/Chat/ChatControllerBase.cpp" line="214"/>
         <source>The server is low on resources</source>
         <translation>De server heeft een tekort aan bronnen</translation>
     </message>
     <message>
-        <location filename="../Controllers/Chat/ChatControllerBase.cpp" line="217"/>
+        <location filename="../Controllers/Chat/ChatControllerBase.cpp" line="215"/>
         <source>The service is unavailable</source>
         <translation>De server is niet beschikbaar</translation>
     </message>
     <message>
-        <location filename="../Controllers/Chat/ChatControllerBase.cpp" line="218"/>
+        <location filename="../Controllers/Chat/ChatControllerBase.cpp" line="216"/>
         <source>A subscription is required</source>
         <translation>Inschrijving is vereist</translation>
     </message>
     <message>
-        <location filename="../Controllers/Chat/ChatControllerBase.cpp" line="219"/>
+        <location filename="../Controllers/Chat/ChatControllerBase.cpp" line="217"/>
         <source>Undefined condition</source>
         <translation>Onbekende fout</translation>
     </message>
     <message>
-        <location filename="../Controllers/Chat/ChatControllerBase.cpp" line="220"/>
+        <location filename="../Controllers/Chat/ChatControllerBase.cpp" line="218"/>
         <source>Unexpected request</source>
         <translation>Onverwacht verzoek</translation>
     </message>
@@ -230,53 +230,53 @@
         <translation>bezoeker</translation>
     </message>
     <message>
-        <location filename="../Controllers/Chat/MUCController.cpp" line="284"/>
+        <location filename="../Controllers/Chat/MUCController.cpp" line="283"/>
         <source>The room subject is now: %1%</source>
         <translation>Het onderwerp van deze kamer is nu: %1%</translation>
     </message>
     <message>
-        <location filename="../Controllers/Chat/MUCController.cpp" line="307"/>
+        <location filename="../Controllers/Chat/MUCController.cpp" line="313"/>
         <source>%1% is now a %2%</source>
         <translation>%1% is nu een %2%</translation>
     </message>
     <message>
-        <location filename="../Controllers/Chat/MUCController.cpp" line="313"/>
+        <location filename="../Controllers/Chat/MUCController.cpp" line="319"/>
         <source>Moderators</source>
         <translation>Moderators</translation>
     </message>
     <message>
-        <location filename="../Controllers/Chat/MUCController.cpp" line="314"/>
+        <location filename="../Controllers/Chat/MUCController.cpp" line="320"/>
         <source>Participants</source>
         <translation>Deelnemers</translation>
     </message>
     <message>
-        <location filename="../Controllers/Chat/MUCController.cpp" line="315"/>
+        <location filename="../Controllers/Chat/MUCController.cpp" line="321"/>
         <source>Visitors</source>
         <translation>Bezoekers</translation>
     </message>
     <message>
-        <location filename="../Controllers/Chat/MUCController.cpp" line="316"/>
+        <location filename="../Controllers/Chat/MUCController.cpp" line="322"/>
         <source>Occupants</source>
         <translation>Bewoners</translation>
     </message>
     <message>
-        <location filename="../Controllers/Chat/MUCController.cpp" line="330"/>
+        <location filename="../Controllers/Chat/MUCController.cpp" line="336"/>
         <source>Trying to enter room %1%</source>
         <translation>Aan het proberen om de kamer %1% te betreden</translation>
     </message>
     <message>
-        <location filename="../Controllers/Chat/MUCController.cpp" line="481"/>
+        <location filename="../Controllers/Chat/MUCController.cpp" line="487"/>
         <source>%1% have left then returned to the room</source>
         <translation>%1% hebben de kamer verlaten en terug betreden</translation>
     </message>
     <message>
-        <location filename="../Controllers/Chat/MUCController.cpp" line="484"/>
+        <location filename="../Controllers/Chat/MUCController.cpp" line="490"/>
         <source>%1% has left then returned to the room</source>
         <translation>%1% heeft de kamer verlaten en terug betreden</translation>
     </message>
     <message>
-        <location filename="../Controllers/Chat/MUCController.cpp" line="359"/>
-        <location filename="../Controllers/Chat/MUCController.cpp" line="468"/>
+        <location filename="../Controllers/Chat/MUCController.cpp" line="365"/>
+        <location filename="../Controllers/Chat/MUCController.cpp" line="474"/>
         <source>%1% has left the room</source>
         <translation>%1% heeft de kamer verlaten</translation>
     </message>
@@ -286,205 +286,205 @@
         <translation>U heeft de kamer %1% als %2% betreden.</translation>
     </message>
     <message>
-        <location filename="../Controllers/Chat/MUCController.cpp" line="359"/>
+        <location filename="../Controllers/Chat/MUCController.cpp" line="365"/>
         <source>You have left the room</source>
         <translation>U heeft de kamer verlaten</translation>
     </message>
     <message>
-        <location filename="../Controllers/Chat/MUCController.cpp" line="433"/>
-        <location filename="../Controllers/Chat/MUCController.cpp" line="497"/>
+        <location filename="../Controllers/Chat/MUCController.cpp" line="439"/>
+        <location filename="../Controllers/Chat/MUCController.cpp" line="503"/>
         <source> and </source>
         <translation> en </translation>
     </message>
     <message>
-        <location filename="../Controllers/Chat/MUCController.cpp" line="457"/>
+        <location filename="../Controllers/Chat/MUCController.cpp" line="463"/>
         <source>%1% have entered the room</source>
         <translation>%1% hebben de kamer betreden</translation>
     </message>
     <message>
-        <location filename="../Controllers/Chat/MUCController.cpp" line="460"/>
+        <location filename="../Controllers/Chat/MUCController.cpp" line="466"/>
         <source>%1% has entered the room</source>
         <translation>%1% heeft de kamer betreden</translation>
     </message>
     <message>
-        <location filename="../Controllers/Chat/MUCController.cpp" line="473"/>
+        <location filename="../Controllers/Chat/MUCController.cpp" line="479"/>
         <source>%1% have entered then left the room</source>
         <translation>%1% hebben de kamer betreden en terug verlaten</translation>
     </message>
     <message>
-        <location filename="../Controllers/Chat/MUCController.cpp" line="476"/>
+        <location filename="../Controllers/Chat/MUCController.cpp" line="482"/>
         <source>%1% has entered then left the room</source>
         <translation>%1% heeft de kamer betreden en terug verlaten</translation>
     </message>
     <message>
-        <location filename="../Controllers/Chat/MUCController.cpp" line="465"/>
+        <location filename="../Controllers/Chat/MUCController.cpp" line="471"/>
         <source>%1% have left the room</source>
         <translation>%1% hebben de kamer verlaten</translation>
     </message>
     <message>
-        <location filename="../Controllers/MainController.cpp" line="437"/>
+        <location filename="../Controllers/MainController.cpp" line="438"/>
         <source>Unknown Error</source>
         <translation>Onbekende fout</translation>
     </message>
     <message>
-        <location filename="../Controllers/MainController.cpp" line="438"/>
+        <location filename="../Controllers/MainController.cpp" line="439"/>
         <source>Unable to find server</source>
         <translation>Kan server niet vinden</translation>
     </message>
     <message>
-        <location filename="../Controllers/MainController.cpp" line="439"/>
+        <location filename="../Controllers/MainController.cpp" line="440"/>
         <source>Error connecting to server</source>
         <translation>Fout tijdens het verbinden met de server</translation>
     </message>
     <message>
-        <location filename="../Controllers/MainController.cpp" line="440"/>
+        <location filename="../Controllers/MainController.cpp" line="441"/>
         <source>Error while receiving server data</source>
         <translation>Fout tijdens het ontvangen van gegevens</translation>
     </message>
     <message>
-        <location filename="../Controllers/MainController.cpp" line="441"/>
+        <location filename="../Controllers/MainController.cpp" line="442"/>
         <source>Error while sending data to the server</source>
         <translation>Fout tijdens het verzenden van gegevens</translation>
     </message>
     <message>
-        <location filename="../Controllers/MainController.cpp" line="442"/>
+        <location filename="../Controllers/MainController.cpp" line="443"/>
         <source>Error parsing server data</source>
         <translation>Fout tijdens het ontleden van gegevens</translation>
     </message>
     <message>
-        <location filename="../Controllers/MainController.cpp" line="443"/>
+        <location filename="../Controllers/MainController.cpp" line="444"/>
         <source>Login/password invalid</source>
         <translation>Gebruikersnaam/wachtwoord ongeldig</translation>
     </message>
     <message>
-        <location filename="../Controllers/MainController.cpp" line="444"/>
+        <location filename="../Controllers/MainController.cpp" line="445"/>
         <source>Error while compressing stream</source>
         <translation>Fout tijdens het comprimeren</translation>
     </message>
     <message>
-        <location filename="../Controllers/MainController.cpp" line="445"/>
+        <location filename="../Controllers/MainController.cpp" line="446"/>
         <source>Server verification failed</source>
         <translation>Serververificatie gefaald</translation>
     </message>
     <message>
-        <location filename="../Controllers/MainController.cpp" line="446"/>
+        <location filename="../Controllers/MainController.cpp" line="447"/>
         <source>Authentication mechanisms not supported</source>
         <translation>Authenticatiemechanismen niet ondersteund</translation>
     </message>
     <message>
-        <location filename="../Controllers/MainController.cpp" line="447"/>
+        <location filename="../Controllers/MainController.cpp" line="448"/>
         <source>Unexpected response</source>
         <translation>Onverwacht antwoord</translation>
     </message>
     <message>
-        <location filename="../Controllers/MainController.cpp" line="448"/>
+        <location filename="../Controllers/MainController.cpp" line="449"/>
         <source>Error binding resource</source>
         <translation>Fout tijdens het binden van de resource</translation>
     </message>
     <message>
-        <location filename="../Controllers/MainController.cpp" line="449"/>
+        <location filename="../Controllers/MainController.cpp" line="450"/>
         <source>Error starting session</source>
         <translation>Fout bij het starten van de sessie</translation>
     </message>
     <message>
-        <location filename="../Controllers/MainController.cpp" line="450"/>
+        <location filename="../Controllers/MainController.cpp" line="451"/>
         <source>Stream error</source>
         <translation>Stroomfout</translation>
     </message>
     <message>
-        <location filename="../Controllers/MainController.cpp" line="451"/>
+        <location filename="../Controllers/MainController.cpp" line="452"/>
         <source>Encryption error</source>
         <translation>Beveiligingsfout</translation>
     </message>
     <message>
-        <location filename="../Controllers/MainController.cpp" line="452"/>
+        <location filename="../Controllers/MainController.cpp" line="453"/>
         <source>Error loading certificate (Invalid password?)</source>
         <translation>Fout bij het laden van het certificaat (Ongeldig wachtwoord?)</translation>
     </message>
     <message>
-        <location filename="../Controllers/MainController.cpp" line="453"/>
+        <location filename="../Controllers/MainController.cpp" line="454"/>
         <source>Certificate not authorized</source>
         <translation>Certificaat heeft geen toestemming</translation>
     </message>
     <message>
-        <location filename="../Controllers/MainController.cpp" line="455"/>
+        <location filename="../Controllers/MainController.cpp" line="456"/>
         <source>Unknown certificate</source>
         <translation>Onbekend certificaat</translation>
     </message>
     <message>
-        <location filename="../Controllers/MainController.cpp" line="456"/>
+        <location filename="../Controllers/MainController.cpp" line="457"/>
         <source>Certificate has expired</source>
         <translation>Certificaat is verstreken</translation>
     </message>
     <message>
-        <location filename="../Controllers/MainController.cpp" line="457"/>
+        <location filename="../Controllers/MainController.cpp" line="458"/>
         <source>Certificate is not yet valid</source>
         <translation>Certificaat is nog niet geldig</translation>
     </message>
     <message>
-        <location filename="../Controllers/MainController.cpp" line="458"/>
+        <location filename="../Controllers/MainController.cpp" line="459"/>
         <source>Certificate is self-signed</source>
         <translation>Certificaat is zelfondertekend</translation>
     </message>
     <message>
-        <location filename="../Controllers/MainController.cpp" line="459"/>
+        <location filename="../Controllers/MainController.cpp" line="460"/>
         <source>Certificate has been rejected</source>
         <translation>Certificaat werd afgewezen</translation>
     </message>
     <message>
-        <location filename="../Controllers/MainController.cpp" line="460"/>
+        <location filename="../Controllers/MainController.cpp" line="461"/>
         <source>Certificate is not trusted</source>
         <translation>Certificaat wordt niet vertrouwd</translation>
     </message>
     <message>
-        <location filename="../Controllers/MainController.cpp" line="461"/>
+        <location filename="../Controllers/MainController.cpp" line="462"/>
         <source>Certificate cannot be used for encrypting your connection</source>
         <translation>Certificaat kan niet gebruikt worden om verbinding te beveiligen</translation>
     </message>
     <message>
-        <location filename="../Controllers/MainController.cpp" line="462"/>
+        <location filename="../Controllers/MainController.cpp" line="463"/>
         <source>Certificate path length constraint exceeded</source>
         <translation>Padlengte certificaat overschreden</translation>
     </message>
     <message>
-        <location filename="../Controllers/MainController.cpp" line="463"/>
+        <location filename="../Controllers/MainController.cpp" line="464"/>
         <source>Invalid certificate signature</source>
         <translation>Certificaat heeft ongeldige handtekening</translation>
     </message>
     <message>
-        <location filename="../Controllers/MainController.cpp" line="464"/>
+        <location filename="../Controllers/MainController.cpp" line="465"/>
         <source>Invalid Certificate Authority</source>
         <translation>Ongeldige certificeringsinstantie</translation>
     </message>
     <message>
-        <location filename="../Controllers/MainController.cpp" line="465"/>
+        <location filename="../Controllers/MainController.cpp" line="466"/>
         <source>Certificate does not match the host identity</source>
         <translation>Certificaat komt niet overeen met identiteit</translation>
     </message>
     <message>
-        <location filename="../Controllers/MainController.cpp" line="475"/>
+        <location filename="../Controllers/MainController.cpp" line="476"/>
         <source>Certificate error</source>
         <translation>Certificaatfout</translation>
     </message>
     <message>
-        <location filename="../Controllers/MainController.cpp" line="489"/>
+        <location filename="../Controllers/MainController.cpp" line="490"/>
         <source>Reconnect to %1% failed: %2%. Will retry in %3% seconds.</source>
         <translation>Herverbinding met %1% mislukt: %2%. Zal opnieuw proberen binnen %3% seconden.</translation>
     </message>
     <message>
-        <location filename="../Controllers/MainController.cpp" line="492"/>
+        <location filename="../Controllers/MainController.cpp" line="493"/>
         <source>Disconnected from %1%: %2%.</source>
         <translation>Verbinding met %1% verbroken: %2%.</translation>
     </message>
     <message>
         <location filename="../Controllers/Roster/RosterController.cpp" line="126"/>
         <location filename="../Controllers/Roster/RosterController.cpp" line="152"/>
-        <location filename="../Controllers/Roster/RosterController.cpp" line="213"/>
+        <location filename="../Controllers/Roster/RosterController.cpp" line="214"/>
         <source>Contacts</source>
         <translation>Contacten</translation>
     </message>
     <message>
-        <location filename="../Controllers/Roster/RosterController.cpp" line="250"/>
+        <location filename="../Controllers/Roster/RosterController.cpp" line="251"/>
         <source>Server %1% rejected contact list change to item &apos;%2%&apos;</source>
         <translation>Server %1% heeft de aanpassing van contact &apos;%2&apos; geweigerd</translation>
     </message>
@@ -511,7 +511,7 @@
         <translation>Offline</translation>
     </message>
     <message>
-        <location filename="../Controllers/EventNotifier.cpp" line="51"/>
+        <location filename="../Controllers/EventNotifier.cpp" line="54"/>
         <source>Error</source>
         <translation>Fout</translation>
     </message>
@@ -918,17 +918,17 @@ afbeelding</translation>
 <context>
     <name>Swift::QtChatWindow</name>
     <message>
-        <location filename="../QtUI/QtChatWindow.cpp" line="291"/>
+        <location filename="../QtUI/QtChatWindow.cpp" line="302"/>
         <source>This message has not been received by your server yet.</source>
         <translation>Deze boodschap werd nog niet door uw server ontvangen.</translation>
     </message>
     <message>
-        <location filename="../QtUI/QtChatWindow.cpp" line="293"/>
+        <location filename="../QtUI/QtChatWindow.cpp" line="304"/>
         <source>This message may not have been transmitted.</source>
         <translation>Dit bericht kan mogelijk niet verzonden zijn.</translation>
     </message>
     <message>
-        <location filename="../QtUI/QtChatWindow.cpp" line="313"/>
+        <location filename="../QtUI/QtChatWindow.cpp" line="324"/>
         <source>Couldn&apos;t send message: %1</source>
         <translation>Kon boodschap niet verzenden: %1</translation>
     </message>
@@ -1171,16 +1171,21 @@ afbeelding</translation>
     </message>
     <message>
         <location filename="../QtUI/QtMainWindow.cpp" line="95"/>
+        <source>&amp;Edit Selected Contact</source>
+        <translation>Geselecteerde Contact &amp;Bewerken</translation>
+    </message>
+    <message>
+        <location filename="../QtUI/QtMainWindow.cpp" line="99"/>
         <source>Start &amp;Chat</source>
         <translation>&amp;Conversatie starten</translation>
     </message>
     <message>
-        <location filename="../QtUI/QtMainWindow.cpp" line="99"/>
+        <location filename="../QtUI/QtMainWindow.cpp" line="103"/>
         <source>&amp;Sign Out</source>
         <translation>&amp;Afmelden</translation>
     </message>
     <message>
-        <location filename="../QtUI/QtMainWindow.cpp" line="131"/>
+        <location filename="../QtUI/QtMainWindow.cpp" line="137"/>
         <source>Notices</source>
         <translation>Berichten</translation>
     </message>
@@ -1270,45 +1275,53 @@ afbeelding</translation>
 <context>
     <name>Swift::QtTreeWidget</name>
     <message>
-        <location filename="../QtUI/Roster/QtTreeWidget.cpp" line="91"/>
+        <location filename="../QtUI/Roster/QtTreeWidget.cpp" line="144"/>
         <source>Edit</source>
         <translation>Bewerk</translation>
     </message>
     <message>
-        <location filename="../QtUI/Roster/QtTreeWidget.cpp" line="92"/>
+        <location filename="../QtUI/Roster/QtTreeWidget.cpp" line="145"/>
         <source>Remove</source>
         <translation>Verwijder</translation>
     </message>
     <message>
-        <location filename="../QtUI/Roster/QtTreeWidget.cpp" line="104"/>
+        <location filename="../QtUI/Roster/QtTreeWidget.cpp" line="157"/>
         <source>Rename</source>
         <translation>Naam wijzigen</translation>
     </message>
     <message>
-        <location filename="../QtUI/Roster/QtTreeWidget.cpp" line="108"/>
+        <location filename="../QtUI/Roster/QtTreeWidget.cpp" line="167"/>
         <source>Rename group</source>
         <translation>Groepsnaam wijzigen</translation>
     </message>
     <message>
-        <location filename="../QtUI/Roster/QtTreeWidget.cpp" line="108"/>
+        <location filename="../QtUI/Roster/QtTreeWidget.cpp" line="167"/>
         <source>New name for %1</source>
         <translation>Niewe naam voor %1</translation>
     </message>
 </context>
 <context>
+    <name>Swift::QtUserSearchDetailsPage</name>
+    <message>
+        <location filename="../QtUI/UserSearch/QtUserSearchDetailsPage.cpp" line="17"/>
+        <source>Please choose a name for the contact, and select the groups you want to add the contact to.</source>
+        <translation>Kies een naam voor het contact, en selecteer de groepen waar het contact moet toegevoegd worden.</translation>
+    </message>
+</context>
+<context>
     <name>Swift::QtUserSearchFirstPage</name>
     <message>
-        <location filename="../QtUI/UserSearch/QtUserSearchWindow.cpp" line="26"/>
+        <location filename="../QtUI/UserSearch/QtUserSearchFirstPage.cpp" line="16"/>
         <source>Chat to another user</source>
         <translation>Start conversatie met andere gebruiker</translation>
     </message>
     <message>
-        <location filename="../QtUI/UserSearch/QtUserSearchWindow.cpp" line="26"/>
+        <location filename="../QtUI/UserSearch/QtUserSearchFirstPage.cpp" line="16"/>
         <source>%1. If you know their address you can enter it directly, or you can search for them.</source>
         <translation>%1. Indien u het adres kent kan u dit rechtstreeks invoeren, anders kan u het adres opzoeken.</translation>
     </message>
     <message>
-        <location filename="../QtUI/UserSearch/QtUserSearchWindow.cpp" line="26"/>
+        <location filename="../QtUI/UserSearch/QtUserSearchFirstPage.cpp" line="16"/>
         <source>Add another user to your contact list</source>
         <translation>Voeg een andere gebruiker toe aan uw contactenlijst</translation>
     </message>
@@ -1316,32 +1329,32 @@ afbeelding</translation>
 <context>
     <name>Swift::QtUserSearchWindow</name>
     <message>
-        <location filename="../QtUI/UserSearch/QtUserSearchWindow.cpp" line="85"/>
+        <location filename="../QtUI/UserSearch/QtUserSearchWindow.cpp" line="32"/>
         <source>Add Contact</source>
         <translation>Contact toevoegen</translation>
     </message>
     <message>
-        <location filename="../QtUI/UserSearch/QtUserSearchWindow.cpp" line="85"/>
+        <location filename="../QtUI/UserSearch/QtUserSearchWindow.cpp" line="32"/>
         <source>Chat to User</source>
         <translation>Start conversatie met gebruiker</translation>
     </message>
     <message>
-        <location filename="../QtUI/UserSearch/QtUserSearchWindow.cpp" line="294"/>
+        <location filename="../QtUI/UserSearch/QtUserSearchWindow.cpp" line="223"/>
         <source>How would you like to find the user to add?</source>
         <translation>Hoe wilt u de gebruiker toevoegen?</translation>
     </message>
     <message>
-        <location filename="../QtUI/UserSearch/QtUserSearchWindow.cpp" line="297"/>
+        <location filename="../QtUI/UserSearch/QtUserSearchWindow.cpp" line="226"/>
         <source>How would you like to find the user to chat to?</source>
         <translation>Hoe wilt u de gebruiker contacteren?</translation>
     </message>
     <message>
-        <location filename="../QtUI/UserSearch/QtUserSearchWindow.cpp" line="321"/>
+        <location filename="../QtUI/UserSearch/QtUserSearchWindow.cpp" line="251"/>
         <source>Error while searching</source>
         <translation>Fout tijdens zoeken</translation>
     </message>
     <message>
-        <location filename="../QtUI/UserSearch/QtUserSearchWindow.cpp" line="327"/>
+        <location filename="../QtUI/UserSearch/QtUserSearchWindow.cpp" line="257"/>
         <source>This server doesn&apos;t support searching for users.</source>
         <translation>Deze server ondersteunt het zoeken van gebruikers niet.</translation>
     </message>

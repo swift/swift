@@ -176,7 +176,7 @@ for file in os.listdir(Dir("../Translations").abspath) :
 		translation_languages.append(file[6:-3])
 
 # Generate translation modules
-translation_sources = []
+translation_sources = [env.File("../Translations/swift.ts").abspath]
 translation_modules = []
 for lang in translation_languages :
 	translation_resource = "../resources/translations/swift_" + lang + ".qm"

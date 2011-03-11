@@ -1,0 +1,39 @@
+Translating Swift
+-----------------
+Below, you will find instructions on how to translate Swift. A prerequisite is to
+have Qt (with Qt Linguist installed).
+
+
+Starting a new translation
+--------------------------
+- Run the following command to generate a clean translation template 'swift.ts':
+    scons update_translations=1 Swift/Translations/swift.ts
+- Rename the new 'swift.ts' file to swift_<LANGUAGE-CODE>.ts, e.g. "swift_nl.ts"
+  for Dutch
+- Open the file in Qt Linguist, and translate the phrases. 
+  For more information, see http://doc.qt.nokia.com/latest/linguist-manual.html
+- Submit your finished translation file to the Swift development team.
+
+If you have trouble generating the translation file yourself, you can ask the 
+Swift development team to provide you with a new translation template for your 
+language.
+
+
+Updating an existing translation
+--------------------------------
+- Run the following command to update an existing translation template:
+    scons update_translations=1 Swift/Translations/<your-translation-file>
+
+If you have trouble updating the translation file yourself, you can ask the 
+Swift development team to provide you with a new translation template for your 
+language.
+
+
+Testing your translation
+------------------------
+- Ensure your translation file is in Swift/Translations/swift_<YOURLANGUAGE>.ts
+- Build Swift (for more details, see the building documentation):
+    scons Swift
+  This will build translation modules (.qm) for your translation sources, and 
+  put them in the right place.
+- Run Swift
