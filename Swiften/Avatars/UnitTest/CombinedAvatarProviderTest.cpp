@@ -25,6 +25,7 @@ class CombinedAvatarProviderTest : public CppUnit::TestFixture {
 		CPPUNIT_TEST(testProviderSecondUpdateTriggersChange);
 		CPPUNIT_TEST(testProviderUpdateWithAvatarDisappearingTriggersChange);
 		CPPUNIT_TEST(testProviderUpdateAfterAvatarDisappearedTriggersChange);
+		CPPUNIT_TEST(testProviderUpdateAfterGetDoesNotTriggerChange);
 		CPPUNIT_TEST(testRemoveProviderDisconnectsUpdates);
 		CPPUNIT_TEST_SUITE_END();
 
@@ -141,6 +142,18 @@ class CombinedAvatarProviderTest : public CppUnit::TestFixture {
 
 			CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(changes.size()));
 			CPPUNIT_ASSERT_EQUAL(user1, changes[0]);
+		}
+
+
+		void testProviderUpdateAfterGetDoesNotTriggerChange() {
+			std::auto_ptr<CombinedAvatarProvider> testling(createProvider());
+			testling->addProvider(avatarProvider1);
+			avatarProvider1->avatars[user1] = avatarHash1;
+
+			testling->getAvatarHash(user1);
+			avatarProvider1->onAvatarChanged(user1);
+
+			CPPUNIT_ASSERT_EQUAL(0, static_cast<int>(changes.size()));
 		}
 
 		void testRemoveProviderDisconnectsUpdates() {

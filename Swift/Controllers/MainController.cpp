@@ -561,9 +561,12 @@ void MainController::handleVCardReceived(const JID& jid, VCard::ref vCard) {
 	if (!jid.equals(jid_, JID::WithoutResource) || !vCard || vCard->getPhoto().isEmpty()) {
 		return;
 	}
-	vCardPhotoHash_ = Hexify::hexify(SHA1::getHash(vCard->getPhoto()));
-	if (client_ && client_->isAvailable()) {
-		sendPresence(statusTracker_->getNextPresence());
+	std::string hash = Hexify::hexify(SHA1::getHash(vCard->getPhoto()));
+	if (hash != vCardPhotoHash_) {
+		vCardPhotoHash_ = hash;
+		if (client_ && client_->isAvailable()) {
+			sendPresence(statusTracker_->getNextPresence());
+		}
 	}
 }
 

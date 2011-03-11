@@ -22,9 +22,10 @@ namespace Swift {
 
 		private:
 			void handleAvatarChanged(const JID&);
+			std::string getCombinedAvatarAndCache(const JID&) const;
 
 		private:
 			std::vector<AvatarProvider*> providers;
-			std::map<JID, std::string> avatars;
+			mutable std::map<JID, std::string> avatars;
 	};
 }

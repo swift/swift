@@ -14,16 +14,13 @@
 namespace Swift {
 
 std::string CombinedAvatarProvider::getAvatarHash(const JID& jid) const {
-	SWIFT_LOG(debug) << "JID: " << jid << std::endl;
-	for (size_t i = 0; i < providers.size(); ++i) {
-		std::string hash = providers[i]->getAvatarHash(jid);
-		SWIFT_LOG(debug) << "Provider " << providers[i] << ": " << hash << std::endl;
-		if (!hash.empty()) {
-			return hash;
-		}
+	std::map<JID, std::string>::const_iterator i = avatars.find(jid);
+	if (i == avatars.end()) {
+		return getCombinedAvatarAndCache(jid);
 	}
-	SWIFT_LOG(debug) << "No hash found" << std::endl;
-	return std::string();
+	else {
+		return i->second;
+	}
 }
 
 void CombinedAvatarProvider::addProvider(AvatarProvider* provider) {
@@ -40,23 +37,27 @@ void CombinedAvatarProvider::removeProvider(AvatarProvider* provider) {
 }
 
 void CombinedAvatarProvider::handleAvatarChanged(const JID& jid) {
-	std::string hash = getAvatarHash(jid);
-	std::map<JID, std::string>::iterator i = avatars.find(jid);
+	std::string oldHash;
+	std::map<JID, std::string>::const_iterator i = avatars.find(jid);
 	if (i != avatars.end()) {
-		if (i->second != hash) {
-			if (hash.empty()) {
-				avatars.erase(i);
-			}
-			else {
-				avatars.insert(std::make_pair(jid, hash));
-			}
-			onAvatarChanged(jid);
-		}
+		oldHash = i->second;
 	}
-	else if (!hash.empty()) {
-		avatars.insert(std::make_pair(jid, hash));
+	std::string newHash = getCombinedAvatarAndCache(jid);
+	if (newHash != oldHash) {
+		SWIFT_LOG(debug) << "Avatar changed: " << jid << ": " << oldHash << " -> " << newHash << std::endl;
 		onAvatarChanged(jid);
 	}
+}
+
+std::string CombinedAvatarProvider::getCombinedAvatarAndCache(const JID& jid) const {
+	SWIFT_LOG(debug) << "JID: " << jid << std::endl;
+	std::string hash;
+	for (size_t i = 0; i < providers.size() && hash.empty(); ++i) {
+		hash = providers[i]->getAvatarHash(jid);
+		SWIFT_LOG(debug) << "Provider " << providers[i] << ": " << hash << std::endl;
+	}
+	avatars[jid] = hash;
+	return hash;
 }
 
 }
