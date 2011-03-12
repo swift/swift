@@ -1145,9 +1145,8 @@ afbeelding</translation>
         <translation>&amp;Beeld</translation>
     </message>
     <message>
-        <location filename="../QtUI/QtMainWindow.cpp" line="78"/>
         <source>Show offline contacts</source>
-        <translation>Toon offline contacten</translation>
+        <translation type="obsolete">Toon offline contacten</translation>
     </message>
     <message>
         <location filename="../QtUI/QtMainWindow.cpp" line="84"/>
@@ -1155,9 +1154,18 @@ afbeelding</translation>
         <translation>&amp;Acties</translation>
     </message>
     <message>
-        <location filename="../QtUI/QtMainWindow.cpp" line="86"/>
         <source>Edit Profile</source>
-        <translation>Bewerk profiel</translation>
+        <translation type="obsolete">Bewerk profiel</translation>
+    </message>
+    <message>
+        <location filename="../QtUI/QtMainWindow.cpp" line="78"/>
+        <source>&amp;Show offline contacts</source>
+        <translation>&amp;Toon offline contacten</translation>
+    </message>
+    <message>
+        <location filename="../QtUI/QtMainWindow.cpp" line="86"/>
+        <source>&amp;Edit Profile</source>
+        <translation>&amp;Bewerk profiel</translation>
     </message>
     <message>
         <location filename="../QtUI/QtMainWindow.cpp" line="89"/>
