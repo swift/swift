@@ -7,6 +7,7 @@
 #pragma once
 
 #include <string>
+#include <ostream>
 
 namespace Swift {
 	class JID {
