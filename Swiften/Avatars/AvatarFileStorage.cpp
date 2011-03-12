@@ -29,8 +29,8 @@ AvatarFileStorage::AvatarFileStorage(const boost::filesystem::path& avatarsDir, 
 					if (jid.isValid()) {
 						jidAvatars.insert(std::make_pair(jid, r.first));
 					}
-					else {
-						std::cerr << "Invalid entry in avatars file" << std::endl;
+					else if (!r.first.empty() || !r.second.empty()) {
+						std::cerr << "Invalid entry in avatars file: " << r.second << std::endl;
 					}
 				}
 			}

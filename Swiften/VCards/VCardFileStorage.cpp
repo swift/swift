@@ -35,7 +35,7 @@ VCardFileStorage::VCardFileStorage(boost::filesystem::path dir) : vcardsPath(dir
 					if (jid.isValid()) {
 						photoHashes.insert(std::make_pair(jid, r.first));
 					}
-					else {
+					else if (!r.first.empty() || !r.second.empty()) {
 						std::cerr << "Invalid entry in phashes file" << std::endl;
 					}
 				}
