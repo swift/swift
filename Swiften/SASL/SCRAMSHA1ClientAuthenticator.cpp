@@ -65,7 +65,7 @@ bool SCRAMSHA1ClientAuthenticator::setChallenge(const boost::optional<ByteArray>
 		}
 		initialServerMessage = *challenge;
 
-		std::map<char, std::string> keys = parseMap(std::string(initialServerMessage.getData(), initialServerMessage.getSize()));
+		std::map<char, std::string> keys = parseMap(initialServerMessage.toString());
 
 		// Extract the salt
 		ByteArray salt = Base64::decode(keys['s']);

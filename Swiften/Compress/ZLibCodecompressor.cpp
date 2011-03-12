@@ -27,7 +27,7 @@ ZLibCodecompressor::~ZLibCodecompressor() {
 ByteArray ZLibCodecompressor::process(const ByteArray& input) {
 	ByteArray output;
 	stream_.avail_in = input.getSize();
-	stream_.next_in = reinterpret_cast<Bytef*>(const_cast<char*>(input.getData()));
+	stream_.next_in = reinterpret_cast<Bytef*>(const_cast<unsigned char*>(input.getData()));
 	int outputPosition = 0;
 	do {
 		output.resize(outputPosition + CHUNK_SIZE);

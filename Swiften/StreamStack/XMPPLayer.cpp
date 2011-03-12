@@ -52,7 +52,7 @@ void XMPPLayer::writeDataInternal(const ByteArray& data) {
 void XMPPLayer::handleDataRead(const ByteArray& data) {
 	onDataRead(data);
 	inParser_ = true;
-	if (!xmppParser_->parse(std::string(data.getData(), data.getSize()))) {
+	if (!xmppParser_->parse(data.toString())) {
 		inParser_ = false;
 		onError();
 		return;

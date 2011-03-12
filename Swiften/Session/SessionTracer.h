@@ -27,7 +27,7 @@ namespace Swift {
 					std::cerr << direction;
 				}
 				std::cerr << " " << session->getRemoteJID()<< " " << direction << direction << std::endl;
-				std::cerr << std::string(data.getData(), data.getSize()) << std::endl;
+				std::cerr << data.toString() << std::endl;
 			}
 
 			boost::shared_ptr<Session> session;

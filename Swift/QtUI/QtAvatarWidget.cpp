@@ -84,7 +84,7 @@ void QtAvatarWidget::mousePressEvent(QMouseEvent* event) {
 			data.readFromFile(Q2PSTRING(fileName));
 
 			QBuffer buffer;
-			buffer.setData(data.getData(), data.getSize());
+			buffer.setData(reinterpret_cast<const char*>(data.getData()), data.getSize());
 			buffer.open(QIODevice::ReadOnly);
 			QString type = QImageReader::imageFormat(&buffer).toLower();
 			if (!type.isEmpty()) {

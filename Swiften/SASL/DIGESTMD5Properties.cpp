@@ -25,7 +25,7 @@ namespace {
 	}
 
 	ByteArray stripQuotes(const ByteArray& v) {
-		const char* data = v.getData();
+		const char* data = reinterpret_cast<const char*>(v.getData());
 		size_t size = v.getSize();
 		if (v[0] == '"') {
 			data++;

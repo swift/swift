@@ -56,7 +56,7 @@ boost::shared_ptr<VCard> VCardFileStorage::getVCard(const JID& jid) const {
 
 		VCardParser parser;
 		PayloadParserTester tester(&parser);
-		tester.parse(std::string(data.getData(), data.getSize()));
+		tester.parse(data.toString());
 		return boost::dynamic_pointer_cast<VCard>(parser.getPayload());
 	}
 	else {

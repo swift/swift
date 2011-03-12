@@ -50,7 +50,7 @@ void CertificateFileStorage::addCertificate(Certificate::ref certificate) {
 	}
 	boost::filesystem::ofstream file(certificatePath, boost::filesystem::ofstream::binary|boost::filesystem::ofstream::out);
 	ByteArray data = certificate->toDER();
-	file.write(data.getData(), data.getSize());
+	file.write(reinterpret_cast<const char*>(data.getData()), data.getSize());
 	file.close();
 }
 

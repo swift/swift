@@ -28,7 +28,7 @@ ByteArray FileReadBytestream::read(size_t size)  {
 	ByteArray result;
 	result.resize(size);
 	assert(stream->good());
-	stream->read(result.getData(), size);
+	stream->read(reinterpret_cast<char*>(result.getData()), size);
 	result.resize(stream->gcount());
 	return result;
 }

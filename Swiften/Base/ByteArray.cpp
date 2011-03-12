@@ -31,7 +31,7 @@ void ByteArray::readFromFile(const std::string& file) {
 	while (input.good()) {
 		size_t oldSize = data_.size();
 		data_.resize(oldSize + BUFFER_SIZE);
-		input.read(&data_[oldSize], BUFFER_SIZE);
+		input.read(reinterpret_cast<char*>(&data_[oldSize]), BUFFER_SIZE);
 		data_.resize(oldSize + input.gcount());
 	}
 	input.close();

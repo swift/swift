@@ -121,7 +121,7 @@ class XMPPLayerTest : public CppUnit::TestFixture {
 		class DummyLowLayer : public LowLayer {
 			public:
 				virtual void writeData(const ByteArray& data) {
-					writtenData += std::string(data.getData(), data.getSize());
+					writtenData += data.toString();
 				}
 				
 				std::string writtenData;

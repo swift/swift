@@ -146,12 +146,12 @@ void PlatformDomainNameServiceQuery::runBlocking() {
 		}
 		ByteArray entry;
 		entry.resize(NS_MAXDNAME);
-		entryLength = dn_expand(messageStart, messageEnd, currentEntry, entry.getData(), entry.getSize());
+		entryLength = dn_expand(messageStart, messageEnd, currentEntry, reinterpret_cast<char*>(entry.getData()), entry.getSize());
 		if (entryLength < 0) {
 			emitError();
 			return;
 		}
-		record.hostname = std::string(entry.getData());
+		record.hostname = std::string(reinterpret_cast<const char*>(entry.getData()));
 		records.push_back(record);
 		currentEntry += entryLength;
 		answersCount--;

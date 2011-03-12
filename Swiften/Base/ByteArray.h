@@ -16,7 +16,7 @@ namespace Swift {
 	class ByteArray
 	{
 		public:
-			typedef std::vector<char>::const_iterator const_iterator;
+			typedef std::vector<unsigned char>::const_iterator const_iterator;
 
 			ByteArray() : data_() {}
 
@@ -43,11 +43,11 @@ namespace Swift {
 				}
 			}
 
-			const char* getData() const {
+			const unsigned char* getData() const {
 				return data_.empty() ? NULL : &data_[0];
 			}
 
-			char* getData() {
+			unsigned char* getData() {
 				return data_.empty() ? NULL : &data_[0];
 			}
 
@@ -95,11 +95,11 @@ namespace Swift {
 			}
 
 
-			const char& operator[](size_t i) const {
+			const unsigned char& operator[](size_t i) const {
 				return data_[i];
 			}
 
-			char& operator[](size_t i) {
+			unsigned char& operator[](size_t i) {
 				return data_[i];
 			}
 
@@ -112,7 +112,7 @@ namespace Swift {
 			}
 
 			std::string toString() const {
-				return std::string(getData(), getSize());
+				return std::string(reinterpret_cast<const char*>(getData()), getSize());
 			}
 
 			void readFromFile(const std::string& file);
@@ -122,7 +122,7 @@ namespace Swift {
 			}
 
 		private:
-			std::vector<char> data_;
+			std::vector<unsigned char> data_;
 	};
 }
 

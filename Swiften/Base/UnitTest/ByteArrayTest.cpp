@@ -20,7 +20,7 @@ class ByteArrayTest : public CppUnit::TestFixture {
 		void testGetData_NoData() {
 			ByteArray testling;
 
-			CPPUNIT_ASSERT_EQUAL(static_cast<const char*>(NULL), static_cast<const char*>(testling.getData()));
+			CPPUNIT_ASSERT_EQUAL(reinterpret_cast<const char*>(NULL), reinterpret_cast<const char*>(testling.getData()));
 		}
 };
 
