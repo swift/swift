@@ -8,7 +8,10 @@
 
 #include <unistd.h>
 #include <boost/algorithm/string.hpp>
+#include <iostream>
+
 #include <Swiften/Base/String.h>
+#include <Swiften/Base/foreach.h>
 
 namespace Swift {
 
