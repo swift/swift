@@ -16,6 +16,7 @@ class StringTest : public CppUnit::TestFixture {
 		CPPUNIT_TEST_SUITE(StringTest);
 		CPPUNIT_TEST(testGetUnicodeCodePoints);
 		CPPUNIT_TEST(testGetSplittedAtFirst);
+		CPPUNIT_TEST(testGetSplittedAtFirst_CharacterAtBegin);
 		CPPUNIT_TEST(testGetSplittedAtFirst_CharacterAtEnd);
 		CPPUNIT_TEST(testGetSplittedAtFirst_NoSuchCharacter);
 		CPPUNIT_TEST(testReplaceAll);
@@ -42,6 +43,14 @@ class StringTest : public CppUnit::TestFixture {
 			std::pair<std::string,std::string> result = String::getSplittedAtFirst(testling, '@');
 			CPPUNIT_ASSERT_EQUAL(std::string("ab"), result.first);
 			CPPUNIT_ASSERT_EQUAL(std::string("cd@ef"), result.second);
+		}
+
+		void testGetSplittedAtFirst_CharacterAtBegin() {
+			std::string testling(" ab");
+
+			std::pair<std::string,std::string> result = String::getSplittedAtFirst(testling, ' ');
+			CPPUNIT_ASSERT(result.first.empty());
+			CPPUNIT_ASSERT_EQUAL(std::string("ab"), result.second);
 		}
 
 		void testGetSplittedAtFirst_CharacterAtEnd() {

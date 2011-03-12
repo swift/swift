@@ -32,7 +32,7 @@ VCardFileStorage::VCardFileStorage(boost::filesystem::path dir) : vcardsPath(dir
 					getline(file, line);
 					std::pair<std::string, std::string> r = String::getSplittedAtFirst(line, ' ');
 					JID jid(r.second);
-					if (jid.isValid() && !r.first.empty()) {
+					if (jid.isValid()) {
 						photoHashes.insert(std::make_pair(jid, r.first));
 					}
 					else {
