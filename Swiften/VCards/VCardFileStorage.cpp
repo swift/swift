@@ -7,8 +7,6 @@
 #include "Swiften/VCards/VCardFileStorage.h"
 
 #include <boost/filesystem/fstream.hpp>
-#include <boost/property_tree/ptree.hpp>
-#include <boost/property_tree/xml_parser.hpp>
 
 #include <Swiften/Base/String.h>
 #include <Swiften/StringCodecs/Hexify.h>
@@ -24,26 +22,27 @@
 namespace Swift {
 
 VCardFileStorage::VCardFileStorage(boost::filesystem::path dir) : vcardsPath(dir) {
-	cacheFile = vcardsPath / "vcards.xml";
+	cacheFile = vcardsPath / "phashes";
 	if (boost::filesystem::exists(cacheFile)) {
-		boost::property_tree::ptree tree;
 		try {
-			boost::property_tree::xml_parser::read_xml(cacheFile.string(), tree);
-		}
-		catch (const boost::property_tree::xml_parser::xml_parser_error& e) {
-			std::cerr << "Error reading vcards file: " << e.filename() << ":" << e.line() << ": " << e.message() << std::endl;
-		}
-		foreach(const boost::property_tree::ptree::value_type &v, tree.get_child("vcards")) {
-			try {
-				JID jid(v.second.get<std::string>("jid"));
-				std::string hash(v.second.get<std::string>("phash"));
-				if (jid.isValid()) {
-					photoHashes.insert(std::make_pair(jid, hash));
+			boost::filesystem::ifstream file(cacheFile);
+			std::string line;
+			if (file.is_open()) {
+				while (!file.eof()) {
+					getline(file, line);
+					std::pair<std::string, std::string> r = String::getSplittedAtFirst(line, ' ');
+					JID jid(r.second);
+					if (jid.isValid() && !r.first.empty()) {
+						photoHashes.insert(std::make_pair(jid, r.first));
+					}
+					else {
+						std::cerr << "Invalid entry in phashes file" << std::endl;
+					}
 				}
 			}
-			catch (const boost::property_tree::ptree_error& e) {
-				std::cerr << "Invalid vcard value: " << e.what() << std::endl;
-			}
+		}
+		catch (...) {
+			std::cerr << "Error reading phashes file" << std::endl;
 		}
 	}
 }
@@ -114,18 +113,15 @@ std::string VCardFileStorage::getAndUpdatePhotoHash(const JID& jid, VCard::ref v
 }
 
 void VCardFileStorage::savePhotoHashes() const {
-	boost::property_tree::ptree tree;
-	for (PhotoHashMap::const_iterator i = photoHashes.begin(); i != photoHashes.end(); ++i) {
-		boost::property_tree::ptree entry;
-		entry.put("jid", i->first.toString());
-		entry.put("phash", i->second);
-		tree.add_child("vcards.vcard", entry);
-	}
 	try {
-		boost::property_tree::xml_parser::write_xml(cacheFile.string(), tree);
+		boost::filesystem::ofstream file(cacheFile);
+		for (PhotoHashMap::const_iterator i = photoHashes.begin(); i != photoHashes.end(); ++i) {
+			file << i->second << " " << i->first.toString() << std::endl;
+		}
+		file.close();
 	}
-	catch (const boost::property_tree::xml_parser::xml_parser_error& e) {
-		std::cerr << "Error writing vcards file: " << e.filename() << ": " << e.message() << std::endl;
+	catch (...) {
+		std::cerr << "Error writing vcards file" << std::endl;
 	}
 }
 

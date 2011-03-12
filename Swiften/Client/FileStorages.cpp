@@ -15,7 +15,7 @@ FileStorages::FileStorages(const boost::filesystem::path& baseDir, const JID& ji
 	std::string profile = jid.toBare();
 	vcardStorage = new VCardFileStorage(baseDir / profile / "vcards");
 	capsStorage = new CapsFileStorage(baseDir / "caps");
-	avatarStorage = new AvatarFileStorage(baseDir / "avatars", baseDir / profile / "avatars.xml");
+	avatarStorage = new AvatarFileStorage(baseDir / "avatars", baseDir / profile / "avatars");
 }
 
 FileStorages::~FileStorages() {

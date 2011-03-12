@@ -8,10 +8,9 @@
 
 #include <iostream>
 #include <boost/filesystem/fstream.hpp>
-#include <boost/property_tree/ptree.hpp>
-#include <boost/property_tree/xml_parser.hpp>
 
 #include <Swiften/Base/foreach.h>
+#include <Swiften/Base/String.h>
 #include <Swiften/StringCodecs/SHA1.h>
 #include <Swiften/StringCodecs/Hexify.h>
 
@@ -19,24 +18,25 @@ namespace Swift {
 
 AvatarFileStorage::AvatarFileStorage(const boost::filesystem::path& avatarsDir, const boost::filesystem::path& avatarsFile) : avatarsDir(avatarsDir), avatarsFile(avatarsFile) {
 	if (boost::filesystem::exists(avatarsFile)) {
-		boost::property_tree::ptree tree;
 		try {
-			boost::property_tree::xml_parser::read_xml(avatarsFile.string(), tree);
-		}
-		catch (const boost::property_tree::xml_parser::xml_parser_error& e) {
-			std::cerr << "Error reading avatars file: " << e.filename() << ":" << e.line() << ": " << e.message() << std::endl;
-		}
-		foreach(const boost::property_tree::ptree::value_type &v, tree.get_child("avatars")) {
-			try {
-				JID jid(v.second.get<std::string>("jid"));
-				std::string hash(v.second.get<std::string>("hash"));
-				if (jid.isValid()) {
-					jidAvatars.insert(std::make_pair(jid, hash));
+			boost::filesystem::ifstream file(avatarsFile);
+			std::string line;
+			if (file.is_open()) {
+				while (!file.eof()) {
+					getline(file, line);
+					std::pair<std::string, std::string> r = String::getSplittedAtFirst(line, ' ');
+					JID jid(r.second);
+					if (jid.isValid() && !r.first.empty()) {
+						jidAvatars.insert(std::make_pair(jid, r.first));
+					}
+					else {
+						std::cerr << "Invalid entry in avatars file" << std::endl;
+					}
 				}
 			}
-			catch (const boost::property_tree::ptree_error& e) {
-				std::cerr << "Invalid avatar value: " << e.what() << std::endl;
-			}
+		}
+		catch (...) {
+			std::cerr << "Error reading avatars file" << std::endl;
 		}
 	}
 }
@@ -89,18 +89,15 @@ std::string AvatarFileStorage::getAvatarForJID(const JID& jid) const {
 }
 
 void AvatarFileStorage::saveJIDAvatars() {
-	boost::property_tree::ptree tree;
-	for (JIDAvatarMap::const_iterator i = jidAvatars.begin(); i != jidAvatars.end(); ++i) {
-		boost::property_tree::ptree entry;
-		entry.put("jid", i->first.toString());
-		entry.put("hash", i->second);
-		tree.add_child("avatars.avatar", entry);
-	}
 	try {
-		boost::property_tree::xml_parser::write_xml(avatarsFile.string(), tree);
+		boost::filesystem::ofstream file(avatarsFile);
+		for (JIDAvatarMap::const_iterator i = jidAvatars.begin(); i != jidAvatars.end(); ++i) {
+			file << i->second << " " << i->first.toString() << std::endl;
+		}
+		file.close();
 	}
-	catch (const boost::property_tree::xml_parser::xml_parser_error& e) {
-		std::cerr << "Error writing avatars file: " << e.filename() << ": " << e.message() << std::endl;
+	catch (...) {
+		std::cerr << "Error writing avatars file" << std::endl;
 	}
 }
 
