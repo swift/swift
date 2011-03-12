@@ -29,17 +29,16 @@ void VCardAvatarManager::handleVCardChanged(const JID& from) {
 }
 
 std::string VCardAvatarManager::getAvatarHash(const JID& jid) const {
-	VCard::ref vCard = vcardManager_->getVCard(getAvatarJID(jid));
-	if (vCard && !vCard->getPhoto().isEmpty()) {
-		std::string hash = Hexify::hexify(SHA1::getHash(vCard->getPhoto()));
+	JID avatarJID = getAvatarJID(jid);
+	std::string hash = vcardManager_->getPhotoHash(avatarJID);
+	if (!hash.empty()) {
 		if (!avatarStorage_->hasAvatar(hash)) {
+			VCard::ref vCard = vcardManager_->getVCard(avatarJID);
+			assert(vCard);
 			avatarStorage_->addAvatar(hash, vCard->getPhoto());
 		}
-		return hash;
 	}
-	else {
-		return "";
-	}
+	return hash;
 }
 
 JID VCardAvatarManager::getAvatarJID(const JID& jid) const {

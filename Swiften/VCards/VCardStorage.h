@@ -6,9 +6,10 @@
 
 #pragma once
 
+#include <string>
 #include <boost/shared_ptr.hpp>
 
-#include "Swiften/Elements/VCard.h"
+#include <Swiften/Elements/VCard.h>
 
 namespace Swift {
 	class JID;
@@ -19,5 +20,7 @@ namespace Swift {
 
 			virtual VCard::ref getVCard(const JID& jid) const = 0;
 			virtual void setVCard(const JID&, VCard::ref) = 0;
+
+			virtual std::string getPhotoHash(const JID&) const;
 	};
 }

@@ -12,6 +12,7 @@
 #include "Swiften/VCards/VCardStorage.h"
 #include "Swiften/VCards/GetVCardRequest.h"
 
+
 namespace Swift {
 
 VCardManager::VCardManager(const JID& ownJID, IQRouter* iqRouter, VCardStorage* vcardStorage) : ownJID(ownJID), iqRouter(iqRouter), storage(vcardStorage) {
@@ -75,6 +76,10 @@ void VCardManager::setVCard(const JID& jid, VCard::ref vcard) {
 	if (jid.compare(ownJID, JID::WithoutResource) == 0) {
 		onOwnVCardChanged(vcard);
 	}
+}
+
+std::string VCardManager::getPhotoHash(const JID& jid) const {
+	return storage->getPhotoHash(jid);
 }
 
 }

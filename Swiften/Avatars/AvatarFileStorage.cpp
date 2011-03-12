@@ -12,6 +12,8 @@
 #include <boost/property_tree/xml_parser.hpp>
 
 #include <Swiften/Base/foreach.h>
+#include <Swiften/StringCodecs/SHA1.h>
+#include <Swiften/StringCodecs/Hexify.h>
 
 namespace Swift {
 
@@ -44,6 +46,8 @@ bool AvatarFileStorage::hasAvatar(const std::string& hash) const {
 }
 
 void AvatarFileStorage::addAvatar(const std::string& hash, const ByteArray& avatar) {
+	assert(Hexify::hexify(SHA1::getHash(avatar)) == hash);
+
 	boost::filesystem::path avatarPath = getAvatarPath(hash);
 	if (!boost::filesystem::exists(avatarPath.parent_path())) {
 		try {

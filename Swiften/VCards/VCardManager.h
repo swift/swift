@@ -29,6 +29,9 @@ namespace Swift {
 			void requestVCard(const JID& jid);
 			void requestOwnVCard();
 
+			std::string getPhotoHash(const JID& jid) const;
+
+
 			SetVCardRequest::ref createSetVCardRequest(VCard::ref);
 
 		public:
