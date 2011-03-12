@@ -8,6 +8,8 @@
 
 #include <boost/shared_ptr.hpp>
 #include <boost/filesystem.hpp>
+#include <string>
+#include <map>
 
 #include "Swiften/VCards/VCardStorage.h"
 
@@ -19,10 +21,18 @@ namespace Swift {
 			virtual VCard::ref getVCard(const JID& jid) const;
 			virtual void setVCard(const JID& jid, VCard::ref v);
 
+			virtual std::string getPhotoHash(const JID&) const;
+
 		private:
 			boost::filesystem::path getVCardPath(const JID&) const;
 
+			std::string getAndUpdatePhotoHash(const JID& jid, VCard::ref vcard) const;
+			void savePhotoHashes() const;
+
 		private:
 			boost::filesystem::path vcardsPath;
+			boost::filesystem::path cacheFile;
+			typedef std::map<JID, std::string> PhotoHashMap;
+			mutable PhotoHashMap photoHashes;
 	};
 }
