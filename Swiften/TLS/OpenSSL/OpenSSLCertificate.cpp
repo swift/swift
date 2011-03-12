@@ -23,9 +23,9 @@ OpenSSLCertificate::OpenSSLCertificate(boost::shared_ptr<X509> cert) : cert(cert
 
 OpenSSLCertificate::OpenSSLCertificate(const ByteArray& der) {
 #if OPENSSL_VERSION_NUMBER <= 0x009070cfL
-	unsigned char* p = reinterpret_cast<unsigned char*>(const_cast<char*>(der.getData()));
+	unsigned char* p = const_cast<unsigned char*>(der.getData());
 #else
-	const unsigned char* p = reinterpret_cast<const unsigned char*>(der.getData());
+	const unsigned char* p = der.getData();
 #endif
 	cert = boost::shared_ptr<X509>(d2i_X509(NULL, &p, der.getSize()), X509_free);
 	if (!cert) {
