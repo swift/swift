@@ -20,10 +20,7 @@ ByteArray HMACSHA1::getResult(const ByteArray& key, const ByteArray& data) {
 
 	// Create the padded key
 	ByteArray paddedKey(key);
-	paddedKey.resize(B);
-	for (unsigned int i = key.getSize(); i < paddedKey.getSize(); ++i) {
-		paddedKey[i] = 0x0;
-	}
+	paddedKey.resize(B, 0x0);
 
 	// Create the first value
 	ByteArray x(paddedKey);
