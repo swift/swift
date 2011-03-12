@@ -43,12 +43,23 @@ namespace Swift {
 				}
 			}
 
+			ByteArray(const std::vector<unsigned char>& data) : data_(data) {
+			}
+
 			const unsigned char* getData() const {
 				return data_.empty() ? NULL : &data_[0];
 			}
 
 			unsigned char* getData() {
 				return data_.empty() ? NULL : &data_[0];
+			}
+			
+			const std::vector<unsigned char>& getVector() const {
+				return data_;
+			}
+
+			std::vector<unsigned char>& getVector() {
+				return data_;
 			}
 
 			size_t getSize() const {
