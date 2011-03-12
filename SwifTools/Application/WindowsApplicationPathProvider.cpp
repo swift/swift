@@ -8,8 +8,6 @@
 
 #include <windows.h>
 
-#include "Swiften/Base/ByteArray.h"
-
 namespace Swift {
 
 WindowsApplicationPathProvider::WindowsApplicationPathProvider(const std::string& name) : ApplicationPathProvider(name) {

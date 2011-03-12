@@ -9,8 +9,6 @@
 #include <iostream>
 #include <mach-o/dyld.h>
 
-#include "Swiften/Base/ByteArray.h"
-
 namespace Swift {
 
 MacOSXApplicationPathProvider::MacOSXApplicationPathProvider(const std::string& name) : ApplicationPathProvider(name) {

@@ -8,7 +8,6 @@
 
 #include <boost/filesystem.hpp>
 #include <vector>
-
 #include <string>
 
 namespace Swift {

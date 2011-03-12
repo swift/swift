@@ -6,8 +6,8 @@
 
 #include "SwifTools/Application/UnixApplicationPathProvider.h"
 
+#include <unistd.h>
 #include <boost/algorithm/string.hpp>
-
 #include <Swiften/Base/String.h>
 
 namespace Swift {
