@@ -1064,8 +1064,12 @@ afbeelding</translation>
     </message>
     <message>
         <location filename="../QtUI/QtLoginWindow.cpp" line="175"/>
-        <source>Show &amp;Notifications</source>
+        <source>Display Pop-up &amp;Notifications</source>
         <translation>Toon &amp;schermboodschappen</translation>
+    </message>
+    <message>
+        <source>Show &amp;Notifications</source>
+        <translation type="obsolete">Toon &amp;schermboodschappen</translation>
     </message>
     <message>
         <location filename="../QtUI/QtLoginWindow.cpp" line="190"/>

@@ -172,7 +172,7 @@ QtLoginWindow::QtLoginWindow(UIEventStream* uiEventStream) : QMainWindow() {
 	connect(toggleSoundsAction_, SIGNAL(toggled(bool)), SLOT(handleToggleSounds(bool)));
 	generalMenu_->addAction(toggleSoundsAction_);
 
-	toggleNotificationsAction_ = new QAction(tr("Show &Notifications"), this);
+	toggleNotificationsAction_ = new QAction(tr("Display Pop-up &Notifications"), this);
 	toggleNotificationsAction_->setCheckable(true);
 	toggleNotificationsAction_->setChecked(true);
 	connect(toggleNotificationsAction_, SIGNAL(toggled(bool)), SLOT(handleToggleNotifications(bool)));
