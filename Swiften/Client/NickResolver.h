@@ -5,9 +5,9 @@
  */
 
 #include <map>
-#include <boost/signals.hpp>
 #include <boost/shared_ptr.hpp>
 
+#include <Swiften/Base/boost_bsignals.h>
 #include <string>
 #include "Swiften/JID/JID.h"
 #include "Swiften/Elements/VCard.h"

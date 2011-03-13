@@ -6,6 +6,9 @@
 
 #include "Swiften/Serializer/PayloadSerializers/MUCPayloadSerializer.h"
 
+#include <boost/lexical_cast.hpp>
+#include <boost/date_time/posix_time/posix_time.hpp>
+
 #include "Swiften/Serializer/XML/XMLElement.h"
 #include <Swiften/Base/String.h>
 

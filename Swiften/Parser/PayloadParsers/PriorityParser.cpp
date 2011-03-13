@@ -24,7 +24,7 @@ void PriorityParser::handleEndElement(const std::string&, const std::string&) {
 		try {
 			priority = boost::lexical_cast<int>(text_);
 		}
-		catch (boost::bad_lexical_cast& e) {
+		catch (boost::bad_lexical_cast&) {
 		}
 		getPayloadInternal()->setPriority(priority);
 	}

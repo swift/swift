@@ -4,15 +4,14 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#ifndef SWIFTEN_PAYLOADSERIALIZER_H
-#define SWIFTEN_PAYLOADSERIALIZER_H
-
-#include <boost/shared_ptr.hpp>
+#pragma once
 
 #include <string>
-#include "Swiften/Elements/Payload.h"
+#include <boost/shared_ptr.hpp>
 
 namespace Swift {
+	class Payload;
+
 	class PayloadSerializer {
 		public:
 			virtual ~PayloadSerializer();
@@ -21,5 +20,3 @@ namespace Swift {
 			virtual std::string serialize(boost::shared_ptr<Payload>) const = 0;
 	};
 }
-
-#endif

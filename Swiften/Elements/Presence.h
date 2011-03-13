@@ -6,11 +6,8 @@
 
 #pragma once
 
-
-#include "Swiften/Elements/Stanza.h"
-#include "Swiften/Elements/Status.h"
-#include "Swiften/Elements/StatusShow.h"
-#include "Swiften/Elements/Priority.h"
+#include <Swiften/Elements/Stanza.h>
+#include <Swiften/Elements/StatusShow.h>
 
 namespace Swift {
 	class Presence : public Stanza {
@@ -19,10 +16,9 @@ namespace Swift {
 
 			enum Type { Available, Error, Probe, Subscribe, Subscribed, Unavailable, Unsubscribe, Unsubscribed };
 
-			Presence() : type_(Available) /*, showType_(Online)*/ {}
-			Presence(const std::string& status) : type_(Available) {
-				setStatus(status);
-			}
+			Presence();
+			Presence(const std::string& status);
+			virtual ~Presence();
 
 			static ref create() {
 				return ref(new Presence());
@@ -51,26 +47,11 @@ namespace Swift {
 				updatePayload(boost::shared_ptr<StatusShow>(new StatusShow(show)));
 			}
 
-			std::string getStatus() const { 
-				boost::shared_ptr<Status> status(getPayload<Status>());
-				if (status) {
-					return status->getText();
-				}
-				return "";
-			}
+			std::string getStatus() const;
+			void setStatus(const std::string& status);
 
-			void setStatus(const std::string& status) { 
-				updatePayload(boost::shared_ptr<Status>(new Status(status)));
-			}
-
-			int getPriority() const {
-				boost::shared_ptr<Priority> priority(getPayload<Priority>());
-				return (priority ? priority->getPriority() : 0);
-			}
-
-			void setPriority(int priority) {
-				updatePayload(boost::shared_ptr<Priority>(new Priority(priority)));
-			}
+			int getPriority() const;
+			void setPriority(int priority);
 
 			boost::shared_ptr<Presence> clone() const {
 				return boost::shared_ptr<Presence>(new Presence(*this));

@@ -9,6 +9,7 @@
 #include <boost/bind.hpp>
 #include <vector>
 
+#include <Swiften/Base/foreach.h>
 #include "Swiften/Base/String.h"
 #include "Swift/Controllers/Roster/GroupRosterItem.h"
 

@@ -6,11 +6,8 @@
 
 #pragma once
 
-#include <map>
-
 #include "Swiften/Avatars/AvatarProvider.h"
 #include "Swiften/JID/JID.h"
-#include "Swiften/Elements/VCard.h"
 
 namespace Swift {
 	class MUCRegistry;

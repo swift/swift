@@ -7,8 +7,8 @@
 #pragma once
 
 #include <boost/shared_ptr.hpp>
-
 #include <string>
+
 #include "Swiften/Base/ByteArray.h"
 #include "Swiften/Elements/Payload.h"
 

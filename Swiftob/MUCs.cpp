@@ -6,6 +6,10 @@
 
 #include "Swiftob/MUCs.h"
 
+#include <boost/bind.hpp>
+#include <boost/date_time/posix_time/posix_time.hpp>
+
+#include <Swiften/Base/foreach.h>
 #include <Swiften/Client/Client.h>
 #include <Swiften/MUC/MUC.h>
 #include <Swiften/MUC/MUCManager.h>

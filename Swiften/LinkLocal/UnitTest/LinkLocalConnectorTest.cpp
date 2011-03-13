@@ -7,6 +7,8 @@
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/extensions/TestFactoryRegistry.h>
 
+#include <boost/bind.hpp>
+
 #include "Swiften/LinkLocal/LinkLocalConnector.h"
 #include "Swiften/LinkLocal/LinkLocalService.h"
 #include "Swiften/LinkLocal/DNSSD/DNSSDServiceID.h"

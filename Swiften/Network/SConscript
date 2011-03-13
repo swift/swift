@@ -12,6 +12,8 @@ sourceList = [
 			"BoostIOServiceThread.cpp",
 			"ConnectionFactory.cpp",
 			"ConnectionServer.cpp",
+			"DummyConnection.cpp",
+			"FakeConnection.cpp",
  			"Connector.cpp",
 			"TimerFactory.cpp",
 			"DummyTimerFactory.cpp",

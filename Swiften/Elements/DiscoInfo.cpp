@@ -6,6 +6,8 @@
 
 #include "Swiften/Elements/DiscoInfo.h"
 
+#include <algorithm>
+
 namespace Swift {
 
 const std::string DiscoInfo::ChatStatesFeature = std::string("http://jabber.org/protocol/chatstates");
@@ -31,6 +33,10 @@ bool DiscoInfo::Identity::operator<(const Identity& other) const {
 	else {
 		return category_ < other.category_;
 	}
+}
+
+bool DiscoInfo::hasFeature(const std::string& feature) const {
+	return std::find(features_.begin(), features_.end(), feature) != features_.end();
 }
 
 }

@@ -7,24 +7,14 @@
 #pragma once
 
 #include <deque>
-#include <iostream>
-#include <boost/function.hpp>
 
 #include "Swiften/EventLoop/EventLoop.h"
-#include "Swiften/Base/foreach.h"
 
 namespace Swift {
 	class DummyEventLoop : public EventLoop {
 		public:
-			DummyEventLoop() {
-			}
-
-			~DummyEventLoop() {
-				if (!events_.empty()) {
-					std::cerr << "DummyEventLoop: Unhandled events at destruction time" << std::endl;
-				}
-				events_.clear();
-			}
+			DummyEventLoop();
+			~DummyEventLoop();
 
 			void processEvents() {
 				while (!events_.empty()) {

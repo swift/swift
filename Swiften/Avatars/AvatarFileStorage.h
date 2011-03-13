@@ -8,7 +8,7 @@
 
 #include <map>
 #include <string>
-#include <boost/filesystem.hpp>
+#include <boost/filesystem/path.hpp>
 
 #include <Swiften/JID/JID.h>
 #include "Swiften/Base/ByteArray.h"

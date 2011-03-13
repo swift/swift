@@ -7,6 +7,7 @@
 #include "Swiften/StreamManagement/StanzaAckRequester.h"
 
 #include <boost/numeric/conversion/cast.hpp>
+#include <iostream>
 
 #include "Swiften/Elements/Message.h"
 

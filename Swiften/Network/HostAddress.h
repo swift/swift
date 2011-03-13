@@ -7,12 +7,9 @@
 #pragma once
 
 #include <string>
-#include <vector>
-#include <boost/asio.hpp>
+#include <boost/asio/ip/address.hpp>
 
 namespace Swift {
-	
-
 	class HostAddress {
 		public:
 			HostAddress();

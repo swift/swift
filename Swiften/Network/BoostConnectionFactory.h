@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include <boost/asio.hpp>
+#include <boost/asio/io_service.hpp>
 
 #include "Swiften/Network/ConnectionFactory.h"
 #include "Swiften/Network/BoostConnection.h"

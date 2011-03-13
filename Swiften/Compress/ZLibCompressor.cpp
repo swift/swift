@@ -6,6 +6,8 @@
 
 #include "Swiften/Compress/ZLibCompressor.h"
 
+#include <cassert>
+
 #pragma GCC diagnostic ignored "-Wold-style-cast"
 
 namespace Swift {

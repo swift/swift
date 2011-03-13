@@ -11,7 +11,6 @@
 #include <list>
 #include <set>
 
-#include "Swiften/Base/foreach.h"
 #include <string>
 #include "Swiften/EventLoop/EventOwner.h"
 #include "Swiften/LinkLocal/DNSSD/DNSSDQuerier.h"
@@ -63,8 +62,8 @@ namespace Swift {
 			template<typename T>
 			std::vector< boost::shared_ptr<T> > getAllQueriesEverRun() const {
 				std::vector< boost::shared_ptr<T> > result;
-				foreach(const boost::shared_ptr<FakeDNSSDQuery>& query, allQueriesEverRun) {
-					if (boost::shared_ptr<T> resultQuery = boost::dynamic_pointer_cast<T>(query)) {
+				for (QueryList::const_iterator i = allQueriesEverRun.begin(); i != allQueriesEverRun.end(); ++i) {
+					if (boost::shared_ptr<T> resultQuery = boost::dynamic_pointer_cast<T>(*i)) {
 						result.push_back(resultQuery);
 					}
 				}
@@ -75,8 +74,8 @@ namespace Swift {
 			template<typename T>
 			std::vector< boost::shared_ptr<T> > getQueries() const {
 				std::vector< boost::shared_ptr<T> > result;
-				foreach(const boost::shared_ptr<FakeDNSSDQuery>& query, runningQueries) {
-					if (boost::shared_ptr<T> resultQuery = boost::dynamic_pointer_cast<T>(query)) {
+				for (QueryList::const_iterator i = runningQueries.begin(); i != runningQueries.end(); ++i) {
+					if (boost::shared_ptr<T> resultQuery = boost::dynamic_pointer_cast<T>(*i)) {
 						result.push_back(resultQuery);
 					}
 				}
@@ -86,8 +85,9 @@ namespace Swift {
 		private:
 			std::string domain;
 			EventLoop* eventLoop;
-			std::list< boost::shared_ptr<FakeDNSSDQuery> > runningQueries;
-			std::list< boost::shared_ptr<FakeDNSSDQuery> > allQueriesEverRun;
+			typedef std::list< boost::shared_ptr<FakeDNSSDQuery> > QueryList;
+			QueryList runningQueries;
+			QueryList allQueriesEverRun;
 			std::set<DNSSDServiceID> services;
 			typedef std::map<DNSSDServiceID,DNSSDResolveServiceQuery::Result> ServiceInfoMap;
 			ServiceInfoMap serviceInfo;

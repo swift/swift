@@ -7,10 +7,9 @@
 #pragma once
 
 #include <vector>
-#include <algorithm>
+#include <string>
 
 #include "Swiften/Elements/Payload.h"
-#include <string>
 #include "Swiften/JID/JID.h"
 
 namespace Swift {

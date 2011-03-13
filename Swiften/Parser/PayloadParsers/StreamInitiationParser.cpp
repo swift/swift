@@ -42,7 +42,7 @@ void StreamInitiationParser::handleStartElement(const std::string& element, cons
 			try {
 				currentFile.size = boost::lexical_cast<int>(attributes.getAttribute("size"));
 			}
-			catch (boost::bad_lexical_cast& e) {
+			catch (boost::bad_lexical_cast&) {
 			}
 		}
 		else if (element == "feature" && ns == FEATURE_NEG_NS) {

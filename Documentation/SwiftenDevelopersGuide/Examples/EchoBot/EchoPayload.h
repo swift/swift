@@ -8,9 +8,8 @@
 
 #include <Swiften/Swiften.h>
 
-using namespace Swift;
 //...
-class EchoPayload : public Payload {
+class EchoPayload : public Swift::Payload {
 	public:
 		EchoPayload() {}
 

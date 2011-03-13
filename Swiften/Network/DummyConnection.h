@@ -6,26 +6,20 @@
 
 #pragma once
 
-#include <cassert>
-#include <boost/bind.hpp>
 #include <boost/enable_shared_from_this.hpp>
 
 #include "Swiften/Network/Connection.h"
+#include "Swiften/Network/HostAddressPort.h"
 #include "Swiften/EventLoop/EventLoop.h"
 #include "Swiften/EventLoop/EventOwner.h"
 
 namespace Swift {
 	class DummyConnection : public Connection, public EventOwner,	public boost::enable_shared_from_this<DummyConnection> {
 		public:
-			DummyConnection(EventLoop* eventLoop) : eventLoop(eventLoop) {}
+			DummyConnection(EventLoop* eventLoop);
 
-			void listen() {
-				assert(false);
-			}
-
-			void connect(const HostAddressPort&) {
-				assert(false);
-			}
+			void listen();
+			void connect(const HostAddressPort&);
 
 			void disconnect() {
 				//assert(false);
@@ -36,9 +30,7 @@ namespace Swift {
 				onDataSent(data);
 			}
 
-			void receive(const ByteArray& data) {
-				eventLoop->postEvent(boost::bind(boost::ref(onDataRead), ByteArray(data)), shared_from_this());
-			}
+			void receive(const ByteArray& data);
 
 			HostAddressPort getLocalAddress() const {
 				return localAddress;

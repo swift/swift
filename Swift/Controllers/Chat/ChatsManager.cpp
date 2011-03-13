@@ -8,6 +8,7 @@
 
 #include <boost/bind.hpp>
 
+#include <Swiften/Base/foreach.h>
 #include "Swift/Controllers/Chat/ChatController.h"
 #include "Swift/Controllers/Chat/MUCSearchController.h"
 #include "Swift/Controllers/XMPPEvents/EventController.h"

@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include <boost/asio.hpp>
+#include <boost/asio/io_service.hpp>
 #include <boost/enable_shared_from_this.hpp>
 
 #include <Swiften/Network/DomainNameAddressQuery.h>

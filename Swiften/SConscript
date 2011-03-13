@@ -55,6 +55,7 @@ if env["SCONS_STAGE"] == "build" :
 			"Client/ClientSessionStanzaChannel.cpp",
 			"Client/CoreClient.cpp",
 			"Client/Client.cpp",
+			"Client/ClientXMLTracer.cpp",
 			"Client/ClientSession.cpp",
 			"Client/MemoryStorages.cpp",
 			"Client/FileStorages.cpp",
@@ -65,7 +66,9 @@ if env["SCONS_STAGE"] == "build" :
 			"Compress/ZLibDecompressor.cpp",
 			"Compress/ZLibCompressor.cpp",
 			"Elements/DiscoInfo.cpp",
+			"Elements/Presence.cpp",
 			"Elements/Form.cpp",
+			"Elements/StreamFeatures.cpp",
 			"Elements/Element.cpp",
 			"Elements/IQ.cpp",
 			"Elements/Payload.cpp",
@@ -138,6 +141,7 @@ if env["SCONS_STAGE"] == "build" :
 			"Server/SimpleUserRegistry.cpp",
 			"Server/UserRegistry.cpp",
 			"Session/Session.cpp",
+			"Session/SessionTracer.cpp",
 			"Session/SessionStream.cpp",
 			"Session/BasicSessionStream.cpp",
 			"StringCodecs/Base64.cpp",
@@ -260,6 +264,7 @@ if env["SCONS_STAGE"] == "build" :
 			File("Queries/UnitTest/ResponderTest.cpp"),
 			File("Roster/UnitTest/XMPPRosterImplTest.cpp"),
 			File("Roster/UnitTest/XMPPRosterControllerTest.cpp"),
+			File("Roster/UnitTest/XMPPRosterSignalHandler.cpp"),
 			File("Serializer/PayloadSerializers/UnitTest/PayloadsSerializer.cpp"),
 			File("Serializer/PayloadSerializers/UnitTest/CapsInfoSerializerTest.cpp"),
 			File("Serializer/PayloadSerializers/UnitTest/FormSerializerTest.cpp"),
@@ -318,7 +323,7 @@ if env["SCONS_STAGE"] == "build" :
 				swiften_includes.append(include)
 				if root.endswith("OpenSSL") :
 					continue
-				if file.startswith("CAres") or file.startswith("LibXML") or file.startswith("Expat") :
+				if file.startswith("CAres") or file.startswith("LibXML") or file.startswith("Expat") or file.startswith("foreach") or file.startswith("Log.h") or file.startswith("format.h") :
 					continue
 				swiften_header += "#include <" + include + ">\n"
 				swiften_includes.append(include)

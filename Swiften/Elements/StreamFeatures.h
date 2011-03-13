@@ -7,9 +7,9 @@
 #pragma once
 
 #include <vector>
-#include <algorithm>
-
 #include <string>
+#include <boost/shared_ptr.hpp>
+
 #include "Swiften/Elements/Element.h"
 
 namespace Swift {
@@ -51,9 +51,7 @@ namespace Swift {
 				compressionMethods_.push_back(mechanism);
 			}
 
-			bool hasCompressionMethod(const std::string& mechanism) const {
-				return std::find(compressionMethods_.begin(), compressionMethods_.end(), mechanism) != compressionMethods_.end();
-			}
+			bool hasCompressionMethod(const std::string& mechanism) const;
 
 			const std::vector<std::string>& getAuthenticationMechanisms() const {
 				return authenticationMechanisms_;
@@ -63,9 +61,7 @@ namespace Swift {
 				authenticationMechanisms_.push_back(mechanism);
 			}
 
-			bool hasAuthenticationMechanism(const std::string& mechanism) const {
-				return std::find(authenticationMechanisms_.begin(), authenticationMechanisms_.end(), mechanism) != authenticationMechanisms_.end();
-			}
+			bool hasAuthenticationMechanism(const std::string& mechanism) const;
 
 			bool hasAuthenticationMechanisms() const {
 				return !authenticationMechanisms_.empty();

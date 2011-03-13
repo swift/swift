@@ -14,6 +14,7 @@ extern "C" {
 #include <deque>
 #include <boost/assign/list_of.hpp>
 
+#include <Swiften/Base/foreach.h>
 #include <Swiften/Swiften.h>
 
 #include "Watchdog.h"

@@ -8,6 +8,7 @@
 
 #include <iostream>
 #include <boost/filesystem/fstream.hpp>
+#include <boost/filesystem.hpp>
 
 #include <Swiften/Base/foreach.h>
 #include <Swiften/Base/String.h>
@@ -58,7 +59,7 @@ void AvatarFileStorage::addAvatar(const std::string& hash, const ByteArray& avat
 		}
 	}
 	boost::filesystem::ofstream file(avatarPath, boost::filesystem::ofstream::binary|boost::filesystem::ofstream::out);
-	file.write(reinterpret_cast<const char*>(avatar.getData()), avatar.getSize());
+	file.write(reinterpret_cast<const char*>(avatar.getData()), static_cast<std::streamsize>(avatar.getSize()));
 	file.close();
 }
 

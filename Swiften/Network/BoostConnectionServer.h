@@ -7,8 +7,9 @@
 #pragma once
 
 #include <boost/shared_ptr.hpp>
+#include <boost/asio/io_service.hpp>
+#include <boost/asio/ip/tcp.hpp>
 #include <boost/enable_shared_from_this.hpp>
-#include <boost/asio.hpp>
 #include "Swiften/Base/boost_bsignals.h"
 
 #include "Swiften/Network/BoostConnection.h"

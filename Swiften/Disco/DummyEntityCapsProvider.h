@@ -7,7 +7,7 @@
 #pragma once
 
 #include <map>
-#include <iostream>
+
 #include "Swiften/Disco/EntityCapsProvider.h"
 
 namespace Swift {
@@ -16,13 +16,7 @@ namespace Swift {
 			DummyEntityCapsProvider() {
 			}
 
-			DiscoInfo::ref getCaps(const JID& jid) const {
-				std::map<JID, DiscoInfo::ref>::const_iterator i = caps.find(jid);
-				if (i != caps.end()) {
-					return i->second;
-				}
-				return DiscoInfo::ref();
-			}
+			DiscoInfo::ref getCaps(const JID& jid) const;
 
 			std::map<JID, DiscoInfo::ref> caps;
 	};

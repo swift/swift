@@ -7,11 +7,9 @@
 #pragma once
 
 #include <vector>
-#include <algorithm>
-
-#include "Swiften/Elements/Payload.h"
 #include <string>
 
+#include "Swiften/Elements/Payload.h"
 #include "Swiften/Elements/Form.h"
 
 namespace Swift {
@@ -82,9 +80,7 @@ namespace Swift {
 				features_.push_back(feature);
 			}
 
-			bool hasFeature(const std::string& feature) const {
-				return std::find(features_.begin(), features_.end(), feature) != features_.end();
-			}
+			bool hasFeature(const std::string& feature) const;
 
 			void addExtension(Form::ref form) {
 				extensions_.push_back(form);

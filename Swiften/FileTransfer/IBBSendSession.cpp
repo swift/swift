@@ -44,7 +44,7 @@ void IBBSendSession::handleIBBResponse(IBB::ref, ErrorPayload::ref error) {
 				request->onResponse.connect(boost::bind(&IBBSendSession::handleIBBResponse, this, _1, _2));
 				request->send();
 			}
-			catch (const BytestreamException& e) {
+			catch (const BytestreamException&) {
 				finish(FileTransferError(FileTransferError::ReadError));
 			}
 		}

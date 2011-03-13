@@ -7,6 +7,7 @@
 #pragma once
 
 #include "Swift/Controllers/Settings/SettingsProvider.h"
+#include <Swiften/Base/foreach.h>
 
 namespace Swift {
 

@@ -8,6 +8,7 @@
 
 #include <iostream>
 #include <boost/filesystem/fstream.hpp>
+#include <boost/filesystem.hpp>
 
 #include "Swiften/Base/ByteArray.h"
 #include "Swiften/Serializer/PayloadSerializers/DiscoInfoSerializer.h"

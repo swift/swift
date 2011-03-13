@@ -4,8 +4,7 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#ifndef SWIFTEN_ELEMENT_H
-#define SWIFTEN_ELEMENT_H
+#pragma once
 
 namespace Swift {
 	class Element {
@@ -13,5 +12,3 @@ namespace Swift {
 			virtual ~Element();
 	};
 }
-
-#endif

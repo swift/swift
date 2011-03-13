@@ -7,7 +7,9 @@
 #include "Swiften/LinkLocal/DNSSD/Fake/FakeDNSSDQuerier.h"
 
 #include <boost/bind.hpp>
+#include <iostream>
 
+#include <Swiften/Base/foreach.h>
 #include "Swiften/LinkLocal/DNSSD/Fake/FakeDNSSDBrowseQuery.h"
 #include "Swiften/LinkLocal/DNSSD/Fake/FakeDNSSDRegisterQuery.h"
 #include "Swiften/LinkLocal/DNSSD/Fake/FakeDNSSDResolveServiceQuery.h"

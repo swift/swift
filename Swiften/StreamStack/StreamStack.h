@@ -11,7 +11,6 @@
 #include <vector>
 
 #include "Swiften/Elements/Stanza.h"
-#include "Swiften/Base/foreach.h"
 
 namespace Swift {
 	class XMPPLayer;
@@ -30,8 +29,8 @@ namespace Swift {
 			}
 
 			template<typename T> T* getLayer() {
-				foreach(StreamLayer* streamLayer, layers_) {
-					T* layer = dynamic_cast<T*>(streamLayer);
+				for (size_t i = 0; i < layers_.size(); ++i) {
+					T* layer = dynamic_cast<T*>(layers_[i]);
 					if (layer) {
 						return layer;
 					}

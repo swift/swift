@@ -6,29 +6,15 @@
 
 #pragma once
 
-#include <boost/bind.hpp>
-
 #include "Swiften/Component/Component.h"
 
 namespace Swift {
 	class ComponentXMLTracer {
 		public:
-			ComponentXMLTracer(Component* component) {
-				component->onDataRead.connect(boost::bind(&ComponentXMLTracer::printData, '<', _1));
-				component->onDataWritten.connect(boost::bind(&ComponentXMLTracer::printData, '>', _1));
-			}
+			ComponentXMLTracer(CoreComponent* component);
 
 		private:
-			static void printData(char direction, const std::string& data) {
-				printLine(direction);
-				std::cerr << data << std::endl;
-			}
-
-			static void printLine(char c) {
-				for (unsigned int i = 0; i < 80; ++i) {
-					std::cerr << c;
-				}
-				std::cerr << std::endl;
-			}
+			static void printData(char direction, const std::string& data);
+			static void printLine(char c);
 	};
 }

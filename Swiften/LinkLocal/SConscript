@@ -31,7 +31,11 @@ elif myenv.get("HAVE_AVAHI", 0) :
 	myenv.Append(CPPDEFINES = ["HAVE_AVAHI"])
 	sources += [
 			"DNSSD/Avahi/AvahiQuerier.cpp",
-			"DNSSD/Avahi/AvahiQuery.cpp"
+			"DNSSD/Avahi/AvahiQuery.cpp",
+			"DNSSD/Avahi/AvahiResolveHostnameQuery.cpp",
+			"DNSSD/Avahi/AvahiResolveServiceQuery.cpp",
+			"DNSSD/Avahi/AvahiRegisterQuery.cpp",
+			"DNSSD/Avahi/AvahiBrowseQuery.cpp",
 		]
 
 objects = myenv.SwiftenObject(sources)

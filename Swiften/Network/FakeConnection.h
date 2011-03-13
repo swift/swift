@@ -7,7 +7,6 @@
 #pragma once
 
 #include <boost/optional.hpp>
-#include <boost/bind.hpp>
 #include <boost/enable_shared_from_this.hpp>
 #include <vector>
 
@@ -30,56 +29,17 @@ namespace Swift {
 				DisconnectedWithError
 			};
 
-			FakeConnection(EventLoop* eventLoop) : eventLoop(eventLoop), state(Initial), delayConnect(false) {}
+			FakeConnection(EventLoop* eventLoop);
+			~FakeConnection();
 
-			virtual void listen() {
-				assert(false);
-			}
-
+			virtual void listen();
 			virtual HostAddressPort getLocalAddress() const {
 				return HostAddressPort();
 			}
 
-			void setError(const Error& e) {
-				error = boost::optional<Error>(e);
-				state = DisconnectedWithError;
-				if (connectedTo) {
-					eventLoop->postEvent(
-							boost::bind(boost::ref(onDisconnected), error),
-							shared_from_this());
-				}
-			}
-
-			virtual void connect(const HostAddressPort& address) {
-				if (delayConnect) {
-					state = Connecting;
-				}
-				else {
-					if (!error) {
-						connectedTo = address;
-						state = Connected;
-					}
-					else {
-						state = DisconnectedWithError;
-					}
-					eventLoop->postEvent(
-							boost::bind(boost::ref(onConnectFinished), error),
-							shared_from_this());
-				}
-			}
-
-			virtual void disconnect() {
-				if (!error) {
-					state = Disconnected;
-				}
-				else {
-					state = DisconnectedWithError;
-				}
-				connectedTo.reset();
-				eventLoop->postEvent(
-						boost::bind(boost::ref(onDisconnected), error),
-						shared_from_this());
-			}
+			void setError(const Error& e);
+			virtual void connect(const HostAddressPort& address);
+			virtual void disconnect();
 
 			virtual void write(const ByteArray& data) {
 				dataWritten.push_back(data);

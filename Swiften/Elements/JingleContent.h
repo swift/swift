@@ -8,13 +8,12 @@
 
 #include <vector>
 #include <boost/optional.hpp>
-
 #include <string>
+
 #include <Swiften/JID/JID.h>
 #include <Swiften/Elements/Payload.h>
 #include <Swiften/Elements/JingleDescription.h>
 #include <Swiften/Elements/JingleTransport.h>
-#include <Swiften/Base/foreach.h>
 
 namespace Swift {
 	class JingleContent : public Payload {
@@ -49,18 +48,18 @@ namespace Swift {
 				descriptions.push_back(description);
 			}
 
-			const std::vector<JingleTransport::ref>& getTransports() const {
+			const std::vector<boost::shared_ptr<JingleTransportPayload> >& getTransports() const {
 				return transports;
 			}
 
-			void addTransport(JingleTransport::ref transport) {
+			void addTransport(boost::shared_ptr<JingleTransportPayload>  transport) {
 				transports.push_back(transport);
 			}
 
 			template<typename T>
 			boost::shared_ptr<T> getDescription() const {
-				foreach (JingleDescription::ref i, descriptions) {
-					boost::shared_ptr<T> result(boost::dynamic_pointer_cast<T>(i));
+				for (size_t i = 0; i < descriptions.size(); ++i) {
+					boost::shared_ptr<T> result(boost::dynamic_pointer_cast<T>(descriptions[i]));
 					if (result) {
 						return result;
 					}
@@ -70,8 +69,8 @@ namespace Swift {
 
 			template<typename T>
 			boost::shared_ptr<T> getTransport() const {
-				foreach (JingleTransport::ref i, transports) {
-					boost::shared_ptr<T> result(boost::dynamic_pointer_cast<T>(i));
+				for (size_t i = 0; i < transports.size(); ++i) {
+					boost::shared_ptr<T> result(boost::dynamic_pointer_cast<T>(transports[i]));
 					if (result) {
 						return result;
 					}
@@ -84,6 +83,10 @@ namespace Swift {
 			std::string name;
 			//Senders senders;
 			std::vector<JingleDescription::ref> descriptions;
+<<<<<<< HEAD:Swiften/Elements/JingleContent.h
 			std::vector<JingleTransport::ref> transports;
+=======
+			std::vector<boost::shared_ptr<JingleTransportPayload> > transports;
+>>>>>>> 7c05f3f... Cleaned up headers.:Swiften/Elements/JingleContentPayload.h
 	};
 }

@@ -7,7 +7,7 @@
 #pragma once
 
 #include <boost/shared_ptr.hpp>
-#include <boost/filesystem.hpp>
+#include <boost/filesystem/path.hpp>
 #include <string>
 #include <map>
 

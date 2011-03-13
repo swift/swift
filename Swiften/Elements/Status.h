@@ -4,8 +4,7 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#ifndef SWIFTEN_Status_H
-#define SWIFTEN_Status_H
+#pragma once
 
 #include "Swiften/Elements/Payload.h"
 #include <string>
@@ -28,5 +27,3 @@ namespace Swift {
 			std::string text_;
 	};
 }
-
-#endif

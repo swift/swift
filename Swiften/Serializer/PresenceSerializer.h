@@ -7,8 +7,6 @@
 #ifndef SWIFTEN_PresenceSerializer_H
 #define SWIFTEN_PresenceSerializer_H
 
-#include <cassert>
-
 #include "Swiften/Serializer/GenericStanzaSerializer.h"
 #include "Swiften/Elements/Presence.h"
 

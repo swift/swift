@@ -7,6 +7,7 @@
 #include <Swiften/Jingle/JingleSessionManager.h>
 #include <Swiften/Jingle/JingleResponder.h>
 #include <Swiften/Jingle/IncomingJingleSessionHandler.h>
+#include <Swiften/Base/foreach.h>
 
 namespace Swift {
 

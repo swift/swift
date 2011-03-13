@@ -7,6 +7,7 @@
 #include "Swiften/FileTransfer/SOCKS5BytestreamServerSession.h"
 
 #include <boost/bind.hpp>
+#include <iostream>
 
 #include "Swiften/Base/ByteArray.h"
 #include "Swiften/FileTransfer/SOCKS5BytestreamRegistry.h"
@@ -98,7 +99,7 @@ void SOCKS5BytestreamServerSession::sendData() {
 		try {
 			connection->write(bytestream->read(chunkSize));
 		}
-		catch (const BytestreamException& e) {
+		catch (const BytestreamException&) {
 			finish(true);
 		}
 	}

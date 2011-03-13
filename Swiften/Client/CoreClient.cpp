@@ -283,5 +283,25 @@ void CoreClient::setUseTLS(UseTLS b) {
 	useTLS = b;
 }
 
+bool CoreClient::isAvailable() const {
+	return stanzaChannel_->isAvailable();
+}
+
+bool CoreClient::getStreamManagementEnabled() const {
+	return stanzaChannel_->getStreamManagementEnabled();
+}
+
+StanzaChannel* CoreClient::getStanzaChannel() const {
+	return stanzaChannel_;
+}
+
+const JID& CoreClient::getJID() const {
+	if (session_) {
+		return session_->getLocalJID();
+	}
+	else {
+		return jid_;
+	}
+}
 
 }

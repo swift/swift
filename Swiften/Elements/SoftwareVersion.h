@@ -6,8 +6,10 @@
 
 #pragma once
 
-#include "Swiften/Elements/Payload.h"
 #include <string>
+#include <boost/shared_ptr.hpp>
+
+#include "Swiften/Elements/Payload.h"
 
 namespace Swift {
 	class SoftwareVersion : public Payload {

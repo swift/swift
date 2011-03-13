@@ -12,7 +12,6 @@
 #include <string>
 #include <Swiften/Elements/JinglePayload.h>
 #include <Swiften/Elements/JingleContent.h>
-#include <Swiften/Base/foreach.h>
 
 namespace Swift {
 	class JingleSession {
@@ -29,9 +28,9 @@ namespace Swift {
 
 			template<typename T>
 			JingleContent::ref getContentWithDescription() const {
-				foreach (JingleContent::ref content, contents) {
-					if (content->getDescription<T>()) {
-						return content;
+				for (size_t i = 0; i < contents.size(); ++i) {
+					if (contents[i]->getDescription<T>()) {
+						return contents[i];
 					}
 				}
 				return JingleContent::ref();

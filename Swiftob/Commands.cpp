@@ -6,6 +6,7 @@
 
 #include "Swiftob/Commands.h"
 
+#include <Swiften/Base/foreach.h>
 #include <iostream>
 #include <boost/bind.hpp>
 

@@ -27,7 +27,7 @@ void BytestreamsParser::handleStartElement(const std::string& element, const std
 			try {
 				getPayloadInternal()->addStreamHost(Bytestreams::StreamHost(attributes.getAttribute("host"), JID(attributes.getAttribute("jid")), boost::lexical_cast<int>(attributes.getAttribute("port"))));
 			}
-			catch (boost::bad_lexical_cast& e) {
+			catch (boost::bad_lexical_cast&) {
 			}
 		}
 		else if (element == "streamhost-used") {

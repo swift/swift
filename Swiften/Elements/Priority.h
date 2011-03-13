@@ -6,13 +6,11 @@
 
 #pragma once
 
-#include "Swiften/Elements/Payload.h"
+#include <Swiften/Elements/Payload.h>
 
 namespace Swift {
 	class Priority : public Payload {
 		public:
-			typedef boost::shared_ptr<Priority> ref;
-
 			Priority(int priority = 0) : priority_(priority) {
 			}
 

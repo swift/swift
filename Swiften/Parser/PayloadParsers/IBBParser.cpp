@@ -27,7 +27,7 @@ void IBBParser::handleStartElement(const std::string& element, const std::string
 			try {
 				getPayloadInternal()->setSequenceNumber(boost::lexical_cast<int>(attributes.getAttribute("seq")));
 			}
-			catch (boost::bad_lexical_cast& e) {
+			catch (boost::bad_lexical_cast&) {
 			}
 		}
 		else if (element == "open") {
@@ -42,7 +42,7 @@ void IBBParser::handleStartElement(const std::string& element, const std::string
 			try {
 				getPayloadInternal()->setBlockSize(boost::lexical_cast<int>(attributes.getAttribute("block-size")));
 			}
-			catch (boost::bad_lexical_cast& e) {
+			catch (boost::bad_lexical_cast&) {
 			}
 		}
 		else if (element == "close") {

@@ -6,8 +6,10 @@
 
 #include <boost/bind.hpp>
 #include <boost/filesystem.hpp>
+#include <iostream>
 
 #include "Swiften/Client/Client.h"
+#include <Swiften/Elements/Presence.h>
 #include "Swiften/Network/BoostTimer.h"
 #include "Swiften/Network/TimerFactory.h"
 #include "Swiften/Network/BoostNetworkFactories.h"

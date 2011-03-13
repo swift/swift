@@ -44,6 +44,6 @@ namespace Swift {
 			/**
 			 * Retrieve a pointer to the payload.
 			 */
-			virtual Payload::ref getPayload() const = 0;
+			virtual boost::shared_ptr<Payload> getPayload() const = 0;
 	};
 }

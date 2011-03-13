@@ -6,8 +6,6 @@
 
 #pragma once
 
-#include <cassert>
-
 #include "Swiften/Compress/ZLibCodecompressor.h"
 #include "Swiften/Base/ByteArray.h"
 

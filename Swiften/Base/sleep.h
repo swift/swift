@@ -4,11 +4,8 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#ifndef SWIFTEN_sleep_H
-#define SWIFTEN_sleep_H
+#pragma once
 
 namespace Swift {
 	void sleep(unsigned int msecs);
 }
-
-#endif

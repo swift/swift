@@ -6,6 +6,7 @@ sources = [
 		"HighLayer.cpp",
 		"LowLayer.cpp",
 		"StreamStack.cpp",
+		"ConnectionLayer.cpp",
 		"TLSLayer.cpp",
 		"WhitespacePingLayer.cpp",
 		"XMPPLayer.cpp",

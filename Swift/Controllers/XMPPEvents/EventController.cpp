@@ -9,6 +9,7 @@
 #include <boost/bind.hpp>
 #include <algorithm>
 
+#include <Swiften/Base/foreach.h>
 #include "Swift/Controllers/XMPPEvents/MessageEvent.h"
 #include "Swift/Controllers/XMPPEvents/ErrorEvent.h"
 #include "Swift/Controllers/XMPPEvents/SubscriptionRequestEvent.h"

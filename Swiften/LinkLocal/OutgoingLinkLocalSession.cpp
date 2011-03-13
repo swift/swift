@@ -8,6 +8,7 @@
 
 #include <boost/bind.hpp>
 
+#include <Swiften/Base/foreach.h>
 #include "Swiften/StreamStack/XMPPLayer.h"
 #include "Swiften/Elements/ProtocolHeader.h"
 #include "Swiften/Elements/StreamFeatures.h"

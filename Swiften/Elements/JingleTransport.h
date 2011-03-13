@@ -6,9 +6,13 @@
 
 #pragma once
 
+#include <boost/shared_ptr.hpp>
+
 #include <Swiften/Elements/Payload.h>
 
 namespace Swift {
-	class JingleTransport : public Payload {
+	class JingleTransportPayload : public Payload {
+		public:
+			typedef boost::shared_ptr<JingleTransportPayload> ref;
 	};
 }

@@ -4,8 +4,7 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#ifndef SWIFTEN_IDGenerator_H
-#define SWIFTEN_IDGenerator_H
+#pragma once
 
 #include <string>
 
@@ -20,5 +19,3 @@ namespace Swift {
 			std::string currentID_;
 	};
 }
-
-#endif

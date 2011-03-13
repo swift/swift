@@ -5,6 +5,7 @@ objects = swiften_env.SwiftenObject([
 			"CapsManager.cpp",
 			"EntityCapsManager.cpp",
 			"EntityCapsProvider.cpp",
+			"DummyEntityCapsProvider.cpp",
 			"CapsStorage.cpp",
 			"CapsFileStorage.cpp",
 			"ClientDiscoManager.cpp",

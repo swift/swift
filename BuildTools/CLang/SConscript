@@ -1,0 +1,15 @@
+Import("env")
+
+#myenv = Environment()
+#myenv.Append(CPPPATH = ["."])
+#myenv.Program("CLangDiagnosticsFlagsTool", ["CLangDiagnosticsFlagsTool.cpp"])
+#
+#disabledDiagnostics = ["-wunreachable-code", "-wunused-macros", "-wmissing-noreturn", "-wlong-long", "-wcast-align", "-wglobal-constructors", "-wmissing-prototypes", "-wpadded", "-wshadow"]
+#clangDiagnosticsFlagsToolCommand = "BuildTools/CLang/CLangDiagnosticsFlagsTool -O" + env.Dir(".").abspath + " " + " ".join(disabledDiagnostics) + " "
+#clangDiagnosticsFlagsToolCommand += " ".join([flag for flag in env["CXXFLAGS"] if flag.startswith("-W")])
+#clangDiagnosticsFlagsToolCommand += "\n"
+#clangDiagnosticsFlagsToolCommand += "dot -Tpng " + env.Dir(".").abspath + "/clang-diagnostics-overview.dot > " + env.Dir(".").abspath + "/clang-diagnostics-overview.png\n"
+#v = env.WriteVal("#/BuildTools/CLang/CLangDiagnosticsFlagsTool.sh", env.Value(clangDiagnosticsFlagsToolCommand))
+#env.AddPostAction(v, Chmod(v[0], 0755))
+#
+#

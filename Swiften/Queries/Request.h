@@ -4,8 +4,7 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#ifndef SWIFTEN_Request_H
-#define SWIFTEN_Request_H
+#pragma once
 
 #include <boost/shared_ptr.hpp>
 #include <boost/optional.hpp>
@@ -48,15 +47,15 @@ namespace Swift {
 					const JID& receiver, 
 					IQRouter* router);
 
-			virtual void setPayload(Payload::ref payload) {
+			virtual void setPayload(boost::shared_ptr<Payload> payload) {
 				payload_ = payload;
 			}
 
-			Payload::ref getPayload() const {
+			boost::shared_ptr<Payload> getPayload() const {
 				return payload_;
 			}
 
-			virtual void handleResponse(Payload::ref, ErrorPayload::ref) = 0;
+			virtual void handleResponse(boost::shared_ptr<Payload>, boost::shared_ptr<ErrorPayload>) = 0;
 
 		private:
 			bool handleIQ(boost::shared_ptr<IQ>);
@@ -70,5 +69,3 @@ namespace Swift {
 			bool sent_;
 	};
 }
-
-#endif

@@ -7,7 +7,7 @@
 #pragma once
 
 #include <ares.h>
-#include <boost/thread.hpp>
+#include <boost/thread/thread.hpp>
 #include <boost/thread/mutex.hpp>
 #include <list>
 

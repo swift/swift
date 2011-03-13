@@ -7,6 +7,8 @@
 #include "Swift/Controllers/Roster/ContactRosterItem.h"
 #include "Swift/Controllers/Roster/GroupRosterItem.h"
 
+#include <Swiften/Base/foreach.h>
+
 namespace Swift {
 
 

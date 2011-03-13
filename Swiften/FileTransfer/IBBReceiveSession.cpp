@@ -7,6 +7,7 @@
 #include "Swiften/FileTransfer/IBBReceiveSession.h"
 
 #include <boost/bind.hpp>
+#include <iostream>
 
 #include "Swiften/Queries/IQRouter.h"
 #include "Swiften/FileTransfer/IBBRequest.h"

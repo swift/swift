@@ -7,8 +7,6 @@
 #ifndef SWIFTEN_IQSerializer_H
 #define SWIFTEN_IQSerializer_H
 
-#include <cassert>
-
 #include "Swiften/Serializer/GenericStanzaSerializer.h"
 #include "Swiften/Elements/IQ.h"
 #include "Swiften/Serializer/XML/XMLElement.h"

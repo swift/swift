@@ -9,8 +9,13 @@
 
 #include <typeinfo>
 
+#include <Swiften/Base/foreach.h>
+
 namespace Swift {
 
+Stanza::Stanza() {
+}
+	
 Stanza::~Stanza() {
 	payloads_.clear();
 }

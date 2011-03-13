@@ -6,6 +6,7 @@
 
 #include <Swiften/Parser/PayloadParsers/DelayParserFactory.h>
 
+#include <boost/date_time/posix_time/posix_time.hpp>
 #include <boost/date_time/time_facet.hpp>
 
 namespace Swift {

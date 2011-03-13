@@ -6,6 +6,8 @@
 
 #include <Swiften/Network/PlatformDomainNameAddressQuery.h>
 
+#include <boost/asio/ip/tcp.hpp>
+
 #include <Swiften/Network/PlatformDomainNameResolver.h>
 #include <Swiften/EventLoop/EventLoop.h>
 

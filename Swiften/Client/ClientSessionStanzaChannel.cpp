@@ -7,6 +7,7 @@
 #include "Swiften/Client/ClientSessionStanzaChannel.h"
 
 #include <boost/bind.hpp>
+#include <iostream>
 
 namespace Swift {
 

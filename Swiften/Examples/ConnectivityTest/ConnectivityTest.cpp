@@ -6,6 +6,7 @@
 
 #include <boost/bind.hpp>
 #include <boost/thread.hpp>
+#include <iostream>
 
 #include "Swiften/Client/Client.h"
 #include "Swiften/Network/Timer.h"

@@ -6,8 +6,9 @@
 
 #pragma once
 
-#include "Swiften/Base/boost_bsignals.h"
 #include <string>
+
+#include <Swiften/Base/boost_bsignals.h>
 
 namespace Swift {
 	class JID;

@@ -9,9 +9,7 @@
 #include <Swiften/Swiften.h>
 #include "EchoPayload.h"
 
-using namespace Swift;
-
-class EchoPayloadParser : public GenericPayloadParser<EchoPayload> {
+class EchoPayloadParser : public Swift::GenericPayloadParser<EchoPayload> {
 	public:
 		EchoPayloadParser() : currentDepth(0) {}
 
@@ -36,7 +34,7 @@ class EchoPayloadParser : public GenericPayloadParser<EchoPayload> {
 		std::string currentText;
 };
 
-class EchoPayloadParserFactory : public GenericPayloadParserFactory<EchoPayloadParser> {
+class EchoPayloadParserFactory : public Swift::GenericPayloadParserFactory<EchoPayloadParser> {
 	public:
 		EchoPayloadParserFactory() :
 			GenericPayloadParserFactory<EchoPayloadParser>("echo", "http://swift.im/echo") {}

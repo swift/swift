@@ -6,35 +6,32 @@
 
 #pragma once
 
-#include "Swiften/Base/boost_bsignals.h"
-#include <boost/shared_ptr.hpp>
-
-#include "Swiften/Network/PlatformDomainNameResolver.h"
-#include "Swiften/Network/Connector.h"
-#include "Swiften/Base/Error.h"
-#include "Swiften/Client/ClientSession.h"
-#include "Swiften/Client/ClientError.h"
-#include "Swiften/Elements/Presence.h"
-#include "Swiften/Elements/Message.h"
-#include "Swiften/JID/JID.h"
 #include <string>
-#include "Swiften/Client/StanzaChannel.h"
-#include "Swiften/Parser/PayloadParsers/FullPayloadParserFactoryCollection.h"
-#include "Swiften/Serializer/PayloadSerializers/FullPayloadSerializerCollection.h"
-#include <Swiften/Entity/Entity.h>
+#include <boost/shared_ptr.hpp>
+#include <Swiften/Base/boost_bsignals.h>
 
-#include "Swiften/Client/ClientSessionStanzaChannel.h"
+#include <Swiften/Entity/Entity.h>
+#include <Swiften/JID/JID.h>
+#include <Swiften/Client/ClientError.h>
 
 namespace Swift {
+	class Connector;
+	class Message;
+	class Presence;
+	class Error;
 	class IQRouter;
 	class TLSContextFactory;
 	class ConnectionFactory;
+	class Connection;
 	class TimerFactory;
 	class ClientSession;
+	class StanzaChannel;
+	class Stanza;
 	class BasicSessionStream;
 	class PlatformTLSFactories;
 	class CertificateTrustChecker;
 	class NetworkFactories;
+	class ClientSessionStanzaChannel;
 
 	/** 
 	 * The central class for communicating with an XMPP server.
@@ -80,12 +77,12 @@ namespace Swift {
 			/**
 			 * Sends a message.
 			 */
-			void sendMessage(Message::ref);
+			void sendMessage(boost::shared_ptr<Message>);
 
 			/**
 			 * Sends a presence stanza.
 			 */
-			void sendPresence(Presence::ref);
+			void sendPresence(boost::shared_ptr<Presence>);
 
 			/**
 			 * Sends raw, unchecked data.
@@ -103,9 +100,7 @@ namespace Swift {
 			 * Checks whether the client is connected to the server,
 			 * and stanzas can be sent.
 			 */
-			bool isAvailable() const {
-				return stanzaChannel_->isAvailable();
-			}
+			bool isAvailable() const;
 
 			/**
 			 * Checks whether the client is active.
@@ -118,14 +113,7 @@ namespace Swift {
 			 * Returns the JID of the client. 
 			 * After the session was initialized, this returns the bound JID.
 			 */
-			const JID& getJID() const {
-				if (session_) {
-					return session_->getLocalJID();
-				}
-				else {
-					return jid_;
-				}
-			}
+			const JID& getJID() const;
 
 			/**
 			 * Checks whether stream management is enabled.
@@ -135,13 +123,9 @@ namespace Swift {
 			 *
 			 * \see onStanzaAcked
 			 */
-			bool getStreamManagementEnabled() const {
-				return stanzaChannel_->getStreamManagementEnabled();
-			}
+			bool getStreamManagementEnabled() const;
 
-			StanzaChannel* getStanzaChannel() const {
-				return stanzaChannel_;
-			}
+			StanzaChannel* getStanzaChannel() const;
 
 			/**
 			 * Sets the certificate trust checker.
@@ -197,12 +181,12 @@ namespace Swift {
 			/**
 			 * Emitted when a message is received.
 			 */
-			boost::signal<void (Message::ref)> onMessageReceived;
+			boost::signal<void (boost::shared_ptr<Message>)> onMessageReceived;
 
 			/**
 			 * Emitted when a presence stanza is received.
 			 */
-			boost::signal<void (Presence::ref) > onPresenceReceived;
+			boost::signal<void (boost::shared_ptr<Presence>) > onPresenceReceived;
 
 			/**
 			 * Emitted when the server acknowledges receipt of a
@@ -210,7 +194,7 @@ namespace Swift {
 			 *
 			 * \see getStreamManagementEnabled()
 			 */
-			boost::signal<void (Stanza::ref)> onStanzaAcked;
+			boost::signal<void (boost::shared_ptr<Stanza>)> onStanzaAcked;
 
 		private:
 			void handleConnectorFinished(boost::shared_ptr<Connection>);
@@ -219,9 +203,9 @@ namespace Swift {
 			void handleNeedCredentials();
 			void handleDataRead(const std::string&);
 			void handleDataWritten(const std::string&);
-			void handlePresenceReceived(Presence::ref);
-			void handleMessageReceived(Message::ref);
-			void handleStanzaAcked(Stanza::ref);
+			void handlePresenceReceived(boost::shared_ptr<Presence>);
+			void handleMessageReceived(boost::shared_ptr<Message>);
+			void handleStanzaAcked(boost::shared_ptr<Stanza>);
 
 		private:
 			JID jid_;
@@ -231,7 +215,7 @@ namespace Swift {
 			UseTLS useTLS;
 			ClientSessionStanzaChannel* stanzaChannel_;
 			IQRouter* iqRouter_;
-			Connector::ref connector_;
+			boost::shared_ptr<Connector> connector_;
 			PlatformTLSFactories* tlsFactories;
 			boost::shared_ptr<Connection> connection_;
 			boost::shared_ptr<BasicSessionStream> sessionStream_;

@@ -9,7 +9,7 @@
 #include <boost/shared_ptr.hpp>
 #include <boost/enable_shared_from_this.hpp>
 #include <list>
-#include <boost/thread.hpp>
+#include <boost/thread/thread.hpp>
 #include <boost/thread/mutex.hpp>
 
 #include "Swiften/LinkLocal/DNSSD/DNSSDQuerier.h"

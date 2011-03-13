@@ -8,6 +8,7 @@
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/extensions/TestFactoryRegistry.h>
 
+#include <Swiften/Base/foreach.h>
 #include "Swift/Controllers/Roster/RosterController.h"
 #include "Swift/Controllers/UnitTest/MockMainWindowFactory.h"
 // #include "Swiften/Elements/Payload.h"

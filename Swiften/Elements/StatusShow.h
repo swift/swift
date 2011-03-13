@@ -4,11 +4,9 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#ifndef SWIFTEN_StatusShow_H
-#define SWIFTEN_StatusShow_H
+#pragma once
 
-#include "Swiften/Elements/Payload.h"
-#include <string>
+#include <Swiften/Elements/Payload.h>
 
 namespace Swift {
 	class StatusShow : public Payload {
@@ -32,19 +30,16 @@ namespace Swift {
 			 */
 			static int typeToAvailabilityOrdering(Type type) {
 				switch (type) {
-				case Online: return 4;
-				case FFC: return 5;
-				case Away: return 2;
-				case XA: return 1;
-				case DND: return 3;
-				case None: return 0;
+					case Online: return 4;
+					case FFC: return 5;
+					case Away: return 2;
+					case XA: return 1;
+					case DND: return 3;
+					case None: return 0;
 				}
-				return -1;
 			}
 
 		private:
 			Type type_;
 	};
 }
-
-#endif

@@ -9,6 +9,7 @@
 #include <locale>
 
 #include <boost/date_time/time_facet.hpp>
+#include <boost/date_time/posix_time/posix_time.hpp>
 
 namespace Swift {
 

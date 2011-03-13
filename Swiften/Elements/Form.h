@@ -7,11 +7,10 @@
 #pragma once
 
 #include <vector>
+#include <string>
 
 #include "Swiften/Elements/Payload.h"
 #include "Swiften/Elements/FormField.h"
-#include <string>
-
 #include "Swiften/JID/JID.h"
 
 namespace Swift {

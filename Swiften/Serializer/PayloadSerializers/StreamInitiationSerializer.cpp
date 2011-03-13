@@ -49,7 +49,7 @@ std::string StreamInitiationSerializer::serializePayload(boost::shared_ptr<Strea
 		siElement.addNode(fileElement);
 	}
 
-	boost::shared_ptr<XMLElement> featureElement(new XMLElement("feature", "http://jabber.org/protocol/feature-neg"));
+	boost::shared_ptr<XMLElement> featureElement(new XMLElement("feature", FEATURE_NEG_NS));
 	if (streamInitiation->getProvidedMethods().size() > 0) {
 		Form::ref form(new Form(Form::FormType));
 		ListSingleFormField::ref field = ListSingleFormField::create();

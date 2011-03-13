@@ -31,7 +31,7 @@ namespace Swift {
 			RawRequest(IQ::Type type, const JID& receiver, const std::string& data, IQRouter* router) : Request(type, receiver, boost::make_shared<RawXMLPayload>(data), router) {
 			}
 
-			virtual void handleResponse(Payload::ref payload, ErrorPayload::ref error) {
+			virtual void handleResponse(boost::shared_ptr<Payload> payload, ErrorPayload::ref error) {
 				if (error) {
 					onResponse(ErrorSerializer().serializePayload(error));
 				}

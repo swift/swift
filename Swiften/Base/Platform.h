@@ -4,8 +4,7 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#ifndef SWIFTEN_Platform_H
-#define SWIFTEN_Platform_H
+#pragma once
 
 // Base platforms
 #if defined(linux) || defined(__linux) || defined(__linux__)
@@ -45,6 +44,4 @@
 #define SWIFTEN_LITTLE_ENDIAN
 #elif defined(BOOST_BIG_ENDIAN)
 #define SWIFTEN_BIG_ENDIAN
-#endif
-
 #endif

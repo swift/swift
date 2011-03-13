@@ -7,6 +7,7 @@
 #include "Swiften/Serializer/PayloadSerializers/DelaySerializer.h"
 
 #include <boost/shared_ptr.hpp>
+#include <boost/date_time/posix_time/posix_time.hpp>
 
 #include <Swiften/Base/String.h>
 #include "Swiften/Serializer/XML/XMLElement.h"

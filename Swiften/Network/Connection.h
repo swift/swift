@@ -7,13 +7,13 @@
 #pragma once
 
 #include <boost/shared_ptr.hpp>
+#include <Swiften/Base/boost_bsignals.h>
 
-#include "Swiften/Base/boost_bsignals.h"
-#include "Swiften/Base/ByteArray.h"
-#include <string>
-#include "Swiften/Network/HostAddressPort.h"
+#include <Swiften/Base/ByteArray.h>
 
 namespace Swift {
+	class HostAddressPort;
+
 	class Connection {
 		public:
 			typedef boost::shared_ptr<Connection> ref;

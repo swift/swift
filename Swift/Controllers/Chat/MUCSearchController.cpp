@@ -11,6 +11,7 @@
 #include <boost/bind.hpp>
 #include <boost/shared_ptr.hpp>
 
+#include <Swiften/Base/foreach.h>
 #include <Swiften/Disco/GetDiscoItemsRequest.h>
 #include <Swiften/Base/Log.h>
 #include <Swiften/Base/String.h>

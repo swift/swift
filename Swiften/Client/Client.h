@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include "Swiften/Client/CoreClient.h"
+#include <Swiften/Client/CoreClient.h>
 
 namespace Swift {
 	class SoftwareVersionResponder;
@@ -85,12 +85,12 @@ namespace Swift {
 			/**
 			 * Returns the last received presence for the given (full) JID.
 			 */
-			Presence::ref getLastPresence(const JID& jid) const;
+			boost::shared_ptr<Presence> getLastPresence(const JID& jid) const;
 
 			/**
 			 * Returns the presence with the highest priority received for the given JID.
 			 */
-			Presence::ref getHighestPriorityPresence(const JID& bareJID) const;
+			boost::shared_ptr<Presence> getHighestPriorityPresence(const JID& bareJID) const;
 
 			PresenceOracle* getPresenceOracle() const {
 				return presenceOracle;
@@ -142,7 +142,7 @@ namespace Swift {
 			/**
 			 * This signal is emitted when a JID changes presence.
 			 */
-			boost::signal<void (Presence::ref)> onPresenceChange;
+			boost::signal<void (boost::shared_ptr<Presence>)> onPresenceChange;
 
 		private:
 			Storages* getStorages() const;

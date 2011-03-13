@@ -26,11 +26,11 @@ namespace Swift {
 			SetInBandRegistrationRequest(const JID& to, InBandRegistrationPayload::ref payload, IQRouter* router) : Request(IQ::Set, to, InBandRegistrationPayload::ref(payload), router) {
 			}
 
-			virtual void handleResponse(Payload::ref payload, ErrorPayload::ref error) {
+			virtual void handleResponse(boost::shared_ptr<Payload> payload, ErrorPayload::ref error) {
 				onResponse(payload, error);
 			}
 
 		public:
-			boost::signal<void (Payload::ref, ErrorPayload::ref)> onResponse;
+			boost::signal<void (boost::shared_ptr<Payload>, ErrorPayload::ref)> onResponse;
 	};
 }

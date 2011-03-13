@@ -27,7 +27,7 @@ namespace Swift {
 				try {
 					writeDataToChildLayer(compressor_.process(data));
 				}
-				catch (const ZLibException& e) {
+				catch (const ZLibException&) {
 					onError();
 				}
 			}
@@ -36,7 +36,7 @@ namespace Swift {
 				try {
 					writeDataToParentLayer(decompressor_.process(data));
 				}
-				catch (const ZLibException& e) {
+				catch (const ZLibException&) {
 					onError();
 				}
 			}

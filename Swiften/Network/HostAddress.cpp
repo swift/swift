@@ -24,7 +24,7 @@ HostAddress::HostAddress(const std::string& address) {
 	try {
 		address_ = boost::asio::ip::address::from_string(address);
 	}
-	catch (const std::exception& t) {
+	catch (const std::exception&) {
 	}
 }
 

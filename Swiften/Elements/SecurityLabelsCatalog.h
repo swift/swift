@@ -4,13 +4,13 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#ifndef SWIFTEN_SecurityLabelsCatalog_H
-#define SWIFTEN_SecurityLabelsCatalog_H
+#pragma once
 
 #include <vector>
+#include <string>
+#include <boost/shared_ptr.hpp>
 
 #include "Swiften/JID/JID.h"
-#include <string>
 #include "Swiften/Elements/Payload.h"
 #include "Swiften/Elements/SecurityLabel.h"
 
@@ -85,5 +85,3 @@ namespace Swift {
 			std::vector<Item> items_;
 	};
 }
-
-#endif

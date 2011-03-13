@@ -6,11 +6,9 @@
 
 #pragma once
 
-#include <cstring>
 #include <vector>
-#include <iostream>
-
 #include <string>
+#include <cstring> // for memcpy
 
 namespace Swift {
 	class ByteArray
@@ -24,7 +22,7 @@ namespace Swift {
 
 			ByteArray(const char* c) {
 				while (*c) {
-					data_.push_back(*c);
+					data_.push_back(static_cast<unsigned char>(*c));
 					++c;
 				}
 			}
@@ -75,7 +73,7 @@ namespace Swift {
 			}
 
 			void resize(size_t size, char c) {
-				return data_.resize(size, c);
+				return data_.resize(size, static_cast<unsigned char>(c));
 			}
 
 			friend ByteArray operator+(const ByteArray& a, const ByteArray&b) {
@@ -87,7 +85,7 @@ namespace Swift {
 			friend ByteArray operator+(const ByteArray& a, char b) {
 				ByteArray x;
 				x.resize(1);
-				x[0] = b;
+				x[0] = static_cast<unsigned char>(b);
 				return a + x;
 			}
 
@@ -97,7 +95,7 @@ namespace Swift {
 			}
 
 			ByteArray& operator+=(char c) {
-				data_.push_back(c);
+				data_.push_back(static_cast<unsigned char>(c));
 				return *this;
 			}
 

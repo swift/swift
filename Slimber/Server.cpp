@@ -8,7 +8,9 @@
 
 #include <string>
 #include <boost/bind.hpp>
+#include <iostream>
 
+#include <Swiften/Base/foreach.h>
 #include "Swiften/Base/String.h"
 #include "Swiften/LinkLocal/LinkLocalConnector.h"
 #include "Swiften/Network/Connection.h"

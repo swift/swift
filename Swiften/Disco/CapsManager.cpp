@@ -7,6 +7,7 @@
 #include "Swiften/Disco/CapsManager.h"
 
 #include <boost/bind.hpp>
+#include <iostream>
 
 #include "Swiften/Client/StanzaChannel.h"
 #include "Swiften/Disco/CapsStorage.h"

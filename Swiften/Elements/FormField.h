@@ -11,8 +11,8 @@
 
 #include <vector>
 #include <boost/shared_ptr.hpp>
-
 #include <string>
+
 #include "Swiften/JID/JID.h"
 
 namespace Swift {

@@ -21,7 +21,7 @@ namespace Swift {
 		public:
 			PayloadAddingPresenceSender(PresenceSender*);
 
-			void sendPresence(Presence::ref);
+			void sendPresence(boost::shared_ptr<Presence>);
 			bool isAvailable() const;
 
 			/**
@@ -30,11 +30,11 @@ namespace Swift {
 			 * with an updated payload. Initial presence is reset when unavailable presence is
 			 * sent.
 			 */
-			void setPayload(Payload::ref);
+			void setPayload(boost::shared_ptr<Payload>);
 
 		private:
-			Presence::ref lastSentPresence;
+			boost::shared_ptr<Presence> lastSentPresence;
 			PresenceSender* sender;
-			Payload::ref payload;
+			boost::shared_ptr<Payload> payload;
 	};
 }

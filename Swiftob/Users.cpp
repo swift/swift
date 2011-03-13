@@ -8,6 +8,7 @@
 
 #include <iostream>
 
+#include <Swiften/Base/foreach.h>
 #include <Swiften/Client/Client.h>
 
 #include "Swiftob/MUCs.h"

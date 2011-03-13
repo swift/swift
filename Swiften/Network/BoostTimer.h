@@ -6,8 +6,8 @@
 
 #pragma once
 
-#include <boost/asio.hpp>
-#include <boost/thread.hpp>
+#include <boost/asio/io_service.hpp>
+#include <boost/asio/deadline_timer.hpp>
 #include <boost/enable_shared_from_this.hpp>
 
 #include "Swiften/EventLoop/EventOwner.h"

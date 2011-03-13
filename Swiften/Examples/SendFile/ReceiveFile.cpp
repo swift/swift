@@ -7,7 +7,10 @@
 #include <boost/bind.hpp>
 #include <boost/filesystem.hpp>
 #include <boost/smart_ptr/make_shared.hpp>
+#include <iostream>
 
+#include <Swiften/Elements/Presence.h>
+#include <Swiften/Base/foreach.h>
 #include <Swiften/Client/Client.h>
 #include <Swiften/Network/BoostNetworkFactories.h>
 #include <Swiften/EventLoop/SimpleEventLoop.h>

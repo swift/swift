@@ -9,6 +9,8 @@
 #include <iostream>
 #include <boost/bind.hpp>
 #include <boost/thread.hpp>
+#include <boost/asio/placeholders.hpp>
+#include <boost/asio/write.hpp>
 
 #include <Swiften/Base/Log.h>
 #include "Swiften/EventLoop/EventLoop.h"

@@ -9,9 +9,9 @@
 #include <vector>
 #include <boost/optional.hpp>
 #include <boost/shared_ptr.hpp>
+#include <string>
 
 #include "Swiften/JID/JID.h"
-#include <string>
 #include "Swiften/Elements/Payload.h"
 
 namespace Swift {

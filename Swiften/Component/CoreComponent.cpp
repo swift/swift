@@ -7,6 +7,7 @@
 #include "Swiften/Component/CoreComponent.h"
 
 #include <boost/bind.hpp>
+#include <iostream>
 
 #include "Swiften/Component/ComponentSession.h"
 #include "Swiften/Network/Connector.h"

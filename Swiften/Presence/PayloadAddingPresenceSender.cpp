@@ -34,7 +34,7 @@ bool PayloadAddingPresenceSender::isAvailable() const {
 	return sender->isAvailable();
 }
 
-void PayloadAddingPresenceSender::setPayload(Payload::ref payload) {
+void PayloadAddingPresenceSender::setPayload(boost::shared_ptr<Payload> payload) {
 	this->payload = payload;
 	if (lastSentPresence) {
 		sendPresence(lastSentPresence);

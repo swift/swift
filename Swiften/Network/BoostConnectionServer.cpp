@@ -8,6 +8,7 @@
 
 #include <boost/bind.hpp>
 #include <boost/system/system_error.hpp>
+#include <boost/asio/placeholders.hpp>
 
 #include "Swiften/EventLoop/EventLoop.h"
 

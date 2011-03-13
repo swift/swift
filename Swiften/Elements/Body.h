@@ -6,14 +6,13 @@
 
 #pragma once
 
-#include "Swiften/Elements/Payload.h"
 #include <string>
+
+#include <Swiften/Elements/Payload.h>
 
 namespace Swift {
 	class Body : public Payload {
 		public:
-			typedef boost::shared_ptr<Body> ref;
-
 			Body(const std::string& text = "") : text_(text) {
 			}
 

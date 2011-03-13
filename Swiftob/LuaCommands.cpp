@@ -9,7 +9,9 @@
 #include <boost/bind.hpp>
 #include <vector>
 #include <algorithm>
+#include <iostream>
 
+#include <Swiften/Base/foreach.h>
 #include <Swiften/Client/Client.h>
 #include <Swiften/Network/TimerFactory.h>
 

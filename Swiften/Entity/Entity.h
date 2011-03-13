@@ -6,21 +6,20 @@
 
 #pragma once
 
-#include <Swiften/Base/boost_bsignals.h>
-#include <boost/shared_ptr.hpp>
-
-#include "Swiften/Parser/PayloadParsers/FullPayloadParserFactoryCollection.h"
-#include "Swiften/Serializer/PayloadSerializers/FullPayloadSerializerCollection.h"
-
 namespace Swift {
 	class PayloadParserFactory;
 	class PayloadSerializer;
+	class FullPayloadParserFactoryCollection;
+	class FullPayloadSerializerCollection;
+	class PayloadParserFactoryCollection;
+	class PayloadSerializerCollection;
 
 	/** 
 	 * The base class for XMPP entities (Clients, Components).
 	 */
 	class Entity  {
 		public: 
+			Entity();
 			virtual ~Entity();
 
 			void addPayloadParserFactory(PayloadParserFactory* payloadParserFactory);
@@ -30,16 +29,11 @@ namespace Swift {
 			void removePayloadSerializer(PayloadSerializer* payloadSerializer);
 
 		protected:
-			PayloadParserFactoryCollection* getPayloadParserFactories() {
-				return &payloadParserFactories;
-			}
-
-			PayloadSerializerCollection* getPayloadSerializers() {
-				return &payloadSerializers;
-			}
+			PayloadParserFactoryCollection* getPayloadParserFactories();
+			PayloadSerializerCollection* getPayloadSerializers();
 
 		private:
-			FullPayloadParserFactoryCollection payloadParserFactories;
-			FullPayloadSerializerCollection payloadSerializers;
+			FullPayloadParserFactoryCollection* payloadParserFactories;
+			FullPayloadSerializerCollection* payloadSerializers;
 	};
 }

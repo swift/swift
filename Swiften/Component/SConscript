@@ -7,6 +7,7 @@ sources = [
 		"ComponentSessionStanzaChannel.cpp",
 		"CoreComponent.cpp",
 		"Component.cpp",
+		"ComponentXMLTracer.cpp",
 	]
 
 swiften_env.Append(SWIFTEN_OBJECTS = swiften_env.SwiftenObject(sources))

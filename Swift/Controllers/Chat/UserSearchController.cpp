@@ -9,9 +9,9 @@
 #include <boost/bind.hpp>
 #include <boost/shared_ptr.hpp>
 
+#include <Swiften/Base/foreach.h>
 #include <Swiften/Disco/GetDiscoInfoRequest.h>
 #include <Swiften/Disco/GetDiscoItemsRequest.h>
-
 #include <Swift/Controllers/DiscoServiceWalker.h>
 #include <Swift/Controllers/UIEvents/UIEventStream.h>
 #include <Swift/Controllers/UIEvents/RequestChatWithUserDialogUIEvent.h>

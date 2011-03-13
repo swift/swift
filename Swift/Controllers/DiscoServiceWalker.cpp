@@ -6,6 +6,7 @@
 
 #include <Swift/Controllers/DiscoServiceWalker.h>
 #include <Swiften/Base/Log.h>
+#include <Swiften/Base/foreach.h>
 
 #include <boost/bind.hpp>
 
