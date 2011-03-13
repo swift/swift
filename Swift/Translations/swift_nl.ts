@@ -1068,10 +1068,6 @@ afbeelding</translation>
         <translation>Toon &amp;schermboodschappen</translation>
     </message>
     <message>
-        <source>Show &amp;Notifications</source>
-        <translation type="obsolete">Toon &amp;schermboodschappen</translation>
-    </message>
-    <message>
         <location filename="../QtUI/QtLoginWindow.cpp" line="190"/>
         <source>&amp;Quit</source>
         <translation>&amp;Afsluiten</translation>
@@ -1149,17 +1145,9 @@ afbeelding</translation>
         <translation>&amp;Beeld</translation>
     </message>
     <message>
-        <source>Show offline contacts</source>
-        <translation type="obsolete">Toon offline contacten</translation>
-    </message>
-    <message>
         <location filename="../QtUI/QtMainWindow.cpp" line="84"/>
         <source>&amp;Actions</source>
         <translation>&amp;Acties</translation>
-    </message>
-    <message>
-        <source>Edit Profile</source>
-        <translation type="obsolete">Bewerk profiel</translation>
     </message>
     <message>
         <location filename="../QtUI/QtMainWindow.cpp" line="78"/>
