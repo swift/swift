@@ -12,6 +12,7 @@ Starting a new translation
   for Dutch
 - Open the file in Qt Linguist, and translate the phrases. 
   For more information, see http://doc.qt.nokia.com/latest/linguist-manual.html
+- Translate the Swift/resources/swift.desktop entry.
 - Submit your finished translation file to the Swift development team.
 
 If you have trouble generating the translation file yourself, you can ask the 
