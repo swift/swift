@@ -19,7 +19,7 @@ elif env.get("BOOST_BUNDLED", False) :
 # Common
 ################################################################################
 
-	cppdefines = ["BOOST_ALL_NO_LIB", "BOOST_SYSTEM_NO_DEPRECATED"]
+	cppdefines = ["BOOST_ALL_NO_LIB", "BOOST_SYSTEM_NO_DEPRECATED", ("BOOST_FILESYSTEM_VERSION", "2")]
 	#if env["PLATFORM"] == "darwin" :
 	#	cppdefines += ["BOOST_ASIO_DISABLE_KQUEUE"]
 	if env["PLATFORM"] == "win32" :
