@@ -170,7 +170,7 @@ void MUCController::handleJoinFailed(boost::shared_ptr<ErrorPayload> error) {
 void MUCController::handleJoinComplete(const std::string& nick) {
 	receivedActivity();
 	joined_ = true;
-	std::string joinMessage = str(format(QT_TRANSLATE_NOOP("", "You have entered room %1% as a %2%.")) % toJID_.toString() % nick);
+	std::string joinMessage = str(format(QT_TRANSLATE_NOOP("", "You have entered room %1% as %2%.")) % toJID_.toString() % nick);
 	nick_ = nick;
 	chatWindow_->addSystemMessage(joinMessage);
 	clearPresenceQueue();
