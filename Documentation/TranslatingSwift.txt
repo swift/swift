@@ -32,9 +32,25 @@ language.
 
 Testing your translation
 ------------------------
-- Ensure your translation file is in Swift/Translations/swift_<YOURLANGUAGE>.ts
-- Build Swift (for more details, see the building documentation):
-    scons Swift
-  This will build translation modules (.qm) for your translation sources, and 
-  put them in the right place.
-- Run Swift
+You can choose to manually test your translation (doesn't require a
+development environment for Swift), or automatically:
+- Manually:
+  - In Linguist, select "File->Release". This will create a file called
+    <YOURLANGUAGE>.qm.
+  - Put <YOURLANGUAGE>.qm in the translations dir
+      - On Windows, in the 'translations/' subdir of the installed package
+      - On Mac OS X, use "Show Package Contents" on Swift.app, and put the
+        translation file in Contents/Resources/translations
+      - On Linux, in /usr/share/swift/translations
+- Automatically:
+  - Ensure your translation file is in Swift/Translations/swift_<YOURLANGUAGE>.ts
+  - Build Swift (for more details, see the building documentation):
+      scons Swift
+    This will build translation modules (.qm) for your translation sources, and 
+    put them in the right place.
+
+Finally, run Swift. If your system isn't set up to use your language, set the 
+LANG environment variable to the name of your language before running Swift.
+For example:
+  set LANG=nl (on Windows)
+  export LANG=nl (on Linux or Mac OS X, in Bash)
