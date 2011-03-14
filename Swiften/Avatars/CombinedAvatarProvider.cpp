@@ -14,13 +14,7 @@
 namespace Swift {
 
 std::string CombinedAvatarProvider::getAvatarHash(const JID& jid) const {
-	std::map<JID, std::string>::const_iterator i = avatars.find(jid);
-	if (i == avatars.end()) {
-		return getCombinedAvatarAndCache(jid);
-	}
-	else {
-		return i->second;
-	}
+	return getCombinedAvatarAndCache(jid);
 }
 
 void CombinedAvatarProvider::addProvider(AvatarProvider* provider) {

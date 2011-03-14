@@ -26,6 +26,7 @@ class CombinedAvatarProviderTest : public CppUnit::TestFixture {
 		CPPUNIT_TEST(testProviderUpdateWithAvatarDisappearingTriggersChange);
 		CPPUNIT_TEST(testProviderUpdateAfterAvatarDisappearedTriggersChange);
 		CPPUNIT_TEST(testProviderUpdateAfterGetDoesNotTriggerChange);
+		CPPUNIT_TEST(testProviderUpdateBareJIDAfterGetFullJID);
 		CPPUNIT_TEST(testRemoveProviderDisconnectsUpdates);
 		CPPUNIT_TEST_SUITE_END();
 
@@ -168,6 +169,19 @@ class CombinedAvatarProviderTest : public CppUnit::TestFixture {
 			CPPUNIT_ASSERT_EQUAL(0, static_cast<int>(changes.size()));
 		}
 
+		void testProviderUpdateBareJIDAfterGetFullJID() {
+			std::auto_ptr<CombinedAvatarProvider> testling(createProvider());
+			avatarProvider1->useBare = true;
+			testling->addProvider(avatarProvider1);
+
+			avatarProvider1->avatars[user1.toBare()] = avatarHash1;
+			testling->getAvatarHash(user1);
+			avatarProvider1->avatars[user1.toBare()] = avatarHash2;
+			avatarProvider1->onAvatarChanged(user1.toBare());
+
+			CPPUNIT_ASSERT_EQUAL(avatarHash2, testling->getAvatarHash(user1));
+		}
+
 	private:
 		std::auto_ptr<CombinedAvatarProvider> createProvider() {
 			std::auto_ptr<CombinedAvatarProvider> result(new CombinedAvatarProvider());
@@ -181,8 +195,12 @@ class CombinedAvatarProviderTest : public CppUnit::TestFixture {
 
 	private:
 		struct DummyAvatarProvider : public AvatarProvider {
+			DummyAvatarProvider() : useBare(false) {
+			}
+
 			std::string getAvatarHash(const JID& jid) const {
-				std::map<JID, std::string>::const_iterator i = avatars.find(jid);
+				JID actualJID = useBare ? jid.toBare() : jid;
+				std::map<JID, std::string>::const_iterator i = avatars.find(actualJID);
 				if (i != avatars.end()) {
 					return i->second;
 				}
@@ -191,6 +209,7 @@ class CombinedAvatarProviderTest : public CppUnit::TestFixture {
 				}
 			}
 
+			bool useBare;
 			std::map<JID, std::string> avatars;
 		};
 
