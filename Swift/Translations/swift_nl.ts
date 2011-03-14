@@ -930,14 +930,6 @@ afbeelding</translation>
         <translation>&amp;Toon offline contacten</translation>
     </message>
     <message>
-        <source>&amp;Edit Profile</source>
-        <translation>&amp;Bewerk profiel</translation>
-    </message>
-    <message>
-        <source>&amp;Enter Room</source>
-        <translation>&amp;Kamer betreden</translation>
-    </message>
-    <message>
         <source>&amp;Add Contact</source>
         <translation>Contact &amp;toevoegen</translation>
     </message>
@@ -956,6 +948,14 @@ afbeelding</translation>
     <message>
         <source>Notices</source>
         <translation>Berichten</translation>
+    </message>
+    <message>
+        <source>Edit &amp;Profile</source>
+        <translation>Bewerk &amp;profiel</translation>
+    </message>
+    <message>
+        <source>Enter &amp;Room</source>
+        <translation>&amp;Kamer betreden</translation>
     </message>
 </context>
 <context>

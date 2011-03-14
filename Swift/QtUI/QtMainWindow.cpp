@@ -83,10 +83,10 @@ QtMainWindow::QtMainWindow(QtSettingsProvider* settings, UIEventStream* uiEventS
 
 	QMenu* actionsMenu = new QMenu(tr("&Actions"), this);
 	menus_.push_back(actionsMenu);
-	QAction* editProfileAction = new QAction(tr("&Edit Profile"), this);
+	QAction* editProfileAction = new QAction(tr("Edit &Profile"), this);
 	connect(editProfileAction, SIGNAL(triggered()), SLOT(handleEditProfileAction()));
 	actionsMenu->addAction(editProfileAction);
-	QAction* joinMUCAction = new QAction(tr("&Enter Room"), this);
+	QAction* joinMUCAction = new QAction(tr("Enter &Room"), this);
 	connect(joinMUCAction, SIGNAL(triggered()), SLOT(handleJoinMUCAction()));
 	actionsMenu->addAction(joinMUCAction);
 	addUserAction_ = new QAction(tr("&Add Contact"), this);
