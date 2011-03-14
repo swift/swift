@@ -2,7 +2,7 @@
 // detail/select_reactor.hpp
 // ~~~~~~~~~~~~~~~~~~~~~~~~~
 //
-// Copyright (c) 2003-2010 Christopher M. Kohlhoff (chris at kohlhoff dot com)
+// Copyright (c) 2003-2011 Christopher M. Kohlhoff (chris at kohlhoff dot com)
 //
 // Distributed under the Boost Software License, Version 1.0. (See accompanying
 // file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -51,10 +51,10 @@ class select_reactor
 {
 public:
 #if defined(BOOST_WINDOWS) || defined(__CYGWIN__)
-  enum { read_op = 0, write_op = 1, except_op = 2,
+  enum op_types { read_op = 0, write_op = 1, except_op = 2,
     max_select_ops = 3, connect_op = 3, max_ops = 4 };
 #else // defined(BOOST_WINDOWS) || defined(__CYGWIN__)
-  enum { read_op = 0, write_op = 1, except_op = 2,
+  enum op_types { read_op = 0, write_op = 1, except_op = 2,
     max_select_ops = 3, connect_op = 1, max_ops = 3 };
 #endif // defined(BOOST_WINDOWS) || defined(__CYGWIN__)
 

@@ -2,7 +2,7 @@
 // placeholders.hpp
 // ~~~~~~~~~~~~~~~~
 //
-// Copyright (c) 2003-2010 Christopher M. Kohlhoff (chris at kohlhoff dot com)
+// Copyright (c) 2003-2011 Christopher M. Kohlhoff (chris at kohlhoff dot com)
 //
 // Distributed under the Boost Software License, Version 1.0. (See accompanying
 // file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -39,7 +39,7 @@ unspecified bytes_transferred;
 
 /// An argument placeholder, for use with boost::bind(), that corresponds to
 /// the iterator argument of a handler for asynchronous functions such as
-/// boost::asio::basic_resolver::resolve.
+/// boost::asio::basic_resolver::async_resolve.
 unspecified iterator;
 
 #elif defined(__BORLANDC__) || defined(__GNUC__)

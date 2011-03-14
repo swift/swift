@@ -68,7 +68,7 @@ void bcp_implementation::add_directory(const fs::path& p)
       // we need to convert *i back into
       // a relative path, what follows is a hack:
       //
-      std::string s(i->string());
+      std::string s(i->path().string());
       if(m_boost_path.string().size())
          s.erase(0, m_boost_path.string().size() + 1);
       fs::path np = s;

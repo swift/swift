@@ -57,7 +57,7 @@ void bcp_implementation::output_license_info()
    i = m_license_data.begin();
    j = m_license_data.end();
 
-   std::ofstream os(m_dest_path.native_file_string().c_str());
+   std::ofstream os(m_dest_path.string().c_str());
    if(!os)
    {
       std::string msg("Error opening ");

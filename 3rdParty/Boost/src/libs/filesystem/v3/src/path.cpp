@@ -27,6 +27,7 @@
 #include <boost/scoped_array.hpp>
 #include <boost/system/error_code.hpp>
 #include <boost/assert.hpp>
+#include <algorithm>
 #include <cstddef>
 #include <cstring>
 #include <cassert>
@@ -155,27 +156,17 @@ namespace filesystem3
 
 # ifdef BOOST_WINDOWS_API
 
-  void path::m_portable()
-  {
-    for (string_type::iterator it = m_pathname.begin();
-          it != m_pathname.end(); ++it)
-    {
-      if (*it == L'\\')
-        *it = L'/';
-    }
-  }
-
   const std::string path::generic_string(const codecvt_type& cvt) const
   { 
     path tmp(*this);
-    tmp.m_portable();
+    tmp.make_preferred();
     return tmp.string(cvt);
   }
 
   const std::wstring path::generic_wstring() const
   { 
     path tmp(*this);
-    tmp.m_portable();
+    tmp.make_preferred();
     return tmp.wstring();
   }
 
@@ -216,12 +207,7 @@ namespace filesystem3
 # ifdef BOOST_WINDOWS_API
   path & path::make_preferred()
   {
-    for (string_type::iterator it = m_pathname.begin();
-          it != m_pathname.end(); ++it)
-    {
-      if (*it == L'/')
-        *it = L'\\';
-    }
+    std::replace(m_pathname.begin(), m_pathname.end(), L'\\', L'/');
     return *this;
   }
 # endif

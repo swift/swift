@@ -63,7 +63,7 @@ void bcp_implementation::copy_path(const fs::path& p)
       static std::vector<char> v1, v2;
       v1.clear();
       v2.clear();
-      std::ifstream is((m_boost_path / p).native_file_string().c_str());
+      std::ifstream is((m_boost_path / p).string().c_str());
       std::copy(std::istreambuf_iterator<char>(is), std::istreambuf_iterator<char>(), std::back_inserter(v1));
 
       static boost::regex libname_matcher;
@@ -78,9 +78,9 @@ void bcp_implementation::copy_path(const fs::path& p)
 
       std::ofstream os;
       if(m_unix_lines)
-         os.open((m_dest_path / p).native_file_string().c_str(), std::ios_base::binary | std::ios_base::out);
+         os.open((m_dest_path / p).string().c_str(), std::ios_base::binary | std::ios_base::out);
       else
-         os.open((m_dest_path / p).native_file_string().c_str(), std::ios_base::out);
+         os.open((m_dest_path / p).string().c_str(), std::ios_base::out);
       os.write(&*v1.begin(), v1.size());
       os.close();
    }
@@ -89,7 +89,7 @@ void bcp_implementation::copy_path(const fs::path& p)
       static std::vector<char> v1, v2;
       v1.clear();
       v2.clear();
-      std::ifstream is((m_boost_path / p).native_file_string().c_str());
+      std::ifstream is((m_boost_path / p).string().c_str());
       std::copy(std::istreambuf_iterator<char>(is), std::istreambuf_iterator<char>(), std::back_inserter(v1));
 
       static boost::regex libname_matcher;
@@ -111,9 +111,9 @@ void bcp_implementation::copy_path(const fs::path& p)
 
       std::ofstream os;
       if(m_unix_lines)
-         os.open((m_dest_path / p).native_file_string().c_str(), std::ios_base::binary | std::ios_base::out);
+         os.open((m_dest_path / p).string().c_str(), std::ios_base::binary | std::ios_base::out);
       else
-         os.open((m_dest_path / p).native_file_string().c_str(), std::ios_base::out);
+         os.open((m_dest_path / p).string().c_str(), std::ios_base::out);
       os.write(&*v1.begin(), v1.size());
       os.close();
    }
@@ -127,7 +127,7 @@ void bcp_implementation::copy_path(const fs::path& p)
       static std::vector<char> v1, v2;
       v1.clear();
       v2.clear();
-      std::ifstream is((m_boost_path / p).native_file_string().c_str());
+      std::ifstream is((m_boost_path / p).string().c_str());
       std::copy(std::istreambuf_iterator<char>(is), std::istreambuf_iterator<char>(), std::back_inserter(v1));
 
       static const boost::regex namespace_matcher(
@@ -202,20 +202,20 @@ void bcp_implementation::copy_path(const fs::path& p)
 
       std::ofstream os;
       if(m_unix_lines)
-         os.open((m_dest_path / p).native_file_string().c_str(), std::ios_base::binary | std::ios_base::out);
+         os.open((m_dest_path / p).string().c_str(), std::ios_base::binary | std::ios_base::out);
       else
-         os.open((m_dest_path / p).native_file_string().c_str(), std::ios_base::out);
+         os.open((m_dest_path / p).string().c_str(), std::ios_base::out);
       if(v1.size())
          os.write(&*v1.begin(), v1.size());
       os.close();
    }
    else if(m_unix_lines && !is_binary_file(p))
    {
-      std::ifstream is((m_boost_path / p).native_file_string().c_str());
+      std::ifstream is((m_boost_path / p).string().c_str());
       std::istreambuf_iterator<char> isi(is);
       std::istreambuf_iterator<char> end;
 
-      std::ofstream os((m_dest_path / p).native_file_string().c_str(), std::ios_base::binary | std::ios_base::out);
+      std::ofstream os((m_dest_path / p).string().c_str(), std::ios_base::binary | std::ios_base::out);
       std::ostreambuf_iterator<char> osi(os);
 
       std::copy(isi, end, osi);
