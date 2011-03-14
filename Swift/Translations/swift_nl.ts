@@ -935,7 +935,7 @@ afbeelding</translation>
     </message>
     <message>
         <source>&amp;Edit Selected Contact</source>
-        <translation>Geselecteerde Contact &amp;Bewerken</translation>
+        <translation>Geselecteerde contact &amp;bewerken</translation>
     </message>
     <message>
         <source>Start &amp;Chat</source>
