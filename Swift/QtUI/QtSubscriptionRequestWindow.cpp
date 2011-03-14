@@ -22,7 +22,7 @@ QtSubscriptionRequestWindow::QtSubscriptionRequestWindow(boost::shared_ptr<Subsc
 
 	if (event_->getConcluded()) {
 		QLabel* doneLabel = new QLabel(tr("You have already replied to this request"));
-		QPushButton* okButton = new QPushButton(tr("Ok"), this);
+		QPushButton* okButton = new QPushButton(tr("OK"), this);
 		connect(okButton, SIGNAL(clicked()), this, SLOT(handleDefer()));
 		layout->addWidget(doneLabel);
 		layout->addWidget(okButton);

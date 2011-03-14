@@ -41,7 +41,7 @@ QtContactEditWindow::QtContactEditWindow() : contactEditWidget_(NULL) {
 	QPushButton* removeButton = new QPushButton(tr("Remove contact"), this);
 	connect(removeButton, SIGNAL(clicked()), this, SLOT(handleRemoveContact()));
 	buttonLayout->addWidget(removeButton);
-	QPushButton* okButton = new QPushButton(tr("Ok"), this);
+	QPushButton* okButton = new QPushButton(tr("OK"), this);
 	connect(okButton, SIGNAL(clicked()), this, SLOT(handleUpdateContact()));
 	buttonLayout->addStretch();
 	buttonLayout->addWidget(okButton);
