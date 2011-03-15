@@ -1052,8 +1052,8 @@ afbeelding</translation>
         <translation>Groepsnaam wijzigen</translation>
     </message>
     <message>
-        <source>New name for %1</source>
-        <translation>Niewe naam voor %1</translation>
+        <source>Enter a new name for group &apos;%1&apos;:</source>
+        <translation>Geef een niewe naam voor groep &apos;%1&apos;:</translation>
     </message>
 </context>
 <context>

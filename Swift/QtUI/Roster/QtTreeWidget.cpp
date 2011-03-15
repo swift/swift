@@ -164,7 +164,7 @@ void QtTreeWidget::contextMenuEvent(QContextMenuEvent* event) {
 
 void QtTreeWidget::renameGroup(GroupRosterItem* group) {
 	bool ok;
-	QString newName = QInputDialog::getText(NULL, tr("Rename group"), tr("New name for %1").arg(P2QSTRING(group->getDisplayName())), QLineEdit::Normal, P2QSTRING(group->getDisplayName()), &ok);
+	QString newName = QInputDialog::getText(NULL, tr("Rename group"), tr("Enter a new name for group '%1':").arg(P2QSTRING(group->getDisplayName())), QLineEdit::Normal, P2QSTRING(group->getDisplayName()), &ok);
 	if (ok) {
 		eventStream_->send(boost::make_shared<RenameGroupUIEvent>(group->getDisplayName(), Q2PSTRING(newName)));
 	}
