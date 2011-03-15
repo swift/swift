@@ -704,7 +704,11 @@ afbeelding</translation>
     </message>
     <message>
         <source>You must specify a valid room address (e.g. myroom@chats.example.com).</source>
-        <translation>Specifieer een geldige kamer (bv. mijnkamer@kamers.voorbeeld.com).</translation>
+        <translation type="obsolete">Specifieer een geldige kamer (bv. mijnkamer@kamers.voorbeeld.com).</translation>
+    </message>
+    <message>
+        <source>You must specify a valid room address (e.g. someroom@rooms.example.com).</source>
+        <translation>Specifieer een geldige kamer (bv. eenkamer@kamers.voorbeeld.com).</translation>
     </message>
 </context>
 <context>
