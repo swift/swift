@@ -40,7 +40,7 @@ QtUserSearchWindow::QtUserSearchWindow(UIEventStream* eventStream, UserSearchWin
 	connect(firstPage_->byLocalSearch_, SIGNAL(toggled(bool)), this, SLOT(handleFirstPageRadioChange()));
 	connect(firstPage_->byRemoteSearch_, SIGNAL(toggled(bool)), this, SLOT(handleFirstPageRadioChange()));
 #if QT_VERSION >= 0x040700
-		firstPage_->jid_->setPlaceholderText("alice@wonderland.lit");
+		firstPage_->jid_->setPlaceholderText(tr("alice@wonderland.lit"));
 #endif
 	firstPage_->service_->setEnabled(false);
 	setPage(1, firstPage_);

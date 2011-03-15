@@ -12,7 +12,7 @@ namespace Swift {
 QtJoinMUCWindow::QtJoinMUCWindow() {
 	ui.setupUi(this);
 #if QT_VERSION >= 0x040700
-	ui.room->setPlaceholderText("someroom@rooms.example.com");
+	ui.room->setPlaceholderText(tr("someroom@rooms.example.com"));
 #endif
 	connect(ui.room, SIGNAL(returnPressed()), this, SLOT(handleJoin()));
 	connect(ui.searchButton, SIGNAL(clicked()), this, SLOT(handleSearch()));

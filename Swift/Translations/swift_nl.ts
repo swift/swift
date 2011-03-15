@@ -802,6 +802,13 @@ afbeelding</translation>
     </message>
 </context>
 <context>
+    <name>Swift::QtJoinMUCWindow</name>
+    <message>
+        <source>someroom@rooms.example.com</source>
+        <translation>eenkamer@kamers.voorbeeld.com</translation>
+    </message>
+</context>
+<context>
     <name>Swift::QtLoginWindow</name>
     <message>
         <source>User address:</source>
@@ -1096,6 +1103,10 @@ afbeelding</translation>
     <message>
         <source>This server doesn&apos;t support searching for users.</source>
         <translation>Deze server ondersteunt het zoeken van gebruikers niet.</translation>
+    </message>
+    <message>
+        <source>alice@wonderland.lit</source>
+        <translation>alice@wonderland.lit</translation>
     </message>
 </context>
 <context>
