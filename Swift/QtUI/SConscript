@@ -222,6 +222,12 @@ if env["PLATFORM"] == "darwin" :
 if env.get("SWIFT_INSTALLDIR", "") :
   env.Install(os.path.join(env["SWIFT_INSTALLDIR"], "bin"), swiftProgram)
   env.InstallAs(os.path.join(env["SWIFT_INSTALLDIR"], "share", "pixmaps", "swift.xpm"), "../resources/logo/logo-icon-32.xpm")
+  icons_path = os.path.join(env["SWIFT_INSTALLDIR"], "share", "icons", "hicolor")
+  env.InstallAs(os.path.join(icons_path, "32x32", "apps", "swift.xpm"), "../resources/logo/logo-icon-32.xpm")
+  env.InstallAs(os.path.join(icons_path, "scalable", "apps", "swift.svg"), "../resources/logo/logo-icon.svg")
+  # TODO: 22, 24
+  for i in ["16", "64", "128"] :
+    env.InstallAs(os.path.join(icons_path, i + "x" + i, "apps", "swift.png"), "../resources/logo/logo-icon-" + i + ".png")
   env.Install(os.path.join(env["SWIFT_INSTALLDIR"], "share", "applications"), "../resources/swift.desktop")
   for dir, resource in commonResources.items() : 
     env.Install(os.path.join(env["SWIFT_INSTALLDIR"], "share", "swift", dir), resource)
