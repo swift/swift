@@ -12,7 +12,7 @@ if env["SCONS_STAGE"] == "build":
 	myenv.MergeFlags(myenv.get("LIBXML_FLAGS", ""))
 	myenv.MergeFlags(myenv.get("EXPAT_FLAGS", ""))
 	myenv.MergeFlags(myenv["PLATFORM_FLAGS"])
-	myenv.MergeFlags(myenv["LUA_FLAGS"])
+	myenv.MergeFlags(myenv.get("LUA_FLAGS", {}))
 	sources = [
 		"linit.c", # This is horrible!
 		"Swiftob.cpp",
