@@ -8,4 +8,4 @@ sources = [
 		"JingleSession.cpp",
 	]
 
-swiften_env.Append(SWIFTEN_OBJECTS = swiften_env.StaticObject(sources))
+swiften_env.Append(SWIFTEN_OBJECTS = swiften_env.SwiftenObject(sources))

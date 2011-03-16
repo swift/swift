@@ -7,13 +7,13 @@ sources = [
 		"SimpleEventLoop.cpp",
 	]
 
-objects = swiften_env.StaticObject(sources)
+objects = swiften_env.SwiftenObject(sources)
 swiften_env.Append(SWIFTEN_OBJECTS = [objects])
 
 if swiften_env["PLATFORM"] == "darwin" :
 	myenv = swiften_env.Clone()
 	myenv.Append(CXXFLAGS = myenv["OBJCCFLAGS"])
-	objects = myenv.StaticObject([
+	objects = myenv.SwiftenObject([
 			"Cocoa/CocoaEventLoop.mm",
 			"Cocoa/CocoaEvent.mm"
 		])

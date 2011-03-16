@@ -34,5 +34,5 @@ elif myenv.get("HAVE_AVAHI", 0) :
 			"DNSSD/Avahi/AvahiQuery.cpp"
 		]
 
-objects = myenv.StaticObject(sources)
+objects = myenv.SwiftenObject(sources)
 swiften_env.Append(SWIFTEN_OBJECTS = [objects])

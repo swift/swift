@@ -1,6 +1,6 @@
 Import("swiften_env")
 
-objects = swiften_env.StaticObject([
+objects = swiften_env.SwiftenObject([
 			"ByteArray.cpp",
 			"Error.cpp",
 			"Log.cpp",

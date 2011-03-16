@@ -32,5 +32,5 @@ if myenv.get("HAVE_CARES", False) :
    sourceList.append("CAresDomainNameResolver.cpp")
 		
 
-objects = myenv.StaticObject(sourceList)
+objects = myenv.SwiftenObject(sourceList)
 swiften_env.Append(SWIFTEN_OBJECTS = [objects])

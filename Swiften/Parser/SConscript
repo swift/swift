@@ -71,5 +71,5 @@ if myenv.get("HAVE_LIBXML", 0) :
 	myenv.Append(CPPDEFINES = "HAVE_LIBXML")
 	sources += ["LibXMLParser.cpp"]
 
-objects = myenv.StaticObject(sources)
+objects = myenv.SwiftenObject(sources)
 swiften_env.Append(SWIFTEN_OBJECTS = [objects])

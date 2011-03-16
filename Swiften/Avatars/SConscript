@@ -1,6 +1,6 @@
 Import("swiften_env")
 
-objects = swiften_env.StaticObject([
+objects = swiften_env.SwiftenObject([
 			"AvatarFileStorage.cpp",
 			"VCardUpdateAvatarManager.cpp",
 			"VCardAvatarManager.cpp",

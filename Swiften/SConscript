@@ -6,12 +6,14 @@ Import("env")
 # Flags
 ################################################################################
 
+swiften_dep_modules = ["BOOST", "LIBIDN", "ZLIB", "OPENSSL", "LIBXML", "EXPAT"]
+
 if env["SCONS_STAGE"] == "flags" :
 	swiften_env = env.Clone()
 	swiften_env["LIBPATH"] = [Dir(".")]
 	swiften_env["LIBS"] = ["Swiften"]
 	dep_env = env.Clone()
-	for module in ["BOOST", "LIBIDN", "ZLIB", "OPENSSL", "LIBXML", "EXPAT"] :
+	for module in swiften_dep_modules :
 		if env.get(module + "_BUNDLED", False) :
 			swiften_env.UseFlags(env.get(module + "_FLAGS", {}))
 		else :
@@ -33,12 +35,20 @@ if env["SCONS_STAGE"] == "flags" :
 
 if env["SCONS_STAGE"] == "build" :
 	swiften_env = env.Clone()
-	swiften_env.MergeFlags(swiften_env["BOOST_FLAGS"])
+	for module in swiften_dep_modules :
+		swiften_env.UseFlags(swiften_env.get(module + "_FLAGS", {}))
+	swiften_env.UseFlags(swiften_env["PLATFORM_FLAGS"])
+	def buildObject(env, sources) :
+		if ARGUMENTS.get("swiften_dll", False) :
+			return env.SharedObject(sources)
+		else :
+			return env.StaticObject(sources)
+	swiften_env.AddMethod(buildObject, "SwiftenObject")
+
 	Export("swiften_env")
 
 # TODO: Move all this to a submodule SConscript
 	myenv = swiften_env.Clone()
-	myenv.MergeFlags(myenv["ZLIB_FLAGS"])
 	sources = [
 			"Chat/ChatStateTracker.cpp",
 			"Chat/ChatStateNotifier.cpp",
@@ -167,7 +177,10 @@ if env["SCONS_STAGE"] == "build" :
 			"Examples"
 		])
 
-	myenv.StaticLibrary("Swiften", sources + swiften_env["SWIFTEN_OBJECTS"])
+	if ARGUMENTS.get("swiften_dll", False) :
+		myenv.SharedLibrary("Swiften", sources + swiften_env["SWIFTEN_OBJECTS"])
+	else :
+		myenv.StaticLibrary("Swiften", sources + swiften_env["SWIFTEN_OBJECTS"])
 
 	env.Append(UNITTEST_SOURCES = [
 			File("Avatars/UnitTest/VCardUpdateAvatarManagerTest.cpp"),

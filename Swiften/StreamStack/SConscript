@@ -11,5 +11,5 @@ sources = [
 		"XMPPLayer.cpp",
 	]
 
-objects = myenv.StaticObject(sources)
+objects = myenv.SwiftenObject(sources)
 swiften_env.Append(SWIFTEN_OBJECTS = [objects])
