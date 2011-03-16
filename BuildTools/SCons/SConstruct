@@ -209,7 +209,7 @@ env["TEST_IGNORE_RESULT"] = "ignore_test_result" in ARGUMENTS
 env["DIST"] = "dist" in ARGUMENTS or env.GetOption("clean")
 for path in ["SWIFT_INSTALLDIR", "SWIFTEN_INSTALLDIR"] :
 	if ARGUMENTS.get(path, "") :
-		if os.path.isabs(path) :
+		if os.path.isabs(ARGUMENTS[path]) :
 			env[path] = Dir(ARGUMENTS[path]).abspath
 		else :
 			env[path] = Dir("#/" + ARGUMENTS[path]).abspath

@@ -326,6 +326,7 @@ if env["SCONS_STAGE"] == "build" :
 				swiften_header += "#include <Swiften/" + file + ">\n"		
 				swiften_includes.append("Swiften/" + file)
 	swiften_env.WriteVal("Swiften.h", swiften_env.Value(swiften_header))
+	swiften_includes.append("Swiften/Swiften.h")
 
 	# Install swiften
 	if swiften_env.get("SWIFTEN_INSTALLDIR", "") :

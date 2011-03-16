@@ -6,16 +6,15 @@
 
 #include <iostream>
 
+#include <boost/algorithm/string.hpp>
 #include <boost/program_options/options_description.hpp>
 #include <boost/program_options/variables_map.hpp>
 #include <boost/program_options.hpp>
 #include <boost/version.hpp>
 #include <string>
 
-#include <Swiften/Base/foreach.h>
 #include <Swiften/Base/Platform.h>
 #include <Swiften/Base/Paths.h>
-#include <Swiften/Base/String.h>
 
 #include "swiften-config.h"
 
@@ -72,28 +71,34 @@ int main(int argc, char* argv[]) {
 
 	// Detect whether we're running in-place or not
 	boost::filesystem::path executablePath = Paths::getExecutablePath();
-	boost::filesystem::path topPath = executablePath / ".." / "..";
-	bool inPlace = true;	
+	boost::filesystem::path topSourcePath = executablePath / ".." / "..";
+	boost::filesystem::path topInstallPath = executablePath / "..";
+	bool inPlace = !boost::filesystem::exists(topInstallPath / "include" / "Swiften" / "Swiften.h");
 
 	// Replace "#" variables with the correct path
 	for(size_t i = 0; i < libs.size(); ++i) {
 		if (inPlace) {
 			std::string lib = libs[i];
-			String::replaceAll(lib, '#', topPath.string());
+			boost::replace_all(lib, "#", topSourcePath.string());
 			libs[i] = lib;
 		}
 		else {
-			// TODO
+			std::string lib = libs[i];
+			boost::replace_all(lib, "#", (topInstallPath / "lib").string());
+			boost::erase_all(lib, "/Swiften");
+			libs[i] = lib;
 		}
 	}
 	for(size_t i = 0; i < cflags.size(); ++i) {
 		if (inPlace) {
 			std::string cflag = cflags[i];
-			String::replaceAll(cflag, '#', topPath.string());
+			boost::replace_all(cflag, "#", topSourcePath.string());
 			cflags[i] = cflag;
 		}
 		else {
-			// TODO
+			std::string cflag = cflags[i];
+			boost::replace_all(cflag, "#", (topInstallPath / "include").string());
+			cflags[i] = cflag;
 		}
 	}
 
