@@ -178,9 +178,9 @@ if env["SCONS_STAGE"] == "build" :
 		])
 
 	if ARGUMENTS.get("swiften_dll", False) :
-		myenv.SharedLibrary("Swiften", sources + swiften_env["SWIFTEN_OBJECTS"])
+		swiften_lib = myenv.SharedLibrary("Swiften", sources + swiften_env["SWIFTEN_OBJECTS"])
 	else :
-		myenv.StaticLibrary("Swiften", sources + swiften_env["SWIFTEN_OBJECTS"])
+		swiften_lib = myenv.StaticLibrary("Swiften", sources + swiften_env["SWIFTEN_OBJECTS"])
 
 	env.Append(UNITTEST_SOURCES = [
 			File("Avatars/UnitTest/VCardUpdateAvatarManagerTest.cpp"),
@@ -304,20 +304,31 @@ if env["SCONS_STAGE"] == "build" :
 	
 	# Generate the Swiften header
 	swiften_header = "#pragma once\n"
+	swiften_includes = []
 	top_path = env.Dir("..").abspath
 	public_dirs = ["Avatars", "Base", "Chat", "Client", "Component", "Disco", "Entity", "Elements", "JID", "MUC", "Network", "Parser", "Presence", "Queries", "Roster", "Serializer", "StringCodecs", "TLS", "VCards"]
 	for public_dir in public_dirs :
 		for root, dirs, files in os.walk(env.Dir(public_dir).abspath) :
 			if root.endswith("UnitTest") :
 				continue
-			if root.endswith("OpenSSL") :
-				continue
 			for file in files :
 				if not file.endswith(".h") :
 					continue
+				include = os.path.relpath(os.path.join(root, file), top_path)
+				swiften_includes.append(include)
+				if root.endswith("OpenSSL") :
+					continue
 				if file.startswith("CAres") or file.startswith("LibXML") or file.startswith("Expat") :
 					continue
-				swiften_header += "#include \"" + os.path.relpath(os.path.join(root, file), top_path) + "\"\n"
+				swiften_header += "#include <" + include + ">\n"
+				swiften_includes.append(include)
 	for file in ["EventLoop/SimpleEventLoop.h"] :
-				swiften_header += "#include \"Swiften/" + file + "\"\n"		
+				swiften_header += "#include <Swiften/" + file + ">\n"		
+				swiften_includes.append("Swiften/" + file)
 	swiften_env.WriteVal("Swiften.h", swiften_env.Value(swiften_header))
+
+	# Install swiften
+	if swiften_env.get("SWIFTEN_INSTALLDIR", "") :
+		swiften_env.Install(os.path.join(swiften_env["SWIFTEN_INSTALLDIR"], "lib"), swiften_lib)
+		for include in swiften_includes :
+			swiften_env.Install(os.path.join(swiften_env["SWIFTEN_INSTALLDIR"], "include", os.path.dirname(include)), "#/" + include)

@@ -1,3 +1,5 @@
+import os.path
+
 Import("env")
 
 def replaceSwiftenPath(input) :
@@ -29,6 +31,9 @@ config_env.MergeFlags(config_env["SWIFTEN_FLAGS"])
 config_env.MergeFlags(config_env["BOOST_FLAGS"])
 config_env.MergeFlags(config_env["PLATFORM_FLAGS"])
 config_env.WriteVal("swiften-config.h", config_env.Value(config_flags))
-config_env.Program("swiften-config", [
+swiften_config = config_env.Program("swiften-config", [
 		"swiften-config.cpp"
 	])
+
+if swiften_env.get("SWIFTEN_INSTALLDIR", "") :
+	swiften_env.Install(os.path.join(swiften_env["SWIFTEN_INSTALLDIR"], "bin"), swiften_config)
