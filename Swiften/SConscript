@@ -6,7 +6,7 @@ Import("env")
 # Flags
 ################################################################################
 
-swiften_dep_modules = ["BOOST", "LIBIDN", "ZLIB", "OPENSSL", "LIBXML", "EXPAT"]
+swiften_dep_modules = ["BOOST", "LIBIDN", "ZLIB", "OPENSSL", "LIBXML", "EXPAT", "AVAHI"]
 
 if env["SCONS_STAGE"] == "flags" :
 	swiften_env = env.Clone()
