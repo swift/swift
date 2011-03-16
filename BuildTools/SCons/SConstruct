@@ -207,11 +207,12 @@ env["TEST_IGNORE_RESULT"] = "ignore_test_result" in ARGUMENTS
 
 # Packaging
 env["DIST"] = "dist" in ARGUMENTS or env.GetOption("clean")
-if ARGUMENTS.get("SWIFT_INSTALLDIR", "") :
-	env["SWIFT_INSTALLDIR"] = Dir(ARGUMENTS["SWIFT_INSTALLDIR"]).abspath
-if ARGUMENTS.get("SWIFTEN_INSTALLDIR", "") :
-	env["SWIFTEN_INSTALLDIR"] = Dir(ARGUMENTS["SWIFTEN_INSTALLDIR"]).abspath
-
+for path in ["SWIFT_INSTALLDIR", "SWIFTEN_INSTALLDIR"] :
+	if ARGUMENTS.get(path, "") :
+		if os.path.isabs(path) :
+			env[path] = Dir(ARGUMENTS[path]).abspath
+		else :
+			env[path] = Dir("#/" + ARGUMENTS[path]).abspath
 
 ################################################################################
 # XCode / iPhone / ...
