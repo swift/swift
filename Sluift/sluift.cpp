@@ -225,7 +225,7 @@ static int sluift_client_disconnect(lua_State *L) {
 
 static int sluift_client_set_version(lua_State *L) {
 	try {
-		eventLoop.runUntilEvents();
+		eventLoop.runOnce();
 
 		SluiftClient* client = getClient(L);
 		luaL_checktype(L, 2, LUA_TTABLE);
@@ -247,7 +247,7 @@ static int sluift_client_set_version(lua_State *L) {
 
 static int sluift_client_get_contacts(lua_State *L) {
 	try {
-		eventLoop.runUntilEvents();
+		eventLoop.runOnce();
 
 		SluiftClient* client = getClient(L);
 		Lua::Table contactsTable;
