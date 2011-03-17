@@ -117,10 +117,10 @@ class SluiftClient {
 				return event;
 			}
 			Watchdog watchdog(timeout, networkFactories.getTimerFactory());
-			while (!watchdog.getTimedOut() && pendingEvents.empty()) {
+			while (!watchdog.getTimedOut() && pendingEvents.empty() && !client->isActive()) {
 				eventLoop.runUntilEvents();
 			}
-			if (watchdog.getTimedOut()) {
+			if (watchdog.getTimedOut() || !client->isActive()) {
 				return Stanza::ref();
 			}
 			else {
@@ -317,15 +317,29 @@ static int sluift_client_get_version(lua_State *L) {
 }
 
 static int sluift_client_send_message(lua_State *L) {
-	getClient(L)->sendMessage(std::string(luaL_checkstring(L, 2)), luaL_checkstring(L, 3));
-	lua_pushvalue(L, 1);
-	return 1;
+	try {
+		eventLoop.runOnce();
+
+		getClient(L)->sendMessage(std::string(luaL_checkstring(L, 2)), luaL_checkstring(L, 3));
+		lua_pushvalue(L, 1);
+		return 1;
+	}
+	catch (const SluiftException& e) {
+		return luaL_error(L, e.getReason().c_str());
+	}
 }
 
 static int sluift_client_send_presence(lua_State *L) {
-	getClient(L)->sendPresence(std::string(luaL_checkstring(L, 2)));
-	lua_pushvalue(L, 1);
-	return 0;
+	try {
+		eventLoop.runOnce();
+
+		getClient(L)->sendPresence(std::string(luaL_checkstring(L, 2)));
+		lua_pushvalue(L, 1);
+		return 0;
+	}
+	catch (const SluiftException& e) {
+		return luaL_error(L, e.getReason().c_str());
+	}
 }
 
 static int sluift_client_get(lua_State *L) {
@@ -371,9 +385,16 @@ static int sluift_client_set(lua_State *L) {
 }
 
 static int sluift_client_send(lua_State *L) {
-	getClient(L)->getClient()->sendData(std::string(luaL_checkstring(L, 2)));
-	lua_pushvalue(L, 1);
-	return 0;
+	try {
+		eventLoop.runOnce();
+
+		getClient(L)->getClient()->sendData(std::string(luaL_checkstring(L, 2)));
+		lua_pushvalue(L, 1);
+		return 0;
+	}
+	catch (const SluiftException& e) {
+		return luaL_error(L, e.getReason().c_str());
+	}
 }
 
 static int sluift_client_set_options(lua_State* L) {
