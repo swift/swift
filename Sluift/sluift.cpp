@@ -300,7 +300,7 @@ static int sluift_client_get_version(lua_State *L) {
 
 		ResponseSink<SoftwareVersion> sink;
 		GetSoftwareVersionRequest::ref request = GetSoftwareVersionRequest::create(std::string(luaL_checkstring(L, 2)), client->getClient()->getIQRouter());
-		request->onResponse.connect(boost::ref(sink));
+		boost::signals::scoped_connection c = request->onResponse.connect(boost::ref(sink));
 		request->send();
 
 		Watchdog watchdog(timeout, networkFactories.getTimerFactory());
@@ -580,7 +580,7 @@ static int sluift_client_add_contact(lua_State* L) {
 
 			ResponseSink<RosterPayload> sink;
 			SetRosterRequest::ref request = SetRosterRequest::create(roster, client->getClient()->getIQRouter());
-			request->onResponse.connect(boost::ref(sink));
+			boost::signals::scoped_connection c = request->onResponse.connect(boost::ref(sink));
 			request->send();
 			while (!sink.hasResponse()) {
 				eventLoop.runUntilEvents();
@@ -609,7 +609,7 @@ static int sluift_client_remove_contact(lua_State* L) {
 		roster->addItem(RosterItemPayload(JID(luaL_checkstring(L, 2)), "", RosterItemPayload::Remove));
 		ResponseSink<RosterPayload> sink;
 		SetRosterRequest::ref request = SetRosterRequest::create(roster, client->getClient()->getIQRouter());
-		request->onResponse.connect(boost::ref(sink));
+		boost::signals::scoped_connection c = request->onResponse.connect(boost::ref(sink));
 		request->send();
 		while (!sink.hasResponse()) {
 			eventLoop.runUntilEvents();
