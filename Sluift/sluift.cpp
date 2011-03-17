@@ -29,7 +29,8 @@ using namespace Swift;
  * Forward declarations
  ******************************************************************************/
 
-bool debug = false;
+static bool debug = false;
+static int globalTimeout = 30000;
 
 /*******************************************************************************
  * Helper classes
@@ -68,8 +69,13 @@ class SluiftClient {
 		}
 
 		void waitConnected() {
-			while (client->isActive() && !client->isAvailable()) {
+			Watchdog watchdog(globalTimeout, networkFactories.getTimerFactory());
+			while (!watchdog.getTimedOut() && client->isActive() && !client->isAvailable()) {
 				eventLoop.runUntilEvents();
+			}
+			if (watchdog.getTimedOut()) {
+				client->disconnect();
+				throw SluiftException("Timeout while connecting");
 			}
 		}
 
@@ -694,9 +700,13 @@ static int sluift_sleep(lua_State *L) {
 }
 
 static int sluift_index(lua_State *L) {
-	luaL_checkstring(L, 2);
-	if (std::string(lua_tostring(L, 2)) == "debug") {
+	std::string key(luaL_checkstring(L, 2));
+	if (key == "debug") {
 		lua_pushboolean(L, debug);
+		return 1;
+	}
+	else if (key == "timeout") {
+		lua_pushnumber(L, globalTimeout);
 		return 1;
 	}
 	else {
@@ -705,9 +715,13 @@ static int sluift_index(lua_State *L) {
 }
 
 static int sluift_newindex(lua_State *L) {
-	luaL_checkstring(L, 2);
-	if (std::string(lua_tostring(L, 2)) == "debug") {
+	std::string key(luaL_checkstring(L, 2));
+	if (key == "debug") {
 		debug = lua_toboolean(L, 3);
+		return 0;
+	}
+	else if (key == "timeout") {
+		globalTimeout = luaL_checknumber(L, 3);
 		return 0;
 	}
 	else {
