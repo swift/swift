@@ -60,10 +60,10 @@ QString QtEvent::text() {
 		std::string reason = subscriptionRequestEvent->getReason();
 		QString message;
 		if (reason.empty()) {
-			message = QString("%1 would like to add you to their roster.").arg(subscriptionRequestEvent->getJID().toBare().toString().c_str());
+			message = QString(QObject::tr("%1 would like to add you to their contact list.")).arg(subscriptionRequestEvent->getJID().toBare().toString().c_str());
 		}
 		else {
-			message = QString("%1 would like to add you to their roster, saying '%2'").arg(subscriptionRequestEvent->getJID().toBare().toString().c_str()).arg(reason.c_str());
+			message = QString(QObject::tr("%1 would like to add you to their contact list, saying '%2'")).arg(subscriptionRequestEvent->getJID().toBare().toString().c_str()).arg(reason.c_str());
 		}
 		return message;
 	}

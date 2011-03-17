@@ -450,6 +450,14 @@
         <source>No rooms found</source>
         <translation>Geen kamers gevonden</translation>
     </message>
+    <message>
+        <source>%1 would like to add you to their contact list.</source>
+        <translation>%1 wil u aan zijn contactenlijst toevoegen.</translation>
+    </message>
+    <message>
+        <source>%1 would like to add you to their contact list, saying &apos;%2&apos;</source>
+        <translation>%1 wil u aan zijn contactenlijst toevoegen, met als boodschap &apos;%2&apos;</translation>
+    </message>
 </context>
 <context>
     <name>QWizard</name>
@@ -703,10 +711,6 @@ afbeelding</translation>
         <translation>Bladwijzer ongeldig</translation>
     </message>
     <message>
-        <source>You must specify a valid room address (e.g. myroom@chats.example.com).</source>
-        <translation type="obsolete">Specifieer een geldige kamer (bv. mijnkamer@kamers.voorbeeld.com).</translation>
-    </message>
-    <message>
         <source>You must specify a valid room address (e.g. someroom@rooms.example.com).</source>
         <translation>Specifieer een geldige kamer (bv. eenkamer@kamers.voorbeeld.com).</translation>
     </message>
@@ -955,10 +959,6 @@ afbeelding</translation>
     <message>
         <source>&amp;Sign Out</source>
         <translation>&amp;Afmelden</translation>
-    </message>
-    <message>
-        <source>Notices</source>
-        <translation>Berichten</translation>
     </message>
     <message>
         <source>Edit &amp;Profile</source>
