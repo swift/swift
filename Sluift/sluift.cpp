@@ -94,15 +94,23 @@ class SluiftClient {
 			client->sendPresence(boost::make_shared<Presence>(status));
 		}
 
-		std::string sendQuery(const JID& jid, IQ::Type type, const std::string& data) {
+		boost::optional<std::string> sendQuery(const JID& jid, IQ::Type type, const std::string& data, int timeout) {
 			rawRequestResponse.reset();
 			RawRequest::ref request = RawRequest::create(type, jid, data, client->getIQRouter());
-			request->onResponse.connect(boost::bind(&SluiftClient::handleRawRequestResponse, this, _1));
+			boost::signals::scoped_connection c = request->onResponse.connect(boost::bind(&SluiftClient::handleRawRequestResponse, this, _1));
 			request->send();
-			while (!rawRequestResponse) {
+
+			Watchdog watchdog(timeout, networkFactories.getTimerFactory());
+			while (!watchdog.getTimedOut() && !rawRequestResponse) {
 				eventLoop.runUntilEvents();
 			}
-			return *rawRequestResponse;
+
+			if (watchdog.getTimedOut()) {
+				return boost::optional<std::string>();
+			}
+			else {
+				return *rawRequestResponse;
+			}
 		}
 
 		void disconnect() {
@@ -285,21 +293,31 @@ static int sluift_client_get_contacts(lua_State *L) {
 static int sluift_client_get_version(lua_State *L) {
 	try {
 		SluiftClient* client = getClient(L);
+		int timeout = -1;
+		if (lua_type(L, 3) != LUA_TNONE) {
+			timeout = luaL_checknumber(L, 3);
+		}
 
 		ResponseSink<SoftwareVersion> sink;
 		GetSoftwareVersionRequest::ref request = GetSoftwareVersionRequest::create(std::string(luaL_checkstring(L, 2)), client->getClient()->getIQRouter());
 		request->onResponse.connect(boost::ref(sink));
 		request->send();
-		while (!sink.hasResponse()) {
+
+		Watchdog watchdog(timeout, networkFactories.getTimerFactory());
+		while (!watchdog.getTimedOut() && !sink.hasResponse()) {
 			eventLoop.runUntilEvents();
 		}
 
-		if (ErrorPayload::ref error = sink.getResponseError()) {
+		ErrorPayload::ref error = sink.getResponseError();
+		if (error || watchdog.getTimedOut()) {
 			lua_pushnil(L);
-			// TODO
-			if (error->getCondition() == ErrorPayload::RemoteServerNotFound) {
+			if (watchdog.getTimedOut()) {
+				lua_pushstring(L, "Timeout");
+			}
+			else if (error->getCondition() == ErrorPayload::RemoteServerNotFound) {
 				lua_pushstring(L, "Remote server not found");
 			}
+			// TODO
 			else {
 				lua_pushstring(L, "Error");
 			}
@@ -353,15 +371,27 @@ static int sluift_client_get(lua_State *L) {
 		SluiftClient* client = getClient(L);
 		JID jid;
 		std::string data;
-		if (lua_type(L, 3) != LUA_TNONE) {
+		int timeout = -1;
+		if (lua_type(L, 3) == LUA_TSTRING) {
 			jid = JID(std::string(luaL_checkstring(L, 2)));
 			data = std::string(luaL_checkstring(L, 3));
+			if (lua_type(L, 4) != LUA_TNONE) {
+				timeout = luaL_checknumber(L, 4);
+			}
 		}
 		else {
 			data = std::string(luaL_checkstring(L, 2));
+			if (lua_type(L, 3) != LUA_TNONE) {
+				timeout = luaL_checknumber(L, 3);
+			}
 		}
-		std::string result = client->sendQuery(jid, IQ::Get, data);
-		lua_pushstring(L, result.c_str());
+		boost::optional<std::string> result = client->sendQuery(jid, IQ::Get, data, timeout);
+		if (result) {
+			lua_pushstring(L, result->c_str());
+		}
+		else {
+			lua_pushnil(L);
+		}
 		return 1;
 	}
 	catch (const SluiftException& e) {
@@ -374,15 +404,27 @@ static int sluift_client_set(lua_State *L) {
 		SluiftClient* client = getClient(L);
 		JID jid;
 		std::string data;
-		if (lua_type(L, 3) != LUA_TNONE) {
+		int timeout = -1;
+		if (lua_type(L, 3) == LUA_TSTRING) {
 			jid = JID(std::string(luaL_checkstring(L, 2)));
 			data = std::string(luaL_checkstring(L, 3));
+			if (lua_type(L, 4) != LUA_TNONE) {
+				timeout = luaL_checknumber(L, 4);
+			}
 		}
 		else {
 			data = std::string(luaL_checkstring(L, 2));
+			if (lua_type(L, 3) != LUA_TNONE) {
+				timeout = luaL_checknumber(L, 3);
+			}
 		}
-		std::string result = client->sendQuery(jid, IQ::Set, data);
-		lua_pushstring(L, result.c_str());
+		boost::optional<std::string> result = client->sendQuery(jid, IQ::Set, data, timeout);
+		if (result) {
+			lua_pushstring(L, result->c_str());
+		}
+		else {
+			lua_pushnil(L);
+		}
 		return 1;
 	}
 	catch (const SluiftException& e) {
