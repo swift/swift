@@ -9,6 +9,7 @@
 #include <boost/bind.hpp>
 
 #include <Swift/Controllers/Intl.h>
+#include <Swiften/Base/format.h>
 #include "Swift/Controllers/XMPPEvents/EventController.h"
 #include "SwifTools/Notifier/Notifier.h"
 #include "Swiften/Avatars/AvatarManager.h"
@@ -47,7 +48,7 @@ void EventNotifier::handleEventAdded(boost::shared_ptr<StanzaEvent> event) {
 	else if(boost::shared_ptr<SubscriptionRequestEvent> subscriptionEvent = boost::dynamic_pointer_cast<SubscriptionRequestEvent>(event)) {
 		JID jid = subscriptionEvent->getJID();
 		std::string title = "";
-		std::string message = nickResolver->jidToNick(jid) + " wants to add you to his/her roster";
+		std::string message = str(format(QT_TRANSLATE_NOOP("", "%1% wants to add you to his/her contact list")) % nickResolver->jidToNick(jid));
 		notifier->showMessage(Notifier::SystemMessage, title, message, boost::filesystem::path(), boost::function<void()>());
 	}
 	else if(boost::shared_ptr<ErrorEvent> errorEvent = boost::dynamic_pointer_cast<ErrorEvent>(event)) {

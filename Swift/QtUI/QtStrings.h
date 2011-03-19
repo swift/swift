@@ -16,6 +16,8 @@
 
 QT_TRANSLATE_NOOP3("QApplication", "QT_LAYOUT_DIRECTION", "Translate this to LTR for left-to-right or RTL for right-to-left languages");
 
+QT_TRANSLATE_NOOP("QWebPage", "Copy Link");
+
 QT_TRANSLATE_NOOP("QWizard", "< &Back");
 QT_TRANSLATE_NOOP("QWizard", "&Finish");
 QT_TRANSLATE_NOOP("QWizard", "&Help");

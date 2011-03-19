@@ -408,6 +408,10 @@
         <source>Error</source>
         <translation>Fout</translation>
     </message>
+    <message>
+        <source>%1% wants to add you to his/her contact list</source>
+        <translation>%1% wil u aan zijn/haar contactenlijst toevoegen</translation>
+    </message>
 </context>
 <context>
     <name>QApplication</name>
@@ -457,6 +461,13 @@
     <message>
         <source>%1 would like to add you to their contact list, saying &apos;%2&apos;</source>
         <translation>%1 wil u aan zijn contactenlijst toevoegen, met als boodschap &apos;%2&apos;</translation>
+    </message>
+</context>
+<context>
+    <name>QWebPage</name>
+    <message>
+        <source>Copy Link</source>
+        <translation>Kopieer koppeling</translation>
     </message>
 </context>
 <context>
@@ -1035,6 +1046,16 @@ afbeelding</translation>
     <message>
         <source>Defer</source>
         <translation>Uitstellen</translation>
+    </message>
+    <message>
+        <source>%1 would like to add you to their contact list.
+ Would you like to add them to your contact list and share your status when you&apos;re online? 
+
+If you choose to defer this choice, you will be asked again when you next login.</source>
+        <translation>%1 wil u aan zijn/haar contactenlijst toevoegen.
+Wilt u dit contact toevoegen aan uw contactenlijst, en uw aanwezigheid delen wanneer u aanwezig bent?
+
+Als u deze keuze uitstelt, zal deze vraag opnieuw gesteld worden wanneer u zich opnieuw aanmeldt.</translation>
     </message>
 </context>
 <context>

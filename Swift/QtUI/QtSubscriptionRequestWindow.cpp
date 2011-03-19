@@ -15,7 +15,7 @@
 
 namespace Swift {
 QtSubscriptionRequestWindow::QtSubscriptionRequestWindow(boost::shared_ptr<SubscriptionRequestEvent> event, QWidget* parent) : QDialog(parent), event_(event) {
-	QString text = QString("%1 would like to add you to their roster.\n Would you like to add them to your roster and share your status when you're online? \n\nIf you choose to defer this choice, you'll be asked again when you next login.").arg(event->getJID().toString().c_str());
+	QString text = QString(tr("%1 would like to add you to their contact list.\n Would you like to add them to your contact list and share your status when you're online? \n\nIf you choose to defer this choice, you will be asked again when you next login.")).arg(event->getJID().toString().c_str());
 	QVBoxLayout* layout = new QVBoxLayout();
 	QLabel* label = new QLabel(text, this);
 	layout->addWidget(label);
