@@ -11,8 +11,14 @@
 namespace Swift {
 	inline boost::format format(const std::string& s) {
 		using namespace boost::io;
-		boost::format fmter(s);
-		fmter.exceptions( all_error_bits ^ ( too_many_args_bit | too_few_args_bit )  );
-		return fmter;
+		try {
+			boost::format fmter(s);
+			fmter.exceptions(no_error_bits);
+			return fmter;
+		}
+		catch (...) {
+			std::cerr << "Error: Invalid translation: " << s << std::endl;
+			throw;
+		}
 	}
 }
