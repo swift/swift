@@ -386,7 +386,7 @@
     </message>
     <message>
         <source>Server %1% rejected contact list change to item &apos;%2%&apos;</source>
-        <translation>Server %1% heeft de aanpassing van contact &apos;%2&apos; geweigerd</translation>
+        <translation>Server %1% heeft de aanpassing van contact &apos;%2%&apos; geweigerd</translation>
     </message>
     <message>
         <source>Available</source>
