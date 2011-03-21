@@ -469,6 +469,10 @@
         <source>Copy Link</source>
         <translation>Kopieer koppeling</translation>
     </message>
+    <message>
+        <source>Copy</source>
+        <translation>Kopiëren</translation>
+    </message>
 </context>
 <context>
     <name>QWizard</name>
