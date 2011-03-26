@@ -6,13 +6,13 @@
 
 #pragma once
 
-#include <Swiften/Jingle/IncomingJingleSession.h>
+#include <Swiften/Jingle/JingleSession.h>
 
 namespace Swift {
 	class IncomingJingleSessionHandler {
 		public:
 			virtual ~IncomingJingleSessionHandler();
 
-			virtual bool handleIncomingJingleSession(IncomingJingleSession::ref) = 0;
+			virtual bool handleIncomingJingleSession(JingleSession::ref, const std::vector<JingleContentPayload::ref>& contents) = 0;
 	};
 }

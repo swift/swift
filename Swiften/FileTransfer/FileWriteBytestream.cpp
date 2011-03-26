@@ -21,12 +21,12 @@ FileWriteBytestream::~FileWriteBytestream() {
 	}
 }
 
-void FileWriteBytestream::write(const ByteArray& data) {
+void FileWriteBytestream::write(const std::vector<unsigned char>& data) {
 	if (!stream) {
 		stream = new boost::filesystem::ofstream(file, std::ios_base::out|std::ios_base::binary);
 	}
 	assert(stream->good());
-	stream->write(reinterpret_cast<const char*>(data.getData()), data.getSize());
+	stream->write(reinterpret_cast<const char*>(&data[0]), data.size());
 }
 
 }

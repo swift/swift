@@ -9,7 +9,7 @@
 #include <boost/filesystem/path.hpp>
 #include <boost/filesystem/fstream.hpp>
 
-#include "Swiften/FileTransfer/WriteBytestream.h"
+#include <Swiften/FileTransfer/WriteBytestream.h>
 
 namespace Swift {
 	class FileWriteBytestream : public WriteBytestream {
@@ -17,7 +17,7 @@ namespace Swift {
 			FileWriteBytestream(const boost::filesystem::path& file);
 			~FileWriteBytestream();
 
-			virtual void write(const ByteArray&);
+			virtual void write(const std::vector<unsigned char>&);
 
 		private:
 			boost::filesystem::path file;

@@ -130,9 +130,19 @@ namespace Swift {
 				data_.clear();
 			}
 
+			const std::vector<unsigned char>& getDataVector() const {
+				return data_;
+			}
+
+			static std::vector<unsigned char> create(const std::string& s);
+			static std::vector<unsigned char> create(const char* c);
+			static std::vector<unsigned char> create(const unsigned char* c, size_t n);
+			static std::vector<unsigned char> create(const char* c, size_t n);
+
 		private:
 			std::vector<unsigned char> data_;
 	};
 }
 
 std::ostream& operator<<(std::ostream& os, const Swift::ByteArray& s);
+std::ostream& operator<<(std::ostream& os, const std::vector<unsigned char>& s);

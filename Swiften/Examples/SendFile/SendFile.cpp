@@ -16,7 +16,7 @@
 #include "Swiften/EventLoop/EventLoop.h"
 #include "Swiften/Client/ClientXMLTracer.h"
 #include "Swiften/EventLoop/SimpleEventLoop.h"
-#include "Swiften/FileTransfer/OutgoingFileTransfer.h"
+#include "Swiften/FileTransfer/OutgoingSIFileTransfer.h"
 #include "Swiften/FileTransfer/FileReadBytestream.h"
 #include "Swiften/FileTransfer/SOCKS5BytestreamServer.h"
 #include "Swiften/Network/BoostConnectionServer.h"
@@ -66,7 +66,7 @@ class FileSender {
 	private:
 		void handleConnected() {
 			client->sendPresence(Presence::create());
-			transfer = new OutgoingFileTransfer("myid",	client->getJID(), recipient, file.filename(), boost::filesystem::file_size(file), "A file", boost::shared_ptr<FileReadBytestream>(new FileReadBytestream(file)), client->getIQRouter(), socksBytestreamServer);
+			transfer = new OutgoingSIFileTransfer("myid",	client->getJID(), recipient, file.filename(), boost::filesystem::file_size(file), "A file", boost::shared_ptr<FileReadBytestream>(new FileReadBytestream(file)), client->getIQRouter(), socksBytestreamServer);
 			transfer->onFinished.connect(boost::bind(&FileSender::handleFileTransferFinished, this, _1));
 			transfer->start();
 		}
@@ -101,7 +101,7 @@ class FileSender {
 		boost::filesystem::path file;
 		Client* client;
 		ClientXMLTracer* tracer;
-		OutgoingFileTransfer* transfer;
+		OutgoingSIFileTransfer* transfer;
 };
 
 

@@ -6,31 +6,32 @@
 
 #pragma once
 
-#include "Swiften/FileTransfer/ReadBytestream.h"
-#include "Swiften/Base/ByteArray.h"
+#include <vector>
+
+#include <Swiften/FileTransfer/ReadBytestream.h>
 
 namespace Swift {
 	class ByteArrayReadBytestream : public ReadBytestream {
 		public:
-			ByteArrayReadBytestream(const ByteArray& data) : data(data), position(0) {
+			ByteArrayReadBytestream(const std::vector<unsigned char>& data) : data(data), position(0) {
 			}
 
-			virtual ByteArray read(size_t size) {
+			virtual std::vector<unsigned char> read(size_t size) {
 				size_t readSize = size;
-				if (position + readSize > data.getSize()) {
-					readSize = data.getSize() - position;
+				if (position + readSize > data.size()) {
+					readSize = data.size() - position;
 				}
-				ByteArray result(data.getData() + position, readSize);
+				std::vector<unsigned char> result(data.begin() + position, data.begin() + position + readSize);
 				position += readSize;
 				return result;
 			}
 
 			virtual bool isFinished() const {
-				return position >= data.getSize();
+				return position >= data.size();
 			}
 
 		private:
-			ByteArray data;
+			std::vector<unsigned char> data;
 			size_t position;
 	};
 }

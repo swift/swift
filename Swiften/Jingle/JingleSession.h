@@ -7,46 +7,43 @@
 #pragma once
 
 #include <boost/shared_ptr.hpp>
+#include <string>
 
 #include <Swiften/Base/boost_bsignals.h>
-#include <string>
+#include <Swiften/JID/JID.h>
 #include <Swiften/Elements/JinglePayload.h>
-#include <Swiften/Elements/JingleContent.h>
 
 namespace Swift {
+	class JingleContentID;
+
 	class JingleSession {
-			friend class JingleResponder;
 		public:
 			typedef boost::shared_ptr<JingleSession> ref;
 
-			JingleSession(const std::string& id, const std::vector<JingleContent::ref>& contents);
+			JingleSession(const JID& initiator, const std::string& id);
 			virtual ~JingleSession();
+
+			const JID& getInitiator() const {
+				return initiator;
+			}
 
 			std::string getID() const {
 				return id;
 			}
 
-			template<typename T>
-			JingleContent::ref getContentWithDescription() const {
-				for (size_t i = 0; i < contents.size(); ++i) {
-					if (contents[i]->getDescription<T>()) {
-						return contents[i];
-					}
-				}
-				return JingleContent::ref();
-			}
+			virtual void terminate(JinglePayload::Reason::Type reason) = 0;
+			virtual void accept(JingleTransportPayload::ref = JingleTransportPayload::ref()) = 0;
+			virtual void sendTransportInfo(const JingleContentID&, JingleTransportPayload::ref) = 0;
+			virtual void acceptTransport(const JingleContentID&, JingleTransportPayload::ref) = 0;
+			virtual void rejectTransport(const JingleContentID&, JingleTransportPayload::ref) = 0;
 
-			const std::vector<JingleContent::ref> getContents() const {
-				return contents;
-			}
-
-			void terminate(JinglePayload::Reason::Type reason);
+		public:
+			boost::signal<void ()> onSessionTerminateReceived;
+			boost::signal<void (const JingleContentID&, JingleTransportPayload::ref)> onTransportInfoReceived;
+			boost::signal<void (const JingleContentID&, JingleTransportPayload::ref)> onTransportReplaceReceived;
 
 		private:
-			void handleIncomingAction(JinglePayload::ref);
-
-		private:
+			JID initiator;
 			std::string id;
-			std::vector<JingleContent::ref> contents;
 	};
 }

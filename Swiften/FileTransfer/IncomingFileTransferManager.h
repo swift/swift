@@ -15,6 +15,8 @@
 namespace Swift {
 	class IQRouter;
 	class JingleSessionManager;
+	class RemoteJingleTransportCandidateSelectorFactory;
+	class LocalJingleTransportCandidateGeneratorFactory;
 
 	class IncomingFileTransferManager : public IncomingJingleSessionHandler {
 		public:
@@ -24,7 +26,7 @@ namespace Swift {
 			boost::signal<void (IncomingFileTransfer::ref)> onIncomingFileTransfer;
 
 		private:
-			bool handleIncomingJingleSession(IncomingJingleSession::ref session);
+			bool handleIncomingJingleSession(JingleSession::ref session, const std::vector<JingleContentPayload::ref>& contents);
 
 		private:
 			JingleSessionManager* jingleSessionManager;

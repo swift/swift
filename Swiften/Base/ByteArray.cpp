@@ -9,6 +9,10 @@
 #include <fstream>
 
 std::ostream& operator<<(std::ostream& os, const Swift::ByteArray& s) {
+	return operator<<(os, s.getDataVector());
+}
+
+std::ostream& operator<<(std::ostream& os, const std::vector<unsigned char>& s) {
 	std::ios::fmtflags oldFlags = os.flags(); 
 	os << std::hex;
 	for (Swift::ByteArray::const_iterator i = s.begin(); i != s.end(); ++i) {
@@ -35,6 +39,37 @@ void ByteArray::readFromFile(const std::string& file) {
 		data_.resize(oldSize + input.gcount());
 	}
 	input.close();
+}
+
+std::vector<unsigned char> ByteArray::create(const std::string& s) {
+	return std::vector<unsigned char>(s.begin(), s.end());
+}
+
+std::vector<unsigned char> ByteArray::create(const char* c) {
+	std::vector<unsigned char> data;
+	while (*c) {
+		data.push_back(static_cast<unsigned char>(*c));
+		++c;
+	}
+	return data;
+}
+
+std::vector<unsigned char> ByteArray::create(const char* c, size_t n) {
+	std::vector<unsigned char> data;
+	if (n > 0) {
+		data.resize(n);
+		memcpy(&data[0], c, n);
+	}
+	return data;
+}
+
+std::vector<unsigned char> ByteArray::create(const unsigned char* c, size_t n) {
+	std::vector<unsigned char> data;
+	if (n > 0) {
+		data.resize(n);
+		memcpy(&data[0], c, n);
+	}
+	return data;
 }
 
 }

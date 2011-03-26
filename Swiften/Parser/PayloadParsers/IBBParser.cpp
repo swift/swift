@@ -64,7 +64,7 @@ void IBBParser::handleEndElement(const std::string& element, const std::string&)
 					data.push_back(c);
 				}
 			}
-			getPayloadInternal()->setData(Base64::decode(std::string(&data[0], data.size())));
+			getPayloadInternal()->setData(Base64::decode(std::string(&data[0], data.size())).getDataVector());
 		}
 	}
 }

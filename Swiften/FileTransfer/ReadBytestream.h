@@ -6,13 +6,13 @@
 
 #pragma once
 
-#include "Swiften/Base/ByteArray.h"
+#include <vector>
 
 namespace Swift {
 	class ReadBytestream {
 		public:
 			virtual ~ReadBytestream();
-			virtual ByteArray read(size_t size) = 0;
+			virtual std::vector<unsigned char> read(size_t size) = 0;
 			virtual bool isFinished() const = 0;
 	};
 }

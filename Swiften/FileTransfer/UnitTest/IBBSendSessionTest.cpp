@@ -4,13 +4,12 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "Swiften/Base/ByteArray.h"
-
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/extensions/TestFactoryRegistry.h>
 #include <vector>
 #include <boost/bind.hpp>
 
+#include "Swiften/Base/ByteArray.h"
 #include "Swiften/FileTransfer/IBBSendSession.h"
 #include "Swiften/FileTransfer/ByteArrayReadBytestream.h"
 #include "Swiften/Queries/IQRouter.h"
@@ -33,7 +32,7 @@ class IBBSendSessionTest : public CppUnit::TestFixture {
 		void setUp() {
 			stanzaChannel = new DummyStanzaChannel();
 			iqRouter = new IQRouter(stanzaChannel);
-			bytestream = boost::shared_ptr<ByteArrayReadBytestream>(new ByteArrayReadBytestream(ByteArray("abcdefg")));
+			bytestream = boost::shared_ptr<ByteArrayReadBytestream>(new ByteArrayReadBytestream(ByteArray::create("abcdefg")));
 		}
 
 		void tearDown() {
@@ -66,7 +65,7 @@ class IBBSendSessionTest : public CppUnit::TestFixture {
 			CPPUNIT_ASSERT(stanzaChannel->isRequestAtIndex<IBB>(1, JID("foo@bar.com/baz"), IQ::Set));
 			IBB::ref ibb = stanzaChannel->sentStanzas[1]->getPayload<IBB>();
 			CPPUNIT_ASSERT_EQUAL(IBB::Data, ibb->getAction());
-			CPPUNIT_ASSERT_EQUAL(ByteArray("abc"), ibb->getData());
+			CPPUNIT_ASSERT(ByteArray::create("abc") == ibb->getData());
 			CPPUNIT_ASSERT_EQUAL(0, ibb->getSequenceNumber());
 			CPPUNIT_ASSERT_EQUAL(std::string("myid"), ibb->getStreamID());
 		}
@@ -82,7 +81,7 @@ class IBBSendSessionTest : public CppUnit::TestFixture {
 			CPPUNIT_ASSERT(stanzaChannel->isRequestAtIndex<IBB>(2, JID("foo@bar.com/baz"), IQ::Set));
 			IBB::ref ibb = stanzaChannel->sentStanzas[2]->getPayload<IBB>();
 			CPPUNIT_ASSERT_EQUAL(IBB::Data, ibb->getAction());
-			CPPUNIT_ASSERT_EQUAL(ByteArray("def"), ibb->getData());
+			CPPUNIT_ASSERT(ByteArray::create("def") == ibb->getData());
 			CPPUNIT_ASSERT_EQUAL(1, ibb->getSequenceNumber());
 			CPPUNIT_ASSERT_EQUAL(std::string("myid"), ibb->getStreamID());
 		}

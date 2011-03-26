@@ -7,8 +7,7 @@
 #pragma once
 
 #include <boost/shared_ptr.hpp>
-
-#include "Swiften/Base/ByteArray.h"
+#include <vector>
 
 namespace Swift {
 	class WriteBytestream {
@@ -17,6 +16,6 @@ namespace Swift {
 
 			virtual ~WriteBytestream();
 
-			virtual void write(const ByteArray&) = 0;
+			virtual void write(const std::vector<unsigned char>&) = 0;
 	};
 }

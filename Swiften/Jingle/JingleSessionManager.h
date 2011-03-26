@@ -10,7 +10,7 @@
 #include <map>
 
 #include <Swiften/Base/boost_bsignals.h>
-#include <Swiften/Jingle/IncomingJingleSession.h>
+#include <Swiften/Jingle/JingleSessionImpl.h>
 
 namespace Swift {
 	class IQRouter;
@@ -23,13 +23,13 @@ namespace Swift {
 			JingleSessionManager(IQRouter* router);
 			~JingleSessionManager();
 
-			JingleSession::ref getSession(const JID& jid, const std::string& id) const;
+			JingleSessionImpl::ref getSession(const JID& jid, const std::string& id) const;
 
 			void addIncomingSessionHandler(IncomingJingleSessionHandler* handler);
 			void removeIncomingSessionHandler(IncomingJingleSessionHandler* handler);
 
 		protected:
-			void handleIncomingSession(const JID& from, IncomingJingleSession::ref);
+			void handleIncomingSession(const JID& from, JingleSessionImpl::ref, const std::vector<JingleContentPayload::ref>& contents);
 
 		private:
 			IQRouter* router;
@@ -43,7 +43,7 @@ namespace Swift {
 				JID jid;
 				std::string session;
 			};
-			typedef std::map<JIDSession, JingleSession::ref> SessionMap;
+			typedef std::map<JIDSession, JingleSessionImpl::ref> SessionMap;
 			SessionMap incomingSessions;
 	};
 }

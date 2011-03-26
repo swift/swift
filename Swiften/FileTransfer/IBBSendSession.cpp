@@ -38,7 +38,7 @@ void IBBSendSession::handleIBBResponse(IBB::ref, ErrorPayload::ref error) {
 	if (!error) {
 		if (!bytestream->isFinished()) {
 			try {
-				ByteArray data = bytestream->read(blockSize);
+				std::vector<unsigned char> data = bytestream->read(blockSize);
 				IBBRequest::ref request = IBBRequest::create(to, IBB::createIBBData(id, sequenceNumber, data), router);
 				sequenceNumber++;
 				request->onResponse.connect(boost::bind(&IBBSendSession::handleIBBResponse, this, _1, _2));

@@ -6,11 +6,11 @@
 
 #pragma once
 
-#include <boost/shared_ptr.hpp>
 #include <string>
+#include <vector>
+#include <boost/shared_ptr.hpp>
 
-#include "Swiften/Base/ByteArray.h"
-#include "Swiften/Elements/Payload.h"
+#include <Swiften/Elements/Payload.h>
 
 namespace Swift {
 	class IBB : public Payload {
@@ -36,7 +36,7 @@ namespace Swift {
 				return result;
 			}
 
-			static IBB::ref createIBBData(const std::string& streamID, int sequenceNumber, const ByteArray& data) {
+			static IBB::ref createIBBData(const std::string& streamID, int sequenceNumber, const std::vector<unsigned char>& data) {
 				IBB::ref result(new IBB(Data, streamID));
 				result->setSequenceNumber(sequenceNumber);
 				result->setData(data);
@@ -71,11 +71,11 @@ namespace Swift {
 				return streamID;
 			}
 
-			const ByteArray& getData() const {
+			const std::vector<unsigned char>& getData() const {
 				return data;
 			}
 
-			void setData(const ByteArray& data) {
+			void setData(const std::vector<unsigned char>& data) {
 				this->data = data;
 			}
 
@@ -98,7 +98,7 @@ namespace Swift {
 		private:
 			Action action;
 			std::string streamID;
-			ByteArray data;
+			std::vector<unsigned char> data;
 			StanzaType stanzaType;
 			int blockSize;
 			int sequenceNumber;

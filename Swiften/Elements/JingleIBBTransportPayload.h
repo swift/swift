@@ -6,12 +6,16 @@
 
 #pragma once
 
+#include <boost/shared_ptr.hpp>
 #include <string>
-#include <Swiften/Elements/JingleTransport.h>
+
+#include <Swiften/Elements/JingleTransportPayload.h>
 
 namespace Swift {
-	class JingleIBBTransport : public JingleTransport {
+	class JingleIBBTransportPayload : public JingleTransportPayload {
 		public:
+			typedef boost::shared_ptr<JingleIBBTransportPayload> ref;
+
 			enum StanzaType {
 				IQStanza,
 				MessageStanza,

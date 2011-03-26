@@ -9,7 +9,7 @@
 #include <boost/smart_ptr/make_shared.hpp>
 
 #include <Swiften/Jingle/JingleSessionManager.h>
-#include <Swiften/Jingle/IncomingJingleSession.h>
+#include <Swiften/Jingle/JingleSessionImpl.h>
 
 namespace Swift {
 
@@ -24,12 +24,12 @@ bool JingleResponder::handleSetRequest(const JID& from, const JID&, const std::s
 		}
 		else {
 			sendResponse(from, id, boost::shared_ptr<JinglePayload>());
-			IncomingJingleSession::ref session = boost::make_shared<IncomingJingleSession>(id, payload->getContents());
-			sessionManager->handleIncomingSession(from, session);
+			JingleSessionImpl::ref session = boost::make_shared<JingleSessionImpl>(payload->getInitiator(), payload->getSessionID());
+			sessionManager->handleIncomingSession(from, session, payload->getContents());
 		}
 	}
 	else {
-		JingleSession::ref session = sessionManager->getSession(from, payload->getSessionID());
+		JingleSessionImpl::ref session = sessionManager->getSession(from, payload->getSessionID());
 		if (session) {
 			session->handleIncomingAction(payload);
 			sendResponse(from, id, boost::shared_ptr<JinglePayload>());

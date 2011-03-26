@@ -12,7 +12,7 @@
 #include <string>
 #include <Swiften/JID/JID.h>
 #include <Swiften/Elements/Payload.h>
-#include <Swiften/Elements/JingleContent.h>
+#include <Swiften/Elements/JingleContentPayload.h>
 
 
 namespace Swift {
@@ -98,11 +98,11 @@ namespace Swift {
 				return sessionID;
 			}
 
-			void addContent(JingleContent::ref content) {
+			void addContent(JingleContentPayload::ref content) {
 				this->contents.push_back(content);
 			}
 
-			const std::vector<JingleContent::ref> getContents() const {
+			const std::vector<JingleContentPayload::ref> getContents() const {
 				return contents;
 			}
 
@@ -119,7 +119,7 @@ namespace Swift {
 			JID initiator;
 			JID responder;
 			std::string sessionID;
-			std::vector<JingleContent::ref> contents;
+			std::vector<JingleContentPayload::ref> contents;
 			boost::optional<Reason> reason;
 	};
 }

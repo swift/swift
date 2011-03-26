@@ -19,9 +19,9 @@ JingleSessionManager::~JingleSessionManager() {
 	delete responder;
 }
 
-JingleSession::ref JingleSessionManager::getSession(const JID& jid, const std::string& id) const {
+JingleSessionImpl::ref JingleSessionManager::getSession(const JID& jid, const std::string& id) const {
 	SessionMap::const_iterator i = incomingSessions.find(JIDSession(jid, id));
-	return i != incomingSessions.end() ? i->second : JingleSession::ref();
+	return i != incomingSessions.end() ? i->second : JingleSessionImpl::ref();
 }
 
 void JingleSessionManager::addIncomingSessionHandler(IncomingJingleSessionHandler* handler) {
@@ -32,10 +32,10 @@ void JingleSessionManager::removeIncomingSessionHandler(IncomingJingleSessionHan
 	incomingSessionHandlers.erase(std::remove(incomingSessionHandlers.begin(), incomingSessionHandlers.end(), handler), incomingSessionHandlers.end());
 }
 
-void JingleSessionManager::handleIncomingSession(const JID& from, IncomingJingleSession::ref session) {
+void JingleSessionManager::handleIncomingSession(const JID& from, JingleSessionImpl::ref session, const std::vector<JingleContentPayload::ref>& contents) {
 	incomingSessions.insert(std::make_pair(JIDSession(from, session->getID()), session));
 	foreach (IncomingJingleSessionHandler* handler, incomingSessionHandlers) {
-		if (handler->handleIncomingJingleSession(session)) {
+		if (handler->handleIncomingJingleSession(session, contents)) {
 			return;
 		}
 	}

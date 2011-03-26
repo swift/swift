@@ -12,6 +12,7 @@ objects = myenv.SwiftenObject([
 		"DIGESTMD5ClientAuthenticator.cpp",
 	])
 swiften_env.Append(SWIFTEN_OBJECTS = [objects])
+
 env.Append(UNITTEST_SOURCES = [
 			File("UnitTest/PLAINMessageTest.cpp"),
 			File("UnitTest/PLAINClientAuthenticatorTest.cpp"),

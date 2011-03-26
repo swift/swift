@@ -212,8 +212,6 @@ if env["SCONS_STAGE"] == "build" :
 			File("Elements/UnitTest/FormTest.cpp"),
 			File("EventLoop/UnitTest/EventLoopTest.cpp"),
 			File("EventLoop/UnitTest/SimpleEventLoopTest.cpp"),
-			File("FileTransfer/UnitTest/SOCKS5BytestreamServerSessionTest.cpp"),
-			File("FileTransfer/UnitTest/IBBSendSessionTest.cpp"),
 #			File("History/UnitTest/SQLiteHistoryManagerTest.cpp"),
 			File("JID/UnitTest/JIDTest.cpp"),
 			File("LinkLocal/UnitTest/LinkLocalConnectorTest.cpp"),

@@ -10,8 +10,10 @@
 
 #include <Swiften/Elements/JingleDescription.h>
 #include <Swiften/Elements/JingleFileTransferDescription.h>
-#include <Swiften/Elements/JingleIBBTransport.h>
+#include <Swiften/Elements/JingleIBBTransportPayload.h>
+#include <Swiften/Elements/JingleS5BTransportPayload.h>
 #include <Swiften/Jingle/JingleSessionManager.h>
+#include <Swiften/Jingle/Jingle.h>
 #include <Swiften/FileTransfer/IncomingJingleFileTransfer.h>
 
 namespace Swift {
@@ -24,12 +26,12 @@ IncomingFileTransferManager::~IncomingFileTransferManager() {
 	jingleSessionManager->removeIncomingSessionHandler(this);
 }
 
-bool IncomingFileTransferManager::handleIncomingJingleSession(IncomingJingleSession::ref session) {
-	JingleContent::ref content = session->getContentWithDescription<JingleFileTransferDescription>();
-	if (content) {
-		// Check for supported transports
-		if (content->getTransport<JingleIBBTransport>()) {
-			IncomingJingleFileTransfer::ref transfer = boost::make_shared<IncomingJingleFileTransfer>(session);
+bool IncomingFileTransferManager::handleIncomingJingleSession(JingleSession::ref session, const std::vector<JingleContentPayload::ref>& contents) {
+	if (JingleContentPayload::ref content = Jingle::getContentWithDescription<JingleFileTransferDescription>(contents)) {
+		if (content->getTransport<JingleIBBTransportPayload>() || content->getTransport<JingleS5BTransportPayload>()) {
+			RemoteJingleTransportCandidateSelectorFactory* a;
+			LocalJingleTransportCandidateGeneratorFactory* b;
+			IncomingJingleFileTransfer::ref transfer = boost::make_shared<IncomingJingleFileTransfer>(session, content, a, b, router);
 			onIncomingFileTransfer(transfer);
 		}
 		else {

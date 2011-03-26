@@ -6,11 +6,13 @@
 
 #pragma once
 
-#include <Swiften/Elements/JingleTransport.h>
+#include <Swiften/Elements/JingleTransportPayload.h>
 #include <Swiften/Elements/Bytestreams.h>
 
+// FIXME: Remove Bytestreams, and replace by our own candidate
+
 namespace Swift {
-	class JingleS5BTransport : public JingleTransport {
+	class JingleS5BTransportPayload : public JingleTransportPayload {
 		public:
 			const Bytestreams& getInfo() const {
 				return info;

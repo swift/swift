@@ -7,27 +7,30 @@
 #pragma once
 
 #include <boost/shared_ptr.hpp>
-#include <boost/optional.hpp>
+#include <boost/optional/optional_fwd.hpp>
 
 #include "Swiften/Base/boost_bsignals.h"
 #include "Swiften/FileTransfer/WriteBytestream.h"
 #include "Swiften/JID/JID.h"
 #include "Swiften/Elements/IBB.h"
-#include "Swiften/Elements/ErrorPayload.h"
 #include "Swiften/FileTransfer/FileTransferError.h"
-#include "Swiften/Queries/SetResponder.h"
 
 namespace Swift {
 	class IQRouter;
 
-	class IBBReceiveSession : public SetResponder<IBB> {
+	class IBBReceiveSession {
 		public:
-			IBBReceiveSession(const std::string& id, const JID& from, size_t size, WriteBytestream::ref bytestream, IQRouter* router);
+			IBBReceiveSession(
+					const std::string& id, 
+					const JID& from, 
+					size_t size, 
+					IQRouter* router);
 			~IBBReceiveSession();
 
 			void start();
 			void stop();
 
+			boost::signal<void (const std::vector<unsigned char>&)> onDataReceived;
 			boost::signal<void (boost::optional<FileTransferError>)> onFinished;
 
 		private:
@@ -35,13 +38,14 @@ namespace Swift {
 			void finish(boost::optional<FileTransferError>);
 
 		private:
+			class IBBResponder;
+			friend class IBBResponder;
+
 			std::string id;
 			JID from;
 			size_t size;
-			WriteBytestream::ref bytestream;
 			IQRouter* router;
-			int sequenceNumber;
+			IBBResponder* responder;
 			bool active;
-			size_t receivedSize;
 	};
 }

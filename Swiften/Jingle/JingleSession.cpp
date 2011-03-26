@@ -10,21 +10,11 @@
 
 namespace Swift {
 
-JingleSession::JingleSession(const std::string& id, const std::vector<JingleContent::ref>& contents) : id(id), contents(contents) {
+JingleSession::JingleSession(const JID& initiator, const std::string& id) : initiator(initiator), id(id) {
 
 }
 
 JingleSession::~JingleSession() {
 }
-
-void JingleSession::handleIncomingAction(JinglePayload::ref) {
-}
-
-void JingleSession::terminate(JinglePayload::Reason::Type reason) {
-	JinglePayload::ref payload = boost::make_shared<JinglePayload>(JinglePayload::SessionTerminate, id);
-	payload->setReason(JinglePayload::Reason(reason));
-	//onAction(payload)
-}
-
 
 }

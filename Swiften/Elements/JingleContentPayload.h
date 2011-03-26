@@ -13,12 +13,12 @@
 #include <Swiften/JID/JID.h>
 #include <Swiften/Elements/Payload.h>
 #include <Swiften/Elements/JingleDescription.h>
-#include <Swiften/Elements/JingleTransport.h>
+#include <Swiften/Elements/JingleTransportPayload.h>
 
 namespace Swift {
-	class JingleContent : public Payload {
+	class JingleContentPayload : public Payload {
 		public:
-			typedef boost::shared_ptr<JingleContent> ref;
+			typedef boost::shared_ptr<JingleContentPayload> ref;
 
 			enum Creator {
 				InitiatorCreator,
@@ -32,8 +32,16 @@ namespace Swift {
 				BothSenders,
 			};*/
 
+			Creator getCreator() const {
+				return creator;
+			}
+
 			void setCreator(Creator creator) {
 				this->creator = creator;
+			}
+
+			const std::string& getName() const {
+				return name;
 			}
 
 			void setName(const std::string& name) {
@@ -83,10 +91,6 @@ namespace Swift {
 			std::string name;
 			//Senders senders;
 			std::vector<JingleDescription::ref> descriptions;
-<<<<<<< HEAD:Swiften/Elements/JingleContent.h
-			std::vector<JingleTransport::ref> transports;
-=======
 			std::vector<boost::shared_ptr<JingleTransportPayload> > transports;
->>>>>>> 7c05f3f... Cleaned up headers.:Swiften/Elements/JingleContentPayload.h
 	};
 }

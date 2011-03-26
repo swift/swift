@@ -7,6 +7,7 @@
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/extensions/TestFactoryRegistry.h>
 
+#include <Swiften/Base/ByteArray.h>
 #include "Swiften/FileTransfer/FileReadBytestream.h"
 #include "SwifTools/Application/PlatformApplicationPathProvider.h"
 
@@ -32,16 +33,16 @@ class FileReadBytestreamTest : public CppUnit::TestFixture {
 		void testRead() {
 			std::auto_ptr<FileReadBytestream> testling(createTestling());
 
-			ByteArray result = testling->read(10);
+			std::vector<unsigned char> result = testling->read(10);
 
-			CPPUNIT_ASSERT_EQUAL(std::string("/*\n * Copy"), result.toString());
+			CPPUNIT_ASSERT(ByteArray::create("/*\n * Copy") == result);
 		}
 
 		void testRead_Twice() {
 			std::auto_ptr<FileReadBytestream> testling(createTestling());
 
 			testling->read(10);
-			ByteArray result = testling->read(10);
+			ByteArray result(testling->read(10));
 
 			CPPUNIT_ASSERT_EQUAL(std::string("right (c) "), result.toString());
 		}

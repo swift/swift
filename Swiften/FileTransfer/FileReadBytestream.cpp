@@ -21,14 +21,14 @@ FileReadBytestream::~FileReadBytestream() {
 	}
 }
 
-ByteArray FileReadBytestream::read(size_t size)  {
+std::vector<unsigned char> FileReadBytestream::read(size_t size)  {
 	if (!stream) {
 		stream = new boost::filesystem::ifstream(file, std::ios_base::in|std::ios_base::binary);
 	}
-	ByteArray result;
+	std::vector<unsigned char> result;
 	result.resize(size);
 	assert(stream->good());
-	stream->read(reinterpret_cast<char*>(result.getData()), size);
+	stream->read(reinterpret_cast<char*>(&result[0]), size);
 	result.resize(stream->gcount());
 	return result;
 }

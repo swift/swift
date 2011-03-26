@@ -56,6 +56,22 @@ namespace Swift {
 				return iqStanza && iqStanza->getType() == type && iqStanza->getTo() == jid && iqStanza->getPayload<T>();
 			}
 
+			bool isResultAtIndex(size_t index, const std::string& id) {
+				if (index >= sentStanzas.size()) {
+					return false;
+				}
+				boost::shared_ptr<IQ> iqStanza = boost::dynamic_pointer_cast<IQ>(sentStanzas[index]);
+				return iqStanza && iqStanza->getType() == IQ::Result && iqStanza->getID() == id;
+			}
+
+			bool isErrorAtIndex(size_t index, const std::string& id) {
+				if (index >= sentStanzas.size()) {
+					return false;
+				}
+				boost::shared_ptr<IQ> iqStanza = boost::dynamic_pointer_cast<IQ>(sentStanzas[index]);
+				return iqStanza && iqStanza->getType() == IQ::Error && iqStanza->getID() == id;
+			}
+
 			template<typename T> boost::shared_ptr<T> getStanzaAtIndex(size_t index) {
 				if (sentStanzas.size() <= index) {
 					return boost::shared_ptr<T>();
