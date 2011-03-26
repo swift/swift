@@ -24,7 +24,7 @@ $LCOVDIR/lcov --zerocounters --directory $SOURCE_DIR
 
 # Run SCons
 $LCOVDIR/lcov --capture --directory $SOURCE_DIR -b $SOURCE_DIR --output-file $OUTPUT_DIR/all.info --test-name all
-cp $OUTPUT_DIR/all.info $OUTPUT_DIR/all.info.orig
+#cp $OUTPUT_DIR/all.info $OUTPUT_DIR/all.info.orig
 $SCRIPT_DIR/FilterLCovData.py $OUTPUT_DIR/all.info
 
 # Generate HTML
