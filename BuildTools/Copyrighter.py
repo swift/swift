@@ -111,7 +111,7 @@ def check_copyright(filename) :
   (prolog, copyright, epilog) = parse_file(filename)
   if copyright == None :
     print "No copyright found in: " + filename
-    print "Please run '" + sys.argv[0] + " set-copyright " + filename + "'"
+    #print "Please run '" + sys.argv[0] + " set-copyright " + filename + "'"
     return False
   else :
     return True
