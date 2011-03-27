@@ -972,17 +972,17 @@
 <context>
     <name>Swift::QtChatWindow</name>
     <message>
-        <location filename="../QtUI/QtChatWindow.cpp" line="318"/>
+        <location filename="../QtUI/QtChatWindow.cpp" line="302"/>
         <source>This message has not been received by your server yet.</source>
         <translation>Die Nachricht wurde noch nicht von deinem Server empfangen.</translation>
     </message>
     <message>
-        <location filename="../QtUI/QtChatWindow.cpp" line="320"/>
+        <location filename="../QtUI/QtChatWindow.cpp" line="304"/>
         <source>This message may not have been transmitted.</source>
         <translation>Die Nachricht scheint nicht versandt worden zu sein.</translation>
     </message>
     <message>
-        <location filename="../QtUI/QtChatWindow.cpp" line="340"/>
+        <location filename="../QtUI/QtChatWindow.cpp" line="324"/>
         <source>Couldn&apos;t send message: %1</source>
         <translation>Konnte die Nachricht nicht senden: %1</translation>
     </message>
@@ -1485,7 +1485,7 @@ Wenn du dich jetzt noch nicht festlegen willst, wirst du beim nächsten Einlogge
     <message>
         <location filename="../QtUI/QtAboutWidget.cpp" line="52"/>
         <source>TRANSLATION_LICENSE</source>
-        <comment>Should be the following (untranslated) text: &apos;This translation is licensed under the BSD License. See http://www.opensource.org/licenses/bsd-license.php&apos;</comment>
+        <comment>This string contains the license under which this translation is licensed. We ask you to license the translation under the BSD license. Please read http://www.opensource.org/licenses/bsd-license.php, and if you agree to release your translation under this license, use the following (untranslated) text: &apos;This translation is licensed under the BSD License. See http://www.opensource.org/licenses/bsd-license.php&apos;</comment>
         <translation>This translation is licensed under the BSD License. See http://www.opensource.org/licenses/bsd-license.php</translation>
     </message>
 </context>

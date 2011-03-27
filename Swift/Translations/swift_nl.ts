@@ -1180,7 +1180,7 @@ Als u deze keuze uitstelt, zal deze vraag opnieuw gesteld worden wanneer u zich 
     </message>
     <message>
         <source>TRANSLATION_LICENSE</source>
-        <comment>Should be the following (untranslated) text: &apos;This translation is licensed under the BSD License. See http://www.opensource.org/licenses/bsd-license.php&apos;</comment>
+        <comment>This string contains the license under which this translation is licensed. We ask you to license the translation under the BSD license. Please read http://www.opensource.org/licenses/bsd-license.php, and if you agree to release your translation under this license, use the following (untranslated) text: &apos;This translation is licensed under the BSD License. See http://www.opensource.org/licenses/bsd-license.php&apos;</comment>
         <translation>This translation is licensed under the GNU General Public License v3. See Documentation/Licenses/GPLv3.txt for more information</translation>
     </message>
 </context>

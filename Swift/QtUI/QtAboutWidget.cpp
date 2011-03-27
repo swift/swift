@@ -49,7 +49,7 @@ QtAboutWidget::QtAboutWidget() : QDialog() {
 	if (QCoreApplication::translate("TRANSLATION_INFO", "TRANSLATION_AUTHOR") != "TRANSLATION_AUTHOR") {
 		mainLayout->addWidget(new QLabel(QString("<center><font size='-1'>") + QString(tr("Using the English translation by\n%1")).arg(QCoreApplication::translate("TRANSLATION_INFO", "TRANSLATION_AUTHOR")).replace("\n", "<br/>") + "</font></center>", this));
 	}
-	QCoreApplication::translate("TRANSLATION_INFO", "TRANSLATION_LICENSE", "Should be the following (untranslated) text: 'This translation is licensed under the BSD License. See http://www.opensource.org/licenses/bsd-license.php'");
+	QCoreApplication::translate("TRANSLATION_INFO", "TRANSLATION_LICENSE", "This string contains the license under which this translation is licensed. We ask you to license the translation under the BSD license. Please read http://www.opensource.org/licenses/bsd-license.php, and if you agree to release your translation under this license, use the following (untranslated) text: 'This translation is licensed under the BSD License. See http://www.opensource.org/licenses/bsd-license.php'");
 
 	QPushButton* licenseButton = new QPushButton(tr("View License"), this);
 	mainLayout->addWidget(licenseButton);
