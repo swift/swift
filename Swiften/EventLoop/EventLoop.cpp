@@ -12,7 +12,17 @@
 
 #include <Swiften/Base/Log.h>
 
+
 namespace Swift {
+
+inline void invokeCallback(const Event& event) {
+	try {
+		event.callback();
+	}
+	catch (const std::exception& e) {
+		std::cerr << "Uncaught exception in event loop: " << e.what() << std::endl;
+	}
+}
 
 EventLoop::EventLoop() : nextEventID_(0), handlingEvents_(false) {
 }
@@ -41,24 +51,14 @@ void EventLoop::handleEvent(const Event& event) {
 	}
 	if (doCallback) {
 		handlingEvents_ = true;
-		try {
-			event.callback();
-		}
-		catch (const boost::bad_function_call&) {
-			SWIFT_LOG(error) << "Invalid function call" << std::endl;
-		}
+		invokeCallback(event);
 
 		// Process events that were passed to handleEvent during the callback
 		// (i.e. through recursive calls of handleEvent)
 		while (!eventsToHandle_.empty()) {
 			Event nextEvent = eventsToHandle_.front();
 			eventsToHandle_.pop_front();
-			try {
-				nextEvent.callback();
-			}
-			catch (const boost::bad_function_call&) {
-				SWIFT_LOG(error) << "Invalid function call" << std::endl;
-			}
+			invokeCallback(nextEvent);
 		}
 		handlingEvents_ = false;
 	}
