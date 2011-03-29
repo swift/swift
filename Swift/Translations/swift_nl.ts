@@ -414,6 +414,37 @@
     </message>
 </context>
 <context>
+    <name>MAC_APPLICATION_MENU</name>
+    <message>
+        <source>Services</source>
+        <translation>Voorzieningen</translation>
+    </message>
+    <message>
+        <source>Hide %1</source>
+        <translation>Verberg %1</translation>
+    </message>
+    <message>
+        <source>Hide Others</source>
+        <translation>Verberg andere</translation>
+    </message>
+    <message>
+        <source>Show All</source>
+        <translation>Toon alles</translation>
+    </message>
+    <message>
+        <source>Preferences...</source>
+        <translation>Voorkeuren...</translation>
+    </message>
+    <message>
+        <source>Quit %1</source>
+        <translation>Stop %1</translation>
+    </message>
+    <message>
+        <source>About %1</source>
+        <translation>Over %1</translation>
+    </message>
+</context>
+<context>
     <name>QApplication</name>
     <message>
         <source>QT_LAYOUT_DIRECTION</source>
