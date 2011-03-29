@@ -414,6 +414,13 @@
     </message>
 </context>
 <context>
+    <name>CloseButton</name>
+    <message>
+        <source>Close Tab</source>
+        <translation>Sluit tab</translation>
+    </message>
+</context>
+<context>
     <name>MAC_APPLICATION_MENU</name>
     <message>
         <source>Services</source>
@@ -480,6 +487,37 @@
     </message>
 </context>
 <context>
+    <name>QLineEdit</name>
+    <message>
+        <source>Select All</source>
+        <translation>Selecteer alle</translation>
+    </message>
+    <message>
+        <source>Delete</source>
+        <translation>Verwijder</translation>
+    </message>
+    <message>
+        <source>&amp;Undo</source>
+        <translation>&amp;Herstel</translation>
+    </message>
+    <message>
+        <source>&amp;Redo</source>
+        <translation>&amp;Opniew</translation>
+    </message>
+    <message>
+        <source>Cu&amp;t</source>
+        <translation>&amp;Knip</translation>
+    </message>
+    <message>
+        <source>&amp;Copy</source>
+        <translation>&amp;Kopieer</translation>
+    </message>
+    <message>
+        <source>&amp;Paste</source>
+        <translation>&amp;Plak</translation>
+    </message>
+</context>
+<context>
     <name>QObject</name>
     <message>
         <source>No rooms found</source>
@@ -495,6 +533,68 @@
     </message>
 </context>
 <context>
+    <name>QScrollBar</name>
+    <message>
+        <source>Scroll here</source>
+        <translation>Ga naar hier</translation>
+    </message>
+    <message>
+        <source>Top</source>
+        <translation>Bovenste</translation>
+    </message>
+    <message>
+        <source>Bottom</source>
+        <translation>Onderste</translation>
+    </message>
+    <message>
+        <source>Page up</source>
+        <translation>Pagina omhoog</translation>
+    </message>
+    <message>
+        <source>Page down</source>
+        <translation>Pagina omlaag</translation>
+    </message>
+    <message>
+        <source>Scroll up</source>
+        <translation>Rol omhoog</translation>
+    </message>
+    <message>
+        <source>Scroll down</source>
+        <translation>Rol omlaag</translation>
+    </message>
+</context>
+<context>
+    <name>QTextControl</name>
+    <message>
+        <source>Select All</source>
+        <translation>Selecteer alle</translation>
+    </message>
+    <message>
+        <source>&amp;Copy</source>
+        <translation>&amp;Kopieer</translation>
+    </message>
+    <message>
+        <source>&amp;Undo</source>
+        <translation>&amp;Herstel</translation>
+    </message>
+    <message>
+        <source>&amp;Redo</source>
+        <translation>&amp;Opniew</translation>
+    </message>
+    <message>
+        <source>Cu&amp;t</source>
+        <translation>&amp;Knip</translation>
+    </message>
+    <message>
+        <source>&amp;Paste</source>
+        <translation>&amp;Plak</translation>
+    </message>
+    <message>
+        <source>Delete</source>
+        <translation>Verwijder</translation>
+    </message>
+</context>
+<context>
     <name>QWebPage</name>
     <message>
         <source>Copy Link</source>
@@ -502,7 +602,39 @@
     </message>
     <message>
         <source>Copy</source>
-        <translation>Kopiëren</translation>
+        <translation>Kopieer</translation>
+    </message>
+    <message>
+        <source>Copy Image</source>
+        <translation>Kopieer afbeelding</translation>
+    </message>
+    <message>
+        <source>Scroll here</source>
+        <translation>Ga naar hier</translation>
+    </message>
+    <message>
+        <source>Top</source>
+        <translation>Bovenste</translation>
+    </message>
+    <message>
+        <source>Bottom</source>
+        <translation>Onderste</translation>
+    </message>
+    <message>
+        <source>Page up</source>
+        <translation>Pagina omhoog</translation>
+    </message>
+    <message>
+        <source>Page down</source>
+        <translation>Pagina omlaag</translation>
+    </message>
+    <message>
+        <source>Scroll up</source>
+        <translation>Rol omhoog</translation>
+    </message>
+    <message>
+        <source>Scroll down</source>
+        <translation>Rol omlaag</translation>
     </message>
 </context>
 <context>

@@ -14,10 +14,44 @@
 
 #pragma once
 
+QT_TRANSLATE_NOOP("CloseButton", "Close Tab");
+
 QT_TRANSLATE_NOOP3("QApplication", "QT_LAYOUT_DIRECTION", "Translate this to LTR for left-to-right or RTL for right-to-left languages");
+
+QT_TRANSLATE_NOOP("QLineEdit", "Select All");
+QT_TRANSLATE_NOOP("QLineEdit", "&Undo");
+QT_TRANSLATE_NOOP("QLineEdit", "&Redo");
+QT_TRANSLATE_NOOP("QLineEdit", "Cu&t");
+QT_TRANSLATE_NOOP("QLineEdit", "&Copy");
+QT_TRANSLATE_NOOP("QLineEdit", "&Paste");
+QT_TRANSLATE_NOOP("QLineEdit", "Delete");
+
+QT_TRANSLATE_NOOP("QScrollBar", "Scroll here");
+QT_TRANSLATE_NOOP("QScrollBar", "Top");
+QT_TRANSLATE_NOOP("QScrollBar", "Bottom");
+QT_TRANSLATE_NOOP("QScrollBar", "Page up");
+QT_TRANSLATE_NOOP("QScrollBar", "Page down");
+QT_TRANSLATE_NOOP("QScrollBar", "Scroll up");
+QT_TRANSLATE_NOOP("QScrollBar", "Scroll down");
+
+QT_TRANSLATE_NOOP("QTextControl", "Select All");
+QT_TRANSLATE_NOOP("QTextControl", "&Copy");
+QT_TRANSLATE_NOOP("QTextControl", "&Undo");
+QT_TRANSLATE_NOOP("QTextControl", "&Redo");
+QT_TRANSLATE_NOOP("QTextControl", "Cu&t");
+QT_TRANSLATE_NOOP("QTextControl", "&Paste");
+QT_TRANSLATE_NOOP("QTextControl", "Delete");
 
 QT_TRANSLATE_NOOP("QWebPage", "Copy Link");
 QT_TRANSLATE_NOOP("QWebPage", "Copy");
+QT_TRANSLATE_NOOP("QWebPage", "Copy Image");
+QT_TRANSLATE_NOOP("QWebPage", "Scroll here");
+QT_TRANSLATE_NOOP("QWebPage", "Top");
+QT_TRANSLATE_NOOP("QWebPage", "Bottom");
+QT_TRANSLATE_NOOP("QWebPage", "Page up");
+QT_TRANSLATE_NOOP("QWebPage", "Page down");
+QT_TRANSLATE_NOOP("QWebPage", "Scroll up");
+QT_TRANSLATE_NOOP("QWebPage", "Scroll down");
 
 QT_TRANSLATE_NOOP("QWizard", "< &Back");
 QT_TRANSLATE_NOOP("QWizard", "&Finish");
