@@ -14,3 +14,6 @@ Categories=Network;InstantMessaging;Qt;
 
 GenericName[nl]=Jabber/XMPP Boodschapper
 Comment[nl]=Communiceer over het Jabber/XMPP netwerk
+
+GenericName[ru]=Jabber-клиент
+Comment[ru]=Общение в сети Jabber
