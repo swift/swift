@@ -73,6 +73,9 @@ QT_TRANSLATE_NOOP("QDialogButtonBox", "OK");
 QT_TRANSLATE_NOOP("QDialogButtonBox", "&Cancel");
 QT_TRANSLATE_NOOP("QDialogButtonBox", "Cancel");
 
+QT_TRANSLATE_NOOP("QMessageBox", "Show Details...");
+QT_TRANSLATE_NOOP("QMessageBox", "Hide Details...");
+
 QT_TRANSLATE_NOOP("MAC_APPLICATION_MENU", "Services");
 QT_TRANSLATE_NOOP("MAC_APPLICATION_MENU", "Hide %1");
 QT_TRANSLATE_NOOP("MAC_APPLICATION_MENU", "Hide Others");

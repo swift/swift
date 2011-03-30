@@ -522,6 +522,17 @@
     </message>
 </context>
 <context>
+    <name>QMessageBox</name>
+    <message>
+        <source>Show Details...</source>
+        <translation>Toon details...</translation>
+    </message>
+    <message>
+        <source>Hide Details...</source>
+        <translation>Verbeg details...</translation>
+    </message>
+</context>
+<context>
     <name>QObject</name>
     <message>
         <source>No rooms found</source>
