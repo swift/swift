@@ -12,6 +12,7 @@
 #include <Swift/Controllers/UIEvents/UIEventStream.h>
 #include <Swift/Controllers/UIInterfaces/ProfileWindowFactory.h>
 #include <Swiften/VCards/VCardManager.h>
+#include <Swift/Controllers/Intl.h>
 
 
 namespace Swift {
@@ -58,7 +59,7 @@ void ProfileController::handleSetVCardResponse(ErrorPayload::ref error) {
 	pendingSetVCardRequest.reset();
 	updateDialogStatus();
 	if (error) {
-		profileWindow->setError("There was an error publishing your profile data");
+		profileWindow->setError(QT_TRANSLATE_NOOP("", "There was an error publishing your profile data"));
 	}
 	else {
 		profileWindow->setError("");

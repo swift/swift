@@ -522,6 +522,11 @@
         <source>Offline</source>
         <translation>Отключён</translation>
     </message>
+    <message>
+        <location filename="../Controllers/ProfileController.cpp" line="62"/>
+        <source>There was an error publishing your profile data</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>CloseButton</name>

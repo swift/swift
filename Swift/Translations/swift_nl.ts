@@ -412,6 +412,10 @@
         <source>%1% wants to add you to his/her contact list</source>
         <translation>%1% wil u aan zijn/haar contactenlijst toevoegen</translation>
     </message>
+    <message>
+        <source>There was an error publishing your profile data</source>
+        <translation>Er is een fout opgetreden bij het publiceren van uw profiel</translation>
+    </message>
 </context>
 <context>
     <name>CloseButton</name>
