@@ -31,7 +31,7 @@ namespace {
 		assert(CFDataGetLength(growlContextData) == sizeof(Context));
 		CFDataGetBytes(growlContextData, CFRangeMake(0, CFDataGetLength(growlContextData)), (UInt8*) &context);
 		
-		if (activateCallback) {
+		if (activateCallback && !context.callback->empty()) {
 			(*context.callback)();
 		}
 		delete context.callback;

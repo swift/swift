@@ -58,7 +58,7 @@ void SnarlNotifier::handleMessageReceived(MSG* message) {
 			int notificationID = message->lParam;
 			NotificationsMap::iterator i = notifications.find(notificationID);
 			if (i != notifications.end()) {
-				if (action == Snarl::V41::SnarlEnums::NotificationAck) {
+				if (action == Snarl::V41::SnarlEnums::NotificationAck && !i->second.empty()) {
 					i->second();
 				}
 				notifications.erase(i);
