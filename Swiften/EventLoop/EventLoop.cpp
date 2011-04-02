@@ -9,6 +9,7 @@
 #include <algorithm>
 #include <boost/bind.hpp>
 #include <iostream>
+#include <cassert>
 
 #include <Swiften/Base/Log.h>
 
@@ -17,6 +18,7 @@ namespace Swift {
 
 inline void invokeCallback(const Event& event) {
 	try {
+		assert(!event.callback.empty());
 		event.callback();
 	}
 	catch (const std::exception& e) {
