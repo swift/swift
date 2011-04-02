@@ -161,7 +161,7 @@ MainController::MainController(
 }
 
 MainController::~MainController() {
-	setManagersOffline();
+	//setManagersOffline();
 	eventController_->disconnectAll();
 
 	resetClient();
