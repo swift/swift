@@ -1,7 +1,7 @@
 import SCons.Util, os.path
 
 def generate(env) :
-  def createAppBundle(env, bundle, version = "1.0", resources = [], frameworks = [], info = {}) :
+  def createAppBundle(env, bundle, version = "1.0", resources = [], frameworks = [], info = {}, handlesXMPPURIs = False) :
     bundleDir = bundle + ".app"
     bundleContentsDir = bundleDir + "/Contents"
     resourcesDir = bundleContentsDir + "/Resources"
@@ -32,6 +32,18 @@ def generate(env) :
     for key, value in infoDict.items() :
       plist += "<key>" + key + "</key>\n"
       plist += "<string>" + value.encode("utf-8") + "</string>\n"
+    if handlesXMPPURIs :
+      plist += """<key>CFBundleURLTypes</key>
+<array>
+    <dict>
+        <key>CFBundleURLName</key>
+        <string>XMPP URL</string>
+        <key>CFBundleURLSchemes</key>
+        <array>
+            <string>xmpp</string>
+        </array>
+    </dict>
+</array>\n"""
     plist += """</dict>
   </plist>
   """

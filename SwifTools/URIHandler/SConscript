@@ -1,0 +1,23 @@
+Import("swiftools_env", "env")
+
+sources = [
+		"XMPPURI.cpp",
+		"URIHandler.cpp",
+	]
+
+if swiftools_env["PLATFORM"] == "darwin" and swiftools_env["target"] == "native" :
+	sources += [
+			"MacOSXURIHandler.mm",
+			"MacOSXURIHandlerHelpers.mm",
+		]
+elif swiftools_env["PLATFORM"] == "win32" :
+	sources += []
+else :
+	sources += []
+
+objects = swiftools_env.StaticObject(sources)
+swiftools_env.Append(SWIFTOOLS_OBJECTS = [objects])
+
+env.Append(UNITTEST_SOURCES = [
+		File("UnitTest/XMPPURITest.cpp"),
+	])

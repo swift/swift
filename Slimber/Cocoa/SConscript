@@ -16,7 +16,6 @@ myenv.Program("Slimber", [
 		"main.mm",
 		"CocoaController.mm",
 		"CocoaMenulet.mm",
-		"CocoaAction.mm"
 	])
 
 myenv.Nib("MainMenu")

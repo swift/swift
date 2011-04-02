@@ -32,20 +32,28 @@
 #include "Swift/Controllers/BuildVersion.h"
 #include "SwifTools/AutoUpdater/AutoUpdater.h"
 #include "SwifTools/AutoUpdater/PlatformAutoUpdaterFactory.h"
+
 #if defined(SWIFTEN_PLATFORM_WINDOWS)
 #include "WindowsNotifier.h"
-#endif
-#if defined(HAVE_GROWL)
+#elif defined(HAVE_GROWL)
 #include "SwifTools/Notifier/GrowlNotifier.h"
 #elif defined(SWIFTEN_PLATFORM_LINUX)
 #include "FreeDesktopNotifier.h"
 #else
 #include "SwifTools/Notifier/NullNotifier.h"
 #endif
+
 #if defined(SWIFTEN_PLATFORM_MACOSX)
 #include "SwifTools/Dock/MacOSXDock.h"
-#endif
+#else
 #include "SwifTools/Dock/NullDock.h"
+#endif
+
+#if defined(SWIFTEN_PLATFORM_MACOSX)
+#include "QtURIHandler.h"
+#else
+#include <SwifTools/URIHandler/NullURIHandler.h>
+#endif
 
 namespace Swift{
 
@@ -123,6 +131,12 @@ QtSwift::QtSwift(const po::variables_map& options) : networkFactories_(&clientMa
 	dock_ = new NullDock();
 #endif
 
+#if defined(SWIFTEN_PLATFORM_MACOSX)
+	uriHandler_ = new QtURIHandler();
+#else
+	uriHandler_ = new NullURIHandler();
+#endif
+
 	if (splitter_) {
 		splitter_->show();
 	}
@@ -145,6 +159,7 @@ QtSwift::QtSwift(const po::variables_map& options) : networkFactories_(&clientMa
 				certificateStorageFactory_,
 				dock_,
 				notifier_,
+				uriHandler_,
 				options.count("latency-debug") > 0);
 		mainControllers_.push_back(mainController);
 	}
@@ -172,6 +187,7 @@ QtSwift::~QtSwift() {
 	}
 	delete tabs_;
 	delete splitter_;
+	delete uriHandler_;
 	delete dock_;
 	delete soundPlayer_;
 	delete chatWindowFactory_;

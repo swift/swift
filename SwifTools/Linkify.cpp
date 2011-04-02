@@ -12,7 +12,7 @@
 
 namespace Swift {
 
-static boost::regex linkifyRegexp("^https?://.*");
+static boost::regex linkifyRegexp("^(https?://|xmpp:).*");
 
 std::string Linkify::linkify(const std::string& input) {
 	std::ostringstream result;

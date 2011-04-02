@@ -50,8 +50,10 @@ if env["SCONS_STAGE"] == "build" :
 			"Application",
 			"Dock",
 			"Notifier",
+			"URIHandler",
 			"Idle/IdleQuerierTest",
 			"Idle/UnitTest",
+			"Cocoa",
 			"UnitTest"
 		])
 

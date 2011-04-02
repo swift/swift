@@ -77,6 +77,7 @@ sources = [
     "QtStatusWidget.cpp",
 		"QtScaledAvatarCache.cpp",
     "QtSwift.cpp",
+    "QtURIHandler.cpp",
     "QtChatView.cpp",
     "QtChatTheme.cpp",
     "QtChatTabs.cpp",
@@ -215,7 +216,7 @@ if env["PLATFORM"] == "darwin" :
   if env["HAVE_GROWL"] :
     frameworks.append(env["GROWL_FRAMEWORK"])
   commonResources[""] = commonResources.get("", []) + ["../resources/MacOSX/Swift.icns"]
-  app = myenv.AppBundle("Swift", version = myenv["SWIFT_VERSION"], resources = commonResources, frameworks = frameworks)
+  app = myenv.AppBundle("Swift", version = myenv["SWIFT_VERSION"], resources = commonResources, frameworks = frameworks, handlesXMPPURIs = True)
   if env["DIST"] :
     myenv.Command(["Swift-${SWIFT_VERSION}.dmg"], [app], ["Swift/Packaging/MacOSX/package.sh " + app.path + " Swift/Packaging/MacOSX/Swift.dmg.gz $TARGET $QTDIR"])
     

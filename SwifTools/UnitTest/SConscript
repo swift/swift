@@ -2,5 +2,5 @@ Import("env")
 
 env.Append(UNITTEST_SOURCES = [
 		File("LinkifyTest.cpp"),
-		File("TabCompleteTest.cpp")
+		File("TabCompleteTest.cpp"),
 	])

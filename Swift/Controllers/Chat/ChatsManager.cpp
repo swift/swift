@@ -158,13 +158,13 @@ void ChatsManager::handleUIEvent(boost::shared_ptr<UIEvent> event) {
 	else if (JoinMUCUIEvent::ref joinEvent = boost::dynamic_pointer_cast<JoinMUCUIEvent>(event)) {
 		handleJoinMUCRequest(joinEvent->getJID(), joinEvent->getNick(), false);
 	}
-	else if (boost::dynamic_pointer_cast<RequestJoinMUCUIEvent>(event)) {
+	else if (boost::shared_ptr<RequestJoinMUCUIEvent> joinEvent = boost::dynamic_pointer_cast<RequestJoinMUCUIEvent>(event)) {
 		if (!joinMUCWindow_) {
 			joinMUCWindow_ = joinMUCWindowFactory_->createJoinMUCWindow();
 			joinMUCWindow_->onJoinMUC.connect(boost::bind(&ChatsManager::handleJoinMUCRequest, this, _1, _2, _3));
 			joinMUCWindow_->onSearchMUC.connect(boost::bind(&ChatsManager::handleSearchMUCRequest, this));
 		}
-		joinMUCWindow_->setMUC("");
+		joinMUCWindow_->setMUC(joinEvent->getRoom());
 		joinMUCWindow_->setNick(nickResolver_->jidToNick(jid_));
 		joinMUCWindow_->show();
 	}

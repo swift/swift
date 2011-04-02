@@ -62,6 +62,8 @@ namespace Swift {
 	class Storages;
 	class StoragesFactory;
 	class NetworkFactories;
+	class URIHandler;
+	class XMPPURIController;
 
 	class MainController {
 		public:
@@ -76,6 +78,7 @@ namespace Swift {
 					CertificateStorageFactory* certificateStorageFactory,
 					Dock* dock,
 					Notifier* notifier,
+					URIHandler* uriHandler,
 					bool useDelayForLatency);
 			~MainController();
 
@@ -123,6 +126,7 @@ namespace Swift {
 			SettingsProvider *settings_;
 			ProfileSettingsProvider* profileSettings_;
 			Dock* dock_;
+			URIHandler* uriHandler_;
 			TogglableNotifier* notifier_;
 			PresenceNotifier* presenceNotifier_;
 			EventNotifier* eventNotifier_;
@@ -139,6 +143,7 @@ namespace Swift {
 			JID boundJID_;
 			SystemTrayController* systemTrayController_;
 			SoundEventController* soundEventController_;
+			XMPPURIController* xmppURIController_;
 			std::string vCardPhotoHash_;
 			std::string password_;
 			std::string certificateFile_;

@@ -1,0 +1,8 @@
+Import("swiftools_env", "env")
+
+sources = []
+if swiftools_env["PLATFORM"] == "darwin" and swiftools_env["target"] == "native" :
+	sources += ["CocoaAction.mm"]
+
+objects = swiftools_env.StaticObject(sources)
+swiftools_env.Append(SWIFTOOLS_OBJECTS = [objects])

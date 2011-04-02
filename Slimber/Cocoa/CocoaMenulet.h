@@ -9,7 +9,7 @@
 #include <Cocoa/Cocoa.h>
 
 #include "Slimber/Menulet.h"
-#include "Slimber/Cocoa/CocoaAction.h"
+#include <SwifTools/Cocoa/CocoaAction.h>
 
 class CocoaMenulet : public Menulet {
 	public:

@@ -44,6 +44,7 @@ namespace Swift {
 	class QtMUCSearchWindowFactory;
 	class QtUserSearchWindowFactory;
 	class EventLoop;
+	class URIHandler;
 		
 	class QtSwift : public QObject {
 		Q_OBJECT
@@ -63,6 +64,7 @@ namespace Swift {
 			QSplitter* splitter_;
 			QtSoundPlayer* soundPlayer_;
 			Dock* dock_;
+			URIHandler* uriHandler_;
 			QtChatTabs* tabs_;
 			ApplicationPathProvider* applicationPathProvider_;
 			StoragesFactory* storagesFactory_;

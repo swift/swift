@@ -65,6 +65,7 @@
 #include "Swiften/Network/NetworkFactories.h"
 #include <Swift/Controllers/ProfileController.h>
 #include <Swift/Controllers/ContactEditController.h>
+#include <Swift/Controllers/XMPPURIController.h>
 
 namespace Swift {
 
@@ -84,6 +85,7 @@ MainController::MainController(
 		CertificateStorageFactory* certificateStorageFactory,
 		Dock* dock,
 		Notifier* notifier,
+		URIHandler* uriHandler,
 		bool useDelayForLatency) :
 			eventLoop_(eventLoop),
 			networkFactories_(networkFactories),
@@ -92,6 +94,7 @@ MainController::MainController(
 			storagesFactory_(storagesFactory),
 			certificateStorageFactory_(certificateStorageFactory),
 			settings_(settings),
+			uriHandler_(uriHandler),
 			loginWindow_(NULL) ,
 			useDelayForLatency_(useDelayForLatency) {
 	storages_ = NULL;
@@ -120,6 +123,8 @@ MainController::MainController(
 	systemTrayController_ = new SystemTrayController(eventController_, systemTray);
 	loginWindow_ = uiFactory_->createLoginWindow(uiEventStream_);
 	soundEventController_ = new SoundEventController(eventController_, soundPlayer, settings, uiEventStream_);
+
+	xmppURIController_ = new XMPPURIController(uriHandler_, uiEventStream_);
 
 	std::string selectedLoginJID = settings_->getStringSetting("lastLoginJID");
 	bool loginAutomatically = settings_->getBoolSetting("loginAutomatically", false);
@@ -167,6 +172,7 @@ MainController::~MainController() {
 	resetClient();
 
 	delete xmlConsoleController_;
+	delete xmppURIController_;
 	delete soundEventController_;
 	delete systemTrayController_;
 	delete eventController_;
