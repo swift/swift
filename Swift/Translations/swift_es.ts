@@ -549,37 +549,37 @@
 <context>
     <name>MAC_APPLICATION_MENU</name>
     <message>
-        <location filename="../QtUI/QtStrings.h" line="76"/>
+        <location filename="../QtUI/QtStrings.h" line="79"/>
         <source>Services</source>
         <translation>Servicios</translation>
     </message>
     <message>
-        <location filename="../QtUI/QtStrings.h" line="77"/>
+        <location filename="../QtUI/QtStrings.h" line="80"/>
         <source>Hide %1</source>
         <translation>Ocultar %1</translation>
     </message>
     <message>
-        <location filename="../QtUI/QtStrings.h" line="78"/>
+        <location filename="../QtUI/QtStrings.h" line="81"/>
         <source>Hide Others</source>
         <translation>Ocultar Otros</translation>
     </message>
     <message>
-        <location filename="../QtUI/QtStrings.h" line="79"/>
+        <location filename="../QtUI/QtStrings.h" line="82"/>
         <source>Show All</source>
         <translation>Mostrar Todo</translation>
     </message>
     <message>
-        <location filename="../QtUI/QtStrings.h" line="80"/>
+        <location filename="../QtUI/QtStrings.h" line="83"/>
         <source>Preferences...</source>
         <translation>Preferencias...</translation>
     </message>
     <message>
-        <location filename="../QtUI/QtStrings.h" line="81"/>
+        <location filename="../QtUI/QtStrings.h" line="84"/>
         <source>Quit %1</source>
         <translation>Salir de %1</translation>
     </message>
     <message>
-        <location filename="../QtUI/QtStrings.h" line="82"/>
+        <location filename="../QtUI/QtStrings.h" line="85"/>
         <source>About %1</source>
         <translation>Acerca de %1</translation>
     </message>
@@ -662,6 +662,19 @@
         <location filename="../QtUI/QtStrings.h" line="27"/>
         <source>Delete</source>
         <translation>Eliminar</translation>
+    </message>
+</context>
+<context>
+    <name>QMessageBox</name>
+    <message>
+        <location filename="../QtUI/QtStrings.h" line="76"/>
+        <source>Show Details...</source>
+        <translation>Mostrar Detalles...</translation>
+    </message>
+    <message>
+        <location filename="../QtUI/QtStrings.h" line="77"/>
+        <source>Hide Details...</source>
+        <translation>Ocultar Detalles...</translation>
     </message>
 </context>
 <context>
