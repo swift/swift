@@ -16,18 +16,65 @@ using namespace Swift;
 class SHA1Test : public CppUnit::TestFixture {
 		CPPUNIT_TEST_SUITE(SHA1Test);
 		CPPUNIT_TEST(testGetHash);
-		CPPUNIT_TEST(testGetHash_Twice);
+		CPPUNIT_TEST(testGetHash_TwoUpdates);
+		CPPUNIT_TEST(testGetHash_TwoGetHash);
 		CPPUNIT_TEST(testGetHash_NoData);
+		CPPUNIT_TEST(testGetHash_InterleavedUpdate);
+		CPPUNIT_TEST(testGetHashStatic);
+		CPPUNIT_TEST(testGetHashStatic_Twice);
+		CPPUNIT_TEST(testGetHashStatic_NoData);
 		CPPUNIT_TEST_SUITE_END();
 
 	public:
 		void testGetHash() {
+			SHA1 sha;
+			sha.update(ByteArray::create("client/pc//Exodus 0.9.1<http://jabber.org/protocol/caps<http://jabber.org/protocol/disco#info<http://jabber.org/protocol/disco#items<http://jabber.org/protocol/muc<"));
+
+			CPPUNIT_ASSERT_EQUAL(ByteArray::create("\x42\x06\xb2\x3c\xa6\xb0\xa6\x43\xd2\x0d\x89\xb0\x4f\xf5\x8c\xf7\x8b\x80\x96\xed"), sha.getHash());
+		}
+
+		void testGetHash_TwoUpdates() {
+			SHA1 sha;
+			sha.update(ByteArray::create("client/pc//Exodus 0.9.1<http://jabber.org/protocol/caps<"));
+			sha.update(ByteArray::create("http://jabber.org/protocol/disco#info<http://jabber.org/protocol/disco#items<http://jabber.org/protocol/muc<"));
+
+			CPPUNIT_ASSERT_EQUAL(ByteArray::create("\x42\x06\xb2\x3c\xa6\xb0\xa6\x43\xd2\x0d\x89\xb0\x4f\xf5\x8c\xf7\x8b\x80\x96\xed"), sha.getHash());
+		}
+
+		void testGetHash_TwoGetHash() {
+			SHA1 sha;
+			sha.update(ByteArray::create("client/pc//Exodus 0.9.1<http://jabber.org/protocol/caps<http://jabber.org/protocol/disco#info<http://jabber.org/protocol/disco#items<http://jabber.org/protocol/muc<"));
+
+			sha.getHash();
+
+			CPPUNIT_ASSERT_EQUAL(ByteArray::create("\x42\x06\xb2\x3c\xa6\xb0\xa6\x43\xd2\x0d\x89\xb0\x4f\xf5\x8c\xf7\x8b\x80\x96\xed"), sha.getHash());
+		}
+
+		void testGetHash_InterleavedUpdate() {
+			SHA1 sha;
+
+			sha.update(ByteArray::create("client/pc//Exodus 0.9.1<http://jabber.org/protocol/caps<"));
+			sha.getHash();
+			sha.update(ByteArray::create("http://jabber.org/protocol/disco#info<http://jabber.org/protocol/disco#items<http://jabber.org/protocol/muc<"));
+
+			CPPUNIT_ASSERT_EQUAL(ByteArray::create("\x42\x06\xb2\x3c\xa6\xb0\xa6\x43\xd2\x0d\x89\xb0\x4f\xf5\x8c\xf7\x8b\x80\x96\xed"), sha.getHash());
+		}
+
+
+		void testGetHash_NoData() {
+			SHA1 sha;
+			sha.update(std::vector<unsigned char>());
+
+			CPPUNIT_ASSERT_EQUAL(ByteArray::create("\xda\x39\xa3\xee\x5e\x6b\x4b\x0d\x32\x55\xbf\xef\x95\x60\x18\x90\xaf\xd8\x07\x09"), sha.getHash());
+		}
+
+		void testGetHashStatic() {
 			ByteArray result(SHA1::getHash("client/pc//Exodus 0.9.1<http://jabber.org/protocol/caps<http://jabber.org/protocol/disco#info<http://jabber.org/protocol/disco#items<http://jabber.org/protocol/muc<"));
 			CPPUNIT_ASSERT_EQUAL(ByteArray("\x42\x06\xb2\x3c\xa6\xb0\xa6\x43\xd2\x0d\x89\xb0\x4f\xf5\x8c\xf7\x8b\x80\x96\xed"), result);
 		}
 
 
-		void testGetHash_Twice() {
+		void testGetHashStatic_Twice() {
 			ByteArray input("client/pc//Exodus 0.9.1<http://jabber.org/protocol/caps<http://jabber.org/protocol/disco#info<http://jabber.org/protocol/disco#items<http://jabber.org/protocol/muc<");
 			SHA1::getHash(input);
 			ByteArray result(SHA1::getHash(input));
@@ -35,7 +82,7 @@ class SHA1Test : public CppUnit::TestFixture {
 			CPPUNIT_ASSERT_EQUAL(ByteArray("\x42\x06\xb2\x3c\xa6\xb0\xa6\x43\xd2\x0d\x89\xb0\x4f\xf5\x8c\xf7\x8b\x80\x96\xed"), result);
 		}
 
-		void testGetHash_NoData() {
+		void testGetHashStatic_NoData() {
 			ByteArray result(SHA1::getHash(ByteArray()));
 
 			CPPUNIT_ASSERT_EQUAL(ByteArray("\xda\x39\xa3\xee\x5e\x6b\x4b\x0d\x32\x55\xbf\xef\x95\x60\x18\x90\xaf\xd8\x07\x09"), result);

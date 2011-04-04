@@ -4,9 +4,13 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
+#include <Swiften/StringCodecs/SHA1.h>
+
 #include "Swiften/Base/Platform.h"
 
 #pragma GCC diagnostic ignored "-Wold-style-cast"
+
+using namespace Swift;
 
 /*
 SHA-1 in C
@@ -25,20 +29,8 @@ A million repetitions of "a"
 /* #define LITTLE_ENDIAN * This should be #define'd if true. */
 /* #define SHA1HANDSOFF * Copies data before messing with it. */
 
-#include <boost/cstdint.hpp>
 #include <stdio.h>
 #include <string.h>
-
-typedef struct {
-		boost::uint32_t state[5];
-		boost::uint32_t count[2];
-		boost::uint8_t buffer[64];
-} SHA1_CTX;
-
-void SHA1Transform(boost::uint32_t state[5], boost::uint8_t buffer[64]);
-void SHA1Init(SHA1_CTX* context);
-void SHA1Update(SHA1_CTX* context, boost::uint8_t* data, unsigned int len);
-void SHA1Final(boost::uint8_t digest[20], SHA1_CTX* context);
 
 #define rol(value, bits) (((value) << (bits)) | ((value) >> (32 - (bits))))
 
@@ -63,7 +55,7 @@ void SHA1Final(boost::uint8_t digest[20], SHA1_CTX* context);
 
 /* Hash a single 512-bit block. This is the core of the algorithm. */
 
-void SHA1Transform(boost::uint32_t state[5], boost::uint8_t buffer[64])
+void SHA1::Transform(boost::uint32_t state[5], boost::uint8_t buffer[64])
 {
 boost::uint32_t a, b, c, d, e;
 typedef union {
@@ -118,7 +110,7 @@ static boost::uint8_t workspace[64];
 
 /* SHA1Init - Initialize new context */
 
-void SHA1Init(SHA1_CTX* context)
+void SHA1::Init(SHA1::CTX* context)
 {
 		/* SHA1 initialization constants */
 		context->state[0] = 0x67452301;
@@ -132,7 +124,7 @@ void SHA1Init(SHA1_CTX* context)
 
 /* Run your data through this. */
 
-void SHA1Update(SHA1_CTX* context, boost::uint8_t* data, unsigned int len)
+void SHA1::Update(SHA1::CTX* context, boost::uint8_t* data, unsigned int len)
 {
 unsigned int i, j;
 
@@ -141,9 +133,9 @@ unsigned int i, j;
 		context->count[1] += (len >> 29);
 		if ((j + len) > 63) {
 				memcpy(&context->buffer[j], data, (i = 64-j));
-				SHA1Transform(context->state, context->buffer);
+				Transform(context->state, context->buffer);
 				for ( ; i + 63 < len; i += 64) {
-						SHA1Transform(context->state, &data[i]);
+						Transform(context->state, &data[i]);
 				}
 				j = 0;
 		}
@@ -154,7 +146,7 @@ unsigned int i, j;
 
 /* Add padding and return the message digest. */
 
-void SHA1Final(boost::uint8_t digest[20], SHA1_CTX* context)
+void SHA1::Final(boost::uint8_t digest[20], SHA1::CTX* context)
 {
 boost::uint32_t i, j;
 boost::uint8_t finalcount[8];
@@ -163,11 +155,11 @@ boost::uint8_t finalcount[8];
 				finalcount[i] = (boost::uint8_t) ((context->count[(i >= 4 ? 0 : 1)]
 				 >> ((3-(i & 3)) * 8) ) & 255);  /* Endian independent */
 		}
-		SHA1Update(context, (boost::uint8_t *)("\200"), 1);
+		Update(context, (boost::uint8_t *)("\200"), 1);
 		while ((context->count[0] & 504) != 448) {
-				SHA1Update(context, (boost::uint8_t *)("\0"), 1);
+				Update(context, (boost::uint8_t *)("\0"), 1);
 		}
-		SHA1Update(context, finalcount, 8);  /* Should cause a SHA1Transform() */
+		Update(context, finalcount, 8);  /* Should cause a SHA1Transform() */
 		for (i = 0; i < 20; i++) {
 				digest[i] = (boost::uint8_t)
 				 ((context->state[i>>2] >> ((3-(i & 3)) * 8) ) & 255);
@@ -179,24 +171,43 @@ boost::uint8_t finalcount[8];
 		memset(context->count, 0, 8);
 		memset(&finalcount, 0, 8);
 #ifdef SHA1HANDSOFF  /* make SHA1Transform overwrite it's own static vars */
-		SHA1Transform(context->state, context->buffer);
+		Transform(context->state, context->buffer);
 #endif
 }
 
 // -----------------------------------------------------------------------------
 
-#include "Swiften/StringCodecs/SHA1.h"
-
 namespace Swift {
 
+SHA1::SHA1() {
+	Init(&context);
+}
+
+SHA1& SHA1::update(const std::vector<unsigned char>& input) {
+	std::vector<unsigned char> inputCopy(input);
+	Update(&context, (boost::uint8_t*) &inputCopy[0], inputCopy.size());
+	return *this;
+}
+
+std::vector<unsigned char> SHA1::getHash() const {
+	std::vector<unsigned char> digest;
+	digest.resize(20);
+	CTX contextCopy(context);
+	Final((boost::uint8_t*) &digest[0], &contextCopy);
+	return digest;
+}
+
 ByteArray SHA1::getHash(const ByteArray& input) {
-	ByteArray inputCopy(input);
+	CTX context;
+	Init(&context);
+
+	std::vector<unsigned char> inputCopy(input.getVector());
+	Update(&context, (boost::uint8_t*) &inputCopy[0], inputCopy.size());
+
 	ByteArray digest;
 	digest.resize(20);
-	SHA1_CTX context;
-	SHA1Init(&context);
-	SHA1Update(&context, (boost::uint8_t*) inputCopy.getData(), inputCopy.getSize());
-	SHA1Final((boost::uint8_t*) digest.getData(), &context);
+	Final((boost::uint8_t*) digest.getData(), &context);
+
 	return digest;
 }
 
