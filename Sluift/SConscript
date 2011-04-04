@@ -22,6 +22,10 @@ if env["SCONS_STAGE"] == "build" :
 		myenv.Append(CPPDEFINES = ["SLUIFT_BUILD_DLL"])
 	elif myenv["PLATFORM"] == "darwin" :
 		myenv["SHLIBSUFFIX"] = ".so"
+	if env["PLATFORM"] == "win32" :
+		myenv.Append(CFLAGS = ["/TP"])
+	else :
+		myenv.Append(CFLAGS = ["-x", "c++"])
 
 	myenv["SLUIFT_VERSION"] = Version.getBuildVersion("sluift")
 	def patchLua(env, target, source) :

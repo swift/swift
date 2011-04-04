@@ -4,10 +4,8 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-extern "C" {
-	#include "sluift.h"
-	#include <lauxlib.h>
-}
+#include "sluift.h"
+#include <lauxlib.h>
 
 #include <iostream>
 #include <string>

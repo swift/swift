@@ -9,12 +9,9 @@
 #include <string>
 #include <vector>
 
-extern "C" {
 #include <lua.h>
 #include <lauxlib.h>
 #include <lualib.h>
-}
-
 #include <boost/filesystem/fstream.hpp>
 #include <boost/noncopyable.hpp>
 #include "Swiften/Network/NetworkFactories.h"
