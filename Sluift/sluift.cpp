@@ -137,10 +137,13 @@ class SluiftClient {
 			if (watchdog.getTimedOut() || !client->isActive()) {
 				return Stanza::ref();
 			}
-			else {
+			else if (!pendingEvents.empty()) {
 				Stanza::ref event = pendingEvents.front();
 				pendingEvents.pop_front();
 				return event;
+			}
+			else {
+				return Stanza::ref();
 			}
 		}
 
