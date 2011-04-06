@@ -27,6 +27,10 @@ class QtSettingsProvider : public SettingsProvider {
 		virtual void createProfile(const std::string& profile);
 		virtual void removeProfile(const std::string& profile);
 		QSettings* getQSettings();
+	
+	private:
+		void updatePermissions();
+
 	private:
 		QSettings settings_;
 };

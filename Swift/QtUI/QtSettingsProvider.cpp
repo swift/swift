@@ -7,6 +7,7 @@
 #include "QtSettingsProvider.h"
 
 #include <QStringList>
+#include <QFile>
 
 namespace Swift {
 
@@ -24,6 +25,7 @@ std::string QtSettingsProvider::getStringSetting(const std::string &settingPath)
 
 void QtSettingsProvider::storeString(const std::string &settingPath, const std::string &settingValue) {
 	settings_.setValue(settingPath.c_str(), settingValue.c_str());
+	updatePermissions();
 }
 
 bool QtSettingsProvider::getBoolSetting(const std::string &settingPath, bool defaultValue) {
@@ -33,6 +35,7 @@ bool QtSettingsProvider::getBoolSetting(const std::string &settingPath, bool def
 
 void QtSettingsProvider::storeBool(const std::string &settingPath, bool settingValue) {
 	settings_.setValue(settingPath.c_str(), settingValue);
+	updatePermissions();
 }
 
 int QtSettingsProvider::getIntSetting(const std::string &settingPath, int defaultValue) {
@@ -42,6 +45,7 @@ int QtSettingsProvider::getIntSetting(const std::string &settingPath, int defaul
 
 void QtSettingsProvider::storeInt(const std::string &settingPath, int settingValue) {
 	settings_.setValue(settingPath.c_str(), settingValue);
+	updatePermissions();
 }
 
 std::vector<std::string> QtSettingsProvider::getAvailableProfiles() {
@@ -57,6 +61,7 @@ void QtSettingsProvider::createProfile(const std::string& profile) {
 	QStringList stringList = settings_.value("profileList").toStringList();
 	stringList.append(profile.c_str());
 	settings_.setValue("profileList", stringList);
+	updatePermissions();
 }
 
 void QtSettingsProvider::removeProfile(const std::string& profile) {
@@ -69,10 +74,18 @@ void QtSettingsProvider::removeProfile(const std::string& profile) {
 	QStringList stringList = settings_.value("profileList").toStringList();
 	stringList.removeAll(profile.c_str());
 	settings_.setValue("profileList", stringList);
+	updatePermissions();
 }
 
 QSettings* QtSettingsProvider::getQSettings() {
 	return &settings_;
+}
+
+void QtSettingsProvider::updatePermissions() {
+	QFile file(settings_.fileName());
+	if (file.exists()) {
+		file.setPermissions(QFile::ReadOwner|QFile::WriteOwner);
+	}
 }
 
 }
