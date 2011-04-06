@@ -82,10 +82,12 @@ QSettings* QtSettingsProvider::getQSettings() {
 }
 
 void QtSettingsProvider::updatePermissions() {
+#if !defined(Q_WS_WIN) && !defined(Q_WS_MAC)
 	QFile file(settings_.fileName());
 	if (file.exists()) {
 		file.setPermissions(QFile::ReadOwner|QFile::WriteOwner);
 	}
+#endif
 }
 
 }
