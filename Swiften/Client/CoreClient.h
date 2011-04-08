@@ -196,6 +196,11 @@ namespace Swift {
 			 */
 			boost::signal<void (boost::shared_ptr<Stanza>)> onStanzaAcked;
 
+		protected:
+			boost::shared_ptr<ClientSession> getSession() const {
+				return session_;
+			}
+
 		private:
 			void handleConnectorFinished(boost::shared_ptr<Connection>);
 			void handleStanzaChannelAvailableChanged(bool available);

@@ -18,21 +18,29 @@
 namespace Swift {
 	class IQRouter;
 	class XMPPRosterImpl;
+	class RosterStorage;
 
 	class XMPPRosterController {
 		public:
-			XMPPRosterController(IQRouter *iqRouter, XMPPRosterImpl* xmppRoster);
+			XMPPRosterController(IQRouter *iqRouter, XMPPRosterImpl* xmppRoster, RosterStorage* storage);
 			~XMPPRosterController();
 
 			void requestRoster();
 
+			void setUseVersioning(bool b) {
+				useVersioning = b;
+			}
+
 		private:
-			void handleRosterReceived(boost::shared_ptr<RosterPayload> rosterPayload, bool initial);
+			void handleRosterReceived(boost::shared_ptr<RosterPayload> rosterPayload, bool initial, boost::shared_ptr<RosterPayload> previousRoster);
+			void saveRoster(const std::string& version);
 
 		private:
 			IQRouter* iqRouter_;
 			RosterPushResponder rosterPushResponder_;
 			XMPPRosterImpl* xmppRoster_;
+			RosterStorage* rosterStorage_;
+			bool useVersioning;
 	};
 }
 

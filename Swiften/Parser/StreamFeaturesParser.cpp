@@ -31,6 +31,9 @@ void StreamFeaturesParser::handleStartElement(const std::string& element, const 
 		else if (element == "compression" && ns == "http://jabber.org/features/compress") {
 			inCompression_ = true;
 		}
+		else if (element == "ver" && ns == "urn:xmpp:features:rosterver") {
+			getElementGeneric()->setHasRosterVersioning();
+		}
 	}
 	else if (currentDepth_ == 2) {
 		if (inCompression_ && element == "method") {

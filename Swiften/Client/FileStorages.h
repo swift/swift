@@ -14,6 +14,7 @@ namespace Swift {
 	class VCardFileStorage;
 	class AvatarFileStorage;
 	class CapsFileStorage;
+	class RosterFileStorage;
 	class JID;
 
 	/**
@@ -41,10 +42,12 @@ namespace Swift {
 			virtual VCardStorage* getVCardStorage() const;
 			virtual AvatarStorage* getAvatarStorage() const;
 			virtual CapsStorage* getCapsStorage() const;
+			virtual RosterStorage* getRosterStorage() const;
 
 		private:
 			VCardFileStorage* vcardStorage;
 			AvatarFileStorage* avatarStorage;
 			CapsFileStorage* capsStorage;
+			RosterFileStorage* rosterStorage;
 	};
 }

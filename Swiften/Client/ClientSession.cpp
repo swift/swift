@@ -54,6 +54,7 @@ ClientSession::ClientSession(
 			needSessionStart(false),
 			needResourceBind(false),
 			needAcking(false),
+			rosterVersioningSupported(false),
 			authenticator(NULL),
 			certificateTrustChecker(NULL) {
 }
@@ -223,6 +224,7 @@ void ClientSession::handleElement(boost::shared_ptr<Element> element) {
 		}
 		else {
 			// Start the session
+			rosterVersioningSupported = streamFeatures->hasRosterVersioning();
 			stream->setWhitespacePingEnabled(true);
 			needSessionStart = streamFeatures->hasSession();
 			needResourceBind = streamFeatures->hasResourceBind();

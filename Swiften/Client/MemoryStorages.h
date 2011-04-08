@@ -23,10 +23,12 @@ namespace Swift {
 			virtual VCardStorage* getVCardStorage() const;
 			virtual AvatarStorage* getAvatarStorage() const;
 			virtual CapsStorage* getCapsStorage() const;
+			virtual RosterStorage* getRosterStorage() const;
 
 		private:
 			VCardMemoryStorage* vcardStorage;
 			AvatarStorage* avatarStorage;
 			CapsStorage* capsStorage;
+			RosterStorage* rosterStorage;
 	};
 }

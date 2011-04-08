@@ -37,15 +37,21 @@ public:
 		lastEvent_ = None;
 	}
 
+	int getEventCount() const {
+		return eventCount;
+	}
+
 private:
 	void handleJIDAdded(const Swift::JID& jid) {
 		lastJID_ = jid;
 		lastEvent_ = Add;
+		eventCount++;
 	}
 
 	void handleJIDRemoved(const Swift::JID& jid) {
 		lastJID_ = jid;
 		lastEvent_ = Remove;
+		eventCount++;
 	}
 
 	void handleJIDUpdated(const Swift::JID& jid, const std::string& oldName, const std::vector<std::string>& oldGroups);
@@ -54,5 +60,5 @@ private:
 	Swift::JID lastJID_;
 	std::string lastOldName_;
 	std::vector<std::string> lastOldGroups_;
-
+	int eventCount;
 };

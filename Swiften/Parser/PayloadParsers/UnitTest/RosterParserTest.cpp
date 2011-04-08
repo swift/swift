@@ -17,6 +17,8 @@ class RosterParserTest : public CppUnit::TestFixture
 		CPPUNIT_TEST_SUITE(RosterParserTest);
 		CPPUNIT_TEST(testParse);
 		CPPUNIT_TEST(testParse_ItemWithUnknownContent);
+		CPPUNIT_TEST(testParse_WithVersion);
+		CPPUNIT_TEST(testParse_WithEmptyVersion);
 		CPPUNIT_TEST_SUITE_END();
 
 	public:
@@ -32,6 +34,8 @@ class RosterParserTest : public CppUnit::TestFixture
 				"</query>"));
 
 			RosterPayload* payload = dynamic_cast<RosterPayload*>(parser.getPayload().get());
+
+			CPPUNIT_ASSERT(!payload->getVersion());
 			const RosterPayload::RosterItemPayloads& items = payload->getItems();
 
 			CPPUNIT_ASSERT_EQUAL(static_cast<size_t>(2), items.size());
@@ -73,6 +77,24 @@ class RosterParserTest : public CppUnit::TestFixture
 				"<foo xmlns=\"http://example.com\"><bar xmlns=\"http://example.com\">Baz</bar></foo>"
 				"<baz xmlns=\"jabber:iq:roster\"><fum xmlns=\"jabber:iq:roster\">foo</fum></baz>"
 				), items[0].getUnknownContent());
+		}
+
+		void testParse_WithVersion() {
+			PayloadsParserTester parser;
+			CPPUNIT_ASSERT(parser.parse("<query xmlns='jabber:iq:roster' ver='ver10'/>"));
+
+			RosterPayload* payload = dynamic_cast<RosterPayload*>(parser.getPayload().get());
+			CPPUNIT_ASSERT(payload->getVersion());
+			CPPUNIT_ASSERT_EQUAL(std::string("ver10"), *payload->getVersion());
+		}
+
+		void testParse_WithEmptyVersion() {
+			PayloadsParserTester parser;
+			CPPUNIT_ASSERT(parser.parse("<query xmlns='jabber:iq:roster' ver=''/>"));
+
+			RosterPayload* payload = dynamic_cast<RosterPayload*>(parser.getPayload().get());
+			CPPUNIT_ASSERT(payload->getVersion());
+			CPPUNIT_ASSERT_EQUAL(std::string(""), *payload->getVersion());
 		}
 };
 

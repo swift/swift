@@ -32,6 +32,7 @@ class StreamFeaturesSerializerTest : public CppUnit::TestFixture
 			streamFeatures->setHasResourceBind();
 			streamFeatures->setHasSession();
 			streamFeatures->setHasStreamManagement();
+			streamFeatures->setHasRosterVersioning();
 
 			CPPUNIT_ASSERT_EQUAL(std::string(
 				"<stream:features>"
@@ -47,6 +48,7 @@ class StreamFeaturesSerializerTest : public CppUnit::TestFixture
 					"<bind xmlns=\"urn:ietf:params:xml:ns:xmpp-bind\"/>"
 					"<session xmlns=\"urn:ietf:params:xml:ns:xmpp-session\"/>"
 					"<sm xmlns=\"urn:xmpp:sm:2\"/>"
+					"<ver xmlns=\"urn:xmpp:features:rosterver\"/>"
 				"</stream:features>"), testling.serialize(streamFeatures));
 		}
 };

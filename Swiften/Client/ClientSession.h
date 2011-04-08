@@ -89,6 +89,10 @@ namespace Swift {
 				return stanzaAckRequester_;
 			}
 
+			bool getRosterVersioningSupported() const {
+				return rosterVersioningSupported;
+			}
+
 			const JID& getLocalJID() const {
 				return localJID;
 			}
@@ -153,6 +157,7 @@ namespace Swift {
 			bool needSessionStart;
 			bool needResourceBind;
 			bool needAcking;
+			bool rosterVersioningSupported;
 			ClientAuthenticator* authenticator;
 			boost::shared_ptr<StanzaAckRequester> stanzaAckRequester_;
 			boost::shared_ptr<StanzaAckResponder> stanzaAckResponder_;

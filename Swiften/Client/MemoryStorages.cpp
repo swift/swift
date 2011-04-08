@@ -8,6 +8,7 @@
 #include "Swiften/VCards/VCardMemoryStorage.h"
 #include "Swiften/Avatars/AvatarMemoryStorage.h"
 #include "Swiften/Disco/CapsMemoryStorage.h"
+#include "Swiften/Roster/RosterMemoryStorage.h"
 
 namespace Swift {
 
@@ -15,9 +16,11 @@ MemoryStorages::MemoryStorages() {
 	vcardStorage = new VCardMemoryStorage();
 	capsStorage = new CapsMemoryStorage();
 	avatarStorage = new AvatarMemoryStorage();
+	rosterStorage = new RosterMemoryStorage();
 }
 
 MemoryStorages::~MemoryStorages() {
+	delete rosterStorage;
 	delete avatarStorage;
 	delete capsStorage;
 	delete vcardStorage;
@@ -34,5 +37,10 @@ CapsStorage* MemoryStorages::getCapsStorage() const {
 AvatarStorage* MemoryStorages::getAvatarStorage() const {
 	return avatarStorage;
 }
+
+RosterStorage* MemoryStorages::getRosterStorage() const {
+	return rosterStorage;
+}
+
 
 }

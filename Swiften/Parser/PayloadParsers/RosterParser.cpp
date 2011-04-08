@@ -13,7 +13,13 @@ RosterParser::RosterParser() : level_(TopLevel), inItem_(false), unknownContentP
 }
 
 void RosterParser::handleStartElement(const std::string& element, const std::string& ns, const AttributeMap& attributes) {
-	if (level_ == PayloadLevel) {
+	if (level_ == TopLevel) {
+		AttributeMap::const_iterator i = attributes.find("ver");
+		if (i != attributes.end()) {
+			getPayloadInternal()->setVersion(i->second);
+		}
+	}
+	else if (level_ == PayloadLevel) {
 		if (element == "item") {
 			inItem_ = true;
 			currentItem_ = RosterItemPayload();

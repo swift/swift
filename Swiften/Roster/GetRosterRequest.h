@@ -19,6 +19,12 @@ namespace Swift {
 				return ref(new GetRosterRequest(router));
 			}
 
+			static ref create(IQRouter* router, const std::string& version) {
+				ref result(new GetRosterRequest(router));
+				result->getPayloadGeneric()->setVersion(version);
+				return result;
+			}
+
 		private:
 			GetRosterRequest(IQRouter* router) :
 					GenericRequest<RosterPayload>(IQ::Get, JID(), boost::shared_ptr<Payload>(new RosterPayload()), router) {

@@ -6,6 +6,8 @@
 
 #include "Swiften/Serializer/StreamFeaturesSerializer.h"
 
+#include <boost/smart_ptr/make_shared.hpp>
+
 #include "Swiften/Serializer/XML/XMLElement.h"
 #include "Swiften/Serializer/XML/XMLTextNode.h"
 #include "Swiften/Base/foreach.h"
@@ -48,6 +50,9 @@ std::string StreamFeaturesSerializer::serialize(boost::shared_ptr<Element> eleme
 	}
 	if (streamFeatures->hasStreamManagement()) {
 		streamFeaturesElement.addNode(boost::shared_ptr<XMLElement>(new XMLElement("sm", "urn:xmpp:sm:2")));
+	}
+	if (streamFeatures->hasRosterVersioning()) {
+		streamFeaturesElement.addNode(boost::make_shared<XMLElement>("ver", "urn:xmpp:features:rosterver"));
 	}
 	return streamFeaturesElement.serialize();
 }

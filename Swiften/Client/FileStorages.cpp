@@ -8,6 +8,7 @@
 #include "Swiften/VCards/VCardFileStorage.h"
 #include "Swiften/Avatars/AvatarFileStorage.h"
 #include "Swiften/Disco/CapsFileStorage.h"
+#include "Swiften/Roster/RosterFileStorage.h"
 
 namespace Swift {
 
@@ -16,9 +17,11 @@ FileStorages::FileStorages(const boost::filesystem::path& baseDir, const JID& ji
 	vcardStorage = new VCardFileStorage(baseDir / profile / "vcards");
 	capsStorage = new CapsFileStorage(baseDir / "caps");
 	avatarStorage = new AvatarFileStorage(baseDir / "avatars", baseDir / profile / "avatars");
+	rosterStorage = new RosterFileStorage(baseDir / profile / "roster.xml");
 }
 
 FileStorages::~FileStorages() {
+	delete rosterStorage;
 	delete avatarStorage;
 	delete capsStorage;
 	delete vcardStorage;
@@ -34,6 +37,10 @@ CapsStorage* FileStorages::getCapsStorage() const {
 
 AvatarStorage* FileStorages::getAvatarStorage() const {
 	return avatarStorage;
+}
+
+RosterStorage* FileStorages::getRosterStorage() const {
+	return rosterStorage;
 }
 
 }

@@ -4,22 +4,20 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#ifndef SWIFTEN_RosterItemPayloadPayload_H
-#define SWIFTEN_RosterItemPayloadPayload_H
+#pragma once
 
 #include <vector>
-
-#include "Swiften/JID/JID.h"
 #include <string>
 
+#include <Swiften/JID/JID.h>
+
 namespace Swift {
-	class RosterItemPayload
-	{
+	class RosterItemPayload {
 		public:
 			enum Subscription { None, To, From, Both, Remove };
 
 			RosterItemPayload() : subscription_(None), ask_(false) {}
-			RosterItemPayload(const JID& jid, const std::string& name, Subscription subscription) : jid_(jid), name_(name), subscription_(subscription), ask_(false) { }
+			RosterItemPayload(const JID& jid, const std::string& name, Subscription subscription, const std::vector<std::string>& groups = std::vector<std::string>()) : jid_(jid), name_(name), subscription_(subscription), groups_(groups), ask_(false) { }
 			
 			void setJID(const JID& jid) { jid_ = jid; }
 			const JID& getJID() const { return jid_; }
@@ -51,5 +49,3 @@ namespace Swift {
 			std::string unknownContent_;
 	};
 }
-
-#endif

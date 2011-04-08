@@ -25,6 +25,7 @@
 #include "Swiften/Presence/SubscriptionManager.h"
 #include "Swiften/TLS/BlindCertificateTrustChecker.h"
 #include <Swiften/Client/NickManagerImpl.h>
+#include <Swiften/Client/ClientSession.h>
 
 namespace Swift {
 
@@ -35,7 +36,7 @@ Client::Client(const JID& jid, const std::string& password, NetworkFactories* ne
 	softwareVersionResponder->start();
 
 	roster = new XMPPRosterImpl();
-	rosterController = new XMPPRosterController(getIQRouter(), roster);
+	rosterController = new XMPPRosterController(getIQRouter(), roster, storages->getRosterStorage());
 
 	subscriptionManager = new SubscriptionManager(getStanzaChannel());
 
@@ -98,6 +99,11 @@ void Client::setSoftwareVersion(const std::string& name, const std::string& vers
 }
 
 void Client::requestRoster() {
+	// FIXME: We should set this once when the session is finished, but there
+	// is currently no callback for this
+	if (getSession()) {
+		rosterController->setUseVersioning(getSession()->getRosterVersioningSupported());
+	}
 	rosterController->requestRoster();
 }
 

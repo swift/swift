@@ -17,7 +17,7 @@ namespace Swift {
 		public:
 			typedef boost::shared_ptr<StreamFeatures> ref;
 
-			StreamFeatures() : hasStartTLS_(false), hasResourceBind_(false), hasSession_(false), hasStreamManagement_(false) {}
+			StreamFeatures() : hasStartTLS_(false), hasResourceBind_(false), hasSession_(false), hasStreamManagement_(false), hasRosterVersioning_(false) {}
 
 			void setHasStartTLS() {
 				hasStartTLS_ = true;
@@ -75,6 +75,14 @@ namespace Swift {
 				hasStreamManagement_ = true;
 			}
 
+			bool hasRosterVersioning() const {
+				return hasRosterVersioning_;
+			}
+
+			void setHasRosterVersioning() {
+				hasRosterVersioning_ = true;
+			}
+
 		private:
 			bool hasStartTLS_;
 			std::vector<std::string> compressionMethods_;
@@ -82,5 +90,6 @@ namespace Swift {
 			bool hasResourceBind_;
 			bool hasSession_;
 			bool hasStreamManagement_;
+			bool hasRosterVersioning_;
 	};
 }

@@ -20,6 +20,9 @@ RosterSerializer::RosterSerializer() : GenericPayloadSerializer<RosterPayload>()
 
 std::string RosterSerializer::serializePayload(boost::shared_ptr<RosterPayload> roster)  const {
 	XMLElement queryElement("query", "jabber:iq:roster");
+	if (roster->getVersion()) {
+		queryElement.setAttribute("ver", *roster->getVersion());
+	}
 	foreach(const RosterItemPayload& item, roster->getItems()) {
 		boost::shared_ptr<XMLElement> itemElement(new XMLElement("item"));
 		itemElement->setAttribute("jid", item.getJID());

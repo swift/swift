@@ -10,6 +10,7 @@ namespace Swift {
 	class VCardStorage;
 	class AvatarStorage;
 	class CapsStorage;
+	class RosterStorage;
 
 	/**
 	 * An interface to hold storage classes for different
@@ -17,10 +18,11 @@ namespace Swift {
 	 */
 	class Storages {
 		public:
-			virtual ~Storages() {}
+			virtual ~Storages();
 
 			virtual VCardStorage* getVCardStorage() const = 0;
 			virtual AvatarStorage* getAvatarStorage() const = 0;
 			virtual CapsStorage* getCapsStorage() const = 0;
+			virtual RosterStorage* getRosterStorage() const = 0;
 	};
 }

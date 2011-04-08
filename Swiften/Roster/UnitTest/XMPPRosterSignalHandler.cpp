@@ -11,7 +11,7 @@
 
 using namespace Swift;
 
-XMPPRosterSignalHandler::XMPPRosterSignalHandler(Swift::XMPPRoster* roster) {
+XMPPRosterSignalHandler::XMPPRosterSignalHandler(Swift::XMPPRoster* roster) : eventCount(0) {
 	lastEvent_ = None;
 	roster->onJIDAdded.connect(boost::bind(&XMPPRosterSignalHandler::handleJIDAdded, this, _1));
 	roster->onJIDRemoved.connect(boost::bind(&XMPPRosterSignalHandler::handleJIDRemoved, this, _1));
@@ -24,4 +24,5 @@ void XMPPRosterSignalHandler::handleJIDUpdated(const Swift::JID& jid, const std:
 	lastOldName_ = oldName;
 	lastOldGroups_ = oldGroups;
 	lastEvent_ = Update;
+	eventCount++;
 }

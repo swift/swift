@@ -37,6 +37,7 @@ class StreamFeaturesParserTest : public CppUnit::TestFixture {
 					"<bind xmlns=\"urn:ietf:params:xml:ns:xmpp-bind\"/>"
 					"<sm xmlns='urn:xmpp:sm:2'/>"
 					"<session xmlns=\"urn:ietf:params:xml:ns:xmpp-session\"/>"
+					"<ver xmlns=\"urn:xmpp:features:rosterver\"/>"
 				"</stream:features>"));
 
 			StreamFeatures::ref element = boost::dynamic_pointer_cast<StreamFeatures>(testling.getElement());
@@ -49,6 +50,7 @@ class StreamFeaturesParserTest : public CppUnit::TestFixture {
 			CPPUNIT_ASSERT(element->hasAuthenticationMechanism("DIGEST-MD5"));
 			CPPUNIT_ASSERT(element->hasAuthenticationMechanism("PLAIN"));
 			CPPUNIT_ASSERT(element->hasStreamManagement());
+			CPPUNIT_ASSERT(element->hasRosterVersioning());
 		}
 
 		void testParse_Empty() {

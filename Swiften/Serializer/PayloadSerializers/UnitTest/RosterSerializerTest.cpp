@@ -11,16 +11,15 @@
 
 using namespace Swift;
 
-class RosterSerializerTest : public CppUnit::TestFixture
-{
+class RosterSerializerTest : public CppUnit::TestFixture {
 		CPPUNIT_TEST_SUITE(RosterSerializerTest);
 		CPPUNIT_TEST(testSerialize);
 		CPPUNIT_TEST(testSerialize_ItemWithUnknownContent);
+		CPPUNIT_TEST(testSerialize_WithVersion);
+		CPPUNIT_TEST(testSerialize_WithEmptyVersion);
 		CPPUNIT_TEST_SUITE_END();
 
 	public:
-		RosterSerializerTest() {}
-
 		void testSerialize() {
 			RosterSerializer testling;
 			boost::shared_ptr<RosterPayload> roster(new RosterPayload());
@@ -74,6 +73,26 @@ class RosterSerializerTest : public CppUnit::TestFixture
 						"<baz xmlns=\"jabber:iq:roster\"><fum xmlns=\"jabber:iq:roster\">foo</fum></baz>"
 					"</item>"
 				"</query>";
+
+			CPPUNIT_ASSERT_EQUAL(expectedResult, testling.serialize(roster));
+		}
+
+		void testSerialize_WithVersion() {
+			RosterSerializer testling;
+			boost::shared_ptr<RosterPayload> roster(new RosterPayload());
+			roster->setVersion("ver20");
+
+			std::string expectedResult = "<query ver=\"ver20\" xmlns=\"jabber:iq:roster\"/>";
+
+			CPPUNIT_ASSERT_EQUAL(expectedResult, testling.serialize(roster));
+		}
+
+		void testSerialize_WithEmptyVersion() {
+			RosterSerializer testling;
+			boost::shared_ptr<RosterPayload> roster(new RosterPayload());
+			roster->setVersion("");
+
+			std::string expectedResult = "<query ver=\"\" xmlns=\"jabber:iq:roster\"/>";
 
 			CPPUNIT_ASSERT_EQUAL(expectedResult, testling.serialize(roster));
 		}

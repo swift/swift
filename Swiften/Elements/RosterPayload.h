@@ -33,7 +33,16 @@ namespace Swift {
 				return items_;
 			}
 
+			const boost::optional<std::string>& getVersion() const {
+				return version_;
+			}
+
+			void setVersion(const std::string& version) {
+				version_ = version;
+			}
+
 		private:
 			RosterItemPayloads items_;
+			boost::optional<std::string> version_;
 	};
 }
