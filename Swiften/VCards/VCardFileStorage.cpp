@@ -10,18 +10,20 @@
 #include <boost/filesystem.hpp>
 #include <iostream>
 
+#include <Swiften/Entity/GenericPayloadPersister.h>
 #include <Swiften/Base/String.h>
 #include <Swiften/StringCodecs/Hexify.h>
 #include <Swiften/StringCodecs/SHA1.h>
 #include <Swiften/Base/foreach.h>
 #include "Swiften/JID/JID.h"
-#include "Swiften/Base/ByteArray.h"
 #include "Swiften/Elements/VCard.h"
 #include "Swiften/Serializer/PayloadSerializers/VCardSerializer.h"
 #include "Swiften/Parser/PayloadParsers/UnitTest/PayloadParserTester.h"
 #include "Swiften/Parser/PayloadParsers/VCardParser.h"
 
-namespace Swift {
+using namespace Swift;
+
+typedef GenericPayloadPersister<VCard, VCardParser, VCardSerializer> VCardPersister;
 
 VCardFileStorage::VCardFileStorage(boost::filesystem::path dir) : vcardsPath(dir) {
 	cacheFile = vcardsPath / "phashes";
@@ -50,34 +52,11 @@ VCardFileStorage::VCardFileStorage(boost::filesystem::path dir) : vcardsPath(dir
 }
 
 boost::shared_ptr<VCard> VCardFileStorage::getVCard(const JID& jid) const {
-	boost::filesystem::path vcardPath(getVCardPath(jid));
-	if (boost::filesystem::exists(vcardPath)) {
-		ByteArray data;
-		data.readFromFile(vcardPath.string());
-
-		VCardParser parser;
-		PayloadParserTester tester(&parser);
-		tester.parse(data.toString());
-		return boost::dynamic_pointer_cast<VCard>(parser.getPayload());
-	}
-	else {
-		return boost::shared_ptr<VCard>();
-	}
+	return VCardPersister().loadPayloadGeneric(getVCardPath(jid));
 }
 
 void VCardFileStorage::setVCard(const JID& jid, VCard::ref v) {
-	boost::filesystem::path vcardPath(getVCardPath(jid));
-	if (!boost::filesystem::exists(vcardPath.parent_path())) {
-		try {
-			boost::filesystem::create_directories(vcardPath.parent_path());
-		}
-		catch (const boost::filesystem::filesystem_error& e) {
-			std::cerr << "ERROR: " << e.what() << std::endl;
-		}
-	}
-	boost::filesystem::ofstream file(getVCardPath(jid));
-	file << VCardSerializer().serializePayload(v);
-	file.close();
+	VCardPersister().savePayload(v, getVCardPath(jid));
 	getAndUpdatePhotoHash(jid, v);
 }
 
@@ -125,7 +104,4 @@ void VCardFileStorage::savePhotoHashes() const {
 	catch (...) {
 		std::cerr << "Error writing vcards file" << std::endl;
 	}
-}
-
-
 }

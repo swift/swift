@@ -78,6 +78,7 @@ if env["SCONS_STAGE"] == "build" :
 			"Elements/VCard.cpp",
 			"Elements/MUCOccupant.cpp",
 			"Entity/Entity.cpp",
+			"Entity/PayloadPersister.cpp",
 			"MUC/MUC.cpp",
 			"MUC/MUCManager.cpp",
 			"MUC/MUCRegistry.cpp",

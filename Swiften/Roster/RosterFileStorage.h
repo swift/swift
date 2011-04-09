@@ -15,15 +15,10 @@ namespace Swift {
 		public:
 			RosterFileStorage(const boost::filesystem::path& path);
 
-			// FIXME
-			virtual boost::shared_ptr<RosterPayload> getRoster() const {
-				return roster;
-			}
-
+			virtual boost::shared_ptr<RosterPayload> getRoster() const;
 			virtual void setRoster(boost::shared_ptr<RosterPayload>);
 
 		private:
 			boost::filesystem::path path;
-			boost::shared_ptr<RosterPayload> roster;
 	};
 }

@@ -6,19 +6,21 @@
 
 #include <Swiften/Roster/RosterFileStorage.h>
 
-#include <boost/smart_ptr/make_shared.hpp>
+#include <Swiften/Entity/GenericPayloadPersister.h>
+#include <Swiften/Serializer/PayloadSerializers/RosterSerializer.h>
+#include <Swiften/Parser/PayloadParsers/RosterParser.h>
 
-namespace Swift {
+using namespace Swift;
+
+typedef GenericPayloadPersister<RosterPayload, RosterParser, RosterSerializer> RosterPersister;
 
 RosterFileStorage::RosterFileStorage(const boost::filesystem::path& path) : path(path) {
 }
 
-// FIXME
-void RosterFileStorage::setRoster(boost::shared_ptr<RosterPayload> r) {
-	roster.reset();
-	if (r) {
-		roster = boost::make_shared<RosterPayload>(*r);
-	}
+boost::shared_ptr<RosterPayload> RosterFileStorage::getRoster() const {
+	return RosterPersister().loadPayloadGeneric(path);
 }
 
+void RosterFileStorage::setRoster(boost::shared_ptr<RosterPayload> roster) {
+	RosterPersister().savePayload(roster, path);
 }
