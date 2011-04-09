@@ -200,8 +200,8 @@ if env["PLATFORM"] == "win32" :
 	nsis_translation_install_script = ""
 	nsis_translation_uninstall_script = ""
 	for lang in translation_languages :
-		nsis_translation_install_script += "File \"..\\..\\QtUI\\Swift\\translations\\swift_" + lang + ".qm\""
-		nsis_translation_uninstall_script += "delete $INSTDIR\\translations\\swift_" + lang + ".qm"
+		nsis_translation_install_script += "File \"..\\..\\QtUI\\Swift\\translations\\swift_" + lang + ".qm\"\n"
+		nsis_translation_uninstall_script += "delete $INSTDIR\\translations\\swift_" + lang + ".qm\n"
 	myenv.WriteVal("../Packaging/nsis/translations-install.nsh", myenv.Value(nsis_translation_install_script))
 	myenv.WriteVal("../Packaging/nsis/translations-uninstall.nsh", myenv.Value(nsis_translation_uninstall_script))
 	
