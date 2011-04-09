@@ -18,42 +18,41 @@
 
 using namespace Swift;
 
-namespace {
-
-	struct PercentEncodedCharacterFinder {
-		template<typename Iterator>
-		boost::iterator_range<Iterator> operator()(Iterator begin, Iterator end) {
-			boost::iterator_range<Iterator> r = boost::first_finder("%")(begin, end);
-			if (r.end() == end) {
-				return r;
+// Should be in anonymous namespace, but older GCCs complain if we do that
+struct PercentEncodedCharacterFinder {
+	template<typename Iterator>
+	boost::iterator_range<Iterator> operator()(Iterator begin, Iterator end) {
+		boost::iterator_range<Iterator> r = boost::first_finder("%")(begin, end);
+		if (r.end() == end) {
+			return r;
+		}
+		else {
+			if (r.end() + 1 == end || r.end() + 2 == end) {
+				throw std::runtime_error("Incomplete escape character");
 			}
 			else {
-				if (r.end() + 1 == end || r.end() + 2 == end) {
-					throw std::runtime_error("Incomplete escape character");
-				}
-				else {
-					r.advance_end(2);
-					return r;
-				}
+				r.advance_end(2);
+				return r;
 			}
 		}
-	};
+	}
+};
 
-	struct PercentUnencodeFormatter {
-		template<typename FindResult>
-		std::string operator()(const FindResult& match) const {
-			std::stringstream s;
-			s << std::hex << std::string(match.begin() + 1, match.end());
-			unsigned int value;
-			s >> value;
-			if (s.fail() || s.bad()) {
-				throw std::runtime_error("Invalid escape character");
-			}
-			return std::string(reinterpret_cast<const char*>(&value), 1);
+struct PercentUnencodeFormatter {
+	template<typename FindResult>
+	std::string operator()(const FindResult& match) const {
+		std::stringstream s;
+		s << std::hex << std::string(match.begin() + 1, match.end());
+		unsigned int value;
+		s >> value;
+		if (s.fail() || s.bad()) {
+			throw std::runtime_error("Invalid escape character");
 		}
-	};
-	
+		return std::string(reinterpret_cast<const char*>(&value), 1);
+	}
+};
 
+namespace {
 	std::string unescape(const std::string& s) {
 		try {
 			return boost::find_format_all_copy(s, PercentEncodedCharacterFinder(), PercentUnencodeFormatter());
