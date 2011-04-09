@@ -34,6 +34,7 @@ class IBBReceiveSessionTest : public CppUnit::TestFixture {
 		void setUp() {
 			stanzaChannel = new DummyStanzaChannel();
 			iqRouter = new IQRouter(stanzaChannel);
+			finished = false;
 		}
 
 		void tearDown() {

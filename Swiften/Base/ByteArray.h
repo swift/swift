@@ -139,6 +139,14 @@ namespace Swift {
 			static std::vector<unsigned char> create(const unsigned char* c, size_t n);
 			static std::vector<unsigned char> create(const char* c, size_t n);
 
+			static const unsigned char* data(const std::vector<unsigned char>& v) {
+				return v.empty() ? NULL : &v[0];
+			}
+
+			static const char* charData(const std::vector<unsigned char>& v) {
+				return v.empty() ? NULL : reinterpret_cast<const char*>(&v[0]);
+			}
+
 		private:
 			std::vector<unsigned char> data_;
 	};
