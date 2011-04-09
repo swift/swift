@@ -1,6 +1,8 @@
 import re, os
 import SCons.Util
 nsisFiles_re = re.compile(r'^\s*File "([^"]*)"', re.M)
+# FIXME
+nsisIncludes_re = re.compile(r'^\s*!include (translations-\S*)', re.M)
 
 """
 TODO:
@@ -18,7 +20,7 @@ def generate(env) :
 		return os.path.join(*path.split("\\"))
 	def scanNsisContent(node, env, path, arg):
 		contents = node.get_contents()
-		includes = nsisFiles_re.findall(contents)
+		includes = nsisFiles_re.findall(contents) + nsisIncludes_re.findall(contents)
 		includes = [ winToLocalReformat(include) for include in includes ]
 		return filter(lambda x: x.rfind('*')==-1, includes)
 	nsisscanner = env.Scanner(name = 'nsisfile',
