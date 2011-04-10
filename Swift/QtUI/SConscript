@@ -65,7 +65,6 @@ sources = [
     "main.cpp",
     "QtAboutWidget.cpp",
     "QtAvatarWidget.cpp",
-    "QtDBUSURIHandler.cpp",
     "QtUIFactory.cpp",
     "QtChatWindowFactory.cpp",
     "QtChatWindow.cpp",
@@ -145,7 +144,10 @@ if env["PLATFORM"] == "win32" :
 		]
 
 if env["PLATFORM"] == "posix" :
-	sources += ["FreeDesktopNotifier.cpp"]
+	sources += [
+			"FreeDesktopNotifier.cpp"
+			"QtDBUSURIHandler.cpp",
+	]
 
 if env["PLATFORM"] == "darwin" or env["PLATFORM"] == "win32" :
   swiftProgram = myenv.Program("Swift", sources)
