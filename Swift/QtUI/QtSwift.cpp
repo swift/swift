@@ -51,8 +51,10 @@
 
 #if defined(SWIFTEN_PLATFORM_MACOSX)
 #include "QtURIHandler.h"
-#else
+#elif defined(SWIFTEN_PLATFORM_WIN32)
 #include <SwifTools/URIHandler/NullURIHandler.h>
+#else
+#include "QtDBUSURIHandler.h"
 #endif
 
 namespace Swift{
@@ -133,8 +135,10 @@ QtSwift::QtSwift(const po::variables_map& options) : networkFactories_(&clientMa
 
 #if defined(SWIFTEN_PLATFORM_MACOSX)
 	uriHandler_ = new QtURIHandler();
-#else
+#elif defined(SWIFTEN_PLATFORM_WIN32)
 	uriHandler_ = new NullURIHandler();
+#else
+	uriHandler_ = new QtDBUSURIHandler();
 #endif
 
 	if (splitter_) {

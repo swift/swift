@@ -65,6 +65,7 @@ sources = [
     "main.cpp",
     "QtAboutWidget.cpp",
     "QtAvatarWidget.cpp",
+    "QtDBUSURIHandler.cpp",
     "QtUIFactory.cpp",
     "QtChatWindowFactory.cpp",
     "QtChatWindow.cpp",
@@ -151,6 +152,11 @@ if env["PLATFORM"] == "darwin" or env["PLATFORM"] == "win32" :
 else :
   swiftProgram = myenv.Program("swift", sources)
 
+if env["PLATFORM"] != "darwin" and env["PLATFORM"] != "win32" :
+	openURIProgram = myenv.Program("swift-open-uri", "swift-open-uri.cpp")
+else :
+	openURIProgram = []
+
 myenv.Uic4("MUCSearch/QtMUCSearchWindow.ui")
 myenv.Uic4("UserSearch/QtUserSearchWizard.ui")
 myenv.Uic4("UserSearch/QtUserSearchFirstPage.ui")
@@ -221,7 +227,7 @@ if env["PLATFORM"] == "darwin" :
     myenv.Command(["Swift-${SWIFT_VERSION}.dmg"], [app], ["Swift/Packaging/MacOSX/package.sh " + app.path + " Swift/Packaging/MacOSX/Swift.dmg.gz $TARGET $QTDIR"])
     
 if env.get("SWIFT_INSTALLDIR", "") :
-  env.Install(os.path.join(env["SWIFT_INSTALLDIR"], "bin"), swiftProgram)
+  env.Install(os.path.join(env["SWIFT_INSTALLDIR"], "bin"), swiftProgram + openURIProgram)
   env.InstallAs(os.path.join(env["SWIFT_INSTALLDIR"], "share", "pixmaps", "swift.xpm"), "../resources/logo/logo-icon-32.xpm")
   icons_path = os.path.join(env["SWIFT_INSTALLDIR"], "share", "icons", "hicolor")
   env.InstallAs(os.path.join(icons_path, "32x32", "apps", "swift.xpm"), "../resources/logo/logo-icon-32.xpm")
