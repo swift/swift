@@ -226,6 +226,7 @@ if env["SCONS_STAGE"] == "build" :
 			File("MUC/UnitTest/MUCTest.cpp"),
 			File("Network/UnitTest/HostAddressTest.cpp"),
 			File("Network/UnitTest/ConnectorTest.cpp"),
+			File("Network/UnitTest/ChainedConnectorTest.cpp"),
 			File("Parser/PayloadParsers/UnitTest/BodyParserTest.cpp"),
 			File("Parser/PayloadParsers/UnitTest/DiscoInfoParserTest.cpp"),
 			File("Parser/PayloadParsers/UnitTest/ErrorParserTest.cpp"),
