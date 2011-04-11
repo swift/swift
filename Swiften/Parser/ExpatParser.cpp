@@ -30,7 +30,7 @@ static void handleStartElement(void* client, const XML_Char* name, const XML_Cha
 			nsAttributePair.second = nsAttributePair.first;
 			nsAttributePair.first = "";
 		}
-		attributeValues[nsAttributePair.second] = std::string(*(currentAttribute+1));
+		attributeValues.addAttribute(nsAttributePair.second, nsAttributePair.first, std::string(*(currentAttribute+1)));
 		currentAttribute += 2;
 	}
 

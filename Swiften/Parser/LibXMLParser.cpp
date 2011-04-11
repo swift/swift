@@ -15,10 +15,18 @@
 
 namespace Swift {
 
-static void handleStartElement(void *client, const xmlChar* name, const xmlChar*, const xmlChar* xmlns, int, const xmlChar**, int nbAttributes, int, const xmlChar ** attributes) {
+static void handleStartElement(void *client, const xmlChar* name, const xmlChar*, const xmlChar* xmlns, int, const xmlChar**, int nbAttributes, int nbDefaulted, const xmlChar ** attributes) {
 	AttributeMap attributeValues;
+	if (nbDefaulted != 0) {
+		// Just because i don't understand what this means yet :-)
+		std::cerr << "Unexpected nbDefaulted on XML element" << std::endl;
+	}
 	for (int i = 0; i < nbAttributes*5; i += 5) {
-		attributeValues[std::string(reinterpret_cast<const char*>(attributes[i]))] = std::string(reinterpret_cast<const char*>(attributes[i+3]), attributes[i+4]-attributes[i+3]);
+		std::string attributeNS = "";
+		if (attributes[i+2]) {
+			attributeNS = std::string(reinterpret_cast<const char*>(attributes[i+2]));
+		}
+		attributeValues.addAttribute(std::string(reinterpret_cast<const char*>(attributes[i])), attributeNS, std::string(reinterpret_cast<const char*>(attributes[i+3]), attributes[i+4]-attributes[i+3]));
 	}
 	static_cast<XMLParserClient*>(client)->handleStartElement(reinterpret_cast<const char*>(name), (xmlns ? reinterpret_cast<const char*>(xmlns) : std::string()), attributeValues);
 }

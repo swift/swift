@@ -6,6 +6,7 @@ myenv.MergeFlags(swiften_env.get("LIBXML_FLAGS", ""))
 myenv.MergeFlags(swiften_env.get("EXPAT_FLAGS", ""))
 
 sources = [
+		"AttributeMap.cpp",
 		"AuthRequestParser.cpp",
 		"AuthChallengeParser.cpp",
 		"AuthSuccessParser.cpp",

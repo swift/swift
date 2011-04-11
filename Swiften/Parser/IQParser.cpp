@@ -5,8 +5,9 @@
  */
 
 #include <iostream>
+#include <boost/optional.hpp>
 
-#include "Swiften/Parser/IQParser.h"
+#include <Swiften/Parser/IQParser.h>
 
 namespace Swift {
 
@@ -15,22 +16,22 @@ IQParser::IQParser(PayloadParserFactoryCollection* factories) :
 }
 
 void IQParser::handleStanzaAttributes(const AttributeMap& attributes) {
-	AttributeMap::const_iterator type = attributes.find("type");
-	if (type != attributes.end()) {
-		if (type->second == "set") {
+	boost::optional<std::string> type = attributes.getAttributeValue("type");
+	if (type) {
+		if (*type == "set") {
 			getStanzaGeneric()->setType(IQ::Set);
 		}
-		else if (type->second == "get") {
+		else if (*type == "get") {
 			getStanzaGeneric()->setType(IQ::Get);
 		}
-		else if (type->second == "result") {
+		else if (*type == "result") {
 			getStanzaGeneric()->setType(IQ::Result);
 		}
-		else if (type->second == "error") {
+		else if (*type == "error") {
 			getStanzaGeneric()->setType(IQ::Error);
 		}
 		else {
-			std::cerr << "Unknown IQ type: " << type->second << std::endl;
+			std::cerr << "Unknown IQ type: " << *type << std::endl;
 			getStanzaGeneric()->setType(IQ::Get);
 		}
 	}

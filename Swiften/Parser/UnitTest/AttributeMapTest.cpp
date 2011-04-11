@@ -14,6 +14,7 @@ using namespace Swift;
 class AttributeMapTest : public CppUnit::TestFixture
 {
 		CPPUNIT_TEST_SUITE(AttributeMapTest);
+		CPPUNIT_TEST(testGetAttribute_Namespaced);
 		CPPUNIT_TEST(testGetBoolAttribute_True);
 		CPPUNIT_TEST(testGetBoolAttribute_1);
 		CPPUNIT_TEST(testGetBoolAttribute_False);
@@ -24,39 +25,46 @@ class AttributeMapTest : public CppUnit::TestFixture
 		CPPUNIT_TEST_SUITE_END();
 
 	public:
-		AttributeMapTest() {}
+		void testGetAttribute_Namespaced() {
+			AttributeMap testling;
+			testling.addAttribute("lang", "", "nl");
+			testling.addAttribute("lang", "http://www.w3.org/XML/1998/namespace", "en");
+			testling.addAttribute("lang", "", "fr");
+
+			CPPUNIT_ASSERT_EQUAL(std::string("en"), testling.getAttribute("lang", "http://www.w3.org/XML/1998/namespace"));
+		}
 
 		void testGetBoolAttribute_True() {
 			AttributeMap testling;
-			testling["foo"] = "true";
+			testling.addAttribute("foo", "", "true");
 
 			CPPUNIT_ASSERT(testling.getBoolAttribute("foo"));
 		}
 
 		void testGetBoolAttribute_1() {
 			AttributeMap testling;
-			testling["foo"] = "1";
+			testling.addAttribute("foo", "", "1");
 
 			CPPUNIT_ASSERT(testling.getBoolAttribute("foo"));
 		}
 
 		void testGetBoolAttribute_False() {
 			AttributeMap testling;
-			testling["foo"] = "false";
+			testling.addAttribute("foo", "", "false");
 
 			CPPUNIT_ASSERT(!testling.getBoolAttribute("foo", true));
 		}
 
 		void testGetBoolAttribute_0() {
 			AttributeMap testling;
-			testling["foo"] = "0";
+			testling.addAttribute("foo", "", "0");
 
 			CPPUNIT_ASSERT(!testling.getBoolAttribute("foo", true));
 		}
 
 		void testGetBoolAttribute_Invalid() {
 			AttributeMap testling;
-			testling["foo"] = "bla";
+			testling.addAttribute("foo", "", "bla");
 
 			CPPUNIT_ASSERT(!testling.getBoolAttribute("foo", true));
 		}

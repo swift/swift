@@ -40,8 +40,8 @@ class StanzaParserTest : public CppUnit::TestFixture {
 			MyStanzaParser testling(factoryCollection_);
 
 			AttributeMap attributes;
-			attributes["foo"] = "fum";
-			attributes["bar"] = "baz";
+			attributes.addAttribute("foo", "", "fum");
+			attributes.addAttribute("bar", "", "baz");
 			testling.handleStartElement("mystanza", "", attributes);
 			testling.handleStartElement("mypayload1", "", attributes);
 			testling.handleStartElement("child", "", attributes);
@@ -107,9 +107,9 @@ class StanzaParserTest : public CppUnit::TestFixture {
 			MyStanzaParser testling(factoryCollection_);
 
 			AttributeMap attributes;
-			attributes["to"] = "foo@example.com/blo";
-			attributes["from"] = "bar@example.com/baz";
-			attributes["id"] = "id-123";
+			attributes.addAttribute("to", "", "foo@example.com/blo");
+			attributes.addAttribute("from", "", "bar@example.com/baz");
+			attributes.addAttribute("id", "", "id-123");
 			testling.handleStartElement("mystanza", "", attributes);
 			testling.handleEndElement("mypayload1", "");
 

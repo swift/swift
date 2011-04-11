@@ -15,7 +15,7 @@ DiscoInfoParser::DiscoInfoParser() : level_(TopLevel), formParser_(NULL) {
 void DiscoInfoParser::handleStartElement(const std::string& element, const std::string& ns, const AttributeMap& attributes) {
 	if (level_ == PayloadLevel) {
 		if (element == "identity") {
-			getPayloadInternal()->addIdentity(DiscoInfo::Identity(attributes.getAttribute("name"), attributes.getAttribute("category"), attributes.getAttribute("type"), attributes.getAttribute("lang")));
+			getPayloadInternal()->addIdentity(DiscoInfo::Identity(attributes.getAttribute("name"), attributes.getAttribute("category"), attributes.getAttribute("type"), attributes.getAttribute("lang", "http://www.w3.org/XML/1998/namespace")));
 		}
 		else if (element == "feature") {
 			getPayloadInternal()->addFeature(attributes.getAttribute("var"));

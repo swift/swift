@@ -5,6 +5,7 @@
  */
 
 #include <iostream>
+#include <boost/optional.hpp>
 
 #include "Swiften/Parser/PresenceParser.h"
 
@@ -15,31 +16,31 @@ PresenceParser::PresenceParser(PayloadParserFactoryCollection* factories) :
 }
 
 void PresenceParser::handleStanzaAttributes(const AttributeMap& attributes) {
-	AttributeMap::const_iterator type = attributes.find("type");
-	if (type != attributes.end()) {
-		if (type->second == "unavailable") {
+	boost::optional<std::string> type = attributes.getAttributeValue("type");
+	if (type) {
+		if (*type == "unavailable") {
 			getStanzaGeneric()->setType(Presence::Unavailable);
 		}
-		else if (type->second == "probe") {
+		else if (*type == "probe") {
 			getStanzaGeneric()->setType(Presence::Probe);
 		}
-		else if (type->second == "subscribe") {
+		else if (*type == "subscribe") {
 			getStanzaGeneric()->setType(Presence::Subscribe);
 		}
-		else if (type->second == "subscribed") {
+		else if (*type == "subscribed") {
 			getStanzaGeneric()->setType(Presence::Subscribed);
 		}
-		else if (type->second == "unsubscribe") {
+		else if (*type == "unsubscribe") {
 			getStanzaGeneric()->setType(Presence::Unsubscribe);
 		}
-		else if (type->second == "unsubscribed") {
+		else if (*type == "unsubscribed") {
 			getStanzaGeneric()->setType(Presence::Unsubscribed);
 		}
-		else if (type->second == "error") {
+		else if (*type == "error") {
 			getStanzaGeneric()->setType(Presence::Error);
 		}
 		else {
-			std::cerr << "Unknown Presence type: " << type->second << std::endl;
+			std::cerr << "Unknown Presence type: " << *type << std::endl;
 			getStanzaGeneric()->setType(Presence::Available);
 		}
 	}

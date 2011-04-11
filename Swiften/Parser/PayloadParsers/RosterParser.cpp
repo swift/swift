@@ -5,6 +5,9 @@
  */
 
 #include "Swiften/Parser/PayloadParsers/RosterParser.h"
+
+#include <boost/optional.hpp>
+
 #include "Swiften/Parser/SerializingParser.h"
 
 namespace Swift {
@@ -14,9 +17,9 @@ RosterParser::RosterParser() : level_(TopLevel), inItem_(false), unknownContentP
 
 void RosterParser::handleStartElement(const std::string& element, const std::string& ns, const AttributeMap& attributes) {
 	if (level_ == TopLevel) {
-		AttributeMap::const_iterator i = attributes.find("ver");
-		if (i != attributes.end()) {
-			getPayloadInternal()->setVersion(i->second);
+		boost::optional<std::string> ver = attributes.getAttributeValue("ver");
+		if (ver) {
+			getPayloadInternal()->setVersion(*ver);
 		}
 	}
 	else if (level_ == PayloadLevel) {

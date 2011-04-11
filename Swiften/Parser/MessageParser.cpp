@@ -4,9 +4,9 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include <iostream>
+#include <boost/optional.hpp>
 
-#include "Swiften/Parser/MessageParser.h"
+#include <Swiften/Parser/MessageParser.h>
 
 namespace Swift {
 
@@ -16,18 +16,18 @@ MessageParser::MessageParser(PayloadParserFactoryCollection* factories) :
 }
 
 void MessageParser::handleStanzaAttributes(const AttributeMap& attributes) {
-	AttributeMap::const_iterator type = attributes.find("type");
-	if (type != attributes.end()) {
-		if (type->second == "chat") {
+	boost::optional<std::string> type = attributes.getAttributeValue("type");
+	if (type) {
+		if (*type == "chat") {
 			getStanzaGeneric()->setType(Message::Chat);
 		}
-		else if (type->second == "error") {
+		else if (*type == "error") {
 			getStanzaGeneric()->setType(Message::Error);
 		}
-		else if (type->second == "groupchat") {
+		else if (*type == "groupchat") {
 			getStanzaGeneric()->setType(Message::Groupchat);
 		}
-		else if (type->second == "headline") {
+		else if (*type == "headline") {
 			getStanzaGeneric()->setType(Message::Headline);
 		}
 		else {

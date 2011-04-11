@@ -7,6 +7,7 @@
 #include "Swiften/Parser/StanzaParser.h"
 
 #include <iostream>
+#include <boost/optional.hpp>
 #include <cassert>
 
 #include "Swiften/Parser/PayloadParser.h"
@@ -39,17 +40,17 @@ void StanzaParser::handleStartElement(const std::string& element, const std::str
 		currentPayloadParser_->handleStartElement(element, ns, attributes);
 	}
 	else {
-		AttributeMap::const_iterator from = attributes.find("from");
-		if (from != attributes.end()) {
-			getStanza()->setFrom(JID(from->second));
+		boost::optional<std::string> from = attributes.getAttributeValue("from");
+		if (from) {
+			getStanza()->setFrom(JID(*from));
 		}
-		AttributeMap::const_iterator to = attributes.find("to");
-		if (to != attributes.end()) {
-			getStanza()->setTo(JID(to->second));
+		boost::optional<std::string> to = attributes.getAttributeValue("to");
+		if (to) {
+			getStanza()->setTo(JID(*to));
 		}
-		AttributeMap::const_iterator id = attributes.find("id");
-		if (id != attributes.end()) {
-			getStanza()->setID(id->second);
+		boost::optional<std::string> id = attributes.getAttributeValue("id");
+		if (id) {
+			getStanza()->setID(*id);
 		}
 		handleStanzaAttributes(attributes);
 	}

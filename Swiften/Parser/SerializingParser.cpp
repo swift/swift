@@ -7,7 +7,6 @@
 #include "Swiften/Parser/SerializingParser.h"
 #include "Swiften/Serializer/XML/XMLTextNode.h"
 #include "Swiften/Base/foreach.h"
-#include <iostream>
 
 namespace Swift {
 
@@ -16,8 +15,9 @@ SerializingParser::SerializingParser() {
 
 void SerializingParser::handleStartElement(const std::string& tag, const std::string&  ns, const AttributeMap& attributes) {
 	boost::shared_ptr<XMLElement> element(new XMLElement(tag, ns));
-	for (AttributeMap::const_iterator i = attributes.begin(); i != attributes.end(); ++i) {
-		element->setAttribute((*i).first, (*i).second);
+	// FIXME: Ignoring attribute namespace
+	foreach (const AttributeMap::Entry& e, attributes.getEntries()) {
+		element->setAttribute(e.getAttribute().getName(), e.getValue());
 	}
 
 	if (elementStack_.empty()) {

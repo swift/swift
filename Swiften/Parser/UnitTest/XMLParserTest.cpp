@@ -31,6 +31,8 @@ class XMLParserTest : public CppUnit::TestFixture {
 		CPPUNIT_TEST(testParse_InErrorState);
 		CPPUNIT_TEST(testParse_Incremental);
 		CPPUNIT_TEST(testParse_WhitespaceInAttribute);
+		CPPUNIT_TEST(testParse_AttributeWithoutNamespace);
+		CPPUNIT_TEST(testParse_AttributeWithNamespace);
 		CPPUNIT_TEST_SUITE_END();
 
 	public:
@@ -46,13 +48,13 @@ class XMLParserTest : public CppUnit::TestFixture {
 
 			CPPUNIT_ASSERT_EQUAL(Client::StartElement, client_.events[0].type);
 			CPPUNIT_ASSERT_EQUAL(std::string("iq"), client_.events[0].data);
-			CPPUNIT_ASSERT_EQUAL(static_cast<size_t>(1), client_.events[0].attributes.size());
-			CPPUNIT_ASSERT_EQUAL(std::string("get"), client_.events[0].attributes["type"]);
+			CPPUNIT_ASSERT_EQUAL(static_cast<size_t>(1), client_.events[0].attributes.getEntries().size());
+			CPPUNIT_ASSERT_EQUAL(std::string("get"), client_.events[0].attributes.getAttribute("type"));
 			CPPUNIT_ASSERT_EQUAL(std::string(), client_.events[0].ns);
 
 			CPPUNIT_ASSERT_EQUAL(Client::StartElement, client_.events[1].type);
 			CPPUNIT_ASSERT_EQUAL(std::string("query"), client_.events[1].data);
-			CPPUNIT_ASSERT_EQUAL(static_cast<size_t>(0), client_.events[1].attributes.size());
+			CPPUNIT_ASSERT_EQUAL(static_cast<size_t>(0), client_.events[1].attributes.getEntries().size());
 			CPPUNIT_ASSERT_EQUAL(std::string("jabber:iq:version"), client_.events[1].ns);
 
 			CPPUNIT_ASSERT_EQUAL(Client::EndElement, client_.events[2].type);
@@ -76,7 +78,7 @@ class XMLParserTest : public CppUnit::TestFixture {
 
 			CPPUNIT_ASSERT_EQUAL(Client::StartElement, client_.events[0].type);
 			CPPUNIT_ASSERT_EQUAL(std::string("query"), client_.events[0].data);
-			CPPUNIT_ASSERT_EQUAL(static_cast<size_t>(0), client_.events[0].attributes.size());
+			CPPUNIT_ASSERT_EQUAL(static_cast<size_t>(0), client_.events[0].attributes.getEntries().size());
 			CPPUNIT_ASSERT_EQUAL(std::string("jabber:iq:version"), client_.events[0].ns);
 
 			CPPUNIT_ASSERT_EQUAL(Client::StartElement, client_.events[1].type);
@@ -204,6 +206,28 @@ class XMLParserTest : public CppUnit::TestFixture {
 			CPPUNIT_ASSERT_EQUAL(std::string("presence"), client_.events[1].data);
 			CPPUNIT_ASSERT_EQUAL(Client::EndElement, client_.events[2].type);
 			CPPUNIT_ASSERT_EQUAL(std::string("presence"), client_.events[2].data);
+		}
+
+		void testParse_AttributeWithoutNamespace() {
+			ParserType testling(&client_);
+
+			CPPUNIT_ASSERT(testling.parse(
+				"<query xmlns='http://swift.im' attr='3'/>"));
+
+			CPPUNIT_ASSERT_EQUAL(static_cast<size_t>(1), client_.events[0].attributes.getEntries().size());
+			CPPUNIT_ASSERT_EQUAL(std::string("attr"), client_.events[0].attributes.getEntries()[0].getAttribute().getName());
+			CPPUNIT_ASSERT_EQUAL(std::string(""), client_.events[0].attributes.getEntries()[0].getAttribute().getNamespace());
+		}
+
+		void testParse_AttributeWithNamespace() {
+			ParserType testling(&client_);
+
+			CPPUNIT_ASSERT(testling.parse(
+				"<query xmlns='http://swift.im' xmlns:f='http://swift.im/f' f:attr='3'/>"));
+
+			CPPUNIT_ASSERT_EQUAL(static_cast<size_t>(1), client_.events[0].attributes.getEntries().size());
+			CPPUNIT_ASSERT_EQUAL(std::string("attr"), client_.events[0].attributes.getEntries()[0].getAttribute().getName());
+			CPPUNIT_ASSERT_EQUAL(std::string("http://swift.im/f"), client_.events[0].attributes.getEntries()[0].getAttribute().getNamespace());
 		}
 	
 	private:
