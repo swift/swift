@@ -1,529 +1,530 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.0" language="de_DE">
+<TS version="2.0" language="fr_FR">
 <defaultcodec>UTF-8</defaultcodec>
 <context>
     <name></name>
     <message>
         <location filename="../Controllers/Chat/ChatController.cpp" line="46"/>
         <source>Starting chat with %1% in chatroom %2%</source>
-        <translation>Beginne ein Gespräche mit %1% im Chatraum %2%</translation>
+        <translation>Démarrer une discussion avec %1% dans le salon %2%</translation>
     </message>
     <message>
         <location filename="../Controllers/Chat/ChatController.cpp" line="49"/>
         <source>Starting chat with %1% - %2%</source>
-        <translation>Beginne ein Gespräch mit %1% - %2%</translation>
+        <translation>Démarrer une discussion avec %1% - %2%</translation>
     </message>
     <message>
         <location filename="../Controllers/Chat/ChatController.cpp" line="119"/>
         <source>me</source>
-        <translation>Ich</translation>
+        <translation>moi</translation>
     </message>
     <message>
         <location filename="../Controllers/Chat/ChatController.cpp" line="160"/>
         <source>%1% has gone offline</source>
-        <translation>%1% ist offline gegangen</translation>
+        <translation>%1% est hors ligne</translation>
     </message>
     <message>
         <location filename="../Controllers/Chat/ChatController.cpp" line="164"/>
         <source>%1% has become available</source>
-        <translation>%1% ist online gekommen</translation>
+        <translation>%1% est devenu disponible</translation>
     </message>
     <message>
         <location filename="../Controllers/Chat/ChatController.cpp" line="166"/>
         <source>%1% has gone away</source>
-        <translation>%1% ist nicht mehr am Rechner</translation>
+        <translation>%1% est parti</translation>
     </message>
     <message>
         <location filename="../Controllers/Chat/ChatController.cpp" line="168"/>
         <source>%1% is now busy</source>
-        <translation>%1% ist beschäftigt</translation>
+        <translation>%1% est maintenant occupé</translation>
     </message>
     <message>
         <location filename="../Controllers/Chat/ChatControllerBase.cpp" line="56"/>
         <source>The day is now %1%</source>
-        <translation>Wir haben jetzt den Tag %1%</translation>
+        <translation>Nous sommes maintenant le %1%</translation>
     </message>
     <message>
         <location filename="../Controllers/Chat/ChatControllerBase.cpp" line="191"/>
         <source>Error sending message</source>
-        <translation>Fehler beim Senden der Nachricht</translation>
+        <translation>Erreur d&apos;envoi du message</translation>
     </message>
     <message>
         <location filename="../Controllers/Chat/ChatControllerBase.cpp" line="197"/>
         <source>Bad request</source>
-        <translation>Fehlerhafter Aufruf</translation>
+        <translation>Requête invalide</translation>
     </message>
     <message>
         <location filename="../Controllers/Chat/ChatControllerBase.cpp" line="198"/>
         <source>Conflict</source>
-        <translation>Konflikt</translation>
+        <translation>Conflit</translation>
     </message>
     <message>
         <location filename="../Controllers/Chat/ChatControllerBase.cpp" line="199"/>
         <source>This feature is not implemented</source>
-        <translation>Diese Eigenschaft ist nicht implementiert</translation>
+        <translation>Cette fonctionnalité n&apos;est pas implementée</translation>
     </message>
     <message>
         <location filename="../Controllers/Chat/ChatControllerBase.cpp" line="200"/>
         <source>Forbidden</source>
-        <translation>Verboten</translation>
+        <translation>Interdit</translation>
     </message>
     <message>
         <location filename="../Controllers/Chat/ChatControllerBase.cpp" line="201"/>
         <source>Recipient can no longer be contacted</source>
-        <translation>Der Empfänger ist nicht länger verfügbar</translation>
+        <translation>Destinataire ne peut plus être contacté</translation>
     </message>
     <message>
         <location filename="../Controllers/Chat/ChatControllerBase.cpp" line="202"/>
         <source>Internal server error</source>
-        <translation>Interner Server Fehler</translation>
+        <translation>Erreur interne du serveur</translation>
     </message>
     <message>
         <location filename="../Controllers/Chat/ChatControllerBase.cpp" line="203"/>
         <source>Item not found</source>
-        <translation>Element nicht gefunden</translation>
+        <translation>Objet non trouvé</translation>
     </message>
     <message>
         <location filename="../Controllers/Chat/ChatControllerBase.cpp" line="204"/>
         <source>JID Malformed</source>
-        <translation>Jabber ID ist falsch formatiert</translation>
+        <translation>JID mal formaté</translation>
     </message>
     <message>
         <location filename="../Controllers/Chat/ChatControllerBase.cpp" line="205"/>
         <source>Message was rejected</source>
-        <translation>Nachricht wurde zurückgewiesen</translation>
+        <translation>Message a été rejeté</translation>
     </message>
     <message>
         <location filename="../Controllers/Chat/ChatControllerBase.cpp" line="206"/>
         <source>Not allowed</source>
-        <translation>Nicht erlaubt</translation>
+        <translation>Non permis</translation>
     </message>
     <message>
         <location filename="../Controllers/Chat/ChatControllerBase.cpp" line="207"/>
         <source>Not authorized</source>
-        <translation>Nicht authorisiert</translation>
+        <translation>Non autorisé</translation>
     </message>
     <message>
         <location filename="../Controllers/Chat/ChatControllerBase.cpp" line="208"/>
         <source>Payment is required</source>
-        <translation>Bezahlung ist nötig</translation>
+        <translatorcomment>Paiement est requis</translatorcomment>
+        <translation></translation>
     </message>
     <message>
         <location filename="../Controllers/Chat/ChatControllerBase.cpp" line="209"/>
         <source>Recipient is unavailable</source>
-        <translation>Empfänger nicht verfügbar</translation>
+        <translation>Destinataire est indisponible</translation>
     </message>
     <message>
         <location filename="../Controllers/Chat/ChatControllerBase.cpp" line="210"/>
         <source>Redirect</source>
-        <translation>Weiterleitung</translation>
+        <translation>Rediriger</translation>
     </message>
     <message>
         <location filename="../Controllers/Chat/ChatControllerBase.cpp" line="211"/>
         <source>Registration required</source>
-        <translation>Registrierung nötig</translation>
+        <translation>Inscription requise</translation>
     </message>
     <message>
         <location filename="../Controllers/Chat/ChatControllerBase.cpp" line="212"/>
         <source>Recipient&apos;s server not found</source>
-        <translation>Server des Empfängers konnte nicht gefunden werden</translation>
+        <translation>Serveur du destinataire non trouvé</translation>
     </message>
     <message>
         <location filename="../Controllers/Chat/ChatControllerBase.cpp" line="213"/>
         <source>Remote server timeout</source>
-        <translation>Zeitüberschreitung beim entfernten Server</translation>
+        <translation>Pas de réponse du serveur distant</translation>
     </message>
     <message>
         <location filename="../Controllers/Chat/ChatControllerBase.cpp" line="214"/>
         <source>The server is low on resources</source>
-        <translation>Der Server hat nur noch wenige Resourcen zur Verfügung</translation>
+        <translation>Le serveur est faible en ressources</translation>
     </message>
     <message>
         <location filename="../Controllers/Chat/ChatControllerBase.cpp" line="215"/>
         <source>The service is unavailable</source>
-        <translation>Dieser Service ist nicht verfügbar</translation>
+        <translation>Le service est indisponible</translation>
     </message>
     <message>
         <location filename="../Controllers/Chat/ChatControllerBase.cpp" line="216"/>
         <source>A subscription is required</source>
-        <translation>Ein Abonnement ist nötig</translation>
+        <translation>Un abonnement est requis</translation>
     </message>
     <message>
         <location filename="../Controllers/Chat/ChatControllerBase.cpp" line="217"/>
         <source>Undefined condition</source>
-        <translation>Nicht definierter Zustand</translation>
+        <translation>Condition non définie</translation>
     </message>
     <message>
         <location filename="../Controllers/Chat/ChatControllerBase.cpp" line="218"/>
         <source>Unexpected request</source>
-        <translation>Unerwarteter Aufruf</translation>
+        <translation>Requête inattendue</translation>
     </message>
     <message>
         <location filename="../Controllers/Chat/MUCController.cpp" line="114"/>
         <source>Room %1% is not responding. This operation may never complete.</source>
-        <translation>Der Chatraum %1% antwortet nicht. Diese Aktion wird wohl nie enden.</translation>
+        <translation>Salon %1% ne réponds pas. Cette opération peut ne jamais se terminer.</translation>
     </message>
     <message>
         <location filename="../Controllers/Chat/MUCController.cpp" line="125"/>
         <source>Unable to enter this room</source>
-        <translation>Es ist nicht möglich diesem Chatraum beizutreten</translation>
+        <translation>Impossible de joindre ce salon</translation>
     </message>
     <message>
         <location filename="../Controllers/Chat/MUCController.cpp" line="131"/>
         <source>Unable to enter this room as %1%, retrying as %2%</source>
-        <translation>Es ist nicht möglich diesem Chatraum als %1% beizutreten, versuche es als %2%</translation>
+        <translation>Impossible de joindre ce salon en tant que %1%, réessaye en tant que %2%</translation>
     </message>
     <message>
         <location filename="../Controllers/Chat/MUCController.cpp" line="135"/>
         <source>No nickname specified</source>
-        <translation>Nickname nicht angegeben</translation>
+        <translation>Aucun pseudo spécifié</translation>
     </message>
     <message>
         <location filename="../Controllers/Chat/MUCController.cpp" line="139"/>
         <source>A password needed</source>
-        <translation>Ein Passwort ist nötig</translation>
+        <translation>Un mot de passe est nécessaire</translation>
     </message>
     <message>
         <location filename="../Controllers/Chat/MUCController.cpp" line="143"/>
         <source>Only members may enter</source>
-        <translation>Es dürfen nur Mitglieder eintreten</translation>
+        <translation>Seuls les membres peuvent joindre</translation>
     </message>
     <message>
         <location filename="../Controllers/Chat/MUCController.cpp" line="147"/>
         <source>You are banned from the room</source>
-        <translation>Du wurdest aus diesem Chatraum gebannt</translation>
+        <translation>Vous êtes bannis du salon</translation>
     </message>
     <message>
         <location filename="../Controllers/Chat/MUCController.cpp" line="151"/>
         <source>The room is full</source>
-        <translation>Der Chatraum ist voll</translation>
+        <translation>Le salon est plein</translation>
     </message>
     <message>
         <location filename="../Controllers/Chat/MUCController.cpp" line="155"/>
         <source>The room does not exist</source>
-        <translation>Dieser Chatraum existiert nicht</translation>
+        <translation>Le salon n&apos;existe pas</translation>
     </message>
     <message>
         <location filename="../Controllers/Chat/MUCController.cpp" line="173"/>
         <source>You have entered room %1% as %2%.</source>
-        <translation>Du hast den Chatraum %1% als %2% betreten.</translation>
+        <translation>Vous avez rejoint le salon %1% en tant que %2%.</translation>
     </message>
     <message>
         <location filename="../Controllers/Chat/MUCController.cpp" line="214"/>
         <source>%1% has entered the room as a %2%.</source>
-        <translation>%1% hat den Chatraum als ein %2% betreten.</translation>
+        <translation>%1% a rejoint le salon en tant que %2%.</translation>
     </message>
     <message>
         <location filename="../Controllers/Chat/MUCController.cpp" line="217"/>
         <source>%1% has entered the room.</source>
-        <translation>%1% hat den Chatraum betreten.</translation>
+        <translation>%1% a rejoint le salon.</translation>
     </message>
     <message>
         <location filename="../Controllers/Chat/MUCController.cpp" line="243"/>
         <source>moderator</source>
-        <translation>Moderator</translation>
+        <translation>modérateur</translation>
     </message>
     <message>
         <location filename="../Controllers/Chat/MUCController.cpp" line="244"/>
         <source>participant</source>
-        <translation>Teilnehmer</translation>
+        <translation>participant</translation>
     </message>
     <message>
         <location filename="../Controllers/Chat/MUCController.cpp" line="245"/>
         <source>visitor</source>
-        <translation>Gast</translation>
+        <translation>visiteur</translation>
     </message>
     <message>
         <location filename="../Controllers/Chat/MUCController.cpp" line="283"/>
         <source>The room subject is now: %1%</source>
-        <translation>Das Thema des Chatraumes ist nun: %1%</translation>
+        <translation>Le sujet du salon est actuellement: %1%</translation>
     </message>
     <message>
         <location filename="../Controllers/Chat/MUCController.cpp" line="313"/>
         <source>%1% is now a %2%</source>
-        <translation>%1% ist nun ein %2%</translation>
+        <translation>%1% est maintenant un %2%</translation>
     </message>
     <message>
         <location filename="../Controllers/Chat/MUCController.cpp" line="319"/>
         <source>Moderators</source>
-        <translation>Moderatoren</translation>
+        <translation>Modérateurs</translation>
     </message>
     <message>
         <location filename="../Controllers/Chat/MUCController.cpp" line="320"/>
         <source>Participants</source>
-        <translation>Teilnehmer</translation>
+        <translation>Participants</translation>
     </message>
     <message>
         <location filename="../Controllers/Chat/MUCController.cpp" line="321"/>
         <source>Visitors</source>
-        <translation>Gäste</translation>
+        <translation>Visiteurs</translation>
     </message>
     <message>
         <location filename="../Controllers/Chat/MUCController.cpp" line="322"/>
         <source>Occupants</source>
-        <translation>Besitzer</translation>
+        <translation>Occupants</translation>
     </message>
     <message>
         <location filename="../Controllers/Chat/MUCController.cpp" line="336"/>
         <source>Trying to enter room %1%</source>
-        <translation>Versuche in den Chatraum %1% einzutreten</translation>
+        <translation>Tente de joindre le salon %1%</translation>
     </message>
     <message>
         <location filename="../Controllers/Chat/MUCController.cpp" line="365"/>
         <location filename="../Controllers/Chat/MUCController.cpp" line="474"/>
         <source>%1% has left the room</source>
-        <translation>%1% hat den Chatraum verlassen</translation>
+        <translation>%1% a quitté le salon</translation>
     </message>
     <message>
         <location filename="../Controllers/Chat/MUCController.cpp" line="365"/>
         <source>You have left the room</source>
-        <translation>Du hast den Chatraum verlassen</translation>
+        <translation>Vous avez quitté le salon</translation>
     </message>
     <message>
         <location filename="../Controllers/Chat/MUCController.cpp" line="439"/>
         <location filename="../Controllers/Chat/MUCController.cpp" line="503"/>
         <source> and </source>
-        <translation> und </translation>
+        <translation> et </translation>
     </message>
     <message>
         <location filename="../Controllers/Chat/MUCController.cpp" line="463"/>
         <source>%1% have entered the room</source>
-        <translation>%1% haben den Chatraum betreten</translation>
+        <translation>%1% ont rejoint le salon</translation>
     </message>
     <message>
         <location filename="../Controllers/Chat/MUCController.cpp" line="466"/>
         <source>%1% has entered the room</source>
-        <translation>%1% hat den Chatraum betreten</translation>
+        <translation>%1% a rejoint le salon</translation>
     </message>
     <message>
         <location filename="../Controllers/Chat/MUCController.cpp" line="471"/>
         <source>%1% have left the room</source>
-        <translation>%1% haben den Chatraum verlassen</translation>
+        <translation>%1% ont quitté le salon</translation>
     </message>
     <message>
         <location filename="../Controllers/Chat/MUCController.cpp" line="479"/>
         <source>%1% have entered then left the room</source>
-        <translation>%1% habe den Chatraum betreten und dann wieder verlassen</translation>
+        <translation>%1% ont rejoint et quitté le salon</translation>
     </message>
     <message>
         <location filename="../Controllers/Chat/MUCController.cpp" line="482"/>
         <source>%1% has entered then left the room</source>
-        <translation>%1% hat den Chatraum betreten und dann wieder verlassen</translation>
+        <translation>%1% a rejoint et quitté le salon</translation>
     </message>
     <message>
         <location filename="../Controllers/Chat/MUCController.cpp" line="487"/>
         <source>%1% have left then returned to the room</source>
-        <translation>%1% haben den Chatraum verlassen und dann wieder betreten</translation>
+        <translation>%1% ont quitté et rejoint le salon</translation>
     </message>
     <message>
         <location filename="../Controllers/Chat/MUCController.cpp" line="490"/>
         <source>%1% has left then returned to the room</source>
-        <translation>%1% hat den Chatraum verlassen und dann wieder betreten</translation>
+        <translation>%1% a quitté et rejoint le salon</translation>
     </message>
     <message>
         <location filename="../Controllers/EventNotifier.cpp" line="51"/>
         <source>%1% wants to add you to his/her contact list</source>
-        <translation>%1% möchte dich zu seiner/ihrer Kontaktliste hinzufügen</translation>
+        <translation>%1% souhaite vous ajouter à sa liste de contacts</translation>
     </message>
     <message>
         <location filename="../Controllers/EventNotifier.cpp" line="55"/>
         <source>Error</source>
-        <translation>Fehler</translation>
+        <translation>Erreur</translation>
     </message>
     <message>
         <location filename="../Controllers/MainController.cpp" line="438"/>
         <source>Unknown Error</source>
-        <translation>unbekannter Fehler</translation>
+        <translation>Erreur inconnue</translation>
     </message>
     <message>
         <location filename="../Controllers/MainController.cpp" line="439"/>
         <source>Unable to find server</source>
-        <translation>Der Server kann nicht gefunden werden</translation>
+        <translation>Impossible de trouver le serveur</translation>
     </message>
     <message>
         <location filename="../Controllers/MainController.cpp" line="440"/>
         <source>Error connecting to server</source>
-        <translation>Fehler beim Aufbau einer Verbindung zum Server</translation>
+        <translation>Erreur de connexion au serveur</translation>
     </message>
     <message>
         <location filename="../Controllers/MainController.cpp" line="441"/>
         <source>Error while receiving server data</source>
-        <translation>Fehler beim Empfangen der Serverdaten</translation>
+        <translation>Erreur lors de la réception de données du serveur</translation>
     </message>
     <message>
         <location filename="../Controllers/MainController.cpp" line="442"/>
         <source>Error while sending data to the server</source>
-        <translation>Fehler beim Senden der Daten zum Server</translation>
+        <translation>Erreur lors de l&apos;envoi de données vers le serveur</translation>
     </message>
     <message>
         <location filename="../Controllers/MainController.cpp" line="443"/>
         <source>Error parsing server data</source>
-        <translation>Fehler beim Einlesen der Serverdaten</translation>
+        <translation>Erreur de traîtement des données du serveur</translation>
     </message>
     <message>
         <location filename="../Controllers/MainController.cpp" line="444"/>
         <source>Login/password invalid</source>
-        <translation>Login oder Passwort ungültig</translation>
+        <translation>Login/mot de passe invalide</translation>
     </message>
     <message>
         <location filename="../Controllers/MainController.cpp" line="445"/>
         <source>Error while compressing stream</source>
-        <translation>Fehler beim Komprimieren des Datenstreams</translation>
+        <translation>Erreur lors de la compression de flux</translation>
     </message>
     <message>
         <location filename="../Controllers/MainController.cpp" line="446"/>
         <source>Server verification failed</source>
-        <translation>Überprüfung des Servers fehlgeschlagen</translation>
+        <translation>Vérification du serveur a échoué</translation>
     </message>
     <message>
         <location filename="../Controllers/MainController.cpp" line="447"/>
         <source>Authentication mechanisms not supported</source>
-        <translation>Authentifizierungsmethoden werden nicht unterstützt</translation>
+        <translation>Méthodes d&apos;authentification non prises en charge</translation>
     </message>
     <message>
         <location filename="../Controllers/MainController.cpp" line="448"/>
         <source>Unexpected response</source>
-        <translation>Unerwartete Antwort</translation>
+        <translation>Réponse inattendue</translation>
     </message>
     <message>
         <location filename="../Controllers/MainController.cpp" line="449"/>
         <source>Error binding resource</source>
-        <translation>Fehler beim Verknüpfen der Resourcen</translation>
+        <translation>Erreur de liaison de ressource</translation>
     </message>
     <message>
         <location filename="../Controllers/MainController.cpp" line="450"/>
         <source>Error starting session</source>
-        <translation>Fehler beim Starten der Sitzung</translation>
+        <translation>Erreur de démarrage session</translation>
     </message>
     <message>
         <location filename="../Controllers/MainController.cpp" line="451"/>
         <source>Stream error</source>
-        <translation>Stream Fehler</translation>
+        <translation>Erreur de flux</translation>
     </message>
     <message>
         <location filename="../Controllers/MainController.cpp" line="452"/>
         <source>Encryption error</source>
-        <translation>Verschlüsselungsfehler</translation>
+        <translation>Erreur de cryptage</translation>
     </message>
     <message>
         <location filename="../Controllers/MainController.cpp" line="453"/>
         <source>Error loading certificate (Invalid password?)</source>
-        <translation>Fehler beim Laden des Zertifikates (falsches Passwort?)</translation>
+        <translation>Erreur de chargement du certificat (mot de passe invalide?)</translation>
     </message>
     <message>
         <location filename="../Controllers/MainController.cpp" line="454"/>
         <source>Certificate not authorized</source>
-        <translation>Zertifikat nicht authorisiert</translation>
+        <translation>Certificat non autorisé</translation>
     </message>
     <message>
         <location filename="../Controllers/MainController.cpp" line="456"/>
         <source>Unknown certificate</source>
-        <translation>Unbekanntes Zertifikat</translation>
+        <translation>Certificat inconnu</translation>
     </message>
     <message>
         <location filename="../Controllers/MainController.cpp" line="457"/>
         <source>Certificate has expired</source>
-        <translation>Zertifikat ist abgelaufen</translation>
+        <translation>Certificat a expiré</translation>
     </message>
     <message>
         <location filename="../Controllers/MainController.cpp" line="458"/>
         <source>Certificate is not yet valid</source>
-        <translation>Zertifikat noch nicht gültig</translation>
+        <translation>Certificat n&apos;est pas encore valide</translation>
     </message>
     <message>
         <location filename="../Controllers/MainController.cpp" line="459"/>
         <source>Certificate is self-signed</source>
-        <translation>Zertifikat ist selbst signiert</translation>
+        <translation>Certificat est auto-signé</translation>
     </message>
     <message>
         <location filename="../Controllers/MainController.cpp" line="460"/>
         <source>Certificate has been rejected</source>
-        <translation>Zertifikat wurde zurückgewiesen</translation>
+        <translation>Certificat a été rejeté</translation>
     </message>
     <message>
         <location filename="../Controllers/MainController.cpp" line="461"/>
         <source>Certificate is not trusted</source>
-        <translation>Zertifikat wird nicht vertraut</translation>
+        <translation>Certificat n&apos;est pas approuvé</translation>
     </message>
     <message>
         <location filename="../Controllers/MainController.cpp" line="462"/>
         <source>Certificate cannot be used for encrypting your connection</source>
-        <translation>Zertifikat kann nicht zum Verschlüsseln der Verbindung genutzt werden</translation>
+        <translation>Certificat ne peut pas être utilisé pour crypter votre connexion</translation>
     </message>
     <message>
         <location filename="../Controllers/MainController.cpp" line="463"/>
         <source>Certificate path length constraint exceeded</source>
-        <translation>Zertifikatpfadlängenbeschränkung überschritten</translation>
+        <translation>Contrainte de longueur du chemin d&apos;accès de certification dépassée</translation>
     </message>
     <message>
         <location filename="../Controllers/MainController.cpp" line="464"/>
         <source>Invalid certificate signature</source>
-        <translation>Ungültige Zertifikatssignatur</translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../Controllers/MainController.cpp" line="465"/>
         <source>Invalid Certificate Authority</source>
-        <translation>Ungültige Zertifizierungsstelle</translation>
+        <translation>Autorité de Certification invalide</translation>
     </message>
     <message>
         <location filename="../Controllers/MainController.cpp" line="466"/>
         <source>Certificate does not match the host identity</source>
-        <translation>Zertifikat stimmt nicht mit der Hostidentität überein</translation>
+        <translation>Certificat ne correspond pas à l&apos;identité hôte</translation>
     </message>
     <message>
         <location filename="../Controllers/MainController.cpp" line="476"/>
         <source>Certificate error</source>
-        <translation>Zertifikatsfehler</translation>
+        <translation>Erreur de certificat</translation>
     </message>
     <message>
         <location filename="../Controllers/MainController.cpp" line="490"/>
         <source>Reconnect to %1% failed: %2%. Will retry in %3% seconds.</source>
-        <translation>Erneutes verbinden zu %1% fehlgeschlagen: %2%. Es wird in %3% Sekunden erneut versucht zu verbinden.</translation>
+        <translation>Reconnexion a %1% a echoué: %2%. Va réessayer dans %3% secondes.</translation>
     </message>
     <message>
         <location filename="../Controllers/MainController.cpp" line="493"/>
         <source>Disconnected from %1%: %2%.</source>
-        <translation>Verbindung zu %1% getrennt: %2%.</translation>
+        <translation>Déconnecté de %1%: %2%.</translation>
     </message>
     <message>
         <location filename="../Controllers/Roster/RosterController.cpp" line="126"/>
         <location filename="../Controllers/Roster/RosterController.cpp" line="152"/>
         <location filename="../Controllers/Roster/RosterController.cpp" line="214"/>
         <source>Contacts</source>
-        <translation>Kontakte</translation>
+        <translation>Contacts</translation>
     </message>
     <message>
         <location filename="../Controllers/Roster/RosterController.cpp" line="251"/>
         <source>Server %1% rejected contact list change to item &apos;%2%&apos;</source>
-        <translation>Server %1% hat die Kontaktlistenänderung, für Element &apos;%2%&apos;, zurückgewiesen</translation>
+        <translation>Serveur %1% a rejeté le changement de liste de contacts en objet &apos;%2%&apos;</translation>
     </message>
     <message>
         <location filename="../Controllers/StatusUtil.cpp" line="15"/>
         <location filename="../Controllers/StatusUtil.cpp" line="16"/>
         <source>Available</source>
-        <translation>Verfügbar</translation>
+        <translation>Disponible</translation>
     </message>
     <message>
         <location filename="../Controllers/StatusUtil.cpp" line="17"/>
         <location filename="../Controllers/StatusUtil.cpp" line="18"/>
         <source>Away</source>
-        <translation>Abwesend</translation>
+        <translation>Absent</translation>
     </message>
     <message>
         <location filename="../Controllers/StatusUtil.cpp" line="19"/>
         <source>Busy</source>
-        <translation>Beschäftigt</translation>
+        <translation>Occupé</translation>
     </message>
     <message>
         <location filename="../Controllers/StatusUtil.cpp" line="20"/>
         <source>Offline</source>
-        <translation>Offline</translation>
+        <translation>Hors ligne</translation>
     </message>
     <message>
         <location filename="../Controllers/ProfileController.cpp" line="62"/>
         <source>There was an error publishing your profile data</source>
-        <translation>Es ist eine Fehler während des Veröfflichen deiner Profildaten aufgetreten</translation>
+        <translation>Il ya eu une erreur de publication de vos données de profil</translation>
     </message>
 </context>
 <context>
@@ -531,7 +532,7 @@
     <message>
         <location filename="../QtUI/QtStrings.h" line="17"/>
         <source>Close Tab</source>
-        <translation>Tab schließen</translation>
+        <translation>Fermer l&apos;onglet</translation>
     </message>
 </context>
 <context>
@@ -539,37 +540,37 @@
     <message>
         <location filename="../QtUI/QtStrings.h" line="79"/>
         <source>Services</source>
-        <translation>Dienste</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../QtUI/QtStrings.h" line="80"/>
         <source>Hide %1</source>
-        <translation>Verstecke %1</translation>
+        <translation type="unfinished">Hide %1</translation>
     </message>
     <message>
         <location filename="../QtUI/QtStrings.h" line="81"/>
         <source>Hide Others</source>
-        <translation>Verstecke andere</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../QtUI/QtStrings.h" line="82"/>
         <source>Show All</source>
-        <translation>Zeige alle</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../QtUI/QtStrings.h" line="83"/>
         <source>Preferences...</source>
-        <translation>Einstellungen...</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../QtUI/QtStrings.h" line="84"/>
         <source>Quit %1</source>
-        <translation>Beende %1</translation>
+        <translation type="unfinished">Quit %1</translation>
     </message>
     <message>
         <location filename="../QtUI/QtStrings.h" line="85"/>
         <source>About %1</source>
-        <translation>Über %1</translation>
+        <translation type="unfinished">About %1</translation>
     </message>
 </context>
 <context>
@@ -586,32 +587,32 @@
     <message>
         <location filename="../QtUI/QtStrings.h" line="69"/>
         <source>&amp;Yes</source>
-        <translation>&amp;Ja</translation>
+        <translation>&amp;Oui</translation>
     </message>
     <message>
         <location filename="../QtUI/QtStrings.h" line="70"/>
         <source>&amp;No</source>
-        <translation>&amp;Nein</translation>
+        <translation>&amp;Non</translation>
     </message>
     <message>
         <location filename="../QtUI/QtStrings.h" line="71"/>
         <source>&amp;OK</source>
-        <translation>&amp;Ok</translation>
+        <translation>&amp;OK</translation>
     </message>
     <message>
         <location filename="../QtUI/QtStrings.h" line="72"/>
         <source>OK</source>
-        <translation>Ok</translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../QtUI/QtStrings.h" line="73"/>
         <source>&amp;Cancel</source>
-        <translation>&amp;Abbrechen</translation>
+        <translation>&amp;Annuler</translation>
     </message>
     <message>
         <location filename="../QtUI/QtStrings.h" line="74"/>
         <source>Cancel</source>
-        <translation>Abbrechen</translation>
+        <translation>Annuler</translation>
     </message>
 </context>
 <context>
@@ -619,37 +620,37 @@
     <message>
         <location filename="../QtUI/QtStrings.h" line="21"/>
         <source>Select All</source>
-        <translation>Alle auswählen</translation>
+        <translation>Tout sélectionner</translation>
     </message>
     <message>
         <location filename="../QtUI/QtStrings.h" line="22"/>
         <source>&amp;Undo</source>
-        <translation>&amp;Rückgängig</translation>
+        <translation>&amp;Annuler</translation>
     </message>
     <message>
         <location filename="../QtUI/QtStrings.h" line="23"/>
         <source>&amp;Redo</source>
-        <translation>&amp;Wiederherstellen</translation>
+        <translation>&amp;Rétablir</translation>
     </message>
     <message>
         <location filename="../QtUI/QtStrings.h" line="24"/>
         <source>Cu&amp;t</source>
-        <translation>&amp;Ausschneiden</translation>
+        <translation>Coupe&amp;r</translation>
     </message>
     <message>
         <location filename="../QtUI/QtStrings.h" line="25"/>
         <source>&amp;Copy</source>
-        <translation>&amp;Kopieren</translation>
+        <translation>&amp;Copier</translation>
     </message>
     <message>
         <location filename="../QtUI/QtStrings.h" line="26"/>
         <source>&amp;Paste</source>
-        <translation>&amp;Einfügen</translation>
+        <translation>&amp;Coller</translation>
     </message>
     <message>
         <location filename="../QtUI/QtStrings.h" line="27"/>
         <source>Delete</source>
-        <translation>Löschen</translation>
+        <translation>Supprimer</translation>
     </message>
 </context>
 <context>
@@ -657,12 +658,12 @@
     <message>
         <location filename="../QtUI/QtStrings.h" line="76"/>
         <source>Show Details...</source>
-        <translation>Details anzeigen...</translation>
+        <translation>Afficher les Détails...</translation>
     </message>
     <message>
         <location filename="../QtUI/QtStrings.h" line="77"/>
         <source>Hide Details...</source>
-        <translation>Details verstecken...</translation>
+        <translation>Cacher les Détails...</translation>
     </message>
 </context>
 <context>
@@ -670,17 +671,17 @@
     <message>
         <location filename="../QtUI/MUCSearch/MUCSearchEmptyItem.cpp" line="25"/>
         <source>No rooms found</source>
-        <translation>Keine Chaträume gefunden</translation>
+        <translation>Aucuns salons trouvés</translation>
     </message>
     <message>
         <location filename="../QtUI/EventViewer/QtEvent.cpp" line="63"/>
         <source>%1 would like to add you to their contact list.</source>
-        <translation>%1 möchte dich zu seiner/ihrer Kontaktliste hinzufügen.</translation>
+        <translation>%1 souhaitent vous ajouter à leur liste de contacts.</translation>
     </message>
     <message>
         <location filename="../QtUI/EventViewer/QtEvent.cpp" line="66"/>
         <source>%1 would like to add you to their contact list, saying &apos;%2&apos;</source>
-        <translation>%1 möchte dich zu seiner/ihrer Kontaktliste hinzufügen, sein/ihr Kommentar dazu war: &apos;%2&apos;</translation>
+        <translation>%1 would like to add you to their contact list, saying &apos;%2&apos;</translation>
     </message>
 </context>
 <context>
@@ -688,37 +689,37 @@
     <message>
         <location filename="../QtUI/QtStrings.h" line="29"/>
         <source>Scroll here</source>
-        <translation>Hier scrollen</translation>
+        <translation>Défiler ici</translation>
     </message>
     <message>
         <location filename="../QtUI/QtStrings.h" line="30"/>
         <source>Top</source>
-        <translation>Oben</translation>
+        <translation>Haut</translation>
     </message>
     <message>
         <location filename="../QtUI/QtStrings.h" line="31"/>
         <source>Bottom</source>
-        <translation>Unten</translation>
+        <translation>Bas</translation>
     </message>
     <message>
         <location filename="../QtUI/QtStrings.h" line="32"/>
         <source>Page up</source>
-        <translation>Seite hoch</translation>
+        <translation>Haut de page</translation>
     </message>
     <message>
         <location filename="../QtUI/QtStrings.h" line="33"/>
         <source>Page down</source>
-        <translation>Seite runter</translation>
+        <translation>Bas de page</translation>
     </message>
     <message>
         <location filename="../QtUI/QtStrings.h" line="34"/>
         <source>Scroll up</source>
-        <translation>raufscrollen</translation>
+        <translation>Défiler vers le haut</translation>
     </message>
     <message>
         <location filename="../QtUI/QtStrings.h" line="35"/>
         <source>Scroll down</source>
-        <translation>runterscrollen</translation>
+        <translation>Défiler vers le bas</translation>
     </message>
 </context>
 <context>
@@ -726,37 +727,37 @@
     <message>
         <location filename="../QtUI/QtStrings.h" line="37"/>
         <source>Select All</source>
-        <translation>Alles auswählen</translation>
+        <translation>Tout Sélectionner</translation>
     </message>
     <message>
         <location filename="../QtUI/QtStrings.h" line="38"/>
         <source>&amp;Copy</source>
-        <translation>&amp;Kopieren</translation>
+        <translation>&amp;Copier</translation>
     </message>
     <message>
         <location filename="../QtUI/QtStrings.h" line="39"/>
         <source>&amp;Undo</source>
-        <translation>&amp;Rückgängig</translation>
+        <translation>&amp;Annuler</translation>
     </message>
     <message>
         <location filename="../QtUI/QtStrings.h" line="40"/>
         <source>&amp;Redo</source>
-        <translation>&amp;Wiederherstellen</translation>
+        <translation>&amp;Rétablir</translation>
     </message>
     <message>
         <location filename="../QtUI/QtStrings.h" line="41"/>
         <source>Cu&amp;t</source>
-        <translation>&amp;Ausschneiden</translation>
+        <translation>&amp;Couper</translation>
     </message>
     <message>
         <location filename="../QtUI/QtStrings.h" line="42"/>
         <source>&amp;Paste</source>
-        <translation>&amp;Einfügen</translation>
+        <translation>&amp;Coller</translation>
     </message>
     <message>
         <location filename="../QtUI/QtStrings.h" line="43"/>
         <source>Delete</source>
-        <translation>Löschen</translation>
+        <translation>Supprimer</translation>
     </message>
 </context>
 <context>
@@ -764,52 +765,52 @@
     <message>
         <location filename="../QtUI/QtStrings.h" line="45"/>
         <source>Copy Link</source>
-        <translation>Verknüpfung kopieren</translation>
+        <translation>Copier le lien</translation>
     </message>
     <message>
         <location filename="../QtUI/QtStrings.h" line="46"/>
         <source>Copy</source>
-        <translation>Kopieren</translation>
+        <translation>Copier</translation>
     </message>
     <message>
         <location filename="../QtUI/QtStrings.h" line="47"/>
         <source>Copy Image</source>
-        <translation>Bild kopieren</translation>
+        <translation>Copier l&apos;image</translation>
     </message>
     <message>
         <location filename="../QtUI/QtStrings.h" line="48"/>
         <source>Scroll here</source>
-        <translation>Hier scrollen</translation>
+        <translation>Déplacer ici</translation>
     </message>
     <message>
         <location filename="../QtUI/QtStrings.h" line="49"/>
         <source>Top</source>
-        <translation>Oben</translation>
+        <translation>Haut</translation>
     </message>
     <message>
         <location filename="../QtUI/QtStrings.h" line="50"/>
         <source>Bottom</source>
-        <translation>Unten</translation>
+        <translation>Bas</translation>
     </message>
     <message>
         <location filename="../QtUI/QtStrings.h" line="51"/>
         <source>Page up</source>
-        <translation>Seite hoch</translation>
+        <translation>Haut de page</translation>
     </message>
     <message>
         <location filename="../QtUI/QtStrings.h" line="52"/>
         <source>Page down</source>
-        <translation>Seite runter</translation>
+        <translation>Bas de page</translation>
     </message>
     <message>
         <location filename="../QtUI/QtStrings.h" line="53"/>
         <source>Scroll up</source>
-        <translation>hochscrollen</translation>
+        <translation>Défiler vers le haut</translation>
     </message>
     <message>
         <location filename="../QtUI/QtStrings.h" line="54"/>
         <source>Scroll down</source>
-        <translation>runterscrollen</translation>
+        <translation>Défiler vers le bas</translation>
     </message>
 </context>
 <context>
@@ -817,62 +818,62 @@
     <message>
         <location filename="../QtUI/QtStrings.h" line="56"/>
         <source>&lt; &amp;Back</source>
-        <translation>&lt; &amp;Zurück</translation>
+        <translation>&lt; &amp;Précédent</translation>
     </message>
     <message>
         <location filename="../QtUI/QtStrings.h" line="57"/>
         <source>&amp;Finish</source>
-        <translation>&amp;Abschliesen</translation>
+        <translation>&amp;Terminer</translation>
     </message>
     <message>
         <location filename="../QtUI/QtStrings.h" line="58"/>
         <source>&amp;Help</source>
-        <translation>&amp;Hilfe</translation>
+        <translation>&amp;Aide</translation>
     </message>
     <message>
         <location filename="../QtUI/QtStrings.h" line="59"/>
         <source>Go Back</source>
-        <translation>Zurück</translation>
+        <translation>Revenir</translation>
     </message>
     <message>
         <location filename="../QtUI/QtStrings.h" line="60"/>
         <source>Continue</source>
-        <translation>Weiter</translation>
+        <translation>Continuer</translation>
     </message>
     <message>
         <location filename="../QtUI/QtStrings.h" line="61"/>
         <source>Commit</source>
-        <translation>Festlegen</translation>
+        <translation>Engager</translation>
     </message>
     <message>
         <location filename="../QtUI/QtStrings.h" line="62"/>
         <source>Done</source>
-        <translation>Fertig</translation>
+        <translation>Fait</translation>
     </message>
     <message>
         <location filename="../QtUI/QtStrings.h" line="63"/>
         <source>Quit</source>
-        <translation>Beenden</translation>
+        <translation>Quitter</translation>
     </message>
     <message>
         <location filename="../QtUI/QtStrings.h" line="64"/>
         <source>Help</source>
-        <translation>Hilfe</translation>
+        <translation>Aide</translation>
     </message>
     <message>
         <location filename="../QtUI/QtStrings.h" line="65"/>
         <source>Cancel</source>
-        <translation>Abbrechen</translation>
+        <translation>Annuler</translation>
     </message>
     <message>
         <location filename="../QtUI/QtStrings.h" line="66"/>
         <source>&amp;Next</source>
-        <translation>&amp;Nächstes</translation>
+        <translation>&amp;Suivant</translation>
     </message>
     <message>
         <location filename="../QtUI/QtStrings.h" line="67"/>
         <source>&amp;Next &gt;</source>
-        <translation>&amp;Nächstes &gt;</translation>
+        <translation>&amp;Suivant &gt;</translation>
     </message>
 </context>
 <context>
@@ -881,37 +882,37 @@
         <location filename="../QtUI/QtBookmarkDetailWindow.ui"/>
         <location filename="../QtUI/ui_QtBookmarkDetailWindow.h" line="137"/>
         <source>Edit Bookmark Details</source>
-        <translation>Lesezeichendetails editieren</translation>
+        <translation>Editer les Details du Signet</translation>
     </message>
     <message>
         <location filename="../QtUI/QtBookmarkDetailWindow.ui"/>
         <location filename="../QtUI/ui_QtBookmarkDetailWindow.h" line="138"/>
         <source>Bookmark Name:</source>
-        <translation>Lesezeichenname:</translation>
+        <translation>Non du Signet:</translation>
     </message>
     <message>
         <location filename="../QtUI/QtBookmarkDetailWindow.ui"/>
         <location filename="../QtUI/ui_QtBookmarkDetailWindow.h" line="139"/>
         <source>Room Address:</source>
-        <translation>Chatraumadresse:</translation>
+        <translation>Adresse du Salon:</translation>
     </message>
     <message>
         <location filename="../QtUI/QtBookmarkDetailWindow.ui"/>
         <location filename="../QtUI/ui_QtBookmarkDetailWindow.h" line="140"/>
         <source>Your Nickname:</source>
-        <translation>Dein Nickname:</translation>
+        <translation>Votre Pseudo:</translation>
     </message>
     <message>
         <location filename="../QtUI/QtBookmarkDetailWindow.ui"/>
         <location filename="../QtUI/ui_QtBookmarkDetailWindow.h" line="141"/>
         <source>Room password:</source>
-        <translation>Chatraum Passwort:</translation>
+        <translation>Mot de passe du salon:</translation>
     </message>
     <message>
         <location filename="../QtUI/QtBookmarkDetailWindow.ui"/>
         <location filename="../QtUI/ui_QtBookmarkDetailWindow.h" line="142"/>
         <source>Join automatically</source>
-        <translation>Automatisch betreten</translation>
+        <translation>Joindre automatiquement</translation>
     </message>
 </context>
 <context>
@@ -921,31 +922,31 @@
         <location filename="../QtUI/ui_QtJoinMUCWindow.h" line="124"/>
         <location filename="../QtUI/ui_QtJoinMUCWindow.h" line="130"/>
         <source>Enter Room</source>
-        <translation>Chatraum betreten</translation>
+        <translation>Joindre un Salon</translation>
     </message>
     <message>
         <location filename="../QtUI/QtJoinMUCWindow.ui"/>
         <location filename="../QtUI/ui_QtJoinMUCWindow.h" line="125"/>
         <source>Room:</source>
-        <translation>Chatraum:</translation>
+        <translation>Salon:</translation>
     </message>
     <message>
         <location filename="../QtUI/QtJoinMUCWindow.ui"/>
         <location filename="../QtUI/ui_QtJoinMUCWindow.h" line="126"/>
         <source>Search ...</source>
-        <translation>Suchen ...</translation>
+        <translation>Rechercher ...</translation>
     </message>
     <message>
         <location filename="../QtUI/QtJoinMUCWindow.ui"/>
         <location filename="../QtUI/ui_QtJoinMUCWindow.h" line="127"/>
         <source>Nickname:</source>
-        <translation>Nickname:</translation>
+        <translation>Pseudo:</translation>
     </message>
     <message>
         <location filename="../QtUI/QtJoinMUCWindow.ui"/>
         <location filename="../QtUI/ui_QtJoinMUCWindow.h" line="129"/>
         <source>Enter automatically in future</source>
-        <translation>In Zukunft automatisch eintreten</translation>
+        <translation>Joindre automatiquement par la suite</translation>
     </message>
 </context>
 <context>
@@ -954,7 +955,7 @@
         <location filename="../QtUI/MUCSearch/QtMUCSearchWindow.ui"/>
         <location filename="../QtUI/MUCSearch/ui_QtMUCSearchWindow.h" line="118"/>
         <source>Search Room</source>
-        <translation>Chatraum suchen</translation>
+        <translation>Rechercher un Salon</translation>
     </message>
     <message>
         <location filename="../QtUI/MUCSearch/QtMUCSearchWindow.ui"/>
@@ -966,19 +967,19 @@
         <location filename="../QtUI/MUCSearch/QtMUCSearchWindow.ui"/>
         <location filename="../QtUI/MUCSearch/ui_QtMUCSearchWindow.h" line="121"/>
         <source>Cancel</source>
-        <translation>Abbrechen</translation>
-    </message>
-    <message>
-        <location filename="../QtUI/MUCSearch/QtMUCSearchWindow.ui"/>
-        <location filename="../QtUI/MUCSearch/ui_QtMUCSearchWindow.h" line="123"/>
-        <source>List rooms</source>
-        <translation>Chaträume auflisten</translation>
+        <translation>Annuler</translation>
     </message>
     <message>
         <location filename="../QtUI/MUCSearch/QtMUCSearchWindow.ui"/>
         <location filename="../QtUI/MUCSearch/ui_QtMUCSearchWindow.h" line="122"/>
         <source>OK</source>
-        <translation>Ok</translation>
+        <translation>OK</translation>
+    </message>
+    <message>
+        <location filename="../QtUI/MUCSearch/QtMUCSearchWindow.ui"/>
+        <location filename="../QtUI/MUCSearch/ui_QtMUCSearchWindow.h" line="123"/>
+        <source>List rooms</source>
+        <translation>Liste des salons</translation>
     </message>
 </context>
 <context>
@@ -987,19 +988,19 @@
         <location filename="../QtUI/UserSearch/QtUserSearchFieldsPage.ui"/>
         <location filename="../QtUI/UserSearch/ui_QtUserSearchFieldsPage.h" line="119"/>
         <source>Nickname:</source>
-        <translation>Nickname:</translation>
+        <translation>Pseudo:</translation>
     </message>
     <message>
         <location filename="../QtUI/UserSearch/QtUserSearchFieldsPage.ui"/>
         <location filename="../QtUI/UserSearch/ui_QtUserSearchFieldsPage.h" line="120"/>
         <source>First name:</source>
-        <translation>Vorname:</translation>
+        <translation>Prénom:</translation>
     </message>
     <message>
         <location filename="../QtUI/UserSearch/QtUserSearchFieldsPage.ui"/>
         <location filename="../QtUI/UserSearch/ui_QtUserSearchFieldsPage.h" line="121"/>
         <source>Last name:</source>
-        <translation>Nachname:</translation>
+        <translation>Nom:</translation>
     </message>
     <message>
         <location filename="../QtUI/UserSearch/QtUserSearchFieldsPage.ui"/>
@@ -1011,7 +1012,7 @@
         <location filename="../QtUI/UserSearch/QtUserSearchFieldsPage.ui"/>
         <location filename="../QtUI/UserSearch/ui_QtUserSearchFieldsPage.h" line="124"/>
         <source>Fetching search fields</source>
-        <translation>Suchfelder abrufen</translation>
+        <translation>Récupération des champs de recherche</translation>
     </message>
 </context>
 <context>
@@ -1020,31 +1021,31 @@
         <location filename="../QtUI/UserSearch/QtUserSearchFirstPage.ui"/>
         <location filename="../QtUI/UserSearch/ui_QtUserSearchFirstPage.h" line="121"/>
         <source>Add a user</source>
-        <translation>Benutzer hinzufügen</translation>
+        <translation>Ajouter un utilisateur</translation>
     </message>
     <message>
         <location filename="../QtUI/UserSearch/QtUserSearchFirstPage.ui"/>
         <location filename="../QtUI/UserSearch/ui_QtUserSearchFirstPage.h" line="122"/>
         <source>Add another user to your contact list. If you know their address you can add them directly, or you can search for them.</source>
-        <translation>Füge einen anderen Benutzer zu deiner Kontaktliste hinzu. Wenn du desen Adresse weißt, kannst du sie direkt eingeben, oder du kannst nach ihm suchen.</translation>
+        <translation>Ajouter un autre utilisateur à votre liste de contacts. Si vous connaissez leur adresse vous pouvez les ajouter directement, ou vous pouvez les rechercher.</translation>
     </message>
     <message>
         <location filename="../QtUI/UserSearch/QtUserSearchFirstPage.ui"/>
         <location filename="../QtUI/UserSearch/ui_QtUserSearchFirstPage.h" line="124"/>
         <source>I know their address:</source>
-        <translation>Ich kennen seine Adresse:</translation>
+        <translation>Je connais leur adresse:</translation>
     </message>
     <message>
         <location filename="../QtUI/UserSearch/QtUserSearchFirstPage.ui"/>
         <location filename="../QtUI/UserSearch/ui_QtUserSearchFirstPage.h" line="125"/>
         <source>I&apos;d like to search my server</source>
-        <translation>Ich will meinen Server nach ihm durchsuchen</translation>
+        <translation>Je souhaite rechercher mon serveur</translation>
     </message>
     <message>
         <location filename="../QtUI/UserSearch/QtUserSearchFirstPage.ui"/>
         <location filename="../QtUI/UserSearch/ui_QtUserSearchFirstPage.h" line="126"/>
         <source>I&apos;d like to search another server:</source>
-        <translation>Ich will einen anderen Server nach ihm durchsuchen:</translation>
+        <translation>Je souhaite rechercher un autre serveur:</translation>
     </message>
 </context>
 <context>
@@ -1053,7 +1054,7 @@
         <location filename="../QtUI/UserSearch/QtUserSearchWizard.ui"/>
         <location filename="../QtUI/UserSearch/ui_QtUserSearchWizard.h" line="39"/>
         <source>Find User</source>
-        <translation>Benutzer finden</translation>
+        <translation>Trouver un utilisateur</translation>
     </message>
 </context>
 <context>
@@ -1061,7 +1062,7 @@
     <message>
         <location filename="../QtUI/ChatList/ChatListModel.cpp" line="15"/>
         <source>Bookmarked Rooms</source>
-        <translation>Chatraum Lesezeichen</translation>
+        <translation>Signets de Salons</translation>
     </message>
 </context>
 <context>
@@ -1069,7 +1070,7 @@
     <message>
         <location filename="../QtUI/QtAboutWidget.cpp" line="23"/>
         <source>About %1</source>
-        <translation>Über %1</translation>
+        <translation>A propos de %1</translation>
     </message>
     <message>
         <location filename="../QtUI/QtAboutWidget.cpp" line="40"/>
@@ -1079,24 +1080,23 @@
     <message>
         <location filename="../QtUI/QtAboutWidget.cpp" line="43"/>
         <source>Built with Qt %1</source>
-        <translation>Anhand von Qt %1 erstellt</translation>
+        <translation>Compilé avec Qt %1</translation>
     </message>
     <message>
         <location filename="../QtUI/QtAboutWidget.cpp" line="44"/>
         <source>Running with Qt %1</source>
-        <translation>Läuft unter Qt %1</translation>
+        <translation>Exécute avec Qt %1</translation>
     </message>
     <message>
         <location filename="../QtUI/QtAboutWidget.cpp" line="50"/>
         <source>Using the English translation by
 %1</source>
-        <translation>Die, zur Zeit genutzte, deutsche Übersetzung stammt von
-%1</translation>
+        <translation>Utilise la traduction en Anglais de %1</translation>
     </message>
     <message>
         <location filename="../QtUI/QtAboutWidget.cpp" line="54"/>
         <source>View License</source>
-        <translation>Zeige die Lizense</translation>
+        <translation>Voir la Licence</translation>
     </message>
 </context>
 <context>
@@ -1104,37 +1104,37 @@
     <message>
         <location filename="../QtUI/QtAvatarWidget.cpp" line="61"/>
         <source>No picture</source>
-        <translation>Kein Bild</translation>
+        <translation>Aucune image</translation>
     </message>
     <message>
         <location filename="../QtUI/QtAvatarWidget.cpp" line="73"/>
         <source>Select picture ...</source>
-        <translation>Bild auswählen ...</translation>
+        <translation>Sélectionner l&apos;image ...</translation>
     </message>
     <message>
         <location filename="../QtUI/QtAvatarWidget.cpp" line="76"/>
         <source>Clear picture</source>
-        <translation>Bild verwerfen</translation>
+        <translation>Effacer l&apos;image</translation>
     </message>
     <message>
         <location filename="../QtUI/QtAvatarWidget.cpp" line="81"/>
         <source>Select picture</source>
-        <translation>Bild auswählen</translation>
+        <translation>Sélectionner l&apos;image</translation>
     </message>
     <message>
         <location filename="../QtUI/QtAvatarWidget.cpp" line="81"/>
         <source>Image Files (*.png *.jpg *.gif)</source>
-        <translation>Bilddateien (*.png *.jpg *.gif)</translation>
+        <translation>Fichiers d&apos;images (*.png *.jpg *.gif)</translation>
     </message>
     <message>
         <location filename="../QtUI/QtAvatarWidget.cpp" line="95"/>
         <source>Error</source>
-        <translation>Fehler</translation>
+        <translation>Erreur</translation>
     </message>
     <message>
         <location filename="../QtUI/QtAvatarWidget.cpp" line="95"/>
         <source>The selected picture is in an unrecognized format</source>
-        <translation>Das ausgewählte Bild ist von einem unbekannten Format</translation>
+        <translation>L&apos;image sélectionnée est dans un format non-reconnu</translation>
     </message>
 </context>
 <context>
@@ -1142,12 +1142,12 @@
     <message>
         <location filename="../QtUI/QtBookmarkDetailWindow.cpp" line="31"/>
         <source>Bookmark not valid</source>
-        <translation>Lesezeichen nicht gültig</translation>
+        <translation>Signet non valide</translation>
     </message>
     <message>
         <location filename="../QtUI/QtBookmarkDetailWindow.cpp" line="31"/>
         <source>You must specify a valid room address (e.g. someroom@rooms.example.com).</source>
-        <translation>Du musst eine gültige Chatraumadresse angeben (z.B. meinraum@chatraeume.beispiel.com).</translation>
+        <translation>Vous devez spécifier une adresse de salon valide (ex. myroom@chats.example.com).</translation>
     </message>
 </context>
 <context>
@@ -1156,17 +1156,17 @@
         <location filename="../QtUI/ChatList/QtChatListWindow.cpp" line="62"/>
         <location filename="../QtUI/ChatList/QtChatListWindow.cpp" line="66"/>
         <source>Add New Bookmark</source>
-        <translation>Neues Lesezeichen hinzufügen</translation>
+        <translation>Ajouter un Nouveau Signet</translation>
     </message>
     <message>
         <location filename="../QtUI/ChatList/QtChatListWindow.cpp" line="63"/>
         <source>Edit Bookmark</source>
-        <translation>Lesezeichen editieren</translation>
+        <translation>Editer le Signet</translation>
     </message>
     <message>
         <location filename="../QtUI/ChatList/QtChatListWindow.cpp" line="64"/>
         <source>Remove Bookmark</source>
-        <translation>Lesezeichen entfernen</translation>
+        <translation>Supprimer le Signet</translation>
     </message>
 </context>
 <context>
@@ -1174,17 +1174,17 @@
     <message>
         <location filename="../QtUI/QtChatView.cpp" line="61"/>
         <source>Clear log</source>
-        <translation>Aufzeichnung löschen</translation>
+        <translation>Effacer l&apos;historique</translation>
     </message>
     <message>
         <location filename="../QtUI/QtChatView.cpp" line="62"/>
         <source>You are about to clear the contents of your chat log.</source>
-        <translation>Du bist dabei die Gesprächsaufzeichung zu löschen.</translation>
+        <translation>Vous êtes sur le point d&apos;effacer le contenu de votre historique de discussion.</translation>
     </message>
     <message>
         <location filename="../QtUI/QtChatView.cpp" line="63"/>
         <source>Are you sure?</source>
-        <translation>Bist du dir sicher?</translation>
+        <translation>Etes vous sûr?</translation>
     </message>
 </context>
 <context>
@@ -1192,17 +1192,17 @@
     <message>
         <location filename="../QtUI/QtChatWindow.cpp" line="302"/>
         <source>This message has not been received by your server yet.</source>
-        <translation>Die Nachricht wurde noch nicht von deinem Server empfangen.</translation>
+        <translation>Ce message n&apos;a pas encore été reçu par votre serveur.</translation>
     </message>
     <message>
         <location filename="../QtUI/QtChatWindow.cpp" line="304"/>
         <source>This message may not have been transmitted.</source>
-        <translation>Die Nachricht scheint nicht versandt worden zu sein.</translation>
+        <translation>Ce message peut ne pas avoir été transmis.</translation>
     </message>
     <message>
         <location filename="../QtUI/QtChatWindow.cpp" line="324"/>
         <source>Couldn&apos;t send message: %1</source>
-        <translation>Konnte die Nachricht nicht senden: %1</translation>
+        <translation>N&apos;a pas pu envoyer ce message: %1</translation>
     </message>
 </context>
 <context>
@@ -1210,17 +1210,17 @@
     <message>
         <location filename="../QtUI/QtContactEditWidget.cpp" line="28"/>
         <source>Name:</source>
-        <translation>Name:</translation>
+        <translation>Nom:</translation>
     </message>
     <message>
         <location filename="../QtUI/QtContactEditWidget.cpp" line="34"/>
         <source>Groups:</source>
-        <translation>Gruppen:</translation>
+        <translation>Groupes:</translation>
     </message>
     <message>
         <location filename="../QtUI/QtContactEditWidget.cpp" line="56"/>
         <source>New Group:</source>
-        <translation>Neue Gruppe:</translation>
+        <translation>Nouveau Groupe:</translation>
     </message>
 </context>
 <context>
@@ -1228,32 +1228,32 @@
     <message>
         <location filename="../QtUI/QtContactEditWindow.cpp" line="26"/>
         <source>Edit contact</source>
-        <translation>Kontakt editieren</translation>
+        <translation>Editer le contact</translation>
     </message>
     <message>
         <location filename="../QtUI/QtContactEditWindow.cpp" line="41"/>
         <source>Remove contact</source>
-        <translation>Kontakt entfernen</translation>
+        <translation>Supprimer le contact</translation>
     </message>
     <message>
         <location filename="../QtUI/QtContactEditWindow.cpp" line="44"/>
         <source>OK</source>
-        <translation>Ok</translation>
+        <translation>OK</translation>
     </message>
     <message>
         <location filename="../QtUI/QtContactEditWindow.cpp" line="82"/>
         <source>Confirm contact deletion</source>
-        <translation>Das Löschen des Kontakts bestätigen</translation>
+        <translation>Confirmer la suppression du contact</translation>
     </message>
     <message>
         <location filename="../QtUI/QtContactEditWindow.cpp" line="83"/>
         <source>Are you sure you want to delete this contact?</source>
-        <translation>Bist du dir sicher, dass du diesen Kontakt löschen willst?</translation>
+        <translation>Etes-vous sûr de vouloir supprimer ce contact?</translation>
     </message>
     <message>
         <location filename="../QtUI/QtContactEditWindow.cpp" line="84"/>
         <source>This will remove the contact &apos;%1&apos; from all groups they may be in.</source>
-        <translation>Dies wird den Kontakt &apos;%1&apos; aus allen Gruppen, in denen er sich befindet, entfernen.</translation>
+        <translation>Cela supprimera le contact &apos;%1&apos; de tous les groupes dans lesquels il peut être.</translation>
     </message>
 </context>
 <context>
@@ -1261,7 +1261,7 @@
     <message>
         <location filename="../QtUI/EventViewer/QtEventWindow.cpp" line="47"/>
         <source>Display Notice</source>
-        <translation>Hinweis anzeigen</translation>
+        <translation>Afficher l&apos;Avis</translation>
     </message>
 </context>
 <context>
@@ -1269,7 +1269,7 @@
     <message>
         <location filename="../QtUI/QtJoinMUCWindow.cpp" line="15"/>
         <source>someroom@rooms.example.com</source>
-        <translation>meinraum@chatraeume.beispiel.com</translation>
+        <translation>someroom@rooms.example.com</translation>
     </message>
 </context>
 <context>
@@ -1277,45 +1277,45 @@
     <message>
         <location filename="../QtUI/QtLoginWindow.cpp" line="81"/>
         <source>User address:</source>
-        <translation>Benutzer Adresse:</translation>
+        <translation>Adresse de l&apos;utilisateur:</translation>
     </message>
     <message>
         <location filename="../QtUI/QtLoginWindow.cpp" line="86"/>
         <location filename="../QtUI/QtLoginWindow.cpp" line="87"/>
         <source>User address - looks like someuser@someserver.com</source>
-        <translation>Benutzeradresse - schaut ungefähr aus wie irgendeinbenutzer@irgendeinserver.de</translation>
+        <translation>Adresse de l&apos;utilisateur - ressemble à someuser@someserver.com</translation>
     </message>
     <message>
         <location filename="../QtUI/QtLoginWindow.cpp" line="91"/>
         <source>Example: alice@wonderland.lit</source>
-        <translation>Beispiel: alice@wunderland.lit</translation>
+        <translation>Exemple: alice@wonderland.lit</translation>
     </message>
     <message>
         <location filename="../QtUI/QtLoginWindow.cpp" line="97"/>
         <source>Password:</source>
-        <translation>Passwort:</translation>
+        <translation>Mot de passe:</translation>
     </message>
     <message>
         <location filename="../QtUI/QtLoginWindow.cpp" line="118"/>
         <location filename="../QtUI/QtLoginWindow.cpp" line="119"/>
         <source>Click if you have a personal certificate used for login to the service.</source>
-        <translation>Wenn du ein persönliches Zertifikat zu einloggen hast, drücke hier.</translation>
+        <translation>Cliquez si vous avez un certificat personnel utilisé pour la connexion au service.</translation>
     </message>
     <message>
         <location filename="../QtUI/QtLoginWindow.cpp" line="125"/>
         <location filename="../QtUI/QtLoginWindow.cpp" line="299"/>
         <source>Connect</source>
-        <translation>Verbinden</translation>
+        <translation>Se connecter</translation>
     </message>
     <message>
         <location filename="../QtUI/QtLoginWindow.cpp" line="136"/>
         <source>Remember Password?</source>
-        <translation>Passwort behalten?</translation>
+        <translation>Mémoriser le Mot de passe?</translation>
     </message>
     <message>
         <location filename="../QtUI/QtLoginWindow.cpp" line="138"/>
         <source>Login Automatically?</source>
-        <translation>Automatisch einloggen?</translation>
+        <translation>Connexion automatique?</translation>
     </message>
     <message>
         <location filename="../QtUI/QtLoginWindow.cpp" line="150"/>
@@ -1325,72 +1325,72 @@
     <message>
         <location filename="../QtUI/QtLoginWindow.cpp" line="152"/>
         <source>&amp;General</source>
-        <translation>All&amp;gemein</translation>
+        <translation>&amp;Général</translation>
     </message>
     <message>
         <location filename="../QtUI/QtLoginWindow.cpp" line="160"/>
         <source>&amp;About %1</source>
-        <translation>&amp;Über %1</translation>
+        <translation>&amp;A propos de %1</translation>
     </message>
     <message>
         <location filename="../QtUI/QtLoginWindow.cpp" line="165"/>
         <source>&amp;Show Debug Console</source>
-        <translation>&amp;Debug Konsole anzeigen</translation>
+        <translation>&amp;Afficher la Console de Débogage</translation>
     </message>
     <message>
         <location filename="../QtUI/QtLoginWindow.cpp" line="169"/>
         <source>&amp;Play Sounds</source>
-        <translation>&amp;Klänge abspielen</translation>
+        <translation>&amp;Jouer les Sons</translation>
     </message>
     <message>
         <location filename="../QtUI/QtLoginWindow.cpp" line="175"/>
         <source>Display Pop-up &amp;Notifications</source>
-        <translation>Hi&amp;nweisdialoge anzeigen</translation>
+        <translation>Afficher les Pop-up de &amp;Notifications</translation>
     </message>
     <message>
         <location filename="../QtUI/QtLoginWindow.cpp" line="190"/>
         <source>&amp;Quit</source>
-        <translation>&amp;Beenden</translation>
+        <translation>&amp;Quitter</translation>
     </message>
     <message>
         <location filename="../QtUI/QtLoginWindow.cpp" line="205"/>
         <source>Remove profile</source>
-        <translation>Profil entfernen</translation>
+        <translation>Supprimer le profile</translation>
     </message>
     <message>
         <location filename="../QtUI/QtLoginWindow.cpp" line="205"/>
         <source>Remove the profile &apos;%1&apos;?</source>
-        <translation>Das Profil &apos;%1&apos; entfernen?</translation>
+        <translation>Supprimer le profile &apos;%1&apos;?</translation>
     </message>
     <message>
         <location filename="../QtUI/QtLoginWindow.cpp" line="299"/>
         <source>Cancel</source>
-        <translation>Abbrechen</translation>
+        <translation>Annuler</translation>
     </message>
     <message>
         <location filename="../QtUI/QtLoginWindow.cpp" line="320"/>
         <source>Select an authentication certificate</source>
-        <translation>Wähle ein Authentifizierungszertifikat</translation>
+        <translation>Sélectionnez un certificat d&apos;authentification</translation>
     </message>
     <message>
         <location filename="../QtUI/QtLoginWindow.cpp" line="420"/>
         <source>The certificate presented by the server is not valid.</source>
-        <translation>Das Serverzertifikate ist nicht gültig.</translation>
+        <translation>Le certificat presenté par le serveur n&apos;est pas valide.</translation>
     </message>
     <message>
         <location filename="../QtUI/QtLoginWindow.cpp" line="421"/>
         <source>Would you like to permanently trust this certificate? This must only be done if you know it is correct.</source>
-        <translation>Willst du diesem Zertifikate permanent Vertrauen? Das darf nur der Fall sein, wenn du genau weißt das es korrekt ist.</translation>
+        <translation>Souhaitez-vous autoriser définitivement ce certificat? Cela doit être effectué uniquement si vous savez qu&apos;il est valide.</translation>
     </message>
     <message>
         <location filename="../QtUI/QtLoginWindow.cpp" line="423"/>
         <source>Subject: %1</source>
-        <translation>Betreff: %1</translation>
+        <translation>Sujet: %1</translation>
     </message>
     <message>
         <location filename="../QtUI/QtLoginWindow.cpp" line="424"/>
         <source>SHA-1 Fingerprint: %1</source>
-        <translation>SHA-1 Fingerabdruck: %1</translation>
+        <translation>SHA-1 Fingerprint: %1</translation>
     </message>
 </context>
 <context>
@@ -1399,7 +1399,7 @@
         <location filename="../QtUI/MUCSearch/QtMUCSearchWindow.cpp" line="49"/>
         <location filename="../QtUI/MUCSearch/QtMUCSearchWindow.cpp" line="51"/>
         <source>Searching</source>
-        <translation>Suche</translation>
+        <translation>Recherche</translation>
     </message>
 </context>
 <context>
@@ -1407,63 +1407,63 @@
     <message>
         <location filename="../QtUI/QtMainWindow.cpp" line="64"/>
         <source>&amp;Contacts</source>
-        <translation>&amp;Kontakte</translation>
+        <translation>&amp;Contacts</translation>
     </message>
     <message>
         <location filename="../QtUI/QtMainWindow.cpp" line="71"/>
         <location filename="../QtUI/QtMainWindow.cpp" line="137"/>
         <source>&amp;Notices</source>
-        <translation>H&amp;inweise</translation>
+        <translation>&amp;Avis</translation>
     </message>
     <message>
         <location filename="../QtUI/QtMainWindow.cpp" line="72"/>
         <source>C&amp;hats</source>
-        <translation>C&amp;hats</translation>
+        <translation>D&amp;iscussions</translation>
     </message>
     <message>
         <location filename="../QtUI/QtMainWindow.cpp" line="76"/>
         <source>&amp;View</source>
-        <translation>A&amp;nsicht</translation>
+        <translation>&amp;Affichage</translation>
     </message>
     <message>
         <location filename="../QtUI/QtMainWindow.cpp" line="78"/>
         <source>&amp;Show offline contacts</source>
-        <translation>&amp;Offline Kontakte anzeigen</translation>
+        <translation>&amp;Voir les contacts hors ligne</translation>
     </message>
     <message>
         <location filename="../QtUI/QtMainWindow.cpp" line="84"/>
         <source>&amp;Actions</source>
-        <translation>&amp;Aktionen</translation>
+        <translation>&amp;Actions</translation>
     </message>
     <message>
         <location filename="../QtUI/QtMainWindow.cpp" line="86"/>
         <source>Edit &amp;Profile</source>
-        <translation>&amp;Profil editieren</translation>
+        <translation>Editer le &amp;Profil</translation>
     </message>
     <message>
         <location filename="../QtUI/QtMainWindow.cpp" line="89"/>
         <source>Enter &amp;Room</source>
-        <translation>Chat&amp;raum betreten</translation>
+        <translation>Joindre le &amp;Salon</translation>
     </message>
     <message>
         <location filename="../QtUI/QtMainWindow.cpp" line="92"/>
         <source>&amp;Add Contact</source>
-        <translation>Kont&amp;akt hinzufügen</translation>
+        <translation>&amp;Ajouter un Contact</translation>
     </message>
     <message>
         <location filename="../QtUI/QtMainWindow.cpp" line="95"/>
         <source>&amp;Edit Selected Contact</source>
-        <translation>Ausgewählten Kontakt &amp;editieren</translation>
+        <translation>&amp;Editer le Contact Sélectionné</translation>
     </message>
     <message>
         <location filename="../QtUI/QtMainWindow.cpp" line="99"/>
         <source>Start &amp;Chat</source>
-        <translation>Gesprä&amp;ch beginnen</translation>
+        <translation>Démarrer une &amp;Discussion</translation>
     </message>
     <message>
         <location filename="../QtUI/QtMainWindow.cpp" line="103"/>
         <source>&amp;Sign Out</source>
-        <translation>A&amp;bmelden</translation>
+        <translation></translation>
     </message>
 </context>
 <context>
@@ -1471,22 +1471,22 @@
     <message>
         <location filename="../QtUI/QtNameWidget.cpp" line="47"/>
         <source>Show Nickname</source>
-        <translation>Nicknamen anzeigen</translation>
+        <translation>Voir le Pseudo</translation>
     </message>
     <message>
         <location filename="../QtUI/QtNameWidget.cpp" line="47"/>
         <source>(No Nickname Set)</source>
-        <translation>(Kein Nickname eingestellt)</translation>
+        <translation>(Aucun Pseudo renseigné)</translation>
     </message>
     <message>
         <location filename="../QtUI/QtNameWidget.cpp" line="55"/>
         <source>Show Address</source>
-        <translation>Adresse anzeigen</translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../QtUI/QtNameWidget.cpp" line="62"/>
         <source>Edit Profile</source>
-        <translation>Profile editieren</translation>
+        <translation>Editer le Profil</translation>
     </message>
 </context>
 <context>
@@ -1494,17 +1494,17 @@
     <message>
         <location filename="../QtUI/QtProfileWindow.cpp" line="24"/>
         <source>Edit Profile</source>
-        <translation>Profile editieren</translation>
+        <translation>Editer le Profil</translation>
     </message>
     <message>
         <location filename="../QtUI/QtProfileWindow.cpp" line="43"/>
         <source>Nickname:</source>
-        <translation>Nickname:</translation>
+        <translation>Pseudo:</translation>
     </message>
     <message>
         <location filename="../QtUI/QtProfileWindow.cpp" line="67"/>
         <source>Save</source>
-        <translation>Speichern</translation>
+        <translation>Enregistrer</translation>
     </message>
 </context>
 <context>
@@ -1512,31 +1512,31 @@
     <message>
         <location filename="../QtUI/QtStatusWidget.cpp" line="231"/>
         <source>Connecting</source>
-        <translation>Verbinden</translation>
+        <translation>Connexion</translation>
     </message>
     <message>
         <location filename="../QtUI/QtStatusWidget.cpp" line="263"/>
         <source>(No message)</source>
-        <translation>(Keine Nachricht)</translation>
+        <translation>(Aucun message)</translation>
     </message>
 </context>
 <context>
     <name>Swift::QtSubscriptionRequestWindow</name>
-    <message>
-        <location filename="../QtUI/QtSubscriptionRequestWindow.cpp" line="24"/>
-        <source>You have already replied to this request</source>
-        <translation>Du hast auf diese Anfrage bereits geantwortet</translation>
-    </message>
     <message>
         <location filename="../QtUI/QtSubscriptionRequestWindow.cpp" line="18"/>
         <source>%1 would like to add you to their contact list.
  Would you like to add them to your contact list and share your status when you&apos;re online? 
 
 If you choose to defer this choice, you will be asked again when you next login.</source>
-        <translation>%1 möchte dich zu seiner/ihrer Kontaktliste hinzufügen.
-Willst du ihn/sie auch zu deiner Kontaktliste hinzufügen und deinen Status ihm/ihr mitteilen wenn du online bist?
+        <translation>%1 souhaitent vous ajouter à leur liste de contacts.
+ Souhaitez-vous les ajouter à votre liste de contacts et partager votre status lorsque vous êtes en ligne? 
 
-Wenn du dich jetzt noch nicht festlegen willst, wirst du beim nächsten Einloggen nochmals danach gefragt.</translation>
+Si vous choisissez de ne pas accepter, il vous sera demandé à nouveau lors de votre prochaine connexion.</translation>
+    </message>
+    <message>
+        <location filename="../QtUI/QtSubscriptionRequestWindow.cpp" line="24"/>
+        <source>You have already replied to this request</source>
+        <translation>Vous avez déja répondu à cette requête</translation>
     </message>
     <message>
         <location filename="../QtUI/QtSubscriptionRequestWindow.cpp" line="25"/>
@@ -1546,17 +1546,17 @@ Wenn du dich jetzt noch nicht festlegen willst, wirst du beim nächsten Einlogge
     <message>
         <location filename="../QtUI/QtSubscriptionRequestWindow.cpp" line="30"/>
         <source>Yes</source>
-        <translation>Ja</translation>
+        <translation>Oui</translation>
     </message>
     <message>
         <location filename="../QtUI/QtSubscriptionRequestWindow.cpp" line="32"/>
         <source>No</source>
-        <translation>Nein</translation>
+        <translation>Non</translation>
     </message>
     <message>
         <location filename="../QtUI/QtSubscriptionRequestWindow.cpp" line="34"/>
         <source>Defer</source>
-        <translation>Später</translation>
+        <translation>Refuser</translation>
     </message>
 </context>
 <context>
@@ -1564,27 +1564,27 @@ Wenn du dich jetzt noch nicht festlegen willst, wirst du beim nächsten Einlogge
     <message>
         <location filename="../QtUI/Roster/QtTreeWidget.cpp" line="144"/>
         <source>Edit</source>
-        <translation>Editieren</translation>
+        <translation>Editer</translation>
     </message>
     <message>
         <location filename="../QtUI/Roster/QtTreeWidget.cpp" line="145"/>
         <source>Remove</source>
-        <translation>Entfernen</translation>
+        <translation>Supprimer</translation>
     </message>
     <message>
         <location filename="../QtUI/Roster/QtTreeWidget.cpp" line="157"/>
         <source>Rename</source>
-        <translation>Umbenennen</translation>
+        <translation>Renommer</translation>
     </message>
     <message>
         <location filename="../QtUI/Roster/QtTreeWidget.cpp" line="167"/>
         <source>Rename group</source>
-        <translation>Guppe umbenennen</translation>
+        <translation>Renommer le groupe</translation>
     </message>
     <message>
         <location filename="../QtUI/Roster/QtTreeWidget.cpp" line="167"/>
         <source>Enter a new name for group &apos;%1&apos;:</source>
-        <translation>Gibt einen neuen Namen für die Gruppe &apos;%1&apos; ein:</translation>
+        <translation>Entrer un nouveau nom pour le groupe &apos;%1&apos;:</translation>
     </message>
 </context>
 <context>
@@ -1592,7 +1592,7 @@ Wenn du dich jetzt noch nicht festlegen willst, wirst du beim nächsten Einlogge
     <message>
         <location filename="../QtUI/UserSearch/QtUserSearchDetailsPage.cpp" line="17"/>
         <source>Please choose a name for the contact, and select the groups you want to add the contact to.</source>
-        <translation>Bitte wähle einen Namen für den Kontakt und wähle die Gruppen aus zu denen der Kontakt hinzugefügt werden soll.</translation>
+        <translation>Veuillez choisir un nom pour le contact, et sélectionner les groupes dans lesquels vous voulez ajouter le contact.</translation>
     </message>
 </context>
 <context>
@@ -1600,17 +1600,17 @@ Wenn du dich jetzt noch nicht festlegen willst, wirst du beim nächsten Einlogge
     <message>
         <location filename="../QtUI/UserSearch/QtUserSearchFirstPage.cpp" line="16"/>
         <source>%1. If you know their address you can enter it directly, or you can search for them.</source>
-        <translation>%1. Wenn du seine Adresse kennst, kannst du sie direkt eingeben, ansonsten kannst du auch danach suchen.</translation>
+        <translation>%1. Si vous connaissez leur adresse vous pouvez la saisir directement, ou vous pouvez les rechercher.</translation>
     </message>
     <message>
         <location filename="../QtUI/UserSearch/QtUserSearchFirstPage.cpp" line="16"/>
         <source>Add another user to your contact list</source>
-        <translation>Füge einen anderen Benutzer zu deinen Kontakten hinzu</translation>
+        <translation>Ajouter un autre utilisateur à votre liste de contacts</translation>
     </message>
     <message>
         <location filename="../QtUI/UserSearch/QtUserSearchFirstPage.cpp" line="16"/>
         <source>Chat to another user</source>
-        <translation>Mit einem anderen Benutzer chatten</translation>
+        <translation>Discuter avec un autre utilisateur</translation>
     </message>
 </context>
 <context>
@@ -1618,12 +1618,12 @@ Wenn du dich jetzt noch nicht festlegen willst, wirst du beim nächsten Einlogge
     <message>
         <location filename="../QtUI/UserSearch/QtUserSearchWindow.cpp" line="32"/>
         <source>Add Contact</source>
-        <translation>Kontakt hinzufügen</translation>
+        <translation>Ajouter un Contact</translation>
     </message>
     <message>
         <location filename="../QtUI/UserSearch/QtUserSearchWindow.cpp" line="32"/>
         <source>Chat to User</source>
-        <translation>Mit einem Benutzer chatten</translation>
+        <translation>Discuter avec l&apos;utilisateur</translation>
     </message>
     <message>
         <location filename="../QtUI/UserSearch/QtUserSearchWindow.cpp" line="43"/>
@@ -1633,22 +1633,22 @@ Wenn du dich jetzt noch nicht festlegen willst, wirst du beim nächsten Einlogge
     <message>
         <location filename="../QtUI/UserSearch/QtUserSearchWindow.cpp" line="223"/>
         <source>How would you like to find the user to add?</source>
-        <translation>Wie willst du nach dem Benutzer suchen, den du hinzufügen möchtest?</translation>
+        <translation>Comment voulez-vous trouver l&apos;utilisateur à ajouter?</translation>
     </message>
     <message>
         <location filename="../QtUI/UserSearch/QtUserSearchWindow.cpp" line="226"/>
         <source>How would you like to find the user to chat to?</source>
-        <translation>Wie willst du nach dem Benutzer suchen, mit dem du sprechen willst?</translation>
+        <translation>Comment voulez-vous trouver l&apos;utilisateur avec qui discuter?</translation>
     </message>
     <message>
         <location filename="../QtUI/UserSearch/QtUserSearchWindow.cpp" line="251"/>
         <source>Error while searching</source>
-        <translation>Während der Suche ist ein Fehler aufgetreten</translation>
+        <translation>Erreur lors de la recherche</translation>
     </message>
     <message>
         <location filename="../QtUI/UserSearch/QtUserSearchWindow.cpp" line="257"/>
         <source>This server doesn&apos;t support searching for users.</source>
-        <translation>Dieser Server untersützt das Suchen nach Benutzern nicht.</translation>
+        <translation>Ce serveur ne supporte pas la recherche d&apos;utilisateurs.</translation>
     </message>
 </context>
 <context>
@@ -1656,7 +1656,7 @@ Wenn du dich jetzt noch nicht festlegen willst, wirst du beim nächsten Einlogge
     <message>
         <location filename="../QtUI/QtWebView.cpp" line="61"/>
         <source>Clear</source>
-        <translation>Leeren</translation>
+        <translation>Effacer</translation>
     </message>
 </context>
 <context>
@@ -1664,32 +1664,32 @@ Wenn du dich jetzt noch nicht festlegen willst, wirst du beim nächsten Einlogge
     <message>
         <location filename="../QtUI/QtXMLConsoleWidget.cpp" line="22"/>
         <source>Console</source>
-        <translation>Konsole</translation>
+        <translation>Console</translation>
     </message>
     <message>
         <location filename="../QtUI/QtXMLConsoleWidget.cpp" line="40"/>
         <source>Trace input/output</source>
-        <translation>Eingabe/Ausgabe mit schneiden</translation>
+        <translation>Tracer les entrées/sorties</translation>
     </message>
     <message>
         <location filename="../QtUI/QtXMLConsoleWidget.cpp" line="46"/>
         <source>Clear</source>
-        <translation>Leeren</translation>
+        <translation>Effacer</translation>
     </message>
     <message>
         <location filename="../QtUI/QtXMLConsoleWidget.cpp" line="50"/>
         <source>Debug Console</source>
-        <translation>Debug Konsole</translation>
+        <translation>Console de débogage</translation>
     </message>
     <message>
         <location filename="../QtUI/QtXMLConsoleWidget.cpp" line="75"/>
         <source>&lt;!-- IN --&gt;</source>
-        <translation>&lt;!-- EINTREFFEND --&gt;</translation>
+        <translation>&lt;!-- ENTREE --&gt;</translation>
     </message>
     <message>
         <location filename="../QtUI/QtXMLConsoleWidget.cpp" line="79"/>
         <source>&lt;!-- OUT --&gt;</source>
-        <translation>&lt;!-- AUSGEHEND --&gt;</translation>
+        <translation></translation>
     </message>
 </context>
 <context>
@@ -1698,13 +1698,13 @@ Wenn du dich jetzt noch nicht festlegen willst, wirst du beim nächsten Einlogge
         <location filename="../QtUI/QtAboutWidget.cpp" line="49"/>
         <location filename="../QtUI/QtAboutWidget.cpp" line="50"/>
         <source>TRANSLATION_AUTHOR</source>
-        <translation>Thilo Cestonaro</translation>
+        <translation>Cédric DUBOULOZ</translation>
     </message>
     <message>
         <location filename="../QtUI/QtAboutWidget.cpp" line="52"/>
         <source>TRANSLATION_LICENSE</source>
         <comment>This string contains the license under which this translation is licensed. We ask you to license the translation under the BSD license. Please read http://www.opensource.org/licenses/bsd-license.php, and if you agree to release your translation under this license, use the following (untranslated) text: &apos;This translation is licensed under the BSD License. See http://www.opensource.org/licenses/bsd-license.php&apos;</comment>
-        <translation>This translation is licensed under the BSD License. See http://www.opensource.org/licenses/bsd-license.php</translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 </TS>
