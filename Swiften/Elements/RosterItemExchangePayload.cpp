@@ -9,6 +9,9 @@
 
 namespace Swift {
 
+RosterItemExchangePayload::Item::Item() {
+}
+
 RosterItemExchangePayload::RosterItemExchangePayload() {
 }
 

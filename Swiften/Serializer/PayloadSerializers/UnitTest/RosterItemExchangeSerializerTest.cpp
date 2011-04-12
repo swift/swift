@@ -25,17 +25,17 @@ class RosterItemExchangeSerializerTest : public CppUnit::TestFixture
 			boost::shared_ptr<RosterItemExchangePayload> roster(new RosterItemExchangePayload());
 
 			RosterItemExchangePayload::Item item1;
-			item1.jid = JID("foo@bar.com");
-			item1.name = "Foo @ Bar";
-			item1.action = RosterItemExchangePayload::Add;
-			item1.groups.push_back("Group 1");
-			item1.groups.push_back("Group 2");
+			item1.setJID("foo@bar.com");
+			item1.setName("Foo @ Bar");
+			item1.setAction(RosterItemExchangePayload::Item::Add);
+			item1.addGroup("Group 1");
+			item1.addGroup("Group 2");
 			roster->addItem(item1);
 
 			RosterItemExchangePayload::Item item2;
-			item2.jid = JID("baz@blo.com");
-			item2.name = "Baz";
-			item2.action = RosterItemExchangePayload::Modify;
+			item2.setJID("baz@blo.com");
+			item2.setName("Baz");
+			item2.setAction(RosterItemExchangePayload::Item::Modify);
 			roster->addItem(item2);
 
 			std::string expectedResult = 

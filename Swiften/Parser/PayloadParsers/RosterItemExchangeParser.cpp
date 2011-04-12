@@ -19,22 +19,22 @@ void RosterItemExchangeParser::handleStartElement(const std::string& element, co
 
 			currentItem_ = RosterItemExchangePayload::Item();
 
-			currentItem_.jid = JID(attributes.getAttribute("jid"));
-			currentItem_.name = attributes.getAttribute("name");
+			currentItem_.setJID(JID(attributes.getAttribute("jid")));
+			currentItem_.setName(attributes.getAttribute("name"));
 
 			std::string action = attributes.getAttribute("action");
 			if (action == "add") {
-				currentItem_.action = RosterItemExchangePayload::Add;
+				currentItem_.setAction(RosterItemExchangePayload::Item::Add);
 			}
 			else if (action == "modify") {
-				currentItem_.action = RosterItemExchangePayload::Modify;
+				currentItem_.setAction(RosterItemExchangePayload::Item::Modify);
 			}
 			else if (action == "delete") {
-				currentItem_.action = RosterItemExchangePayload::Delete;
+				currentItem_.setAction(RosterItemExchangePayload::Item::Delete);
 			}
 			else {
 				// Add is default action according to XEP
-				currentItem_.action = RosterItemExchangePayload::Add;
+				currentItem_.setAction(RosterItemExchangePayload::Item::Add);
 			}
 		}
 	}
@@ -56,7 +56,7 @@ void RosterItemExchangeParser::handleEndElement(const std::string& element, cons
 	}
 	else if (level_ == ItemLevel) {
 		if (element == "group") {
-			currentItem_.groups.push_back(currentText_);
+			currentItem_.addGroup(currentText_);
 		}
 	}
 }

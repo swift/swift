@@ -18,12 +18,16 @@ namespace Swift {
 		public:
 			typedef boost::shared_ptr<SetRosterRequest> ref;
 
-			static ref create(RosterPayload::ref payload, IQRouter* router, const JID& to = JID()) {
-				return ref(new SetRosterRequest(payload, router, to));
+			static ref create(RosterPayload::ref payload, IQRouter* router) {
+				return ref(new SetRosterRequest(JID(), payload, router));
+			}
+
+			static ref create(RosterPayload::ref payload, const JID& to, IQRouter* router) {
+				return ref(new SetRosterRequest(to, payload, router));
 			}
 
 		private:
-			SetRosterRequest(boost::shared_ptr<RosterPayload> payload, IQRouter* router, const JID& to) : Request(IQ::Set, to, boost::shared_ptr<RosterPayload>(payload), router) {
+			SetRosterRequest(const JID& to, boost::shared_ptr<RosterPayload> payload, IQRouter* router) : Request(IQ::Set, to, boost::shared_ptr<RosterPayload>(payload), router) {
 			}
 
 			virtual void handleResponse(boost::shared_ptr<Payload> /*payload*/, ErrorPayload::ref error) {

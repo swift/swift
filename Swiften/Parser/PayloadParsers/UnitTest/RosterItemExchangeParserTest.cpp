@@ -35,17 +35,17 @@ class RosterItemExchangeParserTest : public CppUnit::TestFixture
 
 			CPPUNIT_ASSERT_EQUAL(static_cast<size_t>(2), items.size());
 
-			CPPUNIT_ASSERT_EQUAL(JID("foo@bar.com"), items[0].jid);
-			CPPUNIT_ASSERT_EQUAL(std::string("Foo @ Bar"), items[0].name);
-			CPPUNIT_ASSERT_EQUAL(RosterItemExchangePayload::Add, items[0].action);
-			CPPUNIT_ASSERT_EQUAL(static_cast<size_t>(2), items[0].groups.size());
-			CPPUNIT_ASSERT_EQUAL(std::string("Group 1"), items[0].groups[0]);
-			CPPUNIT_ASSERT_EQUAL(std::string("Group 2"), items[0].groups[1]);
+			CPPUNIT_ASSERT_EQUAL(JID("foo@bar.com"), items[0].getJID());
+			CPPUNIT_ASSERT_EQUAL(std::string("Foo @ Bar"), items[0].getName());
+			CPPUNIT_ASSERT_EQUAL(RosterItemExchangePayload::Item::Add, items[0].getAction());
+			CPPUNIT_ASSERT_EQUAL(static_cast<size_t>(2), items[0].getGroups().size());
+			CPPUNIT_ASSERT_EQUAL(std::string("Group 1"), items[0].getGroups()[0]);
+			CPPUNIT_ASSERT_EQUAL(std::string("Group 2"), items[0].getGroups()[1]);
 
-			CPPUNIT_ASSERT_EQUAL(JID("baz@blo.com"), items[1].jid);
-			CPPUNIT_ASSERT_EQUAL(std::string("Baz"), items[1].name);
-			CPPUNIT_ASSERT_EQUAL(RosterItemExchangePayload::Modify, items[1].action);
-			CPPUNIT_ASSERT_EQUAL(static_cast<size_t>(0), items[1].groups.size());
+			CPPUNIT_ASSERT_EQUAL(JID("baz@blo.com"), items[1].getJID());
+			CPPUNIT_ASSERT_EQUAL(std::string("Baz"), items[1].getName());
+			CPPUNIT_ASSERT_EQUAL(RosterItemExchangePayload::Item::Modify, items[1].getAction());
+			CPPUNIT_ASSERT_EQUAL(static_cast<size_t>(0), items[1].getGroups().size());
 		}
 };
 

@@ -22,17 +22,16 @@ std::string RosterItemExchangeSerializer::serializePayload(boost::shared_ptr<Ros
 	XMLElement queryElement("x", "http://jabber.org/protocol/rosterx");
 	foreach(const RosterItemExchangePayload::Item& item, roster->getItems()) {
 		boost::shared_ptr<XMLElement> itemElement(new XMLElement("item"));
-		itemElement->setAttribute("jid", item.jid);
-		itemElement->setAttribute("name", item.name);
+		itemElement->setAttribute("jid", item.getJID());
+		itemElement->setAttribute("name", item.getName());
 
-		switch (item.action) {
-			case RosterItemExchangePayload::Add: itemElement->setAttribute("action", "add"); break;
-			case RosterItemExchangePayload::Modify: itemElement->setAttribute("action", "modify"); break;
-			case RosterItemExchangePayload::Delete: itemElement->setAttribute("action", "delete"); break;
-			default: itemElement->setAttribute("action", "add"); break;
+		switch (item.getAction()) {
+			case RosterItemExchangePayload::Item::Add: itemElement->setAttribute("action", "add"); break;
+			case RosterItemExchangePayload::Item::Modify: itemElement->setAttribute("action", "modify"); break;
+			case RosterItemExchangePayload::Item::Delete: itemElement->setAttribute("action", "delete"); break;
 		}
 
-		foreach(const std::string& group, item.groups) {
+		foreach(const std::string& group, item.getGroups()) {
 			boost::shared_ptr<XMLElement> groupElement(new XMLElement("group"));
 			groupElement->addNode(boost::shared_ptr<XMLTextNode>(new XMLTextNode(group)));
 			itemElement->addNode(groupElement);

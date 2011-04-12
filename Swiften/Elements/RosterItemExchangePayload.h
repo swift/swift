@@ -8,7 +8,6 @@
 
 #include <vector>
 #include <string>
-#include <boost/optional.hpp>
 #include <boost/shared_ptr.hpp>
 
 #include "Swiften/Elements/Payload.h"
@@ -20,13 +19,49 @@ namespace Swift {
 		public:
 			typedef boost::shared_ptr<RosterItemExchangePayload> ref;
 
-			enum Action { Add, Modify, Delete };
+			class Item {
+				public:
+					enum Action { Add, Modify, Delete };
 
-			struct Item {
-				Action action;
-				JID jid;
-				std::string name;
-				std::vector<std::string> groups;
+					Item();
+
+					Action getAction() const {
+						return action;
+					}
+
+					void setAction(Action action) {
+						this->action = action;
+					}
+
+					const JID& getJID() const {
+						return jid;
+					}
+
+					void setJID(const JID& jid) {
+						this->jid = jid;
+					}
+
+					const std::string& getName() const {
+						return name;
+					}
+
+					void setName(const std::string& name) {
+						this->name = name;
+					}
+
+					const std::vector<std::string>& getGroups() const {
+						return groups;
+					}
+
+					void addGroup(const std::string& group) {
+						groups.push_back(group);
+					}
+
+				private:
+					Action action;
+					JID jid;
+					std::string name;
+					std::vector<std::string> groups;
 			};
 
 			typedef std::vector<RosterItemExchangePayload::Item> RosterItemExchangePayloadItems;
