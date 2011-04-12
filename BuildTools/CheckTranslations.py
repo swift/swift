@@ -10,6 +10,18 @@ def getText(nodelist):
   return text
 
 
+desktop_generic_names = set()
+desktop_comments = set()
+f = open("Swift/resources/swift.desktop", "r")
+for l in f.readlines() :
+  m = re.match("GenericName\[(\w+)\].*", l)
+  if m :
+    desktop_generic_names.add(m.group(1))
+  m = re.match("Comment\[(\w+)\].*", l)
+  if m :
+    desktop_comments.add(m.group(1))
+f.close()
+
 for filename in os.listdir("Swift/Translations") :
   m = re.match("swift_(.*)\.ts", filename)
   if m :
@@ -32,3 +44,7 @@ for filename in os.listdir("Swift/Translations") :
         print "[Error] " + filename + ": Placeholder mismatch in translation '" + sourceText + "'"
     if not finished :
         print "[Warning] " + filename + ": Unfinished"
+    if language not in desktop_generic_names :
+        print "[Warning] GenericName field missing in desktop entry for " + language
+    if language not in desktop_comments :
+        print "[Warning] Comment field missing in desktop entry for " + language
