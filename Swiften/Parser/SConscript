@@ -38,6 +38,7 @@ sources = [
 		"PayloadParsers/PrivateStorageParser.cpp",
 		"PayloadParsers/RawXMLPayloadParser.cpp",
 		"PayloadParsers/ResourceBindParser.cpp",
+		"PayloadParsers/RosterItemExchangeParser.cpp",
 		"PayloadParsers/RosterParser.cpp",
 		"PayloadParsers/SecurityLabelParser.cpp",
 		"PayloadParsers/SecurityLabelsCatalogParser.cpp",

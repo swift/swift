@@ -14,6 +14,7 @@
 #include "Swiften/Serializer/PayloadSerializers/PrioritySerializer.h"
 #include "Swiften/Serializer/PayloadSerializers/ErrorSerializer.h"
 #include "Swiften/Serializer/PayloadSerializers/RosterSerializer.h"
+#include "Swiften/Serializer/PayloadSerializers/RosterItemExchangeSerializer.h"
 #include "Swiften/Serializer/PayloadSerializers/MUCPayloadSerializer.h"
 #include "Swiften/Serializer/PayloadSerializers/MUCUserPayloadSerializer.h"
 #include "Swiften/Serializer/PayloadSerializers/MUCOwnerPayloadSerializer.h"
@@ -51,6 +52,7 @@ FullPayloadSerializerCollection::FullPayloadSerializerCollection() {
 	serializers_.push_back(new PrioritySerializer());
 	serializers_.push_back(new ErrorSerializer());
 	serializers_.push_back(new RosterSerializer());
+	serializers_.push_back(new RosterItemExchangeSerializer());
 	serializers_.push_back(new MUCPayloadSerializer());
 	serializers_.push_back(new MUCUserPayloadSerializer());
 	serializers_.push_back(new MUCOwnerPayloadSerializer(this));

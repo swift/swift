@@ -17,6 +17,7 @@
 #include "Swiften/Parser/PayloadParsers/StartSessionParser.h"
 #include "Swiften/Parser/PayloadParsers/StatusParser.h"
 #include "Swiften/Parser/PayloadParsers/StatusShowParser.h"
+#include "Swiften/Parser/PayloadParsers/RosterItemExchangeParser.h"
 #include "Swiften/Parser/PayloadParsers/RosterParser.h"
 #include "Swiften/Parser/PayloadParsers/SoftwareVersionParser.h"
 #include "Swiften/Parser/PayloadParsers/StorageParser.h"
@@ -54,6 +55,7 @@ FullPayloadParserFactoryCollection::FullPayloadParserFactoryCollection() {
 	factories_.push_back(shared_ptr<PayloadParserFactory>(new GenericPayloadParserFactory<ErrorParser>("error")));
 	factories_.push_back(shared_ptr<PayloadParserFactory>(new GenericPayloadParserFactory<SoftwareVersionParser>("query", "jabber:iq:version")));
 	factories_.push_back(shared_ptr<PayloadParserFactory>(new GenericPayloadParserFactory<StorageParser>("storage", "storage:bookmarks")));
+	factories_.push_back(shared_ptr<PayloadParserFactory>(new GenericPayloadParserFactory<RosterItemExchangeParser>("x", "http://jabber.org/protocol/rosterx")));
 	factories_.push_back(shared_ptr<PayloadParserFactory>(new GenericPayloadParserFactory<RosterParser>("query", "jabber:iq:roster")));
 	factories_.push_back(shared_ptr<PayloadParserFactory>(new GenericPayloadParserFactory<DiscoInfoParser>("query", "http://jabber.org/protocol/disco#info")));
 	factories_.push_back(shared_ptr<PayloadParserFactory>(new GenericPayloadParserFactory<DiscoItemsParser>("query", "http://jabber.org/protocol/disco#items")));
