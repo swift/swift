@@ -1,6 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE TS>
-<TS version="2.0">
+<!DOCTYPE TS><TS>
 <defaultcodec>UTF-8</defaultcodec>
 <context>
     <name></name>
@@ -322,47 +320,47 @@
     </message>
     <message>
         <source>Encryption error</source>
-        <translation>Kódolási hiba</translation>
+        <translation>Titkosítási hiba</translation>
     </message>
     <message>
         <source>Error loading certificate (Invalid password?)</source>
-        <translation>Hiba az aláírás betöltésekor (Hibás jelszó?)</translation>
+        <translation>Hiba a tanusítvány betöltésekor (Hibás jelszó?)</translation>
     </message>
     <message>
         <source>Certificate not authorized</source>
-        <translation>Aláírás nem engedélyezett</translation>
+        <translation>A tanusítvány nem engedélyezett</translation>
     </message>
     <message>
         <source>Unknown certificate</source>
-        <translation>Ismeretlen aláírás</translation>
+        <translation>Ismeretlen tanusítvány</translation>
     </message>
     <message>
         <source>Certificate has expired</source>
-        <translation>Az aláírás lejárt</translation>
+        <translation>A tanusítvány lejárt</translation>
     </message>
     <message>
         <source>Certificate is not yet valid</source>
-        <translation>Az aláírás nem valós</translation>
+        <translation>A tanusítvány nem valós</translation>
     </message>
     <message>
         <source>Certificate is self-signed</source>
-        <translation>Az aláírás saját kezüleg lett aláírva</translation>
+        <translation>A tanusítvány saját kezüleg lett aláírva</translation>
     </message>
     <message>
         <source>Certificate has been rejected</source>
-        <translation>Az aláírás visszautasítva</translation>
+        <translation>A tanusítvány visszautasítva</translation>
     </message>
     <message>
         <source>Certificate is not trusted</source>
-        <translation>Az aláírás nem megbízható</translation>
+        <translation>A tanusítvány nem megbízható</translation>
     </message>
     <message>
         <source>Certificate cannot be used for encrypting your connection</source>
-        <translation>Az aláírás nem használható a kapcsolat titkosítására</translation>
+        <translation>A tanusítvány nem használható a kapcsolat titkosítására</translation>
     </message>
     <message>
         <source>Certificate path length constraint exceeded</source>
-        <translation>Az aláírás hossza nem megfelelő</translation>
+        <translation>A tanusítvány úthossza nem megfelelő</translation>
     </message>
     <message>
         <source>Invalid certificate signature</source>
@@ -370,11 +368,11 @@
     </message>
     <message>
         <source>Invalid Certificate Authority</source>
-        <translation>Hibás az aláírás aláírója</translation>
+        <translation>Érvénytelen hitelesítésszlgáltató</translation>
     </message>
     <message>
         <source>Certificate does not match the host identity</source>
-        <translation>Az aláírás nem azonos a hoszttal</translation>
+        <translation>A tanusítvány nem egyezik a befogadóval</translation>
     </message>
     <message>
         <source>Certificate error</source>
@@ -414,45 +412,45 @@
     </message>
     <message>
         <source>There was an error publishing your profile data</source>
-        <translation type="unfinished"></translation>
+        <translation>Valamilyen hiba lépett fel a profil adatok mentésekor</translation>
     </message>
 </context>
 <context>
     <name>CloseButton</name>
     <message>
         <source>Close Tab</source>
-        <translation type="unfinished"></translation>
+        <translation>Fül bezárása</translation>
     </message>
 </context>
 <context>
     <name>MAC_APPLICATION_MENU</name>
     <message>
         <source>Services</source>
-        <translation type="unfinished"></translation>
+        <translation>Szolgáltatások</translation>
     </message>
     <message>
         <source>Hide %1</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 elrejtése</translation>
     </message>
     <message>
         <source>Hide Others</source>
-        <translation type="unfinished"></translation>
+        <translation>Többi elrejtése</translation>
     </message>
     <message>
         <source>Show All</source>
-        <translation type="unfinished"></translation>
+        <translation>Összes megjelenítése</translation>
     </message>
     <message>
         <source>Preferences...</source>
-        <translation type="unfinished"></translation>
+        <translation>Beállítások...</translation>
     </message>
     <message>
         <source>Quit %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Kilépés %1</translation>
     </message>
     <message>
         <source>About %1</source>
-        <translation type="unfinished">A %1 prógramról</translation>
+        <translation>A %1 prógramról</translation>
     </message>
 </context>
 <context>
@@ -494,42 +492,42 @@
     <name>QLineEdit</name>
     <message>
         <source>Select All</source>
-        <translation type="unfinished"></translation>
+        <translation>Összes kiválasztása</translation>
     </message>
     <message>
         <source>&amp;Undo</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Visszavonás</translation>
     </message>
     <message>
         <source>&amp;Redo</source>
-        <translation type="unfinished"></translation>
+        <translation>Új&amp;ra</translation>
     </message>
     <message>
         <source>Cu&amp;t</source>
-        <translation type="unfinished"></translation>
+        <translation>K&amp;ivágás</translation>
     </message>
     <message>
         <source>&amp;Copy</source>
-        <translation type="unfinished"></translation>
+        <translation>Másolás (&amp;C)</translation>
     </message>
     <message>
         <source>&amp;Paste</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Beillesztés</translation>
     </message>
     <message>
         <source>Delete</source>
-        <translation type="unfinished"></translation>
+        <translation>Törlés</translation>
     </message>
 </context>
 <context>
     <name>QMessageBox</name>
     <message>
         <source>Show Details...</source>
-        <translation type="unfinished"></translation>
+        <translation>Részletek...</translation>
     </message>
     <message>
         <source>Hide Details...</source>
-        <translation type="unfinished"></translation>
+        <translation>Részletek elrejtése...</translation>
     </message>
 </context>
 <context>
@@ -551,62 +549,63 @@
     <name>QScrollBar</name>
     <message>
         <source>Scroll here</source>
-        <translation type="unfinished"></translation>
+        <translation>Görgetés ide</translation>
     </message>
     <message>
         <source>Top</source>
-        <translation type="unfinished"></translation>
+        <translation>Felső</translation>
     </message>
     <message>
         <source>Bottom</source>
-        <translation type="unfinished"></translation>
+        <translation>Alsó</translation>
     </message>
     <message>
         <source>Page up</source>
-        <translation type="unfinished"></translation>
+        <translation>Lapozás felfele</translation>
     </message>
     <message>
         <source>Page down</source>
-        <translation type="unfinished"></translation>
+        <translation>Lapozás lefele</translation>
     </message>
     <message>
         <source>Scroll up</source>
-        <translation type="unfinished"></translation>
+        <translation>Felfele görgetés</translation>
     </message>
     <message>
         <source>Scroll down</source>
-        <translation type="unfinished"></translation>
+        <translation>Lefelé görgetés</translation>
     </message>
 </context>
 <context>
     <name>QTextControl</name>
     <message>
         <source>Select All</source>
-        <translation type="unfinished"></translation>
+        <translation>Összes Összes kiválasztása</translation>
     </message>
     <message>
         <source>&amp;Copy</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Másolás</translation>
     </message>
     <message>
         <source>&amp;Undo</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Visszavonás</translation>
     </message>
     <message>
         <source>&amp;Redo</source>
-        <translation type="unfinished"></translation>
+        <translation>Új&amp;ra</translation>
     </message>
     <message>
         <source>Cu&amp;t</source>
-        <translation type="unfinished"></translation>
+        <translation>K&amp;ivágás
+</translation>
     </message>
     <message>
         <source>&amp;Paste</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Beillesztés</translation>
     </message>
     <message>
         <source>Delete</source>
-        <translation type="unfinished"></translation>
+        <translation>Törlés</translation>
     </message>
 </context>
 <context>
@@ -621,35 +620,35 @@
     </message>
     <message>
         <source>Copy Image</source>
-        <translation type="unfinished"></translation>
+        <translation>Kép másolása</translation>
     </message>
     <message>
         <source>Scroll here</source>
-        <translation type="unfinished"></translation>
+        <translation>Görgetés ide</translation>
     </message>
     <message>
         <source>Top</source>
-        <translation type="unfinished"></translation>
+        <translation>Felső</translation>
     </message>
     <message>
         <source>Bottom</source>
-        <translation type="unfinished"></translation>
+        <translation>Alsó</translation>
     </message>
     <message>
         <source>Page up</source>
-        <translation type="unfinished"></translation>
+        <translation>Lapozás felfele</translation>
     </message>
     <message>
         <source>Page down</source>
-        <translation type="unfinished"></translation>
+        <translation>Lapozás lefele</translation>
     </message>
     <message>
         <source>Scroll up</source>
-        <translation type="unfinished"></translation>
+        <translation>Felfele görgetés</translation>
     </message>
     <message>
         <source>Scroll down</source>
-        <translation type="unfinished"></translation>
+        <translation>Lefelé görgetés</translation>
     </message>
 </context>
 <context>
@@ -1363,7 +1362,7 @@ Hogyha az elutasítást választod, következő belépéskor ismét megjelenik e
     <message>
         <source>TRANSLATION_LICENSE</source>
         <comment>This string contains the license under which this translation is licensed. We ask you to license the translation under the BSD license. Please read http://www.opensource.org/licenses/bsd-license.php, and if you agree to release your translation under this license, use the following (untranslated) text: &apos;This translation is licensed under the BSD License. See http://www.opensource.org/licenses/bsd-license.php&apos;</comment>
-        <translation type="unfinished">Should be the following (untranslated) text: &apos;This translation is licensed under the BSD License. See http://www.opensource.org/licenses/bsd-license.php&apos;</translation>
+        <translation>This translation is licensed under the BSD License. See http://www.opensource.org/licenses/bsd-license.php</translation>
     </message>
 </context>
 </TS>

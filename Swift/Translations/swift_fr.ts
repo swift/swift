@@ -107,8 +107,7 @@
     <message>
         <location filename="../Controllers/Chat/ChatControllerBase.cpp" line="208"/>
         <source>Payment is required</source>
-        <translatorcomment>Paiement est requis</translatorcomment>
-        <translation></translation>
+        <translation>Paiement est requis</translation>
     </message>
     <message>
         <location filename="../Controllers/Chat/ChatControllerBase.cpp" line="209"/>
@@ -365,7 +364,7 @@
     <message>
         <location filename="../Controllers/MainController.cpp" line="444"/>
         <source>Login/password invalid</source>
-        <translation>Login/mot de passe invalide</translation>
+        <translation>Identifiant/mot de passe invalide</translation>
     </message>
     <message>
         <location filename="../Controllers/MainController.cpp" line="445"/>
@@ -425,32 +424,32 @@
     <message>
         <location filename="../Controllers/MainController.cpp" line="457"/>
         <source>Certificate has expired</source>
-        <translation>Certificat a expiré</translation>
+        <translation>Le certificat a expiré</translation>
     </message>
     <message>
         <location filename="../Controllers/MainController.cpp" line="458"/>
         <source>Certificate is not yet valid</source>
-        <translation>Certificat n&apos;est pas encore valide</translation>
+        <translation>Le certificat n&apos;est pas encore valide</translation>
     </message>
     <message>
         <location filename="../Controllers/MainController.cpp" line="459"/>
         <source>Certificate is self-signed</source>
-        <translation>Certificat est auto-signé</translation>
+        <translation>Le certificat est auto-signé</translation>
     </message>
     <message>
         <location filename="../Controllers/MainController.cpp" line="460"/>
         <source>Certificate has been rejected</source>
-        <translation>Certificat a été rejeté</translation>
+        <translation>Le certificat a été rejeté</translation>
     </message>
     <message>
         <location filename="../Controllers/MainController.cpp" line="461"/>
         <source>Certificate is not trusted</source>
-        <translation>Certificat n&apos;est pas approuvé</translation>
+        <translation>Le certificat n&apos;est pas approuvé</translation>
     </message>
     <message>
         <location filename="../Controllers/MainController.cpp" line="462"/>
         <source>Certificate cannot be used for encrypting your connection</source>
-        <translation>Certificat ne peut pas être utilisé pour crypter votre connexion</translation>
+        <translation>Le certificat ne peut pas être utilisé pour crypter votre connexion</translation>
     </message>
     <message>
         <location filename="../Controllers/MainController.cpp" line="463"/>
@@ -460,7 +459,7 @@
     <message>
         <location filename="../Controllers/MainController.cpp" line="464"/>
         <source>Invalid certificate signature</source>
-        <translation></translation>
+        <translation>Signature de certificat invalide</translation>
     </message>
     <message>
         <location filename="../Controllers/MainController.cpp" line="465"/>
@@ -470,7 +469,7 @@
     <message>
         <location filename="../Controllers/MainController.cpp" line="466"/>
         <source>Certificate does not match the host identity</source>
-        <translation>Certificat ne correspond pas à l&apos;identité hôte</translation>
+        <translation>Le certificat ne correspond pas à l&apos;identité hôte</translation>
     </message>
     <message>
         <location filename="../Controllers/MainController.cpp" line="476"/>
@@ -540,37 +539,38 @@
     <message>
         <location filename="../QtUI/QtStrings.h" line="79"/>
         <source>Services</source>
-        <translation type="unfinished"></translation>
+        <translation>Services</translation>
     </message>
     <message>
         <location filename="../QtUI/QtStrings.h" line="80"/>
         <source>Hide %1</source>
-        <translation type="unfinished">Hide %1</translation>
+        <translatorcomment>Cacher %1</translatorcomment>
+        <translation>Hide %1</translation>
     </message>
     <message>
         <location filename="../QtUI/QtStrings.h" line="81"/>
         <source>Hide Others</source>
-        <translation type="unfinished"></translation>
+        <translation>Cacher les autres</translation>
     </message>
     <message>
         <location filename="../QtUI/QtStrings.h" line="82"/>
         <source>Show All</source>
-        <translation type="unfinished"></translation>
+        <translation>Voir Tout</translation>
     </message>
     <message>
         <location filename="../QtUI/QtStrings.h" line="83"/>
         <source>Preferences...</source>
-        <translation type="unfinished"></translation>
+        <translation>Préférences...</translation>
     </message>
     <message>
         <location filename="../QtUI/QtStrings.h" line="84"/>
         <source>Quit %1</source>
-        <translation type="unfinished">Quit %1</translation>
+        <translation>Quitter %1</translation>
     </message>
     <message>
         <location filename="../QtUI/QtStrings.h" line="85"/>
         <source>About %1</source>
-        <translation type="unfinished">About %1</translation>
+        <translation>A propos de %1</translation>
     </message>
 </context>
 <context>
@@ -602,7 +602,7 @@
     <message>
         <location filename="../QtUI/QtStrings.h" line="72"/>
         <source>OK</source>
-        <translation></translation>
+        <translation>OK</translation>
     </message>
     <message>
         <location filename="../QtUI/QtStrings.h" line="73"/>
@@ -681,7 +681,7 @@
     <message>
         <location filename="../QtUI/EventViewer/QtEvent.cpp" line="66"/>
         <source>%1 would like to add you to their contact list, saying &apos;%2&apos;</source>
-        <translation>%1 would like to add you to their contact list, saying &apos;%2&apos;</translation>
+        <translation>%1 souhaitent vous ajouter à leur liste de contacts, disant &apos;%2&apos;</translation>
     </message>
 </context>
 <context>
@@ -922,7 +922,7 @@
         <location filename="../QtUI/ui_QtJoinMUCWindow.h" line="124"/>
         <location filename="../QtUI/ui_QtJoinMUCWindow.h" line="130"/>
         <source>Enter Room</source>
-        <translation>Joindre un Salon</translation>
+        <translation>Joindre le Salon</translation>
     </message>
     <message>
         <location filename="../QtUI/QtJoinMUCWindow.ui"/>
@@ -1091,7 +1091,7 @@
         <location filename="../QtUI/QtAboutWidget.cpp" line="50"/>
         <source>Using the English translation by
 %1</source>
-        <translation>Utilise la traduction en Anglais de %1</translation>
+        <translation>Utilise la traduction Anglaise de %1</translation>
     </message>
     <message>
         <location filename="../QtUI/QtAboutWidget.cpp" line="54"/>
@@ -1335,7 +1335,7 @@
     <message>
         <location filename="../QtUI/QtLoginWindow.cpp" line="165"/>
         <source>&amp;Show Debug Console</source>
-        <translation>&amp;Afficher la Console de Débogage</translation>
+        <translation>&amp;Voir la Console de Débogage</translation>
     </message>
     <message>
         <location filename="../QtUI/QtLoginWindow.cpp" line="169"/>
@@ -1423,7 +1423,7 @@
     <message>
         <location filename="../QtUI/QtMainWindow.cpp" line="76"/>
         <source>&amp;View</source>
-        <translation>&amp;Affichage</translation>
+        <translation>&amp;Vue</translation>
     </message>
     <message>
         <location filename="../QtUI/QtMainWindow.cpp" line="78"/>
@@ -1443,7 +1443,7 @@
     <message>
         <location filename="../QtUI/QtMainWindow.cpp" line="89"/>
         <source>Enter &amp;Room</source>
-        <translation>Joindre le &amp;Salon</translation>
+        <translation>Joindre un &amp;Salon</translation>
     </message>
     <message>
         <location filename="../QtUI/QtMainWindow.cpp" line="92"/>
@@ -1463,7 +1463,7 @@
     <message>
         <location filename="../QtUI/QtMainWindow.cpp" line="103"/>
         <source>&amp;Sign Out</source>
-        <translation></translation>
+        <translation>&amp;Se déconnecter</translation>
     </message>
 </context>
 <context>
@@ -1481,7 +1481,7 @@
     <message>
         <location filename="../QtUI/QtNameWidget.cpp" line="55"/>
         <source>Show Address</source>
-        <translation></translation>
+        <translation>Voir l&apos;Addresse</translation>
     </message>
     <message>
         <location filename="../QtUI/QtNameWidget.cpp" line="62"/>
@@ -1689,7 +1689,7 @@ Si vous choisissez de ne pas accepter, il vous sera demandé à nouveau lors de 
     <message>
         <location filename="../QtUI/QtXMLConsoleWidget.cpp" line="79"/>
         <source>&lt;!-- OUT --&gt;</source>
-        <translation></translation>
+        <translation>&lt;!-- SORTIE --&gt;</translation>
     </message>
 </context>
 <context>
@@ -1704,7 +1704,7 @@ Si vous choisissez de ne pas accepter, il vous sera demandé à nouveau lors de 
         <location filename="../QtUI/QtAboutWidget.cpp" line="52"/>
         <source>TRANSLATION_LICENSE</source>
         <comment>This string contains the license under which this translation is licensed. We ask you to license the translation under the BSD license. Please read http://www.opensource.org/licenses/bsd-license.php, and if you agree to release your translation under this license, use the following (untranslated) text: &apos;This translation is licensed under the BSD License. See http://www.opensource.org/licenses/bsd-license.php&apos;</comment>
-        <translation type="unfinished"></translation>
+        <translation>&apos;This translation is licensed under the BSD License. See http://www.opensource.org/licenses/bsd-license.php&apos;</translation>
     </message>
 </context>
 </TS>
