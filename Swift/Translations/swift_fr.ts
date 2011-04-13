@@ -72,7 +72,7 @@
     <message>
         <location filename="../Controllers/Chat/ChatControllerBase.cpp" line="201"/>
         <source>Recipient can no longer be contacted</source>
-        <translation>Destinataire ne peut plus être contacté</translation>
+        <translation>Le destinataire ne peut plus être contacté</translation>
     </message>
     <message>
         <location filename="../Controllers/Chat/ChatControllerBase.cpp" line="202"/>
@@ -112,7 +112,7 @@
     <message>
         <location filename="../Controllers/Chat/ChatControllerBase.cpp" line="209"/>
         <source>Recipient is unavailable</source>
-        <translation>Destinataire est indisponible</translation>
+        <translation>Le destinataire est indisponible</translation>
     </message>
     <message>
         <location filename="../Controllers/Chat/ChatControllerBase.cpp" line="210"/>
@@ -394,7 +394,7 @@
     <message>
         <location filename="../Controllers/MainController.cpp" line="450"/>
         <source>Error starting session</source>
-        <translation>Erreur de démarrage session</translation>
+        <translation>Erreur de démarrage de session</translation>
     </message>
     <message>
         <location filename="../Controllers/MainController.cpp" line="451"/>
@@ -454,7 +454,7 @@
     <message>
         <location filename="../Controllers/MainController.cpp" line="463"/>
         <source>Certificate path length constraint exceeded</source>
-        <translation>Contrainte de longueur du chemin d&apos;accès de certification dépassée</translation>
+        <translation>Contrainte de longueur du chemin d&apos;accès de certificat dépassée</translation>
     </message>
     <message>
         <location filename="../Controllers/MainController.cpp" line="464"/>
@@ -479,7 +479,7 @@
     <message>
         <location filename="../Controllers/MainController.cpp" line="490"/>
         <source>Reconnect to %1% failed: %2%. Will retry in %3% seconds.</source>
-        <translation>Reconnexion a %1% a echoué: %2%. Va réessayer dans %3% secondes.</translation>
+        <translation>Reconnexion à %1% a echoué: %2%. Va réessayer dans %3% secondes.</translation>
     </message>
     <message>
         <location filename="../Controllers/MainController.cpp" line="493"/>
@@ -523,7 +523,7 @@
     <message>
         <location filename="../Controllers/ProfileController.cpp" line="62"/>
         <source>There was an error publishing your profile data</source>
-        <translation>Il ya eu une erreur de publication de vos données de profil</translation>
+        <translation>Il y a eu une erreur de publication de vos données de profil</translation>
     </message>
 </context>
 <context>
@@ -544,8 +544,7 @@
     <message>
         <location filename="../QtUI/QtStrings.h" line="80"/>
         <source>Hide %1</source>
-        <translatorcomment>Cacher %1</translatorcomment>
-        <translation>Hide %1</translation>
+        <translation>Cacher %1</translation>
     </message>
     <message>
         <location filename="../QtUI/QtStrings.h" line="81"/>
@@ -681,7 +680,7 @@
     <message>
         <location filename="../QtUI/EventViewer/QtEvent.cpp" line="66"/>
         <source>%1 would like to add you to their contact list, saying &apos;%2&apos;</source>
-        <translation>%1 souhaitent vous ajouter à leur liste de contacts, disant &apos;%2&apos;</translation>
+        <translation>%1 souhaitent vous ajouter à leur liste de contacts, dit &apos;%2&apos;</translation>
     </message>
 </context>
 <context>
@@ -1531,7 +1530,7 @@ If you choose to defer this choice, you will be asked again when you next login.
         <translation>%1 souhaitent vous ajouter à leur liste de contacts.
  Souhaitez-vous les ajouter à votre liste de contacts et partager votre status lorsque vous êtes en ligne? 
 
-Si vous choisissez de ne pas accepter, il vous sera demandé à nouveau lors de votre prochaine connexion.</translation>
+Si vous choisissez de refuser ce choixr, il vous sera demandé à nouveau lors de votre prochaine connexion.</translation>
     </message>
     <message>
         <location filename="../QtUI/QtSubscriptionRequestWindow.cpp" line="24"/>
