@@ -72,4 +72,14 @@ std::vector<unsigned char> ByteArray::create(const unsigned char* c, size_t n) {
 	return data;
 }
 
+std::string ByteArray::toString() const {
+	size_t i;
+	for (i = data_.size(); i > 0; --i) {
+		if (data_[i - 1] != 0) {
+			break;
+		}
+	}
+	return i > 0 ? std::string(reinterpret_cast<const char*>(getData()), i) : "";
+}
+
 }

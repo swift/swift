@@ -8,6 +8,7 @@
 #include <cppunit/extensions/TestFactoryRegistry.h>
 
 #include "Swiften/Base/ByteArray.h"
+#include <boost/lexical_cast.hpp>
 
 using namespace Swift;
 
@@ -17,6 +18,7 @@ class ByteArrayTest : public CppUnit::TestFixture {
 		CPPUNIT_TEST(testToString);
 		CPPUNIT_TEST(testToString_NullTerminated);
 		CPPUNIT_TEST(testToString_TwoNullTerminated);
+		CPPUNIT_TEST(testToString_AllNull);
 		CPPUNIT_TEST_SUITE_END();
 
 	public:
@@ -33,15 +35,21 @@ class ByteArrayTest : public CppUnit::TestFixture {
 		}
 
 		void testToString_NullTerminated() {
-			ByteArray testling(ByteArray::create("abcde\0"));
+			ByteArray testling(ByteArray::create("abcde\0", 6));
 
 			CPPUNIT_ASSERT_EQUAL(std::string("abcde"), testling.toString());
 		}
 
 		void testToString_TwoNullTerminated() {
-			ByteArray testling(ByteArray::create("abcde\0\0"));
+			ByteArray testling(ByteArray::create("abcde\0\0", 7));
 
 			CPPUNIT_ASSERT_EQUAL(std::string("abcde"), testling.toString());
+		}
+
+		void testToString_AllNull() {
+			ByteArray testling(ByteArray::create("\0\0", 2));
+
+			CPPUNIT_ASSERT_EQUAL(std::string(""), testling.toString());
 		}
 };
 

@@ -120,9 +120,7 @@ namespace Swift {
 				return data_.end(); 
 			}
 
-			std::string toString() const {
-				return std::string(reinterpret_cast<const char*>(getData()), getSize());
-			}
+			std::string toString() const;
 
 			void readFromFile(const std::string& file);
 
