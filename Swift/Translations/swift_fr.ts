@@ -1530,7 +1530,7 @@ If you choose to defer this choice, you will be asked again when you next login.
         <translation>%1 souhaitent vous ajouter à leur liste de contacts.
  Souhaitez-vous les ajouter à votre liste de contacts et partager votre status lorsque vous êtes en ligne? 
 
-Si vous choisissez de refuser ce choixr, il vous sera demandé à nouveau lors de votre prochaine connexion.</translation>
+Si vous choisissez de refuser ce choix, il vous sera demandé à nouveau lors de votre prochaine connexion.</translation>
     </message>
     <message>
         <location filename="../QtUI/QtSubscriptionRequestWindow.cpp" line="24"/>
