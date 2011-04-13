@@ -14,6 +14,9 @@ using namespace Swift;
 class ByteArrayTest : public CppUnit::TestFixture {
 		CPPUNIT_TEST_SUITE(ByteArrayTest);
 		CPPUNIT_TEST(testGetData_NoData);
+		CPPUNIT_TEST(testToString);
+		CPPUNIT_TEST(testToString_NullTerminated);
+		CPPUNIT_TEST(testToString_TwoNullTerminated);
 		CPPUNIT_TEST_SUITE_END();
 
 	public:
@@ -21,6 +24,24 @@ class ByteArrayTest : public CppUnit::TestFixture {
 			ByteArray testling;
 
 			CPPUNIT_ASSERT_EQUAL(reinterpret_cast<const char*>(NULL), reinterpret_cast<const char*>(testling.getData()));
+		}
+
+		void testToString() {
+			ByteArray testling(ByteArray::create("abcde"));
+
+			CPPUNIT_ASSERT_EQUAL(std::string("abcde"), testling.toString());
+		}
+
+		void testToString_NullTerminated() {
+			ByteArray testling(ByteArray::create("abcde\0"));
+
+			CPPUNIT_ASSERT_EQUAL(std::string("abcde"), testling.toString());
+		}
+
+		void testToString_TwoNullTerminated() {
+			ByteArray testling(ByteArray::create("abcde\0\0"));
+
+			CPPUNIT_ASSERT_EQUAL(std::string("abcde"), testling.toString());
 		}
 };
 
