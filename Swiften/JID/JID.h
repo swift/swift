@@ -38,6 +38,10 @@ namespace Swift {
 				return !hasResource_;
 			}
 
+			static std::string getEscapedNode(const std::string& node);
+
+			std::string getUnescapedNode() const;
+
 			JID toBare() const {
 				JID result(*this);
 				result.hasResource_ = false;

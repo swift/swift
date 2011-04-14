@@ -51,6 +51,8 @@ class JIDTest : public CppUnit::TestFixture
 		CPPUNIT_TEST(testSmallerThan_Larger);
 		CPPUNIT_TEST(testHasResource);
 		CPPUNIT_TEST(testHasResource_NoResource);
+		CPPUNIT_TEST(testGetEscapedNode);
+		CPPUNIT_TEST(testGetUnescapedNode);
 		CPPUNIT_TEST_SUITE_END();
 
 	public:
@@ -310,6 +312,21 @@ class JIDTest : public CppUnit::TestFixture
 			JID testling("x@y");
 
 			CPPUNIT_ASSERT(testling.isBare());
+		}
+
+		void testGetEscapedNode() {
+			std::string escaped = JID::getEscapedNode("alice@wonderland.lit");
+			CPPUNIT_ASSERT_EQUAL(std::string("alice\\40wonderland.lit"), escaped);
+
+			escaped = JID::getEscapedNode("\\& \" ' / <\\\\> @ :\\3a\\40");
+			CPPUNIT_ASSERT_EQUAL(std::string("\\5c\\26\\20\\22\\20\\27\\20\\2f\\20\\3c\\5c\\5c\\3e\\20\\40\\20\\3a\\5c3a\\5c40"), escaped);
+		}
+
+		void testGetUnescapedNode() {
+			std::string input = "\\& \" ' / <\\\\> @ : \\5c\\40";
+			JID testling(JID::getEscapedNode(input) + "@y");
+			CPPUNIT_ASSERT(testling.isValid());
+			CPPUNIT_ASSERT_EQUAL(input, testling.getUnescapedNode());
 		}
 };
 

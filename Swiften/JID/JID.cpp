@@ -13,6 +13,7 @@
 #ifdef SWIFTEN_CACHE_JID_PREP
 #include <boost/unordered_map.hpp>
 #endif
+#include <boost/algorithm/string/replace.hpp>
 #include <stringprep.h>
 
 #include <Swiften/Base/String.h>
@@ -124,6 +125,41 @@ int JID::compare(const Swift::JID& o, CompareType compareType) const {
 		if (resource_ > o.resource_) { return 1; }
 	}
 	return 0;
+}
+
+std::string JID::getEscapedNode(const std::string& node) {
+	std::string escaped = node;
+	
+	boost::algorithm::replace_all(escaped, "\\", "\\5c");
+	boost::algorithm::replace_all(escaped, " ", "\\20");
+	boost::algorithm::replace_all(escaped, "\"", "\\22");
+	boost::algorithm::replace_all(escaped, "&", "\\26");
+	boost::algorithm::replace_all(escaped, "'", "\\27");
+	boost::algorithm::replace_all(escaped, "/", "\\2f");
+	boost::algorithm::replace_all(escaped, "<", "\\3c");
+	boost::algorithm::replace_all(escaped, ">", "\\3e");
+	boost::algorithm::replace_all(escaped, "@", "\\40");
+	boost::algorithm::replace_all(escaped, ":", "\\3a");
+
+	return escaped;
+}
+
+std::string JID::getUnescapedNode() const {
+	std::string unescaped = node_;
+
+	boost::algorithm::replace_all(unescaped, "\\20", " ");
+	boost::algorithm::replace_all(unescaped, "\\22", "\"");
+	boost::algorithm::replace_all(unescaped, "\\26", "&");
+	boost::algorithm::replace_all(unescaped, "\\27", "'");
+	boost::algorithm::replace_all(unescaped, "\\2f", "/");
+	boost::algorithm::replace_all(unescaped, "\\3c", "<");
+	boost::algorithm::replace_all(unescaped, "\\3e", ">");
+	boost::algorithm::replace_all(unescaped, "\\40", "@");
+	boost::algorithm::replace_all(unescaped, "\\3a", ":");
+	boost::algorithm::replace_all(unescaped, "\\5c", "\\");
+	
+
+	return unescaped;
 }
 
 } // namespace Swift
