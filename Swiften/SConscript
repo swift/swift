@@ -159,6 +159,9 @@ if env["SCONS_STAGE"] == "build" :
 			"StringCodecs/Hexify.cpp",
 		]
 
+	if myenv["PLATFORM"] != "darwin" and myenv["PLATFORM"] != "win32" and myenv.get("HAVE_GCONF", 0) :
+		env.MergeFlags(env["GCONF_FLAGS"])
+
 	SConscript(dirs = [
 			"Avatars",
 			"Base",
@@ -332,6 +335,8 @@ if env["SCONS_STAGE"] == "build" :
 				if root.endswith("OpenSSL") :
 					continue
 				if file.startswith("CAres") or file.startswith("LibXML") or file.startswith("Expat") or file.startswith("foreach") or file.startswith("Log.h") or file.startswith("format.h") :
+					continue
+				if file.find("ProxyProvider") != -1 :
 					continue
 				swiften_header += "#include <" + include + ">\n"
 				swiften_includes.append(include)

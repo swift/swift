@@ -19,17 +19,28 @@
 #include "Swiften/Base/IDGenerator.h"
 #include "Swiften/Client/ClientSessionStanzaChannel.h"
 #include <Swiften/Base/Log.h>
+#include "Swiften/Network/PlatformProxyProvider.h"
+#include "Swiften/Network/SOCKS5ProxiedConnectionFactory.h"
+#include "Swiften/Network/HTTPConnectProxiedConnectionFactory.h"
 
 namespace Swift {
 
-CoreClient::CoreClient(const JID& jid, const std::string& password, NetworkFactories* networkFactories) : jid_(jid), password_(password), networkFactories(networkFactories), useStreamCompression(true), useTLS(UseTLSWhenAvailable), disconnectRequested_(false), certificateTrustChecker(NULL) {
+CoreClient::CoreClient(const JID& jid, const std::string& password, NetworkFactories* networkFactories) : jid_(jid), password_(password), networkFactories(networkFactories), useStreamCompression(true), useTLS(UseTLSWhenAvailable), proxyConnectionFactory_(NULL), disconnectRequested_(false), certificateTrustChecker(NULL) {
 	stanzaChannel_ = new ClientSessionStanzaChannel();
 	stanzaChannel_->onMessageReceived.connect(boost::bind(&CoreClient::handleMessageReceived, this, _1));
 	stanzaChannel_->onPresenceReceived.connect(boost::bind(&CoreClient::handlePresenceReceived, this, _1));
 	stanzaChannel_->onStanzaAcked.connect(boost::bind(&CoreClient::handleStanzaAcked, this, _1));
 	stanzaChannel_->onAvailableChanged.connect(boost::bind(&CoreClient::handleStanzaChannelAvailableChanged, this, _1));
 
+	PlatformProxyProvider proxyProvider;
+
 	iqRouter_ = new IQRouter(stanzaChannel_);
+	if(proxyProvider.getSOCKS5Proxy().isValid()) {
+		proxyConnectionFactory_ = new SOCKS5ProxiedConnectionFactory(networkFactories->getConnectionFactory(), proxyProvider.getSOCKS5Proxy());
+	}
+	else if(proxyProvider.getHTTPConnectProxy().isValid()) {
+		proxyConnectionFactory_ = new HTTPConnectProxiedConnectionFactory(networkFactories->getConnectionFactory(), proxyProvider.getHTTPConnectProxy());
+	}
 	tlsFactories = new PlatformTLSFactories();
 }
 
@@ -38,6 +49,7 @@ CoreClient::~CoreClient() {
 		std::cerr << "Warning: Client not disconnected properly" << std::endl;
 	}
 	delete tlsFactories;
+	delete proxyConnectionFactory_;
 	delete iqRouter_;
 
 	stanzaChannel_->onAvailableChanged.disconnect(boost::bind(&CoreClient::handleStanzaChannelAvailableChanged, this, _1));
@@ -56,7 +68,7 @@ void CoreClient::connect(const std::string& host) {
 	SWIFT_LOG(debug) << "Connecting to host " << host << std::endl;
 	disconnectRequested_ = false;
 	assert(!connector_);
-	connector_ = Connector::create(host, networkFactories->getDomainNameResolver(), networkFactories->getConnectionFactory(), networkFactories->getTimerFactory());
+	connector_ = Connector::create(host, networkFactories->getDomainNameResolver(), proxyConnectionFactory_ != NULL ? proxyConnectionFactory_ : networkFactories->getConnectionFactory(), networkFactories->getTimerFactory());
 	connector_->onConnectFinished.connect(boost::bind(&CoreClient::handleConnectorFinished, this, _1));
 	connector_->setTimeoutMilliseconds(60*1000);
 	connector_->start();

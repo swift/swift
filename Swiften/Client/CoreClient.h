@@ -221,6 +221,7 @@ namespace Swift {
 			ClientSessionStanzaChannel* stanzaChannel_;
 			IQRouter* iqRouter_;
 			boost::shared_ptr<Connector> connector_;
+			ConnectionFactory* proxyConnectionFactory_;
 			PlatformTLSFactories* tlsFactories;
 			boost::shared_ptr<Connection> connection_;
 			boost::shared_ptr<BasicSessionStream> sessionStream_;

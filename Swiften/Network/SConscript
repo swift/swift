@@ -6,6 +6,10 @@ if myenv.get("HAVE_CARES", False) :
    myenv.MergeFlags(myenv.get("CARES_FLAGS", {}))
 
 sourceList = [
+			"HTTPConnectProxiedConnection.cpp",
+			"HTTPConnectProxiedConnectionFactory.cpp",
+			"SOCKS5ProxiedConnection.cpp",
+			"SOCKS5ProxiedConnectionFactory.cpp",
 			"BoostConnection.cpp",
 			"BoostConnectionFactory.cpp",
 			"BoostConnectionServer.cpp",
@@ -30,10 +34,25 @@ sourceList = [
 			"NetworkFactories.cpp",
 			"BoostNetworkFactories.cpp",
 			"Timer.cpp",
-			"BoostTimer.cpp"]
+			"BoostTimer.cpp",
+			"ProxyProvider.cpp"
+	]
+
 if myenv.get("HAVE_CARES", False) :
    sourceList.append("CAresDomainNameResolver.cpp")
 		
+if myenv["PLATFORM"] == "darwin" :
+	myenv.Append(FRAMEWORKS = ["CoreServices", "SystemConfiguration"])
+	sourceList += [ "MacOSXProxyProvider.cpp" ]
+elif myenv["PLATFORM"] == "win32" :
+	sourceList += [ "WindowsProxyProvider.cpp" ]
+else :
+	sourceList += [ "UnixProxyProvider.cpp" ]
+	sourceList += [ "EnvironmentProxyProvider.cpp" ]
+	if myenv.get("HAVE_GCONF", 0) :
+		myenv.Append(CPPDEFINES = "HAVE_GCONF")
+		myenv.MergeFlags(myenv["GCONF_FLAGS"])
+		sourceList += [ "GConfProxyProvider.cpp" ]
 
 objects = myenv.SwiftenObject(sourceList)
 swiften_env.Append(SWIFTEN_OBJECTS = [objects])

@@ -1,0 +1,26 @@
+/*
+ * Copyright (c) 2010-2011 Thilo Cestonaro
+ * Licensed under the simplified BSD license.
+ * See Documentation/Licenses/BSD-simplified.txt for more information.
+ */
+
+#pragma once
+
+#include "Swiften/Network/ConnectionFactory.h"
+#include "Swiften/Network/HTTPConnectProxiedConnection.h"
+#include "Swiften/Network/HostAddressPort.h"
+
+namespace Swift {
+	class HTTPConnectProxiedConnection;
+
+	class HTTPConnectProxiedConnectionFactory : public ConnectionFactory {
+		public:
+			HTTPConnectProxiedConnectionFactory(ConnectionFactory* connectionFactory, HostAddressPort proxy);
+
+			virtual boost::shared_ptr<Connection> createConnection();
+
+		private:
+			ConnectionFactory* connectionFactory_;
+			HostAddressPort proxy_;
+	};
+}

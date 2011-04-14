@@ -193,7 +193,7 @@ if env.get("coverage", 0) :
 	env.Append(LINKFLAGS = ["-fprofile-arcs", "-ftest-coverage"])
 
 if env["PLATFORM"] == "win32" :
-	env.Append(LIBS = ["user32", "crypt32", "dnsapi", "ws2_32", "wsock32"])
+	env.Append(LIBS = ["user32", "crypt32", "dnsapi", "ws2_32", "wsock32", "Advapi32"])
 	env.Append(CCFLAGS = ["/EHsc", "/nologo"])
 	# FIXME: We should find a decent solution for MSVS 10
 	if int(env["MSVS_VERSION"].split(".")[0]) < 10 :
@@ -201,7 +201,7 @@ if env["PLATFORM"] == "win32" :
 		env["SHLINKCOM"] = [env["SHLINKCOM"], 'mt.exe -nologo -manifest ${TARGET}.manifest -outputresource:$TARGET;2']
 
 if env["PLATFORM"] == "darwin" and not env["target"] in ["iphone-device", "iphone-simulator", "xcode"] :
-	env.Append(FRAMEWORKS = ["IOKit", "AppKit"])
+	env.Append(FRAMEWORKS = ["IOKit", "AppKit", "SystemConfiguration"])
 
 # Testing
 env["TEST_TYPE"] = env["test"]
@@ -419,6 +419,22 @@ if env["PLATFORM"] != "win32" and env["PLATFORM"] != "darwin" :
 	if conf.CheckFunc("XScreenSaverQueryExtension") :
 		env["HAVE_XSS"] = 1
 		env["XSS_FLAGS"] = xss_flags
+	conf.Finish()
+
+# GConf
+env["HAVE_GCONF"] = 0
+if env["PLATFORM"] != "win32" and env["PLATFORM"] != "darwin" :
+	gconf_env = Environment()
+	gconf_env.ParseConfig('pkg-config --cflags gconf-2.0 --libs gconf-2.0')
+	conf = Configure(gconf_env)
+	if conf.CheckCHeader("gconf/gconf-client.h") and conf.CheckLib("gconf-2") :
+		env["HAVE_GCONF"] = 1
+		env["GCONF_FLAGS"] = {
+			"LIBS": gconf_env["LIBS"],
+			"CCFLAGS": gconf_env["CCFLAGS"],
+			"CPPPATH": gconf_env["CPPPATH"],
+			"CPPDEFINES": gconf_env["CPPDEFINES"],
+		}
 	conf.Finish()
 
 # Sparkle

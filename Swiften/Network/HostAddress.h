@@ -3,7 +3,6 @@
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
-
 #pragma once
 
 #include <string>
@@ -18,6 +17,7 @@ namespace Swift {
 			HostAddress(const boost::asio::ip::address& address);
 
 			std::string toString() const;
+			boost::asio::ip::address getRawAddress() const;
 
 			bool operator==(const HostAddress& o) const {
 				return address_ == o.address_;

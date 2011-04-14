@@ -57,4 +57,8 @@ bool HostAddress::isValid() const {
 	return !(address_.is_v4() && address_.to_v4().to_ulong() == 0);
 }
 
+boost::asio::ip::address HostAddress::getRawAddress() const {
+	return address_;
+}
+
 }

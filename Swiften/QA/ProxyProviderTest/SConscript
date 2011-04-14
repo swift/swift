@@ -1,0 +1,11 @@
+import os
+
+Import("env")
+
+myenv = env.Clone()
+myenv.MergeFlags(myenv["SWIFTEN_FLAGS"])
+myenv.MergeFlags(myenv["BOOST_FLAGS"])
+
+myenv.Program("ProxyProviderTest", [
+		"ProxyProviderTest.cpp",
+	])

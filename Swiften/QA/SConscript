@@ -8,4 +8,5 @@ SConscript(dirs = [
 		"StorageTest",
 		"TLSTest",
 		"ScriptedTests",
+		"ProxyProviderTest",
 	])
