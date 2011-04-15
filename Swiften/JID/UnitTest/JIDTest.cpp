@@ -52,7 +52,9 @@ class JIDTest : public CppUnit::TestFixture
 		CPPUNIT_TEST(testHasResource);
 		CPPUNIT_TEST(testHasResource_NoResource);
 		CPPUNIT_TEST(testGetEscapedNode);
+		CPPUNIT_TEST(testGetEscapedNode_XEP106Examples);
 		CPPUNIT_TEST(testGetUnescapedNode);
+		CPPUNIT_TEST(testGetUnescapedNode_XEP106Examples);
 		CPPUNIT_TEST_SUITE_END();
 
 	public:
@@ -319,7 +321,22 @@ class JIDTest : public CppUnit::TestFixture
 			CPPUNIT_ASSERT_EQUAL(std::string("alice\\40wonderland.lit"), escaped);
 
 			escaped = JID::getEscapedNode("\\& \" ' / <\\\\> @ :\\3a\\40");
-			CPPUNIT_ASSERT_EQUAL(std::string("\\5c\\26\\20\\22\\20\\27\\20\\2f\\20\\3c\\5c\\5c\\3e\\20\\40\\20\\3a\\5c3a\\5c40"), escaped);
+			CPPUNIT_ASSERT_EQUAL(std::string("\\\\26\\20\\22\\20\\27\\20\\2f\\20\\3c\\\\\\3e\\20\\40\\20\\3a\\5c3a\\5c40"), escaped);
+		}
+
+		void testGetEscapedNode_XEP106Examples() {
+			CPPUNIT_ASSERT_EQUAL(JID::getEscapedNode("space cadet"), std::string("space\\20cadet"));
+			CPPUNIT_ASSERT_EQUAL(JID::getEscapedNode("call me \"ishmael\""), std::string("call\\20me\\20\\22ishmael\\22"));
+			CPPUNIT_ASSERT_EQUAL(JID::getEscapedNode("at&t guy"), std::string("at\\26t\\20guy"));
+			CPPUNIT_ASSERT_EQUAL(JID::getEscapedNode("d'artagnan"), std::string("d\\27artagnan"));
+			CPPUNIT_ASSERT_EQUAL(JID::getEscapedNode("/.fanboy"), std::string("\\2f.fanboy"));
+			CPPUNIT_ASSERT_EQUAL(JID::getEscapedNode("::foo::"), std::string("\\3a\\3afoo\\3a\\3a"));
+			CPPUNIT_ASSERT_EQUAL(JID::getEscapedNode("<foo>"), std::string("\\3cfoo\\3e"));
+			CPPUNIT_ASSERT_EQUAL(JID::getEscapedNode("user@host"), std::string("user\\40host"));
+			CPPUNIT_ASSERT_EQUAL(JID::getEscapedNode("c:\\net"), std::string("c\\3a\\net"));
+			CPPUNIT_ASSERT_EQUAL(JID::getEscapedNode("c:\\\\net"), std::string("c\\3a\\\\net"));
+			CPPUNIT_ASSERT_EQUAL(JID::getEscapedNode("c:\\cool stuff"), std::string("c\\3a\\cool\\20stuff"));
+			CPPUNIT_ASSERT_EQUAL(JID::getEscapedNode("c:\\5commas"), std::string("c\\3a\\5c5commas"));
 		}
 
 		void testGetUnescapedNode() {
@@ -327,6 +344,21 @@ class JIDTest : public CppUnit::TestFixture
 			JID testling(JID::getEscapedNode(input) + "@y");
 			CPPUNIT_ASSERT(testling.isValid());
 			CPPUNIT_ASSERT_EQUAL(input, testling.getUnescapedNode());
+		}
+
+		void testGetUnescapedNode_XEP106Examples() {
+			CPPUNIT_ASSERT_EQUAL(std::string("space cadet"), JID("space\\20cadet@example.com").getUnescapedNode());
+			CPPUNIT_ASSERT_EQUAL(std::string("call me \"ishmael\""), JID("call\\20me\\20\\22ishmael\\22@example.com").getUnescapedNode());
+			CPPUNIT_ASSERT_EQUAL(std::string("at&t guy"), JID("at\\26t\\20guy@example.com").getUnescapedNode());
+			CPPUNIT_ASSERT_EQUAL(std::string("d'artagnan"), JID("d\\27artagnan@example.com").getUnescapedNode());
+			CPPUNIT_ASSERT_EQUAL(std::string("/.fanboy"), JID("\\2f.fanboy@example.com").getUnescapedNode());
+			CPPUNIT_ASSERT_EQUAL(std::string("::foo::"), JID("\\3a\\3afoo\\3a\\3a@example.com").getUnescapedNode());
+			CPPUNIT_ASSERT_EQUAL(std::string("<foo>"), JID("\\3cfoo\\3e@example.com").getUnescapedNode());
+			CPPUNIT_ASSERT_EQUAL(std::string("user@host"), JID("user\\40host@example.com").getUnescapedNode());
+			CPPUNIT_ASSERT_EQUAL(std::string("c:\\net"), JID("c\\3a\\net@example.com").getUnescapedNode());
+			CPPUNIT_ASSERT_EQUAL(std::string("c:\\\\net"), JID("c\\3a\\\\net@example.com").getUnescapedNode());
+			CPPUNIT_ASSERT_EQUAL(std::string("c:\\cool stuff"), JID("c\\3a\\cool\\20stuff@example.com").getUnescapedNode());
+			CPPUNIT_ASSERT_EQUAL(std::string("c:\\5commas"), JID("c\\3a\\5c5commas@example.com").getUnescapedNode());
 		}
 };
 

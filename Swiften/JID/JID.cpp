@@ -7,13 +7,17 @@
 #define SWIFTEN_CACHE_JID_PREP
 
 #include <vector>
+#include <list>
 #include <iostream>
 
 #include <string>
 #ifdef SWIFTEN_CACHE_JID_PREP
 #include <boost/unordered_map.hpp>
 #endif
-#include <boost/algorithm/string/replace.hpp>
+#include <boost/assign/list_of.hpp>
+#include <boost/algorithm/string/find_format.hpp>
+#include <boost/algorithm/string/finder.hpp>
+#include <sstream>
 #include <stringprep.h>
 
 #include <Swiften/Base/String.h>
@@ -27,6 +31,75 @@ static PrepCache nodePrepCache;
 static PrepCache domainPrepCache;
 static PrepCache resourcePrepCache;
 #endif
+
+static const std::list<char> escapedChars = boost::assign::list_of(' ')('"')('&')('\'')('/')('<')('>')('@')(':');
+
+bool getEscapeSequenceValue(const std::string& sequence, unsigned char& value) {
+	std::stringstream s;
+	unsigned int v;
+	s << std::hex << sequence;
+	s >> v;
+	value = static_cast<unsigned char>(v);
+	return (!s.fail() && !s.bad() && (value == 0x5C || std::find(escapedChars.begin(), escapedChars.end(), value) != escapedChars.end()));
+}
+
+struct UnescapedCharacterFinder {
+	template<typename Iterator>	boost::iterator_range<Iterator> operator()(Iterator begin, Iterator end) {
+		for (; begin != end; ++begin) {
+			if (std::find(escapedChars.begin(), escapedChars.end(), *begin) != escapedChars.end()) {
+				return boost::iterator_range<Iterator>(begin, begin + 1);
+			}
+			else if (*begin == '\\') {
+				// Check if we have an escaped dissalowed character sequence
+				Iterator innerBegin = begin + 1;
+				if (innerBegin != end && innerBegin + 1 != end) {
+					Iterator innerEnd = innerBegin + 2;
+					unsigned char value;
+					if (getEscapeSequenceValue(std::string(innerBegin, innerEnd), value)) {
+						return boost::iterator_range<Iterator>(begin, begin + 1);
+					}
+				}
+			}
+		}
+		return boost::iterator_range<Iterator>(end, end);
+	}
+};
+
+struct UnescapedCharacterFormatter {
+	template<typename FindResult>	std::string operator()(const FindResult& match) const {
+		std::ostringstream s;
+		s << '\\' << std::hex << static_cast<int>(*match.begin());
+		return s.str();
+	}
+};
+
+struct EscapedCharacterFinder {
+	template<typename Iterator>	boost::iterator_range<Iterator> operator()(Iterator begin, Iterator end) {
+		for (; begin != end; ++begin) {
+			if (*begin == '\\') {
+				Iterator innerEnd = begin + 1;
+				for (size_t i = 0; i < 2 && innerEnd != end; ++i, ++innerEnd) {
+				}
+				unsigned char value;
+				if (getEscapeSequenceValue(std::string(begin + 1, innerEnd), value)) {
+					return boost::iterator_range<Iterator>(begin, innerEnd);
+				}
+			}
+		}
+		return boost::iterator_range<Iterator>(end, end);
+	}
+};
+
+struct EscapedCharacterFormatter {
+	template<typename FindResult>	std::string operator()(const FindResult& match) const {
+		unsigned char value;
+		if (getEscapeSequenceValue(std::string(match.begin() + 1, match.end()), value)) {
+			return std::string(reinterpret_cast<const char*>(&value), 1);
+		}
+		return boost::copy_range<std::string>(match);
+	}
+};
+
 
 namespace Swift {
 
@@ -128,38 +201,11 @@ int JID::compare(const Swift::JID& o, CompareType compareType) const {
 }
 
 std::string JID::getEscapedNode(const std::string& node) {
-	std::string escaped = node;
-	
-	boost::algorithm::replace_all(escaped, "\\", "\\5c");
-	boost::algorithm::replace_all(escaped, " ", "\\20");
-	boost::algorithm::replace_all(escaped, "\"", "\\22");
-	boost::algorithm::replace_all(escaped, "&", "\\26");
-	boost::algorithm::replace_all(escaped, "'", "\\27");
-	boost::algorithm::replace_all(escaped, "/", "\\2f");
-	boost::algorithm::replace_all(escaped, "<", "\\3c");
-	boost::algorithm::replace_all(escaped, ">", "\\3e");
-	boost::algorithm::replace_all(escaped, "@", "\\40");
-	boost::algorithm::replace_all(escaped, ":", "\\3a");
-
-	return escaped;
+	return boost::find_format_all_copy(node, UnescapedCharacterFinder(), UnescapedCharacterFormatter());
 }
 
 std::string JID::getUnescapedNode() const {
-	std::string unescaped = node_;
-
-	boost::algorithm::replace_all(unescaped, "\\20", " ");
-	boost::algorithm::replace_all(unescaped, "\\22", "\"");
-	boost::algorithm::replace_all(unescaped, "\\26", "&");
-	boost::algorithm::replace_all(unescaped, "\\27", "'");
-	boost::algorithm::replace_all(unescaped, "\\2f", "/");
-	boost::algorithm::replace_all(unescaped, "\\3c", "<");
-	boost::algorithm::replace_all(unescaped, "\\3e", ">");
-	boost::algorithm::replace_all(unescaped, "\\40", "@");
-	boost::algorithm::replace_all(unescaped, "\\3a", ":");
-	boost::algorithm::replace_all(unescaped, "\\5c", "\\");
-	
-
-	return unescaped;
+	return boost::find_format_all_copy(node_, EscapedCharacterFinder(), EscapedCharacterFormatter());
 }
 
 } // namespace Swift

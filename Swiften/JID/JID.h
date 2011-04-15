@@ -38,8 +38,16 @@ namespace Swift {
 				return !hasResource_;
 			}
 
+			/**
+			 * Returns the given node, escaped according to XEP-0106.
+			 * The resulting node is a valid node for a JID, whereas the input value can contain characters
+			 * that are not allowed.
+			 */
 			static std::string getEscapedNode(const std::string& node);
 
+			/**
+			 * Returns the node of the current JID, unescaped according to XEP-0106.
+			 */
 			std::string getUnescapedNode() const;
 
 			JID toBare() const {

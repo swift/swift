@@ -48,7 +48,8 @@ struct PercentUnencodeFormatter {
 		if (s.fail() || s.bad()) {
 			throw std::runtime_error("Invalid escape character");
 		}
-		return std::string(reinterpret_cast<const char*>(&value), 1);
+		unsigned char charValue = static_cast<unsigned char>(value);
+		return std::string(reinterpret_cast<const char*>(&charValue), 1);
 	}
 };
 
