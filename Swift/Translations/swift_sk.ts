@@ -1350,7 +1350,7 @@
     <message>
         <location filename="../QtUI/QtLoginWindow.cpp" line="160"/>
         <source>&amp;About %1</source>
-        <translation>&amp;O programe %1</translation>
+        <translation>O programe &amp;%1</translation>
     </message>
     <message>
         <location filename="../QtUI/QtLoginWindow.cpp" line="165"/>
@@ -1450,7 +1450,7 @@
     <message>
         <location filename="../QtUI/QtMainWindow.cpp" line="78"/>
         <source>&amp;Show offline contacts</source>
-        <translation>&amp;Zobraziť odpojené kontakty</translation>
+        <translation>Zobraziť &amp;odpojené kontakty</translation>
     </message>
     <message>
         <location filename="../QtUI/QtMainWindow.cpp" line="84"/>
@@ -1470,7 +1470,7 @@
     <message>
         <location filename="../QtUI/QtMainWindow.cpp" line="92"/>
         <source>&amp;Add Contact</source>
-        <translation>&amp;Pridať kontakt</translation>
+        <translation>Pridať &amp;kontakt</translation>
     </message>
     <message>
         <location filename="../QtUI/QtMainWindow.cpp" line="95"/>
