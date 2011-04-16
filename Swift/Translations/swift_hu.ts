@@ -749,7 +749,7 @@
     </message>
     <message>
         <source>Enter automatically in future</source>
-        <translation>Belépés automatikusan a jövőben</translation>
+        <translation>Belépés automatikusan</translation>
     </message>
 </context>
 <context>
@@ -1113,11 +1113,11 @@
     <name>Swift::QtMainWindow</name>
     <message>
         <source>&amp;Contacts</source>
-        <translation>&amp;Kapcsolatok</translation>
+        <translation>&amp;Partnerek</translation>
     </message>
     <message>
         <source>&amp;Notices</source>
-        <translation>&amp;Figyelmeztetések</translation>
+        <translation>&amp;Értesítések</translation>
     </message>
     <message>
         <source>C&amp;hats</source>
@@ -1129,7 +1129,7 @@
     </message>
     <message>
         <source>&amp;Show offline contacts</source>
-        <translation>&amp;Kijelentkezett partaneker mutatása</translation>
+        <translation>&amp;Kijelentkezett partnerek mutatása</translation>
     </message>
     <message>
         <source>&amp;Actions</source>
