@@ -38,11 +38,6 @@ namespace Swift {
 
 			virtual HostAddressPort getLocalAddress() const;
 		private:
-			enum {
-				ProxyAuthenticating = 0,
-				ProxyConnecting,
-			} proxyState_;
-
 			HTTPConnectProxiedConnection(ConnectionFactory* connectionFactory, HostAddressPort proxy);
 
 			void handleConnectionConnectFinished(bool error);

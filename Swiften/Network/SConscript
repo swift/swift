@@ -20,6 +20,7 @@ sourceList = [
 			"FakeConnection.cpp",
  			"ChainedConnector.cpp",
  			"Connector.cpp",
+ 			"Connection.cpp",
 			"TimerFactory.cpp",
 			"DummyTimerFactory.cpp",
 			"BoostTimerFactory.cpp",

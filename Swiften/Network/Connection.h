@@ -23,8 +23,8 @@ namespace Swift {
 				WriteError
 			};
 
-			Connection() {}
-			virtual ~Connection() {}
+			Connection();
+			virtual ~Connection();
 
 			virtual void listen() = 0;
 			virtual void connect(const HostAddressPort& address) = 0;
