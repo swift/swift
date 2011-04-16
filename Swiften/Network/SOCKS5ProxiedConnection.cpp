@@ -9,28 +9,26 @@
 #include <iostream>
 #include <boost/bind.hpp>
 #include <boost/thread.hpp>
-#include <math.h>
 
+#include <Swiften/Network/ConnectionFactory.h>
 #include "Swiften/Base/Log.h"
 #include "Swiften/Base/String.h"
 #include "Swiften/Base/ByteArray.h"
 #include "Swiften/Network/HostAddressPort.h"
 
-namespace Swift {
+using namespace Swift;
 
-SOCKS5ProxiedConnection::SOCKS5ProxiedConnection(ConnectionFactory* connectionFactory, HostAddressPort proxy)
-: connectionFactory_(connectionFactory), proxy_(proxy), server_(HostAddressPort(HostAddress("0.0.0.0"), 0))
-{
+SOCKS5ProxiedConnection::SOCKS5ProxiedConnection(ConnectionFactory* connectionFactory, const HostAddressPort& proxy) : connectionFactory_(connectionFactory), proxy_(proxy), server_(HostAddressPort(HostAddress("0.0.0.0"), 0)) {
 	connected_ = false;
 }
 
 SOCKS5ProxiedConnection::~SOCKS5ProxiedConnection() {
-	if(connection_) {
+	if (connection_) {
 		connection_->onDataRead.disconnect(boost::bind(&SOCKS5ProxiedConnection::handleDataRead, shared_from_this(), _1));
 		connection_->onDisconnected.disconnect(boost::bind(&SOCKS5ProxiedConnection::handleDisconnected, shared_from_this(), _1));
 	}
 
-	if(connected_) {
+	if (connected_) {
 		std::cerr << "Warning: Connection was still established." << std::endl;
 	}
 }
@@ -53,8 +51,9 @@ void SOCKS5ProxiedConnection::listen() {
 
 void SOCKS5ProxiedConnection::disconnect() {
 	connected_ = false;
-	if(connection_)
+	if (connection_) {
 		connection_->disconnect();
+	}
 }
 
 void SOCKS5ProxiedConnection::handleDisconnected(const boost::optional<Error>& error) {
@@ -62,13 +61,14 @@ void SOCKS5ProxiedConnection::handleDisconnected(const boost::optional<Error>& e
 }
 
 void SOCKS5ProxiedConnection::write(const ByteArray& data) {
-	if(connection_)
+	if (connection_) {
 		connection_->write(data);
+	}
 }
 
 void SOCKS5ProxiedConnection::handleConnectionConnectFinished(bool error) {
 	connection_->onConnectFinished.disconnect(boost::bind(&SOCKS5ProxiedConnection::handleConnectionConnectFinished, shared_from_this(), _1));
-	if(!error) {
+	if (!error) {
 		SWIFT_LOG(debug) << "Connection to proxy established, now connect to the server via it." << std::endl;
 		
 		proxyState_ = ProxyAuthenticating;
@@ -109,13 +109,14 @@ void SOCKS5ProxiedConnection::handleDataRead(const ByteArray& data) {
 								if(rawAddress.is_v4()) {
 									uc = rawAddress.to_v4().to_bytes()[s]; // the address.
 								}
-								else
+								else {
 									uc = rawAddress.to_v6().to_bytes()[s]; // the address.
+								}
 								socksConnect += static_cast<char> (uc);
 						
 							}
-							socksConnect += static_cast<unsigned char> (server_.getPort() >> 8); // highbyte of the port.
-							socksConnect += static_cast<unsigned char> (server_.getPort()); // lowbyte of the port.
+							socksConnect += static_cast<unsigned char> ((server_.getPort() >> 8) & 0xFF); // highbyte of the port.
+							socksConnect += static_cast<unsigned char> (server_.getPort() & 0xFF); // lowbyte of the port.
 							connection_->write(socksConnect);
 							return;
 						}
@@ -170,7 +171,4 @@ void SOCKS5ProxiedConnection::handleDataRead(const ByteArray& data) {
 
 HostAddressPort SOCKS5ProxiedConnection::getLocalAddress() const {
 	return connection_->getLocalAddress();
-}
-
-//namespace
 }

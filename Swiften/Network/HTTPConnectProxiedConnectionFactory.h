@@ -7,15 +7,12 @@
 #pragma once
 
 #include "Swiften/Network/ConnectionFactory.h"
-#include "Swiften/Network/HTTPConnectProxiedConnection.h"
 #include "Swiften/Network/HostAddressPort.h"
 
 namespace Swift {
-	class HTTPConnectProxiedConnection;
-
 	class HTTPConnectProxiedConnectionFactory : public ConnectionFactory {
 		public:
-			HTTPConnectProxiedConnectionFactory(ConnectionFactory* connectionFactory, HostAddressPort proxy);
+			HTTPConnectProxiedConnectionFactory(ConnectionFactory* connectionFactory, const HostAddressPort& proxy);
 
 			virtual boost::shared_ptr<Connection> createConnection();
 

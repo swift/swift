@@ -8,7 +8,6 @@
 
 #include <boost/enable_shared_from_this.hpp>
 
-#include "Swiften/Network/ConnectionFactory.h"
 #include "Swiften/Network/Connection.h"
 #include "Swiften/Network/HostAddressPort.h"
 
@@ -20,6 +19,8 @@ namespace boost {
 }
 
 namespace Swift {
+	class ConnectionFactory;
+
 	class HTTPConnectProxiedConnection : public Connection, public boost::enable_shared_from_this<HTTPConnectProxiedConnection> {
 		public:
 			typedef boost::shared_ptr<HTTPConnectProxiedConnection> ref;

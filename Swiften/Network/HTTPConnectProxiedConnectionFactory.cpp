@@ -5,14 +5,12 @@
  */
 
 #include "Swiften/Network/HTTPConnectProxiedConnectionFactory.h"
+
 #include "Swiften/Network/HTTPConnectProxiedConnection.h"
 
 namespace Swift {
 
-HTTPConnectProxiedConnectionFactory::HTTPConnectProxiedConnectionFactory(ConnectionFactory* connectionFactory, HostAddressPort proxy)
-: connectionFactory_(connectionFactory), proxy_(proxy)
-{
-
+HTTPConnectProxiedConnectionFactory::HTTPConnectProxiedConnectionFactory(ConnectionFactory* connectionFactory, const HostAddressPort& proxy) : connectionFactory_(connectionFactory), proxy_(proxy) {
 }
 
 boost::shared_ptr<Connection> HTTPConnectProxiedConnectionFactory::createConnection() {

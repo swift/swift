@@ -5,14 +5,12 @@
  */
 
 #include "Swiften/Network/SOCKS5ProxiedConnectionFactory.h"
+
 #include "Swiften/Network/SOCKS5ProxiedConnection.h"
 
 namespace Swift {
 
-SOCKS5ProxiedConnectionFactory::SOCKS5ProxiedConnectionFactory(ConnectionFactory* connectionFactory, HostAddressPort proxy)
-: connectionFactory_(connectionFactory), proxy_(proxy)
-{
-
+SOCKS5ProxiedConnectionFactory::SOCKS5ProxiedConnectionFactory(ConnectionFactory* connectionFactory, const HostAddressPort& proxy) : connectionFactory_(connectionFactory), proxy_(proxy) {
 }
 
 boost::shared_ptr<Connection> SOCKS5ProxiedConnectionFactory::createConnection() {

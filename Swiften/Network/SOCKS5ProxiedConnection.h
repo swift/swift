@@ -6,10 +6,8 @@
 
 #pragma once
 
-#include <boost/asio.hpp>
 #include <boost/enable_shared_from_this.hpp>
 
-#include "Swiften/Network/ConnectionFactory.h"
 #include "Swiften/Network/Connection.h"
 #include "Swiften/Network/HostAddressPort.h"
 
@@ -21,13 +19,15 @@ namespace boost {
 }
 
 namespace Swift {
+	class ConnectionFactory;
+
 	class SOCKS5ProxiedConnection : public Connection, public boost::enable_shared_from_this<SOCKS5ProxiedConnection> {
 		public:
 			typedef boost::shared_ptr<SOCKS5ProxiedConnection> ref;
 
 			~SOCKS5ProxiedConnection();
 
-			static ref create(ConnectionFactory* connectionFactory, HostAddressPort proxy) {
+			static ref create(ConnectionFactory* connectionFactory, const HostAddressPort& proxy) {
 				return ref(new SOCKS5ProxiedConnection(connectionFactory, proxy));
 			}
 
@@ -37,19 +37,19 @@ namespace Swift {
 			virtual void write(const ByteArray& data);
 
 			virtual HostAddressPort getLocalAddress() const;
-		private:
-			enum {
-				ProxyAuthenticating = 0,
-				ProxyConnecting,
-			} proxyState_;
 
-			SOCKS5ProxiedConnection(ConnectionFactory* connectionFactory, HostAddressPort proxy);
+		private:
+			SOCKS5ProxiedConnection(ConnectionFactory* connectionFactory, const HostAddressPort& proxy);
 
 			void handleConnectionConnectFinished(bool error);
 			void handleDataRead(const ByteArray& data);
 			void handleDisconnected(const boost::optional<Error>& error);
 
 		private:
+			enum {
+				ProxyAuthenticating = 0,
+				ProxyConnecting,
+			} proxyState_;
 			bool connected_;
 			ConnectionFactory* connectionFactory_;	
 			HostAddressPort proxy_;
