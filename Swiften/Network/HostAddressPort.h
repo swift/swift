@@ -7,21 +7,14 @@
 #pragma once
 
 #include <boost/asio/ip/tcp.hpp>
-#include <boost/lexical_cast.hpp>
 
 #include "Swiften/Network/HostAddress.h"
 
 namespace Swift {
 	class HostAddressPort {
 		public:
-			HostAddressPort(const HostAddress& address = HostAddress(), int port = -1) : address_(address), port_(port) {
-			}
-
-			HostAddressPort(const boost::asio::ip::tcp::endpoint& endpoint) {
-				address_ = HostAddress(endpoint.address());
-				port_ = endpoint.port();
-			}
-
+			HostAddressPort(const HostAddress& address = HostAddress(), int port = -1);
+			HostAddressPort(const boost::asio::ip::tcp::endpoint& endpoint);
 
 			const HostAddress& getAddress() const {
 				return address_;
@@ -39,9 +32,7 @@ namespace Swift {
 				return address_.isValid() && port_ > 0;
 			}
 			
-			std::string toString() const {
-				return getAddress().toString() + ":" + boost::lexical_cast<std::string>(getPort());
-			}
+			std::string toString() const;
 
 		private:
 			HostAddress address_;
