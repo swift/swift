@@ -30,6 +30,9 @@ Comment[hu]=Beszélgetés Jabber/XMPP protokollon keresztül
 GenericName[nl]=Jabber/XMPP Boodschapper
 Comment[nl]=Communiceer over het Jabber/XMPP netwerk
 
+GenericName[pl]=Komunikator Jabber/XMPP
+Comment[pl]=Rozmawiaj poprzez sieć Jabber/XMPP
+
 GenericName[ru]=Jabber-клиент
 Comment[ru]=Общение в сети Jabber
 
