@@ -7,10 +7,12 @@
 #include <Swiften/Network/ChainedConnector.h>
 
 #include <boost/bind.hpp>
+#include <typeinfo>
 
 #include <Swiften/Base/Log.h>
 #include <Swiften/Base/foreach.h>
 #include <Swiften/Network/Connector.h>
+#include <Swiften/Network/ConnectionFactory.h>
 
 using namespace Swift;
 
@@ -47,7 +49,6 @@ void ChainedConnector::stop() {
 }
 
 void ChainedConnector::tryNextConnectionFactory() {
-	SWIFT_LOG(debug) << "Trying next connection factory" << std::endl;
 	assert(!currentConnector);
 	if (connectionFactoryQueue.empty()) {
 		SWIFT_LOG(debug) << "No more connection factories" << std::endl;
@@ -55,6 +56,7 @@ void ChainedConnector::tryNextConnectionFactory() {
 	}
 	else {
 		ConnectionFactory* connectionFactory = connectionFactoryQueue.front();
+		SWIFT_LOG(debug) << "Trying next connection factory: " << typeid(*connectionFactory).name() << std::endl;
 		connectionFactoryQueue.pop_front();
 		currentConnector = Connector::create(hostname, resolver, connectionFactory, timerFactory);
 		currentConnector->setTimeoutMilliseconds(timeoutMilliseconds);

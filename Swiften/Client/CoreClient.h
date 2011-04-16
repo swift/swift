@@ -15,7 +15,7 @@
 #include <Swiften/Client/ClientError.h>
 
 namespace Swift {
-	class Connector;
+	class ChainedConnector;
 	class Message;
 	class Presence;
 	class Error;
@@ -220,8 +220,8 @@ namespace Swift {
 			UseTLS useTLS;
 			ClientSessionStanzaChannel* stanzaChannel_;
 			IQRouter* iqRouter_;
-			boost::shared_ptr<Connector> connector_;
-			ConnectionFactory* proxyConnectionFactory_;
+			boost::shared_ptr<ChainedConnector> connector_;
+			std::vector<ConnectionFactory*> proxyConnectionFactories;
 			PlatformTLSFactories* tlsFactories;
 			boost::shared_ptr<Connection> connection_;
 			boost::shared_ptr<BasicSessionStream> sessionStream_;
