@@ -325,6 +325,9 @@ class JIDTest : public CppUnit::TestFixture
 		}
 
 		void testGetEscapedNode_XEP106Examples() {
+			CPPUNIT_ASSERT_EQUAL(std::string("\\2plus\\2is\\4"), JID::getEscapedNode("\\2plus\\2is\\4"));
+			CPPUNIT_ASSERT_EQUAL(std::string("foo\\bar"), JID::getEscapedNode("foo\\bar"));
+			CPPUNIT_ASSERT_EQUAL(std::string("foob\\41r"), JID::getEscapedNode("foob\\41r"));
 			CPPUNIT_ASSERT_EQUAL(JID::getEscapedNode("space cadet"), std::string("space\\20cadet"));
 			CPPUNIT_ASSERT_EQUAL(JID::getEscapedNode("call me \"ishmael\""), std::string("call\\20me\\20\\22ishmael\\22"));
 			CPPUNIT_ASSERT_EQUAL(JID::getEscapedNode("at&t guy"), std::string("at\\26t\\20guy"));
@@ -347,6 +350,9 @@ class JIDTest : public CppUnit::TestFixture
 		}
 
 		void testGetUnescapedNode_XEP106Examples() {
+			CPPUNIT_ASSERT_EQUAL(std::string("\\2plus\\2is\\4"), JID("\\2plus\\2is\\4@example.com").getUnescapedNode());
+			CPPUNIT_ASSERT_EQUAL(std::string("foo\\bar"), JID("foo\\bar@example.com").getUnescapedNode());
+			CPPUNIT_ASSERT_EQUAL(std::string("foob\\41r"), JID("foob\\41r@example.com").getUnescapedNode());
 			CPPUNIT_ASSERT_EQUAL(std::string("space cadet"), JID("space\\20cadet@example.com").getUnescapedNode());
 			CPPUNIT_ASSERT_EQUAL(std::string("call me \"ishmael\""), JID("call\\20me\\20\\22ishmael\\22@example.com").getUnescapedNode());
 			CPPUNIT_ASSERT_EQUAL(std::string("at&t guy"), JID("at\\26t\\20guy@example.com").getUnescapedNode());
