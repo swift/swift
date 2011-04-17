@@ -7,6 +7,7 @@
 #include "Swiften/Roster/XMPPRosterController.h"
 
 #include <boost/bind.hpp>
+#include <iostream>
 
 #include "Swiften/Base/foreach.h"
 #include "Swiften/Elements/RosterItemPayload.h"

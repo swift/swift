@@ -6,7 +6,7 @@ Import("env")
 # Flags
 ################################################################################
 
-swiften_dep_modules = ["BOOST", "LIBIDN", "ZLIB", "OPENSSL", "LIBXML", "EXPAT", "AVAHI"]
+swiften_dep_modules = ["BOOST", "GCONF", "LIBIDN", "ZLIB", "OPENSSL", "LIBXML", "EXPAT", "AVAHI"]
 
 if env["SCONS_STAGE"] == "flags" :
 	swiften_env = env.Clone()
@@ -76,6 +76,7 @@ if env["SCONS_STAGE"] == "build" :
 			"Elements/RosterItemExchangePayload.cpp",
 			"Elements/RosterPayload.cpp",
 			"Elements/Stanza.cpp",
+			"Elements/StatusShow.cpp",
 			"Elements/VCard.cpp",
 			"Elements/MUCOccupant.cpp",
 			"Entity/Entity.cpp",

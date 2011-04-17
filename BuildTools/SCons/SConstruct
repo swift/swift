@@ -328,6 +328,12 @@ def checkObjCHeader(context, header) :
 if ARGUMENTS.get("force-configure", 0) :
   SCons.SConf.SetCacheMode("force")
 
+def CheckPKG(context, name):
+	context.Message( 'Checking for package %s... ' % name )
+	ret = context.TryAction('pkg-config --exists \'%s\'' % name)[0]
+	context.Result( ret )
+	return ret
+
 conf = Configure(conf_env)
 
 if not conf.CheckCXX() or not conf.CheckCC() :
@@ -425,17 +431,26 @@ if env["PLATFORM"] != "win32" and env["PLATFORM"] != "darwin" :
 # GConf
 env["HAVE_GCONF"] = 0
 if env["PLATFORM"] != "win32" and env["PLATFORM"] != "darwin" :
-	gconf_env = Environment()
-	gconf_env.ParseConfig('pkg-config --cflags gconf-2.0 --libs gconf-2.0')
-	conf = Configure(gconf_env)
-	if conf.CheckCHeader("gconf/gconf-client.h") and conf.CheckLib("gconf-2") :
-		env["HAVE_GCONF"] = 1
-		env["GCONF_FLAGS"] = {
-			"LIBS": gconf_env["LIBS"],
-			"CCFLAGS": gconf_env["CCFLAGS"],
-			"CPPPATH": gconf_env["CPPPATH"],
-			"CPPDEFINES": gconf_env["CPPDEFINES"],
-		}
+	gconf_env = conf_env.Clone()
+	conf = Configure(gconf_env, custom_tests = {"CheckPKG": CheckPKG})
+	if conf.CheckPKG("gconf-2.0") :
+		gconf_bare_env = Environment()
+		gconf_bare_env.ParseConfig('pkg-config --cflags gconf-2.0 --libs gconf-2.0')
+		gconf_flags = {
+				"LIBS": gconf_bare_env["LIBS"],
+				"CCFLAGS": gconf_bare_env["CCFLAGS"],
+				"CPPPATH": gconf_bare_env["CPPPATH"],
+				"CPPDEFINES": gconf_bare_env["CPPDEFINES"],
+			}
+		gconf_env.MergeFlags(gconf_flags)
+		if conf.CheckCHeader("gconf/gconf-client.h") and conf.CheckLib("gconf-2") :
+			env["HAVE_GCONF"] = 1
+			env["GCONF_FLAGS"] = {
+				"LIBS": gconf_env["LIBS"],
+				"CCFLAGS": gconf_env["CCFLAGS"],
+				"CPPPATH": gconf_env["CPPPATH"],
+				"CPPDEFINES": gconf_env["CPPDEFINES"],
+			}
 	conf.Finish()
 
 # Sparkle

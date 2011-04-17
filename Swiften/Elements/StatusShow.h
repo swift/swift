@@ -13,8 +13,7 @@ namespace Swift {
 		public:
 			enum Type { Online, Away, FFC, XA, DND, None };
 
-			StatusShow(const Type& type = Online) : type_(type) {
-			}
+			StatusShow(const Type& type = Online);
 
 			void setType(const Type& type) {
 				type_ = type;
@@ -37,6 +36,7 @@ namespace Swift {
 					case DND: return 3;
 					case None: return 0;
 				}
+				return 0;
 			}
 
 		private:
