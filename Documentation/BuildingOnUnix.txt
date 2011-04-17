@@ -20,6 +20,9 @@ Running tests
 -------------
 - Run
 		./scons test=unit
-	for running the unit tests, or
-		./scons test=all
-	for running all tests.
+	for running the unit tests.
+
+Installing
+----------
+- To install swift in /usr/local, run
+		./scons SWIFT_INSTALLDIR=/usr/local /usr/local
