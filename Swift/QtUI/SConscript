@@ -137,7 +137,10 @@ sources = [
 myenv["SWIFT_VERSION"] = Version.getBuildVersion("swift")
 
 if env["PLATFORM"] == "win32" :
-  myenv.RES("../resources/Windows/Swift.rc")
+  res = myenv.RES("../resources/Windows/Swift.rc")
+  # For some reason, SCons isn't picking up the dependency correctly
+	# Adding it explicitly until i figure out why
+  myenv.Depends(res, "../Controllers/BuildVersion.h")
   sources += [
 			"WindowsNotifier.cpp",
 			"../resources/Windows/Swift.res"
