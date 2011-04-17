@@ -19,7 +19,7 @@ if m :
 
 if "dev" in version :
   distribution = "development"
-elif "beta" or "rc" in version :
+elif "beta" in version or "rc" in version :
   distribution = "beta development"
 else :
   distribution = "release beta development"
