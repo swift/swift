@@ -529,7 +529,7 @@
     </message>
     <message>
         <source>Hide Details...</source>
-        <translation>Verbeg details...</translation>
+        <translation>Verberg details...</translation>
     </message>
 </context>
 <context>
