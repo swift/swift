@@ -148,7 +148,7 @@ if env["PLATFORM"] == "win32" :
 
 if env["PLATFORM"] == "posix" :
 	sources += [
-			"FreeDesktopNotifier.cpp"
+			"FreeDesktopNotifier.cpp",
 			"QtDBUSURIHandler.cpp",
 	]
 
