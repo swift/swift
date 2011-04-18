@@ -160,6 +160,7 @@ if env.get("mac105", 0) :
 			"-mmacosx-version-min=10.5", 
 			"-isysroot", "/Developer/SDKs/MacOSX10.5.sdk", 
 			"-arch", "i386"])
+	env.Append(FRAMEWORKS = ["Security"])
 
 # If we build shared libs on AMD64, we need -fPIC.
 # This should have no performance impact om AMD64

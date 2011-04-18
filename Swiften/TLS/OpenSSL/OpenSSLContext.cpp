@@ -14,6 +14,9 @@
 #include <openssl/err.h>
 #include <openssl/pkcs12.h>
 
+#if defined(SWIFTEN_PLATFORM_MACOSX) && OPENSSL_VERSION_NUMBER < 0x00908000
+#include <Security/Security.h>
+#endif
 
 #include "Swiften/TLS/OpenSSL/OpenSSLContext.h"
 #include "Swiften/TLS/OpenSSL/OpenSSLCertificate.h"
@@ -54,6 +57,28 @@ OpenSSLContext::OpenSSLContext() : state_(Start), context_(0), handle_(0), readB
 	}
 #elif !defined(SWIFTEN_PLATFORM_MACOSX)
 	SSL_CTX_load_verify_locations(context_, NULL, "/etc/ssl/certs");
+#elif defined(SWIFTEN_PLATFORM_MACOSX) && OPENSSL_VERSION_NUMBER < 0x00908000
+	// On Mac OS X 10.5 (OpenSSL < 0.9.8), OpenSSL does not automatically look in the system store.
+	// We therefore add all certs from the system store ourselves.
+	X509_STORE* store = SSL_CTX_get_cert_store(context_);
+	CFArrayRef anchorCertificates;
+	if (SecTrustCopyAnchorCertificates(&anchorCertificates) == 0) {
+		for (int i = 0; i < CFArrayGetCount(anchorCertificates); ++i) {
+			SecCertificateRef cert = reinterpret_cast<SecCertificateRef>(const_cast<void*>(CFArrayGetValueAtIndex(anchorCertificates, i)));
+			CSSM_DATA certCSSMData;
+			if (SecCertificateGetData(cert, &certCSSMData) != 0 || certCSSMData.Length == 0) {
+				continue;
+			}
+			std::vector<unsigned char> certData;
+			certData.resize(certCSSMData.Length);
+			memcpy(&certData[0], certCSSMData.Data, certCSSMData.Length);
+			OpenSSLCertificate certificate(certData);
+			if (store && certificate.getInternalX509()) {
+				X509_STORE_add_cert(store, certificate.getInternalX509().get());
+			}
+		}
+		CFRelease(anchorCertificates);
+	}
 #endif
 }
 
