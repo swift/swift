@@ -16,6 +16,7 @@
 #include <SystemConfiguration/SystemConfiguration.h>
 #endif
 
+using namespace Swift;
 
 #ifndef SWIFTEN_PLATFORM_IPHONE
 static HostAddressPort getFromDictionary(CFDictionaryRef dict, CFStringRef enabledKey, CFStringRef hostKey, CFStringRef portKey) {
