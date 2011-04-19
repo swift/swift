@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Kevin Smith
+ * Copyright (c) 2010-2011 Kevin Smith
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -56,9 +56,9 @@ QtLoginWindow::QtLoginWindow(UIEventStream* uiEventStream) : QMainWindow() {
 	stack_ = new QStackedWidget(centralWidget);
 	topLayout->addWidget(stack_);
 	topLayout->setMargin(0);
-	QWidget *wrapperWidget = new QWidget(this);
-	wrapperWidget->setSizePolicy(QSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding));
-	QBoxLayout *layout = new QBoxLayout(QBoxLayout::TopToBottom, wrapperWidget);
+	loginWidgetWrapper_ = new QWidget(this);
+	loginWidgetWrapper_->setSizePolicy(QSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding));
+	QBoxLayout *layout = new QBoxLayout(QBoxLayout::TopToBottom, loginWidgetWrapper_);
 	layout->addStretch(2);
 
 	QLabel* logo = new QLabel(this);
@@ -139,7 +139,7 @@ QtLoginWindow::QtLoginWindow(UIEventStream* uiEventStream) : QMainWindow() {
 	layout->addWidget(loginAutomatically_);
 
 	connect(loginButton_, SIGNAL(clicked()), SLOT(loginClicked()));
-	stack_->addWidget(wrapperWidget);
+	stack_->addWidget(loginWidgetWrapper_);
 #ifdef SWIFTEN_PLATFORM_MACOSX
 	menuBar_ = new QMenuBar(NULL);
 #else
@@ -284,11 +284,9 @@ void QtLoginWindow::handleUsernameTextChanged() {
 }
 
 void QtLoginWindow::loggedOut() {
-	if (stack_->count() > 1) {
-		QWidget* current = stack_->currentWidget();
-		stack_->setCurrentIndex(0);
-		stack_->removeWidget(current);
-	}
+	stack_->removeWidget(stack_->currentWidget());
+	stack_->addWidget(loginWidgetWrapper_);
+	stack_->setCurrentWidget(loginWidgetWrapper_);
 	setInitialMenus();
 	setIsLoggingIn(false);
 }
@@ -370,6 +368,7 @@ void QtLoginWindow::setInitialMenus() {
 void QtLoginWindow::morphInto(MainWindow *mainWindow) {
 	QtMainWindow *qtMainWindow = dynamic_cast<QtMainWindow*>(mainWindow);
 	assert(qtMainWindow);
+	stack_->removeWidget(loginWidgetWrapper_);
 	stack_->addWidget(qtMainWindow);
 	stack_->setCurrentWidget(qtMainWindow);
 	setEnabled(true);

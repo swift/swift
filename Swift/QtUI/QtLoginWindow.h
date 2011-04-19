@@ -1,11 +1,10 @@
 /*
- * Copyright (c) 2010 Kevin Smith
+ * Copyright (c) 2010-2011 Kevin Smith
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#ifndef SWIFT_QtLoginWindow_H
-#define SWIFT_QtLoginWindow_H
+#pragma once
 
 #include <QMainWindow>
 #include <QPointer>
@@ -65,6 +64,7 @@ namespace Swift {
 
 		private:
 			void setInitialMenus();
+			QWidget* loginWidgetWrapper_;
 			QStringList usernames_;
 			QStringList passwords_;
 			QStringList certificateFiles_;
@@ -87,5 +87,3 @@ namespace Swift {
 			QPointer<QtAboutWidget> aboutDialog_;
 	};
 }
-
-#endif
