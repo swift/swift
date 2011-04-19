@@ -12,7 +12,7 @@
 #include <iostream>
 #include <utility>
 
-#ifdef SWIFTEN_PLATFORM_IPHONE
+#ifndef SWIFTEN_PLATFORM_IPHONE
 #include <SystemConfiguration/SystemConfiguration.h>
 #endif
 
