@@ -16,7 +16,9 @@ if env["PLATFORM"] == "win32" :
 		cpp0x = True
 else :
 	if env["CCVERSION"].split(".") >= ["4", "5", "0"] :
-		cpp0x = True
+		# Temporarily disabling c++0x mode because of problems with boost::thread
+		# on some platforms
+		#cpp0x = True
 		cpp0x_env.Replace(CXXFLAGS = [flag for flag in env["CXXFLAGS"] if flag != "-Werror"])
 		cpp0x_env.Append(CXXFLAGS = ["-std=c++0x"])
 if cpp0x :
