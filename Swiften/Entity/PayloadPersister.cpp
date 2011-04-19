@@ -8,6 +8,7 @@
 
 #include <boost/filesystem/fstream.hpp>
 #include <boost/filesystem.hpp>
+#include <iostream>
 
 #include <Swiften/Parser/PayloadParsers/UnitTest/PayloadParserTester.h>
 #include <Swiften/Base/ByteArray.h>
