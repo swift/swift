@@ -4,12 +4,13 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#ifndef SWIFT_QtChatWindow_H
-#define SWIFT_QtChatWindow_H
+#pragma once
 
 #include "Swift/Controllers/UIInterfaces/ChatWindow.h"
 
 #include "QtTabbable.h"
+
+#include "SwifTools/LastLineTracker.h"
 
 #include "Swiften/Base/IDGenerator.h"
 
@@ -79,6 +80,7 @@ namespace Swift {
 
 			int unreadCount_;
 			bool contactIsTyping_;
+			LastLineTracker lastLineTracker_;
 			QString contact_;
 			QtChatView* messageLog_;
 			QtChatTheme* theme_;
@@ -97,5 +99,3 @@ namespace Swift {
 			IDGenerator id_;
 	};
 }
-
-#endif

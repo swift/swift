@@ -26,8 +26,8 @@ namespace Swift {
 			Q_OBJECT
 		public:
 			QtChatView(QtChatTheme* theme, QWidget* parent);
-
 			void addMessage(boost::shared_ptr<ChatSnippet> snippet);
+			void addLastSeenLine();
 			void replaceLastMessage(const QString& newMessage);
 			void replaceLastMessage(const QString& newMessage, const QString& note);
 			void rememberScrolledToBottom();
@@ -63,6 +63,7 @@ namespace Swift {
 
 			QtChatTheme* theme_;
 			QWebElement newInsertPoint_;
+			QWebElement lineSeparator_;
 			QWebElement lastElement_;
 			QWebElement document_;
 	};

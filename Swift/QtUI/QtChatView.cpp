@@ -106,6 +106,19 @@ void QtChatView::addToDOM(boost::shared_ptr<ChatSnippet> snippet) {
 	//qApp->processEvents();
 }
 
+void QtChatView::addLastSeenLine() {
+	if (lineSeparator_.isNull()) {
+		lineSeparator_ = newInsertPoint_.clone();
+		lineSeparator_.setInnerXml(QString("<hr/>"));
+		newInsertPoint_.prependOutside(lineSeparator_);
+	}
+	else {
+		QWebElement lineSeparatorC = lineSeparator_.clone();
+		lineSeparatorC.removeFromDocument();
+	}
+	newInsertPoint_.prependOutside(lineSeparator_);
+}
+
 void QtChatView::replaceLastMessage(const QString& newMessage) {
 	assert(viewReady_);
 	/* FIXME: must be queued? */

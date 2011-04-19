@@ -27,6 +27,7 @@ if env["SCONS_STAGE"] == "build" :
 			"AutoUpdater/PlatformAutoUpdaterFactory.cpp",
 			"Linkify.cpp",
 			"TabComplete.cpp",
+			"LastLineTracker.cpp",
 		]
 
 	if swiftools_env.get("HAVE_SPARKLE", 0) :

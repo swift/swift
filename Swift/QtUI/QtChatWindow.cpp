@@ -40,7 +40,7 @@ QtChatWindow::QtChatWindow(const QString &contact, QtChatTheme* theme, UIEventSt
 	QBoxLayout *layout = new QBoxLayout(QBoxLayout::TopToBottom, this);
 	layout->setContentsMargins(0,0,0,0);
 	layout->setSpacing(2);
-	
+
 
 	QSplitter *logRosterSplitter = new QSplitter(this);
 	logRosterSplitter->setAutoFillBackground(true);
@@ -72,7 +72,7 @@ QtChatWindow::QtChatWindow(const QString &contact, QtChatTheme* theme, UIEventSt
 	input_ = new QtTextEdit(this);
 	input_->setAcceptRichText(false);
 	layout->addWidget(input_);
-	
+
 	inputClearing_ = false;
 	contactIsTyping_ = false;
 
@@ -150,7 +150,7 @@ void QtChatWindow::tabComplete() {
 }
 
 void QtChatWindow::setRosterModel(Roster* roster) {
-	treeWidget_->setRosterModel(roster);	
+	treeWidget_->setRosterModel(roster);
 }
 
 void QtChatWindow::setAvailableSecurityLabels(const std::vector<SecurityLabelsCatalog::Item>& labels) {
@@ -204,10 +204,13 @@ void QtChatWindow::qAppFocusChanged(QWidget *old, QWidget *now) {
 	Q_UNUSED(old);
 	Q_UNUSED(now);
 	if (isWidgetSelected()) {
+		lastLineTracker_.setHasFocus(true);
 		input_->setFocus();
 		onAllMessagesRead();
 	}
-	
+	else {
+		lastLineTracker_.setHasFocus(false);
+	}
 }
 
 void QtChatWindow::setInputEnabled(bool enabled) {
@@ -236,7 +239,7 @@ void QtChatWindow::setContactChatState(ChatState::ChatStateType state) {
 QtTabbable::AlertType QtChatWindow::getWidgetAlertState() {
 	if (contactIsTyping_) {
 		return ImpendingActivity;
-	} 
+	}
 	if (unreadCount_ > 0) {
 		return WaitingActivity;
 	}
@@ -265,7 +268,6 @@ std::string QtChatWindow::addMessage(const std::string &message, const std::stri
 	if (isWidgetSelected()) {
 		onAllMessagesRead();
 	}
-
 	QString scaledAvatarPath = QtScaledAvatarCache(32).getScaledAvatarPath(avatarPath.c_str());
 
 	QString htmlString;
@@ -281,6 +283,12 @@ std::string QtChatWindow::addMessage(const std::string &message, const std::stri
 	htmlString += styleSpanStart + messageHTML + styleSpanEnd;
 
 	bool appendToPrevious = !previousMessageWasSystem_ && !previousMessageWasPresence_ && ((senderIsSelf && previousMessageWasSelf_) || (!senderIsSelf && !previousMessageWasSelf_ && previousSenderName_ == P2QSTRING(senderName)));
+	if (lastLineTracker_.getShouldMoveLastLine()) {
+		/* should this be queued? */
+		messageLog_->addLastSeenLine();
+		/* if the line is added we should break the snippet */
+		appendToPrevious = false;
+	}
 	QString qAvatarPath =  scaledAvatarPath.isEmpty() ? "qrc:/icons/avatar.png" : QUrl::fromLocalFile(scaledAvatarPath).toEncoded();
 	std::string id = id_.generateID();
 	messageLog_->addMessage(boost::shared_ptr<ChatSnippet>(new MessageSnippet(htmlString, Qt::escape(P2QSTRING(senderName)), B2QDATE(time), qAvatarPath, senderIsSelf, appendToPrevious, theme_, P2QSTRING(id))));
@@ -399,7 +407,7 @@ void QtChatWindow::resizeEvent(QResizeEvent*) {
 }
 
 void QtChatWindow::moveEvent(QMoveEvent*) {
-	emit geometryChanged();	
+	emit geometryChanged();
 }
 
 void QtChatWindow::replaceLastMessage(const std::string& message) {
