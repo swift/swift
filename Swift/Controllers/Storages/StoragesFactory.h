@@ -8,6 +8,7 @@
 
 namespace Swift {
 	class Storages;
+	class JID;
 
 	class StoragesFactory {
 		public:

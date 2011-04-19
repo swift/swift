@@ -10,6 +10,8 @@
 #include "Swiften/Client/MemoryStorages.h"
 
 namespace Swift {
+	class JID;
+	
 	class MemoryStoragesFactory : public StoragesFactory {
 		public:
 			MemoryStoragesFactory() {}

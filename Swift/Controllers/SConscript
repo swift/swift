@@ -53,6 +53,7 @@ if env["SCONS_STAGE"] == "build" :
 			"Storages/CertificateStorageFactory.cpp",
 			"Storages/CertificateStorage.cpp",
 			"Storages/CertificateFileStorage.cpp",
+			"Storages/CertificateMemoryStorage.cpp",
 			"Storages/AvatarFileStorage.cpp",
 			"Storages/FileStorages.cpp",
 			"Storages/RosterFileStorage.cpp",

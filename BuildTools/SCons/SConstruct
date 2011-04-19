@@ -255,7 +255,7 @@ if target in ["iphone-device", "iphone-simulator", "xcode"] :
 	env["CXX"] = "$XCODE_PLATFORM_DEVELOPER_BIN_DIR/g++"
 	env["OBJCCFLAGS"] = ["-fobjc-abi-version=2", "-fobjc-legacy-dispatch"]
 	env["LD"] = env["CC"]
-	env.Append(CCFLAGS = env["XCODE_ARCH_FLAGS"])
+	env.Append(CCFLAGS = env["XCODE_ARCH_FLAGS"] + ["-fvisibility=hidden"])
 	env.Append(LINKFLAGS = env["XCODE_ARCH_FLAGS"])
 	env.Append(CPPFLAGS = ["-isysroot", "$XCODE_SDKROOT"])
 	env.Append(FRAMEWORKS = ["CoreFoundation", "Foundation", "UIKit", "CoreGraphics"])
