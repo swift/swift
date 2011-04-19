@@ -90,13 +90,17 @@ elif env.get("BOOST_BUNDLED", False) :
 				"src/libs/program_options/src/config_file.cpp",
 				"src/libs/program_options/src/convert.cpp",
 				"src/libs/program_options/src/options_description.cpp",
-				"src/libs/program_options/src/parsers.cpp",
 				"src/libs/program_options/src/positional_options.cpp",
 				"src/libs/program_options/src/split.cpp",
 				"src/libs/program_options/src/program_options_utf8_codecvt_facet.cpp",
 				"src/libs/program_options/src/value_semantic.cpp",
 				"src/libs/program_options/src/variables_map.cpp",
 				"src/libs/program_options/src/winmain.cpp"]
+
+		if env["PLATFORM"] != "darwin" or env["target"] == "native" :
+			sources += [
+					"src/libs/program_options/src/parsers.cpp",
+				]
 
 		if env["PLATFORM"] != "win32" :
 			sources += [

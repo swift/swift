@@ -239,12 +239,12 @@ if target in ["iphone-device", "iphone-simulator", "xcode"] :
 		# Hard code values
 		env["XCODE_PLATFORM_DEVELOPER_BIN_DIR"] = "/Developer/Platforms/iPhoneOS.platform/Developer/usr/bin"
 		if target == "iphone-device":
-			env["XCODE_ARCH_FLAGS"] = ["-arch", "armv6"]
+			env["XCODE_ARCH_FLAGS"] = ["-arch", "armv6", "-arch", "armv7"]
 			sdkPart = "iPhoneOS"
 		else :
 			env["XCODE_ARCH_FLAGS"] = ["-arch", "i386"]
 			sdkPart = "iPhoneSimulator"
-		sdkVer = "4.0"
+		sdkVer = "4.3"
 		env["XCODE_SDKROOT"] = "/Developer/Platforms/" + sdkPart + ".platform/Developer/SDKs/" + sdkPart + sdkVer + ".sdk"
 
 	# Set the build flags

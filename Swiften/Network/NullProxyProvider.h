@@ -1,17 +1,18 @@
 /*
- * Copyright (c) 2010-2011 Thilo Cestonaro
+ * Copyright (c) 2011 Remko Tronçon
  * Licensed under the simplified BSD license.
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
 #pragma once
-#include "Swiften/Network/ProxyProvider.h"
-#include <CoreFoundation/CoreFoundation.h>
+
+#include <Swiften/Network/ProxyProvider.h>
 
 namespace Swift {
-	class MacOSXProxyProvider : public ProxyProvider {
+	class NullProxyProvider : public ProxyProvider {
 		public:
-			MacOSXProxyProvider();
+			NullProxyProvider();
+
 			virtual HostAddressPort getHTTPConnectProxy() const;
 			virtual HostAddressPort getSOCKS5Proxy() const;
 	};

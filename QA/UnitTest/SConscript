@@ -27,7 +27,8 @@ if env["TEST"] :
 		if env.get("HAVE_EXPAT") :
 			myenv.Append(CPPDEFINES = ["HAVE_EXPAT"])
 		if env["TEST_CREATE_LIBRARIES"] :
-			myenv.StaticLibrary("Swift_UnitTests", env["UNITTEST_SOURCES"] + env["UNITTEST_OBJECTS"])
+			lib = myenv.StaticLibrary("Swift_UnitTests", env["UNITTEST_SOURCES"] + env["UNITTEST_OBJECTS"])
+			myenv.Program("checker", lib)
 		else :
 			checker = myenv.Program("checker", env["UNITTEST_SOURCES"] + env["UNITTEST_OBJECTS"])
 			for i in ["HOME", "USERPROFILE", "APPDATA"]:

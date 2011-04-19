@@ -21,6 +21,7 @@ else :
 objects = swiftools_env.StaticObject(sources)
 swiftools_env.Append(SWIFTOOLS_OBJECTS = [objects])
 
-env.Append(UNITTEST_SOURCES = [
-		File("UnitTest/ApplicationPathProviderTest.cpp")
-	])
+if swiftools_env["PLATFORM"] != "darwin" or swiftools_env["target"] == "native" :
+	env.Append(UNITTEST_SOURCES = [
+			File("UnitTest/ApplicationPathProviderTest.cpp")
+		])

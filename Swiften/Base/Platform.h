@@ -25,6 +25,10 @@
 #define SWIFTEN_PLATFORM_BEOS
 #elif defined(macintosh) || defined(__APPLE__) || defined(__APPLE_CC__)
 #define SWIFTEN_PLATFORM_MACOSX
+#include <TargetConditionals.h>
+#  if defined(TARGET_OS_IPHONE)
+#  define SWIFTEN_PLATFORM_IPHONE
+#  endif
 #elif defined(__IBMCPP__) || defined(_AIX)
 #define SWIFTEN_PLATFORM_AIX
 #elif defined(__amigaos__)

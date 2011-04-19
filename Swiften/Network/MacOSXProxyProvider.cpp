@@ -4,35 +4,21 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
+#include <Swiften/Base/Platform.h>
+#include <Swiften/Network/MacOSXProxyProvider.h>
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <iostream>
 #include <utility>
 
-#include "Swiften/Network/MacOSXProxyProvider.h"
+#ifdef SWIFTEN_PLATFORM_IPHONE
 #include <SystemConfiguration/SystemConfiguration.h>
+#endif
 
-namespace Swift {
 
-MacOSXProxyProvider::MacOSXProxyProvider()
-: ProxyProvider()
-{
-	CFDictionaryRef proxies = SCDynamicStoreCopyProxies(NULL);
-	if(proxies != NULL) {
-		socksProxy = getFromDictionary(proxies, kSCPropNetProxiesSOCKSEnable, kSCPropNetProxiesSOCKSProxy, kSCPropNetProxiesSOCKSPort);
-		httpProxy = getFromDictionary(proxies, kSCPropNetProxiesHTTPEnable, kSCPropNetProxiesHTTPProxy, kSCPropNetProxiesHTTPPort);
-	}
-}
-
-HostAddressPort MacOSXProxyProvider::getHTTPConnectProxy() const {
-	return httpProxy;
-}
-
-HostAddressPort MacOSXProxyProvider::getSOCKS5Proxy() const {
-	return socksProxy;
-}
-
-HostAddressPort MacOSXProxyProvider::getFromDictionary(CFDictionaryRef dict, CFStringRef enabledKey, CFStringRef hostKey, CFStringRef portKey) {
+#ifndef SWIFTEN_PLATFORM_IPHONE
+static HostAddressPort getFromDictionary(CFDictionaryRef dict, CFStringRef enabledKey, CFStringRef hostKey, CFStringRef portKey) {
 	CFNumberRef numberValue = NULL;
 	HostAddressPort ret = HostAddressPort(HostAddress(), 0);
 
@@ -78,6 +64,33 @@ HostAddressPort MacOSXProxyProvider::getFromDictionary(CFDictionaryRef dict, CFS
 		}
 	}
 	return ret;
+}
+#endif
+namespace Swift {
+
+MacOSXProxyProvider::MacOSXProxyProvider() {
+}
+
+HostAddressPort MacOSXProxyProvider::getHTTPConnectProxy() const {
+	HostAddressPort result;
+#ifndef SWIFTEN_PLATFORM_IPHONE
+	CFDictionaryRef proxies = SCDynamicStoreCopyProxies(NULL);
+	if(proxies != NULL) {
+		result = getFromDictionary(proxies, kSCPropNetProxiesHTTPEnable, kSCPropNetProxiesHTTPProxy, kSCPropNetProxiesHTTPPort);
+	}
+#endif
+	return result;
+}
+
+HostAddressPort MacOSXProxyProvider::getSOCKS5Proxy() const {
+	HostAddressPort result;
+#ifndef SWIFTEN_PLATFORM_IPHONE
+	CFDictionaryRef proxies = SCDynamicStoreCopyProxies(NULL);
+	if(proxies != NULL) {
+		result = getFromDictionary(proxies, kSCPropNetProxiesSOCKSEnable, kSCPropNetProxiesSOCKSProxy, kSCPropNetProxiesSOCKSPort);
+	}
+#endif
+	return result;
 }
 
 }

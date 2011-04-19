@@ -37,7 +37,8 @@ sourceList = [
 			"BoostNetworkFactories.cpp",
 			"Timer.cpp",
 			"BoostTimer.cpp",
-			"ProxyProvider.cpp"
+			"ProxyProvider.cpp",
+			"NullProxyProvider.cpp"
 	]
 
 if myenv.get("HAVE_CARES", False) :
