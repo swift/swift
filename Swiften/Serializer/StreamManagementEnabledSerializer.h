@@ -10,16 +10,12 @@
 
 #include "Swiften/Elements/StreamManagementEnabled.h"
 #include "Swiften/Serializer/GenericElementSerializer.h"
-#include "Swiften/Serializer/XML/XMLElement.h"
 
 namespace Swift {
 	class StreamManagementEnabledSerializer : public GenericElementSerializer<StreamManagementEnabled> {
 		public:
-			StreamManagementEnabledSerializer() : GenericElementSerializer<StreamManagementEnabled>() {
-			}
+			StreamManagementEnabledSerializer();
 
-			virtual std::string serialize(boost::shared_ptr<Element>) const {
-				return XMLElement("enabled", "urn:xmpp:sm:2").serialize();
-			}
+			virtual std::string serialize(boost::shared_ptr<Element>) const;
 	};
 }

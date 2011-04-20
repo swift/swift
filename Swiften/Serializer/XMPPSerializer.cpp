@@ -4,36 +4,38 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "Swiften/Serializer/XMPPSerializer.h"
+#include <Swiften/Serializer/XMPPSerializer.h>
 
 #include <boost/bind.hpp>
 #include <boost/smart_ptr/make_shared.hpp>
 #include <iostream>
 #include <cassert>
 
-#include "Swiften/Elements/ProtocolHeader.h"
-#include "Swiften/Base/foreach.h"
-#include "Swiften/Serializer/CompressRequestSerializer.h"
-#include "Swiften/Serializer/CompressFailureSerializer.h"
-#include "Swiften/Serializer/StreamErrorSerializer.h"
-#include "Swiften/Serializer/StreamFeaturesSerializer.h"
-#include "Swiften/Serializer/AuthRequestSerializer.h"
-#include "Swiften/Serializer/AuthFailureSerializer.h"
-#include "Swiften/Serializer/AuthSuccessSerializer.h"
-#include "Swiften/Serializer/AuthChallengeSerializer.h"
-#include "Swiften/Serializer/AuthResponseSerializer.h"
-#include "Swiften/Serializer/EnableStreamManagementSerializer.h"
-#include "Swiften/Serializer/StreamManagementEnabledSerializer.h"
-#include "Swiften/Serializer/StreamManagementFailedSerializer.h"
-#include "Swiften/Serializer/StanzaAckSerializer.h"
-#include "Swiften/Serializer/StanzaAckRequestSerializer.h"
-#include "Swiften/Serializer/StartTLSRequestSerializer.h"
-#include "Swiften/Serializer/StartTLSFailureSerializer.h"
-#include "Swiften/Serializer/TLSProceedSerializer.h"
-#include "Swiften/Serializer/MessageSerializer.h"
-#include "Swiften/Serializer/PresenceSerializer.h"
-#include "Swiften/Serializer/IQSerializer.h"
-#include "Swiften/Serializer/ComponentHandshakeSerializer.h"
+#include <Swiften/Elements/ProtocolHeader.h>
+#include <Swiften/Base/foreach.h>
+#include <Swiften/Serializer/CompressRequestSerializer.h>
+#include <Swiften/Serializer/CompressFailureSerializer.h>
+#include <Swiften/Serializer/StreamErrorSerializer.h>
+#include <Swiften/Serializer/StreamFeaturesSerializer.h>
+#include <Swiften/Serializer/AuthRequestSerializer.h>
+#include <Swiften/Serializer/AuthFailureSerializer.h>
+#include <Swiften/Serializer/AuthSuccessSerializer.h>
+#include <Swiften/Serializer/AuthChallengeSerializer.h>
+#include <Swiften/Serializer/AuthResponseSerializer.h>
+#include <Swiften/Serializer/EnableStreamManagementSerializer.h>
+#include <Swiften/Serializer/StreamManagementEnabledSerializer.h>
+#include <Swiften/Serializer/StreamResumeSerializer.h>
+#include <Swiften/Serializer/StreamResumedSerializer.h>
+#include <Swiften/Serializer/StreamManagementFailedSerializer.h>
+#include <Swiften/Serializer/StanzaAckSerializer.h>
+#include <Swiften/Serializer/StanzaAckRequestSerializer.h>
+#include <Swiften/Serializer/StartTLSRequestSerializer.h>
+#include <Swiften/Serializer/StartTLSFailureSerializer.h>
+#include <Swiften/Serializer/TLSProceedSerializer.h>
+#include <Swiften/Serializer/MessageSerializer.h>
+#include <Swiften/Serializer/PresenceSerializer.h>
+#include <Swiften/Serializer/IQSerializer.h>
+#include <Swiften/Serializer/ComponentHandshakeSerializer.h>
 
 namespace Swift {
 
@@ -56,6 +58,8 @@ XMPPSerializer::XMPPSerializer(PayloadSerializerCollection* payloadSerializers, 
 	serializers_.push_back(boost::make_shared<EnableStreamManagementSerializer>());
 	serializers_.push_back(boost::make_shared<StreamManagementEnabledSerializer>());
 	serializers_.push_back(boost::make_shared<StreamManagementFailedSerializer>());
+	serializers_.push_back(boost::make_shared<StreamResumeSerializer>());
+	serializers_.push_back(boost::make_shared<StreamResumedSerializer>());
 	serializers_.push_back(boost::make_shared<StanzaAckSerializer>());
 	serializers_.push_back(boost::make_shared<StanzaAckRequestSerializer>());
 	serializers_.push_back(boost::make_shared<ComponentHandshakeSerializer>());

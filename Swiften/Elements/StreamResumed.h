@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2011 Remko Tronçon
+ * Copyright (c) 2011 Remko Tronçon
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -7,22 +7,15 @@
 #pragma once
 
 #include <string>
+#include <boost/optional.hpp>
 
 #include <Swiften/Elements/Element.h>
 
 namespace Swift {
-	class StreamManagementEnabled : public Element {
+	class StreamResumed : public Element {
 		public:
-			StreamManagementEnabled();
-			~StreamManagementEnabled();
-
-			void setResumeSupported() {
-				resumeSupported = true;
-			}
-
-			bool getResumeSupported() const {
-				return resumeSupported;
-			}
+			StreamResumed();
+			~StreamResumed();
 
 			void setResumeID(const std::string& id) {
 				resumeID = id;
@@ -32,8 +25,16 @@ namespace Swift {
 				return resumeID;
 			}
 
+			const boost::optional<int> getHandledStanzasCount() const {
+				return handledStanzasCount;
+			}
+
+			void setHandledStanzasCount(int i) {
+				handledStanzasCount = i;
+			}
+
 		private:
-			bool resumeSupported;
 			std::string resumeID;
+			boost::optional<int> handledStanzasCount;
 	};
 }

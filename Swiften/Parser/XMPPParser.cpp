@@ -29,6 +29,7 @@
 #include "Swiften/Parser/EnableStreamManagementParser.h"
 #include "Swiften/Parser/StreamManagementEnabledParser.h"
 #include "Swiften/Parser/StreamManagementFailedParser.h"
+#include "Swiften/Parser/StreamResumeParser.h"
 #include "Swiften/Parser/StanzaAckParser.h"
 #include "Swiften/Parser/StanzaAckRequestParser.h"
 #include "Swiften/Parser/StartTLSParser.h"
@@ -181,6 +182,12 @@ ElementParser* XMPPParser::createElementParser(const std::string& element, const
 	}
 	else if (element == "failed" && ns == "urn:xmpp:sm:2") {
 		return new StreamManagementFailedParser();
+	}
+	else if (element == "resume" && ns == "urn:xmpp:sm:2") {
+		return new StreamResumeParser();
+	}
+	else if (element == "resumed" && ns == "urn:xmpp:sm:2") {
+		return new StreamResumeParser();
 	}
 	else if (element == "a" && ns == "urn:xmpp:sm:2") {
 		return new StanzaAckParser();

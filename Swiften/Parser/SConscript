@@ -59,6 +59,8 @@ sources = [
 		"StanzaParser.cpp",
 		"StreamErrorParser.cpp",
 		"StreamFeaturesParser.cpp",
+		"StreamManagementEnabledParser.cpp",
+		"StreamResumeParser.cpp",
 		"XMLParser.cpp",
 		"XMLParserClient.cpp",
 		"XMLParserFactory.cpp",
