@@ -237,7 +237,7 @@
     <message>
         <location filename="../Controllers/Chat/MUCController.cpp" line="283"/>
         <source>The room subject is now: %1%</source>
-        <translation>Le sujet du salon est actuellement: %1%</translation>
+        <translation>Le sujet du salon est maintenant: %1%</translation>
     </message>
     <message>
         <location filename="../Controllers/Chat/MUCController.cpp" line="313"/>
@@ -554,7 +554,7 @@
     <message>
         <location filename="../QtUI/QtStrings.h" line="82"/>
         <source>Show All</source>
-        <translation>Voir Tout</translation>
+        <translation>Tout Voir</translation>
     </message>
     <message>
         <location filename="../QtUI/QtStrings.h" line="83"/>
@@ -675,12 +675,12 @@
     <message>
         <location filename="../QtUI/EventViewer/QtEvent.cpp" line="63"/>
         <source>%1 would like to add you to their contact list.</source>
-        <translation>%1 souhaitent vous ajouter à leur liste de contacts.</translation>
+        <translation>%1 souhaite vous ajouter à-sa liste de contacts.</translation>
     </message>
     <message>
         <location filename="../QtUI/EventViewer/QtEvent.cpp" line="66"/>
         <source>%1 would like to add you to their contact list, saying &apos;%2&apos;</source>
-        <translation>%1 souhaitent vous ajouter à leur liste de contacts, dit &apos;%2&apos;</translation>
+        <translation>%1 souhaite vous ajouter à sa liste de contacts, dit &apos;%2&apos;</translation>
     </message>
 </context>
 <context>
@@ -842,7 +842,7 @@
     <message>
         <location filename="../QtUI/QtStrings.h" line="61"/>
         <source>Commit</source>
-        <translation>Engager</translation>
+        <translation>Publier</translation>
     </message>
     <message>
         <location filename="../QtUI/QtStrings.h" line="62"/>
@@ -1038,13 +1038,13 @@
         <location filename="../QtUI/UserSearch/QtUserSearchFirstPage.ui"/>
         <location filename="../QtUI/UserSearch/ui_QtUserSearchFirstPage.h" line="125"/>
         <source>I&apos;d like to search my server</source>
-        <translation>Je souhaite rechercher mon serveur</translation>
+        <translation>Je souhaite rechercher sur mon serveur</translation>
     </message>
     <message>
         <location filename="../QtUI/UserSearch/QtUserSearchFirstPage.ui"/>
         <location filename="../QtUI/UserSearch/ui_QtUserSearchFirstPage.h" line="126"/>
         <source>I&apos;d like to search another server:</source>
-        <translation>Je souhaite rechercher un autre serveur:</translation>
+        <translation>Je souhaite rechercher sur un autre serveur:</translation>
     </message>
 </context>
 <context>
@@ -1354,12 +1354,12 @@
     <message>
         <location filename="../QtUI/QtLoginWindow.cpp" line="205"/>
         <source>Remove profile</source>
-        <translation>Supprimer le profile</translation>
+        <translation>Supprimer le profil</translation>
     </message>
     <message>
         <location filename="../QtUI/QtLoginWindow.cpp" line="205"/>
         <source>Remove the profile &apos;%1&apos;?</source>
-        <translation>Supprimer le profile &apos;%1&apos;?</translation>
+        <translation>Supprimer le profil &apos;%1&apos;?</translation>
     </message>
     <message>
         <location filename="../QtUI/QtLoginWindow.cpp" line="299"/>
@@ -1527,10 +1527,10 @@
  Would you like to add them to your contact list and share your status when you&apos;re online? 
 
 If you choose to defer this choice, you will be asked again when you next login.</source>
-        <translation>%1 souhaitent vous ajouter à leur liste de contacts.
- Souhaitez-vous les ajouter à votre liste de contacts et partager votre status lorsque vous êtes en ligne? 
+        <translation>%1 souhaite vous ajouter à sa liste de contacts.
+ Souhaitez-vous l&apos; ajouter à votre liste de contacts et partager votre status lorsque vous êtes en ligne? 
 
-Si vous choisissez de refuser ce choix, il vous sera demandé à nouveau lors de votre prochaine connexion.</translation>
+Si vous choisissez de refuser, il vous sera demandé à nouveau lors de votre prochaine connexion.</translation>
     </message>
     <message>
         <location filename="../QtUI/QtSubscriptionRequestWindow.cpp" line="24"/>
@@ -1622,7 +1622,7 @@ Si vous choisissez de refuser ce choix, il vous sera demandé à nouveau lors de
     <message>
         <location filename="../QtUI/UserSearch/QtUserSearchWindow.cpp" line="32"/>
         <source>Chat to User</source>
-        <translation>Discuter avec l&apos;utilisateur</translation>
+        <translation>Discuter avec un utilisateur</translation>
     </message>
     <message>
         <location filename="../QtUI/UserSearch/QtUserSearchWindow.cpp" line="43"/>
