@@ -36,7 +36,7 @@ class ContactRosterItem : public RosterItem {
 		void applyPresence(const std::string& resource, boost::shared_ptr<Presence> presence);
 		void clearPresence();
 		void calculateShownPresence();
-		const std::vector<std::string> getGroups() const;
+		const std::vector<std::string>& getGroups() const;
 		/** Only used so a contact can know about the groups it's in*/
 		void addGroup(const std::string& group);
 		void removeGroup(const std::string& group);

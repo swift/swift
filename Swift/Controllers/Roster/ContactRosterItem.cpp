@@ -99,7 +99,7 @@ void ContactRosterItem::applyPresence(const std::string& resource, boost::shared
 	onDataChanged();
 }
 
-const std::vector<std::string> ContactRosterItem::getGroups() const {
+const std::vector<std::string>& ContactRosterItem::getGroups() const {
 	return groups_;
 }
 
