@@ -27,7 +27,7 @@
 
 namespace Swift {
 
-CoreClient::CoreClient(const JID& jid, const std::string& password, NetworkFactories* networkFactories) : jid_(jid), password_(password), networkFactories(networkFactories), useStreamCompression(true), useTLS(UseTLSWhenAvailable), disconnectRequested_(false), certificateTrustChecker(NULL) {
+CoreClient::CoreClient(const JID& jid, const std::string& password, NetworkFactories* networkFactories) : jid_(jid), password_(password), networkFactories(networkFactories), disconnectRequested_(false), certificateTrustChecker(NULL) {
 	stanzaChannel_ = new ClientSessionStanzaChannel();
 	stanzaChannel_->onMessageReceived.connect(boost::bind(&CoreClient::handleMessageReceived, this, _1));
 	stanzaChannel_->onPresenceReceived.connect(boost::bind(&CoreClient::handlePresenceReceived, this, _1));
@@ -52,8 +52,9 @@ CoreClient::~CoreClient() {
 	delete stanzaChannel_;
 }
 
-void CoreClient::connect() {
+void CoreClient::connect(const ClientOptions& o) {
 	SWIFT_LOG(debug) << "Connecting" << std::endl;
+	options = o;
 	connect(jid_.getDomain());
 }
 
@@ -103,12 +104,12 @@ void CoreClient::handleConnectorFinished(boost::shared_ptr<Connection> connectio
 
 		session_ = ClientSession::create(jid_, sessionStream_);
 		session_->setCertificateTrustChecker(certificateTrustChecker);
-		session_->setUseStreamCompression(useStreamCompression);
-		switch(useTLS) {
-			case UseTLSWhenAvailable:
+		session_->setUseStreamCompression(options.useStreamCompression);
+		switch(options.useTLS) {
+			case ClientOptions::UseTLSWhenAvailable:
 				session_->setUseTLS(ClientSession::UseTLSWhenAvailable);
 				break;
-			case NeverUseTLS:
+			case ClientOptions::NeverUseTLS:
 				session_->setUseTLS(ClientSession::NeverUseTLS);
 				break;
 		}
@@ -294,14 +295,6 @@ void CoreClient::handleMessageReceived(Message::ref message) {
 
 void CoreClient::handleStanzaAcked(Stanza::ref stanza) {
 	onStanzaAcked(stanza);
-}
-
-void CoreClient::setUseStreamCompression(bool b) {
-	useStreamCompression = b;
-}
-
-void CoreClient::setUseTLS(UseTLS b) {
-	useTLS = b;
 }
 
 bool CoreClient::isAvailable() const {

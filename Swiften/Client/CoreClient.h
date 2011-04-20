@@ -13,6 +13,7 @@
 #include <Swiften/Entity/Entity.h>
 #include <Swiften/JID/JID.h>
 #include <Swiften/Client/ClientError.h>
+#include <Swiften/Client/ClientOptions.h>
 
 namespace Swift {
 	class ChainedConnector;
@@ -45,11 +46,6 @@ namespace Swift {
 	 */
 	class CoreClient : public Entity {
 		public: 
-			enum UseTLS {
-				NeverUseTLS,
-				UseTLSWhenAvailable
-			};
-
 			/**
 			 * Constructs a client for the given JID with the given password.
 			 * The given eventLoop will be used to post events to.
@@ -65,7 +61,7 @@ namespace Swift {
 			 * After the connection is established, the client will set 
 			 * initialize the stream and authenticate.
 			 */
-			void connect();
+			void connect(const ClientOptions& = ClientOptions());
 
 			/**
 			 * Disconnects the client from the server.
@@ -137,16 +133,6 @@ namespace Swift {
 			 */
 			void setCertificateTrustChecker(CertificateTrustChecker*);
 
-			/**
-			 * Sets whether ZLib stream compression should be used when available.
-			 */
-			void setUseStreamCompression(bool b);
-
-			/**
-			 * Sets whether TLS encryption should be used.
-			 */
-			void setUseTLS(UseTLS useTLS);
-
 		public:
 			/**
 			 * Emitted when the client was disconnected from the network.
@@ -216,10 +202,9 @@ namespace Swift {
 			JID jid_;
 			std::string password_;
 			NetworkFactories* networkFactories;
-			bool useStreamCompression;
-			UseTLS useTLS;
 			ClientSessionStanzaChannel* stanzaChannel_;
 			IQRouter* iqRouter_;
+			ClientOptions options;
 			boost::shared_ptr<ChainedConnector> connector_;
 			std::vector<ConnectionFactory*> proxyConnectionFactories;
 			PlatformTLSFactories* tlsFactories;

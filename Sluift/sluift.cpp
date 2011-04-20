@@ -62,6 +62,10 @@ class SluiftClient {
 			return client;
 		}
 
+		ClientOptions& getOptions() {
+			return options;
+		}
+
 		void connect() {
 			rosterReceived = false;
 			client->connect();
@@ -178,6 +182,7 @@ class SluiftClient {
 	
 	private:
 		Client* client;
+		ClientOptions options;
 		ClientXMLTracer* tracer;
 		bool rosterReceived;
 		std::deque<Stanza::ref> pendingEvents;
@@ -452,12 +457,12 @@ static int sluift_client_set_options(lua_State* L) {
 	luaL_checktype(L, 2, LUA_TTABLE);
 	lua_getfield(L, 2, "compress");
 	if (!lua_isnil(L, -1)) {
-		client->getClient()->setUseStreamCompression(lua_toboolean(L, -1));
+		client->getOptions().useStreamCompression = lua_toboolean(L, -1);
 	}
 	lua_getfield(L, 2, "tls");
 	if (!lua_isnil(L, -1)) {
 		bool useTLS = lua_toboolean(L, -1);
-		client->getClient()->setUseTLS(useTLS ? Client::UseTLSWhenAvailable : Client::NeverUseTLS);
+		client->getOptions().useTLS = (useTLS ? ClientOptions::UseTLSWhenAvailable : ClientOptions::NeverUseTLS);
 	}
 	lua_pushvalue(L, 1);
 	return 0;
