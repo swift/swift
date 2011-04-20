@@ -16,6 +16,10 @@
 
 
 namespace Swift {
+
+static const QString SPLITTER_STATE = "mucSplitterState";
+static const QString CHAT_TABS_GEOMETRY = "chatTabsGeometry";
+
 QtChatWindowFactory::QtChatWindowFactory(QSplitter* splitter, QtSettingsProvider* settings, QtChatTabs* tabs, const QString& themePath) : themePath_(themePath) {
 	settings_ = settings;
 	tabs_ = tabs;
@@ -23,7 +27,7 @@ QtChatWindowFactory::QtChatWindowFactory(QSplitter* splitter, QtSettingsProvider
 	if (splitter) {
 		splitter->addWidget(tabs_);
 	} else if (tabs_) {
-		QVariant chatTabsGeometryVariant = settings_->getQSettings()->value("chatTabsGeometry");
+		QVariant chatTabsGeometryVariant = settings_->getQSettings()->value(CHAT_TABS_GEOMETRY);
 		if (chatTabsGeometryVariant.isValid()) {
 			tabs_->restoreGeometry(chatTabsGeometryVariant.toByteArray());
 		}
@@ -43,11 +47,20 @@ ChatWindow* QtChatWindowFactory::createChatWindow(const JID &contact,UIEventStre
 			theme_ = new QtChatTheme(""); /* Use the inbuilt theme */
 		}
 	}
+
 	QtChatWindow *chatWindow = new QtChatWindow(P2QSTRING(contact.toString()), theme_, eventStream);
+	connect(chatWindow, SIGNAL(splitterMoved()), this, SLOT(handleSplitterMoved()));
+	connect(this, SIGNAL(changeSplitterState(QByteArray)), chatWindow, SLOT(handleChangeSplitterState(QByteArray)));
+
+	QVariant splitterState = settings_->getQSettings()->value(SPLITTER_STATE);
+	if(splitterState.isValid()) {
+		chatWindow->handleChangeSplitterState(splitterState.toByteArray());
+	}
+
 	if (tabs_) {
 		tabs_->addTab(chatWindow);
 	} else {
-		QVariant chatGeometryVariant = settings_->getQSettings()->value("chatTabsGeometry");
+		QVariant chatGeometryVariant = settings_->getQSettings()->value(CHAT_TABS_GEOMETRY);
 		if (chatGeometryVariant.isValid()) {
 			chatWindow->restoreGeometry(chatGeometryVariant.toByteArray());
 		}
@@ -57,7 +70,13 @@ ChatWindow* QtChatWindowFactory::createChatWindow(const JID &contact,UIEventStre
 }
 
 void QtChatWindowFactory::handleWindowGeometryChanged() {
-	settings_->getQSettings()->setValue("chatTabsGeometry", qobject_cast<QWidget*>(sender())->saveGeometry());
+	settings_->getQSettings()->setValue(CHAT_TABS_GEOMETRY, qobject_cast<QWidget*>(sender())->saveGeometry());
+}
+
+void QtChatWindowFactory::handleSplitterMoved() {
+	QByteArray splitterState = qobject_cast<QtChatWindow*>(sender())->getSplitterState();
+	settings_->getQSettings()->setValue(SPLITTER_STATE, QVariant(splitterState));
+	emit changeSplitterState(splitterState);
 }
 
 }

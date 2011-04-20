@@ -18,6 +18,7 @@ class QTextEdit;
 class QLineEdit;
 class QComboBox;
 class QLabel;
+class QSplitter;
 
 namespace Swift {
 	class QtChatView;
@@ -57,9 +58,14 @@ namespace Swift {
 			void replaceLastMessage(const std::string& message);
 			void setAckState(const std::string& id, AckState state);
 			void flash();
+			QByteArray getSplitterState();
+
+		public slots:
+			void handleChangeSplitterState(QByteArray state);
 
 		signals:
 			void geometryChanged();
+			void splitterMoved();
 
 		protected slots:
 			void qAppFocusChanged(QWidget* old, QWidget* now);
@@ -74,6 +80,7 @@ namespace Swift {
 			void returnPressed();
 			void handleInputChanged();
 			void handleKeyPressEvent(QKeyEvent* event);
+			void handleSplitterMoved(int pos, int index);
 
 		private:
 			void updateTitleWithUnreadCount();
@@ -104,5 +111,6 @@ namespace Swift {
 			UIEventStream* eventStream_;
 			bool inputEnabled_;
 			IDGenerator id_;
+			QSplitter *logRosterSplitter_;
 	};
 }

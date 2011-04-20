@@ -22,8 +22,11 @@ namespace Swift {
 			QtChatWindowFactory(QSplitter* splitter, QtSettingsProvider* settings, QtChatTabs* tabs, const QString& themePath);
 			~QtChatWindowFactory();
 			ChatWindow* createChatWindow(const JID &contact, UIEventStream* eventStream);
+		signals:
+			void changeSplitterState(QByteArray);
 		private slots:
 			void handleWindowGeometryChanged();
+			void handleSplitterMoved();
 		private:
 			QString themePath_;
 			QtSettingsProvider* settings_;

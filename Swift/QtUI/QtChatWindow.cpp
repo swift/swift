@@ -13,6 +13,7 @@
 #include "MessageSnippet.h"
 #include "SystemMessageSnippet.h"
 #include "QtTextEdit.h"
+#include "QtSettingsProvider.h"
 #include "QtScaledAvatarCache.h"
 
 #include "SwifTools/TabComplete.h"
@@ -38,24 +39,25 @@ QtChatWindow::QtChatWindow(const QString &contact, QtChatTheme* theme, UIEventSt
 	theme_ = theme;
 	isCorrection_ = false;
 	updateTitleWithUnreadCount();
+	QtSettingsProvider settings;
 
 	QBoxLayout *layout = new QBoxLayout(QBoxLayout::TopToBottom, this);
 	layout->setContentsMargins(0,0,0,0);
 	layout->setSpacing(2);
 
-
-	QSplitter *logRosterSplitter = new QSplitter(this);
-	logRosterSplitter->setAutoFillBackground(true);
-	layout->addWidget(logRosterSplitter);
+	logRosterSplitter_ = new QSplitter(this);
+	logRosterSplitter_->setAutoFillBackground(true);
+	layout->addWidget(logRosterSplitter_);
 
 	messageLog_ = new QtChatView(theme, this);
-	logRosterSplitter->addWidget(messageLog_);
+	logRosterSplitter_->addWidget(messageLog_);
 
 	treeWidget_ = new QtTreeWidget(eventStream_);
 	treeWidget_->setEditable(false);
 	treeWidget_->hide();
-	logRosterSplitter->addWidget(treeWidget_);
-	logRosterSplitter->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+	logRosterSplitter_->addWidget(treeWidget_);
+	logRosterSplitter_->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+	connect(logRosterSplitter_, SIGNAL(splitterMoved(int, int)), this, SLOT(handleSplitterMoved(int, int)));
 
 	QWidget* midBar = new QWidget(this);
 	layout->addWidget(midBar);
@@ -89,7 +91,7 @@ QtChatWindow::QtChatWindow(const QString &contact, QtChatTheme* theme, UIEventSt
 	connect(input_, SIGNAL(returnPressed()), this, SLOT(returnPressed()));
 	connect(input_, SIGNAL(textChanged()), this, SLOT(handleInputChanged()));
 	setFocusProxy(input_);
-	logRosterSplitter->setFocusProxy(input_);
+	logRosterSplitter_->setFocusProxy(input_);
 	midBar->setFocusProxy(input_);
 	messageLog_->setFocusProxy(input_);
 	connect(qApp, SIGNAL(focusChanged(QWidget*, QWidget*)), this, SLOT(qAppFocusChanged(QWidget*, QWidget*)));
@@ -152,6 +154,18 @@ void QtChatWindow::cancelCorrection() {
 	cursor.removeSelectedText();
 	isCorrection_ = false;
 	correctingLabel_->hide();
+}
+
+QByteArray QtChatWindow::getSplitterState() {
+	return logRosterSplitter_->saveState();
+}
+
+void QtChatWindow::handleChangeSplitterState(QByteArray state) {
+	logRosterSplitter_->restoreState(state);
+}
+
+void QtChatWindow::handleSplitterMoved(int, int) {
+	emit splitterMoved();
 }
 
 void QtChatWindow::tabComplete() {
