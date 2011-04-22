@@ -7,6 +7,7 @@
 #pragma once
 
 #include <boost/format.hpp>
+#include <iostream>
 
 namespace Swift {
 	inline boost::format format(const std::string& s) {
