@@ -2,8 +2,8 @@
 
 import sys
 sys.path.append("SCons")
-import Version
+import Version, os.path
 
 assert(len(sys.argv) == 2)
 
-print Version.getBuildVersion(sys.argv[1])
+print Version.getBuildVersion(os.path.dirname(sys.argv[0] + "/.."), sys.argv[1])

@@ -23,7 +23,7 @@ if env["SCONS_STAGE"] == "build" :
 	elif myenv["PLATFORM"] == "darwin" :
 		myenv["SHLIBSUFFIX"] = ".so"
 
-	myenv["SLUIFT_VERSION"] = Version.getBuildVersion("sluift")
+	myenv["SLUIFT_VERSION"] = Version.getBuildVersion(env.Dir("#").abspath, "sluift")
 	def patchLua(env, target, source) :
 		f = open(source[0].abspath, "r")
 		contents = f.read()

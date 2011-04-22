@@ -133,7 +133,7 @@ sources = [
     "qrc_Swift.cc",
   ]
 
-myenv["SWIFT_VERSION"] = Version.getBuildVersion("swift")
+myenv["SWIFT_VERSION"] = Version.getBuildVersion(env.Dir("#").abspath, "swift")
 
 if env["PLATFORM"] == "win32" :
   myenv.RES("../resources/Windows/Swift.rc")
