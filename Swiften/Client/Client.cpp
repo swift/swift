@@ -36,7 +36,7 @@ Client::Client(const JID& jid, const std::string& password, NetworkFactories* ne
 	softwareVersionResponder->start();
 
 	roster = new XMPPRosterImpl();
-	rosterController = new XMPPRosterController(getIQRouter(), roster, storages->getRosterStorage());
+	rosterController = new XMPPRosterController(getIQRouter(), roster, getStorages()->getRosterStorage());
 
 	subscriptionManager = new SubscriptionManager(getStanzaChannel());
 
