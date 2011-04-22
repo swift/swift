@@ -7,6 +7,10 @@
 #include "QtChatTabs.h"
 
 #include <algorithm>
+#include <vector>
+
+#include <Swift/Controllers/ChatMessageSummarizer.h>
+#include <Swift/QtUI/QtSwiftUtil.h>
 
 #include <QCloseEvent>
 #include <QDesktopWidget>
@@ -236,16 +240,18 @@ void QtChatTabs::handleTabTitleUpdated(QWidget* widget) {
 	default : tabTextColor = QColor();
 	}
 	tabs_->tabBar()->setTabTextColor(index, tabTextColor);
-	int unread = 0;
+
+	std::vector<std::pair<std::string, int> > unreads;
 	for (int i = 0; i < tabs_->count(); i++) {
 		QtTabbable* tab = qobject_cast<QtTabbable*>(tabs_->widget(i));
 		if (tab) {
-			unread += tab->getCount();
+			unreads.push_back(std::pair<std::string, int>(Q2PSTRING(tab->windowTitle()), tab->getCount()));
 		}
 	}
 
-	QtTabbable* current = qobject_cast<QtTabbable*>(tabs_->currentWidget());
-	setWindowTitle(unread > 0 ? QString("(%1) %2").arg(unread).arg(current->windowTitle()) : current->windowTitle());
+	std::string current(Q2PSTRING(qobject_cast<QtTabbable*>(tabs_->currentWidget())->windowTitle()));
+	ChatMessageSummarizer summary;
+	setWindowTitle(summary.getSummary(current, unreads).c_str());
 }
 
 void QtChatTabs::flash() {

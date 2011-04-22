@@ -21,6 +21,7 @@
 *.ilk
 *.res
 *.moc
+*.patch
 *~
 _CL_*
 *.manifest

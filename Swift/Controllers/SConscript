@@ -54,7 +54,8 @@ if env["SCONS_STAGE"] == "build" :
 			"CertificateFileStorage.cpp",
 			"StatusUtil.cpp",
 			"Translator.cpp",
-			"XMPPURIController.cpp",	
+			"XMPPURIController.cpp",
+			"ChatMessageSummarizer.cpp",
 		])
 
 	env.Append(UNITTEST_SOURCES = [
@@ -65,4 +66,5 @@ if env["SCONS_STAGE"] == "build" :
 			File("Chat/UnitTest/ChatsManagerTest.cpp"),
 			File("Chat/UnitTest/MUCControllerTest.cpp"),
 			File("UnitTest/MockChatWindow.cpp"),
+			File("UnitTest/ChatMessageSummarizerTest.cpp"),
 		])
