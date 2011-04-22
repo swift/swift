@@ -8,7 +8,7 @@ def generate(env) :
 
 static const char* buildVersion = \"%(buildVersion)s\";\n
 #define SWIFT_VERSION_STRING \"%(buildVersion)s\";\n
-""" % { "buildVersion" : Version.getBuildVersion(project) }
+""" % { "buildVersion" : Version.getBuildVersion(env.Dir("#").abspath, project) }
     env.WriteVal(target, env.Value(buildVersion))
 
   env.AddMethod(createBuildVersion, "BuildVersion")

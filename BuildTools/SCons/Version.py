@@ -17,12 +17,12 @@ def git(cmd) :
   p.stdin.close()
   return gitVersion if p.wait() == 0 else None
 
-def getBuildVersion(project) :
+def getBuildVersion(root, project) :
   gitVersion = getGitBuildVersion(project) 
   if gitVersion :
     return gitVersion
   else :
-    versionFilename = "VERSION." + project
+    versionFilename = os.path.join(root, "VERSION." + project)
     if os.path.isfile(versionFilename) :
       f = open(versionFilename)
       version = f.read().strip()
