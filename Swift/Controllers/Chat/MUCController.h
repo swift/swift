@@ -7,18 +7,18 @@
 #pragma once
 
 #include <boost/shared_ptr.hpp>
-#include "Swiften/Base/boost_bsignals.h"
+#include <Swiften/Base/boost_bsignals.h>
 #include <boost/signals/connection.hpp>
 #include <set>
 
 #include <string>
-#include "Swiften/Network/Timer.h"
-#include "Swift/Controllers/Chat/ChatControllerBase.h"
-#include "Swiften/Elements/Message.h"
-#include "Swiften/Elements/DiscoInfo.h"
-#include "Swiften/JID/JID.h"
-#include "Swiften/MUC/MUC.h"
-#include "Swiften/Elements/MUCOccupant.h"
+#include <Swiften/Network/Timer.h>
+#include <Swift/Controllers/Chat/ChatControllerBase.h>
+#include <Swiften/Elements/Message.h>
+#include <Swiften/Elements/DiscoInfo.h>
+#include <Swiften/JID/JID.h>
+#include <Swiften/MUC/MUC.h>
+#include <Swiften/Elements/MUCOccupant.h>
 
 namespace Swift {
 	class StanzaChannel;
@@ -71,6 +71,7 @@ namespace Swift {
 			void handleJoinFailed(boost::shared_ptr<ErrorPayload> error);
 			void handleJoinTimeoutTick();
 			std::string roleToGroupName(MUCOccupant::Role role);
+			std::string roleToSortName(MUCOccupant::Role role);
 			JID nickToJID(const std::string& nick);
 			std::string roleToFriendlyName(MUCOccupant::Role role);
 			void receivedActivity();
@@ -97,6 +98,7 @@ namespace Swift {
 			std::set<std::string> currentOccupants_;
 			std::vector<NickJoinPart> joinParts_;
 			boost::posix_time::ptime lastActivity_;
+			std::set<std::string> addedRosterGroups_;
 	};
 }
 

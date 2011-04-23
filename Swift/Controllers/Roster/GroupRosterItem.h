@@ -31,6 +31,8 @@ class GroupRosterItem : public RosterItem {
 		void setExpanded(bool expanded);
 		bool isExpanded() const;
 		boost::signal<void (bool)> onExpandedChanged;
+		void setManualSort(const std::string& manualSortValue);
+		virtual const std::string& getSortableDisplayName() const;
 	private:
 		void handleChildrenChanged(GroupRosterItem* group);
 		void handleDataChanged(RosterItem* item);
@@ -40,6 +42,8 @@ class GroupRosterItem : public RosterItem {
 		std::vector<RosterItem*> children_;
 		std::vector<RosterItem*> displayedChildren_;
 		bool sortByStatus_;
+		bool manualSort_;
+		std::string manualSortValue_;
 };
 
 }

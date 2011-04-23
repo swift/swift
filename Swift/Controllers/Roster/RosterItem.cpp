@@ -33,11 +33,11 @@ void RosterItem::setDisplayName(const std::string& name) {
 	onDataChanged();
 }
 
-std::string RosterItem::getDisplayName() const {
+const std::string& RosterItem::getDisplayName() const {
 	return name_;
 }
 
-std::string RosterItem::getSortableDisplayName() const {
+const std::string& RosterItem::getSortableDisplayName() const {
 	return sortableDisplayName_;
 }
 

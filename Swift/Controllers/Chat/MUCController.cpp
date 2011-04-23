@@ -4,7 +4,7 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "Swift/Controllers/Chat/MUCController.h"
+#include <Swift/Controllers/Chat/MUCController.h>
 
 #include <boost/bind.hpp>
 #include <boost/regex.hpp>
@@ -12,23 +12,24 @@
 
 #include <Swift/Controllers/Intl.h>
 #include <Swiften/Base/format.h>
-#include "Swiften/Network/Timer.h"
-#include "Swiften/Network/TimerFactory.h"
-#include "Swiften/Base/foreach.h"
-#include "SwifTools/TabComplete.h"
-#include "Swiften/Base/foreach.h"
-#include "Swift/Controllers/XMPPEvents/EventController.h"
-#include "Swift/Controllers/UIInterfaces/ChatWindow.h"
-#include "Swift/Controllers/UIInterfaces/ChatWindowFactory.h"
-#include "Swift/Controllers/UIEvents/UIEventStream.h"
-#include "Swift/Controllers/UIEvents/RequestChatUIEvent.h"
-#include "Swiften/Avatars/AvatarManager.h"
-#include "Swiften/Elements/Delay.h"
-#include "Swiften/MUC/MUC.h"
-#include "Swiften/Client/StanzaChannel.h"
-#include "Swift/Controllers/Roster/Roster.h"
-#include "Swift/Controllers/Roster/SetAvatar.h"
-#include "Swift/Controllers/Roster/SetPresence.h"
+#include <Swiften/Network/Timer.h>
+#include <Swiften/Network/TimerFactory.h>
+#include <Swiften/Base/foreach.h>
+#include <SwifTools/TabComplete.h>
+#include <Swiften/Base/foreach.h>
+#include <Swift/Controllers/XMPPEvents/EventController.h>
+#include <Swift/Controllers/UIInterfaces/ChatWindow.h>
+#include <Swift/Controllers/UIInterfaces/ChatWindowFactory.h>
+#include <Swift/Controllers/UIEvents/UIEventStream.h>
+#include <Swift/Controllers/UIEvents/RequestChatUIEvent.h>
+#include <Swift/Controllers/Roster/GroupRosterItem.h>
+#include <Swiften/Avatars/AvatarManager.h>
+#include <Swiften/Elements/Delay.h>
+#include <Swiften/MUC/MUC.h>
+#include <Swiften/Client/StanzaChannel.h>
+#include <Swift/Controllers/Roster/Roster.h>
+#include <Swift/Controllers/Roster/SetAvatar.h>
+#include <Swift/Controllers/Roster/SetPresence.h>
 
 
 #define MUC_JOIN_WARNING_TIMEOUT_MILLISECONDS 60000
@@ -206,7 +207,12 @@ void MUCController::handleOccupantJoined(const MUCOccupant& occupant) {
 	currentOccupants_.insert(occupant.getNick());
 	NickJoinPart event(occupant.getNick(), Join);
 	appendToJoinParts(joinParts_, event);
-	roster_->addContact(jid, realJID, occupant.getNick(), roleToGroupName(occupant.getRole()), avatarManager_->getAvatarPath(jid).string());
+	std::string groupName(roleToGroupName(occupant.getRole()));
+	roster_->addContact(jid, realJID, occupant.getNick(), groupName, avatarManager_->getAvatarPath(jid).string());
+	if (addedRosterGroups_.count(groupName) == 0) {
+		roster_->getGroup(groupName)->setManualSort(roleToSortName(occupant.getRole()));
+		addedRosterGroups_.insert(groupName);
+	}
 	if (joined_) {
 		std::string joinString;
 		MUCOccupant::Role role = occupant.getRole();
@@ -246,6 +252,16 @@ std::string MUCController::roleToFriendlyName(MUCOccupant::Role role) {
 	case MUCOccupant::NoRole: return "";
 	}
 	return "";
+}
+
+std::string MUCController::roleToSortName(MUCOccupant::Role role) {
+	switch (role) {
+	case MUCOccupant::Moderator: return "1";
+	case MUCOccupant::Participant: return "2";
+	case MUCOccupant::Visitor: return "3";
+	case MUCOccupant::NoRole: return "4";
+	}
+	return "5";
 }
 
 JID MUCController::nickToJID(const std::string& nick) {

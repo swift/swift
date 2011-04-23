@@ -20,8 +20,8 @@ class RosterItem {
 		boost::signal<void ()> onDataChanged;
 		GroupRosterItem* getParent() const;
 		void setDisplayName(const std::string& name);
-		std::string getDisplayName() const;
-		std::string getSortableDisplayName() const;
+		const std::string& getDisplayName() const;
+		virtual const std::string& getSortableDisplayName() const;
 	private:
 		std::string name_;
 		std::string sortableDisplayName_;

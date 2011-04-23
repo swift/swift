@@ -12,12 +12,25 @@
 
 namespace Swift {
 
-GroupRosterItem::GroupRosterItem(const std::string& name, GroupRosterItem* parent, bool sortByStatus) : RosterItem(name, parent), sortByStatus_(sortByStatus) {
+GroupRosterItem::GroupRosterItem(const std::string& name, GroupRosterItem* parent, bool sortByStatus) : RosterItem(name, parent), sortByStatus_(sortByStatus), manualSort_(false) {
 	expanded_ = true;
 }
 
 GroupRosterItem::~GroupRosterItem() {
 
+}
+
+void GroupRosterItem::setManualSort(const std::string& manualSortValue) {
+	manualSort_ = true;
+	bool changed = manualSortValue_ != manualSortValue;
+	manualSortValue_ = manualSortValue;
+	if (changed) {
+		onDataChanged();
+	}
+}
+
+const std::string& GroupRosterItem::getSortableDisplayName() const {
+	return manualSort_ ? manualSortValue_ : RosterItem::getSortableDisplayName();
 }
 
 bool GroupRosterItem::isExpanded() const {
