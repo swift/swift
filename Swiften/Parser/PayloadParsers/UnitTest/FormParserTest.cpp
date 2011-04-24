@@ -77,7 +77,6 @@ class FormParserTest : public CppUnit::TestFixture {
 						"</field>"
 						"<field var=\"untyped\">"
 							"<value>foo</value>"
-							"<value>baz</value>"
 						"</field>"
 					"</x>"));
 
@@ -114,8 +113,7 @@ class FormParserTest : public CppUnit::TestFixture {
 			CPPUNIT_ASSERT_EQUAL(JID("baz@fum.org"), boost::dynamic_pointer_cast<JIDMultiFormField>(payload->getFields()[8])->getValue()[1]);
 			CPPUNIT_ASSERT_EQUAL(std::string("Tell all your friends about your new bot!"), payload->getFields()[8]->getDescription());
 
-			CPPUNIT_ASSERT_EQUAL(std::string("foo"), boost::dynamic_pointer_cast<UntypedFormField>(payload->getFields()[9])->getValue()[0]);
-			CPPUNIT_ASSERT_EQUAL(std::string("baz"), boost::dynamic_pointer_cast<UntypedFormField>(payload->getFields()[9])->getValue()[1]);
+			CPPUNIT_ASSERT_EQUAL(std::string("foo"), boost::dynamic_pointer_cast<TextSingleFormField>(payload->getFields()[9])->getValue());
 		}
 };
 

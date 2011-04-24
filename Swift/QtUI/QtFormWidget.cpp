@@ -129,9 +129,6 @@ QWidget* QtFormWidget::createWidget(FormField::ref field) {
 	if (listMultiField) {
 		widget = createList(field);
 	}
-	boost::shared_ptr<UntypedFormField> untypedField = boost::dynamic_pointer_cast<UntypedFormField>(field);
-	if (untypedField) {
-	}
 	boost::shared_ptr<HiddenFormField> hiddenField = boost::dynamic_pointer_cast<HiddenFormField>(field);
 	if (hiddenField) {
 	}
@@ -231,9 +228,6 @@ Form::ref QtFormWidget::getCompletedForm() {
 				values.push_back(field->getOptions()[listWidget->row(item)].value);
 			}
 			resultField = FormField::ref(ListMultiFormField::create(values));
-		}
-		boost::shared_ptr<UntypedFormField> untypedField = boost::dynamic_pointer_cast<UntypedFormField>(field);
-		if (untypedField) {
 		}
 		boost::shared_ptr<HiddenFormField> hiddenField = boost::dynamic_pointer_cast<HiddenFormField>(field);
 		if (hiddenField) {

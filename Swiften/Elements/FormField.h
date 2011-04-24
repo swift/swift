@@ -111,5 +111,4 @@ namespace Swift {
 	SWIFTEN_DECLARE_FORM_FIELD(JIDSingle, JID);
 	SWIFTEN_DECLARE_FORM_FIELD(JIDMulti, std::vector<JID>);
 	SWIFTEN_DECLARE_FORM_FIELD(ListMulti, std::vector<std::string>);
-	SWIFTEN_DECLARE_FORM_FIELD(Untyped, std::vector<std::string>);
 }

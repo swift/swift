@@ -63,11 +63,8 @@ void FormParser::handleStartElement(const std::string& element, const std::strin
 			else if (type == "text-private") {
 				currentFieldParseHelper_ = TextPrivateFormFieldParseHelper::create();
 			}
-			else if (type == "text-single") {
+			else /*if (type == "text-single") || undefined */ {
 				currentFieldParseHelper_ = TextSingleFormFieldParseHelper::create();
-			}
-			else {
-				currentFieldParseHelper_ = UntypedFormFieldParseHelper::create();
 			}
 			if (currentFieldParseHelper_) {
 				currentFieldParseHelper_->getField()->setName(attributes.getAttribute("var"));
