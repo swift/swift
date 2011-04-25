@@ -9,6 +9,7 @@
 #include <boost/bind.hpp>
 #include <QBoxLayout>
 #include <Swift/QtUI/QtFormWidget.h>
+#include <Swiften/Elements/Command.h>
 
 namespace Swift {
 QtAdHocCommandWindow::QtAdHocCommandWindow(boost::shared_ptr<OutgoingAdHocCommandSession> command) : command_(command) {
@@ -47,6 +48,10 @@ QtAdHocCommandWindow::QtAdHocCommandWindow(boost::shared_ptr<OutgoingAdHocComman
 	nextButton_->setEnabled(false);
 	backButton_->setEnabled(false);
 	completeButton_->setEnabled(false);
+	actions_[Command::Next] = nextButton_;
+	actions_[Command::Prev] = backButton_;
+	actions_[Command::Complete] = completeButton_;
+	actions_[Command::Cancel] = cancelButton_;
 	show();
 }
 
@@ -109,21 +114,23 @@ void QtAdHocCommandWindow::setNoForm() {
 	delete formWidget_;
 }
 
-void QtAdHocCommandWindow::setAvailableActions(Command::ref commandResult) {
-	const std::vector<Command::Action> actions = commandResult->getAvailableActions();
-	nextButton_->setEnabled(std::find(actions.begin(), actions.end(), Command::Next) != actions.end());
-	backButton_->setEnabled(std::find(actions.begin(), actions.end(), Command::Prev) != actions.end());
-	completeButton_->setEnabled(std::find(actions.begin(), actions.end(), Command::Complete) != actions.end());
+typedef std::pair<Command::Action, QPushButton*> ActionButton;
 
-
-	if (command_->getIsMultiStage()) {
-		backButton_->show();
-		nextButton_->show();
-	}
-	else {
-		backButton_->hide();
-		nextButton_->hide();
-
+void QtAdHocCommandWindow::setAvailableActions(Command::ref /*commandResult*/) {
+	foreach (ActionButton pair, actions_) {
+		OutgoingAdHocCommandSession::ActionState state = command_->getActionState(pair.first);
+		if (state & OutgoingAdHocCommandSession::Present) {
+			pair.second->show();
+		}
+		else {
+			pair.second->hide();
+		}
+		if (state & OutgoingAdHocCommandSession::Enabled) {
+			pair.second->setEnabled(true);
+		}
+		else {
+			pair.second->setEnabled(false);
+		}
 	}
 }
 

@@ -19,6 +19,16 @@ namespace Swift {
 	class AdHocCommandWindowFactory;
 	class OutgoingAdHocCommandSession {
 		public:
+
+			/**
+			 * Availability of action.
+			 */
+			enum ActionState {
+				Absent /** Action isn't applicable to this command. */ = 0,
+				Present /** Action is applicable to this command */= 1,
+				Enabled /** Action is applicable and currently available */ = 2,
+				EnabledAndPresent = 3};
+
 			OutgoingAdHocCommandSession(const DiscoItems::Item& command, AdHocCommandWindowFactory* factory, IQRouter* iqRouter);
 			/**
 			 * Send initial request to the target.
@@ -57,6 +67,14 @@ namespace Swift {
 			 * Emitted on error.
 			 */
 			boost::signal<void (ErrorPayload::ref)> onError;
+
+			/**
+			 * Get the state of a given action.
+			 * This is useful for a UI to determine which buttons should be visible,
+			 * and which enabled.
+			 * Use for Next, Prev, Cancel and Complete only.
+			 */
+			ActionState getActionState(Command::Action action);
 		private:
 			void handleResponse(boost::shared_ptr<Command> payload, ErrorPayload::ref error);
 		private:
@@ -64,5 +82,6 @@ namespace Swift {
 			IQRouter* iqRouter_;
 			bool isMultiStage_;
 			std::string sessionID_;
+			std::map<Command::Action, ActionState> actionStates_;
 	};
 }

@@ -19,8 +19,27 @@ void OutgoingAdHocCommandSession::handleResponse(boost::shared_ptr<Command> payl
 	if (error) {
 		onError(error);
 	} else {
-		sessionID_ = payload->getSessionID();
 		const std::vector<Command::Action> actions = payload->getAvailableActions();
+		actionStates_.clear();
+		actionStates_[Command::Cancel] = EnabledAndPresent;
+		actionStates_[Command::Complete] = Present;
+		if (std::find(actions.begin(), actions.end(), Command::Complete) != actions.end()) {
+			actionStates_[Command::Complete] = EnabledAndPresent;
+		}
+
+		if (getIsMultiStage()) {
+			actionStates_[Command::Next] = Present;
+			actionStates_[Command::Prev] = Present;
+		}
+
+		if (std::find(actions.begin(), actions.end(), Command::Next) != actions.end()) {
+			actionStates_[Command::Next] = EnabledAndPresent;
+		}
+		if (std::find(actions.begin(), actions.end(), Command::Prev) != actions.end()) {
+			actionStates_[Command::Prev] = EnabledAndPresent;
+		}
+
+		sessionID_ = payload->getSessionID();
 		if (std::find(actions.begin(), actions.end(), Command::Next) != actions.end()
 				|| std::find(actions.begin(), actions.end(), Command::Prev) != actions.end()) {
 			isMultiStage_ = true;
@@ -72,6 +91,10 @@ void OutgoingAdHocCommandSession::goNext(Form::ref form) {
 	boost::shared_ptr<GenericRequest<Command> > commandRequest(new GenericRequest<Command>(IQ::Set, command_.getJID(), commandPayload, iqRouter_));
 	commandRequest->onResponse.connect(boost::bind(&OutgoingAdHocCommandSession::handleResponse, this, _1, _2));
 	commandRequest->send();
+}
+
+OutgoingAdHocCommandSession::ActionState OutgoingAdHocCommandSession::getActionState(Command::Action action) {
+	return actionStates_[action];
 }
 
 }

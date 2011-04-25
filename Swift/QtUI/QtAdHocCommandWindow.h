@@ -43,5 +43,6 @@ namespace Swift {
 			QPushButton* nextButton_;
 			QPushButton* completeButton_;
 			QPushButton* cancelButton_;
+			std::map<Command::Action, QPushButton*> actions_;
 	};
 }

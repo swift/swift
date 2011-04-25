@@ -11,7 +11,6 @@
 
 #include <Swiften/Base/foreach.h>
 #include <Swiften/Queries/IQRouter.h>
-#include <Swiften/Disco/GetDiscoItemsRequest.h>
 #include <Swiften/AdHoc/OutgoingAdHocCommandSession.h>
 #include <Swift/Controllers/UIInterfaces/MainWindow.h>
 #include <Swift/Controllers/UIInterfaces/AdHocCommandWindowFactory.h>
@@ -30,14 +29,18 @@ AdHocManager::AdHocManager(const JID& jid, AdHocCommandWindowFactory* factory, I
 }
 
 AdHocManager::~AdHocManager() {
-
+	uiEventStream_->onUIEvent.disconnect(boost::bind(&AdHocManager::handleUIEvent, this, _1));
 }
 
 void AdHocManager::setServerDiscoInfo(boost::shared_ptr<DiscoInfo> info) {
 	if (iqRouter_->isAvailable() && info->hasFeature(DiscoInfo::CommandsFeature)) {
-		GetDiscoItemsRequest::ref discoItemsRequest = GetDiscoItemsRequest::create(JID(jid_.getDomain()), DiscoInfo::CommandsFeature, iqRouter_);
-		discoItemsRequest->onResponse.connect(boost::bind(&AdHocManager::handleServerDiscoItemsResponse, this, _1, _2));
-		discoItemsRequest->send();
+		if (discoItemsRequest_) {
+			discoItemsRequest_->onResponse.disconnect(boost::bind(&AdHocManager::handleServerDiscoItemsResponse, this, _1, _2));
+			discoItemsRequest_.reset();
+		}
+		discoItemsRequest_ = GetDiscoItemsRequest::create(JID(jid_.getDomain()), DiscoInfo::CommandsFeature, iqRouter_);
+		discoItemsRequest_->onResponse.connect(boost::bind(&AdHocManager::handleServerDiscoItemsResponse, this, _1, _2));
+		discoItemsRequest_->send();
 	} else {
 		mainWindow_->setAvailableAdHocCommands(std::vector<DiscoItems::Item>());
 	}

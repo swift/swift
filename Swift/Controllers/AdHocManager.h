@@ -7,12 +7,14 @@
 #pragma once
 
 #include <boost/shared_ptr.hpp>
+#include <vector>
 
 #include <Swiften/Base/boost_bsignals.h>
 #include <Swiften/JID/JID.h>
 #include <Swiften/Elements/DiscoInfo.h>
 #include <Swiften/Elements/DiscoItems.h>
 #include <Swiften/Elements/ErrorPayload.h>
+#include <Swiften/Disco/GetDiscoItemsRequest.h>
 #include <Swift/Controllers/UIEvents/UIEvent.h>
 
 namespace Swift {
@@ -33,5 +35,6 @@ namespace Swift {
 			UIEventStream* uiEventStream_;
 			MainWindow* mainWindow_;
 			AdHocCommandWindowFactory* factory_;
+			GetDiscoItemsRequest::ref discoItemsRequest_;
 	};
 }
