@@ -21,22 +21,24 @@ void OutgoingAdHocCommandSession::handleResponse(boost::shared_ptr<Command> payl
 	} else {
 		const std::vector<Command::Action> actions = payload->getAvailableActions();
 		actionStates_.clear();
-		actionStates_[Command::Cancel] = EnabledAndPresent;
-		actionStates_[Command::Complete] = Present;
-		if (std::find(actions.begin(), actions.end(), Command::Complete) != actions.end()) {
-			actionStates_[Command::Complete] = EnabledAndPresent;
-		}
+		if (payload->getStatus() == Command::Executing ) {
+			actionStates_[Command::Cancel] = EnabledAndPresent;
+			actionStates_[Command::Complete] = Present;
+			if (std::find(actions.begin(), actions.end(), Command::Complete) != actions.end()) {
+				actionStates_[Command::Complete] = EnabledAndPresent;
+			}
 
-		if (getIsMultiStage()) {
-			actionStates_[Command::Next] = Present;
-			actionStates_[Command::Prev] = Present;
-		}
+			if (getIsMultiStage()) {
+				actionStates_[Command::Next] = Present;
+				actionStates_[Command::Prev] = Present;
+			}
 
 		if (std::find(actions.begin(), actions.end(), Command::Next) != actions.end()) {
-			actionStates_[Command::Next] = EnabledAndPresent;
-		}
+				actionStates_[Command::Next] = EnabledAndPresent;
+			}
 		if (std::find(actions.begin(), actions.end(), Command::Prev) != actions.end()) {
-			actionStates_[Command::Prev] = EnabledAndPresent;
+				actionStates_[Command::Prev] = EnabledAndPresent;
+			}
 		}
 
 		sessionID_ = payload->getSessionID();

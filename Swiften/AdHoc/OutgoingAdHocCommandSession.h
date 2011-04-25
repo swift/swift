@@ -73,6 +73,7 @@ namespace Swift {
 			 * This is useful for a UI to determine which buttons should be visible,
 			 * and which enabled.
 			 * Use for Next, Prev, Cancel and Complete only.
+			 * If no actions are available, the command has completed.
 			 */
 			ActionState getActionState(Command::Action action);
 		private:
