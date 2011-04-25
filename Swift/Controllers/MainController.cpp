@@ -18,7 +18,7 @@
 #include <Swift/Controllers/UIInterfaces/UIFactory.h>
 #include "Swiften/Network/TimerFactory.h"
 #include "Swift/Controllers/BuildVersion.h"
-#include "Swift/Controllers/Storages/StoragesFactory.h"
+#include "Swiften/Client/Storages.h"
 #include "Swiften/VCards/VCardManager.h"
 #include "Swift/Controllers/Chat/UserSearchController.h"
 #include "Swift/Controllers/Chat/ChatsManager.h"
@@ -39,6 +39,7 @@
 #include "Swift/Controllers/UIEvents/UIEventStream.h"
 #include "Swift/Controllers/PresenceNotifier.h"
 #include "Swift/Controllers/EventNotifier.h"
+#include "Swift/Controllers/Storages/StoragesFactory.h"
 #include "SwifTools/Dock/Dock.h"
 #include "SwifTools/Notifier/TogglableNotifier.h"
 #include "Swiften/Base/foreach.h"

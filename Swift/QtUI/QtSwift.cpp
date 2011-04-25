@@ -18,13 +18,11 @@
 #include "QtUIFactory.h"
 #include "QtChatWindowFactory.h"
 #include <Swiften/Base/Log.h>
-#include <Swift/Controllers/CertificateFileStorageFactory.h>
+#include <Swift/Controllers/Storages/CertificateFileStorageFactory.h>
+#include "Swift/Controllers/Storages/FileStoragesFactory.h"
 #include "SwifTools/Application/PlatformApplicationPathProvider.h"
-#include "Swiften/Avatars/AvatarFileStorage.h"
-#include "Swiften/Disco/CapsFileStorage.h"
 #include <string>
 #include "Swiften/Base/Platform.h"
-#include "Swift/Controllers/FileStoragesFactory.h"
 #include "Swiften/Elements/Presence.h"
 #include "Swiften/Client/Client.h"
 #include "Swift/Controllers/MainController.h"

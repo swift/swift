@@ -7,7 +7,7 @@
 #pragma once
 
 #include "Swift/Controllers/Storages/StoragesFactory.h"
-#include "Swiften/Client/FileStorages.h"
+#include "Swift/Controllers/Storages/FileStorages.h"
 
 namespace Swift {
 	class FileStoragesFactory : public StoragesFactory {
