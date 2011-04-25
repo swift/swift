@@ -4,7 +4,7 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include <Swiften/Avatars/AvatarFileStorage.h>
+#include <Swift/Controllers/Storages/AvatarFileStorage.h>
 
 #include <iostream>
 #include <boost/filesystem/fstream.hpp>

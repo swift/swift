@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include "Swift/Controllers/StoragesFactory.h"
+#include "Swift/Controllers/Storages/StoragesFactory.h"
 #include "Swiften/Client/FileStorages.h"
 
 namespace Swift {

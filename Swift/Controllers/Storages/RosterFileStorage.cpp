@@ -4,7 +4,7 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include <Swiften/Roster/RosterFileStorage.h>
+#include <Swift/Controllers/Storages/RosterFileStorage.h>
 
 #include <Swiften/Entity/GenericPayloadPersister.h>
 #include <Swiften/Serializer/PayloadSerializers/RosterSerializer.h>

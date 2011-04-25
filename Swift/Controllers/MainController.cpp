@@ -18,8 +18,7 @@
 #include <Swift/Controllers/UIInterfaces/UIFactory.h>
 #include "Swiften/Network/TimerFactory.h"
 #include "Swift/Controllers/BuildVersion.h"
-#include "Swift/Controllers/StoragesFactory.h"
-#include "Swiften/Client/Storages.h"
+#include "Swift/Controllers/Storages/StoragesFactory.h"
 #include "Swiften/VCards/VCardManager.h"
 #include "Swift/Controllers/Chat/UserSearchController.h"
 #include "Swift/Controllers/Chat/ChatsManager.h"
@@ -59,8 +58,8 @@
 #include "Swift/Controllers/UIEvents/RequestChatUIEvent.h"
 #include "Swift/Controllers/UIEvents/ToggleNotificationsUIEvent.h"
 #include "Swift/Controllers/UIEvents/JoinMUCUIEvent.h"
-#include "Swift/Controllers/CertificateStorageFactory.h"
-#include "Swift/Controllers/CertificateStorageTrustChecker.h"
+#include "Swift/Controllers/Storages/CertificateStorageFactory.h"
+#include "Swift/Controllers/Storages/CertificateStorageTrustChecker.h"
 #include "Swiften/Network/NetworkFactories.h"
 #include <Swift/Controllers/ProfileController.h>
 #include <Swift/Controllers/ContactEditController.h>

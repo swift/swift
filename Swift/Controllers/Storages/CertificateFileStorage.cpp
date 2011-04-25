@@ -4,7 +4,7 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include <Swift/Controllers/CertificateFileStorage.h>
+#include <Swift/Controllers/Storages/CertificateFileStorage.h>
 
 #include <iostream>
 #include <boost/filesystem/fstream.hpp>

@@ -1,7 +1,6 @@
 Import("swiften_env")
 
 objects = swiften_env.SwiftenObject([
-			"AvatarFileStorage.cpp",
 			"VCardUpdateAvatarManager.cpp",
 			"VCardAvatarManager.cpp",
 			"OfflineAvatarManager.cpp",

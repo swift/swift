@@ -6,8 +6,8 @@
 
 #pragma once
 
-#include <Swift/Controllers/CertificateStorageFactory.h>
-#include <Swift/Controllers/CertificateFileStorage.h>
+#include <Swift/Controllers/Storages/CertificateStorageFactory.h>
+#include <Swift/Controllers/Storages/CertificateFileStorage.h>
 
 namespace Swift {
 	class CertificateFactory;

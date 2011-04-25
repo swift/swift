@@ -4,7 +4,7 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "Swiften/VCards/VCardFileStorage.h"
+#include "Swift/Controllers/Storages/VCardFileStorage.h"
 
 #include <boost/filesystem/fstream.hpp>
 #include <boost/filesystem.hpp>

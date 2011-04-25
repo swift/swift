@@ -8,7 +8,7 @@
 
 #include <boost/filesystem.hpp>
 
-#include "Swift/Controllers/CertificateStorage.h"
+#include "Swift/Controllers/Storages/CertificateStorage.h"
 
 namespace Swift {
 	class CertificateFactory;

@@ -4,7 +4,7 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "Swiften/Disco/CapsFileStorage.h"
+#include "Swift/Controllers/Storages/CapsFileStorage.h"
 
 #include <Swiften/Entity/GenericPayloadPersister.h>
 #include "Swiften/Serializer/PayloadSerializers/DiscoInfoSerializer.h"

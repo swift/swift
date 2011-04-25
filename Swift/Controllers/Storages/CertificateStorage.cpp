@@ -4,11 +4,11 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include <Swift/Controllers/CertificateStorageFactory.h>
+#include "Swift/Controllers/Storages/CertificateStorage.h"
 
 namespace Swift {
 
-CertificateStorageFactory::~CertificateStorageFactory() {
+CertificateStorage::~CertificateStorage() {
 }
 
 }
