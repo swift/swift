@@ -42,6 +42,9 @@ vars.Add("expat_libname", "Expat library name", "libexpat" if os.name == "nt" el
 vars.Add(PathVariable("libidn_includedir", "LibIDN headers location", None, PathVariable.PathAccept))
 vars.Add(PathVariable("libidn_libdir", "LibIDN library location", None, PathVariable.PathAccept))
 vars.Add("libidn_libname", "LibIDN library name", "libidn" if os.name == "nt" else "idn")
+vars.Add(PathVariable("sqlite_includedir", "SQLite headers location", None, PathVariable.PathAccept))
+vars.Add(PathVariable("sqlite_libdir", "SQLite library location", None, PathVariable.PathAccept))
+vars.Add("sqlite_libname", "SQLite library name", "libsqlite3" if os.name == "nt" else "sqlite3")
 vars.Add(PathVariable("avahi_includedir", "Avahi headers location", None, PathVariable.PathAccept))
 vars.Add(PathVariable("avahi_libdir", "Avahi library location", None, PathVariable.PathAccept))
 vars.Add(PathVariable("qt", "Qt location", "", PathVariable.PathAccept))
@@ -544,6 +547,23 @@ if conf.CheckCHeader("idna.h") and conf.CheckLib(env["libidn_libname"]) :
 	env["LIBIDN_FLAGS"].update(libidn_flags)
 else :
 	env["LIBIDN_BUNDLED"] = 1
+conf.Finish()
+
+# SQLite
+sqlite_conf_env = conf_env.Clone()
+sqlite_flags = {}
+if env.get("sqlite_libdir", None) :
+	sqlite_flags["LIBPATH"] = [env["sqlite_libdir"]]
+if env.get("sqlite_includedir", None) :
+	sqlite_flags["CPPPATH"] = [env["sqlite_includedir"]]
+sqlite_conf_env.MergeFlags(sqlite_flags)
+conf = Configure(sqlite_conf_env)
+if conf.CheckCHeader("sqlite3.h") and conf.CheckLib(env["sqlite_libname"]) :
+	env["HAVE_SQLITE"] = 1
+	env["SQLITE_FLAGS"] = { "LIBS": [env["sqlite_libname"]] }
+	env["SQLITE_FLAGS"].update(sqlite_flags)
+else :
+	env["SQLITE_BUNDLED"] = 1
 conf.Finish()
 
 # Lua
