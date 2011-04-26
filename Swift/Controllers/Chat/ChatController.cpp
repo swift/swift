@@ -117,7 +117,7 @@ void ChatController::preSendMessageRequest(boost::shared_ptr<Message> message) {
 
 void ChatController::postSendMessage(const std::string& body, boost::shared_ptr<Stanza> sentStanza) {
 	std::string id = addMessage(body, QT_TRANSLATE_NOOP("", "me"), true, labelsEnabled_ ? chatWindow_->getSelectedSecurityLabel().getLabel() : boost::shared_ptr<SecurityLabel>(), std::string(avatarManager_->getAvatarPath(selfJID_).string()), boost::posix_time::microsec_clock::universal_time());
-	if (stanzaChannel_->getStreamManagementEnabled()) {
+	if (stanzaChannel_->getStreamManagementEnabled() && !id.empty()) {
 		chatWindow_->setAckState(id, ChatWindow::Pending);
 		unackedStanzas_[sentStanza] = id;
 	}
@@ -126,11 +126,11 @@ void ChatController::postSendMessage(const std::string& body, boost::shared_ptr<
 }
 
 void ChatController::handleStanzaAcked(boost::shared_ptr<Stanza> stanza) {
-	std::string id = unackedStanzas_[stanza];
-	if (id != "") {
-		chatWindow_->setAckState(id, ChatWindow::Received);
+	std::map<boost::shared_ptr<Stanza>, std::string>::iterator unackedStanza = unackedStanzas_.find(stanza);
+	if (unackedStanza != unackedStanzas_.end()) {
+		chatWindow_->setAckState(unackedStanza->second, ChatWindow::Received);
+		unackedStanzas_.erase(unackedStanza);
 	}
-	unackedStanzas_.erase(unackedStanzas_.find(stanza));
 }
 
 void ChatController::setOnline(bool online) {
