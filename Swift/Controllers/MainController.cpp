@@ -362,19 +362,25 @@ void MainController::handleInputIdleChanged(bool idle) {
 }
 
 void MainController::handleLoginRequest(const std::string &username, const std::string &password, const std::string& certificateFile, bool remember, bool loginAutomatically) {
-	loginWindow_->setMessage("");
-	loginWindow_->setIsLoggingIn(true);
-	profileSettings_ = new ProfileSettingsProvider(username, settings_);
-	profileSettings_->storeString("jid", username);
-	profileSettings_->storeString("certificate", certificateFile);
-	profileSettings_->storeString("pass", (remember || loginAutomatically) ? password : "");
-	settings_->storeString("lastLoginJID", username);
-	settings_->storeBool("loginAutomatically", loginAutomatically);
-	loginWindow_->addAvailableAccount(profileSettings_->getStringSetting("jid"), profileSettings_->getStringSetting("pass"), profileSettings_->getStringSetting("certificate"));
 	jid_ = JID(username);
-	password_ = password;
-	certificateFile_ = certificateFile;
-	performLoginFromCachedCredentials();
+	if (!jid_.isValid() || jid_.getNode().empty()) {
+		loginWindow_->setMessage(QT_TRANSLATE_NOOP("", "Username not a valid format"));
+		loginWindow_->setIsLoggingIn(false);
+	} else {
+		loginWindow_->setMessage("");
+		loginWindow_->setIsLoggingIn(true);
+		profileSettings_ = new ProfileSettingsProvider(username, settings_);
+		profileSettings_->storeString("jid", username);
+		profileSettings_->storeString("certificate", certificateFile);
+		profileSettings_->storeString("pass", (remember || loginAutomatically) ? password : "");
+		settings_->storeString("lastLoginJID", username);
+		settings_->storeBool("loginAutomatically", loginAutomatically);
+		loginWindow_->addAvailableAccount(profileSettings_->getStringSetting("jid"), profileSettings_->getStringSetting("pass"), profileSettings_->getStringSetting("certificate"));
+
+		password_ = password;
+		certificateFile_ = certificateFile;
+		performLoginFromCachedCredentials();
+	}
 }
 
 void MainController::handlePurgeSavedLoginRequest(const std::string& username) {
