@@ -495,6 +495,7 @@ void MainController::handleDisconnected(const boost::optional<ClientError>& erro
 		else if (!rosterController_) { //hasn't been logged in yet
 			signOut();
 			loginWindow_->setMessage(message);
+			loginWindow_->setIsLoggingIn(false);
 		} else {
 			logout();
 			setReconnectTimer();
@@ -507,6 +508,9 @@ void MainController::handleDisconnected(const boost::optional<ClientError>& erro
 			lastDisconnectError_ = boost::shared_ptr<ErrorEvent>(new ErrorEvent(JID(jid_.getDomain()), message));
 			eventController_->handleIncomingEvent(lastDisconnectError_);
 		}
+	}
+	else if (!rosterController_) { //hasn't been logged in yet
+		loginWindow_->setIsLoggingIn(false);
 	}
 }
 
