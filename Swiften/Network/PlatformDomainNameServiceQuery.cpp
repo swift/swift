@@ -160,7 +160,7 @@ void PlatformDomainNameServiceQuery::runBlocking() {
 
 	std::sort(records.begin(), records.end(), ResultPriorityComparator());
 	//std::cout << "Sending out " << records.size() << " SRV results " << std::endl;
-	eventLoop->postEvent(boost::bind(boost::ref(onResult), records));
+	eventLoop->postEvent(boost::bind(boost::ref(onResult), records), shared_from_this());
 }
 
 void PlatformDomainNameServiceQuery::emitError() {
