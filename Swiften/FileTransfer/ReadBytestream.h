@@ -7,6 +7,7 @@
 #pragma once
 
 #include <vector>
+#include <cstring>
 
 namespace Swift {
 	class ReadBytestream {
