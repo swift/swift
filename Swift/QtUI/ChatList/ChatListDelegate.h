@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Kevin Smith
+ * Copyright (c) 2010-2011 Kevin Smith
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -12,6 +12,7 @@
 
 namespace Swift {
 	class ChatListMUCItem;
+	class ChatListRecentItem;
 	class ChatListDelegate : public QStyledItemDelegate {
 		public:
 			ChatListDelegate();
@@ -20,7 +21,9 @@ namespace Swift {
 			void paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const;
 		private:
 			void paintMUC(QPainter* painter, const QStyleOptionViewItem& option, ChatListMUCItem* item) const;
+			void paintRecent(QPainter* painter, const QStyleOptionViewItem& option, ChatListRecentItem* item) const;
 			QSize mucSizeHint(const QStyleOptionViewItem& /*option*/, const QModelIndex& /*index*/ ) const;
+			QSize recentSizeHint(const QStyleOptionViewItem& /*option*/, const QModelIndex& /*index*/ ) const;
 
 			DelegateCommons common_;
 			GroupItemDelegate* groupDelegate_;

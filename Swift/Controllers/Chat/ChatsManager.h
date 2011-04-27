@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Kevin Smith
+ * Copyright (c) 2010-2011 Kevin Smith
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -11,13 +11,14 @@
 #include <boost/shared_ptr.hpp>
 
 #include <string>
-#include "Swiften/Elements/DiscoInfo.h"
-#include "Swiften/Elements/Message.h"
-#include "Swiften/Elements/Presence.h"
-#include "Swiften/JID/JID.h"
-#include "Swiften/MUC/MUCRegistry.h"
-#include "Swift/Controllers/UIEvents/UIEventStream.h"
-#include "Swiften/MUC/MUCBookmark.h"
+#include <Swiften/Elements/DiscoInfo.h>
+#include <Swiften/Elements/Message.h>
+#include <Swiften/Elements/Presence.h>
+#include <Swiften/JID/JID.h>
+#include <Swiften/MUC/MUCRegistry.h>
+#include <Swift/Controllers/UIEvents/UIEventStream.h>
+#include <Swift/Controllers/UIInterfaces/ChatListWindow.h>
+#include <Swiften/MUC/MUCBookmark.h>
 
 namespace Swift {
 	class EventController;
@@ -34,7 +35,6 @@ namespace Swift {
 	class IQRouter;
 	class PresenceSender;
 	class MUCBookmarkManager;
-	class ChatListWindow;
 	class ChatListWindowFactory;
 	class TimerFactory;
 	class EntityCapsProvider;
@@ -52,12 +52,6 @@ namespace Swift {
 			void setServerDiscoInfo(boost::shared_ptr<DiscoInfo> info);
 			void handleIncomingMessage(boost::shared_ptr<Message> message);
 		private:
-			class Chat {
-				public: Chat(const JID& jid, bool isMUC, const std::string& nick) : jid(jid), isMUC(isMUC), nick(nick) {}
-				JID jid;
-				bool isMUC;
-				std::string nick;
-			};
 			void handleChatRequest(const std::string& contact);
 			void handleJoinMUCRequest(const JID& muc, const boost::optional<std::string>& nick, bool autoJoin);
 			void handleSearchMUCRequest();
@@ -69,6 +63,7 @@ namespace Swift {
 			void handleMUCBookmarkRemoved(const MUCBookmark& bookmark);
 			void handleUserLeftMUC(MUCController* mucController);
 			void handleBookmarksReady();
+			void handleChatActivity(const JID& jid, const std::string& activity);
 			void setupBookmarks();
 			void loadRecents();
 			void saveRecents();
@@ -101,6 +96,6 @@ namespace Swift {
 			EntityCapsProvider* entityCapsProvider_;
 			MUCManager* mucManager;
 			MUCSearchController* mucSearchController_;
-			std::vector<Chat> recentChats_;
+			std::list<ChatListWindow::Chat> recentChats_;
 	};
 }

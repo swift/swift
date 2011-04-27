@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Kevin Smith
+ * Copyright (c) 2010-2011 Kevin Smith
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -11,9 +11,10 @@
 #include <QAbstractItemModel>
 #include <QList>
 
-#include "Swiften/MUC/MUCBookmark.h"
+#include <Swiften/MUC/MUCBookmark.h>
+#include <Swift/Controllers/UIInterfaces/ChatListWindow.h>
 
-#include "Swift/QtUI/ChatList/ChatListGroupItem.h"
+#include <Swift/QtUI/ChatList/ChatListGroupItem.h>
 
 namespace Swift {
 	class ChatListModel : public QAbstractItemModel {
@@ -28,9 +29,11 @@ namespace Swift {
 			QModelIndex parent(const QModelIndex& index) const;
 			int rowCount(const QModelIndex& parent = QModelIndex()) const;
 			ChatListItem* getItemForIndex(const QModelIndex& index) const;
-			void clear();
+			void clearBookmarks();
+			void setRecents(const std::list<ChatListWindow::Chat>& recents);
 		private:
 			ChatListGroupItem* mucBookmarks_;
+			ChatListGroupItem* recents_;
 			ChatListGroupItem* root_;
 	};
 

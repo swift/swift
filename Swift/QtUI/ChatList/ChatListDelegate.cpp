@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Kevin Smith
+ * Copyright (c) 2010-2011 Kevin Smith
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -11,6 +11,7 @@
 #include "Swift/QtUI/Roster/GroupItemDelegate.h"
 #include "Swift/QtUI/ChatList/ChatListItem.h"
 #include "Swift/QtUI/ChatList/ChatListMUCItem.h"
+#include "Swift/QtUI/ChatList/ChatListRecentItem.h"
 #include "Swift/QtUI/ChatList/ChatListGroupItem.h"
 
 namespace Swift {
@@ -27,7 +28,11 @@ QSize ChatListDelegate::sizeHint(const QStyleOptionViewItem& option, const QMode
 	ChatListItem* item = static_cast<ChatListItem*>(index.internalPointer());
 	if (item && dynamic_cast<ChatListMUCItem*>(item)) {
 		return mucSizeHint(option, index);
-	} else if (item && dynamic_cast<ChatListGroupItem*>(item)) {
+	}
+	else if (item && dynamic_cast<ChatListRecentItem*>(item)) {
+		return recentSizeHint(option, index);
+	}
+	else if (item && dynamic_cast<ChatListGroupItem*>(item)) {
 		return groupDelegate_->sizeHint(option, index);
 	} 
 	return QStyledItemDelegate::sizeHint(option, index);
@@ -40,14 +45,23 @@ QSize ChatListDelegate::mucSizeHint(const QStyleOptionViewItem& /*option*/, cons
 	return QSize(150, sizeByText);
 }
 
+QSize ChatListDelegate::recentSizeHint(const QStyleOptionViewItem& option, const QModelIndex& index) const {
+	return mucSizeHint(option, index);
+}
+
 void ChatListDelegate::paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const {
 	ChatListItem* item = static_cast<ChatListItem*>(index.internalPointer());
 	if (item && dynamic_cast<ChatListMUCItem*>(item)) {
 		paintMUC(painter, option, dynamic_cast<ChatListMUCItem*>(item));
-	} else if (item && dynamic_cast<ChatListGroupItem*>(item)) {
+	}
+	else if (item && dynamic_cast<ChatListRecentItem*>(item)) {
+		paintRecent(painter, option, dynamic_cast<ChatListRecentItem*>(item));
+	}
+	else if (item && dynamic_cast<ChatListGroupItem*>(item)) {
 		ChatListGroupItem* group = dynamic_cast<ChatListGroupItem*>(item);
 		groupDelegate_->paint(painter, option, group->data(Qt::DisplayRole).toString(), group->rowCount(), option.state & QStyle::State_Open); 
-	} else {
+	}
+	else {
 		QStyledItemDelegate::paint(painter, option, index);
 	}
 }
@@ -78,8 +92,39 @@ void ChatListDelegate::paintMUC(QPainter* painter, const QStyleOptionViewItem& o
 	painter->setPen(QPen(QColor(160,160,160)));
 	
 	QRect detailRegion(textRegion.adjusted(0, nameHeight, 0, 0));
-	DelegateCommons::drawElidedText(painter, detailRegion, item->data(DetailTextRole).toString());
+	DelegateCommons::drawElidedText(painter, detailRegion, item->data(ChatListMUCItem::DetailTextRole).toString());
 	
+	painter->restore();
+}
+
+void ChatListDelegate::paintRecent(QPainter* painter, const QStyleOptionViewItem& option, ChatListRecentItem* item) const {
+	painter->save();
+	QRect fullRegion(option.rect);
+	if ( option.state & QStyle::State_Selected ) {
+		painter->fillRect(fullRegion, option.palette.highlight());
+		painter->setPen(option.palette.highlightedText().color());
+	} else {
+		QColor nameColor = item->data(Qt::TextColorRole).value<QColor>();
+		painter->setPen(QPen(nameColor));
+	}
+
+	QFontMetrics nameMetrics(common_.nameFont);
+	painter->setFont(common_.nameFont);
+	int extraFontWidth = nameMetrics.width("H");
+	int leftOffset = common_.horizontalMargin * 2 + extraFontWidth / 2;
+	QRect textRegion(fullRegion.adjusted(leftOffset, 0, 0, 0));
+
+	int nameHeight = nameMetrics.height() + common_.verticalMargin;
+	QRect nameRegion(textRegion.adjusted(0, common_.verticalMargin, 0, 0));
+
+	DelegateCommons::drawElidedText(painter, nameRegion, item->data(Qt::DisplayRole).toString());
+
+	painter->setFont(common_.detailFont);
+	painter->setPen(QPen(QColor(160,160,160)));
+
+	QRect detailRegion(textRegion.adjusted(0, nameHeight, 0, 0));
+	DelegateCommons::drawElidedText(painter, detailRegion, item->data(ChatListRecentItem::DetailTextRole).toString());
+
 	painter->restore();
 }
 

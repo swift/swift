@@ -10,6 +10,7 @@
 
 #include "Swift/Controllers/Chat/ChatsManager.h"
 
+#include "Swift/Controllers/Chat/UnitTest/MockChatListWindow.h"
 #include "Swift/Controllers/UIInterfaces/ChatWindow.h"
 #include "Swift/Controllers/Settings/DummySettingsProvider.h"
 #include "Swift/Controllers/UIInterfaces/ChatWindowFactory.h"
@@ -82,7 +83,8 @@ public:
 		chatListWindowFactory_ = mocks_->InterfaceMock<ChatListWindowFactory>();
 		mucSearchWindowFactory_ = mocks_->InterfaceMock<MUCSearchWindowFactory>();
 		settings_ = new DummySettingsProvider();
-		mocks_->ExpectCall(chatListWindowFactory_, ChatListWindowFactory::createChatListWindow).With(uiEventStream_).Return(NULL);
+		chatListWindow_ = new MockChatListWindow();
+		mocks_->ExpectCall(chatListWindowFactory_, ChatListWindowFactory::createChatListWindow).With(uiEventStream_).Return(chatListWindow_);
 		manager_ = new ChatsManager(jid_, stanzaChannel_, iqRouter_, eventController_, chatWindowFactory_, joinMUCWindowFactory_, nickResolver_, presenceOracle_, directedPresenceSender_, uiEventStream_, chatListWindowFactory_, true, NULL, mucRegistry_, entityCapsManager_, mucManager_, mucSearchWindowFactory_, settings_);
 
 		avatarManager_ = new NullAvatarManager();
@@ -109,6 +111,7 @@ public:
 		delete xmppRoster_;
 		delete entityCapsManager_;
 		delete capsProvider_;
+		delete chatListWindow_;
 	}
 
 	void testFirstOpenWindowIncoming() {
@@ -346,6 +349,7 @@ private:
 	CapsProvider* capsProvider_;
 	MUCManager* mucManager_;
 	DummySettingsProvider* settings_;
+	ChatListWindow* chatListWindow_;
 };
 
 CPPUNIT_TEST_SUITE_REGISTRATION(ChatsManagerTest);

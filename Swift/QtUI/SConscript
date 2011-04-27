@@ -117,6 +117,7 @@ sources = [
     "ChatList/ChatListModel.cpp",
     "ChatList/ChatListDelegate.cpp",
     "ChatList/ChatListMUCItem.cpp",
+    "ChatList/ChatListRecentItem.cpp",
     "MUCSearch/QtMUCSearchWindow.cpp",
     "MUCSearch/MUCSearchModel.cpp",
     "MUCSearch/MUCSearchRoomItem.cpp",

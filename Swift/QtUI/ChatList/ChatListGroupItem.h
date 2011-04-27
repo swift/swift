@@ -13,8 +13,8 @@
 namespace Swift {
 	class ChatListGroupItem : public ChatListItem {
 		public:
-			ChatListGroupItem(const QString& name, ChatListGroupItem* parent) : ChatListItem(parent), name_(name) {};
-			void addItem(ChatListItem* item) {items_.push_back(item); qStableSort(items_.begin(), items_.end(), pointerItemLessThan);};
+			ChatListGroupItem(const QString& name, ChatListGroupItem* parent, bool sorted = true) : ChatListItem(parent), name_(name), sorted_(sorted) {};
+			void addItem(ChatListItem* item) {items_.push_back(item); if (sorted_) {qStableSort(items_.begin(), items_.end(), pointerItemLessThan);}};
 			void remove(int index) {items_.removeAt(index);};
 			int rowCount() {return items_.size();};
 			ChatListItem* item(int i) {return items_[i];};
@@ -30,5 +30,6 @@ namespace Swift {
 
 			QString name_;
 			QList<ChatListItem*> items_;
+			bool sorted_;
 	};
 }

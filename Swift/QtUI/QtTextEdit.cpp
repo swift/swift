@@ -4,7 +4,7 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "QtTextEdit.h"
+#include <Swift/QtUI/QtTextEdit.h>
 
 #include <QFontMetrics>
 #include <QKeyEvent>
@@ -22,19 +22,19 @@ void QtTextEdit::keyPressEvent(QKeyEvent* event) {
 	if ((key == Qt::Key_Enter || key == Qt::Key_Return)
 		&& (modifiers == Qt::NoModifier || modifiers == Qt::KeypadModifier)) {
 		emit returnPressed();
-	} else if (((key == Qt::Key_PageUp || key == Qt::Key_PageDown) && modifiers == Qt::ShiftModifier)
+	}
+	else if (((key == Qt::Key_PageUp || key == Qt::Key_PageDown) && modifiers == Qt::ShiftModifier)
 			   || (key == Qt::Key_C && modifiers == Qt::ControlModifier && textCursor().selectedText().isEmpty())
 			   || (key == Qt::Key_W && modifiers == Qt::ControlModifier)
 			   || (key == Qt::Key_PageUp && modifiers == Qt::ControlModifier)
 			   || (key == Qt::Key_PageDown && modifiers == Qt::ControlModifier)
-//			   || (key == Qt::Key_Left && modifiers == (Qt::ControlModifier | Qt::ShiftModifier))
-//			   || (key == Qt::Key_Right && modifiers == (Qt::ControlModifier | Qt::ShiftModifier))
 			   || (key == Qt::Key_Tab && modifiers == Qt::ControlModifier)
 			   || (key == Qt::Key_A && modifiers == Qt::AltModifier)
 			   || (key == Qt::Key_Tab)
 	) {
 		emit unhandledKeyPressEvent(event);
-	} else {
+	}
+	else {
 		QTextEdit::keyPressEvent(event);
 	}
 }

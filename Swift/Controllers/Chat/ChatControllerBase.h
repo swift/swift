@@ -47,6 +47,8 @@ namespace Swift {
 			virtual void setOnline(bool online);
 			virtual void setEnabled(bool enabled);
 			virtual void setToJID(const JID& jid) {toJID_ = jid;};
+			/** Used for determining when something is recent.*/
+			boost::signal<void (const std::string& /*activity*/)> onActivity;
 		protected:
 			ChatControllerBase(const JID& self, StanzaChannel* stanzaChannel, IQRouter* iqRouter, ChatWindowFactory* chatWindowFactory, const JID &toJID, PresenceOracle* presenceOracle, AvatarManager* avatarManager, bool useDelayForLatency, UIEventStream* eventStream, EventController* eventController, TimerFactory* timerFactory);
 

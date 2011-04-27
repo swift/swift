@@ -106,6 +106,7 @@ void ChatControllerBase::handleSendMessageRequest(const std::string &body) {
 	}
 	stanzaChannel_->sendMessage(message);
 	postSendMessage(message->getBody(), boost::dynamic_pointer_cast<Stanza>(message));
+	onActivity(message->getBody());
 }
 
 void ChatControllerBase::handleSecurityLabelsCatalogResponse(boost::shared_ptr<SecurityLabelsCatalog> catalog, ErrorPayload::ref error) {
@@ -181,6 +182,7 @@ void ChatControllerBase::handleIncomingMessage(boost::shared_ptr<MessageEvent> m
 		}
 
 		addMessage(body, senderDisplayNameFromMessage(from), isIncomingMessageFromMe(message), label, std::string(avatarManager_->getAvatarPath(from).string()), timeStamp);
+		onActivity(body);
 	}
 	chatWindow_->show();
 	chatWindow_->setUnreadMessageCount(unreadMessages_.size());

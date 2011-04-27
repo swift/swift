@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Kevin Smith
+ * Copyright (c) 2010-2011 Kevin Smith
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -10,9 +10,11 @@
 #include <QContextMenuEvent>
 
 #include "Swift/QtUI/ChatList/ChatListMUCItem.h"
+#include "Swift/QtUI/ChatList/ChatListRecentItem.h"
 #include "Swift/QtUI/QtAddBookmarkWindow.h"
 #include "Swift/QtUI/QtEditBookmarkWindow.h"
 #include "Swift/Controllers/UIEvents/JoinMUCUIEvent.h"
+#include "Swift/Controllers/UIEvents/RequestChatUIEvent.h"
 #include "Swift/Controllers/UIEvents/AddMUCBookmarkUIEvent.h"
 #include "Swift/Controllers/UIEvents/RemoveMUCBookmarkUIEvent.h"
 #include "Swift/Controllers/UIEvents/EditMUCBookmarkUIEvent.h"
@@ -77,10 +79,15 @@ void QtChatListWindow::handleItemActivated(const QModelIndex& index) {
 		boost::shared_ptr<UIEvent> event(new JoinMUCUIEvent(mucItem->getBookmark().getRoom(), mucItem->getBookmark().getNick()));
 		eventStream_->send(event);
 	}
+	ChatListRecentItem* recentItem = dynamic_cast<ChatListRecentItem*>(item);
+	if (recentItem) {
+		boost::shared_ptr<UIEvent> event(new RequestChatUIEvent(recentItem->getChat().jid));
+		eventStream_->send(event);
+	}
 }
 
-void QtChatListWindow::clear() {
-	model_->clear();
+void QtChatListWindow::clearBookmarks() {
+	model_->clearBookmarks();
 }
 
 void QtChatListWindow::addMUCBookmark(const MUCBookmark& bookmark) {
@@ -89,6 +96,10 @@ void QtChatListWindow::addMUCBookmark(const MUCBookmark& bookmark) {
 
 void QtChatListWindow::removeMUCBookmark(const MUCBookmark& bookmark) {
 	model_->removeMUCBookmark(bookmark);
+}
+
+void QtChatListWindow::setRecents(const std::list<ChatListWindow::Chat>& recents) {
+	model_->setRecents(recents);
 }
 
 void QtChatListWindow::handleRemoveBookmark() {

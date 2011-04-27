@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Kevin Smith
+ * Copyright (c) 2010-2011 Kevin Smith
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -99,7 +99,7 @@ void ChatsManager::setupBookmarks() {
 
 		if (chatListWindow_) {
 			chatListWindow_->setBookmarksEnabled(false);
-			chatListWindow_->clear();
+			chatListWindow_->clearBookmarks();
 		}
 	}
 }
@@ -121,6 +121,15 @@ void ChatsManager::handleMUCBookmarkAdded(const MUCBookmark& bookmark) {
 
 void ChatsManager::handleMUCBookmarkRemoved(const MUCBookmark& bookmark) {
 	chatListWindow_->removeMUCBookmark(bookmark);
+}
+
+void ChatsManager::handleChatActivity(const JID& jid, const std::string& activity) {
+	/* FIXME: MUC use requires changes here. */
+	ChatListWindow::Chat chat(jid, nickResolver_->jidToNick(jid), activity, false);
+	/* FIXME: handle nick changes */
+	recentChats_.erase(std::remove(recentChats_.begin(), recentChats_.end(), chat), recentChats_.end());
+	recentChats_.push_front(chat);
+	chatListWindow_->setRecents(recentChats_);
 }
 
 void ChatsManager::handleUserLeftMUC(MUCController* mucController) {
@@ -245,6 +254,7 @@ ChatController* ChatsManager::createNewChatController(const JID& contact) {
 	ChatController* controller = new ChatController(jid_, stanzaChannel_, iqRouter_, chatWindowFactory_, contact, nickResolver_, presenceOracle_, avatarManager_, mucRegistry_->isMUC(contact.toBare()), useDelayForLatency_, uiEventStream_, eventController_, timerFactory_, entityCapsProvider_);
 	chatControllers_[contact] = controller;
 	controller->setAvailableServerFeatures(serverDiscoInfo_);
+	controller->onActivity.connect(boost::bind(&ChatsManager::handleChatActivity, this, contact, _1));
 	return controller;
 }
 
@@ -303,6 +313,7 @@ void ChatsManager::handleJoinMUCRequest(const JID &mucJID, const boost::optional
 		controller->onUserLeft.connect(boost::bind(&ChatsManager::handleUserLeftMUC, this, controller));
 	}
 	mucControllers_[mucJID]->activateChatWindow();
+	/* FIXME: handleChatActivity connection for recents, and changes to that method.*/
 }
 
 void ChatsManager::handleSearchMUCRequest() {

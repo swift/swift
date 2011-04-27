@@ -1,22 +1,25 @@
 /*
- * Copyright (c) 2010 Kevin Smith
+ * Copyright (c) 2010-2011 Kevin Smith
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "Swift/QtUI/ChatList/ChatListModel.h"
+#include <Swift/QtUI/ChatList/ChatListModel.h>
 
-#include "Swift/QtUI/ChatList/ChatListMUCItem.h"
+#include <Swift/QtUI/ChatList/ChatListMUCItem.h>
+#include <Swift/QtUI/ChatList/ChatListRecentItem.h>
 
 namespace Swift {
 
 ChatListModel::ChatListModel() {
 	root_ = new ChatListGroupItem("", NULL);
 	mucBookmarks_ = new ChatListGroupItem(tr("Bookmarked Rooms"), root_);
+	recents_ = new ChatListGroupItem(tr("Recent Chats"), root_, false);
 	root_->addItem(mucBookmarks_);
+	root_->addItem(recents_);
 }
 
-void ChatListModel::clear() {
+void ChatListModel::clearBookmarks() {
 	emit layoutAboutToBeChanged();
 	mucBookmarks_->clear();
 	emit layoutChanged();
@@ -41,6 +44,15 @@ void ChatListModel::removeMUCBookmark(const Swift::MUCBookmark& bookmark) {
 			break;
 		}
 	}
+}
+
+void ChatListModel::setRecents(const std::list<ChatListWindow::Chat>& recents) {
+	emit layoutAboutToBeChanged();
+	recents_->clear();
+	foreach (const ChatListWindow::Chat chat, recents) {
+		recents_->addItem(new ChatListRecentItem(chat, recents_));
+	}
+	emit layoutChanged();
 }
 
 int ChatListModel::columnCount(const QModelIndex& /*parent*/) const {
