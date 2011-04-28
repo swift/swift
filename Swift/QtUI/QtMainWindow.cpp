@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Kevin Smith
+ * Copyright (c) 2010-2011 Kevin Smith
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -21,21 +21,25 @@
 #include <QAction>
 #include <QTabWidget>
 
-#include "QtSwiftUtil.h"
-#include "QtTabWidget.h"
-#include "Roster/QtTreeWidget.h"
-#include "Swift/Controllers/UIEvents/RequestJoinMUCUIEvent.h"
-#include "Swift/Controllers/UIEvents/RequestAddUserDialogUIEvent.h"
-#include "Swift/Controllers/UIEvents/RequestChatWithUserDialogUIEvent.h"
-#include "Swift/Controllers/UIEvents/RequestProfileEditorUIEvent.h"
-#include "Swift/Controllers/UIEvents/JoinMUCUIEvent.h"
-#include "Swift/Controllers/UIEvents/ToggleShowOfflineUIEvent.h"
-#include "Swift/Controllers/UIEvents/RequestAdHocUIEvent.h"
+#include <Swift/QtUI/QtSwiftUtil.h>
+#include <Swift/QtUI/QtTabWidget.h>
+#include <Swift/QtUI/QtSettingsProvider.h>
+#include <Roster/QtTreeWidget.h>
+#include <Swift/Controllers/UIEvents/RequestJoinMUCUIEvent.h>
+#include <Swift/Controllers/UIEvents/RequestAddUserDialogUIEvent.h>
+#include <Swift/Controllers/UIEvents/RequestChatWithUserDialogUIEvent.h>
+#include <Swift/Controllers/UIEvents/RequestProfileEditorUIEvent.h>
+#include <Swift/Controllers/UIEvents/JoinMUCUIEvent.h>
+#include <Swift/Controllers/UIEvents/ToggleShowOfflineUIEvent.h>
+#include <Swift/Controllers/UIEvents/RequestAdHocUIEvent.h>
 
 namespace Swift {
 
+#define CURRENT_ROSTER_TAB "current_roster_tab"
+
 QtMainWindow::QtMainWindow(QtSettingsProvider* settings, UIEventStream* uiEventStream) : QWidget(), MainWindow(false) {
 	uiEventStream_ = uiEventStream;
+	settings_ = settings;
 	setSizePolicy(QSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding));
 	QBoxLayout *mainLayout = new QBoxLayout(QBoxLayout::TopToBottom, this);
 	mainLayout->setContentsMargins(0,0,0,0);
@@ -69,8 +73,12 @@ QtMainWindow::QtMainWindow(QtSettingsProvider* settings, UIEventStream* uiEventS
 
 	chatListWindow_ = new QtChatListWindow(uiEventStream_);
 
-	tabs_->addTab(eventWindow_, tr("&Notices"));
 	tabs_->addTab(chatListWindow_, tr("C&hats"));
+	tabs_->addTab(eventWindow_, tr("&Notices"));
+
+	tabs_->setCurrentIndex(settings_->getIntSetting(CURRENT_ROSTER_TAB, 0));
+
+	connect(tabs_, SIGNAL(currentChanged(int)), this, SLOT(handleTabChanged(int)));
 
 	this->setLayout(mainLayout);
 
@@ -121,6 +129,10 @@ QtMainWindow::QtMainWindow(QtSettingsProvider* settings, UIEventStream* uiEventS
 
 QtMainWindow::~QtMainWindow() {
 	uiEventStream_->onUIEvent.disconnect(boost::bind(&QtMainWindow::handleUIEvent, this, _1));
+}
+
+void QtMainWindow::handleTabChanged(int index) {
+	settings_->storeInt(CURRENT_ROSTER_TAB, index);
 }
 
 QtEventWindow* QtMainWindow::getEventWindow() {

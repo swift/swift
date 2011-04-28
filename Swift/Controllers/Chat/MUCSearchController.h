@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Kevin Smith
+ * Copyright (c) 2010-2011 Kevin Smith
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -16,7 +16,7 @@
 #include "Swiften/JID/JID.h"
 
 #include "Swift/Controllers/UIEvents/UIEvent.h"
-#include "Swift/Controllers/Settings/SettingsProvider.h"
+#include "Swift/Controllers/ProfileSettingsProvider.h"
 #include "Swiften/Elements/DiscoInfo.h"
 #include "Swiften/Elements/DiscoItems.h"
 #include "Swiften/Elements/ErrorPayload.h"
@@ -87,7 +87,7 @@ namespace Swift {
 
 	class MUCSearchController {
 		public:
-			MUCSearchController(const JID& jid, MUCSearchWindowFactory* mucSearchWindowFactory, IQRouter* iqRouter, SettingsProvider* settings);
+			MUCSearchController(const JID& jid, MUCSearchWindowFactory* mucSearchWindowFactory, IQRouter* iqRouter, ProfileSettingsProvider* settings);
 			~MUCSearchController();
 
 			void openSearchWindow();
@@ -112,7 +112,7 @@ namespace Swift {
 			JID jid_;
 			MUCSearchWindowFactory* factory_;
 			IQRouter* iqRouter_;
-			SettingsProvider* settings_;
+			ProfileSettingsProvider* settings_;
 			MUCSearchWindow* window_;
 			DiscoServiceWalker* walker_;
 			std::list<JID> services_;

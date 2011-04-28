@@ -7,6 +7,7 @@
 #include "Swift/Controllers/Chat/ChatsManager.h"
 
 #include <boost/bind.hpp>
+#include <boost/algorithm/string.hpp>
 
 #include <Swiften/Base/foreach.h>
 #include "Swift/Controllers/Chat/ChatController.h"
@@ -27,11 +28,14 @@
 #include "Swiften/MUC/MUCManager.h"
 #include "Swiften/Elements/ChatState.h"
 #include "Swiften/MUC/MUCBookmarkManager.h"
+#include <Swift/Controllers/ProfileSettingsProvider.h>
 
 namespace Swift {
 
 typedef std::pair<JID, ChatController*> JIDChatControllerPair;
 typedef std::pair<JID, MUCController*> JIDMUCControllerPair;
+
+#define RECENT_CHATS "recent_chats"
 
 ChatsManager::ChatsManager(
 		JID jid, StanzaChannel* stanzaChannel, 
@@ -50,7 +54,7 @@ ChatsManager::ChatsManager(
 		EntityCapsProvider* entityCapsProvider, 
 		MUCManager* mucManager,
 		MUCSearchWindowFactory* mucSearchWindowFactory,
-		SettingsProvider* settings) : 
+		ProfileSettingsProvider* settings) :
 			jid_(jid), 
 			joinMUCWindowFactory_(joinMUCWindowFactory), 
 			useDelayForLatency_(useDelayForLatency), 
@@ -69,6 +73,7 @@ ChatsManager::ChatsManager(
 	presenceSender_ = presenceSender;
 	uiEventStream_ = uiEventStream;
 	mucBookmarkManager_ = NULL;
+	profileSettings_ = settings;
 	presenceOracle_->onPresenceChange.connect(boost::bind(&ChatsManager::handlePresenceChange, this, _1));
 	uiEventConnection_ = uiEventStream_->onUIEvent.connect(boost::bind(&ChatsManager::handleUIEvent, this, _1));
 	chatListWindow_ = chatListWindowFactory->createChatListWindow(uiEventStream_);
@@ -76,6 +81,7 @@ ChatsManager::ChatsManager(
 	mucSearchController_ = new MUCSearchController(jid_, mucSearchWindowFactory, iqRouter, settings);
 	mucSearchController_->onMUCSelected.connect(boost::bind(&ChatsManager::handleMUCSelectedAfterSearch, this, _1));
 	setupBookmarks();
+	loadRecents();
 }
 
 ChatsManager::~ChatsManager() {
@@ -88,6 +94,44 @@ ChatsManager::~ChatsManager() {
 	}
 	delete mucBookmarkManager_;
 	delete mucSearchController_;
+}
+
+void ChatsManager::saveRecents() {
+	std::string recents;
+	foreach (ChatListWindow::Chat chat, recentChats_) {
+		std::vector<std::string> activity;
+		boost::split(activity, chat.activity, boost::is_any_of("\t\n"));
+		std::string recent = chat.jid.toString() + "\t" + activity[0] + "\t" + (chat.isMUC ? "true" : "false") +  "\t" + chat.nick;
+		recents += recent + "\n";
+	}
+	profileSettings_->storeString(RECENT_CHATS, recents);
+}
+
+void ChatsManager::loadRecents() {
+	std::string recentsString(profileSettings_->getStringSetting(RECENT_CHATS));
+	std::vector<std::string> recents;
+	boost::split(recents, recentsString, boost::is_any_of("\n"));
+	int i = 0;
+	foreach (std::string recentString, recents) {
+		if (i++ > 30) {
+			break;
+		}
+		std::vector<std::string> recent;
+		boost::split(recent, recentString, boost::is_any_of("\t"));
+		if (recent.size() < 4) {
+			continue;
+		}
+		JID jid(recent[0]);
+		if (!jid.isValid()) {
+			continue;
+		}
+		std::string activity(recent[1]);
+		bool isMUC = recent[2] == "true";
+		std::string nick(recent[3]);
+		ChatListWindow::Chat chat(jid, nickResolver_->jidToNick(jid), activity, isMUC, nick);
+		recentChats_.push_back(chat);
+		chatListWindow_->setRecents(recentChats_);
+	}
 }
 
 void ChatsManager::setupBookmarks() {
@@ -130,6 +174,7 @@ void ChatsManager::handleChatActivity(const JID& jid, const std::string& activit
 	recentChats_.erase(std::remove(recentChats_.begin(), recentChats_.end(), chat), recentChats_.end());
 	recentChats_.push_front(chat);
 	chatListWindow_->setRecents(recentChats_);
+	saveRecents();
 }
 
 void ChatsManager::handleUserLeftMUC(MUCController* mucController) {

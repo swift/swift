@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Kevin Smith
+ * Copyright (c) 2010-2011 Kevin Smith
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -39,6 +39,7 @@
 #include "Swift/Controllers/UIEvents/RequestChatUIEvent.h"
 #include "Swift/Controllers/UIEvents/JoinMUCUIEvent.h"
 #include "Swift/Controllers/UIEvents/UIEventStream.h"
+#include <Swift/Controllers/ProfileSettingsProvider.h>
 
 
 using namespace Swift;
@@ -83,9 +84,10 @@ public:
 		chatListWindowFactory_ = mocks_->InterfaceMock<ChatListWindowFactory>();
 		mucSearchWindowFactory_ = mocks_->InterfaceMock<MUCSearchWindowFactory>();
 		settings_ = new DummySettingsProvider();
+		profileSettings_ = new ProfileSettingsProvider("a", settings_);
 		chatListWindow_ = new MockChatListWindow();
 		mocks_->ExpectCall(chatListWindowFactory_, ChatListWindowFactory::createChatListWindow).With(uiEventStream_).Return(chatListWindow_);
-		manager_ = new ChatsManager(jid_, stanzaChannel_, iqRouter_, eventController_, chatWindowFactory_, joinMUCWindowFactory_, nickResolver_, presenceOracle_, directedPresenceSender_, uiEventStream_, chatListWindowFactory_, true, NULL, mucRegistry_, entityCapsManager_, mucManager_, mucSearchWindowFactory_, settings_);
+		manager_ = new ChatsManager(jid_, stanzaChannel_, iqRouter_, eventController_, chatWindowFactory_, joinMUCWindowFactory_, nickResolver_, presenceOracle_, directedPresenceSender_, uiEventStream_, chatListWindowFactory_, true, NULL, mucRegistry_, entityCapsManager_, mucManager_, mucSearchWindowFactory_, profileSettings_);
 
 		avatarManager_ = new NullAvatarManager();
 		manager_->setAvatarManager(avatarManager_);
@@ -94,6 +96,7 @@ public:
 	void tearDown() {
 		//delete chatListWindowFactory_;
 		delete settings_;
+		delete profileSettings_;
 		delete mocks_;
 		delete avatarManager_;
 		delete manager_;
@@ -349,6 +352,7 @@ private:
 	CapsProvider* capsProvider_;
 	MUCManager* mucManager_;
 	DummySettingsProvider* settings_;
+	ProfileSettingsProvider* profileSettings_;
 	ChatListWindow* chatListWindow_;
 };
 

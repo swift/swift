@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Kevin Smith
+ * Copyright (c) 2010-2011 Kevin Smith
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -60,8 +60,10 @@ namespace Swift {
 			void handleAdHocActionTriggered(bool checked);
 			void handleEventCountUpdated(int count);
 			void handleEditProfileRequest();
+			void handleTabChanged(int index);
 
 		private:
+			QtSettingsProvider* settings_;
 			std::vector<QMenu*> menus_;
 			QtTreeWidget* treeWidget_;
 			QtRosterHeader* meView_;
