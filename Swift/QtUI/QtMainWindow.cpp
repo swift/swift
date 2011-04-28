@@ -153,7 +153,7 @@ void QtMainWindow::handleEditProfileRequest() {
 
 void QtMainWindow::handleEventCountUpdated(int count) {
 	QColor eventTabColor = (count == 0) ? QColor() : QColor(255, 0, 0); // invalid resets to default
-	int eventIndex = 1;
+	int eventIndex = 2;
 	tabs_->tabBar()->setTabTextColor(eventIndex, eventTabColor);
 	QString text = tr("&Notices");
 	if (count > 0) {
