@@ -108,7 +108,7 @@ QtMainWindow::QtMainWindow(QtSettingsProvider* settings, UIEventStream* uiEventS
 	chatUserAction_ = new QAction(tr("Start &Chat"), this);
 	connect(chatUserAction_, SIGNAL(triggered(bool)), this, SLOT(handleChatUserActionTriggered(bool)));
 	actionsMenu->addAction(chatUserAction_);
-	serverAdHocMenu_ = new QMenu("Server Commands", this);
+	serverAdHocMenu_ = new QMenu(tr("Run Server Command"), this);
 	actionsMenu->addMenu(serverAdHocMenu_);
 	actionsMenu->addSeparator();
 	QAction* signOutAction = new QAction(tr("&Sign Out"), this);
@@ -118,7 +118,7 @@ QtMainWindow::QtMainWindow(QtSettingsProvider* settings, UIEventStream* uiEventS
 	connect(treeWidget_, SIGNAL(onSomethingSelectedChanged(bool)), editUserAction_, SLOT(setEnabled(bool)));
 
 	setAvailableAdHocCommands(std::vector<DiscoItems::Item>());
-	QAction* adHocAction = new QAction("Populating commands..", this);
+	QAction* adHocAction = new QAction(tr("Collecting commands..."), this);
 	adHocAction->setEnabled(false);
 	serverAdHocMenu_->addAction(adHocAction);
 	serverAdHocCommandActions_.append(adHocAction);
@@ -248,7 +248,7 @@ void QtMainWindow::setAvailableAdHocCommands(const std::vector<DiscoItems::Item>
 		serverAdHocCommandActions_.append(action);
 	}
 	if (serverAdHocCommandActions_.isEmpty()) {
-		QAction* action = new QAction("No available commands", this);
+		QAction* action = new QAction(tr("No Available Commands"), this);
 		action->setEnabled(false);
 		serverAdHocMenu_->addAction(action);
 		serverAdHocCommandActions_.append(action);

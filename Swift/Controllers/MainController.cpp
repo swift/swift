@@ -364,7 +364,7 @@ void MainController::handleInputIdleChanged(bool idle) {
 void MainController::handleLoginRequest(const std::string &username, const std::string &password, const std::string& certificateFile, bool remember, bool loginAutomatically) {
 	jid_ = JID(username);
 	if (!jid_.isValid() || jid_.getNode().empty()) {
-		loginWindow_->setMessage(QT_TRANSLATE_NOOP("", "Username not a valid format"));
+		loginWindow_->setMessage(QT_TRANSLATE_NOOP("", "User address invalid. User address should be of the form 'alice@wonderland.lit'"));
 		loginWindow_->setIsLoggingIn(false);
 	} else {
 		loginWindow_->setMessage("");

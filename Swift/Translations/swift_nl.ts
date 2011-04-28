@@ -416,6 +416,22 @@
         <source>There was an error publishing your profile data</source>
         <translation>Er is een fout opgetreden bij het publiceren van uw profiel</translation>
     </message>
+    <message>
+        <source>%1% (%2%)</source>
+        <translation>%1% (%2%)</translation>
+    </message>
+    <message>
+        <source>%1% and %2% others (%3%)</source>
+        <translation>%1% en %2% anderen (%3%)</translation>
+    </message>
+    <message>
+        <source>%1%, %2% (%3%)</source>
+        <translation>%1%, %2% (%3%)</translation>
+    </message>
+    <message>
+        <source>User address invalid. User address should be of the form &apos;alice@wonderland.lit&apos;</source>
+        <translation>Gebruikersadres ongeldig. Gebruikersadres moet van de vorm &apos;alice@wonderland.lit&apos; zijn</translation>
+    </message>
 </context>
 <context>
     <name>CloseButton</name>
@@ -835,6 +851,10 @@
         <source>Bookmarked Rooms</source>
         <translation>Bladwijzers</translation>
     </message>
+    <message>
+        <source>Recent Chats</source>
+        <translation>Recente conversaties</translation>
+    </message>
 </context>
 <context>
     <name>Swift::QtAboutWidget</name>
@@ -863,6 +883,37 @@
     <message>
         <source>View License</source>
         <translation>Bekijk Licentie</translation>
+    </message>
+</context>
+<context>
+    <name>Swift::QtAdHocCommandWindow</name>
+    <message>
+        <source>Cancel</source>
+        <translation>Annuleren</translation>
+    </message>
+    <message>
+        <source>Back</source>
+        <translation>Terug</translation>
+    </message>
+    <message>
+        <source>Next</source>
+        <translation>Volgende</translation>
+    </message>
+    <message>
+        <source>Complete</source>
+        <translation>Voltooien</translation>
+    </message>
+    <message>
+        <source>Error: %1</source>
+        <translation>Fout: %1</translation>
+    </message>
+    <message>
+        <source>Warning: %1</source>
+        <translation>Waarschuwing: %1</translation>
+    </message>
+    <message>
+        <source>Error executing command</source>
+        <translation>Fout bij het uitvoeren van de opdracht</translation>
     </message>
 </context>
 <context>
@@ -1160,6 +1211,18 @@ afbeelding</translation>
     <message>
         <source>Enter &amp;Room</source>
         <translation>&amp;Kamer betreden</translation>
+    </message>
+    <message>
+        <source>Run Server Command</source>
+        <translation>Voer opdracht op server uit</translation>
+    </message>
+    <message>
+        <source>Collecting commands...</source>
+        <translation>Opdrachten aan het verzamelen...</translation>
+    </message>
+    <message>
+        <source>No Available Commands</source>
+        <translation>Geen beschikbare opdrachten</translation>
     </message>
 </context>
 <context>
