@@ -39,7 +39,6 @@ namespace Swift {
 			void handleRequestedPreviousTab();
 			void handleRequestedNextTab();
 			void handleRequestedActiveTab();
-			void handleTabChange(int index);
 			void flash();
 
 		private:
