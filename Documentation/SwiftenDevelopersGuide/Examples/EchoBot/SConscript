@@ -15,9 +15,11 @@ if env["PLATFORM"] == "win32" :
 	if int(env["MSVS_VERSION"].split(".")[0]) >= 10 :
 		cpp0x = True
 else :
-	if env["CCVERSION"].split(".") >= ["4", "5", "0"] :
-		cpp0x = True
-		cpp0x_env.Replace(CXXFLAGS = [flag for flag in env["CXXFLAGS"] if flag != "-Werror"])
-		cpp0x_env.Append(CXXFLAGS = ["-std=c++0x"])
+	pass
+# Disabling C++0x compilation, because older boosts are not compliant yet
+#	if env["CCVERSION"].split(".") >= ["4", "5", "0"] :
+#		cpp0x = True
+#		cpp0x_env.Replace(CXXFLAGS = [flag for flag in env["CXXFLAGS"] if flag != "-Werror"])
+#		cpp0x_env.Append(CXXFLAGS = ["-std=c++0x"])
 if cpp0x :
 	cpp0x_env.Program("EchoBot0x", "EchoBot0x.cpp")
