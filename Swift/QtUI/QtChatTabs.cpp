@@ -39,6 +39,8 @@ QtChatTabs::QtChatTabs() : QWidget() {
 #else
 #warning Qt 4.5 or later is needed. Trying anyway, some things will be disabled.
 #endif
+	connect(tabs_, SIGNAL(currentChanged(int)), this, SLOT(handleTabChange(int)), Qt::UniqueConnection);
+
 	QVBoxLayout *layout = new QVBoxLayout;
 	layout->setSpacing(0);
 	layout->setContentsMargins(0, 3, 0, 0);
@@ -64,6 +66,13 @@ void QtChatTabs::addTab(QtTabbable* tab) {
 	QSizePolicy policy = sizePolicy();
 	/* Chat windows like to grow - don't let them */
 	setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
+
+	/* Hide previous opened QtChatWindow, so it doesn't receive further QPaint events. */
+	QWidget* old = tabs_->currentWidget();
+	if (old) {
+		old->hide();
+	}
+
 	tabs_->addTab(tab, tab->windowTitle());
 	connect(tab, SIGNAL(titleUpdated()), this, SLOT(handleTabTitleUpdated()), Qt::UniqueConnection);
 	connect(tab, SIGNAL(countUpdated()), this, SLOT(handleTabTitleUpdated()), Qt::UniqueConnection);
@@ -252,12 +261,29 @@ void QtChatTabs::handleTabTitleUpdated(QWidget* widget) {
 	std::string current(Q2PSTRING(qobject_cast<QtTabbable*>(tabs_->currentWidget())->windowTitle()));
 	ChatMessageSummarizer summary;
 	setWindowTitle(summary.getSummary(current, unreads).c_str());
+
+	/* hide() QtChatWindow again, so it won't receive Paint events. */
+	if (widget != tabs_->currentWidget()) {
+		widget->hide();
+	}
 }
 
 void QtChatTabs::flash() {
 #ifndef SWIFTEN_PLATFORM_MACOSX
 	QApplication::alert(this, 3000);
 #endif
+}
+
+void QtChatTabs::handleTabChange(int index) {
+	if (index == -1) {
+		return;
+	}
+	/* hide() old tab, show() new tab */
+	QWidget* old_tab = tabs_->currentWidget();
+	old_tab->hide();
+	
+	QWidget* new_tab = tabs_->widget(index);
+	new_tab->show();
 }
 
 void QtChatTabs::resizeEvent(QResizeEvent*) {
