@@ -433,7 +433,9 @@ void QtChatWindow::handleInputChanged() {
 }
 
 void QtChatWindow::show() {
-	QWidget::show();
+	if (parentWidget() == NULL) {
+		QWidget::show();
+	}
 	emit windowOpening();
 }
 
