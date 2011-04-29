@@ -17,7 +17,7 @@ namespace Swift {
 		public:
 			ChatSnippet(bool appendToPrevious);
 			virtual ~ChatSnippet();
-			
+
 			virtual const QString& getContent() const = 0;
 			virtual QString getContinuationElementID() const { return ""; }
 
@@ -26,7 +26,7 @@ namespace Swift {
 			bool getAppendToPrevious() const {
 				return appendToPrevious_;
 			}
-			
+
 			static QString escape(const QString& original) {
 				QString result(original);
 				result.replace("%message%", "&#37;message&#37;");
@@ -37,11 +37,12 @@ namespace Swift {
 				return result;
 			}
 
+			static QString timeToEscapedString(const QDateTime& time);
+
 		protected:
 			void setContinuationFallbackSnippet(boost::shared_ptr<ChatSnippet> continuationFallback) {
 				continuationFallback_ = continuationFallback;
 			}
-			static QString timeToEscapedString(const QDateTime& time);
 		private:
 			bool appendToPrevious_;
 			boost::shared_ptr<ChatSnippet> continuationFallback_;

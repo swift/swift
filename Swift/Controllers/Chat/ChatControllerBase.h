@@ -26,6 +26,7 @@
 #include "Swiften/Elements/ErrorPayload.h"
 #include "Swiften/Presence/PresenceOracle.h"
 #include "Swiften/Queries/IQRouter.h"
+#include "Swiften/Base/IDGenerator.h"
 
 namespace Swift {
 	class IQRouter;
@@ -66,8 +67,10 @@ namespace Swift {
 			virtual void dayTicked() {};
 
 		private:
+			IDGenerator idGenerator_;
+			std::string lastSentMessageStanzaID_;
 			void createDayChangeTimer();
-			void handleSendMessageRequest(const std::string &body);
+			void handleSendMessageRequest(const std::string &body, bool isCorrectionMessage);
 			void handleAllMessagesRead();
 			void handleSecurityLabelsCatalogResponse(boost::shared_ptr<SecurityLabelsCatalog>, ErrorPayload::ref error);
 			std::string getErrorMessage(boost::shared_ptr<ErrorPayload>);
@@ -82,6 +85,8 @@ namespace Swift {
 			ChatWindow* chatWindow_;
 			JID toJID_;
 			bool labelsEnabled_;
+			bool replacedMessage_;
+			std::string lastMessageUIID_;
 			PresenceOracle* presenceOracle_;
 			AvatarManager* avatarManager_;
 			bool useDelayForLatency_;

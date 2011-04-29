@@ -36,6 +36,7 @@ namespace Swift {
 			void addSystemMessage(const std::string& message);
 			void addPresenceMessage(const std::string& message);
 			void addErrorMessage(const std::string& errorMessage);
+			void replaceMessage(const std::string& message, const std::string& id, const boost::posix_time::ptime& time);
 			void show();
 			void activate();
 			void setUnreadMessageCount(int count);
@@ -82,6 +83,7 @@ namespace Swift {
 			bool contactIsTyping_;
 			LastLineTracker lastLineTracker_;
 			QString contact_;
+			QString lastSentMessage_;
 			QtChatView* messageLog_;
 			QtChatTheme* theme_;
 			QtTextEdit* input_;
@@ -89,6 +91,7 @@ namespace Swift {
 			QtTreeWidget* treeWidget_;
 			TabComplete* completer_;
 			std::vector<SecurityLabelsCatalog::Item> availableLabels_;
+			bool isCorrection_;
 			bool previousMessageWasSelf_;
 			bool previousMessageWasSystem_;
 			bool previousMessageWasPresence_;

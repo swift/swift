@@ -31,6 +31,8 @@ void QtTextEdit::keyPressEvent(QKeyEvent* event) {
 			   || (key == Qt::Key_Tab && modifiers == Qt::ControlModifier)
 			   || (key == Qt::Key_A && modifiers == Qt::AltModifier)
 			   || (key == Qt::Key_Tab)
+			   || (key == Qt::Key_Up)
+			   || (key == Qt::Key_Down)
 	) {
 		emit unhandledKeyPressEvent(event);
 	}

@@ -40,6 +40,7 @@ namespace Swift {
 			NickResolver* nickResolver_;
 			ChatStateNotifier* chatStateNotifier_;
 			ChatStateTracker* chatStateTracker_;
+			std::string myLastMessageUIID_;
 			bool isInMUC_;
 			bool lastWasPresence_;
 			std::string lastStatusChangeString_;

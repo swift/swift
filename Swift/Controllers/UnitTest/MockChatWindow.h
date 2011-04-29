@@ -34,12 +34,13 @@ namespace Swift {
 			virtual void setRosterModel(Roster* /*roster*/) {};
 			virtual void setTabComplete(TabComplete*) {};
 			virtual void replaceLastMessage(const std::string&) {};
+			virtual void replaceMessage(const std::string&, const std::string&, const boost::posix_time::ptime&) {};
 			void setAckState(const std::string& /*id*/, AckState /*state*/) {};
 			virtual void flash() {};
 
 			boost::signal<void ()> onClosed;
 			boost::signal<void ()> onAllMessagesRead;
-			boost::signal<void (const std::string&)> onSendMessageRequest;
+			boost::signal<void (const std::string&, bool isCorrection)> onSendMessageRequest;
 
 			std::string name_;
 			std::string lastMessageBody_;

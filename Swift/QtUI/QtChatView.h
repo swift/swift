@@ -30,8 +30,10 @@ namespace Swift {
 			void addLastSeenLine();
 			void replaceLastMessage(const QString& newMessage);
 			void replaceLastMessage(const QString& newMessage, const QString& note);
+			void replaceMessage(const QString& newMessage, const QString& id, const QDateTime& time);
 			void rememberScrolledToBottom();
 			void setAckXML(const QString& id, const QString& xml);
+			QString getLastSentMessage();
 
 		signals:
 			void gotFocus();

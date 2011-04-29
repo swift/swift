@@ -35,6 +35,7 @@ QtChatWindow::QtChatWindow(const QString &contact, QtChatTheme* theme, UIEventSt
 	inputEnabled_ = true;
 	completer_ = NULL;
 	theme_ = theme;
+	isCorrection_ = false;
 	updateTitleWithUnreadCount();
 
 	QBoxLayout *layout = new QBoxLayout(QBoxLayout::TopToBottom, this);
@@ -99,6 +100,7 @@ void QtChatWindow::setTabComplete(TabComplete* completer) {
 void QtChatWindow::handleKeyPressEvent(QKeyEvent* event) {
 	int key = event->key();
 	Qt::KeyboardModifiers modifiers = event->modifiers();
+	QTextCursor cursor;
 	if (key == Qt::Key_W && modifiers == Qt::ControlModifier) {
 		close();
 	} else if (
@@ -118,6 +120,17 @@ void QtChatWindow::handleKeyPressEvent(QKeyEvent* event) {
 		emit requestActiveTab();
 	} else if (key == Qt::Key_Tab) {
 		tabComplete();
+	} else if ((key == Qt::Key_Up) && input_->toPlainText().isEmpty() && !(lastSentMessage_.isEmpty())) {
+		cursor = input_->textCursor();
+		cursor.select(QTextCursor::Document);
+		cursor.beginEditBlock();
+		cursor.insertText(QString(lastSentMessage_));
+		cursor.endEditBlock();
+		isCorrection_ = true;
+	} else if (key == Qt::Key_Down && isCorrection_ && (cursor = input_->textCursor()).atBlockEnd()) {
+		cursor.select(QTextCursor::Document);
+		cursor.removeSelectedText();
+		isCorrection_ = false;
 	} else {
 		messageLog_->handleKeyPressEvent(event);
 	}
@@ -351,6 +364,15 @@ void QtChatWindow::addSystemMessage(const std::string& message) {
 	previousMessageWasPresence_ = false;
 }
 
+void QtChatWindow::replaceMessage(const std::string& message, const std::string& id, const boost::posix_time::ptime& time) {
+	if (!id.empty()) {
+		QString messageHTML(Qt::escape(P2QSTRING(message)));
+		messageHTML = P2QSTRING(Linkify::linkify(Q2PSTRING(messageHTML)));
+		messageHTML.replace("\n","<br/>");
+		messageLog_->replaceMessage(messageHTML, P2QSTRING(id), B2QDATE(time));
+	}
+}
+
 void QtChatWindow::addPresenceMessage(const std::string& message) {
 	if (isWidgetSelected()) {
 		onAllMessagesRead();
@@ -372,7 +394,9 @@ void QtChatWindow::returnPressed() {
 		return;
 	}
 	messageLog_->scrollToBottom();
-	onSendMessageRequest(Q2PSTRING(input_->toPlainText()));
+	lastSentMessage_ = QString(input_->toPlainText());
+	onSendMessageRequest(Q2PSTRING(input_->toPlainText()), isCorrection_);
+	isCorrection_ = false;
 	inputClearing_ = true;
 	input_->clear();
 	inputClearing_ = false;

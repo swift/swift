@@ -40,6 +40,7 @@
 #include "Swiften/Parser/PayloadParsers/DelayParserFactory.h"
 #include "Swiften/Parser/PayloadParsers/MUCUserPayloadParserFactory.h"
 #include "Swiften/Parser/PayloadParsers/NicknameParserFactory.h"
+#include "Swiften/Parser/PayloadParsers/ReplaceParser.h"
 
 using namespace boost;
 
@@ -49,6 +50,7 @@ FullPayloadParserFactoryCollection::FullPayloadParserFactoryCollection() {
 	factories_.push_back(shared_ptr<PayloadParserFactory>(new GenericPayloadParserFactory<IBBParser>("", "http://jabber.org/protocol/ibb")));
 	factories_.push_back(shared_ptr<PayloadParserFactory>(new GenericPayloadParserFactory<StatusShowParser>("show")));
 	factories_.push_back(shared_ptr<PayloadParserFactory>(new GenericPayloadParserFactory<StatusParser>("status")));
+	factories_.push_back(shared_ptr<PayloadParserFactory>(new GenericPayloadParserFactory<ReplaceParser>("replace", "http://swift.im/protocol/replace")));
 	factories_.push_back(shared_ptr<PayloadParserFactory>(new GenericPayloadParserFactory<BodyParser>("body")));
 	factories_.push_back(shared_ptr<PayloadParserFactory>(new GenericPayloadParserFactory<SubjectParser>("subject")));
 	factories_.push_back(shared_ptr<PayloadParserFactory>(new GenericPayloadParserFactory<PriorityParser>("priority")));

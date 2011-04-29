@@ -30,9 +30,10 @@ namespace Swift {
 ChatControllerBase::ChatControllerBase(const JID& self, StanzaChannel* stanzaChannel, IQRouter* iqRouter, ChatWindowFactory* chatWindowFactory, const JID &toJID, PresenceOracle* presenceOracle, AvatarManager* avatarManager, bool useDelayForLatency, UIEventStream* eventStream, EventController* eventController, TimerFactory* timerFactory) : selfJID_(self), stanzaChannel_(stanzaChannel), iqRouter_(iqRouter), chatWindowFactory_(chatWindowFactory), toJID_(toJID), labelsEnabled_(false), presenceOracle_(presenceOracle), avatarManager_(avatarManager), useDelayForLatency_(useDelayForLatency), eventController_(eventController), timerFactory_(timerFactory) {
 	chatWindow_ = chatWindowFactory_->createChatWindow(toJID, eventStream);
 	chatWindow_->onAllMessagesRead.connect(boost::bind(&ChatControllerBase::handleAllMessagesRead, this));
-	chatWindow_->onSendMessageRequest.connect(boost::bind(&ChatControllerBase::handleSendMessageRequest, this, _1));
+	chatWindow_->onSendMessageRequest.connect(boost::bind(&ChatControllerBase::handleSendMessageRequest, this, _1, _2));
 	setOnline(stanzaChannel->isAvailable() && iqRouter->isAvailable());
 	createDayChangeTimer();
+	replacedMessage_ = false;
 }
 
 ChatControllerBase::~ChatControllerBase() {
@@ -88,7 +89,7 @@ void ChatControllerBase::handleAllMessagesRead() {
 	chatWindow_->setUnreadMessageCount(0);
 }
 
-void ChatControllerBase::handleSendMessageRequest(const std::string &body) {
+void ChatControllerBase::handleSendMessageRequest(const std::string &body, bool isCorrectionMessage) {
 	if (!stanzaChannel_->isAvailable() || body.empty()) {
 		return;
 	}
@@ -104,6 +105,10 @@ void ChatControllerBase::handleSendMessageRequest(const std::string &body) {
 		boost::posix_time::ptime now = boost::posix_time::microsec_clock::universal_time();
 		message->addPayload(boost::shared_ptr<Delay>(new Delay(now, selfJID_)));
 	}
+	if (isCorrectionMessage) {
+		message->addPayload(boost::shared_ptr<Replace> (new Replace(lastSentMessageStanzaID_)));
+	}
+	message->setID(lastSentMessageStanzaID_ = idGenerator_.generateID());
 	stanzaChannel_->sendMessage(message);
 	postSendMessage(message->getBody(), boost::dynamic_pointer_cast<Stanza>(message));
 	onActivity(message->getBody());
@@ -164,7 +169,7 @@ void ChatControllerBase::handleIncomingMessage(boost::shared_ptr<MessageEvent> m
 		JID from = message->getFrom();
 		std::vector<boost::shared_ptr<Delay> > delayPayloads = message->getPayloads<Delay>();
 		for (size_t i = 0; useDelayForLatency_ && i < delayPayloads.size(); i++) {
-			if (!delayPayloads[i]->getFrom()) { 
+			if (!delayPayloads[i]->getFrom()) {
 				continue;
 			}
 			boost::posix_time::ptime now = boost::posix_time::microsec_clock::universal_time();
@@ -180,9 +185,10 @@ void ChatControllerBase::handleIncomingMessage(boost::shared_ptr<MessageEvent> m
 		if (messageTimeStamp) {
 			timeStamp = *messageTimeStamp;
 		}
-
-		addMessage(body, senderDisplayNameFromMessage(from), isIncomingMessageFromMe(message), label, std::string(avatarManager_->getAvatarPath(from).string()), timeStamp);
 		onActivity(body);
+		if (!replacedMessage_) {
+			lastMessageUIID_ = addMessage(body, senderDisplayNameFromMessage(from), isIncomingMessageFromMe(message), label, std::string(avatarManager_->getAvatarPath(from).string()), timeStamp);
+		}
 	}
 	chatWindow_->show();
 	chatWindow_->setUnreadMessageCount(unreadMessages_.size());

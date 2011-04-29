@@ -40,6 +40,7 @@ namespace Swift {
 			virtual void addSystemMessage(const std::string& message) = 0;
 			virtual void addPresenceMessage(const std::string& message) = 0;
 			virtual void addErrorMessage(const std::string& message) = 0;
+			virtual void replaceMessage(const std::string& message, const std::string& id, const boost::posix_time::ptime& time) = 0;
 
 			virtual void setContactChatState(ChatState::ChatStateType state) = 0;
 			virtual void setName(const std::string& name) = 0;
@@ -61,9 +62,11 @@ namespace Swift {
 
 			boost::signal<void ()> onClosed;
 			boost::signal<void ()> onAllMessagesRead;
-			boost::signal<void (const std::string&)> onSendMessageRequest;
+			boost::signal<void (const std::string&, bool isCorrection)> onSendMessageRequest;
+			boost::signal<void ()> onSendCorrectionMessageRequest;
 			boost::signal<void ()> onUserTyping;
 			boost::signal<void ()> onUserCancelsTyping;
+			boost::signal<void (bool correction)> onSendMessageCorrection;
 	};
 }
 #endif

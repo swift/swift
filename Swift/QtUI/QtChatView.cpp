@@ -138,6 +138,25 @@ void QtChatView::replaceLastMessage(const QString& newMessage, const QString& no
 	replace.setInnerXml(ChatSnippet::escape(note));
 }
 
+QString QtChatView::getLastSentMessage() {
+	return lastElement_.toPlainText();
+}
+
+void QtChatView::replaceMessage(const QString& newMessage, const QString& id, const QDateTime& editTime) {
+	rememberScrolledToBottom();
+	QWebElement message = document_.findFirst("#" + id);
+	if (!message.isNull()) {
+		QWebElement replaceContent = message.findFirst("span.swift_message");
+		assert(!replaceContent.isNull());
+		QString old = replaceContent.toOuterXml();
+		replaceContent.setInnerXml(ChatSnippet::escape(newMessage));
+		QWebElement replaceTime = message.findFirst("span.swift_time");
+		assert(!replaceTime.isNull());
+		old = replaceTime.toOuterXml();
+		replaceTime.setInnerXml(ChatSnippet::escape(tr("%1 edited").arg(ChatSnippet::timeToEscapedString(editTime))));
+	}
+}
+
 void QtChatView::copySelectionToClipboard() {
 	if (!webPage_->selectedText().isEmpty()) {
 		webPage_->triggerAction(QWebPage::Copy);
