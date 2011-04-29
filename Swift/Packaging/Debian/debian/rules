@@ -13,7 +13,7 @@ install: build
 	dh_testroot
 	dh_prep  
 	dh_installdirs
-	scons optimize=1 debug=1 allow_warnings=1 qt=/usr/share/qt4 docbook_xsl=/usr/share/xml/docbook/stylesheet/docbook-xsl docbook_xml=/usr/share/xml/docbook/schema/dtd/4.5 SWIFT_INSTALLDIR=$(CURDIR)/debian/swift-im/usr $(CURDIR)/debian/swift-im
+	scons $(SCONS_FLAGS) optimize=1 debug=1 allow_warnings=1 swiften_dll=1 qt=/usr/share/qt4 docbook_xsl=/usr/share/xml/docbook/stylesheet/docbook-xsl docbook_xml=/usr/share/xml/docbook/schema/dtd/4.5 SWIFT_INSTALLDIR=$(CURDIR)/debian/swift-im/usr SWIFTEN_INSTALLDIR=$(CURDIR)/debian/swift-im/usr $(CURDIR)/debian/swift-im
 	#mv $(CURDIR)/debian/swift-im/usr/bin/swift $(CURDIR)/debian/swift-im/usr/bin/swift-im
 	#mv $(CURDIR)/debian/swift-im/usr/share/pixmaps/swift.xpm $(CURDIR)/debian/swift-im/usr/share/pixmaps/swift-im.xpm
 	#mv $(CURDIR)/debian/swift-im/usr/share/swift $(CURDIR)/debian/swift-im/usr/share/swift-im
