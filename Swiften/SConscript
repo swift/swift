@@ -1,4 +1,4 @@
-import os
+import os, re, Version
 
 Import("env")
 
@@ -9,9 +9,19 @@ Import("env")
 swiften_dep_modules = ["BOOST", "LIBIDN", "ZLIB", "OPENSSL", "LIBXML", "EXPAT", "AVAHI"]
 
 if env["SCONS_STAGE"] == "flags" :
+	env["SWIFTEN_VERSION"] = Version.getBuildVersion(env.Dir("#").abspath, "swift")
+	version_match = re.match("(\d+)\.(\d+).*", env["SWIFTEN_VERSION"])
+	if version_match :
+		env["SWIFTEN_VERSION_MAJOR"] = int(version_match.group(1))
+		env["SWIFTEN_VERSION_MINOR"] = int(version_match.group(2))
+	else :
+		env["SWIFTEN_VERSION_MAJOR"] = 0
+		env["SWIFTEN_VERSION_MINOR"] = 0
+	env["SWIFTEN_VERSION_PATCH"] = 0
+
 	swiften_env = env.Clone()
 	swiften_env["LIBPATH"] = [Dir(".")]
-	swiften_env["LIBS"] = ["Swiften"]
+	swiften_env["LIBS"] = ["Swiften" + str(swiften_env["SWIFTEN_VERSION_MAJOR"])]
 	dep_env = env.Clone()
 	for module in swiften_dep_modules :
 		if env.get(module + "_BUNDLED", False) :
@@ -178,9 +188,9 @@ if env["SCONS_STAGE"] == "build" :
 		])
 
 	if ARGUMENTS.get("swiften_dll", False) :
-		swiften_lib = myenv.SharedLibrary("Swiften", sources + swiften_env["SWIFTEN_OBJECTS"])
+		swiften_lib = myenv.SharedLibrary("Swiften" + str(swiften_env["SWIFTEN_VERSION_MAJOR"]), sources + swiften_env["SWIFTEN_OBJECTS"])
 	else :
-		swiften_lib = myenv.StaticLibrary("Swiften", sources + swiften_env["SWIFTEN_OBJECTS"])
+		swiften_lib = myenv.StaticLibrary("Swiften" + str(swiften_env["SWIFTEN_VERSION_MAJOR"]), sources + swiften_env["SWIFTEN_OBJECTS"])
 
 	env.Append(UNITTEST_SOURCES = [
 			File("Avatars/UnitTest/VCardUpdateAvatarManagerTest.cpp"),
@@ -327,6 +337,11 @@ if env["SCONS_STAGE"] == "build" :
 				swiften_includes.append("Swiften/" + file)
 	swiften_env.WriteVal("Swiften.h", swiften_env.Value(swiften_header))
 	swiften_includes.append("Swiften/Swiften.h")
+
+	version_header = "#pragma once\n\n"
+	version_header += "#define SWIFTEN_VERSION 0x%02X%02X%02X\n" % (swiften_env["SWIFTEN_VERSION_MAJOR"], swiften_env["SWIFTEN_VERSION_MINOR"], swiften_env["SWIFTEN_VERSION_PATCH"])
+	swiften_env.WriteVal("Version.h", swiften_env.Value(version_header))
+	swiften_includes.append("Swiften/Version.h")
 
 	# Install swiften
 	if swiften_env.get("SWIFTEN_INSTALLDIR", "") :
