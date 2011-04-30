@@ -6,11 +6,27 @@ Build-Depends: debhelper (>= 7), scons (>= 1.2.0), libssl-dev (>= 0.9.8g), libqt
 Standards-Version: 3.8.4
 Homepage: http://swift.im
 
-Package: swift-im
+Package: libswiften%SWIFTEN_SOVERSION%
 Architecture: any
 Section: net
 Priority: optional
 Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: XMPP Library.
+	The Swiften XMPP library.
+
+Package: libswiften%SWIFTEN_SOVERSION%-dev
+Architecture: any
+Section: libdevel
+Priority: optional
+Depends: libswiften%SWIFTEN_SOVERSION% (= ${binary:Version}), ${shlibs:Depends}, ${misc:Depends}
+Description: XMPP Library.
+	The Swiften XMPP library.
+
+Package: swift-im
+Architecture: any
+Section: net
+Priority: optional
+Depends: libswiften%SWIFTEN_SOVERSION% (= ${binary:Version}), ${shlibs:Depends}, ${misc:Depends}
 Description: XMPP Client.
 	The Swift IM client.
 
