@@ -14,13 +14,13 @@
 #include <lualib.h>
 #include <boost/filesystem/fstream.hpp>
 #include <boost/noncopyable.hpp>
-#include "Swiften/Network/NetworkFactories.h"
+#include <Swiften/Network/NetworkFactories.h>
 #include <Swiften/Elements/SoftwareVersion.h>
 #include <Swiften/Queries/Requests/GetSoftwareVersionRequest.h>
 #include <Swiften/Network/Timer.h>
 
-#include "Swiftob/Commands.h"
-#include "Swiftob/Storage.h"
+#include <Swiftob/Commands.h>
+#include <Swiftob/Storage.h>
 
 using namespace Swift;
 /**

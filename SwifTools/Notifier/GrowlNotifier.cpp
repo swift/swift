@@ -8,10 +8,10 @@
 
 #include <cassert>
 
-#include "Swiften/Base/String.h"
-#include "Swiften/Base/ByteArray.h"
-#include "SwifTools/Notifier/GrowlNotifier.h"
-#include "Swiften/Base/foreach.h"
+#include <Swiften/Base/String.h>
+#include <Swiften/Base/ByteArray.h>
+#include <SwifTools/Notifier/GrowlNotifier.h>
+#include <Swiften/Base/foreach.h>
 
 #pragma GCC diagnostic ignored "-Wold-style-cast"
 #pragma GCC diagnostic ignored "-Wdeprecated-declarations"

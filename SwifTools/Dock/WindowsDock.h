@@ -9,8 +9,8 @@
 #include <QSystemTrayIcon>
 #include <boost/lexical_cast.hpp>
 
-#include "SwifTools/Dock/Dock.h"
-#include "SwifTools/Notifier/Notifier.h"
+#include <SwifTools/Dock/Dock.h>
+#include <SwifTools/Notifier/Notifier.h>
 
 namespace Swift {
 	class WindowsDock : public Dock {

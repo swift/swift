@@ -6,15 +6,15 @@
 
 // FIXME: This notifier needs finishing (handling callbacks etc.)
 
-#include "SwifTools/Notifier/GNTPNotifier.h"
+#include <SwifTools/Notifier/GNTPNotifier.h>
 
 #include <cassert>
 #include <iostream>
 #include <boost/bind.hpp>
 #include <sstream>
 
-#include "Swiften/Base/foreach.h"
-#include "Swiften/Network/ConnectionFactory.h"
+#include <Swiften/Base/foreach.h>
+#include <Swiften/Network/ConnectionFactory.h>
 
 namespace Swift {
 

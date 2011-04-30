@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include "SwifTools/Notifier/Notifier.h"
+#include <SwifTools/Notifier/Notifier.h>
 
 namespace Swift {
 	class TogglableNotifier : public Notifier {

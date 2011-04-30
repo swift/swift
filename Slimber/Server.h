@@ -10,15 +10,15 @@
 #include <boost/optional.hpp>
 #include <vector>
 
-#include "Swiften/Network/BoostIOServiceThread.h"
-#include "Swiften/Network/BoostConnectionServer.h"
-#include "Swiften/Server/UserRegistry.h"
-#include "Swiften/Base/IDGenerator.h"
-#include "Swiften/Server/ServerFromClientSession.h"
-#include "Swiften/JID/JID.h"
-#include "Swiften/Parser/PayloadParsers/FullPayloadParserFactoryCollection.h"
-#include "Swiften/Serializer/PayloadSerializers/FullPayloadSerializerCollection.h"
-#include "Swiften/LinkLocal/LinkLocalServiceInfo.h"
+#include <Swiften/Network/BoostIOServiceThread.h>
+#include <Swiften/Network/BoostConnectionServer.h>
+#include <Swiften/Server/UserRegistry.h>
+#include <Swiften/Base/IDGenerator.h>
+#include <Swiften/Server/ServerFromClientSession.h>
+#include <Swiften/JID/JID.h>
+#include <Swiften/Parser/PayloadParsers/FullPayloadParserFactoryCollection.h>
+#include <Swiften/Serializer/PayloadSerializers/FullPayloadSerializerCollection.h>
+#include <Swiften/LinkLocal/LinkLocalServiceInfo.h>
 #include "Slimber/ServerError.h"
 
 namespace Swift {

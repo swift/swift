@@ -4,7 +4,7 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "SwifTools/AutoUpdater/AutoUpdater.h"
+#include <SwifTools/AutoUpdater/AutoUpdater.h>
 
 namespace Swift {
 

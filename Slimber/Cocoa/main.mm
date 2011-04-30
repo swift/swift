@@ -1,7 +1,7 @@
 #include <Cocoa/Cocoa.h>
 
 #include "Slimber/Cocoa/main.h"
-#include "Swiften/EventLoop/Cocoa/CocoaEventLoop.h"
+#include <Swiften/EventLoop/Cocoa/CocoaEventLoop.h>
 
 Swift::CocoaEventLoop* eventLoop;
 

@@ -9,16 +9,16 @@
 #include <boost/bind.hpp>
 #include <map>
 
-#include "Swiften/Elements/Presence.h"
-#include "Swiften/Elements/RosterPayload.h"
-#include "Swiften/Elements/RosterItemPayload.h"
+#include <Swiften/Elements/Presence.h>
+#include <Swiften/Elements/RosterPayload.h>
+#include <Swiften/Elements/RosterItemPayload.h>
 #include "Slimber/LinkLocalPresenceManager.h"
-#include "Swiften/LinkLocal/LinkLocalServiceInfo.h"
-#include "Swiften/LinkLocal/LinkLocalServiceBrowser.h"
-#include "Swiften/LinkLocal/DNSSD/DNSSDServiceID.h"
-#include "Swiften/LinkLocal/DNSSD/DNSSDResolveServiceQuery.h"
-#include "Swiften/LinkLocal/DNSSD/Fake/FakeDNSSDQuerier.h"
-#include "Swiften/EventLoop/DummyEventLoop.h"
+#include <Swiften/LinkLocal/LinkLocalServiceInfo.h>
+#include <Swiften/LinkLocal/LinkLocalServiceBrowser.h>
+#include <Swiften/LinkLocal/DNSSD/DNSSDServiceID.h>
+#include <Swiften/LinkLocal/DNSSD/DNSSDResolveServiceQuery.h>
+#include <Swiften/LinkLocal/DNSSD/Fake/FakeDNSSDQuerier.h>
+#include <Swiften/EventLoop/DummyEventLoop.h>
 
 using namespace Swift;
 

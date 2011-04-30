@@ -4,7 +4,7 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "Swiftob/Storage.h"
+#include <Swiftob/Storage.h>
 
 #include <Swiften/Base/String.h>
 #include <Swiften/Base/ByteArray.h>

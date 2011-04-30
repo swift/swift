@@ -10,11 +10,11 @@
 #include <boost/lexical_cast.hpp>
 #include <iostream>
 
-#include "Swiften/Base/foreach.h"
-#include "SwifTools/Application/PlatformApplicationPathProvider.h"
-#include "Swiften/LinkLocal/LinkLocalService.h"
-#include "Swiften/LinkLocal/LinkLocalServiceBrowser.h"
-#include "Swiften/LinkLocal/DNSSD/PlatformDNSSDQuerierFactory.h"
+#include <Swiften/Base/foreach.h>
+#include <SwifTools/Application/PlatformApplicationPathProvider.h>
+#include <Swiften/LinkLocal/LinkLocalService.h>
+#include <Swiften/LinkLocal/LinkLocalServiceBrowser.h>
+#include <Swiften/LinkLocal/DNSSD/PlatformDNSSDQuerierFactory.h>
 #include "Slimber/Server.h"
 #include "Slimber/FileVCardCollection.h"
 #include "Slimber/MenuletController.h"

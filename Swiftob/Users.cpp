@@ -4,14 +4,14 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "Swiftob/Users.h"
+#include <Swiftob/Users.h>
 
 #include <iostream>
 
 #include <Swiften/Base/foreach.h>
 #include <Swiften/Client/Client.h>
 
-#include "Swiftob/MUCs.h"
+#include <Swiftob/MUCs.h>
 
 Users::Users(Client* client, MUCs* mucs) {
 	client_ = client;

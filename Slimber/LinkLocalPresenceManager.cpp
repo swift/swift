@@ -8,10 +8,10 @@
 
 #include <boost/bind.hpp>
 
-#include "Swiften/Base/foreach.h"
-#include "Swiften/LinkLocal/LinkLocalServiceBrowser.h"
-#include "Swiften/Elements/RosterPayload.h"
-#include "Swiften/Elements/Presence.h"
+#include <Swiften/Base/foreach.h>
+#include <Swiften/LinkLocal/LinkLocalServiceBrowser.h>
+#include <Swiften/Elements/RosterPayload.h>
+#include <Swiften/Elements/Presence.h>
 
 namespace Swift {
 

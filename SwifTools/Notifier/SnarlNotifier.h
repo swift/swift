@@ -8,7 +8,7 @@
 
 #include <map>
 
-#include "SwifTools/Notifier/Notifier.h"
+#include <SwifTools/Notifier/Notifier.h>
 #include "SnarlInterface.h"
 
 namespace Swift {

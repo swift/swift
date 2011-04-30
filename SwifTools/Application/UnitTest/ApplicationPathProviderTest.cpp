@@ -9,7 +9,7 @@
 #include <string>
 #include <boost/algorithm/string.hpp>
 
-#include "SwifTools/Application/PlatformApplicationPathProvider.h"
+#include <SwifTools/Application/PlatformApplicationPathProvider.h>
 
 using namespace Swift;
 

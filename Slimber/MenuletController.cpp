@@ -6,7 +6,7 @@
 
 #include "Slimber/MenuletController.h"
 
-#include "Swiften/Base/foreach.h"
+#include <Swiften/Base/foreach.h>
 #include <string>
 #include "Slimber/Menulet.h"
 

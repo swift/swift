@@ -10,7 +10,7 @@
 #include <Growl/Growl.h>
 #include <boost/filesystem/fstream.hpp>
 
-#include "SwifTools/Notifier/Notifier.h"
+#include <SwifTools/Notifier/Notifier.h>
 
 namespace Swift {
 	/**

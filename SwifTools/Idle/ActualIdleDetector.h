@@ -8,7 +8,7 @@
 
 #include <boost/shared_ptr.hpp>
 
-#include "SwifTools/Idle/IdleDetector.h"
+#include <SwifTools/Idle/IdleDetector.h>
 
 namespace Swift {
 	class IdleQuerier;

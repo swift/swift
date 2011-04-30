@@ -1,10 +1,10 @@
-#include "SwifTools/Dock/MacOSXDock.h"
+#include <SwifTools/Dock/MacOSXDock.h>
 
 #include <AppKit/AppKit.h>
 #include <Cocoa/Cocoa.h>
 #include <boost/lexical_cast.hpp>
 
-#include "Swiften/Base/String.h"
+#include <Swiften/Base/String.h>
 
 namespace Swift {
 

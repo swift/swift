@@ -4,7 +4,7 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "Swiftob/MUCs.h"
+#include <Swiftob/MUCs.h>
 
 #include <boost/bind.hpp>
 #include <boost/date_time/posix_time/posix_time.hpp>
@@ -15,7 +15,7 @@
 #include <Swiften/MUC/MUCManager.h>
 #include <Swiften/Base/String.h>
 
-#include "Swiftob/Storage.h"
+#include <Swiftob/Storage.h>
 
 #define MUC_LIST_SETTING "muc_list"
 

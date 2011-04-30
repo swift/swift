@@ -12,8 +12,8 @@
 #include <Swiften/Base/boost_bsignals.h>
 #include <Swiften/Elements/Message.h>
 
-#include "Swiftob/Users.h"
-#include "Swiftob/MUCs.h"
+#include <Swiftob/Users.h>
+#include <Swiftob/MUCs.h>
 
 namespace Swift {
 	class Client;

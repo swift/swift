@@ -4,7 +4,7 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "Swiftob/Commands.h"
+#include <Swiftob/Commands.h>
 
 #include <Swiften/Base/foreach.h>
 #include <iostream>

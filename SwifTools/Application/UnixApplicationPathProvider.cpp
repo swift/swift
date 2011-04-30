@@ -4,7 +4,7 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "SwifTools/Application/UnixApplicationPathProvider.h"
+#include <SwifTools/Application/UnixApplicationPathProvider.h>
 
 #include <unistd.h>
 #include <boost/algorithm/string.hpp>

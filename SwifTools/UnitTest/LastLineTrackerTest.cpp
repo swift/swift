@@ -7,7 +7,7 @@
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/extensions/TestFactoryRegistry.h>
 
-#include "SwifTools/LastLineTracker.h"
+#include <SwifTools/LastLineTracker.h>
 
 using namespace Swift;
 

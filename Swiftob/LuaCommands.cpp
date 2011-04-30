@@ -4,7 +4,7 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "Swiftob/LuaCommands.h"
+#include <Swiftob/LuaCommands.h>
 
 #include <boost/bind.hpp>
 #include <vector>
@@ -15,7 +15,7 @@
 #include <Swiften/Client/Client.h>
 #include <Swiften/Network/TimerFactory.h>
 
-#include "Swiftob/Commands.h"
+#include <Swiftob/Commands.h>
 
 #define LUA_COMMANDS "__Lua_Commands"
 #define STORAGE "__Storage"

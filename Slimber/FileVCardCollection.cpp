@@ -8,11 +8,11 @@
 
 #include <boost/filesystem/fstream.hpp>
 
-#include "Swiften/Base/ByteArray.h"
-#include "Swiften/Elements/VCard.h"
-#include "Swiften/Serializer/PayloadSerializers/VCardSerializer.h"
-#include "Swiften/Parser/PayloadParsers/UnitTest/PayloadParserTester.h"
-#include "Swiften/Parser/PayloadParsers/VCardParser.h"
+#include <Swiften/Base/ByteArray.h>
+#include <Swiften/Elements/VCard.h>
+#include <Swiften/Serializer/PayloadSerializers/VCardSerializer.h>
+#include <Swiften/Parser/PayloadParsers/UnitTest/PayloadParserTester.h>
+#include <Swiften/Parser/PayloadParsers/VCardParser.h>
 
 namespace Swift {
 

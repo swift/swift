@@ -11,28 +11,28 @@
 #include <iostream>
 
 #include <Swiften/Base/foreach.h>
-#include "Swiften/Base/String.h"
-#include "Swiften/LinkLocal/LinkLocalConnector.h"
-#include "Swiften/Network/Connection.h"
-#include "Swiften/Session/SessionTracer.h"
-#include "Swiften/Elements/Element.h"
-#include "Swiften/Elements/Presence.h"
-#include "Swiften/Elements/RosterPayload.h"
-#include "Swiften/Network/BoostConnection.h"
-#include "Swiften/Network/BoostConnectionServer.h"
-#include "Swiften/Session/SessionTracer.h"
-#include "Swiften/Elements/IQ.h"
-#include "Swiften/Elements/VCard.h"
-#include "Swiften/Server/UserRegistry.h"
+#include <Swiften/Base/String.h>
+#include <Swiften/LinkLocal/LinkLocalConnector.h>
+#include <Swiften/Network/Connection.h>
+#include <Swiften/Session/SessionTracer.h>
+#include <Swiften/Elements/Element.h>
+#include <Swiften/Elements/Presence.h>
+#include <Swiften/Elements/RosterPayload.h>
+#include <Swiften/Network/BoostConnection.h>
+#include <Swiften/Network/BoostConnectionServer.h>
+#include <Swiften/Session/SessionTracer.h>
+#include <Swiften/Elements/IQ.h>
+#include <Swiften/Elements/VCard.h>
+#include <Swiften/Server/UserRegistry.h>
 #include <string>
-#include "Swiften/LinkLocal/LinkLocalServiceInfo.h"
-#include "Swiften/LinkLocal/OutgoingLinkLocalSession.h"
-#include "Swiften/LinkLocal/IncomingLinkLocalSession.h"
-#include "Swiften/LinkLocal/LinkLocalServiceBrowser.h"
-#include "Swiften/Network/ConnectionServer.h"
+#include <Swiften/LinkLocal/LinkLocalServiceInfo.h>
+#include <Swiften/LinkLocal/OutgoingLinkLocalSession.h>
+#include <Swiften/LinkLocal/IncomingLinkLocalSession.h>
+#include <Swiften/LinkLocal/LinkLocalServiceBrowser.h>
+#include <Swiften/Network/ConnectionServer.h>
 #include "Slimber/VCardCollection.h"
 #include "Slimber/LinkLocalPresenceManager.h"
-#include "Swiften/Server/ServerFromClientSession.h"
+#include <Swiften/Server/ServerFromClientSession.h>
 
 namespace Swift {
 

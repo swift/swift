@@ -4,17 +4,17 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "SwifTools/Idle/PlatformIdleQuerier.h"
-#include "Swiften/Base/Platform.h"
+#include <SwifTools/Idle/PlatformIdleQuerier.h>
+#include <Swiften/Base/Platform.h>
 
 #if defined(SWIFTEN_PLATFORM_MACOSX) && defined(HAVE_IOKIT) && !defined(SWIFTEN_PLATFORM_IPHONE)
-#include "SwifTools/Idle/MacOSXIdleQuerier.h"
+#include <SwifTools/Idle/MacOSXIdleQuerier.h>
 #elif defined(SWIFTEN_PLATFORM_WINDOWS)
-#include "SwifTools/Idle/WindowsIdleQuerier.h"
+#include <SwifTools/Idle/WindowsIdleQuerier.h>
 #elif defined(HAVE_XSS)
-#include "SwifTools/Idle/XSSIdleQuerier.h"
+#include <SwifTools/Idle/XSSIdleQuerier.h>
 #endif
-#include "SwifTools/Idle/DummyIdleQuerier.h"
+#include <SwifTools/Idle/DummyIdleQuerier.h>
 
 #include <cassert>
 #include <iostream>

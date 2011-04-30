@@ -4,12 +4,12 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "SwifTools/TabComplete.h"
+#include <SwifTools/TabComplete.h>
 
 #include <algorithm>
 #include <boost/algorithm/string.hpp>
 
-#include "Swiften/Base/foreach.h"
+#include <Swiften/Base/foreach.h>
 
 namespace Swift {
 

@@ -4,7 +4,7 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "SwifTools/Linkify.h"
+#include <SwifTools/Linkify.h>
 
 #include <boost/regex.hpp>
 #include <sstream>

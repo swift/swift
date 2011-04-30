@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include "SwifTools/Dock/Dock.h"
+#include <SwifTools/Dock/Dock.h>
 
 namespace Swift {
 	class NullDock : public Dock {

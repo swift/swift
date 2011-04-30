@@ -4,14 +4,14 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "SwifTools/Idle/ActualIdleDetector.h"
+#include <SwifTools/Idle/ActualIdleDetector.h>
 
 #include <boost/bind.hpp>
 #include <iostream>
 
-#include "SwifTools/Idle/IdleQuerier.h"
-#include "Swiften/Network/Timer.h"
-#include "Swiften/Network/TimerFactory.h"
+#include <SwifTools/Idle/IdleQuerier.h>
+#include <Swiften/Network/Timer.h>
+#include <Swiften/Network/TimerFactory.h>
 
 namespace Swift {
 

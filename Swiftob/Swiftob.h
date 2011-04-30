@@ -18,8 +18,8 @@
 #include <Swiften/Client/Client.h>
 #include <Swiften/Network/BoostNetworkFactories.h>
 
-#include "Swiftob/Commands.h"
-#include "Swiftob/LuaCommands.h"
+#include <Swiftob/Commands.h>
+#include <Swiftob/LuaCommands.h>
 
 namespace po = boost::program_options;
 

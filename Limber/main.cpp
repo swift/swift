@@ -8,22 +8,22 @@
 #include <boost/bind.hpp>
 #include <boost/shared_ptr.hpp>
 
-#include "Swiften/Elements/IQ.h"
-#include "Swiften/Elements/RosterPayload.h"
-#include "Swiften/Elements/VCard.h"
-#include "Swiften/Server/SimpleUserRegistry.h"
-#include "Swiften/Base/IDGenerator.h"
-#include "Swiften/EventLoop/EventLoop.h"
-#include "Swiften/EventLoop/SimpleEventLoop.h"
-#include "Swiften/EventLoop/EventOwner.h"
-#include "Swiften/Elements/Stanza.h"
-#include "Swiften/Network/ConnectionServer.h"
-#include "Swiften/Network/BoostConnection.h"
-#include "Swiften/Network/BoostIOServiceThread.h"
-#include "Swiften/Network/BoostConnectionServer.h"
-#include "Swiften/Server/ServerFromClientSession.h"
-#include "Swiften/Parser/PayloadParsers/FullPayloadParserFactoryCollection.h"
-#include "Swiften/Serializer/PayloadSerializers/FullPayloadSerializerCollection.h"
+#include <Swiften/Elements/IQ.h>
+#include <Swiften/Elements/RosterPayload.h>
+#include <Swiften/Elements/VCard.h>
+#include <Swiften/Server/SimpleUserRegistry.h>
+#include <Swiften/Base/IDGenerator.h>
+#include <Swiften/EventLoop/EventLoop.h>
+#include <Swiften/EventLoop/SimpleEventLoop.h>
+#include <Swiften/EventLoop/EventOwner.h>
+#include <Swiften/Elements/Stanza.h>
+#include <Swiften/Network/ConnectionServer.h>
+#include <Swiften/Network/BoostConnection.h>
+#include <Swiften/Network/BoostIOServiceThread.h>
+#include <Swiften/Network/BoostConnectionServer.h>
+#include <Swiften/Server/ServerFromClientSession.h>
+#include <Swiften/Parser/PayloadParsers/FullPayloadParserFactoryCollection.h>
+#include <Swiften/Serializer/PayloadSerializers/FullPayloadSerializerCollection.h>
 
 using namespace Swift;
 

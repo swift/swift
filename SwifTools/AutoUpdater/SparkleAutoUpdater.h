@@ -7,7 +7,7 @@
 #pragma once
 
 #include <string>
-#include "SwifTools/AutoUpdater/AutoUpdater.h"
+#include <SwifTools/AutoUpdater/AutoUpdater.h>
 
 namespace Swift {
 	class SparkleAutoUpdater : public AutoUpdater {

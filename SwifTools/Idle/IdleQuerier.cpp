@@ -4,7 +4,7 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "SwifTools/Idle/IdleQuerier.h"
+#include <SwifTools/Idle/IdleQuerier.h>
 
 namespace Swift {
 

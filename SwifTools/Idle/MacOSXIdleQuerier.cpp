@@ -4,7 +4,7 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "SwifTools/Idle/MacOSXIdleQuerier.h"
+#include <SwifTools/Idle/MacOSXIdleQuerier.h>
 
 #pragma GCC diagnostic ignored "-Wold-style-cast"
 

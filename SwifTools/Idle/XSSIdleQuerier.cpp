@@ -4,7 +4,7 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "SwifTools/Idle/XSSIdleQuerier.h"
+#include <SwifTools/Idle/XSSIdleQuerier.h>
 
 #include <cassert>
 #include <iostream>

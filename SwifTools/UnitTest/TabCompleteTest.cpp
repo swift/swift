@@ -7,7 +7,7 @@
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/extensions/TestFactoryRegistry.h>
 
-#include "SwifTools/TabComplete.h"
+#include <SwifTools/TabComplete.h>
 
 using namespace Swift;
 

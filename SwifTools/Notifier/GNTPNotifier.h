@@ -8,8 +8,8 @@
 
 #include <boost/filesystem.hpp>
 
-#include "SwifTools/Notifier/Notifier.h"
-#include "Swiften/Network/Connection.h"
+#include <SwifTools/Notifier/Notifier.h>
+#include <Swiften/Network/Connection.h>
 
 namespace Swift {
 	class ConnectionFactory;

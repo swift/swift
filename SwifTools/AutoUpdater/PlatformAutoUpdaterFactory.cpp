@@ -4,12 +4,12 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "SwifTools/AutoUpdater/PlatformAutoUpdaterFactory.h"
+#include <SwifTools/AutoUpdater/PlatformAutoUpdaterFactory.h>
 
 #include <cassert>
 
 #ifdef HAVE_SPARKLE
-#include "SwifTools/AutoUpdater/SparkleAutoUpdater.h"
+#include <SwifTools/AutoUpdater/SparkleAutoUpdater.h>
 #endif
 
 namespace Swift {

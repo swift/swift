@@ -4,7 +4,7 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "Swiftob/Swiftob.h"
+#include <Swiftob/Swiftob.h>
 
 #include <string>
 #include <iostream>
@@ -14,8 +14,8 @@
 #include <Swiften/Base/String.h>
 #include <Swiften/Presence/PresenceSender.h>
 
-#include "Swiftob/Users.h"
-#include "Swiftob/Storage.h"
+#include <Swiftob/Users.h>
+#include <Swiftob/Storage.h>
 
 
 po::options_description Swiftob::getOptionsDescription() {

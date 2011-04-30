@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include "SwifTools/Idle/IdleQuerier.h"
+#include <SwifTools/Idle/IdleQuerier.h>
 
 namespace Swift {
 	class PlatformIdleQuerier : public IdleQuerier {

@@ -6,6 +6,6 @@
 
 #pragma once
 
-#include "Swiften/EventLoop/Cocoa/CocoaEventLoop.h"
+#include <Swiften/EventLoop/Cocoa/CocoaEventLoop.h>
 
 extern Swift::CocoaEventLoop* eventLoop;

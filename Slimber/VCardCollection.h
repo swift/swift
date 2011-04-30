@@ -8,7 +8,7 @@
 
 #include <boost/shared_ptr.hpp>
 
-#include "Swiften/Elements/VCard.h"
+#include <Swiften/Elements/VCard.h>
 
 namespace Swift {
 	class VCardCollection {

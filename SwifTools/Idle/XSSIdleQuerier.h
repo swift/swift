@@ -9,7 +9,7 @@
 #include <X11/Xlib.h>
 #include <X11/extensions/scrnsaver.h>
 
-#include "SwifTools/Idle/IdleQuerier.h"
+#include <SwifTools/Idle/IdleQuerier.h>
 
 namespace Swift {
 	class XSSIdleQuerier : public IdleQuerier {

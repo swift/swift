@@ -8,11 +8,11 @@
 #include <cppunit/extensions/TestFactoryRegistry.h>
 #include <boost/bind.hpp>
 
-#include "SwifTools/Idle/ActualIdleDetector.h"
-#include "SwifTools/Idle/IdleQuerier.h"
-#include "Swiften/Base/foreach.h"
-#include "Swiften/Network/TimerFactory.h"
-#include "Swiften/Network/Timer.h"
+#include <SwifTools/Idle/ActualIdleDetector.h>
+#include <SwifTools/Idle/IdleQuerier.h>
+#include <Swiften/Base/foreach.h>
+#include <Swiften/Network/TimerFactory.h>
+#include <Swiften/Network/Timer.h>
 
 using namespace Swift;
 

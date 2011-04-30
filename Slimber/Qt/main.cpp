@@ -11,7 +11,7 @@
 
 #include "QtMenulet.h"
 #include "Slimber/MainController.h"
-#include "Swiften/EventLoop/Qt/QtEventLoop.h"
+#include <Swiften/EventLoop/Qt/QtEventLoop.h>
 #include "Slimber/Qt/BuildVersion.h"
 
 int main(int argc, char* argv[]) {

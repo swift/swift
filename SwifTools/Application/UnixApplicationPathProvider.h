@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include "SwifTools/Application/ApplicationPathProvider.h"
+#include <SwifTools/Application/ApplicationPathProvider.h>
 
 namespace Swift {
 	class UnixApplicationPathProvider : public ApplicationPathProvider {

@@ -7,7 +7,7 @@
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/extensions/TestFactoryRegistry.h>
 
-#include "SwifTools/Linkify.h"
+#include <SwifTools/Linkify.h>
 
 using namespace Swift;
 

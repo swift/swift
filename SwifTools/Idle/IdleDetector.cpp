@@ -4,7 +4,7 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "SwifTools/Idle/IdleDetector.h"
+#include <SwifTools/Idle/IdleDetector.h>
 
 namespace Swift {
 

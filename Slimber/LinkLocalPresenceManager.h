@@ -7,11 +7,11 @@
 #pragma once
 
 #include <boost/shared_ptr.hpp>
-#include "Swiften/Base/boost_bsignals.h"
+#include <Swiften/Base/boost_bsignals.h>
 
-#include "Swiften/Elements/RosterItemPayload.h"
+#include <Swiften/Elements/RosterItemPayload.h>
 #include <string>
-#include "Swiften/JID/JID.h"
+#include <Swiften/JID/JID.h>
 
 namespace Swift {
 	class LinkLocalService;

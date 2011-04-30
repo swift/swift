@@ -1,4 +1,4 @@
-#include "SwifTools/AutoUpdater/SparkleAutoUpdater.h"
+#include <SwifTools/AutoUpdater/SparkleAutoUpdater.h>
 
 #include <Cocoa/Cocoa.h>
 #include <Sparkle/Sparkle.h>

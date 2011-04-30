@@ -6,8 +6,8 @@
 
 #pragma once
 
-#include "SwifTools/Notifier/Notifier.h"
-#include "Swiften/Base/ByteArray.h"
+#include <SwifTools/Notifier/Notifier.h>
+#include <Swiften/Base/ByteArray.h>
 
 namespace Swift {
 	class LoggingNotifier : public Notifier {

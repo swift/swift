@@ -4,7 +4,7 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "SwifTools/Idle/WindowsIdleQuerier.h"
+#include <SwifTools/Idle/WindowsIdleQuerier.h>
 
 #include <windows.h>
 

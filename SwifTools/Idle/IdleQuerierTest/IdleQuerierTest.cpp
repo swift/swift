@@ -6,8 +6,8 @@
 
 #include <iostream>
 
-#include "SwifTools/Idle/PlatformIdleQuerier.h"
-#include "Swiften/Base/sleep.h"
+#include <SwifTools/Idle/PlatformIdleQuerier.h>
+#include <Swiften/Base/sleep.h>
 
 using namespace Swift;
 

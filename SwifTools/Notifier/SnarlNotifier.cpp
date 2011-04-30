@@ -4,14 +4,14 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "SwifTools/Notifier/SnarlNotifier.h"
+#include <SwifTools/Notifier/SnarlNotifier.h>
 
 #include <cassert>
 #include <iostream>
 #include <boost/bind.hpp>
 
-#include "Swiften/Base/foreach.h"
-#include "SwifTools/Notifier/Win32NotifierWindow.h"
+#include <Swiften/Base/foreach.h>
+#include <SwifTools/Notifier/Win32NotifierWindow.h>
 
 #define SWIFT_SNARLNOTIFIER_MESSAGE_ID 0x4567 // Sounds sick to pick a number, but this is windows
 

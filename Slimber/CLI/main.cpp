@@ -4,7 +4,7 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "Swiften/EventLoop/SimpleEventLoop.h"
+#include <Swiften/EventLoop/SimpleEventLoop.h>
 #include "Slimber/CLI/DummyMenulet.h"
 #include "Slimber/MainController.h"
 
