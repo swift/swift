@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include "Swiften/Network/ProxyProvider.h"
+#include <Swiften/Network/ProxyProvider.h>
 
 namespace Swift {
 	class GConfProxyProvider : public ProxyProvider {

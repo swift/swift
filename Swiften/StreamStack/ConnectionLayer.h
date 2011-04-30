@@ -8,8 +8,8 @@
 
 #include <boost/shared_ptr.hpp>
 
-#include "Swiften/StreamStack/LowLayer.h"
-#include "Swiften/Network/Connection.h"
+#include <Swiften/StreamStack/LowLayer.h>
+#include <Swiften/Network/Connection.h>
 
 namespace Swift {
 	class ConnectionLayer : public LowLayer {

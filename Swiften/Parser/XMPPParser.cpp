@@ -4,42 +4,42 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "Swiften/Parser/XMPPParser.h"
+#include <Swiften/Parser/XMPPParser.h>
 
 #include <iostream>
 #include <cassert>
 
-#include "Swiften/Elements/ProtocolHeader.h"
+#include <Swiften/Elements/ProtocolHeader.h>
 #include <string>
-#include "Swiften/Parser/XMLParser.h"
-#include "Swiften/Parser/PlatformXMLParserFactory.h"
-#include "Swiften/Parser/XMPPParserClient.h"
-#include "Swiften/Parser/XMPPParser.h"
-#include "Swiften/Parser/ElementParser.h"
-#include "Swiften/Parser/PresenceParser.h"
-#include "Swiften/Parser/IQParser.h"
-#include "Swiften/Parser/MessageParser.h"
-#include "Swiften/Parser/StreamFeaturesParser.h"
-#include "Swiften/Parser/StreamErrorParser.h"
-#include "Swiften/Parser/AuthRequestParser.h"
-#include "Swiften/Parser/AuthSuccessParser.h"
-#include "Swiften/Parser/AuthFailureParser.h"
-#include "Swiften/Parser/AuthChallengeParser.h"
-#include "Swiften/Parser/AuthResponseParser.h"
-#include "Swiften/Parser/EnableStreamManagementParser.h"
-#include "Swiften/Parser/StreamManagementEnabledParser.h"
-#include "Swiften/Parser/StreamManagementFailedParser.h"
-#include "Swiften/Parser/StreamResumeParser.h"
-#include "Swiften/Parser/StanzaAckParser.h"
-#include "Swiften/Parser/StanzaAckRequestParser.h"
-#include "Swiften/Parser/StartTLSParser.h"
-#include "Swiften/Parser/StartTLSFailureParser.h"
-#include "Swiften/Parser/CompressParser.h"
-#include "Swiften/Parser/CompressFailureParser.h"
-#include "Swiften/Parser/CompressedParser.h"
-#include "Swiften/Parser/UnknownElementParser.h"
-#include "Swiften/Parser/TLSProceedParser.h"
-#include "Swiften/Parser/ComponentHandshakeParser.h"
+#include <Swiften/Parser/XMLParser.h>
+#include <Swiften/Parser/PlatformXMLParserFactory.h>
+#include <Swiften/Parser/XMPPParserClient.h>
+#include <Swiften/Parser/XMPPParser.h>
+#include <Swiften/Parser/ElementParser.h>
+#include <Swiften/Parser/PresenceParser.h>
+#include <Swiften/Parser/IQParser.h>
+#include <Swiften/Parser/MessageParser.h>
+#include <Swiften/Parser/StreamFeaturesParser.h>
+#include <Swiften/Parser/StreamErrorParser.h>
+#include <Swiften/Parser/AuthRequestParser.h>
+#include <Swiften/Parser/AuthSuccessParser.h>
+#include <Swiften/Parser/AuthFailureParser.h>
+#include <Swiften/Parser/AuthChallengeParser.h>
+#include <Swiften/Parser/AuthResponseParser.h>
+#include <Swiften/Parser/EnableStreamManagementParser.h>
+#include <Swiften/Parser/StreamManagementEnabledParser.h>
+#include <Swiften/Parser/StreamManagementFailedParser.h>
+#include <Swiften/Parser/StreamResumeParser.h>
+#include <Swiften/Parser/StanzaAckParser.h>
+#include <Swiften/Parser/StanzaAckRequestParser.h>
+#include <Swiften/Parser/StartTLSParser.h>
+#include <Swiften/Parser/StartTLSFailureParser.h>
+#include <Swiften/Parser/CompressParser.h>
+#include <Swiften/Parser/CompressFailureParser.h>
+#include <Swiften/Parser/CompressedParser.h>
+#include <Swiften/Parser/UnknownElementParser.h>
+#include <Swiften/Parser/TLSProceedParser.h>
+#include <Swiften/Parser/ComponentHandshakeParser.h>
 
 // TODO: Whenever an error occurs in the handlers, stop the parser by returing
 // a bool value, and stopping the XML parser

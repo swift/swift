@@ -9,8 +9,8 @@
 #include <boost/bind.hpp>
 #include <boost/numeric/conversion/cast.hpp>
 
-#include "Swiften/StreamManagement/StanzaAckResponder.h"
-#include "Swiften/Elements/Message.h"
+#include <Swiften/StreamManagement/StanzaAckResponder.h>
+#include <Swiften/Elements/Message.h>
 
 using namespace Swift;
 

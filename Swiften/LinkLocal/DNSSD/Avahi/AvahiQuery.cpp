@@ -4,8 +4,8 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "Swiften/LinkLocal/DNSSD/Avahi/AvahiQuery.h"
-#include "Swiften/LinkLocal/DNSSD/Avahi/AvahiQuerier.h"
+#include <Swiften/LinkLocal/DNSSD/Avahi/AvahiQuery.h>
+#include <Swiften/LinkLocal/DNSSD/Avahi/AvahiQuerier.h>
 
 namespace Swift {
 

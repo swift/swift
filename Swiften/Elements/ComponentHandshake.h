@@ -9,7 +9,7 @@
 #include <boost/shared_ptr.hpp>
 #include <string>
 
-#include "Swiften/Elements/Element.h"
+#include <Swiften/Elements/Element.h>
 
 namespace Swift {
 	class ComponentHandshake : public Element {

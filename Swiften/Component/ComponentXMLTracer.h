@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include "Swiften/Component/Component.h"
+#include <Swiften/Component/Component.h>
 
 namespace Swift {
 	class ComponentXMLTracer {

@@ -4,14 +4,14 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "Swiften/Component/ComponentSession.h"
+#include <Swiften/Component/ComponentSession.h>
 
 #include <boost/bind.hpp>
 
-#include "Swiften/Elements/ProtocolHeader.h"
-#include "Swiften/Elements/ComponentHandshake.h"
-#include "Swiften/Session/SessionStream.h"
-#include "Swiften/Component/ComponentHandshakeGenerator.h"
+#include <Swiften/Elements/ProtocolHeader.h>
+#include <Swiften/Elements/ComponentHandshake.h>
+#include <Swiften/Session/SessionStream.h>
+#include <Swiften/Component/ComponentHandshakeGenerator.h>
 
 namespace Swift {
 

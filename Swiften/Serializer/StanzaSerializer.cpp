@@ -4,18 +4,18 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "Swiften/Serializer/StanzaSerializer.h"
+#include <Swiften/Serializer/StanzaSerializer.h>
 
 #include <sstream>
 #include <typeinfo>
 #include <iostream>
 
 #include <Swiften/Base/foreach.h>
-#include "Swiften/Serializer/XML/XMLElement.h"
-#include "Swiften/Serializer/XML/XMLRawTextNode.h"
-#include "Swiften/Serializer/PayloadSerializer.h"
-#include "Swiften/Serializer/PayloadSerializerCollection.h"
-#include "Swiften/Elements/Stanza.h"
+#include <Swiften/Serializer/XML/XMLElement.h>
+#include <Swiften/Serializer/XML/XMLRawTextNode.h>
+#include <Swiften/Serializer/PayloadSerializer.h>
+#include <Swiften/Serializer/PayloadSerializerCollection.h>
+#include <Swiften/Elements/Stanza.h>
 
 namespace Swift {
 

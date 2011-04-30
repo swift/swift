@@ -7,8 +7,8 @@
 
 #pragma once
 
-#include "Swiften/Serializer/GenericPayloadSerializer.h"
-#include "Swiften/Elements/SearchPayload.h"
+#include <Swiften/Serializer/GenericPayloadSerializer.h>
+#include <Swiften/Elements/SearchPayload.h>
 
 namespace Swift {
 	class PayloadSerializerCollection;

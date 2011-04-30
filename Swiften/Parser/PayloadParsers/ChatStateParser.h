@@ -6,8 +6,8 @@
 
 #pragma once
 
-#include "Swiften/Elements/ChatState.h"
-#include "Swiften/Parser/GenericPayloadParser.h"
+#include <Swiften/Elements/ChatState.h>
+#include <Swiften/Parser/GenericPayloadParser.h>
 
 namespace Swift {
 	class ChatStateParser : public GenericPayloadParser<ChatState> {

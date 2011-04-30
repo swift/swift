@@ -4,9 +4,9 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
-#include "Swiften/Network/HTTPConnectProxiedConnectionFactory.h"
+#include <Swiften/Network/HTTPConnectProxiedConnectionFactory.h>
 
-#include "Swiften/Network/HTTPConnectProxiedConnection.h"
+#include <Swiften/Network/HTTPConnectProxiedConnection.h>
 
 namespace Swift {
 

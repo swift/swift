@@ -9,9 +9,9 @@
 #include <boost/optional.hpp>
 #include <boost/date_time/posix_time/posix_time_types.hpp>
 
-#include "Swiften/JID/JID.h"
+#include <Swiften/JID/JID.h>
 #include <string>
-#include "Swiften/Elements/Payload.h"
+#include <Swiften/Elements/Payload.h>
 
 namespace Swift {
 	class MUCPayload : public Payload {

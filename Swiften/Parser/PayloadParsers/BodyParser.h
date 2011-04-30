@@ -7,8 +7,8 @@
 #ifndef SWIFTEN_BodyParser_H
 #define SWIFTEN_BodyParser_H
 
-#include "Swiften/Elements/Body.h"
-#include "Swiften/Parser/GenericPayloadParser.h"
+#include <Swiften/Elements/Body.h>
+#include <Swiften/Parser/GenericPayloadParser.h>
 
 namespace Swift {
 	class BodyParser : public GenericPayloadParser<Body> {

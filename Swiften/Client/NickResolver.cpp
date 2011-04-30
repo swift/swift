@@ -4,14 +4,14 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "Swiften/Client/NickResolver.h"
+#include <Swiften/Client/NickResolver.h>
 
 #include <boost/shared_ptr.hpp>
 #include <boost/bind.hpp>
 
-#include "Swiften/MUC/MUCRegistry.h"
-#include "Swiften/Roster/XMPPRoster.h"
-#include "Swiften/VCards/VCardManager.h"
+#include <Swiften/MUC/MUCRegistry.h>
+#include <Swiften/Roster/XMPPRoster.h>
+#include <Swiften/VCards/VCardManager.h>
 
 // FIXME: The NickResolver currently relies on the vcard being requested by the client on login.
 // The VCardManager should get an onConnected() signal (which is signalled when the stanzachannel is available(, and each time this is emitted,

@@ -4,7 +4,7 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "Swiften/StreamManagement/StanzaAckResponder.h"
+#include <Swiften/StreamManagement/StanzaAckResponder.h>
 
 #include <boost/numeric/conversion/cast.hpp>
 

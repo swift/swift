@@ -4,12 +4,12 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "Swiften/Network/DummyTimerFactory.h"
+#include <Swiften/Network/DummyTimerFactory.h>
 
 #include <algorithm>
 
-#include "Swiften/Base/foreach.h"
-#include "Swiften/Network/Timer.h"
+#include <Swiften/Base/foreach.h>
+#include <Swiften/Network/Timer.h>
 
 namespace Swift {
 

@@ -9,8 +9,8 @@
 #include <boost/shared_ptr.hpp>
 
 #include <string>
-#include "Swiften/Base/ByteArray.h"
-#include "Swiften/Elements/Payload.h"
+#include <Swiften/Base/ByteArray.h>
+#include <Swiften/Elements/Payload.h>
 
 namespace Swift {
 	class VCard : public Payload {

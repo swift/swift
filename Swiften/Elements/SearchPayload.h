@@ -9,8 +9,8 @@
 #include <boost/shared_ptr.hpp>
 #include <boost/optional.hpp>
 
-#include "Swiften/Elements/Payload.h"
-#include "Swiften/Elements/Form.h"
+#include <Swiften/Elements/Payload.h>
+#include <Swiften/Elements/Form.h>
 #include <string>
 
 namespace Swift {

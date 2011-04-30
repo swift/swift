@@ -4,11 +4,11 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "Swiften/Serializer/PayloadSerializers/UnitTest/PayloadsSerializer.h"
+#include <Swiften/Serializer/PayloadSerializers/UnitTest/PayloadsSerializer.h>
 
 #include <cppunit/extensions/HelperMacros.h>
 
-#include "Swiften/Serializer/PayloadSerializer.h"
+#include <Swiften/Serializer/PayloadSerializer.h>
 
 namespace Swift {
 

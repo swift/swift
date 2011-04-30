@@ -6,8 +6,8 @@
 
 #pragma once
 
-#include "Swiften/Network/NetworkFactories.h"
-#include "Swiften/Network/BoostIOServiceThread.h"
+#include <Swiften/Network/NetworkFactories.h>
+#include <Swiften/Network/BoostIOServiceThread.h>
 
 namespace Swift {
 	class EventLoop;

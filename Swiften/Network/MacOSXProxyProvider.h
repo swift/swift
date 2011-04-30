@@ -5,7 +5,7 @@
  */
 
 #pragma once
-#include "Swiften/Network/ProxyProvider.h"
+#include <Swiften/Network/ProxyProvider.h>
 #include <CoreFoundation/CoreFoundation.h>
 
 namespace Swift {

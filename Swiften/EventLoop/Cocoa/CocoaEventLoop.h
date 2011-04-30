@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include "Swiften/EventLoop/EventLoop.h"
+#include <Swiften/EventLoop/EventLoop.h>
 
 namespace Swift {
 	class CocoaEventLoop : public EventLoop {

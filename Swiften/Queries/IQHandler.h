@@ -9,7 +9,7 @@
 
 #include <boost/shared_ptr.hpp>
 
-#include "Swiften/Elements/IQ.h"
+#include <Swiften/Elements/IQ.h>
 
 namespace Swift {
 	class IQRouter;

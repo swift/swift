@@ -4,7 +4,7 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "Swiften/Presence/PresenceSender.h"
+#include <Swiften/Presence/PresenceSender.h>
 
 namespace Swift {
 

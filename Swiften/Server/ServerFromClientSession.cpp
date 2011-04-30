@@ -4,22 +4,22 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "Swiften/Server/ServerFromClientSession.h"
+#include <Swiften/Server/ServerFromClientSession.h>
 
 #include <boost/bind.hpp>
 
-#include "Swiften/Elements/ProtocolHeader.h"
-#include "Swiften/Server/UserRegistry.h"
-#include "Swiften/Network/Connection.h"
-#include "Swiften/StreamStack/XMPPLayer.h"
-#include "Swiften/Elements/StreamFeatures.h"
-#include "Swiften/Elements/ResourceBind.h"
-#include "Swiften/Elements/StartSession.h"
-#include "Swiften/Elements/IQ.h"
-#include "Swiften/Elements/AuthSuccess.h"
-#include "Swiften/Elements/AuthFailure.h"
-#include "Swiften/Elements/AuthRequest.h"
-#include "Swiften/SASL/PLAINMessage.h"
+#include <Swiften/Elements/ProtocolHeader.h>
+#include <Swiften/Server/UserRegistry.h>
+#include <Swiften/Network/Connection.h>
+#include <Swiften/StreamStack/XMPPLayer.h>
+#include <Swiften/Elements/StreamFeatures.h>
+#include <Swiften/Elements/ResourceBind.h>
+#include <Swiften/Elements/StartSession.h>
+#include <Swiften/Elements/IQ.h>
+#include <Swiften/Elements/AuthSuccess.h>
+#include <Swiften/Elements/AuthFailure.h>
+#include <Swiften/Elements/AuthRequest.h>
+#include <Swiften/SASL/PLAINMessage.h>
 
 namespace Swift {
 

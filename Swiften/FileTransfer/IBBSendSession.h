@@ -9,12 +9,12 @@
 #include <boost/shared_ptr.hpp>
 #include <boost/optional.hpp>
 
-#include "Swiften/Base/boost_bsignals.h"
-#include "Swiften/FileTransfer/ReadBytestream.h"
-#include "Swiften/JID/JID.h"
-#include "Swiften/Elements/IBB.h"
-#include "Swiften/Elements/ErrorPayload.h"
-#include "Swiften/FileTransfer/FileTransferError.h"
+#include <Swiften/Base/boost_bsignals.h>
+#include <Swiften/FileTransfer/ReadBytestream.h>
+#include <Swiften/JID/JID.h>
+#include <Swiften/Elements/IBB.h>
+#include <Swiften/Elements/ErrorPayload.h>
+#include <Swiften/FileTransfer/FileTransferError.h>
 
 namespace Swift {
 	class IQRouter;

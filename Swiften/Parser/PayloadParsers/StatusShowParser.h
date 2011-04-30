@@ -7,8 +7,8 @@
 #ifndef SWIFTEN_StatusShowParser_H
 #define SWIFTEN_StatusShowParser_H
 
-#include "Swiften/Elements/StatusShow.h"
-#include "Swiften/Parser/GenericPayloadParser.h"
+#include <Swiften/Elements/StatusShow.h>
+#include <Swiften/Parser/GenericPayloadParser.h>
 
 namespace Swift {
 	class StatusShowParser : public GenericPayloadParser<StatusShow> {

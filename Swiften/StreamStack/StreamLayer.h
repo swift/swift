@@ -6,8 +6,8 @@
 
 #pragma once
 
-#include "Swiften/StreamStack/LowLayer.h"
-#include "Swiften/StreamStack/HighLayer.h"
+#include <Swiften/StreamStack/LowLayer.h>
+#include <Swiften/StreamStack/HighLayer.h>
 
 namespace Swift {
 	class StreamLayer : public LowLayer, public HighLayer {

@@ -4,22 +4,22 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "Swiften/Base/ByteArray.h"
+#include <Swiften/Base/ByteArray.h>
 
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/extensions/TestFactoryRegistry.h>
 #include <boost/bind.hpp>
 
-#include "Swiften/Elements/VCardUpdate.h"
-#include "Swiften/Avatars/VCardUpdateAvatarManager.h"
-#include "Swiften/Avatars/AvatarMemoryStorage.h"
-#include "Swiften/VCards/VCardMemoryStorage.h"
-#include "Swiften/VCards/VCardManager.h"
-#include "Swiften/MUC/MUCRegistry.h"
-#include "Swiften/Queries/IQRouter.h"
-#include "Swiften/Client/DummyStanzaChannel.h"
-#include "Swiften/StringCodecs/SHA1.h"
-#include "Swiften/StringCodecs/Hexify.h"
+#include <Swiften/Elements/VCardUpdate.h>
+#include <Swiften/Avatars/VCardUpdateAvatarManager.h>
+#include <Swiften/Avatars/AvatarMemoryStorage.h>
+#include <Swiften/VCards/VCardMemoryStorage.h>
+#include <Swiften/VCards/VCardManager.h>
+#include <Swiften/MUC/MUCRegistry.h>
+#include <Swiften/Queries/IQRouter.h>
+#include <Swiften/Client/DummyStanzaChannel.h>
+#include <Swiften/StringCodecs/SHA1.h>
+#include <Swiften/StringCodecs/Hexify.h>
 
 using namespace Swift;
 

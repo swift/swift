@@ -9,7 +9,7 @@
 
 #include <vector>
 
-#include "Swiften/Parser/AttributeMap.h"
+#include <Swiften/Parser/AttributeMap.h>
 
 namespace Swift {
 	class PayloadParserFactory;

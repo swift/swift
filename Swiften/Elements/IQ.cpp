@@ -4,7 +4,7 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "Swiften/Elements/IQ.h"
+#include <Swiften/Elements/IQ.h>
 
 namespace Swift {
 

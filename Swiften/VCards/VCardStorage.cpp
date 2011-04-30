@@ -4,7 +4,7 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "Swiften/VCards/VCardStorage.h"
+#include <Swiften/VCards/VCardStorage.h>
 
 #include <Swiften/StringCodecs/Hexify.h>
 #include <Swiften/StringCodecs/SHA1.h>

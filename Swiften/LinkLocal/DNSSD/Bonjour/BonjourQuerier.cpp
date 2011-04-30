@@ -4,17 +4,17 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "Swiften/LinkLocal/DNSSD/Bonjour/BonjourQuerier.h"
+#include <Swiften/LinkLocal/DNSSD/Bonjour/BonjourQuerier.h>
 
 #include <unistd.h>
 #include <sys/socket.h>
 #include <fcntl.h>
 
-#include "Swiften/LinkLocal/DNSSD/Bonjour/BonjourBrowseQuery.h"
-#include "Swiften/LinkLocal/DNSSD/Bonjour/BonjourRegisterQuery.h"
-#include "Swiften/LinkLocal/DNSSD/Bonjour/BonjourResolveServiceQuery.h"
-#include "Swiften/LinkLocal/DNSSD/Bonjour/BonjourResolveHostnameQuery.h"
-#include "Swiften/Base/foreach.h"
+#include <Swiften/LinkLocal/DNSSD/Bonjour/BonjourBrowseQuery.h>
+#include <Swiften/LinkLocal/DNSSD/Bonjour/BonjourRegisterQuery.h>
+#include <Swiften/LinkLocal/DNSSD/Bonjour/BonjourResolveServiceQuery.h>
+#include <Swiften/LinkLocal/DNSSD/Bonjour/BonjourResolveHostnameQuery.h>
+#include <Swiften/Base/foreach.h>
 
 namespace Swift {
 

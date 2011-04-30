@@ -4,10 +4,10 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "Swiften/Entity/Entity.h"
+#include <Swiften/Entity/Entity.h>
 
-#include "Swiften/Parser/PayloadParsers/FullPayloadParserFactoryCollection.h"
-#include "Swiften/Serializer/PayloadSerializers/FullPayloadSerializerCollection.h"
+#include <Swiften/Parser/PayloadParsers/FullPayloadParserFactoryCollection.h>
+#include <Swiften/Serializer/PayloadSerializers/FullPayloadSerializerCollection.h>
 
 
 namespace Swift {

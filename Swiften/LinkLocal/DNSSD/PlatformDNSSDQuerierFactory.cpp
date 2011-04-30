@@ -4,12 +4,12 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "Swiften/LinkLocal/DNSSD/PlatformDNSSDQuerierFactory.h"
+#include <Swiften/LinkLocal/DNSSD/PlatformDNSSDQuerierFactory.h>
 
 #if defined(HAVE_BONJOUR)
-#include "Swiften/LinkLocal/DNSSD/Bonjour/BonjourQuerier.h"
+#include <Swiften/LinkLocal/DNSSD/Bonjour/BonjourQuerier.h>
 #elif defined(HAVE_AVAHI)
-#include "Swiften/LinkLocal/DNSSD/Avahi/AvahiQuerier.h"
+#include <Swiften/LinkLocal/DNSSD/Avahi/AvahiQuerier.h>
 #endif
 
 

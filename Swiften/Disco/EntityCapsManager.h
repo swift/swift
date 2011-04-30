@@ -8,11 +8,11 @@
 
 #include <map>
 
-#include "Swiften/Base/boost_bsignals.h"
-#include "Swiften/Elements/Presence.h"
-#include "Swiften/Elements/DiscoInfo.h"
-#include "Swiften/Elements/ErrorPayload.h"
-#include "Swiften/Disco/EntityCapsProvider.h"
+#include <Swiften/Base/boost_bsignals.h>
+#include <Swiften/Elements/Presence.h>
+#include <Swiften/Elements/DiscoInfo.h>
+#include <Swiften/Elements/ErrorPayload.h>
+#include <Swiften/Disco/EntityCapsProvider.h>
 
 namespace Swift {
 	class StanzaChannel;

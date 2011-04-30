@@ -6,8 +6,8 @@
 
 #pragma once
 
-#include "Swiften/Serializer/GenericPayloadSerializer.h"
-#include "Swiften/Elements/Storage.h"
+#include <Swiften/Serializer/GenericPayloadSerializer.h>
+#include <Swiften/Elements/Storage.h>
 
 namespace Swift {
 	class StorageSerializer : public GenericPayloadSerializer<Storage> {

@@ -10,8 +10,8 @@
 
 #include <gconf/gconf-client.h>
 
-#include "Swiften/Base/Log.h"
-#include "Swiften/Network/GConfProxyProvider.h"
+#include <Swiften/Base/Log.h>
+#include <Swiften/Network/GConfProxyProvider.h>
 
 namespace Swift {
 

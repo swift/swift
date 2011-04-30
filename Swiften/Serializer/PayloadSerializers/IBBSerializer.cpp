@@ -4,16 +4,16 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "Swiften/Serializer/PayloadSerializers/IBBSerializer.h"
+#include <Swiften/Serializer/PayloadSerializers/IBBSerializer.h>
 
 #include <boost/shared_ptr.hpp>
 #include <boost/lexical_cast.hpp>
 
-#include "Swiften/Base/foreach.h"
-#include "Swiften/Serializer/XML/XMLElement.h"
-#include "Swiften/Serializer/XML/XMLTextNode.h"
-#include "Swiften/Serializer/PayloadSerializerCollection.h"
-#include "Swiften/StringCodecs/Base64.h"
+#include <Swiften/Base/foreach.h>
+#include <Swiften/Serializer/XML/XMLElement.h>
+#include <Swiften/Serializer/XML/XMLTextNode.h>
+#include <Swiften/Serializer/PayloadSerializerCollection.h>
+#include <Swiften/StringCodecs/Base64.h>
 
 namespace Swift {
 

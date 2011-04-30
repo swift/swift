@@ -8,8 +8,8 @@
 #define SWIFTEN_ResourceBind_H
 
 #include <string>
-#include "Swiften/Elements/Payload.h"
-#include "Swiften/JID/JID.h"
+#include <Swiften/Elements/Payload.h>
+#include <Swiften/JID/JID.h>
 
 namespace Swift {
 	class ResourceBind : public Payload

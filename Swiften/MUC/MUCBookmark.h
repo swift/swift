@@ -9,8 +9,8 @@
 #include <boost/optional.hpp>
 
 #include <string>
-#include "Swiften/JID/JID.h"
-#include "Swiften/Elements/Storage.h"
+#include <Swiften/JID/JID.h>
+#include <Swiften/Elements/Storage.h>
 
 namespace Swift {
 	class MUCBookmark {

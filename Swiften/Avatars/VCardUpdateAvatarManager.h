@@ -9,11 +9,11 @@
 #include <boost/shared_ptr.hpp>
 #include <map>
 
-#include "Swiften/Avatars/AvatarProvider.h"
-#include "Swiften/JID/JID.h"
-#include "Swiften/Elements/Presence.h"
-#include "Swiften/Elements/VCard.h"
-#include "Swiften/Elements/ErrorPayload.h"
+#include <Swiften/Avatars/AvatarProvider.h>
+#include <Swiften/JID/JID.h>
+#include <Swiften/Elements/Presence.h>
+#include <Swiften/Elements/VCard.h>
+#include <Swiften/Elements/ErrorPayload.h>
 
 namespace Swift {
 	class MUCRegistry;

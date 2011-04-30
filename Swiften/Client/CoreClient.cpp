@@ -4,26 +4,26 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "Swiften/Client/CoreClient.h"
+#include <Swiften/Client/CoreClient.h>
 
 #include <boost/bind.hpp>
 #include <boost/smart_ptr/make_shared.hpp>
 
-#include "Swiften/Client/ClientSession.h"
-#include "Swiften/TLS/PlatformTLSFactories.h"
-#include "Swiften/TLS/CertificateVerificationError.h"
+#include <Swiften/Client/ClientSession.h>
+#include <Swiften/TLS/PlatformTLSFactories.h>
+#include <Swiften/TLS/CertificateVerificationError.h>
 #include <Swiften/Network/ChainedConnector.h>
-#include "Swiften/Network/NetworkFactories.h"
-#include "Swiften/TLS/PKCS12Certificate.h"
-#include "Swiften/Session/BasicSessionStream.h"
-#include "Swiften/Queries/IQRouter.h"
-#include "Swiften/Base/IDGenerator.h"
-#include "Swiften/Client/ClientSessionStanzaChannel.h"
+#include <Swiften/Network/NetworkFactories.h>
+#include <Swiften/TLS/PKCS12Certificate.h>
+#include <Swiften/Session/BasicSessionStream.h>
+#include <Swiften/Queries/IQRouter.h>
+#include <Swiften/Base/IDGenerator.h>
+#include <Swiften/Client/ClientSessionStanzaChannel.h>
 #include <Swiften/Base/Log.h>
 #include <Swiften/Base/foreach.h>
-#include "Swiften/Network/PlatformProxyProvider.h"
-#include "Swiften/Network/SOCKS5ProxiedConnectionFactory.h"
-#include "Swiften/Network/HTTPConnectProxiedConnectionFactory.h"
+#include <Swiften/Network/PlatformProxyProvider.h>
+#include <Swiften/Network/SOCKS5ProxiedConnectionFactory.h>
+#include <Swiften/Network/HTTPConnectProxiedConnectionFactory.h>
 
 namespace Swift {
 

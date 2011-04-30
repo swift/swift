@@ -6,9 +6,9 @@
 
 #pragma once
 
-#include "Swiften/LinkLocal/DNSSD/Fake/FakeDNSSDQuery.h"
-#include "Swiften/LinkLocal/DNSSD/DNSSDResolveServiceQuery.h"
-#include "Swiften/LinkLocal/LinkLocalServiceInfo.h"
+#include <Swiften/LinkLocal/DNSSD/Fake/FakeDNSSDQuery.h>
+#include <Swiften/LinkLocal/DNSSD/DNSSDResolveServiceQuery.h>
+#include <Swiften/LinkLocal/LinkLocalServiceInfo.h>
 
 namespace Swift {
 	class FakeDNSSDQuerier;

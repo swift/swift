@@ -8,8 +8,8 @@
 #include <stdlib.h>
 #include <iostream>
 
-#include "Swiften/Base/Log.h"
-#include "Swiften/Network/EnvironmentProxyProvider.h"
+#include <Swiften/Base/Log.h>
+#include <Swiften/Network/EnvironmentProxyProvider.h>
 
 namespace Swift {
 

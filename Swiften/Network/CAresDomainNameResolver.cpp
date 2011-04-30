@@ -7,8 +7,8 @@
 // TODO: Check the second param of postEvent. We sometimes omit it. Same 
 // goes for the PlatformDomainNameResolver.
 
-#include "Swiften/Network/CAresDomainNameResolver.h"
-#include "Swiften/Base/Platform.h"
+#include <Swiften/Network/CAresDomainNameResolver.h>
+#include <Swiften/Base/Platform.h>
 
 #ifndef SWIFTEN_PLATFORM_WINDOWS
 #include <netdb.h>
@@ -16,11 +16,11 @@
 #endif
 #include <algorithm>
 
-#include "Swiften/Network/DomainNameServiceQuery.h"
-#include "Swiften/Network/DomainNameAddressQuery.h"
-#include "Swiften/Base/ByteArray.h"
-#include "Swiften/EventLoop/EventLoop.h"
-#include "Swiften/Base/foreach.h"
+#include <Swiften/Network/DomainNameServiceQuery.h>
+#include <Swiften/Network/DomainNameAddressQuery.h>
+#include <Swiften/Base/ByteArray.h>
+#include <Swiften/EventLoop/EventLoop.h>
+#include <Swiften/Base/foreach.h>
 
 namespace Swift {
 

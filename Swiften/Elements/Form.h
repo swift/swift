@@ -9,9 +9,9 @@
 #include <vector>
 #include <string>
 
-#include "Swiften/Elements/Payload.h"
-#include "Swiften/Elements/FormField.h"
-#include "Swiften/JID/JID.h"
+#include <Swiften/Elements/Payload.h>
+#include <Swiften/Elements/FormField.h>
+#include <Swiften/JID/JID.h>
 
 namespace Swift {
 	/**

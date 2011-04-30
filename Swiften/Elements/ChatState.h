@@ -8,7 +8,7 @@
 
 #include <string>
 
-#include "Swiften/Elements/Payload.h"
+#include <Swiften/Elements/Payload.h>
 
 namespace Swift {
 	class ChatState : public Payload {

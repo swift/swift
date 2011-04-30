@@ -7,8 +7,8 @@
 #ifndef SWIFTEN_RosterParser_H
 #define SWIFTEN_RosterParser_H
 
-#include "Swiften/Elements/RosterPayload.h"
-#include "Swiften/Parser/GenericPayloadParser.h"
+#include <Swiften/Elements/RosterPayload.h>
+#include <Swiften/Parser/GenericPayloadParser.h>
 
 namespace Swift {
 	class SerializingParser;

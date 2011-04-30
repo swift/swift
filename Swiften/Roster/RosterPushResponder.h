@@ -6,10 +6,10 @@
 
 #pragma once
 
-#include "Swiften/Base/boost_bsignals.h"
+#include <Swiften/Base/boost_bsignals.h>
 
-#include "Swiften/Queries/SetResponder.h"
-#include "Swiften/Elements/RosterPayload.h"
+#include <Swiften/Queries/SetResponder.h>
+#include <Swiften/Elements/RosterPayload.h>
 
 namespace Swift {
 	class RosterPushResponder : public SetResponder<RosterPayload> {

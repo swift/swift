@@ -8,8 +8,8 @@
 
 #include <boost/shared_ptr.hpp>
 
-#include "Swiften/Elements/Stanza.h"
-#include "Swiften/Elements/ErrorPayload.h"
+#include <Swiften/Elements/Stanza.h>
+#include <Swiften/Elements/ErrorPayload.h>
 
 namespace Swift {
 	class IQ : public Stanza {

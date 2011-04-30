@@ -4,10 +4,10 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "Swiften/Network/PlatformDomainNameResolver.h"
+#include <Swiften/Network/PlatformDomainNameResolver.h>
 
 // Putting this early on, because some system types conflict with thread
-#include "Swiften/Network/PlatformDomainNameServiceQuery.h"
+#include <Swiften/Network/PlatformDomainNameServiceQuery.h>
 
 #include <string>
 #include <vector>
@@ -16,11 +16,11 @@
 #include <algorithm>
 
 #include <string>
-#include "Swiften/IDN/IDNA.h"
-#include "Swiften/Network/HostAddress.h"
-#include "Swiften/EventLoop/EventLoop.h"
-#include "Swiften/Network/HostAddressPort.h"
-#include "Swiften/Network/DomainNameAddressQuery.h"
+#include <Swiften/IDN/IDNA.h>
+#include <Swiften/Network/HostAddress.h>
+#include <Swiften/EventLoop/EventLoop.h>
+#include <Swiften/Network/HostAddressPort.h>
+#include <Swiften/Network/DomainNameAddressQuery.h>
 #include <Swiften/Network/PlatformDomainNameAddressQuery.h>
 
 using namespace Swift;

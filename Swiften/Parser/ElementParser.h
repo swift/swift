@@ -10,8 +10,8 @@
 #include <boost/shared_ptr.hpp>
 
 #include <string>
-#include "Swiften/Elements/Element.h"
-#include "Swiften/Parser/AttributeMap.h"
+#include <Swiften/Elements/Element.h>
+#include <Swiften/Parser/AttributeMap.h>
 
 namespace Swift {
 	class ElementParser {

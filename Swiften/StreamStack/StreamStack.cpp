@@ -4,14 +4,14 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "Swiften/StreamStack/StreamStack.h"
+#include <Swiften/StreamStack/StreamStack.h>
 
 #include <boost/bind.hpp>
 
-#include "Swiften/Base/foreach.h"
-#include "Swiften/StreamStack/XMPPLayer.h"
-#include "Swiften/StreamStack/LowLayer.h"
-#include "Swiften/StreamStack/StreamLayer.h"
+#include <Swiften/Base/foreach.h>
+#include <Swiften/StreamStack/XMPPLayer.h>
+#include <Swiften/StreamStack/LowLayer.h>
+#include <Swiften/StreamStack/StreamLayer.h>
 
 namespace Swift {
 

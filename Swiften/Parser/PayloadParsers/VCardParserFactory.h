@@ -6,8 +6,8 @@
 
 #pragma once
 
-#include "Swiften/Parser/GenericPayloadParserFactory.h"
-#include "Swiften/Parser/PayloadParsers/VCardParser.h"
+#include <Swiften/Parser/GenericPayloadParserFactory.h>
+#include <Swiften/Parser/PayloadParsers/VCardParser.h>
 
 namespace Swift {
 	class VCardParserFactory : public GenericPayloadParserFactory<VCardParser> {

@@ -6,8 +6,8 @@
 
 #pragma once
 
-#include "Swiften/Parser/PayloadParserFactory.h"
-#include "Swiften/Parser/PayloadParsers/RawXMLPayloadParser.h"
+#include <Swiften/Parser/PayloadParserFactory.h>
+#include <Swiften/Parser/PayloadParsers/RawXMLPayloadParser.h>
 #include <string>
 
 namespace Swift {

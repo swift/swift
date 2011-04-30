@@ -4,13 +4,13 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "Swiften/Serializer/PayloadSerializers/StorageSerializer.h"
+#include <Swiften/Serializer/PayloadSerializers/StorageSerializer.h>
 
 #include <boost/shared_ptr.hpp>
 
-#include "Swiften/Base/foreach.h"
-#include "Swiften/Serializer/XML/XMLElement.h"
-#include "Swiften/Serializer/XML/XMLTextNode.h"
+#include <Swiften/Base/foreach.h>
+#include <Swiften/Serializer/XML/XMLElement.h>
+#include <Swiften/Serializer/XML/XMLTextNode.h>
 
 namespace Swift {
 

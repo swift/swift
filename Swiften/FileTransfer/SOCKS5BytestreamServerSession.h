@@ -8,9 +8,9 @@
 
 #include <boost/shared_ptr.hpp>
 
-#include "Swiften/Base/boost_bsignals.h"
-#include "Swiften/Network/Connection.h"
-#include "Swiften/FileTransfer/ReadBytestream.h"
+#include <Swiften/Base/boost_bsignals.h>
+#include <Swiften/Network/Connection.h>
+#include <Swiften/FileTransfer/ReadBytestream.h>
 
 namespace Swift {
 	class SOCKS5BytestreamRegistry;

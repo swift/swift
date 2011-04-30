@@ -4,7 +4,7 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "Swiften/IDN/IDNA.h"
+#include <Swiften/IDN/IDNA.h>
 
 #include <stringprep.h>
 #include <vector>

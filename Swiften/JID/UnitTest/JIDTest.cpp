@@ -7,7 +7,7 @@
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/extensions/TestFactoryRegistry.h>
 
-#include "Swiften/JID/JID.h"
+#include <Swiften/JID/JID.h>
 
 using namespace Swift;
 

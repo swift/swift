@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include "Swiften/Base/Error.h"
+#include <Swiften/Base/Error.h>
 
 namespace Swift {
 	class CertificateVerificationError : public Error {

@@ -4,9 +4,9 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "Swiften/Disco/JIDDiscoInfoResponder.h"
-#include "Swiften/Queries/IQRouter.h"
-#include "Swiften/Elements/DiscoInfo.h"
+#include <Swiften/Disco/JIDDiscoInfoResponder.h>
+#include <Swiften/Queries/IQRouter.h>
+#include <Swiften/Elements/DiscoInfo.h>
 
 namespace Swift {
 

@@ -4,12 +4,12 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "Swiften/StreamManagement/StanzaAckRequester.h"
+#include <Swiften/StreamManagement/StanzaAckRequester.h>
 
 #include <boost/numeric/conversion/cast.hpp>
 #include <iostream>
 
-#include "Swiften/Elements/Message.h"
+#include <Swiften/Elements/Message.h>
 
 namespace Swift {
 

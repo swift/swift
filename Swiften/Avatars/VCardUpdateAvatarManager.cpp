@@ -4,18 +4,18 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "Swiften/Avatars/VCardUpdateAvatarManager.h"
+#include <Swiften/Avatars/VCardUpdateAvatarManager.h>
 
 #include <boost/bind.hpp>
 
-#include "Swiften/Client/StanzaChannel.h"
-#include "Swiften/Elements/VCardUpdate.h"
-#include "Swiften/VCards/GetVCardRequest.h"
-#include "Swiften/StringCodecs/SHA1.h"
-#include "Swiften/StringCodecs/Hexify.h"
-#include "Swiften/Avatars/AvatarStorage.h"
-#include "Swiften/MUC/MUCRegistry.h"
-#include "Swiften/VCards/VCardManager.h"
+#include <Swiften/Client/StanzaChannel.h>
+#include <Swiften/Elements/VCardUpdate.h>
+#include <Swiften/VCards/GetVCardRequest.h>
+#include <Swiften/StringCodecs/SHA1.h>
+#include <Swiften/StringCodecs/Hexify.h>
+#include <Swiften/Avatars/AvatarStorage.h>
+#include <Swiften/MUC/MUCRegistry.h>
+#include <Swiften/VCards/VCardManager.h>
 #include <Swiften/Base/Log.h>
 
 namespace Swift {

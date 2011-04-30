@@ -7,8 +7,8 @@
 #include <boost/bind.hpp>
 #include <algorithm>
 
-#include "Swiften/Parser/PayloadParserFactoryCollection.h"
-#include "Swiften/Parser/PayloadParserFactory.h"
+#include <Swiften/Parser/PayloadParserFactoryCollection.h>
+#include <Swiften/Parser/PayloadParserFactory.h>
 
 namespace Swift {
 

@@ -4,11 +4,11 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "Swiften/Disco/ClientDiscoManager.h"
+#include <Swiften/Disco/ClientDiscoManager.h>
 
-#include "Swiften/Disco/DiscoInfoResponder.h"
-#include "Swiften/Disco/CapsInfoGenerator.h"
-#include "Swiften/Presence/PayloadAddingPresenceSender.h"
+#include <Swiften/Disco/DiscoInfoResponder.h>
+#include <Swiften/Disco/CapsInfoGenerator.h>
+#include <Swiften/Presence/PayloadAddingPresenceSender.h>
 
 namespace Swift {
 

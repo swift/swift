@@ -4,17 +4,17 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "Swiften/SASL/SCRAMSHA1ClientAuthenticator.h"
+#include <Swiften/SASL/SCRAMSHA1ClientAuthenticator.h>
 
 #include <cassert>
 #include <map>
 #include <boost/lexical_cast.hpp>
 
-#include "Swiften/StringCodecs/SHA1.h"
-#include "Swiften/StringCodecs/Base64.h"
-#include "Swiften/StringCodecs/HMACSHA1.h"
-#include "Swiften/StringCodecs/PBKDF2.h"
-#include "Swiften/IDN/StringPrep.h"
+#include <Swiften/StringCodecs/SHA1.h>
+#include <Swiften/StringCodecs/Base64.h>
+#include <Swiften/StringCodecs/HMACSHA1.h>
+#include <Swiften/StringCodecs/PBKDF2.h>
+#include <Swiften/IDN/StringPrep.h>
 
 namespace Swift {
 

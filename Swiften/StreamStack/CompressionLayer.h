@@ -7,13 +7,13 @@
 #pragma once
 
 #include <boost/noncopyable.hpp>
-#include "Swiften/Base/boost_bsignals.h"
+#include <Swiften/Base/boost_bsignals.h>
 
-#include "Swiften/Base/ByteArray.h"
-#include "Swiften/StreamStack/StreamLayer.h"
-#include "Swiften/Compress/ZLibException.h"
-#include "Swiften/Compress/ZLibCompressor.h"
-#include "Swiften/Compress/ZLibDecompressor.h"
+#include <Swiften/Base/ByteArray.h>
+#include <Swiften/StreamStack/StreamLayer.h>
+#include <Swiften/Compress/ZLibException.h>
+#include <Swiften/Compress/ZLibCompressor.h>
+#include <Swiften/Compress/ZLibDecompressor.h>
 
 namespace Swift {
 	class ZLibCompressor;

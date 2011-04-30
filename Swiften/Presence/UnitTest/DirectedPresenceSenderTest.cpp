@@ -7,9 +7,9 @@
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/extensions/TestFactoryRegistry.h>
 
-#include "Swiften/Client/DummyStanzaChannel.h"
-#include "Swiften/Presence/DirectedPresenceSender.h"
-#include "Swiften/Presence/StanzaChannelPresenceSender.h"
+#include <Swiften/Client/DummyStanzaChannel.h>
+#include <Swiften/Presence/DirectedPresenceSender.h>
+#include <Swiften/Presence/StanzaChannelPresenceSender.h>
 
 using namespace Swift;
 

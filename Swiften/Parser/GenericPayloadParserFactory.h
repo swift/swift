@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include "Swiften/Parser/PayloadParserFactory.h"
+#include <Swiften/Parser/PayloadParserFactory.h>
 #include <string>
 
 namespace Swift {

@@ -10,7 +10,7 @@
 #include <expat.h>
 #include <boost/noncopyable.hpp>
 
-#include "Swiften/Parser/XMLParser.h"
+#include <Swiften/Parser/XMLParser.h>
 
 namespace Swift {
 	class ExpatParser : public XMLParser, public boost::noncopyable {

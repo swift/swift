@@ -9,13 +9,13 @@
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/extensions/TestFactoryRegistry.h>
 
-#include "Swiften/Elements/ProtocolHeader.h"
-#include "Swiften/Elements/Presence.h"
-#include "Swiften/Base/ByteArray.h"
-#include "Swiften/StreamStack/XMPPLayer.h"
-#include "Swiften/StreamStack/LowLayer.h"
-#include "Swiften/Parser/PayloadParsers/FullPayloadParserFactoryCollection.h"
-#include "Swiften/Serializer/PayloadSerializers/FullPayloadSerializerCollection.h"
+#include <Swiften/Elements/ProtocolHeader.h>
+#include <Swiften/Elements/Presence.h>
+#include <Swiften/Base/ByteArray.h>
+#include <Swiften/StreamStack/XMPPLayer.h>
+#include <Swiften/StreamStack/LowLayer.h>
+#include <Swiften/Parser/PayloadParsers/FullPayloadParserFactoryCollection.h>
+#include <Swiften/Serializer/PayloadSerializers/FullPayloadSerializerCollection.h>
 
 using namespace Swift;
 

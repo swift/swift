@@ -4,13 +4,13 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "Swiften/Serializer/StreamFeaturesSerializer.h"
+#include <Swiften/Serializer/StreamFeaturesSerializer.h>
 
 #include <boost/smart_ptr/make_shared.hpp>
 
-#include "Swiften/Serializer/XML/XMLElement.h"
-#include "Swiften/Serializer/XML/XMLTextNode.h"
-#include "Swiften/Base/foreach.h"
+#include <Swiften/Serializer/XML/XMLElement.h>
+#include <Swiften/Serializer/XML/XMLTextNode.h>
+#include <Swiften/Base/foreach.h>
 
 namespace Swift {
 

@@ -7,8 +7,8 @@
 #include <boost/bind.hpp>
 #include <algorithm>
 
-#include "Swiften/Serializer/PayloadSerializerCollection.h"
-#include "Swiften/Serializer/PayloadSerializer.h"
+#include <Swiften/Serializer/PayloadSerializerCollection.h>
+#include <Swiften/Serializer/PayloadSerializer.h>
 
 namespace Swift {
 

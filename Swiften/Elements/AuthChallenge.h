@@ -8,8 +8,8 @@
 
 #include <boost/optional.hpp>
 
-#include "Swiften/Base/ByteArray.h"
-#include "Swiften/Elements/Element.h"
+#include <Swiften/Base/ByteArray.h>
+#include <Swiften/Elements/Element.h>
 
 namespace Swift {
 	class AuthChallenge : public Element {

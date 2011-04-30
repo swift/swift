@@ -4,9 +4,9 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
-#include "Swiften/Network/SOCKS5ProxiedConnectionFactory.h"
+#include <Swiften/Network/SOCKS5ProxiedConnectionFactory.h>
 
-#include "Swiften/Network/SOCKS5ProxiedConnection.h"
+#include <Swiften/Network/SOCKS5ProxiedConnection.h>
 
 namespace Swift {
 

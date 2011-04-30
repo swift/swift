@@ -4,7 +4,7 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "Swiften/Roster/XMPPRoster.h"
+#include <Swiften/Roster/XMPPRoster.h>
 
 namespace Swift {
 

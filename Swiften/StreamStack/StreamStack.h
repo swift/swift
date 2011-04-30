@@ -7,10 +7,10 @@
 #pragma once
 
 #include <boost/shared_ptr.hpp>
-#include "Swiften/Base/boost_bsignals.h"
+#include <Swiften/Base/boost_bsignals.h>
 #include <vector>
 
-#include "Swiften/Elements/Stanza.h"
+#include <Swiften/Elements/Stanza.h>
 
 namespace Swift {
 	class XMPPLayer;

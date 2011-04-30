@@ -6,9 +6,9 @@
 
 #pragma once
 
-#include "Swiften/Base/boost_bsignals.h"
+#include <Swiften/Base/boost_bsignals.h>
 
-#include "Swiften/Queries/Request.h"
+#include <Swiften/Queries/Request.h>
 
 namespace Swift {
 	template<typename PAYLOAD_TYPE>

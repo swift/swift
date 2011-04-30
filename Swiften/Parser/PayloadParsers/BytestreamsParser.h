@@ -8,8 +8,8 @@
 
 #include <boost/optional.hpp>
 
-#include "Swiften/Elements/Bytestreams.h"
-#include "Swiften/Parser/GenericPayloadParser.h"
+#include <Swiften/Elements/Bytestreams.h>
+#include <Swiften/Parser/GenericPayloadParser.h>
 
 namespace Swift {
 	class BytestreamsParser : public GenericPayloadParser<Bytestreams> {

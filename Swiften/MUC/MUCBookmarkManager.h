@@ -9,12 +9,12 @@
 #include <vector>
 
 #include <boost/shared_ptr.hpp>
-#include "Swiften/Base/boost_bsignals.h"
+#include <Swiften/Base/boost_bsignals.h>
 #include <boost/optional.hpp>
 
-#include "Swiften/MUC/MUCBookmark.h"
-#include "Swiften/Elements/Storage.h"
-#include "Swiften/Elements/ErrorPayload.h"
+#include <Swiften/MUC/MUCBookmark.h>
+#include <Swiften/Elements/Storage.h>
+#include <Swiften/Elements/ErrorPayload.h>
 
 namespace Swift {
 	class IQRouter;

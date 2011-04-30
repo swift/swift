@@ -8,8 +8,8 @@
 #define SWIFTEN_STREAMFEATURESPARSER_H
 
 #include <string>
-#include "Swiften/Parser/GenericElementParser.h"
-#include "Swiften/Elements/StreamFeatures.h"
+#include <Swiften/Parser/GenericElementParser.h>
+#include <Swiften/Elements/StreamFeatures.h>
 
 namespace Swift {
 	class StreamFeaturesParser : public GenericElementParser<StreamFeatures> {

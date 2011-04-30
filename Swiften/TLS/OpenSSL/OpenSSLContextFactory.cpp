@@ -4,8 +4,8 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "Swiften/TLS/OpenSSL/OpenSSLContextFactory.h"
-#include "Swiften/TLS/OpenSSL/OpenSSLContext.h"
+#include <Swiften/TLS/OpenSSL/OpenSSLContextFactory.h>
+#include <Swiften/TLS/OpenSSL/OpenSSLContext.h>
 
 namespace Swift {
 

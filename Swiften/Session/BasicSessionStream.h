@@ -8,9 +8,9 @@
 
 #include <boost/shared_ptr.hpp>
 
-#include "Swiften/Network/Connection.h"
-#include "Swiften/Session/SessionStream.h"
-#include "Swiften/Elements/StreamType.h"
+#include <Swiften/Network/Connection.h>
+#include <Swiften/Session/SessionStream.h>
+#include <Swiften/Elements/StreamType.h>
 
 namespace Swift {
 	class TLSContextFactory;

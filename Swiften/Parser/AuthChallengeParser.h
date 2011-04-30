@@ -6,8 +6,8 @@
 
 #pragma once
 
-#include "Swiften/Parser/GenericElementParser.h"
-#include "Swiften/Elements/AuthChallenge.h"
+#include <Swiften/Parser/GenericElementParser.h>
+#include <Swiften/Elements/AuthChallenge.h>
 #include <string>
 
 namespace Swift {

@@ -7,14 +7,14 @@
 #pragma once
 
 #include <boost/shared_ptr.hpp>
-#include "Swiften/Base/boost_bsignals.h"
+#include <Swiften/Base/boost_bsignals.h>
 #include <boost/optional.hpp>
 #include <boost/enable_shared_from_this.hpp>
 
-#include "Swiften/JID/JID.h"
-#include "Swiften/Elements/Element.h"
-#include "Swiften/Network/Connection.h"
-#include "Swiften/StreamStack/ConnectionLayer.h"
+#include <Swiften/JID/JID.h>
+#include <Swiften/Elements/Element.h>
+#include <Swiften/Network/Connection.h>
+#include <Swiften/StreamStack/ConnectionLayer.h>
 
 namespace Swift {
 	class ProtocolHeader;

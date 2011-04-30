@@ -7,10 +7,10 @@
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/extensions/TestFactoryRegistry.h>
 
-#include "Swiften/Serializer/XMPPSerializer.h"
-#include "Swiften/Elements/AuthChallenge.h"
-#include "Swiften/Serializer/PayloadSerializerCollection.h"
-#include "Swiften/Elements/ProtocolHeader.h"
+#include <Swiften/Serializer/XMPPSerializer.h>
+#include <Swiften/Elements/AuthChallenge.h>
+#include <Swiften/Serializer/PayloadSerializerCollection.h>
+#include <Swiften/Elements/ProtocolHeader.h>
 
 using namespace Swift;
 

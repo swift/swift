@@ -4,7 +4,7 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "Swiften/Base/sleep.h"
+#include <Swiften/Base/sleep.h>
 
 #include <boost/thread.hpp>
 

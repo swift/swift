@@ -6,8 +6,8 @@
 
 #pragma once
 
-#include "Swiften/Presence/PresenceSender.h"
-#include "Swiften/Elements/Payload.h"
+#include <Swiften/Presence/PresenceSender.h>
+#include <Swiften/Elements/Payload.h>
 
 namespace Swift {
 	class StanzaChannel;

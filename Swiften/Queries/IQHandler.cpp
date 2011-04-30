@@ -4,8 +4,8 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "Swiften/Queries/IQHandler.h"
-#include "Swiften/Queries/IQRouter.h"
+#include <Swiften/Queries/IQHandler.h>
+#include <Swiften/Queries/IQRouter.h>
 
 namespace Swift {
 

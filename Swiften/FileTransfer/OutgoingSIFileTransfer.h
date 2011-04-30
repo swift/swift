@@ -9,15 +9,15 @@
 #include <boost/shared_ptr.hpp>
 
 #include <Swiften/FileTransfer/OutgoingFileTransfer.h>
-#include "Swiften/FileTransfer/ReadBytestream.h"
-#include "Swiften/Base/boost_bsignals.h"
-#include "Swiften/FileTransfer/FileTransferError.h"
-#include "Swiften/FileTransfer/SOCKS5BytestreamServer.h"
-#include "Swiften/JID/JID.h"
-#include "Swiften/Elements/StreamInitiation.h"
-#include "Swiften/Elements/Bytestreams.h"
-#include "Swiften/Elements/ErrorPayload.h"
-#include "Swiften/FileTransfer/IBBSendSession.h"
+#include <Swiften/FileTransfer/ReadBytestream.h>
+#include <Swiften/Base/boost_bsignals.h>
+#include <Swiften/FileTransfer/FileTransferError.h>
+#include <Swiften/FileTransfer/SOCKS5BytestreamServer.h>
+#include <Swiften/JID/JID.h>
+#include <Swiften/Elements/StreamInitiation.h>
+#include <Swiften/Elements/Bytestreams.h>
+#include <Swiften/Elements/ErrorPayload.h>
+#include <Swiften/FileTransfer/IBBSendSession.h>
 
 namespace Swift {
 	class IQRouter;

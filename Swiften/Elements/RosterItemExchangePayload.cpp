@@ -4,8 +4,8 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
-#include "Swiften/Elements/RosterItemExchangePayload.h"
-#include "Swiften/Base/foreach.h"
+#include <Swiften/Elements/RosterItemExchangePayload.h>
+#include <Swiften/Base/foreach.h>
 
 namespace Swift {
 

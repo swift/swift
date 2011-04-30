@@ -7,7 +7,7 @@
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/extensions/TestFactoryRegistry.h>
 
-#include "Swiften/Serializer/PayloadSerializers/VCardUpdateSerializer.h"
+#include <Swiften/Serializer/PayloadSerializers/VCardUpdateSerializer.h>
 
 using namespace Swift;
 

@@ -7,10 +7,10 @@
 #pragma once
 
 #include <string>
-#include "Swiften/LinkLocal/DNSSD/Avahi/AvahiQuery.h"
-#include "Swiften/LinkLocal/DNSSD/DNSSDResolveHostnameQuery.h"
-#include "Swiften/EventLoop/EventLoop.h"
-#include "Swiften/Network/HostAddress.h"
+#include <Swiften/LinkLocal/DNSSD/Avahi/AvahiQuery.h>
+#include <Swiften/LinkLocal/DNSSD/DNSSDResolveHostnameQuery.h>
+#include <Swiften/EventLoop/EventLoop.h>
+#include <Swiften/Network/HostAddress.h>
 
 #include <netinet/in.h>
 

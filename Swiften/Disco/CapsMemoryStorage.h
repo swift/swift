@@ -10,7 +10,7 @@
 #include <map>
 
 #include <string>
-#include "Swiften/Disco/CapsStorage.h"
+#include <Swiften/Disco/CapsStorage.h>
 
 namespace Swift {
 	class CapsMemoryStorage : public CapsStorage {

@@ -6,9 +6,9 @@
 
 #pragma once
 
-#include "Swiften/Serializer/GenericPayloadSerializer.h"
-#include "Swiften/Serializer/XML/XMLTextNode.h"
-#include "Swiften/Elements/Replace.h"
+#include <Swiften/Serializer/GenericPayloadSerializer.h>
+#include <Swiften/Serializer/XML/XMLTextNode.h>
+#include <Swiften/Elements/Replace.h>
 
 namespace Swift {
 	class ReplaceSerializer : public GenericPayloadSerializer<Replace> {

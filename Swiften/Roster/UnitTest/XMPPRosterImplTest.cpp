@@ -9,8 +9,8 @@
 #include <boost/shared_ptr.hpp>
 #include <boost/bind.hpp>
 
-#include "Swiften/Roster/UnitTest/XMPPRosterSignalHandler.h"
-#include "Swiften/Roster/XMPPRosterImpl.h"
+#include <Swiften/Roster/UnitTest/XMPPRosterSignalHandler.h>
+#include <Swiften/Roster/XMPPRosterImpl.h>
 
 
 using namespace Swift;

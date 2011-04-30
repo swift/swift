@@ -8,7 +8,7 @@
 #include <cppunit/extensions/TestFactoryRegistry.h>
 #include <boost/shared_ptr.hpp>
 
-#include "Swiften/Elements/Form.h"
+#include <Swiften/Elements/Form.h>
 
 using namespace Swift;
 

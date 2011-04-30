@@ -4,8 +4,8 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "Swiften/Elements/Stanza.h"
-#include "Swiften/Elements/Delay.h"
+#include <Swiften/Elements/Stanza.h>
+#include <Swiften/Elements/Delay.h>
 
 #include <typeinfo>
 

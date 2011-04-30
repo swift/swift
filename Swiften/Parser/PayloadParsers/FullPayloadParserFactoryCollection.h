@@ -9,8 +9,8 @@
 #include <boost/shared_ptr.hpp>
 #include <vector>
 
-#include "Swiften/Parser/PayloadParserFactoryCollection.h"
-#include "Swiften/Parser/PayloadParserFactory.h"
+#include <Swiften/Parser/PayloadParserFactoryCollection.h>
+#include <Swiften/Parser/PayloadParserFactory.h>
 
 namespace Swift {
 	class FullPayloadParserFactoryCollection : public PayloadParserFactoryCollection {

@@ -4,7 +4,7 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "Swiften/Chat/ChatStateTracker.h"
+#include <Swiften/Chat/ChatStateTracker.h>
 
 namespace Swift {
 ChatStateTracker::ChatStateTracker() {

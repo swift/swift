@@ -7,9 +7,9 @@
 #pragma once
 
 #include <boost/shared_ptr.hpp>
-#include "Swiften/Parser/AttributeMap.h"
+#include <Swiften/Parser/AttributeMap.h>
 
-#include "Swiften/Elements/Payload.h"
+#include <Swiften/Elements/Payload.h>
 
 namespace Swift {
 	

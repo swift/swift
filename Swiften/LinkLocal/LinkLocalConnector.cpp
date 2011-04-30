@@ -4,16 +4,16 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "Swiften/LinkLocal/LinkLocalConnector.h"
+#include <Swiften/LinkLocal/LinkLocalConnector.h>
 
 #include <boost/bind.hpp>
 
-#include "Swiften/Network/Connection.h"
-#include "Swiften/Network/ConnectionFactory.h"
-#include "Swiften/Network/HostAddress.h"
-#include "Swiften/Network/HostAddressPort.h"
-#include "Swiften/LinkLocal/DNSSD/DNSSDQuerier.h"
-#include "Swiften/LinkLocal/DNSSD/DNSSDResolveHostnameQuery.h"
+#include <Swiften/Network/Connection.h>
+#include <Swiften/Network/ConnectionFactory.h>
+#include <Swiften/Network/HostAddress.h>
+#include <Swiften/Network/HostAddressPort.h>
+#include <Swiften/LinkLocal/DNSSD/DNSSDQuerier.h>
+#include <Swiften/LinkLocal/DNSSD/DNSSDResolveHostnameQuery.h>
 
 namespace Swift {
 

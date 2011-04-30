@@ -9,10 +9,10 @@
 #include <boost/shared_ptr.hpp>
 #include <boost/bind.hpp>
 
-#include "Swiften/Queries/Requests/GetPrivateStorageRequest.h"
-#include "Swiften/Queries/IQRouter.h"
-#include "Swiften/Queries/DummyIQChannel.h"
-#include "Swiften/Elements/Payload.h"
+#include <Swiften/Queries/Requests/GetPrivateStorageRequest.h>
+#include <Swiften/Queries/IQRouter.h>
+#include <Swiften/Queries/DummyIQChannel.h>
+#include <Swiften/Elements/Payload.h>
 
 using namespace Swift;
 

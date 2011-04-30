@@ -8,9 +8,9 @@
 #include <cppunit/extensions/TestFactoryRegistry.h>
 #include <typeinfo>
 
-#include "Swiften/Disco/JIDDiscoInfoResponder.h"
-#include "Swiften/Queries/IQRouter.h"
-#include "Swiften/Queries/DummyIQChannel.h"
+#include <Swiften/Disco/JIDDiscoInfoResponder.h>
+#include <Swiften/Queries/IQRouter.h>
+#include <Swiften/Queries/DummyIQChannel.h>
 
 using namespace Swift;
 

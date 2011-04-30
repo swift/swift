@@ -10,10 +10,10 @@
 #include <boost/bind.hpp>
 #include <boost/smart_ptr/make_shared.hpp>
 
-#include "Swiften/Queries/GenericRequest.h"
-#include "Swiften/Queries/IQRouter.h"
-#include "Swiften/Queries/DummyIQChannel.h"
-#include "Swiften/Elements/Payload.h"
+#include <Swiften/Queries/GenericRequest.h>
+#include <Swiften/Queries/IQRouter.h>
+#include <Swiften/Queries/DummyIQChannel.h>
+#include <Swiften/Elements/Payload.h>
 #include <Swiften/Elements/RawXMLPayload.h>
 
 using namespace Swift;

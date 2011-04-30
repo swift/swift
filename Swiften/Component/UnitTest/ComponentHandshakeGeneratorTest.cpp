@@ -7,7 +7,7 @@
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/extensions/TestFactoryRegistry.h>
 
-#include "Swiften/Component/ComponentHandshakeGenerator.h"
+#include <Swiften/Component/ComponentHandshakeGenerator.h>
 
 using namespace Swift;
 

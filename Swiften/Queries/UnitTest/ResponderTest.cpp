@@ -9,10 +9,10 @@
 #include <boost/shared_ptr.hpp>
 #include <boost/bind.hpp>
 
-#include "Swiften/Queries/Responder.h"
-#include "Swiften/Queries/IQRouter.h"
-#include "Swiften/Queries/DummyIQChannel.h"
-#include "Swiften/Elements/SoftwareVersion.h"
+#include <Swiften/Queries/Responder.h>
+#include <Swiften/Queries/IQRouter.h>
+#include <Swiften/Queries/DummyIQChannel.h>
+#include <Swiften/Elements/SoftwareVersion.h>
 
 using namespace Swift;
 

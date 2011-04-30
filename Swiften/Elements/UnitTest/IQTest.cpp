@@ -8,8 +8,8 @@
 #include <cppunit/extensions/TestFactoryRegistry.h>
 #include <boost/shared_ptr.hpp>
 
-#include "Swiften/Elements/IQ.h"
-#include "Swiften/Elements/SoftwareVersion.h"
+#include <Swiften/Elements/IQ.h>
+#include <Swiften/Elements/SoftwareVersion.h>
 
 using namespace Swift;
 

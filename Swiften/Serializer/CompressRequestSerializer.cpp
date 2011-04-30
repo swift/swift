@@ -4,9 +4,9 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "Swiften/Serializer/CompressRequestSerializer.h"
+#include <Swiften/Serializer/CompressRequestSerializer.h>
 
-#include "Swiften/Elements/CompressRequest.h"
+#include <Swiften/Elements/CompressRequest.h>
 
 namespace Swift {
 

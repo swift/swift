@@ -6,11 +6,11 @@
 
 #include <boost/asio.hpp>
 
-#include "Swiften/Network/PlatformDomainNameServiceQuery.h"
+#include <Swiften/Network/PlatformDomainNameServiceQuery.h>
 
 #pragma GCC diagnostic ignored "-Wold-style-cast"
 
-#include "Swiften/Base/Platform.h"
+#include <Swiften/Base/Platform.h>
 #include <stdlib.h>
 #ifdef SWIFTEN_PLATFORM_WINDOWS
 #undef UNICODE
@@ -26,9 +26,9 @@
 #endif
 #include <boost/bind.hpp>
 
-#include "Swiften/Base/ByteArray.h"
-#include "Swiften/EventLoop/EventLoop.h"
-#include "Swiften/Base/foreach.h"
+#include <Swiften/Base/ByteArray.h>
+#include <Swiften/EventLoop/EventLoop.h>
+#include <Swiften/Base/foreach.h>
 #include <Swiften/Base/Log.h>
 #include <Swiften/Network/PlatformDomainNameResolver.h>
 

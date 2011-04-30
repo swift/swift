@@ -4,8 +4,8 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "Swiften/Parser/PayloadParsers/RawXMLPayloadParser.h"
-#include "Swiften/Parser/SerializingParser.h"
+#include <Swiften/Parser/PayloadParsers/RawXMLPayloadParser.h>
+#include <Swiften/Parser/SerializingParser.h>
 
 namespace Swift {
 

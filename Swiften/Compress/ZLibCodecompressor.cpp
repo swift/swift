@@ -4,11 +4,11 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "Swiften/Compress/ZLibCodecompressor.h"
+#include <Swiften/Compress/ZLibCodecompressor.h>
 
 #include <cassert>
 
-#include "Swiften/Compress/ZLibException.h"
+#include <Swiften/Compress/ZLibException.h>
 
 namespace Swift {
 

@@ -7,8 +7,8 @@
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/extensions/TestFactoryRegistry.h>
 
-#include "Swiften/Serializer/AuthSuccessSerializer.h"
-#include "Swiften/Elements/AuthSuccess.h"
+#include <Swiften/Serializer/AuthSuccessSerializer.h>
+#include <Swiften/Elements/AuthSuccess.h>
 
 using namespace Swift;
 

@@ -9,12 +9,12 @@
 #include <vector>
 #include <map>
 
-#include "Swiften/Network/HostAddress.h"
-#include "Swiften/Network/HostAddressPort.h"
-#include "Swiften/Network/DomainNameResolver.h"
-#include "Swiften/Network/DomainNameServiceQuery.h"
-#include "Swiften/Network/DomainNameAddressQuery.h"
-#include "Swiften/EventLoop/EventLoop.h"
+#include <Swiften/Network/HostAddress.h>
+#include <Swiften/Network/HostAddressPort.h>
+#include <Swiften/Network/DomainNameResolver.h>
+#include <Swiften/Network/DomainNameServiceQuery.h>
+#include <Swiften/Network/DomainNameAddressQuery.h>
+#include <Swiften/EventLoop/EventLoop.h>
 
 namespace Swift {
 	

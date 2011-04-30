@@ -9,9 +9,9 @@
 #include <boost/shared_ptr.hpp>
 #include <boost/lexical_cast.hpp>
 
-#include "Swiften/Elements/StanzaAck.h"
-#include "Swiften/Serializer/GenericElementSerializer.h"
-#include "Swiften/Serializer/XML/XMLElement.h"
+#include <Swiften/Elements/StanzaAck.h>
+#include <Swiften/Serializer/GenericElementSerializer.h>
+#include <Swiften/Serializer/XML/XMLElement.h>
 
 namespace Swift {
 	class StanzaAckSerializer : public GenericElementSerializer<StanzaAck> {

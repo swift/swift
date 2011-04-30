@@ -4,7 +4,7 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
-#include "Swiften/Parser/PayloadParsers/ReplaceParser.h"
+#include <Swiften/Parser/PayloadParsers/ReplaceParser.h>
 
 namespace Swift {
 

@@ -4,9 +4,9 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "Swiften/Parser/PayloadParsers/SecurityLabelsCatalogParser.h"
-#include "Swiften/Parser/PayloadParsers/SecurityLabelParserFactory.h"
-#include "Swiften/Parser/PayloadParsers/SecurityLabelParser.h"
+#include <Swiften/Parser/PayloadParsers/SecurityLabelsCatalogParser.h>
+#include <Swiften/Parser/PayloadParsers/SecurityLabelParserFactory.h>
+#include <Swiften/Parser/PayloadParsers/SecurityLabelParser.h>
 
 namespace Swift {
 

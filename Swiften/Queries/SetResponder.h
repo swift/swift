@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include "Swiften/Queries/Responder.h"
+#include <Swiften/Queries/Responder.h>
 
 namespace Swift {
 	template<typename T>

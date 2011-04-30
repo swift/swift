@@ -4,13 +4,13 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "Swiften/Base/ByteArray.h"
+#include <Swiften/Base/ByteArray.h>
 
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/extensions/TestFactoryRegistry.h>
 
-#include "Swiften/Parser/PayloadParsers/UnitTest/PayloadsParserTester.h"
-#include "Swiften/Elements/IBB.h"
+#include <Swiften/Parser/PayloadParsers/UnitTest/PayloadsParserTester.h>
+#include <Swiften/Elements/IBB.h>
 
 using namespace Swift;
 

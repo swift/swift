@@ -4,9 +4,9 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "Swiften/Serializer/ComponentHandshakeSerializer.h"
+#include <Swiften/Serializer/ComponentHandshakeSerializer.h>
 
-#include "Swiften/Elements/ComponentHandshake.h"
+#include <Swiften/Elements/ComponentHandshake.h>
 
 namespace Swift {
 

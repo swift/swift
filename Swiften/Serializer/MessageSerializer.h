@@ -7,8 +7,8 @@
 #ifndef SWIFTEN_MessageSerializer_H
 #define SWIFTEN_MessageSerializer_H
 
-#include "Swiften/Serializer/GenericStanzaSerializer.h"
-#include "Swiften/Elements/Message.h"
+#include <Swiften/Serializer/GenericStanzaSerializer.h>
+#include <Swiften/Elements/Message.h>
 
 namespace Swift {
 	class XMLElement;

@@ -7,10 +7,10 @@
 #pragma once
 
 #include <boost/shared_ptr.hpp>
-#include "Swiften/Base/boost_bsignals.h"
+#include <Swiften/Base/boost_bsignals.h>
 
-#include "Swiften/Network/Connection.h"
-#include "Swiften/Network/HostAddressPort.h"
+#include <Swiften/Network/Connection.h>
+#include <Swiften/Network/HostAddressPort.h>
 
 namespace Swift {
 	class ConnectionServer {

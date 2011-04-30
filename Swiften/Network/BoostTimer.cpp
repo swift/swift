@@ -4,13 +4,13 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "Swiften/Network/BoostTimer.h"
+#include <Swiften/Network/BoostTimer.h>
 
 #include <boost/date_time/posix_time/posix_time.hpp>
 #include <boost/asio.hpp>
 #include <boost/bind.hpp>
 
-#include "Swiften/EventLoop/EventLoop.h"
+#include <Swiften/EventLoop/EventLoop.h>
 
 namespace Swift {
 

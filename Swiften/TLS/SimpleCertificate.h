@@ -7,7 +7,7 @@
 #pragma once
 
 #include <string>
-#include "Swiften/TLS/Certificate.h"
+#include <Swiften/TLS/Certificate.h>
 
 namespace Swift {
 	class SimpleCertificate : public Certificate {

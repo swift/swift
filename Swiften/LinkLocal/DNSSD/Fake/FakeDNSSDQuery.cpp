@@ -4,8 +4,8 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "Swiften/LinkLocal/DNSSD/Fake/FakeDNSSDQuery.h"
-#include "Swiften/LinkLocal/DNSSD/Fake/FakeDNSSDQuerier.h"
+#include <Swiften/LinkLocal/DNSSD/Fake/FakeDNSSDQuery.h>
+#include <Swiften/LinkLocal/DNSSD/Fake/FakeDNSSDQuerier.h>
 
 namespace Swift {
 

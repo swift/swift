@@ -4,7 +4,7 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "Swiften/Serializer/XML/XMLNode.h"
+#include <Swiften/Serializer/XML/XMLNode.h>
 
 namespace Swift {
 

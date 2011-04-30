@@ -8,8 +8,8 @@
 
 #include <boost/shared_ptr.hpp>
 
-#include "Swiften/Elements/StreamManagementEnabled.h"
-#include "Swiften/Serializer/GenericElementSerializer.h"
+#include <Swiften/Elements/StreamManagementEnabled.h>
+#include <Swiften/Serializer/GenericElementSerializer.h>
 
 namespace Swift {
 	class StreamManagementEnabledSerializer : public GenericElementSerializer<StreamManagementEnabled> {

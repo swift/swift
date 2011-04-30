@@ -4,14 +4,14 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "Swiften/Chat/ChatStateNotifier.h"
+#include <Swiften/Chat/ChatStateNotifier.h>
 
 #include <boost/bind.hpp>
 
-#include "Swiften/Elements/Message.h"
-#include "Swiften/Elements/ChatState.h"
-#include "Swiften/Client/StanzaChannel.h"
-#include "Swiften/Disco/EntityCapsProvider.h"
+#include <Swiften/Elements/Message.h>
+#include <Swiften/Elements/ChatState.h>
+#include <Swiften/Client/StanzaChannel.h>
+#include <Swiften/Disco/EntityCapsProvider.h>
 
 namespace Swift {
 

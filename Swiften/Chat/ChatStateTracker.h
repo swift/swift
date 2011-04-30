@@ -6,12 +6,12 @@
 
 #pragma once
 
-#include "Swiften/Base/boost_bsignals.h"
+#include <Swiften/Base/boost_bsignals.h>
 #include <boost/shared_ptr.hpp>
 
-#include "Swiften/Elements/Message.h"
-#include "Swiften/Elements/Presence.h"
-#include "Swiften/Elements/ChatState.h"
+#include <Swiften/Elements/Message.h>
+#include <Swiften/Elements/Presence.h>
+#include <Swiften/Elements/ChatState.h>
 
 namespace Swift {
 	class ChatStateTracker {

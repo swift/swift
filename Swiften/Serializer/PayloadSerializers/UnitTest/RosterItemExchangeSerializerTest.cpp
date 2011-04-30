@@ -7,7 +7,7 @@
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/extensions/TestFactoryRegistry.h>
 
-#include "Swiften/Serializer/PayloadSerializers/RosterItemExchangeSerializer.h"
+#include <Swiften/Serializer/PayloadSerializers/RosterItemExchangeSerializer.h>
 
 using namespace Swift;
 

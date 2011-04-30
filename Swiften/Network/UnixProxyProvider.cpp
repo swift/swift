@@ -8,8 +8,8 @@
 #include <stdlib.h>
 #include <iostream>
 
-#include "Swiften/Base/foreach.h"
-#include "Swiften/Network/UnixProxyProvider.h"
+#include <Swiften/Base/foreach.h>
+#include <Swiften/Network/UnixProxyProvider.h>
 
 namespace Swift {
 

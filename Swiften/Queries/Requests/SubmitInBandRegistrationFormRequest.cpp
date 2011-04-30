@@ -4,4 +4,4 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "Swiften/Queries/Requests/SubmitInBandRegistrationFormRequest.h"
+#include <Swiften/Queries/Requests/SubmitInBandRegistrationFormRequest.h>

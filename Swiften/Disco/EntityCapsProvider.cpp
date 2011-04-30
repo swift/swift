@@ -4,7 +4,7 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "Swiften/Disco/EntityCapsProvider.h"
+#include <Swiften/Disco/EntityCapsProvider.h>
 
 namespace Swift {
 

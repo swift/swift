@@ -7,7 +7,7 @@
 #ifndef XMLPARSERCLIENT_H
 #define XMLPARSERCLIENT_H
 
-#include "Swiften/Parser/AttributeMap.h"
+#include <Swiften/Parser/AttributeMap.h>
 
 namespace Swift {
 	

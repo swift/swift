@@ -6,11 +6,11 @@
 
 #pragma once
 
-#include "Swiften/LinkLocal/DNSSD/Bonjour/BonjourQuery.h"
-#include "Swiften/LinkLocal/DNSSD/DNSSDResolveServiceQuery.h"
-#include "Swiften/LinkLocal/LinkLocalServiceInfo.h"
-#include "Swiften/Base/ByteArray.h"
-#include "Swiften/EventLoop/EventLoop.h"
+#include <Swiften/LinkLocal/DNSSD/Bonjour/BonjourQuery.h>
+#include <Swiften/LinkLocal/DNSSD/DNSSDResolveServiceQuery.h>
+#include <Swiften/LinkLocal/LinkLocalServiceInfo.h>
+#include <Swiften/Base/ByteArray.h>
+#include <Swiften/EventLoop/EventLoop.h>
 
 namespace Swift {
 	class BonjourQuerier;

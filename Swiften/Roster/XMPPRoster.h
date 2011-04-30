@@ -9,11 +9,11 @@
 #include <boost/optional.hpp>
 #include <vector>
 #include <set>
-#include "Swiften/Base/boost_bsignals.h"
+#include <Swiften/Base/boost_bsignals.h>
 
 #include <string>
-#include "Swiften/JID/JID.h"
-#include "Swiften/Elements/RosterItemPayload.h"
+#include <Swiften/JID/JID.h>
+#include <Swiften/Elements/RosterItemPayload.h>
 #include <Swiften/Roster/XMPPRosterItem.h>
 
 namespace Swift {

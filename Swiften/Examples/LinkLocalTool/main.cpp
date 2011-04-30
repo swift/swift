@@ -8,11 +8,11 @@
 
 #include <iostream>
 
-#include "Swiften/EventLoop/SimpleEventLoop.h"
-#include "Swiften/LinkLocal/DNSSD/PlatformDNSSDQuerierFactory.h"
-#include "Swiften/LinkLocal/DNSSD/DNSSDQuerier.h"
-#include "Swiften/LinkLocal/DNSSD/DNSSDBrowseQuery.h"
-#include "Swiften/LinkLocal/DNSSD/DNSSDResolveServiceQuery.h"
+#include <Swiften/EventLoop/SimpleEventLoop.h>
+#include <Swiften/LinkLocal/DNSSD/PlatformDNSSDQuerierFactory.h>
+#include <Swiften/LinkLocal/DNSSD/DNSSDQuerier.h>
+#include <Swiften/LinkLocal/DNSSD/DNSSDBrowseQuery.h>
+#include <Swiften/LinkLocal/DNSSD/DNSSDResolveServiceQuery.h>
 
 using namespace Swift;
 

@@ -7,8 +7,8 @@
 #ifndef SWIFTEN_SecurityLabelsCatalogParser_H
 #define SWIFTEN_SecurityLabelsCatalogParser_H
 
-#include "Swiften/Elements/SecurityLabelsCatalog.h"
-#include "Swiften/Parser/GenericPayloadParser.h"
+#include <Swiften/Elements/SecurityLabelsCatalog.h>
+#include <Swiften/Parser/GenericPayloadParser.h>
 
 namespace Swift {
 	class SecurityLabelParserFactory;

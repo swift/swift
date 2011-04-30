@@ -11,8 +11,8 @@
 #include <boost/shared_ptr.hpp>
 #include <string>
 
-#include "Swiften/JID/JID.h"
-#include "Swiften/Elements/Payload.h"
+#include <Swiften/JID/JID.h>
+#include <Swiften/Elements/Payload.h>
 
 namespace Swift {
 	class Bytestreams : public Payload {

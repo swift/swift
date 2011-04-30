@@ -4,16 +4,16 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "Swiften/Disco/CapsManager.h"
+#include <Swiften/Disco/CapsManager.h>
 
 #include <boost/bind.hpp>
 #include <iostream>
 
-#include "Swiften/Client/StanzaChannel.h"
-#include "Swiften/Disco/CapsStorage.h"
-#include "Swiften/Disco/CapsInfoGenerator.h"
-#include "Swiften/Elements/CapsInfo.h"
-#include "Swiften/Disco/GetDiscoInfoRequest.h"
+#include <Swiften/Client/StanzaChannel.h>
+#include <Swiften/Disco/CapsStorage.h>
+#include <Swiften/Disco/CapsInfoGenerator.h>
+#include <Swiften/Elements/CapsInfo.h>
+#include <Swiften/Disco/GetDiscoInfoRequest.h>
 
 namespace Swift {
 

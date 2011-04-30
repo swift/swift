@@ -9,7 +9,7 @@
 
 #include <boost/shared_ptr.hpp>
 
-#include "Swiften/Parser/PayloadParser.h"
+#include <Swiften/Parser/PayloadParser.h>
 
 namespace Swift {
 	

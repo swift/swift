@@ -9,8 +9,8 @@
 
 #include <boost/lexical_cast.hpp>
 
-#include "Swiften/Serializer/GenericPayloadSerializer.h"
-#include "Swiften/Elements/StartSession.h"
+#include <Swiften/Serializer/GenericPayloadSerializer.h>
+#include <Swiften/Elements/StartSession.h>
 
 namespace Swift {
 	class StartSessionSerializer : public GenericPayloadSerializer<StartSession> {

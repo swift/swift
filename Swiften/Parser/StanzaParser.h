@@ -10,9 +10,9 @@
 #include <boost/noncopyable.hpp>
 
 #include <string>
-#include "Swiften/Elements/Stanza.h"
-#include "Swiften/Parser/ElementParser.h"
-#include "Swiften/Parser/AttributeMap.h"
+#include <Swiften/Elements/Stanza.h>
+#include <Swiften/Parser/ElementParser.h>
+#include <Swiften/Parser/AttributeMap.h>
 
 namespace Swift {
 	class PayloadParser;

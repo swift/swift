@@ -4,7 +4,7 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "Swiften/EventLoop/EventLoop.h"
+#include <Swiften/EventLoop/EventLoop.h>
 
 #include <algorithm>
 #include <boost/bind.hpp>

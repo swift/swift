@@ -8,8 +8,8 @@
 
 #include <boost/optional.hpp>
 
-#include "Swiften/Elements/MUCUserPayload.h"
-#include "Swiften/Parser/GenericPayloadParser.h"
+#include <Swiften/Elements/MUCUserPayload.h>
+#include <Swiften/Parser/GenericPayloadParser.h>
 
 namespace Swift {
 	class MUCUserPayloadParser : public GenericPayloadParser<MUCUserPayload> {

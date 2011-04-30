@@ -9,9 +9,9 @@
 
 #include <boost/shared_ptr.hpp>
 
-#include "Swiften/Elements/StartTLSFailure.h"
-#include "Swiften/Serializer/GenericElementSerializer.h"
-#include "Swiften/Serializer/XML/XMLElement.h"
+#include <Swiften/Elements/StartTLSFailure.h>
+#include <Swiften/Serializer/GenericElementSerializer.h>
+#include <Swiften/Serializer/XML/XMLElement.h>
 
 namespace Swift {
 	class StartTLSFailureSerializer : public GenericElementSerializer<StartTLSFailure> {

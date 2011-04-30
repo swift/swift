@@ -9,7 +9,7 @@
 #include <boost/shared_ptr.hpp>
 #include <vector>
 
-#include "Swiften/Roster/XMPPRosterImpl.h"
+#include <Swiften/Roster/XMPPRosterImpl.h>
 
 enum XMPPRosterEvents {None, Add, Remove, Update};
 

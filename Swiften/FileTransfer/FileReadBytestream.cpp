@@ -7,7 +7,7 @@
 #include <boost/filesystem/fstream.hpp>
 #include <cassert>
 
-#include "Swiften/FileTransfer/FileReadBytestream.h"
+#include <Swiften/FileTransfer/FileReadBytestream.h>
 
 namespace Swift {
 

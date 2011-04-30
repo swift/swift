@@ -4,8 +4,8 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "Swiften/Serializer/PresenceSerializer.h"
-#include "Swiften/Serializer/XML/XMLElement.h"
+#include <Swiften/Serializer/PresenceSerializer.h>
+#include <Swiften/Serializer/XML/XMLElement.h>
 
 #include "boost/shared_ptr.hpp"
 

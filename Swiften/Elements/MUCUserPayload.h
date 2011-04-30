@@ -11,9 +11,9 @@
 #include <string>
 #include <vector>
 
-#include "Swiften/JID/JID.h"
-#include "Swiften/Elements/Payload.h"
-#include "Swiften/Elements/MUCOccupant.h"
+#include <Swiften/JID/JID.h>
+#include <Swiften/Elements/Payload.h>
+#include <Swiften/Elements/MUCOccupant.h>
 
 namespace Swift {
 	class MUCUserPayload : public Payload {

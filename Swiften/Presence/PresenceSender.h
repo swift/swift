@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include "Swiften/Elements/Presence.h"
+#include <Swiften/Elements/Presence.h>
 
 namespace Swift {
 	class PresenceSender {

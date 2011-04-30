@@ -7,12 +7,12 @@
 #pragma once
 
 #include <boost/shared_ptr.hpp>
-#include "Swiften/Base/boost_bsignals.h"
+#include <Swiften/Base/boost_bsignals.h>
 #include <boost/enable_shared_from_this.hpp>
 #include <vector>
 
-#include "Swiften/Session/Session.h"
-#include "Swiften/JID/JID.h"
+#include <Swiften/Session/Session.h>
+#include <Swiften/JID/JID.h>
 
 namespace Swift {
 	class ConnectionFactory;

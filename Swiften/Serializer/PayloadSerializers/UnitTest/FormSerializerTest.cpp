@@ -7,7 +7,7 @@
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/extensions/TestFactoryRegistry.h>
 
-#include "Swiften/Serializer/PayloadSerializers/FormSerializer.h"
+#include <Swiften/Serializer/PayloadSerializers/FormSerializer.h>
 
 using namespace Swift;
 

@@ -6,8 +6,8 @@
 
 #pragma once
 
-#include "Swiften/Parser/GenericElementParser.h"
-#include "Swiften/Elements/StreamManagementFailed.h"
+#include <Swiften/Parser/GenericElementParser.h>
+#include <Swiften/Elements/StreamManagementFailed.h>
 
 namespace Swift {
 	class StreamManagementFailedParser : public GenericElementParser<StreamManagementFailed> {

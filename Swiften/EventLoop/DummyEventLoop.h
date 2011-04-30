@@ -8,7 +8,7 @@
 
 #include <deque>
 
-#include "Swiften/EventLoop/EventLoop.h"
+#include <Swiften/EventLoop/EventLoop.h>
 
 namespace Swift {
 	class DummyEventLoop : public EventLoop {

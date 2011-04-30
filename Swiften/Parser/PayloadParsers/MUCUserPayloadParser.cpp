@@ -4,11 +4,11 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "Swiften/Parser/PayloadParsers/MUCUserPayloadParser.h"
+#include <Swiften/Parser/PayloadParsers/MUCUserPayloadParser.h>
 
 #include <boost/lexical_cast.hpp>
 
-#include "Swiften/Elements/MUCOccupant.h"
+#include <Swiften/Elements/MUCOccupant.h>
 
 #include <cassert>
 #include <iostream>

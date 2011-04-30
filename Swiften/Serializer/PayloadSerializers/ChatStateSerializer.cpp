@@ -4,7 +4,7 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "Swiften/Serializer/PayloadSerializers/ChatStateSerializer.h"
+#include <Swiften/Serializer/PayloadSerializers/ChatStateSerializer.h>
 
 namespace Swift {
 

@@ -4,12 +4,12 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "Swiften/StreamStack/WhitespacePingLayer.h"
+#include <Swiften/StreamStack/WhitespacePingLayer.h>
 
 #include <boost/bind.hpp>
 
-#include "Swiften/Network/TimerFactory.h"
-#include "Swiften/Network/Timer.h"
+#include <Swiften/Network/TimerFactory.h>
+#include <Swiften/Network/Timer.h>
 
 namespace Swift {
 

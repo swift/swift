@@ -7,7 +7,7 @@
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/extensions/TestFactoryRegistry.h>
 
-#include "Swiften/Serializer/PayloadSerializers/CapsInfoSerializer.h"
+#include <Swiften/Serializer/PayloadSerializers/CapsInfoSerializer.h>
 
 using namespace Swift;
 

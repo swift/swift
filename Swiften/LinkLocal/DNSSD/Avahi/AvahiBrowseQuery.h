@@ -8,9 +8,9 @@
 
 #include <avahi-client/lookup.h>
 
-#include "Swiften/LinkLocal/DNSSD/Avahi/AvahiQuery.h"
-#include "Swiften/LinkLocal/DNSSD/DNSSDBrowseQuery.h"
-#include "Swiften/EventLoop/EventLoop.h"
+#include <Swiften/LinkLocal/DNSSD/Avahi/AvahiQuery.h>
+#include <Swiften/LinkLocal/DNSSD/DNSSDBrowseQuery.h>
+#include <Swiften/EventLoop/EventLoop.h>
 
 namespace Swift {
 	class AvahiQuerier;

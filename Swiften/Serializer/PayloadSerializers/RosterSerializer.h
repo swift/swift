@@ -7,8 +7,8 @@
 #ifndef SWIFTEN_RosterSerializer_H
 #define SWIFTEN_RosterSerializer_H
 
-#include "Swiften/Serializer/GenericPayloadSerializer.h"
-#include "Swiften/Elements/RosterPayload.h"
+#include <Swiften/Serializer/GenericPayloadSerializer.h>
+#include <Swiften/Elements/RosterPayload.h>
 
 namespace Swift {
 	class RosterSerializer : public GenericPayloadSerializer<RosterPayload> {

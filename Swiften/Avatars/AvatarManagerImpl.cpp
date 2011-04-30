@@ -4,15 +4,15 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "Swiften/Avatars/AvatarManagerImpl.h"
+#include <Swiften/Avatars/AvatarManagerImpl.h>
 
 #include <boost/bind.hpp>
 
-#include "Swiften/Avatars/VCardUpdateAvatarManager.h"
-#include "Swiften/Avatars/VCardAvatarManager.h"
-#include "Swiften/Avatars/AvatarStorage.h"
+#include <Swiften/Avatars/VCardUpdateAvatarManager.h>
+#include <Swiften/Avatars/VCardAvatarManager.h>
+#include <Swiften/Avatars/AvatarStorage.h>
 #include <Swiften/Avatars/OfflineAvatarManager.h>
-#include "Swiften/Base/ByteArray.h"
+#include <Swiften/Base/ByteArray.h>
 
 namespace Swift {
 

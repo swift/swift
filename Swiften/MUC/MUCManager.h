@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include "Swiften/MUC/MUC.h"
+#include <Swiften/MUC/MUC.h>
 
 namespace Swift {
 	class IQRouter;

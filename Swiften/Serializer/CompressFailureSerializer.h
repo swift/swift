@@ -9,9 +9,9 @@
 
 #include <boost/shared_ptr.hpp>
 
-#include "Swiften/Elements/CompressFailure.h"
-#include "Swiften/Serializer/GenericElementSerializer.h"
-#include "Swiften/Serializer/XML/XMLElement.h"
+#include <Swiften/Elements/CompressFailure.h>
+#include <Swiften/Serializer/GenericElementSerializer.h>
+#include <Swiften/Serializer/XML/XMLElement.h>
 
 namespace Swift {
 	class CompressFailureSerializer : public GenericElementSerializer<CompressFailure> {

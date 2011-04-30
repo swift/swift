@@ -4,16 +4,16 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "Swiften/Roster/XMPPRosterController.h"
+#include <Swiften/Roster/XMPPRosterController.h>
 
 #include <boost/bind.hpp>
 #include <iostream>
 
-#include "Swiften/Base/foreach.h"
-#include "Swiften/Elements/RosterItemPayload.h"
-#include "Swiften/Queries/IQRouter.h"
-#include "Swiften/Roster/GetRosterRequest.h"
-#include "Swiften/Roster/XMPPRosterImpl.h"
+#include <Swiften/Base/foreach.h>
+#include <Swiften/Elements/RosterItemPayload.h>
+#include <Swiften/Queries/IQRouter.h>
+#include <Swiften/Roster/GetRosterRequest.h>
+#include <Swiften/Roster/XMPPRosterImpl.h>
 #include <Swiften/Roster/RosterStorage.h>
 
 namespace Swift {

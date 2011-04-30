@@ -7,7 +7,7 @@
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/extensions/TestFactoryRegistry.h>
 
-#include "Swiften/Network/HostAddress.h"
+#include <Swiften/Network/HostAddress.h>
 #include <string>
 
 using namespace Swift;

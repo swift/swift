@@ -6,8 +6,8 @@
 
 #pragma once
 
-#include "Swiften/Serializer/GenericPayloadSerializer.h"
-#include "Swiften/Elements/Nickname.h"
+#include <Swiften/Serializer/GenericPayloadSerializer.h>
+#include <Swiften/Elements/Nickname.h>
 
 namespace Swift {
 	class NicknameSerializer : public GenericPayloadSerializer<Nickname> {

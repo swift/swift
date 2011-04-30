@@ -7,9 +7,9 @@
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/extensions/TestFactoryRegistry.h>
 
-#include "Swiften/StringCodecs/Hexify.h"
+#include <Swiften/StringCodecs/Hexify.h>
 #include <string>
-#include "Swiften/Base/ByteArray.h"
+#include <Swiften/Base/ByteArray.h>
 
 using namespace Swift;
 

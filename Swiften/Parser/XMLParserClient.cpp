@@ -4,7 +4,7 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "Swiften/Parser/XMLParserClient.h"
+#include <Swiften/Parser/XMLParserClient.h>
 
 namespace Swift {
 

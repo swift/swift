@@ -6,9 +6,9 @@
 
 #pragma once
 
-#include "Swiften/Base/boost_bsignals.h"
-#include "Swiften/JID/JID.h"
-#include "Swiften/Elements/DiscoInfo.h"
+#include <Swiften/Base/boost_bsignals.h>
+#include <Swiften/JID/JID.h>
+#include <Swiften/Elements/DiscoInfo.h>
 
 namespace Swift {
 	/**

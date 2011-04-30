@@ -4,12 +4,12 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "Swiften/Session/Session.h"
+#include <Swiften/Session/Session.h>
 
 #include <boost/bind.hpp>
 
-#include "Swiften/StreamStack/XMPPLayer.h"
-#include "Swiften/StreamStack/StreamStack.h"
+#include <Swiften/StreamStack/XMPPLayer.h>
+#include <Swiften/StreamStack/StreamStack.h>
 
 namespace Swift {
 

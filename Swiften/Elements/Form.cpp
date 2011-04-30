@@ -4,8 +4,8 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "Swiften/Elements/Form.h"
-#include "Swiften/Base/foreach.h"
+#include <Swiften/Elements/Form.h>
+#include <Swiften/Base/foreach.h>
 
 namespace Swift {
 

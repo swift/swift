@@ -12,10 +12,10 @@
 #include <set>
 
 #include <string>
-#include "Swiften/EventLoop/EventOwner.h"
-#include "Swiften/LinkLocal/DNSSD/DNSSDQuerier.h"
-#include "Swiften/LinkLocal/DNSSD/DNSSDResolveServiceQuery.h"
-#include "Swiften/Network/HostAddress.h"
+#include <Swiften/EventLoop/EventOwner.h>
+#include <Swiften/LinkLocal/DNSSD/DNSSDQuerier.h>
+#include <Swiften/LinkLocal/DNSSD/DNSSDResolveServiceQuery.h>
+#include <Swiften/Network/HostAddress.h>
 
 namespace Swift {
 	class ByteArray;

@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include "Swiften/TLS/TLSContextFactory.h"
+#include <Swiften/TLS/TLSContextFactory.h>
 
 namespace Swift {
 	class OpenSSLContextFactory : public TLSContextFactory {

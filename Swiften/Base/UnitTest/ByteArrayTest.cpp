@@ -7,7 +7,7 @@
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/extensions/TestFactoryRegistry.h>
 
-#include "Swiften/Base/ByteArray.h"
+#include <Swiften/Base/ByteArray.h>
 #include <boost/lexical_cast.hpp>
 
 using namespace Swift;

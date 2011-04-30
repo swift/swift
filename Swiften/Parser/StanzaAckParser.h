@@ -6,8 +6,8 @@
 
 #pragma once
 
-#include "Swiften/Parser/GenericElementParser.h"
-#include "Swiften/Elements/StanzaAck.h"
+#include <Swiften/Parser/GenericElementParser.h>
+#include <Swiften/Elements/StanzaAck.h>
 
 namespace Swift {
 	class StanzaAckParser : public GenericElementParser<StanzaAck> {

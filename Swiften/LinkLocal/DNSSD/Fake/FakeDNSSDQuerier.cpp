@@ -4,17 +4,17 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "Swiften/LinkLocal/DNSSD/Fake/FakeDNSSDQuerier.h"
+#include <Swiften/LinkLocal/DNSSD/Fake/FakeDNSSDQuerier.h>
 
 #include <boost/bind.hpp>
 #include <iostream>
 
 #include <Swiften/Base/foreach.h>
-#include "Swiften/LinkLocal/DNSSD/Fake/FakeDNSSDBrowseQuery.h"
-#include "Swiften/LinkLocal/DNSSD/Fake/FakeDNSSDRegisterQuery.h"
-#include "Swiften/LinkLocal/DNSSD/Fake/FakeDNSSDResolveServiceQuery.h"
-#include "Swiften/LinkLocal/DNSSD/Fake/FakeDNSSDResolveHostnameQuery.h"
-#include "Swiften/EventLoop/EventLoop.h"
+#include <Swiften/LinkLocal/DNSSD/Fake/FakeDNSSDBrowseQuery.h>
+#include <Swiften/LinkLocal/DNSSD/Fake/FakeDNSSDRegisterQuery.h>
+#include <Swiften/LinkLocal/DNSSD/Fake/FakeDNSSDResolveServiceQuery.h>
+#include <Swiften/LinkLocal/DNSSD/Fake/FakeDNSSDResolveHostnameQuery.h>
+#include <Swiften/EventLoop/EventLoop.h>
 
 namespace Swift {
 

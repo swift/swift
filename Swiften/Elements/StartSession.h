@@ -8,7 +8,7 @@
 #define SWIFTEN_StartSession_H
 
 #include <string>
-#include "Swiften/Elements/Payload.h"
+#include <Swiften/Elements/Payload.h>
 
 namespace Swift {
 	class StartSession : public Payload {

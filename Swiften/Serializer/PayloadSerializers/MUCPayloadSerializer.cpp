@@ -4,12 +4,12 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "Swiften/Serializer/PayloadSerializers/MUCPayloadSerializer.h"
+#include <Swiften/Serializer/PayloadSerializers/MUCPayloadSerializer.h>
 
 #include <boost/lexical_cast.hpp>
 #include <boost/date_time/posix_time/posix_time.hpp>
 
-#include "Swiften/Serializer/XML/XMLElement.h"
+#include <Swiften/Serializer/XML/XMLElement.h>
 #include <Swiften/Base/String.h>
 
 namespace Swift {

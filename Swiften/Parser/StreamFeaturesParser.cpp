@@ -4,7 +4,7 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "Swiften/Parser/StreamFeaturesParser.h"
+#include <Swiften/Parser/StreamFeaturesParser.h>
 
 namespace Swift {
 

@@ -7,11 +7,11 @@
 #ifndef SWIFTEN_IQChannel_H
 #define SWIFTEN_IQChannel_H
 
-#include "Swiften/Base/boost_bsignals.h"
+#include <Swiften/Base/boost_bsignals.h>
 #include <boost/shared_ptr.hpp>
 
 #include <string>
-#include "Swiften/Elements/IQ.h"
+#include <Swiften/Elements/IQ.h>
 
 namespace Swift {
 	class IQChannel {

@@ -8,7 +8,7 @@
 
 #include <boost/shared_ptr.hpp>
 
-#include "Swiften/Elements/Payload.h"
+#include <Swiften/Elements/Payload.h>
 
 namespace Swift {
 	class PrivateStorage : public Payload {

@@ -6,8 +6,8 @@
 
 #pragma once
 
-#include "Swiften/Elements/DiscoInfo.h"
-#include "Swiften/Parser/GenericPayloadParser.h"
+#include <Swiften/Elements/DiscoInfo.h>
+#include <Swiften/Parser/GenericPayloadParser.h>
 
 namespace Swift {
 	class DiscoInfoParser : public GenericPayloadParser<DiscoInfo> {

@@ -10,8 +10,8 @@
 #include <string>
 #include <boost/shared_ptr.hpp>
 
-#include "Swiften/Elements/Payload.h"
-#include "Swiften/JID/JID.h"
+#include <Swiften/Elements/Payload.h>
+#include <Swiften/JID/JID.h>
 
 
 namespace Swift {

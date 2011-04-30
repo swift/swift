@@ -11,7 +11,7 @@
 #include <boost/enable_shared_from_this.hpp>
 #include <boost/thread/mutex.hpp>
 
-#include "Swiften/EventLoop/EventOwner.h"
+#include <Swiften/EventLoop/EventOwner.h>
 
 namespace Swift {
 	class BonjourQuerier;

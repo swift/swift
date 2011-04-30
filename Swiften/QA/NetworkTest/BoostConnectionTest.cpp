@@ -10,12 +10,12 @@
 #include <boost/smart_ptr/make_shared.hpp>
 
 #include <string>
-#include "Swiften/Base/sleep.h"
-#include "Swiften/Network/BoostConnection.h"
-#include "Swiften/Network/HostAddress.h"
-#include "Swiften/Network/HostAddressPort.h"
-#include "Swiften/Network/BoostIOServiceThread.h"
-#include "Swiften/EventLoop/DummyEventLoop.h"
+#include <Swiften/Base/sleep.h>
+#include <Swiften/Network/BoostConnection.h>
+#include <Swiften/Network/HostAddress.h>
+#include <Swiften/Network/HostAddressPort.h>
+#include <Swiften/Network/BoostIOServiceThread.h>
+#include <Swiften/EventLoop/DummyEventLoop.h>
 
 const unsigned char* address = reinterpret_cast<const unsigned char*>("\x41\x63\xde\x89");
 

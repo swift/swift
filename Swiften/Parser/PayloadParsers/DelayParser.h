@@ -6,8 +6,8 @@
 
 #pragma once
 
-#include "Swiften/Elements/Delay.h"
-#include "Swiften/Parser/GenericPayloadParser.h"
+#include <Swiften/Elements/Delay.h>
+#include <Swiften/Parser/GenericPayloadParser.h>
 
 namespace Swift {
 	class DelayParser : public GenericPayloadParser<Delay> {

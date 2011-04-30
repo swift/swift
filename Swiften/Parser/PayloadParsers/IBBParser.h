@@ -8,8 +8,8 @@
 
 #include <boost/optional.hpp>
 
-#include "Swiften/Elements/IBB.h"
-#include "Swiften/Parser/GenericPayloadParser.h"
+#include <Swiften/Elements/IBB.h>
+#include <Swiften/Parser/GenericPayloadParser.h>
 
 namespace Swift {
 	class IBBParser : public GenericPayloadParser<IBB> {

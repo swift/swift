@@ -4,17 +4,17 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "Swiften/Serializer/PayloadSerializers/StreamInitiationSerializer.h"
+#include <Swiften/Serializer/PayloadSerializers/StreamInitiationSerializer.h>
 
 #include <boost/shared_ptr.hpp>
 #include <boost/lexical_cast.hpp>
 
-#include "Swiften/Base/foreach.h"
-#include "Swiften/Serializer/XML/XMLElement.h"
-#include "Swiften/Serializer/XML/XMLTextNode.h"
-#include "Swiften/Serializer/XML/XMLRawTextNode.h"
-#include "Swiften/Serializer/PayloadSerializerCollection.h"
-#include "Swiften/Serializer/PayloadSerializers/FormSerializer.h"
+#include <Swiften/Base/foreach.h>
+#include <Swiften/Serializer/XML/XMLElement.h>
+#include <Swiften/Serializer/XML/XMLTextNode.h>
+#include <Swiften/Serializer/XML/XMLRawTextNode.h>
+#include <Swiften/Serializer/PayloadSerializerCollection.h>
+#include <Swiften/Serializer/PayloadSerializers/FormSerializer.h>
 
 
 #define FILE_TRANSFER_NS "http://jabber.org/protocol/si/profile/file-transfer"

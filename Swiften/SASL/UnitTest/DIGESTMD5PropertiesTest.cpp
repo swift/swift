@@ -7,7 +7,7 @@
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/extensions/TestFactoryRegistry.h>
 
-#include "Swiften/SASL/DIGESTMD5Properties.h"
+#include <Swiften/SASL/DIGESTMD5Properties.h>
 
 using namespace Swift;
 

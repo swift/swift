@@ -12,7 +12,7 @@
 
 #include <string>
 
-#include "Swiften/Serializer/XML/XMLNode.h"
+#include <Swiften/Serializer/XML/XMLNode.h>
 
 namespace Swift {
 	class XMLElement : public XMLNode {

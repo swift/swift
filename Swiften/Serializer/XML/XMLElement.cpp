@@ -4,10 +4,10 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "Swiften/Serializer/XML/XMLElement.h"
+#include <Swiften/Serializer/XML/XMLElement.h>
 
-#include "Swiften/Base/foreach.h"
-#include "Swiften/Serializer/XML/XMLTextNode.h"
+#include <Swiften/Base/foreach.h>
+#include <Swiften/Serializer/XML/XMLTextNode.h>
 
 namespace Swift {
 

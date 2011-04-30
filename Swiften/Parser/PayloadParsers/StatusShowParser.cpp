@@ -4,7 +4,7 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "Swiften/Parser/PayloadParsers/StatusShowParser.h"
+#include <Swiften/Parser/PayloadParsers/StatusShowParser.h>
 
 namespace Swift {
 

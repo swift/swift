@@ -8,7 +8,7 @@
 #include <cppunit/extensions/TestFactoryRegistry.h>
 
 #include <Swiften/Base/ByteArray.h>
-#include "Swiften/FileTransfer/FileReadBytestream.h"
+#include <Swiften/FileTransfer/FileReadBytestream.h>
 #include "SwifTools/Application/PlatformApplicationPathProvider.h"
 
 using namespace Swift;

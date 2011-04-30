@@ -7,7 +7,7 @@
 #include <iostream>
 #include <boost/optional.hpp>
 
-#include "Swiften/Parser/PresenceParser.h"
+#include <Swiften/Parser/PresenceParser.h>
 
 namespace Swift {
 

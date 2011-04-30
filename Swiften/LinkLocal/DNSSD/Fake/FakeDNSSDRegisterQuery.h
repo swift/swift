@@ -6,9 +6,9 @@
 
 #pragma once
 
-#include "Swiften/LinkLocal/DNSSD/Fake/FakeDNSSDQuery.h"
-#include "Swiften/LinkLocal/DNSSD/DNSSDRegisterQuery.h"
-#include "Swiften/Base/ByteArray.h"
+#include <Swiften/LinkLocal/DNSSD/Fake/FakeDNSSDQuery.h>
+#include <Swiften/LinkLocal/DNSSD/DNSSDRegisterQuery.h>
+#include <Swiften/Base/ByteArray.h>
 #include <string>
 
 namespace Swift {

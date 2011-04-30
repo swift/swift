@@ -6,8 +6,8 @@
 
 #pragma once
 
-#include "Swiften/Queries/GenericRequest.h"
-#include "Swiften/Elements/IBB.h"
+#include <Swiften/Queries/GenericRequest.h>
+#include <Swiften/Elements/IBB.h>
 
 
 namespace Swift {

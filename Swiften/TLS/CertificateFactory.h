@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include "Swiften/TLS/Certificate.h"
+#include <Swiften/TLS/Certificate.h>
 
 namespace Swift {
 	class CertificateFactory {

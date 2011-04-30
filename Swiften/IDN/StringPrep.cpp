@@ -4,7 +4,7 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "Swiften/IDN/StringPrep.h"
+#include <Swiften/IDN/StringPrep.h>
 
 #include <stringprep.h>
 #include <vector>

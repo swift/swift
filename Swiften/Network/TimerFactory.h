@@ -8,7 +8,7 @@
 
 #include <boost/shared_ptr.hpp>
 
-#include "Swiften/Network/Timer.h"
+#include <Swiften/Network/Timer.h>
 
 namespace Swift {
 	class TimerFactory {

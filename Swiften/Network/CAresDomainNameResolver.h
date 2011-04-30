@@ -11,7 +11,7 @@
 #include <boost/thread/mutex.hpp>
 #include <list>
 
-#include "Swiften/Network/DomainNameResolver.h"
+#include <Swiften/Network/DomainNameResolver.h>
 
 namespace Swift {
 	class CAresQuery;

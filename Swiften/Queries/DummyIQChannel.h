@@ -8,7 +8,7 @@
 
 #include <vector>
 
-#include "Swiften/Queries/IQChannel.h"
+#include <Swiften/Queries/IQChannel.h>
 
 namespace Swift {
 	class DummyIQChannel : public IQChannel {

@@ -6,8 +6,8 @@
 
 #pragma once
 
-#include "Swiften/LinkLocal/DNSSD/Fake/FakeDNSSDQuery.h"
-#include "Swiften/LinkLocal/DNSSD/DNSSDBrowseQuery.h"
+#include <Swiften/LinkLocal/DNSSD/Fake/FakeDNSSDQuery.h>
+#include <Swiften/LinkLocal/DNSSD/DNSSDBrowseQuery.h>
 
 namespace Swift {
 	class FakeDNSSDQuerier;

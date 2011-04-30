@@ -4,7 +4,7 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "Swiften/History/HistoryManager.h"
+#include <Swiften/History/HistoryManager.h>
 
 namespace Swift {
 

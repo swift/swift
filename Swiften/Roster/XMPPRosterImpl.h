@@ -9,7 +9,7 @@
 #include <map>
 #include <set>
 
-#include "Swiften/Roster/XMPPRoster.h"
+#include <Swiften/Roster/XMPPRoster.h>
 
 namespace Swift {
 	class XMPPRosterImpl : public XMPPRoster {

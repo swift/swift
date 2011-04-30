@@ -4,12 +4,12 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "Swiften/Base/boost_bsignals.h"
+#include <Swiften/Base/boost_bsignals.h>
 
-#include "Swiften/Base/ByteArray.h"
-#include "Swiften/StreamStack/StreamLayer.h"
-#include "Swiften/TLS/Certificate.h"
-#include "Swiften/TLS/CertificateVerificationError.h"
+#include <Swiften/Base/ByteArray.h>
+#include <Swiften/StreamStack/StreamLayer.h>
+#include <Swiften/TLS/Certificate.h>
+#include <Swiften/TLS/CertificateVerificationError.h>
 
 namespace Swift {
 	class TLSContext;

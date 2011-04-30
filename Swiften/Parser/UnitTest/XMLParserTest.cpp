@@ -9,12 +9,12 @@
 #include <vector>
 
 #include <string>
-#include "Swiften/Parser/XMLParserClient.h"
+#include <Swiften/Parser/XMLParserClient.h>
 #ifdef HAVE_EXPAT
-#include "Swiften/Parser/ExpatParser.h"
+#include <Swiften/Parser/ExpatParser.h>
 #endif
 #ifdef HAVE_LIBXML
-#include "Swiften/Parser/LibXMLParser.h"
+#include <Swiften/Parser/LibXMLParser.h>
 #endif
 
 using namespace Swift;

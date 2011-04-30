@@ -1,5 +1,5 @@
-#include "Swiften/EventLoop/Cocoa/CocoaEventLoop.h"
-#include "Swiften/EventLoop/Cocoa/CocoaEvent.h"
+#include <Swiften/EventLoop/Cocoa/CocoaEventLoop.h>
+#include <Swiften/EventLoop/Cocoa/CocoaEvent.h>
 
 #pragma GCC diagnostic ignored "-Wold-style-cast"
 

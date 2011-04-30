@@ -9,8 +9,8 @@
 #include <boost/shared_ptr.hpp>
 #include <map>
 
-#include "Swiften/JID/JID.h"
-#include "Swiften/Elements/Stanza.h"
+#include <Swiften/JID/JID.h>
+#include <Swiften/Elements/Stanza.h>
 
 namespace Swift {
 	class ServerSession;

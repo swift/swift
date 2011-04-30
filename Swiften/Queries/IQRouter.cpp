@@ -4,15 +4,15 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "Swiften/Queries/IQRouter.h"
+#include <Swiften/Queries/IQRouter.h>
 
 #include <algorithm>
 #include <boost/bind.hpp>
 
-#include "Swiften/Base/foreach.h"
-#include "Swiften/Queries/IQHandler.h"
-#include "Swiften/Queries/IQChannel.h"
-#include "Swiften/Elements/ErrorPayload.h"
+#include <Swiften/Base/foreach.h>
+#include <Swiften/Queries/IQHandler.h>
+#include <Swiften/Queries/IQChannel.h>
+#include <Swiften/Elements/ErrorPayload.h>
 
 namespace Swift {
 

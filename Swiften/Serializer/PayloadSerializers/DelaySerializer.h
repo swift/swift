@@ -6,8 +6,8 @@
 
 #pragma once
 
-#include "Swiften/Serializer/GenericPayloadSerializer.h"
-#include "Swiften/Elements/Delay.h"
+#include <Swiften/Serializer/GenericPayloadSerializer.h>
+#include <Swiften/Elements/Delay.h>
 
 namespace Swift {
 	class DelaySerializer : public GenericPayloadSerializer<Delay> {

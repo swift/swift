@@ -6,20 +6,20 @@
 
 #pragma once
 
-#include "Swiften/Base/Platform.h"
+#include <Swiften/Base/Platform.h>
 
 #if defined(SWIFTEN_PLATFORM_MACOSX)
-#include "Swiften/Network/MacOSXProxyProvider.h"
+#include <Swiften/Network/MacOSXProxyProvider.h>
 namespace Swift {
 	typedef MacOSXProxyProvider PlatformProxyProvider;
 }
 #elif defined(SWIFTEN_PLATFORM_WIN32)
-#include "Swiften/Network/WindowsProxyProvider.h"
+#include <Swiften/Network/WindowsProxyProvider.h>
 namespace Swift {
 	typedef WindowsProxyProvider PlatformProxyProvider;
 }
 #else
-#include "Swiften/Network/UnixProxyProvider.h"
+#include <Swiften/Network/UnixProxyProvider.h>
 namespace Swift {
 	typedef UnixProxyProvider PlatformProxyProvider;
 }

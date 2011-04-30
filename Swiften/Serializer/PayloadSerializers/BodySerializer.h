@@ -7,9 +7,9 @@
 #ifndef SWIFTEN_BodySerializer_H
 #define SWIFTEN_BodySerializer_H
 
-#include "Swiften/Serializer/GenericPayloadSerializer.h"
-#include "Swiften/Serializer/XML/XMLTextNode.h"
-#include "Swiften/Elements/Body.h"
+#include <Swiften/Serializer/GenericPayloadSerializer.h>
+#include <Swiften/Serializer/XML/XMLTextNode.h>
+#include <Swiften/Elements/Body.h>
 
 namespace Swift {
 	class BodySerializer : public GenericPayloadSerializer<Body> {

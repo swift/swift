@@ -7,14 +7,14 @@
 #include <boost/bind.hpp>
 #include <boost/thread.hpp>
 
-#include "Swiften/Client/Client.h"
-#include "Swiften/Network/BoostTimer.h"
-#include "Swiften/EventLoop/EventLoop.h"
-#include "Swiften/EventLoop/SimpleEventLoop.h"
-#include "Swiften/Roster/GetRosterRequest.h"
-#include "Swiften/Client/ClientXMLTracer.h"
-#include "Swiften/Network/BoostIOServiceThread.h"
-#include "Swiften/Network/MainBoostIOServiceThread.h"
+#include <Swiften/Client/Client.h>
+#include <Swiften/Network/BoostTimer.h>
+#include <Swiften/EventLoop/EventLoop.h>
+#include <Swiften/EventLoop/SimpleEventLoop.h>
+#include <Swiften/Roster/GetRosterRequest.h>
+#include <Swiften/Client/ClientXMLTracer.h>
+#include <Swiften/Network/BoostIOServiceThread.h>
+#include <Swiften/Network/MainBoostIOServiceThread.h>
 
 using namespace Swift;
 

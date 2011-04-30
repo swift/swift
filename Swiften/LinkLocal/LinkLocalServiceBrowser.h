@@ -6,19 +6,19 @@
 
 #pragma once
 
-#include "Swiften/Base/boost_bsignals.h"
+#include <Swiften/Base/boost_bsignals.h>
 #include <boost/shared_ptr.hpp>
 #include <boost/optional.hpp>
 #include <map>
 #include <vector>
 
 #include <string>
-#include "Swiften/LinkLocal/DNSSD/DNSSDQuerier.h"
-#include "Swiften/LinkLocal/DNSSD/DNSSDResolveServiceQuery.h"
-#include "Swiften/LinkLocal/DNSSD/DNSSDRegisterQuery.h"
-#include "Swiften/LinkLocal/DNSSD/DNSSDServiceID.h"
-#include "Swiften/LinkLocal/LinkLocalService.h"
-#include "Swiften/LinkLocal/LinkLocalServiceInfo.h"
+#include <Swiften/LinkLocal/DNSSD/DNSSDQuerier.h>
+#include <Swiften/LinkLocal/DNSSD/DNSSDResolveServiceQuery.h>
+#include <Swiften/LinkLocal/DNSSD/DNSSDRegisterQuery.h>
+#include <Swiften/LinkLocal/DNSSD/DNSSDServiceID.h>
+#include <Swiften/LinkLocal/LinkLocalService.h>
+#include <Swiften/LinkLocal/LinkLocalServiceInfo.h>
 
 namespace Swift {
 	class LinkLocalServiceBrowser {

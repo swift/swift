@@ -10,10 +10,10 @@
 #include <boost/bind.hpp>
 #include <boost/optional.hpp>
 
-#include "Swiften/Session/SessionStream.h"
-#include "Swiften/Component/ComponentSession.h"
-#include "Swiften/Elements/ComponentHandshake.h"
-#include "Swiften/Elements/AuthFailure.h"
+#include <Swiften/Session/SessionStream.h>
+#include <Swiften/Component/ComponentSession.h>
+#include <Swiften/Elements/ComponentHandshake.h>
+#include <Swiften/Elements/AuthFailure.h>
 
 using namespace Swift;
 

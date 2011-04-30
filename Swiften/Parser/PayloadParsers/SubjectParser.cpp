@@ -4,7 +4,7 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "Swiften/Parser/PayloadParsers/SubjectParser.h"
+#include <Swiften/Parser/PayloadParsers/SubjectParser.h>
 
 namespace Swift {
 

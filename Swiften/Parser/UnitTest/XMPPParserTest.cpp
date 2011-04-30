@@ -8,17 +8,17 @@
 #include <cppunit/extensions/TestFactoryRegistry.h>
 #include <vector>
 
-#include "Swiften/Elements/ProtocolHeader.h"
+#include <Swiften/Elements/ProtocolHeader.h>
 #include <string>
-#include "Swiften/Parser/XMPPParser.h"
-#include "Swiften/Parser/ElementParser.h"
-#include "Swiften/Parser/XMPPParserClient.h"
-#include "Swiften/Parser/PayloadParserFactoryCollection.h"
-#include "Swiften/Elements/Presence.h"
-#include "Swiften/Elements/IQ.h"
-#include "Swiften/Elements/Message.h"
-#include "Swiften/Elements/StreamFeatures.h"
-#include "Swiften/Elements/UnknownElement.h"
+#include <Swiften/Parser/XMPPParser.h>
+#include <Swiften/Parser/ElementParser.h>
+#include <Swiften/Parser/XMPPParserClient.h>
+#include <Swiften/Parser/PayloadParserFactoryCollection.h>
+#include <Swiften/Elements/Presence.h>
+#include <Swiften/Elements/IQ.h>
+#include <Swiften/Elements/Message.h>
+#include <Swiften/Elements/StreamFeatures.h>
+#include <Swiften/Elements/UnknownElement.h>
 
 using namespace Swift;
 

@@ -9,7 +9,7 @@
 #include <vector>
 #include <boost/cstdint.hpp>
 
-#include "Swiften/Base/ByteArray.h"
+#include <Swiften/Base/ByteArray.h>
 
 namespace Swift {
 	class SHA1 {

@@ -6,8 +6,8 @@
 
 #pragma once
 
-#include "Swiften/Compress/ZLibCodecompressor.h"
-#include "Swiften/Base/ByteArray.h"
+#include <Swiften/Compress/ZLibCodecompressor.h>
+#include <Swiften/Base/ByteArray.h>
 
 namespace Swift {
 	class ZLibDecompressor : public ZLibCodecompressor {

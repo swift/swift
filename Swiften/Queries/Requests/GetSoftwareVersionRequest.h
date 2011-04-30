@@ -6,8 +6,8 @@
 
 #pragma once
 
-#include "Swiften/Queries/GenericRequest.h"
-#include "Swiften/Elements/SoftwareVersion.h"
+#include <Swiften/Queries/GenericRequest.h>
+#include <Swiften/Elements/SoftwareVersion.h>
 #include <boost/smart_ptr/make_shared.hpp>
 
 

@@ -10,7 +10,7 @@
 #include <vector>
 
 #include <string>
-#include "Swiften/Elements/IQ.h"
+#include <Swiften/Elements/IQ.h>
 
 namespace Swift {
 	class IQChannel;

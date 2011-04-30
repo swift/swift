@@ -8,7 +8,7 @@
 
 #include <boost/shared_ptr.hpp>
 
-#include "Swiften/Elements/DiscoInfo.h"
+#include <Swiften/Elements/DiscoInfo.h>
 
 namespace Swift {
 	

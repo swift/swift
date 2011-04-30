@@ -4,7 +4,7 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "Swiften/Parser/StanzaAckParser.h"
+#include <Swiften/Parser/StanzaAckParser.h>
 
 #include <boost/lexical_cast.hpp>
 

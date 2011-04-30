@@ -7,8 +7,8 @@
 #ifndef SWIFTEN_StatusShowSerializer_H
 #define SWIFTEN_StatusShowSerializer_H
 
-#include "Swiften/Serializer/GenericPayloadSerializer.h"
-#include "Swiften/Elements/StatusShow.h"
+#include <Swiften/Serializer/GenericPayloadSerializer.h>
+#include <Swiften/Elements/StatusShow.h>
 
 namespace Swift {
 	class StatusShowSerializer : public GenericPayloadSerializer<StatusShow> {

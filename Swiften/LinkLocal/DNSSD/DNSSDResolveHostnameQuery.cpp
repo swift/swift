@@ -4,7 +4,7 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "Swiften/LinkLocal/DNSSD/DNSSDResolveHostnameQuery.h"
+#include <Swiften/LinkLocal/DNSSD/DNSSDResolveHostnameQuery.h>
 
 namespace Swift {
 

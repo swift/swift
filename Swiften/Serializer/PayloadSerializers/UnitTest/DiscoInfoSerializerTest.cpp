@@ -7,7 +7,7 @@
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/extensions/TestFactoryRegistry.h>
 
-#include "Swiften/Serializer/PayloadSerializers/DiscoInfoSerializer.h"
+#include <Swiften/Serializer/PayloadSerializers/DiscoInfoSerializer.h>
 
 using namespace Swift;
 

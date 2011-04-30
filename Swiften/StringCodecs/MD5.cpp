@@ -33,12 +33,12 @@
 
 #pragma GCC diagnostic ignored "-Wold-style-cast"
 
-#include "Swiften/StringCodecs/MD5.h"
+#include <Swiften/StringCodecs/MD5.h>
 
 #include <cassert>
 
-#include "Swiften/Base/ByteArray.h"
-#include "Swiften/Base/Platform.h"
+#include <Swiften/Base/ByteArray.h>
+#include <Swiften/Base/Platform.h>
 
 namespace Swift {
 

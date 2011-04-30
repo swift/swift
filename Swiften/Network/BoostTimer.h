@@ -10,8 +10,8 @@
 #include <boost/asio/deadline_timer.hpp>
 #include <boost/enable_shared_from_this.hpp>
 
-#include "Swiften/EventLoop/EventOwner.h"
-#include "Swiften/Network/Timer.h"
+#include <Swiften/EventLoop/EventOwner.h>
+#include <Swiften/Network/Timer.h>
 
 namespace Swift {
 	class EventLoop;

@@ -4,15 +4,15 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "Swiften/LinkLocal/OutgoingLinkLocalSession.h"
+#include <Swiften/LinkLocal/OutgoingLinkLocalSession.h>
 
 #include <boost/bind.hpp>
 
 #include <Swiften/Base/foreach.h>
-#include "Swiften/StreamStack/XMPPLayer.h"
-#include "Swiften/Elements/ProtocolHeader.h"
-#include "Swiften/Elements/StreamFeatures.h"
-#include "Swiften/Elements/IQ.h"
+#include <Swiften/StreamStack/XMPPLayer.h>
+#include <Swiften/Elements/ProtocolHeader.h>
+#include <Swiften/Elements/StreamFeatures.h>
+#include <Swiften/Elements/IQ.h>
 
 namespace Swift {
 

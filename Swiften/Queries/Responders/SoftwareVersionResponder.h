@@ -6,8 +6,8 @@
 
 #pragma once
 
-#include "Swiften/Queries/GetResponder.h"
-#include "Swiften/Elements/SoftwareVersion.h"
+#include <Swiften/Queries/GetResponder.h>
+#include <Swiften/Elements/SoftwareVersion.h>
 
 namespace Swift {
 	class IQRouter;

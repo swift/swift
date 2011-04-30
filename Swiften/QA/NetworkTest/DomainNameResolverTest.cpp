@@ -10,13 +10,13 @@
 
 #include <algorithm>
 
-#include "Swiften/Base/sleep.h"
+#include <Swiften/Base/sleep.h>
 #include <string>
-#include "Swiften/Base/ByteArray.h"
-#include "Swiften/Network/PlatformDomainNameResolver.h"
-#include "Swiften/Network/DomainNameAddressQuery.h"
-#include "Swiften/Network/DomainNameServiceQuery.h"
-#include "Swiften/EventLoop/DummyEventLoop.h"
+#include <Swiften/Base/ByteArray.h>
+#include <Swiften/Network/PlatformDomainNameResolver.h>
+#include <Swiften/Network/DomainNameAddressQuery.h>
+#include <Swiften/Network/DomainNameServiceQuery.h>
+#include <Swiften/EventLoop/DummyEventLoop.h>
 
 using namespace Swift;
 

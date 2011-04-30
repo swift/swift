@@ -10,7 +10,7 @@
 #include <QEvent>
 #include <QCoreApplication>
 
-#include "Swiften/EventLoop/EventLoop.h"
+#include <Swiften/EventLoop/EventLoop.h>
 
 namespace Swift {
 	class QtEventLoop : public QObject, public EventLoop {

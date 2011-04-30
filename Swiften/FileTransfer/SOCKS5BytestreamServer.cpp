@@ -4,13 +4,13 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "Swiften/FileTransfer/SOCKS5BytestreamServer.h"
+#include <Swiften/FileTransfer/SOCKS5BytestreamServer.h>
 
 #include <boost/bind.hpp>
 
-#include "Swiften/StringCodecs/Hexify.h"
-#include "Swiften/StringCodecs/SHA1.h"
-#include "Swiften/FileTransfer/SOCKS5BytestreamServerSession.h"
+#include <Swiften/StringCodecs/Hexify.h>
+#include <Swiften/StringCodecs/SHA1.h>
+#include <Swiften/FileTransfer/SOCKS5BytestreamServerSession.h>
 
 namespace Swift {
 

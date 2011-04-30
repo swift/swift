@@ -8,7 +8,7 @@
 
 #include <map>
 
-#include "Swiften/Disco/EntityCapsProvider.h"
+#include <Swiften/Disco/EntityCapsProvider.h>
 
 namespace Swift {
 	class DummyEntityCapsProvider : public EntityCapsProvider {

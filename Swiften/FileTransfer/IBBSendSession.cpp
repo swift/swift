@@ -4,13 +4,13 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "Swiften/FileTransfer/IBBSendSession.h"
+#include <Swiften/FileTransfer/IBBSendSession.h>
 
 #include <boost/bind.hpp>
 
-#include "Swiften/Queries/IQRouter.h"
-#include "Swiften/FileTransfer/IBBRequest.h"
-#include "Swiften/FileTransfer/BytestreamException.h"
+#include <Swiften/Queries/IQRouter.h>
+#include <Swiften/FileTransfer/IBBRequest.h>
+#include <Swiften/FileTransfer/BytestreamException.h>
 
 namespace Swift {
 

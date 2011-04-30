@@ -8,12 +8,12 @@
 
 #include <cppunit/extensions/HelperMacros.h>
 
-#include "Swiften/Parser/PayloadParsers/FullPayloadParserFactoryCollection.h"
-#include "Swiften/Parser/XMLParser.h"
-#include "Swiften/Parser/XMLParserClient.h"
-#include "Swiften/Parser/PlatformXMLParserFactory.h"
-#include "Swiften/Elements/Payload.h"
-#include "Swiften/Parser/PayloadParser.h"
+#include <Swiften/Parser/PayloadParsers/FullPayloadParserFactoryCollection.h>
+#include <Swiften/Parser/XMLParser.h>
+#include <Swiften/Parser/XMLParserClient.h>
+#include <Swiften/Parser/PlatformXMLParserFactory.h>
+#include <Swiften/Elements/Payload.h>
+#include <Swiften/Parser/PayloadParser.h>
 
 namespace Swift {
 	class PayloadsParserTester : public XMLParserClient {

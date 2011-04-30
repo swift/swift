@@ -6,8 +6,8 @@
 
 #pragma once
 
-#include "Swiften/Network/ConnectionFactory.h"
-#include "Swiften/Network/HostAddressPort.h"
+#include <Swiften/Network/ConnectionFactory.h>
+#include <Swiften/Network/HostAddressPort.h>
 
 namespace Swift {
 	class SOCKS5ProxiedConnectionFactory : public ConnectionFactory {

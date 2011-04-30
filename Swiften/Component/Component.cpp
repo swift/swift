@@ -4,9 +4,9 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "Swiften/Component/Component.h"
+#include <Swiften/Component/Component.h>
 
-#include "Swiften/Queries/Responders/SoftwareVersionResponder.h"
+#include <Swiften/Queries/Responders/SoftwareVersionResponder.h>
 
 namespace Swift {
 

@@ -9,8 +9,8 @@
 
 #include <boost/shared_ptr.hpp>
 
-#include "Swiften/Elements/StreamFeatures.h"
-#include "Swiften/Serializer/GenericElementSerializer.h"
+#include <Swiften/Elements/StreamFeatures.h>
+#include <Swiften/Serializer/GenericElementSerializer.h>
 
 namespace Swift {
 	class StreamFeaturesSerializer : public GenericElementSerializer<StreamFeatures> {

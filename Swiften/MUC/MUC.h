@@ -6,16 +6,16 @@
 
 #pragma once
 
-#include "Swiften/JID/JID.h"
+#include <Swiften/JID/JID.h>
 #include <string>
-#include "Swiften/Elements/Message.h"
-#include "Swiften/Elements/Presence.h"
-#include "Swiften/Elements/MUCOccupant.h"
-#include "Swiften/MUC/MUCRegistry.h"
-#include "Swiften/Elements/MUCOwnerPayload.h"
+#include <Swiften/Elements/Message.h>
+#include <Swiften/Elements/Presence.h>
+#include <Swiften/Elements/MUCOccupant.h>
+#include <Swiften/MUC/MUCRegistry.h>
+#include <Swiften/Elements/MUCOwnerPayload.h>
 
 #include <boost/shared_ptr.hpp>
-#include "Swiften/Base/boost_bsignals.h"
+#include <Swiften/Base/boost_bsignals.h>
 #include <boost/signals/connection.hpp>
 
 #include <map>

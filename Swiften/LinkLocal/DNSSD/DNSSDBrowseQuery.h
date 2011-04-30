@@ -6,9 +6,9 @@
 
 #pragma once
 
-#include "Swiften/Base/boost_bsignals.h"
+#include <Swiften/Base/boost_bsignals.h>
 
-#include "Swiften/LinkLocal/DNSSD/DNSSDServiceID.h"
+#include <Swiften/LinkLocal/DNSSD/DNSSDServiceID.h>
 
 namespace Swift {
 	class DNSSDBrowseQuery {

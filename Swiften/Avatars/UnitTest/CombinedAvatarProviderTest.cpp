@@ -8,9 +8,9 @@
 #include <cppunit/extensions/TestFactoryRegistry.h>
 #include <boost/bind.hpp>
 
-#include "Swiften/JID/JID.h"
+#include <Swiften/JID/JID.h>
 #include <string>
-#include "Swiften/Avatars/CombinedAvatarProvider.h"
+#include <Swiften/Avatars/CombinedAvatarProvider.h>
 
 using namespace Swift;
 

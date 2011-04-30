@@ -4,26 +4,26 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "Swiften/Client/Client.h"
+#include <Swiften/Client/Client.h>
 
-#include "Swiften/Queries/Responders/SoftwareVersionResponder.h"
-#include "Swiften/Roster/XMPPRosterImpl.h"
-#include "Swiften/Roster/XMPPRosterController.h"
-#include "Swiften/Presence/PresenceOracle.h"
-#include "Swiften/Presence/StanzaChannelPresenceSender.h"
-#include "Swiften/Presence/DirectedPresenceSender.h"
-#include "Swiften/MUC/MUCRegistry.h"
-#include "Swiften/MUC/MUCManager.h"
-#include "Swiften/Client/MemoryStorages.h"
-#include "Swiften/VCards/VCardManager.h"
-#include "Swiften/VCards/VCardManager.h"
-#include "Swiften/Avatars/AvatarManagerImpl.h"
-#include "Swiften/Disco/CapsManager.h"
-#include "Swiften/Disco/EntityCapsManager.h"
-#include "Swiften/Disco/ClientDiscoManager.h"
-#include "Swiften/Client/NickResolver.h"
-#include "Swiften/Presence/SubscriptionManager.h"
-#include "Swiften/TLS/BlindCertificateTrustChecker.h"
+#include <Swiften/Queries/Responders/SoftwareVersionResponder.h>
+#include <Swiften/Roster/XMPPRosterImpl.h>
+#include <Swiften/Roster/XMPPRosterController.h>
+#include <Swiften/Presence/PresenceOracle.h>
+#include <Swiften/Presence/StanzaChannelPresenceSender.h>
+#include <Swiften/Presence/DirectedPresenceSender.h>
+#include <Swiften/MUC/MUCRegistry.h>
+#include <Swiften/MUC/MUCManager.h>
+#include <Swiften/Client/MemoryStorages.h>
+#include <Swiften/VCards/VCardManager.h>
+#include <Swiften/VCards/VCardManager.h>
+#include <Swiften/Avatars/AvatarManagerImpl.h>
+#include <Swiften/Disco/CapsManager.h>
+#include <Swiften/Disco/EntityCapsManager.h>
+#include <Swiften/Disco/ClientDiscoManager.h>
+#include <Swiften/Client/NickResolver.h>
+#include <Swiften/Presence/SubscriptionManager.h>
+#include <Swiften/TLS/BlindCertificateTrustChecker.h>
 #include <Swiften/Client/NickManagerImpl.h>
 #include <Swiften/Client/ClientSession.h>
 

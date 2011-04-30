@@ -7,7 +7,7 @@
 #ifndef SWIFTEN_XMLRawTextNode_H
 #define SWIFTEN_XMLRawTextNode_H
 
-#include "Swiften/Serializer/XML/XMLNode.h"
+#include <Swiften/Serializer/XML/XMLNode.h>
 
 namespace Swift {
 	class XMLRawTextNode : public XMLNode {

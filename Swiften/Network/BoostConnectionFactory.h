@@ -8,8 +8,8 @@
 
 #include <boost/asio/io_service.hpp>
 
-#include "Swiften/Network/ConnectionFactory.h"
-#include "Swiften/Network/BoostConnection.h"
+#include <Swiften/Network/ConnectionFactory.h>
+#include <Swiften/Network/BoostConnection.h>
 
 namespace Swift {
 	class BoostConnection;

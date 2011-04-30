@@ -9,8 +9,8 @@
 #include <vector>
 #include <string>
 
-#include "Swiften/Elements/Payload.h"
-#include "Swiften/JID/JID.h"
+#include <Swiften/Elements/Payload.h>
+#include <Swiften/JID/JID.h>
 
 namespace Swift {
 	class DiscoItems : public Payload {

@@ -8,8 +8,8 @@
 
 #include <boost/asio/io_service.hpp>
 
-#include "Swiften/Network/TimerFactory.h"
-#include "Swiften/Network/BoostTimer.h"
+#include <Swiften/Network/TimerFactory.h>
+#include <Swiften/Network/BoostTimer.h>
 
 namespace Swift {
 	class BoostTimer;

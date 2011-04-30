@@ -7,7 +7,7 @@
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/extensions/TestFactoryRegistry.h>
 
-#include "Swiften/Parser/AttributeMap.h"
+#include <Swiften/Parser/AttributeMap.h>
 
 using namespace Swift;
 

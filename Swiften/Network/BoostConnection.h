@@ -11,8 +11,8 @@
 #include <boost/enable_shared_from_this.hpp>
 #include <boost/thread/mutex.hpp>
 
-#include "Swiften/Network/Connection.h"
-#include "Swiften/EventLoop/EventOwner.h"
+#include <Swiften/Network/Connection.h>
+#include <Swiften/EventLoop/EventOwner.h>
 
 namespace boost {
 	class thread;

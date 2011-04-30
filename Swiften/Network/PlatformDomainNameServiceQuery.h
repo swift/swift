@@ -8,8 +8,8 @@
 
 #include <boost/enable_shared_from_this.hpp>
 
-#include "Swiften/Network/DomainNameServiceQuery.h"
-#include "Swiften/EventLoop/EventOwner.h"
+#include <Swiften/Network/DomainNameServiceQuery.h>
+#include <Swiften/EventLoop/EventOwner.h>
 #include <string>
 #include <Swiften/Network/PlatformDomainNameQuery.h>
 

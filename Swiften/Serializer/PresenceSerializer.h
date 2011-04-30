@@ -7,8 +7,8 @@
 #ifndef SWIFTEN_PresenceSerializer_H
 #define SWIFTEN_PresenceSerializer_H
 
-#include "Swiften/Serializer/GenericStanzaSerializer.h"
-#include "Swiften/Elements/Presence.h"
+#include <Swiften/Serializer/GenericStanzaSerializer.h>
+#include <Swiften/Elements/Presence.h>
 
 namespace Swift {
 	class PresenceSerializer : public GenericStanzaSerializer<Presence> {

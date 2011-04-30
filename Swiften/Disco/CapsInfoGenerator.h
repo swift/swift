@@ -7,7 +7,7 @@
 #pragma once
 
 #include <string>
-#include "Swiften/Elements/CapsInfo.h"
+#include <Swiften/Elements/CapsInfo.h>
 
 namespace Swift {
 	class DiscoInfo;

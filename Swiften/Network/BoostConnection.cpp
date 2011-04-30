@@ -4,7 +4,7 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "Swiften/Network/BoostConnection.h"
+#include <Swiften/Network/BoostConnection.h>
 
 #include <iostream>
 #include <boost/bind.hpp>
@@ -13,11 +13,11 @@
 #include <boost/asio/write.hpp>
 
 #include <Swiften/Base/Log.h>
-#include "Swiften/EventLoop/EventLoop.h"
+#include <Swiften/EventLoop/EventLoop.h>
 #include <string>
-#include "Swiften/Base/ByteArray.h"
-#include "Swiften/Network/HostAddressPort.h"
-#include "Swiften/Base/sleep.h"
+#include <Swiften/Base/ByteArray.h>
+#include <Swiften/Network/HostAddressPort.h>
+#include <Swiften/Base/sleep.h>
 
 namespace Swift {
 

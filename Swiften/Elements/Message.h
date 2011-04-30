@@ -10,11 +10,11 @@
 #include <boost/shared_ptr.hpp>
 
 #include <string>
-#include "Swiften/Elements/Body.h"
-#include "Swiften/Elements/Subject.h"
-#include "Swiften/Elements/ErrorPayload.h"
-#include "Swiften/Elements/Stanza.h"
-#include "Swiften/Elements/Replace.h"
+#include <Swiften/Elements/Body.h>
+#include <Swiften/Elements/Subject.h>
+#include <Swiften/Elements/ErrorPayload.h>
+#include <Swiften/Elements/Stanza.h>
+#include <Swiften/Elements/Replace.h>
 
 namespace Swift {
 	class Message : public Stanza {

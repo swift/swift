@@ -3,7 +3,7 @@
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
-#include "Swiften/Base/Platform.h"
+#include <Swiften/Base/Platform.h>
 
 #ifdef SWIFTEN_PLATFORM_WINDOWS
 #include <windows.h>
@@ -18,9 +18,9 @@
 #include <Security/Security.h>
 #endif
 
-#include "Swiften/TLS/OpenSSL/OpenSSLContext.h"
-#include "Swiften/TLS/OpenSSL/OpenSSLCertificate.h"
-#include "Swiften/TLS/PKCS12Certificate.h"
+#include <Swiften/TLS/OpenSSL/OpenSSLContext.h>
+#include <Swiften/TLS/OpenSSL/OpenSSLCertificate.h>
+#include <Swiften/TLS/PKCS12Certificate.h>
 
 #pragma GCC diagnostic ignored "-Wold-style-cast"
 

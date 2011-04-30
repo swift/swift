@@ -8,18 +8,18 @@
 #include <boost/filesystem.hpp>
 #include <iostream>
 
-#include "Swiften/Client/Client.h"
+#include <Swiften/Client/Client.h>
 #include <Swiften/Elements/Presence.h>
-#include "Swiften/Network/BoostTimer.h"
-#include "Swiften/Network/TimerFactory.h"
-#include "Swiften/Network/BoostNetworkFactories.h"
-#include "Swiften/EventLoop/EventLoop.h"
-#include "Swiften/Client/ClientXMLTracer.h"
-#include "Swiften/EventLoop/SimpleEventLoop.h"
-#include "Swiften/FileTransfer/OutgoingSIFileTransfer.h"
-#include "Swiften/FileTransfer/FileReadBytestream.h"
-#include "Swiften/FileTransfer/SOCKS5BytestreamServer.h"
-#include "Swiften/Network/BoostConnectionServer.h"
+#include <Swiften/Network/BoostTimer.h>
+#include <Swiften/Network/TimerFactory.h>
+#include <Swiften/Network/BoostNetworkFactories.h>
+#include <Swiften/EventLoop/EventLoop.h>
+#include <Swiften/Client/ClientXMLTracer.h>
+#include <Swiften/EventLoop/SimpleEventLoop.h>
+#include <Swiften/FileTransfer/OutgoingSIFileTransfer.h>
+#include <Swiften/FileTransfer/FileReadBytestream.h>
+#include <Swiften/FileTransfer/SOCKS5BytestreamServer.h>
+#include <Swiften/Network/BoostConnectionServer.h>
 
 using namespace Swift;
 

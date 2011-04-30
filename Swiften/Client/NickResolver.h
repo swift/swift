@@ -9,8 +9,8 @@
 
 #include <Swiften/Base/boost_bsignals.h>
 #include <string>
-#include "Swiften/JID/JID.h"
-#include "Swiften/Elements/VCard.h"
+#include <Swiften/JID/JID.h>
+#include <Swiften/Elements/VCard.h>
 
 namespace Swift {
 	class XMPPRoster;

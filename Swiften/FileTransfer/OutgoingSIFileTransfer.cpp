@@ -4,14 +4,14 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "Swiften/FileTransfer/OutgoingSIFileTransfer.h"
+#include <Swiften/FileTransfer/OutgoingSIFileTransfer.h>
 
 #include <boost/bind.hpp>
 
-#include "Swiften/FileTransfer/StreamInitiationRequest.h"
-#include "Swiften/FileTransfer/BytestreamsRequest.h"
-#include "Swiften/FileTransfer/SOCKS5BytestreamServer.h"
-#include "Swiften/FileTransfer/IBBSendSession.h"
+#include <Swiften/FileTransfer/StreamInitiationRequest.h>
+#include <Swiften/FileTransfer/BytestreamsRequest.h>
+#include <Swiften/FileTransfer/SOCKS5BytestreamServer.h>
+#include <Swiften/FileTransfer/IBBSendSession.h>
 
 namespace Swift {
 

@@ -4,12 +4,12 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "Swiften/EventLoop/SimpleEventLoop.h"
+#include <Swiften/EventLoop/SimpleEventLoop.h>
 
 #include <boost/bind.hpp>
 #include <iostream>
 
-#include "Swiften/Base/foreach.h"
+#include <Swiften/Base/foreach.h>
 
 
 namespace Swift {

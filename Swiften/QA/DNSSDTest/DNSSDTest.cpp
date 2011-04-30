@@ -11,16 +11,16 @@
 
 #include <algorithm>
 
-#include "Swiften/Base/sleep.h"
-#include "Swiften/Base/ByteArray.h"
-#include "Swiften/EventLoop/DummyEventLoop.h"
-#include "Swiften/LinkLocal/LinkLocalServiceInfo.h"
-#include "Swiften/LinkLocal/DNSSD/DNSSDQuerier.h"
-#include "Swiften/LinkLocal/DNSSD/DNSSDBrowseQuery.h"
-#include "Swiften/LinkLocal/DNSSD/DNSSDRegisterQuery.h"
-#include "Swiften/LinkLocal/DNSSD/DNSSDResolveServiceQuery.h"
+#include <Swiften/Base/sleep.h>
+#include <Swiften/Base/ByteArray.h>
+#include <Swiften/EventLoop/DummyEventLoop.h>
+#include <Swiften/LinkLocal/LinkLocalServiceInfo.h>
+#include <Swiften/LinkLocal/DNSSD/DNSSDQuerier.h>
+#include <Swiften/LinkLocal/DNSSD/DNSSDBrowseQuery.h>
+#include <Swiften/LinkLocal/DNSSD/DNSSDRegisterQuery.h>
+#include <Swiften/LinkLocal/DNSSD/DNSSDResolveServiceQuery.h>
 #ifdef HAVE_AVAHI
-#include "Swiften/LinkLocal/DNSSD/Avahi/AvahiQuerier.h"
+#include <Swiften/LinkLocal/DNSSD/Avahi/AvahiQuerier.h>
 #endif
 
 #define SLEEP_INTERVALS 20

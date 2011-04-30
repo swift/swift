@@ -4,14 +4,14 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "Swiften/TLS/PlatformTLSFactories.h"
+#include <Swiften/TLS/PlatformTLSFactories.h>
 
 #include <cstring>
 #include <cassert>
 
 #ifdef HAVE_OPENSSL
-#include "Swiften/TLS/OpenSSL/OpenSSLContextFactory.h"
-#include "Swiften/TLS/OpenSSL/OpenSSLCertificateFactory.h"
+#include <Swiften/TLS/OpenSSL/OpenSSLContextFactory.h>
+#include <Swiften/TLS/OpenSSL/OpenSSLCertificateFactory.h>
 #endif
 
 namespace Swift {

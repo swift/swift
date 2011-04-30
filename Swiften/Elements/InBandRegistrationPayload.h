@@ -10,8 +10,8 @@
 #include <boost/optional.hpp>
 #include <string>
 
-#include "Swiften/Elements/Payload.h"
-#include "Swiften/Elements/Form.h"
+#include <Swiften/Elements/Payload.h>
+#include <Swiften/Elements/Form.h>
 
 namespace Swift {
 	class InBandRegistrationPayload : public Payload {

@@ -8,8 +8,8 @@
 
 #include <boost/shared_ptr.hpp>
 
-#include "Swiften/Elements/ComponentHandshake.h"
-#include "Swiften/Serializer/GenericElementSerializer.h"
+#include <Swiften/Elements/ComponentHandshake.h>
+#include <Swiften/Serializer/GenericElementSerializer.h>
 
 namespace Swift {
 	class ComponentHandshakeSerializer : public GenericElementSerializer<ComponentHandshake> {

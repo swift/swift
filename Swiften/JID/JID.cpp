@@ -21,8 +21,8 @@
 #include <stringprep.h>
 
 #include <Swiften/Base/String.h>
-#include "Swiften/JID/JID.h"
-#include "Swiften/IDN/StringPrep.h"
+#include <Swiften/JID/JID.h>
+#include <Swiften/IDN/StringPrep.h>
 
 #ifdef SWIFTEN_CACHE_JID_PREP
 typedef boost::unordered_map<std::string, std::string> PrepCache;

@@ -4,12 +4,12 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "Swiften/StreamStack/TLSLayer.h"
+#include <Swiften/StreamStack/TLSLayer.h>
 
 #include <boost/bind.hpp>
 
-#include "Swiften/TLS/TLSContextFactory.h"
-#include "Swiften/TLS/TLSContext.h"
+#include <Swiften/TLS/TLSContextFactory.h>
+#include <Swiften/TLS/TLSContext.h>
 
 namespace Swift {
 

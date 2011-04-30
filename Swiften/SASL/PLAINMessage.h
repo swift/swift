@@ -9,7 +9,7 @@
 #pragma once
 
 #include <string>
-#include "Swiften/Base/ByteArray.h"
+#include <Swiften/Base/ByteArray.h>
 
 namespace Swift {
 	class PLAINMessage {

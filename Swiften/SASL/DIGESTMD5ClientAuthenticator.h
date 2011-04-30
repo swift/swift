@@ -9,9 +9,9 @@
 #include <map>
 
 #include <string>
-#include "Swiften/Base/ByteArray.h"
-#include "Swiften/SASL/ClientAuthenticator.h"
-#include "Swiften/SASL/DIGESTMD5Properties.h"
+#include <Swiften/Base/ByteArray.h>
+#include <Swiften/SASL/ClientAuthenticator.h>
+#include <Swiften/SASL/DIGESTMD5Properties.h>
 
 namespace Swift {
 	class DIGESTMD5ClientAuthenticator : public ClientAuthenticator {

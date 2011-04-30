@@ -9,8 +9,8 @@
 
 #include <boost/lexical_cast.hpp>
 
-#include "Swiften/Serializer/GenericPayloadSerializer.h"
-#include "Swiften/Elements/Priority.h"
+#include <Swiften/Serializer/GenericPayloadSerializer.h>
+#include <Swiften/Elements/Priority.h>
 
 namespace Swift {
 	class PrioritySerializer : public GenericPayloadSerializer<Priority> {

@@ -9,8 +9,8 @@
 #include <boost/thread.hpp>
 #include <boost/bind.hpp>
 
-#include "Swiften/EventLoop/SimpleEventLoop.h"
-#include "Swiften/Base/sleep.h"
+#include <Swiften/EventLoop/SimpleEventLoop.h>
+#include <Swiften/Base/sleep.h>
 
 using namespace Swift;
 

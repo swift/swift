@@ -7,8 +7,8 @@
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/extensions/TestFactoryRegistry.h>
 
-#include "Swiften/Parser/PayloadParsers/UnitTest/PayloadsParserTester.h"
-#include "Swiften/Elements/Command.h"
+#include <Swiften/Parser/PayloadParsers/UnitTest/PayloadsParserTester.h>
+#include <Swiften/Elements/Command.h>
 
 using namespace Swift;
 

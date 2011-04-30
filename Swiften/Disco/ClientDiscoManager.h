@@ -6,9 +6,9 @@
 
 #pragma once
 
-#include "Swiften/Elements/CapsInfo.h"
-#include "Swiften/Elements/DiscoInfo.h"
-#include "Swiften/Presence/PayloadAddingPresenceSender.h"
+#include <Swiften/Elements/CapsInfo.h>
+#include <Swiften/Elements/DiscoInfo.h>
+#include <Swiften/Presence/PayloadAddingPresenceSender.h>
 
 namespace Swift {
 	class IQRouter;

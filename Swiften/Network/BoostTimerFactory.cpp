@@ -4,8 +4,8 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "Swiften/Network/BoostTimerFactory.h"
-#include "Swiften/Network/BoostTimer.h"
+#include <Swiften/Network/BoostTimerFactory.h>
+#include <Swiften/Network/BoostTimer.h>
 
 namespace Swift {
 

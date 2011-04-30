@@ -7,10 +7,10 @@
 #ifndef SWIFTEN_StatusSerializer_H
 #define SWIFTEN_StatusSerializer_H
 
-#include "Swiften/Serializer/GenericPayloadSerializer.h"
-#include "Swiften/Serializer/XML/XMLElement.h"
-#include "Swiften/Serializer/XML/XMLTextNode.h"
-#include "Swiften/Elements/Status.h"
+#include <Swiften/Serializer/GenericPayloadSerializer.h>
+#include <Swiften/Serializer/XML/XMLElement.h>
+#include <Swiften/Serializer/XML/XMLTextNode.h>
+#include <Swiften/Elements/Status.h>
 
 namespace Swift {
 	class StatusSerializer : public GenericPayloadSerializer<Status> {

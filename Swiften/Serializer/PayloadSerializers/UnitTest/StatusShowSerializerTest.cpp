@@ -7,7 +7,7 @@
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/extensions/TestFactoryRegistry.h>
 
-#include "Swiften/Serializer/PayloadSerializers/StatusShowSerializer.h"
+#include <Swiften/Serializer/PayloadSerializers/StatusShowSerializer.h>
 
 using namespace Swift;
 

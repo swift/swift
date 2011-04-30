@@ -8,10 +8,10 @@
 
 #include <avahi-client/publish.h>
 
-#include "Swiften/LinkLocal/DNSSD/Avahi/AvahiQuery.h"
-#include "Swiften/LinkLocal/DNSSD/DNSSDRegisterQuery.h"
-#include "Swiften/Base/ByteArray.h"
-#include "Swiften/EventLoop/EventLoop.h"
+#include <Swiften/LinkLocal/DNSSD/Avahi/AvahiQuery.h>
+#include <Swiften/LinkLocal/DNSSD/DNSSDRegisterQuery.h>
+#include <Swiften/Base/ByteArray.h>
+#include <Swiften/EventLoop/EventLoop.h>
 
 namespace Swift {
 	class AvahiQuerier;

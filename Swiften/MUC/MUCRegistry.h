@@ -8,7 +8,7 @@
 
 #include <vector>
 
-#include "Swiften/JID/JID.h"
+#include <Swiften/JID/JID.h>
 
 namespace Swift {
 	class JID;

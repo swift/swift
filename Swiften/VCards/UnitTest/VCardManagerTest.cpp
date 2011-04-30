@@ -4,7 +4,7 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "Swiften/Base/ByteArray.h"
+#include <Swiften/Base/ByteArray.h>
 
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/extensions/TestFactoryRegistry.h>
@@ -12,10 +12,10 @@
 #include <boost/bind.hpp>
 #include <boost/smart_ptr/make_shared.hpp>
 
-#include "Swiften/VCards/VCardManager.h"
-#include "Swiften/VCards/VCardMemoryStorage.h"
-#include "Swiften/Queries/IQRouter.h"
-#include "Swiften/Client/DummyStanzaChannel.h"
+#include <Swiften/VCards/VCardManager.h>
+#include <Swiften/VCards/VCardMemoryStorage.h>
+#include <Swiften/Queries/IQRouter.h>
+#include <Swiften/Client/DummyStanzaChannel.h>
 
 using namespace Swift;
 

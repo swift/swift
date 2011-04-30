@@ -8,9 +8,9 @@
 
 #include <boost/shared_ptr.hpp>
 
-#include "Swiften/Elements/EnableStreamManagement.h"
-#include "Swiften/Serializer/GenericElementSerializer.h"
-#include "Swiften/Serializer/XML/XMLElement.h"
+#include <Swiften/Elements/EnableStreamManagement.h>
+#include <Swiften/Serializer/GenericElementSerializer.h>
+#include <Swiften/Serializer/XML/XMLElement.h>
 
 namespace Swift {
 	class EnableStreamManagementSerializer : public GenericElementSerializer<EnableStreamManagement> {

@@ -7,8 +7,8 @@
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/extensions/TestFactoryRegistry.h>
 
-#include "Swiften/SASL/SCRAMSHA1ClientAuthenticator.h"
-#include "Swiften/Base/ByteArray.h"
+#include <Swiften/SASL/SCRAMSHA1ClientAuthenticator.h>
+#include <Swiften/Base/ByteArray.h>
 
 using namespace Swift;
 

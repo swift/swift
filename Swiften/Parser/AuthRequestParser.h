@@ -7,8 +7,8 @@
 #ifndef SWIFTEN_AuthRequestParser_H
 #define SWIFTEN_AuthRequestParser_H
 
-#include "Swiften/Parser/GenericElementParser.h"
-#include "Swiften/Elements/AuthRequest.h"
+#include <Swiften/Parser/GenericElementParser.h>
+#include <Swiften/Elements/AuthRequest.h>
 #include <string>
 
 namespace Swift {

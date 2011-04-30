@@ -8,9 +8,9 @@
 
 #include <boost/shared_ptr.hpp>
 
-#include "Swiften/Elements/Payload.h"
+#include <Swiften/Elements/Payload.h>
 #include <string>
-#include "Swiften/Serializer/PayloadSerializers/FullPayloadSerializerCollection.h"
+#include <Swiften/Serializer/PayloadSerializers/FullPayloadSerializerCollection.h>
 
 namespace Swift {
 	class PayloadsSerializer {

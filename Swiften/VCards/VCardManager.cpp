@@ -4,13 +4,13 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "Swiften/VCards/VCardManager.h"
+#include <Swiften/VCards/VCardManager.h>
 
 #include <boost/bind.hpp>
 
-#include "Swiften/JID/JID.h"
-#include "Swiften/VCards/VCardStorage.h"
-#include "Swiften/VCards/GetVCardRequest.h"
+#include <Swiften/JID/JID.h>
+#include <Swiften/VCards/VCardStorage.h>
+#include <Swiften/VCards/GetVCardRequest.h>
 
 
 namespace Swift {

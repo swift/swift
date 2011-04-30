@@ -6,7 +6,7 @@
 
 #include <Swiften/StringCodecs/SHA1.h>
 
-#include "Swiften/Base/Platform.h"
+#include <Swiften/Base/Platform.h>
 
 #pragma GCC diagnostic ignored "-Wold-style-cast"
 

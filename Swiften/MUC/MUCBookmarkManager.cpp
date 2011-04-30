@@ -10,9 +10,9 @@
 #include <iostream>
 
 #include <Swiften/Base/foreach.h>
-#include "Swiften/Queries/IQRouter.h"
-#include "Swiften/Queries/Requests/GetPrivateStorageRequest.h"
-#include "Swiften/Queries/Requests/SetPrivateStorageRequest.h"
+#include <Swiften/Queries/IQRouter.h>
+#include <Swiften/Queries/Requests/GetPrivateStorageRequest.h>
+#include <Swiften/Queries/Requests/SetPrivateStorageRequest.h>
 
 
 namespace Swift {

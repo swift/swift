@@ -6,8 +6,8 @@
 
 #pragma once
 
-#include "Swiften/Parser/GenericPayloadParserFactory.h"
-#include "Swiften/Parser/PayloadParsers/InBandRegistrationPayloadParser.h"
+#include <Swiften/Parser/GenericPayloadParserFactory.h>
+#include <Swiften/Parser/PayloadParsers/InBandRegistrationPayloadParser.h>
 
 namespace Swift {
 	class InBandRegistrationPayloadParserFactory : public GenericPayloadParserFactory<InBandRegistrationPayloadParser> {

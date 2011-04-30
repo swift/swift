@@ -6,8 +6,8 @@
 
 #pragma once
 
-#include "Swiften/Serializer/GenericPayloadSerializer.h"
-#include "Swiften/Elements/VCard.h"
+#include <Swiften/Serializer/GenericPayloadSerializer.h>
+#include <Swiften/Elements/VCard.h>
 
 namespace Swift {
 	class VCardSerializer : public GenericPayloadSerializer<VCard> {

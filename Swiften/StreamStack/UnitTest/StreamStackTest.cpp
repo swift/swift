@@ -4,7 +4,7 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "Swiften/Base/ByteArray.h"
+#include <Swiften/Base/ByteArray.h>
 
 #include <vector>
 #include <boost/bind.hpp>
@@ -12,13 +12,13 @@
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/extensions/TestFactoryRegistry.h>
 
-#include "Swiften/Base/ByteArray.h"
-#include "Swiften/StreamStack/StreamStack.h"
-#include "Swiften/StreamStack/LowLayer.h"
-#include "Swiften/StreamStack/XMPPLayer.h"
-#include "Swiften/StreamStack/StreamLayer.h"
-#include "Swiften/Parser/PayloadParsers/FullPayloadParserFactoryCollection.h"
-#include "Swiften/Serializer/PayloadSerializers/FullPayloadSerializerCollection.h"
+#include <Swiften/Base/ByteArray.h>
+#include <Swiften/StreamStack/StreamStack.h>
+#include <Swiften/StreamStack/LowLayer.h>
+#include <Swiften/StreamStack/XMPPLayer.h>
+#include <Swiften/StreamStack/StreamLayer.h>
+#include <Swiften/Parser/PayloadParsers/FullPayloadParserFactoryCollection.h>
+#include <Swiften/Serializer/PayloadSerializers/FullPayloadSerializerCollection.h>
 
 using namespace Swift;
 

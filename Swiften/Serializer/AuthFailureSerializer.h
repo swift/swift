@@ -9,9 +9,9 @@
 
 #include <boost/shared_ptr.hpp>
 
-#include "Swiften/Elements/AuthFailure.h"
-#include "Swiften/Serializer/GenericElementSerializer.h"
-#include "Swiften/Serializer/XML/XMLElement.h"
+#include <Swiften/Elements/AuthFailure.h>
+#include <Swiften/Serializer/GenericElementSerializer.h>
+#include <Swiften/Serializer/XML/XMLElement.h>
 
 namespace Swift {
 	class AuthFailureSerializer : public GenericElementSerializer<AuthFailure> {

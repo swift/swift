@@ -8,7 +8,7 @@
 #include <cppunit/extensions/TestFactoryRegistry.h>
 #include <set>
 
-#include "Swiften/Base/IDGenerator.h"
+#include <Swiften/Base/IDGenerator.h>
 
 using namespace Swift;
 

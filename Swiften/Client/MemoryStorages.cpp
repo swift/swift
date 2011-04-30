@@ -4,11 +4,11 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "Swiften/Client/MemoryStorages.h"
-#include "Swiften/VCards/VCardMemoryStorage.h"
-#include "Swiften/Avatars/AvatarMemoryStorage.h"
-#include "Swiften/Disco/CapsMemoryStorage.h"
-#include "Swiften/Roster/RosterMemoryStorage.h"
+#include <Swiften/Client/MemoryStorages.h>
+#include <Swiften/VCards/VCardMemoryStorage.h>
+#include <Swiften/Avatars/AvatarMemoryStorage.h>
+#include <Swiften/Disco/CapsMemoryStorage.h>
+#include <Swiften/Roster/RosterMemoryStorage.h>
 
 namespace Swift {
 

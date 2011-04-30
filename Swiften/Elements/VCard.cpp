@@ -4,9 +4,9 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "Swiften/Elements/VCard.h"
+#include <Swiften/Elements/VCard.h>
 
-#include "Swiften/Base/foreach.h"
+#include <Swiften/Base/foreach.h>
 
 namespace Swift {
 

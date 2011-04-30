@@ -8,10 +8,10 @@
 #include <fstream>
 #include <typeinfo>
 
-#include "Swiften/Parser/UnitTest/ParserTester.h"
-#include "Swiften/Parser/XMPPParser.h"
-#include "Swiften/Parser/XMPPParserClient.h"
-#include "Swiften/Parser/PayloadParsers/FullPayloadParserFactoryCollection.h"
+#include <Swiften/Parser/UnitTest/ParserTester.h>
+#include <Swiften/Parser/XMPPParser.h>
+#include <Swiften/Parser/XMPPParserClient.h>
+#include <Swiften/Parser/PayloadParsers/FullPayloadParserFactoryCollection.h>
 
 using namespace Swift;
 

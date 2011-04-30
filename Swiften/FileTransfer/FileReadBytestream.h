@@ -9,7 +9,7 @@
 #include <boost/filesystem/path.hpp>
 #include <boost/filesystem/fstream.hpp>
 
-#include "Swiften/FileTransfer/ReadBytestream.h"
+#include <Swiften/FileTransfer/ReadBytestream.h>
 
 namespace Swift {
 	class FileReadBytestream : public ReadBytestream {

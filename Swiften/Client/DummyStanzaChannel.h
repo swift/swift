@@ -8,7 +8,7 @@
 
 #include <vector>
 
-#include "Swiften/Client/StanzaChannel.h"
+#include <Swiften/Client/StanzaChannel.h>
 
 namespace Swift {
 	class DummyStanzaChannel : public StanzaChannel {

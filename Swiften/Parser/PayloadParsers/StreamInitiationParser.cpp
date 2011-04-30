@@ -4,14 +4,14 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "Swiften/Parser/PayloadParsers/StreamInitiationParser.h"
+#include <Swiften/Parser/PayloadParsers/StreamInitiationParser.h>
 
 #include <boost/lexical_cast.hpp>
 #include <boost/cast.hpp>
 
-#include "Swiften/Parser/PayloadParsers/FormParserFactory.h"
-#include "Swiften/Parser/PayloadParsers/FormParser.h"
-#include "Swiften/Base/foreach.h"
+#include <Swiften/Parser/PayloadParsers/FormParserFactory.h>
+#include <Swiften/Parser/PayloadParsers/FormParser.h>
+#include <Swiften/Base/foreach.h>
 
 
 #define FILE_TRANSFER_NS "http://jabber.org/protocol/si/profile/file-transfer"

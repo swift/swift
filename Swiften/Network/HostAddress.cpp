@@ -4,7 +4,7 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "Swiften/Network/HostAddress.h"
+#include <Swiften/Network/HostAddress.h>
 
 #include <boost/numeric/conversion/cast.hpp>
 #include <boost/lexical_cast.hpp>
@@ -12,7 +12,7 @@
 #include <stdexcept>
 #include <boost/array.hpp>
 
-#include "Swiften/Base/foreach.h"
+#include <Swiften/Base/foreach.h>
 #include <string>
 
 namespace Swift {

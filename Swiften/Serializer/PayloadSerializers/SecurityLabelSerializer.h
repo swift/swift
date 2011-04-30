@@ -7,8 +7,8 @@
 #ifndef SWIFTEN_SecurityLabelSerializer_H
 #define SWIFTEN_SecurityLabelSerializer_H
 
-#include "Swiften/Serializer/GenericPayloadSerializer.h"
-#include "Swiften/Elements/SecurityLabel.h"
+#include <Swiften/Serializer/GenericPayloadSerializer.h>
+#include <Swiften/Elements/SecurityLabel.h>
 
 namespace Swift {
 	class SecurityLabelSerializer : public GenericPayloadSerializer<SecurityLabel> {

@@ -4,8 +4,8 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "Swiften/Presence/StanzaChannelPresenceSender.h"
-#include "Swiften/Client/StanzaChannel.h"
+#include <Swiften/Presence/StanzaChannelPresenceSender.h>
+#include <Swiften/Client/StanzaChannel.h>
 
 namespace Swift {
 

@@ -8,7 +8,7 @@
 #if defined(HAVE_GCONF)
 #  include "Swiften/Network/GConfProxyProvider.h"
 #endif
-#include "Swiften/Network/EnvironmentProxyProvider.h"
+#include <Swiften/Network/EnvironmentProxyProvider.h>
 
 namespace Swift {
 	class UnixProxyProvider : public ProxyProvider {

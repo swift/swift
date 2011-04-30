@@ -6,9 +6,9 @@
 
 #pragma once
 
-#include "Swiften/Elements/RawXMLPayload.h"
-#include "Swiften/Parser/GenericPayloadParser.h"
-#include "Swiften/Parser/SerializingParser.h"
+#include <Swiften/Elements/RawXMLPayload.h>
+#include <Swiften/Parser/GenericPayloadParser.h>
+#include <Swiften/Parser/SerializingParser.h>
 
 namespace Swift {
 	class SerializingParser;

@@ -9,10 +9,10 @@
 #include <boost/shared_ptr.hpp>
 #include <vector>
 
-#include "Swiften/Elements/Element.h"
-#include "Swiften/Elements/StreamType.h"
+#include <Swiften/Elements/Element.h>
+#include <Swiften/Elements/StreamType.h>
 #include <string>
-#include "Swiften/Serializer/ElementSerializer.h"
+#include <Swiften/Serializer/ElementSerializer.h>
 
 namespace Swift {
 	class PayloadSerializerCollection;

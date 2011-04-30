@@ -4,7 +4,7 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "Swiften/LinkLocal/LinkLocalService.h"
+#include <Swiften/LinkLocal/LinkLocalService.h>
 
 namespace Swift {
 

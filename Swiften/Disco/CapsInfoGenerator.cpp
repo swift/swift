@@ -4,15 +4,15 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "Swiften/Disco/CapsInfoGenerator.h"
+#include <Swiften/Disco/CapsInfoGenerator.h>
 
 #include <algorithm>
 
-#include "Swiften/Base/foreach.h"
-#include "Swiften/Elements/DiscoInfo.h"
-#include "Swiften/Elements/FormField.h"
-#include "Swiften/StringCodecs/SHA1.h"
-#include "Swiften/StringCodecs/Base64.h"
+#include <Swiften/Base/foreach.h>
+#include <Swiften/Elements/DiscoInfo.h>
+#include <Swiften/Elements/FormField.h>
+#include <Swiften/StringCodecs/SHA1.h>
+#include <Swiften/StringCodecs/Base64.h>
 
 namespace {
 	bool compareFields(Swift::FormField::ref f1, Swift::FormField::ref f2) {

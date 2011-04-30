@@ -9,9 +9,9 @@
 #include <boost/bind.hpp>
 #include <boost/shared_ptr.hpp>
 
-#include "Swiften/Presence/PresenceOracle.h"
-#include "Swiften/Client/DummyStanzaChannel.h"
-#include "Swiften/Presence/SubscriptionManager.h"
+#include <Swiften/Presence/PresenceOracle.h>
+#include <Swiften/Client/DummyStanzaChannel.h>
+#include <Swiften/Presence/SubscriptionManager.h>
 
 using namespace Swift;
 

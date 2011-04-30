@@ -10,8 +10,8 @@
 #include <boost/optional.hpp>
 
 #include <string>
-#include "Swiften/Base/ByteArray.h"
-#include "Swiften/SASL/ClientAuthenticator.h"
+#include <Swiften/Base/ByteArray.h>
+#include <Swiften/SASL/ClientAuthenticator.h>
 
 namespace Swift {
 	class SCRAMSHA1ClientAuthenticator : public ClientAuthenticator {

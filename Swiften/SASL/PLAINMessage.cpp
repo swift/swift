@@ -4,7 +4,7 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "Swiften/SASL/PLAINMessage.h"
+#include <Swiften/SASL/PLAINMessage.h>
 
 namespace Swift {
 

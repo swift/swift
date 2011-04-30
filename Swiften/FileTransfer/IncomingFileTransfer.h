@@ -8,8 +8,8 @@
 
 #include <boost/shared_ptr.hpp>
 
-#include "Swiften/Base/boost_bsignals.h"
-#include "Swiften/FileTransfer/WriteBytestream.h"
+#include <Swiften/Base/boost_bsignals.h>
+#include <Swiften/FileTransfer/WriteBytestream.h>
 
 namespace Swift {
 	class IncomingFileTransfer {

@@ -4,7 +4,7 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "Swiften/TLS/TLSContext.h"
+#include <Swiften/TLS/TLSContext.h>
 
 namespace Swift {
 

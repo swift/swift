@@ -4,11 +4,11 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "Swiften/Serializer/PayloadSerializers/MUCOwnerPayloadSerializer.h"
+#include <Swiften/Serializer/PayloadSerializers/MUCOwnerPayloadSerializer.h>
 
-#include "Swiften/Serializer/PayloadSerializerCollection.h"
-#include "Swiften/Serializer/XML/XMLElement.h"
-#include "Swiften/Serializer/XML/XMLRawTextNode.h"
+#include <Swiften/Serializer/PayloadSerializerCollection.h>
+#include <Swiften/Serializer/XML/XMLElement.h>
+#include <Swiften/Serializer/XML/XMLRawTextNode.h>
 
 namespace Swift {
 

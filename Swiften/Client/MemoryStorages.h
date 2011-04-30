@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include "Swiften/Client/Storages.h"
+#include <Swiften/Client/Storages.h>
 
 namespace Swift {
 	class VCardMemoryStorage;

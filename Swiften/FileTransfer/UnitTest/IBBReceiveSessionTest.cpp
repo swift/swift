@@ -12,9 +12,9 @@
 #include <boost/smart_ptr/make_shared.hpp>
 
 #include <Swiften/Base/ByteArray.h>
-#include "Swiften/FileTransfer/IBBReceiveSession.h"
-#include "Swiften/Queries/IQRouter.h"
-#include "Swiften/Client/DummyStanzaChannel.h"
+#include <Swiften/FileTransfer/IBBReceiveSession.h>
+#include <Swiften/Queries/IQRouter.h>
+#include <Swiften/Client/DummyStanzaChannel.h>
 
 using namespace Swift;
 

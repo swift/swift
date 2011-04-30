@@ -9,11 +9,11 @@
 #include <vector>
 #include <boost/bind.hpp>
 
-#include "Swiften/Base/ByteArray.h"
-#include "Swiften/FileTransfer/IBBSendSession.h"
-#include "Swiften/FileTransfer/ByteArrayReadBytestream.h"
-#include "Swiften/Queries/IQRouter.h"
-#include "Swiften/Client/DummyStanzaChannel.h"
+#include <Swiften/Base/ByteArray.h>
+#include <Swiften/FileTransfer/IBBSendSession.h>
+#include <Swiften/FileTransfer/ByteArrayReadBytestream.h>
+#include <Swiften/Queries/IQRouter.h>
+#include <Swiften/Client/DummyStanzaChannel.h>
 
 using namespace Swift;
 

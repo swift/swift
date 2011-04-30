@@ -8,8 +8,8 @@
 
 #include <boost/shared_ptr.hpp>
 
-#include "Swiften/Queries/GenericRequest.h"
-#include "Swiften/Elements/Bytestreams.h"
+#include <Swiften/Queries/GenericRequest.h>
+#include <Swiften/Elements/Bytestreams.h>
 
 namespace Swift {
 	class BytestreamsRequest : public GenericRequest<Bytestreams> {

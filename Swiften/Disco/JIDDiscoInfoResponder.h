@@ -8,9 +8,9 @@
 
 #include <map>
 
-#include "Swiften/Queries/GetResponder.h"
-#include "Swiften/Elements/DiscoInfo.h"
-#include "Swiften/JID/JID.h"
+#include <Swiften/Queries/GetResponder.h>
+#include <Swiften/Elements/DiscoInfo.h>
+#include <Swiften/JID/JID.h>
 
 namespace Swift {
 	class IQRouter;

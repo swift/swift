@@ -8,8 +8,8 @@
 
 #include <boost/enable_shared_from_this.hpp>
 
-#include "Swiften/Network/Connection.h"
-#include "Swiften/Network/HostAddressPort.h"
+#include <Swiften/Network/Connection.h>
+#include <Swiften/Network/HostAddressPort.h>
 
 namespace boost {
 	class thread;

@@ -4,16 +4,16 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "Swiften/Serializer/PayloadSerializers/FormSerializer.h"
+#include <Swiften/Serializer/PayloadSerializers/FormSerializer.h>
 
 #include <boost/shared_ptr.hpp>
 #include <iostream>
 #include <string>
 
-#include "Swiften/Base/String.h"
-#include "Swiften/Base/foreach.h"
-#include "Swiften/Serializer/XML/XMLTextNode.h"
-#include "Swiften/Serializer/XML/XMLRawTextNode.h"
+#include <Swiften/Base/String.h>
+#include <Swiften/Base/foreach.h>
+#include <Swiften/Serializer/XML/XMLTextNode.h>
+#include <Swiften/Serializer/XML/XMLRawTextNode.h>
 
 using namespace Swift;
 

@@ -4,8 +4,8 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "Swiften/StringCodecs/PBKDF2.h"
-#include "Swiften/StringCodecs/HMACSHA1.h"
+#include <Swiften/StringCodecs/PBKDF2.h>
+#include <Swiften/StringCodecs/HMACSHA1.h>
 
 namespace Swift {
 

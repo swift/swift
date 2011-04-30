@@ -4,14 +4,14 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "Swiften/Parser/LibXMLParser.h"
+#include <Swiften/Parser/LibXMLParser.h>
 
 #include <iostream>
 #include <cassert>
 #include <cstring>
 
 #include <string>
-#include "Swiften/Parser/XMLParserClient.h"
+#include <Swiften/Parser/XMLParserClient.h>
 
 namespace Swift {
 

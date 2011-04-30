@@ -6,9 +6,9 @@
 
 #pragma once
 
-#include "Swiften/Queries/IQHandler.h"
-#include "Swiften/Queries/IQRouter.h"
-#include "Swiften/Elements/ErrorPayload.h"
+#include <Swiften/Queries/IQHandler.h>
+#include <Swiften/Queries/IQRouter.h>
+#include <Swiften/Elements/ErrorPayload.h>
 
 namespace Swift {
 	/**

@@ -4,7 +4,7 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "Swiften/SASL/PLAINClientAuthenticator.h"
+#include <Swiften/SASL/PLAINClientAuthenticator.h>
 
 namespace Swift {
 

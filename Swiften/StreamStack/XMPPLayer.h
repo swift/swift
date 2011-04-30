@@ -7,14 +7,14 @@
 #pragma once
 
 #include <boost/shared_ptr.hpp>
-#include "Swiften/Base/boost_bsignals.h"
+#include <Swiften/Base/boost_bsignals.h>
 #include <boost/noncopyable.hpp>
 
 #include <Swiften/StreamStack/HighLayer.h>
-#include "Swiften/Base/ByteArray.h"
-#include "Swiften/Elements/Element.h"
-#include "Swiften/Elements/StreamType.h"
-#include "Swiften/Parser/XMPPParserClient.h"
+#include <Swiften/Base/ByteArray.h>
+#include <Swiften/Elements/Element.h>
+#include <Swiften/Elements/StreamType.h>
+#include <Swiften/Parser/XMPPParserClient.h>
 
 namespace Swift {
 	class ProtocolHeader;

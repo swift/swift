@@ -4,18 +4,18 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "Swiften/Session/BasicSessionStream.h"
+#include <Swiften/Session/BasicSessionStream.h>
 
 #include <boost/bind.hpp>
 
-#include "Swiften/StreamStack/XMPPLayer.h"
-#include "Swiften/StreamStack/StreamStack.h"
-#include "Swiften/StreamStack/ConnectionLayer.h"
-#include "Swiften/StreamStack/WhitespacePingLayer.h"
-#include "Swiften/StreamStack/CompressionLayer.h"
-#include "Swiften/StreamStack/TLSLayer.h"
-#include "Swiften/TLS/TLSContextFactory.h"
-#include "Swiften/TLS/TLSContext.h"
+#include <Swiften/StreamStack/XMPPLayer.h>
+#include <Swiften/StreamStack/StreamStack.h>
+#include <Swiften/StreamStack/ConnectionLayer.h>
+#include <Swiften/StreamStack/WhitespacePingLayer.h>
+#include <Swiften/StreamStack/CompressionLayer.h>
+#include <Swiften/StreamStack/TLSLayer.h>
+#include <Swiften/TLS/TLSContextFactory.h>
+#include <Swiften/TLS/TLSContext.h>
 
 namespace Swift {
 

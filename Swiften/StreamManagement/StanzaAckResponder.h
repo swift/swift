@@ -8,8 +8,8 @@
 
 #include <boost/shared_ptr.hpp>
 
-#include "Swiften/Elements/Stanza.h"
-#include "Swiften/Base/boost_bsignals.h"
+#include <Swiften/Elements/Stanza.h>
+#include <Swiften/Base/boost_bsignals.h>
 
 namespace Swift {
 	class StanzaAckResponder {

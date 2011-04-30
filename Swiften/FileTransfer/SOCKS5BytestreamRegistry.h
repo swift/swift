@@ -10,7 +10,7 @@
 #include <map>
 
 #include <string>
-#include "Swiften/FileTransfer/ReadBytestream.h"
+#include <Swiften/FileTransfer/ReadBytestream.h>
 
 namespace Swift {
 	class SOCKS5BytestreamRegistry {

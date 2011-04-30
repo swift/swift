@@ -8,7 +8,7 @@
 
 #include <boost/optional.hpp>
 
-#include "Swiften/History/HistoryManager.h"
+#include <Swiften/History/HistoryManager.h>
 
 struct sqlite3;
 

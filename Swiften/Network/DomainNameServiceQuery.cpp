@@ -4,7 +4,7 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "Swiften/Network/DomainNameServiceQuery.h"
+#include <Swiften/Network/DomainNameServiceQuery.h>
 
 namespace Swift {
 

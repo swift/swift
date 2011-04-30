@@ -9,8 +9,8 @@
 
 #include <boost/shared_ptr.hpp>
 
-#include "Swiften/Elements/AuthRequest.h"
-#include "Swiften/Serializer/GenericElementSerializer.h"
+#include <Swiften/Elements/AuthRequest.h>
+#include <Swiften/Serializer/GenericElementSerializer.h>
 
 namespace Swift {
 	class AuthRequestSerializer : public GenericElementSerializer<AuthRequest> {

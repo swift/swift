@@ -4,12 +4,12 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "Swiften/StringCodecs/HMACSHA1.h"
+#include <Swiften/StringCodecs/HMACSHA1.h>
 
 #include <cassert>
 
-#include "Swiften/StringCodecs/SHA1.h"
-#include "Swiften/Base/ByteArray.h"
+#include <Swiften/StringCodecs/SHA1.h>
+#include <Swiften/Base/ByteArray.h>
 
 namespace Swift {
 

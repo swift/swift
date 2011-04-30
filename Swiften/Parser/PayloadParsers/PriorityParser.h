@@ -7,8 +7,8 @@
 #ifndef SWIFTEN_PriorityParser_H
 #define SWIFTEN_PriorityParser_H
 
-#include "Swiften/Elements/Priority.h"
-#include "Swiften/Parser/GenericPayloadParser.h"
+#include <Swiften/Elements/Priority.h>
+#include <Swiften/Parser/GenericPayloadParser.h>
 
 namespace Swift {
 	class PriorityParser : public GenericPayloadParser<Priority> {

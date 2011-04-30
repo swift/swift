@@ -10,7 +10,7 @@
 #include <openssl/ssl.h>
 
 #include <string>
-#include "Swiften/TLS/Certificate.h"
+#include <Swiften/TLS/Certificate.h>
 
 namespace Swift {
 	class OpenSSLCertificate : public Certificate {

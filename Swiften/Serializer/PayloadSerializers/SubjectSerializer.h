@@ -6,9 +6,9 @@
 
 #pragma once
 
-#include "Swiften/Serializer/GenericPayloadSerializer.h"
-#include "Swiften/Serializer/XML/XMLTextNode.h"
-#include "Swiften/Elements/Subject.h"
+#include <Swiften/Serializer/GenericPayloadSerializer.h>
+#include <Swiften/Serializer/XML/XMLTextNode.h>
+#include <Swiften/Elements/Subject.h>
 
 namespace Swift {
 	class SubjectSerializer : public GenericPayloadSerializer<Subject> {

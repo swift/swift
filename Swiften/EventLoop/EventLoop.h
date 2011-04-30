@@ -11,7 +11,7 @@
 #include <list>
 #include <deque>
 
-#include "Swiften/EventLoop/Event.h"
+#include <Swiften/EventLoop/Event.h>
 
 namespace Swift {
 	class EventOwner;

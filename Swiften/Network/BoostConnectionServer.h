@@ -10,11 +10,11 @@
 #include <boost/asio/io_service.hpp>
 #include <boost/asio/ip/tcp.hpp>
 #include <boost/enable_shared_from_this.hpp>
-#include "Swiften/Base/boost_bsignals.h"
+#include <Swiften/Base/boost_bsignals.h>
 
-#include "Swiften/Network/BoostConnection.h"
-#include "Swiften/Network/ConnectionServer.h"
-#include "Swiften/EventLoop/EventOwner.h"
+#include <Swiften/Network/BoostConnection.h>
+#include <Swiften/Network/ConnectionServer.h>
+#include <Swiften/EventLoop/EventOwner.h>
 
 namespace Swift {
 	class BoostConnectionServer : public ConnectionServer, public EventOwner, public boost::enable_shared_from_this<BoostConnectionServer> {

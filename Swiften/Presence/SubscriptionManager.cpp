@@ -4,12 +4,12 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "Swiften/Presence/SubscriptionManager.h"
+#include <Swiften/Presence/SubscriptionManager.h>
 
 #include <boost/bind.hpp>
 
-#include "Swiften/Base/foreach.h"
-#include "Swiften/Client/StanzaChannel.h"
+#include <Swiften/Base/foreach.h>
+#include <Swiften/Client/StanzaChannel.h>
 
 namespace Swift {
 

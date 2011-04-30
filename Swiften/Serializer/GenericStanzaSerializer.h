@@ -7,7 +7,7 @@
 #ifndef SWIFTEN_GENERICSTANZASERIALIZER_H
 #define SWIFTEN_GENERICSTANZASERIALIZER_H
 
-#include "Swiften/Serializer/StanzaSerializer.h"
+#include <Swiften/Serializer/StanzaSerializer.h>
 
 namespace Swift {
 	template<typename STANZA_TYPE>

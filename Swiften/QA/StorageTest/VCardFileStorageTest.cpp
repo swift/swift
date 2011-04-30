@@ -8,10 +8,10 @@
 #include <cppunit/extensions/TestFactoryRegistry.h>
 #include <boost/algorithm/string.hpp>
 
-#include "Swiften/VCards/VCardFileStorage.h"
-#include "Swiften/JID/JID.h"
+#include <Swiften/VCards/VCardFileStorage.h>
+#include <Swiften/JID/JID.h>
 #include "SwifTools/Application/PlatformApplicationPathProvider.h"
-#include "Swiften/Elements/VCard.h"
+#include <Swiften/Elements/VCard.h>
 
 using namespace Swift;
 

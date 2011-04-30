@@ -4,7 +4,7 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "Swiften/Network/BoostIOServiceThread.h"
+#include <Swiften/Network/BoostIOServiceThread.h>
 
 #include <boost/smart_ptr/make_shared.hpp>
 

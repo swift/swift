@@ -7,9 +7,9 @@
 #pragma once
 #include <map>
 
-#include "Swiften/Base/Log.h"
-#include "Swiften/Network/HostAddressPort.h"
-#include "Swiften/Base/String.h"
+#include <Swiften/Base/Log.h>
+#include <Swiften/Network/HostAddressPort.h>
+#include <Swiften/Base/String.h>
 
 namespace Swift {
 	class ProxyProvider {

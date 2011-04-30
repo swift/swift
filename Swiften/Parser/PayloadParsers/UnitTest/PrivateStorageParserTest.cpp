@@ -7,10 +7,10 @@
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/extensions/TestFactoryRegistry.h>
 
-#include "Swiften/Elements/Storage.h"
-#include "Swiften/Parser/PayloadParsers/PrivateStorageParser.h"
-#include "Swiften/Parser/PayloadParsers/UnitTest/PayloadsParserTester.h"
-#include "Swiften/Parser/PayloadParsers/UnitTest/PayloadParserTester.h"
+#include <Swiften/Elements/Storage.h>
+#include <Swiften/Parser/PayloadParsers/PrivateStorageParser.h>
+#include <Swiften/Parser/PayloadParsers/UnitTest/PayloadsParserTester.h>
+#include <Swiften/Parser/PayloadParsers/UnitTest/PayloadParserTester.h>
 
 using namespace Swift;
 

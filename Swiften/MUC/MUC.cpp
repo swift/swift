@@ -4,22 +4,22 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "Swiften/MUC/MUC.h"
+#include <Swiften/MUC/MUC.h>
 
 #include <boost/bind.hpp>
 #include <boost/shared_ptr.hpp>
 #include <boost/smart_ptr/make_shared.hpp>
 
 #include <Swiften/Base/foreach.h>
-#include "Swiften/Presence/DirectedPresenceSender.h"
-#include "Swiften/Client/StanzaChannel.h"
-#include "Swiften/Queries/IQRouter.h"
-#include "Swiften/Elements/Form.h"
-#include "Swiften/Elements/IQ.h"
-#include "Swiften/Elements/MUCUserPayload.h"
-#include "Swiften/Elements/MUCPayload.h"
-#include "Swiften/MUC/MUCRegistry.h"
-#include "Swiften/Queries/GenericRequest.h"
+#include <Swiften/Presence/DirectedPresenceSender.h>
+#include <Swiften/Client/StanzaChannel.h>
+#include <Swiften/Queries/IQRouter.h>
+#include <Swiften/Elements/Form.h>
+#include <Swiften/Elements/IQ.h>
+#include <Swiften/Elements/MUCUserPayload.h>
+#include <Swiften/Elements/MUCPayload.h>
+#include <Swiften/MUC/MUCRegistry.h>
+#include <Swiften/Queries/GenericRequest.h>
 
 namespace Swift {
 

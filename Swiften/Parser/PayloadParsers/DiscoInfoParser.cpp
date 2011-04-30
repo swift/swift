@@ -4,8 +4,8 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "Swiften/Parser/PayloadParsers/DiscoInfoParser.h"
-#include "Swiften/Parser/PayloadParsers/FormParser.h"
+#include <Swiften/Parser/PayloadParsers/DiscoInfoParser.h>
+#include <Swiften/Parser/PayloadParsers/FormParser.h>
 
 namespace Swift {
 

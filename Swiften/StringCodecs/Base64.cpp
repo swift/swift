@@ -7,7 +7,7 @@
 #include <boost/numeric/conversion/cast.hpp>
 #include <algorithm>
 
-#include "Swiften/StringCodecs/Base64.h"
+#include <Swiften/StringCodecs/Base64.h>
 
 namespace Swift {
 

@@ -7,9 +7,9 @@
 #ifndef SWIFTEN_IQSerializer_H
 #define SWIFTEN_IQSerializer_H
 
-#include "Swiften/Serializer/GenericStanzaSerializer.h"
-#include "Swiften/Elements/IQ.h"
-#include "Swiften/Serializer/XML/XMLElement.h"
+#include <Swiften/Serializer/GenericStanzaSerializer.h>
+#include <Swiften/Elements/IQ.h>
+#include <Swiften/Serializer/XML/XMLElement.h>
 
 namespace Swift {
 	class IQSerializer : public GenericStanzaSerializer<IQ> {

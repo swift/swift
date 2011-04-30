@@ -8,8 +8,8 @@
 #define SWIFTEN_SerializingParser_H
 
 #include <string>
-#include "Swiften/Parser/AttributeMap.h"
-#include "Swiften/Serializer/XML/XMLElement.h"
+#include <Swiften/Parser/AttributeMap.h>
+#include <Swiften/Serializer/XML/XMLElement.h>
 
 namespace Swift {
 	class SerializingParser {

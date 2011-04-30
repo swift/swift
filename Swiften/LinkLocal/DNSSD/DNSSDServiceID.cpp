@@ -4,7 +4,7 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "Swiften/LinkLocal/DNSSD/DNSSDServiceID.h"
+#include <Swiften/LinkLocal/DNSSD/DNSSDServiceID.h>
 
 namespace Swift {
 

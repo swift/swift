@@ -4,11 +4,11 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "Swiften/Parser/PayloadParsers/BytestreamsParser.h"
+#include <Swiften/Parser/PayloadParsers/BytestreamsParser.h>
 
 #include <boost/lexical_cast.hpp>
 
-#include "Swiften/Base/foreach.h"
+#include <Swiften/Base/foreach.h>
 
 namespace Swift {
 

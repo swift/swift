@@ -6,13 +6,13 @@
 
 #pragma once
 
-#include "Swiften/Base/boost_bsignals.h"
+#include <Swiften/Base/boost_bsignals.h>
 #include <boost/optional.hpp>
 #include <vector>
 #include <boost/shared_ptr.hpp>
 
 #include <string>
-#include "Swiften/Network/DomainNameResolveError.h"
+#include <Swiften/Network/DomainNameResolveError.h>
 
 namespace Swift {
 	class DomainNameServiceQuery {

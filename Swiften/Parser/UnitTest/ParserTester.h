@@ -7,9 +7,9 @@
 #ifndef SWIFTEN_ParserTester_H
 #define SWIFTEN_ParserTester_H
 
-#include "Swiften/Parser/XMLParserClient.h"
-#include "Swiften/Parser/PlatformXMLParserFactory.h"
-#include "Swiften/Parser/XMLParser.h"
+#include <Swiften/Parser/XMLParserClient.h>
+#include <Swiften/Parser/PlatformXMLParserFactory.h>
+#include <Swiften/Parser/XMLParser.h>
 
 namespace Swift {
 	class XMLParser;

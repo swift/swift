@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include "Swiften/SASL/ClientAuthenticator.h"
+#include <Swiften/SASL/ClientAuthenticator.h>
 
 namespace Swift {
 	class PLAINClientAuthenticator : public ClientAuthenticator {

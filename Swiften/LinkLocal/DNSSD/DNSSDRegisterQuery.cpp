@@ -4,7 +4,7 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "Swiften/LinkLocal/DNSSD/DNSSDRegisterQuery.h"
+#include <Swiften/LinkLocal/DNSSD/DNSSDRegisterQuery.h>
 
 namespace Swift {
 

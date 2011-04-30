@@ -7,8 +7,8 @@
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/extensions/TestFactoryRegistry.h>
 
-#include "Swiften/Elements/DiscoInfo.h"
-#include "Swiften/Disco/CapsInfoGenerator.h"
+#include <Swiften/Elements/DiscoInfo.h>
+#include <Swiften/Disco/CapsInfoGenerator.h>
 
 using namespace Swift;
 

@@ -4,7 +4,7 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "Swiften/Disco/CapsStorage.h"
+#include <Swiften/Disco/CapsStorage.h>
 
 namespace Swift {
 

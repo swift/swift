@@ -4,12 +4,12 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "Swiften/Disco/EntityCapsManager.h"
+#include <Swiften/Disco/EntityCapsManager.h>
 
 #include <boost/bind.hpp>
 
-#include "Swiften/Disco/CapsProvider.h"
-#include "Swiften/Client/StanzaChannel.h"
+#include <Swiften/Disco/CapsProvider.h>
+#include <Swiften/Client/StanzaChannel.h>
 
 namespace Swift {
 

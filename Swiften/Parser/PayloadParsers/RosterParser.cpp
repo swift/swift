@@ -4,11 +4,11 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "Swiften/Parser/PayloadParsers/RosterParser.h"
+#include <Swiften/Parser/PayloadParsers/RosterParser.h>
 
 #include <boost/optional.hpp>
 
-#include "Swiften/Parser/SerializingParser.h"
+#include <Swiften/Parser/SerializingParser.h>
 
 namespace Swift {
 

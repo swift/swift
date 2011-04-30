@@ -6,8 +6,8 @@
 
 #pragma once
 
-#include "Swiften/Parser/GenericStanzaParser.h"
-#include "Swiften/Elements/IQ.h"
+#include <Swiften/Parser/GenericStanzaParser.h>
+#include <Swiften/Elements/IQ.h>
 
 namespace Swift {
 	class IQParser : public GenericStanzaParser<IQ> {

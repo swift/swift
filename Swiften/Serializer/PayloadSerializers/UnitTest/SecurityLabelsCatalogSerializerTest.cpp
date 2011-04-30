@@ -7,7 +7,7 @@
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/extensions/TestFactoryRegistry.h>
 
-#include "Swiften/Serializer/PayloadSerializers/SecurityLabelsCatalogSerializer.h"
+#include <Swiften/Serializer/PayloadSerializers/SecurityLabelsCatalogSerializer.h>
 
 using namespace Swift;
 

@@ -7,7 +7,7 @@
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/extensions/TestFactoryRegistry.h>
 
-#include "Swiften/LinkLocal/LinkLocalService.h"
+#include <Swiften/LinkLocal/LinkLocalService.h>
 
 using namespace Swift;
 

@@ -4,17 +4,17 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
-#include "Swiften/Network/HTTPConnectProxiedConnection.h"
+#include <Swiften/Network/HTTPConnectProxiedConnection.h>
 
 #include <iostream>
 #include <boost/bind.hpp>
 #include <boost/thread.hpp>
 #include <boost/lexical_cast.hpp>
 
-#include "Swiften/Base/Log.h"
-#include "Swiften/Base/String.h"
-#include "Swiften/Base/ByteArray.h"
-#include "Swiften/Network/HostAddressPort.h"
+#include <Swiften/Base/Log.h>
+#include <Swiften/Base/String.h>
+#include <Swiften/Base/ByteArray.h>
+#include <Swiften/Network/HostAddressPort.h>
 #include <Swiften/Network/ConnectionFactory.h>
 
 using namespace Swift;

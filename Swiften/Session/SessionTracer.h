@@ -8,8 +8,8 @@
 
 #include <string>
 
-#include "Swiften/Session/Session.h"
-#include "Swiften/Base/ByteArray.h"
+#include <Swiften/Session/Session.h>
+#include <Swiften/Base/ByteArray.h>
 
 namespace Swift {
 	class SessionTracer {

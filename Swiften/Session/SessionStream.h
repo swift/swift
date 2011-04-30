@@ -6,16 +6,16 @@
 
 #pragma once
 
-#include "Swiften/Base/boost_bsignals.h"
+#include <Swiften/Base/boost_bsignals.h>
 #include <boost/shared_ptr.hpp>
 #include <boost/optional.hpp>
 
-#include "Swiften/Elements/ProtocolHeader.h"
-#include "Swiften/Elements/Element.h"
-#include "Swiften/Base/Error.h"
-#include "Swiften/TLS/PKCS12Certificate.h"
-#include "Swiften/TLS/Certificate.h"
-#include "Swiften/TLS/CertificateVerificationError.h"
+#include <Swiften/Elements/ProtocolHeader.h>
+#include <Swiften/Elements/Element.h>
+#include <Swiften/Base/Error.h>
+#include <Swiften/TLS/PKCS12Certificate.h>
+#include <Swiften/TLS/Certificate.h>
+#include <Swiften/TLS/CertificateVerificationError.h>
 
 namespace Swift {
 	class SessionStream {

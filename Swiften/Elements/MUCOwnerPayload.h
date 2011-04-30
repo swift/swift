@@ -8,7 +8,7 @@
 
 #include <boost/optional.hpp>
 
-#include "Swiften/Elements/Payload.h"
+#include <Swiften/Elements/Payload.h>
 
 namespace Swift {
 	class MUCOwnerPayload : public Payload {

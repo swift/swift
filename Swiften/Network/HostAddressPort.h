@@ -8,7 +8,7 @@
 
 #include <boost/asio/ip/tcp.hpp>
 
-#include "Swiften/Network/HostAddress.h"
+#include <Swiften/Network/HostAddress.h>
 
 namespace Swift {
 	class HostAddressPort {

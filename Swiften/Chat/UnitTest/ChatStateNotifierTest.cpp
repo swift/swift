@@ -9,9 +9,9 @@
 #include <boost/bind.hpp>
 
 #include <Swiften/Base/foreach.h>
-#include "Swiften/Chat/ChatStateNotifier.h"
-#include "Swiften/Client/DummyStanzaChannel.h"
-#include "Swiften/Disco/DummyEntityCapsProvider.h"
+#include <Swiften/Chat/ChatStateNotifier.h>
+#include <Swiften/Client/DummyStanzaChannel.h>
+#include <Swiften/Disco/DummyEntityCapsProvider.h>
 
 using namespace Swift;
 

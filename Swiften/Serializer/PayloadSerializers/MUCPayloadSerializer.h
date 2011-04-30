@@ -6,8 +6,8 @@
 
 #pragma once
 
-#include "Swiften/Serializer/GenericPayloadSerializer.h"
-#include "Swiften/Elements/MUCPayload.h"
+#include <Swiften/Serializer/GenericPayloadSerializer.h>
+#include <Swiften/Elements/MUCPayload.h>
 
 namespace Swift {
 	class MUCPayloadSerializer : public GenericPayloadSerializer<MUCPayload> {

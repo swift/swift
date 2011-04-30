@@ -6,8 +6,8 @@
 
 #pragma once
 
-#include "Swiften/Parser/GenericElementParser.h"
-#include "Swiften/Elements/ComponentHandshake.h"
+#include <Swiften/Parser/GenericElementParser.h>
+#include <Swiften/Elements/ComponentHandshake.h>
 #include <string>
 
 namespace Swift {

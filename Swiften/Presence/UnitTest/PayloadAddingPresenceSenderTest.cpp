@@ -9,10 +9,10 @@
 #include <vector>
 #include <boost/bind.hpp>
 
-#include "Swiften/Presence/PayloadAddingPresenceSender.h"
-#include "Swiften/Presence/StanzaChannelPresenceSender.h"
-#include "Swiften/Elements/Body.h"
-#include "Swiften/Client/DummyStanzaChannel.h"
+#include <Swiften/Presence/PayloadAddingPresenceSender.h>
+#include <Swiften/Presence/StanzaChannelPresenceSender.h>
+#include <Swiften/Elements/Body.h>
+#include <Swiften/Client/DummyStanzaChannel.h>
 
 using namespace Swift;
 

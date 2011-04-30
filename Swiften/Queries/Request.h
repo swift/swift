@@ -11,11 +11,11 @@
 #include <boost/enable_shared_from_this.hpp>
 
 #include <string>
-#include "Swiften/Queries/IQHandler.h"
-#include "Swiften/Elements/IQ.h"
-#include "Swiften/Elements/Payload.h"
-#include "Swiften/Elements/ErrorPayload.h"
-#include "Swiften/JID/JID.h"
+#include <Swiften/Queries/IQHandler.h>
+#include <Swiften/Elements/IQ.h>
+#include <Swiften/Elements/Payload.h>
+#include <Swiften/Elements/ErrorPayload.h>
+#include <Swiften/JID/JID.h>
 
 namespace Swift {
 	/**

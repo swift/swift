@@ -7,12 +7,12 @@
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/extensions/TestFactoryRegistry.h>
 
-#include "Swiften/Parser/StanzaParser.h"
-#include "Swiften/Parser/GenericPayloadParser.h"
-#include "Swiften/Parser/PayloadParserFactory.h"
-#include "Swiften/Parser/PayloadParserFactoryCollection.h"
-#include "Swiften/Elements/Stanza.h"
-#include "Swiften/Elements/Payload.h"
+#include <Swiften/Parser/StanzaParser.h>
+#include <Swiften/Parser/GenericPayloadParser.h>
+#include <Swiften/Parser/PayloadParserFactory.h>
+#include <Swiften/Parser/PayloadParserFactoryCollection.h>
+#include <Swiften/Elements/Stanza.h>
+#include <Swiften/Elements/Payload.h>
 
 using namespace Swift;
 

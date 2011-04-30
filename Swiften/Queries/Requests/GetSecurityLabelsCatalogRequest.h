@@ -6,8 +6,8 @@
 
 #pragma once
 
-#include "Swiften/Queries/GenericRequest.h"
-#include "Swiften/Elements/SecurityLabelsCatalog.h"
+#include <Swiften/Queries/GenericRequest.h>
+#include <Swiften/Elements/SecurityLabelsCatalog.h>
 
 
 namespace Swift {

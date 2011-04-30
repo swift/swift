@@ -7,11 +7,11 @@
 #pragma once
 
 #include <openssl/ssl.h>
-#include "Swiften/Base/boost_bsignals.h"
+#include <Swiften/Base/boost_bsignals.h>
 #include <boost/noncopyable.hpp>
 
-#include "Swiften/TLS/TLSContext.h"
-#include "Swiften/Base/ByteArray.h"
+#include <Swiften/TLS/TLSContext.h>
+#include <Swiften/Base/ByteArray.h>
 
 namespace Swift {
 	class PKCS12Certificate;

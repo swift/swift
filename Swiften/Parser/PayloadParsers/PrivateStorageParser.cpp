@@ -4,9 +4,9 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "Swiften/Parser/PayloadParsers/PrivateStorageParser.h"
-#include "Swiften/Parser/PayloadParserFactoryCollection.h"
-#include "Swiften/Parser/PayloadParserFactory.h"
+#include <Swiften/Parser/PayloadParsers/PrivateStorageParser.h>
+#include <Swiften/Parser/PayloadParserFactoryCollection.h>
+#include <Swiften/Parser/PayloadParserFactory.h>
 
 namespace Swift {
 

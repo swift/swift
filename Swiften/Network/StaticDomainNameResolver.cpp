@@ -4,12 +4,12 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "Swiften/Network/StaticDomainNameResolver.h"
+#include <Swiften/Network/StaticDomainNameResolver.h>
 
 #include <boost/bind.hpp>
 #include <boost/lexical_cast.hpp>
 
-#include "Swiften/Network/DomainNameResolveError.h"
+#include <Swiften/Network/DomainNameResolveError.h>
 #include <string>
 
 using namespace Swift;

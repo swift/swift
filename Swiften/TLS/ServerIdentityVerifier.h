@@ -9,8 +9,8 @@
 #include <boost/shared_ptr.hpp>
 
 #include <string>
-#include "Swiften/JID/JID.h"
-#include "Swiften/TLS/Certificate.h"
+#include <Swiften/JID/JID.h>
+#include <Swiften/TLS/Certificate.h>
 
 namespace Swift {
 	class ServerIdentityVerifier {

@@ -8,19 +8,19 @@
 
 #include <boost/shared_ptr.hpp>
 
-#include "Swiften/Base/boost_bsignals.h"
-#include "Swiften/Base/Error.h"
-#include "Swiften/Network/PlatformDomainNameResolver.h"
-#include "Swiften/Component/ComponentConnector.h"
-#include "Swiften/Component/ComponentSession.h"
-#include "Swiften/Component/ComponentError.h"
-#include "Swiften/Elements/Presence.h"
-#include "Swiften/Elements/Message.h"
-#include "Swiften/JID/JID.h"
+#include <Swiften/Base/boost_bsignals.h>
+#include <Swiften/Base/Error.h>
+#include <Swiften/Network/PlatformDomainNameResolver.h>
+#include <Swiften/Component/ComponentConnector.h>
+#include <Swiften/Component/ComponentSession.h>
+#include <Swiften/Component/ComponentError.h>
+#include <Swiften/Elements/Presence.h>
+#include <Swiften/Elements/Message.h>
+#include <Swiften/JID/JID.h>
 #include <string>
-#include "Swiften/Parser/PayloadParsers/FullPayloadParserFactoryCollection.h"
-#include "Swiften/Serializer/PayloadSerializers/FullPayloadSerializerCollection.h"
-#include "Swiften/Component/ComponentSessionStanzaChannel.h"
+#include <Swiften/Parser/PayloadParsers/FullPayloadParserFactoryCollection.h>
+#include <Swiften/Serializer/PayloadSerializers/FullPayloadSerializerCollection.h>
+#include <Swiften/Component/ComponentSessionStanzaChannel.h>
 #include <Swiften/Entity/Entity.h>
 
 namespace Swift {

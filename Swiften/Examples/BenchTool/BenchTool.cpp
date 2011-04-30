@@ -8,13 +8,13 @@
 #include <boost/thread.hpp>
 #include <iostream>
 
-#include "Swiften/Client/Client.h"
-#include "Swiften/Network/TimerFactory.h"
-#include "Swiften/Network/BoostNetworkFactories.h"
-#include "Swiften/EventLoop/EventLoop.h"
-#include "Swiften/EventLoop/SimpleEventLoop.h"
-#include "Swiften/Roster/GetRosterRequest.h"
-#include "Swiften/Client/ClientXMLTracer.h"
+#include <Swiften/Client/Client.h>
+#include <Swiften/Network/TimerFactory.h>
+#include <Swiften/Network/BoostNetworkFactories.h>
+#include <Swiften/EventLoop/EventLoop.h>
+#include <Swiften/EventLoop/SimpleEventLoop.h>
+#include <Swiften/Roster/GetRosterRequest.h>
+#include <Swiften/Client/ClientXMLTracer.h>
 #include <Swiften/Base/sleep.h>
 #include <Swiften/TLS/BlindCertificateTrustChecker.h>
 

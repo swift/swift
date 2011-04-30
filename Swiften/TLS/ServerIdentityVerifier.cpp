@@ -4,12 +4,12 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "Swiften/TLS/ServerIdentityVerifier.h"
+#include <Swiften/TLS/ServerIdentityVerifier.h>
 
 #include <boost/algorithm/string.hpp>
 
-#include "Swiften/Base/foreach.h"
-#include "Swiften/IDN/IDNA.h"
+#include <Swiften/Base/foreach.h>
+#include <Swiften/IDN/IDNA.h>
 
 namespace Swift {
 

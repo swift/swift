@@ -8,12 +8,12 @@
 
 #include <boost/shared_ptr.hpp>
 
-#include "Swiften/Base/IDGenerator.h"
-#include "Swiften/Component/ComponentSession.h"
-#include "Swiften/Client/StanzaChannel.h"
-#include "Swiften/Elements/Message.h"
-#include "Swiften/Elements/IQ.h"
-#include "Swiften/Elements/Presence.h"
+#include <Swiften/Base/IDGenerator.h>
+#include <Swiften/Component/ComponentSession.h>
+#include <Swiften/Client/StanzaChannel.h>
+#include <Swiften/Elements/Message.h>
+#include <Swiften/Elements/IQ.h>
+#include <Swiften/Elements/Presence.h>
 
 namespace Swift {
 	/**

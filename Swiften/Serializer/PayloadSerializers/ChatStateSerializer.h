@@ -6,8 +6,8 @@
 
 #pragma once
 
-#include "Swiften/Serializer/GenericPayloadSerializer.h"
-#include "Swiften/Elements/ChatState.h"
+#include <Swiften/Serializer/GenericPayloadSerializer.h>
+#include <Swiften/Elements/ChatState.h>
 
 namespace Swift {
 	class ChatStateSerializer : public GenericPayloadSerializer<ChatState> {

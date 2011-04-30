@@ -7,8 +7,8 @@
 #ifndef SWIFTEN_SoftwareVersionParser_H
 #define SWIFTEN_SoftwareVersionParser_H
 
-#include "Swiften/Elements/SoftwareVersion.h"
-#include "Swiften/Parser/GenericPayloadParser.h"
+#include <Swiften/Elements/SoftwareVersion.h>
+#include <Swiften/Parser/GenericPayloadParser.h>
 
 namespace Swift {
 	class SoftwareVersionParser : public GenericPayloadParser<SoftwareVersion> {

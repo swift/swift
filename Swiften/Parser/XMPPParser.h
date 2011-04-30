@@ -10,8 +10,8 @@
 #include <boost/shared_ptr.hpp>
 #include <boost/noncopyable.hpp>
 
-#include "Swiften/Parser/XMLParserClient.h"
-#include "Swiften/Parser/AttributeMap.h"
+#include <Swiften/Parser/XMLParserClient.h>
+#include <Swiften/Parser/AttributeMap.h>
 
 namespace Swift {
 	class XMLParser;

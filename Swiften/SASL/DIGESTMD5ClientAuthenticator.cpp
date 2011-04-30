@@ -4,12 +4,12 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "Swiften/SASL/DIGESTMD5ClientAuthenticator.h"
+#include <Swiften/SASL/DIGESTMD5ClientAuthenticator.h>
 
 #include <cassert>
 
-#include "Swiften/StringCodecs/MD5.h"
-#include "Swiften/StringCodecs/Hexify.h"
+#include <Swiften/StringCodecs/MD5.h>
+#include <Swiften/StringCodecs/Hexify.h>
 
 namespace Swift {
 

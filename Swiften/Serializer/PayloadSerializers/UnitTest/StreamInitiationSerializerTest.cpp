@@ -7,7 +7,7 @@
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/extensions/TestFactoryRegistry.h>
 
-#include "Swiften/Serializer/PayloadSerializers/StreamInitiationSerializer.h"
+#include <Swiften/Serializer/PayloadSerializers/StreamInitiationSerializer.h>
 
 using namespace Swift;
 

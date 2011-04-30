@@ -8,7 +8,7 @@
 #include <cppunit/extensions/TestFactoryRegistry.h>
 #include <boost/date_time/posix_time/posix_time.hpp>
 
-#include "Swiften/History/SQLiteHistoryManager.h"
+#include <Swiften/History/SQLiteHistoryManager.h>
 
 using namespace Swift;
 

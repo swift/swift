@@ -6,8 +6,8 @@
 
 #pragma once
 
-#include "Swiften/TLS/CertificateFactory.h"
-#include "Swiften/TLS/OpenSSL/OpenSSLCertificate.h"
+#include <Swiften/TLS/CertificateFactory.h>
+#include <Swiften/TLS/OpenSSL/OpenSSLCertificate.h>
 
 namespace Swift {
 	class OpenSSLCertificateFactory : public CertificateFactory {

@@ -8,8 +8,8 @@
 
 #include <boost/optional.hpp>
 
-#include "Swiften/Elements/InBandRegistrationPayload.h"
-#include "Swiften/Parser/GenericPayloadParser.h"
+#include <Swiften/Elements/InBandRegistrationPayload.h>
+#include <Swiften/Parser/GenericPayloadParser.h>
 
 namespace Swift {
 	class FormParserFactory;

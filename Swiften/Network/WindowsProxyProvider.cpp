@@ -10,10 +10,10 @@
 #include <iostream>
 #include <boost/lexical_cast.hpp>
 
-#include "Swiften/Base/log.h"
-#include "Swiften/Base/foreach.h"
-#include "Swiften/Network/WindowsProxyProvider.h"
-#include "Swiften/Base/ByteArray.h"
+#include <Swiften/Base/log.h>
+#include <Swiften/Base/foreach.h>
+#include <Swiften/Network/WindowsProxyProvider.h>
+#include <Swiften/Base/ByteArray.h>
 
 #include <windows.h>
 

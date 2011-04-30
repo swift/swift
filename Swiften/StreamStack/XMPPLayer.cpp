@@ -4,10 +4,10 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "Swiften/StreamStack/XMPPLayer.h"
-#include "Swiften/Parser/XMPPParser.h"
-#include "Swiften/Serializer/XMPPSerializer.h"
-#include "Swiften/Elements/ProtocolHeader.h"
+#include <Swiften/StreamStack/XMPPLayer.h>
+#include <Swiften/Parser/XMPPParser.h>
+#include <Swiften/Serializer/XMPPSerializer.h>
+#include <Swiften/Elements/ProtocolHeader.h>
 
 namespace Swift {
 

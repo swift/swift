@@ -4,8 +4,8 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
-#include "Swiften/Parser/PayloadParsers/RosterItemExchangeParser.h"
-#include "Swiften/Parser/SerializingParser.h"
+#include <Swiften/Parser/PayloadParsers/RosterItemExchangeParser.h>
+#include <Swiften/Parser/SerializingParser.h>
 
 namespace Swift {
 

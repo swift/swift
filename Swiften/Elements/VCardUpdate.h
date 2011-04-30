@@ -7,7 +7,7 @@
 #pragma once
 
 #include <string>
-#include "Swiften/Elements/Payload.h"
+#include <Swiften/Elements/Payload.h>
 
 namespace Swift {
 	class VCardUpdate : public Payload {

@@ -8,9 +8,9 @@
 
 #include <set>
 
-#include "Swiften/JID/JID.h"
-#include "Swiften/Elements/VCard.h"
-#include "Swiften/Elements/ErrorPayload.h"
+#include <Swiften/JID/JID.h>
+#include <Swiften/Elements/VCard.h>
+#include <Swiften/Elements/ErrorPayload.h>
 #include <Swiften/VCards/SetVCardRequest.h>
 #include <Swiften/Base/boost_bsignals.h>
 

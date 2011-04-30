@@ -10,7 +10,7 @@
 #include <string>
 #include <boost/shared_ptr.hpp>
 
-#include "Swiften/Elements/Element.h"
+#include <Swiften/Elements/Element.h>
 
 namespace Swift {
 	class StreamFeatures : public Element	{

@@ -6,8 +6,8 @@
 
 #pragma once
 
-#include "Swiften/Queries/GenericRequest.h"
-#include "Swiften/Elements/DiscoInfo.h"
+#include <Swiften/Queries/GenericRequest.h>
+#include <Swiften/Elements/DiscoInfo.h>
 
 namespace Swift {
 	class GetDiscoInfoRequest : public GenericRequest<DiscoInfo> {

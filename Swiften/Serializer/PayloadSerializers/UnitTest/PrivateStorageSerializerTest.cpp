@@ -7,9 +7,9 @@
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/extensions/TestFactoryRegistry.h>
 
-#include "Swiften/Serializer/PayloadSerializers/UnitTest/PayloadsSerializer.h"
-#include "Swiften/Elements/PrivateStorage.h"
-#include "Swiften/Elements/Storage.h"
+#include <Swiften/Serializer/PayloadSerializers/UnitTest/PayloadsSerializer.h>
+#include <Swiften/Elements/PrivateStorage.h>
+#include <Swiften/Elements/Storage.h>
 
 using namespace Swift;
 

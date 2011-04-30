@@ -4,16 +4,16 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "Swiften/Parser/StanzaParser.h"
+#include <Swiften/Parser/StanzaParser.h>
 
 #include <iostream>
 #include <boost/optional.hpp>
 #include <cassert>
 
-#include "Swiften/Parser/PayloadParser.h"
-#include "Swiften/Parser/PayloadParserFactory.h"
-#include "Swiften/Parser/PayloadParserFactoryCollection.h"
-#include "Swiften/Parser/UnknownPayloadParser.h"
+#include <Swiften/Parser/PayloadParser.h>
+#include <Swiften/Parser/PayloadParserFactory.h>
+#include <Swiften/Parser/PayloadParserFactoryCollection.h>
+#include <Swiften/Parser/UnknownPayloadParser.h>
 
 namespace Swift {
 

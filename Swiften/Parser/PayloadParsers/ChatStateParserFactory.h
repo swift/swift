@@ -6,8 +6,8 @@
 
 #pragma once
 
-#include "Swiften/Parser/PayloadParserFactory.h"
-#include "Swiften/Parser/PayloadParsers/ChatStateParser.h"
+#include <Swiften/Parser/PayloadParserFactory.h>
+#include <Swiften/Parser/PayloadParsers/ChatStateParser.h>
 
 namespace Swift {
 	class PayloadParserFactoryCollection;

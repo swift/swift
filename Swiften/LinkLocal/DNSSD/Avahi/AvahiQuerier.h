@@ -15,7 +15,7 @@
 #include <avahi-common/malloc.h>
 #include <avahi-common/error.h>
 
-#include "Swiften/LinkLocal/DNSSD/DNSSDQuerier.h"
+#include <Swiften/LinkLocal/DNSSD/DNSSDQuerier.h>
 
 namespace Swift {
 	class ByteArray;

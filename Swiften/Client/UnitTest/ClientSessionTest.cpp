@@ -11,23 +11,23 @@
 #include <boost/optional.hpp>
 #include <boost/smart_ptr/make_shared.hpp>
 
-#include "Swiften/Session/SessionStream.h"
-#include "Swiften/Client/ClientSession.h"
-#include "Swiften/Elements/StartTLSRequest.h"
-#include "Swiften/Elements/StreamFeatures.h"
-#include "Swiften/Elements/StreamError.h"
-#include "Swiften/Elements/TLSProceed.h"
-#include "Swiften/Elements/StartTLSFailure.h"
-#include "Swiften/Elements/AuthRequest.h"
-#include "Swiften/Elements/AuthSuccess.h"
-#include "Swiften/Elements/AuthFailure.h"
-#include "Swiften/Elements/StreamManagementEnabled.h"
-#include "Swiften/Elements/StreamManagementFailed.h"
-#include "Swiften/Elements/EnableStreamManagement.h"
-#include "Swiften/Elements/IQ.h"
-#include "Swiften/Elements/ResourceBind.h"
-#include "Swiften/TLS/SimpleCertificate.h"
-#include "Swiften/TLS/BlindCertificateTrustChecker.h"
+#include <Swiften/Session/SessionStream.h>
+#include <Swiften/Client/ClientSession.h>
+#include <Swiften/Elements/StartTLSRequest.h>
+#include <Swiften/Elements/StreamFeatures.h>
+#include <Swiften/Elements/StreamError.h>
+#include <Swiften/Elements/TLSProceed.h>
+#include <Swiften/Elements/StartTLSFailure.h>
+#include <Swiften/Elements/AuthRequest.h>
+#include <Swiften/Elements/AuthSuccess.h>
+#include <Swiften/Elements/AuthFailure.h>
+#include <Swiften/Elements/StreamManagementEnabled.h>
+#include <Swiften/Elements/StreamManagementFailed.h>
+#include <Swiften/Elements/EnableStreamManagement.h>
+#include <Swiften/Elements/IQ.h>
+#include <Swiften/Elements/ResourceBind.h>
+#include <Swiften/TLS/SimpleCertificate.h>
+#include <Swiften/TLS/BlindCertificateTrustChecker.h>
 
 using namespace Swift;
 

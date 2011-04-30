@@ -6,12 +6,12 @@
 
 #pragma once
 
-#include "Swiften/Base/boost_bsignals.h"
+#include <Swiften/Base/boost_bsignals.h>
 #include <boost/shared_ptr.hpp>
 
-#include "Swiften/Queries/Request.h"
-#include "Swiften/Elements/PrivateStorage.h"
-#include "Swiften/Elements/ErrorPayload.h"
+#include <Swiften/Queries/Request.h>
+#include <Swiften/Elements/PrivateStorage.h>
+#include <Swiften/Elements/ErrorPayload.h>
 
 namespace Swift {
 	template<typename PAYLOAD_TYPE>

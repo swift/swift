@@ -9,9 +9,9 @@
 #include <boost/shared_ptr.hpp>
 
 #include <string>
-#include "Swiften/Network/BoostConnectionServer.h"
-#include "Swiften/Network/BoostIOServiceThread.h"
-#include "Swiften/EventLoop/DummyEventLoop.h"
+#include <Swiften/Network/BoostConnectionServer.h>
+#include <Swiften/Network/BoostIOServiceThread.h>
+#include <Swiften/EventLoop/DummyEventLoop.h>
 
 using namespace Swift;
 

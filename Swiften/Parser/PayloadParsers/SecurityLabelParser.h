@@ -7,8 +7,8 @@
 #ifndef SWIFTEN_SecurityLabelParser_H
 #define SWIFTEN_SecurityLabelParser_H
 
-#include "Swiften/Elements/SecurityLabel.h"
-#include "Swiften/Parser/GenericPayloadParser.h"
+#include <Swiften/Elements/SecurityLabel.h>
+#include <Swiften/Parser/GenericPayloadParser.h>
 
 namespace Swift {
 	class SerializingParser;

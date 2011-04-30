@@ -8,14 +8,14 @@
 #include <cppunit/extensions/TestFactoryRegistry.h>
 #include <boost/smart_ptr/make_shared.hpp>
 
-#include "Swiften/Roster/UnitTest/XMPPRosterSignalHandler.h"
-#include "Swiften/Roster/XMPPRosterController.h"
-#include "Swiften/Elements/Payload.h"
-#include "Swiften/Elements/RosterItemPayload.h"
-#include "Swiften/Elements/RosterPayload.h"
-#include "Swiften/Client/DummyStanzaChannel.h"
-#include "Swiften/Queries/IQRouter.h"
-#include "Swiften/Roster/XMPPRosterImpl.h"
+#include <Swiften/Roster/UnitTest/XMPPRosterSignalHandler.h>
+#include <Swiften/Roster/XMPPRosterController.h>
+#include <Swiften/Elements/Payload.h>
+#include <Swiften/Elements/RosterItemPayload.h>
+#include <Swiften/Elements/RosterPayload.h>
+#include <Swiften/Client/DummyStanzaChannel.h>
+#include <Swiften/Queries/IQRouter.h>
+#include <Swiften/Roster/XMPPRosterImpl.h>
 #include <Swiften/Roster/RosterMemoryStorage.h>
 
 using namespace Swift;

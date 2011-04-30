@@ -10,7 +10,7 @@
 #include <cppunit/extensions/TestFactoryRegistry.h>
 #include <boost/bind.hpp>
 
-#include "Swiften/TLS/CertificateFactory.h"
+#include <Swiften/TLS/CertificateFactory.h>
 #include "SwifTools/Application/PlatformApplicationPathProvider.h"
 
 using namespace Swift;
@@ -95,6 +95,6 @@ class CertificateTest : public CppUnit::TestFixture {
 };
 
 #ifdef HAVE_OPENSSL
-#include "Swiften/TLS/OpenSSL/OpenSSLCertificateFactory.h"
+#include <Swiften/TLS/OpenSSL/OpenSSLCertificateFactory.h>
 CPPUNIT_TEST_SUITE_REGISTRATION(CertificateTest<OpenSSLCertificateFactory>);
 #endif

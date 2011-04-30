@@ -6,8 +6,8 @@
 
 #pragma once
 
-#include "Swiften/Serializer/GenericPayloadSerializer.h"
-#include "Swiften/Elements/RosterItemExchangePayload.h"
+#include <Swiften/Serializer/GenericPayloadSerializer.h>
+#include <Swiften/Elements/RosterItemExchangePayload.h>
 
 namespace Swift {
 	class RosterItemExchangeSerializer : public GenericPayloadSerializer<RosterItemExchangePayload> {

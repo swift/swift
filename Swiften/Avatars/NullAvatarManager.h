@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include "Swiften/Avatars/AvatarManager.h"
+#include <Swiften/Avatars/AvatarManager.h>
 
 namespace Swift {
 	class NullAvatarManager : public AvatarManager {

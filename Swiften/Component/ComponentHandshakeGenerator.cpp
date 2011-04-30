@@ -4,9 +4,9 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "Swiften/Component/ComponentHandshakeGenerator.h"
-#include "Swiften/StringCodecs/Hexify.h"
-#include "Swiften/StringCodecs/SHA1.h"
+#include <Swiften/Component/ComponentHandshakeGenerator.h>
+#include <Swiften/StringCodecs/Hexify.h>
+#include <Swiften/StringCodecs/SHA1.h>
 #include <Swiften/Base/String.h>
 
 namespace Swift {

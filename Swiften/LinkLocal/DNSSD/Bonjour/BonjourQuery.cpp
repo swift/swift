@@ -4,8 +4,8 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "Swiften/LinkLocal/DNSSD/Bonjour/BonjourQuery.h"
-#include "Swiften/LinkLocal/DNSSD/Bonjour/BonjourQuerier.h"
+#include <Swiften/LinkLocal/DNSSD/Bonjour/BonjourQuery.h>
+#include <Swiften/LinkLocal/DNSSD/Bonjour/BonjourQuerier.h>
 
 namespace Swift {
 

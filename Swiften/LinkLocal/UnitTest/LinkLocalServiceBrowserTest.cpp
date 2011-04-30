@@ -9,13 +9,13 @@
 #include <boost/bind.hpp>
 #include <map>
 
-#include "Swiften/LinkLocal/LinkLocalServiceBrowser.h"
-#include "Swiften/LinkLocal/LinkLocalService.h"
-#include "Swiften/LinkLocal/DNSSD/DNSSDServiceID.h"
-#include "Swiften/LinkLocal/DNSSD/DNSSDResolveServiceQuery.h"
-#include "Swiften/LinkLocal/DNSSD/Fake/FakeDNSSDQuerier.h"
-#include "Swiften/LinkLocal/DNSSD/Fake/FakeDNSSDResolveServiceQuery.h"
-#include "Swiften/EventLoop/DummyEventLoop.h"
+#include <Swiften/LinkLocal/LinkLocalServiceBrowser.h>
+#include <Swiften/LinkLocal/LinkLocalService.h>
+#include <Swiften/LinkLocal/DNSSD/DNSSDServiceID.h>
+#include <Swiften/LinkLocal/DNSSD/DNSSDResolveServiceQuery.h>
+#include <Swiften/LinkLocal/DNSSD/Fake/FakeDNSSDQuerier.h>
+#include <Swiften/LinkLocal/DNSSD/Fake/FakeDNSSDResolveServiceQuery.h>
+#include <Swiften/EventLoop/DummyEventLoop.h>
 
 using namespace Swift;
 

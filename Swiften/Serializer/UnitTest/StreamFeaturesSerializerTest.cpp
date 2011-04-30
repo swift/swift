@@ -7,8 +7,8 @@
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/extensions/TestFactoryRegistry.h>
 
-#include "Swiften/Serializer/StreamFeaturesSerializer.h"
-#include "Swiften/Elements/StreamFeatures.h"
+#include <Swiften/Serializer/StreamFeaturesSerializer.h>
+#include <Swiften/Elements/StreamFeatures.h>
 
 using namespace Swift;
 

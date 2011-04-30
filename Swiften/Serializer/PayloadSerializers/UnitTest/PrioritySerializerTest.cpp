@@ -7,7 +7,7 @@
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/extensions/TestFactoryRegistry.h>
 
-#include "Swiften/Serializer/PayloadSerializers/PrioritySerializer.h"
+#include <Swiften/Serializer/PayloadSerializers/PrioritySerializer.h>
 
 using namespace Swift;
 

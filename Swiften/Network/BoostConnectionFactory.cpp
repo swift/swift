@@ -4,8 +4,8 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "Swiften/Network/BoostConnectionFactory.h"
-#include "Swiften/Network/BoostConnection.h"
+#include <Swiften/Network/BoostConnectionFactory.h>
+#include <Swiften/Network/BoostConnection.h>
 
 namespace Swift {
 

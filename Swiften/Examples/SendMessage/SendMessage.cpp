@@ -8,13 +8,13 @@
 #include <boost/thread.hpp>
 #include <iostream>
 
-#include "Swiften/Client/Client.h"
-#include "Swiften/Elements/Message.h"
-#include "Swiften/Network/BoostNetworkFactories.h"
-#include "Swiften/Network/TimerFactory.h"
-#include "Swiften/EventLoop/EventLoop.h"
-#include "Swiften/Client/ClientXMLTracer.h"
-#include "Swiften/EventLoop/SimpleEventLoop.h"
+#include <Swiften/Client/Client.h>
+#include <Swiften/Elements/Message.h>
+#include <Swiften/Network/BoostNetworkFactories.h>
+#include <Swiften/Network/TimerFactory.h>
+#include <Swiften/EventLoop/EventLoop.h>
+#include <Swiften/Client/ClientXMLTracer.h>
+#include <Swiften/EventLoop/SimpleEventLoop.h>
 
 using namespace Swift;
 

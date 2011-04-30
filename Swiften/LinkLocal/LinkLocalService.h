@@ -7,10 +7,10 @@
 #pragma once
 
 #include <string>
-#include "Swiften/JID/JID.h"
-#include "Swiften/LinkLocal/DNSSD/DNSSDServiceID.h"
-#include "Swiften/LinkLocal/DNSSD/DNSSDResolveServiceQuery.h"
-#include "Swiften/LinkLocal/LinkLocalServiceInfo.h"
+#include <Swiften/JID/JID.h>
+#include <Swiften/LinkLocal/DNSSD/DNSSDServiceID.h>
+#include <Swiften/LinkLocal/DNSSD/DNSSDResolveServiceQuery.h>
+#include <Swiften/LinkLocal/LinkLocalServiceInfo.h>
 
 namespace Swift {
 	class LinkLocalService {

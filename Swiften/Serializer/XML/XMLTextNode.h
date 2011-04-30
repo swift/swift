@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include "Swiften/Serializer/XML/XMLNode.h"
+#include <Swiften/Serializer/XML/XMLNode.h>
 #include <Swiften/Base/String.h>
 
 namespace Swift {

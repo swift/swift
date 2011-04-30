@@ -7,8 +7,8 @@
 #ifndef SWIFTEN_STANZASERIALIZER_H
 #define SWIFTEN_STANZASERIALIZER_H
 
-#include "Swiften/Elements/Stanza.h"
-#include "Swiften/Serializer/ElementSerializer.h"
+#include <Swiften/Elements/Stanza.h>
+#include <Swiften/Serializer/ElementSerializer.h>
 #include <string>
 
 namespace Swift {

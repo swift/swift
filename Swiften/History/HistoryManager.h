@@ -7,8 +7,8 @@
 #pragma once
 
 #include <string>
-#include "Swiften/JID/JID.h"
-#include "Swiften/History/HistoryMessage.h"
+#include <Swiften/JID/JID.h>
+#include <Swiften/History/HistoryMessage.h>
 
 namespace Swift {
 	class HistoryManager {

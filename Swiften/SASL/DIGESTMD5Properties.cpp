@@ -4,7 +4,7 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "Swiften/SASL/DIGESTMD5Properties.h"
+#include <Swiften/SASL/DIGESTMD5Properties.h>
 
 namespace Swift {
 

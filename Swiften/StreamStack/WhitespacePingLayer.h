@@ -9,7 +9,7 @@
 #include <boost/noncopyable.hpp>
 #include <boost/shared_ptr.hpp>
 
-#include "Swiften/StreamStack/StreamLayer.h"
+#include <Swiften/StreamStack/StreamLayer.h>
 
 namespace Swift {
 	class Timer;

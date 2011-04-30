@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include "Swiften/Component/CoreComponent.h"
+#include <Swiften/Component/CoreComponent.h>
 
 namespace Swift {
 	class SoftwareVersionResponder;

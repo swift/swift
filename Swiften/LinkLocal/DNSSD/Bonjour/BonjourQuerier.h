@@ -12,8 +12,8 @@
 #include <boost/thread/thread.hpp>
 #include <boost/thread/mutex.hpp>
 
-#include "Swiften/LinkLocal/DNSSD/DNSSDQuerier.h"
-#include "Swiften/LinkLocal/DNSSD/Bonjour/BonjourQuery.h"
+#include <Swiften/LinkLocal/DNSSD/DNSSDQuerier.h>
+#include <Swiften/LinkLocal/DNSSD/Bonjour/BonjourQuery.h>
 
 namespace Swift {
 	class ByteArray;

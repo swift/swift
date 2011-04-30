@@ -4,15 +4,15 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "Swiften/Network/Connector.h"
+#include <Swiften/Network/Connector.h>
 
 #include <boost/bind.hpp>
 #include <iostream>
 
-#include "Swiften/Network/ConnectionFactory.h"
-#include "Swiften/Network/DomainNameResolver.h"
-#include "Swiften/Network/DomainNameAddressQuery.h"
-#include "Swiften/Network/TimerFactory.h"
+#include <Swiften/Network/ConnectionFactory.h>
+#include <Swiften/Network/DomainNameResolver.h>
+#include <Swiften/Network/DomainNameAddressQuery.h>
+#include <Swiften/Network/TimerFactory.h>
 #include <Swiften/Base/Log.h>
 
 namespace Swift {

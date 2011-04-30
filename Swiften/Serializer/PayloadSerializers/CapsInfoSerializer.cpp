@@ -4,11 +4,11 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "Swiften/Serializer/PayloadSerializers/CapsInfoSerializer.h"
+#include <Swiften/Serializer/PayloadSerializers/CapsInfoSerializer.h>
 
 #include <boost/shared_ptr.hpp>
 
-#include "Swiften/Serializer/XML/XMLElement.h"
+#include <Swiften/Serializer/XML/XMLElement.h>
 
 namespace Swift {
 

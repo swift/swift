@@ -4,7 +4,7 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "Swiften/Queries/IQChannel.h"
+#include <Swiften/Queries/IQChannel.h>
 
 namespace Swift {
 

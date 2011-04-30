@@ -7,7 +7,7 @@
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/extensions/TestFactoryRegistry.h>
 
-#include "Swiften/Serializer/PayloadSerializers/InBandRegistrationPayloadSerializer.h"
+#include <Swiften/Serializer/PayloadSerializers/InBandRegistrationPayloadSerializer.h>
 
 using namespace Swift;
 

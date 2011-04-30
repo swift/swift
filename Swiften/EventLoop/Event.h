@@ -9,7 +9,7 @@
 #include <boost/shared_ptr.hpp>
 #include <boost/function.hpp>
 
-#include "Swiften/EventLoop/EventOwner.h"
+#include <Swiften/EventLoop/EventOwner.h>
 
 namespace Swift {
 	class Event {

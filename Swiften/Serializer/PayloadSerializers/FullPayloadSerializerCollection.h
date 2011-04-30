@@ -9,7 +9,7 @@
 
 #include <vector>
 
-#include "Swiften/Serializer/PayloadSerializerCollection.h"
+#include <Swiften/Serializer/PayloadSerializerCollection.h>
 
 namespace Swift {
 	class FullPayloadSerializerCollection : public PayloadSerializerCollection {

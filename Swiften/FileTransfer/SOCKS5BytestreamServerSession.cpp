@@ -4,14 +4,14 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "Swiften/FileTransfer/SOCKS5BytestreamServerSession.h"
+#include <Swiften/FileTransfer/SOCKS5BytestreamServerSession.h>
 
 #include <boost/bind.hpp>
 #include <iostream>
 
-#include "Swiften/Base/ByteArray.h"
-#include "Swiften/FileTransfer/SOCKS5BytestreamRegistry.h"
-#include "Swiften/FileTransfer/BytestreamException.h"
+#include <Swiften/Base/ByteArray.h>
+#include <Swiften/FileTransfer/SOCKS5BytestreamRegistry.h>
+#include <Swiften/FileTransfer/BytestreamException.h>
 
 namespace Swift {
 

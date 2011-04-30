@@ -4,7 +4,7 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "Swiften/Base/IDGenerator.h"
+#include <Swiften/Base/IDGenerator.h>
 
 namespace Swift {
 

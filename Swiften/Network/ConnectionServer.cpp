@@ -4,7 +4,7 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "Swiften/Network/ConnectionServer.h"
+#include <Swiften/Network/ConnectionServer.h>
 
 namespace Swift {
 

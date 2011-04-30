@@ -4,7 +4,7 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "Swiften/Serializer/ElementSerializer.h"
+#include <Swiften/Serializer/ElementSerializer.h>
 
 namespace Swift {
 

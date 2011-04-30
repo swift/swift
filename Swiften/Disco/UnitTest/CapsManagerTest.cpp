@@ -9,13 +9,13 @@
 #include <vector>
 #include <boost/bind.hpp>
 
-#include "Swiften/Disco/CapsManager.h"
-#include "Swiften/Disco/CapsMemoryStorage.h"
-#include "Swiften/Disco/CapsInfoGenerator.h"
-#include "Swiften/Queries/IQRouter.h"
-#include "Swiften/Elements/CapsInfo.h"
-#include "Swiften/Elements/DiscoInfo.h"
-#include "Swiften/Client/DummyStanzaChannel.h"
+#include <Swiften/Disco/CapsManager.h>
+#include <Swiften/Disco/CapsMemoryStorage.h>
+#include <Swiften/Disco/CapsInfoGenerator.h>
+#include <Swiften/Queries/IQRouter.h>
+#include <Swiften/Elements/CapsInfo.h>
+#include <Swiften/Elements/DiscoInfo.h>
+#include <Swiften/Client/DummyStanzaChannel.h>
 
 using namespace Swift;
 

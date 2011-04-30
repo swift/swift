@@ -7,7 +7,7 @@
 #ifndef SWIFTEN_PKCS12Certificate_H
 #define SWIFTEN_PKCS12Certificate_H
 
-#include "Swiften/Base/ByteArray.h"
+#include <Swiften/Base/ByteArray.h>
 
 namespace Swift {
 	class PKCS12Certificate {

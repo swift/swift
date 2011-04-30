@@ -7,9 +7,9 @@
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/extensions/TestFactoryRegistry.h>
 
-#include "Swiften/Parser/StanzaAckParser.h"
-#include "Swiften/Parser/PayloadParserFactoryCollection.h"
-#include "Swiften/Parser/UnitTest/ElementParserTester.h"
+#include <Swiften/Parser/StanzaAckParser.h>
+#include <Swiften/Parser/PayloadParserFactoryCollection.h>
+#include <Swiften/Parser/UnitTest/ElementParserTester.h>
 
 using namespace Swift;
 

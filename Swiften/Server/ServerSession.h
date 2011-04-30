@@ -8,7 +8,7 @@
 
 #include <boost/shared_ptr.hpp>
 
-#include "Swiften/Elements/Stanza.h"
+#include <Swiften/Elements/Stanza.h>
 
 namespace Swift {
 	class ServerSession {

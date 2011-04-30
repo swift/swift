@@ -9,10 +9,10 @@
 #pragma GCC diagnostic ignored "-Wold-style-cast"
 
 #include <string>
-#include "Swiften/LinkLocal/DNSSD/Bonjour/BonjourQuery.h"
-#include "Swiften/LinkLocal/DNSSD/DNSSDResolveHostnameQuery.h"
-#include "Swiften/EventLoop/EventLoop.h"
-#include "Swiften/Network/HostAddress.h"
+#include <Swiften/LinkLocal/DNSSD/Bonjour/BonjourQuery.h>
+#include <Swiften/LinkLocal/DNSSD/DNSSDResolveHostnameQuery.h>
+#include <Swiften/EventLoop/EventLoop.h>
+#include <Swiften/Network/HostAddress.h>
 
 #include <netinet/in.h>
 

@@ -9,11 +9,11 @@
 #include <boost/shared_ptr.hpp>
 #include <map>
 
-#include "Swiften/Network/ConnectionServer.h"
+#include <Swiften/Network/ConnectionServer.h>
 #include <string>
-#include "Swiften/JID/JID.h"
-#include "Swiften/FileTransfer/ReadBytestream.h"
-#include "Swiften/FileTransfer/SOCKS5BytestreamRegistry.h"
+#include <Swiften/JID/JID.h>
+#include <Swiften/FileTransfer/ReadBytestream.h>
+#include <Swiften/FileTransfer/SOCKS5BytestreamRegistry.h>
 
 namespace Swift {
 	class SOCKS5BytestreamServerSession;

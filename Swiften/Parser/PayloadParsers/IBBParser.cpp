@@ -4,12 +4,12 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "Swiften/Parser/PayloadParsers/IBBParser.h"
+#include <Swiften/Parser/PayloadParsers/IBBParser.h>
 
 #include <boost/lexical_cast.hpp>
 
-#include "Swiften/Base/foreach.h"
-#include "Swiften/StringCodecs/Base64.h"
+#include <Swiften/Base/foreach.h>
+#include <Swiften/StringCodecs/Base64.h>
 
 namespace Swift {
 

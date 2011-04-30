@@ -7,9 +7,9 @@
 #include <boost/bind.hpp>
 #include <iostream>
 
-#include "Swiften/LinkLocal/LinkLocalServiceBrowser.h"
-#include "Swiften/LinkLocal/DNSSD/DNSSDBrowseQuery.h"
-#include "Swiften/Network/HostAddress.h"
+#include <Swiften/LinkLocal/LinkLocalServiceBrowser.h>
+#include <Swiften/LinkLocal/DNSSD/DNSSDBrowseQuery.h>
+#include <Swiften/Network/HostAddress.h>
 
 namespace Swift {
 

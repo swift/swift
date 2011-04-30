@@ -9,8 +9,8 @@
 #include <boost/shared_ptr.hpp>
 #include <map>
 
-#include "Swiften/JID/JID.h"
-#include "Swiften/VCards/VCardStorage.h"
+#include <Swiften/JID/JID.h>
+#include <Swiften/VCards/VCardStorage.h>
 
 namespace Swift {
 	class VCardMemoryStorage : public VCardStorage {

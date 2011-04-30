@@ -4,12 +4,12 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "Swiften/Parser/PayloadParsers/CommandParser.h"
+#include <Swiften/Parser/PayloadParsers/CommandParser.h>
 
 #include <boost/cast.hpp>
 
-#include "Swiften/Parser/PayloadParsers/FormParserFactory.h"
-#include "Swiften/Parser/PayloadParsers/FormParser.h"
+#include <Swiften/Parser/PayloadParsers/FormParserFactory.h>
+#include <Swiften/Parser/PayloadParsers/FormParser.h>
 
 namespace Swift {
 

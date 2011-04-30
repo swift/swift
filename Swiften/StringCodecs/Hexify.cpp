@@ -4,14 +4,14 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "Swiften/StringCodecs/Hexify.h"
+#include <Swiften/StringCodecs/Hexify.h>
 
 #include <sstream>
 #include <iomanip>
 #include <boost/numeric/conversion/cast.hpp>
 
 #include <string>
-#include "Swiften/Base/ByteArray.h"
+#include <Swiften/Base/ByteArray.h>
 
 namespace Swift {
 

@@ -6,8 +6,8 @@
 
 #pragma once
 
-#include "Swiften/Elements/Subject.h"
-#include "Swiften/Parser/GenericPayloadParser.h"
+#include <Swiften/Elements/Subject.h>
+#include <Swiften/Parser/GenericPayloadParser.h>
 
 namespace Swift {
 	class SubjectParser : public GenericPayloadParser<Subject> {

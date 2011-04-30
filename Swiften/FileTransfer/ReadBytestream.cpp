@@ -4,7 +4,7 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "Swiften/FileTransfer/ReadBytestream.h"
+#include <Swiften/FileTransfer/ReadBytestream.h>
 
 namespace Swift {
 

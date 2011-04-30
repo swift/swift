@@ -8,10 +8,10 @@
 
 #include <boost/enable_shared_from_this.hpp>
 
-#include "Swiften/Network/Connection.h"
-#include "Swiften/Network/HostAddressPort.h"
-#include "Swiften/EventLoop/EventLoop.h"
-#include "Swiften/EventLoop/EventOwner.h"
+#include <Swiften/Network/Connection.h>
+#include <Swiften/Network/HostAddressPort.h>
+#include <Swiften/EventLoop/EventLoop.h>
+#include <Swiften/EventLoop/EventOwner.h>
 
 namespace Swift {
 	class DummyConnection : public Connection, public EventOwner,	public boost::enable_shared_from_this<DummyConnection> {

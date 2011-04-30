@@ -9,9 +9,9 @@
 #include <map>
 
 #include <string>
-#include "Swiften/Elements/Presence.h"
+#include <Swiften/Elements/Presence.h>
 
-#include "Swiften/Base/boost_bsignals.h"
+#include <Swiften/Base/boost_bsignals.h>
 
 namespace Swift {
 class StanzaChannel;

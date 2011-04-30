@@ -7,8 +7,8 @@
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/extensions/TestFactoryRegistry.h>
 
-#include "Swiften/Parser/PayloadParsers/RawXMLPayloadParser.h"
-#include "Swiften/Parser/PayloadParsers/UnitTest/PayloadParserTester.h"
+#include <Swiften/Parser/PayloadParsers/RawXMLPayloadParser.h>
+#include <Swiften/Parser/PayloadParsers/UnitTest/PayloadParserTester.h>
 
 using namespace Swift;
 

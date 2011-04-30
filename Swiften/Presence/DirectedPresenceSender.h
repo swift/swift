@@ -8,8 +8,8 @@
 
 #include <set>
 
-#include "Swiften/Elements/Presence.h"
-#include "Swiften/Presence/PresenceSender.h"
+#include <Swiften/Elements/Presence.h>
+#include <Swiften/Presence/PresenceSender.h>
 
 namespace Swift {
 	class DirectedPresenceSender : public PresenceSender {

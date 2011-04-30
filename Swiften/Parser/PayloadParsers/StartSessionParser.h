@@ -7,8 +7,8 @@
 #ifndef SWIFTEN_StartSessionParser_H
 #define SWIFTEN_StartSessionParser_H
 
-#include "Swiften/Elements/StartSession.h"
-#include "Swiften/Parser/GenericPayloadParser.h"
+#include <Swiften/Elements/StartSession.h>
+#include <Swiften/Parser/GenericPayloadParser.h>
 
 namespace Swift {
 	class StartSessionParser : public GenericPayloadParser<StartSession> {

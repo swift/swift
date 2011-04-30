@@ -4,14 +4,14 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "Swiften/Parser/PlatformXMLParserFactory.h"
+#include <Swiften/Parser/PlatformXMLParserFactory.h>
 
 #include <cassert>
 
 #ifdef HAVE_LIBXML
-#include "Swiften/Parser/LibXMLParser.h"
+#include <Swiften/Parser/LibXMLParser.h>
 #else
-#include "Swiften/Parser/ExpatParser.h"
+#include <Swiften/Parser/ExpatParser.h>
 #endif
 
 

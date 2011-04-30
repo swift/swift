@@ -7,8 +7,8 @@
 #ifndef SWIFTEN_ResourceBindParser_H
 #define SWIFTEN_ResourceBindParser_H
 
-#include "Swiften/Elements/ResourceBind.h"
-#include "Swiften/Parser/GenericPayloadParser.h"
+#include <Swiften/Elements/ResourceBind.h>
+#include <Swiften/Parser/GenericPayloadParser.h>
 
 namespace Swift {
 	class ResourceBindParser : public GenericPayloadParser<ResourceBind> {

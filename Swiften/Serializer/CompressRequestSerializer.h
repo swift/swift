@@ -9,7 +9,7 @@
 
 #include <boost/shared_ptr.hpp>
 
-#include "Swiften/Serializer/ElementSerializer.h"
+#include <Swiften/Serializer/ElementSerializer.h>
 
 namespace Swift {
 	class CompressRequestSerializer : public ElementSerializer {

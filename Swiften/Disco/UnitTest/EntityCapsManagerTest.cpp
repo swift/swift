@@ -9,11 +9,11 @@
 #include <vector>
 #include <boost/bind.hpp>
 
-#include "Swiften/Disco/EntityCapsManager.h"
-#include "Swiften/Disco/CapsProvider.h"
-#include "Swiften/Elements/CapsInfo.h"
-#include "Swiften/Client/DummyStanzaChannel.h"
-#include "Swiften/Disco/CapsInfoGenerator.h"
+#include <Swiften/Disco/EntityCapsManager.h>
+#include <Swiften/Disco/CapsProvider.h>
+#include <Swiften/Elements/CapsInfo.h>
+#include <Swiften/Client/DummyStanzaChannel.h>
+#include <Swiften/Disco/CapsInfoGenerator.h>
 
 using namespace Swift;
 

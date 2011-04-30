@@ -10,9 +10,9 @@
 #include <string>
 #include <boost/shared_ptr.hpp>
 
-#include "Swiften/JID/JID.h"
-#include "Swiften/Elements/Payload.h"
-#include "Swiften/Elements/SecurityLabel.h"
+#include <Swiften/JID/JID.h>
+#include <Swiften/Elements/Payload.h>
+#include <Swiften/Elements/SecurityLabel.h>
 
 namespace Swift {
 	class SecurityLabelsCatalog : public Payload {

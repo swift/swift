@@ -4,18 +4,18 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "Swiften/Base/ByteArray.h"
+#include <Swiften/Base/ByteArray.h>
 
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/extensions/TestFactoryRegistry.h>
 #include <boost/bind.hpp>
 
-#include "Swiften/FileTransfer/SOCKS5BytestreamServerSession.h"
-#include "Swiften/FileTransfer/ByteArrayReadBytestream.h"
-#include "Swiften/FileTransfer/SOCKS5BytestreamRegistry.h"
-#include "Swiften/Network/DummyConnection.h"
-#include "Swiften/EventLoop/DummyEventLoop.h"
-#include "Swiften/Base/StartStopper.h"
+#include <Swiften/FileTransfer/SOCKS5BytestreamServerSession.h>
+#include <Swiften/FileTransfer/ByteArrayReadBytestream.h>
+#include <Swiften/FileTransfer/SOCKS5BytestreamRegistry.h>
+#include <Swiften/Network/DummyConnection.h>
+#include <Swiften/EventLoop/DummyEventLoop.h>
+#include <Swiften/Base/StartStopper.h>
 
 using namespace Swift;
 

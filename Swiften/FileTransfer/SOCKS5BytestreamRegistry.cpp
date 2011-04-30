@@ -4,7 +4,7 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "Swiften/FileTransfer/SOCKS5BytestreamRegistry.h"
+#include <Swiften/FileTransfer/SOCKS5BytestreamRegistry.h>
 
 namespace Swift {
 

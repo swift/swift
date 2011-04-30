@@ -9,7 +9,7 @@
 #include <boost/shared_ptr.hpp>
 #include <string>
 
-#include "Swiften/Elements/Payload.h"
+#include <Swiften/Elements/Payload.h>
 
 namespace Swift {
 	class ErrorPayload : public Payload {

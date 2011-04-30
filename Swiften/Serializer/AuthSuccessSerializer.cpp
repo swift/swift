@@ -4,10 +4,10 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "Swiften/Serializer/AuthSuccessSerializer.h"
+#include <Swiften/Serializer/AuthSuccessSerializer.h>
 
-#include "Swiften/Elements/AuthSuccess.h"
-#include "Swiften/StringCodecs/Base64.h"
+#include <Swiften/Elements/AuthSuccess.h>
+#include <Swiften/StringCodecs/Base64.h>
 
 namespace Swift {
 

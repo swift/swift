@@ -9,7 +9,7 @@
 #include <boost/shared_ptr.hpp>
 
 #include <string>
-#include "Swiften/TLS/Certificate.h"
+#include <Swiften/TLS/Certificate.h>
 
 namespace Swift {
 	/**

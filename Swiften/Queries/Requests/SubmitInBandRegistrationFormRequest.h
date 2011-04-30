@@ -6,11 +6,11 @@
 
 #pragma once
 
-#include "Swiften/Base/boost_bsignals.h"
+#include <Swiften/Base/boost_bsignals.h>
 #include <boost/shared_ptr.hpp>
 
-#include "Swiften/Queries/Request.h"
-#include "Swiften/Elements/InBandRegistrationPayload.h"
+#include <Swiften/Queries/Request.h>
+#include <Swiften/Elements/InBandRegistrationPayload.h>
 
 
 namespace Swift {

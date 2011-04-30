@@ -4,41 +4,41 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "Swiften/Client/ClientSession.h"
+#include <Swiften/Client/ClientSession.h>
 
 #include <boost/bind.hpp>
 #include <boost/uuid/uuid.hpp>
 #include <boost/uuid/uuid_io.hpp>
 #include <boost/uuid/uuid_generators.hpp>
 
-#include "Swiften/Elements/ProtocolHeader.h"
-#include "Swiften/Elements/StreamFeatures.h"
-#include "Swiften/Elements/StreamError.h"
-#include "Swiften/Elements/StartTLSRequest.h"
-#include "Swiften/Elements/StartTLSFailure.h"
-#include "Swiften/Elements/TLSProceed.h"
-#include "Swiften/Elements/AuthRequest.h"
-#include "Swiften/Elements/AuthSuccess.h"
-#include "Swiften/Elements/AuthFailure.h"
-#include "Swiften/Elements/AuthChallenge.h"
-#include "Swiften/Elements/AuthResponse.h"
-#include "Swiften/Elements/Compressed.h"
-#include "Swiften/Elements/CompressFailure.h"
-#include "Swiften/Elements/CompressRequest.h"
-#include "Swiften/Elements/EnableStreamManagement.h"
-#include "Swiften/Elements/StreamManagementEnabled.h"
-#include "Swiften/Elements/StreamManagementFailed.h"
-#include "Swiften/Elements/StartSession.h"
-#include "Swiften/Elements/StanzaAck.h"
-#include "Swiften/Elements/StanzaAckRequest.h"
-#include "Swiften/Elements/IQ.h"
-#include "Swiften/Elements/ResourceBind.h"
-#include "Swiften/SASL/PLAINClientAuthenticator.h"
-#include "Swiften/SASL/SCRAMSHA1ClientAuthenticator.h"
-#include "Swiften/SASL/DIGESTMD5ClientAuthenticator.h"
-#include "Swiften/Session/SessionStream.h"
-#include "Swiften/TLS/CertificateTrustChecker.h"
-#include "Swiften/TLS/ServerIdentityVerifier.h"
+#include <Swiften/Elements/ProtocolHeader.h>
+#include <Swiften/Elements/StreamFeatures.h>
+#include <Swiften/Elements/StreamError.h>
+#include <Swiften/Elements/StartTLSRequest.h>
+#include <Swiften/Elements/StartTLSFailure.h>
+#include <Swiften/Elements/TLSProceed.h>
+#include <Swiften/Elements/AuthRequest.h>
+#include <Swiften/Elements/AuthSuccess.h>
+#include <Swiften/Elements/AuthFailure.h>
+#include <Swiften/Elements/AuthChallenge.h>
+#include <Swiften/Elements/AuthResponse.h>
+#include <Swiften/Elements/Compressed.h>
+#include <Swiften/Elements/CompressFailure.h>
+#include <Swiften/Elements/CompressRequest.h>
+#include <Swiften/Elements/EnableStreamManagement.h>
+#include <Swiften/Elements/StreamManagementEnabled.h>
+#include <Swiften/Elements/StreamManagementFailed.h>
+#include <Swiften/Elements/StartSession.h>
+#include <Swiften/Elements/StanzaAck.h>
+#include <Swiften/Elements/StanzaAckRequest.h>
+#include <Swiften/Elements/IQ.h>
+#include <Swiften/Elements/ResourceBind.h>
+#include <Swiften/SASL/PLAINClientAuthenticator.h>
+#include <Swiften/SASL/SCRAMSHA1ClientAuthenticator.h>
+#include <Swiften/SASL/DIGESTMD5ClientAuthenticator.h>
+#include <Swiften/Session/SessionStream.h>
+#include <Swiften/TLS/CertificateTrustChecker.h>
+#include <Swiften/TLS/ServerIdentityVerifier.h>
 
 namespace Swift {
 

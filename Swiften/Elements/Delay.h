@@ -9,8 +9,8 @@
 #include <boost/date_time/posix_time/posix_time_types.hpp>
 #include <boost/optional.hpp>
 
-#include "Swiften/Elements/Payload.h"
-#include "Swiften/JID/JID.h"
+#include <Swiften/Elements/Payload.h>
+#include <Swiften/JID/JID.h>
 
 namespace Swift {
 	class Delay : public Payload {

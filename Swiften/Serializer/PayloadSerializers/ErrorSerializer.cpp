@@ -4,8 +4,8 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "Swiften/Serializer/PayloadSerializers/ErrorSerializer.h"
-#include "Swiften/Serializer/XML/XMLTextNode.h"
+#include <Swiften/Serializer/PayloadSerializers/ErrorSerializer.h>
+#include <Swiften/Serializer/XML/XMLTextNode.h>
 
 namespace Swift {
 

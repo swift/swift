@@ -6,8 +6,8 @@
 
 #pragma once
 
-#include "Swiften/Elements/Replace.h"
-#include "Swiften/Parser/GenericPayloadParser.h"
+#include <Swiften/Elements/Replace.h>
+#include <Swiften/Parser/GenericPayloadParser.h>
 
 namespace Swift {
 	class ReplaceParser : public GenericPayloadParser<Replace> {

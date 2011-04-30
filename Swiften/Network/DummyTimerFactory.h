@@ -8,7 +8,7 @@
 
 #include <list>
 
-#include "Swiften/Network/TimerFactory.h"
+#include <Swiften/Network/TimerFactory.h>
 
 namespace Swift {
 	class DummyTimerFactory : public TimerFactory {

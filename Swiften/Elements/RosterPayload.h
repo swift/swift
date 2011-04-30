@@ -10,8 +10,8 @@
 #include <boost/optional.hpp>
 #include <boost/shared_ptr.hpp>
 
-#include "Swiften/Elements/RosterItemPayload.h"
-#include "Swiften/Elements/Payload.h"
+#include <Swiften/Elements/RosterItemPayload.h>
+#include <Swiften/Elements/Payload.h>
 
 
 namespace Swift {

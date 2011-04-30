@@ -8,8 +8,8 @@
 #define SWIFTEN_CompressParser_H
 
 #include <string>
-#include "Swiften/Parser/GenericElementParser.h"
-#include "Swiften/Elements/CompressRequest.h"
+#include <Swiften/Parser/GenericElementParser.h>
+#include <Swiften/Elements/CompressRequest.h>
 
 namespace Swift {
 	class CompressParser : public GenericElementParser<CompressRequest> {

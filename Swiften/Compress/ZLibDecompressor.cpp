@@ -4,7 +4,7 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "Swiften/Compress/ZLibDecompressor.h"
+#include <Swiften/Compress/ZLibDecompressor.h>
 
 #include <cassert>
 

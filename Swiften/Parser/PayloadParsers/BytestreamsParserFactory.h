@@ -6,8 +6,8 @@
 
 #pragma once
 
-#include "Swiften/Parser/GenericPayloadParserFactory.h"
-#include "Swiften/Parser/PayloadParsers/BytestreamsParser.h"
+#include <Swiften/Parser/GenericPayloadParserFactory.h>
+#include <Swiften/Parser/PayloadParsers/BytestreamsParser.h>
 
 namespace Swift {
 	class BytestreamsParserFactory : public GenericPayloadParserFactory<BytestreamsParser> {

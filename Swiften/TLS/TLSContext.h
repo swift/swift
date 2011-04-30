@@ -6,12 +6,12 @@
 
 #pragma once
 
-#include "Swiften/Base/boost_bsignals.h"
+#include <Swiften/Base/boost_bsignals.h>
 #include <boost/shared_ptr.hpp>
 
-#include "Swiften/Base/ByteArray.h"
-#include "Swiften/TLS/Certificate.h"
-#include "Swiften/TLS/CertificateVerificationError.h"
+#include <Swiften/Base/ByteArray.h>
+#include <Swiften/TLS/Certificate.h>
+#include <Swiften/TLS/CertificateVerificationError.h>
 
 namespace Swift {
 	class PKCS12Certificate;

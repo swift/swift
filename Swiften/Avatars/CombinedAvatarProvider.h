@@ -9,8 +9,8 @@
 #include <vector>
 #include <map>
 
-#include "Swiften/Avatars/AvatarProvider.h"
-#include "Swiften/JID/JID.h"
+#include <Swiften/Avatars/AvatarProvider.h>
+#include <Swiften/JID/JID.h>
 
 namespace Swift {
 	class CombinedAvatarProvider : public AvatarProvider {

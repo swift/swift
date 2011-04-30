@@ -7,8 +7,8 @@
 #ifndef SWIFTEN_ResourceBindSerializer_H
 #define SWIFTEN_ResourceBindSerializer_H
 
-#include "Swiften/Serializer/GenericPayloadSerializer.h"
-#include "Swiften/Elements/ResourceBind.h"
+#include <Swiften/Serializer/GenericPayloadSerializer.h>
+#include <Swiften/Elements/ResourceBind.h>
 
 namespace Swift {
 	class ResourceBindSerializer : public GenericPayloadSerializer<ResourceBind> {

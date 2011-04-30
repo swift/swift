@@ -4,7 +4,7 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "Swiften/Avatars/CombinedAvatarProvider.h"
+#include <Swiften/Avatars/CombinedAvatarProvider.h>
 
 #include <algorithm>
 #include <boost/bind.hpp>

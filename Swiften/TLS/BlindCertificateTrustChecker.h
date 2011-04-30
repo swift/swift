@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include "Swiften/TLS/CertificateTrustChecker.h"
+#include <Swiften/TLS/CertificateTrustChecker.h>
 
 namespace Swift {
 	/**

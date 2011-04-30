@@ -8,7 +8,7 @@
 
 #include <boost/bind.hpp>
 
-#include "Swiften/Client/StanzaChannel.h"
+#include <Swiften/Client/StanzaChannel.h>
 
 namespace Swift {
 

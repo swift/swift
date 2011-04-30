@@ -4,7 +4,7 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "Swiften/Component/ComponentSessionStanzaChannel.h"
+#include <Swiften/Component/ComponentSessionStanzaChannel.h>
 
 #include <boost/bind.hpp>
 #include <iostream>

@@ -1,6 +1,6 @@
-#include "Swiften/EventLoop/Cocoa/CocoaEvent.h"
-#include "Swiften/EventLoop/Event.h"
-#include "Swiften/EventLoop/Cocoa/CocoaEventLoop.h"
+#include <Swiften/EventLoop/Cocoa/CocoaEvent.h>
+#include <Swiften/EventLoop/Event.h>
+#include <Swiften/EventLoop/Cocoa/CocoaEventLoop.h>
 
 @implementation CocoaEvent 
 
