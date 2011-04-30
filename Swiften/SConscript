@@ -18,21 +18,16 @@ if env["SCONS_STAGE"] == "flags" :
 		env["SWIFTEN_VERSION_MAJOR"] = 0
 		env["SWIFTEN_VERSION_MINOR"] = 0
 	env["SWIFTEN_VERSION_PATCH"] = 0
+	env["SWIFTEN_LIBRARY"] = "Swiften"
+	env["SWIFTEN_LIBRARY_FILE"] = "Swiften"
 	env["SWIFTEN_LIBRARY_ALIASES"] = []
-	if env["PLATFORM"] == "win32" :
-		env["SWIFTEN_LIBRARY"] = env.subst("Swiften$SWIFTEN_VERSION_MAJOR")
-		env["SWIFTEN_LIBRARY_NAME"] = env.subst("Swiften$SWIFTEN_VERSION_MAJOR")
-		env["SWIFTEN_LIBRARY_FILE"] = env.subst("Swiften$SWIFTEN_VERSION_MAJOR")
-	elif env["PLATFORM"] == "darwin" :
-		env["SWIFTEN_LIBRARY"] = env.subst("Swiften$SWIFTEN_VERSION_MAJOR")
-		env["SWIFTEN_LIBRARY_NAME"] = env.subst("Swiften$SWIFTEN_VERSION_MAJOR")
-		env["SWIFTEN_LIBRARY_FILE"] = env.subst("Swiften$SWIFTEN_VERSION_MAJOR")
-	else :
-		env["SWIFTEN_LIBRARY"] = "Swiften"
-		env["SWIFTEN_LIBRARY_NAME"] = "Swiften"
-		env["SWIFTEN_LIBRARY_FILE"] = "Swiften"
-		if ARGUMENTS.get("swiften_dll", False) :
-			env["SWIFTEN_LIBRARY_NAME"] = env.subst("libSwiften.so.$SWIFTEN_VERSION_MAJOR")
+	if ARGUMENTS.get("swiften_dll", False) :
+		if env["PLATFORM"] == "win32" :
+			pass
+		elif env["PLATFORM"] == "darwin" :
+			env["SWIFTEN_LIBRARY_FILE"] = env.subst("Swiften.${SWIFTEN_VERSION_MAJOR}.${SWIFTEN_VERSION_MINOR}")
+			env["SWIFTEN_LIBRARY_ALIASES"] = ["libSwiften.dylib", env.subst("libSwiften.${SWIFTEN_VERSION_MAJOR}.dylib")]
+		else :
 			env["SWIFTEN_LIBRARY_FILE"] = env.subst("libSwiften.so.${SWIFTEN_VERSION_MAJOR}.${SWIFTEN_VERSION_MINOR}")
 			env["SWIFTEN_LIBRARY_ALIASES"] = ["libSwiften.so", env.subst("libSwiften.so.${SWIFTEN_VERSION_MAJOR}")]
 
@@ -204,9 +199,12 @@ if env["SCONS_STAGE"] == "build" :
 		])
 
 	myenv = swiften_env.Clone()
-	if ARGUMENTS.get("swiften_dll", False) and myenv["PLATFORM"] == "posix" :
-		myenv.Append(LINKFLAGS = ["-Wl,-soname,$SWIFTEN_LIBRARY_NAME"])
-		myenv["SHLIBSUFFIX"] = ""
+	if ARGUMENTS.get("swiften_dll", False) :
+		if myenv["PLATFORM"] == "posix" :
+			myenv.Append(LINKFLAGS = ["-Wl,-soname,libSwiften.so.$SWIFTEN_VERSION_MAJOR"])
+			myenv["SHLIBSUFFIX"] = ""
+		elif myenv["PLATFORM"] == "darwin" :
+			myenv.Append(LINKFLAGS = ["-Wl,-install_name,libSwiften.so.$SWIFTEN_VERSION_MAJOR", "-Wl,-compatibility_version,${SWIFTEN_VERSION_MAJOR}.${SWIFTEN_VERSION_MINOR}", "-Wl,-current_version,${SWIFTEN_VERSION_MAJOR}.${SWIFTEN_VERSION_MINOR}"])
 	swiften_lib = myenv.SwiftenLibrary(swiften_env["SWIFTEN_LIBRARY_FILE"], sources + swiften_env["SWIFTEN_OBJECTS"])
 	def symlink(env, target, source) :
 		if os.path.exists(str(target[0])) :
