@@ -18,10 +18,23 @@ if env["SCONS_STAGE"] == "flags" :
 		env["SWIFTEN_VERSION_MAJOR"] = 0
 		env["SWIFTEN_VERSION_MINOR"] = 0
 	env["SWIFTEN_VERSION_PATCH"] = 0
+	env["SWIFTEN_LIBRARY_ALIASES"] = []
+	if env["PLATFORM"] == "win32" :
+		env["SWIFTEN_LIBRARY"] = env.subst("Swiften$SWIFTEN_VERSION_MAJOR")
+		env["SWIFTEN_LIBRARY_NAME"] = env.subst("Swiften$SWIFTEN_VERSION_MAJOR")
+	elif env["PLATFORM"] == "darwin" :
+		env["SWIFTEN_LIBRARY"] = env.subst("Swiften$SWIFTEN_VERSION_MAJOR")
+		env["SWIFTEN_LIBRARY_NAME"] = env.subst("Swiften$SWIFTEN_VERSION_MAJOR")
+	else :
+		env["SWIFTEN_LIBRARY"] = "Swiften"
+		env["SWIFTEN_LIBRARY_NAME"] = "Swiften"
+		if ARGUMENTS.get("swiften_dll", False) :
+			env["SWIFTEN_LIBRARY_NAME"] = env.subst("libSwiften.so.$SWIFTEN_VERSION_MAJOR")
+			env["SWIFTEN_LIBRARY_ALIASES"] = ["libSwiften.so", env.subst("libSwiften.so.${SWIFTEN_VERSION_MAJOR}.${SWIFTEN_VERSION_MINOR}")]
 
 	swiften_env = env.Clone()
 	swiften_env["LIBPATH"] = [Dir(".")]
-	swiften_env["LIBS"] = ["Swiften" + str(swiften_env["SWIFTEN_VERSION_MAJOR"])]
+	swiften_env["LIBS"] = [swiften_env["SWIFTEN_LIBRARY"]]
 	dep_env = env.Clone()
 	for module in swiften_dep_modules :
 		if env.get(module + "_BUNDLED", False) :
@@ -48,17 +61,16 @@ if env["SCONS_STAGE"] == "build" :
 	for module in swiften_dep_modules :
 		swiften_env.UseFlags(swiften_env.get(module + "_FLAGS", {}))
 	swiften_env.UseFlags(swiften_env["PLATFORM_FLAGS"])
-	def buildObject(env, sources) :
-		if ARGUMENTS.get("swiften_dll", False) :
-			return env.SharedObject(sources)
-		else :
-			return env.StaticObject(sources)
-	swiften_env.AddMethod(buildObject, "SwiftenObject")
-
+	
+	if ARGUMENTS.get("swiften_dll", False) :
+		swiften_env.AddMethod(lambda e,s : e.SharedObject(s), "SwiftenObject")
+		swiften_env.AddMethod(lambda e,l,o : e.SharedLibrary(l,o), "SwiftenLibrary")
+	else :
+		swiften_env.AddMethod(lambda e,s : e.StaticObject(s), "SwiftenObject")
+		swiften_env.AddMethod(lambda e,l,o  : e.StaticLibrary(l,o), "SwiftenLibrary")
 	Export("swiften_env")
 
 # TODO: Move all this to a submodule SConscript
-	myenv = swiften_env.Clone()
 	sources = [
 			"Chat/ChatStateTracker.cpp",
 			"Chat/ChatStateNotifier.cpp",
@@ -207,10 +219,16 @@ if env["SCONS_STAGE"] == "build" :
 			"Examples"
 		])
 
-	if ARGUMENTS.get("swiften_dll", False) :
-		swiften_lib = myenv.SharedLibrary("Swiften" + str(swiften_env["SWIFTEN_VERSION_MAJOR"]), sources + swiften_env["SWIFTEN_OBJECTS"])
-	else :
-		swiften_lib = myenv.StaticLibrary("Swiften" + str(swiften_env["SWIFTEN_VERSION_MAJOR"]), sources + swiften_env["SWIFTEN_OBJECTS"])
+	myenv = swiften_env.Clone()
+	if ARGUMENTS.get("swiften_dll", False) and myenv["PLATFORM"] == "posix" :
+		myenv.Append(LINKFLAGS = ["-Wl,-soname,$SWIFTEN_LIBRARY_NAME"])
+	swiften_lib = myenv.SwiftenLibrary(swiften_env["SWIFTEN_LIBRARY_NAME"], sources + swiften_env["SWIFTEN_OBJECTS"])
+	def symlink(env, target, source) :
+		if os.path.exists(str(target[0])) :
+			os.unlink(str(target[0]))
+		os.symlink(source[0].get_contents(), str(target[0]))
+	for alias in myenv["SWIFTEN_LIBRARY_ALIASES"] :
+		myenv.Command(myenv.File(alias), [myenv.Value(swiften_lib[0].name), swiften_lib[0]], symlink)
 
 	env.Append(UNITTEST_SOURCES = [
 			File("Avatars/UnitTest/VCardUpdateAvatarManagerTest.cpp"),
@@ -372,5 +390,7 @@ if env["SCONS_STAGE"] == "build" :
 	# Install swiften
 	if swiften_env.get("SWIFTEN_INSTALLDIR", "") :
 		swiften_env.Install(os.path.join(swiften_env["SWIFTEN_INSTALLDIR"], "lib"), swiften_lib)
+		for alias in myenv["SWIFTEN_LIBRARY_ALIASES"] :
+			myenv.Command(myenv.File(os.path.join(swiften_env["SWIFTEN_INSTALLDIR"], "lib", alias)), [env.Value(swiften_lib[0].name), swiften_lib[0]], symlink)
 		for include in swiften_includes :
 			swiften_env.Install(os.path.join(swiften_env["SWIFTEN_INSTALLDIR"], "include", os.path.dirname(include)), "#/" + include)
