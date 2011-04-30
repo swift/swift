@@ -9,8 +9,8 @@
 #include <boost/shared_ptr.hpp>
 #include <Swiften/Base/boost_bsignals.h>
 #include <boost/signals/connection.hpp>
-#include <set>
 
+#include <set>
 #include <string>
 #include <Swiften/Network/Timer.h>
 #include <Swift/Controllers/Chat/ChatControllerBase.h>
@@ -98,7 +98,6 @@ namespace Swift {
 			std::set<std::string> currentOccupants_;
 			std::vector<NickJoinPart> joinParts_;
 			boost::posix_time::ptime lastActivity_;
-			std::set<std::string> addedRosterGroups_;
 	};
 }
 

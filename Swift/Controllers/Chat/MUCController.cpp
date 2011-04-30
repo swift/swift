@@ -209,10 +209,7 @@ void MUCController::handleOccupantJoined(const MUCOccupant& occupant) {
 	appendToJoinParts(joinParts_, event);
 	std::string groupName(roleToGroupName(occupant.getRole()));
 	roster_->addContact(jid, realJID, occupant.getNick(), groupName, avatarManager_->getAvatarPath(jid).string());
-	if (addedRosterGroups_.count(groupName) == 0) {
-		roster_->getGroup(groupName)->setManualSort(roleToSortName(occupant.getRole()));
-		addedRosterGroups_.insert(groupName);
-	}
+	roster_->getGroup(groupName)->setManualSort(roleToSortName(occupant.getRole()));
 	if (joined_) {
 		std::string joinString;
 		MUCOccupant::Role role = occupant.getRole();
