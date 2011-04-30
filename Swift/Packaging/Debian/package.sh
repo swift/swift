@@ -6,6 +6,7 @@ export PYTHONPATH=../../../BuildTools/SCons
 VERSION=`../../../BuildTools/GetBuildVersion.py swift`
 DEBIAN_VERSION=`../../../BuildTools/DebianizeVersion.py $VERSION`
 DIRNAME=swift-im-$DEBIAN_VERSION
+SWIFTEN_SOVERSION=`../../../BuildTools/GetBuildVersion.py swift --major`
 
 if [ -z "$DEBIAN_VERSION" ]; then
 	echo "Unable to determine version"
@@ -14,6 +15,7 @@ fi
 
 echo "Cleaning up old packages ..."
 rm -f swift-im_*
+rm -f libswiften*
 rm -rf swift-im-*
 
 echo "Checking out a fresh copy ..."
@@ -28,6 +30,10 @@ cp -r $DIRNAME/3rdParty/Boost/src/boost/uuid $DIRNAME/3rdParty/Boost/uuid/boost
 
 ln -s Swift/Packaging/Debian/debian $DIRNAME/debian
 ../../../BuildTools/UpdateDebianChangelog.py $DIRNAME/debian/changelog $DEBIAN_VERSION
+cat $DIRNAME/debian/control.in | sed -e "s/%SWIFTEN_SOVERSION%/$SWIFTEN_SOVERSION/g" > $DIRNAME/debian/control
+cat $DIRNAME/debian/shlibs.in | sed -e "s/%SWIFTEN_SOVERSION%/$SWIFTEN_SOVERSION/g" > $DIRNAME/debian/shlibs
+mv $DIRNAME/debian/libswiften.install $DIRNAME/debian/libswiften$SWIFTEN_SOVERSION.install
+mv $DIRNAME/debian/libswiften-dev.install $DIRNAME/debian/libswiften$SWIFTEN_SOVERSION-dev.install
 
 echo "Building ..."
 cd $DIRNAME

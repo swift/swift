@@ -360,27 +360,31 @@ if env["SCONS_STAGE"] == "build" :
 	swiften_header = "#pragma once\n"
 	swiften_includes = []
 	top_path = env.Dir("..").abspath
-	public_dirs = ["Avatars", "Base", "Chat", "Client", "Component", "Disco", "Entity", "Elements", "JID", "MUC", "Network", "Parser", "Presence", "Queries", "Roster", "Serializer", "StringCodecs", "TLS", "VCards"]
-	for public_dir in public_dirs :
-		for root, dirs, files in os.walk(env.Dir(public_dir).abspath) :
-			if root.endswith("UnitTest") :
+	for root, dirs, files in os.walk(env.Dir(".").abspath) :
+		if root.endswith("UnitTest") :
+			continue
+		for file in files :
+			if not file.endswith(".h") :
 				continue
-			for file in files :
-				if not file.endswith(".h") :
-					continue
-				include = os.path.relpath(os.path.join(root, file), top_path)
-				swiften_includes.append(include)
-				if root.endswith("OpenSSL") :
-					continue
-				if file.startswith("CAres") or file.startswith("LibXML") or file.startswith("Expat") or file.startswith("foreach") or file.startswith("Log.h") or file.startswith("format.h") :
-					continue
-				if file.find("ProxyProvider") != -1 :
-					continue
-				swiften_header += "#include <" + include + ">\n"
-				swiften_includes.append(include)
-	for file in ["EventLoop/SimpleEventLoop.h"] :
-				swiften_header += "#include <Swiften/" + file + ">\n"		
-				swiften_includes.append("Swiften/" + file)
+			include = os.path.relpath(os.path.join(root, file), top_path)
+			swiften_includes.append(include)
+			# Private modules
+			if root.endswith("Config") or root.endswith("Compress") :
+				continue
+
+			# Library-specfifc private modules
+			if root.endswith("OpenSSL") or root.endswith("Cocoa") or root.endswith("Qt") or root.endswith("IDN") or root.endswith("Avahi") or root.endswith("Bonjour") :
+				continue
+
+			# Library-specific files
+			if file.startswith("CAres") or file.startswith("LibXML") or file.startswith("Expat") :
+				continue
+
+			# Specific headers we don't want to globally include
+			if file == "Swiften.h" or file == "foreach.h" or file == "Log.h" or file == "format.h" :
+				continue
+			swiften_header += "#include <" + include + ">\n"
+			swiften_includes.append(include)
 	swiften_env.WriteVal("Swiften.h", swiften_env.Value(swiften_header))
 	swiften_includes.append("Swiften/Swiften.h")
 

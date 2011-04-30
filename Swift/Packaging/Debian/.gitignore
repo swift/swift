@@ -1,2 +1,3 @@
-swift-*
-swift_*
+/swift-*
+/swift_*
+/libswiften*
