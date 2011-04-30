@@ -221,6 +221,7 @@ if env["SCONS_STAGE"] == "build" :
 		env.MergeFlags(env["GCONF_FLAGS"])
 	if ARGUMENTS.get("swiften_dll", False) and myenv["PLATFORM"] == "posix" :
 		myenv.Append(LINKFLAGS = ["-Wl,-soname,$SWIFTEN_LIBRARY_NAME"])
+		myenv["SHLIBSUFFIX"] = ""
 	swiften_lib = myenv.SwiftenLibrary(swiften_env["SWIFTEN_LIBRARY_NAME"], sources + swiften_env["SWIFTEN_OBJECTS"])
 	def symlink(env, target, source) :
 		if os.path.exists(str(target[0])) :
