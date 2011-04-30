@@ -186,9 +186,6 @@ if env["SCONS_STAGE"] == "build" :
 			"StringCodecs/Hexify.cpp",
 		]
 
-	if myenv["PLATFORM"] != "darwin" and myenv["PLATFORM"] != "win32" and myenv.get("HAVE_GCONF", 0) :
-		env.MergeFlags(env["GCONF_FLAGS"])
-
 	SConscript(dirs = [
 			"Avatars",
 			"Base",
@@ -220,6 +217,8 @@ if env["SCONS_STAGE"] == "build" :
 		])
 
 	myenv = swiften_env.Clone()
+	if myenv["PLATFORM"] != "darwin" and myenv["PLATFORM"] != "win32" and myenv.get("HAVE_GCONF", 0) :
+		env.MergeFlags(env["GCONF_FLAGS"])
 	if ARGUMENTS.get("swiften_dll", False) and myenv["PLATFORM"] == "posix" :
 		myenv.Append(LINKFLAGS = ["-Wl,-soname,$SWIFTEN_LIBRARY_NAME"])
 	swiften_lib = myenv.SwiftenLibrary(swiften_env["SWIFTEN_LIBRARY_NAME"], sources + swiften_env["SWIFTEN_OBJECTS"])
