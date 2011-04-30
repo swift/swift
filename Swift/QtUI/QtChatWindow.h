@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Kevin Smith
+ * Copyright (c) 2010-2011 Kevin Smith
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -17,6 +17,7 @@
 class QTextEdit;
 class QLineEdit;
 class QComboBox;
+class QLabel;
 
 namespace Swift {
 	class QtChatView;
@@ -77,6 +78,8 @@ namespace Swift {
 		private:
 			void updateTitleWithUnreadCount();
 			void tabComplete();
+			void beginCorrection();
+			void cancelCorrection();
 			std::string addMessage(const std::string &message, const std::string &senderName, bool senderIsSelf, boost::shared_ptr<SecurityLabel> label, const std::string& avatarPath, const QString& style, const boost::posix_time::ptime& time);
 
 			int unreadCount_;
@@ -89,6 +92,7 @@ namespace Swift {
 			QtTextEdit* input_;
 			QComboBox* labelsWidget_;
 			QtTreeWidget* treeWidget_;
+			QLabel* correctingLabel_;
 			TabComplete* completer_;
 			std::vector<SecurityLabelsCatalog::Item> availableLabels_;
 			bool isCorrection_;

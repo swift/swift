@@ -31,10 +31,14 @@ void QtTextEdit::keyPressEvent(QKeyEvent* event) {
 			   || (key == Qt::Key_Tab && modifiers == Qt::ControlModifier)
 			   || (key == Qt::Key_A && modifiers == Qt::AltModifier)
 			   || (key == Qt::Key_Tab)
-			   || (key == Qt::Key_Up)
-			   || (key == Qt::Key_Down)
 	) {
 		emit unhandledKeyPressEvent(event);
+	}
+	else if ((key == Qt::Key_Up)
+			   || (key == Qt::Key_Down)
+	){
+		emit unhandledKeyPressEvent(event);
+		QTextEdit::keyPressEvent(event);
 	}
 	else {
 		QTextEdit::keyPressEvent(event);

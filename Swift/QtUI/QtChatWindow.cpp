@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Kevin Smith
+ * Copyright (c) 2010-2011 Kevin Smith
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -17,6 +17,7 @@
 
 #include "SwifTools/TabComplete.h"
 
+#include <QLabel>
 #include <QApplication>
 #include <QBoxLayout>
 #include <QCloseEvent>
@@ -70,9 +71,17 @@ QtChatWindow::QtChatWindow(const QString &contact, QtChatTheme* theme, UIEventSt
 	labelsWidget_->setSizeAdjustPolicy(QComboBox::AdjustToContents);
 	midBarLayout->addWidget(labelsWidget_,0);
 
+	QWidget* inputBar = new QWidget(this);
+	layout->addWidget(inputBar);
+	QHBoxLayout* inputBarLayout = new QHBoxLayout(inputBar);
+	inputBarLayout->setContentsMargins(0,0,0,0);
+	inputBarLayout->setSpacing(2);
 	input_ = new QtTextEdit(this);
 	input_->setAcceptRichText(false);
-	layout->addWidget(input_);
+	inputBarLayout->addWidget(input_);
+	correctingLabel_ = new QLabel(tr("Correcting"), this);
+	inputBarLayout->addWidget(correctingLabel_);
+	correctingLabel_->hide();
 
 	inputClearing_ = false;
 	contactIsTyping_ = false;
@@ -100,7 +109,6 @@ void QtChatWindow::setTabComplete(TabComplete* completer) {
 void QtChatWindow::handleKeyPressEvent(QKeyEvent* event) {
 	int key = event->key();
 	Qt::KeyboardModifiers modifiers = event->modifiers();
-	QTextCursor cursor;
 	if (key == Qt::Key_W && modifiers == Qt::ControlModifier) {
 		close();
 	} else if (
@@ -121,19 +129,30 @@ void QtChatWindow::handleKeyPressEvent(QKeyEvent* event) {
 	} else if (key == Qt::Key_Tab) {
 		tabComplete();
 	} else if ((key == Qt::Key_Up) && input_->toPlainText().isEmpty() && !(lastSentMessage_.isEmpty())) {
-		cursor = input_->textCursor();
-		cursor.select(QTextCursor::Document);
-		cursor.beginEditBlock();
-		cursor.insertText(QString(lastSentMessage_));
-		cursor.endEditBlock();
-		isCorrection_ = true;
-	} else if (key == Qt::Key_Down && isCorrection_ && (cursor = input_->textCursor()).atBlockEnd()) {
-		cursor.select(QTextCursor::Document);
-		cursor.removeSelectedText();
-		isCorrection_ = false;
+		beginCorrection();
+	} else if (key == Qt::Key_Down && isCorrection_ && input_->textCursor().atBlockEnd()) {
+		cancelCorrection();
 	} else {
 		messageLog_->handleKeyPressEvent(event);
 	}
+}
+
+void QtChatWindow::beginCorrection() {
+	QTextCursor cursor = input_->textCursor();
+	cursor.select(QTextCursor::Document);
+	cursor.beginEditBlock();
+	cursor.insertText(QString(lastSentMessage_));
+	cursor.endEditBlock();
+	isCorrection_ = true;
+	correctingLabel_->show();
+}
+
+void QtChatWindow::cancelCorrection() {
+	QTextCursor cursor = input_->textCursor();
+	cursor.select(QTextCursor::Document);
+	cursor.removeSelectedText();
+	isCorrection_ = false;
+	correctingLabel_->hide();
 }
 
 void QtChatWindow::tabComplete() {
@@ -396,9 +415,9 @@ void QtChatWindow::returnPressed() {
 	messageLog_->scrollToBottom();
 	lastSentMessage_ = QString(input_->toPlainText());
 	onSendMessageRequest(Q2PSTRING(input_->toPlainText()), isCorrection_);
-	isCorrection_ = false;
 	inputClearing_ = true;
 	input_->clear();
+	cancelCorrection();
 	inputClearing_ = false;
 }
 
