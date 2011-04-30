@@ -16,7 +16,7 @@ namespace Swift {
 		public:
 			typedef boost::shared_ptr<Replace> ref;
 			Replace(const std::string& id = std::string()) : replaceID_(id) {};
-			std::string getID() {
+			const std::string& getID() const {
 				return replaceID_;
 			}
 			void setID(const std::string& id) {
