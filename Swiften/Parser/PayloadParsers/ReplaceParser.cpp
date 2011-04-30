@@ -14,7 +14,7 @@ namespace Swift {
 	void ReplaceParser::handleStartElement(const std::string&, const std::string&, const AttributeMap& attributes) {
 		if (level_ == 0) {
 			std::string id = attributes.getAttribute("id");
-			getPayloadInternal()->setId(id);
+			getPayloadInternal()->setID(id);
 		}
 		level_++;
 	}

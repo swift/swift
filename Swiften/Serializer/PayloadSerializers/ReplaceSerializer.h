@@ -16,7 +16,7 @@ namespace Swift {
 			ReplaceSerializer() : GenericPayloadSerializer<Replace>() {}
 
 			virtual std::string serializePayload(boost::shared_ptr<Replace> replace) const {
-				return "<replace id = '" + replace->getId() + "' xmlns='http://swift.im/protocol/replace'/>";
+				return "<replace id = '" + replace->getID() + "' xmlns='http://swift.im/protocol/replace'/>";
 			}
 	};
 }

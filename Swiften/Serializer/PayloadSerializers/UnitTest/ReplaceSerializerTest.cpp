@@ -22,7 +22,7 @@ class ReplaceSerializerTest: public CppUnit::TestFixture {
 		void testSerialize() {
 			ReplaceSerializer testling;
 			boost::shared_ptr<Replace> replace(new Replace());
-			replace->setId("bad1");
+			replace->setID("bad1");
 			CPPUNIT_ASSERT_EQUAL(std::string("<replace id = 'bad1' xmlns='http://swift.im/protocol/replace'/>"), testling.serialize(replace));
 		}
 };

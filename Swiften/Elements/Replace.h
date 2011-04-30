@@ -15,11 +15,11 @@ namespace Swift {
 	class Replace : public Payload {
 		public:
 			typedef boost::shared_ptr<Replace> ref;
-			Replace(std::string id = "") : replaceID_(id) {};
-			std::string getId() {
+			Replace(const std::string& id = std::string()) : replaceID_(id) {};
+			std::string getID() {
 				return replaceID_;
 			}
-			void setId(std::string id) {
+			void setID(const std::string& id) {
 				replaceID_ = id;
 			}
 		private:
