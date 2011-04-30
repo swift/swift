@@ -93,6 +93,8 @@ if env["max_jobs"] :
 		SetOption("num_jobs", multiprocessing.cpu_count())
 	except NotImplementedError :
 		pass
+	except ImportError :
+		pass
 
 # Default compiler flags
 if env.get("distcc", False) :

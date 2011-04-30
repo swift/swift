@@ -1,4 +1,4 @@
-import os, re, Version
+import os, re, Version, os.path
 
 Import("env")
 
@@ -359,6 +359,9 @@ if env["SCONS_STAGE"] == "build" :
 		])
 	
 	# Generate the Swiften header
+	def relpath(path, start) :
+		i = len(os.path.commonprefix([path, start]))
+		return path[i+1:]
 	swiften_header = "#pragma once\n"
 	swiften_includes = []
 	top_path = env.Dir("..").abspath
@@ -368,7 +371,7 @@ if env["SCONS_STAGE"] == "build" :
 		for file in files :
 			if not file.endswith(".h") :
 				continue
-			include = os.path.relpath(os.path.join(root, file), top_path)
+			include = relpath(os.path.join(root, file), top_path)
 			swiften_includes.append(include)
 			# Private modules
 			if root.endswith("Config") or root.endswith("Compress") :
