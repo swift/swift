@@ -25,6 +25,7 @@ void GroupRosterItem::setManualSort(const std::string& manualSortValue) {
 	bool changed = manualSortValue_ != manualSortValue;
 	manualSortValue_ = manualSortValue;
 	if (changed) {
+		onChildrenChanged();
 		onDataChanged();
 	}
 }
