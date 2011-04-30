@@ -354,7 +354,9 @@ if env["SCONS_STAGE"] == "build" :
 			# Library-specific files
 			if file.startswith("CAres") or file.startswith("LibXML") or file.startswith("Expat") :
 				continue
-			if file == "Swiften.h" :
+
+			# Specific headers we don't want to globally include
+			if file == "Swiften.h" or file == "foreach.h" or file == "Log.h" or file == "format.h" :
 				continue
 			swiften_header += "#include <" + include + ">\n"
 			swiften_includes.append(include)
