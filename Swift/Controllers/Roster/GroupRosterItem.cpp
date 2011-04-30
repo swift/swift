@@ -224,7 +224,8 @@ void GroupRosterItem::handleChildrenChanged(GroupRosterItem* group) {
 	} else {
 		displayedChildren_.erase(std::remove(displayedChildren_.begin(), displayedChildren_.end(), group), displayedChildren_.end());
 	}
-	if (oldSize != getDisplayedChildren().size()) {
+
+	if (oldSize != getDisplayedChildren().size() || sortDisplayed()) {
 		onChildrenChanged();
 		onDataChanged();
 	}

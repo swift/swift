@@ -322,7 +322,9 @@ void MUCController::handleOccupantRoleChanged(const std::string& nick, const MUC
 	if (occupant.getRealJID()) {
 		realJID = occupant.getRealJID().get();
 	}
-	roster_->addContact(jid, realJID, nick, roleToGroupName(occupant.getRole()), avatarManager_->getAvatarPath(jid).string());
+	std::string group(roleToGroupName(occupant.getRole()));
+	roster_->addContact(jid, realJID, nick, group, avatarManager_->getAvatarPath(jid).string());
+	roster_->getGroup(group)->setManualSort(roleToSortName(occupant.getRole()));
 	chatWindow_->addSystemMessage(str(format(QT_TRANSLATE_NOOP("", "%1% is now a %2%")) % nick % roleToFriendlyName(occupant.getRole())));
 }
 

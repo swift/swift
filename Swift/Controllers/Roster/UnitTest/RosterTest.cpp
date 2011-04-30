@@ -21,6 +21,7 @@ class RosterTest : public CppUnit::TestFixture {
 		CPPUNIT_TEST(testRemoveSecondContact);
 		CPPUNIT_TEST(testRemoveSecondContactSameBare);
 		CPPUNIT_TEST(testApplyPresenceLikeMUC);
+		CPPUNIT_TEST(testReSortLikeMUC);
 		CPPUNIT_TEST_SUITE_END();
 
 	public:
@@ -115,6 +116,22 @@ class RosterTest : public CppUnit::TestFixture {
 			roster_->removeContact(jid4c);
 			roster_->applyOnItems(SetPresence(presence, JID::WithResource));
 
+		}
+
+		void testReSortLikeMUC() {
+			JID jid4a("a@b/c");
+			JID jid4b("a@b/d");
+			JID jid4c("a@b/e");
+			roster_->addContact(jid4a, JID(), "Bird", "group1", "");
+			roster_->addContact(jid4b, JID(), "Cookie", "group2", "");
+			roster_->addContact(jid4b, JID(), "Ernie", "group1", "");
+			roster_->getGroup("group1")->setManualSort("2");
+			roster_->getGroup("group2")->setManualSort("1");
+			GroupRosterItem* root = roster_->getRoot();
+			const std::vector<RosterItem*> kids = root->getDisplayedChildren();
+			CPPUNIT_ASSERT_EQUAL(static_cast<size_t>(2), kids.size());
+			CPPUNIT_ASSERT_EQUAL(std::string("group2"), kids[0]->getDisplayName());
+			CPPUNIT_ASSERT_EQUAL(std::string("group1"), kids[1]->getDisplayName());
 		}
 
 	private:
