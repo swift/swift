@@ -20,17 +20,17 @@ if env["SCONS_STAGE"] == "flags" :
 	env["SWIFTEN_VERSION_PATCH"] = 0
 	env["SWIFTEN_LIBRARY_ALIASES"] = []
 	if env["PLATFORM"] == "win32" :
-		env["SWIFTEN_LIBRARY"] = "Swiften$SWIFTEN_VERSION_MAJOR"
-		env["SWIFTEN_LIBRARY_NAME"] = "Swiften$SWIFTEN_VERSION_MAJOR"
-	if env["PLATFORM"] == "darwin" :
-		env["SWIFTEN_LIBRARY"] = "Swiften$SWIFTEN_VERSION_MAJOR"
-		env["SWIFTEN_LIBRARY_NAME"] = "Swiften$SWIFTEN_VERSION_MAJOR"
+		env["SWIFTEN_LIBRARY"] = env.subst("Swiften$SWIFTEN_VERSION_MAJOR")
+		env["SWIFTEN_LIBRARY_NAME"] = env.subst("Swiften$SWIFTEN_VERSION_MAJOR")
+	elif env["PLATFORM"] == "darwin" :
+		env["SWIFTEN_LIBRARY"] = env.subst("Swiften$SWIFTEN_VERSION_MAJOR")
+		env["SWIFTEN_LIBRARY_NAME"] = env.subst("Swiften$SWIFTEN_VERSION_MAJOR")
 	else :
 		env["SWIFTEN_LIBRARY"] = "Swiften"
 		env["SWIFTEN_LIBRARY_NAME"] = "Swiften"
 		if ARGUMENTS.get("swiften_dll", False) :
-			env["SWIFTEN_LIBRARY_NAME"] = "libSwiften.so.$SWIFTEN_VERSION_MAJOR"
-			env["SWIFTEN_LIBRARY_ALIASES"] = ["libSwiften.so", "libSwiften.so.${SWIFTEN_VERSION_MAJOR}.${SWIFTEN_VERSION_MINOR}"]
+			env["SWIFTEN_LIBRARY_NAME"] = env.subst("libSwiften.so.$SWIFTEN_VERSION_MAJOR")
+			env["SWIFTEN_LIBRARY_ALIASES"] = ["libSwiften.so", env.subst("libSwiften.so.${SWIFTEN_VERSION_MAJOR}.${SWIFTEN_VERSION_MINOR}")]
 
 	swiften_env = env.Clone()
 	swiften_env["LIBPATH"] = [Dir(".")]
