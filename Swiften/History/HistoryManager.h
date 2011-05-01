@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include <string>
+#include <vector>
 #include <Swiften/JID/JID.h>
 #include <Swiften/History/HistoryMessage.h>
 
