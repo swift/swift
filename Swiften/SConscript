@@ -354,7 +354,7 @@ if env["SCONS_STAGE"] == "build" :
 				continue
 
 			# Library-specific files
-			if file.startswith("CAres") or file.startswith("LibXML") or file.startswith("Expat") :
+			if file.startswith("CAres") or file.startswith("LibXML") or file.startswith("Expat") or file.startswith("SQLite") :
 				continue
 
 			# Specific headers we don't want to globally include
