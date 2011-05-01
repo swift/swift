@@ -87,6 +87,7 @@ if "doc" in ARGUMENTS :
 sources = []
 for i in range(1, 7) :
 	sources.append("Examples/EchoBot/EchoBot" + str(i) + ".cpp")
+sources.append("Examples/EchoBot/EchoBot0x.cpp")
 sources += ["Examples/EchoBot/" + i for i in ["EchoPayloadParserFactory.h", "EchoPayloadSerializer.h", "EchoPayload.h", "EchoComponent.cpp"]]
 for source in sources :
 	env.Command(source + ".xml", source, Action(generateDocBookCode, cmdstr = "$GENCOMSTR"))

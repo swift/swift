@@ -13,25 +13,19 @@ int main(int, char**) {
 	SimpleEventLoop eventLoop;
 	BoostNetworkFactories networkFactories(&eventLoop);
 
-	// Initialize the client with the JID and password
 	Client client("echobot@wonderland.lit", "mypass", &networkFactories);
-
-	// When the client is convnected, send out initial presence
+	client.setAlwaysTrustCertificates();
 	client.onConnected.connect([&] {
-		client.sendPresence(Presence::create("Send me a message"));
+		std::cout << "Connected" << std::endl;
 	});
-
-	// When the client receives an incoming message, echo it back
 	client.onMessageReceived.connect([&] (Message::ref message) {
 		message->setTo(message->getFrom());
 		message->setFrom(JID());
 		client.sendMessage(message);
 	});
-
-	// Start the client
 	client.connect();
 
-	// Run the event loop to start processing incoming network events
 	eventLoop.run();
+
 	return 0;
 }

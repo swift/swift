@@ -13,6 +13,7 @@ int main(int, char**) {
 	BoostNetworkFactories networkFactories(&eventLoop);
 
 	Client client("echobot@wonderland.lit", "mypass", &networkFactories);
+	client.setAlwaysTrustCertificates();
 	client.connect();
 
 	eventLoop.run();

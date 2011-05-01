@@ -23,6 +23,7 @@ class EchoBot {
 		EchoBot(NetworkFactories* networkFactories) {
 			//...
 			client = new Client("echobot@wonderland.lit", "mypass", networkFactories);
+			client->setAlwaysTrustCertificates();
 			client->onConnected.connect(bind(&EchoBot::handleConnected, this));
 			client->onMessageReceived.connect(
 					bind(&EchoBot::handleMessageReceived, this, _1));

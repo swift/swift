@@ -94,7 +94,12 @@
         <literal>connect()</literal> to instruct the client to connect to 
         the XMPP server with the given credentials. Note that this call returns
         immediately; it is only when starting the event loop that network
-        the actual connection process will start.
+        the actual connection process will start. The call to
+        <literal>setAlwaysTrustCertificates()</literal> before connecting
+        avoids checks for certificate validity; this is convenient for
+        the examples in this guide (because not all servers have trusted
+        certificates), but for production software, you should
+        not call this.
       </para>
     </sect1>
 
@@ -177,8 +182,20 @@
       </para>
 
       <para>
+        If you use a C++ compiler that supports C++0x lambda expressions (such as 
+        GCC 4.5 or Microsoft Visual Studio 2010), you can write this example in a more
+        concise way, as illustrated in <xref linkend="Example-EchoBot0x"/>. However,
+        for the remainder of this guide, we will not use this functionality.
+      </para>
+      <example id="Example-EchoBot0x">
+        <title>EchoBot using C++0x lambda expressions. This is currently only possible with a limited set of C++compilers.</title>
+        <include xmlns="http://www.w3.org/2001/XInclude" href="Examples/EchoBot/EchoBot0x.cpp.xml" xpointer="xpointer(//programlisting|//calloutlist)"/>
+      </example>
+
+      <para>
         Before moving on to the next step, we are going to rearrange our
-        code a bit, to make it a bit cleaner. Instead of using global 
+        code from <xref linkend="Example-EchoBot2"/> a bit, to make it a bit cleaner. 
+        Instead of using global 
         variables, we are going to create an <literal>EchoBot</literal>
         class with the current code in it. The resulting code can be found
         in <xref linkend="Example-EchoBot3"/>.

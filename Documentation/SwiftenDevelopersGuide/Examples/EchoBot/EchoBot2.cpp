@@ -22,6 +22,7 @@ int main(int, char**) {
 	BoostNetworkFactories networkFactories(&eventLoop);
 
 	client = new Client("echobot@wonderland.lit", "mypass", &networkFactories);
+	client->setAlwaysTrustCertificates();
 	client->onConnected.connect(&handleConnected);
 	client->onMessageReceived.connect(bind(&handleMessageReceived, _1));
 	client->connect();
