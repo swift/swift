@@ -131,19 +131,22 @@ void ChatController::preSendMessageRequest(boost::shared_ptr<Message> message) {
 }
 
 void ChatController::postSendMessage(const std::string& body, boost::shared_ptr<Stanza> sentStanza) {
-	if (stanzaChannel_->getStreamManagementEnabled() && !myLastMessageUIID_.empty()) {
-		chatWindow_->setAckState(myLastMessageUIID_, ChatWindow::Pending);
-		unackedStanzas_[sentStanza] = myLastMessageUIID_;
-	}
 	boost::shared_ptr<Replace> replace = sentStanza->getPayload<Replace>();
 	if (replace) {
 		chatWindow_->replaceMessage(body, myLastMessageUIID_, boost::posix_time::microsec_clock::universal_time());
+		for (std::map<boost::shared_ptr<Stanza>, std::string>::iterator it = unackedStanzas_.begin(); it != unackedStanzas_.end(); ) {
+			if ((*it).second == myLastMessageUIID_) {
+				unackedStanzas_.erase(it++);
+			} else {
+				++it;
+			}
+		}
 	} else {
 		myLastMessageUIID_ = addMessage(body, QT_TRANSLATE_NOOP("", "me"), true, labelsEnabled_ ? chatWindow_->getSelectedSecurityLabel().getLabel() : boost::shared_ptr<SecurityLabel>(), std::string(avatarManager_->getAvatarPath(selfJID_).string()), boost::posix_time::microsec_clock::universal_time());
-		if (stanzaChannel_->getStreamManagementEnabled()) {
-			chatWindow_->setAckState(myLastMessageUIID_, ChatWindow::Pending);
-			unackedStanzas_[sentStanza] = myLastMessageUIID_;
-		}
+	}
+	if (stanzaChannel_->getStreamManagementEnabled() && !myLastMessageUIID_.empty() ) {
+		chatWindow_->setAckState(myLastMessageUIID_, ChatWindow::Pending);
+		unackedStanzas_[sentStanza] = myLastMessageUIID_;
 	}
 	lastWasPresence_ = false;
 	chatStateNotifier_->userSentMessage();
