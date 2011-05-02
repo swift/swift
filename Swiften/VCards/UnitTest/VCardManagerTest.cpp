@@ -48,7 +48,7 @@ class VCardManagerTest : public CppUnit::TestFixture {
 		}
 
 		void testGet_NewVCardRequestsVCard() {
-			std::auto_ptr<VCardManager> testling = createManager();
+			boost::shared_ptr<VCardManager> testling = createManager();
 			VCard::ref result = testling->getVCardAndRequestWhenNeeded(JID("foo@bar.com/baz"));
 
 			CPPUNIT_ASSERT(!result);
@@ -57,7 +57,7 @@ class VCardManagerTest : public CppUnit::TestFixture {
 		}
 
 		void testGet_ExistingVCard() {
-			std::auto_ptr<VCardManager> testling = createManager();
+			boost::shared_ptr<VCardManager> testling = createManager();
 			VCard::ref vcard(new VCard());
 			vcard->setFullName("Foo Bar");
 			vcardStorage->setVCard(JID("foo@bar.com/baz"), vcard);
@@ -69,7 +69,7 @@ class VCardManagerTest : public CppUnit::TestFixture {
 		}
 
 		void testRequest_RequestsVCard() {
-			std::auto_ptr<VCardManager> testling = createManager();
+			boost::shared_ptr<VCardManager> testling = createManager();
 			testling->requestVCard(JID("foo@bar.com/baz"));
 
 			CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(stanzaChannel->sentStanzas.size()));
@@ -77,7 +77,7 @@ class VCardManagerTest : public CppUnit::TestFixture {
 		}
 
 		void testRequest_ReceiveEmitsNotification() {
-			std::auto_ptr<VCardManager> testling = createManager();
+			boost::shared_ptr<VCardManager> testling = createManager();
 			testling->requestVCard(JID("foo@bar.com/baz"));
 			stanzaChannel->onIQReceived(createVCardResult());
 
@@ -90,7 +90,7 @@ class VCardManagerTest : public CppUnit::TestFixture {
 		}
 
 		void testRequest_Error() {
-			std::auto_ptr<VCardManager> testling = createManager();
+			boost::shared_ptr<VCardManager> testling = createManager();
 			testling->requestVCard(JID("foo@bar.com/baz"));
 			stanzaChannel->onIQReceived(IQ::createError(JID("baz@fum.com/foo"), stanzaChannel->sentStanzas[0]->getID()));
 
@@ -101,7 +101,7 @@ class VCardManagerTest : public CppUnit::TestFixture {
 		}
 
 		void testRequest_VCardAlreadyRequested() {
-			std::auto_ptr<VCardManager> testling = createManager();
+			boost::shared_ptr<VCardManager> testling = createManager();
 			testling->requestVCard(JID("foo@bar.com/baz"));
 			VCard::ref result = testling->getVCardAndRequestWhenNeeded(JID("foo@bar.com/baz"));
 
@@ -110,7 +110,7 @@ class VCardManagerTest : public CppUnit::TestFixture {
 		}
 
 		void testRequest_AfterPreviousRequest() {
-			std::auto_ptr<VCardManager> testling = createManager();
+			boost::shared_ptr<VCardManager> testling = createManager();
 			testling->requestVCard(JID("foo@bar.com/baz"));
 			stanzaChannel->onIQReceived(createVCardResult());
 			testling->requestVCard(JID("foo@bar.com/baz"));
@@ -120,7 +120,7 @@ class VCardManagerTest : public CppUnit::TestFixture {
 		}
 
 		void testRequestOwnVCard() {
-			std::auto_ptr<VCardManager> testling = createManager();
+			boost::shared_ptr<VCardManager> testling = createManager();
 			testling->requestVCard(ownJID);
 			stanzaChannel->onIQReceived(createOwnVCardResult());
 
@@ -136,7 +136,7 @@ class VCardManagerTest : public CppUnit::TestFixture {
 		}
 
 		void testCreateSetVCardRequest() {
-			std::auto_ptr<VCardManager> testling = createManager();
+			boost::shared_ptr<VCardManager> testling = createManager();
 			VCard::ref vcard = boost::make_shared<VCard>();
 			vcard->setFullName("New Name");
 			SetVCardRequest::ref request = testling->createSetVCardRequest(vcard);
@@ -150,7 +150,7 @@ class VCardManagerTest : public CppUnit::TestFixture {
 		}
 
 		void testCreateSetVCardRequest_Error() {
-			std::auto_ptr<VCardManager> testling = createManager();
+			boost::shared_ptr<VCardManager> testling = createManager();
 			VCard::ref vcard = boost::make_shared<VCard>();
 			vcard->setFullName("New Name");
 			SetVCardRequest::ref request = testling->createSetVCardRequest(vcard);
@@ -162,8 +162,8 @@ class VCardManagerTest : public CppUnit::TestFixture {
 		}
 
 	private:
-		std::auto_ptr<VCardManager> createManager() {
-			std::auto_ptr<VCardManager> manager(new VCardManager(ownJID, iqRouter, vcardStorage));
+		boost::shared_ptr<VCardManager> createManager() {
+			boost::shared_ptr<VCardManager> manager(new VCardManager(ownJID, iqRouter, vcardStorage));
 			manager->onVCardChanged.connect(boost::bind(&VCardManagerTest::handleVCardChanged, this, _1, _2));
 			manager->onOwnVCardChanged.connect(boost::bind(&VCardManagerTest::handleOwnVCardChanged, this, _1));
 			return manager;

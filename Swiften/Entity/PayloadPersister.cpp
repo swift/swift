@@ -42,7 +42,7 @@ boost::shared_ptr<Payload> PayloadPersister::loadPayload(const boost::filesystem
 	if (boost::filesystem::exists(path)) {
 		ByteArray data;
 		data.readFromFile(path.string());
-		std::auto_ptr<PayloadParser> parser(createParser());
+		boost::shared_ptr<PayloadParser> parser(createParser());
 		PayloadParserTester tester(parser.get());
 		tester.parse(data.toString());
 		return parser->getPayload();

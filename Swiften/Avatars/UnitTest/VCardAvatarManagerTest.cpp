@@ -58,7 +58,7 @@ class VCardAvatarManagerTest : public CppUnit::TestFixture {
 		}
 
 		void testGetAvatarHashKnownAvatar() {
-			std::auto_ptr<VCardAvatarManager> testling = createManager();
+			boost::shared_ptr<VCardAvatarManager> testling = createManager();
 			storeVCardWithPhoto(user1.toBare(), avatar1);
 			avatarStorage->addAvatar(avatar1Hash, avatar1);
 
@@ -68,7 +68,7 @@ class VCardAvatarManagerTest : public CppUnit::TestFixture {
 		}
 
 		void testGetAvatarHashEmptyAvatar() {
-			std::auto_ptr<VCardAvatarManager> testling = createManager();
+			boost::shared_ptr<VCardAvatarManager> testling = createManager();
 			storeEmptyVCard(user1.toBare());
 
 			std::string result = testling->getAvatarHash(user1);
@@ -77,7 +77,7 @@ class VCardAvatarManagerTest : public CppUnit::TestFixture {
 		}
 
 		void testGetAvatarHashUnknownAvatarKnownVCardStoresAvatar() {
-			std::auto_ptr<VCardAvatarManager> testling = createManager();
+			boost::shared_ptr<VCardAvatarManager> testling = createManager();
 			storeVCardWithPhoto(user1.toBare(), avatar1);
 
 			std::string result = testling->getAvatarHash(user1);
@@ -88,7 +88,7 @@ class VCardAvatarManagerTest : public CppUnit::TestFixture {
 		}
 
 		void testGetAvatarHashUnknownAvatarUnknownVCard() {
-			std::auto_ptr<VCardAvatarManager> testling = createManager();
+			boost::shared_ptr<VCardAvatarManager> testling = createManager();
 
 			std::string result = testling->getAvatarHash(user1);
 
@@ -96,7 +96,7 @@ class VCardAvatarManagerTest : public CppUnit::TestFixture {
 		}
 
 		void testVCardUpdateTriggersUpdate() {
-			std::auto_ptr<VCardAvatarManager> testling = createManager();
+			boost::shared_ptr<VCardAvatarManager> testling = createManager();
 			vcardManager->requestVCard(user1);
 			sendVCardResult();
 
@@ -104,8 +104,8 @@ class VCardAvatarManagerTest : public CppUnit::TestFixture {
 		}
 
 	private:
-		std::auto_ptr<VCardAvatarManager> createManager() {
-			std::auto_ptr<VCardAvatarManager> result(new VCardAvatarManager(vcardManager, avatarStorage, mucRegistry));
+		boost::shared_ptr<VCardAvatarManager> createManager() {
+			boost::shared_ptr<VCardAvatarManager> result(new VCardAvatarManager(vcardManager, avatarStorage, mucRegistry));
 			result->onAvatarChanged.connect(boost::bind(&VCardAvatarManagerTest::handleAvatarChanged, this, _1));
 			return result;
 		}

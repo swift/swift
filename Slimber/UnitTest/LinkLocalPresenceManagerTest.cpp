@@ -56,14 +56,14 @@ class LinkLocalPresenceManagerTest : public CppUnit::TestFixture {
 		void testConstructor() {
 			addService("alice@wonderland");
 			addService("rabbit@teaparty");
-			std::auto_ptr<LinkLocalPresenceManager> testling(createTestling());
+			boost::shared_ptr<LinkLocalPresenceManager> testling(createTestling());
 
 			CPPUNIT_ASSERT_EQUAL(2, static_cast<int>(testling->getRoster()->getItems().size()));
 			CPPUNIT_ASSERT_EQUAL(2, static_cast<int>(testling->getAllPresence().size()));
 		}
 
 		void testServiceAdded() {
-			std::auto_ptr<LinkLocalPresenceManager> testling(createTestling());
+			boost::shared_ptr<LinkLocalPresenceManager> testling(createTestling());
 
 			addService("alice@wonderland", "Alice");
 
@@ -79,7 +79,7 @@ class LinkLocalPresenceManagerTest : public CppUnit::TestFixture {
 		}
 
 		void testServiceRemoved() {
-			std::auto_ptr<LinkLocalPresenceManager> testling(createTestling());
+			boost::shared_ptr<LinkLocalPresenceManager> testling(createTestling());
 
 			addService("alice@wonderland");
 			removeService("alice@wonderland");
@@ -92,7 +92,7 @@ class LinkLocalPresenceManagerTest : public CppUnit::TestFixture {
 		}
 
 		void testServiceChanged() {
-			std::auto_ptr<LinkLocalPresenceManager> testling(createTestling());
+			boost::shared_ptr<LinkLocalPresenceManager> testling(createTestling());
 
 			addService("alice@wonderland");
 			updateServicePresence("alice@wonderland", LinkLocalServiceInfo::Away, "I'm Away");
@@ -105,7 +105,7 @@ class LinkLocalPresenceManagerTest : public CppUnit::TestFixture {
 		}
 
 		void testGetAllPresence() {
-			std::auto_ptr<LinkLocalPresenceManager> testling(createTestling());
+			boost::shared_ptr<LinkLocalPresenceManager> testling(createTestling());
 
 			addService("alice@wonderland");
 			addService("rabbit@teaparty");
@@ -121,7 +121,7 @@ class LinkLocalPresenceManagerTest : public CppUnit::TestFixture {
 		}
 
 		void testGetRoster() {
-			std::auto_ptr<LinkLocalPresenceManager> testling(createTestling());
+			boost::shared_ptr<LinkLocalPresenceManager> testling(createTestling());
 
 			addService("alice@wonderland", "Alice");
 			addService("rabbit@teaparty", "Rabbit");
@@ -140,7 +140,7 @@ class LinkLocalPresenceManagerTest : public CppUnit::TestFixture {
 		}
 
 		void testGetRoster_InfoWithNick() {
-			std::auto_ptr<LinkLocalPresenceManager> testling(createTestling());
+			boost::shared_ptr<LinkLocalPresenceManager> testling(createTestling());
 
 			addService("alice@wonderland", "Alice", "Alice In", "Wonderland");
 
@@ -149,7 +149,7 @@ class LinkLocalPresenceManagerTest : public CppUnit::TestFixture {
 		}
 
 		void testGetRoster_InfoWithFirstName() {
-			std::auto_ptr<LinkLocalPresenceManager> testling(createTestling());
+			boost::shared_ptr<LinkLocalPresenceManager> testling(createTestling());
 
 			addService("alice@wonderland", "", "Alice In", "");
 
@@ -158,7 +158,7 @@ class LinkLocalPresenceManagerTest : public CppUnit::TestFixture {
 		}
 
 		void testGetRoster_InfoWithLastName() {
-			std::auto_ptr<LinkLocalPresenceManager> testling(createTestling());
+			boost::shared_ptr<LinkLocalPresenceManager> testling(createTestling());
 
 			addService("alice@wonderland", "", "", "Wonderland");
 
@@ -167,7 +167,7 @@ class LinkLocalPresenceManagerTest : public CppUnit::TestFixture {
 		}
 
 		void testGetRoster_InfoWithFirstAndLastName() {
-			std::auto_ptr<LinkLocalPresenceManager> testling(createTestling());
+			boost::shared_ptr<LinkLocalPresenceManager> testling(createTestling());
 
 			addService("alice@wonderland", "", "Alice In", "Wonderland");
 
@@ -176,7 +176,7 @@ class LinkLocalPresenceManagerTest : public CppUnit::TestFixture {
 		}
 
 		void testGetRoster_NoInfo() {
-			std::auto_ptr<LinkLocalPresenceManager> testling(createTestling());
+			boost::shared_ptr<LinkLocalPresenceManager> testling(createTestling());
 
 			addService("alice@wonderland");
 
@@ -185,7 +185,7 @@ class LinkLocalPresenceManagerTest : public CppUnit::TestFixture {
 		}
 
 		void testGetServiceForJID() {
-			std::auto_ptr<LinkLocalPresenceManager> testling(createTestling());
+			boost::shared_ptr<LinkLocalPresenceManager> testling(createTestling());
 
 			addService("alice@wonderland");
 			addService("rabbit@teaparty");
@@ -197,7 +197,7 @@ class LinkLocalPresenceManagerTest : public CppUnit::TestFixture {
 		}
 
 		void testGetServiceForJID_NoMatch() {
-			std::auto_ptr<LinkLocalPresenceManager> testling(createTestling());
+			boost::shared_ptr<LinkLocalPresenceManager> testling(createTestling());
 
 			addService("alice@wonderland");
 			addService("queen@garden");
@@ -206,8 +206,8 @@ class LinkLocalPresenceManagerTest : public CppUnit::TestFixture {
 		}
 
 	private:
-		std::auto_ptr<LinkLocalPresenceManager> createTestling() {
-			std::auto_ptr<LinkLocalPresenceManager> testling(
+		boost::shared_ptr<LinkLocalPresenceManager> createTestling() {
+			boost::shared_ptr<LinkLocalPresenceManager> testling(
 					new LinkLocalPresenceManager(browser));
 			testling->onRosterChanged.connect(boost::bind(
 					&LinkLocalPresenceManagerTest::handleRosterChanged, this, _1));

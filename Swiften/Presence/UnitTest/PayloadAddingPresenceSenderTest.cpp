@@ -38,7 +38,7 @@ class PayloadAddingPresenceSenderTest : public CppUnit::TestFixture {
 		}
 
 		void testSetPayloadAddsPayloadOnPresenceSend() {
-			std::auto_ptr<PayloadAddingPresenceSender> testling(createSender());
+			boost::shared_ptr<PayloadAddingPresenceSender> testling(createSender());
 
 			testling->setPayload(MyPayload::create("foo"));
 			testling->sendPresence(Presence::create("bar"));
@@ -49,7 +49,7 @@ class PayloadAddingPresenceSenderTest : public CppUnit::TestFixture {
 		}
 
 		void testSetNullPayloadDoesNotAddPayloadOnPresenceSend() {
-			std::auto_ptr<PayloadAddingPresenceSender> testling(createSender());
+			boost::shared_ptr<PayloadAddingPresenceSender> testling(createSender());
 
 			testling->setPayload(MyPayload::ref());
 			testling->sendPresence(Presence::create("bar"));
@@ -60,7 +60,7 @@ class PayloadAddingPresenceSenderTest : public CppUnit::TestFixture {
 		}
 
 		void testSendPresenceDoesNotAlterOriginalPayload() {
-			std::auto_ptr<PayloadAddingPresenceSender> testling(createSender());
+			boost::shared_ptr<PayloadAddingPresenceSender> testling(createSender());
 
 			testling->setPayload(MyPayload::create("foo"));
 			Presence::ref presence(Presence::create("bar"));
@@ -70,7 +70,7 @@ class PayloadAddingPresenceSenderTest : public CppUnit::TestFixture {
 		}
 
 		void testSetPayloadAfterInitialPresenceResendsPresence() {
-			std::auto_ptr<PayloadAddingPresenceSender> testling(createSender());
+			boost::shared_ptr<PayloadAddingPresenceSender> testling(createSender());
 
 			testling->sendPresence(Presence::create("bar"));
 			testling->setPayload(MyPayload::create("foo"));
@@ -81,7 +81,7 @@ class PayloadAddingPresenceSenderTest : public CppUnit::TestFixture {
 		}
 
 		void testSetPayloadAfterUnavailablePresenceDoesNotResendPresence() {
-			std::auto_ptr<PayloadAddingPresenceSender> testling(createSender());
+			boost::shared_ptr<PayloadAddingPresenceSender> testling(createSender());
 
 			Presence::ref presence = Presence::create("bar");
 			presence->setType(Presence::Unavailable);
@@ -93,7 +93,7 @@ class PayloadAddingPresenceSenderTest : public CppUnit::TestFixture {
 		}
 
 		void testSendDirectedPresenceIsNotResent() {
-			std::auto_ptr<PayloadAddingPresenceSender> testling(createSender());
+			boost::shared_ptr<PayloadAddingPresenceSender> testling(createSender());
 
 			testling->sendPresence(Presence::create("bar"));
 			Presence::ref directedPresence = Presence::create("baz");
@@ -106,8 +106,8 @@ class PayloadAddingPresenceSenderTest : public CppUnit::TestFixture {
 		}
 
 	private:
-		std::auto_ptr<PayloadAddingPresenceSender> createSender() {
-			std::auto_ptr<PayloadAddingPresenceSender> sender(new PayloadAddingPresenceSender(presenceSender));
+		boost::shared_ptr<PayloadAddingPresenceSender> createSender() {
+			boost::shared_ptr<PayloadAddingPresenceSender> sender(new PayloadAddingPresenceSender(presenceSender));
 			return sender;
 		}
 

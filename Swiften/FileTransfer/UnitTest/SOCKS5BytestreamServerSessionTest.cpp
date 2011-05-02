@@ -44,7 +44,7 @@ class SOCKS5BytestreamServerSessionTest : public CppUnit::TestFixture {
 		}
 
 		void testAuthenticate() {
-			std::auto_ptr<SOCKS5BytestreamServerSession> testling(createSession());
+			boost::shared_ptr<SOCKS5BytestreamServerSession> testling(createSession());
 			StartStopper<SOCKS5BytestreamServerSession> stopper(testling.get());
 
 			receive(ByteArray::create("\x05\x02\x01\x02"));
@@ -53,7 +53,7 @@ class SOCKS5BytestreamServerSessionTest : public CppUnit::TestFixture {
 		}
 
 		void testAuthenticate_Chunked() {
-			std::auto_ptr<SOCKS5BytestreamServerSession> testling(createSession());
+			boost::shared_ptr<SOCKS5BytestreamServerSession> testling(createSession());
 			StartStopper<SOCKS5BytestreamServerSession> stopper(testling.get());
 
 			receive(ByteArray::create("\x05\x02\x01"));
@@ -64,7 +64,7 @@ class SOCKS5BytestreamServerSessionTest : public CppUnit::TestFixture {
 		}
 
 		void testRequest() {
-			std::auto_ptr<SOCKS5BytestreamServerSession> testling(createSession());
+			boost::shared_ptr<SOCKS5BytestreamServerSession> testling(createSession());
 			StartStopper<SOCKS5BytestreamServerSession> stopper(testling.get());
 			bytestreams.addBytestream("abcdef", stream1);
 			authenticate();
@@ -75,7 +75,7 @@ class SOCKS5BytestreamServerSessionTest : public CppUnit::TestFixture {
 		}
 
 		void testRequest_UnknownBytestream() {
-			std::auto_ptr<SOCKS5BytestreamServerSession> testling(createSession());
+			boost::shared_ptr<SOCKS5BytestreamServerSession> testling(createSession());
 			StartStopper<SOCKS5BytestreamServerSession> stopper(testling.get());
 			authenticate();
 
@@ -85,7 +85,7 @@ class SOCKS5BytestreamServerSessionTest : public CppUnit::TestFixture {
 		}
 
 		void testReceiveData() {
-			std::auto_ptr<SOCKS5BytestreamServerSession> testling(createSession());
+			boost::shared_ptr<SOCKS5BytestreamServerSession> testling(createSession());
 			StartStopper<SOCKS5BytestreamServerSession> stopper(testling.get());
 			bytestreams.addBytestream("abcdef", stream1);
 			authenticate();
@@ -98,7 +98,7 @@ class SOCKS5BytestreamServerSessionTest : public CppUnit::TestFixture {
 		}
 
 		void testReceiveData_Chunked() {
-			std::auto_ptr<SOCKS5BytestreamServerSession> testling(createSession());
+			boost::shared_ptr<SOCKS5BytestreamServerSession> testling(createSession());
 			testling->setChunkSize(3);
 			StartStopper<SOCKS5BytestreamServerSession> stopper(testling.get());
 			bytestreams.addBytestream("abcdef", stream1);

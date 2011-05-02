@@ -62,7 +62,7 @@ namespace Swift {
 		private:
 			XMLParser* xmlParser;
 			FullPayloadParserFactoryCollection factories;
-			std::auto_ptr<PayloadParser> payloadParser;
+			boost::shared_ptr<PayloadParser> payloadParser;
 			int level;
 	};
 }

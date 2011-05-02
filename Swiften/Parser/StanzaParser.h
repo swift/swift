@@ -4,10 +4,10 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#ifndef SWIFTEN_StanzaParser_H
-#define SWIFTEN_StanzaParser_H
+#pragma once
 
 #include <boost/noncopyable.hpp>
+#include <boost/shared_ptr.hpp>
 
 #include <string>
 #include <Swiften/Elements/Stanza.h>
@@ -47,8 +47,6 @@ namespace Swift {
 		private:
 			int currentDepth_;
 			PayloadParserFactoryCollection* factories_;
-			std::auto_ptr<PayloadParser> currentPayloadParser_;
+			boost::shared_ptr<PayloadParser> currentPayloadParser_;
 	};
 }
-
-#endif

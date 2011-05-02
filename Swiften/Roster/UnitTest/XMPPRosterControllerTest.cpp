@@ -58,7 +58,7 @@ class XMPPRosterControllerTest : public CppUnit::TestFixture {
 		}
 
 		void testGet_Response() {
-			std::auto_ptr<XMPPRosterController> testling(createController());
+			boost::shared_ptr<XMPPRosterController> testling(createController());
 
 			testling->requestRoster();
 			boost::shared_ptr<RosterPayload> payload = boost::make_shared<RosterPayload>();
@@ -94,7 +94,7 @@ class XMPPRosterControllerTest : public CppUnit::TestFixture {
 		}
 
 		void testGet_NoRosterInStorage() {
-			std::auto_ptr<XMPPRosterController> testling(createController());
+			boost::shared_ptr<XMPPRosterController> testling(createController());
 			testling->setUseVersioning(true);
 
 			testling->requestRoster();
@@ -105,7 +105,7 @@ class XMPPRosterControllerTest : public CppUnit::TestFixture {
 		}
 
 		void testGet_NoVersionInStorage() {
-			std::auto_ptr<XMPPRosterController> testling(createController());
+			boost::shared_ptr<XMPPRosterController> testling(createController());
 			testling->setUseVersioning(true);
 			rosterStorage_->setRoster(boost::make_shared<RosterPayload>());
 
@@ -117,7 +117,7 @@ class XMPPRosterControllerTest : public CppUnit::TestFixture {
 		}
 
 		void testGet_VersionInStorage() {
-			std::auto_ptr<XMPPRosterController> testling(createController());
+			boost::shared_ptr<XMPPRosterController> testling(createController());
 			testling->setUseVersioning(true);
 			boost::shared_ptr<RosterPayload> payload(new RosterPayload());
 			payload->setVersion("foover");
@@ -131,7 +131,7 @@ class XMPPRosterControllerTest : public CppUnit::TestFixture {
 		}
 
 		void testGet_ServerDoesNotSupportVersion() {
-			std::auto_ptr<XMPPRosterController> testling(createController());
+			boost::shared_ptr<XMPPRosterController> testling(createController());
 			boost::shared_ptr<RosterPayload> payload(new RosterPayload());
 			payload->setVersion("foover");
 			rosterStorage_->setRoster(payload);
@@ -143,7 +143,7 @@ class XMPPRosterControllerTest : public CppUnit::TestFixture {
 		}
 
 		void testGet_ResponseWithoutNewVersion() {
-			std::auto_ptr<XMPPRosterController> testling(createController());
+			boost::shared_ptr<XMPPRosterController> testling(createController());
 			testling->setUseVersioning(true);
 			boost::shared_ptr<RosterPayload> storedRoster(new RosterPayload());
 			storedRoster->setVersion("version10");
@@ -167,7 +167,7 @@ class XMPPRosterControllerTest : public CppUnit::TestFixture {
 		}
 
 		void testGet_ResponseWithNewVersion() {
-			std::auto_ptr<XMPPRosterController> testling(createController());
+			boost::shared_ptr<XMPPRosterController> testling(createController());
 			testling->setUseVersioning(true);
 			boost::shared_ptr<RosterPayload> storedRoster(new RosterPayload());
 			storedRoster->setVersion("version10");
@@ -240,7 +240,7 @@ class XMPPRosterControllerTest : public CppUnit::TestFixture {
 		}
 
 		void testRemove_RosterStorageUpdated() {
-			std::auto_ptr<XMPPRosterController> testling(createController());
+			boost::shared_ptr<XMPPRosterController> testling(createController());
 			testling->setUseVersioning(true);
 			boost::shared_ptr<RosterPayload> storedRoster(new RosterPayload());
 			storedRoster->setVersion("version10");

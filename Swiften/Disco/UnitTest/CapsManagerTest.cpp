@@ -63,7 +63,7 @@ class CapsManagerTest : public CppUnit::TestFixture {
 		}
 
 		void testReceiveNewHashRequestsDisco() {
-			std::auto_ptr<CapsManager> testling = createManager();
+			boost::shared_ptr<CapsManager> testling = createManager();
 			sendPresenceWithCaps(user1, capsInfo1);
 
 			CPPUNIT_ASSERT(stanzaChannel->isRequestAtIndex<DiscoInfo>(0, user1, IQ::Get));
@@ -73,7 +73,7 @@ class CapsManagerTest : public CppUnit::TestFixture {
 		}
 
 		void testReceiveSameHashDoesNotRequestDisco() {
-			std::auto_ptr<CapsManager> testling = createManager();
+			boost::shared_ptr<CapsManager> testling = createManager();
 			sendPresenceWithCaps(user1, capsInfo1);
 			stanzaChannel->sentStanzas.clear();
 			sendPresenceWithCaps(user1, capsInfo1);
@@ -82,14 +82,14 @@ class CapsManagerTest : public CppUnit::TestFixture {
 		}
 
 		void testReceiveLegacyCapsDoesNotRequestDisco() {
-			std::auto_ptr<CapsManager> testling = createManager();
+			boost::shared_ptr<CapsManager> testling = createManager();
 			sendPresenceWithCaps(user1, legacyCapsInfo);
 
 			CPPUNIT_ASSERT_EQUAL(0, static_cast<int>(stanzaChannel->sentStanzas.size()));
 		}
 
 		void testReceiveSameHashAfterSuccesfulDiscoDoesNotRequestDisco() {
-			std::auto_ptr<CapsManager> testling = createManager();
+			boost::shared_ptr<CapsManager> testling = createManager();
 			sendPresenceWithCaps(user1, capsInfo1);
 			sendDiscoInfoResult(discoInfo1);
 
@@ -100,7 +100,7 @@ class CapsManagerTest : public CppUnit::TestFixture {
 		}
 
 		void testReceiveSameHashFromSameUserAfterFailedDiscoDoesNotRequestDisco() {
-			std::auto_ptr<CapsManager> testling = createManager();
+			boost::shared_ptr<CapsManager> testling = createManager();
 			sendPresenceWithCaps(user1, capsInfo1);
 			stanzaChannel->onIQReceived(IQ::createError(JID("baz@fum.com/foo"), stanzaChannel->sentStanzas[0]->getID()));
 
@@ -111,7 +111,7 @@ class CapsManagerTest : public CppUnit::TestFixture {
 		}
 
 		void testReceiveSameHashFromSameUserAfterIncorrectVerificationDoesNotRequestDisco() {
-			std::auto_ptr<CapsManager> testling = createManager();
+			boost::shared_ptr<CapsManager> testling = createManager();
 			sendPresenceWithCaps(user1, capsInfo1);
 			sendDiscoInfoResult(discoInfo2);
 
@@ -122,7 +122,7 @@ class CapsManagerTest : public CppUnit::TestFixture {
 		}
 
 		void testReceiveSameHashFromDifferentUserAfterFailedDiscoRequestsDisco() {
-			std::auto_ptr<CapsManager> testling = createManager();
+			boost::shared_ptr<CapsManager> testling = createManager();
 			sendPresenceWithCaps(user1, capsInfo1);
 			stanzaChannel->onIQReceived(IQ::createError(JID("baz@fum.com/foo"), stanzaChannel->sentStanzas[0]->getID()));
 
@@ -132,7 +132,7 @@ class CapsManagerTest : public CppUnit::TestFixture {
 		}
 
 		void testReceiveSameHashFromDifferentUserAfterIncorrectVerificationRequestsDisco() {
-			std::auto_ptr<CapsManager> testling = createManager();
+			boost::shared_ptr<CapsManager> testling = createManager();
 			sendPresenceWithCaps(user1, capsInfo1);
 			sendDiscoInfoResult(discoInfo2);
 
@@ -142,7 +142,7 @@ class CapsManagerTest : public CppUnit::TestFixture {
 		}
 
 		void testReceiveDifferentHashFromSameUserAfterFailedDiscoDoesNotRequestDisco() {
-			std::auto_ptr<CapsManager> testling = createManager();
+			boost::shared_ptr<CapsManager> testling = createManager();
 			sendPresenceWithCaps(user1, capsInfo1);
 			stanzaChannel->onIQReceived(IQ::createError(JID("baz@fum.com/foo"), stanzaChannel->sentStanzas[0]->getID()));
 
@@ -153,7 +153,7 @@ class CapsManagerTest : public CppUnit::TestFixture {
 		}
 
 		void testReceiveSuccesfulDiscoStoresCaps() {
-			std::auto_ptr<CapsManager> testling = createManager();
+			boost::shared_ptr<CapsManager> testling = createManager();
 			sendPresenceWithCaps(user1, capsInfo1);
 			sendDiscoInfoResult(discoInfo1);
 
@@ -163,7 +163,7 @@ class CapsManagerTest : public CppUnit::TestFixture {
 		}
 
 		void testReceiveIncorrectVerificationDiscoDoesNotStoreCaps() {
-			std::auto_ptr<CapsManager> testling = createManager();
+			boost::shared_ptr<CapsManager> testling = createManager();
 			sendPresenceWithCaps(user1, capsInfo1);
 			sendDiscoInfoResult(discoInfo2);
 
@@ -172,7 +172,7 @@ class CapsManagerTest : public CppUnit::TestFixture {
 		}
 
 		void testReceiveFailingDiscoFallsBack() {
-			std::auto_ptr<CapsManager> testling = createManager();
+			boost::shared_ptr<CapsManager> testling = createManager();
 			sendPresenceWithCaps(user1, capsInfo1);
 			sendPresenceWithCaps(user2, capsInfo1alt);
 			stanzaChannel->onIQReceived(IQ::createError(JID("baz@fum.com/foo"), stanzaChannel->sentStanzas[0]->getID()));
@@ -184,7 +184,7 @@ class CapsManagerTest : public CppUnit::TestFixture {
 		}
 
 		void testReceiveFailingFallbackDiscoFallsBack() {
-			std::auto_ptr<CapsManager> testling = createManager();
+			boost::shared_ptr<CapsManager> testling = createManager();
 			sendPresenceWithCaps(user1, capsInfo1);
 			sendPresenceWithCaps(user2, capsInfo1alt);
 			sendPresenceWithCaps(user3, capsInfo1);
@@ -195,7 +195,7 @@ class CapsManagerTest : public CppUnit::TestFixture {
 		}
 
 		void testReceiveSameHashFromFailingUserAfterReconnectRequestsDisco() {
-			std::auto_ptr<CapsManager> testling = createManager();
+			boost::shared_ptr<CapsManager> testling = createManager();
 			sendPresenceWithCaps(user1, capsInfo1);
 			stanzaChannel->onIQReceived(IQ::createError(JID("baz@fum.com/foo"), stanzaChannel->sentStanzas[0]->getID()));
 			stanzaChannel->setAvailable(false);
@@ -208,7 +208,7 @@ class CapsManagerTest : public CppUnit::TestFixture {
 		}
 
 		void testReconnectResetsFallback() {
-			std::auto_ptr<CapsManager> testling = createManager();
+			boost::shared_ptr<CapsManager> testling = createManager();
 			sendPresenceWithCaps(user1, capsInfo1);
 			sendPresenceWithCaps(user2, capsInfo1alt);
 			stanzaChannel->setAvailable(false);
@@ -221,7 +221,7 @@ class CapsManagerTest : public CppUnit::TestFixture {
 		}
 
 		void testReconnectResetsRequests() {
-			std::auto_ptr<CapsManager> testling = createManager();
+			boost::shared_ptr<CapsManager> testling = createManager();
 			sendPresenceWithCaps(user1, capsInfo1);
 			stanzaChannel->sentStanzas.clear();
 			stanzaChannel->setAvailable(false);
@@ -232,8 +232,8 @@ class CapsManagerTest : public CppUnit::TestFixture {
 		}
 
 	private:
-		std::auto_ptr<CapsManager> createManager() {
-			std::auto_ptr<CapsManager> manager(new CapsManager(storage, stanzaChannel, iqRouter));
+		boost::shared_ptr<CapsManager> createManager() {
+			boost::shared_ptr<CapsManager> manager(new CapsManager(storage, stanzaChannel, iqRouter));
 			manager->setWarnOnInvalidHash(false);
 			//manager->onCapsChanged.connect(boost::bind(&CapsManagerTest::handleCapsChanged, this, _1));
 			return manager;

@@ -26,6 +26,6 @@ namespace Swift {
 		private:
 			PayloadParserFactoryCollection* factories;
 			int level;
-			std::auto_ptr<PayloadParser> currentPayloadParser;
+			boost::shared_ptr<PayloadParser> currentPayloadParser;
 	};
 }

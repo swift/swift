@@ -52,7 +52,7 @@ class EntityCapsManagerTest : public CppUnit::TestFixture {
 		}
 
 		void testReceiveKnownHash() {
-			std::auto_ptr<EntityCapsManager> testling = createManager();
+			boost::shared_ptr<EntityCapsManager> testling = createManager();
 			capsProvider->caps[capsInfo1->getVersion()] = discoInfo1;
 			sendPresenceWithCaps(user1, capsInfo1);
 
@@ -62,7 +62,7 @@ class EntityCapsManagerTest : public CppUnit::TestFixture {
 		}
 
 		void testReceiveKnownHashTwiceDoesNotTriggerChange() {
-			std::auto_ptr<EntityCapsManager> testling = createManager();
+			boost::shared_ptr<EntityCapsManager> testling = createManager();
 			capsProvider->caps[capsInfo1->getVersion()] = discoInfo1;
 			sendPresenceWithCaps(user1, capsInfo1);
 			changes.clear();
@@ -73,14 +73,14 @@ class EntityCapsManagerTest : public CppUnit::TestFixture {
 		}
 
 		void testReceiveUnknownHashDoesNotTriggerChange() {
-			std::auto_ptr<EntityCapsManager> testling = createManager();
+			boost::shared_ptr<EntityCapsManager> testling = createManager();
 			sendPresenceWithCaps(user1, capsInfo1);
 
 			CPPUNIT_ASSERT_EQUAL(0, static_cast<int>(changes.size()));
 		}
 
 		void testHashAvailable() {
-			std::auto_ptr<EntityCapsManager> testling = createManager();
+			boost::shared_ptr<EntityCapsManager> testling = createManager();
 			sendPresenceWithCaps(user1, capsInfo1);
 
 			capsProvider->caps[capsInfo1->getVersion()] = discoInfo1;
@@ -92,7 +92,7 @@ class EntityCapsManagerTest : public CppUnit::TestFixture {
 		}
 
 		void testReceiveUnknownHashAfterKnownHashTriggersChangeAndClearsCaps() {
-			std::auto_ptr<EntityCapsManager> testling = createManager();
+			boost::shared_ptr<EntityCapsManager> testling = createManager();
 			capsProvider->caps[capsInfo1->getVersion()] = discoInfo1;
 			sendPresenceWithCaps(user1, capsInfo1);
 			changes.clear();
@@ -104,7 +104,7 @@ class EntityCapsManagerTest : public CppUnit::TestFixture {
 		}
 
 		void testReceiveUnavailablePresenceAfterKnownHashTriggersChangeAndClearsCaps() {
-			std::auto_ptr<EntityCapsManager> testling = createManager();
+			boost::shared_ptr<EntityCapsManager> testling = createManager();
 			capsProvider->caps[capsInfo1->getVersion()] = discoInfo1;
 			sendPresenceWithCaps(user1, capsInfo1);
 			changes.clear();
@@ -116,7 +116,7 @@ class EntityCapsManagerTest : public CppUnit::TestFixture {
 		}
 
 		void testReconnectTriggersChangeAndClearsCaps() {
-			std::auto_ptr<EntityCapsManager> testling = createManager();
+			boost::shared_ptr<EntityCapsManager> testling = createManager();
 			capsProvider->caps[capsInfo1->getVersion()] = discoInfo1;
 			capsProvider->caps[capsInfo2->getVersion()] = discoInfo2;
 			sendPresenceWithCaps(user1, capsInfo1);
@@ -133,8 +133,8 @@ class EntityCapsManagerTest : public CppUnit::TestFixture {
 		}
 
 	private:
-		std::auto_ptr<EntityCapsManager> createManager() {
-			std::auto_ptr<EntityCapsManager> manager(new EntityCapsManager(capsProvider, stanzaChannel));
+		boost::shared_ptr<EntityCapsManager> createManager() {
+			boost::shared_ptr<EntityCapsManager> manager(new EntityCapsManager(capsProvider, stanzaChannel));
 			manager->onCapsChanged.connect(boost::bind(&EntityCapsManagerTest::handleCapsChanged, this, _1));
 			return manager;
 		}

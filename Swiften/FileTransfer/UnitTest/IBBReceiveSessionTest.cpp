@@ -43,7 +43,7 @@ class IBBReceiveSessionTest : public CppUnit::TestFixture {
 		}
 
 		void testOpen() {
-			std::auto_ptr<IBBReceiveSession> testling(createSession("foo@bar.com/baz", "mysession"));
+			boost::shared_ptr<IBBReceiveSession> testling(createSession("foo@bar.com/baz", "mysession"));
 			testling->start();
 			stanzaChannel->onIQReceived(createIBBRequest(IBB::createIBBOpen("mysession", 0x10), "foo@bar.com/baz", "id-open"));
 
@@ -54,7 +54,7 @@ class IBBReceiveSessionTest : public CppUnit::TestFixture {
 		}
 
 		void testReceiveData() {
-			std::auto_ptr<IBBReceiveSession> testling(createSession("foo@bar.com/baz", "mysession"));
+			boost::shared_ptr<IBBReceiveSession> testling(createSession("foo@bar.com/baz", "mysession"));
 			testling->start();
 			stanzaChannel->onIQReceived(createIBBRequest(IBB::createIBBOpen("mysession", 0x10), "foo@bar.com/baz", "id-open"));
 
@@ -68,7 +68,7 @@ class IBBReceiveSessionTest : public CppUnit::TestFixture {
 		}
 
 		void testReceiveMultipleData() {
-			std::auto_ptr<IBBReceiveSession> testling(createSession("foo@bar.com/baz", "mysession"));
+			boost::shared_ptr<IBBReceiveSession> testling(createSession("foo@bar.com/baz", "mysession"));
 			testling->start();
 			stanzaChannel->onIQReceived(createIBBRequest(IBB::createIBBOpen("mysession", 0x10), "foo@bar.com/baz", "id-open"));
 
@@ -83,7 +83,7 @@ class IBBReceiveSessionTest : public CppUnit::TestFixture {
 		}
 
 		void testReceiveDataForOtherSession() {
-			std::auto_ptr<IBBReceiveSession> testling(createSession("foo@bar.com/baz", "mysession"));
+			boost::shared_ptr<IBBReceiveSession> testling(createSession("foo@bar.com/baz", "mysession"));
 			testling->start();
 			stanzaChannel->onIQReceived(createIBBRequest(IBB::createIBBOpen("mysession", 0x10), "foo@bar.com/baz", "id-open"));
 
@@ -95,7 +95,7 @@ class IBBReceiveSessionTest : public CppUnit::TestFixture {
 		}
 
 		void testReceiveDataOutOfOrder() {
-			std::auto_ptr<IBBReceiveSession> testling(createSession("foo@bar.com/baz", "mysession"));
+			boost::shared_ptr<IBBReceiveSession> testling(createSession("foo@bar.com/baz", "mysession"));
 			testling->start();
 			stanzaChannel->onIQReceived(createIBBRequest(IBB::createIBBOpen("mysession", 0x10), "foo@bar.com/baz", "id-open"));
 
@@ -110,7 +110,7 @@ class IBBReceiveSessionTest : public CppUnit::TestFixture {
 		}
 
 		void testReceiveLastData() {
-			std::auto_ptr<IBBReceiveSession> testling(createSession("foo@bar.com/baz", "mysession", 6));
+			boost::shared_ptr<IBBReceiveSession> testling(createSession("foo@bar.com/baz", "mysession", 6));
 			testling->start();
 			stanzaChannel->onIQReceived(createIBBRequest(IBB::createIBBOpen("mysession", 0x10), "foo@bar.com/baz", "id-open"));
 
@@ -126,7 +126,7 @@ class IBBReceiveSessionTest : public CppUnit::TestFixture {
 		}
 
 		void testReceiveClose() {
-			std::auto_ptr<IBBReceiveSession> testling(createSession("foo@bar.com/baz", "mysession"));
+			boost::shared_ptr<IBBReceiveSession> testling(createSession("foo@bar.com/baz", "mysession"));
 			testling->start();
 			stanzaChannel->onIQReceived(createIBBRequest(IBB::createIBBOpen("mysession", 0x10), "foo@bar.com/baz", "id-open"));
 
@@ -139,7 +139,7 @@ class IBBReceiveSessionTest : public CppUnit::TestFixture {
 		}
 
 		void testStopWhileActive() {
-			std::auto_ptr<IBBReceiveSession> testling(createSession("foo@bar.com/baz", "mysession"));
+			boost::shared_ptr<IBBReceiveSession> testling(createSession("foo@bar.com/baz", "mysession"));
 			testling->start();
 			stanzaChannel->onIQReceived(createIBBRequest(IBB::createIBBOpen("mysession", 0x10), "foo@bar.com/baz", "id-open"));
 

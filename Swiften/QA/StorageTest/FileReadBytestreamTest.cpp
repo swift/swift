@@ -31,7 +31,7 @@ class FileReadBytestreamTest : public CppUnit::TestFixture {
 		}
 
 		void testRead() {
-			std::auto_ptr<FileReadBytestream> testling(createTestling());
+			boost::shared_ptr<FileReadBytestream> testling(createTestling());
 
 			std::vector<unsigned char> result = testling->read(10);
 
@@ -39,7 +39,7 @@ class FileReadBytestreamTest : public CppUnit::TestFixture {
 		}
 
 		void testRead_Twice() {
-			std::auto_ptr<FileReadBytestream> testling(createTestling());
+			boost::shared_ptr<FileReadBytestream> testling(createTestling());
 
 			testling->read(10);
 			ByteArray result(testling->read(10));
@@ -48,7 +48,7 @@ class FileReadBytestreamTest : public CppUnit::TestFixture {
 		}
 
 		void testIsFinished_NotFinished() {
-			std::auto_ptr<FileReadBytestream> testling(createTestling());
+			boost::shared_ptr<FileReadBytestream> testling(createTestling());
 
 			testling->read(10);
 
@@ -56,7 +56,7 @@ class FileReadBytestreamTest : public CppUnit::TestFixture {
 		}
 
 		void testIsFinished_IsFinished() {
-			std::auto_ptr<FileReadBytestream> testling(createTestling());
+			boost::shared_ptr<FileReadBytestream> testling(createTestling());
 
 			testling->read(4096);
 

@@ -41,7 +41,7 @@ class IBBSendSessionTest : public CppUnit::TestFixture {
 		}
 
 		void testStart() {
-			std::auto_ptr<IBBSendSession> testling = createSession("foo@bar.com/baz");
+			boost::shared_ptr<IBBSendSession> testling = createSession("foo@bar.com/baz");
 			testling->setBlockSize(1234);
 
 			testling->start();
@@ -55,7 +55,7 @@ class IBBSendSessionTest : public CppUnit::TestFixture {
 		}
 
 		void testStart_ResponseStartsSending() {
-			std::auto_ptr<IBBSendSession> testling = createSession("foo@bar.com/baz");
+			boost::shared_ptr<IBBSendSession> testling = createSession("foo@bar.com/baz");
 			testling->setBlockSize(3);
 			testling->start();
 
@@ -71,7 +71,7 @@ class IBBSendSessionTest : public CppUnit::TestFixture {
 		}
 
 		void testResponseContinuesSending() {
-			std::auto_ptr<IBBSendSession> testling = createSession("foo@bar.com/baz");
+			boost::shared_ptr<IBBSendSession> testling = createSession("foo@bar.com/baz");
 			testling->setBlockSize(3);
 			testling->start();
 			stanzaChannel->onIQReceived(createIBBResult());
@@ -87,7 +87,7 @@ class IBBSendSessionTest : public CppUnit::TestFixture {
 		}
 
 		void testRespondToAllFinishes() {
-			std::auto_ptr<IBBSendSession> testling = createSession("foo@bar.com/baz");
+			boost::shared_ptr<IBBSendSession> testling = createSession("foo@bar.com/baz");
 			testling->setBlockSize(3);
 			testling->start();
 			stanzaChannel->onIQReceived(createIBBResult());
@@ -100,7 +100,7 @@ class IBBSendSessionTest : public CppUnit::TestFixture {
 		}
 
 		void testErrorResponseFinishesWithError() {
-			std::auto_ptr<IBBSendSession> testling = createSession("foo@bar.com/baz");
+			boost::shared_ptr<IBBSendSession> testling = createSession("foo@bar.com/baz");
 			testling->setBlockSize(3);
 			testling->start();
 			stanzaChannel->onIQReceived(IQ::createError(JID("baz@fum.com/foo"), stanzaChannel->sentStanzas[0]->getID()));
@@ -110,7 +110,7 @@ class IBBSendSessionTest : public CppUnit::TestFixture {
 		}
 
 		void testStopDuringSessionCloses() {
-			std::auto_ptr<IBBSendSession> testling = createSession("foo@bar.com/baz");
+			boost::shared_ptr<IBBSendSession> testling = createSession("foo@bar.com/baz");
 			testling->setBlockSize(3);
 			testling->start();
 			testling->stop();
@@ -125,7 +125,7 @@ class IBBSendSessionTest : public CppUnit::TestFixture {
 		}
 
 		void testStopAfterFinishedDoesNotClose() {
-			std::auto_ptr<IBBSendSession> testling = createSession("foo@bar.com/baz");
+			boost::shared_ptr<IBBSendSession> testling = createSession("foo@bar.com/baz");
 			testling->setBlockSize(16);
 			testling->start();
 			stanzaChannel->onIQReceived(createIBBResult());
@@ -143,8 +143,8 @@ class IBBSendSessionTest : public CppUnit::TestFixture {
 		}
 
 	private:
-		std::auto_ptr<IBBSendSession> createSession(const std::string& to) {
-			std::auto_ptr<IBBSendSession> session(new IBBSendSession("myid", JID(to), bytestream, iqRouter));
+		boost::shared_ptr<IBBSendSession> createSession(const std::string& to) {
+			boost::shared_ptr<IBBSendSession> session(new IBBSendSession("myid", JID(to), bytestream, iqRouter));
 			session->onFinished.connect(boost::bind(&IBBSendSessionTest::handleFinished, this, _1));
 			return session;
 		}

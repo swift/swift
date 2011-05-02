@@ -34,7 +34,7 @@ class SQLiteHistoryManagerTest : public CppUnit::TestFixture {
 		}
 
 		void testAddMessage() {
-			std::auto_ptr<SQLiteHistoryManager> testling(createHistoryManager());
+			boost::shared_ptr<SQLiteHistoryManager> testling(createHistoryManager());
 			HistoryMessage testMessage("Test", JID("foo@bar.com"), JID("fum@baz.org"), boost::posix_time::time_from_string("1980-01-21 22:03"));
 			testling->addMessage(testMessage);
 
@@ -44,7 +44,7 @@ class SQLiteHistoryManagerTest : public CppUnit::TestFixture {
 		}
 
 		void testAddMessage_TwoMessages() {
-			std::auto_ptr<SQLiteHistoryManager> testling(createHistoryManager());
+			boost::shared_ptr<SQLiteHistoryManager> testling(createHistoryManager());
 			HistoryMessage testMessage1("Test1", JID("foo@bar.com"), JID("fum@baz.org"), boost::posix_time::time_from_string("1980-01-21 22:03"));
 			testling->addMessage(testMessage1);
 			HistoryMessage testMessage2("Test2", JID("fum@baz.org"), JID("foo@bar.com"), boost::posix_time::time_from_string("1975-03-09 22:04"));
@@ -57,7 +57,7 @@ class SQLiteHistoryManagerTest : public CppUnit::TestFixture {
 		}
 
 		void testGetIDForJID_SameJID() {
-			std::auto_ptr<SQLiteHistoryManager> testling(createHistoryManager());
+			boost::shared_ptr<SQLiteHistoryManager> testling(createHistoryManager());
 			int id1 = testling->getIDForJID(JID("foo@bar.com"));
 			int id2 = testling->getIDForJID(JID("foo@bar.com"));
 
@@ -65,7 +65,7 @@ class SQLiteHistoryManagerTest : public CppUnit::TestFixture {
 		}
 
 		void testGetIDForJID_DifferentJIDs() {
-			std::auto_ptr<SQLiteHistoryManager> testling(createHistoryManager());
+			boost::shared_ptr<SQLiteHistoryManager> testling(createHistoryManager());
 			int id1 = testling->getIDForJID(JID("foo@bar.com"));
 			int id2 = testling->getIDForJID(JID("foo@baz.com"));
 
@@ -73,7 +73,7 @@ class SQLiteHistoryManagerTest : public CppUnit::TestFixture {
 		}
 
 		void getJIDFromID() {
-			std::auto_ptr<SQLiteHistoryManager> testling(createHistoryManager());
+			boost::shared_ptr<SQLiteHistoryManager> testling(createHistoryManager());
 			int id = testling->addJID(JID("foo@bar.com"));
 
 			boost::optional<JID> result(testling->getJIDFromID(id));
@@ -82,7 +82,7 @@ class SQLiteHistoryManagerTest : public CppUnit::TestFixture {
 		}
 
 		void getJIDFromID_UnexistingID() {
-			std::auto_ptr<SQLiteHistoryManager> testling(createHistoryManager());
+			boost::shared_ptr<SQLiteHistoryManager> testling(createHistoryManager());
 
 			boost::optional<JID> result(testling->getJIDFromID(1));
 
@@ -90,7 +90,7 @@ class SQLiteHistoryManagerTest : public CppUnit::TestFixture {
 		}
 
 		void getIDFromJID() {
-			std::auto_ptr<SQLiteHistoryManager> testling(createHistoryManager());
+			boost::shared_ptr<SQLiteHistoryManager> testling(createHistoryManager());
 			int id = testling->addJID(JID("foo@bar.com"));
 
 			boost::optional<int> result(testling->getIDFromJID(JID("foo@bar.com")));
@@ -99,7 +99,7 @@ class SQLiteHistoryManagerTest : public CppUnit::TestFixture {
 		}
 
 		void getIDFromJID_UnexistingJID() {
-			std::auto_ptr<SQLiteHistoryManager> testling(createHistoryManager());
+			boost::shared_ptr<SQLiteHistoryManager> testling(createHistoryManager());
 
 			boost::optional<int> result(testling->getIDFromJID(JID("foo@bar.com")));
 

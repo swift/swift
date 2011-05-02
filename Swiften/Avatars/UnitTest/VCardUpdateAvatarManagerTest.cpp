@@ -60,7 +60,7 @@ class VCardUpdateAvatarManagerTest : public CppUnit::TestFixture {
 		}
 
 		void testUpdate_NewHashNewVCardRequestsVCard() {
-			std::auto_ptr<VCardUpdateAvatarManager> testling = createManager();
+			boost::shared_ptr<VCardUpdateAvatarManager> testling = createManager();
 			stanzaChannel->onPresenceReceived(createPresenceWithPhotoHash(user1, avatar1Hash));
 
 			CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(stanzaChannel->sentStanzas.size()));
@@ -68,7 +68,7 @@ class VCardUpdateAvatarManagerTest : public CppUnit::TestFixture {
 		}
 
 		void testUpdate_NewHashStoresAvatarAndEmitsNotificationOnVCardReceive() {
-			std::auto_ptr<VCardUpdateAvatarManager> testling = createManager();
+			boost::shared_ptr<VCardUpdateAvatarManager> testling = createManager();
 			stanzaChannel->onPresenceReceived(createPresenceWithPhotoHash(user1, avatar1Hash));
 			stanzaChannel->onIQReceived(createVCardResult(avatar1));
 
@@ -80,7 +80,7 @@ class VCardUpdateAvatarManagerTest : public CppUnit::TestFixture {
 		}
 
 		void testUpdate_KnownHash() {
-			std::auto_ptr<VCardUpdateAvatarManager> testling = createManager();
+			boost::shared_ptr<VCardUpdateAvatarManager> testling = createManager();
 			stanzaChannel->onPresenceReceived(createPresenceWithPhotoHash(user1, avatar1Hash));
 			stanzaChannel->onIQReceived(createVCardResult(avatar1));
 			changes.clear();
@@ -93,7 +93,7 @@ class VCardUpdateAvatarManagerTest : public CppUnit::TestFixture {
 		}
 
 		void testUpdate_KnownHashFromDifferentUserDoesNotRequestVCardButTriggersNotification() {
-			std::auto_ptr<VCardUpdateAvatarManager> testling = createManager();
+			boost::shared_ptr<VCardUpdateAvatarManager> testling = createManager();
 			stanzaChannel->onPresenceReceived(createPresenceWithPhotoHash(user1, avatar1Hash));
 			stanzaChannel->onIQReceived(createVCardResult(avatar1));
 			changes.clear();
@@ -108,7 +108,7 @@ class VCardUpdateAvatarManagerTest : public CppUnit::TestFixture {
 		}
 
 		void testVCardWithEmptyPhoto() {
-			std::auto_ptr<VCardUpdateAvatarManager> testling = createManager();
+			boost::shared_ptr<VCardUpdateAvatarManager> testling = createManager();
 			vcardManager->requestVCard(JID("foo@bar.com"));
 			stanzaChannel->onIQReceived(createVCardResult(ByteArray()));
 			
@@ -117,7 +117,7 @@ class VCardUpdateAvatarManagerTest : public CppUnit::TestFixture {
 		}
 
 		void testStanzaChannelReset_ClearsHash() {
-			std::auto_ptr<VCardUpdateAvatarManager> testling = createManager();
+			boost::shared_ptr<VCardUpdateAvatarManager> testling = createManager();
 			stanzaChannel->onPresenceReceived(createPresenceWithPhotoHash(user1, avatar1Hash));
 			stanzaChannel->onIQReceived(createVCardResult(avatar1));
 			changes.clear();
@@ -132,7 +132,7 @@ class VCardUpdateAvatarManagerTest : public CppUnit::TestFixture {
 		}
 
 		void testStanzaChannelReset_ReceiveHashAfterResetUpdatesHash() {
-			std::auto_ptr<VCardUpdateAvatarManager> testling = createManager();
+			boost::shared_ptr<VCardUpdateAvatarManager> testling = createManager();
 			stanzaChannel->onPresenceReceived(createPresenceWithPhotoHash(user1, avatar1Hash));
 			stanzaChannel->onIQReceived(createVCardResult(avatar1));
 			changes.clear();
@@ -148,8 +148,8 @@ class VCardUpdateAvatarManagerTest : public CppUnit::TestFixture {
 		}
 
 	private:
-		std::auto_ptr<VCardUpdateAvatarManager> createManager() {
-			std::auto_ptr<VCardUpdateAvatarManager> result(new VCardUpdateAvatarManager(vcardManager, stanzaChannel, avatarStorage, mucRegistry));
+		boost::shared_ptr<VCardUpdateAvatarManager> createManager() {
+			boost::shared_ptr<VCardUpdateAvatarManager> result(new VCardUpdateAvatarManager(vcardManager, stanzaChannel, avatarStorage, mucRegistry));
 			result->onAvatarChanged.connect(boost::bind(&VCardUpdateAvatarManagerTest::handleAvatarChanged, this, _1));
 			return result;
 		}
