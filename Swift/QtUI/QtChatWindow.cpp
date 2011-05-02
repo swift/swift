@@ -71,9 +71,7 @@ QtChatWindow::QtChatWindow(const QString &contact, QtChatTheme* theme, UIEventSt
 	labelsWidget_->setSizeAdjustPolicy(QComboBox::AdjustToContents);
 	midBarLayout->addWidget(labelsWidget_,0);
 
-	QWidget* inputBar = new QWidget(this);
-	layout->addWidget(inputBar);
-	QHBoxLayout* inputBarLayout = new QHBoxLayout(inputBar);
+	QHBoxLayout* inputBarLayout = new QHBoxLayout();
 	inputBarLayout->setContentsMargins(0,0,0,0);
 	inputBarLayout->setSpacing(2);
 	input_ = new QtTextEdit(this);
@@ -82,6 +80,7 @@ QtChatWindow::QtChatWindow(const QString &contact, QtChatTheme* theme, UIEventSt
 	correctingLabel_ = new QLabel(tr("Correcting"), this);
 	inputBarLayout->addWidget(correctingLabel_);
 	correctingLabel_->hide();
+	layout->addLayout(inputBarLayout);
 
 	inputClearing_ = false;
 	contactIsTyping_ = false;
