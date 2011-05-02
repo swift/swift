@@ -4,8 +4,7 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#ifndef SWIFTEN_AuthFailureParser_H
-#define SWIFTEN_AuthFailureParser_H
+#pragma once
 
 #include <Swiften/Parser/GenericElementParser.h>
 #include <Swiften/Elements/AuthFailure.h>
@@ -16,5 +15,3 @@ namespace Swift {
 			AuthFailureParser() : GenericElementParser<AuthFailure>() {}
 	};
 }
-
-#endif

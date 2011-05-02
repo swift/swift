@@ -4,8 +4,7 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#ifndef SWIFTEN_IQHandler_H
-#define SWIFTEN_IQHandler_H
+#pragma once
 
 #include <boost/shared_ptr.hpp>
 
@@ -21,5 +20,3 @@ namespace Swift {
 			virtual bool handleIQ(boost::shared_ptr<IQ>) = 0;
 	};
 }
-
-#endif

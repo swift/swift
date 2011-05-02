@@ -4,8 +4,7 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#ifndef SWIFTEN_SecurityLabelsCatalogParserFactory_H
-#define SWIFTEN_SecurityLabelsCatalogParserFactory_H
+#pragma once
 
 #include <Swiften/Parser/GenericPayloadParserFactory.h>
 #include <Swiften/Parser/PayloadParsers/SecurityLabelsCatalogParser.h>
@@ -16,5 +15,3 @@ namespace Swift {
 			SecurityLabelsCatalogParserFactory() : GenericPayloadParserFactory<SecurityLabelsCatalogParser>("catalog", "urn:xmpp:sec-label:catalog:2") {}
 	};
 }
-
-#endif

@@ -4,8 +4,7 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#ifndef SWIFTEN_PAYLOADPARSERFACTORYCOLLECTION_H
-#define SWIFTEN_PAYLOADPARSERFACTORYCOLLECTION_H
+#pragma once
 
 #include <vector>
 
@@ -13,7 +12,6 @@
 
 namespace Swift {
 	class PayloadParserFactory;
-	
 
 	class PayloadParserFactoryCollection {
 		public:
@@ -30,5 +28,3 @@ namespace Swift {
 			PayloadParserFactory* defaultFactory_;
 	};
 }
-
-#endif

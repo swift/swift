@@ -4,8 +4,7 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#ifndef SWIFTEN_XMLNode_H
-#define SWIFTEN_XMLNode_H
+#pragma once
 
 #include <string>
 
@@ -17,5 +16,3 @@ namespace Swift {
 			virtual std::string serialize() = 0;
 	};
 }
-
-#endif

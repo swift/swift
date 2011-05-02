@@ -4,8 +4,7 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#ifndef SWIFTEN_StatusShowSerializer_H
-#define SWIFTEN_StatusShowSerializer_H
+#pragma once
 
 #include <Swiften/Serializer/GenericPayloadSerializer.h>
 #include <Swiften/Elements/StatusShow.h>
@@ -35,5 +34,3 @@ namespace Swift {
 			}
 	};
 }
-
-#endif

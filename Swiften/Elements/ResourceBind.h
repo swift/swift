@@ -4,16 +4,14 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#ifndef SWIFTEN_ResourceBind_H
-#define SWIFTEN_ResourceBind_H
+#pragma once
 
 #include <string>
 #include <Swiften/Elements/Payload.h>
 #include <Swiften/JID/JID.h>
 
 namespace Swift {
-	class ResourceBind : public Payload
-	{
+	class ResourceBind : public Payload {
 		public:
 			ResourceBind() {}
 
@@ -38,5 +36,3 @@ namespace Swift {
 			std::string resource_;
 	};
 }
-
-#endif

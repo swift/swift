@@ -4,8 +4,7 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#ifndef SWIFTEN_TLSProceedParser_H
-#define SWIFTEN_TLSProceedParser_H
+#pragma once
 
 #include <Swiften/Parser/GenericElementParser.h>
 #include <Swiften/Elements/TLSProceed.h>
@@ -16,5 +15,3 @@ namespace Swift {
 			TLSProceedParser() : GenericElementParser<TLSProceed>() {}
 	};
 }
-
-#endif

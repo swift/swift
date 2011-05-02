@@ -4,8 +4,7 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#ifndef SWIFTEN_SecurityLabelsCatalogSerializer_H
-#define SWIFTEN_SecurityLabelsCatalogSerializer_H
+#pragma once
 
 #include <Swiften/Serializer/GenericPayloadSerializer.h>
 #include <Swiften/Elements/SecurityLabelsCatalog.h>
@@ -18,5 +17,3 @@ namespace Swift {
 			virtual std::string serializePayload(boost::shared_ptr<SecurityLabelsCatalog> version)  const;
 	};
 }
-
-#endif

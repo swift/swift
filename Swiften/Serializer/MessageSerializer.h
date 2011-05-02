@@ -4,8 +4,7 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#ifndef SWIFTEN_MessageSerializer_H
-#define SWIFTEN_MessageSerializer_H
+#pragma once
 
 #include <Swiften/Serializer/GenericStanzaSerializer.h>
 #include <Swiften/Elements/Message.h>
@@ -23,5 +22,3 @@ namespace Swift {
 					XMLElement& element) const;
 	};
 }
-
-#endif

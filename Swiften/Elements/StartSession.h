@@ -4,8 +4,7 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#ifndef SWIFTEN_StartSession_H
-#define SWIFTEN_StartSession_H
+#pragma once
 
 #include <string>
 #include <Swiften/Elements/Payload.h>
@@ -16,5 +15,3 @@ namespace Swift {
 			StartSession() {}
 	};
 }
-
-#endif

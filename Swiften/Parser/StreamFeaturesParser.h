@@ -4,8 +4,7 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#ifndef SWIFTEN_STREAMFEATURESPARSER_H
-#define SWIFTEN_STREAMFEATURESPARSER_H
+#pragma once
 
 #include <string>
 #include <Swiften/Parser/GenericElementParser.h>
@@ -30,5 +29,3 @@ namespace Swift {
 			bool inCompressionMethod_;
 	};
 }
-
-#endif

@@ -4,8 +4,7 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#ifndef SWIFTEN_UnknownElementParser_H
-#define SWIFTEN_UnknownElementParser_H
+#pragma once
 
 #include <Swiften/Parser/GenericElementParser.h>
 #include <Swiften/Elements/UnknownElement.h>
@@ -16,5 +15,3 @@ namespace Swift {
 			UnknownElementParser() : GenericElementParser<UnknownElement>() {}
 	};
 }
-
-#endif

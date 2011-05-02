@@ -4,8 +4,8 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#ifndef SWIFTEN_CompressFailure_H
-#define SWIFTEN_CompressFailure_H
+#pragma once
+
 
 #include <Swiften/Elements/Element.h>
 
@@ -15,5 +15,3 @@ namespace Swift {
 			CompressFailure() {}
 	};
 }
-
-#endif

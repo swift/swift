@@ -4,8 +4,7 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#ifndef SWIFTEN_IQChannel_H
-#define SWIFTEN_IQChannel_H
+#pragma once
 
 #include <Swiften/Base/boost_bsignals.h>
 #include <boost/shared_ptr.hpp>
@@ -26,5 +25,3 @@ namespace Swift {
 			boost::signal<void (boost::shared_ptr<IQ>)> onIQReceived;
 	};
 }
-
-#endif

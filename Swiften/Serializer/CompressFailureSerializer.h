@@ -4,8 +4,7 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#ifndef SWIFTEN_CompressFailureSerializer_H
-#define SWIFTEN_CompressFailureSerializer_H
+#pragma once
 
 #include <boost/shared_ptr.hpp>
 
@@ -24,5 +23,3 @@ namespace Swift {
 			}
 	};
 }
-
-#endif

@@ -4,8 +4,7 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#ifndef SWIFTEN_StanzaParserTester_H
-#define SWIFTEN_StanzaParserTester_H
+#pragma once
 
 #include <Swiften/Parser/StanzaParser.h>
 #include <Swiften/Parser/UnitTest/ParserTester.h>
@@ -13,5 +12,3 @@
 namespace Swift {
 	typedef ParserTester<StanzaParser> StanzaParserTester;
 }
-
-#endif

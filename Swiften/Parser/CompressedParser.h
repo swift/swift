@@ -4,8 +4,7 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#ifndef SWIFTEN_COMPRESSEDPARSER_H
-#define SWIFTEN_COMPRESSEDPARSER_H
+#pragma once
 
 #include <Swiften/Parser/GenericElementParser.h>
 #include <Swiften/Elements/Compressed.h>
@@ -16,5 +15,3 @@ namespace Swift {
 			CompressedParser() : GenericElementParser<Compressed>() {}
 	};
 }
-
-#endif

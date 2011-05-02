@@ -4,8 +4,7 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#ifndef SWIFTEN_SoftwareVersionParser_H
-#define SWIFTEN_SoftwareVersionParser_H
+#pragma once
 
 #include <Swiften/Elements/SoftwareVersion.h>
 #include <Swiften/Parser/GenericPayloadParser.h>
@@ -28,5 +27,3 @@ namespace Swift {
 			std::string currentText_;
 	};
 }
-
-#endif

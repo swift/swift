@@ -4,8 +4,8 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#ifndef SWIFTEN_ParserTester_H
-#define SWIFTEN_ParserTester_H
+#pragma once
+
 
 #include <Swiften/Parser/XMLParserClient.h>
 #include <Swiften/Parser/PlatformXMLParserFactory.h>
@@ -46,5 +46,3 @@ namespace Swift {
 			ParserType* parser_;
 	};
 }
-
-#endif

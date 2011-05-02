@@ -4,8 +4,7 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#ifndef SWIFTEN_AuthRequestSerializer_H
-#define SWIFTEN_AuthRequestSerializer_H
+#pragma once
 
 #include <boost/shared_ptr.hpp>
 
@@ -20,5 +19,3 @@ namespace Swift {
 			virtual std::string serialize(boost::shared_ptr<Element> element)  const;
 	};
 }
-
-#endif

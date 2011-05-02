@@ -4,8 +4,7 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#ifndef SWIFTEN_CompressFailureParser_H
-#define SWIFTEN_CompressFailureParser_H
+#pragma once
 
 #include <Swiften/Parser/GenericElementParser.h>
 #include <Swiften/Elements/CompressFailure.h>
@@ -16,5 +15,3 @@ namespace Swift {
 			CompressFailureParser() : GenericElementParser<CompressFailure>() {}
 	};
 }
-
-#endif

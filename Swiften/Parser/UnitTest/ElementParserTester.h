@@ -4,13 +4,11 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#ifndef SWIFTEN_ElementParserTester_H
-#define SWIFTEN_ElementParserTester_H
+#pragma once
+
 
 #include <Swiften/Parser/UnitTest/ParserTester.h>
 
 namespace Swift {
 	typedef ParserTester<ElementParser> ElementParserTester;
 }
-
-#endif

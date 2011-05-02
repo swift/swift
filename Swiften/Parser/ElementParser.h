@@ -4,8 +4,7 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#ifndef SWIFTEN_ElementParser_H
-#define SWIFTEN_ElementParser_H
+#pragma once
 
 #include <boost/shared_ptr.hpp>
 
@@ -25,5 +24,3 @@ namespace Swift {
 			virtual boost::shared_ptr<Element> getElement() const = 0;
 	};
 }
-
-#endif

@@ -4,8 +4,7 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#ifndef SWIFTEN_PKCS12Certificate_H
-#define SWIFTEN_PKCS12Certificate_H
+#pragma once
 
 #include <Swiften/Base/ByteArray.h>
 
@@ -39,5 +38,3 @@ namespace Swift {
 			std::string password_;
 	};
 }
-
-#endif

@@ -4,8 +4,7 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#ifndef SWIFTEN_BodySerializer_H
-#define SWIFTEN_BodySerializer_H
+#pragma once
 
 #include <Swiften/Serializer/GenericPayloadSerializer.h>
 #include <Swiften/Serializer/XML/XMLTextNode.h>
@@ -22,5 +21,3 @@ namespace Swift {
 			}
 	};
 }
-
-#endif

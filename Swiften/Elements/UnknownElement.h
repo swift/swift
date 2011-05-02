@@ -4,8 +4,7 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#ifndef SWIFTEN_UnknownElement_H
-#define SWIFTEN_UnknownElement_H
+#pragma once
 
 #include <Swiften/Elements/Element.h>
 
@@ -15,5 +14,3 @@ namespace Swift {
 			UnknownElement() {}
 	};
 }
-
-#endif

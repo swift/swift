@@ -4,8 +4,7 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#ifndef SWIFTEN_MESSAGEPARSER_H
-#define SWIFTEN_MESSAGEPARSER_H
+#pragma once
 
 #include <Swiften/Parser/GenericStanzaParser.h>
 #include <Swiften/Elements/Message.h>
@@ -19,5 +18,3 @@ namespace Swift {
 			virtual void handleStanzaAttributes(const AttributeMap&);
 	};
 }
-
-#endif

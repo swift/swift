@@ -4,8 +4,7 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#ifndef SWIFTEN_PrioritySerializer_H
-#define SWIFTEN_PrioritySerializer_H
+#pragma once
 
 #include <boost/lexical_cast.hpp>
 
@@ -22,5 +21,3 @@ namespace Swift {
 			}
 	};
 }
-
-#endif

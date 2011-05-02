@@ -4,8 +4,7 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#ifndef SWIFTEN_SecurityLabelsCatalogParser_H
-#define SWIFTEN_SecurityLabelsCatalogParser_H
+#pragma once
 
 #include <Swiften/Elements/SecurityLabelsCatalog.h>
 #include <Swiften/Parser/GenericPayloadParser.h>
@@ -36,5 +35,3 @@ namespace Swift {
 			boost::shared_ptr<SecurityLabelsCatalog::Item> currentItem_;
 	};
 }
-
-#endif

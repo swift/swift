@@ -4,8 +4,7 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#ifndef SWIFTEN_CompressRequest_H
-#define SWIFTEN_CompressRequest_H
+#pragma once
 
 #include <Swiften/Elements/Element.h>
 
@@ -27,5 +26,3 @@ namespace Swift {
 			std::string method_;
 	};
 }
-
-#endif

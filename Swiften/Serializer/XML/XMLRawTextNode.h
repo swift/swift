@@ -4,8 +4,7 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#ifndef SWIFTEN_XMLRawTextNode_H
-#define SWIFTEN_XMLRawTextNode_H
+#pragma once
 
 #include <Swiften/Serializer/XML/XMLNode.h>
 
@@ -23,5 +22,3 @@ namespace Swift {
 			std::string text_;
 	};
 }
-
-#endif

@@ -4,8 +4,7 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#ifndef SWIFTEN_StatusSerializer_H
-#define SWIFTEN_StatusSerializer_H
+#pragma once
 
 #include <Swiften/Serializer/GenericPayloadSerializer.h>
 #include <Swiften/Serializer/XML/XMLElement.h>
@@ -24,5 +23,3 @@ namespace Swift {
 			}
 	};
 }
-
-#endif

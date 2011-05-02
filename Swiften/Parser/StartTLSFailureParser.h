@@ -4,8 +4,7 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#ifndef SWIFTEN_StartTLSFailureParser_H
-#define SWIFTEN_StartTLSFailureParser_H
+#pragma once
 
 #include <Swiften/Parser/GenericElementParser.h>
 #include <Swiften/Elements/StartTLSFailure.h>
@@ -16,5 +15,3 @@ namespace Swift {
 			StartTLSFailureParser() : GenericElementParser<StartTLSFailure>() {}
 	};
 }
-
-#endif

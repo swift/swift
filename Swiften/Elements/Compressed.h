@@ -4,17 +4,13 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#ifndef SWIFTEN_COMPRESSED_H
-#define SWIFTEN_COMPRESSED_H
+#pragma once
 
 #include <Swiften/Elements/Element.h>
 
 namespace Swift {
-	class Compressed : public Element
-	{
+	class Compressed : public Element {
 		public:
 			Compressed() {}
 	};
 }
-
-#endif

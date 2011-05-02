@@ -4,8 +4,7 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#ifndef SWIFTEN_StartTLSParser_H
-#define SWIFTEN_StartTLSParser_H
+#pragma once
 
 #include <Swiften/Parser/GenericElementParser.h>
 #include <Swiften/Elements/StartTLSRequest.h>
@@ -16,5 +15,3 @@ namespace Swift {
 			StartTLSParser() : GenericElementParser<StartTLSRequest>() {}
 	};
 }
-
-#endif

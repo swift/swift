@@ -4,8 +4,7 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#ifndef SWIFTEN_SecurityLabelParser_H
-#define SWIFTEN_SecurityLabelParser_H
+#pragma once
 
 #include <Swiften/Elements/SecurityLabel.h>
 #include <Swiften/Parser/GenericPayloadParser.h>
@@ -33,5 +32,3 @@ namespace Swift {
 			std::string currentText_;
 	};
 }
-
-#endif

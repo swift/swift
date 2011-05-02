@@ -4,8 +4,7 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#ifndef SWIFTEN_GENERICSTANZASERIALIZER_H
-#define SWIFTEN_GENERICSTANZASERIALIZER_H
+#pragma once
 
 #include <Swiften/Serializer/StanzaSerializer.h>
 
@@ -31,5 +30,3 @@ namespace Swift {
 					XMLElement&) const = 0;
 	};
 }
-
-#endif

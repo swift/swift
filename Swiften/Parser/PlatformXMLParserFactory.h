@@ -4,8 +4,7 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#ifndef SWIFTEN_PlatformXMLParserFactory_H
-#define SWIFTEN_PlatformXMLParserFactory_H
+#pragma once
 
 #include <Swiften/Parser/XMLParserFactory.h>
 
@@ -17,5 +16,3 @@ namespace Swift {
 			virtual XMLParser* createXMLParser(XMLParserClient*);
 	};
 }
-
-#endif

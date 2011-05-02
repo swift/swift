@@ -4,8 +4,7 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#ifndef SWIFTEN_XMPPPARSER_H
-#define SWIFTEN_XMPPPARSER_H
+#pragma once
 
 #include <boost/shared_ptr.hpp>
 #include <boost/noncopyable.hpp>
@@ -53,5 +52,3 @@ namespace Swift {
 			bool parseErrorOccurred_;
 	};
 }
-
-#endif

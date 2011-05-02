@@ -4,8 +4,7 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#ifndef SWIFTEN_AuthRequestParser_H
-#define SWIFTEN_AuthRequestParser_H
+#pragma once
 
 #include <Swiften/Parser/GenericElementParser.h>
 #include <Swiften/Elements/AuthRequest.h>
@@ -25,5 +24,3 @@ namespace Swift {
 			int depth_;
 	};
 }
-
-#endif

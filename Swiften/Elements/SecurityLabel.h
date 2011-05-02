@@ -4,8 +4,7 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#ifndef SWIFTEN_SecurityLabel_H
-#define SWIFTEN_SecurityLabel_H
+#pragma once
 
 #include <vector>
 
@@ -59,5 +58,3 @@ namespace Swift {
 			std::vector<std::string> equivalentLabels_;
 	};
 }
-
-#endif

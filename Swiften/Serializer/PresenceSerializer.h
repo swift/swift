@@ -4,8 +4,7 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#ifndef SWIFTEN_PresenceSerializer_H
-#define SWIFTEN_PresenceSerializer_H
+#pragma once
 
 #include <Swiften/Serializer/GenericStanzaSerializer.h>
 #include <Swiften/Elements/Presence.h>
@@ -21,5 +20,3 @@ namespace Swift {
 					XMLElement& element) const;
 	};
 }
-
-#endif

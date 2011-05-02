@@ -4,8 +4,7 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#ifndef SWIFTEN_IQSerializer_H
-#define SWIFTEN_IQSerializer_H
+#pragma once
 
 #include <Swiften/Serializer/GenericStanzaSerializer.h>
 #include <Swiften/Elements/IQ.h>
@@ -30,5 +29,3 @@ namespace Swift {
 			}
 	};
 }
-
-#endif

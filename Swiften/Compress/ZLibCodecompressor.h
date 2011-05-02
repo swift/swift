@@ -4,8 +4,7 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#ifndef SWIFTEN_ZLibCodecompressor_H
-#define SWIFTEN_ZLibCodecompressor_H
+#pragma once
 
 #include <zlib.h>
 
@@ -24,5 +23,3 @@ namespace Swift {
 			z_stream stream_;
 	};
 }
-
-#endif

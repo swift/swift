@@ -4,8 +4,7 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#ifndef SWIFTEN_ExpatParser_H
-#define SWIFTEN_ExpatParser_H
+#pragma once
 
 #include <expat.h>
 #include <boost/noncopyable.hpp>
@@ -24,5 +23,3 @@ namespace Swift {
 			XML_Parser parser_;
 	};
 }
-
-#endif

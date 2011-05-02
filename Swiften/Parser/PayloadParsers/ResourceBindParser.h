@@ -4,8 +4,7 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#ifndef SWIFTEN_ResourceBindParser_H
-#define SWIFTEN_ResourceBindParser_H
+#pragma once
 
 #include <Swiften/Elements/ResourceBind.h>
 #include <Swiften/Parser/GenericPayloadParser.h>
@@ -26,5 +25,3 @@ namespace Swift {
 			std::string text_;
 	};
 }
-
-#endif

@@ -4,8 +4,7 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#ifndef SWIFTEN_STANZASERIALIZER_H
-#define SWIFTEN_STANZASERIALIZER_H
+#pragma once
 
 #include <Swiften/Elements/Stanza.h>
 #include <Swiften/Serializer/ElementSerializer.h>
@@ -27,5 +26,3 @@ namespace Swift {
 			PayloadSerializerCollection* payloadSerializers_;
 	};
 }
-
-#endif

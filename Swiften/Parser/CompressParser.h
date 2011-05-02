@@ -4,8 +4,7 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#ifndef SWIFTEN_CompressParser_H
-#define SWIFTEN_CompressParser_H
+#pragma once
 
 #include <string>
 #include <Swiften/Parser/GenericElementParser.h>
@@ -27,5 +26,3 @@ namespace Swift {
 			bool inMethod_;
 	};
 }
-
-#endif

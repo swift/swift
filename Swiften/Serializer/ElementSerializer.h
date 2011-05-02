@@ -4,8 +4,7 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#ifndef SWIFTEN_ELEMENTSERIALIZER_H
-#define SWIFTEN_ELEMENTSERIALIZER_H
+#pragma once
 
 #include <boost/shared_ptr.hpp>
 
@@ -21,5 +20,3 @@ namespace Swift {
 			virtual bool canSerialize(boost::shared_ptr<Element> element) const = 0;
 	};
 }
-
-#endif

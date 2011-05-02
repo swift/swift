@@ -4,8 +4,7 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#ifndef SWIFTEN_StatusParser_H
-#define SWIFTEN_StatusParser_H
+#pragma once
 
 #include <Swiften/Elements/Status.h>
 #include <Swiften/Parser/GenericPayloadParser.h>
@@ -24,5 +23,3 @@ namespace Swift {
 			std::string text_;
 	};
 }
-
-#endif

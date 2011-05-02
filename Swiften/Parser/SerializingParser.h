@@ -4,8 +4,7 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#ifndef SWIFTEN_SerializingParser_H
-#define SWIFTEN_SerializingParser_H
+#pragma once
 
 #include <string>
 #include <Swiften/Parser/AttributeMap.h>
@@ -27,5 +26,3 @@ namespace Swift {
 			boost::shared_ptr<XMLElement> rootElement_;
 	};
 }
-
-#endif

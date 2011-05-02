@@ -4,8 +4,7 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#ifndef SWIFTEN_RosterParser_H
-#define SWIFTEN_RosterParser_H
+#pragma once
 
 #include <Swiften/Elements/RosterPayload.h>
 #include <Swiften/Parser/GenericPayloadParser.h>
@@ -34,5 +33,3 @@ namespace Swift {
 			SerializingParser* unknownContentParser_;
 	};
 }
-
-#endif

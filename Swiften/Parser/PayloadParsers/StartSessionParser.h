@@ -4,8 +4,7 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#ifndef SWIFTEN_StartSessionParser_H
-#define SWIFTEN_StartSessionParser_H
+#pragma once
 
 #include <Swiften/Elements/StartSession.h>
 #include <Swiften/Parser/GenericPayloadParser.h>
@@ -20,5 +19,3 @@ namespace Swift {
 			virtual void handleCharacterData(const std::string&) {}
 	};
 }
-
-#endif

@@ -4,8 +4,8 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#ifndef SWIFTEN_ZLIBEXCEPTION_H
-#define SWIFTEN_ZLIBEXCEPTION_H
+#pragma once
+
 
 namespace Swift {
 	class ZLibException {
@@ -13,5 +13,3 @@ namespace Swift {
 			ZLibException() {}
 	};
 }
-
-#endif

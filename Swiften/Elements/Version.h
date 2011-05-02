@@ -4,15 +4,13 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#ifndef SWIFTEN_STANZAS_VERSION_H
-#define SWIFTEN_STANZAS_VERSION_H
+#pragma once
 
 #include <string>
 #include <Swiften/Elements/Payload.h>
 
 namespace Swift {
-	class Version : public Payload
-	{
+	class Version : public Payload {
 		public:
 			Version(const std::string& name = "", const std::string& version = "", const std::string& os = "") : name_(name), version_(version), os_(os) { }
 
@@ -26,5 +24,3 @@ namespace Swift {
 			std::string os_;
 	};
 }
-
-#endif

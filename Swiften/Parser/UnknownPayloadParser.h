@@ -4,16 +4,13 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#ifndef SWIFTEN_UNKNOWNPAYLOADPARSER_H
-#define SWIFTEN_UNKNOWNPAYLOADPARSER_H
+#pragma once
 
 #include <boost/shared_ptr.hpp>
 
 #include <Swiften/Parser/PayloadParser.h>
 
 namespace Swift {
-	
-
 	class UnknownPayloadParser : public PayloadParser {
 		public:
 			UnknownPayloadParser() {}
@@ -27,5 +24,3 @@ namespace Swift {
 			}
 	};
 }
-
-#endif
