@@ -37,6 +37,9 @@ namespace Swift {
 			virtual void replaceMessage(const std::string&, const std::string&, const boost::posix_time::ptime&) {};
 			void setAckState(const std::string& /*id*/, AckState /*state*/) {};
 			virtual void flash() {};
+			virtual void setAlert(const std::string& /*alertText*/, const std::string& /*buttonText*/) {};
+			virtual void cancelAlert() {};
+			virtual void setCorrectionEnabled(Tristate /*enabled*/) {}
 
 			boost::signal<void ()> onClosed;
 			boost::signal<void ()> onAllMessagesRead;

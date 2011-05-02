@@ -35,6 +35,7 @@ namespace Swift {
 			void handleStanzaAcked(boost::shared_ptr<Stanza> stanza);
 			void dayTicked() {lastWasPresence_ = false;}
 			void handleContactNickChanged(const JID& jid, const std::string& /*oldNick*/);
+			void handleBareJIDCapsChanged(const JID& jid);
 
 		private:
 			NickResolver* nickResolver_;

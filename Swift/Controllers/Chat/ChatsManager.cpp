@@ -480,7 +480,7 @@ void ChatsManager::handleJoinMUCRequest(const JID &mucJID, const boost::optional
 	} else {
 		std::string nick = nickMaybe ? nickMaybe.get() : jid_.getNode();
 		MUC::ref muc = mucManager->createMUC(mucJID);
-		MUCController* controller = new MUCController(jid_, muc, nick, stanzaChannel_, iqRouter_, chatWindowFactory_, presenceOracle_, avatarManager_, uiEventStream_, false, timerFactory_, eventController_);
+		MUCController* controller = new MUCController(jid_, muc, nick, stanzaChannel_, iqRouter_, chatWindowFactory_, presenceOracle_, avatarManager_, uiEventStream_, false, timerFactory_, eventController_, entityCapsProvider_);
 		mucControllers_[mucJID] = controller;
 		controller->setAvailableServerFeatures(serverDiscoInfo_);
 		controller->onUserLeft.connect(boost::bind(&ChatsManager::handleUserLeftMUC, this, controller));

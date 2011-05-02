@@ -30,6 +30,7 @@
 #include <Swift/Controllers/Roster/Roster.h>
 #include <Swift/Controllers/Roster/SetAvatar.h>
 #include <Swift/Controllers/Roster/SetPresence.h>
+#include <Swiften/Disco/EntityCapsProvider.h>
 
 
 #define MUC_JOIN_WARNING_TIMEOUT_MILLISECONDS 60000
@@ -51,8 +52,9 @@ MUCController::MUCController (
 		UIEventStream* uiEventStream,
 		bool useDelayForLatency,
 		TimerFactory* timerFactory,
-		EventController* eventController) :
-			ChatControllerBase(self, stanzaChannel, iqRouter, chatWindowFactory, muc->getJID(), presenceOracle, avatarManager, useDelayForLatency, uiEventStream, eventController, timerFactory), muc_(muc), nick_(nick), desiredNick_(nick) {
+		EventController* eventController,
+		EntityCapsProvider* entityCapsProvider) :
+			ChatControllerBase(self, stanzaChannel, iqRouter, chatWindowFactory, muc->getJID(), presenceOracle, avatarManager, useDelayForLatency, uiEventStream, eventController, timerFactory, entityCapsProvider), muc_(muc), nick_(nick), desiredNick_(nick) {
 	parting_ = true;
 	joined_ = false;
 	lastWasPresence_ = false;
@@ -82,6 +84,7 @@ MUCController::MUCController (
 	if (avatarManager_ != NULL) {
 		avatarChangedConnection_ = (avatarManager_->onAvatarChanged.connect(boost::bind(&MUCController::handleAvatarChanged, this, _1)));
 	} 
+	handleBareJIDCapsChanged(muc->getJID());
 }
 
 MUCController::~MUCController() {
@@ -92,6 +95,23 @@ MUCController::~MUCController() {
 	}
 	chatWindow_->setTabComplete(NULL);
 	delete completer_;
+}
+
+void MUCController::handleBareJIDCapsChanged(const JID& /*jid*/) {
+	ChatWindow::Tristate support = ChatWindow::Yes;
+	bool any = false;
+	foreach (const std::string& nick, currentOccupants_) {
+		DiscoInfo::ref disco = entityCapsProvider_->getCaps(toJID_.toBare().toString() + "/" + nick);
+		if (disco && disco->hasFeature(DiscoInfo::MessageCorrectionFeature)) {
+			any = true;
+		} else {
+			support = ChatWindow::Maybe;
+		}
+	}
+	if (!any) {
+		support = ChatWindow::No;
+	}
+	chatWindow_->setCorrectionEnabled(support);
 }
 
 /**

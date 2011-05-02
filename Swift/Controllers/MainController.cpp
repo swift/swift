@@ -288,6 +288,7 @@ void MainController::handleConnected() {
 		discoInfo.addIdentity(DiscoInfo::Identity(CLIENT_NAME, "client", "pc"));
 		discoInfo.addFeature(DiscoInfo::ChatStatesFeature);
 		discoInfo.addFeature(DiscoInfo::SecurityLabelsFeature);
+		discoInfo.addFeature(DiscoInfo::MessageCorrectionFeature);
 		client_->getDiscoManager()->setCapsNode(CLIENT_NODE);
 		client_->getDiscoManager()->setDiscoInfo(discoInfo);
 

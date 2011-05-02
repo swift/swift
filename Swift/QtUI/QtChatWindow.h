@@ -19,6 +19,7 @@ class QLineEdit;
 class QComboBox;
 class QLabel;
 class QSplitter;
+class QPushButton;
 
 namespace Swift {
 	class QtChatView;
@@ -63,6 +64,9 @@ namespace Swift {
 		public slots:
 			void handleChangeSplitterState(QByteArray state);
 			void handleFontResized(int fontSizeSteps);
+			void setAlert(const std::string& alertText, const std::string& buttonText = "");
+			void cancelAlert();
+			void setCorrectionEnabled(Tristate enabled);
 
 		signals:
 			void geometryChanged();
@@ -83,6 +87,7 @@ namespace Swift {
 			void handleInputChanged();
 			void handleKeyPressEvent(QKeyEvent* event);
 			void handleSplitterMoved(int pos, int index);
+			void handleAlertButtonClicked();
 
 		private:
 			void updateTitleWithUnreadCount();
@@ -102,6 +107,9 @@ namespace Swift {
 			QComboBox* labelsWidget_;
 			QtTreeWidget* treeWidget_;
 			QLabel* correctingLabel_;
+			QLabel* alertLabel_;
+			QWidget* alertWidget_;
+			QPushButton* alertButton_;
 			TabComplete* completer_;
 			std::vector<SecurityLabelsCatalog::Item> availableLabels_;
 			bool isCorrection_;
@@ -114,5 +122,6 @@ namespace Swift {
 			bool inputEnabled_;
 			IDGenerator id_;
 			QSplitter *logRosterSplitter_;
+			Tristate correctionEnabled_;
 	};
 }

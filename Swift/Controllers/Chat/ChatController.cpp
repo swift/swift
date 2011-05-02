@@ -12,16 +12,16 @@
 #include <Swift/Controllers/Intl.h>
 #include <Swiften/Base/format.h>
 #include <Swiften/Base/Algorithm.h>
-#include "Swiften/Avatars/AvatarManager.h"
-#include "Swiften/Chat/ChatStateNotifier.h"
-#include "Swiften/Chat/ChatStateTracker.h"
-#include "Swiften/Client/StanzaChannel.h"
-#include "Swiften/Disco/EntityCapsProvider.h"
-#include "Swift/Controllers/UIInterfaces/ChatWindow.h"
-#include "Swift/Controllers/UIInterfaces/ChatWindowFactory.h"
-#include "Swiften/Client/NickResolver.h"
-#include "Swift/Controllers/XMPPEvents/EventController.h"
+#include <Swiften/Avatars/AvatarManager.h>
+#include <Swiften/Chat/ChatStateNotifier.h>
+#include <Swiften/Chat/ChatStateTracker.h>
+#include <Swiften/Client/StanzaChannel.h>
+#include <Swift/Controllers/UIInterfaces/ChatWindow.h>
+#include <Swift/Controllers/UIInterfaces/ChatWindowFactory.h>
+#include <Swiften/Client/NickResolver.h>
+#include <Swift/Controllers/XMPPEvents/EventController.h>
 #include <Swift/Controllers/StatusUtil.h>
+#include <Swiften/Disco/EntityCapsProvider.h>
 
 namespace Swift {
 	
@@ -29,7 +29,7 @@ namespace Swift {
  * The controller does not gain ownership of the stanzaChannel, nor the factory.
  */
 ChatController::ChatController(const JID& self, StanzaChannel* stanzaChannel, IQRouter* iqRouter, ChatWindowFactory* chatWindowFactory, const JID &contact, NickResolver* nickResolver, PresenceOracle* presenceOracle, AvatarManager* avatarManager, bool isInMUC, bool useDelayForLatency, UIEventStream* eventStream, EventController* eventController, TimerFactory* timerFactory, EntityCapsProvider* entityCapsProvider)
-	: ChatControllerBase(self, stanzaChannel, iqRouter, chatWindowFactory, contact, presenceOracle, avatarManager, useDelayForLatency, eventStream, eventController, timerFactory) {
+	: ChatControllerBase(self, stanzaChannel, iqRouter, chatWindowFactory, contact, presenceOracle, avatarManager, useDelayForLatency, eventStream, eventController, timerFactory, entityCapsProvider) {
 	isInMUC_ = isInMUC;
 	lastWasPresence_ = false;
 	chatStateNotifier_ = new ChatStateNotifier(stanzaChannel, contact, entityCapsProvider);
@@ -60,6 +60,7 @@ ChatController::ChatController(const JID& self, StanzaChannel* stanzaChannel, IQ
 	chatWindow_->addSystemMessage(startMessage);
 	chatWindow_->onUserTyping.connect(boost::bind(&ChatStateNotifier::setUserIsTyping, chatStateNotifier_));
 	chatWindow_->onUserCancelsTyping.connect(boost::bind(&ChatStateNotifier::userCancelledNewMessage, chatStateNotifier_));
+	handleBareJIDCapsChanged(toJID_);
 
 }
 
@@ -75,6 +76,19 @@ ChatController::~ChatController() {
 	delete chatStateTracker_;
 }
 
+void ChatController::handleBareJIDCapsChanged(const JID& /*jid*/) {
+	DiscoInfo::ref disco = entityCapsProvider_->getCaps(toJID_);
+	if (disco) {
+		if (disco->hasFeature(DiscoInfo::MessageCorrectionFeature)) {
+			chatWindow_->setCorrectionEnabled(ChatWindow::Yes);
+		} else {
+			chatWindow_->setCorrectionEnabled(ChatWindow::No);
+		}
+	} else {
+		chatWindow_->setCorrectionEnabled(ChatWindow::Maybe);
+	}
+}
+
 void ChatController::setToJID(const JID& jid) {
 	chatStateNotifier_->setContact(jid);
 	ChatControllerBase::setToJID(jid);
@@ -85,6 +99,7 @@ void ChatController::setToJID(const JID& jid) {
 		presence = jid.isBare() ? presenceOracle_->getHighestPriorityPresence(jid.toBare()) : presenceOracle_->getLastPresence(jid);
 	}
 	chatStateNotifier_->setContactIsOnline(presence && presence->getType() == Presence::Available);
+	handleBareJIDCapsChanged(toJID_);
 }
 
 bool ChatController::isIncomingMessageFromMe(boost::shared_ptr<Message>) {

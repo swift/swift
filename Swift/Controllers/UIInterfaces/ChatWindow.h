@@ -26,6 +26,7 @@ namespace Swift {
 	class ChatWindow {
 		public:
 			enum AckState {Pending, Received, Failed};
+			enum Tristate {Yes, No, Maybe};
 			ChatWindow() {}
 			virtual ~ChatWindow() {};
 
@@ -48,6 +49,7 @@ namespace Swift {
 			virtual void activate() = 0;
 			virtual void setAvailableSecurityLabels(const std::vector<SecurityLabelsCatalog::Item>& labels) = 0;
 			virtual void setSecurityLabelsEnabled(bool enabled) = 0;
+			virtual void setCorrectionEnabled(Tristate enabled) = 0;
 			virtual void setUnreadMessageCount(int count) = 0;
 			virtual void convertToMUC() = 0;
 //			virtual TreeWidget *getTreeWidget() = 0;
@@ -59,6 +61,16 @@ namespace Swift {
 			virtual void replaceLastMessage(const std::string& message) = 0;
 			virtual void setAckState(const std::string& id, AckState state) = 0;
 			virtual void flash() = 0;
+			/**
+			 * Set an alert on the window.
+			 * @param alertText Description of alert (required).
+			 * @param buttonText Button text to use (optional, no button is shown if empty).
+			 */
+			virtual void setAlert(const std::string& alertText, const std::string& buttonText = "") = 0;
+			/**
+			 * Removes an alert.
+			 */
+			virtual void cancelAlert() = 0;
 
 			boost::signal<void ()> onClosed;
 			boost::signal<void ()> onAllMessagesRead;
@@ -66,6 +78,7 @@ namespace Swift {
 			boost::signal<void ()> onSendCorrectionMessageRequest;
 			boost::signal<void ()> onUserTyping;
 			boost::signal<void ()> onUserCancelsTyping;
+			boost::signal<void ()> onAlertButtonClicked;
 	};
 }
 #endif

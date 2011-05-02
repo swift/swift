@@ -25,6 +25,7 @@
 #include "Swiften/Presence/PresenceOracle.h"
 #include "Swiften/Network/TimerFactory.h"
 #include "Swiften/Elements/MUCUserPayload.h"
+#include "Swiften/Disco/DummyEntityCapsProvider.h"
 
 using namespace Swift;
 
@@ -56,12 +57,14 @@ public:
 		TimerFactory* timerFactory = NULL;
 		window_ = new MockChatWindow();//mocks_->InterfaceMock<ChatWindow>();
 		mucRegistry_ = new MUCRegistry();
+		entityCapsProvider_ = new DummyEntityCapsProvider();
 		muc_ = MUC::ref(new MUC(stanzaChannel_, iqRouter_, directedPresenceSender_, JID("teaparty@rooms.wonderland.lit"), mucRegistry_));
 		mocks_->ExpectCall(chatWindowFactory_, ChatWindowFactory::createChatWindow).With(muc_->getJID(), uiEventStream_).Return(window_);
-		controller_ = new MUCController (self_, muc_, nick_, stanzaChannel_, iqRouter_, chatWindowFactory_, presenceOracle_, avatarManager_, uiEventStream_, false, timerFactory, eventController_);
+		controller_ = new MUCController (self_, muc_, nick_, stanzaChannel_, iqRouter_, chatWindowFactory_, presenceOracle_, avatarManager_, uiEventStream_, false, timerFactory, eventController_, entityCapsProvider_);
 	};
 
 	void tearDown() {
+		delete entityCapsProvider_;
 		delete controller_;
 		delete eventController_;
 		delete presenceOracle_;
@@ -240,6 +243,7 @@ private:
 	UIEventStream* uiEventStream_;
 	MockChatWindow* window_;
 	MUCRegistry* mucRegistry_;
+	DummyEntityCapsProvider* entityCapsProvider_;
 };
 
 CPPUNIT_TEST_SUITE_REGISTRATION(MUCControllerTest);

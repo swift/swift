@@ -35,6 +35,7 @@ namespace Swift {
 	class AvatarManager;
 	class UIEventStream;
 	class EventController;
+	class EntityCapsProvider;
 
 	class ChatControllerBase : public boost::bsignals::trackable {
 		public:
@@ -52,8 +53,9 @@ namespace Swift {
 			boost::signal<void ()> onUnreadCountChanged;
 			int getUnreadCount();
 			const JID& getToJID() {return toJID_;}
+			void handleCapsChanged(const JID& jid);
 		protected:
-			ChatControllerBase(const JID& self, StanzaChannel* stanzaChannel, IQRouter* iqRouter, ChatWindowFactory* chatWindowFactory, const JID &toJID, PresenceOracle* presenceOracle, AvatarManager* avatarManager, bool useDelayForLatency, UIEventStream* eventStream, EventController* eventController, TimerFactory* timerFactory);
+			ChatControllerBase(const JID& self, StanzaChannel* stanzaChannel, IQRouter* iqRouter, ChatWindowFactory* chatWindowFactory, const JID &toJID, PresenceOracle* presenceOracle, AvatarManager* avatarManager, bool useDelayForLatency, UIEventStream* eventStream, EventController* eventController, TimerFactory* timerFactory, EntityCapsProvider* entityCapsProvider);
 
 			/**
 			 * Pass the Message appended, and the stanza used to send it.
@@ -67,6 +69,7 @@ namespace Swift {
 			virtual bool isFromContact(const JID& from);
 			virtual boost::optional<boost::posix_time::ptime> getMessageTimestamp(boost::shared_ptr<Message>) const = 0;
 			virtual void dayTicked() {};
+			virtual void handleBareJIDCapsChanged(const JID& jid) = 0;
 
 		private:
 			IDGenerator idGenerator_;
@@ -94,5 +97,6 @@ namespace Swift {
 			EventController* eventController_;
 			boost::shared_ptr<Timer> dateChangeTimer_;
 			TimerFactory* timerFactory_;
+			EntityCapsProvider* entityCapsProvider_;
 	};
 }

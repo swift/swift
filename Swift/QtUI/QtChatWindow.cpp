@@ -30,6 +30,7 @@
 #include <QTextEdit>
 #include <QTime>
 #include <QUrl>
+#include <QPushButton>
 
 namespace Swift {
 QtChatWindow::QtChatWindow(const QString &contact, QtChatTheme* theme, UIEventStream* eventStream) : QtTabbable(), contact_(contact), previousMessageWasSelf_(false), previousMessageWasSystem_(false), previousMessageWasPresence_(false), eventStream_(eventStream) {
@@ -38,6 +39,7 @@ QtChatWindow::QtChatWindow(const QString &contact, QtChatTheme* theme, UIEventSt
 	completer_ = NULL;
 	theme_ = theme;
 	isCorrection_ = false;
+	correctionEnabled_ = Maybe;
 	updateTitleWithUnreadCount();
 	QtSettingsProvider settings;
 
@@ -45,10 +47,24 @@ QtChatWindow::QtChatWindow(const QString &contact, QtChatTheme* theme, UIEventSt
 	layout->setContentsMargins(0,0,0,0);
 	layout->setSpacing(2);
 
+	alertWidget_ = new QWidget(this);
+	QHBoxLayout* alertLayout = new QHBoxLayout(alertWidget_);
+	layout->addWidget(alertWidget_);
+	alertLabel_ = new QLabel(this);
+	alertLayout->addWidget(alertLabel_);
+	alertButton_ = new QPushButton(this);
+	connect (alertButton_, SIGNAL(clicked()), this, SLOT(handleAlertButtonClicked()));
+	alertLayout->addWidget(alertButton_);
+	QPalette palette = alertWidget_->palette();
+	palette.setColor(QPalette::Window, QColor(Qt::yellow));
+	palette.setColor(QPalette::WindowText, QColor(Qt::black));
+	alertWidget_->setPalette(palette);
+	alertLabel_->setPalette(palette);
+	alertWidget_->hide();
+
 	logRosterSplitter_ = new QSplitter(this);
 	logRosterSplitter_->setAutoFillBackground(true);
 	layout->addWidget(logRosterSplitter_);
-
 	messageLog_ = new QtChatView(theme, this);
 	logRosterSplitter_->addWidget(messageLog_);
 
@@ -104,8 +120,28 @@ QtChatWindow::~QtChatWindow() {
 
 }
 
+
 void QtChatWindow::handleFontResized(int fontSizeSteps) {
 	messageLog_->resizeFont(fontSizeSteps);
+}
+
+void QtChatWindow::handleAlertButtonClicked() {
+	onAlertButtonClicked();
+}
+
+void QtChatWindow::setAlert(const std::string& alertText, const std::string& buttonText) {
+	alertLabel_->setText(alertText.c_str());
+	if (buttonText.empty()) {
+		alertButton_->hide();
+	} else {
+		alertButton_->setText(buttonText.c_str());
+		alertButton_->show();
+	}
+	alertWidget_->show();
+}
+
+void QtChatWindow::cancelAlert() {
+	alertWidget_->hide();
 }
 
 void QtChatWindow::setTabComplete(TabComplete* completer) {
@@ -146,6 +182,11 @@ void QtChatWindow::handleKeyPressEvent(QKeyEvent* event) {
 }
 
 void QtChatWindow::beginCorrection() {
+	if (correctionEnabled_ == ChatWindow::Maybe) {
+		setAlert(Q2PSTRING(tr("This chat may not support message correction. If you send a correction anyway, it may appear as a duplicate message")));
+	} else if (correctionEnabled_ == ChatWindow::No) {
+		setAlert(Q2PSTRING(tr("This chat does not support message correction.  If you send a correction anyway, it will appear as a duplicate message")));
+	}
 	QTextCursor cursor = input_->textCursor();
 	cursor.select(QTextCursor::Document);
 	cursor.beginEditBlock();
@@ -156,6 +197,7 @@ void QtChatWindow::beginCorrection() {
 }
 
 void QtChatWindow::cancelCorrection() {
+	cancelAlert();
 	QTextCursor cursor = input_->textCursor();
 	cursor.select(QTextCursor::Document);
 	cursor.removeSelectedText();
@@ -235,6 +277,10 @@ void QtChatWindow::setSecurityLabelsEnabled(bool enabled) {
 	} else {
 		labelsWidget_->hide();
 	}
+}
+
+void QtChatWindow::setCorrectionEnabled(Tristate enabled) {
+	correctionEnabled_ = enabled;
 }
 
 SecurityLabelsCatalog::Item QtChatWindow::getSelectedSecurityLabel() {
