@@ -11,6 +11,7 @@
 
 #include <Swift/Controllers/Intl.h>
 #include <Swiften/Base/format.h>
+#include <Swiften/Base/Algorithm.h>
 #include "Swiften/Avatars/AvatarManager.h"
 #include "Swiften/Chat/ChatStateNotifier.h"
 #include "Swiften/Chat/ChatStateTracker.h"
@@ -134,13 +135,7 @@ void ChatController::postSendMessage(const std::string& body, boost::shared_ptr<
 	boost::shared_ptr<Replace> replace = sentStanza->getPayload<Replace>();
 	if (replace) {
 		chatWindow_->replaceMessage(body, myLastMessageUIID_, boost::posix_time::microsec_clock::universal_time());
-		for (std::map<boost::shared_ptr<Stanza>, std::string>::iterator it = unackedStanzas_.begin(); it != unackedStanzas_.end(); ) {
-			if ((*it).second == myLastMessageUIID_) {
-				unackedStanzas_.erase(it++);
-			} else {
-				++it;
-			}
-		}
+		eraseIf(unackedStanzas_, PairSecondEquals<boost::shared_ptr<Stanza>, std::string>(myLastMessageUIID_));
 	} else {
 		myLastMessageUIID_ = addMessage(body, QT_TRANSLATE_NOOP("", "me"), true, labelsEnabled_ ? chatWindow_->getSelectedSecurityLabel().getLabel() : boost::shared_ptr<SecurityLabel>(), std::string(avatarManager_->getAvatarPath(selfJID_).string()), boost::posix_time::microsec_clock::universal_time());
 	}

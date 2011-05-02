@@ -9,9 +9,8 @@
 #include <cppunit/extensions/TestFactoryRegistry.h>
 #include <boost/bind.hpp>
 
-#include <algorithm>
-
 #include <Swiften/Base/sleep.h>
+#include <Swiften/Base/Algorithm.h>
 #include <Swiften/Base/ByteArray.h>
 #include <Swiften/EventLoop/DummyEventLoop.h>
 #include <Swiften/LinkLocal/LinkLocalServiceInfo.h>
@@ -112,7 +111,7 @@ class DNSSDTest : public CppUnit::TestFixture {
 
 		void handleServiceRemoved(const DNSSDServiceID& id) {
 			CPPUNIT_ASSERT(std::find(toRemove.begin(), toRemove.end(), id) != toRemove.end());
-			toRemove.erase(std::remove(toRemove.begin(), toRemove.end(), id));
+			erase(toRemove, id);
 		}
 
 		void handleRegisterFinished(boost::optional<DNSSDServiceID> id) {

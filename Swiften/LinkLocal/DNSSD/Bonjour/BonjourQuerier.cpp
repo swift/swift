@@ -15,6 +15,7 @@
 #include <Swiften/LinkLocal/DNSSD/Bonjour/BonjourResolveServiceQuery.h>
 #include <Swiften/LinkLocal/DNSSD/Bonjour/BonjourResolveHostnameQuery.h>
 #include <Swiften/Base/foreach.h>
+#include <Swiften/Base/Algorithm.h>
 
 namespace Swift {
 
@@ -59,8 +60,7 @@ void BonjourQuerier::addRunningQuery(boost::shared_ptr<BonjourQuery> query) {
 void BonjourQuerier::removeRunningQuery(boost::shared_ptr<BonjourQuery> query) {
 	{
 		boost::lock_guard<boost::mutex> lock(runningQueriesMutex);
-		runningQueries.erase(std::remove(
-			runningQueries.begin(), runningQueries.end(), query), runningQueries.end());
+		erase(runningQueries, query);
 	}
 }
 

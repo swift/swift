@@ -5,9 +5,11 @@
  */
 
 #include <boost/numeric/conversion/cast.hpp>
+
 #include <algorithm>
 
 #include <Swiften/StringCodecs/Base64.h>
+#include <Swiften/Base/Algorithm.h>
 
 namespace Swift {
 
@@ -48,7 +50,7 @@ std::string Base64::encode(const ByteArray &s) {
 
 ByteArray Base64::decode(const std::string& input) {
 	std::string inputWithoutNewlines(input);
-	inputWithoutNewlines.erase(std::remove(inputWithoutNewlines.begin(), inputWithoutNewlines.end(), '\n'), inputWithoutNewlines.end());
+	erase(inputWithoutNewlines, '\n');
 
 	const std::string& s = inputWithoutNewlines;
 	ByteArray p;

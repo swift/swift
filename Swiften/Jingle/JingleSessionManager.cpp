@@ -8,6 +8,7 @@
 #include <Swiften/Jingle/JingleResponder.h>
 #include <Swiften/Jingle/IncomingJingleSessionHandler.h>
 #include <Swiften/Base/foreach.h>
+#include <Swiften/Base/Algorithm.h>
 
 namespace Swift {
 
@@ -29,7 +30,7 @@ void JingleSessionManager::addIncomingSessionHandler(IncomingJingleSessionHandle
 }
 
 void JingleSessionManager::removeIncomingSessionHandler(IncomingJingleSessionHandler* handler) {
-	incomingSessionHandlers.erase(std::remove(incomingSessionHandlers.begin(), incomingSessionHandlers.end(), handler), incomingSessionHandlers.end());
+	erase(incomingSessionHandlers, handler);
 }
 
 void JingleSessionManager::handleIncomingSession(const JID& from, JingleSessionImpl::ref session, const std::vector<JingleContentPayload::ref>& contents) {

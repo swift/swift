@@ -1,0 +1,107 @@
+/*
+ * Copyright (c) 2011 Remko Tronçon
+ * Licensed under the GNU General Public License v3.
+ * See Documentation/Licenses/GPLv3.txt for more information.
+ */
+
+#pragma once
+
+#include <vector>
+#include <list>
+#include <map>
+#include <algorithm>
+
+namespace Swift {
+	/*
+	 * Generic erase()
+	 */
+	namespace Detail {
+		struct VectorCategory {};
+		struct ListCategory {};
+		struct MapCategory {};
+
+		template<typename T> 
+		struct ContainerTraits {};
+
+		template<typename A, typename B> 
+		struct ContainerTraits< std::vector<A, B> > {
+			typedef VectorCategory Category;
+		};
+
+		template<>
+		struct ContainerTraits< std::string > {
+			typedef VectorCategory Category;
+		};
+
+		template<typename A, typename B> 
+		struct ContainerTraits< std::list<A, B> > {
+			typedef ListCategory Category;
+		};
+
+		template<typename A, typename B, typename C, typename D> 
+		struct ContainerTraits< std::map<A, B, C, D> > {
+			typedef MapCategory Category;
+		};
+
+		template<typename C, typename V>
+		void eraseImpl(C& c, const V& v, VectorCategory) {
+			c.erase(std::remove(c.begin(), c.end(), v), c.end());
+		}
+
+		template<typename C, typename V>
+		void eraseImpl(C& c, const V& v, ListCategory) {
+			c.remove(v);
+		}
+
+		template<typename C, typename V>
+		void eraseImpl(C& c, const V& v, MapCategory) {
+		  for (typename C::iterator it = c.begin(); it != c.end(); ) {
+				if (it->second == v) {
+					c.erase(it++);
+				}
+				else {
+					++it;
+				}
+			}
+		}
+
+		template<typename C, typename P>
+		void eraseIfImpl(C& c, const P& p, MapCategory) {
+		  for (typename C::iterator it = c.begin(); it != c.end(); ) {
+				if (p(*it)) {
+					c.erase(it++);
+				}
+				else {
+					++it;
+				}
+			}
+		}
+	}
+
+	template<typename C, typename V>
+	void erase(C& container, const V& value) {
+		Detail::eraseImpl(container, value, typename Detail::ContainerTraits<C>::Category());
+	}
+
+	template<typename C, typename P>
+	void eraseIf(C& container, const P& predicate) {
+		Detail::eraseIfImpl(container, predicate, typename Detail::ContainerTraits<C>::Category());
+	}
+
+	/*
+	 * Functors
+	 */
+	template<typename K, typename V>
+	class PairSecondEquals {
+		public:
+			PairSecondEquals(const V& value) : value(value) {
+			}
+
+			bool operator()(const std::pair<K,V>& pair) const {
+				return pair.second == value;
+			}
+
+		private:
+			V value;
+	};
+}

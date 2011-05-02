@@ -10,6 +10,7 @@
 #include <iostream>
 
 #include <Swiften/Base/foreach.h>
+#include <Swiften/Base/Algorithm.h>
 #include <Swiften/LinkLocal/DNSSD/Fake/FakeDNSSDBrowseQuery.h>
 #include <Swiften/LinkLocal/DNSSD/Fake/FakeDNSSDRegisterQuery.h>
 #include <Swiften/LinkLocal/DNSSD/Fake/FakeDNSSDResolveServiceQuery.h>
@@ -74,8 +75,7 @@ void FakeDNSSDQuerier::addRunningQuery(boost::shared_ptr<FakeDNSSDQuery> query) 
 }
 
 void FakeDNSSDQuerier::removeRunningQuery(boost::shared_ptr<FakeDNSSDQuery> query) {
-	runningQueries.erase(std::remove(
-		runningQueries.begin(), runningQueries.end(), query), runningQueries.end());
+	erase(runningQueries, query);
 }
 
 void FakeDNSSDQuerier::addService(const DNSSDServiceID& id) {

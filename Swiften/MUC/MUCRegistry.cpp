@@ -6,7 +6,7 @@
 
 #include <Swiften/MUC/MUCRegistry.h>
 
-#include <algorithm>
+#include <Swiften/Base/Algorithm.h>
 
 namespace Swift {
 
@@ -22,7 +22,7 @@ void MUCRegistry::addMUC(const JID& j) {
 }
 
 void MUCRegistry::removeMUC(const JID& j) {
-	mucs.erase(std::remove(mucs.begin(), mucs.end(), j), mucs.end());
+	erase(mucs, j);
 }
 
 

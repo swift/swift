@@ -6,6 +6,7 @@
 
 #include <Swiften/Server/ServerStanzaRouter.h>
 #include <Swiften/Server/ServerSession.h>
+#include <Swiften/Base/Algorithm.h>
 
 #include <cassert>
 #include <algorithm>
@@ -67,7 +68,7 @@ void ServerStanzaRouter::addClientSession(ServerSession* clientSession) {
 }
 
 void ServerStanzaRouter::removeClientSession(ServerSession* clientSession) {
-	clientSessions_.erase(std::remove(clientSessions_.begin(), clientSessions_.end(), clientSession), clientSessions_.end());
+	erase(clientSessions_, clientSession);
 }
 
 }

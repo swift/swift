@@ -11,6 +11,7 @@
 #include <string>
 
 #include <Swiften/Base/String.h>
+#include <Swiften/Base/Algorithm.h>
 #include <Swiften/Base/foreach.h>
 #include <Swiften/Serializer/XML/XMLTextNode.h>
 #include <Swiften/Serializer/XML/XMLRawTextNode.h>
@@ -154,7 +155,7 @@ boost::shared_ptr<XMLElement> FormSerializer::fieldToXML(boost::shared_ptr<FormF
 
 void FormSerializer::multiLineify(const std::string& text, const std::string& elementName, boost::shared_ptr<XMLElement> element) const {
 	std::string unRdText(text);
-	unRdText.erase(std::remove(unRdText.begin(), unRdText.end(), '\r'), unRdText.end());
+	erase(unRdText, '\r');
 	std::vector<std::string> lines = String::split(unRdText, '\n');
 	foreach (std::string line, lines) {
 		boost::shared_ptr<XMLElement> lineElement(new XMLElement(elementName));
