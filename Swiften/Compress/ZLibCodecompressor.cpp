@@ -7,6 +7,7 @@
 #include <Swiften/Compress/ZLibCodecompressor.h>
 
 #include <cassert>
+#include <string.h>
 
 #include <Swiften/Compress/ZLibException.h>
 
@@ -26,13 +27,13 @@ ZLibCodecompressor::~ZLibCodecompressor() {
 
 ByteArray ZLibCodecompressor::process(const ByteArray& input) {
 	ByteArray output;
-	stream_.avail_in = input.getSize();
-	stream_.next_in = reinterpret_cast<Bytef*>(const_cast<unsigned char*>(input.getData()));
+	stream_.avail_in = input.size();
+	stream_.next_in = reinterpret_cast<Bytef*>(const_cast<unsigned char*>(vecptr(input)));
 	int outputPosition = 0;
 	do {
 		output.resize(outputPosition + CHUNK_SIZE);
 		stream_.avail_out = CHUNK_SIZE;
-		stream_.next_out = reinterpret_cast<Bytef*>(output.getData() + outputPosition);
+		stream_.next_out = reinterpret_cast<Bytef*>(vecptr(output) + outputPosition);
 		int result = processZStream();
 		if (result != Z_OK && result != Z_BUF_ERROR) {
 			throw ZLibException(/* stream_.msg */);

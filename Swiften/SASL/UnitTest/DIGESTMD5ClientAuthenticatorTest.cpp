@@ -31,28 +31,28 @@ class DIGESTMD5ClientAuthenticatorTest : public CppUnit::TestFixture {
 			DIGESTMD5ClientAuthenticator testling("xmpp.example.com", "abcdefgh");
 
 			testling.setCredentials("user", "pass", "");
-			testling.setChallenge(ByteArray(
+			testling.setChallenge(createByteArray(
 				"realm=\"example.com\","
 				"nonce=\"O6skKPuaCZEny3hteI19qXMBXSadoWs840MchORo\","
 				"qop=auth,charset=utf-8,algorithm=md5-sess"));
 
 			ByteArray response = *testling.getResponse();
 
-			CPPUNIT_ASSERT_EQUAL(std::string("charset=utf-8,cnonce=\"abcdefgh\",digest-uri=\"xmpp/xmpp.example.com\",nc=00000001,nonce=\"O6skKPuaCZEny3hteI19qXMBXSadoWs840MchORo\",qop=auth,realm=\"example.com\",response=088891c800ecff1b842159ad6459104a,username=\"user\""), response.toString());
+			CPPUNIT_ASSERT_EQUAL(std::string("charset=utf-8,cnonce=\"abcdefgh\",digest-uri=\"xmpp/xmpp.example.com\",nc=00000001,nonce=\"O6skKPuaCZEny3hteI19qXMBXSadoWs840MchORo\",qop=auth,realm=\"example.com\",response=088891c800ecff1b842159ad6459104a,username=\"user\""), byteArrayToString(response));
 		}
 
 		void testGetResponse_WithAuthorizationID() {
 			DIGESTMD5ClientAuthenticator testling("xmpp.example.com", "abcdefgh");
 
 			testling.setCredentials("user", "pass", "myauthzid");
-			testling.setChallenge(ByteArray(
+			testling.setChallenge(createByteArray(
 				"realm=\"example.com\","
 				"nonce=\"O6skKPuaCZEny3hteI19qXMBXSadoWs840MchORo\","
 				"qop=auth,charset=utf-8,algorithm=md5-sess"));
 
 			ByteArray response = *testling.getResponse();
 
-			CPPUNIT_ASSERT_EQUAL(std::string("authzid=\"myauthzid\",charset=utf-8,cnonce=\"abcdefgh\",digest-uri=\"xmpp/xmpp.example.com\",nc=00000001,nonce=\"O6skKPuaCZEny3hteI19qXMBXSadoWs840MchORo\",qop=auth,realm=\"example.com\",response=4293834432b6e7889a2dee7e8fe7dd06,username=\"user\""), response.toString());
+			CPPUNIT_ASSERT_EQUAL(std::string("authzid=\"myauthzid\",charset=utf-8,cnonce=\"abcdefgh\",digest-uri=\"xmpp/xmpp.example.com\",nc=00000001,nonce=\"O6skKPuaCZEny3hteI19qXMBXSadoWs840MchORo\",qop=auth,realm=\"example.com\",response=4293834432b6e7889a2dee7e8fe7dd06,username=\"user\""), byteArrayToString(response));
 		}
 };
 

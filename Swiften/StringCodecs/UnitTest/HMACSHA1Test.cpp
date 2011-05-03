@@ -9,6 +9,7 @@
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/extensions/TestFactoryRegistry.h>
 
+#include <QA/Checker/IO.h>
 #include <Swiften/Base/ByteArray.h>
 #include <Swiften/StringCodecs/HMACSHA1.h>
 
@@ -21,8 +22,8 @@ class HMACSHA1Test : public CppUnit::TestFixture {
 
 	public:
 		void testGetResult() {
-			ByteArray result(HMACSHA1::getResult("foo", "foobar"));
-			CPPUNIT_ASSERT_EQUAL(ByteArray("\xa4\xee\xba\x8e\x63\x3d\x77\x88\x69\xf5\x68\xd0\x5a\x1b\x3d\xc7\x2b\xfd\x4\xdd"), result);
+			ByteArray result(HMACSHA1::getResult(createByteArray("foo"), createByteArray("foobar")));
+			CPPUNIT_ASSERT_EQUAL(createByteArray("\xa4\xee\xba\x8e\x63\x3d\x77\x88\x69\xf5\x68\xd0\x5a\x1b\x3d\xc7\x2b\xfd\x4\xdd"), result);
 		}
 };
 

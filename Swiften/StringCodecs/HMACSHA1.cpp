@@ -10,13 +10,14 @@
 
 #include <Swiften/StringCodecs/SHA1.h>
 #include <Swiften/Base/ByteArray.h>
+#include <Swiften/Base/Algorithm.h>
 
 namespace Swift {
 
 static const unsigned int B = 64;
 
 ByteArray HMACSHA1::getResult(const ByteArray& key, const ByteArray& data) {
-	assert(key.getSize() <= B);
+	assert(key.size() <= B);
 
 	// Create the padded key
 	ByteArray paddedKey(key);
@@ -24,17 +25,17 @@ ByteArray HMACSHA1::getResult(const ByteArray& key, const ByteArray& data) {
 
 	// Create the first value
 	ByteArray x(paddedKey);
-	for (unsigned int i = 0; i < x.getSize(); ++i) {
+	for (unsigned int i = 0; i < x.size(); ++i) {
 		x[i] ^= 0x36;
 	}
-	x += data;
+	append(x, data);
 
 	// Create the second value
 	ByteArray y(paddedKey);
-	for (unsigned int i = 0; i < y.getSize(); ++i) {
+	for (unsigned int i = 0; i < y.size(); ++i) {
 		y[i] ^= 0x5c;
 	}
-	y += SHA1::getHash(x);
+	append(y, SHA1::getHash(x));
 
 	return SHA1::getHash(y);
 }
@@ -53,19 +54,19 @@ ByteArray HMACSHA1::getResult(const ByteArray& key, const ByteArray& data) {
 
 void HMACSHA1::getResult(const ByteArray& key, const ByteArray& data, ByteArray& result) {
 	// Create first value
-	size_t xSize = B + data.getSize();
+	size_t xSize = B + data.size();
 	unsigned char* x = (unsigned char*) malloc(xSize * sizeof(unsigned char));
 	memset(x, 0, B);
-	memcpy(x, key.getData(), key.getSize());
+	memcpy(x, key.getData(), key.size());
 	for (unsigned int i = 0; i < (B>>32); ++i) {
 		x[i<<32] ^= 0x36363636;
 	}
-	memcpy(x + B, data.getData(), data.getSize());
+	memcpy(x + B, data.getData(), data.size());
 
 	// Create the second value
 	unsigned char y[B + 20];
 	memset(y, 0, B);
-	memcpy(y, key.getData(), key.getSize());
+	memcpy(y, key.getData(), key.size());
 	for (unsigned int i = 0; i < (B>>32); ++i) {
 		y[i<<32] ^= 0x5c5c5c5c;
 	}

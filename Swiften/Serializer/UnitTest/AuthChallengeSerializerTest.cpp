@@ -9,6 +9,7 @@
 
 #include <Swiften/Serializer/AuthChallengeSerializer.h>
 #include <Swiften/Elements/AuthChallenge.h>
+#include <Swiften/Base/ByteArray.h>
 
 using namespace Swift;
 
@@ -23,7 +24,7 @@ class AuthChallengeSerializerTest : public CppUnit::TestFixture {
 		void testSerialize() {
 			AuthChallengeSerializer testling;
 			boost::shared_ptr<AuthChallenge> authChallenge(new AuthChallenge());
-			authChallenge->setValue("foo");
+			authChallenge->setValue(createByteArray("foo"));
 
 			CPPUNIT_ASSERT_EQUAL(std::string(
 				"<challenge xmlns=\"urn:ietf:params:xml:ns:xmpp-sasl\">"
@@ -43,7 +44,7 @@ class AuthChallengeSerializerTest : public CppUnit::TestFixture {
 		void testSerialize_EmptyMessage() {
 			AuthChallengeSerializer testling;
 			boost::shared_ptr<AuthChallenge> authChallenge(new AuthChallenge());
-			authChallenge->setValue(ByteArray());
+			authChallenge->setValue(std::vector<unsigned char>());
 
 			CPPUNIT_ASSERT_EQUAL(std::string(
 				"<challenge xmlns=\"urn:ietf:params:xml:ns:xmpp-sasl\">"

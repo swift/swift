@@ -9,6 +9,7 @@
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/extensions/TestFactoryRegistry.h>
 
+#include <QA/Checker/IO.h>
 #include <Swiften/LinkLocal/LinkLocalServiceInfo.h>
 
 using namespace Swift;
@@ -28,11 +29,11 @@ class LinkLocalServiceInfoTest : public CppUnit::TestFixture {
 			info.setLastName("Tron\xc3\xe7on");
 			info.setStatus(LinkLocalServiceInfo::Away);
 
-			CPPUNIT_ASSERT_EQUAL(ByteArray("\x09txtvers=1\x09" + std::string("1st=Remko\x0dlast=Tron\xc3\xe7on\x0bstatus=away")), info.toTXTRecord());
+			CPPUNIT_ASSERT_EQUAL(createByteArray("\x09txtvers=1\x09" + std::string("1st=Remko\x0dlast=Tron\xc3\xe7on\x0bstatus=away")), info.toTXTRecord());
 		}
 
 		void testCreateFromTXTRecord() {
-			LinkLocalServiceInfo info = LinkLocalServiceInfo::createFromTXTRecord(ByteArray("\x09txtvers=1\x09" + std::string("1st=Remko\x0dlast=Tron\xc3\xe7on\x0bstatus=away")));
+			LinkLocalServiceInfo info = LinkLocalServiceInfo::createFromTXTRecord(createByteArray("\x09txtvers=1\x09" + std::string("1st=Remko\x0dlast=Tron\xc3\xe7on\x0bstatus=away")));
 
 			CPPUNIT_ASSERT_EQUAL(std::string("Remko"), info.getFirstName());
 			CPPUNIT_ASSERT_EQUAL(std::string("Tron\xc3\xe7on"), info.getLastName());
@@ -40,7 +41,7 @@ class LinkLocalServiceInfoTest : public CppUnit::TestFixture {
 		}
 
 		void testCreateFromTXTRecord_InvalidSize() {
-			LinkLocalServiceInfo info = LinkLocalServiceInfo::createFromTXTRecord(ByteArray("\x10last=a"));
+			LinkLocalServiceInfo info = LinkLocalServiceInfo::createFromTXTRecord(createByteArray("\x10last=a"));
 
 			CPPUNIT_ASSERT_EQUAL(std::string("a"), info.getLastName());
 		}

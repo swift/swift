@@ -74,12 +74,12 @@ GrowlNotifier::GrowlNotifier(const std::string& name) {
 
 void GrowlNotifier::showMessage(Type type, const std::string& subject, const std::string& description, const boost::filesystem::path& picturePath, boost::function<void()> callback) {
 	ByteArray picture;
-	picture.readFromFile(picturePath.string());
+	readByteArrayFromFile(picture, picturePath.string());
 
 	CFStringRef cfSubject = SWIFTEN_STRING_TO_CFSTRING(subject);
 	CFStringRef cfDescription = SWIFTEN_STRING_TO_CFSTRING(description);
 	CFStringRef cfName = SWIFTEN_STRING_TO_CFSTRING(typeToString(type));
-	CFDataRef cfIcon = CFDataCreate( NULL, (UInt8*) picture.getData(), picture.getSize());
+	CFDataRef cfIcon = CFDataCreate( NULL, (UInt8*) vecptr(picture), picture.size());
 	
 	Context context(callback);
 	CFDataRef cfContextData[1];

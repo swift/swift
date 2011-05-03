@@ -32,7 +32,7 @@ class IBBSendSessionTest : public CppUnit::TestFixture {
 		void setUp() {
 			stanzaChannel = new DummyStanzaChannel();
 			iqRouter = new IQRouter(stanzaChannel);
-			bytestream = boost::shared_ptr<ByteArrayReadBytestream>(new ByteArrayReadBytestream(ByteArray::create("abcdefg")));
+			bytestream = boost::shared_ptr<ByteArrayReadBytestream>(new ByteArrayReadBytestream(createByteArray("abcdefg")));
 		}
 
 		void tearDown() {
@@ -65,7 +65,7 @@ class IBBSendSessionTest : public CppUnit::TestFixture {
 			CPPUNIT_ASSERT(stanzaChannel->isRequestAtIndex<IBB>(1, JID("foo@bar.com/baz"), IQ::Set));
 			IBB::ref ibb = stanzaChannel->sentStanzas[1]->getPayload<IBB>();
 			CPPUNIT_ASSERT_EQUAL(IBB::Data, ibb->getAction());
-			CPPUNIT_ASSERT(ByteArray::create("abc") == ibb->getData());
+			CPPUNIT_ASSERT(createByteArray("abc") == ibb->getData());
 			CPPUNIT_ASSERT_EQUAL(0, ibb->getSequenceNumber());
 			CPPUNIT_ASSERT_EQUAL(std::string("myid"), ibb->getStreamID());
 		}
@@ -81,7 +81,7 @@ class IBBSendSessionTest : public CppUnit::TestFixture {
 			CPPUNIT_ASSERT(stanzaChannel->isRequestAtIndex<IBB>(2, JID("foo@bar.com/baz"), IQ::Set));
 			IBB::ref ibb = stanzaChannel->sentStanzas[2]->getPayload<IBB>();
 			CPPUNIT_ASSERT_EQUAL(IBB::Data, ibb->getAction());
-			CPPUNIT_ASSERT(ByteArray::create("def") == ibb->getData());
+			CPPUNIT_ASSERT(createByteArray("def") == ibb->getData());
 			CPPUNIT_ASSERT_EQUAL(1, ibb->getSequenceNumber());
 			CPPUNIT_ASSERT_EQUAL(std::string("myid"), ibb->getStreamID());
 		}

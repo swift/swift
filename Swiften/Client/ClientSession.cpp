@@ -10,6 +10,7 @@
 #include <boost/uuid/uuid.hpp>
 #include <boost/uuid/uuid_io.hpp>
 #include <boost/uuid/uuid_generators.hpp>
+#include <boost/smart_ptr/make_shared.hpp>
 
 #include <Swiften/Elements/ProtocolHeader.h>
 #include <Swiften/Elements/StreamFeatures.h>
@@ -184,7 +185,7 @@ void ClientSession::handleElement(boost::shared_ptr<Element> element) {
 			if (stream->hasTLSCertificate()) {
 				if (streamFeatures->hasAuthenticationMechanism("EXTERNAL")) {
 					state = Authenticating;
-					stream->writeElement(boost::shared_ptr<Element>(new AuthRequest("EXTERNAL", "")));
+					stream->writeElement(boost::make_shared<AuthRequest>("EXTERNAL", createByteArray("")));
 				}
 				else {
 					finishSession(Error::TLSClientCertificateError);
@@ -192,7 +193,7 @@ void ClientSession::handleElement(boost::shared_ptr<Element> element) {
 			}
 			else if (streamFeatures->hasAuthenticationMechanism("EXTERNAL")) {
 				state = Authenticating;
-				stream->writeElement(boost::shared_ptr<Element>(new AuthRequest("EXTERNAL", "")));
+				stream->writeElement(boost::make_shared<AuthRequest>("EXTERNAL", createByteArray("")));
 			}
 			else if (streamFeatures->hasAuthenticationMechanism("SCRAM-SHA-1") || streamFeatures->hasAuthenticationMechanism("SCRAM-SHA-1-PLUS")) {
 				std::ostringstream s;
@@ -265,7 +266,7 @@ void ClientSession::handleElement(boost::shared_ptr<Element> element) {
 		checkState(Authenticating);
 		assert(authenticator);
 		if (authenticator->setChallenge(challenge->getValue())) {
-			stream->writeElement(boost::shared_ptr<AuthResponse>(new AuthResponse(authenticator->getResponse())));
+			stream->writeElement(boost::make_shared<AuthResponse>(authenticator->getResponse()));
 		}
 		else {
 			finishSession(Error::AuthenticationFailedError);

@@ -8,10 +8,10 @@
 
 #include <boost/filesystem/path.hpp>
 #include <string>
+#include <Swiften/Base/ByteArray.h>
 
 namespace Swift {
 	class JID;
-	class ByteArray;
 
 	class AvatarStorage {
 		public:

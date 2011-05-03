@@ -10,10 +10,9 @@
 #include <boost/optional.hpp>
 
 #include <Swiften/LinkLocal/DNSSD/DNSSDServiceID.h>
+#include <Swiften/Base/ByteArray.h>
 
 namespace Swift {
-	class ByteArray;
-
 	class DNSSDRegisterQuery {
 		public:
 			virtual ~DNSSDRegisterQuery();

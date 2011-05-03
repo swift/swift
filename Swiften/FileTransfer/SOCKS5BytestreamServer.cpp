@@ -34,7 +34,7 @@ void SOCKS5BytestreamServer::removeBytestream(const std::string& id, const JID& 
 }
 
 std::string SOCKS5BytestreamServer::getSOCKSDestinationAddress(const std::string& id, const JID& from, const JID& to) {
-	return Hexify::hexify(SHA1::getHash(ByteArray(id + from.toString() + to.toString())));
+	return Hexify::hexify(SHA1::getHash(createByteArray(id + from.toString() + to.toString())));
 }
 
 void SOCKS5BytestreamServer::handleNewConnection(boost::shared_ptr<Connection> connection) {

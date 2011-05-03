@@ -9,7 +9,7 @@
 #include <boost/optional.hpp>
 
 #include <string>
-#include <Swiften/Base/ByteArray.h>
+#include <vector>
 
 namespace Swift {
 	class ClientAuthenticator {
@@ -27,8 +27,8 @@ namespace Swift {
 				this->authzid = authzid;
 			}
 
-			virtual boost::optional<ByteArray> getResponse() const = 0;
-			virtual bool setChallenge(const boost::optional<ByteArray>&) = 0;
+			virtual boost::optional< std::vector<unsigned char> > getResponse() const = 0;
+			virtual bool setChallenge(const boost::optional< std::vector<unsigned char> >&) = 0;
 
 			const std::string& getAuthenticationID() const {
 				return authcid;

@@ -12,6 +12,8 @@
 #include <boost/smart_ptr/make_shared.hpp>
 #include <boost/shared_ptr.hpp>
 
+#include <QA/Checker/IO.h>
+#include <Swiften/Base/Algorithm.h>
 #include <Swiften/Network/Connection.h>
 #include <Swiften/Network/ConnectionFactory.h>
 #include <Swiften/Network/HTTPConnectProxiedConnection.h>
@@ -66,7 +68,7 @@ class HTTPConnectProxiedConnectionTest : public CppUnit::TestFixture {
 			testling->connect(HostAddressPort(HostAddress("2.2.2.2"), 2345));
 			eventLoop->processEvents();
 
-			CPPUNIT_ASSERT_EQUAL(ByteArray("CONNECT 2.2.2.2:2345 HTTP/1.1\r\n\r\n"), connectionFactory->connections[0]->dataWritten);
+			CPPUNIT_ASSERT_EQUAL(createByteArray("CONNECT 2.2.2.2:2345 HTTP/1.1\r\n\r\n"), connectionFactory->connections[0]->dataWritten);
 		}
 
 		void testConnect_ReceiveConnectResponse() {
@@ -74,12 +76,12 @@ class HTTPConnectProxiedConnectionTest : public CppUnit::TestFixture {
 			testling->connect(HostAddressPort(HostAddress("2.2.2.2"), 2345));
 			eventLoop->processEvents();
 
-			connectionFactory->connections[0]->onDataRead(ByteArray("HTTP/1.0 200 Connection established\r\n\r\n"));
+			connectionFactory->connections[0]->onDataRead(createByteArray("HTTP/1.0 200 Connection established\r\n\r\n"));
 			eventLoop->processEvents();
 
 			CPPUNIT_ASSERT(connectFinished);
 			CPPUNIT_ASSERT(!connectFinishedWithError);
-			CPPUNIT_ASSERT(dataRead.isEmpty());
+			CPPUNIT_ASSERT(dataRead.empty());
 		}
 
 		void testConnect_ReceiveMalformedConnectResponse() {
@@ -87,7 +89,7 @@ class HTTPConnectProxiedConnectionTest : public CppUnit::TestFixture {
 			testling->connect(HostAddressPort(HostAddress("2.2.2.2"), 2345));
 			eventLoop->processEvents();
 
-			connectionFactory->connections[0]->onDataRead(ByteArray("FLOOP"));
+			connectionFactory->connections[0]->onDataRead(createByteArray("FLOOP"));
 			eventLoop->processEvents();
 
 			CPPUNIT_ASSERT(connectFinished);
@@ -100,7 +102,7 @@ class HTTPConnectProxiedConnectionTest : public CppUnit::TestFixture {
 			testling->connect(HostAddressPort(HostAddress("2.2.2.2"), 2345));
 			eventLoop->processEvents();
 
-			connectionFactory->connections[0]->onDataRead(ByteArray("HTTP/1.0 401 Unauthorized\r\n\r\n"));
+			connectionFactory->connections[0]->onDataRead(createByteArray("HTTP/1.0 401 Unauthorized\r\n\r\n"));
 			eventLoop->processEvents();
 
 			CPPUNIT_ASSERT(connectFinished);
@@ -112,25 +114,25 @@ class HTTPConnectProxiedConnectionTest : public CppUnit::TestFixture {
 			HTTPConnectProxiedConnection::ref testling(createTestling());
 			testling->connect(HostAddressPort(HostAddress("2.2.2.2"), 2345));
 			eventLoop->processEvents();
-			connectionFactory->connections[0]->onDataRead(ByteArray("HTTP/1.0 200 Connection established\r\n\r\n"));
+			connectionFactory->connections[0]->onDataRead(createByteArray("HTTP/1.0 200 Connection established\r\n\r\n"));
 			eventLoop->processEvents();
 
-			connectionFactory->connections[0]->onDataRead(ByteArray("abcdef"));
+			connectionFactory->connections[0]->onDataRead(createByteArray("abcdef"));
 
-			CPPUNIT_ASSERT_EQUAL(ByteArray("abcdef"), dataRead);
+			CPPUNIT_ASSERT_EQUAL(createByteArray("abcdef"), dataRead);
 		}
 
 		void testWrite_AfterConnect() {
 			HTTPConnectProxiedConnection::ref testling(createTestling());
 			testling->connect(HostAddressPort(HostAddress("2.2.2.2"), 2345));
 			eventLoop->processEvents();
-			connectionFactory->connections[0]->onDataRead(ByteArray("HTTP/1.0 200 Connection established\r\n\r\n"));
+			connectionFactory->connections[0]->onDataRead(createByteArray("HTTP/1.0 200 Connection established\r\n\r\n"));
 			eventLoop->processEvents();
 			connectionFactory->connections[0]->dataWritten.clear();
 
-			testling->write(ByteArray("abcdef"));
+			testling->write(createByteArray("abcdef"));
 
-			CPPUNIT_ASSERT_EQUAL(ByteArray("abcdef"), connectionFactory->connections[0]->dataWritten);
+			CPPUNIT_ASSERT_EQUAL(createByteArray("abcdef"), connectionFactory->connections[0]->dataWritten);
 		}
 
 		void testDisconnect_AfterConnectRequest() {
@@ -149,7 +151,7 @@ class HTTPConnectProxiedConnectionTest : public CppUnit::TestFixture {
 			HTTPConnectProxiedConnection::ref testling(createTestling());
 			testling->connect(HostAddressPort(HostAddress("2.2.2.2"), 2345));
 			eventLoop->processEvents();
-			connectionFactory->connections[0]->onDataRead(ByteArray("HTTP/1.0 200 Connection established\r\n\r\n"));
+			connectionFactory->connections[0]->onDataRead(createByteArray("HTTP/1.0 200 Connection established\r\n\r\n"));
 			eventLoop->processEvents();
 
 			testling->disconnect();
@@ -179,7 +181,7 @@ class HTTPConnectProxiedConnectionTest : public CppUnit::TestFixture {
 		}
 
 		void handleDataRead(const ByteArray& d) {
-			dataRead += d;
+			append(dataRead, d);
 		}
 
 		struct MockConnection : public Connection {
@@ -203,7 +205,7 @@ class HTTPConnectProxiedConnectionTest : public CppUnit::TestFixture {
 				}
 				
 				void write(const ByteArray& d) { 
-					dataWritten += d;
+					append(dataWritten, d);
 				}
 
 				EventLoop* eventLoop;

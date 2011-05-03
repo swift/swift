@@ -6,25 +6,25 @@
 
 #pragma once
 
+#include <vector>
 #include <boost/optional.hpp>
 
 #include <Swiften/Elements/Element.h>
-#include <Swiften/Base/ByteArray.h>
 
 namespace Swift {
 	class AuthSuccess : public Element {
 		public:
 			AuthSuccess() {}
 
-			const boost::optional<ByteArray>& getValue() const {
+			const boost::optional<std::vector<unsigned char> >& getValue() const {
 				return value;
 			}
 
-			void setValue(const ByteArray& value) {
-				this->value = boost::optional<ByteArray>(value);
+			void setValue(const std::vector<unsigned char>& value) {
+				this->value = boost::optional<std::vector<unsigned char> >(value);
 			}
 
 		private:
-			boost::optional<ByteArray> value;
+			boost::optional<std::vector<unsigned char> > value;
 	};
 }

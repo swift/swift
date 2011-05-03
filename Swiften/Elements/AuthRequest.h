@@ -6,9 +6,10 @@
 
 #pragma once
 
+#include <vector>
+#include <string>
 #include <boost/optional.hpp>
 
-#include <Swiften/Base/ByteArray.h>
 #include <Swiften/Elements/Element.h>
 
 namespace Swift {
@@ -17,20 +18,20 @@ namespace Swift {
 			AuthRequest(const std::string& mechanism = "") : mechanism_(mechanism) {
 			}
 
-			AuthRequest(const std::string& mechanism, const ByteArray& message) : 
+			AuthRequest(const std::string& mechanism, const std::vector<unsigned char>& message) : 
 					mechanism_(mechanism), message_(message) {
 			}
 
-			AuthRequest(const std::string& mechanism, const boost::optional<ByteArray>& message) : 
+			AuthRequest(const std::string& mechanism, const boost::optional<std::vector<unsigned char> >& message) : 
 					mechanism_(mechanism), message_(message) {
 			}
 
-			const boost::optional<ByteArray>& getMessage() const {
+			const boost::optional<std::vector<unsigned char> >& getMessage() const {
 				return message_;
 			}
 
-			void setMessage(const ByteArray& message) {
-				message_ = boost::optional<ByteArray>(message);
+			void setMessage(const std::vector<unsigned char>& message) {
+				message_ = boost::optional<std::vector<unsigned char> >(message);
 			}
 
 			const std::string& getMechanism() const {
@@ -43,6 +44,6 @@ namespace Swift {
 
 		private:
 			std::string mechanism_;
-			boost::optional<ByteArray> message_;
+			boost::optional<std::vector<unsigned char> > message_;
 	};
 }

@@ -14,10 +14,9 @@
 
 #include <Swiften/LinkLocal/DNSSD/DNSSDQuerier.h>
 #include <Swiften/LinkLocal/DNSSD/Bonjour/BonjourQuery.h>
+#include <Swiften/Base/ByteArray.h>
 
 namespace Swift {
-	class ByteArray;
-
 	class BonjourQuerier : 
 			public DNSSDQuerier, 
 			public boost::enable_shared_from_this<BonjourQuerier> {

@@ -17,7 +17,7 @@ namespace Swift {
 
 std::string Base64::encode(const ByteArray &s) {
 	int i;
-	int len = s.getSize();
+	int len = s.size();
 	char tbl[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";
 	int a, b, c;
 

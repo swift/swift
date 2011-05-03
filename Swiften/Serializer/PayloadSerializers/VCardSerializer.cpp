@@ -87,14 +87,14 @@ std::string VCardSerializer::serializePayload(boost::shared_ptr<VCard> vcard)  c
 		nickElement->addNode(boost::shared_ptr<XMLTextNode>(new XMLTextNode(vcard->getNickname())));
 		queryElement.addNode(nickElement);
 	}
-	if (!vcard->getPhoto().isEmpty() || !vcard->getPhotoType().empty()) {
+	if (!vcard->getPhoto().empty() || !vcard->getPhotoType().empty()) {
 		XMLElement::ref photoElement(new XMLElement("PHOTO"));
 		if (!vcard->getPhotoType().empty()) {
 			XMLElement::ref typeElement(new XMLElement("TYPE"));
 			typeElement->addNode(XMLTextNode::ref(new XMLTextNode(vcard->getPhotoType())));
 			photoElement->addNode(typeElement);
 		}
-		if (!vcard->getPhoto().isEmpty()) {
+		if (!vcard->getPhoto().empty()) {
 			XMLElement::ref binvalElement(new XMLElement("BINVAL"));
 			binvalElement->addNode(XMLTextNode::ref(new XMLTextNode(Base64::encode(vcard->getPhoto()))));
 			photoElement->addNode(binvalElement);

@@ -14,6 +14,7 @@
 #include <Swiften/Session/Session.h>
 #include <Swiften/JID/JID.h>
 #include <Swiften/Network/Connection.h>
+#include <Swiften/Base/ByteArray.h>
 
 namespace Swift {
 	class ProtocolHeader;
@@ -26,7 +27,6 @@ namespace Swift {
 	class XMPPLayer;
 	class ConnectionLayer;
 	class Connection;
-	class ByteArray;
 
 	class ServerFromClientSession : public Session {
 		public:

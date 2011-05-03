@@ -8,44 +8,26 @@
 
 #include <fstream>
 
-std::ostream& operator<<(std::ostream& os, const Swift::ByteArray& s) {
-	return operator<<(os, s.getDataVector());
-}
-
-std::ostream& operator<<(std::ostream& os, const std::vector<unsigned char>& s) {
-	std::ios::fmtflags oldFlags = os.flags(); 
-	os << std::hex;
-	for (Swift::ByteArray::const_iterator i = s.begin(); i != s.end(); ++i) {
-		os << "0x" << static_cast<unsigned int>(static_cast<unsigned char>(*i));
-		if (i + 1 < s.end()) {
-			os << " ";
-		}
-	}
-	os << std::endl;
-	os.flags(oldFlags);
-	return os;
-}
-
 namespace Swift {
 
 static const int BUFFER_SIZE = 4096;
 
-void ByteArray::readFromFile(const std::string& file) {
+void readByteArrayFromFile(ByteArray& data, const std::string& file) {
 	std::ifstream input(file.c_str(), std::ios_base::in|std::ios_base::binary);
 	while (input.good()) {
-		size_t oldSize = data_.size();
-		data_.resize(oldSize + BUFFER_SIZE);
-		input.read(reinterpret_cast<char*>(&data_[oldSize]), BUFFER_SIZE);
-		data_.resize(oldSize + input.gcount());
+		size_t oldSize = data.size();
+		data.resize(oldSize + BUFFER_SIZE);
+		input.read(reinterpret_cast<char*>(&data[oldSize]), BUFFER_SIZE);
+		data.resize(oldSize + input.gcount());
 	}
 	input.close();
 }
 
-std::vector<unsigned char> ByteArray::create(const std::string& s) {
+std::vector<unsigned char> createByteArray(const std::string& s) {
 	return std::vector<unsigned char>(s.begin(), s.end());
 }
 
-std::vector<unsigned char> ByteArray::create(const char* c) {
+std::vector<unsigned char> createByteArray(const char* c) {
 	std::vector<unsigned char> data;
 	while (*c) {
 		data.push_back(static_cast<unsigned char>(*c));
@@ -54,32 +36,26 @@ std::vector<unsigned char> ByteArray::create(const char* c) {
 	return data;
 }
 
-std::vector<unsigned char> ByteArray::create(const char* c, size_t n) {
-	std::vector<unsigned char> data;
-	if (n > 0) {
-		data.resize(n);
-		memcpy(&data[0], c, n);
-	}
+std::vector<unsigned char> createByteArray(const char* c, size_t n) {
+	std::vector<unsigned char> data(n);
+	std::copy(c, c + n, data.begin());
 	return data;
 }
 
-std::vector<unsigned char> ByteArray::create(const unsigned char* c, size_t n) {
-	std::vector<unsigned char> data;
-	if (n > 0) {
-		data.resize(n);
-		memcpy(&data[0], c, n);
-	}
+std::vector<unsigned char> createByteArray(const unsigned char* c, size_t n) {
+	std::vector<unsigned char> data(n);
+	std::copy(c, c + n, data.begin());
 	return data;
 }
 
-std::string ByteArray::toString() const {
+std::string byteArrayToString(const ByteArray& b) {
 	size_t i;
-	for (i = data_.size(); i > 0; --i) {
-		if (data_[i - 1] != 0) {
+	for (i = b.size(); i > 0; --i) {
+		if (b[i - 1] != 0) {
 			break;
 		}
 	}
-	return i > 0 ? std::string(reinterpret_cast<const char*>(getData()), i) : "";
+	return i > 0 ? std::string(reinterpret_cast<const char*>(vecptr(b)), i) : "";
 }
 
 }

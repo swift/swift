@@ -12,13 +12,13 @@
 #include <set>
 
 #include <string>
+#include <Swiften/Base/ByteArray.h>
 #include <Swiften/EventLoop/EventOwner.h>
 #include <Swiften/LinkLocal/DNSSD/DNSSDQuerier.h>
 #include <Swiften/LinkLocal/DNSSD/DNSSDResolveServiceQuery.h>
 #include <Swiften/Network/HostAddress.h>
 
 namespace Swift {
-	class ByteArray;
 	class FakeDNSSDQuery;
 	class FakeDNSSDBrowseQuery;
 	class EventLoop;

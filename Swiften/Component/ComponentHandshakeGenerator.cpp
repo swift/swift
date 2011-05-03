@@ -18,7 +18,7 @@ std::string ComponentHandshakeGenerator::getHandshake(const std::string& streamI
 	String::replaceAll(concatenatedString, '>', "&gt;");
 	String::replaceAll(concatenatedString, '\'', "&apos;");
 	String::replaceAll(concatenatedString, '"', "&quot;");
-	return Hexify::hexify(SHA1::getHash(ByteArray(concatenatedString)));
+	return Hexify::hexify(SHA1::getHash(createByteArray(concatenatedString)));
 }
 
 }

@@ -24,22 +24,22 @@ boost::filesystem::path Paths::getExecutablePath() {
 	ByteArray path;
 	uint32_t size = 4096;
 	path.resize(size);
-	if (_NSGetExecutablePath(reinterpret_cast<char*>(path.getData()), &size) == 0) {
-		return boost::filesystem::path(std::string(reinterpret_cast<const char*>(path.getData()), path.getSize()).c_str()).parent_path();
+	if (_NSGetExecutablePath(const_cast<char*>(reinterpret_cast<const char*>(vecptr(path))), &size) == 0) {
+		return boost::filesystem::path(std::string(reinterpret_cast<const char*>(vecptr(path)), path.size()).c_str()).parent_path();
 	}
 #elif defined(SWIFTEN_PLATFORM_LINUX)
 	ByteArray path;
 	path.resize(4096);
-	size_t size = readlink("/proc/self/exe", reinterpret_cast<char*>(path.getData()), path.getSize());
+	size_t size = readlink("/proc/self/exe", reinterpret_cast<char*>(vecptr(path)), path.size());
 	if (size > 0) {
 		path.resize(size);
-		return boost::filesystem::path(std::string(reinterpret_cast<const char*>(path.getData()), path.getSize()).c_str()).parent_path();
+		return boost::filesystem::path(std::string(reinterpret_cast<const char*>(vecptr(path)), path.size()).c_str()).parent_path();
 	}
 #elif defined(SWIFTEN_PLATFORM_WINDOWS)
 	ByteArray data;
 	data.resize(2048);
-	GetModuleFileName(NULL, reinterpret_cast<char*>(data.getData()), data.getSize());
-	return boost::filesystem::path(std::string(reinterpret_cast<const char*>(data.getData()), data.getSize()).c_str()).parent_path();
+	GetModuleFileName(NULL, reinterpret_cast<char*>(vecptr(data)), data.size());
+	return boost::filesystem::path(std::string(reinterpret_cast<const char*>(vecptr(data)), data.size()).c_str()).parent_path();
 #endif
 	return boost::filesystem::path();
 }

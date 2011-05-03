@@ -15,6 +15,7 @@
 #include <Swiften/StringCodecs/HMACSHA1.h>
 #include <Swiften/StringCodecs/PBKDF2.h>
 #include <Swiften/IDN/StringPrep.h>
+#include <Swiften/Base/Concat.h>
 
 namespace Swift {
 
@@ -40,17 +41,17 @@ SCRAMSHA1ClientAuthenticator::SCRAMSHA1ClientAuthenticator(const std::string& no
 
 boost::optional<ByteArray> SCRAMSHA1ClientAuthenticator::getResponse() const {
 	if (step == Initial) {
-		return getGS2Header() + getInitialBareClientMessage();
+		return concat(getGS2Header(), getInitialBareClientMessage());
 	}
 	else if (step == Proof) {
-		ByteArray clientKey = HMACSHA1::getResult(saltedPassword, "Client Key");
+		ByteArray clientKey = HMACSHA1::getResult(saltedPassword, createByteArray("Client Key"));
 		ByteArray storedKey = SHA1::getHash(clientKey);
 		ByteArray clientSignature = HMACSHA1::getResult(storedKey, authMessage);
 		ByteArray clientProof = clientKey;
-		for (unsigned int i = 0; i < clientProof.getSize(); ++i) {
+		for (unsigned int i = 0; i < clientProof.size(); ++i) {
 			clientProof[i] ^= clientSignature[i];
 		}
-		ByteArray result = getFinalMessageWithoutProof() + ",p=" + Base64::encode(clientProof);
+		ByteArray result = concat(getFinalMessageWithoutProof(), createByteArray(",p="), createByteArray(Base64::encode(clientProof)));
 		return result;
 	}
 	else {
@@ -65,7 +66,7 @@ bool SCRAMSHA1ClientAuthenticator::setChallenge(const boost::optional<ByteArray>
 		}
 		initialServerMessage = *challenge;
 
-		std::map<char, std::string> keys = parseMap(initialServerMessage.toString());
+		std::map<char, std::string> keys = parseMap(byteArrayToString(initialServerMessage));
 
 		// Extract the salt
 		ByteArray salt = Base64::decode(keys['s']);
@@ -79,7 +80,7 @@ bool SCRAMSHA1ClientAuthenticator::setChallenge(const boost::optional<ByteArray>
 		if (receivedClientNonce != clientnonce) {
 			return false;
 		}
-		serverNonce = clientServerNonce.substr(clientnonce.size(), clientServerNonce.npos);
+		serverNonce = createByteArray(clientServerNonce.substr(clientnonce.size(), clientServerNonce.npos));
 
 		// Extract the number of iterations
 		int iterations = 0;
@@ -99,16 +100,16 @@ bool SCRAMSHA1ClientAuthenticator::setChallenge(const boost::optional<ByteArray>
 		}
 
 		// Compute all the values needed for the server signature
-		saltedPassword = PBKDF2::encode(StringPrep::getPrepared(getPassword(), StringPrep::SASLPrep), salt, iterations);
-		authMessage = getInitialBareClientMessage() + "," + initialServerMessage + "," + getFinalMessageWithoutProof();
-		ByteArray serverKey = HMACSHA1::getResult(saltedPassword, "Server Key");
+		saltedPassword = PBKDF2::encode(createByteArray(StringPrep::getPrepared(getPassword(), StringPrep::SASLPrep)), salt, iterations);
+		authMessage = concat(getInitialBareClientMessage(), createByteArray(","), initialServerMessage, createByteArray(","), getFinalMessageWithoutProof());
+		ByteArray serverKey = HMACSHA1::getResult(saltedPassword, createByteArray("Server Key"));
 		serverSignature = HMACSHA1::getResult(serverKey, authMessage);
 
 		step = Proof;
 		return true;
 	}
 	else if (step == Proof) {
-		ByteArray result = ByteArray("v=") + ByteArray(Base64::encode(serverSignature));
+		ByteArray result = concat(createByteArray("v="), createByteArray(Base64::encode(serverSignature)));
 		step = Final;
 		return challenge && challenge == result;
 	}
@@ -147,20 +148,20 @@ std::map<char, std::string> SCRAMSHA1ClientAuthenticator::parseMap(const std::st
 
 ByteArray SCRAMSHA1ClientAuthenticator::getInitialBareClientMessage() const {
 	std::string authenticationID = StringPrep::getPrepared(getAuthenticationID(), StringPrep::SASLPrep);
-	return ByteArray(std::string("n=" + escape(authenticationID) + ",r=" + clientnonce));
+	return createByteArray(std::string("n=" + escape(authenticationID) + ",r=" + clientnonce));
 }
 
 ByteArray SCRAMSHA1ClientAuthenticator::getGS2Header() const {
-	ByteArray channelBindingHeader("n");
+	ByteArray channelBindingHeader(createByteArray("n"));
 	if (tlsChannelBindingData) {
 		if (useChannelBinding) {
-			channelBindingHeader = ByteArray("p=tls-unique");
+			channelBindingHeader = createByteArray("p=tls-unique");
 		}
 		else {
-			channelBindingHeader = ByteArray("y");
+			channelBindingHeader = createByteArray("y");
 		}
 	}
-	return channelBindingHeader + ByteArray(",") + (getAuthorizationID().empty() ? "" : "a=" + escape(getAuthorizationID())) + ",";
+	return concat(channelBindingHeader, createByteArray(","), (getAuthorizationID().empty() ? ByteArray() : createByteArray("a=" + escape(getAuthorizationID()))), createByteArray(","));
 }
 
 void SCRAMSHA1ClientAuthenticator::setTLSChannelBindingData(const ByteArray& channelBindingData) {
@@ -172,7 +173,7 @@ ByteArray SCRAMSHA1ClientAuthenticator::getFinalMessageWithoutProof() const {
 	if (useChannelBinding && tlsChannelBindingData) {
 		channelBindData = *tlsChannelBindingData;
 	}
-	return ByteArray("c=") + Base64::encode(getGS2Header() + channelBindData) + ",r=" + clientnonce + serverNonce;
+	return concat(createByteArray("c=" + Base64::encode(concat(getGS2Header(), channelBindData)) + ",r=" + clientnonce), serverNonce);
 }
 
 

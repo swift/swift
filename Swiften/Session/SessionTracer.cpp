@@ -22,7 +22,7 @@ void SessionTracer::printData(char direction, const ByteArray& data) {
 		std::cerr << direction;
 	}
 	std::cerr << " " << session->getRemoteJID()<< " " << direction << direction << std::endl;
-	std::cerr << data.toString() << std::endl;
+	std::cerr << byteArrayToString(data) << std::endl;
 }
 
 }

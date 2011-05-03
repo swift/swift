@@ -48,8 +48,7 @@ OpenSSLContext::OpenSSLContext() : state_(Start), context_(0), handle_(0), readB
 			if (!certContext) {
 				break;
 			}
-			ByteArray certData(certContext->pbCertEncoded, certContext->cbCertEncoded);
-			OpenSSLCertificate cert(certData);
+			OpenSSLCertificate cert(createByteArray(certContext->pbCertEncoded, certContext->cbCertEncoded));
 			if (store && cert.getInternalX509()) {
 				X509_STORE_add_cert(store, cert.getInternalX509().get());
 			}
@@ -140,13 +139,13 @@ void OpenSSLContext::sendPendingDataToNetwork() {
 	if (size > 0) {
 		ByteArray data;
 		data.resize(size);
-		BIO_read(writeBIO_, data.getData(), size);
+		BIO_read(writeBIO_, vecptr(data), size);
 		onDataForNetwork(data);
 	}
 }
 
 void OpenSSLContext::handleDataFromNetwork(const ByteArray& data) {
-	BIO_write(readBIO_, data.getData(), data.getSize());
+	BIO_write(readBIO_, vecptr(data), data.size());
 	switch (state_) {
 		case Connecting:
 			doConnect();
@@ -160,7 +159,7 @@ void OpenSSLContext::handleDataFromNetwork(const ByteArray& data) {
 }
 
 void OpenSSLContext::handleDataFromApplication(const ByteArray& data) {
-	if (SSL_write(handle_, data.getData(), data.getSize()) >= 0) {
+	if (SSL_write(handle_, vecptr(data), data.size()) >= 0) {
 		sendPendingDataToNetwork();
 	}
 	else {
@@ -172,12 +171,12 @@ void OpenSSLContext::handleDataFromApplication(const ByteArray& data) {
 void OpenSSLContext::sendPendingDataToApplication() {
 	ByteArray data;
 	data.resize(SSL_READ_BUFFERSIZE);
-	int ret = SSL_read(handle_, data.getData(), data.getSize());
+	int ret = SSL_read(handle_, vecptr(data), data.size());
 	while (ret > 0) {
 		data.resize(ret);
 		onDataForApplication(data);
 		data.resize(SSL_READ_BUFFERSIZE);
-		ret = SSL_read(handle_, data.getData(), data.getSize());
+		ret = SSL_read(handle_, vecptr(data), data.size());
 	}
 	if (ret < 0 && SSL_get_error(handle_, ret) != SSL_ERROR_WANT_READ) {
 		state_ = Error;
@@ -192,7 +191,7 @@ bool OpenSSLContext::setClientCertificate(const PKCS12Certificate& certificate) 
 
 	// Create a PKCS12 structure
 	BIO* bio = BIO_new(BIO_s_mem());
-	BIO_write(bio, certificate.getData().getData(), certificate.getData().getSize());
+	BIO_write(bio, vecptr(certificate.getData()), certificate.getData().size());
 	boost::shared_ptr<PKCS12> pkcs12(d2i_PKCS12_bio(bio, NULL), PKCS12_free);
 	BIO_free(bio);
 	if (!pkcs12) {
@@ -247,7 +246,7 @@ boost::shared_ptr<CertificateVerificationError> OpenSSLContext::getPeerCertifica
 ByteArray OpenSSLContext::getFinishMessage() const {
 	ByteArray data;
 	data.resize(MAX_FINISHED_SIZE);
-	size_t size = SSL_get_finished(handle_, data.getData(), data.getSize());
+	size_t size = SSL_get_finished(handle_, vecptr(data), data.size());
 	data.resize(size);
 	return data;
 }

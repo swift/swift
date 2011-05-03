@@ -9,6 +9,7 @@
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/extensions/TestFactoryRegistry.h>
 
+#include <QA/Checker/IO.h>
 #include <Swiften/StringCodecs/MD5.h>
 #include <Swiften/Base/ByteArray.h>
 
@@ -22,15 +23,15 @@ class MD5Test : public CppUnit::TestFixture {
 
 	public:
 		void testGetHash_Empty() {
-			ByteArray result(MD5::getHash(""));
+			ByteArray result(MD5::getHash(createByteArray("")));
 
-			CPPUNIT_ASSERT_EQUAL(ByteArray("\xd4\x1d\x8c\xd9\x8f\x00\xb2\x04\xe9\x80\x09\x98\xec\xf8\x42\x7e", 16), result);
+			CPPUNIT_ASSERT_EQUAL(createByteArray("\xd4\x1d\x8c\xd9\x8f\x00\xb2\x04\xe9\x80\x09\x98\xec\xf8\x42\x7e", 16), result);
 		}
 
 		void testGetHash_Alphabet() {
-			ByteArray result(MD5::getHash("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"));
+			ByteArray result(MD5::getHash(createByteArray("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789")));
 
-			CPPUNIT_ASSERT_EQUAL(ByteArray("\xd1\x74\xab\x98\xd2\x77\xd9\xf5\xa5\x61\x1c\x2c\x9f\x41\x9d\x9f", 16), result);
+			CPPUNIT_ASSERT_EQUAL(createByteArray("\xd1\x74\xab\x98\xd2\x77\xd9\xf5\xa5\x61\x1c\x2c\x9f\x41\x9d\x9f", 16), result);
 		}
 };
 

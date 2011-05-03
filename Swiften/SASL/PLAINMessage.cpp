@@ -13,24 +13,24 @@ PLAINMessage::PLAINMessage(const std::string& authcid, const std::string& passwo
 
 PLAINMessage::PLAINMessage(const ByteArray& value) {
 	size_t i = 0;
-	while (i < value.getSize() && value[i] != '\0') {
+	while (i < value.size() && value[i] != '\0') {
 		authzid += value[i];
 		++i;
 	}
-	if (i == value.getSize()) {
+	if (i == value.size()) {
 		return;
 	}
 	++i;
-	while (i < value.getSize() && value[i] != '\0') {
+	while (i < value.size() && value[i] != '\0') {
 		authcid += value[i];
 		++i;
 	}
-	if (i == value.getSize()) {
+	if (i == value.size()) {
 		authcid = "";
 		return;
 	}
 	++i;
-	while (i < value.getSize()) {
+	while (i < value.size()) {
 		password += value[i];
 		++i;
 	}
@@ -38,7 +38,7 @@ PLAINMessage::PLAINMessage(const ByteArray& value) {
 
 ByteArray PLAINMessage::getValue() const {
 	std::string s = authzid + '\0' + authcid + '\0' + password;
-	return ByteArray(s.c_str(), s.size());
+	return createByteArray(s);
 }
 
 }

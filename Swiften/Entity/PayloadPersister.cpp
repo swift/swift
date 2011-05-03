@@ -41,10 +41,10 @@ void PayloadPersister::savePayload(boost::shared_ptr<Payload> payload, const boo
 boost::shared_ptr<Payload> PayloadPersister::loadPayload(const boost::filesystem::path& path) {
 	if (boost::filesystem::exists(path)) {
 		ByteArray data;
-		data.readFromFile(path.string());
+		readByteArrayFromFile(data, path.string());
 		boost::shared_ptr<PayloadParser> parser(createParser());
 		PayloadParserTester tester(parser.get());
-		tester.parse(data.toString());
+		tester.parse(byteArrayToString(data));
 		return parser->getPayload();
 	}
 	else {

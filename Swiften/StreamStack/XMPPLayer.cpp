@@ -29,19 +29,19 @@ XMPPLayer::~XMPPLayer() {
 }
 
 void XMPPLayer::writeHeader(const ProtocolHeader& header) {
-	writeDataInternal(ByteArray(xmppSerializer_->serializeHeader(header)));
+	writeDataInternal(createByteArray(xmppSerializer_->serializeHeader(header)));
 }
 
 void XMPPLayer::writeFooter() {
-	writeDataInternal(ByteArray(xmppSerializer_->serializeFooter()));
+	writeDataInternal(createByteArray(xmppSerializer_->serializeFooter()));
 }
 
 void XMPPLayer::writeElement(boost::shared_ptr<Element> element) {
-	writeDataInternal(ByteArray(xmppSerializer_->serializeElement(element)));
+	writeDataInternal(createByteArray(xmppSerializer_->serializeElement(element)));
 }
 
 void XMPPLayer::writeData(const std::string& data) {
-	writeDataInternal(ByteArray(data));
+	writeDataInternal(createByteArray(data));
 }
 
 void XMPPLayer::writeDataInternal(const ByteArray& data) {
@@ -52,7 +52,7 @@ void XMPPLayer::writeDataInternal(const ByteArray& data) {
 void XMPPLayer::handleDataRead(const ByteArray& data) {
 	onDataRead(data);
 	inParser_ = true;
-	if (!xmppParser_->parse(data.toString())) {
+	if (!xmppParser_->parse(byteArrayToString(data))) {
 		inParser_ = false;
 		onError();
 		return;

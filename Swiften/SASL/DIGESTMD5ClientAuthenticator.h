@@ -9,7 +9,7 @@
 #include <map>
 
 #include <string>
-#include <Swiften/Base/ByteArray.h>
+#include <vector>
 #include <Swiften/SASL/ClientAuthenticator.h>
 #include <Swiften/SASL/DIGESTMD5Properties.h>
 
@@ -18,8 +18,8 @@ namespace Swift {
 		public:
 			DIGESTMD5ClientAuthenticator(const std::string& host, const std::string& nonce);
 			
-			virtual boost::optional<ByteArray> getResponse() const;
-			virtual bool setChallenge(const boost::optional<ByteArray>&);
+			virtual boost::optional<std::vector<unsigned char> > getResponse() const;
+			virtual bool setChallenge(const boost::optional<std::vector<unsigned char> >&);
 
 		private:
 			enum Step {

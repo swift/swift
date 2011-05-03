@@ -10,6 +10,8 @@
 
 #include <Swiften/StringCodecs/MD5.h>
 #include <Swiften/StringCodecs/Hexify.h>
+#include <Swiften/Base/Concat.h>
+#include <Swiften/Base/Algorithm.h>
 
 namespace Swift {
 
@@ -30,16 +32,18 @@ boost::optional<ByteArray> DIGESTMD5ClientAuthenticator::getResponse() const {
 		std::string nc = "00000001";
 
 		// Compute the response value
-		ByteArray A1 = MD5::getHash(getAuthenticationID() + ":" + realm + ":" + getPassword()) + ":" + *challenge.getValue("nonce") + ":" + cnonce;
+		ByteArray A1 = concat(
+			MD5::getHash(createByteArray(getAuthenticationID() + ":" + realm + ":" + getPassword())), createByteArray(":"), createByteArray(*challenge.getValue("nonce")), createByteArray(":"), createByteArray(cnonce));
 		if (!getAuthorizationID().empty()) {
-			A1 += ":" + getAuthenticationID();
+			append(A1, createByteArray(":" + getAuthenticationID()));
 		}
-		std::string A2 = "AUTHENTICATE:" + digestURI;
+		ByteArray A2 = createByteArray("AUTHENTICATE:" + digestURI);
 
-		std::string responseValue = Hexify::hexify(MD5::getHash(
-				Hexify::hexify(MD5::getHash(A1)) + ":" 
-				+ *challenge.getValue("nonce") + ":" + nc + ":" + cnonce + ":" + qop + ":" 
-				+ Hexify::hexify(MD5::getHash(A2))));
+		std::string responseValue = Hexify::hexify(MD5::getHash(createByteArray(
+			Hexify::hexify(MD5::getHash(A1)) + ":"
+			+ *challenge.getValue("nonce") + ":" + nc + ":" + cnonce + ":" + qop + ":"
+			+ Hexify::hexify(MD5::getHash(A2)))));
+
 
 		DIGESTMD5Properties response;
 		response.setValue("username", getAuthenticationID());

@@ -10,6 +10,7 @@
 #include <cppunit/extensions/TestFactoryRegistry.h>
 #include <boost/bind.hpp>
 
+#include <QA/Checker/IO.h>
 #include <Swiften/Elements/VCardUpdate.h>
 #include <Swiften/Avatars/VCardUpdateAvatarManager.h>
 #include <Swiften/Avatars/AvatarMemoryStorage.h>
@@ -44,7 +45,7 @@ class VCardUpdateAvatarManagerTest : public CppUnit::TestFixture {
 			avatarStorage = new AvatarMemoryStorage();
 			vcardStorage = new VCardMemoryStorage();
 			vcardManager = new VCardManager(ownJID, iqRouter, vcardStorage);
-			avatar1 = ByteArray("abcdefg");
+			avatar1 = createByteArray("abcdefg");
 			avatar1Hash = Hexify::hexify(SHA1::getHash(avatar1));
 			user1 = JID("user1@bar.com/bla");
 			user2 = JID("user2@foo.com/baz");
@@ -163,7 +164,7 @@ class VCardUpdateAvatarManagerTest : public CppUnit::TestFixture {
 
 		IQ::ref createVCardResult(const ByteArray& avatar) {
 			VCard::ref vcard(new VCard());
-			if (!avatar.isEmpty()) {
+			if (!avatar.empty()) {
 				vcard->setPhoto(avatar);
 			}
 			return IQ::createResult(JID("baz@fum.com"), stanzaChannel->sentStanzas[0]->getID(), vcard);

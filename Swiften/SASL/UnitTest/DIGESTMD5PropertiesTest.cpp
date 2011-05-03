@@ -19,7 +19,7 @@ class DIGESTMD5PropertiesTest : public CppUnit::TestFixture {
 
 	public:
 		void testParse() {
-			DIGESTMD5Properties properties = DIGESTMD5Properties::parse(ByteArray(
+			DIGESTMD5Properties properties = DIGESTMD5Properties::parse(createByteArray(
 					"realm=\"myrealm1\",realm=\"myrealm2\",nonce=\"mynonce\","
 					"algorithm=md5-sess,charset=utf-8"));
 
@@ -47,8 +47,8 @@ class DIGESTMD5PropertiesTest : public CppUnit::TestFixture {
 			properties.setValue("username", "myuser");
 
 			ByteArray result = properties.serialize();
-			ByteArray expected("authzid=\"myauthzid\",charset=utf-8,cnonce=\"mycnonce\",digest-uri=\"mydigesturi\",nc=1,nonce=\"mynonce\",qop=auth,realm=\"myrealm\",response=myresponse,username=\"myuser\"");
-			CPPUNIT_ASSERT_EQUAL(expected.toString(), result.toString());
+			ByteArray expected(createByteArray("authzid=\"myauthzid\",charset=utf-8,cnonce=\"mycnonce\",digest-uri=\"mydigesturi\",nc=1,nonce=\"mynonce\",qop=auth,realm=\"myrealm\",response=myresponse,username=\"myuser\""));
+			CPPUNIT_ASSERT_EQUAL(byteArrayToString(expected), byteArrayToString(result));
 		}
 };
 

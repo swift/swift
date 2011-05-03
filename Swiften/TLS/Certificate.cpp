@@ -22,7 +22,7 @@ Certificate::~Certificate() {
 std::string Certificate::getSHA1Fingerprint() const {
 	ByteArray hash = SHA1::getHash(toDER());
 	std::ostringstream s;
-	for (size_t i = 0; i < hash.getSize(); ++i) {
+	for (size_t i = 0; i < hash.size(); ++i) {
 		if (i > 0) {
 			s << ":";
 		}

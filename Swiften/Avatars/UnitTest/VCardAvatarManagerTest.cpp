@@ -10,6 +10,7 @@
 #include <cppunit/extensions/TestFactoryRegistry.h>
 #include <boost/bind.hpp>
 
+#include <QA/Checker/IO.h>
 #include <Swiften/Elements/VCard.h>
 #include <Swiften/Avatars/VCardAvatarManager.h>
 #include <Swiften/Avatars/AvatarMemoryStorage.h>
@@ -42,7 +43,7 @@ class VCardAvatarManagerTest : public CppUnit::TestFixture {
 			avatarStorage = new AvatarMemoryStorage();
 			vcardStorage = new VCardMemoryStorage();
 			vcardManager = new VCardManager(ownJID, iqRouter, vcardStorage);
-			avatar1 = ByteArray("abcdefg");
+			avatar1 = createByteArray("abcdefg");
 			avatar1Hash = Hexify::hexify(SHA1::getHash(avatar1));
 			user1 = JID("user1@bar.com/bla");
 			user2 = JID("user2@foo.com/baz");

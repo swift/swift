@@ -88,6 +88,11 @@ namespace Swift {
 		Detail::eraseIfImpl(container, predicate, typename Detail::ContainerTraits<C>::Category());
 	}
 
+	template<typename C>
+	void append(C& target, const C& source) {
+		target.insert(target.end(), source.begin(), source.end());
+	}
+
 	/*
 	 * Functors
 	 */

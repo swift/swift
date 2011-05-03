@@ -19,7 +19,7 @@ namespace Swift {
 			BonjourRegisterQuery(const std::string& name, int port, const ByteArray& txtRecord, boost::shared_ptr<BonjourQuerier> querier, EventLoop* eventLoop) : BonjourQuery(querier, eventLoop) {
 				DNSServiceErrorType result = DNSServiceRegister(
 						&sdRef, 0, 0, name.c_str(), "_presence._tcp", NULL, NULL, port, 
-						txtRecord.getSize(), txtRecord.getData(), 
+						txtRecord.size(), vecptr(txtRecord), 
 						&BonjourRegisterQuery::handleServiceRegisteredStatic, this);
 				if (result != kDNSServiceErr_NoError) {
 					sdRef = NULL;
@@ -41,7 +41,7 @@ namespace Swift {
 
 			void updateServiceInfo(const ByteArray& txtRecord) {
 				boost::lock_guard<boost::mutex> lock(sdRefMutex);
-				DNSServiceUpdateRecord(sdRef, NULL, NULL, txtRecord.getSize(), txtRecord.getData(), 0);
+				DNSServiceUpdateRecord(sdRef, NULL, NULL, txtRecord.size(), vecptr(txtRecord), 0);
 			}
 
 		private:

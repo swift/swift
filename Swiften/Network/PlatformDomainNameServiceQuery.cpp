@@ -81,7 +81,7 @@ void PlatformDomainNameServiceQuery::runBlocking() {
 
 	ByteArray response;
 	response.resize(NS_PACKETSZ);
-	int responseLength = res_query(const_cast<char*>(service.c_str()), ns_c_in, ns_t_srv, reinterpret_cast<u_char*>(response.getData()), response.getSize());
+	int responseLength = res_query(const_cast<char*>(service.c_str()), ns_c_in, ns_t_srv, reinterpret_cast<u_char*>(vecptr(response)), response.size());
 	if (responseLength == -1) {
 		SWIFT_LOG(debug) << "Error" << std::endl;
 		emitError();
@@ -89,8 +89,8 @@ void PlatformDomainNameServiceQuery::runBlocking() {
 	}
 
 	// Parse header
-	HEADER* header = reinterpret_cast<HEADER*>(response.getData());
-	unsigned char* messageStart = reinterpret_cast<unsigned char*>(response.getData());
+	HEADER* header = reinterpret_cast<HEADER*>(vecptr(response));
+	unsigned char* messageStart = vecptr(response);
 	unsigned char* messageEnd = messageStart + responseLength;
 	unsigned char* currentEntry = messageStart + NS_HFIXEDSZ;
 
@@ -146,12 +146,12 @@ void PlatformDomainNameServiceQuery::runBlocking() {
 		}
 		ByteArray entry;
 		entry.resize(NS_MAXDNAME);
-		entryLength = dn_expand(messageStart, messageEnd, currentEntry, reinterpret_cast<char*>(entry.getData()), entry.getSize());
+		entryLength = dn_expand(messageStart, messageEnd, currentEntry, reinterpret_cast<char*>(vecptr(entry)), entry.size());
 		if (entryLength < 0) {
 			emitError();
 			return;
 		}
-		record.hostname = std::string(reinterpret_cast<const char*>(entry.getData()));
+		record.hostname = std::string(reinterpret_cast<const char*>(vecptr(entry)));
 		records.push_back(record);
 		currentEntry += entryLength;
 		answersCount--;

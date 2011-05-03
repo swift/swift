@@ -8,9 +8,4 @@
 
 #include <Swiften/Base/ByteArray.h>
 
-namespace Swift {
-	class HMACSHA1 {
-		public:
-			static ByteArray getResult(const ByteArray& key, const ByteArray& data);
-	};
-}
+std::ostream& operator<<(std::ostream& os, const Swift::ByteArray& s);

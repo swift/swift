@@ -22,11 +22,11 @@ FileVCardCollection::FileVCardCollection(boost::filesystem::path dir) : vcardsPa
 boost::shared_ptr<VCard> FileVCardCollection::getOwnVCard() const {
 	if (boost::filesystem::exists(vcardsPath / std::string("vcard.xml"))) {
 		ByteArray data;
-		data.readFromFile(boost::filesystem::path(vcardsPath / std::string("vcard.xml")).string());
+		readByteArrayFromFile(data, boost::filesystem::path(vcardsPath / std::string("vcard.xml")).string());
 
 		VCardParser parser;
 		PayloadParserTester tester(&parser);
-		tester.parse(data.toString());
+		tester.parse(byteArrayToString(data));
 		return boost::dynamic_pointer_cast<VCard>(parser.getPayload());
 	}
 	else {

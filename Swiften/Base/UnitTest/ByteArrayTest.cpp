@@ -25,31 +25,31 @@ class ByteArrayTest : public CppUnit::TestFixture {
 		void testGetData_NoData() {
 			ByteArray testling;
 
-			CPPUNIT_ASSERT_EQUAL(reinterpret_cast<const char*>(NULL), reinterpret_cast<const char*>(testling.getData()));
+			CPPUNIT_ASSERT_EQUAL(reinterpret_cast<const char*>(NULL), reinterpret_cast<const char*>(vecptr(testling)));
 		}
 
 		void testToString() {
-			ByteArray testling(ByteArray::create("abcde"));
+			ByteArray testling(createByteArray("abcde"));
 
-			CPPUNIT_ASSERT_EQUAL(std::string("abcde"), testling.toString());
+			CPPUNIT_ASSERT_EQUAL(std::string("abcde"), byteArrayToString(testling));
 		}
 
 		void testToString_NullTerminated() {
-			ByteArray testling(ByteArray::create("abcde\0", 6));
+			ByteArray testling(createByteArray("abcde\0", 6));
 
-			CPPUNIT_ASSERT_EQUAL(std::string("abcde"), testling.toString());
+			CPPUNIT_ASSERT_EQUAL(std::string("abcde"), byteArrayToString(testling));
 		}
 
 		void testToString_TwoNullTerminated() {
-			ByteArray testling(ByteArray::create("abcde\0\0", 7));
+			ByteArray testling(createByteArray("abcde\0\0", 7));
 
-			CPPUNIT_ASSERT_EQUAL(std::string("abcde"), testling.toString());
+			CPPUNIT_ASSERT_EQUAL(std::string("abcde"), byteArrayToString(testling));
 		}
 
 		void testToString_AllNull() {
-			ByteArray testling(ByteArray::create("\0\0", 2));
+			ByteArray testling(createByteArray("\0\0", 2));
 
-			CPPUNIT_ASSERT_EQUAL(std::string(""), testling.toString());
+			CPPUNIT_ASSERT_EQUAL(std::string(""), byteArrayToString(testling));
 		}
 };
 

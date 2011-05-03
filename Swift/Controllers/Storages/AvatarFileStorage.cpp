@@ -59,7 +59,7 @@ void AvatarFileStorage::addAvatar(const std::string& hash, const ByteArray& avat
 		}
 	}
 	boost::filesystem::ofstream file(avatarPath, boost::filesystem::ofstream::binary|boost::filesystem::ofstream::out);
-	file.write(reinterpret_cast<const char*>(avatar.getData()), static_cast<std::streamsize>(avatar.getSize()));
+	file.write(reinterpret_cast<const char*>(vecptr(avatar)), static_cast<std::streamsize>(avatar.size()));
 	file.close();
 }
 
@@ -69,7 +69,7 @@ boost::filesystem::path AvatarFileStorage::getAvatarPath(const std::string& hash
 
 ByteArray AvatarFileStorage::getAvatar(const std::string& hash) const {
 	ByteArray data;
-	data.readFromFile(getAvatarPath(hash).string());
+	readByteArrayFromFile(data, getAvatarPath(hash).string());
 	return data;
 }
 

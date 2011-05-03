@@ -8,9 +8,9 @@
 
 #include <boost/shared_ptr.hpp>
 
+#include <Swiften/Base/ByteArray.h>
+
 namespace Swift {
-	
-	class ByteArray;
 	class DNSSDServiceID;
 	class DNSSDBrowseQuery;
 	class DNSSDRegisterQuery;

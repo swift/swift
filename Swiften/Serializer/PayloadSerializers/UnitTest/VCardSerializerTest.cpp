@@ -29,7 +29,7 @@ class VCardSerializerTest : public CppUnit::TestFixture
 			vcard->setFamilyName("Wonderland");
 			vcard->setSuffix("PhD");
 			vcard->setNickname("DreamGirl");
-			vcard->setPhoto("abcdef");
+			vcard->setPhoto(createByteArray("abcdef"));
 			vcard->setPhotoType("image/png");
 			vcard->addUnknownContent("<BDAY>1234</BDAY><MAILER>mutt</MAILER>");
 

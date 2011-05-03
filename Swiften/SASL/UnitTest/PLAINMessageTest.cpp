@@ -9,6 +9,7 @@
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/extensions/TestFactoryRegistry.h>
 
+#include <QA/Checker/IO.h>
 #include <Swiften/SASL/PLAINMessage.h>
 
 using namespace Swift;
@@ -29,16 +30,16 @@ class PLAINMessageTest : public CppUnit::TestFixture
 
 		void testGetValue_WithoutAuthzID() {
 			PLAINMessage message("user", "pass");
-			CPPUNIT_ASSERT_EQUAL(message.getValue(), ByteArray("\0user\0pass", 10));
+			CPPUNIT_ASSERT_EQUAL(message.getValue(), createByteArray("\0user\0pass", 10));
 		}
 
 		void testGetValue_WithAuthzID() {
 			PLAINMessage message("user", "pass", "authz");
-			CPPUNIT_ASSERT_EQUAL(message.getValue(), ByteArray("authz\0user\0pass", 15));
+			CPPUNIT_ASSERT_EQUAL(message.getValue(), createByteArray("authz\0user\0pass", 15));
 		}
 
 		void testConstructor_WithoutAuthzID() {
-			PLAINMessage message(ByteArray("\0user\0pass", 10));
+			PLAINMessage message(createByteArray("\0user\0pass", 10));
 
 			CPPUNIT_ASSERT_EQUAL(std::string(""), message.getAuthorizationID());
 			CPPUNIT_ASSERT_EQUAL(std::string("user"), message.getAuthenticationID());
@@ -46,7 +47,7 @@ class PLAINMessageTest : public CppUnit::TestFixture
 		}
 
 		void testConstructor_WithAuthzID() {
-			PLAINMessage message(ByteArray("authz\0user\0pass", 15));
+			PLAINMessage message(createByteArray("authz\0user\0pass", 15));
 
 			CPPUNIT_ASSERT_EQUAL(std::string("authz"), message.getAuthorizationID());
 			CPPUNIT_ASSERT_EQUAL(std::string("user"), message.getAuthenticationID());
@@ -54,13 +55,13 @@ class PLAINMessageTest : public CppUnit::TestFixture
 		}
 
 		void testConstructor_NoAuthcid() {
-			PLAINMessage message(ByteArray("authzid", 7));
+			PLAINMessage message(createByteArray("authzid", 7));
 
 			CPPUNIT_ASSERT_EQUAL(std::string(""), message.getAuthenticationID());
 		}
 
 		void testConstructor_NoPassword() {
-			PLAINMessage message(ByteArray("authzid\0authcid", 15));
+			PLAINMessage message(createByteArray("authzid\0authcid", 15));
 
 			CPPUNIT_ASSERT_EQUAL(std::string(""), message.getAuthenticationID());
 		}

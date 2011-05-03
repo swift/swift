@@ -50,7 +50,7 @@ void VCardUpdateAvatarManager::handleVCardChanged(const JID& from, VCard::ref vC
 		return;
 	}
 
-	if (vCard->getPhoto().isEmpty()) {
+	if (vCard->getPhoto().empty()) {
 		setAvatarHash(from, "");
 	}
 	else {

@@ -575,7 +575,7 @@ void MainController::handleServerDiscoInfoResponse(boost::shared_ptr<DiscoInfo> 
 }
 
 void MainController::handleVCardReceived(const JID& jid, VCard::ref vCard) {
-	if (!jid.equals(jid_, JID::WithoutResource) || !vCard || vCard->getPhoto().isEmpty()) {
+	if (!jid.equals(jid_, JID::WithoutResource) || !vCard || vCard->getPhoto().empty()) {
 		return;
 	}
 	std::string hash = Hexify::hexify(SHA1::getHash(vCard->getPhoto()));

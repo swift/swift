@@ -36,6 +36,7 @@
 #include <Swiften/StringCodecs/MD5.h>
 
 #include <cassert>
+#include <string.h>
 
 #include <Swiften/Base/ByteArray.h>
 #include <Swiften/Base/Platform.h>
@@ -356,8 +357,8 @@ ByteArray MD5::getHash(const ByteArray& data) {
 
 	md5_state_t state;
 	md5_init(&state);
-	md5_append(&state, reinterpret_cast<const md5_byte_t*>(data.getData()), data.getSize());
-	md5_finish(&state, reinterpret_cast<md5_byte_t*>(digest.getData()));
+	md5_append(&state, reinterpret_cast<const md5_byte_t*>(vecptr(data)), data.size());
+	md5_finish(&state, reinterpret_cast<md5_byte_t*>(vecptr(digest)));
 
 	return digest;
 }

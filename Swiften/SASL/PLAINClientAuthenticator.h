@@ -7,6 +7,7 @@
 #pragma once
 
 #include <Swiften/SASL/ClientAuthenticator.h>
+#include <Swiften/Base/ByteArray.h>
 
 namespace Swift {
 	class PLAINClientAuthenticator : public ClientAuthenticator {

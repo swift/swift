@@ -10,6 +10,8 @@
 #include <iostream>
 
 #include <Swiften/Base/ByteArray.h>
+#include <Swiften/Base/Algorithm.h>
+#include <Swiften/Base/Concat.h>
 #include <Swiften/FileTransfer/SOCKS5BytestreamRegistry.h>
 #include <Swiften/FileTransfer/BytestreamException.h>
 
@@ -35,51 +37,51 @@ void SOCKS5BytestreamServerSession::stop() {
 }
 
 void SOCKS5BytestreamServerSession::handleDataRead(const ByteArray& data) {
-	unprocessedData += data;
+	append(unprocessedData, data);
 	process();
 }
 
 void SOCKS5BytestreamServerSession::process() {
 	if (state == WaitingForAuthentication) {
-		if (unprocessedData.getSize() >= 2) {
+		if (unprocessedData.size() >= 2) {
 			size_t authCount = unprocessedData[1];
 			size_t i = 2;
-			while (i < 2 + authCount && i < unprocessedData.getSize()) {
+			while (i < 2 + authCount && i < unprocessedData.size()) {
 				// Skip authentication mechanism
 				++i;
 			}
 			if (i == 2 + authCount) {
 				// Authentication message is complete
-				if (i != unprocessedData.getSize()) {
+				if (i != unprocessedData.size()) {
 					std::cerr << "SOCKS5BytestreamServerSession: Junk after authentication mechanism";
 				}
 				unprocessedData.clear();
-				connection->write(ByteArray("\x05\x00", 2));
+				connection->write(createByteArray("\x05\x00", 2));
 				state = WaitingForRequest;
 			}
 		}
 	}
 	else if (state == WaitingForRequest) {
-		if (unprocessedData.getSize() >= 5) {
+		if (unprocessedData.size() >= 5) {
 			ByteArray requestID;
 			size_t i = 5;
 			size_t hostnameSize = unprocessedData[4];
-			while (i < 5 + hostnameSize && i < unprocessedData.getSize()) {
-				requestID += unprocessedData[i];
+			while (i < 5 + hostnameSize && i < unprocessedData.size()) {
+				requestID.push_back(unprocessedData[i]);
 				++i;
 			}
 			// Skip the port:
 			i += 2;
-			if (i >= unprocessedData.getSize()) {
-				if (i != unprocessedData.getSize()) {
+			if (i >= unprocessedData.size()) {
+				if (i != unprocessedData.size()) {
 					std::cerr << "SOCKS5BytestreamServerSession: Junk after authentication mechanism";
 				}
-				bytestream = bytestreams->getBytestream(requestID.toString());
-				ByteArray result("\x05", 1);
-				result += bytestream ? 0x0 : 0x4;
-				result += ByteArray("\x00\x03", 2);
-				result += static_cast<char>(requestID.getSize());
-				result += requestID + ByteArray("\x00\x00", 2);
+				bytestream = bytestreams->getBytestream(byteArrayToString(requestID));
+				ByteArray result = createByteArray("\x05", 1);
+				result.push_back(bytestream ? 0x0 : 0x4);
+				append(result, createByteArray("\x00\x03", 2));
+				result.push_back(static_cast<char>(requestID.size()));
+				append(result, concat(requestID, createByteArray("\x00\x00", 2)));
 				if (!bytestream) {
 					connection->write(result);
 					finish(true);

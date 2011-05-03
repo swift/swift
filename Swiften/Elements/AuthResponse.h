@@ -6,9 +6,9 @@
 
 #pragma once
 
+#include <vector>
 #include <boost/optional.hpp>
 
-#include <Swiften/Base/ByteArray.h>
 #include <Swiften/Elements/Element.h>
 
 namespace Swift {
@@ -17,21 +17,21 @@ namespace Swift {
 			AuthResponse() {
 			}
 
-			AuthResponse(const ByteArray& value) : value(value) {
+			AuthResponse(const std::vector<unsigned char>& value) : value(value) {
 			}
 
-			AuthResponse(const boost::optional<ByteArray>& value) : value(value) {
+			AuthResponse(const boost::optional<std::vector<unsigned char> >& value) : value(value) {
 			}
 
-			const boost::optional<ByteArray>& getValue() const {
+			const boost::optional<std::vector<unsigned char> >& getValue() const {
 				return value;
 			}
 
-			void setValue(const ByteArray& value) {
-				this->value = boost::optional<ByteArray>(value);
+			void setValue(const std::vector<unsigned char>& value) {
+				this->value = boost::optional<std::vector<unsigned char> >(value);
 			}
 
 		private:
-			boost::optional<ByteArray> value;
+			boost::optional<std::vector<unsigned char> > value;
 	};
 }

@@ -73,9 +73,9 @@ void SOCKS5ProxiedConnection::handleConnectionConnectFinished(bool error) {
 		
 		proxyState_ = ProxyAuthenticating;
 		ByteArray socksConnect;
-		socksConnect += 0x05; // VER = SOCKS5 = 0x05
-		socksConnect += 0x01; // Number of authentication methods after this byte.
-		socksConnect += 0x00; // 0x00 == no authentication
+		socksConnect.push_back(0x05); // VER = SOCKS5 = 0x05
+		socksConnect.push_back(0x01); // Number of authentication methods after this byte.
+		socksConnect.push_back(0x00); // 0x00 == no authentication
 		// buffer.push_back(0x01); // 0x01 == GSSAPI 
 		// buffer.push_back(0x02); // 0x02 ==  Username/Password
 		// rest see RFC 1928 (http://tools.ietf.org/html/rfc1928)
@@ -99,10 +99,10 @@ void SOCKS5ProxiedConnection::handleDataRead(const ByteArray& data) {
 					case 0x00:
 						try {
 							proxyState_ = ProxyConnecting;
-							socksConnect += 0x05; // VER = SOCKS5 = 0x05
-							socksConnect += 0x01; // Construct a TCP connection. (CMD)
-							socksConnect += 0x00; // reserved.
-							socksConnect += rawAddress.is_v4() ? 0x01 : 0x04; // IPv4 == 0x01, Hostname == 0x02, IPv6 == 0x04. (ATYP)
+							socksConnect.push_back(0x05); // VER = SOCKS5 = 0x05
+							socksConnect.push_back(0x01); // Construct a TCP connection. (CMD)
+							socksConnect.push_back(0x00); // reserved.
+							socksConnect.push_back(rawAddress.is_v4() ? 0x01 : 0x04); // IPv4 == 0x01, Hostname == 0x02, IPv6 == 0x04. (ATYP)
 							size_t size = rawAddress.is_v4() ? rawAddress.to_v4().to_bytes().size() : rawAddress.to_v6().to_bytes().size();
 							for (size_t s = 0; s < size; s++) {
 								unsigned char uc;
@@ -112,11 +112,11 @@ void SOCKS5ProxiedConnection::handleDataRead(const ByteArray& data) {
 								else {
 									uc = rawAddress.to_v6().to_bytes()[s]; // the address.
 								}
-								socksConnect += static_cast<char> (uc);
+								socksConnect.push_back(static_cast<char>(uc));
 						
 							}
-							socksConnect += static_cast<unsigned char> ((server_.getPort() >> 8) & 0xFF); // highbyte of the port.
-							socksConnect += static_cast<unsigned char> (server_.getPort() & 0xFF); // lowbyte of the port.
+							socksConnect.push_back(static_cast<unsigned char> ((server_.getPort() >> 8) & 0xFF)); // highbyte of the port.
+							socksConnect.push_back(static_cast<unsigned char> (server_.getPort() & 0xFF)); // lowbyte of the port.
 							connection_->write(socksConnect);
 							return;
 						}

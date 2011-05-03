@@ -6,9 +6,9 @@
 
 #pragma once
 
-namespace Swift {
-	class ByteArray;
+#include <Swiften/Base/ByteArray.h>
 
+namespace Swift {
 	class MD5 {
 		public:
 			static ByteArray getHash(const ByteArray& data);

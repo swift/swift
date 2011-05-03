@@ -36,9 +36,9 @@ WindowsProxyProvider::WindowsProxyProvider()
 			return;
 		}
 		dataBuffer.resize(dataSize);
-		result = RegQueryValueEx(hKey, "ProxyServer", NULL, &dataType, reinterpret_cast<BYTE*>(dataBuffer.getData()), &dataSize);
+		result = RegQueryValueEx(hKey, "ProxyServer", NULL, &dataType, reinterpret_cast<BYTE*>(vecptr(dataBuffer)), &dataSize);
 		if(result == ERROR_SUCCESS) {
-			std::vector<std::string> proxies = String::split(dataBuffer.toString(), ';');
+			std::vector<std::string> proxies = String::split(byteArrayToString(dataBuffer), ';');
 			std::pair<std::string, std::string> protocolAndProxy;
 			foreach(std::string proxy, proxies) {
 				if(proxy.find('=') != std::string::npos) {
@@ -100,11 +100,11 @@ bool WindowsProxyProvider::proxyEnabled(HKEY hKey) const {
 		return ret;
 
 	dataBuffer.resize(dataSize);
-	result = RegQueryValueEx(hKey, "ProxyEnable", NULL, &dataType, reinterpret_cast<BYTE*>(dataBuffer.getData()), &dataSize);
+	result = RegQueryValueEx(hKey, "ProxyEnable", NULL, &dataType, reinterpret_cast<BYTE*>(vecptr(dataBuffer)), &dataSize);
 	if(result != ERROR_SUCCESS)
 		return ret;
 
-	for(size_t t = 0; t < dataBuffer.getSize(); t++) {
+	for(size_t t = 0; t < dataBuffer.size(); t++) {
 		data += static_cast<int> (dataBuffer[t]) * pow(256, static_cast<double>(t));
 	}
 	return (data == 1);

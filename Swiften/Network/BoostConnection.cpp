@@ -7,14 +7,15 @@
 #include <Swiften/Network/BoostConnection.h>
 
 #include <iostream>
+#include <string>
 #include <boost/bind.hpp>
 #include <boost/thread.hpp>
 #include <boost/asio/placeholders.hpp>
 #include <boost/asio/write.hpp>
 
 #include <Swiften/Base/Log.h>
+#include <Swiften/Base/Algorithm.h>
 #include <Swiften/EventLoop/EventLoop.h>
-#include <string>
 #include <Swiften/Base/ByteArray.h>
 #include <Swiften/Network/HostAddressPort.h>
 #include <Swiften/Base/sleep.h>
@@ -84,7 +85,7 @@ void BoostConnection::write(const ByteArray& data) {
 		doWrite(data);
 	}
 	else {
-		writeQueue_ += data;
+		append(writeQueue_, data);
 	}
 }
 
@@ -113,7 +114,7 @@ void BoostConnection::doRead() {
 void BoostConnection::handleSocketRead(const boost::system::error_code& error, size_t bytesTransferred) {
 	SWIFT_LOG(debug) << "Socket read " << error << std::endl;
 	if (!error) {
-		eventLoop->postEvent(boost::bind(boost::ref(onDataRead), ByteArray(&readBuffer_[0], bytesTransferred)), shared_from_this());
+		eventLoop->postEvent(boost::bind(boost::ref(onDataRead), createByteArray(&readBuffer_[0], bytesTransferred)), shared_from_this());
 		doRead();
 	}
 	else if (/*error == boost::asio::error::eof ||*/ error == boost::asio::error::operation_aborted) {
@@ -137,7 +138,7 @@ void BoostConnection::handleDataWritten(const boost::system::error_code& error) 
 	}
 	{
 		boost::lock_guard<boost::mutex> lock(writeMutex_);
-		if (writeQueue_.isEmpty()) {
+		if (writeQueue_.empty()) {
 			writing_ = false;
 		}
 		else {

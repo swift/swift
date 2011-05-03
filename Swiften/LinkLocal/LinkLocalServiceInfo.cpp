@@ -8,36 +8,39 @@
 
 #include <boost/lexical_cast.hpp>
 
+#include <Swiften/Base/Algorithm.h>
+#include <Swiften/Base/Concat.h>
+
 namespace Swift {
 
 ByteArray LinkLocalServiceInfo::toTXTRecord() const {
 	ByteArray result(getEncoded("txtvers=1"));
 	if (!firstName.empty()) {
-		result += getEncoded("1st=" + firstName);
+		append(result, getEncoded("1st=" + firstName));
 	}
 	if (!lastName.empty()) {
-		result += getEncoded("last=" + lastName);
+		append(result, getEncoded("last=" + lastName));
 	}
 	if (!email.empty()) {
-		result += getEncoded("email=" + email);
+		append(result, getEncoded("email=" + email));
 	}
 	if (jid.isValid()) {
-		result += getEncoded("jid=" + jid.toString());
+		append(result, getEncoded("jid=" + jid.toString()));
 	}
 	if (!message.empty()) {
-		result += getEncoded("msg=" + message);
+		append(result, getEncoded("msg=" + message));
 	}
 	if (!nick.empty()) {
-		result += getEncoded("nick=" + nick);
+		append(result, getEncoded("nick=" + nick));
 	}
 	if (port) {
-		result += getEncoded("port.p2pj=" + std::string(boost::lexical_cast<std::string>(*port)));
+		append(result, getEncoded("port.p2pj=" + std::string(boost::lexical_cast<std::string>(*port))));
 	}
 
 	switch (status) {
-		case Available: result += getEncoded("status=avail"); break;
-		case Away: result += getEncoded("status=away"); break;
-		case DND: result += getEncoded("status=dnd"); break;
+		case Available: append(result, getEncoded("status=avail")); break;
+		case Away: append(result, getEncoded("status=away")); break;
+		case DND: append(result, getEncoded("status=dnd")); break;
 	}
 
 	return result;
@@ -47,13 +50,13 @@ ByteArray LinkLocalServiceInfo::getEncoded(const std::string& s) {
 	ByteArray sizeByte;
 	sizeByte.resize(1);
 	sizeByte[0] = s.size();
-	return sizeByte + ByteArray(s);
+	return concat(sizeByte, createByteArray(s));
 }
 
 LinkLocalServiceInfo LinkLocalServiceInfo::createFromTXTRecord(const ByteArray& record) {
 	LinkLocalServiceInfo info;
 	size_t i = 0;
-	while (i < record.getSize()) {
+	while (i < record.size()) {
 		std::pair<std::string,std::string> entry = readEntry(record, &i);
 		if (entry.first.empty()) {
 			break;
@@ -99,7 +102,7 @@ std::pair<std::string,std::string> LinkLocalServiceInfo::readEntry(const ByteArr
 	size_t entryEnd = i + 1 + record[i];
 	++i;
 	bool inKey = true;
-	while (i < entryEnd && i < record.getSize()) {
+	while (i < entryEnd && i < record.size()) {
 		if (inKey) {
 			if (record[i] == '=') {
 				inKey = false;

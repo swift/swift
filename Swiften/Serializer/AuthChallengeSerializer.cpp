@@ -8,6 +8,7 @@
 
 #include <Swiften/Elements/AuthChallenge.h>
 #include <Swiften/StringCodecs/Base64.h>
+#include <Swiften/Base/ByteArray.h>
 
 namespace Swift {
 
@@ -17,13 +18,13 @@ AuthChallengeSerializer::AuthChallengeSerializer() {
 std::string AuthChallengeSerializer::serialize(boost::shared_ptr<Element> element)  const {
 	boost::shared_ptr<AuthChallenge> authChallenge(boost::dynamic_pointer_cast<AuthChallenge>(element));
 	std::string value;
-	boost::optional<ByteArray> message = authChallenge->getValue();
+	boost::optional<std::vector<unsigned char> > message = authChallenge->getValue();
 	if (message) {
-		if ((*message).isEmpty()) {
+		if ((*message).empty()) {
 			value = "=";
 		}
 		else {
-			value = Base64::encode(*message);
+			value = Base64::encode(ByteArray(*message));
 		}
 	}
 	return "<challenge xmlns=\"urn:ietf:params:xml:ns:xmpp-sasl\">" + value + "</challenge>";

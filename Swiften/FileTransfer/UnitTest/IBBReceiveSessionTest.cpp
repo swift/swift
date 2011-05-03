@@ -58,10 +58,10 @@ class IBBReceiveSessionTest : public CppUnit::TestFixture {
 			testling->start();
 			stanzaChannel->onIQReceived(createIBBRequest(IBB::createIBBOpen("mysession", 0x10), "foo@bar.com/baz", "id-open"));
 
-			stanzaChannel->onIQReceived(createIBBRequest(IBB::createIBBData("mysession", 0, ByteArray::create("abc")), "foo@bar.com/baz", "id-a"));
+			stanzaChannel->onIQReceived(createIBBRequest(IBB::createIBBData("mysession", 0, createByteArray("abc")), "foo@bar.com/baz", "id-a"));
 
 			CPPUNIT_ASSERT(stanzaChannel->isResultAtIndex(1, "id-a"));
-			CPPUNIT_ASSERT(ByteArray::create("abc") == receivedData);
+			CPPUNIT_ASSERT(createByteArray("abc") == receivedData);
 			CPPUNIT_ASSERT(!finished);
 
 			testling->stop();
@@ -72,11 +72,11 @@ class IBBReceiveSessionTest : public CppUnit::TestFixture {
 			testling->start();
 			stanzaChannel->onIQReceived(createIBBRequest(IBB::createIBBOpen("mysession", 0x10), "foo@bar.com/baz", "id-open"));
 
-			stanzaChannel->onIQReceived(createIBBRequest(IBB::createIBBData("mysession", 0, ByteArray::create("abc")), "foo@bar.com/baz", "id-a"));
-			stanzaChannel->onIQReceived(createIBBRequest(IBB::createIBBData("mysession", 1, ByteArray::create("def")), "foo@bar.com/baz", "id-b"));
+			stanzaChannel->onIQReceived(createIBBRequest(IBB::createIBBData("mysession", 0, createByteArray("abc")), "foo@bar.com/baz", "id-a"));
+			stanzaChannel->onIQReceived(createIBBRequest(IBB::createIBBData("mysession", 1, createByteArray("def")), "foo@bar.com/baz", "id-b"));
 
 			CPPUNIT_ASSERT(stanzaChannel->isResultAtIndex(2, "id-b"));
-			CPPUNIT_ASSERT(ByteArray::create("abcdef") == receivedData);
+			CPPUNIT_ASSERT(createByteArray("abcdef") == receivedData);
 			CPPUNIT_ASSERT(!finished);
 
 			testling->stop();
@@ -87,7 +87,7 @@ class IBBReceiveSessionTest : public CppUnit::TestFixture {
 			testling->start();
 			stanzaChannel->onIQReceived(createIBBRequest(IBB::createIBBOpen("mysession", 0x10), "foo@bar.com/baz", "id-open"));
 
-			stanzaChannel->onIQReceived(createIBBRequest(IBB::createIBBData("othersession", 0, ByteArray::create("abc")), "foo@bar.com/baz", "id-a"));
+			stanzaChannel->onIQReceived(createIBBRequest(IBB::createIBBData("othersession", 0, createByteArray("abc")), "foo@bar.com/baz", "id-a"));
 
 			CPPUNIT_ASSERT(stanzaChannel->isErrorAtIndex(1, "id-a"));
 
@@ -99,8 +99,8 @@ class IBBReceiveSessionTest : public CppUnit::TestFixture {
 			testling->start();
 			stanzaChannel->onIQReceived(createIBBRequest(IBB::createIBBOpen("mysession", 0x10), "foo@bar.com/baz", "id-open"));
 
-			stanzaChannel->onIQReceived(createIBBRequest(IBB::createIBBData("mysession", 0, ByteArray::create("abc")), "foo@bar.com/baz", "id-a"));
-			stanzaChannel->onIQReceived(createIBBRequest(IBB::createIBBData("mysession", 0, ByteArray::create("def")), "foo@bar.com/baz", "id-b"));
+			stanzaChannel->onIQReceived(createIBBRequest(IBB::createIBBData("mysession", 0, createByteArray("abc")), "foo@bar.com/baz", "id-a"));
+			stanzaChannel->onIQReceived(createIBBRequest(IBB::createIBBData("mysession", 0, createByteArray("def")), "foo@bar.com/baz", "id-b"));
 
 			CPPUNIT_ASSERT(stanzaChannel->isErrorAtIndex(2, "id-b"));
 			CPPUNIT_ASSERT(finished);
@@ -114,11 +114,11 @@ class IBBReceiveSessionTest : public CppUnit::TestFixture {
 			testling->start();
 			stanzaChannel->onIQReceived(createIBBRequest(IBB::createIBBOpen("mysession", 0x10), "foo@bar.com/baz", "id-open"));
 
-			stanzaChannel->onIQReceived(createIBBRequest(IBB::createIBBData("mysession", 0, ByteArray::create("abc")), "foo@bar.com/baz", "id-a"));
-			stanzaChannel->onIQReceived(createIBBRequest(IBB::createIBBData("mysession", 1, ByteArray::create("def")), "foo@bar.com/baz", "id-b"));
+			stanzaChannel->onIQReceived(createIBBRequest(IBB::createIBBData("mysession", 0, createByteArray("abc")), "foo@bar.com/baz", "id-a"));
+			stanzaChannel->onIQReceived(createIBBRequest(IBB::createIBBData("mysession", 1, createByteArray("def")), "foo@bar.com/baz", "id-b"));
 
 			CPPUNIT_ASSERT(stanzaChannel->isResultAtIndex(2, "id-b"));
-			CPPUNIT_ASSERT(ByteArray::create("abcdef") == receivedData);
+			CPPUNIT_ASSERT(createByteArray("abcdef") == receivedData);
 			CPPUNIT_ASSERT(finished);
 			CPPUNIT_ASSERT(!error);
 

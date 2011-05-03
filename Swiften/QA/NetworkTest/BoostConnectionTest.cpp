@@ -10,6 +10,7 @@
 #include <boost/smart_ptr/make_shared.hpp>
 
 #include <string>
+#include <Swiften/Base/Algorithm.h>
 #include <Swiften/Base/sleep.h>
 #include <Swiften/Network/BoostConnection.h>
 #include <Swiften/Network/HostAddress.h>
@@ -70,7 +71,7 @@ class BoostConnectionTest : public CppUnit::TestFixture {
 			testling->onDataRead.connect(boost::bind(&BoostConnectionTest::handleDataRead, this, _1));
 			testling->onDisconnected.connect(boost::bind(&BoostConnectionTest::handleDisconnected, this));
 			testling->connect(HostAddressPort(HostAddress("65.99.222.137"), 5222));
-			while (receivedData.isEmpty()) {
+			while (receivedData.empty()) {
 				Swift::sleep(10);
 				eventLoop_->processEvents();
 			}
@@ -83,7 +84,7 @@ class BoostConnectionTest : public CppUnit::TestFixture {
 			testling->onDataRead.connect(boost::bind(&BoostConnectionTest::handleDataRead, this, _1));
 			testling->onDisconnected.connect(boost::bind(&BoostConnectionTest::handleDisconnected, this));
 			testling->connect(HostAddressPort(HostAddress("2001:470:1f0e:852::2"), 80));
-			while (receivedData.isEmpty()) {
+			while (receivedData.empty()) {
 				Swift::sleep(10);
 				eventLoop_->processEvents();
 			}
@@ -102,9 +103,9 @@ class BoostConnectionTest : public CppUnit::TestFixture {
 				eventLoop_->processEvents();
 			}
 
-			testling->write(ByteArray("<stream:strea"));
-			testling->write(ByteArray("m"));
-			testling->write(ByteArray(">"));
+			testling->write(createByteArray("<stream:strea"));
+			testling->write(createByteArray("m"));
+			testling->write(createByteArray(">"));
 
 			 // Check that we only did one write event, the others are queued
 			/*int runHandlers = */boostIOService->poll();
@@ -112,7 +113,7 @@ class BoostConnectionTest : public CppUnit::TestFixture {
 			// this test doesn't really work any more. We'll have to trust that things are queued.
 			//CPPUNIT_ASSERT_EQUAL(1, runHandlers);
 			// Process the other events
-			while (receivedData.isEmpty()) {
+			while (receivedData.empty()) {
 				boostIOService->run_one();
 				eventLoop_->processEvents();
 			}
@@ -126,12 +127,12 @@ class BoostConnectionTest : public CppUnit::TestFixture {
 		}
 
 		void doWrite(BoostConnection* connection) {
-			connection->write(ByteArray("<stream:stream>"));
-			connection->write(ByteArray("\r\n\r\n")); // Temporarily, while we don't have an xmpp server running on ipv6
+			connection->write(createByteArray("<stream:stream>"));
+			connection->write(createByteArray("\r\n\r\n")); // Temporarily, while we don't have an xmpp server running on ipv6
 		}
 
 		void handleDataRead(const ByteArray& data) {
-			receivedData += data;
+			append(receivedData, data);
 		}
 
 		void handleDisconnected() {

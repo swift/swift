@@ -66,7 +66,7 @@ void HTTPConnectProxiedConnection::handleConnectionConnectFinished(bool error) {
 	if (!error) {
 		std::stringstream connect;
 		connect << "CONNECT " << server_.getAddress().toString() << ":" << server_.getPort() << " HTTP/1.1\r\n\r\n";
-		connection_->write(ByteArray(connect.str()));
+		connection_->write(createByteArray(connect.str()));
 	}
 	else {
 		onConnectFinished(true);
@@ -75,8 +75,8 @@ void HTTPConnectProxiedConnection::handleConnectionConnectFinished(bool error) {
 
 void HTTPConnectProxiedConnection::handleDataRead(const ByteArray& data) {
 	if (!connected_) {
-		SWIFT_LOG(debug) << data.toString() << std::endl;
-		std::vector<std::string> tmp = String::split(data.toString(), ' ');
+		SWIFT_LOG(debug) << byteArrayToString(data) << std::endl;
+		std::vector<std::string> tmp = String::split(byteArrayToString(data), ' ');
 		if(tmp.size() > 1) {
 			int status = boost::lexical_cast<int> (tmp[1].c_str()); 
 			SWIFT_LOG(debug) << "Proxy Status: " << status << std::endl;
@@ -85,7 +85,7 @@ void HTTPConnectProxiedConnection::handleDataRead(const ByteArray& data) {
 				onConnectFinished(false);
 				return;
 			}
-			SWIFT_LOG(debug) << "HTTP Proxy returned an error: " << data.toString() << std::endl;
+			SWIFT_LOG(debug) << "HTTP Proxy returned an error: " << byteArrayToString(data) << std::endl;
 		}
 		disconnect();
 		onConnectFinished(true);

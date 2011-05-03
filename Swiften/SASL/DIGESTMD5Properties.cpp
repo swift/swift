@@ -5,19 +5,20 @@
  */
 
 #include <Swiften/SASL/DIGESTMD5Properties.h>
+#include <Swiften/Base/Algorithm.h>
 
 namespace Swift {
 
 namespace {
 	bool insideQuotes(const ByteArray& v) {
-		if (v.getSize() == 0) {
+		if (v.size() == 0) {
 			return false;
 		}
-		else if (v.getSize() == 1) {
+		else if (v.size() == 1) {
 			return v[0] == '"';
 		}
 		else if (v[0] == '"') {
-			return v[v.getSize() - 1] != '"';
+			return v[v.size() - 1] != '"';
 		}
 		else {
 			return false;
@@ -25,16 +26,16 @@ namespace {
 	}
 
 	ByteArray stripQuotes(const ByteArray& v) {
-		const char* data = reinterpret_cast<const char*>(v.getData());
-		size_t size = v.getSize();
+		const char* data = reinterpret_cast<const char*>(vecptr(v));
+		size_t size = v.size();
 		if (v[0] == '"') {
 			data++;
 			size--;
 		}
-		if (v[v.getSize() - 1] == '"') {
+		if (v[v.size() - 1] == '"') {
 			size--;
 		}
-		return ByteArray(data, size);
+		return createByteArray(data, size);
 	}
 }
 
@@ -46,42 +47,42 @@ DIGESTMD5Properties DIGESTMD5Properties::parse(const ByteArray& data) {
 	bool inKey = true;
 	ByteArray currentKey;
 	ByteArray currentValue;
-	for (size_t i = 0; i < data.getSize(); ++i) {
+	for (size_t i = 0; i < data.size(); ++i) {
 		char c = data[i];
 		if (inKey) {
 			if (c == '=') {
 				inKey = false;
 			}
 			else {
-				currentKey += c;
+				currentKey.push_back(c);
 			}
 		}
 		else {
 			if (c == ',' && !insideQuotes(currentValue)) {
-				std::string key = currentKey.toString();
+				std::string key = byteArrayToString(currentKey);
 				if (isQuoted(key)) {
-					result.setValue(key, stripQuotes(currentValue).toString());
+					result.setValue(key, byteArrayToString(stripQuotes(currentValue)));
 				}
 				else {
-					result.setValue(key, currentValue.toString());
+					result.setValue(key, byteArrayToString(currentValue));
 				}
 				inKey = true;
 				currentKey = ByteArray();
 				currentValue = ByteArray();
 			}
 			else {
-				currentValue += c;
+				currentValue.push_back(c);
 			}
 		}
 	}
 
-	if (!currentKey.isEmpty()) {
-		std::string key = currentKey.toString();
+	if (!currentKey.empty()) {
+		std::string key = byteArrayToString(currentKey);
 		if (isQuoted(key)) {
-			result.setValue(key, stripQuotes(currentValue).toString());
+			result.setValue(key, byteArrayToString(stripQuotes(currentValue)));
 		}
 		else {
-			result.setValue(key, currentValue.toString());
+			result.setValue(key, byteArrayToString(currentValue));
 		}
 	}
 
@@ -92,15 +93,17 @@ ByteArray DIGESTMD5Properties::serialize() const {
 	ByteArray result;
 	for(DIGESTMD5PropertiesMap::const_iterator i = properties.begin(); i != properties.end(); ++i) {
 		if (i != properties.begin()) {
-			result += ',';
+			result.push_back(',');
 		}
-		result += i->first;
-		result += '=';
+		append(result, createByteArray(i->first));
+		result.push_back('=');
 		if (isQuoted(i->first)) {
-			result += "\"" + i->second + "\"";
+			append(result, createByteArray("\""));
+			append(result, i->second);
+			append(result, createByteArray("\""));
 		}
 		else {
-			result += i->second;
+			append(result, i->second);
 		}
 	}
 	return result;
@@ -109,7 +112,7 @@ ByteArray DIGESTMD5Properties::serialize() const {
 boost::optional<std::string> DIGESTMD5Properties::getValue(const std::string& key) const {
 	DIGESTMD5PropertiesMap::const_iterator i = properties.find(key);
 	if (i != properties.end()) {
-		return i->second.toString();
+		return byteArrayToString(i->second);
 	}
 	else {
 		return boost::optional<std::string>();
@@ -117,7 +120,7 @@ boost::optional<std::string> DIGESTMD5Properties::getValue(const std::string& ke
 }
 
 void DIGESTMD5Properties::setValue(const std::string& key, const std::string& value) {
-	properties.insert(DIGESTMD5PropertiesMap::value_type(key, ByteArray(value)));
+	properties.insert(DIGESTMD5PropertiesMap::value_type(key, createByteArray(value)));
 }
 
 bool DIGESTMD5Properties::isQuoted(const std::string& p) {

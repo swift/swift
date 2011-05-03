@@ -14,11 +14,11 @@ namespace Swift {
 			PKCS12Certificate() {}
 
 			PKCS12Certificate(const std::string& filename, const std::string& password) : password_(password) {
-				data_.readFromFile(filename);
+				readByteArrayFromFile(data_, filename);
 			}
 
 			bool isNull() const {
-				return data_.isEmpty();
+				return data_.empty();
 			}
 
 			const ByteArray& getData() const {

@@ -47,8 +47,8 @@ void QtAvatarWidget::setAvatar(const ByteArray& data, const std::string& type) {
 	this->type = type;
 
 	QImage image;
-	if (!data.isEmpty()) {
-		image.loadFromData(reinterpret_cast<const uchar*>(data.getData()), data.getSize());
+	if (!data.empty()) {
+		image.loadFromData(reinterpret_cast<const uchar*>(vecptr(data)), data.size());
 	}
 
 	if (image.isNull()) {
@@ -81,10 +81,10 @@ void QtAvatarWidget::mousePressEvent(QMouseEvent* event) {
 		QString fileName = QFileDialog::getOpenFileName(this, tr("Select picture"), "", tr("Image Files (*.png *.jpg *.gif)"));
 		if (!fileName.isEmpty()) {
 			ByteArray data;
-			data.readFromFile(Q2PSTRING(fileName));
+			readByteArrayFromFile(data, Q2PSTRING(fileName));
 
 			QBuffer buffer;
-			buffer.setData(reinterpret_cast<const char*>(data.getData()), data.getSize());
+			buffer.setData(reinterpret_cast<const char*>(vecptr(data)), data.size());
 			buffer.open(QIODevice::ReadOnly);
 			QString type = QImageReader::imageFormat(&buffer).toLower();
 			if (!type.isEmpty()) {

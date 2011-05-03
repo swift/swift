@@ -9,6 +9,7 @@
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/extensions/TestFactoryRegistry.h>
 
+#include <QA/Checker/IO.h>
 #include <Swiften/Compress/ZLibCompressor.h>
 
 using namespace Swift;
@@ -26,17 +27,17 @@ class ZLibCompressorTest : public CppUnit::TestFixture
 
 		void testProcess() {
 			ZLibCompressor testling;
-			ByteArray result = testling.process("foo");
+			ByteArray result = testling.process(createByteArray("foo"));
 
-			CPPUNIT_ASSERT_EQUAL(ByteArray("\x78\xda\x4a\xcb\xcf\x07\x00\x00\x00\xff\xff", 11), result);
+			CPPUNIT_ASSERT_EQUAL(createByteArray("\x78\xda\x4a\xcb\xcf\x07\x00\x00\x00\xff\xff", 11), result);
 		}
 
 		void testProcess_Twice() {
 			ZLibCompressor testling;
-			testling.process("foo");
-			ByteArray result = testling.process("bar");
+			testling.process(createByteArray("foo"));
+			ByteArray result = testling.process(createByteArray("bar"));
 
-			CPPUNIT_ASSERT_EQUAL(ByteArray("\x4a\x4a\x2c\x02\x00\x00\x00\xff\xff",9), result); 
+			CPPUNIT_ASSERT_EQUAL(createByteArray("\x4a\x4a\x2c\x02\x00\x00\x00\xff\xff",9), result); 
 		}
 };
 

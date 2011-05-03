@@ -15,13 +15,13 @@
 #include <Swiften/Elements/Element.h>
 #include <Swiften/Network/Connection.h>
 #include <Swiften/StreamStack/ConnectionLayer.h>
+#include <Swiften/Base/ByteArray.h>
 
 namespace Swift {
 	class ProtocolHeader;
 	class StreamStack;
 	class JID;
 	class Element;
-	class ByteArray;
 	class PayloadParserFactoryCollection;
 	class PayloadSerializerCollection;
 	class XMPPLayer;

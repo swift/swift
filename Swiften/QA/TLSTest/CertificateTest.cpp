@@ -10,6 +10,7 @@
 #include <cppunit/extensions/TestFactoryRegistry.h>
 #include <boost/bind.hpp>
 
+#include <QA/Checker/IO.h>
 #include <Swiften/TLS/CertificateFactory.h>
 #include "SwifTools/Application/PlatformApplicationPathProvider.h"
 
@@ -30,7 +31,7 @@ class CertificateTest : public CppUnit::TestFixture {
 	public:
 		void setUp() {
 			pathProvider = new PlatformApplicationPathProvider("FileReadBytestreamTest");
-			certificateData.readFromFile((pathProvider->getExecutableDir() / "jabber_org.crt").string());
+			readByteArrayFromFile(certificateData, (pathProvider->getExecutableDir() / "jabber_org.crt").string());
 			certificateFactory = new CERTIFICATE_FACTORY();
 		}
 

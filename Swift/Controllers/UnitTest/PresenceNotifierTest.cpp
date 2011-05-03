@@ -144,7 +144,7 @@ class PresenceNotifierTest : public CppUnit::TestFixture {
 
 		void testNotificationPicture() {
 			boost::shared_ptr<PresenceNotifier> testling = createNotifier();
-			avatarManager->avatars[user1] = ByteArray("abcdef");
+			avatarManager->avatars[user1] = createByteArray("abcdef");
 
 			sendPresence(user1, StatusShow::Online);
 

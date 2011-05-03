@@ -23,11 +23,11 @@ OpenSSLCertificate::OpenSSLCertificate(boost::shared_ptr<X509> cert) : cert(cert
 
 OpenSSLCertificate::OpenSSLCertificate(const ByteArray& der) {
 #if OPENSSL_VERSION_NUMBER <= 0x009070cfL
-	unsigned char* p = const_cast<unsigned char*>(der.getData());
+	unsigned char* p = const_cast<unsigned char*>(vecptr(der));
 #else
-	const unsigned char* p = der.getData();
+	const unsigned char* p = vecptr(der);
 #endif
-	cert = boost::shared_ptr<X509>(d2i_X509(NULL, &p, der.getSize()), X509_free);
+	cert = boost::shared_ptr<X509>(d2i_X509(NULL, &p, der.size()), X509_free);
 	if (!cert) {
 		SWIFT_LOG(warning) << "Error creating certificate from DER data" << std::endl;
 	}
@@ -41,7 +41,7 @@ ByteArray OpenSSLCertificate::toDER() const {
 
 	ByteArray result;
 	result.resize(i2d_X509(cert.get(), NULL));
-	unsigned char* p = reinterpret_cast<unsigned char*>(result.getData());
+	unsigned char* p = vecptr(result);
 	i2d_X509(cert.get(), &p);
 	return result;
 }
@@ -57,15 +57,15 @@ void OpenSSLCertificate::parse() {
 		// Subject name
 		ByteArray subjectNameData;
 		subjectNameData.resize(256);
-		X509_NAME_oneline(X509_get_subject_name(cert.get()), reinterpret_cast<char*>(subjectNameData.getData()), subjectNameData.getSize());
-		this->subjectName = std::string(reinterpret_cast<const char*>(subjectNameData.getData()));
+		X509_NAME_oneline(X509_get_subject_name(cert.get()), reinterpret_cast<char*>(vecptr(subjectNameData)), subjectNameData.size());
+		this->subjectName = byteArrayToString(subjectNameData);
 
 		// Common name
 		int cnLoc = X509_NAME_get_index_by_NID(subjectName, NID_commonName, -1);
 		while (cnLoc != -1) {
 			X509_NAME_ENTRY* cnEntry = X509_NAME_get_entry(subjectName, cnLoc);
 			ASN1_STRING* cnData = X509_NAME_ENTRY_get_data(cnEntry);
-			commonNames.push_back(ByteArray(cnData->data, cnData->length).toString());
+			commonNames.push_back(byteArrayToString(createByteArray(reinterpret_cast<const char*>(cnData->data), cnData->length)));
 			cnLoc = X509_NAME_get_index_by_NID(subjectName, NID_commonName, cnLoc);
 		}
 	}
@@ -87,7 +87,7 @@ void OpenSSLCertificate::parse() {
 						continue;
 					}
 					ASN1_UTF8STRING* xmppAddrValue = otherName->value->value.utf8string;
-					addXMPPAddress(ByteArray(ASN1_STRING_data(xmppAddrValue), ASN1_STRING_length(xmppAddrValue)).toString());
+					addXMPPAddress(byteArrayToString(createByteArray(reinterpret_cast<const char*>(ASN1_STRING_data(xmppAddrValue)), ASN1_STRING_length(xmppAddrValue))));
 				}
 				else if (OBJ_cmp(otherName->type_id, dnsSRVObject.get()) == 0) {
 					// SRVName
@@ -95,12 +95,12 @@ void OpenSSLCertificate::parse() {
 						continue;
 					}
 					ASN1_IA5STRING* srvNameValue = otherName->value->value.ia5string;
-					addSRVName(ByteArray(ASN1_STRING_data(srvNameValue), ASN1_STRING_length(srvNameValue)).toString());
+					addSRVName(byteArrayToString(createByteArray(reinterpret_cast<const char*>(ASN1_STRING_data(srvNameValue)), ASN1_STRING_length(srvNameValue))));
 				}
 			}
 			else if (generalName->type == GEN_DNS) {
 				// DNSName
-				addDNSName(ByteArray(ASN1_STRING_data(generalName->d.dNSName), ASN1_STRING_length(generalName->d.dNSName)).toString());
+				addDNSName(byteArrayToString(createByteArray(ASN1_STRING_data(generalName->d.dNSName), ASN1_STRING_length(generalName->d.dNSName))));
 			}
 		}
 	}

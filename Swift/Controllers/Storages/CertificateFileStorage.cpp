@@ -23,7 +23,7 @@ bool CertificateFileStorage::hasCertificate(Certificate::ref certificate) const 
 	boost::filesystem::path certificatePath = getCertificatePath(certificate);
 	if (boost::filesystem::exists(certificatePath)) {
 		ByteArray data;
-		data.readFromFile(certificatePath.string());
+		readByteArrayFromFile(data, certificatePath.string());
 		Certificate::ref storedCertificate = certificateFactory->createCertificateFromDER(data);
 		if (storedCertificate && storedCertificate->toDER() == certificate->toDER()) {
 			return true;
@@ -50,7 +50,7 @@ void CertificateFileStorage::addCertificate(Certificate::ref certificate) {
 	}
 	boost::filesystem::ofstream file(certificatePath, boost::filesystem::ofstream::binary|boost::filesystem::ofstream::out);
 	ByteArray data = certificate->toDER();
-	file.write(reinterpret_cast<const char*>(data.getData()), data.getSize());
+	file.write(reinterpret_cast<const char*>(vecptr(data)), data.size());
 	file.close();
 }
 

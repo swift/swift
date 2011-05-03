@@ -56,7 +56,7 @@ namespace Swift {
 							boost::bind(
 								boost::ref(onServiceResolved), 
 								Result(std::string(fullName), std::string(host), port, 
-									ByteArray(reinterpret_cast<const char*>(txtRecord), txtLen))), 
+									createByteArray(reinterpret_cast<const char*>(txtRecord), txtLen))), 
 							shared_from_this());
 				}
 			}

@@ -9,6 +9,7 @@
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/extensions/TestFactoryRegistry.h>
 
+#include <QA/Checker/IO.h>
 #include <Swiften/Parser/PayloadParsers/VCardParser.h>
 #include <Swiften/Parser/PayloadParsers/UnitTest/PayloadsParserTester.h>
 
@@ -93,7 +94,7 @@ class VCardParserTest : public CppUnit::TestFixture {
 
 			VCard* payload = dynamic_cast<VCard*>(parser.getPayload().get());
 			CPPUNIT_ASSERT_EQUAL(std::string("image/jpeg"), payload->getPhotoType());
-			CPPUNIT_ASSERT_EQUAL(ByteArray("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890"), payload->getPhoto());
+			CPPUNIT_ASSERT_EQUAL(createByteArray("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890"), payload->getPhoto());
 		}
 
 		void testParse_Nickname() {

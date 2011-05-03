@@ -9,6 +9,7 @@
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/extensions/TestFactoryRegistry.h>
 
+#include <QA/Checker/IO.h>
 #include <Swiften/Compress/ZLibDecompressor.h>
 #include <Swiften/Compress/ZLibCompressor.h>
 #include <Swiften/Compress/ZLibException.h>
@@ -31,22 +32,22 @@ class ZLibDecompressorTest : public CppUnit::TestFixture
 
 		void testProcess() {
 			ZLibDecompressor testling;
-			ByteArray result = testling.process(ByteArray("\x78\xda\x4a\xcb\xcf\x07\x00\x00\x00\xff\xff", 11));
+			ByteArray result = testling.process(createByteArray("\x78\xda\x4a\xcb\xcf\x07\x00\x00\x00\xff\xff", 11));
 
-			CPPUNIT_ASSERT_EQUAL(ByteArray("foo"), result);
+			CPPUNIT_ASSERT_EQUAL(createByteArray("foo"), result);
 		}
 
 		void testProcess_Twice() {
 			ZLibDecompressor testling;
-			testling.process(ByteArray("\x78\xda\x4a\xcb\xcf\x07\x00\x00\x00\xff\xff", 11));
-			ByteArray result = testling.process(ByteArray("\x4a\x4a\x2c\x02\x00\x00\x00\xff\xff", 9)); 
+			testling.process(createByteArray("\x78\xda\x4a\xcb\xcf\x07\x00\x00\x00\xff\xff", 11));
+			ByteArray result = testling.process(createByteArray("\x4a\x4a\x2c\x02\x00\x00\x00\xff\xff", 9)); 
 
-			CPPUNIT_ASSERT_EQUAL(ByteArray("bar"), result);
+			CPPUNIT_ASSERT_EQUAL(createByteArray("bar"), result);
 		}
 
 		void testProcess_Invalid() {
 			ZLibDecompressor testling;
-			CPPUNIT_ASSERT_THROW(testling.process(ByteArray("invalid")), ZLibException);
+			CPPUNIT_ASSERT_THROW(testling.process(createByteArray("invalid")), ZLibException);
 		}
 
 		void testProcess_Huge() {
@@ -55,7 +56,7 @@ class ZLibDecompressorTest : public CppUnit::TestFixture
 			for (unsigned int i = 0; i < 2048; ++i) {
 				data.push_back(static_cast<char>(i));
 			}
-			ByteArray original(&data[0], data.size());
+			ByteArray original(createByteArray(&data[0], data.size()));
 			ByteArray compressed = ZLibCompressor().process(original);
 			ByteArray decompressed = ZLibDecompressor().process(compressed);
 
@@ -68,7 +69,7 @@ class ZLibDecompressorTest : public CppUnit::TestFixture
 			for (unsigned int i = 0; i < 1024; ++i) {
 				data.push_back(static_cast<char>(i));
 			}
-			ByteArray original(&data[0], data.size());
+			ByteArray original(createByteArray(&data[0], data.size()));
 			ByteArray compressed = ZLibCompressor().process(original);
 			ByteArray decompressed = ZLibDecompressor().process(compressed);
 

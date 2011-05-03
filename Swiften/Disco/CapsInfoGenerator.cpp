@@ -57,7 +57,7 @@ CapsInfo CapsInfoGenerator::generateCapsInfo(const DiscoInfo& discoInfo) const {
 		}
 	}
 
-	std::string version(Base64::encode(SHA1::getHash(serializedCaps)));
+	std::string version(Base64::encode(SHA1::getHash(createByteArray(serializedCaps))));
 	return CapsInfo(node_, version, "sha-1");
 }
 

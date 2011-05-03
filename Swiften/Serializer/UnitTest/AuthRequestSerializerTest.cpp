@@ -9,6 +9,7 @@
 
 #include <Swiften/Serializer/AuthRequestSerializer.h>
 #include <Swiften/Elements/AuthRequest.h>
+#include <Swiften/Base/ByteArray.h>
 
 using namespace Swift;
 
@@ -23,7 +24,7 @@ class AuthRequestSerializerTest : public CppUnit::TestFixture {
 		void testSerialize() {
 			AuthRequestSerializer testling;
 			boost::shared_ptr<AuthRequest> authRequest(new AuthRequest("PLAIN"));
-			authRequest->setMessage("foo");
+			authRequest->setMessage(createByteArray("foo"));
 
 			CPPUNIT_ASSERT_EQUAL(std::string(
 				"<auth xmlns=\"urn:ietf:params:xml:ns:xmpp-sasl\" mechanism=\"PLAIN\">"
@@ -43,7 +44,7 @@ class AuthRequestSerializerTest : public CppUnit::TestFixture {
 		void testSerialize_EmptyMessage() {
 			AuthRequestSerializer testling;
 			boost::shared_ptr<AuthRequest> authRequest(new AuthRequest("PLAIN"));
-			authRequest->setMessage(ByteArray());
+			authRequest->setMessage(std::vector<unsigned char>());
 
 			CPPUNIT_ASSERT_EQUAL(std::string(
 				"<auth xmlns=\"urn:ietf:params:xml:ns:xmpp-sasl\" mechanism=\"PLAIN\">"

@@ -5,6 +5,7 @@
  */
 
 #include <Swiften/SASL/PLAINClientAuthenticator.h>
+#include <Swiften/Base/Concat.h>
 
 namespace Swift {
 
@@ -12,7 +13,7 @@ PLAINClientAuthenticator::PLAINClientAuthenticator() : ClientAuthenticator("PLAI
 }
 
 boost::optional<ByteArray> PLAINClientAuthenticator::getResponse() const {
-	return ByteArray(getAuthorizationID()) + '\0' + ByteArray(getAuthenticationID()) + '\0' + ByteArray(getPassword());
+	return concat(createByteArray(getAuthorizationID()), createByteArray('\0'), createByteArray(getAuthenticationID()), createByteArray('\0'), createByteArray(getPassword()));
 }
 
 bool PLAINClientAuthenticator::setChallenge(const boost::optional<ByteArray>&) {

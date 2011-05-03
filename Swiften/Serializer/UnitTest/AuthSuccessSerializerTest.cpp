@@ -9,6 +9,7 @@
 
 #include <Swiften/Serializer/AuthSuccessSerializer.h>
 #include <Swiften/Elements/AuthSuccess.h>
+#include <Swiften/Base/ByteArray.h>
 
 using namespace Swift;
 
@@ -23,7 +24,7 @@ class AuthSuccessSerializerTest : public CppUnit::TestFixture {
 		void testSerialize() {
 			AuthSuccessSerializer testling;
 			boost::shared_ptr<AuthSuccess> authSuccess(new AuthSuccess());
-			authSuccess->setValue("foo");
+			authSuccess->setValue(createByteArray("foo"));
 
 			CPPUNIT_ASSERT_EQUAL(std::string(
 				"<success xmlns=\"urn:ietf:params:xml:ns:xmpp-sasl\">"
@@ -43,7 +44,7 @@ class AuthSuccessSerializerTest : public CppUnit::TestFixture {
 		void testSerialize_EmptyMessage() {
 			AuthSuccessSerializer testling;
 			boost::shared_ptr<AuthSuccess> authSuccess(new AuthSuccess());
-			authSuccess->setValue(ByteArray());
+			authSuccess->setValue(std::vector<unsigned char>());
 
 			CPPUNIT_ASSERT_EQUAL(std::string(
 				"<success xmlns=\"urn:ietf:params:xml:ns:xmpp-sasl\">"

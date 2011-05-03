@@ -30,7 +30,7 @@ void WhitespacePingLayer::handleDataRead(const ByteArray& data) {
 
 void WhitespacePingLayer::handleTimerTick() {
 	timer->stop();
-	writeDataToChildLayer(" ");
+	writeDataToChildLayer(createByteArray(" "));
 	timer->start();
 }
 

@@ -32,7 +32,7 @@ class IBBParserTest : public CppUnit::TestFixture {
 
 			IBB::ref ibb = parser.getPayload<IBB>();
 			CPPUNIT_ASSERT(ibb->getAction() == IBB::Data);
-			CPPUNIT_ASSERT(ByteArray::create("abcdefgihjklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890\x0a") == ibb->getData());
+			CPPUNIT_ASSERT(createByteArray("abcdefgihjklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890\x0a") == ibb->getData());
 			CPPUNIT_ASSERT_EQUAL(4, ibb->getSequenceNumber());
 		}
 };
