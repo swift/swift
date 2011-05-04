@@ -71,6 +71,11 @@ class SluiftClient {
 			client->connect();
 		}
 
+		void connect(const std::string& host) {
+			rosterReceived = false;
+			client->connect(host);
+		}
+
 		void waitConnected() {
 			Watchdog watchdog(globalTimeout, networkFactories.getTimerFactory());
 			while (!watchdog.getTimedOut() && client->isActive() && !client->isAvailable()) {
@@ -200,7 +205,13 @@ static inline SluiftClient* getClient(lua_State* L) {
 static int sluift_client_connect(lua_State *L) {
 	try {
 		SluiftClient* client = getClient(L);
-		client->connect();
+		std::string host(luaL_checkstring(L, 2));
+		if (host.empty()) {
+			client->connect();
+		}
+		else {
+			client->connect(host);
+		}
 		client->waitConnected();
 		return 1;
 	}
