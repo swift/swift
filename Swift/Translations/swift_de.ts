@@ -523,7 +523,7 @@
     <message>
         <location filename="../Controllers/ProfileController.cpp" line="62"/>
         <source>There was an error publishing your profile data</source>
-        <translation>Es ist eine Fehler während der Veröffentlichung deiner Profildaten aufgetreten</translation>
+        <translation>Es ist ein Fehler während der Veröffentlichung deiner Profildaten aufgetreten</translation>
     </message>
 </context>
 <context>
@@ -1096,7 +1096,7 @@
     <message>
         <location filename="../QtUI/QtAboutWidget.cpp" line="54"/>
         <source>View License</source>
-        <translation>Zeige die Lizense</translation>
+        <translation>Lizenz anzeigen</translation>
     </message>
 </context>
 <context>
@@ -1486,7 +1486,7 @@
     <message>
         <location filename="../QtUI/QtNameWidget.cpp" line="62"/>
         <source>Edit Profile</source>
-        <translation>Profile editieren</translation>
+        <translation>Profil editieren</translation>
     </message>
 </context>
 <context>
@@ -1494,7 +1494,7 @@
     <message>
         <location filename="../QtUI/QtProfileWindow.cpp" line="24"/>
         <source>Edit Profile</source>
-        <translation>Profile editieren</translation>
+        <translation>Profil editieren</translation>
     </message>
     <message>
         <location filename="../QtUI/QtProfileWindow.cpp" line="43"/>
