@@ -18,6 +18,9 @@
 
 using namespace Swift;
 
+// Disabling this code for now, since GCC4.5+boost1.42 (on ubuntu) seems to
+// result in a bug. Replacing it with naive code.
+#if 0
 // Should be in anonymous namespace, but older GCCs complain if we do that
 struct PercentEncodedCharacterFinder {
 	template<typename Iterator>
@@ -61,6 +64,35 @@ namespace {
 		catch (const std::exception&) {
 			return "";
 		}
+	}
+}
+#endif
+namespace {
+	std::string unescape(const std::string& str) {
+		std::string result;
+		for (size_t i = 0; i < str.size(); ++i) {
+			if (str[i] == '%') {
+				if (i + 3 < str.size()) {
+					std::stringstream s;
+					s << std::hex << str.substr(i+1, 2);
+					unsigned int value;
+					s >> value;
+					if (s.fail() || s.bad()) {
+						return "";
+					}
+					unsigned char charValue = static_cast<unsigned char>(value);
+					result += std::string(reinterpret_cast<const char*>(&charValue), 1);
+					i += 2;
+				}
+				else {
+					return "";
+				}
+			}
+			else {
+				result += str[i];
+			}
+		}
+		return result;
 	}
 }
 
