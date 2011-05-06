@@ -21,7 +21,7 @@ namespace Swift {
 		struct MapCategory {};
 
 		template<typename T> 
-		struct ContainerTraits {};
+		struct ContainerTraits;
 
 		template<typename A, typename B> 
 		struct ContainerTraits< std::vector<A, B> > {
