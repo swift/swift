@@ -47,7 +47,7 @@ void AvahiResolveServiceQuery::handleServiceResolved(AvahiServiceResolver* resol
 
 			ByteArray txtRecord;
 			txtRecord.resize(1024);
-			avahi_string_list_serialize(txt, txtRecord.getData(), txtRecord.getSize());
+			avahi_string_list_serialize(txt, vecptr(txtRecord), txtRecord.size());
 
 			// FIXME: Probably not accurate
 			std::string fullname = std::string(name) + "." + std::string(type) + "." + std::string(domain) + ".";
