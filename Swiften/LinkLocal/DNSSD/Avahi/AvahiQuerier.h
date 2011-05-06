@@ -16,9 +16,9 @@
 #include <avahi-common/error.h>
 
 #include <Swiften/LinkLocal/DNSSD/DNSSDQuerier.h>
+#include <Swiften/Base/ByteArray.h>
 
 namespace Swift {
-	class ByteArray;
 	class EventLoop;
 
 	class AvahiQuerier : 

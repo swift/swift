@@ -47,7 +47,7 @@ void AvahiRegisterQuery::updateServiceInfo(const ByteArray& txtRecord) {
 
 void AvahiRegisterQuery::doRegisterService() {
 	AvahiStringList* txtList;
-	avahi_string_list_parse(txtRecord.getData(), txtRecord.getSize(), &txtList);
+	avahi_string_list_parse(vecptr(txtRecord), txtRecord.size(), &txtList);
 
 	int result = avahi_entry_group_add_service_strlst(group, AVAHI_IF_UNSPEC, AVAHI_PROTO_UNSPEC, static_cast<AvahiPublishFlags>(0), name.c_str(), "_presence._tcp", NULL, NULL, port, txtList);
 	if (result < 0) {
