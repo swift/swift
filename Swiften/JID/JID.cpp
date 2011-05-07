@@ -34,7 +34,13 @@ static PrepCache resourcePrepCache;
 
 static const std::list<char> escapedChars = boost::assign::list_of(' ')('"')('&')('\'')('/')('<')('>')('@')(':');
 
-bool getEscapeSequenceValue(const std::string& sequence, unsigned char& value) {
+static std::string getEscaped(char c) {
+	std::ostringstream s;
+	s << '\\' << std::hex << static_cast<int>(c);
+	return s.str();
+}
+
+static bool getEscapeSequenceValue(const std::string& sequence, unsigned char& value) {
 	std::stringstream s;
 	unsigned int v;
 	s << std::hex << sequence;
@@ -43,6 +49,9 @@ bool getEscapeSequenceValue(const std::string& sequence, unsigned char& value) {
 	return (!s.fail() && !s.bad() && (value == 0x5C || std::find(escapedChars.begin(), escapedChars.end(), value) != escapedChars.end()));
 }
 
+// Disabling this code for now, since GCC4.5+boost1.42 (on ubuntu) seems to
+// result in a bug. Replacing it with naive code.
+#if 0
 struct UnescapedCharacterFinder {
 	template<typename Iterator>	boost::iterator_range<Iterator> operator()(Iterator begin, Iterator end) {
 		for (; begin != end; ++begin) {
@@ -99,9 +108,9 @@ struct EscapedCharacterFormatter {
 		return boost::copy_range<std::string>(match);
 	}
 };
+#endif
 
-
-namespace Swift {
+using namespace Swift;
 
 JID::JID(const char* jid) {
 	initializeFromString(std::string(jid));
@@ -201,12 +210,47 @@ int JID::compare(const Swift::JID& o, CompareType compareType) const {
 }
 
 std::string JID::getEscapedNode(const std::string& node) {
-	return boost::find_format_all_copy(node, UnescapedCharacterFinder(), UnescapedCharacterFormatter());
+	std::string result;
+	for (std::string::const_iterator i = node.begin(); i != node.end(); ++i) {
+		if (std::find(escapedChars.begin(), escapedChars.end(), *i) != escapedChars.end()) {
+			result += getEscaped(*i);
+			continue;
+		}
+		else if (*i == '\\') {
+			// Check if we have an escaped dissalowed character sequence
+			std::string::const_iterator innerBegin = i + 1;
+			if (innerBegin != result.end() && innerBegin + 1 != result.end()) {
+				std::string::const_iterator innerEnd = innerBegin + 2;
+				unsigned char value;
+				if (getEscapeSequenceValue(std::string(innerBegin, innerEnd), value)) {
+					result += getEscaped(*i);
+					continue;
+				}
+			}
+		}
+		result += *i;
+	}
+	return result;
+	//return boost::find_format_all_copy(node, UnescapedCharacterFinder(), UnescapedCharacterFormatter());
 }
-
+					
 std::string JID::getUnescapedNode() const {
-	return boost::find_format_all_copy(node_, EscapedCharacterFinder(), EscapedCharacterFormatter());
+	std::string result;
+	for (std::string::const_iterator j = node_.begin(); j != node_.end();) {
+		if (*j == '\\') {
+			std::string::const_iterator innerEnd = j + 1;
+			for (size_t i = 0; i < 2 && innerEnd != node_.end(); ++i, ++innerEnd) {
+			}
+			unsigned char value;
+			if (getEscapeSequenceValue(std::string(j + 1, innerEnd), value)) {
+				result += std::string(reinterpret_cast<const char*>(&value), 1);
+				j = innerEnd;
+				continue;
+			}
+		}
+		result += *j;
+		++j;
+	}
+	return result;
+	//return boost::find_format_all_copy(node_, EscapedCharacterFinder(), EscapedCharacterFormatter());
 }
-
-} // namespace Swift
-
