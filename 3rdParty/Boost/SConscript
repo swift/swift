@@ -120,7 +120,15 @@ elif env.get("BOOST_BUNDLED", False) :
 			bcp_env = myenv.Clone()
 			bcp_env.MergeFlags(bcp_env["BOOST_FLAGS"])
 			bcp_env.Append(CPPPATH = ["src/tools/bcp"])
+			bcp_env.Replace(CPPDEFINES = [flag for flag in bcp_env["CPPDEFINES"] if flag[0] != "BOOST_FILESYSTEM_VERSION"])
 			bcp_env.Program("bcp", [
+					"src/libs/filesystem/v3/src/codecvt_error_category.cpp",
+					"src/libs/filesystem/v3/src/operations.cpp",
+					"src/libs/filesystem/v3/src/path.cpp",
+					"src/libs/filesystem/v3/src/path_traits.cpp",
+					"src/libs/filesystem/v3/src/portability.cpp",
+					"src/libs/filesystem/v3/src/unique_path.cpp",
+					"src/libs/filesystem/v3/src/windows_file_codecvt.cpp",
 					"src/tools/bcp/add_path.cpp",
 					"src/tools/bcp/add_dependent_lib.cpp",
 					"src/tools/bcp/bcp_imp.cpp",
