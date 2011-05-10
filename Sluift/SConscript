@@ -55,8 +55,10 @@ if env["SCONS_STAGE"] == "build" :
 	myenv.SharedLibrary("sluift", ["dll.c"])
 
 	if env["PLATFORM"] == "win32" :
-		myenv.WindowsBundle("Sluift", 
-			resources = {"": [
-				os.path.join(env["OPENSSL_DIR"], "bin", "ssleay32.dll"),  
-				os.path.join(env["OPENSSL_DIR"], "bin", "libeay32.dll")
-			]})
+		ssl_libs = []
+		if myenv.get("OPENSSL_DIR", False) :
+			ssl_libs = [
+			os.path.join(env["OPENSSL_DIR"], "bin", "ssleay32.dll"),  
+			os.path.join(env["OPENSSL_DIR"], "bin", "libeay32.dll")
+		]
+		myenv.WindowsBundle("Sluift", resources = {"": ssl_libs})
