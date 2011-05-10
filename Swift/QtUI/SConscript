@@ -28,13 +28,7 @@ if myenv["HAVE_XSS"] :
 if myenv["HAVE_SPARKLE"] :
   myenv.MergeFlags(env["SPARKLE_FLAGS"])
 myenv.MergeFlags(env["SWIFTEN_FLAGS"])
-myenv.MergeFlags(env["LIBIDN_FLAGS"])
-myenv.MergeFlags(env["BOOST_FLAGS"])
-myenv.MergeFlags(env.get("SQLITE_FLAGS", {}))
-myenv.MergeFlags(env["ZLIB_FLAGS"])
-myenv.MergeFlags(env["OPENSSL_FLAGS"])
-myenv.MergeFlags(env.get("LIBXML_FLAGS", ""))
-myenv.MergeFlags(env.get("EXPAT_FLAGS", ""))
+myenv.MergeFlags(env["SWIFTEN_DEP_FLAGS"])
 if myenv.get("HAVE_GROWL", False) :
 	myenv.MergeFlags(myenv["GROWL_FLAGS"])
 	myenv.Append(CPPDEFINES = ["HAVE_GROWL"])

@@ -33,6 +33,7 @@ if "Slimber" in env["PROJECTS"] :
 		myenv = env.Clone()
 		myenv.MergeFlags(env["BOOST_FLAGS"])
 		myenv.MergeFlags(env["SWIFTEN_FLAGS"])
+		myenv.MergeFlags(env["SWIFTEN_DEP_FLAGS"])
 		myenv.StaticLibrary("Slimber", [
 				"LinkLocalPresenceManager.cpp",
 				"FileVCardCollection.cpp",
