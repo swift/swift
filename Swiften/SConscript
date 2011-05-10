@@ -386,7 +386,7 @@ if env["SCONS_STAGE"] == "build" :
 				continue
 
 			# Specific headers we don't want to globally include
-			if file == "Swiften.h" or file == "foreach.h" or file == "Log.h" or file == "format.h" :
+			if file == "Swiften.h" or file == "foreach.h" or file == "Log.h" or file == "format.h" or file == "CompressionLayer.h":
 				continue
 			swiften_header += "#include <" + include + ">\n"
 			swiften_includes.append(include)
