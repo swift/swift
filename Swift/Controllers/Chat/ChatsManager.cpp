@@ -129,9 +129,9 @@ void ChatsManager::loadRecents() {
 		bool isMUC = recent[2] == "true";
 		std::string nick(recent[3]);
 		ChatListWindow::Chat chat(jid, nickResolver_->jidToNick(jid), activity, isMUC, nick);
-		recentChats_.push_back(chat);
-		chatListWindow_->setRecents(recentChats_);
+		prependRecent(chat);
 	}
+	chatListWindow_->setRecents(recentChats_);
 }
 
 void ChatsManager::setupBookmarks() {
@@ -171,10 +171,19 @@ void ChatsManager::handleChatActivity(const JID& jid, const std::string& activit
 	/* FIXME: MUC use requires changes here. */
 	ChatListWindow::Chat chat(jid, nickResolver_->jidToNick(jid), activity, false);
 	/* FIXME: handle nick changes */
-	recentChats_.erase(std::remove(recentChats_.begin(), recentChats_.end(), chat), recentChats_.end());
-	recentChats_.push_front(chat);
+	appendRecent(chat);
 	chatListWindow_->setRecents(recentChats_);
 	saveRecents();
+}
+
+void ChatsManager::appendRecent(const ChatListWindow::Chat& chat) {
+	recentChats_.erase(std::remove(recentChats_.begin(), recentChats_.end(), chat), recentChats_.end());
+	recentChats_.push_front(chat);
+}
+
+void ChatsManager::prependRecent(const ChatListWindow::Chat& chat) {
+	recentChats_.erase(std::remove(recentChats_.begin(), recentChats_.end(), chat), recentChats_.end());
+	recentChats_.push_back(chat);
 }
 
 void ChatsManager::handleUserLeftMUC(MUCController* mucController) {

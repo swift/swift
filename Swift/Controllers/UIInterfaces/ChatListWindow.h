@@ -17,7 +17,7 @@ namespace Swift {
 				public:
 					Chat(const JID& jid, const std::string& chatName, const std::string& activity, bool isMUC, const std::string& nick = "") : jid(jid), chatName(chatName), activity(activity), isMUC(isMUC), nick(nick) {}
 					/** Assume that nicks aren't important for equality */
-					bool operator==(const Chat& other) const {return jid == other.jid && isMUC == other.isMUC;};
+					bool operator==(const Chat& other) const {return jid.toBare() == other.jid.toBare() && isMUC == other.isMUC;};
 					JID jid;
 					std::string chatName;
 					std::string activity;

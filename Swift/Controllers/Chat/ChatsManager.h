@@ -64,6 +64,8 @@ namespace Swift {
 			void handleUserLeftMUC(MUCController* mucController);
 			void handleBookmarksReady();
 			void handleChatActivity(const JID& jid, const std::string& activity);
+			void appendRecent(const ChatListWindow::Chat& chat);
+			void prependRecent(const ChatListWindow::Chat& chat);
 			void setupBookmarks();
 			void loadRecents();
 			void saveRecents();
