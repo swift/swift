@@ -77,13 +77,14 @@ void QtChatView::addMessage(boost::shared_ptr<ChatSnippet> snippet) {
 	if (viewReady_) {
 		addToDOM(snippet);
 	} else {
-		queuedSnippets_.append(snippet);
+		/* If this asserts, the previous queuing code was necessary and should be reinstated */
+		assert(false);
 	}
 }
 
 QWebElement QtChatView::snippetToDOM(boost::shared_ptr<ChatSnippet> snippet) {
 	QWebElement newElement = newInsertPoint_.clone();
-	newElement.setInnerXml(snippet->getContent()); /* FIXME: Outer, surely? */
+	newElement.setInnerXml(snippet->getContent());
 	Q_ASSERT(!newElement.isNull());
 	return newElement;
 }
@@ -103,7 +104,6 @@ void QtChatView::addToDOM(boost::shared_ptr<ChatSnippet> snippet) {
 		newInsertPoint_.prependOutside(newElement);
 	}
 	lastElement_ = newElement;
-	//qApp->processEvents();
 }
 
 void QtChatView::addLastSeenLine() {
@@ -121,7 +121,6 @@ void QtChatView::addLastSeenLine() {
 
 void QtChatView::replaceLastMessage(const QString& newMessage) {
 	assert(viewReady_);
-	/* FIXME: must be queued? */
 	rememberScrolledToBottom();
 	assert(!lastElement_.isNull());
 	QWebElement replace = lastElement_.findFirst("span.swift_message");
@@ -192,17 +191,9 @@ void QtChatView::handleLinkClicked(const QUrl& url) {
 	QDesktopServices::openUrl(url);
 }
 
-void QtChatView::addQueuedSnippets() {
-	for (int i = 0; i < queuedSnippets_.count(); i++) {
-		addToDOM(queuedSnippets_[i]);
-	}
-	queuedSnippets_.clear();
-}
-
 void QtChatView::handleViewLoadFinished(bool ok) {
 	Q_ASSERT(ok);
 	viewReady_ = true;
-	addQueuedSnippets();
 }
 
 void QtChatView::resetView() {

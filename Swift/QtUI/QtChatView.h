@@ -53,7 +53,6 @@ namespace Swift {
 		private:
 			void headerEncode();
 			void messageEncode();
-			void addQueuedSnippets();
 			void addToDOM(boost::shared_ptr<ChatSnippet> snippet);
 			QWebElement snippetToDOM(boost::shared_ptr<ChatSnippet> snippet);
 
@@ -61,7 +60,6 @@ namespace Swift {
 			bool isAtBottom_;
 			QtWebView* webView_;
 			QWebPage* webPage_;
-			QList<boost::shared_ptr<ChatSnippet> > queuedSnippets_;
 
 			QtChatTheme* theme_;
 			QWebElement newInsertPoint_;
