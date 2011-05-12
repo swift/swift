@@ -59,6 +59,8 @@ void QtWebView::contextMenuEvent(QContextMenuEvent* ev) {
 
 	// Add our own custom actions
 	menu->addAction(tr("Clear"), this, SIGNAL(clearRequested()));
+	menu->addAction(tr("Increase font size"), this, SIGNAL(fontGrowRequested()));
+	menu->addAction(tr("Decrease font size"), this, SIGNAL(fontShrinkRequested()));
 
 	menu->exec(ev->globalPos());
 	delete menu;

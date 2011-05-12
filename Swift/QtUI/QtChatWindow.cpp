@@ -97,10 +97,15 @@ QtChatWindow::QtChatWindow(const QString &contact, QtChatTheme* theme, UIEventSt
 	connect(qApp, SIGNAL(focusChanged(QWidget*, QWidget*)), this, SLOT(qAppFocusChanged(QWidget*, QWidget*)));
 	connect(messageLog_, SIGNAL(gotFocus()), input_, SLOT(setFocus()));
 	resize(400,300);
+	connect(messageLog_, SIGNAL(fontResized(int)), this, SIGNAL(fontResized(int)));
 }
 
 QtChatWindow::~QtChatWindow() {
 
+}
+
+void QtChatWindow::handleFontResized(int fontSizeSteps) {
+	messageLog_->resizeFont(fontSizeSteps);
 }
 
 void QtChatWindow::setTabComplete(TabComplete* completer) {

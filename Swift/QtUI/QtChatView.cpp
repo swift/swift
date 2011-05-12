@@ -24,7 +24,7 @@
 
 namespace Swift {
 
-QtChatView::QtChatView(QtChatTheme* theme, QWidget* parent) : QWidget(parent) {
+QtChatView::QtChatView(QtChatTheme* theme, QWidget* parent) : QWidget(parent), fontSizeSteps_(0) {
 	theme_ = theme;
 
 	QVBoxLayout* mainLayout = new QVBoxLayout(this);
@@ -35,6 +35,8 @@ QtChatView::QtChatView(QtChatTheme* theme, QWidget* parent) : QWidget(parent) {
 	connect(webView_, SIGNAL(loadFinished(bool)), SLOT(handleViewLoadFinished(bool)));
 	connect(webView_, SIGNAL(gotFocus()), SIGNAL(gotFocus()));
 	connect(webView_, SIGNAL(clearRequested()), SLOT(handleClearRequested()));
+	connect(webView_, SIGNAL(fontGrowRequested()), SLOT(increaseFontSize()));
+	connect(webView_, SIGNAL(fontShrinkRequested()), SLOT(decreaseFontSize()));
 #ifdef Q_WS_X11
 	/* To give a border on Linux, where it looks bad without */
 	QStackedWidget* stack = new QStackedWidget(this);
@@ -104,6 +106,14 @@ void QtChatView::addToDOM(boost::shared_ptr<ChatSnippet> snippet) {
 		newInsertPoint_.prependOutside(newElement);
 	}
 	lastElement_ = newElement;
+	if (fontSizeSteps_ != 0) {
+		double size = 1.0 + 0.2 * fontSizeSteps_;
+		QString sizeString(QString().setNum(size, 'g', 3) + "em");
+		const QWebElementCollection spans = lastElement_.findAll("span");
+		foreach (QWebElement span, spans) {
+			span.setStyleProperty("font-size", sizeString);
+		}
+	}
 }
 
 void QtChatView::addLastSeenLine() {
@@ -194,6 +204,31 @@ void QtChatView::handleLinkClicked(const QUrl& url) {
 void QtChatView::handleViewLoadFinished(bool ok) {
 	Q_ASSERT(ok);
 	viewReady_ = true;
+}
+
+void QtChatView::increaseFontSize(int numSteps) {
+	qDebug() << "Increasing";
+	fontSizeSteps_ += numSteps;
+	emit fontResized(fontSizeSteps_);
+}
+
+void QtChatView::decreaseFontSize() {
+	fontSizeSteps_--;
+	if (fontSizeSteps_ < 0) {
+		fontSizeSteps_ = 0;
+	}
+	emit fontResized(fontSizeSteps_);
+}
+
+void QtChatView::resizeFont(int fontSizeSteps) {
+	fontSizeSteps_ = fontSizeSteps;
+	double size = 1.0 + 0.2 * fontSizeSteps_;
+	QString sizeString(QString().setNum(size, 'g', 3) + "em");
+	qDebug() << "Setting to " << sizeString;
+	const QWebElementCollection spans = document_.findAll("span");
+	foreach (QWebElement span, spans) {
+		span.setStyleProperty("font-size", sizeString);
+	}
 }
 
 void QtChatView::resetView() {

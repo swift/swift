@@ -37,6 +37,7 @@ namespace Swift {
 
 		signals:
 			void gotFocus();
+			void fontResized(int);
 
 		public slots:
 			void copySelectionToClipboard();
@@ -44,6 +45,9 @@ namespace Swift {
 			void handleLinkClicked(const QUrl&);
 			void handleKeyPressEvent(QKeyEvent* event);
 			void resetView();
+			void increaseFontSize(int numSteps = 1);
+			void decreaseFontSize();
+			void resizeFont(int fontSizeSteps);
 
 		private slots:
 			void handleViewLoadFinished(bool);
@@ -60,7 +64,7 @@ namespace Swift {
 			bool isAtBottom_;
 			QtWebView* webView_;
 			QWebPage* webPage_;
-
+			int fontSizeSteps_;
 			QtChatTheme* theme_;
 			QWebElement newInsertPoint_;
 			QWebElement lineSeparator_;

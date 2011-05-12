@@ -62,10 +62,12 @@ namespace Swift {
 
 		public slots:
 			void handleChangeSplitterState(QByteArray state);
+			void handleFontResized(int fontSizeSteps);
 
 		signals:
 			void geometryChanged();
 			void splitterMoved();
+			void fontResized(int);
 
 		protected slots:
 			void qAppFocusChanged(QWidget* old, QWidget* now);

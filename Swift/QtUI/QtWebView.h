@@ -22,6 +22,8 @@ namespace Swift {
 		signals:
 			void gotFocus();
 			void clearRequested();
+			void fontGrowRequested();
+			void fontShrinkRequested();
 
 		protected:
 			void focusInEvent(QFocusEvent* event);

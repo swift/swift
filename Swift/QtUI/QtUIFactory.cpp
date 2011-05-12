@@ -25,9 +25,12 @@
 #include "QtContactEditWindow.h"
 #include "QtAdHocCommandWindow.h"
 
+#define CHATWINDOW_FONT_SIZE "chatWindowFontSize"
+
 namespace Swift {
 
 QtUIFactory::QtUIFactory(QtSettingsProvider* settings, QtChatTabs* tabs, QSplitter* netbookSplitter, QtSystemTray* systemTray, QtChatWindowFactory* chatWindowFactory, bool startMinimized) : settings(settings), tabs(tabs), netbookSplitter(netbookSplitter), systemTray(systemTray), chatWindowFactory(chatWindowFactory), lastMainWindow(NULL), loginWindow(NULL), startMinimized(startMinimized)  {
+	chatFontSize = settings->getIntSetting(CHATWINDOW_FONT_SIZE, 0);
 }
 
 XMLConsoleWidget* QtUIFactory::createXMLConsoleWidget() {
@@ -81,7 +84,26 @@ MUCSearchWindow* QtUIFactory::createMUCSearchWindow() {
 }
 
 ChatWindow* QtUIFactory::createChatWindow(const JID& contact, UIEventStream* eventStream) {
-	return chatWindowFactory->createChatWindow(contact, eventStream);
+	QtChatWindow* window = dynamic_cast<QtChatWindow*>(chatWindowFactory->createChatWindow(contact, eventStream));
+	chatWindows.push_back(window);
+	foreach (QtChatWindow* existingWindow, chatWindows) {
+		connect(window, SIGNAL(fontResized(int)), existingWindow, SLOT(handleFontResized(int)));
+		connect(existingWindow, SIGNAL(fontResized(int)), window, SLOT(handleFontResized(int)));
+	}
+	connect(window, SIGNAL(fontResized(int)), this, SLOT(handleChatWindowFontResized(int)));
+	connect(window, SIGNAL(destroyed(QObject*)), this, SLOT(handleChatWindowDestroyed(QObject*)));
+	window->handleFontResized(chatFontSize);
+	return window;
+}
+
+void QtUIFactory::handleChatWindowFontResized(int size) {
+	chatFontSize = size;
+	settings->storeInt(CHATWINDOW_FONT_SIZE, size);
+}
+
+void QtUIFactory::handleChatWindowDestroyed(QObject* window) {
+	QtChatWindow* chatWindow = qobject_cast<QtChatWindow*>(window);
+	chatWindows.erase(std::remove(chatWindows.begin(), chatWindows.end(), chatWindow), chatWindows.end());
 }
 
 UserSearchWindow* QtUIFactory::createUserSearchWindow(UserSearchWindow::Type type, UIEventStream* eventStream, const std::set<std::string>& groups) {

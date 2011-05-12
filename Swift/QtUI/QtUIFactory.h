@@ -20,6 +20,7 @@ namespace Swift {
 	class QtMainWindow;
 	class QtChatTheme;
 	class QtChatWindowFactory;
+	class QtChatWindow;
 
 	class QtUIFactory : public QObject, public UIFactory {
 			Q_OBJECT
@@ -41,6 +42,8 @@ namespace Swift {
 
 		private slots:
 			void handleLoginWindowGeometryChanged();
+			void handleChatWindowDestroyed(QObject*);
+			void handleChatWindowFontResized(int);
 
 		private:
 			QtSettingsProvider* settings;
@@ -50,6 +53,8 @@ namespace Swift {
 			QtChatWindowFactory* chatWindowFactory;
 			QtMainWindow* lastMainWindow;
 			QtLoginWindow* loginWindow;
+			std::vector<QtChatWindow*> chatWindows;
 			bool startMinimized;
+			int chatFontSize;
 	};
 }
