@@ -56,7 +56,7 @@ namespace Swift {
 			/**
 			 * Is the form multi-stage?
 			 */
-			bool getIsMultiStage();
+			bool getIsMultiStage() const;
 
 			/**
 			 * Emitted when the form for the next stage is available.
@@ -75,9 +75,12 @@ namespace Swift {
 			 * Use for Next, Prev, Cancel and Complete only.
 			 * If no actions are available, the command has completed.
 			 */
-			ActionState getActionState(Command::Action action);
+			ActionState getActionState(Command::Action action) const;
+
 		private:
 			void handleResponse(boost::shared_ptr<Command> payload, ErrorPayload::ref error);
+			void submitForm(Form::ref, Command::Action action);
+
 		private:
 			DiscoItems::Item command_;
 			IQRouter* iqRouter_;

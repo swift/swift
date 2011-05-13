@@ -93,6 +93,17 @@ namespace Swift {
 		target.insert(target.end(), source.begin(), source.end());
 	}
 
+	template<typename A, typename B, typename C, typename D> 
+	B get(const std::map<A, B, C, D>& map, const A& key, const B& defaultValue) {
+		typename std::map<A, B, C, D>::const_iterator i = map.find(key);
+		if (i != map.end()) {
+			return i->second;
+		}
+		else {
+			return defaultValue;
+		}
+	}
+
 	/*
 	 * Functors
 	 */

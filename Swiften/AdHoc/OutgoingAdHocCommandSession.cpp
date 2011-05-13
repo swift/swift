@@ -7,8 +7,10 @@
 #include <Swiften/AdHoc/OutgoingAdHocCommandSession.h>
 
 #include <boost/bind.hpp>
+#include <boost/smart_ptr/make_shared.hpp>
 
 #include <Swiften/Queries/GenericRequest.h>
+#include <Swiften/Base/Algorithm.h>
 
 namespace Swift {
 OutgoingAdHocCommandSession::OutgoingAdHocCommandSession(const DiscoItems::Item& command, IQRouter* iqRouter) : command_(command), iqRouter_(iqRouter), isMultiStage_(false) {
@@ -19,7 +21,7 @@ void OutgoingAdHocCommandSession::handleResponse(boost::shared_ptr<Command> payl
 	if (error) {
 		onError(error);
 	} else {
-		const std::vector<Command::Action> actions = payload->getAvailableActions();
+		const std::vector<Command::Action>& actions = payload->getAvailableActions();
 		actionStates_.clear();
 		if (payload->getStatus() == Command::Executing ) {
 			actionStates_[Command::Cancel] = EnabledAndPresent;
@@ -50,53 +52,44 @@ void OutgoingAdHocCommandSession::handleResponse(boost::shared_ptr<Command> payl
 	}
 }
 
-bool OutgoingAdHocCommandSession::getIsMultiStage() {
+bool OutgoingAdHocCommandSession::getIsMultiStage() const {
 	return isMultiStage_;
 }
 
 void OutgoingAdHocCommandSession::start() {
-	boost::shared_ptr<Payload> commandPayload(new Command(command_.getNode()));
-	boost::shared_ptr<GenericRequest<Command> > commandRequest(new GenericRequest<Command>(IQ::Set, command_.getJID(), commandPayload, iqRouter_));
+	boost::shared_ptr<GenericRequest<Command> > commandRequest = boost::make_shared< GenericRequest<Command> >(IQ::Set, command_.getJID(), boost::make_shared<Command>(command_.getNode()), iqRouter_);
 	commandRequest->onResponse.connect(boost::bind(&OutgoingAdHocCommandSession::handleResponse, this, _1, _2));
 	commandRequest->send();
 }
 
 void OutgoingAdHocCommandSession::cancel() {
 	if (!sessionID_.empty()) {
-		boost::shared_ptr<Payload> commandPayload(new Command(command_.getNode(), sessionID_, Command::Cancel));
-		boost::shared_ptr<GenericRequest<Command> > commandRequest(new GenericRequest<Command>(IQ::Set, command_.getJID(), commandPayload, iqRouter_));
-		commandRequest->onResponse.connect(boost::bind(&OutgoingAdHocCommandSession::handleResponse, this, _1, _2));
-		commandRequest->send();
+		submitForm(Form::ref(), Command::Cancel);
 	}
 }
 
 void OutgoingAdHocCommandSession::goBack() {
-	boost::shared_ptr<Payload> commandPayload(new Command(command_.getNode(), sessionID_, Command::Prev));
-	boost::shared_ptr<GenericRequest<Command> > commandRequest(new GenericRequest<Command>(IQ::Set, command_.getJID(), commandPayload, iqRouter_));
-	commandRequest->onResponse.connect(boost::bind(&OutgoingAdHocCommandSession::handleResponse, this, _1, _2));
-	commandRequest->send();
+	submitForm(Form::ref(), Command::Prev);
 }
 
 void OutgoingAdHocCommandSession::complete(Form::ref form) {
-	Command* command = new Command(command_.getNode(), sessionID_, Command::Complete);
-	boost::shared_ptr<Payload> commandPayload(command);
-	command->setForm(form);
-	boost::shared_ptr<GenericRequest<Command> > commandRequest(new GenericRequest<Command>(IQ::Set, command_.getJID(), commandPayload, iqRouter_));
-	commandRequest->onResponse.connect(boost::bind(&OutgoingAdHocCommandSession::handleResponse, this, _1, _2));
-	commandRequest->send();
+	submitForm(form, Command::Complete);
 }
 
 void OutgoingAdHocCommandSession::goNext(Form::ref form) {
-	Command* command = new Command(command_.getNode(), sessionID_, Command::Next);
-	boost::shared_ptr<Payload> commandPayload(command);
+	submitForm(form, Command::Next);
+}
+
+void OutgoingAdHocCommandSession::submitForm(Form::ref form, Command::Action action) {
+	boost::shared_ptr<Command> command(boost::make_shared<Command>(command_.getNode(), sessionID_, action));
 	command->setForm(form);
-	boost::shared_ptr<GenericRequest<Command> > commandRequest(new GenericRequest<Command>(IQ::Set, command_.getJID(), commandPayload, iqRouter_));
+	boost::shared_ptr<GenericRequest<Command> > commandRequest = boost::make_shared< GenericRequest<Command> >(IQ::Set, command_.getJID(), command, iqRouter_);
 	commandRequest->onResponse.connect(boost::bind(&OutgoingAdHocCommandSession::handleResponse, this, _1, _2));
 	commandRequest->send();
 }
 
-OutgoingAdHocCommandSession::ActionState OutgoingAdHocCommandSession::getActionState(Command::Action action) {
-	return actionStates_[action];
+OutgoingAdHocCommandSession::ActionState OutgoingAdHocCommandSession::getActionState(Command::Action action) const {
+	return get(actionStates_, action, Absent);
 }
 
 }
