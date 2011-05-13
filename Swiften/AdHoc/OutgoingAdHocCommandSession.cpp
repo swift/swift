@@ -13,7 +13,7 @@
 #include <Swiften/Base/Algorithm.h>
 
 namespace Swift {
-OutgoingAdHocCommandSession::OutgoingAdHocCommandSession(const DiscoItems::Item& command, IQRouter* iqRouter) : command_(command), iqRouter_(iqRouter), isMultiStage_(false) {
+OutgoingAdHocCommandSession::OutgoingAdHocCommandSession(const JID& to, const std::string& commandNode, IQRouter* iqRouter) : to_(to), commandNode_(commandNode), iqRouter_(iqRouter), isMultiStage_(false) {
 
 }
 
@@ -57,7 +57,7 @@ bool OutgoingAdHocCommandSession::getIsMultiStage() const {
 }
 
 void OutgoingAdHocCommandSession::start() {
-	boost::shared_ptr<GenericRequest<Command> > commandRequest = boost::make_shared< GenericRequest<Command> >(IQ::Set, command_.getJID(), boost::make_shared<Command>(command_.getNode()), iqRouter_);
+	boost::shared_ptr<GenericRequest<Command> > commandRequest = boost::make_shared< GenericRequest<Command> >(IQ::Set, to_, boost::make_shared<Command>(commandNode_), iqRouter_);
 	commandRequest->onResponse.connect(boost::bind(&OutgoingAdHocCommandSession::handleResponse, this, _1, _2));
 	commandRequest->send();
 }
@@ -81,9 +81,9 @@ void OutgoingAdHocCommandSession::goNext(Form::ref form) {
 }
 
 void OutgoingAdHocCommandSession::submitForm(Form::ref form, Command::Action action) {
-	boost::shared_ptr<Command> command(boost::make_shared<Command>(command_.getNode(), sessionID_, action));
+	boost::shared_ptr<Command> command(boost::make_shared<Command>(commandNode_, sessionID_, action));
 	command->setForm(form);
-	boost::shared_ptr<GenericRequest<Command> > commandRequest = boost::make_shared< GenericRequest<Command> >(IQ::Set, command_.getJID(), command, iqRouter_);
+	boost::shared_ptr<GenericRequest<Command> > commandRequest = boost::make_shared< GenericRequest<Command> >(IQ::Set, to_, command, iqRouter_);
 	commandRequest->onResponse.connect(boost::bind(&OutgoingAdHocCommandSession::handleResponse, this, _1, _2));
 	commandRequest->send();
 }

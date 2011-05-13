@@ -8,6 +8,7 @@
 
 #include <boost/bind.hpp>
 #include <boost/shared_ptr.hpp>
+#include <boost/smart_ptr/make_shared.hpp>
 
 #include <Swiften/Base/foreach.h>
 #include <Swiften/Queries/IQRouter.h>
@@ -62,7 +63,7 @@ void AdHocManager::handleServerDiscoItemsResponse(boost::shared_ptr<DiscoItems> 
 void AdHocManager::handleUIEvent(boost::shared_ptr<UIEvent> event) {
 	boost::shared_ptr<RequestAdHocUIEvent> adHocEvent = boost::dynamic_pointer_cast<RequestAdHocUIEvent>(event);
 	if (adHocEvent) {
-		factory_->createAdHocCommandWindow(boost::shared_ptr<OutgoingAdHocCommandSession>(new OutgoingAdHocCommandSession(adHocEvent->getCommand(), iqRouter_)));
+		factory_->createAdHocCommandWindow(boost::make_shared<OutgoingAdHocCommandSession>(adHocEvent->getCommand().getJID(), adHocEvent->getCommand().getNode(), iqRouter_));
 	}
 }
 
