@@ -479,7 +479,7 @@
     <message>
         <location filename="../Controllers/MainController.cpp" line="490"/>
         <source>Reconnect to %1% failed: %2%. Will retry in %3% seconds.</source>
-        <translation>Erneutes verbinden zu %1% fehlgeschlagen: %2%. Es wird in %3% Sekunden erneut versucht zu verbinden.</translation>
+        <translation>Erneutes Verbinden zu %1% fehlgeschlagen: %2%. Es wird in %3% Sekunden erneut versucht zu verbinden.</translation>
     </message>
     <message>
         <location filename="../Controllers/MainController.cpp" line="493"/>
@@ -523,7 +523,7 @@
     <message>
         <location filename="../Controllers/ProfileController.cpp" line="62"/>
         <source>There was an error publishing your profile data</source>
-        <translation>Es ist eine Fehler während des Veröfflichen deiner Profildaten aufgetreten</translation>
+        <translation>Es ist ein Fehler während der Veröffentlichung deiner Profildaten aufgetreten</translation>
     </message>
 </context>
 <context>
@@ -822,7 +822,7 @@
     <message>
         <location filename="../QtUI/QtStrings.h" line="57"/>
         <source>&amp;Finish</source>
-        <translation>&amp;Abschliesen</translation>
+        <translation>&amp;Abschließen</translation>
     </message>
     <message>
         <location filename="../QtUI/QtStrings.h" line="58"/>
@@ -1026,7 +1026,7 @@
         <location filename="../QtUI/UserSearch/QtUserSearchFirstPage.ui"/>
         <location filename="../QtUI/UserSearch/ui_QtUserSearchFirstPage.h" line="122"/>
         <source>Add another user to your contact list. If you know their address you can add them directly, or you can search for them.</source>
-        <translation>Füge einen anderen Benutzer zu deiner Kontaktliste hinzu. Wenn du desen Adresse weißt, kannst du sie direkt eingeben, oder du kannst nach ihm suchen.</translation>
+        <translation>Füge einen anderen Benutzer zu deiner Kontaktliste hinzu. Wenn du dessen Adresse weißt, kannst du sie direkt eingeben, oder du kannst nach ihm suchen.</translation>
     </message>
     <message>
         <location filename="../QtUI/UserSearch/QtUserSearchFirstPage.ui"/>
@@ -1061,7 +1061,7 @@
     <message>
         <location filename="../QtUI/ChatList/ChatListModel.cpp" line="15"/>
         <source>Bookmarked Rooms</source>
-        <translation>Chatraum Lesezeichen</translation>
+        <translation>Chatraum-Lesezeichen</translation>
     </message>
 </context>
 <context>
@@ -1096,7 +1096,7 @@
     <message>
         <location filename="../QtUI/QtAboutWidget.cpp" line="54"/>
         <source>View License</source>
-        <translation>Zeige die Lizense</translation>
+        <translation>Lizenz anzeigen</translation>
     </message>
 </context>
 <context>
@@ -1277,7 +1277,7 @@
     <message>
         <location filename="../QtUI/QtLoginWindow.cpp" line="81"/>
         <source>User address:</source>
-        <translation>Benutzer Adresse:</translation>
+        <translation>Benutzeradresse:</translation>
     </message>
     <message>
         <location filename="../QtUI/QtLoginWindow.cpp" line="86"/>
@@ -1299,7 +1299,7 @@
         <location filename="../QtUI/QtLoginWindow.cpp" line="118"/>
         <location filename="../QtUI/QtLoginWindow.cpp" line="119"/>
         <source>Click if you have a personal certificate used for login to the service.</source>
-        <translation>Wenn du ein persönliches Zertifikat zu einloggen hast, drücke hier.</translation>
+        <translation>Wenn du ein persönliches Zertifikat zum Einloggen hast, drücke hier.</translation>
     </message>
     <message>
         <location filename="../QtUI/QtLoginWindow.cpp" line="125"/>
@@ -1335,7 +1335,7 @@
     <message>
         <location filename="../QtUI/QtLoginWindow.cpp" line="165"/>
         <source>&amp;Show Debug Console</source>
-        <translation>&amp;Debug Konsole anzeigen</translation>
+        <translation>&amp;Debug-Konsole anzeigen</translation>
     </message>
     <message>
         <location filename="../QtUI/QtLoginWindow.cpp" line="169"/>
@@ -1375,12 +1375,12 @@
     <message>
         <location filename="../QtUI/QtLoginWindow.cpp" line="420"/>
         <source>The certificate presented by the server is not valid.</source>
-        <translation>Das Serverzertifikate ist nicht gültig.</translation>
+        <translation>Das Serverzertifikat ist nicht gültig.</translation>
     </message>
     <message>
         <location filename="../QtUI/QtLoginWindow.cpp" line="421"/>
         <source>Would you like to permanently trust this certificate? This must only be done if you know it is correct.</source>
-        <translation>Willst du diesem Zertifikate permanent Vertrauen? Das darf nur der Fall sein, wenn du genau weißt das es korrekt ist.</translation>
+        <translation>Willst du diesem Zertifikat permanent Vertrauen? Das darf nur der Fall sein, wenn du genau weißt, dass es korrekt ist.</translation>
     </message>
     <message>
         <location filename="../QtUI/QtLoginWindow.cpp" line="423"/>
@@ -1428,7 +1428,7 @@
     <message>
         <location filename="../QtUI/QtMainWindow.cpp" line="78"/>
         <source>&amp;Show offline contacts</source>
-        <translation>&amp;Offline Kontakte anzeigen</translation>
+        <translation>&amp;Offline-Kontakte anzeigen</translation>
     </message>
     <message>
         <location filename="../QtUI/QtMainWindow.cpp" line="84"/>
@@ -1486,7 +1486,7 @@
     <message>
         <location filename="../QtUI/QtNameWidget.cpp" line="62"/>
         <source>Edit Profile</source>
-        <translation>Profile editieren</translation>
+        <translation>Profil editieren</translation>
     </message>
 </context>
 <context>
@@ -1494,7 +1494,7 @@
     <message>
         <location filename="../QtUI/QtProfileWindow.cpp" line="24"/>
         <source>Edit Profile</source>
-        <translation>Profile editieren</translation>
+        <translation>Profil editieren</translation>
     </message>
     <message>
         <location filename="../QtUI/QtProfileWindow.cpp" line="43"/>
@@ -1679,7 +1679,7 @@ Wenn du dich jetzt noch nicht festlegen willst, wirst du beim nächsten Einlogge
     <message>
         <location filename="../QtUI/QtXMLConsoleWidget.cpp" line="50"/>
         <source>Debug Console</source>
-        <translation>Debug Konsole</translation>
+        <translation>Debug-Konsole</translation>
     </message>
     <message>
         <location filename="../QtUI/QtXMLConsoleWidget.cpp" line="75"/>
