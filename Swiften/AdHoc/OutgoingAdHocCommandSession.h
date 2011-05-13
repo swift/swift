@@ -6,9 +6,12 @@
 
 #pragma once
 
-#include <Swiften/Base/boost_bsignals.h>
 #include <boost/shared_ptr.hpp>
-#include <Swiften/Elements/DiscoItems.h>
+#include <string>
+#include <map>
+
+#include <Swiften/JID/JID.h>
+#include <Swiften/Base/boost_bsignals.h>
 #include <Swiften/Elements/Command.h>
 #include <Swiften/Elements/ErrorPayload.h>
 
