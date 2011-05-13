@@ -25,6 +25,8 @@ myenv.MergeFlags(env["SWIFT_CONTROLLERS_FLAGS"])
 myenv.MergeFlags(env["SWIFTOOLS_FLAGS"])
 if myenv["HAVE_XSS"] :
   myenv.MergeFlags(env["XSS_FLAGS"])
+if env["PLATFORM"] == "posix" :
+  myenv.Append(LIBS = ["X11"])
 if myenv["HAVE_SPARKLE"] :
   myenv.MergeFlags(env["SPARKLE_FLAGS"])
 myenv.MergeFlags(env["SWIFTEN_FLAGS"])

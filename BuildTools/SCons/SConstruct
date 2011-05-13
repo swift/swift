@@ -423,7 +423,7 @@ env["HAVE_XSS"] = 0
 if env["PLATFORM"] != "win32" and env["PLATFORM"] != "darwin" :
 	xss_flags = {
 			"LIBPATH": ["/usr/X11R6/lib"],
-			"LIBS": ["X11", "Xss"]
+			"LIBS": ["Xss"]
 		}
 	xss_env = conf_env.Clone()
 	xss_env.MergeFlags(xss_flags)
