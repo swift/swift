@@ -11,7 +11,7 @@
 #include <Swiften/Queries/GenericRequest.h>
 
 namespace Swift {
-OutgoingAdHocCommandSession::OutgoingAdHocCommandSession(const DiscoItems::Item& command, AdHocCommandWindowFactory* /*factory*/, IQRouter* iqRouter) : command_(command), iqRouter_(iqRouter), isMultiStage_(false) {
+OutgoingAdHocCommandSession::OutgoingAdHocCommandSession(const DiscoItems::Item& command, IQRouter* iqRouter) : command_(command), iqRouter_(iqRouter), isMultiStage_(false) {
 
 }
 

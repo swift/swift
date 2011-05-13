@@ -62,7 +62,7 @@ void AdHocManager::handleServerDiscoItemsResponse(boost::shared_ptr<DiscoItems> 
 void AdHocManager::handleUIEvent(boost::shared_ptr<UIEvent> event) {
 	boost::shared_ptr<RequestAdHocUIEvent> adHocEvent = boost::dynamic_pointer_cast<RequestAdHocUIEvent>(event);
 	if (adHocEvent) {
-		factory_->createAdHocCommandWindow(boost::shared_ptr<OutgoingAdHocCommandSession>(new OutgoingAdHocCommandSession(adHocEvent->getCommand(), factory_, iqRouter_)));
+		factory_->createAdHocCommandWindow(boost::shared_ptr<OutgoingAdHocCommandSession>(new OutgoingAdHocCommandSession(adHocEvent->getCommand(), iqRouter_)));
 	}
 }
 

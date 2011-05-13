@@ -16,7 +16,7 @@ namespace Swift {
 	class IQRouter;
 	class MainWindow;
 	class UIEventStream;
-	class AdHocCommandWindowFactory;
+
 	class OutgoingAdHocCommandSession {
 		public:
 
@@ -29,7 +29,7 @@ namespace Swift {
 				Enabled /** Action is applicable and currently available */ = 2,
 				EnabledAndPresent = 3};
 
-			OutgoingAdHocCommandSession(const DiscoItems::Item& command, AdHocCommandWindowFactory* factory, IQRouter* iqRouter);
+			OutgoingAdHocCommandSession(const DiscoItems::Item& command, IQRouter* iqRouter);
 			/**
 			 * Send initial request to the target.
 			 */
