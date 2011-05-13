@@ -86,12 +86,19 @@ MUCSearchWindow* QtUIFactory::createMUCSearchWindow() {
 ChatWindow* QtUIFactory::createChatWindow(const JID& contact, UIEventStream* eventStream) {
 	QtChatWindow* window = dynamic_cast<QtChatWindow*>(chatWindowFactory->createChatWindow(contact, eventStream));
 	chatWindows.push_back(window);
-	foreach (QtChatWindow* existingWindow, chatWindows) {
-		connect(window, SIGNAL(fontResized(int)), existingWindow, SLOT(handleFontResized(int)));
-		connect(existingWindow, SIGNAL(fontResized(int)), window, SLOT(handleFontResized(int)));
+	std::vector<QPointer<QtChatWindow> > deletions;
+	foreach (QPointer<QtChatWindow> existingWindow, chatWindows) {
+		if (existingWindow.isNull()) {
+			deletions.push_back(existingWindow);
+		} else {
+			connect(window, SIGNAL(fontResized(int)), existingWindow, SLOT(handleFontResized(int)));
+			connect(existingWindow, SIGNAL(fontResized(int)), window, SLOT(handleFontResized(int)));
+		}
+	}
+	foreach (QPointer<QtChatWindow> deletedWindow, deletions) {
+		chatWindows.erase(std::remove(chatWindows.begin(), chatWindows.end(), deletedWindow), chatWindows.end());
 	}
 	connect(window, SIGNAL(fontResized(int)), this, SLOT(handleChatWindowFontResized(int)));
-	connect(window, SIGNAL(destroyed(QObject*)), this, SLOT(handleChatWindowDestroyed(QObject*)));
 	window->handleFontResized(chatFontSize);
 	return window;
 }
@@ -99,11 +106,6 @@ ChatWindow* QtUIFactory::createChatWindow(const JID& contact, UIEventStream* eve
 void QtUIFactory::handleChatWindowFontResized(int size) {
 	chatFontSize = size;
 	settings->storeInt(CHATWINDOW_FONT_SIZE, size);
-}
-
-void QtUIFactory::handleChatWindowDestroyed(QObject* window) {
-	QtChatWindow* chatWindow = qobject_cast<QtChatWindow*>(window);
-	chatWindows.erase(std::remove(chatWindows.begin(), chatWindows.end(), chatWindow), chatWindows.end());
 }
 
 UserSearchWindow* QtUIFactory::createUserSearchWindow(UserSearchWindow::Type type, UIEventStream* eventStream, const std::set<std::string>& groups) {

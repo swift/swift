@@ -7,6 +7,7 @@
 #pragma once
 
 #include <QObject>
+#include <QPointer>
 
 #include <Swift/Controllers/UIInterfaces/UIFactory.h>
 
@@ -42,7 +43,6 @@ namespace Swift {
 
 		private slots:
 			void handleLoginWindowGeometryChanged();
-			void handleChatWindowDestroyed(QObject*);
 			void handleChatWindowFontResized(int);
 
 		private:
@@ -53,7 +53,7 @@ namespace Swift {
 			QtChatWindowFactory* chatWindowFactory;
 			QtMainWindow* lastMainWindow;
 			QtLoginWindow* loginWindow;
-			std::vector<QtChatWindow*> chatWindows;
+			std::vector<QPointer<QtChatWindow> > chatWindows;
 			bool startMinimized;
 			int chatFontSize;
 	};
