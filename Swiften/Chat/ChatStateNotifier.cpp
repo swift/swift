@@ -7,6 +7,7 @@
 #include <Swiften/Chat/ChatStateNotifier.h>
 
 #include <boost/bind.hpp>
+#include <boost/smart_ptr/make_shared.hpp>
 
 #include <Swiften/Elements/Message.h>
 #include <Swiften/Elements/ChatState.h>
@@ -68,15 +69,15 @@ bool ChatStateNotifier::contactShouldReceiveStates() {
 }
 
 void ChatStateNotifier::changeState(ChatState::ChatStateType state) {
-	boost::shared_ptr<Message> message(new Message());
+	boost::shared_ptr<Message> message(boost::make_shared<Message>());
 	message->setTo(contact_);
-	message->addPayload(boost::shared_ptr<Payload>(new ChatState(state)));
+	message->addPayload(boost::make_shared<ChatState>(state));
 	stanzaChannel_->sendMessage(message);
 }
 
 void ChatStateNotifier::addChatStateRequest(Message::ref message) {
 	if (contactShouldReceiveStates()) {
-		message->addPayload(boost::shared_ptr<Payload>(new ChatState(ChatState::Active)));
+		message->addPayload(boost::make_shared<ChatState>(ChatState::Active));
 	}
 }
 

@@ -95,7 +95,7 @@ void CoreClient::handleConnectorFinished(boost::shared_ptr<Connection> connectio
 		connection_ = connection;
 
 		assert(!sessionStream_);
-		sessionStream_ = boost::shared_ptr<BasicSessionStream>(new BasicSessionStream(ClientStreamType, connection_, getPayloadParserFactories(), getPayloadSerializers(), tlsFactories->getTLSContextFactory(), networkFactories->getTimerFactory()));
+		sessionStream_ = boost::make_shared<BasicSessionStream>(ClientStreamType, connection_, getPayloadParserFactories(), getPayloadSerializers(), tlsFactories->getTLSContextFactory(), networkFactories->getTimerFactory());
 		if (!certificate_.empty()) {
 			sessionStream_->setTLSCertificate(PKCS12Certificate(certificate_, password_));
 		}

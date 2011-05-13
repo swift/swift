@@ -13,6 +13,7 @@
 #include <vector>
 #include <openssl/err.h>
 #include <openssl/pkcs12.h>
+#include <boost/smart_ptr/make_shared.hpp>
 
 #if defined(SWIFTEN_PLATFORM_MACOSX) && OPENSSL_VERSION_NUMBER < 0x00908000
 #include <Security/Security.h>
@@ -226,7 +227,7 @@ bool OpenSSLContext::setClientCertificate(const PKCS12Certificate& certificate) 
 Certificate::ref OpenSSLContext::getPeerCertificate() const {
 	boost::shared_ptr<X509> x509Cert(SSL_get_peer_certificate(handle_), X509_free);
 	if (x509Cert) {
-		return Certificate::ref(new OpenSSLCertificate(x509Cert));
+		return boost::make_shared<OpenSSLCertificate>(x509Cert);
 	}
 	else {
 		return Certificate::ref();
@@ -236,7 +237,7 @@ Certificate::ref OpenSSLContext::getPeerCertificate() const {
 boost::shared_ptr<CertificateVerificationError> OpenSSLContext::getPeerCertificateVerificationError() const {
 	int verifyResult = SSL_get_verify_result(handle_);
 	if (verifyResult != X509_V_OK) {
-		return boost::shared_ptr<CertificateVerificationError>(new CertificateVerificationError(getVerificationErrorTypeForResult(verifyResult)));
+		return boost::make_shared<CertificateVerificationError>(getVerificationErrorTypeForResult(verifyResult));
 	}
 	else {
 		return boost::shared_ptr<CertificateVerificationError>();

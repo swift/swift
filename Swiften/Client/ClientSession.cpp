@@ -175,11 +175,11 @@ void ClientSession::handleElement(boost::shared_ptr<Element> element) {
 
 		if (streamFeatures->hasStartTLS() && stream->supportsTLSEncryption() && useTLS != NeverUseTLS) {
 			state = WaitingForEncrypt;
-			stream->writeElement(boost::shared_ptr<StartTLSRequest>(new StartTLSRequest()));
+			stream->writeElement(boost::make_shared<StartTLSRequest>());
 		}
 		else if (useStreamCompression && streamFeatures->hasCompressionMethod("zlib")) {
 			state = Compressing;
-			stream->writeElement(boost::shared_ptr<CompressRequest>(new CompressRequest("zlib")));
+			stream->writeElement(boost::make_shared<CompressRequest>("zlib"));
 		}
 		else if (streamFeatures->hasAuthenticationMechanisms()) {
 			if (stream->hasTLSCertificate()) {
@@ -250,10 +250,10 @@ void ClientSession::handleElement(boost::shared_ptr<Element> element) {
 		finishSession(Error::CompressionFailedError);
 	}
 	else if (boost::dynamic_pointer_cast<StreamManagementEnabled>(element)) {
-		stanzaAckRequester_ = boost::shared_ptr<StanzaAckRequester>(new StanzaAckRequester());
+		stanzaAckRequester_ = boost::make_shared<StanzaAckRequester>();
 		stanzaAckRequester_->onRequestAck.connect(boost::bind(&ClientSession::requestAck, shared_from_this()));
 		stanzaAckRequester_->onStanzaAcked.connect(boost::bind(&ClientSession::handleStanzaAcked, shared_from_this(), _1));
-		stanzaAckResponder_ = boost::shared_ptr<StanzaAckResponder>(new StanzaAckResponder());
+		stanzaAckResponder_ = boost::make_shared<StanzaAckResponder>();
 		stanzaAckResponder_->onAck.connect(boost::bind(&ClientSession::ack, shared_from_this(), _1));
 		needAcking = false;
 		continueSessionInitialization();
@@ -308,7 +308,7 @@ void ClientSession::handleElement(boost::shared_ptr<Element> element) {
 void ClientSession::continueSessionInitialization() {
 	if (needResourceBind) {
 		state = BindingResource;
-		boost::shared_ptr<ResourceBind> resourceBind(new ResourceBind());
+		boost::shared_ptr<ResourceBind> resourceBind(boost::make_shared<ResourceBind>());
 		if (!localJID.getResource().empty()) {
 			resourceBind->setResource(localJID.getResource());
 		}
@@ -316,11 +316,11 @@ void ClientSession::continueSessionInitialization() {
 	}
 	else if (needAcking) {
 		state = EnablingSessionManagement;
-		stream->writeElement(boost::shared_ptr<EnableStreamManagement>(new EnableStreamManagement()));
+		stream->writeElement(boost::make_shared<EnableStreamManagement>());
 	}
 	else if (needSessionStart) {
 		state = StartingSession;
-		sendStanza(IQ::createRequest(IQ::Set, JID(), "session-start", boost::shared_ptr<StartSession>(new StartSession())));
+		sendStanza(IQ::createRequest(IQ::Set, JID(), "session-start", boost::make_shared<StartSession>()));
 	}
 	else {
 		state = Initialized;
@@ -340,7 +340,7 @@ void ClientSession::sendCredentials(const std::string& password) {
 	assert(WaitingForCredentials);
 	state = Authenticating;
 	authenticator->setCredentials(localJID.getNode(), password);
-	stream->writeElement(boost::shared_ptr<AuthRequest>(new AuthRequest(authenticator->getName(), authenticator->getResponse())));
+	stream->writeElement(boost::make_shared<AuthRequest>(authenticator->getName(), authenticator->getResponse()));
 }
 
 void ClientSession::handleTLSEncrypted() {
@@ -357,8 +357,7 @@ void ClientSession::handleTLSEncrypted() {
 			continueAfterTLSEncrypted();
 		}
 		else {
-			boost::shared_ptr<CertificateVerificationError> identityError(new CertificateVerificationError(CertificateVerificationError::InvalidServerIdentity));
-			checkTrustOrFinish(certificate, identityError);
+			checkTrustOrFinish(certificate, boost::make_shared<CertificateVerificationError>(CertificateVerificationError::InvalidServerIdentity));
 		}
 	}
 }
@@ -410,7 +409,7 @@ void ClientSession::finish() {
 }
 
 void ClientSession::finishSession(Error::Type error) {
-	finishSession(boost::shared_ptr<Swift::ClientSession::Error>(new Swift::ClientSession::Error(error)));
+	finishSession(boost::make_shared<Swift::ClientSession::Error>(error));
 }
 
 void ClientSession::finishSession(boost::shared_ptr<Swift::Error> error) {
@@ -422,7 +421,7 @@ void ClientSession::finishSession(boost::shared_ptr<Swift::Error> error) {
 }
 
 void ClientSession::requestAck() {
-	stream->writeElement(boost::shared_ptr<StanzaAckRequest>(new StanzaAckRequest()));
+	stream->writeElement(boost::make_shared<StanzaAckRequest>());
 }
 
 void ClientSession::handleStanzaAcked(boost::shared_ptr<Stanza> stanza) {
@@ -430,7 +429,7 @@ void ClientSession::handleStanzaAcked(boost::shared_ptr<Stanza> stanza) {
 }
 
 void ClientSession::ack(unsigned int handledStanzasCount) {
-	stream->writeElement(boost::shared_ptr<StanzaAck>(new StanzaAck(handledStanzasCount)));
+	stream->writeElement(boost::make_shared<StanzaAck>(handledStanzasCount));
 }
 
 }
