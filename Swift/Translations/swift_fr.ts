@@ -1090,7 +1090,8 @@
         <location filename="../QtUI/QtAboutWidget.cpp" line="50"/>
         <source>Using the English translation by
 %1</source>
-        <translation>Utilise la traduction Anglaise de %1</translation>
+        <translation>Utilise la traduction Française de
+%1</translation>
     </message>
     <message>
         <location filename="../QtUI/QtAboutWidget.cpp" line="54"/>
