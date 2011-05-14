@@ -13,6 +13,7 @@
 
 #include <Swiften/Session/SessionStream.h>
 #include <Swiften/Client/ClientSession.h>
+#include <Swiften/Elements/Message.h>
 #include <Swiften/Elements/StartTLSRequest.h>
 #include <Swiften/Elements/StreamFeatures.h>
 #include <Swiften/Elements/StreamError.h>
@@ -23,6 +24,7 @@
 #include <Swiften/Elements/AuthFailure.h>
 #include <Swiften/Elements/StreamManagementEnabled.h>
 #include <Swiften/Elements/StreamManagementFailed.h>
+#include <Swiften/Elements/StanzaAck.h>
 #include <Swiften/Elements/EnableStreamManagement.h>
 #include <Swiften/Elements/IQ.h>
 #include <Swiften/Elements/ResourceBind.h>
@@ -45,6 +47,7 @@ class ClientSessionTest : public CppUnit::TestFixture {
 		CPPUNIT_TEST(testAuthenticate_NoValidAuthMechanisms);
 		CPPUNIT_TEST(testStreamManagement);
 		CPPUNIT_TEST(testStreamManagement_Failed);
+		CPPUNIT_TEST(testFinishAcksStanzas);
 		/*
 		CPPUNIT_TEST(testResourceBind);
 		CPPUNIT_TEST(testResourceBind_ChangeResource);
@@ -275,6 +278,17 @@ class ClientSessionTest : public CppUnit::TestFixture {
 			session->finish();
 		}
 
+		void testFinishAcksStanzas() {
+			boost::shared_ptr<ClientSession> session(createSession());
+			initializeSession(session);
+			server->sendMessage();
+			server->sendMessage();
+			server->sendMessage();
+
+			session->finish();
+
+			server->receiveAck(3);
+		}
 
 	private:
 		boost::shared_ptr<ClientSession> createSession() {
@@ -283,6 +297,23 @@ class ClientSessionTest : public CppUnit::TestFixture {
 			session->onNeedCredentials.connect(boost::bind(&ClientSessionTest::handleSessionNeedCredentials, this));
 			session->setAllowPLAINOverNonTLS(true);
 			return session;
+		}
+
+		void initializeSession(boost::shared_ptr<ClientSession> session) {
+			session->start();
+			server->receiveStreamStart();
+			server->sendStreamStart();
+			server->sendStreamFeaturesWithPLAINAuthentication();
+			session->sendCredentials("mypass");
+			server->receiveAuthRequest("PLAIN");
+			server->sendAuthSuccess();
+			server->receiveStreamStart();
+			server->sendStreamStart();
+			server->sendStreamFeaturesWithBindAndStreamManagement();
+			server->receiveBind();
+			server->sendBindResult();
+			server->receiveStreamManagementEnable();
+			server->sendStreamManagementEnabled();
 		}
 
 		void handleSessionFinished(boost::shared_ptr<Error> error) {
@@ -447,6 +478,12 @@ class ClientSessionTest : public CppUnit::TestFixture {
 					onElementReceived(iq);
 				}
 
+				void sendMessage() {
+					boost::shared_ptr<Message> message = boost::make_shared<Message>();
+					message->setTo(JID("foo@bar.com/bla"));
+					onElementReceived(message);
+				}
+
 				void receiveStreamStart() {
 					Event event = popEvent();
 					CPPUNIT_ASSERT(event.header);
@@ -479,6 +516,14 @@ class ClientSessionTest : public CppUnit::TestFixture {
 					CPPUNIT_ASSERT(iq);
 					CPPUNIT_ASSERT(iq->getPayload<ResourceBind>());
 					bindID = iq->getID();
+				}
+
+				void receiveAck(unsigned int n) {
+					Event event = popEvent();
+					CPPUNIT_ASSERT(event.element);
+					boost::shared_ptr<StanzaAck> ack = boost::dynamic_pointer_cast<StanzaAck>(event.element);
+					CPPUNIT_ASSERT(ack);
+					CPPUNIT_ASSERT_EQUAL(n, ack->getHandledStanzasCount());
 				}
 
 				Event popEvent() {
