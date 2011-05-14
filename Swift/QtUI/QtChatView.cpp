@@ -207,7 +207,7 @@ void QtChatView::handleViewLoadFinished(bool ok) {
 }
 
 void QtChatView::increaseFontSize(int numSteps) {
-	qDebug() << "Increasing";
+	//qDebug() << "Increasing";
 	fontSizeSteps_ += numSteps;
 	emit fontResized(fontSizeSteps_);
 }
@@ -224,7 +224,7 @@ void QtChatView::resizeFont(int fontSizeSteps) {
 	fontSizeSteps_ = fontSizeSteps;
 	double size = 1.0 + 0.2 * fontSizeSteps_;
 	QString sizeString(QString().setNum(size, 'g', 3) + "em");
-	qDebug() << "Setting to " << sizeString;
+	//qDebug() << "Setting to " << sizeString;
 	const QWebElementCollection spans = document_.findAll("span");
 	foreach (QWebElement span, spans) {
 		span.setStyleProperty("font-size", sizeString);
