@@ -21,7 +21,7 @@ MUCUserPayloadSerializer::MUCUserPayloadSerializer() : GenericPayloadSerializer<
 }
 
 std::string MUCUserPayloadSerializer::serializePayload(boost::shared_ptr<MUCUserPayload> payload)  const {
-	XMLElement mucElement("x", "http://jabber.org/protocol/muc");
+	XMLElement mucElement("x", "http://jabber.org/protocol/muc#user");
 	foreach (const MUCUserPayload::StatusCode statusCode, payload->getStatusCodes()) {
 		boost::shared_ptr<XMLElement> statusElement(new XMLElement("status"));
 		std::ostringstream code;
