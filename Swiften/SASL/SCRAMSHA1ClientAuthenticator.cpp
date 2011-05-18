@@ -39,23 +39,23 @@ static std::string escape(const std::string& s) {
 SCRAMSHA1ClientAuthenticator::SCRAMSHA1ClientAuthenticator(const std::string& nonce, bool useChannelBinding) : ClientAuthenticator(useChannelBinding ? "SCRAM-SHA-1-PLUS" : "SCRAM-SHA-1"), step(Initial), clientnonce(nonce), useChannelBinding(useChannelBinding) {
 }
 
-boost::optional<ByteArray> SCRAMSHA1ClientAuthenticator::getResponse() const {
+boost::optional<SafeByteArray> SCRAMSHA1ClientAuthenticator::getResponse() const {
 	if (step == Initial) {
-		return concat(getGS2Header(), getInitialBareClientMessage());
+		return createSafeByteArray(concat(getGS2Header(), getInitialBareClientMessage()));
 	}
 	else if (step == Proof) {
 		ByteArray clientKey = HMACSHA1::getResult(saltedPassword, createByteArray("Client Key"));
 		ByteArray storedKey = SHA1::getHash(clientKey);
-		ByteArray clientSignature = HMACSHA1::getResult(storedKey, authMessage);
+		ByteArray clientSignature = HMACSHA1::getResult(createSafeByteArray(storedKey), authMessage);
 		ByteArray clientProof = clientKey;
 		for (unsigned int i = 0; i < clientProof.size(); ++i) {
 			clientProof[i] ^= clientSignature[i];
 		}
 		ByteArray result = concat(getFinalMessageWithoutProof(), createByteArray(",p="), createByteArray(Base64::encode(clientProof)));
-		return result;
+		return createSafeByteArray(result);
 	}
 	else {
-		return boost::optional<ByteArray>();
+		return boost::optional<SafeByteArray>();
 	}
 }
 
@@ -100,7 +100,7 @@ bool SCRAMSHA1ClientAuthenticator::setChallenge(const boost::optional<ByteArray>
 		}
 
 		// Compute all the values needed for the server signature
-		saltedPassword = PBKDF2::encode(createByteArray(StringPrep::getPrepared(getPassword(), StringPrep::SASLPrep)), salt, iterations);
+		saltedPassword = PBKDF2::encode(createSafeByteArray(StringPrep::getPrepared(getPassword(), StringPrep::SASLPrep)), salt, iterations);
 		authMessage = concat(getInitialBareClientMessage(), createByteArray(","), initialServerMessage, createByteArray(","), getFinalMessageWithoutProof());
 		ByteArray serverKey = HMACSHA1::getResult(saltedPassword, createByteArray("Server Key"));
 		serverSignature = HMACSHA1::getResult(serverKey, authMessage);

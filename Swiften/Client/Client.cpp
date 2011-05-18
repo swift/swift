@@ -29,7 +29,7 @@
 
 namespace Swift {
 
-Client::Client(const JID& jid, const std::string& password, NetworkFactories* networkFactories, Storages* storages) : CoreClient(jid, password, networkFactories), storages(storages) {
+Client::Client(const JID& jid, const SafeString& password, NetworkFactories* networkFactories, Storages* storages) : CoreClient(jid, password, networkFactories), storages(storages) {
 	memoryStorages = new MemoryStorages();
 
 	softwareVersionResponder = new SoftwareVersionResponder(getIQRouter());

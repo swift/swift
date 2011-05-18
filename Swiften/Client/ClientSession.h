@@ -21,6 +21,7 @@
 namespace Swift {
 	class ClientAuthenticator;
 	class CertificateTrustChecker;
+	class SafeString;
 
 	class ClientSession : public boost::enable_shared_from_this<ClientSession> {
 		public:
@@ -104,7 +105,7 @@ namespace Swift {
 				return getState() == Finished;
 			}
 
-			void sendCredentials(const std::string& password);
+			void sendCredentials(const SafeString& password);
 			void sendStanza(boost::shared_ptr<Stanza>);
 
 			void setCertificateTrustChecker(CertificateTrustChecker* checker) {

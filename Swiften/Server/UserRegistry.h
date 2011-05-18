@@ -7,15 +7,15 @@
 #pragma once
 
 #include <string>
+#include <Swiften/Base/SafeByteArray.h>
 
 namespace Swift {
-	
 	class JID;
 
 	class UserRegistry {
 		public:
 			virtual ~UserRegistry();
 
-			virtual bool isValidUserPassword(const JID& user, const std::string& password) const = 0;
+			virtual bool isValidUserPassword(const JID& user, const SafeByteArray& password) const = 0;
 	};
 }

@@ -29,39 +29,39 @@ class PLAINMessageTest : public CppUnit::TestFixture
 		PLAINMessageTest() {}
 
 		void testGetValue_WithoutAuthzID() {
-			PLAINMessage message("user", "pass");
-			CPPUNIT_ASSERT_EQUAL(message.getValue(), createByteArray("\0user\0pass", 10));
+			PLAINMessage message("user", createSafeByteArray("pass"));
+			CPPUNIT_ASSERT_EQUAL(message.getValue(), createSafeByteArray("\0user\0pass", 10));
 		}
 
 		void testGetValue_WithAuthzID() {
-			PLAINMessage message("user", "pass", "authz");
-			CPPUNIT_ASSERT_EQUAL(message.getValue(), createByteArray("authz\0user\0pass", 15));
+			PLAINMessage message("user", createSafeByteArray("pass"), "authz");
+			CPPUNIT_ASSERT_EQUAL(message.getValue(), createSafeByteArray("authz\0user\0pass", 15));
 		}
 
 		void testConstructor_WithoutAuthzID() {
-			PLAINMessage message(createByteArray("\0user\0pass", 10));
+			PLAINMessage message(createSafeByteArray("\0user\0pass", 10));
 
 			CPPUNIT_ASSERT_EQUAL(std::string(""), message.getAuthorizationID());
 			CPPUNIT_ASSERT_EQUAL(std::string("user"), message.getAuthenticationID());
-			CPPUNIT_ASSERT_EQUAL(std::string("pass"), message.getPassword());
+			CPPUNIT_ASSERT_EQUAL(createSafeByteArray("pass"), message.getPassword());
 		}
 
 		void testConstructor_WithAuthzID() {
-			PLAINMessage message(createByteArray("authz\0user\0pass", 15));
+			PLAINMessage message(createSafeByteArray("authz\0user\0pass", 15));
 
 			CPPUNIT_ASSERT_EQUAL(std::string("authz"), message.getAuthorizationID());
 			CPPUNIT_ASSERT_EQUAL(std::string("user"), message.getAuthenticationID());
-			CPPUNIT_ASSERT_EQUAL(std::string("pass"), message.getPassword());
+			CPPUNIT_ASSERT_EQUAL(createSafeByteArray("pass"), message.getPassword());
 		}
 
 		void testConstructor_NoAuthcid() {
-			PLAINMessage message(createByteArray("authzid", 7));
+			PLAINMessage message(createSafeByteArray("authzid", 7));
 
 			CPPUNIT_ASSERT_EQUAL(std::string(""), message.getAuthenticationID());
 		}
 
 		void testConstructor_NoPassword() {
-			PLAINMessage message(createByteArray("authzid\0authcid", 15));
+			PLAINMessage message(createSafeByteArray("authzid\0authcid", 15));
 
 			CPPUNIT_ASSERT_EQUAL(std::string(""), message.getAuthenticationID());
 		}

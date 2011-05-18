@@ -9,36 +9,50 @@
 #include <cassert>
 
 #include <Swiften/StringCodecs/SHA1.h>
-#include <Swiften/Base/ByteArray.h>
 #include <Swiften/Base/Algorithm.h>
+
+using namespace Swift;
+
+namespace {
+	static const unsigned int B = 64;
+
+	template<typename SourceType>
+	ByteArray getHMACSHA1(const SourceType& key, const ByteArray& data) {
+		assert(key.size() <= B);
+
+		// Create the padded key
+		SourceType paddedKey(key);
+		paddedKey.resize(B, 0x0);
+
+		// Create the first value
+		SourceType x(paddedKey);
+		for (unsigned int i = 0; i < x.size(); ++i) {
+			x[i] ^= 0x36;
+		}
+		append(x, data);
+
+		// Create the second value
+		SourceType y(paddedKey);
+		for (unsigned int i = 0; i < y.size(); ++i) {
+			y[i] ^= 0x5c;
+		}
+		append(y, SHA1::getHash(x));
+
+		return SHA1::getHash(y);
+	}
+}
 
 namespace Swift {
 
-static const unsigned int B = 64;
+ByteArray HMACSHA1::getResult(const SafeByteArray& key, const ByteArray& data) {
+	return getHMACSHA1(key, data);
+}
 
 ByteArray HMACSHA1::getResult(const ByteArray& key, const ByteArray& data) {
-	assert(key.size() <= B);
-
-	// Create the padded key
-	ByteArray paddedKey(key);
-	paddedKey.resize(B, 0x0);
-
-	// Create the first value
-	ByteArray x(paddedKey);
-	for (unsigned int i = 0; i < x.size(); ++i) {
-		x[i] ^= 0x36;
-	}
-	append(x, data);
-
-	// Create the second value
-	ByteArray y(paddedKey);
-	for (unsigned int i = 0; i < y.size(); ++i) {
-		y[i] ^= 0x5c;
-	}
-	append(y, SHA1::getHash(x));
-
-	return SHA1::getHash(y);
+	return getHMACSHA1(key, data);
 }
+
+
 
 #if 0
 

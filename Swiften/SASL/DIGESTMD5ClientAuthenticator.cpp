@@ -18,9 +18,9 @@ namespace Swift {
 DIGESTMD5ClientAuthenticator::DIGESTMD5ClientAuthenticator(const std::string& host, const std::string& nonce) : ClientAuthenticator("DIGEST-MD5"), step(Initial), host(host), cnonce(nonce) {
 }
 
-boost::optional<ByteArray> DIGESTMD5ClientAuthenticator::getResponse() const {
+boost::optional<SafeByteArray> DIGESTMD5ClientAuthenticator::getResponse() const {
 	if (step == Initial) {
-		return boost::optional<ByteArray>();
+		return boost::optional<SafeByteArray>();
 	}
 	else if (step == Response) {
 		std::string realm;
@@ -33,7 +33,9 @@ boost::optional<ByteArray> DIGESTMD5ClientAuthenticator::getResponse() const {
 
 		// Compute the response value
 		ByteArray A1 = concat(
-			MD5::getHash(createByteArray(getAuthenticationID() + ":" + realm + ":" + getPassword())), createByteArray(":"), createByteArray(*challenge.getValue("nonce")), createByteArray(":"), createByteArray(cnonce));
+				MD5::getHash(
+					createSafeByteArray(concat(SafeString(getAuthenticationID().c_str()), SafeString(":"), SafeString(realm.c_str()), SafeString(":"), getPassword()))),
+				createByteArray(":"), createByteArray(*challenge.getValue("nonce")), createByteArray(":"), createByteArray(cnonce));
 		if (!getAuthorizationID().empty()) {
 			append(A1, createByteArray(":" + getAuthenticationID()));
 		}
@@ -60,10 +62,10 @@ boost::optional<ByteArray> DIGESTMD5ClientAuthenticator::getResponse() const {
 		if (!getAuthorizationID().empty()) {
 			response.setValue("authzid", getAuthorizationID());
 		}
-		return response.serialize();
+		return createSafeByteArray(response.serialize());
 	}
 	else {
-		return boost::optional<ByteArray>();
+		return boost::optional<SafeByteArray>();
 	}
 }
 

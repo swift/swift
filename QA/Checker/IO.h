@@ -7,5 +7,7 @@
 #pragma once
 
 #include <Swiften/Base/ByteArray.h>
+#include <Swiften/Base/SafeByteArray.h>
 
 std::ostream& operator<<(std::ostream& os, const Swift::ByteArray& s);
+std::ostream& operator<<(std::ostream& os, const Swift::SafeByteArray& s);

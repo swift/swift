@@ -36,18 +36,6 @@ std::vector<unsigned char> createByteArray(const char* c) {
 	return data;
 }
 
-std::vector<unsigned char> createByteArray(const char* c, size_t n) {
-	std::vector<unsigned char> data(n);
-	std::copy(c, c + n, data.begin());
-	return data;
-}
-
-std::vector<unsigned char> createByteArray(const unsigned char* c, size_t n) {
-	std::vector<unsigned char> data(n);
-	std::copy(c, c + n, data.begin());
-	return data;
-}
-
 std::string byteArrayToString(const ByteArray& b) {
 	size_t i;
 	for (i = b.size(); i > 0; --i) {

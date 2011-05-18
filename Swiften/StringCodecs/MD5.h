@@ -7,10 +7,12 @@
 #pragma once
 
 #include <Swiften/Base/ByteArray.h>
+#include <Swiften/Base/SafeByteArray.h>
 
 namespace Swift {
 	class MD5 {
 		public:
 			static ByteArray getHash(const ByteArray& data);
+			static ByteArray getHash(const SafeByteArray& data);
 	};
 }

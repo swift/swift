@@ -10,6 +10,7 @@
 #include <boost/optional.hpp>
 
 #include <Swiften/Elements/Element.h>
+#include <Swiften/Base/SafeByteArray.h>
 
 namespace Swift {
 	class AuthResponse : public Element {
@@ -17,21 +18,21 @@ namespace Swift {
 			AuthResponse() {
 			}
 
-			AuthResponse(const std::vector<unsigned char>& value) : value(value) {
+			AuthResponse(const SafeByteArray& value) : value(value) {
 			}
 
-			AuthResponse(const boost::optional<std::vector<unsigned char> >& value) : value(value) {
+			AuthResponse(const boost::optional<SafeByteArray>& value) : value(value) {
 			}
 
-			const boost::optional<std::vector<unsigned char> >& getValue() const {
+			const boost::optional<SafeByteArray>& getValue() const {
 				return value;
 			}
 
-			void setValue(const std::vector<unsigned char>& value) {
-				this->value = boost::optional<std::vector<unsigned char> >(value);
+			void setValue(const SafeByteArray& value) {
+				this->value = boost::optional<SafeByteArray>(value);
 			}
 
 		private:
-			boost::optional<std::vector<unsigned char> > value;
+			boost::optional<SafeByteArray> value;
 	};
 }

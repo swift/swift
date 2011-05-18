@@ -51,7 +51,7 @@ void ServerFromClientSession::handleElement(boost::shared_ptr<Element> element) 
 						getXMPPLayer()->resetParser();
 				}
 				else {
-					PLAINMessage plainMessage(authRequest->getMessage() ? *authRequest->getMessage() : createByteArray(""));
+					PLAINMessage plainMessage(authRequest->getMessage() ? *authRequest->getMessage() : createSafeByteArray(""));
 					if (userRegistry_->isValidUserPassword(JID(plainMessage.getAuthenticationID(), getLocalJID().getDomain()), plainMessage.getPassword())) {
 						getXMPPLayer()->writeElement(boost::shared_ptr<AuthSuccess>(new AuthSuccess()));
 						user_ = plainMessage.getAuthenticationID();

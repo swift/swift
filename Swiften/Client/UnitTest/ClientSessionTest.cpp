@@ -11,6 +11,7 @@
 #include <boost/optional.hpp>
 #include <boost/smart_ptr/make_shared.hpp>
 
+#include <Swiften/Base/SafeString.h>
 #include <Swiften/Session/SessionStream.h>
 #include <Swiften/Client/ClientSession.h>
 #include <Swiften/Elements/Message.h>

@@ -12,8 +12,8 @@ namespace Swift {
 PLAINClientAuthenticator::PLAINClientAuthenticator() : ClientAuthenticator("PLAIN") {
 }
 
-boost::optional<ByteArray> PLAINClientAuthenticator::getResponse() const {
-	return concat(createByteArray(getAuthorizationID()), createByteArray('\0'), createByteArray(getAuthenticationID()), createByteArray('\0'), createByteArray(getPassword()));
+boost::optional<SafeByteArray> PLAINClientAuthenticator::getResponse() const {
+	return concat(createSafeByteArray(getAuthorizationID()), createSafeByteArray('\0'), createSafeByteArray(getAuthenticationID()), createSafeByteArray('\0'), createSafeByteArray(getPassword()));
 }
 
 bool PLAINClientAuthenticator::setChallenge(const boost::optional<ByteArray>&) {

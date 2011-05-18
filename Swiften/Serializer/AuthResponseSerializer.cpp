@@ -9,6 +9,7 @@
 #include <Swiften/Elements/AuthResponse.h>
 #include <Swiften/StringCodecs/Base64.h>
 #include <Swiften/Base/ByteArray.h>
+#include <Swiften/Base/SafeString.h>
 
 namespace Swift {
 
@@ -17,17 +18,17 @@ AuthResponseSerializer::AuthResponseSerializer() {
 
 std::string AuthResponseSerializer::serialize(boost::shared_ptr<Element> element)	const {
 	boost::shared_ptr<AuthResponse> authResponse(boost::dynamic_pointer_cast<AuthResponse>(element));
-	std::string value;
-	boost::optional<std::vector<unsigned char> > message = authResponse->getValue();
+	SafeString value;
+	boost::optional<SafeByteArray> message = authResponse->getValue();
 	if (message) {
 		if ((*message).empty()) {
 			value = "=";
 		}
 		else {
-			value = Base64::encode(ByteArray(*message));
+			value = Base64::encode(*message);
 		}
 	}
-	return "<response xmlns=\"urn:ietf:params:xml:ns:xmpp-sasl\">" + value + "</response>";
+	return "<response xmlns=\"urn:ietf:params:xml:ns:xmpp-sasl\">" + value.toString() + "</response>";
 }
 
 }

@@ -22,7 +22,7 @@ class HMACSHA1Test : public CppUnit::TestFixture {
 
 	public:
 		void testGetResult() {
-			ByteArray result(HMACSHA1::getResult(createByteArray("foo"), createByteArray("foobar")));
+			ByteArray result(HMACSHA1::getResult(createSafeByteArray("foo"), createByteArray("foobar")));
 			CPPUNIT_ASSERT_EQUAL(createByteArray("\xa4\xee\xba\x8e\x63\x3d\x77\x88\x69\xf5\x68\xd0\x5a\x1b\x3d\xc7\x2b\xfd\x4\xdd"), result);
 		}
 };

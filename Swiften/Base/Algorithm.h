@@ -88,8 +88,8 @@ namespace Swift {
 		Detail::eraseIfImpl(container, predicate, typename Detail::ContainerTraits<C>::Category());
 	}
 
-	template<typename C>
-	void append(C& target, const C& source) {
+	template<typename Source, typename Target>
+	void append(Target& target, const Source& source) {
 		target.insert(target.end(), source.begin(), source.end());
 	}
 
@@ -102,6 +102,11 @@ namespace Swift {
 		else {
 			return defaultValue;
 		}
+	}
+
+	template<typename Container>
+	void nullify(Container& c) {
+		std::fill(c.begin(), c.end(), 0);
 	}
 
 	/*

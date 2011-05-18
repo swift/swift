@@ -197,11 +197,12 @@ std::vector<unsigned char> SHA1::getHash() const {
 	return digest;
 }
 
-ByteArray SHA1::getHash(const ByteArray& input) {
+template<typename Container>
+ByteArray SHA1::getHashInternal(const Container& input) {
 	CTX context;
 	Init(&context);
 
-	std::vector<unsigned char> inputCopy(input);
+	Container inputCopy(input);
 	Update(&context, (boost::uint8_t*) vecptr(inputCopy), inputCopy.size());
 
 	ByteArray digest;
@@ -210,5 +211,14 @@ ByteArray SHA1::getHash(const ByteArray& input) {
 
 	return digest;
 }
+
+ByteArray SHA1::getHash(const ByteArray& input) {
+	return getHashInternal(input);
+}
+
+ByteArray SHA1::getHash(const SafeByteArray& input) {
+	return getHashInternal(input);
+}
+
 
 }

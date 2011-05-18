@@ -27,7 +27,7 @@
 
 namespace Swift {
 
-CoreClient::CoreClient(const JID& jid, const std::string& password, NetworkFactories* networkFactories) : jid_(jid), password_(password), networkFactories(networkFactories), disconnectRequested_(false), certificateTrustChecker(NULL) {
+CoreClient::CoreClient(const JID& jid, const SafeString& password, NetworkFactories* networkFactories) : jid_(jid), password_(password), networkFactories(networkFactories), disconnectRequested_(false), certificateTrustChecker(NULL) {
 	stanzaChannel_ = new ClientSessionStanzaChannel();
 	stanzaChannel_->onMessageReceived.connect(boost::bind(&CoreClient::handleMessageReceived, this, _1));
 	stanzaChannel_->onPresenceReceived.connect(boost::bind(&CoreClient::handlePresenceReceived, this, _1));
@@ -97,7 +97,7 @@ void CoreClient::handleConnectorFinished(boost::shared_ptr<Connection> connectio
 		assert(!sessionStream_);
 		sessionStream_ = boost::make_shared<BasicSessionStream>(ClientStreamType, connection_, getPayloadParserFactories(), getPayloadSerializers(), tlsFactories->getTLSContextFactory(), networkFactories->getTimerFactory());
 		if (!certificate_.empty()) {
-			sessionStream_->setTLSCertificate(PKCS12Certificate(certificate_, password_));
+			sessionStream_->setTLSCertificate(PKCS12Certificate(certificate_, password_.toString()));
 		}
 		sessionStream_->onDataRead.connect(boost::bind(&CoreClient::handleDataRead, this, _1));
 		sessionStream_->onDataWritten.connect(boost::bind(&CoreClient::handleDataWritten, this, _1));

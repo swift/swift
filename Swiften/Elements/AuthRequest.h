@@ -11,6 +11,7 @@
 #include <boost/optional.hpp>
 
 #include <Swiften/Elements/Element.h>
+#include <Swiften/Base/SafeByteArray.h>
 
 namespace Swift {
 	class AuthRequest : public Element {
@@ -18,20 +19,20 @@ namespace Swift {
 			AuthRequest(const std::string& mechanism = "") : mechanism_(mechanism) {
 			}
 
-			AuthRequest(const std::string& mechanism, const std::vector<unsigned char>& message) : 
+			AuthRequest(const std::string& mechanism, const SafeByteArray& message) :
 					mechanism_(mechanism), message_(message) {
 			}
 
-			AuthRequest(const std::string& mechanism, const boost::optional<std::vector<unsigned char> >& message) : 
+			AuthRequest(const std::string& mechanism, const boost::optional<SafeByteArray>& message) :
 					mechanism_(mechanism), message_(message) {
 			}
 
-			const boost::optional<std::vector<unsigned char> >& getMessage() const {
+			const boost::optional<SafeByteArray>& getMessage() const {
 				return message_;
 			}
 
-			void setMessage(const std::vector<unsigned char>& message) {
-				message_ = boost::optional<std::vector<unsigned char> >(message);
+			void setMessage(const SafeByteArray& message) {
+				message_ = boost::optional<SafeByteArray>(message);
 			}
 
 			const std::string& getMechanism() const {
@@ -44,6 +45,6 @@ namespace Swift {
 
 		private:
 			std::string mechanism_;
-			boost::optional<std::vector<unsigned char> > message_;
+			boost::optional<SafeByteArray> message_;
 	};
 }

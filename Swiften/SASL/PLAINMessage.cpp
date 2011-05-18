@@ -5,13 +5,14 @@
  */
 
 #include <Swiften/SASL/PLAINMessage.h>
+#include <Swiften/Base/Concat.h>
 
 namespace Swift {
 
-PLAINMessage::PLAINMessage(const std::string& authcid, const std::string& password, const std::string& authzid) : authcid(authcid), authzid(authzid), password(password) {
+PLAINMessage::PLAINMessage(const std::string& authcid, const SafeByteArray& password, const std::string& authzid) : authcid(authcid), authzid(authzid), password(password) {
 }
 
-PLAINMessage::PLAINMessage(const ByteArray& value) {
+PLAINMessage::PLAINMessage(const SafeByteArray& value) {
 	size_t i = 0;
 	while (i < value.size() && value[i] != '\0') {
 		authzid += value[i];
@@ -31,14 +32,13 @@ PLAINMessage::PLAINMessage(const ByteArray& value) {
 	}
 	++i;
 	while (i < value.size()) {
-		password += value[i];
+		password.push_back(value[i]);
 		++i;
 	}
 }
 
-ByteArray PLAINMessage::getValue() const {
-	std::string s = authzid + '\0' + authcid + '\0' + password;
-	return createByteArray(s);
+SafeByteArray PLAINMessage::getValue() const {
+	return concat(createSafeByteArray(authzid), createSafeByteArray('\0'), createSafeByteArray(authcid), createSafeByteArray('\0'), password);
 }
 
 }

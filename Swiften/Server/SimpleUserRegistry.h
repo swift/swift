@@ -19,10 +19,10 @@ namespace Swift {
 		public:
 			SimpleUserRegistry();
 
-			virtual bool isValidUserPassword(const JID& user, const std::string& password) const;
+			virtual bool isValidUserPassword(const JID& user, const SafeByteArray& password) const;
 			void addUser(const JID& user, const std::string& password);
 
 		private:
-			std::map<JID, std::string> users;
+			std::map<JID, SafeByteArray> users;
 	};
 }

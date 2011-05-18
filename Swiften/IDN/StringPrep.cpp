@@ -9,32 +9,45 @@
 #include <stringprep.h>
 #include <vector>
 #include <cassert>
+#include <Swiften/Base/SafeAllocator.h>
+
+using namespace Swift;
+
+	namespace {
+	static const int MAX_STRINGPREP_SIZE = 1024;
+
+	const Stringprep_profile* getLibIDNProfile(StringPrep::Profile profile) {
+		switch(profile) {
+			case StringPrep::NamePrep: return stringprep_nameprep; break;
+			case StringPrep::XMPPNodePrep: return stringprep_xmpp_nodeprep; break;
+			case StringPrep::XMPPResourcePrep: return stringprep_xmpp_resourceprep; break;
+			case StringPrep::SASLPrep: return stringprep_saslprep; break;
+		}
+		assert(false);
+		return 0;
+	}
+
+	template<typename StringType, typename ContainerType>
+	StringType getStringPrepared(const StringType& s, StringPrep::Profile profile) {
+		ContainerType input(s.begin(), s.end());
+		input.resize(MAX_STRINGPREP_SIZE);
+		if (stringprep(&input[0], MAX_STRINGPREP_SIZE, static_cast<Stringprep_profile_flags>(0), getLibIDNProfile(profile)) == 0) {
+			return StringType(&input[0]);
+		}
+		else {
+			return StringType();
+		}
+	}
+}
 
 namespace Swift {
 
-static const int MAX_STRINGPREP_SIZE = 1024;
-
-const Stringprep_profile* getLibIDNProfile(StringPrep::Profile profile) {
-	switch(profile) {
-		case StringPrep::NamePrep: return stringprep_nameprep; break;
-		case StringPrep::XMPPNodePrep: return stringprep_xmpp_nodeprep; break;
-		case StringPrep::XMPPResourcePrep: return stringprep_xmpp_resourceprep; break;
-		case StringPrep::SASLPrep: return stringprep_saslprep; break;
-	}
-	assert(false);
-	return 0;
+std::string StringPrep::getPrepared(const std::string& s, Profile profile) {
+	return getStringPrepared< std::string, std::vector<char> >(s, profile);
 }
 
-std::string StringPrep::getPrepared(const std::string& s, Profile profile) {
-	
-	std::vector<char> input(s.begin(), s.end());
-	input.resize(MAX_STRINGPREP_SIZE);
-	if (stringprep(&input[0], MAX_STRINGPREP_SIZE, static_cast<Stringprep_profile_flags>(0), getLibIDNProfile(profile)) == 0) {
-		return std::string(&input[0]);
-	}
-	else {
-		return "";
-	}
+SafeString StringPrep::getPrepared(const SafeString& s, Profile profile) {
+	return getStringPrepared<SafeString, std::vector<char, SafeAllocator<char> > >(s, profile);
 }
 
 }

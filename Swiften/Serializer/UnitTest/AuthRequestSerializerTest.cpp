@@ -24,7 +24,7 @@ class AuthRequestSerializerTest : public CppUnit::TestFixture {
 		void testSerialize() {
 			AuthRequestSerializer testling;
 			boost::shared_ptr<AuthRequest> authRequest(new AuthRequest("PLAIN"));
-			authRequest->setMessage(createByteArray("foo"));
+			authRequest->setMessage(createSafeByteArray("foo"));
 
 			CPPUNIT_ASSERT_EQUAL(std::string(
 				"<auth xmlns=\"urn:ietf:params:xml:ns:xmpp-sasl\" mechanism=\"PLAIN\">"
@@ -44,7 +44,7 @@ class AuthRequestSerializerTest : public CppUnit::TestFixture {
 		void testSerialize_EmptyMessage() {
 			AuthRequestSerializer testling;
 			boost::shared_ptr<AuthRequest> authRequest(new AuthRequest("PLAIN"));
-			authRequest->setMessage(std::vector<unsigned char>());
+			authRequest->setMessage(SafeByteArray());
 
 			CPPUNIT_ASSERT_EQUAL(std::string(
 				"<auth xmlns=\"urn:ietf:params:xml:ns:xmpp-sasl\" mechanism=\"PLAIN\">"

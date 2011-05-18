@@ -20,7 +20,7 @@ namespace Swift {
 
 			void setTLSChannelBindingData(const ByteArray& channelBindingData);
 			
-			virtual boost::optional<ByteArray> getResponse() const;
+			virtual boost::optional<SafeByteArray> getResponse() const;
 			virtual bool setChallenge(const boost::optional<ByteArray>&);
 
 		private:

@@ -351,16 +351,27 @@ md5_finish(md5_state_t *pms, md5_byte_t digest[16])
 				digest[i] = (md5_byte_t)(pms->abcd[i >> 2] >> ((i & 3) << 3));
 }
 
+namespace {
+	template<typename SourceType>
+	ByteArray getMD5Hash(const SourceType& data) {
+		ByteArray digest;
+		digest.resize(16);
+
+		md5_state_t state;
+		md5_init(&state);
+		md5_append(&state, reinterpret_cast<const md5_byte_t*>(vecptr(data)), data.size());
+		md5_finish(&state, reinterpret_cast<md5_byte_t*>(vecptr(digest)));
+
+		return digest;
+	}
+}
+
 ByteArray MD5::getHash(const ByteArray& data) {
-	ByteArray digest;
-	digest.resize(16);
+	return getMD5Hash(data);
+}
 
-	md5_state_t state;
-	md5_init(&state);
-	md5_append(&state, reinterpret_cast<const md5_byte_t*>(vecptr(data)), data.size());
-	md5_finish(&state, reinterpret_cast<md5_byte_t*>(vecptr(digest)));
-
-	return digest;
+ByteArray MD5::getHash(const SafeByteArray& data) {
+	return getMD5Hash(data);
 }
 
 }

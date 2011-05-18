@@ -22,7 +22,7 @@ void AuthRequestParser::handleStartElement(const std::string&, const std::string
 void AuthRequestParser::handleEndElement(const std::string&, const std::string&) {
 	--depth_;
 	if (depth_ == 0) {
-		getElementGeneric()->setMessage(Base64::decode(text_));
+		getElementGeneric()->setMessage(createSafeByteArray(Base64::decode(text_)));
 	}
 }
 

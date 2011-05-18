@@ -87,7 +87,7 @@ namespace Swift {
 				public:
 					DummyUserRegistry() {}
 
-					virtual bool isValidUserPassword(const JID&, const std::string&) const {
+					virtual bool isValidUserPassword(const JID&, const SafeByteArray&) const {
 						return true;
 					}
 			};

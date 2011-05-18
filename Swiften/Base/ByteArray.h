@@ -12,15 +12,20 @@
 namespace Swift {
 	typedef std::vector<unsigned char> ByteArray;
 
-	ByteArray createByteArray(const unsigned char* c, size_t n);
 	ByteArray createByteArray(const std::string& s);
 	ByteArray createByteArray(const char* c);
-	ByteArray createByteArray(const char* c, size_t n);
+
+	inline ByteArray createByteArray(const unsigned char* c, size_t n) {
+		return ByteArray(c, c  + n);
+	}
+
+	inline ByteArray createByteArray(const char* c, size_t n) {
+		return ByteArray(c, c  + n);
+	}
 
 	inline ByteArray createByteArray(char c) {
 		return std::vector<unsigned char>(1, c);
 	}
-
 
 	template<typename T, typename A>
 	static const T* vecptr(const std::vector<T, A>& v) {

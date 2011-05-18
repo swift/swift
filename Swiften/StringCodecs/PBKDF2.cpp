@@ -10,7 +10,7 @@
 
 namespace Swift {
 
-ByteArray PBKDF2::encode(const ByteArray& password, const ByteArray& salt, int iterations) {
+ByteArray PBKDF2::encode(const SafeByteArray& password, const ByteArray& salt, int iterations) {
 	ByteArray u = HMACSHA1::getResult(password, concat(salt, createByteArray("\0\0\0\1", 4)));
 	ByteArray result(u);
 	int i = 1;

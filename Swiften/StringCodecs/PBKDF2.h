@@ -6,11 +6,11 @@
 
 #pragma once
 
-#include <Swiften/Base/ByteArray.h>
+#include <Swiften/Base/SafeByteArray.h>
 
 namespace Swift {
 	class PBKDF2 {
 		public:
-			static ByteArray encode(const ByteArray& password, const ByteArray& salt, int iterations);
+			static ByteArray encode(const SafeByteArray& password, const ByteArray& salt, int iterations);
 	};
 }

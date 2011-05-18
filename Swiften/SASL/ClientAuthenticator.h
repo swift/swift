@@ -7,9 +7,12 @@
 #pragma once
 
 #include <boost/optional.hpp>
-
 #include <string>
 #include <vector>
+
+#include <Swiften/Base/SafeString.h>
+#include <Swiften/Base/SafeByteArray.h>
+#include <Swiften/Base/ByteArray.h>
 
 namespace Swift {
 	class ClientAuthenticator {
@@ -21,14 +24,14 @@ namespace Swift {
 				return name;
 			}
 
-			void setCredentials(const std::string& authcid, const std::string& password, const std::string& authzid = std::string()) {
+			void setCredentials(const std::string& authcid, const SafeString& password, const std::string& authzid = std::string()) {
 				this->authcid = authcid;
 				this->password = password;
 				this->authzid = authzid;
 			}
 
-			virtual boost::optional< std::vector<unsigned char> > getResponse() const = 0;
-			virtual bool setChallenge(const boost::optional< std::vector<unsigned char> >&) = 0;
+			virtual boost::optional<SafeByteArray> getResponse() const = 0;
+			virtual bool setChallenge(const boost::optional<ByteArray>&) = 0;
 
 			const std::string& getAuthenticationID() const {
 				return authcid;
@@ -38,14 +41,14 @@ namespace Swift {
 				return authzid;
 			}
 
-			const std::string& getPassword() const {
+			const SafeString& getPassword() const {
 				return password;
 			}
 		
 		private:
 			std::string name;
 			std::string authcid;
-			std::string password;
+			SafeString password;
 			std::string authzid;
 	};
 }

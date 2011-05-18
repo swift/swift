@@ -9,21 +9,21 @@
 #pragma once
 
 #include <string>
-#include <Swiften/Base/ByteArray.h>
+#include <Swiften/Base/SafeByteArray.h>
 
 namespace Swift {
 	class PLAINMessage {
 		public:
-			PLAINMessage(const std::string& authcid, const std::string& password, const std::string& authzid = "");
-			PLAINMessage(const ByteArray& value);
+			PLAINMessage(const std::string& authcid, const SafeByteArray& password, const std::string& authzid = "");
+			PLAINMessage(const SafeByteArray& value);
 
-			ByteArray getValue() const;
+			SafeByteArray getValue() const;
 
 			const std::string& getAuthenticationID() const {
 				return authcid;
 			}
 
-			const std::string& getPassword() const {
+			const SafeByteArray& getPassword() const {
 				return password;
 			}
 
@@ -34,6 +34,6 @@ namespace Swift {
 		private:
 			std::string authcid;
 			std::string authzid;
-			std::string password;
+			SafeByteArray password;
 	};
 }

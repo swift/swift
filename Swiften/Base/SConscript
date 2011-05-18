@@ -2,10 +2,12 @@ Import("swiften_env")
 
 objects = swiften_env.SwiftenObject([
 			"ByteArray.cpp",
+			"SafeByteArray.cpp",
 			"Error.cpp",
 			"Log.cpp",
 			"Paths.cpp",
 			"String.cpp",
+			"SafeString.cpp",
 			"IDGenerator.cpp",
 			"sleep.cpp",
 		])

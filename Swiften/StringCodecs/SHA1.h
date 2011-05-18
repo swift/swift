@@ -10,6 +10,7 @@
 #include <boost/cstdint.hpp>
 
 #include <Swiften/Base/ByteArray.h>
+#include <Swiften/Base/SafeByteArray.h>
 
 namespace Swift {
 	class SHA1 {
@@ -26,6 +27,8 @@ namespace Swift {
 			 */
 			static ByteArray getHash(const ByteArray& data);
 
+			static ByteArray getHash(const SafeByteArray& data);
+
 		private:
 			typedef struct {
 					boost::uint32_t state[5];
@@ -36,6 +39,8 @@ namespace Swift {
 			static void Transform(boost::uint32_t state[5], boost::uint8_t buffer[64]);
 			static void Update(CTX* context, boost::uint8_t* data, unsigned int len);
 			static void Final(boost::uint8_t digest[20], CTX* context);
+
+			template<typename Container> static	ByteArray getHashInternal(const Container& input);
 
 		private:
 			CTX context;

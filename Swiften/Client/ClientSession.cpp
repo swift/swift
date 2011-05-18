@@ -12,6 +12,7 @@
 #include <boost/uuid/uuid_generators.hpp>
 #include <boost/smart_ptr/make_shared.hpp>
 
+#include <Swiften/Base/SafeString.h>
 #include <Swiften/Elements/ProtocolHeader.h>
 #include <Swiften/Elements/StreamFeatures.h>
 #include <Swiften/Elements/StreamError.h>
@@ -185,7 +186,7 @@ void ClientSession::handleElement(boost::shared_ptr<Element> element) {
 			if (stream->hasTLSCertificate()) {
 				if (streamFeatures->hasAuthenticationMechanism("EXTERNAL")) {
 					state = Authenticating;
-					stream->writeElement(boost::make_shared<AuthRequest>("EXTERNAL", createByteArray("")));
+					stream->writeElement(boost::make_shared<AuthRequest>("EXTERNAL", createSafeByteArray("")));
 				}
 				else {
 					finishSession(Error::TLSClientCertificateError);
@@ -193,7 +194,7 @@ void ClientSession::handleElement(boost::shared_ptr<Element> element) {
 			}
 			else if (streamFeatures->hasAuthenticationMechanism("EXTERNAL")) {
 				state = Authenticating;
-				stream->writeElement(boost::make_shared<AuthRequest>("EXTERNAL", createByteArray("")));
+				stream->writeElement(boost::make_shared<AuthRequest>("EXTERNAL", createSafeByteArray("")));
 			}
 			else if (streamFeatures->hasAuthenticationMechanism("SCRAM-SHA-1") || streamFeatures->hasAuthenticationMechanism("SCRAM-SHA-1-PLUS")) {
 				std::ostringstream s;
@@ -275,6 +276,8 @@ void ClientSession::handleElement(boost::shared_ptr<Element> element) {
 	else if (AuthSuccess* authSuccess = dynamic_cast<AuthSuccess*>(element.get())) {
 		checkState(Authenticating);
 		if (authenticator && !authenticator->setChallenge(authSuccess->getValue())) {
+			delete authenticator;
+			authenticator = NULL;
 			finishSession(Error::ServerVerificationFailedError);
 		}
 		else {
@@ -336,7 +339,7 @@ bool ClientSession::checkState(State state) {
 	return true;
 }
 
-void ClientSession::sendCredentials(const std::string& password) {
+void ClientSession::sendCredentials(const SafeString& password) {
 	assert(WaitingForCredentials);
 	state = Authenticating;
 	authenticator->setCredentials(localJID.getNode(), password);

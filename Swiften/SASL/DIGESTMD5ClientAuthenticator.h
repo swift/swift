@@ -12,13 +12,14 @@
 #include <vector>
 #include <Swiften/SASL/ClientAuthenticator.h>
 #include <Swiften/SASL/DIGESTMD5Properties.h>
+#include <Swiften/Base/SafeByteArray.h>
 
 namespace Swift {
 	class DIGESTMD5ClientAuthenticator : public ClientAuthenticator {
 		public:
 			DIGESTMD5ClientAuthenticator(const std::string& host, const std::string& nonce);
 			
-			virtual boost::optional<std::vector<unsigned char> > getResponse() const;
+			virtual boost::optional<SafeByteArray> getResponse() const;
 			virtual bool setChallenge(const boost::optional<std::vector<unsigned char> >&);
 
 		private:
