@@ -15,7 +15,7 @@
 #include <Swiften/Elements/Element.h>
 #include <Swiften/Network/Connection.h>
 #include <Swiften/StreamStack/ConnectionLayer.h>
-#include <Swiften/Base/ByteArray.h>
+#include <Swiften/Base/SafeByteArray.h>
 
 namespace Swift {
 	class ProtocolHeader;
@@ -63,8 +63,8 @@ namespace Swift {
 
 			boost::signal<void (boost::shared_ptr<Element>)> onElementReceived;
 			boost::signal<void (const boost::optional<SessionError>&)> onSessionFinished;
-			boost::signal<void (const ByteArray&)> onDataWritten;
-			boost::signal<void (const ByteArray&)> onDataRead;
+			boost::signal<void (const SafeByteArray&)> onDataWritten;
+			boost::signal<void (const SafeByteArray&)> onDataRead;
 
 		protected:
 			void setRemoteJID(const JID& j) {

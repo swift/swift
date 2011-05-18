@@ -138,14 +138,14 @@ void OpenSSLContext::doConnect() {
 void OpenSSLContext::sendPendingDataToNetwork() {
 	int size = BIO_pending(writeBIO_);
 	if (size > 0) {
-		ByteArray data;
+		SafeByteArray data;
 		data.resize(size);
 		BIO_read(writeBIO_, vecptr(data), size);
 		onDataForNetwork(data);
 	}
 }
 
-void OpenSSLContext::handleDataFromNetwork(const ByteArray& data) {
+void OpenSSLContext::handleDataFromNetwork(const SafeByteArray& data) {
 	BIO_write(readBIO_, vecptr(data), data.size());
 	switch (state_) {
 		case Connecting:
@@ -159,7 +159,7 @@ void OpenSSLContext::handleDataFromNetwork(const ByteArray& data) {
 	}
 }
 
-void OpenSSLContext::handleDataFromApplication(const ByteArray& data) {
+void OpenSSLContext::handleDataFromApplication(const SafeByteArray& data) {
 	if (SSL_write(handle_, vecptr(data), data.size()) >= 0) {
 		sendPendingDataToNetwork();
 	}
@@ -170,7 +170,7 @@ void OpenSSLContext::handleDataFromApplication(const ByteArray& data) {
 }
 
 void OpenSSLContext::sendPendingDataToApplication() {
-	ByteArray data;
+	SafeByteArray data;
 	data.resize(SSL_READ_BUFFERSIZE);
 	int ret = SSL_read(handle_, vecptr(data), data.size());
 	while (ret > 0) {

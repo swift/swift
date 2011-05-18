@@ -13,7 +13,7 @@ namespace Swift {
 ComponentHandshakeSerializer::ComponentHandshakeSerializer() {
 }
 
-std::string ComponentHandshakeSerializer::serialize(boost::shared_ptr<Element> element)  const {
+SafeString ComponentHandshakeSerializer::serialize(boost::shared_ptr<Element> element)  const {
 	boost::shared_ptr<ComponentHandshake> handshake(boost::dynamic_pointer_cast<ComponentHandshake>(element));
 	return "<handshake>" + handshake->getData() + "</handshake>";
 }

@@ -17,7 +17,7 @@ using namespace Swift;
 StreamResumedSerializer::StreamResumedSerializer() : GenericElementSerializer<StreamResumed>() {
 }
 
-std::string StreamResumedSerializer::serialize(boost::shared_ptr<Element> el) const {
+SafeString StreamResumedSerializer::serialize(boost::shared_ptr<Element> el) const {
 	boost::shared_ptr<StreamResumed> e(boost::dynamic_pointer_cast<StreamResumed>(el));
 	XMLElement element("resumed", "urn:xmpp:sm:2");
 	element.setAttribute("previd", e->getResumeID());

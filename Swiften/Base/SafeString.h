@@ -59,6 +59,10 @@ namespace Swift {
 				return data.size();
 			}
 
+			bool operator==(const SafeString& o) const {
+				return data == o.data;
+			}
+
 		private:
 			std::vector<char, SafeAllocator<char> > data;
 	};

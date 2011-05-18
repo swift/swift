@@ -10,6 +10,7 @@
 #include <Swiften/Serializer/AuthSuccessSerializer.h>
 #include <Swiften/Elements/AuthSuccess.h>
 #include <Swiften/Base/ByteArray.h>
+#include <QA/Checker/IO.h>
 
 using namespace Swift;
 
@@ -26,7 +27,7 @@ class AuthSuccessSerializerTest : public CppUnit::TestFixture {
 			boost::shared_ptr<AuthSuccess> authSuccess(new AuthSuccess());
 			authSuccess->setValue(createByteArray("foo"));
 
-			CPPUNIT_ASSERT_EQUAL(std::string(
+			CPPUNIT_ASSERT_EQUAL(SafeString(
 				"<success xmlns=\"urn:ietf:params:xml:ns:xmpp-sasl\">"
 					"Zm9v"
 				"</success>"), testling.serialize(authSuccess));
@@ -36,7 +37,7 @@ class AuthSuccessSerializerTest : public CppUnit::TestFixture {
 			AuthSuccessSerializer testling;
 			boost::shared_ptr<AuthSuccess> authSuccess(new AuthSuccess());
 
-			CPPUNIT_ASSERT_EQUAL(std::string(
+			CPPUNIT_ASSERT_EQUAL(SafeString(
 				"<success xmlns=\"urn:ietf:params:xml:ns:xmpp-sasl\">"
 				"</success>"), testling.serialize(authSuccess));
 		}
@@ -46,7 +47,7 @@ class AuthSuccessSerializerTest : public CppUnit::TestFixture {
 			boost::shared_ptr<AuthSuccess> authSuccess(new AuthSuccess());
 			authSuccess->setValue(std::vector<unsigned char>());
 
-			CPPUNIT_ASSERT_EQUAL(std::string(
+			CPPUNIT_ASSERT_EQUAL(SafeString(
 				"<success xmlns=\"urn:ietf:params:xml:ns:xmpp-sasl\">"
 					"="
 				"</success>"), testling.serialize(authSuccess));

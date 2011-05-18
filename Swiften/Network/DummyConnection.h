@@ -25,18 +25,18 @@ namespace Swift {
 				//assert(false);
 			}
 
-			void write(const ByteArray& data) {
+			void write(const SafeByteArray& data) {
 				eventLoop->postEvent(boost::ref(onDataWritten), shared_from_this());
 				onDataSent(data);
 			}
 
-			void receive(const ByteArray& data);
+			void receive(const SafeByteArray& data);
 
 			HostAddressPort getLocalAddress() const {
 				return localAddress;
 			}
 
-			boost::signal<void (const ByteArray&)> onDataSent;
+			boost::signal<void (const SafeByteArray&)> onDataSent;
 
 			EventLoop* eventLoop;
 			HostAddressPort localAddress;

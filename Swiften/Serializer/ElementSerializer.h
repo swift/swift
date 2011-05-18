@@ -8,7 +8,7 @@
 
 #include <boost/shared_ptr.hpp>
 
-#include <string>
+#include <Swiften/Base/SafeString.h>
 #include <Swiften/Elements/Element.h>
 
 namespace Swift {
@@ -16,7 +16,7 @@ namespace Swift {
 		public:
 			virtual ~ElementSerializer();
 
-			virtual std::string serialize(boost::shared_ptr<Element> element) const = 0;
+			virtual SafeString serialize(boost::shared_ptr<Element> element) const = 0;
 			virtual bool canSerialize(boost::shared_ptr<Element> element) const = 0;
 	};
 }

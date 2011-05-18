@@ -16,6 +16,6 @@ namespace Swift {
 		public:
 			StreamManagementEnabledSerializer();
 
-			virtual std::string serialize(boost::shared_ptr<Element>) const;
+			virtual SafeString serialize(boost::shared_ptr<Element>) const;
 	};
 }

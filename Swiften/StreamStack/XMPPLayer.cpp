@@ -29,30 +29,33 @@ XMPPLayer::~XMPPLayer() {
 }
 
 void XMPPLayer::writeHeader(const ProtocolHeader& header) {
-	writeDataInternal(createByteArray(xmppSerializer_->serializeHeader(header)));
+	writeDataInternal(createSafeByteArray(xmppSerializer_->serializeHeader(header)));
 }
 
 void XMPPLayer::writeFooter() {
-	writeDataInternal(createByteArray(xmppSerializer_->serializeFooter()));
+	writeDataInternal(createSafeByteArray(xmppSerializer_->serializeFooter()));
 }
 
 void XMPPLayer::writeElement(boost::shared_ptr<Element> element) {
-	writeDataInternal(createByteArray(xmppSerializer_->serializeElement(element)));
+	writeDataInternal(createSafeByteArray(xmppSerializer_->serializeElement(element)));
 }
 
 void XMPPLayer::writeData(const std::string& data) {
-	writeDataInternal(createByteArray(data));
+	writeDataInternal(createSafeByteArray(data));
 }
 
-void XMPPLayer::writeDataInternal(const ByteArray& data) {
+void XMPPLayer::writeDataInternal(const SafeByteArray& data) {
 	onWriteData(data);
 	writeDataToChildLayer(data);
 }
 
-void XMPPLayer::handleDataRead(const ByteArray& data) {
+void XMPPLayer::handleDataRead(const SafeByteArray& data) {
 	onDataRead(data);
 	inParser_ = true;
-	if (!xmppParser_->parse(byteArrayToString(data))) {
+	// FIXME: Converting to unsafe string. Should be ok, since we don't take passwords
+	// from the stream in clients. If servers start using this, and require safe storage,
+	// we need to fix this.
+	if (!xmppParser_->parse(byteArrayToString(ByteArray(data.begin(), data.end())))) {
 		inParser_ = false;
 		onError();
 		return;

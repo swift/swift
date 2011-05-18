@@ -15,7 +15,7 @@ namespace Swift {
 		public:
 			CompressRequestSerializer();
 
-			virtual std::string serialize(boost::shared_ptr<Element> element)  const;
+			virtual SafeString serialize(boost::shared_ptr<Element> element)  const;
 			virtual bool canSerialize(boost::shared_ptr<Element> element) const;
 	};
 }

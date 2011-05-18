@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include <Swiften/Base/ByteArray.h>
+#include <Swiften/Base/SafeByteArray.h>
 
 namespace Swift {
 	class LowLayer;
@@ -18,7 +18,7 @@ namespace Swift {
 			HighLayer();
 			virtual ~HighLayer();
 
-			virtual void handleDataRead(const ByteArray& data) = 0;
+			virtual void handleDataRead(const SafeByteArray& data) = 0;
 	
 		protected:
 			LowLayer* getChildLayer() {
@@ -29,7 +29,7 @@ namespace Swift {
 				this->childLayer = childLayer;
 			}
 
-			void writeDataToChildLayer(const ByteArray& data);
+			void writeDataToChildLayer(const SafeByteArray& data);
 
 		private:
 			LowLayer* childLayer;

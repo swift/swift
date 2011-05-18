@@ -29,11 +29,11 @@ void TLSLayer::connect() {
 	context->connect();
 }
 
-void TLSLayer::writeData(const ByteArray& data) {
+void TLSLayer::writeData(const SafeByteArray& data) {
 	context->handleDataFromApplication(data);
 }
 
-void TLSLayer::handleDataRead(const ByteArray& data) {
+void TLSLayer::handleDataRead(const SafeByteArray& data) {
 	context->handleDataFromNetwork(data);
 }
 

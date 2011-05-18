@@ -25,8 +25,8 @@ ZLibCodecompressor::ZLibCodecompressor() {
 ZLibCodecompressor::~ZLibCodecompressor() {
 }
 
-ByteArray ZLibCodecompressor::process(const ByteArray& input) {
-	ByteArray output;
+SafeByteArray ZLibCodecompressor::process(const SafeByteArray& input) {
+	SafeByteArray output;
 	stream_.avail_in = input.size();
 	stream_.next_in = reinterpret_cast<Bytef*>(const_cast<unsigned char*>(vecptr(input)));
 	int outputPosition = 0;

@@ -17,7 +17,7 @@ namespace Swift {
 			ConnectionLayer(boost::shared_ptr<Connection> connection);
 			~ConnectionLayer();
 
-			void writeData(const ByteArray& data) {
+			void writeData(const SafeByteArray& data) {
 				connection->write(data);
 			}
 

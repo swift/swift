@@ -15,7 +15,7 @@ namespace Swift {
 StreamErrorSerializer::StreamErrorSerializer() : GenericElementSerializer<StreamError>() {
 }
 
-std::string StreamErrorSerializer::serialize(boost::shared_ptr<Element> element)  const {
+SafeString StreamErrorSerializer::serialize(boost::shared_ptr<Element> element)  const {
 	StreamError::ref error = boost::dynamic_pointer_cast<StreamError>(element);
 	XMLElement errorElement("error", "http://etherx.jabber.org/streams");
 

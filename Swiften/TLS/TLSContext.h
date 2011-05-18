@@ -9,7 +9,7 @@
 #include <Swiften/Base/boost_bsignals.h>
 #include <boost/shared_ptr.hpp>
 
-#include <Swiften/Base/ByteArray.h>
+#include <Swiften/Base/SafeByteArray.h>
 #include <Swiften/TLS/Certificate.h>
 #include <Swiften/TLS/CertificateVerificationError.h>
 
@@ -24,8 +24,8 @@ namespace Swift {
 
 			virtual bool setClientCertificate(const PKCS12Certificate& cert) = 0;
 
-			virtual void handleDataFromNetwork(const ByteArray&) = 0;
-			virtual void handleDataFromApplication(const ByteArray&) = 0;
+			virtual void handleDataFromNetwork(const SafeByteArray&) = 0;
+			virtual void handleDataFromApplication(const SafeByteArray&) = 0;
 
 			virtual Certificate::ref getPeerCertificate() const = 0;
 			virtual CertificateVerificationError::ref getPeerCertificateVerificationError() const = 0;
@@ -33,8 +33,8 @@ namespace Swift {
 			virtual ByteArray getFinishMessage() const = 0;
 
 		public:
-			boost::signal<void (const ByteArray&)> onDataForNetwork;
-			boost::signal<void (const ByteArray&)> onDataForApplication;
+			boost::signal<void (const SafeByteArray&)> onDataForNetwork;
+			boost::signal<void (const SafeByteArray&)> onDataForApplication;
 			boost::signal<void ()> onError;
 			boost::signal<void ()> onConnected;
 	};

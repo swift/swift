@@ -11,7 +11,7 @@
 #include <boost/noncopyable.hpp>
 
 #include <Swiften/StreamStack/HighLayer.h>
-#include <Swiften/Base/ByteArray.h>
+#include <Swiften/Base/SafeByteArray.h>
 #include <Swiften/Elements/Element.h>
 #include <Swiften/Elements/StreamType.h>
 #include <Swiften/Parser/XMPPParserClient.h>
@@ -39,14 +39,14 @@ namespace Swift {
 			void resetParser();
 
 		protected:
-			void handleDataRead(const ByteArray& data);
-			void writeDataInternal(const ByteArray& data);
+			void handleDataRead(const SafeByteArray& data);
+			void writeDataInternal(const SafeByteArray& data);
 
 		public:
 			boost::signal<void (const ProtocolHeader&)> onStreamStart;
 			boost::signal<void (boost::shared_ptr<Element>)> onElement;
-			boost::signal<void (const ByteArray&)> onWriteData;
-			boost::signal<void (const ByteArray&)> onDataRead;
+			boost::signal<void (const SafeByteArray&)> onWriteData;
+			boost::signal<void (const SafeByteArray&)> onDataRead;
 			boost::signal<void ()> onError;
 
 		private:

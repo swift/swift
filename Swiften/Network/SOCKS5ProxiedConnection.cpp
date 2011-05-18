@@ -60,7 +60,7 @@ void SOCKS5ProxiedConnection::handleDisconnected(const boost::optional<Error>& e
 	onDisconnected(error);
 }
 
-void SOCKS5ProxiedConnection::write(const ByteArray& data) {
+void SOCKS5ProxiedConnection::write(const SafeByteArray& data) {
 	if (connection_) {
 		connection_->write(data);
 	}
@@ -72,7 +72,7 @@ void SOCKS5ProxiedConnection::handleConnectionConnectFinished(bool error) {
 		SWIFT_LOG(debug) << "Connection to proxy established, now connect to the server via it." << std::endl;
 		
 		proxyState_ = ProxyAuthenticating;
-		ByteArray socksConnect;
+		SafeByteArray socksConnect;
 		socksConnect.push_back(0x05); // VER = SOCKS5 = 0x05
 		socksConnect.push_back(0x01); // Number of authentication methods after this byte.
 		socksConnect.push_back(0x00); // 0x00 == no authentication
@@ -86,8 +86,8 @@ void SOCKS5ProxiedConnection::handleConnectionConnectFinished(bool error) {
 	}
 }
 
-void SOCKS5ProxiedConnection::handleDataRead(const ByteArray& data) {
-	ByteArray socksConnect;
+void SOCKS5ProxiedConnection::handleDataRead(const SafeByteArray& data) {
+	SafeByteArray socksConnect;
 	boost::asio::ip::address rawAddress = server_.getAddress().getRawAddress();
 	assert(rawAddress.is_v4() || rawAddress.is_v6());
 	if (!connected_) {

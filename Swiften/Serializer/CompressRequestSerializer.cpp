@@ -13,7 +13,7 @@ namespace Swift {
 CompressRequestSerializer::CompressRequestSerializer() {
 }
 
-std::string CompressRequestSerializer::serialize(boost::shared_ptr<Element> element)  const {
+SafeString CompressRequestSerializer::serialize(boost::shared_ptr<Element> element)  const {
 	boost::shared_ptr<CompressRequest> compressRequest(boost::dynamic_pointer_cast<CompressRequest>(element));
 	return "<compress xmlns='http://jabber.org/protocol/compress'><method>" + compressRequest->getMethod() + "</method></compress>";
 }

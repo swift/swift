@@ -8,7 +8,7 @@
 
 #include <zlib.h>
 
-#include <Swiften/Base/ByteArray.h>
+#include <Swiften/Base/SafeByteArray.h>
 
 namespace Swift {
 	class ZLibCodecompressor {
@@ -16,7 +16,7 @@ namespace Swift {
 			ZLibCodecompressor();
 			virtual ~ZLibCodecompressor();
 
-			ByteArray process(const ByteArray& data);
+			SafeByteArray process(const SafeByteArray& data);
 			virtual int processZStream() = 0;
 
 		protected:

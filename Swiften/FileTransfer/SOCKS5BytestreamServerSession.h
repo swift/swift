@@ -40,7 +40,7 @@ namespace Swift {
 		private:
 			void finish(bool error);
 			void process();
-			void handleDataRead(const ByteArray&);
+			void handleDataRead(const SafeByteArray&);
 			void sendData();
 
 		private:

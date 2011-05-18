@@ -8,6 +8,7 @@
 
 #include <boost/shared_ptr.hpp>
 
+#include <Swiften/Base/SafeByteArray.h>
 #include <Swiften/Network/Connection.h>
 #include <Swiften/Session/SessionStream.h>
 #include <Swiften/Elements/StreamType.h>
@@ -64,8 +65,8 @@ namespace Swift {
 			void handleTLSError();
 			void handleStreamStartReceived(const ProtocolHeader&);
 			void handleElementReceived(boost::shared_ptr<Element>);
-			void handleDataRead(const ByteArray& data);
-			void handleDataWritten(const ByteArray& data);
+			void handleDataRead(const SafeByteArray& data);
+			void handleDataWritten(const SafeByteArray& data);
 
 		private:
 			bool available;

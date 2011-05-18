@@ -9,7 +9,7 @@
 #include <string>
 
 #include <Swiften/Session/Session.h>
-#include <Swiften/Base/ByteArray.h>
+#include <Swiften/Base/SafeByteArray.h>
 
 namespace Swift {
 	class SessionTracer {
@@ -17,7 +17,7 @@ namespace Swift {
 			SessionTracer(boost::shared_ptr<Session> session);
 
 		private:
-			void printData(char direction, const ByteArray& data);
+			void printData(char direction, const SafeByteArray& data);
 
 			boost::shared_ptr<Session> session;
 	};

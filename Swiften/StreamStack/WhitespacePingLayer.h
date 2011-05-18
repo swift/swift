@@ -21,8 +21,8 @@ namespace Swift {
 
 			void setActive();
 			void setInactive();
-			void writeData(const ByteArray& data);
-			void handleDataRead(const ByteArray& data);
+			void writeData(const SafeByteArray& data);
+			void handleDataRead(const SafeByteArray& data);
 
 			bool getIsActive() const {
 				return isActive;

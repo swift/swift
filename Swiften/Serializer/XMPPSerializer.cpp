@@ -83,10 +83,8 @@ std::string XMPPSerializer::serializeHeader(const ProtocolHeader& header) const 
 	return result;
 }
 
-std::string XMPPSerializer::serializeElement(boost::shared_ptr<Element> element) const {
-	std::vector< boost::shared_ptr<ElementSerializer> >::const_iterator i = std::find_if(
-			serializers_.begin(), serializers_.end(), 
-			boost::bind(&ElementSerializer::canSerialize, _1, element));
+SafeString XMPPSerializer::serializeElement(boost::shared_ptr<Element> element) const {
+	std::vector< boost::shared_ptr<ElementSerializer> >::const_iterator i = std::find_if(serializers_.begin(), serializers_.end(), boost::bind(&ElementSerializer::canSerialize, _1, element));
 	if (i != serializers_.end()) {
 		return (*i)->serialize(element);
 	}

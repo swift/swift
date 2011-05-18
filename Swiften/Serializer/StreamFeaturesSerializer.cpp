@@ -17,7 +17,7 @@ namespace Swift {
 StreamFeaturesSerializer::StreamFeaturesSerializer() {
 }
 
-std::string StreamFeaturesSerializer::serialize(boost::shared_ptr<Element> element)  const {
+SafeString StreamFeaturesSerializer::serialize(boost::shared_ptr<Element> element)  const {
 	boost::shared_ptr<StreamFeatures> streamFeatures(boost::dynamic_pointer_cast<StreamFeatures>(element));
 
 	XMLElement streamFeaturesElement("stream:features");

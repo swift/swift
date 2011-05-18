@@ -10,6 +10,7 @@
 #include <iostream>
 
 #include <Swiften/Base/ByteArray.h>
+#include <Swiften/Base/SafeByteArray.h>
 #include <Swiften/Base/Algorithm.h>
 #include <Swiften/Base/Concat.h>
 #include <Swiften/FileTransfer/SOCKS5BytestreamRegistry.h>
@@ -36,7 +37,7 @@ void SOCKS5BytestreamServerSession::stop() {
 	finish(false);
 }
 
-void SOCKS5BytestreamServerSession::handleDataRead(const ByteArray& data) {
+void SOCKS5BytestreamServerSession::handleDataRead(const SafeByteArray& data) {
 	append(unprocessedData, data);
 	process();
 }
@@ -56,7 +57,7 @@ void SOCKS5BytestreamServerSession::process() {
 					std::cerr << "SOCKS5BytestreamServerSession: Junk after authentication mechanism";
 				}
 				unprocessedData.clear();
-				connection->write(createByteArray("\x05\x00", 2));
+				connection->write(createSafeByteArray("\x05\x00", 2));
 				state = WaitingForRequest;
 			}
 		}
@@ -77,7 +78,7 @@ void SOCKS5BytestreamServerSession::process() {
 					std::cerr << "SOCKS5BytestreamServerSession: Junk after authentication mechanism";
 				}
 				bytestream = bytestreams->getBytestream(byteArrayToString(requestID));
-				ByteArray result = createByteArray("\x05", 1);
+				SafeByteArray result = createSafeByteArray("\x05", 1);
 				result.push_back(bytestream ? 0x0 : 0x4);
 				append(result, createByteArray("\x00\x03", 2));
 				result.push_back(static_cast<char>(requestID.size()));
@@ -99,7 +100,7 @@ void SOCKS5BytestreamServerSession::process() {
 void SOCKS5BytestreamServerSession::sendData() {
 	if (!bytestream->isFinished()) {
 		try {
-			connection->write(bytestream->read(chunkSize));
+			connection->write(createSafeByteArray(bytestream->read(chunkSize)));
 		}
 		catch (const BytestreamException&) {
 			finish(true);

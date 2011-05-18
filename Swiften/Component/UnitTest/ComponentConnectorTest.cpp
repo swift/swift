@@ -174,7 +174,7 @@ class ComponentConnectorTest : public CppUnit::TestFixture {
 				}
 
 				void disconnect() { assert(false); }
-				void write(const ByteArray&) { assert(false); }
+				void write(const SafeByteArray&) { assert(false); }
 				HostAddressPort getLocalAddress() const { return HostAddressPort(); }
 
 				EventLoop* eventLoop;

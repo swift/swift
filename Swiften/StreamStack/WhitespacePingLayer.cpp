@@ -20,17 +20,17 @@ WhitespacePingLayer::WhitespacePingLayer(TimerFactory* timerFactory) : isActive(
 	timer->onTick.connect(boost::bind(&WhitespacePingLayer::handleTimerTick, this));
 }
 
-void WhitespacePingLayer::writeData(const ByteArray& data) {
+void WhitespacePingLayer::writeData(const SafeByteArray& data) {
 	writeDataToChildLayer(data);
 }
 
-void WhitespacePingLayer::handleDataRead(const ByteArray& data) {
+void WhitespacePingLayer::handleDataRead(const SafeByteArray& data) {
 	writeDataToParentLayer(data);
 }
 
 void WhitespacePingLayer::handleTimerTick() {
 	timer->stop();
-	writeDataToChildLayer(createByteArray(" "));
+	writeDataToChildLayer(createSafeByteArray(" "));
 	timer->start();
 }
 

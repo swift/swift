@@ -35,3 +35,8 @@ std::ostream& operator<<(std::ostream& os, const Swift::SafeByteArray& s) {
 	os.flags(oldFlags);
 	return os;
 }
+
+std::ostream& operator<<(std::ostream& os, const Swift::SafeString& s) {
+	os << s.toString();
+	return os;
+}

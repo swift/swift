@@ -10,6 +10,7 @@
 #include <Swiften/Serializer/AuthChallengeSerializer.h>
 #include <Swiften/Elements/AuthChallenge.h>
 #include <Swiften/Base/ByteArray.h>
+#include <QA/Checker/IO.h>
 
 using namespace Swift;
 
@@ -26,7 +27,7 @@ class AuthChallengeSerializerTest : public CppUnit::TestFixture {
 			boost::shared_ptr<AuthChallenge> authChallenge(new AuthChallenge());
 			authChallenge->setValue(createByteArray("foo"));
 
-			CPPUNIT_ASSERT_EQUAL(std::string(
+			CPPUNIT_ASSERT_EQUAL(SafeString(
 				"<challenge xmlns=\"urn:ietf:params:xml:ns:xmpp-sasl\">"
 					"Zm9v"
 				"</challenge>"), testling.serialize(authChallenge));
@@ -36,7 +37,7 @@ class AuthChallengeSerializerTest : public CppUnit::TestFixture {
 			AuthChallengeSerializer testling;
 			boost::shared_ptr<AuthChallenge> authChallenge(new AuthChallenge());
 
-			CPPUNIT_ASSERT_EQUAL(std::string(
+			CPPUNIT_ASSERT_EQUAL(SafeString(
 				"<challenge xmlns=\"urn:ietf:params:xml:ns:xmpp-sasl\">"
 				"</challenge>"), testling.serialize(authChallenge));
 		}
@@ -46,7 +47,7 @@ class AuthChallengeSerializerTest : public CppUnit::TestFixture {
 			boost::shared_ptr<AuthChallenge> authChallenge(new AuthChallenge());
 			authChallenge->setValue(std::vector<unsigned char>());
 
-			CPPUNIT_ASSERT_EQUAL(std::string(
+			CPPUNIT_ASSERT_EQUAL(SafeString(
 				"<challenge xmlns=\"urn:ietf:params:xml:ns:xmpp-sasl\">"
 					"="
 				"</challenge>"), testling.serialize(authChallenge));

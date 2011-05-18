@@ -34,6 +34,10 @@ namespace Swift {
 		return SafeByteArray(c, c + n);
 	}
 
+	inline SafeByteArray createSafeByteArray(const unsigned char* c, size_t n) {
+		return SafeByteArray(c, c + n);
+	}
+
 	SafeByteArray createSafeByteArray(const SafeString& s);
 }
 

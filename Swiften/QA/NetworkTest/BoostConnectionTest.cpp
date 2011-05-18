@@ -103,9 +103,9 @@ class BoostConnectionTest : public CppUnit::TestFixture {
 				eventLoop_->processEvents();
 			}
 
-			testling->write(createByteArray("<stream:strea"));
-			testling->write(createByteArray("m"));
-			testling->write(createByteArray(">"));
+			testling->write(createSafeByteArray("<stream:strea"));
+			testling->write(createSafeByteArray("m"));
+			testling->write(createSafeByteArray(">"));
 
 			 // Check that we only did one write event, the others are queued
 			/*int runHandlers = */boostIOService->poll();
@@ -127,11 +127,11 @@ class BoostConnectionTest : public CppUnit::TestFixture {
 		}
 
 		void doWrite(BoostConnection* connection) {
-			connection->write(createByteArray("<stream:stream>"));
-			connection->write(createByteArray("\r\n\r\n")); // Temporarily, while we don't have an xmpp server running on ipv6
+			connection->write(createSafeByteArray("<stream:stream>"));
+			connection->write(createSafeByteArray("\r\n\r\n")); // Temporarily, while we don't have an xmpp server running on ipv6
 		}
 
-		void handleDataRead(const ByteArray& data) {
+		void handleDataRead(const SafeByteArray& data) {
 			append(receivedData, data);
 		}
 

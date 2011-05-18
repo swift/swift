@@ -8,6 +8,8 @@
 
 #include <Swiften/Base/ByteArray.h>
 #include <Swiften/Base/SafeByteArray.h>
+#include <Swiften/Base/SafeString.h>
 
 std::ostream& operator<<(std::ostream& os, const Swift::ByteArray& s);
 std::ostream& operator<<(std::ostream& os, const Swift::SafeByteArray& s);
+std::ostream& operator<<(std::ostream& os, const Swift::SafeString& s);

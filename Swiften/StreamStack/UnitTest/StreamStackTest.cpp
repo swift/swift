@@ -54,7 +54,7 @@ class StreamStackTest : public CppUnit::TestFixture {
 			xmppStream_->writeData("foo");
 
 			CPPUNIT_ASSERT_EQUAL(static_cast<size_t>(1), physicalStream_->data_.size());
-			CPPUNIT_ASSERT_EQUAL(createByteArray("foo"), physicalStream_->data_[0]);
+			CPPUNIT_ASSERT_EQUAL(createSafeByteArray("foo"), physicalStream_->data_[0]);
 		}
 
 		void testWriteData_OneIntermediateStream() {
@@ -65,7 +65,7 @@ class StreamStackTest : public CppUnit::TestFixture {
 			xmppStream_->writeData("foo");
 
 			CPPUNIT_ASSERT_EQUAL(static_cast<size_t>(1), physicalStream_->data_.size());
-			CPPUNIT_ASSERT_EQUAL(createByteArray("Xfoo"), physicalStream_->data_[0]);
+			CPPUNIT_ASSERT_EQUAL(createSafeByteArray("Xfoo"), physicalStream_->data_[0]);
 		}
 
 		void testWriteData_TwoIntermediateStreamStack() {
@@ -78,14 +78,14 @@ class StreamStackTest : public CppUnit::TestFixture {
 			xmppStream_->writeData("foo");
 
 			CPPUNIT_ASSERT_EQUAL(static_cast<size_t>(1), physicalStream_->data_.size());
-			CPPUNIT_ASSERT_EQUAL(createByteArray("XYfoo"), physicalStream_->data_[0]);
+			CPPUNIT_ASSERT_EQUAL(createSafeByteArray("XYfoo"), physicalStream_->data_[0]);
 		}
 
 		void testReadData_NoIntermediateStreamStack() {
 			StreamStack testling(xmppStream_, physicalStream_);
 			xmppStream_->onElement.connect(boost::bind(&StreamStackTest::handleElement, this, _1));
 			
-			physicalStream_->onDataRead(createByteArray("<stream:stream xmlns:stream='http://etherx.jabber.org/streams'><presence/>"));
+			physicalStream_->onDataRead(createSafeByteArray("<stream:stream xmlns:stream='http://etherx.jabber.org/streams'><presence/>"));
 
 			CPPUNIT_ASSERT_EQUAL(1, elementsReceived_);
 		}
@@ -96,7 +96,7 @@ class StreamStackTest : public CppUnit::TestFixture {
 			boost::shared_ptr<MyStreamLayer> xStream(new MyStreamLayer("<"));
 			testling.addLayer(xStream.get());
 
-			physicalStream_->onDataRead(createByteArray("stream:stream xmlns:stream='http://etherx.jabber.org/streams'><presence/>"));
+			physicalStream_->onDataRead(createSafeByteArray("stream:stream xmlns:stream='http://etherx.jabber.org/streams'><presence/>"));
 
 			CPPUNIT_ASSERT_EQUAL(1, elementsReceived_);
 		}
@@ -109,7 +109,7 @@ class StreamStackTest : public CppUnit::TestFixture {
 			testling.addLayer(xStream.get());
 			testling.addLayer(yStream.get());
 
-			physicalStream_->onDataRead(createByteArray("tream:stream xmlns:stream='http://etherx.jabber.org/streams'><presence/>"));
+			physicalStream_->onDataRead(createSafeByteArray("tream:stream xmlns:stream='http://etherx.jabber.org/streams'><presence/>"));
 
 			CPPUNIT_ASSERT_EQUAL(1, elementsReceived_);
 		}
@@ -129,7 +129,7 @@ class StreamStackTest : public CppUnit::TestFixture {
 			++elementsReceived_;
 		}
 
-		void handleWriteData(ByteArray) {
+		void handleWriteData(const SafeByteArray&) {
 			++dataWriteReceived_;
 		}
 
@@ -139,12 +139,12 @@ class StreamStackTest : public CppUnit::TestFixture {
 				MyStreamLayer(const std::string& prepend) : prepend_(prepend) {
 				}
 
-				virtual void writeData(const ByteArray& data) {
-					writeDataToChildLayer(concat(createByteArray(prepend_), data));
+				virtual void writeData(const SafeByteArray& data) {
+					writeDataToChildLayer(concat(createSafeByteArray(prepend_), data));
 				}
 
-				virtual void handleDataRead(const ByteArray& data) {
-					writeDataToParentLayer(concat(createByteArray(prepend_), data));
+				virtual void handleDataRead(const SafeByteArray& data) {
+					writeDataToParentLayer(concat(createSafeByteArray(prepend_), data));
 				}
 
 			private:
@@ -156,15 +156,15 @@ class StreamStackTest : public CppUnit::TestFixture {
 				TestLowLayer() {
 				}
 
-				virtual void writeData(const ByteArray& data) {
+				virtual void writeData(const SafeByteArray& data) {
 					data_.push_back(data);
 				}
 
-				void onDataRead(const ByteArray& data) {
+				void onDataRead(const SafeByteArray& data) {
 					writeDataToParentLayer(data);
 				}
 
-				std::vector<ByteArray> data_;
+				std::vector<SafeByteArray> data_;
 		};
 
 

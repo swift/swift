@@ -13,6 +13,7 @@
 
 #include <Swiften/Network/Connection.h>
 #include <Swiften/EventLoop/EventOwner.h>
+#include <Swiften/Base/SafeByteArray.h>
 
 namespace boost {
 	class thread;
@@ -37,7 +38,7 @@ namespace Swift {
 			virtual void listen();
 			virtual void connect(const HostAddressPort& address);
 			virtual void disconnect();
-			virtual void write(const ByteArray& data);
+			virtual void write(const SafeByteArray& data);
 
 			boost::asio::ip::tcp::socket& getSocket() {
 				return socket_;
@@ -52,15 +53,15 @@ namespace Swift {
 			void handleSocketRead(const boost::system::error_code& error, size_t bytesTransferred);
 			void handleDataWritten(const boost::system::error_code& error);
 			void doRead();
-			void doWrite(const ByteArray& data);
+			void doWrite(const SafeByteArray& data);
 
 		private:
 			EventLoop* eventLoop;
 			boost::shared_ptr<boost::asio::io_service> ioService;
 			boost::asio::ip::tcp::socket socket_;
-			std::vector<char> readBuffer_;
+			SafeByteArray readBuffer_;
 			boost::mutex writeMutex_;
 			bool writing_;
-			ByteArray writeQueue_;
+			SafeByteArray writeQueue_;
 	};
 }

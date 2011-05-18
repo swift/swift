@@ -9,6 +9,8 @@
 
 #include <Swiften/Serializer/StreamFeaturesSerializer.h>
 #include <Swiften/Elements/StreamFeatures.h>
+#include <QA/Checker/IO.h>
+
 
 using namespace Swift;
 
@@ -34,7 +36,7 @@ class StreamFeaturesSerializerTest : public CppUnit::TestFixture
 			streamFeatures->setHasStreamManagement();
 			streamFeatures->setHasRosterVersioning();
 
-			CPPUNIT_ASSERT_EQUAL(std::string(
+			CPPUNIT_ASSERT_EQUAL(SafeString(
 				"<stream:features>"
 					"<starttls xmlns=\"urn:ietf:params:xml:ns:xmpp-tls\"/>"
 					"<compression xmlns=\"http://jabber.org/features/compress\">"

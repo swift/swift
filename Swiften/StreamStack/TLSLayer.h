@@ -6,7 +6,7 @@
 
 #include <Swiften/Base/boost_bsignals.h>
 
-#include <Swiften/Base/ByteArray.h>
+#include <Swiften/Base/SafeByteArray.h>
 #include <Swiften/StreamStack/StreamLayer.h>
 #include <Swiften/TLS/Certificate.h>
 #include <Swiften/TLS/CertificateVerificationError.h>
@@ -27,8 +27,8 @@ namespace Swift {
 			Certificate::ref getPeerCertificate() const;
 			boost::shared_ptr<CertificateVerificationError> getPeerCertificateVerificationError() const;
 
-			void writeData(const ByteArray& data);
-			void handleDataRead(const ByteArray& data);
+			void writeData(const SafeByteArray& data);
+			void handleDataRead(const SafeByteArray& data);
 
 			TLSContext* getContext() const {
 				return context;

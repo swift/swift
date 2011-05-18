@@ -14,8 +14,8 @@ namespace Swift {
 DummyConnection::DummyConnection(EventLoop* eventLoop) : eventLoop(eventLoop) {
 }
 
-void DummyConnection::receive(const ByteArray& data) {
-	eventLoop->postEvent(boost::bind(boost::ref(onDataRead), ByteArray(data)), shared_from_this());
+void DummyConnection::receive(const SafeByteArray& data) {
+	eventLoop->postEvent(boost::bind(boost::ref(onDataRead), SafeByteArray(data)), shared_from_this());
 }
 
 void DummyConnection::listen() {

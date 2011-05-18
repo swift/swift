@@ -34,7 +34,7 @@ namespace Swift {
 			virtual void listen();
 			virtual void connect(const HostAddressPort& address);
 			virtual void disconnect();
-			virtual void write(const ByteArray& data);
+			virtual void write(const SafeByteArray& data);
 
 			virtual HostAddressPort getLocalAddress() const;
 
@@ -42,7 +42,7 @@ namespace Swift {
 			SOCKS5ProxiedConnection(ConnectionFactory* connectionFactory, const HostAddressPort& proxy);
 
 			void handleConnectionConnectFinished(bool error);
-			void handleDataRead(const ByteArray& data);
+			void handleDataRead(const SafeByteArray& data);
 			void handleDisconnected(const boost::optional<Error>& error);
 
 		private:

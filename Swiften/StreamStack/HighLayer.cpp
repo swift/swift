@@ -18,7 +18,7 @@ HighLayer::HighLayer() : childLayer(NULL) {
 HighLayer::~HighLayer() {
 }
 
-void HighLayer::writeDataToChildLayer(const ByteArray& data) {
+void HighLayer::writeDataToChildLayer(const SafeByteArray& data) {
 	assert(childLayer);
 	childLayer->writeData(data);
 }

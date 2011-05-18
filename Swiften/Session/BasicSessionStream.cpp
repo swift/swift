@@ -192,12 +192,12 @@ void BasicSessionStream::handleConnectionFinished(const boost::optional<Connecti
 	}
 }
 
-void BasicSessionStream::handleDataRead(const ByteArray& data) {
-	onDataRead(byteArrayToString(data));
+void BasicSessionStream::handleDataRead(const SafeByteArray& data) {
+	onDataRead(byteArrayToString(ByteArray(data.begin(), data.end())));
 }
 
-void BasicSessionStream::handleDataWritten(const ByteArray& data) {
-	onDataWritten(byteArrayToString(data));
+void BasicSessionStream::handleDataWritten(const SafeByteArray& data) {
+	onDataWritten(byteArrayToString(ByteArray(data.begin(), data.end())));
 }
 
 };

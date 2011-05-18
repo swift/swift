@@ -18,7 +18,7 @@ LowLayer::LowLayer() : parentLayer(NULL) {
 LowLayer::~LowLayer() {
 }
 
-void LowLayer::writeDataToParentLayer(const ByteArray& data) {
+void LowLayer::writeDataToParentLayer(const SafeByteArray& data) {
 	assert(parentLayer);
 	parentLayer->handleDataRead(data);
 }

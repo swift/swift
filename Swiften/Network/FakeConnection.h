@@ -41,7 +41,7 @@ namespace Swift {
 			virtual void connect(const HostAddressPort& address);
 			virtual void disconnect();
 
-			virtual void write(const ByteArray& data) {
+			virtual void write(const SafeByteArray& data) {
 				dataWritten.push_back(data);
 			}
 
@@ -51,7 +51,7 @@ namespace Swift {
 
 			EventLoop* eventLoop;
 			boost::optional<HostAddressPort> connectedTo;
-			std::vector<ByteArray> dataWritten;
+			std::vector<SafeByteArray> dataWritten;
 			boost::optional<Error> error;
 			State state;
 			bool delayConnect;

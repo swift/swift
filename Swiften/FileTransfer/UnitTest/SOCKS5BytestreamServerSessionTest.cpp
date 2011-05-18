@@ -48,7 +48,7 @@ class SOCKS5BytestreamServerSessionTest : public CppUnit::TestFixture {
 			boost::shared_ptr<SOCKS5BytestreamServerSession> testling(createSession());
 			StartStopper<SOCKS5BytestreamServerSession> stopper(testling.get());
 
-			receive(createByteArray("\x05\x02\x01\x02"));
+			receive(createSafeByteArray("\x05\x02\x01\x02"));
 
 			CPPUNIT_ASSERT(createByteArray("\x05\x00", 2) == receivedData);
 		}
@@ -57,10 +57,10 @@ class SOCKS5BytestreamServerSessionTest : public CppUnit::TestFixture {
 			boost::shared_ptr<SOCKS5BytestreamServerSession> testling(createSession());
 			StartStopper<SOCKS5BytestreamServerSession> stopper(testling.get());
 
-			receive(createByteArray("\x05\x02\x01"));
+			receive(createSafeByteArray("\x05\x02\x01"));
 
 			CPPUNIT_ASSERT_EQUAL(0, static_cast<int>(receivedData.size()));
-			receive(createByteArray("\x01"));
+			receive(createSafeByteArray("\x01"));
 			CPPUNIT_ASSERT(createByteArray("\x05\x00", 2) == receivedData);
 		}
 
@@ -71,7 +71,7 @@ class SOCKS5BytestreamServerSessionTest : public CppUnit::TestFixture {
 			authenticate();
 
 			ByteArray hostname(createByteArray("abcdef"));
-			receive(concat(createByteArray("\x05\x01\x00\x03", 4), createByteArray(hostname.size()), hostname, createByteArray("\x00\x00", 2)));
+			receive(concat(createSafeByteArray("\x05\x01\x00\x03", 4), createSafeByteArray(hostname.size()), createSafeByteArray(hostname), createSafeByteArray("\x00\x00", 2)));
 			CPPUNIT_ASSERT(createByteArray("\x05\x00\x00\x03\x06\x61\x62\x63\x64\x65\x66\x00\x00", 13) == createByteArray(&receivedData[0], 13));
 		}
 
@@ -81,7 +81,7 @@ class SOCKS5BytestreamServerSessionTest : public CppUnit::TestFixture {
 			authenticate();
 
 			ByteArray hostname(createByteArray("abcdef"));
-			receive(concat(createByteArray("\x05\x01\x00\x03", 4), createByteArray(hostname.size()), hostname, createByteArray("\x00\x00", 2)));
+			receive(concat(createSafeByteArray("\x05\x01\x00\x03", 4), createSafeByteArray(hostname.size()), createSafeByteArray(hostname), createSafeByteArray("\x00\x00", 2)));
 			CPPUNIT_ASSERT(createByteArray("\x05\x04\x00\x03\x06\x61\x62\x63\x64\x65\x66\x00\x00", 13) == receivedData);
 		}
 
@@ -113,19 +113,19 @@ class SOCKS5BytestreamServerSessionTest : public CppUnit::TestFixture {
 		}
 
 	private:
-		void receive(const ByteArray& data) {
+		void receive(const SafeByteArray& data) {
 			connection->receive(data);
 			eventLoop->processEvents();
 		}
 
 		void authenticate() {
-			receive(createByteArray("\x05\x02\x01\x02"));
+			receive(createSafeByteArray("\x05\x02\x01\x02"));
 			receivedData.clear();
 			receivedDataChunks = 0;
 		}
 
 		void request(const std::string& hostname) {
-			receive(concat(createByteArray("\x05\x01\x00\x03", 4), createByteArray(hostname.size()), createByteArray(hostname), createByteArray("\x00\x00", 2)));
+			receive(concat(createSafeByteArray("\x05\x01\x00\x03", 4), createSafeByteArray(hostname.size()), createSafeByteArray(hostname), createSafeByteArray("\x00\x00", 2)));
 		}
 
 		void skipHeader(const std::string& hostname) {
@@ -134,7 +134,7 @@ class SOCKS5BytestreamServerSessionTest : public CppUnit::TestFixture {
 		}
 
 
-		void handleDataWritten(const ByteArray& data) {
+		void handleDataWritten(const SafeByteArray& data) {
 			receivedData.insert(receivedData.end(), data.begin(), data.end());
 			receivedDataChunks++;
 		}

@@ -8,6 +8,7 @@
 
 #include <iostream>
 #include <string>
+#include <algorithm>
 #include <boost/bind.hpp>
 #include <boost/thread.hpp>
 #include <boost/asio/placeholders.hpp>
@@ -19,6 +20,7 @@
 #include <Swiften/Base/ByteArray.h>
 #include <Swiften/Network/HostAddressPort.h>
 #include <Swiften/Base/sleep.h>
+#include <Swiften/Base/SafeAllocator.h>
 
 namespace Swift {
 
@@ -29,8 +31,8 @@ static const size_t BUFFER_SIZE = 4096;
 // A reference-counted non-modifiable buffer class.
 class SharedBuffer {
 	public:
-		SharedBuffer(const ByteArray& data) : 
-				data_(new std::vector<char>(data.begin(), data.end())),
+		SharedBuffer(const SafeByteArray& data) :
+				data_(new std::vector<char, SafeAllocator<char> >(data.begin(), data.end())),
 				buffer_(boost::asio::buffer(*data_)) {
 		}
 
@@ -41,7 +43,7 @@ class SharedBuffer {
 		const boost::asio::const_buffer* end() const { return &buffer_ + 1; }
 
 	private:
-		boost::shared_ptr< std::vector<char> > data_;
+		boost::shared_ptr< std::vector<char, SafeAllocator<char> > > data_;
 		boost::asio::const_buffer buffer_;
 };
 
@@ -78,7 +80,7 @@ void BoostConnection::disconnect() {
 	socket_.close();
 }
 
-void BoostConnection::write(const ByteArray& data) {
+void BoostConnection::write(const SafeByteArray& data) {
 	boost::lock_guard<boost::mutex> lock(writeMutex_);
 	if (!writing_) {
 		writing_ = true;
@@ -89,7 +91,7 @@ void BoostConnection::write(const ByteArray& data) {
 	}
 }
 
-void BoostConnection::doWrite(const ByteArray& data) {
+void BoostConnection::doWrite(const SafeByteArray& data) {
 	boost::asio::async_write(socket_, SharedBuffer(data),
 			boost::bind(&BoostConnection::handleDataWritten, shared_from_this(), boost::asio::placeholders::error));
 }
@@ -114,7 +116,8 @@ void BoostConnection::doRead() {
 void BoostConnection::handleSocketRead(const boost::system::error_code& error, size_t bytesTransferred) {
 	SWIFT_LOG(debug) << "Socket read " << error << std::endl;
 	if (!error) {
-		eventLoop->postEvent(boost::bind(boost::ref(onDataRead), createByteArray(&readBuffer_[0], bytesTransferred)), shared_from_this());
+		eventLoop->postEvent(boost::bind(boost::ref(onDataRead), createSafeByteArray(&readBuffer_[0], bytesTransferred)), shared_from_this());
+		std::fill(readBuffer_.begin(), readBuffer_.end(), 0);
 		doRead();
 	}
 	else if (/*error == boost::asio::error::eof ||*/ error == boost::asio::error::operation_aborted) {

@@ -46,7 +46,7 @@ class XMPPLayerTest : public CppUnit::TestFixture {
 		void testParseData_Error() {
 			testling_->onError.connect(boost::bind(&XMPPLayerTest::handleError, this));
 
-			testling_->handleDataRead(createByteArray("<iq>"));
+			testling_->handleDataRead(createSafeByteArray("<iq>"));
 			
 			CPPUNIT_ASSERT_EQUAL(1, errorReceived_);
 		}
@@ -55,10 +55,10 @@ class XMPPLayerTest : public CppUnit::TestFixture {
 			testling_->onElement.connect(boost::bind(&XMPPLayerTest::handleElement, this, _1));
 			testling_->onError.connect(boost::bind(&XMPPLayerTest::handleError, this));
 
-			testling_->handleDataRead(createByteArray("<stream:stream to=\"example.com\" xmlns=\"jabber:client\" xmlns:stream=\"http://etherx.jabber.org/streams\" >"));
+			testling_->handleDataRead(createSafeByteArray("<stream:stream to=\"example.com\" xmlns=\"jabber:client\" xmlns:stream=\"http://etherx.jabber.org/streams\" >"));
 			testling_->resetParser();
-			testling_->handleDataRead(createByteArray("<stream:stream to=\"example.com\" xmlns=\"jabber:client\" xmlns:stream=\"http://etherx.jabber.org/streams\" >"));
-			testling_->handleDataRead(createByteArray("<presence/>"));
+			testling_->handleDataRead(createSafeByteArray("<stream:stream to=\"example.com\" xmlns=\"jabber:client\" xmlns:stream=\"http://etherx.jabber.org/streams\" >"));
+			testling_->handleDataRead(createSafeByteArray("<presence/>"));
 
 			CPPUNIT_ASSERT_EQUAL(1, elementsReceived_);
 			CPPUNIT_ASSERT_EQUAL(0, errorReceived_);
@@ -66,8 +66,8 @@ class XMPPLayerTest : public CppUnit::TestFixture {
 
 		void testResetParser_FromSlot() {
 			testling_->onElement.connect(boost::bind(&XMPPLayerTest::handleElementAndReset, this, _1));
-			testling_->handleDataRead(createByteArray("<stream:stream to=\"example.com\" xmlns=\"jabber:client\" xmlns:stream=\"http://etherx.jabber.org/streams\" ><presence/>"));
-			testling_->handleDataRead(createByteArray("<stream:stream to=\"example.com\" xmlns=\"jabber:client\" xmlns:stream=\"http://etherx.jabber.org/streams\" ><presence/>"));
+			testling_->handleDataRead(createSafeByteArray("<stream:stream to=\"example.com\" xmlns=\"jabber:client\" xmlns:stream=\"http://etherx.jabber.org/streams\" ><presence/>"));
+			testling_->handleDataRead(createSafeByteArray("<stream:stream to=\"example.com\" xmlns=\"jabber:client\" xmlns:stream=\"http://etherx.jabber.org/streams\" ><presence/>"));
 
 			CPPUNIT_ASSERT_EQUAL(2, elementsReceived_);
 			CPPUNIT_ASSERT_EQUAL(0, errorReceived_);
@@ -120,8 +120,8 @@ class XMPPLayerTest : public CppUnit::TestFixture {
 
 		class DummyLowLayer : public LowLayer {
 			public:
-				virtual void writeData(const ByteArray& data) {
-					writtenData += byteArrayToString(data);
+				virtual void writeData(const SafeByteArray& data) {
+					writtenData += byteArrayToString(ByteArray(data.begin(), data.end()));
 				}
 				
 				std::string writtenData;

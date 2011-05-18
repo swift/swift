@@ -18,7 +18,7 @@ namespace Swift {
 			StartTLSRequestSerializer() : GenericElementSerializer<StartTLSRequest>() {
 			}
 
-			virtual std::string serialize(boost::shared_ptr<Element>) const {
+			virtual SafeString serialize(boost::shared_ptr<Element>) const {
 				return XMLElement("starttls", "urn:ietf:params:xml:ns:xmpp-tls").serialize();
 			}
 	};

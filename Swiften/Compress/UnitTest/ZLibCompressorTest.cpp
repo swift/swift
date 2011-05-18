@@ -4,7 +4,7 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include <Swiften/Base/ByteArray.h>
+#include <Swiften/Base/SafeByteArray.h>
 
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/extensions/TestFactoryRegistry.h>
@@ -27,17 +27,17 @@ class ZLibCompressorTest : public CppUnit::TestFixture
 
 		void testProcess() {
 			ZLibCompressor testling;
-			ByteArray result = testling.process(createByteArray("foo"));
+			SafeByteArray result = testling.process(createSafeByteArray("foo"));
 
-			CPPUNIT_ASSERT_EQUAL(createByteArray("\x78\xda\x4a\xcb\xcf\x07\x00\x00\x00\xff\xff", 11), result);
+			CPPUNIT_ASSERT_EQUAL(createSafeByteArray("\x78\xda\x4a\xcb\xcf\x07\x00\x00\x00\xff\xff", 11), result);
 		}
 
 		void testProcess_Twice() {
 			ZLibCompressor testling;
-			testling.process(createByteArray("foo"));
-			ByteArray result = testling.process(createByteArray("bar"));
+			testling.process(createSafeByteArray("foo"));
+			SafeByteArray result = testling.process(createSafeByteArray("bar"));
 
-			CPPUNIT_ASSERT_EQUAL(createByteArray("\x4a\x4a\x2c\x02\x00\x00\x00\xff\xff",9), result); 
+			CPPUNIT_ASSERT_EQUAL(createSafeByteArray("\x4a\x4a\x2c\x02\x00\x00\x00\xff\xff",9), result);
 		}
 };
 

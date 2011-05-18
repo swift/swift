@@ -9,7 +9,7 @@
 #include <boost/noncopyable.hpp>
 #include <Swiften/Base/boost_bsignals.h>
 
-#include <Swiften/Base/ByteArray.h>
+#include <Swiften/Base/SafeByteArray.h>
 #include <Swiften/StreamStack/StreamLayer.h>
 #include <Swiften/Compress/ZLibException.h>
 #include <Swiften/Compress/ZLibCompressor.h>
@@ -23,7 +23,7 @@ namespace Swift {
 		public:
 			CompressionLayer() {}
 
-			virtual void writeData(const ByteArray& data) {
+			virtual void writeData(const SafeByteArray& data) {
 				try {
 					writeDataToChildLayer(compressor_.process(data));
 				}
@@ -32,7 +32,7 @@ namespace Swift {
 				}
 			}
 
-			virtual void handleDataRead(const ByteArray& data) {
+			virtual void handleDataRead(const SafeByteArray& data) {
 				try {
 					writeDataToParentLayer(decompressor_.process(data));
 				}
