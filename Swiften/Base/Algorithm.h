@@ -105,8 +105,9 @@ namespace Swift {
 	}
 
 	template<typename Container>
-	void nullify(Container& c) {
+	void safeClear(Container& c) {
 		std::fill(c.begin(), c.end(), 0);
+		c.clear();
 	}
 
 	/*
