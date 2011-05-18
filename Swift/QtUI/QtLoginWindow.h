@@ -36,6 +36,7 @@ namespace Swift {
 			virtual void removeAvailableAccount(const std::string& jid);
 			virtual void setLoginAutomatically(bool loginAutomatically);
 			virtual void setIsLoggingIn(bool loggingIn);
+			virtual void setRememberingAllowed(bool allowed);
 			void selectUser(const std::string& user);
 			bool askUserToTrustCertificatePermanently(const std::string& message, Certificate::ref certificate);
 			void hide();

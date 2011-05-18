@@ -12,7 +12,7 @@ struct ClientOptions {
 		UseTLSWhenAvailable
 	};
 
-	ClientOptions() : useStreamCompression(true), useTLS(UseTLSWhenAvailable), useStreamResumption(false) {
+	ClientOptions() : useStreamCompression(true), useTLS(UseTLSWhenAvailable), useStreamResumption(false), forgetPassword(false) {
 	}
 
 	/**
@@ -35,5 +35,15 @@ struct ClientOptions {
 	 * Default: false
 	 */
 	bool useStreamResumption;
+
+	/**
+	 * Forget the password once it's used.
+	 * This makes the Client useless after the first login attempt.
+	 *
+	 * FIXME: This is a temporary workaround.
+	 *
+	 * Default: false
+	 */
+	bool forgetPassword;
 };
 

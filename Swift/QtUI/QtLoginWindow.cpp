@@ -197,6 +197,15 @@ QtLoginWindow::QtLoginWindow(UIEventStream* uiEventStream) : QMainWindow() {
 	this->show();
 }
 
+void QtLoginWindow::setRememberingAllowed(bool allowed) {
+	remember_->setEnabled(allowed);
+	loginAutomatically_->setEnabled(allowed);
+	if (!allowed) {
+		remember_->setChecked(false);
+		loginAutomatically_->setChecked(false);
+	}
+}
+
 bool QtLoginWindow::eventFilter(QObject *obj, QEvent *event) {
 	if (obj == username_->view() && event->type() == QEvent::KeyPress) {
 		QKeyEvent *keyEvent = static_cast<QKeyEvent*>(event);
@@ -304,6 +313,10 @@ void QtLoginWindow::setIsLoggingIn(bool loggingIn) {
 void QtLoginWindow::loginClicked() {
 	if (username_->isEnabled()) {
 		onLoginRequest(Q2PSTRING(username_->currentText()), Q2PSTRING(password_->text()), Q2PSTRING(certificateFile_), remember_->isChecked(), loginAutomatically_->isChecked());
+		if (!remember_->isEnabled()) { /* Mustn't remember logins */
+			username_->clearEditText();
+			password_->setText("");
+		}
 	} else {
 		onCancelLoginRequest();
 	}

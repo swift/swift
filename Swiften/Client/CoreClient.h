@@ -199,6 +199,7 @@ namespace Swift {
 			void handlePresenceReceived(boost::shared_ptr<Presence>);
 			void handleMessageReceived(boost::shared_ptr<Message>);
 			void handleStanzaAcked(boost::shared_ptr<Stanza>);
+			void purgePassword();
 
 		private:
 			JID jid_;

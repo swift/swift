@@ -81,7 +81,8 @@ namespace Swift {
 					Dock* dock,
 					Notifier* notifier,
 					URIHandler* uriHandler,
-					bool useDelayForLatency);
+					bool useDelayForLatency,
+					bool eagleMode);
 			~MainController();
 
 
@@ -111,6 +112,7 @@ namespace Swift {
 			void setManagersOffline();
 			void handleNotificationClicked(const JID& jid);
 			void handleForceQuit();
+			void purgeCachedCredentials();
 
 		private:
 			EventLoop* eventLoop_;
@@ -160,5 +162,6 @@ namespace Swift {
 			bool myStatusLooksOnline_;
 			bool quitRequested_;
 			static const int SecondsToWaitBeforeForceQuitting;
+			bool eagleMode_;
 	};
 }

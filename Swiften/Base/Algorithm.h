@@ -12,6 +12,7 @@
 #include <algorithm>
 
 namespace Swift {
+
 	/*
 	 * Generic erase()
 	 */

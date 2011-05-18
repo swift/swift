@@ -9,6 +9,10 @@
 #include <boost/bind.hpp>
 #include <boost/smart_ptr/make_shared.hpp>
 
+#include <Swiften/Base/IDGenerator.h>
+#include <Swiften/Base/Log.h>
+#include <Swiften/Base/foreach.h>
+#include <Swiften/Base/Algorithm.h>
 #include <Swiften/Client/ClientSession.h>
 #include <Swiften/TLS/PlatformTLSFactories.h>
 #include <Swiften/TLS/CertificateVerificationError.h>
@@ -17,10 +21,7 @@
 #include <Swiften/TLS/PKCS12Certificate.h>
 #include <Swiften/Session/BasicSessionStream.h>
 #include <Swiften/Queries/IQRouter.h>
-#include <Swiften/Base/IDGenerator.h>
 #include <Swiften/Client/ClientSessionStanzaChannel.h>
-#include <Swiften/Base/Log.h>
-#include <Swiften/Base/foreach.h>
 #include <Swiften/Network/PlatformProxyProvider.h>
 #include <Swiften/Network/SOCKS5ProxiedConnectionFactory.h>
 #include <Swiften/Network/HTTPConnectProxiedConnectionFactory.h>
@@ -50,6 +51,7 @@ CoreClient::~CoreClient() {
 	stanzaChannel_->onPresenceReceived.disconnect(boost::bind(&CoreClient::handlePresenceReceived, this, _1));
 	stanzaChannel_->onStanzaAcked.disconnect(boost::bind(&CoreClient::handleStanzaAcked, this, _1));
 	delete stanzaChannel_;
+	purgePassword();
 }
 
 void CoreClient::connect(const ClientOptions& o) {
@@ -88,6 +90,9 @@ void CoreClient::handleConnectorFinished(boost::shared_ptr<Connection> connectio
 	}
 
 	if (!connection) {
+		if (options.forgetPassword) {
+			purgePassword();
+		}
 		onDisconnected(disconnectRequested_ ? boost::optional<ClientError>() : boost::optional<ClientError>(ClientError::ConnectionError));
 	}
 	else {
@@ -121,6 +126,9 @@ void CoreClient::handleConnectorFinished(boost::shared_ptr<Connection> connectio
 }
 
 void CoreClient::disconnect() {
+	if (options.forgetPassword) {
+			purgePassword();
+		}
 	// FIXME: We should be able to do without this boolean. We just have to make sure we can tell the difference between
 	// connector finishing without a connection due to an error or because of a disconnect.
 	disconnectRequested_ = true;
@@ -137,6 +145,9 @@ void CoreClient::setCertificate(const std::string& certificate) {
 }
 
 void CoreClient::handleSessionFinished(boost::shared_ptr<Error> error) {
+	if (options.forgetPassword) {
+		purgePassword();
+	}
 	session_->onFinished.disconnect(boost::bind(&CoreClient::handleSessionFinished, this, _1));
 	session_->onNeedCredentials.disconnect(boost::bind(&CoreClient::handleNeedCredentials, this));
 
@@ -248,6 +259,9 @@ void CoreClient::handleSessionFinished(boost::shared_ptr<Error> error) {
 void CoreClient::handleNeedCredentials() {
 	assert(session_);
 	session_->sendCredentials(password_);
+	if (options.forgetPassword) {
+		purgePassword();
+	}
 }
 
 void CoreClient::handleDataRead(const std::string& data) {
@@ -316,6 +330,10 @@ const JID& CoreClient::getJID() const {
 	else {
 		return jid_;
 	}
+}
+
+void CoreClient::purgePassword() {
+	safeClear(password_);
 }
 
 }

@@ -14,6 +14,7 @@
 #include <stdlib.h>
 
 #include <Swiften/Base/format.h>
+#include <Swiften/Base/Algorithm.h>
 #include <Swift/Controllers/Intl.h>
 #include <Swift/Controllers/UIInterfaces/UIFactory.h>
 #include "Swiften/Network/TimerFactory.h"
@@ -86,7 +87,8 @@ MainController::MainController(
 		Dock* dock,
 		Notifier* notifier,
 		URIHandler* uriHandler,
-		bool useDelayForLatency) :
+		bool useDelayForLatency,
+		bool eagleMode) :
 			eventLoop_(eventLoop),
 			networkFactories_(networkFactories),
 			uiFactory_(uiFactories),
@@ -96,7 +98,8 @@ MainController::MainController(
 			settings_(settings),
 			uriHandler_(uriHandler),
 			loginWindow_(NULL) ,
-			useDelayForLatency_(useDelayForLatency) {
+			useDelayForLatency_(useDelayForLatency),
+			eagleMode_(eagleMode) {
 	storages_ = NULL;
 	certificateStorage_ = NULL;
 	statusTracker_ = NULL;
@@ -130,19 +133,25 @@ MainController::MainController(
 	bool loginAutomatically = settings_->getBoolSetting("loginAutomatically", false);
 	std::string cachedPassword;
 	std::string cachedCertificate;
-	foreach (std::string profile, settings->getAvailableProfiles()) {
-		ProfileSettingsProvider profileSettings(profile, settings);
-		std::string password = profileSettings.getStringSetting("pass");
-		std::string certificate = profileSettings.getStringSetting("certificate");
-		std::string jid = profileSettings.getStringSetting("jid");
-		loginWindow_->addAvailableAccount(jid, password, certificate);
-		if (jid == selectedLoginJID) {
-			cachedPassword = password;
-			cachedCertificate = certificate;
+	if (!eagleMode_) {
+		foreach (std::string profile, settings->getAvailableProfiles()) {
+			ProfileSettingsProvider profileSettings(profile, settings);
+			std::string password = eagleMode ? "" : profileSettings.getStringSetting("pass");
+			std::string certificate = profileSettings.getStringSetting("certificate");
+			std::string jid = profileSettings.getStringSetting("jid");
+			loginWindow_->addAvailableAccount(jid, password, certificate);
+			if (jid == selectedLoginJID) {
+				cachedPassword = password;
+				cachedCertificate = certificate;
+			}
 		}
+		loginWindow_->selectUser(selectedLoginJID);
+		loginWindow_->setLoginAutomatically(loginAutomatically);
+	} else {
+		loginWindow_->setRememberingAllowed(false);
 	}
-	loginWindow_->selectUser(selectedLoginJID);
-	loginWindow_->setLoginAutomatically(loginAutomatically);
+
+
 	loginWindow_->onLoginRequest.connect(boost::bind(&MainController::handleLoginRequest, this, _1, _2, _3, _4, _5));
 	loginWindow_->onPurgeSavedLoginRequest.connect(boost::bind(&MainController::handlePurgeSavedLoginRequest, this, _1));
 	loginWindow_->onCancelLoginRequest.connect(boost::bind(&MainController::handleCancelLoginRequest, this));
@@ -166,6 +175,7 @@ MainController::MainController(
 }
 
 MainController::~MainController() {
+	purgeCachedCredentials();
 	//setManagersOffline();
 	eventController_->disconnectAll();
 
@@ -180,7 +190,12 @@ MainController::~MainController() {
 	delete uiEventStream_;
 }
 
+void MainController::purgeCachedCredentials() {
+	safeClear(password_);
+}
+
 void MainController::resetClient() {
+	purgeCachedCredentials();
 	resetCurrentError();
 	resetPendingReconnects();
 	vCardPhotoHash_.clear();
@@ -243,6 +258,9 @@ void MainController::handleConnected() {
 	loginWindow_->setIsLoggingIn(false);
 	resetCurrentError();
 	resetPendingReconnects();
+	if (eagleMode_) {
+		purgeCachedCredentials();
+	}
 	bool freshLogin = rosterController_ == NULL;
 	myStatusLooksOnline_ = true;
 	if (freshLogin) {
@@ -370,12 +388,14 @@ void MainController::handleLoginRequest(const std::string &username, const std::
 		loginWindow_->setMessage("");
 		loginWindow_->setIsLoggingIn(true);
 		profileSettings_ = new ProfileSettingsProvider(username, settings_);
-		profileSettings_->storeString("jid", username);
-		profileSettings_->storeString("certificate", certificateFile);
-		profileSettings_->storeString("pass", (remember || loginAutomatically) ? password : "");
-		settings_->storeString("lastLoginJID", username);
-		settings_->storeBool("loginAutomatically", loginAutomatically);
-		loginWindow_->addAvailableAccount(profileSettings_->getStringSetting("jid"), profileSettings_->getStringSetting("pass"), profileSettings_->getStringSetting("certificate"));
+		if (!eagleMode_) {
+			profileSettings_->storeString("jid", username);
+			profileSettings_->storeString("certificate", certificateFile);
+			profileSettings_->storeString("pass", (remember || loginAutomatically) ? password : "");
+			settings_->storeString("lastLoginJID", username);
+			settings_->storeBool("loginAutomatically", loginAutomatically);
+			loginWindow_->addAvailableAccount(profileSettings_->getStringSetting("jid"), profileSettings_->getStringSetting("pass"), profileSettings_->getStringSetting("certificate"));
+		}
 
 		password_ = password;
 		certificateFile_ = certificateFile;
@@ -389,6 +409,10 @@ void MainController::handlePurgeSavedLoginRequest(const std::string& username) {
 }
 
 void MainController::performLoginFromCachedCredentials() {
+	if (eagleMode_ && password_.empty()) {
+		/* Then we can't try to login again. */
+		return;
+	}
 	/* If we logged in with a bare JID, and we have a full bound JID, re-login with the
 	 * bound JID to try and keep dynamically assigned resources */
 	JID clientJID = jid_;
@@ -434,11 +458,15 @@ void MainController::performLoginFromCachedCredentials() {
 	if (rosterController_) {
 		rosterController_->getWindow()->setConnecting();
 	}
-
-	client_->connect();
+	ClientOptions clientOptions;
+	clientOptions.forgetPassword = eagleMode_;
+	client_->connect(clientOptions);
 }
 
 void MainController::handleDisconnected(const boost::optional<ClientError>& error) {
+	if (eagleMode_) {
+		purgeCachedCredentials();
+	}
 	if (quitRequested_) {
 		resetClient();
 		loginWindow_->quit();
@@ -498,15 +526,19 @@ void MainController::handleDisconnected(const boost::optional<ClientError>& erro
 			loginWindow_->setIsLoggingIn(false);
 		} else {
 			logout();
-			setReconnectTimer();
-			if (lastDisconnectError_) {
-				message = str(format(QT_TRANSLATE_NOOP("", "Reconnect to %1% failed: %2%. Will retry in %3% seconds.")) % jid_.getDomain() % message % boost::lexical_cast<std::string>(timeBeforeNextReconnect_));
-				lastDisconnectError_->conclude();
+			if (eagleMode_) {
+				message = str(format(QT_TRANSLATE_NOOP("", "Disconnected from %1%: %2%. To reconnect, Sign Out and provide your password again.")) % jid_.getDomain() % message);
 			} else {
-				message = str(format(QT_TRANSLATE_NOOP("", "Disconnected from %1%: %2%.")) % jid_.getDomain() % message);
+				setReconnectTimer();
+				if (lastDisconnectError_) {
+					message = str(format(QT_TRANSLATE_NOOP("", "Reconnect to %1% failed: %2%. Will retry in %3% seconds.")) % jid_.getDomain() % message % boost::lexical_cast<std::string>(timeBeforeNextReconnect_));
+					lastDisconnectError_->conclude();
+				} else {
+					message = str(format(QT_TRANSLATE_NOOP("", "Disconnected from %1%: %2%.")) % jid_.getDomain() % message);
+				}
+				lastDisconnectError_ = boost::shared_ptr<ErrorEvent>(new ErrorEvent(JID(jid_.getDomain()), message));
+				eventController_->handleIncomingEvent(lastDisconnectError_);
 			}
-			lastDisconnectError_ = boost::shared_ptr<ErrorEvent>(new ErrorEvent(JID(jid_.getDomain()), message));
-			eventController_->handleIncomingEvent(lastDisconnectError_);
 		}
 	}
 	else if (!rosterController_) { //hasn't been logged in yet
@@ -533,6 +565,9 @@ void MainController::handleCancelLoginRequest() {
 }
 
 void MainController::signOut() {
+	if (eagleMode_) {
+		purgeCachedCredentials();
+	}
 	eventController_->clear();
 	logout();
 	loginWindow_->loggedOut();
@@ -540,6 +575,9 @@ void MainController::signOut() {
 }
 
 void MainController::logout() {
+	if (eagleMode_) {
+		purgeCachedCredentials();
+	}
 	systemTrayController_->setMyStatusType(StatusShow::None);
 	if (clientInitialized_ /*&& client_->isAvailable()*/) {
 		client_->disconnect();

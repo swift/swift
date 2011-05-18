@@ -27,6 +27,8 @@ namespace Swift {
 			boost::signal<void (const std::string&, const std::string&, const std::string& /* certificateFile */, bool /* remember password*/, bool /* login automatically */)> onLoginRequest;
 			virtual void setLoginAutomatically(bool loginAutomatically) = 0;
 			virtual void quit() = 0;
+			/** Disable any GUI elements that suggest saving of passwords. */
+			virtual void setRememberingAllowed(bool allowed) = 0;
 			/** Blocking request whether a cert should be permanently trusted.*/
 			virtual bool askUserToTrustCertificatePermanently(const std::string& message, Certificate::ref) = 0;
 

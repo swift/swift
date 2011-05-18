@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Kevin Smith
+ * Copyright (c) 2010-2011 Kevin Smith
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -73,6 +73,7 @@ po::options_description QtSwift::getOptionsDescription() {
 		("latency-debug", "use latency debugging (unsupported)")
 		("multi-account", po::value<int>()->default_value(1), "number of accounts to open windows for (unsupported)")
 		("start-minimized", "don't show the login/roster window at startup")
+		("eagle-mode", "Settings more suitable for military/secure deployments")
 		;
 	return result;
 }
@@ -103,6 +104,7 @@ QtSwift::QtSwift(const po::variables_map& options) : networkFactories_(&clientMa
 
 	tabs_ = options.count("no-tabs") && !(splitter_ > 0) ? NULL : new QtChatTabs();
 	bool startMinimized = options.count("start-minimized") > 0;
+	bool eagleMode = options.count("eagle-mode") > 0;
 	settings_ = new QtSettingsProvider();
 	applicationPathProvider_ = new PlatformApplicationPathProvider(SWIFT_APPLICATION_NAME);
 	storagesFactory_ = new FileStoragesFactory(applicationPathProvider_->getDataDir());
@@ -162,7 +164,8 @@ QtSwift::QtSwift(const po::variables_map& options) : networkFactories_(&clientMa
 				dock_,
 				notifier_,
 				uriHandler_,
-				options.count("latency-debug") > 0);
+				options.count("latency-debug") > 0,
+				eagleMode);
 		mainControllers_.push_back(mainController);
 	}
 
