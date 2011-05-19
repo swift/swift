@@ -372,6 +372,8 @@ if env["SCONS_STAGE"] == "build" :
 			if not file.endswith(".h") :
 				continue
 			include = relpath(os.path.join(root, file), top_path)
+			if swiften_env["PLATFORM"] == "win32" :
+				include = include.replace("\\", "/")
 			swiften_includes.append(include)
 			# Private modules
 			if root.endswith("Config") or root.endswith("Compress") :
