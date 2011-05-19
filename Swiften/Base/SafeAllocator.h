@@ -23,7 +23,7 @@ namespace Swift {
 			~SafeAllocator() throw() {}
 
 			void deallocate (T* p, size_t num) {
-				std::fill(p, p + num, 0);
+				std::fill(reinterpret_cast<char*>(p), reinterpret_cast<char*>(p + num), 0);
 				std::allocator<T>::deallocate(p, num);
 			}
 	};
