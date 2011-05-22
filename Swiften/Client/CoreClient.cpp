@@ -51,7 +51,6 @@ CoreClient::~CoreClient() {
 	stanzaChannel_->onPresenceReceived.disconnect(boost::bind(&CoreClient::handlePresenceReceived, this, _1));
 	stanzaChannel_->onStanzaAcked.disconnect(boost::bind(&CoreClient::handleStanzaAcked, this, _1));
 	delete stanzaChannel_;
-	purgePassword();
 }
 
 void CoreClient::connect(const ClientOptions& o) {
@@ -126,9 +125,6 @@ void CoreClient::handleConnectorFinished(boost::shared_ptr<Connection> connectio
 }
 
 void CoreClient::disconnect() {
-	if (options.forgetPassword) {
-			purgePassword();
-		}
 	// FIXME: We should be able to do without this boolean. We just have to make sure we can tell the difference between
 	// connector finishing without a connection due to an error or because of a disconnect.
 	disconnectRequested_ = true;
