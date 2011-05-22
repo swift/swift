@@ -219,7 +219,7 @@ std::string JID::getEscapedNode(const std::string& node) {
 		else if (*i == '\\') {
 			// Check if we have an escaped dissalowed character sequence
 			std::string::const_iterator innerBegin = i + 1;
-			if (innerBegin != result.end() && innerBegin + 1 != result.end()) {
+			if (innerBegin != node.end() && innerBegin + 1 != node.end()) {
 				std::string::const_iterator innerEnd = innerBegin + 2;
 				unsigned char value;
 				if (getEscapeSequenceValue(std::string(innerBegin, innerEnd), value)) {

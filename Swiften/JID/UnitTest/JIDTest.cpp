@@ -53,6 +53,7 @@ class JIDTest : public CppUnit::TestFixture
 		CPPUNIT_TEST(testHasResource_NoResource);
 		CPPUNIT_TEST(testGetEscapedNode);
 		CPPUNIT_TEST(testGetEscapedNode_XEP106Examples);
+		CPPUNIT_TEST(testGetEscapedNode_BackslashAtEnd);
 		CPPUNIT_TEST(testGetUnescapedNode);
 		CPPUNIT_TEST(testGetUnescapedNode_XEP106Examples);
 		CPPUNIT_TEST_SUITE_END();
@@ -340,6 +341,10 @@ class JIDTest : public CppUnit::TestFixture
 			CPPUNIT_ASSERT_EQUAL(JID::getEscapedNode("c:\\\\net"), std::string("c\\3a\\\\net"));
 			CPPUNIT_ASSERT_EQUAL(JID::getEscapedNode("c:\\cool stuff"), std::string("c\\3a\\cool\\20stuff"));
 			CPPUNIT_ASSERT_EQUAL(JID::getEscapedNode("c:\\5commas"), std::string("c\\3a\\5c5commas"));
+		}
+
+		void testGetEscapedNode_BackslashAtEnd() {
+			CPPUNIT_ASSERT_EQUAL(std::string("foo\\"), JID::getEscapedNode("foo\\"));
 		}
 
 		void testGetUnescapedNode() {
