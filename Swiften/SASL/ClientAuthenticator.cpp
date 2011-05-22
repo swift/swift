@@ -6,15 +6,12 @@
 
 #include <Swiften/SASL/ClientAuthenticator.h>
 
-#include <Swiften/Base/Algorithm.h>
-
 namespace Swift {
 
 ClientAuthenticator::ClientAuthenticator(const std::string& name) : name(name) {
 }
 
 ClientAuthenticator::~ClientAuthenticator() {
-	safeClear(password);
 }
 
 }
