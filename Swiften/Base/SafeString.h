@@ -59,6 +59,10 @@ namespace Swift {
 				return data.size();
 			}
 
+			void clear() {
+				data.clear();
+			}
+
 			bool operator==(const SafeString& o) const {
 				return data == o.data;
 			}
