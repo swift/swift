@@ -86,5 +86,6 @@ namespace Swift {
 			QAction* toggleNotificationsAction_;
 			UIEventStream* uiEventStream_;
 			QPointer<QtAboutWidget> aboutDialog_;
+			bool forgetful_;
 	};
 }

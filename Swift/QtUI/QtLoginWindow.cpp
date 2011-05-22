@@ -39,7 +39,7 @@
 
 namespace Swift{
 
-QtLoginWindow::QtLoginWindow(UIEventStream* uiEventStream) : QMainWindow() {
+QtLoginWindow::QtLoginWindow(UIEventStream* uiEventStream) : QMainWindow(), forgetful_(false) {
 	uiEventStream_ = uiEventStream;
 
 	setWindowTitle("Swift");
@@ -198,6 +198,7 @@ QtLoginWindow::QtLoginWindow(UIEventStream* uiEventStream) : QMainWindow() {
 }
 
 void QtLoginWindow::setRememberingAllowed(bool allowed) {
+	forgetful_ = true;
 	remember_->setEnabled(allowed);
 	loginAutomatically_->setEnabled(allowed);
 	if (!allowed) {
@@ -313,7 +314,7 @@ void QtLoginWindow::setIsLoggingIn(bool loggingIn) {
 void QtLoginWindow::loginClicked() {
 	if (username_->isEnabled()) {
 		onLoginRequest(Q2PSTRING(username_->currentText()), Q2PSTRING(password_->text()), Q2PSTRING(certificateFile_), remember_->isChecked(), loginAutomatically_->isChecked());
-		if (!remember_->isEnabled()) { /* Mustn't remember logins */
+		if (forgetful_) { /* Mustn't remember logins */
 			username_->clearEditText();
 			password_->setText("");
 		}
