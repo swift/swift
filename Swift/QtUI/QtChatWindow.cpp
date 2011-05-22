@@ -138,6 +138,8 @@ void QtChatWindow::handleKeyPressEvent(QKeyEvent* event) {
 		beginCorrection();
 	} else if (key == Qt::Key_Down && isCorrection_ && input_->textCursor().atBlockEnd()) {
 		cancelCorrection();
+	} else if (key == Qt::Key_Down || key == Qt::Key_Up) {
+		/* Drop */
 	} else {
 		messageLog_->handleKeyPressEvent(event);
 	}
