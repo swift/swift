@@ -66,7 +66,6 @@ namespace Swift {
 			boost::signal<void ()> onSendCorrectionMessageRequest;
 			boost::signal<void ()> onUserTyping;
 			boost::signal<void ()> onUserCancelsTyping;
-			boost::signal<void (bool correction)> onSendMessageCorrection;
 	};
 }
 #endif
