@@ -37,6 +37,7 @@ if env["SCONS_STAGE"] == "build" :
 			"Roster/GroupRosterItem.cpp",
 			"Roster/RosterItem.cpp",
 			"Roster/Roster.cpp",
+			"Roster/TableRoster.cpp",
 			"EventWindowController.cpp",
 			"SoundEventController.cpp",
 			"SystemTrayController.cpp",
