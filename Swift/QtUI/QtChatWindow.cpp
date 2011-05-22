@@ -381,7 +381,7 @@ void QtChatWindow::addErrorMessage(const std::string& errorMessage) {
 
 	QString errorMessageHTML(Qt::escape(P2QSTRING(errorMessage)));
 	errorMessageHTML.replace("\n","<br/>");
-	messageLog_->addMessage(boost::shared_ptr<ChatSnippet>(new SystemMessageSnippet(QString("<span class=\"error\">" + tr("Couldn't send message: %1") + "</span>").arg(errorMessageHTML), QDateTime::currentDateTime(), false, theme_)));
+	messageLog_->addMessage(boost::shared_ptr<ChatSnippet>(new SystemMessageSnippet("<span class=\"error\">" + errorMessageHTML + "</span>", QDateTime::currentDateTime(), false, theme_)));
 
 	previousMessageWasSelf_ = false;
 	previousMessageWasSystem_ = true;

@@ -158,7 +158,7 @@ void ChatControllerBase::handleIncomingMessage(boost::shared_ptr<MessageEvent> m
 	boost::shared_ptr<Message> message = messageEvent->getStanza();
 	std::string body = message->getBody();
 	if (message->isError()) {
-		std::string errorMessage = getErrorMessage(message->getPayload<ErrorPayload>());
+		std::string errorMessage = str(format(QT_TRANSLATE_NOOP("", "Couldn't send message: %1")) % getErrorMessage(message->getPayload<ErrorPayload>()));
 		chatWindow_->addErrorMessage(errorMessage);
 	}
 	else {
