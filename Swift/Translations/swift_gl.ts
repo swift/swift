@@ -1596,7 +1596,7 @@ Se escolles pospoñer esta escolla, preguntaráseche de novo na vindeira conexi�
     <message>
         <location filename="../QtUI/UserSearch/QtUserSearchDetailsPage.cpp" line="17"/>
         <source>Please choose a name for the contact, and select the groups you want to add the contact to.</source>
-        <translation>Por favor, escolla un nome para o contacto, e selecciona os grupos aos que desexas engadilo.</translation>
+        <translation>Escolle un nome para o contacto, e seleccione os grupos aos que desexas engadilo.</translation>
     </message>
 </context>
 <context>
