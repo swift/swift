@@ -24,6 +24,8 @@
 #include <Swiften/JID/JID.h>
 #include <Swiften/IDN/StringPrep.h>
 
+using namespace Swift;
+
 #ifdef SWIFTEN_CACHE_JID_PREP
 typedef boost::unordered_map<std::string, std::string> PrepCache;
 
@@ -35,9 +37,7 @@ static PrepCache resourcePrepCache;
 static const std::list<char> escapedChars = boost::assign::list_of(' ')('"')('&')('\'')('/')('<')('>')('@')(':');
 
 static std::string getEscaped(char c) {
-	std::ostringstream s;
-	s << '\\' << std::hex << static_cast<int>(c);
-	return s.str();
+	return makeString() << '\\' << std::hex << static_cast<int>(c);
 }
 
 static bool getEscapeSequenceValue(const std::string& sequence, unsigned char& value) {
@@ -109,8 +109,6 @@ struct EscapedCharacterFormatter {
 	}
 };
 #endif
-
-using namespace Swift;
 
 JID::JID(const char* jid) {
 	initializeFromString(std::string(jid));
