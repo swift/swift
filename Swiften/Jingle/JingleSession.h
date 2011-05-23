@@ -27,7 +27,7 @@ namespace Swift {
 				return initiator;
 			}
 
-			std::string getID() const {
+			const std::string& getID() const {
 				return id;
 			}
 
