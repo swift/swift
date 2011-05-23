@@ -37,7 +37,7 @@ namespace Swift {
 				return JingleContent::ref();
 			}
 
-			const std::vector<JingleContent::ref> getContents() const {
+			const std::vector<JingleContent::ref>& getContents() const {
 				return contents;
 			}
 

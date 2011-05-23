@@ -90,7 +90,7 @@ namespace Swift {
 				extensions_.push_back(form);
 			}
 
-			const std::vector<Form::ref> getExtensions() const {
+			const std::vector<Form::ref>& getExtensions() const {
 				return extensions_;
 			}
 
