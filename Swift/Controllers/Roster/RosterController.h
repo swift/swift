@@ -57,7 +57,7 @@ namespace Swift {
 			void handleOnJIDAdded(const JID &jid);
 			void handleRosterCleared();
 			void handleOnJIDRemoved(const JID &jid);
-			void handleOnJIDUpdated(const JID &jid, const std::string& oldName, const std::vector<std::string> oldGroups);
+			void handleOnJIDUpdated(const JID &jid, const std::string& oldName, const std::vector<std::string>& oldGroups);
 			void handleStartChatRequest(const JID& contact);
 			void handleChangeStatusRequest(StatusShow::Type show, const std::string &statusText);
 			void handleShowOfflineToggled(bool state);

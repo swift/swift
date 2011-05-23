@@ -102,7 +102,7 @@ namespace Swift {
 				this->contents.push_back(content);
 			}
 
-			const std::vector<JingleContentPayload::ref> getContents() const {
+			const std::vector<JingleContentPayload::ref>& getContents() const {
 				return contents;
 			}
 

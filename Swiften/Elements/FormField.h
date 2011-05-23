@@ -48,7 +48,7 @@ namespace Swift {
 				return options;
 			}
 
-			const std::vector<std::string> getRawValues() const {
+			const std::vector<std::string>& getRawValues() const {
 				return rawValues;
 			}
 

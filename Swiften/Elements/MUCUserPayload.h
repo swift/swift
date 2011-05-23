@@ -52,9 +52,9 @@ namespace Swift {
 		
 			void addStatusCode(StatusCode code) {statusCodes_.push_back(code);}
 
-			const std::vector<Item> getItems() const {return items_;}
+			const std::vector<Item>& getItems() const {return items_;}
 
-			const std::vector<StatusCode> getStatusCodes() const {return statusCodes_;}
+			const std::vector<StatusCode>& getStatusCodes() const {return statusCodes_;}
 
 		private:
 			std::vector<Item> items_;

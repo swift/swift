@@ -74,7 +74,7 @@ namespace Swift {
 				this->email = v;
 			}
 
-			const std::vector<Item> getItems() const {
+			const std::vector<Item>& getItems() const {
 				return items;
 			}
 

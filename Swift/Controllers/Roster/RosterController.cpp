@@ -142,7 +142,7 @@ void RosterController::handleOnJIDRemoved(const JID& jid) {
 	roster_->removeContact(jid);
 }
 
-void RosterController::handleOnJIDUpdated(const JID& jid, const std::string& oldName, const std::vector<std::string> passedOldGroups) {
+void RosterController::handleOnJIDUpdated(const JID& jid, const std::string& oldName, const std::vector<std::string>& passedOldGroups) {
 	if (oldName != xmppRoster_->getNameForJID(jid)) {
 		roster_->applyOnItems(SetName(nickResolver_->jidToNick(jid), jid));
 	}
