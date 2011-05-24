@@ -3,6 +3,7 @@
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
+#include <QA/Checker/IO.h>
 
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/extensions/TestFactoryRegistry.h>
@@ -12,7 +13,6 @@
 #include <boost/smart_ptr/make_shared.hpp>
 #include <boost/shared_ptr.hpp>
 
-#include <QA/Checker/IO.h>
 #include <Swiften/Base/Algorithm.h>
 #include <Swiften/Network/Connection.h>
 #include <Swiften/Network/ConnectionFactory.h>

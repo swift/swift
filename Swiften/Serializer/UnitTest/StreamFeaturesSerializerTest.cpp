@@ -3,13 +3,13 @@
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
+#include <QA/Checker/IO.h>
 
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/extensions/TestFactoryRegistry.h>
 
 #include <Swiften/Serializer/StreamFeaturesSerializer.h>
 #include <Swiften/Elements/StreamFeatures.h>
-#include <QA/Checker/IO.h>
 
 
 using namespace Swift;

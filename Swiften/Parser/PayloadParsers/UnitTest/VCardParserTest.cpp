@@ -5,11 +5,11 @@
  */
 
 #include <Swiften/Base/ByteArray.h>
+#include <QA/Checker/IO.h>
 
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/extensions/TestFactoryRegistry.h>
 
-#include <QA/Checker/IO.h>
 #include <Swiften/Parser/PayloadParsers/VCardParser.h>
 #include <Swiften/Parser/PayloadParsers/UnitTest/PayloadsParserTester.h>
 

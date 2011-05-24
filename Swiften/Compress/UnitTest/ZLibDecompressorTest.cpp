@@ -5,11 +5,11 @@
  */
 
 #include <Swiften/Base/ByteArray.h>
+#include <QA/Checker/IO.h>
 
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/extensions/TestFactoryRegistry.h>
 
-#include <QA/Checker/IO.h>
 #include <Swiften/Compress/ZLibDecompressor.h>
 #include <Swiften/Compress/ZLibCompressor.h>
 #include <Swiften/Compress/ZLibException.h>

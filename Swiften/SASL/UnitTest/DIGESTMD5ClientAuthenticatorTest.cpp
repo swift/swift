@@ -4,12 +4,13 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
+#include <QA/Checker/IO.h>
+
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/extensions/TestFactoryRegistry.h>
 
 #include <Swiften/SASL/DIGESTMD5ClientAuthenticator.h>
 #include <Swiften/Base/ByteArray.h>
-#include <QA/Checker/IO.h>
 
 using namespace Swift;
 

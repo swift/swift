@@ -5,6 +5,7 @@
  */
 
 #include <Swiften/Base/ByteArray.h>
+#include <QA/Checker/IO.h>
 
 #include <vector>
 #include <boost/bind.hpp>
@@ -12,7 +13,6 @@
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/extensions/TestFactoryRegistry.h>
 
-#include <QA/Checker/IO.h>
 #include <Swiften/Base/ByteArray.h>
 #include <Swiften/Base/Concat.h>
 #include <Swiften/StreamStack/StreamStack.h>
