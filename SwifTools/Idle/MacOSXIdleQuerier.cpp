@@ -26,6 +26,7 @@ int MacOSXIdleQuerier::getIdleTimeSeconds() {
 	uint64_t idle = 0;
 	bool result = CFNumberGetValue((CFNumberRef)property, kCFNumberSInt64Type, &idle);
 	assert(result);
+	(void) result;
 	CFRelease(property);
 	return idle / 1000000000;
 }

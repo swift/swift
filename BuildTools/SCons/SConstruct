@@ -19,6 +19,7 @@ vars.Add(EnumVariable("test", "Compile and run tests", "none", ["none", "all", "
 vars.Add(BoolVariable("optimize", "Compile with optimizations turned on", "no"))
 vars.Add(BoolVariable("debug", "Compile with debug information", "yes"))
 vars.Add(BoolVariable("allow_warnings", "Allow compilation warnings during compilation", "yes"))
+vars.Add(BoolVariable("assertions", "Compile with assertions", "yes"))
 vars.Add(BoolVariable("max_jobs", "Build with maximum number of parallel jobs", "no"))
 vars.Add(EnumVariable("target", "Choose a target platform for compilation", "native", ["native", "iphone-simulator", "iphone-device", "xcode"]))
 vars.Add(BoolVariable("swift_mobile", "Build mobile Swift", "no"))
@@ -166,6 +167,9 @@ if env.get("mac105", 0) :
 			"-isysroot", "/Developer/SDKs/MacOSX10.5.sdk", 
 			"-arch", "i386"])
 	env.Append(FRAMEWORKS = ["Security"])
+
+if not env["assertions"] :
+	env.Append(CPPDEFINES = ["NDEBUG"])
 
 # If we build shared libs on AMD64, we need -fPIC.
 # This should have no performance impact om AMD64

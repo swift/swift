@@ -23,6 +23,7 @@ BonjourQuerier::BonjourQuerier(EventLoop* eventLoop) : eventLoop(eventLoop), sto
 	int fds[2];
 	int result = pipe(fds);
 	assert(result == 0);
+	(void) result;
 	interruptSelectReadSocket = fds[0];
 	fcntl(interruptSelectReadSocket, F_SETFL, fcntl(interruptSelectReadSocket, F_GETFL)|O_NONBLOCK);
 	interruptSelectWriteSocket = fds[1];
