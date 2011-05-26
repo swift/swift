@@ -9,6 +9,7 @@
 #include <boost/shared_ptr.hpp>
 
 #include <Swiften/Base/boost_bsignals.h>
+#include <Swiften/FileTransfer/FileTransfer.h>
 
 namespace Swift {
 	class JingleTransport {
@@ -21,5 +22,6 @@ namespace Swift {
 			virtual void stop() = 0;
 
 			boost::signal<void (const std::vector<unsigned char>&)> onDataReceived;
+			boost::signal<void (boost::optional<FileTransferError>)> onFinished;
 	};
 }

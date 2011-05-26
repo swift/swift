@@ -7,7 +7,7 @@
 #pragma once
 
 #include <boost/shared_ptr.hpp>
-#include <boost/optional.hpp>
+#include <vector>
 
 #include <Swiften/Elements/JingleDescription.h>
 #include <Swiften/Elements/StreamInitiationFileInfo.h>
@@ -17,15 +17,25 @@ namespace Swift {
 		public:
 			typedef boost::shared_ptr<JingleFileTransferDescription> ref;
 
-			void setOffer(const StreamInitiationFileInfo& offer) {
-				this->offer = offer;
+			void addOffer(const StreamInitiationFileInfo& offer) {
+				offers.push_back(offer);
 			}
+			
 
-			const boost::optional<StreamInitiationFileInfo>& getOffer() const {
-				return offer;
+			const std::vector<StreamInitiationFileInfo>& getOffers() const {
+				return offers;
+			}
+			
+			void addRequest(const StreamInitiationFileInfo& request) {
+				reqeusts.push_back(request);
+			}
+			
+			const std::vector<StreamInitiationFileInfo>& getRequests() const {
+				return reqeusts;
 			}
 
 		private:
-			boost::optional<StreamInitiationFileInfo> offer;
+			std::vector<StreamInitiationFileInfo> offers;
+			std::vector<StreamInitiationFileInfo> reqeusts;
 	};
 }

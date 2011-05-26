@@ -9,10 +9,12 @@
 #include <QContextMenuEvent>
 #include <QMenu>
 #include <QInputDialog>
+#include <QFileDialog>
 
 #include "Swift/Controllers/UIEvents/RequestContactEditorUIEvent.h"
 #include "Swift/Controllers/UIEvents/RemoveRosterItemUIEvent.h"
 #include "Swift/Controllers/UIEvents/RenameGroupUIEvent.h"
+#include "Swift/Controllers/UIEvents/SendFileUIEvent.h"
 #include "QtContactEditWindow.h"
 #include "Swift/Controllers/Roster/ContactRosterItem.h"
 #include "Swift/Controllers/Roster/GroupRosterItem.h"
@@ -54,6 +56,10 @@ void QtRosterWidget::contextMenuEvent(QContextMenuEvent* event) {
 	if (ContactRosterItem* contact = dynamic_cast<ContactRosterItem*>(item)) {
 		QAction* editContact = contextMenu.addAction(tr("Edit"));
 		QAction* removeContact = contextMenu.addAction(tr("Remove"));
+		QAction* sendFile = NULL;
+		if (contact->supportsFeature(ContactRosterItem::FileTransferFeature)) {
+			sendFile = contextMenu.addAction(tr("Send File"));
+		}
 		QAction* result = contextMenu.exec(event->globalPos());
 		if (result == editContact) {
 			eventStream_->send(boost::make_shared<RequestContactEditorUIEvent>(contact->getJID()));
@@ -61,6 +67,12 @@ void QtRosterWidget::contextMenuEvent(QContextMenuEvent* event) {
 		else if (result == removeContact) {
 			if (QtContactEditWindow::confirmContactDeletion(contact->getJID())) {
 				eventStream_->send(boost::make_shared<RemoveRosterItemUIEvent>(contact->getJID()));
+			}
+		}
+		else if (result == sendFile) {
+			QString fileName = QFileDialog::getOpenFileName(this, tr("Send File"), "", tr("All Files (*);;"));
+			if (!fileName.isEmpty()) {
+				eventStream_->send(boost::make_shared<SendFileUIEvent>(contact->getJID(), fileName.toStdString()));
 			}
 		}
 	}

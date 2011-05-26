@@ -15,6 +15,14 @@ namespace Swift {
 		public:
 			JingleContentID(const std::string& name, JingleContentPayload::Creator creator) : name(name), creator(creator) {
 			}
+			
+			const std::string getName() const {
+				return this->name;
+			}
+			
+			JingleContentPayload::Creator getCreator() const {
+				return this->creator;
+			}
 
 		private:
 			std::string name;

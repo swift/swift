@@ -18,6 +18,8 @@
 #include <QMessageBox>
 #include <QApplication>
 
+#include <Swiften/Base/Log.h>
+
 #include "QtWebView.h"
 #include "QtChatTheme.h"
 
@@ -47,9 +49,11 @@ QtChatView::QtChatView(QtChatTheme* theme, QWidget* parent) : QWidget(parent), f
 #else
 	mainLayout->addWidget(webView_);
 #endif
+	setAcceptDrops(true);
 
 	webPage_ = new QWebPage(this);
 	webPage_->setLinkDelegationPolicy(QWebPage::DelegateAllLinks);
+	webPage_->settings()->setAttribute(QWebSettings::DeveloperExtrasEnabled, true);
 	webView_->setPage(webPage_);
 	connect(webPage_, SIGNAL(selectionChanged()), SLOT(copySelectionToClipboard()));
 
@@ -149,6 +153,10 @@ void QtChatView::replaceLastMessage(const QString& newMessage, const QString& no
 
 QString QtChatView::getLastSentMessage() {
 	return lastElement_.toPlainText();
+}
+
+void QtChatView::addToJSEnvironment(const QString& name, QObject* obj) {
+	webView_->page()->currentFrame()->addToJavaScriptWindowObject(name, obj);
 }
 
 void QtChatView::replaceMessage(const QString& newMessage, const QString& id, const QDateTime& editTime) {
@@ -261,6 +269,71 @@ void QtChatView::resetView() {
 	Q_ASSERT(!newInsertPoint_.isNull());
 
 	connect(webPage_->mainFrame(), SIGNAL(contentsSizeChanged(const QSize&)), this, SLOT(handleFrameSizeChanged()), Qt::UniqueConnection);
+}
+
+QWebElement findDivElementWithID(QWebElement document, QString id) {
+	QWebElementCollection divs = document.findAll("div");
+	foreach(QWebElement div, divs) {
+		if (div.attribute("id") == id) {
+			return div;
+		}
+	}
+	return QWebElement();
+}
+
+void QtChatView::setFileTransferProgress(QString id, const int percentageDone) {
+	QWebElement ftElement = findDivElementWithID(document_, id);
+	if (ftElement.isNull()) {
+		SWIFT_LOG(debug) << "Tried to access FT UI via invalid id!" << std::endl;
+		return;
+	}
+	QWebElement progressBar = ftElement.findFirst("div.progressbar");
+	progressBar.setStyleProperty("width", QString::number(percentageDone) + "%");
+
+	QWebElement progressBarValue = ftElement.findFirst("div.progressbar-value");
+	progressBarValue.setInnerXml(QString::number(percentageDone) + " %");
+}
+
+void QtChatView::setFileTransferStatus(QString id, const ChatWindow::FileTransferState state, const QString& /* msg */) {
+	QWebElement ftElement = findDivElementWithID(document_, id);
+	if (ftElement.isNull()) {
+		SWIFT_LOG(debug) << "Tried to access FT UI via invalid id! id = " << id.toStdString() << std::endl;
+		return;
+	}
+
+	QString newInnerHTML = "";
+	if (state == ChatWindow::WaitingForAccept) {
+		newInnerHTML =	"Waiting for other side to accept the transfer.<br/>"
+						"<input id=\"discard\" type=\"submit\" value=\"Cancel\" onclick=\"filetransfer.cancel(\'" + id + "\');\">";
+	}
+	if (state == ChatWindow::Negotiating) {
+		// replace with text "Negotiaging" + Cancel button
+		newInnerHTML =	"Negotiating...<br/>"
+						"<input id=\"discard\" type=\"submit\" value=\"Cancel\" onclick=\"filetransfer.cancel(\'" + id + "\');\">";
+	}
+	else if (state == ChatWindow::Transferring) {
+		// progress bar + Cancel Button
+		newInnerHTML =	"<div style=\"position: relative; width: 90%; height: 20px; border: 2px solid grey; -webkit-border-radius: 10px;\">"
+							"<div class=\"progressbar\" style=\"width: 0%; height: 100%; background: #AAA; -webkit-border-radius: 6px;\">"
+								"<div class=\"progressbar-value\" style=\"position: absolute; top: 0px; left: 0px; width: 100%; text-align: center; padding-top: 2px;\">"
+									"0%"
+								"</div>"
+							"</div>"
+						"</div>"
+						"<input id=\"discard\" type=\"submit\" value=\"Cancel\" onclick=\"filetransfer.cancel(\'" + id + "\');\">";
+	}
+	else if (state == ChatWindow::Canceled) {
+		newInnerHTML = "Transfer has been canceled!";
+	}
+	else if (state == ChatWindow::Finished) {
+		// text "Successful transfer"
+		newInnerHTML = "Transfer completed successfully.";
+	}
+	else if (state == ChatWindow::FTFailed) {
+		newInnerHTML = "Transfer failed.";
+	}
+
+	ftElement.setInnerXml(newInnerHTML);
 }
 
 }

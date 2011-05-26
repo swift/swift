@@ -23,6 +23,11 @@ namespace Swift {
 			static const std::string JabberSearchFeature;
 			static const std::string CommandsFeature;
 			static const std::string MessageCorrectionFeature;
+			static const std::string JingleFeature;
+			static const std::string JingleFTFeature;
+			static const std::string JingleTransportsIBBFeature;
+			static const std::string JingleTransportsS5BFeature;
+			static const std::string Bytestream;
 
 			class Identity {
 				public:

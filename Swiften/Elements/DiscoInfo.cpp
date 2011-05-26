@@ -16,7 +16,11 @@ const std::string DiscoInfo::SecurityLabelsCatalogFeature = std::string("urn:xmp
 const std::string DiscoInfo::JabberSearchFeature = std::string("jabber:iq:search");
 const std::string DiscoInfo::CommandsFeature = std::string("http://jabber.org/protocol/commands");
 const std::string DiscoInfo::MessageCorrectionFeature = std::string("urn:xmpp:message-correct:0");
-
+const std::string DiscoInfo::JingleFeature = std::string("urn:xmpp:jingle:1");
+const std::string DiscoInfo::JingleFTFeature = std::string("urn:xmpp:jingle:apps:file-transfer:3");
+const std::string DiscoInfo::JingleTransportsIBBFeature = std::string("urn:xmpp:jingle:transports:ibb:1");
+const std::string DiscoInfo::JingleTransportsS5BFeature = std::string("urn:xmpp:jingle:transports:s5b:1");
+const std::string DiscoInfo::Bytestream = std::string("http://jabber.org/protocol/bytestreams");
 
 
 bool DiscoInfo::Identity::operator<(const Identity& other) const {

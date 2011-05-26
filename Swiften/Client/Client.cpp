@@ -26,6 +26,9 @@
 #include <Swiften/TLS/BlindCertificateTrustChecker.h>
 #include <Swiften/Client/NickManagerImpl.h>
 #include <Swiften/Client/ClientSession.h>
+#include <Swiften/Jingle/JingleSessionManager.h>
+#include <Swiften/Network/NetworkFactories.h>
+#include <Swiften/FileTransfer/FileTransferManagerImpl.h>
 
 namespace Swift {
 
@@ -59,9 +62,15 @@ Client::Client(const JID& jid, const SafeString& password, NetworkFactories* net
 	nickResolver = new NickResolver(jid.toBare(), roster, vcardManager, mucRegistry);
 
 	blindCertificateTrustChecker = new BlindCertificateTrustChecker();
+	
+	jingleSessionManager = new JingleSessionManager(getIQRouter());
+	fileTransferManager = NULL;
 }
 
 Client::~Client() {
+	delete fileTransferManager;
+	delete jingleSessionManager;
+	
 	delete blindCertificateTrustChecker;
 
 	delete nickResolver;
@@ -96,6 +105,10 @@ XMPPRoster* Client::getRoster() const {
 
 void Client::setSoftwareVersion(const std::string& name, const std::string& version, const std::string& os) {
 	softwareVersionResponder->setVersion(name, version, os);
+}
+
+void Client::handleConnected() {
+	fileTransferManager = new FileTransferManagerImpl(getJID(), jingleSessionManager, getIQRouter(), getEntityCapsProvider(), presenceOracle, getNetworkFactories()->getConnectionFactory(), getNetworkFactories()->getConnectionServerFactory(), getNetworkFactories()->getTimerFactory(), getNetworkFactories()->getPlatformNATTraversalWorker());
 }
 
 void Client::requestRoster() {
@@ -137,6 +150,10 @@ void Client::setAlwaysTrustCertificates() {
 
 NickManager* Client::getNickManager() const {
 	return nickManager;
+}
+
+FileTransferManager* Client::getFileTransferManager() const {
+	return fileTransferManager;
 }
 
 }

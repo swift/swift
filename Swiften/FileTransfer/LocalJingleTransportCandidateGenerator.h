@@ -15,8 +15,10 @@ namespace Swift {
 	class LocalJingleTransportCandidateGenerator {
 		public:
 			virtual ~LocalJingleTransportCandidateGenerator();
-
-			virtual void generateLocalTransportCandidates() = 0;
+			/**
+			* Should call onLocalTransportCandidatesGenerated if it has finished discovering local candidates.
+			*/
+			virtual void generateLocalTransportCandidates(JingleTransportPayload::ref) = 0;
 
 			virtual bool isActualCandidate(JingleTransportPayload::ref) = 0;
 			virtual int getPriority(JingleTransportPayload::ref) = 0;

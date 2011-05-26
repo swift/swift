@@ -13,6 +13,7 @@
 #include "Swiften/Elements/Presence.h"
 
 #include <map>
+#include <set>
 #include <boost/bind.hpp>
 #include "Swiften/Base/boost_bsignals.h"
 #include <boost/shared_ptr.hpp>
@@ -21,6 +22,11 @@ namespace Swift {
 
 class GroupRosterItem;
 class ContactRosterItem : public RosterItem {
+	public:
+		enum Feature {
+			FileTransferFeature,
+		};
+		
 	public:
 		ContactRosterItem(const JID& jid, const JID& displayJID, const std::string& name, GroupRosterItem* parent);
 		virtual ~ContactRosterItem();
@@ -40,6 +46,9 @@ class ContactRosterItem : public RosterItem {
 		/** Only used so a contact can know about the groups it's in*/
 		void addGroup(const std::string& group);
 		void removeGroup(const std::string& group);
+		
+		void setSupportedFeatures(const std::set<Feature>& features);
+		bool supportsFeature(Feature feat) const;
 	private:
 		JID jid_;
 		JID displayJID_;
@@ -48,6 +57,7 @@ class ContactRosterItem : public RosterItem {
 		boost::shared_ptr<Presence> offlinePresence_;
 		boost::shared_ptr<Presence> shownPresence_;
 		std::vector<std::string> groups_;
+		std::set<Feature> features_;
 };
 
 }

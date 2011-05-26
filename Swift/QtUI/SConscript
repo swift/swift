@@ -84,6 +84,8 @@ sources = [
     "QtTabWidget.cpp",
     "QtTextEdit.cpp",
     "QtXMLConsoleWidget.cpp",
+	"QtFileTransferListWidget.cpp",
+	"QtFileTransferListItemModel.cpp",
     "QtAdHocCommandWindow.cpp",
     "QtUtilities.cpp",
     "QtBookmarkDetailWindow.cpp",
@@ -133,6 +135,7 @@ sources = [
     "QtWebView.cpp",
     "qrc_DefaultTheme.cc",
     "qrc_Swift.cc",
+    "QtFileTransferJSBridge.cpp",
   ]
 
 myenv["SWIFT_VERSION"] = Version.getBuildVersion(env.Dir("#").abspath, "swift")

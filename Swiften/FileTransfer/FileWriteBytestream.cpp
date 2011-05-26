@@ -27,6 +27,14 @@ void FileWriteBytestream::write(const std::vector<unsigned char>& data) {
 	}
 	assert(stream->good());
 	stream->write(reinterpret_cast<const char*>(&data[0]), data.size());
+	onWrite(data);
+}
+
+void FileWriteBytestream::close() {
+	if (stream) {
+		stream->close();
+		stream = NULL;
+	}
 }
 
 }

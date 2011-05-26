@@ -8,11 +8,14 @@
 
 #include <boost/smart_ptr/make_shared.hpp>
 
+#include <QUrl>
+
 #include "Swiften/Base/Platform.h"
 #include "Swift/Controllers/Roster/ContactRosterItem.h"
 #include "Swift/Controllers/Roster/GroupRosterItem.h"
 #include "Swift/Controllers/UIEvents/UIEventStream.h"
 #include "Swift/Controllers/UIEvents/RequestChatUIEvent.h"
+#include "Swift/Controllers/UIEvents/SendFileUIEvent.h"
 #include "QtSwiftUtil.h"
 
 namespace Swift {
@@ -31,6 +34,7 @@ QtTreeWidget::QtTreeWidget(UIEventStream* eventStream, QWidget* parent) : QTreeV
 	expandAll();
 	setAnimated(true);
 	setIndentation(0);
+	setAcceptDrops(true);
 	setRootIsDecorated(true);
 	connect(this, SIGNAL(activated(const QModelIndex&)), this, SLOT(handleItemActivated(const QModelIndex&)));
 	connect(model_, SIGNAL(itemExpanded(const QModelIndex&, bool)), this, SLOT(handleModelItemExpanded(const QModelIndex&, bool)));
@@ -102,6 +106,41 @@ void QtTreeWidget::handleItemActivated(const QModelIndex& index) {
 	if (contact) {
 		eventStream_->send(boost::shared_ptr<UIEvent>(new RequestChatUIEvent(contact->getJID())));
 	}
+}
+
+void QtTreeWidget::dragEnterEvent(QDragEnterEvent *event) {
+	if (event->mimeData()->hasUrls() && event->mimeData()->urls().size() == 1) {
+		event->acceptProposedAction();
+	}
+}
+
+void QtTreeWidget::dropEvent(QDropEvent *event) {
+	QModelIndex index = indexAt(event->pos());
+	if (index.isValid()) {
+		RosterItem* item = static_cast<RosterItem*>(index.internalPointer());
+		if (ContactRosterItem* contact = dynamic_cast<ContactRosterItem*>(item)) {
+			if (contact->supportsFeature(ContactRosterItem::FileTransferFeature)) {
+				QString filename = event->mimeData()->urls().at(0).toLocalFile();
+				if (!filename.isEmpty()) {
+					eventStream_->send(boost::make_shared<SendFileUIEvent>(contact->getJID(), filename.toStdString()));
+				}
+			}
+		}
+	}
+}
+
+void QtTreeWidget::dragMoveEvent(QDragMoveEvent* event) {
+	QModelIndex index = indexAt(event->pos());
+	if (index.isValid()) {
+		RosterItem* item = static_cast<RosterItem*>(index.internalPointer());
+		if (ContactRosterItem* contact = dynamic_cast<ContactRosterItem*>(item)) {
+			if (contact->supportsFeature(ContactRosterItem::FileTransferFeature)) {
+				event->accept();
+				return;
+			}
+		}
+	}
+	event->ignore();
 }
 
 void QtTreeWidget::handleExpanded(const QModelIndex& index) {

@@ -10,6 +10,7 @@
 #include "Swiften/JID/JID.h"
 #include "Swift/Controllers/Roster/RosterItemOperation.h"
 #include "Swift/Controllers/Roster/RosterFilter.h"
+#include <Swift/Controllers/Roster/ContactRosterItem.h>
 
 #include <vector>
 #include <map>
@@ -43,6 +44,8 @@ class Roster {
 		boost::signal<void (GroupRosterItem*)> onGroupAdded;
 		boost::signal<void (RosterItem*)> onDataChanged;
 		GroupRosterItem* getGroup(const std::string& groupName);
+		void setAvailableFeatures(const JID& jid, const std::set<ContactRosterItem::Feature>& features);
+
 	private:
 		void handleDataChanged(RosterItem* item);
 		void handleChildrenChanged(GroupRosterItem* item);

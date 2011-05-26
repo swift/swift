@@ -20,6 +20,11 @@ namespace Swift {
 			virtual void addErrorMessage(const std::string& /*message*/) {};
 			virtual void addPresenceMessage(const std::string& /*message*/) {};
 
+			// File transfer related stuff
+			virtual std::string addFileTransfer(const std::string& /*senderName*/, bool /*senderIsSelf*/,const std::string& /*filename*/, const boost::uintmax_t /*sizeInBytes*/) { return 0; };
+			virtual void setFileTransferProgress(std::string /*id*/, const int /*alreadyTransferedBytes*/) { };
+			virtual void setFileTransferStatus(std::string /*id*/, const FileTransferState /*state*/, const std::string& /*msg*/) { };
+			
 			virtual void setContactChatState(ChatState::ChatStateType /*state*/) {};
 			virtual void setName(const std::string& name) {name_ = name;};
 			virtual void show() {};
@@ -40,7 +45,7 @@ namespace Swift {
 			virtual void setAlert(const std::string& /*alertText*/, const std::string& /*buttonText*/) {};
 			virtual void cancelAlert() {};
 			virtual void setCorrectionEnabled(Tristate /*enabled*/) {}
-			void setAvailableOccupantActions(const std::vector<OccupantAction>& actions) {}
+			void setAvailableOccupantActions(const std::vector<OccupantAction>&/* actions*/) {}
 
 			boost::signal<void ()> onClosed;
 			boost::signal<void ()> onAllMessagesRead;

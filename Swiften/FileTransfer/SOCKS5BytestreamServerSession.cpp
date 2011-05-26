@@ -13,12 +13,14 @@
 #include <Swiften/Base/SafeByteArray.h>
 #include <Swiften/Base/Algorithm.h>
 #include <Swiften/Base/Concat.h>
+#include <Swiften/Base/Log.h>
 #include <Swiften/FileTransfer/SOCKS5BytestreamRegistry.h>
 #include <Swiften/FileTransfer/BytestreamException.h>
 
 namespace Swift {
 
-SOCKS5BytestreamServerSession::SOCKS5BytestreamServerSession(boost::shared_ptr<Connection> connection, SOCKS5BytestreamRegistry* bytestreams) : connection(connection), bytestreams(bytestreams), state(Initial), chunkSize(4096) {
+SOCKS5BytestreamServerSession::SOCKS5BytestreamServerSession(boost::shared_ptr<Connection> connection, SOCKS5BytestreamRegistry* bytestreams) : connection(connection), bytestreams(bytestreams), state(Initial), chunkSize(131072) {
+	connection->onDisconnected.connect(boost::bind(&SOCKS5BytestreamServerSession::handleDisconnected, this, _1));
 }
 
 SOCKS5BytestreamServerSession::~SOCKS5BytestreamServerSession() {
@@ -29,17 +31,55 @@ SOCKS5BytestreamServerSession::~SOCKS5BytestreamServerSession() {
 }
 
 void SOCKS5BytestreamServerSession::start() {
+	SWIFT_LOG(debug) << std::endl;
 	connection->onDataRead.connect(boost::bind(&SOCKS5BytestreamServerSession::handleDataRead, this, _1));
 	state = WaitingForAuthentication;
 }
 
 void SOCKS5BytestreamServerSession::stop() {
-	finish(false);
+	connection->onDataWritten.disconnect(boost::bind(&SOCKS5BytestreamServerSession::sendData, this));
+	connection->onDataRead.disconnect(boost::bind(&SOCKS5BytestreamServerSession::handleDataRead, this, _1));
+	connection->disconnect();
+	state = Finished;
+}
+
+void SOCKS5BytestreamServerSession::startTransfer() {
+	if (state == ReadyForTransfer) {
+		if (readBytestream) {
+			state = WritingData;
+			connection->onDataWritten.connect(boost::bind(&SOCKS5BytestreamServerSession::sendData, this));
+			sendData();
+		}
+		else if(writeBytestream) {
+			state = ReadingData;
+			writeBytestream->write(unprocessedData);
+			onBytesReceived(unprocessedData.size());
+			unprocessedData.clear();
+		}
+	} else {
+		SWIFT_LOG(debug) << "Not ready for transfer!" << std::endl;
+	}
+}
+
+HostAddressPort SOCKS5BytestreamServerSession::getAddressPort() const {
+	return connection->getLocalAddress();
 }
 
 void SOCKS5BytestreamServerSession::handleDataRead(const SafeByteArray& data) {
-	append(unprocessedData, data);
-	process();
+	if (state != ReadingData) {
+		append(unprocessedData, data);
+		process();
+	} else {
+		writeBytestream->write(createByteArray(data.data(), data.size()));
+		onBytesReceived(data.size());
+	}
+}
+
+void SOCKS5BytestreamServerSession::handleDisconnected(const boost::optional<Connection::Error>& error) {
+	SWIFT_LOG(debug) << (error ? (error == Connection::ReadError ? "Read Error" : "Write Error") : "No Error") << std::endl;
+	if (error) {
+		finish(true);
+	}
 }
 
 void SOCKS5BytestreamServerSession::process() {
@@ -54,7 +94,7 @@ void SOCKS5BytestreamServerSession::process() {
 			if (i == 2 + authCount) {
 				// Authentication message is complete
 				if (i != unprocessedData.size()) {
-					std::cerr << "SOCKS5BytestreamServerSession: Junk after authentication mechanism";
+					SWIFT_LOG(debug) << "Junk after authentication mechanism" << std::endl;
 				}
 				unprocessedData.clear();
 				connection->write(createSafeByteArray("\x05\x00", 2));
@@ -71,26 +111,31 @@ void SOCKS5BytestreamServerSession::process() {
 				requestID.push_back(unprocessedData[i]);
 				++i;
 			}
-			// Skip the port:
+			// Skip the port: 2 byte large, one already skipped. Add one for comparison with size
 			i += 2;
-			if (i >= unprocessedData.size()) {
+			if (i <= unprocessedData.size()) {
 				if (i != unprocessedData.size()) {
-					std::cerr << "SOCKS5BytestreamServerSession: Junk after authentication mechanism";
+					SWIFT_LOG(debug) << "Junk after authentication mechanism" << std::endl;
 				}
-				bytestream = bytestreams->getBytestream(byteArrayToString(requestID));
+				unprocessedData.clear();
+				std::string streamID = byteArrayToString(requestID);
+				readBytestream = bytestreams->getReadBytestream(streamID);
+				writeBytestream = bytestreams->getWriteBytestream(streamID);
 				SafeByteArray result = createSafeByteArray("\x05", 1);
-				result.push_back(bytestream ? 0x0 : 0x4);
+				result.push_back((readBytestream || writeBytestream) ? 0x0 : 0x4);
 				append(result, createByteArray("\x00\x03", 2));
 				result.push_back(static_cast<char>(requestID.size()));
 				append(result, concat(requestID, createByteArray("\x00\x00", 2)));
-				if (!bytestream) {
+				if (!readBytestream && !writeBytestream) {
+					SWIFT_LOG(debug) << "Readstream or Wrtiestream with ID " << streamID << " not found!" << std::endl;
 					connection->write(result);
 					finish(true);
 				}
 				else {
-					state = SendingData;
-					connection->onDataWritten.connect(boost::bind(&SOCKS5BytestreamServerSession::sendData, this));
+					SWIFT_LOG(deubg) << "Found " << (readBytestream ? "Readstream" : "Writestream") << ". Sent OK." << std::endl;
 					connection->write(result);
+					bytestreams->serverSessions[streamID] = this;
+					state = ReadyForTransfer;
 				}
 			}
 		}
@@ -98,9 +143,11 @@ void SOCKS5BytestreamServerSession::process() {
 }
 
 void SOCKS5BytestreamServerSession::sendData() {
-	if (!bytestream->isFinished()) {
+	if (!readBytestream->isFinished()) {
 		try {
-			connection->write(createSafeByteArray(bytestream->read(chunkSize)));
+			SafeByteArray dataToSend = createSafeByteArray(readBytestream->read(chunkSize));
+			connection->write(dataToSend);
+			onBytesSent(dataToSend.size());
 		}
 		catch (const BytestreamException&) {
 			finish(true);
@@ -114,9 +161,14 @@ void SOCKS5BytestreamServerSession::sendData() {
 void SOCKS5BytestreamServerSession::finish(bool error) {
 	connection->onDataWritten.disconnect(boost::bind(&SOCKS5BytestreamServerSession::sendData, this));
 	connection->onDataRead.disconnect(boost::bind(&SOCKS5BytestreamServerSession::handleDataRead, this, _1));
-	bytestream.reset();
+	connection->onDisconnected.disconnect(boost::bind(&SOCKS5BytestreamServerSession::handleDisconnected, this, _1));
+	readBytestream.reset();
 	state = Finished;
-	onFinished(error);
+	if (error) {
+		onFinished(boost::optional<FileTransferError>(FileTransferError::PeerError));
+	} else {
+		onFinished(boost::optional<FileTransferError>());
+	}
 }
 
 }

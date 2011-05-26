@@ -51,6 +51,7 @@ namespace Swift {
 			void handleCertficateChecked(bool);
 			void handleQuit();
 			void handleShowXMLConsole();
+			void handleShowFileTransferOverview();
 			void handleToggleSounds(bool enabled);
 			void handleToggleNotifications(bool enabled);
 			void handleAbout();
@@ -88,5 +89,6 @@ namespace Swift {
 			QPointer<QtAboutWidget> aboutDialog_;
 			bool forgetful_;
 			QAction* xmlConsoleAction_;
+			QAction* fileTransferOverviewAction_;
 	};
 }

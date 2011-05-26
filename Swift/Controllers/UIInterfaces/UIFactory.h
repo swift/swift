@@ -18,6 +18,7 @@
 #include <Swift/Controllers/UIInterfaces/ProfileWindowFactory.h>
 #include <Swift/Controllers/UIInterfaces/ContactEditWindowFactory.h>
 #include <Swift/Controllers/UIInterfaces/AdHocCommandWindowFactory.h>
+#include <Swift/Controllers/UIInterfaces/FileTransferListWidgetFactory.h>
 
 namespace Swift {
 	class UIFactory : 
@@ -27,12 +28,13 @@ namespace Swift {
 			public LoginWindowFactory, 
 			public MainWindowFactory, 
 			public MUCSearchWindowFactory, 
-			public XMLConsoleWidgetFactory, 
+			public XMLConsoleWidgetFactory,
 			public UserSearchWindowFactory, 
 			public JoinMUCWindowFactory,
 			public ProfileWindowFactory,
 			public ContactEditWindowFactory,
-			public AdHocCommandWindowFactory {
+			public AdHocCommandWindowFactory,
+			public FileTransferListWidgetFactory {
 		public:
 			virtual ~UIFactory() {}
 	};

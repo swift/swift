@@ -11,17 +11,24 @@
 #include <Swiften/Base/boost_bsignals.h>
 #include <Swiften/Network/Connection.h>
 #include <Swiften/FileTransfer/ReadBytestream.h>
+#include <Swiften/FileTransfer/WriteBytestream.h>
+#include <Swiften/FileTransfer/FileTransferError.h>
 
 namespace Swift {
 	class SOCKS5BytestreamRegistry;
 
 	class SOCKS5BytestreamServerSession {
 		public:
+		typedef boost::shared_ptr<SOCKS5BytestreamServerSession> ref;
+
+		public:
 			enum State {
 				Initial,
 				WaitingForAuthentication,
 				WaitingForRequest,
-				SendingData,
+				ReadyForTransfer,
+				ReadingData,
+				WritingData,
 				Finished,
 			};
 
@@ -35,12 +42,18 @@ namespace Swift {
 			void start();
 			void stop();
 
-			boost::signal<void (bool /* error */)> onFinished;
+			void startTransfer();
+			HostAddressPort getAddressPort() const;
+
+			boost::signal<void (boost::optional<FileTransferError>)> onFinished;
+			boost::signal<void (int)> onBytesSent;
+			boost::signal<void (int)> onBytesReceived;
 
 		private:
 			void finish(bool error);
 			void process();
 			void handleDataRead(const SafeByteArray&);
+			void handleDisconnected(const boost::optional<Connection::Error>&);
 			void sendData();
 
 		private:
@@ -49,6 +62,7 @@ namespace Swift {
 			ByteArray unprocessedData;
 			State state;
 			int chunkSize;
-			boost::shared_ptr<ReadBytestream> bytestream;
+			boost::shared_ptr<ReadBytestream> readBytestream;
+			boost::shared_ptr<WriteBytestream> writeBytestream;
 	};
 }

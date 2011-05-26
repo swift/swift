@@ -30,6 +30,7 @@ std::vector<unsigned char> FileReadBytestream::read(size_t size)  {
 	assert(stream->good());
 	stream->read(reinterpret_cast<char*>(&result[0]), size);
 	result.resize(stream->gcount());
+	onRead(result);
 	return result;
 }
 

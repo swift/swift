@@ -35,7 +35,7 @@ void IBBSendSession::stop() {
 }
 
 void IBBSendSession::handleIBBResponse(IBB::ref, ErrorPayload::ref error) {
-	if (!error) {
+	if (!error && active) {
 		if (!bytestream->isFinished()) {
 			try {
 				std::vector<unsigned char> data = bytestream->read(blockSize);
@@ -43,6 +43,7 @@ void IBBSendSession::handleIBBResponse(IBB::ref, ErrorPayload::ref error) {
 				sequenceNumber++;
 				request->onResponse.connect(boost::bind(&IBBSendSession::handleIBBResponse, this, _1, _2));
 				request->send();
+				onBytesSent(data.size());
 			}
 			catch (const BytestreamException&) {
 				finish(FileTransferError(FileTransferError::ReadError));

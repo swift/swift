@@ -29,6 +29,8 @@
 #include <Swiften/MUC/MUCManager.h>
 #include <Swiften/Elements/ChatState.h>
 #include <Swiften/MUC/MUCBookmarkManager.h>
+#include <Swift/Controllers/FileTransfer/FileTransferController.h>
+#include <Swift/Controllers/FileTransfer/FileTransferOverview.h>
 #include <Swift/Controllers/ProfileSettingsProvider.h>
 #include <Swiften/Avatars/AvatarManager.h>
 
@@ -56,13 +58,15 @@ ChatsManager::ChatsManager(
 		EntityCapsProvider* entityCapsProvider, 
 		MUCManager* mucManager,
 		MUCSearchWindowFactory* mucSearchWindowFactory,
-		ProfileSettingsProvider* settings) :
+		ProfileSettingsProvider* settings,
+		FileTransferOverview* ftOverview) :
 			jid_(jid), 
 			joinMUCWindowFactory_(joinMUCWindowFactory), 
 			useDelayForLatency_(useDelayForLatency), 
 			mucRegistry_(mucRegistry), 
 			entityCapsProvider_(entityCapsProvider), 
-			mucManager(mucManager)  {
+			mucManager(mucManager),
+			ftOverview_(ftOverview) {
 	timerFactory_ = timerFactory;
 	eventController_ = eventController;
 	stanzaChannel_ = stanzaChannel;
@@ -86,6 +90,7 @@ ChatsManager::ChatsManager(
 	joinMUCWindow_ = NULL;
 	mucSearchController_ = new MUCSearchController(jid_, mucSearchWindowFactory, iqRouter, settings);
 	mucSearchController_->onMUCSelected.connect(boost::bind(&ChatsManager::handleMUCSelectedAfterSearch, this, _1));
+	ftOverview_->onNewFileTransferController.connect(boost::bind(&ChatsManager::handleNewFileTransferController, this, _1));
 	setupBookmarks();
 	loadRecents();
 }
@@ -533,6 +538,12 @@ void ChatsManager::handleMUCSelectedAfterSearch(const JID& muc) {
 
 void ChatsManager::handleMUCBookmarkActivated(const MUCBookmark& mucBookmark) {
 	uiEventStream_->send(boost::make_shared<JoinMUCUIEvent>(mucBookmark.getRoom(), mucBookmark.getNick()));
+}
+
+void ChatsManager::handleNewFileTransferController(FileTransferController* ftc) {
+	ChatController* chatController = getChatControllerOrCreate(ftc->getOtherParty());
+	chatController->handleNewFileTransferController(ftc);
+	chatController->activateChatWindow();
 }
 
 void ChatsManager::handleRecentActivated(const ChatListWindow::Chat& chat) {

@@ -11,20 +11,32 @@
 #include <Swiften/Jingle/JingleSession.h>
 
 namespace Swift {
+	class IQRouter;
+
 	class JingleSessionImpl : public JingleSession {
 			friend class JingleResponder;
 		public:
 			typedef boost::shared_ptr<JingleSessionImpl> ref;
 
-			JingleSessionImpl(const JID& initiator, const std::string& id);
+			JingleSessionImpl(const JID& initiator, const JID&, const std::string& id, IQRouter* router);
 
-			virtual void terminate(JinglePayload::Reason::Type reason);
-			virtual void accept(JingleTransportPayload::ref);
+			virtual void sendInitiate(const JingleContentID&, JingleDescription::ref, JingleTransportPayload::ref);
+			virtual void sendTerminate(JinglePayload::Reason::Type reason);
+			virtual void sendInfo(boost::shared_ptr<Payload>);
+			virtual void sendAccept(const JingleContentID&, JingleDescription::ref, JingleTransportPayload::ref);
 			virtual void sendTransportInfo(const JingleContentID&, JingleTransportPayload::ref);
-			virtual void acceptTransport(const JingleContentID&, JingleTransportPayload::ref);
-			virtual void rejectTransport(const JingleContentID&, JingleTransportPayload::ref);
+			virtual void sendTransportAccept(const JingleContentID&, JingleTransportPayload::ref);
+			virtual void sendTransportReject(const JingleContentID&, JingleTransportPayload::ref);
+			virtual void sendTransportReplace(const JingleContentID&, JingleTransportPayload::ref);
 
 		private:
 			void handleIncomingAction(JinglePayload::ref);
+			
+			void sendSetRequest(JinglePayload::ref payload);
+			JinglePayload::ref createPayload() const;
+			
+		private:
+			IQRouter *iqRouter;
+			JID peerJID;
 	};
 }

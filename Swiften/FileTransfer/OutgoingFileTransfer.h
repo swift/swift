@@ -6,8 +6,14 @@
 
 #pragma once
 
+#include <boost/shared_ptr.hpp>
+
+#include <Swiften/FileTransfer/FileTransfer.h>
+
 namespace Swift {
-	class OutgoingFileTransfer {
+	class OutgoingFileTransfer : public FileTransfer {
+		public:
+			typedef boost::shared_ptr<OutgoingFileTransfer> ref;
 		public:
 			virtual ~OutgoingFileTransfer();
 

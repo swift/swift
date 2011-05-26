@@ -188,6 +188,15 @@ namespace Swift {
 				return session_;
 			}
 
+			NetworkFactories* getNetworkFactories() const {
+				return networkFactories;
+			}
+
+			/**
+			 * Called before onConnected signal is emmitted.
+			 */
+			virtual void handleConnected() {};
+
 		private:
 			void handleConnectorFinished(boost::shared_ptr<Connection>);
 			void handleStanzaChannelAvailableChanged(bool available);

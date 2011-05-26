@@ -17,6 +17,7 @@
 #include <boost/bind.hpp>
 
 #include <iostream>
+#include <set>
 #include <deque>
 
 namespace Swift {
@@ -60,6 +61,13 @@ GroupRosterItem* Roster::getGroup(const std::string& groupName) {
 	return group;
 }
 
+void Roster::setAvailableFeatures(const JID& jid, const std::set<ContactRosterItem::Feature>& features) {
+	if (itemMap_[fullJIDMapping_ ? jid : jid.toBare()].empty()) return;
+	foreach(ContactRosterItem* item, itemMap_[fullJIDMapping_ ? jid : jid.toBare()]) {
+		item->setSupportedFeatures(features);
+	}
+}
+
 void Roster::removeGroup(const std::string& group) {
 	root_->removeGroupChild(group);
 }
@@ -74,7 +82,7 @@ void Roster::handleChildrenChanged(GroupRosterItem* item) {
 
 void Roster::addContact(const JID& jid, const JID& displayJID, const std::string& name, const std::string& groupName, const std::string& avatarPath) {
 	GroupRosterItem* group(getGroup(groupName));
-	ContactRosterItem *item = new ContactRosterItem(jid, displayJID, name, group);
+	ContactRosterItem *item = new ContactRosterItem(jid, displayJID, name, group);	
 	item->setAvatarPath(avatarPath);
 	group->addChild(item);
 	if (itemMap_[fullJIDMapping_ ? jid : jid.toBare()].size() > 0) {

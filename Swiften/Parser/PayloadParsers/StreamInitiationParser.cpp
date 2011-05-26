@@ -38,9 +38,9 @@ void StreamInitiationParser::handleStartElement(const std::string& element, cons
 		if (element == "file") {
 			inFile = true;
 			currentFile = StreamInitiationFileInfo();
-			currentFile.name = attributes.getAttribute("name");
+			currentFile.setName(attributes.getAttribute("name"));
 			try {
-				currentFile.size = boost::lexical_cast<int>(attributes.getAttribute("size"));
+				currentFile.setSize(boost::lexical_cast<int>(attributes.getAttribute("size")));
 			}
 			catch (boost::bad_lexical_cast&) {
 			}
@@ -83,7 +83,7 @@ void StreamInitiationParser::handleEndElement(const std::string& element, const 
 	}
 	else if (level == FileOrFeatureLevel) {
 		if (inFile && element == "desc") {
-			currentFile.description = currentText;
+			currentFile.setDescription(currentText);
 		}
 		else if (formParser) {
 			Form::ref form = formParser->getPayloadInternal();

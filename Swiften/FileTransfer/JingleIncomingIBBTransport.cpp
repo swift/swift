@@ -8,8 +8,9 @@
 
 namespace Swift {
 
-JingleIncomingIBBTransport::JingleIncomingIBBTransport(const JID& from, const std::string& id, size_t size, IQRouter* router) : ibbSession(from, id, size, router) {
+JingleIncomingIBBTransport::JingleIncomingIBBTransport(const JID& from, const std::string& id, size_t size, IQRouter* router) : ibbSession(id, from, size, router) {
 	ibbSession.onDataReceived.connect(boost::ref(onDataReceived));
+	ibbSession.onFinished.connect(boost::ref(onFinished));
 }
 
 void JingleIncomingIBBTransport::start() {

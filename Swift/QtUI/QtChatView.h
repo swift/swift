@@ -16,6 +16,8 @@
 
 #include "ChatSnippet.h"
 
+#include <Swift/Controllers/UIInterfaces/ChatWindow.h>
+
 class QWebPage;
 class QUrl;
 
@@ -34,6 +36,9 @@ namespace Swift {
 			void rememberScrolledToBottom();
 			void setAckXML(const QString& id, const QString& xml);
 			QString getLastSentMessage();
+			void addToJSEnvironment(const QString&, QObject*);
+			void setFileTransferProgress(QString id, const int percentageDone);
+			void setFileTransferStatus(QString id, const ChatWindow::FileTransferState state, const QString& msg);
 
 		signals:
 			void gotFocus();

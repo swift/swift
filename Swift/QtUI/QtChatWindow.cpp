@@ -19,8 +19,15 @@
 #include "QtScaledAvatarCache.h"
 
 #include "SwifTools/TabComplete.h"
+#include <Swift/Controllers/UIEvents/UIEventStream.h>
+#include <Swift/Controllers/UIEvents/SendFileUIEvent.h>
+#include "QtFileTransferJSBridge.h"
+
+#include <boost/format.hpp>
+#include <boost/lexical_cast.hpp>
 
 #include <QLabel>
+#include <QInputDialog>
 #include <QApplication>
 #include <QBoxLayout>
 #include <QCloseEvent>
@@ -33,9 +40,12 @@
 #include <QTime>
 #include <QUrl>
 #include <QPushButton>
+#include <QFileDialog>
+
+#include <QDebug>
 
 namespace Swift {
-QtChatWindow::QtChatWindow(const QString &contact, QtChatTheme* theme, UIEventStream* eventStream) : QtTabbable(), contact_(contact), previousMessageWasSelf_(false), previousMessageWasSystem_(false), previousMessageWasPresence_(false), eventStream_(eventStream) {
+QtChatWindow::QtChatWindow(const QString &contact, QtChatTheme* theme, UIEventStream* eventStream) : QtTabbable(), contact_(contact), previousMessageWasSelf_(false), previousMessageWasSystem_(false), previousMessageWasPresence_(false), previousMessageWasFileTransfer_(false), eventStream_(eventStream) {
 	unreadCount_ = 0;
 	inputEnabled_ = true;
 	completer_ = NULL;
@@ -44,6 +54,8 @@ QtChatWindow::QtChatWindow(const QString &contact, QtChatTheme* theme, UIEventSt
 	correctionEnabled_ = Maybe;
 	updateTitleWithUnreadCount();
 	QtSettingsProvider settings;
+
+	setAcceptDrops(true);
 
 	alertStyleSheet_ = "background: rgb(255, 255, 153); color: black";
 
@@ -117,14 +129,22 @@ QtChatWindow::QtChatWindow(const QString &contact, QtChatTheme* theme, UIEventSt
 	connect(messageLog_, SIGNAL(gotFocus()), input_, SLOT(setFocus()));
 	resize(400,300);
 	connect(messageLog_, SIGNAL(fontResized(int)), this, SIGNAL(fontResized(int)));
+
 	treeWidget_->onSomethingSelectedChanged.connect(boost::bind(&QtChatWindow::handleOccupantSelectionChanged, this, _1));
 	treeWidget_->onOccupantActionSelected.connect(boost::bind(boost::ref(onOccupantActionSelected), _1, _2));
 
+	fileTransferJS = new QtFileTransferJSBridge();
+	messageLog_->addToJSEnvironment("filetransfer", fileTransferJS);
+	connect(fileTransferJS, SIGNAL(setDescription(QString)), this, SLOT(handleFileTransferSetDescription(QString)));
+	connect(fileTransferJS, SIGNAL(sendRequest(QString)), this, SLOT(handleFileTransferStart(QString)));
+	connect(fileTransferJS, SIGNAL(acceptRequest(QString, QString)), this, SLOT(handleFileTransferAccept(QString, QString)));
+	connect(fileTransferJS, SIGNAL(cancel(QString)), this, SLOT(handleFileTransferCancel(QString)));
 }
 
 QtChatWindow::~QtChatWindow() {
-
+	delete fileTransferJS;
 }
+
 
 void QtChatWindow::handleOccupantSelectionChanged(RosterItem* item) {
 	onOccupantSelectionChanged(dynamic_cast<ContactRosterItem*>(item));
@@ -306,6 +326,7 @@ void QtChatWindow::closeEvent(QCloseEvent* event) {
 }
 
 void QtChatWindow::convertToMUC() {
+	setAcceptDrops(false);
 	treeWidget_->show();
 }
 
@@ -391,7 +412,7 @@ std::string QtChatWindow::addMessage(const std::string &message, const std::stri
 	QString styleSpanEnd = style == "" ? "" : "</span>";
 	htmlString += styleSpanStart + messageHTML + styleSpanEnd;
 
-	bool appendToPrevious = !previousMessageWasSystem_ && !previousMessageWasPresence_ && ((senderIsSelf && previousMessageWasSelf_) || (!senderIsSelf && !previousMessageWasSelf_ && previousSenderName_ == P2QSTRING(senderName)));
+	bool appendToPrevious = !previousMessageWasFileTransfer_ && !previousMessageWasSystem_ && !previousMessageWasPresence_ && ((senderIsSelf && previousMessageWasSelf_) || (!senderIsSelf && !previousMessageWasSelf_ && previousSenderName_ == P2QSTRING(senderName)));
 	if (lastLineTracker_.getShouldMoveLastLine()) {
 		/* should this be queued? */
 		messageLog_->addLastSeenLine();
@@ -406,6 +427,7 @@ std::string QtChatWindow::addMessage(const std::string &message, const std::stri
 	previousSenderName_ = P2QSTRING(senderName);
 	previousMessageWasSystem_ = false;
 	previousMessageWasPresence_ = false;
+	previousMessageWasFileTransfer_ = false;
 	return id;
 }
 
@@ -431,6 +453,94 @@ std::string QtChatWindow::addAction(const std::string &message, const std::strin
 	return addMessage(" *" + message + "*", senderName, senderIsSelf, label, avatarPath, "font-style:italic ", time);
 }
 
+std::string formatSize(const uintmax_t bytes) {
+	static const char *siPrefix[] = {"k", "M", "G", "T", "P", "E", "Z", "Y", NULL};
+	int power = 0;
+	double engBytes = bytes;
+	while (engBytes >= 1000) {
+		++power;
+		engBytes = engBytes / 1000.0;
+	}
+	return str( boost::format("%.1lf %sB") % engBytes % (power > 0 ? siPrefix[power-1] : "") );
+}
+
+std::string QtChatWindow::addFileTransfer(const std::string& senderName, bool senderIsSelf, const std::string& filename, const boost::uintmax_t sizeInBytes) {
+	qDebug() << "addFileTransfer";
+	std::string ft_id = id_.generateID();
+	
+	std::string htmlString;
+	if (senderIsSelf) {
+		// outgoing
+		htmlString = "Send file: " + filename + " ( " + formatSize(sizeInBytes) + ") </br>" +
+			"<div id='" + ft_id + "'>" +
+			"<input id='discard' type='submit' value='Cancel' onclick='filetransfer.cancel(\"" + ft_id + "\");' />" +
+			"<input id='description' type='submit' value='Set Description' onclick='filetransfer.setDescription(\"" + ft_id + "\");' />" +
+			"<input id='send' type='submit' value='Send' onclick='filetransfer.sendRequest(\"" + ft_id + "\");' />" +
+			"</div>";
+	} else {
+		// incoming
+		htmlString = "Receiving file: " + filename + " ( " + formatSize(sizeInBytes)  + ") </br>" +
+			"<div id='" + ft_id + "'>" +
+			"<input id='discard' type='submit' value='Cancel' onclick='filetransfer.cancel(\"" + ft_id + "\");' />" +
+			"<input id='accept' type='submit' value='Accept' onclick='filetransfer.acceptRequest(\"" + ft_id + "\", \"" + filename + "\");' />" +
+			"</div>";
+	}
+
+	//addMessage(message, senderName, senderIsSelf, boost::shared_ptr<SecurityLabel>(), "", boost::posix_time::second_clock::local_time());
+
+	bool appendToPrevious = !previousMessageWasFileTransfer_ && !previousMessageWasSystem_ && !previousMessageWasPresence_ && ((senderIsSelf && previousMessageWasSelf_) || (!senderIsSelf && !previousMessageWasSelf_ && previousSenderName_ == P2QSTRING(senderName)));
+	if (lastLineTracker_.getShouldMoveLastLine()) {
+		/* should this be queued? */
+		messageLog_->addLastSeenLine();
+		/* if the line is added we should break the snippet */
+		appendToPrevious = false;
+	}
+	QString qAvatarPath = "qrc:/icons/avatar.png";
+	std::string id = id_.generateID();
+	messageLog_->addMessage(boost::shared_ptr<ChatSnippet>(new MessageSnippet(QString::fromStdString(htmlString), Qt::escape(P2QSTRING(senderName)), B2QDATE(boost::posix_time::second_clock::local_time()), qAvatarPath, senderIsSelf, appendToPrevious, theme_, P2QSTRING(id))));
+
+
+	return ft_id;
+}
+
+void QtChatWindow::setFileTransferProgress(std::string id, const int percentageDone) {
+	messageLog_->setFileTransferProgress(QString::fromStdString(id), percentageDone);
+}
+
+void QtChatWindow::setFileTransferStatus(std::string id, const FileTransferState state, const std::string& msg) {
+	messageLog_->setFileTransferStatus(QString::fromStdString(id), state, QString::fromStdString(msg));
+}
+
+void QtChatWindow::handleFileTransferCancel(QString id) {
+	qDebug() << "QtChatWindow::handleFileTransferCancel(" << id << ")";
+	onFileTransferCancel(id.toStdString());
+}
+
+void QtChatWindow::handleFileTransferSetDescription(QString id) {
+	bool ok = false;
+	QString text = QInputDialog::getText(this, tr("File transfer description"),
+		tr("Description:"), QLineEdit::Normal, "", &ok);
+	if (ok) {
+		descriptions[id] = text;
+	}
+}
+
+void QtChatWindow::handleFileTransferStart(QString id) {
+	qDebug() << "QtChatWindow::handleFileTransferStart(" << id << ")";
+	
+	QString text = descriptions.find(id) == descriptions.end() ? QString() : descriptions[id];
+	onFileTransferStart(id.toStdString(), text.toStdString());
+}
+
+void QtChatWindow::handleFileTransferAccept(QString id, QString filename) {
+	qDebug() << "QtChatWindow::handleFileTransferAccept(" << id << ", " << filename << ")";
+
+	QString path = QFileDialog::getSaveFileName(this, tr("Save File"), filename);
+	if (!path.isEmpty()) {
+		onFileTransferAccept(id.toStdString(), path.toStdString());
+	}
+}
+
 void QtChatWindow::addErrorMessage(const std::string& errorMessage) {
 	if (isWidgetSelected()) {
 		onAllMessagesRead();
@@ -443,6 +553,7 @@ void QtChatWindow::addErrorMessage(const std::string& errorMessage) {
 	previousMessageWasSelf_ = false;
 	previousMessageWasSystem_ = true;
 	previousMessageWasPresence_ = false;
+	previousMessageWasFileTransfer_ = false;
 }
 
 void QtChatWindow::addSystemMessage(const std::string& message) {
@@ -458,6 +569,7 @@ void QtChatWindow::addSystemMessage(const std::string& message) {
 	previousMessageWasSelf_ = false;
 	previousMessageWasSystem_ = true;
 	previousMessageWasPresence_ = false;
+	previousMessageWasFileTransfer_ = false;
 }
 
 void QtChatWindow::replaceMessage(const std::string& message, const std::string& id, const boost::posix_time::ptime& time) {
@@ -530,6 +642,21 @@ void QtChatWindow::resizeEvent(QResizeEvent*) {
 
 void QtChatWindow::moveEvent(QMoveEvent*) {
 	emit geometryChanged();
+}
+
+void QtChatWindow::dragEnterEvent(QDragEnterEvent *event) {
+	if (event->mimeData()->hasUrls() && event->mimeData()->urls().size() == 1) {
+		// TODO: check whether contact actually supports file transfer
+		event->acceptProposedAction();
+	}
+}
+
+void QtChatWindow::dropEvent(QDropEvent *event) {
+	if (event->mimeData()->urls().size() == 1) {
+		onSendFileRequest(event->mimeData()->urls().at(0).toLocalFile().toStdString());
+	} else {
+		addSystemMessage("Sending of multiple files at once isn't supported at this time.");
+	}
 }
 
 void QtChatWindow::replaceLastMessage(const std::string& message) {

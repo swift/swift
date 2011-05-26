@@ -8,13 +8,15 @@
 
 #include <boost/bind.hpp>
 
+#include <Swiften/Base/Log.h>
 #include <Swiften/StringCodecs/Hexify.h>
 #include <Swiften/StringCodecs/SHA1.h>
 #include <Swiften/FileTransfer/SOCKS5BytestreamServerSession.h>
+#include <Swiften/FileTransfer/SOCKS5BytestreamRegistry.h>
 
 namespace Swift {
 
-SOCKS5BytestreamServer::SOCKS5BytestreamServer(boost::shared_ptr<ConnectionServer> connectionServer) : connectionServer(connectionServer) {
+SOCKS5BytestreamServer::SOCKS5BytestreamServer(boost::shared_ptr<ConnectionServer> connectionServer, SOCKS5BytestreamRegistry* registry) : connectionServer(connectionServer), registry(registry) {
 }
 
 void SOCKS5BytestreamServer::start() {
@@ -25,12 +27,12 @@ void SOCKS5BytestreamServer::stop() {
 	connectionServer->onNewConnection.disconnect(boost::bind(&SOCKS5BytestreamServer::handleNewConnection, this, _1));
 }
 
-void SOCKS5BytestreamServer::addBytestream(const std::string& id, const JID& from, const JID& to, boost::shared_ptr<ReadBytestream> byteStream) {
-	bytestreams.addBytestream(getSOCKSDestinationAddress(id, from, to), byteStream);
+void SOCKS5BytestreamServer::addReadBytestream(const std::string& id, const JID& from, const JID& to, boost::shared_ptr<ReadBytestream> byteStream) {
+	registry->addReadBytestream(getSOCKSDestinationAddress(id, from, to), byteStream);
 }
 
-void SOCKS5BytestreamServer::removeBytestream(const std::string& id, const JID& from, const JID& to) {
-	bytestreams.removeBytestream(getSOCKSDestinationAddress(id, from, to));
+void SOCKS5BytestreamServer::removeReadBytestream(const std::string& id, const JID& from, const JID& to) {
+	registry->removeReadBytestream(getSOCKSDestinationAddress(id, from, to));
 }
 
 std::string SOCKS5BytestreamServer::getSOCKSDestinationAddress(const std::string& id, const JID& from, const JID& to) {
@@ -38,7 +40,7 @@ std::string SOCKS5BytestreamServer::getSOCKSDestinationAddress(const std::string
 }
 
 void SOCKS5BytestreamServer::handleNewConnection(boost::shared_ptr<Connection> connection) {
-	boost::shared_ptr<SOCKS5BytestreamServerSession> session(new SOCKS5BytestreamServerSession(connection, &bytestreams));
+	boost::shared_ptr<SOCKS5BytestreamServerSession> session(new SOCKS5BytestreamServerSession(connection, registry));
 	sessions.push_back(session);
 	session->start();
 }

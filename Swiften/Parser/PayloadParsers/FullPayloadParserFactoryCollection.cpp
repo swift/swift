@@ -48,6 +48,19 @@
 #include <Swiften/Parser/PayloadParsers/NicknameParserFactory.h>
 #include <Swiften/Parser/PayloadParsers/ReplaceParser.h>
 #include <Swiften/Parser/PayloadParsers/LastParser.h>
+#include <Swiften/Parser/PayloadParsers/JingleParserFactory.h>
+#include <Swiften/Parser/PayloadParsers/JingleReasonParser.h>
+#include <Swiften/Parser/PayloadParsers/JingleContentPayloadParserFactory.h>
+#include <Swiften/Parser/PayloadParsers/JingleIBBTransportMethodPayloadParser.h>
+#include <Swiften/Parser/PayloadParsers/JingleS5BTransportMethodPayloadParser.h>
+#include <Swiften/Parser/PayloadParsers/JingleFileTransferDescriptionParserFactory.h>
+#include <Swiften/Parser/PayloadParsers/StreamInitiationFileInfoParser.h>
+#include <Swiften/Parser/PayloadParsers/JingleFileTransferReceivedParser.h>
+#include <Swiften/Parser/PayloadParsers/JingleFileTransferHashParser.h>
+#include <Swiften/Parser/PayloadParsers/S5BProxyRequestParser.h>
+
+#include "JingleIBBTransportMethodPayloadParser.h"
+#include "JingleFileTransferDescriptionParser.h"
 
 using namespace boost;
 
@@ -91,6 +104,16 @@ FullPayloadParserFactoryCollection::FullPayloadParserFactoryCollection() {
 	factories_.push_back(shared_ptr<PayloadParserFactory>(new MUCUserPayloadParserFactory()));
 	factories_.push_back(shared_ptr<PayloadParserFactory>(new GenericPayloadParserFactory<MUCAdminPayloadParser>("query", "http://jabber.org/protocol/muc#admin")));
 	factories_.push_back(shared_ptr<PayloadParserFactory>(new NicknameParserFactory()));
+	factories_.push_back(shared_ptr<PayloadParserFactory>(new JingleParserFactory(this)));
+	factories_.push_back(shared_ptr<PayloadParserFactory>(new GenericPayloadParserFactory<JingleReasonParser>("reason", "urn:xmpp:jingle:1")));
+	factories_.push_back(shared_ptr<PayloadParserFactory>(new JingleContentPayloadParserFactory(this)));
+	factories_.push_back(shared_ptr<PayloadParserFactory>(new GenericPayloadParserFactory<JingleIBBTransportMethodPayloadParser>("transport", "urn:xmpp:jingle:transports:ibb:1")));
+	factories_.push_back(shared_ptr<PayloadParserFactory>(new GenericPayloadParserFactory<JingleS5BTransportMethodPayloadParser>("transport", "urn:xmpp:jingle:transports:s5b:1")));
+	factories_.push_back(shared_ptr<PayloadParserFactory>(new JingleFileTransferDescriptionParserFactory(this)));
+	factories_.push_back(shared_ptr<PayloadParserFactory>(new GenericPayloadParserFactory<StreamInitiationFileInfoParser>("file", "http://jabber.org/protocol/si/profile/file-transfer")));
+	factories_.push_back(shared_ptr<PayloadParserFactory>(new GenericPayloadParserFactory<JingleFileTransferReceivedParser>("received", "urn:xmpp:jingle:apps:file-transfer:3")));
+	factories_.push_back(shared_ptr<PayloadParserFactory>(new GenericPayloadParserFactory<JingleFileTransferHashParser>("checksum")));
+	factories_.push_back(shared_ptr<PayloadParserFactory>(new GenericPayloadParserFactory<S5BProxyRequestParser>("query", "http://jabber.org/protocol/bytestreams")));
 	foreach(shared_ptr<PayloadParserFactory> factory, factories_) {
 		addFactory(factory.get());
 	}

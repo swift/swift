@@ -45,7 +45,9 @@ void QtWebView::setFontSizeIsMinimal(bool minimum) {
 
 void QtWebView::contextMenuEvent(QContextMenuEvent* ev) {
 	// Filter out the relevant actions from the standard actions
+	
 	QMenu* menu = page()->createStandardContextMenu();
+	/*
 	QList<QAction*> actions(menu->actions());
 	for (int i = 0; i < actions.size(); ++i) {
 		QAction* action = actions.at(i);
@@ -59,7 +61,7 @@ void QtWebView::contextMenuEvent(QContextMenuEvent* ev) {
 		if (removeAction) {
 			menu->removeAction(action);
 		}
-	}
+	}*/
 
 	// Add our own custom actions
 	menu->addAction(tr("Clear"), this, SIGNAL(clearRequested()));

@@ -276,6 +276,7 @@ void CoreClient::handleDataWritten(const SafeByteArray& data) {
 
 void CoreClient::handleStanzaChannelAvailableChanged(bool available) {
 	if (available) {
+		handleConnected();
 		onConnected();
 	}
 }

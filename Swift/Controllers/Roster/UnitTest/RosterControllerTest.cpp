@@ -31,10 +31,20 @@
 #include "Swift/Controllers/UIEvents/RenameRosterItemUIEvent.h"
 #include "Swiften/MUC/MUCRegistry.h"
 #include <Swiften/Client/DummyNickManager.h>
+#include <Swiften/Disco/EntityCapsManager.h>
+#include <Swiften/Disco/CapsProvider.h>
+#include <Swiften/Jingle/JingleSessionManager.h>
+#include <Swiften/FileTransfer/UnitTest/DummyFileTransferManager.h>
+#include <Swiften/Base/Algorithm.h>
+#include <Swiften/EventLoop/DummyEventLoop.h>
 
 using namespace Swift;
 
 #define CHILDREN mainWindow_->roster->getRoot()->getChildren()
+
+class DummyCapsProvider : public CapsProvider {
+		DiscoInfo::ref getCaps(const std::string&) const {return DiscoInfo::ref(new DiscoInfo());}
+};
 
 class RosterControllerTest : public CppUnit::TestFixture {
 		CPPUNIT_TEST_SUITE(RosterControllerTest);
@@ -66,12 +76,21 @@ class RosterControllerTest : public CppUnit::TestFixture {
 			uiEventStream_ = new UIEventStream();
 			settings_ = new DummySettingsProvider();
 			nickManager_ = new DummyNickManager();
-			rosterController_ = new RosterController(jid_, xmppRoster_, avatarManager_, mainWindowFactory_, nickManager_, nickResolver_, presenceOracle_, subscriptionManager_, eventController_, uiEventStream_, router_, settings_);
+			capsProvider_ = new DummyCapsProvider();
+			entityCapsManager_ = new EntityCapsManager(capsProvider_, stanzaChannel_);
+			jingleSessionManager_ = new JingleSessionManager(router_);
+
+			ftManager_ = new DummyFileTransferManager();
+			ftOverview_ = new FileTransferOverview(ftManager_);
+			rosterController_ = new RosterController(jid_, xmppRoster_, avatarManager_, mainWindowFactory_, nickManager_, nickResolver_, presenceOracle_, subscriptionManager_, eventController_, uiEventStream_, router_, settings_, entityCapsManager_, ftOverview_);
 			mainWindow_ = mainWindowFactory_->last;
 		};
 
 		void tearDown() {
 			delete rosterController_;
+			delete ftManager_;
+			delete jingleSessionManager_;
+			
 			delete nickManager_;
 			delete nickResolver_;
 			delete mucRegistry_;
@@ -313,6 +332,11 @@ class RosterControllerTest : public CppUnit::TestFixture {
 		UIEventStream* uiEventStream_;
 		MockMainWindow* mainWindow_;
 		DummySettingsProvider* settings_;
+		DummyCapsProvider* capsProvider_;
+		EntityCapsManager* entityCapsManager_;
+		JingleSessionManager* jingleSessionManager_;
+		FileTransferManager* ftManager_;
+		FileTransferOverview* ftOverview_;
 };
 
 CPPUNIT_TEST_SUITE_REGISTRATION(RosterControllerTest);

@@ -9,6 +9,8 @@
 #include <boost/shared_ptr.hpp>
 #include <vector>
 
+#include <Swiften/Base/boost_bsignals.h>
+
 namespace Swift {
 	class WriteBytestream {
 		public:
@@ -17,5 +19,7 @@ namespace Swift {
 			virtual ~WriteBytestream();
 
 			virtual void write(const std::vector<unsigned char>&) = 0;
+
+			boost::signal<void (const std::vector<unsigned char>&)> onWrite;
 	};
 }

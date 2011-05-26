@@ -17,6 +17,7 @@ class HexifyTest : public CppUnit::TestFixture {
 		CPPUNIT_TEST_SUITE(HexifyTest);
 		CPPUNIT_TEST(testHexify);
 		CPPUNIT_TEST(testHexify_Byte);
+		CPPUNIT_TEST(testUnhexify);
 		CPPUNIT_TEST_SUITE_END();
 
 	public:
@@ -26,6 +27,11 @@ class HexifyTest : public CppUnit::TestFixture {
 
 		void testHexify_Byte() {
 			CPPUNIT_ASSERT_EQUAL(std::string("b2"), Hexify::hexify(0xb2));
+		}
+
+		void testUnhexify() {
+			CPPUNIT_ASSERT_EQUAL(std::string("ffaf02"), Hexify::hexify(Hexify::unhexify("ffaf02")));
+			CPPUNIT_ASSERT(createByteArray("\x01\x23\xf2", 3) == Hexify::unhexify("0123f2"));
 		}
 };
 

@@ -366,6 +366,27 @@ namespace {
 	}
 }
 
+MD5::MD5() {
+	state = new md5_state_t;
+	md5_init(state);
+}
+
+MD5::~MD5() {
+	delete state;
+}
+
+MD5& MD5::update(const std::vector<unsigned char>& input) {
+	md5_append(state, reinterpret_cast<const md5_byte_t*>(vecptr(input)), input.size());
+	return *this;
+}
+
+std::vector<unsigned char> MD5::getHash() {
+	ByteArray digest;
+	digest.resize(16);
+	md5_finish(state, reinterpret_cast<md5_byte_t*>(vecptr(digest)));
+	return digest;
+}
+
 ByteArray MD5::getHash(const ByteArray& data) {
 	return getMD5Hash(data);
 }

@@ -6,6 +6,7 @@ sources = [
 		"IncomingJingleSessionHandler.cpp",
 		"JingleSessionManager.cpp",	
 		"JingleResponder.cpp",
+		"FakeJingleSession.cpp",
 	]
 
 swiften_env.Append(SWIFTEN_OBJECTS = swiften_env.SwiftenObject(sources))

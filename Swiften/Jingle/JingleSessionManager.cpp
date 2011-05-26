@@ -14,15 +14,17 @@ namespace Swift {
 
 JingleSessionManager::JingleSessionManager(IQRouter* router) : router(router) {
 	responder = new JingleResponder(this, router);
+	responder->start();
 }
 
 JingleSessionManager::~JingleSessionManager() {
+	responder->stop();
 	delete responder;
 }
 
 JingleSessionImpl::ref JingleSessionManager::getSession(const JID& jid, const std::string& id) const {
-	SessionMap::const_iterator i = incomingSessions.find(JIDSession(jid, id));
-	return i != incomingSessions.end() ? i->second : JingleSessionImpl::ref();
+	SessionMap::const_iterator i = sessions.find(JIDSession(jid, id));
+	return i != sessions.end() ? i->second : JingleSessionImpl::ref();
 }
 
 void JingleSessionManager::addIncomingSessionHandler(IncomingJingleSessionHandler* handler) {
@@ -33,8 +35,13 @@ void JingleSessionManager::removeIncomingSessionHandler(IncomingJingleSessionHan
 	erase(incomingSessionHandlers, handler);
 }
 
-void JingleSessionManager::handleIncomingSession(const JID& from, JingleSessionImpl::ref session, const std::vector<JingleContentPayload::ref>& contents) {
-	incomingSessions.insert(std::make_pair(JIDSession(from, session->getID()), session));
+void JingleSessionManager::registerOutgoingSession(const JID& initiator, JingleSessionImpl::ref session) {
+	sessions.insert(std::make_pair(JIDSession(initiator, session->getID()), session));
+	SWIFT_LOG(debug) << "Added session " << session->getID() << " for initiator " << initiator.toString() << std::endl;
+}
+
+void JingleSessionManager::handleIncomingSession(const JID& initiator, JingleSessionImpl::ref session, const std::vector<JingleContentPayload::ref>& contents) {
+	sessions.insert(std::make_pair(JIDSession(initiator, session->getID()), session));
 	foreach (IncomingJingleSessionHandler* handler, incomingSessionHandlers) {
 		if (handler->handleIncomingJingleSession(session, contents)) {
 			return;

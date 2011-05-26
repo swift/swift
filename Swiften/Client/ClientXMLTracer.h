@@ -7,15 +7,19 @@
 #pragma once
 
 #include <Swiften/Client/CoreClient.h>
+#include <Swiften/Client/XMLBeautifier.h>
 #include <Swiften/Base/SafeByteArray.h>
 
 namespace Swift {
 	class ClientXMLTracer {
 		public:
 			ClientXMLTracer(CoreClient* client);
+			~ClientXMLTracer();
+		private:
+			void printData(char direction, const SafeByteArray& data);
+			void printLine(char c);
 
 		private:
-			static void printData(char direction, const SafeByteArray& data);
-			static void printLine(char c);
+			XMLBeautifier *beautifier;
 	};
 }

@@ -13,5 +13,6 @@ namespace Swift {
 		public:
 			static std::string hexify(unsigned char byte);
 			static std::string hexify(const ByteArray& data);
+			static ByteArray unhexify(const std::string& hexstring);
 	};
 }

@@ -14,6 +14,8 @@
 
 #include "Swiften/Base/IDGenerator.h"
 
+#include <map>
+
 class QTextEdit;
 class QLineEdit;
 class QComboBox;
@@ -28,6 +30,7 @@ namespace Swift {
 	class TreeWidget;
 	class QtTextEdit;
 	class UIEventStream;
+	class QtFileTransferJSBridge;
 	class QtChatWindow : public QtTabbable, public ChatWindow {
 		Q_OBJECT
 		public:
@@ -39,6 +42,11 @@ namespace Swift {
 			void addPresenceMessage(const std::string& message);
 			void addErrorMessage(const std::string& errorMessage);
 			void replaceMessage(const std::string& message, const std::string& id, const boost::posix_time::ptime& time);
+			// File transfer related stuff
+			std::string addFileTransfer(const std::string& senderName, bool senderIsSelf, const std::string& filename, const boost::uintmax_t sizeInBytes);
+			void setFileTransferProgress(std::string id, const int percentageDone);
+			void setFileTransferStatus(std::string id, const FileTransferState state, const std::string& msg);
+			
 			void show();
 			void activate();
 			void setUnreadMessageCount(int count);
@@ -79,6 +87,9 @@ namespace Swift {
 			void resizeEvent(QResizeEvent* event);
 			void moveEvent(QMoveEvent* event);
 
+			void dragEnterEvent(QDragEnterEvent *event);
+			void dropEvent(QDropEvent *event);
+
 		protected:
 			void showEvent(QShowEvent* event);
 
@@ -88,6 +99,13 @@ namespace Swift {
 			void handleKeyPressEvent(QKeyEvent* event);
 			void handleSplitterMoved(int pos, int index);
 			void handleAlertButtonClicked();
+
+			
+			void handleFileTransferCancel(QString id);
+			void handleFileTransferSetDescription(QString id);
+			void handleFileTransferStart(QString id);
+			void handleFileTransferAccept(QString id, QString filename);
+
 		private:
 			void updateTitleWithUnreadCount();
 			void tabComplete();
@@ -116,6 +134,7 @@ namespace Swift {
 			bool previousMessageWasSelf_;
 			bool previousMessageWasSystem_;
 			bool previousMessageWasPresence_;
+			bool previousMessageWasFileTransfer_;
 			QString previousSenderName_;
 			bool inputClearing_;
 			UIEventStream* eventStream_;
@@ -124,5 +143,8 @@ namespace Swift {
 			QSplitter *logRosterSplitter_;
 			Tristate correctionEnabled_;
 			QString alertStyleSheet_;
+			
+			std::map<QString, QString> descriptions;
+			QtFileTransferJSBridge* fileTransferJS;
 	};
 }

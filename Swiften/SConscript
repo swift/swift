@@ -6,7 +6,7 @@ Import("env")
 # Flags
 ################################################################################
 
-swiften_dep_modules = ["BOOST", "GCONF", "LIBIDN", "ZLIB", "OPENSSL", "LIBXML", "EXPAT", "AVAHI"]
+swiften_dep_modules = ["BOOST", "GCONF", "LIBIDN", "ZLIB", "OPENSSL", "LIBXML", "EXPAT", "AVAHI", "LIBMINIUPNPC", "LIBNATPMP"]
 
 if env["SCONS_STAGE"] == "flags" :
 	env["SWIFTEN_VERSION"] = Version.getBuildVersion(env.Dir("#").abspath, "swift")
@@ -21,6 +21,10 @@ if env["SCONS_STAGE"] == "flags" :
 	env["SWIFTEN_LIBRARY"] = "Swiften"
 	env["SWIFTEN_LIBRARY_FILE"] = "Swiften"
 	env["SWIFTEN_LIBRARY_ALIASES"] = []
+	
+	if env["PLATFORM"] == "win32" :
+		env.Append(CCFLAGS = ["-DSTATICLIB"])
+	
 	if ARGUMENTS.get("swiften_dll", False) :
 		if env["PLATFORM"] == "win32" :
 			pass
@@ -87,6 +91,7 @@ if env["SCONS_STAGE"] == "build" :
 			"Client/NickManager.cpp",
 			"Client/NickManagerImpl.cpp",
 			"Client/Storages.cpp",
+			"Client/XMLBeautifier.cpp",
 			"Compress/ZLibCodecompressor.cpp",
 			"Compress/ZLibDecompressor.cpp",
 			"Compress/ZLibCompressor.cpp",
@@ -166,6 +171,14 @@ if env["SCONS_STAGE"] == "build" :
 			"Serializer/PayloadSerializers/SearchPayloadSerializer.cpp",
 			"Serializer/PayloadSerializers/FormSerializer.cpp",
 			"Serializer/PayloadSerializers/NicknameSerializer.cpp",
+			"Serializer/PayloadSerializers/JingleFileTransferDescriptionSerializer.cpp",
+			"Serializer/PayloadSerializers/JinglePayloadSerializer.cpp",
+			"Serializer/PayloadSerializers/JingleContentPayloadSerializer.cpp",
+			"Serializer/PayloadSerializers/JingleFileTransferHashSerializer.cpp",
+			"Serializer/PayloadSerializers/JingleFileTransferReceivedSerializer.cpp",
+			"Serializer/PayloadSerializers/JingleIBBTransportPayloadSerializer.cpp",
+			"Serializer/PayloadSerializers/JingleS5BTransportPayloadSerializer.cpp",
+			"Serializer/PayloadSerializers/StreamInitiationFileInfoSerializer.cpp",
 			"Serializer/PresenceSerializer.cpp",
 			"Serializer/StanzaSerializer.cpp",
 			"Serializer/StreamErrorSerializer.cpp",
@@ -281,6 +294,7 @@ if env["SCONS_STAGE"] == "build" :
 			File("Parser/PayloadParsers/UnitTest/RosterItemExchangeParserTest.cpp"),
 			File("Parser/PayloadParsers/UnitTest/RosterParserTest.cpp"),
 			File("Parser/PayloadParsers/UnitTest/IBBParserTest.cpp"),
+			File("Parser/PayloadParsers/UnitTest/JingleParserTest.cpp"),
 			File("Parser/PayloadParsers/UnitTest/SearchPayloadParserTest.cpp"),
 			File("Parser/PayloadParsers/UnitTest/SecurityLabelParserTest.cpp"),
 			File("Parser/PayloadParsers/UnitTest/SecurityLabelsCatalogParserTest.cpp"),
@@ -340,6 +354,7 @@ if env["SCONS_STAGE"] == "build" :
 			File("Serializer/PayloadSerializers/UnitTest/PrivateStorageSerializerTest.cpp"),
 			File("Serializer/PayloadSerializers/UnitTest/ReplaceSerializerTest.cpp"),
 			File("Serializer/PayloadSerializers/UnitTest/MUCAdminPayloadSerializerTest.cpp"),
+			File("Serializer/PayloadSerializers/UnitTest/JingleSerializersTest.cpp"),
 			File("Serializer/UnitTest/StreamFeaturesSerializerTest.cpp"),
 			File("Serializer/UnitTest/AuthSuccessSerializerTest.cpp"),
 			File("Serializer/UnitTest/AuthChallengeSerializerTest.cpp"),

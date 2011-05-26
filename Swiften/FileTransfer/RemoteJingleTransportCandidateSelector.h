@@ -8,8 +8,10 @@
 
 #include <Swiften/Base/boost_bsignals.h>
 
+#include <Swiften/JID/JID.h>
 #include <Swiften/Elements/JingleTransportPayload.h>
 #include <Swiften/FileTransfer/JingleTransport.h>
+#include <Swiften/FileTransfer/SOCKS5BytestreamClientSession.h>
 
 namespace Swift {
 	class RemoteJingleTransportCandidateSelector {
@@ -19,6 +21,8 @@ namespace Swift {
 			virtual void addRemoteTransportCandidates(JingleTransportPayload::ref) = 0;
 			virtual void selectCandidate() = 0;
 			virtual void setMinimumPriority(int) = 0;
+			virtual void setRequesterTargtet(const JID&, const JID&) {}
+			virtual SOCKS5BytestreamClientSession::ref getS5BSession() { return SOCKS5BytestreamClientSession::ref(); }
 
 			virtual bool isActualCandidate(JingleTransportPayload::ref) = 0;
 			virtual int getPriority(JingleTransportPayload::ref) = 0;

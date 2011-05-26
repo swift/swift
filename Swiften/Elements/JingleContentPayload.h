@@ -21,6 +21,7 @@ namespace Swift {
 			typedef boost::shared_ptr<JingleContentPayload> ref;
 
 			enum Creator {
+				UnknownCreator,
 				InitiatorCreator,
 				ResponderCreator,
 			};

@@ -24,12 +24,14 @@ namespace Swift {
 	class TabComplete;
 	class RosterItem;
 	class ContactRosterItem;
+	class FileTransferController;
 
 	class ChatWindow {
 		public:
 			enum AckState {Pending, Received, Failed};
 			enum Tristate {Yes, No, Maybe};
 			enum OccupantAction {Kick};
+			enum FileTransferState {WaitingForAccept, Negotiating, Transferring, Canceled, Finished, FTFailed};
 			ChatWindow() {}
 			virtual ~ChatWindow() {};
 
@@ -45,6 +47,11 @@ namespace Swift {
 			virtual void addPresenceMessage(const std::string& message) = 0;
 			virtual void addErrorMessage(const std::string& message) = 0;
 			virtual void replaceMessage(const std::string& message, const std::string& id, const boost::posix_time::ptime& time) = 0;
+			
+			// File transfer related stuff
+			virtual std::string addFileTransfer(const std::string& senderName, bool senderIsSelf, const std::string& filename, const boost::uintmax_t sizeInBytes) = 0;
+			virtual void setFileTransferProgress(std::string, const int percentageDone) = 0;
+			virtual void setFileTransferStatus(std::string, const FileTransferState state, const std::string& msg = "") = 0;
 
 			virtual void setContactChatState(ChatState::ChatStateType state) = 0;
 			virtual void setName(const std::string& name) = 0;
@@ -88,6 +95,12 @@ namespace Swift {
 			boost::signal<void ()> onAlertButtonClicked;
 			boost::signal<void (ContactRosterItem*)> onOccupantSelectionChanged;
 			boost::signal<void (ChatWindow::OccupantAction, ContactRosterItem*)> onOccupantActionSelected;
+			
+			// File transfer related
+			boost::signal<void (std::string /* id */)> onFileTransferCancel;
+			boost::signal<void (std::string /* id */, std::string /* description */)> onFileTransferStart;
+			boost::signal<void (std::string /* id */, std::string /* path */)> onFileTransferAccept;
+			boost::signal<void (std::string /* path */)> onSendFileRequest;
 	};
 }
 #endif

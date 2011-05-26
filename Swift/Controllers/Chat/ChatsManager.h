@@ -43,10 +43,12 @@ namespace Swift {
 	class MUCSearchWindowFactory;
 	class ProfileSettingsProvider;
 	class MUCSearchController;
-
+	class FileTransferOverview;
+	class FileTransferController;
+	
 	class ChatsManager {
 		public:
-			ChatsManager(JID jid, StanzaChannel* stanzaChannel, IQRouter* iqRouter, EventController* eventController, ChatWindowFactory* chatWindowFactory, JoinMUCWindowFactory* joinMUCWindowFactory, NickResolver* nickResolver, PresenceOracle* presenceOracle, PresenceSender* presenceSender, UIEventStream* uiEventStream, ChatListWindowFactory* chatListWindowFactory, bool useDelayForLatency, TimerFactory* timerFactory, MUCRegistry* mucRegistry, EntityCapsProvider* entityCapsProvider, MUCManager* mucManager, MUCSearchWindowFactory* mucSearchWindowFactory, ProfileSettingsProvider* settings);
+			ChatsManager(JID jid, StanzaChannel* stanzaChannel, IQRouter* iqRouter, EventController* eventController, ChatWindowFactory* chatWindowFactory, JoinMUCWindowFactory* joinMUCWindowFactory, NickResolver* nickResolver, PresenceOracle* presenceOracle, PresenceSender* presenceSender, UIEventStream* uiEventStream, ChatListWindowFactory* chatListWindowFactory, bool useDelayForLatency, TimerFactory* timerFactory, MUCRegistry* mucRegistry, EntityCapsProvider* entityCapsProvider, MUCManager* mucManager, MUCSearchWindowFactory* mucSearchWindowFactory, ProfileSettingsProvider* settings, FileTransferOverview* ftOverview);
 			virtual ~ChatsManager();
 			void setAvatarManager(AvatarManager* avatarManager);
 			void setOnline(bool enabled);
@@ -67,6 +69,7 @@ namespace Swift {
 			void handleUserLeftMUC(MUCController* mucController);
 			void handleBookmarksReady();
 			void handleChatActivity(const JID& jid, const std::string& activity, bool isMUC);
+			void handleNewFileTransferController(FileTransferController*);
 			void appendRecent(const ChatListWindow::Chat& chat);
 			void prependRecent(const ChatListWindow::Chat& chat);
 			void setupBookmarks();
@@ -110,5 +113,6 @@ namespace Swift {
 			MUCSearchController* mucSearchController_;
 			std::list<ChatListWindow::Chat> recentChats_;
 			ProfileSettingsProvider* profileSettings_;
+			FileTransferOverview* ftOverview_;
 	};
 }

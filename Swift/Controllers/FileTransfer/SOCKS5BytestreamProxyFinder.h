@@ -1,0 +1,38 @@
+/*
+ * Copyright (c) 2011 Tobias Markmann
+ * Licensed under the simplified BSD license.
+ * See Documentation/Licenses/BSD-simplified.txt for more information.
+ */
+
+#pragma once
+
+#include <boost/shared_ptr.hpp>
+
+#include <Swift/Controllers/DiscoServiceWalker.h>
+#include <Swiften/Network/HostAddressPort.h>
+#include <Swiften/Elements/S5BProxyRequest.h>
+
+namespace Swift {
+
+class JID;
+class IQRouter;
+
+class SOCKS5BytestreamProxyFinder {
+public:
+	SOCKS5BytestreamProxyFinder(const JID& service, IQRouter *iqRouter);
+	void start();
+
+	boost::signal<void(boost::shared_ptr<S5BProxyRequest>)> onProxyFound;
+
+private:
+	void sendBytestreamQuery(const JID&);
+
+	void handleServiceFound(const JID&, boost::shared_ptr<DiscoInfo>);
+	void handleProxyResponse(boost::shared_ptr<S5BProxyRequest>, ErrorPayload::ref);
+private:
+	boost::shared_ptr<DiscoServiceWalker> serviceWalker;
+	IQRouter* iqRouter;
+	std::vector<boost::shared_ptr<GenericRequest<S5BProxyRequest> > > requests;
+};
+
+}

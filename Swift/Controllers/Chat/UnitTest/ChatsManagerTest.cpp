@@ -8,6 +8,8 @@
 #include <cppunit/extensions/TestFactoryRegistry.h>
 #include "3rdParty/hippomocks.h"
 
+#include <boost/bind.hpp>
+
 #include "Swift/Controllers/Chat/ChatsManager.h"
 
 #include "Swift/Controllers/Chat/UnitTest/MockChatListWindow.h"
@@ -36,11 +38,14 @@
 #include "Swiften/Client/DummyStanzaChannel.h"
 #include "Swiften/Queries/DummyIQChannel.h"
 #include "Swiften/Presence/PresenceOracle.h"
+#include "Swiften/Jingle/JingleSessionManager.h"
+#include "Swiften/FileTransfer/UnitTest/DummyFileTransferManager.h"
 #include "Swift/Controllers/UIEvents/RequestChatUIEvent.h"
 #include "Swift/Controllers/UIEvents/JoinMUCUIEvent.h"
 #include "Swift/Controllers/UIEvents/UIEventStream.h"
 #include <Swift/Controllers/ProfileSettingsProvider.h>
-
+#include "Swift/Controllers/FileTransfer/FileTransferOverview.h"
+#include <Swiften/Base/Algorithm.h>
 
 using namespace Swift;
 
@@ -86,19 +91,23 @@ public:
 		settings_ = new DummySettingsProvider();
 		profileSettings_ = new ProfileSettingsProvider("a", settings_);
 		chatListWindow_ = new MockChatListWindow();
+		ftManager_ = new DummyFileTransferManager();
+		ftOverview_ = new FileTransferOverview(ftManager_);
 		mocks_->ExpectCall(chatListWindowFactory_, ChatListWindowFactory::createChatListWindow).With(uiEventStream_).Return(chatListWindow_);
-		manager_ = new ChatsManager(jid_, stanzaChannel_, iqRouter_, eventController_, chatWindowFactory_, joinMUCWindowFactory_, nickResolver_, presenceOracle_, directedPresenceSender_, uiEventStream_, chatListWindowFactory_, true, NULL, mucRegistry_, entityCapsManager_, mucManager_, mucSearchWindowFactory_, profileSettings_);
+		manager_ = new ChatsManager(jid_, stanzaChannel_, iqRouter_, eventController_, chatWindowFactory_, joinMUCWindowFactory_, nickResolver_, presenceOracle_, directedPresenceSender_, uiEventStream_, chatListWindowFactory_, true, NULL, mucRegistry_, entityCapsManager_, mucManager_, mucSearchWindowFactory_, profileSettings_, ftOverview_);
 
 		avatarManager_ = new NullAvatarManager();
 		manager_->setAvatarManager(avatarManager_);
 	};
 	
 	void tearDown() {
-		//delete chatListWindowFactory_;
+		//delete chatListWindowFactory
 		delete settings_;
 		delete profileSettings_;
 		delete avatarManager_;
 		delete manager_;
+		delete ftOverview_;
+		delete ftManager_;
 		delete directedPresenceSender_;
 		delete presenceSender_;
 		delete presenceOracle_;
@@ -354,6 +363,8 @@ private:
 	DummySettingsProvider* settings_;
 	ProfileSettingsProvider* profileSettings_;
 	ChatListWindow* chatListWindow_;
+	FileTransferOverview* ftOverview_;
+	FileTransferManager* ftManager_;
 };
 
 CPPUNIT_TEST_SUITE_REGISTRATION(ChatsManagerTest);

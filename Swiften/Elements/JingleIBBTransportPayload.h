@@ -29,14 +29,6 @@ namespace Swift {
 				return stanzaType;
 			}
 
-			void setSessionID(const std::string& id) {
-				sessionID = id;
-			}
-
-			const std::string& getSessionID() const {
-				return sessionID;
-			}
-
 			int getBlockSize() const {
 				return blockSize;
 			}
@@ -46,7 +38,6 @@ namespace Swift {
 			}
 
 		private:
-			std::string sessionID;
 			int blockSize;
 			StanzaType stanzaType;
 	};

@@ -8,6 +8,9 @@
 
 #include <QTreeView>
 #include <QModelIndex>
+#include <QDragEnterEvent>
+#include <QDropEvent>
+#include <QDragMoveEvent>
 #include "Swift/QtUI/Roster/RosterModel.h"
 #include "Swift/QtUI/Roster/RosterDelegate.h"
 
@@ -31,6 +34,10 @@ class QtTreeWidget : public QTreeView{
 		void handleExpanded(const QModelIndex&);
 		void handleCollapsed(const QModelIndex&);
 		void handleClicked(const QModelIndex&);
+	protected:
+		void dragEnterEvent(QDragEnterEvent* event);
+		void dropEvent(QDropEvent* event);
+		void dragMoveEvent(QDragMoveEvent* event);
 
 	protected:
 		QModelIndexList getSelectedIndexes() const;

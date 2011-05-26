@@ -40,7 +40,18 @@ sourceList = [
 			"Timer.cpp",
 			"BoostTimer.cpp",
 			"ProxyProvider.cpp",
-			"NullProxyProvider.cpp"
+			"NullProxyProvider.cpp",
+			"PlatformNATTraversalWorker.cpp",
+			"PlatformNATTraversalGetPublicIPRequest.cpp",
+			"PlatformNATTraversalForwardPortRequest.cpp",
+			"PlatformNATTraversalRemovePortForwardingRequest.cpp",
+			"PlatformNATTraversalRequest.cpp",
+			"UPnPNATTraversalGetPublicIPRequest.cpp",
+			"UPnPNATTraversalForwardPortRequest.cpp",
+			"UPnPNATTraversalRemovePortForwardingRequest.cpp",
+			"NATPMPNATTraversalGetPublicIPRequest.cpp",
+			"NATPMPNATTraversalForwardPortRequest.cpp",
+			"NATPMPNATTraversalRemovePortForwardingRequest.cpp",
 	]
 
 if myenv.get("HAVE_CARES", False) :
@@ -49,9 +60,12 @@ if myenv.get("HAVE_CARES", False) :
 if myenv["PLATFORM"] == "darwin" :
 	myenv.Append(FRAMEWORKS = ["CoreServices", "SystemConfiguration"])
 	sourceList += [ "MacOSXProxyProvider.cpp" ]
+	sourceList += [ "UnixNetworkEnvironment.cpp" ]
 elif myenv["PLATFORM"] == "win32" :
 	sourceList += [ "WindowsProxyProvider.cpp" ]
+	sourceList += [ "WindowsNetworkEnvironment.cpp" ]
 else :
+	sourceList += [ "UnixNetworkEnvironment.cpp" ]
 	sourceList += [ "UnixProxyProvider.cpp" ]
 	sourceList += [ "EnvironmentProxyProvider.cpp" ]
 	if myenv.get("HAVE_GCONF", 0) :

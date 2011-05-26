@@ -4,12 +4,12 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include <cppunit/extensions/HelperMacros.h>
-#include <cppunit/extensions/TestFactoryRegistry.h>
 #include <boost/assign/list_of.hpp>
 #include <functional>
 
 #include <QA/Checker/IO.h>
+#include <cppunit/extensions/HelperMacros.h>
+#include <cppunit/extensions/TestFactoryRegistry.h>
 #include <Swift/Controllers/Roster/LeastCommonSubsequence.h>
 
 using namespace Swift;

@@ -49,6 +49,16 @@
 #include <Swiften/Serializer/PayloadSerializers/ReplaceSerializer.h>
 #include <Swiften/Serializer/PayloadSerializers/LastSerializer.h>
 
+#include <Swiften/Serializer/PayloadSerializers/StreamInitiationFileInfoSerializer.h>
+#include <Swiften/Serializer/PayloadSerializers/JingleContentPayloadSerializer.h>
+#include <Swiften/Serializer/PayloadSerializers/JingleFileTransferDescriptionSerializer.h>
+#include <Swiften/Serializer/PayloadSerializers/JingleFileTransferHashSerializer.h>
+#include <Swiften/Serializer/PayloadSerializers/JingleFileTransferReceivedSerializer.h>
+#include <Swiften/Serializer/PayloadSerializers/JingleIBBTransportPayloadSerializer.h>
+#include <Swiften/Serializer/PayloadSerializers/JingleS5BTransportPayloadSerializer.h>
+#include <Swiften/Serializer/PayloadSerializers/JinglePayloadSerializer.h>
+#include <Swiften/Serializer/PayloadSerializers/S5BProxyRequestSerializer.h>
+
 namespace Swift {
 
 FullPayloadSerializerCollection::FullPayloadSerializerCollection() {
@@ -92,6 +102,17 @@ FullPayloadSerializerCollection::FullPayloadSerializerCollection() {
 	serializers_.push_back(new SearchPayloadSerializer());
 	serializers_.push_back(new ReplaceSerializer());
 	serializers_.push_back(new LastSerializer());
+	
+	serializers_.push_back(new StreamInitiationFileInfoSerializer());
+	serializers_.push_back(new JingleContentPayloadSerializer());
+	serializers_.push_back(new JingleFileTransferDescriptionSerializer());
+	serializers_.push_back(new JingleFileTransferHashSerializer());
+	serializers_.push_back(new JingleFileTransferReceivedSerializer());
+	serializers_.push_back(new JingleIBBTransportPayloadSerializer());
+	serializers_.push_back(new JingleS5BTransportPayloadSerializer());
+	serializers_.push_back(new JinglePayloadSerializer(this));
+	serializers_.push_back(new S5BProxyRequestSerializer());
+	
 	foreach(PayloadSerializer* serializer, serializers_) {
 		addSerializer(serializer);
 	}

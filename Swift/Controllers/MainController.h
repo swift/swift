@@ -23,6 +23,8 @@
 #include "Swiften/Elements/CapsInfo.h"
 #include "Swift/Controllers/XMPPEvents/ErrorEvent.h"
 #include "Swift/Controllers/UIEvents/UIEvent.h"
+#include "Swift/Controllers/FileTransfer/SOCKS5BytestreamProxyFinder.h"
+#include "Swiften/Client/ClientXMLTracer.h"
 
 namespace Swift {
 	class IdleDetector;
@@ -51,6 +53,7 @@ namespace Swift {
 	class SoundEventController;
 	class SoundPlayer;
 	class XMLConsoleController;
+	class FileTransferListController;
 	class UIEventStream;
 	class EventWindowFactory;
 	class EventWindowController;
@@ -65,6 +68,7 @@ namespace Swift {
 	class XMPPURIController;
 	class AdHocManager;
 	class AdHocCommandWindowFactory;
+	class FileTransferOverview;
 
 	class MainController {
 		public:
@@ -140,6 +144,7 @@ namespace Swift {
 			LoginWindow* loginWindow_;
 			UIEventStream* uiEventStream_;
 			XMLConsoleController* xmlConsoleController_;
+			FileTransferListController* fileTransferListController_;
 			ChatsManager* chatsManager_;
 			ProfileController* profileController_;
 			ContactEditController* contactEditController_;
@@ -162,5 +167,7 @@ namespace Swift {
 			bool quitRequested_;
 			static const int SecondsToWaitBeforeForceQuitting;
 			bool eagleMode_;
+			FileTransferOverview* ftOverview_;
+			SOCKS5BytestreamProxyFinder* s5bProxyFinder_;
 	};
 }

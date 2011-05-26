@@ -311,6 +311,27 @@ else :
 	env["LIBIDN_BUNDLED"] = 1
 conf.Finish()
 
+# LibMiniUPnPc
+libminiupnpc_conf_env = conf_env.Clone()
+
+conf = Configure(libminiupnpc_conf_env)
+if conf.CheckCHeader("miniupnpc.h") and conf.CheckLib(env["libminiupnpc_libname"]) :
+	print "NOT IMPLEMENTED YET"
+else :
+	env["LIBMINIUPNPC_BUNDLED"] = 1
+conf.Finish()
+
+# LibNATPMP
+libnatpmp_conf_env = conf_env.Clone()
+
+conf = Configure(libnatpmp_conf_env)
+if conf.CheckCHeader("natpmp.h") and conf.CheckLib(env["libnatpmp_libname"]) :
+	print "NOT IMPLEMENTED YET"
+else :
+	env["LIBNATPMP_BUNDLED"] = 1
+conf.Finish()
+
+
 # SQLite
 #sqlite_conf_env = conf_env.Clone()
 #sqlite_flags = {}

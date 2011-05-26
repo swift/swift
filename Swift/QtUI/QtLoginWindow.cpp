@@ -7,6 +7,7 @@
 #include "QtLoginWindow.h"
 
 #include <boost/bind.hpp>
+#include <boost/smart_ptr/make_shared.hpp>
 #include <algorithm>
 #include <cassert>
 
@@ -28,6 +29,7 @@
  
 #include "Swift/Controllers/UIEvents/UIEventStream.h"
 #include "Swift/Controllers/UIEvents/RequestXMLConsoleUIEvent.h"
+#include "Swift/Controllers/UIEvents/RequestFileTransferListUIEvent.h"
 #include "Swift/Controllers/UIEvents/ToggleSoundsUIEvent.h"
 #include "Swift/Controllers/UIEvents/ToggleNotificationsUIEvent.h"
 #include "Swiften/Base/Platform.h"
@@ -165,6 +167,10 @@ QtLoginWindow::QtLoginWindow(UIEventStream* uiEventStream) : QMainWindow(), forg
 	xmlConsoleAction_ = new QAction(tr("&Show Debug Console"), this);
 	connect(xmlConsoleAction_, SIGNAL(triggered()), SLOT(handleShowXMLConsole()));
 	generalMenu_->addAction(xmlConsoleAction_);
+
+	fileTransferOverviewAction_ = new QAction(tr("Show &File Transfer Overview"), this);
+	connect(fileTransferOverviewAction_, SIGNAL(triggered()), SLOT(handleShowFileTransferOverview()));
+	generalMenu_->addAction(fileTransferOverviewAction_);
 
 	toggleSoundsAction_ = new QAction(tr("&Play Sounds"), this);
 	toggleSoundsAction_->setCheckable(true);
@@ -354,6 +360,10 @@ void QtLoginWindow::handleAbout() {
 
 void QtLoginWindow::handleShowXMLConsole() {
 	uiEventStream_->send(boost::shared_ptr<RequestXMLConsoleUIEvent>(new RequestXMLConsoleUIEvent()));
+}
+
+void QtLoginWindow::handleShowFileTransferOverview() {
+	uiEventStream_->send(boost::make_shared<RequestFileTransferListUIEvent>());
 }
 
 void QtLoginWindow::handleToggleSounds(bool enabled) {

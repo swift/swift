@@ -12,13 +12,18 @@
 namespace Swift {
 
 ClientXMLTracer::ClientXMLTracer(CoreClient* client) {
-	client->onDataRead.connect(boost::bind(&ClientXMLTracer::printData, '<', _1));
-	client->onDataWritten.connect(boost::bind(&ClientXMLTracer::printData, '>', _1));
+	beautifier = new XMLBeautifier(true, true);
+	client->onDataRead.connect(boost::bind(&ClientXMLTracer::printData, this, '<', _1));
+	client->onDataWritten.connect(boost::bind(&ClientXMLTracer::printData, this, '>', _1));
+}
+
+ClientXMLTracer::~ClientXMLTracer() {
+	delete beautifier;
 }
 
 void ClientXMLTracer::printData(char direction, const SafeByteArray& data) {
 	printLine(direction);
-	std::cerr << byteArrayToString(ByteArray(data.begin(), data.end())) << std::endl;
+	std::cerr << beautifier->beautify(byteArrayToString(ByteArray(data.begin(), data.end()))) << std::endl;
 }
 
 void ClientXMLTracer::printLine(char c) {

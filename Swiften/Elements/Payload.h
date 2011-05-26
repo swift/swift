@@ -6,8 +6,12 @@
 
 #pragma once
 
+#include <boost/shared_ptr.hpp>
+
 namespace Swift {
 	class Payload {
+		public:
+			typedef boost::shared_ptr<Payload> ref;
 		public:
 			virtual ~Payload();
 	};

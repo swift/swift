@@ -34,6 +34,7 @@ class SOCKS5BytestreamServerSessionTest : public CppUnit::TestFixture {
 		void setUp() {
 			receivedDataChunks = 0;
 			eventLoop = new DummyEventLoop();
+			bytestreams = new SOCKS5BytestreamRegistry();
 			connection = boost::shared_ptr<DummyConnection>(new DummyConnection(eventLoop));
 			connection->onDataSent.connect(boost::bind(&SOCKS5BytestreamServerSessionTest::handleDataWritten, this, _1));
 			stream1 = boost::shared_ptr<ByteArrayReadBytestream>(new ByteArrayReadBytestream(createByteArray("abcdefg")));
@@ -41,6 +42,7 @@ class SOCKS5BytestreamServerSessionTest : public CppUnit::TestFixture {
 
 		void tearDown() {
 			connection.reset();
+			delete bytestreams;
 			delete eventLoop;
 		}
 
@@ -67,7 +69,7 @@ class SOCKS5BytestreamServerSessionTest : public CppUnit::TestFixture {
 		void testRequest() {
 			boost::shared_ptr<SOCKS5BytestreamServerSession> testling(createSession());
 			StartStopper<SOCKS5BytestreamServerSession> stopper(testling.get());
-			bytestreams.addBytestream("abcdef", stream1);
+			bytestreams->addReadBytestream("abcdef", stream1);
 			authenticate();
 
 			ByteArray hostname(createByteArray("abcdef"));
@@ -88,10 +90,11 @@ class SOCKS5BytestreamServerSessionTest : public CppUnit::TestFixture {
 		void testReceiveData() {
 			boost::shared_ptr<SOCKS5BytestreamServerSession> testling(createSession());
 			StartStopper<SOCKS5BytestreamServerSession> stopper(testling.get());
-			bytestreams.addBytestream("abcdef", stream1);
+			bytestreams->addReadBytestream("abcdef", stream1);
 			authenticate();
 			request("abcdef");
 			eventLoop->processEvents();
+			testling->startTransfer();
 			skipHeader("abcdef");
 
 			CPPUNIT_ASSERT(createByteArray("abcdefg") == receivedData);
@@ -102,11 +105,12 @@ class SOCKS5BytestreamServerSessionTest : public CppUnit::TestFixture {
 			boost::shared_ptr<SOCKS5BytestreamServerSession> testling(createSession());
 			testling->setChunkSize(3);
 			StartStopper<SOCKS5BytestreamServerSession> stopper(testling.get());
-			bytestreams.addBytestream("abcdef", stream1);
+			bytestreams->addReadBytestream("abcdef", stream1);
 			authenticate();
 			request("abcdef");
 			eventLoop->processEvents();
-
+			testling->startTransfer();
+			eventLoop->processEvents();
 			skipHeader("abcdef");
 			CPPUNIT_ASSERT(createByteArray("abcdefg") == receivedData);
 			CPPUNIT_ASSERT_EQUAL(4, receivedDataChunks);
@@ -141,13 +145,13 @@ class SOCKS5BytestreamServerSessionTest : public CppUnit::TestFixture {
 
 	private:
 		SOCKS5BytestreamServerSession* createSession() {
-			SOCKS5BytestreamServerSession* session = new SOCKS5BytestreamServerSession(connection, &bytestreams);
+			SOCKS5BytestreamServerSession* session = new SOCKS5BytestreamServerSession(connection, bytestreams);
 			return session;
 		}
 
 	private:
 		DummyEventLoop* eventLoop;
-		SOCKS5BytestreamRegistry bytestreams;
+		SOCKS5BytestreamRegistry* bytestreams;
 		boost::shared_ptr<DummyConnection> connection;
 		std::vector<unsigned char> receivedData;
 		int receivedDataChunks;

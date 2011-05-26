@@ -6,6 +6,7 @@
 
 #include <QA/Checker/IO.h>
 
+#include <algorithm>
 #include <iostream>
 
 std::ostream& operator<<(std::ostream& os, const Swift::ByteArray& s) {
@@ -54,4 +55,11 @@ std::ostream& operator<<(std::ostream& os, const std::vector<size_t>& s) {
 	}
 	os << std::endl;
 	return os;
+}
+
+bool operator==(const Swift::ByteArray& a, const Swift::ByteArray& b) {
+	if (a.size() != b.size()) {
+		return false;
+	}
+	return std::equal(a.begin(), a.end(), b.begin());
 }

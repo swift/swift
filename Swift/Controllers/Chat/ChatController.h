@@ -8,12 +8,16 @@
 
 #include "Swift/Controllers/Chat/ChatControllerBase.h"
 
+#include <map>
+#include <string>
+
 namespace Swift {
 	class AvatarManager;
 	class ChatStateNotifier;
 	class ChatStateTracker;
 	class NickResolver;
 	class EntityCapsProvider;
+	class FileTransferController;
 
 	class ChatController : public ChatControllerBase {
 		public:
@@ -21,6 +25,7 @@ namespace Swift {
 			virtual ~ChatController();
 			virtual void setToJID(const JID& jid);
 			virtual void setOnline(bool online);
+			virtual void handleNewFileTransferController(FileTransferController* ftc);
 
 		private:
 			void handlePresenceChange(boost::shared_ptr<Presence> newPresence);
@@ -37,6 +42,11 @@ namespace Swift {
 			void handleContactNickChanged(const JID& jid, const std::string& /*oldNick*/);
 			void handleBareJIDCapsChanged(const JID& jid);
 
+			void handleFileTransferCancel(std::string /* id */);
+			void handleFileTransferStart(std::string /* id */, std::string /* description */);
+			void handleFileTransferAccept(std::string /* id */, std::string /* filename */);
+			void handleSendFileRequest(std::string filename);
+
 		private:
 			NickResolver* nickResolver_;
 			ChatStateNotifier* chatStateNotifier_;
@@ -47,6 +57,9 @@ namespace Swift {
 			std::string lastStatusChangeString_;
 			std::map<boost::shared_ptr<Stanza>, std::string> unackedStanzas_;
 			StatusShow::Type lastShownStatus_;
+			UIEventStream* eventStream_;
+
+			std::map<std::string, FileTransferController*> ftControllers;
 	};
 }
 

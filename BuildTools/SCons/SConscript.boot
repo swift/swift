@@ -180,7 +180,7 @@ else :
 	if gccVersion >= ["4", "5", "0"] :
 		env.Append(CXXFLAGS = ["-Wlogical-op"])
 	if "clang" in env["CC"] :
-		env.Append(CXXFLAGS = ["-W#warnings", "-W-Wc++0x-compat", "-Wc++0x-compat", "-Waddress-of-temporary", "-Wambiguous-member-template", "-Warray-bounds", "-Watomic-properties", "-Wbind-to-temporary-copy", "-Wbuiltin-macro-redefined", "-Wc++-compat", "-Wc++0x-extensions", "-Wcomments", "-Wconditional-uninitialized", "-Wconstant-logical-operand", "-Wdeclaration-after-statement", "-Wdeprecated", "-Wdeprecated-implementations", "-Wdeprecated-writable-strings", "-Wduplicate-method-arg", "-Wempty-body", "-Wendif-labels", "-Wenum-compare", "-Wformat=2", "-Wfour-char-constants", "-Wgnu", "-Wincomplete-implementation", "-Winvalid-noreturn", "-Winvalid-offsetof", "-Winvalid-token-paste", "-Wlocal-type-template-args", "-Wmethod-signatures", "-Wmicrosoft", "-Wmissing-declarations", "-Wnon-pod-varargs", "-Wnonfragile-abi2", "-Wnull-dereference", "-Wout-of-line-declaration", "-Woverlength-strings", "-Wpacked", "-Wpointer-arith", "-Wpointer-sign", "-Wprotocol", "-Wreadonly-setter-attrs", "-Wselector", "-Wshift-overflow", "-Wshift-sign-overflow", "-Wstrict-selector-match", "-Wsuper-class-method-mismatch", "-Wtautological-compare", "-Wtypedef-redefinition", "-Wundeclared-selector", "-Wunknown-attributes", "-Wunknown-warning-option", "-Wunnamed-type-template-args", "-Wunused-exception-parameter", "-Wunused-member-function", "-Wused-but-marked-unused", "-Wvariadic-macros"])
+		env.Append(CXXFLAGS = ["-W#warnings", "-Wc++0x-compat", "-Waddress-of-temporary", "-Wambiguous-member-template", "-Warray-bounds", "-Watomic-properties", "-Wbind-to-temporary-copy", "-Wbuiltin-macro-redefined", "-Wc++-compat", "-Wc++0x-extensions", "-Wcomments", "-Wconditional-uninitialized", "-Wconstant-logical-operand", "-Wdeclaration-after-statement", "-Wdeprecated", "-Wdeprecated-implementations", "-Wdeprecated-writable-strings", "-Wduplicate-method-arg", "-Wempty-body", "-Wendif-labels", "-Wenum-compare", "-Wformat=2", "-Wfour-char-constants", "-Wgnu", "-Wincomplete-implementation", "-Winvalid-noreturn", "-Winvalid-offsetof", "-Winvalid-token-paste", "-Wlocal-type-template-args", "-Wmethod-signatures", "-Wmicrosoft", "-Wmissing-declarations", "-Wnon-pod-varargs", "-Wnonfragile-abi2", "-Wnull-dereference", "-Wout-of-line-declaration", "-Woverlength-strings", "-Wpacked", "-Wpointer-arith", "-Wpointer-sign", "-Wprotocol", "-Wreadonly-setter-attrs", "-Wselector", "-Wshift-overflow", "-Wshift-sign-overflow", "-Wstrict-selector-match", "-Wsuper-class-method-mismatch", "-Wtautological-compare", "-Wtypedef-redefinition", "-Wundeclared-selector", "-Wunknown-warning-option", "-Wunnamed-type-template-args", "-Wunused-exception-parameter", "-Wunused-member-function", "-Wused-but-marked-unused", "-Wvariadic-macros"])
 # To enable: 
 # "-Wheader-hygiene"
 #	"-Wnon-gcc",
@@ -193,7 +193,7 @@ if env.get("coverage", 0) :
 	env.Append(LINKFLAGS = ["-fprofile-arcs", "-ftest-coverage"])
 
 if env["PLATFORM"] == "win32" :
-	env.Append(LIBS = ["user32", "crypt32", "dnsapi", "ws2_32", "wsock32", "Advapi32"])
+	env.Append(LIBS = ["user32", "crypt32", "dnsapi", "iphlpapi", "ws2_32", "wsock32", "Advapi32"])
 	env.Append(CCFLAGS = ["/EHsc", "/nologo"])
 	# FIXME: We should find a decent solution for MSVS 10
 	if int(env["MSVS_VERSION"].split(".")[0]) < 10 :

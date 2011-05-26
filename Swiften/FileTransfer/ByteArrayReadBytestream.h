@@ -22,6 +22,8 @@ namespace Swift {
 					readSize = data.size() - position;
 				}
 				std::vector<unsigned char> result(data.begin() + position, data.begin() + position + readSize);
+
+				onRead(result);
 				position += readSize;
 				return result;
 			}

@@ -13,6 +13,18 @@
 namespace Swift {
 	class JingleTransportPayload : public Payload {
 		public:
+			void setSessionID(const std::string& id) {
+				sessionID = id;
+			}
+
+			const std::string& getSessionID() const {
+				return sessionID;
+			}
+
+		public:
 			typedef boost::shared_ptr<JingleTransportPayload> ref;
+
+		private:
+			std::string sessionID;
 	};
 }

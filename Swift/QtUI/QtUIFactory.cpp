@@ -24,6 +24,7 @@
 #include "QtProfileWindow.h"
 #include "QtContactEditWindow.h"
 #include "QtAdHocCommandWindow.h"
+#include "QtFileTransferListWidget.h"
 
 #define CHATWINDOW_FONT_SIZE "chatWindowFontSize"
 
@@ -43,6 +44,15 @@ XMLConsoleWidget* QtUIFactory::createXMLConsoleWidget() {
 	return widget;
 }
 
+FileTransferListWidget* QtUIFactory::createFileTransferListWidget() {
+	QtFileTransferListWidget* widget = new QtFileTransferListWidget();
+	tabs->addTab(widget);
+	if (!tabs->isVisible()) {
+		tabs->show();
+	}
+	widget->show();
+	return widget;
+}
 
 MainWindow* QtUIFactory::createMainWindow(UIEventStream* eventStream) {
 	lastMainWindow  = new QtMainWindow(settings, eventStream);

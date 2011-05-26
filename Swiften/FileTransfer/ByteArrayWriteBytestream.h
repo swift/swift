@@ -16,6 +16,7 @@ namespace Swift {
 
 			virtual void write(const std::vector<unsigned char>& bytes) {
 				data.insert(data.end(), bytes.begin(), bytes.end());
+				onWrite(bytes);
 			}
 
 			const std::vector<unsigned char>& getData() const {

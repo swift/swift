@@ -8,12 +8,14 @@
 
 #include "Swiften/JID/JID.h"
 #include <string>
+#include <set>
 #include "Swiften/Elements/Presence.h"
 #include "Swiften/Elements/ErrorPayload.h"
 #include "Swiften/Elements/RosterPayload.h"
 #include "Swiften/Avatars/AvatarManager.h"
 #include "Swift/Controllers/UIEvents/UIEvent.h"
 #include "RosterGroupExpandinessPersister.h"
+#include "Swift/Controllers/FileTransfer/FileTransferOverview.h"
 
 #include "Swiften/Base/boost_bsignals.h"
 #include <boost/shared_ptr.hpp>
@@ -35,10 +37,12 @@ namespace Swift {
 	class IQRouter;
 	class SettingsProvider;
 	class NickManager;
-
+	class EntityCapsProvider;
+	class FileTransferManager;
+	
 	class RosterController {
 		public:
-			RosterController(const JID& jid, XMPPRoster* xmppRoster, AvatarManager* avatarManager, MainWindowFactory* mainWindowFactory, NickManager* nickManager, NickResolver* nickResolver, PresenceOracle* presenceOracle, SubscriptionManager* subscriptionManager, EventController* eventController, UIEventStream* uiEventStream, IQRouter* iqRouter_, SettingsProvider* settings);
+			RosterController(const JID& jid, XMPPRoster* xmppRoster, AvatarManager* avatarManager, MainWindowFactory* mainWindowFactory, NickManager* nickManager, NickResolver* nickResolver, PresenceOracle* presenceOracle, SubscriptionManager* subscriptionManager, EventController* eventController, UIEventStream* uiEventStream, IQRouter* iqRouter_, SettingsProvider* settings, EntityCapsProvider* entityCapsProvider, FileTransferOverview* fileTransferOverview);
 			~RosterController();
 			void showRosterWindow();
 			MainWindow* getWindow() {return mainWindow_;};
@@ -69,6 +73,7 @@ namespace Swift {
 			void handleRosterSetError(ErrorPayload::ref error, boost::shared_ptr<RosterPayload> rosterPayload);
 			void applyAllPresenceTo(const JID& jid);
 			void handleEditProfileRequest();
+			void handleOnCapsChanged(const JID& jid);
 
 			JID myJID_;
 			XMPPRoster* xmppRoster_;
@@ -86,6 +91,9 @@ namespace Swift {
 			IQRouter* iqRouter_;
 			SettingsProvider* settings_;
 			UIEventStream* uiEventStream_;
+			EntityCapsProvider* entityCapsManager_;
+			FileTransferOverview* ftOverview_;
+			
 			boost::bsignals::scoped_connection changeStatusConnection_;
 			boost::bsignals::scoped_connection signOutConnection_;
 			boost::bsignals::scoped_connection uiEventConnection_;

@@ -36,9 +36,14 @@
 #include "Swift/Controllers/UIEvents/RenameRosterItemUIEvent.h"
 #include "Swift/Controllers/UIEvents/RenameGroupUIEvent.h"
 #include "Swift/Controllers/UIEvents/ToggleShowOfflineUIEvent.h"
+#include "Swift/Controllers/UIEvents/SendFileUIEvent.h"
+#include <Swiften/FileTransfer/FileTransferManager.h>
 #include <Swiften/Client/NickManager.h>
 #include <Swift/Controllers/Intl.h>
 #include <Swiften/Base/format.h>
+#include <Swiften/Elements/DiscoInfo.h>
+#include <Swiften/Disco/EntityCapsManager.h>
+#include <Swiften/Jingle/JingleSessionManager.h>
 
 namespace Swift {
 
@@ -47,8 +52,9 @@ static const std::string SHOW_OFFLINE = "showOffline";
 /**
  * The controller does not gain ownership of these parameters.
  */
-RosterController::RosterController(const JID& jid, XMPPRoster* xmppRoster, AvatarManager* avatarManager, MainWindowFactory* mainWindowFactory, NickManager* nickManager, NickResolver* nickResolver, PresenceOracle* presenceOracle, SubscriptionManager* subscriptionManager, EventController* eventController, UIEventStream* uiEventStream, IQRouter* iqRouter, SettingsProvider* settings)
- : myJID_(jid), xmppRoster_(xmppRoster), mainWindowFactory_(mainWindowFactory), mainWindow_(mainWindowFactory_->createMainWindow(uiEventStream)), roster_(new Roster()), offlineFilter_(new OfflineRosterFilter()), nickManager_(nickManager), nickResolver_(nickResolver), uiEventStream_(uiEventStream) {
+RosterController::RosterController(const JID& jid, XMPPRoster* xmppRoster, AvatarManager* avatarManager, MainWindowFactory* mainWindowFactory, NickManager* nickManager, NickResolver* nickResolver, PresenceOracle* presenceOracle, SubscriptionManager* subscriptionManager, EventController* eventController, UIEventStream* uiEventStream, IQRouter* iqRouter, SettingsProvider* settings, EntityCapsProvider* entityCapsManager, FileTransferOverview* fileTransferOverview)
+ : myJID_(jid), xmppRoster_(xmppRoster), mainWindowFactory_(mainWindowFactory), mainWindow_(mainWindowFactory_->createMainWindow(uiEventStream)), roster_(new Roster()), offlineFilter_(new OfflineRosterFilter()), nickManager_(nickManager), nickResolver_(nickResolver), uiEventStream_(uiEventStream), entityCapsManager_(entityCapsManager), ftOverview_(fileTransferOverview) {
+	assert(fileTransferOverview);
 	iqRouter_ = iqRouter;
 	presenceOracle_ = presenceOracle;
 	subscriptionManager_ = subscriptionManager;
@@ -74,15 +80,17 @@ RosterController::RosterController(const JID& jid, XMPPRoster* xmppRoster, Avata
 	nickManager_->onOwnNickChanged.connect(boost::bind(&MainWindow::setMyNick, mainWindow_, _1));
 	mainWindow_->setMyJID(jid);
 	mainWindow_->setMyNick(nickManager_->getOwnNick());
+	
+	entityCapsManager_->onCapsChanged.connect(boost::bind(&RosterController::handleOnCapsChanged, this, _1));
 
 	if (settings->getBoolSetting(SHOW_OFFLINE, false)) {
 		uiEventStream->onUIEvent(boost::shared_ptr<UIEvent>(new ToggleShowOfflineUIEvent(true)));
 	}
 }
 
-RosterController::~RosterController() {
+RosterController::~RosterController() {	
 	nickManager_->onOwnNickChanged.disconnect(boost::bind(&MainWindow::setMyNick, mainWindow_, _1));
-
+	
 	delete offlineFilter_;
 	delete expandiness_;
 
@@ -91,6 +99,7 @@ RosterController::~RosterController() {
 		delete mainWindow_;
 	}
 	delete roster_;
+	
 }
 
 void RosterController::setEnabled(bool enabled) {
@@ -226,6 +235,10 @@ void RosterController::handleUIEvent(boost::shared_ptr<UIEvent> event) {
 			}
 		}
 	}
+	else if (boost::shared_ptr<SendFileUIEvent> sendFileEvent = boost::dynamic_pointer_cast<SendFileUIEvent>(event)) {
+		//TODO add send file dialog to ChatView of receipient jid
+		ftOverview_->sendFile(sendFileEvent->getJID(), sendFileEvent->getFilename());
+	}
 }
 
 void RosterController::setContactGroups(const JID& jid, const std::vector<std::string>& groups) {
@@ -300,6 +313,17 @@ boost::optional<XMPPRosterItem> RosterController::getItem(const JID& jid) const 
 
 std::set<std::string> RosterController::getGroups() const {
 	return xmppRoster_->getGroups();
+}
+
+void RosterController::handleOnCapsChanged(const JID& jid) {
+	DiscoInfo::ref info = entityCapsManager_->getCaps(jid);
+	if (info) {
+		std::set<ContactRosterItem::Feature> features;
+		if (info->hasFeature(DiscoInfo::JingleFeature) && info->hasFeature(DiscoInfo::JingleFTFeature) && info->hasFeature(DiscoInfo::JingleTransportsIBBFeature)) {
+			features.insert(ContactRosterItem::FileTransferFeature);
+		}
+		roster_->setAvailableFeatures(jid, features);
+	}
 }
 
 }

@@ -17,10 +17,13 @@ namespace Swift {
 	class JingleSessionManager;
 	class RemoteJingleTransportCandidateSelectorFactory;
 	class LocalJingleTransportCandidateGeneratorFactory;
+	class SOCKS5BytestreamRegistry;
+	class SOCKS5BytestreamProxy;
+	class TimerFactory;
 
 	class IncomingFileTransferManager : public IncomingJingleSessionHandler {
 		public:
-			IncomingFileTransferManager(JingleSessionManager* jingleSessionManager, IQRouter* router);
+			IncomingFileTransferManager(const JID& ourFullJID, JingleSessionManager* jingleSessionManager, IQRouter* router, RemoteJingleTransportCandidateSelectorFactory* remoteFactory, LocalJingleTransportCandidateGeneratorFactory* localFactory, SOCKS5BytestreamRegistry* bytestreamRegistry, SOCKS5BytestreamProxy* bytestreamProxy, TimerFactory* timerFactory);
 			~IncomingFileTransferManager();
 
 			boost::signal<void (IncomingFileTransfer::ref)> onIncomingFileTransfer;
@@ -29,7 +32,13 @@ namespace Swift {
 			bool handleIncomingJingleSession(JingleSession::ref session, const std::vector<JingleContentPayload::ref>& contents);
 
 		private:
+			JID ourJID;
 			JingleSessionManager* jingleSessionManager;
 			IQRouter* router;
+			RemoteJingleTransportCandidateSelectorFactory* remoteFactory;
+			LocalJingleTransportCandidateGeneratorFactory* localFactory;
+			SOCKS5BytestreamRegistry* bytestreamRegistry;
+			SOCKS5BytestreamProxy* bytestreamProxy;
+			TimerFactory* timerFactory;
 	};
 }

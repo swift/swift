@@ -14,6 +14,8 @@
 #include <Swiften/FileTransfer/BytestreamException.h>
 #include <Swiften/Queries/SetResponder.h>
 
+#include <cassert>
+
 namespace Swift {
 
 class IBBReceiveSession::IBBResponder : public SetResponder<IBB> {
@@ -43,14 +45,17 @@ class IBBReceiveSession::IBBResponder : public SetResponder<IBB> {
 					}
 				}
 				else if (ibb->getAction() == IBB::Open) {
+					SWIFT_LOG(debug) << "IBB open received" << std::endl;
 					sendResponse(from, id, IBB::ref());
 				}
 				else if (ibb->getAction() == IBB::Close) {
+					SWIFT_LOG(debug) << "IBB close received" << std::endl;
 					sendResponse(from, id, IBB::ref());
 					session->finish(FileTransferError(FileTransferError::ClosedError));
 				}
 				return true;
 			}
+			SWIFT_LOG(debug) << "wrong from/sessionID: " << from << " == " << session->from << " / " <<ibb->getStreamID() << " == " << session->id << std::endl;
 			return false;
 		}
 
@@ -71,6 +76,8 @@ IBBReceiveSession::IBBReceiveSession(
 			size(size), 
 			router(router), 
 			active(false) {
+	assert(!id.empty());
+	assert(from.isValid());
 	responder = new IBBResponder(this, router);
 }
 
@@ -82,11 +89,13 @@ IBBReceiveSession::~IBBReceiveSession() {
 }
 
 void IBBReceiveSession::start() {
+	SWIFT_LOG(debug) << "receive session started" << std::endl;
 	active = true;
 	responder->start();
 }
 
 void IBBReceiveSession::stop() {
+	SWIFT_LOG(debug) << "receive session stopped" << std::endl;
 	responder->stop();
 	if (active) {
 		if (router->isAvailable()) {

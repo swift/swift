@@ -37,6 +37,7 @@
 #include "Swift/Controllers/SystemTray.h"
 #include "Swift/Controllers/SystemTrayController.h"
 #include "Swift/Controllers/XMLConsoleController.h"
+#include "Swift/Controllers/FileTransferListController.h"
 #include "Swift/Controllers/UIEvents/UIEventStream.h"
 #include "Swift/Controllers/PresenceNotifier.h"
 #include "Swift/Controllers/EventNotifier.h"
@@ -68,6 +69,9 @@
 #include <Swift/Controllers/XMPPURIController.h>
 #include "Swift/Controllers/AdHocManager.h"
 #include <SwifTools/Idle/IdleDetector.h>
+#include <Swift/Controllers/FileTransfer/FileTransferOverview.h>
+#include <Swiften/FileTransfer/FileTransferManager.h>
+#include <Swiften/Client/ClientXMLTracer.h>
 
 namespace Swift {
 
@@ -101,7 +105,8 @@ MainController::MainController(
 			idleDetector_(idleDetector),
 			loginWindow_(NULL) ,
 			useDelayForLatency_(useDelayForLatency),
-			eagleMode_(eagleMode) {
+			eagleMode_(eagleMode),
+			ftOverview_(NULL) {
 	storages_ = NULL;
 	certificateStorage_ = NULL;
 	statusTracker_ = NULL;
@@ -164,6 +169,8 @@ MainController::MainController(
 
 	xmlConsoleController_ = new XMLConsoleController(uiEventStream_, uiFactory_);
 
+	fileTransferListController_ = new FileTransferListController(uiEventStream_, uiFactory_);
+
 	uiEventStream_->onUIEvent.connect(boost::bind(&MainController::handleUIEvent, this, _1));
 	bool enabled = settings_->getBoolSetting(SHOW_NOTIFICATIONS, true);
 	uiEventStream_->send(boost::shared_ptr<ToggleNotificationsUIEvent>(new ToggleNotificationsUIEvent(enabled)));
@@ -184,7 +191,7 @@ MainController::~MainController() {
 	eventController_->disconnectAll();
 
 	resetClient();
-
+	delete fileTransferListController_;
 	delete xmlConsoleController_;
 	delete xmppURIController_;
 	delete soundEventController_;
@@ -211,6 +218,10 @@ void MainController::resetClient() {
 	eventWindowController_ = NULL;
 	delete chatsManager_;
 	chatsManager_ = NULL;
+	delete s5bProxyFinder_;
+	s5bProxyFinder_ = NULL;
+	delete ftOverview_;
+	ftOverview_ = NULL;
 	delete rosterController_;
 	rosterController_ = NULL;
 	delete eventNotifier_;
@@ -270,13 +281,22 @@ void MainController::handleConnected() {
 	myStatusLooksOnline_ = true;
 	if (freshLogin) {
 		profileController_ = new ProfileController(client_->getVCardManager(), uiFactory_, uiEventStream_);
-		rosterController_ = new RosterController(jid_, client_->getRoster(), client_->getAvatarManager(), uiFactory_, client_->getNickManager(), client_->getNickResolver(), client_->getPresenceOracle(), client_->getSubscriptionManager(), eventController_, uiEventStream_, client_->getIQRouter(), settings_);
+		srand(time(NULL));
+		int randomPort = 10000 + rand() % 10000;
+		client_->getFileTransferManager()->startListeningOnPort(randomPort);
+		s5bProxyFinder_ = new SOCKS5BytestreamProxyFinder(client_->getJID().getDomain(), client_->getIQRouter());
+		s5bProxyFinder_->onProxyFound.connect(boost::bind(&FileTransferManager::addS5BProxy, client_->getFileTransferManager(), _1));
+		s5bProxyFinder_->start();
+		ftOverview_ = new FileTransferOverview(client_->getFileTransferManager());
+		fileTransferListController_->setFileTransferOverview(ftOverview_);
+		rosterController_ = new RosterController(jid_, client_->getRoster(), client_->getAvatarManager(), uiFactory_, client_->getNickManager(), client_->getNickResolver(), client_->getPresenceOracle(), client_->getSubscriptionManager(), eventController_, uiEventStream_, client_->getIQRouter(), settings_, client_->getEntityCapsProvider(), ftOverview_);
 		rosterController_->onChangeStatusRequest.connect(boost::bind(&MainController::handleChangeStatusRequest, this, _1, _2));
 		rosterController_->onSignOutRequest.connect(boost::bind(&MainController::signOut, this));
 
 		contactEditController_ = new ContactEditController(rosterController_, uiFactory_, uiEventStream_);
 
-		chatsManager_ = new ChatsManager(jid_, client_->getStanzaChannel(), client_->getIQRouter(), eventController_, uiFactory_, uiFactory_, client_->getNickResolver(), client_->getPresenceOracle(), client_->getPresenceSender(), uiEventStream_, uiFactory_, useDelayForLatency_, networkFactories_->getTimerFactory(), client_->getMUCRegistry(), client_->getEntityCapsProvider(), client_->getMUCManager(), uiFactory_, profileSettings_);
+		chatsManager_ = new ChatsManager(jid_, client_->getStanzaChannel(), client_->getIQRouter(), eventController_, uiFactory_, uiFactory_, client_->getNickResolver(), client_->getPresenceOracle(), client_->getPresenceSender(), uiEventStream_, uiFactory_, useDelayForLatency_, networkFactories_->getTimerFactory(), client_->getMUCRegistry(), client_->getEntityCapsProvider(), client_->getMUCManager(), uiFactory_, profileSettings_, ftOverview_);
+		
 		client_->onMessageReceived.connect(boost::bind(&ChatsManager::handleIncomingMessage, chatsManager_, _1));
 		chatsManager_->setAvatarManager(client_->getAvatarManager());
 
@@ -289,6 +309,10 @@ void MainController::handleConnected() {
 		discoInfo.addFeature(DiscoInfo::ChatStatesFeature);
 		discoInfo.addFeature(DiscoInfo::SecurityLabelsFeature);
 		discoInfo.addFeature(DiscoInfo::MessageCorrectionFeature);
+		discoInfo.addFeature(DiscoInfo::JingleFeature);
+		discoInfo.addFeature(DiscoInfo::JingleFTFeature);
+		discoInfo.addFeature(DiscoInfo::JingleTransportsIBBFeature);
+		discoInfo.addFeature(DiscoInfo::JingleTransportsS5BFeature);
 		client_->getDiscoManager()->setCapsNode(CLIENT_NODE);
 		client_->getDiscoManager()->setDiscoInfo(discoInfo);
 

@@ -36,13 +36,13 @@ std::string StreamInitiationSerializer::serializePayload(boost::shared_ptr<Strea
 	if (streamInitiation->getFileInfo()) {
 		StreamInitiationFileInfo file = *streamInitiation->getFileInfo();
 		boost::shared_ptr<XMLElement> fileElement(new XMLElement("file", "http://jabber.org/protocol/si/profile/file-transfer"));
-		fileElement->setAttribute("name", file.name);
-		if (file.size != -1) {
-			fileElement->setAttribute("size", boost::lexical_cast<std::string>(file.size));
+		fileElement->setAttribute("name", file.getName());
+		if (file.getSize() != 0) {
+			fileElement->setAttribute("size", boost::lexical_cast<std::string>(file.getSize()));
 		}
-		if (!file.description.empty()) {
+		if (!file.getDescription().empty()) {
 			boost::shared_ptr<XMLElement> descElement(new XMLElement("desc"));
-			descElement->addNode(boost::shared_ptr<XMLTextNode>(new XMLTextNode(file.description)));
+			descElement->addNode(boost::shared_ptr<XMLTextNode>(new XMLTextNode(file.getDescription())));
 			fileElement->addNode(descElement);
 		}
 		siElement.addNode(fileElement);

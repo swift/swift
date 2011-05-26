@@ -39,6 +39,7 @@ namespace Swift {
 			virtual JoinMUCWindow* createJoinMUCWindow(UIEventStream* uiEventStream);
 			virtual ProfileWindow* createProfileWindow();
 			virtual ContactEditWindow* createContactEditWindow();
+			virtual FileTransferListWidget* createFileTransferListWidget();
 			virtual void createAdHocCommandWindow(boost::shared_ptr<OutgoingAdHocCommandSession> command);
 
 		private slots:

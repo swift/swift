@@ -7,6 +7,8 @@
 #pragma once
 
 #include <boost/shared_ptr.hpp>
+#include <boost/optional.hpp>
+
 #include <string>
 
 #include <Swiften/Base/boost_bsignals.h>
@@ -30,16 +32,22 @@ namespace Swift {
 			const std::string& getID() const {
 				return id;
 			}
-
-			virtual void terminate(JinglePayload::Reason::Type reason) = 0;
-			virtual void accept(JingleTransportPayload::ref = JingleTransportPayload::ref()) = 0;
+			virtual void sendInitiate(const JingleContentID&, JingleDescription::ref, JingleTransportPayload::ref) = 0;
+			virtual void sendTerminate(JinglePayload::Reason::Type reason) = 0;
+			virtual void sendInfo(boost::shared_ptr<Payload>) = 0;
+			virtual void sendAccept(const JingleContentID&, JingleDescription::ref, JingleTransportPayload::ref = JingleTransportPayload::ref()) = 0;
 			virtual void sendTransportInfo(const JingleContentID&, JingleTransportPayload::ref) = 0;
-			virtual void acceptTransport(const JingleContentID&, JingleTransportPayload::ref) = 0;
-			virtual void rejectTransport(const JingleContentID&, JingleTransportPayload::ref) = 0;
+			virtual void sendTransportAccept(const JingleContentID&, JingleTransportPayload::ref) = 0;
+			virtual void sendTransportReject(const JingleContentID&, JingleTransportPayload::ref) = 0;
+			virtual void sendTransportReplace(const JingleContentID&, JingleTransportPayload::ref) = 0;
 
 		public:
-			boost::signal<void ()> onSessionTerminateReceived;
+			boost::signal<void (const JingleContentID&, JingleDescription::ref, JingleTransportPayload::ref)> onSessionAcceptReceived;
+			boost::signal<void (JinglePayload::ref)> onSessionInfoReceived;
+			boost::signal<void (boost::optional<JinglePayload::Reason>)> onSessionTerminateReceived;
+			boost::signal<void (const JingleContentID&, JingleTransportPayload::ref)> onTransportAcceptReceived;
 			boost::signal<void (const JingleContentID&, JingleTransportPayload::ref)> onTransportInfoReceived;
+			boost::signal<void (const JingleContentID&, JingleTransportPayload::ref)> onTransportRejectReceived;
 			boost::signal<void (const JingleContentID&, JingleTransportPayload::ref)> onTransportReplaceReceived;
 
 		private:

@@ -38,7 +38,7 @@ void OutgoingSIFileTransfer::handleStreamInitiationRequestResponse(StreamInitiat
 	}
 	else {
 		if (response->getRequestedMethod() == "http://jabber.org/protocol/bytestreams") {
-			socksServer->addBytestream(id, from, to, bytestream); 
+			socksServer->addReadBytestream(id, from, to, bytestream);
 			Bytestreams::ref bytestreams(new Bytestreams());
 			bytestreams->setStreamID(id);
 			HostAddressPort addressPort = socksServer->getAddressPort();
@@ -67,7 +67,7 @@ void OutgoingSIFileTransfer::finish(boost::optional<FileTransferError> error) {
 		ibbSession->onFinished.disconnect(boost::bind(&OutgoingSIFileTransfer::handleIBBSessionFinished, this, _1));
 		ibbSession.reset();
 	}
-	socksServer->removeBytestream(id, from, to); 
+	socksServer->removeReadBytestream(id, from, to);
 	onFinished(error);
 }
 

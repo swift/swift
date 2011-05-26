@@ -19,6 +19,7 @@ class MD5Test : public CppUnit::TestFixture {
 		CPPUNIT_TEST_SUITE(MD5Test);
 		CPPUNIT_TEST(testGetHash_Empty);
 		CPPUNIT_TEST(testGetHash_Alphabet);
+		CPPUNIT_TEST(testIncrementalTest);
 		CPPUNIT_TEST_SUITE_END();
 
 	public:
@@ -30,6 +31,16 @@ class MD5Test : public CppUnit::TestFixture {
 
 		void testGetHash_Alphabet() {
 			ByteArray result(MD5::getHash(createByteArray("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789")));
+
+			CPPUNIT_ASSERT_EQUAL(createByteArray("\xd1\x74\xab\x98\xd2\x77\xd9\xf5\xa5\x61\x1c\x2c\x9f\x41\x9d\x9f", 16), result);
+		}
+
+		void testIncrementalTest() {
+			MD5 testling;
+			testling.update(createByteArray("ABCDEFGHIJKLMNOPQRSTUVWXYZ"));
+			testling.update(createByteArray("abcdefghijklmnopqrstuvwxyz0123456789"));
+
+			ByteArray result = testling.getHash();
 
 			CPPUNIT_ASSERT_EQUAL(createByteArray("\xd1\x74\xab\x98\xd2\x77\xd9\xf5\xa5\x61\x1c\x2c\x9f\x41\x9d\x9f", 16), result);
 		}

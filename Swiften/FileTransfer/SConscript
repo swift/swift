@@ -3,6 +3,9 @@ Import("swiften_env", "env")
 sources = [
 		"OutgoingFileTransfer.cpp",
 		"OutgoingSIFileTransfer.cpp",
+		"OutgoingJingleFileTransfer.cpp",
+		"OutgoingFileTransferManager.cpp",
+		"OutgoingFileTransferManager.cpp",
 		"IncomingFileTransfer.cpp",
 		"IncomingJingleFileTransfer.cpp",
 		"IncomingFileTransferManager.cpp",
@@ -10,23 +13,36 @@ sources = [
 		"RemoteJingleTransportCandidateSelectorFactory.cpp",
 		"LocalJingleTransportCandidateGenerator.cpp",
 		"LocalJingleTransportCandidateGeneratorFactory.cpp",
+		"DefaultRemoteJingleTransportCandidateSelectorFactory.cpp",
+		"DefaultLocalJingleTransportCandidateGeneratorFactory.cpp",
+		"DefaultRemoteJingleTransportCandidateSelector.cpp",
+		"DefaultLocalJingleTransportCandidateGenerator.cpp",
 		"JingleTransport.cpp",
 		"JingleIncomingIBBTransport.cpp",
 		"ReadBytestream.cpp",
 		"WriteBytestream.cpp",
 		"FileReadBytestream.cpp",
 		"FileWriteBytestream.cpp",
+		"SOCKS5BytestreamClientSession.cpp",
 		"SOCKS5BytestreamServer.cpp",
 		"SOCKS5BytestreamServerSession.cpp",
 		"SOCKS5BytestreamRegistry.cpp",
+		"SOCKS5BytestreamProxy.cpp",
 		"IBBSendSession.cpp",
 		"IBBReceiveSession.cpp",
+		"FileTransferManager.cpp",
+		"FileTransferManagerImpl.cpp",
+		"IncrementalBytestreamHashCalculator.cpp",
+		"ConnectivityManager.cpp",
 	]
 
 swiften_env.Append(SWIFTEN_OBJECTS = swiften_env.SwiftenObject(sources))
 
 env.Append(UNITTEST_SOURCES = [
 			File("UnitTest/SOCKS5BytestreamServerSessionTest.cpp"),
+			File("UnitTest/SOCKS5BytestreamClientSessionTest.cpp"),
 			File("UnitTest/IBBSendSessionTest.cpp"),
 			File("UnitTest/IBBReceiveSessionTest.cpp"),
+			File("UnitTest/IncomingJingleFileTransferTest.cpp"),
+			File("UnitTest/OutgoingJingleFileTransferTest.cpp"),
 	])

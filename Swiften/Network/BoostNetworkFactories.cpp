@@ -9,6 +9,7 @@
 #include <Swiften/Network/BoostConnectionFactory.h>
 #include <Swiften/Network/PlatformDomainNameResolver.h>
 #include <Swiften/Network/BoostConnectionServerFactory.h>
+#include <Swiften/Network/PlatformNATTraversalWorker.h>
 
 namespace Swift {
 
@@ -17,9 +18,11 @@ BoostNetworkFactories::BoostNetworkFactories(EventLoop* eventLoop) {
 	connectionFactory = new BoostConnectionFactory(ioServiceThread.getIOService(), eventLoop);
 	domainNameResolver = new PlatformDomainNameResolver(eventLoop);
 	connectionServerFactory = new BoostConnectionServerFactory(ioServiceThread.getIOService(), eventLoop);
+	platformNATTraversalWorker = new PlatformNATTraversalWorker(eventLoop);
 }
 
 BoostNetworkFactories::~BoostNetworkFactories() {
+	delete platformNATTraversalWorker;
 	delete connectionServerFactory;
 	delete domainNameResolver;
 	delete connectionFactory;

@@ -37,11 +37,16 @@ namespace Swift {
 				return connectionServerFactory;
 			}
 
+			PlatformNATTraversalWorker* getPlatformNATTraversalWorker() const {
+				return platformNATTraversalWorker;
+			}
+
 		private:
 			BoostIOServiceThread ioServiceThread;
 			TimerFactory* timerFactory;
 			ConnectionFactory* connectionFactory;
 			DomainNameResolver* domainNameResolver;
 			ConnectionServerFactory* connectionServerFactory;
+			PlatformNATTraversalWorker* platformNATTraversalWorker;
 	};
 }

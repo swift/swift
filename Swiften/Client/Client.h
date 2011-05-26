@@ -33,6 +33,9 @@ namespace Swift {
 	class SubscriptionManager;
 	class ClientDiscoManager;
 	class NickManager;
+	class FileTransferManager;
+	class JingleSessionManager;
+	class FileTransferManagerImpl;
 
 	/**
 	 * Provides the core functionality for writing XMPP client software.
@@ -131,6 +134,11 @@ namespace Swift {
 			ClientDiscoManager* getDiscoManager() const {
 				return discoManager;
 			}
+			
+			/**
+			 * Returns a FileTransferManager for the client. This is only available after the onConnected signal has been fired.
+			 */
+			FileTransferManager* getFileTransferManager() const;
 
 			/**
 			 * Configures the client to always trust a non-validating
@@ -148,6 +156,9 @@ namespace Swift {
 
 		private:
 			Storages* getStorages() const;
+
+		protected:
+			void handleConnected();
 
 		private:
 			Storages* storages;
@@ -168,6 +179,8 @@ namespace Swift {
 			SubscriptionManager* subscriptionManager;
 			MUCManager* mucManager;
 			ClientDiscoManager* discoManager;
+			JingleSessionManager* jingleSessionManager;
+			FileTransferManagerImpl* fileTransferManager;
 			BlindCertificateTrustChecker* blindCertificateTrustChecker;
 	};
 }

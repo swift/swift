@@ -113,6 +113,14 @@ void ContactRosterItem::removeGroup(const std::string& group) {
 	groups_.erase(std::remove(groups_.begin(), groups_.end(), group), groups_.end());
 }
 
+void ContactRosterItem::setSupportedFeatures(const std::set<Feature>& features) {
+	features_ = features;
+}
+
+bool ContactRosterItem::supportsFeature(const Feature feat) const {
+	return features_.find(feat) != features_.end();
+}
+
 }
 
 

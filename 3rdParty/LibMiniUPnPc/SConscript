@@ -1,0 +1,66 @@
+Import(["env", "conf_env"])
+
+if env.get("LIBMINIUPNPC_BUNDLED", False) :
+
+################################################################################
+# Module flags
+################################################################################
+
+	if env["SCONS_STAGE"] == "flags" :
+		env["LIBMINIUPNPC_FLAGS"] = {
+				"CPPPATH": [Dir("src/miniupnpc")],
+				"LIBPATH": [Dir(".")],
+				"LIBS": ["Swiften_MiniUPnPc"],
+			}
+		#if env["PLATFORM"] == "win32" :
+		#	env["LIBIDN_FLAGS"]["CPPPATH"] += [Dir("stubs/win32")]
+		#	if env["MSVC_VERSION"][:3] == "9.0" :
+		#		env["LIBIDN_FLAGS"]["CPPPATH"] += [Dir("stubs/win32/VC2008")]
+
+################################################################################
+# Build
+################################################################################
+
+	if env["SCONS_STAGE"] == "build" :
+		myenv = env.Clone()
+		myenv.Append(CPPPATH = ["src"])
+		# Remove warn flags
+		myenv.Replace(CCFLAGS = [flag for flag in env["CCFLAGS"] if flag not in ["-W", "-Wall"]])
+
+		myenv.Append(CCFLAGS = ["-DNDEBUG", "-DSTATICLIB"])
+		
+		if myenv["PLATFORM"] != "win32":
+			myenv.Append(CCFLAGS = ["-DMINIUPNPC_SET_SOCKET_TIMEOUT"])
+		
+		if myenv["PLATFORM"] == "darwin":
+			myenv.Append(CCFLAGS = ["-DMACOSX", "-D_DARWIN_C_SOURCE"])
+		
+		if myenv["PLATFORM"] == "win32":
+			myenv.Append(CCFLAGS = ["-DWIN32", "-D_WIN32_WINNT=0x0501"])
+
+		myenv.WriteVal("src/miniupnpc/miniupnpcstrings.h", myenv.Value(
+"""
+#ifndef __MINIUPNPCSTRINGS_H__
+#define __MINIUPNPCSTRINGS_H__
+
+#define OS_STRING "$OS_STRING"
+#define MINIUPNPC_VERSION_STRING "1.5"
+
+#endif
+""".replace("$OS_STRING", myenv["PLATFORM"])))
+
+		myenv.StaticLibrary("Swiften_MiniUPnPc", [
+			"src/miniupnpc/igd_desc_parse.c",
+			"src/miniupnpc/miniupnpc.c",
+			"src/miniupnpc/minixml.c",
+			"src/miniupnpc/minisoap.c",
+			"src/miniupnpc/minissdpc.c",
+			"src/miniupnpc/miniwget.c",
+			#"src/miniupnpc/upnpc.c",
+			"src/miniupnpc/upnpcommands.c",
+			"src/miniupnpc/upnpreplyparse.c",
+			"src/miniupnpc/upnperrors.c",
+			"src/miniupnpc/connecthostport.c",
+			"src/miniupnpc/portlistingparse.c",
+			"src/miniupnpc/receivedata.c"
+			])

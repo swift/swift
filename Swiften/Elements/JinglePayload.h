@@ -7,6 +7,7 @@
 #pragma once
 
 #include <vector>
+#include <boost/shared_ptr.hpp>
 #include <boost/optional.hpp>
 
 #include <string>
@@ -14,13 +15,15 @@
 #include <Swiften/Elements/Payload.h>
 #include <Swiften/Elements/JingleContentPayload.h>
 
+#include <Swiften/Base/Log.h>
 
 namespace Swift {
 	class JinglePayload : public Payload {
 		public:
 			typedef boost::shared_ptr<JinglePayload> ref;
-			struct Reason {
+			struct Reason : public Payload {
 					enum Type {
+						UnknownType,
 						AlternativeSession,
 						Busy,
 						Cancel,
@@ -39,13 +42,15 @@ namespace Swift {
 						UnsupportedApplications,
 						UnsupportedTransports
 					};
-					
+					Reason() : type(UnknownType), text("") {}
 					Reason(Type type, const std::string& text = "") : type(type), text(text) {}
+					~Reason() {}
 					Type type;
 					std::string text;
 			};
 
 			enum Action {
+				UnknownAction,
 				ContentAccept,
 				ContentAdd,
 				ContentModify,
@@ -62,8 +67,11 @@ namespace Swift {
 				TransportReject,
 				TransportReplace
 			};
-
+			JinglePayload() : action(SessionTerminate), sessionID("") {
+			}
+			
 			JinglePayload(Action action, const std::string& sessionID) : action(action), sessionID(sessionID) {
+			
 			}
 
 			void setAction(Action action) {
@@ -99,11 +107,46 @@ namespace Swift {
 			}
 
 			void addContent(JingleContentPayload::ref content) {
-				this->contents.push_back(content);
+				this->payloads.push_back(content);
+			}
+			
+			void addPayload(boost::shared_ptr<Payload> payload) {
+				this->payloads.push_back(payload);
+			}
+			
+			const std::vector<JingleContentPayload::ref> getContents() const {
+				return getPayloads<JingleContentPayload>();
+			}
+			
+			const std::vector<boost::shared_ptr<Payload> > getPayloads() const {
+				return payloads;
+			}
+			
+			template<typename T>
+			const std::vector<boost::shared_ptr<T> > getPayloads() const {
+				std::vector<boost::shared_ptr<T> > matched_payloads;
+				for (std::vector<boost::shared_ptr<Payload> >::const_iterator i = payloads.begin(); i != payloads.end(); ++i) {
+					boost::shared_ptr<T> result = boost::dynamic_pointer_cast<T>(*i);
+					if (result) {
+						matched_payloads.push_back(result);
+					}
+				}
+				
+				return matched_payloads;
+				
 			}
 
-			const std::vector<JingleContentPayload::ref>& getContents() const {
-				return contents;
+			template<typename T>
+			const boost::shared_ptr<T> getPayload() const {
+				boost::shared_ptr<T> result;
+				for (std::vector<boost::shared_ptr<Payload> >::const_iterator i = payloads.begin(); i != payloads.end(); ++i) {
+					result = boost::dynamic_pointer_cast<T>(*i);
+					if (result) {
+						return result;
+					}
+				}
+				
+				return result;
 			}
 
 			void setReason(const Reason& reason) {
@@ -119,7 +162,7 @@ namespace Swift {
 			JID initiator;
 			JID responder;
 			std::string sessionID;
-			std::vector<JingleContentPayload::ref> contents;
+			std::vector<boost::shared_ptr<Payload> > payloads;
 			boost::optional<Reason> reason;
 	};
 }

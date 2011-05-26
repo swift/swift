@@ -60,7 +60,7 @@ void IBBParser::handleEndElement(const std::string& element, const std::string&)
 			std::vector<char> data;
 			for (size_t i = 0; i < currentText.size(); ++i) {
 				char c = currentText[i];
-				if (c >= 48 && c <= 122) {
+				if ((c >= 48 && c <= 122) || c == 47 || c == 43) {
 					data.push_back(c);
 				}
 			}

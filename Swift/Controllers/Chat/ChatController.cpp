@@ -20,8 +20,13 @@
 #include <Swift/Controllers/UIInterfaces/ChatWindowFactory.h>
 #include <Swiften/Client/NickResolver.h>
 #include <Swift/Controllers/XMPPEvents/EventController.h>
+#include <Swift/Controllers/FileTransfer/FileTransferController.h>
 #include <Swift/Controllers/StatusUtil.h>
 #include <Swiften/Disco/EntityCapsProvider.h>
+#include <Swiften/Base/foreach.h>
+#include <Swift/Controllers/UIEvents/UIEventStream.h>
+#include <Swift/Controllers/UIEvents/SendFileUIEvent.h>
+
 
 namespace Swift {
 	
@@ -29,7 +34,7 @@ namespace Swift {
  * The controller does not gain ownership of the stanzaChannel, nor the factory.
  */
 ChatController::ChatController(const JID& self, StanzaChannel* stanzaChannel, IQRouter* iqRouter, ChatWindowFactory* chatWindowFactory, const JID &contact, NickResolver* nickResolver, PresenceOracle* presenceOracle, AvatarManager* avatarManager, bool isInMUC, bool useDelayForLatency, UIEventStream* eventStream, EventController* eventController, TimerFactory* timerFactory, EntityCapsProvider* entityCapsProvider)
-	: ChatControllerBase(self, stanzaChannel, iqRouter, chatWindowFactory, contact, presenceOracle, avatarManager, useDelayForLatency, eventStream, eventController, timerFactory, entityCapsProvider) {
+	: ChatControllerBase(self, stanzaChannel, iqRouter, chatWindowFactory, contact, presenceOracle, avatarManager, useDelayForLatency, eventStream, eventController, timerFactory, entityCapsProvider), eventStream_(eventStream) {
 	isInMUC_ = isInMUC;
 	lastWasPresence_ = false;
 	chatStateNotifier_ = new ChatStateNotifier(stanzaChannel, contact, entityCapsProvider);
@@ -60,6 +65,10 @@ ChatController::ChatController(const JID& self, StanzaChannel* stanzaChannel, IQ
 	chatWindow_->addSystemMessage(startMessage);
 	chatWindow_->onUserTyping.connect(boost::bind(&ChatStateNotifier::setUserIsTyping, chatStateNotifier_));
 	chatWindow_->onUserCancelsTyping.connect(boost::bind(&ChatStateNotifier::userCancelledNewMessage, chatStateNotifier_));
+	chatWindow_->onFileTransferStart.connect(boost::bind(&ChatController::handleFileTransferStart, this, _1, _2));
+	chatWindow_->onFileTransferAccept.connect(boost::bind(&ChatController::handleFileTransferAccept, this, _1, _2));
+	chatWindow_->onFileTransferCancel.connect(boost::bind(&ChatController::handleFileTransferCancel, this, _1));
+	chatWindow_->onSendFileRequest.connect(boost::bind(&ChatController::handleSendFileRequest, this, _1));
 	handleBareJIDCapsChanged(toJID_);
 
 }
@@ -169,6 +178,45 @@ void ChatController::setOnline(bool online) {
 		chatStateTracker_->handlePresenceChange(fakeOffline);
 	}
 	ChatControllerBase::setOnline(online);
+}
+
+void ChatController::handleNewFileTransferController(FileTransferController* ftc) {
+	std::string nick = senderDisplayNameFromMessage(ftc->getOtherParty());
+	std::string ftID = ftc->setChatWindow(chatWindow_, nick);
+	
+	ftControllers[ftID] = ftc;
+}
+
+void ChatController::handleFileTransferCancel(std::string id) {
+	std::cout << "handleFileTransferCancel(" << id << ")" << std::endl;
+	if (ftControllers.find(id) != ftControllers.end()) {
+		ftControllers[id]->cancel();
+	} else {
+		std::cerr << "unknown file transfer UI id" << std::endl;
+	}
+}
+
+void ChatController::handleFileTransferStart(std::string id, std::string description) {
+	std::cout << "handleFileTransferStart(" << id << ", " << description << ")" << std::endl;
+	if (ftControllers.find(id) != ftControllers.end()) {
+		ftControllers[id]->start(description);
+	} else {
+		std::cerr << "unknown file transfer UI id" << std::endl;
+	}
+}
+
+void ChatController::handleFileTransferAccept(std::string id, std::string filename) {
+	std::cout << "handleFileTransferAccept(" << id << ", " << filename << ")" << std::endl;
+	if (ftControllers.find(id) != ftControllers.end()) {
+		ftControllers[id]->accept(filename);
+	} else {
+		std::cerr << "unknown file transfer UI id" << std::endl;
+	}
+}
+
+void ChatController::handleSendFileRequest(std::string filename) {
+	std::cout << "ChatController::handleSendFileRequest(" << filename << ")" << std::endl;
+	eventStream_->send(boost::make_shared<SendFileUIEvent>(getToJID(), filename));
 }
 
 std::string ChatController::senderDisplayNameFromMessage(const JID& from) {
