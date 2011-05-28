@@ -13,6 +13,8 @@
 #include <cppunit/TextTestProgressListener.h>
 #include <cppunit/TextOutputter.h>
 
+#include <Swiften/Base/Log.h>
+
 int main(int argc, char* argv[]) {
 	bool verbose = false;
 	bool outputXML = false;
@@ -26,6 +28,9 @@ int main(int argc, char* argv[]) {
 		}
 		else if (param == "--xml") {
 			outputXML = true;
+		}
+		else if (param == "--debug") {
+			Swift::logging = true;
 		}
 		else {
 			testsToRun.push_back(param);
