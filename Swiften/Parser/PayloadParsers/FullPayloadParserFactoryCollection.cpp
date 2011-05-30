@@ -9,6 +9,7 @@
 #include <Swiften/Parser/GenericPayloadParser.h>
 #include <Swiften/Parser/PayloadParserFactory.h>
 #include <Swiften/Parser/PayloadParsers/ErrorParser.h>
+#include <Swiften/Parser/PayloadParsers/ErrorParserFactory.h>
 #include <Swiften/Parser/PayloadParsers/BodyParser.h>
 #include <Swiften/Parser/PayloadParsers/SubjectParser.h>
 #include <Swiften/Parser/PayloadParsers/ChatStateParserFactory.h>
@@ -54,7 +55,7 @@ FullPayloadParserFactoryCollection::FullPayloadParserFactoryCollection() {
 	factories_.push_back(shared_ptr<PayloadParserFactory>(new GenericPayloadParserFactory<BodyParser>("body")));
 	factories_.push_back(shared_ptr<PayloadParserFactory>(new GenericPayloadParserFactory<SubjectParser>("subject")));
 	factories_.push_back(shared_ptr<PayloadParserFactory>(new GenericPayloadParserFactory<PriorityParser>("priority")));
-	factories_.push_back(shared_ptr<PayloadParserFactory>(new GenericPayloadParserFactory<ErrorParser>("error")));
+	factories_.push_back(shared_ptr<PayloadParserFactory>(new ErrorParserFactory(this)));
 	factories_.push_back(shared_ptr<PayloadParserFactory>(new GenericPayloadParserFactory<SoftwareVersionParser>("query", "jabber:iq:version")));
 	factories_.push_back(shared_ptr<PayloadParserFactory>(new GenericPayloadParserFactory<StorageParser>("storage", "storage:bookmarks")));
 	factories_.push_back(shared_ptr<PayloadParserFactory>(new GenericPayloadParserFactory<RosterItemExchangeParser>("x", "http://jabber.org/protocol/rosterx")));

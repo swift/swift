@@ -5,13 +5,15 @@
  */
 
 #include <Swiften/Parser/PayloadParsers/ErrorParser.h>
+#include <Swiften/Parser/PayloadParserFactoryCollection.h>
+#include <Swiften/Parser/PayloadParserFactory.h>
 
 namespace Swift {
 
-ErrorParser::ErrorParser() : level_(TopLevel) {
+ErrorParser::ErrorParser(PayloadParserFactoryCollection* factories) : factories(factories), level_(TopLevel) {
 }
 
-void ErrorParser::handleStartElement(const std::string&, const std::string&, const AttributeMap& attributes) {
+void ErrorParser::handleStartElement(const std::string& element, const std::string& ns, const AttributeMap& attributes) {
 	if (level_ == TopLevel) {
 		std::string type = attributes.getAttribute("type");
 		if (type == "continue") {
@@ -30,14 +32,9 @@ void ErrorParser::handleStartElement(const std::string&, const std::string&, con
 			getPayloadInternal()->setType(ErrorPayload::Cancel);
 		}
 	}
-	++level_;
-}
-
-void ErrorParser::handleEndElement(const std::string& element, const std::string&) {
-	--level_;
-	if (level_ == PayloadLevel) {
+	else if (level_ == PayloadLevel) {
 		if (element == "text") {
-			getPayloadInternal()->setText(currentText_);
+
 		}
 		else if (element == "bad-request") {
 			getPayloadInternal()->setCondition(ErrorPayload::BadRequest);
@@ -103,13 +100,46 @@ void ErrorParser::handleEndElement(const std::string& element, const std::string
 			getPayloadInternal()->setCondition(ErrorPayload::UnexpectedRequest);
 		}
 		else {
-			getPayloadInternal()->setCondition(ErrorPayload::UndefinedCondition);
+			PayloadParserFactory* payloadParserFactory = factories->getPayloadParserFactory(element, ns, attributes);
+			if (payloadParserFactory) {
+				currentPayloadParser.reset(payloadParserFactory->createPayloadParser());
+			} else {
+				getPayloadInternal()->setCondition(ErrorPayload::UndefinedCondition);
+			}
+		}
+	}
+	if (level_ >= PayloadLevel && currentPayloadParser.get()) {
+		currentPayloadParser->handleStartElement(element, ns, attributes);
+	}
+	++level_;
+}
+
+void ErrorParser::handleEndElement(const std::string& element, const std::string& ns) {
+	--level_;
+	if (currentPayloadParser.get()) {
+		if (level_ >= PayloadLevel) {
+			currentPayloadParser->handleEndElement(element, ns);
+		}
+
+		if (level_ == PayloadLevel) {
+			getPayloadInternal()->setPayload(currentPayloadParser->getPayload());
+			currentPayloadParser.reset();
+		}
+	}
+	else if (level_ == PayloadLevel) {
+		if (element == "text") {
+			getPayloadInternal()->setText(currentText_);
 		}
 	}
 }
 
 void ErrorParser::handleCharacterData(const std::string& data) {
-	currentText_ += data;
+	if (level_ > PayloadLevel && currentPayloadParser.get()) {
+		currentPayloadParser->handleCharacterData(data);
+	}
+	else {
+		currentText_ += data;
+	}
 }
 
 }

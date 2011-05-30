@@ -69,9 +69,18 @@ namespace Swift {
 				return text_; 
 			}
 
+			void setPayload(boost::shared_ptr<Payload> payload) {
+				payload_ = payload;
+			}
+
+			boost::shared_ptr<Payload> getPayload() {
+				return payload_;
+			}
+
 		private:
 			Type type_;
 			Condition condition_;
 			std::string text_;
+			boost::shared_ptr<Payload> payload_;
 	};
 }
