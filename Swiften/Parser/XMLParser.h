@@ -19,7 +19,6 @@ namespace Swift {
 
 			virtual bool parse(const std::string& data) = 0;
 
-		protected:
 			XMLParserClient* getClient() const {
 				return client_;
 			}

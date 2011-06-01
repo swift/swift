@@ -16,7 +16,7 @@ namespace Swift {
 
 static const char NAMESPACE_SEPARATOR = '\x01';
 
-static void handleStartElement(void* client, const XML_Char* name, const XML_Char** attributes) {
+static void handleStartElement(void* parser, const XML_Char* name, const XML_Char** attributes) {
 	std::pair<std::string,std::string> nsTagPair = String::getSplittedAtFirst(name, NAMESPACE_SEPARATOR);
 	if (nsTagPair.second == "") {
 		nsTagPair.second = nsTagPair.first;
@@ -34,32 +34,37 @@ static void handleStartElement(void* client, const XML_Char* name, const XML_Cha
 		currentAttribute += 2;
 	}
 
-	static_cast<XMLParserClient*>(client)->handleStartElement(nsTagPair.second, nsTagPair.first, attributeValues);
+	static_cast<XMLParser*>(parser)->getClient()->handleStartElement(nsTagPair.second, nsTagPair.first, attributeValues);
 }
 
-static void handleEndElement(void* client, const XML_Char* name) {
+static void handleEndElement(void* parser, const XML_Char* name) {
 	std::pair<std::string,std::string> nsTagPair = String::getSplittedAtFirst(name, NAMESPACE_SEPARATOR);
 	if (nsTagPair.second == "") {
 		nsTagPair.second = nsTagPair.first;
 		nsTagPair.first = "";
 	}
-	static_cast<XMLParserClient*>(client)->handleEndElement(nsTagPair.second, nsTagPair.first);
+	static_cast<XMLParser*>(parser)->getClient()->handleEndElement(nsTagPair.second, nsTagPair.first);
 }
 
-static void handleCharacterData(void* client, const XML_Char* data, int len) {
-	static_cast<XMLParserClient*>(client)->handleCharacterData(std::string(data, len));
+static void handleCharacterData(void* parser, const XML_Char* data, int len) {
+	static_cast<XMLParser*>(parser)->getClient()->handleCharacterData(std::string(data, len));
 }
 
 static void handleXMLDeclaration(void*, const XML_Char*, const XML_Char*, int) {
 }
 
+static void handleEntityDeclaration(void* parser, const XML_Char*, int, const XML_Char*, int, const XML_Char*, const XML_Char*, const XML_Char*, const XML_Char*) {
+	XML_StopParser(static_cast<ExpatParser*>(parser)->getParser(), static_cast<XML_Bool>(0));
+}
+
 
 ExpatParser::ExpatParser(XMLParserClient* client) : XMLParser(client) {
 	parser_ = XML_ParserCreateNS("UTF-8", NAMESPACE_SEPARATOR);
-	XML_SetUserData(parser_, client);
+	XML_SetUserData(parser_, this);
 	XML_SetElementHandler(parser_, handleStartElement, handleEndElement);
 	XML_SetCharacterDataHandler(parser_, handleCharacterData);
 	XML_SetXmlDeclHandler(parser_, handleXMLDeclaration);
+	XML_SetEntityDeclHandler(parser_, handleEntityDeclaration);
 }
 
 ExpatParser::~ExpatParser() {
