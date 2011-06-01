@@ -19,6 +19,10 @@ namespace Swift {
 
 			bool parse(const std::string& data);
 
+			XML_Parser getParser() {
+				return parser_;
+			}
+
 		private:
 			XML_Parser parser_;
 	};

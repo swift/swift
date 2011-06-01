@@ -25,6 +25,7 @@ class XMLParserTest : public CppUnit::TestFixture {
 		CPPUNIT_TEST(testParse_NestedElements);
 		CPPUNIT_TEST(testParse_ElementInNamespacedElement);
 		CPPUNIT_TEST(testParse_CharacterData);
+		CPPUNIT_TEST(testParse_XMLEntity);
 		CPPUNIT_TEST(testParse_NamespacePrefix);
 		CPPUNIT_TEST(testParse_UnhandledXML);
 		CPPUNIT_TEST(testParse_InvalidXML);
@@ -33,6 +34,7 @@ class XMLParserTest : public CppUnit::TestFixture {
 		CPPUNIT_TEST(testParse_WhitespaceInAttribute);
 		CPPUNIT_TEST(testParse_AttributeWithoutNamespace);
 		CPPUNIT_TEST(testParse_AttributeWithNamespace);
+		CPPUNIT_TEST(testParse_BillionLaughs);
 		CPPUNIT_TEST_SUITE_END();
 
 	public:
@@ -124,6 +126,26 @@ class XMLParserTest : public CppUnit::TestFixture {
 
 			CPPUNIT_ASSERT_EQUAL(Client::EndElement, client_.events[6].type);
 			CPPUNIT_ASSERT_EQUAL(std::string("html"), client_.events[6].data);
+		}
+
+		void testParse_XMLEntity() {
+			ParserType testling(&client_);
+
+			CPPUNIT_ASSERT(testling.parse("<html>&lt;&gt;</html>"));
+
+			CPPUNIT_ASSERT_EQUAL(static_cast<size_t>(4), client_.events.size());
+
+			CPPUNIT_ASSERT_EQUAL(Client::StartElement, client_.events[0].type);
+			CPPUNIT_ASSERT_EQUAL(std::string("html"), client_.events[0].data);
+
+			CPPUNIT_ASSERT_EQUAL(Client::CharacterData, client_.events[1].type);
+			CPPUNIT_ASSERT_EQUAL(std::string("<"), client_.events[1].data);
+
+			CPPUNIT_ASSERT_EQUAL(Client::CharacterData, client_.events[2].type);
+			CPPUNIT_ASSERT_EQUAL(std::string(">"), client_.events[2].data);
+
+			CPPUNIT_ASSERT_EQUAL(Client::EndElement, client_.events[3].type);
+			CPPUNIT_ASSERT_EQUAL(std::string("html"), client_.events[3].data);
 		}
 
 		void testParse_NamespacePrefix() {
@@ -228,6 +250,26 @@ class XMLParserTest : public CppUnit::TestFixture {
 			CPPUNIT_ASSERT_EQUAL(static_cast<size_t>(1), client_.events[0].attributes.getEntries().size());
 			CPPUNIT_ASSERT_EQUAL(std::string("attr"), client_.events[0].attributes.getEntries()[0].getAttribute().getName());
 			CPPUNIT_ASSERT_EQUAL(std::string("http://swift.im/f"), client_.events[0].attributes.getEntries()[0].getAttribute().getNamespace());
+		}
+
+		void testParse_BillionLaughs() {
+			ParserType testling(&client_);
+
+			CPPUNIT_ASSERT(!testling.parse(
+				"<?xml version=\"1.0\"?>"
+				"<!DOCTYPE lolz ["
+				"  <!ENTITY lol \"lol\">"
+				"  <!ENTITY lol2 \"&lol;&lol;&lol;&lol;&lol;&lol;&lol;&lol;&lol;&lol;\">"
+				"  <!ENTITY lol3 \"&lol2;&lol2;&lol2;&lol2;&lol2;&lol2;&lol2;&lol2;&lol2;&lol2;\">"
+				"  <!ENTITY lol4 \"&lol3;&lol3;&lol3;&lol3;&lol3;&lol3;&lol3;&lol3;&lol3;&lol3;\">"
+				"  <!ENTITY lol5 \"&lol4;&lol4;&lol4;&lol4;&lol4;&lol4;&lol4;&lol4;&lol4;&lol4;\">"
+				"  <!ENTITY lol6 \"&lol5;&lol5;&lol5;&lol5;&lol5;&lol5;&lol5;&lol5;&lol5;&lol5;\">"
+				"  <!ENTITY lol7 \"&lol6;&lol6;&lol6;&lol6;&lol6;&lol6;&lol6;&lol6;&lol6;&lol6;\">"
+				"  <!ENTITY lol8 \"&lol7;&lol7;&lol7;&lol7;&lol7;&lol7;&lol7;&lol7;&lol7;&lol7;\">"
+				"  <!ENTITY lol9 \"&lol8;&lol8;&lol8;&lol8;&lol8;&lol8;&lol8;&lol8;&lol8;&lol8;\">"
+				"]>"
+				"<lolz>&lol9;</lolz>"
+			));
 		}
 	
 	private:
