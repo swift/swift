@@ -14,7 +14,7 @@ namespace Swift {
 			Last() {};
 			Last(int seconds) : seconds_(seconds) {};
 
-			int getSeconds() {return seconds_;}
+			int getSeconds() const {return seconds_;}
 			void setSeconds(int seconds) {seconds_ = seconds;}
 
 		private:
