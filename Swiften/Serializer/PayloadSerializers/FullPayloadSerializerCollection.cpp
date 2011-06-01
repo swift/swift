@@ -42,6 +42,7 @@
 #include <Swiften/Serializer/PayloadSerializers/NicknameSerializer.h>
 #include <Swiften/Serializer/PayloadSerializers/SearchPayloadSerializer.h>
 #include <Swiften/Serializer/PayloadSerializers/ReplaceSerializer.h>
+#include <Swiften/Serializer/PayloadSerializers/LastSerializer.h>
 
 namespace Swift {
 
@@ -81,6 +82,7 @@ FullPayloadSerializerCollection::FullPayloadSerializerCollection() {
 	serializers_.push_back(new NicknameSerializer());
 	serializers_.push_back(new SearchPayloadSerializer());
 	serializers_.push_back(new ReplaceSerializer());
+	serializers_.push_back(new LastSerializer());
 	foreach(PayloadSerializer* serializer, serializers_) {
 		addSerializer(serializer);
 	}

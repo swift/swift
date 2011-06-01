@@ -42,6 +42,7 @@
 #include <Swiften/Parser/PayloadParsers/MUCUserPayloadParserFactory.h>
 #include <Swiften/Parser/PayloadParsers/NicknameParserFactory.h>
 #include <Swiften/Parser/PayloadParsers/ReplaceParser.h>
+#include <Swiften/Parser/PayloadParsers/LastParser.h>
 
 using namespace boost;
 
@@ -52,6 +53,7 @@ FullPayloadParserFactoryCollection::FullPayloadParserFactoryCollection() {
 	factories_.push_back(shared_ptr<PayloadParserFactory>(new GenericPayloadParserFactory<StatusShowParser>("show")));
 	factories_.push_back(shared_ptr<PayloadParserFactory>(new GenericPayloadParserFactory<StatusParser>("status")));
 	factories_.push_back(shared_ptr<PayloadParserFactory>(new GenericPayloadParserFactory<ReplaceParser>("replace", "http://swift.im/protocol/replace")));
+	factories_.push_back(shared_ptr<PayloadParserFactory>(new GenericPayloadParserFactory<LastParser>("query", "jabber:iq:last")));
 	factories_.push_back(shared_ptr<PayloadParserFactory>(new GenericPayloadParserFactory<BodyParser>("body")));
 	factories_.push_back(shared_ptr<PayloadParserFactory>(new GenericPayloadParserFactory<SubjectParser>("subject")));
 	factories_.push_back(shared_ptr<PayloadParserFactory>(new GenericPayloadParserFactory<PriorityParser>("priority")));

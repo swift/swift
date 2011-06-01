@@ -54,6 +54,7 @@ sources = [
 		"PayloadParsers/MUCUserPayloadParser.cpp",
 		"PayloadParsers/NicknameParser.cpp",
 		"PayloadParsers/ReplaceParser.cpp",
+		"PayloadParsers/LastParser.cpp",
 		"PlatformXMLParserFactory.cpp",
 		"PresenceParser.cpp",
 		"SerializingParser.cpp",
