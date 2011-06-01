@@ -4,8 +4,7 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#ifndef SWIFTEN_ChatControllerBase_H
-#define SWIFTEN_ChatControllerBase_H
+#pragma once
 
 #include <map>
 #include <vector>
@@ -85,8 +84,7 @@ namespace Swift {
 			ChatWindow* chatWindow_;
 			JID toJID_;
 			bool labelsEnabled_;
-			bool replacedMessage_;
-			std::string lastMessageUIID_;
+			std::map<JID, std::string> lastMessagesUIID_;
 			PresenceOracle* presenceOracle_;
 			AvatarManager* avatarManager_;
 			bool useDelayForLatency_;
@@ -95,5 +93,3 @@ namespace Swift {
 			TimerFactory* timerFactory_;
 	};
 }
-
-#endif

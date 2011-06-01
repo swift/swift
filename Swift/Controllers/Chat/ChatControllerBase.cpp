@@ -7,6 +7,7 @@
 #include "Swift/Controllers/Chat/ChatControllerBase.h"
 
 #include <sstream>
+#include <map>
 
 #include <boost/bind.hpp>
 #include <boost/shared_ptr.hpp>
@@ -33,7 +34,6 @@ ChatControllerBase::ChatControllerBase(const JID& self, StanzaChannel* stanzaCha
 	chatWindow_->onSendMessageRequest.connect(boost::bind(&ChatControllerBase::handleSendMessageRequest, this, _1, _2));
 	setOnline(stanzaChannel->isAvailable() && iqRouter->isAvailable());
 	createDayChangeTimer();
-	replacedMessage_ = false;
 }
 
 ChatControllerBase::~ChatControllerBase() {
@@ -186,8 +186,19 @@ void ChatControllerBase::handleIncomingMessage(boost::shared_ptr<MessageEvent> m
 			timeStamp = *messageTimeStamp;
 		}
 		onActivity(body);
-		if (!replacedMessage_) {
-			lastMessageUIID_ = addMessage(body, senderDisplayNameFromMessage(from), isIncomingMessageFromMe(message), label, std::string(avatarManager_->getAvatarPath(from).string()), timeStamp);
+
+ 		boost::shared_ptr<Replace> replace = message->getPayload<Replace>();
+		if (replace) {
+			std::string body = message->getBody();
+			// Should check if the user has a previous message
+			std::map<JID, std::string>::iterator lastMessage;
+			lastMessage = lastMessagesUIID_.find(from);
+			if (lastMessage != lastMessagesUIID_.end()) {
+				chatWindow_->replaceMessage(body, lastMessagesUIID_[from], timeStamp);
+			}
+		}
+		else {
+			lastMessagesUIID_[from] = addMessage(body, senderDisplayNameFromMessage(from), isIncomingMessageFromMe(message), label, std::string(avatarManager_->getAvatarPath(from).string()), timeStamp);
 		}
 	}
 	chatWindow_->show();

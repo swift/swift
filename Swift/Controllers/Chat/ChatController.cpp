@@ -103,21 +103,6 @@ void ChatController::preHandleIncomingMessage(boost::shared_ptr<MessageEvent> me
 			setToJID(from);
 		}
 	}
-	boost::shared_ptr<Replace> replace = message->getPayload<Replace>();
-	if (replace) {
-		// Determine the timestamp
-		boost::posix_time::ptime timeStamp = boost::posix_time::microsec_clock::universal_time();
-		boost::optional<boost::posix_time::ptime> messageTimeStamp = getMessageTimestamp(message);
-		if (messageTimeStamp) {
-			timeStamp = *messageTimeStamp;
-		}
-		std::string body = message->getBody();
-		chatWindow_->replaceMessage(body, lastMessageUIID_, timeStamp);
-		replacedMessage_ = true;
-	}
-	else {
-		replacedMessage_ = false;
-	}
 	chatStateTracker_->handleMessageReceived(message);
 	chatStateNotifier_->receivedMessageFromContact(message->getPayload<ChatState>());
 }
@@ -134,7 +119,6 @@ void ChatController::preSendMessageRequest(boost::shared_ptr<Message> message) {
 void ChatController::postSendMessage(const std::string& body, boost::shared_ptr<Stanza> sentStanza) {
 	boost::shared_ptr<Replace> replace = sentStanza->getPayload<Replace>();
 	if (replace) {
-		chatWindow_->replaceMessage(body, myLastMessageUIID_, boost::posix_time::microsec_clock::universal_time());
 		eraseIf(unackedStanzas_, PairSecondEquals<boost::shared_ptr<Stanza>, std::string>(myLastMessageUIID_));
 	} else {
 		myLastMessageUIID_ = addMessage(body, QT_TRANSLATE_NOOP("", "me"), true, labelsEnabled_ ? chatWindow_->getSelectedSecurityLabel().getLabel() : boost::shared_ptr<SecurityLabel>(), std::string(avatarManager_->getAvatarPath(selfJID_).string()), boost::posix_time::microsec_clock::universal_time());
