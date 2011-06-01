@@ -17,7 +17,7 @@ namespace Swift {
 			ErrorParserFactory(PayloadParserFactoryCollection* factories) : factories(factories) {
 			}
 
-			virtual bool canParse(const std::string& element, const std::string& ns, const AttributeMap&) const {
+			virtual bool canParse(const std::string& element, const std::string& /*ns*/, const AttributeMap&) const {
 				return element == "error";
 			}
 
