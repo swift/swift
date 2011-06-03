@@ -63,6 +63,7 @@ sources = [
 		"StreamFeaturesParser.cpp",
 		"StreamManagementEnabledParser.cpp",
 		"StreamResumeParser.cpp",
+		"StreamResumedParser.cpp",
 		"XMLParser.cpp",
 		"XMLParserClient.cpp",
 		"XMLParserFactory.cpp",
