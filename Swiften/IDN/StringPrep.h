@@ -7,7 +7,7 @@
 #pragma once
 
 #include <string>
-#include <Swiften/Base/SafeString.h>
+#include <Swiften/Base/SafeByteArray.h>
 
 namespace Swift {
 	class StringPrep {
@@ -20,6 +20,6 @@ namespace Swift {
 			};
 
 			static std::string getPrepared(const std::string& s, Profile profile);
-			static SafeString getPrepared(const SafeString& s, Profile profile);
+			static SafeByteArray getPrepared(const SafeByteArray& s, Profile profile);
 	};
 }

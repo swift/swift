@@ -9,7 +9,6 @@
 #include <Swiften/Elements/AuthRequest.h>
 #include <Swiften/StringCodecs/Base64.h>
 #include <Swiften/Base/SafeByteArray.h>
-#include <Swiften/Base/SafeString.h>
 #include <Swiften/Base/Concat.h>
 
 namespace Swift {
@@ -17,19 +16,19 @@ namespace Swift {
 AuthRequestSerializer::AuthRequestSerializer() {
 }
 
-SafeString AuthRequestSerializer::serialize(boost::shared_ptr<Element> element)  const {
+SafeByteArray AuthRequestSerializer::serialize(boost::shared_ptr<Element> element)  const {
 	boost::shared_ptr<AuthRequest> authRequest(boost::dynamic_pointer_cast<AuthRequest>(element));
-	SafeString value;
+	SafeByteArray value;
 	boost::optional<SafeByteArray> message = authRequest->getMessage();
 	if (message) {
 		if ((*message).empty()) {
-			value = "=";
+			value = createSafeByteArray("=");
 		}
 		else {
 			value = Base64::encode(*message);
 		}
 	}
-	return concat(SafeString("<auth xmlns=\"urn:ietf:params:xml:ns:xmpp-sasl\" mechanism=\"" + authRequest->getMechanism() + "\">"), value, SafeString("</auth>"));
+	return concat(createSafeByteArray("<auth xmlns=\"urn:ietf:params:xml:ns:xmpp-sasl\" mechanism=\"" + authRequest->getMechanism() + "\">"), value, createSafeByteArray("</auth>"));
 }
 
 }

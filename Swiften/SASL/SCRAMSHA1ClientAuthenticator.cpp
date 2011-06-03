@@ -100,7 +100,7 @@ bool SCRAMSHA1ClientAuthenticator::setChallenge(const boost::optional<ByteArray>
 		}
 
 		// Compute all the values needed for the server signature
-		saltedPassword = PBKDF2::encode(createSafeByteArray(StringPrep::getPrepared(getPassword(), StringPrep::SASLPrep)), salt, iterations);
+		saltedPassword = PBKDF2::encode(StringPrep::getPrepared(getPassword(), StringPrep::SASLPrep), salt, iterations);
 		authMessage = concat(getInitialBareClientMessage(), createByteArray(","), initialServerMessage, createByteArray(","), getFinalMessageWithoutProof());
 		ByteArray serverKey = HMACSHA1::getResult(saltedPassword, createByteArray("Server Key"));
 		serverSignature = HMACSHA1::getResult(serverKey, authMessage);

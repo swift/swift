@@ -16,6 +16,6 @@ namespace Swift {
 		public:
 			AuthRequestSerializer();
 
-			virtual SafeString serialize(boost::shared_ptr<Element> element)  const;
+			virtual SafeByteArray serialize(boost::shared_ptr<Element> element)  const;
 	};
 }

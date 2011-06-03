@@ -18,8 +18,8 @@ namespace Swift {
 			StreamManagementFailedSerializer() : GenericElementSerializer<StreamManagementFailed>() {
 			}
 
-			virtual SafeString serialize(boost::shared_ptr<Element>) const {
-				return XMLElement("failed", "urn:xmpp:sm:2").serialize();
+			virtual SafeByteArray serialize(boost::shared_ptr<Element>) const {
+				return createSafeByteArray(XMLElement("failed", "urn:xmpp:sm:2").serialize());
 			}
 	};
 }

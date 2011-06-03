@@ -428,7 +428,7 @@ void MainController::performLoginFromCachedCredentials() {
 		certificateStorage_ = certificateStorageFactory_->createCertificateStorage(jid_.toBare());
 		certificateTrustChecker_ = new CertificateStorageTrustChecker(certificateStorage_);
 
-		client_ = boost::make_shared<Swift::Client>(clientJID, password_.c_str(), networkFactories_, storages_);
+		client_ = boost::make_shared<Swift::Client>(clientJID, createSafeByteArray(password_.c_str()), networkFactories_, storages_);
 		clientInitialized_ = true;
 		client_->setCertificateTrustChecker(certificateTrustChecker_);
 		client_->onDataRead.connect(boost::bind(&XMLConsoleController::handleDataRead, xmlConsoleController_, _1));

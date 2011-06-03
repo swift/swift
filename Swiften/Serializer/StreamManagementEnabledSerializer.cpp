@@ -16,7 +16,7 @@ using namespace Swift;
 StreamManagementEnabledSerializer::StreamManagementEnabledSerializer() : GenericElementSerializer<StreamManagementEnabled>() {
 }
 
-SafeString StreamManagementEnabledSerializer::serialize(boost::shared_ptr<Element> el) const {
+SafeByteArray StreamManagementEnabledSerializer::serialize(boost::shared_ptr<Element> el) const {
 	boost::shared_ptr<StreamManagementEnabled> e(boost::dynamic_pointer_cast<StreamManagementEnabled>(el));
 	XMLElement element("enabled", "urn:xmpp:sm:2");
 	if (!e->getResumeID().empty()) {
@@ -25,5 +25,5 @@ SafeString StreamManagementEnabledSerializer::serialize(boost::shared_ptr<Elemen
 	if (e->getResumeSupported()) {
 		element.setAttribute("resume", "true");
 	}
-	return element.serialize();
+	return createSafeByteArray(element.serialize());
 }

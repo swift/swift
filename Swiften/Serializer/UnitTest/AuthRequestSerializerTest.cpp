@@ -27,7 +27,7 @@ class AuthRequestSerializerTest : public CppUnit::TestFixture {
 			boost::shared_ptr<AuthRequest> authRequest(new AuthRequest("PLAIN"));
 			authRequest->setMessage(createSafeByteArray("foo"));
 
-			CPPUNIT_ASSERT_EQUAL(SafeString(
+			CPPUNIT_ASSERT_EQUAL(createSafeByteArray(
 				"<auth xmlns=\"urn:ietf:params:xml:ns:xmpp-sasl\" mechanism=\"PLAIN\">"
 					"Zm9v"
 				"</auth>"), testling.serialize(authRequest));
@@ -37,7 +37,7 @@ class AuthRequestSerializerTest : public CppUnit::TestFixture {
 			AuthRequestSerializer testling;
 			boost::shared_ptr<AuthRequest> authRequest(new AuthRequest("PLAIN"));
 
-			CPPUNIT_ASSERT_EQUAL(SafeString(
+			CPPUNIT_ASSERT_EQUAL(createSafeByteArray(
 				"<auth xmlns=\"urn:ietf:params:xml:ns:xmpp-sasl\" mechanism=\"PLAIN\">"
 				"</auth>"), testling.serialize(authRequest));
 		}
@@ -47,7 +47,7 @@ class AuthRequestSerializerTest : public CppUnit::TestFixture {
 			boost::shared_ptr<AuthRequest> authRequest(new AuthRequest("PLAIN"));
 			authRequest->setMessage(SafeByteArray());
 
-			CPPUNIT_ASSERT_EQUAL(SafeString(
+			CPPUNIT_ASSERT_EQUAL(createSafeByteArray(
 				"<auth xmlns=\"urn:ietf:params:xml:ns:xmpp-sasl\" mechanism=\"PLAIN\">"
 					"="
 				"</auth>"), testling.serialize(authRequest));

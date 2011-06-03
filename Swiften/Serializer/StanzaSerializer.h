@@ -18,7 +18,7 @@ namespace Swift {
 		public:
 			StanzaSerializer(const std::string& tag, PayloadSerializerCollection* payloadSerializers);
 
-			virtual SafeString serialize(boost::shared_ptr<Element>) const;
+			virtual SafeByteArray serialize(boost::shared_ptr<Element>) const;
 			virtual void setStanzaSpecificAttributes(boost::shared_ptr<Element>, XMLElement&) const = 0;
 
 		private:

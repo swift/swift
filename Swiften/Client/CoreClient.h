@@ -14,7 +14,6 @@
 #include <Swiften/JID/JID.h>
 #include <Swiften/Client/ClientError.h>
 #include <Swiften/Client/ClientOptions.h>
-#include <Swiften/Base/SafeString.h>
 #include <Swiften/Base/SafeByteArray.h>
 
 namespace Swift {
@@ -35,7 +34,6 @@ namespace Swift {
 	class CertificateTrustChecker;
 	class NetworkFactories;
 	class ClientSessionStanzaChannel;
-	class SafeString;
 
 	/** 
 	 * The central class for communicating with an XMPP server.
@@ -53,7 +51,7 @@ namespace Swift {
 			 * Constructs a client for the given JID with the given password.
 			 * The given eventLoop will be used to post events to.
 			 */
-			CoreClient(const JID& jid, const SafeString& password, NetworkFactories* networkFactories);
+			CoreClient(const JID& jid, const SafeByteArray& password, NetworkFactories* networkFactories);
 			~CoreClient();
 
 			void setCertificate(const std::string& certificate);
@@ -204,7 +202,7 @@ namespace Swift {
 
 		private:
 			JID jid_;
-			SafeString password_;
+			SafeByteArray password_;
 			NetworkFactories* networkFactories;
 			ClientSessionStanzaChannel* stanzaChannel_;
 			IQRouter* iqRouter_;

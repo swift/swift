@@ -14,6 +14,6 @@ namespace Swift {
 		public:
 			StreamErrorSerializer();
 
-			virtual SafeString serialize(boost::shared_ptr<Element> error) const;
+			virtual SafeByteArray serialize(boost::shared_ptr<Element> error) const;
 	};
 }

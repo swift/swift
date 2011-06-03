@@ -34,7 +34,7 @@ boost::optional<SafeByteArray> DIGESTMD5ClientAuthenticator::getResponse() const
 		// Compute the response value
 		ByteArray A1 = concat(
 				MD5::getHash(
-					createSafeByteArray(concat(SafeString(getAuthenticationID().c_str()), SafeString(":"), SafeString(realm.c_str()), SafeString(":"), getPassword()))),
+					concat(createSafeByteArray(getAuthenticationID().c_str()), createSafeByteArray(":"), createSafeByteArray(realm.c_str()), createSafeByteArray(":"), getPassword())),
 				createByteArray(":"), createByteArray(*challenge.getValue("nonce")), createByteArray(":"), createByteArray(cnonce));
 		if (!getAuthorizationID().empty()) {
 			append(A1, createByteArray(":" + getAuthenticationID()));

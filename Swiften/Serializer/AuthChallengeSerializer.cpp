@@ -15,7 +15,7 @@ namespace Swift {
 AuthChallengeSerializer::AuthChallengeSerializer() {
 }
 
-SafeString AuthChallengeSerializer::serialize(boost::shared_ptr<Element> element)  const {
+SafeByteArray AuthChallengeSerializer::serialize(boost::shared_ptr<Element> element)  const {
 	boost::shared_ptr<AuthChallenge> authChallenge(boost::dynamic_pointer_cast<AuthChallenge>(element));
 	std::string value;
 	boost::optional<std::vector<unsigned char> > message = authChallenge->getValue();
@@ -27,7 +27,7 @@ SafeString AuthChallengeSerializer::serialize(boost::shared_ptr<Element> element
 			value = Base64::encode(ByteArray(*message));
 		}
 	}
-	return "<challenge xmlns=\"urn:ietf:params:xml:ns:xmpp-sasl\">" + value + "</challenge>";
+	return createSafeByteArray("<challenge xmlns=\"urn:ietf:params:xml:ns:xmpp-sasl\">" + value + "</challenge>");
 }
 
 }

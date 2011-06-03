@@ -18,8 +18,8 @@ namespace Swift {
 			AuthFailureSerializer() : GenericElementSerializer<AuthFailure>() {
 			}
 
-			virtual SafeString serialize(boost::shared_ptr<Element>) const {
-				return XMLElement("failure", "urn:ietf:params:xml:ns:xmpp-sasl").serialize();
+			virtual SafeByteArray serialize(boost::shared_ptr<Element>) const {
+				return createSafeByteArray(XMLElement("failure", "urn:ietf:params:xml:ns:xmpp-sasl").serialize());
 			}
 	};
 }

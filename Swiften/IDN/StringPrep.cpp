@@ -28,14 +28,14 @@ using namespace Swift;
 	}
 
 	template<typename StringType, typename ContainerType>
-	StringType getStringPrepared(const StringType& s, StringPrep::Profile profile) {
+	ContainerType getStringPrepared(const StringType& s, StringPrep::Profile profile) {
 		ContainerType input(s.begin(), s.end());
 		input.resize(MAX_STRINGPREP_SIZE);
 		if (stringprep(&input[0], MAX_STRINGPREP_SIZE, static_cast<Stringprep_profile_flags>(0), getLibIDNProfile(profile)) == 0) {
-			return StringType(&input[0]);
+			return input;
 		}
 		else {
-			return StringType();
+			return ContainerType();
 		}
 	}
 }
@@ -43,11 +43,11 @@ using namespace Swift;
 namespace Swift {
 
 std::string StringPrep::getPrepared(const std::string& s, Profile profile) {
-	return getStringPrepared< std::string, std::vector<char> >(s, profile);
+	return std::string(vecptr(getStringPrepared< std::string, std::vector<char> >(s, profile)));
 }
 
-SafeString StringPrep::getPrepared(const SafeString& s, Profile profile) {
-	return getStringPrepared<SafeString, std::vector<char, SafeAllocator<char> > >(s, profile);
+SafeByteArray StringPrep::getPrepared(const SafeByteArray& s, Profile profile) {
+	return createSafeByteArray(reinterpret_cast<const char*>(vecptr(getStringPrepared<SafeByteArray, std::vector<char, SafeAllocator<char> > >(s, profile))));
 }
 
 }

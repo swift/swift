@@ -46,7 +46,7 @@ int main(int, char**) {
 	BlindCertificateTrustChecker trustChecker;
 	std::vector<CoreClient*> clients;
 	for (int i = 0; i < numberOfInstances; ++i) {
-		CoreClient* client = new Swift::CoreClient(JID(jid), std::string(pass), &networkFactories);
+		CoreClient* client = new Swift::CoreClient(JID(jid), createSafeByteArray(std::string(pass)), &networkFactories);
 		client->setCertificateTrustChecker(&trustChecker);
 		client->onConnected.connect(&handleConnected);
 		clients.push_back(client);

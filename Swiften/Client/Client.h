@@ -8,6 +8,8 @@
 
 #include <Swiften/Client/CoreClient.h>
 
+#include <Swiften/Base/SafeString.h>
+
 namespace Swift {
 	class SoftwareVersionResponder;
 	class BlindCertificateTrustChecker;

@@ -10,7 +10,6 @@
 #include <string>
 #include <vector>
 
-#include <Swiften/Base/SafeString.h>
 #include <Swiften/Base/SafeByteArray.h>
 #include <Swiften/Base/ByteArray.h>
 
@@ -24,7 +23,7 @@ namespace Swift {
 				return name;
 			}
 
-			void setCredentials(const std::string& authcid, const SafeString& password, const std::string& authzid = std::string()) {
+			void setCredentials(const std::string& authcid, const SafeByteArray& password, const std::string& authzid = std::string()) {
 				this->authcid = authcid;
 				this->password = password;
 				this->authzid = authzid;
@@ -41,14 +40,14 @@ namespace Swift {
 				return authzid;
 			}
 
-			const SafeString& getPassword() const {
+			const SafeByteArray& getPassword() const {
 				return password;
 			}
 		
 		private:
 			std::string name;
 			std::string authcid;
-			SafeString password;
+			SafeByteArray password;
 			std::string authzid;
 	};
 }

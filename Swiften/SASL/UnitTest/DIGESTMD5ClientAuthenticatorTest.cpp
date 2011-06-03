@@ -32,7 +32,7 @@ class DIGESTMD5ClientAuthenticatorTest : public CppUnit::TestFixture {
 		void testGetResponse() {
 			DIGESTMD5ClientAuthenticator testling("xmpp.example.com", "abcdefgh");
 
-			testling.setCredentials("user", "pass", "");
+			testling.setCredentials("user", createSafeByteArray("pass"), "");
 			testling.setChallenge(createByteArray(
 				"realm=\"example.com\","
 				"nonce=\"O6skKPuaCZEny3hteI19qXMBXSadoWs840MchORo\","
@@ -46,7 +46,7 @@ class DIGESTMD5ClientAuthenticatorTest : public CppUnit::TestFixture {
 		void testGetResponse_WithAuthorizationID() {
 			DIGESTMD5ClientAuthenticator testling("xmpp.example.com", "abcdefgh");
 
-			testling.setCredentials("user", "pass", "myauthzid");
+			testling.setCredentials("user", createSafeByteArray("pass"), "myauthzid");
 			testling.setChallenge(createByteArray(
 				"realm=\"example.com\","
 				"nonce=\"O6skKPuaCZEny3hteI19qXMBXSadoWs840MchORo\","

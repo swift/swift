@@ -36,7 +36,7 @@ class StreamFeaturesSerializerTest : public CppUnit::TestFixture
 			streamFeatures->setHasStreamManagement();
 			streamFeatures->setHasRosterVersioning();
 
-			CPPUNIT_ASSERT_EQUAL(SafeString(
+			CPPUNIT_ASSERT_EQUAL(createSafeByteArray(
 				"<stream:features>"
 					"<starttls xmlns=\"urn:ietf:params:xml:ns:xmpp-tls\"/>"
 					"<compression xmlns=\"http://jabber.org/features/compress\">"

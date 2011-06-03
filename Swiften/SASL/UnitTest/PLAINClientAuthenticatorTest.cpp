@@ -22,7 +22,7 @@ class PLAINClientAuthenticatorTest : public CppUnit::TestFixture {
 		void testGetResponse_WithoutAuthzID() {
 			PLAINClientAuthenticator testling;
 
-			testling.setCredentials("user", "pass");
+			testling.setCredentials("user", createSafeByteArray("pass"));
 
 			CPPUNIT_ASSERT_EQUAL(*testling.getResponse(), createSafeByteArray("\0user\0pass", 10));
 		}
@@ -30,7 +30,7 @@ class PLAINClientAuthenticatorTest : public CppUnit::TestFixture {
 		void testGetResponse_WithAuthzID() {
 			PLAINClientAuthenticator testling;
 
-			testling.setCredentials("user", "pass", "authz");
+			testling.setCredentials("user", createSafeByteArray("pass"), "authz");
 
 			CPPUNIT_ASSERT_EQUAL(*testling.getResponse(), createSafeByteArray("authz\0user\0pass", 15));
 		}

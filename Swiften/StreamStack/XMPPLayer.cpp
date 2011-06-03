@@ -37,7 +37,7 @@ void XMPPLayer::writeFooter() {
 }
 
 void XMPPLayer::writeElement(boost::shared_ptr<Element> element) {
-	writeDataInternal(createSafeByteArray(xmppSerializer_->serializeElement(element)));
+	writeDataInternal(xmppSerializer_->serializeElement(element));
 }
 
 void XMPPLayer::writeData(const std::string& data) {

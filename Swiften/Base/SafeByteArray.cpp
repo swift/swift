@@ -5,7 +5,6 @@
  */
 
 #include <Swiften/Base/SafeByteArray.h>
-#include <Swiften/Base/SafeString.h>
 
 using namespace Swift;
 
@@ -18,10 +17,6 @@ SafeByteArray createSafeByteArray(const char* c) {
 		++c;
 	}
 	return data;
-}
-
-SafeByteArray createSafeByteArray(const SafeString& s) {
-	return SafeByteArray(s.begin(), s.end());
 }
 
 }

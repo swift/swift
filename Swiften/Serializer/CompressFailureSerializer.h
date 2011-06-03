@@ -18,8 +18,8 @@ namespace Swift {
 			CompressFailureSerializer() : GenericElementSerializer<CompressFailure>() {
 			}
 
-			virtual SafeString serialize(boost::shared_ptr<Element>) const {
-				return XMLElement("failure", "http://jabber.org/protocol/compress").serialize();
+			virtual SafeByteArray serialize(boost::shared_ptr<Element>) const {
+				return createSafeByteArray(XMLElement("failure", "http://jabber.org/protocol/compress").serialize());
 			}
 	};
 }

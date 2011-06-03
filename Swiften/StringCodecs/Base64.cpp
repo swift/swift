@@ -10,7 +10,6 @@
 
 #include <Swiften/StringCodecs/Base64.h>
 #include <Swiften/Base/Algorithm.h>
-#include <Swiften/Base/SafeString.h>
 
 namespace Swift {
 
@@ -56,8 +55,8 @@ std::string Base64::encode(const ByteArray &s) {
 	return base64Encode<std::string, ByteArray>(s);
 }
 
-SafeString Base64::encode(const SafeByteArray &s) {
-	return base64Encode<SafeString, SafeByteArray>(s);
+SafeByteArray Base64::encode(const SafeByteArray &s) {
+	return base64Encode<SafeByteArray, SafeByteArray>(s);
 }
 
 ByteArray Base64::decode(const std::string& input) {

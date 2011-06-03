@@ -12,7 +12,6 @@
 #include <boost/uuid/uuid_generators.hpp>
 #include <boost/smart_ptr/make_shared.hpp>
 
-#include <Swiften/Base/SafeString.h>
 #include <Swiften/Elements/ProtocolHeader.h>
 #include <Swiften/Elements/StreamFeatures.h>
 #include <Swiften/Elements/StreamError.h>
@@ -339,7 +338,7 @@ bool ClientSession::checkState(State state) {
 	return true;
 }
 
-void ClientSession::sendCredentials(const SafeString& password) {
+void ClientSession::sendCredentials(const SafeByteArray& password) {
 	assert(WaitingForCredentials);
 	state = Authenticating;
 	authenticator->setCredentials(localJID.getNode(), password);

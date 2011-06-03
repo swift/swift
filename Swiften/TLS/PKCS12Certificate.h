@@ -6,14 +6,14 @@
 
 #pragma once
 
-#include <Swiften/Base/ByteArray.h>
+#include <Swiften/Base/SafeByteArray.h>
 
 namespace Swift {
 	class PKCS12Certificate {
 		public:
 			PKCS12Certificate() {}
 
-			PKCS12Certificate(const std::string& filename, const std::string& password) : password_(password) {
+			PKCS12Certificate(const std::string& filename, const SafeByteArray& password) : password_(password) {
 				readByteArrayFromFile(data_, filename);
 			}
 
@@ -29,12 +29,12 @@ namespace Swift {
 				data_ = data;
 			}
 
-			const std::string& getPassword() const {
+			const SafeByteArray& getPassword() const {
 				return password_;
 			}
 
 		private:
 			ByteArray data_;
-			std::string password_;
+			SafeByteArray password_;
 	};
 }

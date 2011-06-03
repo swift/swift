@@ -17,7 +17,7 @@ namespace Swift {
 StreamFeaturesSerializer::StreamFeaturesSerializer() {
 }
 
-SafeString StreamFeaturesSerializer::serialize(boost::shared_ptr<Element> element)  const {
+SafeByteArray StreamFeaturesSerializer::serialize(boost::shared_ptr<Element> element)  const {
 	boost::shared_ptr<StreamFeatures> streamFeatures(boost::dynamic_pointer_cast<StreamFeatures>(element));
 
 	XMLElement streamFeaturesElement("stream:features");
@@ -54,7 +54,7 @@ SafeString StreamFeaturesSerializer::serialize(boost::shared_ptr<Element> elemen
 	if (streamFeatures->hasRosterVersioning()) {
 		streamFeaturesElement.addNode(boost::make_shared<XMLElement>("ver", "urn:xmpp:features:rosterver"));
 	}
-	return streamFeaturesElement.serialize();
+	return createSafeByteArray(streamFeaturesElement.serialize());
 }
 
 }

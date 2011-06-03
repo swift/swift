@@ -16,7 +16,7 @@ namespace Swift {
 	class Base64 {
 		public:
 			static std::string encode(const ByteArray& s);
-			static SafeString encode(const SafeByteArray& s);
+			static SafeByteArray encode(const SafeByteArray& s);
 
 			static ByteArray decode(const std::string &s);
 	};

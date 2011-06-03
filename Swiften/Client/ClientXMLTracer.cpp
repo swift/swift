@@ -9,8 +9,6 @@
 #include <iostream>
 #include <boost/bind.hpp>
 
-#include <Swiften/Base/SafeString.h>
-
 namespace Swift {
 
 ClientXMLTracer::ClientXMLTracer(CoreClient* client) {

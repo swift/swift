@@ -12,9 +12,11 @@ std::ostream& operator<<(std::ostream& os, const Swift::ByteArray& s) {
 	std::ios::fmtflags oldFlags = os.flags(); 
 	os << std::hex;
 	for (Swift::ByteArray::const_iterator i = s.begin(); i != s.end(); ++i) {
-		os << "0x" << static_cast<unsigned int>(static_cast<unsigned char>(*i));
-		if (i + 1 < s.end()) {
-			os << " ";
+		if (*i >= 32 && *i < 127) {
+			os << *i;
+		}
+		else {
+			os << "\\x" << static_cast<unsigned int>(static_cast<unsigned char>(*i));
 		}
 	}
 	os << std::endl;
@@ -26,9 +28,11 @@ std::ostream& operator<<(std::ostream& os, const Swift::SafeByteArray& s) {
 	std::ios::fmtflags oldFlags = os.flags();
 	os << std::hex;
 	for (Swift::SafeByteArray::const_iterator i = s.begin(); i != s.end(); ++i) {
-		os << "0x" << static_cast<unsigned int>(static_cast<unsigned char>(*i));
-		if (i + 1 < s.end()) {
-			os << " ";
+		if (*i >= 32 && *i < 127) {
+			os << *i;
+		}
+		else {
+			os << "\\x" << static_cast<unsigned int>(static_cast<unsigned char>(*i));
 		}
 	}
 	os << std::endl;
@@ -36,7 +40,3 @@ std::ostream& operator<<(std::ostream& os, const Swift::SafeByteArray& s) {
 	return os;
 }
 
-std::ostream& operator<<(std::ostream& os, const Swift::SafeString& s) {
-	os << s.toString();
-	return os;
-}

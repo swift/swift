@@ -27,7 +27,7 @@ class AuthResponseSerializerTest : public CppUnit::TestFixture {
 			boost::shared_ptr<AuthResponse> authResponse(new AuthResponse());
 			authResponse->setValue(createSafeByteArray("foo"));
 
-			CPPUNIT_ASSERT_EQUAL(SafeString(
+			CPPUNIT_ASSERT_EQUAL(createSafeByteArray(
 				"<response xmlns=\"urn:ietf:params:xml:ns:xmpp-sasl\">"
 					"Zm9v"
 				"</response>"), testling.serialize(authResponse));
@@ -37,7 +37,7 @@ class AuthResponseSerializerTest : public CppUnit::TestFixture {
 			AuthResponseSerializer testling;
 			boost::shared_ptr<AuthResponse> authResponse(new AuthResponse());
 
-			CPPUNIT_ASSERT_EQUAL(SafeString(
+			CPPUNIT_ASSERT_EQUAL(createSafeByteArray(
 				"<response xmlns=\"urn:ietf:params:xml:ns:xmpp-sasl\">"
 				"</response>"), testling.serialize(authResponse));
 		}
@@ -47,7 +47,7 @@ class AuthResponseSerializerTest : public CppUnit::TestFixture {
 			boost::shared_ptr<AuthResponse> authResponse(new AuthResponse());
 			authResponse->setValue(SafeByteArray());
 
-			CPPUNIT_ASSERT_EQUAL(SafeString(
+			CPPUNIT_ASSERT_EQUAL(createSafeByteArray(
 				"<response xmlns=\"urn:ietf:params:xml:ns:xmpp-sasl\">"
 					"="
 				"</response>"), testling.serialize(authResponse));

@@ -18,8 +18,8 @@ namespace Swift {
 			StanzaAckRequestSerializer() : GenericElementSerializer<StanzaAckRequest>() {
 			}
 
-			virtual SafeString serialize(boost::shared_ptr<Element>) const {
-				return XMLElement("r", "urn:xmpp:sm:2").serialize();
+			virtual SafeByteArray serialize(boost::shared_ptr<Element>) const {
+				return createSafeByteArray(XMLElement("r", "urn:xmpp:sm:2").serialize());
 			}
 	};
 }

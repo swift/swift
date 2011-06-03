@@ -11,7 +11,6 @@
 #include <boost/optional.hpp>
 #include <boost/smart_ptr/make_shared.hpp>
 
-#include <Swiften/Base/SafeString.h>
 #include <Swiften/Session/SessionStream.h>
 #include <Swiften/Client/ClientSession.h>
 #include <Swiften/Elements/Message.h>
@@ -182,7 +181,7 @@ class ClientSessionTest : public CppUnit::TestFixture {
 			server->sendStreamFeaturesWithPLAINAuthentication();
 			CPPUNIT_ASSERT(needCredentials);
 			CPPUNIT_ASSERT_EQUAL(ClientSession::WaitingForCredentials, session->getState());
-			session->sendCredentials("mypass");
+			session->sendCredentials(createSafeByteArray("mypass"));
 			server->receiveAuthRequest("PLAIN");
 			server->sendAuthSuccess();
 			server->receiveStreamStart();
@@ -198,7 +197,7 @@ class ClientSessionTest : public CppUnit::TestFixture {
 			server->sendStreamFeaturesWithPLAINAuthentication();
 			CPPUNIT_ASSERT(needCredentials);
 			CPPUNIT_ASSERT_EQUAL(ClientSession::WaitingForCredentials, session->getState());
-			session->sendCredentials("mypass");
+			session->sendCredentials(createSafeByteArray("mypass"));
 			server->receiveAuthRequest("PLAIN");
 			server->sendAuthFailure();
 
@@ -238,7 +237,7 @@ class ClientSessionTest : public CppUnit::TestFixture {
 			server->receiveStreamStart();
 			server->sendStreamStart();
 			server->sendStreamFeaturesWithPLAINAuthentication();
-			session->sendCredentials("mypass");
+			session->sendCredentials(createSafeByteArray("mypass"));
 			server->receiveAuthRequest("PLAIN");
 			server->sendAuthSuccess();
 			server->receiveStreamStart();
@@ -262,7 +261,7 @@ class ClientSessionTest : public CppUnit::TestFixture {
 			server->receiveStreamStart();
 			server->sendStreamStart();
 			server->sendStreamFeaturesWithPLAINAuthentication();
-			session->sendCredentials("mypass");
+			session->sendCredentials(createSafeByteArray("mypass"));
 			server->receiveAuthRequest("PLAIN");
 			server->sendAuthSuccess();
 			server->receiveStreamStart();
@@ -305,7 +304,7 @@ class ClientSessionTest : public CppUnit::TestFixture {
 			server->receiveStreamStart();
 			server->sendStreamStart();
 			server->sendStreamFeaturesWithPLAINAuthentication();
-			session->sendCredentials("mypass");
+			session->sendCredentials(createSafeByteArray("mypass"));
 			server->receiveAuthRequest("PLAIN");
 			server->sendAuthSuccess();
 			server->receiveStreamStart();

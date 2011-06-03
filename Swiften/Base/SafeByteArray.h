@@ -12,8 +12,6 @@
 #include <Swiften/Base/ByteArray.h>
 
 namespace Swift {
-	class SafeString;
-
 	typedef std::vector<unsigned char, SafeAllocator<unsigned char> > SafeByteArray;
 
 	inline SafeByteArray createSafeByteArray(const ByteArray& a) {
@@ -37,8 +35,6 @@ namespace Swift {
 	inline SafeByteArray createSafeByteArray(const unsigned char* c, size_t n) {
 		return SafeByteArray(c, c + n);
 	}
-
-	SafeByteArray createSafeByteArray(const SafeString& s);
 
 	/* WARNING! This breaks the safety of the data in the safe byte array.
 	 * Do not use in modes that require data safety. */

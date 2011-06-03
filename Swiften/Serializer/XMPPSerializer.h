@@ -24,7 +24,7 @@ namespace Swift {
 			XMPPSerializer(PayloadSerializerCollection*, StreamType type);
 
 			std::string serializeHeader(const ProtocolHeader&) const;
-			SafeString serializeElement(boost::shared_ptr<Element> stanza) const;
+			SafeByteArray serializeElement(boost::shared_ptr<Element> stanza) const;
 			std::string serializeFooter() const;
 		
 		private:

@@ -17,12 +17,12 @@ using namespace Swift;
 StreamResumeSerializer::StreamResumeSerializer() : GenericElementSerializer<StreamResume>() {
 }
 
-SafeString StreamResumeSerializer::serialize(boost::shared_ptr<Element> el) const {
+SafeByteArray StreamResumeSerializer::serialize(boost::shared_ptr<Element> el) const {
 	boost::shared_ptr<StreamResume> e(boost::dynamic_pointer_cast<StreamResume>(el));
 	XMLElement element("resume", "urn:xmpp:sm:2");
 	element.setAttribute("previd", e->getResumeID());
 	if (e->getHandledStanzasCount()) {
 		element.setAttribute("h", boost::lexical_cast<std::string>(e->getHandledStanzasCount()));
 	}
-	return element.serialize();
+	return createSafeByteArray(element.serialize());
 }
