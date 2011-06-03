@@ -71,12 +71,12 @@ void QtXMLConsoleWidget::closeEvent(QCloseEvent* event) {
 	event->accept();
 }
 
-void QtXMLConsoleWidget::handleDataRead(const std::string& data) {
-	appendTextIfEnabled(std::string(tr("<!-- IN -->").toUtf8()) + "\n" + data + "\n", QColor(33,98,33));
+void QtXMLConsoleWidget::handleDataRead(const SafeByteArray& data) {
+	appendTextIfEnabled(std::string(tr("<!-- IN -->").toUtf8()) + "\n" + safeByteArrayToString(data) + "\n", QColor(33,98,33));
 }
 
-void QtXMLConsoleWidget::handleDataWritten(const std::string& data) {
-	appendTextIfEnabled(std::string(tr("<!-- OUT -->").toUtf8()) + "\n" + data + "\n", QColor(155,1,0));
+void QtXMLConsoleWidget::handleDataWritten(const SafeByteArray& data) {
+	appendTextIfEnabled(std::string(tr("<!-- OUT -->").toUtf8()) + "\n" + safeByteArrayToString(data) + "\n", QColor(155,1,0));
 }
 
 void QtXMLConsoleWidget::appendTextIfEnabled(const std::string& data, const QColor& color) {

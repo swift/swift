@@ -11,6 +11,7 @@
 #include <boost/shared_ptr.hpp>
 
 #include "Swift/Controllers/UIEvents/UIEventStream.h"
+#include <Swiften/Base/SafeByteArray.h>
 
 namespace Swift {
 	
@@ -23,8 +24,8 @@ namespace Swift {
 			~XMLConsoleController();
 
 		public:
-			void handleDataRead(const std::string& data);
-			void handleDataWritten(const std::string& data);
+			void handleDataRead(const SafeByteArray& data);
+			void handleDataWritten(const SafeByteArray& data);
 
 		private:
 			void handleUIEvent(boost::shared_ptr<UIEvent> event);

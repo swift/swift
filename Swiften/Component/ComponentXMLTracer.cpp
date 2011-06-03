@@ -16,9 +16,9 @@ ComponentXMLTracer::ComponentXMLTracer(CoreComponent* client) {
 	client->onDataWritten.connect(boost::bind(&ComponentXMLTracer::printData, '>', _1));
 }
 
-void ComponentXMLTracer::printData(char direction, const std::string& data) {
+void ComponentXMLTracer::printData(char direction, const SafeByteArray& data) {
 	printLine(direction);
-	std::cerr << data << std::endl;
+	std::cerr << byteArrayToString(ByteArray(data.begin(), data.end())) << std::endl;
 }
 
 void ComponentXMLTracer::printLine(char c) {

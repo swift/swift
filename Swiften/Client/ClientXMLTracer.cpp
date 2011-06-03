@@ -9,6 +9,8 @@
 #include <iostream>
 #include <boost/bind.hpp>
 
+#include <Swiften/Base/SafeString.h>
+
 namespace Swift {
 
 ClientXMLTracer::ClientXMLTracer(CoreClient* client) {
@@ -16,9 +18,9 @@ ClientXMLTracer::ClientXMLTracer(CoreClient* client) {
 	client->onDataWritten.connect(boost::bind(&ClientXMLTracer::printData, '>', _1));
 }
 
-void ClientXMLTracer::printData(char direction, const std::string& data) {
+void ClientXMLTracer::printData(char direction, const SafeByteArray& data) {
 	printLine(direction);
-	std::cerr << data << std::endl;
+	std::cerr << byteArrayToString(ByteArray(data.begin(), data.end())) << std::endl;
 }
 
 void ClientXMLTracer::printLine(char c) {

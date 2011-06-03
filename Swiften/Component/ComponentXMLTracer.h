@@ -14,7 +14,7 @@ namespace Swift {
 			ComponentXMLTracer(CoreComponent* component);
 
 		private:
-			static void printData(char direction, const std::string& data);
+			static void printData(char direction, const SafeByteArray& data);
 			static void printLine(char c);
 	};
 }

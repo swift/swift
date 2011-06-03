@@ -260,11 +260,11 @@ void CoreClient::handleNeedCredentials() {
 	}
 }
 
-void CoreClient::handleDataRead(const std::string& data) {
+void CoreClient::handleDataRead(const SafeByteArray& data) {
 	onDataRead(data);
 }
 
-void CoreClient::handleDataWritten(const std::string& data) {
+void CoreClient::handleDataWritten(const SafeByteArray& data) {
 	onDataWritten(data);
 }
 

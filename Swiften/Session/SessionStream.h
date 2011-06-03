@@ -13,6 +13,7 @@
 #include <Swiften/Elements/ProtocolHeader.h>
 #include <Swiften/Elements/Element.h>
 #include <Swiften/Base/Error.h>
+#include <Swiften/Base/SafeByteArray.h>
 #include <Swiften/TLS/PKCS12Certificate.h>
 #include <Swiften/TLS/Certificate.h>
 #include <Swiften/TLS/CertificateVerificationError.h>
@@ -71,8 +72,8 @@ namespace Swift {
 			boost::signal<void (boost::shared_ptr<Element>)> onElementReceived;
 			boost::signal<void (boost::shared_ptr<Error>)> onClosed;
 			boost::signal<void ()> onTLSEncrypted;
-			boost::signal<void (const std::string&)> onDataRead;
-			boost::signal<void (const std::string&)> onDataWritten;
+			boost::signal<void (const SafeByteArray&)> onDataRead;
+			boost::signal<void (const SafeByteArray&)> onDataWritten;
 
 		protected:
 			const PKCS12Certificate& getTLSCertificate() const {

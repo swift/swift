@@ -139,11 +139,11 @@ void CoreComponent::handleSessionFinished(boost::shared_ptr<Error> error) {
 	}
 }
 
-void CoreComponent::handleDataRead(const std::string& data) {
+void CoreComponent::handleDataRead(const SafeByteArray& data) {
 	onDataRead(data);
 }
 
-void CoreComponent::handleDataWritten(const std::string& data) {
+void CoreComponent::handleDataWritten(const SafeByteArray& data) {
 	onDataWritten(data);
 }
 

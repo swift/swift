@@ -7,6 +7,7 @@
 #pragma once
 
 #include <Swiften/Client/CoreClient.h>
+#include <Swiften/Base/SafeByteArray.h>
 
 namespace Swift {
 	class ClientXMLTracer {
@@ -14,7 +15,7 @@ namespace Swift {
 			ClientXMLTracer(CoreClient* client);
 
 		private:
-			static void printData(char direction, const std::string& data);
+			static void printData(char direction, const SafeByteArray& data);
 			static void printLine(char c);
 	};
 }

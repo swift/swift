@@ -22,6 +22,7 @@
 #include <Swiften/Serializer/PayloadSerializers/FullPayloadSerializerCollection.h>
 #include <Swiften/Component/ComponentSessionStanzaChannel.h>
 #include <Swiften/Entity/Entity.h>
+#include <Swiften/Base/SafeByteArray.h>
 
 namespace Swift {
 	class IQRouter;
@@ -72,8 +73,8 @@ namespace Swift {
 		public:
 			boost::signal<void (const ComponentError&)> onError;
 			boost::signal<void ()> onConnected;
-			boost::signal<void (const std::string&)> onDataRead;
-			boost::signal<void (const std::string&)> onDataWritten;
+			boost::signal<void (const SafeByteArray&)> onDataRead;
+			boost::signal<void (const SafeByteArray&)> onDataWritten;
 
 			boost::signal<void (boost::shared_ptr<Message>)> onMessageReceived;
 			boost::signal<void (boost::shared_ptr<Presence>) > onPresenceReceived;
@@ -82,8 +83,8 @@ namespace Swift {
 			void handleConnectorFinished(boost::shared_ptr<Connection>);
 			void handleStanzaChannelAvailableChanged(bool available);
 			void handleSessionFinished(boost::shared_ptr<Error>);
-			void handleDataRead(const std::string&);
-			void handleDataWritten(const std::string&);
+			void handleDataRead(const SafeByteArray&);
+			void handleDataWritten(const SafeByteArray&);
 
 		private:
 			EventLoop* eventLoop;

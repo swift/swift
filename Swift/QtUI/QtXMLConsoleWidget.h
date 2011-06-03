@@ -23,8 +23,8 @@ namespace Swift {
 			void show();
 			void activate();
 
-			virtual void handleDataRead(const std::string& data);
-			virtual void handleDataWritten(const std::string& data);
+			virtual void handleDataRead(const SafeByteArray& data);
+			virtual void handleDataWritten(const SafeByteArray& data);
 
 		private:
 			virtual void closeEvent(QCloseEvent* event);

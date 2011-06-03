@@ -15,6 +15,7 @@
 #include <Swiften/Client/ClientError.h>
 #include <Swiften/Client/ClientOptions.h>
 #include <Swiften/Base/SafeString.h>
+#include <Swiften/Base/SafeByteArray.h>
 
 namespace Swift {
 	class ChainedConnector;
@@ -156,7 +157,7 @@ namespace Swift {
 			 * This signal is emitted before the XML data is parsed,
 			 * so this data is unformatted.
 			 */
-			boost::signal<void (const std::string&)> onDataRead;
+			boost::signal<void (const SafeByteArray&)> onDataRead;
 
 			/**
 			 * Emitted when the client sends data.
@@ -164,7 +165,7 @@ namespace Swift {
 			 * This signal is emitted after the XML was serialized, and 
 			 * is unformatted.
 			 */
-			boost::signal<void (const std::string&)> onDataWritten;
+			boost::signal<void (const SafeByteArray&)> onDataWritten;
 
 			/**
 			 * Emitted when a message is received.
@@ -194,8 +195,8 @@ namespace Swift {
 			void handleStanzaChannelAvailableChanged(bool available);
 			void handleSessionFinished(boost::shared_ptr<Error>);
 			void handleNeedCredentials();
-			void handleDataRead(const std::string&);
-			void handleDataWritten(const std::string&);
+			void handleDataRead(const SafeByteArray&);
+			void handleDataWritten(const SafeByteArray&);
 			void handlePresenceReceived(boost::shared_ptr<Presence>);
 			void handleMessageReceived(boost::shared_ptr<Message>);
 			void handleStanzaAcked(boost::shared_ptr<Stanza>);

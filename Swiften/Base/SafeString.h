@@ -26,6 +26,8 @@ namespace Swift {
 
 			SafeString(const char*);
 
+			SafeString(const char* begin, const char* end) : data(begin, end) {
+			}
 
 			std::string toString() const {
 				return data.empty() ? std::string() : std::string(&data[0], data.size());

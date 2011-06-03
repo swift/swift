@@ -39,5 +39,11 @@ namespace Swift {
 	}
 
 	SafeByteArray createSafeByteArray(const SafeString& s);
+
+	/* WARNING! This breaks the safety of the data in the safe byte array.
+	 * Do not use in modes that require data safety. */
+	inline std::string safeByteArrayToString(const SafeByteArray& b) {
+		return byteArrayToString(ByteArray(b.begin(), b.end()));
+	}
 }
 
