@@ -25,16 +25,16 @@ namespace Swift {
 				return resumeID;
 			}
 
-			const boost::optional<int> getHandledStanzasCount() const {
+			const boost::optional<unsigned int> getHandledStanzasCount() const {
 				return handledStanzasCount;
 			}
 
-			void setHandledStanzasCount(int i) {
+			void setHandledStanzasCount(unsigned int i) {
 				handledStanzasCount = i;
 			}
 
 		private:
 			std::string resumeID;
-			boost::optional<int> handledStanzasCount;
+			boost::optional<unsigned int> handledStanzasCount;
 	};
 }
