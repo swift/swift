@@ -26,7 +26,6 @@ sources = [
 		"PayloadParsers/CapsInfoParser.cpp",
 		"PayloadParsers/DiscoInfoParser.cpp",
 		"PayloadParsers/DiscoItemsParser.cpp",
-		"PayloadParsers/DelayParserFactory.cpp",
 		"PayloadParsers/ErrorParser.cpp",
 		"PayloadParsers/FormParser.cpp",
 		"PayloadParsers/IBBParser.cpp",

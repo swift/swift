@@ -38,7 +38,7 @@
 #include <Swiften/Parser/PayloadParsers/VCardParserFactory.h>
 #include <Swiften/Parser/PayloadParsers/RawXMLPayloadParserFactory.h>
 #include <Swiften/Parser/PayloadParsers/PrivateStorageParserFactory.h>
-#include <Swiften/Parser/PayloadParsers/DelayParserFactory.h>
+#include <Swiften/Parser/PayloadParsers/DelayParser.h>
 #include <Swiften/Parser/PayloadParsers/MUCUserPayloadParserFactory.h>
 #include <Swiften/Parser/PayloadParsers/NicknameParserFactory.h>
 #include <Swiften/Parser/PayloadParsers/ReplaceParser.h>
@@ -58,6 +58,7 @@ FullPayloadParserFactoryCollection::FullPayloadParserFactoryCollection() {
 	factories_.push_back(shared_ptr<PayloadParserFactory>(new GenericPayloadParserFactory<SubjectParser>("subject")));
 	factories_.push_back(shared_ptr<PayloadParserFactory>(new GenericPayloadParserFactory<PriorityParser>("priority")));
 	factories_.push_back(shared_ptr<PayloadParserFactory>(new ErrorParserFactory(this)));
+	factories_.push_back(shared_ptr<PayloadParserFactory>(new GenericPayloadParserFactory<DelayParser>("delay", "urn:xmpp:delay")));
 	factories_.push_back(shared_ptr<PayloadParserFactory>(new GenericPayloadParserFactory<SoftwareVersionParser>("query", "jabber:iq:version")));
 	factories_.push_back(shared_ptr<PayloadParserFactory>(new GenericPayloadParserFactory<StorageParser>("storage", "storage:bookmarks")));
 	factories_.push_back(shared_ptr<PayloadParserFactory>(new GenericPayloadParserFactory<RosterItemExchangeParser>("x", "http://jabber.org/protocol/rosterx")));
@@ -79,7 +80,6 @@ FullPayloadParserFactoryCollection::FullPayloadParserFactoryCollection() {
 	factories_.push_back(shared_ptr<PayloadParserFactory>(new VCardParserFactory()));
 	factories_.push_back(shared_ptr<PayloadParserFactory>(new PrivateStorageParserFactory(this)));
 	factories_.push_back(shared_ptr<PayloadParserFactory>(new ChatStateParserFactory()));
-	factories_.push_back(shared_ptr<PayloadParserFactory>(new DelayParserFactory()));
 	factories_.push_back(shared_ptr<PayloadParserFactory>(new MUCUserPayloadParserFactory()));
 	factories_.push_back(shared_ptr<PayloadParserFactory>(new NicknameParserFactory()));
 	foreach(shared_ptr<PayloadParserFactory> factory, factories_) {

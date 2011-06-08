@@ -6,27 +6,16 @@
 
 #include <Swiften/Parser/PayloadParsers/DelayParser.h>
 
-#include <locale>
-
-#include <boost/date_time/time_facet.hpp>
-#include <boost/date_time/posix_time/posix_time.hpp>
+#include <Swiften/Base/DateTime.h>
 
 namespace Swift {
 
-DelayParser::DelayParser(const std::locale& locale) : locale(locale), level_(0) {
-}
-
-boost::posix_time::ptime DelayParser::dateFromString(const std::string& string) {
-	std::istringstream stream(string); 
-	stream.imbue(locale);
-	boost::posix_time::ptime result(boost::posix_time::not_a_date_time);
-	stream >> result;
-	return result;
+DelayParser::DelayParser() : level_(0) {
 }
 
 void DelayParser::handleStartElement(const std::string& /*element*/, const std::string& /*ns*/, const AttributeMap& attributes) {
 	if (level_ == 0) {
-		boost::posix_time::ptime stamp = dateFromString(attributes.getAttribute("stamp"));
+		boost::posix_time::ptime stamp = stringToDateTime(attributes.getAttribute("stamp"));
 		getPayloadInternal()->setStamp(stamp);
 		if (!attributes.getAttribute("from").empty()) {
 			std::string from = attributes.getAttribute("from");
