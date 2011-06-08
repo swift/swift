@@ -109,6 +109,7 @@ void CoreClient::handleConnectorFinished(boost::shared_ptr<Connection> connectio
 		session_ = ClientSession::create(jid_, sessionStream_);
 		session_->setCertificateTrustChecker(certificateTrustChecker);
 		session_->setUseStreamCompression(options.useStreamCompression);
+		session_->setAllowPLAINOverNonTLS(options.allowPLAINWithoutTLS);
 		switch(options.useTLS) {
 			case ClientOptions::UseTLSWhenAvailable:
 				session_->setUseTLS(ClientSession::UseTLSWhenAvailable);
