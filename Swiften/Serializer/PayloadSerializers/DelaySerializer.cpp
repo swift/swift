@@ -11,6 +11,7 @@
 
 #include <Swiften/Base/String.h>
 #include <Swiften/Serializer/XML/XMLElement.h>
+#include <Swiften/Base/DateTime.h>
 
 namespace Swift {
 
@@ -22,16 +23,8 @@ std::string DelaySerializer::serializePayload(boost::shared_ptr<Delay> delay)  c
 	if (delay->getFrom()) {
 		delayElement.setAttribute("from", delay->getFrom()->toString());
 	}
-	std::string stampString = boostPTimeToXEP0082(delay->getStamp());
-	delayElement.setAttribute("stamp", stampString);
+	delayElement.setAttribute("stamp", dateTimeToString(delay->getStamp()));
 	return delayElement.serialize();
-}
-
-std::string DelaySerializer::boostPTimeToXEP0082(const boost::posix_time::ptime& time) {
-	std::string stampString = std::string(boost::posix_time::to_iso_extended_string(time));
-	String::replaceAll(stampString, ',', ".");
-	stampString += "Z";
-	return stampString;
 }
 
 }

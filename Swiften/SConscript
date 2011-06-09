@@ -238,6 +238,7 @@ if env["SCONS_STAGE"] == "build" :
 			File("Avatars/UnitTest/CombinedAvatarProviderTest.cpp"),
 			File("Base/UnitTest/IDGeneratorTest.cpp"),
 			File("Base/UnitTest/StringTest.cpp"),
+			File("Base/UnitTest/DateTimeTest.cpp"),
 			File("Base/UnitTest/ByteArrayTest.cpp"),
 			File("Chat/UnitTest/ChatStateNotifierTest.cpp"),
 #		File("Chat/UnitTest/ChatStateTrackerTest.cpp"),

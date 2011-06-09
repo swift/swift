@@ -10,8 +10,13 @@
 
 namespace Swift {
 	/**
-	 * Converts a date formatted according to XEP-0082 into a time
-	 * object.
+	 * Converts a date formatted according to XEP-0082 into a ptime
+	 * object (in UTC).
 	 */
 	boost::posix_time::ptime stringToDateTime(const std::string& string);
+
+	/**
+	 * Converts a UTC ptime object to a XEP-0082 formatted string.
+	 */
+	std::string dateTimeToString(const boost::posix_time::ptime& time);
 }

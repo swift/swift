@@ -14,6 +14,7 @@ fi
 	bind.hpp \
 	cast.hpp \
 	date_time/posix_time/posix_time.hpp \
+	date_time/local_time/local_time.hpp \
 	foreach.hpp \
 	filesystem.hpp \
 	filesystem/fstream.hpp \

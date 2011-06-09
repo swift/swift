@@ -15,7 +15,6 @@ namespace Swift {
 			DelaySerializer();
 
 			virtual std::string serializePayload(boost::shared_ptr<Delay>)  const;
-			static std::string boostPTimeToXEP0082(const boost::posix_time::ptime& time);
 	};
 }
 
