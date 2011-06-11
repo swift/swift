@@ -7,5 +7,6 @@ if env["TEST"] :
 	myenv.MergeFlags(myenv["BOOST_FLAGS"])
 	if myenv["HAVE_XSS"] :
 		myenv.MergeFlags(myenv.get("XSS_FLAGS", {}))
+		myenv.Append(LIBS = ["X11"])
 	myenv.MergeFlags(myenv["PLATFORM_FLAGS"])
 	tester = myenv.Program("IdleQuerierTest", ["IdleQuerierTest.cpp"])
