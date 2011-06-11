@@ -444,7 +444,7 @@ if env["PLATFORM"] != "win32" and env["PLATFORM"] != "darwin" :
 	conf = Configure(gconf_env, custom_tests = {"CheckPKG": CheckPKG})
 	if conf.CheckPKG("gconf-2.0") :
 		gconf_bare_env = Environment()
-		gconf_bare_env.ParseConfig('pkg-config --cflags gconf-2.0 --libs gconf-2.0')
+		gconf_bare_env.ParseConfig('pkg-config --cflags gconf-2.0 gobject-2.0 --libs gconf-2.0 gobject-2.0')
 		gconf_flags = {
 				"LIBS": gconf_bare_env["LIBS"],
 				"CCFLAGS": gconf_bare_env["CCFLAGS"],
