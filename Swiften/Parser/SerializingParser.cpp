@@ -39,7 +39,7 @@ void SerializingParser::handleEndElement(const std::string&, const std::string&)
 
 void SerializingParser::handleCharacterData(const std::string& data) {
 	if (!elementStack_.empty()) {
-		(*(elementStack_.end()-1))->addNode(boost::shared_ptr<XMLTextNode>(new XMLTextNode(data)));
+		(*(elementStack_.end()-1))->addNode(boost::make_shared<XMLTextNode>(data));
 	}
 }
 
