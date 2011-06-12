@@ -19,7 +19,7 @@ SafeByteArray CompressRequestSerializer::serialize(boost::shared_ptr<Element> el
 }
 
 bool CompressRequestSerializer::canSerialize(boost::shared_ptr<Element> element) const {
-	return dynamic_cast<CompressRequest*>(element.get()) != 0;
+	return boost::dynamic_pointer_cast<CompressRequest>(element) != 0;
 }
 
 }
