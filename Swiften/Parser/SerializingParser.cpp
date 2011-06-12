@@ -5,6 +5,9 @@
  */
 
 #include <Swiften/Parser/SerializingParser.h>
+
+#include <boost/smart_ptr/make_shared.hpp>
+
 #include <Swiften/Serializer/XML/XMLTextNode.h>
 #include <Swiften/Base/foreach.h>
 
@@ -14,7 +17,7 @@ SerializingParser::SerializingParser() {
 }
 
 void SerializingParser::handleStartElement(const std::string& tag, const std::string&  ns, const AttributeMap& attributes) {
-	boost::shared_ptr<XMLElement> element(new XMLElement(tag, ns));
+	boost::shared_ptr<XMLElement> element = boost::make_shared<XMLElement>(tag, ns);
 	// FIXME: Ignoring attribute namespace
 	foreach (const AttributeMap::Entry& e, attributes.getEntries()) {
 		element->setAttribute(e.getAttribute().getName(), e.getValue());
