@@ -6,11 +6,13 @@
 
 #include <Swiften/Elements/IQ.h>
 
+#include <boost/smart_ptr/make_shared.hpp>
+
 namespace Swift {
 
 boost::shared_ptr<IQ> IQ::createRequest(
 		Type type, const JID& to, const std::string& id, boost::shared_ptr<Payload> payload) {
-	boost::shared_ptr<IQ> iq(new IQ(type));
+	boost::shared_ptr<IQ> iq = boost::make_shared<IQ>(type);
 	if (to.isValid()) {
 		iq->setTo(to);
 	}
