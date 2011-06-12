@@ -8,6 +8,7 @@
 
 #include <boost/optional.hpp>
 #include <boost/shared_ptr.hpp>
+#include <boost/smart_ptr/make_shared.hpp>
 
 #include <string>
 #include <Swiften/Elements/Body.h>
@@ -34,7 +35,7 @@ namespace Swift {
 			}
 
 			void setSubject(const std::string& subject) { 
-				updatePayload(boost::shared_ptr<Subject>(new Subject(subject)));
+				updatePayload(boost::make_shared<Subject>(subject));
 			}
 
 			std::string getBody() const { 
@@ -46,7 +47,7 @@ namespace Swift {
 			}
 
 			void setBody(const std::string& body) { 
-				updatePayload(boost::shared_ptr<Body>(new Body(body)));
+				updatePayload(boost::make_shared<Body>(body));
 			}
 
 			bool isError() {

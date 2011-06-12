@@ -27,7 +27,7 @@ int Presence::getPriority() const {
 }
 
 void Presence::setPriority(int priority) {
-	updatePayload(boost::shared_ptr<Priority>(new Priority(priority)));
+	updatePayload(boost::make_shared<Priority>(priority));
 }
 
 std::string Presence::getStatus() const { 
@@ -39,7 +39,7 @@ std::string Presence::getStatus() const {
 }
 
 void Presence::setStatus(const std::string& status) { 
-	updatePayload(boost::shared_ptr<Status>(new Status(status)));
+	updatePayload(boost::make_shared<Status>(status));
 }
 
 

@@ -6,6 +6,8 @@
 
 #pragma once
 
+#include <boost/smart_ptr/make_shared.hpp>
+
 #include <Swiften/Elements/Stanza.h>
 #include <Swiften/Elements/StatusShow.h>
 
@@ -21,15 +23,15 @@ namespace Swift {
 			virtual ~Presence();
 
 			static ref create() {
-				return ref(new Presence());
+				return boost::make_shared<Presence>();
 			}
 
 			static ref create(const std::string& status) {
-				return ref(new Presence(status));
+				return boost::make_shared<Presence>(status);
 			}
 
 			static ref create(Presence::ref presence) {
-				return ref(new Presence(*presence));
+				return boost::make_shared<Presence>(*presence);
 			}
 
 			Type getType() const { return type_; }
@@ -44,7 +46,7 @@ namespace Swift {
 			}
 
 			void setShow(const StatusShow::Type &show) { 
-				updatePayload(boost::shared_ptr<StatusShow>(new StatusShow(show)));
+				updatePayload(boost::make_shared<StatusShow>(show));
 			}
 
 			std::string getStatus() const;
@@ -54,7 +56,7 @@ namespace Swift {
 			void setPriority(int priority);
 
 			boost::shared_ptr<Presence> clone() const {
-				return boost::shared_ptr<Presence>(new Presence(*this));
+				return boost::make_shared<Presence>(*this);
 			}
 
 			bool isAvailable() const {
