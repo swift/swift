@@ -21,7 +21,7 @@ void PrivateStorageParser::handleStartElement(const std::string& element, const 
 		}
 	}
 
-	if (level >= 1 && currentPayloadParser.get()) {
+	if (level >= 1 && currentPayloadParser) {
 		currentPayloadParser->handleStartElement(element, ns, attributes);
 	}
 	++level;
@@ -29,7 +29,7 @@ void PrivateStorageParser::handleStartElement(const std::string& element, const 
 
 void PrivateStorageParser::handleEndElement(const std::string& element, const std::string& ns) {
 	--level;
-	if (currentPayloadParser.get()) {
+	if (currentPayloadParser) {
 		if (level >= 1) {
 			currentPayloadParser->handleEndElement(element, ns);
 		}
@@ -41,7 +41,7 @@ void PrivateStorageParser::handleEndElement(const std::string& element, const st
 }
 
 void PrivateStorageParser::handleCharacterData(const std::string& data) {
-	if (level > 1 && currentPayloadParser.get()) {
+	if (level > 1 && currentPayloadParser) {
 		currentPayloadParser->handleCharacterData(data);
 	}
 }

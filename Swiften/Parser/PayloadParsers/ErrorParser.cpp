@@ -108,7 +108,7 @@ void ErrorParser::handleStartElement(const std::string& element, const std::stri
 			}
 		}
 	}
-	if (level_ >= PayloadLevel && currentPayloadParser.get()) {
+	if (level_ >= PayloadLevel && currentPayloadParser) {
 		currentPayloadParser->handleStartElement(element, ns, attributes);
 	}
 	++level_;
@@ -116,7 +116,7 @@ void ErrorParser::handleStartElement(const std::string& element, const std::stri
 
 void ErrorParser::handleEndElement(const std::string& element, const std::string& ns) {
 	--level_;
-	if (currentPayloadParser.get()) {
+	if (currentPayloadParser) {
 		if (level_ >= PayloadLevel) {
 			currentPayloadParser->handleEndElement(element, ns);
 		}
@@ -134,7 +134,7 @@ void ErrorParser::handleEndElement(const std::string& element, const std::string
 }
 
 void ErrorParser::handleCharacterData(const std::string& data) {
-	if (level_ > PayloadLevel && currentPayloadParser.get()) {
+	if (level_ > PayloadLevel && currentPayloadParser) {
 		currentPayloadParser->handleCharacterData(data);
 	}
 	else {
