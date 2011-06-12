@@ -27,7 +27,7 @@ StanzaParser::~StanzaParser() {
 void StanzaParser::handleStartElement(const std::string& element, const std::string& ns, const AttributeMap& attributes) {
 	if (inStanza()) {
 		if (!inPayload()) {
-			assert(!currentPayloadParser_.get());
+			assert(!currentPayloadParser_);
 			PayloadParserFactory* payloadParserFactory = factories_->getPayloadParserFactory(element, ns, attributes);
 			if (payloadParserFactory) {
 				currentPayloadParser_.reset(payloadParserFactory->createPayloadParser());
@@ -36,7 +36,7 @@ void StanzaParser::handleStartElement(const std::string& element, const std::str
 				currentPayloadParser_.reset(new UnknownPayloadParser());
 			}
 		}
-		assert(currentPayloadParser_.get());
+		assert(currentPayloadParser_);
 		currentPayloadParser_->handleStartElement(element, ns, attributes);
 	}
 	else {
@@ -60,7 +60,7 @@ void StanzaParser::handleStartElement(const std::string& element, const std::str
 void StanzaParser::handleEndElement(const std::string& element, const std::string& ns) {
 	assert(inStanza());
 	if (inPayload()) {
-		assert(currentPayloadParser_.get());
+		assert(currentPayloadParser_);
 		currentPayloadParser_->handleEndElement(element, ns);
 		--currentDepth_;
 		if (!inPayload()) {
@@ -77,7 +77,7 @@ void StanzaParser::handleEndElement(const std::string& element, const std::strin
 }
 
 void StanzaParser::handleCharacterData(const std::string& data) {
-	if (currentPayloadParser_.get()) {
+	if (currentPayloadParser_) {
 		currentPayloadParser_->handleCharacterData(data);
 	}
 }
