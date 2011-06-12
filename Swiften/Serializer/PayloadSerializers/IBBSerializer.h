@@ -10,8 +10,6 @@
 #include <Swiften/Elements/IBB.h>
 
 namespace Swift {
-	class PayloadSerializerCollection;
-
 	class IBBSerializer : public GenericPayloadSerializer<IBB> {
 		public:
 			IBBSerializer();

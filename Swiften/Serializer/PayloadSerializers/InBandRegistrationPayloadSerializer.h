@@ -11,8 +11,6 @@
 #include <Swiften/Elements/InBandRegistrationPayload.h>
 
 namespace Swift {
-	class PayloadSerializerCollection;
-
 	class InBandRegistrationPayloadSerializer : public GenericPayloadSerializer<InBandRegistrationPayload> {
 		public:
 			InBandRegistrationPayloadSerializer();

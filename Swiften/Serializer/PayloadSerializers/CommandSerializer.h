@@ -10,8 +10,6 @@
 #include <Swiften/Elements/Command.h>
 
 namespace Swift {
-	class PayloadSerializerCollection;
-
 	class CommandSerializer : public GenericPayloadSerializer<Command> {
 		public:
 			CommandSerializer();

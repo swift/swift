@@ -10,8 +10,6 @@
 #include <Swiften/Elements/StreamInitiation.h>
 
 namespace Swift {
-	class PayloadSerializerCollection;
-
 	class StreamInitiationSerializer : public GenericPayloadSerializer<StreamInitiation> {
 		public:
 			StreamInitiationSerializer();
