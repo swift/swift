@@ -26,17 +26,19 @@ UnixProxyProvider::UnixProxyProvider() :
 }
 
 UnixProxyProvider::~UnixProxyProvider() {
+#if defined(HAVE_GCONF)
 	delete gconfProxyProvider;
+#endif
 }
 
 HostAddressPort UnixProxyProvider::getSOCKS5Proxy() const {
 	HostAddressPort proxy;
-	if (gconfProxyProvider) {
-		proxy = gconfProxyProvider.getSOCKS5Proxy();
-		if(proxy.isValid()) {
-			return proxy;
-		}
+#if defined(HAVE_GCONF)
+	proxy = gconfProxyProvider->getSOCKS5Proxy();
+	if(proxy.isValid()) {
+		return proxy;
 	}
+#endif
 	proxy = environmentProxyProvider.getSOCKS5Proxy();
 	if(proxy.isValid()) {
 		return proxy;
@@ -46,12 +48,12 @@ HostAddressPort UnixProxyProvider::getSOCKS5Proxy() const {
 
 HostAddressPort UnixProxyProvider::getHTTPConnectProxy() const {
 	HostAddressPort proxy;
-	if (gconfProxyProvider) {
-		proxy = gconfProxyProvider.getHTTPConnectProxy();
-		if(proxy.isValid()) {
-			return proxy;
-		}
+#if defined(HAVE_GCONF)
+	proxy = gconfProxyProvider->getHTTPConnectProxy();
+	if(proxy.isValid()) {
+		return proxy;
 	}
+#endif
 	proxy = environmentProxyProvider.getHTTPConnectProxy();
 	if(proxy.isValid()) {
 		return proxy;
