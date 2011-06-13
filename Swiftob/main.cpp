@@ -17,7 +17,7 @@ int main(int argc, char* argv[]) {
 	boost::program_options::variables_map vm;
 	try {
 		boost::program_options::store(boost::program_options::parse_command_line(argc, argv, desc), vm);
-	} catch (boost::program_options::unknown_option option) {
+	} catch (const boost::program_options::unknown_option& option) {
 #if BOOST_VERSION >= 104200
 		std::cout << "Ignoring unknown option " << option.get_option_name() << " but continuing." <<  std::endl;
 #else

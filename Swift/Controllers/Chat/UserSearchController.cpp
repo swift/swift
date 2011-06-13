@@ -85,12 +85,12 @@ void UserSearchController::endDiscoWalker() {
 
 
 void UserSearchController::handleDiscoServiceFound(const JID& jid, boost::shared_ptr<DiscoInfo> info) {
-	bool isUserDirectory = false;
+	//bool isUserDirectory = false;
 	bool supports55 = false;
 	foreach (DiscoInfo::Identity identity, info->getIdentities()) {
 		if ((identity.getCategory() == "directory"
 			&& identity.getType() == "user")) {
-			isUserDirectory = true;
+			//isUserDirectory = true;
 		}
 	}
 	std::vector<std::string> features = info->getFeatures();

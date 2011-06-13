@@ -61,7 +61,6 @@ class ChatsManagerTest : public CppUnit::TestFixture {
 	CPPUNIT_TEST_SUITE_END();
 	
 public:
-	// cppcheck-suppress publicAllocationError
 	void setUp() { 
 		mocks_ = new MockRepository();
 		jid_ = JID("test@test.com/resource");

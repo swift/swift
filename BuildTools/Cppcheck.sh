@@ -6,6 +6,7 @@ cppcheck $@  \
 	--suppress=postfixOperator:3rdParty/hippomocks.h \
 	--suppress=stlSize:3rdParty/hippomocks.h \
 	--suppress=noConstructor \
+	--suppress=publicAllocationError:Swift/Controllers/Chat/UnitTest/ChatsManagerTest.cpp \
 	-i 3rdParty -i .git -i .sconf_temp \
 	-i Swiftob/linit.cpp \
 	-i Swift/QtUI/EventViewer/main.cpp \
