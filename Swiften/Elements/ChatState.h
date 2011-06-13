@@ -18,7 +18,7 @@ namespace Swift {
 				state_ = state;
 			}
 
-			ChatStateType getChatState() { return state_; }
+			ChatStateType getChatState() const { return state_; }
 			void setChatState(ChatStateType state) {state_ = state;}
 
 		private:

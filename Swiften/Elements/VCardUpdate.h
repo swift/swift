@@ -15,7 +15,7 @@ namespace Swift {
 			VCardUpdate(const std::string& photoHash = "") : photoHash_(photoHash) {}
 
 			void setPhotoHash(const std::string& photoHash) { photoHash_ = photoHash; }
-			const std::string& getPhotoHash() { return photoHash_; }
+			const std::string& getPhotoHash() const { return photoHash_; }
 
 		private:
 			std::string photoHash_;

@@ -63,7 +63,7 @@ bool ServerIdentityVerifier::certificateVerifies(Certificate::ref certificate) {
 	return false;
 }
 
-bool ServerIdentityVerifier::matchesDomain(const std::string& s) {
+bool ServerIdentityVerifier::matchesDomain(const std::string& s) const {
 	if (boost::starts_with(s, "*.")) {
 		std::string matchString(s.substr(2, s.npos));
 		std::string matchDomain = encodedDomain;
@@ -78,7 +78,7 @@ bool ServerIdentityVerifier::matchesDomain(const std::string& s) {
 	}
 }
 
-bool ServerIdentityVerifier::matchesAddress(const std::string& s) {
+bool ServerIdentityVerifier::matchesAddress(const std::string& s) const {
 	return s == domain;
 }
 

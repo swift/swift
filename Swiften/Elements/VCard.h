@@ -60,10 +60,10 @@ namespace Swift {
 			const std::string& getNickname() const { return nick_; }
 
 			void setPhoto(const ByteArray& photo) { photo_ = photo; }
-			const ByteArray& getPhoto() { return photo_; }
+			const ByteArray& getPhoto() const { return photo_; }
 
 			void setPhotoType(const std::string& photoType) { photoType_ = photoType; }
-			const std::string& getPhotoType() { return photoType_; }
+			const std::string& getPhotoType() const { return photoType_; }
 
 			const std::string& getUnknownContent() const { return unknownContent_; }
 			void addUnknownContent(const std::string& c) { 

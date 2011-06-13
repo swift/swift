@@ -16,7 +16,7 @@ namespace Swift {
 			BoostIOServiceThread();
 			~BoostIOServiceThread();
 
-			boost::shared_ptr<boost::asio::io_service> getIOService() {
+			boost::shared_ptr<boost::asio::io_service> getIOService() const {
 				return ioService_;
 			}
 

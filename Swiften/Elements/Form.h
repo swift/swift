@@ -31,12 +31,12 @@ namespace Swift {
 			void addField(boost::shared_ptr<FormField> field) { fields_.push_back(field); }
 			const std::vector<boost::shared_ptr<FormField> >& getFields() const { return fields_; }
 			void setTitle(const std::string& title) { title_ = title; }
-			const std::string& getTitle() { return title_; }
+			const std::string& getTitle() const { return title_; }
 
 			void setInstructions(const std::string& instructions) { instructions_ = instructions; }
-			const std::string& getInstructions() { return instructions_; }
+			const std::string& getInstructions() const { return instructions_; }
 
-			Type getType() { return type_; }
+			Type getType() const { return type_; }
 			void setType(Type type) { type_ = type; }
 
 			std::string getFormType() const;

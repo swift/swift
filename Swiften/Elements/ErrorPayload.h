@@ -73,7 +73,7 @@ namespace Swift {
 				payload_ = payload;
 			}
 
-			boost::shared_ptr<Payload> getPayload() {
+			boost::shared_ptr<Payload> getPayload() const {
 				return payload_;
 			}
 

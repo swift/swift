@@ -527,7 +527,7 @@ class ClientSessionTest : public CppUnit::TestFixture {
 				}
 
 				Event popEvent() {
-					CPPUNIT_ASSERT(receivedEvents.size() > 0);
+					CPPUNIT_ASSERT(!receivedEvents.empty());
 					Event event = receivedEvents.front();
 					receivedEvents.pop_front();
 					return event;

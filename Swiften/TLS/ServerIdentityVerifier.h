@@ -20,8 +20,8 @@ namespace Swift {
 			bool certificateVerifies(Certificate::ref);
 
 		private:
-			bool matchesDomain(const std::string&);
-			bool matchesAddress(const std::string&);
+			bool matchesDomain(const std::string&) const ;
+			bool matchesAddress(const std::string&) const;
 
 		private:
 			std::string domain;

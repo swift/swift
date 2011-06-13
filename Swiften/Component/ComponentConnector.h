@@ -27,7 +27,7 @@ namespace Swift {
 			typedef boost::shared_ptr<ComponentConnector> ref;
 
 			static ComponentConnector::ref create(const std::string& hostname, int port, DomainNameResolver* resolver, ConnectionFactory* connectionFactory, TimerFactory* timerFactory) {
-				return ComponentConnector::ref(new ComponentConnector(hostname, port, resolver, connectionFactory, timerFactory));
+				return ref(new ComponentConnector(hostname, port, resolver, connectionFactory, timerFactory));
 			}
 
 			void setTimeoutMilliseconds(int milliseconds);

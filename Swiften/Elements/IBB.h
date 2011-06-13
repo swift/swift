@@ -9,6 +9,7 @@
 #include <string>
 #include <vector>
 #include <boost/shared_ptr.hpp>
+#include <boost/smart_ptr/make_shared.hpp>
 
 #include <Swiften/Elements/Payload.h>
 
@@ -31,20 +32,20 @@ namespace Swift {
 			}
 
 			static IBB::ref createIBBOpen(const std::string& streamID, int blockSize) {
-				IBB::ref result(new IBB(Open, streamID));
+				IBB::ref result = boost::make_shared<IBB>(Open, streamID);
 				result->setBlockSize(blockSize);
 				return result;
 			}
 
 			static IBB::ref createIBBData(const std::string& streamID, int sequenceNumber, const std::vector<unsigned char>& data) {
-				IBB::ref result(new IBB(Data, streamID));
+				IBB::ref result = boost::make_shared<IBB>(Data, streamID);
 				result->setSequenceNumber(sequenceNumber);
 				result->setData(data);
 				return result;
 			}
 
 			static IBB::ref createIBBClose(const std::string& streamID) {
-				return IBB::ref(new IBB(Close, streamID));
+				return boost::make_shared<IBB>(Close, streamID);
 			}
 
 			void setAction(Action action) {

@@ -40,19 +40,19 @@ namespace Swift {
 				since_ = since;
 			}
 
-			int getMaxChars() {
+			int getMaxChars() const{
 				return maxChars_;
 			}
 
-			int getMaxStanzas() {
+			int getMaxStanzas() const{
 				return maxStanzas_;
 			}
 
-			int getSeconds() {
+			int getSeconds() const {
 				return seconds_;
 			}
 
-			boost::posix_time::ptime getSince() {
+			const boost::posix_time::ptime& getSince() const {
 				return since_;
 			}
 
