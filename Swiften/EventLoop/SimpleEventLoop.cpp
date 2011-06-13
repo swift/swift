@@ -30,7 +30,7 @@ void SimpleEventLoop::doRun(bool breakAfterEvents) {
 		std::vector<Event> events;
 		{
 			boost::unique_lock<boost::mutex> lock(eventsMutex_);
-			while (events_.size() == 0) {
+			while (events_.empty()) {
 				eventsAvailable_.wait(lock);
 			}
 			events.swap(events_);

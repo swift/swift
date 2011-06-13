@@ -188,7 +188,7 @@ void ChatsManager::prependRecent(const ChatListWindow::Chat& chat) {
 
 void ChatsManager::handleUserLeftMUC(MUCController* mucController) {
 	std::map<JID, MUCController*>::iterator it;
-	for (it = mucControllers_.begin(); it != mucControllers_.end(); it++) {
+	for (it = mucControllers_.begin(); it != mucControllers_.end(); ++it) {
 		if ((*it).second == mucController) {
 			mucControllers_.erase(it);
 			delete mucController;

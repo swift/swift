@@ -16,7 +16,7 @@ VCard::EMailAddress VCard::getPreferredEMailAddress() const {
 			return address;
 		}
 	}
-	if (emailAddresses_.size() > 0) {
+	if (!emailAddresses_.empty()) {
 		return emailAddresses_[0];
 	}
 	return EMailAddress();

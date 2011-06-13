@@ -54,7 +54,7 @@ static const size_t diagnostics_count = sizeof(diagnostics) / sizeof(diagnostics
 using namespace boost;
 
 struct Properties {
-	Properties() : missing(false), redundant(false) {
+	Properties() : have(false), implicitHave(false), dontWant(false), implicitDontWant(false), ignored(false), available(false), missing(false), redundant(false), alreadyCovered(false) {
 	}
 
 	std::string name;

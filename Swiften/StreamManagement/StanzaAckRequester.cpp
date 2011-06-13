@@ -29,7 +29,7 @@ void StanzaAckRequester::handleStanzaSent(boost::shared_ptr<Stanza> stanza) {
 void StanzaAckRequester::handleAckReceived(unsigned int handledStanzasCount) {
 	unsigned int i = lastHandledStanzasCount;
 	while (i != handledStanzasCount) {
-		if (unackedStanzas.size() == 0) {
+		if (unackedStanzas.empty()) {
 			std::cerr << "Warning: Server acked more stanzas than we sent" << std::endl;
 			break;
 		}

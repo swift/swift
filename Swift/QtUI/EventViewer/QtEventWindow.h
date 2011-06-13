@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include "boost/shared_ptr.hpp"
+#include <boost/shared_ptr.hpp>
 
 #include <QTreeView>
 

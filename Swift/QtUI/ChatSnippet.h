@@ -21,7 +21,7 @@ namespace Swift {
 			virtual const QString& getContent() const = 0;
 			virtual QString getContinuationElementID() const { return ""; }
 
-			boost::shared_ptr<ChatSnippet> getContinuationFallbackSnippet() {return continuationFallback_;}
+			boost::shared_ptr<ChatSnippet> getContinuationFallbackSnippet() const {return continuationFallback_;}
 
 			bool getAppendToPrevious() const {
 				return appendToPrevious_;

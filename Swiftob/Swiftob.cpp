@@ -108,6 +108,7 @@ Swiftob::~Swiftob() {
 	delete commands_;
 	delete storage_;
 	delete users_;
+	delete mucs_;
 	delete client_;
 }
 

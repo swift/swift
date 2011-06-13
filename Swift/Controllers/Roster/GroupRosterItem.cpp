@@ -89,7 +89,7 @@ void GroupRosterItem::removeAll() {
 				delete group;
 			}
 		}
-		it++;
+		++it;
 	}
 	children_.clear();
 }
@@ -117,7 +117,7 @@ ContactRosterItem* GroupRosterItem::removeChild(const JID& jid) {
 				removed = groupRemoved;
 			}
 		}
-		it++;
+		++it;
 	}
 	onChildrenChanged();
 	onDataChanged();
@@ -136,7 +136,7 @@ GroupRosterItem* GroupRosterItem::removeGroupChild(const std::string& groupName)
 			it = children_.erase(it);
 			continue;
 		}
-		it++;
+		++it;
 	}
 	onChildrenChanged();
 	onDataChanged();

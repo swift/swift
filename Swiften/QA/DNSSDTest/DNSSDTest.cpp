@@ -94,7 +94,7 @@ class DNSSDTest : public CppUnit::TestFixture {
 			toRemove.clear();
 			toRemove.insert(toRemove.begin(), added.begin(), added.end());
 			registerQuery->unregisterService();
-			while (toRemove.size() > 0) {
+			while (!toRemove.empty()) {
 				Swift::sleep(100);
 				eventLoop->processEvents();
 			}

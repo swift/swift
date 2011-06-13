@@ -1,6 +1,6 @@
-#include "lua.h"
-#include "lualib.h"
-#include "lauxlib.h"
+#include <lua.h>
+#include <lualib.h>
+#include <lauxlib.h>
 #include "sluift.h"
 
 // A built-in table print function

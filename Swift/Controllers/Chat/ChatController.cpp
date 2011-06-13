@@ -143,7 +143,7 @@ void ChatController::handleStanzaAcked(boost::shared_ptr<Stanza> stanza) {
 void ChatController::setOnline(bool online) {
 	if (!online) {
 		std::map<boost::shared_ptr<Stanza>, std::string>::iterator it = unackedStanzas_.begin();
-		for ( ; it != unackedStanzas_.end(); it++) {
+		for ( ; it != unackedStanzas_.end(); ++it) {
 			chatWindow_->setAckState(it->second, ChatWindow::Failed);
 		}
 		unackedStanzas_.clear();

@@ -125,13 +125,13 @@ static void md5_process(md5_state_t *pms, const md5_byte_t *data /*[64]*/) {
 		a = pms->abcd[0], b = pms->abcd[1],
 		c = pms->abcd[2], d = pms->abcd[3];
 		md5_word_t t;
-#ifdef SWIFTEN_BIG_ENDIAN
-		/* Define storage only for big-endian CPUs. */
-		md5_word_t X[16];
-#else
+#ifdef SWIFTEN_LITTLE_ENDIAN
 		/* Define storage for little-endian or both types of CPUs. */
 		md5_word_t xbuf[16];
 		const md5_word_t *X;
+#else
+		/* Define storage only for big-endian CPUs. */
+		md5_word_t X[16];
 #endif
 
 		{

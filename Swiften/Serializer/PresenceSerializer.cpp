@@ -7,7 +7,7 @@
 #include <Swiften/Serializer/PresenceSerializer.h>
 #include <Swiften/Serializer/XML/XMLElement.h>
 
-#include "boost/shared_ptr.hpp"
+#include <boost/shared_ptr.hpp>
 
 namespace Swift {
 

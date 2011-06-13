@@ -48,7 +48,7 @@ static HostAddressPort getFromDictionary(CFDictionaryRef dict, CFStringRef enabl
 					CFIndex length = CFStringGetLength(stringValue) + 1;
 					buffer.resize(length);
 					if(CFStringGetCString(stringValue, &buffer[0], length, kCFStringEncodingMacRoman)) {
-						for(std::vector<char>::iterator iter = buffer.begin(); iter != buffer.end(); iter++) {
+						for(std::vector<char>::iterator iter = buffer.begin(); iter != buffer.end(); ++iter) {
 							host += *iter;
 						}
 					}

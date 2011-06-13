@@ -86,7 +86,7 @@ void MUCBookmarkManager::addBookmark(const MUCBookmark& bookmark) {
 void MUCBookmarkManager::removeBookmark(const MUCBookmark& bookmark) {
 	if (!ready_) return;
 	std::vector<MUCBookmark>::iterator it;
-	for (it = bookmarks_.begin(); it != bookmarks_.end(); it++) {
+	for (it = bookmarks_.begin(); it != bookmarks_.end(); ++it) {
 		if ((*it) == bookmark) {
 			bookmarks_.erase(it);
 			onBookmarkRemoved(bookmark);

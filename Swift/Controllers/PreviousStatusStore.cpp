@@ -40,7 +40,7 @@ std::vector<TypeStringPair> PreviousStatusStore::getSuggestions(const std::strin
 			suggestions.push_back(status);
 		}
 	}
-	if (suggestions.size() == 0) {
+	if (suggestions.empty()) {
 		TypeStringPair suggestion(StatusShow::Online, message);
 		suggestions.push_back(suggestion);
 	}

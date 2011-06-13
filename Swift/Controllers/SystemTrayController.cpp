@@ -22,7 +22,7 @@ SystemTrayController::SystemTrayController(EventController* eventController, Sys
 void SystemTrayController::handleEventQueueLengthChange(int /*length*/) {
 	EventList events = eventController_->getEvents();
 	bool found = false;
-	for (EventList::iterator it = events.begin(); it != events.end(); it++) {
+	for (EventList::iterator it = events.begin(); it != events.end(); ++it) {
 		if (boost::dynamic_pointer_cast<MessageEvent>(*it)) {
 			found = true;
 			break;

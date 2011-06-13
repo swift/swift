@@ -37,7 +37,7 @@ string ChatMessageSummarizer::getSummary(const string& current, const vector<Unr
 	if (others.size() > 1) {
 		string result(QT_TRANSLATE_NOOP("", "%1% and %2% others (%3%)"));
 		myString = str(format(result) % myString % others.size() % otherCount);
-	} else if (others.size() > 0) {
+	} else if (!others.empty()) {
 		string result(QT_TRANSLATE_NOOP("", "%1%, %2% (%3%)"));
 		myString = str(format(result) % myString % others[0].first % otherCount);
 	}

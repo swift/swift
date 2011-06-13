@@ -18,7 +18,7 @@
 
 namespace {
 	struct Context {
-		Context() {}
+		Context() : callback(0) {}
 		Context(const boost::function<void()>& callback) : callback(new boost::function<void()>(callback)) {}
 
 		boost::function<void()>* callback;

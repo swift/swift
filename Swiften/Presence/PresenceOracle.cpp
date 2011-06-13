@@ -84,7 +84,7 @@ std::vector<Presence::ref> PresenceOracle::getAllPresence(const JID& bareJID) co
 	}
 	PresenceMap presenceMap = i->second;
 	PresenceMap::const_iterator j = presenceMap.begin();
-	for (; j != presenceMap.end(); j++) {
+	for (; j != presenceMap.end(); ++j) {
 		Presence::ref current = j->second;
 		results.push_back(current);
 	}
@@ -99,7 +99,7 @@ Presence::ref PresenceOracle::getHighestPriorityPresence(const JID& bareJID) con
 	PresenceMap presenceMap = i->second;
 	PresenceMap::const_iterator j = presenceMap.begin();
 	Presence::ref highest;
-	for (; j != presenceMap.end(); j++) {
+	for (; j != presenceMap.end(); ++j) {
 		Presence::ref current = j->second;
 		if (!highest
 				|| current->getPriority() > highest->getPriority()

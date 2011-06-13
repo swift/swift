@@ -426,7 +426,7 @@ void MUCController::updateJoinParts() {
 void MUCController::appendToJoinParts(std::vector<NickJoinPart>& joinParts, const NickJoinPart& newEvent) {
 	std::vector<NickJoinPart>::iterator it = joinParts.begin();
 	bool matched = false;
-	for (; it != joinParts.end(); it++) {
+	for (; it != joinParts.end(); ++it) {
 		if ((*it).nick == newEvent.nick) {
 			matched = true;
 			JoinPart type = (*it).type;

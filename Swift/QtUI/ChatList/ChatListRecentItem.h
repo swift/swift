@@ -25,7 +25,7 @@ namespace Swift {
 				StatusShowTypeRole = Qt::UserRole + 3*/
 			};
 			ChatListRecentItem(const ChatListWindow::Chat& chat, ChatListGroupItem* parent);
-			const ChatListWindow::Chat& getChat();
+			const ChatListWindow::Chat& getChat() const;
 			QVariant data(int role) const;
 		private:
 			ChatListWindow::Chat chat_;

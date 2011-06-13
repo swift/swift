@@ -9,7 +9,7 @@
 #include <map>
 
 #include <SwifTools/Notifier/Notifier.h>
-#include "SnarlInterface.h"
+#include <SnarlInterface.h>
 
 namespace Swift {
 	class Win32NotifierWindow;

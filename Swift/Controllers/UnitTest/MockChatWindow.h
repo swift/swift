@@ -11,7 +11,7 @@
 namespace Swift {
 	class MockChatWindow : public ChatWindow {
 		public:
-			MockChatWindow() {};
+			MockChatWindow() : labelsEnabled_(false) {};
 			virtual ~MockChatWindow();
 
 			virtual std::string addMessage(const std::string& message, const std::string& /*senderName*/, bool /*senderIsSelf*/, boost::shared_ptr<SecurityLabel> /*label*/, const std::string& /*avatarPath*/, const boost::posix_time::ptime&) {lastMessageBody_ = message; return "";};

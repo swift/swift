@@ -28,7 +28,7 @@ std::string XMLElement::serialize() {
 		result += " " + p.first + "=\"" + p.second + "\"";
 	}
 
-	if (childNodes_.size() > 0) {
+	if (!childNodes_.empty()) {
 		result += ">";
 		foreach (boost::shared_ptr<XMLNode> node, childNodes_) {
 			result += node->serialize();

@@ -11,8 +11,7 @@
 namespace Swift {
 	class Last : public Payload {
 		public:
-			Last() {};
-			Last(int seconds) : seconds_(seconds) {};
+			Last(int seconds = 0) : seconds_(seconds) {};
 
 			int getSeconds() const {return seconds_;}
 			void setSeconds(int seconds) {seconds_ = seconds;}

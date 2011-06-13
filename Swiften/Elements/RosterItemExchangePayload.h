@@ -23,7 +23,7 @@ namespace Swift {
 				public:
 					enum Action { Add, Modify, Delete };
 
-					Item();
+					Item(Action action = Add);
 
 					Action getAction() const {
 						return action;

@@ -97,7 +97,6 @@ public:
 		//delete chatListWindowFactory_;
 		delete settings_;
 		delete profileSettings_;
-		delete mocks_;
 		delete avatarManager_;
 		delete manager_;
 		delete directedPresenceSender_;
@@ -115,6 +114,7 @@ public:
 		delete entityCapsManager_;
 		delete capsProvider_;
 		delete chatListWindow_;
+		delete mocks_;
 	}
 
 	void testFirstOpenWindowIncoming() {

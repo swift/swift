@@ -11,7 +11,7 @@ namespace Swift {
 
 namespace {
 	bool insideQuotes(const ByteArray& v) {
-		if (v.size() == 0) {
+		if (v.empty()) {
 			return false;
 		}
 		else if (v.size() == 1) {

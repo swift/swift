@@ -9,7 +9,7 @@
 
 namespace Swift {
 
-RosterItemExchangePayload::Item::Item() {
+RosterItemExchangePayload::Item::Item(Action action) : action(action) {
 }
 
 RosterItemExchangePayload::RosterItemExchangePayload() {

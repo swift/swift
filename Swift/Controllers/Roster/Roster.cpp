@@ -107,7 +107,7 @@ void Roster::removeAll() {
 void Roster::removeContact(const JID& jid) {
 	std::vector<ContactRosterItem*>* items = &itemMap_[fullJIDMapping_ ? jid : jid.toBare()];
 	items->erase(std::remove_if(items->begin(), items->end(), JIDEqualsTo(jid)), items->end());
-	if (items->size() == 0) {
+	if (items->empty()) {
 		itemMap_.erase(fullJIDMapping_ ? jid : jid.toBare());
 	}
 	//Causes the delete
@@ -124,7 +124,7 @@ void Roster::removeContactFromGroup(const JID& jid, const std::string& groupName
 			std::vector<ContactRosterItem*>* items = &itemMap_[fullJIDMapping_ ? jid : jid.toBare()];
 			items->erase(std::remove(items->begin(), items->end(), deleted), items->end());
 		}
-		it++;
+		++it;
 	}
 	foreach (ContactRosterItem* item, itemMap_[fullJIDMapping_ ? jid : jid.toBare()]) {
 		item->removeGroup(groupName);
@@ -179,7 +179,7 @@ void Roster::filterContact(ContactRosterItem* contact, GroupRosterItem* group) {
 	foreach (RosterFilter *filter, filters_) {
 		hide &= (*filter)(contact);
 	}
-	group->setDisplayed(contact, filters_.size() == 0 || !hide);
+	group->setDisplayed(contact, filters_.empty() || !hide);
 	int newDisplayedSize = group->getDisplayedChildren().size();
 	if (oldDisplayedSize == 0 && newDisplayedSize > 0) {
 		onGroupAdded(group);

@@ -24,7 +24,7 @@ namespace Swift {
 				StatusShowTypeRole = Qt::UserRole + 3*/
 			};
 			ChatListMUCItem(const MUCBookmark& bookmark, ChatListGroupItem* parent);
-			const MUCBookmark& getBookmark();
+			const MUCBookmark& getBookmark() const;
 			QVariant data(int role) const;
 		private:
 			MUCBookmark bookmark_;

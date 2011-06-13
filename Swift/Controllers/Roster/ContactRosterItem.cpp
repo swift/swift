@@ -91,7 +91,7 @@ void ContactRosterItem::applyPresence(const std::string& resource, boost::shared
 				presences_.erase(resource);
 			}
 		}
-		if (presences_.size() == 0) {
+		if (presences_.empty()) {
 			offlinePresence_ = presence;
 		}
 	} else {

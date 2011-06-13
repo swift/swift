@@ -6,7 +6,8 @@
 
 #pragma once
 
-#include "boost/shared_ptr.hpp"
+#include <boost/shared_ptr.hpp>
+
 #include "Swift/Controllers/XMPPEvents/StanzaEvent.h"
 
 namespace Swift {

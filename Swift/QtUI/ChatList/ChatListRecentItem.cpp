@@ -13,7 +13,7 @@ ChatListRecentItem::ChatListRecentItem(const ChatListWindow::Chat& chat, ChatLis
 
 }
 
-const ChatListWindow::Chat& ChatListRecentItem::getChat() {
+const ChatListWindow::Chat& ChatListRecentItem::getChat() const {
 	return chat_;
 }
 

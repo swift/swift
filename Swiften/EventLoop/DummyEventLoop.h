@@ -24,7 +24,7 @@ namespace Swift {
 			}
 
 			bool hasEvents() {
-				return events_.size() > 0;
+				return !events_.empty();
 			}
 
 			virtual void post(const Event& event) {

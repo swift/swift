@@ -42,7 +42,7 @@ std::string Linkify::linkify(const std::string& input) {
 			}
 		}
 	}
-	if (currentURL.size() > 0) {
+	if (!currentURL.empty()) {
 		std::string url(&currentURL[0], currentURL.size());
 		result << "<a href=\"" << url << "\">" <<  url << "</a>";
 	}

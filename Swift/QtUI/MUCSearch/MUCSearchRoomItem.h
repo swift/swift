@@ -15,7 +15,7 @@ namespace Swift {
 			MUCSearchRoomItem(const QString& node, MUCSearchServiceItem* parent);
 			MUCSearchServiceItem* getParent();
 			QVariant data(int role);
-			QString getNode() {return node_;}
+			QString getNode() const {return node_;}
 		private:
 			MUCSearchServiceItem* parent_;
 			QString node_;

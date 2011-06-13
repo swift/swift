@@ -7,7 +7,7 @@
 #include <iostream>
 #include <boost/lexical_cast.hpp>
 
-#include "sqlite3.h"
+#include <sqlite3.h>
 #include <Swiften/History/SQLiteHistoryManager.h>
 
 namespace {

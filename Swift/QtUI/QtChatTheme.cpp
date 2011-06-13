@@ -60,7 +60,7 @@ QtChatTheme::QtChatTheme(const QString& themePath) : qrc_(themePath.isEmpty()), 
 
 }
 
-QString QtChatTheme::getBase() {
+QString QtChatTheme::getBase() const {
 	return qrc_ ? "qrc" + themePath_ : "file://" + themePath_;
 }
 

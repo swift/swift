@@ -12,6 +12,6 @@
 #define SLUIFT_API extern
 #endif
 
-#include "lua.h"
+#include <lua.h>
 
 SLUIFT_API int (luaopen_sluift)(lua_State *L);

@@ -141,7 +141,7 @@ void DiscoServiceWalker::markNodeCompleted(const JID& jid) {
 
 	servicesBeingSearched_.erase(jid);
 	/* All results are in */
-	if (servicesBeingSearched_.size() == 0) {
+	if (servicesBeingSearched_.empty()) {
 		active_ = false;
 		onWalkComplete();
 	}

@@ -56,7 +56,8 @@ ByteArray LinkLocalServiceInfo::getEncoded(const std::string& s) {
 LinkLocalServiceInfo LinkLocalServiceInfo::createFromTXTRecord(const ByteArray& record) {
 	LinkLocalServiceInfo info;
 	size_t i = 0;
-	while (i < record.size()) {
+	size_t recordCount = record.size();
+	while (i < recordCount) {
 		std::pair<std::string,std::string> entry = readEntry(record, &i);
 		if (entry.first.empty()) {
 			break;

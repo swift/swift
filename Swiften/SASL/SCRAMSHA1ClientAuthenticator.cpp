@@ -132,7 +132,7 @@ std::map<char, std::string> SCRAMSHA1ClientAuthenticator::parseMap(const std::st
 				i++;
 			}
 			else if (s[i] == ',') {
-				result[key] = value;
+				result[static_cast<size_t>(key)] = value;
 				value = "";
 				expectKey = true;
 			}

@@ -24,7 +24,7 @@ namespace Swift {
 					default: return QVariant();
 				}
 			}
-			QString getHost() {return jidString_;}
+			QString getHost() const {return jidString_;}
 		private:
 			QList<MUCSearchItem*> rooms_;
 			QString jidString_;

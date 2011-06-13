@@ -13,7 +13,7 @@ ChatListMUCItem::ChatListMUCItem(const MUCBookmark& bookmark, ChatListGroupItem*
 
 }
 
-const MUCBookmark& ChatListMUCItem::getBookmark() {
+const MUCBookmark& ChatListMUCItem::getBookmark() const {
 	return bookmark_;
 }
 

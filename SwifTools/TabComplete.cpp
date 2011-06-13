@@ -28,7 +28,7 @@ void TabComplete::removeWord(const std::string& word) {
 
 std::string TabComplete::completeWord(const std::string& word) {
 	if (word == lastCompletion_) {
-		if (lastCompletionCandidates_.size() != 0) {
+		if (!lastCompletionCandidates_.empty()) {
 			size_t match = 0;
 			for (match = 0; match < lastCompletionCandidates_.size(); match++) {
 				if (lastCompletionCandidates_[match] == lastCompletion_) {
@@ -47,7 +47,7 @@ std::string TabComplete::completeWord(const std::string& word) {
 				lastCompletionCandidates_.push_back(candidate);
 			}
 		}
-		lastCompletion_ = lastCompletionCandidates_.size() > 0 ? lastCompletionCandidates_[0] : word;
+		lastCompletion_ = !lastCompletionCandidates_.empty() ? lastCompletionCandidates_[0] : word;
 	}
 	return lastCompletion_;
 }
