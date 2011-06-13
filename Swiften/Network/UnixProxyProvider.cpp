@@ -10,25 +10,33 @@
 
 #include <Swiften/Base/foreach.h>
 #include <Swiften/Network/UnixProxyProvider.h>
+#if defined(HAVE_GCONF)
+#  include "Swiften/Network/GConfProxyProvider.h"
+#endif
 
 namespace Swift {
 
 UnixProxyProvider::UnixProxyProvider() :
-#if defined(HAVE_GCONF)
-	gconfProxyProvider(),
-#endif
+	gconfProxyProvider(0),
 	environmentProxyProvider()
 {
+#if defined(HAVE_GCONF)
+	gconfProxyProvider = new GConfProxyProvider();
+#endif
+}
+
+UnixProxyProvider::~UnixProxyProvider() {
+	delete gconfProxyProvider;
 }
 
 HostAddressPort UnixProxyProvider::getSOCKS5Proxy() const {
 	HostAddressPort proxy;
-#if defined(HAVE_GCONF)
-	proxy = gconfProxyProvider.getSOCKS5Proxy();
-	if(proxy.isValid()) {
-		return proxy;
+	if (gconfProxyProvider) {
+		proxy = gconfProxyProvider.getSOCKS5Proxy();
+		if(proxy.isValid()) {
+			return proxy;
+		}
 	}
-#endif
 	proxy = environmentProxyProvider.getSOCKS5Proxy();
 	if(proxy.isValid()) {
 		return proxy;
@@ -38,12 +46,12 @@ HostAddressPort UnixProxyProvider::getSOCKS5Proxy() const {
 
 HostAddressPort UnixProxyProvider::getHTTPConnectProxy() const {
 	HostAddressPort proxy;
-#if defined(HAVE_GCONF)
-	proxy = gconfProxyProvider.getHTTPConnectProxy();
-	if(proxy.isValid()) {
-		return proxy;
+	if (gconfProxyProvider) {
+		proxy = gconfProxyProvider.getHTTPConnectProxy();
+		if(proxy.isValid()) {
+			return proxy;
+		}
 	}
-#endif
 	proxy = environmentProxyProvider.getHTTPConnectProxy();
 	if(proxy.isValid()) {
 		return proxy;

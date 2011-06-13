@@ -5,21 +5,22 @@
  */
 
 #pragma once
-#if defined(HAVE_GCONF)
-#  include "Swiften/Network/GConfProxyProvider.h"
-#endif
+
 #include <Swiften/Network/EnvironmentProxyProvider.h>
 
 namespace Swift {
+	class GConfProxyProvider;
+
 	class UnixProxyProvider : public ProxyProvider {
 		public:
 			UnixProxyProvider();
+			~UnixProxyProvider();
+
 			virtual HostAddressPort getHTTPConnectProxy() const;
 			virtual HostAddressPort getSOCKS5Proxy() const;
+
 		private:
-#if defined(HAVE_GCONF)
-			GConfProxyProvider gconfProxyProvider;
-#endif
+			GConfProxyProvider* gconfProxyProvider;
 			EnvironmentProxyProvider environmentProxyProvider;
 	};
 }
