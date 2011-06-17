@@ -343,6 +343,21 @@ def CheckPKG(context, name):
 	context.Result( ret )
 	return ret
 
+def CheckVersion(context, library, version, define, header, value) :
+	context.Message("Checking " + library + " version (>= " + version + ") ...")
+	ret = context.TryRun("""
+#include <%(header)s>
+#include <stdio.h>
+
+int main(int argc, char* argv[]) {
+	printf("%%d\\n", %(define)s);
+	return 0;
+}
+""" % { "header" : header, "define": define }, ".c")
+	ok = ret[0] and int(ret[1]) >= value
+	context.Result(ok)
+	return ok
+
 conf = Configure(conf_env)
 
 if not conf.CheckCXX() or not conf.CheckCC() :
@@ -499,8 +514,8 @@ if env["PLATFORM"] == "win32" :
 	env["HAVE_SNARL"] = True
 
 # LibXML
-conf = Configure(conf_env)
-if conf.CheckCHeader("libxml/parser.h") and conf.CheckLib("xml2") :
+conf = Configure(conf_env, custom_tests = {"CheckVersion": CheckVersion})
+if conf.CheckCHeader("libxml/parser.h") and conf.CheckLib("xml2") and conf.CheckVersion("LibXML", "2.6.23", "LIBXML_VERSION", "libxml/xmlversion.h", 20623) :
 	env["HAVE_LIBXML"] = 1
 	env["LIBXML_FLAGS"] = { "LIBS": ["xml2"] }
 conf.Finish()
@@ -508,8 +523,8 @@ conf.Finish()
 if not env.get("HAVE_LIBXML", 0) :
 	libxml_env = conf_env.Clone()
 	libxml_env.Append(CPPPATH = ["/usr/include/libxml2"])
-	conf = Configure(libxml_env)
-	if conf.CheckCHeader("libxml/parser.h") and conf.CheckLib("xml2") :
+	conf = Configure(libxml_env, custom_tests = {"CheckVersion": CheckVersion})
+	if conf.CheckCHeader("libxml/parser.h") and conf.CheckLib("xml2") and conf.CheckVersion("LibXML", "2.6.23", "LIBXML_VERSION", "libxml/xmlversion.h", 20623):
 		env["HAVE_LIBXML"] = 1
 		env["LIBXML_FLAGS"] = { "CPPPATH": ["/usr/include/libxml2"], "LIBS": ["xml2"] }
 	conf.Finish()
