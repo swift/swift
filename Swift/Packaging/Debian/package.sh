@@ -31,7 +31,6 @@ cp -r $DIRNAME/3rdParty/Boost/src/boost/uuid $DIRNAME/3rdParty/Boost/uuid/boost
 ln -s Swift/Packaging/Debian/debian $DIRNAME/debian
 ../../../BuildTools/UpdateDebianChangelog.py $DIRNAME/debian/changelog $DEBIAN_VERSION
 cat $DIRNAME/debian/control.in | sed -e "s/%SWIFTEN_SOVERSION%/$SWIFTEN_SOVERSION/g" > $DIRNAME/debian/control
-cat $DIRNAME/debian/shlibs.in | sed -e "s/%SWIFTEN_SOVERSION%/$SWIFTEN_SOVERSION/g" > $DIRNAME/debian/shlibs
 mv $DIRNAME/debian/libswiften.install $DIRNAME/debian/libswiften$SWIFTEN_SOVERSION.install
 mv $DIRNAME/debian/libswiften-dev.install $DIRNAME/debian/libswiften$SWIFTEN_SOVERSION-dev.install
 

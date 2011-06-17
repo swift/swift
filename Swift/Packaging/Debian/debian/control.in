@@ -33,7 +33,7 @@ Description: XMPP Client.
 Package: swift-im-dbg
 Architecture: any
 Section: debug
-Priority: optional
+Priority: extra
 Depends: swift-im (= ${binary:Version}), ${shlibs:Depends}, ${misc:Depends}
 Description: Debugging symbols for swift-im.
 	The Swift IM client.
