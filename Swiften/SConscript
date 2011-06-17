@@ -49,6 +49,7 @@ if env["SCONS_STAGE"] == "flags" :
 				"CPPFLAGS": e.get("CPPFLAGS", []),
 				"LIBPATH": e.get("LIBPATH", []),
 				"LIBS": e.get("LIBS", []),
+				"FRAMEWORKS": e.get("FRAMEWORKS", []),
 			}
 
 ################################################################################
