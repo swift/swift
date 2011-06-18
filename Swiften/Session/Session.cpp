@@ -38,18 +38,26 @@ void Session::startSession() {
 }
 
 void Session::finishSession() {
+	if (finishing)
+		return;
 	finishing = true;
+	if (xmppLayer) {
+		xmppLayer->writeFooter();
+	}
 	connection->disconnect();
 	handleSessionFinished(boost::optional<SessionError>());
-	finishing = false;
 	onSessionFinished(boost::optional<SessionError>());
 }
 
 void Session::finishSession(const SessionError& error) {
+	if (finishing)
+		return;
 	finishing = true;
+	if (xmppLayer) {
+		xmppLayer->writeFooter();
+	}
 	connection->disconnect();
 	handleSessionFinished(boost::optional<SessionError>(error));
-	finishing = false;
 	onSessionFinished(boost::optional<SessionError>(error));
 }
 
