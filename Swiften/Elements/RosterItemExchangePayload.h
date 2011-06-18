@@ -53,6 +53,10 @@ namespace Swift {
 						return groups;
 					}
 
+					void setGroups(const std::vector<std::string> &groups) {
+						this->groups = groups;
+					}
+
 					void addGroup(const std::string& group) {
 						groups.push_back(group);
 					}
