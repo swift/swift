@@ -8,8 +8,8 @@
 #include <cppunit/extensions/TestFactoryRegistry.h>
 
 #include "Swiften/Elements/Message.h"
-#include "Swiften/Server/ServerStanzaRouter.h"
-#include "Swiften/Server/ServerSession.h"
+#include "Limber/Server/ServerStanzaRouter.h"
+#include "Limber/Server/ServerSession.h"
 
 using namespace Swift;
 

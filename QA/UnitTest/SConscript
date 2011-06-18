@@ -12,6 +12,7 @@ if env["TEST"] :
 		myenv.MergeFlags(env.get("SLIMBER_FLAGS",""))
 		myenv.MergeFlags(env.get("SWIFT_CONTROLLERS_FLAGS",""))
 		myenv.MergeFlags(env.get("SWIFTOOLS_FLAGS",""))
+		myenv.MergeFlags(env.get("LIMBER_FLAGS",""))
 		myenv.MergeFlags(env.get("SWIFTEN_FLAGS",""))
 		myenv.MergeFlags(env.get("CPPUNIT_FLAGS",""))
 		myenv.MergeFlags(env.get("LIBIDN_FLAGS", ""))

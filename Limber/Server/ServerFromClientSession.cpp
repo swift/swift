@@ -4,12 +4,12 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "Swiften/Server/ServerFromClientSession.h"
+#include "Limber/Server/ServerFromClientSession.h"
 
 #include <boost/bind.hpp>
 
 #include "Swiften/Elements/ProtocolHeader.h"
-#include "Swiften/Server/UserRegistry.h"
+#include "Limber/Server/UserRegistry.h"
 #include "Swiften/Network/Connection.h"
 #include "Swiften/StreamStack/XMPPLayer.h"
 #include "Swiften/Elements/StreamFeatures.h"
