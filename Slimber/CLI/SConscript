@@ -1,16 +1,16 @@
 Import("env")
 
 myenv = env.Clone()
+myenv.UseFlags(env["SLIMBER_FLAGS"])
 myenv.UseFlags(env["LIMBER_FLAGS"])
-myenv.MergeFlags(env["SLIMBER_FLAGS"])
-myenv.MergeFlags(env["SWIFTOOLS_FLAGS"])
-myenv.MergeFlags(env["SWIFTEN_FLAGS"])
-myenv.MergeFlags(env["LIBIDN_FLAGS"])
-myenv.MergeFlags(env["BOOST_FLAGS"])
-myenv.MergeFlags(env.get("LIBXML_FLAGS", {}))
-myenv.MergeFlags(env.get("EXPAT_FLAGS", {}))
-myenv.MergeFlags(env.get("AVAHI_FLAGS", {}))
-myenv.MergeFlags(myenv["PLATFORM_FLAGS"])
+myenv.UseFlags(env["SWIFTOOLS_FLAGS"])
+myenv.UseFlags(env["SWIFTEN_FLAGS"])
+myenv.UseFlags(env["LIBIDN_FLAGS"])
+myenv.UseFlags(env["BOOST_FLAGS"])
+myenv.UseFlags(env.get("LIBXML_FLAGS", {}))
+myenv.UseFlags(env.get("EXPAT_FLAGS", {}))
+myenv.UseFlags(env.get("AVAHI_FLAGS", {}))
+myenv.UseFlags(myenv["PLATFORM_FLAGS"])
 
 myenv.Program("slimber", [
 		"main.cpp",
