@@ -362,6 +362,7 @@ if env["SCONS_STAGE"] == "build" :
 
 	version_header = "#pragma once\n\n"
 	version_header += "#define SWIFTEN_VERSION 0x%02X%02X%02X\n" % (swiften_env["SWIFTEN_VERSION_MAJOR"], swiften_env["SWIFTEN_VERSION_MINOR"], swiften_env["SWIFTEN_VERSION_PATCH"])
+	version_header += "#define SWIFTEN_VERSION_STRING \"%s\"\n" % swiften_env["SWIFTEN_VERSION"]
 	swiften_env.WriteVal("Version.h", swiften_env.Value(version_header))
 	swiften_includes.append("Swiften/Version.h")
 

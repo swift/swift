@@ -31,6 +31,7 @@ binary-arch: install
 	dh_installchangelogs 
 	dh_installdocs
 	dh_installmenu
+	dh_installman -a
 	dh_link
 	dh_strip --dbg-package=swift-im-dbg
 	dh_compress
