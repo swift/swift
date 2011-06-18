@@ -2,19 +2,26 @@
 
 #export DH_VERBOSE=1
 
+SCONS_FLAGS=V=1 optimize=1 debug=1 allow_warnings=1 swiften_dll=1 qt=/usr/share/qt4 docbook_xsl=/usr/share/xml/docbook/stylesheet/docbook-xsl docbook_xml=/usr/share/xml/docbook/schema/dtd/4.5 
+
+clean: 
+	dh_testdir
+	dh_clean
+	scons $(SCONS_FLAGS) $(SCONS_EXTRA_FLAGS) SWIFT_INSTALLDIR=$(CURDIR)/debian/tmp/usr SWIFTEN_INSTALLDIR=$(CURDIR)/debian/tmp/usr -c
+	-rm -rf .scon*
+	-rm -rf config.log
+
 configure:
 
 build: configure
-
-clean: 
+	dh_testdir
+	scons $(SCONS_FLAGS) $(SCONS_EXTRA_FLAGS) Swift Swiften
 
 install: build
-	dh_testdir
 	dh_testroot
 	dh_prep  
 	dh_installdirs
-	scons $(SCONS_FLAGS) optimize=1 debug=1 allow_warnings=1 swiften_dll=1 qt=/usr/share/qt4 docbook_xsl=/usr/share/xml/docbook/stylesheet/docbook-xsl docbook_xml=/usr/share/xml/docbook/schema/dtd/4.5 SWIFT_INSTALLDIR=$(CURDIR)/debian/tmp/usr SWIFTEN_INSTALLDIR=$(CURDIR)/debian/tmp/usr $(CURDIR)/debian/tmp
-
+	scons $(SCONS_FLAGS) $(SCONS_EXTRA_FLAGS) SWIFT_INSTALLDIR=$(CURDIR)/debian/tmp/usr SWIFTEN_INSTALLDIR=$(CURDIR)/debian/tmp/usr $(CURDIR)/debian/tmp
 
 binary-indep: install
 binary-arch: install
