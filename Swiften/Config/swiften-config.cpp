@@ -16,6 +16,7 @@
 
 #include <Swiften/Base/Platform.h>
 #include <Swiften/Base/Paths.h>
+#include <Swiften/Version.h>
 
 #include "swiften-config.h"
 
@@ -35,6 +36,7 @@ int main(int argc, char* argv[]) {
 	boost::program_options::options_description desc;
 	desc.add_options()
 		("help", "Show this help message")
+		("version", "Show version information")
 		("libs", "List the library flags")
 		("cflags", "List the compiler & preprocessor flags")
 	;
@@ -56,7 +58,15 @@ int main(int argc, char* argv[]) {
 	}
 
 	if (vm.count("help") > 0) {
+		std::cout << "swiften-config outputs the Swiften build options." << std::endl;
+		std::cout << std::endl;
+		std::cout << "Usage: swiften-config [OPTIONS]..." << std::endl;
+		std::cout << std::endl;
 		std::cout << desc << "\n";
+		return 0;
+	}
+	if (vm.count("version") > 0) {
+		std::cout << "swiften-config " << SWIFTEN_VERSION_STRING << std::endl;
 		return 0;
 	}
 

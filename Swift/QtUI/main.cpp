@@ -16,6 +16,7 @@
 
 #include <Swift/Controllers/Translator.h>
 #include <Swift/Controllers/ApplicationInfo.h>
+#include <Swift/Controllers/BuildVersion.h>
 #include <SwifTools/Application/PlatformApplicationPathProvider.h>
 
 #include "QtSwift.h"
@@ -52,8 +53,16 @@ int main(int argc, char* argv[]) {
 	}
 	boost::program_options::notify(vm);
 	if (vm.count("help") > 0) {
-		std::cout << desc << "\n";
+		std::cout << SWIFT_APPLICATION_NAME << " is an instant messaging client for the XMPP network." << std::endl;
+		std::cout << std::endl;
+		std::cout << "Usage: " << argv[0] << " [OPTIONS]..." << std::endl;
+		std::cout << std::endl;
+		std::cout << desc << std::endl;
 		return 1;
+	}
+	if (vm.count("version") > 0) {
+		std::cout << SWIFT_APPLICATION_NAME << " " << buildVersion << std::endl;
+		return 0;
 	}
 
 	Swift::QtSwift swift(vm);

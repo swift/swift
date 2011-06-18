@@ -67,12 +67,13 @@ po::options_description QtSwift::getOptionsDescription() {
 	po::options_description result("Options");
 	result.add_options()
 		("debug", "Turn on debug logging")
-		("help", "produce help message")
-		("netbook-mode", "use netbook mode display (unsupported)")
-		("no-tabs", "don't manage chat windows in tabs (unsupported)")
-		("latency-debug", "use latency debugging (unsupported)")
-		("multi-account", po::value<int>()->default_value(1), "number of accounts to open windows for (unsupported)")
-		("start-minimized", "don't show the login/roster window at startup")
+		("help", "Show this help message")
+		("version", "Show version information")
+		("netbook-mode", "Use netbook mode display (unsupported)")
+		("no-tabs", "Don't manage chat windows in tabs (unsupported)")
+		("latency-debug", "Use latency debugging (unsupported)")
+		("multi-account", po::value<int>()->default_value(1), "Number of accounts to open windows for (unsupported)")
+		("start-minimized", "Don't show the login/roster window at startup")
 		("eagle-mode", "Settings more suitable for military/secure deployments")
 		;
 	return result;
