@@ -10,7 +10,7 @@
 
 #include <Swiften/JID/JID.h>
 #include <string>
-#include <Swiften/Server/UserRegistry.h>
+#include "Limber/Server/UserRegistry.h"
 
 namespace Swift {
 	

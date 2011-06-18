@@ -1,6 +1,7 @@
 Import("env")
 
 myenv = env.Clone()
+myenv.UseFlags(env["LIMBER_FLAGS"])
 myenv.MergeFlags(env["SLIMBER_FLAGS"])
 myenv.MergeFlags(env["SWIFTOOLS_FLAGS"])
 myenv.MergeFlags(env["SWIFTEN_FLAGS"])

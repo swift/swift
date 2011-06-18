@@ -4,7 +4,7 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include <Swiften/Server/UserRegistry.h>
+#include "Limber/Server/UserRegistry.h"
 
 namespace Swift {
 

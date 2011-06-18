@@ -4,12 +4,12 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include <Swiften/Server/ServerStanzaRouter.h>
-#include <Swiften/Server/ServerSession.h>
-#include <Swiften/Base/Algorithm.h>
+#include "Limber/Server/ServerStanzaRouter.h"
+#include "Limber/Server/ServerSession.h"
 
 #include <cassert>
 #include <algorithm>
+#include <Swiften/Base/Algorithm.h>
 
 namespace Swift {
 

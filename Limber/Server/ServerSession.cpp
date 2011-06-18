@@ -4,7 +4,7 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include <Swiften/Server/ServerSession.h>
+#include "Limber/Server/ServerSession.h"
 
 namespace Swift {
 

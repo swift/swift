@@ -8,22 +8,22 @@
 
 #include <string>
 #include <boost/bind.hpp>
-#include <iostream>
 
+#include "Swiften/Base/String.h"
+#include "Swiften/LinkLocal/LinkLocalConnector.h"
+#include "Swiften/Network/Connection.h"
+#include "Swiften/Session/SessionTracer.h"
+#include "Swiften/Elements/Element.h"
+#include "Swiften/Elements/Presence.h"
+#include "Swiften/Elements/RosterPayload.h"
+#include "Swiften/Network/BoostConnection.h"
+#include "Swiften/Network/BoostConnectionServer.h"
+#include "Swiften/Session/SessionTracer.h"
+#include "Swiften/Elements/IQ.h"
+#include "Swiften/Elements/VCard.h"
+#include "Limber/Server/UserRegistry.h"
+#include "Swiften/Session/Session.h"
 #include <Swiften/Base/foreach.h>
-#include <Swiften/Base/String.h>
-#include <Swiften/LinkLocal/LinkLocalConnector.h>
-#include <Swiften/Network/Connection.h>
-#include <Swiften/Session/SessionTracer.h>
-#include <Swiften/Elements/Element.h>
-#include <Swiften/Elements/Presence.h>
-#include <Swiften/Elements/RosterPayload.h>
-#include <Swiften/Network/BoostConnection.h>
-#include <Swiften/Network/BoostConnectionServer.h>
-#include <Swiften/Session/SessionTracer.h>
-#include <Swiften/Elements/IQ.h>
-#include <Swiften/Elements/VCard.h>
-#include <Swiften/Server/UserRegistry.h>
 #include <string>
 #include <Swiften/LinkLocal/LinkLocalServiceInfo.h>
 #include <Swiften/LinkLocal/OutgoingLinkLocalSession.h>
@@ -32,7 +32,7 @@
 #include <Swiften/Network/ConnectionServer.h>
 #include "Slimber/VCardCollection.h"
 #include "Slimber/LinkLocalPresenceManager.h"
-#include <Swiften/Server/ServerFromClientSession.h>
+#include "Limber/Server/ServerFromClientSession.h"
 
 namespace Swift {
 

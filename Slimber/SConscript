@@ -31,6 +31,7 @@ if "Slimber" in env["PROJECTS"] :
 
 	if env["SCONS_STAGE"] == "build" :
 		myenv = env.Clone()
+		myenv.UseFlags(env["LIMBER_FLAGS"])
 		myenv.MergeFlags(env["BOOST_FLAGS"])
 		myenv.MergeFlags(env["SWIFTEN_FLAGS"])
 		myenv.MergeFlags(env["SWIFTEN_DEP_FLAGS"])
