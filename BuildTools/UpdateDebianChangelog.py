@@ -17,6 +17,9 @@ if m :
   project = m.group(1)
   last_version = m.group(2)
 
+if project == "" :
+  project="swift-im"
+
 if "dev" in version :
   distribution = "development"
 elif "beta" in version or "rc" in version :
