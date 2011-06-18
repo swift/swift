@@ -8,6 +8,7 @@
 #include <Swiften/Network/BoostTimerFactory.h>
 #include <Swiften/Network/BoostConnectionFactory.h>
 #include <Swiften/Network/PlatformDomainNameResolver.h>
+#include <Swiften/Network/BoostConnectionServerFactory.h>
 
 namespace Swift {
 
@@ -15,9 +16,11 @@ BoostNetworkFactories::BoostNetworkFactories(EventLoop* eventLoop) {
 	timerFactory = new BoostTimerFactory(ioServiceThread.getIOService(), eventLoop);
 	connectionFactory = new BoostConnectionFactory(ioServiceThread.getIOService(), eventLoop);
 	domainNameResolver = new PlatformDomainNameResolver(eventLoop);
+	connectionServerFactory = new BoostConnectionServerFactory(ioServiceThread.getIOService(), eventLoop);
 }
 
 BoostNetworkFactories::~BoostNetworkFactories() {
+	delete connectionServerFactory;
 	delete domainNameResolver;
 	delete connectionFactory;
 	delete timerFactory;
