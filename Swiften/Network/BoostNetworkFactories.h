@@ -42,6 +42,6 @@ namespace Swift {
 			TimerFactory* timerFactory;
 			ConnectionFactory* connectionFactory;
 			DomainNameResolver* domainNameResolver;
-			ConnectionServerFactory *connectionServerFactory;
+			ConnectionServerFactory* connectionServerFactory;
 	};
 }

@@ -18,6 +18,6 @@ namespace Swift {
 
 			virtual boost::shared_ptr<ConnectionServer> createConnectionServer(int port) = 0;
 
-			virtual boost::shared_ptr<ConnectionServer> createConnectionServer(const Swift::HostAddress &hostAddress, int port) = 0;
+			virtual boost::shared_ptr<ConnectionServer> createConnectionServer(const Swift::HostAddress& hostAddress, int port) = 0;
 	};
 }

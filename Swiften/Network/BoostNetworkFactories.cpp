@@ -20,10 +20,10 @@ BoostNetworkFactories::BoostNetworkFactories(EventLoop* eventLoop) {
 }
 
 BoostNetworkFactories::~BoostNetworkFactories() {
+	delete connectionServerFactory;
 	delete domainNameResolver;
 	delete connectionFactory;
 	delete timerFactory;
-	delete connectionServerFactory;
 }
 
 }

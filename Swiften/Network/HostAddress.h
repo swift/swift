@@ -21,6 +21,7 @@ namespace Swift {
 			HostAddress(const boost::asio::ip::address& address);
 
 			std::string toString() const;
+			boost::asio::ip::address getRawAddress() const;
 
 			bool operator==(const HostAddress& o) const {
 				return address_ == o.address_;
