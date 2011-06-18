@@ -36,6 +36,6 @@ Package: swift-im-dbg
 Architecture: any
 Section: debug
 Priority: extra
-Depends: swift-im (= ${binary:Version}), ${shlibs:Depends}, ${misc:Depends}
+Depends: swift-im (= ${binary:Version}), ${misc:Depends}
 Description: Debugging symbols for swift-im.
 	The Swift IM client.
