@@ -16,13 +16,22 @@ namespace Swift {
 BoostConnectionServer::BoostConnectionServer(int port, boost::shared_ptr<boost::asio::io_service> ioService, EventLoop* eventLoop) : port_(port), ioService_(ioService), eventLoop(eventLoop), acceptor_(NULL) {
 }
 
+BoostConnectionServer::BoostConnectionServer(const HostAddress &address, int port, boost::shared_ptr<boost::asio::io_service> ioService, EventLoop* eventLoop) : address_(address), port_(port), ioService_(ioService), eventLoop(eventLoop), acceptor_(NULL) {
+}
 
 void BoostConnectionServer::start() {
 	try {
 		assert(!acceptor_);
-		acceptor_ = new boost::asio::ip::tcp::acceptor(
+		if (address_.isValid()) {
+			acceptor_ = new boost::asio::ip::tcp::acceptor(
+				*ioService_, 
+				boost::asio::ip::tcp::endpoint(address_.getRawAddress(), port_));
+		}
+		else {
+			acceptor_ = new boost::asio::ip::tcp::acceptor(
 				*ioService_, 
 				boost::asio::ip::tcp::endpoint(boost::asio::ip::tcp::v4(), port_));
+		}
 		acceptNextConnection();
 	}
 	catch (const boost::system::system_error& e) {

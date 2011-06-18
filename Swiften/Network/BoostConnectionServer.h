@@ -29,8 +29,12 @@ namespace Swift {
 				return ref(new BoostConnectionServer(port, ioService, eventLoop));
 			}
 
-			void start();
-			void stop();
+			static ref create(const HostAddress &address, int port, boost::shared_ptr<boost::asio::io_service> ioService, EventLoop* eventLoop) {
+				return ref(new BoostConnectionServer(address, port, ioService, eventLoop));
+			}
+
+			virtual void start();
+			virtual void stop();
 
 			virtual HostAddressPort getAddressPort() const;
 
@@ -38,12 +42,14 @@ namespace Swift {
 
 		private:
 			BoostConnectionServer(int port, boost::shared_ptr<boost::asio::io_service> ioService, EventLoop* eventLoop);
+			BoostConnectionServer(const HostAddress &address, int port, boost::shared_ptr<boost::asio::io_service> ioService, EventLoop* eventLoop);
 
 			void stop(boost::optional<Error> e);
 			void acceptNextConnection();
 			void handleAccept(boost::shared_ptr<BoostConnection> newConnection, const boost::system::error_code& error);
 
 		private:
+			HostAddress address_;
 			int port_;
 			boost::shared_ptr<boost::asio::io_service> ioService_;
 			EventLoop* eventLoop;

@@ -10,6 +10,7 @@ namespace Swift {
 	class TimerFactory;
 	class ConnectionFactory;
 	class DomainNameResolver;
+	class ConnectionServerFactory;
 
 	/**
 	 * An interface collecting network factories.
@@ -21,5 +22,6 @@ namespace Swift {
 			virtual TimerFactory* getTimerFactory() const = 0;
 			virtual ConnectionFactory* getConnectionFactory() const = 0;
 			virtual DomainNameResolver* getDomainNameResolver() const = 0;
+			virtual ConnectionServerFactory* getConnectionServerFactory() const = 0;
 	};
 }

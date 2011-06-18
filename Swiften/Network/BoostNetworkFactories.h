@@ -33,10 +33,15 @@ namespace Swift {
 				return domainNameResolver;
 			}
 
+			ConnectionServerFactory* getConnectionServerFactory() const {
+				return connectionServerFactory;
+			}
+
 		private:
 			BoostIOServiceThread ioServiceThread;
 			TimerFactory* timerFactory;
 			ConnectionFactory* connectionFactory;
 			DomainNameResolver* domainNameResolver;
+			ConnectionServerFactory *connectionServerFactory;
 	};
 }
