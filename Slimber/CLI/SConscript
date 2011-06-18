@@ -1,8 +1,8 @@
 Import("env")
 
 myenv = env.Clone()
-myenv.UseFlags(env["LIMBER_FLAGS"])
 myenv.UseFlags(env["SLIMBER_FLAGS"])
+myenv.UseFlags(env["LIMBER_FLAGS"])
 myenv.UseFlags(env["SWIFTOOLS_FLAGS"])
 myenv.UseFlags(env["SWIFTEN_FLAGS"])
 myenv.UseFlags(env["LIBIDN_FLAGS"])
