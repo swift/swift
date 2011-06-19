@@ -35,10 +35,17 @@ cp -r $DIRNAME/3rdParty/Boost/src/boost/uuid $DIRNAME/3rdParty/Boost/uuid/boost
 # Create orig tarball for debuild
 tar czf swift-im_$DEBIAN_VERSION.orig.tar.gz --exclude=$DIRNAME/.git $DIRNAME
 
+# Detect dependencies
+WEBKIT_DEPENDENCY=", libqtwebkit-dev (>= 2.0.0)"
+DISTRIBUTION=`lsb_release -s -i`-`lsb_release -s -c`
+if [ "$DISTRIBUTION" == "Debian-squeeze" -o "$DISTRIBUTION" == "Ubuntu-lucid" ]; then
+	WEBKIT_DEPENDENCY=""
+fi
+
 # Initialize debian files
 ln -s Swift/Packaging/Debian/debian $DIRNAME/debian
 ../../../BuildTools/UpdateDebianChangelog.py $DIRNAME/debian/changelog $DEBIAN_VERSION
-cat $DIRNAME/debian/control.in | sed -e "s/%SWIFTEN_SOVERSION%/$SWIFTEN_SOVERSION/g" > $DIRNAME/debian/control
+cat $DIRNAME/debian/control.in | sed -e "s/%SWIFTEN_SOVERSION%/$SWIFTEN_SOVERSION/g" | sed -e "s/%WEBKIT_DEPENDENCY%/$WEBKIT_DEPENDENCY/g" > $DIRNAME/debian/control
 mv $DIRNAME/debian/libswiften.install $DIRNAME/debian/libswiften$SWIFTEN_SOVERSION.install
 mv $DIRNAME/debian/libswiften-dev.install $DIRNAME/debian/libswiften$SWIFTEN_SOVERSION-dev.install
 mv $DIRNAME/debian/libswiften-dev.manpages $DIRNAME/debian/libswiften$SWIFTEN_SOVERSION-dev.manpages
