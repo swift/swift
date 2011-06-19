@@ -38,8 +38,9 @@ void Session::startSession() {
 }
 
 void Session::finishSession() {
-	if (finishing)
+	if (finishing) {
 		return;
+	}
 	finishing = true;
 	if (xmppLayer) {
 		xmppLayer->writeFooter();
@@ -50,8 +51,9 @@ void Session::finishSession() {
 }
 
 void Session::finishSession(const SessionError& error) {
-	if (finishing)
+	if (finishing) {
 		return;
+	}
 	finishing = true;
 	if (xmppLayer) {
 		xmppLayer->writeFooter();
