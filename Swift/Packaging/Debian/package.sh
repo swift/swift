@@ -38,7 +38,7 @@ tar czf swift-im_$DEBIAN_VERSION.orig.tar.gz --exclude=$DIRNAME/.git $DIRNAME
 # Detect dependencies
 WEBKIT_DEPENDENCY=", libqtwebkit-dev (>= 2.0.0)"
 DISTRIBUTION=`lsb_release -s -i`-`lsb_release -s -c`
-if [ "$DISTRIBUTION" == "Debian-squeeze" -o "$DISTRIBUTION" == "Ubuntu-lucid" ]; then
+if [ "$DISTRIBUTION" = "Debian-squeeze" -o "$DISTRIBUTION" = "Ubuntu-lucid" ]; then
 	WEBKIT_DEPENDENCY=""
 fi
 
