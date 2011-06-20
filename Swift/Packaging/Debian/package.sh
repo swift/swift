@@ -62,6 +62,6 @@ mv $DIRNAME/debian/libswiften-dev.manpages $DIRNAME/debian/libswiften$SWIFTEN_SO
 # Build
 cd $DIRNAME
 set +e
-debuild -i -I
+debuild -i -I --lintian-opts --pedantic
 #dpkg-buildpackage -S -rfakeroot -i -I
 #dpkg-buildpackage -b -rfakeroot -i -I
