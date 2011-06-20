@@ -13,24 +13,38 @@ Architecture: any
 Section: net
 Priority: optional
 Depends: ${shlibs:Depends}, ${misc:Depends}
-Description: XMPP Library.
-	The Swiften XMPP library.
+Description: The Swiften XMPP Library.
+ Swiften is a robust, high-quality, standards-compliant, cross-platform,
+ and performant C++ library for implementing XMPP applications. Swiften
+ is used as the back-end library for the Swift Instant Messaging client.
 
 Package: libswiften%SWIFTEN_SOVERSION%-dev
 Architecture: any
 Section: libdevel
 Priority: optional
 Depends: libswiften%SWIFTEN_SOVERSION% (= ${binary:Version}), ${shlibs:Depends}, ${misc:Depends}
-Description: XMPP Library.
-	The Swiften XMPP library.
+Description: The Swiften XMPP Library.
+ Swiften is a robust, high-quality, standards-compliant, cross-platform,
+ and performant C++ library for implementing XMPP applications. Swiften
+ is used as the back-end library for the Swift Instant Messaging client.
+ .
+ This package contains the header development files and programs for 
+ developing with Swiften.
 
 Package: swift-im
 Architecture: any
 Section: net
 Priority: optional
 Depends: libswiften%SWIFTEN_SOVERSION% (= ${binary:Version}), ${shlibs:Depends}, ${misc:Depends}
-Description: XMPP Client.
-	The Swift IM client.
+Description: The Swift Instant Messaging client.
+ Swift is a free instant messaging client. It concentrates on making
+ the most-used features easily accessible, supporting
+ internationalisation, private and group chats, together with features
+ for security-conscious organisations including Security Labelling.
+ .
+ Swift uses the XMPP protocol and so supports both the public Jabber
+ network and closed XMPP services, such as those found in many
+ organisations.
 
 Package: swift-im-dbg
 Architecture: any
@@ -38,4 +52,5 @@ Section: debug
 Priority: extra
 Depends: swift-im (= ${binary:Version}), ${misc:Depends}
 Description: Debugging symbols for swift-im.
-	The Swift IM client.
+ This package contains the debugging symbols for debugging Swift
+ and Swiften applications.

@@ -18,16 +18,15 @@ def git(cmd) :
   return gitVersion if p.wait() == 0 else None
 
 def getBuildVersion(root, project) :
+  versionFilename = os.path.join(root, "VERSION." + project)
+  if os.path.isfile(versionFilename) :
+    f = open(versionFilename)
+    version = f.read().strip()
+    f.close()
+    return version
+
   gitVersion = getGitBuildVersion(project) 
   if gitVersion :
     return gitVersion
-  else :
-    versionFilename = os.path.join(root, "VERSION." + project)
-    if os.path.isfile(versionFilename) :
-      f = open(versionFilename)
-      version = f.read().strip()
-      f.close()
-      return version
-    else :
-      # TODO: Add the current branch
-      return datetime.date.today().strftime("%Y%m%d")
+
+  return datetime.date.today().strftime("%Y%m%d")
