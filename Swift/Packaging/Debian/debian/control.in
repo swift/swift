@@ -36,7 +36,7 @@ Architecture: any
 Section: net
 Priority: optional
 Depends: libswiften%SWIFTEN_SOVERSION% (= ${binary:Version}), ${shlibs:Depends}, ${misc:Depends}
-Description: The Swift Instant Messaging client.
+Description: Easy to use Jabber/XMPP chat client.
  Swift is a free instant messaging client. It concentrates on making
  the most-used features easily accessible, supporting
  internationalisation, private and group chats, together with features
