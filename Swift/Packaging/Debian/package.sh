@@ -3,7 +3,7 @@
 set -e -x
 
 export PYTHONPATH=../../../BuildTools/SCons
-VERSION=`../../../BuildTools/GetBuildVersion.py swift`
+VERSION=${VERSION:=`../../../BuildTools/GetBuildVersion.py swift`}
 DEBIAN_VERSION=`../../../BuildTools/DebianizeVersion.py $VERSION`
 DIRNAME=swift-im-$DEBIAN_VERSION
 SWIFTEN_SOVERSION=`../../../BuildTools/GetBuildVersion.py swift --major`
@@ -22,10 +22,15 @@ echo "Checking out a fresh copy ..."
 rm -rf $DIRNAME
 git clone ../../../.git $DIRNAME
 
-# Clean out 3rdParty
+# Remove development files & 3rdParty files
+rm -rf $DIRNAME/.git
+find $DIRNAME -name .gitignore | xargs rm -f
 find $DIRNAME/3rdParty -type f | grep -v uuid | grep -v SConscript | xargs rm -f
 find $DIRNAME/3rdParty -depth -empty -type d -exec rmdir {} \;
 rm -rf $DIRNAME/3rdParty/SCons
+
+# Initialize the build version
+echo $VERSION > $DIRNAME/VERSION.swift
 
 # Fork local Boost UUID copy
 # FIXME: This shouldn't be necessary, but SCons isn't picking up the generated headers for compilation
@@ -33,7 +38,7 @@ mkdir -p $DIRNAME/3rdParty/Boost/uuid/boost
 cp -r $DIRNAME/3rdParty/Boost/src/boost/uuid $DIRNAME/3rdParty/Boost/uuid/boost
 
 # Create orig tarball for debuild
-tar czf swift-im_$DEBIAN_VERSION.orig.tar.gz --exclude=$DIRNAME/.git $DIRNAME
+tar czf swift-im_$DEBIAN_VERSION.orig.tar.gz $DIRNAME
 
 # Detect dependencies
 WEBKIT_DEPENDENCY=", libqtwebkit-dev (>= 2.0.0)"
@@ -44,7 +49,11 @@ fi
 
 # Initialize debian files
 ln -s Swift/Packaging/Debian/debian $DIRNAME/debian
-../../../BuildTools/UpdateDebianChangelog.py $DIRNAME/debian/changelog $DEBIAN_VERSION
+if [ -z "$CHANGELOG" ]; then
+	../../../BuildTools/UpdateDebianChangelog.py $DIRNAME/debian/changelog $DEBIAN_VERSION
+else
+	cp $CHANGELOG $DIRNAME/debian/changelog
+fi
 cat $DIRNAME/debian/control.in | sed -e "s/%SWIFTEN_SOVERSION%/$SWIFTEN_SOVERSION/g" | sed -e "s/%WEBKIT_DEPENDENCY%/$WEBKIT_DEPENDENCY/g" > $DIRNAME/debian/control
 mv $DIRNAME/debian/libswiften.install $DIRNAME/debian/libswiften$SWIFTEN_SOVERSION.install
 mv $DIRNAME/debian/libswiften-dev.install $DIRNAME/debian/libswiften$SWIFTEN_SOVERSION-dev.install
