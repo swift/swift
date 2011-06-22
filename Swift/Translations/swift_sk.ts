@@ -1221,7 +1221,7 @@
     <message>
         <location filename="../QtUI/QtChatWindow.cpp" line="324"/>
         <source>Couldn&apos;t send message: %1</source>
-        <translation>Správu sa nepodarilo odoslať : %1</translation>
+        <translation>Správu sa nepodarilo odoslať: %1</translation>
     </message>
 </context>
 <context>
