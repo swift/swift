@@ -28,6 +28,7 @@ find $DIRNAME -name .gitignore | xargs rm -f
 find $DIRNAME/3rdParty -type f | grep -v uuid | grep -v SConscript | xargs rm -f
 find $DIRNAME/3rdParty -depth -empty -type d -exec rmdir {} \;
 rm -rf $DIRNAME/3rdParty/SCons
+rm -rf $DIRNAME/Swift/Packaging/Debian
 
 # Initialize the build version
 echo $VERSION > $DIRNAME/VERSION.swift
@@ -37,7 +38,7 @@ echo $VERSION > $DIRNAME/VERSION.swift
 mkdir -p $DIRNAME/3rdParty/Boost/uuid/boost
 cp -r $DIRNAME/3rdParty/Boost/src/boost/uuid $DIRNAME/3rdParty/Boost/uuid/boost
 
-# Create orig tarball for debuild
+# Create orig tarball
 tar czf swift-im_$DEBIAN_VERSION.orig.tar.gz $DIRNAME
 
 # Detect dependencies
@@ -48,20 +49,18 @@ if [ "$DISTRIBUTION" = "Debian-squeeze" -o "$DISTRIBUTION" = "Ubuntu-lucid" ]; t
 fi
 
 # Initialize debian files
-ln -s Swift/Packaging/Debian/debian $DIRNAME/debian
+cp -r debian $DIRNAME/debian
 if [ -z "$CHANGELOG" ]; then
 	../../../BuildTools/UpdateDebianChangelog.py $DIRNAME/debian/changelog $DEBIAN_VERSION
 else
 	cp $CHANGELOG $DIRNAME/debian/changelog
 fi
 cat $DIRNAME/debian/control.in | sed -e "s/%SWIFTEN_SOVERSION%/$SWIFTEN_SOVERSION/g" | sed -e "s/%WEBKIT_DEPENDENCY%/$WEBKIT_DEPENDENCY/g" > $DIRNAME/debian/control
+rm $DIRNAME/debian/control.in
 mv $DIRNAME/debian/libswiften.install $DIRNAME/debian/libswiften$SWIFTEN_SOVERSION.install
-mv $DIRNAME/debian/libswiften-dev.install $DIRNAME/debian/libswiften$SWIFTEN_SOVERSION-dev.install
-mv $DIRNAME/debian/libswiften-dev.manpages $DIRNAME/debian/libswiften$SWIFTEN_SOVERSION-dev.manpages
+cat ../../../COPYING | awk '/--- END OF OpenSSL/,EOF' | tail -n +3 >> $DIRNAME/debian/copyright
 
 # Build
 cd $DIRNAME
 set +e
 debuild -i -I --lintian-opts --pedantic
-#dpkg-buildpackage -S -rfakeroot -i -I
-#dpkg-buildpackage -b -rfakeroot -i -I

@@ -1,5 +1,6 @@
 swift-im (1.1-1) unstable; urgency=low
 
   * Initial release. Closes: #631002
+  * Thanks to Olly Betts <olly@survex.com>
 
  -- Swift Package Maintainer <packages@swift.im>  Mon, 20 Jun 2011 16:24:48 -0000

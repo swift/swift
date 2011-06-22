@@ -1,6 +1,7 @@
 #!/usr/bin/make -f
 
 #export DH_VERBOSE=1
+export PYTHONDONTWRITEBYTECODE=1
 
 SCONS_FLAGS=V=1 optimize=1 debug=1 allow_warnings=1 swiften_dll=1 qt=/usr/share/qt4 docbook_xsl=/usr/share/xml/docbook/stylesheet/docbook-xsl docbook_xml=/usr/share/xml/docbook/schema/dtd/4.5 
 

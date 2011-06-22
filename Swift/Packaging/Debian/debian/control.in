@@ -2,8 +2,9 @@ Source: swift-im
 Section: net
 Priority: optional
 Maintainer: Swift Package Maintainer <packages@swift.im>
-Build-Depends: debhelper (>= 7), scons (>= 1.2.0), libssl-dev (>= 0.9.8g), libqt4-dev (>= 4.5.0), libxml2-dev (>= 2.7.6), lintian (>= 2.2.5), libxss-dev (>= 1.2.0), libboost-dev (>= 1.34.1), libboost-filesystem-dev (>= 1.34.1), libboost-program-options-dev (>= 1.34.1), libboost-regex-dev (>= 1.34.1), libboost-signals-dev (>= 1.34.1), libboost-system-dev (>= 1.34.1), libboost-thread-dev (>= 1.34.1), libboost-date-time-dev (>= 1.34.1), libidn11-dev (>= 1.10), docbook-xsl (>= 1.75.0), docbook-xml (>= 4.5), xsltproc, libxml2-utils %WEBKIT_DEPENDENCY%
-Standards-Version: 3.9.1
+Uploaders: Remko Tronçon <dev@el-tramo.be>, Kevin Smith <debian@kismith.co.uk>, Olly betts <olly@survex.com>
+Build-Depends: debhelper (>= 7), scons (>= 1.2.0), libssl-dev (>= 0.9.8g), libqt4-dev (>= 4.5.0), libxml2-dev (>= 2.7.6), libxss-dev (>= 1.2.0), libboost-dev (>= 1.34.1), libboost-filesystem-dev (>= 1.34.1), libboost-program-options-dev (>= 1.34.1), libboost-regex-dev (>= 1.34.1), libboost-signals-dev (>= 1.34.1), libboost-system-dev (>= 1.34.1), libboost-thread-dev (>= 1.34.1), libboost-date-time-dev (>= 1.34.1), libidn11-dev (>= 1.10), docbook-xsl (>= 1.75.0), docbook-xml (>= 4.5), xsltproc, libxml2-utils %WEBKIT_DEPENDENCY%
+Standards-Version: 3.9.2
 Vcs-Git: git://swift.im/swift
 Vcs-Browser: http://swift.im/git/swift
 Homepage: http://swift.im
@@ -13,17 +14,17 @@ Architecture: any
 Section: net
 Priority: optional
 Depends: ${shlibs:Depends}, ${misc:Depends}
-Description: The Swiften XMPP Library.
+Description: Swiften XMPP Library
  Swiften is a robust, high-quality, standards-compliant, cross-platform,
  and performant C++ library for implementing XMPP applications. Swiften
  is used as the back-end library for the Swift Instant Messaging client.
 
-Package: libswiften%SWIFTEN_SOVERSION%-dev
+Package: libswiften-dev
 Architecture: any
 Section: libdevel
 Priority: optional
 Depends: libswiften%SWIFTEN_SOVERSION% (= ${binary:Version}), ${shlibs:Depends}, ${misc:Depends}
-Description: The Swiften XMPP Library.
+Description: Swiften XMPP Library
  Swiften is a robust, high-quality, standards-compliant, cross-platform,
  and performant C++ library for implementing XMPP applications. Swiften
  is used as the back-end library for the Swift Instant Messaging client.
@@ -36,7 +37,7 @@ Architecture: any
 Section: net
 Priority: optional
 Depends: libswiften%SWIFTEN_SOVERSION% (= ${binary:Version}), ${shlibs:Depends}, ${misc:Depends}
-Description: Easy to use Jabber/XMPP chat client.
+Description: Easy to use Jabber/XMPP chat client
  Swift is a free instant messaging client. It concentrates on making
  the most-used features easily accessible, supporting
  internationalisation, private and group chats, together with features
@@ -51,6 +52,6 @@ Architecture: any
 Section: debug
 Priority: extra
 Depends: swift-im (= ${binary:Version}), ${misc:Depends}
-Description: Debugging symbols for swift-im.
+Description: Debugging symbols for swift-im
  This package contains the debugging symbols for debugging Swift
  and Swiften applications.
