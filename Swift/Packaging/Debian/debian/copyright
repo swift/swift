@@ -1,12 +1,21 @@
-This package was debianized by the Swift Package Maintainer <packages@swift.im>
+This package was debianized by the Swift project <packages@swift.im>,
+with help from Olly Betts <olly@survex.com>.
 
-License:
+The upstream sources were obtained from http://swift.im.
 
-	Copyright (C) 2010 Kevin Smith and Remko Tronçon
-	
-	You are free to distribute this software under the terms of
-	the GNU General Public License version 3.
-	The complete text of the GNU General Public License can be 
-	found in /usr/share/common-licenses/GPL-3 file.
+Copyright (C) 2010-2011 Kevin Smith and Remko Tronçon
+Licensed under the GNU General Public License.
+See /usr/share/common-licenses/GPL-3 for the full license.
 
-	This software is subject to the OpenSSL license exception.
+
+This software is subject to the OpenSSL license exception.
+
+Additional permission under GNU GPL version 3 section 7
+
+If you modify this Program, or any covered work, by linking or combining
+it with the OpenSSL library (or a modified version of that library), 
+containing parts covered by the terms of the OpenSSL License, the 
+licensors of this Program grant you additional permission to convey 
+the resulting work.
+
+
