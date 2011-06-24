@@ -44,7 +44,7 @@ void handleServerDiscoInfoResponse(boost::shared_ptr<DiscoInfo> /*info*/, ErrorP
 void handleConnected() {
 	exitCode = NO_RESPONSE;
 	GetDiscoInfoRequest::ref discoInfoRequest = GetDiscoInfoRequest::create(JID(), client->getIQRouter());
-	discoInfoRequest->onResponse.connect(handleServerDiscoInfoResponse);
+	discoInfoRequest->onResponse.connect(&handleServerDiscoInfoResponse);
 	discoInfoRequest->send();
 }
 
