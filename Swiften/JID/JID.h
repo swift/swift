@@ -10,30 +10,95 @@
 #include <iosfwd>
 
 namespace Swift {
+	/**
+	 * This represents the JID used in XMPP
+	 * (RFC6120 - http://tools.ietf.org/html/rfc6120 ).
+	 * For a description of format, see the RFC or page 14 of
+	 * XMPP: The Definitive Guide (Saint-Andre et al.)
+	 *
+	 * Particularly - a Bare JID is a JID without a resource part.
+	 *
+	 */
 	class JID {
 		public:
 			enum CompareType {
 				WithResource, WithoutResource
 			};
 
-			JID(const std::string& = std::string());
+			/**
+			 * Create a JID from its String representation.
+			 *
+			 * e.g.
+			 * wonderland.lit
+			 * wonderland.lit/rabbithole
+			 * alice@wonderland.lit
+			 * alice@wonderland.lit/TeaParty
+			 *
+			 * @param jid String representation. Invalid JID if empty or invalid.
+			 */
+			JID(const std::string& jid = std::string());
+
+			/**
+			 * See std::string constructor.
+			 */
 			JID(const char*);
+
+			/**
+			 * Create a bare JID from the node and domain parts.
+			 *
+			 * JID("node@domain") == JID("node", "domain")
+			 * unless you pass in empty values.
+			 *
+			 * @param node JID node part.
+			 * @param domain JID domain part.
+			 */
 			JID(const std::string& node, const std::string& domain);
+			/**
+			 * Create a bare JID from the node, domain and resource parts.
+			 *
+			 * JID("node@domain/resource") == JID("node", "domain", "resource")
+			 * unless you pass in empty values.
+			 *
+			 * @param node JID node part.
+			 * @param domain JID domain part.
+			 * @param resource JID resource part.
+			 */
 			JID(const std::string& node, const std::string& domain, const std::string& resource);
 
+			/**
+			 * @return Is a correctly-formatted JID.
+			 */
 			bool isValid() const {
 				return !domain_.empty(); /* FIXME */
 			}
 
+			/**
+			 * e.g. JID("node@domain").getNode() == "node"
+			 * @return could be empty.
+			 */
 			const std::string& getNode() const {
 				return node_;
 			}
+
+			/**
+			 * e.g. JID("node@domain").getDomain() == "domain"
+			 * @return could be empty.
+			 */
 			const std::string& getDomain() const {
 				return domain_;
 			}
+
+			/**
+			 * e.g. JID("node@domain/resource").getResource() == "resource"
+			 * @return could be empty.
+			 */
 			const std::string& getResource() const {
 				return resource_;
 			}
+
+			/**
+			 * Is a bare JID, i.e. has no resource part.
+			 */
 			bool isBare() const {
 				return !hasResource_;
 			}
@@ -50,6 +115,10 @@ namespace Swift {
 			 */
 			std::string getUnescapedNode() const;
 
+			/**
+			 * Get the JID without a resource.
+			 * @return Invalid if the original is invalid.
+			 */
 			JID toBare() const {
 				JID result(*this);
 				result.hasResource_ = false;
