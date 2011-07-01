@@ -8,6 +8,7 @@
 
 #include <string>
 #include <boost/bind.hpp>
+#include <iostream>
 
 #include "Swiften/Base/String.h"
 #include "Swiften/LinkLocal/LinkLocalConnector.h"

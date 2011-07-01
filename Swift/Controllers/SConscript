@@ -69,6 +69,8 @@ if env["SCONS_STAGE"] == "build" :
 	env.Append(UNITTEST_SOURCES = [
 			File("Roster/UnitTest/RosterControllerTest.cpp"),
 			File("Roster/UnitTest/RosterTest.cpp"),
+			File("Roster/UnitTest/LeastCommonSubsequenceTest.cpp"),
+			File("Roster/UnitTest/TableRosterTest.cpp"),	
 			File("UnitTest/PreviousStatusStoreTest.cpp"),
 			File("UnitTest/PresenceNotifierTest.cpp"),
 			File("Chat/UnitTest/ChatsManagerTest.cpp"),

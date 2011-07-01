@@ -14,22 +14,40 @@
 
 namespace Swift {
 	class Roster;
+	class TimerFactory;
+	class Timer;
 
 	class TableRoster {
 		public:
 			struct Item {
+				Item(const std::string& name, const std::string& description, const JID& jid) : name(name), description(description), jid(jid) {
+				}
 				std::string name;
 				std::string description;
 				JID jid;
 			};
+
 			struct Index {
-				Index(size_t section, size_t row) : section(section), row(row) { 
+				Index(size_t section = 0, size_t row = 0) : section(section), row(row) {
 				}
 				size_t section;
 				size_t row;
+
+				bool operator==(const Index& o) const {
+					return o.section == section && o.row == row;
+				}
 			};
 
-			TableRoster(Roster* model);
+			struct Update {
+				std::vector<Index> updatedRows;
+				std::vector<Index> insertedRows;
+				std::vector<Index> deletedRows;
+				std::vector<size_t> insertedSections;
+				std::vector<size_t> deletedSections;
+			};
+
+			TableRoster(Roster* model, TimerFactory* timerFactory, int updateDelay);
+			~TableRoster();
 			
 			size_t getNumberOfSections() const;
 			size_t getNumberOfRowsInSection(size_t section) const;
@@ -38,14 +56,25 @@ namespace Swift {
 
 			Item getItem(const Index&) const;
 
-			boost::signal<void ()> onBeginUpdates;
-			boost::signal<void (const std::vector<Index>&)> onRowsInserted;
-			boost::signal<void (const std::vector<Index>&)> onRowsDeleted;
-			boost::signal<void (const std::vector<size_t>&)> onSectionsInserted;
-			boost::signal<void (const std::vector<size_t>&)> onSectionsDeleted;
-			boost::signal<void ()> onEndUpdates;
+			boost::signal<void (const Update&)> onUpdate;
 
 		private:
+			void handleUpdateTimerTick();
+			void scheduleUpdate();
+
+		private:
+			friend class SectionNameEquals;
+			struct Section {
+				Section(const std::string& name) : name(name) {
+				}
+
+				std::string name;
+				std::vector<Item> items;
+			};
+
 			Roster* model;
+			std::vector<Section> sections;
+			bool updatePending;
+			boost::shared_ptr<Timer> updateTimer;
 	};
 }

@@ -40,3 +40,18 @@ std::ostream& operator<<(std::ostream& os, const Swift::SafeByteArray& s) {
 	return os;
 }
 
+std::ostream& operator<<(std::ostream& os, const std::vector<int>& s) {
+	for (std::vector<int>::const_iterator i = s.begin(); i != s.end(); ++i) {
+		os << *i << " ";
+	}
+	os << std::endl;
+	return os;
+}
+
+std::ostream& operator<<(std::ostream& os, const std::vector<size_t>& s) {
+	for (std::vector<size_t>::const_iterator i = s.begin(); i != s.end(); ++i) {
+		os << *i << " ";
+	}
+	os << std::endl;
+	return os;
+}

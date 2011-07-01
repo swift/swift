@@ -11,3 +11,5 @@
 
 std::ostream& operator<<(std::ostream& os, const Swift::ByteArray& s);
 std::ostream& operator<<(std::ostream& os, const Swift::SafeByteArray& s);
+std::ostream& operator<<(std::ostream& os, const std::vector<int>& s);
+std::ostream& operator<<(std::ostream& os, const std::vector<size_t>& s);
