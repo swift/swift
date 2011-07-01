@@ -87,6 +87,7 @@ void CoreClient::handleConnectorFinished(boost::shared_ptr<Connection> connectio
 	foreach(ConnectionFactory* f, proxyConnectionFactories) {
 		delete f;
 	}
+	proxyConnectionFactories.clear();
 
 	if (!connection) {
 		if (options.forgetPassword) {
