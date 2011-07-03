@@ -18,6 +18,8 @@ namespace Swift {
 	 *
 	 * Particularly - a Bare JID is a JID without a resource part.
 	 *
+	 * A JID can be invalid (when isValid() returns false). No member methods are 
+	 * guaranteed to work correctly if they do.
 	 */
 	class JID {
 		public:
@@ -82,7 +84,6 @@ namespace Swift {
 
 			/**
 			 * e.g. JID("node@domain").getDomain() == "domain"
-			 * @return could be empty.
 			 */
 			const std::string& getDomain() const {
 				return domain_;
