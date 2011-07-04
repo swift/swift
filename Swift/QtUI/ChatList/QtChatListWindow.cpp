@@ -71,24 +71,15 @@ void QtChatListWindow::setupContextMenus() {
 
 void QtChatListWindow::handleItemActivated(const QModelIndex& index) {
 	ChatListItem* item = model_->getItemForIndex(index);
-	ChatListMUCItem* mucItem = dynamic_cast<ChatListMUCItem*>(item);
-	if (bookmarksEnabled_ && mucItem) {
-		boost::shared_ptr<UIEvent> event(new JoinMUCUIEvent(mucItem->getBookmark().getRoom(), mucItem->getBookmark().getNick()));
-		eventStream_->send(event);
+	if (ChatListMUCItem* mucItem = dynamic_cast<ChatListMUCItem*>(item)) {
+		if (bookmarksEnabled_) {
+			onMUCBookmarkActivated(mucItem->getBookmark());
+		}
 	}
-	ChatListRecentItem* recentItem = dynamic_cast<ChatListRecentItem*>(item);
-	if (recentItem) {
-		boost::shared_ptr<UIEvent> event;
-		if (recentItem->getChat().isMUC) {
-			if (!bookmarksEnabled_) {
-				return;
-			}
-			return;
+	else if (ChatListRecentItem* recentItem = dynamic_cast<ChatListRecentItem*>(item)) {
+		if (!recentItem->getChat().isMUC || bookmarksEnabled_) {
+			onRecentActivated(recentItem->getChat());
 		}
-		else {
-			event = boost::shared_ptr<UIEvent>(new RequestChatUIEvent(recentItem->getChat().jid));
-		}
-		eventStream_->send(event);
 	}
 }
 

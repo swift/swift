@@ -10,6 +10,8 @@
 #include <boost/shared_ptr.hpp>
 #include <Swiften/MUC/MUCBookmark.h>
 
+#include "Swiften/Base/boost_bsignals.h"
+
 namespace Swift {
 	class ChatListWindow {
 		public:
@@ -31,5 +33,8 @@ namespace Swift {
 			virtual void removeMUCBookmark(const MUCBookmark& bookmark) = 0;
 			virtual void setRecents(const std::list<Chat>& recents) = 0;
 			virtual void clearBookmarks() = 0;
+
+			boost::signal<void (const MUCBookmark&)> onMUCBookmarkActivated;
+			boost::signal<void (const Chat&)> onRecentActivated;
 	};
 }

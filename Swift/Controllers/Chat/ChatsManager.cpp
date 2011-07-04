@@ -76,7 +76,11 @@ ChatsManager::ChatsManager(
 	profileSettings_ = settings;
 	presenceOracle_->onPresenceChange.connect(boost::bind(&ChatsManager::handlePresenceChange, this, _1));
 	uiEventConnection_ = uiEventStream_->onUIEvent.connect(boost::bind(&ChatsManager::handleUIEvent, this, _1));
+
 	chatListWindow_ = chatListWindowFactory->createChatListWindow(uiEventStream_);
+	chatListWindow_->onMUCBookmarkActivated.connect(boost::bind(&ChatsManager::handleMUCBookmarkActivated, this, _1));
+	chatListWindow_->onRecentActivated.connect(boost::bind(&ChatsManager::handleRecentActivated, this, _1));
+
 	joinMUCWindow_ = NULL;
 	mucSearchController_ = new MUCSearchController(jid_, mucSearchWindowFactory, iqRouter, settings);
 	mucSearchController_->onMUCSelected.connect(boost::bind(&ChatsManager::handleMUCSelectedAfterSearch, this, _1));
@@ -402,6 +406,14 @@ void ChatsManager::handleMUCSelectedAfterSearch(const JID& muc) {
 	if (joinMUCWindow_) {
 		joinMUCWindow_->setMUC(muc.toString());
 	}
+}
+
+void ChatsManager::handleMUCBookmarkActivated(const MUCBookmark& mucBookmark) {
+	uiEventStream_->send(boost::make_shared<JoinMUCUIEvent>(mucBookmark.getRoom(), mucBookmark.getNick()));
+}
+
+void ChatsManager::handleRecentActivated(const ChatListWindow::Chat& chat) {
+	uiEventStream_->send(boost::make_shared<RequestChatUIEvent>(chat.jid));
 }
 
 

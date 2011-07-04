@@ -51,6 +51,7 @@ namespace Swift {
 			void setOnline(bool enabled);
 			void setServerDiscoInfo(boost::shared_ptr<DiscoInfo> info);
 			void handleIncomingMessage(boost::shared_ptr<Message> message);
+
 		private:
 			void handleChatRequest(const std::string& contact);
 			void handleJoinMUCRequest(const JID& muc, const boost::optional<std::string>& nick, bool autoJoin);
@@ -70,10 +71,15 @@ namespace Swift {
 			void loadRecents();
 			void saveRecents();
 			void handleChatMadeRecent();
+			void handleMUCBookmarkActivated(const MUCBookmark&);
+			void handleRecentActivated(const ChatListWindow::Chat&);
+
 			ChatController* getChatControllerOrFindAnother(const JID &contact);
 			ChatController* createNewChatController(const JID &contact);
 			ChatController* getChatControllerOrCreate(const JID &contact);
 			ChatController* getChatControllerIfExists(const JID &contact);
+
+		private:
 			std::map<JID, MUCController*> mucControllers_;
 			std::map<JID, ChatController*> chatControllers_;
 			EventController* eventController_;
