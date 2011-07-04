@@ -244,6 +244,8 @@ if target in ["iphone-device", "iphone-simulator", "xcode"] :
 		env["XCODE_PLATFORM_DEVELOPER_BIN_DIR"] = os.environ["PLATFORM_DEVELOPER_BIN_DIR"]
 		env["XCODE_SDKROOT"] = os.environ["SDKROOT"]
 		env["XCODE_ARCH_FLAGS"] = sum([["-arch", arch] for arch in os.environ["ARCHS"].split(" ")], [])
+		# Usae absolute path sources so Xcode can highlight compilation errors in swiften
+		env['CXXCOM'] = '$CXX -o $TARGET -c $CXXFLAGS $CCFLAGS $_CCCOMCOM ${SOURCES.abspath}'
 	else :
 		# Hard code values
 		env["XCODE_PLATFORM_DEVELOPER_BIN_DIR"] = "/Developer/Platforms/iPhoneOS.platform/Developer/usr/bin"
@@ -515,7 +517,8 @@ if env["PLATFORM"] == "win32" :
 
 # LibXML
 conf = Configure(conf_env, custom_tests = {"CheckVersion": CheckVersion})
-if conf.CheckCHeader("libxml/parser.h") and conf.CheckLib("xml2") and conf.CheckVersion("LibXML", "2.6.23", "LIBXML_VERSION", "libxml/xmlversion.h", 20623) :
+if conf.CheckCHeader("libxml/parser.h") and conf.CheckLib("xml2") :
+#and conf.CheckVersion("LibXML", "2.6.23", "LIBXML_VERSION", "libxml/xmlversion.h", 20623) :
 	env["HAVE_LIBXML"] = 1
 	env["LIBXML_FLAGS"] = { "LIBS": ["xml2"] }
 conf.Finish()
@@ -524,7 +527,8 @@ if not env.get("HAVE_LIBXML", 0) :
 	libxml_env = conf_env.Clone()
 	libxml_env.Append(CPPPATH = ["/usr/include/libxml2"])
 	conf = Configure(libxml_env, custom_tests = {"CheckVersion": CheckVersion})
-	if conf.CheckCHeader("libxml/parser.h") and conf.CheckLib("xml2") and conf.CheckVersion("LibXML", "2.6.23", "LIBXML_VERSION", "libxml/xmlversion.h", 20623):
+	if conf.CheckCHeader("libxml/parser.h") and conf.CheckLib("xml2") :
+#	and conf.CheckVersion("LibXML", "2.6.23", "LIBXML_VERSION", "libxml/xmlversion.h", 20623):
 		env["HAVE_LIBXML"] = 1
 		env["LIBXML_FLAGS"] = { "CPPPATH": ["/usr/include/libxml2"], "LIBS": ["xml2"] }
 	conf.Finish()

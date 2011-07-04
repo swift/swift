@@ -11,6 +11,7 @@
 #include <Swiften/Base/boost_bsignals.h>
 
 #include <Swiften/JID/JID.h>
+#include <Swiften/Elements/StatusShow.h>
 
 namespace Swift {
 	class Roster;
@@ -20,11 +21,12 @@ namespace Swift {
 	class TableRoster {
 		public:
 			struct Item {
-				Item(const std::string& name, const std::string& description, const JID& jid) : name(name), description(description), jid(jid) {
+				Item(const std::string& name, const std::string& description, const JID& jid, StatusShow::Type status) : name(name), description(description), jid(jid), status(status) {
 				}
 				std::string name;
 				std::string description;
 				JID jid;
+				StatusShow::Type status;
 			};
 
 			struct Index {

@@ -45,6 +45,7 @@ class LeastCommonSubsequenceTest : public CppUnit::TestFixture {
 		CPPUNIT_TEST(testComputeLeastCommonSubsequenceMatrix_NoCommonSequence);
 		CPPUNIT_TEST(testComputeLeastCommonSubsequenceMatrix_SameSequences);
 		CPPUNIT_TEST(testComputeIndexDiff_1);
+		CPPUNIT_TEST(testComputeIndexDiff_2);
 		CPPUNIT_TEST(testComputeIndexDiff_Sequence1Empty);
 		CPPUNIT_TEST(testComputeIndexDiff_Sequence2Empty);
 		CPPUNIT_TEST(testComputeIndexDiff_BothSequencesEmpty);
@@ -179,6 +180,23 @@ class LeastCommonSubsequenceTest : public CppUnit::TestFixture {
 			CPPUNIT_ASSERT_EQUAL(expectedPostUpdates, postUpdates);
 			CPPUNIT_ASSERT_EQUAL(expectedRemoves, removes);
 			CPPUNIT_ASSERT_EQUAL(expectedInserts, inserts);
+		}
+
+		void testComputeIndexDiff_2() {
+			std::vector<char> x = boost::assign::list_of('x')('y');
+			std::vector<char> y = boost::assign::list_of('x');
+
+			std::vector<size_t> updates;
+			std::vector<size_t> postUpdates;
+			std::vector<size_t> removes;
+			std::vector<size_t> inserts;
+			computeIndexDiff<char, std::equal_to<char>, IsBOrC >(x, y, updates, postUpdates, removes, inserts);
+			
+			std::vector<size_t> expectedRemoves = boost::assign::list_of(1);
+			CPPUNIT_ASSERT(updates.empty());
+			CPPUNIT_ASSERT(postUpdates.empty());
+			CPPUNIT_ASSERT(inserts.empty());
+			CPPUNIT_ASSERT_EQUAL(expectedRemoves, removes);
 		}
 
 		void testComputeIndexDiff_Sequence1Empty() {

@@ -40,7 +40,7 @@ namespace Swift {
 
 	struct ItemNeedsUpdate {
 			bool operator()(const TableRoster::Item& i1, const TableRoster::Item& i2) const {
-				return i1.description != i2.description || i1.name != i2.name;
+				return i1.status != i2.status || i1.description != i2.description || i1.name != i2.name;
 			}
 	};
 
@@ -58,18 +58,24 @@ namespace Swift {
 
 using namespace Swift;
 
-TableRoster::TableRoster(Roster* model, TimerFactory* timerFactory, int updateDelay) : model(model) {
+TableRoster::TableRoster(Roster* model, TimerFactory* timerFactory, int updateDelay) : model(model), updatePending(false) {
 	updateTimer = timerFactory->createTimer(updateDelay);
-	model->onChildrenChanged.connect(boost::bind(&TableRoster::scheduleUpdate, this));
-	model->onGroupAdded.connect(boost::bind(&TableRoster::scheduleUpdate, this));
-	model->onDataChanged.connect(boost::bind(&TableRoster::scheduleUpdate, this));
+	updateTimer->onTick.connect(boost::bind(&TableRoster::handleUpdateTimerTick, this));
+	if (model) {
+		model->onChildrenChanged.connect(boost::bind(&TableRoster::scheduleUpdate, this));
+		model->onGroupAdded.connect(boost::bind(&TableRoster::scheduleUpdate, this));
+		model->onDataChanged.connect(boost::bind(&TableRoster::scheduleUpdate, this));
+	}
 }
 
 TableRoster::~TableRoster() {
-	model->onDataChanged.disconnect(boost::bind(&TableRoster::scheduleUpdate, this));
-	model->onGroupAdded.disconnect(boost::bind(&TableRoster::scheduleUpdate, this));
-	model->onChildrenChanged.disconnect(boost::bind(&TableRoster::scheduleUpdate, this));
 	updateTimer->stop();
+	updateTimer->onTick.disconnect(boost::bind(&TableRoster::handleUpdateTimerTick, this));
+	if (model) {
+		model->onDataChanged.disconnect(boost::bind(&TableRoster::scheduleUpdate, this));
+		model->onGroupAdded.disconnect(boost::bind(&TableRoster::scheduleUpdate, this));
+		model->onChildrenChanged.disconnect(boost::bind(&TableRoster::scheduleUpdate, this));
+	}
 }
 			
 size_t TableRoster::getNumberOfSections() const {
@@ -94,15 +100,19 @@ void TableRoster::handleUpdateTimerTick() {
 
 	// Get a model for the new roster
 	std::vector<Section> newSections;
-	foreach(RosterItem* item, model->getRoot()->getDisplayedChildren()) {
-		if (GroupRosterItem* groupItem = boost::polymorphic_downcast<GroupRosterItem*>(item)) {
-			Section section(groupItem->getDisplayName());
-			foreach(RosterItem* groupChildItem, groupItem->getDisplayedChildren()) {
-				if (ContactRosterItem* contact = boost::polymorphic_downcast<ContactRosterItem*>(groupChildItem)) {
-					section.items.push_back(Item(contact->getDisplayName(), contact->getStatusText(), contact->getDisplayJID()));
+	if (model) {
+		foreach(RosterItem* item, model->getRoot()->getDisplayedChildren()) {
+			if (GroupRosterItem* groupItem = boost::polymorphic_downcast<GroupRosterItem*>(item)) {
+				//std::cerr << "* " << groupItem->getDisplayName() << std::endl;
+				Section section(groupItem->getDisplayName());
+				foreach(RosterItem* groupChildItem, groupItem->getDisplayedChildren()) {
+					if (ContactRosterItem* contact = boost::polymorphic_downcast<ContactRosterItem*>(groupChildItem)) {
+						//std::cerr << "  - " << contact->getDisplayJID() << std::endl;
+						section.items.push_back(Item(contact->getDisplayName(), contact->getStatusText(), contact->getDisplayJID(), contact->getStatusShow()));
+					}
 				}
+				newSections.push_back(section);
 			}
-			newSections.push_back(section);
 		}
 	}
 
@@ -120,16 +130,47 @@ void TableRoster::handleUpdateTimerTick() {
 		std::vector<size_t> itemRemoves;
 		std::vector<size_t> itemInserts;
 		computeIndexDiff<Item, ItemEquals, ItemNeedsUpdate >(sections[sectionUpdates[i]].items, newSections[sectionPostUpdates[i]].items, itemUpdates, itemPostUpdates, itemRemoves, itemInserts);
-		update.insertedRows.resize(itemInserts.size());
-		std::transform(itemInserts.begin(), itemInserts.end(), update.insertedRows.begin(), CreateIndexForSection(sectionPostUpdates[i]));
-		update.deletedRows.resize(itemRemoves.size());
-		std::transform(itemRemoves.begin(), itemRemoves.end(), update.deletedRows.begin(), CreateIndexForSection(sectionPostUpdates[i]));
-		update.updatedRows.resize(itemUpdates.size());
-		std::transform(itemUpdates.begin(), itemUpdates.end(), update.updatedRows.begin(), CreateIndexForSection(sectionPostUpdates[i]));
+		size_t end = update.insertedRows.size();
+		update.insertedRows.resize(update.insertedRows.size() + itemInserts.size());
+		std::transform(itemInserts.begin(), itemInserts.end(), update.insertedRows.begin() + end, CreateIndexForSection(sectionPostUpdates[i]));
+		end = update.deletedRows.size();
+		update.deletedRows.resize(update.deletedRows.size() + itemRemoves.size());
+		std::transform(itemRemoves.begin(), itemRemoves.end(), update.deletedRows.begin() + end, CreateIndexForSection(sectionUpdates[i]));
+		end = update.updatedRows.size();
+		update.updatedRows.resize(update.updatedRows.size() + itemUpdates.size());
+		std::transform(itemUpdates.begin(), itemUpdates.end(), update.updatedRows.begin() + end, CreateIndexForSection(sectionPostUpdates[i]));
 	}
 	
 	// Switch the old model with the new
 	sections.swap(newSections);
+
+	/*
+	std::cerr << "-S: ";
+	for (size_t i = 0; i < update.deletedSections.size(); ++i) {
+		std::cerr << update.deletedSections[i] << " ";
+	}
+	std::cerr << std::endl;
+	std::cerr << "+S: ";
+	for (size_t i = 0; i < update.insertedSections.size(); ++i) {
+		std::cerr << update.insertedSections[i] << " ";
+	}
+	std::cerr << std::endl;
+	std::cerr << "-R: ";
+	for (size_t i = 0; i < update.deletedRows.size(); ++i) {
+		std::cerr << update.deletedRows[i].section << "," << update.deletedRows[i].row << " ";
+	}
+	std::cerr << std::endl;
+	std::cerr << "*R: ";
+	for (size_t i = 0; i < update.updatedRows.size(); ++i) {
+		std::cerr << update.updatedRows[i].section << "," << update.updatedRows[i].row << " ";
+	}
+	std::cerr << std::endl;
+	std::cerr << "+R: ";
+	for (size_t i = 0; i < update.insertedRows.size(); ++i) {
+		std::cerr << update.insertedRows[i].section << "," << update.insertedRows[i].row << " ";
+	}
+	std::cerr << std::endl;
+	*/
 
 	// Emit the update
 	onUpdate(update);
