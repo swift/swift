@@ -92,7 +92,7 @@ MainController::MainController(
 			eventLoop_(eventLoop),
 			networkFactories_(networkFactories),
 			uiFactory_(uiFactories),
-			idleDetector_(&idleQuerier_, networkFactories_->getTimerFactory(), 100),
+			idleDetector_(&idleQuerier_, networkFactories_->getTimerFactory(), 1000),
 			storagesFactory_(storagesFactory),
 			certificateStorageFactory_(certificateStorageFactory),
 			settings_(settings),
