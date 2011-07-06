@@ -224,6 +224,7 @@ void ChatsManager::handleUIEvent(boost::shared_ptr<UIEvent> event) {
 	}
 	else if (JoinMUCUIEvent::ref joinEvent = boost::dynamic_pointer_cast<JoinMUCUIEvent>(event)) {
 		handleJoinMUCRequest(joinEvent->getJID(), joinEvent->getNick(), false);
+		mucControllers_[joinEvent->getJID()]->activateChatWindow();
 	}
 	else if (boost::shared_ptr<RequestJoinMUCUIEvent> joinEvent = boost::dynamic_pointer_cast<RequestJoinMUCUIEvent>(event)) {
 		if (!joinMUCWindow_) {
@@ -349,8 +350,8 @@ void ChatsManager::rebindControllerJID(const JID& from, const JID& to) {
 	chatControllers_[to]->setToJID(to);
 }
 
-void ChatsManager::handleJoinMUCRequest(const JID &mucJID, const boost::optional<std::string>& nickMaybe, bool autoJoin) {
-	if (autoJoin) {
+void ChatsManager::handleJoinMUCRequest(const JID &mucJID, const boost::optional<std::string>& nickMaybe, bool addAutoJoin) {
+	if (addAutoJoin) {
 		MUCBookmark bookmark(mucJID, mucJID.getNode());
 		bookmark.setAutojoin(true);
 		if (nickMaybe) {
@@ -370,7 +371,8 @@ void ChatsManager::handleJoinMUCRequest(const JID &mucJID, const boost::optional
 		controller->setAvailableServerFeatures(serverDiscoInfo_);
 		controller->onUserLeft.connect(boost::bind(&ChatsManager::handleUserLeftMUC, this, controller));
 	}
-	mucControllers_[mucJID]->activateChatWindow();
+
+	mucControllers_[mucJID]->showChatWindow();
 	/* FIXME: handleChatActivity connection for recents, and changes to that method.*/
 }
 

@@ -54,7 +54,7 @@ namespace Swift {
 
 		private:
 			void handleChatRequest(const std::string& contact);
-			void handleJoinMUCRequest(const JID& muc, const boost::optional<std::string>& nick, bool autoJoin);
+			void handleJoinMUCRequest(const JID& muc, const boost::optional<std::string>& nick, bool addAutoJoin);
 			void handleSearchMUCRequest();
 			void handleMUCSelectedAfterSearch(const JID&);
 			void rebindControllerJID(const JID& from, const JID& to);
