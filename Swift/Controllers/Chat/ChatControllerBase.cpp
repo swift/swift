@@ -87,6 +87,11 @@ void ChatControllerBase::handleAllMessagesRead() {
 	}
 	unreadMessages_.clear();
 	chatWindow_->setUnreadMessageCount(0);
+	onUnreadCountChanged();
+}
+
+int ChatControllerBase::getUnreadCount() {
+	return unreadMessages_.size();
 }
 
 void ChatControllerBase::handleSendMessageRequest(const std::string &body, bool isCorrectionMessage) {
@@ -203,6 +208,7 @@ void ChatControllerBase::handleIncomingMessage(boost::shared_ptr<MessageEvent> m
 	}
 	chatWindow_->show();
 	chatWindow_->setUnreadMessageCount(unreadMessages_.size());
+	onUnreadCountChanged();
 	postHandleIncomingMessage(messageEvent);
 }
 

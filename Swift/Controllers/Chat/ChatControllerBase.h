@@ -49,6 +49,9 @@ namespace Swift {
 			virtual void setToJID(const JID& jid) {toJID_ = jid;};
 			/** Used for determining when something is recent.*/
 			boost::signal<void (const std::string& /*activity*/)> onActivity;
+			boost::signal<void ()> onUnreadCountChanged;
+			int getUnreadCount();
+			const JID& getToJID() {return toJID_;}
 		protected:
 			ChatControllerBase(const JID& self, StanzaChannel* stanzaChannel, IQRouter* iqRouter, ChatWindowFactory* chatWindowFactory, const JID &toJID, PresenceOracle* presenceOracle, AvatarManager* avatarManager, bool useDelayForLatency, UIEventStream* eventStream, EventController* eventController, TimerFactory* timerFactory);
 

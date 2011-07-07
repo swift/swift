@@ -99,6 +99,10 @@ void QtChatListWindow::setRecents(const std::list<ChatListWindow::Chat>& recents
 	model_->setRecents(recents);
 }
 
+void QtChatListWindow::setUnreadCount(int unread) {
+
+}
+
 void QtChatListWindow::handleRemoveBookmark() {
 	ChatListMUCItem* mucItem = dynamic_cast<ChatListMUCItem*>(contextMenuItem_);
 	if (!mucItem) return;

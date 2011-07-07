@@ -51,6 +51,7 @@ namespace Swift {
 			void setOnline(bool enabled);
 			void setServerDiscoInfo(boost::shared_ptr<DiscoInfo> info);
 			void handleIncomingMessage(boost::shared_ptr<Message> message);
+			ChatListWindow::Chat createChatListChatItem(const JID& jid, const std::string& activity);
 
 		private:
 			void handleChatRequest(const std::string& contact);
@@ -73,6 +74,7 @@ namespace Swift {
 			void handleChatMadeRecent();
 			void handleMUCBookmarkActivated(const MUCBookmark&);
 			void handleRecentActivated(const ChatListWindow::Chat&);
+			void handleUnreadCountChanged(ChatController* controller);
 
 			ChatController* getChatControllerOrFindAnother(const JID &contact);
 			ChatController* createNewChatController(const JID &contact);

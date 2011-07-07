@@ -132,7 +132,7 @@ void ChatsManager::loadRecents() {
 		std::string activity(recent[1]);
 		bool isMUC = recent[2] == "true";
 		std::string nick(recent[3]);
-		ChatListWindow::Chat chat(jid, nickResolver_->jidToNick(jid), activity, isMUC, nick);
+		ChatListWindow::Chat chat(jid, nickResolver_->jidToNick(jid), activity, 0, isMUC, nick);
 		prependRecent(chat);
 	}
 	chatListWindow_->setRecents(recentChats_);
@@ -171,13 +171,35 @@ void ChatsManager::handleMUCBookmarkRemoved(const MUCBookmark& bookmark) {
 	chatListWindow_->removeMUCBookmark(bookmark);
 }
 
+ChatListWindow::Chat ChatsManager::createChatListChatItem(const JID& jid, const std::string& activity) {
+	int unreadCount = 0;
+	ChatController* controller = getChatControllerIfExists(jid);
+	if (controller) {
+		unreadCount = controller->getUnreadCount();
+	}
+	return ChatListWindow::Chat(jid, nickResolver_->jidToNick(jid), activity, unreadCount, false);
+}
+
 void ChatsManager::handleChatActivity(const JID& jid, const std::string& activity) {
+	ChatListWindow::Chat chat = createChatListChatItem(jid, activity);
 	/* FIXME: MUC use requires changes here. */
-	ChatListWindow::Chat chat(jid, nickResolver_->jidToNick(jid), activity, false);
+
 	/* FIXME: handle nick changes */
 	appendRecent(chat);
 	chatListWindow_->setRecents(recentChats_);
 	saveRecents();
+}
+
+void ChatsManager::handleUnreadCountChanged(ChatController* controller) {
+	int unreadTotal = 0;
+	foreach (ChatListWindow::Chat chatItem, recentChats_) {
+		if (chatItem.jid == controller->getToJID()) {
+			chatItem.setUnreadCount(controller->getUnreadCount());
+		}
+		unreadTotal += chatItem.unreadCount;
+	}
+	chatListWindow_->setRecents(recentChats_);
+	chatListWindow_->setUnreadCount(unreadTotal);
 }
 
 void ChatsManager::appendRecent(const ChatListWindow::Chat& chat) {
@@ -314,6 +336,7 @@ ChatController* ChatsManager::createNewChatController(const JID& contact) {
 	chatControllers_[contact] = controller;
 	controller->setAvailableServerFeatures(serverDiscoInfo_);
 	controller->onActivity.connect(boost::bind(&ChatsManager::handleChatActivity, this, contact, _1));
+	controller->onUnreadCountChanged.connect(boost::bind(&ChatsManager::handleUnreadCountChanged, this, controller));
 	return controller;
 }
 
