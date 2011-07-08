@@ -37,7 +37,6 @@ namespace Swift {
 			virtual void replaceMessage(const std::string&, const std::string&, const boost::posix_time::ptime&) {};
 			void setAckState(const std::string& /*id*/, AckState /*state*/) {};
 			virtual void flash() {};
-			virtual void setJID(const JID& jid) {}
 
 			boost::signal<void ()> onClosed;
 			boost::signal<void ()> onAllMessagesRead;

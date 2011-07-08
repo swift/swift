@@ -29,8 +29,6 @@ namespace Swift {
 			ChatWindow() {}
 			virtual ~ChatWindow() {};
 
-			virtual void setJID(const JID& jid) = 0;
-
 			/** Add message to window.
 			 * @return id of added message (for acks).
 			 */

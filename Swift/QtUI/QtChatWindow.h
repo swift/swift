@@ -60,8 +60,6 @@ namespace Swift {
 			void flash();
 			QByteArray getSplitterState();
 
-			void setJID(const JID& ) {}
-
 		public slots:
 			void handleChangeSplitterState(QByteArray state);
 			void handleFontResized(int fontSizeSteps);
