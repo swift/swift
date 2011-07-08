@@ -79,7 +79,7 @@ namespace Swift {
 			ChatController* getChatControllerOrFindAnother(const JID &contact);
 			ChatController* createNewChatController(const JID &contact);
 			ChatController* getChatControllerOrCreate(const JID &contact);
-			ChatController* getChatControllerIfExists(const JID &contact);
+			ChatController* getChatControllerIfExists(const JID &contact, bool rebindIfNeeded = true);
 
 		private:
 			std::map<JID, MUCController*> mucControllers_;

@@ -173,7 +173,7 @@ void ChatsManager::handleMUCBookmarkRemoved(const MUCBookmark& bookmark) {
 
 ChatListWindow::Chat ChatsManager::createChatListChatItem(const JID& jid, const std::string& activity) {
 	int unreadCount = 0;
-	ChatController* controller = getChatControllerIfExists(jid);
+	ChatController* controller = getChatControllerIfExists(jid, false);
 	if (controller) {
 		unreadCount = controller->getUnreadCount();
 	}
@@ -345,7 +345,7 @@ ChatController* ChatsManager::getChatControllerOrCreate(const JID &contact) {
 	return controller ? controller : createNewChatController(contact);
 }
 
-ChatController* ChatsManager::getChatControllerIfExists(const JID &contact) {
+ChatController* ChatsManager::getChatControllerIfExists(const JID &contact, bool rebindIfNeeded) {
 	if (chatControllers_.find(contact) == chatControllers_.end()) {
 		if (mucRegistry_->isMUC(contact.toBare())) {
 			return NULL;
@@ -357,8 +357,13 @@ ChatController* ChatsManager::getChatControllerIfExists(const JID &contact) {
 		} else {
 			foreach (JIDChatControllerPair pair, chatControllers_) {
 				if (pair.first.toBare() == contact.toBare()) {
-					rebindControllerJID(pair.first, contact);
-					return chatControllers_[contact];
+					if (rebindIfNeeded) {
+						rebindControllerJID(pair.first, contact);
+						return chatControllers_[contact];
+					} else {
+						return pair.second;
+					}
+
 				}
 			}
 			return NULL;
