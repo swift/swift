@@ -192,7 +192,7 @@ void ChatsManager::handleChatActivity(const JID& jid, const std::string& activit
 
 void ChatsManager::handleUnreadCountChanged(ChatController* controller) {
 	int unreadTotal = 0;
-	foreach (ChatListWindow::Chat chatItem, recentChats_) {
+	foreach (ChatListWindow::Chat& chatItem, recentChats_) {
 		if (controller && chatItem.jid.toBare() == controller->getToJID().toBare()) {
 			chatItem.setUnreadCount(controller->getUnreadCount());
 		}
