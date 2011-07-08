@@ -135,7 +135,7 @@ void ChatsManager::loadRecents() {
 		ChatListWindow::Chat chat(jid, nickResolver_->jidToNick(jid), activity, 0, isMUC, nick);
 		prependRecent(chat);
 	}
-	chatListWindow_->setRecents(recentChats_);
+	handleUnreadCountChanged(NULL);
 }
 
 void ChatsManager::setupBookmarks() {
@@ -186,14 +186,14 @@ void ChatsManager::handleChatActivity(const JID& jid, const std::string& activit
 
 	/* FIXME: handle nick changes */
 	appendRecent(chat);
-	chatListWindow_->setRecents(recentChats_);
+	handleUnreadCountChanged(NULL);
 	saveRecents();
 }
 
 void ChatsManager::handleUnreadCountChanged(ChatController* controller) {
 	int unreadTotal = 0;
 	foreach (ChatListWindow::Chat chatItem, recentChats_) {
-		if (chatItem.jid == controller->getToJID()) {
+		if (controller && chatItem.jid.toBare() == controller->getToJID().toBare()) {
 			chatItem.setUnreadCount(controller->getUnreadCount());
 		}
 		unreadTotal += chatItem.unreadCount;
