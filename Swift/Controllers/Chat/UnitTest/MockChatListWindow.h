@@ -18,7 +18,7 @@ namespace Swift {
 			void removeMUCBookmark(const MUCBookmark& /*bookmark*/) {}
 			void setBookmarksEnabled(bool /*enabled*/) {}
 			void setRecents(const std::list<ChatListWindow::Chat>& /*recents*/) {}
-			void setUnreadCount(int unread) {}
+			void setUnreadCount(int /*unread*/) {}
 			void clearBookmarks() {}
 	};
 

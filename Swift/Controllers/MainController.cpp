@@ -255,12 +255,13 @@ void MainController::resetCurrentError() {
 
 void MainController::handleConnected() {
 	boundJID_ = client_->getJID();
-	loginWindow_->setIsLoggingIn(false);
 	resetCurrentError();
 	resetPendingReconnects();
+
 	if (eagleMode_) {
 		purgeCachedCredentials();
 	}
+
 	bool freshLogin = rosterController_ == NULL;
 	myStatusLooksOnline_ = true;
 	if (freshLogin) {
@@ -290,7 +291,8 @@ void MainController::handleConnected() {
 		userSearchControllerAdd_ = new UserSearchController(UserSearchController::AddContact, jid_, uiEventStream_, uiFactory_, client_->getIQRouter(), rosterController_);
 		adHocManager_ = new AdHocManager(boundJID_, uiFactory_, client_->getIQRouter(), uiEventStream_, rosterController_->getWindow());
 	}
-	
+	loginWindow_->setIsLoggingIn(false);
+
 	client_->requestRoster();
 
 	GetDiscoInfoRequest::ref discoInfoRequest = GetDiscoInfoRequest::create(boundJID_.toBare(), client_->getIQRouter());
