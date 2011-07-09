@@ -132,7 +132,9 @@ void ChatsManager::loadRecents() {
 		std::string activity(recent[1]);
 		bool isMUC = recent[2] == "true";
 		std::string nick(recent[3]);
-		ChatListWindow::Chat chat(jid, nickResolver_->jidToNick(jid), activity, 0, isMUC, nick);
+		Presence::ref presence = presenceOracle_->getHighestPriorityPresence(jid.toBare());
+		StatusShow::Type type = presence ? presence->getShow() : StatusShow::None;
+		ChatListWindow::Chat chat(jid, nickResolver_->jidToNick(jid), activity, 0, type, isMUC, nick);
 		prependRecent(chat);
 	}
 	handleUnreadCountChanged(NULL);
@@ -177,7 +179,10 @@ ChatListWindow::Chat ChatsManager::createChatListChatItem(const JID& jid, const 
 	if (controller) {
 		unreadCount = controller->getUnreadCount();
 	}
-	return ChatListWindow::Chat(jid, nickResolver_->jidToNick(jid), activity, unreadCount, false);
+
+	Presence::ref presence = presenceOracle_->getHighestPriorityPresence(jid.toBare());
+	StatusShow::Type type = presence ? presence->getShow() : StatusShow::None;
+	return ChatListWindow::Chat(jid, nickResolver_->jidToNick(jid), activity, unreadCount, type, false);
 }
 
 void ChatsManager::handleChatActivity(const JID& jid, const std::string& activity) {
@@ -265,6 +270,16 @@ void ChatsManager::handleUIEvent(boost::shared_ptr<UIEvent> event) {
  */
 void ChatsManager::handlePresenceChange(boost::shared_ptr<Presence> newPresence) {
 	if (mucRegistry_->isMUC(newPresence->getFrom().toBare())) return;
+
+	foreach (ChatListWindow::Chat& chat, recentChats_) {
+		if (newPresence->getFrom().toBare() == chat.jid.toBare()) {
+			Presence::ref presence = presenceOracle_->getHighestPriorityPresence(chat.jid.toBare());
+			chat.setStatusType(presence ? presence->getShow() : StatusShow::None);
+			chatListWindow_->setRecents(recentChats_);
+			break;
+		}
+	}
+
 	//if (newPresence->getType() != Presence::Unavailable) return;
 	JID fullJID(newPresence->getFrom());
 	std::map<JID, ChatController*>::iterator it = chatControllers_.find(fullJID);

@@ -9,16 +9,17 @@
 #include <list>
 #include <boost/shared_ptr.hpp>
 #include <Swiften/MUC/MUCBookmark.h>
+#include <Swiften/Elements/StatusShow.h>
 
-#include "Swiften/Base/boost_bsignals.h"
+#include <Swiften/Base/boost_bsignals.h>
 
 namespace Swift {
 	class ChatListWindow {
 		public:
 			class Chat {
 				public:
-					Chat(const JID& jid, const std::string& chatName, const std::string& activity, int unreadCount, bool isMUC, const std::string& nick = "")
-					: jid(jid), chatName(chatName), activity(activity), isMUC(isMUC), nick(nick), unreadCount(unreadCount) {}
+					Chat(const JID& jid, const std::string& chatName, const std::string& activity, int unreadCount, StatusShow::Type statusType, bool isMUC, const std::string& nick = "")
+					: jid(jid), chatName(chatName), activity(activity), statusType(statusType), isMUC(isMUC), nick(nick), unreadCount(unreadCount) {}
 					/** Assume that nicks and other transient features aren't important for equality */
 					bool operator==(const Chat& other) const {
 						return jid.toBare() == other.jid.toBare()
@@ -27,9 +28,13 @@ namespace Swift {
 					void setUnreadCount(int unread) {
 						unreadCount = unread;
 					}
+					void setStatusType(StatusShow::Type type) {
+						statusType = type;
+					}
 					JID jid;
 					std::string chatName;
 					std::string activity;
+					StatusShow::Type statusType;
 					bool isMUC;
 					std::string nick;
 					int unreadCount;
