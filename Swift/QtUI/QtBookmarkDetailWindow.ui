@@ -90,7 +90,7 @@
       <item row="4" column="1">
        <widget class="QCheckBox" name="autojoin_">
         <property name="text">
-         <string>Join automatically</string>
+         <string>Enter automatically</string>
         </property>
         <property name="checked">
          <bool>true</bool>
