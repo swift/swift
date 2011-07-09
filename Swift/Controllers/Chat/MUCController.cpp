@@ -110,6 +110,14 @@ void MUCController::rejoin() {
 	}
 }
 
+bool MUCController::isJoined() {
+	return joined_;
+}
+
+const std::string& MUCController::getNick() {
+	return nick_;
+}
+
 void MUCController::handleJoinTimeoutTick() {
 	receivedActivity();
 	chatWindow_->addSystemMessage(str(format(QT_TRANSLATE_NOOP("", "Room %1% is not responding. This operation may never complete.")) % toJID_.toString()));

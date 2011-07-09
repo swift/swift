@@ -23,6 +23,7 @@
 namespace Swift {
 	class EventController;
 	class ChatController;
+	class ChatControllerBase;
 	class MUCController;
 	class MUCManager;
 	class ChatWindowFactory;
@@ -51,9 +52,9 @@ namespace Swift {
 			void setOnline(bool enabled);
 			void setServerDiscoInfo(boost::shared_ptr<DiscoInfo> info);
 			void handleIncomingMessage(boost::shared_ptr<Message> message);
-			ChatListWindow::Chat createChatListChatItem(const JID& jid, const std::string& activity);
 
 		private:
+			ChatListWindow::Chat createChatListChatItem(const JID& jid, const std::string& activity);
 			void handleChatRequest(const std::string& contact);
 			void handleJoinMUCRequest(const JID& muc, const boost::optional<std::string>& nick, bool addAutoJoin);
 			void handleSearchMUCRequest();
@@ -65,7 +66,7 @@ namespace Swift {
 			void handleMUCBookmarkRemoved(const MUCBookmark& bookmark);
 			void handleUserLeftMUC(MUCController* mucController);
 			void handleBookmarksReady();
-			void handleChatActivity(const JID& jid, const std::string& activity);
+			void handleChatActivity(const JID& jid, const std::string& activity, bool isMUC);
 			void appendRecent(const ChatListWindow::Chat& chat);
 			void prependRecent(const ChatListWindow::Chat& chat);
 			void setupBookmarks();
@@ -74,7 +75,7 @@ namespace Swift {
 			void handleChatMadeRecent();
 			void handleMUCBookmarkActivated(const MUCBookmark&);
 			void handleRecentActivated(const ChatListWindow::Chat&);
-			void handleUnreadCountChanged(ChatController* controller);
+			void handleUnreadCountChanged(ChatControllerBase* controller);
 
 			ChatController* getChatControllerOrFindAnother(const JID &contact);
 			ChatController* createNewChatController(const JID &contact);

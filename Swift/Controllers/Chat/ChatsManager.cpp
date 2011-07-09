@@ -10,24 +10,25 @@
 #include <boost/algorithm/string.hpp>
 
 #include <Swiften/Base/foreach.h>
-#include "Swift/Controllers/Chat/ChatController.h"
-#include "Swift/Controllers/Chat/MUCSearchController.h"
-#include "Swift/Controllers/XMPPEvents/EventController.h"
-#include "Swift/Controllers/Chat/MUCController.h"
-#include "Swift/Controllers/UIEvents/RequestChatUIEvent.h"
-#include "Swift/Controllers/UIEvents/JoinMUCUIEvent.h"
-#include "Swift/Controllers/UIEvents/RequestJoinMUCUIEvent.h"
-#include "Swift/Controllers/UIEvents/AddMUCBookmarkUIEvent.h"
-#include "Swift/Controllers/UIEvents/RemoveMUCBookmarkUIEvent.h"
-#include "Swift/Controllers/UIEvents/EditMUCBookmarkUIEvent.h"
-#include "Swift/Controllers/UIInterfaces/ChatListWindowFactory.h"
-#include "Swift/Controllers/UIInterfaces/JoinMUCWindow.h"
-#include "Swift/Controllers/UIInterfaces/JoinMUCWindowFactory.h"
-#include "Swiften/Presence/PresenceSender.h"
-#include "Swiften/Client/NickResolver.h"
-#include "Swiften/MUC/MUCManager.h"
-#include "Swiften/Elements/ChatState.h"
-#include "Swiften/MUC/MUCBookmarkManager.h"
+#include <Swift/Controllers/Chat/ChatController.h>
+#include <Swift/Controllers/Chat/ChatControllerBase.h>
+#include <Swift/Controllers/Chat/MUCSearchController.h>
+#include <Swift/Controllers/XMPPEvents/EventController.h>
+#include <Swift/Controllers/Chat/MUCController.h>
+#include <Swift/Controllers/UIEvents/RequestChatUIEvent.h>
+#include <Swift/Controllers/UIEvents/JoinMUCUIEvent.h>
+#include <Swift/Controllers/UIEvents/RequestJoinMUCUIEvent.h>
+#include <Swift/Controllers/UIEvents/AddMUCBookmarkUIEvent.h>
+#include <Swift/Controllers/UIEvents/RemoveMUCBookmarkUIEvent.h>
+#include <Swift/Controllers/UIEvents/EditMUCBookmarkUIEvent.h>
+#include <Swift/Controllers/UIInterfaces/ChatListWindowFactory.h>
+#include <Swift/Controllers/UIInterfaces/JoinMUCWindow.h>
+#include <Swift/Controllers/UIInterfaces/JoinMUCWindowFactory.h>
+#include <Swiften/Presence/PresenceSender.h>
+#include <Swiften/Client/NickResolver.h>
+#include <Swiften/MUC/MUCManager.h>
+#include <Swiften/Elements/ChatState.h>
+#include <Swiften/MUC/MUCBookmarkManager.h>
 #include <Swift/Controllers/ProfileSettingsProvider.h>
 
 namespace Swift {
@@ -132,8 +133,16 @@ void ChatsManager::loadRecents() {
 		std::string activity(recent[1]);
 		bool isMUC = recent[2] == "true";
 		std::string nick(recent[3]);
-		Presence::ref presence = presenceOracle_->getHighestPriorityPresence(jid.toBare());
-		StatusShow::Type type = presence ? presence->getShow() : StatusShow::None;
+		StatusShow::Type type = StatusShow::None;
+		if (isMUC) {
+			if (mucControllers_.find(jid.toBare()) != mucControllers_.end()) {
+				type = StatusShow::Online;
+			}
+		} else {
+			Presence::ref presence = presenceOracle_->getHighestPriorityPresence(jid.toBare());
+			type = presence ? presence->getShow() : StatusShow::None;
+		}
+
 		ChatListWindow::Chat chat(jid, nickResolver_->jidToNick(jid), activity, 0, type, isMUC, nick);
 		prependRecent(chat);
 	}
@@ -175,30 +184,58 @@ void ChatsManager::handleMUCBookmarkRemoved(const MUCBookmark& bookmark) {
 
 ChatListWindow::Chat ChatsManager::createChatListChatItem(const JID& jid, const std::string& activity) {
 	int unreadCount = 0;
-	ChatController* controller = getChatControllerIfExists(jid, false);
-	if (controller) {
-		unreadCount = controller->getUnreadCount();
-	}
+	if (mucRegistry_->isMUC(jid)) {
+		MUCController* controller = mucControllers_[jid.toBare()];
+		StatusShow::Type type = StatusShow::None;
+		std::string nick = "";
+		if (controller) {
+			unreadCount = controller->getUnreadCount();
+			if (controller->isJoined()) {
+				type = StatusShow::Online;
+			}
+			nick = controller->getNick();
+		}
+		return ChatListWindow::Chat(jid, jid.toString(), activity, unreadCount, type, true, nick);
 
-	Presence::ref presence = presenceOracle_->getHighestPriorityPresence(jid.toBare());
-	StatusShow::Type type = presence ? presence->getShow() : StatusShow::None;
-	return ChatListWindow::Chat(jid, nickResolver_->jidToNick(jid), activity, unreadCount, type, false);
+	} else {
+		ChatController* controller = getChatControllerIfExists(jid, false);
+		if (controller) {
+			unreadCount = controller->getUnreadCount();
+		}
+
+		Presence::ref presence = presenceOracle_->getHighestPriorityPresence(jid.toBare());
+		StatusShow::Type type = presence ? presence->getShow() : StatusShow::None;
+		return ChatListWindow::Chat(jid, nickResolver_->jidToNick(jid), activity, unreadCount, type, false);
+	}
 }
 
-void ChatsManager::handleChatActivity(const JID& jid, const std::string& activity) {
+void ChatsManager::handleChatActivity(const JID& jid, const std::string& activity, bool isMUC) {
+	if (mucRegistry_->isMUC(jid.toBare()) && !isMUC) {
+		/* Don't include PMs in MUC rooms.*/
+		return;
+	}
 	ChatListWindow::Chat chat = createChatListChatItem(jid, activity);
-	/* FIXME: MUC use requires changes here. */
-
 	/* FIXME: handle nick changes */
 	appendRecent(chat);
 	handleUnreadCountChanged(NULL);
 	saveRecents();
 }
 
-void ChatsManager::handleUnreadCountChanged(ChatController* controller) {
+void ChatsManager::handleUnreadCountChanged(ChatControllerBase* controller) {
 	int unreadTotal = 0;
+	bool controllerIsMUC = dynamic_cast<MUCController*>(controller);
+	bool isPM = controller && !controllerIsMUC && mucRegistry_->isMUC(controller->getToJID().toBare());
 	foreach (ChatListWindow::Chat& chatItem, recentChats_) {
-		if (controller && chatItem.jid.toBare() == controller->getToJID().toBare()) {
+		bool match = false;
+		if (controller) {
+			/* Matching MUC item */
+			match |= chatItem.isMUC == controllerIsMUC && chatItem.jid.toBare() == controller->getToJID().toBare();
+			/* Matching PM */
+			match |= isPM &&  chatItem.jid == controller->getToJID();
+			/* Matching non-PM */
+			match |= !isPM && !controllerIsMUC && chatItem.jid.toBare() == controller->getToJID().toBare();
+		}
+		if (match) {
 			chatItem.setUnreadCount(controller->getUnreadCount());
 		}
 		unreadTotal += chatItem.unreadCount;
@@ -221,6 +258,11 @@ void ChatsManager::handleUserLeftMUC(MUCController* mucController) {
 	std::map<JID, MUCController*>::iterator it;
 	for (it = mucControllers_.begin(); it != mucControllers_.end(); ++it) {
 		if ((*it).second == mucController) {
+			foreach (ChatListWindow::Chat& chat, recentChats_) {
+				if (chat.isMUC && chat.jid == (*it).first) {
+					chat.statusType = StatusShow::None;
+				}
+			}
 			mucControllers_.erase(it);
 			delete mucController;
 			return;
@@ -350,7 +392,7 @@ ChatController* ChatsManager::createNewChatController(const JID& contact) {
 	ChatController* controller = new ChatController(jid_, stanzaChannel_, iqRouter_, chatWindowFactory_, contact, nickResolver_, presenceOracle_, avatarManager_, mucRegistry_->isMUC(contact.toBare()), useDelayForLatency_, uiEventStream_, eventController_, timerFactory_, entityCapsProvider_);
 	chatControllers_[contact] = controller;
 	controller->setAvailableServerFeatures(serverDiscoInfo_);
-	controller->onActivity.connect(boost::bind(&ChatsManager::handleChatActivity, this, contact, _1));
+	controller->onActivity.connect(boost::bind(&ChatsManager::handleChatActivity, this, contact, _1, false));
 	controller->onUnreadCountChanged.connect(boost::bind(&ChatsManager::handleUnreadCountChanged, this, controller));
 	return controller;
 }
@@ -413,10 +455,12 @@ void ChatsManager::handleJoinMUCRequest(const JID &mucJID, const boost::optional
 		mucControllers_[mucJID] = controller;
 		controller->setAvailableServerFeatures(serverDiscoInfo_);
 		controller->onUserLeft.connect(boost::bind(&ChatsManager::handleUserLeftMUC, this, controller));
+		controller->onActivity.connect(boost::bind(&ChatsManager::handleChatActivity, this, mucJID.toBare(), _1, true));
+		controller->onUnreadCountChanged.connect(boost::bind(&ChatsManager::handleUnreadCountChanged, this, controller));
+		handleChatActivity(mucJID.toBare(), "", true);
 	}
 
 	mucControllers_[mucJID]->showChatWindow();
-	/* FIXME: handleChatActivity connection for recents, and changes to that method.*/
 }
 
 void ChatsManager::handleSearchMUCRequest() {
@@ -458,7 +502,12 @@ void ChatsManager::handleMUCBookmarkActivated(const MUCBookmark& mucBookmark) {
 }
 
 void ChatsManager::handleRecentActivated(const ChatListWindow::Chat& chat) {
-	uiEventStream_->send(boost::make_shared<RequestChatUIEvent>(chat.jid));
+	if (chat.isMUC) {
+		uiEventStream_->send(boost::make_shared<JoinMUCUIEvent>(chat.jid, chat.nick));
+	}
+	else {
+		uiEventStream_->send(boost::make_shared<RequestChatUIEvent>(chat.jid));
+	}
 }
 
 

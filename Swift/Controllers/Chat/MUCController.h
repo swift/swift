@@ -49,6 +49,8 @@ namespace Swift {
 			static void appendToJoinParts(std::vector<NickJoinPart>& joinParts, const NickJoinPart& newEvent);
 			static std::string generateJoinPartString(const std::vector<NickJoinPart>& joinParts);
 			static std::string concatenateListOfNames(const std::vector<NickJoinPart>& joinParts);
+			bool isJoined();
+			const std::string& getNick();
 		
 		protected:
 			void preSendMessageRequest(boost::shared_ptr<Message> message);
