@@ -211,11 +211,11 @@ ChatListWindow::Chat ChatsManager::createChatListChatItem(const JID& jid, const 
 		if (controller) {
 			unreadCount = controller->getUnreadCount();
 		}
-
-		Presence::ref presence = presenceOracle_->getHighestPriorityPresence(jid.toBare());
+		JID bareishJID = mucRegistry_->isMUC(jid.toBare()) ? jid : jid.toBare();
+		Presence::ref presence = presenceOracle_->getHighestPriorityPresence(bareishJID);
 		StatusShow::Type type = presence ? presence->getShow() : StatusShow::None;
-		boost::filesystem::path avatarPath = avatarManager_ ? avatarManager_->getAvatarPath(jid) : boost::filesystem::path();
-		return ChatListWindow::Chat(jid, nickResolver_->jidToNick(jid), activity, unreadCount, type, avatarPath, false);
+		boost::filesystem::path avatarPath = avatarManager_ ? avatarManager_->getAvatarPath(bareishJID) : boost::filesystem::path();
+		return ChatListWindow::Chat(bareishJID, nickResolver_->jidToNick(bareishJID), activity, unreadCount, type, avatarPath, false);
 	}
 }
 
