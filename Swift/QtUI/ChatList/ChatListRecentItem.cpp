@@ -25,7 +25,7 @@ QVariant ChatListRecentItem::data(int role) const {
 		case Qt::BackgroundColorRole: return backgroundColor_;
 		case Qt::ToolTipRole: return isContact() ? toolTipString() : QVariant();
 		case StatusTextRole: return statusText_;*/
-		case AvatarRole: return chat_.avatarPath.string().c_str();
+		case AvatarRole: return QVariant(QString(chat_.avatarPath.string().c_str()));
 		case PresenceIconRole: return getPresenceIcon();
 		default: return QVariant();
 	}

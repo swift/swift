@@ -64,7 +64,7 @@ void RosterDelegate::paintContact(QPainter* painter, const QStyleOptionViewItem&
 	QColor nameColor = index.data(Qt::TextColorRole).value<QColor>();
 	QString avatarPath;
 	if (index.data(AvatarRole).isValid() && !index.data(AvatarRole).value<QString>().isNull()) {
-		QString avatarPath = index.data(AvatarRole).value<QString>();
+		avatarPath = index.data(AvatarRole).value<QString>();
 	}
 	QIcon presenceIcon = index.data(PresenceIconRole).isValid() && !index.data(PresenceIconRole).value<QIcon>().isNull()
 			? index.data(PresenceIconRole).value<QIcon>()

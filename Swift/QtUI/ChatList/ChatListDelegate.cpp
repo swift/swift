@@ -101,12 +101,13 @@ void ChatListDelegate::paintRecent(QPainter* painter, const QStyleOptionViewItem
 	QColor nameColor = item->data(Qt::TextColorRole).value<QColor>();
 	QString avatarPath;
 	if (item->data(ChatListRecentItem::AvatarRole).isValid() && !item->data(ChatListRecentItem::AvatarRole).value<QString>().isNull()) {
-		QString avatarPath = item->data(ChatListRecentItem::AvatarRole).value<QString>();
+		avatarPath = item->data(ChatListRecentItem::AvatarRole).value<QString>();
 	}
 	QIcon presenceIcon = item->data(ChatListRecentItem::PresenceIconRole).isValid() && !item->data(ChatListRecentItem::PresenceIconRole).value<QIcon>().isNull()
 			? item->data(ChatListRecentItem::PresenceIconRole).value<QIcon>()
 			: QIcon(":/icons/offline.png");
 	QString name = item->data(Qt::DisplayRole).toString();
+	//qDebug() << "Avatar for " << name << " = " << avatarPath;
 	QString statusText = item->data(ChatListRecentItem::DetailTextRole).toString();
 	common_.paintContact(painter, option, nameColor, avatarPath, presenceIcon, name, statusText);
 }
