@@ -105,13 +105,6 @@ if env.get("distcc", False) :
 		env["ENV"]["DISTCC_HOSTS"] = env["distcc_hosts"]
 	env["CC"] = "distcc gcc"
 	env["CXX"] = "distcc g++"
-if env.get("ccache", False) :
-	env["ENV"]["HOME"] = os.environ["HOME"]
-	for var in os.environ :
-		if var.startswith("CCACHE_") :
-			env["ENV"][var] = os.environ[var]
-	env["CC"] = "ccache gcc"
-	env["CXX"] = "ccache g++"
 if "cc" in env :
 	env["CC"] = env["cc"]
 if "cxx" in env :
@@ -276,6 +269,21 @@ if target in ["iphone-device", "iphone-simulator", "xcode"] :
 	env.Append(LINKFLAGS = env["XCODE_ARCH_FLAGS"] + ["-isysroot", "$XCODE_SDKROOT", "-L\"$XCODE_SDKROOT/usr/lib\"", "-F\"$XCODE_SDKROOT/System/Library/Frameworks\"", "-F\"$XCODE_SDKROOT/System/Library/PrivateFrameworks\""])
 	# Bit of a hack, because BOOST doesn't know the endianness for ARM
 	env.Append(CPPDEFINES = ["_LITTLE_ENDIAN"]) 
+
+# CCache
+if env.get("ccache", False) :
+	env["ENV"]["HOME"] = os.environ["HOME"]
+	for var in os.environ :
+		if var.startswith("CCACHE_") :
+			env["ENV"][var] = os.environ[var]
+	if env.get("CC", "") != "" :
+		env["CC"] = "ccache " + env["CC"]
+	else :
+		env["CC"] = "ccache gcc"
+	if env.get("CXX", "") != "" :
+		env["CXX"] = "ccache " + env["CXX"]
+	else :
+		env["CC"] = "ccache g++"
 
 conf_env = env.Clone()
 
