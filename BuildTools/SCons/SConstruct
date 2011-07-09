@@ -136,6 +136,9 @@ if env["optimize"] :
 	else :
 		env.Append(CCFLAGS = ["-O2"])
 
+if env["target"] == "xcode" and os.environ["CONFIGURATION"] == "Release" :
+	env.Append(CCFLAGS = ["-Os"])
+
 if env["debug"] :
 	if env["PLATFORM"] == "win32" :
 		env.Append(CCFLAGS = ["/Zi", "/MDd"])
