@@ -347,16 +347,21 @@ void ChatsManager::setAvatarManager(AvatarManager* avatarManager) {
 		avatarManager_->onAvatarChanged.disconnect(boost::bind(&ChatsManager::handleAvatarChanged, this, _1));
 	}
 	avatarManager_ = avatarManager;
+	foreach (ChatListWindow::Chat& chat, recentChats_) {
+		if (!chat.isMUC) {
+			chat.setAvatarPath(avatarManager_->getAvatarPath(chat.jid));
+		}
+	}
 	avatarManager_->onAvatarChanged.connect(boost::bind(&ChatsManager::handleAvatarChanged, this, _1));
 }
 
 void ChatsManager::handleAvatarChanged(const JID& jid) {
 	foreach (ChatListWindow::Chat& chat, recentChats_) {
-			if (!chat.isMUC && jid.toBare() == chat.jid.toBare()) {
-				chat.setAvatarPath(avatarManager_->getAvatarPath(jid));
-				break;
-			}
+		if (!chat.isMUC && jid.toBare() == chat.jid.toBare()) {
+			chat.setAvatarPath(avatarManager_->getAvatarPath(jid));
+			break;
 		}
+	}
 }
 
 void ChatsManager::setServerDiscoInfo(boost::shared_ptr<DiscoInfo> info) {
