@@ -257,9 +257,6 @@ if target in ["iphone-device", "iphone-simulator", "xcode"] :
 	# Set the build flags
 	env["CC"] = "$XCODE_PLATFORM_DEVELOPER_BIN_DIR/gcc"
 	env["CXX"] = "$XCODE_PLATFORM_DEVELOPER_BIN_DIR/g++"
-	if env.get("ccache", False):
-		env["CC"] = "ccache " + env["CC"]
-		env["CXX"] = "ccache " + env["CXX"]
 	env["OBJCCFLAGS"] = ["-fobjc-abi-version=2", "-fobjc-legacy-dispatch"]
 	env["LD"] = env["CC"]
 	env.Append(CCFLAGS = env["XCODE_ARCH_FLAGS"] + ["-fvisibility=hidden"])
