@@ -90,7 +90,7 @@ size_t TableRoster::getNumberOfRowsInSection(size_t section) const {
 	return sections[section].items.size();
 }
 
-TableRoster::Item TableRoster::getItem(const Index& index) const {
+const TableRoster::Item& TableRoster::getItem(const Index& index) const {
 	return sections[index.section].items[index.row];
 }
 			
@@ -108,7 +108,7 @@ void TableRoster::handleUpdateTimerTick() {
 				foreach(RosterItem* groupChildItem, groupItem->getDisplayedChildren()) {
 					if (ContactRosterItem* contact = boost::polymorphic_downcast<ContactRosterItem*>(groupChildItem)) {
 						//std::cerr << "  - " << contact->getDisplayJID() << std::endl;
-						section.items.push_back(Item(contact->getDisplayName(), contact->getStatusText(), contact->getDisplayJID(), contact->getStatusShow()));
+						section.items.push_back(Item(contact->getDisplayName(), contact->getStatusText(), contact->getDisplayJID(), contact->getStatusShow(), contact->getAvatarPath()));
 					}
 				}
 				newSections.push_back(section);

@@ -21,12 +21,13 @@ namespace Swift {
 	class TableRoster {
 		public:
 			struct Item {
-				Item(const std::string& name, const std::string& description, const JID& jid, StatusShow::Type status) : name(name), description(description), jid(jid), status(status) {
+				Item(const std::string& name, const std::string& description, const JID& jid, StatusShow::Type status, const std::string& avatarPath) : name(name), description(description), jid(jid), status(status), avatarPath(avatarPath) {
 				}
 				std::string name;
 				std::string description;
 				JID jid;
 				StatusShow::Type status;
+				std::string avatarPath;
 			};
 
 			struct Index {
@@ -56,7 +57,7 @@ namespace Swift {
 
 			const std::string& getSectionTitle(size_t);
 
-			Item getItem(const Index&) const;
+			const Item& getItem(const Index&) const;
 
 			boost::signal<void (const Update&)> onUpdate;
 
