@@ -87,5 +87,6 @@ namespace Swift {
 			UIEventStream* uiEventStream_;
 			QPointer<QtAboutWidget> aboutDialog_;
 			bool forgetful_;
+			QAction* xmlConsoleAction_;
 	};
 }

@@ -162,9 +162,9 @@ QtLoginWindow::QtLoginWindow(UIEventStream* uiEventStream) : QMainWindow(), forg
 	connect(aboutAction, SIGNAL(triggered()), SLOT(handleAbout()));
 	swiftMenu_->addAction(aboutAction);
 
-	QAction* xmlConsoleAction = new QAction(tr("&Show Debug Console"), this);
-	connect(xmlConsoleAction, SIGNAL(triggered()), SLOT(handleShowXMLConsole()));
-	generalMenu_->addAction(xmlConsoleAction);
+	xmlConsoleAction_ = new QAction(tr("&Show Debug Console"), this);
+	connect(xmlConsoleAction_, SIGNAL(triggered()), SLOT(handleShowXMLConsole()));
+	generalMenu_->addAction(xmlConsoleAction_);
 
 	toggleSoundsAction_ = new QAction(tr("&Play Sounds"), this);
 	toggleSoundsAction_->setCheckable(true);
@@ -201,6 +201,7 @@ void QtLoginWindow::setRememberingAllowed(bool allowed) {
 	forgetful_ = true;
 	remember_->setEnabled(allowed);
 	loginAutomatically_->setEnabled(allowed);
+	xmlConsoleAction_->setEnabled(allowed);
 	if (!allowed) {
 		remember_->setChecked(false);
 		loginAutomatically_->setChecked(false);
