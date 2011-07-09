@@ -28,9 +28,5 @@ namespace Swift {
 		DelegateCommons common_;
 		GroupItemDelegate* groupDelegate_;
 		QtTreeWidget* tree_;
-		static const int avatarSize_;
-		static const int presenceIconHeight_;
-		static const int presenceIconWidth_;
-
 	};
 }

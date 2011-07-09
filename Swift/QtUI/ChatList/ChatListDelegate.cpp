@@ -30,7 +30,7 @@ QSize ChatListDelegate::sizeHint(const QStyleOptionViewItem& option, const QMode
 		return mucSizeHint(option, index);
 	}
 	else if (item && dynamic_cast<ChatListRecentItem*>(item)) {
-		return recentSizeHint(option, index);
+		return common_.contactSizeHint(option, index);
 	}
 	else if (item && dynamic_cast<ChatListGroupItem*>(item)) {
 		return groupDelegate_->sizeHint(option, index);
@@ -98,34 +98,17 @@ void ChatListDelegate::paintMUC(QPainter* painter, const QStyleOptionViewItem& o
 }
 
 void ChatListDelegate::paintRecent(QPainter* painter, const QStyleOptionViewItem& option, ChatListRecentItem* item) const {
-	painter->save();
-	QRect fullRegion(option.rect);
-	if ( option.state & QStyle::State_Selected ) {
-		painter->fillRect(fullRegion, option.palette.highlight());
-		painter->setPen(option.palette.highlightedText().color());
-	} else {
-		QColor nameColor = item->data(Qt::TextColorRole).value<QColor>();
-		painter->setPen(QPen(nameColor));
+	QColor nameColor = item->data(Qt::TextColorRole).value<QColor>();
+	QString avatarPath;
+	if (item->data(ChatListRecentItem::AvatarRole).isValid() && !item->data(ChatListRecentItem::AvatarRole).value<QString>().isNull()) {
+		QString avatarPath = item->data(ChatListRecentItem::AvatarRole).value<QString>();
 	}
-
-	QFontMetrics nameMetrics(common_.nameFont);
-	painter->setFont(common_.nameFont);
-	int extraFontWidth = nameMetrics.width("H");
-	int leftOffset = common_.horizontalMargin * 2 + extraFontWidth / 2;
-	QRect textRegion(fullRegion.adjusted(leftOffset, 0, 0, 0));
-
-	int nameHeight = nameMetrics.height() + common_.verticalMargin;
-	QRect nameRegion(textRegion.adjusted(0, common_.verticalMargin, 0, 0));
-
-	DelegateCommons::drawElidedText(painter, nameRegion, item->data(Qt::DisplayRole).toString());
-
-	painter->setFont(common_.detailFont);
-	painter->setPen(QPen(QColor(160,160,160)));
-
-	QRect detailRegion(textRegion.adjusted(0, nameHeight, 0, 0));
-	DelegateCommons::drawElidedText(painter, detailRegion, item->data(ChatListRecentItem::DetailTextRole).toString());
-
-	painter->restore();
+	QIcon presenceIcon = item->data(ChatListRecentItem::PresenceIconRole).isValid() && !item->data(ChatListRecentItem::PresenceIconRole).value<QIcon>().isNull()
+			? item->data(ChatListRecentItem::PresenceIconRole).value<QIcon>()
+			: QIcon(":/icons/offline.png");
+	QString name = item->data(Qt::DisplayRole).toString();
+	QString statusText = item->data(ChatListRecentItem::DetailTextRole).toString();
+	common_.paintContact(painter, option, nameColor, avatarPath, presenceIcon, name, statusText);
 }
 
 }

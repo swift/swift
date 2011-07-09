@@ -24,11 +24,24 @@ QVariant ChatListRecentItem::data(int role) const {
 			/*case Qt::TextColorRole: return textColor_;
 		case Qt::BackgroundColorRole: return backgroundColor_;
 		case Qt::ToolTipRole: return isContact() ? toolTipString() : QVariant();
-		case StatusTextRole: return statusText_;
-		case AvatarRole: return avatar_;
-		case PresenceIconRole: return getPresenceIcon();*/
+		case StatusTextRole: return statusText_;*/
+		case AvatarRole: return chat_.avatarPath.string().c_str();
+		case PresenceIconRole: return getPresenceIcon();
 		default: return QVariant();
 	}
+}
+
+QIcon ChatListRecentItem::getPresenceIcon() const {
+	QString iconString;
+	switch (chat_.statusType) {
+	 	case StatusShow::Online: iconString = "online";break;
+	 	case StatusShow::Away: iconString = "away";break;
+	 	case StatusShow::XA: iconString = "away";break;
+	 	case StatusShow::FFC: iconString = "online";break;
+	 	case StatusShow::DND: iconString = "dnd";break;
+	 	case StatusShow::None: iconString = "offline";break;
+	}
+	return QIcon(":/icons/" + iconString + ".png");
 }
 
 }

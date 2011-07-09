@@ -7,6 +7,7 @@
 #pragma once
 
 #include <QList>
+#include <QIcon>
 
 #include <boost/shared_ptr.hpp>
 
@@ -19,15 +20,16 @@ namespace Swift {
 	class ChatListRecentItem : public ChatListItem {
 		public:
 			enum RecentItemRoles {
-				DetailTextRole = Qt::UserRole/*,
+				DetailTextRole = Qt::UserRole,
 				AvatarRole = Qt::UserRole + 1,
-				PresenceIconRole = Qt::UserRole + 2,
+				PresenceIconRole = Qt::UserRole + 2/*,
 				StatusShowTypeRole = Qt::UserRole + 3*/
 			};
 			ChatListRecentItem(const ChatListWindow::Chat& chat, ChatListGroupItem* parent);
 			const ChatListWindow::Chat& getChat() const;
 			QVariant data(int role) const;
 		private:
+			QIcon getPresenceIcon() const;
 			ChatListWindow::Chat chat_;
 	};
 }

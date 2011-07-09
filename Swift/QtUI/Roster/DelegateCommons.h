@@ -11,6 +11,8 @@
 #include <QPainter>
 #include <QRect>
 #include <QString>
+#include <QIcon>
+#include <QStyleOptionViewItem>
 
 namespace Swift {
 	class DelegateCommons {
@@ -23,11 +25,17 @@ namespace Swift {
 
 			static void drawElidedText(QPainter* painter, const QRect& region, const QString& text);
 
+			QSize contactSizeHint(const QStyleOptionViewItem& option, const QModelIndex& index) const;
+			void paintContact(QPainter* painter, const QStyleOptionViewItem& option, const QColor& nameColor, const QString& avatarPath, const QIcon& presenceIcon, const QString& name, const QString& statusText) const;
+
 			int detailFontSizeDrop;
 			QFont nameFont;
 			QFont detailFont;
 			static const int horizontalMargin;
 			static const int verticalMargin;
 			static const int farLeftMargin;			
+			static const int avatarSize;
+			static const int presenceIconHeight;
+			static const int presenceIconWidth;
 	};
 }
