@@ -185,6 +185,7 @@ void MUCController::handleJoinComplete(const std::string& nick) {
 	clearPresenceQueue();
 	shouldJoinOnReconnect_ = true;
 	setEnabled(true);
+	onUserJoined();
 }
 
 void MUCController::handleAvatarChanged(const JID& jid) {

@@ -44,6 +44,7 @@ namespace Swift {
 			MUCController(const JID& self, MUC::ref muc, const std::string &nick, StanzaChannel* stanzaChannel, IQRouter* iqRouter, ChatWindowFactory* chatWindowFactory, PresenceOracle* presenceOracle, AvatarManager* avatarManager, UIEventStream* events, bool useDelayForLatency, TimerFactory* timerFactory, EventController* eventController);
 			~MUCController();
 			boost::signal<void ()> onUserLeft;
+			boost::signal<void ()> onUserJoined;
 			virtual void setOnline(bool online);
 			void rejoin();
 			static void appendToJoinParts(std::vector<NickJoinPart>& joinParts, const NickJoinPart& newEvent);
