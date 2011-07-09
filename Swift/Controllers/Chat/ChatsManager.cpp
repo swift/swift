@@ -30,6 +30,7 @@
 #include <Swiften/Elements/ChatState.h>
 #include <Swiften/MUC/MUCBookmarkManager.h>
 #include <Swift/Controllers/ProfileSettingsProvider.h>
+#include <Swiften/Avatars/AvatarManager.h>
 
 namespace Swift {
 
@@ -138,16 +139,20 @@ void ChatsManager::loadRecents() {
 		bool isMUC = recent[2] == "true";
 		std::string nick(recent[3]);
 		StatusShow::Type type = StatusShow::None;
+		boost::filesystem::path path;
 		if (isMUC) {
 			if (mucControllers_.find(jid.toBare()) != mucControllers_.end()) {
 				type = StatusShow::Online;
 			}
 		} else {
+			if (avatarManager_) {
+				path = avatarManager_->getAvatarPath(jid);
+			}
 			Presence::ref presence = presenceOracle_->getHighestPriorityPresence(jid.toBare());
 			type = presence ? presence->getShow() : StatusShow::None;
 		}
 
-		ChatListWindow::Chat chat(jid, nickResolver_->jidToNick(jid), activity, 0, type, isMUC, nick);
+		ChatListWindow::Chat chat(jid, nickResolver_->jidToNick(jid), activity, 0, type, path, isMUC, nick);
 		prependRecent(chat);
 	}
 	handleUnreadCountChanged(NULL);
@@ -199,7 +204,7 @@ ChatListWindow::Chat ChatsManager::createChatListChatItem(const JID& jid, const 
 			}
 			nick = controller->getNick();
 		}
-		return ChatListWindow::Chat(jid, jid.toString(), activity, unreadCount, type, true, nick);
+		return ChatListWindow::Chat(jid, jid.toString(), activity, unreadCount, type, boost::filesystem::path(), true, nick);
 
 	} else {
 		ChatController* controller = getChatControllerIfExists(jid, false);
@@ -209,7 +214,8 @@ ChatListWindow::Chat ChatsManager::createChatListChatItem(const JID& jid, const 
 
 		Presence::ref presence = presenceOracle_->getHighestPriorityPresence(jid.toBare());
 		StatusShow::Type type = presence ? presence->getShow() : StatusShow::None;
-		return ChatListWindow::Chat(jid, nickResolver_->jidToNick(jid), activity, unreadCount, type, false);
+		boost::filesystem::path avatarPath = avatarManager_ ? avatarManager_->getAvatarPath(jid) : boost::filesystem::path();
+		return ChatListWindow::Chat(jid, nickResolver_->jidToNick(jid), activity, unreadCount, type, avatarPath, false);
 	}
 }
 
@@ -337,7 +343,20 @@ void ChatsManager::handlePresenceChange(boost::shared_ptr<Presence> newPresence)
 }
 
 void ChatsManager::setAvatarManager(AvatarManager* avatarManager) {
+	if (avatarManager_) {
+		avatarManager_->onAvatarChanged.disconnect(boost::bind(&ChatsManager::handleAvatarChanged, this, _1));
+	}
 	avatarManager_ = avatarManager;
+	avatarManager_->onAvatarChanged.connect(boost::bind(&ChatsManager::handleAvatarChanged, this, _1));
+}
+
+void ChatsManager::handleAvatarChanged(const JID& jid) {
+	foreach (ChatListWindow::Chat& chat, recentChats_) {
+			if (!chat.isMUC && jid.toBare() == chat.jid.toBare()) {
+				chat.setAvatarPath(avatarManager_->getAvatarPath(jid));
+				break;
+			}
+		}
 }
 
 void ChatsManager::setServerDiscoInfo(boost::shared_ptr<DiscoInfo> info) {

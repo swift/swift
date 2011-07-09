@@ -76,6 +76,7 @@ namespace Swift {
 			void handleMUCBookmarkActivated(const MUCBookmark&);
 			void handleRecentActivated(const ChatListWindow::Chat&);
 			void handleUnreadCountChanged(ChatControllerBase* controller);
+			void handleAvatarChanged(const JID& jid);
 
 			ChatController* getChatControllerOrFindAnother(const JID &contact);
 			ChatController* createNewChatController(const JID &contact);

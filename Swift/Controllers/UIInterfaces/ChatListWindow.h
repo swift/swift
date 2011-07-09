@@ -10,6 +10,7 @@
 #include <boost/shared_ptr.hpp>
 #include <Swiften/MUC/MUCBookmark.h>
 #include <Swiften/Elements/StatusShow.h>
+#include <boost/filesystem/path.hpp>
 
 #include <Swiften/Base/boost_bsignals.h>
 
@@ -18,8 +19,8 @@ namespace Swift {
 		public:
 			class Chat {
 				public:
-					Chat(const JID& jid, const std::string& chatName, const std::string& activity, int unreadCount, StatusShow::Type statusType, bool isMUC, const std::string& nick = "")
-					: jid(jid), chatName(chatName), activity(activity), statusType(statusType), isMUC(isMUC), nick(nick), unreadCount(unreadCount) {}
+					Chat(const JID& jid, const std::string& chatName, const std::string& activity, int unreadCount, StatusShow::Type statusType, const boost::filesystem::path& avatarPath, bool isMUC, const std::string& nick = "")
+					: jid(jid), chatName(chatName), activity(activity), statusType(statusType), isMUC(isMUC), nick(nick), unreadCount(unreadCount), avatarPath(avatarPath) {}
 					/** Assume that nicks and other transient features aren't important for equality */
 					bool operator==(const Chat& other) const {
 						return jid.toBare() == other.jid.toBare()
@@ -31,6 +32,9 @@ namespace Swift {
 					void setStatusType(StatusShow::Type type) {
 						statusType = type;
 					}
+					void setAvatarPath(const boost::filesystem::path& path) {
+						avatarPath = path;
+					}
 					JID jid;
 					std::string chatName;
 					std::string activity;
@@ -38,6 +42,7 @@ namespace Swift {
 					bool isMUC;
 					std::string nick;
 					int unreadCount;
+					boost::filesystem::path avatarPath;
 			};
 			virtual ~ChatListWindow();
 
