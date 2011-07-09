@@ -103,11 +103,15 @@ ChatsManager::~ChatsManager() {
 
 void ChatsManager::saveRecents() {
 	std::string recents;
+	int i = 1;
 	foreach (ChatListWindow::Chat chat, recentChats_) {
 		std::vector<std::string> activity;
 		boost::split(activity, chat.activity, boost::is_any_of("\t\n"));
 		std::string recent = chat.jid.toString() + "\t" + activity[0] + "\t" + (chat.isMUC ? "true" : "false") +  "\t" + chat.nick;
 		recents += recent + "\n";
+		if (i++ > 25) {
+			break;
+		}
 	}
 	profileSettings_->storeString(RECENT_CHATS, recents);
 }
