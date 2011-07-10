@@ -1,5 +1,7 @@
+root = Dir("../..").abspath
+
 import sys, os, re, platform
-sys.path.append(Dir("BuildTools/SCons").abspath)
+sys.path.append(Dir("#/BuildTools/SCons").abspath)
 import SCons.SConf
 
 ################################################################################
@@ -743,7 +745,7 @@ for dir in os.listdir(Dir("#").abspath) :
 env["PROJECTS"] = [m for m in modules if m not in ["Documentation", "QA", "SwifTools"] and not m.startswith("3rdParty")]
 for stage in ["flags", "build", "test"] :
 	env["SCONS_STAGE"] = stage
-	SConscript(dirs = map(lambda x : "#/" + x, modules))
+	SConscript(dirs = map(lambda x : root + "/" + x, modules))
 
 # SLOCCount
 if ARGUMENTS.get("sloccount", False) :

@@ -55,7 +55,7 @@ if env["PLATFORM"] == "win32" :
   myenv.Append(LINKFLAGS = ["/SUBSYSTEM:WINDOWS"])
   myenv.Append(LIBS = "qtmain")
 
-myenv.WriteVal("DefaultTheme.qrc", myenv.Value(generateDefaultTheme(myenv.Dir("../resources/themes/Default"))))
+myenv.WriteVal("DefaultTheme.qrc", myenv.Value(generateDefaultTheme(myenv.Dir("#/Swift/resources/themes/Default"))))
 
 sources = [
     "main.cpp",
@@ -136,13 +136,13 @@ sources = [
 myenv["SWIFT_VERSION"] = Version.getBuildVersion(env.Dir("#").abspath, "swift")
 
 if env["PLATFORM"] == "win32" :
-  res = myenv.RES("../resources/Windows/Swift.rc")
+  res = myenv.RES("#/Swift/resources/Windows/Swift.rc")
   # For some reason, SCons isn't picking up the dependency correctly
 	# Adding it explicitly until i figure out why
   myenv.Depends(res, "../Controllers/BuildVersion.h")
   sources += [
 			"WindowsNotifier.cpp",
-			"../resources/Windows/Swift.res"
+			"#/Swift/resources/Windows/Swift.res"
 		]
 
 if env["PLATFORM"] == "posix" :
@@ -173,7 +173,7 @@ myenv.Qrc("Swift.qrc")
 
 # Resources
 commonResources = {
-	"": ["../resources/sounds"]
+	"": ["#/Swift/resources/sounds"]
 }
 
 ################################################################################
@@ -182,16 +182,16 @@ commonResources = {
 
 # Collect available languages
 translation_languages = []
-for file in os.listdir(Dir("../Translations").abspath) :
+for file in os.listdir(Dir("#/Swift/Translations").abspath) :
 	if file.startswith("swift_") and file.endswith(".ts") :
 		translation_languages.append(file[6:-3])
 
 # Generate translation modules
-translation_sources = [env.File("../Translations/swift.ts").abspath]
+translation_sources = [env.File("#/Swift/Translations/swift.ts").abspath]
 translation_modules = []
 for lang in translation_languages :
-	translation_resource = "../resources/translations/swift_" + lang + ".qm"
-	translation_source = "../Translations/swift_" + lang + ".ts"
+	translation_resource = "#/Swift/resources/translations/swift_" + lang + ".qm"
+	translation_source = "#/Swift/Translations/swift_" + lang + ".ts"
 	translation_sources.append(env.File(translation_source).abspath)
 	translation_modules.append(env.File(translation_resource).abspath)
 	myenv.Qm(translation_resource, translation_source)
@@ -225,20 +225,20 @@ if env["PLATFORM"] == "darwin" :
     frameworks.append(env["SPARKLE_FRAMEWORK"])
   if env["HAVE_GROWL"] :
     frameworks.append(env["GROWL_FRAMEWORK"])
-  commonResources[""] = commonResources.get("", []) + ["../resources/MacOSX/Swift.icns"]
+  commonResources[""] = commonResources.get("", []) + ["#/Swift/resources/MacOSX/Swift.icns"]
   app = myenv.AppBundle("Swift", version = myenv["SWIFT_VERSION"], resources = commonResources, frameworks = frameworks, handlesXMPPURIs = True)
   if env["DIST"] :
     myenv.Command(["Swift-${SWIFT_VERSION}.dmg"], [app], ["Swift/Packaging/MacOSX/package.sh " + app.path + " Swift/Packaging/MacOSX/Swift.dmg.gz $TARGET $QTDIR"])
     
 if env.get("SWIFT_INSTALLDIR", "") :
   env.Install(os.path.join(env["SWIFT_INSTALLDIR"], "bin"), swiftProgram + openURIProgram)
-  env.InstallAs(os.path.join(env["SWIFT_INSTALLDIR"], "share", "pixmaps", "swift.xpm"), "../resources/logo/logo-icon-32.xpm")
+  env.InstallAs(os.path.join(env["SWIFT_INSTALLDIR"], "share", "pixmaps", "swift.xpm"), "#/Swift/resources/logo/logo-icon-32.xpm")
   icons_path = os.path.join(env["SWIFT_INSTALLDIR"], "share", "icons", "hicolor")
-  env.InstallAs(os.path.join(icons_path, "32x32", "apps", "swift.xpm"), "../resources/logo/logo-icon-32.xpm")
-  env.InstallAs(os.path.join(icons_path, "scalable", "apps", "swift.svg"), "../resources/logo/logo-icon.svg")
+  env.InstallAs(os.path.join(icons_path, "32x32", "apps", "swift.xpm"), "#/Swift/resources/logo/logo-icon-32.xpm")
+  env.InstallAs(os.path.join(icons_path, "scalable", "apps", "swift.svg"), "#/Swift/resources/logo/logo-icon.svg")
   for i in ["16", "22", "24", "64", "128"] :
-    env.InstallAs(os.path.join(icons_path, i + "x" + i, "apps", "swift.png"), "../resources/logo/logo-icon-" + i + ".png")
-  env.Install(os.path.join(env["SWIFT_INSTALLDIR"], "share", "applications"), "../resources/swift.desktop")
+    env.InstallAs(os.path.join(icons_path, i + "x" + i, "apps", "swift.png"), "#/Swift/resources/logo/logo-icon-" + i + ".png")
+  env.Install(os.path.join(env["SWIFT_INSTALLDIR"], "share", "applications"), "#/Swift/resources/swift.desktop")
   for dir, resource in commonResources.items() : 
     env.Install(os.path.join(env["SWIFT_INSTALLDIR"], "share", "swift", dir), resource)
     
@@ -247,7 +247,7 @@ if env["PLATFORM"] == "win32" :
     commonResources[""] = commonResources.get("", []) + [
         os.path.join(env["OPENSSL_DIR"], "bin", "ssleay32.dll"),  
         os.path.join(env["OPENSSL_DIR"], "bin", "libeay32.dll"),
-        "../resources/images",  
+        "#/Swift/resources/images",  
       ]
     myenv.WindowsBundle("Swift", 
       resources = commonResources,
