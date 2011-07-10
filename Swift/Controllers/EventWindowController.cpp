@@ -27,8 +27,11 @@ void EventWindowController::handleEventQueueEventAdded(boost::shared_ptr<StanzaE
 	if (event->getConcluded()) {
 		handleEventConcluded(event);
 	} else {
-		event->onConclusion.connect(boost::bind(&EventWindowController::handleEventConcluded, this, event));
-		window_->addEvent(event, true);
+		boost::shared_ptr<MessageEvent> message = boost::dynamic_pointer_cast<MessageEvent>(event);
+		if (!(message && message->isReadable())) {
+			event->onConclusion.connect(boost::bind(&EventWindowController::handleEventConcluded, this, event));
+			window_->addEvent(event, true);
+		}
 	}
 }
 
