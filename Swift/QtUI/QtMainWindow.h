@@ -59,6 +59,7 @@ namespace Swift {
 			void handleChatUserActionTriggered(bool checked);
 			void handleAdHocActionTriggered(bool checked);
 			void handleEventCountUpdated(int count);
+			void handleChatCountUpdated(int count);
 			void handleEditProfileRequest();
 			void handleTabChanged(int index);
 

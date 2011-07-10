@@ -72,6 +72,7 @@ QtMainWindow::QtMainWindow(QtSettingsProvider* settings, UIEventStream* uiEventS
 	connect(eventWindow_, SIGNAL(onNewEventCountUpdated(int)), this, SLOT(handleEventCountUpdated(int)));
 
 	chatListWindow_ = new QtChatListWindow(uiEventStream_);
+	connect(chatListWindow_, SIGNAL(onCountUpdated(int)), this, SLOT(handleChatCountUpdated(int)));
 
 	tabs_->addTab(chatListWindow_, tr("C&hats"));
 	tabs_->addTab(eventWindow_, tr("&Notices"));
@@ -160,6 +161,17 @@ void QtMainWindow::handleEventCountUpdated(int count) {
 		text += QString(" (%1)").arg(count);
 	}
 	tabs_->setTabText(eventIndex, text);
+}
+
+void QtMainWindow::handleChatCountUpdated(int count) {
+	QColor chatTabColor = (count == 0) ? QColor() : QColor(255, 0, 0); // invalid resets to default
+	int chatIndex = 1;
+	tabs_->tabBar()->setTabTextColor(chatIndex, chatTabColor);
+	QString text = tr("&Chats");
+	if (count > 0) {
+		text += QString(" (%1)").arg(count);
+	}
+	tabs_->setTabText(chatIndex, text);
 }
 
 void QtMainWindow::handleAddUserActionTriggered(bool /*checked*/) {

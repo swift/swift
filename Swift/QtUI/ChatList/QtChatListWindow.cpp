@@ -99,8 +99,8 @@ void QtChatListWindow::setRecents(const std::list<ChatListWindow::Chat>& recents
 	model_->setRecents(recents);
 }
 
-void QtChatListWindow::setUnreadCount(int /*unread*/) {
-
+void QtChatListWindow::setUnreadCount(int unread) {
+	emit onCountUpdated(unread);
 }
 
 void QtChatListWindow::handleRemoveBookmark() {

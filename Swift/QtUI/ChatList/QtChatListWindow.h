@@ -26,6 +26,9 @@ namespace Swift {
 			void setRecents(const std::list<ChatListWindow::Chat>& recents);
 			void setUnreadCount(int unread);
 			void clearBookmarks();
+
+		signals:
+			void onCountUpdated(int count);
 		private slots:
 			void handleItemActivated(const QModelIndex&);
 			void handleAddBookmark();
