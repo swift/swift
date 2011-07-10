@@ -201,14 +201,15 @@ if env["SCONS_STAGE"] == "build" :
 			"LinkLocal",
 			"StreamManagement",
 			"Component",
-			"Config",
 			"AdHoc"
 		])
-	SConscript(test_only = True, dirs = [
+	if env["build_examples"] :
+		SConscript(dirs = [
+				"Config",
+				"Examples"
+			])
+	env.SConscript(test_only = True, dirs = [
 			"QA",
-		])
-	SConscript(dirs = [
-			"Examples"
 		])
 
 	myenv = swiften_env.Clone()

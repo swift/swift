@@ -50,6 +50,7 @@ vars.Add(PathVariable("avahi_libdir", "Avahi library location", None, PathVariab
 vars.Add(PathVariable("qt", "Qt location", "", PathVariable.PathAccept))
 vars.Add(PathVariable("docbook_xml", "DocBook XML", None, PathVariable.PathAccept))
 vars.Add(PathVariable("docbook_xsl", "DocBook XSL", None, PathVariable.PathAccept))
+vars.Add(BoolVariable("build_examples", "Build example programs", "yes"))
 vars.Add(BoolVariable("enable_variants", "Build in a separate dir under build/, depending on compile flags", "no"))
 
 ################################################################################
@@ -81,12 +82,6 @@ if env["PLATFORM"] == "win32" :
 		env['ENV']['TMP'] = os.environ['TMP'] 
 env.Tool("SLOCCount", toolpath = ["#/BuildTools/SCons/Tools"])
 
-# Override SConscript to handle tests
-oldSConscript = SConscript
-def SConscript(*arguments, **keywords) :
-  if not keywords.get("test_only", False) or env["TEST"] :
-    return apply(oldSConscript, arguments, keywords)
-  
 # Max out the number of jobs
 if env["max_jobs"] :
 	try :
@@ -289,8 +284,12 @@ Export("conf_env")
 
 variant = ""
 if env["enable_variants"] :
-	fingerprint = "".join([flag for flag in env["CXXFLAGS"] + env["CCFLAGS"] if not flag.startswith("-W")])
+	fingerprint = ",".join([flag for flag in env["CXXFLAGS"] + env["CCFLAGS"] if not flag.startswith("-W") and not flag.startswith("-fvisibility")])
 	variant = "build/" + fingerprint
-
+	if not os.path.exists(Dir("#/build").abspath) :
+		os.mkdir(Dir("#/build").abspath)
+	if os.path.exists(Dir("#/build/current").abspath) :
+		os.unlink(Dir("#/build/current").abspath)
+	os.symlink(os.path.basename(variant), Dir("#/build/current").abspath)
 
 Return("variant")

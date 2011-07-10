@@ -1,6 +1,6 @@
 Import("env")
 
-openssl_bundle_dir = "#/../openssl"
+openssl_bundle_dir = "openssl"
 
 if env.get("OPENSSL_BUNDLED", False) :
 	if env["SCONS_STAGE"] == "flags" :

@@ -7,7 +7,8 @@
 #pragma once
 
 #include <string>
-#include <iosfwd>
+//#include <iosfwd>
+#include <iostream>
 
 namespace Swift {
 	/**
