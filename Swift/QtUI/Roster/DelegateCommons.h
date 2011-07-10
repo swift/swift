@@ -23,10 +23,10 @@ namespace Swift {
 				detailFont.setPointSize(nameFont.pointSize() - detailFontSizeDrop);
 			}
 
-			static void drawElidedText(QPainter* painter, const QRect& region, const QString& text);
+			static void drawElidedText(QPainter* painter, const QRect& region, const QString& text, int flags = Qt::AlignTop);
 
 			QSize contactSizeHint(const QStyleOptionViewItem& option, const QModelIndex& index) const;
-			void paintContact(QPainter* painter, const QStyleOptionViewItem& option, const QColor& nameColor, const QString& avatarPath, const QIcon& presenceIcon, const QString& name, const QString& statusText) const;
+			void paintContact(QPainter* painter, const QStyleOptionViewItem& option, const QColor& nameColor, const QString& avatarPath, const QIcon& presenceIcon, const QString& name, const QString& statusText, int unreadCount) const;
 
 			int detailFontSizeDrop;
 			QFont nameFont;
@@ -37,5 +37,6 @@ namespace Swift {
 			static const int avatarSize;
 			static const int presenceIconHeight;
 			static const int presenceIconWidth;
+			static const int unreadCountSize;
 	};
 }

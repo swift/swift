@@ -12,12 +12,12 @@
 namespace Swift {
 
 
-void DelegateCommons::drawElidedText(QPainter* painter, const QRect& region, const QString& text) {
+void DelegateCommons::drawElidedText(QPainter* painter, const QRect& region, const QString& text, int flags) {
 	QString adjustedText(painter->fontMetrics().elidedText(text, Qt::ElideRight, region.width(), Qt::TextShowMnemonic));
-	painter->drawText(region, Qt::AlignTop, adjustedText);
+	painter->drawText(region, flags, adjustedText);
 }
 
-void DelegateCommons::paintContact(QPainter* painter, const QStyleOptionViewItem& option, const QColor& nameColor, const QString& avatarPath, const QIcon& presenceIcon, const QString& name, const QString& statusText) const {
+void DelegateCommons::paintContact(QPainter* painter, const QStyleOptionViewItem& option, const QColor& nameColor, const QString& avatarPath, const QIcon& presenceIcon, const QString& name, const QString& statusText, int unreadCount) const {
 	painter->save();
 	QRect fullRegion(option.rect);
 	if ( option.state & QStyle::State_Selected ) {
@@ -67,6 +67,20 @@ void DelegateCommons::paintContact(QPainter* painter, const QStyleOptionViewItem
 	QRect statusTextRegion(textRegion.adjusted(0, nameHeight, 0, 0));
 	DelegateCommons::drawElidedText(painter, statusTextRegion, statusText);
 
+	if (unreadCount > 0) {
+		QRect unreadRect(fullRegion.right() - unreadCountSize - horizontalMargin, fullRegion.top() + (fullRegion.height() - unreadCountSize) / 2, unreadCountSize, unreadCountSize);
+		QPen pen(QColor("black"));
+		pen.setWidth(1);
+		painter->setRenderHint(QPainter::Antialiasing, true);
+		painter->setPen(pen);
+		painter->setBrush(QBrush(QColor("red"), Qt::SolidPattern));
+		//painter->setBackgroundMode(Qt::OpaqueMode);
+		painter->drawEllipse(unreadRect);
+		painter->setBackgroundMode(Qt::TransparentMode);
+		painter->setPen(QColor("white"));
+		drawElidedText(painter, unreadRect, QString("%1").arg(unreadCount), Qt::AlignCenter);
+	}
+
 	painter->restore();
 }
 
@@ -87,6 +101,7 @@ const int DelegateCommons::farLeftMargin = 2;
 const int DelegateCommons::avatarSize = 20;
 const int DelegateCommons::presenceIconHeight = 16;
 const int DelegateCommons::presenceIconWidth = 16;
+const int DelegateCommons::unreadCountSize = 16;
 
 
 
