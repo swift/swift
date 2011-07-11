@@ -11,8 +11,6 @@
 #include <vector>
 
 #include "Swiften/Network/Timer.h"
-#include "SwifTools/Idle/PlatformIdleQuerier.h"
-#include "SwifTools/Idle/ActualIdleDetector.h"
 #include <string>
 #include "Swiften/Client/ClientError.h"
 #include "Swiften/JID/JID.h"
@@ -27,6 +25,7 @@
 #include "Swift/Controllers/UIEvents/UIEvent.h"
 
 namespace Swift {
+	class IdleDetector;
 	class UIFactory;
 	class EventLoop;
 	class Client;
@@ -81,6 +80,7 @@ namespace Swift {
 					Dock* dock,
 					Notifier* notifier,
 					URIHandler* uriHandler,
+					IdleDetector* idleDetector,
 					bool useDelayForLatency,
 					bool eagleMode);
 			~MainController();
@@ -118,8 +118,6 @@ namespace Swift {
 			EventLoop* eventLoop_;
 			NetworkFactories* networkFactories_;
 			UIFactory* uiFactory_;
-			PlatformIdleQuerier idleQuerier_;
-			ActualIdleDetector idleDetector_;
 			StoragesFactory* storagesFactory_;
 			Storages* storages_;
 			CertificateStorageFactory* certificateStorageFactory_;
@@ -131,6 +129,7 @@ namespace Swift {
 			ProfileSettingsProvider* profileSettings_;
 			Dock* dock_;
 			URIHandler* uriHandler_;
+			IdleDetector* idleDetector_;
 			TogglableNotifier* notifier_;
 			PresenceNotifier* presenceNotifier_;
 			EventNotifier* eventNotifier_;

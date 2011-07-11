@@ -29,7 +29,6 @@ namespace Swift {
 
 			boost::signal<void (bool /* isIdle */)> onIdleChanged;
 
-		protected:
 			void setIdle(bool b) {
 				if (b != idle) {
 					idle = b;

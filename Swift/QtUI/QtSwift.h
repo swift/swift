@@ -21,6 +21,8 @@
 #if defined(SWIFTEN_PLATFORM_WINDOWS)
 #include "WindowsNotifier.h"
 #endif
+#include "SwifTools/Idle/PlatformIdleQuerier.h"
+#include "SwifTools/Idle/ActualIdleDetector.h"
 
 namespace po = boost::program_options;
 
@@ -71,6 +73,8 @@ namespace Swift {
 			CertificateStorageFactory* certificateStorageFactory_;
 			AutoUpdater* autoUpdater_;
 			Notifier* notifier_;
+			PlatformIdleQuerier idleQuerier_;
+			ActualIdleDetector idleDetector_;
 #if defined(SWIFTEN_PLATFORM_MACOSX)
 			CocoaApplication cocoaApplication_;
 #endif

@@ -67,6 +67,7 @@
 #include <Swift/Controllers/ContactEditController.h>
 #include <Swift/Controllers/XMPPURIController.h>
 #include "Swift/Controllers/AdHocManager.h"
+#include <SwifTools/Idle/IdleDetector.h>
 
 namespace Swift {
 
@@ -87,16 +88,17 @@ MainController::MainController(
 		Dock* dock,
 		Notifier* notifier,
 		URIHandler* uriHandler,
+		IdleDetector* idleDetector,
 		bool useDelayForLatency,
 		bool eagleMode) :
 			eventLoop_(eventLoop),
 			networkFactories_(networkFactories),
 			uiFactory_(uiFactories),
-			idleDetector_(&idleQuerier_, networkFactories_->getTimerFactory(), 1000),
 			storagesFactory_(storagesFactory),
 			certificateStorageFactory_(certificateStorageFactory),
 			settings_(settings),
 			uriHandler_(uriHandler),
+			idleDetector_(idleDetector),
 			loginWindow_(NULL) ,
 			useDelayForLatency_(useDelayForLatency),
 			eagleMode_(eagleMode) {
@@ -157,8 +159,8 @@ MainController::MainController(
 	loginWindow_->onCancelLoginRequest.connect(boost::bind(&MainController::handleCancelLoginRequest, this));
 	loginWindow_->onQuitRequest.connect(boost::bind(&MainController::handleQuitRequest, this));
 
-	idleDetector_.setIdleTimeSeconds(600);
-	idleDetector_.onIdleChanged.connect(boost::bind(&MainController::handleInputIdleChanged, this, _1));
+	idleDetector_->setIdleTimeSeconds(600);
+	idleDetector_->onIdleChanged.connect(boost::bind(&MainController::handleInputIdleChanged, this, _1));
 
 	xmlConsoleController_ = new XMLConsoleController(uiEventStream_, uiFactory_);
 
@@ -175,6 +177,8 @@ MainController::MainController(
 }
 
 MainController::~MainController() {
+	idleDetector_->onIdleChanged.disconnect(boost::bind(&MainController::handleInputIdleChanged, this, _1));
+
 	purgeCachedCredentials();
 	//setManagersOffline();
 	eventController_->disconnectAll();
