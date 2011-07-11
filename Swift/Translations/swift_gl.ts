@@ -162,7 +162,7 @@
     <message>
         <location filename="../Controllers/Chat/MUCController.cpp" line="114"/>
         <source>Room %1% is not responding. This operation may never complete.</source>
-        <translation>A sala %1% non responde. É posible que esta operación non se complete nunca.</translation>
+        <translation>A sala «%1%» non responde. É posible que esta operación non se complete nunca.</translation>
     </message>
     <message>
         <location filename="../Controllers/Chat/MUCController.cpp" line="125"/>
@@ -172,7 +172,7 @@
     <message>
         <location filename="../Controllers/Chat/MUCController.cpp" line="131"/>
         <source>Unable to enter this room as %1%, retrying as %2%</source>
-        <translation>Non é posible entrar nesta sala como %1%, tentandoo de novo como %2%</translation>
+        <translation>Non é posible entrar nesta sala como «%1%», tentandoo de novo como «%2%»</translation>
     </message>
     <message>
         <location filename="../Controllers/Chat/MUCController.cpp" line="135"/>
@@ -207,17 +207,17 @@
     <message>
         <location filename="../Controllers/Chat/MUCController.cpp" line="173"/>
         <source>You have entered room %1% as %2%.</source>
-        <translation>Entraches na sala %1% como %2%.</translation>
+        <translation>Entraches na sala «%1%» como «%2%».</translation>
     </message>
     <message>
         <location filename="../Controllers/Chat/MUCController.cpp" line="214"/>
         <source>%1% has entered the room as a %2%.</source>
-        <translation>%1% entrou na sala como %2%.</translation>
+        <translation>«%1%» entrou na sala como «%2%».</translation>
     </message>
     <message>
         <location filename="../Controllers/Chat/MUCController.cpp" line="217"/>
         <source>%1% has entered the room.</source>
-        <translation>%1% entrou na sala.</translation>
+        <translation>«%1%» entrou na sala.</translation>
     </message>
     <message>
         <location filename="../Controllers/Chat/MUCController.cpp" line="243"/>
@@ -242,7 +242,7 @@
     <message>
         <location filename="../Controllers/Chat/MUCController.cpp" line="313"/>
         <source>%1% is now a %2%</source>
-        <translation>%1% é agora un %2%</translation>
+        <translation>«%1%» é agora un %2%</translation>
     </message>
     <message>
         <location filename="../Controllers/Chat/MUCController.cpp" line="319"/>
@@ -268,7 +268,7 @@
     <message>
         <location filename="../Controllers/Chat/MUCController.cpp" line="336"/>
         <source>Trying to enter room %1%</source>
-        <translation>Tentando entrar na sala %1%</translation>
+        <translation>Tentando entrar na sala «%1%»</translation>
     </message>
     <message>
         <location filename="../Controllers/Chat/MUCController.cpp" line="365"/>
@@ -279,7 +279,7 @@
     <message>
         <location filename="../Controllers/Chat/MUCController.cpp" line="365"/>
         <source>You have left the room</source>
-        <translation>Saíches a sala</translation>
+        <translation>Saíches da sala</translation>
     </message>
     <message>
         <location filename="../Controllers/Chat/MUCController.cpp" line="439"/>
@@ -481,7 +481,7 @@
     <message>
         <location filename="../Controllers/MainController.cpp" line="490"/>
         <source>Reconnect to %1% failed: %2%. Will retry in %3% seconds.</source>
-        <translation>A reconexión con %1% fallou: %2%. Tentarase de novo en %3% segundos.</translation>
+        <translation>A reconexión con «%1%» fallou: «%2%». Tentarase de novo en %3% segundos.</translation>
     </message>
     <message>
         <location filename="../Controllers/MainController.cpp" line="493"/>
@@ -498,7 +498,7 @@
     <message>
         <location filename="../Controllers/Roster/RosterController.cpp" line="251"/>
         <source>Server %1% rejected contact list change to item &apos;%2%&apos;</source>
-        <translation>O servidor %1% rexeitou o troco ao elemento «%2%» da lista de contactos</translation>
+        <translation>O servidor «%1%» rexeitou o troco ao elemento «%2%» da lista de contactos</translation>
     </message>
     <message>
         <location filename="../Controllers/StatusUtil.cpp" line="15"/>
@@ -571,7 +571,7 @@
     <message>
         <location filename="../QtUI/QtStrings.h" line="85"/>
         <source>About %1</source>
-        <translation>Acerca de %1</translation>
+        <translation>Sobre %1</translation>
     </message>
 </context>
 <context>
@@ -1071,7 +1071,7 @@
     <message>
         <location filename="../QtUI/QtAboutWidget.cpp" line="23"/>
         <source>About %1</source>
-        <translation>Acerca de %1</translation>
+        <translation>Sobre %1</translation>
     </message>
     <message>
         <location filename="../QtUI/QtAboutWidget.cpp" line="40"/>
@@ -1334,7 +1334,7 @@
     <message>
         <location filename="../QtUI/QtLoginWindow.cpp" line="160"/>
         <source>&amp;About %1</source>
-        <translation>&amp;Acerca de %1</translation>
+        <translation>&amp;Sobre %1</translation>
     </message>
     <message>
         <location filename="../QtUI/QtLoginWindow.cpp" line="165"/>
@@ -1596,7 +1596,7 @@ Se escolles pospoñer esta escolla, preguntaráseche de novo na vindeira conexi�
     <message>
         <location filename="../QtUI/UserSearch/QtUserSearchDetailsPage.cpp" line="17"/>
         <source>Please choose a name for the contact, and select the groups you want to add the contact to.</source>
-        <translation>Escolle un nome para o contacto, e seleccione os grupos aos que desexas engadilo.</translation>
+        <translation>Escolle un nome para o contacto, e selecciona os grupos aos que desexas engadilo.</translation>
     </message>
 </context>
 <context>
