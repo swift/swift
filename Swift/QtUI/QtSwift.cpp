@@ -80,7 +80,7 @@ po::options_description QtSwift::getOptionsDescription() {
 }
 
 
-QtSwift::QtSwift(const po::variables_map& options) : networkFactories_(&clientMainThreadCaller_), autoUpdater_(NULL), idleDetector_(&idleQuerier_, networkFactories_->getTimerFactory(), 1000) {
+QtSwift::QtSwift(const po::variables_map& options) : networkFactories_(&clientMainThreadCaller_), autoUpdater_(NULL), idleDetector_(&idleQuerier_, networkFactories_.getTimerFactory(), 1000) {
 	if (options.count("netbook-mode")) {
 		splitter_ = new QSplitter();
 	} else {
