@@ -5,319 +5,329 @@
 <context>
     <name></name>
     <message>
-        <location filename="../Controllers/Chat/ChatController.cpp" line="46"/>
+        <location filename="../Controllers/Chat/ChatController.cpp" line="47"/>
         <source>Starting chat with %1% in chatroom %2%</source>
         <translation>Beginne ein Gespräche mit %1% im Chatraum %2%</translation>
     </message>
     <message>
-        <location filename="../Controllers/Chat/ChatController.cpp" line="49"/>
+        <location filename="../Controllers/Chat/ChatController.cpp" line="50"/>
         <source>Starting chat with %1% - %2%</source>
         <translation>Beginne ein Gespräch mit %1% - %2%</translation>
     </message>
     <message>
-        <location filename="../Controllers/Chat/ChatController.cpp" line="119"/>
+        <location filename="../Controllers/Chat/ChatController.cpp" line="125"/>
         <source>me</source>
         <translation>Ich</translation>
     </message>
     <message>
-        <location filename="../Controllers/Chat/ChatController.cpp" line="160"/>
+        <location filename="../Controllers/Chat/ChatController.cpp" line="167"/>
         <source>%1% has gone offline</source>
         <translation>%1% ist offline gegangen</translation>
     </message>
     <message>
-        <location filename="../Controllers/Chat/ChatController.cpp" line="164"/>
+        <location filename="../Controllers/Chat/ChatController.cpp" line="171"/>
         <source>%1% has become available</source>
         <translation>%1% ist online gekommen</translation>
     </message>
     <message>
-        <location filename="../Controllers/Chat/ChatController.cpp" line="166"/>
+        <location filename="../Controllers/Chat/ChatController.cpp" line="173"/>
         <source>%1% has gone away</source>
         <translation>%1% ist nicht mehr am Rechner</translation>
     </message>
     <message>
-        <location filename="../Controllers/Chat/ChatController.cpp" line="168"/>
+        <location filename="../Controllers/Chat/ChatController.cpp" line="175"/>
         <source>%1% is now busy</source>
         <translation>%1% ist beschäftigt</translation>
     </message>
     <message>
-        <location filename="../Controllers/Chat/ChatControllerBase.cpp" line="56"/>
+        <location filename="../Controllers/Chat/ChatControllerBase.cpp" line="57"/>
         <source>The day is now %1%</source>
         <translation>Wir haben jetzt den Tag %1%</translation>
     </message>
     <message>
-        <location filename="../Controllers/Chat/ChatControllerBase.cpp" line="191"/>
+        <location filename="../Controllers/Chat/ChatControllerBase.cpp" line="161"/>
+        <source>Couldn&apos;t send message: %1%</source>
+        <translation>Konnte die Nachricht nicht senden: %1%</translation>
+    </message>
+    <message>
+        <location filename="../Controllers/Chat/ChatControllerBase.cpp" line="210"/>
         <source>Error sending message</source>
         <translation>Fehler beim Senden der Nachricht</translation>
     </message>
     <message>
-        <location filename="../Controllers/Chat/ChatControllerBase.cpp" line="197"/>
+        <location filename="../Controllers/Chat/ChatControllerBase.cpp" line="216"/>
         <source>Bad request</source>
         <translation>Fehlerhafter Aufruf</translation>
     </message>
     <message>
-        <location filename="../Controllers/Chat/ChatControllerBase.cpp" line="198"/>
+        <location filename="../Controllers/Chat/ChatControllerBase.cpp" line="217"/>
         <source>Conflict</source>
         <translation>Konflikt</translation>
     </message>
     <message>
-        <location filename="../Controllers/Chat/ChatControllerBase.cpp" line="199"/>
+        <location filename="../Controllers/Chat/ChatControllerBase.cpp" line="218"/>
         <source>This feature is not implemented</source>
         <translation>Diese Eigenschaft ist nicht implementiert</translation>
     </message>
     <message>
-        <location filename="../Controllers/Chat/ChatControllerBase.cpp" line="200"/>
+        <location filename="../Controllers/Chat/ChatControllerBase.cpp" line="219"/>
         <source>Forbidden</source>
         <translation>Verboten</translation>
     </message>
     <message>
-        <location filename="../Controllers/Chat/ChatControllerBase.cpp" line="201"/>
+        <location filename="../Controllers/Chat/ChatControllerBase.cpp" line="220"/>
         <source>Recipient can no longer be contacted</source>
         <translation>Der Empfänger ist nicht länger verfügbar</translation>
     </message>
     <message>
-        <location filename="../Controllers/Chat/ChatControllerBase.cpp" line="202"/>
+        <location filename="../Controllers/Chat/ChatControllerBase.cpp" line="221"/>
         <source>Internal server error</source>
         <translation>Interner Server Fehler</translation>
     </message>
     <message>
-        <location filename="../Controllers/Chat/ChatControllerBase.cpp" line="203"/>
+        <location filename="../Controllers/Chat/ChatControllerBase.cpp" line="222"/>
         <source>Item not found</source>
         <translation>Element nicht gefunden</translation>
     </message>
     <message>
-        <location filename="../Controllers/Chat/ChatControllerBase.cpp" line="204"/>
+        <location filename="../Controllers/Chat/ChatControllerBase.cpp" line="223"/>
         <source>JID Malformed</source>
         <translation>Jabber ID ist falsch formatiert</translation>
     </message>
     <message>
-        <location filename="../Controllers/Chat/ChatControllerBase.cpp" line="205"/>
+        <location filename="../Controllers/Chat/ChatControllerBase.cpp" line="224"/>
         <source>Message was rejected</source>
         <translation>Nachricht wurde zurückgewiesen</translation>
     </message>
     <message>
-        <location filename="../Controllers/Chat/ChatControllerBase.cpp" line="206"/>
+        <location filename="../Controllers/Chat/ChatControllerBase.cpp" line="225"/>
         <source>Not allowed</source>
         <translation>Nicht erlaubt</translation>
     </message>
     <message>
-        <location filename="../Controllers/Chat/ChatControllerBase.cpp" line="207"/>
+        <location filename="../Controllers/Chat/ChatControllerBase.cpp" line="226"/>
         <source>Not authorized</source>
         <translation>Nicht authorisiert</translation>
     </message>
     <message>
-        <location filename="../Controllers/Chat/ChatControllerBase.cpp" line="208"/>
+        <location filename="../Controllers/Chat/ChatControllerBase.cpp" line="227"/>
         <source>Payment is required</source>
         <translation>Bezahlung ist nötig</translation>
     </message>
     <message>
-        <location filename="../Controllers/Chat/ChatControllerBase.cpp" line="209"/>
+        <location filename="../Controllers/Chat/ChatControllerBase.cpp" line="228"/>
         <source>Recipient is unavailable</source>
         <translation>Empfänger nicht verfügbar</translation>
     </message>
     <message>
-        <location filename="../Controllers/Chat/ChatControllerBase.cpp" line="210"/>
+        <location filename="../Controllers/Chat/ChatControllerBase.cpp" line="229"/>
         <source>Redirect</source>
         <translation>Weiterleitung</translation>
     </message>
     <message>
-        <location filename="../Controllers/Chat/ChatControllerBase.cpp" line="211"/>
+        <location filename="../Controllers/Chat/ChatControllerBase.cpp" line="230"/>
         <source>Registration required</source>
         <translation>Registrierung nötig</translation>
     </message>
     <message>
-        <location filename="../Controllers/Chat/ChatControllerBase.cpp" line="212"/>
+        <location filename="../Controllers/Chat/ChatControllerBase.cpp" line="231"/>
         <source>Recipient&apos;s server not found</source>
         <translation>Server des Empfängers konnte nicht gefunden werden</translation>
     </message>
     <message>
-        <location filename="../Controllers/Chat/ChatControllerBase.cpp" line="213"/>
+        <location filename="../Controllers/Chat/ChatControllerBase.cpp" line="232"/>
         <source>Remote server timeout</source>
         <translation>Zeitüberschreitung beim entfernten Server</translation>
     </message>
     <message>
-        <location filename="../Controllers/Chat/ChatControllerBase.cpp" line="214"/>
+        <location filename="../Controllers/Chat/ChatControllerBase.cpp" line="233"/>
         <source>The server is low on resources</source>
         <translation>Der Server hat nur noch wenige Resourcen zur Verfügung</translation>
     </message>
     <message>
-        <location filename="../Controllers/Chat/ChatControllerBase.cpp" line="215"/>
+        <location filename="../Controllers/Chat/ChatControllerBase.cpp" line="234"/>
         <source>The service is unavailable</source>
         <translation>Dieser Service ist nicht verfügbar</translation>
     </message>
     <message>
-        <location filename="../Controllers/Chat/ChatControllerBase.cpp" line="216"/>
+        <location filename="../Controllers/Chat/ChatControllerBase.cpp" line="235"/>
         <source>A subscription is required</source>
         <translation>Ein Abonnement ist nötig</translation>
     </message>
     <message>
-        <location filename="../Controllers/Chat/ChatControllerBase.cpp" line="217"/>
+        <location filename="../Controllers/Chat/ChatControllerBase.cpp" line="236"/>
         <source>Undefined condition</source>
         <translation>Nicht definierter Zustand</translation>
     </message>
     <message>
-        <location filename="../Controllers/Chat/ChatControllerBase.cpp" line="218"/>
+        <location filename="../Controllers/Chat/ChatControllerBase.cpp" line="237"/>
         <source>Unexpected request</source>
         <translation>Unerwarteter Aufruf</translation>
     </message>
     <message>
-        <location filename="../Controllers/Chat/MUCController.cpp" line="114"/>
+        <location filename="../Controllers/Chat/MUCController.cpp" line="115"/>
         <source>Room %1% is not responding. This operation may never complete.</source>
         <translation>Der Chatraum %1% antwortet nicht. Diese Aktion wird wohl nie enden.</translation>
     </message>
     <message>
-        <location filename="../Controllers/Chat/MUCController.cpp" line="125"/>
+        <location filename="../Controllers/Chat/MUCController.cpp" line="126"/>
         <source>Unable to enter this room</source>
         <translation>Es ist nicht möglich diesem Chatraum beizutreten</translation>
     </message>
     <message>
-        <location filename="../Controllers/Chat/MUCController.cpp" line="131"/>
+        <location filename="../Controllers/Chat/MUCController.cpp" line="132"/>
         <source>Unable to enter this room as %1%, retrying as %2%</source>
         <translation>Es ist nicht möglich diesem Chatraum als %1% beizutreten, versuche es als %2%</translation>
     </message>
     <message>
-        <location filename="../Controllers/Chat/MUCController.cpp" line="135"/>
+        <location filename="../Controllers/Chat/MUCController.cpp" line="136"/>
         <source>No nickname specified</source>
         <translation>Nickname nicht angegeben</translation>
     </message>
     <message>
-        <location filename="../Controllers/Chat/MUCController.cpp" line="139"/>
+        <location filename="../Controllers/Chat/MUCController.cpp" line="140"/>
         <source>A password needed</source>
         <translation>Ein Passwort ist nötig</translation>
     </message>
     <message>
-        <location filename="../Controllers/Chat/MUCController.cpp" line="143"/>
+        <location filename="../Controllers/Chat/MUCController.cpp" line="144"/>
         <source>Only members may enter</source>
         <translation>Es dürfen nur Mitglieder eintreten</translation>
     </message>
     <message>
-        <location filename="../Controllers/Chat/MUCController.cpp" line="147"/>
+        <location filename="../Controllers/Chat/MUCController.cpp" line="148"/>
         <source>You are banned from the room</source>
         <translation>Du wurdest aus diesem Chatraum gebannt</translation>
     </message>
     <message>
-        <location filename="../Controllers/Chat/MUCController.cpp" line="151"/>
+        <location filename="../Controllers/Chat/MUCController.cpp" line="152"/>
         <source>The room is full</source>
         <translation>Der Chatraum ist voll</translation>
     </message>
     <message>
-        <location filename="../Controllers/Chat/MUCController.cpp" line="155"/>
+        <location filename="../Controllers/Chat/MUCController.cpp" line="156"/>
         <source>The room does not exist</source>
         <translation>Dieser Chatraum existiert nicht</translation>
     </message>
     <message>
-        <location filename="../Controllers/Chat/MUCController.cpp" line="173"/>
+        <location filename="../Controllers/Chat/MUCController.cpp" line="162"/>
+        <source>Couldn&apos;t join room: %1%.</source>
+        <translation>Konnte dem Raum nicht beitreten: %1%.</translation>
+    </message>
+    <message>
+        <location filename="../Controllers/Chat/MUCController.cpp" line="174"/>
         <source>You have entered room %1% as %2%.</source>
         <translation>Du hast den Chatraum %1% als %2% betreten.</translation>
     </message>
     <message>
-        <location filename="../Controllers/Chat/MUCController.cpp" line="214"/>
+        <location filename="../Controllers/Chat/MUCController.cpp" line="217"/>
         <source>%1% has entered the room as a %2%.</source>
         <translation>%1% hat den Chatraum als ein %2% betreten.</translation>
     </message>
     <message>
-        <location filename="../Controllers/Chat/MUCController.cpp" line="217"/>
+        <location filename="../Controllers/Chat/MUCController.cpp" line="220"/>
         <source>%1% has entered the room.</source>
         <translation>%1% hat den Chatraum betreten.</translation>
     </message>
     <message>
-        <location filename="../Controllers/Chat/MUCController.cpp" line="243"/>
+        <location filename="../Controllers/Chat/MUCController.cpp" line="246"/>
         <source>moderator</source>
         <translation>Moderator</translation>
     </message>
     <message>
-        <location filename="../Controllers/Chat/MUCController.cpp" line="244"/>
+        <location filename="../Controllers/Chat/MUCController.cpp" line="247"/>
         <source>participant</source>
         <translation>Teilnehmer</translation>
     </message>
     <message>
-        <location filename="../Controllers/Chat/MUCController.cpp" line="245"/>
+        <location filename="../Controllers/Chat/MUCController.cpp" line="248"/>
         <source>visitor</source>
         <translation>Gast</translation>
     </message>
     <message>
-        <location filename="../Controllers/Chat/MUCController.cpp" line="283"/>
+        <location filename="../Controllers/Chat/MUCController.cpp" line="296"/>
         <source>The room subject is now: %1%</source>
         <translation>Das Thema des Chatraumes ist nun: %1%</translation>
     </message>
     <message>
-        <location filename="../Controllers/Chat/MUCController.cpp" line="313"/>
+        <location filename="../Controllers/Chat/MUCController.cpp" line="328"/>
         <source>%1% is now a %2%</source>
         <translation>%1% ist nun ein %2%</translation>
     </message>
     <message>
-        <location filename="../Controllers/Chat/MUCController.cpp" line="319"/>
+        <location filename="../Controllers/Chat/MUCController.cpp" line="334"/>
         <source>Moderators</source>
         <translation>Moderatoren</translation>
     </message>
     <message>
-        <location filename="../Controllers/Chat/MUCController.cpp" line="320"/>
+        <location filename="../Controllers/Chat/MUCController.cpp" line="335"/>
         <source>Participants</source>
         <translation>Teilnehmer</translation>
     </message>
     <message>
-        <location filename="../Controllers/Chat/MUCController.cpp" line="321"/>
+        <location filename="../Controllers/Chat/MUCController.cpp" line="336"/>
         <source>Visitors</source>
         <translation>Gäste</translation>
     </message>
     <message>
-        <location filename="../Controllers/Chat/MUCController.cpp" line="322"/>
+        <location filename="../Controllers/Chat/MUCController.cpp" line="337"/>
         <source>Occupants</source>
         <translation>Besitzer</translation>
     </message>
     <message>
-        <location filename="../Controllers/Chat/MUCController.cpp" line="336"/>
+        <location filename="../Controllers/Chat/MUCController.cpp" line="351"/>
         <source>Trying to enter room %1%</source>
         <translation>Versuche in den Chatraum %1% einzutreten</translation>
     </message>
     <message>
-        <location filename="../Controllers/Chat/MUCController.cpp" line="365"/>
-        <location filename="../Controllers/Chat/MUCController.cpp" line="474"/>
+        <location filename="../Controllers/Chat/MUCController.cpp" line="380"/>
+        <location filename="../Controllers/Chat/MUCController.cpp" line="489"/>
         <source>%1% has left the room</source>
         <translation>%1% hat den Chatraum verlassen</translation>
     </message>
     <message>
-        <location filename="../Controllers/Chat/MUCController.cpp" line="365"/>
+        <location filename="../Controllers/Chat/MUCController.cpp" line="380"/>
         <source>You have left the room</source>
         <translation>Du hast den Chatraum verlassen</translation>
     </message>
     <message>
-        <location filename="../Controllers/Chat/MUCController.cpp" line="439"/>
-        <location filename="../Controllers/Chat/MUCController.cpp" line="503"/>
+        <location filename="../Controllers/Chat/MUCController.cpp" line="454"/>
+        <location filename="../Controllers/Chat/MUCController.cpp" line="518"/>
         <source> and </source>
         <translation> und </translation>
     </message>
     <message>
-        <location filename="../Controllers/Chat/MUCController.cpp" line="463"/>
+        <location filename="../Controllers/Chat/MUCController.cpp" line="478"/>
         <source>%1% have entered the room</source>
         <translation>%1% haben den Chatraum betreten</translation>
     </message>
     <message>
-        <location filename="../Controllers/Chat/MUCController.cpp" line="466"/>
+        <location filename="../Controllers/Chat/MUCController.cpp" line="481"/>
         <source>%1% has entered the room</source>
         <translation>%1% hat den Chatraum betreten</translation>
     </message>
     <message>
-        <location filename="../Controllers/Chat/MUCController.cpp" line="471"/>
+        <location filename="../Controllers/Chat/MUCController.cpp" line="486"/>
         <source>%1% have left the room</source>
         <translation>%1% haben den Chatraum verlassen</translation>
     </message>
     <message>
-        <location filename="../Controllers/Chat/MUCController.cpp" line="479"/>
+        <location filename="../Controllers/Chat/MUCController.cpp" line="494"/>
         <source>%1% have entered then left the room</source>
         <translation>%1% habe den Chatraum betreten und dann wieder verlassen</translation>
     </message>
     <message>
-        <location filename="../Controllers/Chat/MUCController.cpp" line="482"/>
+        <location filename="../Controllers/Chat/MUCController.cpp" line="497"/>
         <source>%1% has entered then left the room</source>
         <translation>%1% hat den Chatraum betreten und dann wieder verlassen</translation>
     </message>
     <message>
-        <location filename="../Controllers/Chat/MUCController.cpp" line="487"/>
+        <location filename="../Controllers/Chat/MUCController.cpp" line="502"/>
         <source>%1% have left then returned to the room</source>
         <translation>%1% haben den Chatraum verlassen und dann wieder betreten</translation>
     </message>
     <message>
-        <location filename="../Controllers/Chat/MUCController.cpp" line="490"/>
+        <location filename="../Controllers/Chat/MUCController.cpp" line="505"/>
         <source>%1% has left then returned to the room</source>
         <translation>%1% hat den Chatraum verlassen und dann wieder betreten</translation>
     </message>
@@ -332,157 +342,167 @@
         <translation>Fehler</translation>
     </message>
     <message>
-        <location filename="../Controllers/MainController.cpp" line="438"/>
+        <location filename="../Controllers/MainController.cpp" line="385"/>
+        <source>User address invalid. User address should be of the form &apos;alice@wonderland.lit&apos;</source>
+        <translation>Die Benutzerkennung ist falsch. Eine Benutzerkennung sollte wie z.B. &apos;alice@wonderland.lit&apos; ausschauen</translation>
+    </message>
+    <message>
+        <location filename="../Controllers/MainController.cpp" line="478"/>
         <source>Unknown Error</source>
         <translation>unbekannter Fehler</translation>
     </message>
     <message>
-        <location filename="../Controllers/MainController.cpp" line="439"/>
+        <location filename="../Controllers/MainController.cpp" line="479"/>
         <source>Unable to find server</source>
         <translation>Der Server kann nicht gefunden werden</translation>
     </message>
     <message>
-        <location filename="../Controllers/MainController.cpp" line="440"/>
+        <location filename="../Controllers/MainController.cpp" line="480"/>
         <source>Error connecting to server</source>
         <translation>Fehler beim Aufbau einer Verbindung zum Server</translation>
     </message>
     <message>
-        <location filename="../Controllers/MainController.cpp" line="441"/>
+        <location filename="../Controllers/MainController.cpp" line="481"/>
         <source>Error while receiving server data</source>
         <translation>Fehler beim Empfangen der Serverdaten</translation>
     </message>
     <message>
-        <location filename="../Controllers/MainController.cpp" line="442"/>
+        <location filename="../Controllers/MainController.cpp" line="482"/>
         <source>Error while sending data to the server</source>
         <translation>Fehler beim Senden der Daten zum Server</translation>
     </message>
     <message>
-        <location filename="../Controllers/MainController.cpp" line="443"/>
+        <location filename="../Controllers/MainController.cpp" line="483"/>
         <source>Error parsing server data</source>
         <translation>Fehler beim Einlesen der Serverdaten</translation>
     </message>
     <message>
-        <location filename="../Controllers/MainController.cpp" line="444"/>
+        <location filename="../Controllers/MainController.cpp" line="484"/>
         <source>Login/password invalid</source>
         <translation>Login oder Passwort ungültig</translation>
     </message>
     <message>
-        <location filename="../Controllers/MainController.cpp" line="445"/>
+        <location filename="../Controllers/MainController.cpp" line="485"/>
         <source>Error while compressing stream</source>
         <translation>Fehler beim Komprimieren des Datenstreams</translation>
     </message>
     <message>
-        <location filename="../Controllers/MainController.cpp" line="446"/>
+        <location filename="../Controllers/MainController.cpp" line="486"/>
         <source>Server verification failed</source>
         <translation>Überprüfung des Servers fehlgeschlagen</translation>
     </message>
     <message>
-        <location filename="../Controllers/MainController.cpp" line="447"/>
+        <location filename="../Controllers/MainController.cpp" line="487"/>
         <source>Authentication mechanisms not supported</source>
         <translation>Authentifizierungsmethoden werden nicht unterstützt</translation>
     </message>
     <message>
-        <location filename="../Controllers/MainController.cpp" line="448"/>
+        <location filename="../Controllers/MainController.cpp" line="488"/>
         <source>Unexpected response</source>
         <translation>Unerwartete Antwort</translation>
     </message>
     <message>
-        <location filename="../Controllers/MainController.cpp" line="449"/>
+        <location filename="../Controllers/MainController.cpp" line="489"/>
         <source>Error binding resource</source>
         <translation>Fehler beim Verknüpfen der Resourcen</translation>
     </message>
     <message>
-        <location filename="../Controllers/MainController.cpp" line="450"/>
+        <location filename="../Controllers/MainController.cpp" line="490"/>
         <source>Error starting session</source>
         <translation>Fehler beim Starten der Sitzung</translation>
     </message>
     <message>
-        <location filename="../Controllers/MainController.cpp" line="451"/>
+        <location filename="../Controllers/MainController.cpp" line="491"/>
         <source>Stream error</source>
         <translation>Stream Fehler</translation>
     </message>
     <message>
-        <location filename="../Controllers/MainController.cpp" line="452"/>
+        <location filename="../Controllers/MainController.cpp" line="492"/>
         <source>Encryption error</source>
         <translation>Verschlüsselungsfehler</translation>
     </message>
     <message>
-        <location filename="../Controllers/MainController.cpp" line="453"/>
+        <location filename="../Controllers/MainController.cpp" line="493"/>
         <source>Error loading certificate (Invalid password?)</source>
         <translation>Fehler beim Laden des Zertifikates (falsches Passwort?)</translation>
     </message>
     <message>
-        <location filename="../Controllers/MainController.cpp" line="454"/>
+        <location filename="../Controllers/MainController.cpp" line="494"/>
         <source>Certificate not authorized</source>
         <translation>Zertifikat nicht authorisiert</translation>
     </message>
     <message>
-        <location filename="../Controllers/MainController.cpp" line="456"/>
+        <location filename="../Controllers/MainController.cpp" line="496"/>
         <source>Unknown certificate</source>
         <translation>Unbekanntes Zertifikat</translation>
     </message>
     <message>
-        <location filename="../Controllers/MainController.cpp" line="457"/>
+        <location filename="../Controllers/MainController.cpp" line="497"/>
         <source>Certificate has expired</source>
         <translation>Zertifikat ist abgelaufen</translation>
     </message>
     <message>
-        <location filename="../Controllers/MainController.cpp" line="458"/>
+        <location filename="../Controllers/MainController.cpp" line="498"/>
         <source>Certificate is not yet valid</source>
         <translation>Zertifikat noch nicht gültig</translation>
     </message>
     <message>
-        <location filename="../Controllers/MainController.cpp" line="459"/>
+        <location filename="../Controllers/MainController.cpp" line="499"/>
         <source>Certificate is self-signed</source>
         <translation>Zertifikat ist selbst signiert</translation>
     </message>
     <message>
-        <location filename="../Controllers/MainController.cpp" line="460"/>
+        <location filename="../Controllers/MainController.cpp" line="500"/>
         <source>Certificate has been rejected</source>
         <translation>Zertifikat wurde zurückgewiesen</translation>
     </message>
     <message>
-        <location filename="../Controllers/MainController.cpp" line="461"/>
+        <location filename="../Controllers/MainController.cpp" line="501"/>
         <source>Certificate is not trusted</source>
         <translation>Zertifikat wird nicht vertraut</translation>
     </message>
     <message>
-        <location filename="../Controllers/MainController.cpp" line="462"/>
+        <location filename="../Controllers/MainController.cpp" line="502"/>
         <source>Certificate cannot be used for encrypting your connection</source>
         <translation>Zertifikat kann nicht zum Verschlüsseln der Verbindung genutzt werden</translation>
     </message>
     <message>
-        <location filename="../Controllers/MainController.cpp" line="463"/>
+        <location filename="../Controllers/MainController.cpp" line="503"/>
         <source>Certificate path length constraint exceeded</source>
         <translation>Zertifikatpfadlängenbeschränkung überschritten</translation>
     </message>
     <message>
-        <location filename="../Controllers/MainController.cpp" line="464"/>
+        <location filename="../Controllers/MainController.cpp" line="504"/>
         <source>Invalid certificate signature</source>
         <translation>Ungültige Zertifikatssignatur</translation>
     </message>
     <message>
-        <location filename="../Controllers/MainController.cpp" line="465"/>
+        <location filename="../Controllers/MainController.cpp" line="505"/>
         <source>Invalid Certificate Authority</source>
         <translation>Ungültige Zertifizierungsstelle</translation>
     </message>
     <message>
-        <location filename="../Controllers/MainController.cpp" line="466"/>
+        <location filename="../Controllers/MainController.cpp" line="506"/>
         <source>Certificate does not match the host identity</source>
         <translation>Zertifikat stimmt nicht mit der Hostidentität überein</translation>
     </message>
     <message>
-        <location filename="../Controllers/MainController.cpp" line="476"/>
+        <location filename="../Controllers/MainController.cpp" line="516"/>
         <source>Certificate error</source>
         <translation>Zertifikatsfehler</translation>
     </message>
     <message>
-        <location filename="../Controllers/MainController.cpp" line="490"/>
+        <location filename="../Controllers/MainController.cpp" line="530"/>
+        <source>Disconnected from %1%: %2%. To reconnect, Sign Out and provide your password again.</source>
+        <translation>Verbindung zu %1% wurde getrennt: %2%. Bitte ausloggen und nochmal einloggen um die Verbindung wieder aufzubauen.</translation>
+    </message>
+    <message>
+        <location filename="../Controllers/MainController.cpp" line="534"/>
         <source>Reconnect to %1% failed: %2%. Will retry in %3% seconds.</source>
         <translation>Erneutes Verbinden zu %1% fehlgeschlagen: %2%. Es wird in %3% Sekunden erneut versucht zu verbinden.</translation>
     </message>
     <message>
-        <location filename="../Controllers/MainController.cpp" line="493"/>
+        <location filename="../Controllers/MainController.cpp" line="537"/>
         <source>Disconnected from %1%: %2%.</source>
         <translation>Verbindung zu %1% getrennt: %2%.</translation>
     </message>
@@ -524,6 +544,21 @@
         <location filename="../Controllers/ProfileController.cpp" line="62"/>
         <source>There was an error publishing your profile data</source>
         <translation>Es ist ein Fehler während der Veröffentlichung deiner Profildaten aufgetreten</translation>
+    </message>
+    <message>
+        <location filename="../Controllers/ChatMessageSummarizer.cpp" line="33"/>
+        <source>%1% (%2%)</source>
+        <translation>%1% (%2%)</translation>
+    </message>
+    <message>
+        <location filename="../Controllers/ChatMessageSummarizer.cpp" line="38"/>
+        <source>%1% and %2% others (%3%)</source>
+        <translation>%1% und %2% andere (%3%)</translation>
+    </message>
+    <message>
+        <location filename="../Controllers/ChatMessageSummarizer.cpp" line="41"/>
+        <source>%1%, %2% (%3%)</source>
+        <translation>%1%, %2% (%3%)</translation>
     </message>
 </context>
 <context>
@@ -681,6 +716,14 @@
         <location filename="../QtUI/EventViewer/QtEvent.cpp" line="66"/>
         <source>%1 would like to add you to their contact list, saying &apos;%2&apos;</source>
         <translation>%1 möchte dich zu seiner/ihrer Kontaktliste hinzufügen, sein/ihr Kommentar dazu war: &apos;%2&apos;</translation>
+    </message>
+    <message>
+        <source>Systray</source>
+        <translation type="obsolete">Infobereich</translation>
+    </message>
+    <message>
+        <source>No system tray</source>
+        <translation type="obsolete">Kein Infobereich (Systemtray) verfügbar</translation>
     </message>
 </context>
 <context>
@@ -1059,9 +1102,14 @@
 <context>
     <name>Swift::ChatListModel</name>
     <message>
-        <location filename="../QtUI/ChatList/ChatListModel.cpp" line="15"/>
+        <location filename="../QtUI/ChatList/ChatListModel.cpp" line="16"/>
         <source>Bookmarked Rooms</source>
         <translation>Chatraum-Lesezeichen</translation>
+    </message>
+    <message>
+        <location filename="../QtUI/ChatList/ChatListModel.cpp" line="17"/>
+        <source>Recent Chats</source>
+        <translation>Kürzliche Gespräche</translation>
     </message>
 </context>
 <context>
@@ -1097,6 +1145,44 @@
         <location filename="../QtUI/QtAboutWidget.cpp" line="54"/>
         <source>View License</source>
         <translation>Lizenz anzeigen</translation>
+    </message>
+</context>
+<context>
+    <name>Swift::QtAdHocCommandWindow</name>
+    <message>
+        <location filename="../QtUI/QtAdHocCommandWindow.cpp" line="36"/>
+        <source>Cancel</source>
+        <translation>Abbrechen</translation>
+    </message>
+    <message>
+        <location filename="../QtUI/QtAdHocCommandWindow.cpp" line="39"/>
+        <source>Back</source>
+        <translation>Zurück</translation>
+    </message>
+    <message>
+        <location filename="../QtUI/QtAdHocCommandWindow.cpp" line="42"/>
+        <source>Next</source>
+        <translation>Weiter</translation>
+    </message>
+    <message>
+        <location filename="../QtUI/QtAdHocCommandWindow.cpp" line="45"/>
+        <source>Complete</source>
+        <translation>Fertig</translation>
+    </message>
+    <message>
+        <location filename="../QtUI/QtAdHocCommandWindow.cpp" line="90"/>
+        <source>Error: %1</source>
+        <translation>Fehler: %1</translation>
+    </message>
+    <message>
+        <location filename="../QtUI/QtAdHocCommandWindow.cpp" line="91"/>
+        <source>Warning: %1</source>
+        <translation>Warnung: %1</translation>
+    </message>
+    <message>
+        <location filename="../QtUI/QtAdHocCommandWindow.cpp" line="104"/>
+        <source>Error executing command</source>
+        <translation>Fehler beim Ausführen des Kommandos</translation>
     </message>
 </context>
 <context>
@@ -1153,18 +1239,18 @@
 <context>
     <name>Swift::QtChatListWindow</name>
     <message>
-        <location filename="../QtUI/ChatList/QtChatListWindow.cpp" line="62"/>
-        <location filename="../QtUI/ChatList/QtChatListWindow.cpp" line="66"/>
+        <location filename="../QtUI/ChatList/QtChatListWindow.cpp" line="64"/>
+        <location filename="../QtUI/ChatList/QtChatListWindow.cpp" line="68"/>
         <source>Add New Bookmark</source>
         <translation>Neues Lesezeichen hinzufügen</translation>
     </message>
     <message>
-        <location filename="../QtUI/ChatList/QtChatListWindow.cpp" line="63"/>
+        <location filename="../QtUI/ChatList/QtChatListWindow.cpp" line="65"/>
         <source>Edit Bookmark</source>
         <translation>Lesezeichen editieren</translation>
     </message>
     <message>
-        <location filename="../QtUI/ChatList/QtChatListWindow.cpp" line="64"/>
+        <location filename="../QtUI/ChatList/QtChatListWindow.cpp" line="66"/>
         <source>Remove Bookmark</source>
         <translation>Lesezeichen entfernen</translation>
     </message>
@@ -1172,37 +1258,46 @@
 <context>
     <name>Swift::QtChatView</name>
     <message>
-        <location filename="../QtUI/QtChatView.cpp" line="61"/>
+        <location filename="../QtUI/QtChatView.cpp" line="63"/>
         <source>Clear log</source>
         <translation>Aufzeichnung löschen</translation>
     </message>
     <message>
-        <location filename="../QtUI/QtChatView.cpp" line="62"/>
+        <location filename="../QtUI/QtChatView.cpp" line="64"/>
         <source>You are about to clear the contents of your chat log.</source>
         <translation>Du bist dabei die Gesprächsaufzeichung zu löschen.</translation>
     </message>
     <message>
-        <location filename="../QtUI/QtChatView.cpp" line="63"/>
+        <location filename="../QtUI/QtChatView.cpp" line="65"/>
         <source>Are you sure?</source>
         <translation>Bist du dir sicher?</translation>
+    </message>
+    <message>
+        <location filename="../QtUI/QtChatView.cpp" line="165"/>
+        <source>%1 edited</source>
+        <translation>%1 editiert</translation>
     </message>
 </context>
 <context>
     <name>Swift::QtChatWindow</name>
     <message>
-        <location filename="../QtUI/QtChatWindow.cpp" line="302"/>
+        <location filename="../QtUI/QtChatWindow.cpp" line="82"/>
+        <source>Correcting</source>
+        <translation>verbessern</translation>
+    </message>
+    <message>
+        <location filename="../QtUI/QtChatWindow.cpp" line="362"/>
         <source>This message has not been received by your server yet.</source>
         <translation>Die Nachricht wurde noch nicht von deinem Server empfangen.</translation>
     </message>
     <message>
-        <location filename="../QtUI/QtChatWindow.cpp" line="304"/>
+        <location filename="../QtUI/QtChatWindow.cpp" line="364"/>
         <source>This message may not have been transmitted.</source>
         <translation>Die Nachricht scheint nicht versandt worden zu sein.</translation>
     </message>
     <message>
-        <location filename="../QtUI/QtChatWindow.cpp" line="324"/>
         <source>Couldn&apos;t send message: %1</source>
-        <translation>Konnte die Nachricht nicht senden: %1</translation>
+        <translation type="obsolete">Konnte die Nachricht nicht senden: %1</translation>
     </message>
 </context>
 <context>
@@ -1303,7 +1398,7 @@
     </message>
     <message>
         <location filename="../QtUI/QtLoginWindow.cpp" line="125"/>
-        <location filename="../QtUI/QtLoginWindow.cpp" line="299"/>
+        <location filename="../QtUI/QtLoginWindow.cpp" line="307"/>
         <source>Connect</source>
         <translation>Verbinden</translation>
     </message>
@@ -1353,42 +1448,42 @@
         <translation>&amp;Beenden</translation>
     </message>
     <message>
-        <location filename="../QtUI/QtLoginWindow.cpp" line="205"/>
+        <location filename="../QtUI/QtLoginWindow.cpp" line="215"/>
         <source>Remove profile</source>
         <translation>Profil entfernen</translation>
     </message>
     <message>
-        <location filename="../QtUI/QtLoginWindow.cpp" line="205"/>
+        <location filename="../QtUI/QtLoginWindow.cpp" line="215"/>
         <source>Remove the profile &apos;%1&apos;?</source>
         <translation>Das Profil &apos;%1&apos; entfernen?</translation>
     </message>
     <message>
-        <location filename="../QtUI/QtLoginWindow.cpp" line="299"/>
+        <location filename="../QtUI/QtLoginWindow.cpp" line="307"/>
         <source>Cancel</source>
         <translation>Abbrechen</translation>
     </message>
     <message>
-        <location filename="../QtUI/QtLoginWindow.cpp" line="320"/>
+        <location filename="../QtUI/QtLoginWindow.cpp" line="332"/>
         <source>Select an authentication certificate</source>
         <translation>Wähle ein Authentifizierungszertifikat</translation>
     </message>
     <message>
-        <location filename="../QtUI/QtLoginWindow.cpp" line="420"/>
+        <location filename="../QtUI/QtLoginWindow.cpp" line="433"/>
         <source>The certificate presented by the server is not valid.</source>
         <translation>Das Serverzertifikat ist nicht gültig.</translation>
     </message>
     <message>
-        <location filename="../QtUI/QtLoginWindow.cpp" line="421"/>
+        <location filename="../QtUI/QtLoginWindow.cpp" line="434"/>
         <source>Would you like to permanently trust this certificate? This must only be done if you know it is correct.</source>
         <translation>Willst du diesem Zertifikat permanent Vertrauen? Das darf nur der Fall sein, wenn du genau weißt, dass es korrekt ist.</translation>
     </message>
     <message>
-        <location filename="../QtUI/QtLoginWindow.cpp" line="423"/>
+        <location filename="../QtUI/QtLoginWindow.cpp" line="436"/>
         <source>Subject: %1</source>
         <translation>Betreff: %1</translation>
     </message>
     <message>
-        <location filename="../QtUI/QtLoginWindow.cpp" line="424"/>
+        <location filename="../QtUI/QtLoginWindow.cpp" line="437"/>
         <source>SHA-1 Fingerprint: %1</source>
         <translation>SHA-1 Fingerabdruck: %1</translation>
     </message>
@@ -1405,65 +1500,80 @@
 <context>
     <name>Swift::QtMainWindow</name>
     <message>
-        <location filename="../QtUI/QtMainWindow.cpp" line="64"/>
+        <location filename="../QtUI/QtMainWindow.cpp" line="69"/>
         <source>&amp;Contacts</source>
         <translation>&amp;Kontakte</translation>
     </message>
     <message>
-        <location filename="../QtUI/QtMainWindow.cpp" line="71"/>
-        <location filename="../QtUI/QtMainWindow.cpp" line="137"/>
+        <location filename="../QtUI/QtMainWindow.cpp" line="77"/>
+        <location filename="../QtUI/QtMainWindow.cpp" line="158"/>
         <source>&amp;Notices</source>
         <translation>H&amp;inweise</translation>
     </message>
     <message>
-        <location filename="../QtUI/QtMainWindow.cpp" line="72"/>
+        <location filename="../QtUI/QtMainWindow.cpp" line="76"/>
         <source>C&amp;hats</source>
         <translation>C&amp;hats</translation>
     </message>
     <message>
-        <location filename="../QtUI/QtMainWindow.cpp" line="76"/>
+        <location filename="../QtUI/QtMainWindow.cpp" line="85"/>
         <source>&amp;View</source>
         <translation>A&amp;nsicht</translation>
     </message>
     <message>
-        <location filename="../QtUI/QtMainWindow.cpp" line="78"/>
+        <location filename="../QtUI/QtMainWindow.cpp" line="87"/>
         <source>&amp;Show offline contacts</source>
         <translation>&amp;Offline-Kontakte anzeigen</translation>
     </message>
     <message>
-        <location filename="../QtUI/QtMainWindow.cpp" line="84"/>
+        <location filename="../QtUI/QtMainWindow.cpp" line="93"/>
         <source>&amp;Actions</source>
         <translation>&amp;Aktionen</translation>
     </message>
     <message>
-        <location filename="../QtUI/QtMainWindow.cpp" line="86"/>
+        <location filename="../QtUI/QtMainWindow.cpp" line="95"/>
         <source>Edit &amp;Profile</source>
         <translation>&amp;Profil editieren</translation>
     </message>
     <message>
-        <location filename="../QtUI/QtMainWindow.cpp" line="89"/>
+        <location filename="../QtUI/QtMainWindow.cpp" line="98"/>
         <source>Enter &amp;Room</source>
         <translation>Chat&amp;raum betreten</translation>
     </message>
     <message>
-        <location filename="../QtUI/QtMainWindow.cpp" line="92"/>
+        <location filename="../QtUI/QtMainWindow.cpp" line="101"/>
         <source>&amp;Add Contact</source>
         <translation>Kont&amp;akt hinzufügen</translation>
     </message>
     <message>
-        <location filename="../QtUI/QtMainWindow.cpp" line="95"/>
+        <location filename="../QtUI/QtMainWindow.cpp" line="104"/>
         <source>&amp;Edit Selected Contact</source>
         <translation>Ausgewählten Kontakt &amp;editieren</translation>
     </message>
     <message>
-        <location filename="../QtUI/QtMainWindow.cpp" line="99"/>
+        <location filename="../QtUI/QtMainWindow.cpp" line="108"/>
         <source>Start &amp;Chat</source>
         <translation>Gesprä&amp;ch beginnen</translation>
     </message>
     <message>
-        <location filename="../QtUI/QtMainWindow.cpp" line="103"/>
+        <location filename="../QtUI/QtMainWindow.cpp" line="111"/>
+        <source>Run Server Command</source>
+        <translation>Server Kommando ausführen</translation>
+    </message>
+    <message>
+        <location filename="../QtUI/QtMainWindow.cpp" line="114"/>
         <source>&amp;Sign Out</source>
         <translation>A&amp;bmelden</translation>
+    </message>
+    <message>
+        <location filename="../QtUI/QtMainWindow.cpp" line="121"/>
+        <source>Collecting commands...</source>
+        <translation>Verfügbare Kommandos werden abgerufen...</translation>
+    </message>
+    <message>
+        <location filename="../QtUI/QtMainWindow.cpp" line="251"/>
+        <source>No Available Commands</source>
+        <translation>Keine Kommandos verfügbar</translation>
     </message>
 </context>
 <context>
@@ -1657,6 +1767,16 @@ Wenn du dich jetzt noch nicht festlegen willst, wirst du beim nächsten Einlogge
         <location filename="../QtUI/QtWebView.cpp" line="61"/>
         <source>Clear</source>
         <translation>Leeren</translation>
+    </message>
+    <message>
+        <location filename="../QtUI/QtWebView.cpp" line="62"/>
+        <source>Increase font size</source>
+        <translation>Schriftgröße erhöhen</translation>
+    </message>
+    <message>
+        <location filename="../QtUI/QtWebView.cpp" line="63"/>
+        <source>Decrease font size</source>
+        <translation>Schriftgröße verringern</translation>
     </message>
 </context>
 <context>

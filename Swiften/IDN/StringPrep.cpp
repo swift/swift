@@ -43,11 +43,19 @@ using namespace Swift;
 namespace Swift {
 
 std::string StringPrep::getPrepared(const std::string& s, Profile profile) {
-	return std::string(vecptr(getStringPrepared< std::string, std::vector<char> >(s, profile)));
+	std::vector<char> preparedData = getStringPrepared< std::string, std::vector<char> >(s, profile);
+	if (preparedData.empty()) {
+		throw std::exception();
+	}
+	return std::string(vecptr(preparedData));
 }
 
 SafeByteArray StringPrep::getPrepared(const SafeByteArray& s, Profile profile) {
-	return createSafeByteArray(reinterpret_cast<const char*>(vecptr(getStringPrepared<SafeByteArray, std::vector<char, SafeAllocator<char> > >(s, profile))));
+	std::vector<char, SafeAllocator<char> > preparedData = getStringPrepared<SafeByteArray, std::vector<char, SafeAllocator<char> > >(s, profile);
+	if (preparedData.empty()) {
+		throw std::exception();
+	}
+	return createSafeByteArray(reinterpret_cast<const char*>(vecptr(preparedData)));
 }
 
 }

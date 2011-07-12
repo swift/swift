@@ -72,7 +72,7 @@ namespace Swift {
 			 * @return Is a correctly-formatted JID.
 			 */
 			bool isValid() const {
-				return !domain_.empty(); /* FIXME */
+				return valid_;
 			}
 
 			/**
@@ -162,6 +162,7 @@ namespace Swift {
 			void initializeFromString(const std::string&);
 	
 		private:
+			bool valid_;
 			std::string node_;
 			std::string domain_;
 			bool hasResource_;
