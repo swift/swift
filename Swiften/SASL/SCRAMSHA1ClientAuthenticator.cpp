@@ -99,7 +99,11 @@ bool SCRAMSHA1ClientAuthenticator::setChallenge(const boost::optional<ByteArray>
 		}
 
 		// Compute all the values needed for the server signature
-		saltedPassword = PBKDF2::encode(StringPrep::getPrepared(getPassword(), StringPrep::SASLPrep), salt, iterations);
+		try {
+			saltedPassword = PBKDF2::encode(StringPrep::getPrepared(getPassword(), StringPrep::SASLPrep), salt, iterations);
+		}
+		catch (const std::exception&) {
+		}
 		authMessage = getInitialBareClientMessage() + "," + initialServerMessage + "," + getFinalMessageWithoutProof();
 		ByteArray serverKey = HMACSHA1::getResult(saltedPassword, "Server Key");
 		serverSignature = HMACSHA1::getResult(serverKey, authMessage);
@@ -146,7 +150,12 @@ std::map<char, std::string> SCRAMSHA1ClientAuthenticator::parseMap(const std::st
 }
 
 ByteArray SCRAMSHA1ClientAuthenticator::getInitialBareClientMessage() const {
-	std::string authenticationID = StringPrep::getPrepared(getAuthenticationID(), StringPrep::SASLPrep);
+	std::string authenticationID;
+	try {
+	 authenticationID = StringPrep::getPrepared(getAuthenticationID(), StringPrep::SASLPrep);
+	}
+	catch (const std::exception&) {
+	}
 	return ByteArray(std::string("n=" + escape(authenticationID) + ",r=" + clientnonce));
 }
 

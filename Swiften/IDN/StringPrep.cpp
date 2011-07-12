@@ -26,14 +26,13 @@ const Stringprep_profile* getLibIDNProfile(StringPrep::Profile profile) {
 }
 
 std::string StringPrep::getPrepared(const std::string& s, Profile profile) {
-	
 	std::vector<char> input(s.begin(), s.end());
 	input.resize(MAX_STRINGPREP_SIZE);
 	if (stringprep(&input[0], MAX_STRINGPREP_SIZE, static_cast<Stringprep_profile_flags>(0), getLibIDNProfile(profile)) == 0) {
 		return std::string(&input[0]);
 	}
 	else {
-		return "";
+		throw std::exception();
 	}
 }
 

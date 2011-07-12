@@ -22,7 +22,7 @@ namespace Swift {
 			JID(const std::string& node, const std::string& domain, const std::string& resource);
 
 			bool isValid() const {
-				return !domain_.empty(); /* FIXME */
+				return valid_;
 			}
 
 			const std::string& getNode() const {
@@ -79,6 +79,7 @@ namespace Swift {
 			void initializeFromString(const std::string&);
 	
 		private:
+			bool valid_;
 			std::string node_;
 			std::string domain_;
 			bool hasResource_;

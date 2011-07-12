@@ -29,24 +29,25 @@ static PrepCache resourcePrepCache;
 
 namespace Swift {
 
-JID::JID(const char* jid) {
+JID::JID(const char* jid) : valid_(true) {
 	initializeFromString(std::string(jid));
 }
 
-JID::JID(const std::string& jid) {
+JID::JID(const std::string& jid) : valid_(true) {
 	initializeFromString(jid);
 }
 
-JID::JID(const std::string& node, const std::string& domain) : hasResource_(false) {
+JID::JID(const std::string& node, const std::string& domain) : valid_(true), hasResource_(false) {
 	nameprepAndSetComponents(node, domain, "");
 }
 
-JID::JID(const std::string& node, const std::string& domain, const std::string& resource) : hasResource_(true) {
+JID::JID(const std::string& node, const std::string& domain, const std::string& resource) : valid_(true), hasResource_(true) {
 	nameprepAndSetComponents(node, domain, resource);
 }
 
 void JID::initializeFromString(const std::string& jid) {
 	if (String::beginsWith(jid, '@')) {
+		valid_ = false;
 		return;
 	}
 
@@ -72,31 +73,40 @@ void JID::initializeFromString(const std::string& jid) {
 
 
 void JID::nameprepAndSetComponents(const std::string& node, const std::string& domain, const std::string& resource) {
+	try {
 #ifndef SWIFTEN_CACHE_JID_PREP
-	node_ = StringPrep::getPrepared(node, StringPrep::NamePrep);
-	domain_ = StringPrep::getPrepared(domain, StringPrep::XMPPNodePrep);
-	resource_ = StringPrep::getPrepared(resource, StringPrep::XMPPResourcePrep);
+		node_ = StringPrep::getPrepared(node, StringPrep::NamePrep);
+		domain_ = StringPrep::getPrepared(domain, StringPrep::XMPPNodePrep);
+		resource_ = StringPrep::getPrepared(resource, StringPrep::XMPPResourcePrep);
 #else
-	std::pair<PrepCache::iterator, bool> r;
+		std::pair<PrepCache::iterator, bool> r;
 
-	r = nodePrepCache.insert(std::make_pair(node, std::string()));
-	if (r.second) {
-		r.first->second = StringPrep::getPrepared(node, StringPrep::NamePrep);
-	}
-	node_ = r.first->second;
+		r = nodePrepCache.insert(std::make_pair(node, std::string()));
+		if (r.second) {
+			r.first->second = StringPrep::getPrepared(node, StringPrep::NamePrep);
+		}
+		node_ = r.first->second;
 
-	r = domainPrepCache.insert(std::make_pair(domain, std::string()));
-	if (r.second) {
-		r.first->second = StringPrep::getPrepared(domain, StringPrep::XMPPNodePrep);
-	}
-	domain_ = r.first->second;
+		r = domainPrepCache.insert(std::make_pair(domain, std::string()));
+		if (r.second) {
+			r.first->second = StringPrep::getPrepared(domain, StringPrep::XMPPNodePrep);
+		}
+		domain_ = r.first->second;
+		if (domain_.empty()) {
+			valid_ = false;
+			return;
+		}
 
-	r = resourcePrepCache.insert(std::make_pair(resource, std::string()));
-	if (r.second) {
-		r.first->second = StringPrep::getPrepared(resource, StringPrep::XMPPResourcePrep);
-	}
-	resource_ = r.first->second;
+		r = resourcePrepCache.insert(std::make_pair(resource, std::string()));
+		if (r.second) {
+			r.first->second = StringPrep::getPrepared(resource, StringPrep::XMPPResourcePrep);
+		}
+		resource_ = r.first->second;
 #endif
+	}
+	catch (const std::exception&) {
+		valid_ = false;
+	}
 }
 
 std::string JID::toString() const {
