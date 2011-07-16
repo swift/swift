@@ -271,6 +271,8 @@ void ChatsManager::handleUserLeftMUC(MUCController* mucController) {
 			foreach (ChatListWindow::Chat& chat, recentChats_) {
 				if (chat.isMUC && chat.jid == (*it).first) {
 					chat.statusType = StatusShow::None;
+					chatListWindow_->setRecents(recentChats_);
+					break;
 				}
 			}
 			mucControllers_.erase(it);
@@ -324,7 +326,7 @@ void ChatsManager::handlePresenceChange(boost::shared_ptr<Presence> newPresence)
 	if (mucRegistry_->isMUC(newPresence->getFrom().toBare())) return;
 
 	foreach (ChatListWindow::Chat& chat, recentChats_) {
-		if (newPresence->getFrom().toBare() == chat.jid.toBare()) {
+		if (newPresence->getFrom().toBare() == chat.jid.toBare() && !chat.isMUC) {
 			Presence::ref presence = presenceOracle_->getHighestPriorityPresence(chat.jid.toBare());
 			chat.setStatusType(presence ? presence->getShow() : StatusShow::None);
 			chatListWindow_->setRecents(recentChats_);
