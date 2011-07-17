@@ -77,6 +77,11 @@ namespace Swift {
 				}
 			}
 		}
+		
+		template<typename C, typename P>
+		void eraseIfImpl(C& c, const P& p, VectorCategory) {
+			c.erase(std::remove_if(c.begin(), c.end(), p), c.end());
+		}
 	}
 
 	template<typename C, typename V>
@@ -114,6 +119,20 @@ namespace Swift {
 	/*
 	 * Functors
 	 */
+	template<typename K, typename V>
+	class PairFirstEquals {
+		public:
+			PairFirstEquals(const K& value) : value(value) {
+			}
+
+			bool operator()(const std::pair<K,V>& pair) const {
+				return pair.first == value;
+			}
+
+		private:
+			K value;
+	};
+
 	template<typename K, typename V>
 	class PairSecondEquals {
 		public:
