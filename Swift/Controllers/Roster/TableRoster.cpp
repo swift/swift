@@ -40,7 +40,7 @@ namespace Swift {
 
 	struct ItemNeedsUpdate {
 			bool operator()(const TableRoster::Item& i1, const TableRoster::Item& i2) const {
-				return i1.status != i2.status || i1.description != i2.description || i1.name != i2.name;
+				return i1.status != i2.status || i1.description != i2.description || i1.name != i2.name || i1.avatarPath.empty() != i2.avatarPath.empty();
 			}
 	};
 
