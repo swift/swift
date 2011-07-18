@@ -304,13 +304,12 @@ void ChatsManager::handleUIEvent(boost::shared_ptr<UIEvent> event) {
 		mucBookmarkManager_->replaceBookmark(editMUCBookmarkEvent->getOldBookmark(), editMUCBookmarkEvent->getNewBookmark());
 	}
 	else if (JoinMUCUIEvent::ref joinEvent = boost::dynamic_pointer_cast<JoinMUCUIEvent>(event)) {
-		handleJoinMUCRequest(joinEvent->getJID(), joinEvent->getNick(), false);
+		handleJoinMUCRequest(joinEvent->getJID(), joinEvent->getNick(), joinEvent->getShouldJoinAutomatically());
 		mucControllers_[joinEvent->getJID()]->activateChatWindow();
 	}
 	else if (boost::shared_ptr<RequestJoinMUCUIEvent> joinEvent = boost::dynamic_pointer_cast<RequestJoinMUCUIEvent>(event)) {
 		if (!joinMUCWindow_) {
-			joinMUCWindow_ = joinMUCWindowFactory_->createJoinMUCWindow();
-			joinMUCWindow_->onJoinMUC.connect(boost::bind(&ChatsManager::handleJoinMUCRequest, this, _1, _2, _3));
+			joinMUCWindow_ = joinMUCWindowFactory_->createJoinMUCWindow(uiEventStream_);
 			joinMUCWindow_->onSearchMUC.connect(boost::bind(&ChatsManager::handleSearchMUCRequest, this));
 		}
 		joinMUCWindow_->setMUC(joinEvent->getRoom());

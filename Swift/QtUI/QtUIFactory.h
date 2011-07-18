@@ -36,7 +36,7 @@ namespace Swift {
 			virtual MUCSearchWindow* createMUCSearchWindow();
 			virtual ChatWindow* createChatWindow(const JID &contact, UIEventStream* eventStream);
 			virtual UserSearchWindow* createUserSearchWindow(UserSearchWindow::Type type, UIEventStream* eventStream, const std::set<std::string>& groups);
-			virtual JoinMUCWindow* createJoinMUCWindow();
+			virtual JoinMUCWindow* createJoinMUCWindow(UIEventStream* uiEventStream);
 			virtual ProfileWindow* createProfileWindow();
 			virtual ContactEditWindow* createContactEditWindow();
 			virtual void createAdHocCommandWindow(boost::shared_ptr<OutgoingAdHocCommandSession> command);

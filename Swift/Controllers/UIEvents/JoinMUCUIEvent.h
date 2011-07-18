@@ -18,11 +18,13 @@ namespace Swift {
 	class JoinMUCUIEvent : public UIEvent {
 		public:
 			typedef boost::shared_ptr<JoinMUCUIEvent> ref;
-			JoinMUCUIEvent(const JID& jid, const boost::optional<std::string>& nick = boost::optional<std::string>()) : jid_(jid), nick_(nick) {};
+			JoinMUCUIEvent(const JID& jid, const boost::optional<std::string>& nick = boost::optional<std::string>(), bool joinAutomaticallyInFuture = false) : jid_(jid), nick_(nick), joinAutomatically_(joinAutomaticallyInFuture){};
 			boost::optional<std::string> getNick() {return nick_;};
 			JID getJID() {return jid_;};
+			bool getShouldJoinAutomatically() {return joinAutomatically_;}
 		private:
 			JID jid_;
 			boost::optional<std::string> nick_;
+			bool joinAutomatically_;
 	};
 }

@@ -11,10 +11,11 @@
 #include <Swift/QtUI/ui_QtJoinMUCWindow.h>
 
 namespace Swift {
+	class UIEventStream;
 	class QtJoinMUCWindow : public QWidget, public JoinMUCWindow {
 			Q_OBJECT
 		public:
-			QtJoinMUCWindow();
+			QtJoinMUCWindow(UIEventStream* uiEventStream);
 
 			virtual void setNick(const std::string& nick);
 			virtual void setMUC(const std::string& nick);
@@ -28,5 +29,6 @@ namespace Swift {
 		private:
 			Ui::QtJoinMUCWindow ui;
 			std::string lastSetNick;
+			UIEventStream* uiEventStream;
 	};
 }

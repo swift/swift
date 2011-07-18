@@ -112,8 +112,8 @@ UserSearchWindow* QtUIFactory::createUserSearchWindow(UserSearchWindow::Type typ
 	return new QtUserSearchWindow(eventStream, type, groups);
 };
 
-JoinMUCWindow* QtUIFactory::createJoinMUCWindow() {
-	return new QtJoinMUCWindow();
+JoinMUCWindow* QtUIFactory::createJoinMUCWindow(UIEventStream* uiEventStream) {
+	return new QtJoinMUCWindow(uiEventStream);
 }
 
 ProfileWindow* QtUIFactory::createProfileWindow() {

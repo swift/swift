@@ -6,10 +6,13 @@
 
 #include "QtJoinMUCWindow.h"
 #include "QtSwiftUtil.h"
+#include <boost/smart_ptr/make_shared.hpp>
+#include <Swift/Controllers/UIEvents/UIEventStream.h>
+#include <Swift/Controllers/UIEvents/JoinMUCUIEvent.h>
 
 namespace Swift {
 
-QtJoinMUCWindow::QtJoinMUCWindow() {
+QtJoinMUCWindow::QtJoinMUCWindow(UIEventStream* uiEventStream) : uiEventStream(uiEventStream) {
 	ui.setupUi(this);
 #if QT_VERSION >= 0x040700
 	ui.room->setPlaceholderText(tr("someroom@rooms.example.com"));
@@ -35,7 +38,7 @@ void QtJoinMUCWindow::handleJoin() {
 
 	lastSetNick = Q2PSTRING(ui.nickName->text());
 	JID room(Q2PSTRING(ui.room->text()));
-	onJoinMUC(room, lastSetNick, ui.joinAutomatically->isChecked()); 
+	uiEventStream->send(boost::make_shared<JoinMUCUIEvent>(room, lastSetNick, ui.joinAutomatically->isChecked()));
 	hide();
 }
 

@@ -21,7 +21,6 @@ namespace Swift {
 			virtual void setMUC(const std::string& nick) = 0;
 			virtual void show() = 0;
 
-			boost::signal<void (const JID& /* muc */, const std::string& /* nick */, bool /* autoJoin */)> onJoinMUC;
 			boost::signal<void ()> onSearchMUC;
 	};
 }
