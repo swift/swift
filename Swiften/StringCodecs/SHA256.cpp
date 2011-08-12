@@ -8,6 +8,7 @@
 
 #include <cassert>
 #include <algorithm>
+#include <string.h>
 
 #pragma GCC diagnostic ignored "-Wold-style-cast"
 
