@@ -11,20 +11,21 @@
 #include <cppunit/extensions/TestFactoryRegistry.h>
 
 #include <Swiften/Base/ByteArray.h>
-#include <Swiften/StringCodecs/HMACSHA1.h>
+#include <Swiften/StringCodecs/HMAC.h>
+#include <Swiften/StringCodecs/SHA1.h>
 
 using namespace Swift;
 
-class HMACSHA1Test : public CppUnit::TestFixture {
-		CPPUNIT_TEST_SUITE(HMACSHA1Test);
+class HMACTest : public CppUnit::TestFixture {
+		CPPUNIT_TEST_SUITE(HMACTest);
 		CPPUNIT_TEST(testGetResult);
 		CPPUNIT_TEST_SUITE_END();
 
 	public:
 		void testGetResult() {
-			ByteArray result(HMACSHA1::getResult(createSafeByteArray("foo"), createByteArray("foobar")));
+			ByteArray result(HMAC<SHA1>()(createSafeByteArray("foo"), createByteArray("foobar")));
 			CPPUNIT_ASSERT_EQUAL(createByteArray("\xa4\xee\xba\x8e\x63\x3d\x77\x88\x69\xf5\x68\xd0\x5a\x1b\x3d\xc7\x2b\xfd\x4\xdd"), result);
 		}
 };
 
-CPPUNIT_TEST_SUITE_REGISTRATION(HMACSHA1Test);
+CPPUNIT_TEST_SUITE_REGISTRATION(HMACTest);

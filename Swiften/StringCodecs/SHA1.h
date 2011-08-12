@@ -26,8 +26,15 @@ namespace Swift {
 			 *	convenient.
 			 */
 			static ByteArray getHash(const ByteArray& data);
-
 			static ByteArray getHash(const SafeByteArray& data);
+
+			ByteArray operator()(const SafeByteArray& data) {
+				return getHash(data);
+			}
+
+			ByteArray operator()(const ByteArray& data) {
+				return getHash(data);
+			}
 
 		private:
 			typedef struct {
