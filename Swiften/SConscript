@@ -175,6 +175,7 @@ if env["SCONS_STAGE"] == "build" :
 			"Session/BasicSessionStream.cpp",
 			"StringCodecs/Base64.cpp",
 			"StringCodecs/SHA1.cpp",
+			"StringCodecs/SHA256.cpp",
 			"StringCodecs/MD5.cpp",
 			"StringCodecs/Hexify.cpp",
 		]
@@ -345,6 +346,7 @@ if env["SCONS_STAGE"] == "build" :
 			File("StreamStack/UnitTest/XMPPLayerTest.cpp"),
 			File("StringCodecs/UnitTest/Base64Test.cpp"),
 			File("StringCodecs/UnitTest/SHA1Test.cpp"),
+			File("StringCodecs/UnitTest/SHA256Test.cpp"),
 			File("StringCodecs/UnitTest/MD5Test.cpp"),
 			File("StringCodecs/UnitTest/HexifyTest.cpp"),
 			File("StringCodecs/UnitTest/HMACTest.cpp"),
