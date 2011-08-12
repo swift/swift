@@ -12,16 +12,25 @@
 
 namespace Swift {
 	namespace HMAC_Detail {
-		static const unsigned int B = 64;
+		template<typename KeyType> struct KeyWrapper;
+		template<> struct KeyWrapper<ByteArray> {
+			ByteArray wrap(const ByteArray& hash) const {
+				return hash;
+			}
+		};
+		template<> struct KeyWrapper<SafeByteArray> {
+			SafeByteArray wrap(const ByteArray& hash) const {
+				return createSafeByteArray(hash);
+			}
+		};
 
-		template<typename Hash, typename KeyType>
+		template<typename Hash, typename KeyType, int BlockSize>
 		static ByteArray getHMAC(const KeyType& key, const ByteArray& data) {
-			assert(key.size() <= B);
 			Hash hash;
 
 			// Create the padded key
-			KeyType paddedKey(key);
-			paddedKey.resize(B, 0x0);
+			KeyType paddedKey(key.size() <= BlockSize ? key : KeyWrapper<KeyType>().wrap(hash(key)));
+			paddedKey.resize(BlockSize, 0x0);
 
 			// Create the first value
 			KeyType x(paddedKey);
@@ -41,17 +50,17 @@ namespace Swift {
 		}
 	};
 
-	template<typename Hash>
+	template<typename Hash, int BlockSize>
 	class HMAC {
 		private:
 
 		public:
 			ByteArray operator()(const ByteArray& key, const ByteArray& data) const {
-				return HMAC_Detail::getHMAC<Hash,ByteArray>(key, data);
+				return HMAC_Detail::getHMAC<Hash,ByteArray,BlockSize>(key, data);
 			}
 
 			ByteArray operator()(const SafeByteArray& key, const ByteArray& data) const {
-				return HMAC_Detail::getHMAC<Hash,SafeByteArray>(key, data);
+				return HMAC_Detail::getHMAC<Hash,SafeByteArray,BlockSize>(key, data);
 			}
 	};
 }

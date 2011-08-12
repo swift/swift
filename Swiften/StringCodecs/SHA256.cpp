@@ -330,6 +330,10 @@ int SHA256::done(State * md, unsigned char *out)
 
 namespace Swift {
 
+SHA256::SHA256() {
+	init(&state);
+}
+
 SHA256& SHA256::update(const std::vector<unsigned char>& input) {
 	std::vector<unsigned char> inputCopy(input);
 	process(&state, (boost::uint8_t*) vecptr(inputCopy), inputCopy.size());

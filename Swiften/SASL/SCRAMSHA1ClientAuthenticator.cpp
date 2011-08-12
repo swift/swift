@@ -12,8 +12,7 @@
 
 #include <Swiften/StringCodecs/SHA1.h>
 #include <Swiften/StringCodecs/Base64.h>
-#include <Swiften/StringCodecs/HMAC.h>
-#include <Swiften/StringCodecs/SHA1.h>
+#include <Swiften/StringCodecs/HMAC_SHA1.h>
 #include <Swiften/StringCodecs/PBKDF2.h>
 #include <Swiften/IDN/StringPrep.h>
 #include <Swiften/Base/Concat.h>
@@ -45,9 +44,9 @@ boost::optional<SafeByteArray> SCRAMSHA1ClientAuthenticator::getResponse() const
 		return createSafeByteArray(concat(getGS2Header(), getInitialBareClientMessage()));
 	}
 	else if (step == Proof) {
-		ByteArray clientKey = HMAC<SHA1>()(saltedPassword, createByteArray("Client Key"));
+		ByteArray clientKey = HMAC_SHA1()(saltedPassword, createByteArray("Client Key"));
 		ByteArray storedKey = SHA1::getHash(clientKey);
-		ByteArray clientSignature = HMAC<SHA1>()(createSafeByteArray(storedKey), authMessage);
+		ByteArray clientSignature = HMAC_SHA1()(createSafeByteArray(storedKey), authMessage);
 		ByteArray clientProof = clientKey;
 		for (unsigned int i = 0; i < clientProof.size(); ++i) {
 			clientProof[i] ^= clientSignature[i];
@@ -102,13 +101,13 @@ bool SCRAMSHA1ClientAuthenticator::setChallenge(const boost::optional<ByteArray>
 
 		// Compute all the values needed for the server signature
 		try {
-			saltedPassword = PBKDF2::encode<HMAC<SHA1> >(StringPrep::getPrepared(getPassword(), StringPrep::SASLPrep), salt, iterations);
+			saltedPassword = PBKDF2::encode<HMAC_SHA1>(StringPrep::getPrepared(getPassword(), StringPrep::SASLPrep), salt, iterations);
 		}
 		catch (const std::exception&) {
 		}
 		authMessage = concat(getInitialBareClientMessage(), createByteArray(","), initialServerMessage, createByteArray(","), getFinalMessageWithoutProof());
-		ByteArray serverKey = HMAC<SHA1>()(saltedPassword, createByteArray("Server Key"));
-		serverSignature = HMAC<SHA1>()(serverKey, authMessage);
+		ByteArray serverKey = HMAC_SHA1()(saltedPassword, createByteArray("Server Key"));
+		serverSignature = HMAC_SHA1()(serverKey, authMessage);
 
 		step = Proof;
 		return true;
