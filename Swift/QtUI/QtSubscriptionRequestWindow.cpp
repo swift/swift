@@ -28,10 +28,12 @@ QtSubscriptionRequestWindow::QtSubscriptionRequestWindow(boost::shared_ptr<Subsc
 		layout->addWidget(okButton);
 	} else {
 		QPushButton* yesButton = new QPushButton(tr("Yes"), this);
+		yesButton->setDefault(true);
 		connect(yesButton, SIGNAL(clicked()), this, SLOT(handleYes()));
 		QPushButton* noButton = new QPushButton(tr("No"), this);
 		connect(noButton, SIGNAL(clicked()), this, SLOT(handleNo()));
 		QPushButton* deferButton = new QPushButton(tr("Defer"), this);
+		deferButton->setShortcut(QKeySequence(Qt::Key_Escape));
 		connect(deferButton, SIGNAL(clicked()), this, SLOT(handleDefer()));
 
 		QHBoxLayout* buttonLayout = new QHBoxLayout();
