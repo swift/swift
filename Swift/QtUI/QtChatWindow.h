@@ -123,5 +123,6 @@ namespace Swift {
 			IDGenerator id_;
 			QSplitter *logRosterSplitter_;
 			Tristate correctionEnabled_;
+			QString alertStyleSheet_;
 	};
 }

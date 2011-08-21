@@ -43,6 +43,8 @@ QtChatWindow::QtChatWindow(const QString &contact, QtChatTheme* theme, UIEventSt
 	updateTitleWithUnreadCount();
 	QtSettingsProvider settings;
 
+	alertStyleSheet_ = "background: rgb(255, 255, 153); color: black";
+
 	QBoxLayout *layout = new QBoxLayout(QBoxLayout::TopToBottom, this);
 	layout->setContentsMargins(0,0,0,0);
 	layout->setSpacing(2);
@@ -58,8 +60,8 @@ QtChatWindow::QtChatWindow(const QString &contact, QtChatTheme* theme, UIEventSt
 	QPalette palette = alertWidget_->palette();
 	palette.setColor(QPalette::Window, QColor(Qt::yellow));
 	palette.setColor(QPalette::WindowText, QColor(Qt::black));
-	alertWidget_->setPalette(palette);
-	alertLabel_->setPalette(palette);
+	alertWidget_->setStyleSheet(alertStyleSheet_);
+	alertLabel_->setStyleSheet(alertStyleSheet_);
 	alertWidget_->hide();
 
 	logRosterSplitter_ = new QSplitter(this);
@@ -114,6 +116,8 @@ QtChatWindow::QtChatWindow(const QString &contact, QtChatTheme* theme, UIEventSt
 	connect(messageLog_, SIGNAL(gotFocus()), input_, SLOT(setFocus()));
 	resize(400,300);
 	connect(messageLog_, SIGNAL(fontResized(int)), this, SIGNAL(fontResized(int)));
+
+
 }
 
 QtChatWindow::~QtChatWindow() {
@@ -194,6 +198,7 @@ void QtChatWindow::beginCorrection() {
 	cursor.endEditBlock();
 	isCorrection_ = true;
 	correctingLabel_->show();
+	input_->setStyleSheet(alertStyleSheet_);
 }
 
 void QtChatWindow::cancelCorrection() {
@@ -203,6 +208,7 @@ void QtChatWindow::cancelCorrection() {
 	cursor.removeSelectedText();
 	isCorrection_ = false;
 	correctingLabel_->hide();
+	input_->setStyleSheet(qApp->styleSheet());
 }
 
 QByteArray QtChatWindow::getSplitterState() {
