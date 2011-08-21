@@ -284,7 +284,7 @@ void QtLoginWindow::handleUsernameTextChanged() {
 	QString username = username_->currentText();
 	for (int i = 0; i < usernames_.count(); i++) {
 		if (username_->currentText() == usernames_[i]) {
-			certificateFile_ == certificateFiles_[i];
+			certificateFile_ = certificateFiles_[i];
 			password_->setText(passwords_[i]);
 			remember_->setChecked(password_->text() != "");
 		}
