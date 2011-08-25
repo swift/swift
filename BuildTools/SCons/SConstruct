@@ -203,7 +203,7 @@ if env["PLATFORM"] != "win32" and env["PLATFORM"] != "darwin" :
 				"LIBS": gconf_bare_env["LIBS"],
 				"CCFLAGS": gconf_bare_env["CCFLAGS"],
 				"CPPPATH": gconf_bare_env["CPPPATH"],
-				"CPPDEFINES": gconf_bare_env["CPPDEFINES"],
+				"CPPDEFINES": gconf_bare_env.get("CPPDEFINES", []),
 			}
 		gconf_env.MergeFlags(gconf_flags)
 		if conf.CheckCHeader("gconf/gconf-client.h") and conf.CheckLib("gconf-2") :
@@ -212,7 +212,7 @@ if env["PLATFORM"] != "win32" and env["PLATFORM"] != "darwin" :
 				"LIBS": gconf_env["LIBS"],
 				"CCFLAGS": gconf_env["CCFLAGS"],
 				"CPPPATH": gconf_env["CPPPATH"],
-				"CPPDEFINES": gconf_env["CPPDEFINES"],
+				"CPPDEFINES": gconf_env.get("CPPDEFINES", []),
 			}
 	conf.Finish()
 
