@@ -29,6 +29,8 @@ class RequestTest : public CppUnit::TestFixture {
 		CPPUNIT_TEST(testHandleIQ_BeforeSend);
 		CPPUNIT_TEST(testHandleIQ_DifferentPayload);
 		CPPUNIT_TEST(testHandleIQ_RawXMLPayload);
+		CPPUNIT_TEST(testHandleIQ_GetWithSameID);
+		CPPUNIT_TEST(testHandleIQ_SetWithSameID);
 		CPPUNIT_TEST_SUITE_END();
 
 	public:
@@ -122,14 +124,14 @@ class RequestTest : public CppUnit::TestFixture {
 			testling.send();
 
 			boost::shared_ptr<IQ> error = createError("test-id");
-			boost::shared_ptr<Payload> errorPayload = boost::shared_ptr<ErrorPayload>(new ErrorPayload(ErrorPayload::FeatureNotImplemented));
+			boost::shared_ptr<Payload> errorPayload = boost::shared_ptr<ErrorPayload>(new ErrorPayload(ErrorPayload::InternalServerError));
 			error->addPayload(errorPayload);
 			channel_->onIQReceived(error);
 
 			CPPUNIT_ASSERT_EQUAL(0, responsesReceived_);
 			CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(receivedErrors.size()));
 			CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(channel_->iqs_.size()));
-			CPPUNIT_ASSERT_EQUAL(ErrorPayload::FeatureNotImplemented, receivedErrors[0].getCondition());
+			CPPUNIT_ASSERT_EQUAL(ErrorPayload::InternalServerError, receivedErrors[0].getCondition());
 		}
 
 		void testHandleIQ_ErrorWithoutPayload() {
@@ -181,6 +183,35 @@ class RequestTest : public CppUnit::TestFixture {
 			CPPUNIT_ASSERT_EQUAL(0, static_cast<int>(receivedErrors.size()));
 			CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(channel_->iqs_.size()));
 		}
+
+	 void testHandleIQ_GetWithSameID() {
+			MyRequest testling(IQ::Get, JID("foo@bar.com/baz"), payload_, router_);
+			testling.onResponse.connect(boost::bind(&RequestTest::handleResponse, this, _1, _2));
+			testling.send();
+
+			boost::shared_ptr<IQ> response = createResponse("test-id");
+			response->setType(IQ::Get);
+			channel_->onIQReceived(response);
+
+			CPPUNIT_ASSERT_EQUAL(0, responsesReceived_);
+			CPPUNIT_ASSERT_EQUAL(0, static_cast<int>(receivedErrors.size()));
+			CPPUNIT_ASSERT_EQUAL(2, static_cast<int>(channel_->iqs_.size()));
+		}
+
+		void testHandleIQ_SetWithSameID() {
+			MyRequest testling(IQ::Get, JID("foo@bar.com/baz"), payload_, router_);
+			testling.onResponse.connect(boost::bind(&RequestTest::handleResponse, this, _1, _2));
+			testling.send();
+
+			boost::shared_ptr<IQ> response = createResponse("test-id");
+			response->setType(IQ::Set);
+			channel_->onIQReceived(response);
+
+			CPPUNIT_ASSERT_EQUAL(0, responsesReceived_);
+			CPPUNIT_ASSERT_EQUAL(0, static_cast<int>(receivedErrors.size()));
+			CPPUNIT_ASSERT_EQUAL(2, static_cast<int>(channel_->iqs_.size()));
+		}
+
 
 	private:
 		void handleResponse(boost::shared_ptr<Payload> p, ErrorPayload::ref e) {
