@@ -1,4 +1,4 @@
-Import("swiften_env")
+Import("swiften_env", "env")
 
 myenv = swiften_env.Clone()
 myenv.MergeFlags(swiften_env["LIBIDN_FLAGS"])
@@ -8,3 +8,7 @@ objects = myenv.SwiftenObject([
 			"IDNA.cpp",
 		])
 swiften_env.Append(SWIFTEN_OBJECTS = [objects])
+
+env.Append(UNITTEST_SOURCES = [
+			File("UnitTest/StringPrepTest.cpp"),
+	])
