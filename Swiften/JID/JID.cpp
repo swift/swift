@@ -92,10 +92,6 @@ void JID::nameprepAndSetComponents(const std::string& node, const std::string& d
 			r.first->second = StringPrep::getPrepared(domain, StringPrep::XMPPNodePrep);
 		}
 		domain_ = r.first->second;
-		if (domain_.empty()) {
-			valid_ = false;
-			return;
-		}
 
 		r = resourcePrepCache.insert(std::make_pair(resource, std::string()));
 		if (r.second) {
@@ -103,6 +99,11 @@ void JID::nameprepAndSetComponents(const std::string& node, const std::string& d
 		}
 		resource_ = r.first->second;
 #endif
+
+		if (domain_.empty()) {
+			valid_ = false;
+			return;
+		}
 	}
 	catch (const std::exception&) {
 		valid_ = false;

@@ -25,6 +25,7 @@ class JIDTest : public CppUnit::TestFixture
 		CPPUNIT_TEST(testConstructorWithString_EmptyNode);
 		CPPUNIT_TEST(testConstructorWithString_IllegalResource);
 		CPPUNIT_TEST(testConstructorWithStrings);
+		CPPUNIT_TEST(testConstructorWithStrings_EmptyDomain);
 		CPPUNIT_TEST(testIsBare);
 		CPPUNIT_TEST(testIsBare_NotBare);
 		CPPUNIT_TEST(testToBare);
@@ -137,6 +138,12 @@ class JIDTest : public CppUnit::TestFixture
 			CPPUNIT_ASSERT_EQUAL(std::string("foo"), testling.getNode());
 			CPPUNIT_ASSERT_EQUAL(std::string("bar"), testling.getDomain());
 			CPPUNIT_ASSERT_EQUAL(std::string("baz"), testling.getResource());
+		}
+
+		void testConstructorWithStrings_EmptyDomain() {
+			JID testling("foo", "", "baz");
+
+			CPPUNIT_ASSERT(!testling.isValid());
 		}
 
 		void testIsBare() {
