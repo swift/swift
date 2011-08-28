@@ -39,6 +39,10 @@ void QtWebView::dragEnterEvent(QDragEnterEvent*) {
 
 }
 
+void QtWebView::setFontSizeIsMinimal(bool minimum) {
+	fontSizeIsMinimal = minimum;
+}
+
 void QtWebView::contextMenuEvent(QContextMenuEvent* ev) {
 	// Filter out the relevant actions from the standard actions
 	QMenu* menu = page()->createStandardContextMenu();
@@ -60,7 +64,10 @@ void QtWebView::contextMenuEvent(QContextMenuEvent* ev) {
 	// Add our own custom actions
 	menu->addAction(tr("Clear"), this, SIGNAL(clearRequested()));
 	menu->addAction(tr("Increase font size"), this, SIGNAL(fontGrowRequested()));
-	menu->addAction(tr("Decrease font size"), this, SIGNAL(fontShrinkRequested()));
+	QAction* shrink = new QAction(tr("Decrease font size"), this);
+	shrink->setEnabled(!fontSizeIsMinimal);
+	connect(shrink, SIGNAL(triggered()), this, SIGNAL(fontShrinkRequested()));
+	menu->addAction(shrink);
 
 	menu->exec(ev->globalPos());
 	delete menu;

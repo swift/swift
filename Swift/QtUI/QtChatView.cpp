@@ -229,6 +229,7 @@ void QtChatView::resizeFont(int fontSizeSteps) {
 	foreach (QWebElement span, spans) {
 		span.setStyleProperty("font-size", sizeString);
 	}
+	webView_->setFontSizeIsMinimal(size == 1.0);
 }
 
 void QtChatView::resetView() {

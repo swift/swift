@@ -18,6 +18,7 @@ namespace Swift {
 			void keyPressEvent(QKeyEvent* event);
 			void dragEnterEvent(QDragEnterEvent *event);
 			void contextMenuEvent(QContextMenuEvent* ev);
+			void setFontSizeIsMinimal(bool minimum);
 
 		signals:
 			void gotFocus();
@@ -30,5 +31,6 @@ namespace Swift {
 
 		private:
 			std::vector<QWebPage::WebAction> filteredActions;
+			bool fontSizeIsMinimal;
 	};
 }
