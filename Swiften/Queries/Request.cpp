@@ -76,10 +76,6 @@ bool Request::isCorrectSender(const JID& jid) {
 }
 
 bool Request::isAccountJID(const JID& jid) {
-	// If the router's JID is not set, we don't check anything
-	if (!router_->getJID().isValid()) {
-		return true;
-	}
 	return jid.isValid() ? router_->getJID().toBare().equals(jid, JID::WithResource) : true;
 }
 
