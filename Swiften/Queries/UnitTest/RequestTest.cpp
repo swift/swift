@@ -33,6 +33,7 @@ class RequestTest : public CppUnit::TestFixture {
 		CPPUNIT_TEST(testHandleIQ_SetWithSameID);
 		CPPUNIT_TEST(testHandleIQ_IncorrectSender);
 		CPPUNIT_TEST(testHandleIQ_IncorrectSenderForServerQuery);
+		CPPUNIT_TEST(testHandleIQ_IncorrectOtherResourceSenderForServerQuery);
 		CPPUNIT_TEST(testHandleIQ_ServerRespondsWithDomain);
 		CPPUNIT_TEST(testHandleIQ_ServerRespondsWithBareJID);
 		CPPUNIT_TEST(testHandleIQ_ServerRespondsWithoutFrom);
@@ -237,6 +238,19 @@ class RequestTest : public CppUnit::TestFixture {
 			testling.send();
 
 			channel_->onIQReceived(createResponse(JID("foo@bar.com/baz"), "test-id"));
+
+			CPPUNIT_ASSERT_EQUAL(0, responsesReceived_);
+			CPPUNIT_ASSERT_EQUAL(0, static_cast<int>(receivedErrors.size()));
+			CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(channel_->iqs_.size()));
+		}
+
+		void testHandleIQ_IncorrectOtherResourceSenderForServerQuery() {
+			MyRequest testling(IQ::Get, JID(), payload_, router_);
+			router_->setJID("alice@wonderland.lit/TeaParty");
+			testling.onResponse.connect(boost::bind(&RequestTest::handleResponse, this, _1, _2));
+			testling.send();
+
+			channel_->onIQReceived(createResponse(JID("alice@wonderland.lit/RabbitHole"), "test-id"));
 
 			CPPUNIT_ASSERT_EQUAL(0, responsesReceived_);
 			CPPUNIT_ASSERT_EQUAL(0, static_cast<int>(receivedErrors.size()));

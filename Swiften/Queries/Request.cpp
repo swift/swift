@@ -80,7 +80,7 @@ bool Request::isAccountJID(const JID& jid) {
 	if (!router_->getJID().isValid()) {
 		return true;
 	}
-	return jid.isValid() ? router_->getJID().equals(jid, JID::WithoutResource) : true;
+	return jid.isValid() ? router_->getJID().toBare().equals(jid, JID::WithResource) : true;
 }
 
 }
