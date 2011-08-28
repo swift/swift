@@ -14,8 +14,5 @@ namespace Swift {
 			IDGenerator();
 
 			std::string generateID();
-
-		private:
-			std::string currentID_;
 	};
 }
