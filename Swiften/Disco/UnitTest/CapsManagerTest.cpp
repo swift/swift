@@ -32,6 +32,7 @@ class CapsManagerTest : public CppUnit::TestFixture {
 		CPPUNIT_TEST(testReceiveSuccesfulDiscoStoresCaps);
 		CPPUNIT_TEST(testReceiveIncorrectVerificationDiscoDoesNotStoreCaps);
 		CPPUNIT_TEST(testReceiveFailingDiscoFallsBack);
+		CPPUNIT_TEST(testReceiveNoDiscoFallsBack);
 		CPPUNIT_TEST(testReceiveFailingFallbackDiscoFallsBack);
 		CPPUNIT_TEST(testReceiveSameHashFromFailingUserAfterReconnectRequestsDisco);
 		CPPUNIT_TEST(testReconnectResetsFallback);
@@ -176,6 +177,18 @@ class CapsManagerTest : public CppUnit::TestFixture {
 			sendPresenceWithCaps(user1, capsInfo1);
 			sendPresenceWithCaps(user2, capsInfo1alt);
 			stanzaChannel->onIQReceived(IQ::createError(JID("baz@fum.com/foo"), stanzaChannel->sentStanzas[0]->getTo(), stanzaChannel->sentStanzas[0]->getID()));
+
+			CPPUNIT_ASSERT(stanzaChannel->isRequestAtIndex<DiscoInfo>(1, user2, IQ::Get));
+			boost::shared_ptr<DiscoInfo> discoInfo(stanzaChannel->sentStanzas[1]->getPayload<DiscoInfo>());
+			CPPUNIT_ASSERT(discoInfo);
+			CPPUNIT_ASSERT_EQUAL("http://node2.im#" + capsInfo1alt->getVersion(), discoInfo->getNode());
+		}
+
+		void testReceiveNoDiscoFallsBack() {
+			std::auto_ptr<CapsManager> testling = createManager();
+			sendPresenceWithCaps(user1, capsInfo1);
+			sendPresenceWithCaps(user2, capsInfo1alt);
+			stanzaChannel->onIQReceived(IQ::createResult(JID("baz@fum.com/dum"), stanzaChannel->sentStanzas[0]->getTo(), stanzaChannel->sentStanzas[0]->getID(), boost::shared_ptr<DiscoInfo>()));
 
 			CPPUNIT_ASSERT(stanzaChannel->isRequestAtIndex<DiscoInfo>(1, user2, IQ::Get));
 			boost::shared_ptr<DiscoInfo> discoInfo(stanzaChannel->sentStanzas[1]->getPayload<DiscoInfo>());

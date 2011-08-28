@@ -51,8 +51,8 @@ void CapsManager::handleStanzaChannelAvailableChanged(bool available) {
 
 void CapsManager::handleDiscoInfoReceived(const JID& from, const std::string& hash, DiscoInfo::ref discoInfo, ErrorPayload::ref error) {
 	requestedDiscoInfos.erase(hash);
-	if (error || CapsInfoGenerator("").generateCapsInfo(*discoInfo.get()).getVersion() != hash) {
-		if (warnOnInvalidHash && !error) {
+	if (error || !discoInfo || CapsInfoGenerator("").generateCapsInfo(*discoInfo.get()).getVersion() != hash) {
+		if (warnOnInvalidHash && !error &&  discoInfo) {
 			std::cerr << "Warning: Caps from " << from.toString() << " do not verify" << std::endl;
 		}
 		failingCaps.insert(std::make_pair(from, hash));
