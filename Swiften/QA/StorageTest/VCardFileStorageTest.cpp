@@ -7,6 +7,7 @@
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/extensions/TestFactoryRegistry.h>
 #include <boost/algorithm/string.hpp>
+#include <sstream>
 
 #include "Swiften/VCards/VCardFileStorage.h"
 #include "Swiften/JID/JID.h"
@@ -18,8 +19,12 @@ using namespace Swift;
 class VCardFileStorageTest : public CppUnit::TestFixture {
 		CPPUNIT_TEST_SUITE(VCardFileStorageTest);
 		CPPUNIT_TEST(testSetVCard);
+		// Temporarily disabling this, because it generates error messages on console. Need to figure
+		// out something for not showing error messages during tests.
+		//CPPUNIT_TEST(testSetVCard_LargeFilename);
 		CPPUNIT_TEST(testGetVCard);
 		CPPUNIT_TEST(testGetVCard_FileDoesNotExist);
+		//CPPUNIT_TEST(testGetVCard_LargeFilename);
 		CPPUNIT_TEST_SUITE_END();
 
 	public:
@@ -48,6 +53,22 @@ class VCardFileStorageTest : public CppUnit::TestFixture {
 			CPPUNIT_ASSERT(boost::starts_with(data.toString(), "<vCard xmlns=\"vcard-temp\">"));
 		}
 
+		void testSetVCard_LargeFilename() {
+			std::auto_ptr<VCardFileStorage> testling(createTestling());
+			VCard::ref vcard(new VCard());
+			vcard->setFullName("Alice In Wonderland");
+
+			std::ostringstream s;
+			for (int i = 0; i < 1000; ++i) {
+				s << "_";
+			}
+
+			JID jid("alice@wonderland.lit/" + s.str());
+			testling->setVCard(jid, vcard);
+
+			// Just check whether we don't crash
+		}
+
 		void testGetVCard() {
 			std::auto_ptr<VCardFileStorage> testling(createTestling());
 			VCard::ref vcard(new VCard());
@@ -56,6 +77,22 @@ class VCardFileStorageTest : public CppUnit::TestFixture {
 
 			VCard::ref result = testling->getVCard(JID("alice@wonderland.lit"));
 			CPPUNIT_ASSERT_EQUAL(std::string("Alice In Wonderland"), result->getFullName());
+		}
+
+		void testGetVCard_LargeFilename() {
+			std::auto_ptr<VCardFileStorage> testling(createTestling());
+			VCard::ref vcard(new VCard());
+			vcard->setFullName("Alice In Wonderland");
+
+			std::ostringstream s;
+			for (int i = 0; i < 1000; ++i) {
+				s << "_";
+			}
+			JID jid("alice@wonderland.lit/" + s.str());
+
+			VCard::ref result = testling->getVCard(jid);
+
+			// Just check that we don't have an exception
 		}
 
 		void testGetVCard_FileDoesNotExist() {

@@ -48,41 +48,53 @@ VCardFileStorage::VCardFileStorage(boost::filesystem::path dir) : vcardsPath(dir
 }
 
 boost::shared_ptr<VCard> VCardFileStorage::getVCard(const JID& jid) const {
-	boost::filesystem::path vcardPath(getVCardPath(jid));
-	if (boost::filesystem::exists(vcardPath)) {
-		ByteArray data;
-		data.readFromFile(vcardPath.string());
+	try {
+		boost::filesystem::path vcardPath(getVCardPath(jid));
+		if (boost::filesystem::exists(vcardPath)) {
+			ByteArray data;
+			data.readFromFile(vcardPath.string());
 
-		VCardParser parser;
-		PayloadParserTester tester(&parser);
-		tester.parse(data.toString());
-		return boost::dynamic_pointer_cast<VCard>(parser.getPayload());
+			VCardParser parser;
+			PayloadParserTester tester(&parser);
+			tester.parse(data.toString());
+			return boost::dynamic_pointer_cast<VCard>(parser.getPayload());
+		}
+		else {
+			return boost::shared_ptr<VCard>();
+		}
 	}
-	else {
+	catch (const boost::filesystem::filesystem_error& e) {
+		std::cerr << "ERROR: " << e.what() << std::endl;
 		return boost::shared_ptr<VCard>();
 	}
 }
 
 void VCardFileStorage::setVCard(const JID& jid, VCard::ref v) {
-	boost::filesystem::path vcardPath(getVCardPath(jid));
-	if (!boost::filesystem::exists(vcardPath.parent_path())) {
-		try {
+	try {
+		boost::filesystem::path vcardPath(getVCardPath(jid));
+		if (!boost::filesystem::exists(vcardPath.parent_path())) {
 			boost::filesystem::create_directories(vcardPath.parent_path());
 		}
-		catch (const boost::filesystem::filesystem_error& e) {
-			std::cerr << "ERROR: " << e.what() << std::endl;
-		}
+		boost::filesystem::ofstream file(getVCardPath(jid));
+		file << VCardSerializer().serializePayload(v);
+		file.close();
+		getAndUpdatePhotoHash(jid, v);
 	}
-	boost::filesystem::ofstream file(getVCardPath(jid));
-	file << VCardSerializer().serializePayload(v);
-	file.close();
-	getAndUpdatePhotoHash(jid, v);
+	catch (const boost::filesystem::filesystem_error& e) {
+		std::cerr << "ERROR: " << e.what() << std::endl;
+	}
 }
 
 boost::filesystem::path VCardFileStorage::getVCardPath(const JID& jid) const {
-	std::string file(jid.toString());
-	String::replaceAll(file, '/', "%2f");
-	return boost::filesystem::path(vcardsPath / (file + ".xml"));
+	try {
+		std::string file(jid.toString());
+		String::replaceAll(file, '/', "%2f");
+		return boost::filesystem::path(vcardsPath / (file + ".xml"));
+	}
+	catch (const boost::filesystem::filesystem_error& e) {
+		std::cerr << "ERROR: " << e.what() << std::endl;
+		return boost::filesystem::path();
+	}
 }
 
 std::string VCardFileStorage::getPhotoHash(const JID& jid) const {
