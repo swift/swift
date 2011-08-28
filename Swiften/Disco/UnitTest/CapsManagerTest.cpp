@@ -185,7 +185,7 @@ class CapsManagerTest : public CppUnit::TestFixture {
 		}
 
 		void testReceiveNoDiscoFallsBack() {
-			std::auto_ptr<CapsManager> testling = createManager();
+			boost::shared_ptr<CapsManager> testling = createManager();
 			sendPresenceWithCaps(user1, capsInfo1);
 			sendPresenceWithCaps(user2, capsInfo1alt);
 			stanzaChannel->onIQReceived(IQ::createResult(JID("baz@fum.com/dum"), stanzaChannel->sentStanzas[0]->getTo(), stanzaChannel->sentStanzas[0]->getID(), boost::shared_ptr<DiscoInfo>()));
