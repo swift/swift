@@ -166,7 +166,7 @@ class VCardUpdateAvatarManagerTest : public CppUnit::TestFixture {
 			if (!avatar.isEmpty()) {
 				vcard->setPhoto(avatar);
 			}
-			return IQ::createResult(JID("baz@fum.com"), stanzaChannel->sentStanzas[0]->getID(), vcard);
+			return IQ::createResult(JID("baz@fum.com"), stanzaChannel->sentStanzas[0]->getTo(), stanzaChannel->sentStanzas[0]->getID(), vcard);
 		}
 
 		void handleAvatarChanged(const JID& jid) {

@@ -124,7 +124,7 @@ class CapsManagerTest : public CppUnit::TestFixture {
 		void testReceiveSameHashFromDifferentUserAfterFailedDiscoRequestsDisco() {
 			std::auto_ptr<CapsManager> testling = createManager();
 			sendPresenceWithCaps(user1, capsInfo1);
-			stanzaChannel->onIQReceived(IQ::createError(JID("baz@fum.com/foo"), stanzaChannel->sentStanzas[0]->getID()));
+			stanzaChannel->onIQReceived(IQ::createError(JID("baz@fum.com/foo"), stanzaChannel->sentStanzas[0]->getTo(), stanzaChannel->sentStanzas[0]->getID()));
 
 			stanzaChannel->sentStanzas.clear();
 			sendPresenceWithCaps(user2, capsInfo1);
@@ -175,7 +175,7 @@ class CapsManagerTest : public CppUnit::TestFixture {
 			std::auto_ptr<CapsManager> testling = createManager();
 			sendPresenceWithCaps(user1, capsInfo1);
 			sendPresenceWithCaps(user2, capsInfo1alt);
-			stanzaChannel->onIQReceived(IQ::createError(JID("baz@fum.com/foo"), stanzaChannel->sentStanzas[0]->getID()));
+			stanzaChannel->onIQReceived(IQ::createError(JID("baz@fum.com/foo"), stanzaChannel->sentStanzas[0]->getTo(), stanzaChannel->sentStanzas[0]->getID()));
 
 			CPPUNIT_ASSERT(stanzaChannel->isRequestAtIndex<DiscoInfo>(1, user2, IQ::Get));
 			boost::shared_ptr<DiscoInfo> discoInfo(stanzaChannel->sentStanzas[1]->getPayload<DiscoInfo>());
@@ -188,8 +188,8 @@ class CapsManagerTest : public CppUnit::TestFixture {
 			sendPresenceWithCaps(user1, capsInfo1);
 			sendPresenceWithCaps(user2, capsInfo1alt);
 			sendPresenceWithCaps(user3, capsInfo1);
-			stanzaChannel->onIQReceived(IQ::createError(JID("baz@fum.com/foo"), stanzaChannel->sentStanzas[0]->getID()));
-			stanzaChannel->onIQReceived(IQ::createError(JID("baz@fum.com/foo"), stanzaChannel->sentStanzas[1]->getID()));
+			stanzaChannel->onIQReceived(IQ::createError(JID("baz@fum.com/foo"), stanzaChannel->sentStanzas[0]->getTo(), stanzaChannel->sentStanzas[0]->getID()));
+			stanzaChannel->onIQReceived(IQ::createError(JID("baz@fum.com/foo"), stanzaChannel->sentStanzas[1]->getTo(), stanzaChannel->sentStanzas[1]->getID()));
 
 			CPPUNIT_ASSERT(stanzaChannel->isRequestAtIndex<DiscoInfo>(2, user3, IQ::Get));
 		}
@@ -197,7 +197,7 @@ class CapsManagerTest : public CppUnit::TestFixture {
 		void testReceiveSameHashFromFailingUserAfterReconnectRequestsDisco() {
 			std::auto_ptr<CapsManager> testling = createManager();
 			sendPresenceWithCaps(user1, capsInfo1);
-			stanzaChannel->onIQReceived(IQ::createError(JID("baz@fum.com/foo"), stanzaChannel->sentStanzas[0]->getID()));
+			stanzaChannel->onIQReceived(IQ::createError(JID("baz@fum.com/foo"), stanzaChannel->sentStanzas[0]->getTo(), stanzaChannel->sentStanzas[0]->getID()));
 			stanzaChannel->setAvailable(false);
 			stanzaChannel->setAvailable(true);
 			stanzaChannel->sentStanzas.clear();
@@ -215,7 +215,7 @@ class CapsManagerTest : public CppUnit::TestFixture {
 			stanzaChannel->setAvailable(true);
 			stanzaChannel->sentStanzas.clear();
 			sendPresenceWithCaps(user1, capsInfo1);
-			stanzaChannel->onIQReceived(IQ::createError(JID("baz@fum.com/foo"), stanzaChannel->sentStanzas[0]->getID()));
+			stanzaChannel->onIQReceived(IQ::createError(JID("baz@fum.com/foo"), stanzaChannel->sentStanzas[0]->getTo(), stanzaChannel->sentStanzas[0]->getID()));
 
 			CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(stanzaChannel->sentStanzas.size()));
 		}
@@ -251,7 +251,7 @@ class CapsManagerTest : public CppUnit::TestFixture {
 		}
 
 		void sendDiscoInfoResult(boost::shared_ptr<DiscoInfo> discoInfo) {
-			stanzaChannel->onIQReceived(IQ::createResult(JID("baz@fum.com/dum"), stanzaChannel->sentStanzas[0]->getID(), discoInfo));
+			stanzaChannel->onIQReceived(IQ::createResult(JID("baz@fum.com/dum"), stanzaChannel->sentStanzas[0]->getTo(), stanzaChannel->sentStanzas[0]->getID(), discoInfo));
 		}
 
 	private:

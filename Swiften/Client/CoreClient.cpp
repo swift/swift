@@ -30,6 +30,7 @@ CoreClient::CoreClient(const JID& jid, const std::string& password, NetworkFacto
 	stanzaChannel_->onAvailableChanged.connect(boost::bind(&CoreClient::handleStanzaChannelAvailableChanged, this, _1));
 
 	iqRouter_ = new IQRouter(stanzaChannel_);
+	iqRouter_->setJID(jid);
 	tlsFactories = new PlatformTLSFactories();
 }
 

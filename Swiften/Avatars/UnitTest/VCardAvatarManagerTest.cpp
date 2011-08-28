@@ -128,7 +128,7 @@ class VCardAvatarManagerTest : public CppUnit::TestFixture {
 		void sendVCardResult() {
 			VCard::ref vcard(new VCard());
 			vcard->setFullName("Foo Bar");
-			stanzaChannel->onIQReceived(IQ::createResult(JID("baz@fum.com/dum"), stanzaChannel->sentStanzas[0]->getID(), vcard));
+			stanzaChannel->onIQReceived(IQ::createResult(JID("baz@fum.com/dum"), stanzaChannel->sentStanzas[0]->getTo(), stanzaChannel->sentStanzas[0]->getID(), vcard));
 		}
 
 	private:

@@ -92,7 +92,7 @@ class VCardManagerTest : public CppUnit::TestFixture {
 		void testRequest_Error() {
 			std::auto_ptr<VCardManager> testling = createManager();
 			testling->requestVCard(JID("foo@bar.com/baz"));
-			stanzaChannel->onIQReceived(IQ::createError(JID("baz@fum.com/foo"), stanzaChannel->sentStanzas[0]->getID()));
+			stanzaChannel->onIQReceived(IQ::createError(JID("baz@fum.com/foo"), stanzaChannel->sentStanzas[0]->getTo(), stanzaChannel->sentStanzas[0]->getID()));
 
 			CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(changes.size()));
 			CPPUNIT_ASSERT_EQUAL(JID("foo@bar.com/baz"), changes[0].first);
@@ -180,17 +180,17 @@ class VCardManagerTest : public CppUnit::TestFixture {
 		IQ::ref createVCardResult() {
 			VCard::ref vcard(new VCard());
 			vcard->setFullName("Foo Bar");
-			return IQ::createResult(JID("baz@fum.com/dum"), stanzaChannel->sentStanzas[0]->getID(), vcard);
+			return IQ::createResult(JID("baz@fum.com/dum"), stanzaChannel->sentStanzas[0]->getTo(), stanzaChannel->sentStanzas[0]->getID(), vcard);
 		}
 
 		IQ::ref createOwnVCardResult() {
 			VCard::ref vcard(new VCard());
 			vcard->setFullName("Myself");
-			return IQ::createResult(JID(), stanzaChannel->sentStanzas[0]->getID(), vcard);
+			return IQ::createResult(JID(), stanzaChannel->sentStanzas[0]->getTo(), stanzaChannel->sentStanzas[0]->getID(), vcard);
 		}
 
 		IQ::ref createSetVCardResult() {
-			return IQ::createResult(JID("baz@fum.com/dum"), stanzaChannel->sentStanzas[0]->getID(), VCard::ref());
+			return IQ::createResult(JID("baz@fum.com/dum"), stanzaChannel->sentStanzas[0]->getTo(), stanzaChannel->sentStanzas[0]->getID(), VCard::ref());
 		}
 
 
