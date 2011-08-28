@@ -48,6 +48,7 @@ VCardFileStorage::VCardFileStorage(boost::filesystem::path dir) : vcardsPath(dir
 }
 
 boost::shared_ptr<VCard> VCardFileStorage::getVCard(const JID& jid) const {
+	boost::shared_ptr<VCard> result;
 	try {
 		boost::filesystem::path vcardPath(getVCardPath(jid));
 		if (boost::filesystem::exists(vcardPath)) {
@@ -57,16 +58,14 @@ boost::shared_ptr<VCard> VCardFileStorage::getVCard(const JID& jid) const {
 			VCardParser parser;
 			PayloadParserTester tester(&parser);
 			tester.parse(data.toString());
-			return boost::dynamic_pointer_cast<VCard>(parser.getPayload());
-		}
-		else {
-			return boost::shared_ptr<VCard>();
+			result = boost::dynamic_pointer_cast<VCard>(parser.getPayload());
 		}
 	}
 	catch (const boost::filesystem::filesystem_error& e) {
 		std::cerr << "ERROR: " << e.what() << std::endl;
-		return boost::shared_ptr<VCard>();
 	}
+	getAndUpdatePhotoHash(jid, result);
+	return result;
 }
 
 void VCardFileStorage::setVCard(const JID& jid, VCard::ref v) {
