@@ -14,8 +14,8 @@
 #include <Swiften/Elements/VCard.h>
 #include <Swiften/Avatars/VCardAvatarManager.h>
 #include <Swiften/Avatars/AvatarMemoryStorage.h>
-#include <Swiften/VCards/VCardMemoryStorage.h>
 #include <Swiften/VCards/VCardManager.h>
+#include <Swiften/VCards/VCardStorage.h>
 #include <Swiften/MUC/MUCRegistry.h>
 #include <Swiften/Queries/IQRouter.h>
 #include <Swiften/Client/DummyStanzaChannel.h>
@@ -31,9 +31,46 @@ class VCardAvatarManagerTest : public CppUnit::TestFixture {
 		CPPUNIT_TEST(testGetAvatarHashUnknownAvatarKnownVCardStoresAvatar);
 		CPPUNIT_TEST(testGetAvatarHashUnknownAvatarUnknownVCard);
 		CPPUNIT_TEST(testVCardUpdateTriggersUpdate);
+		CPPUNIT_TEST(testGetAvatarHashKnownAvatarUnknownVCard);	
 		CPPUNIT_TEST_SUITE_END();
 
 	public:
+		class TestVCardStorage : public VCardStorage {
+			public:
+				virtual VCard::ref getVCard(const JID& jid) const {
+					VCardMap::const_iterator i = vcards.find(jid);
+					if (i != vcards.end()) {
+						return i->second;
+					}
+					else {
+						return VCard::ref();
+					}
+				}
+
+				virtual void setVCard(const JID& jid, VCard::ref v) {
+					vcards[jid] = v;
+				}
+
+				std::string getPhotoHash(const JID& jid) const {
+					if (photoHashes.find(jid) != photoHashes.end()) {
+						return photoHashes.find(jid)->second;
+					}
+					VCard::ref vCard = getVCard(jid);
+					if (vCard && !vCard->getPhoto().empty()) {
+						return Hexify::hexify(SHA1::getHash(vCard->getPhoto()));
+					}
+					else {
+						return "";
+					}
+				}
+
+				std::map<JID, std::string> photoHashes;
+				
+			private:
+				typedef std::map<JID, VCard::ref> VCardMap;
+				VCardMap vcards;
+		};
+
 		void setUp() {
 			ownJID = JID("foo@fum.com/bum");
 			stanzaChannel = new DummyStanzaChannel();
@@ -41,7 +78,7 @@ class VCardAvatarManagerTest : public CppUnit::TestFixture {
 			iqRouter = new IQRouter(stanzaChannel);
 			mucRegistry = new DummyMUCRegistry();
 			avatarStorage = new AvatarMemoryStorage();
-			vcardStorage = new VCardMemoryStorage();
+			vcardStorage = new TestVCardStorage();
 			vcardManager = new VCardManager(ownJID, iqRouter, vcardStorage);
 			avatar1 = createByteArray("abcdefg");
 			avatar1Hash = Hexify::hexify(SHA1::getHash(avatar1));
@@ -96,6 +133,16 @@ class VCardAvatarManagerTest : public CppUnit::TestFixture {
 			CPPUNIT_ASSERT_EQUAL(std::string(), result);
 		}
 
+		void testGetAvatarHashKnownAvatarUnknownVCard() {
+			boost::shared_ptr<VCardAvatarManager> testling = createManager();
+			vcardStorage->photoHashes[user1.toBare()] = avatar1Hash;
+			
+			std::string result = testling->getAvatarHash(user1);
+			
+			CPPUNIT_ASSERT_EQUAL(std::string(), result);
+		} 
+
+
 		void testVCardUpdateTriggersUpdate() {
 			boost::shared_ptr<VCardAvatarManager> testling = createManager();
 			vcardManager->requestVCard(user1);
@@ -144,7 +191,7 @@ class VCardAvatarManagerTest : public CppUnit::TestFixture {
 		DummyMUCRegistry* mucRegistry;
 		AvatarMemoryStorage* avatarStorage;
 		VCardManager* vcardManager;
-		VCardMemoryStorage* vcardStorage;
+		TestVCardStorage* vcardStorage;
 		ByteArray avatar1;
 		std::string avatar1Hash;
 		std::vector<JID> changes;

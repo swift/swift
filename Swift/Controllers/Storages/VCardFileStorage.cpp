@@ -52,7 +52,9 @@ VCardFileStorage::VCardFileStorage(boost::filesystem::path dir) : vcardsPath(dir
 }
 
 boost::shared_ptr<VCard> VCardFileStorage::getVCard(const JID& jid) const {
-	return VCardPersister().loadPayloadGeneric(getVCardPath(jid));
+	boost::shared_ptr<VCard> result = VCardPersister().loadPayloadGeneric(getVCardPath(jid));
+	getAndUpdatePhotoHash(jid, result);
+	return result;
 }
 
 void VCardFileStorage::setVCard(const JID& jid, VCard::ref v) {

@@ -34,8 +34,13 @@ std::string VCardAvatarManager::getAvatarHash(const JID& jid) const {
 	if (!hash.empty()) {
 		if (!avatarStorage_->hasAvatar(hash)) {
 			VCard::ref vCard = vcardManager_->getVCard(avatarJID);
-			assert(vCard);
-			avatarStorage_->addAvatar(hash, vCard->getPhoto());
+			if (vCard) {
+				avatarStorage_->addAvatar(hash, vCard->getPhoto());
+			}
+			else {
+				// Can happen if the cache is inconsistent.
+				hash = "";
+			}
 		}
 	}
 	return hash;
