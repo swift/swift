@@ -61,9 +61,15 @@ void VCardFileStorage::setVCard(const JID& jid, VCard::ref v) {
 }
 
 boost::filesystem::path VCardFileStorage::getVCardPath(const JID& jid) const {
-	std::string file(jid.toString());
-	String::replaceAll(file, '/', "%2f");
-	return boost::filesystem::path(vcardsPath / (file + ".xml"));
+	try {
+		std::string file(jid.toString());
+		String::replaceAll(file, '/', "%2f");
+		return boost::filesystem::path(vcardsPath / (file + ".xml"));
+	}
+	catch (const boost::filesystem::filesystem_error& e) {
+		std::cerr << "ERROR: " << e.what() << std::endl;
+		return boost::filesystem::path();
+	}
 }
 
 std::string VCardFileStorage::getPhotoHash(const JID& jid) const {
