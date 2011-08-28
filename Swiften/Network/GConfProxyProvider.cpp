@@ -16,6 +16,13 @@
 namespace Swift {
 
 GConfProxyProvider::GConfProxyProvider() {
+	// Ensure static GLib initialization methods are called
+	static bool glibInitialized = false;
+	if (!glibInitialized) {
+		g_type_init();
+		glibInitialized = true;
+	}
+
 	socksProxy = getFromGConf("/system/proxy/socks_host", "/system/proxy/socks_port");
 	httpProxy = getFromGConf("/system/http_proxy/host", "/system/http_proxy/port");
 	SWIFT_LOG(debug) << "GConf: SOCKS5 => " << socksProxy.toString() << "; HTTP Connect => " << httpProxy.toString() << std::endl;
