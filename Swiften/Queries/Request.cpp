@@ -41,27 +41,42 @@ bool Request::handleIQ(boost::shared_ptr<IQ> iq) {
 	bool handled = false;
 	if (iq->getType() == IQ::Result || iq->getType() == IQ::Error) {
 		if (sent_ && iq->getID() == id_) {
-			if (iq->getType() == IQ::Result) {
-				boost::shared_ptr<Payload> payload = iq->getPayloadOfSameType(payload_);
-				if (!payload && boost::dynamic_pointer_cast<RawXMLPayload>(payload_) && !iq->getPayloads().empty()) {
-					payload = iq->getPayloads().front();
-				}
-				handleResponse(payload, ErrorPayload::ref());
-			}
-			else {
-				ErrorPayload::ref errorPayload = iq->getPayload<ErrorPayload>();
-				if (errorPayload) {
-					handleResponse(boost::shared_ptr<Payload>(), errorPayload);
+			if (isCorrectSender(iq->getFrom())) {
+				if (iq->getType() == IQ::Result) {
+					boost::shared_ptr<Payload> payload = iq->getPayloadOfSameType(payload_);
+					if (!payload && boost::dynamic_pointer_cast<RawXMLPayload>(payload_) && !iq->getPayloads().empty()) {
+						payload = iq->getPayloads().front();
+					}
+					handleResponse(payload, ErrorPayload::ref());
 				}
 				else {
-					handleResponse(boost::shared_ptr<Payload>(), ErrorPayload::ref(new ErrorPayload(ErrorPayload::UndefinedCondition)));
+					ErrorPayload::ref errorPayload = iq->getPayload<ErrorPayload>();
+					if (errorPayload) {
+						handleResponse(boost::shared_ptr<Payload>(), errorPayload);
+					}
+					else {
+						handleResponse(boost::shared_ptr<Payload>(), ErrorPayload::ref(new ErrorPayload(ErrorPayload::UndefinedCondition)));
+					}
 				}
+				router_->removeHandler(this);
+				handled = true;
 			}
-			router_->removeHandler(this);
-			handled = true;
 		}
 	}
 	return handled;
+}
+
+bool Request::isCorrectSender(const JID& jid) {
+	if (isAccountJID(receiver_)) {
+		return isAccountJID(jid);
+	}
+	else {
+		return jid.equals(receiver_, JID::WithResource);
+	}
+}
+
+bool Request::isAccountJID(const JID& jid) {
+	return jid.isValid() ? router_->getJID().toBare().equals(jid, JID::WithResource) : true;
 }
 
 }

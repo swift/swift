@@ -103,7 +103,7 @@ class IBBSendSessionTest : public CppUnit::TestFixture {
 			boost::shared_ptr<IBBSendSession> testling = createSession("foo@bar.com/baz");
 			testling->setBlockSize(3);
 			testling->start();
-			stanzaChannel->onIQReceived(IQ::createError(JID("baz@fum.com/foo"), stanzaChannel->sentStanzas[0]->getID()));
+			stanzaChannel->onIQReceived(IQ::createError(JID("baz@fum.com/foo"), stanzaChannel->sentStanzas[0]->getTo(), stanzaChannel->sentStanzas[0]->getID()));
 
 			CPPUNIT_ASSERT(finished);
 			CPPUNIT_ASSERT(error);
@@ -139,7 +139,7 @@ class IBBSendSessionTest : public CppUnit::TestFixture {
 	
 	private:
 		IQ::ref createIBBResult() {
-			return IQ::createResult(JID("baz@fum.com/dum"), stanzaChannel->sentStanzas[stanzaChannel->sentStanzas.size()-1]->getID(), boost::shared_ptr<IBB>());
+			return IQ::createResult(JID("baz@fum.com/dum"), stanzaChannel->sentStanzas[stanzaChannel->sentStanzas.size()-1]->getTo(), stanzaChannel->sentStanzas[stanzaChannel->sentStanzas.size()-1]->getID(), boost::shared_ptr<IBB>());
 		}
 
 	private:

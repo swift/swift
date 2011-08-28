@@ -22,6 +22,20 @@ namespace Swift {
 			~IQRouter();
 
 			/**
+			 * Sets the JID of this IQ router.
+			 *
+			 * This JID is used by requests to check whether incoming
+			 * results are addressed correctly.
+			 */
+			void setJID(const JID& jid) {
+				jid_ = jid;
+			}
+
+			const JID& getJID() {
+				return jid_;
+			}
+
+			/**
 			 * Sets the 'from' JID for all outgoing IQ stanzas.
 			 *
 			 * By default, IQRouter does not add a from to IQ stanzas, since
@@ -55,6 +69,7 @@ namespace Swift {
 
 		private:
 			IQChannel* channel_;
+			JID jid_;
 			JID from_;
 			std::vector< boost::shared_ptr<IQHandler> > handlers_;
 			std::vector< boost::shared_ptr<IQHandler> > queuedRemoves_;

@@ -31,6 +31,12 @@ class RequestTest : public CppUnit::TestFixture {
 		CPPUNIT_TEST(testHandleIQ_RawXMLPayload);
 		CPPUNIT_TEST(testHandleIQ_GetWithSameID);
 		CPPUNIT_TEST(testHandleIQ_SetWithSameID);
+		CPPUNIT_TEST(testHandleIQ_IncorrectSender);
+		CPPUNIT_TEST(testHandleIQ_IncorrectSenderForServerQuery);
+		CPPUNIT_TEST(testHandleIQ_IncorrectOtherResourceSenderForServerQuery);
+		CPPUNIT_TEST(testHandleIQ_ServerRespondsWithDomain);
+		CPPUNIT_TEST(testHandleIQ_ServerRespondsWithBareJID);
+		CPPUNIT_TEST(testHandleIQ_ServerRespondsWithoutFrom);
 		CPPUNIT_TEST_SUITE_END();
 
 	public:
@@ -98,7 +104,7 @@ class RequestTest : public CppUnit::TestFixture {
 			testling.onResponse.connect(boost::bind(&RequestTest::handleResponse, this, _1, _2));
 			testling.send();
 			
-			channel_->onIQReceived(createResponse("test-id"));
+			channel_->onIQReceived(createResponse(JID("foo@bar.com/baz"),"test-id"));
 
 			CPPUNIT_ASSERT_EQUAL(1, responsesReceived_);
 			CPPUNIT_ASSERT_EQUAL(0, static_cast<int>(receivedErrors.size()));
@@ -111,7 +117,7 @@ class RequestTest : public CppUnit::TestFixture {
 			testling.onResponse.connect(boost::bind(&RequestTest::handleResponse, this, _1, _2));
 			testling.send();
 
-			channel_->onIQReceived(createResponse("different-id"));
+			channel_->onIQReceived(createResponse(JID("foo@bar.com/baz"),"different-id"));
 
 			CPPUNIT_ASSERT_EQUAL(0, responsesReceived_);
 			CPPUNIT_ASSERT_EQUAL(0, static_cast<int>(receivedErrors.size()));
@@ -123,7 +129,7 @@ class RequestTest : public CppUnit::TestFixture {
 			testling.onResponse.connect(boost::bind(&RequestTest::handleResponse, this, _1, _2));
 			testling.send();
 
-			boost::shared_ptr<IQ> error = createError("test-id");
+			boost::shared_ptr<IQ> error = createError(JID("foo@bar.com/baz"),"test-id");
 			boost::shared_ptr<Payload> errorPayload = boost::shared_ptr<ErrorPayload>(new ErrorPayload(ErrorPayload::InternalServerError));
 			error->addPayload(errorPayload);
 			channel_->onIQReceived(error);
@@ -139,7 +145,7 @@ class RequestTest : public CppUnit::TestFixture {
 			testling.onResponse.connect(boost::bind(&RequestTest::handleResponse, this, _1, _2));
 			testling.send();
 
-			channel_->onIQReceived(createError("test-id"));
+			channel_->onIQReceived(createError(JID("foo@bar.com/baz"),"test-id"));
 
 			CPPUNIT_ASSERT_EQUAL(0, responsesReceived_);
 			CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(receivedErrors.size()));
@@ -150,7 +156,7 @@ class RequestTest : public CppUnit::TestFixture {
 		void testHandleIQ_BeforeSend() {
 			MyRequest testling(IQ::Get, JID("foo@bar.com/baz"), payload_, router_);
 			testling.onResponse.connect(boost::bind(&RequestTest::handleResponse, this, _1, _2));
-			channel_->onIQReceived(createResponse("test-id"));
+			channel_->onIQReceived(createResponse(JID("foo@bar.com/baz"),"test-id"));
 
 			CPPUNIT_ASSERT_EQUAL(0, responsesReceived_);
 			CPPUNIT_ASSERT_EQUAL(0, static_cast<int>(receivedErrors.size()));
@@ -163,7 +169,7 @@ class RequestTest : public CppUnit::TestFixture {
 			testling.send();
 
 			responsePayload_ = boost::make_shared<MyOtherPayload>();
-			channel_->onIQReceived(createResponse("test-id"));
+			channel_->onIQReceived(createResponse(JID("foo@bar.com/baz"),"test-id"));
 
 			CPPUNIT_ASSERT_EQUAL(1, responsesReceived_);
 			CPPUNIT_ASSERT_EQUAL(0, static_cast<int>(receivedErrors.size()));
@@ -177,7 +183,7 @@ class RequestTest : public CppUnit::TestFixture {
 			testling.send();
 
 			responsePayload_ = boost::make_shared<MyOtherPayload>();
-			channel_->onIQReceived(createResponse("test-id"));
+			channel_->onIQReceived(createResponse(JID("foo@bar.com/baz"),"test-id"));
 
 			CPPUNIT_ASSERT_EQUAL(1, responsesReceived_);
 			CPPUNIT_ASSERT_EQUAL(0, static_cast<int>(receivedErrors.size()));
@@ -189,7 +195,7 @@ class RequestTest : public CppUnit::TestFixture {
 			testling.onResponse.connect(boost::bind(&RequestTest::handleResponse, this, _1, _2));
 			testling.send();
 
-			boost::shared_ptr<IQ> response = createResponse("test-id");
+			boost::shared_ptr<IQ> response = createResponse(JID("foo@bar.com/baz"),"test-id");
 			response->setType(IQ::Get);
 			channel_->onIQReceived(response);
 
@@ -203,7 +209,7 @@ class RequestTest : public CppUnit::TestFixture {
 			testling.onResponse.connect(boost::bind(&RequestTest::handleResponse, this, _1, _2));
 			testling.send();
 
-			boost::shared_ptr<IQ> response = createResponse("test-id");
+			boost::shared_ptr<IQ> response = createResponse(JID("foo@bar.com/baz"), "test-id");
 			response->setType(IQ::Set);
 			channel_->onIQReceived(response);
 
@@ -211,6 +217,85 @@ class RequestTest : public CppUnit::TestFixture {
 			CPPUNIT_ASSERT_EQUAL(0, static_cast<int>(receivedErrors.size()));
 			CPPUNIT_ASSERT_EQUAL(2, static_cast<int>(channel_->iqs_.size()));
 		}
+
+		void testHandleIQ_IncorrectSender() {
+			MyRequest testling(IQ::Get, JID("foo@bar.com/baz"), payload_, router_);
+			router_->setJID("alice@wonderland.lit/TeaParty");
+			testling.onResponse.connect(boost::bind(&RequestTest::handleResponse, this, _1, _2));
+			testling.send();
+
+			channel_->onIQReceived(createResponse(JID("anotherfoo@bar.com/baz"), "test-id"));
+
+			CPPUNIT_ASSERT_EQUAL(0, responsesReceived_);
+			CPPUNIT_ASSERT_EQUAL(0, static_cast<int>(receivedErrors.size()));
+			CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(channel_->iqs_.size()));
+		}
+
+		void testHandleIQ_IncorrectSenderForServerQuery() {
+			MyRequest testling(IQ::Get, JID(), payload_, router_);
+			router_->setJID("alice@wonderland.lit/TeaParty");
+			testling.onResponse.connect(boost::bind(&RequestTest::handleResponse, this, _1, _2));
+			testling.send();
+
+			channel_->onIQReceived(createResponse(JID("foo@bar.com/baz"), "test-id"));
+
+			CPPUNIT_ASSERT_EQUAL(0, responsesReceived_);
+			CPPUNIT_ASSERT_EQUAL(0, static_cast<int>(receivedErrors.size()));
+			CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(channel_->iqs_.size()));
+		}
+
+		void testHandleIQ_IncorrectOtherResourceSenderForServerQuery() {
+			MyRequest testling(IQ::Get, JID(), payload_, router_);
+			router_->setJID("alice@wonderland.lit/TeaParty");
+			testling.onResponse.connect(boost::bind(&RequestTest::handleResponse, this, _1, _2));
+			testling.send();
+
+			channel_->onIQReceived(createResponse(JID("alice@wonderland.lit/RabbitHole"), "test-id"));
+
+			CPPUNIT_ASSERT_EQUAL(0, responsesReceived_);
+			CPPUNIT_ASSERT_EQUAL(0, static_cast<int>(receivedErrors.size()));
+			CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(channel_->iqs_.size()));
+		}
+
+		void testHandleIQ_ServerRespondsWithDomain() {
+			MyRequest testling(IQ::Get, JID(), payload_, router_);
+			router_->setJID("alice@wonderland.lit/TeaParty");
+			testling.onResponse.connect(boost::bind(&RequestTest::handleResponse, this, _1, _2));
+			testling.send();
+
+			channel_->onIQReceived(createResponse(JID("wonderland.lit"),"test-id"));
+
+			CPPUNIT_ASSERT_EQUAL(0, responsesReceived_);
+			CPPUNIT_ASSERT_EQUAL(0, static_cast<int>(receivedErrors.size()));
+			CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(channel_->iqs_.size()));
+		}
+
+		void testHandleIQ_ServerRespondsWithBareJID() {
+			MyRequest testling(IQ::Get, JID(), payload_, router_);
+			router_->setJID("alice@wonderland.lit/TeaParty");
+			testling.onResponse.connect(boost::bind(&RequestTest::handleResponse, this, _1, _2));
+			testling.send();
+
+			channel_->onIQReceived(createResponse(JID("alice@wonderland.lit"),"test-id"));
+
+			CPPUNIT_ASSERT_EQUAL(1, responsesReceived_);
+			CPPUNIT_ASSERT_EQUAL(0, static_cast<int>(receivedErrors.size()));
+			CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(channel_->iqs_.size()));
+		}
+
+		void testHandleIQ_ServerRespondsWithoutFrom() {
+			MyRequest testling(IQ::Get, JID(), payload_, router_);
+			router_->setJID("alice@wonderland.lit/TeaParty");
+			testling.onResponse.connect(boost::bind(&RequestTest::handleResponse, this, _1, _2));
+			testling.send();
+
+			channel_->onIQReceived(createResponse(JID(),"test-id"));
+
+			CPPUNIT_ASSERT_EQUAL(1, responsesReceived_);
+			CPPUNIT_ASSERT_EQUAL(0, static_cast<int>(receivedErrors.size()));
+			CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(channel_->iqs_.size()));
+		}
+
 
 
 	private:
@@ -239,15 +324,17 @@ class RequestTest : public CppUnit::TestFixture {
 			++responsesReceived_;
 		}
 
-		boost::shared_ptr<IQ> createResponse(const std::string& id) {
+		boost::shared_ptr<IQ> createResponse(const JID& from, const std::string& id) {
 			boost::shared_ptr<IQ> iq(new IQ(IQ::Result));
+			iq->setFrom(from);
 			iq->addPayload(responsePayload_);
 			iq->setID(id);
 			return iq;
 		}
 
-		boost::shared_ptr<IQ> createError(const std::string& id) {
+		boost::shared_ptr<IQ> createError(const JID& from, const std::string& id) {
 			boost::shared_ptr<IQ> iq(new IQ(IQ::Error));
+			iq->setFrom(from);
 			iq->setID(id);
 			return iq;
 		}
