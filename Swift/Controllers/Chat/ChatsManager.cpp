@@ -108,6 +108,10 @@ void ChatsManager::saveRecents() {
 	foreach (ChatListWindow::Chat chat, recentChats_) {
 		std::vector<std::string> activity;
 		boost::split(activity, chat.activity, boost::is_any_of("\t\n"));
+		if (activity.size() == 0) {
+			/* Work around Boost bug https://svn.boost.org/trac/boost/ticket/4751 */
+			activity.push_back("");
+		}
 		std::string recent = chat.jid.toString() + "\t" + activity[0] + "\t" + (chat.isMUC ? "true" : "false") +  "\t" + chat.nick;
 		recents += recent + "\n";
 		if (i++ > 25) {
