@@ -41,4 +41,8 @@ void PayloadAddingPresenceSender::setPayload(boost::shared_ptr<Payload> payload)
 	}
 }
 
+void PayloadAddingPresenceSender::reset() {
+	lastSentPresence.reset();
+}
+
 }

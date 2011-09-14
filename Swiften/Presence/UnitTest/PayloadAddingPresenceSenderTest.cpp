@@ -23,6 +23,7 @@ class PayloadAddingPresenceSenderTest : public CppUnit::TestFixture {
 		CPPUNIT_TEST(testSendPresenceDoesNotAlterOriginalPayload);
 		CPPUNIT_TEST(testSetPayloadAfterInitialPresenceResendsPresence);
 		CPPUNIT_TEST(testSetPayloadAfterUnavailablePresenceDoesNotResendPresence);
+		CPPUNIT_TEST(testSetPayloadAfterResetDoesNotResendPresence);
 		CPPUNIT_TEST(testSendDirectedPresenceIsNotResent);
 		CPPUNIT_TEST_SUITE_END();
 
@@ -83,10 +84,22 @@ class PayloadAddingPresenceSenderTest : public CppUnit::TestFixture {
 		void testSetPayloadAfterUnavailablePresenceDoesNotResendPresence() {
 			boost::shared_ptr<PayloadAddingPresenceSender> testling(createSender());
 
+			testling->sendPresence(Presence::create("bar"));
+
 			Presence::ref presence = Presence::create("bar");
 			presence->setType(Presence::Unavailable);
 			testling->sendPresence(presence);
 
+			testling->setPayload(MyPayload::create("foo"));
+
+			CPPUNIT_ASSERT_EQUAL(2, static_cast<int>(stanzaChannel->sentStanzas.size()));
+		}
+
+		void testSetPayloadAfterResetDoesNotResendPresence() {
+			boost::shared_ptr<PayloadAddingPresenceSender> testling(createSender());
+			testling->sendPresence(Presence::create("bar"));
+
+			testling->reset();
 			testling->setPayload(MyPayload::create("foo"));
 
 			CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(stanzaChannel->sentStanzas.size()));
