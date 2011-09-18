@@ -81,7 +81,7 @@ void IQRouter::removeHandler(boost::shared_ptr<IQHandler> handler) {
 }
 
 void IQRouter::sendIQ(boost::shared_ptr<IQ> iq) {
-	if (from_.isValid()) {
+	if (from_.isValid() && !iq->getFrom().isValid()) {
 		iq->setFrom(from_);
 	}
 	channel_->sendIQ(iq);
