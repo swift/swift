@@ -6,9 +6,13 @@
 
 #include <Swiften/Serializer/PayloadSerializers/FullPayloadSerializerCollection.h>
 #include <Swiften/Base/foreach.h>
+#include <Swiften/Elements/BlockPayload.h>
+#include <Swiften/Elements/UnblockPayload.h>
+#include <Swiften/Elements/BlockListPayload.h>
 #include <Swiften/Serializer/PayloadSerializer.h>
 #include <Swiften/Serializer/PayloadSerializers/IBBSerializer.h>
 #include <Swiften/Serializer/PayloadSerializers/BodySerializer.h>
+#include <Swiften/Serializer/PayloadSerializers/BlockSerializer.h>
 #include <Swiften/Serializer/PayloadSerializers/SubjectSerializer.h>
 #include <Swiften/Serializer/PayloadSerializers/ChatStateSerializer.h>
 #include <Swiften/Serializer/PayloadSerializers/PrioritySerializer.h>
@@ -64,6 +68,9 @@ FullPayloadSerializerCollection::FullPayloadSerializerCollection() {
 	serializers_.push_back(new DiscoInfoSerializer());
 	serializers_.push_back(new DiscoItemsSerializer());
 	serializers_.push_back(new CapsInfoSerializer());
+	serializers_.push_back(new BlockSerializer<BlockPayload>("block"));
+	serializers_.push_back(new BlockSerializer<UnblockPayload>("unblock"));
+	serializers_.push_back(new BlockSerializer<BlockListPayload>("blocklist"));
 	serializers_.push_back(new ResourceBindSerializer());
 	serializers_.push_back(new StartSessionSerializer());
 	serializers_.push_back(new SecurityLabelSerializer());

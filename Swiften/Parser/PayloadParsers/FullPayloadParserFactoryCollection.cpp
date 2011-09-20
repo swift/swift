@@ -6,11 +6,15 @@
 
 #include <Swiften/Parser/PayloadParsers/FullPayloadParserFactoryCollection.h>
 #include <Swiften/Base/foreach.h>
+#include <Swiften/Elements/BlockPayload.h>
+#include <Swiften/Elements/UnblockPayload.h>
+#include <Swiften/Elements/BlockListPayload.h>
 #include <Swiften/Parser/GenericPayloadParser.h>
 #include <Swiften/Parser/PayloadParserFactory.h>
 #include <Swiften/Parser/PayloadParsers/ErrorParser.h>
 #include <Swiften/Parser/PayloadParsers/ErrorParserFactory.h>
 #include <Swiften/Parser/PayloadParsers/BodyParser.h>
+#include <Swiften/Parser/PayloadParsers/BlockParser.h>
 #include <Swiften/Parser/PayloadParsers/SubjectParser.h>
 #include <Swiften/Parser/PayloadParsers/ChatStateParserFactory.h>
 #include <Swiften/Parser/PayloadParsers/PriorityParser.h>
@@ -68,6 +72,9 @@ FullPayloadParserFactoryCollection::FullPayloadParserFactoryCollection() {
 	factories_.push_back(shared_ptr<PayloadParserFactory>(new GenericPayloadParserFactory<CapsInfoParser>("c", "http://jabber.org/protocol/caps")));
 	factories_.push_back(shared_ptr<PayloadParserFactory>(new GenericPayloadParserFactory<ResourceBindParser>("bind", "urn:ietf:params:xml:ns:xmpp-bind")));
 	factories_.push_back(shared_ptr<PayloadParserFactory>(new GenericPayloadParserFactory<StartSessionParser>("session", "urn:ietf:params:xml:ns:xmpp-session")));
+	factories_.push_back(shared_ptr<PayloadParserFactory>(new GenericPayloadParserFactory<BlockParser<BlockPayload> >("block", "urn:xmpp:blocking")));
+	factories_.push_back(shared_ptr<PayloadParserFactory>(new GenericPayloadParserFactory<BlockParser<BlockListPayload> >("blocklist", "urn:xmpp:blocking")));
+	factories_.push_back(shared_ptr<PayloadParserFactory>(new GenericPayloadParserFactory<BlockParser<UnblockPayload> >("unblock", "urn:xmpp:blocking")));
 	factories_.push_back(shared_ptr<PayloadParserFactory>(new SecurityLabelParserFactory()));
 	factories_.push_back(shared_ptr<PayloadParserFactory>(new SecurityLabelsCatalogParserFactory()));
 	factories_.push_back(shared_ptr<PayloadParserFactory>(new FormParserFactory()));
