@@ -59,7 +59,8 @@ namespace Swift {
 
 			enum UseTLS {
 				NeverUseTLS,
-				UseTLSWhenAvailable
+				UseTLSWhenAvailable,
+				RequireTLS
 			};
 
 			~ClientSession();

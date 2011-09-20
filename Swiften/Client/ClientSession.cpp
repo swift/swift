@@ -177,6 +177,9 @@ void ClientSession::handleElement(boost::shared_ptr<Element> element) {
 			state = WaitingForEncrypt;
 			stream->writeElement(boost::make_shared<StartTLSRequest>());
 		}
+		else if (useTLS == RequireTLS && !stream->isTLSEncrypted()) {
+			finishSession(Error::NoSupportedAuthMechanismsError);
+		}
 		else if (useStreamCompression && streamFeatures->hasCompressionMethod("zlib")) {
 			state = Compressing;
 			stream->writeElement(boost::make_shared<CompressRequest>("zlib"));

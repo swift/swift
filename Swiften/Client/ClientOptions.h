@@ -10,7 +10,8 @@ namespace Swift {
 	struct ClientOptions {
 		enum UseTLS {
 			NeverUseTLS,
-			UseTLSWhenAvailable
+			UseTLSWhenAvailable,
+			RequireTLS
 		};
 
 		ClientOptions() : useStreamCompression(true), useTLS(UseTLSWhenAvailable), allowPLAINWithoutTLS(false), useStreamResumption(false), forgetPassword(false) {

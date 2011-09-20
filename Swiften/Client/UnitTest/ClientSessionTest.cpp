@@ -45,6 +45,8 @@ class ClientSessionTest : public CppUnit::TestFixture {
 		CPPUNIT_TEST(testAuthenticate);
 		CPPUNIT_TEST(testAuthenticate_Unauthorized);
 		CPPUNIT_TEST(testAuthenticate_NoValidAuthMechanisms);
+		CPPUNIT_TEST(testAuthenticate_PLAINOverNonTLS);
+		CPPUNIT_TEST(testAuthenticate_RequireTLS);
 		CPPUNIT_TEST(testStreamManagement);
 		CPPUNIT_TEST(testStreamManagement_Failed);
 		CPPUNIT_TEST(testFinishAcksStanzas);
@@ -213,6 +215,20 @@ class ClientSessionTest : public CppUnit::TestFixture {
 			server->receiveStreamStart();
 			server->sendStreamStart();
 			server->sendStreamFeaturesWithPLAINAuthentication();
+
+			CPPUNIT_ASSERT_EQUAL(ClientSession::Finished, session->getState());
+			CPPUNIT_ASSERT(sessionFinishedReceived);
+			CPPUNIT_ASSERT(sessionFinishedError);
+		}
+
+		void testAuthenticate_RequireTLS() {
+			boost::shared_ptr<ClientSession> session(createSession());
+			session->setUseTLS(ClientSession::RequireTLS);
+			session->setAllowPLAINOverNonTLS(true);
+			session->start();
+			server->receiveStreamStart();
+			server->sendStreamStart();
+			server->sendStreamFeaturesWithMultipleAuthentication();
 
 			CPPUNIT_ASSERT_EQUAL(ClientSession::Finished, session->getState());
 			CPPUNIT_ASSERT(sessionFinishedReceived);
@@ -430,6 +446,14 @@ class ClientSessionTest : public CppUnit::TestFixture {
 
 				void sendTLSFailure() {
 					onElementReceived(boost::shared_ptr<StartTLSFailure>(new StartTLSFailure()));
+				}
+
+				void sendStreamFeaturesWithMultipleAuthentication() {
+					boost::shared_ptr<StreamFeatures> streamFeatures(new StreamFeatures());
+					streamFeatures->addAuthenticationMechanism("PLAIN");
+					streamFeatures->addAuthenticationMechanism("DIGEST-MD5");
+					streamFeatures->addAuthenticationMechanism("SCRAM-SHA1");
+					onElementReceived(streamFeatures);
 				}
 
 				void sendStreamFeaturesWithPLAINAuthentication() {

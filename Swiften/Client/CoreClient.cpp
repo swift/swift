@@ -119,6 +119,9 @@ void CoreClient::handleConnectorFinished(boost::shared_ptr<Connection> connectio
 			case ClientOptions::NeverUseTLS:
 				session_->setUseTLS(ClientSession::NeverUseTLS);
 				break;
+			case ClientOptions::RequireTLS:
+				session_->setUseTLS(ClientSession::RequireTLS);
+				break;
 		}
 		stanzaChannel_->setSession(session_);
 		session_->onFinished.connect(boost::bind(&CoreClient::handleSessionFinished, this, _1));
