@@ -67,16 +67,13 @@ bool Request::handleIQ(boost::shared_ptr<IQ> iq) {
 }
 
 bool Request::isCorrectSender(const JID& jid) {
-	if (isAccountJID(receiver_)) {
-		return isAccountJID(jid);
+	if (router_->isAccountJID(receiver_)) {
+		return router_->isAccountJID(jid);
 	}
 	else {
 		return jid.equals(receiver_, JID::WithResource);
 	}
 }
 
-bool Request::isAccountJID(const JID& jid) {
-	return jid.isValid() ? router_->getJID().toBare().equals(jid, JID::WithResource) : true;
-}
 
 }

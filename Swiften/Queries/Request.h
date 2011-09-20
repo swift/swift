@@ -60,7 +60,6 @@ namespace Swift {
 		private:
 			bool handleIQ(boost::shared_ptr<IQ>);
 			bool isCorrectSender(const JID& jid);
-			bool isAccountJID(const JID& jid);
 
 		private:
 			IQRouter* router_;
