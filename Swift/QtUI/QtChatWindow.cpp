@@ -71,7 +71,6 @@ QtChatWindow::QtChatWindow(const QString &contact, QtChatTheme* theme, UIEventSt
 	logRosterSplitter_->addWidget(messageLog_);
 
 	treeWidget_ = new QtTreeWidget(eventStream_);
-	treeWidget_->setEditable(false);
 	treeWidget_->hide();
 	logRosterSplitter_->addWidget(treeWidget_);
 	logRosterSplitter_->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);

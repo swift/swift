@@ -24,7 +24,7 @@
 #include <Swift/QtUI/QtSwiftUtil.h>
 #include <Swift/QtUI/QtTabWidget.h>
 #include <Swift/QtUI/QtSettingsProvider.h>
-#include <Roster/QtTreeWidget.h>
+#include <Roster/QtRosterWidget.h>
 #include <Swift/Controllers/UIEvents/RequestJoinMUCUIEvent.h>
 #include <Swift/Controllers/UIEvents/RequestAddUserDialogUIEvent.h>
 #include <Swift/Controllers/UIEvents/RequestChatWithUserDialogUIEvent.h>
@@ -62,8 +62,7 @@ QtMainWindow::QtMainWindow(QtSettingsProvider* settings, UIEventStream* uiEventS
 	contactTabLayout->setSpacing(0);
 	contactTabLayout->setContentsMargins(0, 0, 0, 0);
 
-	treeWidget_ = new QtTreeWidget(uiEventStream_);
-	treeWidget_->setEditable(true);
+	treeWidget_ = new QtRosterWidget(uiEventStream_);
 	contactTabLayout->addWidget(treeWidget_);
 
 	tabs_->addTab(contactsTabWidget_, tr("&Contacts"));

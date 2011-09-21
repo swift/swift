@@ -25,8 +25,7 @@ class QMenu;
 class QTabWidget;
 
 namespace Swift {
-	class QtTreeWidget;
-	class QtTreeWidgetFactory;
+	class QtRosterWidget;
 	class TreeWidget;
 	class UIEventStream;
 	class QtTabWidget;
@@ -36,7 +35,7 @@ namespace Swift {
 		Q_OBJECT
 		public:
 			QtMainWindow(QtSettingsProvider*, UIEventStream* eventStream);
-			~QtMainWindow();
+			virtual ~QtMainWindow();
 			std::vector<QMenu*> getMenus() {return menus_;}
 			void setMyNick(const std::string& name);
 			void setMyJID(const JID& jid);
@@ -66,7 +65,7 @@ namespace Swift {
 		private:
 			QtSettingsProvider* settings_;
 			std::vector<QMenu*> menus_;
-			QtTreeWidget* treeWidget_;
+			QtRosterWidget* treeWidget_;
 			QtRosterHeader* meView_;
 			QAction* addUserAction_;
 			QAction* editUserAction_;

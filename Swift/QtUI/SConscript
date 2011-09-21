@@ -104,6 +104,8 @@ sources = [
     "Roster/RosterDelegate.cpp",
     "Roster/GroupItemDelegate.cpp",
     "Roster/DelegateCommons.cpp",
+    "Roster/QtRosterWidget.cpp",
+    "Roster/QtOccupantListWidget.cpp",
     "EventViewer/EventModel.cpp",
     "EventViewer/EventDelegate.cpp",
     "EventViewer/TwoLineDelegate.cpp",
