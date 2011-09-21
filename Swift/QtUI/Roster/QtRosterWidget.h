@@ -9,7 +9,6 @@
 #include "Swift/QtUI/Roster/QtTreeWidget.h"
 
 namespace Swift {
-
 class QtRosterWidget : public QtTreeWidget {
 	Q_OBJECT
 	public:
@@ -17,12 +16,8 @@ class QtRosterWidget : public QtTreeWidget {
 		virtual ~QtRosterWidget();
 	public slots:
 		void handleEditUserActionTriggered(bool checked);
-	signals:
-		void onSomethingSelectedChanged(bool);
 	protected:
 		void contextMenuEvent(QContextMenuEvent* event);
-	protected slots:
-		virtual void currentChanged(const QModelIndex& current, const QModelIndex& previous);
 	private:
 		void renameGroup(GroupRosterItem* group);
 };

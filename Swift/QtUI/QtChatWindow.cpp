@@ -7,7 +7,9 @@
 #include "QtChatWindow.h"
 #include "QtSwiftUtil.h"
 #include "Swift/Controllers/Roster/Roster.h"
-#include "Roster/QtTreeWidget.h"
+#include "Swift/Controllers/Roster/RosterItem.h"
+#include "Swift/Controllers/Roster/ContactRosterItem.h"
+#include "Roster/QtOccupantListWidget.h"
 #include "SwifTools/Linkify.h"
 #include "QtChatView.h"
 #include "MessageSnippet.h"
@@ -70,7 +72,7 @@ QtChatWindow::QtChatWindow(const QString &contact, QtChatTheme* theme, UIEventSt
 	messageLog_ = new QtChatView(theme, this);
 	logRosterSplitter_->addWidget(messageLog_);
 
-	treeWidget_ = new QtTreeWidget(eventStream_);
+	treeWidget_ = new QtOccupantListWidget(eventStream_, this);
 	treeWidget_->hide();
 	logRosterSplitter_->addWidget(treeWidget_);
 	logRosterSplitter_->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
@@ -115,7 +117,8 @@ QtChatWindow::QtChatWindow(const QString &contact, QtChatTheme* theme, UIEventSt
 	connect(messageLog_, SIGNAL(gotFocus()), input_, SLOT(setFocus()));
 	resize(400,300);
 	connect(messageLog_, SIGNAL(fontResized(int)), this, SIGNAL(fontResized(int)));
-
+	treeWidget_->onSomethingSelectedChanged.connect(boost::bind(&QtChatWindow::handleOccupantSelectionChanged, this, _1));
+	treeWidget_->onOccupantActionSelected.connect(boost::bind(boost::ref(onOccupantActionSelected), _1, _2));
 
 }
 
@@ -123,6 +126,9 @@ QtChatWindow::~QtChatWindow() {
 
 }
 
+void QtChatWindow::handleOccupantSelectionChanged(RosterItem* item) {
+	onOccupantSelectionChanged(dynamic_cast<ContactRosterItem*>(item));
+}
 
 void QtChatWindow::handleFontResized(int fontSizeSteps) {
 	messageLog_->resizeFont(fontSizeSteps);
@@ -528,6 +534,10 @@ void QtChatWindow::moveEvent(QMoveEvent*) {
 
 void QtChatWindow::replaceLastMessage(const std::string& message) {
 	messageLog_->replaceLastMessage(P2QSTRING(Linkify::linkify(message)));
+}
+
+void QtChatWindow::setAvailableOccupantActions(const std::vector<OccupantAction>& actions) {
+	treeWidget_->setAvailableOccupantActions(actions);
 }
 
 }

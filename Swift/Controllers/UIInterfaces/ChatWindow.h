@@ -22,11 +22,14 @@ namespace Swift {
 	class TreeWidget;
 	class Roster;
 	class TabComplete;
+	class RosterItem;
+	class ContactRosterItem;
 
 	class ChatWindow {
 		public:
 			enum AckState {Pending, Received, Failed};
 			enum Tristate {Yes, No, Maybe};
+			enum OccupantAction {Kick};
 			ChatWindow() {}
 			virtual ~ChatWindow() {};
 
@@ -72,6 +75,10 @@ namespace Swift {
 			 */
 			virtual void cancelAlert() = 0;
 
+			/**
+			 * Actions that can be performed on the selected occupant.
+			 */
+			virtual void setAvailableOccupantActions(const std::vector<OccupantAction>& actions) = 0;
 			boost::signal<void ()> onClosed;
 			boost::signal<void ()> onAllMessagesRead;
 			boost::signal<void (const std::string&, bool isCorrection)> onSendMessageRequest;
@@ -79,6 +86,8 @@ namespace Swift {
 			boost::signal<void ()> onUserTyping;
 			boost::signal<void ()> onUserCancelsTyping;
 			boost::signal<void ()> onAlertButtonClicked;
+			boost::signal<void (ContactRosterItem*)> onOccupantSelectionChanged;
+			boost::signal<void (ChatWindow::OccupantAction, ContactRosterItem*)> onOccupantActionSelected;
 	};
 }
 #endif

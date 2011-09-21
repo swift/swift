@@ -23,6 +23,7 @@
 #include <Swift/Controllers/UIEvents/UIEventStream.h>
 #include <Swift/Controllers/UIEvents/RequestChatUIEvent.h>
 #include <Swift/Controllers/Roster/GroupRosterItem.h>
+#include <Swift/Controllers/Roster/ContactRosterItem.h>
 #include <Swiften/Avatars/AvatarManager.h>
 #include <Swiften/Elements/Delay.h>
 #include <Swiften/MUC/MUC.h>
@@ -68,6 +69,8 @@ MUCController::MUCController (
 	chatWindow_->setTabComplete(completer_);
 	chatWindow_->setName(muc->getJID().getNode());
 	chatWindow_->onClosed.connect(boost::bind(&MUCController::handleWindowClosed, this));
+	chatWindow_->onOccupantSelectionChanged.connect(boost::bind(&MUCController::handleWindowOccupantSelectionChanged, this, _1));
+	chatWindow_->onOccupantActionSelected.connect(boost::bind(&MUCController::handleActionRequestedOnOccupant, this, _1, _2));
 	muc_->onJoinComplete.connect(boost::bind(&MUCController::handleJoinComplete, this, _1));
 	muc_->onJoinFailed.connect(boost::bind(&MUCController::handleJoinFailed, this, _1));
 	muc_->onOccupantJoined.connect(boost::bind(&MUCController::handleOccupantJoined, this, _1));
@@ -95,6 +98,21 @@ MUCController::~MUCController() {
 	}
 	chatWindow_->setTabComplete(NULL);
 	delete completer_;
+}
+
+void MUCController::handleWindowOccupantSelectionChanged(ContactRosterItem* item) {
+	std::vector<ChatWindow::OccupantAction> actions;
+	//FIXME
+	if (item) {
+		actions.push_back(ChatWindow::Kick);
+	}
+	chatWindow_->setAvailableOccupantActions(actions);
+}
+
+void MUCController::handleActionRequestedOnOccupant(ChatWindow::OccupantAction action, ContactRosterItem* item) {
+	switch (action) {
+		case ChatWindow::Kick: muc_->kickUser(item->getJID());break;
+	}
 }
 
 void MUCController::handleBareJIDCapsChanged(const JID& /*jid*/) {

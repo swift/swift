@@ -17,40 +17,19 @@
 #include <Swiften/Elements/MUCItem.h>
 
 namespace Swift {
-	class MUCUserPayload : public Payload {
+	class MUCAdminPayload : public Payload {
 		public:
-			typedef boost::shared_ptr<MUCUserPayload> ref;
+			typedef boost::shared_ptr<MUCAdminPayload> ref;
 
-			struct StatusCode {
-				StatusCode() : code(0) {}
-				int code;
-			};
 
-			// struct Password {
-
-			// }
-
-			// struct History {
-
-			// }
-
-			// struct Invite {
-
-			// }
-
-			MUCUserPayload() {
+			MUCAdminPayload() {
 			}
 
 			void addItem(MUCItem item) {items_.push_back(item);}
-		
-			void addStatusCode(StatusCode code) {statusCodes_.push_back(code);}
 
 			const std::vector<MUCItem>& getItems() const {return items_;}
 
-			const std::vector<StatusCode>& getStatusCodes() const {return statusCodes_;}
-
 		private:
 			std::vector<MUCItem> items_;
-			std::vector<StatusCode> statusCodes_;
 	};
 }

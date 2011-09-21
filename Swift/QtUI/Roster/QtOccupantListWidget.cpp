@@ -9,6 +9,7 @@
 
 #include <QContextMenuEvent>
 #include <QMenu>
+#include <QAction>
 #include <QInputDialog>
 
 #include "Swift/Controllers/Roster/ContactRosterItem.h"
@@ -26,33 +27,33 @@ QtOccupantListWidget::~QtOccupantListWidget() {
 
 }
 
+void QtOccupantListWidget::setAvailableOccupantActions(const std::vector<ChatWindow::OccupantAction>& actions) {
+	availableOccupantActions_ = actions;
+}
+
 void QtOccupantListWidget::contextMenuEvent(QContextMenuEvent* event) {
-//	QModelIndex index = indexAt(event->pos());
-//	if (!index.isValid()) {
-//		return;
-//	}
-//	RosterItem* item = static_cast<RosterItem*>(index.internalPointer());
-//	QMenu contextMenu;
-//	if (ContactRosterItem* contact = dynamic_cast<ContactRosterItem*>(item)) {
-//		QAction* editContact = contextMenu.addAction(tr("Edit"));
-//		QAction* removeContact = contextMenu.addAction(tr("Remove"));
-//		QAction* result = contextMenu.exec(event->globalPos());
-//		if (result == editContact) {
-//			eventStream_->send(boost::make_shared<RequestContactEditorUIEvent>(contact->getJID()));
-//		}
-//		else if (result == removeContact) {
-//			if (QtContactEditWindow::confirmContactDeletion(contact->getJID())) {
-//				eventStream_->send(boost::make_shared<RemoveRosterItemUIEvent>(contact->getJID()));
-//			}
-//		}
-//	}
-//	else if (GroupRosterItem* group = dynamic_cast<GroupRosterItem*>(item)) {
-//		QAction* renameGroupAction = contextMenu.addAction(tr("Rename"));
-//		QAction* result = contextMenu.exec(event->globalPos());
-//		if (result == renameGroupAction) {
-//			renameGroup(group);
-//		}
-//	}
+	QModelIndex index = indexAt(event->pos());
+	if (!index.isValid()) {
+		return;
+	}
+	RosterItem* item = static_cast<RosterItem*>(index.internalPointer());
+	ContactRosterItem* contact = dynamic_cast<ContactRosterItem*>(item);
+	if (contact) {
+		QMenu contextMenu;
+		std::map<QAction*, ChatWindow::OccupantAction> actions;
+		foreach (ChatWindow::OccupantAction availableAction, availableOccupantActions_) {
+			QString text = "Error: missing string";
+			switch (availableAction) {
+				case ChatWindow::Kick: text = tr("Kick user"); break;
+			}
+			QAction* action = contextMenu.addAction(text);
+			actions[action] = availableAction;
+		}
+		QAction* result = contextMenu.exec(event->globalPos());
+		if (result) {
+			onOccupantActionSelected(actions[result], contact);
+		}
+	}
 }
 
 }

@@ -62,7 +62,7 @@ QtMainWindow::QtMainWindow(QtSettingsProvider* settings, UIEventStream* uiEventS
 	contactTabLayout->setSpacing(0);
 	contactTabLayout->setContentsMargins(0, 0, 0, 0);
 
-	treeWidget_ = new QtRosterWidget(uiEventStream_);
+	treeWidget_ = new QtRosterWidget(uiEventStream_, this);
 	contactTabLayout->addWidget(treeWidget_);
 
 	tabs_->addTab(contactsTabWidget_, tr("&Contacts"));
@@ -115,7 +115,7 @@ QtMainWindow::QtMainWindow(QtSettingsProvider* settings, UIEventStream* uiEventS
 	connect(signOutAction, SIGNAL(triggered()), SLOT(handleSignOutAction()));
 	actionsMenu->addAction(signOutAction);
 
-	connect(treeWidget_, SIGNAL(onSomethingSelectedChanged(bool)), editUserAction_, SLOT(setEnabled(bool)));
+	treeWidget_->onSomethingSelectedChanged.connect(boost::bind(&QAction::setEnabled, editUserAction_, _1));
 
 	setAvailableAdHocCommands(std::vector<DiscoItems::Item>());
 	QAction* adHocAction = new QAction(tr("Collecting commands..."), this);

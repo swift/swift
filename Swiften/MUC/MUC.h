@@ -13,6 +13,7 @@
 #include <Swiften/Elements/MUCOccupant.h>
 #include <Swiften/MUC/MUCRegistry.h>
 #include <Swiften/Elements/MUCOwnerPayload.h>
+#include <Swiften/Elements/MUCAdminPayload.h>
 
 #include <boost/shared_ptr.hpp>
 #include <Swiften/Base/boost_bsignals.h>
@@ -54,9 +55,11 @@ namespace Swift {
 			/** Get occupant information*/
 			MUCOccupant getOccupant(const std::string& nick);
 			bool hasOccupant(const std::string& nick);
+			void kickUser(const JID& jid);
 		public:
 			boost::signal<void (const std::string& /*nick*/)> onJoinComplete;
 			boost::signal<void (ErrorPayload::ref)> onJoinFailed;
+			boost::signal<void (ErrorPayload::ref, const JID&)> onKickFailed;
 			boost::signal<void (Presence::ref)> onOccupantPresenceChange;
 			boost::signal<void (const std::string&, const MUCOccupant& /*now*/, const MUCOccupant::Role& /*old*/)> onOccupantRoleChanged;
 			boost::signal<void (const std::string&, const MUCOccupant::Affiliation& /*new*/, const MUCOccupant::Affiliation& /*old*/)> onOccupantAffiliationChanged;
@@ -79,6 +82,7 @@ namespace Swift {
 			void handleIncomingPresence(Presence::ref presence);
 			void internalJoin(const std::string& nick);
 			void handleCreationConfigResponse(MUCOwnerPayload::ref, ErrorPayload::ref);
+			void handleKickResponse(MUCAdminPayload::ref, ErrorPayload::ref, const JID&);
 
 		private:
 			JID ownMUCJID;

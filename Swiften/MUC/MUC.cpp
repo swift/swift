@@ -17,6 +17,7 @@
 #include <Swiften/Elements/Form.h>
 #include <Swiften/Elements/IQ.h>
 #include <Swiften/Elements/MUCUserPayload.h>
+#include <Swiften/Elements/MUCAdminPayload.h>
 #include <Swiften/Elements/MUCPayload.h>
 #include <Swiften/MUC/MUCRegistry.h>
 #include <Swiften/Queries/GenericRequest.h>
@@ -121,8 +122,8 @@ void MUC::handleIncomingPresence(Presence::ref presence) {
 	MUCOccupant::Affiliation affiliation(MUCOccupant::NoAffiliation);
 	boost::optional<JID> realJID;
 	if (mucPayload && mucPayload->getItems().size() > 0) {
-		role = mucPayload->getItems()[0].role;
-		affiliation = mucPayload->getItems()[0].affiliation;
+		role = mucPayload->getItems()[0].role ? mucPayload->getItems()[0].role.get() : MUCOccupant::NoRole;
+		affiliation = mucPayload->getItems()[0].affiliation ? mucPayload->getItems()[0].affiliation.get() : MUCOccupant::NoAffiliation;
 		realJID = mucPayload->getItems()[0].realJID;
 	}
 
@@ -215,6 +216,23 @@ bool MUC::hasOccupant(const std::string& nick) {
 
 MUCOccupant MUC::getOccupant(const std::string& nick) {
 	return occupants.find(nick)->second;
+}
+
+void MUC::kickUser(const JID& jid) {
+	MUCAdminPayload::ref mucPayload = boost::make_shared<MUCAdminPayload>();
+	MUCItem item;
+	item.role = MUCOccupant::NoRole;
+	item.nick = jid.getResource();
+	mucPayload->addItem(item);
+	GenericRequest<MUCAdminPayload>* request = new GenericRequest<MUCAdminPayload>(IQ::Set, getJID(), mucPayload, iqRouter_);
+	request->onResponse.connect(boost::bind(&MUC::handleKickResponse, this, _1, _2, jid));
+	request->send();
+}
+
+void MUC::handleKickResponse(MUCAdminPayload::ref /*unused*/, ErrorPayload::ref error, const JID& jid) {
+	if (error) {
+		onKickFailed(error, jid);
+	}
 }
 
 //FIXME: Recognise Topic changes

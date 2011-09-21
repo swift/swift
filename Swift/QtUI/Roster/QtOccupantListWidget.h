@@ -8,6 +8,9 @@
 
 #include "Swift/QtUI/Roster/QtTreeWidget.h"
 
+#include "Swiften/Base/boost_bsignals.h"
+#include "Swift/Controllers/UIInterfaces/ChatWindow.h"
+
 namespace Swift {
 
 class QtOccupantListWidget : public QtTreeWidget {
@@ -15,8 +18,12 @@ class QtOccupantListWidget : public QtTreeWidget {
 	public:
 		QtOccupantListWidget(UIEventStream* eventStream, QWidget* parent = 0);
 		virtual ~QtOccupantListWidget();
+		void setAvailableOccupantActions(const std::vector<ChatWindow::OccupantAction>& actions);
+		boost::signal<void (ChatWindow::OccupantAction, ContactRosterItem*)> onOccupantActionSelected;
 	protected:
 		void contextMenuEvent(QContextMenuEvent* event);
+	private:
+		std::vector<ChatWindow::OccupantAction> availableOccupantActions_;
 };
 
 }

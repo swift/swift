@@ -81,20 +81,4 @@ void QtRosterWidget::renameGroup(GroupRosterItem* group) {
 	}
 }
 
-void QtRosterWidget::currentChanged(const QModelIndex& current, const QModelIndex& previous) {
-	bool valid = false;
-	QModelIndexList selectedIndexList = getSelectedIndexes();
-	if (selectedIndexList.empty() || !selectedIndexList[0].isValid()) {
-		/* I didn't quite understand why using current didn't seem to work here.*/
-	}
-	else if (current.isValid()) {
-		RosterItem* item = static_cast<RosterItem*>(current.internalPointer());
-		if (dynamic_cast<ContactRosterItem*>(item)) {
-			valid = true;
-		}
-	}
-	onSomethingSelectedChanged(valid);
-	QTreeView::currentChanged(current, previous);
-}
-
 }

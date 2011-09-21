@@ -21,6 +21,7 @@
 #include <Swiften/Serializer/PayloadSerializers/RosterItemExchangeSerializer.h>
 #include <Swiften/Serializer/PayloadSerializers/MUCPayloadSerializer.h>
 #include <Swiften/Serializer/PayloadSerializers/MUCUserPayloadSerializer.h>
+#include <Swiften/Serializer/PayloadSerializers/MUCAdminPayloadSerializer.h>
 #include <Swiften/Serializer/PayloadSerializers/MUCOwnerPayloadSerializer.h>
 #include <Swiften/Serializer/PayloadSerializers/SoftwareVersionSerializer.h>
 #include <Swiften/Serializer/PayloadSerializers/StatusSerializer.h>
@@ -61,6 +62,7 @@ FullPayloadSerializerCollection::FullPayloadSerializerCollection() {
 	serializers_.push_back(new RosterItemExchangeSerializer());
 	serializers_.push_back(new MUCPayloadSerializer());
 	serializers_.push_back(new MUCUserPayloadSerializer());
+	serializers_.push_back(new MUCAdminPayloadSerializer());
 	serializers_.push_back(new MUCOwnerPayloadSerializer(this));
 	serializers_.push_back(new SoftwareVersionSerializer());
 	serializers_.push_back(new StatusSerializer());

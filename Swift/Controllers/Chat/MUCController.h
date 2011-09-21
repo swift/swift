@@ -19,11 +19,12 @@
 #include <Swiften/JID/JID.h>
 #include <Swiften/MUC/MUC.h>
 #include <Swiften/Elements/MUCOccupant.h>
+#include <Swift/Controllers/Roster/RosterItem.h>
+#include <Swift/Controllers/UIInterfaces/ChatWindow.h>
 
 namespace Swift {
 	class StanzaChannel;
 	class IQRouter;
-	class ChatWindow;
 	class ChatWindowFactory;
 	class Roster;
 	class AvatarManager;
@@ -64,6 +65,8 @@ namespace Swift {
 		private:
 			void clearPresenceQueue();
 			void addPresenceMessage(const std::string& message);
+			void handleWindowOccupantSelectionChanged(ContactRosterItem* item);
+			void handleActionRequestedOnOccupant(ChatWindow::OccupantAction, ContactRosterItem* item);
 			void handleWindowClosed();
 			void handleAvatarChanged(const JID& jid);
 			void handleOccupantJoined(const MUCOccupant& occupant);

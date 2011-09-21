@@ -23,8 +23,7 @@ class QPushButton;
 
 namespace Swift {
 	class QtChatView;
-	class QtTreeWidget;
-	class QtTreeWidgetFactory;
+	class QtOccupantListWidget;
 	class QtChatTheme;
 	class TreeWidget;
 	class QtTextEdit;
@@ -60,6 +59,7 @@ namespace Swift {
 			void setAckState(const std::string& id, AckState state);
 			void flash();
 			QByteArray getSplitterState();
+			virtual void setAvailableOccupantActions(const std::vector<OccupantAction>& actions);
 
 		public slots:
 			void handleChangeSplitterState(QByteArray state);
@@ -88,13 +88,13 @@ namespace Swift {
 			void handleKeyPressEvent(QKeyEvent* event);
 			void handleSplitterMoved(int pos, int index);
 			void handleAlertButtonClicked();
-
 		private:
 			void updateTitleWithUnreadCount();
 			void tabComplete();
 			void beginCorrection();
 			void cancelCorrection();
 			std::string addMessage(const std::string &message, const std::string &senderName, bool senderIsSelf, boost::shared_ptr<SecurityLabel> label, const std::string& avatarPath, const QString& style, const boost::posix_time::ptime& time);
+			void handleOccupantSelectionChanged(RosterItem* item);
 
 			int unreadCount_;
 			bool contactIsTyping_;
@@ -105,7 +105,7 @@ namespace Swift {
 			QtChatTheme* theme_;
 			QtTextEdit* input_;
 			QComboBox* labelsWidget_;
-			QtTreeWidget* treeWidget_;
+			QtOccupantListWidget* treeWidget_;
 			QLabel* correctingLabel_;
 			QLabel* alertLabel_;
 			QWidget* alertWidget_;

@@ -23,6 +23,7 @@ class QtTreeWidget : public QTreeView{
 		QtTreeWidgetItem* getRoot();
 		void setRosterModel(Roster* roster);
 		Roster* getRoster() {return roster_;}
+		boost::signal<void (RosterItem*)> onSomethingSelectedChanged;
 
 	private slots:
 		void handleItemActivated(const QModelIndex&);
@@ -35,7 +36,8 @@ class QtTreeWidget : public QTreeView{
 		QModelIndexList getSelectedIndexes() const;
 	private:
 		void drawBranches(QPainter*, const QRect&, const QModelIndex&) const;
-	
+	protected slots:
+		virtual void currentChanged(const QModelIndex& current, const QModelIndex& previous);
 	protected:
 		UIEventStream* eventStream_;
 

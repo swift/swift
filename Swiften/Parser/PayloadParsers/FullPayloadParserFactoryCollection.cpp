@@ -44,6 +44,7 @@
 #include <Swiften/Parser/PayloadParsers/PrivateStorageParserFactory.h>
 #include <Swiften/Parser/PayloadParsers/DelayParser.h>
 #include <Swiften/Parser/PayloadParsers/MUCUserPayloadParserFactory.h>
+#include <Swiften/Parser/PayloadParsers/MUCAdminPayloadParser.h>
 #include <Swiften/Parser/PayloadParsers/NicknameParserFactory.h>
 #include <Swiften/Parser/PayloadParsers/ReplaceParser.h>
 #include <Swiften/Parser/PayloadParsers/LastParser.h>
@@ -88,6 +89,7 @@ FullPayloadParserFactoryCollection::FullPayloadParserFactoryCollection() {
 	factories_.push_back(shared_ptr<PayloadParserFactory>(new PrivateStorageParserFactory(this)));
 	factories_.push_back(shared_ptr<PayloadParserFactory>(new ChatStateParserFactory()));
 	factories_.push_back(shared_ptr<PayloadParserFactory>(new MUCUserPayloadParserFactory()));
+	factories_.push_back(shared_ptr<PayloadParserFactory>(new GenericPayloadParserFactory<MUCAdminPayloadParser>("query", "http://jabber.org/protocol/muc#admin")));
 	factories_.push_back(shared_ptr<PayloadParserFactory>(new NicknameParserFactory()));
 	foreach(shared_ptr<PayloadParserFactory> factory, factories_) {
 		addFactory(factory.get());

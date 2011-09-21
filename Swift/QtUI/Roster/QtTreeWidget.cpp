@@ -81,6 +81,21 @@ QModelIndexList QtTreeWidget::getSelectedIndexes() const {
 	return selectedIndexList;
 }
 
+void QtTreeWidget::currentChanged(const QModelIndex& current, const QModelIndex& previous) {
+	RosterItem* item = NULL;
+	QModelIndexList selectedIndexList = getSelectedIndexes();
+	if (selectedIndexList.empty() || !selectedIndexList[0].isValid()) {
+		/* I didn't quite understand why using current didn't seem to work here.*/
+	}
+	else if (current.isValid()) {
+		item = static_cast<RosterItem*>(current.internalPointer());
+		item = dynamic_cast<ContactRosterItem*>(item);
+	}
+	onSomethingSelectedChanged(item);
+	QTreeView::currentChanged(current, previous);
+}
+
+
 void QtTreeWidget::handleItemActivated(const QModelIndex& index) {
 	RosterItem* item = static_cast<RosterItem*>(index.internalPointer());
 	ContactRosterItem* contact = dynamic_cast<ContactRosterItem*>(item);
