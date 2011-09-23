@@ -34,18 +34,6 @@ void ParserElement::appendCharacterData(const std::string& data) {
 	text_ += data;
 }
 
-std::string ParserElement::getText() {
-	return text_;
-}
-
-std::string ParserElement::getName() {
-	return name_;
-}
-
-std::string ParserElement::getNamespace() {
-	return xmlns_;
-}
-
 struct DoesntMatch {
 	public:
 		DoesntMatch(const std::string& tagName, const std::string& ns) : tagName(tagName), ns(ns) {}
@@ -56,16 +44,15 @@ struct DoesntMatch {
 };
 
 
-std::vector<ParserElement::ref> ParserElement::getChildren(const std::string& name, const std::string& xmlns) {
+std::vector<ParserElement::ref> ParserElement::getChildren(const std::string& name, const std::string& xmlns) const {
 	std::vector<ParserElement::ref> result;
 	std::remove_copy_if(children_.begin(), children_.end(), std::back_inserter(result), DoesntMatch(name, xmlns));
 	return result;
 }
 
-ParserElement::ref ParserElement::getChild(const std::string& name, const std::string& xmlns) {
+ParserElement::ref ParserElement::getChild(const std::string& name, const std::string& xmlns) const {
 	std::vector<ParserElement::ref> results = getChildren(name, xmlns);
-	boost::shared_ptr<NullParserElement> nullParser = boost::make_shared<NullParserElement>();
-	ParserElement::ref result = results.empty() ? boost::dynamic_pointer_cast<ParserElement>(nullParser) : results[0];
+	ParserElement::ref result = results.empty() ? boost::make_shared<NullParserElement>() : results[0];
 	return result;
 }
 

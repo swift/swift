@@ -25,7 +25,7 @@ namespace Swift {
 			MUCAdminPayload() {
 			}
 
-			void addItem(MUCItem item) {items_.push_back(item);}
+			void addItem(const MUCItem& item) {items_.push_back(item);}
 
 			const std::vector<MUCItem>& getItems() const {return items_;}
 

@@ -27,7 +27,6 @@ namespace Swift {
 	class GenericPayloadTreeParser : public GenericPayloadParser<PAYLOAD_TYPE> {
 		public:
 			virtual void handleStartElement(const std::string& element, const std::string& xmlns, const AttributeMap& attributes) {
-				//std::cerr << element << ", " << xmlns << ", " << attributes.getEntries().size();
 				if (!root_) {
 					root_ = boost::make_shared<ParserElement>(element, xmlns, attributes);
 					elementStack_.push_back(root_);

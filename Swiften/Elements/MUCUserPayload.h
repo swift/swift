@@ -41,7 +41,7 @@ namespace Swift {
 			MUCUserPayload() {
 			}
 
-			void addItem(MUCItem item) {items_.push_back(item);}
+			void addItem(const MUCItem& item) {items_.push_back(item);}
 		
 			void addStatusCode(StatusCode code) {statusCodes_.push_back(code);}
 
