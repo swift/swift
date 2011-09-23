@@ -15,27 +15,33 @@
 #include <boost/smart_ptr/make_shared.hpp>
 
 namespace Swift {
-class ParserElement {
-	public:
-		typedef boost::shared_ptr<ParserElement> ref;
-		ParserElement(const std::string& name, const std::string& xmlns, const AttributeMap& attributes);
-		virtual ~ParserElement();
-		virtual operator bool();
-		ParserElement::ref addChild(const std::string& name, const std::string& xmlns, const AttributeMap& attributes);
-		void appendCharacterData(const std::string& data);
-		const std::string& getText() const {return text_;};
-		const std::string& getName() const {return name_;};
-		const std::string& getNamespace() const {return xmlns_;};
-		std::vector<ParserElement::ref> getChildren(const std::string& name, const std::string& xmlns) const;
-		ParserElement::ref getChild(const std::string& name, const std::string& xmlns) const;
-		const AttributeMap& getAttributes() const {return attributes_;}
-	private:
-		std::vector<ParserElement::ref> children_;
-		std::string name_;
-		std::string xmlns_;
-		AttributeMap attributes_;
-		std::string text_;
+	class ParserElement {
+		public:
+			typedef boost::shared_ptr<ParserElement> ref;
 
-};
+			ParserElement(const std::string& name, const std::string& xmlns, const AttributeMap& attributes);
+			virtual ~ParserElement();
 
+			const std::string& getText() const { return text_; }
+			const std::string& getName() const { return name_; }
+			const std::string& getNamespace() const { return xmlns_; }
+			const AttributeMap& getAttributes() const { return attributes_; }
+
+			ParserElement::ref addChild(const std::string& name, const std::string& xmlns, const AttributeMap& attributes);
+			void appendCharacterData(const std::string& data);
+
+			std::vector<ParserElement::ref> getChildren(const std::string& name, const std::string& xmlns) const;
+			ParserElement::ref getChild(const std::string& name, const std::string& xmlns) const;
+
+			virtual operator bool() {
+				return true;
+			}
+
+		private:
+			std::vector<ParserElement::ref> children_;
+			std::string name_;
+			std::string xmlns_;
+			AttributeMap attributes_;
+			std::string text_;
+	};
 }

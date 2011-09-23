@@ -13,15 +13,9 @@
 namespace Swift{
 
 ParserElement::ParserElement(const std::string& name, const std::string& xmlns, const AttributeMap& attributes) : name_(name), xmlns_(xmlns), attributes_(attributes) {
-
 }
 
 ParserElement::~ParserElement() {
-
-}
-
-ParserElement::operator bool() {
-	return true;
 }
 
 ParserElement::ref ParserElement::addChild(const std::string& name, const std::string& xmlns, const AttributeMap& attributes) {
@@ -52,7 +46,7 @@ std::vector<ParserElement::ref> ParserElement::getChildren(const std::string& na
 
 ParserElement::ref ParserElement::getChild(const std::string& name, const std::string& xmlns) const {
 	std::vector<ParserElement::ref> results = getChildren(name, xmlns);
-	ParserElement::ref result = results.empty() ? boost::make_shared<NullParserElement>() : results[0];
+	ParserElement::ref result = results.empty() ? NullParserElement::element : results[0];
 	return result;
 }
 

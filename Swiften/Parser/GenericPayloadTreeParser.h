@@ -13,13 +13,8 @@
 
 #include <Swiften/Parser/GenericPayloadParser.h>
 #include <Swiften/Parser/Tree/ParserElement.h>
-#include <Swiften/Parser/Tree/NullParserElement.h>
-
-#include <iostream>
 
 namespace Swift {
-
-
 	/**
 	 * Generic parser offering something a bit like a DOM to work with.
 	 */
@@ -30,7 +25,8 @@ namespace Swift {
 				if (!root_) {
 					root_ = boost::make_shared<ParserElement>(element, xmlns, attributes);
 					elementStack_.push_back(root_);
-				} else {
+				} 
+				else {
 					ParserElement::ref current = *elementStack_.rbegin();
 					elementStack_.push_back(current->addChild(element, xmlns, attributes));
 				}
