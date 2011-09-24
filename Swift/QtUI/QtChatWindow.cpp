@@ -55,7 +55,9 @@ QtChatWindow::QtChatWindow(const QString &contact, QtChatTheme* theme, UIEventSt
 	updateTitleWithUnreadCount();
 	QtSettingsProvider settings;
 
+#ifdef SWIFT_EXPERIMENTAL_FT
 	setAcceptDrops(true);
+#endif
 
 	alertStyleSheet_ = "background: rgb(255, 255, 153); color: black";
 

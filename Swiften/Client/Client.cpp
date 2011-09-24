@@ -29,6 +29,9 @@
 #include <Swiften/Jingle/JingleSessionManager.h>
 #include <Swiften/Network/NetworkFactories.h>
 #include <Swiften/FileTransfer/FileTransferManagerImpl.h>
+#ifndef SWIFT_EXPERIMENTAL_FT
+#include <Swiften/FileTransfer/UnitTest/DummyFileTransferManager.h>
+#endif
 
 namespace Swift {
 
@@ -108,7 +111,11 @@ void Client::setSoftwareVersion(const std::string& name, const std::string& vers
 }
 
 void Client::handleConnected() {
-	fileTransferManager = new FileTransferManagerImpl(getJID(), jingleSessionManager, getIQRouter(), getEntityCapsProvider(), presenceOracle, getNetworkFactories()->getConnectionFactory(), getNetworkFactories()->getConnectionServerFactory(), getNetworkFactories()->getTimerFactory(), getNetworkFactories()->getPlatformNATTraversalWorker());
+#ifdef SWIFT_EXPERIMENTAL_FT
+	fileTransferManager = new FileTransferManagerImpl(getJID(), jingleSessionManager, getIQRouter(), getEntityCapsProvider(), presenceOracle, getNetworkFactories()->getConnectionFactory(), getNetworkFactories()->getConnectionServerFactory(), getNetworkFactories()->getTimerFactory(), getNetworkFactories()->getNATTraverser());
+#else
+	fileTransferManager = new DummyFileTransferManager();
+#endif
 }
 
 void Client::requestRoster() {

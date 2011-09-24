@@ -117,8 +117,8 @@ void ContactRosterItem::setSupportedFeatures(const std::set<Feature>& features) 
 	features_ = features;
 }
 
-bool ContactRosterItem::supportsFeature(const Feature feat) const {
-	return features_.find(feat) != features_.end();
+bool ContactRosterItem::supportsFeature(const Feature feature) const {
+	return features_.find(feature) != features_.end();
 }
 
 }

@@ -96,6 +96,7 @@ class SOCKS5BytestreamServerSessionTest : public CppUnit::TestFixture {
 			eventLoop->processEvents();
 			testling->startTransfer();
 			skipHeader("abcdef");
+			eventLoop->processEvents();
 
 			CPPUNIT_ASSERT(createByteArray("abcdefg") == receivedData);
 			CPPUNIT_ASSERT_EQUAL(2, receivedDataChunks);

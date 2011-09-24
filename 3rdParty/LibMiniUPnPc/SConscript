@@ -11,6 +11,7 @@ if env.get("LIBMINIUPNPC_BUNDLED", False) :
 				"CPPPATH": [Dir("src/miniupnpc")],
 				"LIBPATH": [Dir(".")],
 				"LIBS": ["Swiften_MiniUPnPc"],
+				"INTERNAL_CPPDEFINES": ["STATICLIB"],
 			}
 		#if env["PLATFORM"] == "win32" :
 		#	env["LIBIDN_FLAGS"]["CPPPATH"] += [Dir("stubs/win32")]

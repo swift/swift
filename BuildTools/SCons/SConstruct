@@ -312,25 +312,28 @@ else :
 conf.Finish()
 
 # LibMiniUPnPc
-libminiupnpc_conf_env = conf_env.Clone()
-
-conf = Configure(libminiupnpc_conf_env)
-if conf.CheckCHeader("miniupnpc.h") and conf.CheckLib(env["libminiupnpc_libname"]) :
-	print "NOT IMPLEMENTED YET"
+if env["experimental"] :
+	libminiupnpc_conf_env = conf_env.Clone()
+	conf = Configure(libminiupnpc_conf_env)
+	if conf.CheckCHeader("miniupnpc.h") and conf.CheckLib(env["libminiupnpc_libname"]) :
+		print "NOT IMPLEMENTED YET"
+	else :
+		env["LIBMINIUPNPC_BUNDLED"] = 1
+	conf.Finish()
 else :
-	env["LIBMINIUPNPC_BUNDLED"] = 1
-conf.Finish()
+	env["LIBMINIUPNPC_FLAGS"] = {}
 
 # LibNATPMP
-libnatpmp_conf_env = conf_env.Clone()
-
-conf = Configure(libnatpmp_conf_env)
-if conf.CheckCHeader("natpmp.h") and conf.CheckLib(env["libnatpmp_libname"]) :
-	print "NOT IMPLEMENTED YET"
+if env["experimental"] :
+	libnatpmp_conf_env = conf_env.Clone()
+	conf = Configure(libnatpmp_conf_env)
+	if conf.CheckCHeader("natpmp.h") and conf.CheckLib(env["libnatpmp_libname"]) :
+		print "NOT IMPLEMENTED YET"
+	else :
+		env["LIBNATPMP_BUNDLED"] = 1
+	conf.Finish()
 else :
-	env["LIBNATPMP_BUNDLED"] = 1
-conf.Finish()
-
+	env["LIBNATPMP_FLAGS"] = {}
 
 # SQLite
 #sqlite_conf_env = conf_env.Clone()

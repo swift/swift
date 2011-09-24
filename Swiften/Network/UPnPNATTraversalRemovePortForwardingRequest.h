@@ -6,22 +6,27 @@
 
 #pragma once
 
-#include <Swiften/Network/PlatformNATTraversalRemovePortForwardingRequest.h>
+#include <Swiften/Network/PlatformNATTraversalRequest.h>
+#include <Swiften/Network/NATTraversalRemovePortForwardingRequest.h>
 
 namespace Swift {
 
-class UPnPNATTraversalRemovePortForwardingRequest : public PlatformNATTraversalRemovePortForwardingRequest {
+class UPnPNATTraversalRemovePortForwardingRequest : public NATTraversalRemovePortForwardingRequest, public PlatformNATTraversalRequest {
 public:
-	UPnPNATTraversalRemovePortForwardingRequest(PlatformNATTraversalRemovePortForwardingRequest::PortMapping, PlatformNATTraversalWorker*);
+	UPnPNATTraversalRemovePortForwardingRequest(NATTraversalRemovePortForwardingRequest::PortMapping, PlatformNATTraversalWorker*);
 	virtual ~UPnPNATTraversalRemovePortForwardingRequest();
 
 	virtual void runBlocking();
+
+	virtual void run() {
+		doRun();
+	}
 
 private:
 	HostAddress getLocalClient();
 
 private:
-	PlatformNATTraversalRemovePortForwardingRequest::PortMapping mapping;
+	NATTraversalRemovePortForwardingRequest::PortMapping mapping;
 };
 
 }

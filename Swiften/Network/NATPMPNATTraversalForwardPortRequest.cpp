@@ -10,9 +10,11 @@
 
 #include <Swiften/Base/Log.h>
 
+#pragma GCC diagnostic ignored "-Wold-style-cast"
+
 namespace Swift {
 
-NATPMPNATTraversalForwardPortRequest::NATPMPNATTraversalForwardPortRequest(PlatformNATTraversalForwardPortRequest::PortMapping mapping, PlatformNATTraversalWorker* worker) : PlatformNATTraversalForwardPortRequest(worker), mapping(mapping) {
+NATPMPNATTraversalForwardPortRequest::NATPMPNATTraversalForwardPortRequest(NATTraversalForwardPortRequest::PortMapping mapping, PlatformNATTraversalWorker* worker) : PlatformNATTraversalRequest(worker), mapping(mapping) {
 
 }
 

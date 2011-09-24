@@ -10,9 +10,11 @@
 
 #include <Swiften/Base/Log.h>
 
+#pragma GCC diagnostic ignored "-Wold-style-cast"
+
 namespace Swift {
 
-NATPMPNATTraversalGetPublicIPRequest::NATPMPNATTraversalGetPublicIPRequest(PlatformNATTraversalWorker* worker) : PlatformNATTraversalGetPublicIPRequest(worker) {
+NATPMPNATTraversalGetPublicIPRequest::NATPMPNATTraversalGetPublicIPRequest(PlatformNATTraversalWorker* worker) : PlatformNATTraversalRequest(worker) {
 
 }
 

@@ -62,8 +62,11 @@ GroupRosterItem* Roster::getGroup(const std::string& groupName) {
 }
 
 void Roster::setAvailableFeatures(const JID& jid, const std::set<ContactRosterItem::Feature>& features) {
-	if (itemMap_[fullJIDMapping_ ? jid : jid.toBare()].empty()) return;
-	foreach(ContactRosterItem* item, itemMap_[fullJIDMapping_ ? jid : jid.toBare()]) {
+	JID actualJID = fullJIDMapping_ ? jid : jid.toBare();
+	if (itemMap_[actualJID].empty()) {
+		return;
+	}
+	foreach(ContactRosterItem* item, itemMap_[actualJID]) {
 		item->setSupportedFeatures(features);
 	}
 }

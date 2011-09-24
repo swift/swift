@@ -21,7 +21,7 @@ public:
 	PlatformNATTraversalRequest(PlatformNATTraversalWorker* worker);
 	virtual ~PlatformNATTraversalRequest();
 
-	virtual void run();
+	virtual void doRun();
 	virtual void runBlocking() = 0;
 
 private:

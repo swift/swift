@@ -19,7 +19,7 @@
 
 namespace Swift {
 
-UPnPNATTraversalRemovePortForwardingRequest::UPnPNATTraversalRemovePortForwardingRequest(PlatformNATTraversalRemovePortForwardingRequest::PortMapping mapping, PlatformNATTraversalWorker* worker) : PlatformNATTraversalRemovePortForwardingRequest(worker), mapping(mapping) {
+UPnPNATTraversalRemovePortForwardingRequest::UPnPNATTraversalRemovePortForwardingRequest(NATTraversalRemovePortForwardingRequest::PortMapping mapping, PlatformNATTraversalWorker* worker) : PlatformNATTraversalRequest(worker), mapping(mapping) {
 
 }
 
@@ -58,7 +58,7 @@ void UPnPNATTraversalRemovePortForwardingRequest::runBlocking() {
 			break;
 		}*/
 		SWIFT_LOG(debug) << "Start removing port forwarding..." << std::endl;
-		int ret = UPNP_DeletePortMapping(urls.controlURL, data.first.servicetype, publicPort.c_str(), mapping.protocol == PlatformNATTraversalRemovePortForwardingRequest::PortMapping::TCP ? "TCP" : "UDP", 0);
+		int ret = UPNP_DeletePortMapping(urls.controlURL, data.first.servicetype, publicPort.c_str(), mapping.protocol == NATTraversalRemovePortForwardingRequest::PortMapping::TCP ? "TCP" : "UDP", 0);
 
 		if (ret == UPNPCOMMAND_SUCCESS) {
 			SWIFT_LOG(debug) << "Removing port " << publicPort << " successfull." << std::endl;

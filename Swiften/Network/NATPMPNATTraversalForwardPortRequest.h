@@ -6,19 +6,24 @@
 
 #pragma once
 
-#include <Swiften/Network/PlatformNATTraversalForwardPortRequest.h>
+#include <Swiften/Network/NATTraversalForwardPortRequest.h>
+#include <Swiften/Network/PlatformNATTraversalRequest.h>
 
 namespace Swift {
 
-class NATPMPNATTraversalForwardPortRequest : public PlatformNATTraversalForwardPortRequest {
+class NATPMPNATTraversalForwardPortRequest : public NATTraversalForwardPortRequest, public PlatformNATTraversalRequest {
 public:
-	NATPMPNATTraversalForwardPortRequest(PlatformNATTraversalForwardPortRequest::PortMapping, PlatformNATTraversalWorker*);
+	NATPMPNATTraversalForwardPortRequest(NATTraversalForwardPortRequest::PortMapping, PlatformNATTraversalWorker*);
 	virtual ~NATPMPNATTraversalForwardPortRequest();
 
 	virtual void runBlocking();
 
+	virtual void run() {
+		doRun();
+	}
+
 private:
-	PlatformNATTraversalForwardPortRequest::PortMapping mapping;
+	NATTraversalForwardPortRequest::PortMapping mapping;
 };
 
 }

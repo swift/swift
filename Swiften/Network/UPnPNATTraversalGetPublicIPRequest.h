@@ -6,16 +6,21 @@
 
 #pragma once
 
-#include <Swiften/Network/PlatformNATTraversalGetPublicIPRequest.h>
+#include <Swiften/Network/NATTraversalGetPublicIPRequest.h>
+#include <Swiften/Network/PlatformNATTraversalRequest.h>
 
 namespace Swift {
 
-class UPnPNATTraversalGetPublicIPRequest : public PlatformNATTraversalGetPublicIPRequest {
+class UPnPNATTraversalGetPublicIPRequest : public NATTraversalGetPublicIPRequest, public PlatformNATTraversalRequest {
 public:
 	UPnPNATTraversalGetPublicIPRequest(PlatformNATTraversalWorker*);
 	virtual ~UPnPNATTraversalGetPublicIPRequest();
 
 	virtual void runBlocking();
+
+	virtual void run() {
+		doRun();
+	}
 };
 
 }

@@ -189,7 +189,7 @@ public:
 		CPPUNIT_ASSERT_EQUAL(false, helper.sessionReadyError);
 
 		helper.unprocessedInput.clear();
-		ByteArray transferData = generateRandomByteArray(1024 * 1024);
+		ByteArray transferData = generateRandomByteArray(1024);
 		boost::shared_ptr<ByteArrayReadBytestream> input = boost::make_shared<ByteArrayReadBytestream>(transferData);
 		clientSession->startSending(input);
 		eventLoop->processEvents();

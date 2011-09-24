@@ -6,17 +6,19 @@
 
 #include "ConnectivityManager.h"
 
+#include <boost/bind.hpp>
+
 #include <Swiften/Base/foreach.h>
 #include <Swiften/Base/Log.h>
 #include <Swiften/Network/NetworkInterface.h>
-#include <Swiften/Network/PlatformNATTraversalGetPublicIPRequest.h>
-#include <Swiften/Network/PlatformNATTraversalRemovePortForwardingRequest.h>
-#include <Swiften/Network/PlatformNATTraversalWorker.h>
+#include <Swiften/Network/NATTraversalGetPublicIPRequest.h>
+#include <Swiften/Network/NATTraversalRemovePortForwardingRequest.h>
+#include <Swiften/Network/NATTraverser.h>
 #include <Swiften/Network/PlatformNetworkEnvironment.h>
 
 namespace Swift {
 
-ConnectivityManager::ConnectivityManager(PlatformNATTraversalWorker* worker) : natTraversalWorker(worker) {
+ConnectivityManager::ConnectivityManager(NATTraverser* worker) : natTraversalWorker(worker) {
 
 }
 
@@ -29,13 +31,13 @@ ConnectivityManager::~ConnectivityManager() {
 
 void ConnectivityManager::addListeningPort(int port) {
 	ports.insert(port);
-	boost::shared_ptr<PlatformNATTraversalGetPublicIPRequest> getIPRequest = natTraversalWorker->createGetPublicIPRequest();
+	boost::shared_ptr<NATTraversalGetPublicIPRequest> getIPRequest = natTraversalWorker->createGetPublicIPRequest();
 	if (getIPRequest) {
 		getIPRequest->onResult.connect(boost::bind(&ConnectivityManager::natTraversalGetPublicIPResult, this, _1));
 		getIPRequest->run();
 	}
 
-	boost::shared_ptr<PlatformNATTraversalForwardPortRequest> forwardPortRequest = natTraversalWorker->createForwardPortRequest(port, port);
+	boost::shared_ptr<NATTraversalForwardPortRequest> forwardPortRequest = natTraversalWorker->createForwardPortRequest(port, port);
 	if (forwardPortRequest) {
 		forwardPortRequest->onResult.connect(boost::bind(&ConnectivityManager::natTraversalForwardPortResult, this, _1));
 		forwardPortRequest->run();
@@ -45,7 +47,7 @@ void ConnectivityManager::addListeningPort(int port) {
 void ConnectivityManager::removeListeningPort(int port) {
 	SWIFT_LOG(debug) << "remove listening port " << port << std::endl;
 	ports.erase(port);
-	boost::shared_ptr<PlatformNATTraversalRemovePortForwardingRequest> removePortForwardingRequest = natTraversalWorker->createRemovePortForwardingRequest(port, port);
+	boost::shared_ptr<NATTraversalRemovePortForwardingRequest> removePortForwardingRequest = natTraversalWorker->createRemovePortForwardingRequest(port, port);
 	if (removePortForwardingRequest) {
 		removePortForwardingRequest->run();
 	}
@@ -89,7 +91,7 @@ void ConnectivityManager::natTraversalGetPublicIPResult(boost::optional<HostAddr
 	}
 }
 
-void ConnectivityManager::natTraversalForwardPortResult(boost::optional<PlatformNATTraversalForwardPortRequest::PortMapping> mapping) {
+void ConnectivityManager::natTraversalForwardPortResult(boost::optional<NATTraversalForwardPortRequest::PortMapping> mapping) {
 	if (mapping) {
 		SWIFT_LOG(debug) << "Mapping port was successful." << std::endl;
 	} else {

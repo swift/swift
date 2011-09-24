@@ -35,7 +35,7 @@ namespace Swift {
 	class NickManager;
 	class FileTransferManager;
 	class JingleSessionManager;
-	class FileTransferManagerImpl;
+	class FileTransferManager;
 
 	/**
 	 * Provides the core functionality for writing XMPP client software.
@@ -136,7 +136,10 @@ namespace Swift {
 			}
 			
 			/**
-			 * Returns a FileTransferManager for the client. This is only available after the onConnected signal has been fired.
+			 * Returns a FileTransferManager for the client. This is only available after the onConnected 
+			 * signal has been fired.
+			 *
+			 * WARNING: File transfer will only work if Swiften is built in 'experimental' mode.
 			 */
 			FileTransferManager* getFileTransferManager() const;
 
@@ -180,7 +183,7 @@ namespace Swift {
 			MUCManager* mucManager;
 			ClientDiscoManager* discoManager;
 			JingleSessionManager* jingleSessionManager;
-			FileTransferManagerImpl* fileTransferManager;
+			FileTransferManager* fileTransferManager;
 			BlindCertificateTrustChecker* blindCertificateTrustChecker;
 	};
 }

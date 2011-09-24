@@ -56,10 +56,12 @@ void QtRosterWidget::contextMenuEvent(QContextMenuEvent* event) {
 	if (ContactRosterItem* contact = dynamic_cast<ContactRosterItem*>(item)) {
 		QAction* editContact = contextMenu.addAction(tr("Edit"));
 		QAction* removeContact = contextMenu.addAction(tr("Remove"));
+#ifdef SWIFT_EXPERIMENTAL_FT
 		QAction* sendFile = NULL;
 		if (contact->supportsFeature(ContactRosterItem::FileTransferFeature)) {
 			sendFile = contextMenu.addAction(tr("Send File"));
 		}
+#endif
 		QAction* result = contextMenu.exec(event->globalPos());
 		if (result == editContact) {
 			eventStream_->send(boost::make_shared<RequestContactEditorUIEvent>(contact->getJID()));
@@ -69,12 +71,14 @@ void QtRosterWidget::contextMenuEvent(QContextMenuEvent* event) {
 				eventStream_->send(boost::make_shared<RemoveRosterItemUIEvent>(contact->getJID()));
 			}
 		}
-		else if (result == sendFile) {
+#ifdef SWIFT_EXPERIMENTAL_FT
+		else if (sendFile && result == sendFile) {
 			QString fileName = QFileDialog::getOpenFileName(this, tr("Send File"), "", tr("All Files (*);;"));
 			if (!fileName.isEmpty()) {
 				eventStream_->send(boost::make_shared<SendFileUIEvent>(contact->getJID(), fileName.toStdString()));
 			}
 		}
+#endif
 	}
 	else if (GroupRosterItem* group = dynamic_cast<GroupRosterItem*>(item)) {
 		QAction* renameGroupAction = contextMenu.addAction(tr("Rename"));

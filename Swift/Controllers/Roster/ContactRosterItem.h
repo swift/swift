@@ -48,7 +48,7 @@ class ContactRosterItem : public RosterItem {
 		void removeGroup(const std::string& group);
 		
 		void setSupportedFeatures(const std::set<Feature>& features);
-		bool supportsFeature(Feature feat) const;
+		bool supportsFeature(Feature feature) const;
 	private:
 		JID jid_;
 		JID displayJID_;

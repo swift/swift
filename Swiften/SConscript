@@ -22,9 +22,6 @@ if env["SCONS_STAGE"] == "flags" :
 	env["SWIFTEN_LIBRARY_FILE"] = "Swiften"
 	env["SWIFTEN_LIBRARY_ALIASES"] = []
 	
-	if env["PLATFORM"] == "win32" :
-		env.Append(CCFLAGS = ["-DSTATICLIB"])
-	
 	if ARGUMENTS.get("swiften_dll", False) :
 		if env["PLATFORM"] == "win32" :
 			pass

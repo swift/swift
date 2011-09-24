@@ -14,7 +14,6 @@
 #include <Swiften/Network/NATPMPNATTraversalGetPublicIPRequest.h>
 #include <Swiften/Network/NATPMPNATTraversalForwardPortRequest.h>
 #include <Swiften/Network/NATPMPNATTraversalRemovePortForwardingRequest.h>
-#include <Swiften/Network/PlatformNATTraversalRemovePortForwardingRequest.h>
 
 namespace Swift {
 
@@ -30,7 +29,7 @@ PlatformNATTraversalWorker::~PlatformNATTraversalWorker() {
 	delete thread;
 }
 
-boost::shared_ptr<PlatformNATTraversalGetPublicIPRequest> PlatformNATTraversalWorker::createGetPublicIPRequest() {
+boost::shared_ptr<NATTraversalGetPublicIPRequest> PlatformNATTraversalWorker::createGetPublicIPRequest() {
 	switch(backendType) {
 		case UPnP:
 			return boost::make_shared<UPnPNATTraversalGetPublicIPRequest>(this);
@@ -40,12 +39,12 @@ boost::shared_ptr<PlatformNATTraversalGetPublicIPRequest> PlatformNATTraversalWo
 		case None:
 			break;
 	}
-	return boost::shared_ptr<PlatformNATTraversalGetPublicIPRequest>();
+	return boost::shared_ptr<NATTraversalGetPublicIPRequest>();
 }
 
-boost::shared_ptr<PlatformNATTraversalForwardPortRequest> PlatformNATTraversalWorker::createForwardPortRequest(unsigned int localPort, unsigned int publicPort) {
-	PlatformNATTraversalForwardPortRequest::PortMapping mapping;
-	mapping.protocol = PlatformNATTraversalForwardPortRequest::PortMapping::TCP;
+boost::shared_ptr<NATTraversalForwardPortRequest> PlatformNATTraversalWorker::createForwardPortRequest(unsigned int localPort, unsigned int publicPort) {
+	NATTraversalForwardPortRequest::PortMapping mapping;
+	mapping.protocol = NATTraversalForwardPortRequest::PortMapping::TCP;
 	mapping.leaseInSeconds = 60 * 60 * 24;
 	mapping.localPort = localPort;
 	mapping.publicPort = publicPort;
@@ -59,12 +58,12 @@ boost::shared_ptr<PlatformNATTraversalForwardPortRequest> PlatformNATTraversalWo
 		case None:
 			break;
 	}
-	return boost::shared_ptr<PlatformNATTraversalForwardPortRequest>();
+	return boost::shared_ptr<NATTraversalForwardPortRequest>();
 }
 
-boost::shared_ptr<PlatformNATTraversalRemovePortForwardingRequest> PlatformNATTraversalWorker::createRemovePortForwardingRequest(unsigned int localPort, unsigned int publicPort) {
-	PlatformNATTraversalRemovePortForwardingRequest::PortMapping mapping;
-	mapping.protocol = PlatformNATTraversalRemovePortForwardingRequest::PortMapping::TCP;
+boost::shared_ptr<NATTraversalRemovePortForwardingRequest> PlatformNATTraversalWorker::createRemovePortForwardingRequest(unsigned int localPort, unsigned int publicPort) {
+	NATTraversalRemovePortForwardingRequest::PortMapping mapping;
+	mapping.protocol = NATTraversalRemovePortForwardingRequest::PortMapping::TCP;
 	mapping.leaseInSeconds = 60 * 60 * 24;
 	mapping.localPort = localPort;
 	mapping.publicPort = publicPort;
@@ -78,7 +77,7 @@ boost::shared_ptr<PlatformNATTraversalRemovePortForwardingRequest> PlatformNATTr
 		case None:
 			break;
 	}
-	return boost::shared_ptr<PlatformNATTraversalRemovePortForwardingRequest>();
+	return boost::shared_ptr<NATTraversalRemovePortForwardingRequest>();
 }
 
 void PlatformNATTraversalWorker::run() {

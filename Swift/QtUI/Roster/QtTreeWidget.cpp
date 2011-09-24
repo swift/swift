@@ -34,7 +34,9 @@ QtTreeWidget::QtTreeWidget(UIEventStream* eventStream, QWidget* parent) : QTreeV
 	expandAll();
 	setAnimated(true);
 	setIndentation(0);
+#ifdef SWIFT_EXPERIMENTAL_FT
 	setAcceptDrops(true);
+#endif
 	setRootIsDecorated(true);
 	connect(this, SIGNAL(activated(const QModelIndex&)), this, SLOT(handleItemActivated(const QModelIndex&)));
 	connect(model_, SIGNAL(itemExpanded(const QModelIndex&, bool)), this, SLOT(handleModelItemExpanded(const QModelIndex&, bool)));

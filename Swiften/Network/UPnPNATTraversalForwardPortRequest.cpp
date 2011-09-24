@@ -18,7 +18,7 @@
 
 namespace Swift {
 
-UPnPNATTraversalForwardPortRequest::UPnPNATTraversalForwardPortRequest(PlatformNATTraversalForwardPortRequest::PortMapping mapping, PlatformNATTraversalWorker* worker) : PlatformNATTraversalForwardPortRequest(worker), mapping(mapping) {
+UPnPNATTraversalForwardPortRequest::UPnPNATTraversalForwardPortRequest(NATTraversalForwardPortRequest::PortMapping mapping, PlatformNATTraversalWorker* worker) : PlatformNATTraversalRequest(worker), mapping(mapping) {
 
 }
 
@@ -57,9 +57,9 @@ void UPnPNATTraversalForwardPortRequest::runBlocking() {
 			break;
 		}*/
 
-		int ret = UPNP_AddPortMapping(urls.controlURL, data.first.servicetype, publicPort.c_str(), localPort.c_str(), internalClient.c_str(), 0, mapping.protocol == PlatformNATTraversalForwardPortRequest::PortMapping::TCP ? "TCP" : "UDP", 0, leaseSeconds.c_str());
+		int ret = UPNP_AddPortMapping(urls.controlURL, data.first.servicetype, publicPort.c_str(), localPort.c_str(), internalClient.c_str(), 0, mapping.protocol == NATTraversalForwardPortRequest::PortMapping::TCP ? "TCP" : "UDP", 0, leaseSeconds.c_str());
 		if (ret == UPNPCOMMAND_SUCCESS) {
-			result = boost::optional<PlatformNATTraversalForwardPortRequest::PortMapping>(mapping);
+			result = boost::optional<NATTraversalForwardPortRequest::PortMapping>(mapping);
 		}
 	} while(false);
 

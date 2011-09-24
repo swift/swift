@@ -168,9 +168,11 @@ QtLoginWindow::QtLoginWindow(UIEventStream* uiEventStream) : QMainWindow(), forg
 	connect(xmlConsoleAction_, SIGNAL(triggered()), SLOT(handleShowXMLConsole()));
 	generalMenu_->addAction(xmlConsoleAction_);
 
+#ifdef SWIFT_EXPERIMENTAL_FT
 	fileTransferOverviewAction_ = new QAction(tr("Show &File Transfer Overview"), this);
 	connect(fileTransferOverviewAction_, SIGNAL(triggered()), SLOT(handleShowFileTransferOverview()));
 	generalMenu_->addAction(fileTransferOverviewAction_);
+#endif
 
 	toggleSoundsAction_ = new QAction(tr("&Play Sounds"), this);
 	toggleSoundsAction_->setCheckable(true);

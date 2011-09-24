@@ -11,7 +11,7 @@ namespace Swift {
 	class ConnectionFactory;
 	class DomainNameResolver;
 	class ConnectionServerFactory;
-	class PlatformNATTraversalWorker;
+	class NATTraverser;
 
 	/**
 	 * An interface collecting network factories.
@@ -24,6 +24,6 @@ namespace Swift {
 			virtual ConnectionFactory* getConnectionFactory() const = 0;
 			virtual DomainNameResolver* getDomainNameResolver() const = 0;
 			virtual ConnectionServerFactory* getConnectionServerFactory() const = 0;
-			virtual PlatformNATTraversalWorker* getPlatformNATTraversalWorker() const = 0;
+			virtual NATTraverser* getNATTraverser() const = 0;
 	};
 }

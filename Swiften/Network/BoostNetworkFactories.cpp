@@ -10,6 +10,7 @@
 #include <Swiften/Network/PlatformDomainNameResolver.h>
 #include <Swiften/Network/BoostConnectionServerFactory.h>
 #include <Swiften/Network/PlatformNATTraversalWorker.h>
+#include <Swiften/Network/NullNATTraverser.h>
 
 namespace Swift {
 
@@ -18,11 +19,15 @@ BoostNetworkFactories::BoostNetworkFactories(EventLoop* eventLoop) {
 	connectionFactory = new BoostConnectionFactory(ioServiceThread.getIOService(), eventLoop);
 	domainNameResolver = new PlatformDomainNameResolver(eventLoop);
 	connectionServerFactory = new BoostConnectionServerFactory(ioServiceThread.getIOService(), eventLoop);
-	platformNATTraversalWorker = new PlatformNATTraversalWorker(eventLoop);
+#ifdef SWIFT_EXPERIMENTAL_FT
+	natTraverser = new PlatformNATTraversalWorker(eventLoop);
+#else
+	natTraverser = new NullNATTraverser(eventLoop);
+#endif
 }
 
 BoostNetworkFactories::~BoostNetworkFactories() {
-	delete platformNATTraversalWorker;
+	delete natTraverser;
 	delete connectionServerFactory;
 	delete domainNameResolver;
 	delete connectionFactory;

@@ -25,14 +25,14 @@
 #include <Swiften/Network/ConnectionFactory.h>
 #include <Swiften/Network/ConnectionServerFactory.h>
 #include <Swiften/Network/HostAddress.h>
-#include <Swiften/Network/PlatformNATTraversalWorker.h>
+#include <Swiften/Network/NATTraverser.h>
 
 namespace Swift {
 
-FileTransferManagerImpl::FileTransferManagerImpl(const JID& ownFullJID, JingleSessionManager* jingleSessionManager, IQRouter* router, EntityCapsProvider* capsProvider, PresenceOracle* presOracle, ConnectionFactory* connectionFactory, ConnectionServerFactory* connectionServerFactory, TimerFactory* timerFactory, PlatformNATTraversalWorker* natTraversalWorker) : ownJID(ownFullJID), jingleSM(jingleSessionManager), iqRouter(router), capsProvider(capsProvider), presenceOracle(presOracle), timerFactory(timerFactory), connectionFactory(connectionFactory), connectionServerFactory(connectionServerFactory), natTraversalWorker(natTraversalWorker), bytestreamServer(NULL) {
+FileTransferManagerImpl::FileTransferManagerImpl(const JID& ownFullJID, JingleSessionManager* jingleSessionManager, IQRouter* router, EntityCapsProvider* capsProvider, PresenceOracle* presOracle, ConnectionFactory* connectionFactory, ConnectionServerFactory* connectionServerFactory, TimerFactory* timerFactory, NATTraverser* natTraverser) : ownJID(ownFullJID), jingleSM(jingleSessionManager), iqRouter(router), capsProvider(capsProvider), presenceOracle(presOracle), timerFactory(timerFactory), connectionFactory(connectionFactory), connectionServerFactory(connectionServerFactory), natTraverser(natTraverser), bytestreamServer(NULL) {
 	assert(!ownFullJID.isBare());
 
-	connectivityManager = new ConnectivityManager(natTraversalWorker);
+	connectivityManager = new ConnectivityManager(natTraverser);
 	bytestreamRegistry = new SOCKS5BytestreamRegistry();
 	bytestreamProxy = new SOCKS5BytestreamProxy(connectionFactory, timerFactory);
 

@@ -11,6 +11,7 @@
 
 namespace Swift {
 	class EventLoop;
+	class NATTraverser;
 
 	class BoostNetworkFactories : public NetworkFactories {
 		public:
@@ -37,8 +38,8 @@ namespace Swift {
 				return connectionServerFactory;
 			}
 
-			PlatformNATTraversalWorker* getPlatformNATTraversalWorker() const {
-				return platformNATTraversalWorker;
+			NATTraverser* getNATTraverser() const {
+				return natTraverser;
 			}
 
 		private:
@@ -47,6 +48,6 @@ namespace Swift {
 			ConnectionFactory* connectionFactory;
 			DomainNameResolver* domainNameResolver;
 			ConnectionServerFactory* connectionServerFactory;
-			PlatformNATTraversalWorker* platformNATTraversalWorker;
+			NATTraverser* natTraverser;
 	};
 }

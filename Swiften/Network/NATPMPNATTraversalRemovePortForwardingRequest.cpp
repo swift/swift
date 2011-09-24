@@ -15,9 +15,11 @@
 #include <Swiften/Network/NetworkInterface.h>
 #include <Swiften/Network/PlatformNetworkEnvironment.h>
 
+#pragma GCC diagnostic ignored "-Wold-style-cast"
+
 namespace Swift {
 
-NATPMPNATTraversalRemovePortForwardingRequest::NATPMPNATTraversalRemovePortForwardingRequest(PlatformNATTraversalRemovePortForwardingRequest::PortMapping mapping, PlatformNATTraversalWorker* worker) : PlatformNATTraversalRemovePortForwardingRequest(worker), mapping(mapping) {
+NATPMPNATTraversalRemovePortForwardingRequest::NATPMPNATTraversalRemovePortForwardingRequest(PortMapping mapping, PlatformNATTraversalWorker* worker) : PlatformNATTraversalRequest(worker), mapping(mapping) {
 
 }
 

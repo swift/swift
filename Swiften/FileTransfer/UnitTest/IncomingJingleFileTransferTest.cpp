@@ -156,7 +156,7 @@ public:
 		void test_AcceptOnyIBBSendsSessionAccept() {
 			//1. create your test incoming file transfer
 			shared_ptr<JingleFileTransferDescription> desc = make_shared<JingleFileTransferDescription>();
-			desc->addOffer(StreamInitiationFileInfo());
+			desc->addOffer(StreamInitiationFileInfo("foo.txt", "", 10));
 			jingleContentPayload->addDescription(desc);
 			JingleIBBTransportPayload::ref tpRef = make_shared<JingleIBBTransportPayload>();
 			tpRef->setSessionID("mysession");
@@ -175,7 +175,7 @@ public:
 		void test_OnlyIBBTransferReceiveWorks() {
 			//1. create your test incoming file transfer
 			shared_ptr<JingleFileTransferDescription> desc = make_shared<JingleFileTransferDescription>();
-			desc->addOffer(StreamInitiationFileInfo());
+			desc->addOffer(StreamInitiationFileInfo("file.txt", "", 10));
 			jingleContentPayload->addDescription(desc);
 			JingleIBBTransportPayload::ref tpRef = make_shared<JingleIBBTransportPayload>();
 			tpRef->setSessionID("mysession");
@@ -235,7 +235,7 @@ public:
 private:
 	void addFileTransferDescription() {
 		shared_ptr<JingleFileTransferDescription> desc = make_shared<JingleFileTransferDescription>();
-		desc->addOffer(StreamInitiationFileInfo());
+		desc->addOffer(StreamInitiationFileInfo("file.txt", "", 10));
 		jingleContentPayload->addDescription(desc);
 	}
 

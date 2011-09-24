@@ -12,15 +12,16 @@
 #include <boost/optional.hpp>
 
 #include <Swiften/Network/HostAddressPort.h>
-#include <Swiften/Network/PlatformNATTraversalForwardPortRequest.h>
+#include <Swiften/Network/NATTraverser.h>
+#include <Swiften/Network/NATTraversalForwardPortRequest.h>
 
 namespace Swift {
 
-class PlatformNATTraversalWorker;
+class NATTraverser;
 
 class ConnectivityManager {
 public:
-	ConnectivityManager(PlatformNATTraversalWorker*);
+	ConnectivityManager(NATTraverser*);
 	~ConnectivityManager();
 public:
 	void addListeningPort(int port);
@@ -31,10 +32,10 @@ public:
 
 private:
 	void natTraversalGetPublicIPResult(boost::optional<HostAddress> address);
-	void natTraversalForwardPortResult(boost::optional<PlatformNATTraversalForwardPortRequest::PortMapping> mapping);
+	void natTraversalForwardPortResult(boost::optional<NATTraversalForwardPortRequest::PortMapping> mapping);
 
 private:
-	PlatformNATTraversalWorker* natTraversalWorker;
+	NATTraverser* natTraversalWorker;
 
 	std::set<int> ports;
 	boost::optional<HostAddress> publicAddress;

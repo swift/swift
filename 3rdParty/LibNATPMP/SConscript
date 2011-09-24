@@ -11,6 +11,7 @@ if env.get("LIBNATPMP_BUNDLED", False) :
 				"CPPPATH": [Dir("src/libnatpmp")],
 				"LIBPATH": [Dir(".")],
 				"LIBS": ["Swiften_NATPMP"],
+				"INTERNAL_CPPDEFINES": ["STATICLIB"],
 			}
 		#if env["PLATFORM"] == "win32" :
 		#	env["LIBIDN_FLAGS"]["CPPPATH"] += [Dir("stubs/win32")]

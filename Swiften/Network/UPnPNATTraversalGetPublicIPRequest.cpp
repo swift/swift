@@ -12,7 +12,7 @@
 
 namespace Swift {
 
-UPnPNATTraversalGetPublicIPRequest::UPnPNATTraversalGetPublicIPRequest(PlatformNATTraversalWorker* worker) : PlatformNATTraversalGetPublicIPRequest(worker) {
+UPnPNATTraversalGetPublicIPRequest::UPnPNATTraversalGetPublicIPRequest(PlatformNATTraversalWorker* worker) : PlatformNATTraversalRequest(worker) {
 
 }
 

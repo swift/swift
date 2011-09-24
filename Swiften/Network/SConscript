@@ -41,17 +41,13 @@ sourceList = [
 			"BoostTimer.cpp",
 			"ProxyProvider.cpp",
 			"NullProxyProvider.cpp",
+			"NATTraverser.cpp",
+			"NullNATTraverser.cpp",
+			"NATTraversalGetPublicIPRequest.cpp",
+			"NATTraversalForwardPortRequest.cpp",
+			"NATTraversalRemovePortForwardingRequest.cpp",
 			"PlatformNATTraversalWorker.cpp",
-			"PlatformNATTraversalGetPublicIPRequest.cpp",
-			"PlatformNATTraversalForwardPortRequest.cpp",
-			"PlatformNATTraversalRemovePortForwardingRequest.cpp",
 			"PlatformNATTraversalRequest.cpp",
-			"UPnPNATTraversalGetPublicIPRequest.cpp",
-			"UPnPNATTraversalForwardPortRequest.cpp",
-			"UPnPNATTraversalRemovePortForwardingRequest.cpp",
-			"NATPMPNATTraversalGetPublicIPRequest.cpp",
-			"NATPMPNATTraversalForwardPortRequest.cpp",
-			"NATPMPNATTraversalRemovePortForwardingRequest.cpp",
 	]
 
 if myenv.get("HAVE_CARES", False) :
@@ -74,4 +70,24 @@ else :
 		sourceList += [ "GConfProxyProvider.cpp" ]
 
 objects = myenv.SwiftenObject(sourceList)
+
+if myenv["experimental"] :
+	# LibNATPMP classes
+	natpmp_env = myenv.Clone()
+	natpmp_env.Append(CPPDEFINES = natpmp_env["LIBNATPMP_FLAGS"].get("INTERNAL_CPPDEFINES", []))
+	objects += natpmp_env.SwiftenObject([
+				"NATPMPNATTraversalGetPublicIPRequest.cpp",
+				"NATPMPNATTraversalForwardPortRequest.cpp",
+				"NATPMPNATTraversalRemovePortForwardingRequest.cpp"
+			])
+
+	# LibMINIUPnP classes
+	upnp_env = myenv.Clone()
+	upnp_env.Append(CPPDEFINES = upnp_env["LIBMINIUPNPC_FLAGS"].get("INTERNAL_CPPDEFINES", []))
+	objects += upnp_env.SwiftenObject([
+				"UPnPNATTraversalGetPublicIPRequest.cpp",
+				"UPnPNATTraversalForwardPortRequest.cpp",
+				"UPnPNATTraversalRemovePortForwardingRequest.cpp",
+			])
+
 swiften_env.Append(SWIFTEN_OBJECTS = [objects])

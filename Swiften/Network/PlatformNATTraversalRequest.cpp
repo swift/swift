@@ -18,7 +18,7 @@ PlatformNATTraversalRequest::~PlatformNATTraversalRequest() {
 
 }
 
-void PlatformNATTraversalRequest::run() {
+void PlatformNATTraversalRequest::doRun() {
 	worker->addRequestToQueue(shared_from_this());
 }
 

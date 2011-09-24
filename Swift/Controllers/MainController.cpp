@@ -309,10 +309,12 @@ void MainController::handleConnected() {
 		discoInfo.addFeature(DiscoInfo::ChatStatesFeature);
 		discoInfo.addFeature(DiscoInfo::SecurityLabelsFeature);
 		discoInfo.addFeature(DiscoInfo::MessageCorrectionFeature);
+#ifdef SWIFT_EXPERIMENTAL_FT
 		discoInfo.addFeature(DiscoInfo::JingleFeature);
 		discoInfo.addFeature(DiscoInfo::JingleFTFeature);
 		discoInfo.addFeature(DiscoInfo::JingleTransportsIBBFeature);
 		discoInfo.addFeature(DiscoInfo::JingleTransportsS5BFeature);
+#endif
 		client_->getDiscoManager()->setCapsNode(CLIENT_NODE);
 		client_->getDiscoManager()->setDiscoInfo(discoInfo);
 

@@ -32,7 +32,7 @@ class IncomingFileTransferManager;
 class JingleSessionManager;
 class LocalJingleTransportCandidateGeneratorFactory;
 class OutgoingFileTransferManager;
-class PlatformNATTraversalWorker;
+class NATTraverser;
 class PresenceOracle;
 class ReadBytestream;
 class RemoteJingleTransportCandidateSelectorFactory;
@@ -43,7 +43,7 @@ class TimerFactory;
 
 class FileTransferManagerImpl : public FileTransferManager {
 public:
-	FileTransferManagerImpl(const JID& ownFullJID, JingleSessionManager* jingleSessionManager, IQRouter* router, EntityCapsProvider* capsProvider, PresenceOracle* presOracle, ConnectionFactory* connectionFactory, ConnectionServerFactory* connectionServerFactory, TimerFactory* timerFactory, PlatformNATTraversalWorker* natTraversalWorker);
+	FileTransferManagerImpl(const JID& ownFullJID, JingleSessionManager* jingleSessionManager, IQRouter* router, EntityCapsProvider* capsProvider, PresenceOracle* presOracle, ConnectionFactory* connectionFactory, ConnectionServerFactory* connectionServerFactory, TimerFactory* timerFactory, NATTraverser* natTraverser);
 	~FileTransferManagerImpl();
 	
 	void startListeningOnPort(int port);
@@ -70,7 +70,7 @@ private:
 	TimerFactory* timerFactory;
 	ConnectionFactory* connectionFactory;
 	ConnectionServerFactory* connectionServerFactory;
-	PlatformNATTraversalWorker* natTraversalWorker;
+	NATTraverser* natTraverser;
 	SOCKS5BytestreamRegistry* bytestreamRegistry;
 	SOCKS5BytestreamServer* bytestreamServer;
 	SOCKS5BytestreamProxy* bytestreamProxy;
