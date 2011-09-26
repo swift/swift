@@ -410,7 +410,7 @@ class JingleParserTest : public CppUnit::TestFixture {
 			
 			JingleFileTransferHash::ref hash = jingle->getPayload<JingleFileTransferHash>();
 			CPPUNIT_ASSERT(hash);
-			CPPUNIT_ASSERT_EQUAL(std::string("552da749930852c69ae5d2141d3766b1"), hash->getHashes().at("sha-1"));
+			CPPUNIT_ASSERT_EQUAL(std::string("552da749930852c69ae5d2141d3766b1"), hash->getHashes().find("sha-1")->second);
 			
 		}
 		

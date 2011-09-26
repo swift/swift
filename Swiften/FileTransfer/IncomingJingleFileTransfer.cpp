@@ -243,11 +243,11 @@ void IncomingJingleFileTransfer::handleSessionInfoReceived(JinglePayload::ref ji
 		SWIFT_LOG(debug) << "Recevied hash information." << std::endl;
 		if (transferHash->getHashes().find("sha-1") != transferHash->getHashes().end()) {
 			algo = "sha-1";
-			hash = transferHash->getHashes().at("sha-1");
+			hash = transferHash->getHashes().find("sha-1")->second;
 		}
 		else if (transferHash->getHashes().find("md5") != transferHash->getHashes().end()) {
 			algo = "md5";
-			hash = transferHash->getHashes().at("md5");
+			hash = transferHash->getHashes().find("md5")->second;
 		}
 		checkIfAllDataReceived();
 	}
