@@ -6,6 +6,7 @@
 
 #pragma once
 
+#include <boost/cstdint.hpp>
 #include <boost/optional.hpp>
 #include <boost/shared_ptr.hpp>
 
