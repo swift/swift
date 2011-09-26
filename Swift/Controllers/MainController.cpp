@@ -121,6 +121,7 @@ MainController::MainController(
 	userSearchControllerAdd_ = NULL;
 	quitRequested_ = false;
 	clientInitialized_ = false;
+	s5bProxyFinder_ = NULL;
 
 	timeBeforeNextReconnect_ = -1;
 	dock_ = dock;
@@ -284,9 +285,11 @@ void MainController::handleConnected() {
 		srand(time(NULL));
 		int randomPort = 10000 + rand() % 10000;
 		client_->getFileTransferManager()->startListeningOnPort(randomPort);
+#ifdef SWIFT_EXPERIMENTAL_FT
 		s5bProxyFinder_ = new SOCKS5BytestreamProxyFinder(client_->getJID().getDomain(), client_->getIQRouter());
 		s5bProxyFinder_->onProxyFound.connect(boost::bind(&FileTransferManager::addS5BProxy, client_->getFileTransferManager(), _1));
 		s5bProxyFinder_->start();
+#endif
 		ftOverview_ = new FileTransferOverview(client_->getFileTransferManager());
 		fileTransferListController_->setFileTransferOverview(ftOverview_);
 		rosterController_ = new RosterController(jid_, client_->getRoster(), client_->getAvatarManager(), uiFactory_, client_->getNickManager(), client_->getNickResolver(), client_->getPresenceOracle(), client_->getSubscriptionManager(), eventController_, uiEventStream_, client_->getIQRouter(), settings_, client_->getEntityCapsProvider(), ftOverview_);
