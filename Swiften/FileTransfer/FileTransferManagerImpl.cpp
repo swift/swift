@@ -7,6 +7,7 @@
 #include <Swiften/FileTransfer/FileTransferManagerImpl.h>
 
 #include <boost/bind.hpp>
+#include <boost/cstdint.hpp>
 
 #include <Swiften/Base/foreach.h>
 #include "Swiften/Disco/EntityCapsProvider.h"
@@ -94,12 +95,12 @@ boost::optional<JID> FileTransferManagerImpl::highestPriorityJIDSupportingFileTr
 
 OutgoingFileTransfer::ref FileTransferManagerImpl::createOutgoingFileTransfer(const JID& to, const boost::filesystem::path& filepath, const std::string& description, boost::shared_ptr<ReadBytestream> bytestream) {
 	std::string filename = filepath.filename();
-	uintmax_t sizeInBytes = boost::filesystem::file_size(filepath);
+	boost::uintmax_t sizeInBytes = boost::filesystem::file_size(filepath);
 	boost::posix_time::ptime lastModified = boost::posix_time::from_time_t(boost::filesystem::last_write_time(filepath));
 	return createOutgoingFileTransfer(to, filename, description, sizeInBytes, lastModified, bytestream);
 }
 
-OutgoingFileTransfer::ref FileTransferManagerImpl::createOutgoingFileTransfer(const JID& to, const std::string& filename, const std::string& description, const uintmax_t sizeInBytes, const boost::posix_time::ptime& lastModified, boost::shared_ptr<ReadBytestream> bytestream) {
+OutgoingFileTransfer::ref FileTransferManagerImpl::createOutgoingFileTransfer(const JID& to, const std::string& filename, const std::string& description, const boost::uintmax_t sizeInBytes, const boost::posix_time::ptime& lastModified, boost::shared_ptr<ReadBytestream> bytestream) {
 	StreamInitiationFileInfo fileInfo;
 	fileInfo.setDate(lastModified);
 	fileInfo.setSize(sizeInBytes);

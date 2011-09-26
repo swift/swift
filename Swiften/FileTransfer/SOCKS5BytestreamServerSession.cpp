@@ -70,7 +70,7 @@ void SOCKS5BytestreamServerSession::handleDataRead(const SafeByteArray& data) {
 		append(unprocessedData, data);
 		process();
 	} else {
-		writeBytestream->write(createByteArray(data.data(), data.size()));
+		writeBytestream->write(createByteArray(vecptr(data), data.size()));
 		onBytesReceived(data.size());
 	}
 }

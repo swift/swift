@@ -16,6 +16,7 @@
 #include <Swiften/StringCodecs/Hexify.h>
 #include <Swiften/FileTransfer/BytestreamException.h>
 #include <Swiften/Network/TimerFactory.h>
+#include <Swiften/Base/ByteArray.h>
 
 namespace Swift {
 
@@ -89,7 +90,7 @@ void SOCKS5BytestreamClientSession::process() {
 				// complete domainname and port not available yet
 				break;
 			}
-			bndAddress = createByteArray(&(unprocessedData.data()[5]), unprocessedData[4]);
+			bndAddress = createByteArray(&vecptr(unprocessedData)[5], unprocessedData[4]);
 			if (unprocessedData[unprocessedData[4] + 5] != 0 && bndAddress == createByteArray(destination)) {
 				// we expect a 0 as port
 				// disconnect and fail
@@ -215,7 +216,7 @@ void SOCKS5BytestreamClientSession::handleDataRead(const SafeByteArray& data) {
 		process();
 	}
 	else {
-		writeBytestream->write(createByteArray(data.data(), data.size()));
+		writeBytestream->write(createByteArray(vecptr(data), data.size()));
 		onBytesReceived(data.size());
 	}
 }
