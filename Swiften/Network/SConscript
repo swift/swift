@@ -37,6 +37,7 @@ sourceList = [
 			"HostAddressPort.cpp",
 			"NetworkFactories.cpp",
 			"BoostNetworkFactories.cpp",
+			"NetworkEnvironment.cpp",
 			"Timer.cpp",
 			"BoostTimer.cpp",
 			"ProxyProvider.cpp",

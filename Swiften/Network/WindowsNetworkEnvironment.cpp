@@ -4,7 +4,7 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
-#include "WindowsNetworkEnvironment.h"
+#include <Swiften/Network/WindowsNetworkEnvironment.h>
 
 #include <string>
 #include <vector>
@@ -33,9 +33,9 @@ std::string winSocketAddressToStdString(const SOCKET_ADDRESS& socketAddress) {
 	return result;
 }
 
-std::vector<NetworkInterface::ref> WindowsNetworkEnvironment::getNetworkInterfaces() {
-	std::map<std::string, WindowsNetworkInterface::ref> interfaces;
-	std::vector<NetworkInterface::ref> result;
+std::vector<NetworkInterface> WindowsNetworkEnvironment::getNetworkInterfaces() {
+	std::vector<NetworkInterface> result;
+	std::map<std::string, WindowsNetworkInterface> interfaces;
 
 	IP_ADAPTER_ADDRESSES preBuffer[5];
 	PIP_ADAPTER_ADDRESSES adapterStart = preBuffer;
@@ -78,7 +78,7 @@ std::vector<NetworkInterface::ref> WindowsNetworkEnvironment::getNetworkInterfac
 						interfaces[name] = boost::make_shared<WindowsNetworkInterface>();
 						interfaces[name]->setName(name);
 					}
-					interfaces[name]->addHostAddress(HostAddress(ip));
+					interfaces[name]->addAddress(HostAddress(ip));
 				}
 			}
 		}
@@ -88,7 +88,7 @@ std::vector<NetworkInterface::ref> WindowsNetworkEnvironment::getNetworkInterfac
 		//delete adapterStart;
 	}
 
-	for(std::map<std::string, WindowsNetworkInterface::ref>::iterator i = interfaces.begin(); i != interfaces.end(); ++i) {
+	for (std::map<std::string, WindowsNetworkInterface>::const_iterator i = interfaces.begin(); i != interfaces.end(); ++i) {
 		result.push_back(i->second);
 	}
 	return result;

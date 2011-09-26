@@ -36,7 +36,7 @@ void UPnPNATTraversalRemovePortForwardingRequest::runBlocking() {
 
 	std::string publicPort = str(boost::format("%d") % mapping.publicPort);
 	std::string localPort = str(boost::format("%d") % mapping.localPort);
-	std::string internalClient = getLocalClient().toString();
+	std::string internalClient = PlatformNetworkEnvironment().getLocalAddress().toString();
 	std::string leaseSeconds = str(boost::format("%d") % mapping.leaseInSeconds);
 	UPNPUrls urls;
 	IGDdatas data;
@@ -72,21 +72,6 @@ void UPnPNATTraversalRemovePortForwardingRequest::runBlocking() {
 	freeUPNPDevlist(deviceList); deviceList = 0;
 
 	onResult(result);
-}
-
-HostAddress UPnPNATTraversalRemovePortForwardingRequest::getLocalClient() {
-	PlatformNetworkEnvironment env;
-
-	foreach (NetworkInterface::ref iface, env.getNetworkInterfaces()) {
-		if (!iface->isLoopback()) {
-			foreach (HostAddress address, iface->getAddresses()) {
-				if (address.getRawAddress().is_v4()) {
-					return address;
-				}
-			}
-		}
-	}
-	return HostAddress();
 }
 
 }

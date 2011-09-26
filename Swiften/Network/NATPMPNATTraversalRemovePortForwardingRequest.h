@@ -23,9 +23,6 @@ public:
 	}
 
 private:
-	HostAddress getLocalClient();
-
-private:
 	PortMapping mapping;
 };
 

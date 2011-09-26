@@ -7,29 +7,44 @@
 #pragma once
 
 #include <vector>
-#include <boost/shared_ptr.hpp>
 
 #include <Swiften/Network/HostAddress.h>
 
 namespace Swift {
+	class NetworkInterface {
+		public:
+			enum Type {
+				Unknown,
+				WLAN,
+				Ethernet,
+				Mobile,
+				VPN,
+			};
 
-class NetworkInterface {
-public:
-	typedef boost::shared_ptr<NetworkInterface> ref;
+		public:
+			NetworkInterface(const std::string& name, bool loopback, Type type = Unknown) : name(name), loopback(loopback), type(type) {
+			}
 
-public:
-	enum InterfaceType {
-		WLAN,
-		Ethernet,
-		Mobile,
-		VPN,
+			void addAddress(const HostAddress& address) {
+				addresses.push_back(address);
+			}
+
+			const std::vector<HostAddress>& getAddresses() const {
+				return addresses;
+			}
+
+			const std::string& getName() const {
+				return name;
+			}
+
+			bool isLoopback() const {
+				return loopback;
+			}
+
+		private:
+			std::string name;
+			bool loopback;
+			Type type;
+			std::vector<HostAddress> addresses;
 	};
-
-public:
-	virtual ~NetworkInterface() {};
-	virtual std::vector<HostAddress> getAddresses() = 0;
-	virtual std::string getName() = 0;
-	virtual bool isLoopback() = 0;
-};
-
 }

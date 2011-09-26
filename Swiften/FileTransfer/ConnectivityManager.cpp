@@ -59,8 +59,9 @@ std::vector<HostAddressPort> ConnectivityManager::getHostAddressPorts() const {
 
 	std::vector<HostAddress> addresses;
 
-	foreach (NetworkInterface::ref iface, env.getNetworkInterfaces()) {
-		foreach (HostAddress address, iface->getAddresses()) {
+	std::vector<NetworkInterface> networkInterfaces;
+	foreach (const NetworkInterface& iface, networkInterfaces) {
+		foreach (const HostAddress& address, iface.getAddresses()) {
 			foreach (int port, ports) {
 				results.push_back(HostAddressPort(address, port));
 			}

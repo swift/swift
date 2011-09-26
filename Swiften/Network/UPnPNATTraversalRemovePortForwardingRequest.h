@@ -23,9 +23,6 @@ public:
 	}
 
 private:
-	HostAddress getLocalClient();
-
-private:
 	NATTraversalRemovePortForwardingRequest::PortMapping mapping;
 };
 

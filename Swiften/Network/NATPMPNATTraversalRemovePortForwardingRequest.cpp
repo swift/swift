@@ -67,19 +67,4 @@ void NATPMPNATTraversalRemovePortForwardingRequest::runBlocking() {
 	onResult(result);
 }
 
-HostAddress NATPMPNATTraversalRemovePortForwardingRequest::getLocalClient() {
-	PlatformNetworkEnvironment env;
-
-	foreach (NetworkInterface::ref iface, env.getNetworkInterfaces()) {
-		if (!iface->isLoopback()) {
-			foreach (HostAddress address, iface->getAddresses()) {
-				if (address.getRawAddress().is_v4()) {
-					return address;
-				}
-			}
-		}
-	}
-	return HostAddress();
-}
-
 }
