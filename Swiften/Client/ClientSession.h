@@ -159,11 +159,11 @@ namespace Swift {
 			bool allowPLAINOverNonTLS;
 			bool useStreamCompression;
 			UseTLS useTLS;
+			bool useAcks;
 			bool needSessionStart;
 			bool needResourceBind;
 			bool needAcking;
 			bool rosterVersioningSupported;
-			bool useAcks;
 			ClientAuthenticator* authenticator;
 			boost::shared_ptr<StanzaAckRequester> stanzaAckRequester_;
 			boost::shared_ptr<StanzaAckResponder> stanzaAckResponder_;

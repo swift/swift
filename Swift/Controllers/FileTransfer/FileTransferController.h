@@ -9,6 +9,7 @@
 #include <string>
 
 #include <boost/shared_ptr.hpp>
+#include <boost/cstdint.hpp>
 
 #include <Swiften/JID/JID.h>
 #include <Swiften/FileTransfer/FileTransfer.h>

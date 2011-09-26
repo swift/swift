@@ -52,13 +52,13 @@ ClientSession::ClientSession(
 			allowPLAINOverNonTLS(false),
 			useStreamCompression(true),
 			useTLS(UseTLSWhenAvailable),
+			useAcks(true),
 			needSessionStart(false),
 			needResourceBind(false),
 			needAcking(false),
 			rosterVersioningSupported(false),
 			authenticator(NULL),
-			certificateTrustChecker(NULL),
-			useAcks(true) {
+			certificateTrustChecker(NULL) {
 }
 
 ClientSession::~ClientSession() {
