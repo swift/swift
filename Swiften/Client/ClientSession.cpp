@@ -57,7 +57,8 @@ ClientSession::ClientSession(
 			needAcking(false),
 			rosterVersioningSupported(false),
 			authenticator(NULL),
-			certificateTrustChecker(NULL) {
+			certificateTrustChecker(NULL),
+			useAcks(true) {
 }
 
 ClientSession::~ClientSession() {
@@ -232,7 +233,7 @@ void ClientSession::handleElement(boost::shared_ptr<Element> element) {
 			stream->setWhitespacePingEnabled(true);
 			needSessionStart = streamFeatures->hasSession();
 			needResourceBind = streamFeatures->hasResourceBind();
-			needAcking = streamFeatures->hasStreamManagement();
+			needAcking = streamFeatures->hasStreamManagement() && useAcks;
 			if (!needResourceBind) {
 				// Resource binding is a MUST
 				finishSession(Error::ResourceBindError);

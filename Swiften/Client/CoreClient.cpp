@@ -123,6 +123,7 @@ void CoreClient::handleConnectorFinished(boost::shared_ptr<Connection> connectio
 				session_->setUseTLS(ClientSession::RequireTLS);
 				break;
 		}
+		session_->setUseAcks(options.useAcks);
 		stanzaChannel_->setSession(session_);
 		session_->onFinished.connect(boost::bind(&CoreClient::handleSessionFinished, this, _1));
 		session_->onNeedCredentials.connect(boost::bind(&CoreClient::handleNeedCredentials, this));

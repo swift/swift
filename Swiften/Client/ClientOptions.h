@@ -14,7 +14,7 @@ namespace Swift {
 			RequireTLS
 		};
 
-		ClientOptions() : useStreamCompression(true), useTLS(UseTLSWhenAvailable), allowPLAINWithoutTLS(false), useStreamResumption(false), forgetPassword(false) {
+		ClientOptions() : useStreamCompression(true), useTLS(UseTLSWhenAvailable), allowPLAINWithoutTLS(false), useStreamResumption(false), forgetPassword(false), useAcks(true) {
 		}
 
 		/**
@@ -55,5 +55,11 @@ namespace Swift {
 		 * Default: false
 		 */
 		bool forgetPassword;
+
+		/**
+		 * Use XEP-0198 acks in the stream when available.
+		 * Default: true
+		 */
+		bool useAcks;
 	};
 }

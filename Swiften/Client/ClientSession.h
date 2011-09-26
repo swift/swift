@@ -85,6 +85,10 @@ namespace Swift {
 				useTLS = b;
 			}
 
+			void setUseAcks(bool b) {
+				useAcks = b;
+			}
+
 
 			bool getStreamManagementEnabled() const {
 				return stanzaAckRequester_;
@@ -159,6 +163,7 @@ namespace Swift {
 			bool needResourceBind;
 			bool needAcking;
 			bool rosterVersioningSupported;
+			bool useAcks;
 			ClientAuthenticator* authenticator;
 			boost::shared_ptr<StanzaAckRequester> stanzaAckRequester_;
 			boost::shared_ptr<StanzaAckResponder> stanzaAckResponder_;
