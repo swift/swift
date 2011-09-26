@@ -13,16 +13,7 @@
 namespace Swift {
 	class NetworkInterface {
 		public:
-			enum Type {
-				Unknown,
-				WLAN,
-				Ethernet,
-				Mobile,
-				VPN,
-			};
-
-		public:
-			NetworkInterface(const std::string& name, bool loopback, Type type = Unknown) : name(name), loopback(loopback), type(type) {
+			NetworkInterface(const std::string& name, bool loopback) : name(name), loopback(loopback) {
 			}
 
 			void addAddress(const HostAddress& address) {
@@ -44,7 +35,6 @@ namespace Swift {
 		private:
 			std::string name;
 			bool loopback;
-			Type type;
 			std::vector<HostAddress> addresses;
 	};
 }
