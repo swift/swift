@@ -68,6 +68,7 @@ namespace Swift {
 			void flash();
 			QByteArray getSplitterState();
 			virtual void setAvailableOccupantActions(const std::vector<OccupantAction>& actions);
+			void setSubject(const std::string& subject);
 
 		public slots:
 			void handleChangeSplitterState(QByteArray state);
@@ -99,6 +100,7 @@ namespace Swift {
 			void handleKeyPressEvent(QKeyEvent* event);
 			void handleSplitterMoved(int pos, int index);
 			void handleAlertButtonClicked();
+			void handleActionButtonClicked();
 
 			
 			void handleFileTransferCancel(QString id);
@@ -129,6 +131,8 @@ namespace Swift {
 			QWidget* alertWidget_;
 			QPushButton* alertButton_;
 			TabComplete* completer_;
+			QLineEdit* subject_;
+			QPushButton* actionButton_;
 			std::vector<SecurityLabelsCatalog::Item> availableLabels_;
 			bool isCorrection_;
 			bool previousMessageWasSelf_;

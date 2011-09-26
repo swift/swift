@@ -71,6 +71,7 @@ MUCController::MUCController (
 	chatWindow_->onClosed.connect(boost::bind(&MUCController::handleWindowClosed, this));
 	chatWindow_->onOccupantSelectionChanged.connect(boost::bind(&MUCController::handleWindowOccupantSelectionChanged, this, _1));
 	chatWindow_->onOccupantActionSelected.connect(boost::bind(&MUCController::handleActionRequestedOnOccupant, this, _1, _2));
+	chatWindow_->onChangeSubjectRequest.connect(boost::bind(&MUCController::handleChangeSubjectRequest, this, _1));
 	muc_->onJoinComplete.connect(boost::bind(&MUCController::handleJoinComplete, this, _1));
 	muc_->onJoinFailed.connect(boost::bind(&MUCController::handleJoinFailed, this, _1));
 	muc_->onOccupantJoined.connect(boost::bind(&MUCController::handleOccupantJoined, this, _1));
@@ -341,6 +342,7 @@ void MUCController::preHandleIncomingMessage(boost::shared_ptr<MessageEvent> mes
 
 	if (!message->getSubject().empty() && message->getBody().empty()) {
 		chatWindow_->addSystemMessage(str(format(QT_TRANSLATE_NOOP("", "The room subject is now: %1%")) % message->getSubject()));;
+		chatWindow_->setSubject(message->getSubject());
 		doneGettingHistory_ = true;
 	}
 
@@ -568,6 +570,10 @@ std::string MUCController::generateJoinPartString(const std::vector<NickJoinPart
 		result += eventStrings[populatedEvents[i]];
 	}
 	return result;
+}
+
+void MUCController::handleChangeSubjectRequest(const std::string& subject) {
+	muc_->changeSubject(subject);
 }
 
 }

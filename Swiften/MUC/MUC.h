@@ -56,6 +56,7 @@ namespace Swift {
 			MUCOccupant getOccupant(const std::string& nick);
 			bool hasOccupant(const std::string& nick);
 			void kickUser(const JID& jid);
+			void changeSubject(const std::string& subject);
 		public:
 			boost::signal<void (const std::string& /*nick*/)> onJoinComplete;
 			boost::signal<void (ErrorPayload::ref)> onJoinFailed;

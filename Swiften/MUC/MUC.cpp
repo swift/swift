@@ -15,6 +15,7 @@
 #include <Swiften/Client/StanzaChannel.h>
 #include <Swiften/Queries/IQRouter.h>
 #include <Swiften/Elements/Form.h>
+#include <Swiften/Elements/Message.h>
 #include <Swiften/Elements/IQ.h>
 #include <Swiften/Elements/MUCUserPayload.h>
 #include <Swiften/Elements/MUCAdminPayload.h>
@@ -233,6 +234,14 @@ void MUC::handleKickResponse(MUCAdminPayload::ref /*unused*/, ErrorPayload::ref 
 	if (error) {
 		onKickFailed(error, jid);
 	}
+}
+
+void MUC::changeSubject(const std::string& subject) {
+	Message::ref message = boost::make_shared<Message>();
+	message->setSubject(subject);
+	message->setType(Message::Groupchat);
+	message->setTo(ownMUCJID.toBare());
+	stanzaChannel->sendMessage(message);
 }
 
 //FIXME: Recognise Topic changes

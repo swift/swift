@@ -71,6 +71,7 @@ namespace Swift {
 			virtual void replaceLastMessage(const std::string& message) = 0;
 			virtual void setAckState(const std::string& id, AckState state) = 0;
 			virtual void flash() = 0;
+			virtual void setSubject(const std::string& subject) = 0;
 			/**
 			 * Set an alert on the window.
 			 * @param alertText Description of alert (required).
@@ -95,6 +96,7 @@ namespace Swift {
 			boost::signal<void ()> onAlertButtonClicked;
 			boost::signal<void (ContactRosterItem*)> onOccupantSelectionChanged;
 			boost::signal<void (ChatWindow::OccupantAction, ContactRosterItem*)> onOccupantActionSelected;
+			boost::signal<void (const std::string&)> onChangeSubjectRequest;
 			
 			// File transfer related
 			boost::signal<void (std::string /* id */)> onFileTransferCancel;

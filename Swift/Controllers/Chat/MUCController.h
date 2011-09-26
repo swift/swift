@@ -76,6 +76,7 @@ namespace Swift {
 			void handleJoinComplete(const std::string& nick);
 			void handleJoinFailed(boost::shared_ptr<ErrorPayload> error);
 			void handleJoinTimeoutTick();
+			void handleChangeSubjectRequest(const std::string&);
 			std::string roleToGroupName(MUCOccupant::Role role);
 			std::string roleToSortName(MUCOccupant::Role role);
 			JID nickToJID(const std::string& nick);

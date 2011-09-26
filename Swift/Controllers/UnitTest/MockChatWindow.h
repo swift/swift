@@ -46,6 +46,7 @@ namespace Swift {
 			virtual void cancelAlert() {};
 			virtual void setCorrectionEnabled(Tristate /*enabled*/) {}
 			void setAvailableOccupantActions(const std::vector<OccupantAction>&/* actions*/) {}
+			void setSubject(const std::string& /*subject*/) {}
 
 			boost::signal<void ()> onClosed;
 			boost::signal<void ()> onAllMessagesRead;

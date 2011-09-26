@@ -41,6 +41,7 @@
 #include <QUrl>
 #include <QPushButton>
 #include <QFileDialog>
+#include <QMenu>
 
 #include <QDebug>
 
@@ -79,6 +80,21 @@ QtChatWindow::QtChatWindow(const QString &contact, QtChatTheme* theme, UIEventSt
 	alertWidget_->setStyleSheet(alertStyleSheet_);
 	alertLabel_->setStyleSheet(alertStyleSheet_);
 	alertWidget_->hide();
+
+	QBoxLayout* subjectLayout = new QBoxLayout(QBoxLayout::LeftToRight);
+	subject_ = new QLineEdit(this);
+	subjectLayout->addWidget(subject_);
+	setSubject("");
+	subject_->setReadOnly(true);
+
+	actionButton_ = new QPushButton(tr("Actions"), this);
+	connect(actionButton_, SIGNAL(clicked()), this, SLOT(handleActionButtonClicked()));
+	subjectLayout->addWidget(actionButton_);
+
+	subject_->hide();
+	actionButton_->hide();
+
+	layout->addLayout(subjectLayout);
 
 	logRosterSplitter_ = new QSplitter(this);
 	logRosterSplitter_->setAutoFillBackground(true);
@@ -330,11 +346,11 @@ void QtChatWindow::closeEvent(QCloseEvent* event) {
 void QtChatWindow::convertToMUC() {
 	setAcceptDrops(false);
 	treeWidget_->show();
+	subject_->show();
+	actionButton_->show();
 }
 
-void QtChatWindow::qAppFocusChanged(QWidget *old, QWidget *now) {
-	Q_UNUSED(old);
-	Q_UNUSED(now);
+void QtChatWindow::qAppFocusChanged(QWidget* /*old*/, QWidget* /*now*/) {
 	if (isWidgetSelected()) {
 		lastLineTracker_.setHasFocus(true);
 		input_->setFocus();
@@ -667,6 +683,24 @@ void QtChatWindow::replaceLastMessage(const std::string& message) {
 
 void QtChatWindow::setAvailableOccupantActions(const std::vector<OccupantAction>& actions) {
 	treeWidget_->setAvailableOccupantActions(actions);
+}
+
+void QtChatWindow::setSubject(const std::string& subject) {
+	//subject_->setVisible(!subject.empty());
+	subject_->setText(P2QSTRING(subject));
+}
+
+void QtChatWindow::handleActionButtonClicked() {
+	QMenu contextMenu;
+	QAction* changeSubject = contextMenu.addAction(tr("Change subject"));
+	QAction* result = contextMenu.exec(QCursor::pos());
+	if (result == changeSubject) {
+		bool ok;
+		QString subject = QInputDialog::getText(this, tr("Change room subject"), tr("New subject:"), QLineEdit::Normal, subject_->text(), &ok);
+		if (ok) {
+			onChangeSubjectRequest(Q2PSTRING(subject));
+		}
+	}
 }
 
 }
