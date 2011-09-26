@@ -39,7 +39,7 @@ public:
 	typedef boost::shared_ptr<FileTransfer> ref;
 
 public:
-	uintmax_t fileSizeInBytes;
+	boost::uintmax_t fileSizeInBytes;
 	std::string filename;
 	std::string algo;
 	std::string hash;
