@@ -5,7 +5,6 @@ sources = [
 		"OutgoingSIFileTransfer.cpp",
 		"OutgoingJingleFileTransfer.cpp",
 		"OutgoingFileTransferManager.cpp",
-		"OutgoingFileTransferManager.cpp",
 		"IncomingFileTransfer.cpp",
 		"IncomingJingleFileTransfer.cpp",
 		"IncomingFileTransferManager.cpp",
