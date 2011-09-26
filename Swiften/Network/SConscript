@@ -46,8 +46,6 @@ sourceList = [
 			"NATTraversalGetPublicIPRequest.cpp",
 			"NATTraversalForwardPortRequest.cpp",
 			"NATTraversalRemovePortForwardingRequest.cpp",
-			"PlatformNATTraversalWorker.cpp",
-			"PlatformNATTraversalRequest.cpp",
 	]
 
 if myenv.get("HAVE_CARES", False) :
@@ -89,5 +87,9 @@ if myenv["experimental"] :
 				"UPnPNATTraversalForwardPortRequest.cpp",
 				"UPnPNATTraversalRemovePortForwardingRequest.cpp",
 			])
+	objects += myenv.SwiftenObject([
+				"PlatformNATTraversalWorker.cpp",
+				"PlatformNATTraversalRequest.cpp",
+				])
 
 swiften_env.Append(SWIFTEN_OBJECTS = [objects])
