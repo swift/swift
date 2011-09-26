@@ -23,6 +23,7 @@
 #include <Swift/Controllers/UIEvents/SendFileUIEvent.h>
 #include "QtFileTransferJSBridge.h"
 
+#include <boost/cstdint.hpp>
 #include <boost/format.hpp>
 #include <boost/lexical_cast.hpp>
 
@@ -471,7 +472,7 @@ std::string QtChatWindow::addAction(const std::string &message, const std::strin
 	return addMessage(" *" + message + "*", senderName, senderIsSelf, label, avatarPath, "font-style:italic ", time);
 }
 
-std::string formatSize(const uintmax_t bytes) {
+std::string formatSize(const boost::uintmax_t bytes) {
 	static const char *siPrefix[] = {"k", "M", "G", "T", "P", "E", "Z", "Y", NULL};
 	int power = 0;
 	double engBytes = bytes;

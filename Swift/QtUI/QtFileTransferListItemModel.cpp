@@ -7,6 +7,7 @@
 #include "QtFileTransferListItemModel.h"
 
 #include <boost/bind.hpp>
+#include <boost/cstdint.hpp>
 
 #include <Swiften/Base/boost_bsignals.h>
 #include <Swift/Controllers/FileTransfer/FileTransferController.h>
@@ -14,7 +15,7 @@
 
 namespace Swift {
 
-extern std::string formatSize(const uintmax_t bytes);
+extern std::string formatSize(const boost::uintmax_t bytes);
 
 QtFileTransferListItemModel::QtFileTransferListItemModel(QObject *parent) : QAbstractItemModel(parent), fileTransferOverview(0) {
 }

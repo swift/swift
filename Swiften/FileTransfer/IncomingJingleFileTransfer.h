@@ -7,6 +7,7 @@
 #pragma once
 
 #include <boost/shared_ptr.hpp>
+#include <boost/cstdint.hpp>
 
 #include <Swiften/Base/IDGenerator.h>
 #include <Swiften/Network/Timer.h>
@@ -104,7 +105,7 @@ namespace Swift {
 			State state;
 			JingleFileTransferDescription::ref description;
 			WriteBytestream::ref stream;
-			uintmax_t receivedBytes;
+			boost::uintmax_t receivedBytes;
 			IncrementalBytestreamHashCalculator* hashCalculator;
 			Timer::ref waitOnHashTimer;
 			IDGenerator idGenerator;
