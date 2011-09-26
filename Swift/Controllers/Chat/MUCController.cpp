@@ -340,7 +340,7 @@ void MUCController::preHandleIncomingMessage(boost::shared_ptr<MessageEvent> mes
 	receivedActivity();
 	joined_ = true;
 
-	if (!message->getSubject().empty() && message->getBody().empty()) {
+	if (message->hasSubject() && message->getBody().empty()) {
 		chatWindow_->addSystemMessage(str(format(QT_TRANSLATE_NOOP("", "The room subject is now: %1%")) % message->getSubject()));;
 		chatWindow_->setSubject(message->getSubject());
 		doneGettingHistory_ = true;

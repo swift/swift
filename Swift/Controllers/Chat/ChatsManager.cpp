@@ -509,7 +509,7 @@ void ChatsManager::handleSearchMUCRequest() {
 void ChatsManager::handleIncomingMessage(boost::shared_ptr<Message> message) {
 	JID jid = message->getFrom();
 	boost::shared_ptr<MessageEvent> event(new MessageEvent(message));
-	if (!event->isReadable() && !message->getPayload<ChatState>() && message->getSubject().empty()) {
+	if (!event->isReadable() && !message->getPayload<ChatState>() && !message->hasSubject()) {
 		return;
 	}
 

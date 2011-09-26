@@ -38,6 +38,10 @@ namespace Swift {
 				updatePayload(boost::make_shared<Subject>(subject));
 			}
 
+			bool hasSubject() {
+				return getPayload<Subject>();
+			}
+
 			std::string getBody() const { 
 				boost::shared_ptr<Body> body(getPayload<Body>());
 				if (body) {
