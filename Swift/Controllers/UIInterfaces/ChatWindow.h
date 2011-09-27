@@ -97,6 +97,7 @@ namespace Swift {
 			boost::signal<void (ContactRosterItem*)> onOccupantSelectionChanged;
 			boost::signal<void (ChatWindow::OccupantAction, ContactRosterItem*)> onOccupantActionSelected;
 			boost::signal<void (const std::string&)> onChangeSubjectRequest;
+			boost::signal<void ()> onConfigureRequest;
 			
 			// File transfer related
 			boost::signal<void (std::string /* id */)> onFileTransferCancel;

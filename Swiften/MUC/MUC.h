@@ -57,6 +57,7 @@ namespace Swift {
 			bool hasOccupant(const std::string& nick);
 			void kickUser(const JID& jid);
 			void changeSubject(const std::string& subject);
+			void requestConfigurationForm();
 		public:
 			boost::signal<void (const std::string& /*nick*/)> onJoinComplete;
 			boost::signal<void (ErrorPayload::ref)> onJoinFailed;

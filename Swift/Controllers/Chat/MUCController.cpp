@@ -72,6 +72,7 @@ MUCController::MUCController (
 	chatWindow_->onOccupantSelectionChanged.connect(boost::bind(&MUCController::handleWindowOccupantSelectionChanged, this, _1));
 	chatWindow_->onOccupantActionSelected.connect(boost::bind(&MUCController::handleActionRequestedOnOccupant, this, _1, _2));
 	chatWindow_->onChangeSubjectRequest.connect(boost::bind(&MUCController::handleChangeSubjectRequest, this, _1));
+	chatWindow_->onConfigureRequest.connect(boost::bind(&MUCController::handleConfigureRequest, this));
 	muc_->onJoinComplete.connect(boost::bind(&MUCController::handleJoinComplete, this, _1));
 	muc_->onJoinFailed.connect(boost::bind(&MUCController::handleJoinFailed, this, _1));
 	muc_->onOccupantJoined.connect(boost::bind(&MUCController::handleOccupantJoined, this, _1));
@@ -574,6 +575,10 @@ std::string MUCController::generateJoinPartString(const std::vector<NickJoinPart
 
 void MUCController::handleChangeSubjectRequest(const std::string& subject) {
 	muc_->changeSubject(subject);
+}
+
+void MUCController::handleConfigureRequest() {
+	muc_->requestConfigurationForm();
 }
 
 }

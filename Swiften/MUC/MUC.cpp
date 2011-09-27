@@ -244,6 +244,10 @@ void MUC::changeSubject(const std::string& subject) {
 	stanzaChannel->sendMessage(message);
 }
 
+void MUC::requestConfigurationForm() {
+
+}
+
 //FIXME: Recognise Topic changes
 
 //TODO: Invites(direct/mediated)

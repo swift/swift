@@ -86,6 +86,7 @@ ChatsManager::ChatsManager(
 	chatListWindow_ = chatListWindowFactory->createChatListWindow(uiEventStream_);
 	chatListWindow_->onMUCBookmarkActivated.connect(boost::bind(&ChatsManager::handleMUCBookmarkActivated, this, _1));
 	chatListWindow_->onRecentActivated.connect(boost::bind(&ChatsManager::handleRecentActivated, this, _1));
+	chatListWindow_->onClearRecentsRequested.connect(boost::bind(&ChatsManager::handleClearRecentsRequested, this));
 
 	joinMUCWindow_ = NULL;
 	mucSearchController_ = new MUCSearchController(jid_, mucSearchWindowFactory, iqRouter, settings);
@@ -124,6 +125,12 @@ void ChatsManager::saveRecents() {
 		}
 	}
 	profileSettings_->storeString(RECENT_CHATS, recents);
+}
+
+void ChatsManager::handleClearRecentsRequested() {
+	recentChats_.clear();
+	saveRecents();
+	handleUnreadCountChanged(NULL);
 }
 
 void ChatsManager::loadRecents() {

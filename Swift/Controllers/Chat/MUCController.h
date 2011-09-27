@@ -88,6 +88,7 @@ namespace Swift {
 			void dayTicked() {lastWasPresence_ = false;}
 			void processUserPart();
 			void handleBareJIDCapsChanged(const JID& jid);
+			void handleConfigureRequest();
 
 		private:
 			MUC::ref muc_;

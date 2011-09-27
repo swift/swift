@@ -80,6 +80,7 @@ namespace Swift {
 			void handleRecentActivated(const ChatListWindow::Chat&);
 			void handleUnreadCountChanged(ChatControllerBase* controller);
 			void handleAvatarChanged(const JID& jid);
+			void handleClearRecentsRequested();
 
 			ChatController* getChatControllerOrFindAnother(const JID &contact);
 			ChatController* createNewChatController(const JID &contact);

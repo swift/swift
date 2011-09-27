@@ -55,5 +55,6 @@ namespace Swift {
 
 			boost::signal<void (const MUCBookmark&)> onMUCBookmarkActivated;
 			boost::signal<void (const Chat&)> onRecentActivated;
+			boost::signal<void ()> onClearRecentsRequested;
 	};
 }

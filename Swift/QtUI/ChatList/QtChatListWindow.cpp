@@ -123,9 +123,6 @@ void QtChatListWindow::handleEditBookmark() {
 
 
 void QtChatListWindow::contextMenuEvent(QContextMenuEvent* event) {
-	if (!bookmarksEnabled_) {
-		return;
-	}
 	QModelIndex index = indexAt(event->pos());
 	ChatListItem* baseItem = index.isValid() ? static_cast<ChatListItem*>(index.internalPointer()) : NULL;
 	contextMenuItem_ = baseItem;
@@ -135,7 +132,19 @@ void QtChatListWindow::contextMenuEvent(QContextMenuEvent* event) {
 	}
 	ChatListMUCItem* mucItem = dynamic_cast<ChatListMUCItem*>(baseItem);
 	if (mucItem) {
+		if (!bookmarksEnabled_) {
+			return;
+		}
 		mucMenu_->exec(QCursor::pos());
+	}
+	else {
+		QMenu menu;
+		QAction* clearRecents = menu.addAction(tr("Clear recents"));
+		menu.addAction(clearRecents);
+		QAction* result = menu.exec(event->globalPos());
+		if (result == clearRecents) {
+			onClearRecentsRequested();
+		}
 	}
 }
 

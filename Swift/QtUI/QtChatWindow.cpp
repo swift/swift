@@ -694,6 +694,7 @@ void QtChatWindow::setSubject(const std::string& subject) {
 void QtChatWindow::handleActionButtonClicked() {
 	QMenu contextMenu;
 	QAction* changeSubject = contextMenu.addAction(tr("Change subject"));
+	//QAction* configure = contextMenu.addAction(tr("Configure room"));
 	QAction* result = contextMenu.exec(QCursor::pos());
 	if (result == changeSubject) {
 		bool ok;
@@ -702,6 +703,9 @@ void QtChatWindow::handleActionButtonClicked() {
 			onChangeSubjectRequest(Q2PSTRING(subject));
 		}
 	}
+	//else if (result == configure) {
+	//	onConfigureRequest();
+	//}
 }
 
 }
