@@ -88,7 +88,9 @@ namespace Swift {
 			void dayTicked() {lastWasPresence_ = false;}
 			void processUserPart();
 			void handleBareJIDCapsChanged(const JID& jid);
-			void handleConfigureRequest();
+			void handleConfigureRequest(Form::ref);
+			void handleConfigurationFailed(ErrorPayload::ref);
+			void handleConfigurationFormReceived(Form::ref);
 
 		private:
 			MUC::ref muc_;

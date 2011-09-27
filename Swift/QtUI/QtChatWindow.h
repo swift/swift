@@ -6,15 +6,17 @@
 
 #pragma once
 
-#include "Swift/Controllers/UIInterfaces/ChatWindow.h"
+#include <Swift/Controllers/UIInterfaces/ChatWindow.h>
+#include <Swift/QtUI/QtMUCConfigurationWindow.h>
 
-#include "QtTabbable.h"
+#include <QtTabbable.h>
 
-#include "SwifTools/LastLineTracker.h"
+#include <SwifTools/LastLineTracker.h>
 
-#include "Swiften/Base/IDGenerator.h"
+#include <Swiften/Base/IDGenerator.h>
 
 #include <map>
+#include <QPointer>
 
 class QTextEdit;
 class QLineEdit;
@@ -69,6 +71,7 @@ namespace Swift {
 			QByteArray getSplitterState();
 			virtual void setAvailableOccupantActions(const std::vector<OccupantAction>& actions);
 			void setSubject(const std::string& subject);
+			void showRoomConfigurationForm(Form::ref);
 
 		public slots:
 			void handleChangeSplitterState(QByteArray state);
@@ -147,8 +150,8 @@ namespace Swift {
 			QSplitter *logRosterSplitter_;
 			Tristate correctionEnabled_;
 			QString alertStyleSheet_;
-			
 			std::map<QString, QString> descriptions;
 			QtFileTransferJSBridge* fileTransferJS;
+			QPointer<QtMUCConfigurationWindow> mucConfigurationWindow;
 	};
 }

@@ -61,6 +61,7 @@ sources = [
 		"PayloadParsers/DelayParser.cpp",
 		"PayloadParsers/MUCUserPayloadParser.cpp",
 		"PayloadParsers/MUCAdminPayloadParser.cpp",
+		"PayloadParsers/MUCOwnerPayloadParser.cpp",
 		"PayloadParsers/MUCItemParser.cpp",
 		"PayloadParsers/NicknameParser.cpp",
 		"PayloadParsers/ReplaceParser.cpp",

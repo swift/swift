@@ -14,6 +14,7 @@
 #include <Swiften/MUC/MUCRegistry.h>
 #include <Swiften/Elements/MUCOwnerPayload.h>
 #include <Swiften/Elements/MUCAdminPayload.h>
+#include <Swiften/Elements/Form.h>
 
 #include <boost/shared_ptr.hpp>
 #include <Swiften/Base/boost_bsignals.h>
@@ -58,15 +59,18 @@ namespace Swift {
 			void kickUser(const JID& jid);
 			void changeSubject(const std::string& subject);
 			void requestConfigurationForm();
+			void configureRoom(Form::ref);
 		public:
 			boost::signal<void (const std::string& /*nick*/)> onJoinComplete;
 			boost::signal<void (ErrorPayload::ref)> onJoinFailed;
 			boost::signal<void (ErrorPayload::ref, const JID&)> onKickFailed;
+			boost::signal<void (ErrorPayload::ref)> onConfigurationFailed;
 			boost::signal<void (Presence::ref)> onOccupantPresenceChange;
 			boost::signal<void (const std::string&, const MUCOccupant& /*now*/, const MUCOccupant::Role& /*old*/)> onOccupantRoleChanged;
 			boost::signal<void (const std::string&, const MUCOccupant::Affiliation& /*new*/, const MUCOccupant::Affiliation& /*old*/)> onOccupantAffiliationChanged;
 			boost::signal<void (const MUCOccupant&)> onOccupantJoined;
 			boost::signal<void (const MUCOccupant&, LeavingType, const std::string& /*reason*/)> onOccupantLeft;
+			boost::signal<void (Form::ref)> onConfigurationFormReceived;
 			/* boost::signal<void (const MUCInfo&)> onInfoResult; */
 			/* boost::signal<void (const blah&)> onItemsResult; */
 			
@@ -85,6 +89,8 @@ namespace Swift {
 			void internalJoin(const std::string& nick);
 			void handleCreationConfigResponse(MUCOwnerPayload::ref, ErrorPayload::ref);
 			void handleKickResponse(MUCAdminPayload::ref, ErrorPayload::ref, const JID&);
+			void handleConfigurationFormReceived(MUCOwnerPayload::ref, ErrorPayload::ref);
+			void handleConfigurationResultReceived(MUCOwnerPayload::ref, ErrorPayload::ref);
 
 		private:
 			JID ownMUCJID;

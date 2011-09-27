@@ -9,6 +9,7 @@
 #include <boost/optional.hpp>
 
 #include <Swiften/Elements/Payload.h>
+#include <Swiften/Elements/Form.h>
 
 namespace Swift {
 	class MUCOwnerPayload : public Payload {
@@ -24,6 +25,10 @@ namespace Swift {
 
 			void setPayload(boost::shared_ptr<Payload> p) {
 				payload = p;
+			}
+
+			Form::ref getForm() {
+				return boost::dynamic_pointer_cast<Form>(payload);
 			}
 
 		private:

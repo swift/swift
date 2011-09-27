@@ -136,6 +136,7 @@ sources = [
     "qrc_DefaultTheme.cc",
     "qrc_Swift.cc",
     "QtFileTransferJSBridge.cpp",
+    "QtMUCConfigurationWindow.cpp",
   ]
 
 myenv["SWIFT_VERSION"] = Version.getBuildVersion(env.Dir("#").abspath, "swift")

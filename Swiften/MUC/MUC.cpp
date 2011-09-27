@@ -245,10 +245,37 @@ void MUC::changeSubject(const std::string& subject) {
 }
 
 void MUC::requestConfigurationForm() {
-
+	MUCOwnerPayload::ref mucPayload(new MUCOwnerPayload());
+	GenericRequest<MUCOwnerPayload>* request = new GenericRequest<MUCOwnerPayload>(IQ::Get, getJID(), mucPayload, iqRouter_);
+	request->onResponse.connect(boost::bind(&MUC::handleConfigurationFormReceived, this, _1, _2));
+	request->send();
 }
 
-//FIXME: Recognise Topic changes
+void MUC::handleConfigurationFormReceived(MUCOwnerPayload::ref payload, ErrorPayload::ref error) {
+	Form::ref form;
+	if (payload) {
+		form = payload->getForm();
+	}
+	if (error || !form) {
+		onConfigurationFailed(error);
+	} else {
+		onConfigurationFormReceived(form);
+	}
+}
+
+void MUC::handleConfigurationResultReceived(MUCOwnerPayload::ref /*payload*/, ErrorPayload::ref error) {
+	if (error) {
+		onConfigurationFailed(error);
+	}
+}
+
+void MUC::configureRoom(Form::ref form) {
+	MUCOwnerPayload::ref mucPayload(new MUCOwnerPayload());
+	mucPayload->setPayload(form);
+	GenericRequest<MUCOwnerPayload>* request = new GenericRequest<MUCOwnerPayload>(IQ::Set, getJID(), mucPayload, iqRouter_);
+	request->onResponse.connect(boost::bind(&MUC::handleConfigurationResultReceived, this, _1, _2));
+	request->send();
+}
 
 //TODO: Invites(direct/mediated)
 

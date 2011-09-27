@@ -162,6 +162,9 @@ QtChatWindow::QtChatWindow(const QString &contact, QtChatTheme* theme, UIEventSt
 
 QtChatWindow::~QtChatWindow() {
 	delete fileTransferJS;
+	if (mucConfigurationWindow) {
+		delete mucConfigurationWindow.data();
+	}
 }
 
 
@@ -364,7 +367,9 @@ void QtChatWindow::qAppFocusChanged(QWidget* /*old*/, QWidget* /*now*/) {
 
 void QtChatWindow::setInputEnabled(bool enabled) {
 	inputEnabled_ = enabled;
-//	input_->setEnabled(enabled);
+	if (!enabled && mucConfigurationWindow) {
+		delete mucConfigurationWindow.data();
+	}
 }
 
 void QtChatWindow::showEvent(QShowEvent* event) {
@@ -694,7 +699,7 @@ void QtChatWindow::setSubject(const std::string& subject) {
 void QtChatWindow::handleActionButtonClicked() {
 	QMenu contextMenu;
 	QAction* changeSubject = contextMenu.addAction(tr("Change subject"));
-	//QAction* configure = contextMenu.addAction(tr("Configure room"));
+	QAction* configure = contextMenu.addAction(tr("Configure room"));
 	QAction* result = contextMenu.exec(QCursor::pos());
 	if (result == changeSubject) {
 		bool ok;
@@ -703,9 +708,17 @@ void QtChatWindow::handleActionButtonClicked() {
 			onChangeSubjectRequest(Q2PSTRING(subject));
 		}
 	}
-	//else if (result == configure) {
-	//	onConfigureRequest();
-	//}
+	else if (result == configure) {
+		onConfigureRequest(Form::ref());
+	}
+}
+
+void QtChatWindow::showRoomConfigurationForm(Form::ref form) {
+	if (mucConfigurationWindow) {
+		delete mucConfigurationWindow.data();
+	}
+	mucConfigurationWindow = new QtMUCConfigurationWindow(form);
+	mucConfigurationWindow->onFormComplete.connect(boost::bind(boost::ref(onConfigureRequest), _1));
 }
 
 }

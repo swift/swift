@@ -72,13 +72,15 @@ MUCController::MUCController (
 	chatWindow_->onOccupantSelectionChanged.connect(boost::bind(&MUCController::handleWindowOccupantSelectionChanged, this, _1));
 	chatWindow_->onOccupantActionSelected.connect(boost::bind(&MUCController::handleActionRequestedOnOccupant, this, _1, _2));
 	chatWindow_->onChangeSubjectRequest.connect(boost::bind(&MUCController::handleChangeSubjectRequest, this, _1));
-	chatWindow_->onConfigureRequest.connect(boost::bind(&MUCController::handleConfigureRequest, this));
+	chatWindow_->onConfigureRequest.connect(boost::bind(&MUCController::handleConfigureRequest, this, _1));
 	muc_->onJoinComplete.connect(boost::bind(&MUCController::handleJoinComplete, this, _1));
 	muc_->onJoinFailed.connect(boost::bind(&MUCController::handleJoinFailed, this, _1));
 	muc_->onOccupantJoined.connect(boost::bind(&MUCController::handleOccupantJoined, this, _1));
 	muc_->onOccupantPresenceChange.connect(boost::bind(&MUCController::handleOccupantPresenceChange, this, _1));
 	muc_->onOccupantLeft.connect(boost::bind(&MUCController::handleOccupantLeft, this, _1, _2, _3));
 	muc_->onOccupantRoleChanged.connect(boost::bind(&MUCController::handleOccupantRoleChanged, this, _1, _2, _3));
+	muc_->onConfigurationFailed.connect(boost::bind(&MUCController::handleConfigurationFailed, this, _1));
+	muc_->onConfigurationFormReceived.connect(boost::bind(&MUCController::handleConfigurationFormReceived, this, _1));
 	if (timerFactory) {
 		loginCheckTimer_ = boost::shared_ptr<Timer>(timerFactory->createTimer(MUC_JOIN_WARNING_TIMEOUT_MILLISECONDS));
 		loginCheckTimer_->onTick.connect(boost::bind(&MUCController::handleJoinTimeoutTick, this));
@@ -577,8 +579,23 @@ void MUCController::handleChangeSubjectRequest(const std::string& subject) {
 	muc_->changeSubject(subject);
 }
 
-void MUCController::handleConfigureRequest() {
-	muc_->requestConfigurationForm();
+void MUCController::handleConfigureRequest(Form::ref form) {
+	if (form) {
+		muc_->configureRoom(form);
+	}
+	else {
+		muc_->requestConfigurationForm();
+	}
+}
+
+void MUCController::handleConfigurationFailed(ErrorPayload::ref error) {
+	std::string errorMessage = getErrorMessage(error);
+	errorMessage = str(format(QT_TRANSLATE_NOOP("", "Room configuration failed: %1%.")) % errorMessage);
+	chatWindow_->addErrorMessage(errorMessage);
+}
+
+void MUCController::handleConfigurationFormReceived(Form::ref form) {
+	chatWindow_->showRoomConfigurationForm(form);
 }
 
 }

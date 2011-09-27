@@ -14,8 +14,10 @@
 #include <vector>
 
 #include <string>
-#include "Swiften/Elements/SecurityLabelsCatalog.h"
-#include "Swiften/Elements/ChatState.h"
+#include <Swiften/Elements/SecurityLabelsCatalog.h>
+#include <Swiften/Elements/ChatState.h>
+#include <Swiften/Elements/Form.h>
+
 
 namespace Swift {
 	class AvatarManager;
@@ -87,6 +89,8 @@ namespace Swift {
 			 * Actions that can be performed on the selected occupant.
 			 */
 			virtual void setAvailableOccupantActions(const std::vector<OccupantAction>& actions) = 0;
+
+			virtual void showRoomConfigurationForm(Form::ref) = 0;
 			boost::signal<void ()> onClosed;
 			boost::signal<void ()> onAllMessagesRead;
 			boost::signal<void (const std::string&, bool isCorrection)> onSendMessageRequest;
@@ -97,7 +101,7 @@ namespace Swift {
 			boost::signal<void (ContactRosterItem*)> onOccupantSelectionChanged;
 			boost::signal<void (ChatWindow::OccupantAction, ContactRosterItem*)> onOccupantActionSelected;
 			boost::signal<void (const std::string&)> onChangeSubjectRequest;
-			boost::signal<void ()> onConfigureRequest;
+			boost::signal<void (Form::ref)> onConfigureRequest;
 			
 			// File transfer related
 			boost::signal<void (std::string /* id */)> onFileTransferCancel;

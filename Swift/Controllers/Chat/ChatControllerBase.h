@@ -70,6 +70,7 @@ namespace Swift {
 			virtual boost::optional<boost::posix_time::ptime> getMessageTimestamp(boost::shared_ptr<Message>) const = 0;
 			virtual void dayTicked() {};
 			virtual void handleBareJIDCapsChanged(const JID& jid) = 0;
+			std::string getErrorMessage(boost::shared_ptr<ErrorPayload>);
 
 		private:
 			IDGenerator idGenerator_;
@@ -78,7 +79,6 @@ namespace Swift {
 			void handleSendMessageRequest(const std::string &body, bool isCorrectionMessage);
 			void handleAllMessagesRead();
 			void handleSecurityLabelsCatalogResponse(boost::shared_ptr<SecurityLabelsCatalog>, ErrorPayload::ref error);
-			std::string getErrorMessage(boost::shared_ptr<ErrorPayload>);
 			void handleDayChangeTick();
 
 		protected:
