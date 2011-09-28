@@ -27,13 +27,12 @@ class SOCKS5BytestreamProxy;
 
 class OutgoingFileTransferManager {
 public:
-	OutgoingFileTransferManager(const JID& ownFullJID, JingleSessionManager* jingleSessionManager, IQRouter* router, EntityCapsProvider* capsProvider, RemoteJingleTransportCandidateSelectorFactory* remoteFactory, LocalJingleTransportCandidateGeneratorFactory* localFactory, SOCKS5BytestreamRegistry* bytestreamRegistry, SOCKS5BytestreamProxy* bytestreamProxy);
+	OutgoingFileTransferManager(JingleSessionManager* jingleSessionManager, IQRouter* router, EntityCapsProvider* capsProvider, RemoteJingleTransportCandidateSelectorFactory* remoteFactory, LocalJingleTransportCandidateGeneratorFactory* localFactory, SOCKS5BytestreamRegistry* bytestreamRegistry, SOCKS5BytestreamProxy* bytestreamProxy);
 	~OutgoingFileTransferManager();
 	
-	boost::shared_ptr<OutgoingFileTransfer> createOutgoingFileTransfer(const JID&, boost::shared_ptr<ReadBytestream>, const StreamInitiationFileInfo&);
+	boost::shared_ptr<OutgoingFileTransfer> createOutgoingFileTransfer(const JID& from, const JID& to, boost::shared_ptr<ReadBytestream>, const StreamInitiationFileInfo&);
 
 private:
-	JID ownJID;
 	JingleSessionManager* jsManager;
 	IQRouter* iqRouter;
 	EntityCapsProvider* capsProvider;

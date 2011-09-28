@@ -30,7 +30,7 @@ namespace Swift {
 
 			void registerOutgoingSession(const JID& initiator, JingleSessionImpl::ref);
 		protected:
-			void handleIncomingSession(const JID& initiator, JingleSessionImpl::ref, const std::vector<JingleContentPayload::ref>& contents);
+			void handleIncomingSession(const JID& initiator, const JID& recipient, JingleSessionImpl::ref, const std::vector<JingleContentPayload::ref>& contents);
 
 		private:
 			IQRouter* router;

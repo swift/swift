@@ -40,10 +40,10 @@ void JingleSessionManager::registerOutgoingSession(const JID& initiator, JingleS
 	SWIFT_LOG(debug) << "Added session " << session->getID() << " for initiator " << initiator.toString() << std::endl;
 }
 
-void JingleSessionManager::handleIncomingSession(const JID& initiator, JingleSessionImpl::ref session, const std::vector<JingleContentPayload::ref>& contents) {
+void JingleSessionManager::handleIncomingSession(const JID& initiator, const JID& recipient, JingleSessionImpl::ref session, const std::vector<JingleContentPayload::ref>& contents) {
 	sessions.insert(std::make_pair(JIDSession(initiator, session->getID()), session));
 	foreach (IncomingJingleSessionHandler* handler, incomingSessionHandlers) {
-		if (handler->handleIncomingJingleSession(session, contents)) {
+		if (handler->handleIncomingJingleSession(session, contents, recipient)) {
 			return;
 		}
 	}

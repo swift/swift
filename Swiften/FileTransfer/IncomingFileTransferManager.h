@@ -23,16 +23,15 @@ namespace Swift {
 
 	class IncomingFileTransferManager : public IncomingJingleSessionHandler {
 		public:
-			IncomingFileTransferManager(const JID& ourFullJID, JingleSessionManager* jingleSessionManager, IQRouter* router, RemoteJingleTransportCandidateSelectorFactory* remoteFactory, LocalJingleTransportCandidateGeneratorFactory* localFactory, SOCKS5BytestreamRegistry* bytestreamRegistry, SOCKS5BytestreamProxy* bytestreamProxy, TimerFactory* timerFactory);
+			IncomingFileTransferManager(JingleSessionManager* jingleSessionManager, IQRouter* router, RemoteJingleTransportCandidateSelectorFactory* remoteFactory, LocalJingleTransportCandidateGeneratorFactory* localFactory, SOCKS5BytestreamRegistry* bytestreamRegistry, SOCKS5BytestreamProxy* bytestreamProxy, TimerFactory* timerFactory);
 			~IncomingFileTransferManager();
 
 			boost::signal<void (IncomingFileTransfer::ref)> onIncomingFileTransfer;
 
 		private:
-			bool handleIncomingJingleSession(JingleSession::ref session, const std::vector<JingleContentPayload::ref>& contents);
+			bool handleIncomingJingleSession(JingleSession::ref session, const std::vector<JingleContentPayload::ref>& contents, const JID& recipient);
 
 		private:
-			JID ourJID;
 			JingleSessionManager* jingleSessionManager;
 			IQRouter* router;
 			RemoteJingleTransportCandidateSelectorFactory* remoteFactory;

@@ -21,7 +21,7 @@ JingleResponder::JingleResponder(JingleSessionManager* sessionManager, IQRouter*
 JingleResponder::~JingleResponder() {
 }
 
-bool JingleResponder::handleSetRequest(const JID& from, const JID&, const std::string& id, boost::shared_ptr<JinglePayload> payload) {
+bool JingleResponder::handleSetRequest(const JID& from, const JID& to, const std::string& id, boost::shared_ptr<JinglePayload> payload) {
 	if (payload->getAction() == JinglePayload::SessionInitiate) {
 		if (sessionManager->getSession(from, payload->getSessionID())) {
 			// TODO: Add tie-break error
@@ -31,7 +31,7 @@ bool JingleResponder::handleSetRequest(const JID& from, const JID&, const std::s
 			sendResponse(from, id, boost::shared_ptr<JinglePayload>());
 			if (!payload->getInitiator().isBare()) {
 				JingleSessionImpl::ref session = boost::make_shared<JingleSessionImpl>(payload->getInitiator(), from, payload->getSessionID(), router);
-				sessionManager->handleIncomingSession(from, session, payload->getContents());
+				sessionManager->handleIncomingSession(from, to, session, payload->getContents());
 			} else {
 				SWIFT_LOG(debug) << "Unable to create Jingle session due to initiator not being a full JID." << std::endl;
 			}

@@ -13,6 +13,6 @@ namespace Swift {
 		public:
 			virtual ~IncomingJingleSessionHandler();
 
-			virtual bool handleIncomingJingleSession(JingleSession::ref, const std::vector<JingleContentPayload::ref>& contents) = 0;
+			virtual bool handleIncomingJingleSession(JingleSession::ref, const std::vector<JingleContentPayload::ref>& contents, const JID& recipient) = 0;
 	};
 }

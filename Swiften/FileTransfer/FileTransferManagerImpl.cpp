@@ -39,8 +39,8 @@ FileTransferManagerImpl::FileTransferManagerImpl(const JID& ownFullJID, JingleSe
 
 	localCandidateGeneratorFactory = new DefaultLocalJingleTransportCandidateGeneratorFactory(connectivityManager, bytestreamRegistry, bytestreamProxy, ownFullJID);
 	remoteCandidateSelectorFactory = new DefaultRemoteJingleTransportCandidateSelectorFactory(connectionFactory, timerFactory);
-	outgoingFTManager = new OutgoingFileTransferManager(ownJID, jingleSM, iqRouter, capsProvider, remoteCandidateSelectorFactory, localCandidateGeneratorFactory, bytestreamRegistry, bytestreamProxy);
-	incomingFTManager = new IncomingFileTransferManager(ownJID, jingleSM, iqRouter, remoteCandidateSelectorFactory, localCandidateGeneratorFactory, bytestreamRegistry, bytestreamProxy, timerFactory);
+	outgoingFTManager = new OutgoingFileTransferManager(jingleSM, iqRouter, capsProvider, remoteCandidateSelectorFactory, localCandidateGeneratorFactory, bytestreamRegistry, bytestreamProxy);
+	incomingFTManager = new IncomingFileTransferManager(jingleSM, iqRouter, remoteCandidateSelectorFactory, localCandidateGeneratorFactory, bytestreamRegistry, bytestreamProxy, timerFactory);
 	incomingFTManager->onIncomingFileTransfer.connect(onIncomingFileTransfer);
 }
 
@@ -118,7 +118,7 @@ OutgoingFileTransfer::ref FileTransferManagerImpl::createOutgoingFileTransfer(co
 		}
 	}
 	
-	return outgoingFTManager->createOutgoingFileTransfer(receipient, bytestream, fileInfo);
+	return outgoingFTManager->createOutgoingFileTransfer(ownJID, receipient, bytestream, fileInfo);
 }
 
 }
