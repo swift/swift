@@ -8,22 +8,30 @@
 
 #include <boost/lexical_cast.hpp>
 
+#include <Swiften/Parser/PayloadParserFactoryCollection.h>
+#include <Swiften/Parser/PayloadParserFactory.h>
 #include <Swiften/Base/foreach.h>
 #include <Swiften/Elements/MUCOccupant.h>
+#include <Swiften/Parser/Tree/TreeReparser.h>
 
 namespace Swift {
 
 void MUCUserPayloadParser::handleTree(ParserElement::ref root) {
-	foreach (ParserElement::ref itemElement, root->getChildren("item", "http://jabber.org/protocol/muc#user")) {
-		MUCItem item = MUCItemParser::itemFromTree(itemElement);
-		getPayloadInternal()->addItem(item);
-	}
-	foreach (ParserElement::ref statusElement, root->getChildren("status", "http://jabber.org/protocol/muc#user")) {
-		MUCUserPayload::StatusCode status;
-		try {
-			status.code = boost::lexical_cast<int>(statusElement->getAttributes().getAttribute("code").c_str());
-			getPayloadInternal()->addStatusCode(status);
-		} catch (boost::bad_lexical_cast&) {
+	foreach (ParserElement::ref child, root->getAllChildren()) {
+		if (child->getName() == "item" && child->getNamespace() == root->getNamespace()) {
+			MUCItem item = MUCItemParser::itemFromTree(child);
+			getPayloadInternal()->addItem(item);
+		}
+		else if (child->getName() == "status" && child->getNamespace() == root->getNamespace()) {
+			MUCUserPayload::StatusCode status;
+			try {
+				status.code = boost::lexical_cast<int>(child->getAttributes().getAttribute("code").c_str());
+				getPayloadInternal()->addStatusCode(status);
+			} catch (boost::bad_lexical_cast&) {
+			}
+		}
+		else {
+			getPayloadInternal()->setPayload(TreeReparser::parseTree(child, factories));
 		}
 	}
 }

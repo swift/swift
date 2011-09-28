@@ -10,8 +10,20 @@
 #include <Swiften/Parser/PayloadParsers/MUCUserPayloadParser.h>
 
 namespace Swift {
-	class MUCUserPayloadParserFactory : public GenericPayloadParserFactory<MUCUserPayloadParser> {
+	class MUCUserPayloadParserFactory : public PayloadParserFactory {
 		public:
-			MUCUserPayloadParserFactory() : GenericPayloadParserFactory<MUCUserPayloadParser>("x", "http://jabber.org/protocol/muc#user") {}
+			MUCUserPayloadParserFactory(PayloadParserFactoryCollection* factories) : factories(factories) {
+			}
+
+			virtual bool canParse(const std::string& element, const std::string& ns, const AttributeMap&) const {
+				return element == "x" && ns == "http://jabber.org/protocol/muc#user";
+			}
+
+			virtual PayloadParser* createPayloadParser() {
+				return new MUCUserPayloadParser(factories);
+			}
+
+		private:
+			PayloadParserFactoryCollection* factories;
 	};
 }

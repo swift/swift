@@ -20,6 +20,7 @@
 #include <Swiften/Elements/MUCUserPayload.h>
 #include <Swiften/Elements/MUCAdminPayload.h>
 #include <Swiften/Elements/MUCPayload.h>
+#include <Swiften/Elements/MUCDestroyPayload.h>
 #include <Swiften/MUC/MUCRegistry.h>
 #include <Swiften/Queries/GenericRequest.h>
 
@@ -271,6 +272,15 @@ void MUC::handleConfigurationResultReceived(MUCOwnerPayload::ref /*payload*/, Er
 void MUC::configureRoom(Form::ref form) {
 	MUCOwnerPayload::ref mucPayload(new MUCOwnerPayload());
 	mucPayload->setPayload(form);
+	GenericRequest<MUCOwnerPayload>* request = new GenericRequest<MUCOwnerPayload>(IQ::Set, getJID(), mucPayload, iqRouter_);
+	request->onResponse.connect(boost::bind(&MUC::handleConfigurationResultReceived, this, _1, _2));
+	request->send();
+}
+
+void MUC::destroyRoom() {
+	MUCOwnerPayload::ref mucPayload = boost::make_shared<MUCOwnerPayload>();
+	MUCDestroyPayload::ref mucDestroyPayload = boost::make_shared<MUCDestroyPayload>();
+	mucPayload->setPayload(mucDestroyPayload);
 	GenericRequest<MUCOwnerPayload>* request = new GenericRequest<MUCOwnerPayload>(IQ::Set, getJID(), mucPayload, iqRouter_);
 	request->onResponse.connect(boost::bind(&MUC::handleConfigurationResultReceived, this, _1, _2));
 	request->send();

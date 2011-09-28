@@ -50,8 +50,17 @@ namespace Swift {
 
 			const std::vector<StatusCode>& getStatusCodes() const {return statusCodes_;}
 
+			boost::shared_ptr<Payload> getPayload() const {
+				return payload_;
+			}
+
+			void setPayload(boost::shared_ptr<Payload> p) {
+				payload_ = p;
+			}
+
 		private:
 			std::vector<MUCItem> items_;
 			std::vector<StatusCode> statusCodes_;
+			boost::shared_ptr<Payload> payload_;
 	};
 }

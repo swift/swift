@@ -10,11 +10,14 @@
 #include <Swiften/Elements/MUCUserPayload.h>
 
 namespace Swift {
+	class PayloadSerializerCollection;
 	class MUCUserPayloadSerializer : public GenericPayloadSerializer<MUCUserPayload> {
 		public:
-			MUCUserPayloadSerializer();
+			MUCUserPayloadSerializer(PayloadSerializerCollection* serializers);
 
 			virtual std::string serializePayload(boost::shared_ptr<MUCUserPayload> version)  const;
+		private:
+			PayloadSerializerCollection* serializers;
 	};
 }
 

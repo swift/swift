@@ -46,6 +46,7 @@
 #include <Swiften/Parser/PayloadParsers/MUCUserPayloadParserFactory.h>
 #include <Swiften/Parser/PayloadParsers/MUCAdminPayloadParser.h>
 #include <Swiften/Parser/PayloadParsers/MUCOwnerPayloadParser.h>
+#include <Swiften/Parser/PayloadParsers/MUCDestroyPayloadParser.h>
 #include <Swiften/Parser/PayloadParsers/MUCOwnerPayloadParserFactory.h>
 #include <Swiften/Parser/PayloadParsers/NicknameParserFactory.h>
 #include <Swiften/Parser/PayloadParsers/ReplaceParser.h>
@@ -103,9 +104,11 @@ FullPayloadParserFactoryCollection::FullPayloadParserFactoryCollection() {
 	factories_.push_back(shared_ptr<PayloadParserFactory>(new VCardParserFactory()));
 	factories_.push_back(shared_ptr<PayloadParserFactory>(new PrivateStorageParserFactory(this)));
 	factories_.push_back(shared_ptr<PayloadParserFactory>(new ChatStateParserFactory()));
-	factories_.push_back(shared_ptr<PayloadParserFactory>(new MUCUserPayloadParserFactory()));
+	factories_.push_back(shared_ptr<PayloadParserFactory>(new MUCUserPayloadParserFactory(this)));
 	factories_.push_back(shared_ptr<PayloadParserFactory>(new MUCOwnerPayloadParserFactory(this)));
 	factories_.push_back(shared_ptr<PayloadParserFactory>(new GenericPayloadParserFactory<MUCAdminPayloadParser>("query", "http://jabber.org/protocol/muc#admin")));
+	factories_.push_back(shared_ptr<PayloadParserFactory>(new GenericPayloadParserFactory<MUCDestroyPayloadParser>("destroy", "http://jabber.org/protocol/muc#user")));
+	factories_.push_back(shared_ptr<PayloadParserFactory>(new GenericPayloadParserFactory<MUCDestroyPayloadParser>("destroy", "http://jabber.org/protocol/muc#owner")));
 	factories_.push_back(shared_ptr<PayloadParserFactory>(new NicknameParserFactory()));
 	factories_.push_back(shared_ptr<PayloadParserFactory>(new JingleParserFactory(this)));
 	factories_.push_back(shared_ptr<PayloadParserFactory>(new GenericPayloadParserFactory<JingleReasonParser>("reason", "urn:xmpp:jingle:1")));

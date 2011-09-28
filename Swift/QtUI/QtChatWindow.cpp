@@ -700,6 +700,7 @@ void QtChatWindow::handleActionButtonClicked() {
 	QMenu contextMenu;
 	QAction* changeSubject = contextMenu.addAction(tr("Change subject"));
 	QAction* configure = contextMenu.addAction(tr("Configure room"));
+	QAction* destroy = contextMenu.addAction(tr("Destroy room"));
 	QAction* result = contextMenu.exec(QCursor::pos());
 	if (result == changeSubject) {
 		bool ok;
@@ -710,6 +711,9 @@ void QtChatWindow::handleActionButtonClicked() {
 	}
 	else if (result == configure) {
 		onConfigureRequest(Form::ref());
+	}
+	else if (result == destroy) {
+		onDestroyRequest();
 	}
 }
 

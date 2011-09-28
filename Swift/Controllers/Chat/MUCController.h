@@ -91,6 +91,7 @@ namespace Swift {
 			void handleConfigureRequest(Form::ref);
 			void handleConfigurationFailed(ErrorPayload::ref);
 			void handleConfigurationFormReceived(Form::ref);
+			void handleDestroyRoomRequest();
 
 		private:
 			MUC::ref muc_;

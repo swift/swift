@@ -60,6 +60,7 @@ namespace Swift {
 			void changeSubject(const std::string& subject);
 			void requestConfigurationForm();
 			void configureRoom(Form::ref);
+			void destroyRoom();
 		public:
 			boost::signal<void (const std::string& /*nick*/)> onJoinComplete;
 			boost::signal<void (ErrorPayload::ref)> onJoinFailed;

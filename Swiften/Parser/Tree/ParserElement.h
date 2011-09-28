@@ -31,6 +31,7 @@ namespace Swift {
 			void appendCharacterData(const std::string& data);
 
 			std::vector<ParserElement::ref> getChildren(const std::string& name, const std::string& xmlns) const;
+			const std::vector<ParserElement::ref>& getAllChildren() const {return children_;}
 			ParserElement::ref getChild(const std::string& name, const std::string& xmlns) const;
 
 			virtual operator bool() {

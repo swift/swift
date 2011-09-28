@@ -13,11 +13,13 @@
 #include <Swiften/Base/foreach.h>
 #include <Swiften/Serializer/XML/XMLElement.h>
 #include <Swiften/Serializer/XML/XMLTextNode.h>
+#include <Swiften/Serializer/XML/XMLRawTextNode.h>
 #include <Swiften/Serializer/PayloadSerializers/MUCItemSerializer.h>
+#include <Swiften/Serializer/PayloadSerializerCollection.h>
 
 namespace Swift {
 
-MUCUserPayloadSerializer::MUCUserPayloadSerializer() : GenericPayloadSerializer<MUCUserPayload>() {
+MUCUserPayloadSerializer::MUCUserPayloadSerializer(PayloadSerializerCollection* serializers) : GenericPayloadSerializer<MUCUserPayload>(), serializers(serializers) {
 }
 
 std::string MUCUserPayloadSerializer::serializePayload(boost::shared_ptr<MUCUserPayload> payload)  const {
@@ -31,6 +33,13 @@ std::string MUCUserPayloadSerializer::serializePayload(boost::shared_ptr<MUCUser
 	}
 	foreach (const MUCItem item, payload->getItems()) {
 		mucElement.addNode(MUCItemSerializer::itemToElement(item));
+	}
+	boost::shared_ptr<Payload> childPayload = payload->getPayload();
+	if (childPayload) {
+		PayloadSerializer* serializer = serializers->getPayloadSerializer(childPayload);
+		if (serializer) {
+			mucElement.addNode(boost::shared_ptr<XMLRawTextNode>(new XMLRawTextNode(serializer->serialize(childPayload))));
+		}
 	}
 	return mucElement.serialize();
 }

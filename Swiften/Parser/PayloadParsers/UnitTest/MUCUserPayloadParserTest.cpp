@@ -9,6 +9,7 @@
 
 #include <Swiften/Base/foreach.h>
 #include <Swiften/Parser/PayloadParsers/MUCUserPayloadParser.h>
+#include <Swiften/Elements/MUCDestroyPayload.h>
 #include <Swiften/Parser/PayloadParsers/UnitTest/PayloadsParserTester.h>
 
 using namespace Swift;
@@ -18,6 +19,7 @@ class MUCUserPayloadParserTest : public CppUnit::TestFixture
 		CPPUNIT_TEST_SUITE(MUCUserPayloadParserTest);
 		CPPUNIT_TEST(testParseEmpty);
 		CPPUNIT_TEST(testParse);
+		CPPUNIT_TEST(testParseDestroy);
 		CPPUNIT_TEST_SUITE_END();
 
 	public:
@@ -55,6 +57,19 @@ class MUCUserPayloadParserTest : public CppUnit::TestFixture
 			MUCUserPayload::ref payload = boost::dynamic_pointer_cast<MUCUserPayload>(parser.getPayload());
 			CPPUNIT_ASSERT(payload);
 			CPPUNIT_ASSERT(payload->getItems().empty());
+		}
+
+		void testParseDestroy() {
+			PayloadsParserTester parser;
+
+			CPPUNIT_ASSERT(parser.parse("<x xmlns=\"http://jabber.org/protocol/muc#user\"><destroy jid='alice@wonderland.lit'><reason>bert</reason></destroy></x>"));
+
+			MUCUserPayload::ref payload = boost::dynamic_pointer_cast<MUCUserPayload>(parser.getPayload());
+			CPPUNIT_ASSERT(payload);
+			MUCDestroyPayload::ref destroy = boost::dynamic_pointer_cast<MUCDestroyPayload>(payload->getPayload());
+			CPPUNIT_ASSERT(destroy);
+			CPPUNIT_ASSERT_EQUAL(std::string("bert"), destroy->getReason());
+			CPPUNIT_ASSERT_EQUAL(JID("alice@wonderland.lit"), destroy->getNewVenue());
 		}
 };
 
