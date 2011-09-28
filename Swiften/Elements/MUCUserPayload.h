@@ -23,6 +23,7 @@ namespace Swift {
 
 			struct StatusCode {
 				StatusCode() : code(0) {}
+				StatusCode(int code) : code(code) {}
 				int code;
 			};
 

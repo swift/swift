@@ -18,7 +18,7 @@ void MUCUserPayloadParser::handleTree(ParserElement::ref root) {
 		MUCItem item = MUCItemParser::itemFromTree(itemElement);
 		getPayloadInternal()->addItem(item);
 	}
-	foreach (ParserElement::ref statusElement, root->getChildren("item", "http://jabber.org/protocol/muc#user")) {
+	foreach (ParserElement::ref statusElement, root->getChildren("status", "http://jabber.org/protocol/muc#user")) {
 		MUCUserPayload::StatusCode status;
 		try {
 			status.code = boost::lexical_cast<int>(statusElement->getAttributes().getAttribute("code").c_str());

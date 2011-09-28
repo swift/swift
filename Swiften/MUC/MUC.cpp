@@ -96,7 +96,7 @@ void MUC::handleIncomingPresence(Presence::ref presence) {
 
 	MUCUserPayload::ref mucPayload;
 	foreach (MUCUserPayload::ref payload, presence->getPayloads<MUCUserPayload>()) {
-		if (payload->getItems().size() > 0 || payload->getStatusCodes().size() > 0) {
+		if (!payload->getItems().empty() || !payload->getStatusCodes().empty()) {
 			mucPayload = payload;
 		}
 	}
@@ -199,7 +199,6 @@ void MUC::handleIncomingPresence(Presence::ref presence) {
 			}
 		}
 	}
-
 }
 
 void MUC::handleCreationConfigResponse(MUCOwnerPayload::ref /*unused*/, ErrorPayload::ref error) {
