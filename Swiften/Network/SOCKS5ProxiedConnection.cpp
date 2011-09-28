@@ -86,15 +86,15 @@ void SOCKS5ProxiedConnection::handleConnectionConnectFinished(bool error) {
 	}
 }
 
-void SOCKS5ProxiedConnection::handleDataRead(const SafeByteArray& data) {
+void SOCKS5ProxiedConnection::handleDataRead(boost::shared_ptr<SafeByteArray> data) {
 	SafeByteArray socksConnect;
 	boost::asio::ip::address rawAddress = server_.getAddress().getRawAddress();
 	assert(rawAddress.is_v4() || rawAddress.is_v6());
 	if (!connected_) {
 		if (proxyState_ == ProxyAuthenticating) {
 			SWIFT_LOG(debug) << "ProxyAuthenticating response received, reply with the connect BYTEs" << std::endl;
-			unsigned char choosenMethod = static_cast<unsigned char> (data[1]);
-			if (data[0] == 0x05 && choosenMethod != 0xFF) {
+			unsigned char choosenMethod = static_cast<unsigned char> ((*data)[1]);
+			if ((*data)[0] == 0x05 && choosenMethod != 0xFF) {
 				switch(choosenMethod) { // use the correct Method
 					case 0x00:
 						try {
@@ -134,7 +134,7 @@ void SOCKS5ProxiedConnection::handleDataRead(const SafeByteArray& data) {
 		}
 		else if (proxyState_ == ProxyConnecting) {
 			SWIFT_LOG(debug) << "Connect response received, check if successfully." << std::endl;
-			SWIFT_LOG(debug) << "Errorbyte: 0x" << std::hex << static_cast<int> (data[1]) << std::dec << std::endl;
+			SWIFT_LOG(debug) << "Errorbyte: 0x" << std::hex << static_cast<int> ((*data)[1]) << std::dec << std::endl;
 			/*
 
 			data.at(1) can be one of the following:
@@ -149,14 +149,14 @@ void SOCKS5ProxiedConnection::handleDataRead(const SafeByteArray& data) {
 			0x08 	Address type not supported (ATYP)
 			0x09 bis 0xFF 	unassigned
 			*/
-			if (data[0] == 0x05 && data[1] == 0x0) {
+			if ((*data)[0] == 0x05 && (*data)[1] == 0x0) {
 				SWIFT_LOG(debug) << "Successfully connected the server via the proxy." << std::endl;
 				connected_ = true;
 				onConnectFinished(false);
 				return;
 			}
 			else {
-				std::cerr << "SOCKS Proxy returned an error: " << std::hex << data[1] << std::endl;
+				std::cerr << "SOCKS Proxy returned an error: " << std::hex << (*data)[1] << std::endl;
 			}
 			return;
 		}

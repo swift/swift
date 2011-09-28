@@ -66,7 +66,7 @@ private:
 	void authenticate();
 
 	void handleConnectFinished(bool error);
-	void handleDataRead(const SafeByteArray&);
+	void handleDataRead(boost::shared_ptr<SafeByteArray>);
 	void handleDisconnected(const boost::optional<Connection::Error>&);
 	void handleWeFailedTimeout();
 

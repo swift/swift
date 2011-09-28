@@ -22,6 +22,9 @@ namespace Swift {
 			}
 
 		private:
+			void handleDataRead(boost::shared_ptr<SafeByteArray>);
+
+		private:
 			boost::shared_ptr<Connection> connection;
 	};
 }

@@ -164,7 +164,7 @@ public:
 		clientSession->startReceiving(output);
 
 		ByteArray transferData = generateRandomByteArray(1024);
-		connection->onDataRead(createSafeByteArray(transferData.data(), transferData.size()));
+		connection->onDataRead(createSafeByteArrayRef(transferData.data(), transferData.size()));
 		CPPUNIT_ASSERT_EQUAL(transferData, output->getData());
 	}
 
@@ -212,35 +212,35 @@ private:
 
 	// Server responses
 	void serverRespondHelloOK() {
-		connection->onDataRead(createSafeByteArray("\x05\00", 2));
+		connection->onDataRead(createSafeByteArrayRef("\x05\00", 2));
 	}
 
 	void serverRespondHelloAuthFail() {
-		connection->onDataRead(createSafeByteArray("\x05\xFF", 2));
+		connection->onDataRead(createSafeByteArrayRef("\x05\xFF", 2));
 	}
 
 	void serverRespondRequestOK() {
-		SafeByteArray dataToSend = createSafeByteArray("\x05\x00\x00\x03", 4);
-		append(dataToSend, createSafeByteArray(destination.size()));
-		append(dataToSend, createSafeByteArray(destination));
-		append(dataToSend, createSafeByteArray("\x00", 1));
+		boost::shared_ptr<SafeByteArray> dataToSend = createSafeByteArrayRef("\x05\x00\x00\x03", 4);
+		append(*dataToSend, createSafeByteArray(destination.size()));
+		append(*dataToSend, createSafeByteArray(destination));
+		append(*dataToSend, createSafeByteArray("\x00", 1));
 		connection->onDataRead(dataToSend);
 	}
 
 	void serverRespondRequestFail() {
-		SafeByteArray correctData = createSafeByteArray("\x05\x00\x00\x03", 4);
-		append(correctData, createSafeByteArray(destination.size()));
-		append(correctData, createSafeByteArray(destination));
-		append(correctData, createSafeByteArray("\x00", 1));
+		boost::shared_ptr<SafeByteArray> correctData = createSafeByteArrayRef("\x05\x00\x00\x03", 4);
+		append(*correctData, createSafeByteArray(destination.size()));
+		append(*correctData, createSafeByteArray(destination));
+		append(*correctData, createSafeByteArray("\x00", 1));
 
-		SafeByteArray dataToSend;
+		boost::shared_ptr<SafeByteArray> dataToSend;
 		//ByteArray failingData = Hexify::unhexify("8417947d1d305c72c11520ea7d2c6e787396705e72c312c6ccc3f66613d7cae1b91b7ab48e8b59a17d559c15fb51");
 		//append(dataToSend, failingData);
 		//SWIFT_LOG(debug) << "hexed: " << Hexify::hexify(failingData) << std::endl;
 		do {
-			ByteArray rndArray = generateRandomByteArray(correctData.size());
-			dataToSend = createSafeByteArray(rndArray.data(), rndArray.size());
-		} while (dataToSend == correctData);
+			ByteArray rndArray = generateRandomByteArray(correctData->size());
+			dataToSend = createSafeByteArrayRef(rndArray.data(), rndArray.size());
+		} while (*dataToSend == *correctData);
 		connection->onDataRead(dataToSend);
 	}
 

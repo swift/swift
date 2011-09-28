@@ -65,13 +65,13 @@ HostAddressPort SOCKS5BytestreamServerSession::getAddressPort() const {
 	return connection->getLocalAddress();
 }
 
-void SOCKS5BytestreamServerSession::handleDataRead(const SafeByteArray& data) {
+void SOCKS5BytestreamServerSession::handleDataRead(boost::shared_ptr<SafeByteArray> data) {
 	if (state != ReadingData) {
-		append(unprocessedData, data);
+		append(unprocessedData, *data);
 		process();
 	} else {
-		writeBytestream->write(createByteArray(vecptr(data), data.size()));
-		onBytesReceived(data.size());
+		writeBytestream->write(createByteArray(vecptr(*data), data->size()));
+		onBytesReceived(data->size());
 	}
 }
 

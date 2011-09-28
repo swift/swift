@@ -36,7 +36,7 @@ namespace Swift {
 		public:
 			boost::signal<void (bool /* error */)> onConnectFinished;
 			boost::signal<void (const boost::optional<Error>&)> onDisconnected;
-			boost::signal<void (const SafeByteArray&)> onDataRead;
+			boost::signal<void (boost::shared_ptr<SafeByteArray>)> onDataRead;
 			boost::signal<void ()> onDataWritten;
 	};
 }

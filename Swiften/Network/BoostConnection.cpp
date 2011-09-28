@@ -13,6 +13,7 @@
 #include <boost/thread.hpp>
 #include <boost/asio/placeholders.hpp>
 #include <boost/asio/write.hpp>
+#include <boost/smart_ptr/make_shared.hpp>
 
 #include <Swiften/Base/Log.h>
 #include <Swiften/Base/Algorithm.h>
@@ -50,7 +51,7 @@ class SharedBuffer {
 // -----------------------------------------------------------------------------
 
 BoostConnection::BoostConnection(boost::shared_ptr<boost::asio::io_service> ioService, EventLoop* eventLoop) :
-		eventLoop(eventLoop), ioService(ioService), socket_(*ioService), readBuffer_(BUFFER_SIZE), writing_(false) {
+		eventLoop(eventLoop), ioService(ioService), socket_(*ioService), writing_(false) {
 }
 
 BoostConnection::~BoostConnection() {
@@ -108,16 +109,17 @@ void BoostConnection::handleConnectFinished(const boost::system::error_code& err
 }
 
 void BoostConnection::doRead() {
+	readBuffer_ = boost::make_shared<SafeByteArray>(BUFFER_SIZE);
 	socket_.async_read_some(
-			boost::asio::buffer(readBuffer_),
+			boost::asio::buffer(*readBuffer_),
 			boost::bind(&BoostConnection::handleSocketRead, shared_from_this(), boost::asio::placeholders::error, boost::asio::placeholders::bytes_transferred));
 }
 
 void BoostConnection::handleSocketRead(const boost::system::error_code& error, size_t bytesTransferred) {
 	SWIFT_LOG(debug) << "Socket read " << error << std::endl;
 	if (!error) {
-		eventLoop->postEvent(boost::bind(boost::ref(onDataRead), createSafeByteArray(&readBuffer_[0], bytesTransferred)), shared_from_this());
-		std::fill(readBuffer_.begin(), readBuffer_.end(), 0);
+		readBuffer_->resize(bytesTransferred);
+		eventLoop->postEvent(boost::bind(boost::ref(onDataRead), readBuffer_), shared_from_this());
 		doRead();
 	}
 	else if (/*error == boost::asio::error::eof ||*/ error == boost::asio::error::operation_aborted) {

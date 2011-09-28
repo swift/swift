@@ -209,15 +209,15 @@ void SOCKS5BytestreamClientSession::handleConnectFinished(bool error) {
 	}
 }
 
-void SOCKS5BytestreamClientSession::handleDataRead(const SafeByteArray& data) {
-	SWIFT_LOG(debug) << "state: " << state << " data.size() = " << data.size() << std::endl;
+void SOCKS5BytestreamClientSession::handleDataRead(boost::shared_ptr<SafeByteArray> data) {
+	SWIFT_LOG(debug) << "state: " << state << " data.size() = " << data->size() << std::endl;
 	if (state != Reading) {
-		append(unprocessedData, data);
+		append(unprocessedData, *data);
 		process();
 	}
 	else {
-		writeBytestream->write(createByteArray(vecptr(data), data.size()));
-		onBytesReceived(data.size());
+		writeBytestream->write(createByteArray(vecptr(*data), data->size()));
+		onBytesReceived(data->size());
 	}
 }
 

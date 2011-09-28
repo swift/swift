@@ -131,8 +131,8 @@ class BoostConnectionTest : public CppUnit::TestFixture {
 			connection->write(createSafeByteArray("\r\n\r\n")); // Temporarily, while we don't have an xmpp server running on ipv6
 		}
 
-		void handleDataRead(const SafeByteArray& data) {
-			append(receivedData, data);
+		void handleDataRead(boost::shared_ptr<SafeByteArray> data) {
+			append(receivedData, *data);
 		}
 
 		void handleDisconnected() {

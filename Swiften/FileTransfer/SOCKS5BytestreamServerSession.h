@@ -52,7 +52,7 @@ namespace Swift {
 		private:
 			void finish(bool error);
 			void process();
-			void handleDataRead(const SafeByteArray&);
+			void handleDataRead(boost::shared_ptr<SafeByteArray>);
 			void handleDisconnected(const boost::optional<Connection::Error>&);
 			void sendData();
 

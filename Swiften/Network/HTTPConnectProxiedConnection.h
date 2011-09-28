@@ -41,7 +41,7 @@ namespace Swift {
 			HTTPConnectProxiedConnection(ConnectionFactory* connectionFactory, HostAddressPort proxy);
 
 			void handleConnectionConnectFinished(bool error);
-			void handleDataRead(const SafeByteArray& data);
+			void handleDataRead(boost::shared_ptr<SafeByteArray> data);
 			void handleDisconnected(const boost::optional<Error>& error);
 
 		private:

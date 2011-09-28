@@ -10,5 +10,6 @@ if env["TEST"] :
 
 	if env["SCONS_STAGE"] == "build" :
 			checker_env = env.Clone()
+			checker_env.MergeFlags(env["BOOST_FLAGS"])
 			checker_env.MergeFlags(env["CPPUNIT_FLAGS"])
 			checker_env.Library("Checker", ["checker.cpp", "IO.cpp"])

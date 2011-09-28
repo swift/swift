@@ -59,7 +59,7 @@ namespace Swift {
 			EventLoop* eventLoop;
 			boost::shared_ptr<boost::asio::io_service> ioService;
 			boost::asio::ip::tcp::socket socket_;
-			SafeByteArray readBuffer_;
+			boost::shared_ptr<SafeByteArray> readBuffer_;
 			boost::mutex writeMutex_;
 			bool writing_;
 			SafeByteArray writeQueue_;
