@@ -35,7 +35,7 @@ class NullNATTraversalForwardPortRequest : public NATTraversalForwardPortRequest
 		}
 
 		virtual void run() {
-			eventLoop->postEvent(boost::bind(boost::ref(onResult), boost::optional<PortMapping>()));
+			eventLoop->postEvent(boost::bind(boost::ref(onResult), boost::optional<NATPortMapping>()));
 		}
 
 	private:
@@ -62,11 +62,11 @@ boost::shared_ptr<NATTraversalGetPublicIPRequest> NullNATTraverser::createGetPub
 	return boost::make_shared<NullNATTraversalGetPublicIPRequest>(eventLoop);
 }
 
-boost::shared_ptr<NATTraversalForwardPortRequest> NullNATTraverser::createForwardPortRequest(unsigned int, unsigned int) {
+boost::shared_ptr<NATTraversalForwardPortRequest> NullNATTraverser::createForwardPortRequest(int, int) {
 	return boost::make_shared<NullNATTraversalForwardPortRequest>(eventLoop);
 }
 
-boost::shared_ptr<NATTraversalRemovePortForwardingRequest> NullNATTraverser::createRemovePortForwardingRequest(unsigned int, unsigned int) {
+boost::shared_ptr<NATTraversalRemovePortForwardingRequest> NullNATTraverser::createRemovePortForwardingRequest(int, int) {
 	return boost::make_shared<NullNATTraversalRemovePortForwardingRequest>(eventLoop);
 }
 

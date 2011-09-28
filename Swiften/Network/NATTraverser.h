@@ -18,7 +18,7 @@ namespace Swift {
 			virtual ~NATTraverser();
 
 			virtual boost::shared_ptr<NATTraversalGetPublicIPRequest> createGetPublicIPRequest() = 0;
-			virtual boost::shared_ptr<NATTraversalForwardPortRequest> createForwardPortRequest(unsigned int localPort, unsigned int publicPort) = 0;
-			virtual boost::shared_ptr<NATTraversalRemovePortForwardingRequest> createRemovePortForwardingRequest(unsigned int localPort, unsigned int publicPort) = 0;
+			virtual boost::shared_ptr<NATTraversalForwardPortRequest> createForwardPortRequest(int localPort, int publicPort) = 0;
+			virtual boost::shared_ptr<NATTraversalRemovePortForwardingRequest> createRemovePortForwardingRequest(int localPort, int publicPort) = 0;
 	};
 }

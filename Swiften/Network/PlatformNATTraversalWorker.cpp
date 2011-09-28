@@ -7,18 +7,94 @@
 #include "PlatformNATTraversalWorker.h"
 
 #include <boost/smart_ptr/make_shared.hpp>
+#include <boost/enable_shared_from_this.hpp>
+
 #include <Swiften/Base/Log.h>
-#include <Swiften/Network/UPnPNATTraversalGetPublicIPRequest.h>
-#include <Swiften/Network/UPnPNATTraversalForwardPortRequest.h>
-#include <Swiften/Network/UPnPNATTraversalRemovePortForwardingRequest.h>
-#include <Swiften/Network/NATPMPNATTraversalGetPublicIPRequest.h>
-#include <Swiften/Network/NATPMPNATTraversalForwardPortRequest.h>
-#include <Swiften/Network/NATPMPNATTraversalRemovePortForwardingRequest.h>
+#include <Swiften/Network/NATTraversalGetPublicIPRequest.h>
+#include <Swiften/Network/NATTraversalForwardPortRequest.h>
+#include <Swiften/Network/NATTraversalRemovePortForwardingRequest.h>
+#include <Swiften/Network/NATPMPInterface.h>
+#include <Swiften/Network/MiniUPnPInterface.h>
 
 namespace Swift {
 
-PlatformNATTraversalWorker::PlatformNATTraversalWorker(EventLoop* eventLoop) : backendType(NotYetDecided), eventLoop(eventLoop), stopRequested(false) {
-	checkAvailableNATTraversalProtocols();
+class PlatformNATTraversalRequest : public boost::enable_shared_from_this<PlatformNATTraversalRequest> {
+	public:
+		typedef boost::shared_ptr<PlatformNATTraversalRequest> ref;
+
+	public:
+		PlatformNATTraversalRequest(PlatformNATTraversalWorker* worker) : worker(worker) {
+		}
+
+		virtual ~PlatformNATTraversalRequest() {
+		}
+
+		virtual void doRun() {
+			worker->addRequestToQueue(shared_from_this());
+		}
+
+		NATTraversalInterface* getNATTraversalInterface() const {
+			return worker->getNATTraversalInterface();
+		}
+
+
+		virtual void runBlocking() = 0;
+
+	private:
+		PlatformNATTraversalWorker* worker;
+};
+
+class PlatformNATTraversalGetPublicIPRequest : public NATTraversalGetPublicIPRequest, public PlatformNATTraversalRequest {
+	public:
+		PlatformNATTraversalGetPublicIPRequest(PlatformNATTraversalWorker* worker) : PlatformNATTraversalRequest(worker) {
+		}
+
+		virtual void run() {
+			doRun();
+		}
+
+		virtual void runBlocking() {
+			onResult(getNATTraversalInterface()->getPublicIP());
+		}
+};
+
+class PlatformNATTraversalForwardPortRequest : public NATTraversalForwardPortRequest, public PlatformNATTraversalRequest {
+	public:
+		PlatformNATTraversalForwardPortRequest(PlatformNATTraversalWorker* worker, unsigned int localIP, unsigned int publicIP) : PlatformNATTraversalRequest(worker), localIP(localIP), publicIP(publicIP) {
+		}
+
+		virtual void run() {
+			doRun();
+		}
+
+		virtual void runBlocking() {
+			onResult(getNATTraversalInterface()->addPortForward(localIP, publicIP));
+		}
+
+	private:
+		unsigned int localIP;
+		unsigned int publicIP;
+};
+
+class PlatformNATTraversalRemovePortForwardingRequest : public NATTraversalRemovePortForwardingRequest, public PlatformNATTraversalRequest {
+	public:
+		PlatformNATTraversalRemovePortForwardingRequest(PlatformNATTraversalWorker* worker, const NATPortMapping& mapping) : PlatformNATTraversalRequest(worker), mapping(mapping) {
+		}
+
+		virtual void run() {
+			doRun();
+		}
+
+		virtual void runBlocking() {
+			onResult(getNATTraversalInterface()->removePortForward(mapping));
+		}
+
+	private:
+		NATPortMapping mapping;
+};
+
+PlatformNATTraversalWorker::PlatformNATTraversalWorker(EventLoop* eventLoop) : eventLoop(eventLoop), stopRequested(false), natPMPSupported(boost::logic::indeterminate), natPMPInterface(NULL), miniUPnPSupported(boost::logic::indeterminate), miniUPnPInterface(NULL) {
+	nullNATTraversalInterface = new NullNATTraversalInterface();
 	thread = new boost::thread(boost::bind(&PlatformNATTraversalWorker::run, this));
 }
 
@@ -27,57 +103,43 @@ PlatformNATTraversalWorker::~PlatformNATTraversalWorker() {
 	addRequestToQueue(boost::shared_ptr<PlatformNATTraversalRequest>());
 	thread->join();
 	delete thread;
+	delete natPMPInterface;
+	delete miniUPnPInterface;
+	delete nullNATTraversalInterface;
+}
+
+NATTraversalInterface* PlatformNATTraversalWorker::getNATTraversalInterface() const {
+	if (boost::logic::indeterminate(miniUPnPSupported)) {
+		miniUPnPInterface = new MiniUPnPInterface();
+		miniUPnPSupported = miniUPnPInterface->isAvailable();
+	}
+	if (miniUPnPSupported) {
+		return miniUPnPInterface;
+	}
+
+
+	if (boost::logic::indeterminate(natPMPSupported)) {
+		natPMPInterface = new NATPMPInterface();
+		natPMPSupported = natPMPInterface->isAvailable();
+	}
+	if (natPMPSupported) {
+		return natPMPInterface;
+	}
+
+	return nullNATTraversalInterface;
 }
 
 boost::shared_ptr<NATTraversalGetPublicIPRequest> PlatformNATTraversalWorker::createGetPublicIPRequest() {
-	switch(backendType) {
-		case UPnP:
-			return boost::make_shared<UPnPNATTraversalGetPublicIPRequest>(this);
-		case NATPMP:
-			return boost::make_shared<NATPMPNATTraversalGetPublicIPRequest>(this);
-		case NotYetDecided:
-		case None:
-			break;
-	}
-	return boost::shared_ptr<NATTraversalGetPublicIPRequest>();
+	return boost::make_shared<PlatformNATTraversalGetPublicIPRequest>(this);
 }
 
-boost::shared_ptr<NATTraversalForwardPortRequest> PlatformNATTraversalWorker::createForwardPortRequest(unsigned int localPort, unsigned int publicPort) {
-	NATTraversalForwardPortRequest::PortMapping mapping;
-	mapping.protocol = NATTraversalForwardPortRequest::PortMapping::TCP;
-	mapping.leaseInSeconds = 60 * 60 * 24;
-	mapping.localPort = localPort;
-	mapping.publicPort = publicPort;
-
-	switch(backendType) {
-		case UPnP:
-			return boost::make_shared<UPnPNATTraversalForwardPortRequest>(mapping, this);
-		case NATPMP:
-			return boost::make_shared<NATPMPNATTraversalForwardPortRequest>(mapping, this);
-		case NotYetDecided:
-		case None:
-			break;
-	}
-	return boost::shared_ptr<NATTraversalForwardPortRequest>();
+boost::shared_ptr<NATTraversalForwardPortRequest> PlatformNATTraversalWorker::createForwardPortRequest(int localPort, int publicPort) {
+	return boost::make_shared<PlatformNATTraversalForwardPortRequest>(this, localPort, publicPort);
 }
 
-boost::shared_ptr<NATTraversalRemovePortForwardingRequest> PlatformNATTraversalWorker::createRemovePortForwardingRequest(unsigned int localPort, unsigned int publicPort) {
-	NATTraversalRemovePortForwardingRequest::PortMapping mapping;
-	mapping.protocol = NATTraversalRemovePortForwardingRequest::PortMapping::TCP;
-	mapping.leaseInSeconds = 60 * 60 * 24;
-	mapping.localPort = localPort;
-	mapping.publicPort = publicPort;
-
-	switch(backendType) {
-		case UPnP:
-			return boost::make_shared<UPnPNATTraversalRemovePortForwardingRequest>(mapping, this);
-		case NATPMP:
-			return boost::make_shared<NATPMPNATTraversalRemovePortForwardingRequest>(mapping, this);
-		case NotYetDecided:
-		case None:
-			break;
-	}
-	return boost::shared_ptr<NATTraversalRemovePortForwardingRequest>();
+boost::shared_ptr<NATTraversalRemovePortForwardingRequest> PlatformNATTraversalWorker::createRemovePortForwardingRequest(int localPort, int publicPort) {
+	NATPortMapping mapping(localPort, publicPort, NATPortMapping::TCP); // FIXME
+	return boost::make_shared<PlatformNATTraversalRemovePortForwardingRequest>(this, mapping);
 }
 
 void PlatformNATTraversalWorker::run() {
@@ -105,35 +167,6 @@ void PlatformNATTraversalWorker::addRequestToQueue(PlatformNATTraversalRequest::
 		queue.push_back(request);
 	}
 	queueNonEmpty.notify_one();
-}
-
-void PlatformNATTraversalWorker::checkAvailableNATTraversalProtocols() {
-	boost::shared_ptr<UPnPNATTraversalGetPublicIPRequest> upnpRequest = boost::make_shared<UPnPNATTraversalGetPublicIPRequest>(this);
-	upnpRequest->onResult.connect(boost::bind(&PlatformNATTraversalWorker::handleUPnPGetPublicIPResult, this, _1));
-
-	boost::shared_ptr<NATPMPNATTraversalGetPublicIPRequest> natpmpRequest = boost::make_shared<NATPMPNATTraversalGetPublicIPRequest>(this);
-	natpmpRequest->onResult.connect(boost::bind(&PlatformNATTraversalWorker::handleNATPMPGetPublicIPResult, this, _1));
-
-	upnpRequest->run();
-	natpmpRequest->run();
-}
-
-void PlatformNATTraversalWorker::handleUPnPGetPublicIPResult(boost::optional<HostAddress> address) {
-	if (backendType == NotYetDecided || backendType == None) {
-		if (address) {
-			SWIFT_LOG(debug) << "Found UPnP IGD in the local network." << std::endl;
-			backendType = UPnP;
-		}
-	}
-}
-
-void PlatformNATTraversalWorker::handleNATPMPGetPublicIPResult(boost::optional<HostAddress> address) {
-	if (backendType == NotYetDecided || backendType == None) {
-		if (address) {
-			SWIFT_LOG(debug) << "Found NAT-PMP device in the local network." << std::endl;
-			backendType = NATPMP;
-		}
-	}
 }
 
 }

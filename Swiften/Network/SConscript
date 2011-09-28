@@ -47,6 +47,7 @@ sourceList = [
 			"NATTraversalGetPublicIPRequest.cpp",
 			"NATTraversalForwardPortRequest.cpp",
 			"NATTraversalRemovePortForwardingRequest.cpp",
+			"NATTraversalInterface.cpp",
 	]
 
 if myenv.get("HAVE_CARES", False) :
@@ -75,22 +76,17 @@ if myenv["experimental"] :
 	natpmp_env = myenv.Clone()
 	natpmp_env.Append(CPPDEFINES = natpmp_env["LIBNATPMP_FLAGS"].get("INTERNAL_CPPDEFINES", []))
 	objects += natpmp_env.SwiftenObject([
-				"NATPMPNATTraversalGetPublicIPRequest.cpp",
-				"NATPMPNATTraversalForwardPortRequest.cpp",
-				"NATPMPNATTraversalRemovePortForwardingRequest.cpp"
+				"NATPMPInterface.cpp",
 			])
 
 	# LibMINIUPnP classes
 	upnp_env = myenv.Clone()
 	upnp_env.Append(CPPDEFINES = upnp_env["LIBMINIUPNPC_FLAGS"].get("INTERNAL_CPPDEFINES", []))
 	objects += upnp_env.SwiftenObject([
-				"UPnPNATTraversalGetPublicIPRequest.cpp",
-				"UPnPNATTraversalForwardPortRequest.cpp",
-				"UPnPNATTraversalRemovePortForwardingRequest.cpp",
+				"MiniUPnPInterface.cpp",
 			])
 	objects += myenv.SwiftenObject([
 				"PlatformNATTraversalWorker.cpp",
-				"PlatformNATTraversalRequest.cpp",
-				])
+			])
 
 swiften_env.Append(SWIFTEN_OBJECTS = [objects])

@@ -92,7 +92,7 @@ void ConnectivityManager::natTraversalGetPublicIPResult(boost::optional<HostAddr
 	}
 }
 
-void ConnectivityManager::natTraversalForwardPortResult(boost::optional<NATTraversalForwardPortRequest::PortMapping> mapping) {
+void ConnectivityManager::natTraversalForwardPortResult(boost::optional<NATPortMapping> mapping) {
 	if (mapping) {
 		SWIFT_LOG(debug) << "Mapping port was successful." << std::endl;
 	} else {

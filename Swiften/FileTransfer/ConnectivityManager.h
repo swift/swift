@@ -14,6 +14,7 @@
 #include <Swiften/Network/HostAddressPort.h>
 #include <Swiften/Network/NATTraverser.h>
 #include <Swiften/Network/NATTraversalForwardPortRequest.h>
+#include <Swiften/Network/NATPortMapping.h>
 
 namespace Swift {
 
@@ -32,7 +33,7 @@ public:
 
 private:
 	void natTraversalGetPublicIPResult(boost::optional<HostAddress> address);
-	void natTraversalForwardPortResult(boost::optional<NATTraversalForwardPortRequest::PortMapping> mapping);
+	void natTraversalForwardPortResult(boost::optional<NATPortMapping> mapping);
 
 private:
 	NATTraverser* natTraversalWorker;

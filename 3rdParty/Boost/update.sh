@@ -32,9 +32,10 @@ fi
 	uuid/uuid_generators.hpp \
 	variant.hpp \
 	regex.hpp \
-	boost/unordered_map.hpp \
-	boost/algorithm/string.hpp \
-	boost/format.hpp \
+	unordered_map.hpp \
+	algorithm/string.hpp \
+	format.hpp \
+	logic/tribool.hpp \
 	assign/list_of.hpp \
 	$TARGET_DIR
 
