@@ -12,6 +12,8 @@
 #include <boost/optional.hpp>
 #include <Swiften/Network/HostAddress.h>
 #include <Swiften/Network/NetworkInterface.h>
+#include <Swiften/Base/foreach.h>
+#include <Swiften/Base/ByteArray.h>
 
 #include <winsock2.h>
 #include <iphlpapi.h>
@@ -20,39 +22,25 @@ namespace Swift {
 
 std::vector<NetworkInterface> WindowsNetworkEnvironment::getNetworkInterfaces()  const {
 	std::vector<NetworkInterface> result;
-	std::map<std::string,NetworkInterface> interfaces;
 
-	IP_ADAPTER_ADDRESSES preBuffer[5];
-	PIP_ADAPTER_ADDRESSES adapterStart = preBuffer;
-
-	ULONG bufferSize = sizeof(preBuffer);
-
-	ULONG flags = GAA_FLAG_INCLUDE_ALL_INTERFACES |  GAA_FLAG_INCLUDE_PREFIX | GAA_FLAG_SKIP_MULTICAST | GAA_FLAG_SKIP_DNS_SERVER;
-
-	ULONG ret = GetAdaptersAddresses(	AF_UNSPEC, flags,	NULL, adapterStart, &bufferSize);
-	if (ret == ERROR_BUFFER_OVERFLOW) {
-		adapterStart = new IP_ADAPTER_ADDRESSES[bufferSize / sizeof(IP_ADAPTER_ADDRESSES)];
-		if (!adapterStart) {
-			return result;
-		}
-		ret = GetAdaptersAddresses(AF_UNSPEC, flags, NULL, adapterStart, &bufferSize);
-	}
+	std::vector<IP_ADAPTER_ADDRESSES> adapters;
+	ULONG bufferSize = 0;
+	ULONG ret;
+	ULONG flags = GAA_FLAG_INCLUDE_ALL_INTERFACES | GAA_FLAG_INCLUDE_PREFIX | GAA_FLAG_SKIP_MULTICAST | GAA_FLAG_SKIP_DNS_SERVER;
+	while ((ret = GetAdaptersAddresses(AF_UNSPEC, flags, NULL, vecptr(adapters), &bufferSize)) == ERROR_BUFFER_OVERFLOW) {
+		adapters.resize(bufferSize / sizeof(IP_ADAPTER_ADDRESSES));
+	};
 	if (ret != ERROR_SUCCESS) {
-		if (adapterStart != preBuffer) {
-			delete adapterStart;
-		}
 		return result;
 	}
 
-	for (PIP_ADAPTER_ADDRESSES adapter = adapterStart; adapter; adapter = adapter->Next) {
+	std::map<std::string,NetworkInterface> interfaces;
+	for (IP_ADAPTER_ADDRESSES* adapter = vecptr(adapters); adapter; adapter = adapter->Next) {
 		std::string name(adapter->AdapterName);
-
 		if (adapter->OperStatus != IfOperStatusUp) {
 			continue;
 		}
-
-		// iterate over addresses
-		for (PIP_ADAPTER_UNICAST_ADDRESS address = adapter->FirstUnicastAddress;  address; address = address->Next) {
+		for (IP_ADAPTER_UNICAST_ADDRESS* address = adapter->FirstUnicastAddress; address; address = address->Next) {
 			boost::optional<HostAddress> hostAddress;
 			if (address->Address.lpSockaddr->sa_family == PF_INET) {
 				sockaddr_in* sa = reinterpret_cast<sockaddr_in*>(address->Address.lpSockaddr);
@@ -67,10 +55,6 @@ std::vector<NetworkInterface> WindowsNetworkEnvironment::getNetworkInterfaces() 
 				i->second.addAddress(*hostAddress);
 			}
 		}
-	}
-
-	if (adapterStart != preBuffer) {
-		//delete adapterStart;
 	}
 
 	for (std::map<std::string,NetworkInterface>::const_iterator i = interfaces.begin(); i != interfaces.end(); ++i) {
