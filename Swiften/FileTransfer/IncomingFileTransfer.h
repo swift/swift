@@ -21,6 +21,8 @@ namespace Swift {
 			virtual ~IncomingFileTransfer();
 			
 			virtual void accept(WriteBytestream::ref) = 0;
+
 			virtual const JID& getSender() const = 0;
+			virtual const JID& getRecipient() const = 0;
 	};
 }

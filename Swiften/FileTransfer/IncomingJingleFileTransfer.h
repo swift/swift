@@ -48,7 +48,7 @@ namespace Swift {
 			};
 
 			IncomingJingleFileTransfer(
-					const JID& ourJID,
+					const JID& recipient,
 					JingleSession::ref,
 					JingleContentPayload::ref content,
 					RemoteJingleTransportCandidateSelectorFactory*,
@@ -61,6 +61,7 @@ namespace Swift {
 
 			virtual void accept(WriteBytestream::ref);
 			virtual const JID& getSender() const;
+			virtual const JID& getRecipient() const;
 			void cancel();
 
 		private:

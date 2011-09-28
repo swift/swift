@@ -124,6 +124,10 @@ const JID& IncomingJingleFileTransfer::getSender() const {
 	return session->getInitiator();
 }
 
+const JID& IncomingJingleFileTransfer::getRecipient() const {
+	return ourJID;
+}
+
 void IncomingJingleFileTransfer::cancel() {
 	session->sendTerminate(JinglePayload::Reason::Cancel);
 
