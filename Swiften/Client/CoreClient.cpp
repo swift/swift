@@ -24,6 +24,7 @@
 #include <Swiften/Client/ClientSessionStanzaChannel.h>
 #include <Swiften/Network/SOCKS5ProxiedConnectionFactory.h>
 #include <Swiften/Network/HTTPConnectProxiedConnectionFactory.h>
+#include <Swiften/Network/BOSHConnectionFactory.h>
 
 namespace Swift {
 
@@ -69,7 +70,8 @@ void CoreClient::connect(const std::string& host) {
 		proxyConnectionFactories.push_back(new HTTPConnectProxiedConnectionFactory(networkFactories->getConnectionFactory(), networkFactories->getProxyProvider()->getHTTPConnectProxy()));
 	}
 	std::vector<ConnectionFactory*> connectionFactories(proxyConnectionFactories);
-	connectionFactories.push_back(networkFactories->getConnectionFactory());
+	// connectionFactories.push_back(networkFactories->getConnectionFactory());
+	connectionFactories.push_back(new BOSHConnectionFactory(networkFactories->getConnectionFactory()));
 
 	connector_ = boost::make_shared<ChainedConnector>(host, networkFactories->getDomainNameResolver(), connectionFactories, networkFactories->getTimerFactory());
 	connector_->onConnectFinished.connect(boost::bind(&CoreClient::handleConnectorFinished, this, _1));

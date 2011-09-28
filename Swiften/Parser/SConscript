@@ -11,6 +11,7 @@ sources = [
 		"AuthChallengeParser.cpp",
 		"AuthSuccessParser.cpp",
 		"AuthResponseParser.cpp",
+		"BOSHParser.cpp",
 		"CompressParser.cpp",
 		"ElementParser.cpp",
 		"IQParser.cpp",
