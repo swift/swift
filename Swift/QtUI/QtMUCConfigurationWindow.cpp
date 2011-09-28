@@ -18,9 +18,9 @@ QtMUCConfigurationWindow::QtMUCConfigurationWindow(Form::ref form) {
 	QBoxLayout* layout = new QBoxLayout(QBoxLayout::TopToBottom, this);
 	layout->setContentsMargins(0,0,0,0);
 	layout->setSpacing(2);
-	QLabel* label = new QLabel(this);
-	label->setText(tr("Room configuration"));
-	layout->addWidget(label);
+	//QLabel* label = new QLabel(this);
+	//label->setText(tr("Room configuration"));
+	//layout->addWidget(label);
 
 	formWidget_ = NULL;
 	formWidget_ = new QtFormWidget(form, this);

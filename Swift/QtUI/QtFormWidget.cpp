@@ -13,6 +13,7 @@
 #include <QTextEdit>
 #include <QCheckBox>
 #include <QScrollArea>
+#include <qdebug.h>
 
 #include <Swift/QtUI/QtSwiftUtil.h>
 #include <Swiften/Base/foreach.h>
@@ -53,22 +54,23 @@ QListWidget* QtFormWidget::createList(FormField::ref field) {
 	QListWidget* listWidget = new QListWidget(this);
 	listWidget->setSortingEnabled(false);
 	listWidget->setSelectionMode(boost::dynamic_pointer_cast<ListMultiFormField>(field) ? QAbstractItemView::MultiSelection : QAbstractItemView::SingleSelection);
-	foreach (FormField::Option option, field->getOptions()) {
-		listWidget->addItem(option.label.c_str());
-	}
 	boost::shared_ptr<ListMultiFormField> listMultiField = boost::dynamic_pointer_cast<ListMultiFormField>(field);
 	boost::shared_ptr<ListSingleFormField> listSingleField = boost::dynamic_pointer_cast<ListSingleFormField>(field);
-	for (int i = 0; i < listWidget->count(); i++) {
-		QListWidgetItem* item = listWidget->item(i);
-		bool selected = false;
+	std::vector<bool> selected;
+	foreach (FormField::Option option, field->getOptions()) {
+		listWidget->addItem(option.label.c_str());
 		if (listSingleField) {
-			selected = (item->text() == QString(listSingleField->getValue().c_str()));
+			selected.push_back(option.value == listSingleField->getValue());
 		}
 		else if (listMultiField) {
-			std::string text = Q2PSTRING(item->text());
-			selected = (std::find(listMultiField->getValue().begin(), listMultiField->getValue().end(), text) != listMultiField->getValue().end());
+			std::string text = option.value;
+			selected.push_back(std::find(listMultiField->getValue().begin(), listMultiField->getValue().end(), text) != listMultiField->getValue().end());
 		}
-		item->setSelected(selected);
+
+	}
+	for (int i = 0; i < listWidget->count(); i++) {
+		QListWidgetItem* item = listWidget->item(i);
+		item->setSelected(selected[i]);
 	}
 	return listWidget;
 }
