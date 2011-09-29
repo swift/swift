@@ -67,13 +67,15 @@ void DefaultLocalJingleTransportCandidateGenerator::generateLocalTransportCandid
 		// get proxy candidates
 		std::vector<S5BProxyRequest::ref> proxyCandidates = s5bProxy->getS5BProxies();
 		foreach(S5BProxyRequest::ref proxy, proxyCandidates) {
-			JingleS5BTransportPayload::Candidate candidate;
-			candidate.type = JingleS5BTransportPayload::Candidate::ProxyType;
-			candidate.jid = proxy->getStreamHost().get().jid;
-			candidate.hostPort = proxy->getStreamHost().get().addressPort;
-			candidate.priority = 65536 * 10 + localPreference;
-			candidate.cid = idGenerator.generateID();
-			payL->addCandidate(candidate);
+			if (proxy->getStreamHost()) { // FIXME: Added this test, because there were cases where this wasn't initialized. Investigate this. (Remko)
+				JingleS5BTransportPayload::Candidate candidate;
+				candidate.type = JingleS5BTransportPayload::Candidate::ProxyType;
+				candidate.jid = (*proxy->getStreamHost()).jid;
+				candidate.hostPort = (*proxy->getStreamHost()).addressPort;
+				candidate.priority = 65536 * 10 + localPreference;
+				candidate.cid = idGenerator.generateID();
+				payL->addCandidate(candidate);
+			}
 		}
 
 		onLocalTransportCandidatesGenerated(payL);
