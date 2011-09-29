@@ -63,5 +63,6 @@ namespace Swift {
 			boost::mutex writeMutex_;
 			bool writing_;
 			SafeByteArray writeQueue_;
+			bool closeSocketAfterNextWrite_;
 	};
 }
