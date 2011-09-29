@@ -41,9 +41,12 @@ namespace Swift {
 
 			boost::signal<void (boost::optional<FileTransferError>)> onFinished;
 			boost::signal<void (int)> onBytesSent;
+
 		private:
 			void handleIBBResponse(IBB::ref, ErrorPayload::ref);
 			void finish(boost::optional<FileTransferError>);
+			void sendMoreData();
+			void handleDataAvailable();
 
 		private:
 			std::string id;
@@ -54,5 +57,6 @@ namespace Swift {
 			int blockSize;
 			int sequenceNumber;
 			bool active;
+			bool waitingForData;
 	};
 }

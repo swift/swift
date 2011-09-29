@@ -7,7 +7,6 @@
 #pragma once
 
 #include <vector>
-#include <cstring>
 
 #include <Swiften/Base/boost_bsignals.h>
 
@@ -15,10 +14,17 @@ namespace Swift {
 	class ReadBytestream {
 		public:
 			virtual ~ReadBytestream();
+
+			/**
+			 * Return an empty vector if no more data is available.
+			 * Use onDataAvailable signal for signaling there is data available again.
+			 */
 			virtual std::vector<unsigned char> read(size_t size) = 0;
+
 			virtual bool isFinished() const = 0;
 
 		public:
-			boost::signal<void (std::vector<unsigned char>)> onRead;
+			boost::signal<void ()> onDataAvailable;
+			boost::signal<void (const std::vector<unsigned char>&)> onRead;
 	};
 }

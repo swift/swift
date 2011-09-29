@@ -8,12 +8,13 @@
 
 #include <vector>
 
+#include <Swiften/Base/Algorithm.h>
 #include <Swiften/FileTransfer/ReadBytestream.h>
 
 namespace Swift {
 	class ByteArrayReadBytestream : public ReadBytestream {
 		public:
-			ByteArrayReadBytestream(const std::vector<unsigned char>& data) : data(data), position(0) {
+			ByteArrayReadBytestream(const std::vector<unsigned char>& data) : data(data), position(0), dataComplete(true) {
 			}
 
 			virtual std::vector<unsigned char> read(size_t size) {
@@ -29,11 +30,21 @@ namespace Swift {
 			}
 
 			virtual bool isFinished() const {
-				return position >= data.size();
+				return position >= data.size() && dataComplete;
+			}
+
+			virtual void setDataComplete(bool b) {
+				dataComplete = b;
+			}
+
+			void addData(const std::vector<unsigned char>& moreData) {
+				append(data, moreData);
+				onDataAvailable();
 			}
 
 		private:
 			std::vector<unsigned char> data;
 			size_t position;
+			bool dataComplete;
 	};
 }

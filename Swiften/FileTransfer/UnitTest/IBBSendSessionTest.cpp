@@ -26,6 +26,11 @@ class IBBSendSessionTest : public CppUnit::TestFixture {
 		CPPUNIT_TEST(testErrorResponseFinishesWithError);
 		CPPUNIT_TEST(testStopDuringSessionCloses);
 		CPPUNIT_TEST(testStopAfterFinishedDoesNotClose);
+		CPPUNIT_TEST(testDataStreamPauseStopsSendingData);
+		CPPUNIT_TEST(testDataStreamResumeAfterPauseSendsData);
+		CPPUNIT_TEST(testDataStreamResumeBeforePauseDoesNotSendData);
+		CPPUNIT_TEST(testDataStreamResumeAfterResumeDoesNotSendData);
+
 		CPPUNIT_TEST_SUITE_END();
 
 	public:
@@ -33,6 +38,7 @@ class IBBSendSessionTest : public CppUnit::TestFixture {
 			stanzaChannel = new DummyStanzaChannel();
 			iqRouter = new IQRouter(stanzaChannel);
 			bytestream = boost::shared_ptr<ByteArrayReadBytestream>(new ByteArrayReadBytestream(createByteArray("abcdefg")));
+			finished = false;
 		}
 
 		void tearDown() {
@@ -136,7 +142,66 @@ class IBBSendSessionTest : public CppUnit::TestFixture {
 
 			CPPUNIT_ASSERT_EQUAL(2, static_cast<int>(stanzaChannel->sentStanzas.size()));
 		}
-	
+
+		void testDataStreamPauseStopsSendingData() {
+			boost::shared_ptr<IBBSendSession> testling = createSession("foo@bar.com/baz");
+			bytestream->setDataComplete(false);
+			testling->setBlockSize(3);
+			testling->start();
+			stanzaChannel->onIQReceived(createIBBResult());
+			stanzaChannel->onIQReceived(createIBBResult());
+			stanzaChannel->onIQReceived(createIBBResult());
+			stanzaChannel->onIQReceived(createIBBResult());
+
+			CPPUNIT_ASSERT(!finished);
+			CPPUNIT_ASSERT(!error);
+
+			CPPUNIT_ASSERT_EQUAL(4, static_cast<int>(stanzaChannel->sentStanzas.size()));
+		}
+
+		void testDataStreamResumeAfterPauseSendsData() {
+			boost::shared_ptr<IBBSendSession> testling = createSession("foo@bar.com/baz");
+			bytestream->setDataComplete(false);
+			testling->setBlockSize(3);
+			testling->start();
+			stanzaChannel->onIQReceived(createIBBResult());
+			stanzaChannel->onIQReceived(createIBBResult());
+			stanzaChannel->onIQReceived(createIBBResult());
+			stanzaChannel->onIQReceived(createIBBResult());
+
+			bytestream->addData(createByteArray("xyz"));
+
+			CPPUNIT_ASSERT_EQUAL(5, static_cast<int>(stanzaChannel->sentStanzas.size()));
+		}
+
+		void testDataStreamResumeBeforePauseDoesNotSendData() {
+			boost::shared_ptr<IBBSendSession> testling = createSession("foo@bar.com/baz");
+			bytestream->setDataComplete(false);
+			testling->setBlockSize(3);
+			testling->start();
+			stanzaChannel->onIQReceived(createIBBResult());
+
+			bytestream->addData(createByteArray("xyz"));
+
+			CPPUNIT_ASSERT_EQUAL(2, static_cast<int>(stanzaChannel->sentStanzas.size()));
+		}
+
+		void testDataStreamResumeAfterResumeDoesNotSendData() {
+			boost::shared_ptr<IBBSendSession> testling = createSession("foo@bar.com/baz");
+			bytestream->setDataComplete(false);
+			testling->setBlockSize(3);
+			testling->start();
+			stanzaChannel->onIQReceived(createIBBResult());
+			stanzaChannel->onIQReceived(createIBBResult());
+			stanzaChannel->onIQReceived(createIBBResult());
+			stanzaChannel->onIQReceived(createIBBResult());
+
+			bytestream->addData(createByteArray("xyz"));
+			bytestream->addData(createByteArray("xuv"));
+
+			CPPUNIT_ASSERT_EQUAL(5, static_cast<int>(stanzaChannel->sentStanzas.size()));
+		}
+
 	private:
 		IQ::ref createIBBResult() {
 			return IQ::createResult(JID("baz@fum.com/dum"), stanzaChannel->sentStanzas[stanzaChannel->sentStanzas.size()-1]->getTo(), stanzaChannel->sentStanzas[stanzaChannel->sentStanzas.size()-1]->getID(), boost::shared_ptr<IBB>());

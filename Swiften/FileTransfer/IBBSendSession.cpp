@@ -14,10 +14,12 @@
 
 namespace Swift {
 
-IBBSendSession::IBBSendSession(const std::string& id, const JID& from, const JID& to, boost::shared_ptr<ReadBytestream> bytestream, IQRouter* router) : id(id), from(from), to(to), bytestream(bytestream), router(router), blockSize(4096), sequenceNumber(0), active(false) {
+IBBSendSession::IBBSendSession(const std::string& id, const JID& from, const JID& to, boost::shared_ptr<ReadBytestream> bytestream, IQRouter* router) : id(id), from(from), to(to), bytestream(bytestream), router(router), blockSize(4096), sequenceNumber(0), active(false), waitingForData(false) {
+	bytestream->onDataAvailable.connect(boost::bind(&IBBSendSession::handleDataAvailable, this));
 }
 
 IBBSendSession::~IBBSendSession() {
+	bytestream->onDataAvailable.disconnect(boost::bind(&IBBSendSession::handleDataAvailable, this));
 }
 
 void IBBSendSession::start() {
@@ -37,17 +39,7 @@ void IBBSendSession::stop() {
 void IBBSendSession::handleIBBResponse(IBB::ref, ErrorPayload::ref error) {
 	if (!error && active) {
 		if (!bytestream->isFinished()) {
-			try {
-				std::vector<unsigned char> data = bytestream->read(blockSize);
-				IBBRequest::ref request = IBBRequest::create(from, to, IBB::createIBBData(id, sequenceNumber, data), router);
-				sequenceNumber++;
-				request->onResponse.connect(boost::bind(&IBBSendSession::handleIBBResponse, this, _1, _2));
-				request->send();
-				onBytesSent(data.size());
-			}
-			catch (const BytestreamException&) {
-				finish(FileTransferError(FileTransferError::ReadError));
-			}
+			sendMoreData();
 		}
 		else {
 			finish(boost::optional<FileTransferError>());
@@ -58,9 +50,35 @@ void IBBSendSession::handleIBBResponse(IBB::ref, ErrorPayload::ref error) {
 	}
 }
 
+void IBBSendSession::sendMoreData() {
+	try {
+		std::vector<unsigned char> data = bytestream->read(blockSize);
+		if (!data.empty()) {
+			waitingForData = false;
+			IBBRequest::ref request = IBBRequest::create(from, to, IBB::createIBBData(id, sequenceNumber, data), router);
+			sequenceNumber++;
+			request->onResponse.connect(boost::bind(&IBBSendSession::handleIBBResponse, this, _1, _2));
+			request->send();
+			onBytesSent(data.size());
+		}
+		else {
+			waitingForData = true;
+		}
+	}
+	catch (const BytestreamException&) {
+		finish(FileTransferError(FileTransferError::ReadError));
+	}
+}
+
 void IBBSendSession::finish(boost::optional<FileTransferError> error) {
 	active = false;
 	onFinished(error);
+}
+
+void IBBSendSession::handleDataAvailable() {
+	if (waitingForData) {
+		sendMoreData();
+	}
 }
 
 }
