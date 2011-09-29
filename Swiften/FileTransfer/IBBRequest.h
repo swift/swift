@@ -15,12 +15,12 @@ namespace Swift {
 		public:
 			typedef boost::shared_ptr<IBBRequest> ref;
 
-			static ref create(const JID& jid, boost::shared_ptr<IBB> payload, IQRouter* router) {
-				return ref(new IBBRequest(jid, payload, router));
+			static ref create(const JID& from, const JID& to, boost::shared_ptr<IBB> payload, IQRouter* router) {
+				return ref(new IBBRequest(from, to, payload, router));
 			}
 
 		private:
-			IBBRequest(const JID& jid, boost::shared_ptr<IBB> payload, IQRouter* router) : GenericRequest<IBB>(IQ::Set, jid, payload, router) {
+			IBBRequest(const JID& from, const JID& to, boost::shared_ptr<IBB> payload, IQRouter* router) : GenericRequest<IBB>(IQ::Set, from, to, payload, router) {
 			}
 	};
 }

@@ -14,14 +14,14 @@
 
 namespace Swift {
 
-IBBSendSession::IBBSendSession(const std::string& id, const JID& to, boost::shared_ptr<ReadBytestream> bytestream, IQRouter* router) : id(id), to(to), bytestream(bytestream), router(router), blockSize(4096), sequenceNumber(0), active(false) {
+IBBSendSession::IBBSendSession(const std::string& id, const JID& from, const JID& to, boost::shared_ptr<ReadBytestream> bytestream, IQRouter* router) : id(id), from(from), to(to), bytestream(bytestream), router(router), blockSize(4096), sequenceNumber(0), active(false) {
 }
 
 IBBSendSession::~IBBSendSession() {
 }
 
 void IBBSendSession::start() {
-	IBBRequest::ref request = IBBRequest::create(to, IBB::createIBBOpen(id, blockSize), router);
+	IBBRequest::ref request = IBBRequest::create(from, to, IBB::createIBBOpen(id, blockSize), router);
 	request->onResponse.connect(boost::bind(&IBBSendSession::handleIBBResponse, this, _1, _2));
 	active = true;
 	request->send();
@@ -29,7 +29,7 @@ void IBBSendSession::start() {
 
 void IBBSendSession::stop() {
 	if (active && router->isAvailable()) {
-		IBBRequest::create(to, IBB::createIBBClose(id), router)->send();
+		IBBRequest::create(from, to, IBB::createIBBClose(id), router)->send();
 	}
 	finish(boost::optional<FileTransferError>());
 }
@@ -39,7 +39,7 @@ void IBBSendSession::handleIBBResponse(IBB::ref, ErrorPayload::ref error) {
 		if (!bytestream->isFinished()) {
 			try {
 				std::vector<unsigned char> data = bytestream->read(blockSize);
-				IBBRequest::ref request = IBBRequest::create(to, IBB::createIBBData(id, sequenceNumber, data), router);
+				IBBRequest::ref request = IBBRequest::create(from, to, IBB::createIBBData(id, sequenceNumber, data), router);
 				sequenceNumber++;
 				request->onResponse.connect(boost::bind(&IBBSendSession::handleIBBResponse, this, _1, _2));
 				request->send();

@@ -39,12 +39,13 @@ OutgoingJingleFileTransfer::OutgoingJingleFileTransfer(JingleSession::ref sessio
 					LocalJingleTransportCandidateGeneratorFactory* localFactory,
 					IQRouter* router,
 					IDGenerator *idGenerator,
+					const JID& fromJID,
 					const JID& toJID,
 					boost::shared_ptr<ReadBytestream> readStream,
 					const StreamInitiationFileInfo &fileInfo,
 					SOCKS5BytestreamRegistry* bytestreamRegistry,
 					SOCKS5BytestreamProxy* bytestreamProxy) :
-	session(session), remoteFactory(remoteFactory), localFactory(localFactory), router(router), idGenerator(idGenerator), toJID(toJID), readStream(readStream), fileInfo(fileInfo), s5bRegistry(bytestreamRegistry), s5bProxy(bytestreamProxy), serverSession(NULL), contentID(JingleContentID(idGenerator->generateID(), JingleContentPayload::InitiatorCreator)), canceled(false) {
+	session(session), remoteFactory(remoteFactory), localFactory(localFactory), router(router), idGenerator(idGenerator), fromJID(fromJID), toJID(toJID), readStream(readStream), fileInfo(fileInfo), s5bRegistry(bytestreamRegistry), s5bProxy(bytestreamProxy), serverSession(NULL), contentID(JingleContentID(idGenerator->generateID(), JingleContentPayload::InitiatorCreator)), canceled(false) {
 	session->onSessionAcceptReceived.connect(boost::bind(&OutgoingJingleFileTransfer::handleSessionAcceptReceived, this, _1, _2, _3));
 	session->onSessionTerminateReceived.connect(boost::bind(&OutgoingJingleFileTransfer::handleSessionTerminateReceived, this, _1));
 	session->onTransportInfoReceived.connect(boost::bind(&OutgoingJingleFileTransfer::handleTransportInfoReceived, this, _1, _2));
@@ -109,7 +110,7 @@ void OutgoingJingleFileTransfer::handleSessionAcceptReceived(const JingleContent
 	JingleIBBTransportPayload::ref ibbPayload;
 	JingleS5BTransportPayload::ref s5bPayload;
 	if ((ibbPayload = boost::dynamic_pointer_cast<JingleIBBTransportPayload>(transportPayload))) {
-		ibbSession = boost::make_shared<IBBSendSession>(ibbPayload->getSessionID(), toJID, readStream, router);
+		ibbSession = boost::make_shared<IBBSendSession>(ibbPayload->getSessionID(), fromJID, toJID, readStream, router);
 		ibbSession->setBlockSize(ibbPayload->getBlockSize());
 		ibbSession->onBytesSent.connect(boost::bind(boost::ref(onProcessedBytes), _1));
 		ibbSession->onFinished.connect(boost::bind(&OutgoingJingleFileTransfer::handleTransferFinished, this, _1));
@@ -163,7 +164,7 @@ void OutgoingJingleFileTransfer::handleTransportAcceptReceived(const JingleConte
 	}
 
 	if (JingleIBBTransportPayload::ref ibbPayload = boost::dynamic_pointer_cast<JingleIBBTransportPayload>(transport)) {
-		ibbSession = boost::make_shared<IBBSendSession>(ibbPayload->getSessionID(), toJID, readStream, router);
+		ibbSession = boost::make_shared<IBBSendSession>(ibbPayload->getSessionID(), fromJID, toJID, readStream, router);
 		ibbSession->setBlockSize(ibbPayload->getBlockSize());
 		ibbSession->onBytesSent.connect(boost::bind(boost::ref(onProcessedBytes), _1));
 		ibbSession->onFinished.connect(boost::bind(&OutgoingJingleFileTransfer::handleTransferFinished, this, _1));

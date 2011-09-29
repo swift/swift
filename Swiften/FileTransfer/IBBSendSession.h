@@ -21,11 +21,19 @@ namespace Swift {
 
 	class IBBSendSession {
 		public:
-			IBBSendSession(const std::string& id, const JID& to, boost::shared_ptr<ReadBytestream> bytestream, IQRouter* router);
+			IBBSendSession(const std::string& id, const JID& from, const JID& to, boost::shared_ptr<ReadBytestream> bytestream, IQRouter* router);
 			~IBBSendSession();
 
 			void start();
 			void stop();
+
+			const JID& getSender() const {
+				return from;
+			}
+
+			const JID& getReceiver() const {
+				return to;
+			}
 
 			void setBlockSize(int blockSize) {
 				this->blockSize = blockSize;
@@ -39,6 +47,7 @@ namespace Swift {
 
 		private:
 			std::string id;
+			JID from;
 			JID to;
 			boost::shared_ptr<ReadBytestream> bytestream;
 			IQRouter* router;

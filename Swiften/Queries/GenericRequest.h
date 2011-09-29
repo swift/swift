@@ -22,6 +22,15 @@ namespace Swift {
 						Request(type, receiver, payload, router) {
 			}
 
+			GenericRequest(
+					IQ::Type type,
+					const JID& sender,
+					const JID& receiver,
+					boost::shared_ptr<Payload> payload,
+					IQRouter* router) :
+						Request(type, sender, receiver, payload, router) {
+			}
+
 			virtual void handleResponse(boost::shared_ptr<Payload> payload, ErrorPayload::ref error) {
 				onResponse(boost::dynamic_pointer_cast<PAYLOAD_TYPE>(payload), error);
 			}

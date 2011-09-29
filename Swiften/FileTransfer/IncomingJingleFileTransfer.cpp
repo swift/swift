@@ -498,7 +498,7 @@ void IncomingJingleFileTransfer::stopActiveTransport() {
 
 JingleIncomingIBBTransport::ref IncomingJingleFileTransfer::createIBBTransport(JingleIBBTransportPayload::ref ibbTransport) {
 	// TODO: getOffer() -> getOffers correction
-	return boost::make_shared<JingleIncomingIBBTransport>(session->getInitiator(), ibbTransport->getSessionID(), description->getOffers()[0].getSize(), router);
+	return boost::make_shared<JingleIncomingIBBTransport>(session->getInitiator(), getRecipient(), ibbTransport->getSessionID(), description->getOffers()[0].getSize(), router);
 }
 
 JingleContentID IncomingJingleFileTransfer::getContentID() const {

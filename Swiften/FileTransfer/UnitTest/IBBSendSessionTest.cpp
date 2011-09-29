@@ -144,7 +144,7 @@ class IBBSendSessionTest : public CppUnit::TestFixture {
 
 	private:
 		boost::shared_ptr<IBBSendSession> createSession(const std::string& to) {
-			boost::shared_ptr<IBBSendSession> session(new IBBSendSession("myid", JID(to), bytestream, iqRouter));
+			boost::shared_ptr<IBBSendSession> session(new IBBSendSession("myid", JID(), JID(to), bytestream, iqRouter));
 			session->onFinished.connect(boost::bind(&IBBSendSessionTest::handleFinished, this, _1));
 			return session;
 		}

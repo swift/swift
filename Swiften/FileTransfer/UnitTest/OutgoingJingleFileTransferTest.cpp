@@ -144,7 +144,7 @@ public:
 			fileInfo.setName("test.bin");
 			fileInfo.setHash("asdjasdas");
 			fileInfo.setSize(1024 * 1024);
-			return boost::shared_ptr<OutgoingJingleFileTransfer>(new OutgoingJingleFileTransfer(boost::shared_ptr<JingleSession>(fakeJingleSession), fakeRJTCSF.get(), fakeLJTCF.get(), iqRouter, idGen, to, stream, fileInfo, s5bRegistry, s5bProxy));
+			return boost::shared_ptr<OutgoingJingleFileTransfer>(new OutgoingJingleFileTransfer(boost::shared_ptr<JingleSession>(fakeJingleSession), fakeRJTCSF.get(), fakeLJTCF.get(), iqRouter, idGen, JID(), to, stream, fileInfo, s5bRegistry, s5bProxy));
 		}
 
 		IQ::ref createIBBRequest(IBB::ref ibb, const JID& from, const std::string& id) {

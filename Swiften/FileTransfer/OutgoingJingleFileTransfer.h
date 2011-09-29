@@ -41,7 +41,8 @@ public:
 					LocalJingleTransportCandidateGeneratorFactory*,
 					IQRouter*,
 					IDGenerator*,
-					const JID&,
+					const JID& from,
+					const JID& to,
 					boost::shared_ptr<ReadBytestream>,
 					const StreamInitiationFileInfo&,
 					SOCKS5BytestreamRegistry*,
@@ -90,6 +91,7 @@ private:
 
 	IQRouter* router;
 	IDGenerator* idGenerator;
+	JID fromJID;
 	JID toJID;
 	boost::shared_ptr<ReadBytestream> readStream;
 	StreamInitiationFileInfo fileInfo;

@@ -16,6 +16,12 @@ Request::Request(IQ::Type type, const JID& receiver, boost::shared_ptr<Payload> 
 Request::Request(IQ::Type type, const JID& receiver, IQRouter* router) : router_(router), type_(type), receiver_(receiver), sent_(false) {
 }
 
+Request::Request(IQ::Type type, const JID& sender, const JID& receiver, boost::shared_ptr<Payload> payload, IQRouter* router) : router_(router), type_(type), sender_(sender), receiver_(receiver), payload_(payload), sent_(false) {
+}
+
+Request::Request(IQ::Type type, const JID& sender, const JID& receiver, IQRouter* router) : router_(router), type_(type), sender_(sender), receiver_(receiver), sent_(false) {
+}
+
 void Request::send() {
 	assert(payload_);
 	assert(!sent_);
@@ -23,6 +29,7 @@ void Request::send() {
 
 	boost::shared_ptr<IQ> iq(new IQ(type_));
 	iq->setTo(receiver_);
+	iq->setFrom(sender_);
 	iq->addPayload(payload_);
 	id_ = router_->getNewIQID();
 	iq->setID(id_);

@@ -34,7 +34,7 @@ boost::shared_ptr<OutgoingFileTransfer> OutgoingFileTransferManager::createOutgo
 	//jsManager->getSession(receipient, idGenerator->generateID());
 	assert(jingleSession);
 	jsManager->registerOutgoingSession(from, jingleSession);
-	boost::shared_ptr<OutgoingJingleFileTransfer> jingleFT =  boost::shared_ptr<OutgoingJingleFileTransfer>(new OutgoingJingleFileTransfer(jingleSession, remoteFactory, localFactory, iqRouter, idGenerator, receipient, readBytestream, fileInfo, bytestreamRegistry, bytestreamProxy));
+	boost::shared_ptr<OutgoingJingleFileTransfer> jingleFT =  boost::shared_ptr<OutgoingJingleFileTransfer>(new OutgoingJingleFileTransfer(jingleSession, remoteFactory, localFactory, iqRouter, idGenerator, from, receipient, readBytestream, fileInfo, bytestreamRegistry, bytestreamProxy));
 	
 	// otherwise try SI
 	

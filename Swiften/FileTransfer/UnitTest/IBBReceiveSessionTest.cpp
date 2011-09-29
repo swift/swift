@@ -161,7 +161,7 @@ class IBBReceiveSessionTest : public CppUnit::TestFixture {
 		}
 
 		IBBReceiveSession* createSession(const std::string& from, const std::string& id, size_t size = 0x1000) {
-			IBBReceiveSession* session = new IBBReceiveSession(id, JID(from), size, iqRouter);
+			IBBReceiveSession* session = new IBBReceiveSession(id, JID(from), JID(), size, iqRouter);
 			session->onDataReceived.connect(boost::bind(&IBBReceiveSessionTest::handleDataReceived, this, _1));
 			session->onFinished.connect(boost::bind(&IBBReceiveSessionTest::handleFinished, this, _1));
 			return session;

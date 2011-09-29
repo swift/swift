@@ -16,7 +16,7 @@ namespace Swift {
 		public:
 			typedef boost::shared_ptr<JingleIncomingIBBTransport> ref;
 
-			JingleIncomingIBBTransport(const JID& from, const std::string& id, size_t size, IQRouter* router);
+			JingleIncomingIBBTransport(const JID& from, const JID& to, const std::string& id, size_t size, IQRouter* router);
 
 			virtual void start();
 			virtual void stop();

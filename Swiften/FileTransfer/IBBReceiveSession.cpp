@@ -69,10 +69,12 @@ class IBBReceiveSession::IBBResponder : public SetResponder<IBB> {
 IBBReceiveSession::IBBReceiveSession(
 		const std::string& id, 
 		const JID& from, 
+		const JID& to, 
 		size_t size, 
 		IQRouter* router) : 
 			id(id), 
 			from(from), 
+			to(to), 
 			size(size), 
 			router(router), 
 			active(false) {
@@ -99,7 +101,7 @@ void IBBReceiveSession::stop() {
 	responder->stop();
 	if (active) {
 		if (router->isAvailable()) {
-			IBBRequest::create(from, IBB::createIBBClose(id), router)->send();
+			IBBRequest::create(to, from, IBB::createIBBClose(id), router)->send();
 		}
 		finish(boost::optional<FileTransferError>());
 	}

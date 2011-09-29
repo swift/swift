@@ -23,12 +23,21 @@ namespace Swift {
 			IBBReceiveSession(
 					const std::string& id, 
 					const JID& from, 
+					const JID& to,
 					size_t size, 
 					IQRouter* router);
 			~IBBReceiveSession();
 
 			void start();
 			void stop();
+
+			const JID& getSender() const {
+				return from;
+			}
+
+			const JID& getReceiver() const {
+				return to;
+			}
 
 			boost::signal<void (const std::vector<unsigned char>&)> onDataReceived;
 			boost::signal<void (boost::optional<FileTransferError>)> onFinished;
@@ -43,6 +52,7 @@ namespace Swift {
 
 			std::string id;
 			JID from;
+			JID to;
 			size_t size;
 			IQRouter* router;
 			IBBResponder* responder;

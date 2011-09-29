@@ -39,6 +39,19 @@ namespace Swift {
 					const JID& receiver, 
 					boost::shared_ptr<Payload> payload, 
 					IQRouter* router);
+
+			/**
+			 * Constructs a request of a certain type to a specific receiver from a specific sender, and attaches the given
+			 * payload.
+			 */
+			Request(
+					IQ::Type type,
+					const JID& sender,
+					const JID& receiver,
+					boost::shared_ptr<Payload> payload,
+					IQRouter* router);
+
+
 			/**
 			 * Constructs a request of a certain type to a specific receiver.
 			 */
@@ -46,6 +59,16 @@ namespace Swift {
 					IQ::Type type, 
 					const JID& receiver, 
 					IQRouter* router);
+
+			/**
+			 * Constructs a request of a certain type to a specific receiver from a specific sender.
+			 */
+			Request(
+					IQ::Type type,
+					const JID& sender,
+					const JID& receiver,
+					IQRouter* router);
+
 
 			virtual void setPayload(boost::shared_ptr<Payload> payload) {
 				payload_ = payload;
@@ -64,6 +87,7 @@ namespace Swift {
 		private:
 			IQRouter* router_;
 			IQ::Type type_;
+			JID sender_;
 			JID receiver_;
 			boost::shared_ptr<Payload> payload_;
 			std::string id_;
