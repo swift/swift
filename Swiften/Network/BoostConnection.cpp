@@ -51,7 +51,7 @@ class SharedBuffer {
 // -----------------------------------------------------------------------------
 
 BoostConnection::BoostConnection(boost::shared_ptr<boost::asio::io_service> ioService, EventLoop* eventLoop) :
-	eventLoop(eventLoop), ioService(ioService), socket_(*ioService), writing_(false), closeSocketAfterNextWrite_(false) {
+		eventLoop(eventLoop), ioService(ioService), socket_(*ioService), writing_(false) {
 }
 
 BoostConnection::~BoostConnection() {
@@ -75,11 +75,10 @@ void BoostConnection::disconnect() {
 	// Mac OS X apparently exhibits a problem where closing a socket during a write could potentially go into uninterruptable sleep.
 	// See e.g. http://bugs.python.org/issue7401
 	// We therefore wait until any pending write finishes, which hopefully should fix our hang on exit during close().
-	if (writing_) {
-		closeSocketAfterNextWrite_ = true;
-	} else {
-		socket_.close();
+	while (writing_) {
+		Swift::sleep(10);
 	}
+	socket_.close();
 }
 
 void BoostConnection::write(const SafeByteArray& data) {
@@ -87,9 +86,6 @@ void BoostConnection::write(const SafeByteArray& data) {
 	if (!writing_) {
 		writing_ = true;
 		doWrite(data);
-		if (closeSocketAfterNextWrite_) {
-			socket_.close();
-		}
 	}
 	else {
 		append(writeQueue_, data);
