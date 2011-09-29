@@ -81,8 +81,7 @@ boost::optional<JID> FileTransferManagerImpl::highestPriorityJIDSupportingFileTr
 		if (pres->getPriority() > priority) {
 			// look up caps from the jid
 			DiscoInfo::ref info = capsProvider->getCaps(pres->getFrom());
-			if (info && info->hasFeature(DiscoInfo::JingleFeature) && info->hasFeature(DiscoInfo::JingleFTFeature) &&
-				info->hasFeature(DiscoInfo::JingleTransportsIBBFeature)) {
+			if (info && info->hasFeature(DiscoInfo::JingleFeature) && info->hasFeature(DiscoInfo::JingleFTFeature) && (info->hasFeature(DiscoInfo::JingleTransportsIBBFeature) || info->hasFeature(DiscoInfo::JingleTransportsS5BFeature))) {
 			
 				priority = pres->getPriority();
 				fullReceipientJID = pres->getFrom();
