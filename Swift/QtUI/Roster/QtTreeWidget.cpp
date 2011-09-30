@@ -124,7 +124,7 @@ void QtTreeWidget::dropEvent(QDropEvent *event) {
 			if (contact->supportsFeature(ContactRosterItem::FileTransferFeature)) {
 				QString filename = event->mimeData()->urls().at(0).toLocalFile();
 				if (!filename.isEmpty()) {
-					eventStream_->send(boost::make_shared<SendFileUIEvent>(contact->getJID(), filename.toStdString()));
+					eventStream_->send(boost::make_shared<SendFileUIEvent>(contact->getJID(), Q2PSTRING(filename)));
 				}
 			}
 		}

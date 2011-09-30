@@ -7,10 +7,12 @@
 #pragma once
 
 #include <boost/optional.hpp>
-#include <natpmp.h>
-
 #include <Swiften/Network/NATPortMapping.h>
 #include <Swiften/Network/NATTraversalInterface.h>
+
+// This has to be included after the previous headers, because of WIN32 macro
+// being defined somewhere.
+#include <natpmp.h>
 
 namespace Swift {
 	class NATPMPInterface : public NATTraversalInterface {

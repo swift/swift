@@ -22,6 +22,7 @@
 
 #include "QtWebView.h"
 #include "QtChatTheme.h"
+#include "QtSwiftUtil.h"
 
 
 namespace Swift {
@@ -302,7 +303,7 @@ void QtChatView::setFileTransferProgress(QString id, const int percentageDone) {
 void QtChatView::setFileTransferStatus(QString id, const ChatWindow::FileTransferState state, const QString& /* msg */) {
 	QWebElement ftElement = findDivElementWithID(document_, id);
 	if (ftElement.isNull()) {
-		SWIFT_LOG(debug) << "Tried to access FT UI via invalid id! id = " << id.toStdString() << std::endl;
+		SWIFT_LOG(debug) << "Tried to access FT UI via invalid id! id = " << Q2PSTRING(id) << std::endl;
 		return;
 	}
 

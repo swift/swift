@@ -537,7 +537,7 @@ void QtChatWindow::setFileTransferStatus(std::string id, const FileTransferState
 
 void QtChatWindow::handleFileTransferCancel(QString id) {
 	qDebug() << "QtChatWindow::handleFileTransferCancel(" << id << ")";
-	onFileTransferCancel(id.toStdString());
+	onFileTransferCancel(Q2PSTRING(id));
 }
 
 void QtChatWindow::handleFileTransferSetDescription(QString id) {
@@ -553,7 +553,7 @@ void QtChatWindow::handleFileTransferStart(QString id) {
 	qDebug() << "QtChatWindow::handleFileTransferStart(" << id << ")";
 	
 	QString text = descriptions.find(id) == descriptions.end() ? QString() : descriptions[id];
-	onFileTransferStart(id.toStdString(), text.toStdString());
+	onFileTransferStart(Q2PSTRING(id), Q2PSTRING(text));
 }
 
 void QtChatWindow::handleFileTransferAccept(QString id, QString filename) {
@@ -561,7 +561,7 @@ void QtChatWindow::handleFileTransferAccept(QString id, QString filename) {
 
 	QString path = QFileDialog::getSaveFileName(this, tr("Save File"), filename);
 	if (!path.isEmpty()) {
-		onFileTransferAccept(id.toStdString(), path.toStdString());
+		onFileTransferAccept(Q2PSTRING(id), Q2PSTRING(path));
 	}
 }
 
@@ -677,7 +677,7 @@ void QtChatWindow::dragEnterEvent(QDragEnterEvent *event) {
 
 void QtChatWindow::dropEvent(QDropEvent *event) {
 	if (event->mimeData()->urls().size() == 1) {
-		onSendFileRequest(event->mimeData()->urls().at(0).toLocalFile().toStdString());
+		onSendFileRequest(Q2PSTRING(event->mimeData()->urls().at(0).toLocalFile()));
 	} else {
 		addSystemMessage("Sending of multiple files at once isn't supported at this time.");
 	}

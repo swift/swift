@@ -12,6 +12,7 @@
 #include <Swiften/Network/NATTraversalGetPublicIPRequest.h>
 #include <Swiften/Network/NATTraversalForwardPortRequest.h>
 #include <Swiften/Network/NATTraversalRemovePortForwardingRequest.h>
+#include <Swiften/Network/PlatformNetworkEnvironment.h>
 
 using namespace Swift;
 
@@ -77,5 +78,8 @@ int main(int argc, char* argv[]) {
 		query->onResult.connect(boost::bind(&handleRemovePortForwardingRequestResponse, _1));
 		query->run();
 		eventLoop.run();
+	}
+	else if (std::string(argv[1]) == "get-local-ip") {
+		std::cout << PlatformNetworkEnvironment().getLocalAddress().toString() << std::endl;
 	}
 }

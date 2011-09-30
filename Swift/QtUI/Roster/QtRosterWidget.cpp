@@ -75,7 +75,7 @@ void QtRosterWidget::contextMenuEvent(QContextMenuEvent* event) {
 		else if (sendFile && result == sendFile) {
 			QString fileName = QFileDialog::getOpenFileName(this, tr("Send File"), "", tr("All Files (*);;"));
 			if (!fileName.isEmpty()) {
-				eventStream_->send(boost::make_shared<SendFileUIEvent>(contact->getJID(), fileName.toStdString()));
+				eventStream_->send(boost::make_shared<SendFileUIEvent>(contact->getJID(), Q2PSTRING(fileName)));
 			}
 		}
 #endif

@@ -23,19 +23,19 @@ namespace Swift {
 std::vector<NetworkInterface> WindowsNetworkEnvironment::getNetworkInterfaces()  const {
 	std::vector<NetworkInterface> result;
 
-	std::vector<IP_ADAPTER_ADDRESSES> adapters;
+	ByteArray adapters;
 	ULONG bufferSize = 0;
 	ULONG ret;
 	ULONG flags = GAA_FLAG_INCLUDE_ALL_INTERFACES | GAA_FLAG_INCLUDE_PREFIX | GAA_FLAG_SKIP_MULTICAST | GAA_FLAG_SKIP_DNS_SERVER;
-	while ((ret = GetAdaptersAddresses(AF_UNSPEC, flags, NULL, vecptr(adapters), &bufferSize)) == ERROR_BUFFER_OVERFLOW) {
-		adapters.resize(bufferSize / sizeof(IP_ADAPTER_ADDRESSES));
+	while ((ret = GetAdaptersAddresses(AF_UNSPEC, flags, NULL, reinterpret_cast<IP_ADAPTER_ADDRESSES*>(vecptr(adapters)), &bufferSize)) == ERROR_BUFFER_OVERFLOW) {
+		adapters.resize(bufferSize);
 	};
 	if (ret != ERROR_SUCCESS) {
 		return result;
 	}
 
 	std::map<std::string,NetworkInterface> interfaces;
-	for (IP_ADAPTER_ADDRESSES* adapter = vecptr(adapters); adapter; adapter = adapter->Next) {
+	for (IP_ADAPTER_ADDRESSES* adapter = reinterpret_cast<IP_ADAPTER_ADDRESSES*>(vecptr(adapters)); adapter; adapter = adapter->Next) {
 		std::string name(adapter->AdapterName);
 		if (adapter->OperStatus != IfOperStatusUp) {
 			continue;
