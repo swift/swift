@@ -4,7 +4,7 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
-#include "SOCKS5BytestreamProxyFinder.h"
+#include <Swiften/FileTransfer/SOCKS5BytestreamProxyFinder.h>
 
 #include <boost/smart_ptr/make_shared.hpp>
 #include <boost/bind.hpp>
@@ -16,13 +16,22 @@
 
 namespace Swift {
 
-SOCKS5BytestreamProxyFinder::SOCKS5BytestreamProxyFinder(const JID& service, IQRouter *iqRouter) : iqRouter(iqRouter) {
-	serviceWalker = boost::make_shared<DiscoServiceWalker>(service, iqRouter);
-	serviceWalker->onServiceFound.connect(boost::bind(&SOCKS5BytestreamProxyFinder::handleServiceFound, this, _1, _2));
+SOCKS5BytestreamProxyFinder::SOCKS5BytestreamProxyFinder(const JID& service, IQRouter *iqRouter) : service(service), iqRouter(iqRouter) {
+}
+
+SOCKS5BytestreamProxyFinder::~SOCKS5BytestreamProxyFinder() {
 }
 
 void SOCKS5BytestreamProxyFinder::start() {
+	serviceWalker = boost::make_shared<DiscoServiceWalker>(service, iqRouter);
+	serviceWalker->onServiceFound.connect(boost::bind(&SOCKS5BytestreamProxyFinder::handleServiceFound, this, _1, _2));
 	serviceWalker->beginWalk();
+}
+
+void SOCKS5BytestreamProxyFinder::stop() {
+	serviceWalker->endWalk();
+	serviceWalker->onServiceFound.disconnect(boost::bind(&SOCKS5BytestreamProxyFinder::handleServiceFound, this, _1, _2));
+	serviceWalker.reset();
 }
 
 void SOCKS5BytestreamProxyFinder::sendBytestreamQuery(const JID& jid) {

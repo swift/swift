@@ -23,7 +23,6 @@
 #include "Swiften/Elements/CapsInfo.h"
 #include "Swift/Controllers/XMPPEvents/ErrorEvent.h"
 #include "Swift/Controllers/UIEvents/UIEvent.h"
-#include "Swift/Controllers/FileTransfer/SOCKS5BytestreamProxyFinder.h"
 #include "Swiften/Client/ClientXMLTracer.h"
 
 namespace Swift {
@@ -168,6 +167,5 @@ namespace Swift {
 			static const int SecondsToWaitBeforeForceQuitting;
 			bool eagleMode_;
 			FileTransferOverview* ftOverview_;
-			SOCKS5BytestreamProxyFinder* s5bProxyFinder_;
 	};
 }

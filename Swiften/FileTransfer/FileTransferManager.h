@@ -24,7 +24,6 @@ namespace Swift {
 			virtual ~FileTransferManager();
 			
 			virtual void startListeningOnPort(int port) = 0;
-			virtual void addS5BProxy(boost::shared_ptr<S5BProxyRequest> proxy) = 0;
 
 			virtual OutgoingFileTransfer::ref createOutgoingFileTransfer(const JID& to, const boost::filesystem::path& filepath, const std::string& description, boost::shared_ptr<ReadBytestream> bytestream) = 0;
 			virtual OutgoingFileTransfer::ref createOutgoingFileTransfer(const JID& to, const std::string& filename, const std::string& description, const boost::uintmax_t sizeInBytes, const boost::posix_time::ptime& lastModified, boost::shared_ptr<ReadBytestream> bytestream) = 0;

@@ -33,7 +33,6 @@ if env["SCONS_STAGE"] == "build" :
 			"FileTransfer/FileTransferController.cpp",
 			"FileTransfer/FileTransferOverview.cpp",
 			"FileTransfer/FileTransferProgressInfo.cpp",
-			"FileTransfer/SOCKS5BytestreamProxyFinder.cpp",
 			"Roster/RosterController.cpp",
 			"Roster/RosterGroupExpandinessPersister.cpp",
 			"Roster/ContactRosterItem.cpp",

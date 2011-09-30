@@ -27,6 +27,7 @@ sources = [
 		"SOCKS5BytestreamServerSession.cpp",
 		"SOCKS5BytestreamRegistry.cpp",
 		"SOCKS5BytestreamProxy.cpp",
+		"SOCKS5BytestreamProxyFinder.cpp",
 		"IBBSendSession.cpp",
 		"IBBReceiveSession.cpp",
 		"FileTransferManager.cpp",

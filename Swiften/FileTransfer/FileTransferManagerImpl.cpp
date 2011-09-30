@@ -13,6 +13,7 @@
 #include "Swiften/Disco/EntityCapsProvider.h"
 #include <Swiften/JID/JID.h>
 #include <Swiften/Elements/StreamInitiationFileInfo.h>
+#include <Swiften/FileTransfer/SOCKS5BytestreamProxyFinder.h>
 #include <Swiften/FileTransfer/ConnectivityManager.h>
 #include <Swiften/FileTransfer/OutgoingFileTransferManager.h>
 #include <Swiften/FileTransfer/IncomingFileTransferManager.h>
@@ -30,7 +31,7 @@
 
 namespace Swift {
 
-FileTransferManagerImpl::FileTransferManagerImpl(const JID& ownFullJID, JingleSessionManager* jingleSessionManager, IQRouter* router, EntityCapsProvider* capsProvider, PresenceOracle* presOracle, ConnectionFactory* connectionFactory, ConnectionServerFactory* connectionServerFactory, TimerFactory* timerFactory, NATTraverser* natTraverser) : ownJID(ownFullJID), jingleSM(jingleSessionManager), iqRouter(router), capsProvider(capsProvider), presenceOracle(presOracle), timerFactory(timerFactory), connectionFactory(connectionFactory), connectionServerFactory(connectionServerFactory), natTraverser(natTraverser), bytestreamServer(NULL) {
+FileTransferManagerImpl::FileTransferManagerImpl(const JID& ownFullJID, JingleSessionManager* jingleSessionManager, IQRouter* router, EntityCapsProvider* capsProvider, PresenceOracle* presOracle, ConnectionFactory* connectionFactory, ConnectionServerFactory* connectionServerFactory, TimerFactory* timerFactory, NATTraverser* natTraverser) : ownJID(ownFullJID), jingleSM(jingleSessionManager), iqRouter(router), capsProvider(capsProvider), presenceOracle(presOracle), timerFactory(timerFactory), connectionFactory(connectionFactory), connectionServerFactory(connectionServerFactory), natTraverser(natTraverser), bytestreamServer(NULL), s5bProxyFinder(NULL) {
 	assert(!ownFullJID.isBare());
 
 	connectivityManager = new ConnectivityManager(natTraverser);
@@ -45,8 +46,13 @@ FileTransferManagerImpl::FileTransferManagerImpl(const JID& ownFullJID, JingleSe
 }
 
 FileTransferManagerImpl::~FileTransferManagerImpl() {
+	if (s5bProxyFinder) {
+		s5bProxyFinder->stop();
+		delete s5bProxyFinder;
+	}
 	if (bytestreamServer) {
 		bytestreamServer->stop();
+		delete bytestreamServer;
 	}
 	delete incomingFTManager;
 	delete outgoingFTManager;
@@ -63,6 +69,10 @@ void FileTransferManagerImpl::startListeningOnPort(int port) {
 	bytestreamServer = new SOCKS5BytestreamServer(server, bytestreamRegistry);
 	bytestreamServer->start();
 	connectivityManager->addListeningPort(port);
+
+	s5bProxyFinder = new SOCKS5BytestreamProxyFinder(ownJID.getDomain(), iqRouter);
+	s5bProxyFinder->onProxyFound.connect(boost::bind(&FileTransferManagerImpl::addS5BProxy, this, _1));
+	s5bProxyFinder->start();
 }
 
 void FileTransferManagerImpl::addS5BProxy(S5BProxyRequest::ref proxy) {
