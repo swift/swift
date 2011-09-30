@@ -90,12 +90,14 @@ void ChatControllerBase::setAvailableServerFeatures(boost::shared_ptr<DiscoInfo>
 }
 
 void ChatControllerBase::handleAllMessagesRead() {
-	foreach (boost::shared_ptr<MessageEvent> messageEvent, unreadMessages_) {
-		messageEvent->read();
+	if (!unreadMessages_.empty()) {
+		foreach (boost::shared_ptr<MessageEvent> messageEvent, unreadMessages_) {
+			messageEvent->read();
+		}
+		unreadMessages_.clear();
+		chatWindow_->setUnreadMessageCount(0);
+		onUnreadCountChanged();
 	}
-	unreadMessages_.clear();
-	chatWindow_->setUnreadMessageCount(0);
-	onUnreadCountChanged();
 }
 
 int ChatControllerBase::getUnreadCount() {
