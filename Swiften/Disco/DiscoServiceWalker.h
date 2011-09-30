@@ -52,7 +52,6 @@ namespace Swift {
 			boost::signal<void()> onWalkComplete;
 
 		private:
-			void handleReceivedDiscoItem(const JID& item);
 			void walkNode(const JID& jid);
 			void markNodeCompleted(const JID& jid);
 			void handleDiscoInfoResponse(boost::shared_ptr<DiscoInfo> info, ErrorPayload::ref error, GetDiscoInfoRequest::ref request);

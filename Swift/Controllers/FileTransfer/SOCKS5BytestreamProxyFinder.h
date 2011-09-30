@@ -8,7 +8,7 @@
 
 #include <boost/shared_ptr.hpp>
 
-#include <Swift/Controllers/DiscoServiceWalker.h>
+#include <Swiften/Disco/DiscoServiceWalker.h>
 #include <Swiften/Network/HostAddressPort.h>
 #include <Swiften/Elements/S5BProxyRequest.h>
 

@@ -17,7 +17,7 @@
 #include <Swiften/Base/String.h>
 #include <Swift/Controllers/UIEvents/UIEventStream.h>
 #include <Swift/Controllers/UIInterfaces/MUCSearchWindowFactory.h>
-#include <Swift/Controllers/DiscoServiceWalker.h>
+#include <Swiften/Disco/DiscoServiceWalker.h>
 #include <Swiften/Client/NickResolver.h>
 
 namespace Swift {

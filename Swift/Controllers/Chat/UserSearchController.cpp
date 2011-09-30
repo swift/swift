@@ -12,7 +12,7 @@
 #include <Swiften/Base/foreach.h>
 #include <Swiften/Disco/GetDiscoInfoRequest.h>
 #include <Swiften/Disco/GetDiscoItemsRequest.h>
-#include <Swift/Controllers/DiscoServiceWalker.h>
+#include <Swiften/Disco/DiscoServiceWalker.h>
 #include <Swift/Controllers/UIEvents/UIEventStream.h>
 #include <Swift/Controllers/UIEvents/RequestChatWithUserDialogUIEvent.h>
 #include <Swift/Controllers/UIEvents/RequestAddUserDialogUIEvent.h>

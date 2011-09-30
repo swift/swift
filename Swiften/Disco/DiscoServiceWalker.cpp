@@ -4,7 +4,8 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include <Swift/Controllers/DiscoServiceWalker.h>
+#include <Swiften/Disco/DiscoServiceWalker.h>
+
 #include <Swiften/Base/Log.h>
 #include <Swiften/Base/foreach.h>
 
@@ -45,21 +46,6 @@ void DiscoServiceWalker::walkNode(const JID& jid) {
 	discoInfoRequest->onResponse.connect(boost::bind(&DiscoServiceWalker::handleDiscoInfoResponse, this, _1, _2, discoInfoRequest));
 	pendingDiscoInfoRequests_.insert(discoInfoRequest);
 	discoInfoRequest->send();
-}
-
-void DiscoServiceWalker::handleReceivedDiscoItem(const JID& item) {
-	SWIFT_LOG(debug) << "Received disco item " << item << std::endl;
-
-	/* If we got canceled, don't do anything */
-	if (!active_) {
-		return;
-	}
-
-	if (std::find(searchedServices_.begin(), searchedServices_.end(), item) != searchedServices_.end()) {
-		/* Don't recurse infinitely */
-		return;
-	}
-	walkNode(item);
 }
 
 void DiscoServiceWalker::handleDiscoInfoResponse(boost::shared_ptr<DiscoInfo> info, ErrorPayload::ref error, GetDiscoInfoRequest::ref request) {
@@ -103,8 +89,7 @@ void DiscoServiceWalker::handleDiscoItemsResponse(boost::shared_ptr<DiscoItems> 
 		return;
 	}
 
-	SWIFT_LOG(debug) << "Received disco item from " << request->getReceiver() << std::endl;
-
+	SWIFT_LOG(debug) << "Received disco items from " << request->getReceiver() << std::endl;
 	pendingDiscoItemsRequests_.erase(request);
 	if (error) {
 		handleDiscoError(request->getReceiver(), error);
@@ -115,30 +100,22 @@ void DiscoServiceWalker::handleDiscoItemsResponse(boost::shared_ptr<DiscoItems> 
 			/* Don't look at noded items. It's possible that this will exclude some services,
 			 * but I've never seen one in the wild, and it's an easy fix for not looping.
 			 */
-			handleReceivedDiscoItem(item.getJID());
+			if (std::find(searchedServices_.begin(), searchedServices_.end(), item.getJID()) == searchedServices_.end()) { /* Don't recurse infinitely */
+				SWIFT_LOG(debug) << "Received disco item " << item.getJID() << std::endl;
+				walkNode(item.getJID());
+			}
 		}
 	}
 	markNodeCompleted(request->getReceiver());
 }
 
 void DiscoServiceWalker::handleDiscoError(const JID& jid, ErrorPayload::ref /*error*/) {
-	/* If we got canceled, don't do anything */
-	if (!active_) {
-		return;
-	}
-
 	SWIFT_LOG(debug) << "Disco error from " << jid << std::endl;
-
 	markNodeCompleted(jid);
 }
 
 void DiscoServiceWalker::markNodeCompleted(const JID& jid) {
-	// Check whether we weren't canceled in between a 'emit result' and this call
-	if (!active_) {
-		return;
-	}
 	SWIFT_LOG(debug) << "Node completed " << jid << std::endl;
-
 	servicesBeingSearched_.erase(jid);
 	/* All results are in */
 	if (servicesBeingSearched_.empty()) {
