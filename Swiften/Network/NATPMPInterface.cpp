@@ -8,6 +8,7 @@
 
 #include <Swiften/Base/Log.h>
 
+#pragma GCC diagnostic ignored "-Wold-style-cast"
 
 namespace Swift {
 
