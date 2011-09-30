@@ -85,13 +85,13 @@ int connecthostport(const char * host, unsigned short port)
 	}
 #ifdef MINIUPNPC_SET_SOCKET_TIMEOUT
 	/* setting a 3 seconds timeout for the connect() call */
-	timeout.tv_sec = 3;
+	timeout.tv_sec = 5;
 	timeout.tv_usec = 0;
 	if(setsockopt(s, SOL_SOCKET, SO_RCVTIMEO, &timeout, sizeof(struct timeval)) < 0)
 	{
 		PRINT_SOCKET_ERROR("setsockopt");
 	}
-	timeout.tv_sec = 3;
+	timeout.tv_sec = 5;
 	timeout.tv_usec = 0;
 	if(setsockopt(s, SOL_SOCKET, SO_SNDTIMEO, &timeout, sizeof(struct timeval)) < 0)
 	{
@@ -175,13 +175,13 @@ int connecthostport(const char * host, unsigned short port)
 			continue;
 #ifdef MINIUPNPC_SET_SOCKET_TIMEOUT
 		/* setting a 3 seconds timeout for the connect() call */
-		timeout.tv_sec = 3;
+		timeout.tv_sec = 5;
 		timeout.tv_usec = 0;
 		if(setsockopt(s, SOL_SOCKET, SO_RCVTIMEO, &timeout, sizeof(struct timeval)) < 0)
 		{
 			PRINT_SOCKET_ERROR("setsockopt");
 		}
-		timeout.tv_sec = 3;
+		timeout.tv_sec = 5;
 		timeout.tv_usec = 0;
 		if(setsockopt(s, SOL_SOCKET, SO_SNDTIMEO, &timeout, sizeof(struct timeval)) < 0)
 		{
