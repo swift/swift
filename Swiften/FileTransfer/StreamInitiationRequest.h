@@ -19,8 +19,15 @@ namespace Swift {
 				return ref(new StreamInitiationRequest(jid, payload, router));
 			}
 
+			static ref create(const JID& from, const JID& to, boost::shared_ptr<StreamInitiation> payload, IQRouter* router) {
+				return ref(new StreamInitiationRequest(from, to, payload, router));
+			}
+
 		private:
 			StreamInitiationRequest(const JID& jid, boost::shared_ptr<StreamInitiation> payload, IQRouter* router) : GenericRequest<StreamInitiation>(IQ::Set, jid, payload, router) {
+			}
+
+			StreamInitiationRequest(const JID& from, const JID& to, boost::shared_ptr<StreamInitiation> payload, IQRouter* router) : GenericRequest<StreamInitiation>(IQ::Set, from, to, payload, router) {
 			}
 	};
 }
