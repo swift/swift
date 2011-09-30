@@ -6,8 +6,6 @@
 
 #include "QtXMLConsoleWidget.h"
 
-#include <Swiften/Client/XMLBeautifier.h>
-
 #include <QCloseEvent>
 #include <QTextEdit>
 #include <QVBoxLayout>
@@ -51,11 +49,9 @@ QtXMLConsoleWidget::QtXMLConsoleWidget() {
 
 	setWindowTitle(tr("Debug Console"));
 	emit titleUpdated();
-	beautifier = new XMLBeautifier(true, false);
 }
 
 QtXMLConsoleWidget::~QtXMLConsoleWidget() {
-	delete beautifier;
 }
 
 void QtXMLConsoleWidget::showEvent(QShowEvent* event) {
@@ -79,11 +75,11 @@ void QtXMLConsoleWidget::closeEvent(QCloseEvent* event) {
 }
 
 void QtXMLConsoleWidget::handleDataRead(const SafeByteArray& data) {
-	appendTextIfEnabled(std::string(tr("<!-- IN -->").toUtf8()) + "\n" + beautifier->beautify(safeByteArrayToString(data)) + "\n", QColor(33,98,33));
+	appendTextIfEnabled(std::string(tr("<!-- IN -->").toUtf8()) + "\n" + safeByteArrayToString(data) + "\n", QColor(33,98,33));
 }
 
 void QtXMLConsoleWidget::handleDataWritten(const SafeByteArray& data) {
-	appendTextIfEnabled(std::string(tr("<!-- OUT -->").toUtf8()) + "\n" + beautifier->beautify(safeByteArrayToString(data)) + "\n", QColor(155,1,0));
+	appendTextIfEnabled(std::string(tr("<!-- OUT -->").toUtf8()) + "\n" + safeByteArrayToString(data) + "\n", QColor(155,1,0));
 }
 
 void QtXMLConsoleWidget::appendTextIfEnabled(const std::string& data, const QColor& color) {

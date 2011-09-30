@@ -14,8 +14,6 @@ class QCheckBox;
 class QColor;
 
 namespace Swift {
-	class XMLBeautifier;
-
 	class QtXMLConsoleWidget : public QtTabbable, public XMLConsoleWidget {
 			Q_OBJECT
 
@@ -38,6 +36,5 @@ namespace Swift {
 		private:
 			QTextEdit* textEdit;
 			QCheckBox* enabled;
-			XMLBeautifier* beautifier;
 	};
 }
