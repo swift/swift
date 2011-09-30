@@ -6,6 +6,7 @@
 
 #pragma once
 
+#include <boost/shared_ptr.hpp>
 #include <vector>
 
 #include <Swiften/Base/boost_bsignals.h>
@@ -19,7 +20,7 @@ namespace Swift {
 			 * Return an empty vector if no more data is available.
 			 * Use onDataAvailable signal for signaling there is data available again.
 			 */
-			virtual std::vector<unsigned char> read(size_t size) = 0;
+			virtual boost::shared_ptr< std::vector<unsigned char> > read(size_t size) = 0;
 
 			virtual bool isFinished() const = 0;
 

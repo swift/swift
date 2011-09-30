@@ -7,9 +7,11 @@
 #pragma once
 
 #include <vector>
+#include <boost/smart_ptr/make_shared.hpp>
 
 #include <Swiften/Base/Algorithm.h>
 #include <Swiften/FileTransfer/ReadBytestream.h>
+#include <Swiften/Base/ByteArray.h>
 
 namespace Swift {
 	class ByteArrayReadBytestream : public ReadBytestream {
@@ -17,14 +19,14 @@ namespace Swift {
 			ByteArrayReadBytestream(const std::vector<unsigned char>& data) : data(data), position(0), dataComplete(true) {
 			}
 
-			virtual std::vector<unsigned char> read(size_t size) {
+			virtual boost::shared_ptr<ByteArray> read(size_t size) {
 				size_t readSize = size;
 				if (position + readSize > data.size()) {
 					readSize = data.size() - position;
 				}
-				std::vector<unsigned char> result(data.begin() + position, data.begin() + position + readSize);
+				boost::shared_ptr<ByteArray> result = boost::make_shared<ByteArray>(data.begin() + position, data.begin() + position + readSize);
 
-				onRead(result);
+				onRead(*result);
 				position += readSize;
 				return result;
 			}

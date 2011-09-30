@@ -6,8 +6,10 @@
 
 #include <boost/filesystem/fstream.hpp>
 #include <cassert>
+#include <boost/smart_ptr/make_shared.hpp>
 
 #include <Swiften/FileTransfer/FileReadBytestream.h>
+#include <Swiften/Base/ByteArray.h>
 
 namespace Swift {
 
@@ -21,16 +23,16 @@ FileReadBytestream::~FileReadBytestream() {
 	}
 }
 
-std::vector<unsigned char> FileReadBytestream::read(size_t size)  {
+boost::shared_ptr<ByteArray> FileReadBytestream::read(size_t size)  {
 	if (!stream) {
 		stream = new boost::filesystem::ifstream(file, std::ios_base::in|std::ios_base::binary);
 	}
-	std::vector<unsigned char> result;
-	result.resize(size);
+	boost::shared_ptr<ByteArray> result = boost::make_shared<ByteArray>();
+	result->resize(size);
 	assert(stream->good());
-	stream->read(reinterpret_cast<char*>(&result[0]), size);
-	result.resize(stream->gcount());
-	onRead(result);
+	stream->read(reinterpret_cast<char*>(vecptr(*result)), size);
+	result->resize(stream->gcount());
+	onRead(*result);
 	return result;
 }
 

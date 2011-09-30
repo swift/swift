@@ -145,7 +145,7 @@ void SOCKS5BytestreamServerSession::process() {
 void SOCKS5BytestreamServerSession::sendData() {
 	if (!readBytestream->isFinished()) {
 		try {
-			SafeByteArray dataToSend = createSafeByteArray(readBytestream->read(chunkSize));
+			SafeByteArray dataToSend = createSafeByteArray(*readBytestream->read(chunkSize));
 			connection->write(dataToSend);
 			onBytesSent(dataToSend.size());
 		}

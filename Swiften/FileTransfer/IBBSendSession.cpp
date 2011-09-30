@@ -8,6 +8,7 @@
 
 #include <boost/bind.hpp>
 
+#include <Swiften/Base/ByteArray.h>
 #include <Swiften/Queries/IQRouter.h>
 #include <Swiften/FileTransfer/IBBRequest.h>
 #include <Swiften/FileTransfer/BytestreamException.h>
@@ -52,14 +53,14 @@ void IBBSendSession::handleIBBResponse(IBB::ref, ErrorPayload::ref error) {
 
 void IBBSendSession::sendMoreData() {
 	try {
-		std::vector<unsigned char> data = bytestream->read(blockSize);
-		if (!data.empty()) {
+		boost::shared_ptr<ByteArray> data = bytestream->read(blockSize);
+		if (!data->empty()) {
 			waitingForData = false;
-			IBBRequest::ref request = IBBRequest::create(from, to, IBB::createIBBData(id, sequenceNumber, data), router);
+			IBBRequest::ref request = IBBRequest::create(from, to, IBB::createIBBData(id, sequenceNumber, *data), router);
 			sequenceNumber++;
 			request->onResponse.connect(boost::bind(&IBBSendSession::handleIBBResponse, this, _1, _2));
 			request->send();
-			onBytesSent(data.size());
+			onBytesSent(data->size());
 		}
 		else {
 			waitingForData = true;
