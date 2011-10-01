@@ -277,6 +277,7 @@ void CoreClient::handleDataWritten(const SafeByteArray& data) {
 
 void CoreClient::handleStanzaChannelAvailableChanged(bool available) {
 	if (available) {
+		iqRouter_->setJID(session_->getLocalJID());
 		handleConnected();
 		onConnected();
 	}
