@@ -307,6 +307,7 @@ if env["SCONS_STAGE"] == "build" :
 			File("Parser/PayloadParsers/UnitTest/ReplaceTest.cpp"),
 			File("Parser/PayloadParsers/UnitTest/MUCAdminPayloadParserTest.cpp"),
 			File("Parser/PayloadParsers/UnitTest/MUCUserPayloadParserTest.cpp"),
+			File("Parser/UnitTest/BOSHBodyExtractorTest.cpp"),
 			File("Parser/UnitTest/AttributeMapTest.cpp"),
 			File("Parser/UnitTest/IQParserTest.cpp"),
 			File("Parser/UnitTest/GenericPayloadTreeParserTest.cpp"),

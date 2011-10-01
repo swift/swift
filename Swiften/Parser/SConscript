@@ -17,6 +17,7 @@ sources = [
 		"MessageParser.cpp",
 		"PayloadParser.cpp",
 		"StanzaAckParser.cpp",
+		"BOSHBodyExtractor.cpp",
 		"ComponentHandshakeParser.cpp",
 		"PayloadParserFactory.cpp",
 		"PayloadParserFactoryCollection.cpp",
