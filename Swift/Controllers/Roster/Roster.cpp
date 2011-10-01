@@ -62,11 +62,11 @@ GroupRosterItem* Roster::getGroup(const std::string& groupName) {
 }
 
 void Roster::setAvailableFeatures(const JID& jid, const std::set<ContactRosterItem::Feature>& features) {
-	JID actualJID = fullJIDMapping_ ? jid : jid.toBare();
-	if (itemMap_[actualJID].empty()) {
+	ItemMap::const_iterator i = itemMap_.find(fullJIDMapping_ ? jid : jid.toBare());
+	if (i == itemMap_.end()) {
 		return;
 	}
-	foreach(ContactRosterItem* item, itemMap_[actualJID]) {
+	foreach(ContactRosterItem* item, i->second) {
 		item->setSupportedFeatures(features);
 	}
 }
@@ -88,16 +88,17 @@ void Roster::addContact(const JID& jid, const JID& displayJID, const std::string
 	ContactRosterItem *item = new ContactRosterItem(jid, displayJID, name, group);	
 	item->setAvatarPath(avatarPath);
 	group->addChild(item);
-	if (itemMap_[fullJIDMapping_ ? jid : jid.toBare()].size() > 0) {
-		foreach (std::string existingGroup, itemMap_[fullJIDMapping_ ? jid : jid.toBare()][0]->getGroups()) {
+	ItemMap::iterator i = itemMap_.insert(std::make_pair(fullJIDMapping_ ? jid : jid.toBare(), std::vector<ContactRosterItem*>())).first;
+	if (!i->second.empty()) {
+		foreach (const std::string& existingGroup, i->second[0]->getGroups()) {
 			item->addGroup(existingGroup);
 		}
 	}
-	itemMap_[fullJIDMapping_ ? jid : jid.toBare()].push_back(item);
+	i->second.push_back(item);
 	item->onDataChanged.connect(boost::bind(&Roster::handleDataChanged, this, item));
 	filterContact(item, group);
 
-	foreach (ContactRosterItem* item, itemMap_[fullJIDMapping_ ? jid : jid.toBare()]) {
+	foreach (ContactRosterItem* item, i->second) {
 		item->addGroup(groupName);
 	}
 }
@@ -116,10 +117,13 @@ void Roster::removeAll() {
 }
 
 void Roster::removeContact(const JID& jid) {
-	std::vector<ContactRosterItem*>* items = &itemMap_[fullJIDMapping_ ? jid : jid.toBare()];
-	items->erase(std::remove_if(items->begin(), items->end(), JIDEqualsTo(jid)), items->end());
-	if (items->empty()) {
-		itemMap_.erase(fullJIDMapping_ ? jid : jid.toBare());
+	ItemMap::iterator item = itemMap_.find(fullJIDMapping_ ? jid : jid.toBare());
+	if (item != itemMap_.end()) {
+		std::vector<ContactRosterItem*>& items = item->second;
+		items.erase(std::remove_if(items.begin(), items.end(), JIDEqualsTo(jid)), items.end());
+		if (items.empty()) {
+			itemMap_.erase(item);
+		}
 	}
 	//Causes the delete
 	root_->removeChild(jid);
@@ -128,17 +132,23 @@ void Roster::removeContact(const JID& jid) {
 void Roster::removeContactFromGroup(const JID& jid, const std::string& groupName) {
 	std::vector<RosterItem*> children = root_->getChildren();
 	std::vector<RosterItem*>::iterator it = children.begin();
+	ItemMap::iterator itemIt = itemMap_.find(fullJIDMapping_ ? jid : jid.toBare());
 	while (it != children.end()) {
 		GroupRosterItem* group = dynamic_cast<GroupRosterItem*>(*it);
 		if (group && group->getDisplayName() == groupName) {
 			ContactRosterItem* deleted = group->removeChild(jid);
-			std::vector<ContactRosterItem*>* items = &itemMap_[fullJIDMapping_ ? jid : jid.toBare()];
-			items->erase(std::remove(items->begin(), items->end(), deleted), items->end());
+			if (itemIt != itemMap_.end()) {
+				std::vector<ContactRosterItem*>& items = itemIt->second;
+				items.erase(std::remove(items.begin(), items.end(), deleted), items.end());
+			}
 		}
 		++it;
 	}
-	foreach (ContactRosterItem* item, itemMap_[fullJIDMapping_ ? jid : jid.toBare()]) {
-		item->removeGroup(groupName);
+
+	if (itemIt != itemMap_.end()) {
+		foreach (ContactRosterItem* item, itemIt->second) {
+			item->removeGroup(groupName);
+		}
 	}
 }
 
@@ -152,8 +162,11 @@ void Roster::applyOnItems(const RosterItemOperation& operation) {
 }
 
 void Roster::applyOnItem(const RosterItemOperation& operation, const JID& jid) {
-	
-	foreach (ContactRosterItem* item, itemMap_[fullJIDMapping_ ? jid : jid.toBare()]) {
+	ItemMap::iterator i = itemMap_.find(fullJIDMapping_ ? jid : jid.toBare());
+	if (i == itemMap_.end()) {
+		return;
+	}
+	foreach (ContactRosterItem* item, i->second) {
 		operation(item);
 		filterContact(item, item->getParent());
 	}

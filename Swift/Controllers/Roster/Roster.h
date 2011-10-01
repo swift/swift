@@ -54,7 +54,8 @@ class Roster {
 		void filterAll();
 		GroupRosterItem* root_;
 		std::vector<RosterFilter*> filters_;
-		std::map<JID, std::vector<ContactRosterItem*> > itemMap_;
+		typedef std::map<JID, std::vector<ContactRosterItem*> > ItemMap;
+		ItemMap itemMap_;
 		bool fullJIDMapping_;
 		bool sortByStatus_;
 };
