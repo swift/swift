@@ -88,7 +88,8 @@ QtChatWindow::QtChatWindow(const QString &contact, QtChatTheme* theme, UIEventSt
 	setSubject("");
 	subject_->setReadOnly(true);
 
-	actionButton_ = new QPushButton(tr("Actions"), this);
+	actionButton_ = new QPushButton(this);
+	actionButton_->setIcon(QIcon(":/icons/actions.png"));
 	connect(actionButton_, SIGNAL(clicked()), this, SLOT(handleActionButtonClicked()));
 	subjectLayout->addWidget(actionButton_);
 
