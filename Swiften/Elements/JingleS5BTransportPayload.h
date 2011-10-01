@@ -58,7 +58,7 @@ namespace Swift {
 				this->mode = mode;
 			}
 
-			const std::vector<Candidate>& getCandidates() {
+			const std::vector<Candidate>& getCandidates() const {
 				return candidates;
 			}
 

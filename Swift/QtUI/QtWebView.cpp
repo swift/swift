@@ -12,7 +12,7 @@
 #include <QMenu>
 
 namespace Swift {
-QtWebView::QtWebView(QWidget* parent) : QWebView(parent) {
+QtWebView::QtWebView(QWidget* parent) : QWebView(parent), fontSizeIsMinimal(false) {
 	setRenderHint(QPainter::SmoothPixmapTransform);
 	filteredActions.push_back(QWebPage::CopyLinkToClipboard);
 	filteredActions.push_back(QWebPage::CopyImageToClipboard);

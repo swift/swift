@@ -31,7 +31,7 @@ std::string MUCUserPayloadSerializer::serializePayload(boost::shared_ptr<MUCUser
 		statusElement->setAttribute("code", code.str());
 		mucElement.addNode(statusElement);
 	}
-	foreach (const MUCItem item, payload->getItems()) {
+	foreach (const MUCItem& item, payload->getItems()) {
 		mucElement.addNode(MUCItemSerializer::itemToElement(item));
 	}
 	boost::shared_ptr<Payload> childPayload = payload->getPayload();

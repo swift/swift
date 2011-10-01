@@ -24,7 +24,7 @@ MUCAdminPayloadSerializer::MUCAdminPayloadSerializer() : GenericPayloadSerialize
 
 std::string MUCAdminPayloadSerializer::serializePayload(boost::shared_ptr<MUCAdminPayload> payload)  const {
 	XMLElement mucElement("query", "http://jabber.org/protocol/muc#admin");
-	foreach (const MUCItem item, payload->getItems()) {
+	foreach (const MUCItem& item, payload->getItems()) {
 		mucElement.addNode(MUCItemSerializer::itemToElement(item));
 	}
 	return mucElement.serialize();

@@ -31,7 +31,7 @@ namespace Swift {
 				jid_ = jid;
 			}
 
-			const JID& getJID() {
+			const JID& getJID() const {
 				return jid_;
 			}
 

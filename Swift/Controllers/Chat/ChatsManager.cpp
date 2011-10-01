@@ -114,7 +114,7 @@ void ChatsManager::saveRecents() {
 	foreach (ChatListWindow::Chat chat, recentChats_) {
 		std::vector<std::string> activity;
 		boost::split(activity, chat.activity, boost::is_any_of("\t\n"));
-		if (activity.size() == 0) {
+		if (activity.empty()) {
 			/* Work around Boost bug https://svn.boost.org/trac/boost/ticket/4751 */
 			activity.push_back("");
 		}
