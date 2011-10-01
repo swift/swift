@@ -21,8 +21,13 @@ namespace Swift {
 
 		private:
 			virtual bool handleSetRequest(const JID& from, const JID&, const std::string& id, boost::shared_ptr<RosterPayload> payload) {
-				onRosterReceived(payload);
-				sendResponse(from, id, boost::shared_ptr<RosterPayload>());
+				if (getIQRouter()->isAccountJID(from)) {
+					onRosterReceived(payload);
+					sendResponse(from, id, boost::shared_ptr<RosterPayload>());
+				}
+				else {
+					sendError(from, id, ErrorPayload::NotAuthorized, ErrorPayload::Cancel);
+				}
 				return true;
 			}
 	};

@@ -94,6 +94,10 @@ namespace Swift {
 				router_->sendIQ(IQ::createError(to, from, id, condition, type));
 			}
 
+			IQRouter* getIQRouter() const {
+				return router_;
+			}
+
 		private:
 			virtual bool handleIQ(boost::shared_ptr<IQ> iq) {
 				if (iq->getType() == IQ::Set || iq->getType() == IQ::Get) {

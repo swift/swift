@@ -63,6 +63,16 @@ namespace Swift {
 			
 			bool isAvailable();
 
+			/**
+			 * Checks whether the given jid is the account JID (i.e. it is either
+			 * the bare JID, or it is the empty JID).
+			 * Can be used to check whether a stanza is sent by the server on behalf
+			 * of the user's account.
+			 */
+			bool isAccountJID(const JID& jid) {
+				return jid.isValid() ? jid_.toBare().equals(jid, JID::WithResource) : true;
+			}
+
 		private:
 			void handleIQ(boost::shared_ptr<IQ> iq);
 			void processPendingRemoves();
