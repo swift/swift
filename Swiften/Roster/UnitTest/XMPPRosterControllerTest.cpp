@@ -31,6 +31,7 @@ class XMPPRosterControllerTest : public CppUnit::TestFixture {
 		CPPUNIT_TEST(testGet_ResponseWithoutNewVersion);
 		CPPUNIT_TEST(testGet_ResponseWithNewVersion);
 		CPPUNIT_TEST(testAdd);
+		CPPUNIT_TEST(testAddFromNonAccount);
 		CPPUNIT_TEST(testModify);
 		CPPUNIT_TEST(testRemove);
 		CPPUNIT_TEST(testRemove_RosterStorageUpdated);
@@ -41,6 +42,7 @@ class XMPPRosterControllerTest : public CppUnit::TestFixture {
 		void setUp() {
 			channel_ = new DummyStanzaChannel();
 			router_ = new IQRouter(channel_);
+			router_->setJID("me@bla.com");
 			xmppRoster_ = new XMPPRosterImpl();
 			handler_ = new XMPPRosterSignalHandler(xmppRoster_);
 			rosterStorage_ = new RosterMemoryStorage();
@@ -198,6 +200,18 @@ class XMPPRosterControllerTest : public CppUnit::TestFixture {
 			CPPUNIT_ASSERT(rosterStorage_->getRoster()->getItem(jid2_));
 			CPPUNIT_ASSERT(rosterStorage_->getRoster()->getItem(jid3_));
 			CPPUNIT_ASSERT_EQUAL(2, static_cast<int>(rosterStorage_->getRoster()->getItem(jid3_)->getGroups().size()));
+		}
+
+		void testAddFromNonAccount() {
+			boost::shared_ptr<XMPPRosterController> testling(createController());
+
+			boost::shared_ptr<RosterPayload> payload(new RosterPayload());
+			payload->addItem(RosterItemPayload(jid1_, "Bob", RosterItemPayload::Both));
+			IQ::ref request = IQ::createRequest(IQ::Set, JID(), "eou", payload);
+			request->setFrom(jid2_);
+			channel_->onIQReceived(request);
+
+			CPPUNIT_ASSERT_EQUAL(None, handler_->getLastEvent());
 		}
 
 		void testModify() {
