@@ -24,7 +24,7 @@ namespace Swift {
 
 			BOSHBodyExtractor(XMLParserFactory* parserFactory, const ByteArray& data);
 			
-			const boost::optional<BOSHBody>& getBody() {
+			const boost::optional<BOSHBody>& getBody() const {
 				return body;
 			}
 
