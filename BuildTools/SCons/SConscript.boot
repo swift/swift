@@ -180,7 +180,7 @@ else :
 	env.Append(CXXFLAGS = ["-Wextra", "-Wall", "-Wnon-virtual-dtor", "-Wundef", "-Wold-style-cast", "-Wno-long-long", "-Woverloaded-virtual", "-Wfloat-equal", "-Wredundant-decls"])
 	if not env.get("allow_warnings", False) :
 		env.Append(CXXFLAGS = ["-Werror"])
-	gccVersion = env["CCVERSION"].split(".")
+	gccVersion = env.get("CCVERSION", "0.0.0").split(".")
 	if gccVersion >= ["4", "5", "0"] :
 		env.Append(CXXFLAGS = ["-Wlogical-op"])
 	if "clang" in env["CC"] :

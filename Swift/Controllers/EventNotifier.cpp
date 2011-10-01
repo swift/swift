@@ -47,7 +47,7 @@ void EventNotifier::handleEventAdded(boost::shared_ptr<StanzaEvent> event) {
 	}
 	else if(boost::shared_ptr<SubscriptionRequestEvent> subscriptionEvent = boost::dynamic_pointer_cast<SubscriptionRequestEvent>(event)) {
 		JID jid = subscriptionEvent->getJID();
-		std::string title = "";
+		std::string title = jid;
 		std::string message = str(format(QT_TRANSLATE_NOOP("", "%1% wants to add you to his/her contact list")) % nickResolver->jidToNick(jid));
 		notifier->showMessage(Notifier::SystemMessage, title, message, boost::filesystem::path(), boost::function<void()>());
 	}
