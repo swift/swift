@@ -33,6 +33,7 @@
 #include <Swift/Controllers/FileTransfer/FileTransferOverview.h>
 #include <Swift/Controllers/ProfileSettingsProvider.h>
 #include <Swiften/Avatars/AvatarManager.h>
+#include <Swiften/Elements/MUCInvitationPayload.h>
 
 namespace Swift {
 
@@ -516,12 +517,13 @@ void ChatsManager::handleSearchMUCRequest() {
 void ChatsManager::handleIncomingMessage(boost::shared_ptr<Message> message) {
 	JID jid = message->getFrom();
 	boost::shared_ptr<MessageEvent> event(new MessageEvent(message));
-	if (!event->isReadable() && !message->getPayload<ChatState>() && !message->hasSubject()) {
+	bool isInvite = message->getPayload<MUCInvitationPayload>();
+	if (!event->isReadable() && !message->getPayload<ChatState>() && !isInvite && !message->hasSubject()) {
 		return;
 	}
 
 	// Try to deliver it to a MUC
-	if (message->getType() == Message::Groupchat || message->getType() == Message::Error) {
+	if (message->getType() == Message::Groupchat || message->getType() == Message::Error || (isInvite && message->getType() == Message::Normal)) {
 		std::map<JID, MUCController*>::iterator i = mucControllers_.find(jid.toBare());
 		if (i != mucControllers_.end()) {
 			i->second->handleIncomingMessage(event);
@@ -561,6 +563,5 @@ void ChatsManager::handleRecentActivated(const ChatListWindow::Chat& chat) {
 		uiEventStream_->send(boost::make_shared<RequestChatUIEvent>(chat.jid));
 	}
 }
-
 
 }

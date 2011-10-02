@@ -74,6 +74,7 @@ MUCController::MUCController (
 	chatWindow_->onChangeSubjectRequest.connect(boost::bind(&MUCController::handleChangeSubjectRequest, this, _1));
 	chatWindow_->onConfigureRequest.connect(boost::bind(&MUCController::handleConfigureRequest, this, _1));
 	chatWindow_->onDestroyRequest.connect(boost::bind(&MUCController::handleDestroyRoomRequest, this));
+	chatWindow_->onInvitePersonToThisMUCRequest.connect(boost::bind(&MUCController::handleInvitePersonToThisMUCRequest, this, _1, _2));
 	muc_->onJoinComplete.connect(boost::bind(&MUCController::handleJoinComplete, this, _1));
 	muc_->onJoinFailed.connect(boost::bind(&MUCController::handleJoinFailed, this, _1));
 	muc_->onOccupantJoined.connect(boost::bind(&MUCController::handleOccupantJoined, this, _1));
@@ -601,6 +602,10 @@ void MUCController::handleConfigurationFormReceived(Form::ref form) {
 
 void MUCController::handleDestroyRoomRequest() {
 	muc_->destroyRoom();
+}
+
+void MUCController::handleInvitePersonToThisMUCRequest(const JID& jid, const std::string& reason) {
+	muc_->invitePerson(jid, reason);
 }
 
 }

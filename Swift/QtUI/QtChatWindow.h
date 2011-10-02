@@ -72,6 +72,7 @@ namespace Swift {
 			virtual void setAvailableOccupantActions(const std::vector<OccupantAction>& actions);
 			void setSubject(const std::string& subject);
 			void showRoomConfigurationForm(Form::ref);
+			void addMUCInvitation(const JID& jid, const std::string& reason, const std::string& password);
 
 		public slots:
 			void handleChangeSplitterState(QByteArray state);

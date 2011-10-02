@@ -61,6 +61,8 @@ namespace Swift {
 			void requestConfigurationForm();
 			void configureRoom(Form::ref);
 			void destroyRoom();
+			/** Send an invite for the person to join the MUC */
+			void invitePerson(const JID& person, const std::string& reason = "");
 		public:
 			boost::signal<void (const std::string& /*nick*/)> onJoinComplete;
 			boost::signal<void (ErrorPayload::ref)> onJoinFailed;

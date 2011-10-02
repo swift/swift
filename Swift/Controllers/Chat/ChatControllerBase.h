@@ -80,6 +80,7 @@ namespace Swift {
 			void handleAllMessagesRead();
 			void handleSecurityLabelsCatalogResponse(boost::shared_ptr<SecurityLabelsCatalog>, ErrorPayload::ref error);
 			void handleDayChangeTick();
+			void handleMUCInvitation(Message::ref message);
 
 		protected:
 			JID selfJID_;

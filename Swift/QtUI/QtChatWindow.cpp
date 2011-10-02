@@ -21,6 +21,7 @@
 #include "SwifTools/TabComplete.h"
 #include <Swift/Controllers/UIEvents/UIEventStream.h>
 #include <Swift/Controllers/UIEvents/SendFileUIEvent.h>
+#include <Swift/Controllers/UIEvents/JoinMUCUIEvent.h>
 #include "QtFileTransferJSBridge.h"
 
 #include <boost/cstdint.hpp>
@@ -28,6 +29,7 @@
 #include <boost/lexical_cast.hpp>
 
 #include <QLabel>
+#include <QMessageBox>
 #include <QInputDialog>
 #include <QApplication>
 #include <QBoxLayout>
@@ -702,6 +704,7 @@ void QtChatWindow::handleActionButtonClicked() {
 	QAction* changeSubject = contextMenu.addAction(tr("Change subject"));
 	QAction* configure = contextMenu.addAction(tr("Configure room"));
 	QAction* destroy = contextMenu.addAction(tr("Destroy room"));
+	QAction* invite = contextMenu.addAction(tr("Invite person to this room"));
 	QAction* result = contextMenu.exec(QCursor::pos());
 	if (result == changeSubject) {
 		bool ok;
@@ -716,6 +719,13 @@ void QtChatWindow::handleActionButtonClicked() {
 	else if (result == destroy) {
 		onDestroyRequest();
 	}
+	else if (result == invite) {
+		bool ok;
+		QString jid = QInputDialog::getText(this, tr("Enter person's address"), tr("Address:"), QLineEdit::Normal, "", &ok);
+		if (ok) {
+			onInvitePersonToThisMUCRequest(JID(Q2PSTRING(jid)), "");
+		}
+	}
 }
 
 void QtChatWindow::showRoomConfigurationForm(Form::ref form) {
@@ -724,6 +734,30 @@ void QtChatWindow::showRoomConfigurationForm(Form::ref form) {
 	}
 	mucConfigurationWindow = new QtMUCConfigurationWindow(form);
 	mucConfigurationWindow->onFormComplete.connect(boost::bind(boost::ref(onConfigureRequest), _1));
+}
+
+void QtChatWindow::addMUCInvitation(const JID& jid, const std::string& reason, const std::string& password) {
+	bool accepted = false;
+	QMessageBox msgBox;
+	msgBox.setText(QString("You have been invited to the room %1 by %2.").arg(P2QSTRING(jid.toString())).arg(contact_));
+	QString reasonString;
+	if (!reason.empty()) {
+		reasonString = QString("\"%1\"").arg(P2QSTRING(reason));
+	}
+	msgBox.setInformativeText(QString("Accept invitation from %1 to enter %2?\n%3").arg(contact_).arg(P2QSTRING(jid.toString())).arg(reasonString));
+	msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
+	msgBox.setDefaultButton(QMessageBox::Yes);
+	int ret = msgBox.exec();
+	switch (ret) {
+	   case QMessageBox::Yes:
+	       accepted = true;
+	       break;
+	   default:
+	       break;
+	 }
+	if (accepted) {
+		eventStream_->send(boost::make_shared<JoinMUCUIEvent>(jid));
+	}
 }
 
 }

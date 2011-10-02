@@ -151,6 +151,7 @@ if env["SCONS_STAGE"] == "build" :
 			"Serializer/PayloadSerializers/MUCAdminPayloadSerializer.cpp",
 			"Serializer/PayloadSerializers/MUCOwnerPayloadSerializer.cpp",
 			"Serializer/PayloadSerializers/MUCDestroyPayloadSerializer.cpp",
+			"Serializer/PayloadSerializers/MUCInvitationPayloadSerializer.cpp",
 			"Serializer/PayloadSerializers/ResourceBindSerializer.cpp",
 			"Serializer/PayloadSerializers/RosterItemExchangeSerializer.cpp",
 			"Serializer/PayloadSerializers/RosterSerializer.cpp",

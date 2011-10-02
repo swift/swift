@@ -21,6 +21,7 @@
 #include <Swiften/Elements/MUCAdminPayload.h>
 #include <Swiften/Elements/MUCPayload.h>
 #include <Swiften/Elements/MUCDestroyPayload.h>
+#include <Swiften/Elements/MUCInvitationPayload.h>
 #include <Swiften/MUC/MUCRegistry.h>
 #include <Swiften/Queries/GenericRequest.h>
 
@@ -284,6 +285,17 @@ void MUC::destroyRoom() {
 	GenericRequest<MUCOwnerPayload>* request = new GenericRequest<MUCOwnerPayload>(IQ::Set, getJID(), mucPayload, iqRouter_);
 	request->onResponse.connect(boost::bind(&MUC::handleConfigurationResultReceived, this, _1, _2));
 	request->send();
+}
+
+void MUC::invitePerson(const JID& person, const std::string& reason) {
+	Message::ref message = boost::make_shared<Message>();
+	message->setTo(person);
+	message->setType(Message::Normal);
+	MUCInvitationPayload::ref invite = boost::make_shared<MUCInvitationPayload>();
+	invite->setReason(reason);
+	invite->setJID(ownMUCJID.toBare());
+	message->addPayload(invite);
+	stanzaChannel->sendMessage(message);
 }
 
 //TODO: Invites(direct/mediated)

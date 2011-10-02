@@ -16,16 +16,17 @@
 
 #include <Swift/Controllers/Intl.h>
 #include <Swiften/Base/format.h>
-#include "Swiften/Base/String.h"
-#include "Swiften/Client/StanzaChannel.h"
-#include "Swiften/Elements/Delay.h"
-#include "Swiften/Base/foreach.h"
-#include "Swift/Controllers/XMPPEvents/EventController.h"
-#include "Swiften/Disco/EntityCapsProvider.h"
-#include "Swift/Controllers/UIInterfaces/ChatWindow.h"
-#include "Swift/Controllers/UIInterfaces/ChatWindowFactory.h"
-#include "Swiften/Queries/Requests/GetSecurityLabelsCatalogRequest.h"
-#include "Swiften/Avatars/AvatarManager.h"
+#include <Swiften/Base/String.h>
+#include <Swiften/Client/StanzaChannel.h>
+#include <Swiften/Elements/Delay.h>
+#include <Swiften/Elements/MUCInvitationPayload.h>
+#include <Swiften/Base/foreach.h>
+#include <Swift/Controllers/XMPPEvents/EventController.h>
+#include <Swiften/Disco/EntityCapsProvider.h>
+#include <Swift/Controllers/UIInterfaces/ChatWindow.h>
+#include <Swift/Controllers/UIInterfaces/ChatWindowFactory.h>
+#include <Swiften/Queries/Requests/GetSecurityLabelsCatalogRequest.h>
+#include <Swiften/Avatars/AvatarManager.h>
 
 namespace Swift {
 
@@ -176,6 +177,10 @@ void ChatControllerBase::handleIncomingMessage(boost::shared_ptr<MessageEvent> m
 		std::string errorMessage = str(format(QT_TRANSLATE_NOOP("", "Couldn't send message: %1%")) % getErrorMessage(message->getPayload<ErrorPayload>()));
 		chatWindow_->addErrorMessage(errorMessage);
 	}
+	else if (messageEvent->getStanza()->getPayload<MUCInvitationPayload>()) {
+		handleMUCInvitation(messageEvent->getStanza());
+		return;
+	}
 	else {
 		if (!messageEvent->isReadable()) {
 			return;
@@ -254,6 +259,11 @@ std::string ChatControllerBase::getErrorMessage(boost::shared_ptr<ErrorPayload> 
 		}
 	}
 	return defaultMessage;
+}
+
+void ChatControllerBase::handleMUCInvitation(Message::ref message) {
+	MUCInvitationPayload::ref invite = message->getPayload<MUCInvitationPayload>();
+	chatWindow_->addMUCInvitation(invite->getJID(), invite->getReason(), invite->getPassword());
 }
 
 }

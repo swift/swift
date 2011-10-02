@@ -54,6 +54,7 @@ namespace Swift {
 			virtual std::string addFileTransfer(const std::string& senderName, bool senderIsSelf, const std::string& filename, const boost::uintmax_t sizeInBytes) = 0;
 			virtual void setFileTransferProgress(std::string, const int percentageDone) = 0;
 			virtual void setFileTransferStatus(std::string, const FileTransferState state, const std::string& msg = "") = 0;
+			virtual void addMUCInvitation(const JID& jid, const std::string& reason, const std::string& password) = 0;
 
 			virtual void setContactChatState(ChatState::ChatStateType state) = 0;
 			virtual void setName(const std::string& name) = 0;
@@ -74,6 +75,7 @@ namespace Swift {
 			virtual void setAckState(const std::string& id, AckState state) = 0;
 			virtual void flash() = 0;
 			virtual void setSubject(const std::string& subject) = 0;
+
 			/**
 			 * Set an alert on the window.
 			 * @param alertText Description of alert (required).
@@ -103,6 +105,7 @@ namespace Swift {
 			boost::signal<void (const std::string&)> onChangeSubjectRequest;
 			boost::signal<void (Form::ref)> onConfigureRequest;
 			boost::signal<void ()> onDestroyRequest;
+			boost::signal<void (const JID&, const std::string& /*reason*/)> onInvitePersonToThisMUCRequest;
 			
 			// File transfer related
 			boost::signal<void (std::string /* id */)> onFileTransferCancel;

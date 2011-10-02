@@ -92,6 +92,7 @@ namespace Swift {
 			void handleConfigurationFailed(ErrorPayload::ref);
 			void handleConfigurationFormReceived(Form::ref);
 			void handleDestroyRoomRequest();
+			void handleInvitePersonToThisMUCRequest(const JID& jid, const std::string& reason);
 
 		private:
 			MUC::ref muc_;

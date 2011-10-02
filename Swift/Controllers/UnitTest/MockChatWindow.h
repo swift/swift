@@ -48,6 +48,7 @@ namespace Swift {
 			void setAvailableOccupantActions(const std::vector<OccupantAction>&/* actions*/) {}
 			void setSubject(const std::string& /*subject*/) {}
 			virtual void showRoomConfigurationForm(Form::ref) {}
+			virtual void addMUCInvitation(const JID& /*jid*/, const std::string& /*reason*/, const std::string& /*password*/) {};
 
 			boost::signal<void ()> onClosed;
 			boost::signal<void ()> onAllMessagesRead;
