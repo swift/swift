@@ -106,10 +106,7 @@ FullPayloadParserFactoryCollection::FullPayloadParserFactoryCollection() {
 	factories_.push_back(boost::make_shared<ChatStateParserFactory>());
 	factories_.push_back(boost::make_shared<MUCUserPayloadParserFactory>(this));
 	factories_.push_back(boost::make_shared<MUCOwnerPayloadParserFactory>(this));
-	factories_.push_back(shared_ptr<PayloadParserFactory>(new GenericPayloadParserFactory<MUCAdminPayloadParser>("query", "http://jabber.org/protocol/muc#admin")));
-	factories_.push_back(shared_ptr<PayloadParserFactory>(new GenericPayloadParserFactory<MUCInvitationPayloadParser>("x", "jabber:x:conference")));
-	factories_.push_back(shared_ptr<PayloadParserFactory>(new GenericPayloadParserFactory<MUCDestroyPayloadParser>("destroy", "http://jabber.org/protocol/muc#user")));
-	factories_.push_back(shared_ptr<PayloadParserFactory>(new GenericPayloadParserFactory<MUCDestroyPayloadParser>("destroy", "http://jabber.org/protocol/muc#owner")));
+	factories_.push_back(boost::make_shared<GenericPayloadParserFactory<MUCInvitationPayloadParser> >("x", "jabber:x:conference"));
 	factories_.push_back(boost::make_shared<GenericPayloadParserFactory<MUCAdminPayloadParser> >("query", "http://jabber.org/protocol/muc#admin"));
 	factories_.push_back(boost::make_shared<GenericPayloadParserFactory<MUCDestroyPayloadParser> >("destroy", "http://jabber.org/protocol/muc#user"));
 	factories_.push_back(boost::make_shared<GenericPayloadParserFactory<MUCDestroyPayloadParser> >("destroy", "http://jabber.org/protocol/muc#owner"));
