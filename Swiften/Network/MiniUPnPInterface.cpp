@@ -57,11 +57,11 @@ boost::optional<NATPortMapping> MiniUPnPInterface::addPortForward(int actualLoca
 
 	NATPortMapping mapping(actualLocalPort, actualPublicPort, NATPortMapping::TCP);
 
-	std::string publicPort = boost::lexical_cast<std::string>(mapping.publicPort);
-	std::string localPort = boost::lexical_cast<std::string>(mapping.localPort);
-	std::string leaseSeconds = boost::lexical_cast<std::string>(mapping.leaseInSeconds);
+	std::string publicPort = boost::lexical_cast<std::string>(mapping.getPublicPort());
+	std::string localPort = boost::lexical_cast<std::string>(mapping.getLocalPort());
+	std::string leaseSeconds = boost::lexical_cast<std::string>(mapping.getLeaseInSeconds());
 
-	int ret = UPNP_AddPortMapping(urls.controlURL, data.first.servicetype, publicPort.c_str(), localPort.c_str(), localAddress.c_str(), 0, mapping.protocol == NATPortMapping::TCP ? "TCP" : "UDP", 0, leaseSeconds.c_str());
+	int ret = UPNP_AddPortMapping(urls.controlURL, data.first.servicetype, publicPort.c_str(), localPort.c_str(), localAddress.c_str(), 0, mapping.getPublicPort() == NATPortMapping::TCP ? "TCP" : "UDP", 0, leaseSeconds.c_str());
 	if (ret == UPNPCOMMAND_SUCCESS) {
 		return mapping;
 	}
@@ -75,11 +75,11 @@ bool MiniUPnPInterface::removePortForward(const NATPortMapping& mapping) {
 		return false;
 	}
 
-	std::string publicPort = boost::lexical_cast<std::string>(mapping.publicPort);
-	std::string localPort = boost::lexical_cast<std::string>(mapping.localPort);
-	std::string leaseSeconds = boost::lexical_cast<std::string>(mapping.leaseInSeconds);
+	std::string publicPort = boost::lexical_cast<std::string>(mapping.getPublicPort());
+	std::string localPort = boost::lexical_cast<std::string>(mapping.getLocalPort());
+	std::string leaseSeconds = boost::lexical_cast<std::string>(mapping.getLeaseInSeconds());
 
-	int ret = UPNP_DeletePortMapping(urls.controlURL, data.first.servicetype, publicPort.c_str(), mapping.protocol == NATPortMapping::TCP ? "TCP" : "UDP", 0);
+	int ret = UPNP_DeletePortMapping(urls.controlURL, data.first.servicetype, publicPort.c_str(), mapping.getProtocol() == NATPortMapping::TCP ? "TCP" : "UDP", 0);
 	return ret == UPNPCOMMAND_SUCCESS;
 }
 

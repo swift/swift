@@ -53,7 +53,7 @@ boost::optional<HostAddress> NATPMPInterface::getPublicIP() {
 
 boost::optional<NATPortMapping> NATPMPInterface::addPortForward(int localPort, int publicPort) {
 	NATPortMapping mapping(localPort, publicPort, NATPortMapping::TCP);
-	if (sendnewportmappingrequest(&natpmp, mapping.protocol == NATPortMapping::TCP ? NATPMP_PROTOCOL_TCP : NATPMP_PROTOCOL_UDP, mapping.leaseInSeconds, mapping.publicPort, mapping.localPort) < 0) {
+	if (sendnewportmappingrequest(&natpmp, mapping.getProtocol() == NATPortMapping::TCP ? NATPMP_PROTOCOL_TCP : NATPMP_PROTOCOL_UDP, mapping.getLeaseInSeconds(), mapping.getPublicPort(), mapping.getLocalPort()) < 0) {
 			SWIFT_LOG(debug) << "Failed to send NAT-PMP port forwarding request!" << std::endl;
 			return boost::optional<NATPortMapping>();
 	}
@@ -71,10 +71,8 @@ boost::optional<NATPortMapping> NATPMPInterface::addPortForward(int localPort, i
 	} while(r == NATPMP_TRYAGAIN);
 
 	if (r == 0) {
-		mapping.localPort = response.pnu.newportmapping.privateport;
-		mapping.publicPort = response.pnu.newportmapping.mappedpublicport;
-		mapping.leaseInSeconds = response.pnu.newportmapping.lifetime;
-		return mapping;
+		NATPortMapping result(response.pnu.newportmapping.privateport, response.pnu.newportmapping.mappedpublicport, NATPortMapping::TCP, response.pnu.newportmapping.lifetime);
+		return result;
 	}
 	else {
 		SWIFT_LOG(debug) << "Invalid NAT-PMP response." << std::endl;
@@ -83,7 +81,7 @@ boost::optional<NATPortMapping> NATPMPInterface::addPortForward(int localPort, i
 }
 
 bool NATPMPInterface::removePortForward(const NATPortMapping& mapping) {
-	if (sendnewportmappingrequest(&natpmp, mapping.protocol == NATPortMapping::TCP ? NATPMP_PROTOCOL_TCP : NATPMP_PROTOCOL_UDP, 0, 0, mapping.localPort) < 0) {
+	if (sendnewportmappingrequest(&natpmp, mapping.getProtocol() == NATPortMapping::TCP ? NATPMP_PROTOCOL_TCP : NATPMP_PROTOCOL_UDP, 0, 0, mapping.getLocalPort()) < 0) {
 		SWIFT_LOG(debug) << "Failed to send NAT-PMP remove forwarding request!" << std::endl;
 		return false;
 	}

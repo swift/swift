@@ -9,7 +9,8 @@
 #include <Swiften/Network/HostAddress.h>
 
 namespace Swift {
-	struct NATPortMapping {
+	class NATPortMapping {
+	public:
 		enum Protocol {
 			TCP,
 			UDP,
@@ -19,6 +20,23 @@ namespace Swift {
 
 		}
 
+		int getPublicPort() const {
+			return publicPort;
+		}
+
+		int getLocalPort() const {
+			return localPort;
+		}
+
+		Protocol getProtocol() const {
+			return protocol;
+		}
+
+		int getLeaseInSeconds() const {
+			return leaseInSeconds;
+		}
+
+	private:
 		int publicPort;
 		int localPort;
 		Protocol protocol;
