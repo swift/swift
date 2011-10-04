@@ -30,7 +30,7 @@
 
 namespace Swift {
 
-QtUIFactory::QtUIFactory(QtSettingsProvider* settings, QtChatTabs* tabs, QSplitter* netbookSplitter, QtSystemTray* systemTray, QtChatWindowFactory* chatWindowFactory, bool startMinimized) : settings(settings), tabs(tabs), netbookSplitter(netbookSplitter), systemTray(systemTray), chatWindowFactory(chatWindowFactory), lastMainWindow(NULL), loginWindow(NULL), startMinimized(startMinimized)  {
+QtUIFactory::QtUIFactory(QtSettingsProvider* settings, QtChatTabs* tabs, QSplitter* netbookSplitter, QtSystemTray* systemTray, QtChatWindowFactory* chatWindowFactory, bool startMinimized, bool eagleMode) : settings(settings), tabs(tabs), netbookSplitter(netbookSplitter), systemTray(systemTray), chatWindowFactory(chatWindowFactory), lastMainWindow(NULL), loginWindow(NULL), startMinimized(startMinimized), eagleMode(eagleMode)  {
 	chatFontSize = settings->getIntSetting(CHATWINDOW_FONT_SIZE, 0);
 }
 

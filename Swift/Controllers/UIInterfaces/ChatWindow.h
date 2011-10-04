@@ -92,7 +92,12 @@ namespace Swift {
 			 */
 			virtual void setAvailableOccupantActions(const std::vector<OccupantAction>& actions) = 0;
 
+			/**
+			 * A room configuration has been requested, show the form.
+			 * If the form is cancelled, must emit onConfigurationFormCancelled().
+			 */
 			virtual void showRoomConfigurationForm(Form::ref) = 0;
+
 			boost::signal<void ()> onClosed;
 			boost::signal<void ()> onAllMessagesRead;
 			boost::signal<void (const std::string&, bool isCorrection)> onSendMessageRequest;
@@ -106,6 +111,7 @@ namespace Swift {
 			boost::signal<void (Form::ref)> onConfigureRequest;
 			boost::signal<void ()> onDestroyRequest;
 			boost::signal<void (const JID&, const std::string& /*reason*/)> onInvitePersonToThisMUCRequest;
+			boost::signal<void ()> onConfigurationFormCancelled;
 			
 			// File transfer related
 			boost::signal<void (std::string /* id */)> onFileTransferCancel;

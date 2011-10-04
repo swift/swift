@@ -58,7 +58,7 @@ namespace Swift {
 		private:
 			ChatListWindow::Chat createChatListChatItem(const JID& jid, const std::string& activity);
 			void handleChatRequest(const std::string& contact);
-			void handleJoinMUCRequest(const JID& muc, const boost::optional<std::string>& nick, bool addAutoJoin);
+			void handleJoinMUCRequest(const JID& muc, const boost::optional<std::string>& nick, bool addAutoJoin, bool createAsReservedIfNew);
 			void handleSearchMUCRequest();
 			void handleMUCSelectedAfterSearch(const JID&);
 			void rebindControllerJID(const JID& from, const JID& to);

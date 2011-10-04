@@ -24,6 +24,7 @@ QtJoinMUCWindow::QtJoinMUCWindow(UIEventStream* uiEventStream) : uiEventStream(u
 	// placeholder for the room is visible. This is just because Qt hides 
 	// the placeholder when a widget is focused for some reason.
 	ui.nickName->setFocus();
+	ui.instantRoom->setChecked(true);
 }
 
 void QtJoinMUCWindow::handleJoin() {
@@ -38,7 +39,7 @@ void QtJoinMUCWindow::handleJoin() {
 
 	lastSetNick = Q2PSTRING(ui.nickName->text());
 	JID room(Q2PSTRING(ui.room->text()));
-	uiEventStream->send(boost::make_shared<JoinMUCUIEvent>(room, lastSetNick, ui.joinAutomatically->isChecked()));
+	uiEventStream->send(boost::make_shared<JoinMUCUIEvent>(room, lastSetNick, ui.joinAutomatically->isChecked(), !ui.instantRoom->isChecked()));
 	hide();
 }
 

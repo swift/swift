@@ -60,9 +60,11 @@ namespace Swift {
 			void changeSubject(const std::string& subject);
 			void requestConfigurationForm();
 			void configureRoom(Form::ref);
+			void cancelConfigureRoom();
 			void destroyRoom();
 			/** Send an invite for the person to join the MUC */
 			void invitePerson(const JID& person, const std::string& reason = "");
+			void setCreateAsReservedIfNew() {createAsReservedIfNew = true;}
 		public:
 			boost::signal<void (const std::string& /*nick*/)> onJoinComplete;
 			boost::signal<void (ErrorPayload::ref)> onJoinFailed;
@@ -106,5 +108,7 @@ namespace Swift {
 			bool joinComplete_;
 			boost::bsignals::scoped_connection scopedConnection_;
 			boost::posix_time::ptime joinSince_;
+			bool createAsReservedIfNew;
+			bool unlocking;
 	};
 }

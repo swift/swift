@@ -734,6 +734,7 @@ void QtChatWindow::showRoomConfigurationForm(Form::ref form) {
 	}
 	mucConfigurationWindow = new QtMUCConfigurationWindow(form);
 	mucConfigurationWindow->onFormComplete.connect(boost::bind(boost::ref(onConfigureRequest), _1));
+	mucConfigurationWindow->onFormCancelled.connect(boost::bind(boost::ref(onConfigurationFormCancelled)));
 }
 
 void QtChatWindow::addMUCInvitation(const JID& jid, const std::string& reason, const std::string& password) {

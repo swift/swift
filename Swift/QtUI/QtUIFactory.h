@@ -26,7 +26,7 @@ namespace Swift {
 	class QtUIFactory : public QObject, public UIFactory {
 			Q_OBJECT
 		public:
-			QtUIFactory(QtSettingsProvider* settings, QtChatTabs* tabs, QSplitter* netbookSplitter, QtSystemTray* systemTray, QtChatWindowFactory* chatWindowFactory, bool startMinimized);
+			QtUIFactory(QtSettingsProvider* settings, QtChatTabs* tabs, QSplitter* netbookSplitter, QtSystemTray* systemTray, QtChatWindowFactory* chatWindowFactory, bool startMinimized, bool eagleMode);
 
 			virtual XMLConsoleWidget* createXMLConsoleWidget();
 			virtual MainWindow* createMainWindow(UIEventStream* eventStream);
@@ -57,5 +57,6 @@ namespace Swift {
 			std::vector<QPointer<QtChatWindow> > chatWindows;
 			bool startMinimized;
 			int chatFontSize;
+			bool eagleMode;
 	};
 }

@@ -93,6 +93,7 @@ namespace Swift {
 			void handleConfigurationFormReceived(Form::ref);
 			void handleDestroyRoomRequest();
 			void handleInvitePersonToThisMUCRequest(const JID& jid, const std::string& reason);
+			void handleConfigurationCancelled();
 
 		private:
 			MUC::ref muc_;

@@ -73,6 +73,7 @@ MUCController::MUCController (
 	chatWindow_->onOccupantActionSelected.connect(boost::bind(&MUCController::handleActionRequestedOnOccupant, this, _1, _2));
 	chatWindow_->onChangeSubjectRequest.connect(boost::bind(&MUCController::handleChangeSubjectRequest, this, _1));
 	chatWindow_->onConfigureRequest.connect(boost::bind(&MUCController::handleConfigureRequest, this, _1));
+	chatWindow_->onConfigurationFormCancelled.connect(boost::bind(&MUCController::handleConfigurationCancelled, this));
 	chatWindow_->onDestroyRequest.connect(boost::bind(&MUCController::handleDestroyRoomRequest, this));
 	chatWindow_->onInvitePersonToThisMUCRequest.connect(boost::bind(&MUCController::handleInvitePersonToThisMUCRequest, this, _1, _2));
 	muc_->onJoinComplete.connect(boost::bind(&MUCController::handleJoinComplete, this, _1));
@@ -598,6 +599,10 @@ void MUCController::handleConfigurationFailed(ErrorPayload::ref error) {
 
 void MUCController::handleConfigurationFormReceived(Form::ref form) {
 	chatWindow_->showRoomConfigurationForm(form);
+}
+
+void MUCController::handleConfigurationCancelled() {
+	muc_->cancelConfigureRoom();
 }
 
 void MUCController::handleDestroyRoomRequest() {

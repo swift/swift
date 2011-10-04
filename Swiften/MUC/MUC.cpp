@@ -29,7 +29,7 @@ namespace Swift {
 
 typedef std::pair<std::string, MUCOccupant> StringMUCOccupantPair;
 
-MUC::MUC(StanzaChannel* stanzaChannel, IQRouter* iqRouter, DirectedPresenceSender* presenceSender, const JID &muc, MUCRegistry* mucRegistry) : ownMUCJID(muc), stanzaChannel(stanzaChannel), iqRouter_(iqRouter), presenceSender(presenceSender), mucRegistry(mucRegistry) {
+MUC::MUC(StanzaChannel* stanzaChannel, IQRouter* iqRouter, DirectedPresenceSender* presenceSender, const JID &muc, MUCRegistry* mucRegistry) : ownMUCJID(muc), stanzaChannel(stanzaChannel), iqRouter_(iqRouter), presenceSender(presenceSender), mucRegistry(mucRegistry), createAsReservedIfNew(false), unlocking(false) {
 	scopedConnection_ = stanzaChannel->onPresenceReceived.connect(boost::bind(&MUC::handleIncomingPresence, this, _1));
 }
 
@@ -192,18 +192,25 @@ void MUC::handleIncomingPresence(Presence::ref presence) {
 					ownMUCJID = presence->getFrom();
 					presenceSender->addDirectedPresenceReceiver(ownMUCJID, DirectedPresenceSender::AndSendPresence);
 				}
-				MUCOwnerPayload::ref mucPayload(new MUCOwnerPayload());
-				presenceSender->addDirectedPresenceReceiver(ownMUCJID, DirectedPresenceSender::DontSendPresence);
-				mucPayload->setPayload(boost::make_shared<Form>(Form::SubmitType));
-				GenericRequest<MUCOwnerPayload>* request = new GenericRequest<MUCOwnerPayload>(IQ::Set, getJID(), mucPayload, iqRouter_);
-				request->onResponse.connect(boost::bind(&MUC::handleCreationConfigResponse, this, _1, _2));
-				request->send();
+				if (createAsReservedIfNew) {
+					unlocking = true;
+					requestConfigurationForm();
+				}
+				else {
+					MUCOwnerPayload::ref mucPayload(new MUCOwnerPayload());
+					presenceSender->addDirectedPresenceReceiver(ownMUCJID, DirectedPresenceSender::DontSendPresence);
+					mucPayload->setPayload(boost::make_shared<Form>(Form::SubmitType));
+					GenericRequest<MUCOwnerPayload>* request = new GenericRequest<MUCOwnerPayload>(IQ::Set, getJID(), mucPayload, iqRouter_);
+					request->onResponse.connect(boost::bind(&MUC::handleCreationConfigResponse, this, _1, _2));
+					request->send();
+				}
 			}
 		}
 	}
 }
 
 void MUC::handleCreationConfigResponse(MUCOwnerPayload::ref /*unused*/, ErrorPayload::ref error) {
+	unlocking = false;
 	if (error) {
 		presenceSender->removeDirectedPresenceReceiver(ownMUCJID, DirectedPresenceSender::AndSendPresence);
 		onJoinFailed(error);
@@ -252,6 +259,13 @@ void MUC::requestConfigurationForm() {
 	request->send();
 }
 
+void MUC::cancelConfigureRoom() {
+	MUCOwnerPayload::ref mucPayload(new MUCOwnerPayload());
+	mucPayload->setPayload(boost::make_shared<Form>(Form::CancelType));
+	GenericRequest<MUCOwnerPayload>* request = new GenericRequest<MUCOwnerPayload>(IQ::Set, getJID(), mucPayload, iqRouter_);
+	request->send();
+}
+
 void MUC::handleConfigurationFormReceived(MUCOwnerPayload::ref payload, ErrorPayload::ref error) {
 	Form::ref form;
 	if (payload) {
@@ -274,7 +288,12 @@ void MUC::configureRoom(Form::ref form) {
 	MUCOwnerPayload::ref mucPayload(new MUCOwnerPayload());
 	mucPayload->setPayload(form);
 	GenericRequest<MUCOwnerPayload>* request = new GenericRequest<MUCOwnerPayload>(IQ::Set, getJID(), mucPayload, iqRouter_);
-	request->onResponse.connect(boost::bind(&MUC::handleConfigurationResultReceived, this, _1, _2));
+	if (unlocking) {
+		request->onResponse.connect(boost::bind(&MUC::handleCreationConfigResponse, this, _1, _2));
+	}
+	else {
+		request->onResponse.connect(boost::bind(&MUC::handleConfigurationResultReceived, this, _1, _2));
+	}
 	request->send();
 }
 

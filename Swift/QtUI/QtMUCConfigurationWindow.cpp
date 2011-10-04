@@ -8,10 +8,11 @@
 
 #include <boost/bind.hpp>
 #include <QBoxLayout>
+#include <QCloseEvent>
 #include <Swift/QtUI/QtFormWidget.h>
 
 namespace Swift {
-QtMUCConfigurationWindow::QtMUCConfigurationWindow(Form::ref form) {
+QtMUCConfigurationWindow::QtMUCConfigurationWindow(Form::ref form) : closed_(false) {
 
 	setAttribute(Qt::WA_DeleteOnClose);
 
@@ -43,12 +44,19 @@ QtMUCConfigurationWindow::~QtMUCConfigurationWindow() {
 
 }
 
+void QtMUCConfigurationWindow::closeEvent(QCloseEvent* event) {
+	if (!closed_) {
+		onFormCancelled();
+	}
+}
+
 void QtMUCConfigurationWindow::handleCancelClicked() {
 	close();
 }
 
 void QtMUCConfigurationWindow::handleOKClicked() {
 	onFormComplete(formWidget_->getCompletedForm());
+	closed_ = true;
 	close();
 }
 
