@@ -42,7 +42,7 @@ class StorageParserTest : public CppUnit::TestFixture {
 			CPPUNIT_ASSERT_EQUAL(JID("council@conference.underhill.org"), rooms[0].jid);
 			CPPUNIT_ASSERT(rooms[0].autoJoin);
 			CPPUNIT_ASSERT_EQUAL(std::string("Puck"), rooms[0].nick);
-			CPPUNIT_ASSERT_EQUAL(std::string("MyPass"), rooms[0].password);
+			CPPUNIT_ASSERT_EQUAL(std::string("MyPass"), *rooms[0].password);
 		}
 
 		void testParse_MultipleRooms() {

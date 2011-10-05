@@ -38,8 +38,9 @@ void QtJoinMUCWindow::handleJoin() {
 	}
 
 	lastSetNick = Q2PSTRING(ui.nickName->text());
+	std::string password = Q2PSTRING(ui.password->text());
 	JID room(Q2PSTRING(ui.room->text()));
-	uiEventStream->send(boost::make_shared<JoinMUCUIEvent>(room, lastSetNick, ui.joinAutomatically->isChecked(), !ui.instantRoom->isChecked()));
+	uiEventStream->send(boost::make_shared<JoinMUCUIEvent>(room, password, lastSetNick, ui.joinAutomatically->isChecked(), !ui.instantRoom->isChecked()));
 	hide();
 }
 
@@ -59,6 +60,7 @@ void QtJoinMUCWindow::setMUC(const std::string& nick) {
 void QtJoinMUCWindow::show() {
 	QWidget::show();
 	QWidget::activateWindow();
+	ui.password->setText("");
 }
 
 }

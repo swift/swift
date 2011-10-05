@@ -44,6 +44,13 @@ void MUC::joinAs(const std::string &nick) {
 }
 
 /**
+ * Set the password used for entering the room.
+ */
+void MUC::setPassword(const boost::optional<std::string>& newPassword) {
+	password = newPassword;
+}
+
+/**
  * Join the MUC with context since date.
  */
 void MUC::joinWithContextSince(const std::string &nick, const boost::posix_time::ptime& since) {
@@ -67,6 +74,9 @@ void MUC::internalJoin(const std::string &nick) {
 	MUCPayload::ref mucPayload = boost::make_shared<MUCPayload>();
 	if (joinSince_ != boost::posix_time::not_a_date_time) {
 		mucPayload->setSince(joinSince_);
+	}
+	if (password) {
+		mucPayload->setPassword(*password);
 	}
 	joinPresence->addPayload(mucPayload);
 

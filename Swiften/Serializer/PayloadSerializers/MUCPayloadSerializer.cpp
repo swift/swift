@@ -7,9 +7,11 @@
 #include <Swiften/Serializer/PayloadSerializers/MUCPayloadSerializer.h>
 
 #include <boost/lexical_cast.hpp>
+#include <boost/smart_ptr/make_shared.hpp>
 #include <boost/date_time/posix_time/posix_time.hpp>
 
 #include <Swiften/Serializer/XML/XMLElement.h>
+#include <Swiften/Serializer/XML/XMLTextNode.h>
 #include <Swiften/Base/String.h>
 
 namespace Swift {
@@ -39,6 +41,12 @@ std::string MUCPayloadSerializer::serializePayload(boost::shared_ptr<MUCPayload>
 		sinceString += "Z";
 		historyElement->setAttribute("since", sinceString);
 		history = true;
+	}
+	if (muc->getPassword()) {
+		std::string password = *muc->getPassword();
+		boost::shared_ptr<XMLElement> passwordElement(new XMLElement("password"));
+		passwordElement->addNode(boost::make_shared<XMLTextNode>(password));
+		mucElement.addNode(passwordElement);
 	}
 	if (history) {
 		mucElement.addNode(historyElement);

@@ -30,9 +30,9 @@ std::string StorageSerializer::serializePayload(boost::shared_ptr<Storage> stora
 			nickElement->addNode(boost::shared_ptr<XMLTextNode>(new XMLTextNode(room.nick)));
 			conferenceElement->addNode(nickElement);
 		}
-		if (!room.password.empty()) {
+		if (room.password) {
 			boost::shared_ptr<XMLElement> passwordElement(new XMLElement("password"));
-			passwordElement->addNode(boost::shared_ptr<XMLTextNode>(new XMLTextNode(room.password)));
+			passwordElement->addNode(boost::shared_ptr<XMLTextNode>(new XMLTextNode(*room.password)));
 			conferenceElement->addNode(passwordElement);
 		}
 		storageElement.addNode(conferenceElement);

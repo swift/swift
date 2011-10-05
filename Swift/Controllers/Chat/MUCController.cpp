@@ -44,6 +44,7 @@ namespace Swift {
 MUCController::MUCController (
 		const JID& self,
 		MUC::ref muc,
+		const boost::optional<std::string>& password,
 		const std::string &nick, 
 		StanzaChannel* stanzaChannel, 
 		IQRouter* iqRouter, 
@@ -55,7 +56,7 @@ MUCController::MUCController (
 		TimerFactory* timerFactory,
 		EventController* eventController,
 		EntityCapsProvider* entityCapsProvider) :
-			ChatControllerBase(self, stanzaChannel, iqRouter, chatWindowFactory, muc->getJID(), presenceOracle, avatarManager, useDelayForLatency, uiEventStream, eventController, timerFactory, entityCapsProvider), muc_(muc), nick_(nick), desiredNick_(nick) {
+			ChatControllerBase(self, stanzaChannel, iqRouter, chatWindowFactory, muc->getJID(), presenceOracle, avatarManager, useDelayForLatency, uiEventStream, eventController, timerFactory, entityCapsProvider), muc_(muc), nick_(nick), desiredNick_(nick), password_(password) {
 	parting_ = true;
 	joined_ = false;
 	lastWasPresence_ = false;
@@ -146,6 +147,9 @@ void MUCController::rejoin() {
 	if (parting_) {
 		joined_ = false;
 		parting_ = false;
+		if (password_) {
+			muc_->setPassword(*password_);
+		}
 		//FIXME: check for received activity
 		if (lastActivity_ == boost::posix_time::not_a_date_time) {
 			muc_->joinAs(nick_);

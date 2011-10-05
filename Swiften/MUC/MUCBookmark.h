@@ -59,7 +59,8 @@ namespace Swift {
 			}
 
 			bool operator==(const MUCBookmark& rhs) const {
-				return rhs.room_ == room_ && rhs.name_ == name_ && rhs.nick_ == nick_ && rhs.password_ == password_ && rhs.autojoin_ == autojoin_;
+				/* FIXME: not checking passwords for equality - which might make sense, perhaps */
+				return rhs.room_ == room_ && rhs.name_ == name_ && rhs.nick_ == nick_ /*&& rhs.password_ == password_*/ && rhs.autojoin_ == autojoin_;
 			}
 
 			Storage::Room toStorage() const {

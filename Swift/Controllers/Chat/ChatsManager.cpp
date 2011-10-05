@@ -199,7 +199,7 @@ void ChatsManager::handleMUCBookmarkAdded(const MUCBookmark& bookmark) {
 	std::map<JID, MUCController*>::iterator it = mucControllers_.find(bookmark.getRoom());
 	if (it == mucControllers_.end() && bookmark.getAutojoin()) {
 		//FIXME: need vcard stuff here to get a nick
-		handleJoinMUCRequest(bookmark.getRoom(), bookmark.getNick(), false, false);
+		handleJoinMUCRequest(bookmark.getRoom(), bookmark.getPassword(), bookmark.getNick(), false, false);
 	}
 	chatListWindow_->addMUCBookmark(bookmark);
 }
@@ -321,7 +321,7 @@ void ChatsManager::handleUIEvent(boost::shared_ptr<UIEvent> event) {
 		mucBookmarkManager_->replaceBookmark(editMUCBookmarkEvent->getOldBookmark(), editMUCBookmarkEvent->getNewBookmark());
 	}
 	else if (JoinMUCUIEvent::ref joinEvent = boost::dynamic_pointer_cast<JoinMUCUIEvent>(event)) {
-		handleJoinMUCRequest(joinEvent->getJID(), joinEvent->getNick(), joinEvent->getShouldJoinAutomatically(), joinEvent->getCreateAsReservedRoomIfNew());
+		handleJoinMUCRequest(joinEvent->getJID(), joinEvent->getPassword(), joinEvent->getNick(), joinEvent->getShouldJoinAutomatically(), joinEvent->getCreateAsReservedRoomIfNew());
 		mucControllers_[joinEvent->getJID()]->activateChatWindow();
 	}
 	else if (boost::shared_ptr<RequestJoinMUCUIEvent> joinEvent = boost::dynamic_pointer_cast<RequestJoinMUCUIEvent>(event)) {
@@ -481,7 +481,7 @@ void ChatsManager::rebindControllerJID(const JID& from, const JID& to) {
 	chatControllers_[to]->setToJID(to);
 }
 
-void ChatsManager::handleJoinMUCRequest(const JID &mucJID, const boost::optional<std::string>& nickMaybe, bool addAutoJoin, bool createAsReservedIfNew) {
+void ChatsManager::handleJoinMUCRequest(const JID &mucJID, const boost::optional<std::string>& password, const boost::optional<std::string>& nickMaybe, bool addAutoJoin, bool createAsReservedIfNew) {
 	if (addAutoJoin) {
 		MUCBookmark bookmark(mucJID, mucJID.getNode());
 		bookmark.setAutojoin(true);
@@ -500,7 +500,7 @@ void ChatsManager::handleJoinMUCRequest(const JID &mucJID, const boost::optional
 		if (createAsReservedIfNew) {
 			muc->setCreateAsReservedIfNew();
 		}
-		MUCController* controller = new MUCController(jid_, muc, nick, stanzaChannel_, iqRouter_, chatWindowFactory_, presenceOracle_, avatarManager_, uiEventStream_, false, timerFactory_, eventController_, entityCapsProvider_);
+		MUCController* controller = new MUCController(jid_, muc, password, nick, stanzaChannel_, iqRouter_, chatWindowFactory_, presenceOracle_, avatarManager_, uiEventStream_, false, timerFactory_, eventController_, entityCapsProvider_);
 		mucControllers_[mucJID] = controller;
 		controller->setAvailableServerFeatures(serverDiscoInfo_);
 		controller->onUserLeft.connect(boost::bind(&ChatsManager::handleUserLeftMUC, this, controller));
@@ -549,7 +549,7 @@ void ChatsManager::handleMUCSelectedAfterSearch(const JID& muc) {
 }
 
 void ChatsManager::handleMUCBookmarkActivated(const MUCBookmark& mucBookmark) {
-	uiEventStream_->send(boost::make_shared<JoinMUCUIEvent>(mucBookmark.getRoom(), mucBookmark.getNick()));
+	uiEventStream_->send(boost::make_shared<JoinMUCUIEvent>(mucBookmark.getRoom(), mucBookmark.getPassword(), mucBookmark.getNick()));
 }
 
 void ChatsManager::handleNewFileTransferController(FileTransferController* ftc) {
@@ -560,7 +560,8 @@ void ChatsManager::handleNewFileTransferController(FileTransferController* ftc) 
 
 void ChatsManager::handleRecentActivated(const ChatListWindow::Chat& chat) {
 	if (chat.isMUC) {
-		uiEventStream_->send(boost::make_shared<JoinMUCUIEvent>(chat.jid, chat.nick));
+		/* FIXME: This means that recents requiring passwords will just flat-out not work */
+		uiEventStream_->send(boost::make_shared<JoinMUCUIEvent>(chat.jid, boost::optional<std::string>(), chat.nick));
 	}
 	else {
 		uiEventStream_->send(boost::make_shared<RequestChatUIEvent>(chat.jid));

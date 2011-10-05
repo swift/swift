@@ -12,21 +12,23 @@
 
 #include <Swiften/JID/JID.h>
 
-#include "Swift/Controllers/UIEvents/UIEvent.h"
+#include <Swift/Controllers/UIEvents/UIEvent.h>
 
 namespace Swift {
 	class JoinMUCUIEvent : public UIEvent {
 		public:
 			typedef boost::shared_ptr<JoinMUCUIEvent> ref;
-			JoinMUCUIEvent(const JID& jid, const boost::optional<std::string>& nick = boost::optional<std::string>(), bool joinAutomaticallyInFuture = false, bool createAsReservedRoomIfNew = false) : jid_(jid), nick_(nick), joinAutomatically_(joinAutomaticallyInFuture), createAsReservedRoomIfNew_(createAsReservedRoomIfNew) {};
-			boost::optional<std::string> getNick() {return nick_;};
-			JID getJID() {return jid_;};
-			bool getShouldJoinAutomatically() {return joinAutomatically_;}
-			bool getCreateAsReservedRoomIfNew() {return createAsReservedRoomIfNew_;}
+			JoinMUCUIEvent(const JID& jid, const boost::optional<std::string>& password = boost::optional<std::string>(), const boost::optional<std::string>& nick = boost::optional<std::string>(), bool joinAutomaticallyInFuture = false, bool createAsReservedRoomIfNew = false) : jid_(jid), nick_(nick), joinAutomatically_(joinAutomaticallyInFuture), createAsReservedRoomIfNew_(createAsReservedRoomIfNew), password_(password) {};
+			const boost::optional<std::string>& getNick() const {return nick_;}
+			const JID& getJID() const {return jid_;}
+			bool getShouldJoinAutomatically() const {return joinAutomatically_;}
+			bool getCreateAsReservedRoomIfNew() const {return createAsReservedRoomIfNew_;}
+			const boost::optional<std::string>& getPassword() const {return password_;}
 		private:
 			JID jid_;
 			boost::optional<std::string> nick_;
 			bool joinAutomatically_;
 			bool createAsReservedRoomIfNew_;
+			boost::optional<std::string> password_;
 	};
 }

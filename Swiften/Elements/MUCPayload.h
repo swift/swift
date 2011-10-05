@@ -40,6 +40,10 @@ namespace Swift {
 				since_ = since;
 			}
 
+			void setPassword(const std::string& password) {
+				password_ = password;
+			}
+
 			int getMaxChars() const{
 				return maxChars_;
 			}
@@ -52,6 +56,10 @@ namespace Swift {
 				return seconds_;
 			}
 
+			const boost::optional<std::string>& getPassword() const {
+				return password_;
+			}
+
 			const boost::posix_time::ptime& getSince() const {
 				return since_;
 			}
@@ -61,5 +69,6 @@ namespace Swift {
 			int maxStanzas_;
 			int seconds_;
 			boost::posix_time::ptime since_;
+			boost::optional<std::string> password_;
 	};
 }

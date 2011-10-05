@@ -65,6 +65,7 @@ namespace Swift {
 			/** Send an invite for the person to join the MUC */
 			void invitePerson(const JID& person, const std::string& reason = "");
 			void setCreateAsReservedIfNew() {createAsReservedIfNew = true;}
+			void setPassword(const boost::optional<std::string>& password);
 		public:
 			boost::signal<void (const std::string& /*nick*/)> onJoinComplete;
 			boost::signal<void (ErrorPayload::ref)> onJoinFailed;
@@ -110,5 +111,6 @@ namespace Swift {
 			boost::posix_time::ptime joinSince_;
 			bool createAsReservedIfNew;
 			bool unlocking;
+			boost::optional<std::string> password;
 	};
 }

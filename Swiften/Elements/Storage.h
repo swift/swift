@@ -8,9 +8,12 @@
 
 #include <vector>
 
+#include <boost/optional.hpp>
+
 #include <Swiften/Elements/Payload.h>
 #include <string>
 #include <Swiften/JID/JID.h>
+#include <Swiften/Base/SafeString.h>
 
 namespace Swift {
 	class Storage : public Payload {
@@ -22,7 +25,7 @@ namespace Swift {
 				JID jid;
 				bool autoJoin;
 				std::string nick;
-				std::string password;
+				boost::optional<std::string> password;
 			};
 
 			struct URL {

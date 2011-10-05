@@ -60,7 +60,7 @@ public:
 		entityCapsProvider_ = new DummyEntityCapsProvider();
 		muc_ = MUC::ref(new MUC(stanzaChannel_, iqRouter_, directedPresenceSender_, JID("teaparty@rooms.wonderland.lit"), mucRegistry_));
 		mocks_->ExpectCall(chatWindowFactory_, ChatWindowFactory::createChatWindow).With(muc_->getJID(), uiEventStream_).Return(window_);
-		controller_ = new MUCController (self_, muc_, nick_, stanzaChannel_, iqRouter_, chatWindowFactory_, presenceOracle_, avatarManager_, uiEventStream_, false, timerFactory, eventController_, entityCapsProvider_);
+		controller_ = new MUCController (self_, muc_, boost::optional<std::string>(), nick_, stanzaChannel_, iqRouter_, chatWindowFactory_, presenceOracle_, avatarManager_, uiEventStream_, false, timerFactory, eventController_, entityCapsProvider_);
 	};
 
 	void tearDown() {
