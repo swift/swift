@@ -24,6 +24,9 @@ inline void invokeCallback(const Event& event) {
 	catch (const std::exception& e) {
 		std::cerr << "Uncaught exception in event loop: " << e.what() << std::endl;
 	}
+	catch (...) {
+		std::cerr << "Uncaught non-exception in event loop" << std::endl;	
+	}
 }
 
 EventLoop::EventLoop() : nextEventID_(0), handlingEvents_(false) {

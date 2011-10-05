@@ -37,12 +37,15 @@ class MUCControllerTest : public CppUnit::TestFixture {
 	CPPUNIT_TEST(testAddressedToSelf);
 	CPPUNIT_TEST(testNotAddressedToSelf);
 	CPPUNIT_TEST(testAddressedToSelfBySelf);
+	CPPUNIT_TEST(testMessageWithEmptyLabelItem);
+	CPPUNIT_TEST(testMessageWithLabelItem);
 	CPPUNIT_TEST_SUITE_END();
 
 public:
 	void setUp() {
 		self_ = JID("girl@wonderland.lit/rabbithole");
 		nick_ = "aLiCe";
+		mucJID_ = JID("teaparty@rooms.wonderland.lit");
 		mocks_ = new MockRepository();
 		stanzaChannel_ = new DummyStanzaChannel();
 		iqChannel_ = new DummyIQChannel();
@@ -55,10 +58,10 @@ public:
 		uiEventStream_ = new UIEventStream();
 		avatarManager_ = new NullAvatarManager();
 		TimerFactory* timerFactory = NULL;
-		window_ = new MockChatWindow();//mocks_->InterfaceMock<ChatWindow>();
+		window_ = new MockChatWindow();
 		mucRegistry_ = new MUCRegistry();
 		entityCapsProvider_ = new DummyEntityCapsProvider();
-		muc_ = MUC::ref(new MUC(stanzaChannel_, iqRouter_, directedPresenceSender_, JID("teaparty@rooms.wonderland.lit"), mucRegistry_));
+		muc_ = boost::make_shared<MUC>(stanzaChannel_, iqRouter_, directedPresenceSender_, mucJID_, mucRegistry_);
 		mocks_->ExpectCall(chatWindowFactory_, ChatWindowFactory::createChatWindow).With(muc_->getJID(), uiEventStream_).Return(window_);
 		controller_ = new MUCController (self_, muc_, boost::optional<std::string>(), nick_, stanzaChannel_, iqRouter_, chatWindowFactory_, presenceOracle_, avatarManager_, uiEventStream_, false, timerFactory, eventController_, entityCapsProvider_);
 	};
@@ -156,6 +159,57 @@ public:
 		CPPUNIT_ASSERT_EQUAL((size_t)0, eventController_->getEvents().size());
 	}
 
+	void testMessageWithEmptyLabelItem() {
+		SecurityLabelsCatalog::Item label;
+		label.setSelector("Bob");
+		window_->label_ = label;
+		boost::shared_ptr<DiscoInfo> features = boost::make_shared<DiscoInfo>();
+		features->addFeature(DiscoInfo::SecurityLabelsCatalogFeature);
+		controller_->setAvailableServerFeatures(features);
+		IQ::ref iq = iqChannel_->iqs_[iqChannel_->iqs_.size() - 1];
+		SecurityLabelsCatalog::ref labelPayload = boost::make_shared<SecurityLabelsCatalog>();
+		labelPayload->addItem(label);
+		IQ::ref result = IQ::createResult(self_, iq->getID(), labelPayload);
+		iqChannel_->onIQReceived(result);
+		std::string messageBody("agamemnon");
+		window_->onSendMessageRequest(messageBody, false);
+		boost::shared_ptr<Stanza> rawStanza = stanzaChannel_->sentStanzas[stanzaChannel_->sentStanzas.size() - 1];
+		Message::ref message = boost::dynamic_pointer_cast<Message>(rawStanza);
+		CPPUNIT_ASSERT_EQUAL(iq->getTo(), result->getFrom());
+		CPPUNIT_ASSERT(window_->labelsEnabled_);
+		CPPUNIT_ASSERT(stanzaChannel_->isAvailable()); /* Otherwise will prevent sends. */
+		CPPUNIT_ASSERT(message);
+		CPPUNIT_ASSERT_EQUAL(messageBody, message->getBody());
+		CPPUNIT_ASSERT(!message->getPayload<SecurityLabel>());
+	}
+
+	void testMessageWithLabelItem() {
+		SecurityLabel::ref label = boost::make_shared<SecurityLabel>();
+		label->setLabel("a");
+		SecurityLabelsCatalog::Item labelItem;
+		labelItem.setSelector("Bob");
+		labelItem.setLabel(label);
+		window_->label_ = labelItem;
+		boost::shared_ptr<DiscoInfo> features = boost::make_shared<DiscoInfo>();
+		features->addFeature(DiscoInfo::SecurityLabelsCatalogFeature);
+		controller_->setAvailableServerFeatures(features);
+		IQ::ref iq = iqChannel_->iqs_[iqChannel_->iqs_.size() - 1];
+		SecurityLabelsCatalog::ref labelPayload = boost::make_shared<SecurityLabelsCatalog>();
+		labelPayload->addItem(labelItem);
+		IQ::ref result = IQ::createResult(self_, iq->getID(), labelPayload);
+		iqChannel_->onIQReceived(result);
+		std::string messageBody("agamemnon");
+		window_->onSendMessageRequest(messageBody, false);
+		boost::shared_ptr<Stanza> rawStanza = stanzaChannel_->sentStanzas[stanzaChannel_->sentStanzas.size() - 1];
+		Message::ref message = boost::dynamic_pointer_cast<Message>(rawStanza);
+		CPPUNIT_ASSERT_EQUAL(iq->getTo(), result->getFrom());
+		CPPUNIT_ASSERT(window_->labelsEnabled_);
+		CPPUNIT_ASSERT(stanzaChannel_->isAvailable()); /* Otherwise will prevent sends. */
+		CPPUNIT_ASSERT(message);
+		CPPUNIT_ASSERT_EQUAL(messageBody, message->getBody());
+		CPPUNIT_ASSERT_EQUAL(label, message->getPayload<SecurityLabel>());
+	}
+
 	void checkEqual(const std::vector<NickJoinPart>& expected, const std::vector<NickJoinPart>& actual) {
 		CPPUNIT_ASSERT_EQUAL(expected.size(), actual.size());
 		for (size_t i = 0; i < expected.size(); i++) {
@@ -226,10 +280,11 @@ public:
 
 private:
 	JID self_;
+	JID mucJID_;
 	MUC::ref muc_;
 	std::string nick_;
-	StanzaChannel* stanzaChannel_;
-	IQChannel* iqChannel_;
+	DummyStanzaChannel* stanzaChannel_;
+	DummyIQChannel* iqChannel_;
 	IQRouter* iqRouter_;
 	EventController* eventController_;
 	ChatWindowFactory* chatWindowFactory_;

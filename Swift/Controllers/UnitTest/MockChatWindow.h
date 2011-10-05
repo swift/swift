@@ -34,7 +34,7 @@ namespace Swift {
 			virtual void setUnreadMessageCount(int /*count*/) {};
 			virtual void convertToMUC() {};
 			virtual void setSecurityLabelsError() {};
-			virtual SecurityLabelsCatalog::Item getSelectedSecurityLabel() {return SecurityLabelsCatalog::Item();};
+			virtual SecurityLabelsCatalog::Item getSelectedSecurityLabel() {return label_;}
 			virtual void setInputEnabled(bool /*enabled*/) {};
 			virtual void setRosterModel(Roster* /*roster*/) {};
 			virtual void setTabComplete(TabComplete*) {};
@@ -50,14 +50,11 @@ namespace Swift {
 			virtual void showRoomConfigurationForm(Form::ref) {}
 			virtual void addMUCInvitation(const JID& /*jid*/, const std::string& /*reason*/, const std::string& /*password*/) {};
 
-			boost::signal<void ()> onClosed;
-			boost::signal<void ()> onAllMessagesRead;
-			boost::signal<void (const std::string&, bool isCorrection)> onSendMessageRequest;
-
 			std::string name_;
 			std::string lastMessageBody_;
 			std::vector<SecurityLabelsCatalog::Item> labels_;
 			bool labelsEnabled_;
+			SecurityLabelsCatalog::Item label_;
 	};
 }
 

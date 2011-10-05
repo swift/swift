@@ -17,6 +17,7 @@
 namespace Swift {
 	class SecurityLabelsCatalog : public Payload {
 		public:
+			typedef boost::shared_ptr<SecurityLabelsCatalog> ref;
 			class Item {
 				public:
 					Item() : default_(false) {}

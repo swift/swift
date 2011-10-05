@@ -14,6 +14,7 @@
 namespace Swift {
 	class SecurityLabel : public Payload {
 		public:
+			typedef boost::shared_ptr<SecurityLabel> ref;
 			SecurityLabel() {}
 
 			const std::string& getDisplayMarking() const { return displayMarking_; }

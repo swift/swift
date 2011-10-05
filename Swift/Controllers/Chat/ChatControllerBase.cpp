@@ -78,12 +78,9 @@ void ChatControllerBase::setOnline(bool online) {
 
 void ChatControllerBase::setAvailableServerFeatures(boost::shared_ptr<DiscoInfo> info) {
 	if (iqRouter_->isAvailable() && info->hasFeature(DiscoInfo::SecurityLabelsCatalogFeature)) {
-		//chatWindow_->setSecurityLabelsEnabled(true);
-		//chatWindow_->setSecurityLabelsError();
 		GetSecurityLabelsCatalogRequest::ref request = GetSecurityLabelsCatalogRequest::create(JID(toJID_.toBare()), iqRouter_);
 		request->onResponse.connect(boost::bind(&ChatControllerBase::handleSecurityLabelsCatalogResponse, this, _1, _2));
 		request->send();
-		//labelsEnabled_ = true;
 	} else {
 		chatWindow_->setSecurityLabelsEnabled(false);
 		labelsEnabled_ = false;
@@ -114,7 +111,10 @@ void ChatControllerBase::handleSendMessageRequest(const std::string &body, bool 
 	message->setType(Swift::Message::Chat);
 	message->setBody(body);
 	if (labelsEnabled_) {
-		message->addPayload(chatWindow_->getSelectedSecurityLabel().getLabel());
+		SecurityLabelsCatalog::Item labelItem = chatWindow_->getSelectedSecurityLabel();
+		if (labelItem.getLabel()) {
+			message->addPayload(labelItem.getLabel());
+		}
 	}
 	preSendMessageRequest(message);
 	if (useDelayForLatency_) {
