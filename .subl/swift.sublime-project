@@ -1,0 +1,16 @@
+/* http://www.sublimetext.com/docs/2/projects.html */
+{
+	"folders":
+	[
+		{
+			"path": "..",
+			"folder_exclude_patterns": ["tmp", ".sconf_temp", ".settings", "Swift.app"],
+			"file_exclude_patterns": [".cproject", ".project", ".sconsign.dblite", "*~", "config.log", "*.o"]
+		}
+	],
+	"settings":
+	{
+		"tab_size": 4,
+		"translate_tabs_to_spaces": false
+	}
+}
