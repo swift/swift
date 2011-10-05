@@ -45,6 +45,9 @@ void QtOccupantListWidget::contextMenuEvent(QContextMenuEvent* event) {
 			QString text = "Error: missing string";
 			switch (availableAction) {
 				case ChatWindow::Kick: text = tr("Kick user"); break;
+				case ChatWindow::MakeModerator: text = tr("Make moderator"); break;
+				case ChatWindow::MakeParticipant: text = tr("Make participant"); break;
+				case ChatWindow::MakeVisitor: text = tr("Remove voice"); break;
 			}
 			QAction* action = contextMenu.addAction(text);
 			actions[action] = availableAction;

@@ -94,6 +94,7 @@ namespace Swift {
 			void handleDestroyRoomRequest();
 			void handleInvitePersonToThisMUCRequest(const JID& jid, const std::string& reason);
 			void handleConfigurationCancelled();
+			void handleOccupantRoleChangeFailed(ErrorPayload::ref, const JID&, MUCOccupant::Role);
 
 		private:
 			MUC::ref muc_;

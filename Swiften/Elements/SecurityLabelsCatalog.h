@@ -21,11 +21,11 @@ namespace Swift {
 			class Item {
 				public:
 					Item() : default_(false) {}
-					const boost::shared_ptr<SecurityLabel> getLabel() const {
+					SecurityLabel::ref getLabel() const {
 						return label_;
 					}
 
-					void setLabel(boost::shared_ptr<SecurityLabel> label) {
+					void setLabel(SecurityLabel::ref label) {
 						label_ = label;
 					}
 
@@ -41,7 +41,7 @@ namespace Swift {
 						default_ = isDefault;
 					}
 				private:
-					boost::shared_ptr<SecurityLabel> label_;
+					SecurityLabel::ref label_;
 					std::string selector_;
 					bool default_;
 			};

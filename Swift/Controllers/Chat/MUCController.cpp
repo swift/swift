@@ -85,6 +85,7 @@ MUCController::MUCController (
 	muc_->onOccupantRoleChanged.connect(boost::bind(&MUCController::handleOccupantRoleChanged, this, _1, _2, _3));
 	muc_->onConfigurationFailed.connect(boost::bind(&MUCController::handleConfigurationFailed, this, _1));
 	muc_->onConfigurationFormReceived.connect(boost::bind(&MUCController::handleConfigurationFormReceived, this, _1));
+	muc_->onRoleChangeFailed.connect(boost::bind(&MUCController::handleOccupantRoleChangeFailed, this, _1, _2, _3));
 	if (timerFactory) {
 		loginCheckTimer_ = boost::shared_ptr<Timer>(timerFactory->createTimer(MUC_JOIN_WARNING_TIMEOUT_MILLISECONDS));
 		loginCheckTimer_->onTick.connect(boost::bind(&MUCController::handleJoinTimeoutTick, this));
@@ -110,16 +111,22 @@ MUCController::~MUCController() {
 
 void MUCController::handleWindowOccupantSelectionChanged(ContactRosterItem* item) {
 	std::vector<ChatWindow::OccupantAction> actions;
-	//FIXME
+	/* FIXME: all of these should be conditional */
 	if (item) {
 		actions.push_back(ChatWindow::Kick);
+		actions.push_back(ChatWindow::MakeModerator);
+		actions.push_back(ChatWindow::MakeParticipant);
+		actions.push_back(ChatWindow::MakeVisitor);
 	}
 	chatWindow_->setAvailableOccupantActions(actions);
 }
 
 void MUCController::handleActionRequestedOnOccupant(ChatWindow::OccupantAction action, ContactRosterItem* item) {
 	switch (action) {
-		case ChatWindow::Kick: muc_->kickUser(item->getJID());break;
+		case ChatWindow::Kick: muc_->kickOccupant(item->getJID());break;
+		case ChatWindow::MakeModerator: muc_->changeOccupantRole(item->getJID(), MUCOccupant::Moderator);break;
+		case ChatWindow::MakeParticipant: muc_->changeOccupantRole(item->getJID(), MUCOccupant::Participant);break;
+		case ChatWindow::MakeVisitor: muc_->changeOccupantRole(item->getJID(), MUCOccupant::Visitor);break;
 	}
 }
 
@@ -598,6 +605,12 @@ void MUCController::handleConfigureRequest(Form::ref form) {
 void MUCController::handleConfigurationFailed(ErrorPayload::ref error) {
 	std::string errorMessage = getErrorMessage(error);
 	errorMessage = str(format(QT_TRANSLATE_NOOP("", "Room configuration failed: %1%.")) % errorMessage);
+	chatWindow_->addErrorMessage(errorMessage);
+}
+
+void MUCController::handleOccupantRoleChangeFailed(ErrorPayload::ref error, const JID&, MUCOccupant::Role) {
+	std::string errorMessage = getErrorMessage(error);
+	errorMessage = str(format(QT_TRANSLATE_NOOP("", "Occupant role change failed: %1%.")) % errorMessage);
 	chatWindow_->addErrorMessage(errorMessage);
 }
 

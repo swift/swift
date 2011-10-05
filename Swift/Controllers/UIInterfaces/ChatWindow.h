@@ -32,7 +32,7 @@ namespace Swift {
 		public:
 			enum AckState {Pending, Received, Failed};
 			enum Tristate {Yes, No, Maybe};
-			enum OccupantAction {Kick};
+			enum OccupantAction {Kick, MakeModerator, MakeParticipant, MakeVisitor};
 			enum FileTransferState {WaitingForAccept, Negotiating, Transferring, Canceled, Finished, FTFailed};
 			ChatWindow() {}
 			virtual ~ChatWindow() {};

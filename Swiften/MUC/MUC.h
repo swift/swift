@@ -56,7 +56,8 @@ namespace Swift {
 			/** Get occupant information*/
 			MUCOccupant getOccupant(const std::string& nick);
 			bool hasOccupant(const std::string& nick);
-			void kickUser(const JID& jid);
+			void kickOccupant(const JID& jid);
+			void changeOccupantRole(const JID& jid, MUCOccupant::Role role);
 			void changeSubject(const std::string& subject);
 			void requestConfigurationForm();
 			void configureRoom(Form::ref);
@@ -69,7 +70,7 @@ namespace Swift {
 		public:
 			boost::signal<void (const std::string& /*nick*/)> onJoinComplete;
 			boost::signal<void (ErrorPayload::ref)> onJoinFailed;
-			boost::signal<void (ErrorPayload::ref, const JID&)> onKickFailed;
+			boost::signal<void (ErrorPayload::ref, const JID&, MUCOccupant::Role)> onRoleChangeFailed;
 			boost::signal<void (ErrorPayload::ref)> onConfigurationFailed;
 			boost::signal<void (Presence::ref)> onOccupantPresenceChange;
 			boost::signal<void (const std::string&, const MUCOccupant& /*now*/, const MUCOccupant::Role& /*old*/)> onOccupantRoleChanged;
@@ -94,7 +95,7 @@ namespace Swift {
 			void handleIncomingPresence(Presence::ref presence);
 			void internalJoin(const std::string& nick);
 			void handleCreationConfigResponse(MUCOwnerPayload::ref, ErrorPayload::ref);
-			void handleKickResponse(MUCAdminPayload::ref, ErrorPayload::ref, const JID&);
+			void handleOccupantRoleChangeResponse(MUCAdminPayload::ref, ErrorPayload::ref, const JID&, MUCOccupant::Role);
 			void handleConfigurationFormReceived(MUCOwnerPayload::ref, ErrorPayload::ref);
 			void handleConfigurationResultReceived(MUCOwnerPayload::ref, ErrorPayload::ref);
 

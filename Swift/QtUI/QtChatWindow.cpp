@@ -341,6 +341,7 @@ void QtChatWindow::setCorrectionEnabled(Tristate enabled) {
 
 SecurityLabelsCatalog::Item QtChatWindow::getSelectedSecurityLabel() {
 	assert(labelsWidget_->isEnabled());
+	assert(labelsWidget_->currentIndex() >= 0 && labelsWidget_->currentIndex() < availableLabels_.size());
 	return availableLabels_[labelsWidget_->currentIndex()];
 }
 

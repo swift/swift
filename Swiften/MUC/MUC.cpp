@@ -237,20 +237,25 @@ MUCOccupant MUC::getOccupant(const std::string& nick) {
 	return occupants.find(nick)->second;
 }
 
-void MUC::kickUser(const JID& jid) {
+void MUC::kickOccupant(const JID& jid) {
+	changeOccupantRole(jid, MUCOccupant::NoRole);
+}
+
+void MUC::changeOccupantRole(const JID& jid, MUCOccupant::Role role) {
 	MUCAdminPayload::ref mucPayload = boost::make_shared<MUCAdminPayload>();
 	MUCItem item;
-	item.role = MUCOccupant::NoRole;
+	item.role = role;
 	item.nick = jid.getResource();
 	mucPayload->addItem(item);
 	GenericRequest<MUCAdminPayload>* request = new GenericRequest<MUCAdminPayload>(IQ::Set, getJID(), mucPayload, iqRouter_);
-	request->onResponse.connect(boost::bind(&MUC::handleKickResponse, this, _1, _2, jid));
+	request->onResponse.connect(boost::bind(&MUC::handleOccupantRoleChangeResponse, this, _1, _2, jid, role));
 	request->send();
+	
 }
 
-void MUC::handleKickResponse(MUCAdminPayload::ref /*unused*/, ErrorPayload::ref error, const JID& jid) {
+void MUC::handleOccupantRoleChangeResponse(MUCAdminPayload::ref /*unused*/, ErrorPayload::ref error, const JID& jid, MUCOccupant::Role role) {
 	if (error) {
-		onKickFailed(error, jid);
+		onRoleChangeFailed(error, jid, role);
 	}
 }
 
