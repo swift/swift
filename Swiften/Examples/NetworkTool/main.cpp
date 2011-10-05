@@ -30,7 +30,7 @@ void handleGetPublicIPRequestResponse(const boost::optional<HostAddress>& result
 
 void handleGetForwardPortRequestResponse(const boost::optional<NATPortMapping>& result) {
 	if (result) {
-		std::cerr << "Result: " << result->publicPort << " -> " << result->localPort << std::endl;;
+		std::cerr << "Result: " << result->getPublicPort() << " -> " << result->getLocalPort() << std::endl;;
 	}
 	else {
 		std::cerr << "No result" << std::endl;
