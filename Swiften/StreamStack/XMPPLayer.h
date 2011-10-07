@@ -22,12 +22,14 @@ namespace Swift {
 	class PayloadParserFactoryCollection;
 	class XMPPSerializer;
 	class PayloadSerializerCollection;
+	class XMLParserFactory;
 
 	class XMPPLayer : public XMPPParserClient, public HighLayer, boost::noncopyable {
 		public:
 			XMPPLayer(
 					PayloadParserFactoryCollection* payloadParserFactories,
 					PayloadSerializerCollection* payloadSerializers,
+					XMLParserFactory* xmlParserFactory,
 					StreamType streamType);
 			~XMPPLayer();
 
@@ -60,6 +62,7 @@ namespace Swift {
 			PayloadParserFactoryCollection* payloadParserFactories_;
 			XMPPParser* xmppParser_;
 			PayloadSerializerCollection* payloadSerializers_;
+			XMLParserFactory* xmlParserFactory_;
 			XMPPSerializer* xmppSerializer_;
 			bool resetParserAfterParse_;
 			bool inParser_;

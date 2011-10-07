@@ -147,7 +147,7 @@ void Server::handleNewClientConnection(boost::shared_ptr<Connection> connection)
 	}
 	serverFromClientSession = boost::shared_ptr<ServerFromClientSession>(
 			new ServerFromClientSession(idGenerator.generateID(), connection, 
-					&payloadParserFactories, &payloadSerializers, &userRegistry));
+					&payloadParserFactories, &payloadSerializers, &xmlParserFactory, &userRegistry));
 	serverFromClientSession->setAllowSASLEXTERNAL();
 	serverFromClientSession->onSessionStarted.connect(
 			boost::bind(&Server::handleSessionStarted, this));
@@ -281,7 +281,7 @@ void Server::handleNewLinkLocalConnection(boost::shared_ptr<Connection> connecti
 	boost::shared_ptr<IncomingLinkLocalSession> session(
 			new IncomingLinkLocalSession(
 				selfJID, connection, 
-				&payloadParserFactories, &payloadSerializers));
+				&payloadParserFactories, &payloadSerializers, &xmlParserFactory));
 	registerLinkLocalSession(session);
 }
 
@@ -312,7 +312,7 @@ void Server::handleConnectFinished(boost::shared_ptr<LinkLocalConnector> connect
 		boost::shared_ptr<OutgoingLinkLocalSession> outgoingSession(
 				new OutgoingLinkLocalSession(
 					selfJID, connector->getService().getJID(), connector->getConnection(),
-					&payloadParserFactories, &payloadSerializers));
+					&payloadParserFactories, &payloadSerializers, &xmlParserFactory));
 		foreach(const boost::shared_ptr<Element> element, connector->getQueuedElements()) {
 			outgoingSession->queueElement(element);
 		}

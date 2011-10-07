@@ -19,6 +19,7 @@
 #include <Swiften/StreamStack/LowLayer.h>
 #include <Swiften/StreamStack/XMPPLayer.h>
 #include <Swiften/StreamStack/StreamLayer.h>
+#include <Swiften/Parser/PlatformXMLParserFactory.h>
 #include <Swiften/Parser/PayloadParsers/FullPayloadParserFactoryCollection.h>
 #include <Swiften/Serializer/PayloadSerializers/FullPayloadSerializerCollection.h>
 
@@ -38,7 +39,7 @@ class StreamStackTest : public CppUnit::TestFixture {
 	public:
 		void setUp() {
 			physicalStream_ = new TestLowLayer();
-			xmppStream_ = new XMPPLayer(&parserFactories_, &serializers_, ClientStreamType);
+			xmppStream_ = new XMPPLayer(&parserFactories_, &serializers_, &xmlParserFactory_, ClientStreamType);
 			elementsReceived_ = 0;
 			dataWriteReceived_ = 0;
 		}
@@ -172,6 +173,7 @@ class StreamStackTest : public CppUnit::TestFixture {
 		FullPayloadParserFactoryCollection parserFactories_;
 		FullPayloadSerializerCollection serializers_;
 		TestLowLayer* physicalStream_;
+		PlatformXMLParserFactory xmlParserFactory_;
 		XMPPLayer* xmppStream_;
 		int elementsReceived_;
 		int dataWriteReceived_;

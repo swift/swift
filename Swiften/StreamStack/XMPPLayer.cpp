@@ -14,12 +14,14 @@ namespace Swift {
 XMPPLayer::XMPPLayer(
 		PayloadParserFactoryCollection* payloadParserFactories,
 		PayloadSerializerCollection* payloadSerializers,
+		XMLParserFactory* xmlParserFactory,
 		StreamType streamType) :
 			payloadParserFactories_(payloadParserFactories), 
 			payloadSerializers_(payloadSerializers),
+			xmlParserFactory_(xmlParserFactory),
 			resetParserAfterParse_(false),
 			inParser_(false) {
-	xmppParser_ = new XMPPParser(this, payloadParserFactories_);
+	xmppParser_ = new XMPPParser(this, payloadParserFactories_, xmlParserFactory);
 	xmppSerializer_ = new XMPPSerializer(payloadSerializers_, streamType);
 }
 
@@ -68,7 +70,7 @@ void XMPPLayer::handleDataRead(const SafeByteArray& data) {
 
 void XMPPLayer::doResetParser() {
 	delete xmppParser_;
-	xmppParser_ = new XMPPParser(this, payloadParserFactories_);
+	xmppParser_ = new XMPPParser(this, payloadParserFactories_, xmlParserFactory_);
 	resetParserAfterParse_ = false;
 }
 

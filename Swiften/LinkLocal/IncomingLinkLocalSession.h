@@ -15,7 +15,7 @@
 
 namespace Swift {
 	class ProtocolHeader;
-	
+	class XMLParserFactory;	
 	class Element;
 	class PayloadParserFactoryCollection;
 	class PayloadSerializerCollection;
@@ -26,7 +26,8 @@ namespace Swift {
 					const JID& localJID,
 					boost::shared_ptr<Connection> connection, 
 					PayloadParserFactoryCollection* payloadParserFactories, 
-					PayloadSerializerCollection* payloadSerializers);
+					PayloadSerializerCollection* payloadSerializers,
+					XMLParserFactory* xmlParserFactory);
 
 			boost::signal<void ()> onSessionStarted;
 

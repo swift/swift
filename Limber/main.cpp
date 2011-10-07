@@ -23,6 +23,7 @@
 #include "Limber/Server/SimpleUserRegistry.h"
 #include "Limber/Server/ServerFromClientSession.h"
 #include "Swiften/Parser/PayloadParsers/FullPayloadParserFactoryCollection.h"
+#include "Swiften/Parser/PlatformXMLParserFactory.h"
 #include "Swiften/Serializer/PayloadSerializers/FullPayloadSerializerCollection.h"
 
 using namespace Swift;
@@ -37,7 +38,7 @@ class Server {
 
 	private:
 		void handleNewConnection(boost::shared_ptr<Connection> c) {
-			boost::shared_ptr<ServerFromClientSession> session(new ServerFromClientSession(idGenerator_.generateID(), c, &payloadParserFactories_, &payloadSerializers_, userRegistry_));
+			boost::shared_ptr<ServerFromClientSession> session(new ServerFromClientSession(idGenerator_.generateID(), c, &payloadParserFactories_, &payloadSerializers_, &xmlParserFactory, userRegistry_));
 			serverFromClientSessions_.push_back(session);
 			session->onElementReceived.connect(boost::bind(&Server::handleElementReceived, this, _1, session));
 			session->onSessionFinished.connect(boost::bind(&Server::handleSessionFinished, this, session));
@@ -81,6 +82,7 @@ class Server {
 
 	private:
 		IDGenerator idGenerator_;
+		PlatformXMLParserFactory xmlParserFactory;
 		UserRegistry* userRegistry_;
 		BoostIOServiceThread boostIOServiceThread_;
 		boost::shared_ptr<BoostConnectionServer> serverFromClientConnectionServer_;

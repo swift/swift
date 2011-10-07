@@ -25,6 +25,7 @@ namespace Swift {
 	class PayloadParserFactoryCollection;
 	class PayloadSerializerCollection;
 	class XMPPLayer;
+	class XMLParserFactory;
 
 	class Session : public boost::enable_shared_from_this<Session> {
 		public:
@@ -45,7 +46,8 @@ namespace Swift {
 			Session(
 					boost::shared_ptr<Connection> connection,
 					PayloadParserFactoryCollection* payloadParserFactories, 
-					PayloadSerializerCollection* payloadSerializers);
+					PayloadSerializerCollection* payloadSerializers,
+					XMLParserFactory* xmlParserFactory);
 			virtual ~Session();
 
 			void startSession();
@@ -103,6 +105,7 @@ namespace Swift {
 			boost::shared_ptr<Connection> connection;
 			PayloadParserFactoryCollection* payloadParserFactories;
 			PayloadSerializerCollection* payloadSerializers;
+			XMLParserFactory* xmlParserFactory;
 			XMPPLayer* xmppLayer;
 			ConnectionLayer* connectionLayer;
 			StreamStack* streamStack;

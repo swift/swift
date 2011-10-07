@@ -16,7 +16,7 @@
 
 namespace Swift {
 	class ConnectionFactory;
-	
+	class XMLParserFactory;	
 	class Element;
 	class PayloadParserFactoryCollection;
 	class PayloadSerializerCollection;
@@ -28,7 +28,8 @@ namespace Swift {
 					const JID& remoteJID,
 					boost::shared_ptr<Connection> connection,
 					PayloadParserFactoryCollection* payloadParserFactories, 
-					PayloadSerializerCollection* payloadSerializers);
+					PayloadSerializerCollection* payloadSerializers,
+					XMLParserFactory* xmlParserFactory);
 
 			void queueElement(boost::shared_ptr<Element> element);
 

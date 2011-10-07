@@ -63,7 +63,7 @@ void CoreComponent::handleConnectorFinished(boost::shared_ptr<Connection> connec
 		connection_ = connection;
 
 		assert(!sessionStream_);
-		sessionStream_ = boost::shared_ptr<BasicSessionStream>(new BasicSessionStream(ComponentStreamType, connection_, getPayloadParserFactories(), getPayloadSerializers(), NULL, networkFactories->getTimerFactory()));
+		sessionStream_ = boost::shared_ptr<BasicSessionStream>(new BasicSessionStream(ComponentStreamType, connection_, getPayloadParserFactories(), getPayloadSerializers(), NULL, networkFactories->getTimerFactory(), networkFactories->getXMLParserFactory()));
 		sessionStream_->onDataRead.connect(boost::bind(&CoreComponent::handleDataRead, this, _1));
 		sessionStream_->onDataWritten.connect(boost::bind(&CoreComponent::handleDataWritten, this, _1));
 

@@ -21,8 +21,9 @@ OutgoingLinkLocalSession::OutgoingLinkLocalSession(
 		const JID& remoteJID,
 		boost::shared_ptr<Connection> connection,
 		PayloadParserFactoryCollection* payloadParserFactories, 
-		PayloadSerializerCollection* payloadSerializers) :
-			Session(connection, payloadParserFactories, payloadSerializers) {
+		PayloadSerializerCollection* payloadSerializers,
+		XMLParserFactory* xmlParserFactory) :
+			Session(connection, payloadParserFactories, payloadSerializers, xmlParserFactory) {
 	setLocalJID(localJID);
 	setRemoteJID(remoteJID);
 }

@@ -15,7 +15,7 @@
 namespace Swift {
 	class XMLParser;
 	class XMPPParserClient;
-	
+	class XMLParserFactory;	
 	class ElementParser;
 	class PayloadParserFactoryCollection;
 
@@ -23,7 +23,8 @@ namespace Swift {
 		public:
 			XMPPParser(
 					XMPPParserClient* parserClient, 
-					PayloadParserFactoryCollection* payloadParserFactories);
+					PayloadParserFactoryCollection* payloadParserFactories,
+					XMLParserFactory* xmlParserFactory);
 			~XMPPParser();
 
 			bool parse(const std::string&);

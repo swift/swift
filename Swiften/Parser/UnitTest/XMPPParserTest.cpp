@@ -14,6 +14,7 @@
 #include <Swiften/Parser/ElementParser.h>
 #include <Swiften/Parser/XMPPParserClient.h>
 #include <Swiften/Parser/PayloadParserFactoryCollection.h>
+#include <Swiften/Parser/PlatformXMLParserFactory.h>
 #include <Swiften/Elements/Presence.h>
 #include <Swiften/Elements/IQ.h>
 #include <Swiften/Elements/Message.h>
@@ -38,7 +39,7 @@ class XMPPParserTest : public CppUnit::TestFixture {
 
 	public:
 		void testParse_SimpleSession() {
-			XMPPParser testling(&client_, &factories_);
+			XMPPParser testling(&client_, &factories_, &xmlParserFactory_);
 
 			CPPUNIT_ASSERT(testling.parse("<?xml version='1.0'?>"));
 			CPPUNIT_ASSERT(testling.parse("<stream:stream to='example.com' xmlns='jabber:client' xmlns:stream='http://etherx.jabber.org/streams' >"));
@@ -57,7 +58,7 @@ class XMPPParserTest : public CppUnit::TestFixture {
 		}
 
 		void testParse_SimpleClientFromServerSession() {
-			XMPPParser testling(&client_, &factories_);
+			XMPPParser testling(&client_, &factories_, &xmlParserFactory_);
 
 			CPPUNIT_ASSERT(testling.parse("<?xml version='1.0'?>"));
 			CPPUNIT_ASSERT(testling.parse("<stream:stream from='example.com' xmlns='jabber:client' xmlns:stream='http://etherx.jabber.org/streams' id='aeab'>"));
@@ -70,7 +71,7 @@ class XMPPParserTest : public CppUnit::TestFixture {
 
 
 		void testParse_Presence() {
-			XMPPParser testling(&client_, &factories_);
+			XMPPParser testling(&client_, &factories_, &xmlParserFactory_);
 
 			CPPUNIT_ASSERT(testling.parse("<stream:stream xmlns:stream='http://etherx.jabber.org/streams'>"));
 			CPPUNIT_ASSERT(testling.parse("<presence/>"));
@@ -81,7 +82,7 @@ class XMPPParserTest : public CppUnit::TestFixture {
 		}
 
 		void testParse_IQ() {
-			XMPPParser testling(&client_, &factories_);
+			XMPPParser testling(&client_, &factories_, &xmlParserFactory_);
 
 			CPPUNIT_ASSERT(testling.parse("<stream:stream xmlns:stream='http://etherx.jabber.org/streams'>"));
 			CPPUNIT_ASSERT(testling.parse("<iq/>"));
@@ -92,7 +93,7 @@ class XMPPParserTest : public CppUnit::TestFixture {
 		}
 
 		void testParse_Message() {
-			XMPPParser testling(&client_, &factories_);
+			XMPPParser testling(&client_, &factories_, &xmlParserFactory_);
 
 			CPPUNIT_ASSERT(testling.parse("<stream:stream xmlns:stream='http://etherx.jabber.org/streams'>"));
 			CPPUNIT_ASSERT(testling.parse("<message/>"));
@@ -103,7 +104,7 @@ class XMPPParserTest : public CppUnit::TestFixture {
 		}
 
 		void testParse_StreamFeatures() {
-			XMPPParser testling(&client_, &factories_);
+			XMPPParser testling(&client_, &factories_, &xmlParserFactory_);
 
 			CPPUNIT_ASSERT(testling.parse("<stream:stream xmlns:stream='http://etherx.jabber.org/streams'>"));
 			CPPUNIT_ASSERT(testling.parse("<stream:features/>"));
@@ -114,7 +115,7 @@ class XMPPParserTest : public CppUnit::TestFixture {
 		}
 
 		void testParse_UnknownElement() {
-			XMPPParser testling(&client_, &factories_);
+			XMPPParser testling(&client_, &factories_, &xmlParserFactory_);
 
 			CPPUNIT_ASSERT(testling.parse("<stream:stream xmlns:stream='http://etherx.jabber.org/streams'>"));
 			CPPUNIT_ASSERT(testling.parse("<presence/>"));
@@ -132,7 +133,7 @@ class XMPPParserTest : public CppUnit::TestFixture {
 		}
 
 		void testParse_StrayCharacterData() {
-			XMPPParser testling(&client_, &factories_);
+			XMPPParser testling(&client_, &factories_, &xmlParserFactory_);
 
 			CPPUNIT_ASSERT(testling.parse("<stream:stream xmlns:stream='http://etherx.jabber.org/streams'>"));
 			CPPUNIT_ASSERT(testling.parse("<presence/>"));
@@ -145,13 +146,13 @@ class XMPPParserTest : public CppUnit::TestFixture {
 		}
 
 		void testParse_InvalidStreamStart() {
-			XMPPParser testling(&client_, &factories_);
+			XMPPParser testling(&client_, &factories_, &xmlParserFactory_);
 
 			CPPUNIT_ASSERT(!testling.parse("<tream>"));
 		}
 
 		void testParse_ElementEndAfterInvalidStreamStart() {
-			XMPPParser testling(&client_, &factories_);
+			XMPPParser testling(&client_, &factories_, &xmlParserFactory_);
 
 			CPPUNIT_ASSERT(!testling.parse("<tream/>"));
 		}
@@ -189,6 +190,7 @@ class XMPPParserTest : public CppUnit::TestFixture {
 				std::vector<Event> events;
 		} client_;
 		PayloadParserFactoryCollection factories_;
+		PlatformXMLParserFactory xmlParserFactory_;
 };
 
 CPPUNIT_TEST_SUITE_REGISTRATION(XMPPParserTest);

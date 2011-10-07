@@ -16,10 +16,12 @@ namespace Swift {
 Session::Session(
 		boost::shared_ptr<Connection> connection,
 		PayloadParserFactoryCollection* payloadParserFactories, 
-		PayloadSerializerCollection* payloadSerializers) : 
+		PayloadSerializerCollection* payloadSerializers,
+		XMLParserFactory* xmlParserFactory) : 
 			connection(connection),
 			payloadParserFactories(payloadParserFactories),
 			payloadSerializers(payloadSerializers),
+			xmlParserFactory(xmlParserFactory),
 			xmppLayer(NULL),
 			connectionLayer(NULL),
 			streamStack(0),
@@ -64,7 +66,7 @@ void Session::finishSession(const SessionError& error) {
 }
 
 void Session::initializeStreamStack() {
-	xmppLayer = new XMPPLayer(payloadParserFactories, payloadSerializers, ClientStreamType);
+	xmppLayer = new XMPPLayer(payloadParserFactories, payloadSerializers, xmlParserFactory, ClientStreamType);
 	xmppLayer->onStreamStart.connect(
 			boost::bind(&Session::handleStreamStart, shared_from_this(), _1));
 	xmppLayer->onElement.connect(boost::bind(&Session::handleElement, shared_from_this(), _1));

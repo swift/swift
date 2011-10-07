@@ -25,7 +25,8 @@ BasicSessionStream::BasicSessionStream(
 		PayloadParserFactoryCollection* payloadParserFactories, 
 		PayloadSerializerCollection* payloadSerializers, 
 		TLSContextFactory* tlsContextFactory, 
-		TimerFactory* timerFactory) : 
+		TimerFactory* timerFactory,
+		XMLParserFactory* xmlParserFactory) :
 			available(false), 
 			connection(connection), 
 			payloadParserFactories(payloadParserFactories), 
@@ -36,7 +37,7 @@ BasicSessionStream::BasicSessionStream(
 			compressionLayer(NULL),
 			tlsLayer(NULL),
 			whitespacePingLayer(NULL) {
-	xmppLayer = new XMPPLayer(payloadParserFactories, payloadSerializers, streamType);
+	xmppLayer = new XMPPLayer(payloadParserFactories, payloadSerializers, xmlParserFactory, streamType);
 	xmppLayer->onStreamStart.connect(boost::bind(&BasicSessionStream::handleStreamStartReceived, this, _1));
 	xmppLayer->onElement.connect(boost::bind(&BasicSessionStream::handleElementReceived, this, _1));
 	xmppLayer->onError.connect(boost::bind(&BasicSessionStream::handleXMPPError, this));

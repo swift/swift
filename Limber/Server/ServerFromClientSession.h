@@ -27,6 +27,7 @@ namespace Swift {
 	class XMPPLayer;
 	class ConnectionLayer;
 	class Connection;
+	class XMLParserFactory;
 
 	class ServerFromClientSession : public Session {
 		public:
@@ -35,6 +36,7 @@ namespace Swift {
 					boost::shared_ptr<Connection> connection, 
 					PayloadParserFactoryCollection* payloadParserFactories, 
 					PayloadSerializerCollection* payloadSerializers,
+					XMLParserFactory* xmlParserFactory,
 					UserRegistry* userRegistry);
 
 			boost::signal<void ()> onSessionStarted;

@@ -14,6 +14,7 @@
 #include "Swiften/Network/BoostConnectionServer.h"
 #include "Limber/Server/UserRegistry.h"
 #include "Swiften/Base/IDGenerator.h"
+#include "Swiften/Parser/PlatformXMLParserFactory.h"
 #include "Limber/Server/ServerFromClientSession.h"
 #include "Swiften/JID/JID.h"
 #include "Swiften/Parser/PayloadParsers/FullPayloadParserFactoryCollection.h"
@@ -98,6 +99,7 @@ namespace Swift {
 			FullPayloadSerializerCollection payloadSerializers;
 			BoostIOServiceThread boostIOServiceThread;
 			DummyUserRegistry userRegistry;
+			PlatformXMLParserFactory xmlParserFactory;
 			bool linkLocalServiceRegistered;
 			bool rosterRequested;
 			int clientConnectionPort;

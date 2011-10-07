@@ -12,7 +12,6 @@
 #include <Swiften/Elements/ProtocolHeader.h>
 #include <string>
 #include <Swiften/Parser/XMLParser.h>
-#include <Swiften/Parser/PlatformXMLParserFactory.h>
 #include <Swiften/Parser/XMPPParserClient.h>
 #include <Swiften/Parser/XMPPParser.h>
 #include <Swiften/Parser/ElementParser.h>
@@ -41,6 +40,7 @@
 #include <Swiften/Parser/UnknownElementParser.h>
 #include <Swiften/Parser/TLSProceedParser.h>
 #include <Swiften/Parser/ComponentHandshakeParser.h>
+#include <Swiften/Parser/XMLParserFactory.h>
 
 // TODO: Whenever an error occurs in the handlers, stop the parser by returing
 // a bool value, and stopping the XML parser
@@ -49,14 +49,15 @@ namespace Swift {
 
 XMPPParser::XMPPParser(
 		XMPPParserClient* client, 
-		PayloadParserFactoryCollection* payloadParserFactories) : 
+		PayloadParserFactoryCollection* payloadParserFactories,
+		XMLParserFactory* xmlParserFactory) : 
 				xmlParser_(0),
 				client_(client), 
 				payloadParserFactories_(payloadParserFactories), 
 				level_(0),
 				currentElementParser_(0),
 				parseErrorOccurred_(false) {
-	xmlParser_ = PlatformXMLParserFactory().createXMLParser(this);
+	xmlParser_ = xmlParserFactory->createXMLParser(this);
 }
 
 XMPPParser::~XMPPParser() {

@@ -24,6 +24,7 @@ namespace Swift {
 	class XMPPLayer;
 	class ConnectionLayer;
 	class CompressionLayer;
+	class XMLParserFactory;
 
 	class BasicSessionStream : public SessionStream {
 		public:
@@ -33,7 +34,8 @@ namespace Swift {
 				PayloadParserFactoryCollection* payloadParserFactories, 
 				PayloadSerializerCollection* payloadSerializers,
 				TLSContextFactory* tlsContextFactory,
-				TimerFactory* whitespacePingLayerFactory
+				TimerFactory* whitespacePingLayerFactory,
+				XMLParserFactory* xmlParserFactory
 			);
 			~BasicSessionStream();
 

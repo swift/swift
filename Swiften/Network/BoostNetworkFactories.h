@@ -42,6 +42,10 @@ namespace Swift {
 				return natTraverser;
 			}
 
+			virtual XMLParserFactory* getXMLParserFactory() const {
+				return xmlParserFactory;
+			}
+
 		private:
 			BoostIOServiceThread ioServiceThread;
 			TimerFactory* timerFactory;
@@ -49,5 +53,6 @@ namespace Swift {
 			DomainNameResolver* domainNameResolver;
 			ConnectionServerFactory* connectionServerFactory;
 			NATTraverser* natTraverser;
+			XMLParserFactory* xmlParserFactory;
 	};
 }

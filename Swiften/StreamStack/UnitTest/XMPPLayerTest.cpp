@@ -14,6 +14,7 @@
 #include <Swiften/Base/ByteArray.h>
 #include <Swiften/StreamStack/XMPPLayer.h>
 #include <Swiften/StreamStack/LowLayer.h>
+#include <Swiften/Parser/PlatformXMLParserFactory.h>
 #include <Swiften/Parser/PayloadParsers/FullPayloadParserFactoryCollection.h>
 #include <Swiften/Serializer/PayloadSerializers/FullPayloadSerializerCollection.h>
 
@@ -32,7 +33,7 @@ class XMPPLayerTest : public CppUnit::TestFixture {
 	public:
 		void setUp() {
 			lowLayer_ = new DummyLowLayer();
-			testling_ = new XMPPLayerExposed(&parserFactories_, &serializers_, ClientStreamType);
+			testling_ = new XMPPLayerExposed(&parserFactories_, &serializers_, &xmlParserFactory_, ClientStreamType);
 			testling_->setChildLayer(lowLayer_);
 			elementsReceived_ = 0;
 			errorReceived_ = 0;
@@ -112,7 +113,8 @@ class XMPPLayerTest : public CppUnit::TestFixture {
 				XMPPLayerExposed(
 								PayloadParserFactoryCollection* payloadParserFactories,
 								PayloadSerializerCollection* payloadSerializers,
-								StreamType streamType) : XMPPLayer(payloadParserFactories, payloadSerializers, streamType) {}
+								XMLParserFactory* xmlParserFactory,
+								StreamType streamType) : XMPPLayer(payloadParserFactories, payloadSerializers, xmlParserFactory, streamType) {}
 
 				using XMPPLayer::handleDataRead;
 				using HighLayer::setChildLayer;
@@ -131,6 +133,7 @@ class XMPPLayerTest : public CppUnit::TestFixture {
 		FullPayloadSerializerCollection serializers_;
 		DummyLowLayer* lowLayer_;
 		XMPPLayerExposed* testling_;
+		PlatformXMLParserFactory xmlParserFactory_;
 		int elementsReceived_;
 		int errorReceived_;
 };

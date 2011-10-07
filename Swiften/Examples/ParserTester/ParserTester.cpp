@@ -11,6 +11,7 @@
 #include <Swiften/Parser/UnitTest/ParserTester.h>
 #include <Swiften/Parser/XMPPParser.h>
 #include <Swiften/Parser/XMPPParserClient.h>
+#include <Swiften/Parser/PlatformXMLParserFactory.h>
 #include <Swiften/Parser/PayloadParsers/FullPayloadParserFactoryCollection.h>
 
 using namespace Swift;
@@ -35,7 +36,8 @@ int main(int argc, char* argv[]) {
 	}
 	FullPayloadParserFactoryCollection factories;
 	MyXMPPParserClient parserClient;
-	XMPPParser parser(&parserClient, &factories);
+	PlatformXMLParserFactory xmlParserFactory;
+	XMPPParser parser(&parserClient, &factories, &xmlParserFactory);
 	ParserTester<XMLParserClient> tester(&parser);
 
 	std::string line;
