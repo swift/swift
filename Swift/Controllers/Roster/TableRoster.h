@@ -66,7 +66,7 @@ namespace Swift {
 			void scheduleUpdate();
 
 		private:
-			friend class SectionNameEquals;
+			friend struct SectionNameEquals;
 			struct Section {
 				Section(const std::string& name) : name(name) {
 				}

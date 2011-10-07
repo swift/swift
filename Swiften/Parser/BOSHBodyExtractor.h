@@ -12,7 +12,7 @@
 #include <Swiften/Parser/XMLParserClient.h>
 
 namespace Swift {
-	struct XMLParserFactory;
+	class XMLParserFactory;
 
 	class BOSHBodyExtractor {
 			friend class BOSHBodyParserClient;
