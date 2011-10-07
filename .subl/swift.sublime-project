@@ -5,7 +5,7 @@
 		{
 			"path": "..",
 			"folder_exclude_patterns": ["tmp", ".sconf_temp", ".settings", "Swift.app", "3rdParty"],
-			"file_exclude_patterns": [".cproject", ".project", ".sconsign.dblite", "*~", "config.log", "*.o"]
+			"file_exclude_patterns": ["moc_*", ".cproject", ".project", ".sconsign.dblite", "*~", "config.log", "*.o"]
 		}
 	],
 	"settings":

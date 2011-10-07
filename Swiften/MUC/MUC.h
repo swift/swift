@@ -58,6 +58,8 @@ namespace Swift {
 			bool hasOccupant(const std::string& nick);
 			void kickOccupant(const JID& jid);
 			void changeOccupantRole(const JID& jid, MUCOccupant::Role role);
+			void requestAffiliationList(MUCOccupant::Affiliation);
+			void changeAffiliation(const JID& jid, MUCOccupant::Affiliation affiliation);
 			void changeSubject(const std::string& subject);
 			void requestConfigurationForm();
 			void configureRoom(Form::ref);
@@ -67,17 +69,21 @@ namespace Swift {
 			void invitePerson(const JID& person, const std::string& reason = "");
 			void setCreateAsReservedIfNew() {createAsReservedIfNew = true;}
 			void setPassword(const boost::optional<std::string>& password);
+			
 		public:
 			boost::signal<void (const std::string& /*nick*/)> onJoinComplete;
 			boost::signal<void (ErrorPayload::ref)> onJoinFailed;
 			boost::signal<void (ErrorPayload::ref, const JID&, MUCOccupant::Role)> onRoleChangeFailed;
+			boost::signal<void (ErrorPayload::ref, const JID&, MUCOccupant::Affiliation)> onAffiliationChangeFailed;
 			boost::signal<void (ErrorPayload::ref)> onConfigurationFailed;
+			boost::signal<void (ErrorPayload::ref)> onAffiliationListFailed;
 			boost::signal<void (Presence::ref)> onOccupantPresenceChange;
 			boost::signal<void (const std::string&, const MUCOccupant& /*now*/, const MUCOccupant::Role& /*old*/)> onOccupantRoleChanged;
 			boost::signal<void (const std::string&, const MUCOccupant::Affiliation& /*new*/, const MUCOccupant::Affiliation& /*old*/)> onOccupantAffiliationChanged;
 			boost::signal<void (const MUCOccupant&)> onOccupantJoined;
 			boost::signal<void (const MUCOccupant&, LeavingType, const std::string& /*reason*/)> onOccupantLeft;
 			boost::signal<void (Form::ref)> onConfigurationFormReceived;
+			boost::signal<void (MUCOccupant::Affiliation, const std::vector<JID>&)> onAffiliationListReceived;
 			/* boost::signal<void (const MUCInfo&)> onInfoResult; */
 			/* boost::signal<void (const blah&)> onItemsResult; */
 			
@@ -96,6 +102,8 @@ namespace Swift {
 			void internalJoin(const std::string& nick);
 			void handleCreationConfigResponse(MUCOwnerPayload::ref, ErrorPayload::ref);
 			void handleOccupantRoleChangeResponse(MUCAdminPayload::ref, ErrorPayload::ref, const JID&, MUCOccupant::Role);
+			void handleAffiliationChangeResponse(MUCAdminPayload::ref, ErrorPayload::ref, const JID&, MUCOccupant::Affiliation);
+			void handleAffiliationListResponse(MUCAdminPayload::ref, ErrorPayload::ref, MUCOccupant::Affiliation);
 			void handleConfigurationFormReceived(MUCOwnerPayload::ref, ErrorPayload::ref);
 			void handleConfigurationResultReceived(MUCOwnerPayload::ref, ErrorPayload::ref);
 

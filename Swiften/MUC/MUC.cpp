@@ -241,6 +241,9 @@ void MUC::kickOccupant(const JID& jid) {
 	changeOccupantRole(jid, MUCOccupant::NoRole);
 }
 
+/**
+ * Call with the room JID, not the real JID.
+ */
 void MUC::changeOccupantRole(const JID& jid, MUCOccupant::Role role) {
 	MUCAdminPayload::ref mucPayload = boost::make_shared<MUCAdminPayload>();
 	MUCItem item;
@@ -256,6 +259,51 @@ void MUC::changeOccupantRole(const JID& jid, MUCOccupant::Role role) {
 void MUC::handleOccupantRoleChangeResponse(MUCAdminPayload::ref /*unused*/, ErrorPayload::ref error, const JID& jid, MUCOccupant::Role role) {
 	if (error) {
 		onRoleChangeFailed(error, jid, role);
+	}
+}
+
+void MUC::requestAffiliationList(MUCOccupant::Affiliation affiliation) {
+	MUCAdminPayload::ref mucPayload = boost::make_shared<MUCAdminPayload>();
+	MUCItem item;
+	item.affiliation = affiliation;
+	mucPayload->addItem(item);
+	GenericRequest<MUCAdminPayload>* request = new GenericRequest<MUCAdminPayload>(IQ::Get, getJID(), mucPayload, iqRouter_);
+	request->onResponse.connect(boost::bind(&MUC::handleAffiliationListResponse, this, _1, _2, affiliation));
+	request->send();
+}
+
+/**
+ * Must be called with the real JID, not the room JID.
+ */
+void MUC::changeAffiliation(const JID& jid, MUCOccupant::Affiliation affiliation) {
+	MUCAdminPayload::ref mucPayload = boost::make_shared<MUCAdminPayload>();
+	MUCItem item;
+	item.affiliation = affiliation;
+	item.realJID = jid;
+	mucPayload->addItem(item);
+	GenericRequest<MUCAdminPayload>* request = new GenericRequest<MUCAdminPayload>(IQ::Set, getJID(), mucPayload, iqRouter_);
+	request->onResponse.connect(boost::bind(&MUC::handleAffiliationChangeResponse, this, _1, _2, jid, affiliation));
+	request->send();
+}
+
+void MUC::handleAffiliationListResponse(MUCAdminPayload::ref payload, ErrorPayload::ref error, MUCOccupant::Affiliation affiliation) {
+	if (error) {
+		onAffiliationListFailed(error);
+	}
+	else {
+		std::vector<JID> jids;
+		foreach (MUCItem item, payload->getItems()) {
+			if (item.realJID) {
+				jids.push_back(*item.realJID);
+			}
+		}
+		onAffiliationListReceived(affiliation, jids);
+	}
+}
+
+void MUC::handleAffiliationChangeResponse(MUCAdminPayload::ref /*unused*/, ErrorPayload::ref error, const JID& jid, MUCOccupant::Affiliation affiliation) {
+	if (error) {
+		onAffiliationChangeFailed(error, jid, affiliation);
 	}
 }
 

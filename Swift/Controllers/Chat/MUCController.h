@@ -95,6 +95,9 @@ namespace Swift {
 			void handleInvitePersonToThisMUCRequest(const JID& jid, const std::string& reason);
 			void handleConfigurationCancelled();
 			void handleOccupantRoleChangeFailed(ErrorPayload::ref, const JID&, MUCOccupant::Role);
+			void handleGetAffiliationsRequest();
+			void handleAffiliationListReceived(MUCOccupant::Affiliation affiliation, const std::vector<JID>& jids);
+			void handleChangeAffiliationsRequest(const std::vector<std::pair<MUCOccupant::Affiliation, JID> >& changes);
 
 		private:
 			MUC::ref muc_;

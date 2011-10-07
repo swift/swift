@@ -53,6 +53,7 @@ QtChatWindow::QtChatWindow(const QString &contact, QtChatTheme* theme, UIEventSt
 	unreadCount_ = 0;
 	inputEnabled_ = true;
 	completer_ = NULL;
+	affiliationEditor_ = NULL;
 	theme_ = theme;
 	isCorrection_ = false;
 	correctionEnabled_ = Maybe;
@@ -165,8 +166,8 @@ QtChatWindow::QtChatWindow(const QString &contact, QtChatTheme* theme, UIEventSt
 
 QtChatWindow::~QtChatWindow() {
 	delete fileTransferJS;
-	if (mucConfigurationWindow) {
-		delete mucConfigurationWindow.data();
+	if (mucConfigurationWindow_) {
+		delete mucConfigurationWindow_.data();
 	}
 }
 
@@ -341,7 +342,7 @@ void QtChatWindow::setCorrectionEnabled(Tristate enabled) {
 
 SecurityLabelsCatalog::Item QtChatWindow::getSelectedSecurityLabel() {
 	assert(labelsWidget_->isEnabled());
-	assert(labelsWidget_->currentIndex() >= 0 && labelsWidget_->currentIndex() < availableLabels_.size());
+	assert(labelsWidget_->currentIndex() >= 0 && static_cast<size_t>(labelsWidget_->currentIndex()) < availableLabels_.size());
 	return availableLabels_[labelsWidget_->currentIndex()];
 }
 
@@ -371,8 +372,13 @@ void QtChatWindow::qAppFocusChanged(QWidget* /*old*/, QWidget* /*now*/) {
 
 void QtChatWindow::setInputEnabled(bool enabled) {
 	inputEnabled_ = enabled;
-	if (!enabled && mucConfigurationWindow) {
-		delete mucConfigurationWindow.data();
+	if (!enabled) {
+		if (mucConfigurationWindow_) {
+			delete mucConfigurationWindow_.data();
+		}
+		if (affiliationEditor_) {
+			delete affiliationEditor_.data();
+		}
 	}
 }
 
@@ -704,6 +710,7 @@ void QtChatWindow::handleActionButtonClicked() {
 	QMenu contextMenu;
 	QAction* changeSubject = contextMenu.addAction(tr("Change subject"));
 	QAction* configure = contextMenu.addAction(tr("Configure room"));
+	QAction* affiliations = contextMenu.addAction(tr("Edit affiliations"));
 	QAction* destroy = contextMenu.addAction(tr("Destroy room"));
 	QAction* invite = contextMenu.addAction(tr("Invite person to this room"));
 	QAction* result = contextMenu.exec(QCursor::pos());
@@ -717,6 +724,14 @@ void QtChatWindow::handleActionButtonClicked() {
 	else if (result == configure) {
 		onConfigureRequest(Form::ref());
 	}
+	else if (result == affiliations) {
+		if (!affiliationEditor_) {
+			onGetAffiliationsRequest();
+			affiliationEditor_ = new QtAffiliationEditor(this);
+			connect(affiliationEditor_, SIGNAL(accepted()), this, SLOT(handleAffiliationEditorAccepted()));
+		}
+		affiliationEditor_->show();
+	}
 	else if (result == destroy) {
 		onDestroyRequest();
 	}
@@ -729,13 +744,22 @@ void QtChatWindow::handleActionButtonClicked() {
 	}
 }
 
+void QtChatWindow::handleAffiliationEditorAccepted() {
+	onChangeAffiliationsRequest(affiliationEditor_->getChanges());
+}
+
+void QtChatWindow::setAffiliations(MUCOccupant::Affiliation affiliation, const std::vector<JID>& jids) {
+	if (!affiliationEditor_) return;
+	affiliationEditor_->setAffiliations(affiliation, jids);
+}
+
 void QtChatWindow::showRoomConfigurationForm(Form::ref form) {
-	if (mucConfigurationWindow) {
-		delete mucConfigurationWindow.data();
+	if (mucConfigurationWindow_) {
+		delete mucConfigurationWindow_.data();
 	}
-	mucConfigurationWindow = new QtMUCConfigurationWindow(form);
-	mucConfigurationWindow->onFormComplete.connect(boost::bind(boost::ref(onConfigureRequest), _1));
-	mucConfigurationWindow->onFormCancelled.connect(boost::bind(boost::ref(onConfigurationFormCancelled)));
+	mucConfigurationWindow_ = new QtMUCConfigurationWindow(form);
+	mucConfigurationWindow_->onFormComplete.connect(boost::bind(boost::ref(onConfigureRequest), _1));
+	mucConfigurationWindow_->onFormCancelled.connect(boost::bind(boost::ref(onConfigurationFormCancelled)));
 }
 
 void QtChatWindow::addMUCInvitation(const JID& jid, const std::string& reason, const std::string& password) {

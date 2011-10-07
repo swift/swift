@@ -17,6 +17,7 @@
 #include <Swiften/Elements/SecurityLabelsCatalog.h>
 #include <Swiften/Elements/ChatState.h>
 #include <Swiften/Elements/Form.h>
+#include <Swiften/Elements/MUCOccupant.h>
 
 
 namespace Swift {
@@ -32,7 +33,7 @@ namespace Swift {
 		public:
 			enum AckState {Pending, Received, Failed};
 			enum Tristate {Yes, No, Maybe};
-			enum OccupantAction {Kick, MakeModerator, MakeParticipant, MakeVisitor};
+			enum OccupantAction {Kick, Ban, MakeModerator, MakeParticipant, MakeVisitor};
 			enum FileTransferState {WaitingForAccept, Negotiating, Transferring, Canceled, Finished, FTFailed};
 			ChatWindow() {}
 			virtual ~ChatWindow() {};
@@ -75,6 +76,7 @@ namespace Swift {
 			virtual void setAckState(const std::string& id, AckState state) = 0;
 			virtual void flash() = 0;
 			virtual void setSubject(const std::string& subject) = 0;
+			virtual void setAffiliations(MUCOccupant::Affiliation, const std::vector<JID>&) = 0;
 
 			/**
 			 * Set an alert on the window.
@@ -112,6 +114,9 @@ namespace Swift {
 			boost::signal<void ()> onDestroyRequest;
 			boost::signal<void (const JID&, const std::string& /*reason*/)> onInvitePersonToThisMUCRequest;
 			boost::signal<void ()> onConfigurationFormCancelled;
+			boost::signal<void ()> onGetAffiliationsRequest;
+			boost::signal<void (MUCOccupant::Affiliation, const JID&)> onSetAffiliationRequest;
+			boost::signal<void (const std::vector<std::pair<MUCOccupant::Affiliation, JID> >& changes)> onChangeAffiliationsRequest;
 			
 			// File transfer related
 			boost::signal<void (std::string /* id */)> onFileTransferCancel;

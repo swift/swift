@@ -77,6 +77,8 @@ MUCController::MUCController (
 	chatWindow_->onConfigurationFormCancelled.connect(boost::bind(&MUCController::handleConfigurationCancelled, this));
 	chatWindow_->onDestroyRequest.connect(boost::bind(&MUCController::handleDestroyRoomRequest, this));
 	chatWindow_->onInvitePersonToThisMUCRequest.connect(boost::bind(&MUCController::handleInvitePersonToThisMUCRequest, this, _1, _2));
+	chatWindow_->onGetAffiliationsRequest.connect(boost::bind(&MUCController::handleGetAffiliationsRequest, this));
+	chatWindow_->onChangeAffiliationsRequest.connect(boost::bind(&MUCController::handleChangeAffiliationsRequest, this, _1));
 	muc_->onJoinComplete.connect(boost::bind(&MUCController::handleJoinComplete, this, _1));
 	muc_->onJoinFailed.connect(boost::bind(&MUCController::handleJoinFailed, this, _1));
 	muc_->onOccupantJoined.connect(boost::bind(&MUCController::handleOccupantJoined, this, _1));
@@ -86,6 +88,7 @@ MUCController::MUCController (
 	muc_->onConfigurationFailed.connect(boost::bind(&MUCController::handleConfigurationFailed, this, _1));
 	muc_->onConfigurationFormReceived.connect(boost::bind(&MUCController::handleConfigurationFormReceived, this, _1));
 	muc_->onRoleChangeFailed.connect(boost::bind(&MUCController::handleOccupantRoleChangeFailed, this, _1, _2, _3));
+	muc_->onAffiliationListReceived.connect(boost::bind(&MUCController::handleAffiliationListReceived, this, _1, _2));
 	if (timerFactory) {
 		loginCheckTimer_ = boost::shared_ptr<Timer>(timerFactory->createTimer(MUC_JOIN_WARNING_TIMEOUT_MILLISECONDS));
 		loginCheckTimer_->onTick.connect(boost::bind(&MUCController::handleJoinTimeoutTick, this));
@@ -114,6 +117,7 @@ void MUCController::handleWindowOccupantSelectionChanged(ContactRosterItem* item
 	/* FIXME: all of these should be conditional */
 	if (item) {
 		actions.push_back(ChatWindow::Kick);
+		actions.push_back(ChatWindow::Ban);
 		actions.push_back(ChatWindow::MakeModerator);
 		actions.push_back(ChatWindow::MakeParticipant);
 		actions.push_back(ChatWindow::MakeVisitor);
@@ -124,6 +128,7 @@ void MUCController::handleWindowOccupantSelectionChanged(ContactRosterItem* item
 void MUCController::handleActionRequestedOnOccupant(ChatWindow::OccupantAction action, ContactRosterItem* item) {
 	switch (action) {
 		case ChatWindow::Kick: muc_->kickOccupant(item->getJID());break;
+		case ChatWindow::Ban: muc_->changeAffiliation(item->getJID(), MUCOccupant::Outcast);break;
 		case ChatWindow::MakeModerator: muc_->changeOccupantRole(item->getJID(), MUCOccupant::Moderator);break;
 		case ChatWindow::MakeParticipant: muc_->changeOccupantRole(item->getJID(), MUCOccupant::Participant);break;
 		case ChatWindow::MakeVisitor: muc_->changeOccupantRole(item->getJID(), MUCOccupant::Visitor);break;
@@ -201,7 +206,7 @@ void MUCController::handleJoinFailed(boost::shared_ptr<ErrorPayload> error) {
 			break;
 		case ErrorPayload::NotAuthorized: 
 			errorMessage += ": ";
-			errorMessage += QT_TRANSLATE_NOOP("", "A password needed");
+			errorMessage += QT_TRANSLATE_NOOP("", "A password is needed");
 			break;
 		case ErrorPayload::RegistrationRequired: 
 			errorMessage += ": ";
@@ -628,6 +633,25 @@ void MUCController::handleDestroyRoomRequest() {
 
 void MUCController::handleInvitePersonToThisMUCRequest(const JID& jid, const std::string& reason) {
 	muc_->invitePerson(jid, reason);
+}
+
+void MUCController::handleGetAffiliationsRequest() {
+	muc_->requestAffiliationList(MUCOccupant::Owner);
+	muc_->requestAffiliationList(MUCOccupant::Admin);
+	muc_->requestAffiliationList(MUCOccupant::Member);
+	muc_->requestAffiliationList(MUCOccupant::Outcast);
+}
+
+typedef std::pair<MUCOccupant::Affiliation, JID> AffiliationChangePair;
+
+void MUCController::handleChangeAffiliationsRequest(const std::vector<std::pair<MUCOccupant::Affiliation, JID> >& changes) {
+	foreach (const AffiliationChangePair& change, changes) {
+		muc_->changeAffiliation(change.second, change.first);
+	}
+}
+
+void MUCController::handleAffiliationListReceived(MUCOccupant::Affiliation affiliation, const std::vector<JID>& jids) {
+	chatWindow_->setAffiliations(affiliation, jids);
 }
 
 }

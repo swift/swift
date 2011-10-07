@@ -49,6 +49,7 @@ namespace Swift {
 			void setSubject(const std::string& /*subject*/) {}
 			virtual void showRoomConfigurationForm(Form::ref) {}
 			virtual void addMUCInvitation(const JID& /*jid*/, const std::string& /*reason*/, const std::string& /*password*/) {};
+			virtual void setAffiliations(MUCOccupant::Affiliation, const std::vector<JID>&) {}
 
 			std::string name_;
 			std::string lastMessageBody_;

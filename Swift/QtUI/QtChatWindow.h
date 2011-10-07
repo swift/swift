@@ -8,6 +8,7 @@
 
 #include <Swift/Controllers/UIInterfaces/ChatWindow.h>
 #include <Swift/QtUI/QtMUCConfigurationWindow.h>
+#include <Swift/QtUI/QtAffiliationEditor.h>
 
 #include <QtTabbable.h>
 
@@ -73,6 +74,7 @@ namespace Swift {
 			void setSubject(const std::string& subject);
 			void showRoomConfigurationForm(Form::ref);
 			void addMUCInvitation(const JID& jid, const std::string& reason, const std::string& password);
+			void setAffiliations(MUCOccupant::Affiliation, const std::vector<JID>&);
 
 		public slots:
 			void handleChangeSplitterState(QByteArray state);
@@ -111,6 +113,7 @@ namespace Swift {
 			void handleFileTransferSetDescription(QString id);
 			void handleFileTransferStart(QString id);
 			void handleFileTransferAccept(QString id, QString filename);
+			void handleAffiliationEditorAccepted();
 
 		private:
 			void updateTitleWithUnreadCount();
@@ -153,6 +156,7 @@ namespace Swift {
 			QString alertStyleSheet_;
 			std::map<QString, QString> descriptions;
 			QtFileTransferJSBridge* fileTransferJS;
-			QPointer<QtMUCConfigurationWindow> mucConfigurationWindow;
+			QPointer<QtMUCConfigurationWindow> mucConfigurationWindow_;
+			QPointer<QtAffiliationEditor> affiliationEditor_;
 	};
 }

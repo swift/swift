@@ -84,8 +84,8 @@ sources = [
     "QtTabWidget.cpp",
     "QtTextEdit.cpp",
     "QtXMLConsoleWidget.cpp",
-	"QtFileTransferListWidget.cpp",
-	"QtFileTransferListItemModel.cpp",
+    "QtFileTransferListWidget.cpp",
+    "QtFileTransferListItemModel.cpp",
     "QtAdHocCommandWindow.cpp",
     "QtUtilities.cpp",
     "QtBookmarkDetailWindow.cpp",
@@ -137,6 +137,7 @@ sources = [
     "qrc_Swift.cc",
     "QtFileTransferJSBridge.cpp",
     "QtMUCConfigurationWindow.cpp",
+    "QtAffiliationEditor.cpp",
   ]
 
 myenv["SWIFT_VERSION"] = Version.getBuildVersion(env.Dir("#").abspath, "swift")
@@ -173,6 +174,7 @@ myenv.Uic4("UserSearch/QtUserSearchFirstPage.ui")
 myenv.Uic4("UserSearch/QtUserSearchFieldsPage.ui")
 myenv.Uic4("UserSearch/QtUserSearchResultsPage.ui")
 myenv.Uic4("QtBookmarkDetailWindow.ui")
+myenv.Uic4("QtAffiliationEditor.ui")
 myenv.Uic4("QtJoinMUCWindow.ui")
 myenv.Qrc("DefaultTheme.qrc")
 myenv.Qrc("Swift.qrc")
