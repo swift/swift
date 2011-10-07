@@ -12,6 +12,10 @@
 #include <Swiften/Parser/XMLParser.h>
 
 namespace Swift {
+	/**
+	 * Warning: This constructor is not thread-safe, because it depends on global state to
+	 * check whether it is initialized.
+	 */
 	class LibXMLParser : public XMLParser, public boost::noncopyable {
 		public:
 			LibXMLParser(XMLParserClient* client);
@@ -20,6 +24,7 @@ namespace Swift {
 			bool parse(const std::string& data);
 
 		private:
+			static bool initialized;
 			xmlSAXHandler handler_;
 			xmlParserCtxtPtr context_;
 	};

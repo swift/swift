@@ -51,9 +51,15 @@ static void handleError(void*, const char* /*m*/, ... ) {
 static void handleWarning(void*, const char*, ... ) {
 }
 
-
+bool LibXMLParser::initialized = false;
 
 LibXMLParser::LibXMLParser(XMLParserClient* client) : XMLParser(client) {
+	// Initialize libXML for multithreaded applications
+	if (!initialized) {
+		xmlInitParser();
+		initialized = true;
+	}
+
 	memset(&handler_, 0, sizeof(handler_) );
 	handler_.initialized = XML_SAX2_MAGIC;
 	handler_.startElementNs = &handleStartElement;
