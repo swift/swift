@@ -57,9 +57,7 @@ QtChatView::QtChatView(QtChatTheme* theme, QWidget* parent) : QWidget(parent), f
 
 	webPage_ = new QWebPage(this);
 	webPage_->setLinkDelegationPolicy(QWebPage::DelegateAllLinks);
-#ifdef SWIFT_EXPERIMENTAL_FT
-	webPage_->settings()->setAttribute(QWebSettings::DeveloperExtrasEnabled, true);
-#endif
+	//webPage_->settings()->setAttribute(QWebSettings::DeveloperExtrasEnabled, true);
 	webView_->setPage(webPage_);
 	connect(webPage_, SIGNAL(selectionChanged()), SLOT(copySelectionToClipboard()));
 
