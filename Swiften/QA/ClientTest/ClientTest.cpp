@@ -22,27 +22,33 @@ SimpleEventLoop eventLoop;
 BoostNetworkFactories networkFactories(&eventLoop);
 
 Client* client = 0;
-bool reconnected = false;
 bool rosterReceived = false;
+enum TestStage {
+	FirstConnect,
+	Reconnect
+};
+TestStage stage;
 
-void handleDisconnected(boost::optional<ClientError>) {
-	eventLoop.stop();
+void handleDisconnected(boost::optional<ClientError> e) {
+	std::cout << "Disconnected: " << e << std::endl;
+	if (stage == FirstConnect) {
+		stage = Reconnect;
+		client->connect();
+	}
+	else {
+		eventLoop.stop();
+	}
 }
 
 void handleRosterReceived(boost::shared_ptr<Payload>) {
-	if (reconnected) {
-		rosterReceived = true;
-		client->onDisconnected.connect(boost::bind(&handleDisconnected, _1));
-		client->disconnect();
-	}
-	else {
-		reconnected = true;
-		client->disconnect();
-		client->connect();
-	}
+	rosterReceived = true;
+	std::cout << "Disconnecting" << std::endl;
+	client->disconnect();
 }
 
 void handleConnected() {
+	std::cout << "Connected" << std::endl;
+	rosterReceived = false;
 	GetRosterRequest::ref rosterRequest = GetRosterRequest::create(client->getIQRouter());
 	rosterRequest->onResponse.connect(boost::bind(&handleRosterReceived, _1));
 	rosterRequest->send();
@@ -63,7 +69,9 @@ int main(int, char**) {
 	client = new Swift::Client(JID(jid), std::string(pass), &networkFactories);
 	ClientXMLTracer* tracer = new ClientXMLTracer(client);
 	client->onConnected.connect(&handleConnected);
+	client->onDisconnected.connect(boost::bind(&handleDisconnected, _1));
 	client->setAlwaysTrustCertificates();
+	stage = FirstConnect;
 	client->connect();
 
 	{

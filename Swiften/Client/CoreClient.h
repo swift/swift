@@ -209,6 +209,10 @@ namespace Swift {
 			void handleStanzaAcked(boost::shared_ptr<Stanza>);
 			void purgePassword();
 
+			void resetConnector();
+			void resetSession();
+			void forceReset();
+
 		private:
 			JID jid_;
 			SafeByteArray password_;

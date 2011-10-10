@@ -41,9 +41,7 @@ CoreClient::CoreClient(const JID& jid, const SafeByteArray& password, NetworkFac
 }
 
 CoreClient::~CoreClient() {
-	if ((session_ && !session_->isFinished()) || connection_) {
-		std::cerr << "Warning: Client not disconnected properly" << std::endl;
-	}
+	forceReset();
 	delete tlsFactories;
 	delete iqRouter_;
 
@@ -61,10 +59,11 @@ void CoreClient::connect(const ClientOptions& o) {
 }
 
 void CoreClient::connect(const std::string& host) {
+	forceReset();
+
 	SWIFT_LOG(debug) << "Connecting to host " << host << std::endl;
 	disconnectRequested_ = false;
 	assert(!connector_);
-
 	assert(proxyConnectionFactories.empty());
 	PlatformProxyProvider proxyProvider;
 	if(proxyProvider.getSOCKS5Proxy().isValid()) {
@@ -83,13 +82,7 @@ void CoreClient::connect(const std::string& host) {
 }
 
 void CoreClient::handleConnectorFinished(boost::shared_ptr<Connection> connection) {
-	connector_->onConnectFinished.disconnect(boost::bind(&CoreClient::handleConnectorFinished, this, _1));
-	connector_.reset();
-	foreach(ConnectionFactory* f, proxyConnectionFactories) {
-		delete f;
-	}
-	proxyConnectionFactories.clear();
-
+	resetConnector();
 	if (!connection) {
 		if (options.forgetPassword) {
 			purgePassword();
@@ -151,15 +144,7 @@ void CoreClient::handleSessionFinished(boost::shared_ptr<Error> error) {
 	if (options.forgetPassword) {
 		purgePassword();
 	}
-	session_->onFinished.disconnect(boost::bind(&CoreClient::handleSessionFinished, this, _1));
-	session_->onNeedCredentials.disconnect(boost::bind(&CoreClient::handleNeedCredentials, this));
-
-	sessionStream_->onDataRead.disconnect(boost::bind(&CoreClient::handleDataRead, this, _1));
-	sessionStream_->onDataWritten.disconnect(boost::bind(&CoreClient::handleDataWritten, this, _1));
-	sessionStream_.reset();
-
-	connection_->disconnect();
-	connection_.reset();
+	resetSession();
 
 	boost::optional<ClientError> actualError;
 	if (error) {
@@ -339,6 +324,38 @@ const JID& CoreClient::getJID() const {
 
 void CoreClient::purgePassword() {
 	safeClear(password_);
+}
+
+void CoreClient::resetConnector() {
+	connector_->onConnectFinished.disconnect(boost::bind(&CoreClient::handleConnectorFinished, this, _1));
+	connector_.reset();
+	foreach(ConnectionFactory* f, proxyConnectionFactories) {
+		delete f;
+	}
+	proxyConnectionFactories.clear();
+}
+
+void CoreClient::resetSession() {
+	session_->onFinished.disconnect(boost::bind(&CoreClient::handleSessionFinished, this, _1));
+	session_->onNeedCredentials.disconnect(boost::bind(&CoreClient::handleNeedCredentials, this));
+
+	sessionStream_->onDataRead.disconnect(boost::bind(&CoreClient::handleDataRead, this, _1));
+	sessionStream_->onDataWritten.disconnect(boost::bind(&CoreClient::handleDataWritten, this, _1));
+	sessionStream_.reset();
+
+	connection_->disconnect();
+	connection_.reset();
+}
+
+void CoreClient::forceReset() {
+	if (connector_) {
+		std::cerr << "Warning: Client not disconnected properly: Connector still active" << std::endl;
+		resetConnector();
+	}
+	if (sessionStream_ || connection_) {
+		std::cerr << "Warning: Client not disconnected properly: Session still active" << std::endl;
+		resetSession();
+	}
 }
 
 }
