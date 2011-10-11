@@ -176,6 +176,9 @@ void QtChatView::replaceMessage(const QString& newMessage, const QString& id, co
 		old = replaceTime.toOuterXml();
 		replaceTime.setInnerXml(ChatSnippet::escape(tr("%1 edited").arg(ChatSnippet::timeToEscapedString(editTime))));
 	}
+	else {
+		qWarning() << "Trying to replace element with id " << id << " but it's not there.";
+	}
 }
 
 void QtChatView::copySelectionToClipboard() {

@@ -51,6 +51,7 @@
 namespace Swift {
 QtChatWindow::QtChatWindow(const QString &contact, QtChatTheme* theme, UIEventStream* eventStream) : QtTabbable(), contact_(contact), previousMessageWasSelf_(false), previousMessageWasSystem_(false), previousMessageWasPresence_(false), previousMessageWasFileTransfer_(false), eventStream_(eventStream) {
 	unreadCount_ = 0;
+	idCounter_ = 0;
 	inputEnabled_ = true;
 	completer_ = NULL;
 	affiliationEditor_ = NULL;
@@ -454,7 +455,7 @@ std::string QtChatWindow::addMessage(const std::string &message, const std::stri
 		appendToPrevious = false;
 	}
 	QString qAvatarPath =  scaledAvatarPath.isEmpty() ? "qrc:/icons/avatar.png" : QUrl::fromLocalFile(scaledAvatarPath).toEncoded();
-	std::string id = id_.generateID();
+	std::string id = "id" + boost::lexical_cast<std::string>(idCounter_++);
 	messageLog_->addMessage(boost::shared_ptr<ChatSnippet>(new MessageSnippet(htmlString, Qt::escape(P2QSTRING(senderName)), B2QDATE(time), qAvatarPath, senderIsSelf, appendToPrevious, theme_, P2QSTRING(id))));
 
 	previousMessageWasSelf_ = senderIsSelf;
@@ -500,7 +501,7 @@ std::string formatSize(const boost::uintmax_t bytes) {
 
 std::string QtChatWindow::addFileTransfer(const std::string& senderName, bool senderIsSelf, const std::string& filename, const boost::uintmax_t sizeInBytes) {
 	qDebug() << "addFileTransfer";
-	std::string ft_id = id_.generateID();
+	std::string ft_id = "ft" + boost::lexical_cast<std::string>(idCounter_++);
 	
 	std::string htmlString;
 	if (senderIsSelf) {
@@ -530,7 +531,7 @@ std::string QtChatWindow::addFileTransfer(const std::string& senderName, bool se
 		appendToPrevious = false;
 	}
 	QString qAvatarPath = "qrc:/icons/avatar.png";
-	std::string id = id_.generateID();
+	std::string id = "ftmessage" + boost::lexical_cast<std::string>(idCounter_++);
 	messageLog_->addMessage(boost::shared_ptr<ChatSnippet>(new MessageSnippet(QString::fromStdString(htmlString), Qt::escape(P2QSTRING(senderName)), B2QDATE(boost::posix_time::second_clock::local_time()), qAvatarPath, senderIsSelf, appendToPrevious, theme_, P2QSTRING(id))));
 
 
@@ -612,6 +613,9 @@ void QtChatWindow::replaceMessage(const std::string& message, const std::string&
 		messageHTML = P2QSTRING(Linkify::linkify(Q2PSTRING(messageHTML)));
 		messageHTML.replace("\n","<br/>");
 		messageLog_->replaceMessage(messageHTML, P2QSTRING(id), B2QDATE(time));
+	}
+	else {
+		qWarning() << "Trying to replace a message with no id";
 	}
 }
 

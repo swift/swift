@@ -14,8 +14,6 @@
 
 #include <SwifTools/LastLineTracker.h>
 
-#include <Swiften/Base/IDGenerator.h>
-
 #include <map>
 #include <QPointer>
 
@@ -150,7 +148,6 @@ namespace Swift {
 			bool inputClearing_;
 			UIEventStream* eventStream_;
 			bool inputEnabled_;
-			IDGenerator id_;
 			QSplitter *logRosterSplitter_;
 			Tristate correctionEnabled_;
 			QString alertStyleSheet_;
@@ -158,5 +155,6 @@ namespace Swift {
 			QtFileTransferJSBridge* fileTransferJS;
 			QPointer<QtMUCConfigurationWindow> mucConfigurationWindow_;
 			QPointer<QtAffiliationEditor> affiliationEditor_;
+			int idCounter_;
 	};
 }
