@@ -11,12 +11,14 @@ QtElidingLabel::QtElidingLabel(QWidget* parent, Qt::WindowFlags f) : QLabel(pare
 	fullText_ = "";
 	dirty_ = true;
 	setSizes();
+	setTextFormat(Qt::PlainText);
 }
 
 QtElidingLabel::QtElidingLabel(const QString& text, QWidget* parent, Qt::WindowFlags f) : QLabel(text, parent, f) {
 	fullText_ = text;
 	dirty_ = true;
 	setSizes();
+	setTextFormat(Qt::PlainText);
 }
 
 QtElidingLabel::~QtElidingLabel() {
