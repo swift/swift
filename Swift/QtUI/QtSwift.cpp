@@ -8,7 +8,10 @@
 
 #include <string>
 #include <QSplitter>
+#include <QFile>
 #include <boost/bind.hpp>
+#include <QMessageBox>
+#include <QApplication>
 
 #include "QtLoginWindow.h"
 #include "QtChatTabs.h"
@@ -30,6 +33,7 @@
 #include "Swift/Controllers/BuildVersion.h"
 #include "SwifTools/AutoUpdater/AutoUpdater.h"
 #include "SwifTools/AutoUpdater/PlatformAutoUpdaterFactory.h"
+#include "Swiften/Base/Paths.h"
 
 #if defined(SWIFTEN_PLATFORM_WINDOWS)
 #include "WindowsNotifier.h"
@@ -169,6 +173,29 @@ QtSwift::QtSwift(const po::variables_map& options) : networkFactories_(&clientMa
 				options.count("latency-debug") > 0,
 				eagleMode);
 		mainControllers_.push_back(mainController);
+	}
+
+	if (eagleMode) {
+		QString clickThroughPath(P2QSTRING((Paths::getExecutablePath() / "eagle-banner.txt").string()));
+		QFile clickThroughFile(clickThroughPath);
+		if (clickThroughFile.exists() && clickThroughFile.open(QIODevice::ReadOnly)) {
+			QString banner;
+			while (!clickThroughFile.atEnd()) {
+				QByteArray line = clickThroughFile.readLine();
+				banner += line + "\n";
+			}
+			if (!banner.isEmpty()) {
+				QMessageBox msgBox;
+				msgBox.setWindowTitle(tr("Confirm terms of use"));
+				msgBox.setText(tr("Do you agree to the terms of use?"));
+				msgBox.setInformativeText(banner);
+				msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
+				msgBox.setDefaultButton(QMessageBox::No);
+				if (msgBox.exec() != QMessageBox::Yes) {
+					exit(0);
+				}
+			}
+		}
 	}
 
 
