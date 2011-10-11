@@ -9,6 +9,8 @@
 #include <Swiften/Serializer/GenericPayloadSerializer.h>
 #include <Swiften/Elements/MUCItem.h>
 #include <boost/smart_ptr/make_shared.hpp>
+#include <Swiften/Serializer/XML/XMLElement.h>
+#include <Swiften/Serializer/XML/XMLTextNode.h>
 
 namespace Swift {
 	class MUCItemSerializer {
