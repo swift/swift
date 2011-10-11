@@ -25,6 +25,7 @@ QtAdHocCommandWindow::QtAdHocCommandWindow(boost::shared_ptr<OutgoingAdHocComman
 	layout->setContentsMargins(0,0,0,0);
 	layout->setSpacing(2);
 	label_ = new QLabel(this);
+	label_->setTextFormat(Qt::PlainText);
 	layout->addWidget(label_);
 	QWidget* formContainer = new QWidget(this);
 	layout->addWidget(formContainer);
