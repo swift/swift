@@ -766,7 +766,7 @@ void QtChatWindow::showRoomConfigurationForm(Form::ref form) {
 	mucConfigurationWindow_->onFormCancelled.connect(boost::bind(boost::ref(onConfigurationFormCancelled)));
 }
 
-void QtChatWindow::addMUCInvitation(const JID& jid, const std::string& reason, const std::string& password) {
+void QtChatWindow::addMUCInvitation(const JID& jid, const std::string& reason, const std::string& /*password*/) {
 	bool accepted = false;
 	QMessageBox msgBox;
 	msgBox.setText(QString("You have been invited to the room %1 by %2.").arg(P2QSTRING(jid.toString())).arg(contact_));
