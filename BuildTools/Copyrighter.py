@@ -134,7 +134,7 @@ if sys.argv[1] == "check-copyright" :
 elif sys.argv[1] == "check-all-copyrights" :
   ok = True
   for (path, dirs, files) in os.walk(".") :
-    if "3rdParty" in path or ".sconf" in path or "Swift.app" in path or path.startswith("build") :
+    if "3rdParty" in path or ".sconf" in path or "Swift.app" in path or path.startswith("build") or "xmppbench" in path :
       continue
     for filename in [os.path.join(path, file) for file in files if (file.endswith(".cpp") or file.endswith(".h")) and not "ui_" in file and not "moc_" in file and not "qrc_" in file and not "BuildVersion.h" in file and not "Swiften.h" in file and not "Version.h" in file and not "swiften-config.h" in file and not "linit.cpp" in file ] :
       ok &= check_copyright(filename) 

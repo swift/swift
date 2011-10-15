@@ -44,3 +44,4 @@ cppcheck.log
 /nbproject/private/
 3rdParty/LibMiniUPnPc/src/miniupnpc/miniupnpcstrings.h
 *.sublime-workspace
+/xmppbench
