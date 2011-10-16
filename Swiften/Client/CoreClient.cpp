@@ -14,7 +14,6 @@
 #include <Swiften/Base/foreach.h>
 #include <Swiften/Base/Algorithm.h>
 #include <Swiften/Client/ClientSession.h>
-#include <Swiften/TLS/PlatformTLSFactories.h>
 #include <Swiften/TLS/CertificateVerificationError.h>
 #include <Swiften/Network/ChainedConnector.h>
 #include <Swiften/Network/NetworkFactories.h>
@@ -37,12 +36,10 @@ CoreClient::CoreClient(const JID& jid, const SafeByteArray& password, NetworkFac
 
 	iqRouter_ = new IQRouter(stanzaChannel_);
 	iqRouter_->setJID(jid);
-	tlsFactories = new PlatformTLSFactories();
 }
 
 CoreClient::~CoreClient() {
 	forceReset();
-	delete tlsFactories;
 	delete iqRouter_;
 
 	stanzaChannel_->onAvailableChanged.disconnect(boost::bind(&CoreClient::handleStanzaChannelAvailableChanged, this, _1));
@@ -94,7 +91,7 @@ void CoreClient::handleConnectorFinished(boost::shared_ptr<Connection> connectio
 		connection_ = connection;
 
 		assert(!sessionStream_);
-		sessionStream_ = boost::make_shared<BasicSessionStream>(ClientStreamType, connection_, getPayloadParserFactories(), getPayloadSerializers(), tlsFactories->getTLSContextFactory(), networkFactories->getTimerFactory(), networkFactories->getXMLParserFactory());
+		sessionStream_ = boost::make_shared<BasicSessionStream>(ClientStreamType, connection_, getPayloadParserFactories(), getPayloadSerializers(), networkFactories->getTLSContextFactory(), networkFactories->getTimerFactory(), networkFactories->getXMLParserFactory());
 		if (!certificate_.empty()) {
 			sessionStream_->setTLSCertificate(PKCS12Certificate(certificate_, password_));
 		}

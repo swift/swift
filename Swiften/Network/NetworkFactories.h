@@ -13,6 +13,8 @@ namespace Swift {
 	class ConnectionServerFactory;
 	class NATTraverser;
 	class XMLParserFactory;
+	class TLSContextFactory;
+	class CertificateFactory;
 
 	/**
 	 * An interface collecting network factories.
@@ -27,5 +29,6 @@ namespace Swift {
 			virtual ConnectionServerFactory* getConnectionServerFactory() const = 0;
 			virtual NATTraverser* getNATTraverser() const = 0;
 			virtual XMLParserFactory* getXMLParserFactory() const = 0;
+			virtual TLSContextFactory* getTLSContextFactory() const = 0;
 	};
 }

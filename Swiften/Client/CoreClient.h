@@ -30,7 +30,6 @@ namespace Swift {
 	class StanzaChannel;
 	class Stanza;
 	class BasicSessionStream;
-	class PlatformTLSFactories;
 	class CertificateTrustChecker;
 	class NetworkFactories;
 	class ClientSessionStanzaChannel;
@@ -222,7 +221,6 @@ namespace Swift {
 			ClientOptions options;
 			boost::shared_ptr<ChainedConnector> connector_;
 			std::vector<ConnectionFactory*> proxyConnectionFactories;
-			PlatformTLSFactories* tlsFactories;
 			boost::shared_ptr<Connection> connection_;
 			boost::shared_ptr<BasicSessionStream> sessionStream_;
 			boost::shared_ptr<ClientSession> session_;

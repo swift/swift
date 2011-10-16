@@ -12,6 +12,7 @@
 #include <Swiften/Network/PlatformNATTraversalWorker.h>
 #include <Swiften/Parser/PlatformXMLParserFactory.h>
 #include <Swiften/Network/NullNATTraverser.h>
+#include <Swiften/TLS/PlatformTLSFactories.h>
 
 namespace Swift {
 
@@ -26,9 +27,15 @@ BoostNetworkFactories::BoostNetworkFactories(EventLoop* eventLoop) {
 	natTraverser = new NullNATTraverser(eventLoop);
 #endif
 	xmlParserFactory = new PlatformXMLParserFactory();
+	tlsFactories = new PlatformTLSFactories();
+}
+
+TLSContextFactory* BoostNetworkFactories::getTLSContextFactory() const {
+	return tlsFactories->getTLSContextFactory();
 }
 
 BoostNetworkFactories::~BoostNetworkFactories() {
+	delete tlsFactories;
 	delete xmlParserFactory;
 	delete natTraverser;
 	delete connectionServerFactory;

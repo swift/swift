@@ -12,6 +12,7 @@
 namespace Swift {
 	class EventLoop;
 	class NATTraverser;
+	class PlatformTLSFactories;
 
 	class BoostNetworkFactories : public NetworkFactories {
 		public:
@@ -46,6 +47,8 @@ namespace Swift {
 				return xmlParserFactory;
 			}
 
+			virtual TLSContextFactory* getTLSContextFactory() const;
+
 		private:
 			BoostIOServiceThread ioServiceThread;
 			TimerFactory* timerFactory;
@@ -54,5 +57,6 @@ namespace Swift {
 			ConnectionServerFactory* connectionServerFactory;
 			NATTraverser* natTraverser;
 			XMLParserFactory* xmlParserFactory;
+			PlatformTLSFactories* tlsFactories;
 	};
 }
