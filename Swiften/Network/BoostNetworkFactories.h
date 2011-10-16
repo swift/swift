@@ -49,6 +49,10 @@ namespace Swift {
 
 			virtual TLSContextFactory* getTLSContextFactory() const;
 
+			virtual ProxyProvider* getProxyProvider() const {
+				return proxyProvider;
+			}
+
 		private:
 			BoostIOServiceThread ioServiceThread;
 			TimerFactory* timerFactory;
@@ -58,5 +62,6 @@ namespace Swift {
 			NATTraverser* natTraverser;
 			XMLParserFactory* xmlParserFactory;
 			PlatformTLSFactories* tlsFactories;
+			ProxyProvider* proxyProvider;
 	};
 }

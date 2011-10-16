@@ -13,6 +13,7 @@
 #include <Swiften/Parser/PlatformXMLParserFactory.h>
 #include <Swiften/Network/NullNATTraverser.h>
 #include <Swiften/TLS/PlatformTLSFactories.h>
+#include <Swiften/Network/PlatformProxyProvider.h>
 
 namespace Swift {
 
@@ -28,13 +29,11 @@ BoostNetworkFactories::BoostNetworkFactories(EventLoop* eventLoop) {
 #endif
 	xmlParserFactory = new PlatformXMLParserFactory();
 	tlsFactories = new PlatformTLSFactories();
-}
-
-TLSContextFactory* BoostNetworkFactories::getTLSContextFactory() const {
-	return tlsFactories->getTLSContextFactory();
+	proxyProvider = new PlatformProxyProvider();
 }
 
 BoostNetworkFactories::~BoostNetworkFactories() {
+	delete proxyProvider;
 	delete tlsFactories;
 	delete xmlParserFactory;
 	delete natTraverser;
@@ -42,6 +41,10 @@ BoostNetworkFactories::~BoostNetworkFactories() {
 	delete domainNameResolver;
 	delete connectionFactory;
 	delete timerFactory;
+}
+
+TLSContextFactory* BoostNetworkFactories::getTLSContextFactory() const {
+	return tlsFactories->getTLSContextFactory();
 }
 
 }

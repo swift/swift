@@ -17,11 +17,11 @@
 #include <Swiften/TLS/CertificateVerificationError.h>
 #include <Swiften/Network/ChainedConnector.h>
 #include <Swiften/Network/NetworkFactories.h>
+#include <Swiften/Network/ProxyProvider.h>
 #include <Swiften/TLS/PKCS12Certificate.h>
 #include <Swiften/Session/BasicSessionStream.h>
 #include <Swiften/Queries/IQRouter.h>
 #include <Swiften/Client/ClientSessionStanzaChannel.h>
-#include <Swiften/Network/PlatformProxyProvider.h>
 #include <Swiften/Network/SOCKS5ProxiedConnectionFactory.h>
 #include <Swiften/Network/HTTPConnectProxiedConnectionFactory.h>
 
@@ -62,12 +62,11 @@ void CoreClient::connect(const std::string& host) {
 	disconnectRequested_ = false;
 	assert(!connector_);
 	assert(proxyConnectionFactories.empty());
-	PlatformProxyProvider proxyProvider;
-	if(proxyProvider.getSOCKS5Proxy().isValid()) {
-		proxyConnectionFactories.push_back(new SOCKS5ProxiedConnectionFactory(networkFactories->getConnectionFactory(), proxyProvider.getSOCKS5Proxy()));
+	if(networkFactories->getProxyProvider()->getSOCKS5Proxy().isValid()) {
+		proxyConnectionFactories.push_back(new SOCKS5ProxiedConnectionFactory(networkFactories->getConnectionFactory(), networkFactories->getProxyProvider()->getSOCKS5Proxy()));
 	}
-	if(proxyProvider.getHTTPConnectProxy().isValid()) {
-		proxyConnectionFactories.push_back(new HTTPConnectProxiedConnectionFactory(networkFactories->getConnectionFactory(), proxyProvider.getHTTPConnectProxy()));
+	if(networkFactories->getProxyProvider()->getHTTPConnectProxy().isValid()) {
+		proxyConnectionFactories.push_back(new HTTPConnectProxiedConnectionFactory(networkFactories->getConnectionFactory(), networkFactories->getProxyProvider()->getHTTPConnectProxy()));
 	}
 	std::vector<ConnectionFactory*> connectionFactories(proxyConnectionFactories);
 	connectionFactories.push_back(networkFactories->getConnectionFactory());
