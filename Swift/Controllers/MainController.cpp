@@ -238,6 +238,8 @@ void MainController::resetClient() {
 	userSearchControllerChat_ = NULL;
 	delete userSearchControllerAdd_;
 	userSearchControllerAdd_ = NULL;
+	delete adHocManager_;
+	adHocManager_ = NULL;
 	clientInitialized_ = false;
 }
 
