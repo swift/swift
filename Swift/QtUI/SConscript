@@ -21,25 +21,25 @@ Import("env")
 
 myenv = env.Clone()
 myenv["CXXFLAGS"] = filter(lambda x : x != "-Wfloat-equal", myenv["CXXFLAGS"])
-myenv.MergeFlags(env["SWIFT_CONTROLLERS_FLAGS"])
-myenv.MergeFlags(env["SWIFTOOLS_FLAGS"])
+myenv.UseFlags(env["SWIFT_CONTROLLERS_FLAGS"])
+myenv.UseFlags(env["SWIFTOOLS_FLAGS"])
 if myenv["HAVE_XSS"] :
-  myenv.MergeFlags(env["XSS_FLAGS"])
+  myenv.UseFlags(env["XSS_FLAGS"])
 if env["PLATFORM"] == "posix" :
   myenv.Append(LIBS = ["X11"])
 if myenv["HAVE_SPARKLE"] :
-  myenv.MergeFlags(env["SPARKLE_FLAGS"])
-myenv.MergeFlags(env["SWIFTEN_FLAGS"])
-myenv.MergeFlags(env["SWIFTEN_DEP_FLAGS"])
+  myenv.UseFlags(env["SPARKLE_FLAGS"])
+myenv.UseFlags(env["SWIFTEN_FLAGS"])
+myenv.UseFlags(env["SWIFTEN_DEP_FLAGS"])
 if myenv.get("HAVE_GROWL", False) :
-	myenv.MergeFlags(myenv["GROWL_FLAGS"])
+	myenv.UseFlags(myenv["GROWL_FLAGS"])
 	myenv.Append(CPPDEFINES = ["HAVE_GROWL"])
 if myenv["swift_mobile"] :
 	myenv.Append(CPPDEFINES = ["SWIFT_MOBILE"])
 if myenv.get("HAVE_SNARL", False) :
-	myenv.MergeFlags(myenv["SNARL_FLAGS"])
+	myenv.UseFlags(myenv["SNARL_FLAGS"])
 	myenv.Append(CPPDEFINES = ["HAVE_SNARL"])
-myenv.MergeFlags(myenv["PLATFORM_FLAGS"])
+myenv.UseFlags(myenv["PLATFORM_FLAGS"])
 
 myenv.Tool("qt4", toolpath = ["#/BuildTools/SCons/Tools"])
 myenv.Tool("nsis", toolpath = ["#/BuildTools/SCons/Tools"])
