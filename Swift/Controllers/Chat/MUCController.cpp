@@ -645,8 +645,16 @@ void MUCController::handleGetAffiliationsRequest() {
 typedef std::pair<MUCOccupant::Affiliation, JID> AffiliationChangePair;
 
 void MUCController::handleChangeAffiliationsRequest(const std::vector<std::pair<MUCOccupant::Affiliation, JID> >& changes) {
+	std::set<JID> addedJIDs;
 	foreach (const AffiliationChangePair& change, changes) {
-		muc_->changeAffiliation(change.second, change.first);
+		if (change.first != MUCOccupant::NoAffiliation) {
+			addedJIDs.insert(change.second);
+		}
+	}
+	foreach (const AffiliationChangePair& change, changes) {
+		if (change.first != MUCOccupant::NoAffiliation || addedJIDs.find(change.second) == addedJIDs.end()) {
+			muc_->changeAffiliation(change.second, change.first);
+		}
 	}
 }
 
