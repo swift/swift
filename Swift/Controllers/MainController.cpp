@@ -119,6 +119,7 @@ MainController::MainController(
 	contactEditController_ = NULL;
 	userSearchControllerChat_ = NULL;
 	userSearchControllerAdd_ = NULL;
+	adHocManager_ = NULL;
 	quitRequested_ = false;
 	clientInitialized_ = false;
 
