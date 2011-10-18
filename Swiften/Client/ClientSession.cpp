@@ -420,7 +420,9 @@ void ClientSession::finishSession(Error::Type error) {
 
 void ClientSession::finishSession(boost::shared_ptr<Swift::Error> error) {
 	state = Finishing;
-	error_ = error;
+	if (!error_) {
+		error_ = error;
+	}
 	assert(stream->isOpen());
 	if (stanzaAckResponder_) {
 		stanzaAckResponder_->handleAckRequestReceived();
