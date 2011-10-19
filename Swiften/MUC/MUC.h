@@ -54,7 +54,7 @@ namespace Swift {
 			/** Expose public so it can be called when e.g. user goes offline */
 			void handleUserLeft(LeavingType);
 			/** Get occupant information*/
-			MUCOccupant getOccupant(const std::string& nick);
+			const MUCOccupant& getOccupant(const std::string& nick);
 			bool hasOccupant(const std::string& nick);
 			void kickOccupant(const JID& jid);
 			void changeOccupantRole(const JID& jid, MUCOccupant::Role role);

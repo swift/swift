@@ -233,7 +233,7 @@ bool MUC::hasOccupant(const std::string& nick) {
 	return occupants.find(nick) != occupants.end();
 }
 
-MUCOccupant MUC::getOccupant(const std::string& nick) {
+const MUCOccupant& MUC::getOccupant(const std::string& nick) {
 	return occupants.find(nick)->second;
 }
 

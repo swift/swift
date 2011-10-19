@@ -126,12 +126,18 @@ void MUCController::handleWindowOccupantSelectionChanged(ContactRosterItem* item
 }
 
 void MUCController::handleActionRequestedOnOccupant(ChatWindow::OccupantAction action, ContactRosterItem* item) {
+	JID mucJID = item->getJID();
+	MUCOccupant occupant = muc_->getOccupant(mucJID.getResource());
+	JID realJID;
+	if (occupant.getRealJID()) {
+		realJID = occupant.getRealJID().get();
+	}
 	switch (action) {
-		case ChatWindow::Kick: muc_->kickOccupant(item->getJID());break;
-		case ChatWindow::Ban: muc_->changeAffiliation(item->getJID(), MUCOccupant::Outcast);break;
-		case ChatWindow::MakeModerator: muc_->changeOccupantRole(item->getJID(), MUCOccupant::Moderator);break;
-		case ChatWindow::MakeParticipant: muc_->changeOccupantRole(item->getJID(), MUCOccupant::Participant);break;
-		case ChatWindow::MakeVisitor: muc_->changeOccupantRole(item->getJID(), MUCOccupant::Visitor);break;
+		case ChatWindow::Kick: muc_->kickOccupant(mucJID);break;
+		case ChatWindow::Ban: muc_->changeAffiliation(realJID, MUCOccupant::Outcast);break;
+		case ChatWindow::MakeModerator: muc_->changeOccupantRole(mucJID, MUCOccupant::Moderator);break;
+		case ChatWindow::MakeParticipant: muc_->changeOccupantRole(mucJID, MUCOccupant::Participant);break;
+		case ChatWindow::MakeVisitor: muc_->changeOccupantRole(mucJID, MUCOccupant::Visitor);break;
 	}
 }
 
