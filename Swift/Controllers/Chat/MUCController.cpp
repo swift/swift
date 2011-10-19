@@ -449,12 +449,35 @@ bool MUCController::shouldUpdateJoinParts() {
 	return lastWasPresence_;
 }
 
-void MUCController::handleOccupantLeft(const MUCOccupant& occupant, MUC::LeavingType, const std::string& reason) {
+void MUCController::handleOccupantLeft(const MUCOccupant& occupant, MUC::LeavingType type, const std::string& reason) {
 	NickJoinPart event(occupant.getNick(), Part);
 	appendToJoinParts(joinParts_, event);
 	currentOccupants_.erase(occupant.getNick());
 	completer_->removeWord(occupant.getNick());
-	std::string partMessage = (occupant.getNick() != nick_) ? str(format(QT_TRANSLATE_NOOP("", "%1% has left the room")) % occupant.getNick()) : QT_TRANSLATE_NOOP("", "You have left the room");
+	std::string partMessage;
+	bool clearAfter = false;
+	if (occupant.getNick() != nick_) {
+		std::string partType;
+		switch (type) {
+			case MUC::LeaveKick: clearPresenceQueue(); clearAfter = true; partType = " (kicked)"; break;
+			case MUC::LeaveBan: clearPresenceQueue(); clearAfter = true; partType = " (banned)"; break;
+			case MUC::LeaveNotMember: clearPresenceQueue(); clearAfter = true; partType = " (no longer a member)"; break;
+			case MUC::LeaveDestroy:
+			case MUC::Disconnect:
+			case MUC::LeavePart: break;
+		}
+		partMessage = str(format(QT_TRANSLATE_NOOP("", "%1% has left the room%2%")) % occupant.getNick() % partType);
+	}
+	else {
+		switch (type) {
+			case MUC::LeaveKick: clearPresenceQueue(); clearAfter = true; partMessage = QT_TRANSLATE_NOOP("", "You have been kicked out of the room"); break;
+			case MUC::LeaveBan: clearPresenceQueue(); clearAfter = true; partMessage = QT_TRANSLATE_NOOP("", "You have been banned from the room"); break;
+			case MUC::LeaveNotMember: clearPresenceQueue(); clearAfter = true; partMessage = QT_TRANSLATE_NOOP("", "You are no longer a member of the room and have been removed"); break;
+			case MUC::LeaveDestroy: clearPresenceQueue(); clearAfter = true; partMessage = QT_TRANSLATE_NOOP("", "The room has been destroyed"); break;
+			case MUC::Disconnect:
+			case MUC::LeavePart: partMessage = QT_TRANSLATE_NOOP("", "You have left the room");
+		}
+	}
 	if (!reason.empty()) {
 		partMessage += " (" + reason + ")";
 	}
@@ -471,6 +494,9 @@ void MUCController::handleOccupantLeft(const MUCOccupant& occupant, MUC::Leaving
 		addPresenceMessage(partMessage);
 		parting_ = true;
 		processUserPart();
+	}
+	if (clearAfter) {
+		clearPresenceQueue();
 	}
 }
 

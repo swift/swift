@@ -32,7 +32,7 @@ namespace Swift {
 			typedef boost::shared_ptr<MUC> ref;
 
 			enum JoinResult { JoinSucceeded, JoinFailed };
-			enum LeavingType { Part, Disconnect };
+			enum LeavingType { LeavePart, LeaveKick, LeaveBan, LeaveDestroy, LeaveNotMember, Disconnect };
 
 		public:
 			MUC(StanzaChannel* stanzaChannel, IQRouter* iqRouter, DirectedPresenceSender* presenceSender, const JID &muc, MUCRegistry* mucRegistry);

@@ -145,15 +145,33 @@ void MUC::handleIncomingPresence(Presence::ref presence) {
 	//170 is room logging to http
 	//TODO: Nick changes
 	if (presence->getType() == Presence::Unavailable) {
+		LeavingType type = LeavePart;
+		if (mucPayload) {
+			if (boost::dynamic_pointer_cast<MUCDestroyPayload>(mucPayload->getPayload())) {
+				type = LeaveDestroy;
+			}
+			else foreach (MUCUserPayload::StatusCode status, mucPayload->getStatusCodes()) {
+				if (status.code == 307) {
+					type = LeaveKick;
+				}
+				else if (status.code == 301) {
+					type = LeaveBan;
+				}
+				else if (status.code == 321) {
+					type = LeaveNotMember;
+				}
+			}
+		}
+
 		if (presence->getFrom() == ownMUCJID) {
-			handleUserLeft(Part);
+			handleUserLeft(type);
 			return;
 		} 
 		else {
 			std::map<std::string,MUCOccupant>::iterator i = occupants.find(nick);
 			if (i != occupants.end()) {
 				//TODO: part type
-				onOccupantLeft(i->second, Part, "");
+				onOccupantLeft(i->second, type, "");
 				occupants.erase(i);
 			}
 		}
