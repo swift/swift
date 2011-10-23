@@ -1,0 +1,66 @@
+<?xml version='1.0' encoding='utf-8'?>
+
+<!-- For a sensible tutorial on WiX, see http://wix.tramontana.co.hu/tutorial -->
+
+<Wix xmlns='http://schemas.microsoft.com/wix/2006/wi'>
+
+	<?include variables.wxs ?>
+
+	<Product Name='Swift' Id='D7F276D5-BA67-421E-817B-9E7AB4B7D2BF' UpgradeCode='D7F276D5-BA67-421E-817B-9E7AB4B7D2BF' Language='1033' Codepage='1252' Version='0.0.1' Manufacturer='Swift.im'>
+		<Package Id='*' Keywords='Installer' Description="Swift Installer" Comments="Swift is available under the GPL version 3" Manufacturer="Swift.im" InstallerVersion='300' Languages='1033' Compressed='yes' SummaryCodepage='1252'/>
+		<Media Id='1' Cabinet='Swift.cab' EmbedCab='yes'/>
+
+		<!--<Upgrade Id='D7F276D5-BA67-421E-817B-9E7AB4B7D2BF'>
+			<UpgradeVersion OnlyDetect='no' Property='PREVIOUSFOUND' 
+				Minimum='0.0.1' IncludeMinimum='yes'
+				Maximum='2.0.0' IncludeMaximum='no'/>
+		</Upgrade>-->
+		<!-- This means it will upgrade any existing version up to but not including 2.0.
+			This'll mean we can ship nightlies and we can upgrade to 2.0 from them.
+			It also means we can 'upgrade' from e.g. 1.0 to 0.9. We want to change this so only real upgrades are allowed.
+			The numbering scheme probably needs to therefore be major.minor.commitssinceversion -->
+
+
+		<Directory Id='TARGETDIR' Name='SourceDir'>
+	      <Directory Id='ProgramFilesFolder' Name='PFiles'>
+	          <!--<Directory Id='INSTALLDIR' Name='Swift'>
+	          	
+	          </Directory>-->
+	      </Directory>
+
+	      <Directory Id="ProgramMenuFolder" Name="Programs">
+	        <Directory Id="ProgramMenuDir" Name="Swift">
+	          <Component Id="Shortcuts" Guid="D3BB9B0A-5D14-4920-B127-7CCD2D57BFB0">
+	        	<RemoveFolder Id='ProgramMenuDir' On='uninstall' />
+	            <RegistryValue Root='HKCU' Key='Software\Swift\Swift' Type='string' Value='' KeyPath='yes' />
+		    <Shortcut Id='SwiftShortcut' Directory='ProgramMenuDir' Name='Swift' Target="[INSTALLDIR]\Swift.exe" Icon='Swift.exe'/>
+	          </Component>
+	        </Directory>
+	      </Directory>
+
+	      <Directory Id="DesktopFolder" Name="Desktop" />
+
+	      <Merge Id="CRT" DiskId="1" Language="1033" SourceFile="$(var.VCCRTFile)"/>
+	    </Directory>
+
+	    <Feature Id='Core' Level='1' Title='Swift' Description='All necessary Swift files' Display='expand' ConfigurableDirectory='INSTALLDIR' AllowAdvertise='no' Absent='disallow'>
+	      <ComponentGroupRef Id='Files' />
+	      
+	      <!--<ComponentRef Id='Manual' />-->
+	      <MergeRef Id="CRT"/>
+	    </Feature>
+
+	    <Feature Id='Shortcut' Level='1' Title='Shortcut' Description='Start Menu Shortcut' Display='expand' ConfigurableDirectory='INSTALLDIR' AllowAdvertise='no'>
+	      <ComponentRef Id='Shortcuts' />
+	    </Feature>
+
+	    <!--<UIRef Id='WixUI_Advanced'/>-->
+	    <!--<UIRef Id="WixUI_Minimal"/>-->
+	    <UIRef Id="WixUI_Mondo"/>
+	    <WixVariable Id='WixUILicenseRtf' Value='COPYING.rtf'/>
+
+	    <Icon Id="Swift.exe" SourceFile="Swift.exe" />
+
+	    
+	</Product>
+</Wix>

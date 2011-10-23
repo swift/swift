@@ -43,6 +43,7 @@ myenv.UseFlags(myenv["PLATFORM_FLAGS"])
 
 myenv.Tool("qt4", toolpath = ["#/BuildTools/SCons/Tools"])
 myenv.Tool("nsis", toolpath = ["#/BuildTools/SCons/Tools"])
+myenv.Tool("wix", toolpath = ["#/BuildTools/SCons/Tools"])
 qt4modules = ['QtCore', 'QtGui', 'QtWebKit']
 if env["PLATFORM"] == "posix" :
 	qt4modules += ["QtDBus"]
@@ -258,13 +259,54 @@ if env["PLATFORM"] == "win32" :
         #os.path.join(env["OPENSSL_DIR"], "bin", "libeay32.dll"),
         "#/Swift/resources/images",  
       ]
+    qtimageformats = ["gif", "ico", "jpeg", "mng", "svg", "tiff"]
+    qtlibs = ["QtCore4", "QtGui4", "QtNetwork4", "QtWebKit4", "QtXMLPatterns4", "phonon4"]
     myenv.WindowsBundle("Swift", 
       resources = commonResources,
-      qtimageformats = ["gif", "ico", "jpeg", "mng", "svg", "tiff"],
-      qtlibs = ["QtCore4", "QtGui4", "QtNetwork4", "QtWebKit4", "QtXMLPatterns4", "phonon4"])
+      qtimageformats = qtimageformats,
+      qtlibs = qtlibs)
 
-    myenv.Append(NSIS_OPTIONS = [
-        "/DmsvccRedistributableDir=\"" + env["vcredist"] + "\"", 
-        "/DbuildVersion=" + myenv["SWIFT_VERSION"]
-      ])
-    myenv.Nsis("../Packaging/nsis/swift.nsi")
+    #myenv.Append(NSIS_OPTIONS = [
+    #    "/DmsvccRedistributableDir=\"" + env["vcredist"] + "\"", 
+    #    "/DbuildVersion=" + myenv["SWIFT_VERSION"]
+    #  ])
+    #myenv.Nsis("../Packaging/nsis/swift.nsi")
+    #myenv.WiX("../Packaging/wix/swift.msi", ["../Packaging/WiX/Swift.wxs"])
+    if env["SCONS_STAGE"] == "build" and env.get("wix_bindir", None):
+      licensefile = open('../../COPYING', 'r')
+      rtf = '{\\rtf1\\ansi{\\fonttbl\\f0\\fswiss Helvetica;}\\f0\\pard'
+      for line in licensefile:
+        rtf += line
+        rtf += '\\par'
+      rtf += '}'
+      licensefile.close()
+      myenv.WriteVal("Swift/COPYING.rtf", env.Value(rtf))
+
+      wixvariables = {'VCCRTFile': env.get("vcredist", "c:\\Program Files\\Common Files\\Merge Modules") + "\\Microsoft_VC90_CRT_x86.msm"}
+      wixincludecontent = "<Include>"
+      for key in wixvariables:
+        wixincludecontent += "<?define %s = \"%s\" ?>" % (key, wixvariables[key])
+      wixincludecontent += "</Include>"
+      myenv.WriteVal("..\\Packaging\\Wix\\variables.wxs", env.Value(wixincludecontent))
+      heatDependencies = ['Swift/COPYING.rtf', 'Swift/Swift.exe']
+      for dir, resourceFiles in commonResources.items():
+        for resource in resourceFiles:
+          e = env.Entry(resource)
+          if e.isdir():
+            for subresource in env.Glob(str(e) + "/*") :
+              heatDependencies.append("Swift/" + e.name + "/" + subresource.name)
+          else:
+            if resource[-3:] != ".qm":
+              heatDependencies.append("Swift/" + resource)
+      for resource in qtlibs:
+        heatDependencies.append("Swift/" + resource + ".dll")
+      for resource in qtimageformats:
+        heatDependencies.append("Swift/imageformats/q" + resource + "4.dll")
+      for lang in translation_languages:
+        heatDependencies.append("Swift/translations/swift_" + lang + ".qm")
+      myenv.WiX_Heat('..\\Packaging\\WiX\\gen_files.wxs', heatDependencies)
+      myenv.WiX_Candle('..\\Packaging\\WiX\\Swift.wixobj', '..\\Packaging\\WiX\\Swift.wxs')
+      myenv.WiX_Candle('..\\Packaging\\WiX\\gen_files.wixobj', '..\\Packaging\\WiX\\gen_files.wxs')
+      myenv.WiX_Light('..\\Packaging\\WiX\\Swift-' + myenv["SWIFT_VERSION"] + '.msi', ['..\\Packaging\\WiX\\gen_files.wixobj','..\\Packaging\\WiX\\Swift.wixobj'])
+
+

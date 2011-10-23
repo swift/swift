@@ -32,6 +32,8 @@ if os.name == "mac" or (os.name == "posix" and os.uname()[0] == "Darwin"):
 if os.name == "nt" :
 	vars.Add(PathVariable("vcredist", "MSVC redistributable dir", "", PathVariable.PathAccept))
 if os.name == "nt" :
+	vars.Add(PathVariable("wix_bindir", "Path to WiX binaries", "", PathVariable.PathAccept))
+if os.name == "nt" :
 	vars.Add(PackageVariable("bonjour", "Bonjour SDK location", "yes"))
 vars.Add(PackageVariable("openssl", "OpenSSL location", "yes"))
 vars.Add(PathVariable("boost_includedir", "Boost headers location", None, PathVariable.PathAccept))
