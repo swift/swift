@@ -48,8 +48,6 @@ void Session::finishSession() {
 		xmppLayer->writeFooter();
 	}
 	connection->disconnect();
-	handleSessionFinished(boost::optional<SessionError>());
-	onSessionFinished(boost::optional<SessionError>());
 }
 
 void Session::finishSession(const SessionError& error) {
@@ -61,21 +59,19 @@ void Session::finishSession(const SessionError& error) {
 		xmppLayer->writeFooter();
 	}
 	connection->disconnect();
-	handleSessionFinished(boost::optional<SessionError>(error));
-	onSessionFinished(boost::optional<SessionError>(error));
 }
 
 void Session::initializeStreamStack() {
 	xmppLayer = new XMPPLayer(payloadParserFactories, payloadSerializers, xmlParserFactory, ClientStreamType);
 	xmppLayer->onStreamStart.connect(
-			boost::bind(&Session::handleStreamStart, shared_from_this(), _1));
-	xmppLayer->onElement.connect(boost::bind(&Session::handleElement, shared_from_this(), _1));
+			boost::bind(&Session::handleStreamStart, this, _1));
+	xmppLayer->onElement.connect(boost::bind(&Session::handleElement, this, _1));
 	xmppLayer->onError.connect(
-			boost::bind(&Session::finishSession, shared_from_this(), XMLError));
+			boost::bind(&Session::finishSession, this, XMLError));
 	xmppLayer->onDataRead.connect(boost::bind(boost::ref(onDataRead), _1));
 	xmppLayer->onWriteData.connect(boost::bind(boost::ref(onDataWritten), _1));
 	connection->onDisconnected.connect(
-			boost::bind(&Session::handleDisconnected, shared_from_this(), _1));
+			boost::bind(&Session::handleDisconnected, this, _1));
 	connectionLayer = new ConnectionLayer(connection);
 	streamStack = new StreamStack(xmppLayer, connectionLayer);
 }
@@ -85,18 +81,24 @@ void Session::sendElement(boost::shared_ptr<Element> stanza) {
 }
 
 void Session::handleDisconnected(const boost::optional<Connection::Error>& connectionError) {
+	connection->onDisconnected.disconnect(
+			boost::bind(&Session::handleDisconnected, this, _1));
 	if (connectionError) {
 		switch (*connectionError) {
 			case Connection::ReadError:
-				finishSession(ConnectionReadError);
+				handleSessionFinished(ConnectionReadError);
+				onSessionFinished(ConnectionReadError);
 				break;
 			case Connection::WriteError:
-				finishSession(ConnectionWriteError);
+				handleSessionFinished(ConnectionWriteError);
+				onSessionFinished(ConnectionWriteError);
 				break;
 		}
 	}
 	else {
-		finishSession();
+		boost::optional<SessionError> error;
+		handleSessionFinished(error);
+		onSessionFinished(error);
 	}
 }
 
