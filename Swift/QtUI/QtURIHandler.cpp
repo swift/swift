@@ -11,17 +11,11 @@
 #include <QUrl>
 
 #include "QtSwiftUtil.h"
-#ifdef Q_WS_MAC
-#include <SwifTools/URIHandler/MacOSXURIHandlerHelpers.h>
-#endif
 
 using namespace Swift;
 
 QtURIHandler::QtURIHandler() {
 	qApp->installEventFilter(this);
-#ifdef Q_WS_MAC
-	registerAppAsDefaultXMPPURIHandler();
-#endif
 }
 
 bool QtURIHandler::eventFilter(QObject*, QEvent* event) {

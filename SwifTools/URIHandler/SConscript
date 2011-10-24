@@ -7,8 +7,7 @@ sources = [
 
 if swiftools_env["PLATFORM"] == "darwin" and swiftools_env["target"] == "native" :
 	sources += [
-			"MacOSXURIHandler.mm",
-			"MacOSXURIHandlerHelpers.mm",
+			"MacOSXURIHandler.mm"
 		]
 elif swiftools_env["PLATFORM"] == "win32" :
 	sources += []

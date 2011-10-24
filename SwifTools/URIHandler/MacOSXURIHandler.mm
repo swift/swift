@@ -50,8 +50,10 @@ MacOSXURIHandler::~MacOSXURIHandler() {
 
 void MacOSXURIHandler::start() {
 	[[NSAppleEventManager sharedAppleEventManager] setEventHandler:p->eventHandler andSelector:@selector(getUrl:withReplyEvent:) forEventClass:kInternetEventClass andEventID:kAEGetURL];
-	NSString* bundleID = [[NSBundle mainBundle] bundleIdentifier];
-	LSSetDefaultHandlerForURLScheme((CFStringRef)@"xmpp", (CFStringRef)bundleID);
+
+	// Register ourselves as default URI handler
+	//NSString* bundleID = [[NSBundle mainBundle] bundleIdentifier];
+	//LSSetDefaultHandlerForURLScheme((CFStringRef)@"xmpp", (CFStringRef)bundleID);
 }
 
 void MacOSXURIHandler::stop() {
