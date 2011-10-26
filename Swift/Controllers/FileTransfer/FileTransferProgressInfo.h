@@ -7,6 +7,7 @@
 #pragma once
 
 #include <Swiften/Base/boost_bsignals.h>
+#include <boost/cstdint.hpp>
 
 namespace Swift {
 
