@@ -212,7 +212,7 @@ void MUCController::handleJoinFailed(boost::shared_ptr<ErrorPayload> error) {
 			break;
 		case ErrorPayload::NotAuthorized: 
 			errorMessage += ": ";
-			errorMessage += QT_TRANSLATE_NOOP("", "A password is needed");
+			errorMessage += QT_TRANSLATE_NOOP("", "The correct room password is needed");
 			break;
 		case ErrorPayload::RegistrationRequired: 
 			errorMessage += ": ";
