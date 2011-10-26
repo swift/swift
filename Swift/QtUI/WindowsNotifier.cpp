@@ -42,7 +42,9 @@ void WindowsNotifier::showMessage(Type type, const std::string& subject, const s
 }
 
 void WindowsNotifier::handleMessageClicked() {
-	lastCallback();
+	if (lastCallback) {
+		lastCallback();
+	}
 }
 
 }
