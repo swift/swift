@@ -737,7 +737,15 @@ void QtChatWindow::handleActionButtonClicked() {
 		affiliationEditor_->show();
 	}
 	else if (result == destroy) {
-		onDestroyRequest();
+		QMessageBox msgBox;
+		msgBox.setWindowTitle(tr("Confirm room destruction"));
+		msgBox.setText(tr("Are you sure you want to destroy the room?"));
+		msgBox.setInformativeText(tr("This will destroy the room."));
+		msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
+		msgBox.setDefaultButton(QMessageBox::No);
+		if (msgBox.exec() == QMessageBox::Yes) {
+			onDestroyRequest();
+		}
 	}
 	else if (result == invite) {
 		bool ok;
