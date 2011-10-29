@@ -60,14 +60,16 @@ ChatsManager::ChatsManager(
 		MUCManager* mucManager,
 		MUCSearchWindowFactory* mucSearchWindowFactory,
 		ProfileSettingsProvider* settings,
-		FileTransferOverview* ftOverview) :
+		FileTransferOverview* ftOverview,
+		bool eagleMode) :
 			jid_(jid), 
 			joinMUCWindowFactory_(joinMUCWindowFactory), 
 			useDelayForLatency_(useDelayForLatency), 
 			mucRegistry_(mucRegistry), 
 			entityCapsProvider_(entityCapsProvider), 
 			mucManager(mucManager),
-			ftOverview_(ftOverview) {
+			ftOverview_(ftOverview),
+			eagleMode_(eagleMode) {
 	timerFactory_ = timerFactory;
 	eventController_ = eventController;
 	stanzaChannel_ = stanzaChannel;
@@ -119,7 +121,7 @@ void ChatsManager::saveRecents() {
 			/* Work around Boost bug https://svn.boost.org/trac/boost/ticket/4751 */
 			activity.push_back("");
 		}
-		std::string recent = chat.jid.toString() + "\t" + activity[0] + "\t" + (chat.isMUC ? "true" : "false") +  "\t" + chat.nick;
+		std::string recent = chat.jid.toString() + "\t" + (eagleMode_ ? "" : activity[0]) + "\t" + (chat.isMUC ? "true" : "false") +  "\t" + chat.nick;
 		recents += recent + "\n";
 		if (i++ > 25) {
 			break;

@@ -1,0 +1,15 @@
+Import("env")
+
+env.Tool("DocBook", toolpath = ["#/BuildTools/DocBook/SCons"])
+
+################################################################################
+# Code generation helper
+################################################################################
+
+import sys, re, os.path
+
+################################################################################
+
+if "doc" in ARGUMENTS :
+	env.DocBook("Swift Users Guide.xml")
+

@@ -1,0 +1,94 @@
+<?xml version="1.0" ?>
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN" "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+
+<book>
+  <title>Swift User Guide</title>
+
+  <chapter>
+    <title>Introduction</title>
+    <section>
+      <title>Swift</title>
+      <para>
+        Swift is a chat client using the XMPP protocol. This document describes use of the client for end users; for a further description of the protocol read 
+        <citetitle>XMPP: The Definitive Guide</citetitle> 
+        <citation><biblioref linkend="XMPP-TDG"/></citation>
+        or for development using XMPP see the
+        <citetitle>Swiften Developer's Guide</citetitle>
+        <citation><biblioref linkend="Swiften-Developers-Guide" /></citation>
+      </para>
+    </section>
+  </chapter>
+
+  <chapter>
+    <title>Getting Started</title>
+    <para>
+    </para>
+  </chapter>
+
+  <chapter>
+    <title>Managing Contacts</title>
+    <para>
+    </para>
+  </chapter>
+
+  <chapter>
+    <title>Chatting to Contacts</title>
+    <para>
+    </para>
+  </chapter>
+
+  <chapter>
+    <title>Chatting in Rooms (MUCs)</title>
+    <para>
+    </para>
+  </chapter>
+
+  <chapter>
+    <title>Room (MUC) Administration</title>
+    <para>
+    </para>
+  </chapter>
+
+  <chapter>
+    <title>Server Configuration</title>
+    <para>
+    </para>
+  </chapter>
+
+  <chapter>
+    <title>Eagle Mode</title>
+    <para>
+    </para>
+  </chapter>
+
+  <bibliography>
+    <title>Bibliography</title>
+
+    <biblioentry id="XMPP-TDG">
+      <abbrev>XMPP-TDG</abbrev>
+      <title><ulink url="http://oreilly.com/catalog/9780596157197/">XMPP: The
+      Definitive Guide</ulink></title>
+      <author>
+        <firstname>Peter</firstname>
+        <surname>Saint-Andre</surname>
+      </author>
+      <author>
+        <firstname>Kevin</firstname>
+        <surname>Smith</surname>
+      </author>
+      <author>
+        <firstname>Remko</firstname>
+        <surname>Tronçon</surname>
+      </author>
+    </biblioentry>
+
+    <biblioentry id='Swiften-Developers-Guide'>
+      <abbrev>Swiften-dev</abbrev>
+      <title><ulink url='http://swift.im/swiften/guide/'>Swiften Developer's Guide</ulink></title>
+      <author>
+        <firstname>Remko</firstname>
+        <surname>Tronçon</surname>
+      </author>
+    </biblioentry>
+  </bibliography>
+</book>
