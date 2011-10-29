@@ -60,7 +60,7 @@ MainWindow* QtUIFactory::createMainWindow(UIEventStream* eventStream) {
 }
 
 LoginWindow* QtUIFactory::createLoginWindow(UIEventStream* eventStream) {
-	loginWindow = new QtLoginWindow(eventStream);
+	loginWindow = new QtLoginWindow(eventStream, eagleMode);
 	if (netbookSplitter) {
 		netbookSplitter->insertWidget(0, loginWindow);
 	}

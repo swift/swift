@@ -155,8 +155,6 @@ MainController::MainController(
 		}
 		loginWindow_->selectUser(selectedLoginJID);
 		loginWindow_->setLoginAutomatically(loginAutomatically);
-	} else {
-		loginWindow_->setRememberingAllowed(false);
 	}
 
 

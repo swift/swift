@@ -27,7 +27,7 @@ namespace Swift {
 	class QtLoginWindow : public QMainWindow, public LoginWindow {
 		Q_OBJECT
 		public:
-			QtLoginWindow(UIEventStream* uiEventStream);
+			QtLoginWindow(UIEventStream* uiEventStream, bool eagleMode);
 
 			void morphInto(MainWindow *mainWindow);
 			virtual void loggedOut();
@@ -36,7 +36,6 @@ namespace Swift {
 			virtual void removeAvailableAccount(const std::string& jid);
 			virtual void setLoginAutomatically(bool loginAutomatically);
 			virtual void setIsLoggingIn(bool loggingIn);
-			virtual void setRememberingAllowed(bool allowed);
 			void selectUser(const std::string& user);
 			bool askUserToTrustCertificatePermanently(const std::string& message, Certificate::ref certificate);
 			void hide();
@@ -87,7 +86,7 @@ namespace Swift {
 			QAction* toggleNotificationsAction_;
 			UIEventStream* uiEventStream_;
 			QPointer<QtAboutWidget> aboutDialog_;
-			bool forgetful_;
+			bool eagleMode_;
 			QAction* xmlConsoleAction_;
 			QAction* fileTransferOverviewAction_;
 	};

@@ -33,6 +33,7 @@
 #include "Swift/Controllers/UIEvents/ToggleSoundsUIEvent.h"
 #include "Swift/Controllers/UIEvents/ToggleNotificationsUIEvent.h"
 #include "Swiften/Base/Platform.h"
+#include "Swiften/Base/Paths.h"
 
 #include "QtAboutWidget.h"
 #include "QtSwiftUtil.h"
@@ -41,7 +42,7 @@
 
 namespace Swift{
 
-QtLoginWindow::QtLoginWindow(UIEventStream* uiEventStream) : QMainWindow(), forgetful_(false) {
+QtLoginWindow::QtLoginWindow(UIEventStream* uiEventStream, bool eagleMode) : QMainWindow(), eagleMode_(eagleMode) {
 	uiEventStream_ = uiEventStream;
 
 	setWindowTitle("Swift");
@@ -202,18 +203,17 @@ QtLoginWindow::QtLoginWindow(UIEventStream* uiEventStream) : QMainWindow(), forg
 
 	setInitialMenus();
 	uiEventStream_->onUIEvent.connect(boost::bind(&QtLoginWindow::handleUIEvent, this, _1));
-	this->show();
-}
 
-void QtLoginWindow::setRememberingAllowed(bool allowed) {
-	forgetful_ = true;
-	remember_->setEnabled(allowed);
-	loginAutomatically_->setEnabled(allowed);
-	xmlConsoleAction_->setEnabled(allowed);
-	if (!allowed) {
+
+	remember_->setEnabled(!eagleMode_);
+	loginAutomatically_->setEnabled(!eagleMode_);
+	xmlConsoleAction_->setEnabled(!eagleMode_);
+	if (eagleMode_) {
 		remember_->setChecked(false);
 		loginAutomatically_->setChecked(false);
 	}
+
+	this->show();
 }
 
 bool QtLoginWindow::eventFilter(QObject *obj, QEvent *event) {
@@ -322,8 +322,30 @@ void QtLoginWindow::setIsLoggingIn(bool loggingIn) {
 
 void QtLoginWindow::loginClicked() {
 	if (username_->isEnabled()) {
+		if (eagleMode_) {
+			QString clickThroughPath(P2QSTRING((Paths::getExecutablePath() / "eagle-banner.txt").string()));
+			QFile clickThroughFile(clickThroughPath);
+			if (clickThroughFile.exists() && clickThroughFile.open(QIODevice::ReadOnly)) {
+				QString banner;
+				while (!clickThroughFile.atEnd()) {
+					QByteArray line = clickThroughFile.readLine();
+					banner += line + "\n";
+				}
+				if (!banner.isEmpty()) {
+					QMessageBox msgBox;
+					msgBox.setWindowTitle(tr("Confirm terms of use"));
+					msgBox.setText("");
+					msgBox.setInformativeText(banner);
+					msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
+					msgBox.setDefaultButton(QMessageBox::No);
+					if (msgBox.exec() != QMessageBox::Yes) {
+						return;
+					}
+				}
+			}
+		}
 		onLoginRequest(Q2PSTRING(username_->currentText()), Q2PSTRING(password_->text()), Q2PSTRING(certificateFile_), remember_->isChecked(), loginAutomatically_->isChecked());
-		if (forgetful_) { /* Mustn't remember logins */
+		if (eagleMode_) { /* Mustn't remember logins */
 			username_->clearEditText();
 			password_->setText("");
 		}
