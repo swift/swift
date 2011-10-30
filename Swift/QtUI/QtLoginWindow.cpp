@@ -317,7 +317,8 @@ void QtLoginWindow::setIsLoggingIn(bool loggingIn) {
 	for (int i = 0; i < 5; i++) {
 		widgets[i]->setEnabled(!loggingIn);
 	}
-
+	remember_->setEnabled(!eagleMode_);
+	loginAutomatically_->setEnabled(!eagleMode_);
 }
 
 void QtLoginWindow::loginClicked() {
