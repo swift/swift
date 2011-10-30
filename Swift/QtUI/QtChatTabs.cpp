@@ -256,7 +256,7 @@ void QtChatTabs::handleTabTitleUpdated(QWidget* widget) {
 
 void QtChatTabs::flash() {
 #ifndef SWIFTEN_PLATFORM_MACOSX
-	QApplication::alert(this, 3000);
+	QApplication::alert(this, 0);
 #endif
 }
 
