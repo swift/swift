@@ -12,11 +12,12 @@
 #include "Swift/Controllers/UIInterfaces/ChatWindow.h"
 
 namespace Swift {
+class QtUIPreferences;
 
 class QtOccupantListWidget : public QtTreeWidget {
 	Q_OBJECT
 	public:
-		QtOccupantListWidget(UIEventStream* eventStream, QWidget* parent = 0);
+		QtOccupantListWidget(UIEventStream* eventStream, QtUIPreferences* uiPreferences, QWidget* parent = 0);
 		virtual ~QtOccupantListWidget();
 		void setAvailableOccupantActions(const std::vector<ChatWindow::OccupantAction>& actions);
 		boost::signal<void (ChatWindow::OccupantAction, ContactRosterItem*)> onOccupantActionSelected;

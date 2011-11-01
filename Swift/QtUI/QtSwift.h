@@ -23,6 +23,7 @@
 #endif
 #include "SwifTools/Idle/PlatformIdleQuerier.h"
 #include "SwifTools/Idle/ActualIdleDetector.h"
+#include <Swift/QtUI/QtUIPreferences.h>
 
 namespace po = boost::program_options;
 
@@ -75,6 +76,7 @@ namespace Swift {
 			Notifier* notifier_;
 			PlatformIdleQuerier idleQuerier_;
 			ActualIdleDetector idleDetector_;
+			QtUIPreferences uiPreferences_;
 #if defined(SWIFTEN_PLATFORM_MACOSX)
 			CocoaApplication cocoaApplication_;
 #endif

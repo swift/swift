@@ -30,11 +30,12 @@ namespace Swift {
 	class UIEventStream;
 	class QtTabWidget;
 	class QtSettingsProvider;
+	class QtUIPreferences;
 
 	class QtMainWindow : public QWidget, public MainWindow {
 		Q_OBJECT
 		public:
-			QtMainWindow(QtSettingsProvider*, UIEventStream* eventStream);
+			QtMainWindow(QtSettingsProvider*, UIEventStream* eventStream, QtUIPreferences* uiPreferences);
 			virtual ~QtMainWindow();
 			std::vector<QMenu*> getMenus() {return menus_;}
 			void setMyNick(const std::string& name);
@@ -81,5 +82,6 @@ namespace Swift {
 			bool lastOfflineState_;
 			std::vector<DiscoItems::Item> serverAdHocCommands_;
 			QList<QAction*> serverAdHocCommandActions_;
+			QtUIPreferences* uiPreferences_;
 	};
 }

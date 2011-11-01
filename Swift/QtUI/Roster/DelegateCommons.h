@@ -25,8 +25,8 @@ namespace Swift {
 
 			static void drawElidedText(QPainter* painter, const QRect& region, const QString& text, int flags = Qt::AlignTop);
 
-			QSize contactSizeHint(const QStyleOptionViewItem& option, const QModelIndex& index) const;
-			void paintContact(QPainter* painter, const QStyleOptionViewItem& option, const QColor& nameColor, const QString& avatarPath, const QIcon& presenceIcon, const QString& name, const QString& statusText, int unreadCount) const;
+			QSize contactSizeHint(const QStyleOptionViewItem& option, const QModelIndex& index, bool compact) const;
+			void paintContact(QPainter* painter, const QStyleOptionViewItem& option, const QColor& nameColor, const QString& avatarPath, const QIcon& presenceIcon, const QString& name, const QString& statusText, int unreadCount, bool compact) const;
 
 			int detailFontSizeDrop;
 			QFont nameFont;

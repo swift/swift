@@ -19,7 +19,7 @@
 
 namespace Swift {
 
-QtOccupantListWidget::QtOccupantListWidget(UIEventStream* eventStream, QWidget* parent) : QtTreeWidget(eventStream, parent) {
+QtOccupantListWidget::QtOccupantListWidget(UIEventStream* eventStream, QtUIPreferences* uiPreferences, QWidget* parent) : QtTreeWidget(eventStream, uiPreferences, parent) {
 
 }
 

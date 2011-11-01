@@ -16,11 +16,12 @@
 
 namespace Swift {
 class UIEventStream;
+class QtUIPreferences;
 
 class QtTreeWidget : public QTreeView{
 	Q_OBJECT
 	public:
-		QtTreeWidget(UIEventStream* eventStream, QWidget* parent = 0);
+		QtTreeWidget(UIEventStream* eventStream, QtUIPreferences* uiPreferences, QWidget* parent = 0);
 		~QtTreeWidget();
 		void show();
 		QtTreeWidgetItem* getRoot();
@@ -34,6 +35,7 @@ class QtTreeWidget : public QTreeView{
 		void handleExpanded(const QModelIndex&);
 		void handleCollapsed(const QModelIndex&);
 		void handleClicked(const QModelIndex&);
+		void handleCompactRostersToggled(bool compact);
 	protected:
 		void dragEnterEvent(QDragEnterEvent* event);
 		void dropEvent(QDropEvent* event);
@@ -53,6 +55,7 @@ class QtTreeWidget : public QTreeView{
 		Roster* roster_;
 		RosterDelegate* delegate_;
 		QtTreeWidgetItem* treeRoot_;
+		QtUIPreferences* uiPreferences_;
 };
 
 }

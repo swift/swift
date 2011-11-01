@@ -9,24 +9,26 @@
 #include <QMenu>
 #include <QContextMenuEvent>
 
-#include "Swift/QtUI/ChatList/ChatListMUCItem.h"
-#include "Swift/QtUI/ChatList/ChatListRecentItem.h"
-#include "Swift/QtUI/QtAddBookmarkWindow.h"
-#include "Swift/QtUI/QtEditBookmarkWindow.h"
-#include "Swift/Controllers/UIEvents/JoinMUCUIEvent.h"
-#include "Swift/Controllers/UIEvents/RequestChatUIEvent.h"
-#include "Swift/Controllers/UIEvents/AddMUCBookmarkUIEvent.h"
-#include "Swift/Controllers/UIEvents/RemoveMUCBookmarkUIEvent.h"
-#include "Swift/Controllers/UIEvents/EditMUCBookmarkUIEvent.h"
+#include <Swift/QtUI/ChatList/ChatListMUCItem.h>
+#include <Swift/QtUI/ChatList/ChatListRecentItem.h>
+#include <Swift/QtUI/QtAddBookmarkWindow.h>
+#include <Swift/QtUI/QtEditBookmarkWindow.h>
+#include <Swift/Controllers/UIEvents/JoinMUCUIEvent.h>
+#include <Swift/Controllers/UIEvents/RequestChatUIEvent.h>
+#include <Swift/Controllers/UIEvents/AddMUCBookmarkUIEvent.h>
+#include <Swift/Controllers/UIEvents/RemoveMUCBookmarkUIEvent.h>
+#include <Swift/Controllers/UIEvents/EditMUCBookmarkUIEvent.h>
+#include <Swift/QtUI/QtUIPreferences.h>
 
 namespace Swift {
 
-QtChatListWindow::QtChatListWindow(UIEventStream *uiEventStream, QWidget* parent) : QTreeView(parent) {
+QtChatListWindow::QtChatListWindow(UIEventStream *uiEventStream, QtUIPreferences* uiPreferences, QWidget* parent) : QTreeView(parent) {
 	eventStream_ = uiEventStream;
+	uiPreferences_ = uiPreferences;
 	bookmarksEnabled_ = false;
 	model_ = new ChatListModel();
 	setModel(model_);
-	delegate_ = new ChatListDelegate();
+	delegate_ = new ChatListDelegate(uiPreferences_->getCompactRosters());
 	setItemDelegate(delegate_);
 	setHeaderHidden(true);
 #ifdef SWIFT_PLATFORM_MACOSX
@@ -39,6 +41,7 @@ QtChatListWindow::QtChatListWindow(UIEventStream *uiEventStream, QWidget* parent
 	setupContextMenus();
 	connect(this, SIGNAL(activated(const QModelIndex&)), this, SLOT(handleItemActivated(const QModelIndex&)));
 	connect(this, SIGNAL(clicked(const QModelIndex&)), this, SLOT(handleClicked(const QModelIndex&)));
+	connect(uiPreferences_, SIGNAL(onCompactRostersChanged(bool)), this, SLOT(handleCompactRostersToggled(bool)));
 }
 
 QtChatListWindow::~QtChatListWindow() {
@@ -46,6 +49,11 @@ QtChatListWindow::~QtChatListWindow() {
 	delete delegate_;
 	delete mucMenu_;
 	delete emptyMenu_;
+}
+
+void QtChatListWindow::handleCompactRostersToggled(bool compact) {
+	delegate_->setCompact(compact);
+	repaint();
 }
 
 void QtChatListWindow::setBookmarksEnabled(bool enabled) {

@@ -113,7 +113,7 @@ QtSwift::QtSwift(const po::variables_map& options) : networkFactories_(&clientMa
 	applicationPathProvider_ = new PlatformApplicationPathProvider(SWIFT_APPLICATION_NAME);
 	storagesFactory_ = new FileStoragesFactory(applicationPathProvider_->getDataDir());
 	certificateStorageFactory_ = new CertificateFileStorageFactory(applicationPathProvider_->getDataDir(), tlsFactories_.getCertificateFactory());
-	chatWindowFactory_ = new QtChatWindowFactory(splitter_, settings_, tabs_, "");
+	chatWindowFactory_ = new QtChatWindowFactory(splitter_, settings_, tabs_, "", &uiPreferences_);
 	soundPlayer_ = new QtSoundPlayer(applicationPathProvider_);
 
 	// Ugly, because the dock depends on the tray, but the temporary
@@ -154,7 +154,7 @@ QtSwift::QtSwift(const po::variables_map& options) : networkFactories_(&clientMa
 			// Don't add the first tray (see note above)
 			systemTrays_.push_back(new QtSystemTray());
 		}
-		QtUIFactory* uiFactory = new QtUIFactory(settings_, tabs_, splitter_, systemTrays_[i], chatWindowFactory_, startMinimized, eagleMode);
+		QtUIFactory* uiFactory = new QtUIFactory(settings_, tabs_, splitter_, systemTrays_[i], chatWindowFactory_, startMinimized, eagleMode, &uiPreferences_);
 		uiFactories_.push_back(uiFactory);
 		MainController* mainController = new MainController(
 				&clientMainThreadCaller_,

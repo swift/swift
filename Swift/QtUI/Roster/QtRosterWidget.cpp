@@ -23,7 +23,7 @@
 
 namespace Swift {
 
-QtRosterWidget::QtRosterWidget(UIEventStream* eventStream, QWidget* parent) : QtTreeWidget(eventStream, parent) {
+QtRosterWidget::QtRosterWidget(UIEventStream* eventStream, QtUIPreferences* uiPreferences, QWidget* parent) : QtTreeWidget(eventStream, uiPreferences, parent) {
 
 }
 

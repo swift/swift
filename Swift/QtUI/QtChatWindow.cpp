@@ -45,11 +45,13 @@
 #include <QPushButton>
 #include <QFileDialog>
 #include <QMenu>
+#include <Swift/QtUI/QtUIPreferences.h>
 
 #include <QDebug>
 
 namespace Swift {
-QtChatWindow::QtChatWindow(const QString &contact, QtChatTheme* theme, UIEventStream* eventStream) : QtTabbable(), contact_(contact), previousMessageWasSelf_(false), previousMessageWasSystem_(false), previousMessageWasPresence_(false), previousMessageWasFileTransfer_(false), eventStream_(eventStream) {
+QtChatWindow::QtChatWindow(const QString &contact, QtChatTheme* theme, UIEventStream* eventStream, QtUIPreferences* uiPreferences) : QtTabbable(), contact_(contact), previousMessageWasSelf_(false), previousMessageWasSystem_(false), previousMessageWasPresence_(false), previousMessageWasFileTransfer_(false), eventStream_(eventStream) {
+	uiPreferences_ = uiPreferences;
 	unreadCount_ = 0;
 	idCounter_ = 0;
 	inputEnabled_ = true;
@@ -108,7 +110,7 @@ QtChatWindow::QtChatWindow(const QString &contact, QtChatTheme* theme, UIEventSt
 	messageLog_ = new QtChatView(theme, this);
 	logRosterSplitter_->addWidget(messageLog_);
 
-	treeWidget_ = new QtOccupantListWidget(eventStream_, this);
+	treeWidget_ = new QtOccupantListWidget(eventStream_, uiPreferences_, this);
 	treeWidget_->hide();
 	logRosterSplitter_->addWidget(treeWidget_);
 	logRosterSplitter_->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);

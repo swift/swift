@@ -30,7 +30,7 @@
 
 namespace Swift {
 
-QtUIFactory::QtUIFactory(QtSettingsProvider* settings, QtChatTabs* tabs, QSplitter* netbookSplitter, QtSystemTray* systemTray, QtChatWindowFactory* chatWindowFactory, bool startMinimized, bool eagleMode) : settings(settings), tabs(tabs), netbookSplitter(netbookSplitter), systemTray(systemTray), chatWindowFactory(chatWindowFactory), lastMainWindow(NULL), loginWindow(NULL), startMinimized(startMinimized), eagleMode(eagleMode)  {
+QtUIFactory::QtUIFactory(QtSettingsProvider* settings, QtChatTabs* tabs, QSplitter* netbookSplitter, QtSystemTray* systemTray, QtChatWindowFactory* chatWindowFactory, bool startMinimized, bool eagleMode, QtUIPreferences* uiPreferences) : settings(settings), tabs(tabs), netbookSplitter(netbookSplitter), systemTray(systemTray), chatWindowFactory(chatWindowFactory), lastMainWindow(NULL), loginWindow(NULL), startMinimized(startMinimized), eagleMode(eagleMode), uiPreferences(uiPreferences)  {
 	chatFontSize = settings->getIntSetting(CHATWINDOW_FONT_SIZE, 0);
 }
 
@@ -55,7 +55,7 @@ FileTransferListWidget* QtUIFactory::createFileTransferListWidget() {
 }
 
 MainWindow* QtUIFactory::createMainWindow(UIEventStream* eventStream) {
-	lastMainWindow  = new QtMainWindow(settings, eventStream);
+	lastMainWindow  = new QtMainWindow(settings, eventStream, uiPreferences);
 	return lastMainWindow;
 }
 

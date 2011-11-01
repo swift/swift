@@ -9,10 +9,12 @@
 #include "Swift/QtUI/Roster/QtTreeWidget.h"
 
 namespace Swift {
+class QtUIPreferences;
+
 class QtRosterWidget : public QtTreeWidget {
 	Q_OBJECT
 	public:
-		QtRosterWidget(UIEventStream* eventStream, QWidget* parent = 0);
+		QtRosterWidget(UIEventStream* eventStream, QtUIPreferences* uiPreferences, QWidget* parent = 0);
 		virtual ~QtRosterWidget();
 	public slots:
 		void handleEditUserActionTriggered(bool checked);

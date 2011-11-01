@@ -10,21 +10,23 @@
 
 #include <QUrl>
 
-#include "Swiften/Base/Platform.h"
-#include "Swift/Controllers/Roster/ContactRosterItem.h"
-#include "Swift/Controllers/Roster/GroupRosterItem.h"
-#include "Swift/Controllers/UIEvents/UIEventStream.h"
-#include "Swift/Controllers/UIEvents/RequestChatUIEvent.h"
-#include "Swift/Controllers/UIEvents/SendFileUIEvent.h"
-#include "QtSwiftUtil.h"
+#include <Swiften/Base/Platform.h>
+#include <Swift/Controllers/Roster/ContactRosterItem.h>
+#include <Swift/Controllers/Roster/GroupRosterItem.h>
+#include <Swift/Controllers/UIEvents/UIEventStream.h>
+#include <Swift/Controllers/UIEvents/RequestChatUIEvent.h>
+#include <Swift/Controllers/UIEvents/SendFileUIEvent.h>
+#include <QtSwiftUtil.h>
+#include <Swift/QtUI/QtUIPreferences.h>
 
 namespace Swift {
 
-QtTreeWidget::QtTreeWidget(UIEventStream* eventStream, QWidget* parent) : QTreeView(parent) {
+QtTreeWidget::QtTreeWidget(UIEventStream* eventStream, QtUIPreferences* uiPreferences, QWidget* parent) : QTreeView(parent) {
 	eventStream_ = eventStream;
+	uiPreferences_ = uiPreferences;
 	model_ = new RosterModel(this);
 	setModel(model_);
-	delegate_ = new RosterDelegate(this);
+	delegate_ = new RosterDelegate(this, uiPreferences_->getCompactRosters());
 	setItemDelegate(delegate_);
 	setHeaderHidden(true);
 #ifdef SWIFT_PLATFORM_MACOSX
@@ -43,11 +45,17 @@ QtTreeWidget::QtTreeWidget(UIEventStream* eventStream, QWidget* parent) : QTreeV
 	connect(this, SIGNAL(expanded(const QModelIndex&)), this, SLOT(handleExpanded(const QModelIndex&)));
 	connect(this, SIGNAL(collapsed(const QModelIndex&)), this, SLOT(handleCollapsed(const QModelIndex&)));
 	connect(this, SIGNAL(clicked(const QModelIndex&)), this, SLOT(handleClicked(const QModelIndex&)));
+	connect(uiPreferences_, SIGNAL(onCompactRostersChanged(bool)), this, SLOT(handleCompactRostersToggled(bool)));
 }
 
 QtTreeWidget::~QtTreeWidget() {
 	delete model_;
 	delete delegate_;
+}
+
+void QtTreeWidget::handleCompactRostersToggled(bool compact) {
+	delegate_->setCompact(compact);
+	repaint();
 }
 
 void QtTreeWidget::setRosterModel(Roster* roster) {

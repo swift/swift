@@ -24,6 +24,7 @@
 #include <Swift/QtUI/QtSwiftUtil.h>
 #include <Swift/QtUI/QtTabWidget.h>
 #include <Swift/QtUI/QtSettingsProvider.h>
+#include <Swift/QtUI/QtUIPreferences.h>
 #include <Roster/QtRosterWidget.h>
 #include <Swift/Controllers/UIEvents/RequestJoinMUCUIEvent.h>
 #include <Swift/Controllers/UIEvents/RequestAddUserDialogUIEvent.h>
@@ -37,8 +38,9 @@ namespace Swift {
 
 #define CURRENT_ROSTER_TAB "current_roster_tab"
 
-QtMainWindow::QtMainWindow(QtSettingsProvider* settings, UIEventStream* uiEventStream) : QWidget(), MainWindow(false) {
+QtMainWindow::QtMainWindow(QtSettingsProvider* settings, UIEventStream* uiEventStream, QtUIPreferences* uiPreferences) : QWidget(), MainWindow(false) {
 	uiEventStream_ = uiEventStream;
+	uiPreferences_ = uiPreferences;
 	settings_ = settings;
 	setSizePolicy(QSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding));
 	QBoxLayout *mainLayout = new QBoxLayout(QBoxLayout::TopToBottom, this);
@@ -62,7 +64,7 @@ QtMainWindow::QtMainWindow(QtSettingsProvider* settings, UIEventStream* uiEventS
 	contactTabLayout->setSpacing(0);
 	contactTabLayout->setContentsMargins(0, 0, 0, 0);
 
-	treeWidget_ = new QtRosterWidget(uiEventStream_, this);
+	treeWidget_ = new QtRosterWidget(uiEventStream_, uiPreferences_, this);
 	contactTabLayout->addWidget(treeWidget_);
 
 	tabs_->addTab(contactsTabWidget_, tr("&Contacts"));
@@ -70,7 +72,7 @@ QtMainWindow::QtMainWindow(QtSettingsProvider* settings, UIEventStream* uiEventS
 	eventWindow_ = new QtEventWindow(uiEventStream_);
 	connect(eventWindow_, SIGNAL(onNewEventCountUpdated(int)), this, SLOT(handleEventCountUpdated(int)));
 
-	chatListWindow_ = new QtChatListWindow(uiEventStream_);
+	chatListWindow_ = new QtChatListWindow(uiEventStream_, uiPreferences_);
 	connect(chatListWindow_, SIGNAL(onCountUpdated(int)), this, SLOT(handleChatCountUpdated(int)));
 
 	tabs_->addTab(chatListWindow_, tr("C&hats"));
@@ -89,6 +91,12 @@ QtMainWindow::QtMainWindow(QtSettingsProvider* settings, UIEventStream* uiEventS
 	showOfflineAction_->setChecked(false);
 	connect(showOfflineAction_, SIGNAL(toggled(bool)), SLOT(handleShowOfflineToggled(bool)));
 	viewMenu->addAction(showOfflineAction_);
+
+	//QAction* compactRosterAction_ = new QAction(tr("&Compact Roster"), this);
+	//compactRosterAction_->setCheckable(true);
+	//compactRosterAction_->setChecked(false);
+	//connect(compactRosterAction_, SIGNAL(toggled(bool)), uiPreferences_, SLOT(setCompactRosters(bool)));
+	//viewMenu->addAction(compactRosterAction_);
 
 	QMenu* actionsMenu = new QMenu(tr("&Actions"), this);
 	menus_.push_back(actionsMenu);

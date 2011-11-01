@@ -32,10 +32,12 @@ namespace Swift {
 	class QtTextEdit;
 	class UIEventStream;
 	class QtFileTransferJSBridge;
+	class QtUIPreferences;
+
 	class QtChatWindow : public QtTabbable, public ChatWindow {
 		Q_OBJECT
 		public:
-			QtChatWindow(const QString &contact, QtChatTheme* theme, UIEventStream* eventStream);
+			QtChatWindow(const QString &contact, QtChatTheme* theme, UIEventStream* eventStream, QtUIPreferences* uiPreferences);
 			~QtChatWindow();
 			std::string addMessage(const std::string &message, const std::string &senderName, bool senderIsSelf, boost::shared_ptr<SecurityLabel> label, const std::string& avatarPath, const boost::posix_time::ptime& time);
 			std::string addAction(const std::string &message, const std::string &senderName, bool senderIsSelf, boost::shared_ptr<SecurityLabel> label, const std::string& avatarPath, const boost::posix_time::ptime& time);
@@ -156,5 +158,6 @@ namespace Swift {
 			QPointer<QtMUCConfigurationWindow> mucConfigurationWindow_;
 			QPointer<QtAffiliationEditor> affiliationEditor_;
 			int idCounter_;
+			QtUIPreferences* uiPreferences_;
 	};
 }

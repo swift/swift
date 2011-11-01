@@ -138,6 +138,7 @@ sources = [
     "QtFileTransferJSBridge.cpp",
     "QtMUCConfigurationWindow.cpp",
     "QtAffiliationEditor.cpp",
+    "QtUIPreferences.cpp"
   ]
 
 myenv["SWIFT_VERSION"] = Version.getBuildVersion(env.Dir("#").abspath, "swift")

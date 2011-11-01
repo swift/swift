@@ -10,6 +10,7 @@
 #include <QPointer>
 
 #include <Swift/Controllers/UIInterfaces/UIFactory.h>
+#include <Swift/QtUI/QtUIPreferences.h>
 
 class QSplitter;
 
@@ -26,7 +27,7 @@ namespace Swift {
 	class QtUIFactory : public QObject, public UIFactory {
 			Q_OBJECT
 		public:
-			QtUIFactory(QtSettingsProvider* settings, QtChatTabs* tabs, QSplitter* netbookSplitter, QtSystemTray* systemTray, QtChatWindowFactory* chatWindowFactory, bool startMinimized, bool eagleMode);
+			QtUIFactory(QtSettingsProvider* settings, QtChatTabs* tabs, QSplitter* netbookSplitter, QtSystemTray* systemTray, QtChatWindowFactory* chatWindowFactory, bool startMinimized, bool eagleMode, QtUIPreferences* uiPreferences);
 
 			virtual XMLConsoleWidget* createXMLConsoleWidget();
 			virtual MainWindow* createMainWindow(UIEventStream* eventStream);
@@ -58,5 +59,6 @@ namespace Swift {
 			bool startMinimized;
 			int chatFontSize;
 			bool eagleMode;
+			QtUIPreferences* uiPreferences;
 	};
 }

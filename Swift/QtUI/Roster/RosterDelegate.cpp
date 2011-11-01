@@ -24,13 +24,17 @@
 
 namespace Swift {
 
-RosterDelegate::RosterDelegate(QtTreeWidget* tree) {
+RosterDelegate::RosterDelegate(QtTreeWidget* tree, bool compact) : compact_(compact) {
 	tree_ = tree;
 	groupDelegate_ = new GroupItemDelegate();
 }
 
 RosterDelegate::~RosterDelegate() {
 	delete groupDelegate_;
+}
+
+void RosterDelegate::setCompact(bool compact) {
+	compact_ = compact;
 }
 	
 QSize RosterDelegate::sizeHint(const QStyleOptionViewItem& option, const QModelIndex& index ) const {
@@ -42,7 +46,7 @@ QSize RosterDelegate::sizeHint(const QStyleOptionViewItem& option, const QModelI
 }
 
 QSize RosterDelegate::contactSizeHint(const QStyleOptionViewItem& option, const QModelIndex& index ) const {
-	return common_.contactSizeHint(option, index);
+	return common_.contactSizeHint(option, index, compact_);
 }
 
 void RosterDelegate::paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const {
@@ -71,7 +75,7 @@ void RosterDelegate::paintContact(QPainter* painter, const QStyleOptionViewItem&
 			: QIcon(":/icons/offline.png");
 	QString name = index.data(Qt::DisplayRole).toString();
 	QString statusText = index.data(StatusTextRole).toString();
-	common_.paintContact(painter, option, nameColor, avatarPath, presenceIcon, name, statusText, 0);
+	common_.paintContact(painter, option, nameColor, avatarPath, presenceIcon, name, statusText, 0, compact_);
 }
 
 }

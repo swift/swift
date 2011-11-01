@@ -16,12 +16,16 @@
 
 namespace Swift {
 
-ChatListDelegate::ChatListDelegate() {
+ChatListDelegate::ChatListDelegate(bool compact) : compact_(compact) {
 	groupDelegate_ = new GroupItemDelegate();
 }
 
 ChatListDelegate::~ChatListDelegate() {
 	delete groupDelegate_;
+}
+
+void ChatListDelegate::setCompact(bool compact) {
+	compact_ = compact;
 }
 
 QSize ChatListDelegate::sizeHint(const QStyleOptionViewItem& option, const QModelIndex& index ) const {
@@ -30,7 +34,7 @@ QSize ChatListDelegate::sizeHint(const QStyleOptionViewItem& option, const QMode
 		return mucSizeHint(option, index);
 	}
 	else if (item && dynamic_cast<ChatListRecentItem*>(item)) {
-		return common_.contactSizeHint(option, index);
+		return common_.contactSizeHint(option, index, compact_);
 	}
 	else if (item && dynamic_cast<ChatListGroupItem*>(item)) {
 		return groupDelegate_->sizeHint(option, index);
@@ -109,7 +113,7 @@ void ChatListDelegate::paintRecent(QPainter* painter, const QStyleOptionViewItem
 	QString name = item->data(Qt::DisplayRole).toString();
 	//qDebug() << "Avatar for " << name << " = " << avatarPath;
 	QString statusText = item->data(ChatListRecentItem::DetailTextRole).toString();
-	common_.paintContact(painter, option, nameColor, avatarPath, presenceIcon, name, statusText, item->getChat().unreadCount);
+	common_.paintContact(painter, option, nameColor, avatarPath, presenceIcon, name, statusText, item->getChat().unreadCount, compact_);
 }
 
 }

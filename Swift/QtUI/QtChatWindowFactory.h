@@ -16,10 +16,11 @@ namespace Swift {
 	class QtChatTabs;
 	class QtChatTheme;
 	class UIEventStream;
+	class QtUIPreferences;
 	class QtChatWindowFactory : public QObject, public ChatWindowFactory {
 		Q_OBJECT
 		public:
-			QtChatWindowFactory(QSplitter* splitter, QtSettingsProvider* settings, QtChatTabs* tabs, const QString& themePath);
+			QtChatWindowFactory(QSplitter* splitter, QtSettingsProvider* settings, QtChatTabs* tabs, const QString& themePath, QtUIPreferences* uiPreferences);
 			~QtChatWindowFactory();
 			ChatWindow* createChatWindow(const JID &contact, UIEventStream* eventStream);
 		signals:
@@ -32,6 +33,7 @@ namespace Swift {
 			QtSettingsProvider* settings_;
 			QtChatTabs* tabs_;
 			QtChatTheme* theme_;
+			QtUIPreferences* uiPreferences_;
 	};
 }
 

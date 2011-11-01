@@ -17,7 +17,7 @@ void DelegateCommons::drawElidedText(QPainter* painter, const QRect& region, con
 	painter->drawText(region, flags, adjustedText);
 }
 
-void DelegateCommons::paintContact(QPainter* painter, const QStyleOptionViewItem& option, const QColor& nameColor, const QString& avatarPath, const QIcon& presenceIcon, const QString& name, const QString& statusText, int unreadCount) const {
+void DelegateCommons::paintContact(QPainter* painter, const QStyleOptionViewItem& option, const QColor& nameColor, const QString& avatarPath, const QIcon& presenceIcon, const QString& name, const QString& statusText, int unreadCount, bool compact) const {
 	painter->save();
 	QRect fullRegion(option.rect);
 	if ( option.state & QStyle::State_Selected ) {
@@ -34,17 +34,19 @@ void DelegateCommons::paintContact(QPainter* painter, const QStyleOptionViewItem
 	QRect avatarRegion(QPoint(presenceIconRegion.right() - presenceIconWidth / 2, presenceIconRegion.top()), QSize(calculatedAvatarSize, calculatedAvatarSize));
 
 	QPixmap avatarPixmap;
-	if (!avatarPath.isEmpty()) {
+	if (!compact && !avatarPath.isEmpty()) {
 		QString scaledAvatarPath = QtScaledAvatarCache(avatarRegion.height()).getScaledAvatarPath(avatarPath);
 		if (QFileInfo(scaledAvatarPath).exists()) {
 			avatarPixmap.load(scaledAvatarPath);
 		}
 	}
-	if (avatarPixmap.isNull()) {
+	if (!compact && avatarPixmap.isNull()) {
 		avatarPixmap = QPixmap(":/icons/avatar.png").scaled(avatarRegion.height(), avatarRegion.width(), Qt::KeepAspectRatio, Qt::SmoothTransformation);
 	}
 
-	painter->drawPixmap(avatarRegion.topLeft() + QPoint(((avatarRegion.width() - avatarPixmap.width()) / 2), (avatarRegion.height() - avatarPixmap.height()) / 2), avatarPixmap);
+	if (!compact) {
+		painter->drawPixmap(avatarRegion.topLeft() + QPoint(((avatarRegion.width() - avatarPixmap.width()) / 2), (avatarRegion.height() - avatarPixmap.height()) / 2), avatarPixmap);
+	}
 
 	//Paint the presence icon over the top of the avatar
 	presenceIcon.paint(painter, presenceIconRegion, Qt::AlignBottom | Qt::AlignHCenter);
@@ -52,7 +54,7 @@ void DelegateCommons::paintContact(QPainter* painter, const QStyleOptionViewItem
 	QFontMetrics nameMetrics(nameFont);
 	painter->setFont(nameFont);
 	int extraFontWidth = nameMetrics.width("H");
-	int leftOffset = avatarRegion.right() + horizontalMargin * 2 + extraFontWidth / 2;
+	int leftOffset = (compact ? presenceIconRegion : avatarRegion).right() + horizontalMargin * 2 + extraFontWidth / 2;
 	QRect textRegion(fullRegion.adjusted(leftOffset, 0, 0/*-leftOffset*/, 0));
 
 	int nameHeight = nameMetrics.height() + verticalMargin;
@@ -60,12 +62,13 @@ void DelegateCommons::paintContact(QPainter* painter, const QStyleOptionViewItem
 
 	DelegateCommons::drawElidedText(painter, nameRegion, name);
 
+	if (!compact) {
+		painter->setFont(detailFont);
+		painter->setPen(QPen(QColor(160,160,160)));
 
-	painter->setFont(detailFont);
-	painter->setPen(QPen(QColor(160,160,160)));
-
-	QRect statusTextRegion(textRegion.adjusted(0, nameHeight, 0, 0));
-	DelegateCommons::drawElidedText(painter, statusTextRegion, statusText);
+		QRect statusTextRegion(textRegion.adjusted(0, nameHeight, 0, 0));
+		DelegateCommons::drawElidedText(painter, statusTextRegion, statusText);
+	}
 
 	if (unreadCount > 0) {
 		QRect unreadRect(fullRegion.right() - unreadCountSize - horizontalMargin, fullRegion.top() + (fullRegion.height() - unreadCountSize) / 2, unreadCountSize, unreadCountSize);
@@ -84,11 +87,11 @@ void DelegateCommons::paintContact(QPainter* painter, const QStyleOptionViewItem
 	painter->restore();
 }
 
-QSize DelegateCommons::contactSizeHint(const QStyleOptionViewItem& /*option*/, const QModelIndex& /*index*/ ) const {
-	int heightByAvatar = avatarSize + verticalMargin * 2;
+QSize DelegateCommons::contactSizeHint(const QStyleOptionViewItem& /*option*/, const QModelIndex& /*index*/, bool compact ) const {
+	int heightByAvatar = (compact ? presenceIconHeight : avatarSize) + verticalMargin * 2;
 	QFontMetrics nameMetrics(nameFont);
 	QFontMetrics statusMetrics(detailFont);
-	int sizeByText = 2 * verticalMargin + nameMetrics.height() + statusMetrics.height();
+	int sizeByText = 2 * verticalMargin + nameMetrics.height() + (compact ? 0 : statusMetrics.height());
 	//Doesn't work, yay! FIXME: why?
 	//QSize size = (option.state & QStyle::State_Selected) ? QSize(150, 80) : QSize(150, avatarSize_ + margin_ * 2);
 	//qDebug() << "Returning size" << size;
