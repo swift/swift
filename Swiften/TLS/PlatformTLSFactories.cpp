@@ -13,9 +13,10 @@
 #ifdef HAVE_OPENSSL
 	#include "Swiften/TLS/OpenSSL/OpenSSLContextFactory.h"
 	#include "Swiften/TLS/OpenSSL/OpenSSLCertificateFactory.h"
-#elif defined SWIFTEN_PLATFORM_WINDOWS
+#endif
+#ifdef HAVE_SCHANNEL
 	#include "Swiften/TLS/Schannel/SchannelContextFactory.h"
-#include "Swiften/TLS/Schannel/SchannelCertificateFactory.h"
+	#include "Swiften/TLS/Schannel/SchannelCertificateFactory.h"
 #endif
 
 namespace Swift {
@@ -24,7 +25,8 @@ PlatformTLSFactories::PlatformTLSFactories() : contextFactory(NULL), certificate
 #ifdef HAVE_OPENSSL
 	contextFactory = new OpenSSLContextFactory();
 	certificateFactory = new OpenSSLCertificateFactory();
-#elif defined SWIFTEN_PLATFORM_WINDOWS
+#endif
+#ifdef HAVE_SCHANNEL
 	contextFactory = new SchannelContextFactory();
 	certificateFactory = new SchannelCertificateFactory();
 #endif

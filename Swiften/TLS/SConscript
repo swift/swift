@@ -18,12 +18,13 @@ if myenv.get("HAVE_OPENSSL", 0) :
 			"OpenSSL/OpenSSLContextFactory.cpp",
 		])
 	myenv.Append(CPPDEFINES = "HAVE_OPENSSL")
-elif myenv["PLATFORM"] == "win32" :
+elif myenv.get("HAVE_SCHANNEL", 0) :
 	objects += myenv.StaticObject([
 			"Schannel/SchannelContext.cpp",
 			"Schannel/SchannelCertificate.cpp",
 			"Schannel/SchannelContextFactory.cpp",
 		])
+	myenv.Append(CPPDEFINES = "HAVE_SCHANNEL")
 
 objects += myenv.SwiftenObject(["PlatformTLSFactories.cpp"])
 

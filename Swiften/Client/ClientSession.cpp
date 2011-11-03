@@ -201,10 +201,16 @@ void ClientSession::handleElement(boost::shared_ptr<Element> element) {
 			}
 			else if (streamFeatures->hasAuthenticationMechanism("SCRAM-SHA-1") || streamFeatures->hasAuthenticationMechanism("SCRAM-SHA-1-PLUS")) {
 				std::ostringstream s;
+				ByteArray finishMessage;
+				bool plus = stream->isTLSEncrypted() && streamFeatures->hasAuthenticationMechanism("SCRAM-SHA-1-PLUS");
+				if (plus) {
+					finishMessage = stream->getTLSFinishMessage();
+					plus &= !finishMessage.empty();
+				}
 				s << boost::uuids::random_generator()();
-				SCRAMSHA1ClientAuthenticator* scramAuthenticator = new SCRAMSHA1ClientAuthenticator(s.str(), streamFeatures->hasAuthenticationMechanism("SCRAM-SHA-1-PLUS"));
-				if (stream->isTLSEncrypted()) {
-					scramAuthenticator->setTLSChannelBindingData(stream->getTLSFinishMessage());
+				SCRAMSHA1ClientAuthenticator* scramAuthenticator = new SCRAMSHA1ClientAuthenticator(s.str(), plus);
+				if (plus) {
+					scramAuthenticator->setTLSChannelBindingData(finishMessage);
 				}
 				authenticator = scramAuthenticator;
 				state = WaitingForCredentials;
