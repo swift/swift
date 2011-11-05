@@ -58,8 +58,8 @@ setOutPath $INSTDIR
 # Specify files to go in output path.
 # If you update this list, update the uninstall list too.
 File "..\..\QtUI\Swift\Swift.exe"
-File "..\..\QtUI\Swift\ssleay32.dll"
-File "..\..\QtUI\Swift\libeay32.dll"
+#File "..\..\QtUI\Swift\ssleay32.dll"
+#File "..\..\QtUI\Swift\libeay32.dll"
 File "..\..\QtUI\Swift\phonon4.dll"
 File "..\..\QtUI\Swift\QtCore4.dll"
 File "..\..\QtUI\Swift\QtGui4.dll"
@@ -139,8 +139,8 @@ section "Uninstall"
  
     # now delete installed files
     delete $INSTDIR\Swift.exe
-    delete $INSTDIR\ssleay32.dll
-    delete $INSTDIR\libeay32.dll
+    #delete $INSTDIR\ssleay32.dll
+    #delete $INSTDIR\libeay32.dll
     delete $INSTDIR\phonon4.dll
     delete $INSTDIR\QtCore4.dll
     delete $INSTDIR\QtGui4.dll

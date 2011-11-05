@@ -254,8 +254,8 @@ if env.get("SWIFT_INSTALLDIR", "") :
 if env["PLATFORM"] == "win32" :
   if env["DIST"] :
     commonResources[""] = commonResources.get("", []) + [
-        os.path.join(env["OPENSSL_DIR"], "bin", "ssleay32.dll"),  
-        os.path.join(env["OPENSSL_DIR"], "bin", "libeay32.dll"),
+        #os.path.join(env["OPENSSL_DIR"], "bin", "ssleay32.dll"),  
+        #os.path.join(env["OPENSSL_DIR"], "bin", "libeay32.dll"),
         "#/Swift/resources/images",  
       ]
     myenv.WindowsBundle("Swift", 
