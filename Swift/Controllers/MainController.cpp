@@ -60,6 +60,7 @@
 #include "Swiften/StringCodecs/Hexify.h"
 #include "Swift/Controllers/UIEvents/RequestChatUIEvent.h"
 #include "Swift/Controllers/UIEvents/ToggleNotificationsUIEvent.h"
+#include "Swift/Controllers/UIEvents/ToggleRequestDeliveryReceiptsUIEvent.h"
 #include "Swift/Controllers/UIEvents/JoinMUCUIEvent.h"
 #include "Swift/Controllers/Storages/CertificateStorageFactory.h"
 #include "Swift/Controllers/Storages/CertificateStorageTrustChecker.h"
@@ -79,6 +80,7 @@ static const std::string CLIENT_NAME = "Swift";
 static const std::string CLIENT_NODE = "http://swift.im";
 
 static const std::string SHOW_NOTIFICATIONS = "showNotifications";
+static const std::string REQUEST_DELIVERYRECEIPTS = "requestDeliveryReceipts";
 
 MainController::MainController(
 		EventLoop* eventLoop,
@@ -249,6 +251,11 @@ void MainController::handleUIEvent(boost::shared_ptr<UIEvent> event) {
 		notifier_->setPersistentEnabled(enabled);
 		settings_->storeBool(SHOW_NOTIFICATIONS, enabled);
 	}
+	boost::shared_ptr<ToggleRequestDeliveryReceiptsUIEvent> deliveryReceiptEvent = boost::dynamic_pointer_cast<ToggleRequestDeliveryReceiptsUIEvent>(event);
+	if (deliveryReceiptEvent) {
+		settings_->storeBool(REQUEST_DELIVERYRECEIPTS, deliveryReceiptEvent->getEnabled());
+	}
+
 }
 
 void MainController::resetPendingReconnects() {
@@ -291,7 +298,7 @@ void MainController::handleConnected() {
 
 		contactEditController_ = new ContactEditController(rosterController_, uiFactory_, uiEventStream_);
 
-		chatsManager_ = new ChatsManager(jid_, client_->getStanzaChannel(), client_->getIQRouter(), eventController_, uiFactory_, uiFactory_, client_->getNickResolver(), client_->getPresenceOracle(), client_->getPresenceSender(), uiEventStream_, uiFactory_, useDelayForLatency_, networkFactories_->getTimerFactory(), client_->getMUCRegistry(), client_->getEntityCapsProvider(), client_->getMUCManager(), uiFactory_, profileSettings_, ftOverview_, eagleMode_);
+		chatsManager_ = new ChatsManager(jid_, client_->getStanzaChannel(), client_->getIQRouter(), eventController_, uiFactory_, uiFactory_, client_->getNickResolver(), client_->getPresenceOracle(), client_->getPresenceSender(), uiEventStream_, uiFactory_, useDelayForLatency_, networkFactories_->getTimerFactory(), client_->getMUCRegistry(), client_->getEntityCapsProvider(), client_->getMUCManager(), uiFactory_, profileSettings_, ftOverview_, client_->getRoster(), eagleMode_);
 		
 		client_->onMessageReceived.connect(boost::bind(&ChatsManager::handleIncomingMessage, chatsManager_, _1));
 		chatsManager_->setAvatarManager(client_->getAvatarManager());
@@ -311,6 +318,7 @@ void MainController::handleConnected() {
 		discoInfo.addFeature(DiscoInfo::JingleTransportsIBBFeature);
 		discoInfo.addFeature(DiscoInfo::JingleTransportsS5BFeature);
 #endif
+		discoInfo.addFeature(DiscoInfo::MessageDeliveryReceiptsFeature);
 		client_->getDiscoManager()->setCapsNode(CLIENT_NODE);
 		client_->getDiscoManager()->setDiscoInfo(discoInfo);
 
@@ -335,6 +343,9 @@ void MainController::handleConnected() {
 	sendPresence(statusTracker_->getNextPresence());
 	/* Enable chats last of all, so rejoining MUCs has the right sent presence */
 	chatsManager_->setOnline(true);
+
+	// notify world about current delivey receipt request setting state.
+	uiEventStream_->send(boost::make_shared<ToggleRequestDeliveryReceiptsUIEvent>(settings_->getBoolSetting(REQUEST_DELIVERYRECEIPTS, false)));
 }
 
 void MainController::handleEventQueueLengthChange(int count) {

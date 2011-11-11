@@ -60,6 +60,8 @@
 #include <Swiften/Serializer/PayloadSerializers/JingleS5BTransportPayloadSerializer.h>
 #include <Swiften/Serializer/PayloadSerializers/JinglePayloadSerializer.h>
 #include <Swiften/Serializer/PayloadSerializers/S5BProxyRequestSerializer.h>
+#include <Swiften/Serializer/PayloadSerializers/DeliveryReceiptSerializer.h>
+#include <Swiften/Serializer/PayloadSerializers/DeliveryReceiptRequestSerializer.h>
 
 namespace Swift {
 
@@ -116,6 +118,8 @@ FullPayloadSerializerCollection::FullPayloadSerializerCollection() {
 	serializers_.push_back(new JingleS5BTransportPayloadSerializer());
 	serializers_.push_back(new JinglePayloadSerializer(this));
 	serializers_.push_back(new S5BProxyRequestSerializer());
+	serializers_.push_back(new DeliveryReceiptSerializer());
+	serializers_.push_back(new DeliveryReceiptRequestSerializer());
 	
 	foreach(PayloadSerializer* serializer, serializers_) {
 		addSerializer(serializer);

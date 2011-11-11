@@ -11,6 +11,8 @@
 		<file alias="icons/offline.png">../resources/icons/offline.png</file>
 		<file alias="icons/certificate.png">../resources/icons/certificate.png</file>
 		<file alias="icons/error.png">../resources/icons/error.png</file>
+		<file alias="icons/warn.png">../resources/icons/warn.png</file>
+		<file alias="icons/check.png">../resources/icons/check.png</file>
 		<file alias="icons/throbber.gif">../resources/icons/throbber.gif</file>
 		<file alias="icons/avatar.png">../resources/icons/avatar.png</file>
 		<file alias="icons/no-avatar.png">../resources/icons/no-avatar.png</file>

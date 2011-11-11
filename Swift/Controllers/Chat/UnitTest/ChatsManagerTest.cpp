@@ -43,8 +43,11 @@
 #include "Swift/Controllers/UIEvents/RequestChatUIEvent.h"
 #include "Swift/Controllers/UIEvents/JoinMUCUIEvent.h"
 #include "Swift/Controllers/UIEvents/UIEventStream.h"
+#include "Swift/Controllers/UIEvents/ToggleRequestDeliveryReceiptsUIEvent.h"
 #include <Swift/Controllers/ProfileSettingsProvider.h>
 #include "Swift/Controllers/FileTransfer/FileTransferOverview.h"
+#include "Swiften/Elements/DeliveryReceiptRequest.h"
+#include "Swiften/Elements/DeliveryReceipt.h"
 #include <Swiften/Base/Algorithm.h>
 
 using namespace Swift;
@@ -63,6 +66,10 @@ class ChatsManagerTest : public CppUnit::TestFixture {
 	CPPUNIT_TEST(testUnbindRebind);
 	CPPUNIT_TEST(testNoDuplicateUnbind);
 	CPPUNIT_TEST(testThreeMUCWindows);
+	CPPUNIT_TEST(testChatControllerPresenceAccessUpdatedOnRemoveFromRoster);
+	CPPUNIT_TEST(testChatControllerPresenceAccessUpdatedOnAddToRoster);
+	CPPUNIT_TEST(testChatControllerPresenceAccessUpdatedOnSubscriptionChangeToBoth);
+	CPPUNIT_TEST(testChatControllerPresenceAccessUpdatedOnSubscriptionChangeToFrom);
 	CPPUNIT_TEST_SUITE_END();
 	
 public:
@@ -93,8 +100,9 @@ public:
 		chatListWindow_ = new MockChatListWindow();
 		ftManager_ = new DummyFileTransferManager();
 		ftOverview_ = new FileTransferOverview(ftManager_);
+
 		mocks_->ExpectCall(chatListWindowFactory_, ChatListWindowFactory::createChatListWindow).With(uiEventStream_).Return(chatListWindow_);
-		manager_ = new ChatsManager(jid_, stanzaChannel_, iqRouter_, eventController_, chatWindowFactory_, joinMUCWindowFactory_, nickResolver_, presenceOracle_, directedPresenceSender_, uiEventStream_, chatListWindowFactory_, true, NULL, mucRegistry_, entityCapsManager_, mucManager_, mucSearchWindowFactory_, profileSettings_, ftOverview_, false);
+		manager_ = new ChatsManager(jid_, stanzaChannel_, iqRouter_, eventController_, chatWindowFactory_, joinMUCWindowFactory_, nickResolver_, presenceOracle_, directedPresenceSender_, uiEventStream_, chatListWindowFactory_, true, NULL, mucRegistry_, entityCapsManager_, mucManager_, mucSearchWindowFactory_, profileSettings_, ftOverview_, xmppRoster_, false);
 
 		avatarManager_ = new NullAvatarManager();
 		manager_->setAvatarManager(avatarManager_);
@@ -335,11 +343,104 @@ public:
 		manager_->handleIncomingMessage(message2b);
 		CPPUNIT_ASSERT_EQUAL(body2b, window1->lastMessageBody_);
 	}
-	
+
+	/**
+	 *	Test that ChatController doesn't send receipts anymore after removal of the contact from the roster.
+	 */
+	void testChatControllerPresenceAccessUpdatedOnRemoveFromRoster() {
+		JID messageJID("testling@test.com/resource1");
+		xmppRoster_->addContact(messageJID, "foo", std::vector<std::string>(), RosterItemPayload::Both);
+
+		MockChatWindow* window = new MockChatWindow();//mocks_->InterfaceMock<ChatWindow>();
+		mocks_->ExpectCall(chatWindowFactory_, ChatWindowFactory::createChatWindow).With(messageJID, uiEventStream_).Return(window);
+		uiEventStream_->send(boost::shared_ptr<UIEvent>(new ToggleRequestDeliveryReceiptsUIEvent(true)));
+
+		boost::shared_ptr<Message> message = makeDeliveryReceiptTestMessage(messageJID, "1");
+		manager_->handleIncomingMessage(message);
+		Stanza::ref stanzaContactOnRoster = stanzaChannel_->getStanzaAtIndex<Stanza>(0);
+		CPPUNIT_ASSERT_EQUAL((size_t)1, stanzaChannel_->sentStanzas.size());
+		CPPUNIT_ASSERT(stanzaContactOnRoster->getPayload<DeliveryReceipt>() != 0);
+
+		xmppRoster_->removeContact(messageJID);
+
+		message->setID("2");
+		manager_->handleIncomingMessage(message);
+		CPPUNIT_ASSERT_EQUAL((size_t)1, stanzaChannel_->sentStanzas.size());
+	}
+
+	/**
+	 *	Test that ChatController sends receipts after the contact has been added to the roster.
+	 */
+	void testChatControllerPresenceAccessUpdatedOnAddToRoster() {
+		JID messageJID("testling@test.com/resource1");
+
+		MockChatWindow* window = new MockChatWindow();//mocks_->InterfaceMock<ChatWindow>();
+		mocks_->ExpectCall(chatWindowFactory_, ChatWindowFactory::createChatWindow).With(messageJID, uiEventStream_).Return(window);
+		uiEventStream_->send(boost::shared_ptr<UIEvent>(new ToggleRequestDeliveryReceiptsUIEvent(true)));
+
+		boost::shared_ptr<Message> message = makeDeliveryReceiptTestMessage(messageJID, "1");
+		manager_->handleIncomingMessage(message);
+
+		CPPUNIT_ASSERT_EQUAL((size_t)0, stanzaChannel_->sentStanzas.size());
+
+		xmppRoster_->addContact(messageJID, "foo", std::vector<std::string>(), RosterItemPayload::Both);
+		message->setID("2");
+		manager_->handleIncomingMessage(message);
+
+		CPPUNIT_ASSERT_EQUAL((size_t)1, stanzaChannel_->sentStanzas.size());
+		Stanza::ref stanzaContactOnRoster = stanzaChannel_->getStanzaAtIndex<Stanza>(0);
+		CPPUNIT_ASSERT(stanzaContactOnRoster->getPayload<DeliveryReceipt>() != 0);
+	}
+
+	/**
+	 *	Test that ChatController sends receipts if requested after change from subscription state To to subscription state Both.
+	 */
+	void testChatControllerPresenceAccessUpdatedOnSubscriptionChangeToBoth() {
+		testhelperChatControllerPresenceAccessUpdatedOnSubscriptionChangeReceiptsAllowed(RosterItemPayload::To, RosterItemPayload::Both);
+	}
+
+	/**
+	 *	Test that ChatController sends receipts if requested after change from subscription state To to subscription state From.
+	 */
+	void testChatControllerPresenceAccessUpdatedOnSubscriptionChangeToFrom() {
+		testhelperChatControllerPresenceAccessUpdatedOnSubscriptionChangeReceiptsAllowed(RosterItemPayload::To, RosterItemPayload::From);
+	}
+
+	void testhelperChatControllerPresenceAccessUpdatedOnSubscriptionChangeReceiptsAllowed(RosterItemPayload::Subscription from, RosterItemPayload::Subscription to) {
+		JID messageJID("testling@test.com/resource1");
+		xmppRoster_->addContact(messageJID, "foo", std::vector<std::string>(), from);
+
+		MockChatWindow* window = new MockChatWindow();//mocks_->InterfaceMock<ChatWindow>();
+		mocks_->ExpectCall(chatWindowFactory_, ChatWindowFactory::createChatWindow).With(messageJID, uiEventStream_).Return(window);
+		uiEventStream_->send(boost::shared_ptr<UIEvent>(new ToggleRequestDeliveryReceiptsUIEvent(true)));
+
+		boost::shared_ptr<Message> message = makeDeliveryReceiptTestMessage(messageJID, "1");
+		manager_->handleIncomingMessage(message);
+
+		CPPUNIT_ASSERT_EQUAL((size_t)0, stanzaChannel_->sentStanzas.size());
+
+		xmppRoster_->addContact(messageJID, "foo", std::vector<std::string>(), to);
+		message->setID("2");
+		manager_->handleIncomingMessage(message);
+
+		CPPUNIT_ASSERT_EQUAL((size_t)1, stanzaChannel_->sentStanzas.size());
+		Stanza::ref stanzaContactOnRoster = stanzaChannel_->getStanzaAtIndex<Stanza>(0);
+		CPPUNIT_ASSERT(stanzaContactOnRoster->getPayload<DeliveryReceipt>() != 0);
+	}
+
+private:
+	boost::shared_ptr<Message> makeDeliveryReceiptTestMessage(const JID& from, const std::string& id) {
+		boost::shared_ptr<Message> message = boost::make_shared<Message>();
+		message->setFrom(from);
+		message->setID(id);
+		message->addPayload(boost::make_shared<DeliveryReceiptRequest>());
+		return message;
+	}
+
 private:
 	JID jid_;
 	ChatsManager* manager_;
-	StanzaChannel* stanzaChannel_;
+	DummyStanzaChannel* stanzaChannel_;
 	IQChannel* iqChannel_;
 	IQRouter* iqRouter_;
 	EventController* eventController_;

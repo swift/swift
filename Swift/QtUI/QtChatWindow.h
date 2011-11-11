@@ -68,6 +68,10 @@ namespace Swift {
 			int getCount();
 			void replaceLastMessage(const std::string& message);
 			void setAckState(const std::string& id, AckState state);
+
+			// message receipts
+			void setMessageReceiptState(const std::string& id, ChatWindow::ReceiptState state);
+
 			void flash();
 			QByteArray getSplitterState();
 			virtual void setAvailableOccupantActions(const std::vector<OccupantAction>& actions);

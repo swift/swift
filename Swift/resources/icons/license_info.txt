@@ -1,0 +1,5 @@
+Resources:
+
+Filename		Source 												License
+warn.png		Swift/resources/themes/Default/images/warn.png		BSD
+check.png		http://en.wikipedia.org/wiki/File:Green_check.svg	Public Domain

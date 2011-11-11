@@ -455,6 +455,10 @@ void QtLoginWindow::hide() {
 	window()->hide();
 }
 
+QtLoginWindow::QtMenus QtLoginWindow::getMenus() const {
+	return QtMenus(swiftMenu_, generalMenu_);
+}
+
 void QtLoginWindow::resizeEvent(QResizeEvent*) {
 	emit geometryChanged();
 }

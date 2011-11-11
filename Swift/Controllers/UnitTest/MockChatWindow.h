@@ -25,6 +25,8 @@ namespace Swift {
 			virtual void setFileTransferProgress(std::string /*id*/, const int /*alreadyTransferedBytes*/) { };
 			virtual void setFileTransferStatus(std::string /*id*/, const FileTransferState /*state*/, const std::string& /*msg*/) { };
 			
+			virtual void setMessageReceiptState(const std::string &/* id */, ReceiptState /* state */) { }
+
 			virtual void setContactChatState(ChatState::ChatStateType /*state*/) {};
 			virtual void setName(const std::string& name) {name_ = name;};
 			virtual void show() {};

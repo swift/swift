@@ -25,6 +25,7 @@
 #include <Swift/QtUI/QtTabWidget.h>
 #include <Swift/QtUI/QtSettingsProvider.h>
 #include <Swift/QtUI/QtUIPreferences.h>
+#include <Swift/QtUI/QtLoginWindow.h>
 #include <Roster/QtRosterWidget.h>
 #include <Swift/Controllers/UIEvents/RequestJoinMUCUIEvent.h>
 #include <Swift/Controllers/UIEvents/RequestAddUserDialogUIEvent.h>
@@ -33,12 +34,13 @@
 #include <Swift/Controllers/UIEvents/JoinMUCUIEvent.h>
 #include <Swift/Controllers/UIEvents/ToggleShowOfflineUIEvent.h>
 #include <Swift/Controllers/UIEvents/RequestAdHocUIEvent.h>
+#include <Swift/Controllers/UIEvents/ToggleRequestDeliveryReceiptsUIEvent.h>
 
 namespace Swift {
 
 #define CURRENT_ROSTER_TAB "current_roster_tab"
 
-QtMainWindow::QtMainWindow(QtSettingsProvider* settings, UIEventStream* uiEventStream, QtUIPreferences* uiPreferences) : QWidget(), MainWindow(false) {
+QtMainWindow::QtMainWindow(QtSettingsProvider* settings, UIEventStream* uiEventStream, QtUIPreferences* uiPreferences, QtLoginWindow::QtMenus loginMenus) : QWidget(), MainWindow(false), loginMenus_(loginMenus) {
 	uiEventStream_ = uiEventStream;
 	uiPreferences_ = uiPreferences;
 	settings_ = settings;
@@ -123,6 +125,12 @@ QtMainWindow::QtMainWindow(QtSettingsProvider* settings, UIEventStream* uiEventS
 	connect(signOutAction, SIGNAL(triggered()), SLOT(handleSignOutAction()));
 	actionsMenu->addAction(signOutAction);
 
+	toggleRequestDeliveryReceipts_ = new QAction(tr("&Request Delivery Receipts"), this);
+	toggleRequestDeliveryReceipts_->setCheckable(true);
+	toggleRequestDeliveryReceipts_->setChecked(false);
+	connect(toggleRequestDeliveryReceipts_, SIGNAL(toggled(bool)), SLOT(handleToggleRequestDeliveryReceipts(bool)));
+	loginMenus_.generalMenu->addAction(toggleRequestDeliveryReceipts_);
+
 	treeWidget_->onSomethingSelectedChanged.connect(boost::bind(&QAction::setEnabled, editUserAction_, _1));
 
 	setAvailableAdHocCommands(std::vector<DiscoItems::Item>());
@@ -141,6 +149,10 @@ QtMainWindow::~QtMainWindow() {
 
 void QtMainWindow::handleTabChanged(int index) {
 	settings_->storeInt(CURRENT_ROSTER_TAB, index);
+}
+
+void QtMainWindow::handleToggleRequestDeliveryReceipts(bool enabled) {
+	uiEventStream_->send(boost::make_shared<ToggleRequestDeliveryReceiptsUIEvent>(enabled));
 }
 
 QtEventWindow* QtMainWindow::getEventWindow() {
@@ -192,6 +204,7 @@ void QtMainWindow::handleChatUserActionTriggered(bool /*checked*/) {
 }
 
 void QtMainWindow::handleSignOutAction() {
+	loginMenus_.generalMenu->removeAction(toggleRequestDeliveryReceipts_);
 	onSignOutRequest();
 }
 
@@ -211,6 +224,10 @@ void QtMainWindow::handleUIEvent(boost::shared_ptr<UIEvent> event) {
 	boost::shared_ptr<ToggleShowOfflineUIEvent> toggleEvent = boost::dynamic_pointer_cast<ToggleShowOfflineUIEvent>(event);
 	if (toggleEvent) {
 		handleShowOfflineToggled(toggleEvent->getShow());
+	}
+	boost::shared_ptr<ToggleRequestDeliveryReceiptsUIEvent> deliveryReceiptEvent = boost::dynamic_pointer_cast<ToggleRequestDeliveryReceiptsUIEvent>(event);
+	if (deliveryReceiptEvent) {
+		toggleRequestDeliveryReceipts_->setChecked(deliveryReceiptEvent->getEnabled());
 	}
 }
 

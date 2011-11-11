@@ -196,6 +196,22 @@ void QtChatView::setAckXML(const QString& id, const QString& xml) {
 	ackElement.setInnerXml(xml);
 }
 
+void QtChatView::setReceiptXML(const QString& id, const QString& xml) {
+	QWebElement message = document_.findFirst("#" + id);
+	if (message.isNull()) return;
+	QWebElement receiptElement = message.findFirst("span.swift_receipt");
+	assert(!receiptElement.isNull());
+	receiptElement.setInnerXml(xml);
+}
+
+void QtChatView::displayReceiptInfo(const QString& id, bool showIt) {
+	QWebElement message = document_.findFirst("#" + id);
+	if (message.isNull()) return;
+	QWebElement receiptElement = message.findFirst("span.swift_receipt");
+	assert(!receiptElement.isNull());
+	receiptElement.setStyleProperty("display", showIt ? "inline" : "none");
+}
+
 void QtChatView::rememberScrolledToBottom() {
 	isAtBottom_ = webPage_->mainFrame()->scrollBarValue(Qt::Vertical) == webPage_->mainFrame()->scrollBarMaximum(Qt::Vertical);
 }

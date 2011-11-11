@@ -27,6 +27,13 @@ namespace Swift {
 	class QtLoginWindow : public QMainWindow, public LoginWindow {
 		Q_OBJECT
 		public:
+			struct QtMenus {
+				QtMenus(QMenu* swiftMenu, QMenu* generalMenu) : swiftMenu(swiftMenu), generalMenu(generalMenu) {}
+				QMenu* swiftMenu;
+				QMenu* generalMenu;
+			};
+
+		public:
 			QtLoginWindow(UIEventStream* uiEventStream, bool eagleMode);
 
 			void morphInto(MainWindow *mainWindow);
@@ -39,7 +46,7 @@ namespace Swift {
 			void selectUser(const std::string& user);
 			bool askUserToTrustCertificatePermanently(const std::string& message, Certificate::ref certificate);
 			void hide();
-
+			QtMenus getMenus() const;
 			virtual void quit();
 
 		signals:

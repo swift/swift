@@ -45,10 +45,11 @@ namespace Swift {
 	class MUCSearchController;
 	class FileTransferOverview;
 	class FileTransferController;
+	class XMPPRoster;
 	
 	class ChatsManager {
 		public:
-			ChatsManager(JID jid, StanzaChannel* stanzaChannel, IQRouter* iqRouter, EventController* eventController, ChatWindowFactory* chatWindowFactory, JoinMUCWindowFactory* joinMUCWindowFactory, NickResolver* nickResolver, PresenceOracle* presenceOracle, PresenceSender* presenceSender, UIEventStream* uiEventStream, ChatListWindowFactory* chatListWindowFactory, bool useDelayForLatency, TimerFactory* timerFactory, MUCRegistry* mucRegistry, EntityCapsProvider* entityCapsProvider, MUCManager* mucManager, MUCSearchWindowFactory* mucSearchWindowFactory, ProfileSettingsProvider* settings, FileTransferOverview* ftOverview, bool eagleMode);
+			ChatsManager(JID jid, StanzaChannel* stanzaChannel, IQRouter* iqRouter, EventController* eventController, ChatWindowFactory* chatWindowFactory, JoinMUCWindowFactory* joinMUCWindowFactory, NickResolver* nickResolver, PresenceOracle* presenceOracle, PresenceSender* presenceSender, UIEventStream* uiEventStream, ChatListWindowFactory* chatListWindowFactory, bool useDelayForLatency, TimerFactory* timerFactory, MUCRegistry* mucRegistry, EntityCapsProvider* entityCapsProvider, MUCManager* mucManager, MUCSearchWindowFactory* mucSearchWindowFactory, ProfileSettingsProvider* settings, FileTransferOverview* ftOverview, XMPPRoster* roster, bool eagleMode);
 			virtual ~ChatsManager();
 			void setAvatarManager(AvatarManager* avatarManager);
 			void setOnline(bool enabled);
@@ -81,6 +82,12 @@ namespace Swift {
 			void handleUnreadCountChanged(ChatControllerBase* controller);
 			void handleAvatarChanged(const JID& jid);
 			void handleClearRecentsRequested();
+			void handleJIDAddedToRoster(const JID&);
+			void handleJIDRemovedFromRoster(const JID&);
+			void handleJIDUpdatedInRoster(const JID&);
+			void handleRosterCleared();
+
+			void updatePresenceReceivingStateOnChatController(const JID&);
 
 			ChatController* getChatControllerOrFindAnother(const JID &contact);
 			ChatController* createNewChatController(const JID &contact);
@@ -115,6 +122,8 @@ namespace Swift {
 			std::list<ChatListWindow::Chat> recentChats_;
 			ProfileSettingsProvider* profileSettings_;
 			FileTransferOverview* ftOverview_;
+			XMPPRoster* roster_;
 			bool eagleMode_;
+			bool userWantsReceipts_;
 	};
 }

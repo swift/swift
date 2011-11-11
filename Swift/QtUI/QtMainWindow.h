@@ -13,6 +13,7 @@
 #include "Swift/QtUI/QtRosterHeader.h"
 #include "Swift/QtUI/EventViewer/QtEventWindow.h"
 #include "Swift/QtUI/ChatList/QtChatListWindow.h"
+#include "Swift/QtUI/QtLoginWindow.h"
 
 #include <vector>
 
@@ -35,7 +36,7 @@ namespace Swift {
 	class QtMainWindow : public QWidget, public MainWindow {
 		Q_OBJECT
 		public:
-			QtMainWindow(QtSettingsProvider*, UIEventStream* eventStream, QtUIPreferences* uiPreferences);
+			QtMainWindow(QtSettingsProvider*, UIEventStream* eventStream, QtUIPreferences* uiPreferences, QtLoginWindow::QtMenus loginMenus);
 			virtual ~QtMainWindow();
 			std::vector<QMenu*> getMenus() {return menus_;}
 			void setMyNick(const std::string& name);
@@ -62,9 +63,11 @@ namespace Swift {
 			void handleChatCountUpdated(int count);
 			void handleEditProfileRequest();
 			void handleTabChanged(int index);
+			void handleToggleRequestDeliveryReceipts(bool enabled);
 
 		private:
 			QtSettingsProvider* settings_;
+			QtLoginWindow::QtMenus loginMenus_;
 			std::vector<QMenu*> menus_;
 			QtRosterWidget* treeWidget_;
 			QtRosterHeader* meView_;
@@ -72,6 +75,7 @@ namespace Swift {
 			QAction* editUserAction_;
 			QAction* chatUserAction_;
 			QAction* showOfflineAction_;
+			QAction* toggleRequestDeliveryReceipts_;
 			QMenu* serverAdHocMenu_;
 			QtTabWidget* tabs_;
 			QWidget* contactsTabWidget_;

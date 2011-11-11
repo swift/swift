@@ -21,6 +21,7 @@
 #include <Swift/Controllers/UIEvents/AddMUCBookmarkUIEvent.h>
 #include <Swift/Controllers/UIEvents/RemoveMUCBookmarkUIEvent.h>
 #include <Swift/Controllers/UIEvents/EditMUCBookmarkUIEvent.h>
+#include <Swift/Controllers/UIEvents/ToggleRequestDeliveryReceiptsUIEvent.h>
 #include <Swift/Controllers/UIInterfaces/ChatListWindowFactory.h>
 #include <Swift/Controllers/UIInterfaces/JoinMUCWindow.h>
 #include <Swift/Controllers/UIInterfaces/JoinMUCWindowFactory.h>
@@ -28,12 +29,15 @@
 #include <Swiften/Client/NickResolver.h>
 #include <Swiften/MUC/MUCManager.h>
 #include <Swiften/Elements/ChatState.h>
+#include <Swiften/Elements/DeliveryReceipt.h>
+#include <Swiften/Elements/DeliveryReceiptRequest.h>
 #include <Swiften/MUC/MUCBookmarkManager.h>
 #include <Swift/Controllers/FileTransfer/FileTransferController.h>
 #include <Swift/Controllers/FileTransfer/FileTransferOverview.h>
 #include <Swift/Controllers/ProfileSettingsProvider.h>
 #include <Swiften/Avatars/AvatarManager.h>
 #include <Swiften/Elements/MUCInvitationPayload.h>
+#include <Swiften/Roster/XMPPRoster.h>
 
 namespace Swift {
 
@@ -61,6 +65,7 @@ ChatsManager::ChatsManager(
 		MUCSearchWindowFactory* mucSearchWindowFactory,
 		ProfileSettingsProvider* settings,
 		FileTransferOverview* ftOverview,
+		XMPPRoster* roster,
 		bool eagleMode) :
 			jid_(jid), 
 			joinMUCWindowFactory_(joinMUCWindowFactory), 
@@ -69,6 +74,7 @@ ChatsManager::ChatsManager(
 			entityCapsProvider_(entityCapsProvider), 
 			mucManager(mucManager),
 			ftOverview_(ftOverview),
+			roster_(roster),
 			eagleMode_(eagleMode) {
 	timerFactory_ = timerFactory;
 	eventController_ = eventController;
@@ -95,11 +101,19 @@ ChatsManager::ChatsManager(
 	mucSearchController_ = new MUCSearchController(jid_, mucSearchWindowFactory, iqRouter, settings);
 	mucSearchController_->onMUCSelected.connect(boost::bind(&ChatsManager::handleMUCSelectedAfterSearch, this, _1));
 	ftOverview_->onNewFileTransferController.connect(boost::bind(&ChatsManager::handleNewFileTransferController, this, _1));
+	roster_->onJIDAdded.connect(boost::bind(&ChatsManager::handleJIDAddedToRoster, this, _1));
+	roster_->onJIDRemoved.connect(boost::bind(&ChatsManager::handleJIDRemovedFromRoster, this, _1));
+	roster_->onJIDUpdated.connect(boost::bind(&ChatsManager::handleJIDUpdatedInRoster, this, _1));
+	roster_->onRosterCleared.connect(boost::bind(&ChatsManager::handleRosterCleared, this));
 	setupBookmarks();
 	loadRecents();
 }
 
 ChatsManager::~ChatsManager() {
+	roster_->onJIDAdded.disconnect(boost::bind(&ChatsManager::handleJIDAddedToRoster, this, _1));
+	roster_->onJIDRemoved.disconnect(boost::bind(&ChatsManager::handleJIDRemovedFromRoster, this, _1));
+	roster_->onJIDUpdated.disconnect(boost::bind(&ChatsManager::handleJIDUpdatedInRoster, this, _1));
+	roster_->onRosterCleared.disconnect(boost::bind(&ChatsManager::handleRosterCleared, this));
 	delete joinMUCWindow_;
 	foreach (JIDChatControllerPair controllerPair, chatControllers_) {
 		delete controllerPair.second;
@@ -134,6 +148,39 @@ void ChatsManager::handleClearRecentsRequested() {
 	recentChats_.clear();
 	saveRecents();
 	handleUnreadCountChanged(NULL);
+}
+
+void ChatsManager::handleJIDAddedToRoster(const JID &jid) {
+	updatePresenceReceivingStateOnChatController(jid);
+}
+
+void ChatsManager::handleJIDRemovedFromRoster(const JID &jid) {
+	updatePresenceReceivingStateOnChatController(jid);
+}
+
+void ChatsManager::handleJIDUpdatedInRoster(const JID &jid) {
+	updatePresenceReceivingStateOnChatController(jid);
+}
+
+void ChatsManager::handleRosterCleared() {
+	/*	Setting that all chat controllers aren't receiving presence anymore;
+		including MUC 1-to-1 chats due to the assumtion that this handler
+		is only called on log out. */
+	foreach(JIDChatControllerPair pair, chatControllers_) {
+		pair.second->setContactIsReceivingPresence(false);
+	}
+}
+
+void ChatsManager::updatePresenceReceivingStateOnChatController(const JID &jid) {
+	ChatController* controller = getChatControllerIfExists(jid);
+	if (controller) {
+		if (!mucRegistry_->isMUC(jid.toBare())) {
+			RosterItemPayload::Subscription subscription = roster_->getSubscriptionStateForJID(jid);
+			controller->setContactIsReceivingPresence(subscription == RosterItemPayload::From || subscription == RosterItemPayload::Both);
+		} else {
+			controller->setContactIsReceivingPresence(true);
+		}
+	}
 }
 
 void ChatsManager::loadRecents() {
@@ -316,6 +363,11 @@ void ChatsManager::handleUIEvent(boost::shared_ptr<UIEvent> event) {
 		mucBookmarkManager_->addBookmark(addMUCBookmarkEvent->getBookmark());
 		return;
 	}
+	boost::shared_ptr<ToggleRequestDeliveryReceiptsUIEvent> toggleRequestDeliveryReceipsEvent = boost::dynamic_pointer_cast<ToggleRequestDeliveryReceiptsUIEvent>(event);
+	if (toggleRequestDeliveryReceipsEvent) {
+		userWantsReceipts_ = toggleRequestDeliveryReceipsEvent->getEnabled();
+		return;
+	}
 
 	boost::shared_ptr<EditMUCBookmarkUIEvent> editMUCBookmarkEvent = boost::dynamic_pointer_cast<EditMUCBookmarkUIEvent>(event);
 	if (editMUCBookmarkEvent) {
@@ -436,11 +488,12 @@ ChatController* ChatsManager::getChatControllerOrFindAnother(const JID &contact)
 
 ChatController* ChatsManager::createNewChatController(const JID& contact) {
 	assert(chatControllers_.find(contact) == chatControllers_.end());
-	ChatController* controller = new ChatController(jid_, stanzaChannel_, iqRouter_, chatWindowFactory_, contact, nickResolver_, presenceOracle_, avatarManager_, mucRegistry_->isMUC(contact.toBare()), useDelayForLatency_, uiEventStream_, eventController_, timerFactory_, entityCapsProvider_);
+	ChatController* controller = new ChatController(jid_, stanzaChannel_, iqRouter_, chatWindowFactory_, contact, nickResolver_, presenceOracle_, avatarManager_, mucRegistry_->isMUC(contact.toBare()), useDelayForLatency_, uiEventStream_, eventController_, timerFactory_, entityCapsProvider_, userWantsReceipts_);
 	chatControllers_[contact] = controller;
 	controller->setAvailableServerFeatures(serverDiscoInfo_);
 	controller->onActivity.connect(boost::bind(&ChatsManager::handleChatActivity, this, contact, _1, false));
 	controller->onUnreadCountChanged.connect(boost::bind(&ChatsManager::handleUnreadCountChanged, this, controller));
+	updatePresenceReceivingStateOnChatController(contact);
 	return controller;
 }
 
@@ -522,7 +575,7 @@ void ChatsManager::handleIncomingMessage(boost::shared_ptr<Message> message) {
 	JID jid = message->getFrom();
 	boost::shared_ptr<MessageEvent> event(new MessageEvent(message));
 	bool isInvite = message->getPayload<MUCInvitationPayload>();
-	if (!event->isReadable() && !message->getPayload<ChatState>() && !isInvite && !message->hasSubject()) {
+	if (!event->isReadable() && !message->getPayload<ChatState>() && !message->getPayload<DeliveryReceipt>() && !message->getPayload<DeliveryReceiptRequest>() && !isInvite && !message->hasSubject()) {
 		return;
 	}
 

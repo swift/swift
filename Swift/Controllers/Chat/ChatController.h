@@ -11,6 +11,8 @@
 #include <map>
 #include <string>
 
+#include <Swift/Controllers/UIInterfaces/ChatWindow.h>
+
 namespace Swift {
 	class AvatarManager;
 	class ChatStateNotifier;
@@ -18,14 +20,16 @@ namespace Swift {
 	class NickResolver;
 	class EntityCapsProvider;
 	class FileTransferController;
+	class UIEvent;
 
 	class ChatController : public ChatControllerBase {
 		public:
-			ChatController(const JID& self, StanzaChannel* stanzaChannel, IQRouter* iqRouter, ChatWindowFactory* chatWindowFactory, const JID &contact, NickResolver* nickResolver, PresenceOracle* presenceOracle, AvatarManager* avatarManager, bool isInMUC, bool useDelayForLatency, UIEventStream* eventStream, EventController* eventController, TimerFactory* timerFactory, EntityCapsProvider* entityCapsProvider);
+			ChatController(const JID& self, StanzaChannel* stanzaChannel, IQRouter* iqRouter, ChatWindowFactory* chatWindowFactory, const JID &contact, NickResolver* nickResolver, PresenceOracle* presenceOracle, AvatarManager* avatarManager, bool isInMUC, bool useDelayForLatency, UIEventStream* eventStream, EventController* eventController, TimerFactory* timerFactory, EntityCapsProvider* entityCapsProvider, bool userWantsReceipts);
 			virtual ~ChatController();
 			virtual void setToJID(const JID& jid);
 			virtual void setOnline(bool online);
 			virtual void handleNewFileTransferController(FileTransferController* ftc);
+			virtual void setContactIsReceivingPresence(bool /*isReceivingPresence*/);
 
 		private:
 			void handlePresenceChange(boost::shared_ptr<Presence> newPresence);
@@ -47,6 +51,9 @@ namespace Swift {
 			void handleFileTransferAccept(std::string /* id */, std::string /* filename */);
 			void handleSendFileRequest(std::string filename);
 
+			void handleUIEvent(boost::shared_ptr<UIEvent> event);
+			void checkForDisplayingDisplayReceiptsAlert();
+
 		private:
 			NickResolver* nickResolver_;
 			ChatStateNotifier* chatStateNotifier_;
@@ -56,9 +63,13 @@ namespace Swift {
 			bool lastWasPresence_;
 			std::string lastStatusChangeString_;
 			std::map<boost::shared_ptr<Stanza>, std::string> unackedStanzas_;
+			std::map<std::string, std::string> requestedReceipts_;
 			StatusShow::Type lastShownStatus_;
 			UIEventStream* eventStream_;
 
+			ChatWindow::Tristate contactSupportsReceipts_;
+			bool receivingPresenceFromUs_;
+			bool userWantsReceipts_;
 			std::map<std::string, FileTransferController*> ftControllers;
 	};
 }

@@ -55,7 +55,7 @@ FileTransferListWidget* QtUIFactory::createFileTransferListWidget() {
 }
 
 MainWindow* QtUIFactory::createMainWindow(UIEventStream* eventStream) {
-	lastMainWindow  = new QtMainWindow(settings, eventStream, uiPreferences);
+	lastMainWindow  = new QtMainWindow(settings, eventStream, uiPreferences, loginWindow->getMenus());
 	return lastMainWindow;
 }
 

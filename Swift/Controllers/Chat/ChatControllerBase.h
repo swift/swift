@@ -54,6 +54,7 @@ namespace Swift {
 			int getUnreadCount();
 			const JID& getToJID() {return toJID_;}
 			void handleCapsChanged(const JID& jid);
+
 		protected:
 			ChatControllerBase(const JID& self, StanzaChannel* stanzaChannel, IQRouter* iqRouter, ChatWindowFactory* chatWindowFactory, const JID &toJID, PresenceOracle* presenceOracle, AvatarManager* avatarManager, bool useDelayForLatency, UIEventStream* eventStream, EventController* eventController, TimerFactory* timerFactory, EntityCapsProvider* entityCapsProvider);
 
@@ -71,6 +72,7 @@ namespace Swift {
 			virtual void dayTicked() {};
 			virtual void handleBareJIDCapsChanged(const JID& jid) = 0;
 			std::string getErrorMessage(boost::shared_ptr<ErrorPayload>);
+			virtual void setContactIsReceivingPresence(bool /* isReceivingPresence */) {}
 
 		private:
 			IDGenerator idGenerator_;

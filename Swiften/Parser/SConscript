@@ -70,6 +70,8 @@ sources = [
 		"PayloadParsers/ReplaceParser.cpp",
 		"PayloadParsers/LastParser.cpp",
 		"PayloadParsers/S5BProxyRequestParser.cpp",
+		"PayloadParsers/DeliveryReceiptParser.cpp",
+		"PayloadParsers/DeliveryReceiptRequestParser.cpp",
 		"PlatformXMLParserFactory.cpp",
 		"PresenceParser.cpp",
 		"SerializingParser.cpp",

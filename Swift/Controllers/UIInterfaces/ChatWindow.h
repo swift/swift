@@ -32,6 +32,7 @@ namespace Swift {
 	class ChatWindow {
 		public:
 			enum AckState {Pending, Received, Failed};
+			enum ReceiptState {ReceiptRequested, ReceiptReceived};
 			enum Tristate {Yes, No, Maybe};
 			enum OccupantAction {Kick, Ban, MakeModerator, MakeParticipant, MakeVisitor};
 			enum FileTransferState {WaitingForAccept, Negotiating, Transferring, Canceled, Finished, FTFailed};
@@ -56,6 +57,9 @@ namespace Swift {
 			virtual void setFileTransferProgress(std::string, const int percentageDone) = 0;
 			virtual void setFileTransferStatus(std::string, const FileTransferState state, const std::string& msg = "") = 0;
 			virtual void addMUCInvitation(const JID& jid, const std::string& reason, const std::string& password) = 0;
+
+			// message receipts
+			virtual void setMessageReceiptState(const std::string& id, ChatWindow::ReceiptState state) = 0;
 
 			virtual void setContactChatState(ChatState::ChatStateType state) = 0;
 			virtual void setName(const std::string& name) = 0;

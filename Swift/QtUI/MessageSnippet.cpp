@@ -32,7 +32,7 @@ MessageSnippet::MessageSnippet(const QString& message, const QString& sender, co
 		}
 	}
 
-	content_.replace("%message%", "<span class='swift_message'>" + escape(message) + "</span><span class='swift_ack'></span>");
+	content_.replace("%message%", "<span class='swift_message'>" + escape(message) + "</span><span class='swift_ack'></span><span class='swift_receipt'></span>");
 	content_.replace("%sender%", escape(sender));
 	content_.replace("%time%", "<span class='swift_time'>" + timeToEscapedString(time) + "</span>");
 	content_.replace("%userIconPath%", escape(iconURI));

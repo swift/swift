@@ -35,6 +35,9 @@ namespace Swift {
 			void replaceMessage(const QString& newMessage, const QString& id, const QDateTime& time);
 			void rememberScrolledToBottom();
 			void setAckXML(const QString& id, const QString& xml);
+			void setReceiptXML(const QString& id, const QString& xml);
+			void displayReceiptInfo(const QString& id, bool showIt);
+
 			QString getLastSentMessage();
 			void addToJSEnvironment(const QString&, QObject*);
 			void setFileTransferProgress(QString id, const int percentageDone);

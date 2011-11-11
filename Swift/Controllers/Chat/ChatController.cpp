@@ -16,7 +16,6 @@
 #include <Swiften/Chat/ChatStateNotifier.h>
 #include <Swiften/Chat/ChatStateTracker.h>
 #include <Swiften/Client/StanzaChannel.h>
-#include <Swift/Controllers/UIInterfaces/ChatWindow.h>
 #include <Swift/Controllers/UIInterfaces/ChatWindowFactory.h>
 #include <Swiften/Client/NickResolver.h>
 #include <Swift/Controllers/XMPPEvents/EventController.h>
@@ -26,15 +25,19 @@
 #include <Swiften/Base/foreach.h>
 #include <Swift/Controllers/UIEvents/UIEventStream.h>
 #include <Swift/Controllers/UIEvents/SendFileUIEvent.h>
+#include <Swiften/Elements/DeliveryReceipt.h>
+#include <Swiften/Elements/DeliveryReceiptRequest.h>
+#include <Swift/Controllers/UIEvents/ToggleRequestDeliveryReceiptsUIEvent.h>
 
+#include <Swiften/Base/Log.h>
 
 namespace Swift {
 	
 /**
  * The controller does not gain ownership of the stanzaChannel, nor the factory.
  */
-ChatController::ChatController(const JID& self, StanzaChannel* stanzaChannel, IQRouter* iqRouter, ChatWindowFactory* chatWindowFactory, const JID &contact, NickResolver* nickResolver, PresenceOracle* presenceOracle, AvatarManager* avatarManager, bool isInMUC, bool useDelayForLatency, UIEventStream* eventStream, EventController* eventController, TimerFactory* timerFactory, EntityCapsProvider* entityCapsProvider)
-	: ChatControllerBase(self, stanzaChannel, iqRouter, chatWindowFactory, contact, presenceOracle, avatarManager, useDelayForLatency, eventStream, eventController, timerFactory, entityCapsProvider), eventStream_(eventStream) {
+ChatController::ChatController(const JID& self, StanzaChannel* stanzaChannel, IQRouter* iqRouter, ChatWindowFactory* chatWindowFactory, const JID &contact, NickResolver* nickResolver, PresenceOracle* presenceOracle, AvatarManager* avatarManager, bool isInMUC, bool useDelayForLatency, UIEventStream* eventStream, EventController* eventController, TimerFactory* timerFactory, EntityCapsProvider* entityCapsProvider, bool userWantsReceipts)
+	: ChatControllerBase(self, stanzaChannel, iqRouter, chatWindowFactory, contact, presenceOracle, avatarManager, useDelayForLatency, eventStream, eventController, timerFactory, entityCapsProvider), eventStream_(eventStream), userWantsReceipts_(userWantsReceipts) {
 	isInMUC_ = isInMUC;
 	lastWasPresence_ = false;
 	chatStateNotifier_ = new ChatStateNotifier(stanzaChannel, contact, entityCapsProvider);
@@ -70,7 +73,7 @@ ChatController::ChatController(const JID& self, StanzaChannel* stanzaChannel, IQ
 	chatWindow_->onFileTransferCancel.connect(boost::bind(&ChatController::handleFileTransferCancel, this, _1));
 	chatWindow_->onSendFileRequest.connect(boost::bind(&ChatController::handleSendFileRequest, this, _1));
 	handleBareJIDCapsChanged(toJID_);
-
+	eventStream_->onUIEvent.connect(boost::bind(&ChatController::handleUIEvent, this, _1));
 }
 
 void ChatController::handleContactNickChanged(const JID& jid, const std::string& /*oldNick*/) {
@@ -80,6 +83,7 @@ void ChatController::handleContactNickChanged(const JID& jid, const std::string&
 }
 
 ChatController::~ChatController() {
+	eventStream_->onUIEvent.disconnect(boost::bind(&ChatController::handleUIEvent, this, _1));
 	nickResolver_->onNickChanged.disconnect(boost::bind(&ChatController::handleContactNickChanged, this, _1, _2));
 	delete chatStateNotifier_;
 	delete chatStateTracker_;
@@ -93,9 +97,17 @@ void ChatController::handleBareJIDCapsChanged(const JID& /*jid*/) {
 		} else {
 			chatWindow_->setCorrectionEnabled(ChatWindow::No);
 		}
+		if (disco->hasFeature(DiscoInfo::MessageDeliveryReceiptsFeature)) {
+			contactSupportsReceipts_ = ChatWindow::Yes;
+		} else {
+			contactSupportsReceipts_ = ChatWindow::No;
+		}
 	} else {
+		SWIFT_LOG(debug) << "No disco info :(" << std::endl;
 		chatWindow_->setCorrectionEnabled(ChatWindow::Maybe);
+		contactSupportsReceipts_ = ChatWindow::Maybe;
 	}
+	checkForDisplayingDisplayReceiptsAlert();
 }
 
 void ChatController::setToJID(const JID& jid) {
@@ -129,6 +141,21 @@ void ChatController::preHandleIncomingMessage(boost::shared_ptr<MessageEvent> me
 	}
 	chatStateTracker_->handleMessageReceived(message);
 	chatStateNotifier_->receivedMessageFromContact(message->getPayload<ChatState>());
+
+	if (boost::shared_ptr<DeliveryReceipt> receipt = message->getPayload<DeliveryReceipt>()) {
+		SWIFT_LOG(debug) << "received receipt for id: " << receipt->getReceivedID() << std::endl;
+		if (requestedReceipts_.find(receipt->getReceivedID()) != requestedReceipts_.end()) {
+			chatWindow_->setMessageReceiptState(requestedReceipts_[receipt->getReceivedID()], ChatWindow::ReceiptReceived);
+			requestedReceipts_.erase(receipt->getReceivedID());
+		}
+	} else if (message->getPayload<DeliveryReceiptRequest>()) {
+		if (receivingPresenceFromUs_) {
+			boost::shared_ptr<Message> receiptMessage = boost::make_shared<Message>();
+			receiptMessage->setTo(toJID_);
+			receiptMessage->addPayload(boost::make_shared<DeliveryReceipt>(message->getID()));
+			stanzaChannel_->sendMessage(receiptMessage);
+		}
+	}
 }
 
 void ChatController::postHandleIncomingMessage(boost::shared_ptr<MessageEvent> messageEvent) {
@@ -138,6 +165,30 @@ void ChatController::postHandleIncomingMessage(boost::shared_ptr<MessageEvent> m
 
 void ChatController::preSendMessageRequest(boost::shared_ptr<Message> message) {
 	chatStateNotifier_->addChatStateRequest(message);
+	if (userWantsReceipts_ && (contactSupportsReceipts_ != ChatWindow::No) && message) {
+		message->addPayload(boost::make_shared<DeliveryReceiptRequest>());
+	}
+}
+
+void ChatController::setContactIsReceivingPresence(bool isReceivingPresence) {
+	receivingPresenceFromUs_ = isReceivingPresence;
+}
+
+void ChatController::handleUIEvent(boost::shared_ptr<UIEvent> event) {
+	if (boost::shared_ptr<ToggleRequestDeliveryReceiptsUIEvent> toggleAllowReceipts = boost::dynamic_pointer_cast<ToggleRequestDeliveryReceiptsUIEvent>(event)) {
+		userWantsReceipts_ = toggleAllowReceipts->getEnabled();
+		checkForDisplayingDisplayReceiptsAlert();
+	}
+}
+
+void ChatController::checkForDisplayingDisplayReceiptsAlert() {
+	if (userWantsReceipts_ && (contactSupportsReceipts_ == ChatWindow::No)) {
+		chatWindow_->setAlert("This chat doesn't support delivery receipts.");
+	} else if (userWantsReceipts_ && (contactSupportsReceipts_ == ChatWindow::Maybe)) {
+		chatWindow_->setAlert("This chat may not support delivery receipts. You might not receive delivery receipts for the messages you sent.");
+	} else {
+		chatWindow_->cancelAlert();
+	}
 }
 
 void ChatController::postSendMessage(const std::string& body, boost::shared_ptr<Stanza> sentStanza) {
@@ -148,10 +199,17 @@ void ChatController::postSendMessage(const std::string& body, boost::shared_ptr<
 	} else {
 		myLastMessageUIID_ = addMessage(body, QT_TRANSLATE_NOOP("", "me"), true, labelsEnabled_ ? chatWindow_->getSelectedSecurityLabel().getLabel() : boost::shared_ptr<SecurityLabel>(), std::string(avatarManager_->getAvatarPath(selfJID_).string()), boost::posix_time::microsec_clock::universal_time());
 	}
+
 	if (stanzaChannel_->getStreamManagementEnabled() && !myLastMessageUIID_.empty() ) {
 		chatWindow_->setAckState(myLastMessageUIID_, ChatWindow::Pending);
 		unackedStanzas_[sentStanza] = myLastMessageUIID_;
 	}
+
+	if (sentStanza->getPayload<DeliveryReceiptRequest>()) {
+		requestedReceipts_[sentStanza->getID()] = myLastMessageUIID_;
+		chatWindow_->setMessageReceiptState(myLastMessageUIID_, ChatWindow::ReceiptRequested);
+	}
+
 	lastWasPresence_ = false;
 	chatStateNotifier_->userSentMessage();
 }

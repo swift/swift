@@ -21,7 +21,7 @@ const std::string DiscoInfo::JingleFTFeature = std::string("urn:xmpp:jingle:apps
 const std::string DiscoInfo::JingleTransportsIBBFeature = std::string("urn:xmpp:jingle:transports:ibb:1");
 const std::string DiscoInfo::JingleTransportsS5BFeature = std::string("urn:xmpp:jingle:transports:s5b:1");
 const std::string DiscoInfo::Bytestream = std::string("http://jabber.org/protocol/bytestreams");
-
+const std::string DiscoInfo::MessageDeliveryReceiptsFeature = std::string("urn:xmpp:receipts");
 
 bool DiscoInfo::Identity::operator<(const Identity& other) const {
 	if (category_ == other.category_) {
