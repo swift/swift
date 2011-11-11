@@ -4,8 +4,6 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#pragma once
-
 #include <Swift/QtUI/QtUIPreferences.h>
 
 namespace Swift {
