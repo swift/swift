@@ -28,12 +28,13 @@ enum TestStage {
 	Reconnect
 };
 TestStage stage;
+ClientOptions options;
 
 void handleDisconnected(boost::optional<ClientError> e) {
 	std::cout << "Disconnected: " << e << std::endl;
 	if (stage == FirstConnect) {
 		stage = Reconnect;
-		client->connect();
+		client->connect(options);
 	}
 	else {
 		eventLoop.stop();
@@ -66,13 +67,22 @@ int main(int, char**) {
 		return -1;
 	}
 
+	char* boshHost = getenv("SWIFT_CLIENTTEST_BOSH_HOST");
+	char* boshPort = getenv("SWIFT_CLIENTTEST_BOSH_PORT");
+	char* boshPath = getenv("SWIFT_CLIENTTEST_BOSH_PATH");
+
+	if (boshHost && boshPort && boshPath) {
+		std::cout << "Using BOSH with URL: http://" << boshHost << ":" << boshPort << "/" << boshPath << std::endl;
+		options.boshURL = URL("http", boshHost, atoi(boshPort), boshPath);
+	}
+
 	client = new Swift::Client(JID(jid), std::string(pass), &networkFactories);
-	ClientXMLTracer* tracer = new ClientXMLTracer(client);
+	ClientXMLTracer* tracer = new ClientXMLTracer(client, !options.boshURL.empty());
 	client->onConnected.connect(&handleConnected);
 	client->onDisconnected.connect(boost::bind(&handleDisconnected, _1));
 	client->setAlwaysTrustCertificates();
 	stage = FirstConnect;
-	client->connect();
+	client->connect(options);
 
 	{
 		Timer::ref timer = networkFactories.getTimerFactory()->createTimer(60000);

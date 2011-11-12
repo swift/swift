@@ -46,6 +46,7 @@ namespace Swift {
 			virtual void writeElement(boost::shared_ptr<Element>) = 0;
 			virtual void writeData(const std::string& data) = 0;
 
+			virtual bool supportsZLibCompression() = 0;
 			virtual void addZLibCompression() = 0;
 
 			virtual bool supportsTLSEncryption() = 0;

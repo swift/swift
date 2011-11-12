@@ -142,6 +142,10 @@ class ComponentSessionTest : public CppUnit::TestFixture {
 					return boost::shared_ptr<CertificateVerificationError>();
 				}
 
+				virtual bool supportsZLibCompression() {
+					return true;
+				}
+
 				virtual void addZLibCompression() {
 					assert(false);
 				}

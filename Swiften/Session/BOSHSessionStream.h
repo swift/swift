@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Remko Tronçon
+ * Copyright (c) 2011 Kevin Smith
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -8,16 +8,16 @@
 
 #include <boost/shared_ptr.hpp>
 
+#include <Swiften/Base/SafeString.h>
 #include <Swiften/Base/SafeByteArray.h>
-#include <Swiften/Network/Connection.h>
+#include <Swiften/Network/BOSHConnectionPool.h>
+#include <Swiften/Network/BOSHConnectionFactory.h>
 #include <Swiften/Session/SessionStream.h>
 #include <Swiften/Elements/StreamType.h>
+#include <Swiften/EventLoop/EventOwner.h>
 
 namespace Swift {
-	class TLSContextFactory;
-	class TLSLayer;
 	class TimerFactory;
-	class WhitespacePingLayer;
 	class PayloadParserFactoryCollection;
 	class PayloadSerializerCollection;
 	class StreamStack;
@@ -25,19 +25,25 @@ namespace Swift {
 	class ConnectionLayer;
 	class CompressionLayer;
 	class XMLParserFactory;
+	class TLSContextFactory;
+	class EventLoop;
 
-	class BasicSessionStream : public SessionStream {
+	class BOSHSessionStream : public SessionStream, public EventOwner, public boost::enable_shared_from_this<BOSHSessionStream> {
 		public:
-			BasicSessionStream(
-				StreamType streamType,
-				boost::shared_ptr<Connection> connection,
+			BOSHSessionStream(
+				boost::shared_ptr<BOSHConnectionFactory> connectionFactory,
 				PayloadParserFactoryCollection* payloadParserFactories, 
 				PayloadSerializerCollection* payloadSerializers,
 				TLSContextFactory* tlsContextFactory,
 				TimerFactory* whitespacePingLayerFactory,
-				XMLParserFactory* xmlParserFactory
+				XMLParserFactory* xmlParserFactory,
+				EventLoop* eventLoop,
+				const std::string& to,
+				const URL& boshHTTPConnectProxyURL,
+				const SafeString& boshHTTPConnectProxyAuthID,
+				const SafeString& boshHTTPConnectProxyAuthPassword
 			);
-			~BasicSessionStream();
+			~BOSHSessionStream();
 
 			virtual void close();
 			virtual bool isOpen();
@@ -62,29 +68,32 @@ namespace Swift {
 			virtual void resetXMPPParser();
 
 		private:
-			void handleConnectionFinished(const boost::optional<Connection::Error>& error);
 			void handleXMPPError();
-			void handleTLSConnected();
-			void handleTLSError();
 			void handleStreamStartReceived(const ProtocolHeader&);
 			void handleElementReceived(boost::shared_ptr<Element>);
-			void handleDataRead(const SafeByteArray& data);
-			void handleDataWritten(const SafeByteArray& data);
+			void handlePoolXMPPDataRead(const SafeByteArray& data);
+			void handleXMPPLayerDataWritten(const SafeByteArray& data);
+			void handlePoolSessionStarted();
+			void handlePoolBOSHDataRead(const SafeByteArray& data);
+			void handlePoolBOSHDataWritten(const SafeByteArray& data);
+			void handlePoolSessionTerminated(BOSHError::ref condition);
 
 		private:
+			void fakeStreamHeaderReceipt();
+			void fakeStreamFooterReceipt(BOSHError::ref error);
+
+		private:
+			BOSHConnectionPool* connectionPool;
 			bool available;
-			boost::shared_ptr<Connection> connection;
 			PayloadParserFactoryCollection* payloadParserFactories;
 			PayloadSerializerCollection* payloadSerializers;
 			TLSContextFactory* tlsContextFactory;
 			TimerFactory* timerFactory;
-			StreamType streamType;
+			XMLParserFactory* xmlParserFactory;
 			XMPPLayer* xmppLayer;
-			ConnectionLayer* connectionLayer;
-			CompressionLayer* compressionLayer;
-			TLSLayer* tlsLayer;
-			WhitespacePingLayer* whitespacePingLayer;
-			StreamStack* streamStack;
+			ProtocolHeader streamHeader;
+			EventLoop* eventLoop;
+			bool firstHeader;
 	};
 
 }

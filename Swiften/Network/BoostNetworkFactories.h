@@ -53,6 +53,10 @@ namespace Swift {
 				return proxyProvider;
 			}
 
+			virtual EventLoop* getEventLoop() const {
+				return eventLoop;
+			}
+
 		private:
 			BoostIOServiceThread ioServiceThread;
 			TimerFactory* timerFactory;
@@ -63,5 +67,6 @@ namespace Swift {
 			XMLParserFactory* xmlParserFactory;
 			PlatformTLSFactories* tlsFactories;
 			ProxyProvider* proxyProvider;
+			EventLoop* eventLoop;
 	};
 }

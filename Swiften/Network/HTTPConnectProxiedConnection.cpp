@@ -4,6 +4,13 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
+/*
+ * Copyright (c) 2011 Kevin Smith
+ * Licensed under the GNU General Public License v3.
+ * See Documentation/Licenses/GPLv3.txt for more information.
+ */
+
+
 #include <Swiften/Network/HTTPConnectProxiedConnection.h>
 
 #include <iostream>
@@ -11,15 +18,17 @@
 #include <boost/thread.hpp>
 #include <boost/lexical_cast.hpp>
 
+#include <Swiften/Base/Algorithm.h>
 #include <Swiften/Base/Log.h>
 #include <Swiften/Base/String.h>
 #include <Swiften/Base/ByteArray.h>
 #include <Swiften/Network/HostAddressPort.h>
 #include <Swiften/Network/ConnectionFactory.h>
+#include <Swiften/StringCodecs/Base64.h>
 
 using namespace Swift;
 
-HTTPConnectProxiedConnection::HTTPConnectProxiedConnection(ConnectionFactory* connectionFactory, HostAddressPort proxy) : connectionFactory_(connectionFactory), proxy_(proxy), server_(HostAddressPort(HostAddress("0.0.0.0"), 0)) {
+HTTPConnectProxiedConnection::HTTPConnectProxiedConnection(ConnectionFactory* connectionFactory, HostAddressPort proxy, const SafeString& authID, const SafeString& authPassword) : connectionFactory_(connectionFactory), proxy_(proxy), server_(HostAddressPort(HostAddress("0.0.0.0"), 0)), authID_(authID), authPassword_(authPassword) {
 	connected_ = false;
 }
 
@@ -65,8 +74,18 @@ void HTTPConnectProxiedConnection::handleConnectionConnectFinished(bool error) {
 	connection_->onConnectFinished.disconnect(boost::bind(&HTTPConnectProxiedConnection::handleConnectionConnectFinished, shared_from_this(), _1));
 	if (!error) {
 		std::stringstream connect;
-		connect << "CONNECT " << server_.getAddress().toString() << ":" << server_.getPort() << " HTTP/1.1\r\n\r\n";
-		connection_->write(createSafeByteArray(connect.str()));
+		connect << "CONNECT " << server_.getAddress().toString() << ":" << server_.getPort() << " HTTP/1.1\r\n";
+		SafeByteArray data = createSafeByteArray(connect.str());
+		if (!authID_.empty() && !authPassword_.empty()) {
+			append(data, createSafeByteArray("Proxy-Authorization: Basic "));
+			SafeByteArray credentials = authID_;
+			append(credentials, createSafeByteArray(":"));
+			append(credentials, authPassword_);
+			append(data, Base64::encode(credentials));
+			append(data, createSafeByteArray("\r\n"));
+		}
+		append(data, createSafeByteArray("\r\n"));
+		connection_->write(data);
 	}
 	else {
 		onConnectFinished(true);

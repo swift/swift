@@ -29,7 +29,7 @@ namespace Swift {
 	class ClientSession;
 	class StanzaChannel;
 	class Stanza;
-	class BasicSessionStream;
+	class SessionStream;
 	class CertificateTrustChecker;
 	class NetworkFactories;
 	class ClientSessionStanzaChannel;
@@ -207,6 +207,7 @@ namespace Swift {
 			void handleMessageReceived(boost::shared_ptr<Message>);
 			void handleStanzaAcked(boost::shared_ptr<Stanza>);
 			void purgePassword();
+			void bindSessionToStream();
 
 			void resetConnector();
 			void resetSession();
@@ -222,7 +223,7 @@ namespace Swift {
 			boost::shared_ptr<ChainedConnector> connector_;
 			std::vector<ConnectionFactory*> proxyConnectionFactories;
 			boost::shared_ptr<Connection> connection_;
-			boost::shared_ptr<BasicSessionStream> sessionStream_;
+			boost::shared_ptr<SessionStream> sessionStream_;
 			boost::shared_ptr<ClientSession> session_;
 			std::string certificate_;
 			bool disconnectRequested_;

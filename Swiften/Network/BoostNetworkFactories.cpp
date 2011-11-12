@@ -17,7 +17,7 @@
 
 namespace Swift {
 
-BoostNetworkFactories::BoostNetworkFactories(EventLoop* eventLoop) {
+BoostNetworkFactories::BoostNetworkFactories(EventLoop* eventLoop) : eventLoop(eventLoop){
 	timerFactory = new BoostTimerFactory(ioServiceThread.getIOService(), eventLoop);
 	connectionFactory = new BoostConnectionFactory(ioServiceThread.getIOService(), eventLoop);
 	domainNameResolver = new PlatformDomainNameResolver(eventLoop);

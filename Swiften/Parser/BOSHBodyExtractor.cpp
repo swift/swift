@@ -124,6 +124,8 @@ BOSHBodyExtractor::BOSHBodyExtractor(XMLParserFactory* parserFactory, const Byte
 	BOSHBodyParserClient parserClient(this);
 	boost::shared_ptr<XMLParser> parser(parserFactory->createXMLParser(&parserClient));
 	if (!parser->parse(std::string(reinterpret_cast<const char*>(vecptr(data)), std::distance(data.begin(), i)))) {
+		/* TODO: This needs to be only validating the BOSH <body> element, so that XMPP parsing errors are caught at
+		   the correct higher layer */
 		body = boost::optional<BOSHBody>();
 		return;
 	}

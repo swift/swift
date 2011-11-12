@@ -13,7 +13,7 @@
 namespace Swift {
 	class ClientXMLTracer {
 		public:
-			ClientXMLTracer(CoreClient* client);
+			ClientXMLTracer(CoreClient* client, bool bosh = false);
 			~ClientXMLTracer();
 		private:
 			void printData(char direction, const SafeByteArray& data);
@@ -21,5 +21,6 @@ namespace Swift {
 
 		private:
 			XMLBeautifier *beautifier;
+			bool bosh;
 	};
 }

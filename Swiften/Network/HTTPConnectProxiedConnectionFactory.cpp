@@ -10,11 +10,15 @@
 
 namespace Swift {
 
-HTTPConnectProxiedConnectionFactory::HTTPConnectProxiedConnectionFactory(ConnectionFactory* connectionFactory, const HostAddressPort& proxy) : connectionFactory_(connectionFactory), proxy_(proxy) {
+HTTPConnectProxiedConnectionFactory::HTTPConnectProxiedConnectionFactory(ConnectionFactory* connectionFactory, const HostAddressPort& proxy) : connectionFactory_(connectionFactory), proxy_(proxy), authID_(""), authPassword_("") {
+}
+
+
+HTTPConnectProxiedConnectionFactory::HTTPConnectProxiedConnectionFactory(ConnectionFactory* connectionFactory, const HostAddressPort& proxy, const SafeString& authID, const SafeString& authPassword) : connectionFactory_(connectionFactory), proxy_(proxy), authID_(authID), authPassword_(authPassword) {
 }
 
 boost::shared_ptr<Connection> HTTPConnectProxiedConnectionFactory::createConnection() {
-	return HTTPConnectProxiedConnection::create(connectionFactory_, proxy_);
+	return HTTPConnectProxiedConnection::create(connectionFactory_, proxy_, authID_, authPassword_);
 }
 
 }

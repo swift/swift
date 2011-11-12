@@ -11,7 +11,7 @@
 
 namespace Swift {
 
-ClientXMLTracer::ClientXMLTracer(CoreClient* client) {
+ClientXMLTracer::ClientXMLTracer(CoreClient* client, bool bosh) : bosh(bosh) {
 	beautifier = new XMLBeautifier(true, true);
 	client->onDataRead.connect(boost::bind(&ClientXMLTracer::printData, this, '<', _1));
 	client->onDataWritten.connect(boost::bind(&ClientXMLTracer::printData, this, '>', _1));
@@ -23,7 +23,20 @@ ClientXMLTracer::~ClientXMLTracer() {
 
 void ClientXMLTracer::printData(char direction, const SafeByteArray& data) {
 	printLine(direction);
-	std::cerr << beautifier->beautify(byteArrayToString(ByteArray(data.begin(), data.end()))) << std::endl;
+	if (bosh) {
+		std::string line = byteArrayToString(ByteArray(data.begin(), data.end())); 
+		size_t endOfHTTP = line.find("\r\n\r\n");
+		if (false && endOfHTTP != std::string::npos) {
+			/* Disabled because it swallows bits of XML (namespaces, if I recall) */
+			std::cerr << line.substr(0, endOfHTTP) << std::endl << beautifier->beautify(line.substr(endOfHTTP)) << std::endl;
+		}
+		else {
+			std::cerr << line << std::endl;
+		}
+	}
+	else {
+		std::cerr << beautifier->beautify(byteArrayToString(ByteArray(data.begin(), data.end()))) << std::endl;
+	}
 }
 
 void ClientXMLTracer::printLine(char c) {

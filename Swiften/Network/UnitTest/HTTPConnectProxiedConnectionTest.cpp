@@ -163,7 +163,7 @@ class HTTPConnectProxiedConnectionTest : public CppUnit::TestFixture {
 
 	private:
 		HTTPConnectProxiedConnection::ref createTestling() {
-			boost::shared_ptr<HTTPConnectProxiedConnection> c = HTTPConnectProxiedConnection::create(connectionFactory, proxyHost);
+			boost::shared_ptr<HTTPConnectProxiedConnection> c = HTTPConnectProxiedConnection::create(connectionFactory, proxyHost, "", "");
 			c->onConnectFinished.connect(boost::bind(&HTTPConnectProxiedConnectionTest::handleConnectFinished, this, _1));
 			c->onDisconnected.connect(boost::bind(&HTTPConnectProxiedConnectionTest::handleDisconnected, this, _1));
 			c->onDataRead.connect(boost::bind(&HTTPConnectProxiedConnectionTest::handleDataRead, this, _1));

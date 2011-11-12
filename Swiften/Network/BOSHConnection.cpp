@@ -4,129 +4,281 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
-#include "BOSHConnection.h"
+/*
+ * Copyright (c) 2011 Kevin Smith
+ * Licensed under the GNU General Public License v3.
+ * See Documentation/Licenses/GPLv3.txt for more information.
+ */
+
+#include <Swiften/Network/BOSHConnection.h>
+
 #include <boost/bind.hpp>
 #include <boost/thread.hpp>
+#include <boost/lexical_cast.hpp>
 #include <string>
 
 #include <Swiften/Network/ConnectionFactory.h>
 #include <Swiften/Base/Log.h>
 #include <Swiften/Base/String.h>
+#include <Swiften/Base/Concat.h>
 #include <Swiften/Base/ByteArray.h>
 #include <Swiften/Network/HostAddressPort.h>
-#include <Swiften/Parser/BOSHParser.h>
+#include <Swiften/Network/TLSConnection.h>
+#include <Swiften/Parser/BOSHBodyExtractor.h>
 
 namespace Swift {
 
-	BOSHConnection::BOSHConnection(ConnectionFactory* connectionFactory)
-	: connectionFactory_(connectionFactory), server_(HostAddressPort(HostAddress("0.0.0.0"), 0)), sid_()
-	{
-		reopenAfterAction = true;
+BOSHConnection::BOSHConnection(const URL& boshURL, ConnectionFactory* connectionFactory, XMLParserFactory* parserFactory, TLSContextFactory* tlsFactory)
+	: boshURL_(boshURL), 
+	  connectionFactory_(connectionFactory), 
+	  parserFactory_(parserFactory),
+	  sid_(),
+	  waitingForStartResponse_(false),
+	  pending_(false),
+	  tlsFactory_(tlsFactory),
+	  connectionReady_(false)
+{
+}
+
+BOSHConnection::~BOSHConnection() {
+	if (connection_) {
+		connection_->onConnectFinished.disconnect(boost::bind(&BOSHConnection::handleConnectionConnectFinished, shared_from_this(), _1));
+		connection_->onDataRead.disconnect(boost::bind(&BOSHConnection::handleDataRead, shared_from_this(), _1));
+		connection_->onDisconnected.disconnect(boost::bind(&BOSHConnection::handleDisconnected, shared_from_this(), _1));
+	}
+	disconnect();
+}
+
+void BOSHConnection::connect(const HostAddressPort& server) {
+	/* FIXME: Redundant parameter */
+	Connection::ref rawConnection = connectionFactory_->createConnection();
+	connection_ = (boshURL_.getScheme() == "https") ? boost::make_shared<TLSConnection>(rawConnection, tlsFactory_) : rawConnection;
+	connection_->onConnectFinished.connect(boost::bind(&BOSHConnection::handleConnectionConnectFinished, shared_from_this(), _1));
+	connection_->onDataRead.connect(boost::bind(&BOSHConnection::handleDataRead, shared_from_this(), _1));
+	connection_->onDisconnected.connect(boost::bind(&BOSHConnection::handleDisconnected, shared_from_this(), _1));
+	connection_->connect(HostAddressPort(HostAddress(boshURL_.getHost()), boshURL_.getPort()));
+}
+
+void BOSHConnection::listen() {
+	assert(false);
+}
+
+void BOSHConnection::disconnect() {
+	if(connection_) {
+		connection_->disconnect();
+		sid_ = "";
+	}
+}
+
+void BOSHConnection::restartStream() {
+	write(createSafeByteArray(""), true, false);
+}
+
+void BOSHConnection::terminateStream() {
+	write(createSafeByteArray(""), false, true);
+}
+
+
+void BOSHConnection::write(const SafeByteArray& data) {
+	write(data, false, false);
+}
+
+std::pair<SafeByteArray, size_t> BOSHConnection::createHTTPRequest(const SafeByteArray& data, bool streamRestart, bool terminate, long rid, const std::string& sid, const URL& boshURL) {
+	size_t size;
+	std::stringstream content;
+	SafeByteArray contentTail = createSafeByteArray("</body>");
+	std::stringstream header;
+
+	content << "<body rid='" << rid << "' sid='" << sid << "'";
+	if (streamRestart) {
+		content << " xmpp:restart='true' xmlns:xmpp='urn:xmpp:xbosh'";
+	}
+	if (terminate) {
+		content << " type='terminate'";
+	}
+	content << " xmlns='http://jabber.org/protocol/httpbind'>";
+
+	SafeByteArray safeContent = createSafeByteArray(content.str());
+	safeContent.insert(safeContent.end(), data.begin(), data.end());
+	safeContent.insert(safeContent.end(), contentTail.begin(), contentTail.end());
+
+	size = safeContent.size();
+
+	header	<< "POST /" << boshURL.getPath() << " HTTP/1.1\r\n"
+			<< "Host: " << boshURL.getHost() << ":" << boshURL.getPort() << "\r\n"
+		/*<< "Accept-Encoding: deflate\r\n"*/
+			<< "Content-Type: text/xml; charset=utf-8\r\n"
+			<< "Content-Length: " << size << "\r\n\r\n";
+
+	SafeByteArray safeHeader = createSafeByteArray(header.str());
+	safeHeader.insert(safeHeader.end(), safeContent.begin(), safeContent.end());
+
+	return std::pair<SafeByteArray, size_t>(safeHeader, size);
+}
+
+void BOSHConnection::write(const SafeByteArray& data, bool streamRestart, bool terminate) {
+	assert(connectionReady_);
+	assert(!sid_.empty());
+
+	SafeByteArray safeHeader = createHTTPRequest(data, streamRestart, terminate, rid_, sid_, boshURL_).first;
+
+	onBOSHDataWritten(safeHeader);
+	connection_->write(safeHeader);
+	pending_ = true;
+
+	SWIFT_LOG(debug) << "write data: " << safeByteArrayToString(safeHeader) << std::endl;
+}
+
+void BOSHConnection::handleConnectionConnectFinished(bool error) {
+	connection_->onConnectFinished.disconnect(boost::bind(&BOSHConnection::handleConnectionConnectFinished, shared_from_this(), _1));
+	connectionReady_ = !error;
+	onConnectFinished(error);
+}
+
+void BOSHConnection::startStream(const std::string& to, unsigned long rid) {
+	assert(connectionReady_);
+	// Session Creation Request
+	std::stringstream content;
+	std::stringstream header;
+		
+	content << "<body content='text/xml; charset=utf-8'"
+			<< " hold='1'"
+			<< " to='" << to << "'"
+			<< " rid='" << rid << "'"
+			<< " ver='1.6'"
+			<< " wait='60'" /* FIXME: we probably want this configurable*/
+			/*<< " ack='0'" FIXME: support acks */
+			<< " xml:lang='en'"
+			<< " xmlns:xmpp='urn:xmpp:bosh'"
+			<< " xmpp:version='1.0'"
+			<< " xmlns='http://jabber.org/protocol/httpbind' />";
+
+	std::string contentString = content.str();
+
+	header	<< "POST /" << boshURL_.getPath() << " HTTP/1.1\r\n"
+			<< "Host: " << boshURL_.getHost() << ":" << boshURL_.getPort() << "\r\n"
+		/*<< "Accept-Encoding: deflate\r\n"*/
+			<< "Content-Type: text/xml; charset=utf-8\r\n"
+			<< "Content-Length: " << contentString.size() << "\r\n\r\n"
+			<< contentString;
+	
+	waitingForStartResponse_ = true;
+	SafeByteArray safeHeader = createSafeByteArray(header.str());
+	onBOSHDataWritten(safeHeader);
+	connection_->write(safeHeader);
+	SWIFT_LOG(debug) << "write stream header: " << safeByteArrayToString(safeHeader) << std::endl;
+}
+
+void BOSHConnection::handleDataRead(boost::shared_ptr<SafeByteArray> data) {
+	onBOSHDataRead(*data.get());
+	buffer_ = concat(buffer_, *data.get());
+	std::string response = safeByteArrayToString(buffer_);
+	if (response.find("\r\n\r\n") == std::string::npos) {
+		onBOSHDataRead(createSafeByteArray("[[Previous read incomplete, pending]]"));
+		return;
+	}
+	
+	std::string httpCode = response.substr(response.find(" ") + 1, 3);
+	if (httpCode != "200") {
+		onHTTPError(httpCode);
+		return;
 	}
 
-	BOSHConnection::~BOSHConnection() {
-		if (newConnection_) {
-			newConnection_->onDataRead.disconnect(boost::bind(&BOSHConnection::handleDataRead, shared_from_this(), _1));
-			newConnection_->onDisconnected.disconnect(boost::bind(&BOSHConnection::handleDisconnected, shared_from_this(), _1));
+	BOSHBodyExtractor parser(parserFactory_, createByteArray(response.substr(response.find("\r\n\r\n") + 4)));
+	if (parser.getBody()) {
+		if ((*parser.getBody()).attributes.getAttribute("type") == "terminate") {
+			BOSHError::Type errorType = parseTerminationCondition((*parser.getBody()).attributes.getAttribute("condition"));
+			onSessionTerminated(errorType == BOSHError::NoError ? boost::shared_ptr<BOSHError>() : boost::make_shared<BOSHError>(errorType));
 		}
-		if (currentConnection_) {
-			currentConnection_->onDataRead.disconnect(boost::bind(&BOSHConnection::handleDataRead, shared_from_this(), _1));
-			currentConnection_->onDisconnected.disconnect(boost::bind(&BOSHConnection::handleDisconnected, shared_from_this(), _1));
-		}
-	}
-
-	void BOSHConnection::connect(const HostAddressPort& server) {
-		server_ = server;
-		newConnection_ = connectionFactory_->createConnection();
-		newConnection_->onConnectFinished.connect(boost::bind(&BOSHConnection::handleConnectionConnectFinished, shared_from_this(), _1));
-		newConnection_->onDataRead.connect(boost::bind(&BOSHConnection::handleDataRead, shared_from_this(), _1));
-		newConnection_->onDisconnected.connect(boost::bind(&BOSHConnection::handleDisconnected, shared_from_this(), _1));
-		SWIFT_LOG(debug) << "connect to server " << server.getAddress().toString() << ":" << server.getPort() << std::endl;
-		newConnection_->connect(HostAddressPort(HostAddress("85.10.192.88"), 5280));
-	}
-
-	void BOSHConnection::listen() {
-		assert(false);
-	}
-
-	void BOSHConnection::disconnect() {
-		if(newConnection_)
-			newConnection_->disconnect();
-
-		if(currentConnection_)
-			currentConnection_->disconnect();
-	}
-
-	void BOSHConnection::write(const SafeByteArray& data) {
-		SWIFT_LOG(debug) << "write data: " << safeByteArrayToString(data) << std::endl;
-	}
-
-	void BOSHConnection::handleConnectionConnectFinished(bool error) {
-		newConnection_->onConnectFinished.disconnect(boost::bind(&BOSHConnection::handleConnectionConnectFinished, shared_from_this(), _1));
-		if(error) {
-			onConnectFinished(true);
-			return;
-		}
-
-		if(sid_.size() == 0) {
-			// Session Creation Request
-			std::stringstream content;
-			std::stringstream header;
-
-			content << "<body content='text/xml; charset=utf-8'"
-					<< " from='ephraim@0x10.de'"
-					<< " hold='1'"
-					<< " to='0x10.de'"
-					<< " ver='1.6'"
-					<< " wait='60'"
-					<< " ack='1'"
-					<< " xml:lang='en'"
-					<< " xmlns='http://jabber.org/protocol/httpbind' />\r\n";
-
-			header	<< "POST /http-bind HTTP/1.1\r\n"
-					<< "Host: 0x10.de:5280\r\n"
-					<< "Accept-Encoding: deflate\r\n"
-					<< "Content-Type: text/xml; charset=utf-8\r\n"
-					<< "Content-Length: " << content.str().size() << "\r\n\r\n"
-					<< content.str();
-
-			SWIFT_LOG(debug) << "request: ";
-			newConnection_->write(createSafeByteArray(header.str()));
-		}
-	}
-
-	void BOSHConnection::handleDataRead(const SafeByteArray& data) {
-		std::string response = safeByteArrayToString(data);
-		assert(response.find("\r\n\r\n") != std::string::npos);
-
-		SWIFT_LOG(debug) << "response: " << response.substr(response.find("\r\n\r\n") + 4) << std::endl;
-
-		BOSHParser parser;
-		if(parser.parse(response.substr(response.find("\r\n\r\n") + 4))) {
-			sid_ = parser.getAttribute("sid");
-			onConnectFinished(false);
-			int bodyStartElementLength = 0;
-			bool inQuote = false;
-			for(size_t i= 0; i < response.size(); i++) {
-				if(response.c_str()[i] == '\'' || response.c_str()[i] == '"') {
-					inQuote = !inQuote;
-				}
-				else if(!inQuote && response.c_str()[i] == '>') {
-					bodyStartElementLength = i + 1;
-					break;
-				}
+		buffer_.clear();
+		if (waitingForStartResponse_) {
+			waitingForStartResponse_ = false;
+			sid_ = (*parser.getBody()).attributes.getAttribute("sid");
+			std::string requestsString = (*parser.getBody()).attributes.getAttribute("requests");
+			int requests = 2;
+			if (!requestsString.empty()) {
+				requests = boost::lexical_cast<size_t>(requestsString);
 			}
-			SafeByteArray payload = createSafeByteArray(response.substr(bodyStartElementLength, response.size() - bodyStartElementLength - 7));
-			SWIFT_LOG(debug) << "payload: " << safeByteArrayToString(payload) << std::endl;
-			onDataRead(payload);
+			onSessionStarted(sid_, requests);
 		}
+		SafeByteArray payload = createSafeByteArray((*parser.getBody()).content);
+		/* Say we're good to go again, so don't add anything after here in the method */
+		pending_ = false;
+		onXMPPDataRead(payload);
 	}
 
-	void BOSHConnection::handleDisconnected(const boost::optional<Error>& error) {
-		onDisconnected(error);
-	}
+}
 
-	HostAddressPort BOSHConnection::getLocalAddress() const {
-		return newConnection_->getLocalAddress();
+BOSHError::Type BOSHConnection::parseTerminationCondition(const std::string& text) {
+	BOSHError::Type condition = BOSHError::UndefinedCondition;
+	if (text == "bad-request") {
+		condition = BOSHError::BadRequest;
 	}
+	else if (text == "host-gone") {
+		condition = BOSHError::HostGone;
+	}
+	else if (text == "host-unknown") {
+		condition = BOSHError::HostUnknown;
+	}
+	else if (text == "improper-addressing") {
+		condition = BOSHError::ImproperAddressing;
+	}
+	else if (text == "internal-server-error") {
+		condition = BOSHError::InternalServerError;
+	}
+	else if (text == "item-not-found") {
+		condition = BOSHError::ItemNotFound;
+	}
+	else if (text == "other-request") {
+		condition = BOSHError::OtherRequest;
+	}
+	else if (text == "policy-violation") {
+		condition = BOSHError::PolicyViolation;
+	}
+	else if (text == "remote-connection-failed") {
+		condition = BOSHError::RemoteConnectionFailed;
+	}
+	else if (text == "remote-stream-error") {
+		condition = BOSHError::RemoteStreamError;
+	}
+	else if (text == "see-other-uri") {
+		condition = BOSHError::SeeOtherURI;
+	}
+	else if (text == "system-shutdown") {
+		condition = BOSHError::SystemShutdown;
+	}
+	else if (text == "") {
+		condition = BOSHError::NoError;
+	}
+	return condition;
+}
+
+const std::string& BOSHConnection::getSID() {
+	return sid_;
+}
+
+void BOSHConnection::setRID(unsigned long rid) {
+	rid_ = rid;
+}
+
+void BOSHConnection::setSID(const std::string& sid) {
+	sid_ = sid;
+}
+
+void BOSHConnection::handleDisconnected(const boost::optional<Error>& error) {
+	onDisconnected(error);
+	sid_ = "";
+	connectionReady_ = false;
+}
+
+HostAddressPort BOSHConnection::getLocalAddress() const {
+	return connection_->getLocalAddress();
+}
+
+bool BOSHConnection::isReadyToSend() {
+	/* Without pipelining you need to not send more without first receiving the response */
+	/* With pipelining you can. Assuming we can't, here */
+	return connectionReady_ && !pending_ && !waitingForStartResponse_ && !sid_.empty();
+}
+
 }

@@ -504,12 +504,6 @@ void MainController::performLoginFromCachedCredentials() {
 	ClientOptions clientOptions;
 	clientOptions.forgetPassword = eagleMode_;
 	clientOptions.useTLS = eagleMode_ ? ClientOptions::RequireTLS : ClientOptions::UseTLSWhenAvailable;
-	if (clientJID.getDomain() == "wonderland.lit") {
-		clientOptions.boshURL = URL("http", "192.168.1.185", 5280, "http-bind/");
-	}
-	else if (clientJID.getDomain() == "prosody.doomsong.co.uk") {
-		clientOptions.boshURL = URL("http", "192.168.1.130", 5280, "http-bind/");
-	}
 	client_->connect(clientOptions);
 }
 

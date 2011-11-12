@@ -16,6 +16,7 @@ namespace Swift {
 	class TLSContextFactory;
 	class CertificateFactory;
 	class ProxyProvider;
+	class EventLoop;
 
 	/**
 	 * An interface collecting network factories.
@@ -32,5 +33,6 @@ namespace Swift {
 			virtual XMLParserFactory* getXMLParserFactory() const = 0;
 			virtual TLSContextFactory* getTLSContextFactory() const = 0;
 			virtual ProxyProvider* getProxyProvider() const = 0;
+			virtual EventLoop* getEventLoop() const {};
 	};
 }

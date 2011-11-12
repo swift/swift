@@ -6,6 +6,9 @@
 
 #pragma once
 
+#include <Swiften/Base/URL.h>
+#include <Swiften/Base/SafeString.h>
+
 namespace Swift {
 	struct ClientOptions {
 		enum UseTLS {
@@ -14,7 +17,7 @@ namespace Swift {
 			RequireTLS
 		};
 
-		ClientOptions() : useStreamCompression(true), useTLS(UseTLSWhenAvailable), allowPLAINWithoutTLS(false), useStreamResumption(false), forgetPassword(false), useAcks(true) {
+		ClientOptions() : useStreamCompression(true), useTLS(UseTLSWhenAvailable), allowPLAINWithoutTLS(false), useStreamResumption(false), forgetPassword(false), useAcks(true), boshHTTPConnectProxyAuthID(""), boshHTTPConnectProxyAuthPassword("") {
 		}
 
 		/**
@@ -61,5 +64,28 @@ namespace Swift {
 		 * Default: true
 		 */
 		bool useAcks;
+
+		/**
+		 * If non-empty, use BOSH instead of direct TCP, with the given URL.
+		 * The host currently needs to be specified by IP, rather than hostname.
+		 * Default: empty (no BOSH)
+		 */
+		URL boshURL;
+
+		/**
+		 * If non-empty, BOSH connections will try to connect over this HTTP CONNECT
+		 * proxy instead of directly.
+		 * Must be specified by IP, rather than hostname.
+		 * Default: empty (no proxy)
+		 */
+		URL boshHTTPConnectProxyURL;
+
+		/**
+		 * If this and matching Password are non-empty, BOSH connections over
+		 * HTTP CONNECT proxies will use these credentials for proxy access.
+		 * Default: empty (no authentication needed by the proxy)
+		 */
+		SafeString boshHTTPConnectProxyAuthID;
+		SafeString boshHTTPConnectProxyAuthPassword;
 	};
 }

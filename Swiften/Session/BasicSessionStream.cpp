@@ -136,6 +136,10 @@ ByteArray BasicSessionStream::getTLSFinishMessage() const {
 	return tlsLayer->getContext()->getFinishMessage();
 }
 
+bool BasicSessionStream::supportsZLibCompression() {
+	return true;
+}
+
 void BasicSessionStream::addZLibCompression() {
 	compressionLayer = new CompressionLayer();
 	streamStack->addLayer(compressionLayer);

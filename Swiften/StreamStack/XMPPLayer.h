@@ -23,8 +23,10 @@ namespace Swift {
 	class XMPPSerializer;
 	class PayloadSerializerCollection;
 	class XMLParserFactory;
+	class BOSHSessionStream;
 
 	class XMPPLayer : public XMPPParserClient, public HighLayer, boost::noncopyable {
+		friend class BOSHSessionStream;
 		public:
 			XMPPLayer(
 					PayloadParserFactoryCollection* payloadParserFactories,

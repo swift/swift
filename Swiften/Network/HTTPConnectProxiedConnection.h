@@ -4,12 +4,20 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
+/*
+ * Copyright (c) 2011 Kevin Smith
+ * Licensed under the GNU General Public License v3.
+ * See Documentation/Licenses/GPLv3.txt for more information.
+ */
+
+
 #pragma once
 
 #include <boost/enable_shared_from_this.hpp>
 
 #include <Swiften/Network/Connection.h>
 #include <Swiften/Network/HostAddressPort.h>
+#include <Swiften/Base/SafeString.h>
 
 namespace boost {
 	class thread;
@@ -27,8 +35,8 @@ namespace Swift {
 
 			~HTTPConnectProxiedConnection();
 
-			static ref create(ConnectionFactory* connectionFactory, HostAddressPort proxy) {
-				return ref(new HTTPConnectProxiedConnection(connectionFactory, proxy));
+			static ref create(ConnectionFactory* connectionFactory, HostAddressPort proxy, const SafeString& authID, const SafeString& authPassword) {
+				return ref(new HTTPConnectProxiedConnection(connectionFactory, proxy, authID, authPassword));
 			}
 
 			virtual void listen();
@@ -38,7 +46,7 @@ namespace Swift {
 
 			virtual HostAddressPort getLocalAddress() const;
 		private:
-			HTTPConnectProxiedConnection(ConnectionFactory* connectionFactory, HostAddressPort proxy);
+			HTTPConnectProxiedConnection(ConnectionFactory* connectionFactory, HostAddressPort proxy, const SafeString& authID, const SafeString& authPassword);
 
 			void handleConnectionConnectFinished(bool error);
 			void handleDataRead(boost::shared_ptr<SafeByteArray> data);
@@ -49,6 +57,8 @@ namespace Swift {
 			ConnectionFactory* connectionFactory_;	
 			HostAddressPort proxy_;
 			HostAddressPort server_;
+			SafeByteArray authID_;
+			SafeByteArray authPassword_;
 			boost::shared_ptr<Connection> connection_;
 	};
 }

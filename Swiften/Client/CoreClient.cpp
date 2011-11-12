@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Remko Tronçon
+ * Copyright (c) 2010-2011 Remko Tronçon
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -20,6 +20,7 @@
 #include <Swiften/Network/ProxyProvider.h>
 #include <Swiften/TLS/PKCS12Certificate.h>
 #include <Swiften/Session/BasicSessionStream.h>
+#include <Swiften/Session/BOSHSessionStream.h>
 #include <Swiften/Queries/IQRouter.h>
 #include <Swiften/Client/ClientSessionStanzaChannel.h>
 #include <Swiften/Network/SOCKS5ProxiedConnectionFactory.h>
@@ -70,15 +71,52 @@ void CoreClient::connect(const std::string& host) {
 		proxyConnectionFactories.push_back(new HTTPConnectProxiedConnectionFactory(networkFactories->getConnectionFactory(), networkFactories->getProxyProvider()->getHTTPConnectProxy()));
 	}
 	std::vector<ConnectionFactory*> connectionFactories(proxyConnectionFactories);
-	// connectionFactories.push_back(networkFactories->getConnectionFactory());
-	connectionFactories.push_back(new BOSHConnectionFactory(networkFactories->getConnectionFactory()));
+	if (options.boshURL.empty()) {
+		connectionFactories.push_back(networkFactories->getConnectionFactory());
+		connector_ = boost::make_shared<ChainedConnector>(host, networkFactories->getDomainNameResolver(), connectionFactories, networkFactories->getTimerFactory());
+		connector_->onConnectFinished.connect(boost::bind(&CoreClient::handleConnectorFinished, this, _1));
+		connector_->setTimeoutMilliseconds(60*1000);
+		connector_->start();
+	}
+	else {
+		/* Autodiscovery of which proxy works is largely ok with a TCP session, because this is a one-off. With BOSH
+		 * it would be quite painful given that potentially every stanza could be sent on a new connection.
+		 */
+		//sessionStream_ = boost::make_shared<BOSHSessionStream>(boost::make_shared<BOSHConnectionFactory>(options.boshURL, networkFactories->getConnectionFactory(), networkFactories->getXMLParserFactory(), networkFactories->getTLSContextFactory()), getPayloadParserFactories(), getPayloadSerializers(), networkFactories->getTLSContextFactory(), networkFactories->getTimerFactory(), networkFactories->getXMLParserFactory(), networkFactories->getEventLoop(), host, options.boshHTTPConnectProxyURL, options.boshHTTPConnectProxyAuthID, options.boshHTTPConnectProxyAuthPassword);
+		sessionStream_ = boost::shared_ptr<BOSHSessionStream>(new BOSHSessionStream(boost::make_shared<BOSHConnectionFactory>(options.boshURL, networkFactories->getConnectionFactory(), networkFactories->getXMLParserFactory(), networkFactories->getTLSContextFactory()), getPayloadParserFactories(), getPayloadSerializers(), networkFactories->getTLSContextFactory(), networkFactories->getTimerFactory(), networkFactories->getXMLParserFactory(), networkFactories->getEventLoop(), host, options.boshHTTPConnectProxyURL, options.boshHTTPConnectProxyAuthID, options.boshHTTPConnectProxyAuthPassword));
+		sessionStream_->onDataRead.connect(boost::bind(&CoreClient::handleDataRead, this, _1));
+		sessionStream_->onDataWritten.connect(boost::bind(&CoreClient::handleDataWritten, this, _1));
+		bindSessionToStream();
+	}
 
-	connector_ = boost::make_shared<ChainedConnector>(host, networkFactories->getDomainNameResolver(), connectionFactories, networkFactories->getTimerFactory());
-	connector_->onConnectFinished.connect(boost::bind(&CoreClient::handleConnectorFinished, this, _1));
-	connector_->setTimeoutMilliseconds(60*1000);
-	connector_->start();
 }
 
+void CoreClient::bindSessionToStream() {
+	session_ = ClientSession::create(jid_, sessionStream_);
+	session_->setCertificateTrustChecker(certificateTrustChecker);
+	session_->setUseStreamCompression(options.useStreamCompression);
+	session_->setAllowPLAINOverNonTLS(options.allowPLAINWithoutTLS);
+	switch(options.useTLS) {
+		case ClientOptions::UseTLSWhenAvailable:
+			session_->setUseTLS(ClientSession::UseTLSWhenAvailable);
+			break;
+		case ClientOptions::NeverUseTLS:
+			session_->setUseTLS(ClientSession::NeverUseTLS);
+			break;
+		case ClientOptions::RequireTLS:
+			session_->setUseTLS(ClientSession::RequireTLS);
+			break;
+	}
+	session_->setUseAcks(options.useAcks);
+	stanzaChannel_->setSession(session_);
+	session_->onFinished.connect(boost::bind(&CoreClient::handleSessionFinished, this, _1));
+	session_->onNeedCredentials.connect(boost::bind(&CoreClient::handleNeedCredentials, this));
+	session_->start();
+}
+
+/**
+ * Only called for TCP sessions. BOSH is handled inside the BOSHSessionStream.
+ */
 void CoreClient::handleConnectorFinished(boost::shared_ptr<Connection> connection) {
 	resetConnector();
 	if (!connection) {
@@ -99,26 +137,7 @@ void CoreClient::handleConnectorFinished(boost::shared_ptr<Connection> connectio
 		sessionStream_->onDataRead.connect(boost::bind(&CoreClient::handleDataRead, this, _1));
 		sessionStream_->onDataWritten.connect(boost::bind(&CoreClient::handleDataWritten, this, _1));
 
-		session_ = ClientSession::create(jid_, sessionStream_);
-		session_->setCertificateTrustChecker(certificateTrustChecker);
-		session_->setUseStreamCompression(options.useStreamCompression);
-		session_->setAllowPLAINOverNonTLS(options.allowPLAINWithoutTLS);
-		switch(options.useTLS) {
-			case ClientOptions::UseTLSWhenAvailable:
-				session_->setUseTLS(ClientSession::UseTLSWhenAvailable);
-				break;
-			case ClientOptions::NeverUseTLS:
-				session_->setUseTLS(ClientSession::NeverUseTLS);
-				break;
-			case ClientOptions::RequireTLS:
-				session_->setUseTLS(ClientSession::RequireTLS);
-				break;
-		}
-		session_->setUseAcks(options.useAcks);
-		stanzaChannel_->setSession(session_);
-		session_->onFinished.connect(boost::bind(&CoreClient::handleSessionFinished, this, _1));
-		session_->onNeedCredentials.connect(boost::bind(&CoreClient::handleNeedCredentials, this));
-		session_->start();
+		bindSessionToStream();
 	}
 }
 
@@ -339,9 +358,14 @@ void CoreClient::resetSession() {
 
 	sessionStream_->onDataRead.disconnect(boost::bind(&CoreClient::handleDataRead, this, _1));
 	sessionStream_->onDataWritten.disconnect(boost::bind(&CoreClient::handleDataWritten, this, _1));
-	sessionStream_.reset();
 
-	connection_->disconnect();
+	if (connection_) {
+		connection_->disconnect();
+	}
+	else if (boost::dynamic_pointer_cast<BOSHSessionStream>(sessionStream_)) {
+		sessionStream_->close();
+	}
+	sessionStream_.reset();
 	connection_.reset();
 }
 

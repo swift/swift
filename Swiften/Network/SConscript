@@ -16,7 +16,8 @@ sourceList = [
 			"BoostConnectionServerFactory.cpp",
 			"BoostIOServiceThread.cpp",
 			"BOSHConnection.cpp",
-			"BOSHConnectionFactory.cpp"
+			"BOSHConnectionPool.cpp",
+			"BOSHConnectionFactory.cpp",
 			"ConnectionFactory.cpp",
 			"ConnectionServer.cpp",
 			"ConnectionServerFactory.cpp",
@@ -41,6 +42,8 @@ sourceList = [
 			"BoostNetworkFactories.cpp",
 			"NetworkEnvironment.cpp",
 			"Timer.cpp",
+			"TLSConnection.cpp",
+			"TLSConnectionFactory.cpp",
 			"BoostTimer.cpp",
 			"ProxyProvider.cpp",
 			"NullProxyProvider.cpp",

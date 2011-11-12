@@ -403,6 +403,10 @@ class ClientSessionTest : public CppUnit::TestFixture {
 					return boost::shared_ptr<CertificateVerificationError>();
 				}
 
+				virtual bool supportsZLibCompression() {
+					return true;
+				}
+			
 				virtual void addZLibCompression() {
 					compressed = true;
 				}
