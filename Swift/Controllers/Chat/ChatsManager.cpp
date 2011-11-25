@@ -200,7 +200,6 @@ void ChatsManager::handleBookmarksReady() {
 void ChatsManager::handleMUCBookmarkAdded(const MUCBookmark& bookmark) {
 	std::map<JID, MUCController*>::iterator it = mucControllers_.find(bookmark.getRoom());
 	if (it == mucControllers_.end() && bookmark.getAutojoin()) {
-		//FIXME: need vcard stuff here to get a nick
 		handleJoinMUCRequest(bookmark.getRoom(), bookmark.getPassword(), bookmark.getNick(), false, false);
 	}
 	chatListWindow_->addMUCBookmark(bookmark);
@@ -497,7 +496,7 @@ void ChatsManager::handleJoinMUCRequest(const JID &mucJID, const boost::optional
 	if (it != mucControllers_.end()) {
 		it->second->rejoin();
 	} else {
-		std::string nick = nickMaybe ? nickMaybe.get() : jid_.getNode();
+		std::string nick = (nickMaybe && !(*nickMaybe).empty()) ? nickMaybe.get() : nickResolver_->jidToNick(jid_);
 		MUC::ref muc = mucManager->createMUC(mucJID);
 		if (createAsReservedIfNew) {
 			muc->setCreateAsReservedIfNew();
