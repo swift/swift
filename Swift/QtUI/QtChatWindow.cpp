@@ -152,7 +152,7 @@ QtChatWindow::QtChatWindow(const QString &contact, QtChatTheme* theme, UIEventSt
 	QHBoxLayout* inputBarLayout = new QHBoxLayout();
 	inputBarLayout->setContentsMargins(0,0,0,0);
 	inputBarLayout->setSpacing(2);
-	input_ = new QtTextEdit(this);
+	input_ = new QtTextEdit(settings_, this);
 	input_->setAcceptRichText(false);
 	inputBarLayout->addWidget(midBar_);
 	inputBarLayout->addWidget(input_);

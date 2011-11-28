@@ -23,5 +23,9 @@ namespace Swift {
 			static const SettingsProvider::Setting<std::string> EXPANDED_ROSTER_GROUPS;
 			static const SettingsProvider::Setting<bool> PLAY_SOUNDS;
 			static const SettingsProvider::Setting<std::string> HIGHLIGHT_RULES;
+			static const SettingsProvider::Setting<bool> SPELL_CHECKER;
+			static const SettingsProvider::Setting<std::string> DICT_PATH;
+			static const SettingsProvider::Setting<std::string> PERSONAL_DICT_PATH;
+			static const SettingsProvider::Setting<std::string> DICT_FILE;
 	};
 }

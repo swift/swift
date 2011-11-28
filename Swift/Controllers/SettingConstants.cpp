@@ -20,4 +20,8 @@ const SettingsProvider::Setting<bool> SettingConstants::SHOW_OFFLINE("showOfflin
 const SettingsProvider::Setting<std::string> SettingConstants::EXPANDED_ROSTER_GROUPS("GroupExpandiness", "");
 const SettingsProvider::Setting<bool> SettingConstants::PLAY_SOUNDS("playSounds", true);
 const SettingsProvider::Setting<std::string> SettingConstants::HIGHLIGHT_RULES("highlightRules", "@");
+const SettingsProvider::Setting<bool> SettingConstants::SPELL_CHECKER("spellChecker", false);
+const SettingsProvider::Setting<std::string> SettingConstants::DICT_PATH("dictPath", "/usr/share/myspell/dicts/");
+const SettingsProvider::Setting<std::string> SettingConstants::PERSONAL_DICT_PATH("personaldictPath", "/home/");
+const SettingsProvider::Setting<std::string> SettingConstants::DICT_FILE("dictFile", "en_US.dic");
 }

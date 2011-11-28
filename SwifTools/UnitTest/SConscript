@@ -5,3 +5,8 @@ env.Append(UNITTEST_SOURCES = [
 		File("TabCompleteTest.cpp"),
 		File("LastLineTrackerTest.cpp"),
 	])
+
+if env["HAVE_HUNSPELL"] :
+	env.Append(UNITTEST_SOURCES = [
+		File("SpellParserTest.cpp"),
+	])

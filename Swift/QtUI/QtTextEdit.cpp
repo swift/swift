@@ -4,16 +4,40 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include <Swift/QtUI/QtTextEdit.h>
+#include <boost/tuple/tuple.hpp>
+#include <boost/algorithm/string.hpp>
+#include <boost/bind.hpp>
 
+#include <Swiften/Base/foreach.h>
+
+#include <SwifTools/SpellCheckerFactory.h>
+#include <SwifTools/SpellChecker.h>
+
+#include <Swift/QtUI/QtTextEdit.h>
+#include <Swift/QtUI/QtSwiftUtil.h>
+#include <Swift/QtUI/QtSpellCheckerWindow.h>
+#include <Swift/Controllers/SettingConstants.h>
+
+#include <QApplication>
 #include <QFontMetrics>
 #include <QKeyEvent>
+#include <QDebug>
+#include <QMenu>
 
 namespace Swift {
 
-QtTextEdit::QtTextEdit(QWidget* parent) : QTextEdit(parent){
+QtTextEdit::QtTextEdit(SettingsProvider* settings, QWidget* parent) : QTextEdit(parent) {
 	connect(this, SIGNAL(textChanged()), this, SLOT(handleTextChanged()));
+	checker_ = NULL;
+	settings_ = settings;
+#ifdef HAVE_SPELLCHECKER
+	setUpSpellChecker();
+#endif
 	handleTextChanged();
+}
+
+QtTextEdit::~QtTextEdit() {
+	delete checker_;
 }
 
 void QtTextEdit::keyPressEvent(QKeyEvent* event) {
@@ -35,13 +59,41 @@ void QtTextEdit::keyPressEvent(QKeyEvent* event) {
 		emit unhandledKeyPressEvent(event);
 	}
 	else if ((key == Qt::Key_Up)
-			   || (key == Qt::Key_Down)
-	){
+			   || (key == Qt::Key_Down)) {
 		emit unhandledKeyPressEvent(event);
 		QTextEdit::keyPressEvent(event);
 	}
 	else {
 		QTextEdit::keyPressEvent(event);
+#ifdef HAVE_SPELLCHECKER
+		if (settings_->getSetting(SettingConstants::SPELL_CHECKER)) {
+			underlineMisspells();
+		}
+#endif
+	}
+}
+
+void QtTextEdit::underlineMisspells() {
+	QTextCursor cursor = textCursor();
+	misspelledPositions_.clear();
+	QTextCharFormat normalFormat;
+	cursor.movePosition(QTextCursor::Start, QTextCursor::MoveAnchor, 1);
+	cursor.movePosition(QTextCursor::End, QTextCursor::KeepAnchor, 1);
+	cursor.setCharFormat(normalFormat);
+	if (checker_ == NULL) {
+		return;
+	}
+	QTextCharFormat spellingErrorFormat;
+	spellingErrorFormat.setUnderlineColor(QColor(Qt::red));
+	spellingErrorFormat.setUnderlineStyle(QTextCharFormat::SpellCheckUnderline);
+	std::string fragment = Q2PSTRING(cursor.selectedText());
+	checker_->checkFragment(fragment, misspelledPositions_);
+	foreach (PositionPair position, misspelledPositions_) {
+		cursor.setPosition(boost::get<0>(position), QTextCursor::MoveAnchor);
+		cursor.setPosition(boost::get<1>(position), QTextCursor::KeepAnchor);
+		cursor.setCharFormat(spellingErrorFormat);
+		cursor.clearSelection();
+		cursor.setCharFormat(normalFormat);
 	}
 }
 
@@ -51,6 +103,24 @@ void QtTextEdit::handleTextChanged() {
 	if (previous != maximumSize()) {
 		updateGeometry();
 	}
+}
+
+void QtTextEdit::replaceMisspelledWord(const QString& word, int cursorPosition) {
+	QTextCursor cursor = textCursor();
+	PositionPair wordPosition = getWordFromCursor(cursorPosition);
+	cursor.setPosition(boost::get<0>(wordPosition), QTextCursor::MoveAnchor);
+	cursor.setPosition(boost::get<1>(wordPosition), QTextCursor::KeepAnchor);
+	QTextCharFormat normalFormat;
+	cursor.insertText(word, normalFormat);
+}
+
+PositionPair QtTextEdit::getWordFromCursor(int cursorPosition) {
+	for (PositionPairList::iterator it = misspelledPositions_.begin(); it != misspelledPositions_.end(); ++it) {
+		if (cursorPosition >= boost::get<0>(*it) && cursorPosition <= boost::get<1>(*it)) {
+			return *it;
+		}
+	}
+	return boost::make_tuple(-1,-1);
 }
 
 QSize QtTextEdit::sizeHint() const {
@@ -66,7 +136,100 @@ QSize QtTextEdit::sizeHint() const {
 	//return QSize(QTextEdit::sizeHint().width(), lineHeight * numberOfLines);
 }
 
+void QtTextEdit::contextMenuEvent(QContextMenuEvent* event) {
+	QMenu* menu = createStandardContextMenu();
+	QTextCursor cursor = cursorForPosition(event->pos());
+#ifdef HAVE_SPELLCHECKER
+	QAction* insertPoint = menu->actions().first();
+	QAction* settingsAction = new QAction(QApplication::translate("QtTextEdit", "Spell Checker Options", 0, QApplication::UnicodeUTF8), menu);
+	menu->insertAction(insertPoint, settingsAction);
+	menu->insertAction(insertPoint, menu->addSeparator());
+	addSuggestions(menu, event);
+	QAction* result = menu->exec(event->globalPos());
+	if (result == settingsAction) {
+		spellCheckerSettingsWindow();
+	}
+	for (std::vector<QAction*>::iterator it = replaceWordActions_.begin(); it != replaceWordActions_.end(); ++it) {
+		if (*it == result) {
+			replaceMisspelledWord((*it)->text(), cursor.position());
+		}
+	}
+#else
+	menu->exec(event->globalPos());
+#endif
+	delete menu;
+}
+
+void QtTextEdit::addSuggestions(QMenu* menu, QContextMenuEvent* event)
+{
+	replaceWordActions_.clear();
+	QAction* insertPoint = menu->actions().first();
+	QTextCursor cursor = cursorForPosition(event->pos());
+	PositionPair wordPosition = getWordFromCursor(cursor.position());
+	if (boost::get<0>(wordPosition) < 0) {
+		// The click was executed outside a spellable word so no
+		// suggestions are necessary
+		return;
+	}
+	cursor.setPosition(boost::get<0>(wordPosition), QTextCursor::MoveAnchor);
+	cursor.setPosition(boost::get<1>(wordPosition), QTextCursor::KeepAnchor);
+	std::vector<std::string> wordList;
+	checker_->getSuggestions(Q2PSTRING(cursor.selectedText()), wordList);
+	if (wordList.size() == 0) {
+		QAction* noSuggestions = new QAction(QApplication::translate("QtTextEdit", "No Suggestions", 0, QApplication::UnicodeUTF8), menu);
+		noSuggestions->setDisabled(true);
+		menu->insertAction(insertPoint, noSuggestions);
+	}
+	else {
+		for (std::vector<std::string>::iterator it = wordList.begin(); it != wordList.end(); ++it) {
+			QAction* wordAction = new QAction(it->c_str(), menu);
+			menu->insertAction(insertPoint, wordAction);
+			replaceWordActions_.push_back(wordAction);
+		}
+	}
+	menu->insertAction(insertPoint, menu->addSeparator());
 }
 
 
+#ifdef HAVE_SPELLCHECKER
+void QtTextEdit::setUpSpellChecker()
+{
+	SpellCheckerFactory* checkerFactory = new SpellCheckerFactory();
+	delete checker_;
+	if (settings_->getSetting(SettingConstants::SPELL_CHECKER)) {
+		std::string dictPath = settings_->getSetting(SettingConstants::DICT_PATH);
+		std::string dictFile = settings_->getSetting(SettingConstants::DICT_FILE);
+		checker_ = checkerFactory->createSpellChecker(dictPath + dictFile);
+		delete checkerFactory;
+	}
+	else {
+		checker_ = NULL;
+	}
+}
+#endif
 
+void QtTextEdit::spellCheckerSettingsWindow() {
+	if (!spellCheckerWindow_) {
+		spellCheckerWindow_ = new QtSpellCheckerWindow(settings_);
+		settings_->onSettingChanged.connect(boost::bind(&QtTextEdit::handleSettingChanged, this, _1));
+		spellCheckerWindow_->show();
+	}
+	else {
+		spellCheckerWindow_->show();
+		spellCheckerWindow_->raise();
+		spellCheckerWindow_->activateWindow();
+	}
+}
+
+void QtTextEdit::handleSettingChanged(const std::string& settings) {
+	if (settings == SettingConstants::SPELL_CHECKER.getKey()
+		|| settings == SettingConstants::DICT_PATH.getKey()
+		|| settings == SettingConstants::DICT_FILE.getKey()) {
+#ifdef HAVE_SPELLCHECKER
+		setUpSpellChecker();
+		underlineMisspells();
+#endif
+	}
+}
+
+}

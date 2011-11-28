@@ -45,6 +45,8 @@ if myenv["swift_mobile"] :
 if myenv.get("HAVE_SNARL", False) :
 	myenv.UseFlags(myenv["SNARL_FLAGS"])
 	myenv.Append(CPPDEFINES = ["HAVE_SNARL"])
+if myenv.get("HAVE_HUNSPELL", True):
+	myenv.Append(CPPDEFINES = ["HAVE_HUNSPELL"])
 if env["PLATFORM"] == "win32" :
 	myenv.Append(LIBS = ["cryptui"])
 myenv.UseFlags(myenv["PLATFORM_FLAGS"])
@@ -83,6 +85,7 @@ myenv.WriteVal("DefaultTheme.qrc", myenv.Value(generateDefaultTheme(myenv.Dir("#
 sources = [
     "main.cpp",
     "QtAboutWidget.cpp",
+    "QtSpellCheckerWindow.cpp",
     "QtAvatarWidget.cpp",
     "QtUIFactory.cpp",
     "QtChatWindowFactory.cpp",
@@ -270,6 +273,7 @@ myenv.Uic4("QtHistoryWindow.ui")
 myenv.Uic4("QtConnectionSettings.ui")
 myenv.Uic4("QtHighlightRuleWidget.ui")
 myenv.Uic4("QtHighlightEditorWidget.ui")
+myenv.Uic4("QtSpellCheckerWindow.ui")
 myenv.Qrc("DefaultTheme.qrc")
 myenv.Qrc("Swift.qrc")
 
