@@ -358,14 +358,14 @@ public:
 		boost::shared_ptr<Message> message = makeDeliveryReceiptTestMessage(messageJID, "1");
 		manager_->handleIncomingMessage(message);
 		Stanza::ref stanzaContactOnRoster = stanzaChannel_->getStanzaAtIndex<Stanza>(0);
-		CPPUNIT_ASSERT_EQUAL((size_t)1, stanzaChannel_->sentStanzas.size());
+		CPPUNIT_ASSERT_EQUAL(st(1), stanzaChannel_->sentStanzas.size());
 		CPPUNIT_ASSERT(stanzaContactOnRoster->getPayload<DeliveryReceipt>() != 0);
 
 		xmppRoster_->removeContact(messageJID);
 
 		message->setID("2");
 		manager_->handleIncomingMessage(message);
-		CPPUNIT_ASSERT_EQUAL((size_t)1, stanzaChannel_->sentStanzas.size());
+		CPPUNIT_ASSERT_EQUAL(st(1), stanzaChannel_->sentStanzas.size());
 	}
 
 	/**
@@ -381,13 +381,13 @@ public:
 		boost::shared_ptr<Message> message = makeDeliveryReceiptTestMessage(messageJID, "1");
 		manager_->handleIncomingMessage(message);
 
-		CPPUNIT_ASSERT_EQUAL((size_t)0, stanzaChannel_->sentStanzas.size());
+		CPPUNIT_ASSERT_EQUAL(st(0), stanzaChannel_->sentStanzas.size());
 
 		xmppRoster_->addContact(messageJID, "foo", std::vector<std::string>(), RosterItemPayload::Both);
 		message->setID("2");
 		manager_->handleIncomingMessage(message);
 
-		CPPUNIT_ASSERT_EQUAL((size_t)1, stanzaChannel_->sentStanzas.size());
+		CPPUNIT_ASSERT_EQUAL(st(1), stanzaChannel_->sentStanzas.size());
 		Stanza::ref stanzaContactOnRoster = stanzaChannel_->getStanzaAtIndex<Stanza>(0);
 		CPPUNIT_ASSERT(stanzaContactOnRoster->getPayload<DeliveryReceipt>() != 0);
 	}
@@ -417,13 +417,13 @@ public:
 		boost::shared_ptr<Message> message = makeDeliveryReceiptTestMessage(messageJID, "1");
 		manager_->handleIncomingMessage(message);
 
-		CPPUNIT_ASSERT_EQUAL((size_t)0, stanzaChannel_->sentStanzas.size());
+		CPPUNIT_ASSERT_EQUAL(st(0), stanzaChannel_->sentStanzas.size());
 
 		xmppRoster_->addContact(messageJID, "foo", std::vector<std::string>(), to);
 		message->setID("2");
 		manager_->handleIncomingMessage(message);
 
-		CPPUNIT_ASSERT_EQUAL((size_t)1, stanzaChannel_->sentStanzas.size());
+		CPPUNIT_ASSERT_EQUAL(st(1), stanzaChannel_->sentStanzas.size());
 		Stanza::ref stanzaContactOnRoster = stanzaChannel_->getStanzaAtIndex<Stanza>(0);
 		CPPUNIT_ASSERT(stanzaContactOnRoster->getPayload<DeliveryReceipt>() != 0);
 	}
@@ -435,6 +435,10 @@ private:
 		message->setID(id);
 		message->addPayload(boost::make_shared<DeliveryReceiptRequest>());
 		return message;
+	}
+
+	size_t st(int i) {
+		return static_cast<size_t>(i);
 	}
 
 private:

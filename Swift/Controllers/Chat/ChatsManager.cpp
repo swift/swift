@@ -363,9 +363,9 @@ void ChatsManager::handleUIEvent(boost::shared_ptr<UIEvent> event) {
 		mucBookmarkManager_->addBookmark(addMUCBookmarkEvent->getBookmark());
 		return;
 	}
-	boost::shared_ptr<ToggleRequestDeliveryReceiptsUIEvent> toggleRequestDeliveryReceipsEvent = boost::dynamic_pointer_cast<ToggleRequestDeliveryReceiptsUIEvent>(event);
-	if (toggleRequestDeliveryReceipsEvent) {
-		userWantsReceipts_ = toggleRequestDeliveryReceipsEvent->getEnabled();
+	boost::shared_ptr<ToggleRequestDeliveryReceiptsUIEvent> toggleRequestDeliveryReceiptsEvent = boost::dynamic_pointer_cast<ToggleRequestDeliveryReceiptsUIEvent>(event);
+	if (toggleRequestDeliveryReceiptsEvent) {
+		userWantsReceipts_ = toggleRequestDeliveryReceiptsEvent->getEnabled();
 		return;
 	}
 
