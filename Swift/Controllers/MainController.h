@@ -164,6 +164,7 @@ namespace Swift {
 			StatusTracker* statusTracker_;
 			bool myStatusLooksOnline_;
 			bool quitRequested_;
+			bool offlineRequested_;
 			static const int SecondsToWaitBeforeForceQuitting;
 			bool eagleMode_;
 			FileTransferOverview* ftOverview_;

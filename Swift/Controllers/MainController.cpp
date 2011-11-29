@@ -124,6 +124,7 @@ MainController::MainController(
 	adHocManager_ = NULL;
 	quitRequested_ = false;
 	clientInitialized_ = false;
+	offlineRequested_ = false;
 
 	timeBeforeNextReconnect_ = -1;
 	dock_ = dock;
@@ -366,8 +367,10 @@ void MainController::handleChangeStatusRequest(StatusShow::Type show, const std:
 		presence->setType(Presence::Unavailable);
 		resetPendingReconnects();
 		myStatusLooksOnline_ = false;
+		offlineRequested_ = true;
 	}
 	else {
+		offlineRequested_ = false;
 		presence->setShow(show);
 	}
 	presence->setStatus(statusText);
@@ -501,6 +504,12 @@ void MainController::performLoginFromCachedCredentials() {
 	ClientOptions clientOptions;
 	clientOptions.forgetPassword = eagleMode_;
 	clientOptions.useTLS = eagleMode_ ? ClientOptions::RequireTLS : ClientOptions::UseTLSWhenAvailable;
+	if (clientJID.getDomain() == "wonderland.lit") {
+		clientOptions.boshURL = URL("http", "192.168.1.185", 5280, "http-bind/");
+	}
+	else if (clientJID.getDomain() == "prosody.doomsong.co.uk") {
+		clientOptions.boshURL = URL("http", "192.168.1.130", 5280, "http-bind/");
+	}
 	client_->connect(clientOptions);
 }
 
@@ -570,7 +579,9 @@ void MainController::handleDisconnected(const boost::optional<ClientError>& erro
 			if (eagleMode_) {
 				message = str(format(QT_TRANSLATE_NOOP("", "Disconnected from %1%: %2%. To reconnect, Sign Out and provide your password again.")) % jid_.getDomain() % message);
 			} else {
-				setReconnectTimer();
+				if (!offlineRequested_) {
+					setReconnectTimer();
+				}
 				if (lastDisconnectError_) {
 					message = str(format(QT_TRANSLATE_NOOP("", "Reconnect to %1% failed: %2%. Will retry in %3% seconds.")) % jid_.getDomain() % message % boost::lexical_cast<std::string>(timeBeforeNextReconnect_));
 					lastDisconnectError_->conclude();
