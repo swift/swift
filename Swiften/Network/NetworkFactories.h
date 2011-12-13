@@ -33,6 +33,6 @@ namespace Swift {
 			virtual XMLParserFactory* getXMLParserFactory() const = 0;
 			virtual TLSContextFactory* getTLSContextFactory() const = 0;
 			virtual ProxyProvider* getProxyProvider() const = 0;
-			virtual EventLoop* getEventLoop() const {};
+			virtual EventLoop* getEventLoop() const = 0;
 	};
 }
