@@ -85,6 +85,7 @@ void HTTPConnectProxiedConnection::handleConnectionConnectFinished(bool error) {
 			append(data, createSafeByteArray("\r\n"));
 		}
 		append(data, createSafeByteArray("\r\n"));
+		SWIFT_LOG(debug) << "HTTP Proxy send headers: " << byteArrayToString(ByteArray(data.begin(), data.end())) << std::endl;
 		connection_->write(data);
 	}
 	else {
