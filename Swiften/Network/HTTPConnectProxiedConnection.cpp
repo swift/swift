@@ -34,6 +34,7 @@ HTTPConnectProxiedConnection::HTTPConnectProxiedConnection(ConnectionFactory* co
 
 HTTPConnectProxiedConnection::~HTTPConnectProxiedConnection() {
 	if (connection_) {
+		connection_->onConnectFinished.disconnect(boost::bind(&HTTPConnectProxiedConnection::handleConnectionConnectFinished, shared_from_this(), _1));
 		connection_->onDataRead.disconnect(boost::bind(&HTTPConnectProxiedConnection::handleDataRead, shared_from_this(), _1));
 		connection_->onDisconnected.disconnect(boost::bind(&HTTPConnectProxiedConnection::handleDisconnected, shared_from_this(), _1));
 	}

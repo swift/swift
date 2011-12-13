@@ -48,9 +48,9 @@ BOSHSessionStream::BOSHSessionStream(
 			firstHeader(true) {
 
 	boost::mt19937 random;
-	boost::uniform_int<> dist(0, LONG_MAX);
+	boost::uniform_int<long> dist(0, LONG_MAX);
 	random.seed(time(NULL));
-	boost::variate_generator<boost::mt19937&, boost::uniform_int<> > randomRID(random, dist);
+	boost::variate_generator<boost::mt19937&, boost::uniform_int<long> > randomRID(random, dist);
 	long initialRID = randomRID();
 
 	connectionPool = new BOSHConnectionPool(connectionFactory, to, initialRID, boshHTTPConnectProxyURL, boshHTTPConnectProxyAuthID, boshHTTPConnectProxyAuthPassword);
