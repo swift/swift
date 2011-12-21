@@ -239,8 +239,6 @@ void QtStatusWidget::setStatusText(const QString& text) {
 	statusText_ = text;
 	statusEdit_->setText(text);
 	QString escapedText(text.isEmpty() ? getNoMessage() : text);
-	escapedText.replace("<","&lt;");
-//	statusTextLabel_->setText("<i>" + escapedText + "</i>");
 	statusTextLabel_->setText(escapedText);
 	setNewToolTip();
 }
