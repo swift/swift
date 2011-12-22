@@ -25,7 +25,6 @@
 #include <Swiften/Client/ClientSessionStanzaChannel.h>
 #include <Swiften/Network/SOCKS5ProxiedConnectionFactory.h>
 #include <Swiften/Network/HTTPConnectProxiedConnectionFactory.h>
-#include <Swiften/Network/BOSHConnectionFactory.h>
 
 namespace Swift {
 
@@ -83,7 +82,19 @@ void CoreClient::connect(const std::string& host) {
 		 * it would be quite painful given that potentially every stanza could be sent on a new connection.
 		 */
 		//sessionStream_ = boost::make_shared<BOSHSessionStream>(boost::make_shared<BOSHConnectionFactory>(options.boshURL, networkFactories->getConnectionFactory(), networkFactories->getXMLParserFactory(), networkFactories->getTLSContextFactory()), getPayloadParserFactories(), getPayloadSerializers(), networkFactories->getTLSContextFactory(), networkFactories->getTimerFactory(), networkFactories->getXMLParserFactory(), networkFactories->getEventLoop(), host, options.boshHTTPConnectProxyURL, options.boshHTTPConnectProxyAuthID, options.boshHTTPConnectProxyAuthPassword);
-		sessionStream_ = boost::shared_ptr<BOSHSessionStream>(new BOSHSessionStream(boost::make_shared<BOSHConnectionFactory>(options.boshURL, networkFactories->getConnectionFactory(), networkFactories->getXMLParserFactory(), networkFactories->getTLSContextFactory()), getPayloadParserFactories(), getPayloadSerializers(), networkFactories->getTLSContextFactory(), networkFactories->getTimerFactory(), networkFactories->getXMLParserFactory(), networkFactories->getEventLoop(), host, options.boshHTTPConnectProxyURL, options.boshHTTPConnectProxyAuthID, options.boshHTTPConnectProxyAuthPassword));
+		sessionStream_ = boost::shared_ptr<BOSHSessionStream>(new BOSHSessionStream(
+				options.boshURL,
+				getPayloadParserFactories(),
+				getPayloadSerializers(),
+				networkFactories->getConnectionFactory(),
+				networkFactories->getTLSContextFactory(), 
+				networkFactories->getTimerFactory(), 
+				networkFactories->getXMLParserFactory(),
+				networkFactories->getEventLoop(), 
+				host, 
+				options.boshHTTPConnectProxyURL, 
+				options.boshHTTPConnectProxyAuthID, 
+				options.boshHTTPConnectProxyAuthPassword));
 		sessionStream_->onDataRead.connect(boost::bind(&CoreClient::handleDataRead, this, _1));
 		sessionStream_->onDataWritten.connect(boost::bind(&CoreClient::handleDataWritten, this, _1));
 		bindSessionToStream();

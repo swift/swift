@@ -16,8 +16,11 @@
 #include <Swiften/Network/HTTPConnectProxiedConnectionFactory.h>
 
 namespace Swift {
-BOSHConnectionPool::BOSHConnectionPool(boost::shared_ptr<BOSHConnectionFactory> connectionFactory, const std::string& to, long initialRID, const URL& boshHTTPConnectProxyURL, const SafeString& boshHTTPConnectProxyAuthID, const SafeString& boshHTTPConnectProxyAuthPassword)
-	: connectionFactory(connectionFactory),
+BOSHConnectionPool::BOSHConnectionPool(const URL& boshURL, ConnectionFactory* connectionFactory, XMLParserFactory* parserFactory, TLSContextFactory* tlsFactory, const std::string& to, long initialRID, const URL& boshHTTPConnectProxyURL, const SafeString& boshHTTPConnectProxyAuthID, const SafeString& boshHTTPConnectProxyAuthPassword) :
+		boshURL(boshURL),
+		connectionFactory(connectionFactory),
+		xmlParserFactory(parserFactory),
+		tlsFactory(tlsFactory),
 		rid(initialRID),
 		pendingTerminate(false),
 		to(to),
@@ -29,9 +32,9 @@ BOSHConnectionPool::BOSHConnectionPool(boost::shared_ptr<BOSHConnectionFactory> 
 		connectProxyFactory = NULL;
 	}
 	else {
-		ConnectionFactory* rawFactory = connectionFactory->getRawConnectionFactory();
+		ConnectionFactory* rawFactory = connectionFactory;
 		if (boshHTTPConnectProxyURL.getScheme() == "https") {
-			tlsConnectionFactory = new TLSConnectionFactory(connectionFactory->getTLSContextFactory(), rawFactory);
+			tlsConnectionFactory = new TLSConnectionFactory(tlsFactory, rawFactory);
 			rawFactory = tlsConnectionFactory;
 		}
 		connectProxyFactory = new HTTPConnectProxiedConnectionFactory(rawFactory, HostAddressPort(HostAddress(boshHTTPConnectProxyURL.getHost()), boshHTTPConnectProxyURL.getPort()), boshHTTPConnectProxyAuthID, boshHTTPConnectProxyAuthPassword);
@@ -206,7 +209,7 @@ void BOSHConnectionPool::handleConnectionDisconnected(const boost::optional<Conn
 }
 
 boost::shared_ptr<BOSHConnection> BOSHConnectionPool::createConnection() {
-	BOSHConnection::ref connection = boost::dynamic_pointer_cast<BOSHConnection>(connectionFactory->createConnection(connectProxyFactory));
+	BOSHConnection::ref connection = BOSHConnection::create(boshURL, connectProxyFactory ? connectProxyFactory : connectionFactory, xmlParserFactory, tlsFactory);
 	connection->onXMPPDataRead.connect(boost::bind(&BOSHConnectionPool::handleDataRead, this, _1));
 	connection->onSessionStarted.connect(boost::bind(&BOSHConnectionPool::handleSessionStarted, this, _1, _2));
 	connection->onBOSHDataRead.connect(boost::bind(&BOSHConnectionPool::handleBOSHDataRead, this, _1));

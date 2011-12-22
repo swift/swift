@@ -19,7 +19,6 @@
 #include <Swiften/Network/Connection.h>
 #include <Swiften/Network/ConnectionFactory.h>
 #include <Swiften/Network/BOSHConnection.h>
-#include <Swiften/Network/BOSHConnectionFactory.h>
 #include <Swiften/Network/BOSHConnectionPool.h>
 #include <Swiften/Network/HostAddressPort.h>
 #include <Swiften/EventLoop/DummyEventLoop.h>
@@ -58,7 +57,7 @@ class BOSHConnectionPoolTest : public CppUnit::TestFixture {
 					"xmlns='http://jabber.org/protocol/httpbind'/>";
 			eventLoop = new DummyEventLoop();
 			connectionFactory = new MockConnectionFactory(eventLoop);
-			factory = boost::make_shared<BOSHConnectionFactory>(URL("http", to, 5280, path), connectionFactory, &parserFactory, static_cast<TLSContextFactory*>(NULL));
+			boshURL = URL("http", to, 5280, path);
 			sessionTerminated = 0;
 			sessionStarted = 0;
 			initialRID = 2349876;
@@ -216,8 +215,7 @@ class BOSHConnectionPoolTest : public CppUnit::TestFixture {
 		void testSession() {
 			to = "prosody.doomsong.co.uk";
 			path = "http-bind/";
-			factory = boost::make_shared<BOSHConnectionFactory>(URL("http", to, 5280, path), connectionFactory, &parserFactory, static_cast<TLSContextFactory*>(NULL));
-
+			boshURL = URL("http", to, 5280, path);
 
 			PoolRef testling = createTestling();
 			CPPUNIT_ASSERT_EQUAL(st(1), connectionFactory->connections.size());
@@ -281,7 +279,7 @@ class BOSHConnectionPoolTest : public CppUnit::TestFixture {
 	private:
 
 		PoolRef createTestling() {
-			PoolRef pool = boost::make_shared<BOSHConnectionPool>(factory, to, initialRID, URL(), "", "");
+			PoolRef pool = boost::make_shared<BOSHConnectionPool>(boshURL, connectionFactory, &parserFactory, static_cast<TLSContextFactory*>(NULL), to, initialRID, URL(), "", "");
 			pool->onXMPPDataRead.connect(boost::bind(&BOSHConnectionPoolTest::handleXMPPDataRead, this, _1));
 			pool->onBOSHDataRead.connect(boost::bind(&BOSHConnectionPoolTest::handleBOSHDataRead, this, _1));
 			pool->onBOSHDataWritten.connect(boost::bind(&BOSHConnectionPoolTest::handleBOSHDataWritten, this, _1));
@@ -401,6 +399,7 @@ class BOSHConnectionPoolTest : public CppUnit::TestFixture {
 		}
 
 	private:
+		URL boshURL;
 		DummyEventLoop* eventLoop;
 		MockConnectionFactory* connectionFactory;
 		std::vector<std::string> xmppDataRead;
@@ -413,7 +412,6 @@ class BOSHConnectionPoolTest : public CppUnit::TestFixture {
 		std::string sid;
 		std::string initial;
 		long initialRID;
-		boost::shared_ptr<BOSHConnectionFactory> factory;
 		int sessionStarted;
 		int sessionTerminated;
 

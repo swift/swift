@@ -10,15 +10,15 @@
 #include <vector>
 
 #include <Swiften/Base/SafeString.h>
-#include <Swiften/Network/BOSHConnectionFactory.h>
 #include <Swiften/Network/BOSHConnection.h>
 
 namespace Swift {
 	class HTTPConnectProxiedConnectionFactory;
 	class TLSConnectionFactory;
+
 	class BOSHConnectionPool : public boost::bsignals::trackable {
 		public:
-			BOSHConnectionPool(boost::shared_ptr<BOSHConnectionFactory> factory, const std::string& to, long initialRID, const URL& boshHTTPConnectProxyURL, const SafeString& boshHTTPConnectProxyAuthID, const SafeString& boshHTTPConnectProxyAuthPassword);
+			BOSHConnectionPool(const URL& boshURL, ConnectionFactory* connectionFactory, XMLParserFactory* parserFactory, TLSContextFactory* tlsFactory, const std::string& to, long initialRID, const URL& boshHTTPConnectProxyURL, const SafeString& boshHTTPConnectProxyAuthID, const SafeString& boshHTTPConnectProxyAuthPassword);
 			~BOSHConnectionPool();
 			void write(const SafeByteArray& data);
 			void writeFooter();
@@ -48,7 +48,10 @@ namespace Swift {
 			BOSHConnection::ref getSuitableConnection();
 
 		private:
-			boost::shared_ptr<BOSHConnectionFactory> connectionFactory;
+			URL boshURL;
+			ConnectionFactory* connectionFactory;
+			XMLParserFactory* xmlParserFactory;
+			TLSContextFactory* tlsFactory;
 			std::vector<BOSHConnection::ref> connections;
 			std::string sid;
 			unsigned long rid;

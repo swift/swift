@@ -11,7 +11,6 @@
 #include <Swiften/Base/SafeString.h>
 #include <Swiften/Base/SafeByteArray.h>
 #include <Swiften/Network/BOSHConnectionPool.h>
-#include <Swiften/Network/BOSHConnectionFactory.h>
 #include <Swiften/Session/SessionStream.h>
 #include <Swiften/Elements/StreamType.h>
 #include <Swiften/EventLoop/EventOwner.h>
@@ -31,17 +30,18 @@ namespace Swift {
 	class BOSHSessionStream : public SessionStream, public EventOwner, public boost::enable_shared_from_this<BOSHSessionStream> {
 		public:
 			BOSHSessionStream(
-				boost::shared_ptr<BOSHConnectionFactory> connectionFactory,
-				PayloadParserFactoryCollection* payloadParserFactories, 
-				PayloadSerializerCollection* payloadSerializers,
-				TLSContextFactory* tlsContextFactory,
-				TimerFactory* whitespacePingLayerFactory,
-				XMLParserFactory* xmlParserFactory,
-				EventLoop* eventLoop,
-				const std::string& to,
-				const URL& boshHTTPConnectProxyURL,
-				const SafeString& boshHTTPConnectProxyAuthID,
-				const SafeString& boshHTTPConnectProxyAuthPassword
+					const URL& boshURL,
+					PayloadParserFactoryCollection* payloadParserFactories,
+					PayloadSerializerCollection* payloadSerializers,
+					ConnectionFactory* connectionFactory,
+					TLSContextFactory* tlsContextFactory,
+					TimerFactory* whitespacePingLayerFactory,
+					XMLParserFactory* xmlParserFactory,
+					EventLoop* eventLoop,
+					const std::string& to,
+					const URL& boshHTTPConnectProxyURL,
+					const SafeString& boshHTTPConnectProxyAuthID,
+					const SafeString& boshHTTPConnectProxyAuthPassword
 			);
 			~BOSHSessionStream();
 
