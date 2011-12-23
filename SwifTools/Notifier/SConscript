@@ -8,7 +8,8 @@ sources = [
 
 if swiftools_env.get("HAVE_GROWL", False) :
 	sources += [
-			"GrowlNotifier.cpp",
+			"GrowlNotifier.mm",
+			"GrowlNotifierDelegate.mm",
 		]
 if swiftools_env.get("HAVE_SNARL", False) :
 	myenv.MergeFlags(myenv["SNARL_FLAGS"])

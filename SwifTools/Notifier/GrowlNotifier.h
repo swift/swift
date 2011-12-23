@@ -1,13 +1,11 @@
 /*
- * Copyright (c) 2010 Remko Tronçon
+ * Copyright (c) 2010-2011 Remko Tronçon
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
 #pragma once
 
-#include <CoreFoundation/CoreFoundation.h>
-#include <Growl/Growl.h>
 #include <boost/filesystem/fstream.hpp>
 
 #include <SwifTools/Notifier/Notifier.h>
@@ -24,8 +22,13 @@ namespace Swift {
 			GrowlNotifier(const std::string& name);
 
 			virtual void showMessage(Type type, const std::string& subject, const std::string& description, const boost::filesystem::path& picture, boost::function<void()> callback);
+
+			// Called by the delegate. Don't call.
+			void handleNotificationClicked(void* data);
+			void handleNotificationTimedOut(void* data);
 		
 		private:
-			Growl_Delegate delegate_;
+			class Private;
+			boost::shared_ptr<Private> p;
 	};
 }
