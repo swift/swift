@@ -3,7 +3,6 @@ import SCons.Util
 from subprocess import call
 
 def generate(env) :
-	print "Adding WiX to environment"
 	wixPath = env.get("wix_bindir", "")
 	if len(wixPath) > 0 and wixPath[-1] != "\\":
 		wixPath += "\\"
