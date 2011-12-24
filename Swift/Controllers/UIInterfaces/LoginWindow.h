@@ -20,6 +20,7 @@ namespace Swift {
 			virtual void selectUser(const std::string&) = 0;
 			virtual void morphInto(MainWindow *mainWindow) = 0;
 			virtual void loggedOut() = 0;
+			virtual void setShowNotificationToggle(bool) = 0;
 			virtual void setMessage(const std::string&) = 0;
 			virtual void setIsLoggingIn(bool loggingIn) = 0;
 			virtual void addAvailableAccount(const std::string& defaultJID, const std::string& defaultPassword, const std::string& defaultCertificate) = 0;

@@ -48,6 +48,9 @@ GrowlNotifier::GrowlNotifier(const std::string& name) {
 	p->delegate.get().registrationDictionary = [[[NSDictionary alloc] 
 			initWithObjects: [NSArray arrayWithObjects: allNotifications, defaultNotifications, nil] 
 			forKeys: [NSArray arrayWithObjects: GROWL_NOTIFICATIONS_ALL, GROWL_NOTIFICATIONS_DEFAULT, nil]] autorelease];
+	
+	[allNotifications release];
+	[defaultNotifications release];
 
 	[GrowlApplicationBridge setGrowlDelegate: p->delegate.get()];
 }
@@ -56,8 +59,7 @@ void GrowlNotifier::showMessage(Type type, const std::string& subject, const std
 	ByteArray picture;
 	readByteArrayFromFile(picture, picturePath.string());
 
-	Context* contextPtr = new Context(callback);
-	NSData* context = [NSData dataWithBytes: &contextPtr length: sizeof(contextPtr)];
+	Context* context = new Context(callback);
 
 	[GrowlApplicationBridge 
 		notifyWithTitle: STD2NSSTRING(subject)
@@ -66,7 +68,7 @@ void GrowlNotifier::showMessage(Type type, const std::string& subject, const std
 		iconData: [NSData dataWithBytes: vecptr(picture) length: picture.size()]
 		priority: 0
 		isSticky: NO
-		clickContext: context];
+		clickContext: [NSData dataWithBytes: &context length: sizeof(context)]];
 }
 
 void GrowlNotifier::handleNotificationClicked(void* rawData) {
@@ -79,6 +81,10 @@ void GrowlNotifier::handleNotificationClicked(void* rawData) {
 
 void GrowlNotifier::handleNotificationTimedOut(void* rawData) {
 	delete *(Context**) [((NSData*) rawData) bytes];
+}
+
+bool GrowlNotifier::isExternallyConfigured() const {
+	return ![GrowlApplicationBridge isMistEnabled];
 }
 
 }

@@ -32,6 +32,10 @@ namespace Swift {
 				return true;
 			}
 
+			virtual bool isExternallyConfigured() const {
+				return false;
+			}
+
 		protected:
 			std::string typeToString(Type type);
 			static std::vector<Type> getAllTypes();

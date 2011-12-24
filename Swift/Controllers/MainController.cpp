@@ -136,6 +136,7 @@ MainController::MainController(
 
 	systemTrayController_ = new SystemTrayController(eventController_, systemTray);
 	loginWindow_ = uiFactory_->createLoginWindow(uiEventStream_);
+	loginWindow_->setShowNotificationToggle(!notifier->isExternallyConfigured());
 	soundEventController_ = new SoundEventController(eventController_, soundPlayer, settings, uiEventStream_);
 
 	xmppURIController_ = new XMPPURIController(uriHandler_, uiEventStream_);

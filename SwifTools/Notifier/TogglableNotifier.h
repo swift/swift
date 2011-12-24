@@ -41,9 +41,13 @@ namespace Swift {
 			}
  
 			virtual void showMessage(Type type, const std::string& subject, const std::string& description, const boost::filesystem::path& picture, boost::function<void()> callback) {
-				if (getCurrentlyEnabled()) {
+				if (getCurrentlyEnabled() || notifier->isExternallyConfigured()) {
 					notifier->showMessage(type, subject, description, picture, callback);
 				}
+			}
+
+			virtual bool isExternallyConfigured() const {
+				return notifier->isExternallyConfigured();
 			}
 
 		private:

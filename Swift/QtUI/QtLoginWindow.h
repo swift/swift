@@ -38,6 +38,7 @@ namespace Swift {
 
 			void morphInto(MainWindow *mainWindow);
 			virtual void loggedOut();
+			virtual void setShowNotificationToggle(bool);
 			virtual void setMessage(const std::string& message);
 			virtual void addAvailableAccount(const std::string& defaultJID, const std::string& defaultPassword, const std::string& defaultCertificate);
 			virtual void removeAvailableAccount(const std::string& jid);

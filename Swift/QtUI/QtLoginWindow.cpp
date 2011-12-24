@@ -185,9 +185,6 @@ QtLoginWindow::QtLoginWindow(UIEventStream* uiEventStream, bool eagleMode) : QMa
 	toggleNotificationsAction_->setCheckable(true);
 	toggleNotificationsAction_->setChecked(true);
 	connect(toggleNotificationsAction_, SIGNAL(toggled(bool)), SLOT(handleToggleNotifications(bool)));
-#if defined(SWIFTEN_PLATFORM_LINUX) || defined(SWIFTEN_PLATFORM_WINDOWS)
-	generalMenu_->addAction(toggleNotificationsAction_);
-#endif
 
 #ifndef SWIFTEN_PLATFORM_MACOSX
 	swiftMenu_->addSeparator();
@@ -214,6 +211,15 @@ QtLoginWindow::QtLoginWindow(UIEventStream* uiEventStream, bool eagleMode) : QMa
 	}
 
 	this->show();
+}
+
+void QtLoginWindow::setShowNotificationToggle(bool toggle) {
+	if (toggle) {
+		generalMenu_->addAction(toggleNotificationsAction_);
+	}
+	else {
+		generalMenu_->removeAction(toggleNotificationsAction_);
+	}
 }
 
 bool QtLoginWindow::eventFilter(QObject *obj, QEvent *event) {

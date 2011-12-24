@@ -22,6 +22,7 @@ namespace Swift {
 			GrowlNotifier(const std::string& name);
 
 			virtual void showMessage(Type type, const std::string& subject, const std::string& description, const boost::filesystem::path& picture, boost::function<void()> callback);
+			virtual bool isExternallyConfigured() const;
 
 			// Called by the delegate. Don't call.
 			void handleNotificationClicked(void* data);
