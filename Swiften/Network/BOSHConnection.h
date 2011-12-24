@@ -29,6 +29,8 @@ namespace boost {
 	}
 }
 
+class BOSHConnectionTest;
+
 namespace Swift {
 	class ConnectionFactory;
 	class XMLParserFactory;
@@ -49,42 +51,44 @@ namespace Swift {
 			};
 
 
-	class BOSHConnection : public Connection, public boost::enable_shared_from_this<BOSHConnection> {
+	class BOSHConnection : public boost::enable_shared_from_this<BOSHConnection> {
 		public:
 			typedef boost::shared_ptr<BOSHConnection> ref;
 			static ref create(const URL& boshURL, ConnectionFactory* connectionFactory, XMLParserFactory* parserFactory, TLSContextFactory* tlsFactory) {
 				return ref(new BOSHConnection(boshURL, connectionFactory, parserFactory, tlsFactory));
 			}
 			virtual ~BOSHConnection();
-			virtual void listen();
-			virtual void connect(const HostAddressPort& address);
+			virtual void connect();
 			virtual void disconnect();
 			virtual void write(const SafeByteArray& data);
 
-			virtual HostAddressPort getLocalAddress() const;
 			const std::string& getSID();
-			void setRID(unsigned long rid);
+			void setRID(unsigned long long rid);
 			void setSID(const std::string& sid);
 			void startStream(const std::string& to, unsigned long rid);
 			void terminateStream();
 			bool isReadyToSend();
 			void restartStream();
 
-			static std::pair<SafeByteArray, size_t> createHTTPRequest(const SafeByteArray& data, bool streamRestart, bool terminate, long rid, const std::string& sid, const URL& boshURL);
 
+			boost::signal<void (bool /* error */)> onConnectFinished;
+			boost::signal<void (bool /* error */)> onDisconnected;
 			boost::signal<void (BOSHError::ref)> onSessionTerminated;
 			boost::signal<void (const std::string& /*sid*/, size_t /*requests*/)> onSessionStarted;
 			boost::signal<void (const SafeByteArray&)> onXMPPDataRead;
 			boost::signal<void (const SafeByteArray&)> onBOSHDataRead;
 			boost::signal<void (const SafeByteArray&)> onBOSHDataWritten;
 			boost::signal<void (const std::string&)> onHTTPError;
+
 		private:
+			friend class ::BOSHConnectionTest;
+
 			BOSHConnection(const URL& boshURL, ConnectionFactory* connectionFactory, XMLParserFactory* parserFactory, TLSContextFactory* tlsFactory);
 
-
+			static std::pair<SafeByteArray, size_t> createHTTPRequest(const SafeByteArray& data, bool streamRestart, bool terminate, long rid, const std::string& sid, const URL& boshURL);
 			void handleConnectionConnectFinished(bool error);
 			void handleDataRead(boost::shared_ptr<SafeByteArray> data);
-			void handleDisconnected(const boost::optional<Error>& error);
+			void handleDisconnected(const boost::optional<Connection::Error>& error);
 			void write(const SafeByteArray& data, bool streamRestart, bool terminate); /* FIXME: refactor */
 			BOSHError::Type parseTerminationCondition(const std::string& text);
 
@@ -94,7 +98,7 @@ namespace Swift {
 			boost::shared_ptr<Connection> connection_;
 			std::string sid_;
 			bool waitingForStartResponse_;
-			unsigned long rid_;
+			unsigned long long rid_;
 			SafeByteArray buffer_;
 			bool pending_;
 			TLSContextFactory* tlsFactory_;

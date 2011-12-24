@@ -49,18 +49,13 @@ BOSHConnection::~BOSHConnection() {
 	disconnect();
 }
 
-void BOSHConnection::connect(const HostAddressPort& server) {
-	/* FIXME: Redundant parameter */
+void BOSHConnection::connect() {
 	Connection::ref rawConnection = connectionFactory_->createConnection();
 	connection_ = (boshURL_.getScheme() == "https") ? boost::make_shared<TLSConnection>(rawConnection, tlsFactory_) : rawConnection;
 	connection_->onConnectFinished.connect(boost::bind(&BOSHConnection::handleConnectionConnectFinished, shared_from_this(), _1));
 	connection_->onDataRead.connect(boost::bind(&BOSHConnection::handleDataRead, shared_from_this(), _1));
 	connection_->onDisconnected.connect(boost::bind(&BOSHConnection::handleDisconnected, shared_from_this(), _1));
 	connection_->connect(HostAddressPort(HostAddress(boshURL_.getHost()), boshURL_.getPort()));
-}
-
-void BOSHConnection::listen() {
-	assert(false);
 }
 
 void BOSHConnection::disconnect() {
@@ -170,8 +165,8 @@ void BOSHConnection::startStream(const std::string& to, unsigned long rid) {
 }
 
 void BOSHConnection::handleDataRead(boost::shared_ptr<SafeByteArray> data) {
-	onBOSHDataRead(*data.get());
-	buffer_ = concat(buffer_, *data.get());
+	onBOSHDataRead(*data);
+	buffer_ = concat(buffer_, *data);
 	std::string response = safeByteArrayToString(buffer_);
 	if (response.find("\r\n\r\n") == std::string::npos) {
 		onBOSHDataRead(createSafeByteArray("[[Previous read incomplete, pending]]"));
@@ -186,22 +181,26 @@ void BOSHConnection::handleDataRead(boost::shared_ptr<SafeByteArray> data) {
 
 	BOSHBodyExtractor parser(parserFactory_, createByteArray(response.substr(response.find("\r\n\r\n") + 4)));
 	if (parser.getBody()) {
-		if ((*parser.getBody()).attributes.getAttribute("type") == "terminate") {
-			BOSHError::Type errorType = parseTerminationCondition((*parser.getBody()).attributes.getAttribute("condition"));
+		if (parser.getBody()->attributes.getAttribute("type") == "terminate") {
+			BOSHError::Type errorType = parseTerminationCondition(parser.getBody()->attributes.getAttribute("condition"));
 			onSessionTerminated(errorType == BOSHError::NoError ? boost::shared_ptr<BOSHError>() : boost::make_shared<BOSHError>(errorType));
 		}
 		buffer_.clear();
 		if (waitingForStartResponse_) {
 			waitingForStartResponse_ = false;
-			sid_ = (*parser.getBody()).attributes.getAttribute("sid");
-			std::string requestsString = (*parser.getBody()).attributes.getAttribute("requests");
+			sid_ = parser.getBody()->attributes.getAttribute("sid");
+			std::string requestsString = parser.getBody()->attributes.getAttribute("requests");
 			int requests = 2;
 			if (!requestsString.empty()) {
-				requests = boost::lexical_cast<size_t>(requestsString);
+				try {
+					requests = boost::lexical_cast<size_t>(requestsString);
+				}
+				catch (const boost::bad_lexical_cast&) {
+				}
 			}
 			onSessionStarted(sid_, requests);
 		}
-		SafeByteArray payload = createSafeByteArray((*parser.getBody()).content);
+		SafeByteArray payload = createSafeByteArray(parser.getBody()->content);
 		/* Say we're good to go again, so don't add anything after here in the method */
 		pending_ = false;
 		onXMPPDataRead(payload);
@@ -257,7 +256,7 @@ const std::string& BOSHConnection::getSID() {
 	return sid_;
 }
 
-void BOSHConnection::setRID(unsigned long rid) {
+void BOSHConnection::setRID(unsigned long long rid) {
 	rid_ = rid;
 }
 
@@ -265,15 +264,12 @@ void BOSHConnection::setSID(const std::string& sid) {
 	sid_ = sid;
 }
 
-void BOSHConnection::handleDisconnected(const boost::optional<Error>& error) {
+void BOSHConnection::handleDisconnected(const boost::optional<Connection::Error>& error) {
 	onDisconnected(error);
 	sid_ = "";
 	connectionReady_ = false;
 }
 
-HostAddressPort BOSHConnection::getLocalAddress() const {
-	return connection_->getLocalAddress();
-}
 
 bool BOSHConnection::isReadyToSend() {
 	/* Without pipelining you need to not send more without first receiving the response */

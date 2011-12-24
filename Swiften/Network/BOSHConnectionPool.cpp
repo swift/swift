@@ -197,7 +197,7 @@ void BOSHConnectionPool::handleHTTPError(const std::string& /*errorCode*/) {
 	handleSessionTerminated(boost::make_shared<BOSHError>(BOSHError::UndefinedCondition));
 }
 
-void BOSHConnectionPool::handleConnectionDisconnected(const boost::optional<Connection::Error>& error, BOSHConnection::ref connection) {
+void BOSHConnectionPool::handleConnectionDisconnected(bool error, BOSHConnection::ref connection) {
 	destroyConnection(connection);
 	if (false && error) {
 		handleSessionTerminated(boost::make_shared<BOSHError>(BOSHError::UndefinedCondition));
@@ -218,7 +218,7 @@ boost::shared_ptr<BOSHConnection> BOSHConnectionPool::createConnection() {
 	connection->onConnectFinished.connect(boost::bind(&BOSHConnectionPool::handleConnectFinished, this, _1, connection));
 	connection->onSessionTerminated.connect(boost::bind(&BOSHConnectionPool::handleSessionTerminated, this, _1));
 	connection->onHTTPError.connect(boost::bind(&BOSHConnectionPool::handleHTTPError, this, _1));
-	connection->connect(HostAddressPort(HostAddress("0.0.0.0"), 0));
+	connection->connect();
 	connections.push_back(connection);
 	return connection;
 }

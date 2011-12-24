@@ -45,6 +45,7 @@ class BOSHConnectionTest : public CppUnit::TestFixture {
 			connectionFactory = new MockConnectionFactory(eventLoop);
 			connectFinished = false;
 			disconnected = false;
+			disconnectedError = false;
 			dataRead.clear();
 		}
 
@@ -56,7 +57,7 @@ class BOSHConnectionTest : public CppUnit::TestFixture {
 
 		void testHeader() {
 			BOSHConnection::ref testling = createTestling();
-			testling->connect(HostAddressPort(HostAddress("127.0.0.1"), 5280));
+			testling->connect();
 			eventLoop->processEvents();
 			testling->startStream("wonderland.lit", 1);
 			std::string initial("<body wait='60' "
@@ -76,7 +77,7 @@ class BOSHConnectionTest : public CppUnit::TestFixture {
 
 		void testReadiness_ok() {
 			BOSHConnection::ref testling = createTestling();
-			testling->connect(HostAddressPort(HostAddress("127.0.0.1"), 5280));
+			testling->connect();
 			eventLoop->processEvents();
 			testling->setSID("blahhhhh");
 			CPPUNIT_ASSERT(testling->isReadyToSend());
@@ -84,7 +85,7 @@ class BOSHConnectionTest : public CppUnit::TestFixture {
 
 		void testReadiness_pending() {
 			BOSHConnection::ref testling = createTestling();
-			testling->connect(HostAddressPort(HostAddress("127.0.0.1"), 5280));
+			testling->connect();
 			eventLoop->processEvents();
 			testling->setSID("mySID");
 			CPPUNIT_ASSERT(testling->isReadyToSend());
@@ -96,7 +97,7 @@ class BOSHConnectionTest : public CppUnit::TestFixture {
 
 		void testReadiness_disconnect() {
 			BOSHConnection::ref testling = createTestling();
-			testling->connect(HostAddressPort(HostAddress("127.0.0.1"), 5280));
+			testling->connect();
 			eventLoop->processEvents();
 			testling->setSID("mySID");
 			CPPUNIT_ASSERT(testling->isReadyToSend());
@@ -107,14 +108,14 @@ class BOSHConnectionTest : public CppUnit::TestFixture {
 
 		void testReadiness_noSID() {
 			BOSHConnection::ref testling = createTestling();
-			testling->connect(HostAddressPort(HostAddress("127.0.0.1"), 5280));
+			testling->connect();
 			eventLoop->processEvents();
 			CPPUNIT_ASSERT(!testling->isReadyToSend());
 		}
 
 		void testWrite_Receive() {
 			BOSHConnection::ref testling = createTestling();
-			testling->connect(HostAddressPort(HostAddress("127.0.0.1"), 5280));
+			testling->connect();
 			eventLoop->processEvents();
 			testling->setSID("mySID");
 			testling->write(createSafeByteArray("<mypayload/>"));
@@ -125,7 +126,7 @@ class BOSHConnectionTest : public CppUnit::TestFixture {
 
 		void testWrite_ReceiveTwice() {
 			BOSHConnection::ref testling = createTestling();
-			testling->connect(HostAddressPort(HostAddress("127.0.0.1"), 5280));
+			testling->connect();
 			eventLoop->processEvents();
 			testling->setSID("mySID");
 			testling->write(createSafeByteArray("<mypayload/>"));
@@ -139,7 +140,7 @@ class BOSHConnectionTest : public CppUnit::TestFixture {
 
 		void testRead_Fragment() {
 			BOSHConnection::ref testling = createTestling();
-			testling->connect(HostAddressPort(HostAddress("127.0.0.1"), 5280));
+			testling->connect();
 			eventLoop->processEvents();
 			CPPUNIT_ASSERT_EQUAL(static_cast<size_t>(1), connectionFactory->connections.size());
 			boost::shared_ptr<MockConnection> connection = connectionFactory->connections[0];
@@ -198,7 +199,7 @@ class BOSHConnectionTest : public CppUnit::TestFixture {
 			connectFinishedWithError = error;
 		}
 
-		void handleDisconnected(const boost::optional<Connection::Error>& e) {
+		void handleDisconnected(bool e) {
 			disconnected = true;
 			disconnectedError = e;
 		}
@@ -280,7 +281,7 @@ class BOSHConnectionTest : public CppUnit::TestFixture {
 		bool connectFinished;
 		bool connectFinishedWithError;
 		bool disconnected;
-		boost::optional<Connection::Error> disconnectedError;
+		bool disconnectedError;
 		ByteArray dataRead;
 		PlatformXMLParserFactory parserFactory;
 		std::string sid;	

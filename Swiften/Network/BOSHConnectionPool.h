@@ -38,7 +38,7 @@ namespace Swift {
 			void handleBOSHDataWritten(const SafeByteArray& data);
 			void handleSessionTerminated(BOSHError::ref condition);
 			void handleConnectFinished(bool, BOSHConnection::ref connection);
-			void handleConnectionDisconnected(const boost::optional<Connection::Error>& error, BOSHConnection::ref connection);
+			void handleConnectionDisconnected(bool error, BOSHConnection::ref connection);
 			void handleHTTPError(const std::string& errorCode);
 
 		private:
