@@ -66,6 +66,7 @@ std::string JingleS5BTransportPayloadSerializer::modeToString(JingleS5BTransport
 			return "udp";
 	}
 	assert(false);
+	return "";
 }
 
 std::string JingleS5BTransportPayloadSerializer::typeToString(JingleS5BTransportPayload::Candidate::Type type) const {
@@ -80,6 +81,7 @@ std::string JingleS5BTransportPayloadSerializer::typeToString(JingleS5BTransport
 			return "tunnel";
 	}
 	assert(false);
+	return "";
 }
 
 }
