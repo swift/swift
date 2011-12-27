@@ -241,7 +241,8 @@ if target in ["iphone-device", "iphone-simulator", "xcode"] :
 		env["XCODE_PLATFORM_DEVELOPER_BIN_DIR"] = os.environ["PLATFORM_DEVELOPER_BIN_DIR"]
 		env["XCODE_SDKROOT"] = os.environ["SDKROOT"]
 		env["XCODE_ARCH_FLAGS"] = sum([["-arch", arch] for arch in os.environ["ARCHS"].split(" ")], [])
-		# Usae absolute path sources so Xcode can highlight compilation errors in swiften
+		env["IPHONEOS_DEPLOYMENT_TARGET"] = os.environ["IPHONEOS_DEPLOYMENT_TARGET"]
+		# Use absolute path sources so Xcode can highlight compilation errors in swiften
 		env['CXXCOM'] = '$CXX -o $TARGET -c $CXXFLAGS $CCFLAGS $_CCCOMCOM ${SOURCES.abspath}'
 	else :
 		# Hard code values
@@ -254,13 +255,16 @@ if target in ["iphone-device", "iphone-simulator", "xcode"] :
 			sdkPart = "iPhoneSimulator"
 		sdkVer = "4.3"
 		env["XCODE_SDKROOT"] = "/Developer/Platforms/" + sdkPart + ".platform/Developer/SDKs/" + sdkPart + sdkVer + ".sdk"
+		env["IPHONEOS_DEPLOYMENT_TARGET"] = "4.1"
 
 	# Set the build flags
 	env["CC"] = "$XCODE_PLATFORM_DEVELOPER_BIN_DIR/gcc"
 	env["CXX"] = "$XCODE_PLATFORM_DEVELOPER_BIN_DIR/g++"
 	env["OBJCCFLAGS"] = ["-fobjc-abi-version=2", "-fobjc-legacy-dispatch"]
 	env["LD"] = env["CC"]
-	env.Append(CCFLAGS = env["XCODE_ARCH_FLAGS"] + ["-fvisibility=hidden"])
+	env.Append(CCFLAGS = env["XCODE_ARCH_FLAGS"] + ["-fvisibility=hidden", "-miphoneos-version-min=" + env["IPHONEOS_DEPLOYMENT_TARGET"]])
+	if os.environ.get("GCC_THUMB_SUPPORT", False) :
+		env.Append(CCFLAGS = ["-mthumb"])
 	env.Append(LINKFLAGS = env["XCODE_ARCH_FLAGS"])
 	env.Append(CPPFLAGS = ["-isysroot", "$XCODE_SDKROOT"])
 	env.Append(FRAMEWORKS = ["CoreFoundation", "Foundation", "UIKit", "CoreGraphics"])
