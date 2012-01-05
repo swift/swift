@@ -367,7 +367,7 @@ void QtLoginWindow::setLoginAutomatically(bool loginAutomatically) {
 
 void QtLoginWindow::handleCertficateChecked(bool checked) {
 	if (checked) {
-		 certificateFile_ = QFileDialog::getOpenFileName(this, tr("Select an authentication certificate"), QString(), QString("*.cert"));
+		 certificateFile_ = QFileDialog::getOpenFileName(this, tr("Select an authentication certificate"), QString(), QString("*.cert;*.p12;*.pfx"));
 		 if (certificateFile_.isEmpty()) {
 			 certificateButton_->setChecked(false);
 		 }
