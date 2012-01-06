@@ -8,6 +8,8 @@
 
 #include <QWizardPage>
 
+#include <Swift/QtUI/QtFormWidget.h>
+
 #include <Swift/QtUI/UserSearch/ui_QtUserSearchFieldsPage.h>
 
 namespace Swift {
@@ -16,7 +18,14 @@ namespace Swift {
 		public:
 			QtUserSearchFieldsPage();
 			virtual bool isComplete() const;
+
+			QtFormWidget* getFormWidget();
+			void setFormWidget(QtFormWidget *widget);
+
 		public slots:
 			void emitCompletenessCheck();
+
+		private:
+			QtFormWidget *formWidget_;
 	};
 }

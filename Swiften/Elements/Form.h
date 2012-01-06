@@ -22,6 +22,7 @@ namespace Swift {
 	class Form : public Payload {
 		public:
 			typedef boost::shared_ptr<Form> ref;
+			typedef std::vector<FormField::ref> FormItem;
 
 			enum Type { FormType, SubmitType, CancelType, ResultType };
 
@@ -46,8 +47,15 @@ namespace Swift {
 
 			FormField::ref getField(const std::string& name) const;
 
+			void addReportedField(FormField::ref field);
+			const std::vector<FormField::ref>& getReportedFields() const;
+
+			void addItem(const FormItem& item);
+			const std::vector<FormItem>& getItems() const;
 		private:
 			std::vector<boost::shared_ptr<FormField> > fields_;
+			std::vector<boost::shared_ptr<FormField> > reportedFields_;
+			std::vector<FormItem> items_;
 			std::string title_;
 			std::string instructions_;
 			Type type_;

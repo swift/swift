@@ -49,6 +49,7 @@ namespace Swift {
 			};
 			class JIDFieldParseHelper : public FieldParseHelper {
 					virtual void addValue(const std::string& s) {
+						getField()->addRawValue(s);
 						boost::dynamic_pointer_cast< GenericFormField<JID> >(getField())->setValue(JID(s));
 					}
 			};
@@ -106,5 +107,8 @@ namespace Swift {
 			std::string currentText_;
 			std::string currentOptionLabel_;
 			boost::shared_ptr<FieldParseHelper> currentFieldParseHelper_;
+			bool parsingItem_;
+			bool parsingReported_;
+			std::vector<FormField::ref> currentFields_;
 	};
 }

@@ -19,7 +19,7 @@ namespace Swift {
 			virtual std::string serializePayload(boost::shared_ptr<Form>)  const;
 
 		private:
-			boost::shared_ptr<XMLElement> fieldToXML(boost::shared_ptr<FormField> field) const;
+			boost::shared_ptr<XMLElement> fieldToXML(boost::shared_ptr<FormField> field, bool withTypeAttribute) const;
 			void multiLineify(const std::string& text, const std::string& elementName, boost::shared_ptr<XMLElement> parent) const;
 	};
 }

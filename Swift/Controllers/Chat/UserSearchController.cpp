@@ -123,18 +123,24 @@ void UserSearchController::handleSearchResponse(boost::shared_ptr<SearchPayload>
 		window_->setSearchError(true);
 		return;
 	}
+
 	std::vector<UserSearchResult> results;
-	foreach (SearchPayload::Item item, resultsPayload->getItems()) {
-		JID jid(item.jid);
-		std::map<std::string, std::string> fields;
-		fields["first"] = item.first;
-		fields["last"] = item.last;
-		fields["nick"] = item.nick;
-		fields["email"] = item.email;
-		UserSearchResult result(jid, fields);
-		results.push_back(result);
+
+	if (resultsPayload->getForm()) {
+		window_->setResultsForm(resultsPayload->getForm());
+	} else {
+		foreach (SearchPayload::Item item, resultsPayload->getItems()) {
+			JID jid(item.jid);
+			std::map<std::string, std::string> fields;
+			fields["first"] = item.first;
+			fields["last"] = item.last;
+			fields["nick"] = item.nick;
+			fields["email"] = item.email;
+			UserSearchResult result(jid, fields);
+			results.push_back(result);
+		}
+		window_->setResults(results);
 	}
-	window_->setResults(results);
 }
 
 void UserSearchController::handleDiscoWalkFinished() {

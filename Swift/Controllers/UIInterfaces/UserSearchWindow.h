@@ -23,6 +23,7 @@ namespace Swift {
 
 			virtual void clear() = 0;
 			virtual void setResults(const std::vector<UserSearchResult>& results) = 0;
+			virtual void setResultsForm(const Form::ref results) = 0;
 			virtual void addSavedServices(const std::vector<JID>& services) = 0;
 			virtual void setSelectedService(const JID& service) = 0;
 			virtual void setServerSupportsSearch(bool support) = 0;

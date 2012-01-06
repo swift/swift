@@ -6,17 +6,20 @@
 
 #include "Swift/QtUI/UserSearch/QtUserSearchWindow.h"
 
+#include <QItemDelegate>
 #include <QModelIndex>
 #include <QWizardPage>
 #include <QMovie>
 #include <boost/smart_ptr/make_shared.hpp>
 
+#include <Swiften/Base/foreach.h>
 #include "Swift/Controllers/UIEvents/UIEventStream.h"
 #include "Swift/Controllers/UIEvents/RequestChatUIEvent.h"
 #include "Swift/Controllers/UIEvents/AddContactUIEvent.h"
 #include "Swift/QtUI/UserSearch/UserSearchModel.h"
 #include "Swift/QtUI/UserSearch/UserSearchDelegate.h"
 #include "Swift/QtUI/QtSwiftUtil.h"
+#include "Swift/QtUI/QtFormResultItemModel.h"
 #include "QtUserSearchFirstPage.h"
 #include "QtUserSearchFieldsPage.h"
 #include "QtUserSearchResultsPage.h"
@@ -24,7 +27,7 @@
 
 namespace Swift {
 
-QtUserSearchWindow::QtUserSearchWindow(UIEventStream* eventStream, UserSearchWindow::Type type, const std::set<std::string>& groups) : eventStream_(eventStream), type_(type) {
+QtUserSearchWindow::QtUserSearchWindow(UIEventStream* eventStream, UserSearchWindow::Type type, const std::set<std::string>& groups) : eventStream_(eventStream), type_(type), model_(NULL) {
 	setupUi(this);
 #ifndef Q_WS_MAC
 	setWindowIcon(QIcon(":/logo-icon-16.png"));
@@ -32,7 +35,6 @@ QtUserSearchWindow::QtUserSearchWindow(UIEventStream* eventStream, UserSearchWin
 	QString title(type == UserSearchWindow::AddContact ? tr("Add Contact") : tr("Chat to User"));
 	setWindowTitle(title);
 
-	model_ = new UserSearchModel();
 	delegate_ = new UserSearchDelegate();
 
 	firstPage_ = new QtUserSearchFirstPage(type, title);
@@ -51,9 +53,7 @@ QtUserSearchWindow::QtUserSearchWindow(UIEventStream* eventStream, UserSearchWin
 	setPage(2, fieldsPage_);
 
 	resultsPage_ = new QtUserSearchResultsPage();
-	resultsPage_->results_->setModel(model_);
-	resultsPage_->results_->setItemDelegate(delegate_);
-	resultsPage_->results_->setHeaderHidden(true);
+
 #ifdef SWIFT_PLATFORM_MACOSX
 	resultsPage_->results_->setAlternatingRowColors(true);
 #endif
@@ -74,7 +74,7 @@ QtUserSearchWindow::QtUserSearchWindow(UIEventStream* eventStream, UserSearchWin
 }
 
 QtUserSearchWindow::~QtUserSearchWindow() {
-
+	delete model_;
 }
 
 void QtUserSearchWindow::handleCurrentChanged(int page) {
@@ -101,9 +101,28 @@ JID QtUserSearchWindow::getServerToSearch() {
 void QtUserSearchWindow::handleAccepted() {
 	JID jid;
 	if (!firstPage_->byJID_->isChecked()) {
-		UserSearchResult* userItem = static_cast<UserSearchResult*>(resultsPage_->results_->currentIndex().internalPointer());
-		if (userItem) { /* Remember to leave this if we change to dynamic cast */
-			jid = userItem->getJID();
+		if (dynamic_cast<UserSearchModel*>(model_)) {
+			UserSearchResult* userItem = static_cast<UserSearchResult*>(resultsPage_->results_->currentIndex().internalPointer());
+			if (userItem) { /* Remember to leave this if we change to dynamic cast */
+				jid = userItem->getJID();
+			}
+		} else {
+			int row = resultsPage_->results_->currentIndex().row();
+
+			Form::FormItem item = dynamic_cast<QtFormResultItemModel*>(model_)->getForm()->getItems().at(row);
+			JID fallbackJid;
+			foreach(FormField::ref field, item) {
+				if (boost::dynamic_pointer_cast<JIDSingleFormField>(field)) {
+					jid = JID(field->getRawValues().at(0));
+					break;
+				}
+				if (field->getName() == "jid") {
+					fallbackJid = field->getRawValues().at(0);
+				}
+			}
+			if (!jid.isValid()) {
+				jid = fallbackJid;
+			}
 		}
 	}
 	else {
@@ -152,17 +171,21 @@ void QtUserSearchWindow::handleFirstPageRadioChange() {
 
 void QtUserSearchWindow::handleSearch() {
 	boost::shared_ptr<SearchPayload> search(new SearchPayload());
-	if (fieldsPage_->nickInput_->isEnabled()) {
-		search->setNick(Q2PSTRING(fieldsPage_->nickInput_->text()));
-	}
-	if (fieldsPage_->firstInput_->isEnabled()) {
-		search->setFirst(Q2PSTRING(fieldsPage_->firstInput_->text()));
-	}
-	if (fieldsPage_->lastInput_->isEnabled()) {
-		search->setLast(Q2PSTRING(fieldsPage_->lastInput_->text()));
-	}
-	if (fieldsPage_->emailInput_->isEnabled()) {
-		search->setEMail(Q2PSTRING(fieldsPage_->emailInput_->text()));
+	if (fieldsPage_->getFormWidget()) {
+		search->setForm(fieldsPage_->getFormWidget()->getCompletedForm());
+	} else {
+		if (fieldsPage_->nickInput_->isEnabled()) {
+			search->setNick(Q2PSTRING(fieldsPage_->nickInput_->text()));
+		}
+		if (fieldsPage_->firstInput_->isEnabled()) {
+			search->setFirst(Q2PSTRING(fieldsPage_->firstInput_->text()));
+		}
+		if (fieldsPage_->lastInput_->isEnabled()) {
+			search->setLast(Q2PSTRING(fieldsPage_->lastInput_->text()));
+		}
+		if (fieldsPage_->emailInput_->isEnabled()) {
+			search->setEMail(Q2PSTRING(fieldsPage_->emailInput_->text()));
+		}
 	}
 	onSearchRequested(search, getServerToSearch());
 }
@@ -184,18 +207,41 @@ void QtUserSearchWindow::setSearchFields(boost::shared_ptr<SearchPayload> fields
 	fieldsPage_->fetchingThrobber_->hide();
 	fieldsPage_->fetchingThrobber_->movie()->stop();
 	fieldsPage_->fetchingLabel_->hide();
+
 	fieldsPage_->instructionsLabel_->setText(fields->getInstructions() ? P2QSTRING(fields->getInstructions().get()) : "Enter search terms");
-	bool enabled[8] = {fields->getNick(), fields->getNick(), fields->getFirst(), fields->getFirst(), fields->getLast(), fields->getLast(), fields->getEMail(), fields->getEMail()};
-	QWidget* legacySearchWidgets[8] = {fieldsPage_->nickInputLabel_, fieldsPage_->nickInput_, fieldsPage_->firstInputLabel_, fieldsPage_->firstInput_, fieldsPage_->lastInputLabel_, fieldsPage_->lastInput_, fieldsPage_->emailInputLabel_, fieldsPage_->emailInput_};
-	for (int i = 0; i < 8; i++) {
-		legacySearchWidgets[i]->setVisible(enabled[i]);
-		legacySearchWidgets[i]->setEnabled(enabled[i]);
+	if (fields->getForm()) {
+		fieldsPage_->setFormWidget(new QtFormWidget(fields->getForm(), fieldsPage_));
+	} else {
+		fieldsPage_->setFormWidget(NULL);
+		bool enabled[8] = {fields->getNick(), fields->getNick(), fields->getFirst(), fields->getFirst(), fields->getLast(), fields->getLast(), fields->getEMail(), fields->getEMail()};
+		QWidget* legacySearchWidgets[8] = {fieldsPage_->nickInputLabel_, fieldsPage_->nickInput_, fieldsPage_->firstInputLabel_, fieldsPage_->firstInput_, fieldsPage_->lastInputLabel_, fieldsPage_->lastInput_, fieldsPage_->emailInputLabel_, fieldsPage_->emailInput_};
+		for (int i = 0; i < 8; i++) {
+			legacySearchWidgets[i]->setVisible(enabled[i]);
+			legacySearchWidgets[i]->setEnabled(enabled[i]);
+		}
 	}
 	fieldsPage_->emitCompletenessCheck();
 }
 
 void QtUserSearchWindow::setResults(const std::vector<UserSearchResult>& results) {
-	model_->setResults(results);
+	UserSearchModel *newModel = new UserSearchModel();
+	newModel->setResults(results);
+	resultsPage_->results_->setModel(newModel);
+	resultsPage_->results_->setItemDelegate(delegate_);
+	resultsPage_->results_->setHeaderHidden(true);
+	delete model_;
+	model_ = newModel;
+}
+
+void QtUserSearchWindow::setResultsForm(Form::ref results) {
+	QtFormResultItemModel *newModel = new QtFormResultItemModel(this);
+	newModel->setForm(results);
+	resultsPage_->results_->setModel(newModel);
+	resultsPage_->results_->setItemDelegate(new QItemDelegate());
+	resultsPage_->results_->setHeaderHidden(false);
+	resultsPage_->results_->header()->setResizeMode(QHeaderView::ResizeToContents);
+	delete model_;
+	model_ = newModel;
 }
 
 void QtUserSearchWindow::setSelectedService(const JID& jid) {
@@ -228,7 +274,9 @@ void QtUserSearchWindow::clear() {
 	firstPage_->howLabel_->setText(howText);
 	firstPage_->byJID_->setChecked(true);
 	clearForm();
-	model_->clear();
+	resultsPage_->results_->setModel(NULL);
+	delete model_;
+	model_ = NULL;
 	handleFirstPageRadioChange();
 	restart();
 	lastPage_ = 1;

@@ -24,5 +24,20 @@ FormField::ref Form::getField(const std::string& name) const {
 	return FormField::ref();
 }
 
+void Form::addReportedField(FormField::ref field) {
+	reportedFields_.push_back(field);
+}
+
+const std::vector<FormField::ref>& Form::getReportedFields() const {
+	return reportedFields_;
+}
+
+void Form::addItem(const Form::FormItem& item) {
+	items_.push_back(item);
+}
+
+const std::vector<Form::FormItem>& Form::getItems() const {
+	return items_;
+}
 
 }

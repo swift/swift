@@ -21,6 +21,7 @@ namespace Swift {
 	class QtUserSearchFieldsPage;
 	class QtUserSearchResultsPage;
 	class QtUserSearchDetailsPage;
+	class QtFormResultItemModel;
 
 	class QtUserSearchWindow : public QWizard, public UserSearchWindow, private Ui::QtUserSearchWizard {
 		Q_OBJECT
@@ -33,6 +34,7 @@ namespace Swift {
 			virtual void clear();
 			virtual void show();
 			virtual void setResults(const std::vector<UserSearchResult>& results);
+			virtual void setResultsForm(Form::ref results);
 			virtual void setSelectedService(const JID& jid);
 			virtual void setServerSupportsSearch(bool error);
 			virtual void setSearchError(bool error);
@@ -52,7 +54,7 @@ namespace Swift {
 		private:
 			UIEventStream* eventStream_;
 			UserSearchWindow::Type type_;
-			UserSearchModel* model_;
+			QAbstractItemModel* model_;
 			UserSearchDelegate* delegate_;
 			QtUserSearchFirstPage* firstPage_;
 			QtUserSearchFieldsPage* fieldsPage_;

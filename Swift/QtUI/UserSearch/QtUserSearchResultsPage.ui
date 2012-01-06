@@ -11,10 +11,10 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string></string>
+   <string/>
   </property>
-  <layout class="QHBoxLayout" name="horizontalLayout">
-   <item>
+  <layout class="QGridLayout" name="layout">
+   <item row="0" column="0">
     <widget class="QTreeView" name="results_">
      <property name="rootIsDecorated">
       <bool>false</bool>

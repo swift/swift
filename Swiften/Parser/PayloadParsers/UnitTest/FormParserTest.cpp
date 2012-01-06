@@ -16,6 +16,7 @@ class FormParserTest : public CppUnit::TestFixture {
 		CPPUNIT_TEST_SUITE(FormParserTest);
 		CPPUNIT_TEST(testParse_FormInformation);
 		CPPUNIT_TEST(testParse);
+		CPPUNIT_TEST(testParse_FormItems);
 		CPPUNIT_TEST_SUITE_END();
 
 	public:
@@ -114,6 +115,72 @@ class FormParserTest : public CppUnit::TestFixture {
 			CPPUNIT_ASSERT_EQUAL(std::string("Tell all your friends about your new bot!"), payload->getFields()[8]->getDescription());
 
 			CPPUNIT_ASSERT_EQUAL(std::string("foo"), boost::dynamic_pointer_cast<TextSingleFormField>(payload->getFields()[9])->getValue());
+		}
+
+		void testParse_FormItems() {
+			PayloadsParserTester parser;
+
+			CPPUNIT_ASSERT(parser.parse(
+				"<x xmlns='jabber:x:data' type='result'>"
+					"<field type='hidden' var='FORM_TYPE'>"
+						"<value>jabber:iq:search</value>"
+					"</field>"
+					"<reported>"
+						"<field var='first' label='Given Name' type='text-single'/>"
+						"<field var='last' label='Family Name' type='text-single'/>"
+						"<field var='jid' label='Jabber ID' type='jid-single'/>"
+						"<field var='x-gender' label='Gender' type='list-single'/>"
+					"</reported>"
+					"<item>"
+						"<field var='first'><value>Benvolio</value></field>"
+						"<field var='last'><value>Montague</value></field>"
+						"<field var='jid'><value>benvolio@montague.net</value></field>"
+						"<field var='x-gender'><value>male</value></field>"
+					"</item>"
+					"<item>"
+						"<field var='first'><value>Romeo</value></field>"
+						"<field var='last'><value>Montague</value></field>"
+						"<field var='jid'><value>romeo@montague.net</value></field>"
+						"<field var='x-gender'><value>male</value></field>"
+					"</item>"
+				"</x>"));
+
+			Form* dataForm = dynamic_cast<Form*>(parser.getPayload().get());
+			CPPUNIT_ASSERT(dataForm);
+
+			Form::FormItem reported = dataForm->getReportedFields();
+			CPPUNIT_ASSERT_EQUAL(static_cast<size_t>(4), reported.size());
+
+			std::vector<Form::FormItem> items = dataForm->getItems();
+			CPPUNIT_ASSERT_EQUAL(static_cast<size_t>(2), items.size());
+
+			Form::FormItem item = items[0];
+			CPPUNIT_ASSERT_EQUAL(static_cast<size_t>(4), item.size());
+
+			CPPUNIT_ASSERT_EQUAL(std::string("Benvolio"), item[0]->getRawValues()[0]);
+			CPPUNIT_ASSERT_EQUAL(std::string("first"), item[0]->getName());
+			CPPUNIT_ASSERT_EQUAL(std::string("Montague"), item[1]->getRawValues()[0]);
+			CPPUNIT_ASSERT_EQUAL(std::string("last"), item[1]->getName());
+			JIDSingleFormField::ref jidField = boost::dynamic_pointer_cast<JIDSingleFormField>(item[2]);
+			CPPUNIT_ASSERT(jidField);
+			CPPUNIT_ASSERT_EQUAL(JID("benvolio@montague.net"), jidField->getValue());
+			CPPUNIT_ASSERT_EQUAL(std::string("jid"), item[2]->getName());
+			CPPUNIT_ASSERT_EQUAL(std::string("male"), item[3]->getRawValues()[0]);
+			CPPUNIT_ASSERT_EQUAL(std::string("x-gender"), item[3]->getName());
+
+			item = items[1];
+			CPPUNIT_ASSERT_EQUAL(static_cast<size_t>(4), item.size());
+
+			CPPUNIT_ASSERT_EQUAL(std::string("Romeo"), item[0]->getRawValues()[0]);
+			CPPUNIT_ASSERT_EQUAL(std::string("first"), item[0]->getName());
+			CPPUNIT_ASSERT_EQUAL(std::string("Montague"), item[1]->getRawValues()[0]);
+			CPPUNIT_ASSERT_EQUAL(std::string("last"), item[1]->getName());
+			jidField = boost::dynamic_pointer_cast<JIDSingleFormField>(item[2]);
+			CPPUNIT_ASSERT(jidField);
+			CPPUNIT_ASSERT_EQUAL(JID("romeo@montague.net"), jidField->getValue());
+			CPPUNIT_ASSERT_EQUAL(std::string("jid"), item[2]->getName());
+			CPPUNIT_ASSERT_EQUAL(std::string("male"), item[3]->getRawValues()[0]);
+			CPPUNIT_ASSERT_EQUAL(std::string("x-gender"), item[3]->getName());
 		}
 };
 

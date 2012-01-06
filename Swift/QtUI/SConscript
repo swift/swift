@@ -99,6 +99,7 @@ sources = [
     "SystemMessageSnippet.cpp",
     "QtElidingLabel.cpp",
     "QtFormWidget.cpp",
+	"QtFormResultItemModel.cpp",
     "QtLineEdit.cpp",
     "QtJoinMUCWindow.cpp",
     "Roster/RosterModel.cpp",

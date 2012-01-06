@@ -52,12 +52,27 @@ std::string FormSerializer::serializePayload(boost::shared_ptr<Form> form)  cons
 		multiLineify(form->getInstructions(), "instructions", formElement);
 	}
 	foreach(boost::shared_ptr<FormField> field, form->getFields()) {
-		formElement->addNode(fieldToXML(field));
+		formElement->addNode(fieldToXML(field, true));
 	}
+	if (!form->getReportedFields().empty()) {
+		boost::shared_ptr<XMLElement> reportedElement(new XMLElement("reported"));
+		foreach(FormField::ref field, form->getReportedFields()) {
+			reportedElement->addNode(fieldToXML(field, true));
+		}
+		formElement->addNode(reportedElement);
+	}
+	foreach(Form::FormItem item, form->getItems()) {
+		boost::shared_ptr<XMLElement> itemElement(new XMLElement("item"));
+		foreach(FormField::ref field, item) {
+			itemElement->addNode(fieldToXML(field, false));
+		}
+		formElement->addNode(itemElement);
+	}
+
 	return formElement->serialize();
 }
 
-boost::shared_ptr<XMLElement> FormSerializer::fieldToXML(boost::shared_ptr<FormField> field) const {
+boost::shared_ptr<XMLElement> FormSerializer::fieldToXML(boost::shared_ptr<FormField> field, bool withTypeAttribute) const {
 	boost::shared_ptr<XMLElement> fieldElement(new XMLElement("field"));
 	if (!field->getName().empty()) {
 		fieldElement->setAttribute("var", field->getName());
@@ -115,7 +130,7 @@ boost::shared_ptr<XMLElement> FormSerializer::fieldToXML(boost::shared_ptr<FormF
 		fieldType = "jid-single";
 		boost::shared_ptr<XMLElement> valueElement(new XMLElement("value"));
 		valueElement->addNode(XMLTextNode::create(boost::dynamic_pointer_cast<JIDSingleFormField>(field)->getValue().toString()));
-		fieldElement->addNode(valueElement);
+		if ( boost::dynamic_pointer_cast<JIDSingleFormField>(field)->getValue().isValid()) fieldElement->addNode(valueElement);
 	}
 	else if (boost::dynamic_pointer_cast<ListMultiFormField>(field)) {
 		fieldType = "list-multi";
@@ -133,7 +148,7 @@ boost::shared_ptr<XMLElement> FormSerializer::fieldToXML(boost::shared_ptr<FormF
 	else {
 		assert(false);
 	}
-	if (!fieldType.empty()) {
+	if (!fieldType.empty() && withTypeAttribute) {
 		fieldElement->setAttribute("type", fieldType);
 	}
 
