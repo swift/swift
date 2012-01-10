@@ -28,7 +28,10 @@ namespace Swift {
 		public:
 			Form(Type type = FormType) : type_(type) {}
 
-			void addField(boost::shared_ptr<FormField> field) { fields_.push_back(field); }
+			/** Add a field to the form.
+			 * @param field New field - must not be null.
+			 */
+			void addField(boost::shared_ptr<FormField> field) {assert(field);  fields_.push_back(field); }
 			const std::vector<boost::shared_ptr<FormField> >& getFields() const { return fields_; }
 			void setTitle(const std::string& title) { title_ = title; }
 			const std::string& getTitle() const { return title_; }
