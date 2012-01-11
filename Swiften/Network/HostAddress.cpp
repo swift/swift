@@ -31,14 +31,14 @@ HostAddress::HostAddress(const std::string& address) {
 HostAddress::HostAddress(const unsigned char* address, int length) {
 	assert(length == 4 || length == 16);
 	if (length == 4) {
-		boost::array<unsigned char, 4> data;
+		boost::asio::ip::address_v4::bytes_type data;
 		for (int i = 0; i < length; ++i) {
 			data[i] = address[i];
 		}
 		address_ = boost::asio::ip::address(boost::asio::ip::address_v4(data));
 	}
 	else {
-		boost::array<unsigned char, 16> data;
+		boost::asio::ip::address_v6::bytes_type data;
 		for (int i = 0; i < length; ++i) {
 			data[i] = address[i];
 		}
