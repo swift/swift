@@ -13,8 +13,14 @@
 #include <Swiften/JID/JID.h>
 
 namespace Swift {
+	/**
+	 * Service discovery disco#items from XEP-0030.
+	 */
 	class DiscoItems : public Payload {
 		public:
+			/**
+			 * A single result item.
+			 */
 			class Item {
 				public:
 					Item(const std::string& name, const JID& jid, const std::string& node="") : name_(name), jid_(jid), node_(node) {

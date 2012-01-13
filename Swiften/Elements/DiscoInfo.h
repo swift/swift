@@ -13,6 +13,9 @@
 #include <Swiften/Elements/Form.h>
 
 namespace Swift {
+	/**
+	 * disco#info from XEP-0030
+	 */
 	class DiscoInfo : public Payload {
 		public:
 			typedef boost::shared_ptr<DiscoInfo> ref;
