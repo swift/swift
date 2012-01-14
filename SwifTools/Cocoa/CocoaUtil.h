@@ -11,8 +11,6 @@
 #define STD2NSSTRING(a) [NSString stringWithCString:a.c_str() encoding:NSUTF8StringEncoding]
 
 // Intrusive pointer for NSObjects
-#include <boost/intrusive_ptr.hpp>
-
 namespace boost {	
 	inline void intrusive_ptr_add_ref(NSObject* object) {
 		[object retain];
@@ -22,3 +20,8 @@ namespace boost {
 		[object release];
 	}
 }
+
+// Including intrusive_ptr after ref/release methods to avoid compilation 
+// errors with CLang
+
+#include <boost/intrusive_ptr.hpp>
