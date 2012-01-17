@@ -15,10 +15,12 @@
 namespace Swift {
 	class HTTPConnectProxiedConnectionFactory;
 	class TLSConnectionFactory;
+	class CachingNameOnlyDomainNameResolver;
+	class EventLoop;
 
 	class BOSHConnectionPool : public boost::bsignals::trackable {
 		public:
-			BOSHConnectionPool(const URL& boshURL, ConnectionFactory* connectionFactory, XMLParserFactory* parserFactory, TLSContextFactory* tlsFactory, const std::string& to, long initialRID, const URL& boshHTTPConnectProxyURL, const SafeString& boshHTTPConnectProxyAuthID, const SafeString& boshHTTPConnectProxyAuthPassword);
+			BOSHConnectionPool(const URL& boshURL, DomainNameResolver* resolver, ConnectionFactory* connectionFactory, XMLParserFactory* parserFactory, TLSContextFactory* tlsFactory, TimerFactory* timerFactory, EventLoop* eventLoop, const std::string& to, unsigned long long initialRID, const URL& boshHTTPConnectProxyURL, const SafeString& boshHTTPConnectProxyAuthID, const SafeString& boshHTTPConnectProxyAuthPassword);
 			~BOSHConnectionPool();
 			void write(const SafeByteArray& data);
 			void writeFooter();
@@ -52,16 +54,17 @@ namespace Swift {
 			ConnectionFactory* connectionFactory;
 			XMLParserFactory* xmlParserFactory;
 			TLSContextFactory* tlsFactory;
+			TimerFactory* timerFactory;
 			std::vector<BOSHConnection::ref> connections;
 			std::string sid;
-			unsigned long rid;
+			unsigned long long rid;
 			std::vector<SafeByteArray> dataQueue;
 			bool pendingTerminate;
 			std::string to;
 			size_t requestLimit;
 			int restartCount;
 			bool pendingRestart;
-			HTTPConnectProxiedConnectionFactory* connectProxyFactory;
-			TLSConnectionFactory* tlsConnectionFactory;
+			std::vector<ConnectionFactory*> myConnectionFactories;
+			CachingNameOnlyDomainNameResolver* resolver;
 	};
 }

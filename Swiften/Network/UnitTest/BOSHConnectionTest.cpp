@@ -20,6 +20,8 @@
 #include <Swiften/Network/ConnectionFactory.h>
 #include <Swiften/Network/BOSHConnection.h>
 #include <Swiften/Network/HostAddressPort.h>
+#include <Swiften/Network/StaticDomainNameResolver.h>
+#include <Swiften/Network/DummyTimerFactory.h>
 #include <Swiften/EventLoop/DummyEventLoop.h>
 #include <Swiften/Parser/PlatformXMLParserFactory.h>
 
@@ -43,6 +45,8 @@ class BOSHConnectionTest : public CppUnit::TestFixture {
 		void setUp() {
 			eventLoop = new DummyEventLoop();
 			connectionFactory = new MockConnectionFactory(eventLoop);
+			resolver = new StaticDomainNameResolver(eventLoop);
+			timerFactory = new DummyTimerFactory();
 			connectFinished = false;
 			disconnected = false;
 			disconnectedError = false;
@@ -52,7 +56,9 @@ class BOSHConnectionTest : public CppUnit::TestFixture {
 		void tearDown() {
 			eventLoop->processEvents();
 			delete connectionFactory;
-			delete eventLoop;	
+			delete resolver;
+			delete timerFactory;
+			delete eventLoop;
 		}
 
 		void testHeader() {
@@ -185,7 +191,9 @@ class BOSHConnectionTest : public CppUnit::TestFixture {
 	private:
 
 		BOSHConnection::ref createTestling() {
-			BOSHConnection::ref c = BOSHConnection::create(URL("http", "wonderland.lit", 5280, "http-bind"), connectionFactory, &parserFactory, static_cast<TLSContextFactory*>(NULL));
+			resolver->addAddress("wonderland.lit", HostAddress("127.0.0.1"));
+			Connector::ref connector = Connector::create("wonderland.lit", resolver, connectionFactory, timerFactory, 5280);
+			BOSHConnection::ref c = BOSHConnection::create(URL("http", "wonderland.lit", 5280, "http-bind"), connector, &parserFactory);
 			c->onConnectFinished.connect(boost::bind(&BOSHConnectionTest::handleConnectFinished, this, _1));
 			c->onDisconnected.connect(boost::bind(&BOSHConnectionTest::handleDisconnected, this, _1));
 			c->onXMPPDataRead.connect(boost::bind(&BOSHConnectionTest::handleDataRead, this, _1));
@@ -284,6 +292,8 @@ class BOSHConnectionTest : public CppUnit::TestFixture {
 		bool disconnectedError;
 		ByteArray dataRead;
 		PlatformXMLParserFactory parserFactory;
+		StaticDomainNameResolver* resolver;
+		TimerFactory* timerFactory;
 		std::string sid;	
 
 };

@@ -35,6 +35,7 @@ BOSHSessionStream::BOSHSessionStream(
 		TimerFactory* timerFactory,
 		XMLParserFactory* xmlParserFactory,
 		EventLoop* eventLoop,
+		DomainNameResolver* resolver,
 		const std::string& to,
 		const URL& boshHTTPConnectProxyURL,
 		const SafeString& boshHTTPConnectProxyAuthID,
@@ -49,11 +50,11 @@ BOSHSessionStream::BOSHSessionStream(
 			firstHeader(true) {
 
 	boost::mt19937 random;
-	boost::uniform_int<long long> dist(0, (1LL<<53) - 1);
+	boost::uniform_int<unsigned long long> dist(0, (1LL<<53) - 1);
 	random.seed(time(NULL));
-	long long initialRID = boost::variate_generator<boost::mt19937&, boost::uniform_int<long long> >(random, dist)();
+	unsigned long long initialRID = boost::variate_generator<boost::mt19937&, boost::uniform_int<unsigned long long> >(random, dist)();
 
-	connectionPool = new BOSHConnectionPool(boshURL, connectionFactory, xmlParserFactory, tlsContextFactory, to, initialRID, boshHTTPConnectProxyURL, boshHTTPConnectProxyAuthID, boshHTTPConnectProxyAuthPassword);
+	connectionPool = new BOSHConnectionPool(boshURL, resolver, connectionFactory, xmlParserFactory, tlsContextFactory, timerFactory, eventLoop, to, initialRID, boshHTTPConnectProxyURL, boshHTTPConnectProxyAuthID, boshHTTPConnectProxyAuthPassword);
 	connectionPool->onSessionTerminated.connect(boost::bind(&BOSHSessionStream::handlePoolSessionTerminated, this, _1));
 	connectionPool->onSessionStarted.connect(boost::bind(&BOSHSessionStream::handlePoolSessionStarted, this));
 	connectionPool->onXMPPDataRead.connect(boost::bind(&BOSHSessionStream::handlePoolXMPPDataRead, this, _1));

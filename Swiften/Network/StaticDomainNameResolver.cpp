@@ -10,13 +10,14 @@
 #include <boost/lexical_cast.hpp>
 
 #include <Swiften/Network/DomainNameResolveError.h>
+#include <Swiften/EventLoop/EventOwner.h>
 #include <string>
 
 using namespace Swift;
 
 namespace {
 	struct ServiceQuery : public DomainNameServiceQuery, public boost::enable_shared_from_this<ServiceQuery> {
-		ServiceQuery(const std::string& service, Swift::StaticDomainNameResolver* resolver, EventLoop* eventLoop) : eventLoop(eventLoop), service(service), resolver(resolver) {}
+		ServiceQuery(const std::string& service, Swift::StaticDomainNameResolver* resolver, EventLoop* eventLoop, boost::shared_ptr<EventOwner> owner) : eventLoop(eventLoop), service(service), resolver(resolver), owner(owner) {}
 
 		virtual void run() {
 			if (!resolver->getIsResponsive()) {
@@ -28,7 +29,7 @@ namespace {
 					results.push_back(i->second);
 				}
 			}
-			eventLoop->postEvent(boost::bind(&ServiceQuery::emitOnResult, shared_from_this(), results));
+			eventLoop->postEvent(boost::bind(&ServiceQuery::emitOnResult, shared_from_this(), results), owner);
 		}
 
 		void emitOnResult(std::vector<DomainNameServiceQuery::Result> results) {
@@ -38,10 +39,11 @@ namespace {
 		EventLoop* eventLoop;
 		std::string service;
 		StaticDomainNameResolver* resolver;
+		boost::shared_ptr<EventOwner> owner;
 	};
 
 	struct AddressQuery : public DomainNameAddressQuery, public boost::enable_shared_from_this<AddressQuery> {
-		AddressQuery(const std::string& host, StaticDomainNameResolver* resolver, EventLoop* eventLoop) : eventLoop(eventLoop), host(host), resolver(resolver) {}
+		AddressQuery(const std::string& host, StaticDomainNameResolver* resolver, EventLoop* eventLoop, boost::shared_ptr<EventOwner> owner) : eventLoop(eventLoop), host(host), resolver(resolver), owner(owner) {}
 
 		virtual void run() {
 			if (!resolver->getIsResponsive()) {
@@ -53,7 +55,7 @@ namespace {
 						boost::bind(&AddressQuery::emitOnResult, shared_from_this(), i->second, boost::optional<DomainNameResolveError>()));
 			}
 			else {
-				eventLoop->postEvent(boost::bind(&AddressQuery::emitOnResult, shared_from_this(), std::vector<HostAddress>(), boost::optional<DomainNameResolveError>(DomainNameResolveError())));
+				eventLoop->postEvent(boost::bind(&AddressQuery::emitOnResult, shared_from_this(), std::vector<HostAddress>(), boost::optional<DomainNameResolveError>(DomainNameResolveError())), owner);
 			}
 		}
 
@@ -64,12 +66,25 @@ namespace {
 		EventLoop* eventLoop;
 		std::string host;
 		StaticDomainNameResolver* resolver;
+		boost::shared_ptr<EventOwner> owner;
 	};
 }
 
+class StaticDomainNameResolverEventOwner : public EventOwner {
+	public:
+		~StaticDomainNameResolverEventOwner() {
+
+		}
+};
+
+
 namespace Swift {
 
-StaticDomainNameResolver::StaticDomainNameResolver(EventLoop* eventLoop) : eventLoop(eventLoop), isResponsive(true) {
+StaticDomainNameResolver::StaticDomainNameResolver(EventLoop* eventLoop) : eventLoop(eventLoop), isResponsive(true), owner(new StaticDomainNameResolverEventOwner()) {
+}
+
+StaticDomainNameResolver::~StaticDomainNameResolver() {
+	eventLoop->removeEventsFromOwner(owner);
 }
 
 void StaticDomainNameResolver::addAddress(const std::string& domain, const HostAddress& address) {
@@ -94,11 +109,11 @@ void StaticDomainNameResolver::addXMPPClientService(const std::string& domain, c
 }
 
 boost::shared_ptr<DomainNameServiceQuery> StaticDomainNameResolver::createServiceQuery(const std::string& name) {
-	return boost::shared_ptr<DomainNameServiceQuery>(new ServiceQuery(name, this, eventLoop));
+	return boost::shared_ptr<DomainNameServiceQuery>(new ServiceQuery(name, this, eventLoop, owner));
 }
 
 boost::shared_ptr<DomainNameAddressQuery> StaticDomainNameResolver::createAddressQuery(const std::string& name) {
-	return boost::shared_ptr<DomainNameAddressQuery>(new AddressQuery(name, this, eventLoop));
+	return boost::shared_ptr<DomainNameAddressQuery>(new AddressQuery(name, this, eventLoop, owner));
 }
 
 }

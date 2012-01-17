@@ -67,7 +67,6 @@ namespace Swift {
 
 		/**
 		 * If non-empty, use BOSH instead of direct TCP, with the given URL.
-		 * The host currently needs to be specified by IP, rather than hostname.
 		 * Default: empty (no BOSH)
 		 */
 		URL boshURL;
@@ -75,7 +74,6 @@ namespace Swift {
 		/**
 		 * If non-empty, BOSH connections will try to connect over this HTTP CONNECT
 		 * proxy instead of directly.
-		 * Must be specified by IP, rather than hostname.
 		 * Default: empty (no proxy)
 		 */
 		URL boshHTTPConnectProxyURL;

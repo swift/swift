@@ -38,6 +38,7 @@ namespace Swift {
 					TimerFactory* whitespacePingLayerFactory,
 					XMLParserFactory* xmlParserFactory,
 					EventLoop* eventLoop,
+					DomainNameResolver* resolver,
 					const std::string& to,
 					const URL& boshHTTPConnectProxyURL,
 					const SafeString& boshHTTPConnectProxyAuthID,

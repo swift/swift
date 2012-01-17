@@ -17,8 +17,6 @@
 #include <Swiften/EventLoop/EventLoop.h>
 
 namespace Swift {
-	
-
 	class StaticDomainNameResolver : public DomainNameResolver {
 		public:
 			typedef std::map<std::string, std::vector<HostAddress> > AddressesMap;
@@ -26,6 +24,7 @@ namespace Swift {
 
 		public:
 			StaticDomainNameResolver(EventLoop* eventLoop);
+			~StaticDomainNameResolver();
 
 			void addAddress(const std::string& domain, const HostAddress& address);
 			void addService(const std::string& service, const DomainNameServiceQuery::Result& result);
@@ -50,11 +49,11 @@ namespace Swift {
 
 			virtual boost::shared_ptr<DomainNameServiceQuery> createServiceQuery(const std::string& name);
 			virtual boost::shared_ptr<DomainNameAddressQuery> createAddressQuery(const std::string& name);
-			
 		private:
 			EventLoop* eventLoop;
 			bool isResponsive;
 			AddressesMap addresses;
 			ServicesCollection services;
+			boost::shared_ptr<EventOwner> owner;
 	};
 }

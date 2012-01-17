@@ -14,38 +14,43 @@
 #include <Swiften/Base/SafeString.h>
 #include <Swiften/Network/TLSConnectionFactory.h>
 #include <Swiften/Network/HTTPConnectProxiedConnectionFactory.h>
+#include <Swiften/Network/CachingNameOnlyDomainNameResolver.h>
 
 namespace Swift {
-BOSHConnectionPool::BOSHConnectionPool(const URL& boshURL, ConnectionFactory* connectionFactory, XMLParserFactory* parserFactory, TLSContextFactory* tlsFactory, const std::string& to, long initialRID, const URL& boshHTTPConnectProxyURL, const SafeString& boshHTTPConnectProxyAuthID, const SafeString& boshHTTPConnectProxyAuthPassword) :
+BOSHConnectionPool::BOSHConnectionPool(const URL& boshURL, DomainNameResolver* realResolver, ConnectionFactory* connectionFactoryParameter, XMLParserFactory* parserFactory, TLSContextFactory* tlsFactory, TimerFactory* timerFactory, EventLoop* eventLoop, const std::string& to, unsigned long long initialRID, const URL& boshHTTPConnectProxyURL, const SafeString& boshHTTPConnectProxyAuthID, const SafeString& boshHTTPConnectProxyAuthPassword) :
 		boshURL(boshURL),
-		connectionFactory(connectionFactory),
+		connectionFactory(connectionFactoryParameter),
 		xmlParserFactory(parserFactory),
 		tlsFactory(tlsFactory),
+		timerFactory(timerFactory),
 		rid(initialRID),
 		pendingTerminate(false),
 		to(to),
 		requestLimit(2),
 		restartCount(0),
 		pendingRestart(false) {
-	tlsConnectionFactory = NULL;
-	if (boshHTTPConnectProxyURL.empty()) {
-		connectProxyFactory = NULL;
-	}
-	else {
-		ConnectionFactory* rawFactory = connectionFactory;
+
+	if (!boshHTTPConnectProxyURL.empty()) {
 		if (boshHTTPConnectProxyURL.getScheme() == "https") {
-			tlsConnectionFactory = new TLSConnectionFactory(tlsFactory, rawFactory);
-			rawFactory = tlsConnectionFactory;
+			connectionFactory = new TLSConnectionFactory(tlsFactory, connectionFactory);
+			myConnectionFactories.push_back(connectionFactory);
 		}
-		connectProxyFactory = new HTTPConnectProxiedConnectionFactory(rawFactory, HostAddressPort(HostAddress(boshHTTPConnectProxyURL.getHost()), boshHTTPConnectProxyURL.getPort()), boshHTTPConnectProxyAuthID, boshHTTPConnectProxyAuthPassword);
+		connectionFactory = new HTTPConnectProxiedConnectionFactory(realResolver, connectionFactory, timerFactory, eventLoop, boshHTTPConnectProxyURL.getHost(), boshHTTPConnectProxyURL.getPort(), boshHTTPConnectProxyAuthID, boshHTTPConnectProxyAuthPassword);
 	}
+	if (boshURL.getScheme() == "https") {
+		connectionFactory = new TLSConnectionFactory(tlsFactory, connectionFactory);
+		myConnectionFactories.push_back(connectionFactory);
+	}
+	resolver = new CachingNameOnlyDomainNameResolver(realResolver, eventLoop);
 	createConnection();
 }
 
 BOSHConnectionPool::~BOSHConnectionPool() {
 	close();
-	delete connectProxyFactory;
-	delete tlsConnectionFactory;
+	foreach (ConnectionFactory* factory, myConnectionFactories) {
+		delete factory;
+	}
+	delete resolver;
 }
 
 void BOSHConnectionPool::write(const SafeByteArray& data) {
@@ -209,7 +214,8 @@ void BOSHConnectionPool::handleConnectionDisconnected(bool error, BOSHConnection
 }
 
 boost::shared_ptr<BOSHConnection> BOSHConnectionPool::createConnection() {
-	BOSHConnection::ref connection = BOSHConnection::create(boshURL, connectProxyFactory ? connectProxyFactory : connectionFactory, xmlParserFactory, tlsFactory);
+	Connector::ref connector = Connector::create(boshURL.getHost(), resolver, connectionFactory, timerFactory, boshURL.getPort());
+	BOSHConnection::ref connection = BOSHConnection::create(boshURL, connector, xmlParserFactory);
 	connection->onXMPPDataRead.connect(boost::bind(&BOSHConnectionPool::handleDataRead, this, _1));
 	connection->onSessionStarted.connect(boost::bind(&BOSHConnectionPool::handleSessionStarted, this, _1, _2));
 	connection->onBOSHDataRead.connect(boost::bind(&BOSHConnectionPool::handleBOSHDataRead, this, _1));

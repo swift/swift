@@ -17,32 +17,29 @@
 #include <boost/lexical_cast.hpp>
 #include <string>
 
-#include <Swiften/Network/ConnectionFactory.h>
 #include <Swiften/Base/Log.h>
 #include <Swiften/Base/String.h>
 #include <Swiften/Base/Concat.h>
 #include <Swiften/Base/ByteArray.h>
 #include <Swiften/Network/HostAddressPort.h>
-#include <Swiften/Network/TLSConnection.h>
 #include <Swiften/Parser/BOSHBodyExtractor.h>
 
 namespace Swift {
 
-BOSHConnection::BOSHConnection(const URL& boshURL, ConnectionFactory* connectionFactory, XMLParserFactory* parserFactory, TLSContextFactory* tlsFactory)
-	: boshURL_(boshURL), 
-	  connectionFactory_(connectionFactory), 
+BOSHConnection::BOSHConnection(const URL& boshURL, Connector::ref connector, XMLParserFactory* parserFactory)
+	: boshURL_(boshURL),
+	  connector_(connector),
 	  parserFactory_(parserFactory),
 	  sid_(),
 	  waitingForStartResponse_(false),
 	  pending_(false),
-	  tlsFactory_(tlsFactory),
 	  connectionReady_(false)
 {
 }
 
 BOSHConnection::~BOSHConnection() {
+	cancelConnector();
 	if (connection_) {
-		connection_->onConnectFinished.disconnect(boost::bind(&BOSHConnection::handleConnectionConnectFinished, shared_from_this(), _1));
 		connection_->onDataRead.disconnect(boost::bind(&BOSHConnection::handleDataRead, shared_from_this(), _1));
 		connection_->onDisconnected.disconnect(boost::bind(&BOSHConnection::handleDisconnected, shared_from_this(), _1));
 	}
@@ -50,15 +47,20 @@ BOSHConnection::~BOSHConnection() {
 }
 
 void BOSHConnection::connect() {
-	Connection::ref rawConnection = connectionFactory_->createConnection();
-	connection_ = (boshURL_.getScheme() == "https") ? boost::make_shared<TLSConnection>(rawConnection, tlsFactory_) : rawConnection;
-	connection_->onConnectFinished.connect(boost::bind(&BOSHConnection::handleConnectionConnectFinished, shared_from_this(), _1));
-	connection_->onDataRead.connect(boost::bind(&BOSHConnection::handleDataRead, shared_from_this(), _1));
-	connection_->onDisconnected.connect(boost::bind(&BOSHConnection::handleDisconnected, shared_from_this(), _1));
-	connection_->connect(HostAddressPort(HostAddress(boshURL_.getHost()), boshURL_.getPort()));
+	connector_->onConnectFinished.connect(boost::bind(&BOSHConnection::handleConnectFinished, shared_from_this(), _1));
+	connector_->start();
+}
+
+void BOSHConnection::cancelConnector() {
+	if (connector_) {
+		connector_->onConnectFinished.disconnect(boost::bind(&BOSHConnection::handleConnectFinished, shared_from_this(), _1));
+		connector_->stop();
+		connector_.reset();
+	}
 }
 
 void BOSHConnection::disconnect() {
+	cancelConnector();
 	if(connection_) {
 		connection_->disconnect();
 		sid_ = "";
@@ -78,7 +80,7 @@ void BOSHConnection::write(const SafeByteArray& data) {
 	write(data, false, false);
 }
 
-std::pair<SafeByteArray, size_t> BOSHConnection::createHTTPRequest(const SafeByteArray& data, bool streamRestart, bool terminate, long rid, const std::string& sid, const URL& boshURL) {
+std::pair<SafeByteArray, size_t> BOSHConnection::createHTTPRequest(const SafeByteArray& data, bool streamRestart, bool terminate, unsigned long long rid, const std::string& sid, const URL& boshURL) {
 	size_t size;
 	std::stringstream content;
 	SafeByteArray contentTail = createSafeByteArray("</body>");
@@ -124,13 +126,18 @@ void BOSHConnection::write(const SafeByteArray& data, bool streamRestart, bool t
 	SWIFT_LOG(debug) << "write data: " << safeByteArrayToString(safeHeader) << std::endl;
 }
 
-void BOSHConnection::handleConnectionConnectFinished(bool error) {
-	connection_->onConnectFinished.disconnect(boost::bind(&BOSHConnection::handleConnectionConnectFinished, shared_from_this(), _1));
-	connectionReady_ = !error;
-	onConnectFinished(error);
+void BOSHConnection::handleConnectFinished(Connection::ref connection) {
+	cancelConnector();
+	connectionReady_ = connection;
+	if (connectionReady_) {
+		connection_ = connection;
+		connection_->onDataRead.connect(boost::bind(&BOSHConnection::handleDataRead, shared_from_this(), _1));
+		connection_->onDisconnected.connect(boost::bind(&BOSHConnection::handleDisconnected, shared_from_this(), _1));
+	}
+	onConnectFinished(!connectionReady_);
 }
 
-void BOSHConnection::startStream(const std::string& to, unsigned long rid) {
+void BOSHConnection::startStream(const std::string& to, unsigned long long rid) {
 	assert(connectionReady_);
 	// Session Creation Request
 	std::stringstream content;
@@ -265,6 +272,7 @@ void BOSHConnection::setSID(const std::string& sid) {
 }
 
 void BOSHConnection::handleDisconnected(const boost::optional<Connection::Error>& error) {
+	cancelConnector();
 	onDisconnected(error);
 	sid_ = "";
 	connectionReady_ = false;

@@ -17,7 +17,7 @@
 
 namespace Swift {
 
-Connector::Connector(const std::string& hostname, DomainNameResolver* resolver, ConnectionFactory* connectionFactory, TimerFactory* timerFactory) : hostname(hostname), resolver(resolver), connectionFactory(connectionFactory), timerFactory(timerFactory), timeoutMilliseconds(0), queriedAllServices(true) {
+Connector::Connector(const std::string& hostname, DomainNameResolver* resolver, ConnectionFactory* connectionFactory, TimerFactory* timerFactory, int defaultPort) : hostname(hostname), resolver(resolver), connectionFactory(connectionFactory), timerFactory(timerFactory), defaultPort(defaultPort), timeoutMilliseconds(0), queriedAllServices(true) {
 }
 
 void Connector::setTimeoutMilliseconds(int milliseconds) {
@@ -105,7 +105,7 @@ void Connector::tryNextAddress() {
 		HostAddress address = addressQueryResults.front();
 		addressQueryResults.pop_front();
 
-		int port = 5222;
+		int port = defaultPort;
 		if (!serviceQueryResults.empty()) {
 			port = serviceQueryResults.front().port;
 		}

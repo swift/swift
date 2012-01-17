@@ -67,7 +67,7 @@ void CoreClient::connect(const std::string& host) {
 		proxyConnectionFactories.push_back(new SOCKS5ProxiedConnectionFactory(networkFactories->getConnectionFactory(), networkFactories->getProxyProvider()->getSOCKS5Proxy()));
 	}
 	if(networkFactories->getProxyProvider()->getHTTPConnectProxy().isValid()) {
-		proxyConnectionFactories.push_back(new HTTPConnectProxiedConnectionFactory(networkFactories->getConnectionFactory(), networkFactories->getProxyProvider()->getHTTPConnectProxy()));
+		proxyConnectionFactories.push_back(new HTTPConnectProxiedConnectionFactory(networkFactories->getDomainNameResolver(), networkFactories->getConnectionFactory(), networkFactories->getTimerFactory(), networkFactories->getEventLoop(), networkFactories->getProxyProvider()->getHTTPConnectProxy().getAddress().toString(), networkFactories->getProxyProvider()->getHTTPConnectProxy().getPort()));
 	}
 	std::vector<ConnectionFactory*> connectionFactories(proxyConnectionFactories);
 	if (options.boshURL.empty()) {
@@ -87,13 +87,14 @@ void CoreClient::connect(const std::string& host) {
 				getPayloadParserFactories(),
 				getPayloadSerializers(),
 				networkFactories->getConnectionFactory(),
-				networkFactories->getTLSContextFactory(), 
-				networkFactories->getTimerFactory(), 
+				networkFactories->getTLSContextFactory(),
+				networkFactories->getTimerFactory(),
 				networkFactories->getXMLParserFactory(),
-				networkFactories->getEventLoop(), 
-				host, 
-				options.boshHTTPConnectProxyURL, 
-				options.boshHTTPConnectProxyAuthID, 
+				networkFactories->getEventLoop(),
+				networkFactories->getDomainNameResolver(),
+				host,
+				options.boshHTTPConnectProxyURL,
+				options.boshHTTPConnectProxyAuthID,
 				options.boshHTTPConnectProxyAuthPassword));
 		sessionStream_->onDataRead.connect(boost::bind(&CoreClient::handleDataRead, this, _1));
 		sessionStream_->onDataWritten.connect(boost::bind(&CoreClient::handleDataWritten, this, _1));

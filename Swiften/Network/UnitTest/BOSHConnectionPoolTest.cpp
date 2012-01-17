@@ -21,12 +21,17 @@
 #include <Swiften/Network/BOSHConnection.h>
 #include <Swiften/Network/BOSHConnectionPool.h>
 #include <Swiften/Network/HostAddressPort.h>
+#include <Swiften/Network/StaticDomainNameResolver.h>
+#include <Swiften/Network/DummyTimerFactory.h>
 #include <Swiften/EventLoop/DummyEventLoop.h>
 #include <Swiften/Parser/PlatformXMLParserFactory.h>
+
+
 
 using namespace Swift;
 
 typedef boost::shared_ptr<BOSHConnectionPool> PoolRef;
+
 
 class BOSHConnectionPoolTest : public CppUnit::TestFixture {
 	CPPUNIT_TEST_SUITE(BOSHConnectionPoolTest);
@@ -64,11 +69,16 @@ class BOSHConnectionPoolTest : public CppUnit::TestFixture {
 			xmppDataRead.clear();
 			boshDataRead.clear();
 			boshDataWritten.clear();
+			resolver = new StaticDomainNameResolver(eventLoop);
+			resolver->addAddress(to, HostAddress("127.0.0.1"));
+			timerFactory = new DummyTimerFactory();
 		}
 
 		void tearDown() {
 			eventLoop->processEvents();
 			delete connectionFactory;
+			delete resolver;
+			delete timerFactory;
 			delete eventLoop;
 		}
 
@@ -91,9 +101,12 @@ class BOSHConnectionPoolTest : public CppUnit::TestFixture {
 			CPPUNIT_ASSERT_EQUAL(st(1), connectionFactory->connections.size());
 			eventLoop->processEvents();
 			readResponse(initial, connectionFactory->connections[0]);
+			eventLoop->processEvents();
 			testling->write(createSafeByteArray("<blah/>"));
+			eventLoop->processEvents();
 			CPPUNIT_ASSERT_EQUAL(st(1), connectionFactory->connections.size());
 			testling->write(createSafeByteArray("<bleh/>"));
+			eventLoop->processEvents();
 			eventLoop->processEvents();
 			CPPUNIT_ASSERT_EQUAL(st(2), connectionFactory->connections.size());
 		}
@@ -125,15 +138,20 @@ class BOSHConnectionPoolTest : public CppUnit::TestFixture {
 			CPPUNIT_ASSERT_EQUAL(st(1), boshDataWritten.size()); /* Connection finished, stream header sent */
 
 			readResponse(initial, connectionFactory->connections[0]);
+			eventLoop->processEvents();
 			CPPUNIT_ASSERT_EQUAL(st(1), connectionFactory->connections.size());
 			CPPUNIT_ASSERT_EQUAL(st(1), boshDataWritten.size()); /* Don't respond to initial data with a holding call */
 
 			testling->restartStream();
+			eventLoop->processEvents();
 			readResponse("<body/>", connectionFactory->connections[0]);
+			eventLoop->processEvents();
 			testling->restartStream();
+			eventLoop->processEvents();
 
 
 			testling->write(createSafeByteArray("<blah/>"));
+			eventLoop->processEvents();
 			CPPUNIT_ASSERT_EQUAL(st(2), connectionFactory->connections.size());
 			CPPUNIT_ASSERT_EQUAL(st(3), boshDataWritten.size()); /* New connection isn't up yet. */
 
@@ -142,6 +160,7 @@ class BOSHConnectionPoolTest : public CppUnit::TestFixture {
 			CPPUNIT_ASSERT_EQUAL(st(4), boshDataWritten.size()); /* New connection ready. */
 
 			testling->write(createSafeByteArray("<bleh/>"));
+			eventLoop->processEvents();
 			testling->write(createSafeByteArray("<bluh/>"));
 			CPPUNIT_ASSERT_EQUAL(st(4), boshDataWritten.size()); /* New data can't be sent, no free connections. */
 			eventLoop->processEvents();
@@ -167,6 +186,7 @@ class BOSHConnectionPoolTest : public CppUnit::TestFixture {
 
 			rid++;
 			testling->restartStream();
+			eventLoop->processEvents();
 			readResponse("<body/>", connectionFactory->connections[0]);
 
 			rid++;
@@ -199,6 +219,7 @@ class BOSHConnectionPoolTest : public CppUnit::TestFixture {
 
 			rid++;
 			testling->write(createSafeByteArray("<bleh/>"));
+			eventLoop->processEvents();
 			CPPUNIT_ASSERT(c0->pending);
 			CPPUNIT_ASSERT(c1->pending);
 			CPPUNIT_ASSERT_EQUAL(st(6), boshDataWritten.size()); /* data */
@@ -214,6 +235,7 @@ class BOSHConnectionPoolTest : public CppUnit::TestFixture {
 
 		void testSession() {
 			to = "prosody.doomsong.co.uk";
+			resolver->addAddress("prosody.doomsong.co.uk", HostAddress("127.0.0.1"));
 			path = "http-bind/";
 			boshURL = URL("http", to, 5280, path);
 
@@ -258,15 +280,18 @@ class BOSHConnectionPoolTest : public CppUnit::TestFixture {
 			boost::shared_ptr<MockConnection> c0;
 
 			PoolRef testling = createTestling();
-			c0 = connectionFactory->connections[0];
 			CPPUNIT_ASSERT_EQUAL(st(1), connectionFactory->connections.size());
-			eventLoop->processEvents();
+			c0 = connectionFactory->connections[0];
 
 			readResponse(initial, c0);
+			eventLoop->processEvents();
 			CPPUNIT_ASSERT_EQUAL(st(1), boshDataWritten.size()); /* Shouldn't have sent anything extra */
+			eventLoop->processEvents();
 			testling->restartStream();
+			eventLoop->processEvents();
 			CPPUNIT_ASSERT_EQUAL(st(2), boshDataWritten.size());
 			readResponse("<body></body>", c0);
+			eventLoop->processEvents();
 			CPPUNIT_ASSERT_EQUAL(st(3), boshDataWritten.size());
 			std::string fullBody = "<body rid='" + boost::lexical_cast<std::string>(initialRID + 2) + "' sid='" + sid + "' xmlns='http://jabber.org/protocol/httpbind'></body>";
 			std::string response = boshDataWritten[2];
@@ -279,12 +304,17 @@ class BOSHConnectionPoolTest : public CppUnit::TestFixture {
 	private:
 
 		PoolRef createTestling() {
-			PoolRef pool = boost::make_shared<BOSHConnectionPool>(boshURL, connectionFactory, &parserFactory, static_cast<TLSContextFactory*>(NULL), to, initialRID, URL(), "", "");
+			BOSHConnectionPool* a = new BOSHConnectionPool(boshURL, resolver, connectionFactory, &parserFactory, static_cast<TLSContextFactory*>(NULL), timerFactory, eventLoop, to, initialRID, URL(), SafeString(""), SafeString(""));
+			PoolRef pool(a);
+			//FIXME: Remko - why does the above work, but the below fail?
+			//PoolRef pool = boost::make_shared<BOSHConnectionPool>(boshURL, resolver, connectionFactory, &parserFactory, static_cast<TLSContextFactory*>(NULL), timerFactory, eventLoop, to, initialRID, URL(), SafeString(""), SafeString(""));
 			pool->onXMPPDataRead.connect(boost::bind(&BOSHConnectionPoolTest::handleXMPPDataRead, this, _1));
 			pool->onBOSHDataRead.connect(boost::bind(&BOSHConnectionPoolTest::handleBOSHDataRead, this, _1));
 			pool->onBOSHDataWritten.connect(boost::bind(&BOSHConnectionPoolTest::handleBOSHDataWritten, this, _1));
 			pool->onSessionStarted.connect(boost::bind(&BOSHConnectionPoolTest::handleSessionStarted, this));
 			pool->onSessionTerminated.connect(boost::bind(&BOSHConnectionPoolTest::handleSessionTerminated, this));
+			eventLoop->processEvents();
+			eventLoop->processEvents();
 			return pool;
 		}
 
@@ -406,6 +436,8 @@ class BOSHConnectionPoolTest : public CppUnit::TestFixture {
 		std::vector<std::string> boshDataRead;
 		std::vector<std::string> boshDataWritten;
 		PlatformXMLParserFactory parserFactory;
+		StaticDomainNameResolver* resolver;
+		TimerFactory* timerFactory;
 		std::string to;
 		std::string path;
 		std::string port;

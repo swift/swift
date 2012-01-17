@@ -5,7 +5,7 @@
  */
 
 /*
- * Copyright (c) 2011 Kevin Smith
+ * Copyright (c) 2011-2012 Kevin Smith
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -16,6 +16,7 @@
 #include <boost/enable_shared_from_this.hpp>
 
 #include <Swiften/Network/Connection.h>
+#include <Swiften/Network/Connector.h>
 #include <Swiften/Network/HostAddressPort.h>
 #include <Swiften/Base/SafeString.h>
 
@@ -28,6 +29,7 @@ namespace boost {
 
 namespace Swift {
 	class ConnectionFactory;
+	class EventLoop;
 
 	class HTTPConnectProxiedConnection : public Connection, public boost::enable_shared_from_this<HTTPConnectProxiedConnection> {
 		public:
@@ -35,8 +37,8 @@ namespace Swift {
 
 			~HTTPConnectProxiedConnection();
 
-			static ref create(ConnectionFactory* connectionFactory, HostAddressPort proxy, const SafeString& authID, const SafeString& authPassword) {
-				return ref(new HTTPConnectProxiedConnection(connectionFactory, proxy, authID, authPassword));
+			static ref create(DomainNameResolver* resolver, ConnectionFactory* connectionFactory, TimerFactory* timerFactory, EventLoop* eventLoop, const std::string& proxyHost, int proxyPort, const SafeString& authID, const SafeString& authPassword) {
+				return ref(new HTTPConnectProxiedConnection(resolver, connectionFactory, timerFactory, eventLoop, proxyHost, proxyPort, authID, authPassword));
 			}
 
 			virtual void listen();
@@ -46,19 +48,24 @@ namespace Swift {
 
 			virtual HostAddressPort getLocalAddress() const;
 		private:
-			HTTPConnectProxiedConnection(ConnectionFactory* connectionFactory, HostAddressPort proxy, const SafeString& authID, const SafeString& authPassword);
+			HTTPConnectProxiedConnection(DomainNameResolver* resolver, ConnectionFactory* connectionFactory, TimerFactory* timerFactory, EventLoop* eventLoop, const std::string& proxyHost, int proxyPort, const SafeString& authID, const SafeString& authPassword);
 
-			void handleConnectionConnectFinished(bool error);
+			void handleConnectFinished(Connection::ref connection);
 			void handleDataRead(boost::shared_ptr<SafeByteArray> data);
 			void handleDisconnected(const boost::optional<Error>& error);
+			void cancelConnector();
 
 		private:
 			bool connected_;
+			DomainNameResolver* resolver_;
 			ConnectionFactory* connectionFactory_;	
-			HostAddressPort proxy_;
+			TimerFactory* timerFactory_;
+			std::string proxyHost_;
+			int proxyPort_;
 			HostAddressPort server_;
 			SafeByteArray authID_;
 			SafeByteArray authPassword_;
+			Connector::ref connector_;
 			boost::shared_ptr<Connection> connection_;
 	};
 }

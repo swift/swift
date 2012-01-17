@@ -5,7 +5,7 @@
  */
 
 /*
- * Copyright (c) 2011 Kevin Smith
+ * Copyright (c) 2011-2012 Kevin Smith
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -24,17 +24,20 @@
 #include <Swiften/Base/ByteArray.h>
 #include <Swiften/Network/HostAddressPort.h>
 #include <Swiften/Network/ConnectionFactory.h>
+#include <Swiften/Network/CachingNameOnlyDomainNameResolver.h>
 #include <Swiften/StringCodecs/Base64.h>
 
 using namespace Swift;
 
-HTTPConnectProxiedConnection::HTTPConnectProxiedConnection(ConnectionFactory* connectionFactory, HostAddressPort proxy, const SafeString& authID, const SafeString& authPassword) : connectionFactory_(connectionFactory), proxy_(proxy), server_(HostAddressPort(HostAddress("0.0.0.0"), 0)), authID_(authID), authPassword_(authPassword) {
+HTTPConnectProxiedConnection::HTTPConnectProxiedConnection(DomainNameResolver* resolver, ConnectionFactory* connectionFactory, TimerFactory* timerFactory, EventLoop* eventLoop, const std::string& proxyHost, int proxyPort, const SafeString& authID, const SafeString& authPassword) : connectionFactory_(connectionFactory), timerFactory_(timerFactory), proxyHost_(proxyHost), proxyPort_(proxyPort), server_(HostAddressPort(HostAddress("0.0.0.0"), 0)), authID_(authID), authPassword_(authPassword) {
+	resolver_ = new CachingNameOnlyDomainNameResolver(resolver, eventLoop);
 	connected_ = false;
 }
 
 HTTPConnectProxiedConnection::~HTTPConnectProxiedConnection() {
+	cancelConnector();
+	delete resolver_;
 	if (connection_) {
-		connection_->onConnectFinished.disconnect(boost::bind(&HTTPConnectProxiedConnection::handleConnectionConnectFinished, shared_from_this(), _1));
 		connection_->onDataRead.disconnect(boost::bind(&HTTPConnectProxiedConnection::handleDataRead, shared_from_this(), _1));
 		connection_->onDisconnected.disconnect(boost::bind(&HTTPConnectProxiedConnection::handleDisconnected, shared_from_this(), _1));
 	}
@@ -44,13 +47,19 @@ HTTPConnectProxiedConnection::~HTTPConnectProxiedConnection() {
 	}
 }
 
+void HTTPConnectProxiedConnection::cancelConnector() {
+	if (connector_) {
+		connector_->onConnectFinished.disconnect(boost::bind(&HTTPConnectProxiedConnection::handleConnectFinished, shared_from_this(), _1));
+		connector_->stop();
+		connector_.reset();
+	}
+}
+
 void HTTPConnectProxiedConnection::connect(const HostAddressPort& server) {
 	server_ = server;
-	connection_ = connectionFactory_->createConnection();
-	connection_->onConnectFinished.connect(boost::bind(&HTTPConnectProxiedConnection::handleConnectionConnectFinished, shared_from_this(), _1));
-	connection_->onDataRead.connect(boost::bind(&HTTPConnectProxiedConnection::handleDataRead, shared_from_this(), _1));
-	connection_->onDisconnected.connect(boost::bind(&HTTPConnectProxiedConnection::handleDisconnected, shared_from_this(), _1));
-	connection_->connect(proxy_);
+	connector_ = Connector::create(proxyHost_, resolver_, connectionFactory_, timerFactory_, proxyPort_);
+	connector_->onConnectFinished.connect(boost::bind(&HTTPConnectProxiedConnection::handleConnectFinished, shared_from_this(), _1));
+	connector_->start();
 }
 
 void HTTPConnectProxiedConnection::listen() {
@@ -71,9 +80,13 @@ void HTTPConnectProxiedConnection::write(const SafeByteArray& data) {
 	connection_->write(data);
 }
 
-void HTTPConnectProxiedConnection::handleConnectionConnectFinished(bool error) {
-	connection_->onConnectFinished.disconnect(boost::bind(&HTTPConnectProxiedConnection::handleConnectionConnectFinished, shared_from_this(), _1));
-	if (!error) {
+void HTTPConnectProxiedConnection::handleConnectFinished(Connection::ref connection) {
+	cancelConnector();
+	if (connection) {
+		connection_ = connection;
+		connection_->onDataRead.connect(boost::bind(&HTTPConnectProxiedConnection::handleDataRead, shared_from_this(), _1));
+		connection_->onDisconnected.connect(boost::bind(&HTTPConnectProxiedConnection::handleDisconnected, shared_from_this(), _1));
+
 		std::stringstream connect;
 		connect << "CONNECT " << server_.getAddress().toString() << ":" << server_.getPort() << " HTTP/1.1\r\n";
 		SafeByteArray data = createSafeByteArray(connect.str());
