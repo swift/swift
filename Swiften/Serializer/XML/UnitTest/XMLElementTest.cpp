@@ -31,14 +31,14 @@ class XMLElementTest : public CppUnit::TestFixture
 			barElement->addNode(boost::shared_ptr<XMLTextNode>(new XMLTextNode("Blo")));
 			testling.addNode(barElement);
 			boost::shared_ptr<XMLElement> bazElement(new XMLElement("baz"));
-			bazElement->addNode(boost::shared_ptr<XMLTextNode>(new XMLTextNode("Bli")));
+			bazElement->addNode(boost::shared_ptr<XMLTextNode>(new XMLTextNode("Bli&</stream>")));
 			testling.addNode(bazElement);
 
 			std::string result = testling.serialize();
 			std::string expectedResult = 
 				"<foo myatt=\"myval\" xmlns=\"http://example.com\">"
 					"<bar>Blo</bar>"
-					"<baz>Bli</baz>"
+					"<baz>Bli&amp;&lt;/stream&gt;</baz>"
 				"</foo>";
 
 			CPPUNIT_ASSERT_EQUAL(expectedResult, result);
