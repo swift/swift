@@ -79,9 +79,14 @@ void BoostConnection::disconnect() {
 	if (writing_) {
 		closeSocketAfterNextWrite_ = true;
 	} else {
-		socket_.shutdown();
-		socket_.close();
+		closeSocket();
 	}
+}
+
+void BoostConnection::closeSocket() {
+	boost::system::error_code errorCode;
+	socket_.shutdown(boost::asio::ip::tcp::socket::shutdown_both, errorCode);
+	socket_.close();
 }
 
 void BoostConnection::write(const SafeByteArray& data) {
@@ -149,8 +154,7 @@ void BoostConnection::handleDataWritten(const boost::system::error_code& error) 
 		if (writeQueue_.empty()) {
 			writing_ = false;
 			if (closeSocketAfterNextWrite_) {
-				socket_.shutdown();
-				socket_.close();
+				closeSocket();
 			}
 		}
 		else {

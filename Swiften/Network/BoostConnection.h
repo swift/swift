@@ -54,6 +54,7 @@ namespace Swift {
 			void handleDataWritten(const boost::system::error_code& error);
 			void doRead();
 			void doWrite(const SafeByteArray& data);
+			void closeSocket();
 
 		private:
 			EventLoop* eventLoop;
