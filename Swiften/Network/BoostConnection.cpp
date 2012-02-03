@@ -79,6 +79,7 @@ void BoostConnection::disconnect() {
 	if (writing_) {
 		closeSocketAfterNextWrite_ = true;
 	} else {
+		socket_.shutdown();
 		socket_.close();
 	}
 }
@@ -148,6 +149,7 @@ void BoostConnection::handleDataWritten(const boost::system::error_code& error) 
 		if (writeQueue_.empty()) {
 			writing_ = false;
 			if (closeSocketAfterNextWrite_) {
+				socket_.shutdown();
 				socket_.close();
 			}
 		}
