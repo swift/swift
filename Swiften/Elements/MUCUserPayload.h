@@ -27,17 +27,26 @@ namespace Swift {
 				int code;
 			};
 
-			// struct Password {
+			//struct Password {
 
-			// }
+			//}
 
 			// struct History {
 
 			// }
 
-			// struct Invite {
-
-			// }
+			/**
+			 * reason is optional.
+			 * from and to are mutually exclusive.
+			 * From is used for MUC sending to invited client. To is used sending to MUC from inviting client.
+			 * from is the JID the MUC claims the invite is from.
+			 * to is the JID to send the invite to.
+			 */
+			struct Invite {
+				std::string reason;
+				JID from;
+				JID to;
+			};
 
 			MUCUserPayload() {
 			}
@@ -58,9 +67,29 @@ namespace Swift {
 				payload_ = p;
 			}
 
+			const boost::optional<std::string>& getPassword() const {
+				return password_;
+			}
+
+			void setPassword(const std::string& password) {
+				password_ = password;
+			}
+
+
+			const boost::optional<Invite>& getInvite() const {
+				return invite_;
+			}
+
+			void setInvite(const Invite& invite) {
+				invite_ = invite;
+			}
+
+
 		private:
 			std::vector<MUCItem> items_;
 			std::vector<StatusCode> statusCodes_;
 			boost::shared_ptr<Payload> payload_;
+			boost::optional<std::string> password_;
+			boost::optional<Invite> invite_;
 	};
 }

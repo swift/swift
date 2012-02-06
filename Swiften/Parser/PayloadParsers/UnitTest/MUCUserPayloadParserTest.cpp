@@ -20,6 +20,7 @@ class MUCUserPayloadParserTest : public CppUnit::TestFixture
 		CPPUNIT_TEST(testParseEmpty);
 		CPPUNIT_TEST(testParse);
 		CPPUNIT_TEST(testParseDestroy);
+		CPPUNIT_TEST(testParseInvite);
 		CPPUNIT_TEST_SUITE_END();
 
 	public:
@@ -71,6 +72,23 @@ class MUCUserPayloadParserTest : public CppUnit::TestFixture
 			CPPUNIT_ASSERT_EQUAL(std::string("bert"), destroy->getReason());
 			CPPUNIT_ASSERT_EQUAL(JID("alice@wonderland.lit"), destroy->getNewVenue());
 		}
+
+		void testParseInvite() {
+			PayloadsParserTester parser;
+
+			CPPUNIT_ASSERT(parser.parse("<x xmlns=\"http://jabber.org/protocol/muc#user\"><invite from='crone1@shakespeare.lit/desktop' to='alice@wonderland.lit/xxx'>      <reason>Hey Hecate, this is the place for all good witches!</reason>    </invite>    <password>cauldronburn</password></x>"));
+
+			MUCUserPayload::ref payload = boost::dynamic_pointer_cast<MUCUserPayload>(parser.getPayload());
+			CPPUNIT_ASSERT(payload);
+			CPPUNIT_ASSERT(payload->getInvite());
+			CPPUNIT_ASSERT(payload->getPassword());
+			CPPUNIT_ASSERT_EQUAL(std::string("cauldronburn"), *payload->getPassword());
+			MUCUserPayload::Invite invite = *payload->getInvite();
+			CPPUNIT_ASSERT_EQUAL(std::string("Hey Hecate, this is the place for all good witches!"), invite.reason);
+			CPPUNIT_ASSERT_EQUAL(JID("crone1@shakespeare.lit/desktop"), invite.from);
+			CPPUNIT_ASSERT_EQUAL(JID("alice@wonderland.lit/xxx"), invite.to);
+		}
+
 };
 
 CPPUNIT_TEST_SUITE_REGISTRATION(MUCUserPayloadParserTest);
