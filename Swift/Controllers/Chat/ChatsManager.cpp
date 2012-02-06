@@ -29,6 +29,7 @@
 #include <Swiften/Client/NickResolver.h>
 #include <Swiften/MUC/MUCManager.h>
 #include <Swiften/Elements/ChatState.h>
+#include <Swiften/Elements/MUCUserPayload.h>
 #include <Swiften/Elements/DeliveryReceipt.h>
 #include <Swiften/Elements/DeliveryReceiptRequest.h>
 #include <Swiften/MUC/MUCBookmarkManager.h>
@@ -574,7 +575,7 @@ void ChatsManager::handleSearchMUCRequest() {
 void ChatsManager::handleIncomingMessage(boost::shared_ptr<Message> message) {
 	JID jid = message->getFrom();
 	boost::shared_ptr<MessageEvent> event(new MessageEvent(message));
-	bool isInvite = message->getPayload<MUCInvitationPayload>();
+	bool isInvite = message->getPayload<MUCInvitationPayload>() || (message->getPayload<MUCUserPayload>() && message->getPayload<MUCUserPayload>()->getInvite());
 	if (!event->isReadable() && !message->getPayload<ChatState>() && !message->getPayload<DeliveryReceipt>() && !message->getPayload<DeliveryReceiptRequest>() && !isInvite && !message->hasSubject()) {
 		return;
 	}

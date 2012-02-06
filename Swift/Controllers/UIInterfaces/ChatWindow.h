@@ -56,7 +56,7 @@ namespace Swift {
 			virtual std::string addFileTransfer(const std::string& senderName, bool senderIsSelf, const std::string& filename, const boost::uintmax_t sizeInBytes) = 0;
 			virtual void setFileTransferProgress(std::string, const int percentageDone) = 0;
 			virtual void setFileTransferStatus(std::string, const FileTransferState state, const std::string& msg = "") = 0;
-			virtual void addMUCInvitation(const JID& jid, const std::string& reason, const std::string& password) = 0;
+			virtual void addMUCInvitation(const JID& jid, const std::string& reason, const std::string& password, bool direct = true) = 0;
 
 			// message receipts
 			virtual void setMessageReceiptState(const std::string& id, ChatWindow::ReceiptState state) = 0;

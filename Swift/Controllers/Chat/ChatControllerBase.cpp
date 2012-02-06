@@ -20,6 +20,7 @@
 #include <Swiften/Client/StanzaChannel.h>
 #include <Swiften/Elements/Delay.h>
 #include <Swiften/Elements/MUCInvitationPayload.h>
+#include <Swiften/Elements/MUCUserPayload.h>
 #include <Swiften/Base/foreach.h>
 #include <Swift/Controllers/XMPPEvents/EventController.h>
 #include <Swiften/Disco/EntityCapsProvider.h>
@@ -181,6 +182,10 @@ void ChatControllerBase::handleIncomingMessage(boost::shared_ptr<MessageEvent> m
 		handleMUCInvitation(messageEvent->getStanza());
 		return;
 	}
+	else if (messageEvent->getStanza()->getPayload<MUCUserPayload>() && messageEvent->getStanza()->getPayload<MUCUserPayload>()->getInvite()) {
+		handleMediatedMUCInvitation(messageEvent->getStanza());
+		return;
+	}
 	else {
 		if (!messageEvent->isReadable()) {
 			return;
@@ -265,5 +270,24 @@ void ChatControllerBase::handleMUCInvitation(Message::ref message) {
 	MUCInvitationPayload::ref invite = message->getPayload<MUCInvitationPayload>();
 	chatWindow_->addMUCInvitation(invite->getJID(), invite->getReason(), invite->getPassword());
 }
+
+void ChatControllerBase::handleMediatedMUCInvitation(Message::ref message) {
+	MUCUserPayload::Invite invite = *message->getPayload<MUCUserPayload>()->getInvite();
+	JID from;
+	if (invite.from.isValid()) {
+		from = invite.from;
+	}
+	std::string reason;
+	if (!invite.reason.empty()) {
+		reason = invite.reason;
+	}
+	std::string password;
+	if (message->getPayload<MUCUserPayload>()->getPassword()) {
+		password = *message->getPayload<MUCUserPayload>()->getPassword();
+	}
+	chatWindow_->addMUCInvitation(from, reason, password, false);
+}
+
+
 
 }

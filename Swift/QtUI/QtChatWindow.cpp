@@ -795,13 +795,17 @@ void QtChatWindow::showRoomConfigurationForm(Form::ref form) {
 	mucConfigurationWindow_->onFormCancelled.connect(boost::bind(boost::ref(onConfigurationFormCancelled)));
 }
 
-void QtChatWindow::addMUCInvitation(const JID& jid, const std::string& reason, const std::string& /*password*/) {
+void QtChatWindow::addMUCInvitation(const JID& jid, const std::string& reason, const std::string& /*password*/, bool direct) {
 	bool accepted = false;
 	QMessageBox msgBox;
+	//FIXME: horrid modal untranslated popup. Fix before release.
 	msgBox.setText(QString("You have been invited to the room %1 by %2.").arg(P2QSTRING(jid.toString())).arg(contact_));
 	QString reasonString;
 	if (!reason.empty()) {
 		reasonString = QString("\"%1\"").arg(P2QSTRING(reason));
+	}
+	if (!direct) {
+		reasonString += QString("(%1 may not have really sent this invitation)").arg(P2QSTRING(jid.toString()));
 	}
 	msgBox.setInformativeText(QString("Accept invitation from %1 to enter %2?\n%3").arg(contact_).arg(P2QSTRING(jid.toString())).arg(reasonString));
 	msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
