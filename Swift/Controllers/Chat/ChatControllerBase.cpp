@@ -273,10 +273,7 @@ void ChatControllerBase::handleMUCInvitation(Message::ref message) {
 
 void ChatControllerBase::handleMediatedMUCInvitation(Message::ref message) {
 	MUCUserPayload::Invite invite = *message->getPayload<MUCUserPayload>()->getInvite();
-	JID from;
-	if (invite.from.isValid()) {
-		from = invite.from;
-	}
+	JID from = message->getFrom();
 	std::string reason;
 	if (!invite.reason.empty()) {
 		reason = invite.reason;

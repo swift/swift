@@ -575,13 +575,17 @@ void ChatsManager::handleSearchMUCRequest() {
 void ChatsManager::handleIncomingMessage(boost::shared_ptr<Message> message) {
 	JID jid = message->getFrom();
 	boost::shared_ptr<MessageEvent> event(new MessageEvent(message));
-	bool isInvite = message->getPayload<MUCInvitationPayload>() || (message->getPayload<MUCUserPayload>() && message->getPayload<MUCUserPayload>()->getInvite());
-	if (!event->isReadable() && !message->getPayload<ChatState>() && !message->getPayload<DeliveryReceipt>() && !message->getPayload<DeliveryReceiptRequest>() && !isInvite && !message->hasSubject()) {
+	bool isInvite = message->getPayload<MUCInvitationPayload>();
+	bool isMediatedInvite = (message->getPayload<MUCUserPayload>() && message->getPayload<MUCUserPayload>()->getInvite());
+	if (isMediatedInvite) {
+		jid = (*message->getPayload<MUCUserPayload>()->getInvite()).from;
+	}
+	if (!event->isReadable() && !message->getPayload<ChatState>() && !message->getPayload<DeliveryReceipt>() && !message->getPayload<DeliveryReceiptRequest>() && !isInvite && !isMediatedInvite && !message->hasSubject()) {
 		return;
 	}
 
 	// Try to deliver it to a MUC
-	if (message->getType() == Message::Groupchat || message->getType() == Message::Error || (isInvite && message->getType() == Message::Normal)) {
+	if (message->getType() == Message::Groupchat || message->getType() == Message::Error /*|| (isInvite && message->getType() == Message::Normal)*/) {
 		std::map<JID, MUCController*>::iterator i = mucControllers_.find(jid.toBare());
 		if (i != mucControllers_.end()) {
 			i->second->handleIncomingMessage(event);
