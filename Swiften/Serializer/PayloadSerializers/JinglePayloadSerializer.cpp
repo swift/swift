@@ -96,6 +96,7 @@ std::string JinglePayloadSerializer::actionToString(JinglePayload::Action action
 			return "";
 	}
 	assert(false);
+	return "";
 }
 
 std::string JinglePayloadSerializer::reasonTypeToString(JinglePayload::Reason::Type type) const {
@@ -139,6 +140,7 @@ std::string JinglePayloadSerializer::reasonTypeToString(JinglePayload::Reason::T
 			return "unsupported-transports";
 	}
 	assert(false);
+	return "";
 }
 
 }

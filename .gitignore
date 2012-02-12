@@ -45,3 +45,4 @@ cppcheck.log
 3rdParty/LibMiniUPnPc/src/miniupnpc/miniupnpcstrings.h
 *.sublime-workspace
 /xmppbench
+/.metadata
