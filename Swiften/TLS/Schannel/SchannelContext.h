@@ -10,6 +10,7 @@
 
 #include "Swiften/TLS/TLSContext.h"
 #include "Swiften/TLS/Schannel/SchannelUtil.h"
+#include <Swiften/TLS/CertificateWithKey.h>
 #include "Swiften/Base/ByteArray.h"
 
 #define SECURITY_WIN32
@@ -28,13 +29,15 @@ namespace Swift
 		typedef boost::shared_ptr<SchannelContext> sp_t;
 
 	public:
-						SchannelContext();
+		SchannelContext();
+
+		~SchannelContext();
 
 		//
 		// TLSContext
 		//
 		virtual void	connect();
-		virtual bool	setClientCertificate(const PKCS12Certificate&);
+		virtual bool	setClientCertificate(CertificateWithKey * cert);
 
 		virtual void	handleDataFromNetwork(const SafeByteArray& data);
 		virtual void	handleDataFromApplication(const SafeByteArray& data);
@@ -77,5 +80,9 @@ namespace Swift
 		SecPkgContext_StreamSizes m_streamSizes;
 
 		std::vector<char>	m_receivedData;
+
+		HCERTSTORE		m_my_cert_store;
+		std::string		m_cert_store_name;
+		std::string		m_cert_name;
 	};
 }

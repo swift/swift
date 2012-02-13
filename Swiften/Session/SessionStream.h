@@ -14,7 +14,7 @@
 #include <Swiften/Elements/Element.h>
 #include <Swiften/Base/Error.h>
 #include <Swiften/Base/SafeByteArray.h>
-#include <Swiften/TLS/PKCS12Certificate.h>
+#include <Swiften/TLS/CertificateWithKey.h>
 #include <Swiften/TLS/Certificate.h>
 #include <Swiften/TLS/CertificateVerificationError.h>
 
@@ -36,6 +36,8 @@ namespace Swift {
 					Type type;
 			};
 
+			SessionStream(): certificate(0) {}
+
 			virtual ~SessionStream();
 
 			virtual void close() = 0;
@@ -56,12 +58,12 @@ namespace Swift {
 
 			virtual void resetXMPPParser() = 0;
 
-			void setTLSCertificate(const PKCS12Certificate& cert) {
+			void setTLSCertificate(CertificateWithKey* cert) {
 				certificate = cert;
 			}
 
 			virtual bool hasTLSCertificate() {
-				return !certificate.isNull();
+				return certificate && !certificate->isNull();
 			}
 
 			virtual Certificate::ref getPeerCertificate() const = 0;
@@ -77,11 +79,11 @@ namespace Swift {
 			boost::signal<void (const SafeByteArray&)> onDataWritten;
 
 		protected:
-			const PKCS12Certificate& getTLSCertificate() const {
+			CertificateWithKey * getTLSCertificate() const {
 				return certificate;
 			}
 
 		private:
-			PKCS12Certificate certificate;
+			CertificateWithKey * certificate;
 	};
 }

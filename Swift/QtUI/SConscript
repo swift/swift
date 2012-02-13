@@ -55,6 +55,8 @@ if env["PLATFORM"] == "win32" :
   #myenv["LINKFLAGS"] = ["/SUBSYSTEM:CONSOLE"]
   myenv.Append(LINKFLAGS = ["/SUBSYSTEM:WINDOWS"])
   myenv.Append(LIBS = "qtmain")
+  if myenv.get("HAVE_SCHANNEL", 0) :
+    myenv.Append(LIBS = "Cryptui")
 
 myenv.WriteVal("DefaultTheme.qrc", myenv.Value(generateDefaultTheme(myenv.Dir("#/Swift/resources/themes/Default"))))
 
@@ -151,6 +153,7 @@ if env["PLATFORM"] == "win32" :
 	# Adding it explicitly until i figure out why
   myenv.Depends(res, "../Controllers/BuildVersion.h")
   sources += [
+			"CAPICertificateSelector.cpp",
 			"WindowsNotifier.cpp",
 			"#/Swift/resources/Windows/Swift.res"
 		]

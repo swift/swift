@@ -15,6 +15,9 @@ SchannelContext::SchannelContext()
 : m_state(Start)
 , m_secContext(0)
 , m_verificationError(CertificateVerificationError::UnknownError)
+, m_my_cert_store(NULL)
+, m_cert_store_name("MY")
+, m_cert_name(NULL)
 {
 	m_ctxtFlags = ISC_REQ_ALLOCATE_MEMORY | 
 				  ISC_REQ_CONFIDENTIALITY |
@@ -30,6 +33,13 @@ SchannelContext::SchannelContext()
 
 //------------------------------------------------------------------------
 
+SchannelContext::~SchannelContext()
+{
+	if (m_my_cert_store) CertCloseStore(m_my_cert_store, 0);
+}
+
+//------------------------------------------------------------------------
+
 void SchannelContext::determineStreamSizes()
 {
 	QueryContextAttributes(m_ctxtHandle, SECPKG_ATTR_STREAM_SIZES, &m_streamSizes);
@@ -39,17 +49,65 @@ void SchannelContext::determineStreamSizes()
 
 void SchannelContext::connect() 
 {
+	PCCERT_CONTEXT   pCertContext = NULL;
+
 	m_state = Connecting;
+
+	// If a user name is specified, then attempt to find a client
+	// certificate. Otherwise, just create a NULL credential.
+	if (!m_cert_name.empty())
+	{
+		if (m_my_cert_store == NULL)
+		{
+			m_my_cert_store = CertOpenSystemStore(0, m_cert_store_name.c_str());
+			if (!m_my_cert_store)
+			{
+/////			printf( "**** Error 0x%x returned by CertOpenSystemStore\n", GetLastError() );
+				indicateError();
+				return;
+			}
+		}
+
+		// Find client certificate. Note that this sample just searches for a 
+		// certificate that contains the user name somewhere in the subject name.
+		pCertContext = CertFindCertificateInStore( m_my_cert_store,
+			X509_ASN_ENCODING,
+			0,				// dwFindFlags
+			CERT_FIND_SUBJECT_STR_A,
+			m_cert_name.c_str(),		// *pvFindPara
+			NULL );				// pPrevCertContext
+
+		if (pCertContext == NULL)
+		{
+/////		printf("**** Error 0x%x returned by CertFindCertificateInStore\n", GetLastError());
+			indicateError();
+			return;
+		}
+	}
 
 	// We use an empty list for client certificates
 	PCCERT_CONTEXT clientCerts[1] = {0};
 
 	SCHANNEL_CRED sc = {0};
 	sc.dwVersion = SCHANNEL_CRED_VERSION;
-	sc.cCreds = 0; // Let Crypto API find the appropriate certificate for us
-	sc.paCred = clientCerts;
+
+/////SSL3?
 	sc.grbitEnabledProtocols = SP_PROT_SSL3_CLIENT | SP_PROT_TLS1_CLIENT | SP_PROT_TLS1_1_CLIENT | SP_PROT_TLS1_2_CLIENT;
-	sc.dwFlags = SCH_CRED_AUTO_CRED_VALIDATION | /*SCH_CRED_NO_DEFAULT_CREDS*/ SCH_CRED_USE_DEFAULT_CREDS | SCH_CRED_REVOCATION_CHECK_CHAIN;
+/////Check SCH_CRED_REVOCATION_CHECK_CHAIN
+	sc.dwFlags = SCH_CRED_AUTO_CRED_VALIDATION | SCH_CRED_REVOCATION_CHECK_CHAIN;
+
+	if (pCertContext)
+	{
+		sc.cCreds = 1;
+		sc.paCred = &pCertContext;
+		sc.dwFlags |= SCH_CRED_NO_DEFAULT_CREDS;
+	}
+	else
+	{
+		sc.cCreds = 0; // Let Crypto API find the appropriate certificate for us
+		sc.paCred = clientCerts;
+		sc.dwFlags |= SCH_CRED_USE_DEFAULT_CREDS;
+	}
 
 	// Swiften performs the server name check for us
 	sc.dwFlags |= SCH_CRED_NO_SERVERNAME_CHECK;
@@ -64,6 +122,9 @@ void SchannelContext::connect()
 		NULL,
 		m_credHandle.Reset(),
 		NULL);
+
+	// cleanup: Free the certificate context. Schannel has already made its own copy.
+	if (pCertContext) CertFreeCertificateContext(pCertContext);
 
 	if (status != SEC_E_OK) 
 	{
@@ -456,8 +517,21 @@ void SchannelContext::encryptAndSendData(const SafeByteArray& data)
 
 //------------------------------------------------------------------------
 
-bool SchannelContext::setClientCertificate(const PKCS12Certificate& certificate) 
+bool SchannelContext::setClientCertificate(CertificateWithKey * certificate)
 {
+	if (!certificate || certificate->isNull()) {
+		return false;
+	}
+
+	if (!certificate->isPrivateKeyExportable()) {
+		// We assume that the Certificate Store Name/Certificate Name
+		// are valid at this point
+		m_cert_store_name = certificate->getCertStoreName();
+		m_cert_name = certificate->getCertName();
+
+		return true;
+	}
+
 	return false;
 }
 

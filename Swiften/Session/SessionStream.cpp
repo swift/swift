@@ -9,6 +9,7 @@
 namespace Swift {
 
 SessionStream::~SessionStream() {
+	delete certificate;
 }
 
 };

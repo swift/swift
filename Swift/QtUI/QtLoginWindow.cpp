@@ -41,6 +41,10 @@
 #include <QtMainWindow.h>
 #include <QtUtilities.h>
 
+#ifdef HAVE_SCHANNEL
+#include "CAPICertificateSelector.h"
+#endif
+
 namespace Swift{
 
 QtLoginWindow::QtLoginWindow(UIEventStream* uiEventStream, SettingsProvider* settings) : QMainWindow(), settings_(settings) {
@@ -357,10 +361,17 @@ void QtLoginWindow::setLoginAutomatically(bool loginAutomatically) {
 
 void QtLoginWindow::handleCertficateChecked(bool checked) {
 	if (checked) {
-		 certificateFile_ = QFileDialog::getOpenFileName(this, tr("Select an authentication certificate"), QString(), QString("*.cert;*.p12;*.pfx"));
-		 if (certificateFile_.isEmpty()) {
-			 certificateButton_->setChecked(false);
-		 }
+#ifdef HAVE_SCHANNEL
+		certificateFile_ = selectCAPICertificate();
+		if (certificateFile_.isEmpty()) {
+			certificateButton_->setChecked(false);
+		}
+#else
+		certificateFile_ = QFileDialog::getOpenFileName(this, tr("Select an authentication certificate"), QString(), QString("*.cert;*.p12;*.pfx"));
+		if (certificateFile_.isEmpty()) {
+			certificateButton_->setChecked(false);
+		}
+#endif
 	}
 	else {
 		certificateFile_ = "";

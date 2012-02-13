@@ -14,7 +14,7 @@
 #include <Swiften/Base/ByteArray.h>
 
 namespace Swift {
-	class PKCS12Certificate;
+	class CertificateWithKey;
 
 	class OpenSSLContext : public TLSContext, boost::noncopyable {
 		public:
@@ -22,7 +22,7 @@ namespace Swift {
 			~OpenSSLContext();
 
 			void connect();
-			bool setClientCertificate(const PKCS12Certificate& cert);
+			bool setClientCertificate(CertificateWithKey * cert);
 
 			void handleDataFromNetwork(const SafeByteArray&);
 			void handleDataFromApplication(const SafeByteArray&);

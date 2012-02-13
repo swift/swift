@@ -14,7 +14,7 @@
 #include <Swiften/TLS/CertificateVerificationError.h>
 
 namespace Swift {
-	class PKCS12Certificate;
+	class CertificateWithKey;
 
 	class TLSContext {
 		public:
@@ -22,7 +22,7 @@ namespace Swift {
 
 			virtual void connect() = 0;
 
-			virtual bool setClientCertificate(const PKCS12Certificate& cert) = 0;
+			virtual bool setClientCertificate(CertificateWithKey * cert) = 0;
 
 			virtual void handleDataFromNetwork(const SafeByteArray&) = 0;
 			virtual void handleDataFromApplication(const SafeByteArray&) = 0;

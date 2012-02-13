@@ -21,7 +21,7 @@
 
 #include <Swiften/TLS/OpenSSL/OpenSSLContext.h>
 #include <Swiften/TLS/OpenSSL/OpenSSLCertificate.h>
-#include <Swiften/TLS/PKCS12Certificate.h>
+#include <Swiften/TLS/CertificateWithKey.h>
 
 #pragma GCC diagnostic ignored "-Wold-style-cast"
 
@@ -185,14 +185,18 @@ void OpenSSLContext::sendPendingDataToApplication() {
 	}
 }
 
-bool OpenSSLContext::setClientCertificate(const PKCS12Certificate& certificate) {
-	if (certificate.isNull()) {
+bool OpenSSLContext::setClientCertificate(CertificateWithKey * certificate) {
+	if (!certificate || certificate->isNull()) {
+		return false;
+	}
+
+	if (!certificate->isPrivateKeyExportable()) {
 		return false;
 	}
 
 	// Create a PKCS12 structure
 	BIO* bio = BIO_new(BIO_s_mem());
-	BIO_write(bio, vecptr(certificate.getData()), certificate.getData().size());
+	BIO_write(bio, vecptr(certificate->getData()), certificate->getData().size());
 	boost::shared_ptr<PKCS12> pkcs12(d2i_PKCS12_bio(bio, NULL), PKCS12_free);
 	BIO_free(bio);
 	if (!pkcs12) {
@@ -203,7 +207,7 @@ bool OpenSSLContext::setClientCertificate(const PKCS12Certificate& certificate) 
 	X509 *certPtr = 0;
 	EVP_PKEY* privateKeyPtr = 0;
 	STACK_OF(X509)* caCertsPtr = 0;
-	int result = PKCS12_parse(pkcs12.get(), reinterpret_cast<const char*>(vecptr(certificate.getPassword())), &privateKeyPtr, &certPtr, &caCertsPtr);
+	int result = PKCS12_parse(pkcs12.get(), reinterpret_cast<const char*>(vecptr(certificate->getPassword())), &privateKeyPtr, &certPtr, &caCertsPtr);
 	if (result != 1) { 
 		return false;
 	}

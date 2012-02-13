@@ -126,6 +126,19 @@ void CoreClient::bindSessionToStream() {
 	session_->start();
 }
 
+bool CoreClient::isCAPIURI() {
+#ifdef HAVE_SCHANNEL
+	if (!boost::iequals(certificate_.substr(0, 10), "certstore:")) {
+		return false;
+	}
+
+	return true;
+
+#else
+	return false;
+#endif
+}
+
 /**
  * Only called for TCP sessions. BOSH is handled inside the BOSHSessionStream.
  */
@@ -144,7 +157,19 @@ void CoreClient::handleConnectorFinished(boost::shared_ptr<Connection> connectio
 		assert(!sessionStream_);
 		sessionStream_ = boost::make_shared<BasicSessionStream>(ClientStreamType, connection_, getPayloadParserFactories(), getPayloadSerializers(), networkFactories->getTLSContextFactory(), networkFactories->getTimerFactory(), networkFactories->getXMLParserFactory());
 		if (!certificate_.empty()) {
-			sessionStream_->setTLSCertificate(PKCS12Certificate(certificate_, password_));
+			CertificateWithKey* cert;
+
+#if defined(SWIFTEN_PLATFORM_WIN32)
+			if (isCAPIURI()) {
+				cert = new CAPICertificate(certificate_);
+			} else {
+				cert = new PKCS12Certificate(certificate_, password_);
+			}
+#else
+			cert = new PKCS12Certificate(certificate_, password_);
+#endif
+
+			sessionStream_->setTLSCertificate(cert);
 		}
 		sessionStream_->onDataRead.connect(boost::bind(&CoreClient::handleDataRead, this, _1));
 		sessionStream_->onDataWritten.connect(boost::bind(&CoreClient::handleDataWritten, this, _1));

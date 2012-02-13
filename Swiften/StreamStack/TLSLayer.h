@@ -14,7 +14,7 @@
 namespace Swift {
 	class TLSContext;
 	class TLSContextFactory;
-	class PKCS12Certificate;
+	class CertificateWithKey;
 
 	class TLSLayer : public StreamLayer {
 		public:
@@ -22,7 +22,7 @@ namespace Swift {
 			~TLSLayer();
 
 			void connect();
-			bool setClientCertificate(const PKCS12Certificate&);
+			bool setClientCertificate(CertificateWithKey * cert);
 
 			Certificate::ref getPeerCertificate() const;
 			boost::shared_ptr<CertificateVerificationError> getPeerCertificateVerificationError() const;

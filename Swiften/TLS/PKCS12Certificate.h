@@ -7,9 +7,10 @@
 #pragma once
 
 #include <Swiften/Base/SafeByteArray.h>
+#include <Swiften/TLS/CertificateWithKey.h>
 
 namespace Swift {
-	class PKCS12Certificate {
+	class PKCS12Certificate : public Swift::CertificateWithKey {
 		public:
 			PKCS12Certificate() {}
 
@@ -17,11 +18,29 @@ namespace Swift {
 				readByteArrayFromFile(data_, filename);
 			}
 
-			bool isNull() const {
+			virtual ~PKCS12Certificate() {}
+
+			virtual bool isNull() const {
 				return data_.empty();
 			}
 
-			const ByteArray& getData() const {
+			virtual bool isPrivateKeyExportable() const {
+/////Hopefully a PKCS12 is never missing a private key
+				return true;
+			}
+
+			virtual const std::string& getCertStoreName() const {
+/////				assert(0);
+				throw std::exception();
+			}
+
+			virtual const std::string& getCertName() const {
+				/* We can return the original filename instead, if we care */
+/////				assert(0);
+				throw std::exception();
+			}
+
+			virtual const ByteArray& getData() const {
 				return data_;
 			}
 
@@ -29,7 +48,7 @@ namespace Swift {
 				data_ = data;
 			}
 
-			const SafeByteArray& getPassword() const {
+			virtual const SafeByteArray& getPassword() const {
 				return password_;
 			}
 
