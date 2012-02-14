@@ -805,7 +805,10 @@ void QtChatWindow::addMUCInvitation(const JID& jid, const std::string& reason, c
 		reasonString = QString("\"%1\"").arg(P2QSTRING(reason));
 	}
 	if (!direct) {
-		reasonString += QString("(%1 may not have really sent this invitation)").arg(P2QSTRING(jid.toString()));
+		if (!reasonString.isEmpty()) {
+			reasonString += " ";
+		}
+		reasonString += QString(" (%1 may not have really sent this invitation)").arg(contact_);
 	}
 	msgBox.setInformativeText(QString("Accept invitation from %1 to enter %2?\n%3").arg(contact_).arg(P2QSTRING(jid.toString())).arg(reasonString));
 	msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
