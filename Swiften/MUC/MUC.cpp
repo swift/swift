@@ -297,7 +297,7 @@ void MUC::changeAffiliation(const JID& jid, MUCOccupant::Affiliation affiliation
 	MUCAdminPayload::ref mucPayload = boost::make_shared<MUCAdminPayload>();
 	MUCItem item;
 	item.affiliation = affiliation;
-	item.realJID = jid;
+	item.realJID = jid.toBare();
 	mucPayload->addItem(item);
 	GenericRequest<MUCAdminPayload>* request = new GenericRequest<MUCAdminPayload>(IQ::Set, getJID(), mucPayload, iqRouter_);
 	request->onResponse.connect(boost::bind(&MUC::handleAffiliationChangeResponse, this, _1, _2, jid, affiliation));
