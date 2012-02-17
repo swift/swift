@@ -1,38 +1,29 @@
 /*
- * Copyright (c) 2010 Kevin Smith
+ * Copyright (c) 2010-2012 Kevin Smith
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
 #pragma once
 
-#include "Swift/Controllers/Settings/SettingsProvider.h"
+#include <Swift/Controllers/Settings/SettingsProvider.h>
 #include <Swiften/Base/foreach.h>
 
 namespace Swift {
 
 class ProfileSettingsProvider {
 	public:
-		ProfileSettingsProvider(const std::string& profile, SettingsProvider* provider) : profile_(profile) {
-			provider_ = provider;
-			bool found = false;
-			foreach (std::string existingProfile, provider->getAvailableProfiles()) {
-				if (existingProfile == profile) {
-					found = true;
-				}
-			}
-			if (!found) {
-				provider_->createProfile(profile);
-			}
-		};
-		virtual ~ProfileSettingsProvider() {};
-		virtual std::string getStringSetting(const std::string &settingPath) {return provider_->getStringSetting(profileSettingPath(settingPath));};
-		virtual void storeString(const std::string &settingPath, const std::string &settingValue) {provider_->storeString(profileSettingPath(settingPath), settingValue);};
-		virtual int getIntSetting(const std::string& settingPath, int defaultValue) {return provider_->getIntSetting(settingPath, defaultValue);}
-		virtual void storeInt(const std::string& settingPath, int settingValue) {provider_->storeInt(settingPath, settingValue);}
+		ProfileSettingsProvider(const std::string& profile, SettingsProvider* provider);
+		virtual ~ProfileSettingsProvider();
+		virtual std::string getStringSetting(const std::string &settingPath);
+		virtual void storeString(const std::string &settingPath, const std::string &settingValue);
+		virtual int getIntSetting(const std::string& settingPath, int defaultValue);
+		virtual void storeInt(const std::string& settingPath, int settingValue);
+		/** See @SettingsProvider::getIsSettingFinal for discussion of what this means.*/
+		virtual bool getIsSettingFinal(const std::string& settingPath);
 		
 	private:
-		std::string profileSettingPath(const std::string &settingPath) {return profile_ + ":" + settingPath;};
+		std::string profileSettingPath(const std::string &settingPath);
 		SettingsProvider* provider_; 
 		std::string profile_;
 };

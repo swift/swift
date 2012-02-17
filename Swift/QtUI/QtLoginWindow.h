@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2011 Kevin Smith
+ * Copyright (c) 2010-2012 Kevin Smith
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -14,16 +14,17 @@
 #include <QStackedWidget>
 #include <QMenuBar>
 
-#include "Swift/Controllers/UIInterfaces/LoginWindow.h"
-#include "Swift/Controllers/UIEvents/UIEventStream.h"
-#include "Swift/Controllers/UIInterfaces/MainWindow.h"
-#include "QtAboutWidget.h"
+#include <Swift/Controllers/UIInterfaces/LoginWindow.h>
+#include <Swift/Controllers/UIEvents/UIEventStream.h>
+#include <Swift/Controllers/UIInterfaces/MainWindow.h>
+#include <QtAboutWidget.h>
 
 class QLabel;
 class QToolButton;
 class QComboBox;
 
 namespace Swift {
+	class SettingsProvider;
 	class QtLoginWindow : public QMainWindow, public LoginWindow {
 		Q_OBJECT
 		public:
@@ -34,7 +35,7 @@ namespace Swift {
 			};
 
 		public:
-			QtLoginWindow(UIEventStream* uiEventStream, bool eagleMode);
+			QtLoginWindow(UIEventStream* uiEventStream, SettingsProvider* settings);
 
 			void morphInto(MainWindow *mainWindow);
 			virtual void loggedOut();
@@ -66,7 +67,7 @@ namespace Swift {
 			void handleUsernameTextChanged();
 			void resizeEvent(QResizeEvent* event);
 			void moveEvent(QMoveEvent* event);
-			void handleUIEvent(boost::shared_ptr<UIEvent> event);
+			void handleSettingChanged(const std::string& settingPath);
 
 		protected:
 			bool eventFilter(QObject *obj, QEvent *event);
@@ -94,7 +95,7 @@ namespace Swift {
 			QAction* toggleNotificationsAction_;
 			UIEventStream* uiEventStream_;
 			QPointer<QtAboutWidget> aboutDialog_;
-			bool eagleMode_;
+			SettingsProvider* settings_;
 			QAction* xmlConsoleAction_;
 			QAction* fileTransferOverviewAction_;
 	};

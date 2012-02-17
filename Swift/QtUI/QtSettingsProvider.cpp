@@ -1,10 +1,10 @@
 /*
- * Copyright (c) 2010 Kevin Smith
+ * Copyright (c) 2010-2012 Kevin Smith
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "QtSettingsProvider.h"
+#include <QtSettingsProvider.h>
 
 #include <QStringList>
 #include <QFile>
@@ -18,33 +18,54 @@ QtSettingsProvider::~QtSettingsProvider() {
 
 }
 
-std::string QtSettingsProvider::getStringSetting(const std::string &settingPath) {
-	QVariant setting = settings_.value(settingPath.c_str());
-	return setting.isNull() ? "" : std::string(setting.toString().toUtf8());
+std::string QtSettingsProvider::getSetting(const Setting<std::string>& setting) {
+	QVariant variant = settings_.value(setting.getKey().c_str());
+	return variant.isNull() ? setting.getDefaultValue() : std::string(variant.toString().toUtf8());
 }
 
-void QtSettingsProvider::storeString(const std::string &settingPath, const std::string &settingValue) {
-	settings_.setValue(settingPath.c_str(), settingValue.c_str());
+void QtSettingsProvider::storeSetting(const Setting<std::string>& setting, const std::string& settingValue) {
+	bool changed = false;
+	if (getSetting(setting) != settingValue) {
+		changed = true;
+	}
+	settings_.setValue(setting.getKey().c_str(), settingValue.c_str());
+	if (changed) {
+		onSettingChanged(setting.getKey());
+	}
 	updatePermissions();
 }
 
-bool QtSettingsProvider::getBoolSetting(const std::string &settingPath, bool defaultValue) {
-	QVariant setting = settings_.value(settingPath.c_str());
-	return setting.isNull() ? defaultValue : setting.toBool();
+bool QtSettingsProvider::getSetting(const Setting<bool>& setting) {
+	QVariant variant = settings_.value(setting.getKey().c_str());
+	return variant.isNull() ? setting.getDefaultValue() : variant.toBool();
 }
 
-void QtSettingsProvider::storeBool(const std::string &settingPath, bool settingValue) {
-	settings_.setValue(settingPath.c_str(), settingValue);
+void QtSettingsProvider::storeSetting(const Setting<bool>& setting, const bool& settingValue) {
+	bool changed = false;
+	if (getSetting(setting) != settingValue) {
+		changed = true;
+	}
+	settings_.setValue(setting.getKey().c_str(), settingValue);
+	if (changed) {
+		onSettingChanged(setting.getKey());
+	}
 	updatePermissions();
 }
 
-int QtSettingsProvider::getIntSetting(const std::string &settingPath, int defaultValue) {
-	QVariant setting = settings_.value(settingPath.c_str());
-	return setting.isNull() ? defaultValue : setting.toInt();
+int QtSettingsProvider::getSetting(const Setting<int>& setting) {
+	QVariant variant = settings_.value(setting.getKey().c_str());
+	return variant.isNull() ? setting.getDefaultValue() : variant.toInt();
 }
 
-void QtSettingsProvider::storeInt(const std::string &settingPath, int settingValue) {
-	settings_.setValue(settingPath.c_str(), settingValue);
+void QtSettingsProvider::storeSetting(const Setting<int>& setting, const int& settingValue) {
+	bool changed = false;
+	if (getSetting(setting) != settingValue) {
+		changed = true;
+	}
+	settings_.setValue(setting.getKey().c_str(), settingValue);
+	if (changed) {
+		onSettingChanged(setting.getKey());
+	}
 	updatePermissions();
 }
 
@@ -88,6 +109,10 @@ void QtSettingsProvider::updatePermissions() {
 		file.setPermissions(QFile::ReadOwner|QFile::WriteOwner);
 	}
 #endif
+}
+
+bool QtSettingsProvider::getIsSettingFinal(const std::string& /*settingPath*/) {
+	return false;
 }
 
 }

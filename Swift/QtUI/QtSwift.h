@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Kevin Smith
+ * Copyright (c) 2010-2012 Kevin Smith
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -23,7 +23,6 @@
 #endif
 #include "SwifTools/Idle/PlatformIdleQuerier.h"
 #include "SwifTools/Idle/ActualIdleDetector.h"
-#include <Swift/QtUI/QtUIPreferences.h>
 
 namespace po = boost::program_options;
 
@@ -48,6 +47,8 @@ namespace Swift {
 	class QtUserSearchWindowFactory;
 	class EventLoop;
 	class URIHandler;
+	class SettingsProviderHierachy;
+	class XMLSettingsProvider;
 		
 	class QtSwift : public QObject {
 		Q_OBJECT
@@ -56,6 +57,8 @@ namespace Swift {
 			static po::options_description getOptionsDescription();
 			~QtSwift();
 		private:
+			XMLSettingsProvider* loadSettingsFile(const QString& fileName);
+		private:
 			QtEventLoop clientMainThreadCaller_;
 			PlatformTLSFactories tlsFactories_;
 			BoostNetworkFactories networkFactories_;
@@ -63,7 +66,9 @@ namespace Swift {
 			std::vector<MainController*> mainControllers_;
 			std::vector<QtSystemTray*> systemTrays_;
 			std::vector<QtUIFactory*> uiFactories_;
-			QtSettingsProvider *settings_;
+			QtSettingsProvider* qtSettings_;
+			XMLSettingsProvider* xmlSettings_;
+			SettingsProviderHierachy* settingsHierachy_;
 			QSplitter* splitter_;
 			QtSoundPlayer* soundPlayer_;
 			Dock* dock_;
@@ -76,7 +81,6 @@ namespace Swift {
 			Notifier* notifier_;
 			PlatformIdleQuerier idleQuerier_;
 			ActualIdleDetector idleDetector_;
-			QtUIPreferences uiPreferences_;
 #if defined(SWIFTEN_PLATFORM_MACOSX)
 			CocoaApplication cocoaApplication_;
 #endif

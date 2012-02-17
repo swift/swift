@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Remko Tronçon
+ * Copyright (c) 2010-2012 Remko Tronçon
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -13,15 +13,16 @@
 
 #include <Swift/QtUI/QtElidingLabel.h>
 #include <Swift/QtUI/QtSettingsProvider.h>
+#include <Swift/QtUI/QtUISettingConstants.h>
 
 namespace Swift {
 
-QtNameWidget::QtNameWidget(QtSettingsProvider* settings, QWidget *parent) : QWidget(parent), settings(settings) {
+QtNameWidget::QtNameWidget(SettingsProvider* settings, QWidget *parent) : QWidget(parent), settings(settings) {
 	QHBoxLayout* mainLayout = new QHBoxLayout(this);
 	mainLayout->setSpacing(0);
 	mainLayout->setContentsMargins(0,0,0,0);
 
-	mode = settings->getBoolSetting("showNickInRosterHeader", true) ? ShowNick : ShowJID;
+	mode = settings->getSetting(QtUISettingConstants::SHOW_NICK_IN_ROSTER_HEADER) ? ShowNick : ShowJID;
 
 	textLabel = new QtElidingLabel(this);
 	QFont font = textLabel->font();
@@ -72,7 +73,7 @@ void QtNameWidget::mousePressEvent(QMouseEvent* event) {
 	else if (result == editProfile) {
 		emit onChangeNickRequest();
 	}
-	settings->storeBool("showNickInRosterHeader", mode == ShowNick);
+	settings->storeSetting(QtUISettingConstants::SHOW_NICK_IN_ROSTER_HEADER, mode == ShowNick);
 	updateText();
 }
 

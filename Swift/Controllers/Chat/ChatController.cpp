@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Kevin Smith
+ * Copyright (c) 2010-2012 Kevin Smith
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -27,7 +27,7 @@
 #include <Swift/Controllers/UIEvents/SendFileUIEvent.h>
 #include <Swiften/Elements/DeliveryReceipt.h>
 #include <Swiften/Elements/DeliveryReceiptRequest.h>
-#include <Swift/Controllers/UIEvents/ToggleRequestDeliveryReceiptsUIEvent.h>
+#include <Swift/Controllers/SettingConstants.h>
 
 #include <Swiften/Base/Log.h>
 
@@ -36,8 +36,8 @@ namespace Swift {
 /**
  * The controller does not gain ownership of the stanzaChannel, nor the factory.
  */
-ChatController::ChatController(const JID& self, StanzaChannel* stanzaChannel, IQRouter* iqRouter, ChatWindowFactory* chatWindowFactory, const JID &contact, NickResolver* nickResolver, PresenceOracle* presenceOracle, AvatarManager* avatarManager, bool isInMUC, bool useDelayForLatency, UIEventStream* eventStream, EventController* eventController, TimerFactory* timerFactory, EntityCapsProvider* entityCapsProvider, bool userWantsReceipts)
-	: ChatControllerBase(self, stanzaChannel, iqRouter, chatWindowFactory, contact, presenceOracle, avatarManager, useDelayForLatency, eventStream, eventController, timerFactory, entityCapsProvider), eventStream_(eventStream), userWantsReceipts_(userWantsReceipts) {
+ChatController::ChatController(const JID& self, StanzaChannel* stanzaChannel, IQRouter* iqRouter, ChatWindowFactory* chatWindowFactory, const JID &contact, NickResolver* nickResolver, PresenceOracle* presenceOracle, AvatarManager* avatarManager, bool isInMUC, bool useDelayForLatency, UIEventStream* eventStream, EventController* eventController, TimerFactory* timerFactory, EntityCapsProvider* entityCapsProvider, bool userWantsReceipts, SettingsProvider* settings)
+	: ChatControllerBase(self, stanzaChannel, iqRouter, chatWindowFactory, contact, presenceOracle, avatarManager, useDelayForLatency, eventStream, eventController, timerFactory, entityCapsProvider), eventStream_(eventStream), userWantsReceipts_(userWantsReceipts), settings_(settings) {
 	isInMUC_ = isInMUC;
 	lastWasPresence_ = false;
 	chatStateNotifier_ = new ChatStateNotifier(stanzaChannel, contact, entityCapsProvider);
@@ -73,7 +73,8 @@ ChatController::ChatController(const JID& self, StanzaChannel* stanzaChannel, IQ
 	chatWindow_->onFileTransferCancel.connect(boost::bind(&ChatController::handleFileTransferCancel, this, _1));
 	chatWindow_->onSendFileRequest.connect(boost::bind(&ChatController::handleSendFileRequest, this, _1));
 	handleBareJIDCapsChanged(toJID_);
-	eventStream_->onUIEvent.connect(boost::bind(&ChatController::handleUIEvent, this, _1));
+
+	settings_->onSettingChanged.connect(boost::bind(&ChatController::handleSettingChanged, this, _1));
 }
 
 void ChatController::handleContactNickChanged(const JID& jid, const std::string& /*oldNick*/) {
@@ -83,7 +84,7 @@ void ChatController::handleContactNickChanged(const JID& jid, const std::string&
 }
 
 ChatController::~ChatController() {
-	eventStream_->onUIEvent.disconnect(boost::bind(&ChatController::handleUIEvent, this, _1));
+	settings_->onSettingChanged.disconnect(boost::bind(&ChatController::handleSettingChanged, this, _1));
 	nickResolver_->onNickChanged.disconnect(boost::bind(&ChatController::handleContactNickChanged, this, _1, _2));
 	delete chatStateNotifier_;
 	delete chatStateTracker_;
@@ -174,9 +175,9 @@ void ChatController::setContactIsReceivingPresence(bool isReceivingPresence) {
 	receivingPresenceFromUs_ = isReceivingPresence;
 }
 
-void ChatController::handleUIEvent(boost::shared_ptr<UIEvent> event) {
-	if (boost::shared_ptr<ToggleRequestDeliveryReceiptsUIEvent> toggleAllowReceipts = boost::dynamic_pointer_cast<ToggleRequestDeliveryReceiptsUIEvent>(event)) {
-		userWantsReceipts_ = toggleAllowReceipts->getEnabled();
+void ChatController::handleSettingChanged(const std::string& settingPath) {
+	if (settingPath == SettingConstants::REQUEST_DELIVERYRECEIPTS.getKey()) {
+		userWantsReceipts_ = settings_->getSetting(SettingConstants::REQUEST_DELIVERYRECEIPTS);
 		checkForDisplayingDisplayReceiptsAlert();
 	}
 }

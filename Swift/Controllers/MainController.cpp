@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2011 Kevin Smith
+ * Copyright (c) 2010-2012 Kevin Smith
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -59,8 +59,6 @@
 #include "Swiften/StringCodecs/SHA1.h"
 #include "Swiften/StringCodecs/Hexify.h"
 #include "Swift/Controllers/UIEvents/RequestChatUIEvent.h"
-#include "Swift/Controllers/UIEvents/ToggleNotificationsUIEvent.h"
-#include "Swift/Controllers/UIEvents/ToggleRequestDeliveryReceiptsUIEvent.h"
 #include "Swift/Controllers/UIEvents/JoinMUCUIEvent.h"
 #include "Swift/Controllers/Storages/CertificateStorageFactory.h"
 #include "Swift/Controllers/Storages/CertificateStorageTrustChecker.h"
@@ -73,20 +71,19 @@
 #include <Swift/Controllers/FileTransfer/FileTransferOverview.h>
 #include <Swiften/FileTransfer/FileTransferManager.h>
 #include <Swiften/Client/ClientXMLTracer.h>
+#include <Swift/Controllers/SettingConstants.h>
 
 namespace Swift {
 
 static const std::string CLIENT_NAME = "Swift";
 static const std::string CLIENT_NODE = "http://swift.im";
 
-static const std::string SHOW_NOTIFICATIONS = "showNotifications";
-static const std::string REQUEST_DELIVERYRECEIPTS = "requestDeliveryReceipts";
 
 MainController::MainController(
 		EventLoop* eventLoop,
 		NetworkFactories* networkFactories,
 		UIFactory* uiFactories,
-		SettingsProvider *settings,
+		SettingsProvider* settings,
 		SystemTray* systemTray,
 		SoundPlayer* soundPlayer,
 		StoragesFactory* storagesFactory,
@@ -95,8 +92,7 @@ MainController::MainController(
 		Notifier* notifier,
 		URIHandler* uriHandler,
 		IdleDetector* idleDetector,
-		bool useDelayForLatency,
-		bool eagleMode) :
+		bool useDelayForLatency) :
 			eventLoop_(eventLoop),
 			networkFactories_(networkFactories),
 			uiFactory_(uiFactories),
@@ -107,7 +103,6 @@ MainController::MainController(
 			idleDetector_(idleDetector),
 			loginWindow_(NULL) ,
 			useDelayForLatency_(useDelayForLatency),
-			eagleMode_(eagleMode),
 			ftOverview_(NULL) {
 	storages_ = NULL;
 	certificateStorage_ = NULL;
@@ -137,18 +132,19 @@ MainController::MainController(
 	systemTrayController_ = new SystemTrayController(eventController_, systemTray);
 	loginWindow_ = uiFactory_->createLoginWindow(uiEventStream_);
 	loginWindow_->setShowNotificationToggle(!notifier->isExternallyConfigured());
-	soundEventController_ = new SoundEventController(eventController_, soundPlayer, settings, uiEventStream_);
+	soundEventController_ = new SoundEventController(eventController_, soundPlayer, settings);
 
 	xmppURIController_ = new XMPPURIController(uriHandler_, uiEventStream_);
 
-	std::string selectedLoginJID = settings_->getStringSetting("lastLoginJID");
-	bool loginAutomatically = settings_->getBoolSetting("loginAutomatically", false);
+	std::string selectedLoginJID = settings_->getSetting(SettingConstants::LAST_LOGIN_JID);
+	bool loginAutomatically = settings_->getSetting(SettingConstants::LOGIN_AUTOMATICALLY);
 	std::string cachedPassword;
 	std::string cachedCertificate;
-	if (!eagleMode_) {
+	bool eagle = settings_->getSetting(SettingConstants::FORGET_PASSWORDS);
+	if (!eagle) {
 		foreach (std::string profile, settings->getAvailableProfiles()) {
 			ProfileSettingsProvider profileSettings(profile, settings);
-			std::string password = eagleMode ? "" : profileSettings.getStringSetting("pass");
+			std::string password = profileSettings.getStringSetting("pass");
 			std::string certificate = profileSettings.getStringSetting("certificate");
 			std::string jid = profileSettings.getStringSetting("jid");
 			loginWindow_->addAvailableAccount(jid, password, certificate);
@@ -167,16 +163,14 @@ MainController::MainController(
 	loginWindow_->onCancelLoginRequest.connect(boost::bind(&MainController::handleCancelLoginRequest, this));
 	loginWindow_->onQuitRequest.connect(boost::bind(&MainController::handleQuitRequest, this));
 
-	idleDetector_->setIdleTimeSeconds(600);
+	idleDetector_->setIdleTimeSeconds(settings->getSetting(SettingConstants::IDLE_TIMEOUT));
 	idleDetector_->onIdleChanged.connect(boost::bind(&MainController::handleInputIdleChanged, this, _1));
 
 	xmlConsoleController_ = new XMLConsoleController(uiEventStream_, uiFactory_);
 
 	fileTransferListController_ = new FileTransferListController(uiEventStream_, uiFactory_);
 
-	uiEventStream_->onUIEvent.connect(boost::bind(&MainController::handleUIEvent, this, _1));
-	bool enabled = settings_->getBoolSetting(SHOW_NOTIFICATIONS, true);
-	uiEventStream_->send(boost::shared_ptr<ToggleNotificationsUIEvent>(new ToggleNotificationsUIEvent(enabled)));
+	settings_->onSettingChanged.connect(boost::bind(&MainController::handleSettingChanged, this, _1));
 
 	if (loginAutomatically) {
 		profileSettings_ = new ProfileSettingsProvider(selectedLoginJID, settings_);
@@ -246,18 +240,10 @@ void MainController::resetClient() {
 	clientInitialized_ = false;
 }
 
-void MainController::handleUIEvent(boost::shared_ptr<UIEvent> event) {
-	boost::shared_ptr<ToggleNotificationsUIEvent> notificationsEvent = boost::dynamic_pointer_cast<ToggleNotificationsUIEvent>(event);
-	if (notificationsEvent) {
-		bool enabled = notificationsEvent->getEnabled();
-		notifier_->setPersistentEnabled(enabled);
-		settings_->storeBool(SHOW_NOTIFICATIONS, enabled);
+void MainController::handleSettingChanged(const std::string& settingPath) {
+	if (settingPath == SettingConstants::SHOW_NOTIFICATIONS.getKey()) {
+		notifier_->setPersistentEnabled(settings_->getSetting(SettingConstants::SHOW_NOTIFICATIONS));
 	}
-	boost::shared_ptr<ToggleRequestDeliveryReceiptsUIEvent> deliveryReceiptEvent = boost::dynamic_pointer_cast<ToggleRequestDeliveryReceiptsUIEvent>(event);
-	if (deliveryReceiptEvent) {
-		settings_->storeBool(REQUEST_DELIVERYRECEIPTS, deliveryReceiptEvent->getEnabled());
-	}
-
 }
 
 void MainController::resetPendingReconnects() {
@@ -281,7 +267,7 @@ void MainController::handleConnected() {
 	resetCurrentError();
 	resetPendingReconnects();
 
-	if (eagleMode_) {
+	if (settings_->getSetting(SettingConstants::FORGET_PASSWORDS)) {
 		purgeCachedCredentials();
 	}
 
@@ -300,7 +286,7 @@ void MainController::handleConnected() {
 
 		contactEditController_ = new ContactEditController(rosterController_, uiFactory_, uiEventStream_);
 
-		chatsManager_ = new ChatsManager(jid_, client_->getStanzaChannel(), client_->getIQRouter(), eventController_, uiFactory_, uiFactory_, client_->getNickResolver(), client_->getPresenceOracle(), client_->getPresenceSender(), uiEventStream_, uiFactory_, useDelayForLatency_, networkFactories_->getTimerFactory(), client_->getMUCRegistry(), client_->getEntityCapsProvider(), client_->getMUCManager(), uiFactory_, profileSettings_, ftOverview_, client_->getRoster(), eagleMode_);
+		chatsManager_ = new ChatsManager(jid_, client_->getStanzaChannel(), client_->getIQRouter(), eventController_, uiFactory_, uiFactory_, client_->getNickResolver(), client_->getPresenceOracle(), client_->getPresenceSender(), uiEventStream_, uiFactory_, useDelayForLatency_, networkFactories_->getTimerFactory(), client_->getMUCRegistry(), client_->getEntityCapsProvider(), client_->getMUCManager(), uiFactory_, profileSettings_, ftOverview_, client_->getRoster(), !settings_->getSetting(SettingConstants::REMEMBER_RECENT_CHATS), settings_);
 		
 		client_->onMessageReceived.connect(boost::bind(&ChatsManager::handleIncomingMessage, chatsManager_, _1));
 		chatsManager_->setAvatarManager(client_->getAvatarManager());
@@ -346,8 +332,6 @@ void MainController::handleConnected() {
 	/* Enable chats last of all, so rejoining MUCs has the right sent presence */
 	chatsManager_->setOnline(true);
 
-	// notify world about current delivey receipt request setting state.
-	uiEventStream_->send(boost::make_shared<ToggleRequestDeliveryReceiptsUIEvent>(settings_->getBoolSetting(REQUEST_DELIVERYRECEIPTS, false)));
 }
 
 void MainController::handleEventQueueLengthChange(int count) {
@@ -408,16 +392,24 @@ void MainController::handleInputIdleChanged(bool idle) {
 		//Haven't logged in yet.
 		return;
 	}
-	if (idle) {
-		if (statusTracker_->goAutoAway()) {
-			if (client_ && client_->isAvailable()) {
-				sendPresence(statusTracker_->getNextPresence());
-			}
+
+	if (settings_->getSetting(SettingConstants::IDLE_GOES_OFFLINE)) {
+		if (idle) {
+			logout();
 		}
-	} else {
-		if (statusTracker_->goAutoUnAway()) {
-			if (client_ && client_->isAvailable()) {
-				sendPresence(statusTracker_->getNextPresence());
+	}
+	else {
+		if (idle) {
+			if (statusTracker_->goAutoAway()) {
+				if (client_ && client_->isAvailable()) {
+					sendPresence(statusTracker_->getNextPresence());
+				}
+			}
+		} else {
+			if (statusTracker_->goAutoUnAway()) {
+				if (client_ && client_->isAvailable()) {
+					sendPresence(statusTracker_->getNextPresence());
+				}
 			}
 		}
 	}
@@ -432,12 +424,12 @@ void MainController::handleLoginRequest(const std::string &username, const std::
 		loginWindow_->setMessage("");
 		loginWindow_->setIsLoggingIn(true);
 		profileSettings_ = new ProfileSettingsProvider(username, settings_);
-		if (!eagleMode_) {
+		if (!settings_->getSetting(SettingConstants::FORGET_PASSWORDS)) {
 			profileSettings_->storeString("jid", username);
 			profileSettings_->storeString("certificate", certificateFile);
 			profileSettings_->storeString("pass", (remember || loginAutomatically) ? password : "");
-			settings_->storeString("lastLoginJID", username);
-			settings_->storeBool("loginAutomatically", loginAutomatically);
+			settings_->storeSetting(SettingConstants::LAST_LOGIN_JID, username);
+			settings_->storeSetting(SettingConstants::LOGIN_AUTOMATICALLY, loginAutomatically);
 			loginWindow_->addAvailableAccount(profileSettings_->getStringSetting("jid"), profileSettings_->getStringSetting("pass"), profileSettings_->getStringSetting("certificate"));
 		}
 
@@ -453,7 +445,7 @@ void MainController::handlePurgeSavedLoginRequest(const std::string& username) {
 }
 
 void MainController::performLoginFromCachedCredentials() {
-	if (eagleMode_ && password_.empty()) {
+	if (settings_->getSetting(SettingConstants::FORGET_PASSWORDS) && password_.empty()) {
 		/* Then we can't try to login again. */
 		return;
 	}
@@ -503,8 +495,9 @@ void MainController::performLoginFromCachedCredentials() {
 		rosterController_->getWindow()->setConnecting();
 	}
 	ClientOptions clientOptions;
-	clientOptions.forgetPassword = eagleMode_;
-	clientOptions.useTLS = eagleMode_ ? ClientOptions::RequireTLS : ClientOptions::UseTLSWhenAvailable;
+	bool eagle = settings_->getSetting(SettingConstants::FORGET_PASSWORDS);
+	clientOptions.forgetPassword = eagle;
+	clientOptions.useTLS = eagle ? ClientOptions::RequireTLS : ClientOptions::UseTLSWhenAvailable;
 	/*if (clientJID.getDomain() == "doomsong.co.uk") {
 		clientOptions.boshURL = URL("https", "channels.doomsong.co.uk", 11443, "http-bind/");
 		clientOptions.boshHTTPConnectProxyURL = URL("http", "squidproxy.doomsong.co.uk", 8123, "");
@@ -513,7 +506,7 @@ void MainController::performLoginFromCachedCredentials() {
 }
 
 void MainController::handleDisconnected(const boost::optional<ClientError>& error) {
-	if (eagleMode_) {
+	if (settings_->getSetting(SettingConstants::FORGET_PASSWORDS)) {
 		purgeCachedCredentials();
 	}
 	if (quitRequested_) {
@@ -575,7 +568,7 @@ void MainController::handleDisconnected(const boost::optional<ClientError>& erro
 			loginWindow_->setIsLoggingIn(false);
 		} else {
 			logout();
-			if (eagleMode_) {
+			if (settings_->getSetting(SettingConstants::FORGET_PASSWORDS)) {
 				message = str(format(QT_TRANSLATE_NOOP("", "Disconnected from %1%: %2%. To reconnect, Sign Out and provide your password again.")) % jid_.getDomain() % message);
 			} else {
 				if (!offlineRequested_) {
@@ -616,7 +609,7 @@ void MainController::handleCancelLoginRequest() {
 }
 
 void MainController::signOut() {
-	if (eagleMode_) {
+	if (settings_->getSetting(SettingConstants::FORGET_PASSWORDS)) {
 		purgeCachedCredentials();
 	}
 	eventController_->clear();
@@ -626,7 +619,7 @@ void MainController::signOut() {
 }
 
 void MainController::logout() {
-	if (eagleMode_) {
+	if (settings_->getSetting(SettingConstants::FORGET_PASSWORDS)) {
 		purgeCachedCredentials();
 	}
 	systemTrayController_->setMyStatusType(StatusShow::None);

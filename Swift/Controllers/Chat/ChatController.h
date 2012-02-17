@@ -1,12 +1,12 @@
 /*
- * Copyright (c) 2010 Kevin Smith
+ * Copyright (c) 2010-2012 Kevin Smith
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
 #pragma once
 
-#include "Swift/Controllers/Chat/ChatControllerBase.h"
+#include <Swift/Controllers/Chat/ChatControllerBase.h>
 
 #include <map>
 #include <string>
@@ -20,11 +20,11 @@ namespace Swift {
 	class NickResolver;
 	class EntityCapsProvider;
 	class FileTransferController;
-	class UIEvent;
+	class SettingsProvider;
 
 	class ChatController : public ChatControllerBase {
 		public:
-			ChatController(const JID& self, StanzaChannel* stanzaChannel, IQRouter* iqRouter, ChatWindowFactory* chatWindowFactory, const JID &contact, NickResolver* nickResolver, PresenceOracle* presenceOracle, AvatarManager* avatarManager, bool isInMUC, bool useDelayForLatency, UIEventStream* eventStream, EventController* eventController, TimerFactory* timerFactory, EntityCapsProvider* entityCapsProvider, bool userWantsReceipts);
+			ChatController(const JID& self, StanzaChannel* stanzaChannel, IQRouter* iqRouter, ChatWindowFactory* chatWindowFactory, const JID &contact, NickResolver* nickResolver, PresenceOracle* presenceOracle, AvatarManager* avatarManager, bool isInMUC, bool useDelayForLatency, UIEventStream* eventStream, EventController* eventController, TimerFactory* timerFactory, EntityCapsProvider* entityCapsProvider, bool userWantsReceipts, SettingsProvider* settings);
 			virtual ~ChatController();
 			virtual void setToJID(const JID& jid);
 			virtual void setOnline(bool online);
@@ -51,7 +51,7 @@ namespace Swift {
 			void handleFileTransferAccept(std::string /* id */, std::string /* filename */);
 			void handleSendFileRequest(std::string filename);
 
-			void handleUIEvent(boost::shared_ptr<UIEvent> event);
+			void handleSettingChanged(const std::string& settingPath);
 			void checkForDisplayingDisplayReceiptsAlert();
 
 		private:
@@ -71,6 +71,7 @@ namespace Swift {
 			bool receivingPresenceFromUs_;
 			bool userWantsReceipts_;
 			std::map<std::string, FileTransferController*> ftControllers;
+			SettingsProvider* settings_;
 	};
 }
 

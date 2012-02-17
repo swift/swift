@@ -14,11 +14,11 @@
 #include "Swift/QtUI/ChatList/ChatListDelegate.h"
 
 namespace Swift {
-	class QtUIPreferences;
+	class SettingsProvider;
 	class QtChatListWindow : public QTreeView, public ChatListWindow {
 		Q_OBJECT
 		public:
-			QtChatListWindow(UIEventStream *uiEventStream, QtUIPreferences* uiPreferences, QWidget* parent = NULL);
+			QtChatListWindow(UIEventStream *uiEventStream, SettingsProvider* settings, QWidget* parent = NULL);
 			virtual ~QtChatListWindow();
 			void addMUCBookmark(const MUCBookmark& bookmark);
 			void removeMUCBookmark(const MUCBookmark& bookmark);
@@ -35,7 +35,7 @@ namespace Swift {
 			void handleEditBookmark();
 			void handleRemoveBookmark();
 			void handleClicked(const QModelIndex& index);
-			void handleCompactRostersToggled(bool);
+			void handleSettingChanged(const std::string& setting);
 
 		protected:
 			void contextMenuEvent(QContextMenuEvent* event);
@@ -49,7 +49,7 @@ namespace Swift {
 			QMenu* mucMenu_;
 			QMenu* emptyMenu_;
 			ChatListItem* contextMenuItem_;
-			QtUIPreferences* uiPreferences_;
+			SettingsProvider* settings_;
 	};
 
 }

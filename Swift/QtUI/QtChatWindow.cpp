@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2011 Kevin Smith
+ * Copyright (c) 2010-2012 Kevin Smith
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -45,13 +45,13 @@
 #include <QPushButton>
 #include <QFileDialog>
 #include <QMenu>
-#include <Swift/QtUI/QtUIPreferences.h>
+#include <Swift/Controllers/Settings/SettingsProvider.h>
 
 #include <QDebug>
 
 namespace Swift {
-QtChatWindow::QtChatWindow(const QString &contact, QtChatTheme* theme, UIEventStream* eventStream, QtUIPreferences* uiPreferences) : QtTabbable(), contact_(contact), previousMessageWasSelf_(false), previousMessageWasSystem_(false), previousMessageWasPresence_(false), previousMessageWasFileTransfer_(false), eventStream_(eventStream) {
-	uiPreferences_ = uiPreferences;
+QtChatWindow::QtChatWindow(const QString &contact, QtChatTheme* theme, UIEventStream* eventStream, SettingsProvider* settings) : QtTabbable(), contact_(contact), previousMessageWasSelf_(false), previousMessageWasSystem_(false), previousMessageWasPresence_(false), previousMessageWasFileTransfer_(false), eventStream_(eventStream) {
+	settings_ = settings;
 	unreadCount_ = 0;
 	idCounter_ = 0;
 	inputEnabled_ = true;
@@ -61,7 +61,6 @@ QtChatWindow::QtChatWindow(const QString &contact, QtChatTheme* theme, UIEventSt
 	isCorrection_ = false;
 	correctionEnabled_ = Maybe;
 	updateTitleWithUnreadCount();
-	QtSettingsProvider settings;
 
 #ifdef SWIFT_EXPERIMENTAL_FT
 	setAcceptDrops(true);
@@ -110,7 +109,7 @@ QtChatWindow::QtChatWindow(const QString &contact, QtChatTheme* theme, UIEventSt
 	messageLog_ = new QtChatView(theme, this);
 	logRosterSplitter_->addWidget(messageLog_);
 
-	treeWidget_ = new QtOccupantListWidget(eventStream_, uiPreferences_, this);
+	treeWidget_ = new QtOccupantListWidget(eventStream_, settings_, this);
 	treeWidget_->hide();
 	logRosterSplitter_->addWidget(treeWidget_);
 	logRosterSplitter_->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);

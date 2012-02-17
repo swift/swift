@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011 Kevin Smith
+ * Copyright (c) 2011-2012 Kevin Smith
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -19,7 +19,7 @@
 
 namespace Swift {
 
-QtOccupantListWidget::QtOccupantListWidget(UIEventStream* eventStream, QtUIPreferences* uiPreferences, QWidget* parent) : QtTreeWidget(eventStream, uiPreferences, parent) {
+QtOccupantListWidget::QtOccupantListWidget(UIEventStream* eventStream, SettingsProvider* settings, QWidget* parent) : QtTreeWidget(eventStream, settings, parent) {
 
 }
 

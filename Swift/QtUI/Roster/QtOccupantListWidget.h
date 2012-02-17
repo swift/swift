@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011 Kevin Smith
+ * Copyright (c) 2011-2012 Kevin Smith
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -12,12 +12,12 @@
 #include "Swift/Controllers/UIInterfaces/ChatWindow.h"
 
 namespace Swift {
-class QtUIPreferences;
+class SettingsProvider;
 
 class QtOccupantListWidget : public QtTreeWidget {
 	Q_OBJECT
 	public:
-		QtOccupantListWidget(UIEventStream* eventStream, QtUIPreferences* uiPreferences, QWidget* parent = 0);
+		QtOccupantListWidget(UIEventStream* eventStream, SettingsProvider* settings, QWidget* parent = 0);
 		virtual ~QtOccupantListWidget();
 		void setAvailableOccupantActions(const std::vector<ChatWindow::OccupantAction>& actions);
 		boost::signal<void (ChatWindow::OccupantAction, ContactRosterItem*)> onOccupantActionSelected;

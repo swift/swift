@@ -24,7 +24,6 @@
 #include <Swift/QtUI/QtSwiftUtil.h>
 #include <Swift/QtUI/QtTabWidget.h>
 #include <Swift/QtUI/QtSettingsProvider.h>
-#include <Swift/QtUI/QtUIPreferences.h>
 #include <Swift/QtUI/QtLoginWindow.h>
 #include <Roster/QtRosterWidget.h>
 #include <Swift/Controllers/UIEvents/RequestJoinMUCUIEvent.h>
@@ -32,17 +31,14 @@
 #include <Swift/Controllers/UIEvents/RequestChatWithUserDialogUIEvent.h>
 #include <Swift/Controllers/UIEvents/RequestProfileEditorUIEvent.h>
 #include <Swift/Controllers/UIEvents/JoinMUCUIEvent.h>
-#include <Swift/Controllers/UIEvents/ToggleShowOfflineUIEvent.h>
 #include <Swift/Controllers/UIEvents/RequestAdHocUIEvent.h>
-#include <Swift/Controllers/UIEvents/ToggleRequestDeliveryReceiptsUIEvent.h>
+#include <Swift/QtUI/QtUISettingConstants.h>
+#include <Swift/Controllers/SettingConstants.h>
 
 namespace Swift {
 
-#define CURRENT_ROSTER_TAB "current_roster_tab"
-
-QtMainWindow::QtMainWindow(QtSettingsProvider* settings, UIEventStream* uiEventStream, QtUIPreferences* uiPreferences, QtLoginWindow::QtMenus loginMenus) : QWidget(), MainWindow(false), loginMenus_(loginMenus) {
+QtMainWindow::QtMainWindow(SettingsProvider* settings, UIEventStream* uiEventStream, QtLoginWindow::QtMenus loginMenus) : QWidget(), MainWindow(false), loginMenus_(loginMenus) {
 	uiEventStream_ = uiEventStream;
-	uiPreferences_ = uiPreferences;
 	settings_ = settings;
 	setSizePolicy(QSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding));
 	QBoxLayout *mainLayout = new QBoxLayout(QBoxLayout::TopToBottom, this);
@@ -66,7 +62,7 @@ QtMainWindow::QtMainWindow(QtSettingsProvider* settings, UIEventStream* uiEventS
 	contactTabLayout->setSpacing(0);
 	contactTabLayout->setContentsMargins(0, 0, 0, 0);
 
-	treeWidget_ = new QtRosterWidget(uiEventStream_, uiPreferences_, this);
+	treeWidget_ = new QtRosterWidget(uiEventStream_, settings_, this);
 	contactTabLayout->addWidget(treeWidget_);
 
 	tabs_->addTab(contactsTabWidget_, tr("&Contacts"));
@@ -74,13 +70,13 @@ QtMainWindow::QtMainWindow(QtSettingsProvider* settings, UIEventStream* uiEventS
 	eventWindow_ = new QtEventWindow(uiEventStream_);
 	connect(eventWindow_, SIGNAL(onNewEventCountUpdated(int)), this, SLOT(handleEventCountUpdated(int)));
 
-	chatListWindow_ = new QtChatListWindow(uiEventStream_, uiPreferences_);
+	chatListWindow_ = new QtChatListWindow(uiEventStream_, settings_);
 	connect(chatListWindow_, SIGNAL(onCountUpdated(int)), this, SLOT(handleChatCountUpdated(int)));
 
 	tabs_->addTab(chatListWindow_, tr("C&hats"));
 	tabs_->addTab(eventWindow_, tr("&Notices"));
 
-	tabs_->setCurrentIndex(settings_->getIntSetting(CURRENT_ROSTER_TAB, 0));
+	tabs_->setCurrentIndex(settings_->getSetting(QtUISettingConstants::CURRENT_ROSTER_TAB));
 
 	connect(tabs_, SIGNAL(currentChanged(int)), this, SLOT(handleTabChanged(int)));
 
@@ -140,19 +136,20 @@ QtMainWindow::QtMainWindow(QtSettingsProvider* settings, UIEventStream* uiEventS
 	serverAdHocCommandActions_.append(adHocAction);
 
 	lastOfflineState_ = false;
-	uiEventStream_->onUIEvent.connect(boost::bind(&QtMainWindow::handleUIEvent, this, _1));
+
+	settings_->onSettingChanged.connect(boost::bind(&QtMainWindow::handleSettingChanged, this, _1));
 }
 
 QtMainWindow::~QtMainWindow() {
-	uiEventStream_->onUIEvent.disconnect(boost::bind(&QtMainWindow::handleUIEvent, this, _1));
+	settings_->onSettingChanged.disconnect(boost::bind(&QtMainWindow::handleSettingChanged, this, _1));
 }
 
 void QtMainWindow::handleTabChanged(int index) {
-	settings_->storeInt(CURRENT_ROSTER_TAB, index);
+	settings_->storeSetting(QtUISettingConstants::CURRENT_ROSTER_TAB, index);
 }
 
 void QtMainWindow::handleToggleRequestDeliveryReceipts(bool enabled) {
-	uiEventStream_->send(boost::make_shared<ToggleRequestDeliveryReceiptsUIEvent>(enabled));
+	settings_->storeSetting(SettingConstants::REQUEST_DELIVERYRECEIPTS, enabled);
 }
 
 QtEventWindow* QtMainWindow::getEventWindow() {
@@ -220,14 +217,12 @@ void QtMainWindow::handleStatusChanged(StatusShow::Type showType, const QString 
 	onChangeStatusRequest(showType, Q2PSTRING(statusMessage));
 }
 
-void QtMainWindow::handleUIEvent(boost::shared_ptr<UIEvent> event) {
-	boost::shared_ptr<ToggleShowOfflineUIEvent> toggleEvent = boost::dynamic_pointer_cast<ToggleShowOfflineUIEvent>(event);
-	if (toggleEvent) {
-		handleShowOfflineToggled(toggleEvent->getShow());
+void QtMainWindow::handleSettingChanged(const std::string& settingPath) {
+	if (settingPath == SettingConstants::SHOW_OFFLINE.getKey()) {
+		handleShowOfflineToggled(settings_->getSetting(SettingConstants::SHOW_OFFLINE));
 	}
-	boost::shared_ptr<ToggleRequestDeliveryReceiptsUIEvent> deliveryReceiptEvent = boost::dynamic_pointer_cast<ToggleRequestDeliveryReceiptsUIEvent>(event);
-	if (deliveryReceiptEvent) {
-		toggleRequestDeliveryReceipts_->setChecked(deliveryReceiptEvent->getEnabled());
+	if (settingPath == SettingConstants::REQUEST_DELIVERYRECEIPTS.getKey()) {
+		toggleRequestDeliveryReceipts_->setChecked(settings_->getSetting(SettingConstants::REQUEST_DELIVERYRECEIPTS));
 	}
 }
 
@@ -235,7 +230,7 @@ void QtMainWindow::handleShowOfflineToggled(bool state) {
 	if (state != lastOfflineState_) {
 		lastOfflineState_ = state;
 		showOfflineAction_->setChecked(state);
-		uiEventStream_->onUIEvent(boost::shared_ptr<UIEvent>(new ToggleShowOfflineUIEvent(state)));
+		settings_->storeSetting(SettingConstants::SHOW_OFFLINE, state);
 	}
 }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2011 Kevin Smith
+ * Copyright (c) 2010-2012 Kevin Smith
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -27,22 +27,23 @@
 #include <QMessageBox>
 #include <QKeyEvent>
  
-#include "Swift/Controllers/UIEvents/UIEventStream.h"
-#include "Swift/Controllers/UIEvents/RequestXMLConsoleUIEvent.h"
-#include "Swift/Controllers/UIEvents/RequestFileTransferListUIEvent.h"
-#include "Swift/Controllers/UIEvents/ToggleSoundsUIEvent.h"
-#include "Swift/Controllers/UIEvents/ToggleNotificationsUIEvent.h"
-#include "Swiften/Base/Platform.h"
-#include "Swiften/Base/Paths.h"
+#include <Swift/Controllers/UIEvents/UIEventStream.h>
+#include <Swift/Controllers/UIEvents/RequestXMLConsoleUIEvent.h>
+#include <Swift/Controllers/UIEvents/RequestFileTransferListUIEvent.h>
+#include <Swift/Controllers/Settings/SettingsProvider.h>
+#include <Swift/Controllers/SettingConstants.h>
+#include <Swift/QtUI/QtUISettingConstants.h>
+#include <Swiften/Base/Platform.h>
+#include <Swiften/Base/Paths.h>
 
-#include "QtAboutWidget.h"
-#include "QtSwiftUtil.h"
-#include "QtMainWindow.h"
-#include "QtUtilities.h"
+#include <QtAboutWidget.h>
+#include <QtSwiftUtil.h>
+#include <QtMainWindow.h>
+#include <QtUtilities.h>
 
 namespace Swift{
 
-QtLoginWindow::QtLoginWindow(UIEventStream* uiEventStream, bool eagleMode) : QMainWindow(), eagleMode_(eagleMode) {
+QtLoginWindow::QtLoginWindow(UIEventStream* uiEventStream, SettingsProvider* settings) : QMainWindow(), settings_(settings) {
 	uiEventStream_ = uiEventStream;
 
 	setWindowTitle("Swift");
@@ -199,13 +200,13 @@ QtLoginWindow::QtLoginWindow(UIEventStream* uiEventStream, bool eagleMode) : QMa
 	swiftMenu_->addAction(quitAction);
 
 	setInitialMenus();
-	uiEventStream_->onUIEvent.connect(boost::bind(&QtLoginWindow::handleUIEvent, this, _1));
+	settings_->onSettingChanged.connect(boost::bind(&QtLoginWindow::handleSettingChanged, this, _1));
 
-
-	remember_->setEnabled(!eagleMode_);
-	loginAutomatically_->setEnabled(!eagleMode_);
-	xmlConsoleAction_->setEnabled(!eagleMode_);
-	if (eagleMode_) {
+	bool eagle = settings_->getSetting(SettingConstants::FORGET_PASSWORDS);
+	remember_->setEnabled(!eagle);
+	loginAutomatically_->setEnabled(!eagle);
+	xmlConsoleAction_->setEnabled(!eagle);
+	if (eagle) {
 		remember_->setChecked(false);
 		loginAutomatically_->setChecked(false);
 	}
@@ -237,14 +238,12 @@ bool QtLoginWindow::eventFilter(QObject *obj, QEvent *event) {
 	return QObject::eventFilter(obj, event);
 }
 
-void QtLoginWindow::handleUIEvent(boost::shared_ptr<UIEvent> event) {
-	boost::shared_ptr<ToggleSoundsUIEvent> soundEvent = boost::dynamic_pointer_cast<ToggleSoundsUIEvent>(event);
-	if (soundEvent) {
-		toggleSoundsAction_->setChecked(soundEvent->getEnabled());
+void QtLoginWindow::handleSettingChanged(const std::string& settingPath) {
+	if (settingPath == SettingConstants::PLAY_SOUNDS.getKey()) {
+		toggleSoundsAction_->setChecked(settings_->getSetting(SettingConstants::PLAY_SOUNDS));
 	}
-	boost::shared_ptr<ToggleNotificationsUIEvent> notificationsEvent = boost::dynamic_pointer_cast<ToggleNotificationsUIEvent>(event);
-	if (notificationsEvent) {
-		toggleNotificationsAction_->setChecked(notificationsEvent->getEnabled());
+	if (settingPath == SettingConstants::SHOW_NOTIFICATIONS.getKey()) {
+		toggleNotificationsAction_->setChecked(settings_->getSetting(SettingConstants::SHOW_NOTIFICATIONS));
 	}
 }
 
@@ -323,36 +322,27 @@ void QtLoginWindow::setIsLoggingIn(bool loggingIn) {
 	for (int i = 0; i < 5; i++) {
 		widgets[i]->setEnabled(!loggingIn);
 	}
-	remember_->setEnabled(!eagleMode_);
-	loginAutomatically_->setEnabled(!eagleMode_);
+	bool eagle = settings_->getSetting(SettingConstants::FORGET_PASSWORDS);
+	remember_->setEnabled(!eagle);
+	loginAutomatically_->setEnabled(!eagle);
 }
 
 void QtLoginWindow::loginClicked() {
 	if (username_->isEnabled()) {
-		if (eagleMode_) {
-			QString clickThroughPath(P2QSTRING((Paths::getExecutablePath() / "eagle-banner.txt").string()));
-			QFile clickThroughFile(clickThroughPath);
-			if (clickThroughFile.exists() && clickThroughFile.open(QIODevice::ReadOnly)) {
-				QString banner;
-				while (!clickThroughFile.atEnd()) {
-					QByteArray line = clickThroughFile.readLine();
-					banner += line + "\n";
-				}
-				if (!banner.isEmpty()) {
-					QMessageBox msgBox;
-					msgBox.setWindowTitle(tr("Confirm terms of use"));
-					msgBox.setText("");
-					msgBox.setInformativeText(banner);
-					msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
-					msgBox.setDefaultButton(QMessageBox::No);
-					if (msgBox.exec() != QMessageBox::Yes) {
-						return;
-					}
-				}
+		std::string banner = settings_->getSetting(QtUISettingConstants::CLICKTHROUGH_BANNER);
+		if (!banner.empty()) {
+			QMessageBox msgBox;
+			msgBox.setWindowTitle(tr("Confirm terms of use"));
+			msgBox.setText("");
+			msgBox.setInformativeText(P2QSTRING(banner));
+			msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
+			msgBox.setDefaultButton(QMessageBox::No);
+			if (msgBox.exec() != QMessageBox::Yes) {
+				return;
 			}
 		}
 		onLoginRequest(Q2PSTRING(username_->currentText()), Q2PSTRING(password_->text()), Q2PSTRING(certificateFile_), remember_->isChecked(), loginAutomatically_->isChecked());
-		if (eagleMode_) { /* Mustn't remember logins */
+		if (settings_->getSetting(SettingConstants::FORGET_PASSWORDS)) { /* Mustn't remember logins */
 			username_->clearEditText();
 			password_->setText("");
 		}
@@ -398,11 +388,11 @@ void QtLoginWindow::handleShowFileTransferOverview() {
 }
 
 void QtLoginWindow::handleToggleSounds(bool enabled) {
-	uiEventStream_->send(boost::shared_ptr<ToggleSoundsUIEvent>(new ToggleSoundsUIEvent(enabled)));
+	settings_->storeSetting(SettingConstants::PLAY_SOUNDS, enabled);
 }
 
 void QtLoginWindow::handleToggleNotifications(bool enabled) {
-	uiEventStream_->send(boost::shared_ptr<ToggleNotificationsUIEvent>(new ToggleNotificationsUIEvent(enabled)));
+	settings_->storeSetting(SettingConstants::SHOW_NOTIFICATIONS, enabled);
 }
 
 void QtLoginWindow::handleQuit() {

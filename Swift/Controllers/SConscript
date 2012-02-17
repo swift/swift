@@ -54,6 +54,9 @@ if env["SCONS_STAGE"] == "build" :
 			"UIInterfaces/XMLConsoleWidget.cpp",
 			"UIInterfaces/ChatListWindow.cpp",
 			"PreviousStatusStore.cpp",
+			"ProfileSettingsProvider.cpp",
+			"Settings/SettingsProviderHierachy.cpp",
+			"Settings/XMLSettingsProvider.cpp",
 			"Storages/CertificateStorageFactory.cpp",
 			"Storages/CertificateStorage.cpp",
 			"Storages/CertificateFileStorage.cpp",
@@ -67,6 +70,7 @@ if env["SCONS_STAGE"] == "build" :
 			"Translator.cpp",
 			"XMPPURIController.cpp",
 			"ChatMessageSummarizer.cpp",
+			"SettingConstants.cpp"
 		])
 
 	env.Append(UNITTEST_SOURCES = [

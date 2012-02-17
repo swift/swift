@@ -74,6 +74,7 @@ namespace Swift {
 			void applyAllPresenceTo(const JID& jid);
 			void handleEditProfileRequest();
 			void handleOnCapsChanged(const JID& jid);
+			void handleSettingChanged(const std::string& settingPath);
 
 			JID myJID_;
 			XMPPRoster* xmppRoster_;

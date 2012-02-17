@@ -20,7 +20,7 @@ namespace Swift {
 	class QtChatWindowFactory : public QObject, public ChatWindowFactory {
 		Q_OBJECT
 		public:
-			QtChatWindowFactory(QSplitter* splitter, QtSettingsProvider* settings, QtChatTabs* tabs, const QString& themePath, QtUIPreferences* uiPreferences);
+			QtChatWindowFactory(QSplitter* splitter, SettingsProvider* settings, QtSettingsProvider* qtSettings, QtChatTabs* tabs, const QString& themePath);
 			~QtChatWindowFactory();
 			ChatWindow* createChatWindow(const JID &contact, UIEventStream* eventStream);
 		signals:
@@ -30,10 +30,10 @@ namespace Swift {
 			void handleSplitterMoved();
 		private:
 			QString themePath_;
-			QtSettingsProvider* settings_;
+			SettingsProvider* settings_;
+			QtSettingsProvider* qtOnlySettings_;
 			QtChatTabs* tabs_;
 			QtChatTheme* theme_;
-			QtUIPreferences* uiPreferences_;
 	};
 }
 

@@ -21,7 +21,6 @@
 #include <Swift/Controllers/UIEvents/AddMUCBookmarkUIEvent.h>
 #include <Swift/Controllers/UIEvents/RemoveMUCBookmarkUIEvent.h>
 #include <Swift/Controllers/UIEvents/EditMUCBookmarkUIEvent.h>
-#include <Swift/Controllers/UIEvents/ToggleRequestDeliveryReceiptsUIEvent.h>
 #include <Swift/Controllers/UIInterfaces/ChatListWindowFactory.h>
 #include <Swift/Controllers/UIInterfaces/JoinMUCWindow.h>
 #include <Swift/Controllers/UIInterfaces/JoinMUCWindowFactory.h>
@@ -39,6 +38,8 @@
 #include <Swiften/Avatars/AvatarManager.h>
 #include <Swiften/Elements/MUCInvitationPayload.h>
 #include <Swiften/Roster/XMPPRoster.h>
+#include <Swift/Controllers/Settings/SettingsProvider.h>
+#include <Swift/Controllers/SettingConstants.h>
 
 namespace Swift {
 
@@ -64,10 +65,11 @@ ChatsManager::ChatsManager(
 		EntityCapsProvider* entityCapsProvider, 
 		MUCManager* mucManager,
 		MUCSearchWindowFactory* mucSearchWindowFactory,
-		ProfileSettingsProvider* settings,
+		ProfileSettingsProvider* profileSettings,
 		FileTransferOverview* ftOverview,
 		XMPPRoster* roster,
-		bool eagleMode) :
+		bool eagleMode,
+		SettingsProvider* settings) :
 			jid_(jid), 
 			joinMUCWindowFactory_(joinMUCWindowFactory), 
 			useDelayForLatency_(useDelayForLatency), 
@@ -76,7 +78,8 @@ ChatsManager::ChatsManager(
 			mucManager(mucManager),
 			ftOverview_(ftOverview),
 			roster_(roster),
-			eagleMode_(eagleMode) {
+			eagleMode_(eagleMode),
+			settings_(settings) {
 	timerFactory_ = timerFactory;
 	eventController_ = eventController;
 	stanzaChannel_ = stanzaChannel;
@@ -89,7 +92,7 @@ ChatsManager::ChatsManager(
 	presenceSender_ = presenceSender;
 	uiEventStream_ = uiEventStream;
 	mucBookmarkManager_ = NULL;
-	profileSettings_ = settings;
+	profileSettings_ = profileSettings;
 	presenceOracle_->onPresenceChange.connect(boost::bind(&ChatsManager::handlePresenceChange, this, _1));
 	uiEventConnection_ = uiEventStream_->onUIEvent.connect(boost::bind(&ChatsManager::handleUIEvent, this, _1));
 
@@ -99,18 +102,22 @@ ChatsManager::ChatsManager(
 	chatListWindow_->onClearRecentsRequested.connect(boost::bind(&ChatsManager::handleClearRecentsRequested, this));
 
 	joinMUCWindow_ = NULL;
-	mucSearchController_ = new MUCSearchController(jid_, mucSearchWindowFactory, iqRouter, settings);
+	mucSearchController_ = new MUCSearchController(jid_, mucSearchWindowFactory, iqRouter, profileSettings_);
 	mucSearchController_->onMUCSelected.connect(boost::bind(&ChatsManager::handleMUCSelectedAfterSearch, this, _1));
 	ftOverview_->onNewFileTransferController.connect(boost::bind(&ChatsManager::handleNewFileTransferController, this, _1));
 	roster_->onJIDAdded.connect(boost::bind(&ChatsManager::handleJIDAddedToRoster, this, _1));
 	roster_->onJIDRemoved.connect(boost::bind(&ChatsManager::handleJIDRemovedFromRoster, this, _1));
 	roster_->onJIDUpdated.connect(boost::bind(&ChatsManager::handleJIDUpdatedInRoster, this, _1));
 	roster_->onRosterCleared.connect(boost::bind(&ChatsManager::handleRosterCleared, this));
+
+	settings_->onSettingChanged.connect(boost::bind(&ChatsManager::handleSettingChanged, this, _1));
+
 	setupBookmarks();
 	loadRecents();
 }
 
 ChatsManager::~ChatsManager() {
+	settings_->onSettingChanged.disconnect(boost::bind(&ChatsManager::handleSettingChanged, this, _1));
 	roster_->onJIDAdded.disconnect(boost::bind(&ChatsManager::handleJIDAddedToRoster, this, _1));
 	roster_->onJIDRemoved.disconnect(boost::bind(&ChatsManager::handleJIDRemovedFromRoster, this, _1));
 	roster_->onJIDUpdated.disconnect(boost::bind(&ChatsManager::handleJIDUpdatedInRoster, this, _1));
@@ -348,6 +355,13 @@ void ChatsManager::handleUserLeftMUC(MUCController* mucController) {
 	}
 }
 
+void ChatsManager::handleSettingChanged(const std::string& settingPath) {
+	if (settingPath == SettingConstants::REQUEST_DELIVERYRECEIPTS.getKey()) {
+		userWantsReceipts_ = settings_->getSetting(SettingConstants::REQUEST_DELIVERYRECEIPTS);
+		return;
+	}
+}
+
 void ChatsManager::handleUIEvent(boost::shared_ptr<UIEvent> event) {
 	boost::shared_ptr<RequestChatUIEvent> chatEvent = boost::dynamic_pointer_cast<RequestChatUIEvent>(event);
 	if (chatEvent) {
@@ -364,11 +378,7 @@ void ChatsManager::handleUIEvent(boost::shared_ptr<UIEvent> event) {
 		mucBookmarkManager_->addBookmark(addMUCBookmarkEvent->getBookmark());
 		return;
 	}
-	boost::shared_ptr<ToggleRequestDeliveryReceiptsUIEvent> toggleRequestDeliveryReceiptsEvent = boost::dynamic_pointer_cast<ToggleRequestDeliveryReceiptsUIEvent>(event);
-	if (toggleRequestDeliveryReceiptsEvent) {
-		userWantsReceipts_ = toggleRequestDeliveryReceiptsEvent->getEnabled();
-		return;
-	}
+
 
 	boost::shared_ptr<EditMUCBookmarkUIEvent> editMUCBookmarkEvent = boost::dynamic_pointer_cast<EditMUCBookmarkUIEvent>(event);
 	if (editMUCBookmarkEvent) {
@@ -489,7 +499,7 @@ ChatController* ChatsManager::getChatControllerOrFindAnother(const JID &contact)
 
 ChatController* ChatsManager::createNewChatController(const JID& contact) {
 	assert(chatControllers_.find(contact) == chatControllers_.end());
-	ChatController* controller = new ChatController(jid_, stanzaChannel_, iqRouter_, chatWindowFactory_, contact, nickResolver_, presenceOracle_, avatarManager_, mucRegistry_->isMUC(contact.toBare()), useDelayForLatency_, uiEventStream_, eventController_, timerFactory_, entityCapsProvider_, userWantsReceipts_);
+	ChatController* controller = new ChatController(jid_, stanzaChannel_, iqRouter_, chatWindowFactory_, contact, nickResolver_, presenceOracle_, avatarManager_, mucRegistry_->isMUC(contact.toBare()), useDelayForLatency_, uiEventStream_, eventController_, timerFactory_, entityCapsProvider_, userWantsReceipts_, settings_);
 	chatControllers_[contact] = controller;
 	controller->setAvailableServerFeatures(serverDiscoInfo_);
 	controller->onActivity.connect(boost::bind(&ChatsManager::handleChatActivity, this, contact, _1, false));

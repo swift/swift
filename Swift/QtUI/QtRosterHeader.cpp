@@ -23,7 +23,7 @@
 #include "QtScaledAvatarCache.h"
 
 namespace Swift {
-QtRosterHeader::QtRosterHeader(QtSettingsProvider* settings, QWidget* parent) : QWidget(parent) {
+QtRosterHeader::QtRosterHeader(SettingsProvider* settings, QWidget* parent) : QWidget(parent) {
 	QHBoxLayout* topLayout = new QHBoxLayout();
 	topLayout->setSpacing(3);
 	topLayout->setContentsMargins(4,4,4,4);

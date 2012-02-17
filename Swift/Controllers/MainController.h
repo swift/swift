@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2011 Kevin Smith
+ * Copyright (c) 2010-2012 Kevin Smith
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -84,8 +84,7 @@ namespace Swift {
 					Notifier* notifier,
 					URIHandler* uriHandler,
 					IdleDetector* idleDetector,
-					bool useDelayForLatency,
-					bool eagleMode);
+					bool useDelayForLatency);
 			~MainController();
 
 
@@ -100,7 +99,7 @@ namespace Swift {
 			void handleServerDiscoInfoResponse(boost::shared_ptr<DiscoInfo>, ErrorPayload::ref);
 			void handleEventQueueLengthChange(int count);
 			void handleVCardReceived(const JID& j, VCard::ref vCard);
-			void handleUIEvent(boost::shared_ptr<UIEvent> event);
+			void handleSettingChanged(const std::string& settingPath);
 			void handlePurgeSavedLoginRequest(const std::string& username);
 			void sendPresence(boost::shared_ptr<Presence> presence);
 			void handleInputIdleChanged(bool);
@@ -166,7 +165,6 @@ namespace Swift {
 			bool quitRequested_;
 			bool offlineRequested_;
 			static const int SecondsToWaitBeforeForceQuitting;
-			bool eagleMode_;
 			FileTransferOverview* ftOverview_;
 	};
 }

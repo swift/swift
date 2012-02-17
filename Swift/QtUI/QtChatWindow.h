@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2011 Kevin Smith
+ * Copyright (c) 2010-2012 Kevin Smith
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -32,12 +32,12 @@ namespace Swift {
 	class QtTextEdit;
 	class UIEventStream;
 	class QtFileTransferJSBridge;
-	class QtUIPreferences;
+	class SettingsProvider;
 
 	class QtChatWindow : public QtTabbable, public ChatWindow {
 		Q_OBJECT
 		public:
-			QtChatWindow(const QString &contact, QtChatTheme* theme, UIEventStream* eventStream, QtUIPreferences* uiPreferences);
+			QtChatWindow(const QString &contact, QtChatTheme* theme, UIEventStream* eventStream, SettingsProvider* settings);
 			~QtChatWindow();
 			std::string addMessage(const std::string &message, const std::string &senderName, bool senderIsSelf, boost::shared_ptr<SecurityLabel> label, const std::string& avatarPath, const boost::posix_time::ptime& time);
 			std::string addAction(const std::string &message, const std::string &senderName, bool senderIsSelf, boost::shared_ptr<SecurityLabel> label, const std::string& avatarPath, const boost::posix_time::ptime& time);
@@ -162,6 +162,6 @@ namespace Swift {
 			QPointer<QtMUCConfigurationWindow> mucConfigurationWindow_;
 			QPointer<QtAffiliationEditor> affiliationEditor_;
 			int idCounter_;
-			QtUIPreferences* uiPreferences_;
+			SettingsProvider* settings_;
 	};
 }

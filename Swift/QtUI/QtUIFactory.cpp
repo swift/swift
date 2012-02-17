@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Remko Tronçon
+ * Copyright (c) 2010-2012 Remko Tronçon
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -25,13 +25,13 @@
 #include "QtContactEditWindow.h"
 #include "QtAdHocCommandWindow.h"
 #include "QtFileTransferListWidget.h"
-
-#define CHATWINDOW_FONT_SIZE "chatWindowFontSize"
+#include <Swift/Controllers/Settings/SettingsProviderHierachy.h>
+#include <Swift/QtUI/QtUISettingConstants.h>
 
 namespace Swift {
 
-QtUIFactory::QtUIFactory(QtSettingsProvider* settings, QtChatTabs* tabs, QSplitter* netbookSplitter, QtSystemTray* systemTray, QtChatWindowFactory* chatWindowFactory, bool startMinimized, bool eagleMode, QtUIPreferences* uiPreferences) : settings(settings), tabs(tabs), netbookSplitter(netbookSplitter), systemTray(systemTray), chatWindowFactory(chatWindowFactory), lastMainWindow(NULL), loginWindow(NULL), startMinimized(startMinimized), eagleMode(eagleMode), uiPreferences(uiPreferences)  {
-	chatFontSize = settings->getIntSetting(CHATWINDOW_FONT_SIZE, 0);
+QtUIFactory::QtUIFactory(SettingsProviderHierachy* settings, QtSettingsProvider* qtOnlySettings, QtChatTabs* tabs, QSplitter* netbookSplitter, QtSystemTray* systemTray, QtChatWindowFactory* chatWindowFactory, bool startMinimized) : settings(settings), qtOnlySettings(qtOnlySettings), tabs(tabs), netbookSplitter(netbookSplitter), systemTray(systemTray), chatWindowFactory(chatWindowFactory), lastMainWindow(NULL), loginWindow(NULL), startMinimized(startMinimized) {
+	chatFontSize = settings->getSetting(QtUISettingConstants::CHATWINDOW_FONT_SIZE);
 }
 
 XMLConsoleWidget* QtUIFactory::createXMLConsoleWidget() {
@@ -55,19 +55,19 @@ FileTransferListWidget* QtUIFactory::createFileTransferListWidget() {
 }
 
 MainWindow* QtUIFactory::createMainWindow(UIEventStream* eventStream) {
-	lastMainWindow  = new QtMainWindow(settings, eventStream, uiPreferences, loginWindow->getMenus());
+	lastMainWindow  = new QtMainWindow(settings, eventStream, loginWindow->getMenus());
 	return lastMainWindow;
 }
 
 LoginWindow* QtUIFactory::createLoginWindow(UIEventStream* eventStream) {
-	loginWindow = new QtLoginWindow(eventStream, eagleMode);
+	loginWindow = new QtLoginWindow(eventStream, settings);
 	if (netbookSplitter) {
 		netbookSplitter->insertWidget(0, loginWindow);
 	}
 	connect(systemTray, SIGNAL(clicked()), loginWindow, SLOT(bringToFront()));
 
 #ifndef SWIFT_MOBILE
-	QVariant loginWindowGeometryVariant = settings->getQSettings()->value("loginWindowGeometry");
+	QVariant loginWindowGeometryVariant = qtOnlySettings->getQSettings()->value("loginWindowGeometry");
 	if (loginWindowGeometryVariant.isValid()) {
 		loginWindow->restoreGeometry(loginWindowGeometryVariant.toByteArray());
 	}
@@ -78,7 +78,7 @@ LoginWindow* QtUIFactory::createLoginWindow(UIEventStream* eventStream) {
 }
 
 void QtUIFactory::handleLoginWindowGeometryChanged() {
-	settings->getQSettings()->setValue("loginWindowGeometry", loginWindow->saveGeometry());
+	qtOnlySettings->getQSettings()->setValue("loginWindowGeometry", loginWindow->saveGeometry());
 }
 
 EventWindow* QtUIFactory::createEventWindow() {
@@ -115,7 +115,7 @@ ChatWindow* QtUIFactory::createChatWindow(const JID& contact, UIEventStream* eve
 
 void QtUIFactory::handleChatWindowFontResized(int size) {
 	chatFontSize = size;
-	settings->storeInt(CHATWINDOW_FONT_SIZE, size);
+	settings->storeSetting(QtUISettingConstants::CHATWINDOW_FONT_SIZE, size);
 }
 
 UserSearchWindow* QtUIFactory::createUserSearchWindow(UserSearchWindow::Type type, UIEventStream* eventStream, const std::set<std::string>& groups) {

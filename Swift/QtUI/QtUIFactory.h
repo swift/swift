@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Remko Tronçon
+ * Copyright (c) 2010-2012 Remko Tronçon
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -10,12 +10,12 @@
 #include <QPointer>
 
 #include <Swift/Controllers/UIInterfaces/UIFactory.h>
-#include <Swift/QtUI/QtUIPreferences.h>
 
 class QSplitter;
 
 namespace Swift {
 	class QtSettingsProvider;
+	class SettingsProviderHierachy;
 	class QtChatTabs;
 	class QtSystemTray;
 	class QtLoginWindow;
@@ -27,7 +27,7 @@ namespace Swift {
 	class QtUIFactory : public QObject, public UIFactory {
 			Q_OBJECT
 		public:
-			QtUIFactory(QtSettingsProvider* settings, QtChatTabs* tabs, QSplitter* netbookSplitter, QtSystemTray* systemTray, QtChatWindowFactory* chatWindowFactory, bool startMinimized, bool eagleMode, QtUIPreferences* uiPreferences);
+			QtUIFactory(SettingsProviderHierachy* settings, QtSettingsProvider* qtOnlySettings, QtChatTabs* tabs, QSplitter* netbookSplitter, QtSystemTray* systemTray, QtChatWindowFactory* chatWindowFactory, bool startMinimized);
 
 			virtual XMLConsoleWidget* createXMLConsoleWidget();
 			virtual MainWindow* createMainWindow(UIEventStream* eventStream);
@@ -48,7 +48,8 @@ namespace Swift {
 			void handleChatWindowFontResized(int);
 
 		private:
-			QtSettingsProvider* settings;
+			SettingsProviderHierachy* settings;
+			QtSettingsProvider* qtOnlySettings;
 			QtChatTabs* tabs;
 			QSplitter* netbookSplitter;
 			QtSystemTray* systemTray;
@@ -58,7 +59,5 @@ namespace Swift {
 			std::vector<QPointer<QtChatWindow> > chatWindows;
 			bool startMinimized;
 			int chatFontSize;
-			bool eagleMode;
-			QtUIPreferences* uiPreferences;
 	};
 }

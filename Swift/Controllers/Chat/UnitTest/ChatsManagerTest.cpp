@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2011 Kevin Smith
+ * Copyright (c) 2010-2012 Kevin Smith
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -43,12 +43,12 @@
 #include "Swift/Controllers/UIEvents/RequestChatUIEvent.h"
 #include "Swift/Controllers/UIEvents/JoinMUCUIEvent.h"
 #include "Swift/Controllers/UIEvents/UIEventStream.h"
-#include "Swift/Controllers/UIEvents/ToggleRequestDeliveryReceiptsUIEvent.h"
 #include <Swift/Controllers/ProfileSettingsProvider.h>
 #include "Swift/Controllers/FileTransfer/FileTransferOverview.h"
 #include "Swiften/Elements/DeliveryReceiptRequest.h"
 #include "Swiften/Elements/DeliveryReceipt.h"
 #include <Swiften/Base/Algorithm.h>
+#include <Swift/Controllers/SettingConstants.h>
 
 using namespace Swift;
 
@@ -102,7 +102,7 @@ public:
 		ftOverview_ = new FileTransferOverview(ftManager_);
 
 		mocks_->ExpectCall(chatListWindowFactory_, ChatListWindowFactory::createChatListWindow).With(uiEventStream_).Return(chatListWindow_);
-		manager_ = new ChatsManager(jid_, stanzaChannel_, iqRouter_, eventController_, chatWindowFactory_, joinMUCWindowFactory_, nickResolver_, presenceOracle_, directedPresenceSender_, uiEventStream_, chatListWindowFactory_, true, NULL, mucRegistry_, entityCapsManager_, mucManager_, mucSearchWindowFactory_, profileSettings_, ftOverview_, xmppRoster_, false);
+		manager_ = new ChatsManager(jid_, stanzaChannel_, iqRouter_, eventController_, chatWindowFactory_, joinMUCWindowFactory_, nickResolver_, presenceOracle_, directedPresenceSender_, uiEventStream_, chatListWindowFactory_, true, NULL, mucRegistry_, entityCapsManager_, mucManager_, mucSearchWindowFactory_, profileSettings_, ftOverview_, xmppRoster_, false, settings_);
 
 		avatarManager_ = new NullAvatarManager();
 		manager_->setAvatarManager(avatarManager_);
@@ -110,7 +110,6 @@ public:
 	
 	void tearDown() {
 		//delete chatListWindowFactory
-		delete settings_;
 		delete profileSettings_;
 		delete avatarManager_;
 		delete manager_;
@@ -132,6 +131,7 @@ public:
 		delete capsProvider_;
 		delete chatListWindow_;
 		delete mocks_;
+		delete settings_;
 	}
 
 	void testFirstOpenWindowIncoming() {
@@ -353,7 +353,7 @@ public:
 
 		MockChatWindow* window = new MockChatWindow();//mocks_->InterfaceMock<ChatWindow>();
 		mocks_->ExpectCall(chatWindowFactory_, ChatWindowFactory::createChatWindow).With(messageJID, uiEventStream_).Return(window);
-		uiEventStream_->send(boost::shared_ptr<UIEvent>(new ToggleRequestDeliveryReceiptsUIEvent(true)));
+		settings_->storeSetting(SettingConstants::REQUEST_DELIVERYRECEIPTS, true);
 
 		boost::shared_ptr<Message> message = makeDeliveryReceiptTestMessage(messageJID, "1");
 		manager_->handleIncomingMessage(message);
@@ -376,7 +376,7 @@ public:
 
 		MockChatWindow* window = new MockChatWindow();//mocks_->InterfaceMock<ChatWindow>();
 		mocks_->ExpectCall(chatWindowFactory_, ChatWindowFactory::createChatWindow).With(messageJID, uiEventStream_).Return(window);
-		uiEventStream_->send(boost::shared_ptr<UIEvent>(new ToggleRequestDeliveryReceiptsUIEvent(true)));
+		settings_->storeSetting(SettingConstants::REQUEST_DELIVERYRECEIPTS, true);
 
 		boost::shared_ptr<Message> message = makeDeliveryReceiptTestMessage(messageJID, "1");
 		manager_->handleIncomingMessage(message);
@@ -412,7 +412,7 @@ public:
 
 		MockChatWindow* window = new MockChatWindow();//mocks_->InterfaceMock<ChatWindow>();
 		mocks_->ExpectCall(chatWindowFactory_, ChatWindowFactory::createChatWindow).With(messageJID, uiEventStream_).Return(window);
-		uiEventStream_->send(boost::shared_ptr<UIEvent>(new ToggleRequestDeliveryReceiptsUIEvent(true)));
+		settings_->storeSetting(SettingConstants::REQUEST_DELIVERYRECEIPTS, true);
 
 		boost::shared_ptr<Message> message = makeDeliveryReceiptTestMessage(messageJID, "1");
 		manager_->handleIncomingMessage(message);

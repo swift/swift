@@ -23,12 +23,12 @@ namespace Swift {
 	class QtClickableLabel;
 	class QtStatusWidget;
 	class QtNameWidget;
-	class QtSettingsProvider;
+	class SettingsProvider;
 	
 	class QtRosterHeader : public QWidget {
 		Q_OBJECT
 	public:
-		QtRosterHeader(QtSettingsProvider* settings, QWidget* parent = NULL);
+		QtRosterHeader(SettingsProvider* settings, QWidget* parent = NULL);
 		void setAvatar(const QString& path);
 
 		void setJID(const QString& jid);

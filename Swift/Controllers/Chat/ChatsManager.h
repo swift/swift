@@ -46,10 +46,11 @@ namespace Swift {
 	class FileTransferOverview;
 	class FileTransferController;
 	class XMPPRoster;
+	class SettingsProvider;
 	
 	class ChatsManager {
 		public:
-			ChatsManager(JID jid, StanzaChannel* stanzaChannel, IQRouter* iqRouter, EventController* eventController, ChatWindowFactory* chatWindowFactory, JoinMUCWindowFactory* joinMUCWindowFactory, NickResolver* nickResolver, PresenceOracle* presenceOracle, PresenceSender* presenceSender, UIEventStream* uiEventStream, ChatListWindowFactory* chatListWindowFactory, bool useDelayForLatency, TimerFactory* timerFactory, MUCRegistry* mucRegistry, EntityCapsProvider* entityCapsProvider, MUCManager* mucManager, MUCSearchWindowFactory* mucSearchWindowFactory, ProfileSettingsProvider* settings, FileTransferOverview* ftOverview, XMPPRoster* roster, bool eagleMode);
+			ChatsManager(JID jid, StanzaChannel* stanzaChannel, IQRouter* iqRouter, EventController* eventController, ChatWindowFactory* chatWindowFactory, JoinMUCWindowFactory* joinMUCWindowFactory, NickResolver* nickResolver, PresenceOracle* presenceOracle, PresenceSender* presenceSender, UIEventStream* uiEventStream, ChatListWindowFactory* chatListWindowFactory, bool useDelayForLatency, TimerFactory* timerFactory, MUCRegistry* mucRegistry, EntityCapsProvider* entityCapsProvider, MUCManager* mucManager, MUCSearchWindowFactory* mucSearchWindowFactory, ProfileSettingsProvider* settings, FileTransferOverview* ftOverview, XMPPRoster* roster, bool eagleMode, SettingsProvider* settings);
 			virtual ~ChatsManager();
 			void setAvatarManager(AvatarManager* avatarManager);
 			void setOnline(bool enabled);
@@ -86,6 +87,7 @@ namespace Swift {
 			void handleJIDRemovedFromRoster(const JID&);
 			void handleJIDUpdatedInRoster(const JID&);
 			void handleRosterCleared();
+			void handleSettingChanged(const std::string& settingPath);
 
 			void updatePresenceReceivingStateOnChatController(const JID&);
 
@@ -125,5 +127,6 @@ namespace Swift {
 			XMPPRoster* roster_;
 			bool eagleMode_;
 			bool userWantsReceipts_;
+			SettingsProvider* settings_;
 	};
 }

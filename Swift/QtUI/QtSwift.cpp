@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2011 Kevin Smith
+ * Copyright (c) 2010-2012 Kevin Smith
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -12,27 +12,31 @@
 #include <boost/bind.hpp>
 #include <QMessageBox>
 #include <QApplication>
+#include <qDebug.h>
 
-#include "QtLoginWindow.h"
-#include "QtChatTabs.h"
-#include "QtSystemTray.h"
-#include "QtSoundPlayer.h"
-#include "QtSwiftUtil.h"
-#include "QtUIFactory.h"
-#include "QtChatWindowFactory.h"
+#include <QtLoginWindow.h>
+#include <QtChatTabs.h>
+#include <QtSystemTray.h>
+#include <QtSoundPlayer.h>
+#include <QtSwiftUtil.h>
+#include <QtUIFactory.h>
+#include <QtChatWindowFactory.h>
 #include <Swiften/Base/Log.h>
 #include <Swift/Controllers/Storages/CertificateFileStorageFactory.h>
-#include "Swift/Controllers/Storages/FileStoragesFactory.h"
-#include "SwifTools/Application/PlatformApplicationPathProvider.h"
+#include <Swift/Controllers/Storages/FileStoragesFactory.h>
+#include <SwifTools/Application/PlatformApplicationPathProvider.h>
 #include <string>
-#include "Swiften/Base/Platform.h"
-#include "Swiften/Elements/Presence.h"
-#include "Swiften/Client/Client.h"
-#include "Swift/Controllers/MainController.h"
-#include "Swift/Controllers/ApplicationInfo.h"
-#include "Swift/Controllers/BuildVersion.h"
-#include "SwifTools/AutoUpdater/AutoUpdater.h"
-#include "SwifTools/AutoUpdater/PlatformAutoUpdaterFactory.h"
+#include <Swiften/Base/Platform.h>
+#include <Swiften/Elements/Presence.h>
+#include <Swiften/Client/Client.h>
+#include <Swift/Controllers/Settings/XMLSettingsProvider.h>
+#include <Swift/Controllers/Settings/SettingsProviderHierachy.h>
+#include <Swift/Controllers/MainController.h>
+#include <Swift/Controllers/ApplicationInfo.h>
+#include <Swift/Controllers/BuildVersion.h>
+#include <SwifTools/AutoUpdater/AutoUpdater.h>
+#include <SwifTools/AutoUpdater/PlatformAutoUpdaterFactory.h>
+#include "Swiften/Base/Paths.h"
 
 #if defined(SWIFTEN_PLATFORM_WINDOWS)
 #include "WindowsNotifier.h"
@@ -77,11 +81,22 @@ po::options_description QtSwift::getOptionsDescription() {
 		("latency-debug", "Use latency debugging (unsupported)")
 		("multi-account", po::value<int>()->default_value(1), "Number of accounts to open windows for (unsupported)")
 		("start-minimized", "Don't show the login/roster window at startup")
-		("eagle-mode", "Settings more suitable for military/secure deployments")
 		;
 	return result;
 }
 
+XMLSettingsProvider* QtSwift::loadSettingsFile(const QString& fileName) {
+	QFile configFile(fileName);
+	if (configFile.exists() && configFile.open(QIODevice::ReadOnly)) {
+		QString xmlString;
+		while (!configFile.atEnd()) {
+			QByteArray line = configFile.readLine();
+			xmlString += line + "\n";
+		}
+		return new XMLSettingsProvider(Q2PSTRING(xmlString));
+	}
+	return new XMLSettingsProvider("");
+}
 
 QtSwift::QtSwift(const po::variables_map& options) : networkFactories_(&clientMainThreadCaller_), autoUpdater_(NULL), idleDetector_(&idleQuerier_, networkFactories_.getTimerFactory(), 1000) {
 	if (options.count("netbook-mode")) {
@@ -93,6 +108,12 @@ QtSwift::QtSwift(const po::variables_map& options) : networkFactories_(&clientMa
 	QCoreApplication::setOrganizationName(SWIFT_ORGANIZATION_NAME);
 	QCoreApplication::setOrganizationDomain(SWIFT_ORGANIZATION_DOMAIN);
 	QCoreApplication::setApplicationVersion(buildVersion);
+
+	qtSettings_ = new QtSettingsProvider();
+	xmlSettings_ = loadSettingsFile(P2QSTRING((Paths::getExecutablePath() / "system-settings.xml").string()));
+	settingsHierachy_ = new SettingsProviderHierachy();
+	settingsHierachy_->addProviderToTopOfStack(xmlSettings_);
+	settingsHierachy_->addProviderToTopOfStack(qtSettings_);
 
 	int numberOfAccounts = 1;
 	try {
@@ -108,12 +129,10 @@ QtSwift::QtSwift(const po::variables_map& options) : networkFactories_(&clientMa
 
 	tabs_ = options.count("no-tabs") && !(splitter_ > 0) ? NULL : new QtChatTabs();
 	bool startMinimized = options.count("start-minimized") > 0;
-	bool eagleMode = options.count("eagle-mode") > 0;
-	settings_ = new QtSettingsProvider();
 	applicationPathProvider_ = new PlatformApplicationPathProvider(SWIFT_APPLICATION_NAME);
 	storagesFactory_ = new FileStoragesFactory(applicationPathProvider_->getDataDir());
 	certificateStorageFactory_ = new CertificateFileStorageFactory(applicationPathProvider_->getDataDir(), tlsFactories_.getCertificateFactory());
-	chatWindowFactory_ = new QtChatWindowFactory(splitter_, settings_, tabs_, "", &uiPreferences_);
+	chatWindowFactory_ = new QtChatWindowFactory(splitter_, settingsHierachy_, qtSettings_, tabs_, "");
 	soundPlayer_ = new QtSoundPlayer(applicationPathProvider_);
 
 	// Ugly, because the dock depends on the tray, but the temporary
@@ -154,13 +173,13 @@ QtSwift::QtSwift(const po::variables_map& options) : networkFactories_(&clientMa
 			// Don't add the first tray (see note above)
 			systemTrays_.push_back(new QtSystemTray());
 		}
-		QtUIFactory* uiFactory = new QtUIFactory(settings_, tabs_, splitter_, systemTrays_[i], chatWindowFactory_, startMinimized, eagleMode, &uiPreferences_);
+		QtUIFactory* uiFactory = new QtUIFactory(settingsHierachy_, qtSettings_, tabs_, splitter_, systemTrays_[i], chatWindowFactory_, startMinimized);
 		uiFactories_.push_back(uiFactory);
 		MainController* mainController = new MainController(
 				&clientMainThreadCaller_,
 				&networkFactories_,
 				uiFactory,
-				settings_,
+				settingsHierachy_,
 				systemTrays_[i],
 				soundPlayer_,
 				storagesFactory_,
@@ -169,8 +188,7 @@ QtSwift::QtSwift(const po::variables_map& options) : networkFactories_(&clientMa
 				notifier_,
 				uriHandler_,
 				&idleDetector_,
-				options.count("latency-debug") > 0,
-				eagleMode);
+				options.count("latency-debug") > 0);
 		mainControllers_.push_back(mainController);
 	}
 
@@ -191,7 +209,9 @@ QtSwift::~QtSwift() {
 	foreach (MainController* controller, mainControllers_) {
 		delete controller;
 	}
-	delete settings_;
+	delete settingsHierachy_;
+	delete qtSettings_;
+	delete xmlSettings_;
 	foreach (QtSystemTray* tray, systemTrays_) {
 		delete tray;
 	}

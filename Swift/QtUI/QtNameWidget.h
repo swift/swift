@@ -10,13 +10,13 @@
 
 namespace Swift {
 	class QtElidingLabel;
-	class QtSettingsProvider;
+	class SettingsProvider;
 
 	class QtNameWidget : public QWidget {
 			Q_OBJECT
 
 		public:
-			QtNameWidget(QtSettingsProvider* settings, QWidget *parent);
+			QtNameWidget(SettingsProvider* settings, QWidget *parent);
 
 			void setNick(const QString& text);
 			void setJID(const QString& jid);
@@ -34,7 +34,7 @@ namespace Swift {
 				ShowJID,
 			};
 
-			QtSettingsProvider* settings;
+			SettingsProvider* settings;
 			Mode mode;
 			QtElidingLabel* textLabel;
 			QString jid;

@@ -1,17 +1,18 @@
 /*
- * Copyright (c) 2010 Kevin Smith
+ * Copyright (c) 2010-2012 Kevin Smith
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "RosterGroupExpandinessPersister.h"
+#include <Swift/Controllers/Roster/RosterGroupExpandinessPersister.h>
 
 #include <boost/bind.hpp>
 #include <vector>
 
 #include <Swiften/Base/foreach.h>
-#include "Swiften/Base/String.h"
-#include "Swift/Controllers/Roster/GroupRosterItem.h"
+#include <Swiften/Base/String.h>
+#include <Swift/Controllers/Roster/GroupRosterItem.h>
+#include <Swift/Controllers/SettingConstants.h>
 
 namespace Swift {
 
@@ -48,15 +49,15 @@ void RosterGroupExpandinessPersister::save() {
 		}
 		setting += group;
 	}
-	settings_->storeString(SettingPath, setting);
+	settings_->storeSetting(SettingConstants::EXPANDED_ROSTER_GROUPS, setting);
 }
 
 void RosterGroupExpandinessPersister::load() {
-	std::string saved = settings_->getStringSetting(SettingPath);
+	std::string saved = settings_->getSetting(SettingConstants::EXPANDED_ROSTER_GROUPS);
 	std::vector<std::string> collapsed = String::split(saved, '\n');
 	collapsed_.insert(collapsed.begin(), collapsed.end());
 }
 
-const std::string RosterGroupExpandinessPersister::SettingPath = "GroupExpandiness";
+
 
 }

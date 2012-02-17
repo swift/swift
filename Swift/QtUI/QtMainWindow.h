@@ -30,13 +30,13 @@ namespace Swift {
 	class TreeWidget;
 	class UIEventStream;
 	class QtTabWidget;
-	class QtSettingsProvider;
+	class SettingsProvider;
 	class QtUIPreferences;
 
 	class QtMainWindow : public QWidget, public MainWindow {
 		Q_OBJECT
 		public:
-			QtMainWindow(QtSettingsProvider*, UIEventStream* eventStream, QtUIPreferences* uiPreferences, QtLoginWindow::QtMenus loginMenus);
+			QtMainWindow(SettingsProvider*, UIEventStream* eventStream, QtLoginWindow::QtMenus loginMenus);
 			virtual ~QtMainWindow();
 			std::vector<QMenu*> getMenus() {return menus_;}
 			void setMyNick(const std::string& name);
@@ -51,7 +51,7 @@ namespace Swift {
 			void setAvailableAdHocCommands(const std::vector<DiscoItems::Item>& commands);
 		private slots:
 			void handleStatusChanged(StatusShow::Type showType, const QString &statusMessage);
-			void handleUIEvent(boost::shared_ptr<UIEvent> event);
+			void handleSettingChanged(const std::string& settingPath);
 			void handleShowOfflineToggled(bool);
 			void handleJoinMUCAction();
 			void handleSignOutAction();
@@ -66,7 +66,7 @@ namespace Swift {
 			void handleToggleRequestDeliveryReceipts(bool enabled);
 
 		private:
-			QtSettingsProvider* settings_;
+			SettingsProvider* settings_;
 			QtLoginWindow::QtMenus loginMenus_;
 			std::vector<QMenu*> menus_;
 			QtRosterWidget* treeWidget_;
@@ -86,6 +86,5 @@ namespace Swift {
 			bool lastOfflineState_;
 			std::vector<DiscoItems::Item> serverAdHocCommands_;
 			QList<QAction*> serverAdHocCommandActions_;
-			QtUIPreferences* uiPreferences_;
 	};
 }

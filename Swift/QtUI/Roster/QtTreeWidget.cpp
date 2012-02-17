@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Kevin Smith
+ * Copyright (c) 2010-2012 Kevin Smith
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -7,6 +7,7 @@
 #include "Roster/QtTreeWidget.h"
 
 #include <boost/smart_ptr/make_shared.hpp>
+#include <boost/bind.hpp>
 
 #include <QUrl>
 
@@ -17,16 +18,17 @@
 #include <Swift/Controllers/UIEvents/RequestChatUIEvent.h>
 #include <Swift/Controllers/UIEvents/SendFileUIEvent.h>
 #include <QtSwiftUtil.h>
-#include <Swift/QtUI/QtUIPreferences.h>
+#include <Swift/Controllers/Settings/SettingsProvider.h>
+#include <Swift/QtUI/QtUISettingConstants.h>
 
 namespace Swift {
 
-QtTreeWidget::QtTreeWidget(UIEventStream* eventStream, QtUIPreferences* uiPreferences, QWidget* parent) : QTreeView(parent) {
+QtTreeWidget::QtTreeWidget(UIEventStream* eventStream, SettingsProvider* settings, QWidget* parent) : QTreeView(parent) {
 	eventStream_ = eventStream;
-	uiPreferences_ = uiPreferences;
+	settings_ = settings;
 	model_ = new RosterModel(this);
 	setModel(model_);
-	delegate_ = new RosterDelegate(this, uiPreferences_->getCompactRosters());
+	delegate_ = new RosterDelegate(this, settings_->getSetting(QtUISettingConstants::COMPACT_ROSTER));
 	setItemDelegate(delegate_);
 	setHeaderHidden(true);
 #ifdef SWIFT_PLATFORM_MACOSX
@@ -45,17 +47,21 @@ QtTreeWidget::QtTreeWidget(UIEventStream* eventStream, QtUIPreferences* uiPrefer
 	connect(this, SIGNAL(expanded(const QModelIndex&)), this, SLOT(handleExpanded(const QModelIndex&)));
 	connect(this, SIGNAL(collapsed(const QModelIndex&)), this, SLOT(handleCollapsed(const QModelIndex&)));
 	connect(this, SIGNAL(clicked(const QModelIndex&)), this, SLOT(handleClicked(const QModelIndex&)));
-	connect(uiPreferences_, SIGNAL(onCompactRostersChanged(bool)), this, SLOT(handleCompactRostersToggled(bool)));
+
+	settings_->onSettingChanged.connect(boost::bind(&QtTreeWidget::handleSettingChanged, this, _1));
 }
 
 QtTreeWidget::~QtTreeWidget() {
+	settings_->onSettingChanged.disconnect(boost::bind(&QtTreeWidget::handleSettingChanged, this, _1));
 	delete model_;
 	delete delegate_;
 }
 
-void QtTreeWidget::handleCompactRostersToggled(bool compact) {
-	delegate_->setCompact(compact);
-	repaint();
+void QtTreeWidget::handleSettingChanged(const std::string& setting) {
+	if (setting == QtUISettingConstants::COMPACT_ROSTER.getKey()) {
+		delegate_->setCompact(settings_->getSetting(QtUISettingConstants::COMPACT_ROSTER));
+		repaint();
+	}
 }
 
 void QtTreeWidget::setRosterModel(Roster* roster) {
