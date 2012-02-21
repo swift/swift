@@ -126,6 +126,7 @@ MainController::MainController(
 	uiEventStream_ = new UIEventStream();
 
 	notifier_ = new TogglableNotifier(notifier);
+	notifier_->setPersistentEnabled(settings_->getSetting(SettingConstants::SHOW_NOTIFICATIONS));
 	eventController_ = new EventController();
 	eventController_->onEventQueueLengthChange.connect(boost::bind(&MainController::handleEventQueueLengthChange, this, _1));
 

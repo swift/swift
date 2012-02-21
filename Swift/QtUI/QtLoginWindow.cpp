@@ -184,7 +184,7 @@ QtLoginWindow::QtLoginWindow(UIEventStream* uiEventStream, SettingsProvider* set
 
 	toggleNotificationsAction_ = new QAction(tr("Display Pop-up &Notifications"), this);
 	toggleNotificationsAction_->setCheckable(true);
-	toggleNotificationsAction_->setChecked(true);
+	toggleNotificationsAction_->setChecked(settings_->getSetting(SettingConstants::SHOW_NOTIFICATIONS));
 	connect(toggleNotificationsAction_, SIGNAL(toggled(bool)), SLOT(handleToggleNotifications(bool)));
 
 #ifndef SWIFTEN_PLATFORM_MACOSX
