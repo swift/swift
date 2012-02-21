@@ -6,7 +6,7 @@
 
 #include "Swift/QtUI/ChatList/QtChatListWindow.h"
 
-#include <Boost/bind.hpp>
+#include <boost/bind.hpp>
 
 #include <QMenu>
 #include <QContextMenuEvent>
