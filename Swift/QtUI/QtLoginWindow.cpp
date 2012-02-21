@@ -178,7 +178,7 @@ QtLoginWindow::QtLoginWindow(UIEventStream* uiEventStream, SettingsProvider* set
 
 	toggleSoundsAction_ = new QAction(tr("&Play Sounds"), this);
 	toggleSoundsAction_->setCheckable(true);
-	toggleSoundsAction_->setChecked(true);
+	toggleSoundsAction_->setChecked(settings_->getSetting(SettingConstants::PLAY_SOUNDS));
 	connect(toggleSoundsAction_, SIGNAL(toggled(bool)), SLOT(handleToggleSounds(bool)));
 	generalMenu_->addAction(toggleSoundsAction_);
 
