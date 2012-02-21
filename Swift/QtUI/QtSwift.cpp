@@ -12,7 +12,6 @@
 #include <boost/bind.hpp>
 #include <QMessageBox>
 #include <QApplication>
-#include <qDebug.h>
 
 #include <QtLoginWindow.h>
 #include <QtChatTabs.h>
