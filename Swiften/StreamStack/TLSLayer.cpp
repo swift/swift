@@ -37,7 +37,7 @@ void TLSLayer::handleDataRead(const SafeByteArray& data) {
 	context->handleDataFromNetwork(data);
 }
 
-bool TLSLayer::setClientCertificate(CertificateWithKey * certificate) {
+bool TLSLayer::setClientCertificate(CertificateWithKey::ref certificate) {
 	return context->setClientCertificate(certificate);
 }
 

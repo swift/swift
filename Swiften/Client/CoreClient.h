@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Remko Tronçon
+ * Copyright (c) 2010-2012 Remko Tronçon
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -15,6 +15,7 @@
 #include <Swiften/Client/ClientError.h>
 #include <Swiften/Client/ClientOptions.h>
 #include <Swiften/Base/SafeByteArray.h>
+#include <Swiften/TLS/CertificateWithKey.h>
 
 namespace Swift {
 	class ChainedConnector;
@@ -53,7 +54,12 @@ namespace Swift {
 			CoreClient(const JID& jid, const SafeByteArray& password, NetworkFactories* networkFactories);
 			~CoreClient();
 
-			void setCertificate(const std::string& certificate);
+			/**
+			 * Set a client certificate to use for strong authentication with the server.
+			 * Ensure that it is of the correct type for the TLS engine in use.
+			 * This means, largely, PKCS12Certificate for OpenSSL and CAPICertificate for CAPI.
+			 */
+			void setCertificate(CertificateWithKey::ref certificate);
 
 			/**
 			 * Connects the client to the server.
@@ -227,7 +233,7 @@ namespace Swift {
 			boost::shared_ptr<Connection> connection_;
 			boost::shared_ptr<SessionStream> sessionStream_;
 			boost::shared_ptr<ClientSession> session_;
-			std::string certificate_;
+			CertificateWithKey::ref certificate_;
 			bool disconnectRequested_;
 			CertificateTrustChecker* certificateTrustChecker;
 	};

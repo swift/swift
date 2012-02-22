@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Remko Tronçon
+ * Copyright (c) 2010-2012 Remko Tronçon
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -36,7 +36,7 @@ namespace Swift {
 					Type type;
 			};
 
-			SessionStream(): certificate(0) {}
+			SessionStream(): certificate() {}
 
 			virtual ~SessionStream();
 
@@ -58,7 +58,7 @@ namespace Swift {
 
 			virtual void resetXMPPParser() = 0;
 
-			void setTLSCertificate(CertificateWithKey* cert) {
+			void setTLSCertificate(CertificateWithKey::ref cert) {
 				certificate = cert;
 			}
 
@@ -79,11 +79,11 @@ namespace Swift {
 			boost::signal<void (const SafeByteArray&)> onDataWritten;
 
 		protected:
-			CertificateWithKey * getTLSCertificate() const {
+			CertificateWithKey::ref getTLSCertificate() const {
 				return certificate;
 			}
 
 		private:
-			CertificateWithKey * certificate;
+			CertificateWithKey::ref certificate;
 	};
 }

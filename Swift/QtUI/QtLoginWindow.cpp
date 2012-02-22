@@ -43,7 +43,9 @@
 
 #ifdef HAVE_SCHANNEL
 #include "CAPICertificateSelector.h"
+#include <Swiften/TLS/CAPICertificate.h>
 #endif
+#include <Swiften/TLS/PKCS12Certificate.h>
 
 namespace Swift{
 
@@ -345,7 +347,19 @@ void QtLoginWindow::loginClicked() {
 				return;
 			}
 		}
-		onLoginRequest(Q2PSTRING(username_->currentText()), Q2PSTRING(password_->text()), Q2PSTRING(certificateFile_), remember_->isChecked(), loginAutomatically_->isChecked());
+		CertificateWithKey::ref certificate;
+		std::string certificateString = Q2PSTRING(certificateFile_);
+#if defined(HAVE_SCHANNEL)
+		if (isCAPIURI(certificateString)) {
+			certificate = boost::make_shared<CAPICertificate>(certificateString);
+		} else {
+			certificate = boost::make_shared<PKCS12Certificate>(certificateString, createSafeByteArray(Q2PSTRING(password_->text())));
+		}
+#else
+		certificate = boost::make_shared<PKCS12Certificate>(certificateString, createSafeByteArray(Q2PSTRING(password_->text())));
+#endif
+
+		onLoginRequest(Q2PSTRING(username_->currentText()), Q2PSTRING(password_->text()), certificateString, certificate, remember_->isChecked(), loginAutomatically_->isChecked());
 		if (settings_->getSetting(SettingConstants::FORGET_PASSWORDS)) { /* Mustn't remember logins */
 			username_->clearEditText();
 			password_->setText("");
@@ -362,7 +376,7 @@ void QtLoginWindow::setLoginAutomatically(bool loginAutomatically) {
 void QtLoginWindow::handleCertficateChecked(bool checked) {
 	if (checked) {
 #ifdef HAVE_SCHANNEL
-		certificateFile_ = selectCAPICertificate();
+		certificateFile_ = P2QSTRING(selectCAPICertificate());
 		if (certificateFile_.isEmpty()) {
 			certificateButton_->setChecked(false);
 		}

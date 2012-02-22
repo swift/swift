@@ -4,8 +4,9 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
-#include "Swiften/TLS/Schannel/SchannelContext.h"
-#include "Swiften/TLS/Schannel/SchannelCertificate.h"
+#include <Swiften/TLS/Schannel/SchannelContext.h>
+#include <Swiften/TLS/Schannel/SchannelCertificate.h>
+#include <Swiften/TLS/CAPICertificate.h>
 
 namespace Swift {
 
@@ -17,7 +18,7 @@ SchannelContext::SchannelContext()
 , m_verificationError(CertificateVerificationError::UnknownError)
 , m_my_cert_store(NULL)
 , m_cert_store_name("MY")
-, m_cert_name(NULL)
+, m_cert_name()
 {
 	m_ctxtFlags = ISC_REQ_ALLOCATE_MEMORY | 
 				  ISC_REQ_CONFIDENTIALITY |
@@ -517,22 +518,18 @@ void SchannelContext::encryptAndSendData(const SafeByteArray& data)
 
 //------------------------------------------------------------------------
 
-bool SchannelContext::setClientCertificate(CertificateWithKey * certificate)
+bool SchannelContext::setClientCertificate(CertificateWithKey::ref certificate)
 {
-	if (!certificate || certificate->isNull()) {
+	boost::shared_ptr<CAPICertificate> capiCertificate = boost::dynamic_pointer_cast<CAPICertificate>(certificate);
+	if (!capiCertificate || capiCertificate->isNull()) {
 		return false;
 	}
 
-	if (!certificate->isPrivateKeyExportable()) {
-		// We assume that the Certificate Store Name/Certificate Name
-		// are valid at this point
-		m_cert_store_name = certificate->getCertStoreName();
-		m_cert_name = certificate->getCertName();
-
-		return true;
-	}
-
-	return false;
+	// We assume that the Certificate Store Name/Certificate Name
+	// are valid at this point
+	m_cert_store_name = capiCertificate->getCertStoreName();
+	m_cert_name = capiCertificate->getCertName();
+	return true;
 }
 
 //------------------------------------------------------------------------

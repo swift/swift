@@ -20,6 +20,7 @@ if myenv.get("HAVE_OPENSSL", 0) :
 	myenv.Append(CPPDEFINES = "HAVE_OPENSSL")
 elif myenv.get("HAVE_SCHANNEL", 0) :
 	objects += myenv.StaticObject([
+			"CAPICertificate.cpp",
 			"Schannel/SchannelContext.cpp",
 			"Schannel/SchannelCertificate.cpp",
 			"Schannel/SchannelContextFactory.cpp",

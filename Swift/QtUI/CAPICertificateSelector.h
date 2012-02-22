@@ -10,4 +10,5 @@
 
 namespace Swift {
 	std::string selectCAPICertificate();
+	bool isCAPIURI(std::string uri);
 }

@@ -57,6 +57,9 @@ if env["PLATFORM"] == "win32" :
   myenv.Append(LIBS = "qtmain")
   if myenv.get("HAVE_SCHANNEL", 0) :
     myenv.Append(LIBS = "Cryptui")
+    myenv.Append(CPPDEFINES = "HAVE_SCHANNEL")
+    if env["debug"] :
+      myenv.Append(LINKFLAGS = ["/NODEFAULTLIB:msvcrt"])
 
 myenv.WriteVal("DefaultTheme.qrc", myenv.Value(generateDefaultTheme(myenv.Dir("#/Swift/resources/themes/Default"))))
 

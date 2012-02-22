@@ -11,10 +11,10 @@
 
 #include <Swiften/Base/SafeByteArray.h>
 #include <Swiften/TLS/Certificate.h>
+#include <Swiften/TLS/CertificateWithKey.h>
 #include <Swiften/TLS/CertificateVerificationError.h>
 
 namespace Swift {
-	class CertificateWithKey;
 
 	class TLSContext {
 		public:
@@ -22,7 +22,7 @@ namespace Swift {
 
 			virtual void connect() = 0;
 
-			virtual bool setClientCertificate(CertificateWithKey * cert) = 0;
+			virtual bool setClientCertificate(CertificateWithKey::ref cert) = 0;
 
 			virtual void handleDataFromNetwork(const SafeByteArray&) = 0;
 			virtual void handleDataFromApplication(const SafeByteArray&) = 0;

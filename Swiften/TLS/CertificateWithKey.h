@@ -11,22 +11,12 @@
 namespace Swift {
 	class CertificateWithKey {
 		public:
+			typedef boost::shared_ptr<CertificateWithKey> ref;
 			CertificateWithKey() {}
 
 			virtual ~CertificateWithKey() {}
 
 			virtual bool isNull() const = 0;
 
-			virtual bool isPrivateKeyExportable() const = 0;
-
-			virtual const std::string& getCertStoreName() const = 0;
-
-			virtual const std::string& getCertName() const = 0;
-
-			virtual const ByteArray& getData() const = 0;
-
-			virtual void setData(const ByteArray& data) = 0;
-
-			virtual const SafeByteArray& getPassword() const = 0;
 	};
 }

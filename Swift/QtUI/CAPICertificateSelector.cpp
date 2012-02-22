@@ -6,12 +6,14 @@
 
 #include <string>
 
+#include "CAPICertificateSelector.h"
+
 #define SECURITY_WIN32
 #include <Windows.h>
 #include <WinCrypt.h>
 #include <cryptuiapi.h>
 
-#include "CAPICertificateSelector.h"
+#include <boost/algorithm/string.hpp>
 
 namespace Swift {
 
@@ -134,5 +136,8 @@ std::string selectCAPICertificate() {
 	}
 }
 
+bool isCAPIURI(std::string uri) {
+	return (boost::iequals(uri.substr(0, 10), "certstore:"));
+}
 
 }

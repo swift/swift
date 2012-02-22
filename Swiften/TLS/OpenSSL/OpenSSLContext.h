@@ -22,7 +22,7 @@ namespace Swift {
 			~OpenSSLContext();
 
 			void connect();
-			bool setClientCertificate(CertificateWithKey * cert);
+			bool setClientCertificate(CertificateWithKey::ref cert);
 
 			void handleDataFromNetwork(const SafeByteArray&);
 			void handleDataFromApplication(const SafeByteArray&);

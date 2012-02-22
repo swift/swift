@@ -159,7 +159,7 @@ MainController::MainController(
 	}
 
 
-	loginWindow_->onLoginRequest.connect(boost::bind(&MainController::handleLoginRequest, this, _1, _2, _3, _4, _5));
+	loginWindow_->onLoginRequest.connect(boost::bind(&MainController::handleLoginRequest, this, _1, _2, _3, _4, _5, _6));
 	loginWindow_->onPurgeSavedLoginRequest.connect(boost::bind(&MainController::handlePurgeSavedLoginRequest, this, _1));
 	loginWindow_->onCancelLoginRequest.connect(boost::bind(&MainController::handleCancelLoginRequest, this));
 	loginWindow_->onQuitRequest.connect(boost::bind(&MainController::handleQuitRequest, this));
@@ -175,7 +175,8 @@ MainController::MainController(
 
 	if (loginAutomatically) {
 		profileSettings_ = new ProfileSettingsProvider(selectedLoginJID, settings_);
-		handleLoginRequest(selectedLoginJID, cachedPassword, cachedCertificate, true, true);
+		/* FIXME: deal with autologin with a cert*/
+		handleLoginRequest(selectedLoginJID, cachedPassword, cachedCertificate, CertificateWithKey::ref(), true, true);
 	} else {
 		profileSettings_ = NULL;
 	}
@@ -416,7 +417,7 @@ void MainController::handleInputIdleChanged(bool idle) {
 	}
 }
 
-void MainController::handleLoginRequest(const std::string &username, const std::string &password, const std::string& certificateFile, bool remember, bool loginAutomatically) {
+void MainController::handleLoginRequest(const std::string &username, const std::string &password, const std::string& certificatePath, CertificateWithKey::ref certificate, bool remember, bool loginAutomatically) {
 	jid_ = JID(username);
 	if (!jid_.isValid() || jid_.getNode().empty()) {
 		loginWindow_->setMessage(QT_TRANSLATE_NOOP("", "User address invalid. User address should be of the form 'alice@wonderland.lit'"));
@@ -427,7 +428,7 @@ void MainController::handleLoginRequest(const std::string &username, const std::
 		profileSettings_ = new ProfileSettingsProvider(username, settings_);
 		if (!settings_->getSetting(SettingConstants::FORGET_PASSWORDS)) {
 			profileSettings_->storeString("jid", username);
-			profileSettings_->storeString("certificate", certificateFile);
+			profileSettings_->storeString("certificate", certificatePath);
 			profileSettings_->storeString("pass", (remember || loginAutomatically) ? password : "");
 			settings_->storeSetting(SettingConstants::LAST_LOGIN_JID, username);
 			settings_->storeSetting(SettingConstants::LOGIN_AUTOMATICALLY, loginAutomatically);
@@ -435,7 +436,7 @@ void MainController::handleLoginRequest(const std::string &username, const std::
 		}
 
 		password_ = password;
-		certificateFile_ = certificateFile;
+		certificate_ = certificate;
 		performLoginFromCachedCredentials();
 	}
 }
@@ -480,8 +481,8 @@ void MainController::performLoginFromCachedCredentials() {
 		presenceNotifier_->onNotificationActivated.connect(boost::bind(&MainController::handleNotificationClicked, this, _1));
 		eventNotifier_ = new EventNotifier(eventController_, notifier_, client_->getAvatarManager(), client_->getNickResolver());
 		eventNotifier_->onNotificationActivated.connect(boost::bind(&MainController::handleNotificationClicked, this, _1));
-		if (!certificateFile_.empty()) {
-			client_->setCertificate(certificateFile_);
+		if (certificate_ && !certificate_->isNull()) {
+			client_->setCertificate(certificate_);
 		}
 		boost::shared_ptr<Presence> presence(new Presence());
 		presence->setShow(static_cast<StatusShow::Type>(profileSettings_->getIntSetting("lastShow", StatusShow::Online)));

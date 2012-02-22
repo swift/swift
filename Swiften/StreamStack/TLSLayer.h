@@ -9,12 +9,12 @@
 #include <Swiften/Base/SafeByteArray.h>
 #include <Swiften/StreamStack/StreamLayer.h>
 #include <Swiften/TLS/Certificate.h>
+#include <Swiften/TLS/CertificateWithKey.h>
 #include <Swiften/TLS/CertificateVerificationError.h>
 
 namespace Swift {
 	class TLSContext;
 	class TLSContextFactory;
-	class CertificateWithKey;
 
 	class TLSLayer : public StreamLayer {
 		public:
@@ -22,7 +22,7 @@ namespace Swift {
 			~TLSLayer();
 
 			void connect();
-			bool setClientCertificate(CertificateWithKey * cert);
+			bool setClientCertificate(CertificateWithKey::ref cert);
 
 			Certificate::ref getPeerCertificate() const;
 			boost::shared_ptr<CertificateVerificationError> getPeerCertificateVerificationError() const;

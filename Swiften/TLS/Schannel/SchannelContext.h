@@ -37,7 +37,7 @@ namespace Swift
 		// TLSContext
 		//
 		virtual void	connect();
-		virtual bool	setClientCertificate(CertificateWithKey * cert);
+		virtual bool	setClientCertificate(CertificateWithKey::ref cert);
 
 		virtual void	handleDataFromNetwork(const SafeByteArray& data);
 		virtual void	handleDataFromApplication(const SafeByteArray& data);

@@ -91,7 +91,7 @@ namespace Swift {
 		private:
 			void resetClient();
 			void handleConnected();
-			void handleLoginRequest(const std::string& username, const std::string& password, const std::string& certificateFile, bool remember, bool loginAutomatically);
+			void handleLoginRequest(const std::string& username, const std::string& password, const std::string& certificatePath, CertificateWithKey::ref certificate, bool remember, bool loginAutomatically);
 			void handleCancelLoginRequest();
 			void handleQuitRequest();
 			void handleChangeStatusRequest(StatusShow::Type show, const std::string &statusText);
@@ -153,7 +153,7 @@ namespace Swift {
 			XMPPURIController* xmppURIController_;
 			std::string vCardPhotoHash_;
 			std::string password_;
-			std::string certificateFile_;
+			CertificateWithKey::ref certificate_;
 			boost::shared_ptr<ErrorEvent> lastDisconnectError_;
 			bool useDelayForLatency_;
 			UserSearchController* userSearchControllerChat_;

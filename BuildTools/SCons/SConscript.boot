@@ -134,6 +134,7 @@ if env["debug"] :
 	if env["PLATFORM"] == "win32" :
 		env.Append(CCFLAGS = ["/Zi", "/MDd"])
 		env.Append(LINKFLAGS = ["/DEBUG"])
+		env.Append(CPPDEFINES = ["_ITERATOR_DEBUG_LEVEL=0"])
 	else :
 		env.Append(CCFLAGS = ["-g"])
 elif env["PLATFORM"] == "win32" :
