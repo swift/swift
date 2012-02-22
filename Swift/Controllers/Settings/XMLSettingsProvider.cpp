@@ -77,6 +77,7 @@ void XMLSettingsProvider::storeSetting(const Setting<int>& /*settingPath*/, cons
 
 std::vector<std::string> XMLSettingsProvider::getAvailableProfiles() {
 	assert(false);
+	return std::vector<std::string>();
 }
 
 void XMLSettingsProvider::createProfile(const std::string& /*profile*/) {
