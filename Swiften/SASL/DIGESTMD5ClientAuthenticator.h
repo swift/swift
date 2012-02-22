@@ -21,6 +21,7 @@ namespace Swift {
 			
 			virtual boost::optional<SafeByteArray> getResponse() const;
 			virtual bool setChallenge(const boost::optional<std::vector<unsigned char> >&);
+			static bool canBeUsed();
 
 		private:
 			enum Step {

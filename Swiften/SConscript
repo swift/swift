@@ -193,7 +193,6 @@ if env["SCONS_STAGE"] == "build" :
 			"Session/BasicSessionStream.cpp",
 			"Session/BOSHSessionStream.cpp",
 			"StringCodecs/Base64.cpp",
-			"StringCodecs/SHA1.cpp",
 			"StringCodecs/SHA256.cpp",
 			"StringCodecs/MD5.cpp",
 			"StringCodecs/Hexify.cpp",
@@ -230,7 +229,13 @@ if env["SCONS_STAGE"] == "build" :
 			"QA",
 		])
 
+
 	myenv = swiften_env.Clone()
+	if myenv["PLATFORM"] == "win32":
+		sources.append("StringCodecs/SHA1_Windows.cpp")
+	else:
+		sources.append("StringCodecs/SHA1.cpp")
+
 	if myenv["PLATFORM"] != "darwin" and myenv["PLATFORM"] != "win32" and myenv.get("HAVE_GCONF", 0) :
 		env.MergeFlags(env["GCONF_FLAGS"])
 	if ARGUMENTS.get("swiften_dll", False) :

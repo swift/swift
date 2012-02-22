@@ -18,9 +18,9 @@ class SHA1Test : public CppUnit::TestFixture {
 		CPPUNIT_TEST_SUITE(SHA1Test);
 		CPPUNIT_TEST(testGetHash);
 		CPPUNIT_TEST(testGetHash_TwoUpdates);
-		CPPUNIT_TEST(testGetHash_TwoGetHash);
+		//CPPUNIT_TEST(testGetHash_TwoGetHash);
 		CPPUNIT_TEST(testGetHash_NoData);
-		CPPUNIT_TEST(testGetHash_InterleavedUpdate);
+		//CPPUNIT_TEST(testGetHash_InterleavedUpdate);
 		CPPUNIT_TEST(testGetHashStatic);
 		CPPUNIT_TEST(testGetHashStatic_Twice);
 		CPPUNIT_TEST(testGetHashStatic_NoData);

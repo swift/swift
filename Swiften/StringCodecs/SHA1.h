@@ -1,10 +1,14 @@
 /*
- * Copyright (c) 2010 Remko Tronçon
+ * Copyright (c) 2010-2012 Remko Tronçon
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
 #pragma once
+
+#ifdef SWIFTEN_PLATFORM_WIN32
+#include "SHA1_Windows.h"
+#else
 
 #include <vector>
 #include <boost/cstdint.hpp>
@@ -53,3 +57,5 @@ namespace Swift {
 			CTX context;
 	};
 }
+
+#endif

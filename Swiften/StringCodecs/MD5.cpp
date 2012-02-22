@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Remko Tronçon
+ * Copyright (c) 2010-2012 Remko Tronçon
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -40,6 +40,10 @@
 
 #include <Swiften/Base/ByteArray.h>
 #include <Swiften/Base/Platform.h>
+
+#ifdef SWIFTEN_PLATFORM_WIN32
+#include <Swiften/Base/WindowsRegistry.h>
+#endif
 
 namespace Swift {
 
@@ -393,6 +397,14 @@ ByteArray MD5::getHash(const ByteArray& data) {
 
 ByteArray MD5::getHash(const SafeByteArray& data) {
 	return getMD5Hash(data);
+}
+
+bool MD5::isAllowedForCrypto() {
+#ifdef SWIFTEN_PLATFORM_WIN32
+	return !WindowsRegistry::isFIPSEnabled();
+#else
+	return true;
+#endif
 }
 
 }

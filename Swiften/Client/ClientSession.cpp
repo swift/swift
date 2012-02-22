@@ -12,6 +12,8 @@
 #include <boost/uuid/uuid_generators.hpp>
 #include <boost/smart_ptr/make_shared.hpp>
 
+#include <Swiften/Base/Platform.h>
+#include <Swiften/Base/Log.h>
 #include <Swiften/Elements/ProtocolHeader.h>
 #include <Swiften/Elements/StreamFeatures.h>
 #include <Swiften/Elements/StreamError.h>
@@ -41,6 +43,10 @@
 #include <Swiften/TLS/CertificateTrustChecker.h>
 #include <Swiften/TLS/ServerIdentityVerifier.h>
 
+#ifdef SWIFTEN_PLATFORM_WIN32
+#include <Swiften/Base/WindowsRegistry.h>
+#endif
+
 namespace Swift {
 
 ClientSession::ClientSession(
@@ -59,6 +65,11 @@ ClientSession::ClientSession(
 			rosterVersioningSupported(false),
 			authenticator(NULL),
 			certificateTrustChecker(NULL) {
+#ifdef SWIFTEN_PLATFORM_WIN32
+if (WindowsRegistry::isFIPSEnabled()) {
+	SWIFT_LOG("info") << "Windows is running in FIPS-140 mode. Some authentication methods will be unavailable." << std::endl;
+}
+#endif
 }
 
 ClientSession::~ClientSession() {
@@ -221,7 +232,7 @@ void ClientSession::handleElement(boost::shared_ptr<Element> element) {
 				state = WaitingForCredentials;
 				onNeedCredentials();
 			}
-			else if (streamFeatures->hasAuthenticationMechanism("DIGEST-MD5")) {
+			else if (streamFeatures->hasAuthenticationMechanism("DIGEST-MD5") && DIGESTMD5ClientAuthenticator::canBeUsed()) {
 				std::ostringstream s;
 				s << boost::uuids::random_generator()();
 				// FIXME: Host should probably be the actual host

@@ -18,6 +18,10 @@ namespace Swift {
 DIGESTMD5ClientAuthenticator::DIGESTMD5ClientAuthenticator(const std::string& host, const std::string& nonce) : ClientAuthenticator("DIGEST-MD5"), step(Initial), host(host), cnonce(nonce) {
 }
 
+bool DIGESTMD5ClientAuthenticator::canBeUsed() {
+	return MD5::isAllowedForCrypto();
+}
+
 boost::optional<SafeByteArray> DIGESTMD5ClientAuthenticator::getResponse() const {
 	if (step == Initial) {
 		return boost::optional<SafeByteArray>();
