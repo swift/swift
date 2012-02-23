@@ -12,9 +12,9 @@
 
 #include <Swiften/TLS/TLSContext.h>
 #include <Swiften/Base/ByteArray.h>
+#include <Swiften/TLS/CertificateWithKey.h>
 
 namespace Swift {
-	class CertificateWithKey;
 
 	class OpenSSLContext : public TLSContext, boost::noncopyable {
 		public:

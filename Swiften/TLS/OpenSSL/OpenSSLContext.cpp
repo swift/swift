@@ -22,6 +22,7 @@
 #include <Swiften/TLS/OpenSSL/OpenSSLContext.h>
 #include <Swiften/TLS/OpenSSL/OpenSSLCertificate.h>
 #include <Swiften/TLS/CertificateWithKey.h>
+#include <Swiften/TLS/PKCS12Certificate.h>
 
 #pragma GCC diagnostic ignored "-Wold-style-cast"
 
@@ -185,7 +186,7 @@ void OpenSSLContext::sendPendingDataToApplication() {
 	}
 }
 
-bool OpenSSLContext::setClientCertificate(CertificateWithKey * certificate) {
+bool OpenSSLContext::setClientCertificate(CertificateWithKey::ref certificate) {
 	boost::shared_ptr<PKCS12Certificate> pkcs12Certificate = boost::dynamic_pointer_cast<PKCS12Certificate>(certificate);
 	if (!pkcs12Certificate || pkcs12Certificate->isNull()) {
 		return false;
@@ -193,7 +194,7 @@ bool OpenSSLContext::setClientCertificate(CertificateWithKey * certificate) {
 
 	// Create a PKCS12 structure
 	BIO* bio = BIO_new(BIO_s_mem());
-	BIO_write(bio, vecptr(certificate->getData()), pkcs12Certificate->getData().size());
+	BIO_write(bio, vecptr(pkcs12Certificate->getData()), pkcs12Certificate->getData().size());
 	boost::shared_ptr<PKCS12> pkcs12(d2i_PKCS12_bio(bio, NULL), PKCS12_free);
 	BIO_free(bio);
 	if (!pkcs12) {
