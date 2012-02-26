@@ -7,8 +7,10 @@
 #pragma once
 
 #include <boost/shared_ptr.hpp>
+#include <boost/date_time/posix_time/ptime.hpp>
 
 #include <string>
+#include <Swiften/JID/JID.h>
 #include <Swiften/Base/ByteArray.h>
 #include <Swiften/Elements/Payload.h>
 
@@ -27,6 +29,71 @@ namespace Swift {
 				bool isPreferred;
 				bool isX400;
 				std::string address;
+			};
+
+			struct Telephone {
+				Telephone() : isHome(false), isWork(false), isVoice(false), isFax(false), isPager(false), isMSG(false), isCell(false),
+					isVideo(false), isBBS(false), isModem(false), isISDN(false), isPCS(false), isPreferred(false) {
+				}
+
+				bool isHome;
+				bool isWork;
+				bool isVoice;
+				bool isFax;
+				bool isPager;
+				bool isMSG;
+				bool isCell;
+				bool isVideo;
+				bool isBBS;
+				bool isModem;
+				bool isISDN;
+				bool isPCS;
+				bool isPreferred;
+				std::string number;
+			};
+
+			enum DeliveryType {
+				DomesticDelivery,
+				InternationalDelivery,
+				None
+			};
+
+			struct Address {
+				Address() : isHome(false), isWork(false), isPostal(false), isParcel(false), deliveryType(None), isPreferred(false) {
+				}
+
+				bool isHome;
+				bool isWork;
+				bool isPostal;
+				bool isParcel;
+				DeliveryType deliveryType;
+				bool isPreferred;
+
+				std::string poBox;
+				std::string addressExtension;
+				std::string street;
+				std::string locality;
+				std::string region;
+				std::string postalCode;
+				std::string country;
+			};
+
+			struct AddressLabel {
+				AddressLabel() : isHome(false), isWork(false), isPostal(false), isParcel(false), deliveryType(None), isPreferred(false) {
+				}
+
+				bool isHome;
+				bool isWork;
+				bool isPostal;
+				bool isParcel;
+				DeliveryType deliveryType;
+				bool isPreferred;
+				std::vector<std::string> lines;
+			};
+
+			struct Organization {
+				std::string name;
+				std::vector<std::string> units;
 			};
 
 			VCard() {}
@@ -78,7 +145,123 @@ namespace Swift {
 				emailAddresses_.push_back(email);
 			}
 
+			void clearEMailAddresses() {
+				emailAddresses_.clear();
+			}
+
 			EMailAddress getPreferredEMailAddress() const;
+
+			void setBirthday(const boost::posix_time::ptime& birthday) {
+				birthday_ = birthday;
+			}
+
+			const boost::posix_time::ptime& getBirthday() const {
+				return birthday_;
+			}
+
+			const std::vector<Telephone>& getTelephones() const {
+				return telephones_;
+			}
+
+			void addTelephone(const Telephone& phone) {
+				telephones_.push_back(phone);
+			}
+
+			void clearTelephones() {
+				telephones_.clear();
+			}
+
+			const std::vector<Address>& getAddresses() const {
+				return addresses_;
+			}
+
+			void addAddress(const Address& address) {
+				addresses_.push_back(address);
+			}
+
+			void clearAddresses() {
+				addresses_.clear();
+			}
+
+			const std::vector<AddressLabel>& getAddressLabels() const {
+				return addressLabels_;
+			}
+
+			void addAddressLabel(const AddressLabel& addressLabel) {
+				addressLabels_.push_back(addressLabel);
+			}
+
+			void clearAddressLabels() {
+				addressLabels_.clear();
+			}
+
+			const std::vector<JID>& getJIDs() const {
+				return jids_;
+			}
+
+			void addJID(const JID& jid) {
+				jids_.push_back(jid);
+			}
+
+			void clearJIDs() {
+				jids_.clear();
+			}
+
+			const std::string& getDescription() const {
+				return description_;
+			}
+
+			void setDescription(const std::string& description) {
+				this->description_ = description;
+			}
+
+			const std::vector<Organization>& getOrganizations() const {
+				return organizations_;
+			}
+
+			void addOrganization(const Organization& organization) {
+				organizations_.push_back(organization);
+			}
+
+			void clearOrganizations() {
+				organizations_.clear();
+			}
+
+			const std::vector<std::string>& getTitles() const {
+				return titles_;
+			}
+
+			void addTitle(const std::string& title) {
+				titles_.push_back(title);
+			}
+
+			void clearTitles() {
+				titles_.clear();
+			}
+
+			const std::vector<std::string>& getRoles() const {
+				return roles_;
+			}
+
+			void addRole(const std::string& role) {
+				roles_.push_back(role);
+			}
+
+			void clearRoles() {
+				roles_.clear();
+			}
+
+			const std::vector<std::string>& getURLs() const {
+				return urls_;
+			}
+
+			void addURL(const std::string& url) {
+				urls_.push_back(url);
+			}
+
+			void clearURLs() {
+				urls_.clear();
+			}
 
 		private:
 			std::string version_;
@@ -92,7 +275,17 @@ namespace Swift {
 			ByteArray photo_;
 			std::string photoType_;
 			std::string nick_;
+			boost::posix_time::ptime birthday_;
 			std::string unknownContent_;
 			std::vector<EMailAddress> emailAddresses_;
+			std::vector<Telephone> telephones_;
+			std::vector<Address> addresses_;
+			std::vector<AddressLabel> addressLabels_;
+			std::vector<JID> jids_;
+			std::string description_;
+			std::vector<Organization> organizations_;
+			std::vector<std::string> titles_;
+			std::vector<std::string> roles_;
+			std::vector<std::string> urls_;
 	};
 }

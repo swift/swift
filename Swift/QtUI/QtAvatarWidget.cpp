@@ -68,6 +68,9 @@ void QtAvatarWidget::setAvatar(const ByteArray& data, const std::string& type) {
 }
 
 void QtAvatarWidget::mousePressEvent(QMouseEvent* event) {
+	if (!editable) {
+		return;
+	}
 	QMenu menu;
 
 	QAction* selectPicture = new QAction(tr("Select picture ..."), this);

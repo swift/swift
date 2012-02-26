@@ -38,5 +38,7 @@
 		<file alias="emoticons/tongue.png">../resources/emoticons/tongue.png</file>
 		<file alias="emoticons/unhappy.png">../resources/emoticons/unhappy.png</file>
 		<file alias="emoticons/wink.png">../resources/emoticons/wink.png</file>
+		<file alias="icons/star-checked.png">../resources/icons/star-checked2.png</file>
+		<file alias="icons/star-unchecked.png">../resources/icons/star-unchecked2.png</file>
 	</qresource>
 </RCC>

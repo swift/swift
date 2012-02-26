@@ -4,97 +4,80 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
+/*
+ * Copyright (c) 2012 Tobias Markmann
+ * Licensed under the simplified BSD license.
+ * See Documentation/Licenses/BSD-simplified.txt for more information.
+ */
+
 #include "QtProfileWindow.h"
+#include "ui_QtProfileWindow.h"
 
-#include <QImage>
-#include <QPixmap>
-#include <QSizePolicy>
-#include <QGridLayout>
-#include <QLabel>
-#include <QLineEdit>
-#include <QPushButton>
+#include <QCloseEvent>
 #include <QMovie>
+#include <QShortcut>
+#include <QTextDocument>
 
-#include "QtSwiftUtil.h"
-#include "QtAvatarWidget.h"
+#include <Swift/QtUI/QtSwiftUtil.h>
 
 namespace Swift {
 
-QtProfileWindow::QtProfileWindow() {
-	setWindowTitle(tr("Edit Profile"));
-
-	QSizePolicy sizePolicy(QSizePolicy::Preferred, QSizePolicy::Minimum);
-	sizePolicy.setHorizontalStretch(0);
-	sizePolicy.setVerticalStretch(0);
-	sizePolicy.setHeightForWidth(this->sizePolicy().hasHeightForWidth());
-	setSizePolicy(sizePolicy);
-
-	QVBoxLayout* layout = new QVBoxLayout(this);
-	layout->setContentsMargins(10, 10, 10, 10);
-
-	QHBoxLayout* topLayout = new QHBoxLayout();
-
-	avatar = new QtAvatarWidget(this);
-	topLayout->addWidget(avatar);
-
-	QVBoxLayout* fieldsLayout = new QVBoxLayout();
-
-	QHBoxLayout* horizontalLayout_2 = new QHBoxLayout();
-	nicknameLabel = new QLabel(tr("Nickname:"), this);
-	horizontalLayout_2->addWidget(nicknameLabel);
-	nickname = new QLineEdit(this);
-	horizontalLayout_2->addWidget(nickname);
-
-	fieldsLayout->addLayout(horizontalLayout_2);
-
-	errorLabel = new QLabel(this);
-	errorLabel->setAlignment(Qt::AlignHCenter);
-	fieldsLayout->addWidget(errorLabel);
-
-	fieldsLayout->addItem(new QSpacerItem(198, 17, QSizePolicy::Minimum, QSizePolicy::Expanding));
-	topLayout->addLayout(fieldsLayout);
-
-	layout->addLayout(topLayout);
-
-	QHBoxLayout* horizontalLayout = new QHBoxLayout();
-	horizontalLayout->setContentsMargins(0, 0, 0, 0);
-	horizontalLayout->addItem(new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum));
-
-	throbberLabel = new QLabel(this);
-	throbberLabel->setMovie(new QMovie(":/icons/throbber.gif", QByteArray(), this));
-	horizontalLayout->addWidget(throbberLabel);
-
-	saveButton = new QPushButton(tr("Save"), this);
-	saveButton->setDefault( true );
-	connect(saveButton, SIGNAL(clicked()), SLOT(handleSave()));
-	horizontalLayout->addWidget(saveButton);
-
-	fieldsLayout->addLayout(horizontalLayout);
-
-	resize(360, 120);
+QtProfileWindow::QtProfileWindow(QWidget* parent) :
+	QWidget(parent),
+	ui(new Ui::QtProfileWindow) {
+	ui->setupUi(this);
+	new QShortcut(QKeySequence::Close, this, SLOT(close()));
+	ui->throbberLabel->setMovie(new QMovie(":/icons/throbber.gif", QByteArray(), this));
+	connect(ui->savePushButton, SIGNAL(clicked()), SLOT(handleSave()));
+	setEditable(false);
 }
 
-void QtProfileWindow::setVCard(Swift::VCard::ref vcard) {
-	this->vcard = vcard;
-	nickname->setText(P2QSTRING(vcard->getNickname()));
-	avatar->setAvatar(vcard->getPhoto(), vcard->getPhotoType());
+QtProfileWindow::~QtProfileWindow() {
+	delete ui;
+}
+
+void QtProfileWindow::setJID(const JID& jid) {
+	this->jid = jid;
+	updateTitle();
+}
+
+void QtProfileWindow::setVCard(VCard::ref vcard) {
+	ui->vcard->setVCard(vcard);
 }
 
 void QtProfileWindow::setEnabled(bool b) {
-	nickname->setEnabled(b);
-	nicknameLabel->setEnabled(b);
-	avatar->setEnabled(b);
-	saveButton->setEnabled(b);
+	ui->vcard->setEnabled(b);
+	ui->savePushButton->setEnabled(b);
+}
+
+void QtProfileWindow::setEditable(bool b) {
+	if (b) {
+		ui->savePushButton->show();
+		ui->vcard->setEditable(true);
+	} else {
+		ui->savePushButton->hide();
+		ui->vcard->setEditable(false);
+	}
+	updateTitle();
 }
 
 void QtProfileWindow::setProcessing(bool processing) {
 	if (processing) {
-		throbberLabel->movie()->start();
-		throbberLabel->show();
+		ui->throbberLabel->movie()->start();
+		ui->throbberLabel->show();
 	}
 	else {
-		throbberLabel->hide();
-		throbberLabel->movie()->stop();
+		ui->throbberLabel->hide();
+		ui->throbberLabel->movie()->stop();
+	}
+}
+
+void QtProfileWindow::setError(const std::string& error) {
+	if (!error.empty()) {
+		ui->errorLabel->setText("<font color='red'>" + Qt::escape(P2QSTRING(error)) + "</font>");
+	}
+	else {
+		ui->errorLabel->setText("");
 	}
 }
 
@@ -103,31 +86,30 @@ void QtProfileWindow::show() {
 	QWidget::activateWindow();
 }
 
-void QtProfileWindow::hideEvent(QHideEvent* event) {
-	QWidget::hideEvent(event);
-}
-
 void QtProfileWindow::hide() {
 	QWidget::hide();
 }
 
+void QtProfileWindow::updateTitle() {
+	QString jidString;
+	if (jid.isValid()) {
+		jidString = QString(" ( %1 )").arg(P2QSTRING(jid.toString()));
+	}
+
+	if (ui->vcard->isEditable()) {
+		setWindowTitle(tr("Edit Profile") + jidString);
+	} else {
+		setWindowTitle(tr("Show Profile") + jidString);
+	}
+}
+
+void QtProfileWindow::closeEvent(QCloseEvent* event) {
+	onWindowClosed(jid);
+	event->accept();
+}
+
 void QtProfileWindow::handleSave() {
-	assert(vcard);
-	vcard->setNickname(Q2PSTRING(nickname->text()));
-	vcard->setPhoto(avatar->getAvatarData());
-	vcard->setPhotoType(avatar->getAvatarType());
-	onVCardChangeRequest(vcard);
+	onVCardChangeRequest(ui->vcard->getVCard());
 }
-
-void QtProfileWindow::setError(const std::string& error) {
-	if (!error.empty()) {
-		errorLabel->setText("<font color='red'>" + P2QSTRING(error) + "</font>");
-	}
-	else {
-		errorLabel->setText("");
-	}
-}
-
-
 
 }

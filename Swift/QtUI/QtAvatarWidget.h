@@ -15,6 +15,7 @@ class QLabel;
 namespace Swift {
 	class QtAvatarWidget : public QWidget {
 			Q_OBJECT
+			Q_PROPERTY(bool editable READ isEditable WRITE setEditable)
 		public:
 			QtAvatarWidget(QWidget* parent);
 
@@ -28,9 +29,18 @@ namespace Swift {
 				return type;
 			}
 
+			void setEditable(bool b) {
+				editable = b;
+			}
+
+			bool isEditable() const {
+				return editable;
+			}
+
 			void mousePressEvent(QMouseEvent* event);
 
 		private:
+			bool editable;
 			ByteArray data;
 			std::string type;
 			QLabel* label;

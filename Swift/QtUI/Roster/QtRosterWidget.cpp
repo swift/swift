@@ -16,6 +16,7 @@
 #include "Swift/Controllers/UIEvents/RenameGroupUIEvent.h"
 #include "Swift/Controllers/UIEvents/SendFileUIEvent.h"
 #include "Swift/Controllers/UIEvents/RequestWhiteboardUIEvent.h"
+#include "Swift/Controllers/UIEvents/ShowProfileForRosterItemUIEvent.h"
 #include "QtContactEditWindow.h"
 #include "Swift/Controllers/Roster/ContactRosterItem.h"
 #include "Swift/Controllers/Roster/GroupRosterItem.h"
@@ -57,6 +58,7 @@ void QtRosterWidget::contextMenuEvent(QContextMenuEvent* event) {
 	if (ContactRosterItem* contact = dynamic_cast<ContactRosterItem*>(item)) {
 		QAction* editContact = contextMenu.addAction(tr("Edit…"));
 		QAction* removeContact = contextMenu.addAction(tr("Remove"));
+		QAction* showProfileForContact = contextMenu.addAction(tr("Show Profile"));
 #ifdef SWIFT_EXPERIMENTAL_FT
 		QAction* sendFile = NULL;
 		if (contact->supportsFeature(ContactRosterItem::FileTransferFeature)) {
@@ -77,6 +79,9 @@ void QtRosterWidget::contextMenuEvent(QContextMenuEvent* event) {
 			if (QtContactEditWindow::confirmContactDeletion(contact->getJID())) {
 				eventStream_->send(boost::make_shared<RemoveRosterItemUIEvent>(contact->getJID()));
 			}
+		}
+		else if (result == showProfileForContact) {
+			eventStream_->send(boost::make_shared<ShowProfileForRosterItemUIEvent>(contact->getJID()));
 		}
 #ifdef SWIFT_EXPERIMENTAL_FT
 		else if (sendFile && result == sendFile) {

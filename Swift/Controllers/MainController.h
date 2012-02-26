@@ -43,6 +43,7 @@ namespace Swift {
 	class MUCController;
 	class Notifier;
 	class ProfileController;
+	class ShowProfileController;
 	class ContactEditController;
 	class TogglableNotifier;
 	class PresenceNotifier;
@@ -155,6 +156,7 @@ namespace Swift {
 			FileTransferListController* fileTransferListController_;
 			ChatsManager* chatsManager_;
 			ProfileController* profileController_;
+			ShowProfileController* showProfileController_;
 			ContactEditController* contactEditController_;
 			JID jid_;
 			JID boundJID_;

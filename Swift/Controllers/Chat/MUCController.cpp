@@ -24,6 +24,7 @@
 #include <Swift/Controllers/UIEvents/UIEventStream.h>
 #include <Swift/Controllers/UIEvents/RequestChatUIEvent.h>
 #include <Swift/Controllers/UIEvents/RequestAddUserDialogUIEvent.h>
+#include <Swift/Controllers/UIEvents/ShowProfileForRosterItemUIEvent.h>
 #include <Swift/Controllers/Roster/GroupRosterItem.h>
 #include <Swift/Controllers/Roster/ContactRosterItem.h>
 #include <Swiften/Avatars/AvatarManager.h>
@@ -150,6 +151,7 @@ void MUCController::handleWindowOccupantSelectionChanged(ContactRosterItem* item
 		if (muc_->getOccupant(item->getJID().getResource()).getRealJID()) {
 			actions.push_back(ChatWindow::AddContact);
 		}
+		actions.push_back(ChatWindow::ShowProfile);
 	}
 	chatWindow_->setAvailableOccupantActions(actions);
 }
@@ -168,6 +170,7 @@ void MUCController::handleActionRequestedOnOccupant(ChatWindow::OccupantAction a
 		case ChatWindow::MakeParticipant: muc_->changeOccupantRole(mucJID, MUCOccupant::Participant);break;
 		case ChatWindow::MakeVisitor: muc_->changeOccupantRole(mucJID, MUCOccupant::Visitor);break;
 		case ChatWindow::AddContact: if (occupant.getRealJID()) events_->send(boost::make_shared<RequestAddUserDialogUIEvent>(realJID, occupant.getNick()));break;
+		case ChatWindow::ShowProfile: events_->send(boost::make_shared<ShowProfileForRosterItemUIEvent>(mucJID));break;
 	}
 }
 

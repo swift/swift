@@ -75,6 +75,7 @@
 #include "Swift/Controllers/Storages/CertificateStorageTrustChecker.h"
 #include "Swiften/Network/NetworkFactories.h"
 #include <Swift/Controllers/ProfileController.h>
+#include <Swift/Controllers/ShowProfileController.h>
 #include <Swift/Controllers/ContactEditController.h>
 #include <Swift/Controllers/XMPPURIController.h>
 #include "Swift/Controllers/AdHocManager.h"
@@ -129,6 +130,7 @@ MainController::MainController(
 	historyViewController_ = NULL;
 	eventWindowController_ = NULL;
 	profileController_ = NULL;
+	showProfileController_ = NULL;
 	contactEditController_ = NULL;
 	userSearchControllerChat_ = NULL;
 	userSearchControllerAdd_ = NULL;
@@ -239,6 +241,8 @@ void MainController::resetClient() {
 	contactEditController_ = NULL;
 	delete profileController_;
 	profileController_ = NULL;
+	delete showProfileController_;
+	showProfileController_ = NULL;
 	delete eventWindowController_;
 	eventWindowController_ = NULL;
 	delete chatsManager_;
@@ -311,6 +315,7 @@ void MainController::handleConnected() {
 	myStatusLooksOnline_ = true;
 	if (freshLogin) {
 		profileController_ = new ProfileController(client_->getVCardManager(), uiFactory_, uiEventStream_);
+		showProfileController_ = new ShowProfileController(client_->getVCardManager(), uiFactory_, uiEventStream_);
 		srand(static_cast<unsigned int>(time(NULL)));
 		int randomPort = 10000 + rand() % 10000;
 		client_->getFileTransferManager()->startListeningOnPort(randomPort);

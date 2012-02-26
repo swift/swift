@@ -28,6 +28,10 @@ namespace Swift {
 		private:
 			std::vector<std::string> elementStack_;
 			VCard::EMailAddress currentEMailAddress_;
+			VCard::Telephone currentTelephone_;
+			VCard::Address currentAddress_;
+			VCard::AddressLabel currentAddressLabel_;
+			VCard::Organization currentOrganization_;
 			SerializingParser* unknownContentParser_;
 			std::string currentText_;
 	};

@@ -37,6 +37,7 @@ void ProfileController::handleUIEvent(UIEvent::ref event) {
 
 	if (!profileWindow) {
 		profileWindow = profileWindowFactory->createProfileWindow();
+		profileWindow->setEditable(true);
 		profileWindow->onVCardChangeRequest.connect(boost::bind(&ProfileController::handleVCardChangeRequest, this, _1));
 		vcardManager->onOwnVCardChanged.connect(boost::bind(&ProfileController::handleOwnVCardChanged, this, _1));
 	}

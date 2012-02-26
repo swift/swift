@@ -4,45 +4,54 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
+/*
+ * Copyright (c) 2012 Tobias Markmann
+ * Licensed under the simplified BSD license.
+ * See Documentation/Licenses/BSD-simplified.txt for more information.
+ */
+
 #pragma once
 
-#include <QWidget>
+#include <Swiften/JID/JID.h>
 
 #include <Swift/Controllers/UIInterfaces/ProfileWindow.h>
 
-class QLabel;
-class QLineEdit;
-class QHBoxLayout;
-class QPushButton;
+#include <QWidget>
+
+namespace Ui {
+	class QtProfileWindow;
+}
 
 namespace Swift {
-	class QtAvatarWidget;
 
-	class QtProfileWindow : public QWidget, public ProfileWindow {
-			Q_OBJECT
-		public:
-			QtProfileWindow();
+class QtProfileWindow : public QWidget, public ProfileWindow {
+	Q_OBJECT
 
-			void setVCard(Swift::VCard::ref);
-			void setEnabled(bool);
-			void setProcessing(bool);
-			virtual void setError(const std::string&);
-			void show();
-			void hide();
+	public:
+		explicit QtProfileWindow(QWidget* parent = 0);
+		virtual ~QtProfileWindow();
 
-			void hideEvent (QHideEvent* event);
+		virtual void setJID(const JID& jid);
+		virtual void setVCard(VCard::ref vcard);
 
-		private slots:
-			void handleSave();
+		virtual void setEnabled(bool b);
+		virtual void setProcessing(bool processing);
+		virtual void setError(const std::string& error);
+		virtual void setEditable(bool b);
 
-		private:
-			VCard::ref vcard;
-	    QtAvatarWidget* avatar;
-	    QLabel* nicknameLabel;
-	    QLineEdit* nickname;
-	    QLabel* throbberLabel;
-	    QLabel* errorLabel;
-	    QHBoxLayout* horizontalLayout;
-	    QPushButton* saveButton;
-	};
+		virtual void show();
+		virtual void hide();
+
+	private:
+		void updateTitle();
+		virtual void closeEvent(QCloseEvent* event);
+
+	private slots:
+		void handleSave();
+
+	private:
+		Ui::QtProfileWindow* ui;
+		JID jid;
+};
+
 }

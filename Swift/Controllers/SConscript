@@ -30,6 +30,7 @@ if env["SCONS_STAGE"] == "build" :
 			"Chat/UserSearchController.cpp",
 			"MainController.cpp",
 			"ProfileController.cpp",
+			"ShowProfileController.cpp",
 			"ContactEditController.cpp",
 			"FileTransfer/FileTransferController.cpp",
 			"FileTransfer/FileTransferOverview.cpp",

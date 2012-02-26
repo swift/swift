@@ -24,7 +24,7 @@ myenv = env.Clone()
 # Disable warnings that affect Qt
 myenv["CXXFLAGS"] = filter(lambda x : x != "-Wfloat-equal", myenv["CXXFLAGS"])
 if "clang" in env["CC"] :
-	myenv.Append(CXXFLAGS = ["-Wno-float-equal", "-Wno-shorten-64-to-32", "-Wno-missing-prototypes", "-Wno-unreachable-code", "-Wno-disabled-macro-expansion", "-Wno-unused-private-field", "-Wno-extra-semi", "-Wno-duplicate-enum", "-Wno-missing-variable-declarations"])
+	myenv.Append(CXXFLAGS = ["-Wno-float-equal", "-Wno-shorten-64-to-32", "-Wno-missing-prototypes", "-Wno-unreachable-code", "-Wno-disabled-macro-expansion", "-Wno-unused-private-field", "-Wno-extra-semi", "-Wno-duplicate-enum", "-Wno-missing-variable-declarations", "-Wno-conversion"])
 
 myenv.UseFlags(env["SWIFT_CONTROLLERS_FLAGS"])
 myenv.UseFlags(env["SWIFTOOLS_FLAGS"])
@@ -174,6 +174,34 @@ sources = [
     "QtUISettingConstants.cpp",
     "QtURLValidator.cpp"
   ]
+
+# QtVCardWidget
+sources.extend([
+	"QtVCardWidget/QtCloseButton.cpp",
+	"QtVCardWidget/QtRemovableItemDelegate.cpp",
+	"QtVCardWidget/QtResizableLineEdit.cpp",
+	"QtVCardWidget/QtTagComboBox.cpp",
+	"QtVCardWidget/QtVCardHomeWork.cpp",
+	"QtVCardWidget/QtVCardAddressField.cpp",
+	"QtVCardWidget/QtVCardAddressLabelField.cpp",
+	"QtVCardWidget/QtVCardBirthdayField.cpp",
+	"QtVCardWidget/QtVCardDescriptionField.cpp",
+	"QtVCardWidget/QtVCardInternetEMailField.cpp",
+	"QtVCardWidget/QtVCardJIDField.cpp",
+	"QtVCardWidget/QtVCardOrganizationField.cpp",
+	"QtVCardWidget/QtVCardPhotoAndNameFields.cpp",
+	"QtVCardWidget/QtVCardRoleField.cpp",
+	"QtVCardWidget/QtVCardTelephoneField.cpp",
+	"QtVCardWidget/QtVCardTitleField.cpp",
+	"QtVCardWidget/QtVCardURLField.cpp",
+	"QtVCardWidget/QtVCardGeneralField.cpp",
+	"QtVCardWidget/QtVCardWidget.cpp"
+])
+
+myenv.Uic4("QtVCardWidget/QtVCardPhotoAndNameFields.ui")
+myenv.Uic4("QtVCardWidget/QtVCardWidget.ui")
+myenv.Uic4("QtProfileWindow.ui")
+
 
 # Determine the version
 myenv["SWIFT_VERSION"] = Version.getBuildVersion(env.Dir("#").abspath, "swift")

@@ -35,7 +35,7 @@ namespace Swift {
 			enum AckState {Pending, Received, Failed};
 			enum ReceiptState {ReceiptRequested, ReceiptReceived};
 			enum Tristate {Yes, No, Maybe};
-			enum OccupantAction {Kick, Ban, MakeModerator, MakeParticipant, MakeVisitor, AddContact};
+			enum OccupantAction {Kick, Ban, MakeModerator, MakeParticipant, MakeVisitor, AddContact, ShowProfile};
 			enum RoomAction {ChangeSubject, Configure, Affiliations, Destroy, Invite};
 			enum FileTransferState {WaitingForAccept, Negotiating, Transferring, Canceled, Finished, FTFailed};
 			enum WhiteboardSessionState {WhiteboardAccepted, WhiteboardTerminated, WhiteboardRejected};
