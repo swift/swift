@@ -6,8 +6,12 @@
 #pragma once
 
 #include <Swiften/TLS/CAPICertificate.h>
+#include <Swiften/StringCodecs/Hexify.h>
 
 #include <boost/algorithm/string/predicate.hpp>
+
+// Size of the SHA1 hash
+#define SHA1_HASH_LEN                20
 
 
 namespace Swift {
@@ -34,11 +38,51 @@ const std::string& CAPICertificate::getCertName() const {
 	return certName_;
 }
 
+static PCCERT_CONTEXT findCertificateInStore (HCERTSTORE certStoreHandle, const std::string &certName) {
+	PCCERT_CONTEXT pCertContext = NULL;
+
+	if (!boost::iequals(certName.substr(0, 5), "sha1:")) {
+
+		// Find client certificate. Note that this sample just searches for a
+		// certificate that contains the user name somewhere in the subject name.
+		pCertContext = CertFindCertificateInStore(certStoreHandle,
+				X509_ASN_ENCODING,
+				0,				// dwFindFlags
+				CERT_FIND_SUBJECT_STR_A,
+				certName.c_str(),		// *pvFindPara
+				NULL );				// pPrevCertContext
+		return pCertContext;
+	}
+
+
+	std::string hexstring = certName.substr(5);
+	ByteArray byteArray = Hexify::unhexify(hexstring);
+	CRYPT_HASH_BLOB HashBlob;
+
+	if (byteArray.size() != SHA1_HASH_LEN) {
+		return NULL;
+	}
+	HashBlob.cbData = SHA1_HASH_LEN;
+	HashBlob.pbData = static_cast<BYTE *>(vecptr(byteArray));
+
+	// Find client certificate. Note that this sample just searches for a
+	// certificate that contains the user name somewhere in the subject name.
+	pCertContext = CertFindCertificateInStore(certStoreHandle,
+			X509_ASN_ENCODING,
+			0,				// dwFindFlags
+			CERT_FIND_HASH,
+			&HashBlob,
+			NULL );				// pPrevCertContext
+
+	return pCertContext;
+}
+
+
 void CAPICertificate::setUri (const std::string& capiUri) {
 
 	valid_ = false;
 
-	/* Syntax: "certstore:" [<cert_store> ":"] <cert_id> */
+	/* Syntax: "certstore:" <cert_store> ":" <hash> ":" <hash_of_cert> */
 
 	if (!boost::iequals(capiUri.substr(0, 10), "certstore:")) {
 		return;
@@ -77,16 +121,7 @@ void CAPICertificate::setUri (const std::string& capiUri) {
 
 	certStore_ = new_certStore_name;
 
-	/* NB: This might have to change, depending on how we locate certificates */
-
-	// Find client certificate. Note that this sample just searches for a
-	// certificate that contains the user name somewhere in the subject name.
-	pCertContext = CertFindCertificateInStore(certStoreHandle_,
-			X509_ASN_ENCODING,
-			0,				// dwFindFlags
-			CERT_FIND_SUBJECT_STR_A,
-			certName_.c_str(),		// *pvFindPara
-			NULL );				// pPrevCertContext
+	pCertContext = findCertificateInStore (certStoreHandle_, certName_);
 
 	if (!pCertContext) {
 		return;

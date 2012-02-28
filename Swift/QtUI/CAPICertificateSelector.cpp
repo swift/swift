@@ -13,6 +13,7 @@
 #include <WinCrypt.h>
 #include <cryptuiapi.h>
 
+#include <Swiften/StringCodecs/Hexify.h>
 #include <boost/algorithm/string.hpp>
 
 namespace Swift {
@@ -23,67 +24,23 @@ namespace Swift {
 #define exclude_columns	 CRYPTUI_SELECT_LOCATION_COLUMN \
 			|CRYPTUI_SELECT_INTENDEDUSE_COLUMN
 
-
+// Size of the SHA1 hash
+#define SHA1_HASH_LEN                20
 
 static std::string getCertUri(PCCERT_CONTEXT cert, const char * cert_store_name) {
-	DWORD required_size;
-	char * comma;
-	char * p_in;
-	char * p_out;
-	char * subject_name;
-	std::string ret = std::string("certstore:") + cert_store_name + ":";
+	DWORD cbHash = SHA1_HASH_LEN;
+	BYTE aHash[SHA1_HASH_LEN];
+	std::string ret = std::string("certstore:") + cert_store_name + ":" + "sha1:";
 
-	required_size = CertNameToStrA(cert->dwCertEncodingType,
-				&cert->pCertInfo->Subject,
-				/* Discard attribute names: */
-				CERT_SIMPLE_NAME_STR | CERT_NAME_STR_REVERSE_FLAG,
-				NULL,
-				0);
-
-	subject_name = static_cast<char *>(malloc(required_size+1));
-
-	if (!CertNameToStrA(cert->dwCertEncodingType,
-			    &cert->pCertInfo->Subject,
-			    /* Discard attribute names: */
-			    CERT_SIMPLE_NAME_STR | CERT_NAME_STR_REVERSE_FLAG,
-			    subject_name,
-			    required_size)) {
+	if (CertGetCertificateContextProperty(cert,
+		 CERT_HASH_PROP_ID,
+		 aHash,
+		 &cbHash) == FALSE ) {
 		return "";
 	}
 
-	/* Now search for the "," (ignoring escapes)
-	    and truncate the rest of the string */
-	if (subject_name[0] == '"') {
-		for (comma = subject_name + 1; comma[0]; comma++) {
-			if (comma[0] == '"') {
-				comma++;
-				if (comma[0] != '"') {
-					break;
-				}
-			}
-		}
-	} else {
-		comma = strchr(subject_name, ',');
-	}
-
-	if (comma != NULL) {
-		*comma = '\0';
-	}
-
-	/* We now need to unescape the returned RDN */
-	if (subject_name[0] == '"') {
-		for (p_in = subject_name + 1, p_out = subject_name; p_in[0]; p_in++, p_out++) {
-			if (p_in[0] == '"') {
-				p_in++;
-			}
-
-			p_out[0] = p_in[0];
-		}
-		p_out[0] = '\0';
-	}
-
-	ret += subject_name;
-	free(subject_name);
+	ByteArray byteArray = createByteArray((char *)(&aHash[0]));
+	ret += Hexify::hexify(byteArray);
 
 	return ret;
 }
