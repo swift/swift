@@ -418,7 +418,7 @@ if env["SCONS_STAGE"] == "build" :
 				continue
 
 			# Library-specific files
-			if file.startswith("Schannel") or file.startswith("CAPI") or file.startswith("CAres") or file.startswith("LibXML") or file.startswith("Expat") or file.startswith("GConf") or file.startswith("MacOSX") or file.startswith("Windows") or file.startswith("SQLite") or file.startswith("NATPMP") or file.startswith("MiniUPnP") :
+			if file.startswith("Schannel") or file.startswith("CAPI") or file.startswith("CAres") or file.startswith("LibXML") or file.startswith("Expat") or file.startswith("GConf") or file.startswith("MacOSX") or file.startswith("Windows") or file.endswith("_Windows.h") or file.startswith("SQLite") or file.startswith("NATPMP") or file.startswith("MiniUPnP") :
 				continue
 
 			# Specific headers we don't want to globally include
