@@ -32,8 +32,12 @@ int main(int argc, char* argv[]) {
 	boost::filesystem::path someTranslationPath = Swift::PlatformApplicationPathProvider(SWIFT_APPLICATION_NAME).getResourcePath("/translations/swift_nl.qm");
 	QTranslator qtTranslator;
 	if (!someTranslationPath.empty()) {
+#if QT_VERSION >= 0x040800
+		qtTranslator.load(QLocale::system(), QString(SWIFT_APPLICATION_NAME).toLower(), "_", someTranslationPath.parent_path().string().c_str());
+#else
 		//std::cout << "Loading " << std::string(QLocale::system().name().toUtf8()) << std::endl;
 		qtTranslator.load(QString(SWIFT_APPLICATION_NAME).toLower() + "_" + QLocale::system().name(), someTranslationPath.parent_path().string().c_str());
+#endif
 	}
 	app.installTranslator(&qtTranslator);
 	QtTranslator swiftTranslator;
