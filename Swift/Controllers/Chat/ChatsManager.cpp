@@ -40,6 +40,7 @@
 #include <Swiften/Roster/XMPPRoster.h>
 #include <Swift/Controllers/Settings/SettingsProvider.h>
 #include <Swift/Controllers/SettingConstants.h>
+#include <Swiften/Client/StanzaChannel.h>
 
 namespace Swift {
 
