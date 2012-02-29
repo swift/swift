@@ -35,9 +35,7 @@ int main(int argc, char* argv[]) {
 	QTranslator qtTranslator;
 	if (!someTranslationPath.empty()) {
 #if QT_VERSION >= 0x040800
-		if (QLocale::system().uiLanguages().first() != "en") {
-			qtTranslator.load(QLocale::system(), QString(SWIFT_APPLICATION_NAME).toLower(), "_", someTranslationPath.parent_path().string().c_str());
-		}
+		qtTranslator.load(QLocale::system(), QString(SWIFT_APPLICATION_NAME).toLower(), "_", someTranslationPath.parent_path().string().c_str());
 #else
 		//std::cout << "Loading " << std::string(QLocale::system().name().toUtf8()) << std::endl;
 		qtTranslator.load(QString(SWIFT_APPLICATION_NAME).toLower() + "_" + QLocale::system().name(), someTranslationPath.parent_path().string().c_str());
