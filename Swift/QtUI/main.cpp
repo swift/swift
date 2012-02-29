@@ -13,6 +13,7 @@
 #include <QTextCodec>
 #include <QTranslator>
 #include <QLocale>
+#include <QStringList>
 
 #include <Swift/Controllers/Translator.h>
 #include <Swift/Controllers/ApplicationInfo.h>
@@ -21,6 +22,7 @@
 
 #include "QtSwift.h"
 #include "QtTranslator.h"
+#include "QtSwiftUtil.h"
 
 int main(int argc, char* argv[]) {
 	QApplication app(argc, argv);
@@ -33,7 +35,9 @@ int main(int argc, char* argv[]) {
 	QTranslator qtTranslator;
 	if (!someTranslationPath.empty()) {
 #if QT_VERSION >= 0x040800
-		qtTranslator.load(QLocale::system(), QString(SWIFT_APPLICATION_NAME).toLower(), "_", someTranslationPath.parent_path().string().c_str());
+		if (QLocale::system().uiLanguages().first() != "en") {
+			qtTranslator.load(QLocale::system(), QString(SWIFT_APPLICATION_NAME).toLower(), "_", someTranslationPath.parent_path().string().c_str());
+		}
 #else
 		//std::cout << "Loading " << std::string(QLocale::system().name().toUtf8()) << std::endl;
 		qtTranslator.load(QString(SWIFT_APPLICATION_NAME).toLower() + "_" + QLocale::system().name(), someTranslationPath.parent_path().string().c_str());
