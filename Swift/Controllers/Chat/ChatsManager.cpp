@@ -547,6 +547,10 @@ void ChatsManager::rebindControllerJID(const JID& from, const JID& to) {
 }
 
 void ChatsManager::handleJoinMUCRequest(const JID &mucJID, const boost::optional<std::string>& password, const boost::optional<std::string>& nickMaybe, bool addAutoJoin, bool createAsReservedIfNew) {
+	if (!stanzaChannel_->isAvailable()) {
+		/* This is potentially not the optimal solution, but it will avoid consistency issues.*/
+		return;
+	}
 	if (addAutoJoin) {
 		MUCBookmark bookmark(mucJID, mucJID.getNode());
 		bookmark.setAutojoin(true);

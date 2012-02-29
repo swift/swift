@@ -59,7 +59,6 @@ void MUC::joinWithContextSince(const std::string &nick, const boost::posix_time:
 }
 
 void MUC::internalJoin(const std::string &nick) {
-	//TODO: password
 	//TODO: history request
 	joinComplete_ = false;
 	joinSucceeded_ = false;
