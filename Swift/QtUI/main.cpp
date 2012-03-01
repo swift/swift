@@ -31,7 +31,7 @@ int main(int argc, char* argv[]) {
 
 	// Translation
 	QTextCodec::setCodecForTr(QTextCodec::codecForName("UTF-8"));
-	boost::filesystem::path someTranslationPath = Swift::PlatformApplicationPathProvider(SWIFT_APPLICATION_NAME).getResourcePath("/translations/swift_nl.qm");
+	boost::filesystem::path someTranslationPath = Swift::PlatformApplicationPathProvider(SWIFT_APPLICATION_NAME).getResourcePath("/translations/swift_en.qm");
 	QTranslator qtTranslator;
 	if (!someTranslationPath.empty()) {
 #if QT_VERSION >= 0x040800
