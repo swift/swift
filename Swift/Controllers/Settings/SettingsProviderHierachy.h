@@ -22,6 +22,7 @@ class SettingsProviderHierachy : public SettingsProvider {
 		virtual std::vector<std::string> getAvailableProfiles();
 		virtual void createProfile(const std::string& profile);
 		virtual void removeProfile(const std::string& profile);
+		virtual bool hasSetting(const std::string& key);
 	protected:
 		virtual bool getIsSettingFinal(const std::string& settingPath);
 

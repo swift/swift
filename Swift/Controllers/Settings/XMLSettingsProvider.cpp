@@ -36,6 +36,11 @@ XMLSettingsProvider::~XMLSettingsProvider() {
 
 }
 
+bool XMLSettingsProvider::hasSetting(const std::string& key) {
+	return (values_.find(key) != values_.end());
+}
+
+
 std::string XMLSettingsProvider::getSetting(const Setting<std::string>& setting) {
 	if (values_.find(setting.getKey()) != values_.end()) {
 		std::string value = values_[setting.getKey()];

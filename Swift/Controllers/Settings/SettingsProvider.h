@@ -55,6 +55,7 @@ class SettingsProvider {
 		bool getIsSettingFinal(const Setting<T>& setting) {
 			return getIsSettingFinal(setting.getKey());
 		}
+		virtual bool hasSetting(const std::string& key) = 0;
 
 		friend class SettingsProviderHierachy;
 	protected:

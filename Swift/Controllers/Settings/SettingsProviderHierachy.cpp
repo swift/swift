@@ -13,14 +13,27 @@ namespace Swift {
 SettingsProviderHierachy::~SettingsProviderHierachy() {
 }
 
-std::string SettingsProviderHierachy::getSetting(const Setting<std::string>& setting) {
+bool SettingsProviderHierachy::hasSetting(const std::string& key) {
 	foreach (SettingsProvider* provider, providers_) {
-		std::string providerSetting = provider->getSetting(setting);
-		if (providerSetting != setting.getDefaultValue()) {
-			return providerSetting;
+		if (provider->hasSetting(key)) {
+			return true;
 		}
 	}
-	return setting.getDefaultValue();
+	return false;
+}
+
+std::string SettingsProviderHierachy::getSetting(const Setting<std::string>& setting) {
+	std::string value = setting.getDefaultValue();
+	foreach (SettingsProvider* provider, providers_) {
+		std::string providerSetting = provider->getSetting(setting);
+		if (provider->hasSetting(setting.getKey())) {
+			value = providerSetting;
+		}
+		if (provider->getIsSettingFinal(setting.getKey())) {
+			return value;
+		}
+	}
+	return value;
 }
 
 void SettingsProviderHierachy::storeSetting(const Setting<std::string>& setting, const std::string& settingValue) {
@@ -30,13 +43,17 @@ void SettingsProviderHierachy::storeSetting(const Setting<std::string>& setting,
 }
 
 bool SettingsProviderHierachy::getSetting(const Setting<bool>& setting) {
+	bool value = setting.getDefaultValue();
 	foreach (SettingsProvider* provider, providers_) {
 		bool providerSetting = provider->getSetting(setting);
-		if (providerSetting != setting.getDefaultValue()) {
-			return providerSetting;
+		if (provider->hasSetting(setting.getKey())) {
+			value = providerSetting;
+			if (provider->getIsSettingFinal(setting.getKey())) {
+				return providerSetting;
+			}
 		}
 	}
-	return setting.getDefaultValue();
+	return value;
 }
 
 void SettingsProviderHierachy::storeSetting(const Setting<bool>& setting, const bool& settingValue) {
@@ -46,13 +63,17 @@ void SettingsProviderHierachy::storeSetting(const Setting<bool>& setting, const 
 }
 
 int SettingsProviderHierachy::getSetting(const Setting<int>& setting) {
+	int value = setting.getDefaultValue();
 	foreach (SettingsProvider* provider, providers_) {
 		int providerSetting = provider->getSetting(setting);
-		if (providerSetting != setting.getDefaultValue()) {
-			return providerSetting;
+		if (provider->hasSetting(setting.getKey())) {
+			value = providerSetting;
+			if (provider->getIsSettingFinal(setting.getKey())) {
+				return providerSetting;
+			}
 		}
 	}
-	return setting.getDefaultValue();
+	return value;
 }
 
 void SettingsProviderHierachy::storeSetting(const Setting<int>& setting, const int& settingValue) {

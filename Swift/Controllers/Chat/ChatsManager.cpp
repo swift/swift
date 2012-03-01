@@ -113,6 +113,8 @@ ChatsManager::ChatsManager(
 
 	settings_->onSettingChanged.connect(boost::bind(&ChatsManager::handleSettingChanged, this, _1));
 
+	userWantsReceipts_ = settings_->getSetting(SettingConstants::REQUEST_DELIVERYRECEIPTS);
+
 	setupBookmarks();
 	loadRecents();
 }

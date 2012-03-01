@@ -25,6 +25,7 @@ class QtSettingsProvider : public SettingsProvider {
 		virtual std::vector<std::string> getAvailableProfiles();
 		virtual void createProfile(const std::string& profile);
 		virtual void removeProfile(const std::string& profile);
+		virtual bool hasSetting(const std::string& key);
 		QSettings* getQSettings();
 	protected:
 		virtual bool getIsSettingFinal(const std::string& settingPath);

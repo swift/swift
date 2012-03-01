@@ -27,6 +27,8 @@ class XMLSettingsProvider : public SettingsProvider, public XMLParserClient {
 		virtual std::vector<std::string> getAvailableProfiles();
 		virtual void createProfile(const std::string& profile);
 		virtual void removeProfile(const std::string& profile);
+		virtual bool hasSetting(const std::string& key);
+
 
 		virtual void handleStartElement(const std::string& element, const std::string& ns, const AttributeMap& attributes);
 		virtual void handleEndElement(const std::string& element, const std::string& ns);

@@ -84,4 +84,5 @@ if env["SCONS_STAGE"] == "build" :
 			File("Chat/UnitTest/MUCControllerTest.cpp"),
 			File("UnitTest/MockChatWindow.cpp"),
 			File("UnitTest/ChatMessageSummarizerTest.cpp"),
+			File("Settings/UnitTest/SettingsProviderHierachyTest.cpp"),
 		])

@@ -202,8 +202,6 @@ namespace Swift {
 			 */
 			virtual void handleConnected() {};
 
-			bool isCAPIURI();
-
 		private:
 			void handleConnectorFinished(boost::shared_ptr<Connection>);
 			void handleStanzaChannelAvailableChanged(bool available);

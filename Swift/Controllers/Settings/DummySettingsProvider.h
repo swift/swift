@@ -39,11 +39,18 @@ class DummySettingsProvider : public SettingsProvider {
 		virtual std::vector<std::string> getAvailableProfiles() {return std::vector<std::string>();}
 		virtual void createProfile(const std::string& ) {}
 		virtual void removeProfile(const std::string& ) {}
-		virtual bool getIsSettingFinal(const std::string& ) {return false;}
+		virtual bool getIsSettingFinal(const std::string& settingPath) {return finals.count(settingPath);}
+		void setFinal(const std::string& settingPath) {
+			finals.insert(settingPath);
+		}
+		virtual bool hasSetting(const std::string& key) {
+			return stringValues.find(key) != stringValues.end() || intValues.find(key) != intValues.end() || boolValues.find(key) != boolValues.end();
+		}
 	private:
 		std::map<std::string, std::string> stringValues;
 		std::map<std::string, int> intValues;
 		std::map<std::string, bool> boolValues;
+		std::set<std::string> finals;
 };
 
 }

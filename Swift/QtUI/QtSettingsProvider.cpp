@@ -18,6 +18,11 @@ QtSettingsProvider::~QtSettingsProvider() {
 
 }
 
+bool QtSettingsProvider::hasSetting(const std::string& key) {
+	return !settings_.value(key.c_str()).isNull();
+}
+
+
 std::string QtSettingsProvider::getSetting(const Setting<std::string>& setting) {
 	QVariant variant = settings_.value(setting.getKey().c_str());
 	return variant.isNull() ? setting.getDefaultValue() : std::string(variant.toString().toUtf8());
