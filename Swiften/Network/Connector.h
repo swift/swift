@@ -35,7 +35,7 @@ namespace Swift {
 			void start();
 			void stop();
 
-			boost::signal<void (boost::shared_ptr<Connection>)> onConnectFinished;
+			boost::signal<void (boost::shared_ptr<Connection>, boost::shared_ptr<Error>)> onConnectFinished;
 
 		private:
 			Connector(const std::string& hostname, DomainNameResolver*, ConnectionFactory*, TimerFactory*, int defaultPort);
@@ -67,5 +67,6 @@ namespace Swift {
 			std::deque<HostAddress> addressQueryResults;
 			bool queriedAllServices;
 			boost::shared_ptr<Connection> currentConnection;
+			bool foundSomeDNS;
 	};
 };

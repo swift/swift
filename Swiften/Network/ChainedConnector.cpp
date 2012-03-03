@@ -41,18 +41,18 @@ void ChainedConnector::start() {
 
 void ChainedConnector::stop() {
 	if (currentConnector) {
-		currentConnector->onConnectFinished.disconnect(boost::bind(&ChainedConnector::handleConnectorFinished, this, _1));
+		currentConnector->onConnectFinished.disconnect(boost::bind(&ChainedConnector::handleConnectorFinished, this, _1, _2));
 		currentConnector->stop();
 		currentConnector.reset();
 	}
-	finish(boost::shared_ptr<Connection>());
+	finish(boost::shared_ptr<Connection>(), boost::shared_ptr<Error>());
 }
 
 void ChainedConnector::tryNextConnectionFactory() {
 	assert(!currentConnector);
 	if (connectionFactoryQueue.empty()) {
 		SWIFT_LOG(debug) << "No more connection factories" << std::endl;
-		finish(boost::shared_ptr<Connection>());
+		finish(boost::shared_ptr<Connection>(), lastError);
 	}
 	else {
 		ConnectionFactory* connectionFactory = connectionFactoryQueue.front();
@@ -60,23 +60,24 @@ void ChainedConnector::tryNextConnectionFactory() {
 		connectionFactoryQueue.pop_front();
 		currentConnector = Connector::create(hostname, resolver, connectionFactory, timerFactory);
 		currentConnector->setTimeoutMilliseconds(timeoutMilliseconds);
-		currentConnector->onConnectFinished.connect(boost::bind(&ChainedConnector::handleConnectorFinished, this, _1));
+		currentConnector->onConnectFinished.connect(boost::bind(&ChainedConnector::handleConnectorFinished, this, _1, _2));
 		currentConnector->start();
 	}
 }
 
-void ChainedConnector::handleConnectorFinished(boost::shared_ptr<Connection> connection) {
+void ChainedConnector::handleConnectorFinished(boost::shared_ptr<Connection> connection, boost::shared_ptr<Error> error) {
 	SWIFT_LOG(debug) << "Connector finished" << std::endl;
-	currentConnector->onConnectFinished.disconnect(boost::bind(&ChainedConnector::handleConnectorFinished, this, _1));
+	currentConnector->onConnectFinished.disconnect(boost::bind(&ChainedConnector::handleConnectorFinished, this, _1, _2));
+	lastError = error;
 	currentConnector.reset();
 	if (connection) {
-		finish(connection);
+		finish(connection, error);
 	}
 	else {
 		tryNextConnectionFactory();
 	}
 }
 
-void ChainedConnector::finish(boost::shared_ptr<Connection> connection) {
-	onConnectFinished(connection);
+void ChainedConnector::finish(boost::shared_ptr<Connection> connection, boost::shared_ptr<Error> error) {
+	onConnectFinished(connection, error);
 }

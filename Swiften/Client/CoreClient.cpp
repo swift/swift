@@ -18,6 +18,7 @@
 #include <Swiften/Network/ChainedConnector.h>
 #include <Swiften/Network/NetworkFactories.h>
 #include <Swiften/Network/ProxyProvider.h>
+#include <Swiften/Network/DomainNameResolveError.h>
 #include <Swiften/TLS/PKCS12Certificate.h>
 #include <Swiften/Session/BasicSessionStream.h>
 #include <Swiften/Session/BOSHSessionStream.h>
@@ -63,7 +64,7 @@ void CoreClient::connect(const std::string& host) {
 	disconnectRequested_ = false;
 	assert(!connector_);
 	assert(proxyConnectionFactories.empty());
-	if(networkFactories->getProxyProvider()->getSOCKS5Proxy().isValid()) {
+	if (networkFactories->getProxyProvider()->getSOCKS5Proxy().isValid()) {
 		proxyConnectionFactories.push_back(new SOCKS5ProxiedConnectionFactory(networkFactories->getConnectionFactory(), networkFactories->getProxyProvider()->getSOCKS5Proxy()));
 	}
 	if(networkFactories->getProxyProvider()->getHTTPConnectProxy().isValid()) {
@@ -73,7 +74,7 @@ void CoreClient::connect(const std::string& host) {
 	if (options.boshURL.empty()) {
 		connectionFactories.push_back(networkFactories->getConnectionFactory());
 		connector_ = boost::make_shared<ChainedConnector>(host, networkFactories->getDomainNameResolver(), connectionFactories, networkFactories->getTimerFactory());
-		connector_->onConnectFinished.connect(boost::bind(&CoreClient::handleConnectorFinished, this, _1));
+		connector_->onConnectFinished.connect(boost::bind(&CoreClient::handleConnectorFinished, this, _1, _2));
 		connector_->setTimeoutMilliseconds(60*1000);
 		connector_->start();
 	}
@@ -129,13 +130,17 @@ void CoreClient::bindSessionToStream() {
 /**
  * Only called for TCP sessions. BOSH is handled inside the BOSHSessionStream.
  */
-void CoreClient::handleConnectorFinished(boost::shared_ptr<Connection> connection) {
+void CoreClient::handleConnectorFinished(boost::shared_ptr<Connection> connection, boost::shared_ptr<Error> error) {
 	resetConnector();
 	if (!connection) {
 		if (options.forgetPassword) {
 			purgePassword();
 		}
-		onDisconnected(disconnectRequested_ ? boost::optional<ClientError>() : boost::optional<ClientError>(ClientError::ConnectionError));
+		boost::optional<ClientError> clientError;
+		if (!disconnectRequested_) {
+			clientError = boost::dynamic_pointer_cast<DomainNameResolveError>(error) ? boost::optional<ClientError>(ClientError::DomainNameResolveError) : boost::optional<ClientError>(ClientError::ConnectionError);
+		}
+		onDisconnected(clientError);
 	}
 	else {
 		assert(!connection_);
@@ -356,7 +361,7 @@ void CoreClient::purgePassword() {
 }
 
 void CoreClient::resetConnector() {
-	connector_->onConnectFinished.disconnect(boost::bind(&CoreClient::handleConnectorFinished, this, _1));
+	connector_->onConnectFinished.disconnect(boost::bind(&CoreClient::handleConnectorFinished, this, _1, _2));
 	connector_.reset();
 	foreach(ConnectionFactory* f, proxyConnectionFactories) {
 		delete f;

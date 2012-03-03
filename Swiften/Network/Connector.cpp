@@ -17,7 +17,7 @@
 
 namespace Swift {
 
-Connector::Connector(const std::string& hostname, DomainNameResolver* resolver, ConnectionFactory* connectionFactory, TimerFactory* timerFactory, int defaultPort) : hostname(hostname), resolver(resolver), connectionFactory(connectionFactory), timerFactory(timerFactory), defaultPort(defaultPort), timeoutMilliseconds(0), queriedAllServices(true) {
+Connector::Connector(const std::string& hostname, DomainNameResolver* resolver, ConnectionFactory* connectionFactory, TimerFactory* timerFactory, int defaultPort) : hostname(hostname), resolver(resolver), connectionFactory(connectionFactory), timerFactory(timerFactory), defaultPort(defaultPort), timeoutMilliseconds(0), queriedAllServices(true), foundSomeDNS(false) {
 }
 
 void Connector::setTimeoutMilliseconds(int milliseconds) {
@@ -56,6 +56,9 @@ void Connector::handleServiceQueryResult(const std::vector<DomainNameServiceQuer
 	SWIFT_LOG(debug) << result.size() << " SRV result(s)" << std::endl;
 	serviceQueryResults = std::deque<DomainNameServiceQuery::Result>(result.begin(), result.end());
 	serviceQuery.reset();
+	if (!serviceQueryResults.empty()) {
+		foundSomeDNS = true;
+	}
 	tryNextServiceOrFallback();
 }
 
@@ -86,6 +89,7 @@ void Connector::handleAddressQueryResult(const std::vector<HostAddress>& address
 		tryNextServiceOrFallback();
 	}
 	else {
+		foundSomeDNS = true;
 		addressQueryResults = std::deque<HostAddress>(addresses.begin(), addresses.end());
 		tryNextAddress();
 	}
@@ -160,7 +164,7 @@ void Connector::finish(boost::shared_ptr<Connection> connection) {
 		currentConnection->onConnectFinished.disconnect(boost::bind(&Connector::handleConnectionConnectFinished, shared_from_this(), _1));
 		currentConnection.reset();
 	}
-	onConnectFinished(connection);
+	onConnectFinished(connection, (connection || foundSomeDNS) ? boost::shared_ptr<Error>() : boost::make_shared<DomainNameResolveError>());
 }
 
 void Connector::handleTimeout() {

@@ -12,6 +12,7 @@
 #include <boost/shared_ptr.hpp>
 
 #include <Swiften/Base/boost_bsignals.h>
+#include <Swiften/Base/Error.h>
 
 namespace Swift {
 	class Connection;
@@ -28,12 +29,12 @@ namespace Swift {
 			void start();
 			void stop();
 
-			boost::signal<void (boost::shared_ptr<Connection>)> onConnectFinished;
+			boost::signal<void (boost::shared_ptr<Connection>, boost::shared_ptr<Error>)> onConnectFinished;
 
 		private:
-			void finish(boost::shared_ptr<Connection> connection);
+			void finish(boost::shared_ptr<Connection> connection, boost::shared_ptr<Error>);
 			void tryNextConnectionFactory();
-			void handleConnectorFinished(boost::shared_ptr<Connection>);
+			void handleConnectorFinished(boost::shared_ptr<Connection>, boost::shared_ptr<Error>);
 
 		private:
 			std::string hostname;
@@ -43,5 +44,6 @@ namespace Swift {
 			int timeoutMilliseconds;
 			std::deque<ConnectionFactory*> connectionFactoryQueue;
 			boost::shared_ptr<Connector> currentConnector;
+			boost::shared_ptr<Error> lastError;
 	};
 };

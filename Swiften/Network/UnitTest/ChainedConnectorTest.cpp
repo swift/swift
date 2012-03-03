@@ -17,6 +17,7 @@
 #include <Swiften/Network/StaticDomainNameResolver.h>
 #include <Swiften/Network/DummyTimerFactory.h>
 #include <Swiften/EventLoop/DummyEventLoop.h>
+#include <Swiften/Network/DomainNameResolveError.h>
 
 using namespace Swift;
 
@@ -25,11 +26,13 @@ class ChainedConnectorTest : public CppUnit::TestFixture {
 		CPPUNIT_TEST(testConnect_FirstConnectorSucceeds);
 		CPPUNIT_TEST(testConnect_SecondConnectorSucceeds);
 		CPPUNIT_TEST(testConnect_NoConnectorSucceeds);
+		CPPUNIT_TEST(testConnect_NoDNS);
 		CPPUNIT_TEST(testStop);
 		CPPUNIT_TEST_SUITE_END();
 
 	public:
 		void setUp() {
+			error.reset();
 			host = HostAddressPort(HostAddress("1.1.1.1"), 1234);
 			eventLoop = new DummyEventLoop();
 			resolver = new StaticDomainNameResolver(eventLoop);
@@ -58,6 +61,7 @@ class ChainedConnectorTest : public CppUnit::TestFixture {
 			CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(connections.size()));
 			CPPUNIT_ASSERT(connections[0]);
 			CPPUNIT_ASSERT_EQUAL(1, boost::dynamic_pointer_cast<MockConnection>(connections[0])->id);
+			CPPUNIT_ASSERT(!boost::dynamic_pointer_cast<DomainNameResolveError>(error));
 		}
 
 		void testConnect_SecondConnectorSucceeds() {
@@ -71,6 +75,7 @@ class ChainedConnectorTest : public CppUnit::TestFixture {
 			CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(connections.size()));
 			CPPUNIT_ASSERT(connections[0]);
 			CPPUNIT_ASSERT_EQUAL(2, boost::dynamic_pointer_cast<MockConnection>(connections[0])->id);
+			CPPUNIT_ASSERT(!boost::dynamic_pointer_cast<DomainNameResolveError>(error));
 		}
 
 		void testConnect_NoConnectorSucceeds() {
@@ -83,6 +88,24 @@ class ChainedConnectorTest : public CppUnit::TestFixture {
 
 			CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(connections.size()));
 			CPPUNIT_ASSERT(!connections[0]);
+			CPPUNIT_ASSERT(!boost::dynamic_pointer_cast<DomainNameResolveError>(error));
+		}
+
+		void testConnect_NoDNS() {
+			/* Reset resolver so there's no record */
+			delete resolver;
+			resolver = new StaticDomainNameResolver(eventLoop);
+			boost::shared_ptr<ChainedConnector> testling(createConnector());
+			connectionFactory1->connects = false;
+			connectionFactory2->connects = false;
+
+			testling->start();
+			//testling->stop();
+			eventLoop->processEvents();
+
+			CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(connections.size()));
+			CPPUNIT_ASSERT(!connections[0]);
+			CPPUNIT_ASSERT(boost::dynamic_pointer_cast<DomainNameResolveError>(error));
 		}
 
 		void testStop() {
@@ -104,11 +127,12 @@ class ChainedConnectorTest : public CppUnit::TestFixture {
 			factories.push_back(connectionFactory1);
 			factories.push_back(connectionFactory2);
 			boost::shared_ptr<ChainedConnector> connector = boost::make_shared<ChainedConnector>("foo.com", resolver, factories, timerFactory);
-			connector->onConnectFinished.connect(boost::bind(&ChainedConnectorTest::handleConnectorFinished, this, _1));
+			connector->onConnectFinished.connect(boost::bind(&ChainedConnectorTest::handleConnectorFinished, this, _1, _2));
 			return connector;
 		}
 
-		void handleConnectorFinished(boost::shared_ptr<Connection> connection) {
+		void handleConnectorFinished(boost::shared_ptr<Connection> connection, boost::shared_ptr<Error> resultError) {
+			error = resultError;
 			boost::shared_ptr<MockConnection> c(boost::dynamic_pointer_cast<MockConnection>(connection));
 			if (connection) {
 				assert(c);
@@ -156,6 +180,7 @@ class ChainedConnectorTest : public CppUnit::TestFixture {
 		MockConnectionFactory* connectionFactory2;
 		DummyTimerFactory* timerFactory;
 		std::vector< boost::shared_ptr<MockConnection> > connections;
+		boost::shared_ptr<Error> error;
 };
 
 CPPUNIT_TEST_SUITE_REGISTRATION(ChainedConnectorTest);

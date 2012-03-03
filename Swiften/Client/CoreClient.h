@@ -203,7 +203,7 @@ namespace Swift {
 			virtual void handleConnected() {};
 
 		private:
-			void handleConnectorFinished(boost::shared_ptr<Connection>);
+			void handleConnectorFinished(boost::shared_ptr<Connection>, boost::shared_ptr<Error> error);
 			void handleStanzaChannelAvailableChanged(bool available);
 			void handleSessionFinished(boost::shared_ptr<Error>);
 			void handleNeedCredentials();
