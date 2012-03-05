@@ -37,9 +37,10 @@ std::string JinglePayloadSerializer::serializePayload(boost::shared_ptr<JinglePa
 	jinglePayload.setAttribute("action", actionToString(payload->getAction()));
 	jinglePayload.setAttribute("initiator", payload->getInitiator());
 	jinglePayload.setAttribute("sid", payload->getSessionID());
-	
-	if (!payload->getPayloads().empty()) {		
-		foreach(boost::shared_ptr<Payload> subPayload, payload->getPayloads()) {
+
+	std::vector<boost::shared_ptr<Payload> > payloads = payload->getPayloads();
+	if (!payloads.empty()) {
+		foreach(boost::shared_ptr<Payload> subPayload, payloads) {
 			PayloadSerializer* serializer = serializers->getPayloadSerializer(subPayload);
 			if (serializer) {
 				jinglePayload.addNode(boost::shared_ptr<XMLRawTextNode>(new XMLRawTextNode(serializer->serialize(subPayload))));

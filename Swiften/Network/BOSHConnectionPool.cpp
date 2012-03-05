@@ -143,7 +143,6 @@ void BOSHConnectionPool::tryToSendQueuedData() {
 	}
 
 	BOSHConnection::ref suitableConnection = getSuitableConnection();
-	bool sent = false;
 	bool toSend = !dataQueue.empty();
 	if (suitableConnection) {
 		if (toSend) {
@@ -154,14 +153,12 @@ void BOSHConnectionPool::tryToSendQueuedData() {
 				data.insert(data.end(), datum.begin(), datum.end());
 			}
 			suitableConnection->write(data);
-			sent = true;
 			dataQueue.clear();
 		}
 		else if (pendingTerminate) {
 			rid++;
 			suitableConnection->setRID(rid);
 			suitableConnection->terminateStream();
-			sent = true;
 			onSessionTerminated(boost::shared_ptr<BOSHError>());
 		}
 	}
