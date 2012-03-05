@@ -1,16 +1,17 @@
 /*
- * Copyright (c) 2010 Remko Tronçon
+ * Copyright (c) 2010-2012 Remko Tronçon
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
+
 #include "QtJoinMUCWindow.h"
-#include "QtSwiftUtil.h"
 #include <boost/smart_ptr/make_shared.hpp>
 #include <Swift/Controllers/UIEvents/UIEventStream.h>
 #include <Swift/Controllers/UIEvents/JoinMUCUIEvent.h>
 
 namespace Swift {
+
 
 QtJoinMUCWindow::QtJoinMUCWindow(UIEventStream* uiEventStream) : uiEventStream(uiEventStream) {
 	ui.setupUi(this);
@@ -25,6 +26,7 @@ QtJoinMUCWindow::QtJoinMUCWindow(UIEventStream* uiEventStream) : uiEventStream(u
 	// the placeholder when a widget is focused for some reason.
 	ui.nickName->setFocus();
 	ui.instantRoom->setChecked(true);
+	ui.nickName->setValidator(new NickValidator(this));
 }
 
 void QtJoinMUCWindow::handleJoin() {

@@ -6,12 +6,29 @@
 
 #pragma once
 
+#include <QValidator>
 #include <string>
+#include "QtSwiftUtil.h"
 #include <Swift/Controllers/UIInterfaces/JoinMUCWindow.h>
 #include <Swift/QtUI/ui_QtJoinMUCWindow.h>
 
 namespace Swift {
 	class UIEventStream;
+	class NickValidator : public QValidator {
+		Q_OBJECT
+		public:
+			NickValidator(QObject* parent) : QValidator(parent) {
+			}
+
+			virtual QValidator::State validate(QString& input, int& /*pos*/) const {
+				if (input.isEmpty()) {
+					return QValidator::Acceptable;
+				}
+				JID test("alice", "wonderland.lit", Q2PSTRING(input));
+
+				return test.isValid() ? QValidator::Acceptable : QValidator::Invalid;
+			}
+	};
 	class QtJoinMUCWindow : public QWidget, public JoinMUCWindow {
 			Q_OBJECT
 		public:
