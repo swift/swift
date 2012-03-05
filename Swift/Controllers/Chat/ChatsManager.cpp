@@ -560,6 +560,9 @@ void ChatsManager::handleJoinMUCRequest(const JID &mucJID, const boost::optional
 		if (nickMaybe) {
 			bookmark.setNick(*nickMaybe);
 		}
+		if (password) {
+			bookmark.setPassword(*password);
+		}
 		mucBookmarkManager_->addBookmark(bookmark);
 	}
 
