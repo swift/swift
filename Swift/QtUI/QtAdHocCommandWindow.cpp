@@ -62,6 +62,7 @@ QtAdHocCommandWindow::~QtAdHocCommandWindow() {
 
 void QtAdHocCommandWindow::handleCancelClicked() {
 	command_->cancel();
+	close();
 }
 
 void QtAdHocCommandWindow::handlePrevClicked() {
