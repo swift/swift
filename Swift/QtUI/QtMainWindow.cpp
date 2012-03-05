@@ -123,7 +123,7 @@ QtMainWindow::QtMainWindow(SettingsProvider* settings, UIEventStream* uiEventStr
 
 	toggleRequestDeliveryReceipts_ = new QAction(tr("&Request Delivery Receipts"), this);
 	toggleRequestDeliveryReceipts_->setCheckable(true);
-	toggleRequestDeliveryReceipts_->setChecked(false);
+	toggleRequestDeliveryReceipts_->setChecked(settings_->getSetting(SettingConstants::REQUEST_DELIVERYRECEIPTS));
 	connect(toggleRequestDeliveryReceipts_, SIGNAL(toggled(bool)), SLOT(handleToggleRequestDeliveryReceipts(bool)));
 	loginMenus_.generalMenu->addAction(toggleRequestDeliveryReceipts_);
 
