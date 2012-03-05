@@ -314,7 +314,7 @@ void MainController::handleConnected() {
 
 		userSearchControllerChat_ = new UserSearchController(UserSearchController::StartChat, jid_, uiEventStream_, uiFactory_, client_->getIQRouter(), rosterController_);
 		userSearchControllerAdd_ = new UserSearchController(UserSearchController::AddContact, jid_, uiEventStream_, uiFactory_, client_->getIQRouter(), rosterController_);
-		adHocManager_ = new AdHocManager(boundJID_, uiFactory_, client_->getIQRouter(), uiEventStream_, rosterController_->getWindow());
+		adHocManager_ = new AdHocManager(JID(boundJID_.getDomain()), uiFactory_, client_->getIQRouter(), uiEventStream_, rosterController_->getWindow());
 	}
 	loginWindow_->setIsLoggingIn(false);
 
