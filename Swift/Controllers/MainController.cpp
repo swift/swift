@@ -320,7 +320,7 @@ void MainController::handleConnected() {
 
 	client_->requestRoster();
 
-	GetDiscoInfoRequest::ref discoInfoRequest = GetDiscoInfoRequest::create(boundJID_.toBare(), client_->getIQRouter());
+	GetDiscoInfoRequest::ref discoInfoRequest = GetDiscoInfoRequest::create(JID(boundJID_.getDomain()), client_->getIQRouter());
 	discoInfoRequest->onResponse.connect(boost::bind(&MainController::handleServerDiscoInfoResponse, this, _1, _2));
 	discoInfoRequest->send();
 
