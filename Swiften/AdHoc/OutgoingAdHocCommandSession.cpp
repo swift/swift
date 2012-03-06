@@ -17,6 +17,10 @@ OutgoingAdHocCommandSession::OutgoingAdHocCommandSession(const JID& to, const st
 
 }
 
+OutgoingAdHocCommandSession::~OutgoingAdHocCommandSession() {
+	connection_.disconnect();
+}
+
 void OutgoingAdHocCommandSession::handleResponse(boost::shared_ptr<Command> payload, ErrorPayload::ref error) {
 	if (error) {
 		onError(error);
@@ -58,7 +62,7 @@ bool OutgoingAdHocCommandSession::getIsMultiStage() const {
 
 void OutgoingAdHocCommandSession::start() {
 	boost::shared_ptr<GenericRequest<Command> > commandRequest = boost::make_shared< GenericRequest<Command> >(IQ::Set, to_, boost::make_shared<Command>(commandNode_), iqRouter_);
-	commandRequest->onResponse.connect(boost::bind(&OutgoingAdHocCommandSession::handleResponse, this, _1, _2));
+	connection_ = commandRequest->onResponse.connect(boost::bind(&OutgoingAdHocCommandSession::handleResponse, this, _1, _2));
 	commandRequest->send();
 }
 
@@ -84,7 +88,8 @@ void OutgoingAdHocCommandSession::submitForm(Form::ref form, Command::Action act
 	boost::shared_ptr<Command> command(boost::make_shared<Command>(commandNode_, sessionID_, action));
 	command->setForm(form);
 	boost::shared_ptr<GenericRequest<Command> > commandRequest = boost::make_shared< GenericRequest<Command> >(IQ::Set, to_, command, iqRouter_);
-	commandRequest->onResponse.connect(boost::bind(&OutgoingAdHocCommandSession::handleResponse, this, _1, _2));
+	connection_.disconnect();
+	connection_ = commandRequest->onResponse.connect(boost::bind(&OutgoingAdHocCommandSession::handleResponse, this, _1, _2));
 	commandRequest->send();
 }
 

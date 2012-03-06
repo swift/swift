@@ -14,6 +14,7 @@
 #include <Swiften/Base/boost_bsignals.h>
 #include <Swiften/Elements/Command.h>
 #include <Swiften/Elements/ErrorPayload.h>
+#include <boost/signals/connection.hpp>
 
 namespace Swift {
 	class IQRouter;
@@ -33,6 +34,7 @@ namespace Swift {
 				EnabledAndPresent = 3};
 
 			OutgoingAdHocCommandSession(const JID& to, const std::string& commandNode, IQRouter* iqRouter);
+			~OutgoingAdHocCommandSession();
 			/**
 			 * Send initial request to the target.
 			 */
@@ -91,5 +93,6 @@ namespace Swift {
 			bool isMultiStage_;
 			std::string sessionID_;
 			std::map<Command::Action, ActionState> actionStates_;
+			boost::bsignals::connection connection_;
 	};
 }
