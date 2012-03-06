@@ -59,7 +59,6 @@ RosterController::RosterController(const JID& jid, XMPPRoster* xmppRoster, Avata
 	eventController_ = eventController;
 	settings_ = settings;
 	expandiness_ = new RosterGroupExpandinessPersister(roster_, settings);
-	roster_->addFilter(offlineFilter_);
 	mainWindow_->setRosterModel(roster_);
 	
 	changeStatusConnection_ = mainWindow_->onChangeStatusRequest.connect(boost::bind(&RosterController::handleChangeStatusRequest, this, _1, _2));
@@ -83,7 +82,9 @@ RosterController::RosterController(const JID& jid, XMPPRoster* xmppRoster, Avata
 
 	settings_->onSettingChanged.connect(boost::bind(&RosterController::handleSettingChanged, this, _1));
 
+	handleShowOfflineToggled(settings_->getSetting(SettingConstants::SHOW_OFFLINE));
 }
+
 
 RosterController::~RosterController() {	
 	settings_->onSettingChanged.disconnect(boost::bind(&RosterController::handleSettingChanged, this, _1));
@@ -107,9 +108,6 @@ void RosterController::setEnabled(bool enabled) {
 }
 
 void RosterController::handleShowOfflineToggled(bool state) {
-	if (state != settings_->getSetting(SettingConstants::SHOW_OFFLINE)) {
-		settings_->storeSetting(SettingConstants::SHOW_OFFLINE, state);
-	}
 	if (state) {
 		roster_->removeFilter(offlineFilter_);
 	} else {

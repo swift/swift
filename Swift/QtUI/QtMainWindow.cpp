@@ -89,6 +89,7 @@ QtMainWindow::QtMainWindow(SettingsProvider* settings, UIEventStream* uiEventStr
 	showOfflineAction_->setChecked(false);
 	connect(showOfflineAction_, SIGNAL(toggled(bool)), SLOT(handleShowOfflineToggled(bool)));
 	viewMenu->addAction(showOfflineAction_);
+	handleShowOfflineToggled(settings_->getSetting(SettingConstants::SHOW_OFFLINE));
 
 	//QAction* compactRosterAction_ = new QAction(tr("&Compact Roster"), this);
 	//compactRosterAction_->setCheckable(true);
@@ -134,8 +135,6 @@ QtMainWindow::QtMainWindow(SettingsProvider* settings, UIEventStream* uiEventStr
 	adHocAction->setEnabled(false);
 	serverAdHocMenu_->addAction(adHocAction);
 	serverAdHocCommandActions_.append(adHocAction);
-
-	lastOfflineState_ = false;
 
 	settings_->onSettingChanged.connect(boost::bind(&QtMainWindow::handleSettingChanged, this, _1));
 }
@@ -227,11 +226,8 @@ void QtMainWindow::handleSettingChanged(const std::string& settingPath) {
 }
 
 void QtMainWindow::handleShowOfflineToggled(bool state) {
-	if (state != lastOfflineState_) {
-		lastOfflineState_ = state;
-		showOfflineAction_->setChecked(state);
-		settings_->storeSetting(SettingConstants::SHOW_OFFLINE, state);
-	}
+	settings_->storeSetting(SettingConstants::SHOW_OFFLINE, state);
+	showOfflineAction_->setChecked(settings_->getSetting(SettingConstants::SHOW_OFFLINE));
 }
 
 void QtMainWindow::setMyNick(const std::string& nick) {

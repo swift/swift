@@ -83,7 +83,6 @@ namespace Swift {
 			QtEventWindow* eventWindow_;
 			QtChatListWindow* chatListWindow_;
 			UIEventStream* uiEventStream_;
-			bool lastOfflineState_;
 			std::vector<DiscoItems::Item> serverAdHocCommands_;
 			QList<QAction*> serverAdHocCommandActions_;
 	};
