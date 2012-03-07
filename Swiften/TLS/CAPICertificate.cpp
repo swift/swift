@@ -38,7 +38,7 @@ const std::string& CAPICertificate::getCertName() const {
 	return certName_;
 }
 
-static PCCERT_CONTEXT findCertificateInStore (HCERTSTORE certStoreHandle, const std::string &certName) {
+PCCERT_CONTEXT findCertificateInStore (HCERTSTORE certStoreHandle, const std::string &certName) {
 	PCCERT_CONTEXT pCertContext = NULL;
 
 	if (!boost::iequals(certName.substr(0, 5), "sha1:")) {
@@ -113,7 +113,7 @@ void CAPICertificate::setUri (const std::string& capiUri) {
 	}
 
 	if (certStoreHandle_ == NULL) {
-		certStoreHandle_ = CertOpenSystemStore(0, certStore_.c_str());
+		certStoreHandle_ = CertOpenSystemStore(0, new_certStore_name.c_str());
 		if (!certStoreHandle_) {
 			return;
 		}

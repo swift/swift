@@ -30,7 +30,10 @@ namespace Swift {
 static std::string getCertUri(PCCERT_CONTEXT cert, const char * cert_store_name) {
 	DWORD cbHash = SHA1_HASH_LEN;
 	BYTE aHash[SHA1_HASH_LEN];
-	std::string ret = std::string("certstore:") + cert_store_name + ":" + "sha1:";
+	std::string ret("certstore:");
+
+	ret += cert_store_name;
+	ret += ":sha1:";
 
 	if (CertGetCertificateContextProperty(cert,
 		 CERT_HASH_PROP_ID,
@@ -39,7 +42,7 @@ static std::string getCertUri(PCCERT_CONTEXT cert, const char * cert_store_name)
 		return "";
 	}
 
-	ByteArray byteArray = createByteArray((char *)(&aHash[0]));
+	ByteArray byteArray = createByteArray((char *)(&aHash[0]), cbHash);
 	ret += Hexify::hexify(byteArray);
 
 	return ret;

@@ -39,4 +39,7 @@ namespace Swift {
 			std::string certStore_;
 			std::string certName_;
 	};
+
+PCCERT_CONTEXT findCertificateInStore (HCERTSTORE certStoreHandle, const std::string &certName);
+
 }

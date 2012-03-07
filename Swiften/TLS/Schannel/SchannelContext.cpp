@@ -69,15 +69,7 @@ void SchannelContext::connect()
 			}
 		}
 
-		// Find client certificate. Note that this sample just searches for a 
-		// certificate that contains the user name somewhere in the subject name.
-		pCertContext = CertFindCertificateInStore( m_my_cert_store,
-			X509_ASN_ENCODING,
-			0,				// dwFindFlags
-			CERT_FIND_SUBJECT_STR_A,
-			m_cert_name.c_str(),		// *pvFindPara
-			NULL );				// pPrevCertContext
-
+		pCertContext = findCertificateInStore( m_my_cert_store, m_cert_name );
 		if (pCertContext == NULL)
 		{
 /////		printf("**** Error 0x%x returned by CertFindCertificateInStore\n", GetLastError());
@@ -94,7 +86,6 @@ void SchannelContext::connect()
 
 /////SSL3?
 	sc.grbitEnabledProtocols = SP_PROT_SSL3_CLIENT | SP_PROT_TLS1_CLIENT | SP_PROT_TLS1_1_CLIENT | SP_PROT_TLS1_2_CLIENT;
-/////Check SCH_CRED_REVOCATION_CHECK_CHAIN
 	sc.dwFlags = SCH_CRED_AUTO_CRED_VALIDATION | SCH_CRED_REVOCATION_CHECK_CHAIN;
 
 	if (pCertContext)
