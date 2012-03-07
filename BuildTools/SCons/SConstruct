@@ -242,7 +242,7 @@ if env["PLATFORM"] == "darwin" :
 	growl_env = conf_env.Clone()
 	growl_env.MergeFlags(growl_flags)
 	conf = Configure(growl_env, custom_tests = { "CheckObjCHeader" : checkObjCHeader })
-	if conf.CheckObjCHeader("Growl/Growl.h") :
+	if False and conf.CheckObjCHeader("Growl/Growl.h") :
 		env["HAVE_GROWL"] = 1
 		env["GROWL_FLAGS"] = growl_flags
 		env["GROWL_FRAMEWORK"] = "/Library/Frameworks/Growl.framework"
