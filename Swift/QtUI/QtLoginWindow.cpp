@@ -49,7 +49,7 @@
 
 namespace Swift{
 
-QtLoginWindow::QtLoginWindow(UIEventStream* uiEventStream, SettingsProvider* settings) : QMainWindow(), settings_(settings) {
+QtLoginWindow::QtLoginWindow(UIEventStream* uiEventStream, SettingsProvider* settings, TimerFactory* timerFactory) : QMainWindow(), settings_(settings), timerFactory_(timerFactory) {
 	uiEventStream_ = uiEventStream;
 
 	setWindowTitle("Swift");
@@ -351,7 +351,7 @@ void QtLoginWindow::loginClicked() {
 		std::string certificateString = Q2PSTRING(certificateFile_);
 #if defined(HAVE_SCHANNEL)
 		if (isCAPIURI(certificateString)) {
-			certificate = boost::make_shared<CAPICertificate>(certificateString);
+			certificate = boost::make_shared<CAPICertificate>(certificateString, timerFactory_);
 		} else {
 			certificate = boost::make_shared<PKCS12Certificate>(certificateString, createSafeByteArray(Q2PSTRING(password_->text())));
 		}

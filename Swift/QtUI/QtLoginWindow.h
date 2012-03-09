@@ -25,6 +25,8 @@ class QComboBox;
 
 namespace Swift {
 	class SettingsProvider;
+	class TimerFactory;
+
 	class QtLoginWindow : public QMainWindow, public LoginWindow {
 		Q_OBJECT
 		public:
@@ -35,7 +37,7 @@ namespace Swift {
 			};
 
 		public:
-			QtLoginWindow(UIEventStream* uiEventStream, SettingsProvider* settings);
+			QtLoginWindow(UIEventStream* uiEventStream, SettingsProvider* settings, TimerFactory* timerFactory);
 
 			void morphInto(MainWindow *mainWindow);
 			virtual void loggedOut();
@@ -98,5 +100,6 @@ namespace Swift {
 			SettingsProvider* settings_;
 			QAction* xmlConsoleAction_;
 			QAction* fileTransferOverviewAction_;
+			TimerFactory* timerFactory_;
 	};
 }

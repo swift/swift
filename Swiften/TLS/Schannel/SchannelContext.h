@@ -10,7 +10,7 @@
 
 #include "Swiften/TLS/TLSContext.h"
 #include "Swiften/TLS/Schannel/SchannelUtil.h"
-#include <Swiften/TLS/CertificateWithKey.h>
+#include "Swiften/TLS/CertificateWithKey.h"
 #include "Swiften/Base/ByteArray.h"
 
 #define SECURITY_WIN32
@@ -62,6 +62,8 @@ namespace Swift
 		void			appendNewData(const SafeByteArray& data);
 		SECURITY_STATUS validateServerCertificate();
 
+		void			handleCertificateCardRemoved();
+
 	private:
 		enum SchannelState
 		{
@@ -86,5 +88,7 @@ namespace Swift
 		HCERTSTORE		m_my_cert_store;
 		std::string		m_cert_store_name;
 		std::string		m_cert_name;
+////Not needed, most likely
+		std::string		m_smartcard_reader;	//Can be empty string for non SmartCard certificates
 	};
 }

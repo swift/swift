@@ -23,11 +23,12 @@ namespace Swift {
 	class QtChatTheme;
 	class QtChatWindowFactory;
 	class QtChatWindow;
+	class TimerFactory;
 
 	class QtUIFactory : public QObject, public UIFactory {
 			Q_OBJECT
 		public:
-			QtUIFactory(SettingsProviderHierachy* settings, QtSettingsProvider* qtOnlySettings, QtChatTabs* tabs, QSplitter* netbookSplitter, QtSystemTray* systemTray, QtChatWindowFactory* chatWindowFactory, bool startMinimized);
+			QtUIFactory(SettingsProviderHierachy* settings, QtSettingsProvider* qtOnlySettings, QtChatTabs* tabs, QSplitter* netbookSplitter, QtSystemTray* systemTray, QtChatWindowFactory* chatWindowFactory, TimerFactory* timerFactory, bool startMinimized);
 
 			virtual XMLConsoleWidget* createXMLConsoleWidget();
 			virtual MainWindow* createMainWindow(UIEventStream* eventStream);
@@ -57,6 +58,7 @@ namespace Swift {
 			QtMainWindow* lastMainWindow;
 			QtLoginWindow* loginWindow;
 			std::vector<QPointer<QtChatWindow> > chatWindows;
+			TimerFactory* timerFactory_;
 			bool startMinimized;
 			int chatFontSize;
 	};

@@ -4,8 +4,10 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
-#include "Swiften/TLS/Schannel/SchannelContext.h"
-#include "Swiften/TLS/Schannel/SchannelCertificate.h"
+#include <boost/bind.hpp>
+
+#include <Swiften/TLS/Schannel/SchannelContext.h>
+#include <Swiften/TLS/Schannel/SchannelCertificate.h>
 #include <Swiften/TLS/CAPICertificate.h>
 #include <WinHTTP.h> // For SECURITY_FLAG_IGNORE_CERT_CN_INVALID
 
@@ -19,6 +21,7 @@ SchannelContext::SchannelContext()
 , m_my_cert_store(NULL)
 , m_cert_store_name("MY")
 , m_cert_name()
+, m_smartcard_reader()
 {
 	m_ctxtFlags = ISC_REQ_ALLOCATE_MEMORY | 
 				  ISC_REQ_CONFIDENTIALITY |
@@ -639,7 +642,18 @@ bool SchannelContext::setClientCertificate(CertificateWithKey::ref certificate)
 	// are valid at this point
 	m_cert_store_name = capiCertificate->getCertStoreName();
 	m_cert_name = capiCertificate->getCertName();
+////At the moment this is only useful for logging:
+	m_smartcard_reader = capiCertificate->getSmartCardReaderName();
+
+	capiCertificate->onCertificateCardRemoved.connect(boost::bind(&SchannelContext::handleCertificateCardRemoved, this));
+
 	return true;
+}
+
+//------------------------------------------------------------------------
+void SchannelContext::handleCertificateCardRemoved() {
+	//ToDo: Might want to log the reason ("certificate card ejected")
+	indicateError();
 }
 
 //------------------------------------------------------------------------

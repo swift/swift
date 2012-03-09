@@ -5,9 +5,11 @@
  */
 #pragma once
 
+#include <Swiften/Network/TimerFactory.h>
 #include <Swiften/TLS/CAPICertificate.h>
 #include <Swiften/StringCodecs/Hexify.h>
 
+#include <boost/bind.hpp>
 #include <boost/algorithm/string/predicate.hpp>
 
 // Size of the SHA1 hash
@@ -15,14 +17,38 @@
 
 
 namespace Swift {
-CAPICertificate::CAPICertificate(const std::string& capiUri)
-			  		 : valid_(false), uri_(capiUri), certStoreHandle_(0), certStore_(), certName_() {
+
+CAPICertificate::CAPICertificate(const std::string& capiUri, TimerFactory* timerFactory)
+	: valid_(false),
+	uri_(capiUri),
+	certStoreHandle_(0),
+	scardContext_(0),
+	cardHandle_(0),
+	certStore_(),
+	certName_(),
+	smartCardReaderName_(),
+	timerFactory_(timerFactory) {
+
 	setUri(capiUri);
 }
 
 CAPICertificate::~CAPICertificate() {
+	if (smartCardTimer_) {
+		smartCardTimer_->stop();
+		smartCardTimer_->onTick.disconnect(boost::bind(&CAPICertificate::handleSmartCardTimerTick, this));
+		smartCardTimer_.reset();
+	}
+
 	if (certStoreHandle_) {
 		CertCloseStore(certStoreHandle_, 0);
+	}
+
+	if (cardHandle_) {
+		(void) SCardDisconnect(cardHandle_, SCARD_LEAVE_CARD);
+	}
+
+	if (scardContext_) {
+		SCardReleaseContext(scardContext_);
 	}
 }
 
@@ -36,6 +62,10 @@ const std::string& CAPICertificate::getCertStoreName() const {
 
 const std::string& CAPICertificate::getCertName() const {
 	return certName_;
+}
+
+const std::string& CAPICertificate::getSmartCardReaderName() const {
+	return smartCardReaderName_;
 }
 
 PCCERT_CONTEXT findCertificateInStore (HCERTSTORE certStoreHandle, const std::string &certName) {
@@ -170,6 +200,30 @@ void CAPICertificate::setUri (const std::string& capiUri) {
 		return;
 	}
 
+
+	char smartcard_reader[1024];
+	DWORD buflen;
+
+	buflen = sizeof(smartcard_reader);
+	if (!CryptGetProvParam(hprov, PP_SMARTCARD_READER, (BYTE *)&smartcard_reader, &buflen, 0)) {
+		DWORD error;
+
+		error = GetLastError();
+		smartCardReaderName_ = "";
+	} else {
+		LONG       lRet;
+
+		smartCardReaderName_ = smartcard_reader;
+
+		lRet = SCardEstablishContext(SCARD_SCOPE_USER, NULL, NULL, &scardContext_);
+		if (SCARD_S_SUCCESS == lRet) {
+			// Initiate monitoring for smartcard ejection
+			smartCardTimer_ = timerFactory_->createTimer(SMARTCARD_EJECTION_CHECK_FREQ);
+		} else {
+			///Need to handle an error here
+		}
+	}
+
 	if (!CryptGetUserKey(hprov, pinfo->dwKeySpec, &key)) {
 		CryptReleaseContext(hprov, 0);
 		free(pinfo);
@@ -180,7 +234,133 @@ void CAPICertificate::setUri (const std::string& capiUri) {
 	CryptReleaseContext(hprov, 0);
 	free(pinfo);
 
+	if (smartCardTimer_) {
+		smartCardTimer_->onTick.connect(boost::bind(&CAPICertificate::handleSmartCardTimerTick, this));
+		smartCardTimer_->start();
+	}
+
 	valid_ = true;
+}
+
+static void smartcard_check_status (SCARDCONTEXT  hContext,
+				    const char * pReader,
+				    SCARDHANDLE hCardHandle,     // Can be 0 on the first call
+				    SCARDHANDLE * newCardHandle, // The handle returned
+				    DWORD * pdwState) {
+	LONG            lReturn;
+	DWORD           dwAP;
+	char            szReader[200];
+	DWORD           cch = sizeof(szReader);
+	BYTE            bAttr[32];
+	DWORD           cByte = 32;
+
+	if (hCardHandle == 0) {
+		lReturn = SCardConnect(hContext,
+					pReader,
+					SCARD_SHARE_SHARED,
+					SCARD_PROTOCOL_T0 | SCARD_PROTOCOL_T1,
+					&hCardHandle,
+					&dwAP);
+		if ( SCARD_S_SUCCESS != lReturn ) {
+			hCardHandle = 0;
+			if (SCARD_E_NO_SMARTCARD == lReturn || SCARD_W_REMOVED_CARD == lReturn) {
+				*pdwState = SCARD_ABSENT;
+			} else {
+				*pdwState = SCARD_UNKNOWN;
+			}
+			goto done;
+		}
+	}
+
+	lReturn = SCardStatus(hCardHandle,
+				szReader,	// Unfortunately we can't use NULL here
+				&cch,
+				pdwState,
+				NULL,
+				(LPBYTE)&bAttr,
+				&cByte);
+
+	if ( SCARD_S_SUCCESS != lReturn ) {
+		if (SCARD_E_NO_SMARTCARD == lReturn || SCARD_W_REMOVED_CARD == lReturn) {
+			*pdwState = SCARD_ABSENT;
+		} else {
+			*pdwState = SCARD_UNKNOWN;
+		}
+	}
+
+done:
+	if (newCardHandle == NULL) {
+		(void) SCardDisconnect(hCardHandle, SCARD_LEAVE_CARD);
+		hCardHandle = 0;
+	} else {
+		*newCardHandle = hCardHandle;
+	}
+}
+
+bool CAPICertificate::checkIfSmartCardPresent () {
+
+	DWORD dwState;
+
+	if (!smartCardReaderName_.empty()) {
+		smartcard_check_status (scardContext_,
+					smartCardReaderName_.c_str(),
+					cardHandle_,
+					&cardHandle_,
+					&dwState);
+////DEBUG
+		switch ( dwState ) {
+		case SCARD_ABSENT:
+		    printf("Card absent.\n");
+		    break;
+		case SCARD_PRESENT:
+		    printf("Card present.\n");
+		    break;
+		case SCARD_SWALLOWED:
+		    printf("Card swallowed.\n");
+		    break;
+		case SCARD_POWERED:
+		    printf("Card has power.\n");
+		    break;
+		case SCARD_NEGOTIABLE:
+		    printf("Card reset and waiting PTS negotiation.\n");
+		    break;
+		case SCARD_SPECIFIC:
+		    printf("Card has specific communication protocols set.\n");
+		    break;
+		default:
+		    printf("Unknown or unexpected card state.\n");
+		    break;
+		}
+
+
+
+		switch ( dwState ) {
+		case SCARD_ABSENT:
+		    return false;
+
+		case SCARD_PRESENT:
+		case SCARD_SWALLOWED:
+		case SCARD_POWERED:
+		case SCARD_NEGOTIABLE:
+		case SCARD_SPECIFIC:
+		    return true;
+
+		default:
+		    return false;
+		}
+	} else {
+		return false;
+	}
+}
+
+void CAPICertificate::handleSmartCardTimerTick() {
+
+	if (checkIfSmartCardPresent() == false) {
+		smartCardTimer_->stop();
+		onCertificateCardRemoved();
+	} else {
+		smartCardTimer_->start();
+	}
 }
 
 }
