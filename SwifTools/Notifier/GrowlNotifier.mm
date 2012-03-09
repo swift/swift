@@ -35,6 +35,7 @@ class GrowlNotifier::Private {
 GrowlNotifier::GrowlNotifier(const std::string& name) {
 	p = boost::make_shared<Private>();
 	p->delegate = boost::intrusive_ptr<GrowlNotifierDelegate>([[GrowlNotifierDelegate alloc] init], false);
+	p->delegate.get().notifier = this;
 	p->delegate.get().name = STD2NSSTRING(name);
 	
 	NSMutableArray* allNotifications = [[NSMutableArray alloc] init];

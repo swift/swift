@@ -18,6 +18,7 @@ namespace Swift {
 
 @property (nonatomic, retain) NSDictionary* registrationDictionary;
 @property (nonatomic, copy) NSString* name;
+@property (nonatomic) Swift::GrowlNotifier* notifier;
 
 - (NSDictionary*) registrationDictionaryForGrowl;
 - (NSString *) applicationNameForGrowl;

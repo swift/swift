@@ -12,6 +12,7 @@
 
 @synthesize registrationDictionary;
 @synthesize name;
+@synthesize notifier;
 
 using namespace Swift;
 
