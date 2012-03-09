@@ -7,6 +7,7 @@
 #include <SwifTools/Notifier/GrowlNotifier.h>
 
 #include <boost/smart_ptr/make_shared.hpp>
+#include <set>
 
 #include <SwifTools/Notifier/GrowlNotifierDelegate.h>
 #include <SwifTools/Cocoa/CocoaUtil.h>
@@ -27,6 +28,7 @@ namespace Swift {
 
 class GrowlNotifier::Private {
 	public:
+		std::set<Context*> pendingNotifications;
 		boost::intrusive_ptr<GrowlNotifierDelegate> delegate;
 };
 
@@ -55,12 +57,23 @@ GrowlNotifier::GrowlNotifier(const std::string& name) {
 	[GrowlApplicationBridge setGrowlDelegate: p->delegate.get()];
 }
 
+GrowlNotifier::~GrowlNotifier() {
+	[GrowlApplicationBridge setGrowlDelegate: nil];
+	foreach (Context* context, p->pendingNotifications) {
+		delete context;
+	}
+	p->pendingNotifications.clear();
+}
+
 void GrowlNotifier::showMessage(Type type, const std::string& subject, const std::string& description, const boost::filesystem::path& picturePath, boost::function<void()> callback) {
 	ByteArray picture;
 	readByteArrayFromFile(picture, picturePath.string());
 
 	Context* context = new Context(callback);
-
+	// Growl sometimes sends timeout notifications twice for the same message. We therefore need
+	// to keep track of which ones have already been processed.
+	p->pendingNotifications.insert(context);
+	
 	[GrowlApplicationBridge 
 		notifyWithTitle: STD2NSSTRING(subject)
 		description: STD2NSSTRING(description)
@@ -73,14 +86,19 @@ void GrowlNotifier::showMessage(Type type, const std::string& subject, const std
 
 void GrowlNotifier::handleNotificationClicked(void* rawData) {
 	Context* context = *(Context**) [((NSData*) rawData) bytes];
-	if (!context->callback->empty()) {
-		(*context->callback)();
+	if (p->pendingNotifications.erase(context) > 0) {
+		if (!context->callback->empty()) {
+			(*context->callback)();
+		}
+		delete context;
 	}
-	delete context;
 }
 
 void GrowlNotifier::handleNotificationTimedOut(void* rawData) {
-	delete *(Context**) [((NSData*) rawData) bytes];
+	Context* context = *(Context**) [((NSData*) rawData) bytes];
+	if (p->pendingNotifications.erase(context) > 0) {
+		delete context;
+	}
 }
 
 bool GrowlNotifier::isExternallyConfigured() const {

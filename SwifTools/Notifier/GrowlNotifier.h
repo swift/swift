@@ -20,6 +20,7 @@ namespace Swift {
 	class GrowlNotifier : public Notifier {
 		public:
 			GrowlNotifier(const std::string& name);
+			~GrowlNotifier();
 
 			virtual void showMessage(Type type, const std::string& subject, const std::string& description, const boost::filesystem::path& picture, boost::function<void()> callback);
 			virtual bool isExternallyConfigured() const;
