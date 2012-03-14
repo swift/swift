@@ -90,6 +90,8 @@ void QtUserSearchWindow::handleCurrentChanged(int page) {
 	}
 	else if (page == 4) {
 		detailsPage_->clear();
+		detailsPage_->setJID(getContactJID());
+		onNameSuggestionRequested(getContactJID());
 	}
 	lastPage_ = page;
 }
@@ -99,35 +101,7 @@ JID QtUserSearchWindow::getServerToSearch() {
 }
 
 void QtUserSearchWindow::handleAccepted() {
-	JID jid;
-	if (!firstPage_->byJID_->isChecked()) {
-		if (dynamic_cast<UserSearchModel*>(model_)) {
-			UserSearchResult* userItem = static_cast<UserSearchResult*>(resultsPage_->results_->currentIndex().internalPointer());
-			if (userItem) { /* Remember to leave this if we change to dynamic cast */
-				jid = userItem->getJID();
-			}
-		} else {
-			int row = resultsPage_->results_->currentIndex().row();
-
-			Form::FormItem item = dynamic_cast<QtFormResultItemModel*>(model_)->getForm()->getItems().at(row);
-			JID fallbackJid;
-			foreach(FormField::ref field, item) {
-				if (boost::dynamic_pointer_cast<JIDSingleFormField>(field)) {
-					jid = JID(field->getRawValues().at(0));
-					break;
-				}
-				if (field->getName() == "jid") {
-					fallbackJid = field->getRawValues().at(0);
-				}
-			}
-			if (!jid.isValid()) {
-				jid = fallbackJid;
-			}
-		}
-	}
-	else {
-		jid = JID(Q2PSTRING(firstPage_->jid_->text()));
-	}
+	JID jid = getContactJID();
 
 	if (type_ == AddContact) {
 		eventStream_->send(boost::make_shared<AddContactUIEvent>(jid, detailsPage_->getName(), detailsPage_->getSelectedGroups()));
@@ -190,6 +164,39 @@ void QtUserSearchWindow::handleSearch() {
 	onSearchRequested(search, getServerToSearch());
 }
 
+JID QtUserSearchWindow::getContactJID() const {
+	JID jid;
+	if (!firstPage_->byJID_->isChecked()) {
+		if (dynamic_cast<UserSearchModel*>(model_)) {
+			UserSearchResult* userItem = static_cast<UserSearchResult*>(resultsPage_->results_->currentIndex().internalPointer());
+			if (userItem) { /* Remember to leave this if we change to dynamic cast */
+				jid = userItem->getJID();
+			}
+		} else {
+			int row = resultsPage_->results_->currentIndex().row();
+
+			Form::FormItem item = dynamic_cast<QtFormResultItemModel*>(model_)->getForm()->getItems().at(row);
+			JID fallbackJid;
+			foreach(FormField::ref field, item) {
+				if (boost::dynamic_pointer_cast<JIDSingleFormField>(field)) {
+					jid = JID(field->getRawValues().at(0));
+					break;
+				}
+				if (field->getName() == "jid") {
+					fallbackJid = field->getRawValues().at(0);
+				}
+			}
+			if (!jid.isValid()) {
+				jid = fallbackJid;
+			}
+		}
+	}
+	else {
+		jid = JID(Q2PSTRING(firstPage_->jid_->text()));
+	}
+	return jid;
+}
+
 void QtUserSearchWindow::show() {
 	clear();
 	QWidget::show();
@@ -221,6 +228,12 @@ void QtUserSearchWindow::setSearchFields(boost::shared_ptr<SearchPayload> fields
 		}
 	}
 	fieldsPage_->emitCompletenessCheck();
+}
+
+void QtUserSearchWindow::setNameSuggestions(const std::vector<std::string>& suggestions) {
+	if (detailsPage_) {
+		detailsPage_->setNameSuggestions(suggestions);
+	}
 }
 
 void QtUserSearchWindow::setResults(const std::vector<UserSearchResult>& results) {

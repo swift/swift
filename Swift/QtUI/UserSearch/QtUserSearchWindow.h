@@ -38,7 +38,9 @@ namespace Swift {
 			virtual void setSelectedService(const JID& jid);
 			virtual void setServerSupportsSearch(bool error);
 			virtual void setSearchError(bool error);
-			virtual void setSearchFields(boost::shared_ptr<SearchPayload> fields) ;
+			virtual void setSearchFields(boost::shared_ptr<SearchPayload> fields);
+			virtual void setNameSuggestions(const std::vector<std::string>& suggestions);
+
 		protected:
 			virtual int nextId() const;
 		private slots:
@@ -50,6 +52,7 @@ namespace Swift {
 			void setError(const QString& error);
 			JID getServerToSearch();
 			void handleSearch();
+			JID getContactJID() const;
 
 		private:
 			UIEventStream* eventStream_;

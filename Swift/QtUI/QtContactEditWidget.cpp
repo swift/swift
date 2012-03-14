@@ -8,28 +8,36 @@
 
 #include <algorithm>
 
-#include <QScrollArea>
 #include <QBoxLayout>
-#include <QLabel>
 #include <QCheckBox>
+#include <QLabel>
 #include <QLineEdit>
+#include <QMovie>
+#include <QScrollArea>
+#include <QRadioButton>
 
 #include "Swift/QtUI/QtSwiftUtil.h"
 
 namespace Swift {
 
-QtContactEditWidget::QtContactEditWidget(const std::set<std::string>& allGroups, QWidget* parent) : QWidget(parent), groups_(NULL) {
+QtContactEditWidget::QtContactEditWidget(const std::set<std::string>& allGroups, QWidget* parent) : QWidget(parent), nameRadioButton_(NULL), groups_(NULL) {
 	QBoxLayout* layout = new QVBoxLayout(this);
 	setContentsMargins(0,0,0,0);
 	layout->setContentsMargins(0,0,0,0);
 
-	QHBoxLayout* nameLayout = new QHBoxLayout();
-	
-	QLabel* label = new QLabel(tr("Name:"), this);
-	nameLayout->addWidget(label);
+	nameLayout_ = new QHBoxLayout();
+	suggestionsLayout_ = new QHBoxLayout();
+	nameLayout_->addLayout(suggestionsLayout_);
+
 	name_ = new QLineEdit(this);
-	nameLayout->addWidget(name_);
-	layout->addLayout(nameLayout);
+	nameLayout_->addWidget(name_);
+
+	throbberLabel_ = new QLabel(this);
+	throbberLabel_->setMovie(new QMovie(":/icons/throbber.gif", QByteArray(), this));
+	throbberLabel_->movie()->start();
+	nameLayout_->addWidget(throbberLabel_);
+
+	layout->addLayout(nameLayout_);
 
 	layout->addWidget(new QLabel(tr("Groups:"), this));
 
@@ -68,7 +76,19 @@ void QtContactEditWidget::setName(const std::string& name) {
 }
 
 std::string QtContactEditWidget::getName() const {
-	return Q2PSTRING(name_->text());
+	std::string name;
+	QList<QRadioButton*> buttons = findChildren<QRadioButton*>();
+	foreach(const QRadioButton* button, buttons) {
+		if (button->isChecked()) {
+			if (button == nameRadioButton_) {
+				name = Q2PSTRING(name_->text());
+			} else {
+				name = Q2PSTRING(button->text());
+			}
+			break;
+		}
+	}
+	return name;
 }
 
 void QtContactEditWidget::setSelectedGroups(const std::vector<std::string>& groups) {
@@ -90,11 +110,42 @@ std::set<std::string> QtContactEditWidget::getSelectedGroups() const {
 	return groups;
 }
 
+void QtContactEditWidget::setNameSuggestions(const std::vector<std::string>& suggestions) {
+	throbberLabel_->movie()->stop();
+	throbberLabel_->hide();
+
+	foreach(const std::string& name, suggestions) {
+		suggestionsLayout_->insertWidget(nameLayout_->count() - 2, new QRadioButton(P2QSTRING(name), this));
+	}
+
+	nameRadioButton_ = new QRadioButton(tr("Name:"), this);
+	suggestionsLayout_->insertWidget(nameLayout_->count(), nameRadioButton_);
+
+	if (name_->text().isEmpty()) {
+		QRadioButton* suggestedRadioButton = dynamic_cast<QRadioButton*>(suggestionsLayout_->itemAt(0)->widget());
+		if (suggestedRadioButton) {
+			suggestedRadioButton->setChecked(true);
+		}
+	} else {
+		nameRadioButton_->setChecked(true);
+	}
+}
+
 void QtContactEditWidget::clear() {
 	name_->clear();
 	setSelectedGroups(std::vector<std::string>());
 	newGroup_->setChecked(false);
 	newGroupName_->clear();
+	throbberLabel_->movie()->start();
+	throbberLabel_->show();
+
+	// clear suggestions
+	while(suggestionsLayout_->count() != 0) {
+		QLayoutItem *layoutItem = suggestionsLayout_->takeAt(0);
+		delete layoutItem->widget();
+		delete layoutItem;
+	}
+	nameRadioButton_ = NULL;
 }
 
 }

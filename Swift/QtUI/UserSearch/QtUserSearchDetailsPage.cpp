@@ -8,6 +8,11 @@
 
 #include <QVBoxLayout>
 
+#include <boost/bind.hpp>
+
+#include <Swiften/Base/boost_bsignals.h>
+#include <Swiften/JID/JID.h>
+
 #include <Swift/QtUI/QtContactEditWidget.h>
 
 namespace Swift {
@@ -17,6 +22,18 @@ QtUserSearchDetailsPage::QtUserSearchDetailsPage(const std::set<std::string>& gr
 	layout->addWidget(new QLabel(tr("Please choose a name for the contact, and select the groups you want to add the contact to.")));
 	editWidget = new QtContactEditWidget(groups, this);
 	layout->addWidget(editWidget);
+}
+
+QtUserSearchDetailsPage::~QtUserSearchDetailsPage() {
+
+}
+
+void QtUserSearchDetailsPage::setJID(const JID& jid) {
+	contactJID = jid;
+}
+
+void QtUserSearchDetailsPage::setNameSuggestions(const std::vector<std::string>& nameSuggestions) {
+	editWidget->setNameSuggestions(nameSuggestions);
 }
 
 std::set<std::string> QtUserSearchDetailsPage::getSelectedGroups() {
@@ -30,6 +47,5 @@ std::string QtUserSearchDetailsPage::getName() {
 void QtUserSearchDetailsPage::clear() {
 	editWidget->clear();
 }
-
 
 }

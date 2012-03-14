@@ -11,6 +11,7 @@
 #include <Swift/Controllers/UIInterfaces/ContactEditWindow.h>
 #include <string>
 #include <Swiften/JID/JID.h>
+#include <Swiften/Elements/VCard.h>
 
 class QLabel;
 class QVBoxLayout;
@@ -23,7 +24,9 @@ namespace Swift {
 
 		public:
 			QtContactEditWindow();
+			virtual ~QtContactEditWindow();
 
+			virtual void setNameSuggestions(const std::vector<std::string>& nameSuggestions);
 			virtual void setContact(const JID& jid, const std::string& name, const std::vector<std::string>& groups, const std::set<std::string>& allGroups);
 
 			void setEnabled(bool);

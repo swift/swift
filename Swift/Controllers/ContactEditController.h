@@ -12,6 +12,7 @@
 
 #include <Swiften/JID/JID.h>
 #include <string>
+#include <Swiften/Elements/VCard.h>
 #include <Swift/Controllers/UIEvents/UIEvent.h>
 #include <Swiften/Roster/XMPPRosterItem.h>
 
@@ -20,13 +21,17 @@ namespace Swift {
 	class ContactEditWindowFactory;
 	class ContactEditWindow;
 	class RosterController;
+	class VCardManager;
 
 	class ContactEditController {
 		public:
-			ContactEditController(RosterController* rosterController, ContactEditWindowFactory* contactEditWindowFactory, UIEventStream* uiEventStream);
+			ContactEditController(RosterController* rosterController, VCardManager* vcardManager, ContactEditWindowFactory* contactEditWindowFactory, UIEventStream* uiEventStream);
 			~ContactEditController();
 
 			void setAvailable(bool b);
+
+		public:
+			static std::vector<std::string> nameSuggestionsFromVCard(VCard::ref vcard);
 
 		private:
 			void handleRemoveContactRequest();
@@ -34,12 +39,15 @@ namespace Swift {
 
 		private:
 			void handleUIEvent(UIEvent::ref event);
+			void handleVCardChanged(const JID& jid, VCard::ref vcard);
 
 		private:
 			boost::optional<XMPPRosterItem> currentContact;
 			RosterController* rosterController;
+			VCardManager* vcardManager;
 			ContactEditWindowFactory* contactEditWindowFactory;
 			UIEventStream* uiEventStream;
+			JID jid;
 			ContactEditWindow* contactEditWindow;
 	};
 }

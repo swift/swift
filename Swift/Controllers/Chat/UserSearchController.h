@@ -17,6 +17,7 @@
 #include <Swiften/Elements/DiscoInfo.h>
 #include <Swiften/Elements/DiscoItems.h>
 #include <Swiften/Elements/ErrorPayload.h>
+#include <Swiften/Elements/VCard.h>
 
 namespace Swift {
 	class UIEventStream;
@@ -26,6 +27,7 @@ namespace Swift {
 	class IQRouter;
 	class DiscoServiceWalker;
 	class RosterController;
+	class VCardManager;
 
 	class UserSearchResult {
 		public:
@@ -40,7 +42,7 @@ namespace Swift {
 	class UserSearchController {
 		public:
 			enum Type {AddContact, StartChat};
-			UserSearchController(Type type, const JID& jid, UIEventStream* uiEventStream, UserSearchWindowFactory* userSearchWindowFactory, IQRouter* iqRouter, RosterController* rosterController);
+			UserSearchController(Type type, const JID& jid, UIEventStream* uiEventStream, VCardManager* vcardManager, UserSearchWindowFactory* userSearchWindowFactory, IQRouter* iqRouter, RosterController* rosterController);
 			~UserSearchController();
 
 		private:
@@ -51,12 +53,16 @@ namespace Swift {
 			void handleFormResponse(boost::shared_ptr<SearchPayload> items, ErrorPayload::ref error);
 			void handleSearch(boost::shared_ptr<SearchPayload> fields, const JID& jid);
 			void handleSearchResponse(boost::shared_ptr<SearchPayload> results, ErrorPayload::ref error);
+			void handleNameSuggestionRequest(const JID& jid);
+			void handleVCardChanged(const JID& jid, VCard::ref vcard);
 			void endDiscoWalker();
 
 		private:
 			Type type_;
 			JID jid_;
+			JID suggestionsJID_;
 			UIEventStream* uiEventStream_;
+			VCardManager* vcardManager_;
 			UserSearchWindowFactory* factory_;
 			IQRouter* iqRouter_;
 			RosterController* rosterController_;

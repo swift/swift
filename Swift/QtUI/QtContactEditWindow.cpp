@@ -8,6 +8,8 @@
 
 #include <algorithm>
 
+#include <boost/bind.hpp>
+
 #include <QScrollArea>
 #include <QBoxLayout>
 #include <QLabel>
@@ -22,7 +24,7 @@
 namespace Swift {
 
 QtContactEditWindow::QtContactEditWindow() : contactEditWidget_(NULL) {
-	resize(300,300);
+	resize(400,300);
 	setWindowTitle(tr("Edit contact"));
 	setContentsMargins(0,0,0,0);
 
@@ -46,6 +48,15 @@ QtContactEditWindow::QtContactEditWindow() : contactEditWidget_(NULL) {
 	connect(okButton, SIGNAL(clicked()), this, SLOT(handleUpdateContact()));
 	buttonLayout->addStretch();
 	buttonLayout->addWidget(okButton);
+}
+
+QtContactEditWindow::~QtContactEditWindow() {
+}
+
+void QtContactEditWindow::setNameSuggestions(const std::vector<std::string>& nameSuggestions) {
+	if (contactEditWidget_) {
+		contactEditWidget_->setNameSuggestions(nameSuggestions);
+	}
 }
 
 void QtContactEditWindow::setContact(const JID& jid, const std::string& name, const std::vector<std::string>& groups, const std::set<std::string>& allGroups) {

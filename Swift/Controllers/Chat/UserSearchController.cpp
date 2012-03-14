@@ -13,6 +13,8 @@
 #include <Swiften/Disco/GetDiscoInfoRequest.h>
 #include <Swiften/Disco/GetDiscoItemsRequest.h>
 #include <Swiften/Disco/DiscoServiceWalker.h>
+#include <Swiften/VCards/VCardManager.h>
+#include <Swift/Controllers/ContactEditController.h>
 #include <Swift/Controllers/UIEvents/UIEventStream.h>
 #include <Swift/Controllers/UIEvents/RequestChatWithUserDialogUIEvent.h>
 #include <Swift/Controllers/UIEvents/RequestAddUserDialogUIEvent.h>
@@ -21,8 +23,9 @@
 #include <Swift/Controllers/Roster/RosterController.h>
 
 namespace Swift {
-UserSearchController::UserSearchController(Type type, const JID& jid, UIEventStream* uiEventStream, UserSearchWindowFactory* factory, IQRouter* iqRouter, RosterController* rosterController) : type_(type), jid_(jid), uiEventStream_(uiEventStream), factory_(factory), iqRouter_(iqRouter), rosterController_(rosterController) {
+UserSearchController::UserSearchController(Type type, const JID& jid, UIEventStream* uiEventStream, VCardManager* vcardManager, UserSearchWindowFactory* factory, IQRouter* iqRouter, RosterController* rosterController) : type_(type), jid_(jid), uiEventStream_(uiEventStream), vcardManager_(vcardManager), factory_(factory), iqRouter_(iqRouter), rosterController_(rosterController) {
 	uiEventStream_->onUIEvent.connect(boost::bind(&UserSearchController::handleUIEvent, this, _1));
+	vcardManager_->onVCardChanged.connect(boost::bind(&UserSearchController::handleVCardChanged, this, _1, _2));
 	window_ = NULL;
 	discoWalker_ = NULL;
 }
@@ -31,10 +34,12 @@ UserSearchController::~UserSearchController() {
 	endDiscoWalker();
 	delete discoWalker_;
 	if (window_) {
+		window_->onNameSuggestionRequested.disconnect(boost::bind(&UserSearchController::handleNameSuggestionRequest, this, _1));
 		window_->onFormRequested.disconnect(boost::bind(&UserSearchController::handleFormRequested, this, _1));
 		window_->onSearchRequested.disconnect(boost::bind(&UserSearchController::handleSearch, this, _1, _2));
 		delete window_;
 	}
+	vcardManager_->onVCardChanged.disconnect(boost::bind(&UserSearchController::handleVCardChanged, this, _1, _2));
 	uiEventStream_->onUIEvent.disconnect(boost::bind(&UserSearchController::handleUIEvent, this, _1));
 }
 
@@ -52,6 +57,7 @@ void UserSearchController::handleUIEvent(boost::shared_ptr<UIEvent> event) {
 	if (handle) {
 		if (!window_) {
 			window_ = factory_->createUserSearchWindow(type_ == AddContact ? UserSearchWindow::AddContact : UserSearchWindow::ChatToContact, uiEventStream_, rosterController_->getGroups());
+			window_->onNameSuggestionRequested.connect(boost::bind(&UserSearchController::handleNameSuggestionRequest, this, _1));
 			window_->onFormRequested.connect(boost::bind(&UserSearchController::handleFormRequested, this, _1));
 			window_->onSearchRequested.connect(boost::bind(&UserSearchController::handleSearch, this, _1, _2));
 			window_->setSelectedService(JID(jid_.getDomain()));
@@ -140,6 +146,21 @@ void UserSearchController::handleSearchResponse(boost::shared_ptr<SearchPayload>
 			results.push_back(result);
 		}
 		window_->setResults(results);
+	}
+}
+
+void UserSearchController::handleNameSuggestionRequest(const JID &jid) {
+	suggestionsJID_= jid;
+	VCard::ref vcard = vcardManager_->getVCardAndRequestWhenNeeded(jid);
+	if (vcard) {
+		handleVCardChanged(jid, vcard);
+	}
+}
+
+void UserSearchController::handleVCardChanged(const JID& jid, VCard::ref vcard) {
+	if (jid == suggestionsJID_) {
+		window_->setNameSuggestions(ContactEditController::nameSuggestionsFromVCard(vcard));
+		suggestionsJID_ = JID();
 	}
 }
 

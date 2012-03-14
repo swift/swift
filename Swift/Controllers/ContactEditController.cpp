@@ -6,6 +6,7 @@
 
 #include <Swift/Controllers/ContactEditController.h>
 
+#include <boost/algorithm/string.hpp>
 #include <boost/bind.hpp>
 #include <boost/smart_ptr/make_shared.hpp>
 
@@ -14,11 +15,12 @@
 #include <Swift/Controllers/UIEvents/RemoveRosterItemUIEvent.h>
 #include <Swift/Controllers/UIInterfaces/ContactEditWindowFactory.h>
 #include <Swift/Controllers/Roster/RosterController.h>
+#include <Swiften/VCards/VCardManager.h>
 
 
 namespace Swift {
 
-ContactEditController::ContactEditController(RosterController* rosterController, ContactEditWindowFactory* contactEditWindowFactory, UIEventStream* uiEventStream) : rosterController(rosterController), contactEditWindowFactory(contactEditWindowFactory), uiEventStream(uiEventStream), contactEditWindow(NULL) {
+ContactEditController::ContactEditController(RosterController* rosterController, VCardManager* vcardManager, ContactEditWindowFactory* contactEditWindowFactory, UIEventStream* uiEventStream) : rosterController(rosterController), vcardManager(vcardManager), contactEditWindowFactory(contactEditWindowFactory), uiEventStream(uiEventStream), contactEditWindow(NULL) {
 	uiEventStream->onUIEvent.connect(boost::bind(&ContactEditController::handleUIEvent, this, _1));
 }
 
@@ -44,14 +46,45 @@ void ContactEditController::handleUIEvent(UIEvent::ref event) {
 	}
 	currentContact = rosterController->getItem(editEvent->getJID());
 	assert(currentContact);
-	contactEditWindow->setContact(currentContact->getJID(), currentContact->getName(), currentContact->getGroups(), rosterController->getGroups());
+	jid = rosterController->getItem(editEvent->getJID())->getJID();
+	contactEditWindow->setContact(jid, currentContact->getName(), currentContact->getGroups(), rosterController->getGroups());
 	contactEditWindow->show();
+
+	if (vcardManager) {
+		VCard::ref vcard = vcardManager->getVCardAndRequestWhenNeeded(jid);
+		if (vcard) {
+			handleVCardChanged(jid, vcard);
+		}
+	}
+}
+
+void ContactEditController::handleVCardChanged(const JID &jid, VCard::ref vcard) {
+	if (jid == this->jid) {
+		contactEditWindow->setNameSuggestions(nameSuggestionsFromVCard(vcard));
+	}
 }
 
 void ContactEditController::setAvailable(bool b) {
 	if (contactEditWindow) {
 		contactEditWindow->setEnabled(b);
 	}
+}
+
+std::vector<std::string> ContactEditController::nameSuggestionsFromVCard(VCard::ref vcard) {
+	std::vector<std::string> suggestions;
+	if (!vcard->getNickname().empty()) {
+		suggestions.push_back(vcard->getNickname());
+	}
+	if (!vcard->getFullName().empty()) {
+		suggestions.push_back(vcard->getFullName());
+	}
+	if (!vcard->getGivenName().empty()) {
+		std::string suggestedName;
+		suggestedName = vcard->getGivenName();
+		boost::algorithm::trim(suggestedName);
+		suggestions.push_back(suggestedName);
+	}
+	return suggestions;
 }
 
 void ContactEditController::handleRemoveContactRequest() {
