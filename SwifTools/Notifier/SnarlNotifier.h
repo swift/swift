@@ -22,6 +22,10 @@ namespace Swift {
 			virtual void showMessage(Type type, const std::string& subject, const std::string& description, const boost::filesystem::path& picture, boost::function<void()> callback);
 			virtual bool isAvailable() const;
 		
+			virtual void purgeCallbacks() {
+				notifications.clear();
+			}
+
 		private:
 			void handleMessageReceived(MSG* message);
 

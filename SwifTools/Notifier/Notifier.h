@@ -36,6 +36,9 @@ namespace Swift {
 				return false;
 			}
 
+			/** Remove any pending callbacks. */
+			virtual void purgeCallbacks() = 0;
+
 		protected:
 			std::string typeToString(Type type);
 			static std::vector<Type> getAllTypes();

@@ -50,6 +50,10 @@ namespace Swift {
 				return notifier->isExternallyConfigured();
 			}
 
+			virtual void purgeCallbacks() {
+				notifier->purgeCallbacks();
+			}
+
 		private:
 			Notifier* notifier;
 			bool persistentEnabled;

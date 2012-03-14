@@ -47,4 +47,8 @@ void WindowsNotifier::handleMessageClicked() {
 	}
 }
 
+void WindowsNotifier::purgeCallbacks() {
+	lastCallback = boost::function<void()>();
+}
+
 }

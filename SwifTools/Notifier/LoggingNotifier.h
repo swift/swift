@@ -25,6 +25,8 @@ namespace Swift {
 					boost::function<void()> callback;
 			};
 
+			virtual void purgeCallbacks() {}
+
 			std::vector<Notification> notifications;
 	};
 }

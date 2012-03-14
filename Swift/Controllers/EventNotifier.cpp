@@ -27,6 +27,7 @@ EventNotifier::EventNotifier(EventController* eventController, Notifier* notifie
 }
 
 EventNotifier::~EventNotifier() {
+	notifier->purgeCallbacks();
 	eventController->onEventQueueEventAdded.disconnect(boost::bind(&EventNotifier::handleEventAdded, this, _1));
 }
 

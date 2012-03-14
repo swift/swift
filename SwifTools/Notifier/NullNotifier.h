@@ -13,5 +13,6 @@ namespace Swift {
 		public:
 			virtual void showMessage(Type, const std::string&, const std::string&, const boost::filesystem::path&, boost::function<void()>) {
 			}
+			virtual void purgeCallbacks() {
 	};
 }

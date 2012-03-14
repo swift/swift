@@ -23,7 +23,8 @@ namespace Swift {
 			~WindowsNotifier();
 
 			virtual void showMessage(Type type, const std::string& subject, const std::string& description, const boost::filesystem::path& picture, boost::function<void()> callback);
-		
+			virtual void purgeCallbacks();
+
 		private slots:
 			void handleMessageClicked();
 
