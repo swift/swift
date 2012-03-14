@@ -15,7 +15,9 @@ namespace Swift {
 			FreeDesktopNotifier(const std::string& name);
 
 			virtual void showMessage(Type type, const std::string& subject, const std::string& description, const boost::filesystem::path& picture, boost::function<void()> callback);
-		
+			virtual void purgeCallbacks() {
+#warning FIXME implement.
+			};
 		private:
 			std::string applicationName;
 			QtCachedImageScaler imageScaler;
