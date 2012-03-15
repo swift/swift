@@ -60,10 +60,7 @@ GrowlNotifier::GrowlNotifier(const std::string& name) {
 
 GrowlNotifier::~GrowlNotifier() {
 	[GrowlApplicationBridge setGrowlDelegate: nil];
-	foreach (Context* context, p->pendingNotifications) {
-		delete context;
-	}
-	p->pendingNotifications.clear();
+	clearPendingNotifications();
 }
 
 void GrowlNotifier::showMessage(Type type, const std::string& subject, const std::string& description, const boost::filesystem::path& picturePath, boost::function<void()> callback) {
@@ -104,6 +101,17 @@ void GrowlNotifier::handleNotificationTimedOut(void* rawData) {
 
 bool GrowlNotifier::isExternallyConfigured() const {
 	return ![GrowlApplicationBridge isMistEnabled];
+}
+
+void GrowlNotifier::purgeCallbacks() {
+	clearPendingNotifications();
+}
+
+void GrowlNotifier::clearPendingNotifications() {
+	foreach (Context* context, p->pendingNotifications) {
+		delete context;
+	}
+	p->pendingNotifications.clear();
 }
 
 }

@@ -29,9 +29,11 @@ namespace Swift {
 			void handleNotificationClicked(void* data);
 			void handleNotificationTimedOut(void* data);
 		
-			virtual void purgeCallbacks() {
-#warning FIXME: Implement
-			}
+			virtual void purgeCallbacks();
+
+		private:
+			void clearPendingNotifications();
+		
 		private:
 			class Private;
 			boost::shared_ptr<Private> p;
