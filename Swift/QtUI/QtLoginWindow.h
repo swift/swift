@@ -43,7 +43,7 @@ namespace Swift {
 			virtual void loggedOut();
 			virtual void setShowNotificationToggle(bool);
 			virtual void setMessage(const std::string& message);
-			virtual void addAvailableAccount(const std::string& defaultJID, const std::string& defaultPassword, const std::string& defaultCertificate);
+			virtual void addAvailableAccount(const std::string& defaultJID, const std::string& defaultPassword, const std::string& defaultCertificate, const ClientOptions& options);
 			virtual void removeAvailableAccount(const std::string& jid);
 			virtual void setLoginAutomatically(bool loginAutomatically);
 			virtual void setIsLoggingIn(bool loggingIn);
@@ -71,6 +71,7 @@ namespace Swift {
 			void resizeEvent(QResizeEvent* event);
 			void moveEvent(QMoveEvent* event);
 			void handleSettingChanged(const std::string& settingPath);
+			void handleOpenConnectionOptions();
 
 		protected:
 			bool eventFilter(QObject *obj, QEvent *event);
@@ -81,6 +82,7 @@ namespace Swift {
 			QStringList usernames_;
 			QStringList passwords_;
 			QStringList certificateFiles_;
+			std::vector<ClientOptions> options_;
 			QComboBox* username_;
 			QLineEdit* password_;
 			QPushButton* loginButton_;
@@ -102,5 +104,6 @@ namespace Swift {
 			QAction* xmlConsoleAction_;
 			QAction* fileTransferOverviewAction_;
 			TimerFactory* timerFactory_;
+			ClientOptions currentOptions_;
 	};
 }

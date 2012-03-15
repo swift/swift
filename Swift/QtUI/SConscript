@@ -116,6 +116,7 @@ sources = [
     "QtLineEdit.cpp",
     "QtJoinMUCWindow.cpp",
     "QtInviteToChatWindow.cpp",
+    "QtConnectionSettingsWindow.cpp",
     "Roster/RosterModel.cpp",
     "Roster/QtTreeWidget.cpp",
 #    "Roster/QtTreeWidgetItem.cpp",
@@ -205,6 +206,7 @@ myenv.Uic4("QtBookmarkDetailWindow.ui")
 myenv.Uic4("QtAffiliationEditor.ui")
 myenv.Uic4("QtJoinMUCWindow.ui")
 myenv.Uic4("QtHistoryWindow.ui")
+myenv.Uic4("QtConnectionSettings.ui")
 myenv.Qrc("DefaultTheme.qrc")
 myenv.Qrc("Swift.qrc")
 

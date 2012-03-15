@@ -40,6 +40,7 @@
 #include <QtSwiftUtil.h>
 #include <QtMainWindow.h>
 #include <QtUtilities.h>
+#include <QtConnectionSettingsWindow.h>
 
 #ifdef HAVE_SCHANNEL
 #include "CAPICertificateSelector.h"
@@ -136,6 +137,13 @@ QtLoginWindow::QtLoginWindow(UIEventStream* uiEventStream, SettingsProvider* set
 	loginButton_->setAutoDefault(true);
 	loginButton_->setDefault(true);
 	layout->addWidget(loginButton_);
+
+	QLabel* connectionOptionsLabel = new QLabel(this);
+	connectionOptionsLabel->setText("<a href=\"#\"><font size='-1'>Connection Options</font></a>");
+	connectionOptionsLabel->setTextFormat(Qt::RichText);
+	connectionOptionsLabel->setAlignment(Qt::AlignRight|Qt::AlignVCenter);
+	layout->addWidget(connectionOptionsLabel);
+	connect(connectionOptionsLabel, SIGNAL(linkActivated(const QString&)), SLOT(handleOpenConnectionOptions()));
 
 	message_ = new QLabel(this);
 	message_->setTextFormat(Qt::RichText);
@@ -296,7 +304,7 @@ void QtLoginWindow::removeAvailableAccount(const std::string& jid) {
 	}
 }
 
-void QtLoginWindow::addAvailableAccount(const std::string& defaultJID, const std::string& defaultPassword, const std::string& defaultCertificate) {
+void QtLoginWindow::addAvailableAccount(const std::string& defaultJID, const std::string& defaultPassword, const std::string& defaultCertificate, const ClientOptions& options) {
 	QString username = P2QSTRING(defaultJID);
 	int index = -1;
 	for (int i = 0; i < usernames_.count(); i++) {
@@ -308,11 +316,13 @@ void QtLoginWindow::addAvailableAccount(const std::string& defaultJID, const std
 		usernames_.append(username);
 		passwords_.append(P2QSTRING(defaultPassword));
 		certificateFiles_.append(P2QSTRING(defaultCertificate));
+		options_.push_back(options);
 		username_->addItem(username);
 	} else {
 		usernames_[index] = username;
 		passwords_[index] = P2QSTRING(defaultPassword);
 		certificateFiles_[index] = P2QSTRING(defaultCertificate);
+		options_[index] = options;
 	}
 }
 
@@ -323,6 +333,7 @@ void QtLoginWindow::handleUsernameTextChanged() {
 			certificateFile_ = certificateFiles_[i];
 			password_->setText(passwords_[i]);
 			remember_->setChecked(password_->text() != "");
+			currentOptions_ = options_[i];
 		}
 	}
 	if (!certificateFile_.isEmpty()) {
@@ -376,7 +387,7 @@ void QtLoginWindow::loginClicked() {
 		certificate = boost::make_shared<PKCS12Certificate>(certificateString, createSafeByteArray(Q2PSTRING(password_->text())));
 #endif
 
-		onLoginRequest(Q2PSTRING(username_->currentText()), Q2PSTRING(password_->text()), certificateString, certificate, remember_->isChecked(), loginAutomatically_->isChecked());
+		onLoginRequest(Q2PSTRING(username_->currentText()), Q2PSTRING(password_->text()), certificateString, certificate, currentOptions_, remember_->isChecked(), loginAutomatically_->isChecked());
 		if (settings_->getSetting(SettingConstants::FORGET_PASSWORDS)) { /* Mustn't remember logins */
 			username_->clearEditText();
 			password_->setText("");
@@ -525,6 +536,13 @@ bool QtLoginWindow::askUserToTrustCertificatePermanently(const std::string& mess
 		// FIXME: This isn't very nice, because the dialog disappears every time. We actually need a real
 		// dialog with a custom button.
 		QtMainWindow::openCertificateDialog(certificates, &dialog);
+	}
+}
+
+void QtLoginWindow::handleOpenConnectionOptions() {
+	QtConnectionSettingsWindow connectionSettings(currentOptions_);
+	if (connectionSettings.exec() == QDialog::Accepted) {
+		currentOptions_ = connectionSettings.getOptions();
 	}
 }
 

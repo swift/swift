@@ -12,6 +12,7 @@
 #include <string>
 #include <Swiften/TLS/Certificate.h>
 #include <Swiften/TLS/CertificateWithKey.h>
+#include <Swiften/Client/ClientOptions.h>
 
 namespace Swift {
 	class MainWindow;
@@ -24,10 +25,10 @@ namespace Swift {
 			virtual void setShowNotificationToggle(bool) = 0;
 			virtual void setMessage(const std::string&) = 0;
 			virtual void setIsLoggingIn(bool loggingIn) = 0;
-			virtual void addAvailableAccount(const std::string& defaultJID, const std::string& defaultPassword, const std::string& defaultCertificate) = 0;
+			virtual void addAvailableAccount(const std::string& defaultJID, const std::string& defaultPassword, const std::string& defaultCertificate, const ClientOptions& options) = 0;
 			virtual void removeAvailableAccount(const std::string& jid) = 0;
 			/** The certificate is what is used for login, the certificatePath is used for remembering paths to populate the loginwindow with*/
-			boost::signal<void (const std::string&, const std::string&, const std::string& /*CertificatePath*/, CertificateWithKey::ref /* clientCertificate */, bool /* remember password*/, bool /* login automatically */)> onLoginRequest;
+			boost::signal<void (const std::string&, const std::string&, const std::string& /*CertificatePath*/, CertificateWithKey::ref /* clientCertificate */, const ClientOptions& /*options*/, bool /* remember password*/, bool /* login automatically */)> onLoginRequest;
 			virtual void setLoginAutomatically(bool loginAutomatically) = 0;
 			virtual void quit() = 0;
 			/** Blocking request whether a cert should be permanently trusted.*/

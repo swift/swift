@@ -15,6 +15,8 @@
 
 #include <Swiften/Base/format.h>
 #include <Swiften/Base/Algorithm.h>
+#include <Swiften/Base/String.h>
+#include <Swiften/StringCodecs/Base64.h>
 #include <Swift/Controllers/Intl.h>
 #include <Swift/Controllers/UIInterfaces/UIFactory.h>
 #include "Swiften/Network/TimerFactory.h"
@@ -145,6 +147,7 @@ MainController::MainController(
 	bool loginAutomatically = settings_->getSetting(SettingConstants::LOGIN_AUTOMATICALLY);
 	std::string cachedPassword;
 	std::string cachedCertificate;
+	ClientOptions cachedOptions;
 	bool eagle = settings_->getSetting(SettingConstants::FORGET_PASSWORDS);
 	if (!eagle) {
 		foreach (std::string profile, settings->getAvailableProfiles()) {
@@ -152,10 +155,12 @@ MainController::MainController(
 			std::string password = profileSettings.getStringSetting("pass");
 			std::string certificate = profileSettings.getStringSetting("certificate");
 			std::string jid = profileSettings.getStringSetting("jid");
-			loginWindow_->addAvailableAccount(jid, password, certificate);
+			ClientOptions clientOptions = parseClientOptions(profileSettings.getStringSetting("options"));
+			loginWindow_->addAvailableAccount(jid, password, certificate, clientOptions);
 			if (jid == selectedLoginJID) {
 				cachedPassword = password;
 				cachedCertificate = certificate;
+				cachedOptions = clientOptions;
 			}
 		}
 		loginWindow_->selectUser(selectedLoginJID);
@@ -163,7 +168,7 @@ MainController::MainController(
 	}
 
 
-	loginWindow_->onLoginRequest.connect(boost::bind(&MainController::handleLoginRequest, this, _1, _2, _3, _4, _5, _6));
+	loginWindow_->onLoginRequest.connect(boost::bind(&MainController::handleLoginRequest, this, _1, _2, _3, _4, _5, _6, _7));
 	loginWindow_->onPurgeSavedLoginRequest.connect(boost::bind(&MainController::handlePurgeSavedLoginRequest, this, _1));
 	loginWindow_->onCancelLoginRequest.connect(boost::bind(&MainController::handleCancelLoginRequest, this));
 	loginWindow_->onQuitRequest.connect(boost::bind(&MainController::handleQuitRequest, this));
@@ -180,7 +185,7 @@ MainController::MainController(
 	if (loginAutomatically) {
 		profileSettings_ = new ProfileSettingsProvider(selectedLoginJID, settings_);
 		/* FIXME: deal with autologin with a cert*/
-		handleLoginRequest(selectedLoginJID, cachedPassword, cachedCertificate, CertificateWithKey::ref(), true, true);
+		handleLoginRequest(selectedLoginJID, cachedPassword, cachedCertificate, CertificateWithKey::ref(), cachedOptions, true, true);
 	} else {
 		profileSettings_ = NULL;
 	}
@@ -445,7 +450,7 @@ void MainController::handleShowCertificateRequest() {
 	rosterController_->getWindow()->openCertificateDialog(chain);
 }
 
-void MainController::handleLoginRequest(const std::string &username, const std::string &password, const std::string& certificatePath, CertificateWithKey::ref certificate, bool remember, bool loginAutomatically) {
+void MainController::handleLoginRequest(const std::string &username, const std::string &password, const std::string& certificatePath, CertificateWithKey::ref certificate, const ClientOptions& options, bool remember, bool loginAutomatically) {
 	jid_ = JID(username);
 	if (!jid_.isValid() || jid_.getNode().empty()) {
 		loginWindow_->setMessage(QT_TRANSLATE_NOOP("", "User address invalid. User address should be of the form 'alice@wonderland.lit'"));
@@ -458,13 +463,15 @@ void MainController::handleLoginRequest(const std::string &username, const std::
 			profileSettings_->storeString("jid", username);
 			profileSettings_->storeString("certificate", certificatePath);
 			profileSettings_->storeString("pass", (remember || loginAutomatically) ? password : "");
+			profileSettings_->storeString("options", serializeClientOptions(options));
 			settings_->storeSetting(SettingConstants::LAST_LOGIN_JID, username);
 			settings_->storeSetting(SettingConstants::LOGIN_AUTOMATICALLY, loginAutomatically);
-			loginWindow_->addAvailableAccount(profileSettings_->getStringSetting("jid"), profileSettings_->getStringSetting("pass"), profileSettings_->getStringSetting("certificate"));
+			loginWindow_->addAvailableAccount(profileSettings_->getStringSetting("jid"), profileSettings_->getStringSetting("pass"), profileSettings_->getStringSetting("certificate"), options);
 		}
 
 		password_ = password;
 		certificate_ = certificate;
+		clientOptions_ = options;
 		performLoginFromCachedCredentials();
 	}
 }
@@ -524,7 +531,7 @@ void MainController::performLoginFromCachedCredentials() {
 	if (rosterController_) {
 		rosterController_->getWindow()->setConnecting();
 	}
-	ClientOptions clientOptions;
+	ClientOptions clientOptions = clientOptions_;
 	bool eagle = settings_->getSetting(SettingConstants::FORGET_PASSWORDS);
 	clientOptions.forgetPassword = eagle;
 	clientOptions.useTLS = eagle ? ClientOptions::RequireTLS : ClientOptions::UseTLSWhenAvailable;
@@ -729,6 +736,90 @@ void MainController::handleQuitRequest() {
 		resetClient();
 		loginWindow_->quit();
 	}
+}
+
+#define SERIALIZE_BOOL(option) result += options.option ? "1" : "0"; result += ",";
+#define SERIALIZE_INT(option) result += boost::lexical_cast<std::string>(options.option); result += ",";
+#define SERIALIZE_STRING(option) result += Base64::encode(createByteArray(options.option)); result += ",";
+#define SERIALIZE_SAFE_STRING(option) result += safeByteArrayToString(Base64::encode(options.option)); result += ",";
+#define SERIALIZE_URL(option) SERIALIZE_STRING(option.getScheme()) SERIALIZE_STRING(option.getHost()) SERIALIZE_INT(option.getPort()) SERIALIZE_STRING(option.getPath())
+
+std::string MainController::serializeClientOptions(const ClientOptions& options) {
+	std::string result;
+	SERIALIZE_BOOL(useStreamCompression);
+	switch (options.useTLS) {
+		case ClientOptions::NeverUseTLS: result += "1";break;
+		case ClientOptions::UseTLSWhenAvailable: result += "2";break;
+		case ClientOptions::RequireTLS: result += "3";break;
+	}
+	result += ",";
+	SERIALIZE_BOOL(allowPLAINWithoutTLS);
+	SERIALIZE_BOOL(useStreamResumption);
+	SERIALIZE_BOOL(useAcks);
+	SERIALIZE_STRING(manualHostname);
+	SERIALIZE_INT(manualPort);
+	switch (options.proxyType) {
+		case ClientOptions::NoProxy: result += "1";break;
+		case ClientOptions::SystemConfiguredProxy: result += "2";break;
+		case ClientOptions::SOCKS5Proxy: result += "3";break;
+		case ClientOptions::HTTPConnectProxy: result += "4";break;
+	}
+	result += ",";
+	SERIALIZE_STRING(manualProxyHostname);
+	SERIALIZE_INT(manualProxyPort);
+	SERIALIZE_URL(boshURL);
+	SERIALIZE_URL(boshHTTPConnectProxyURL);
+	SERIALIZE_SAFE_STRING(boshHTTPConnectProxyAuthID);
+	SERIALIZE_SAFE_STRING(boshHTTPConnectProxyAuthPassword);
+	return result;
+}
+
+#define CHECK_PARSE_LENGTH if (i >= segments.size()) {return result;} 
+#define PARSE_INT_RAW CHECK_PARSE_LENGTH intVal = 0; try {intVal = boost::lexical_cast<int>(segments[i]);} catch(const boost::bad_lexical_cast&) {};i++;
+#define PARSE_STRING_RAW CHECK_PARSE_LENGTH stringVal = byteArrayToString(Base64::decode(segments[i]));i++;
+
+#define PARSE_BOOL(option) PARSE_INT_RAW; result.option = (intVal == 1);
+#define PARSE_INT(option) PARSE_INT_RAW; result.option = intVal;
+#define PARSE_STRING(option) PARSE_STRING_RAW; result.option = stringVal;
+#define PARSE_SAFE_STRING(option) PARSE_STRING_RAW; result.option = SafeString(createSafeByteArray(stringVal));
+#define PARSE_URL(option) {PARSE_STRING_RAW; std::string scheme = stringVal; PARSE_STRING_RAW; std::string host = stringVal; PARSE_INT_RAW; int port = intVal; PARSE_STRING_RAW; std::string path = stringVal; result.option = !scheme.empty() && !host.empty() ? URL(scheme, host, port, path) : URL();}
+
+
+ClientOptions MainController::parseClientOptions(const std::string& optionString) {
+	ClientOptions result;
+	size_t i = 0;
+	int intVal = 0;
+	std::string stringVal;
+	std::vector<std::string> segments = String::split(optionString, ',');
+
+	PARSE_BOOL(useStreamCompression);
+	PARSE_INT_RAW;
+	switch (intVal) {
+		case 1: result.useTLS = ClientOptions::NeverUseTLS;break;
+		case 2: result.useTLS = ClientOptions::UseTLSWhenAvailable;break;
+		case 3: result.useTLS = ClientOptions::RequireTLS;break;
+		default:;
+	}
+	PARSE_BOOL(allowPLAINWithoutTLS);
+	PARSE_BOOL(useStreamResumption);
+	PARSE_BOOL(useAcks);
+	PARSE_STRING(manualHostname);
+	PARSE_INT(manualPort);
+	PARSE_INT_RAW;
+	switch (intVal) {
+		case 1: result.proxyType = ClientOptions::NoProxy;break;
+		case 2: result.proxyType = ClientOptions::SystemConfiguredProxy;break;
+		case 3: result.proxyType = ClientOptions::SOCKS5Proxy;break;
+		case 4: result.proxyType = ClientOptions::HTTPConnectProxy;break;
+	}
+	PARSE_STRING(manualProxyHostname);
+	PARSE_INT(manualProxyPort);
+	PARSE_URL(boshURL);
+	PARSE_URL(boshHTTPConnectProxyURL);
+	PARSE_SAFE_STRING(boshHTTPConnectProxyAuthID);
+	PARSE_SAFE_STRING(boshHTTPConnectProxyAuthPassword);
+
+	return result;
 }
 
 }
