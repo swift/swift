@@ -22,13 +22,13 @@ SafeByteArray StreamFeaturesSerializer::serialize(boost::shared_ptr<Element> ele
 
 	XMLElement streamFeaturesElement("stream:features");
 	if (streamFeatures->hasStartTLS()) {
-		streamFeaturesElement.addNode(boost::shared_ptr<XMLElement>(new XMLElement("starttls", "urn:ietf:params:xml:ns:xmpp-tls")));
+		streamFeaturesElement.addNode(boost::make_shared<XMLElement>("starttls", "urn:ietf:params:xml:ns:xmpp-tls"));
 	}
 	if (!streamFeatures->getCompressionMethods().empty()) {
 		boost::shared_ptr<XMLElement> compressionElement(new XMLElement("compression", "http://jabber.org/features/compress"));
 		foreach(const std::string& method, streamFeatures->getCompressionMethods()) {
 			boost::shared_ptr<XMLElement> methodElement(new XMLElement("method"));
-			methodElement->addNode(boost::shared_ptr<XMLTextNode>(new XMLTextNode(method)));
+			methodElement->addNode(boost::make_shared<XMLTextNode>(method));
 			compressionElement->addNode(methodElement);
 		}
 		streamFeaturesElement.addNode(compressionElement);
@@ -37,19 +37,19 @@ SafeByteArray StreamFeaturesSerializer::serialize(boost::shared_ptr<Element> ele
 		boost::shared_ptr<XMLElement> mechanismsElement(new XMLElement("mechanisms", "urn:ietf:params:xml:ns:xmpp-sasl"));
 		foreach(const std::string& mechanism, streamFeatures->getAuthenticationMechanisms()) {
 			boost::shared_ptr<XMLElement> mechanismElement(new XMLElement("mechanism"));
-			mechanismElement->addNode(boost::shared_ptr<XMLTextNode>(new XMLTextNode(mechanism)));
+			mechanismElement->addNode(boost::make_shared<XMLTextNode>(mechanism));
 			mechanismsElement->addNode(mechanismElement);
 		}
 		streamFeaturesElement.addNode(mechanismsElement);
 	}
 	if (streamFeatures->hasResourceBind()) {
-		streamFeaturesElement.addNode(boost::shared_ptr<XMLElement>(new XMLElement("bind", "urn:ietf:params:xml:ns:xmpp-bind")));
+		streamFeaturesElement.addNode(boost::make_shared<XMLElement>("bind", "urn:ietf:params:xml:ns:xmpp-bind"));
 	}
 	if (streamFeatures->hasSession()) {
-		streamFeaturesElement.addNode(boost::shared_ptr<XMLElement>(new XMLElement("session", "urn:ietf:params:xml:ns:xmpp-session")));
+		streamFeaturesElement.addNode(boost::make_shared<XMLElement>("session", "urn:ietf:params:xml:ns:xmpp-session"));
 	}
 	if (streamFeatures->hasStreamManagement()) {
-		streamFeaturesElement.addNode(boost::shared_ptr<XMLElement>(new XMLElement("sm", "urn:xmpp:sm:2")));
+		streamFeaturesElement.addNode(boost::make_shared<XMLElement>("sm", "urn:xmpp:sm:2"));
 	}
 	if (streamFeatures->hasRosterVersioning()) {
 		streamFeaturesElement.addNode(boost::make_shared<XMLElement>("ver", "urn:xmpp:features:rosterver"));

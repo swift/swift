@@ -7,6 +7,7 @@
 #include <Swiften/Serializer/PayloadSerializers/FormSerializer.h>
 
 #include <boost/shared_ptr.hpp>
+#include <boost/smart_ptr/make_shared.hpp>
 #include <iostream>
 #include <string>
 
@@ -81,11 +82,11 @@ boost::shared_ptr<XMLElement> FormSerializer::fieldToXML(boost::shared_ptr<FormF
 		fieldElement->setAttribute("label", field->getLabel());
 	}
 	if (field->getRequired()) {
-		fieldElement->addNode(boost::shared_ptr<XMLElement>(new XMLElement("required")));
+		fieldElement->addNode(boost::make_shared<XMLElement>("required"));
 	}
 	if (!field->getDescription().empty()) {
 		boost::shared_ptr<XMLElement> descriptionElement(new XMLElement("desc"));
-		descriptionElement->addNode(boost::shared_ptr<XMLTextNode>(new XMLTextNode(field->getDescription())));
+		descriptionElement->addNode(boost::make_shared<XMLTextNode>(field->getDescription()));
 		fieldElement->addNode(descriptionElement);
 	}
 
@@ -174,7 +175,7 @@ void FormSerializer::multiLineify(const std::string& text, const std::string& el
 	std::vector<std::string> lines = String::split(unRdText, '\n');
 	foreach (std::string line, lines) {
 		boost::shared_ptr<XMLElement> lineElement(new XMLElement(elementName));
-		lineElement->addNode(boost::shared_ptr<XMLTextNode>(new XMLTextNode(line)));
+		lineElement->addNode(boost::make_shared<XMLTextNode>(line));
 		element->addNode(lineElement);
 	}
 }

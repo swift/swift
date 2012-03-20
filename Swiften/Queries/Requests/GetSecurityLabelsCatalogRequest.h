@@ -6,6 +6,8 @@
 
 #pragma once
 
+#include <boost/smart_ptr/make_shared.hpp>
+
 #include <Swiften/Queries/GenericRequest.h>
 #include <Swiften/Elements/SecurityLabelsCatalog.h>
 
@@ -24,7 +26,7 @@ namespace Swift {
 					const JID& recipient, 
 					IQRouter* router) :
 						GenericRequest<SecurityLabelsCatalog>(
-							IQ::Get, JID(), boost::shared_ptr<SecurityLabelsCatalog>(new SecurityLabelsCatalog(recipient)), router) {
+							IQ::Get, JID(), boost::make_shared<SecurityLabelsCatalog>(recipient), router) {
 			}
 	};
 }

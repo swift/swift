@@ -7,6 +7,7 @@
 #include <Swiften/Serializer/PayloadSerializers/NicknameSerializer.h>
 
 #include <boost/shared_ptr.hpp>
+#include <boost/smart_ptr/make_shared.hpp>
 
 #include <Swiften/Serializer/XML/XMLElement.h>
 #include <Swiften/Serializer/XML/XMLTextNode.h>
@@ -18,7 +19,7 @@ NicknameSerializer::NicknameSerializer() : GenericPayloadSerializer<Nickname>() 
 
 std::string NicknameSerializer::serializePayload(boost::shared_ptr<Nickname> nick)  const {
 	XMLElement nickElement("nick", "http://jabber.org/protocol/nick");
-	nickElement.addNode(boost::shared_ptr<XMLTextNode>(new XMLTextNode(nick->getNickname())));
+	nickElement.addNode(boost::make_shared<XMLTextNode>(nick->getNickname()));
 	return nickElement.serialize();
 }
 

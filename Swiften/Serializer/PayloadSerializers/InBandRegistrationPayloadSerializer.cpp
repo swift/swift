@@ -7,6 +7,7 @@
 #include <Swiften/Serializer/PayloadSerializers/InBandRegistrationPayloadSerializer.h>
 
 #include <boost/shared_ptr.hpp>
+#include <boost/smart_ptr/make_shared.hpp>
 
 #include <Swiften/Base/foreach.h>
 #include <Swiften/Serializer/XML/XMLElement.h>
@@ -103,7 +104,7 @@ std::string InBandRegistrationPayloadSerializer::serializePayload(boost::shared_
 	}
 
 	if (Form::ref form = registration->getForm()) {
-		registerElement.addNode(boost::shared_ptr<XMLRawTextNode>(new XMLRawTextNode(FormSerializer().serialize(form))));
+		registerElement.addNode(boost::make_shared<XMLRawTextNode>(FormSerializer().serialize(form)));
 	}
 
 	return registerElement.serialize();

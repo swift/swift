@@ -7,6 +7,7 @@
 #include "MUCBookmarkManager.h"
 
 #include <boost/bind.hpp>
+#include <boost/smart_ptr/make_shared.hpp>
 #include <iostream>
 
 #include <Swiften/Base/foreach.h>
@@ -98,7 +99,7 @@ void MUCBookmarkManager::removeBookmark(const MUCBookmark& bookmark) {
 
 void MUCBookmarkManager::flush() {
 	if (!storage) {
-		storage = boost::shared_ptr<Storage>(new Storage());
+		storage = boost::make_shared<Storage>();
 	}
 	// Update the storage element
 	storage->clearRooms();

@@ -57,7 +57,7 @@ public:
 		timerFactory = new DummyTimerFactory();
 		connection = boost::make_shared<MockeryConnection>(failingPorts, true, eventLoop);
 		//connection->onDataSent.connect(boost::bind(&SOCKS5BytestreamServerSessionTest::handleDataWritten, this, _1));
-		//stream1 = boost::shared_ptr<ByteArrayReadBytestream>(new ByteArrayReadBytestream(createByteArray("abcdefg")));
+		//stream1 = boost::make_shared<ByteArrayReadBytestream>(createByteArray("abcdefg")));
 //		connection->onDataRead.connect(boost::bind(&SOCKS5BytestreamClientSessionTest::handleDataRead, this, _1));
 	}
 

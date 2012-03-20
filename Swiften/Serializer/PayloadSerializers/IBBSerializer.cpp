@@ -7,6 +7,7 @@
 #include <Swiften/Serializer/PayloadSerializers/IBBSerializer.h>
 
 #include <boost/shared_ptr.hpp>
+#include <boost/smart_ptr/make_shared.hpp>
 #include <boost/lexical_cast.hpp>
 
 #include <Swiften/Base/foreach.h>
@@ -27,7 +28,7 @@ std::string IBBSerializer::serializePayload(boost::shared_ptr<IBB> ibb) const {
 			if (ibb->getSequenceNumber() >= 0) {
 				ibbElement.setAttribute("seq", boost::lexical_cast<std::string>(ibb->getSequenceNumber()));
 			}
-			ibbElement.addNode(boost::shared_ptr<XMLTextNode>(new XMLTextNode(Base64::encode(ibb->getData()))));
+			ibbElement.addNode(boost::make_shared<XMLTextNode>(Base64::encode(ibb->getData())));
 			return ibbElement.serialize();
 		}
 		case IBB::Open: {

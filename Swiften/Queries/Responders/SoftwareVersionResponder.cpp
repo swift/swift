@@ -4,6 +4,8 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
+#include <boost/smart_ptr/make_shared.hpp>
+
 #include <Swiften/Queries/Responders/SoftwareVersionResponder.h>
 #include <Swiften/Queries/IQRouter.h>
 
@@ -19,7 +21,7 @@ void SoftwareVersionResponder::setVersion(const std::string& client, const std::
 }
 
 bool SoftwareVersionResponder::handleGetRequest(const JID& from, const JID&, const std::string& id, boost::shared_ptr<SoftwareVersion>) {
-	sendResponse(from, id, boost::shared_ptr<SoftwareVersion>(new SoftwareVersion(client, version, os)));
+	sendResponse(from, id, boost::make_shared<SoftwareVersion>(client, version, os));
 	return true;
 }
 

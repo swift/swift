@@ -193,7 +193,7 @@ class StanzaParserTest : public CppUnit::TestFixture {
 			public:
 				MyStanzaParser(PayloadParserFactoryCollection* collection) : StanzaParser(collection)
 				{
-					stanza_ = boost::shared_ptr<MyStanza>(new MyStanza());
+					stanza_ = boost::make_shared<MyStanza>();
 				}
 			
 				virtual boost::shared_ptr<Element> getElement() const {

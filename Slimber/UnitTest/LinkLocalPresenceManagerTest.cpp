@@ -42,7 +42,7 @@ class LinkLocalPresenceManagerTest : public CppUnit::TestFixture {
 	public:
 		void setUp() {
 			eventLoop = new DummyEventLoop();
-			querier = boost::shared_ptr<FakeDNSSDQuerier>(new FakeDNSSDQuerier("wonderland.lit", eventLoop));
+			querier = boost::make_shared<FakeDNSSDQuerier>("wonderland.lit", eventLoop);
 			browser = new LinkLocalServiceBrowser(querier);
 			browser->start();
 		}

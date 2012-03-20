@@ -163,7 +163,7 @@ void BOSHSessionStream::handleElementReceived(boost::shared_ptr<Element> element
 
 void BOSHSessionStream::handleXMPPError() {
 	available = false;
-	onClosed(boost::shared_ptr<Error>(new Error(Error::ParseError)));
+	onClosed(boost::make_shared<Error>(Error::ParseError));
 }
 
 void BOSHSessionStream::handlePoolSessionStarted() {

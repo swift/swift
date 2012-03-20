@@ -7,6 +7,8 @@
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/extensions/TestFactoryRegistry.h>
 
+#include <boost/smart_ptr/make_shared.hpp>
+
 #include <Swiften/Serializer/XML/XMLElement.h>
 #include <Swiften/Serializer/XML/XMLTextNode.h>
 
@@ -28,10 +30,10 @@ class XMLElementTest : public CppUnit::TestFixture
 			XMLElement testling("foo", "http://example.com");
 			testling.setAttribute("myatt", "myval");
 			boost::shared_ptr<XMLElement> barElement(new XMLElement("bar"));
-			barElement->addNode(boost::shared_ptr<XMLTextNode>(new XMLTextNode("Blo")));
+			barElement->addNode(boost::make_shared<XMLTextNode>("Blo"));
 			testling.addNode(barElement);
 			boost::shared_ptr<XMLElement> bazElement(new XMLElement("baz"));
-			bazElement->addNode(boost::shared_ptr<XMLTextNode>(new XMLTextNode("Bli&</stream>")));
+			bazElement->addNode(boost::make_shared<XMLTextNode>("Bli&</stream>"));
 			testling.addNode(bazElement);
 
 			std::string result = testling.serialize();

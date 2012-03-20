@@ -66,7 +66,7 @@ class ClientSessionTest : public CppUnit::TestFixture {
 
 	public:
 		void setUp() {
-			server = boost::shared_ptr<MockSessionStream>(new MockSessionStream());
+			server = boost::make_shared<MockSessionStream>();
 			sessionFinishedReceived = false;
 			needCredentials = false;
 			blindCertificateTrustChecker = new BlindCertificateTrustChecker();
@@ -420,11 +420,11 @@ class ClientSessionTest : public CppUnit::TestFixture {
 				}
 
 				void breakConnection() {
-					onClosed(boost::shared_ptr<SessionStream::Error>(new SessionStream::Error(SessionStream::Error::ConnectionReadError)));
+					onClosed(boost::make_shared<SessionStream::Error>(SessionStream::Error::ConnectionReadError));
 				}
 
 				void breakTLS() {
-					onClosed(boost::shared_ptr<SessionStream::Error>(new SessionStream::Error(SessionStream::Error::TLSError)));
+					onClosed(boost::make_shared<SessionStream::Error>(SessionStream::Error::TLSError));
 				}
 
 
@@ -445,11 +445,11 @@ class ClientSessionTest : public CppUnit::TestFixture {
 				}
 
 				void sendTLSProceed() {
-					onElementReceived(boost::shared_ptr<TLSProceed>(new TLSProceed()));
+					onElementReceived(boost::make_shared<TLSProceed>());
 				}
 
 				void sendTLSFailure() {
-					onElementReceived(boost::shared_ptr<StartTLSFailure>(new StartTLSFailure()));
+					onElementReceived(boost::make_shared<StartTLSFailure>());
 				}
 
 				void sendStreamFeaturesWithMultipleAuthentication() {
@@ -484,19 +484,19 @@ class ClientSessionTest : public CppUnit::TestFixture {
 				}
 
 				void sendAuthSuccess() {
-					onElementReceived(boost::shared_ptr<AuthSuccess>(new AuthSuccess()));
+					onElementReceived(boost::make_shared<AuthSuccess>());
 				}
 
 				void sendAuthFailure() {
-					onElementReceived(boost::shared_ptr<AuthFailure>(new AuthFailure()));
+					onElementReceived(boost::make_shared<AuthFailure>());
 				}
 
 				void sendStreamManagementEnabled() {
-					onElementReceived(boost::shared_ptr<StreamManagementEnabled>(new StreamManagementEnabled()));
+					onElementReceived(boost::make_shared<StreamManagementEnabled>());
 				}
 
 				void sendStreamManagementFailed() {
-					onElementReceived(boost::shared_ptr<StreamManagementFailed>(new StreamManagementFailed()));
+					onElementReceived(boost::make_shared<StreamManagementFailed>());
 				}
 
 				void sendBindResult() {
@@ -755,7 +755,7 @@ CPPUNIT_TEST_SUITE_REGISTRATION(ClientSessionTest);
 			processEvents();
 
 			getMockServer()->expectMessage();
-			session->sendElement(boost::shared_ptr<Message>(new Message()));
+			session->sendElement(boost::make_shared<Message>()));
 		}
 
 		void testSendElement() {

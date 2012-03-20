@@ -7,6 +7,7 @@
 #include <Swiften/Serializer/PayloadSerializers/PrivateStorageSerializer.h>
 
 #include <boost/shared_ptr.hpp>
+#include <boost/smart_ptr/make_shared.hpp>
 
 #include <Swiften/Base/foreach.h>
 #include <Swiften/Serializer/XML/XMLElement.h>
@@ -25,7 +26,7 @@ std::string PrivateStorageSerializer::serializePayload(boost::shared_ptr<Private
 	if (payload) {
 		PayloadSerializer* serializer = serializers->getPayloadSerializer(payload);
 		if (serializer) {
-			storageElement.addNode(boost::shared_ptr<XMLRawTextNode>(new XMLRawTextNode(serializer->serialize(payload))));
+			storageElement.addNode(boost::make_shared<XMLRawTextNode>(serializer->serialize(payload)));
 		}
 	}
 	return storageElement.serialize();

@@ -37,7 +37,7 @@ class IBBSendSessionTest : public CppUnit::TestFixture {
 		void setUp() {
 			stanzaChannel = new DummyStanzaChannel();
 			iqRouter = new IQRouter(stanzaChannel);
-			bytestream = boost::shared_ptr<ByteArrayReadBytestream>(new ByteArrayReadBytestream(createByteArray("abcdefg")));
+			bytestream = boost::make_shared<ByteArrayReadBytestream>(createByteArray("abcdefg"));
 			finished = false;
 		}
 

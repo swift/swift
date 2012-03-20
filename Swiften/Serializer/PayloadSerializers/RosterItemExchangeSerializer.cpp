@@ -7,6 +7,7 @@
 #include <Swiften/Serializer/PayloadSerializers/RosterItemExchangeSerializer.h>
 
 #include <boost/shared_ptr.hpp>
+#include <boost/smart_ptr/make_shared.hpp>
 
 #include <Swiften/Base/foreach.h>
 #include <Swiften/Serializer/XML/XMLTextNode.h>
@@ -33,7 +34,7 @@ std::string RosterItemExchangeSerializer::serializePayload(boost::shared_ptr<Ros
 
 		foreach(const std::string& group, item.getGroups()) {
 			boost::shared_ptr<XMLElement> groupElement(new XMLElement("group"));
-			groupElement->addNode(boost::shared_ptr<XMLTextNode>(new XMLTextNode(group)));
+			groupElement->addNode(boost::make_shared<XMLTextNode>(group));
 			itemElement->addNode(groupElement);
 		}
 

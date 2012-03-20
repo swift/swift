@@ -6,6 +6,7 @@
 
 #include "Slimber/FileVCardCollection.h"
 
+#include <boost/smart_ptr/make_shared.hpp>
 #include <boost/filesystem/fstream.hpp>
 
 #include <Swiften/Base/ByteArray.h>
@@ -30,7 +31,7 @@ boost::shared_ptr<VCard> FileVCardCollection::getOwnVCard() const {
 		return boost::dynamic_pointer_cast<VCard>(parser.getPayload());
 	}
 	else {
-		return boost::shared_ptr<VCard>(new VCard());
+		return boost::make_shared<VCard>();
 	}
 }
 

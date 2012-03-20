@@ -7,6 +7,7 @@
 #include <Swiften/Serializer/PayloadSerializers/CommandSerializer.h>
 
 #include <boost/shared_ptr.hpp>
+#include <boost/smart_ptr/make_shared.hpp>
 
 #include <Swiften/Base/foreach.h>
 #include <Swiften/Serializer/XML/XMLElement.h>
@@ -54,7 +55,7 @@ std::string CommandSerializer::serializePayload(boost::shared_ptr<Command> comma
 			actions += "<" + actionToString(action) + "/>";
 		}
 		actions += "</actions>";
-		commandElement.addNode(boost::shared_ptr<XMLRawTextNode>(new XMLRawTextNode(actions)));
+		commandElement.addNode(boost::make_shared<XMLRawTextNode>(actions));
 	}
 
 	foreach (Command::Note note, command->getNotes()) {
@@ -68,13 +69,13 @@ std::string CommandSerializer::serializePayload(boost::shared_ptr<Command> comma
 		if (!type.empty()) {
 			noteElement->setAttribute("type", type);
 		}
-		noteElement->addNode(boost::shared_ptr<XMLTextNode>(new XMLTextNode(note.note)));
+		noteElement->addNode(boost::make_shared<XMLTextNode>(note.note));
 		commandElement.addNode(noteElement);
 	}
 
 	Form::ref form = command->getForm();
 	if (form) {
-		commandElement.addNode(boost::shared_ptr<XMLRawTextNode>(new XMLRawTextNode(FormSerializer().serialize(form))));
+		commandElement.addNode(boost::make_shared<XMLRawTextNode>(FormSerializer().serialize(form)));
 	}
 	return commandElement.serialize();
 }

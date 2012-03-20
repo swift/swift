@@ -8,6 +8,7 @@
 
 #include <Swiften/Base/boost_bsignals.h>
 #include <boost/shared_ptr.hpp>
+#include <boost/smart_ptr/make_shared.hpp>
 
 #include <Swiften/Queries/Request.h>
 #include <Swiften/Elements/PrivateStorage.h>
@@ -24,7 +25,7 @@ namespace Swift {
 			}
 
 		private:
-			GetPrivateStorageRequest(IQRouter* router) : Request(IQ::Get, JID(), boost::shared_ptr<PrivateStorage>(new PrivateStorage(boost::shared_ptr<Payload>(new PAYLOAD_TYPE()))), router) {
+			GetPrivateStorageRequest(IQRouter* router) : Request(IQ::Get, JID(), boost::make_shared<PrivateStorage>(boost::shared_ptr<Payload>(new PAYLOAD_TYPE())), router) {
 			}
 
 			virtual void handleResponse(boost::shared_ptr<Payload> payload, ErrorPayload::ref error) {

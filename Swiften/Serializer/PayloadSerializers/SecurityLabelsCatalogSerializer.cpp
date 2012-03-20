@@ -4,6 +4,8 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
+#include <boost/smart_ptr/make_shared.hpp>
+
 #include <Swiften/Serializer/PayloadSerializers/SecurityLabelsCatalogSerializer.h>
 #include <Swiften/Base/foreach.h>
 #include <Swiften/Serializer/XML/XMLElement.h>
@@ -34,7 +36,7 @@ std::string SecurityLabelsCatalogSerializer::serializePayload(boost::shared_ptr<
 		}
 		if (item.getLabel()) {
 			std::string serializedLabel = SecurityLabelSerializer().serialize(item.getLabel());
-			itemElement->addNode(boost::shared_ptr<XMLRawTextNode>(new XMLRawTextNode(serializedLabel)));
+			itemElement->addNode(boost::make_shared<XMLRawTextNode>(serializedLabel));
 		}
 		element.addNode(itemElement);
 	}

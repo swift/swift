@@ -158,7 +158,7 @@ class VCardUpdateAvatarManagerTest : public CppUnit::TestFixture {
 		boost::shared_ptr<Presence> createPresenceWithPhotoHash(const JID& jid, const std::string& hash) {
 			boost::shared_ptr<Presence> presence(new Presence());
 			presence->setFrom(jid);
-			presence->addPayload(boost::shared_ptr<VCardUpdate>(new VCardUpdate(hash)));
+			presence->addPayload(boost::make_shared<VCardUpdate>(hash));
 			return presence;
 		}
 

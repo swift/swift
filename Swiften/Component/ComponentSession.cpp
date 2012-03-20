@@ -7,6 +7,7 @@
 #include <Swiften/Component/ComponentSession.h>
 
 #include <boost/bind.hpp>
+#include <boost/smart_ptr/make_shared.hpp>
 
 #include <Swiften/Elements/ProtocolHeader.h>
 #include <Swiften/Elements/ComponentHandshake.h>
@@ -101,7 +102,7 @@ void ComponentSession::finish() {
 }
 
 void ComponentSession::finishSession(Error::Type error) {
-	finishSession(boost::shared_ptr<Swift::ComponentSession::Error>(new Swift::ComponentSession::Error(error)));
+	finishSession(boost::make_shared<Swift::ComponentSession::Error>(error));
 }
 
 void ComponentSession::finishSession(boost::shared_ptr<Swift::Error> finishError) {

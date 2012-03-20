@@ -4,6 +4,8 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
+#include <boost/smart_ptr/make_shared.hpp>
+
 #include <Swiften/Disco/JIDDiscoInfoResponder.h>
 #include <Swiften/Queries/IQRouter.h>
 #include <Swiften/Elements/DiscoInfo.h>
@@ -33,12 +35,12 @@ bool JIDDiscoInfoResponder::handleGetRequest(const JID& from, const JID& to, con
 	JIDDiscoInfoMap::const_iterator i = info.find(to);
 	if (i != info.end()) {
 		if (discoInfo->getNode().empty()) {
-			sendResponse(from, to, id, boost::shared_ptr<DiscoInfo>(new DiscoInfo(i->second.discoInfo)));
+			sendResponse(from, to, id, boost::make_shared<DiscoInfo>(i->second.discoInfo));
 		}
 		else {
 			std::map<std::string,DiscoInfo>::const_iterator j = i->second.nodeDiscoInfo.find(discoInfo->getNode());
 			if (j != i->second.nodeDiscoInfo.end()) {
-				sendResponse(from, to, id, boost::shared_ptr<DiscoInfo>(new DiscoInfo(j->second)));
+				sendResponse(from, to, id, boost::make_shared<DiscoInfo>(j->second));
 			}
 			else {
 				sendError(from, to, id, ErrorPayload::ItemNotFound, ErrorPayload::Cancel);

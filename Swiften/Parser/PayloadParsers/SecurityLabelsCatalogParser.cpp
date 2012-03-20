@@ -4,6 +4,8 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
+#include <boost/smart_ptr/make_shared.hpp>
+
 #include <Swiften/Parser/PayloadParsers/SecurityLabelsCatalogParser.h>
 #include <Swiften/Parser/PayloadParsers/SecurityLabelParserFactory.h>
 #include <Swiften/Parser/PayloadParsers/SecurityLabelParser.h>
@@ -26,7 +28,7 @@ void SecurityLabelsCatalogParser::handleStartElement(const std::string& element,
 		getPayloadInternal()->setDescription(attributes.getAttribute("desc"));
 	}
 	else if (level_ == ItemLevel && element == "item" && ns == "urn:xmpp:sec-label:catalog:2") {
-		currentItem_ = boost::shared_ptr<SecurityLabelsCatalog::Item>(new SecurityLabelsCatalog::Item());
+		currentItem_ = boost::make_shared<SecurityLabelsCatalog::Item>();
 		currentItem_->setSelector(attributes.getAttribute("selector"));
 		currentItem_->setIsDefault(attributes.getBoolAttribute("default", false));
 	}

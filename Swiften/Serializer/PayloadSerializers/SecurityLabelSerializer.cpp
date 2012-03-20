@@ -4,6 +4,8 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
+#include <boost/smart_ptr/make_shared.hpp>
+
 #include <Swiften/Serializer/PayloadSerializers/SecurityLabelSerializer.h>
 #include <Swiften/Base/foreach.h>
 #include <Swiften/Serializer/XML/XMLRawTextNode.h>
@@ -25,17 +27,17 @@ std::string SecurityLabelSerializer::serializePayload(boost::shared_ptr<Security
 		if (!label->getBackgroundColor().empty()) {
 			displayMarking->setAttribute("bgcolor", label->getBackgroundColor());
 		}
-		displayMarking->addNode(boost::shared_ptr<XMLTextNode>(new XMLTextNode(label->getDisplayMarking())));
+		displayMarking->addNode(boost::make_shared<XMLTextNode>(label->getDisplayMarking()));
 		element.addNode(displayMarking);
 	}
 
 	boost::shared_ptr<XMLElement> labelElement(new XMLElement("label"));
-	labelElement->addNode(boost::shared_ptr<XMLRawTextNode>(new XMLRawTextNode(label->getLabel())));
+	labelElement->addNode(boost::make_shared<XMLRawTextNode>(label->getLabel()));
 	element.addNode(labelElement);
 	
 	foreach(const std::string& equivalentLabel, label->getEquivalentLabels()) {
 		boost::shared_ptr<XMLElement> equivalentLabelElement(new XMLElement("equivalentlabel"));
-		equivalentLabelElement->addNode(boost::shared_ptr<XMLRawTextNode>(new XMLRawTextNode(equivalentLabel)));
+		equivalentLabelElement->addNode(boost::make_shared<XMLRawTextNode>(equivalentLabel));
 		element.addNode(equivalentLabelElement);
 	}
 	return element.serialize();

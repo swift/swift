@@ -83,7 +83,7 @@ class XMPPLayerTest : public CppUnit::TestFixture {
 		}
 
 		void testWriteElement() {
-			testling_->writeElement(boost::shared_ptr<Presence>(new Presence()));
+			testling_->writeElement(boost::make_shared<Presence>());
 
 			CPPUNIT_ASSERT_EQUAL(std::string("<presence/>"), lowLayer_->writtenData);
 		}

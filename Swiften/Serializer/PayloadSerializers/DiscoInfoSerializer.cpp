@@ -7,6 +7,7 @@
 #include <Swiften/Serializer/PayloadSerializers/DiscoInfoSerializer.h>
 
 #include <boost/shared_ptr.hpp>
+#include <boost/smart_ptr/make_shared.hpp>
 
 #include <Swiften/Base/foreach.h>
 #include <Swiften/Serializer/XML/XMLElement.h>
@@ -39,7 +40,7 @@ std::string DiscoInfoSerializer::serializePayload(boost::shared_ptr<DiscoInfo> d
 		queryElement.addNode(featureElement);
 	}
 	foreach(const Form::ref extension, discoInfo->getExtensions()) {
-		queryElement.addNode(boost::shared_ptr<XMLRawTextNode>(new XMLRawTextNode(FormSerializer().serialize(extension))));
+		queryElement.addNode(boost::make_shared<XMLRawTextNode>(FormSerializer().serialize(extension)));
 	}
 	return queryElement.serialize();
 }

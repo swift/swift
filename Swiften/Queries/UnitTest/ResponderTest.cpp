@@ -7,6 +7,7 @@
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/extensions/TestFactoryRegistry.h>
 #include <boost/shared_ptr.hpp>
+#include <boost/smart_ptr/make_shared.hpp>
 #include <boost/bind.hpp>
 
 #include <Swiften/Queries/Responder.h>
@@ -32,7 +33,7 @@ class ResponderTest : public CppUnit::TestFixture {
 		void setUp() {
 			channel_ = new DummyIQChannel();
 			router_ = new IQRouter(channel_);
-			payload_ = boost::shared_ptr<SoftwareVersion>(new SoftwareVersion("foo"));
+			payload_ = boost::make_shared<SoftwareVersion>("foo");
 		}
 
 		void tearDown() {
@@ -108,7 +109,7 @@ class ResponderTest : public CppUnit::TestFixture {
 		void testHandleIQ_NoPayload() {
 			MyResponder testling(router_);
 
-			CPPUNIT_ASSERT(!dynamic_cast<IQHandler*>(&testling)->handleIQ(boost::shared_ptr<IQ>(new IQ(IQ::Get))));
+			CPPUNIT_ASSERT(!dynamic_cast<IQHandler*>(&testling)->handleIQ(boost::make_shared<IQ>(IQ::Get)));
 
 			CPPUNIT_ASSERT_EQUAL(0, static_cast<int>(testling.getPayloads_.size()));
 			CPPUNIT_ASSERT_EQUAL(0, static_cast<int>(testling.setPayloads_.size()));

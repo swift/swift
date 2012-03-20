@@ -6,17 +6,19 @@
 
 #include "Swift/Controllers/StatusTracker.h"
 
+#include <boost/smart_ptr/make_shared.hpp>
+
 namespace Swift {
 
 StatusTracker::StatusTracker() {
 	isAutoAway_ = false;
-	queuedPresence_ = boost::shared_ptr<Presence>(new Presence());
+	queuedPresence_ = boost::make_shared<Presence>();
 }
 
 boost::shared_ptr<Presence> StatusTracker::getNextPresence() {
 	boost::shared_ptr<Presence> presence;
 	if (isAutoAway_) {
-		presence = boost::shared_ptr<Presence>(new Presence());
+		presence = boost::make_shared<Presence>();
 		presence->setShow(StatusShow::Away);
 		presence->setStatus(queuedPresence_->getStatus());
 	} else {
@@ -29,7 +31,7 @@ void StatusTracker::setRequestedPresence(boost::shared_ptr<Presence> presence) {
 	isAutoAway_ = false;
 	queuedPresence_ = presence;
 //	if (presence->getType() == Presence::Unavailable) {
-//		queuedPresence_ = boost::shared_ptr<Presence>(new Presence());
+//		queuedPresence_ = boost::make_shared<Presence>();
 //	}
 }
 

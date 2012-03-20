@@ -7,6 +7,7 @@
 #include <Swiften/Session/BasicSessionStream.h>
 
 #include <boost/bind.hpp>
+#include <boost/smart_ptr/make_shared.hpp>
 
 #include <Swiften/StreamStack/XMPPLayer.h>
 #include <Swiften/StreamStack/StreamStack.h>
@@ -110,7 +111,7 @@ void BasicSessionStream::addTLSEncryption() {
 	assert(available);
 	tlsLayer = new TLSLayer(tlsContextFactory);
 	if (hasTLSCertificate() && !tlsLayer->setClientCertificate(getTLSCertificate())) {
-		onClosed(boost::shared_ptr<Error>(new Error(Error::InvalidTLSCertificateError)));
+		onClosed(boost::make_shared<Error>(Error::InvalidTLSCertificateError));
 	}
 	else {
 		streamStack->addLayer(tlsLayer);
@@ -172,7 +173,7 @@ void BasicSessionStream::handleElementReceived(boost::shared_ptr<Element> elemen
 
 void BasicSessionStream::handleXMPPError() {
 	available = false;
-	onClosed(boost::shared_ptr<Error>(new Error(Error::ParseError)));
+	onClosed(boost::make_shared<Error>(Error::ParseError));
 }
 
 void BasicSessionStream::handleTLSConnected() {
@@ -181,16 +182,16 @@ void BasicSessionStream::handleTLSConnected() {
 
 void BasicSessionStream::handleTLSError() {
 	available = false;
-	onClosed(boost::shared_ptr<Error>(new Error(Error::TLSError)));
+	onClosed(boost::make_shared<Error>(Error::TLSError));
 }
 
 void BasicSessionStream::handleConnectionFinished(const boost::optional<Connection::Error>& error) {
 	available = false;
 	if (error == Connection::ReadError) {
-		onClosed(boost::shared_ptr<Error>(new Error(Error::ConnectionReadError)));
+		onClosed(boost::make_shared<Error>(Error::ConnectionReadError));
 	}
 	else if (error) {
-		onClosed(boost::shared_ptr<Error>(new Error(Error::ConnectionWriteError)));
+		onClosed(boost::make_shared<Error>(Error::ConnectionWriteError));
 	}
 	else {
 		onClosed(boost::shared_ptr<Error>());

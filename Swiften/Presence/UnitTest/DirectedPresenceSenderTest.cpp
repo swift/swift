@@ -28,9 +28,9 @@ class DirectedPresenceSenderTest : public CppUnit::TestFixture {
 	public:
 		void setUp() {
 			channel = new DummyStanzaChannel();
-			testPresence = boost::shared_ptr<Presence>(new Presence());
+			testPresence = boost::make_shared<Presence>();
 			testPresence->setStatus("Foo");
-			secondTestPresence = boost::shared_ptr<Presence>(new Presence());
+			secondTestPresence = boost::make_shared<Presence>();
 			secondTestPresence->setStatus("Bar");
 			stanzaChannelPresenceSender = new StanzaChannelPresenceSender(channel);
 		}

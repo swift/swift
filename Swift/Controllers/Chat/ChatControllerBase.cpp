@@ -11,6 +11,7 @@
 
 #include <boost/bind.hpp>
 #include <boost/shared_ptr.hpp>
+#include <boost/smart_ptr/make_shared.hpp>
 #include <boost/date_time/posix_time/posix_time.hpp>
 #include <boost/algorithm/string.hpp>
 
@@ -120,7 +121,7 @@ void ChatControllerBase::handleSendMessageRequest(const std::string &body, bool 
 	preSendMessageRequest(message);
 	if (useDelayForLatency_) {
 		boost::posix_time::ptime now = boost::posix_time::microsec_clock::universal_time();
-		message->addPayload(boost::shared_ptr<Delay>(new Delay(now, selfJID_)));
+		message->addPayload(boost::make_shared<Delay>(now, selfJID_));
 	}
 	if (isCorrectionMessage) {
 		message->addPayload(boost::shared_ptr<Replace> (new Replace(lastSentMessageStanzaID_)));

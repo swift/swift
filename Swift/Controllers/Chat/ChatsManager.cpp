@@ -8,6 +8,7 @@
 
 #include <boost/bind.hpp>
 #include <boost/algorithm/string.hpp>
+#include <boost/smart_ptr/make_shared.hpp>
 
 #include <Swiften/Base/foreach.h>
 #include <Swift/Controllers/Chat/ChatController.h>
@@ -89,7 +90,7 @@ ChatsManager::ChatsManager(
 	nickResolver_ = nickResolver;
 	presenceOracle_ = presenceOracle;
 	avatarManager_ = NULL;
-	serverDiscoInfo_ = boost::shared_ptr<DiscoInfo>(new DiscoInfo());
+	serverDiscoInfo_ = boost::make_shared<DiscoInfo>();
 	presenceSender_ = presenceSender;
 	uiEventStream_ = uiEventStream;
 	mucBookmarkManager_ = NULL;

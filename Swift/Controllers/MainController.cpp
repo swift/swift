@@ -381,7 +381,7 @@ void MainController::sendPresence(boost::shared_ptr<Presence> presence) {
 
 	// Add information and send
 	if (!vCardPhotoHash_.empty()) {
-		presence->updatePayload(boost::shared_ptr<VCardUpdate>(new VCardUpdate(vCardPhotoHash_)));
+		presence->updatePayload(boost::make_shared<VCardUpdate>(vCardPhotoHash_));
 	}
 	client_->getPresenceSender()->sendPresence(presence);
 	if (presence->getType() == Presence::Unavailable) {
@@ -582,7 +582,7 @@ void MainController::handleDisconnected(const boost::optional<ClientError>& erro
 				} else {
 					message = str(format(QT_TRANSLATE_NOOP("", "Disconnected from %1%: %2%.")) % jid_.getDomain() % message);
 				}
-				lastDisconnectError_ = boost::shared_ptr<ErrorEvent>(new ErrorEvent(JID(jid_.getDomain()), message));
+				lastDisconnectError_ = boost::make_shared<ErrorEvent>(JID(jid_.getDomain()), message);
 				eventController_->handleIncomingEvent(lastDisconnectError_);
 			}
 		}
@@ -675,7 +675,7 @@ void MainController::handleNotificationClicked(const JID& jid) {
 	assert(chatsManager_);
 	if (clientInitialized_) {
 		if (client_->getMUCRegistry()->isMUC(jid)) {
-			uiEventStream_->send(boost::shared_ptr<JoinMUCUIEvent>(new JoinMUCUIEvent(jid)));
+			uiEventStream_->send(boost::make_shared<JoinMUCUIEvent>(jid));
 		}
 		else {
 			uiEventStream_->send(boost::shared_ptr<UIEvent>(new RequestChatUIEvent(jid)));

@@ -6,6 +6,8 @@
 
 #include <Swiften/Serializer/PayloadSerializers/MUCOwnerPayloadSerializer.h>
 
+#include <boost/smart_ptr/make_shared.hpp>
+
 #include <Swiften/Serializer/PayloadSerializerCollection.h>
 #include <Swiften/Serializer/XML/XMLElement.h>
 #include <Swiften/Serializer/XML/XMLRawTextNode.h>
@@ -21,7 +23,7 @@ std::string MUCOwnerPayloadSerializer::serializePayload(boost::shared_ptr<MUCOwn
 	if (payload) {
 		PayloadSerializer* serializer = serializers->getPayloadSerializer(payload);
 		if (serializer) {
-			mucElement.addNode(boost::shared_ptr<XMLRawTextNode>(new XMLRawTextNode(serializer->serialize(payload))));
+			mucElement.addNode(boost::make_shared<XMLRawTextNode>(serializer->serialize(payload)));
 		}
 	}
 	return mucElement.serialize();

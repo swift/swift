@@ -7,6 +7,7 @@
 #include "Swift/Controllers/Chat/ChatController.h"
 
 #include <boost/bind.hpp>
+#include <boost/smart_ptr/make_shared.hpp>
 #include <stdio.h>
 
 #include <Swift/Controllers/Intl.h>
@@ -321,7 +322,7 @@ void ChatController::handlePresenceChange(boost::shared_ptr<Presence> newPresenc
 		return;
 	}
 	if (!newPresence) {
-		newPresence = boost::shared_ptr<Presence>(new Presence());
+		newPresence = boost::make_shared<Presence>();
 		newPresence->setType(Presence::Unavailable);
 	}
 	lastShownStatus_ = newPresence->getShow();

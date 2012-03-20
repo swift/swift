@@ -7,6 +7,7 @@
 #include <Swiften/Serializer/PayloadSerializers/VCardUpdateSerializer.h>
 
 #include <boost/shared_ptr.hpp>
+#include <boost/smart_ptr/make_shared.hpp>
 
 #include <Swiften/Serializer/XML/XMLElement.h>
 #include <Swiften/Serializer/XML/XMLTextNode.h>
@@ -19,7 +20,7 @@ VCardUpdateSerializer::VCardUpdateSerializer() : GenericPayloadSerializer<VCardU
 std::string VCardUpdateSerializer::serializePayload(boost::shared_ptr<VCardUpdate> vcardUpdate)	const {
 	XMLElement updateElement("x", "vcard-temp:x:update");
 	boost::shared_ptr<XMLElement> photoElement(new XMLElement("photo"));
-	photoElement->addNode(boost::shared_ptr<XMLTextNode>(new XMLTextNode(vcardUpdate->getPhotoHash())));
+	photoElement->addNode(boost::make_shared<XMLTextNode>(vcardUpdate->getPhotoHash()));
 	updateElement.addNode(photoElement);
 	return updateElement.serialize();
 }

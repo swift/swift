@@ -130,7 +130,7 @@ class RequestTest : public CppUnit::TestFixture {
 			testling.send();
 
 			boost::shared_ptr<IQ> error = createError(JID("foo@bar.com/baz"),"test-id");
-			boost::shared_ptr<Payload> errorPayload = boost::shared_ptr<ErrorPayload>(new ErrorPayload(ErrorPayload::InternalServerError));
+			boost::shared_ptr<Payload> errorPayload = boost::make_shared<ErrorPayload>(ErrorPayload::InternalServerError);
 			error->addPayload(errorPayload);
 			channel_->onIQReceived(error);
 

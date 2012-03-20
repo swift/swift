@@ -8,6 +8,7 @@
 
 #include <boost/bind.hpp>
 #include <boost/shared_ptr.hpp>
+#include <boost/smart_ptr/make_shared.hpp>
 
 #include <Swiften/Base/foreach.h>
 #include <Swiften/Disco/GetDiscoInfoRequest.h>
@@ -104,7 +105,7 @@ void UserSearchController::handleDiscoServiceFound(const JID& jid, boost::shared
 	if (/*isUserDirectory && */supports55) { //FIXME: once M-Link correctly advertises directoryness.
 		/* Abort further searches.*/
 		endDiscoWalker();
-		boost::shared_ptr<GenericRequest<SearchPayload> > searchRequest(new GenericRequest<SearchPayload>(IQ::Get, jid, boost::shared_ptr<SearchPayload>(new SearchPayload()), iqRouter_));
+		boost::shared_ptr<GenericRequest<SearchPayload> > searchRequest(new GenericRequest<SearchPayload>(IQ::Get, jid, boost::make_shared<SearchPayload>(), iqRouter_));
 		searchRequest->onResponse.connect(boost::bind(&UserSearchController::handleFormResponse, this, _1, _2));
 		searchRequest->send();
 	}

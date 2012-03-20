@@ -7,6 +7,7 @@
 #include <Swiften/Serializer/PayloadSerializers/SearchPayloadSerializer.h>
 
 #include <boost/shared_ptr.hpp>
+#include <boost/smart_ptr/make_shared.hpp>
 
 #include <Swiften/Base/foreach.h>
 #include <Swiften/Serializer/XML/XMLElement.h>
@@ -53,7 +54,7 @@ std::string SearchPayloadSerializer::serializePayload(boost::shared_ptr<SearchPa
 	}
 
 	if (Form::ref form = searchPayload->getForm()) {
-		searchElement.addNode(boost::shared_ptr<XMLRawTextNode>(new XMLRawTextNode(FormSerializer().serialize(form))));
+		searchElement.addNode(boost::make_shared<XMLRawTextNode>(FormSerializer().serialize(form)));
 	}
 
 	return searchElement.serialize();

@@ -6,6 +6,8 @@
 
 #pragma once
 
+#include <boost/smart_ptr/make_shared.hpp>
+
 #include <Swiften/Queries/GenericRequest.h>
 #include <Swiften/Elements/DiscoItems.h>
 
@@ -24,11 +26,11 @@ namespace Swift {
 
 		private:
 			GetDiscoItemsRequest(const JID& jid, IQRouter* router) :
-					GenericRequest<DiscoItems>(IQ::Get, jid, boost::shared_ptr<DiscoItems>(new DiscoItems()), router) {
+					GenericRequest<DiscoItems>(IQ::Get, jid, boost::make_shared<DiscoItems>(), router) {
 			}
 
 			GetDiscoItemsRequest(const JID& jid, const std::string& node, IQRouter* router) :
-				GenericRequest<DiscoItems>(IQ::Get, jid, boost::shared_ptr<DiscoItems>(new DiscoItems()), router) {
+				GenericRequest<DiscoItems>(IQ::Get, jid, boost::make_shared<DiscoItems>(), router) {
 				getPayloadGeneric()->setNode(node);
 			}
 	};

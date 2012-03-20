@@ -26,6 +26,6 @@ int main(int argc, char *argv[])
 		for (int i = 0; i < 100; i++) {
 			viewer->addEvent(boost::dynamic_pointer_cast<Swift::StanzaEvent>(event1), false);
 		}
-		viewer->addEvent(boost::dynamic_pointer_cast<Swift::StanzaEvent>(boost::shared_ptr<Swift::ErrorEvent>(new Swift::ErrorEvent(Swift::JID("me@example.com"), "Something bad did happen to you."))), true);
+		viewer->addEvent(boost::dynamic_pointer_cast<Swift::StanzaEvent>(boost::make_shared<Swift::ErrorEvent>(Swift::JID("me@example.com"), "Something bad did happen to you.")), true);
 		return app.exec();
 }

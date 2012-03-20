@@ -7,6 +7,7 @@
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/extensions/TestFactoryRegistry.h>
 #include <boost/bind.hpp>
+#include <boost/smart_ptr/make_shared.hpp>
 #include <map>
 
 #include <Swiften/LinkLocal/LinkLocalServiceBrowser.h>
@@ -42,7 +43,7 @@ class LinkLocalServiceBrowserTest : public CppUnit::TestFixture {
 	public:
 		void setUp() {
 			eventLoop = new DummyEventLoop();
-			querier = boost::shared_ptr<FakeDNSSDQuerier>(new FakeDNSSDQuerier("wonderland.lit", eventLoop));
+			querier = boost::make_shared<FakeDNSSDQuerier>("wonderland.lit", eventLoop);
 			aliceServiceID = new DNSSDServiceID("alice", "wonderland.lit");
 			aliceServiceInfo = new DNSSDResolveServiceQuery::Result("_presence._tcp.wonderland.lit", "xmpp.wonderland.lit", 1234, LinkLocalServiceInfo().toTXTRecord());
 			testServiceID = new DNSSDServiceID("foo", "bar.local");

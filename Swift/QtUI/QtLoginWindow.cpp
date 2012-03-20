@@ -405,7 +405,7 @@ void QtLoginWindow::handleAbout() {
 }
 
 void QtLoginWindow::handleShowXMLConsole() {
-	uiEventStream_->send(boost::shared_ptr<RequestXMLConsoleUIEvent>(new RequestXMLConsoleUIEvent()));
+	uiEventStream_->send(boost::make_shared<RequestXMLConsoleUIEvent>());
 }
 
 void QtLoginWindow::handleShowFileTransferOverview() {

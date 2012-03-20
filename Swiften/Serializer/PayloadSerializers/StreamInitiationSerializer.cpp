@@ -7,6 +7,7 @@
 #include <Swiften/Serializer/PayloadSerializers/StreamInitiationSerializer.h>
 
 #include <boost/shared_ptr.hpp>
+#include <boost/smart_ptr/make_shared.hpp>
 #include <boost/lexical_cast.hpp>
 
 #include <Swiften/Base/foreach.h>
@@ -42,7 +43,7 @@ std::string StreamInitiationSerializer::serializePayload(boost::shared_ptr<Strea
 		}
 		if (!file.getDescription().empty()) {
 			boost::shared_ptr<XMLElement> descElement(new XMLElement("desc"));
-			descElement->addNode(boost::shared_ptr<XMLTextNode>(new XMLTextNode(file.getDescription())));
+			descElement->addNode(boost::make_shared<XMLTextNode>(file.getDescription()));
 			fileElement->addNode(descElement);
 		}
 		siElement.addNode(fileElement);
@@ -57,14 +58,14 @@ std::string StreamInitiationSerializer::serializePayload(boost::shared_ptr<Strea
 			field->addOption(FormField::Option("", method));
 		}
 		form->addField(field);
-		featureElement->addNode(boost::shared_ptr<XMLRawTextNode>(new XMLRawTextNode(FormSerializer().serialize(form))));
+		featureElement->addNode(boost::make_shared<XMLRawTextNode>(FormSerializer().serialize(form)));
 	}
 	else if (!streamInitiation->getRequestedMethod().empty()) {
 		Form::ref form(new Form(Form::SubmitType));
 		ListSingleFormField::ref field = ListSingleFormField::create(streamInitiation->getRequestedMethod());
 		field->setName("stream-method");
 		form->addField(field);
-		featureElement->addNode(boost::shared_ptr<XMLRawTextNode>(new XMLRawTextNode(FormSerializer().serialize(form))));
+		featureElement->addNode(boost::make_shared<XMLRawTextNode>(FormSerializer().serialize(form)));
 	}
 	siElement.addNode(featureElement);
 	return siElement.serialize();

@@ -9,6 +9,7 @@
 #include <sstream>
 
 #include <boost/shared_ptr.hpp>
+#include <boost/smart_ptr/make_shared.hpp>
 
 #include <Swiften/Base/foreach.h>
 #include <Swiften/Serializer/XML/XMLElement.h>
@@ -60,7 +61,7 @@ std::string MUCUserPayloadSerializer::serializePayload(boost::shared_ptr<MUCUser
 	if (childPayload) {
 		PayloadSerializer* serializer = serializers->getPayloadSerializer(childPayload);
 		if (serializer) {
-			mucElement.addNode(boost::shared_ptr<XMLRawTextNode>(new XMLRawTextNode(serializer->serialize(childPayload))));
+			mucElement.addNode(boost::make_shared<XMLRawTextNode>(serializer->serialize(childPayload)));
 		}
 	}
 	return mucElement.serialize();

@@ -98,7 +98,7 @@ class RosterTest : public CppUnit::TestFixture {
 			presence->setFrom(jid4c);
 			roster_->applyOnItems(SetPresence(presence, JID::WithResource));
 			
-			presence = boost::shared_ptr<Presence>(new Presence());
+			presence = boost::make_shared<Presence>();
 			presence->setFrom(jid4b);
 			presence->setShow(StatusShow::Online);
 			roster_->applyOnItems(SetPresence(presence, JID::WithResource));
@@ -110,7 +110,7 @@ class RosterTest : public CppUnit::TestFixture {
 			CPPUNIT_ASSERT_EQUAL(std::string("Bert"), children[1]->getDisplayName());
 			CPPUNIT_ASSERT_EQUAL(std::string("Bird"), children[2]->getDisplayName());
 
-			presence = boost::shared_ptr<Presence>(new Presence());
+			presence = boost::make_shared<Presence>();
 			presence->setFrom(jid4c);
 			presence->setType(Presence::Unavailable);
 			roster_->removeContact(jid4c);

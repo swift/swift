@@ -7,6 +7,7 @@
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/extensions/TestFactoryRegistry.h>
 #include <boost/shared_ptr.hpp>
+#include <boost/smart_ptr/make_shared.hpp>
 #include <boost/bind.hpp>
 
 #include <Swiften/Queries/IQHandler.h>
@@ -43,7 +44,7 @@ class IQRouterTest : public CppUnit::TestFixture {
 			DummyIQHandler handler2(true, &testling);
 			testling.removeHandler(&handler1);
 
-			channel_->onIQReceived(boost::shared_ptr<IQ>(new IQ()));
+			channel_->onIQReceived(boost::make_shared<IQ>());
 
 			CPPUNIT_ASSERT_EQUAL(0, handler1.called);
 			CPPUNIT_ASSERT_EQUAL(1, handler2.called);
@@ -54,9 +55,9 @@ class IQRouterTest : public CppUnit::TestFixture {
 			DummyIQHandler handler2(true, &testling);
 			DummyIQHandler handler1(true, &testling);
 
-			channel_->onIQReceived(boost::shared_ptr<IQ>(new IQ()));
+			channel_->onIQReceived(boost::make_shared<IQ>());
 			testling.removeHandler(&handler1);
-			channel_->onIQReceived(boost::shared_ptr<IQ>(new IQ()));
+			channel_->onIQReceived(boost::make_shared<IQ>());
 
 			CPPUNIT_ASSERT_EQUAL(1, handler1.called);
 			CPPUNIT_ASSERT_EQUAL(1, handler2.called);
@@ -67,7 +68,7 @@ class IQRouterTest : public CppUnit::TestFixture {
 			DummyIQHandler handler2(false, &testling);
 			DummyIQHandler handler1(true, &testling);
 
-			channel_->onIQReceived(boost::shared_ptr<IQ>(new IQ()));
+			channel_->onIQReceived(boost::make_shared<IQ>());
 
 			CPPUNIT_ASSERT_EQUAL(1, handler1.called);
 			CPPUNIT_ASSERT_EQUAL(0, handler2.called);
@@ -79,7 +80,7 @@ class IQRouterTest : public CppUnit::TestFixture {
 			DummyIQHandler handler2(true, &testling);
 			DummyIQHandler handler1(false, &testling);
 
-			channel_->onIQReceived(boost::shared_ptr<IQ>(new IQ()));
+			channel_->onIQReceived(boost::make_shared<IQ>());
 
 			CPPUNIT_ASSERT_EQUAL(1, handler1.called);
 			CPPUNIT_ASSERT_EQUAL(1, handler2.called);
@@ -90,7 +91,7 @@ class IQRouterTest : public CppUnit::TestFixture {
 			IQRouter testling(channel_);
 			DummyIQHandler handler(false, &testling);
 
-			channel_->onIQReceived(boost::shared_ptr<IQ>(new IQ()));
+			channel_->onIQReceived(boost::make_shared<IQ>());
 
 			CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(channel_->iqs_.size()));
 			CPPUNIT_ASSERT(channel_->iqs_[0]->getPayload<ErrorPayload>());
@@ -102,8 +103,8 @@ class IQRouterTest : public CppUnit::TestFixture {
 			DummyIQHandler handler2(true, &testling);
 			RemovingIQHandler handler1(&testling);
 
-			channel_->onIQReceived(boost::shared_ptr<IQ>(new IQ()));
-			channel_->onIQReceived(boost::shared_ptr<IQ>(new IQ()));
+			channel_->onIQReceived(boost::make_shared<IQ>());
+			channel_->onIQReceived(boost::make_shared<IQ>());
 
 			CPPUNIT_ASSERT_EQUAL(1, handler1.called);
 			CPPUNIT_ASSERT_EQUAL(2, handler2.called);
@@ -113,7 +114,7 @@ class IQRouterTest : public CppUnit::TestFixture {
 			IQRouter testling(channel_);
 			testling.setFrom(JID("foo@bar.com/baz"));
 
-			testling.sendIQ(boost::shared_ptr<IQ>(new IQ()));
+			testling.sendIQ(boost::make_shared<IQ>());
 
 			CPPUNIT_ASSERT_EQUAL(JID("foo@bar.com/baz"), channel_->iqs_[0]->getFrom());
 		}
@@ -121,7 +122,7 @@ class IQRouterTest : public CppUnit::TestFixture {
 		void testSendIQ_WithoutFrom() {
 			IQRouter testling(channel_);
 
-			testling.sendIQ(boost::shared_ptr<IQ>(new IQ()));
+			testling.sendIQ(boost::make_shared<IQ>());
 
 			CPPUNIT_ASSERT_EQUAL(JID(), channel_->iqs_[0]->getFrom());
 		}
@@ -131,7 +132,7 @@ class IQRouterTest : public CppUnit::TestFixture {
 			testling.setFrom(JID("foo@bar.com/baz"));
 			DummyIQHandler handler(false, &testling);
 
-			channel_->onIQReceived(boost::shared_ptr<IQ>(new IQ()));
+			channel_->onIQReceived(boost::make_shared<IQ>());
 
 			CPPUNIT_ASSERT_EQUAL(JID("foo@bar.com/baz"), channel_->iqs_[0]->getFrom());
 		}

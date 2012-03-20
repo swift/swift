@@ -7,6 +7,7 @@
 #include <Swiften/FileTransfer/OutgoingSIFileTransfer.h>
 
 #include <boost/bind.hpp>
+#include <boost/smart_ptr/make_shared.hpp>
 
 #include <Swiften/FileTransfer/StreamInitiationRequest.h>
 #include <Swiften/FileTransfer/BytestreamsRequest.h>
@@ -48,7 +49,7 @@ void OutgoingSIFileTransfer::handleStreamInitiationRequestResponse(StreamInitiat
 			request->send();
 		}
 		else if (response->getRequestedMethod() == "http://jabber.org/protocol/ibb") {
-			ibbSession = boost::shared_ptr<IBBSendSession>(new IBBSendSession(id, from, to, bytestream, iqRouter));
+			ibbSession = boost::make_shared<IBBSendSession>(id, from, to, bytestream, iqRouter);
 			ibbSession->onFinished.connect(boost::bind(&OutgoingSIFileTransfer::handleIBBSessionFinished, this, _1));
 			ibbSession->start();
 		}

@@ -43,7 +43,7 @@ std::string JinglePayloadSerializer::serializePayload(boost::shared_ptr<JinglePa
 		foreach(boost::shared_ptr<Payload> subPayload, payloads) {
 			PayloadSerializer* serializer = serializers->getPayloadSerializer(subPayload);
 			if (serializer) {
-				jinglePayload.addNode(boost::shared_ptr<XMLRawTextNode>(new XMLRawTextNode(serializer->serialize(subPayload))));
+				jinglePayload.addNode(boost::make_shared<XMLRawTextNode>(serializer->serialize(subPayload)));
 			}
 		}
 	}

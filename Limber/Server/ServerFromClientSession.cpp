@@ -6,6 +6,7 @@
 
 #include "Limber/Server/ServerFromClientSession.h"
 
+#include <boost/smart_ptr/make_shared.hpp>
 #include <boost/bind.hpp>
 
 #include "Swiften/Elements/ProtocolHeader.h"
@@ -47,14 +48,14 @@ void ServerFromClientSession::handleElement(boost::shared_ptr<Element> element) 
 		if (AuthRequest* authRequest = dynamic_cast<AuthRequest*>(element.get())) {
 			if (authRequest->getMechanism() == "PLAIN" || (allowSASLEXTERNAL && authRequest->getMechanism() == "EXTERNAL")) {
 				if (authRequest->getMechanism() == "EXTERNAL") {
-						getXMPPLayer()->writeElement(boost::shared_ptr<AuthSuccess>(new AuthSuccess()));
+						getXMPPLayer()->writeElement(boost::make_shared<AuthSuccess>());
 						authenticated_ = true;
 						getXMPPLayer()->resetParser();
 				}
 				else {
 					PLAINMessage plainMessage(authRequest->getMessage() ? *authRequest->getMessage() : createSafeByteArray(""));
 					if (userRegistry_->isValidUserPassword(JID(plainMessage.getAuthenticationID(), getLocalJID().getDomain()), plainMessage.getPassword())) {
-						getXMPPLayer()->writeElement(boost::shared_ptr<AuthSuccess>(new AuthSuccess()));
+						getXMPPLayer()->writeElement(boost::make_shared<AuthSuccess>());
 						user_ = plainMessage.getAuthenticationID();
 						authenticated_ = true;
 						getXMPPLayer()->resetParser();

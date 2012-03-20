@@ -79,7 +79,7 @@ class FileSender {
 			fileInfo.setDate(boost::posix_time::from_time_t(boost::filesystem::last_write_time(file)));*/
 			//fileInfo.setHash(Hexify::hexify(MD5::getHash(fileData)));
 			/*
-			transfer = new OutgoingSIFileTransfer("myid",	client->getJID(), recipient, file.filename(), boost::filesystem::file_size(file), "A file", boost::shared_ptr<FileReadBytestream>(new FileReadBytestream(file)), client->getIQRouter(), socksBytestreamServer);
+			transfer = new OutgoingSIFileTransfer("myid",	client->getJID(), recipient, file.filename(), boost::filesystem::file_size(file), "A file", boost::make_shared<FileReadBytestream>(file)), client->getIQRouter(), socksBytestreamServer);
 			transfer->onFinished.connect(boost::bind(&FileSender::handleFileTransferFinished, this, _1));
 			transfer->start();
 			 */

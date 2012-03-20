@@ -7,6 +7,7 @@
 #include <Swiften/Serializer/PayloadSerializers/StorageSerializer.h>
 
 #include <boost/shared_ptr.hpp>
+#include <boost/smart_ptr/make_shared.hpp>
 
 #include <Swiften/Base/foreach.h>
 #include <Swiften/Serializer/XML/XMLElement.h>
@@ -27,12 +28,12 @@ std::string StorageSerializer::serializePayload(boost::shared_ptr<Storage> stora
 		conferenceElement->setAttribute("autojoin", room.autoJoin ? "1" : "0");
 		if (!room.nick.empty()) {
 			boost::shared_ptr<XMLElement> nickElement(new XMLElement("nick"));
-			nickElement->addNode(boost::shared_ptr<XMLTextNode>(new XMLTextNode(room.nick)));
+			nickElement->addNode(boost::make_shared<XMLTextNode>(room.nick));
 			conferenceElement->addNode(nickElement);
 		}
 		if (room.password) {
 			boost::shared_ptr<XMLElement> passwordElement(new XMLElement("password"));
-			passwordElement->addNode(boost::shared_ptr<XMLTextNode>(new XMLTextNode(*room.password)));
+			passwordElement->addNode(boost::make_shared<XMLTextNode>(*room.password));
 			conferenceElement->addNode(passwordElement);
 		}
 		storageElement.addNode(conferenceElement);

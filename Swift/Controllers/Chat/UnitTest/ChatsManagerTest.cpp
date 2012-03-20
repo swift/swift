@@ -87,7 +87,7 @@ public:
 		mucRegistry_ = new MUCRegistry();
 		nickResolver_ = new NickResolver(jid_.toBare(), xmppRoster_, NULL, mucRegistry_);
 		presenceOracle_ = new PresenceOracle(stanzaChannel_);
-		serverDiscoInfo_ = boost::shared_ptr<DiscoInfo>(new DiscoInfo());
+		serverDiscoInfo_ = boost::make_shared<DiscoInfo>();
 		presenceSender_ = new StanzaChannelPresenceSender(stanzaChannel_);
 		directedPresenceSender_ = new DirectedPresenceSender(presenceSender_);
 		mucManager_ = new MUCManager(stanzaChannel_, iqRouter_, directedPresenceSender_, mucRegistry_);
@@ -257,7 +257,7 @@ public:
 		JID muc("testling@test.com");
 		ChatWindow* mucWindow = new MockChatWindow();
 		mocks_->ExpectCall(chatWindowFactory_, ChatWindowFactory::createChatWindow).With(muc, uiEventStream_).Return(mucWindow);
-		uiEventStream_->send(boost::shared_ptr<JoinMUCUIEvent>(new JoinMUCUIEvent(muc, std::string("nick"))));
+		uiEventStream_->send(boost::make_shared<JoinMUCUIEvent>(muc, std::string("nick")));
 
 
 		std::string messageJIDString1("testling@test.com/1");

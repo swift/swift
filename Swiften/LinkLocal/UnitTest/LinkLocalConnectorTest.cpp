@@ -31,9 +31,8 @@ class LinkLocalConnectorTest : public CppUnit::TestFixture {
 	public:
 		void setUp() {
 			eventLoop = new DummyEventLoop();
-			querier = boost::shared_ptr<FakeDNSSDQuerier>(
-					new FakeDNSSDQuerier("rabbithole.local", eventLoop));
-			connection = boost::shared_ptr<FakeConnection>(new FakeConnection(eventLoop));
+			querier = boost::make_shared<FakeDNSSDQuerier>("rabbithole.local", eventLoop);
+			connection = boost::make_shared<FakeConnection>(eventLoop);
 			connectFinished = false;
 		}
 

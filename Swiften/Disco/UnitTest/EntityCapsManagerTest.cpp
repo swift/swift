@@ -34,16 +34,16 @@ class EntityCapsManagerTest : public CppUnit::TestFixture {
 			capsProvider = new DummyCapsProvider();
 
 			user1 = JID("user1@bar.com/bla");
-			discoInfo1 = boost::shared_ptr<DiscoInfo>(new DiscoInfo());
+			discoInfo1 = boost::make_shared<DiscoInfo>();
 			discoInfo1->addFeature("http://swift.im/feature1");
-			capsInfo1 = boost::shared_ptr<CapsInfo>(new CapsInfo(CapsInfoGenerator("http://node1.im").generateCapsInfo(*discoInfo1.get())));
-			capsInfo1alt = boost::shared_ptr<CapsInfo>(new CapsInfo(CapsInfoGenerator("http://node2.im").generateCapsInfo(*discoInfo1.get())));
+			capsInfo1 = boost::make_shared<CapsInfo>(CapsInfoGenerator("http://node1.im").generateCapsInfo(*discoInfo1.get()));
+			capsInfo1alt = boost::make_shared<CapsInfo>(CapsInfoGenerator("http://node2.im").generateCapsInfo(*discoInfo1.get()));
 			user2 = JID("user2@foo.com/baz");
-			discoInfo2 = boost::shared_ptr<DiscoInfo>(new DiscoInfo());
+			discoInfo2 = boost::make_shared<DiscoInfo>();
 			discoInfo2->addFeature("http://swift.im/feature2");
-			capsInfo2 = boost::shared_ptr<CapsInfo>(new CapsInfo(CapsInfoGenerator("http://node2.im").generateCapsInfo(*discoInfo2.get())));
+			capsInfo2 = boost::make_shared<CapsInfo>(CapsInfoGenerator("http://node2.im").generateCapsInfo(*discoInfo2.get()));
 			user3 = JID("user3@foo.com/baz");
-			legacyCapsInfo = boost::shared_ptr<CapsInfo>(new CapsInfo("http://swift.im", "ver1", ""));
+			legacyCapsInfo = boost::make_shared<CapsInfo>("http://swift.im", "ver1", "");
 		}
 
 		void tearDown() {

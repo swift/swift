@@ -26,7 +26,7 @@ class ComponentSessionTest : public CppUnit::TestFixture {
 
 	public:
 		void setUp() {
-			server = boost::shared_ptr<MockSessionStream>(new MockSessionStream());
+			server = boost::make_shared<MockSessionStream>();
 			sessionFinishedReceived = false;
 		}
 
@@ -159,7 +159,7 @@ class ComponentSessionTest : public CppUnit::TestFixture {
 				}
 
 				void breakConnection() {
-					onClosed(boost::shared_ptr<SessionStream::Error>(new SessionStream::Error(SessionStream::Error::ConnectionReadError)));
+					onClosed(boost::make_shared<SessionStream::Error>(SessionStream::Error::ConnectionReadError));
 				}
 
 				void sendStreamStart() {

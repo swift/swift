@@ -7,6 +7,7 @@
 #include <Swiften/LinkLocal/IncomingLinkLocalSession.h>
 
 #include <boost/bind.hpp>
+#include <boost/smart_ptr/make_shared.hpp>
 
 #include <Swiften/Elements/ProtocolHeader.h>
 #include <Swiften/Network/Connection.h>
@@ -41,7 +42,7 @@ void IncomingLinkLocalSession::handleStreamStart(const ProtocolHeader& incomingH
 	getXMPPLayer()->writeHeader(header);
 
 	if (incomingHeader.getVersion() == "1.0") {
-		getXMPPLayer()->writeElement(boost::shared_ptr<StreamFeatures>(new StreamFeatures()));
+		getXMPPLayer()->writeElement(boost::make_shared<StreamFeatures>());
 	}
 	else {
 		setInitialized();

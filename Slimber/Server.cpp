@@ -327,7 +327,7 @@ void Server::registerLinkLocalSession(boost::shared_ptr<Session> session) {
 	session->onElementReceived.connect(
 			boost::bind(&Server::handleLinkLocalElementReceived, this, _1, session));
 	linkLocalSessions.push_back(session);
-	//tracers.push_back(boost::shared_ptr<SessionTracer>(new SessionTracer(session)));
+	//tracers.push_back(boost::make_shared<SessionTracer>(session));
 	session->startSession();
 }
 
