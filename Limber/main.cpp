@@ -61,7 +61,7 @@ class Server {
 			if (!stanza->getTo().isValid() || stanza->getTo() == session->getLocalJID() || stanza->getTo() == session->getRemoteJID().toBare()) {
 				if (boost::shared_ptr<IQ> iq = boost::dynamic_pointer_cast<IQ>(stanza)) {
 					if (iq->getPayload<RosterPayload>()) {
-						session->sendElement(IQ::createResult(iq->getFrom(), iq->getID(), boost::make_shared<RosterPayload>())));
+						session->sendElement(IQ::createResult(iq->getFrom(), iq->getID(), boost::make_shared<RosterPayload>()));
 					}
 					if (iq->getPayload<VCard>()) {
 						if (iq->getType() == IQ::Get) {
