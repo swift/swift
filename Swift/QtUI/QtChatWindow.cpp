@@ -475,14 +475,14 @@ void QtChatWindow::setAckState(std::string const& id, ChatWindow::AckState state
 	QString xml;
 	switch (state) {
 		case ChatWindow::Pending:
-			xml = "<img src='qrc:/icons/throbber.gif' alt='" + tr("This message has not been received by your server yet.") + "'/>";
+			xml = "<img src='qrc:/icons/throbber.gif' title='" + tr("This message has not been received by your server yet.") + "'/>";
 			messageLog_->displayReceiptInfo(P2QSTRING(id), false);
 			break;
 		case ChatWindow::Received:
 			xml = "";
 			messageLog_->displayReceiptInfo(P2QSTRING(id), true);
 			break;
-		case ChatWindow::Failed: xml = "<img src='qrc:/icons/error.png' alt='" + tr("This message may not have been transmitted.") + "'/>"; break;
+		case ChatWindow::Failed: xml = "<img src='qrc:/icons/error.png' title='" + tr("This message may not have been transmitted.") + "'/>"; break;
 	}
 	messageLog_->setAckXML(P2QSTRING(id), xml);
 }
@@ -491,10 +491,10 @@ void QtChatWindow::setMessageReceiptState(const std::string& id, ChatWindow::Rec
 	QString xml;
 	switch (state) {
 		case ChatWindow::ReceiptReceived:
-			xml = "<img src='qrc:/icons/check.png' alt'" + tr("The receipt for this message has been received.") + "'/>";
+			xml = "<img src='qrc:/icons/check.png' title='" + tr("The receipt for this message has been received.") + "'/>";
 			break;
 		case ChatWindow::ReceiptRequested:
-			xml = "<img src='qrc:/icons/warn.png' alt='" + tr("The receipt for this message has not yet been received. The receipient(s) might not have received this message.") + "'/>";
+			xml = "<img src='qrc:/icons/warn.png' title='" + tr("The receipt for this message has not yet been received. The receipient(s) might not have received this message.") + "'/>";
 			break;
 	}
 	messageLog_->setReceiptXML(P2QSTRING(id), xml);
