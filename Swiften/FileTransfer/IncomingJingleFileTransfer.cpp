@@ -79,7 +79,7 @@ IncomingJingleFileTransfer::~IncomingJingleFileTransfer() {
 	stream->onWrite.disconnect(boost::bind(&IncrementalBytestreamHashCalculator::feedData, hashCalculator, _1));
 	delete hashCalculator;
 
-	session->onSessionTerminateReceived.disconnect(boost::bind(&IncomingJingleFileTransfer::handleSessionTerminateReceived, this));
+	session->onSessionTerminateReceived.disconnect(boost::bind(&IncomingJingleFileTransfer::handleSessionTerminateReceived, this, _1));
 	session->onTransportReplaceReceived.disconnect(boost::bind(&IncomingJingleFileTransfer::handleTransportReplaceReceived, this, _1, _2));
 	session->onTransportInfoReceived.disconnect(boost::bind(&IncomingJingleFileTransfer::handleTransportInfoReceived, this, _1, _2));
 
