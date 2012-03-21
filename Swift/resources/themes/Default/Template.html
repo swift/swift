@@ -303,33 +303,6 @@
 			head.appendChild( documentFragment );
 		}
 		
-		//Swap an image with its alt-tag text on click
-		document.onclick = imageCheck;
-		function imageCheck() {		
-			node = event.target;
-			if(node.tagName == 'IMG' && node.alt && node.className!="avatar") {
-				a = document.createElement('a');
-				a.setAttribute('onclick', 'imageSwap(this)');
-				a.setAttribute('src', node.src);
-				a.className = node.className;
-				text = document.createTextNode(node.alt);
-				a.appendChild(text);
-				node.parentNode.replaceChild(a, node);
-			}
-		}
-		function imageSwap(node) {
-			shouldScroll = nearBottom();
-
-			//Swap the image/text
-			img = document.createElement('img');
-			img.setAttribute('src', node.src);
-			img.className = node.className;
-			img.setAttribute('alt', node.firstChild.nodeValue);
-			node.parentNode.replaceChild(img, node);
-			
-			alignChat(shouldScroll);
-		}
-		
 		//Align our chat to the bottom of the window.  If true is passed, view will also be scrolled down
 		function alignChat(shouldScroll) {
 
