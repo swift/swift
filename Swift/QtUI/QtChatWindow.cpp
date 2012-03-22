@@ -494,7 +494,7 @@ void QtChatWindow::setMessageReceiptState(const std::string& id, ChatWindow::Rec
 			xml = "<img src='qrc:/icons/check.png' title='" + tr("The receipt for this message has been received.") + "'/>";
 			break;
 		case ChatWindow::ReceiptRequested:
-			xml = "<img src='qrc:/icons/warn.png' title='" + tr("The receipt for this message has not yet been received. The receipient(s) might not have received this message.") + "'/>";
+			xml = "<img src='qrc:/icons/warn.png' title='" + tr("The receipt for this message has not yet been received. The recipient(s) might not have received this message.") + "'/>";
 			break;
 	}
 	messageLog_->setReceiptXML(P2QSTRING(id), xml);
