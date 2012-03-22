@@ -40,6 +40,8 @@ namespace Swift {
 				InvalidCertificateSignatureError,
 				InvalidCAError,
 				InvalidServerIdentityError,
+				RevokedError,
+				RevocationCheckFailedError
 			};
 
 			ClientError(Type type = UnknownError) : type_(type) {}

@@ -271,6 +271,12 @@ void CoreClient::handleSessionFinished(boost::shared_ptr<Error> error) {
 				case CertificateVerificationError::InvalidServerIdentity:
 					clientError = ClientError(ClientError::InvalidServerIdentityError);
 					break;
+				case CertificateVerificationError::Revoked:
+					clientError = ClientError(ClientError::RevokedError);
+					break;
+				case CertificateVerificationError::RevocationCheckFailed:
+					clientError = ClientError(ClientError::RevocationCheckFailedError);
+					break;
 			}
 		}
 		actualError = boost::optional<ClientError>(clientError);

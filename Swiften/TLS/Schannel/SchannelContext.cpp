@@ -4,9 +4,10 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
-#include <Swiften/TLS/Schannel/SchannelContext.h>
-#include <Swiften/TLS/Schannel/SchannelCertificate.h>
+#include "Swiften/TLS/Schannel/SchannelContext.h"
+#include "Swiften/TLS/Schannel/SchannelCertificate.h"
 #include <Swiften/TLS/CAPICertificate.h>
+#include <WinHTTP.h> // For SECURITY_FLAG_IGNORE_CERT_CN_INVALID
 
 namespace Swift {
 
@@ -15,7 +16,6 @@ namespace Swift {
 SchannelContext::SchannelContext() 
 : m_state(Start)
 , m_secContext(0)
-, m_verificationError(CertificateVerificationError::UnknownError)
 , m_my_cert_store(NULL)
 , m_cert_store_name("MY")
 , m_cert_name()
@@ -50,7 +50,7 @@ void SchannelContext::determineStreamSizes()
 
 void SchannelContext::connect() 
 {
-	PCCERT_CONTEXT   pCertContext = NULL;
+	ScopedCertContext pCertContext;
 
 	m_state = Connecting;
 
@@ -86,12 +86,12 @@ void SchannelContext::connect()
 
 /////SSL3?
 	sc.grbitEnabledProtocols = SP_PROT_SSL3_CLIENT | SP_PROT_TLS1_CLIENT | SP_PROT_TLS1_1_CLIENT | SP_PROT_TLS1_2_CLIENT;
-	sc.dwFlags = SCH_CRED_AUTO_CRED_VALIDATION | SCH_CRED_REVOCATION_CHECK_CHAIN;
+	sc.dwFlags = SCH_CRED_MANUAL_CRED_VALIDATION;
 
 	if (pCertContext)
 	{
 		sc.cCreds = 1;
-		sc.paCred = &pCertContext;
+		sc.paCred = pCertContext.GetPointer();
 		sc.dwFlags |= SCH_CRED_NO_DEFAULT_CREDS;
 	}
 	else
@@ -114,10 +114,7 @@ void SchannelContext::connect()
 		NULL,
 		m_credHandle.Reset(),
 		NULL);
-
-	// cleanup: Free the certificate context. Schannel has already made its own copy.
-	if (pCertContext) CertFreeCertificateContext(pCertContext);
-
+	
 	if (status != SEC_E_OK) 
 	{
 		// We failed to obtain the credentials handle
@@ -164,6 +161,7 @@ void SchannelContext::connect()
 	if (status != SEC_E_OK && status != SEC_I_CONTINUE_NEEDED) 
 	{
 		// We failed to initialize the security context
+		handleCertError(status);
 		indicateError();
 		return;
 	}
@@ -173,11 +171,83 @@ void SchannelContext::connect()
 
 	if (status == SEC_E_OK) 
 	{
+		status = validateServerCertificate();
+		if (status != SEC_E_OK)
+			handleCertError(status);
+
 		m_state = Connected;
 		determineStreamSizes();
 
 		onConnected();
 	}
+}
+
+//------------------------------------------------------------------------
+
+SECURITY_STATUS SchannelContext::validateServerCertificate()
+{
+	SchannelCertificate::ref pServerCert = boost::dynamic_pointer_cast<SchannelCertificate>( getPeerCertificate() );
+	if (!pServerCert)
+		return SEC_E_WRONG_PRINCIPAL;
+
+	const LPSTR usage[] = 
+	{
+		szOID_PKIX_KP_SERVER_AUTH,
+		szOID_SERVER_GATED_CRYPTO,
+		szOID_SGC_NETSCAPE
+	};
+
+	CERT_CHAIN_PARA chainParams = {0};
+	chainParams.cbSize = sizeof(chainParams);
+	chainParams.RequestedUsage.dwType = USAGE_MATCH_TYPE_OR;
+	chainParams.RequestedUsage.Usage.cUsageIdentifier = ARRAYSIZE(usage);
+	chainParams.RequestedUsage.Usage.rgpszUsageIdentifier = const_cast<LPSTR*>(usage);
+
+	DWORD chainFlags = CERT_CHAIN_CACHE_END_CERT | CERT_CHAIN_REVOCATION_CHECK_CHAIN_EXCLUDE_ROOT;
+
+	ScopedCertChainContext pChainContext;
+
+	BOOL success = CertGetCertificateChain(
+		NULL, // Use the chain engine for the current user (assumes a user is logged in)
+		pServerCert->getCertContext(),
+		NULL,
+		NULL,
+		&chainParams,
+		chainFlags,
+		NULL,
+		pChainContext.Reset());
+
+	if (!success)
+		return GetLastError();
+
+	SSL_EXTRA_CERT_CHAIN_POLICY_PARA sslChainPolicy = {0};
+	sslChainPolicy.cbSize = sizeof(sslChainPolicy);
+	sslChainPolicy.dwAuthType = AUTHTYPE_SERVER;
+	sslChainPolicy.fdwChecks = SECURITY_FLAG_IGNORE_CERT_CN_INVALID; // Swiften checks the server name for us. Is this the correct way to disable server name checking?
+	sslChainPolicy.pwszServerName = NULL;
+
+	CERT_CHAIN_POLICY_PARA certChainPolicy = {0};
+	certChainPolicy.cbSize = sizeof(certChainPolicy);
+	certChainPolicy.dwFlags = CERT_CHAIN_POLICY_IGNORE_INVALID_NAME_FLAG; // Swiften checks the server name for us. Is this the correct way to disable server name checking?
+	certChainPolicy.pvExtraPolicyPara = &sslChainPolicy;
+
+	CERT_CHAIN_POLICY_STATUS certChainPolicyStatus = {0};
+	certChainPolicyStatus.cbSize = sizeof(certChainPolicyStatus);
+
+	// Verify the chain
+	if (!CertVerifyCertificateChainPolicy(
+		CERT_CHAIN_POLICY_SSL,
+		pChainContext,
+		&certChainPolicy,
+		&certChainPolicyStatus))
+	{
+		return GetLastError();
+	}
+
+	if (certChainPolicyStatus.dwError != S_OK)
+		return certChainPolicyStatus.dwError;
+
+	return S_OK;
 }
 
 //------------------------------------------------------------------------
@@ -270,6 +340,10 @@ void SchannelContext::continueHandshake(const SafeByteArray& data)
 		}
 		else if (status == SEC_E_OK) 
 		{
+			status = validateServerCertificate();
+			if (status != SEC_E_OK)
+				handleCertError(status);
+
 			SecBuffer* pExtraBuffer = &inBuffers[1];
 			
 			if (pExtraBuffer && pExtraBuffer->cbBuffer > 0)
@@ -285,9 +359,51 @@ void SchannelContext::continueHandshake(const SafeByteArray& data)
 		else 
 		{
 			// We failed to initialize the security context
+			handleCertError(status);
 			indicateError();
 			return;
 		}
+	}
+}
+
+//------------------------------------------------------------------------
+
+void SchannelContext::handleCertError(SECURITY_STATUS status) 
+{
+	if (status == SEC_E_UNTRUSTED_ROOT			|| 
+		status == CERT_E_UNTRUSTEDROOT			||
+		status == CRYPT_E_ISSUER_SERIALNUMBER	|| 
+		status == CRYPT_E_SIGNER_NOT_FOUND		||
+		status == CRYPT_E_NO_TRUSTED_SIGNER)
+	{
+		m_verificationError = CertificateVerificationError::Untrusted;
+	}
+	else if (status == SEC_E_CERT_EXPIRED || 
+			 status == CERT_E_EXPIRED)
+	{
+		m_verificationError = CertificateVerificationError::Expired;
+	}
+	else if (status == CRYPT_E_SELF_SIGNED)
+	{
+		m_verificationError = CertificateVerificationError::SelfSigned;
+	}
+	else if (status == CRYPT_E_HASH_VALUE	||
+			 status == TRUST_E_CERT_SIGNATURE)
+	{
+		m_verificationError = CertificateVerificationError::InvalidSignature;
+	}
+	else if (status == CRYPT_E_REVOKED)
+	{
+		m_verificationError = CertificateVerificationError::Revoked;
+	}
+	else if (status == CRYPT_E_NO_REVOCATION_CHECK ||
+			 status == CRYPT_E_REVOCATION_OFFLINE)
+	{
+		m_verificationError = CertificateVerificationError::RevocationCheckFailed;
+	}
+	else
+	{
+		m_verificationError = CertificateVerificationError::UnknownError;
 	}
 }
 
@@ -449,6 +565,9 @@ void SchannelContext::decryptAndProcessData(const SafeByteArray& data)
 
 void SchannelContext::encryptAndSendData(const SafeByteArray& data) 
 {	
+	if (m_streamSizes.cbMaximumMessage == 0)
+		return;
+
 	SecBuffer outBuffers[4]	= {0};
 
 	// Calculate the largest required size of the send buffer
@@ -544,8 +663,8 @@ CertificateVerificationError::ref SchannelContext::getPeerCertificateVerificatio
 {
 	boost::shared_ptr<CertificateVerificationError> pCertError;
 
-	if (m_state == Error)
-		pCertError.reset( new CertificateVerificationError(m_verificationError) );
+	if (m_verificationError)
+		pCertError.reset( new CertificateVerificationError(*m_verificationError) );
 	
 	return pCertError;
 }

@@ -55,6 +55,7 @@ vars.Add(PathVariable("docbook_xsl", "DocBook XSL", None, PathVariable.PathAccep
 vars.Add(BoolVariable("build_examples", "Build example programs", "yes"))
 vars.Add(BoolVariable("enable_variants", "Build in a separate dir under build/, depending on compile flags", "no"))
 vars.Add(BoolVariable("experimental", "Build experimental features", "no"))
+vars.Add(BoolVariable("set_iterator_debug_level", "Set _ITERATOR_DEBUG_LEVEL=0", "yes"))
 
 ################################################################################
 # Set up default build & configure environment
@@ -134,7 +135,8 @@ if env["debug"] :
 	if env["PLATFORM"] == "win32" :
 		env.Append(CCFLAGS = ["/Zi", "/MDd"])
 		env.Append(LINKFLAGS = ["/DEBUG"])
-		env.Append(CPPDEFINES = ["_ITERATOR_DEBUG_LEVEL=0"])
+		if env["set_iterator_debug_level"] :
+			env.Append(CPPDEFINES = ["_ITERATOR_DEBUG_LEVEL=0"])
 	else :
 		env.Append(CCFLAGS = ["-g"])
 elif env["PLATFORM"] == "win32" :

@@ -48,8 +48,13 @@ namespace Swift
 			return m_xmppAddresses;
 		}
 
-		ByteArray toDER() const;
+		ScopedCertContext getCertContext() const
+		{
+			return m_cert;
+		}
 
+		ByteArray toDER() const;
+		
 	private:
 		void parse();
 		std::string wstrToStr(const std::wstring& wstr);

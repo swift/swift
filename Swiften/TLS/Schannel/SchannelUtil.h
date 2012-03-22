@@ -246,7 +246,7 @@ namespace Swift
 		}
 
 		// Copy constructor
-		explicit ScopedCertContext(const ScopedCertContext& rhs)
+		ScopedCertContext(const ScopedCertContext& rhs)
 		{
 			m_pHandle = rhs.m_pHandle;			
 		}
@@ -267,6 +267,11 @@ namespace Swift
 			return m_pHandle->m_pCertCtxt;
 		}
 
+		PCCERT_CONTEXT* GetPointer() const
+		{
+			return &m_pHandle->m_pCertCtxt;
+		}
+
 		PCCERT_CONTEXT operator->() const
 		{
 			return m_pHandle->m_pCertCtxt;
@@ -283,6 +288,15 @@ namespace Swift
 			return *this;
 		}
 
+		ScopedCertContext& operator=(PCCERT_CONTEXT pCertCtxt)
+		{
+			// Only update the internal handle if it's different
+			if (m_pHandle && m_pHandle->m_pCertCtxt != pCertCtxt)
+				m_pHandle.reset( new HandleContext(pCertCtxt) );
+
+			return *this;
+		}
+
 		void FreeContext()
 		{
 			m_pHandle.reset( new HandleContext );
@@ -290,5 +304,122 @@ namespace Swift
 
 	private:
 		boost::shared_ptr<HandleContext> m_pHandle;		
-	};	 
+	};
+
+	//------------------------------------------------------------------------
+
+	//
+	// Convenience wrapper around the Schannel HCERTSTORE.
+	//
+	class ScopedCertStore : boost::noncopyable
+	{
+	public:
+		ScopedCertStore(HCERTSTORE hCertStore)
+		: m_hCertStore(hCertStore)
+		{
+		}
+		
+		~ScopedCertStore()
+		{
+			// Forcefully free all memory related to the store, i.e. we assume all CertContext's that have been opened via this
+			// cert store have been closed at this point.
+			if (m_hCertStore)
+				CertCloseStore(m_hCertStore, CERT_CLOSE_STORE_FORCE_FLAG);
+		}
+
+		operator HCERTSTORE() const
+		{
+			return m_hCertStore;
+		}
+
+	private:
+		HCERTSTORE m_hCertStore;
+	};
+
+	//------------------------------------------------------------------------
+
+	//
+	// Convenience wrapper around the Schannel CERT_CHAIN_CONTEXT.
+	//
+	class ScopedCertChainContext
+	{
+	private:
+		struct HandleContext
+		{
+			HandleContext()
+			: m_pCertChainCtxt(NULL)
+			{
+			}
+
+			HandleContext(PCCERT_CHAIN_CONTEXT pCert)
+			: m_pCertChainCtxt(pCert)
+			{
+			}
+
+			~HandleContext()
+			{
+				if (m_pCertChainCtxt)
+					CertFreeCertificateChain(m_pCertChainCtxt);
+			}
+
+			PCCERT_CHAIN_CONTEXT m_pCertChainCtxt;
+		};
+
+	public:
+		ScopedCertChainContext()
+		: m_pHandle( new HandleContext )
+		{
+		}
+
+		explicit ScopedCertChainContext(PCCERT_CHAIN_CONTEXT pCert)
+		: m_pHandle( new HandleContext(pCert) )
+		{
+		}
+
+		// Copy constructor
+		ScopedCertChainContext(const ScopedCertChainContext& rhs)
+		{
+			m_pHandle = rhs.m_pHandle;			
+		}
+
+		~ScopedCertChainContext()
+		{
+			m_pHandle.reset();
+		}
+
+		PCCERT_CHAIN_CONTEXT* Reset()
+		{
+			FreeContext();
+			return &m_pHandle->m_pCertChainCtxt;
+		}
+
+		operator PCCERT_CHAIN_CONTEXT() const
+		{
+			return m_pHandle->m_pCertChainCtxt;
+		}
+
+		PCCERT_CHAIN_CONTEXT operator->() const
+		{
+			return m_pHandle->m_pCertChainCtxt;
+		}
+
+		ScopedCertChainContext& operator=(const ScopedCertChainContext& sh)
+		{
+			// Only update the internal handle if it's different
+			if (&m_pHandle->m_pCertChainCtxt != &sh.m_pHandle->m_pCertChainCtxt)
+			{
+				m_pHandle = sh.m_pHandle;
+			}
+
+			return *this;
+		}
+
+		void FreeContext()
+		{
+			m_pHandle.reset( new HandleContext );
+		}
+
+	private:
+		boost::shared_ptr<HandleContext> m_pHandle;		
+	};
 }

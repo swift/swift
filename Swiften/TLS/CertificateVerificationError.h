@@ -26,6 +26,8 @@ namespace Swift {
 				InvalidSignature,
 				InvalidCA,
 				InvalidServerIdentity,
+				Revoked,
+				RevocationCheckFailed
 			};
 
 			CertificateVerificationError(Type type = UnknownError) : type(type) {}

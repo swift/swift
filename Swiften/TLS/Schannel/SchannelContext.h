@@ -51,6 +51,7 @@ namespace Swift
 		void			determineStreamSizes();
 		void			continueHandshake(const SafeByteArray& data);
 		void			indicateError();
+		void			handleCertError(SECURITY_STATUS status) ;
 
 		void			sendDataOnNetwork(const void* pData, size_t dataSize);
 		void			forwardDataToApplication(const void* pData, size_t dataSize);
@@ -59,6 +60,7 @@ namespace Swift
 		void			encryptAndSendData(const SafeByteArray& data);
 
 		void			appendNewData(const SafeByteArray& data);
+		SECURITY_STATUS validateServerCertificate();
 
 	private:
 		enum SchannelState
@@ -71,7 +73,7 @@ namespace Swift
 		};
 
 		SchannelState		m_state;
-		CertificateVerificationError m_verificationError;
+		boost::optional<CertificateVerificationError> m_verificationError;
 
 		ULONG				m_secContext;
 		ScopedCredHandle	m_credHandle;
