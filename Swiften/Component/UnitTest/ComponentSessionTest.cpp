@@ -159,7 +159,7 @@ class ComponentSessionTest : public CppUnit::TestFixture {
 				}
 
 				void breakConnection() {
-					onClosed(boost::make_shared<SessionStream::Error>(SessionStream::Error::ConnectionReadError));
+					onClosed(boost::make_shared<SessionStream::SessionStreamError>(SessionStream::SessionStreamError::ConnectionReadError));
 				}
 
 				void sendStreamStart() {

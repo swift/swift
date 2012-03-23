@@ -11,6 +11,7 @@
 #include <Swiften/TLS/Certificate.h>
 #include <Swiften/TLS/CertificateWithKey.h>
 #include <Swiften/TLS/CertificateVerificationError.h>
+#include <Swiften/TLS/TLSError.h>
 
 namespace Swift {
 	class TLSContext;
@@ -35,7 +36,7 @@ namespace Swift {
 			}
 
 		public:
-			boost::signal<void ()> onError;
+			boost::signal<void (boost::shared_ptr<TLSError>)> onError;
 			boost::signal<void ()> onConnected;
 
 		private:

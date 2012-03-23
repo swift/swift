@@ -132,7 +132,7 @@ void OpenSSLContext::doConnect() {
 			break;
 		default:
 			state_ = Error;
-			onError();
+			onError(boost::make_shared<TLSError>());
 	}
 }
 
@@ -166,7 +166,7 @@ void OpenSSLContext::handleDataFromApplication(const SafeByteArray& data) {
 	}
 	else {
 		state_ = Error;
-		onError();
+		onError(boost::make_shared<TLSError>());
 	}
 }
 
@@ -182,7 +182,7 @@ void OpenSSLContext::sendPendingDataToApplication() {
 	}
 	if (ret < 0 && SSL_get_error(handle_, ret) != SSL_ERROR_WANT_READ) {
 		state_ = Error;
-		onError();
+		onError(boost::make_shared<TLSError>());
 	}
 }
 

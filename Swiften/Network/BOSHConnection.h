@@ -36,13 +36,13 @@ namespace Swift {
 	class XMLParserFactory;
 	class TLSContextFactory;
 
-		class BOSHError : public SessionStream::Error {
+		class BOSHError : public SessionStream::SessionStreamError {
 				public:
 					enum Type {BadRequest, HostGone, HostUnknown, ImproperAddressing, 
 						  InternalServerError, ItemNotFound, OtherRequest, PolicyViolation, 
 						  RemoteConnectionFailed, RemoteStreamError, SeeOtherURI, SystemShutdown, UndefinedCondition,
 						  NoError};
-					BOSHError(Type type) : SessionStream::Error(SessionStream::Error::ConnectionReadError), type(type) {}
+					BOSHError(Type type) : SessionStream::SessionStreamError(SessionStream::SessionStreamError::ConnectionReadError), type(type) {}
 					Type getType() {return type;}
 					typedef boost::shared_ptr<BOSHError> ref;
 				private:

@@ -111,11 +111,11 @@ void BasicSessionStream::addTLSEncryption() {
 	assert(available);
 	tlsLayer = new TLSLayer(tlsContextFactory);
 	if (hasTLSCertificate() && !tlsLayer->setClientCertificate(getTLSCertificate())) {
-		onClosed(boost::make_shared<Error>(Error::InvalidTLSCertificateError));
+		onClosed(boost::make_shared<SessionStreamError>(SessionStreamError::InvalidTLSCertificateError));
 	}
 	else {
 		streamStack->addLayer(tlsLayer);
-		tlsLayer->onError.connect(boost::bind(&BasicSessionStream::handleTLSError, this));
+		tlsLayer->onError.connect(boost::bind(&BasicSessionStream::handleTLSError, this, _1));
 		tlsLayer->onConnected.connect(boost::bind(&BasicSessionStream::handleTLSConnected, this));
 		tlsLayer->connect();
 	}
@@ -173,28 +173,28 @@ void BasicSessionStream::handleElementReceived(boost::shared_ptr<Element> elemen
 
 void BasicSessionStream::handleXMPPError() {
 	available = false;
-	onClosed(boost::make_shared<Error>(Error::ParseError));
+	onClosed(boost::make_shared<SessionStreamError>(SessionStreamError::ParseError));
 }
 
 void BasicSessionStream::handleTLSConnected() {
 	onTLSEncrypted();
 }
 
-void BasicSessionStream::handleTLSError() {
+void BasicSessionStream::handleTLSError(boost::shared_ptr<TLSError> error) {
 	available = false;
-	onClosed(boost::make_shared<Error>(Error::TLSError));
+	onClosed(error);
 }
 
 void BasicSessionStream::handleConnectionFinished(const boost::optional<Connection::Error>& error) {
 	available = false;
 	if (error == Connection::ReadError) {
-		onClosed(boost::make_shared<Error>(Error::ConnectionReadError));
+		onClosed(boost::make_shared<SessionStreamError>(SessionStreamError::ConnectionReadError));
 	}
 	else if (error) {
-		onClosed(boost::make_shared<Error>(Error::ConnectionWriteError));
+		onClosed(boost::make_shared<SessionStreamError>(SessionStreamError::ConnectionWriteError));
 	}
 	else {
-		onClosed(boost::shared_ptr<Error>());
+		onClosed(boost::shared_ptr<SessionStreamError>());
 	}
 }
 

@@ -12,6 +12,7 @@
 #include <Swiften/Network/Connection.h>
 #include <Swiften/Session/SessionStream.h>
 #include <Swiften/Elements/StreamType.h>
+#include <Swiften/TLS/TLSError.h>
 
 namespace Swift {
 	class TLSContextFactory;
@@ -65,7 +66,7 @@ namespace Swift {
 			void handleConnectionFinished(const boost::optional<Connection::Error>& error);
 			void handleXMPPError();
 			void handleTLSConnected();
-			void handleTLSError();
+			void handleTLSError(boost::shared_ptr<TLSError>);
 			void handleStreamStartReceived(const ProtocolHeader&);
 			void handleElementReceived(boost::shared_ptr<Element>);
 			void handleDataRead(const SafeByteArray& data);

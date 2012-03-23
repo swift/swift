@@ -473,7 +473,7 @@ void SchannelContext::indicateError()
 {
 	m_state = Error;
 	m_receivedData.clear();
-	onError();
+	onError(boost::make_shared<TLSError>());
 }
 
 //------------------------------------------------------------------------

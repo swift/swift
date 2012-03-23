@@ -518,6 +518,7 @@ void MainController::handleDisconnected(const boost::optional<ClientError>& erro
 	else if (error) {
 		std::string message;
 		std::string certificateErrorMessage;
+		bool forceSignout = false;
 		switch(error->getType()) {
 			case ClientError::UnknownError: message = QT_TRANSLATE_NOOP("", "Unknown Error"); break;
 			case ClientError::DomainNameResolveError: message = QT_TRANSLATE_NOOP("", "Unable to find server"); break;
@@ -536,6 +537,7 @@ void MainController::handleDisconnected(const boost::optional<ClientError>& erro
 			case ClientError::TLSError: message = QT_TRANSLATE_NOOP("", "Encryption error"); break;
 			case ClientError::ClientCertificateLoadError: message = QT_TRANSLATE_NOOP("", "Error loading certificate (Invalid password?)"); break;
 			case ClientError::ClientCertificateError: message = QT_TRANSLATE_NOOP("", "Certificate not authorized"); break;
+			case ClientError::CertificateCardRemoved: message = QT_TRANSLATE_NOOP("", "Certificate card removed"); forceSignout = true; break;
 
 			case ClientError::UnknownCertificateError: certificateErrorMessage = QT_TRANSLATE_NOOP("", "Unknown certificate"); break;
 			case ClientError::CertificateExpiredError: certificateErrorMessage = QT_TRANSLATE_NOOP("", "Certificate has expired"); break;
@@ -564,7 +566,7 @@ void MainController::handleDisconnected(const boost::optional<ClientError>& erro
 		if (forceReconnectAfterCertificateTrust) {
 			performLoginFromCachedCredentials();
 		}
-		else if (!rosterController_) { //hasn't been logged in yet
+		else if (forceSignout || !rosterController_) { //hasn't been logged in yet or permanent error
 			signOut();
 			loginWindow_->setMessage(message);
 			loginWindow_->setIsLoggingIn(false);

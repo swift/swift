@@ -15,6 +15,7 @@
 #include <Swiften/Base/Algorithm.h>
 #include <Swiften/Client/ClientSession.h>
 #include <Swiften/TLS/CertificateVerificationError.h>
+#include <Swiften/TLS/TLSError.h>
 #include <Swiften/Network/ChainedConnector.h>
 #include <Swiften/Network/NetworkFactories.h>
 #include <Swiften/Network/ProxyProvider.h>
@@ -217,21 +218,31 @@ void CoreClient::handleSessionFinished(boost::shared_ptr<Error> error) {
 					break;
 			}
 		}
-		else if (boost::shared_ptr<SessionStream::Error> actualError = boost::dynamic_pointer_cast<SessionStream::Error>(error)) {
-			switch(actualError->type) {
-				case SessionStream::Error::ParseError:
-					clientError = ClientError(ClientError::XMLError);
+		else if (boost::shared_ptr<TLSError> actualError = boost::dynamic_pointer_cast<TLSError>(error)) {
+			switch(actualError->getType()) {
+				case TLSError::CertificateCardRemoved:
+					clientError = ClientError(ClientError::CertificateCardRemoved);
 					break;
-				case SessionStream::Error::TLSError:
+				default:
 					clientError = ClientError(ClientError::TLSError);
 					break;
-				case SessionStream::Error::InvalidTLSCertificateError:
+			}
+		}
+		else if (boost::shared_ptr<SessionStream::SessionStreamError> actualError = boost::dynamic_pointer_cast<SessionStream::SessionStreamError>(error)) {
+			switch(actualError->type) {
+				case SessionStream::SessionStreamError::ParseError:
+					clientError = ClientError(ClientError::XMLError);
+					break;
+				case SessionStream::SessionStreamError::TLSError:
+					clientError = ClientError(ClientError::TLSError);
+					break;
+				case SessionStream::SessionStreamError::InvalidTLSCertificateError:
 					clientError = ClientError(ClientError::ClientCertificateLoadError);
 					break;
-				case SessionStream::Error::ConnectionReadError:
+				case SessionStream::SessionStreamError::ConnectionReadError:
 					clientError = ClientError(ClientError::ConnectionReadError);
 					break;
-				case SessionStream::Error::ConnectionWriteError:
+				case SessionStream::SessionStreamError::ConnectionWriteError:
 					clientError = ClientError(ClientError::ConnectionWriteError);
 					break;
 			}

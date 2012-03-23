@@ -21,7 +21,7 @@
 namespace Swift {
 	class SessionStream {
 		public:
-			class Error : public Swift::Error {
+			class SessionStreamError : public Swift::Error {
 				public:
 					enum Type {
 						ParseError,
@@ -31,7 +31,7 @@ namespace Swift {
 						ConnectionWriteError
 					};
 
-					Error(Type type) : type(type) {}
+					SessionStreamError(Type type) : type(type) {}
 
 					Type type;
 			};

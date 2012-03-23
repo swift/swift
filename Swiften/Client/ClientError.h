@@ -28,6 +28,9 @@ namespace Swift {
 				ClientCertificateLoadError,
 				ClientCertificateError,
 
+				// Certifate on smartcard was removed
+				CertificateCardRemoved,
+
 				// Certificate verification errors
 				UnknownCertificateError,
 				CertificateExpiredError,

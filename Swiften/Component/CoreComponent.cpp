@@ -114,23 +114,23 @@ void CoreComponent::handleSessionFinished(boost::shared_ptr<Error> error) {
 					break;
 			}
 		}
-		else if (boost::shared_ptr<SessionStream::Error> actualError = boost::dynamic_pointer_cast<SessionStream::Error>(error)) {
+		else if (boost::shared_ptr<SessionStream::SessionStreamError> actualError = boost::dynamic_pointer_cast<SessionStream::SessionStreamError>(error)) {
 			switch(actualError->type) {
-				case SessionStream::Error::ParseError:
+				case SessionStream::SessionStreamError::ParseError:
 					componentError = ComponentError(ComponentError::XMLError);
 					break;
-				case SessionStream::Error::TLSError:
+				case SessionStream::SessionStreamError::TLSError:
 					assert(false);
 					componentError = ComponentError(ComponentError::UnknownError);
 					break;
-				case SessionStream::Error::InvalidTLSCertificateError:
+				case SessionStream::SessionStreamError::InvalidTLSCertificateError:
 					assert(false);
 					componentError = ComponentError(ComponentError::UnknownError);
 					break;
-				case SessionStream::Error::ConnectionReadError:
+				case SessionStream::SessionStreamError::ConnectionReadError:
 					componentError = ComponentError(ComponentError::ConnectionReadError);
 					break;
-				case SessionStream::Error::ConnectionWriteError:
+				case SessionStream::SessionStreamError::ConnectionWriteError:
 					componentError = ComponentError(ComponentError::ConnectionWriteError);
 					break;
 			}
