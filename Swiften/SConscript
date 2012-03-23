@@ -43,6 +43,10 @@ if env["SCONS_STAGE"] == "flags" :
 			dep_env.UseFlags(env.get(module + "_FLAGS", {}))
 	dep_env.UseFlags(dep_env["PLATFORM_FLAGS"])
 
+	if env.get("HAVE_SCHANNEL", 0) :
+		dep_env.Append(LIBS = ["Winscard"])
+
+
 	for var, e in [("SWIFTEN_FLAGS", swiften_env), ("SWIFTEN_DEP_FLAGS", dep_env)] : 
 		env[var] = {
 				"CPPDEFINES": e.get("CPPDEFINES", []),

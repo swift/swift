@@ -223,7 +223,7 @@ void CoreClient::handleSessionFinished(boost::shared_ptr<Error> error) {
 				case TLSError::CertificateCardRemoved:
 					clientError = ClientError(ClientError::CertificateCardRemoved);
 					break;
-				default:
+				case TLSError::UnknownError:
 					clientError = ClientError(ClientError::TLSError);
 					break;
 			}

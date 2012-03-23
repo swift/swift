@@ -3,31 +3,35 @@
  * Licensed under the simplified BSD license.
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
+
 #pragma once
 
 #include <Swiften/Network/TimerFactory.h>
 #include <Swiften/TLS/CAPICertificate.h>
 #include <Swiften/StringCodecs/Hexify.h>
+#include <Swiften/Base/Log.h>
 
 #include <boost/bind.hpp>
 #include <boost/algorithm/string/predicate.hpp>
 
 // Size of the SHA1 hash
-#define SHA1_HASH_LEN                20
+#define SHA1_HASH_LEN 20
 
 
 namespace Swift {
 
-CAPICertificate::CAPICertificate(const std::string& capiUri, TimerFactory* timerFactory)
-	: valid_(false),
-	uri_(capiUri),
-	certStoreHandle_(0),
-	scardContext_(0),
-	cardHandle_(0),
-	certStore_(),
-	certName_(),
-	smartCardReaderName_(),
-	timerFactory_(timerFactory) {
+CAPICertificate::CAPICertificate(const std::string& capiUri, TimerFactory* timerFactory) : 
+		valid_(false), 
+		uri_(capiUri),
+		certStoreHandle_(0),
+		scardContext_(0),
+		cardHandle_(0),
+		certStore_(),
+		certName_(),
+		smartCardReaderName_(),
+		timerFactory_(timerFactory),
+		lastPollingResult_(true) {
+	assert(timerFactory_);
 
 	setUri(capiUri);
 }
@@ -69,19 +73,11 @@ const std::string& CAPICertificate::getSmartCardReaderName() const {
 }
 
 PCCERT_CONTEXT findCertificateInStore (HCERTSTORE certStoreHandle, const std::string &certName) {
-	PCCERT_CONTEXT pCertContext = NULL;
-
 	if (!boost::iequals(certName.substr(0, 5), "sha1:")) {
 
 		// Find client certificate. Note that this sample just searches for a
 		// certificate that contains the user name somewhere in the subject name.
-		pCertContext = CertFindCertificateInStore(certStoreHandle,
-				X509_ASN_ENCODING,
-				0,				// dwFindFlags
-				CERT_FIND_SUBJECT_STR_A,
-				certName.c_str(),		// *pvFindPara
-				NULL );				// pPrevCertContext
-		return pCertContext;
+		return CertFindCertificateInStore(certStoreHandle, X509_ASN_ENCODING, /*dwFindFlags*/ 0, CERT_FIND_SUBJECT_STR_A, /* *pvFindPara*/certName.c_str(), /*pPrevCertContext*/ NULL);
 	}
 
 
@@ -97,19 +93,12 @@ PCCERT_CONTEXT findCertificateInStore (HCERTSTORE certStoreHandle, const std::st
 
 	// Find client certificate. Note that this sample just searches for a
 	// certificate that contains the user name somewhere in the subject name.
-	pCertContext = CertFindCertificateInStore(certStoreHandle,
-			X509_ASN_ENCODING,
-			0,				// dwFindFlags
-			CERT_FIND_HASH,
-			&HashBlob,
-			NULL );				// pPrevCertContext
+	return CertFindCertificateInStore(certStoreHandle, X509_ASN_ENCODING, /* dwFindFlags */ 0, CERT_FIND_HASH, &HashBlob, /* pPrevCertContext */ NULL);
 
-	return pCertContext;
 }
 
 
 void CAPICertificate::setUri (const std::string& capiUri) {
-
 	valid_ = false;
 
 	/* Syntax: "certstore:" <cert_store> ":" <hash> ":" <hash_of_cert> */
@@ -119,41 +108,39 @@ void CAPICertificate::setUri (const std::string& capiUri) {
 	}
 
 	/* Substring of subject: uses "storename" */
-	std::string capi_identity = capiUri.substr(10);
-	std::string new_certStore_name;
-	size_t pos = capi_identity.find_first_of (':');
+	std::string capiIdentity = capiUri.substr(10);
+	std::string newCertStoreName;
+	size_t pos = capiIdentity.find_first_of (':');
 
 	if (pos == std::string::npos) {
 		/* Using the default certificate store */
-		new_certStore_name = "MY";
-		certName_ = capi_identity;
+		newCertStoreName = "MY";
+		certName_ = capiIdentity;
 	}
 	else {
-		new_certStore_name = capi_identity.substr(0, pos);
-		certName_ = capi_identity.substr(pos + 1);
+		newCertStoreName = capiIdentity.substr(0, pos);
+		certName_ = capiIdentity.substr(pos + 1);
 	}
 
-	PCCERT_CONTEXT pCertContext = NULL;
-
 	if (certStoreHandle_ != NULL) {
-		if (new_certStore_name != certStore_) {
+		if (newCertStoreName != certStore_) {
 			CertCloseStore(certStoreHandle_, 0);
 			certStoreHandle_ = NULL;
 		}
 	}
 
 	if (certStoreHandle_ == NULL) {
-		certStoreHandle_ = CertOpenSystemStore(0, new_certStore_name.c_str());
+		certStoreHandle_ = CertOpenSystemStore(0, newCertStoreName.c_str());
 		if (!certStoreHandle_) {
 			return;
 		}
 	}
 
-	certStore_ = new_certStore_name;
+	certStore_ = newCertStoreName;
 
-	pCertContext = findCertificateInStore (certStoreHandle_, certName_);
+	PCCERT_CONTEXT certContext = findCertificateInStore (certStoreHandle_, certName_);
 
-	if (!pCertContext) {
+	if (!certContext) {
 		return;
 	}
 
@@ -165,61 +152,50 @@ void CAPICertificate::setUri (const std::string& capiUri) {
 	HCRYPTPROV hprov;
 	HCRYPTKEY key;
 
-	if (!CertGetCertificateContextProperty(pCertContext,
+	if (!CertGetCertificateContextProperty(certContext,
 			CERT_KEY_PROV_INFO_PROP_ID,
 			NULL,
 			&len)) {
-		CertFreeCertificateContext(pCertContext);
+		CertFreeCertificateContext(certContext);
 		return;
 	}
 
 	pinfo = static_cast<CRYPT_KEY_PROV_INFO *>(malloc(len));
 	if (!pinfo) {
-		CertFreeCertificateContext(pCertContext);
+		CertFreeCertificateContext(certContext);
 		return;
 	}
 
-	if (!CertGetCertificateContextProperty(pCertContext,
-			CERT_KEY_PROV_INFO_PROP_ID,
-			pinfo,
-			&len)) {
-		CertFreeCertificateContext(pCertContext);
+	if (!CertGetCertificateContextProperty(certContext, CERT_KEY_PROV_INFO_PROP_ID, pinfo, &len)) {
+		CertFreeCertificateContext(certContext);
 		free(pinfo);
 		return;
 	}
 
-	CertFreeCertificateContext(pCertContext);
+	CertFreeCertificateContext(certContext);
 
 	// Now verify if we have access to the private key
-	if (!CryptAcquireContextW(&hprov,
-			pinfo->pwszContainerName,
-			pinfo->pwszProvName,
-			pinfo->dwProvType,
-			0)) {
+	if (!CryptAcquireContextW(&hprov, pinfo->pwszContainerName, pinfo->pwszProvName, pinfo->dwProvType, 0)) {
 		free(pinfo);
 		return;
 	}
 
 
-	char smartcard_reader[1024];
-	DWORD buflen;
-
-	buflen = sizeof(smartcard_reader);
-	if (!CryptGetProvParam(hprov, PP_SMARTCARD_READER, (BYTE *)&smartcard_reader, &buflen, 0)) {
-		DWORD error;
-
-		error = GetLastError();
+	char smartCardReader[1024];
+	DWORD bufferLength = sizeof(smartCardReader);
+	if (!CryptGetProvParam(hprov, PP_SMARTCARD_READER, (BYTE *)&smartCardReader, &bufferLength, 0)) {
+		DWORD error = GetLastError();
 		smartCardReaderName_ = "";
-	} else {
-		LONG       lRet;
+	}
+	else {
+		smartCardReaderName_ = smartCardReader;
 
-		smartCardReaderName_ = smartcard_reader;
-
-		lRet = SCardEstablishContext(SCARD_SCOPE_USER, NULL, NULL, &scardContext_);
-		if (SCARD_S_SUCCESS == lRet) {
+		LONG result = SCardEstablishContext(SCARD_SCOPE_USER, NULL, NULL, &scardContext_);
+		if (SCARD_S_SUCCESS == result) {
 			// Initiate monitoring for smartcard ejection
-			smartCardTimer_ = timerFactory_->createTimer(SMARTCARD_EJECTION_CHECK_FREQ);
-		} else {
+			smartCardTimer_ = timerFactory_->createTimer(SMARTCARD_EJECTION_CHECK_FREQUENCY_MILLISECONDS);
+		}
+		else {
 			///Need to handle an error here
 		}
 	}
@@ -242,125 +218,115 @@ void CAPICertificate::setUri (const std::string& capiUri) {
 	valid_ = true;
 }
 
-static void smartcard_check_status (SCARDCONTEXT  hContext,
-				    const char * pReader,
-				    SCARDHANDLE hCardHandle,     // Can be 0 on the first call
-				    SCARDHANDLE * newCardHandle, // The handle returned
-				    DWORD * pdwState) {
-	LONG            lReturn;
-	DWORD           dwAP;
-	char            szReader[200];
-	DWORD           cch = sizeof(szReader);
-	BYTE            bAttr[32];
-	DWORD           cByte = 32;
-
+static void smartcard_check_status (SCARDCONTEXT hContext,
+		const char* pReader,
+		SCARDHANDLE hCardHandle, /* Can be 0 on the first call */
+		SCARDHANDLE* newCardHandle, /* The handle returned */
+		DWORD* pdwState) {
 	if (hCardHandle == 0) {
-		lReturn = SCardConnect(hContext,
-					pReader,
-					SCARD_SHARE_SHARED,
-					SCARD_PROTOCOL_T0 | SCARD_PROTOCOL_T1,
-					&hCardHandle,
-					&dwAP);
-		if ( SCARD_S_SUCCESS != lReturn ) {
+		DWORD dwAP;
+		LONG result = SCardConnect(hContext, pReader, SCARD_SHARE_SHARED, SCARD_PROTOCOL_T0 | SCARD_PROTOCOL_T1, &hCardHandle, &dwAP);
+		if (SCARD_S_SUCCESS != result) {
 			hCardHandle = 0;
-			if (SCARD_E_NO_SMARTCARD == lReturn || SCARD_W_REMOVED_CARD == lReturn) {
+			if (SCARD_E_NO_SMARTCARD == result || SCARD_W_REMOVED_CARD == result) {
 				*pdwState = SCARD_ABSENT;
-			} else {
+			}
+			else {
 				*pdwState = SCARD_UNKNOWN;
 			}
-			goto done;
+
+			if (newCardHandle == NULL) {
+				(void) SCardDisconnect(hCardHandle, SCARD_LEAVE_CARD);
+				hCardHandle = 0;
+			}
+			else {
+				*newCardHandle = hCardHandle;
+			}
 		}
 	}
 
-	lReturn = SCardStatus(hCardHandle,
-				szReader,	// Unfortunately we can't use NULL here
-				&cch,
-				pdwState,
-				NULL,
-				(LPBYTE)&bAttr,
-				&cByte);
+	char szReader[200];
+	DWORD cch = sizeof(szReader);
+	BYTE bAttr[32];
+	DWORD cByte = 32;
+	LONG result = SCardStatus(hCardHandle, /* Unfortunately we can't use NULL here */ szReader, &cch, pdwState, NULL, (LPBYTE)&bAttr, &cByte);
 
-	if ( SCARD_S_SUCCESS != lReturn ) {
-		if (SCARD_E_NO_SMARTCARD == lReturn || SCARD_W_REMOVED_CARD == lReturn) {
+	if (SCARD_S_SUCCESS != result) {
+		if (SCARD_E_NO_SMARTCARD == result || SCARD_W_REMOVED_CARD == result) {
 			*pdwState = SCARD_ABSENT;
-		} else {
+		}
+		else {
 			*pdwState = SCARD_UNKNOWN;
 		}
 	}
 
-done:
 	if (newCardHandle == NULL) {
 		(void) SCardDisconnect(hCardHandle, SCARD_LEAVE_CARD);
 		hCardHandle = 0;
-	} else {
+	}
+	else {
 		*newCardHandle = hCardHandle;
 	}
 }
 
 bool CAPICertificate::checkIfSmartCardPresent () {
-
-	DWORD dwState;
-
 	if (!smartCardReaderName_.empty()) {
-		smartcard_check_status (scardContext_,
-					smartCardReaderName_.c_str(),
-					cardHandle_,
-					&cardHandle_,
-					&dwState);
-////DEBUG
-		switch ( dwState ) {
-		case SCARD_ABSENT:
-		    printf("Card absent.\n");
-		    break;
-		case SCARD_PRESENT:
-		    printf("Card present.\n");
-		    break;
-		case SCARD_SWALLOWED:
-		    printf("Card swallowed.\n");
-		    break;
-		case SCARD_POWERED:
-		    printf("Card has power.\n");
-		    break;
-		case SCARD_NEGOTIABLE:
-		    printf("Card reset and waiting PTS negotiation.\n");
-		    break;
-		case SCARD_SPECIFIC:
-		    printf("Card has specific communication protocols set.\n");
-		    break;
-		default:
-		    printf("Unknown or unexpected card state.\n");
-		    break;
+		DWORD dwState;
+		smartcard_check_status(scardContext_, smartCardReaderName_.c_str(), cardHandle_, &cardHandle_, &dwState);
+
+		switch (dwState) {
+			case SCARD_ABSENT:
+				SWIFT_LOG("DEBUG") << "Card absent." << std::endl;
+				break;
+			case SCARD_PRESENT:
+				SWIFT_LOG("DEBUG") << "Card present." << std::endl;
+				break;
+			case SCARD_SWALLOWED:
+				SWIFT_LOG("DEBUG") << "Card swallowed." << std::endl;
+				break;
+			case SCARD_POWERED:
+				SWIFT_LOG("DEBUG") << "Card has power." << std::endl;
+				break;
+			case SCARD_NEGOTIABLE:
+				SWIFT_LOG("DEBUG") << "Card reset and waiting PTS negotiation." << std::endl;
+				break;
+			case SCARD_SPECIFIC:
+				SWIFT_LOG("DEBUG") << "Card has specific communication protocols set." << std::endl;
+				break;
+			default:
+				SWIFT_LOG("DEBUG") << "Unknown or unexpected card state." << std::endl;
+				break;
 		}
 
 
 
-		switch ( dwState ) {
-		case SCARD_ABSENT:
-		    return false;
+		switch (dwState) {
+			case SCARD_ABSENT:
+				return false;
 
-		case SCARD_PRESENT:
-		case SCARD_SWALLOWED:
-		case SCARD_POWERED:
-		case SCARD_NEGOTIABLE:
-		case SCARD_SPECIFIC:
-		    return true;
+			case SCARD_PRESENT:
+			case SCARD_SWALLOWED:
+			case SCARD_POWERED:
+			case SCARD_NEGOTIABLE:
+			case SCARD_SPECIFIC:
+				return true;
 
-		default:
-		    return false;
+			default:
+				return false;
 		}
-	} else {
+	}
+	else {
 		return false;
 	}
 }
 
 void CAPICertificate::handleSmartCardTimerTick() {
-
-	if (checkIfSmartCardPresent() == false) {
-		smartCardTimer_->stop();
+	bool poll = checkIfSmartCardPresent();
+	if (lastPollingResult_ && !poll) {
 		onCertificateCardRemoved();
-	} else {
-		smartCardTimer_->start();
-	}
+	} 
+	lastPollingResult_ = poll;
+	smartCardTimer_->start();
 }
 
 }

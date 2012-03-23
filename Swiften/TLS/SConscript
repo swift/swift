@@ -19,6 +19,7 @@ if myenv.get("HAVE_OPENSSL", 0) :
 		])
 	myenv.Append(CPPDEFINES = "HAVE_OPENSSL")
 elif myenv.get("HAVE_SCHANNEL", 0) :
+	swiften_env.Append(LIBS = ["Winscard"])
 	objects += myenv.StaticObject([
 			"CAPICertificate.cpp",
 			"Schannel/SchannelContext.cpp",

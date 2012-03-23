@@ -16,15 +16,13 @@
 #include <WinCrypt.h>
 #include <Winscard.h>
 
-/* In ms */
-#define SMARTCARD_EJECTION_CHECK_FREQ	1000
+#define SMARTCARD_EJECTION_CHECK_FREQUENCY_MILLISECONDS	1000
 
 namespace Swift {
 	class TimerFactory;
 
 	class CAPICertificate : public Swift::CertificateWithKey {
 		public:
-////Allow timerFactory to be NULL?
 			CAPICertificate(const std::string& capiUri, TimerFactory* timerFactory);
 
 			virtual ~CAPICertificate();
@@ -61,6 +59,8 @@ namespace Swift {
 			std::string smartCardReaderName_;
 			boost::shared_ptr<Timer> smartCardTimer_;
 			TimerFactory* timerFactory_;
+
+			bool lastPollingResult_;
 	};
 
 PCCERT_CONTEXT findCertificateInStore (HCERTSTORE certStoreHandle, const std::string &certName);

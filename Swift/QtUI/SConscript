@@ -41,7 +41,6 @@ if myenv.get("HAVE_SNARL", False) :
 	myenv.Append(CPPDEFINES = ["HAVE_SNARL"])
 if env["PLATFORM"] == "win32" :
 	myenv.Append(LIBS = ["cryptui"])
-	myenv.Append(LIBS = ["Winscard"])
 myenv.UseFlags(myenv["PLATFORM_FLAGS"])
 
 myenv.Tool("qt4", toolpath = ["#/BuildTools/SCons/Tools"])

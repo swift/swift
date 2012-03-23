@@ -4,14 +4,21 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
+/*
+ * Copyright (c) 2012 Kevin Smith
+ * Licensed under the GNU General Public License v3.
+ * See Documentation/Licenses/GPLv3.txt for more information.
+ */
+
 #pragma once
 
-#include "Swiften/Base/boost_bsignals.h"
+#include <Swiften/Base/boost_bsignals.h>
 
-#include "Swiften/TLS/TLSContext.h"
-#include "Swiften/TLS/Schannel/SchannelUtil.h"
-#include "Swiften/TLS/CertificateWithKey.h"
-#include "Swiften/Base/ByteArray.h"
+#include <Swiften/TLS/TLSContext.h>
+#include <Swiften/TLS/Schannel/SchannelUtil.h>
+#include <Swiften/TLS/CertificateWithKey.h>
+#include <Swiften/Base/ByteArray.h>
+#include <Swiften/TLS/TLSError.h>
 
 #define SECURITY_WIN32
 #include <Windows.h>
@@ -23,6 +30,7 @@
 
 namespace Swift 
 {	
+	class CAPICertificate;
 	class SchannelContext : public TLSContext, boost::noncopyable 
 	{
 	public:
@@ -50,7 +58,9 @@ namespace Swift
 	private:
 		void			determineStreamSizes();
 		void			continueHandshake(const SafeByteArray& data);
-		void			indicateError();
+		void			indicateError(boost::shared_ptr<TLSError> error);
+		//FIXME: Remove
+		void indicateError() {indicateError(boost::make_shared<TLSError>());}
 		void			handleCertError(SECURITY_STATUS status) ;
 
 		void			sendDataOnNetwork(const void* pData, size_t dataSize);
@@ -90,5 +100,6 @@ namespace Swift
 		std::string		m_cert_name;
 ////Not needed, most likely
 		std::string		m_smartcard_reader;	//Can be empty string for non SmartCard certificates
+		boost::shared_ptr<CAPICertificate> userCertificate;
 	};
 }
