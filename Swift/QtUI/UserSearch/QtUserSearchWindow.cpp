@@ -97,7 +97,7 @@ void QtUserSearchWindow::handleCurrentChanged(int page) {
 }
 
 JID QtUserSearchWindow::getServerToSearch() {
-	return firstPage_->byRemoteSearch_->isChecked() ? JID(Q2PSTRING(firstPage_->service_->currentText())) : myServer_;
+	return firstPage_->byRemoteSearch_->isChecked() ? JID(Q2PSTRING(firstPage_->service_->currentText().trimmed())) : myServer_;
 }
 
 void QtUserSearchWindow::handleAccepted() {
@@ -192,7 +192,7 @@ JID QtUserSearchWindow::getContactJID() const {
 		}
 	}
 	else {
-		jid = JID(Q2PSTRING(firstPage_->jid_->text()));
+		jid = JID(Q2PSTRING(firstPage_->jid_->text().trimmed()));
 	}
 	return jid;
 }

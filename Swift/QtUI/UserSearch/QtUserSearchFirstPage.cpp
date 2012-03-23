@@ -21,11 +21,11 @@ QtUserSearchFirstPage::QtUserSearchFirstPage(UserSearchWindow::Type type, const 
 bool QtUserSearchFirstPage::isComplete() const {
 	bool complete = false;
 	if (byJID_->isChecked()) {
-		complete = JID(Q2PSTRING(jid_->text())).isValid();
+		complete = JID(Q2PSTRING(jid_->text().trimmed())).isValid();
 	} else if (byLocalSearch_->isChecked()) {
 		complete = true;
 	} else if (byRemoteSearch_->isChecked()) {
-		complete = JID(Q2PSTRING(service_->currentText())).isValid();
+		complete = JID(Q2PSTRING(service_->currentText().trimmed())).isValid();
 	}
 	return complete;
 }
