@@ -7,9 +7,23 @@
 #pragma once
 
 #include "Swift/Controllers/UIEvents/UIEvent.h"
+#include <string>
+#include <Swiften/JID/JID.h>
+
 
 namespace Swift {
 	class RequestAddUserDialogUIEvent : public UIEvent {
+
+		public:
+			RequestAddUserDialogUIEvent(const JID& predefinedJID, const std::string& predefinedName) : preJID_(predefinedJID), preName_(predefinedName) {};
+			RequestAddUserDialogUIEvent() : preJID_(JID()), preName_(std::string()) {};
+
+			const JID& getPredefinedJID() const { return preJID_; };
+			const std::string& getPredefinedName() const { return preName_; };
+
+		private:
+			const JID& preJID_;
+			const std::string& preName_;
 
 	};
 }

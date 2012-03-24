@@ -30,6 +30,7 @@ namespace Swift {
 			virtual void setSearchError(bool support) = 0;
 			virtual void setSearchFields(boost::shared_ptr<SearchPayload> fields) = 0;
 			virtual void setNameSuggestions(const std::vector<std::string>& suggestions) = 0;
+			virtual void prepopulateJIDAndName(const JID& jid, const std::string& name) = 0;
 			virtual void show() = 0;
 
 			boost::signal<void (const JID&)> onFormRequested;

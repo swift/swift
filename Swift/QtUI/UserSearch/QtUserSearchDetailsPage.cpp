@@ -36,6 +36,10 @@ void QtUserSearchDetailsPage::setNameSuggestions(const std::vector<std::string>&
 	editWidget->setNameSuggestions(nameSuggestions);
 }
 
+void QtUserSearchDetailsPage::setName(const std::string& name) {
+	editWidget->setName(name);
+}
+
 std::set<std::string> QtUserSearchDetailsPage::getSelectedGroups() {
 	return editWidget->getSelectedGroups();
 }

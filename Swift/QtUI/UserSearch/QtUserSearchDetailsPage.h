@@ -27,6 +27,7 @@ namespace Swift {
 
 			void setJID(const JID& jid);
 			void setNameSuggestions(const std::vector<std::string>& nameSuggestions);
+			void setName(const std::string& name);
 
 			std::set<std::string> getSelectedGroups();
 			std::string getName();

@@ -236,6 +236,15 @@ void QtUserSearchWindow::setNameSuggestions(const std::vector<std::string>& sugg
 	}
 }
 
+void QtUserSearchWindow::prepopulateJIDAndName(const JID& jid, const std::string& name) {
+	firstPage_->jid_->setText(P2QSTRING(jid.toBare().toString()));
+	detailsPage_->setJID(jid);
+	lastPage_ = 1;
+	restart();
+	next();
+	detailsPage_->setName(name);
+}
+
 void QtUserSearchWindow::setResults(const std::vector<UserSearchResult>& results) {
 	UserSearchModel *newModel = new UserSearchModel();
 	newModel->setResults(results);
