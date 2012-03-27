@@ -12,7 +12,7 @@
 #include "Swift/QtUI/EventViewer/TwoLineDelegate.h"
 
 namespace Swift {
-	enum EventType {MessageEventType, SubscriptionEventType, ErrorEventType};
+	enum EventType {MessageEventType, SubscriptionEventType, ErrorEventType, MUCInviteEventType};
 	class EventDelegate : public QStyledItemDelegate {
 		Q_OBJECT
 		public:
@@ -25,6 +25,7 @@ namespace Swift {
 			TwoLineDelegate messageDelegate_;
 			TwoLineDelegate subscriptionDelegate_;
 			TwoLineDelegate errorDelegate_;
+			TwoLineDelegate mucInviteDelegate_;
 	};
 }
 

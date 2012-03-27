@@ -4,15 +4,15 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
-#include "QtFileTransferJSBridge.h"
+#include "QtChatWindowJSBridge.h"
 
 namespace Swift {
 
-QtFileTransferJSBridge::QtFileTransferJSBridge() {
+QtChatWindowJSBridge::QtChatWindowJSBridge() {
 	
 }
 
-QtFileTransferJSBridge::~QtFileTransferJSBridge() {
+QtChatWindowJSBridge::~QtChatWindowJSBridge() {
 	
 }
 

@@ -144,7 +144,7 @@ sources = [
     "QtWebView.cpp",
     "qrc_DefaultTheme.cc",
     "qrc_Swift.cc",
-    "QtFileTransferJSBridge.cpp",
+    "QtChatWindowJSBridge.cpp",
     "QtMUCConfigurationWindow.cpp",
     "QtAffiliationEditor.cpp",
     "QtUISettingConstants.cpp"

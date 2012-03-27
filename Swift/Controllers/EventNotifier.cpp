@@ -18,6 +18,7 @@
 #include "Swift/Controllers/XMPPEvents/MessageEvent.h"
 #include "Swift/Controllers/XMPPEvents/SubscriptionRequestEvent.h"
 #include "Swift/Controllers/XMPPEvents/ErrorEvent.h"
+#include "Swift/Controllers/XMPPEvents/MUCInviteEvent.h"
 #include "Swift/Controllers/Settings/SettingsProvider.h"
 
 namespace Swift {
@@ -54,6 +55,12 @@ void EventNotifier::handleEventAdded(boost::shared_ptr<StanzaEvent> event) {
 	}
 	else if(boost::shared_ptr<ErrorEvent> errorEvent = boost::dynamic_pointer_cast<ErrorEvent>(event)) {
 		notifier->showMessage(Notifier::SystemMessage, QT_TRANSLATE_NOOP("", "Error"), errorEvent->getText(), boost::filesystem::path(), boost::function<void()>());
+	}
+	else if (boost::shared_ptr<MUCInviteEvent> mucInviteEvent = boost::dynamic_pointer_cast<MUCInviteEvent>(event)) {
+		std::string title = mucInviteEvent->getInviter();
+		std::string message = str(format(QT_TRANSLATE_NOOP("", "%1% has invited you to enter the %2% room")) % nickResolver->jidToNick(mucInviteEvent->getInviter()) % mucInviteEvent->getRoomJID());
+		// FIXME: not show avatar or greyed out avatar for mediated invites
+		notifier->showMessage(Notifier::SystemMessage, title, message, avatarManager->getAvatarPath(mucInviteEvent->getInviter()), boost::bind(&EventNotifier::handleNotificationActivated, this, mucInviteEvent->getInviter()));
 	}
 }
 

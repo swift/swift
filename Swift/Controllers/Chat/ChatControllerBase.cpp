@@ -29,6 +29,7 @@
 #include <Swift/Controllers/UIInterfaces/ChatWindowFactory.h>
 #include <Swiften/Queries/Requests/GetSecurityLabelsCatalogRequest.h>
 #include <Swiften/Avatars/AvatarManager.h>
+#include <Swift/Controllers/XMPPEvents/MUCInviteEvent.h>
 
 namespace Swift {
 
@@ -91,8 +92,8 @@ void ChatControllerBase::setAvailableServerFeatures(boost::shared_ptr<DiscoInfo>
 
 void ChatControllerBase::handleAllMessagesRead() {
 	if (!unreadMessages_.empty()) {
-		foreach (boost::shared_ptr<MessageEvent> messageEvent, unreadMessages_) {
-			messageEvent->read();
+		foreach (boost::shared_ptr<StanzaEvent> stanzaEvent, unreadMessages_) {
+			stanzaEvent->conclude();
 		}
 		unreadMessages_.clear();
 		chatWindow_->setUnreadMessageCount(0);
@@ -267,9 +268,20 @@ std::string ChatControllerBase::getErrorMessage(boost::shared_ptr<ErrorPayload> 
 	return defaultMessage;
 }
 
+void ChatControllerBase::handleGeneralMUCInvitation(MUCInviteEvent::ref event) {
+	unreadMessages_.push_back(event);
+	chatWindow_->show();
+	chatWindow_->setUnreadMessageCount(unreadMessages_.size());
+	onUnreadCountChanged();
+	chatWindow_->addMUCInvitation(senderDisplayNameFromMessage(event->getInviter()), event->getRoomJID(), event->getReason(), event->getPassword(), event->getDirect());
+	eventController_->handleIncomingEvent(event);
+}
+
 void ChatControllerBase::handleMUCInvitation(Message::ref message) {
 	MUCInvitationPayload::ref invite = message->getPayload<MUCInvitationPayload>();
-	chatWindow_->addMUCInvitation(invite->getJID(), invite->getReason(), invite->getPassword());
+
+	MUCInviteEvent::ref inviteEvent = boost::make_shared<MUCInviteEvent>(toJID_, invite->getJID(), invite->getReason(), invite->getPassword(), true);
+	handleGeneralMUCInvitation(inviteEvent);
 }
 
 void ChatControllerBase::handleMediatedMUCInvitation(Message::ref message) {
@@ -283,7 +295,9 @@ void ChatControllerBase::handleMediatedMUCInvitation(Message::ref message) {
 	if (message->getPayload<MUCUserPayload>()->getPassword()) {
 		password = *message->getPayload<MUCUserPayload>()->getPassword();
 	}
-	chatWindow_->addMUCInvitation(from, reason, password, false);
+
+	MUCInviteEvent::ref inviteEvent = boost::make_shared<MUCInviteEvent>(invite.from, from, reason, password, false);
+	handleGeneralMUCInvitation(inviteEvent);
 }
 
 

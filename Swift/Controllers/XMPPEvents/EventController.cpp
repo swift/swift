@@ -13,6 +13,7 @@
 #include "Swift/Controllers/XMPPEvents/MessageEvent.h"
 #include "Swift/Controllers/XMPPEvents/ErrorEvent.h"
 #include "Swift/Controllers/XMPPEvents/SubscriptionRequestEvent.h"
+#include "Swift/Controllers/XMPPEvents/MUCInviteEvent.h"
 
 namespace Swift {
 
@@ -29,7 +30,8 @@ void EventController::handleIncomingEvent(boost::shared_ptr<StanzaEvent> sourceE
 	boost::shared_ptr<MessageEvent> messageEvent = boost::dynamic_pointer_cast<MessageEvent>(sourceEvent);
 	boost::shared_ptr<SubscriptionRequestEvent> subscriptionEvent = boost::dynamic_pointer_cast<SubscriptionRequestEvent>(sourceEvent);
 	boost::shared_ptr<ErrorEvent> errorEvent = boost::dynamic_pointer_cast<ErrorEvent>(sourceEvent);
-	if ((messageEvent && messageEvent->isReadable()) || subscriptionEvent || errorEvent) {
+	boost::shared_ptr<MUCInviteEvent> mucInviteEvent = boost::dynamic_pointer_cast<MUCInviteEvent>(sourceEvent);
+	if ((messageEvent && messageEvent->isReadable()) || subscriptionEvent || errorEvent || mucInviteEvent) {
 		events_.push_back(sourceEvent);
 		sourceEvent->onConclusion.connect(boost::bind(&EventController::handleEventConcluded, this, sourceEvent));
 		onEventQueueLengthChange(events_.size());

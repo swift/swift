@@ -22,6 +22,7 @@
 
 #include "QtWebView.h"
 #include "QtChatTheme.h"
+#include "QtChatWindow.h"
 #include "QtSwiftUtil.h"
 
 
@@ -326,13 +327,13 @@ void QtChatView::setFileTransferStatus(QString id, const ChatWindow::FileTransfe
 
 	QString newInnerHTML = "";
 	if (state == ChatWindow::WaitingForAccept) {
-		newInnerHTML =	"Waiting for other side to accept the transfer.<br/>"
-						"<input id=\"discard\" type=\"submit\" value=\"Cancel\" onclick=\"filetransfer.cancel(\'" + id + "\');\">";
+		newInnerHTML =	"Waiting for other side to accept the transfer.<br/>" +
+			QtChatWindow::buildChatWindowButton(tr("Cancel"), QtChatWindow::ButtonFileTransferCancel, id);
 	}
 	if (state == ChatWindow::Negotiating) {
 		// replace with text "Negotiaging" + Cancel button
-		newInnerHTML =	"Negotiating...<br/>"
-						"<input id=\"discard\" type=\"submit\" value=\"Cancel\" onclick=\"filetransfer.cancel(\'" + id + "\');\">";
+		newInnerHTML =	"Negotiating...<br/>" +
+			QtChatWindow::buildChatWindowButton(tr("Cancel"), QtChatWindow::ButtonFileTransferCancel, id);
 	}
 	else if (state == ChatWindow::Transferring) {
 		// progress bar + Cancel Button
@@ -342,8 +343,8 @@ void QtChatView::setFileTransferStatus(QString id, const ChatWindow::FileTransfe
 									"0%"
 								"</div>"
 							"</div>"
-						"</div>"
-						"<input id=\"discard\" type=\"submit\" value=\"Cancel\" onclick=\"filetransfer.cancel(\'" + id + "\');\">";
+						"</div>" +
+						QtChatWindow::buildChatWindowButton(tr("Cancel"), QtChatWindow::ButtonFileTransferCancel, id);
 	}
 	else if (state == ChatWindow::Canceled) {
 		newInnerHTML = "Transfer has been canceled!";
@@ -357,6 +358,14 @@ void QtChatView::setFileTransferStatus(QString id, const ChatWindow::FileTransfe
 	}
 
 	ftElement.setInnerXml(newInnerHTML);
+}
+
+void QtChatView::setMUCInvitationJoined(QString id) {
+	QWebElement divElement = findDivElementWithID(document_, id);
+	QWebElement buttonElement = divElement.findFirst("input#mucinvite");
+	if (!buttonElement.isNull()) {
+		buttonElement.setAttribute("value", tr("Return to room"));
+	}
 }
 
 }

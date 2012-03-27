@@ -31,11 +31,19 @@ namespace Swift {
 	class TreeWidget;
 	class QtTextEdit;
 	class UIEventStream;
-	class QtFileTransferJSBridge;
+	class QtChatWindowJSBridge;
 	class SettingsProvider;
 
 	class QtChatWindow : public QtTabbable, public ChatWindow {
 		Q_OBJECT
+
+		public:
+			static const QString ButtonFileTransferCancel;
+			static const QString ButtonFileTransferSetDescription;
+			static const QString ButtonFileTransferSendRequest;
+			static const QString ButtonFileTransferAcceptRequest;
+			static const QString ButtonMUCInvite;
+
 		public:
 			QtChatWindow(const QString &contact, QtChatTheme* theme, UIEventStream* eventStream, SettingsProvider* settings);
 			~QtChatWindow();
@@ -77,9 +85,11 @@ namespace Swift {
 			virtual void setAvailableOccupantActions(const std::vector<OccupantAction>& actions);
 			void setSubject(const std::string& subject);
 			void showRoomConfigurationForm(Form::ref);
-			void addMUCInvitation(const JID& jid, const std::string& reason, const std::string& password, bool direct = true);
+			void addMUCInvitation(const std::string& senderName, const JID& jid, const std::string& reason, const std::string& password, bool direct = true);
 			void setAffiliations(MUCOccupant::Affiliation, const std::vector<JID>&);
 			void setAvailableRoomActions(const std::vector<RoomAction> &actions);
+
+			static QString buildChatWindowButton(const QString& name, const QString& id, const QString& arg1 = QString(), const QString& arg2 = QString(), const QString& arg3 = QString());
 
 		public slots:
 			void handleChangeSplitterState(QByteArray state);
@@ -113,12 +123,18 @@ namespace Swift {
 			void handleAlertButtonClicked();
 			void handleActionButtonClicked();
 
-			
-			void handleFileTransferCancel(QString id);
-			void handleFileTransferSetDescription(QString id);
-			void handleFileTransferStart(QString id);
-			void handleFileTransferAccept(QString id, QString filename);
+			void handleHTMLButtonClicked(QString id, QString arg1, QString arg2, QString arg3);
 			void handleAffiliationEditorAccepted();
+
+		private:
+			enum PreviousMessageKind {
+				PreviosuMessageWasNone,
+				PreviousMessageWasMessage,
+				PreviousMessageWasSystem,
+				PreviousMessageWasPresence,
+				PreviousMessageWasFileTransfer,
+				PreviousMessageWasMUCInvite
+			};
 
 		private:
 			void updateTitleWithUnreadCount();
@@ -127,6 +143,7 @@ namespace Swift {
 			void cancelCorrection();
 			std::string addMessage(const std::string &message, const std::string &senderName, bool senderIsSelf, boost::shared_ptr<SecurityLabel> label, const std::string& avatarPath, const QString& style, const boost::posix_time::ptime& time);
 			void handleOccupantSelectionChanged(RosterItem* item);
+			bool appendToPreviousCheck(PreviousMessageKind messageKind, const std::string& senderName, bool senderIsSelf) const;
 
 			int unreadCount_;
 			bool contactIsTyping_;
@@ -148,9 +165,7 @@ namespace Swift {
 			std::vector<SecurityLabelsCatalog::Item> availableLabels_;
 			bool isCorrection_;
 			bool previousMessageWasSelf_;
-			bool previousMessageWasSystem_;
-			bool previousMessageWasPresence_;
-			bool previousMessageWasFileTransfer_;
+			PreviousMessageKind previousMessageKind_;
 			QString previousSenderName_;
 			bool inputClearing_;
 			UIEventStream* eventStream_;
@@ -159,7 +174,7 @@ namespace Swift {
 			Tristate correctionEnabled_;
 			QString alertStyleSheet_;
 			std::map<QString, QString> descriptions;
-			QtFileTransferJSBridge* fileTransferJS;
+			QtChatWindowJSBridge* jsBridge;
 			QPointer<QtMUCConfigurationWindow> mucConfigurationWindow_;
 			QPointer<QtAffiliationEditor> affiliationEditor_;
 			int idCounter_;

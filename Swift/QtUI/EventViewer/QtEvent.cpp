@@ -11,6 +11,7 @@
 #include "Swift/Controllers/XMPPEvents/MessageEvent.h"
 #include "Swift/Controllers/XMPPEvents/ErrorEvent.h"
 #include "Swift/Controllers/XMPPEvents/SubscriptionRequestEvent.h"
+#include "Swift/Controllers/XMPPEvents/MUCInviteEvent.h"
 
 #include "Swift/QtUI/QtSwiftUtil.h"
 
@@ -47,6 +48,10 @@ QString QtEvent::sender() {
 	if (errorEvent) {
 		return P2QSTRING(errorEvent->getJID().toBare().toString());
 	}
+	boost::shared_ptr<MUCInviteEvent> mucInviteEvent = boost::dynamic_pointer_cast<MUCInviteEvent>(event_);
+	if (mucInviteEvent) {
+		return P2QSTRING(mucInviteEvent->getInviter().toString());
+	}
 	return "";
 }
 
@@ -70,6 +75,11 @@ QString QtEvent::text() {
 	boost::shared_ptr<ErrorEvent> errorEvent = boost::dynamic_pointer_cast<ErrorEvent>(event_);
 	if (errorEvent) {
 		return P2QSTRING(errorEvent->getText());
+	}
+	boost::shared_ptr<MUCInviteEvent> mucInviteEvent = boost::dynamic_pointer_cast<MUCInviteEvent>(event_);
+	if (mucInviteEvent) {
+		QString message = QString(QObject::tr("%1 has invited you to enter the %2 room.")).arg(P2QSTRING(mucInviteEvent->getInviter().toBare().toString())).arg(P2QSTRING(mucInviteEvent->getRoomJID().toString()));
+		return message;
 	}
 	return "";
 }

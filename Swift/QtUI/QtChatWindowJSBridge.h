@@ -14,17 +14,13 @@ namespace Swift {
 
 class FileTransferController;
 
-class QtFileTransferJSBridge : public QObject {
+class QtChatWindowJSBridge : public QObject {
 	 Q_OBJECT
 public:
-	QtFileTransferJSBridge();
-	virtual ~QtFileTransferJSBridge();
+	QtChatWindowJSBridge();
+	virtual ~QtChatWindowJSBridge();
 signals:
-	void discard(QString id);
-	void sendRequest(QString id);
-	void setDescription(QString id);
-	void acceptRequest(QString id, QString filename);
-	void cancel(QString id);
+	void buttonClicked(QString id, QString arg1, QString arg2, QString arg3);
 };
 
 }

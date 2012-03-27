@@ -20,6 +20,7 @@
 #include <string>
 #include "Swiften/Elements/DiscoInfo.h"
 #include "Swift/Controllers/XMPPEvents/MessageEvent.h"
+#include <Swift/Controllers/XMPPEvents/MUCInviteEvent.h>
 #include "Swiften/JID/JID.h"
 #include "Swiften/Elements/SecurityLabelsCatalog.h"
 #include "Swiften/Elements/ErrorPayload.h"
@@ -84,10 +85,11 @@ namespace Swift {
 			void handleDayChangeTick();
 			void handleMUCInvitation(Message::ref message);
 			void handleMediatedMUCInvitation(Message::ref message);
+			void handleGeneralMUCInvitation(MUCInviteEvent::ref event);
 
 		protected:
 			JID selfJID_;
-			std::vector<boost::shared_ptr<MessageEvent> > unreadMessages_;
+			std::vector<boost::shared_ptr<StanzaEvent> > unreadMessages_;
 			StanzaChannel* stanzaChannel_;
 			IQRouter* iqRouter_;
 			ChatWindowFactory* chatWindowFactory_;

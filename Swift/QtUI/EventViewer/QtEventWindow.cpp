@@ -16,6 +16,7 @@
 #include "Swift/Controllers/XMPPEvents/ErrorEvent.h"
 #include "Swift/QtUI/QtSubscriptionRequestWindow.h"
 #include "Swift/Controllers/XMPPEvents/SubscriptionRequestEvent.h"
+#include "Swift/Controllers/XMPPEvents/MUCInviteEvent.h"
 #include "Swift/Controllers/UIEvents/RequestChatUIEvent.h"
 #include "Swift/Controllers/UIEvents/JoinMUCUIEvent.h"
 
@@ -75,8 +76,9 @@ void QtEventWindow::handleItemActivated(const QModelIndex& item) {
 	QtEvent* event = model_->getItem(item.row());
 	boost::shared_ptr<MessageEvent> messageEvent = boost::dynamic_pointer_cast<MessageEvent>(event->getEvent());
 	boost::shared_ptr<SubscriptionRequestEvent> subscriptionEvent = boost::dynamic_pointer_cast<SubscriptionRequestEvent>(event->getEvent());
+	boost::shared_ptr<MUCInviteEvent> mucInviteEvent = boost::dynamic_pointer_cast<MUCInviteEvent>(event->getEvent());
 	boost::shared_ptr<ErrorEvent> errorEvent = boost::dynamic_pointer_cast<ErrorEvent>(event->getEvent());
-	
+
 	if (messageEvent) {
 		if (messageEvent->getStanza()->getType() == Message::Groupchat) {
 			eventStream_->send(boost::shared_ptr<UIEvent>(new JoinMUCUIEvent(messageEvent->getStanza()->getFrom().toBare(), messageEvent->getStanza()->getTo().getResource())));
@@ -86,6 +88,9 @@ void QtEventWindow::handleItemActivated(const QModelIndex& item) {
 	} else if (subscriptionEvent) {
 		QtSubscriptionRequestWindow* window = QtSubscriptionRequestWindow::getWindow(subscriptionEvent, this);
 		window->show();
+	} else if (mucInviteEvent) {
+		eventStream_->send(boost::shared_ptr<UIEvent>(new RequestChatUIEvent(mucInviteEvent->getInviter())));
+		mucInviteEvent->conclude();
 	} else {
 		if (errorEvent) {
 			errorEvent->conclude();

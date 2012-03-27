@@ -42,6 +42,7 @@ namespace Swift {
 			void addToJSEnvironment(const QString&, QObject*);
 			void setFileTransferProgress(QString id, const int percentageDone);
 			void setFileTransferStatus(QString id, const ChatWindow::FileTransferState state, const QString& msg);
+			void setMUCInvitationJoined(QString id);
 
 		signals:
 			void gotFocus();
