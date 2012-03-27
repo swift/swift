@@ -117,7 +117,12 @@ else :
 if "link" in env :
 	env["SHLINK"] = env["link"]
 	env["LINK"] = env["link"]
-env["LINKFLAGS"] = env.get("linkflags", [])
+linkflags = env.get("linkflags", [])
+if isinstance(linkflags, str) :
+	# FIXME: Make the splitting more robust
+	env["LINKFLAGS"] = linkflags.split(" ")
+else :
+	env["LINKFLAGS"] = linkflags
 # This isn't a real flag (yet) AFAIK. Be sure to append it to the CXXFLAGS
 # where you need it
 env["OBJCCFLAGS"] = []
