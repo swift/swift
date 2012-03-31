@@ -63,6 +63,7 @@ namespace Swift {
 			void postHandleIncomingMessage(boost::shared_ptr<MessageEvent>);
 
 		private:
+			void setAvailableRoomActions(const MUCOccupant::Affiliation& affiliation, const MUCOccupant::Role& role);
 			void clearPresenceQueue();
 			void addPresenceMessage(const std::string& message);
 			void handleWindowOccupantSelectionChanged(ContactRosterItem* item);
@@ -73,6 +74,7 @@ namespace Swift {
 			void handleOccupantLeft(const MUCOccupant& occupant, MUC::LeavingType type, const std::string& reason);
 			void handleOccupantPresenceChange(boost::shared_ptr<Presence> presence);
 			void handleOccupantRoleChanged(const std::string& nick, const MUCOccupant& occupant,const MUCOccupant::Role& oldRole);
+			void handleOccupantAffiliationChanged(const std::string& nick, const MUCOccupant::Affiliation& affiliation,const MUCOccupant::Affiliation& oldAffiliation);
 			void handleJoinComplete(const std::string& nick);
 			void handleJoinFailed(boost::shared_ptr<ErrorPayload> error);
 			void handleJoinTimeoutTick();

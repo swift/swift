@@ -79,6 +79,7 @@ namespace Swift {
 			void showRoomConfigurationForm(Form::ref);
 			void addMUCInvitation(const JID& jid, const std::string& reason, const std::string& password, bool direct = true);
 			void setAffiliations(MUCOccupant::Affiliation, const std::vector<JID>&);
+			void setAvailableRoomActions(const std::vector<RoomAction> &actions);
 
 		public slots:
 			void handleChangeSplitterState(QByteArray state);
@@ -163,5 +164,6 @@ namespace Swift {
 			QPointer<QtAffiliationEditor> affiliationEditor_;
 			int idCounter_;
 			SettingsProvider* settings_;
+			std::vector<ChatWindow::RoomAction> availableRoomActions_;
 	};
 }

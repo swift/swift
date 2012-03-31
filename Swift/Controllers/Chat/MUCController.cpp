@@ -86,6 +86,7 @@ MUCController::MUCController (
 	muc_->onOccupantPresenceChange.connect(boost::bind(&MUCController::handleOccupantPresenceChange, this, _1));
 	muc_->onOccupantLeft.connect(boost::bind(&MUCController::handleOccupantLeft, this, _1, _2, _3));
 	muc_->onOccupantRoleChanged.connect(boost::bind(&MUCController::handleOccupantRoleChanged, this, _1, _2, _3));
+	muc_->onOccupantAffiliationChanged.connect(boost::bind(&MUCController::handleOccupantAffiliationChanged, this, _1, _2, _3));
 	muc_->onConfigurationFailed.connect(boost::bind(&MUCController::handleConfigurationFailed, this, _1));
 	muc_->onConfigurationFormReceived.connect(boost::bind(&MUCController::handleConfigurationFormReceived, this, _1));
 	muc_->onRoleChangeFailed.connect(boost::bind(&MUCController::handleOccupantRoleChangeFailed, this, _1, _2, _3));
@@ -115,14 +116,21 @@ MUCController::~MUCController() {
 
 void MUCController::handleWindowOccupantSelectionChanged(ContactRosterItem* item) {
 	std::vector<ChatWindow::OccupantAction> actions;
-	/* FIXME: all of these should be conditional */
-	if (item) {
-		actions.push_back(ChatWindow::Kick);
-		actions.push_back(ChatWindow::Ban);
-		actions.push_back(ChatWindow::MakeModerator);
-		actions.push_back(ChatWindow::MakeParticipant);
-		actions.push_back(ChatWindow::MakeVisitor);
 
+	if (item) {
+		MUCOccupant::Affiliation affiliation = muc_->getOccupant(getNick()).getAffiliation();
+		MUCOccupant::Role role = muc_->getOccupant(getNick()).getRole();
+		if (role == MUCOccupant::Moderator)
+		{
+			if (affiliation == MUCOccupant::Admin || affiliation == MUCOccupant::Owner) {
+				actions.push_back(ChatWindow::Ban);
+			}
+
+			actions.push_back(ChatWindow::Kick);
+			actions.push_back(ChatWindow::MakeModerator);
+			actions.push_back(ChatWindow::MakeParticipant);
+			actions.push_back(ChatWindow::MakeVisitor);
+		}
 		// Add contact is available only if the real JID is also available
 		if (muc_->getOccupant(item->getJID().getResource()).getRealJID()) {
 			actions.push_back(ChatWindow::AddContact);
@@ -259,6 +267,8 @@ void MUCController::handleJoinComplete(const std::string& nick) {
 	clearPresenceQueue();
 	shouldJoinOnReconnect_ = true;
 	setEnabled(true);
+	MUCOccupant occupant = muc_->getOccupant(nick);
+	setAvailableRoomActions(occupant.getAffiliation(), occupant.getRole());
 	onUserJoined();
 }
 
@@ -317,6 +327,29 @@ void MUCController::handleOccupantJoined(const MUCOccupant& occupant) {
 void MUCController::addPresenceMessage(const std::string& message) {
 	lastWasPresence_ = true;
 	chatWindow_->addPresenceMessage(message);
+}
+
+
+void MUCController::setAvailableRoomActions(const MUCOccupant::Affiliation& affiliation, const MUCOccupant::Role& role)
+{
+	std::vector<ChatWindow::RoomAction> actions;
+
+	if (role <= MUCOccupant::Participant) {
+		actions.push_back(ChatWindow::ChangeSubject);
+	}
+	if (affiliation == MUCOccupant::Owner) {
+		actions.push_back(ChatWindow::Configure);
+	}
+	if (affiliation <= MUCOccupant::Admin) {
+		actions.push_back(ChatWindow::Affiliations);
+	}
+	if (affiliation == MUCOccupant::Owner) {
+		actions.push_back(ChatWindow::Destroy);
+	}
+	if (role <= MUCOccupant::Visitor) {
+		actions.push_back(ChatWindow::Invite);
+	}
+	chatWindow_->setAvailableRoomActions(actions);
 }
 
 void MUCController::clearPresenceQueue() {
@@ -410,6 +443,16 @@ void MUCController::handleOccupantRoleChanged(const std::string& nick, const MUC
 	roster_->addContact(jid, realJID, nick, group, avatarManager_->getAvatarPath(jid).string());
 	roster_->getGroup(group)->setManualSort(roleToSortName(occupant.getRole()));
 	chatWindow_->addSystemMessage(str(format(QT_TRANSLATE_NOOP("", "%1% is now a %2%")) % nick % roleToFriendlyName(occupant.getRole())));
+	if (nick == nick_) {
+		setAvailableRoomActions(occupant.getAffiliation(), occupant.getRole());
+	}
+}
+
+void MUCController::handleOccupantAffiliationChanged(const std::string& nick, const MUCOccupant::Affiliation& affiliation, const MUCOccupant::Affiliation& oldAffiliation)
+{
+	if (nick == nick_) {
+		setAvailableRoomActions(affiliation, muc_->getOccupant(nick_).getRole());
+	}
 }
 
 std::string MUCController::roleToGroupName(MUCOccupant::Role role) {

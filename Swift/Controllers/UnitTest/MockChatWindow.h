@@ -52,6 +52,7 @@ namespace Swift {
 			virtual void showRoomConfigurationForm(Form::ref) {}
 			virtual void addMUCInvitation(const JID& /*jid*/, const std::string& /*reason*/, const std::string& /*password*/, bool = true) {};
 			virtual void setAffiliations(MUCOccupant::Affiliation, const std::vector<JID>&) {}
+			virtual void setAvailableRoomActions(const std::vector<RoomAction> &) {};
 
 			std::string name_;
 			std::string lastMessageBody_;

@@ -732,11 +732,24 @@ void QtChatWindow::setSubject(const std::string& subject) {
 
 void QtChatWindow::handleActionButtonClicked() {
 	QMenu contextMenu;
-	QAction* changeSubject = contextMenu.addAction(tr("Change subject"));
-	QAction* configure = contextMenu.addAction(tr("Configure room"));
-	QAction* affiliations = contextMenu.addAction(tr("Edit affiliations"));
-	QAction* destroy = contextMenu.addAction(tr("Destroy room"));
-	QAction* invite = contextMenu.addAction(tr("Invite person to this room"));
+	QAction* changeSubject = NULL;
+	QAction* configure = NULL;
+	QAction* affiliations = NULL;
+	QAction* destroy = NULL;
+	QAction* invite = NULL;
+
+	foreach(ChatWindow::RoomAction availableAction, availableRoomActions_)
+	{
+		switch(availableAction)
+		{
+			case ChatWindow::ChangeSubject: changeSubject = contextMenu.addAction(tr("Change subject")); break;
+			case ChatWindow::Configure: configure = contextMenu.addAction(tr("Configure room")); break;
+			case ChatWindow::Affiliations: affiliations = contextMenu.addAction(tr("Edit affiliations")); break;
+			case ChatWindow::Destroy: destroy = contextMenu.addAction(tr("Destroy room")); break;
+			case ChatWindow::Invite: invite = contextMenu.addAction(tr("Invite person to this room")); break;
+		}
+	}
+
 	QAction* result = contextMenu.exec(QCursor::pos());
 	if (result == changeSubject) {
 		bool ok;
@@ -783,6 +796,11 @@ void QtChatWindow::handleAffiliationEditorAccepted() {
 void QtChatWindow::setAffiliations(MUCOccupant::Affiliation affiliation, const std::vector<JID>& jids) {
 	if (!affiliationEditor_) return;
 	affiliationEditor_->setAffiliations(affiliation, jids);
+}
+
+void QtChatWindow::setAvailableRoomActions(const std::vector<RoomAction> &actions)
+{
+	availableRoomActions_ = actions;
 }
 
 void QtChatWindow::showRoomConfigurationForm(Form::ref form) {
