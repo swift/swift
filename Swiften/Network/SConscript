@@ -2,8 +2,6 @@ Import("swiften_env")
 
 myenv = swiften_env.Clone()
 myenv.MergeFlags(myenv["LIBIDN_FLAGS"])
-if myenv.get("HAVE_CARES", False) :
-   myenv.MergeFlags(myenv.get("CARES_FLAGS", {}))
 
 sourceList = [
 			"HTTPConnectProxiedConnection.cpp",
@@ -17,7 +15,7 @@ sourceList = [
 			"BoostIOServiceThread.cpp",
 			"BOSHConnection.cpp",
 			"BOSHConnectionPool.cpp",
-                        "CachingNameOnlyDomainNameResolver.cpp",
+			"CachingNameOnlyDomainNameResolver.cpp",
 			"ConnectionFactory.cpp",
 			"ConnectionServer.cpp",
 			"ConnectionServerFactory.cpp",
@@ -54,9 +52,6 @@ sourceList = [
 			"NATTraversalRemovePortForwardingRequest.cpp",
 			"NATTraversalInterface.cpp",
 	]
-
-if myenv.get("HAVE_CARES", False) :
-   sourceList.append("CAresDomainNameResolver.cpp")
 		
 if myenv["PLATFORM"] == "darwin" :
 	myenv.Append(FRAMEWORKS = ["CoreServices", "SystemConfiguration"])
