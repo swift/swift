@@ -76,7 +76,7 @@ void QtContactEditWidget::setName(const std::string& name) {
 }
 
 std::string QtContactEditWidget::getName() const {
-	std::string name;
+	std::string name = Q2PSTRING(name_->text());
 	QList<QRadioButton*> buttons = findChildren<QRadioButton*>();
 	foreach(const QRadioButton* button, buttons) {
 		if (button->isChecked()) {
