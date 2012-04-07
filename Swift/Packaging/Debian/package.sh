@@ -3,6 +3,9 @@
 #If you want to share tar output (note: necessary if you want multiple archs with the same hashed tarballs)
 # set SHARED_DIR - YOU MUST MAKE SURE YOU HAVE A TRAILING / ON SHARED_DIR
 
+# If you want to pass parameters to debuild, set them in SWIFT_DEBUILD_FLAGS
+# e.g. -S for just source, -b for just binaries
+
 set -e -x
 
 export PYTHONPATH=../../../BuildTools/SCons
@@ -88,4 +91,4 @@ cat ../../../COPYING | awk '/--- END OF OpenSSL/,EOF' | tail -n +3 >> $DIRNAME/d
 # Build
 cd $DIRNAME
 set +e
-debuild -i -I --lintian-opts --pedantic
+debuild -i -I ${SWIFT_DEBUILD_FLAGS} --lintian-opts --pedantic
