@@ -1,5 +1,8 @@
 #!/bin/sh
 
+#If you want to share tar output (note: necessary if you want multiple archs with the same hashed tarballs)
+# set SHARED_DIR - YOU MUST MAKE SURE YOU HAVE A TRAILING / ON SHARED_DIR
+
 set -e -x
 
 export PYTHONPATH=../../../BuildTools/SCons
@@ -7,6 +10,12 @@ VERSION=${VERSION:=`../../../BuildTools/GetBuildVersion.py swift`}
 DEBIAN_VERSION=`../../../BuildTools/DebianizeVersion.py $VERSION`
 DIRNAME=swift-im-$DEBIAN_VERSION
 SWIFTEN_SOVERSION=`../../../BuildTools/GetBuildVersion.py swift --major`
+
+if [ -z "$SHARED_DIR" ]; then
+	echo "Using standalone output"
+else
+	echo "Using shared output in ${SHARED_DIR}"
+fi
 
 if [ -z "$DEBIAN_VERSION" ]; then
 	echo "Unable to determine version"
@@ -18,28 +27,44 @@ rm -f swift-im_*
 rm -f libswiften*
 rm -rf swift-im-*
 
-echo "Checking out a fresh copy ..."
-rm -rf $DIRNAME
-git clone ../../../.git $DIRNAME
+TARBALLBARE="swift-im_$DEBIAN_VERSION.orig.tar.gz"
+TARBALL="${SHARED_DIR}${TARBALLBARE}"
 
-# Remove development files & 3rdParty files
-rm -rf $DIRNAME/.git
-find $DIRNAME -name .gitignore | xargs rm -f
-find $DIRNAME/3rdParty -type f | grep -v uuid | grep -v SConscript | xargs rm -f
-find $DIRNAME/3rdParty -depth -empty -type d -exec rmdir {} \;
-rm -rf $DIRNAME/3rdParty/SCons
-rm -rf $DIRNAME/Swift/Packaging/Debian
+if [ -f $TARBALL ]; then
+	echo "Found existing tarball for the right version, using ${TARBALL}"
+	echo "Cleaning out any previous builds in ${DIRNAME} and re-extracting"
+	rm -rf $DIRNAME
+	cp $TARBALL tmp.tmp
+	mv tmp.tmp $TARBALLBARE
+	tar xzf $TARBALLBARE
+else
+	echo "No shared tarball found"
+	echo "Checking out a fresh copy ..."
+	rm -rf $DIRNAME
+	git clone ../../../.git $DIRNAME
 
-# Initialize the build version
-echo $VERSION > $DIRNAME/VERSION.swift
+	# Remove development files & 3rdParty files
+	rm -rf $DIRNAME/.git
+	find $DIRNAME -name .gitignore | xargs rm -f
+	find $DIRNAME/3rdParty -type f | grep -v uuid | grep -v SConscript | xargs rm -f
+	find $DIRNAME/3rdParty -depth -empty -type d -exec rmdir {} \;
+	rm -rf $DIRNAME/3rdParty/SCons
+	rm -rf $DIRNAME/Swift/Packaging/Debian
 
-# Fork local Boost UUID copy
-# FIXME: This shouldn't be necessary, but SCons isn't picking up the generated headers for compilation
-mkdir -p $DIRNAME/3rdParty/Boost/uuid/boost
-cp -r $DIRNAME/3rdParty/Boost/src/boost/uuid $DIRNAME/3rdParty/Boost/uuid/boost
+	# Initialize the build version
+	echo $VERSION > $DIRNAME/VERSION.swift
 
-# Create orig tarball
-tar czf swift-im_$DEBIAN_VERSION.orig.tar.gz $DIRNAME
+	# Fork local Boost UUID copy
+	# FIXME: This shouldn't be necessary, but SCons isn't picking up the generated headers for compilation
+	mkdir -p $DIRNAME/3rdParty/Boost/uuid/boost
+	cp -r $DIRNAME/3rdParty/Boost/src/boost/uuid $DIRNAME/3rdParty/Boost/uuid/boost
+
+	# Create orig tarball
+	tar czf $TARBALLBARE $DIRNAME
+	cp $TARBALLBARE tmp.tmp
+	mv tmp.tmp $TARBALL
+fi
+
 
 # Detect dependencies
 WEBKIT_DEPENDENCY=", libqtwebkit-dev (>= 2.0.0)"
