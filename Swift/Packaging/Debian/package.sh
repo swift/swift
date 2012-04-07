@@ -72,7 +72,7 @@ fi
 # Detect dependencies
 WEBKIT_DEPENDENCY=", libqtwebkit-dev (>= 2.0.0)"
 DISTRIBUTION=`lsb_release -s -i`-`lsb_release -s -c`
-if [ "$DISTRIBUTION" = "Debian-squeeze" -o "$DISTRIBUTION" = "Ubuntu-lucid" ]; then
+if [ "$DISTRIBUTION" = "Debian-squeeze" -o "$DISTRIBUTION" = "Ubuntu-lucid" -o ! -z "$SWIFT_FORCE_LUCID" ]; then
 	WEBKIT_DEPENDENCY=""
 fi
 
