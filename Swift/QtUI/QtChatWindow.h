@@ -54,6 +54,7 @@ namespace Swift {
 			void addPresenceMessage(const std::string& message);
 			void addErrorMessage(const std::string& errorMessage);
 			void replaceMessage(const std::string& message, const std::string& id, const boost::posix_time::ptime& time);
+			void replaceWithAction(const std::string& message, const std::string& id, const boost::posix_time::ptime& time);
 			// File transfer related stuff
 			std::string addFileTransfer(const std::string& senderName, bool senderIsSelf, const std::string& filename, const boost::uintmax_t sizeInBytes);
 			void setFileTransferProgress(std::string id, const int percentageDone);
@@ -144,6 +145,7 @@ namespace Swift {
 			void beginCorrection();
 			void cancelCorrection();
 			std::string addMessage(const std::string &message, const std::string &senderName, bool senderIsSelf, boost::shared_ptr<SecurityLabel> label, const std::string& avatarPath, const QString& style, const boost::posix_time::ptime& time);
+			void replaceMessage(const std::string& message, const std::string& id, const boost::posix_time::ptime& time, const QString& style);
 			void handleOccupantSelectionChanged(RosterItem* item);
 			bool appendToPreviousCheck(PreviousMessageKind messageKind, const std::string& senderName, bool senderIsSelf) const;
 

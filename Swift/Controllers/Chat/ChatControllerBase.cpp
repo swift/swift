@@ -165,6 +165,14 @@ std::string ChatControllerBase::addMessage(const std::string& message, const std
 	}
 }
 
+void ChatControllerBase::replaceMessage(const std::string& message, const std::string& id, const boost::posix_time::ptime& time) {
+	if (boost::starts_with(message, "/me ")) {
+		chatWindow_->replaceWithAction(String::getSplittedAtFirst(message, ' ').second, id, time);
+	} else {
+		chatWindow_->replaceMessage(message, id, time);
+	}
+}
+
 bool ChatControllerBase::isFromContact(const JID& from) {
 	return from.toBare() == toJID_.toBare();
 }
@@ -221,7 +229,7 @@ void ChatControllerBase::handleIncomingMessage(boost::shared_ptr<MessageEvent> m
 			std::map<JID, std::string>::iterator lastMessage;
 			lastMessage = lastMessagesUIID_.find(from);
 			if (lastMessage != lastMessagesUIID_.end()) {
-				chatWindow_->replaceMessage(body, lastMessagesUIID_[from], timeStamp);
+				replaceMessage(body, lastMessagesUIID_[from], timeStamp);
 			}
 		}
 		else {

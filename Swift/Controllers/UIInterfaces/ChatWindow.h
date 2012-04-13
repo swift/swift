@@ -52,6 +52,7 @@ namespace Swift {
 			virtual void addPresenceMessage(const std::string& message) = 0;
 			virtual void addErrorMessage(const std::string& message) = 0;
 			virtual void replaceMessage(const std::string& message, const std::string& id, const boost::posix_time::ptime& time) = 0;
+			virtual void replaceWithAction(const std::string& message, const std::string& id, const boost::posix_time::ptime& time) = 0;
 			
 			// File transfer related stuff
 			virtual std::string addFileTransfer(const std::string& senderName, bool senderIsSelf, const std::string& filename, const boost::uintmax_t sizeInBytes) = 0;

@@ -42,6 +42,7 @@ namespace Swift {
 			virtual void setTabComplete(TabComplete*) {};
 			virtual void replaceLastMessage(const std::string&) {};
 			virtual void replaceMessage(const std::string&, const std::string&, const boost::posix_time::ptime&) {};
+			virtual void replaceWithAction(const std::string& message, const std::string& id, const boost::posix_time::ptime& time) {};
 			void setAckState(const std::string& /*id*/, AckState /*state*/) {};
 			virtual void flash() {};
 			virtual void setAlert(const std::string& /*alertText*/, const std::string& /*buttonText*/) {};

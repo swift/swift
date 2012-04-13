@@ -658,11 +658,24 @@ void QtChatWindow::addSystemMessage(const std::string& message) {
 	previousMessageKind_ = PreviousMessageWasSystem;
 }
 
+void QtChatWindow::replaceWithAction(const std::string& message, const std::string& id, const boost::posix_time::ptime& time) {
+	replaceMessage(" *" + message + "*", id, time, "font-style:italic ");
+}
+
 void QtChatWindow::replaceMessage(const std::string& message, const std::string& id, const boost::posix_time::ptime& time) {
+	replaceMessage(message, id, time, "");
+}
+
+void QtChatWindow::replaceMessage(const std::string& message, const std::string& id, const boost::posix_time::ptime& time, const QString& style) {
 	if (!id.empty()) {
 		QString messageHTML(Qt::escape(P2QSTRING(message)));
 		messageHTML = P2QSTRING(Linkify::linkify(Q2PSTRING(messageHTML)));
 		messageHTML.replace("\n","<br/>");
+
+		QString styleSpanStart = style == "" ? "" : "<span style=\"" + style + "\">";
+		QString styleSpanEnd = style == "" ? "" : "</span>";
+		messageHTML = styleSpanStart + messageHTML + styleSpanEnd;
+
 		messageLog_->replaceMessage(messageHTML, P2QSTRING(id), B2QDATE(time));
 	}
 	else {
