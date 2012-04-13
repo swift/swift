@@ -149,10 +149,12 @@ QtChatWindow::QtChatWindow(const QString &contact, QtChatTheme* theme, UIEventSt
 
 	inputClearing_ = false;
 	contactIsTyping_ = false;
+	tabCompletion_ = false;
 
 	connect(input_, SIGNAL(unhandledKeyPressEvent(QKeyEvent*)), this, SLOT(handleKeyPressEvent(QKeyEvent*)));
 	connect(input_, SIGNAL(returnPressed()), this, SLOT(returnPressed()));
 	connect(input_, SIGNAL(textChanged()), this, SLOT(handleInputChanged()));
+	connect(input_, SIGNAL(cursorPositionChanged()), this, SLOT(handleCursorPositionChanged()));
 	setFocusProxy(input_);
 	logRosterSplitter_->setFocusProxy(input_);
 	midBar->setFocusProxy(input_);
@@ -288,11 +290,15 @@ void QtChatWindow::tabComplete() {
 	if (!completer_) {
 		return;
 	}
-//	QTextDocument* document = input_->document();
-	QTextCursor cursor = input_->textCursor();
-	cursor.select(QTextCursor::WordUnderCursor);
+
+	QTextCursor cursor;
+	if (tabCompleteCursor_.hasSelection()) {
+		cursor = tabCompleteCursor_;
+	} else {
+		cursor = input_->textCursor();
+		cursor.select(QTextCursor::WordUnderCursor);
+	}
 	QString root = cursor.selectedText();
-	bool firstWord = cursor.selectionStart() == 0;
 	if (root.isEmpty()) {
 		return;
 	}
@@ -300,14 +306,17 @@ void QtChatWindow::tabComplete() {
 	if (root == suggestion) {
 		return;
 	}
+	tabCompletion_ = true;
 	cursor.beginEditBlock();
 	cursor.removeSelectedText();
+	int oldPosition = cursor.position();
+
 	cursor.insertText(suggestion);
-	if (firstWord) {
-		//	cursor.insertText(":");
-	}
-	//cursor.insertText(" ");
+	tabCompleteCursor_ = cursor;
+	tabCompleteCursor_.setPosition(oldPosition, QTextCursor::KeepAnchor);
+
 	cursor.endEditBlock();
+	tabCompletion_ = false;
 }
 
 void QtChatWindow::setRosterModel(Roster* roster) {
@@ -697,6 +706,13 @@ void QtChatWindow::handleInputChanged() {
 	} else {
 		onUserTyping();
 	}
+}
+
+void QtChatWindow::handleCursorPositionChanged() {
+	if (tabCompletion_) {
+		return;
+	}
+	tabCompleteCursor_.clearSelection();
 }
 
 void QtChatWindow::show() {

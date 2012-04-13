@@ -16,6 +16,7 @@
 
 #include <map>
 #include <QPointer>
+#include <QTextCursor>
 
 class QTextEdit;
 class QLineEdit;
@@ -118,6 +119,7 @@ namespace Swift {
 		private slots:
 			void returnPressed();
 			void handleInputChanged();
+			void handleCursorPositionChanged();
 			void handleKeyPressEvent(QKeyEvent* event);
 			void handleSplitterMoved(int pos, int index);
 			void handleAlertButtonClicked();
@@ -150,6 +152,7 @@ namespace Swift {
 			LastLineTracker lastLineTracker_;
 			QString contact_;
 			QString lastSentMessage_;
+			QTextCursor tabCompleteCursor_;
 			QtChatView* messageLog_;
 			QtChatTheme* theme_;
 			QtTextEdit* input_;
@@ -168,6 +171,7 @@ namespace Swift {
 			PreviousMessageKind previousMessageKind_;
 			QString previousSenderName_;
 			bool inputClearing_;
+			bool tabCompletion_;
 			UIEventStream* eventStream_;
 			bool inputEnabled_;
 			QSplitter *logRosterSplitter_;
