@@ -55,10 +55,10 @@ namespace Swift {
 			QSplitter* netbookSplitter;
 			QtSystemTray* systemTray;
 			QtChatWindowFactory* chatWindowFactory;
+			TimerFactory* timerFactory_;
 			QtMainWindow* lastMainWindow;
 			QtLoginWindow* loginWindow;
 			std::vector<QPointer<QtChatWindow> > chatWindows;
-			TimerFactory* timerFactory_;
 			bool startMinimized;
 			int chatFontSize;
 	};

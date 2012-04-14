@@ -448,7 +448,7 @@ void MUCController::handleOccupantRoleChanged(const std::string& nick, const MUC
 	}
 }
 
-void MUCController::handleOccupantAffiliationChanged(const std::string& nick, const MUCOccupant::Affiliation& affiliation, const MUCOccupant::Affiliation& oldAffiliation)
+void MUCController::handleOccupantAffiliationChanged(const std::string& nick, const MUCOccupant::Affiliation& affiliation, const MUCOccupant::Affiliation& /*oldAffiliation*/)
 {
 	if (nick == nick_) {
 		setAvailableRoomActions(affiliation, muc_->getOccupant(nick_).getRole());
