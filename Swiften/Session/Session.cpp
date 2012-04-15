@@ -50,7 +50,7 @@ void Session::finishSession() {
 	connection->disconnect();
 }
 
-void Session::finishSession(const SessionError& error) {
+void Session::finishSession(const SessionError& /*error*/) {
 	if (finishing) {
 		return;
 	}

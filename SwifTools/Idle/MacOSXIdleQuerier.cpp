@@ -14,7 +14,7 @@
 
 namespace Swift {
 
-MacOSXIdleQuerier::MacOSXIdleQuerier() : ioService(NULL) {
+MacOSXIdleQuerier::MacOSXIdleQuerier() : ioService(0) {
 	mach_port_t masterPort;
 	IOMasterPort(MACH_PORT_NULL, &masterPort);
 	ioService = IOServiceGetMatchingService(masterPort, IOServiceMatching("IOHIDSystem"));

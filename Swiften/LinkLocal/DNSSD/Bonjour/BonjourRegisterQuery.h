@@ -41,7 +41,7 @@ namespace Swift {
 
 			void updateServiceInfo(const ByteArray& txtRecord) {
 				boost::lock_guard<boost::mutex> lock(sdRefMutex);
-				DNSServiceUpdateRecord(sdRef, NULL, NULL, txtRecord.size(), vecptr(txtRecord), 0);
+				DNSServiceUpdateRecord(sdRef, NULL, 0, txtRecord.size(), vecptr(txtRecord), 0);
 			}
 
 		private:

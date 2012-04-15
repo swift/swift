@@ -48,7 +48,7 @@ void UserSearchController::handleUIEvent(boost::shared_ptr<UIEvent> event) {
 	bool handle = false;
 	boost::shared_ptr<RequestAddUserDialogUIEvent> request = boost::shared_ptr<RequestAddUserDialogUIEvent>();
 	if (type_ == AddContact) {
-		if (request = boost::dynamic_pointer_cast<RequestAddUserDialogUIEvent>(event)) {
+		if ((request = boost::dynamic_pointer_cast<RequestAddUserDialogUIEvent>(event))) {
 			handle = true;
 		}
 	} else {

@@ -44,7 +44,7 @@ QtMUCConfigurationWindow::~QtMUCConfigurationWindow() {
 
 }
 
-void QtMUCConfigurationWindow::closeEvent(QCloseEvent* event) {
+void QtMUCConfigurationWindow::closeEvent(QCloseEvent* /*event*/) {
 	if (!closed_) {
 		onFormCancelled();
 	}

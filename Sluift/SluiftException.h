@@ -31,12 +31,15 @@ namespace Swift {
 					case ClientError::NoSupportedAuthMechanismsError: reason += "Authentication mechanisms not supported"; break;
 					case ClientError::UnexpectedElementError: reason += "Unexpected response"; break;
 					case ClientError::ResourceBindError: reason += "Error binding resource"; break;
+					case ClientError::RevokedError: reason += "Certificate got revoked"; break;
+					case ClientError::RevocationCheckFailedError: reason += "Failed to do revokation check"; break;
 					case ClientError::SessionStartError: reason += "Error starting session"; break;
 					case ClientError::StreamError: reason += "Stream error"; break;
 					case ClientError::TLSError: reason += "Encryption error"; break;
 					case ClientError::ClientCertificateLoadError: reason += "Error loading certificate (Invalid password?)"; break;
 					case ClientError::ClientCertificateError: reason += "Certificate not authorized"; break;
 					case ClientError::UnknownCertificateError: reason += "Unknown certificate"; break;
+					case ClientError::CertificateCardRemoved: reason += "Certificate card removed"; break;
 					case ClientError::CertificateExpiredError: reason += "Certificate has expired"; break;
 					case ClientError::CertificateNotYetValidError: reason += "Certificate is not yet valid"; break;
 					case ClientError::CertificateSelfSignedError: reason += "Certificate is self-signed"; break;
