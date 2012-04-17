@@ -26,3 +26,10 @@ Installing
 ----------
 - To install swift in /usr/local, run
 		./scons SWIFT_INSTALLDIR=/usr/local /usr/local
+
+Swiften-only
+------------
+- To compile just Swiften, add Swiften to the end of the scons command
+		./scons Swiften
+- To compile and install only Swiften, use SWIFTEN_INSTALLDIR
+		./scons SWIFTEN_INSTALLDIR=/usr/local /usr/local
