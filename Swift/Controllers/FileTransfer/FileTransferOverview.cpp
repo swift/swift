@@ -7,6 +7,7 @@
 #include "FileTransferOverview.h"
 
 #include <boost/bind.hpp>
+#include <boost/filesystem.hpp>
 #include <Swiften/Base/boost_bsignals.h>
 
 #include <Swiften/FileTransfer/FileTransferManager.h>
@@ -22,10 +23,12 @@ FileTransferOverview::~FileTransferOverview() {
 }
 	
 void FileTransferOverview::sendFile(const JID& jid, const std::string& filename) {
-	FileTransferController* controller = new FileTransferController(jid, filename, fileTransferManager);
-	fileTransfers.push_back(controller);
-	
-	onNewFileTransferController(controller);
+	if (boost::filesystem2::exists(filename) && boost::filesystem2::file_size(filename) > 0) {
+		FileTransferController* controller = new FileTransferController(jid, filename, fileTransferManager);
+		fileTransfers.push_back(controller);
+
+		onNewFileTransferController(controller);
+	}
 }
 
 void FileTransferOverview::handleIncomingFileTransfer(IncomingFileTransfer::ref transfer) {
