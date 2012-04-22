@@ -23,7 +23,7 @@ FileTransferOverview::~FileTransferOverview() {
 }
 	
 void FileTransferOverview::sendFile(const JID& jid, const std::string& filename) {
-	if (boost::filesystem2::exists(filename) && boost::filesystem2::file_size(filename) > 0) {
+	if (boost::filesystem::exists(filename) && boost::filesystem::file_size(filename) > 0) {
 		FileTransferController* controller = new FileTransferController(jid, filename, fileTransferManager);
 		fileTransfers.push_back(controller);
 
