@@ -282,14 +282,17 @@ if env["PLATFORM"] == "win32" :
     #myenv.Nsis("../Packaging/nsis/swift.nsi")
     #myenv.WiX("../Packaging/wix/swift.msi", ["../Packaging/WiX/Swift.wxs"])
     if env["SCONS_STAGE"] == "build" and env.get("wix_bindir", None):
-      licensefile = open('../../COPYING', 'r')
-      rtf = '{\\rtf1\\ansi{\\fonttbl\\f0\\fswiss Helvetica;}\\f0\\pard'
-      for line in licensefile:
-        rtf += line
-        rtf += '\\par'
-      rtf += '}'
-      licensefile.close()
-      myenv.WriteVal("Swift/COPYING.rtf", env.Value(rtf))
+      def convertToRTF(env, target, source) :
+        infile = open(source[0].abspath, 'r')
+        outfile = open(target[0].abspath, 'w')
+        outfile.write('{\\rtf1\\ansi{\\fonttbl\\f0\\fswiss Helvetica;}\\f0\\pard\n')
+        for line in infile:
+          outfile.write(line)
+          outfile.write('\\par')
+        outfile.write('}')
+        outfile.close()
+        infile.close()
+      env.Command(["Swift/COPYING.rtf"], ["../../COPYING"], convertToRTF)
 
       wixvariables = {'VCCRTFile': env.get("vcredist", "c:\\Program Files\\Common Files\\Merge Modules") + "\\Microsoft_VC90_CRT_x86.msm"}
       wixincludecontent = "<Include>"
