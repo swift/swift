@@ -78,7 +78,7 @@ void QtAvatarWidget::mousePressEvent(QMouseEvent* event) {
 
 	QAction* result = menu.exec(event->globalPos());
 	if (result == selectPicture) {
-		QString fileName = QFileDialog::getOpenFileName(this, tr("Select picture"), "", tr("Image Files (*.png *.jpg *.gif)"));
+		QString fileName = QFileDialog::getOpenFileName(this, tr("Select picture"), "", tr("Image Files (*.png *.jpg *.jpeg *.gif)"));
 		if (!fileName.isEmpty()) {
 			ByteArray data;
 			readByteArrayFromFile(data, Q2PSTRING(fileName));
