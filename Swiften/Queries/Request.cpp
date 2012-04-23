@@ -7,6 +7,7 @@
 #include <Swiften/Queries/Request.h>
 #include <Swiften/Queries/IQRouter.h>
 #include <Swiften/Elements/RawXMLPayload.h>
+#include <Swiften/Base/Log.h>
 
 namespace Swift {
 
@@ -75,6 +76,11 @@ bool Request::handleIQ(boost::shared_ptr<IQ> iq) {
 
 bool Request::isCorrectSender(const JID& jid) {
 	if (router_->isAccountJID(receiver_)) {
+		if (jid.isValid() && jid.equals(router_->getJID(), JID::WithResource)) {
+			// This unspecified behavior seems to happen in ejabberd versions (e.g. 2.0.5)
+			SWIFT_LOG(warning) << "Server responded to an account request with a full JID, which is not allowed. Handling it anyway.";
+			return true;
+		}
 		return router_->isAccountJID(jid);
 	}
 	else {

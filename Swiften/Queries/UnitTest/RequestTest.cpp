@@ -37,6 +37,7 @@ class RequestTest : public CppUnit::TestFixture {
 		CPPUNIT_TEST(testHandleIQ_ServerRespondsWithDomain);
 		CPPUNIT_TEST(testHandleIQ_ServerRespondsWithBareJID);
 		CPPUNIT_TEST(testHandleIQ_ServerRespondsWithoutFrom);
+		CPPUNIT_TEST(testHandleIQ_ServerRespondsWithFullJID);
 		CPPUNIT_TEST_SUITE_END();
 
 	public:
@@ -277,6 +278,20 @@ class RequestTest : public CppUnit::TestFixture {
 			testling.send();
 
 			channel_->onIQReceived(createResponse(JID("alice@wonderland.lit"),"test-id"));
+
+			CPPUNIT_ASSERT_EQUAL(1, responsesReceived_);
+			CPPUNIT_ASSERT_EQUAL(0, static_cast<int>(receivedErrors.size()));
+			CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(channel_->iqs_.size()));
+		}
+
+		// This tests a bug in ejabberd servers (2.0.5)
+		void testHandleIQ_ServerRespondsWithFullJID() {
+			MyRequest testling(IQ::Get, JID(), payload_, router_);
+			router_->setJID("alice@wonderland.lit/TeaParty");
+			testling.onResponse.connect(boost::bind(&RequestTest::handleResponse, this, _1, _2));
+			testling.send();
+
+			channel_->onIQReceived(createResponse(JID("alice@wonderland.lit/TeaParty"),"test-id"));
 
 			CPPUNIT_ASSERT_EQUAL(1, responsesReceived_);
 			CPPUNIT_ASSERT_EQUAL(0, static_cast<int>(receivedErrors.size()));
