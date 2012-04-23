@@ -8,6 +8,8 @@
 
 #include <numeric>
 #include <cassert>
+#include <functional>
+#include <iterator>
 
 #include <Swiften/Base/RandomGenerator.h>
 #include <boost/numeric/conversion/cast.hpp>
@@ -21,19 +23,12 @@ namespace {
 		}
 	};
 
-	struct WeightAccumulator {
-			int operator()(int accumulator, const DomainNameServiceQuery::Result& result) {
-				return accumulator + result.weight;
-			}
-	};
+	struct GetWeight {
+			GetWeight() {}
 
-	struct WeightToProbability {
-			WeightToProbability(int total) : total(total) {}
-
-			double operator()(const DomainNameServiceQuery::Result& result) {
-				return result.weight / boost::numeric_cast<double>(total);
+			int operator()(const DomainNameServiceQuery::Result& result) {
+				return result.weight + 1 /* easy hack to account for '0' weights getting at least some weight */;
 			}
-			int total;
 	};
 }
 
@@ -50,15 +45,15 @@ void DomainNameServiceQuery::sortResults(std::vector<DomainNameServiceQuery::Res
 	while (i != queries.end()) {
 		std::vector<DomainNameServiceQuery::Result>::iterator next = std::upper_bound(i, queries.end(), *i, comparator);
 		if (std::distance(i, next) > 1) {
-			int weightSum = std::accumulate(i, next, 0, WeightAccumulator());
-			std::vector<double> probabilities;
-			std::transform(i, next, std::back_inserter(probabilities), WeightToProbability(weightSum > 0 ? weightSum : 1));
-
-			// Shuffling the result array and the probabilities in parallel
-			for (size_t j = 0; j < probabilities.size(); ++j) {
-				int selectedIndex = generator.generateWeighedRandomNumber(probabilities.begin() + j, probabilities.end());
+			std::vector<int> weights;
+			std::transform(i, next, std::back_inserter(weights), GetWeight());
+			for (size_t j = 0; j < weights.size() - 1; ++j) {
+				std::vector<int> cumulativeWeights;
+				std::partial_sum(weights.begin() + j, weights.end(), std::back_inserter(cumulativeWeights));
+				int randomNumber = generator.generateRandomInteger(cumulativeWeights.back());
+				int selectedIndex = std::lower_bound(cumulativeWeights.begin(), cumulativeWeights.end(), randomNumber) - cumulativeWeights.begin();
 				std::swap(i[j], i[j + selectedIndex]);
-				std::swap(probabilities.begin()[j], probabilities.begin()[j + selectedIndex]);
+				std::swap(weights.begin()[j], weights.begin()[j + selectedIndex]);
 			}
 		}
 		i = next;

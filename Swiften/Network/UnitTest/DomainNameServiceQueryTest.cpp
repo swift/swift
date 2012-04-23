@@ -16,14 +16,14 @@ using namespace Swift;
 
 namespace {
 	struct RandomGenerator1 : public RandomGenerator {
-		virtual int generateWeighedRandomNumber(std::vector<double>::const_iterator, std::vector<double>::const_iterator) {
+		virtual int generateRandomInteger(int) {
 			return 0;
 		}
 	};
 
 	struct RandomGenerator2 : public RandomGenerator {
-		virtual int generateWeighedRandomNumber(std::vector<double>::const_iterator probabilities_begin, std::vector<double>::const_iterator probabilities_end) {
-			return std::max_element(probabilities_begin, probabilities_end) - probabilities_begin;
+		virtual int generateRandomInteger(int i) {
+			return i;
 		}
 	};
 }
@@ -70,9 +70,9 @@ class DomainNameServiceQueryTest : public CppUnit::TestFixture {
 
 			CPPUNIT_ASSERT_EQUAL(std::string("server5.com"), results[0].hostname);
 			CPPUNIT_ASSERT_EQUAL(std::string("server7.com"), results[1].hostname);
-			CPPUNIT_ASSERT_EQUAL(std::string("server4.com"), results[2].hostname);
-			CPPUNIT_ASSERT_EQUAL(std::string("server6.com"), results[3].hostname);
-			CPPUNIT_ASSERT_EQUAL(std::string("server2.com"), results[4].hostname);
+			CPPUNIT_ASSERT_EQUAL(std::string("server2.com"), results[2].hostname);
+			CPPUNIT_ASSERT_EQUAL(std::string("server4.com"), results[3].hostname);
+			CPPUNIT_ASSERT_EQUAL(std::string("server6.com"), results[4].hostname);
 			CPPUNIT_ASSERT_EQUAL(std::string("server1.com"), results[5].hostname);
 			CPPUNIT_ASSERT_EQUAL(std::string("server3.com"), results[6].hostname);
 		}

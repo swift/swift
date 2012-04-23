@@ -28,8 +28,8 @@ fi
 	optional.hpp \
 	program_options.hpp \
 	random/mersenne_twister.hpp \
-	random/uniform_real.hpp \
 	random/variate_generator.hpp \
+	random/uniform_int.hpp \
 	regex.hpp \
 	shared_ptr.hpp \
 	smart_ptr/make_shared.hpp \

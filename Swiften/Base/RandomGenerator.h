@@ -13,6 +13,6 @@ namespace Swift {
 		public:
 			virtual ~RandomGenerator();
 
-			virtual int generateWeighedRandomNumber(std::vector<double>::const_iterator probabilities_begin, std::vector<double>::const_iterator probabilities_end) = 0;
+			virtual int generateRandomInteger(int max) = 0;
 	};
 }

@@ -13,7 +13,7 @@
 namespace Swift {
 	class BoostRandomGenerator : public RandomGenerator{
 		public:
-			int generateWeighedRandomNumber(std::vector<double>::const_iterator probabilities_begin, std::vector<double>::const_iterator probabilities_end);
+			int generateRandomInteger(int max);
 
 		private:
 			boost::mt19937 generator;
