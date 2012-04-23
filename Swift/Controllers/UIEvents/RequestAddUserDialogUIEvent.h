@@ -22,8 +22,8 @@ namespace Swift {
 			const std::string& getPredefinedName() const { return preName_; };
 
 		private:
-			const JID& preJID_;
-			const std::string& preName_;
+			JID preJID_;
+			std::string preName_;
 
 	};
 }
