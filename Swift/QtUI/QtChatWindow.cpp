@@ -216,26 +216,15 @@ void QtChatWindow::setTabComplete(TabComplete* completer) {
 }
 
 void QtChatWindow::handleKeyPressEvent(QKeyEvent* event) {
+	event->ignore();
+	QtTabbable::handleKeyPressEvent(event);
+	if (event->isAccepted()) {
+		return;
+	}
+	event->accept();
+
 	int key = event->key();
-	Qt::KeyboardModifiers modifiers = event->modifiers();
-	if (key == Qt::Key_W && modifiers == Qt::ControlModifier) {
-		close();
-	} else if (
-		(key == Qt::Key_PageUp && modifiers == Qt::ControlModifier)
-//		|| (key == Qt::Key_Left && modifiers == (Qt::ControlModifier & Qt::ShiftModifier))
-	) {
-		emit requestPreviousTab();
-	} else if (
-		(key == Qt::Key_PageDown && modifiers == Qt::ControlModifier)
-//		|| (key == Qt::Key_Right && modifiers == (Qt::ControlModifier & Qt::ShiftModifier)
-		|| (key == Qt::Key_Tab && modifiers == Qt::ControlModifier)
-	) {
-		emit requestNextTab();
-	} else if (
-		(key == Qt::Key_A && modifiers == Qt::AltModifier)
-	)  {
-		emit requestActiveTab();
-	} else if (key == Qt::Key_Tab) {
+	if (key == Qt::Key_Tab) {
 		tabComplete();
 	} else if ((key == Qt::Key_Up) && input_->toPlainText().isEmpty() && !(lastSentMessage_.isEmpty())) {
 		beginCorrection();

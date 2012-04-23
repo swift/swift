@@ -6,6 +6,7 @@
 
 #pragma once
 
+#include <QKeyEvent>
 #include <QWidget>
 
 
@@ -20,6 +21,10 @@ namespace Swift {
 			virtual int getCount() {return 0;}
 		protected:
 			QtTabbable() : QWidget() {};
+			void keyPressEvent(QKeyEvent* event);
+
+		protected slots:
+			void handleKeyPressEvent(QKeyEvent* event);
 
 		signals:
 			void titleUpdated();

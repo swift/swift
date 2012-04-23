@@ -25,4 +25,36 @@ bool QtTabbable::isWidgetSelected() {
 	return parent ? parent->getCurrentTab() == this : isAncestorOf(QApplication::focusWidget());
 }
 
+void QtTabbable::keyPressEvent(QKeyEvent *event) {
+	handleKeyPressEvent(event);
+}
+
+void QtTabbable::handleKeyPressEvent(QKeyEvent *event) {
+	event->ignore();
+	int key = event->key();
+	Qt::KeyboardModifiers modifiers = event->modifiers();
+	if (key == Qt::Key_W && modifiers == Qt::ControlModifier) {
+		close();
+		event->accept();
+	} else if (
+		(key == Qt::Key_PageUp && modifiers == Qt::ControlModifier)
+//		|| (key == Qt::Key_Left && modifiers == (Qt::ControlModifier & Qt::ShiftModifier))
+	) {
+		emit requestPreviousTab();
+		event->accept();
+	} else if (
+		(key == Qt::Key_PageDown && modifiers == Qt::ControlModifier)
+//		|| (key == Qt::Key_Right && modifiers == (Qt::ControlModifier & Qt::ShiftModifier)
+		|| (key == Qt::Key_Tab && modifiers == Qt::ControlModifier)
+	) {
+		emit requestNextTab();
+		event->accept();
+	} else if (
+		(key == Qt::Key_A && modifiers == Qt::AltModifier)
+	)  {
+		emit requestActiveTab();
+		event->accept();
+	}
+}
+
 }
