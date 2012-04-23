@@ -538,7 +538,7 @@ std::string QtChatWindow::addFileTransfer(const std::string& senderName, bool se
 	QString formattedFileSize = P2QSTRING(formatSize(sizeInBytes));
 	if (senderIsSelf) {
 		// outgoing
-		htmlString = tr("Send file)") + ": " + P2QSTRING(filename) + " ( " + formattedFileSize + ") </br>" +
+		htmlString = tr("Send file") + ": " + P2QSTRING(filename) + " ( " + formattedFileSize + ") </br>" +
 			"<div id='" + ft_id + "'>" +
 				buildChatWindowButton(tr("Cancel"), ButtonFileTransferCancel, ft_id) +
 				buildChatWindowButton(tr("Set Description"), ButtonFileTransferSetDescription, ft_id) +
