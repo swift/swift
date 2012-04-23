@@ -58,6 +58,13 @@ namespace Swift {
 				return presenceSender;
 			}
 
+			/**
+			 * Called when the client is connected.
+			 * This resets the presence sender, such that it assumes initial presence
+			 * hasn't been sent yet.
+			 */
+			void handleConnected();
+
 		private:
 			PayloadAddingPresenceSender* presenceSender;
 			DiscoInfoResponder* discoInfoResponder;

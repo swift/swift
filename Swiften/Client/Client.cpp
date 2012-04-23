@@ -116,6 +116,7 @@ void Client::handleConnected() {
 #else
 	fileTransferManager = new DummyFileTransferManager();
 #endif
+	discoManager->handleConnected();
 }
 
 void Client::requestRoster() {

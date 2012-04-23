@@ -36,4 +36,8 @@ void ClientDiscoManager::setDiscoInfo(const DiscoInfo& discoInfo) {
 	presenceSender->setPayload(capsInfo);
 }
 
+void ClientDiscoManager::handleConnected() {
+	presenceSender->reset();
+}
+
 }
