@@ -15,6 +15,8 @@
 #include <Swiften/Network/DomainNameResolveError.h>
 
 namespace Swift {
+	class RandomGenerator;
+
 	class DomainNameServiceQuery {
 		public:
 			typedef boost::shared_ptr<DomainNameServiceQuery> ref;
@@ -27,15 +29,10 @@ namespace Swift {
 				int weight;
 			};
 
-			struct ResultPriorityComparator {
-				bool operator()(const DomainNameServiceQuery::Result& a, const DomainNameServiceQuery::Result& b) const {
-					return a.priority < b.priority;
-				}
-			};
-
 			virtual ~DomainNameServiceQuery();
 
 			virtual void run() = 0;
+			static void sortResults(std::vector<DomainNameServiceQuery::Result>& queries, RandomGenerator& generator);
 
 			boost::signal<void (const std::vector<Result>&)> onResult;
 	};

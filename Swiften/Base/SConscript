@@ -10,6 +10,8 @@ objects = swiften_env.SwiftenObject([
 			"String.cpp",
 			"IDGenerator.cpp",
 			"SimpleIDGenerator.cpp",
+			"RandomGenerator.cpp",
+			"BoostRandomGenerator.cpp",
 			"sleep.cpp",
 		])
 swiften_env.Append(SWIFTEN_OBJECTS = [objects])

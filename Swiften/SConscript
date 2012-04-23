@@ -294,6 +294,7 @@ if env["SCONS_STAGE"] == "build" :
 			File("Network/UnitTest/HostAddressTest.cpp"),
 			File("Network/UnitTest/ConnectorTest.cpp"),
 			File("Network/UnitTest/ChainedConnectorTest.cpp"),
+			File("Network/UnitTest/DomainNameServiceQueryTest.cpp"),	
 			File("Network/UnitTest/HTTPConnectProxiedConnectionTest.cpp"),
 			File("Network/UnitTest/BOSHConnectionTest.cpp"),
 			File("Network/UnitTest/BOSHConnectionPoolTest.cpp"),

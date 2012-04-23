@@ -11,6 +11,9 @@ fi
 
 ./bcp --boost="$1" \
 	tools/bcp \
+	algorithm/string.hpp \
+	asio.hpp \
+	assign/list_of.hpp \
 	bind.hpp \
 	cast.hpp \
 	date_time/posix_time/posix_time.hpp \
@@ -18,25 +21,25 @@ fi
 	foreach.hpp \
 	filesystem.hpp \
 	filesystem/fstream.hpp \
+	format.hpp \
+	logic/tribool.hpp \
 	noncopyable.hpp \
 	numeric/conversion/cast.hpp \
+	optional.hpp \
+	program_options.hpp \
+	random/mersenne_twister.hpp \
+	random/uniform_real.hpp \
+	random/variate_generator.hpp \
+	regex.hpp \
 	shared_ptr.hpp \
 	smart_ptr/make_shared.hpp \
-	optional.hpp \
 	signals.hpp \
-	program_options.hpp \
 	thread.hpp \
-	asio.hpp \
+	unordered_map.hpp \
 	uuid/uuid.hpp \
 	uuid/uuid_io.hpp \
 	uuid/uuid_generators.hpp \
 	variant.hpp \
-	regex.hpp \
-	unordered_map.hpp \
-	algorithm/string.hpp \
-	format.hpp \
-	logic/tribool.hpp \
-	assign/list_of.hpp \
 	$TARGET_DIR
 
 rm -rf $TARGET_DIR/libs/config
