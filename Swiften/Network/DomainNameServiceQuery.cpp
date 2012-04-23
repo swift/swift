@@ -52,7 +52,7 @@ void DomainNameServiceQuery::sortResults(std::vector<DomainNameServiceQuery::Res
 		if (std::distance(i, next) > 1) {
 			int weightSum = std::accumulate(i, next, 0, WeightAccumulator());
 			std::vector<double> probabilities;
-			std::transform(i, next, std::back_inserter(probabilities), WeightToProbability(weightSum));
+			std::transform(i, next, std::back_inserter(probabilities), WeightToProbability(weightSum > 0 ? weightSum : 1));
 
 			// Shuffling the result array and the probabilities in parallel
 			for (size_t j = 0; j < probabilities.size(); ++j) {
