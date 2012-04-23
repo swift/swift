@@ -13,6 +13,8 @@
 namespace Swift {
 	class BoostRandomGenerator : public RandomGenerator{
 		public:
+			BoostRandomGenerator();
+
 			int generateRandomInteger(int max);
 
 		private:
