@@ -26,7 +26,7 @@
 #elif defined(macintosh) || defined(__APPLE__) || defined(__APPLE_CC__)
 #define SWIFTEN_PLATFORM_MACOSX
 #include <TargetConditionals.h>
-#  if defined(TARGET_OS_IPHONE)
+#  if TARGET_OS_IPHONE == 1
 #  define SWIFTEN_PLATFORM_IPHONE
 #  endif
 #elif defined(__IBMCPP__) || defined(_AIX)
