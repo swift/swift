@@ -248,7 +248,7 @@ void ChatController::handleNewFileTransferController(FileTransferController* ftc
 }
 
 void ChatController::handleFileTransferCancel(std::string id) {
-	std::cout << "handleFileTransferCancel(" << id << ")" << std::endl;
+	SWIFT_LOG(debug) << "handleFileTransferCancel(" << id << ")" << std::endl;
 	if (ftControllers.find(id) != ftControllers.end()) {
 		ftControllers[id]->cancel();
 	} else {
@@ -257,7 +257,7 @@ void ChatController::handleFileTransferCancel(std::string id) {
 }
 
 void ChatController::handleFileTransferStart(std::string id, std::string description) {
-	std::cout << "handleFileTransferStart(" << id << ", " << description << ")" << std::endl;
+	SWIFT_LOG(debug) << "handleFileTransferStart(" << id << ", " << description << ")" << std::endl;
 	if (ftControllers.find(id) != ftControllers.end()) {
 		ftControllers[id]->start(description);
 	} else {
@@ -266,7 +266,7 @@ void ChatController::handleFileTransferStart(std::string id, std::string descrip
 }
 
 void ChatController::handleFileTransferAccept(std::string id, std::string filename) {
-	std::cout << "handleFileTransferAccept(" << id << ", " << filename << ")" << std::endl;
+	SWIFT_LOG(debug) "handleFileTransferAccept(" << id << ", " << filename << ")" << std::endl;
 	if (ftControllers.find(id) != ftControllers.end()) {
 		ftControllers[id]->accept(filename);
 	} else {
@@ -275,7 +275,7 @@ void ChatController::handleFileTransferAccept(std::string id, std::string filena
 }
 
 void ChatController::handleSendFileRequest(std::string filename) {
-	std::cout << "ChatController::handleSendFileRequest(" << filename << ")" << std::endl;
+	SWIFT_LOG(debug) << "ChatController::handleSendFileRequest(" << filename << ")" << std::endl;
 	eventStream_->send(boost::make_shared<SendFileUIEvent>(getToJID(), filename));
 }
 

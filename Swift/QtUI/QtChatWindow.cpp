@@ -46,8 +46,7 @@
 #include <QFileDialog>
 #include <QMenu>
 #include <Swift/Controllers/Settings/SettingsProvider.h>
-
-#include <QDebug>
+#include <Swiften/Base/Log.h>
 
 namespace Swift {
 
@@ -531,7 +530,7 @@ QString QtChatWindow::buildChatWindowButton(const QString& name, const QString& 
 }
 
 std::string QtChatWindow::addFileTransfer(const std::string& senderName, bool senderIsSelf, const std::string& filename, const boost::uintmax_t sizeInBytes) {
-	qDebug() << "addFileTransfer";
+	SWIFT_LOG(debug) << "addFileTransfer" << std::endl;
 	QString ft_id = QString("ft%1").arg(P2QSTRING(boost::lexical_cast<std::string>(idCounter_++)));
 	
 	QString htmlString;
@@ -617,7 +616,7 @@ void QtChatWindow::handleHTMLButtonClicked(QString id, QString arg1, QString arg
 		messageLog_->setMUCInvitationJoined(elementID);
 	}
 	else {
-		qDebug() << "Unknown HTML button! ( " << id << " )";
+		SWIFT_LOG(debug) << "Unknown HTML button! ( " << Q2PSTRING(id) << " )" << std::endl;
 	}
 }
 
@@ -668,7 +667,7 @@ void QtChatWindow::replaceMessage(const std::string& message, const std::string&
 		messageLog_->replaceMessage(messageHTML, P2QSTRING(id), B2QDATE(time));
 	}
 	else {
-		qWarning() << "Trying to replace a message with no id";
+		std::cerr << "Trying to replace a message with no id";
 	}
 }
 

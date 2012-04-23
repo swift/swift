@@ -11,6 +11,7 @@
 #include <Swiften/Base/boost_bsignals.h>
 #include <boost/bind.hpp>
 #include "Swift/Controllers/UIInterfaces/ChatWindow.h"
+#include <Swiften/Base/Log.h>
 
 #include <boost/smart_ptr/make_shared.hpp>
 
@@ -69,7 +70,7 @@ boost::uintmax_t FileTransferController::getSize() const {
 }
 
 void FileTransferController::start(std::string& description) {
-	std::cout << "FileTransferController::start" << std::endl;
+	SWIFT_LOG("DEBUG") << "FileTransferController::start" << std::endl;
 	fileReadStream = boost::make_shared<FileReadBytestream>(boost::filesystem::path(filename));
 	OutgoingFileTransfer::ref outgoingTransfer = ftManager->createOutgoingFileTransfer(otherParty, boost::filesystem::path(filename), description, fileReadStream);
 	if (outgoingTransfer) {
@@ -85,7 +86,7 @@ void FileTransferController::start(std::string& description) {
 }
 
 void FileTransferController::accept(std::string& file) {
-	std::cout << "FileTransferController::accept" << std::endl;
+	SWIFT_LOG("DEBUG") << "FileTransferController::accept" << std::endl;
 	IncomingFileTransfer::ref incomingTransfer = boost::dynamic_pointer_cast<IncomingFileTransfer>(transfer);
 	if (incomingTransfer) {
 		fileWriteStream = boost::make_shared<FileWriteBytestream>(boost::filesystem::path(file));
