@@ -253,6 +253,7 @@ void QtUserSearchWindow::setResults(const std::vector<UserSearchResult>& results
 	resultsPage_->results_->setHeaderHidden(true);
 	delete model_;
 	model_ = newModel;
+	resultsPage_->setNoResults(model_->rowCount() == 0);
 }
 
 void QtUserSearchWindow::setResultsForm(Form::ref results) {
@@ -264,6 +265,7 @@ void QtUserSearchWindow::setResultsForm(Form::ref results) {
 	resultsPage_->results_->header()->setResizeMode(QHeaderView::ResizeToContents);
 	delete model_;
 	model_ = newModel;
+	resultsPage_->setNoResults(model_->rowCount() == 0);
 }
 
 void QtUserSearchWindow::setSelectedService(const JID& jid) {

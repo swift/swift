@@ -15,10 +15,21 @@ QtUserSearchResultsPage::QtUserSearchResultsPage() {
 	connect(results_, SIGNAL(clicked(const QModelIndex&)), this, SLOT(emitCompletenessCheck()));
 	connect(results_, SIGNAL(entered(const QModelIndex&)), this, SLOT(emitCompletenessCheck()));
 	results_->setExpandsOnDoubleClick(false);
+	setNoResults(false);
 }
 
 bool QtUserSearchResultsPage::isComplete() const {
 	return results_->currentIndex().isValid();
+}
+
+void QtUserSearchResultsPage::setNoResults(bool noResults) {
+	if (noResults) {
+		results_->setEnabled(false);
+		noResults_->show();
+	} else {
+		results_->setEnabled(true);
+		noResults_->hide();
+	}
 }
 
 void QtUserSearchResultsPage::emitCompletenessCheck() {
