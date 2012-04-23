@@ -14,6 +14,7 @@
 #include <Swiften/Avatars/AvatarStorage.h>
 #include <Swiften/MUC/MUCRegistry.h>
 #include <Swiften/VCards/VCardManager.h>
+#include <Swiften/Base/Log.h>
 
 namespace Swift {
 
@@ -35,6 +36,13 @@ std::string VCardAvatarManager::getAvatarHash(const JID& jid) const {
 		if (!avatarStorage_->hasAvatar(hash)) {
 			VCard::ref vCard = vcardManager_->getVCard(avatarJID);
 			if (vCard) {
+				std::string newHash = Hexify::hexify(SHA1::getHash(vCard->getPhoto()));
+				if (newHash != hash) {
+					// Shouldn't happen, but sometimes seem to. Might be fixed if we
+					// move to a safer backend.
+					SWIFT_LOG(warning) << "Inconsistent vCard photo hash cache";
+					hash = newHash;
+				}
 				avatarStorage_->addAvatar(hash, vCard->getPhoto());
 			}
 			else {
