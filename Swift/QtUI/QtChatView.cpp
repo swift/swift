@@ -118,7 +118,7 @@ void QtChatView::addToDOM(boost::shared_ptr<ChatSnippet> snippet) {
 	if (fontSizeSteps_ != 0) {
 		double size = 1.0 + 0.2 * fontSizeSteps_;
 		QString sizeString(QString().setNum(size, 'g', 3) + "em");
-		const QWebElementCollection spans = lastElement_.findAll("span");
+		const QWebElementCollection spans = lastElement_.findAll("span.swift_resizable");
 		foreach (QWebElement span, spans) {
 			span.setStyleProperty("font-size", sizeString);
 		}
@@ -257,7 +257,7 @@ void QtChatView::resizeFont(int fontSizeSteps) {
 	double size = 1.0 + 0.2 * fontSizeSteps_;
 	QString sizeString(QString().setNum(size, 'g', 3) + "em");
 	//qDebug() << "Setting to " << sizeString;
-	const QWebElementCollection spans = document_.findAll("span");
+	const QWebElementCollection spans = document_.findAll("span.swift_resizable");
 	foreach (QWebElement span, spans) {
 		span.setStyleProperty("font-size", sizeString);
 	}

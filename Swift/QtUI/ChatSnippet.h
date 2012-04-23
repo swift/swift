@@ -41,6 +41,7 @@ namespace Swift {
 			static QString timeToEscapedString(const QDateTime& time);
 
 		protected:
+			QString wrapResizable(const QString& text);
 			void setContinuationFallbackSnippet(boost::shared_ptr<ChatSnippet> continuationFallback) {
 				continuationFallback_ = continuationFallback;
 			}
