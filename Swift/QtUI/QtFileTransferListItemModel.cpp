@@ -43,11 +43,11 @@ void QtFileTransferListItemModel::handleProgressChange(int index) {
 
 QVariant QtFileTransferListItemModel::headerData(int section, Qt::Orientation /* orientation */, int role) const {
 	if (role != Qt::DisplayRole) return QVariant();
-	if (section == Direction) return QVariant("Direction");
-	if (section == OtherParty) return QVariant("Other Party");
-	if (section == State) return QVariant("State");
-	if (section == Progress) return QVariant("Progress");
-	if (section == OverallSize) return QVariant("Size");
+	if (section == Direction) return QVariant(QObject::tr("Direction"));
+	if (section == OtherParty) return QVariant(QObject::tr("Other Party"));
+	if (section == State) return QVariant(QObject::tr("State"));
+	if (section == Progress) return QVariant(QObject::tr("Progress"));
+	if (section == OverallSize) return QVariant(QObject::tr("Size"));
 	return QVariant();
 }
 
@@ -62,7 +62,7 @@ QVariant QtFileTransferListItemModel::data(const QModelIndex &index, int role) c
 	}
 	FileTransferController* controller = fileTransferOverview->getFileTransfers().at(index.row());
 	if (index.column() == Direction) {
-		return controller->isIncoming() ? QVariant("Incoming") : QVariant("Outgoing");
+		return controller->isIncoming() ? QVariant(QObject::tr("Incoming")) : QVariant(QObject::tr("Outgoing"));
 	}
 	if (index.column() == OtherParty) {
 		return QVariant(QString::fromStdString(controller->getOtherParty().toString()));
@@ -71,19 +71,19 @@ QVariant QtFileTransferListItemModel::data(const QModelIndex &index, int role) c
 		FileTransfer::State state = controller->getState();
 		switch(state.state) {
 			case FileTransfer::State::WaitingForStart:
-				return QVariant("Waiting for start");
+				return QVariant(QObject::tr("Waiting for start"));
 			case FileTransfer::State::WaitingForAccept:
-				return QVariant("Waiting for other side to accept");
+				return QVariant(QObject::tr("Waiting for other side to accept"));
 			case FileTransfer::State::Negotiating:
-				return QVariant("Negotiating");
+				return QVariant(QObject::tr("Negotiating"));
 			case FileTransfer::State::Transferring:
-				return QVariant("Transferring");
+				return QVariant(QObject::tr("Transferring"));
 			case FileTransfer::State::Finished:
-				return QVariant("Finished");
+				return QVariant(QObject::tr("Finished"));
 			case FileTransfer::State::Failed:
-				return QVariant("Failed");
+				return QVariant(QObject::tr("Failed"));
 			case FileTransfer::State::Canceled:
-				return QVariant("Canceled");
+				return QVariant(QObject::tr("Canceled"));
 		}
 	}
 

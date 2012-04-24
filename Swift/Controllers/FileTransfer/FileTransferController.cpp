@@ -12,6 +12,7 @@
 #include <boost/bind.hpp>
 #include "Swift/Controllers/UIInterfaces/ChatWindow.h"
 #include <Swiften/Base/Log.h>
+#include <Swift/Controllers/Intl.h>
 
 #include <boost/smart_ptr/make_shared.hpp>
 
@@ -38,7 +39,7 @@ const JID &FileTransferController::getOtherParty() const {
 std::string FileTransferController::setChatWindow(ChatWindow* wnd, std::string nickname) {
 	chatWindow = wnd;
 	if (sending) {
-		uiID = wnd->addFileTransfer("me", true, filename, boost::filesystem::file_size(boost::filesystem::path(filename)));
+		uiID = wnd->addFileTransfer(QT_TRANSLATE_NOOP("", "me"), true, filename, boost::filesystem::file_size(boost::filesystem::path(filename)));
 	} else {
 		uiID = wnd->addFileTransfer(nickname, false, filename, transfer->fileSizeInBytes);
 	}

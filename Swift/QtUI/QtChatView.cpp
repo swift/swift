@@ -327,12 +327,12 @@ void QtChatView::setFileTransferStatus(QString id, const ChatWindow::FileTransfe
 
 	QString newInnerHTML = "";
 	if (state == ChatWindow::WaitingForAccept) {
-		newInnerHTML =	"Waiting for other side to accept the transfer.<br/>" +
+		newInnerHTML =	tr("Waiting for other side to accept the transfer.") + "<br/>" +
 			QtChatWindow::buildChatWindowButton(tr("Cancel"), QtChatWindow::ButtonFileTransferCancel, id);
 	}
 	if (state == ChatWindow::Negotiating) {
 		// replace with text "Negotiaging" + Cancel button
-		newInnerHTML =	"Negotiating...<br/>" +
+		newInnerHTML =	tr("Negotiating...") + "<br/>" +
 			QtChatWindow::buildChatWindowButton(tr("Cancel"), QtChatWindow::ButtonFileTransferCancel, id);
 	}
 	else if (state == ChatWindow::Transferring) {
@@ -347,14 +347,14 @@ void QtChatView::setFileTransferStatus(QString id, const ChatWindow::FileTransfe
 						QtChatWindow::buildChatWindowButton(tr("Cancel"), QtChatWindow::ButtonFileTransferCancel, id);
 	}
 	else if (state == ChatWindow::Canceled) {
-		newInnerHTML = "Transfer has been canceled!";
+		newInnerHTML = tr("Transfer has been canceled!");
 	}
 	else if (state == ChatWindow::Finished) {
 		// text "Successful transfer"
-		newInnerHTML = "Transfer completed successfully.";
+		newInnerHTML = tr("Transfer completed successfully.");
 	}
 	else if (state == ChatWindow::FTFailed) {
-		newInnerHTML = "Transfer failed.";
+		newInnerHTML = tr("Transfer failed.");
 	}
 
 	ftElement.setInnerXml(newInnerHTML);

@@ -185,9 +185,9 @@ void ChatController::handleSettingChanged(const std::string& settingPath) {
 
 void ChatController::checkForDisplayingDisplayReceiptsAlert() {
 	if (userWantsReceipts_ && (contactSupportsReceipts_ == ChatWindow::No)) {
-		chatWindow_->setAlert("This chat doesn't support delivery receipts.");
+		chatWindow_->setAlert(QT_TRANSLATE_NOOP("", "This chat doesn't support delivery receipts."));
 	} else if (userWantsReceipts_ && (contactSupportsReceipts_ == ChatWindow::Maybe)) {
-		chatWindow_->setAlert("This chat may not support delivery receipts. You might not receive delivery receipts for the messages you sent.");
+		chatWindow_->setAlert(QT_TRANSLATE_NOOP("", "This chat may not support delivery receipts. You might not receive delivery receipts for the messages you sent."));
 	} else {
 		chatWindow_->cancelAlert();
 	}
