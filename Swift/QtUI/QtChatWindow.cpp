@@ -789,7 +789,10 @@ void QtChatWindow::handleActionButtonClicked() {
 	}
 
 	QAction* result = contextMenu.exec(QCursor::pos());
-	if (result == changeSubject) {
+	if (result == NULL) {
+		/* Skip processing. Note that otherwise, because the actions could be null they could match */
+	}
+	else if (result == changeSubject) {
 		bool ok;
 		QString subject = QInputDialog::getText(this, tr("Change room subject"), tr("New subject:"), QLineEdit::Normal, subject_->text(), &ok);
 		if (ok) {
