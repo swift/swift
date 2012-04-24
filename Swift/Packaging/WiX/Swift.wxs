@@ -11,16 +11,6 @@
 		<Media Id='1' Cabinet='Swift.cab' EmbedCab='yes'/>
 
 		<MajorUpgrade DowngradeErrorMessage="A newer version is already installed. Remove this version if you wish to downgrade." />
-		<!--<Upgrade Id='D7F276D5-BA67-421E-817B-9E7AB4B7D2BF'>
-			<UpgradeVersion OnlyDetect='no' Property='PREVIOUSFOUND' 
-				Minimum='0.0.1' IncludeMinimum='yes'
-				Maximum='2.0.0' IncludeMaximum='no'/>
-		</Upgrade>-->
-		<!-- This means it will upgrade any existing version up to but not including 2.0.
-			This'll mean we can ship nightlies and we can upgrade to 2.0 from them.
-			It also means we can 'upgrade' from e.g. 1.0 to 0.9. We want to change this so only real upgrades are allowed.
-			The numbering scheme probably needs to therefore be major.minor.commitssinceversion -->
-
 
 		<Directory Id='TARGETDIR' Name='SourceDir'>
 	      <Directory Id='ProgramFilesFolder' Name='PFiles'>
