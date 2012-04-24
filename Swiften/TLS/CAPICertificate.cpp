@@ -276,25 +276,25 @@ bool CAPICertificate::checkIfSmartCardPresent () {
 
 		switch (dwState) {
 			case SCARD_ABSENT:
-				SWIFT_LOG("DEBUG") << "Card absent." << std::endl;
+				SWIFT_LOG(debug) << "Card absent." << std::endl;
 				break;
 			case SCARD_PRESENT:
-				SWIFT_LOG("DEBUG") << "Card present." << std::endl;
+				SWIFT_LOG(debug) << "Card present." << std::endl;
 				break;
 			case SCARD_SWALLOWED:
-				SWIFT_LOG("DEBUG") << "Card swallowed." << std::endl;
+				SWIFT_LOG(debug) << "Card swallowed." << std::endl;
 				break;
 			case SCARD_POWERED:
-				SWIFT_LOG("DEBUG") << "Card has power." << std::endl;
+				SWIFT_LOG(debug) << "Card has power." << std::endl;
 				break;
 			case SCARD_NEGOTIABLE:
-				SWIFT_LOG("DEBUG") << "Card reset and waiting PTS negotiation." << std::endl;
+				SWIFT_LOG(debug) << "Card reset and waiting PTS negotiation." << std::endl;
 				break;
 			case SCARD_SPECIFIC:
-				SWIFT_LOG("DEBUG") << "Card has specific communication protocols set." << std::endl;
+				SWIFT_LOG(debug) << "Card has specific communication protocols set." << std::endl;
 				break;
 			default:
-				SWIFT_LOG("DEBUG") << "Unknown or unexpected card state." << std::endl;
+				SWIFT_LOG(debug) << "Unknown or unexpected card state." << std::endl;
 				break;
 		}
 

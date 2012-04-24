@@ -132,7 +132,7 @@ void SOCKS5BytestreamServerSession::process() {
 					finish(true);
 				}
 				else {
-					SWIFT_LOG(deubg) << "Found " << (readBytestream ? "Readstream" : "Writestream") << ". Sent OK." << std::endl;
+					SWIFT_LOG(debug) << "Found " << (readBytestream ? "Readstream" : "Writestream") << ". Sent OK." << std::endl;
 					connection->write(result);
 					bytestreams->serverSessions[streamID] = this;
 					state = ReadyForTransfer;
