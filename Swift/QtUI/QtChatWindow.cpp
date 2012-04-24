@@ -882,6 +882,9 @@ void QtChatWindow::addMUCInvitation(const std::string& senderName, const JID& ji
 	QString qAvatarPath = "qrc:/icons/avatar.png";
 
 	messageLog_->addMessage(boost::shared_ptr<ChatSnippet>(new MessageSnippet(htmlString, Qt::escape(P2QSTRING(senderName)), B2QDATE(boost::posix_time::second_clock::local_time()), qAvatarPath, false, appendToPrevious, theme_, id)));
+	previousMessageWasSelf_ = false;
+	previousSenderName_ = P2QSTRING(senderName);
+	previousMessageKind_ = PreviousMessageWasMUCInvite;
 }
 
 }
