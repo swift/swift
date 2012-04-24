@@ -46,3 +46,8 @@ cppcheck.log
 *.sublime-workspace
 /xmppbench
 /.metadata
+/Swift/Packaging/WiX/*.msi
+/Swift/Packaging/WiX/*.wixpdb
+/Swift/Packaging/WiX/*.wixobj
+/Swift/Packaging/WiX/gen_files.wxs
+/Swift/Packaging/WiX/variables.wxs

@@ -30,7 +30,7 @@ if os.name == "mac" or (os.name == "posix" and os.uname()[0] == "Darwin"):
 	vars.Add(BoolVariable("universal", "Create universal binaries", "no"))
 	vars.Add(BoolVariable("mac105", "Link against the 10.5 frameworks", "no"))
 if os.name == "nt" :
-	vars.Add(PathVariable("vcredist", "MSVC redistributable dir", "", PathVariable.PathAccept))
+	vars.Add(PathVariable("vcredist", "MSVC redistributable dir", None, PathVariable.PathAccept))
 if os.name == "nt" :
 	vars.Add(PathVariable("wix_bindir", "Path to WiX binaries", "", PathVariable.PathAccept))
 if os.name == "nt" :

@@ -6,10 +6,11 @@
 
 	<?include variables.wxs ?>
 
-	<Product Name='Swift' Id='D7F276D5-BA67-421E-817B-9E7AB4B7D2BF' UpgradeCode='D7F276D5-BA67-421E-817B-9E7AB4B7D2BF' Language='1033' Codepage='1252' Version='0.0.1' Manufacturer='Swift.im'>
+	<Product Name='Swift' Id='*' UpgradeCode='D7F276D5-BA67-421E-817B-9E7AB4B7D2BF' Language='1033' Codepage='1252' Version='0.0.1' Manufacturer='Swift.im'>
 		<Package Id='*' Keywords='Installer' Description="Swift Installer" Comments="Swift is available under the GPL version 3" Manufacturer="Swift.im" InstallerVersion='300' Languages='1033' Compressed='yes' SummaryCodepage='1252'/>
 		<Media Id='1' Cabinet='Swift.cab' EmbedCab='yes'/>
 
+		<MajorUpgrade DowngradeErrorMessage="A newer version is already installed. Remove this version if you wish to downgrade." />
 		<!--<Upgrade Id='D7F276D5-BA67-421E-817B-9E7AB4B7D2BF'>
 			<UpgradeVersion OnlyDetect='no' Property='PREVIOUSFOUND' 
 				Minimum='0.0.1' IncludeMinimum='yes'
@@ -60,7 +61,6 @@
 	    <WixVariable Id='WixUILicenseRtf' Value='COPYING.rtf'/>
 
 	    <Icon Id="Swift.exe" SourceFile="Swift.exe" />
-
-	    
+			<Property Id="ARPPRODUCTICON" Value="Swift.exe"/> <!-- The icon in the "Programs" dialog -->
 	</Product>
 </Wix>

@@ -285,7 +285,7 @@ if env["PLATFORM"] == "win32" :
       def convertToRTF(env, target, source) :
         infile = open(source[0].abspath, 'r')
         outfile = open(target[0].abspath, 'w')
-        outfile.write('{\\rtf1\\ansi{\\fonttbl\\f0\\fswiss Helvetica;}\\f0\\pard\n')
+        outfile.write('{\\rtf1\\ansi{\\fonttbl\\f0\\fswiss Helvetica;}\\fs16\\f0\\pard\n')
         for line in infile:
           for char in line.decode("utf-8") :
             if ord(char) > 127 :
@@ -295,7 +295,7 @@ if env["PLATFORM"] == "win32" :
               outfile.write("\\'%X" % ord(char)) 
             else :
               outfile.write(char)
-          outfile.write('\\par')
+          outfile.write('\\par ')
         outfile.write('}')
         outfile.close()
         infile.close()
