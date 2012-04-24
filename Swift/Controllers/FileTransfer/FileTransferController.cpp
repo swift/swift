@@ -70,7 +70,7 @@ boost::uintmax_t FileTransferController::getSize() const {
 }
 
 void FileTransferController::start(std::string& description) {
-	SWIFT_LOG("DEBUG") << "FileTransferController::start" << std::endl;
+	SWIFT_LOG(debug) << "FileTransferController::start" << std::endl;
 	fileReadStream = boost::make_shared<FileReadBytestream>(boost::filesystem::path(filename));
 	OutgoingFileTransfer::ref outgoingTransfer = ftManager->createOutgoingFileTransfer(otherParty, boost::filesystem::path(filename), description, fileReadStream);
 	if (outgoingTransfer) {
@@ -86,7 +86,7 @@ void FileTransferController::start(std::string& description) {
 }
 
 void FileTransferController::accept(std::string& file) {
-	SWIFT_LOG("DEBUG") << "FileTransferController::accept" << std::endl;
+	SWIFT_LOG(debug) << "FileTransferController::accept" << std::endl;
 	IncomingFileTransfer::ref incomingTransfer = boost::dynamic_pointer_cast<IncomingFileTransfer>(transfer);
 	if (incomingTransfer) {
 		fileWriteStream = boost::make_shared<FileWriteBytestream>(boost::filesystem::path(file));
