@@ -55,6 +55,8 @@ namespace Swift
 
 		virtual ByteArray getFinishMessage() const;
 
+		virtual void setCheckCertificateRevocation(bool b);
+
 	private:
 		void			determineStreamSizes();
 		void			continueHandshake(const SafeByteArray& data);
@@ -73,8 +75,6 @@ namespace Swift
 		SECURITY_STATUS validateServerCertificate();
 
 		void			handleCertificateCardRemoved();
-
-		virtual void setCheckCertificateRevocation(bool b);
 
 	private:
 		enum SchannelState

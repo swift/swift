@@ -67,7 +67,7 @@ ClientSession::ClientSession(
 			certificateTrustChecker(NULL) {
 #ifdef SWIFTEN_PLATFORM_WIN32
 if (WindowsRegistry::isFIPSEnabled()) {
-	SWIFT_LOG("info") << "Windows is running in FIPS-140 mode. Some authentication methods will be unavailable." << std::endl;
+	SWIFT_LOG(info) << "Windows is running in FIPS-140 mode. Some authentication methods will be unavailable." << std::endl;
 }
 #endif
 }

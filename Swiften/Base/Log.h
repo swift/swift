@@ -14,7 +14,7 @@ namespace Swift {
 		// Only here to be able to statically check the correctness of the severity levers
 		namespace Severity {
 			enum {
-				debug, warning, error
+				debug, info, warning, error
 			};
 		}
 	}
