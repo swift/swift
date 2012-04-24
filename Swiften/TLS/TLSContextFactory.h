@@ -16,5 +16,6 @@ namespace Swift {
 			virtual bool canCreate() const = 0;
 
 			virtual TLSContext* createTLSContext() = 0;
+			virtual void setCheckCertificateRevocation(bool b) = 0;
 	};
 }
