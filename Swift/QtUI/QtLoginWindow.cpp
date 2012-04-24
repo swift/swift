@@ -222,7 +222,8 @@ QtLoginWindow::QtLoginWindow(UIEventStream* uiEventStream, SettingsProvider* set
 
 void QtLoginWindow::setShowNotificationToggle(bool toggle) {
 	if (toggle) {
-		generalMenu_->addAction(toggleNotificationsAction_);
+		QList< QAction* > generalMenuActions = generalMenu_->actions();
+		generalMenu_->insertAction(generalMenuActions.at(generalMenuActions.count()-2), toggleNotificationsAction_);
 	}
 	else {
 		generalMenu_->removeAction(toggleNotificationsAction_);

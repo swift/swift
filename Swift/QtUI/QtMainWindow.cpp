@@ -126,7 +126,9 @@ QtMainWindow::QtMainWindow(SettingsProvider* settings, UIEventStream* uiEventStr
 	toggleRequestDeliveryReceipts_->setCheckable(true);
 	toggleRequestDeliveryReceipts_->setChecked(settings_->getSetting(SettingConstants::REQUEST_DELIVERYRECEIPTS));
 	connect(toggleRequestDeliveryReceipts_, SIGNAL(toggled(bool)), SLOT(handleToggleRequestDeliveryReceipts(bool)));
-	loginMenus_.generalMenu->addAction(toggleRequestDeliveryReceipts_);
+
+	QList< QAction* > generalMenuActions = loginMenus_.generalMenu->actions();
+	loginMenus_.generalMenu->insertAction(generalMenuActions.at(generalMenuActions.count()-2),toggleRequestDeliveryReceipts_);
 
 	treeWidget_->onSomethingSelectedChanged.connect(boost::bind(&QAction::setEnabled, editUserAction_, _1));
 
