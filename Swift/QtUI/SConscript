@@ -1,4 +1,4 @@
-import os, shutil, datetime
+import os, shutil, datetime, re
 import Version
 
 def generateDefaultTheme(dir) :
@@ -151,6 +151,9 @@ sources = [
   ]
 
 myenv["SWIFT_VERSION"] = Version.getBuildVersion(env.Dir("#").abspath, "swift")
+version_match = re.match("(\d+)\.(\d+).*", myenv["SWIFT_VERSION"])
+myenv["SWIFT_VERSION_MAJOR"] = int(version_match.group(1)) if version_match else 0
+myenv["SWIFT_VERSION_MINOR"] = int(version_match.group(2)) if version_match else 0
 
 if env["PLATFORM"] == "win32" :
   res = myenv.RES("#/Swift/resources/Windows/Swift.rc")
@@ -301,7 +304,10 @@ if env["PLATFORM"] == "win32" :
         infile.close()
       env.Command(["Swift/COPYING.rtf"], ["../../COPYING"], convertToRTF)
 
-      wixvariables = {'VCCRTFile': env.get("vcredist", "c:\\Program Files\\Common Files\\Merge Modules") + "\\Microsoft_VC90_CRT_x86.msm"}
+      wixvariables = {
+        'VCCRTFile': env.get("vcredist", "c:\\Program Files\\Common Files\\Merge Modules") + "\\Microsoft_VC90_CRT_x86.msm",
+        'Version': str(myenv["SWIFT_VERSION_MAJOR"]) + "." + str(myenv["SWIFT_VERSION_MINOR"]) 	
+      }
       wixincludecontent = "<Include>"
       for key in wixvariables:
         wixincludecontent += "<?define %s = \"%s\" ?>" % (key, wixvariables[key])
