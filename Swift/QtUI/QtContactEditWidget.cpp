@@ -121,11 +121,16 @@ void QtContactEditWidget::setNameSuggestions(const std::vector<std::string>& sug
 	nameRadioButton_ = new QRadioButton(tr("Name:"), this);
 	suggestionsLayout_->insertWidget(nameLayout_->count(), nameRadioButton_);
 
-	if (name_->text().isEmpty()) {
-		QRadioButton* suggestedRadioButton = dynamic_cast<QRadioButton*>(suggestionsLayout_->itemAt(0)->widget());
-		if (suggestedRadioButton) {
-			suggestedRadioButton->setChecked(true);
+	QRadioButton* suggestedRadioButton = 0;
+	QList<QRadioButton*> radioButtons = findChildren<QRadioButton*>();
+	foreach (QRadioButton* candidate, radioButtons) {
+		if (candidate->text() == name_->text()) {
+			suggestedRadioButton = candidate;
+			break;
 		}
+	}
+	if (suggestedRadioButton) {
+		suggestedRadioButton->setChecked(true);
 	} else {
 		nameRadioButton_->setChecked(true);
 	}
