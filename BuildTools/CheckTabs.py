@@ -30,12 +30,12 @@ for (path, dirs, files) in os.walk(".") :
 			file.close()
 			if contentsChanged :
 				if len(sys.argv) > 1 and sys.argv[1] == "--fix" :
-					print "Fixing tabs in " + filename
+					print("Fixing tabs in " + filename)
 					file = open(filename, "w")
 					file.write(''.join(contents))
 					file.close()
 				else :
 					foundExpandedTabs = True
-					print filename + " contains expanded tabs"
+					print(filename + " contains expanded tabs")
 
 sys.exit(foundExpandedTabs)
