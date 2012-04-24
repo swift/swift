@@ -6,7 +6,7 @@
 
 	<?include variables.wxs ?>
 
-	<Product Name='Swift' Id='*' UpgradeCode='D7F276D5-BA67-421E-817B-9E7AB4B7D2BF' Language='1033' Codepage='1252' Version='0.0.1' Manufacturer='Swift.im'>
+	<Product Name='Swift' Id='*' UpgradeCode='D7F276D5-BA67-421E-817B-9E7AB4B7D2BF' Language='1033' Codepage='1252' Version='$(var.Version)' Manufacturer='Swift.im'>
 		<Package Id='*' Keywords='Installer' Description="Swift Installer" Comments="Swift is available under the GPL version 3" Manufacturer="Swift.im" InstallerVersion='300' Languages='1033' Compressed='yes' SummaryCodepage='1252'/>
 		<Media Id='1' Cabinet='Swift.cab' EmbedCab='yes'/>
 
