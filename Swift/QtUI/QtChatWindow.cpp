@@ -538,7 +538,7 @@ std::string QtChatWindow::addFileTransfer(const std::string& senderName, bool se
 	QString formattedFileSize = P2QSTRING(formatSize(sizeInBytes));
 	if (senderIsSelf) {
 		// outgoing
-		htmlString = tr("Send file") + ": " + P2QSTRING(filename) + " ( " + formattedFileSize + ") </br>" +
+		htmlString = tr("Send file") + ": " + P2QSTRING(filename) + " ( " + formattedFileSize + ") <br/>" +
 			"<div id='" + ft_id + "'>" +
 				buildChatWindowButton(tr("Cancel"), ButtonFileTransferCancel, ft_id) +
 				buildChatWindowButton(tr("Set Description"), ButtonFileTransferSetDescription, ft_id) +
@@ -546,7 +546,7 @@ std::string QtChatWindow::addFileTransfer(const std::string& senderName, bool se
 			"</div>";
 	} else {
 		// incoming
-		htmlString = "Receiving file: " + P2QSTRING(filename) + " ( " + formattedFileSize  + ") </br>" +
+		htmlString = "Receiving file: " + P2QSTRING(filename) + " ( " + formattedFileSize  + ") <br/>" +
 			"<div id='" + ft_id + "'>" +
 				buildChatWindowButton(tr("Cancel"), ButtonFileTransferCancel, ft_id) +
 				buildChatWindowButton(tr("Accept"), ButtonFileTransferAcceptRequest, ft_id, P2QSTRING(filename)) +
@@ -858,12 +858,12 @@ void QtChatWindow::addMUCInvitation(const std::string& senderName, const JID& ji
 		onAllMessagesRead();
 	}
 
-	QString htmlString = QObject::tr("You've been invited to enter the %1 room.").arg(P2QSTRING(jid.toString())) + " </br>";
+	QString htmlString = QObject::tr("You've been invited to enter the %1 room.").arg(P2QSTRING(jid.toString())) + " <br/>";
 	if (!reason.empty()) {
-		htmlString += QObject::tr("Reason: %1").arg(P2QSTRING(reason)) + "</br>";
+		htmlString += QObject::tr("Reason: %1").arg(P2QSTRING(reason)) + "<br/>";
 	}
 	if (!direct) {
-		htmlString += QObject::tr("This person may not have really sent this invitation!") + "</br>";
+		htmlString += QObject::tr("This person may not have really sent this invitation!") + "<br/>";
 	}
 
 	QString id = QString(ButtonMUCInvite + "%1").arg(P2QSTRING(boost::lexical_cast<std::string>(idCounter_++)));
