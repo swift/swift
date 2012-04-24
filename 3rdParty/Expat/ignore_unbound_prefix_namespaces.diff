@@ -1,0 +1,56 @@
+diff --git a/3rdParty/Expat/src/xmlparse.c b/3rdParty/Expat/src/xmlparse.c
+index 94e31de..ad5add2 100755
+--- a/src/xmlparse.c
++++ b/src/xmlparse.c
+@@ -2808,8 +2808,10 @@ storeAtts(XML_Parser parser, const ENCODING *enc,
+         ((XML_Char *)s)[-1] = 0;  /* clear flag */
+         id = (ATTRIBUTE_ID *)lookup(&dtd->attributeIds, s, 0);
+         b = id->prefix->binding;
+-        if (!b)
+-          return XML_ERROR_UNBOUND_PREFIX;
++        if (!b) {
++          //return XML_ERROR_UNBOUND_PREFIX;
++          continue;
++        }
+ 
+         /* as we expand the name we also calculate its hash value */
+         for (j = 0; j < b->uriLen; j++) {
+@@ -2887,7 +2889,7 @@ storeAtts(XML_Parser parser, const ENCODING *enc,
+     return XML_ERROR_NONE;
+ 
+   /* expand the element type name */
+-  if (elementType->prefix) {
++  if (elementType->prefix && elementType->prefix->binding) {
+     binding = elementType->prefix->binding;
+     if (!binding)
+       return XML_ERROR_UNBOUND_PREFIX;
+@@ -2983,10 +2985,10 @@ addBinding(XML_Parser parser, PREFIX *prefix, const ATTRIBUTE_ID *attId,
+       && prefix->name[2] == XML_T(ASCII_l)) {
+ 
+     /* Not allowed to bind xmlns */
+-    if (prefix->name[3] == XML_T(ASCII_n)
++    /*if (prefix->name[3] == XML_T(ASCII_n)
+         && prefix->name[4] == XML_T(ASCII_s)
+         && prefix->name[5] == XML_T('\0'))
+-      return XML_ERROR_RESERVED_PREFIX_XMLNS;
++      return XML_ERROR_RESERVED_PREFIX_XMLNS;*/
+ 
+     if (prefix->name[3] == XML_T('\0'))
+       mustBeXML = XML_TRUE;
+@@ -3003,12 +3005,12 @@ addBinding(XML_Parser parser, PREFIX *prefix, const ATTRIBUTE_ID *attId,
+   isXML = isXML && len == xmlLen;
+   isXMLNS = isXMLNS && len == xmlnsLen;
+ 
+-  if (mustBeXML != isXML)
++  /*if (mustBeXML != isXML)
+     return mustBeXML ? XML_ERROR_RESERVED_PREFIX_XML
+-                     : XML_ERROR_RESERVED_NAMESPACE_URI;
++                     : XML_ERROR_RESERVED_NAMESPACE_URI;*/
+ 
+-  if (isXMLNS)
+-    return XML_ERROR_RESERVED_NAMESPACE_URI;
++  /*if (isXMLNS)
++    return XML_ERROR_RESERVED_NAMESPACE_URI;*/
+ 
+   if (namespaceSeparator)
+     len++;

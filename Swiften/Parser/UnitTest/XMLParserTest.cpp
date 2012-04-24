@@ -35,6 +35,8 @@ class XMLParserTest : public CppUnit::TestFixture {
 		CPPUNIT_TEST(testParse_AttributeWithoutNamespace);
 		CPPUNIT_TEST(testParse_AttributeWithNamespace);
 		CPPUNIT_TEST(testParse_BillionLaughs);
+		//CPPUNIT_TEST(testParse_UndefinedPrefix);
+		//CPPUNIT_TEST(testParse_UndefinedAttributePrefix);
 		CPPUNIT_TEST_SUITE_END();
 
 	public:
@@ -270,6 +272,41 @@ class XMLParserTest : public CppUnit::TestFixture {
 				"]>"
 				"<lolz>&lol9;</lolz>"
 			));
+		}
+
+		void testParse_UndefinedPrefix() {
+			ParserType testling(&client_);
+
+			CPPUNIT_ASSERT(testling.parse(
+				"<foo:bar><bla/></foo:bar>"));
+
+			CPPUNIT_ASSERT_EQUAL(static_cast<size_t>(4), client_.events.size());
+
+			CPPUNIT_ASSERT_EQUAL(Client::StartElement, client_.events[0].type);
+			CPPUNIT_ASSERT_EQUAL(std::string("foo:bar"), client_.events[0].data);
+			CPPUNIT_ASSERT_EQUAL(std::string(""), client_.events[0].ns);
+
+			CPPUNIT_ASSERT_EQUAL(Client::StartElement, client_.events[1].type);
+			CPPUNIT_ASSERT_EQUAL(std::string("bla"), client_.events[1].data);
+			CPPUNIT_ASSERT_EQUAL(std::string(""), client_.events[1].ns);
+
+			CPPUNIT_ASSERT_EQUAL(Client::EndElement, client_.events[2].type);
+			CPPUNIT_ASSERT_EQUAL(std::string("bla"), client_.events[2].data);
+			CPPUNIT_ASSERT_EQUAL(std::string(""), client_.events[2].ns);
+
+			CPPUNIT_ASSERT_EQUAL(Client::EndElement, client_.events[3].type);
+			CPPUNIT_ASSERT_EQUAL(std::string("foo:bar"), client_.events[3].data);
+			CPPUNIT_ASSERT_EQUAL(std::string(""), client_.events[3].ns);
+		}
+
+		void testParse_UndefinedAttributePrefix() {
+			ParserType testling(&client_);
+
+			CPPUNIT_ASSERT(testling.parse(
+				"<foo bar:baz='bla'/>"));
+
+			CPPUNIT_ASSERT_EQUAL(static_cast<size_t>(1), client_.events[0].attributes.getEntries().size());
+			CPPUNIT_ASSERT_EQUAL(std::string("bar:baz"), client_.events[0].attributes.getEntries()[0].getAttribute().getName());
 		}
 	
 	private:
