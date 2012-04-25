@@ -172,6 +172,9 @@ if env["PLATFORM"] == "posix" :
 			"QtDBUSURIHandler.cpp",
 	]
 
+if env["PLATFORM"] == "darwin" :
+	sources += ["CocoaApplicationActivateHelper.mm"]
+
 if env["PLATFORM"] == "darwin" or env["PLATFORM"] == "win32" :
   swiftProgram = myenv.Program("Swift", sources)
 else :

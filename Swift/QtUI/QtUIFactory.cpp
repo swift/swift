@@ -64,7 +64,7 @@ LoginWindow* QtUIFactory::createLoginWindow(UIEventStream* eventStream) {
 	if (netbookSplitter) {
 		netbookSplitter->insertWidget(0, loginWindow);
 	}
-	connect(systemTray, SIGNAL(clicked()), loginWindow, SLOT(bringToFront()));
+	connect(systemTray, SIGNAL(clicked()), loginWindow, SLOT(toggleBringToFront()));
 
 #ifndef SWIFT_MOBILE
 	QVariant loginWindowGeometryVariant = qtOnlySettings->getQSettings()->value("loginWindowGeometry");

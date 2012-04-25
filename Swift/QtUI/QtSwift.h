@@ -17,6 +17,7 @@
 #include "QtSettingsProvider.h"
 #if defined(SWIFTEN_PLATFORM_MACOSX)
 #include "SwifTools/Application/CocoaApplication.h"
+#include "CocoaApplicationActivateHelper.h"
 #endif
 #if defined(SWIFTEN_PLATFORM_WINDOWS)
 #include "WindowsNotifier.h"
@@ -83,6 +84,7 @@ namespace Swift {
 			ActualIdleDetector idleDetector_;
 #if defined(SWIFTEN_PLATFORM_MACOSX)
 			CocoaApplication cocoaApplication_;
+			CocoaApplicationActivateHelper cocoaApplicationActivateHelper_;
 #endif
 	};
 }

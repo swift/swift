@@ -217,6 +217,13 @@ QtLoginWindow::QtLoginWindow(UIEventStream* uiEventStream, SettingsProvider* set
 		loginAutomatically_->setChecked(false);
 	}
 
+#ifdef SWIFTEN_PLATFORM_MACOSX
+	// Temporary workaround for case 501. Could be that this code is still
+	// needed when Qt provides a proper fix
+	qApp->installEventFilter(this);
+#endif
+
+
 	this->show();
 }
 
@@ -242,6 +249,15 @@ bool QtLoginWindow::eventFilter(QObject *obj, QEvent *event) {
 			return true;
 		}
 	}
+#ifdef SWIFTEN_PLATFORM_MACOSX
+	// Dock clicked
+	// Temporary workaround for case 501. Could be that this code is still
+	// needed when Qt provides a proper fix
+	if (obj == qApp && event->type() == QEvent::ApplicationActivate && !isVisible()) {
+		bringToFront();
+	}
+#endif
+
 	return QObject::eventFilter(obj, event);
 }
 
@@ -459,11 +475,9 @@ void QtLoginWindow::setMessage(const std::string& message) {
 	}
 }
 
-void QtLoginWindow::bringToFront() {
+void QtLoginWindow::toggleBringToFront() {
 	if (!isVisible()) {
-		window()->showNormal();
-		window()->raise();
-		window()->activateWindow();
+		bringToFront();
 	}
 	else {
 #ifndef Q_WS_MAC
@@ -471,6 +485,12 @@ void QtLoginWindow::bringToFront() {
 		window()->hide();
 #endif
 	}
+}
+
+void QtLoginWindow::bringToFront() {
+	window()->showNormal();
+	window()->raise();
+	window()->activateWindow();
 }
 
 void QtLoginWindow::hide() {

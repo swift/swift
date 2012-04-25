@@ -66,6 +66,7 @@ namespace Swift {
 			void handleToggleNotifications(bool enabled);
 			void handleAbout();
 			void bringToFront();
+			void toggleBringToFront();
 			void handleUsernameTextChanged();
 			void resizeEvent(QResizeEvent* event);
 			void moveEvent(QMoveEvent* event);
