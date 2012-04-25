@@ -480,10 +480,7 @@ void QtLoginWindow::toggleBringToFront() {
 		bringToFront();
 	}
 	else {
-#ifndef Q_WS_MAC
-		// FIXME: Remove this when we can bring the window back to the front using the dock on OS X
 		window()->hide();
-#endif
 	}
 }
 
