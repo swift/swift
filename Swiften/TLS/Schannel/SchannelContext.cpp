@@ -640,10 +640,12 @@ CertificateVerificationError::ref SchannelContext::getPeerCertificateVerificatio
 //------------------------------------------------------------------------
 
 ByteArray SchannelContext::getFinishMessage() const {
-	// TODO: Implement
-
-	ByteArray emptyArray;
-	return emptyArray;
+	SecPkgContext_Bindings bindings;
+	int ret = QueryContextAttributes(m_ctxtHandle, SECPKG_ATTR_UNIQUE_BINDINGS, &bindings);
+	if (ret == SEC_E_OK) {
+		return createByteArray(((unsigned char*) bindings.Bindings) + bindings.Bindings->dwApplicationDataOffset + 11 /* tls-unique:*/, bindings.Bindings->cbApplicationDataLength - 11);
+	}
+	return ByteArray();
 }
 
 //------------------------------------------------------------------------
