@@ -7,9 +7,11 @@
 #include "Swift/Controllers/EventNotifier.h"
 
 #include <boost/bind.hpp>
+#include <boost/algorithm/string.hpp>
 
 #include <Swift/Controllers/Intl.h>
 #include <Swiften/Base/format.h>
+#include <Swiften/Base/String.h>
 #include "Swift/Controllers/XMPPEvents/EventController.h"
 #include "SwifTools/Notifier/Notifier.h"
 #include "Swiften/Avatars/AvatarManager.h"
@@ -44,7 +46,11 @@ void EventNotifier::handleEventAdded(boost::shared_ptr<StanzaEvent> event) {
 			if (messageEvent->getStanza()->getType() == Message::Groupchat) {
 				activationJID = jid.toBare();
 			}
-			notifier->showMessage(Notifier::IncomingMessage, title, messageEvent->getStanza()->getBody(), avatarManager->getAvatarPath(jid), boost::bind(&EventNotifier::handleNotificationActivated, this, activationJID));
+			std::string messageText = messageEvent->getStanza()->getBody();
+			if (boost::starts_with(messageText, "/me ")) {
+				messageText = "*" + String::getSplittedAtFirst(messageText, ' ').second + "*";
+			}
+			notifier->showMessage(Notifier::IncomingMessage, title, messageText, avatarManager->getAvatarPath(jid), boost::bind(&EventNotifier::handleNotificationActivated, this, activationJID));
 		}
 	}
 	else if(boost::shared_ptr<SubscriptionRequestEvent> subscriptionEvent = boost::dynamic_pointer_cast<SubscriptionRequestEvent>(event)) {
