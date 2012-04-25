@@ -21,7 +21,7 @@ std::string Linkify::linkify(const std::string& input) {
 	for (size_t i = 0; i < input.size(); ++i) {
 		char c = input[i];
 		if (inURL) {
-			if (c != ' ' && c != '\t' && c != '\n') {
+			if (c != ' ' && c != '\t' && c != '\n' && !(c == '*' && i == input.size() - 1 && input[0] == '*')) {
 				currentURL.push_back(c);
 			}
 			else {

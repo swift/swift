@@ -31,6 +31,7 @@ class LinkifyTest : public CppUnit::TestFixture {
 		CPPUNIT_TEST(testLinkify_UnicodeCharacter);
 		CPPUNIT_TEST(testLinkify_NewLine);
 		CPPUNIT_TEST(testLinkify_Tab);
+		CPPUNIT_TEST(testLinkify_Action);
 		CPPUNIT_TEST_SUITE_END();
 
 	public:
@@ -178,6 +179,14 @@ class LinkifyTest : public CppUnit::TestFixture {
 					std::string("<a href=\"http://swift.im\">http://swift.im</a>\tfoo"),
 					result);
 		}
+
+		void testLinkify_Action() {
+				std::string result = Linkify::linkify("*http://swift.im*");
+
+				CPPUNIT_ASSERT_EQUAL(
+						std::string("*<a href=\"http://swift.im\">http://swift.im</a>*"),
+						result);
+			}
 };
 
 CPPUNIT_TEST_SUITE_REGISTRATION(LinkifyTest);
