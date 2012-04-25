@@ -523,6 +523,6 @@ print "  Projects: " + ' '.join(env["PROJECTS"])
 print ""
 print "  XML Parsers: " + ' '.join(parsers)
 
-print "  TLS Support: " + ("OpenSSL" if env.get("HAVE_OPENSSL",0) else "Disabled")
+print "  TLS Support: " + ("OpenSSL" if env.get("HAVE_OPENSSL",0) else ("Schannel" if env.get("HAVE_SCHANNEL", 0) else "Disabled"))
 print "  DNSSD Support: " + ("Bonjour" if env.get("HAVE_BONJOUR") else ("Avahi" if env.get("HAVE_AVAHI") else "Disabled"))
 print
