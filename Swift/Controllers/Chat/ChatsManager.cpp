@@ -403,6 +403,14 @@ void ChatsManager::handleUIEvent(boost::shared_ptr<UIEvent> event) {
 	}
 }
 
+void ChatsManager::markAllRecentsOffline() {
+	foreach (ChatListWindow::Chat& chat, recentChats_) {
+		chat.setStatusType(StatusShow::None);
+	}
+
+	chatListWindow_->setRecents(recentChats_);
+}
+
 /**
  * If a resource goes offline, release bound chatdialog to that resource.
  */
@@ -477,6 +485,7 @@ void ChatsManager::setOnline(bool enabled) {
 		delete mucBookmarkManager_;
 		mucBookmarkManager_ = NULL;
 		chatListWindow_->setBookmarksEnabled(false);
+		markAllRecentsOffline();
 	} else {
 		setupBookmarks();
 	}

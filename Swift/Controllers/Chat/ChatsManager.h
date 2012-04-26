@@ -88,6 +88,7 @@ namespace Swift {
 			void handleJIDUpdatedInRoster(const JID&);
 			void handleRosterCleared();
 			void handleSettingChanged(const std::string& settingPath);
+			void markAllRecentsOffline();
 
 			void updatePresenceReceivingStateOnChatController(const JID&);
 
