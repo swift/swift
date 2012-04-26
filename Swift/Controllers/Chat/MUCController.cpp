@@ -393,10 +393,12 @@ void MUCController::preHandleIncomingMessage(boost::shared_ptr<MessageEvent> mes
 	}
 	clearPresenceQueue();
 	boost::shared_ptr<Message> message = messageEvent->getStanza();
-	if (joined_ && messageEvent->getStanza()->getFrom().getResource() != nick_ && messageTargetsMe(message) && !message->getPayload<Delay>()) {
-		if (messageEvent->isReadable()) {
-			chatWindow_->flash();
-		}
+	if (joined_ && messageEvent->getStanza()->getFrom().getResource() != nick_ && messageTargetsMe(message) && !message->getPayload<Delay>() && messageEvent->isReadable()
+) {
+		chatWindow_->flash();
+	}
+	else {
+		messageEvent->setTargetsMe(false);
 	}
 	if (joined_) {
 		std::string nick = message->getFrom().getResource();

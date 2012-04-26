@@ -91,6 +91,7 @@ namespace Swift {
 		protected:
 			JID selfJID_;
 			std::vector<boost::shared_ptr<StanzaEvent> > unreadMessages_;
+			std::vector<boost::shared_ptr<StanzaEvent> > targetedUnreadMessages_;
 			StanzaChannel* stanzaChannel_;
 			IQRouter* iqRouter_;
 			ChatWindowFactory* chatWindowFactory_;

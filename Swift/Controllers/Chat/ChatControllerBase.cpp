@@ -92,6 +92,7 @@ void ChatControllerBase::setAvailableServerFeatures(boost::shared_ptr<DiscoInfo>
 
 void ChatControllerBase::handleAllMessagesRead() {
 	if (!unreadMessages_.empty()) {
+		targetedUnreadMessages_.clear();
 		foreach (boost::shared_ptr<StanzaEvent> stanzaEvent, unreadMessages_) {
 			stanzaEvent->conclude();
 		}
@@ -102,7 +103,7 @@ void ChatControllerBase::handleAllMessagesRead() {
 }
 
 int ChatControllerBase::getUnreadCount() {
-	return unreadMessages_.size();
+	return targetedUnreadMessages_.size();
 }
 
 void ChatControllerBase::handleSendMessageRequest(const std::string &body, bool isCorrectionMessage) {
@@ -181,6 +182,9 @@ void ChatControllerBase::handleIncomingMessage(boost::shared_ptr<MessageEvent> m
 	preHandleIncomingMessage(messageEvent);
 	if (messageEvent->isReadable() && !messageEvent->getConcluded()) {
 		unreadMessages_.push_back(messageEvent);
+		if (messageEvent->targetsMe()) {
+			targetedUnreadMessages_.push_back(messageEvent);
+		}
 	}
 	boost::shared_ptr<Message> message = messageEvent->getStanza();
 	std::string body = message->getBody();
