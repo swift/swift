@@ -57,7 +57,7 @@ void QtOccupantListWidget::contextMenuEvent(QContextMenuEvent* event) {
 					case ChatWindow::MakeModerator: text = tr("Make moderator"); break;
 					case ChatWindow::MakeParticipant: text = tr("Make participant"); break;
 					case ChatWindow::MakeVisitor: text = tr("Remove voice"); break;
-					case ChatWindow::AddContact: text = tr("Add contact"); break;
+					case ChatWindow::AddContact: text = tr("Add to contacts"); break;
 				}
 				QAction* action = contextMenu.addAction(text);
 				actions[action] = availableAction;
