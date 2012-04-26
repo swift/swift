@@ -670,6 +670,10 @@ void QtChatWindow::replaceMessage(const std::string& message, const std::string&
 
 void QtChatWindow::replaceMessage(const std::string& message, const std::string& id, const boost::posix_time::ptime& time, const QString& style) {
 	if (!id.empty()) {
+		if (isWidgetSelected()) {
+			onAllMessagesRead();
+		}
+
 		QString messageHTML(Qt::escape(P2QSTRING(message)));
 		messageHTML = P2QSTRING(Linkify::linkify(Q2PSTRING(messageHTML)));
 		messageHTML.replace("\n","<br/>");
