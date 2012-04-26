@@ -6,6 +6,7 @@
 
 #include <Swift/Controllers/EventWindowController.h>
 
+#include <Swift/Controllers/XMPPEvents/MessageEvent.h>
 #include <Swift/Controllers/XMPPEvents/SubscriptionRequestEvent.h>
 #include <boost/bind.hpp>
 
@@ -40,7 +41,7 @@ void EventWindowController::handleEventConcluded(boost::shared_ptr<StanzaEvent> 
 	window_->removeEvent(event);
 	bool includeAsCompleted = true;
 	/* Because subscription requests get duplicated, don't add them back */
-	if (boost::dynamic_pointer_cast<SubscriptionRequestEvent>(event)) {
+	if (boost::dynamic_pointer_cast<SubscriptionRequestEvent>(event) || boost::dynamic_pointer_cast<MessageEvent>(event)) {
 		includeAsCompleted = false;
 	}
 	if (includeAsCompleted) {
