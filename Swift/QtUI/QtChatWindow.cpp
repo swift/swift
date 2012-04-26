@@ -18,6 +18,7 @@
 #include "QtSettingsProvider.h"
 #include "QtScaledAvatarCache.h"
 
+#include <Swiften/StringCodecs/Base64.h>
 #include "SwifTools/TabComplete.h"
 #include <Swift/Controllers/UIEvents/UIEventStream.h>
 #include <Swift/Controllers/UIEvents/SendFileUIEvent.h>
@@ -45,6 +46,7 @@
 #include <QPushButton>
 #include <QFileDialog>
 #include <QMenu>
+#include <QTextDocument>
 #include <Swift/Controllers/Settings/SettingsProvider.h>
 #include <Swiften/Base/Log.h>
 
@@ -522,10 +524,18 @@ std::string formatSize(const boost::uintmax_t bytes) {
 	return str( boost::format("%.1lf %sB") % engBytes % (power > 0 ? siPrefix[power-1] : "") );
 }
 
+QString encodeButtonArgument(const QString& str) {
+	return Qt::escape(P2QSTRING(Base64::encode(createByteArray(Q2PSTRING(str)))));
+}
+
+QString decodeButtonArgument(const QString& str) {
+	return P2QSTRING(byteArrayToString(Base64::decode(Q2PSTRING(str))));
+}
+
 QString QtChatWindow::buildChatWindowButton(const QString& name, const QString& id, const QString& arg1, const QString& arg2, const QString& arg3) {
 	QRegExp regex("[A-Za-z][A-Za-z0-9\\-\\_]+");
 	Q_ASSERT(regex.exactMatch(id));
-	QString html = QString("<input id='%2' type='submit' value='%1' onclick='chatwindow.buttonClicked(\"%2\", \"%3\", \"%4\", \"%5\");' />").arg(name).arg(id).arg(arg1).arg(arg2).arg(arg3);
+	QString html = QString("<input id='%2' type='submit' value='%1' onclick='chatwindow.buttonClicked(\"%2\", \"%3\", \"%4\", \"%5\");' />").arg(name).arg(id).arg(encodeButtonArgument(arg1)).arg(encodeButtonArgument(arg2)).arg(encodeButtonArgument(arg3));
 	return html;
 }
 
@@ -579,7 +589,11 @@ void QtChatWindow::setFileTransferStatus(std::string id, const FileTransferState
 	messageLog_->setFileTransferStatus(QString::fromStdString(id), state, QString::fromStdString(msg));
 }
 
-void QtChatWindow::handleHTMLButtonClicked(QString id, QString arg1, QString arg2, QString arg3) {
+void QtChatWindow::handleHTMLButtonClicked(QString id, QString encodedArgument1, QString encodedArgument2, QString encodedArgument3) {
+	QString arg1 = decodeButtonArgument(encodedArgument1);
+	QString arg2 = decodeButtonArgument(encodedArgument2);
+	QString arg3 = decodeButtonArgument(encodedArgument3);
+
 	if (id.startsWith(ButtonFileTransferCancel)) {
 		QString ft_id = arg1;
 		onFileTransferCancel(Q2PSTRING(ft_id));
