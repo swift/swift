@@ -1,11 +1,12 @@
 /*
- * Copyright (c) 2010 Kevin Smith
+ * Copyright (c) 2010-2012 Kevin Smith
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "Swift/Controllers/EventWindowController.h"
+#include <Swift/Controllers/EventWindowController.h>
 
+#include <Swift/Controllers/XMPPEvents/SubscriptionRequestEvent.h>
 #include <boost/bind.hpp>
 
 namespace Swift {
@@ -37,7 +38,14 @@ void EventWindowController::handleEventQueueEventAdded(boost::shared_ptr<StanzaE
 
 void EventWindowController::handleEventConcluded(boost::shared_ptr<StanzaEvent> event) {
 	window_->removeEvent(event);
-	window_->addEvent(event, false);
+	bool includeAsCompleted = true;
+	/* Because subscription requests get duplicated, don't add them back */
+	if (boost::dynamic_pointer_cast<SubscriptionRequestEvent>(event)) {
+		includeAsCompleted = false;
+	}
+	if (includeAsCompleted) {
+		window_->addEvent(event, false);
+	}
 	event->onConclusion.disconnect(boost::bind(&EventWindowController::handleEventConcluded, this, event));
 }
 
