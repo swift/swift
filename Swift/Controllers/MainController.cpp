@@ -565,6 +565,12 @@ void MainController::handleDisconnected(const boost::optional<ClientError>& erro
 			}
 		}
 
+		if (forceReconnectAfterCertificateTrust && settings_->getSetting(SettingConstants::FORGET_PASSWORDS)) {
+			forceReconnectAfterCertificateTrust = false;
+			forceSignout = true;
+			message = QT_TRANSLATE_NOOP("", "Re-enter credentials and retry");
+		}
+
 		if (forceReconnectAfterCertificateTrust) {
 			performLoginFromCachedCredentials();
 		}
