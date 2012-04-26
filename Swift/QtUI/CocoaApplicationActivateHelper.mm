@@ -4,10 +4,10 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
+#include <Cocoa/Cocoa.h>
 #include "CocoaApplicationActivateHelper.h"
 
 #include <boost/function.hpp>
-#include <Cocoa/Cocoa.h>
 #include <QApplication>
 
 @interface CocoaApplicationActivateHelperDelegate : NSObject {
