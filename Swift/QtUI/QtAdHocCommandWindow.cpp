@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2011 Kevin Smith
+ * Copyright (c) 2010-2012 Kevin Smith
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -11,6 +11,8 @@
 #include <Swift/QtUI/QtFormWidget.h>
 #include <Swiften/Elements/Command.h>
 
+const int FormLayoutIndex = 1;
+
 namespace Swift {
 QtAdHocCommandWindow::QtAdHocCommandWindow(boost::shared_ptr<OutgoingAdHocCommandSession> command) : command_(command) {
 
@@ -21,17 +23,14 @@ QtAdHocCommandWindow::QtAdHocCommandWindow(boost::shared_ptr<OutgoingAdHocComman
 	command->onError.connect(boost::bind(&QtAdHocCommandWindow::handleError, this, _1));
 	command->start();
 
-	QBoxLayout* layout = new QBoxLayout(QBoxLayout::TopToBottom, this);
-	layout->setContentsMargins(0,0,0,0);
-	layout->setSpacing(2);
+	layout_ = new QBoxLayout(QBoxLayout::TopToBottom, this);
+	layout_->setContentsMargins(0,0,0,0);
+	layout_->setSpacing(2);
 	label_ = new QLabel(this);
 	label_->setTextFormat(Qt::PlainText);
-	layout->addWidget(label_);
-	QWidget* formContainer = new QWidget(this);
-	layout->addWidget(formContainer);
-	formLayout_ = new QBoxLayout(QBoxLayout::TopToBottom, formContainer);
+	layout_->addWidget(label_);
 	QWidget* buttonsWidget = new QWidget(this);
-	layout->addWidget(buttonsWidget);
+	layout_->addWidget(buttonsWidget);
 
 	QBoxLayout* buttonsLayout = new QBoxLayout(QBoxLayout::LeftToRight, buttonsWidget);
 	cancelButton_ = new QPushButton(tr("Cancel"), buttonsWidget);
@@ -53,7 +52,6 @@ QtAdHocCommandWindow::QtAdHocCommandWindow(boost::shared_ptr<OutgoingAdHocComman
 	actions_[Command::Prev] = backButton_;
 	actions_[Command::Complete] = completeButton_;
 	actions_[Command::Cancel] = cancelButton_;
-	show();
 }
 
 QtAdHocCommandWindow::~QtAdHocCommandWindow() {
@@ -109,11 +107,13 @@ void QtAdHocCommandWindow::handleError(ErrorPayload::ref /*error*/) {
 void QtAdHocCommandWindow::setForm(Form::ref form) {
 	delete formWidget_;
 	formWidget_ = new QtFormWidget(form, this);
-	formLayout_->addWidget(formWidget_);
+	layout_->insertWidget(FormLayoutIndex, formWidget_);
+	show();
 }
 
 void QtAdHocCommandWindow::setNoForm() {
 	delete formWidget_;
+	show();
 }
 
 typedef std::pair<Command::Action, QPushButton*> ActionButton;
