@@ -40,8 +40,8 @@ void MUCSearchController::openSearchWindow() {
 		window_->onSearchService.connect(boost::bind(&MUCSearchController::handleSearchService, this, _1));
 		window_->onFinished.connect(boost::bind(&MUCSearchController::handleMUCSearchFinished, this, _1));
 		window_->addSavedServices(savedServices_);
-		handleSearchService(JID(jid_.getDomain()));
 	}
+	handleSearchService(JID(jid_.getDomain()));
 	window_->show();
 }
 
