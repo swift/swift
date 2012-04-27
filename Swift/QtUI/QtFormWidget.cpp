@@ -241,4 +241,34 @@ Form::ref QtFormWidget::getCompletedForm() {
 	return result;
 }
 
+template<class T> void QtFormWidget::setEnabled(QWidget* rawWidget, bool editable) {
+	T* widget = qobject_cast<T*>(rawWidget);
+	if (widget) {
+		widget->setEnabled(editable);
+	}
+}
+
+template<class T> void QtFormWidget::setEditable(QWidget* rawWidget, bool editable) {
+	T* widget = qobject_cast<T*>(rawWidget);
+	if (widget) {
+		widget->setReadOnly(!editable);
+	}
+}
+
+void QtFormWidget::setEditable(bool editable) {
+	if (!form_) {
+		return;
+	}
+	foreach (boost::shared_ptr<FormField> field, form_->getFields()) {
+		QWidget* widget = NULL;
+		if (field) {
+			widget = fields_[field->getName()];
+		}
+		setEnabled<QCheckBox>(widget, editable);
+		setEnabled<QListWidget>(widget, editable);
+		setEditable<QTextEdit>(widget, editable);
+		setEditable<QLineEdit>(widget, editable);
+	}
+}
+
 }

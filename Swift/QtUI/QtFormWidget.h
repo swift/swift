@@ -21,9 +21,12 @@ class QtFormWidget : public QWidget {
 		QtFormWidget(Form::ref form, QWidget* parent = NULL);
 		virtual ~QtFormWidget();
 		Form::ref getCompletedForm();
+		void setEditable(bool editable);
 	private:
 		QWidget* createWidget(FormField::ref field);
 		QListWidget* createList(FormField::ref field);
+		template<class T> void setEnabled(QWidget* rawWidget, bool editable);
+		template<class T> void setEditable(QWidget* rawWidget, bool editable);
 		std::map<std::string, QWidget*> fields_;
 		Form::ref form_;
 };
