@@ -2043,28 +2043,28 @@
     </message>
     <message>
         <location filename="../QtUI/QtMainWindow.cpp" line="102"/>
-        <source>Edit &amp;Profile</source>
-        <translation>Upraviť &amp;profil</translation>
+        <source>Edit &amp;Profile…</source>
+        <translation>Upraviť &amp;profil…</translation>
     </message>
     <message>
         <location filename="../QtUI/QtMainWindow.cpp" line="105"/>
-        <source>Enter &amp;Room</source>
-        <translation>Vstúpiť do &amp;miestnosti</translation>
+        <source>Enter &amp;Room…</source>
+        <translation>Vstúpiť do &amp;miestnosti…</translation>
     </message>
     <message>
         <location filename="../QtUI/QtMainWindow.cpp" line="108"/>
-        <source>&amp;Add Contact</source>
-        <translation>Pridať &amp;kontakt</translation>
+        <source>&amp;Add Contact…</source>
+        <translation>Pridať &amp;kontakt…</translation>
     </message>
     <message>
         <location filename="../QtUI/QtMainWindow.cpp" line="111"/>
-        <source>&amp;Edit Selected Contact</source>
-        <translation>&amp;Upraviť vybraný kontakt</translation>
+        <source>&amp;Edit Selected Contact…</source>
+        <translation>&amp;Upraviť vybraný kontakt…</translation>
     </message>
     <message>
         <location filename="../QtUI/QtMainWindow.cpp" line="115"/>
-        <source>Start &amp;Chat</source>
-        <translation>Začať &amp;rozhovor</translation>
+        <source>Start &amp;Chat…</source>
+        <translation>Začať &amp;rozhovor…</translation>
     </message>
     <message>
         <location filename="../QtUI/QtMainWindow.cpp" line="121"/>

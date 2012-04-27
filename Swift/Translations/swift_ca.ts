@@ -1595,27 +1595,27 @@ Si esculls ajornar aquesta elecció, se&apos;t preguntarà de nou la propera veg
     </message>
     <message>
         <location filename="../QtUI/QtMainWindow.cpp" line="86"/>
-        <source>Edit &amp;Profile</source>
-        <translation>Editar &amp;Perfil</translation>
+        <source>Edit &amp;Profile…</source>
+        <translation>Editar &amp;Perfil…</translation>
     </message>
     <message>
         <location filename="../QtUI/QtMainWindow.cpp" line="89"/>
-        <source>Enter &amp;Room</source>
-        <translation>Entrar a &amp;Sala</translation>
+        <source>Enter &amp;Room…</source>
+        <translation>Entrar a &amp;Sala…</translation>
     </message>
     <message>
         <location filename="../QtUI/QtMainWindow.cpp" line="92"/>
-        <source>&amp;Add Contact</source>
-        <translation>&amp;Afegir Contacte</translation>
+        <source>&amp;Add Contact…</source>
+        <translation>&amp;Afegir Contacte…</translation>
     </message>
     <message>
         <location filename="../QtUI/QtMainWindow.cpp" line="95"/>
-        <source>&amp;Edit Selected Contact</source>
-        <translation>&amp;Editar Contacte Sel·leccionat</translation>
+        <source>&amp;Edit Selected Contact…</source>
+        <translation>&amp;Editar Contacte Sel·leccionat…</translation>
     </message>
     <message>
         <location filename="../QtUI/QtMainWindow.cpp" line="99"/>
-        <source>Start &amp;Chat</source>
+        <source>Start &amp;Chat…</source>
         <translation>Començar &amp;Conversa</translation>
     </message>
     <message>

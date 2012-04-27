@@ -1437,27 +1437,27 @@
     </message>
     <message>
         <location filename="../QtUI/QtMainWindow.cpp" line="86"/>
-        <source>Edit &amp;Profile</source>
-        <translation>Editer le &amp;Profil</translation>
+        <source>Edit &amp;Profile…</source>
+        <translation>Editer le &amp;Profil…</translation>
     </message>
     <message>
         <location filename="../QtUI/QtMainWindow.cpp" line="89"/>
-        <source>Enter &amp;Room</source>
-        <translation>Joindre un &amp;Salon</translation>
+        <source>Enter &amp;Room…</source>
+        <translation>Joindre un &amp;Salon…</translation>
     </message>
     <message>
         <location filename="../QtUI/QtMainWindow.cpp" line="92"/>
-        <source>&amp;Add Contact</source>
-        <translation>&amp;Ajouter un Contact</translation>
+        <source>&amp;Add Contact…</source>
+        <translation>&amp;Ajouter un Contact…</translation>
     </message>
     <message>
         <location filename="../QtUI/QtMainWindow.cpp" line="95"/>
-        <source>&amp;Edit Selected Contact</source>
-        <translation>&amp;Editer le Contact Sélectionné</translation>
+        <source>&amp;Edit Selected Contact…</source>
+        <translation>&amp;Editer le Contact Sélectionné…</translation>
     </message>
     <message>
         <location filename="../QtUI/QtMainWindow.cpp" line="99"/>
-        <source>Start &amp;Chat</source>
+        <source>Start &amp;Chat…</source>
         <translation>Démarrer une &amp;Discussion</translation>
     </message>
     <message>

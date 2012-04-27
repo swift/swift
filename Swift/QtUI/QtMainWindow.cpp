@@ -99,20 +99,20 @@ QtMainWindow::QtMainWindow(SettingsProvider* settings, UIEventStream* uiEventStr
 
 	QMenu* actionsMenu = new QMenu(tr("&Actions"), this);
 	menus_.push_back(actionsMenu);
-	QAction* editProfileAction = new QAction(tr("Edit &Profile"), this);
+	QAction* editProfileAction = new QAction(tr("Edit &Profile…"), this);
 	connect(editProfileAction, SIGNAL(triggered()), SLOT(handleEditProfileAction()));
 	actionsMenu->addAction(editProfileAction);
-	QAction* joinMUCAction = new QAction(tr("Enter &Room"), this);
+	QAction* joinMUCAction = new QAction(tr("Enter &Room…"), this);
 	connect(joinMUCAction, SIGNAL(triggered()), SLOT(handleJoinMUCAction()));
 	actionsMenu->addAction(joinMUCAction);
-	addUserAction_ = new QAction(tr("&Add Contact"), this);
+	addUserAction_ = new QAction(tr("&Add Contact…"), this);
 	connect(addUserAction_, SIGNAL(triggered(bool)), this, SLOT(handleAddUserActionTriggered(bool)));
 	actionsMenu->addAction(addUserAction_);
-	editUserAction_ = new QAction(tr("&Edit Selected Contact"), this);
+	editUserAction_ = new QAction(tr("&Edit Selected Contact…"), this);
 	connect(editUserAction_, SIGNAL(triggered(bool)), treeWidget_, SLOT(handleEditUserActionTriggered(bool)));
 	actionsMenu->addAction(editUserAction_);
 	editUserAction_->setEnabled(false);
-	chatUserAction_ = new QAction(tr("Start &Chat"), this);
+	chatUserAction_ = new QAction(tr("Start &Chat…"), this);
 	connect(chatUserAction_, SIGNAL(triggered(bool)), this, SLOT(handleChatUserActionTriggered(bool)));
 	actionsMenu->addAction(chatUserAction_);
 	serverAdHocMenu_ = new QMenu(tr("Run Server Command"), this);

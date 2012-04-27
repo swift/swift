@@ -1189,15 +1189,15 @@ afbeelding</translation>
         <translation>&amp;Toon offline contacten</translation>
     </message>
     <message>
-        <source>&amp;Add Contact</source>
-        <translation>Contact &amp;toevoegen</translation>
+        <source>&amp;Add Contact…</source>
+        <translation>Contact &amp;toevoegen…</translation>
     </message>
     <message>
-        <source>&amp;Edit Selected Contact</source>
-        <translation>Geselecteerde contact &amp;bewerken</translation>
+        <source>&amp;Edit Selected Contact…</source>
+        <translation>Geselecteerde contact &amp;bewerken…</translation>
     </message>
     <message>
-        <source>Start &amp;Chat</source>
+        <source>Start &amp;Chat…</source>
         <translation>&amp;Conversatie starten</translation>
     </message>
     <message>
@@ -1205,12 +1205,12 @@ afbeelding</translation>
         <translation>&amp;Afmelden</translation>
     </message>
     <message>
-        <source>Edit &amp;Profile</source>
-        <translation>Bewerk &amp;profiel</translation>
+        <source>Edit &amp;Profile…</source>
+        <translation>Bewerk &amp;profiel…</translation>
     </message>
     <message>
-        <source>Enter &amp;Room</source>
-        <translation>&amp;Kamer betreden</translation>
+        <source>Enter &amp;Room…</source>
+        <translation>&amp;Kamer betreden…</translation>
     </message>
     <message>
         <source>Run Server Command</source>

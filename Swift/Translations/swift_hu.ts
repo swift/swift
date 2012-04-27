@@ -1136,23 +1136,23 @@
         <translation>&amp;Műveletek</translation>
     </message>
     <message>
-        <source>Edit &amp;Profile</source>
-        <translation>&amp;Profil szerkesztése</translation>
+        <source>Edit &amp;Profile…</source>
+        <translation>&amp;Profil szerkesztése…</translation>
     </message>
     <message>
-        <source>Enter &amp;Room</source>
-        <translation>Belépés &amp;szobába</translation>
+        <source>Enter &amp;Room…</source>
+        <translation>Belépés &amp;szobába…</translation>
     </message>
     <message>
-        <source>&amp;Add Contact</source>
-        <translation>&amp;Partner felvétele</translation>
+        <source>&amp;Add Contact…</source>
+        <translation>&amp;Partner felvétele…</translation>
     </message>
     <message>
-        <source>&amp;Edit Selected Contact</source>
-        <translation>&amp;Kiválasztott partner szerkesztése</translation>
+        <source>&amp;Edit Selected Contact…</source>
+        <translation>&amp;Kiválasztott partner szerkesztése…</translation>
     </message>
     <message>
-        <source>Start &amp;Chat</source>
+        <source>Start &amp;Chat…</source>
         <translation>Bes&amp;zélgetés kezdeményezése</translation>
     </message>
     <message>

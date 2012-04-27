@@ -1532,27 +1532,27 @@
     </message>
     <message>
         <location filename="../QtUI/QtMainWindow.cpp" line="95"/>
-        <source>Edit &amp;Profile</source>
-        <translation>&amp;Profil editieren</translation>
+        <source>Edit &amp;Profile…</source>
+        <translation>&amp;Profil editieren…</translation>
     </message>
     <message>
         <location filename="../QtUI/QtMainWindow.cpp" line="98"/>
-        <source>Enter &amp;Room</source>
-        <translation>Chat&amp;raum betreten</translation>
+        <source>Enter &amp;Room…</source>
+        <translation>Chat&amp;raum betreten…</translation>
     </message>
     <message>
         <location filename="../QtUI/QtMainWindow.cpp" line="101"/>
-        <source>&amp;Add Contact</source>
-        <translation>Kont&amp;akt hinzufügen</translation>
+        <source>&amp;Add Contact…</source>
+        <translation>Kont&amp;akt hinzufügen…</translation>
     </message>
     <message>
         <location filename="../QtUI/QtMainWindow.cpp" line="104"/>
-        <source>&amp;Edit Selected Contact</source>
-        <translation>Ausgewählten Kontakt &amp;editieren</translation>
+        <source>&amp;Edit Selected Contact…</source>
+        <translation>Ausgewählten Kontakt &amp;editieren…</translation>
     </message>
     <message>
         <location filename="../QtUI/QtMainWindow.cpp" line="108"/>
-        <source>Start &amp;Chat</source>
+        <source>Start &amp;Chat…</source>
         <translation>Gesprä&amp;ch beginnen</translation>
     </message>
     <message>
