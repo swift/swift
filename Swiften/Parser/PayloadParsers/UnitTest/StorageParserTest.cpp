@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Remko Tronçon
+ * Copyright (c) 2010-2012 Remko Tronçon
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -54,7 +54,7 @@ class StorageParserTest : public CppUnit::TestFixture {
 							"name='Council of Oberon' "
 							"jid='council@conference.underhill.org' />"
 					"<conference "
-							"name='Tea party' "
+							"name='Tea &amp; jam party' "
 							"jid='teaparty@wonderland.lit' />"
 				"</storage>"));
 
@@ -63,7 +63,7 @@ class StorageParserTest : public CppUnit::TestFixture {
 			CPPUNIT_ASSERT_EQUAL(2, static_cast<int>(rooms.size()));
 			CPPUNIT_ASSERT_EQUAL(std::string("Council of Oberon"), rooms[0].name);
 			CPPUNIT_ASSERT_EQUAL(JID("council@conference.underhill.org"), rooms[0].jid);
-			CPPUNIT_ASSERT_EQUAL(std::string("Tea party"), rooms[1].name);
+			CPPUNIT_ASSERT_EQUAL(std::string("Tea & jam party"), rooms[1].name);
 			CPPUNIT_ASSERT_EQUAL(JID("teaparty@wonderland.lit"), rooms[1].jid);
 		}
 

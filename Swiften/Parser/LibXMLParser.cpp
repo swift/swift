@@ -69,6 +69,7 @@ LibXMLParser::LibXMLParser(XMLParserClient* client) : XMLParser(client) {
 	handler_.error = &handleError;
 
 	context_ = xmlCreatePushParserCtxt(&handler_, this, 0, 0, 0);
+	xmlCtxtUseOptions(context_, XML_PARSE_NOENT);
 	assert(context_);
 }
 
