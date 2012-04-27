@@ -47,6 +47,7 @@ namespace Swift {
 		signals:
 			void gotFocus();
 			void fontResized(int);
+			void logCleared();
 
 		public slots:
 			void copySelectionToClipboard();

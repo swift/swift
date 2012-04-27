@@ -37,6 +37,7 @@ ChatControllerBase::ChatControllerBase(const JID& self, StanzaChannel* stanzaCha
 	chatWindow_ = chatWindowFactory_->createChatWindow(toJID, eventStream);
 	chatWindow_->onAllMessagesRead.connect(boost::bind(&ChatControllerBase::handleAllMessagesRead, this));
 	chatWindow_->onSendMessageRequest.connect(boost::bind(&ChatControllerBase::handleSendMessageRequest, this, _1, _2));
+	chatWindow_->onLogCleared.connect(boost::bind(&ChatControllerBase::handleLogCleared, this));
 	entityCapsProvider_->onCapsChanged.connect(boost::bind(&ChatControllerBase::handleCapsChanged, this, _1));
 	setOnline(stanzaChannel->isAvailable() && iqRouter->isAvailable());
 	createDayChangeTimer();
@@ -44,6 +45,10 @@ ChatControllerBase::ChatControllerBase(const JID& self, StanzaChannel* stanzaCha
 
 ChatControllerBase::~ChatControllerBase() {
 	delete chatWindow_;
+}
+
+void ChatControllerBase::handleLogCleared() {
+	cancelReplaces();
 }
 
 void ChatControllerBase::handleCapsChanged(const JID& jid) {

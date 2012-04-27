@@ -118,6 +118,7 @@ namespace Swift {
 			void showEvent(QShowEvent* event);
 
 		private slots:
+			void handleLogCleared();
 			void returnPressed();
 			void handleInputChanged();
 			void handleCursorPositionChanged();

@@ -31,6 +31,9 @@ namespace Swift {
 			virtual void handleNewFileTransferController(FileTransferController* ftc);
 			virtual void setContactIsReceivingPresence(bool /*isReceivingPresence*/);
 
+		protected:
+			void cancelReplaces();
+
 		private:
 			void handlePresenceChange(boost::shared_ptr<Presence> newPresence);
 			std::string getStatusChangeString(boost::shared_ptr<Presence> presence);

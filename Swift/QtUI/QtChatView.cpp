@@ -76,6 +76,7 @@ void QtChatView::handleClearRequested() {
 	messageBox.setDefaultButton(QMessageBox::Yes);
 	int button = messageBox.exec();
 	if (button == QMessageBox::Yes) {
+		logCleared();
 		resetView();
 	}
 }

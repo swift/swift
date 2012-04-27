@@ -75,6 +75,7 @@ namespace Swift {
 			virtual void handleBareJIDCapsChanged(const JID& jid) = 0;
 			std::string getErrorMessage(boost::shared_ptr<ErrorPayload>);
 			virtual void setContactIsReceivingPresence(bool /* isReceivingPresence */) {}
+			virtual void cancelReplaces() = 0;
 
 		private:
 			IDGenerator idGenerator_;
@@ -87,6 +88,7 @@ namespace Swift {
 			void handleMUCInvitation(Message::ref message);
 			void handleMediatedMUCInvitation(Message::ref message);
 			void handleGeneralMUCInvitation(MUCInviteEvent::ref event);
+			void handleLogCleared();
 
 		protected:
 			JID selfJID_;

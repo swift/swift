@@ -1,11 +1,10 @@
 /*
- * Copyright (c) 2010 Kevin Smith
+ * Copyright (c) 2010-2012 Kevin Smith
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#ifndef SWIFTEN_CHATWINDOW_H
-#define SWIFTEN_CHATWINDOW_H
+#pragma once
 
 #include <boost/optional.hpp>
 #include "Swiften/Base/boost_bsignals.h"
@@ -123,6 +122,7 @@ namespace Swift {
 			boost::signal<void ()> onGetAffiliationsRequest;
 			boost::signal<void (MUCOccupant::Affiliation, const JID&)> onSetAffiliationRequest;
 			boost::signal<void (const std::vector<std::pair<MUCOccupant::Affiliation, JID> >& changes)> onChangeAffiliationsRequest;
+			boost::signal<void ()> onLogCleared;
 			
 			// File transfer related
 			boost::signal<void (std::string /* id */)> onFileTransferCancel;
@@ -131,5 +131,4 @@ namespace Swift {
 			boost::signal<void (std::string /* path */)> onSendFileRequest;
 	};
 }
-#endif
 

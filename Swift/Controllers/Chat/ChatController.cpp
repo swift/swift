@@ -91,6 +91,10 @@ ChatController::~ChatController() {
 	delete chatStateTracker_;
 }
 
+void ChatController::cancelReplaces() {
+	lastWasPresence_ = false;
+}
+
 void ChatController::handleBareJIDCapsChanged(const JID& /*jid*/) {
 	DiscoInfo::ref disco = entityCapsProvider_->getCaps(toJID_);
 	if (disco) {

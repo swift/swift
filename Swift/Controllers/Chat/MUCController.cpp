@@ -114,6 +114,10 @@ MUCController::~MUCController() {
 	delete completer_;
 }
 
+void MUCController::cancelReplaces() {
+	lastWasPresence_ = false;
+}
+
 void MUCController::handleWindowOccupantSelectionChanged(ContactRosterItem* item) {
 	std::vector<ChatWindow::OccupantAction> actions;
 

@@ -164,6 +164,7 @@ QtChatWindow::QtChatWindow(const QString &contact, QtChatTheme* theme, UIEventSt
 	connect(messageLog_, SIGNAL(gotFocus()), input_, SLOT(setFocus()));
 	resize(400,300);
 	connect(messageLog_, SIGNAL(fontResized(int)), this, SIGNAL(fontResized(int)));
+	connect(messageLog_, SIGNAL(logCleared()), this, SLOT(handleLogCleared()));
 
 	treeWidget_->onSomethingSelectedChanged.connect(boost::bind(&QtChatWindow::handleOccupantSelectionChanged, this, _1));
 	treeWidget_->onOccupantActionSelected.connect(boost::bind(boost::ref(onOccupantActionSelected), _1, _2));
@@ -180,6 +181,9 @@ QtChatWindow::~QtChatWindow() {
 	}
 }
 
+void QtChatWindow::handleLogCleared() {
+	onLogCleared();
+}
 
 void QtChatWindow::handleOccupantSelectionChanged(RosterItem* item) {
 	onOccupantSelectionChanged(dynamic_cast<ContactRosterItem*>(item));
