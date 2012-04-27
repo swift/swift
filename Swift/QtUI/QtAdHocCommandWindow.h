@@ -44,6 +44,5 @@ namespace Swift {
 			QPushButton* cancelButton_;
 			std::map<Command::Action, QPushButton*> actions_;
 			QBoxLayout* layout_;
-			bool someActions_;
 	};
 }

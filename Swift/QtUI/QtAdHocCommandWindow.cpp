@@ -15,7 +15,6 @@ const int FormLayoutIndex = 1;
 
 namespace Swift {
 QtAdHocCommandWindow::QtAdHocCommandWindow(boost::shared_ptr<OutgoingAdHocCommandSession> command) : command_(command) {
-	someActions_ = false;
 	formWidget_ = NULL;
 
 	setAttribute(Qt::WA_DeleteOnClose);
@@ -105,23 +104,23 @@ void QtAdHocCommandWindow::handleError(ErrorPayload::ref /*error*/) {
 }
 
 void QtAdHocCommandWindow::setForm(Form::ref form) {
+	form_ = form;
 	delete formWidget_;
 	formWidget_ = new QtFormWidget(form, this);
 	layout_->insertWidget(FormLayoutIndex, formWidget_);
 	show();
-	formWidget_->setEditable(someActions_);
 }
 
 void QtAdHocCommandWindow::setNoForm() {
+	form_.reset();
 	delete formWidget_;
 	formWidget_ = NULL;
-	show();
+	hide();
 }
 
 typedef std::pair<Command::Action, QPushButton*> ActionButton;
 
 void QtAdHocCommandWindow::setAvailableActions(Command::ref /*commandResult*/) {
-	someActions_ = false;
 	foreach (ActionButton pair, actions_) {
 		OutgoingAdHocCommandSession::ActionState state = command_->getActionState(pair.first);
 		if (state & OutgoingAdHocCommandSession::Present) {
@@ -132,14 +131,10 @@ void QtAdHocCommandWindow::setAvailableActions(Command::ref /*commandResult*/) {
 		}
 		if (state & OutgoingAdHocCommandSession::Enabled) {
 			pair.second->setEnabled(true);
-			someActions_ = true;
 		}
 		else {
 			pair.second->setEnabled(false);
 		}
-	}
-	if (formWidget_) {
-		formWidget_->setEditable(someActions_);
 	}
 }
 

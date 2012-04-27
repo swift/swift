@@ -44,6 +44,7 @@ QtFormWidget::QtFormWidget(Form::ref form, QWidget* parent) : QWidget(parent), f
 	}
 	scrollArea->setWidget(scroll);
 	scrollArea->setWidgetResizable(true);
+	setEditable(form->getType() != Form::CancelType && form->getType() != Form::ResultType);
 }
 
 QtFormWidget::~QtFormWidget() {
