@@ -200,7 +200,6 @@ QtSwift::QtSwift(const po::variables_map& options) : networkFactories_(&clientMa
 }
 
 QtSwift::~QtSwift() {
-	delete notifier_;
 	delete autoUpdater_;
 	foreach (QtUIFactory* factory, uiFactories_) {
 		delete factory;
@@ -208,6 +207,7 @@ QtSwift::~QtSwift() {
 	foreach (MainController* controller, mainControllers_) {
 		delete controller;
 	}
+	delete notifier_;
 	delete settingsHierachy_;
 	delete qtSettings_;
 	delete xmlSettings_;
