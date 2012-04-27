@@ -500,10 +500,6 @@ void MainController::performLoginFromCachedCredentials() {
 	bool eagle = settings_->getSetting(SettingConstants::FORGET_PASSWORDS);
 	clientOptions.forgetPassword = eagle;
 	clientOptions.useTLS = eagle ? ClientOptions::RequireTLS : ClientOptions::UseTLSWhenAvailable;
-	/*if (clientJID.getDomain() == "doomsong.co.uk") {
-		clientOptions.boshURL = URL("https", "channels.doomsong.co.uk", 11443, "http-bind/");
-		clientOptions.boshHTTPConnectProxyURL = URL("http", "squidproxy.doomsong.co.uk", 8123, "");
-	}*/
 	client_->connect(clientOptions);
 }
 
