@@ -1207,7 +1207,7 @@
         <location filename="../QtUI/QtJoinMUCWindow.ui"/>
         <location filename="../QtUI/ui_QtJoinMUCWindow.h" line="144"/>
         <source>Search ...</source>
-        <translation>Vyhľadať …</translation>
+        <translation>Vyhľadať…</translation>
     </message>
     <message>
         <location filename="../QtUI/QtJoinMUCWindow.ui"/>
@@ -1469,7 +1469,7 @@
     <message>
         <location filename="../QtUI/QtAvatarWidget.cpp" line="73"/>
         <source>Select picture ...</source>
-        <translation>Vybrať obrázok …</translation>
+        <translation>Vybrať obrázok…</translation>
     </message>
     <message>
         <location filename="../QtUI/QtAvatarWidget.cpp" line="76"/>
@@ -1907,7 +1907,7 @@
     <message>
         <location filename="../QtUI/QtLoginWindow.cpp" line="170"/>
         <source>&amp;About %1</source>
-        <translation>O programe &amp;%1</translation>
+        <translation>O &amp;programe %1</translation>
     </message>
     <message>
         <location filename="../QtUI/QtLoginWindow.cpp" line="175"/>
@@ -1928,7 +1928,7 @@
     <message>
         <location filename="../QtUI/QtLoginWindow.cpp" line="203"/>
         <source>&amp;Quit</source>
-        <translation>&amp;Ukončiť</translation>
+        <translation>U&amp;končiť</translation>
     </message>
     <message>
         <location filename="../QtUI/QtLoginWindow.cpp" line="237"/>
