@@ -42,6 +42,7 @@
 #include <Swiften/Session/SessionStream.h>
 #include <Swiften/TLS/CertificateTrustChecker.h>
 #include <Swiften/TLS/ServerIdentityVerifier.h>
+#include <Swiften/Base/Log.h>
 
 #ifdef SWIFTEN_PLATFORM_WIN32
 #include <Swiften/Base/WindowsRegistry.h>
@@ -439,6 +440,9 @@ void ClientSession::finishSession(boost::shared_ptr<Swift::Error> error) {
 	state = Finishing;
 	if (!error_) {
 		error_ = error;
+	}
+	else {
+		LOG(warning) << "Session finished twice";
 	}
 	assert(stream->isOpen());
 	if (stanzaAckResponder_) {
