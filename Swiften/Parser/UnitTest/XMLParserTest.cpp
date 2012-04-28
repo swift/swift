@@ -35,6 +35,7 @@ class XMLParserTest : public CppUnit::TestFixture {
 		CPPUNIT_TEST(testParse_AttributeWithoutNamespace);
 		CPPUNIT_TEST(testParse_AttributeWithNamespace);
 		CPPUNIT_TEST(testParse_BillionLaughs);
+		CPPUNIT_TEST(testParse_InternalEntity);
 		//CPPUNIT_TEST(testParse_UndefinedPrefix);
 		//CPPUNIT_TEST(testParse_UndefinedAttributePrefix);
 		CPPUNIT_TEST_SUITE_END();
@@ -272,6 +273,12 @@ class XMLParserTest : public CppUnit::TestFixture {
 				"]>"
 				"<lolz>&lol9;</lolz>"
 			));
+		}
+
+		void testParse_InternalEntity() {
+			ParserType testling(&client_);
+
+			CPPUNIT_ASSERT(!testling.parse("<!DOCTYPE foo [<!ENTITY bar \"Bar\">]><foo>&bar;</foo>"));
 		}
 
 		void testParse_UndefinedPrefix() {
