@@ -91,6 +91,10 @@ ChatController::~ChatController() {
 	delete chatStateTracker_;
 }
 
+JID ChatController::getBaseJID() {
+	return isInMUC_ ? toJID_ : ChatControllerBase::getBaseJID();
+}
+
 void ChatController::cancelReplaces() {
 	lastWasPresence_ = false;
 }

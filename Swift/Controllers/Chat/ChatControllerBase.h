@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Kevin Smith
+ * Copyright (c) 2010-2012 Kevin Smith
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -76,6 +76,8 @@ namespace Swift {
 			std::string getErrorMessage(boost::shared_ptr<ErrorPayload>);
 			virtual void setContactIsReceivingPresence(bool /* isReceivingPresence */) {}
 			virtual void cancelReplaces() = 0;
+			/** JID any iq for account should go to - bare except for PMs */
+			virtual JID getBaseJID();
 
 		private:
 			IDGenerator idGenerator_;

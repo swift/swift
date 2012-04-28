@@ -33,6 +33,7 @@ namespace Swift {
 
 		protected:
 			void cancelReplaces();
+			JID getBaseJID();
 
 		private:
 			void handlePresenceChange(boost::shared_ptr<Presence> newPresence);

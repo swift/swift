@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2011 Kevin Smith
+ * Copyright (c) 2010-2012 Kevin Smith
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -84,9 +84,13 @@ void ChatControllerBase::setOnline(bool online) {
 	setEnabled(online);
 }
 
+JID ChatControllerBase::getBaseJID() {
+	return JID(toJID_.toBare());
+}
+
 void ChatControllerBase::setAvailableServerFeatures(boost::shared_ptr<DiscoInfo> info) {
 	if (iqRouter_->isAvailable() && info->hasFeature(DiscoInfo::SecurityLabelsCatalogFeature)) {
-		GetSecurityLabelsCatalogRequest::ref request = GetSecurityLabelsCatalogRequest::create(JID(toJID_.toBare()), iqRouter_);
+		GetSecurityLabelsCatalogRequest::ref request = GetSecurityLabelsCatalogRequest::create(getBaseJID(), iqRouter_);
 		request->onResponse.connect(boost::bind(&ChatControllerBase::handleSecurityLabelsCatalogResponse, this, _1, _2));
 		request->send();
 	} else {
