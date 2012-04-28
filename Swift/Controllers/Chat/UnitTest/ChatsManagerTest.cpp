@@ -433,6 +433,7 @@ private:
 		boost::shared_ptr<Message> message = boost::make_shared<Message>();
 		message->setFrom(from);
 		message->setID(id);
+		message->setBody("This will cause the window to open");
 		message->addPayload(boost::make_shared<DeliveryReceiptRequest>());
 		return message;
 	}

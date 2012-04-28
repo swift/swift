@@ -628,7 +628,15 @@ void ChatsManager::handleIncomingMessage(boost::shared_ptr<Message> message) {
 	}
 	
 	//if not a mucroom
-	getChatControllerOrCreate(jid)->handleIncomingMessage(event);
+	if (!event->isReadable() && !isInvite && !isMediatedInvite) {
+		/* Only route such messages if a window exists, don't open new windows for them.*/
+		ChatController* controller = getChatControllerIfExists(jid);
+		if (controller) {
+			controller->handleIncomingMessage(event);
+		}
+	} else {
+		getChatControllerOrCreate(jid)->handleIncomingMessage(event);
+	}
 }
 
 void ChatsManager::handleMUCSelectedAfterSearch(const JID& muc) {
