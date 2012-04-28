@@ -12,8 +12,10 @@
 #include <QMovie>
 
 class QIcon;
+class QMenu;
 
 namespace Swift {
+
 	class QtSystemTray : public QObject, public SystemTray {
 		Q_OBJECT
 		public:
@@ -35,6 +37,7 @@ namespace Swift {
 			void updateStatusIcon();
 			StatusShow::Type statusType_;
 			QSystemTrayIcon* trayIcon_;
+			QMenu* trayMenu_;
 			QIcon onlineIcon_;
 			QIcon awayIcon_;
 			QIcon dndIcon_;

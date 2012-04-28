@@ -4,22 +4,41 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
+#pragma GCC diagnostic ignored "-Wredundant-decls"
+
 #include "Swift/QtUI/QtSystemTray.h"
 
+#include <QtDebug>
+#include <QDBusInterface>
 #include <QIcon>
 #include <QPixmap>
 #include <QResource>
+#include <QMenu>
+#include <QAction>
 
 namespace Swift {
-QtSystemTray::QtSystemTray() : QObject(), onlineIcon_(":icons/online.png"), awayIcon_(":icons/away.png"), dndIcon_(":icons/dnd.png"), offlineIcon_(":icons/offline.png"), newMessageIcon_(":icons/new-chat.png"), throbberMovie_(":/icons/connecting.mng"), unreadMessages_(false), connecting_(false) {
+QtSystemTray::QtSystemTray() : QObject(), trayMenu_(0), onlineIcon_(":icons/online.png"), awayIcon_(":icons/away.png"), dndIcon_(":icons/dnd.png"), offlineIcon_(":icons/offline.png"), newMessageIcon_(":icons/new-chat.png"), throbberMovie_(":/icons/connecting.mng"), unreadMessages_(false), connecting_(false) {
 	trayIcon_ = new QSystemTrayIcon(offlineIcon_);
 	trayIcon_->setToolTip("Swift");
 	connect(trayIcon_, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), this, SLOT(handleIconActivated(QSystemTrayIcon::ActivationReason)));
 	connect(&throbberMovie_, SIGNAL(frameChanged(int)), this, SLOT(handleThrobberFrameChanged(int)));
+#ifdef Q_WS_X11
+	bool isUnity = QDBusInterface("com.canonical.Unity.Launcher", "/com/canonical/Unity/Launcher").isValid();
+	if (isUnity) {
+		// Add an activation menu, because this is the only way to get the application to the
+		// front on Unity. See the README for sni-qt (which handles Qt tray icons for Unity)
+		trayMenu_ = new QMenu();
+		QAction* showAction = new QAction(QString("Show/Hide"), this);
+		connect(showAction, SIGNAL(triggered()), SIGNAL(clicked()));
+		trayMenu_->addAction(showAction);
+		trayIcon_->setContextMenu(trayMenu_);
+	}
+#endif
 	trayIcon_->show();
 }
 
 QtSystemTray::~QtSystemTray() {
+	delete trayMenu_;
 	delete trayIcon_;
 }
 
