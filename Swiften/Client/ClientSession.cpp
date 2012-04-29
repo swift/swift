@@ -442,7 +442,7 @@ void ClientSession::finishSession(boost::shared_ptr<Swift::Error> error) {
 		error_ = error;
 	}
 	else {
-		LOG(warning) << "Session finished twice";
+		SWIFT_LOG(warning) << "Session finished twice";
 	}
 	assert(stream->isOpen());
 	if (stanzaAckResponder_) {
