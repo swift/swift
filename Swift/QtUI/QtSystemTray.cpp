@@ -9,7 +9,9 @@
 #include "Swift/QtUI/QtSystemTray.h"
 
 #include <QtDebug>
+#ifdef Q_WS_X11
 #include <QDBusInterface>
+#endif
 #include <QIcon>
 #include <QPixmap>
 #include <QResource>
