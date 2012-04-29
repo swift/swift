@@ -54,7 +54,7 @@ void QtRosterWidget::contextMenuEvent(QContextMenuEvent* event) {
 	RosterItem* item = static_cast<RosterItem*>(index.internalPointer());
 	QMenu contextMenu;
 	if (ContactRosterItem* contact = dynamic_cast<ContactRosterItem*>(item)) {
-		QAction* editContact = contextMenu.addAction(tr("Edit"));
+		QAction* editContact = contextMenu.addAction(tr("Edit…"));
 		QAction* removeContact = contextMenu.addAction(tr("Remove"));
 #ifdef SWIFT_EXPERIMENTAL_FT
 		QAction* sendFile = NULL;

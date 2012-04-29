@@ -801,11 +801,11 @@ void QtChatWindow::handleActionButtonClicked() {
 	{
 		switch(availableAction)
 		{
-			case ChatWindow::ChangeSubject: changeSubject = contextMenu.addAction(tr("Change subject")); break;
-			case ChatWindow::Configure: configure = contextMenu.addAction(tr("Configure room")); break;
-			case ChatWindow::Affiliations: affiliations = contextMenu.addAction(tr("Edit affiliations")); break;
+			case ChatWindow::ChangeSubject: changeSubject = contextMenu.addAction(tr("Change subject…")); break;
+			case ChatWindow::Configure: configure = contextMenu.addAction(tr("Configure room…")); break;
+			case ChatWindow::Affiliations: affiliations = contextMenu.addAction(tr("Edit affiliations…")); break;
 			case ChatWindow::Destroy: destroy = contextMenu.addAction(tr("Destroy room")); break;
-			case ChatWindow::Invite: invite = contextMenu.addAction(tr("Invite person to this room")); break;
+			case ChatWindow::Invite: invite = contextMenu.addAction(tr("Invite person to this room…")); break;
 		}
 	}
 
