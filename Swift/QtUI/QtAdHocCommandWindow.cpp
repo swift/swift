@@ -10,6 +10,7 @@
 #include <QBoxLayout>
 #include <Swift/QtUI/QtFormWidget.h>
 #include <Swiften/Elements/Command.h>
+#include <Swift/QtUI/QtSwiftUtil.h>
 
 const int FormLayoutIndex = 1;
 
@@ -75,24 +76,24 @@ void QtAdHocCommandWindow::handleCompleteClicked() {
 }
 
 void QtAdHocCommandWindow::handleNextStageReceived(Command::ref command) {
-	if (command->getForm()) {
-		setForm(command->getForm());
-	} else {
-		setNoForm();
-	}
 	QString notes;
 	foreach (Command::Note note, command->getNotes()) {
 		if (!notes.isEmpty()) {
 			notes += "\n";
-			QString qNote(note.note.c_str());
-			switch (note.type) {
-				case Command::Note::Error: notes += tr("Error: %1").arg(qNote); break;
-				case Command::Note::Warn: notes += tr("Warning: %1").arg(qNote); break;
-				case Command::Note::Info: notes += qNote; break;
-			}
+		}
+		QString qNote(P2QSTRING(note.note));
+		switch (note.type) {
+			case Command::Note::Error: notes += tr("Error: %1").arg(qNote); break;
+			case Command::Note::Warn: notes += tr("Warning: %1").arg(qNote); break;
+			case Command::Note::Info: notes += qNote; break;
 		}
 	}
 	label_->setText(notes);
+	if (command->getForm()) {
+		setForm(command->getForm());
+	} else {
+		setNoForm(notes.isEmpty());
+	}
 	setAvailableActions(command);
 }
 
@@ -111,11 +112,12 @@ void QtAdHocCommandWindow::setForm(Form::ref form) {
 	show();
 }
 
-void QtAdHocCommandWindow::setNoForm() {
+void QtAdHocCommandWindow::setNoForm(bool andHide) {
 	form_.reset();
 	delete formWidget_;
 	formWidget_ = NULL;
-	hide();
+	resize(minimumSize());
+	setVisible(!andHide);
 }
 
 typedef std::pair<Command::Action, QPushButton*> ActionButton;

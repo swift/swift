@@ -26,7 +26,7 @@ namespace Swift {
 			void handleNextStageReceived(Command::ref command);
 			void handleError(ErrorPayload::ref error);
 			void setForm(Form::ref);
-			void setNoForm();
+			void setNoForm(bool andHide);
 			void setAvailableActions(Command::ref commandResult);
 		private slots:
 			void handleCancelClicked();
