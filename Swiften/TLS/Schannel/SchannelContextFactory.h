@@ -11,14 +11,7 @@
 namespace Swift {
 	class SchannelContextFactory : public TLSContextFactory {
 		public:
-			SchannelContextFactory();
-
 			bool canCreate() const;
 			virtual TLSContext* createTLSContext();
-
-			virtual void setCheckCertificateRevocation(bool b);
-
-		public:
-			bool checkCertificateRevocation;
 	};
 }

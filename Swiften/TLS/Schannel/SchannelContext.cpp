@@ -21,7 +21,7 @@ namespace Swift {
 
 //------------------------------------------------------------------------
 
-SchannelContext::SchannelContext() : m_state(Start), m_secContext(0), m_my_cert_store(NULL), m_cert_store_name("MY"), m_cert_name(), m_smartcard_reader(), checkCertificateRevocation(true) {
+SchannelContext::SchannelContext() : m_state(Start), m_secContext(0), m_my_cert_store(NULL), m_cert_store_name("MY"), m_cert_name(), m_smartcard_reader() {
 	m_ctxtFlags = ISC_REQ_ALLOCATE_MEMORY |
 				ISC_REQ_CONFIDENTIALITY |
 				ISC_REQ_EXTENDED_ERROR |
@@ -192,10 +192,9 @@ SECURITY_STATUS SchannelContext::validateServerCertificate() {
 	chainParams.RequestedUsage.Usage.cUsageIdentifier = ARRAYSIZE(usage);
 	chainParams.RequestedUsage.Usage.rgpszUsageIdentifier = const_cast<LPSTR*>(usage);
 
-	DWORD chainFlags = CERT_CHAIN_CACHE_END_CERT;
-	if (checkCertificateRevocation) {
-		chainFlags |= CERT_CHAIN_REVOCATION_CHECK_CHAIN_EXCLUDE_ROOT;
-	}
+	// NOTE: We've turned off revocation checking due to some certificate providers causing timeouts when attempting
+	// to talk to their revocation server, such as Starfield)
+	DWORD chainFlags = CERT_CHAIN_CACHE_END_CERT /*| CERT_CHAIN_REVOCATION_CHECK_CHAIN_EXCLUDE_ROOT*/;
 
 	ScopedCertChainContext pChainContext;
 
@@ -649,10 +648,5 @@ ByteArray SchannelContext::getFinishMessage() const {
 }
 
 //------------------------------------------------------------------------
-
-void SchannelContext::setCheckCertificateRevocation(bool b) {
-	checkCertificateRevocation = b;
-}
-
 
 }

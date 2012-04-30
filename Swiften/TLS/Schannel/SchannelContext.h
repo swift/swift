@@ -103,6 +103,5 @@ namespace Swift
 ////Not needed, most likely
 		std::string		m_smartcard_reader;	//Can be empty string for non SmartCard certificates
 		boost::shared_ptr<CAPICertificate> userCertificate;
-		bool checkCertificateRevocation;
 	};
 }
