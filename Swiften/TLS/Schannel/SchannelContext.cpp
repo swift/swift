@@ -192,9 +192,7 @@ SECURITY_STATUS SchannelContext::validateServerCertificate() {
 	chainParams.RequestedUsage.Usage.cUsageIdentifier = ARRAYSIZE(usage);
 	chainParams.RequestedUsage.Usage.rgpszUsageIdentifier = const_cast<LPSTR*>(usage);
 
-	// NOTE: We've turned off revocation checking due to some certificate providers causing timeouts when attempting
-	// to talk to their revocation server, such as Starfield)
-	DWORD chainFlags = CERT_CHAIN_CACHE_END_CERT /*| CERT_CHAIN_REVOCATION_CHECK_CHAIN_EXCLUDE_ROOT*/;
+	DWORD chainFlags = CERT_CHAIN_CACHE_END_CERT | CERT_CHAIN_REVOCATION_CHECK_CHAIN_EXCLUDE_ROOT;
 
 	ScopedCertChainContext pChainContext;
 
@@ -202,7 +200,7 @@ SECURITY_STATUS SchannelContext::validateServerCertificate() {
 		NULL, // Use the chain engine for the current user (assumes a user is logged in)
 		pServerCert->getCertContext(),
 		NULL,
-		pServerCert->getCertContext()->hCertStore,
+		NULL,
 		&chainParams,
 		chainFlags,
 		NULL,
