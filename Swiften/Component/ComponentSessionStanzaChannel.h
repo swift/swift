@@ -31,6 +31,11 @@ namespace Swift {
 				return false;
 			}
 
+			std::vector<Certificate::ref> getPeerCertificateChain() const {
+				// TODO: actually implement this method
+				return std::vector<Certificate::ref>();
+			}
+
 			bool isAvailable() const {
 				return session && session->getState() == ComponentSession::Initialized;
 			}

@@ -129,6 +129,10 @@ Certificate::ref BOSHSessionStream::getPeerCertificate() const {
 	return Certificate::ref();
 }
 
+std::vector<Certificate::ref> BOSHSessionStream::getPeerCertificateChain() const {
+	return std::vector<Certificate::ref>();
+}
+
 boost::shared_ptr<CertificateVerificationError> BOSHSessionStream::getPeerCertificateVerificationError() const {
 	return boost::shared_ptr<CertificateVerificationError>();
 }

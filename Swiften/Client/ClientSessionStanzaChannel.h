@@ -27,6 +27,7 @@ namespace Swift {
 			void sendMessage(boost::shared_ptr<Message> message);
 			void sendPresence(boost::shared_ptr<Presence> presence);
 			bool getStreamManagementEnabled() const;
+			virtual std::vector<Certificate::ref> getPeerCertificateChain() const;
 
 			bool isAvailable() const {
 				return session && session->getState() == ClientSession::Initialized;

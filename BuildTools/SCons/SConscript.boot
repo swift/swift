@@ -215,7 +215,7 @@ if env["PLATFORM"] == "win32" :
 		env["SHLINKCOM"] = [env["SHLINKCOM"], 'mt.exe -nologo -manifest ${TARGET}.manifest -outputresource:$TARGET;2']
 
 if env["PLATFORM"] == "darwin" and not env["target"] in ["iphone-device", "iphone-simulator", "xcode"] :
-	env.Append(FRAMEWORKS = ["IOKit", "AppKit", "SystemConfiguration"])
+	env.Append(FRAMEWORKS = ["IOKit", "AppKit", "SystemConfiguration", "Security", "SecurityInterface"])
 
 # Testing
 env["TEST_TYPE"] = env["test"]

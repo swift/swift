@@ -45,14 +45,27 @@ QtRosterHeader::QtRosterHeader(SettingsProvider* settings, QWidget* parent) : QW
 	rightLayout->setContentsMargins(4,0,0,0);
 	topLayout->addLayout(rightLayout);
 
+	QHBoxLayout* nameAndSecurityLayout = new QHBoxLayout();
+	nameAndSecurityLayout->setContentsMargins(4,0,0,0);
+
 	nameWidget_ = new QtNameWidget(settings, this);
 	connect(nameWidget_, SIGNAL(onChangeNickRequest()), this, SIGNAL(onEditProfileRequest()));
-	rightLayout->addWidget(nameWidget_);
+	nameAndSecurityLayout->addWidget(nameWidget_);
 
+	securityInfoButton_ = new QToolButton(this);
+
+	securityInfoButton_->setStyleSheet("border: none; hover: {border: 1px} pressed {border: 1px}");
+	// TODO: replace with a more appropriate icon
+	securityInfoButton_->setIcon(QIcon(":/icons/certificate.png"));
+	connect(securityInfoButton_, SIGNAL(clicked()), this, SIGNAL(onShowCertificateInfo()));
+	nameAndSecurityLayout->addWidget(securityInfoButton_);
+
+	rightLayout->addLayout(nameAndSecurityLayout);
 
 	statusWidget_ = new QtStatusWidget(this);
 	connect(statusWidget_, SIGNAL(onChangeStatusRequest(StatusShow::Type, const QString&)), this, SLOT(handleChangeStatusRequest(StatusShow::Type, const QString&)));
 	rightLayout->addWidget(statusWidget_);
+
 	show();
 }
 
@@ -70,6 +83,10 @@ void QtRosterHeader::setStatusType(StatusShow::Type type) {
 
 void QtRosterHeader::setConnecting() {
 	statusWidget_->setConnecting();
+}
+
+void QtRosterHeader::setStreamEncryptionStatus(bool tlsInPlace) {
+	securityInfoButton_->setVisible(tlsInPlace);
 }
 
 void QtRosterHeader::setAvatar(const QString& path) {

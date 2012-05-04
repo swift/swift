@@ -22,6 +22,8 @@ namespace Swift {
 			virtual void setMyStatusType(StatusShow::Type /*type*/) {};
 			virtual void setAvailableAdHocCommands(const std::vector<DiscoItems::Item>& /*commands*/) {};
 			virtual void setConnecting() {};
+			virtual void setStreamEncryptionStatus(bool /*tlsInPlaceAndValid*/) {}
+			virtual void openCertificateDialog(const std::vector<Certificate::ref>& /*chain*/) {}
 			Roster* roster;
 
 	};

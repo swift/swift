@@ -79,6 +79,10 @@ namespace Swift {
 				return boost::dynamic_pointer_cast<T>(sentStanzas[index]);
 			}
 
+			std::vector<Certificate::ref> getPeerCertificateChain() const {
+				return std::vector<Certificate::ref>();
+			}
+
 			std::vector<boost::shared_ptr<Stanza> > sentStanzas;
 			bool available_;
 	};

@@ -138,6 +138,10 @@ class ComponentSessionTest : public CppUnit::TestFixture {
 					return Certificate::ref();
 				}
 
+				virtual std::vector<Certificate::ref> getPeerCertificateChain() const {
+					 return std::vector<Certificate::ref>();
+				}
+
 				virtual boost::shared_ptr<CertificateVerificationError> getPeerCertificateVerificationError() const {
 					return boost::shared_ptr<CertificateVerificationError>();
 				}

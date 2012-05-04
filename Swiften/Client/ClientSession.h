@@ -98,6 +98,10 @@ namespace Swift {
 				return rosterVersioningSupported;
 			}
 
+			std::vector<Certificate::ref> getPeerCertificateChain() const {
+				return stream->getPeerCertificateChain();
+			}
+
 			const JID& getLocalJID() const {
 				return localJID;
 			}

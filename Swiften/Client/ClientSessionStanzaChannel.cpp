@@ -82,6 +82,13 @@ bool ClientSessionStanzaChannel::getStreamManagementEnabled() const {
 	return false;
 }
 
+std::vector<Certificate::ref> ClientSessionStanzaChannel::getPeerCertificateChain() const {
+	if (session) {
+		return session->getPeerCertificateChain();
+	}
+	return std::vector<Certificate::ref>();
+}
+
 void ClientSessionStanzaChannel::handleStanzaAcked(boost::shared_ptr<Stanza> stanza) {
 	onStanzaAcked(stanza);
 }

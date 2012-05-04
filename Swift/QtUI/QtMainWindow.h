@@ -45,6 +45,8 @@ namespace Swift {
 			void setMyStatusText(const std::string& status);
 			void setMyStatusType(StatusShow::Type type);
 			void setConnecting();
+			void setStreamEncryptionStatus(bool tlsInPlaceAndValid);
+			void openCertificateDialog(const std::vector<Certificate::ref>& chain);
 			QtEventWindow* getEventWindow();
 			QtChatListWindow* getChatListWindow();
 			void setRosterModel(Roster* roster);
@@ -64,6 +66,7 @@ namespace Swift {
 			void handleEditProfileRequest();
 			void handleTabChanged(int index);
 			void handleToggleRequestDeliveryReceipts(bool enabled);
+			void handleShowCertificateInfo();
 
 		private:
 			SettingsProvider* settings_;

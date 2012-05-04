@@ -29,6 +29,7 @@ namespace Swift {
 			virtual void handleDataFromApplication(const SafeByteArray&) = 0;
 
 			virtual Certificate::ref getPeerCertificate() const = 0;
+			virtual std::vector<Certificate::ref> getPeerCertificateChain() const = 0;
 			virtual CertificateVerificationError::ref getPeerCertificateVerificationError() const = 0;
 
 			virtual ByteArray getFinishMessage() const = 0;

@@ -11,6 +11,7 @@
 #include <QPixmap>
 #include <QSize>
 #include <QToolBar>
+#include <QToolButton>
 
 #include <string>
 #include "Swiften/Elements/StatusShow.h"
@@ -37,9 +38,11 @@ namespace Swift {
 		void setStatusText(const QString& statusMessage);
 		void setStatusType(StatusShow::Type type);
 		void setConnecting();
+		void setStreamEncryptionStatus(bool tlsInPlace);
 	signals:
 		void onChangeStatusRequest(StatusShow::Type showType, const QString &statusMessage);
 		void onEditProfileRequest();
+		void onShowCertificateInfo();
 
 	private slots:
 		void handleChangeStatusRequest(StatusShow::Type type, const QString &statusMessage);
@@ -50,6 +53,7 @@ namespace Swift {
 		QtTextEdit* statusEdit_;
 		QToolBar* toolBar_;
 		QtStatusWidget* statusWidget_;
+		QToolButton* securityInfoButton_;
 		static const int avatarSize_;
 	};
 }

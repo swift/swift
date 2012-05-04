@@ -633,6 +633,35 @@ Certificate::ref SchannelContext::getPeerCertificate() const {
 
 //------------------------------------------------------------------------
 
+std::vector<Certificate::ref> SchannelContext::getPeerCertificateChain() const {
+	std::vector<Certificate::ref> certificateChain;
+	ScopedCertContext pServerCert;
+	ScopedCertContext pIssuerCert;
+	ScopedCertContext pCurrentCert;
+	SECURITY_STATUS status = QueryContextAttributes(m_ctxtHandle, SECPKG_ATTR_REMOTE_CERT_CONTEXT, pServerCert.Reset());
+
+	if (status != SEC_E_OK) {
+		return certificateChain;
+	}
+	certificateChain.push_back(boost::make_shared<SchannelCertificate>(pServerCert));
+
+	pCurrentCert = pServerCert;
+	while(pCurrentCert.GetPointer()) {
+		DWORD dwVerificationFlags = 0;
+		pIssuerCert = CertGetIssuerCertificateFromStore(pServerCert->hCertStore, pCurrentCert, NULL, &dwVerificationFlags );
+		if (!(*pIssuerCert.GetPointer())) {
+			break;
+		}
+		certificateChain.push_back(boost::make_shared<SchannelCertificate>(pIssuerCert));
+
+		pCurrentCert = pIssuerCert;
+		pIssuerCert = NULL;
+	}
+	return certificateChain;
+}
+
+//------------------------------------------------------------------------
+
 CertificateVerificationError::ref SchannelContext::getPeerCertificateVerificationError() const {
 	return m_verificationError ? boost::make_shared<CertificateVerificationError>(*m_verificationError) : CertificateVerificationError::ref();
 }

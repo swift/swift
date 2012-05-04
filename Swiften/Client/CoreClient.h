@@ -127,6 +127,11 @@ namespace Swift {
 			 */
 			bool getStreamManagementEnabled() const;
 
+			/**
+			 * Checks whether stream encryption (TLS) is currently active.
+			 */
+			bool isStreamEncrypted() const;
+
 			StanzaChannel* getStanzaChannel() const;
 
 			/**

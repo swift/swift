@@ -103,6 +103,7 @@ namespace Swift {
 			void handlePurgeSavedLoginRequest(const std::string& username);
 			void sendPresence(boost::shared_ptr<Presence> presence);
 			void handleInputIdleChanged(bool);
+			void handleShowCertificateRequest();
 			void logout();
 			void signOut();
 			void setReconnectTimer();

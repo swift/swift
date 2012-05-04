@@ -161,6 +161,7 @@ if env["PLATFORM"] == "win32" :
 	# Adding it explicitly until i figure out why
   myenv.Depends(res, "../Controllers/BuildVersion.h")
   sources += [
+			"WinUIHelpers.cpp",
 			"CAPICertificateSelector.cpp",
 			"WindowsNotifier.cpp",
 			"#/Swift/resources/Windows/Swift.res"
@@ -174,6 +175,7 @@ if env["PLATFORM"] == "posix" :
 
 if env["PLATFORM"] == "darwin" :
 	sources += ["CocoaApplicationActivateHelper.mm"]
+	sources += ["CocoaUIHelpers.mm"]
 
 if env["PLATFORM"] == "darwin" or env["PLATFORM"] == "win32" :
   swiftProgram = myenv.Program("Swift", sources)

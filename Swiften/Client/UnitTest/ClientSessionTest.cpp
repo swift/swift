@@ -399,6 +399,10 @@ class ClientSessionTest : public CppUnit::TestFixture {
 					return Certificate::ref(new SimpleCertificate());
 				}
 
+				virtual std::vector<Certificate::ref> getPeerCertificateChain() const {
+					 return std::vector<Certificate::ref>();
+				}
+
 				virtual boost::shared_ptr<CertificateVerificationError> getPeerCertificateVerificationError() const {
 					return boost::shared_ptr<CertificateVerificationError>();
 				}

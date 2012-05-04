@@ -129,6 +129,10 @@ Certificate::ref BasicSessionStream::getPeerCertificate() const {
 	return tlsLayer->getPeerCertificate();
 }
 
+std::vector<Certificate::ref> BasicSessionStream::getPeerCertificateChain() const {
+	return tlsLayer->getPeerCertificateChain();
+}
+
 boost::shared_ptr<CertificateVerificationError> BasicSessionStream::getPeerCertificateVerificationError() const {
 	return tlsLayer->getPeerCertificateVerificationError();
 }

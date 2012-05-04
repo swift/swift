@@ -72,6 +72,7 @@
 #include <Swiften/FileTransfer/FileTransferManager.h>
 #include <Swiften/Client/ClientXMLTracer.h>
 #include <Swift/Controllers/SettingConstants.h>
+#include <Swiften/Client/StanzaChannel.h>
 
 namespace Swift {
 
@@ -285,6 +286,7 @@ void MainController::handleConnected() {
 		rosterController_ = new RosterController(jid_, client_->getRoster(), client_->getAvatarManager(), uiFactory_, client_->getNickManager(), client_->getNickResolver(), client_->getPresenceOracle(), client_->getSubscriptionManager(), eventController_, uiEventStream_, client_->getIQRouter(), settings_, client_->getEntityCapsProvider(), ftOverview_);
 		rosterController_->onChangeStatusRequest.connect(boost::bind(&MainController::handleChangeStatusRequest, this, _1, _2));
 		rosterController_->onSignOutRequest.connect(boost::bind(&MainController::signOut, this));
+		rosterController_->getWindow()->onShowCertificateRequest.connect(boost::bind(&MainController::handleShowCertificateRequest, this));
 
 		contactEditController_ = new ContactEditController(rosterController_, client_->getVCardManager(), uiFactory_, uiEventStream_);
 
@@ -327,6 +329,7 @@ void MainController::handleConnected() {
 	client_->getVCardManager()->requestOwnVCard();
 	
 	rosterController_->setEnabled(true);
+	rosterController_->getWindow()->setStreamEncryptionStatus(client_->isStreamEncrypted());
 	profileController_->setAvailable(true);
 	contactEditController_->setAvailable(true);
 	/* Send presence later to catch all the incoming presences. */
@@ -415,6 +418,11 @@ void MainController::handleInputIdleChanged(bool idle) {
 			}
 		}
 	}
+}
+
+void MainController::handleShowCertificateRequest() {
+	std::vector<Certificate::ref> chain = client_->getStanzaChannel()->getPeerCertificateChain();
+	rosterController_->getWindow()->openCertificateDialog(chain);
 }
 
 void MainController::handleLoginRequest(const std::string &username, const std::string &password, const std::string& certificatePath, CertificateWithKey::ref certificate, bool remember, bool loginAutomatically) {

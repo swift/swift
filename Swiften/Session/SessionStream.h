@@ -67,6 +67,7 @@ namespace Swift {
 			}
 
 			virtual Certificate::ref getPeerCertificate() const = 0;
+			virtual std::vector<Certificate::ref> getPeerCertificateChain() const = 0;
 			virtual boost::shared_ptr<CertificateVerificationError> getPeerCertificateVerificationError() const = 0;
 
 			virtual ByteArray getTLSFinishMessage() const = 0;

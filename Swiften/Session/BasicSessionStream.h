@@ -55,6 +55,8 @@ namespace Swift {
 			virtual void addTLSEncryption();
 			virtual bool isTLSEncrypted();
 			virtual Certificate::ref getPeerCertificate() const;
+			virtual std::vector<Certificate::ref> getPeerCertificateChain() const;
+
 			virtual boost::shared_ptr<CertificateVerificationError> getPeerCertificateVerificationError() const;
 			virtual ByteArray getTLSFinishMessage() const;
 

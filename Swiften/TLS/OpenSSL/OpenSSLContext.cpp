@@ -39,6 +39,12 @@ OpenSSLContext::OpenSSLContext() : state_(Start), context_(0), handle_(0), readB
 	ensureLibraryInitialized();
 	context_ = SSL_CTX_new(TLSv1_client_method());
 
+	// TODO: implement CRL checking
+	// TODO: download CRL (HTTP transport)
+	// TODO: cache CRL downloads for configurable time period
+
+	// TODO: implement OCSP support
+	// TODO: handle OCSP stapling see https://www.rfc-editor.org/rfc/rfc4366.txt
 	// Load system certs
 #if defined(SWIFTEN_PLATFORM_WINDOWS)
 	X509_STORE* store = SSL_CTX_get_cert_store(context_);
@@ -234,6 +240,18 @@ Certificate::ref OpenSSLContext::getPeerCertificate() const {
 	else {
 		return Certificate::ref();
 	}
+}
+
+std::vector<Certificate::ref> OpenSSLContext::getPeerCertificateChain() const {
+	std::vector<Certificate::ref> result;
+	STACK_OF(X509)* chain = SSL_get_peer_cert_chain(handle_);
+	for (int i = 0; i < sk_X509_num(chain); ++i) {
+		boost::shared_ptr<X509> x509Cert(X509_dup(sk_X509_value(chain, i)), X509_free);
+
+		Certificate::ref cert = boost::make_shared<OpenSSLCertificate>(x509Cert);
+		result.push_back(cert);
+	}
+	return result;
 }
 
 boost::shared_ptr<CertificateVerificationError> OpenSSLContext::getPeerCertificateVerificationError() const {

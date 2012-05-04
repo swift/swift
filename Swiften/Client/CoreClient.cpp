@@ -360,6 +360,10 @@ bool CoreClient::getStreamManagementEnabled() const {
 	return stanzaChannel_->getStreamManagementEnabled();
 }
 
+bool CoreClient::isStreamEncrypted() const {
+	return sessionStream_->isTLSEncrypted();
+}
+
 StanzaChannel* CoreClient::getStanzaChannel() const {
 	return stanzaChannel_;
 }

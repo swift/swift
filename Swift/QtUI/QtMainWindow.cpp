@@ -34,6 +34,13 @@
 #include <Swift/Controllers/UIEvents/RequestAdHocUIEvent.h>
 #include <Swift/QtUI/QtUISettingConstants.h>
 #include <Swift/Controllers/SettingConstants.h>
+#include <Swiften/Base/Platform.h>
+
+#if defined(SWIFTEN_PLATFORM_MACOSX)
+#include <Swift/QtUI/CocoaUIHelpers.h>
+#elif defined(SWIFTEN_PLATFORM_WINDOWS)
+#include <Swift/QtUI/WinUIHelpers.h>
+#endif
 
 namespace Swift {
 
@@ -48,6 +55,7 @@ QtMainWindow::QtMainWindow(SettingsProvider* settings, UIEventStream* uiEventStr
 	mainLayout->addWidget(meView_);
 	connect(meView_, SIGNAL(onChangeStatusRequest(StatusShow::Type, const QString&)), this, SLOT(handleStatusChanged(StatusShow::Type, const QString&)));
 	connect(meView_, SIGNAL(onEditProfileRequest()), this, SLOT(handleEditProfileRequest()));
+	connect(meView_, SIGNAL(onShowCertificateInfo()), this, SLOT(handleShowCertificateInfo()));
 
 	tabs_ = new QtTabWidget(this);
 #if QT_VERSION >= 0x040500
@@ -153,6 +161,10 @@ void QtMainWindow::handleToggleRequestDeliveryReceipts(bool enabled) {
 	settings_->storeSetting(SettingConstants::REQUEST_DELIVERYRECEIPTS, enabled);
 }
 
+void QtMainWindow::handleShowCertificateInfo() {
+	onShowCertificateRequest();
+}
+
 QtEventWindow* QtMainWindow::getEventWindow() {
 	return eventWindow_;
 }
@@ -254,6 +266,20 @@ void QtMainWindow::setMyStatusType(StatusShow::Type type) {
 
 void QtMainWindow::setConnecting() {
 	meView_->setConnecting();
+}
+
+void QtMainWindow::setStreamEncryptionStatus(bool tlsInPlaceAndValid) {
+	meView_->setStreamEncryptionStatus(tlsInPlaceAndValid);
+}
+
+void QtMainWindow::openCertificateDialog(const std::vector<Certificate::ref>& chain) {
+#if defined(SWIFTEN_PLATFORM_MACOSX)
+	CocoaUIHelpers::displayCertificateChainAsSheet(this, chain);
+#elif defined(SWIFTEN_PLATFORM_WINDOWS)
+	WinUIHelpers::displayCertificateChainAsSheet(this,chain);
+#else
+#pragma message ("No certificate dialog available on this platform.")
+#endif
 }
 
 void QtMainWindow::handleAdHocActionTriggered(bool /*checked*/) {
