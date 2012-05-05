@@ -75,5 +75,6 @@ std::string JingleContentPayloadSerializer::creatorToString(JingleContentPayload
 			return "ERROR ERROR ERROR";
 	}
 	assert(false);
+	return "";
 }
 }

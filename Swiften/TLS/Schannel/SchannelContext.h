@@ -76,8 +76,6 @@ namespace Swift
 
 		void			handleCertificateCardRemoved();
 
-		virtual void setCheckCertificateRevocation(bool b);
-
 	private:
 		enum SchannelState
 		{
