@@ -6,10 +6,11 @@
 
 #include <Swiften/Serializer/PayloadSerializers/ErrorSerializer.h>
 #include <Swiften/Serializer/XML/XMLTextNode.h>
+#include <Swiften/Serializer/PayloadSerializerCollection.h>
 
 namespace Swift {
 
-ErrorSerializer::ErrorSerializer() : GenericPayloadSerializer<ErrorPayload>() {
+ErrorSerializer::ErrorSerializer(PayloadSerializerCollection* serializers) : GenericPayloadSerializer<ErrorPayload>(), serializers(serializers) {
 }
 
 std::string ErrorSerializer::serializePayload(boost::shared_ptr<ErrorPayload> error)  const {
@@ -53,6 +54,13 @@ std::string ErrorSerializer::serializePayload(boost::shared_ptr<ErrorPayload> er
 	if (!error->getText().empty()) {
 		XMLTextNode textNode(error->getText());
 		result += "<text xmlns=\"urn:ietf:params:xml:ns:xmpp-stanzas\">" + textNode.serialize() + "</text>";
+	}
+
+	if (error->getPayload()) {
+		PayloadSerializer* serializer = serializers->getPayloadSerializer(error->getPayload());
+		if (serializer) {
+			result += serializer->serialize(error->getPayload());
+		}
 	}
 
 	result += "</error>";

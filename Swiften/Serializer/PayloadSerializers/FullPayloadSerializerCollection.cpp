@@ -71,7 +71,7 @@ FullPayloadSerializerCollection::FullPayloadSerializerCollection() {
 	serializers_.push_back(new SubjectSerializer());
 	serializers_.push_back(new ChatStateSerializer());
 	serializers_.push_back(new PrioritySerializer());
-	serializers_.push_back(new ErrorSerializer());
+	serializers_.push_back(new ErrorSerializer(this));
 	serializers_.push_back(new RosterSerializer());
 	serializers_.push_back(new RosterItemExchangeSerializer());
 	serializers_.push_back(new MUCPayloadSerializer());

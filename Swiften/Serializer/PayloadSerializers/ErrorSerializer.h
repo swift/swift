@@ -10,10 +10,15 @@
 #include <Swiften/Elements/ErrorPayload.h>
 
 namespace Swift {
+	class PayloadSerializerCollection;
+
 	class ErrorSerializer : public GenericPayloadSerializer<ErrorPayload> {
 		public:
-			ErrorSerializer();
+			ErrorSerializer(PayloadSerializerCollection* serializers);
 
 			virtual std::string serializePayload(boost::shared_ptr<ErrorPayload> error)  const;
+
+		private:
+			PayloadSerializerCollection* serializers;
 	};
 }
