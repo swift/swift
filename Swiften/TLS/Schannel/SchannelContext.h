@@ -76,6 +76,8 @@ namespace Swift
 
 		void			handleCertificateCardRemoved();
 
+		virtual void setCheckCertificateRevocation(bool b);
+
 	private:
 		enum SchannelState
 		{
@@ -103,5 +105,6 @@ namespace Swift
 ////Not needed, most likely
 		std::string		m_smartcard_reader;	//Can be empty string for non SmartCard certificates
 		boost::shared_ptr<CAPICertificate> userCertificate;
+		bool checkCertificateRevocation;
 	};
 }

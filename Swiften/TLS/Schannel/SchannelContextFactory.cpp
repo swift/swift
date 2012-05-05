@@ -9,12 +9,22 @@
 
 namespace Swift {
 
+SchannelContextFactory::SchannelContextFactory() : checkCertificateRevocation(true) {
+}
+
 bool SchannelContextFactory::canCreate() const {
 	return true;
 }
 
 TLSContext* SchannelContextFactory::createTLSContext() {
-	return new SchannelContext();
+	SchannelContext* context = new SchannelContext();
+	context->setCheckCertificateRevocation(checkCertificateRevocation);
+	return context;
 }
+
+void SchannelContextFactory::setCheckCertificateRevocation(bool b) {
+	checkCertificateRevocation = b;
+}
+
 
 }
