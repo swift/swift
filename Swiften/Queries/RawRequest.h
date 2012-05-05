@@ -33,7 +33,7 @@ namespace Swift {
 
 			virtual void handleResponse(boost::shared_ptr<Payload> payload, ErrorPayload::ref error) {
 				if (error) {
-					onResponse(ErrorSerializer().serializePayload(error));
+					onResponse(ErrorSerializer(&serializers).serializePayload(error));
 				}
 				else {
 					assert(payload);

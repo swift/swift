@@ -84,7 +84,7 @@ public:
 		rangeOffset = offset;
 	}
 	
-	int getRangeOffset() const {
+	boost::uintmax_t getRangeOffset() const {
 		return rangeOffset;
 	}
 
