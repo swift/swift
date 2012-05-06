@@ -468,7 +468,7 @@ class JingleParserTest : public CppUnit::TestFixture {
 			
 			StreamInitiationFileInfo file = content->getDescription<JingleFileTransferDescription>()->getRequests()[0];
 			CPPUNIT_ASSERT_EQUAL(std::string("552da749930852c69ae5d2141d3766b1"), file.getHash());
-			CPPUNIT_ASSERT_EQUAL(270336, file.getRangeOffset());
+			CPPUNIT_ASSERT_EQUAL(static_cast<boost::uintmax_t>(270336), file.getRangeOffset());
 			CPPUNIT_ASSERT_EQUAL(true, file.getSupportsRangeRequests());
 		}
 		
