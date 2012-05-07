@@ -44,20 +44,24 @@ boost::shared_ptr<IQ> IQ::createResult(const JID& to, const JID& from, const std
 	return iq;
 }
 
-boost::shared_ptr<IQ> IQ::createError(const JID& to, const std::string& id, ErrorPayload::Condition condition, ErrorPayload::Type type) {
+boost::shared_ptr<IQ> IQ::createError(const JID& to, const std::string& id, ErrorPayload::Condition condition, ErrorPayload::Type type, boost::shared_ptr<Payload> payload) {
 	boost::shared_ptr<IQ> iq = boost::make_shared<IQ>(IQ::Error);
 	iq->setTo(to);
 	iq->setID(id);
-	iq->addPayload(boost::make_shared<Swift::ErrorPayload>(condition, type));
+	boost::shared_ptr<ErrorPayload> errorPayload = boost::make_shared<Swift::ErrorPayload>(condition, type);
+	errorPayload->setPayload(payload);
+	iq->addPayload(errorPayload);
 	return iq;
 }
 
-boost::shared_ptr<IQ> IQ::createError(const JID& to, const JID& from, const std::string& id, ErrorPayload::Condition condition, ErrorPayload::Type type) {
+boost::shared_ptr<IQ> IQ::createError(const JID& to, const JID& from, const std::string& id, ErrorPayload::Condition condition, ErrorPayload::Type type, boost::shared_ptr<Payload> payload) {
 	boost::shared_ptr<IQ> iq = boost::make_shared<IQ>(IQ::Error);
 	iq->setTo(to);
 	iq->setFrom(from);
 	iq->setID(id);
-	iq->addPayload(boost::make_shared<Swift::ErrorPayload>(condition, type));
+	boost::shared_ptr<ErrorPayload> errorPayload = boost::make_shared<Swift::ErrorPayload>(condition, type);
+	errorPayload->setPayload(payload);
+	iq->addPayload(errorPayload);
 	return iq;
 }
 

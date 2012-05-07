@@ -83,15 +83,15 @@ namespace Swift {
 			/**
 			 * Convenience function for responding with an error.
 			 */
-			void sendError(const JID& to, const std::string& id, ErrorPayload::Condition condition, ErrorPayload::Type type) {
-				router_->sendIQ(IQ::createError(to, id, condition, type));
+			void sendError(const JID& to, const std::string& id, ErrorPayload::Condition condition, ErrorPayload::Type type, Payload::ref payload = Payload::ref()) {
+				router_->sendIQ(IQ::createError(to, id, condition, type, payload));
 			}
 
 			/**
 			 * Convenience function for responding with an error from a specific from address.
 			 */
-			void sendError(const JID& to, const JID& from, const std::string& id, ErrorPayload::Condition condition, ErrorPayload::Type type) {
-				router_->sendIQ(IQ::createError(to, from, id, condition, type));
+			void sendError(const JID& to, const JID& from, const std::string& id, ErrorPayload::Condition condition, ErrorPayload::Type type, Payload::ref payload = Payload::ref()) {
+				router_->sendIQ(IQ::createError(to, from, id, condition, type, payload));
 			}
 
 			IQRouter* getIQRouter() const {
