@@ -18,9 +18,11 @@ TLSContext* OpenSSLContextFactory::createTLSContext() {
 	return new OpenSSLContext();
 }
 
-void OpenSSLContextFactory::setCheckCertificateRevocation(bool) {
-	assert(false);
-	SWIFT_LOG(warning) << "CRL Checking not supported for OpenSSL" << std::endl;
+void OpenSSLContextFactory::setCheckCertificateRevocation(bool check) {
+	if (check) {
+		assert(false);
+		SWIFT_LOG(warning) << "CRL Checking not supported for OpenSSL" << std::endl;
+	}
 }
 
 
