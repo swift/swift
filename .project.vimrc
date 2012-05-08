@@ -3,8 +3,8 @@
 " Add the following in your ~/.vimrc to automatically load this when
 " you open vim in the toplevel directory:
 "   
-"   if filereadable(".vimrc")
-"     source .vimrc
+"   if filereadable(".project.vimrc")
+"     source .project.vimrc
 "   endif
 "
 
