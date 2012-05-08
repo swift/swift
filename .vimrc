@@ -12,11 +12,4 @@
 set errorformat+=%E%.%#\ test:\ %.%#line:\ %l\ %f,%Z%m
 
 " SCons support
-if filereadable("SConstruct")
-	if filereadable("3rdParty/SCons/scons.py")
-		set makeprg=python\ 3rdParty/SCons/scons.py
-	else
-		set makeprg=scons
-	endif
-endif
-
+set makeprg=python\ 3rdParty/SCons/scons.py\ check=1
