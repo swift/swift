@@ -1,0 +1,22 @@
+" Some useful VIM stuff for developing Swift
+"
+" Add the following in your ~/.vimrc to automatically load this when
+" you open vim in the toplevel directory:
+"   
+"   if filereadable(".vimrc")
+"     source .vimrc
+"   endif
+"
+
+" CPPUnit QuicFix support
+set errorformat+=%E%.%#\ test:\ %.%#line:\ %l\ %f,%Z%m
+
+" SCons support
+if filereadable("SConstruct")
+	if filereadable("3rdParty/SCons/scons.py")
+		set makeprg=python\ 3rdParty/SCons/scons.py
+	else
+		set makeprg=scons
+	endif
+endif
+
