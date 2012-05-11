@@ -34,6 +34,7 @@ namespace Swift {
 				result.replace("%time%", "%&#37;time&#37;");
 				result.replace("%shortTime%", "%&#37;shortTime&#37;");
 				result.replace("%userIconPath%", "&#37;userIconPath&#37;");
+				result.replace("\t", "    ");
 				result.replace("  ", "&nbsp;&nbsp;");
 				return result;
 			}

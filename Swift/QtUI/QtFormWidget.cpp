@@ -96,7 +96,9 @@ QWidget* QtFormWidget::createWidget(FormField::ref field) {
 	boost::shared_ptr<TextMultiFormField> textMultiField = boost::dynamic_pointer_cast<TextMultiFormField>(field);
 	if (textMultiField) {
 		QString value = textMultiField->getValue().c_str();
-		widget = new QTextEdit(value, this);
+		QTextEdit* textWidget = new QTextEdit(this);
+		textWidget->setPlainText(value);
+		widget = textWidget;
 	}
 	boost::shared_ptr<TextPrivateFormField> textPrivateField = boost::dynamic_pointer_cast<TextPrivateFormField>(field);
 	if (textPrivateField) {
@@ -126,7 +128,9 @@ QWidget* QtFormWidget::createWidget(FormField::ref field) {
 			prev = true;
 			text += line.toString().c_str();
 		}
-		widget = new QTextEdit(text, this);
+		QTextEdit* textWidget = new QTextEdit(this);
+		textWidget->setPlainText(text);
+		widget = textWidget;
 	}
 	boost::shared_ptr<ListMultiFormField> listMultiField = boost::dynamic_pointer_cast<ListMultiFormField>(field);
 	if (listMultiField) {
