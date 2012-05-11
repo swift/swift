@@ -22,7 +22,7 @@ namespace Swift {
 			bool eventFilter(QObject* o, QEvent* e);
 
 		private:
-			class Private;
+			struct Private;
 			Private* p;
 	};
 }
