@@ -625,14 +625,6 @@ void SchannelContext::handleCertificateCardRemoved() {
 
 //------------------------------------------------------------------------
 
-Certificate::ref SchannelContext::getPeerCertificate() const {
-	ScopedCertContext pServerCert;
-	SECURITY_STATUS status = QueryContextAttributes(m_ctxtHandle, SECPKG_ATTR_REMOTE_CERT_CONTEXT, pServerCert.Reset());
-	return status == SEC_E_OK ? boost::make_shared<SchannelCertificate>(pServerCert) : SchannelCertificate::ref();
-}
-
-//------------------------------------------------------------------------
-
 std::vector<Certificate::ref> SchannelContext::getPeerCertificateChain() const {
 	std::vector<Certificate::ref> certificateChain;
 	ScopedCertContext pServerCert;

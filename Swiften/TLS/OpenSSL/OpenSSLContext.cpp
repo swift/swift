@@ -232,16 +232,6 @@ bool OpenSSLContext::setClientCertificate(CertificateWithKey::ref certificate) {
 	return true;
 }
 
-Certificate::ref OpenSSLContext::getPeerCertificate() const {
-	boost::shared_ptr<X509> x509Cert(SSL_get_peer_certificate(handle_), X509_free);
-	if (x509Cert) {
-		return boost::make_shared<OpenSSLCertificate>(x509Cert);
-	}
-	else {
-		return Certificate::ref();
-	}
-}
-
 std::vector<Certificate::ref> OpenSSLContext::getPeerCertificateChain() const {
 	std::vector<Certificate::ref> result;
 	STACK_OF(X509)* chain = SSL_get_peer_cert_chain(handle_);

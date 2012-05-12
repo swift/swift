@@ -154,7 +154,7 @@ namespace Swift {
 			void handleStanzaAcked(boost::shared_ptr<Stanza> stanza);
 			void ack(unsigned int handledStanzasCount);
 			void continueAfterTLSEncrypted();
-			void checkTrustOrFinish(Certificate::ref certificate, const std::vector<Certificate::ref>& certificateChain, boost::shared_ptr<CertificateVerificationError> error);
+			void checkTrustOrFinish(const std::vector<Certificate::ref>& certificateChain, boost::shared_ptr<CertificateVerificationError> error);
 
 		private:
 			JID localJID;

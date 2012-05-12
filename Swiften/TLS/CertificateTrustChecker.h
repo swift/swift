@@ -21,13 +21,13 @@ namespace Swift {
 			virtual ~CertificateTrustChecker();
 
 			/**
-			 * This method is called to find out whether a certificate is
+			 * This method is called to find out whether a certificate (chain) is
 			 * trusted. This usually happens when a certificate's validation
 			 * fails, to check whether to proceed with the connection or not.
 			 *
-			 * certificateChain contains the chain of certificates, if available.
-			 * This chain includes certificate.
+			 * certificateChain contains the chain of certificates. The first certificate
+			 * is the subject certificate.
 			 */
-			virtual bool isCertificateTrusted(Certificate::ref certificate, const std::vector<Certificate::ref>& certificateChain) = 0;
+			virtual bool isCertificateTrusted(const std::vector<Certificate::ref>& certificateChain) = 0;
 	};
 }

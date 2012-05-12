@@ -50,7 +50,6 @@ namespace Swift
 		virtual void	handleDataFromNetwork(const SafeByteArray& data);
 		virtual void	handleDataFromApplication(const SafeByteArray& data);
 
-		virtual Certificate::ref getPeerCertificate() const;
 		virtual std::vector<Certificate::ref> getPeerCertificateChain() const;
 		virtual CertificateVerificationError::ref getPeerCertificateVerificationError() const;
 

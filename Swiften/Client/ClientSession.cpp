@@ -370,25 +370,24 @@ void ClientSession::sendCredentials(const SafeByteArray& password) {
 void ClientSession::handleTLSEncrypted() {
 	checkState(Encrypting);
 
-	Certificate::ref certificate = stream->getPeerCertificate();
 	std::vector<Certificate::ref> certificateChain = stream->getPeerCertificateChain();
 	boost::shared_ptr<CertificateVerificationError> verificationError = stream->getPeerCertificateVerificationError();
 	if (verificationError) {
-		checkTrustOrFinish(certificate, certificateChain, verificationError);
+		checkTrustOrFinish(certificateChain, verificationError);
 	}
 	else {
 		ServerIdentityVerifier identityVerifier(localJID);
-		if (identityVerifier.certificateVerifies(certificate)) {
+		if (!certificateChain.empty() && identityVerifier.certificateVerifies(certificateChain[0])) {
 			continueAfterTLSEncrypted();
 		}
 		else {
-			checkTrustOrFinish(certificate, certificateChain, boost::make_shared<CertificateVerificationError>(CertificateVerificationError::InvalidServerIdentity));
+			checkTrustOrFinish(certificateChain, boost::make_shared<CertificateVerificationError>(CertificateVerificationError::InvalidServerIdentity));
 		}
 	}
 }
 
-void ClientSession::checkTrustOrFinish(Certificate::ref certificate, const std::vector<Certificate::ref>& certificateChain, boost::shared_ptr<CertificateVerificationError> error) {
-	if (certificateTrustChecker && certificateTrustChecker->isCertificateTrusted(certificate, certificateChain)) {
+void ClientSession::checkTrustOrFinish(const std::vector<Certificate::ref>& certificateChain, boost::shared_ptr<CertificateVerificationError> error) {
+	if (certificateTrustChecker && certificateTrustChecker->isCertificateTrusted(certificateChain)) {
 		continueAfterTLSEncrypted();
 	}
 	else {
