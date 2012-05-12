@@ -47,6 +47,7 @@ namespace Swift {
 			void setConnecting();
 			void setStreamEncryptionStatus(bool tlsInPlaceAndValid);
 			void openCertificateDialog(const std::vector<Certificate::ref>& chain);
+			static void openCertificateDialog(const std::vector<Certificate::ref>& chain, QWidget* parent);
 			QtEventWindow* getEventWindow();
 			QtChatListWindow* getChatListWindow();
 			void setRosterModel(Roster* roster);

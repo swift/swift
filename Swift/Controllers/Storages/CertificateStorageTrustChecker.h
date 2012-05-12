@@ -18,17 +18,17 @@ namespace Swift {
 			CertificateStorageTrustChecker(CertificateStorage* storage) : storage(storage) {
 			}
 
-			virtual bool isCertificateTrusted(Certificate::ref certificate) {
-				lastCertificate = certificate;
-				return storage->hasCertificate(certificate);
+			virtual bool isCertificateTrusted(Certificate::ref, const std::vector<Certificate::ref>& certificateChain) {
+				lastCertificateChain = std::vector<Certificate::ref>(certificateChain.begin(), certificateChain.end());
+				return certificateChain.empty() ? false : storage->hasCertificate(certificateChain[0]);
 			}
 
-			Certificate::ref getLastCertificate() const {
-				return lastCertificate;
+			const std::vector<Certificate::ref>& getLastCertificateChain() const {
+				return lastCertificateChain;
 			}
 
 		private:
 			CertificateStorage* storage;
-			Certificate::ref lastCertificate;
+			std::vector<Certificate::ref> lastCertificateChain;
 	};
 }

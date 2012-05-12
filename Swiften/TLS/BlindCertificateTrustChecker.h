@@ -19,7 +19,7 @@ namespace Swift {
 	 */
 	class BlindCertificateTrustChecker : public CertificateTrustChecker {
 		public:
-			virtual bool isCertificateTrusted(Certificate::ref) {
+			virtual bool isCertificateTrusted(Certificate::ref, const std::vector<Certificate::ref>&) {
 				return true;
 			}
 	};

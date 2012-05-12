@@ -10,6 +10,7 @@
 
 #include <string>
 #include <Swiften/TLS/Certificate.h>
+#include <vector>
 
 namespace Swift {
 	/**
@@ -23,7 +24,10 @@ namespace Swift {
 			 * This method is called to find out whether a certificate is
 			 * trusted. This usually happens when a certificate's validation
 			 * fails, to check whether to proceed with the connection or not.
+			 *
+			 * certificateChain contains the chain of certificates, if available.
+			 * This chain includes certificate.
 			 */
-			virtual bool isCertificateTrusted(Certificate::ref certificate) = 0;
+			virtual bool isCertificateTrusted(Certificate::ref certificate, const std::vector<Certificate::ref>& certificateChain) = 0;
 	};
 }

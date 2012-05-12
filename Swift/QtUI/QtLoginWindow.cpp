@@ -506,20 +506,25 @@ void QtLoginWindow::moveEvent(QMoveEvent*) {
 	emit geometryChanged();
 }
 
-bool QtLoginWindow::askUserToTrustCertificatePermanently(const std::string& message, Certificate::ref certificate) {
+bool QtLoginWindow::askUserToTrustCertificatePermanently(const std::string& message, const std::vector<Certificate::ref>& certificates) {
 	QMessageBox dialog(this);
 
 	dialog.setText(tr("The certificate presented by the server is not valid."));
 	dialog.setInformativeText(P2QSTRING(message) + "\n\n" + tr("Would you like to permanently trust this certificate? This must only be done if you know it is correct."));
 
-	QString detailedText = tr("Subject: %1").arg(P2QSTRING(certificate->getSubjectName())) + "\n";
-	detailedText += tr("SHA-1 Fingerprint: %1").arg(P2QSTRING(certificate->getSHA1Fingerprint()));
-	dialog.setDetailedText(detailedText);
-
-	dialog.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
+	dialog.addButton("Show Certificate", QMessageBox::HelpRole);
+	dialog.addButton(QMessageBox::Yes);
+	dialog.addButton(QMessageBox::No);
 	dialog.setDefaultButton(QMessageBox::No);
-
-	return dialog.exec() == QMessageBox::Yes;
+	while (true) {
+		int result = dialog.exec();
+		if (result == QMessageBox::Yes || result == QMessageBox::No) {
+			return result == QMessageBox::Yes;
+		}
+		// FIXME: This isn't very nice, because the dialog disappears every time. We actually need a real
+		// dialog with a custom button.
+		QtMainWindow::openCertificateDialog(certificates, &dialog);
+	}
 }
 
 }

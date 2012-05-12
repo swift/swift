@@ -273,10 +273,14 @@ void QtMainWindow::setStreamEncryptionStatus(bool tlsInPlaceAndValid) {
 }
 
 void QtMainWindow::openCertificateDialog(const std::vector<Certificate::ref>& chain) {
+	openCertificateDialog(chain, this);
+}
+
+void QtMainWindow::openCertificateDialog(const std::vector<Certificate::ref>& chain, QWidget* parent) {
 #if defined(SWIFTEN_PLATFORM_MACOSX)
-	CocoaUIHelpers::displayCertificateChainAsSheet(this, chain);
+	CocoaUIHelpers::displayCertificateChainAsSheet(parent, chain);
 #elif defined(SWIFTEN_PLATFORM_WINDOWS)
-	WinUIHelpers::displayCertificateChainAsSheet(this,chain);
+	WinUIHelpers::displayCertificateChainAsSheet(parent, chain);
 #else
 #pragma message ("No certificate dialog available on this platform.")
 #endif

@@ -48,7 +48,7 @@ namespace Swift {
 			virtual void setLoginAutomatically(bool loginAutomatically);
 			virtual void setIsLoggingIn(bool loggingIn);
 			void selectUser(const std::string& user);
-			bool askUserToTrustCertificatePermanently(const std::string& message, Certificate::ref certificate);
+			bool askUserToTrustCertificatePermanently(const std::string& message, const std::vector<Certificate::ref>& certificate);
 			void hide();
 			QtMenus getMenus() const;
 			virtual void quit();

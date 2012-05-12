@@ -559,9 +559,9 @@ void MainController::handleDisconnected(const boost::optional<ClientError>& erro
 		}
 		bool forceReconnectAfterCertificateTrust = false;
 		if (!certificateErrorMessage.empty()) {
-			Certificate::ref certificate = certificateTrustChecker_->getLastCertificate();
-			if (loginWindow_->askUserToTrustCertificatePermanently(certificateErrorMessage, certificate)) {
-				certificateStorage_->addCertificate(certificate);
+			std::vector<Certificate::ref> certificates = certificateTrustChecker_->getLastCertificateChain();
+			if (!certificates.empty() && loginWindow_->askUserToTrustCertificatePermanently(certificateErrorMessage, certificates)) {
+				certificateStorage_->addCertificate(certificates[0]);
 				forceReconnectAfterCertificateTrust = true;
 			}
 			else {

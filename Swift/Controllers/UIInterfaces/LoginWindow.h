@@ -31,7 +31,7 @@ namespace Swift {
 			virtual void setLoginAutomatically(bool loginAutomatically) = 0;
 			virtual void quit() = 0;
 			/** Blocking request whether a cert should be permanently trusted.*/
-			virtual bool askUserToTrustCertificatePermanently(const std::string& message, Certificate::ref) = 0;
+			virtual bool askUserToTrustCertificatePermanently(const std::string& message, const std::vector<Certificate::ref>& certificateChain) = 0;
 
 			boost::signal<void ()> onCancelLoginRequest;
 			boost::signal<void ()> onQuitRequest;
