@@ -22,6 +22,8 @@
 *.res
 *.moc
 *.patch
+.gdb_history
+.clang_complete
 *~
 _CL_*
 *.manifest
