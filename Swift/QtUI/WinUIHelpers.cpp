@@ -32,7 +32,7 @@ void WinUIHelpers::displayCertificateChainAsSheet(QWidget* parent, const std::ve
 	boost::shared_ptr<const CERT_CONTEXT> certificate_chain;
 	{
 		PCCERT_CONTEXT certChain;
-		BOOL ok = CertAddCertificateContextToStore(chainStore, CertCreateCertificateContext(X509_ASN_ENCODING, certAsDER.data(), certAsDER.size()), CERT_STORE_ADD_ALWAYS, &certChain);
+		BOOL ok = CertAddCertificateContextToStore(chainStore, CertCreateCertificateContext(X509_ASN_ENCODING, vecptr(certAsDER), certAsDER.size()), CERT_STORE_ADD_ALWAYS, &certChain);
 		// maybe free the cert contex we created
 		if (!ok || !certChain) {
 			return;
@@ -42,7 +42,7 @@ void WinUIHelpers::displayCertificateChainAsSheet(QWidget* parent, const std::ve
 
 	for (size_t i = 1; i < chain.size(); ++i) {
 		ByteArray certAsDER = chain[i]->toDER();
-		CertAddCertificateContextToStore(chainStore, CertCreateCertificateContext(X509_ASN_ENCODING, certAsDER.data(), certAsDER.size()), CERT_STORE_ADD_ALWAYS, NULL);
+		CertAddCertificateContextToStore(chainStore, CertCreateCertificateContext(X509_ASN_ENCODING, vecptr(certAsDER), certAsDER.size()), CERT_STORE_ADD_ALWAYS, NULL);
 	}
 
 	CRYPTUI_VIEWCERTIFICATE_STRUCT viewDialogProperties = { 0 };
