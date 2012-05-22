@@ -68,7 +68,7 @@ class SluiftClient {
 
 		void connect() {
 			rosterReceived = false;
-			client->connect();
+			client->connect(options);
 		}
 
 		void connect(const std::string& host) {
@@ -205,7 +205,10 @@ static inline SluiftClient* getClient(lua_State* L) {
 static int sluift_client_connect(lua_State *L) {
 	try {
 		SluiftClient* client = getClient(L);
-		std::string host(luaL_checkstring(L, 2));
+		std::string host;
+		if (lua_type(L, 2) != LUA_TNONE) {
+			host = luaL_checkstring(L, 2);
+		}
 		if (host.empty()) {
 			client->connect();
 		}
