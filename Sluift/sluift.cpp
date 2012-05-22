@@ -466,6 +466,10 @@ static int sluift_client_send(lua_State *L) {
 static int sluift_client_set_options(lua_State* L) {
 	SluiftClient* client = getClient(L);
 	luaL_checktype(L, 2, LUA_TTABLE);
+	lua_getfield(L, 2, "ack");
+	if (!lua_isnil(L, -1)) {
+		client->getOptions().useAcks = lua_toboolean(L, -1);
+	}
 	lua_getfield(L, 2, "compress");
 	if (!lua_isnil(L, -1)) {
 		client->getOptions().useStreamCompression = lua_toboolean(L, -1);
