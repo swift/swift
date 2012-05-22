@@ -49,7 +49,7 @@ else
 	# Remove development files & 3rdParty files
 	rm -rf $DIRNAME/.git
 	find $DIRNAME -name .gitignore | xargs rm -f
-	find $DIRNAME/3rdParty -type f | grep -v uuid | grep -v SConscript | xargs rm -f
+	find $DIRNAME/3rdParty -type f | grep -v SConscript | xargs rm -f
 	find $DIRNAME/3rdParty -depth -empty -type d -exec rmdir {} \;
 	rm -rf $DIRNAME/3rdParty/SCons
 	rm -rf $DIRNAME/Swift/Packaging/Debian
@@ -59,8 +59,8 @@ else
 
 	# Fork local Boost UUID copy
 	# FIXME: This shouldn't be necessary, but SCons isn't picking up the generated headers for compilation
-	mkdir -p $DIRNAME/3rdParty/Boost/uuid/boost
-	cp -r $DIRNAME/3rdParty/Boost/src/boost/uuid $DIRNAME/3rdParty/Boost/uuid/boost
+	#mkdir -p $DIRNAME/3rdParty/Boost/uuid/boost
+	#cp -r $DIRNAME/3rdParty/Boost/src/boost/uuid $DIRNAME/3rdParty/Boost/uuid/boost
 
 	# Create orig tarball
 	tar czf $TARBALLBARE $DIRNAME
