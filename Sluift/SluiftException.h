@@ -11,13 +11,15 @@
 #include <Swiften/Client/ClientError.h>
 
 namespace Swift {
-	class SluiftException {
+	class SluiftException : public std::exception {
 		public:
+			virtual ~SluiftException() throw() {}
+			
 			SluiftException(const std::string& reason) : reason(reason) {
 			}
 
 			SluiftException(const ClientError& error) {
-				std::string reason("Disconnected: ");
+				reason = "Disconnected: ";
 				switch(error.getType()) {
 					case ClientError::UnknownError: reason += "Unknown Error"; break;
 					case ClientError::DomainNameResolveError: reason += "Unable to find server"; break;
@@ -56,6 +58,11 @@ namespace Swift {
 			const std::string& getReason() const {
 				return reason;
 			}
+
+			virtual const char* what() const throw() {
+				return getReason().c_str();
+			}
+
 
 		private:
 			std::string reason;
