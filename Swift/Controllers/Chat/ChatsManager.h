@@ -18,6 +18,7 @@
 #include <Swiften/MUC/MUCRegistry.h>
 #include <Swift/Controllers/UIEvents/UIEventStream.h>
 #include <Swift/Controllers/UIInterfaces/ChatListWindow.h>
+#include <Swift/Controllers/UIInterfaces/ChatWindow.h>
 #include <Swiften/MUC/MUCBookmark.h>
 
 namespace Swift {
@@ -47,11 +48,12 @@ namespace Swift {
 	class FileTransferController;
 	class XMPPRoster;
 	class SettingsProvider;
+	class WhiteboardManager;
 	class HistoryController;
 	
 	class ChatsManager {
 		public:
-			ChatsManager(JID jid, StanzaChannel* stanzaChannel, IQRouter* iqRouter, EventController* eventController, ChatWindowFactory* chatWindowFactory, JoinMUCWindowFactory* joinMUCWindowFactory, NickResolver* nickResolver, PresenceOracle* presenceOracle, PresenceSender* presenceSender, UIEventStream* uiEventStream, ChatListWindowFactory* chatListWindowFactory, bool useDelayForLatency, TimerFactory* timerFactory, MUCRegistry* mucRegistry, EntityCapsProvider* entityCapsProvider, MUCManager* mucManager, MUCSearchWindowFactory* mucSearchWindowFactory, ProfileSettingsProvider* profileSettings, FileTransferOverview* ftOverview, XMPPRoster* roster, bool eagleMode, SettingsProvider* settings, HistoryController* historyController_);
+			ChatsManager(JID jid, StanzaChannel* stanzaChannel, IQRouter* iqRouter, EventController* eventController, ChatWindowFactory* chatWindowFactory, JoinMUCWindowFactory* joinMUCWindowFactory, NickResolver* nickResolver, PresenceOracle* presenceOracle, PresenceSender* presenceSender, UIEventStream* uiEventStream, ChatListWindowFactory* chatListWindowFactory, bool useDelayForLatency, TimerFactory* timerFactory, MUCRegistry* mucRegistry, EntityCapsProvider* entityCapsProvider, MUCManager* mucManager, MUCSearchWindowFactory* mucSearchWindowFactory, ProfileSettingsProvider* profileSettings, FileTransferOverview* ftOverview, XMPPRoster* roster, bool eagleMode, SettingsProvider* settings, HistoryController* historyController_, WhiteboardManager* whiteboardManager);
 			virtual ~ChatsManager();
 			void setAvatarManager(AvatarManager* avatarManager);
 			void setOnline(bool enabled);
@@ -73,6 +75,8 @@ namespace Swift {
 			void handleBookmarksReady();
 			void handleChatActivity(const JID& jid, const std::string& activity, bool isMUC);
 			void handleNewFileTransferController(FileTransferController*);
+			void handleWhiteboardSessionRequest(const JID& contact, bool senderIsSelf);
+			void handleWhiteboardStateChange(const JID& contact, const ChatWindow::WhiteboardSessionState state);
 			void appendRecent(const ChatListWindow::Chat& chat);
 			void prependRecent(const ChatListWindow::Chat& chat);
 			void setupBookmarks();
@@ -131,5 +135,6 @@ namespace Swift {
 			bool userWantsReceipts_;
 			SettingsProvider* settings_;
 			HistoryController* historyController_;
+			WhiteboardManager* whiteboardManager_;
 	};
 }

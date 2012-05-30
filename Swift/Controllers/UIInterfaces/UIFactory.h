@@ -20,6 +20,7 @@
 #include <Swift/Controllers/UIInterfaces/ContactEditWindowFactory.h>
 #include <Swift/Controllers/UIInterfaces/AdHocCommandWindowFactory.h>
 #include <Swift/Controllers/UIInterfaces/FileTransferListWidgetFactory.h>
+#include <Swift/Controllers/UIInterfaces/WhiteboardWindowFactory.h>
 
 namespace Swift {
 	class UIFactory : 
@@ -36,7 +37,8 @@ namespace Swift {
 			public ProfileWindowFactory,
 			public ContactEditWindowFactory,
 			public AdHocCommandWindowFactory,
-			public FileTransferListWidgetFactory {
+			public FileTransferListWidgetFactory,
+			public WhiteboardWindowFactory {
 		public:
 			virtual ~UIFactory() {}
 	};

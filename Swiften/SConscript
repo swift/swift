@@ -189,6 +189,7 @@ if env["SCONS_STAGE"] == "build" :
 			"Serializer/PayloadSerializers/StreamInitiationFileInfoSerializer.cpp",
 			"Serializer/PayloadSerializers/DeliveryReceiptSerializer.cpp",
 			"Serializer/PayloadSerializers/DeliveryReceiptRequestSerializer.cpp",
+			"Serializer/PayloadSerializers/WhiteboardSerializer.cpp",
 			"Serializer/PresenceSerializer.cpp",
 			"Serializer/StanzaSerializer.cpp",
 			"Serializer/StreamErrorSerializer.cpp",
@@ -205,6 +206,15 @@ if env["SCONS_STAGE"] == "build" :
 			"StringCodecs/SHA256.cpp",
 			"StringCodecs/MD5.cpp",
 			"StringCodecs/Hexify.cpp",
+			"Whiteboard/WhiteboardResponder.cpp",
+			"Whiteboard/WhiteboardSession.cpp",
+			"Whiteboard/IncomingWhiteboardSession.cpp",
+			"Whiteboard/OutgoingWhiteboardSession.cpp",
+			"Whiteboard/WhiteboardSessionManager.cpp",
+			"Whiteboard/WhiteboardServer.cpp",
+			"Whiteboard/WhiteboardClient.cpp",
+			"Elements/Whiteboard/WhiteboardColor.cpp",
+			"Whiteboard/WhiteboardTransformer.cpp",
 		]
 
 	SConscript(dirs = [
@@ -400,6 +410,8 @@ if env["SCONS_STAGE"] == "build" :
 			File("TLS/UnitTest/ServerIdentityVerifierTest.cpp"),
 			File("TLS/UnitTest/CertificateTest.cpp"),
 			File("VCards/UnitTest/VCardManagerTest.cpp"),
+			File("Whiteboard/UnitTest/WhiteboardServerTest.cpp"),
+			File("Whiteboard/UnitTest/WhiteboardClientTest.cpp"),
 		])
 	
 	# Generate the Swiften header

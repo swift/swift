@@ -54,6 +54,9 @@
 
 namespace Swift {
 
+const QString QtChatWindow::ButtonWhiteboardSessionCancel = QString("whiteboard-cancel");
+const QString QtChatWindow::ButtonWhiteboardSessionAcceptRequest = QString("whiteboard-acceptrequest");
+const QString QtChatWindow::ButtonWhiteboardShowWindow = QString("whiteboard-showwindow");
 const QString QtChatWindow::ButtonFileTransferCancel = QString("filetransfer-cancel");
 const QString QtChatWindow::ButtonFileTransferSetDescription = QString("filetransfer-setdescription");
 const QString QtChatWindow::ButtonFileTransferSendRequest = QString("filetransfer-sendrequest");
@@ -649,6 +652,39 @@ void QtChatWindow::setFileTransferStatus(std::string id, const FileTransferState
 	messageLog_->setFileTransferStatus(QString::fromStdString(id), state, QString::fromStdString(msg));
 }
 
+std::string QtChatWindow::addWhiteboardRequest(bool senderIsSelf) {
+	QString wb_id = QString("wb%1").arg(P2QSTRING(boost::lexical_cast<std::string>(idCounter_++)));
+	QString htmlString;
+	if (senderIsSelf) {
+		htmlString = "<div id='" + wb_id + "'>" + tr("Starting whiteboard chat") + "<br />"+
+				buildChatWindowButton(tr("Cancel"), ButtonWhiteboardSessionCancel, wb_id) +
+			"</div>";
+	} else {
+		htmlString = "<div id='" + wb_id + "'>" + Qt::escape(contact_) + tr(" would like to start whiteboard chat") + ": <br/>" +
+				buildChatWindowButton(tr("Cancel"), ButtonWhiteboardSessionCancel, wb_id) +
+				buildChatWindowButton(tr("Accept"), ButtonWhiteboardSessionAcceptRequest, wb_id) +
+			"</div>";
+	}
+
+	if (lastLineTracker_.getShouldMoveLastLine()) {
+		/* should this be queued? */
+		messageLog_->addLastSeenLine();
+		/* if the line is added we should break the snippet */
+//		appendToPrevious = false;
+	}
+	QString qAvatarPath = "qrc:/icons/avatar.png";
+	std::string id = "wbmessage" + boost::lexical_cast<std::string>(idCounter_++);
+	messageLog_->addMessage(boost::shared_ptr<ChatSnippet>(new MessageSnippet(htmlString, Qt::escape(contact_), B2QDATE(boost::posix_time::second_clock::local_time()), qAvatarPath, false, false, theme_, P2QSTRING(id))));
+
+	previousMessageWasSelf_ = false;
+	previousSenderName_ = contact_;
+	return Q2PSTRING(wb_id);
+}
+
+void QtChatWindow::setWhiteboardSessionStatus(std::string id, const ChatWindow::WhiteboardSessionState state) {
+	messageLog_->setWhiteboardSessionStatus(QString::fromStdString(id), state);
+}
+
 void QtChatWindow::handleHTMLButtonClicked(QString id, QString encodedArgument1, QString encodedArgument2, QString encodedArgument3) {
 	QString arg1 = decodeButtonArgument(encodedArgument1);
 	QString arg2 = decodeButtonArgument(encodedArgument2);
@@ -680,6 +716,20 @@ void QtChatWindow::handleHTMLButtonClicked(QString id, QString encodedArgument1,
 		if (!path.isEmpty()) {
 			onFileTransferAccept(Q2PSTRING(ft_id), Q2PSTRING(path));
 		}
+	}
+	else if (id.startsWith(ButtonWhiteboardSessionAcceptRequest)) {
+		QString id = arg1;
+		messageLog_->setWhiteboardSessionStatus(QString::fromStdString(Q2PSTRING(id)), ChatWindow::WhiteboardAccepted);
+		onWhiteboardSessionAccept();
+	}
+	else if (id.startsWith(ButtonWhiteboardSessionCancel)) {
+		QString id = arg1;
+		messageLog_->setWhiteboardSessionStatus(QString::fromStdString(Q2PSTRING(id)), ChatWindow::WhiteboardTerminated);
+		onWhiteboardSessionCancel();
+	}
+	else if (id.startsWith(ButtonWhiteboardShowWindow)) {
+		QString id = arg1;
+		onWhiteboardWindowShow();
 	}
 	else if (id.startsWith(ButtonMUCInvite)) {
 		QString roomJID = arg1;

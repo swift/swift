@@ -70,6 +70,7 @@ namespace Swift {
 	class AdHocManager;
 	class AdHocCommandWindowFactory;
 	class FileTransferOverview;
+	class WhiteboardManager;
 
 	class MainController {
 		public:
@@ -174,5 +175,6 @@ namespace Swift {
 			bool offlineRequested_;
 			static const int SecondsToWaitBeforeForceQuitting;
 			FileTransferOverview* ftOverview_;
+			WhiteboardManager* whiteboardManager_;
 	};
 }

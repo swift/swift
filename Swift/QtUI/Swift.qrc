@@ -21,5 +21,13 @@
 		<file alias="icons/new-chat.png">../resources/icons/new-chat.png</file>
 		<file alias="icons/actions.png">../resources/icons/actions.png</file>
 		<file alias="COPYING">COPYING</file>
+		<file alias="icons/line.png">../resources/icons/line.png</file>
+		<file alias="icons/rect.png">../resources/icons/rect.png</file>
+		<file alias="icons/circle.png">../resources/icons/circle.png</file>
+		<file alias="icons/handline.png">../resources/icons/handline.png</file>
+		<file alias="icons/text.png">../resources/icons/text.png</file>
+		<file alias="icons/polygon.png">../resources/icons/polygon.png</file>
+		<file alias="icons/cursor.png">../resources/icons/cursor.png</file>
+		<file alias="icons/eraser.png">../resources/icons/eraser.png</file>
 	</qresource>
 </RCC>

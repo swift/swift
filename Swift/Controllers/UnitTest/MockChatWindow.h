@@ -52,6 +52,10 @@ namespace Swift {
 			void setSubject(const std::string& /*subject*/) {}
 			virtual void showRoomConfigurationForm(Form::ref) {}
 			virtual void addMUCInvitation(const std::string& /*senderName*/, const JID& /*jid*/, const std::string& /*reason*/, const std::string& /*password*/, bool = true) {};
+
+			virtual std::string addWhiteboardRequest(bool) {return "";};
+			virtual void setWhiteboardSessionStatus(std::string, const ChatWindow::WhiteboardSessionState){};
+
 			virtual void setAffiliations(MUCOccupant::Affiliation, const std::vector<JID>&) {}
 			virtual void setAvailableRoomActions(const std::vector<RoomAction> &) {};
 			virtual InviteToChatWindow* createInviteToChatWindow() {return NULL;}

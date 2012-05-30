@@ -30,6 +30,8 @@ namespace Swift {
 			virtual void setToJID(const JID& jid);
 			virtual void setOnline(bool online);
 			virtual void handleNewFileTransferController(FileTransferController* ftc);
+			virtual void handleWhiteboardSessionRequest(bool senderIsSelf);
+			virtual void handleWhiteboardStateChange(const ChatWindow::WhiteboardSessionState state);
 			virtual void setContactIsReceivingPresence(bool /*isReceivingPresence*/);
 
 		protected:
@@ -57,6 +59,10 @@ namespace Swift {
 			void handleFileTransferAccept(std::string /* id */, std::string /* filename */);
 			void handleSendFileRequest(std::string filename);
 
+			void handleWhiteboardSessionAccept();
+			void handleWhiteboardSessionCancel();
+			void handleWhiteboardWindowShow();
+
 			void handleSettingChanged(const std::string& settingPath);
 			void checkForDisplayingDisplayReceiptsAlert();
 
@@ -78,6 +84,7 @@ namespace Swift {
 			bool userWantsReceipts_;
 			std::map<std::string, FileTransferController*> ftControllers;
 			SettingsProvider* settings_;
+			std::string lastWbID_;
 	};
 }
 

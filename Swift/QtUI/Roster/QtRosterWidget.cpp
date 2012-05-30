@@ -15,6 +15,7 @@
 #include "Swift/Controllers/UIEvents/RemoveRosterItemUIEvent.h"
 #include "Swift/Controllers/UIEvents/RenameGroupUIEvent.h"
 #include "Swift/Controllers/UIEvents/SendFileUIEvent.h"
+#include "Swift/Controllers/UIEvents/RequestWhiteboardUIEvent.h"
 #include "QtContactEditWindow.h"
 #include "Swift/Controllers/Roster/ContactRosterItem.h"
 #include "Swift/Controllers/Roster/GroupRosterItem.h"
@@ -62,6 +63,12 @@ void QtRosterWidget::contextMenuEvent(QContextMenuEvent* event) {
 			sendFile = contextMenu.addAction(tr("Send File"));
 		}
 #endif
+#ifdef SWIFT_EXPERIMENTAL_WB
+		QAction* startWhiteboardChat = NULL;
+		if (contact->supportsFeature(ContactRosterItem::WhiteboardFeature)) {
+			startWhiteboardChat = contextMenu.addAction(tr("Start Whiteboard Chat"));
+		}
+#endif
 		QAction* result = contextMenu.exec(event->globalPos());
 		if (result == editContact) {
 			eventStream_->send(boost::make_shared<RequestContactEditorUIEvent>(contact->getJID()));
@@ -77,6 +84,11 @@ void QtRosterWidget::contextMenuEvent(QContextMenuEvent* event) {
 			if (!fileName.isEmpty()) {
 				eventStream_->send(boost::make_shared<SendFileUIEvent>(contact->getJID(), Q2PSTRING(fileName)));
 			}
+		}
+#endif
+#ifdef SWIFT_EXPERIMENTAL_WB
+		else if (startWhiteboardChat && result == startWhiteboardChat) {
+			eventStream_->send(boost::make_shared<RequestWhiteboardUIEvent>(contact->getJID()));
 		}
 #endif
 	}

@@ -23,6 +23,8 @@ namespace Swift {
 			ChatListModel();
 			void addMUCBookmark(const MUCBookmark& bookmark);
 			void removeMUCBookmark(const MUCBookmark& bookmark);
+			void addWhiteboardSession(const ChatListWindow::Chat& chat);
+			void removeWhiteboardSession(const JID& jid);
 			int columnCount(const QModelIndex& parent = QModelIndex()) const;
 			QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const;
 			QModelIndex index(int row, int column, const QModelIndex & parent = QModelIndex()) const;
@@ -34,6 +36,7 @@ namespace Swift {
 		private:
 			ChatListGroupItem* mucBookmarks_;
 			ChatListGroupItem* recents_;
+			ChatListGroupItem* whiteboards_;
 			ChatListGroupItem* root_;
 	};
 

@@ -26,6 +26,9 @@
 #include <Swiften/Base/foreach.h>
 #include <Swift/Controllers/UIEvents/UIEventStream.h>
 #include <Swift/Controllers/UIEvents/SendFileUIEvent.h>
+#include <Swift/Controllers/UIEvents/AcceptWhiteboardSessionUIEvent.h>
+#include <Swift/Controllers/UIEvents/CancelWhiteboardSessionUIEvent.h>
+#include <Swift/Controllers/UIEvents/ShowWhiteboardUIEvent.h>
 #include <Swiften/Elements/DeliveryReceipt.h>
 #include <Swiften/Elements/DeliveryReceiptRequest.h>
 #include <Swift/Controllers/SettingConstants.h>
@@ -73,6 +76,9 @@ ChatController::ChatController(const JID& self, StanzaChannel* stanzaChannel, IQ
 	chatWindow_->onFileTransferAccept.connect(boost::bind(&ChatController::handleFileTransferAccept, this, _1, _2));
 	chatWindow_->onFileTransferCancel.connect(boost::bind(&ChatController::handleFileTransferCancel, this, _1));
 	chatWindow_->onSendFileRequest.connect(boost::bind(&ChatController::handleSendFileRequest, this, _1));
+	chatWindow_->onWhiteboardSessionAccept.connect(boost::bind(&ChatController::handleWhiteboardSessionAccept, this));
+	chatWindow_->onWhiteboardSessionCancel.connect(boost::bind(&ChatController::handleWhiteboardSessionCancel, this));
+	chatWindow_->onWhiteboardWindowShow.connect(boost::bind(&ChatController::handleWhiteboardWindowShow, this));
 	handleBareJIDCapsChanged(toJID_);
 
 	settings_->onSettingChanged.connect(boost::bind(&ChatController::handleSettingChanged, this, _1));
@@ -255,6 +261,14 @@ void ChatController::handleNewFileTransferController(FileTransferController* ftc
 	ftControllers[ftID] = ftc;
 }
 
+void ChatController::handleWhiteboardSessionRequest(bool senderIsSelf) {
+	lastWbID_ = chatWindow_->addWhiteboardRequest(senderIsSelf);
+}
+
+void ChatController::handleWhiteboardStateChange(const ChatWindow::WhiteboardSessionState state) {
+	chatWindow_->setWhiteboardSessionStatus(lastWbID_, state);
+}
+
 void ChatController::handleFileTransferCancel(std::string id) {
 	SWIFT_LOG(debug) << "handleFileTransferCancel(" << id << ")" << std::endl;
 	if (ftControllers.find(id) != ftControllers.end()) {
@@ -285,6 +299,18 @@ void ChatController::handleFileTransferAccept(std::string id, std::string filena
 void ChatController::handleSendFileRequest(std::string filename) {
 	SWIFT_LOG(debug) << "ChatController::handleSendFileRequest(" << filename << ")" << std::endl;
 	eventStream_->send(boost::make_shared<SendFileUIEvent>(getToJID(), filename));
+}
+
+void ChatController::handleWhiteboardSessionAccept() {
+	eventStream_->send(boost::make_shared<AcceptWhiteboardSessionUIEvent>(toJID_));
+}
+
+void ChatController::handleWhiteboardSessionCancel() {
+	eventStream_->send(boost::make_shared<CancelWhiteboardSessionUIEvent>(toJID_));
+}
+
+void ChatController::handleWhiteboardWindowShow() {
+	eventStream_->send(boost::make_shared<ShowWhiteboardUIEvent>(toJID_));
 }
 
 std::string ChatController::senderDisplayNameFromMessage(const JID& from) {

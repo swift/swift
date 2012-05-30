@@ -73,6 +73,9 @@ namespace Swift {
 		Q_OBJECT
 
 		public:
+			static const QString ButtonWhiteboardSessionCancel;
+			static const QString ButtonWhiteboardSessionAcceptRequest;
+			static const QString ButtonWhiteboardShowWindow;
 			static const QString ButtonFileTransferCancel;
 			static const QString ButtonFileTransferSetDescription;
 			static const QString ButtonFileTransferSendRequest;
@@ -94,6 +97,9 @@ namespace Swift {
 			void setFileTransferProgress(std::string id, const int percentageDone);
 			void setFileTransferStatus(std::string id, const FileTransferState state, const std::string& msg);
 			
+			std::string addWhiteboardRequest(bool senderIsSelf);
+			void setWhiteboardSessionStatus(std::string id, const ChatWindow::WhiteboardSessionState state);
+
 			void show();
 			void activate();
 			void setUnreadMessageCount(int count);

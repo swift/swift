@@ -13,6 +13,7 @@
 
 #include <Swift/QtUI/ChatList/ChatListMUCItem.h>
 #include <Swift/QtUI/ChatList/ChatListRecentItem.h>
+#include <Swift/QtUI/ChatList/ChatListWhiteboardItem.h>
 #include <Swift/QtUI/QtAddBookmarkWindow.h>
 #include <Swift/QtUI/QtEditBookmarkWindow.h>
 #include <Swift/QtUI/QtUISettingConstants.h>
@@ -21,6 +22,7 @@
 #include <Swift/Controllers/UIEvents/AddMUCBookmarkUIEvent.h>
 #include <Swift/Controllers/UIEvents/RemoveMUCBookmarkUIEvent.h>
 #include <Swift/Controllers/UIEvents/EditMUCBookmarkUIEvent.h>
+#include <Swift/Controllers/UIEvents/ShowWhiteboardUIEvent.h>
 #include <Swift/Controllers/Settings/SettingsProvider.h>
 
 
@@ -97,6 +99,11 @@ void QtChatListWindow::handleItemActivated(const QModelIndex& index) {
 			onRecentActivated(recentItem->getChat());
 		}
 	}
+	else if (ChatListWhiteboardItem* whiteboardItem = dynamic_cast<ChatListWhiteboardItem*>(item)) {
+		if (!whiteboardItem->getChat().isMUC || bookmarksEnabled_) {
+			eventStream_->send(boost::make_shared<ShowWhiteboardUIEvent>(whiteboardItem->getChat().jid));
+		}
+	}
 }
 
 void QtChatListWindow::clearBookmarks() {
@@ -109,6 +116,14 @@ void QtChatListWindow::addMUCBookmark(const MUCBookmark& bookmark) {
 
 void QtChatListWindow::removeMUCBookmark(const MUCBookmark& bookmark) {
 	model_->removeMUCBookmark(bookmark);
+}
+
+void QtChatListWindow::addWhiteboardSession(const ChatListWindow::Chat& chat) {
+	model_->addWhiteboardSession(chat);
+}
+
+void QtChatListWindow::removeWhiteboardSession(const JID& jid) {
+	model_->removeWhiteboardSession(jid);
 }
 
 void QtChatListWindow::setRecents(const std::list<ChatListWindow::Chat>& recents) {

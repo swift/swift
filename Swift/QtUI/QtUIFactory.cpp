@@ -25,9 +25,11 @@
 #include "QtContactEditWindow.h"
 #include "QtAdHocCommandWindow.h"
 #include "QtFileTransferListWidget.h"
+#include "Whiteboard/QtWhiteboardWindow.h"
 #include <Swift/Controllers/Settings/SettingsProviderHierachy.h>
 #include <Swift/QtUI/QtUISettingConstants.h>
 #include <QtHistoryWindow.h>
+#include <Swiften/Whiteboard/WhiteboardSession.h>
 
 namespace Swift {
 
@@ -153,6 +155,10 @@ ProfileWindow* QtUIFactory::createProfileWindow() {
 
 ContactEditWindow* QtUIFactory::createContactEditWindow() {
 	return new QtContactEditWindow();
+}
+
+WhiteboardWindow* QtUIFactory::createWhiteboardWindow(boost::shared_ptr<WhiteboardSession> whiteboardSession) {
+	return new QtWhiteboardWindow(whiteboardSession);
 }
 
 void QtUIFactory::createAdHocCommandWindow(boost::shared_ptr<OutgoingAdHocCommandSession> command) {

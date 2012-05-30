@@ -22,6 +22,8 @@ namespace Swift {
 			virtual ~QtChatListWindow();
 			void addMUCBookmark(const MUCBookmark& bookmark);
 			void removeMUCBookmark(const MUCBookmark& bookmark);
+			void addWhiteboardSession(const ChatListWindow::Chat& chat);
+			void removeWhiteboardSession(const JID& jid);
 			void setBookmarksEnabled(bool enabled);
 			void setRecents(const std::list<ChatListWindow::Chat>& recents);
 			void setUnreadCount(int unread);

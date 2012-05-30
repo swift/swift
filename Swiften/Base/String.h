@@ -29,6 +29,9 @@ namespace Swift {
 			inline bool endsWith(const std::string& s, char c) { 
 				return s.size() > 0 && s[s.size()-1] == c; 
 			}
+
+			std::string convertIntToHexString(int h);
+			int convertHexStringToInt(const std::string& s);
 	};
 
 	class SWIFTEN_API makeString {

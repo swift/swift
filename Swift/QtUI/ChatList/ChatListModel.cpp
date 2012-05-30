@@ -8,6 +8,7 @@
 
 #include <Swift/QtUI/ChatList/ChatListMUCItem.h>
 #include <Swift/QtUI/ChatList/ChatListRecentItem.h>
+#include <Swift/QtUI/ChatList/ChatListWhiteboardItem.h>
 
 namespace Swift {
 
@@ -15,8 +16,10 @@ ChatListModel::ChatListModel() {
 	root_ = new ChatListGroupItem("", NULL, false);
 	mucBookmarks_ = new ChatListGroupItem(tr("Bookmarked Rooms"), root_);
 	recents_ = new ChatListGroupItem(tr("Recent Chats"), root_, false);
+	whiteboards_ = new ChatListGroupItem(tr("Opened Whiteboards"), root_, false);
 	root_->addItem(recents_);
 	root_->addItem(mucBookmarks_);
+	root_->addItem(whiteboards_);
 }
 
 void ChatListModel::clearBookmarks() {
@@ -46,11 +49,30 @@ void ChatListModel::removeMUCBookmark(const Swift::MUCBookmark& bookmark) {
 	}
 }
 
+void ChatListModel::addWhiteboardSession(const ChatListWindow::Chat& chat) {
+	emit layoutAboutToBeChanged();
+	whiteboards_->addItem(new ChatListWhiteboardItem(chat, whiteboards_));
+	emit layoutChanged();
+}
+
+void ChatListModel::removeWhiteboardSession(const JID& jid) {
+	for (int i = 0; i < whiteboards_->rowCount(); i++) {
+		ChatListWhiteboardItem* item = dynamic_cast<ChatListWhiteboardItem*>(whiteboards_->item(i));
+		if (item->getChat().jid == jid) {
+			emit layoutAboutToBeChanged();
+			whiteboards_->remove(i);
+			emit layoutChanged();
+			break;
+		}
+	}
+}
+
 void ChatListModel::setRecents(const std::list<ChatListWindow::Chat>& recents) {
 	emit layoutAboutToBeChanged();
 	recents_->clear();
 	foreach (const ChatListWindow::Chat chat, recents) {
 		recents_->addItem(new ChatListRecentItem(chat, recents_));
+//whiteboards_->addItem(new ChatListRecentItem(chat, whiteboards_));
 	}
 	emit layoutChanged();
 }

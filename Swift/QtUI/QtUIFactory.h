@@ -25,6 +25,7 @@ namespace Swift {
 	class QtChatWindow;
 	class TimerFactory;
 	class historyWindow_;
+	class WhiteboardSession;
 
 	class QtUIFactory : public QObject, public UIFactory {
 			Q_OBJECT
@@ -44,6 +45,7 @@ namespace Swift {
 			virtual ProfileWindow* createProfileWindow();
 			virtual ContactEditWindow* createContactEditWindow();
 			virtual FileTransferListWidget* createFileTransferListWidget();
+			virtual WhiteboardWindow* createWhiteboardWindow(boost::shared_ptr<WhiteboardSession> whiteboardSession);
 			virtual void createAdHocCommandWindow(boost::shared_ptr<OutgoingAdHocCommandSession> command);
 
 		private slots:

@@ -42,6 +42,7 @@
 #include <Swift/Controllers/Settings/SettingsProvider.h>
 #include <Swift/Controllers/SettingConstants.h>
 #include <Swiften/Client/StanzaChannel.h>
+#include <Swift/Controllers/WhiteboardManager.h>
 
 namespace Swift {
 
@@ -72,7 +73,8 @@ ChatsManager::ChatsManager(
 		XMPPRoster* roster,
 		bool eagleMode,
 		SettingsProvider* settings,
-		HistoryController* historyController) :
+		HistoryController* historyController,
+		WhiteboardManager* whiteboardManager) :
 			jid_(jid), 
 			joinMUCWindowFactory_(joinMUCWindowFactory), 
 			useDelayForLatency_(useDelayForLatency), 
@@ -83,7 +85,8 @@ ChatsManager::ChatsManager(
 			roster_(roster),
 			eagleMode_(eagleMode),
 			settings_(settings),
-			historyController_(historyController) {
+			historyController_(historyController),
+			whiteboardManager_(whiteboardManager) {
 	timerFactory_ = timerFactory;
 	eventController_ = eventController;
 	stanzaChannel_ = stanzaChannel;
@@ -109,6 +112,10 @@ ChatsManager::ChatsManager(
 	mucSearchController_ = new MUCSearchController(jid_, mucSearchWindowFactory, iqRouter, profileSettings_);
 	mucSearchController_->onMUCSelected.connect(boost::bind(&ChatsManager::handleMUCSelectedAfterSearch, this, _1));
 	ftOverview_->onNewFileTransferController.connect(boost::bind(&ChatsManager::handleNewFileTransferController, this, _1));
+	whiteboardManager_->onSessionRequest.connect(boost::bind(&ChatsManager::handleWhiteboardSessionRequest, this, _1, _2));
+	whiteboardManager_->onRequestAccepted.connect(boost::bind(&ChatsManager::handleWhiteboardStateChange, this, _1, ChatWindow::WhiteboardAccepted));
+	whiteboardManager_->onSessionTerminate.connect(boost::bind(&ChatsManager::handleWhiteboardStateChange, this, _1, ChatWindow::WhiteboardTerminated));
+	whiteboardManager_->onRequestRejected.connect(boost::bind(&ChatsManager::handleWhiteboardStateChange, this, _1, ChatWindow::WhiteboardRejected));
 	roster_->onJIDAdded.connect(boost::bind(&ChatsManager::handleJIDAddedToRoster, this, _1));
 	roster_->onJIDRemoved.connect(boost::bind(&ChatsManager::handleJIDRemovedFromRoster, this, _1));
 	roster_->onJIDUpdated.connect(boost::bind(&ChatsManager::handleJIDUpdatedInRoster, this, _1));
@@ -655,6 +662,29 @@ void ChatsManager::handleNewFileTransferController(FileTransferController* ftc) 
 	ChatController* chatController = getChatControllerOrCreate(ftc->getOtherParty());
 	chatController->handleNewFileTransferController(ftc);
 	chatController->activateChatWindow();
+}
+
+void ChatsManager::handleWhiteboardSessionRequest(const JID& contact, bool senderIsSelf) {
+	ChatController* chatController = getChatControllerOrCreate(contact);
+	chatController->handleWhiteboardSessionRequest(senderIsSelf);
+	chatController->activateChatWindow();
+}
+
+void ChatsManager::handleWhiteboardStateChange(const JID& contact, const ChatWindow::WhiteboardSessionState state) {
+	ChatController* chatController = getChatControllerOrCreate(contact);
+	chatController->handleWhiteboardStateChange(state);
+	chatController->activateChatWindow();
+	if (state == ChatWindow::WhiteboardAccepted) {
+		boost::filesystem::path path;
+		JID bareJID = contact.toBare();
+		if (avatarManager_) {
+			path = avatarManager_->getAvatarPath(bareJID);
+		}
+		ChatListWindow::Chat chat(bareJID, nickResolver_->jidToNick(bareJID), "", 0, StatusShow::None, path, false);
+ 		chatListWindow_->addWhiteboardSession(chat);
+	} else {
+		chatListWindow_->removeWhiteboardSession(contact.toBare());
+	}
 }
 
 void ChatsManager::handleRecentActivated(const ChatListWindow::Chat& chat) {

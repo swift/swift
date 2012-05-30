@@ -17,6 +17,7 @@
 #include "Swift/Controllers/Settings/DummySettingsProvider.h"
 #include "Swift/Controllers/UIInterfaces/ChatWindowFactory.h"
 #include "Swift/Controllers/UIInterfaces/ChatListWindowFactory.h"
+#include "Swift/Controllers/UIInterfaces/WhiteboardWindowFactory.h"
 #include "Swift/Controllers/UIInterfaces/JoinMUCWindowFactory.h"
 #include "Swift/Controllers/UIInterfaces/MUCSearchWindowFactory.h"
 #include "Swiften/Client/Client.h"
@@ -49,6 +50,8 @@
 #include "Swiften/Elements/DeliveryReceipt.h"
 #include <Swiften/Base/Algorithm.h>
 #include <Swift/Controllers/SettingConstants.h>
+#include <Swift/Controllers/WhiteboardManager.h>
+#include <Swiften/Whiteboard/WhiteboardSessionManager.h>
 
 using namespace Swift;
 
@@ -100,11 +103,13 @@ public:
 		chatListWindow_ = new MockChatListWindow();
 		ftManager_ = new DummyFileTransferManager();
 		ftOverview_ = new FileTransferOverview(ftManager_);
+		avatarManager_ = new NullAvatarManager();
+		wbSessionManager_ = new WhiteboardSessionManager(iqRouter_, stanzaChannel_, presenceOracle_, entityCapsManager_);
+		wbManager_ = new WhiteboardManager(whiteboardWindowFactory_, uiEventStream_, nickResolver_, wbSessionManager_);
 
 		mocks_->ExpectCall(chatListWindowFactory_, ChatListWindowFactory::createChatListWindow).With(uiEventStream_).Return(chatListWindow_);
-		manager_ = new ChatsManager(jid_, stanzaChannel_, iqRouter_, eventController_, chatWindowFactory_, joinMUCWindowFactory_, nickResolver_, presenceOracle_, directedPresenceSender_, uiEventStream_, chatListWindowFactory_, true, NULL, mucRegistry_, entityCapsManager_, mucManager_, mucSearchWindowFactory_, profileSettings_, ftOverview_, xmppRoster_, false, settings_, NULL);
+		manager_ = new ChatsManager(jid_, stanzaChannel_, iqRouter_, eventController_, chatWindowFactory_, joinMUCWindowFactory_, nickResolver_, presenceOracle_, directedPresenceSender_, uiEventStream_, chatListWindowFactory_, true, NULL, mucRegistry_, entityCapsManager_, mucManager_, mucSearchWindowFactory_, profileSettings_, ftOverview_, xmppRoster_, false, settings_, NULL, wbManager_);
 
-		avatarManager_ = new NullAvatarManager();
 		manager_->setAvatarManager(avatarManager_);
 	};
 	
@@ -115,6 +120,8 @@ public:
 		delete manager_;
 		delete ftOverview_;
 		delete ftManager_;
+		delete wbSessionManager_;
+		delete wbManager_;
 		delete directedPresenceSender_;
 		delete presenceSender_;
 		delete presenceOracle_;
@@ -460,6 +467,7 @@ private:
 	MockRepository* mocks_;
 	UIEventStream* uiEventStream_;
 	ChatListWindowFactory* chatListWindowFactory_;
+	WhiteboardWindowFactory* whiteboardWindowFactory_;
 	MUCSearchWindowFactory* mucSearchWindowFactory_;
 	MUCRegistry* mucRegistry_;
 	DirectedPresenceSender* directedPresenceSender_;
@@ -471,6 +479,8 @@ private:
 	ChatListWindow* chatListWindow_;
 	FileTransferOverview* ftOverview_;
 	FileTransferManager* ftManager_;
+	WhiteboardSessionManager* wbSessionManager_;
+	WhiteboardManager* wbManager_;
 };
 
 CPPUNIT_TEST_SUITE_REGISTRATION(ChatsManagerTest);

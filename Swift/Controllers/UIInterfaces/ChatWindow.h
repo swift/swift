@@ -37,6 +37,7 @@ namespace Swift {
 			enum OccupantAction {Kick, Ban, MakeModerator, MakeParticipant, MakeVisitor, AddContact};
 			enum RoomAction {ChangeSubject, Configure, Affiliations, Destroy, Invite};
 			enum FileTransferState {WaitingForAccept, Negotiating, Transferring, Canceled, Finished, FTFailed};
+			enum WhiteboardSessionState {WhiteboardAccepted, WhiteboardTerminated, WhiteboardRejected};
 			ChatWindow() {}
 			virtual ~ChatWindow() {};
 
@@ -59,6 +60,9 @@ namespace Swift {
 			virtual void setFileTransferProgress(std::string, const int percentageDone) = 0;
 			virtual void setFileTransferStatus(std::string, const FileTransferState state, const std::string& msg = "") = 0;
 			virtual void addMUCInvitation(const std::string& senderName, const JID& jid, const std::string& reason, const std::string& password, bool direct = true) = 0;
+
+			virtual std::string addWhiteboardRequest(bool senderIsSelf) = 0;
+			virtual void setWhiteboardSessionStatus(std::string id, const ChatWindow::WhiteboardSessionState state) = 0;
 
 			// message receipts
 			virtual void setMessageReceiptState(const std::string& id, ChatWindow::ReceiptState state) = 0;
@@ -132,6 +136,11 @@ namespace Swift {
 			boost::signal<void (std::string /* id */, std::string /* description */)> onFileTransferStart;
 			boost::signal<void (std::string /* id */, std::string /* path */)> onFileTransferAccept;
 			boost::signal<void (std::string /* path */)> onSendFileRequest;
+
+			//Whiteboard related	
+			boost::signal<void ()> onWhiteboardSessionAccept;
+			boost::signal<void ()> onWhiteboardSessionCancel;
+			boost::signal<void ()> onWhiteboardWindowShow;
 	};
 }
 

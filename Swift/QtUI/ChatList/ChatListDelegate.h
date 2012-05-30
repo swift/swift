@@ -13,6 +13,7 @@
 namespace Swift {
 	class ChatListMUCItem;
 	class ChatListRecentItem;
+	class ChatListWhiteboardItem;
 	class ChatListDelegate : public QStyledItemDelegate {
 		public:
 			ChatListDelegate(bool compact);
@@ -24,6 +25,7 @@ namespace Swift {
 		private:
 			void paintMUC(QPainter* painter, const QStyleOptionViewItem& option, ChatListMUCItem* item) const;
 			void paintRecent(QPainter* painter, const QStyleOptionViewItem& option, ChatListRecentItem* item) const;
+			void paintWhiteboard(QPainter* painter, const QStyleOptionViewItem& option, ChatListWhiteboardItem* item) const;
 			QSize mucSizeHint(const QStyleOptionViewItem& /*option*/, const QModelIndex& /*index*/ ) const;
 			QSize recentSizeHint(const QStyleOptionViewItem& /*option*/, const QModelIndex& /*index*/ ) const;
 

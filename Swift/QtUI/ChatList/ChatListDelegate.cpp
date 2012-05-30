@@ -12,6 +12,7 @@
 #include "Swift/QtUI/ChatList/ChatListItem.h"
 #include "Swift/QtUI/ChatList/ChatListMUCItem.h"
 #include "Swift/QtUI/ChatList/ChatListRecentItem.h"
+#include "Swift/QtUI/ChatList/ChatListWhiteboardItem.h"
 #include "Swift/QtUI/ChatList/ChatListGroupItem.h"
 
 namespace Swift {
@@ -38,6 +39,9 @@ QSize ChatListDelegate::sizeHint(const QStyleOptionViewItem& option, const QMode
 	}
 	else if (item && dynamic_cast<ChatListGroupItem*>(item)) {
 		return groupDelegate_->sizeHint(option, index);
+	}
+	else if (item && dynamic_cast<ChatListWhiteboardItem*>(item)) {
+		return common_.contactSizeHint(option, index, compact_);
 	} 
 	return QStyledItemDelegate::sizeHint(option, index);
 }
@@ -64,6 +68,9 @@ void ChatListDelegate::paint(QPainter* painter, const QStyleOptionViewItem& opti
 	else if (item && dynamic_cast<ChatListGroupItem*>(item)) {
 		ChatListGroupItem* group = dynamic_cast<ChatListGroupItem*>(item);
 		groupDelegate_->paint(painter, option, group->data(Qt::DisplayRole).toString(), group->rowCount(), option.state & QStyle::State_Open); 
+	}
+	else if (item && dynamic_cast<ChatListWhiteboardItem*>(item)) {
+		paintWhiteboard(painter, option, dynamic_cast<ChatListWhiteboardItem*>(item));
 	}
 	else {
 		QStyledItemDelegate::paint(painter, option, index);
@@ -113,6 +120,21 @@ void ChatListDelegate::paintRecent(QPainter* painter, const QStyleOptionViewItem
 	QString name = item->data(Qt::DisplayRole).toString();
 	//qDebug() << "Avatar for " << name << " = " << avatarPath;
 	QString statusText = item->data(ChatListRecentItem::DetailTextRole).toString();
+	common_.paintContact(painter, option, nameColor, avatarPath, presenceIcon, name, statusText, item->getChat().unreadCount, compact_);
+}
+
+void ChatListDelegate::paintWhiteboard(QPainter* painter, const QStyleOptionViewItem& option, ChatListWhiteboardItem* item) const {
+	QColor nameColor = item->data(Qt::TextColorRole).value<QColor>();
+	QString avatarPath;
+	if (item->data(ChatListWhiteboardItem::AvatarRole).isValid() && !item->data(ChatListWhiteboardItem::AvatarRole).value<QString>().isNull()) {
+		avatarPath = item->data(ChatListWhiteboardItem::AvatarRole).value<QString>();
+	}
+	QIcon presenceIcon;/* = item->data(ChatListWhiteboardItem::PresenceIconRole).isValid() && !item->data(ChatListWhiteboardItem::PresenceIconRole).value<QIcon>().isNull()
+			? item->data(ChatListWhiteboardItem::PresenceIconRole).value<QIcon>()
+			: QIcon(":/icons/offline.png");*/
+	QString name = item->data(Qt::DisplayRole).toString();
+	//qDebug() << "Avatar for " << name << " = " << avatarPath;
+	QString statusText = item->data(ChatListWhiteboardItem::DetailTextRole).toString();
 	common_.paintContact(painter, option, nameColor, avatarPath, presenceIcon, name, statusText, item->getChat().unreadCount, compact_);
 }
 

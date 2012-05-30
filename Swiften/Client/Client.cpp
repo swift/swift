@@ -29,6 +29,7 @@
 #include <Swiften/Jingle/JingleSessionManager.h>
 #include <Swiften/Network/NetworkFactories.h>
 #include <Swiften/FileTransfer/FileTransferManagerImpl.h>
+#include <Swiften/Whiteboard/WhiteboardSessionManager.h>
 #ifndef SWIFT_EXPERIMENTAL_FT
 #include <Swiften/FileTransfer/UnitTest/DummyFileTransferManager.h>
 #endif
@@ -68,9 +69,16 @@ Client::Client(const JID& jid, const SafeString& password, NetworkFactories* net
 	
 	jingleSessionManager = new JingleSessionManager(getIQRouter());
 	fileTransferManager = NULL;
+
+	whiteboardSessionManager = NULL;
+#ifdef SWIFT_EXPERIMENTAL_WB
+	whiteboardSessionManager = new WhiteboardSessionManager(getIQRouter(), getStanzaChannel(), presenceOracle, getEntityCapsProvider());
+#endif
 }
 
 Client::~Client() {
+	delete whiteboardSessionManager;
+
 	delete fileTransferManager;
 	delete jingleSessionManager;
 	
@@ -162,6 +170,10 @@ NickManager* Client::getNickManager() const {
 
 FileTransferManager* Client::getFileTransferManager() const {
 	return fileTransferManager;
+}
+
+WhiteboardSessionManager* Client::getWhiteboardSessionManager() const {
+	return whiteboardSessionManager;
 }
 
 }

@@ -72,6 +72,7 @@ sources = [
 		"PayloadParsers/S5BProxyRequestParser.cpp",
 		"PayloadParsers/DeliveryReceiptParser.cpp",
 		"PayloadParsers/DeliveryReceiptRequestParser.cpp",
+		"PayloadParsers/WhiteboardParser.cpp",
 		"PlatformXMLParserFactory.cpp",
 		"PresenceParser.cpp",
 		"SerializingParser.cpp",

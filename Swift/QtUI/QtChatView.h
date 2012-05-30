@@ -44,6 +44,7 @@ namespace Swift {
 			void addToJSEnvironment(const QString&, QObject*);
 			void setFileTransferProgress(QString id, const int percentageDone);
 			void setFileTransferStatus(QString id, const ChatWindow::FileTransferState state, const QString& msg);
+			void setWhiteboardSessionStatus(QString id, const ChatWindow::WhiteboardSessionState state);
 			void setMUCInvitationJoined(QString id);
 			void showEmoticons(bool show);
 			int getSnippetPositionByDate(const QDate& date);

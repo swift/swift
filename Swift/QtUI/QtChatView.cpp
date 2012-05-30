@@ -430,6 +430,20 @@ void QtChatView::setFileTransferStatus(QString id, const ChatWindow::FileTransfe
 	ftElement.setInnerXml(newInnerHTML);
 }
 
+void QtChatView::setWhiteboardSessionStatus(QString id, const ChatWindow::WhiteboardSessionState state) {
+	QWebElement divElement = findDivElementWithID(document_, id);
+	QString newInnerHTML;
+	if (state == ChatWindow::WhiteboardAccepted) {
+		newInnerHTML =	tr("Started whiteboard chat") + "<br/>" +
+			QtChatWindow::buildChatWindowButton(tr("Show whiteboard"), QtChatWindow::ButtonWhiteboardShowWindow, id);
+	} else if (state == ChatWindow::WhiteboardTerminated) {
+		newInnerHTML =	tr("Whiteboard chat has been canceled");
+	} else if (state == ChatWindow::WhiteboardRejected) {
+		newInnerHTML =	tr("Whiteboard chat request has been rejected");
+	}
+	divElement.setInnerXml(newInnerHTML);
+}
+
 void QtChatView::setMUCInvitationJoined(QString id) {
 	QWebElement divElement = findDivElementWithID(document_, id);
 	QWebElement buttonElement = divElement.findFirst("input#mucinvite");

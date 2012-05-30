@@ -48,6 +48,8 @@ namespace Swift {
 
 			virtual void setBookmarksEnabled(bool enabled) = 0;
 			virtual void addMUCBookmark(const MUCBookmark& bookmark) = 0;
+			virtual void addWhiteboardSession(const ChatListWindow::Chat& chat) = 0;
+			virtual void removeWhiteboardSession(const JID& jid) = 0;
 			virtual void removeMUCBookmark(const MUCBookmark& bookmark) = 0;
 			virtual void setRecents(const std::list<Chat>& recents) = 0;
 			virtual void setUnreadCount(int unread) = 0;
@@ -55,6 +57,7 @@ namespace Swift {
 
 			boost::signal<void (const MUCBookmark&)> onMUCBookmarkActivated;
 			boost::signal<void (const Chat&)> onRecentActivated;
+			boost::signal<void (const JID&)> onWhiteboardActivated;
 			boost::signal<void ()> onClearRecentsRequested;
 	};
 }

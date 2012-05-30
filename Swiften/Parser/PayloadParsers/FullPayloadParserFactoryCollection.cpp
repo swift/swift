@@ -66,6 +66,7 @@
 #include <Swiften/Parser/PayloadParsers/JingleFileTransferDescriptionParser.h>
 #include <Swiften/Parser/PayloadParsers/DeliveryReceiptParserFactory.h>
 #include <Swiften/Parser/PayloadParsers/DeliveryReceiptRequestParserFactory.h>
+#include <Swiften/Parser/PayloadParsers/WhiteboardParser.h>
 
 using namespace boost;
 
@@ -124,6 +125,7 @@ FullPayloadParserFactoryCollection::FullPayloadParserFactoryCollection() {
 	factories_.push_back(boost::make_shared<GenericPayloadParserFactory<JingleFileTransferReceivedParser> >("received", "urn:xmpp:jingle:apps:file-transfer:3"));
 	factories_.push_back(boost::make_shared<GenericPayloadParserFactory<JingleFileTransferHashParser> >("checksum"));
 	factories_.push_back(boost::make_shared<GenericPayloadParserFactory<S5BProxyRequestParser> >("query", "http://jabber.org/protocol/bytestreams"));
+	factories_.push_back(boost::make_shared<GenericPayloadParserFactory<WhiteboardParser> >("wb", "http://swift.im/whiteboard"));
 	factories_.push_back(boost::make_shared<DeliveryReceiptParserFactory>());
 	factories_.push_back(boost::make_shared<DeliveryReceiptRequestParserFactory>());
 

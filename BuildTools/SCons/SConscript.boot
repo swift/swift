@@ -181,7 +181,7 @@ if not env["assertions"] :
 	env.Append(CPPDEFINES = ["NDEBUG"])
 
 if env["experimental"] :
-	env.Append(CPPDEFINES = ["SWIFT_EXPERIMENTAL_FT", "SWIFT_EXPERIMENTAL_HISTORY"])
+	env.Append(CPPDEFINES = ["SWIFT_EXPERIMENTAL_FT", "SWIFT_EXPERIMENTAL_HISTORY", "SWIFT_EXPERIMENTAL_WB"])
 
 # If we build shared libs on AMD64, we need -fPIC.
 # This should have no performance impact om AMD64

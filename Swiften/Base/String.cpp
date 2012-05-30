@@ -6,6 +6,8 @@
 
 #include <cassert>
 #include <algorithm>
+#include <sstream>
+#include <iomanip>
 
 #include <Swiften/Base/String.h>
 
@@ -93,6 +95,22 @@ std::vector<std::string> String::split(const std::string& s, char c) {
 	}
 	result.push_back(accumulator);
 	return result;
+}
+
+std::string String::convertIntToHexString(int h) {
+	std::stringstream ss;
+	ss << std::setbase(16);
+	ss << h;
+	return ss.str();
+}
+
+int String::convertHexStringToInt(const std::string& s) {
+	std::stringstream ss;
+	int h;
+	ss << std::setbase(16);
+	ss << s;
+	ss >> h;
+	return h;
 }
 
 }

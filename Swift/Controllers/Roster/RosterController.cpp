@@ -321,6 +321,9 @@ void RosterController::handleOnCapsChanged(const JID& jid) {
 		if (info->hasFeature(DiscoInfo::JingleFeature) && info->hasFeature(DiscoInfo::JingleFTFeature) && info->hasFeature(DiscoInfo::JingleTransportsIBBFeature)) {
 			features.insert(ContactRosterItem::FileTransferFeature);
 		}
+		if (info->hasFeature(DiscoInfo::WhiteboardFeature)) {
+			features.insert(ContactRosterItem::WhiteboardFeature);
+		}
 		roster_->setAvailableFeatures(jid, features);
 	}
 }
