@@ -749,6 +749,7 @@ void MUCController::handleInviteToMUCWindowCompleted() {
 	foreach (const JID& jid, inviteWindow_->getJIDs()) {
 		muc_->invitePerson(jid, inviteWindow_->getReason());
 	}
+	inviteWindow_ = NULL;
 }
 
 void MUCController::handleGetAffiliationsRequest() {
