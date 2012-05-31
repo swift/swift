@@ -52,8 +52,9 @@ QtContactEditWidget::QtContactEditWidget(const std::set<std::string>& allGroups,
 	QVBoxLayout* scrollLayout = new QVBoxLayout(groups);
 
 	foreach (std::string group, allGroups) {
+		QString groupName = doubleAmpersand(group);
 		QCheckBox* check = new QCheckBox(groups);
-		check->setText(P2QSTRING(group));
+		check->setText(groupName);
 		check->setCheckState(Qt::Unchecked);
 		checkBoxes_[group] = check;
 		scrollLayout->addWidget(check);
@@ -83,7 +84,7 @@ std::string QtContactEditWidget::getName() const {
 			if (button == nameRadioButton_) {
 				name = Q2PSTRING(name_->text());
 			} else {
-				name = Q2PSTRING(button->text());
+				name = singleAmpersand(button->text());
 			}
 			break;
 		}
@@ -115,7 +116,7 @@ void QtContactEditWidget::setNameSuggestions(const std::vector<std::string>& sug
 	throbberLabel_->hide();
 
 	foreach(const std::string& name, suggestions) {
-		suggestionsLayout_->insertWidget(nameLayout_->count() - 2, new QRadioButton(P2QSTRING(name), this));
+		suggestionsLayout_->insertWidget(nameLayout_->count() - 2, new QRadioButton(doubleAmpersand(name), this));
 	}
 
 	nameRadioButton_ = new QRadioButton(tr("Name:"), this);
@@ -135,6 +136,15 @@ void QtContactEditWidget::setNameSuggestions(const std::vector<std::string>& sug
 		nameRadioButton_->setChecked(true);
 	}
 }
+QString QtContactEditWidget::doubleAmpersand(const std::string& name) const {
+	return P2QSTRING(name).replace("&", "&&");
+
+}
+
+std::string QtContactEditWidget::singleAmpersand(const QString& name) const {
+	return Q2PSTRING(QString(name).replace("&&", "&"));
+}
+
 
 void QtContactEditWidget::clear() {
 	name_->clear();
