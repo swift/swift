@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Remko Tronçon
+ * Copyright (c) 2010-2012 Remko Tronçon
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -76,6 +76,7 @@ FullPayloadParserFactoryCollection::FullPayloadParserFactoryCollection() {
 	factories_.push_back(boost::make_shared<GenericPayloadParserFactory<StatusShowParser> >("show"));
 	factories_.push_back(boost::make_shared<GenericPayloadParserFactory<StatusParser> >("status"));
 	factories_.push_back(boost::make_shared<GenericPayloadParserFactory<ReplaceParser> >("replace", "http://swift.im/protocol/replace"));
+	factories_.push_back(boost::make_shared<GenericPayloadParserFactory<ReplaceParser> >("replace", "urn:xmpp:message-correct:0"));
 	factories_.push_back(boost::make_shared<GenericPayloadParserFactory<LastParser> >("query", "jabber:iq:last"));
 	factories_.push_back(boost::make_shared<GenericPayloadParserFactory<BodyParser> >("body"));
 	factories_.push_back(boost::make_shared<GenericPayloadParserFactory<SubjectParser> >("subject"));

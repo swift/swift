@@ -4,6 +4,12 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
+/*
+ * Copyright (c) 2012 Kevin Smith
+ * Licensed under the GNU General Public License v3.
+ * See Documentation/Licenses/GPLv3.txt for more information.
+ */
+
 #pragma once
 
 #include <Swiften/Serializer/GenericPayloadSerializer.h>
@@ -16,7 +22,7 @@ namespace Swift {
 			ReplaceSerializer() : GenericPayloadSerializer<Replace>() {}
 
 			virtual std::string serializePayload(boost::shared_ptr<Replace> replace) const {
-				return "<replace id = '" + replace->getID() + "' xmlns='http://swift.im/protocol/replace'/>";
+				return "<replace id = '" + replace->getID() + "' xmlns='urn:xmpp:message-correct:0'/>";
 			}
 	};
 }
