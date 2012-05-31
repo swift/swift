@@ -7,7 +7,7 @@
 #pragma once
 
 #include <boost/optional.hpp>
-#include "Swiften/Base/boost_bsignals.h"
+#include <Swiften/Base/boost_bsignals.h>
 #include <boost/shared_ptr.hpp>
 #include <boost/date_time/posix_time/posix_time.hpp>
 #include <vector>
@@ -27,6 +27,7 @@ namespace Swift {
 	class RosterItem;
 	class ContactRosterItem;
 	class FileTransferController;
+	class InviteToChatWindow;
 
 	class ChatWindow {
 		public:
@@ -105,6 +106,8 @@ namespace Swift {
 			 */
 			virtual void showRoomConfigurationForm(Form::ref) = 0;
 
+			virtual InviteToChatWindow* createInviteToChatWindow() = 0;
+
 			boost::signal<void ()> onClosed;
 			boost::signal<void ()> onAllMessagesRead;
 			boost::signal<void (const std::string&, bool isCorrection)> onSendMessageRequest;
@@ -117,7 +120,7 @@ namespace Swift {
 			boost::signal<void (const std::string&)> onChangeSubjectRequest;
 			boost::signal<void (Form::ref)> onConfigureRequest;
 			boost::signal<void ()> onDestroyRequest;
-			boost::signal<void (const JID&, const std::string& /*reason*/)> onInvitePersonToThisMUCRequest;
+			boost::signal<void ()> onInvitePersonToThisMUCRequest;
 			boost::signal<void ()> onConfigurationFormCancelled;
 			boost::signal<void ()> onGetAffiliationsRequest;
 			boost::signal<void (MUCOccupant::Affiliation, const JID&)> onSetAffiliationRequest;

@@ -19,6 +19,7 @@
 #include <Swiften/Base/foreach.h>
 #include <Swift/Controllers/XMPPEvents/EventController.h>
 #include <Swift/Controllers/UIInterfaces/ChatWindow.h>
+#include <Swift/Controllers/UIInterfaces/InviteToChatWindow.h>
 #include <Swift/Controllers/UIInterfaces/ChatWindowFactory.h>
 #include <Swift/Controllers/UIEvents/UIEventStream.h>
 #include <Swift/Controllers/UIEvents/RequestChatUIEvent.h>
@@ -64,6 +65,7 @@ MUCController::MUCController (
 	shouldJoinOnReconnect_ = true;
 	doneGettingHistory_ = false;
 	events_ = uiEventStream;
+	inviteWindow_ = NULL;
 	
 	roster_ = new Roster(false, true);
 	completer_ = new TabComplete();
@@ -77,7 +79,7 @@ MUCController::MUCController (
 	chatWindow_->onConfigureRequest.connect(boost::bind(&MUCController::handleConfigureRequest, this, _1));
 	chatWindow_->onConfigurationFormCancelled.connect(boost::bind(&MUCController::handleConfigurationCancelled, this));
 	chatWindow_->onDestroyRequest.connect(boost::bind(&MUCController::handleDestroyRoomRequest, this));
-	chatWindow_->onInvitePersonToThisMUCRequest.connect(boost::bind(&MUCController::handleInvitePersonToThisMUCRequest, this, _1, _2));
+	chatWindow_->onInvitePersonToThisMUCRequest.connect(boost::bind(&MUCController::handleInvitePersonToThisMUCRequest, this));
 	chatWindow_->onGetAffiliationsRequest.connect(boost::bind(&MUCController::handleGetAffiliationsRequest, this));
 	chatWindow_->onChangeAffiliationsRequest.connect(boost::bind(&MUCController::handleChangeAffiliationsRequest, this, _1));
 	muc_->onJoinComplete.connect(boost::bind(&MUCController::handleJoinComplete, this, _1));
@@ -719,8 +721,22 @@ void MUCController::handleDestroyRoomRequest() {
 	muc_->destroyRoom();
 }
 
-void MUCController::handleInvitePersonToThisMUCRequest(const JID& jid, const std::string& reason) {
-	muc_->invitePerson(jid, reason);
+void MUCController::handleInvitePersonToThisMUCRequest() {
+	if (!inviteWindow_) {
+		inviteWindow_ = chatWindow_->createInviteToChatWindow();
+		inviteWindow_->onCompleted.connect(boost::bind(&MUCController::handleInviteToMUCWindowCompleted, this));
+		inviteWindow_->onDismissed.connect(boost::bind(&MUCController::handleInviteToMUCWindowDismissed, this));
+	}
+}
+
+void MUCController::handleInviteToMUCWindowDismissed() {
+	inviteWindow_= NULL;
+}
+
+void MUCController::handleInviteToMUCWindowCompleted() {
+	foreach (const JID& jid, inviteWindow_->getJIDs()) {
+		muc_->invitePerson(jid, inviteWindow_->getReason());
+	}
 }
 
 void MUCController::handleGetAffiliationsRequest() {

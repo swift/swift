@@ -54,6 +54,7 @@ namespace Swift {
 			virtual void addMUCInvitation(const std::string& /*senderName*/, const JID& /*jid*/, const std::string& /*reason*/, const std::string& /*password*/, bool = true) {};
 			virtual void setAffiliations(MUCOccupant::Affiliation, const std::vector<JID>&) {}
 			virtual void setAvailableRoomActions(const std::vector<RoomAction> &) {};
+			virtual InviteToChatWindow* createInviteToChatWindow() {return NULL;}
 
 			std::string name_;
 			std::string lastMessageBody_;

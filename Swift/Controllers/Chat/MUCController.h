@@ -31,6 +31,7 @@ namespace Swift {
 	class UIEventStream;
 	class TimerFactory;
 	class TabComplete;
+	class InviteToChatWindow;
 
 	enum JoinPart {Join, Part, JoinThenPart, PartThenJoin};
 
@@ -95,12 +96,14 @@ namespace Swift {
 			void handleConfigurationFailed(ErrorPayload::ref);
 			void handleConfigurationFormReceived(Form::ref);
 			void handleDestroyRoomRequest();
-			void handleInvitePersonToThisMUCRequest(const JID& jid, const std::string& reason);
+			void handleInvitePersonToThisMUCRequest();
 			void handleConfigurationCancelled();
 			void handleOccupantRoleChangeFailed(ErrorPayload::ref, const JID&, MUCOccupant::Role);
 			void handleGetAffiliationsRequest();
 			void handleAffiliationListReceived(MUCOccupant::Affiliation affiliation, const std::vector<JID>& jids);
 			void handleChangeAffiliationsRequest(const std::vector<std::pair<MUCOccupant::Affiliation, JID> >& changes);
+			void handleInviteToMUCWindowDismissed();
+			void handleInviteToMUCWindowCompleted();
 
 		private:
 			MUC::ref muc_;
@@ -120,6 +123,7 @@ namespace Swift {
 			std::vector<NickJoinPart> joinParts_;
 			boost::posix_time::ptime lastActivity_;
 			boost::optional<std::string> password_;
+			InviteToChatWindow* inviteWindow_;
 	};
 }
 

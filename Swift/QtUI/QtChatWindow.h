@@ -91,6 +91,8 @@ namespace Swift {
 			void setAffiliations(MUCOccupant::Affiliation, const std::vector<JID>&);
 			void setAvailableRoomActions(const std::vector<RoomAction> &actions);
 
+			InviteToChatWindow* createInviteToChatWindow();
+
 			static QString buildChatWindowButton(const QString& name, const QString& id, const QString& arg1 = QString(), const QString& arg2 = QString(), const QString& arg3 = QString());
 
 		public slots:

@@ -17,6 +17,7 @@
 #include "QtTextEdit.h"
 #include "QtSettingsProvider.h"
 #include "QtScaledAvatarCache.h"
+#include "QtInviteToChatWindow.h"
 
 #include <Swiften/StringCodecs/Base64.h>
 #include "SwifTools/TabComplete.h"
@@ -843,11 +844,7 @@ void QtChatWindow::handleActionButtonClicked() {
 		}
 	}
 	else if (result == invite) {
-		bool ok;
-		QString jid = QInputDialog::getText(this, tr("Enter person's address"), tr("Address:"), QLineEdit::Normal, "", &ok);
-		if (ok) {
-			onInvitePersonToThisMUCRequest(JID(Q2PSTRING(jid)), "");
-		}
+		onInvitePersonToThisMUCRequest();
 	}
 }
 
@@ -907,5 +904,11 @@ void QtChatWindow::addMUCInvitation(const std::string& senderName, const JID& ji
 	previousSenderName_ = P2QSTRING(senderName);
 	previousMessageKind_ = PreviousMessageWasMUCInvite;
 }
+
+
+InviteToChatWindow* QtChatWindow::createInviteToChatWindow() {
+	return new QtInviteToChatWindow(this);
+}
+
 
 }

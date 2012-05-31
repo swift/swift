@@ -109,6 +109,7 @@ sources = [
     "QtFormResultItemModel.cpp",
     "QtLineEdit.cpp",
     "QtJoinMUCWindow.cpp",
+    "QtInviteToChatWindow.cpp",
     "Roster/RosterModel.cpp",
     "Roster/QtTreeWidget.cpp",
 #    "Roster/QtTreeWidgetItem.cpp",
