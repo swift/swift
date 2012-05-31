@@ -512,6 +512,9 @@ void MainController::performLoginFromCachedCredentials() {
 }
 
 void MainController::handleDisconnected(const boost::optional<ClientError>& error) {
+	if (rosterController_) {
+		rosterController_->getWindow()->setStreamEncryptionStatus(false);
+	}
 	if (settings_->getSetting(SettingConstants::FORGET_PASSWORDS)) {
 		purgeCachedCredentials();
 	}
