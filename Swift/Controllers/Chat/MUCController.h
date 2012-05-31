@@ -32,6 +32,7 @@ namespace Swift {
 	class TimerFactory;
 	class TabComplete;
 	class InviteToChatWindow;
+	class XMPPRoster;
 
 	enum JoinPart {Join, Part, JoinThenPart, PartThenJoin};
 
@@ -43,7 +44,7 @@ namespace Swift {
 
 	class MUCController : public ChatControllerBase {
 		public:
-			MUCController(const JID& self, MUC::ref muc, const boost::optional<std::string>& password, const std::string &nick, StanzaChannel* stanzaChannel, IQRouter* iqRouter, ChatWindowFactory* chatWindowFactory, PresenceOracle* presenceOracle, AvatarManager* avatarManager, UIEventStream* events, bool useDelayForLatency, TimerFactory* timerFactory, EventController* eventController, EntityCapsProvider* entityCapsProvider);
+			MUCController(const JID& self, MUC::ref muc, const boost::optional<std::string>& password, const std::string &nick, StanzaChannel* stanzaChannel, IQRouter* iqRouter, ChatWindowFactory* chatWindowFactory, PresenceOracle* presenceOracle, AvatarManager* avatarManager, UIEventStream* events, bool useDelayForLatency, TimerFactory* timerFactory, EventController* eventController, EntityCapsProvider* entityCapsProvider, XMPPRoster* roster);
 			~MUCController();
 			boost::signal<void ()> onUserLeft;
 			boost::signal<void ()> onUserJoined;
@@ -124,6 +125,7 @@ namespace Swift {
 			boost::posix_time::ptime lastActivity_;
 			boost::optional<std::string> password_;
 			InviteToChatWindow* inviteWindow_;
+			XMPPRoster* xmppRoster_;
 	};
 }
 

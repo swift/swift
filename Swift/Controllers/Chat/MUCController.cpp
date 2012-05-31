@@ -34,6 +34,7 @@
 #include <Swift/Controllers/Roster/SetAvatar.h>
 #include <Swift/Controllers/Roster/SetPresence.h>
 #include <Swiften/Disco/EntityCapsProvider.h>
+#include <Swiften/Roster/XMPPRoster.h>
 
 
 #define MUC_JOIN_WARNING_TIMEOUT_MILLISECONDS 60000
@@ -57,7 +58,8 @@ MUCController::MUCController (
 		bool useDelayForLatency,
 		TimerFactory* timerFactory,
 		EventController* eventController,
-		EntityCapsProvider* entityCapsProvider) :
+		EntityCapsProvider* entityCapsProvider,
+		XMPPRoster* roster) :
 			ChatControllerBase(self, stanzaChannel, iqRouter, chatWindowFactory, muc->getJID(), presenceOracle, avatarManager, useDelayForLatency, uiEventStream, eventController, timerFactory, entityCapsProvider), muc_(muc), nick_(nick), desiredNick_(nick), password_(password) {
 	parting_ = true;
 	joined_ = false;
@@ -66,6 +68,7 @@ MUCController::MUCController (
 	doneGettingHistory_ = false;
 	events_ = uiEventStream;
 	inviteWindow_ = NULL;
+	xmppRoster_ = roster;
 	
 	roster_ = new Roster(false, true);
 	completer_ = new TabComplete();
@@ -727,6 +730,15 @@ void MUCController::handleInvitePersonToThisMUCRequest() {
 		inviteWindow_->onCompleted.connect(boost::bind(&MUCController::handleInviteToMUCWindowCompleted, this));
 		inviteWindow_->onDismissed.connect(boost::bind(&MUCController::handleInviteToMUCWindowDismissed, this));
 	}
+	std::vector<std::pair<JID, std::string> > autoCompletes;
+	foreach (XMPPRosterItem item, xmppRoster_->getItems()) {
+		std::pair<JID, std::string> jidName;
+		jidName.first = item.getJID();
+		jidName.second = item.getName();
+		autoCompletes.push_back(jidName);
+		std::cerr << "MUCController adding " << item.getJID().toString() << std::endl;
+	}
+	inviteWindow_->setAutoCompletions(autoCompletes);
 }
 
 void MUCController::handleInviteToMUCWindowDismissed() {

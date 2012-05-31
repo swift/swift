@@ -7,7 +7,7 @@
 #pragma once
 
 #include <vector>
-
+#include <utility>
 #include <string>
 #include <Swiften/Base/boost_bsignals.h>
 #include <Swiften/JID/JID.h>
@@ -16,6 +16,8 @@ namespace Swift {
 	class InviteToChatWindow {
 		public:
 			virtual ~InviteToChatWindow() {};
+
+			virtual void setAutoCompletions(std::vector<std::pair<JID, std::string> > completions) = 0;
 
 			virtual std::string getReason() const = 0;
 

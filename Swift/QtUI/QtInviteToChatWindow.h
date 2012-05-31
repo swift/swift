@@ -9,7 +9,7 @@
 #include <Swift/Controllers/UIInterfaces/InviteToChatWindow.h>
 
 #include <QDialog>
-#include <QStringList>
+#include <QStringListModel>
 
 class QLineEdit;
 class QBoxLayout;
@@ -24,6 +24,7 @@ namespace Swift {
 			virtual std::string getReason() const;
 
 			virtual std::vector<JID> getJIDs() const;
+			virtual void setAutoCompletions(std::vector<std::pair<JID, std::string> > completions);
 		private:
 			void addJIDLine();
 		private slots:
@@ -31,7 +32,7 @@ namespace Swift {
 			void handleAccepting();
 			void handleRejecting();
 		private:
-			QStringList completions_;
+			QStringListModel completions_;
 			QLineEdit* reason_;
 			QBoxLayout* jidsLayout_;
 			std::vector<QLineEdit*> jids_;

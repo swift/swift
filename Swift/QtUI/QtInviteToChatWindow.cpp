@@ -19,8 +19,8 @@ namespace Swift {
 
 QtInviteToChatWindow::QtInviteToChatWindow(QWidget* parent) : QDialog(parent) {
 	QBoxLayout *layout = new QBoxLayout(QBoxLayout::TopToBottom, this);
-	layout->setContentsMargins(0,0,0,0);
-	layout->setSpacing(2);
+	//layout->setContentsMargins(0,0,0,0);
+	//layout->setSpacing(2);
 
 	QLabel* description = new QLabel(tr("Users to invite to this chat (one per line):"));
 	layout->addWidget(description);
@@ -44,6 +44,8 @@ QtInviteToChatWindow::QtInviteToChatWindow(QWidget* parent) : QDialog(parent) {
 	connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
 
 	layout->addWidget(buttonBox);
+
+	jids_[0]->setFocus();
 
 	setModal(false);
 	show();
@@ -81,7 +83,7 @@ std::vector<JID> QtInviteToChatWindow::getJIDs() const {
 
 void QtInviteToChatWindow::addJIDLine() {
 	QLineEdit* jid = new QLineEdit(this);
-	QCompleter* completer = new QCompleter(completions_, this);
+	QCompleter* completer = new QCompleter(&completions_, this);
 	completer->setCaseSensitivity(Qt::CaseInsensitive);
 	jid->setCompleter(completer);
 	jids_.push_back(jid);
@@ -99,6 +101,20 @@ void QtInviteToChatWindow::handleJIDTextChanged() {
 	if (!gotEmpty) {
 		addJIDLine();
 	}
+}
+
+typedef std::pair<JID, std::string> JIDString;
+
+void QtInviteToChatWindow::setAutoCompletions(std::vector<std::pair<JID, std::string> > completions) {
+	QStringList list;
+	foreach (JIDString jidPair, completions) {
+		QString line = P2QSTRING(jidPair.first.toString());
+		if (jidPair.second != jidPair.first.toString() && !jidPair.second.empty()) {
+			line = P2QSTRING(jidPair.second) + " - " + line;
+		}
+		list.append(line);
+	}
+	completions_.setStringList(list);
 }
 
 }

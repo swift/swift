@@ -585,7 +585,7 @@ void ChatsManager::handleJoinMUCRequest(const JID &mucJID, const boost::optional
 		if (createAsReservedIfNew) {
 			muc->setCreateAsReservedIfNew();
 		}
-		MUCController* controller = new MUCController(jid_, muc, password, nick, stanzaChannel_, iqRouter_, chatWindowFactory_, presenceOracle_, avatarManager_, uiEventStream_, false, timerFactory_, eventController_, entityCapsProvider_);
+		MUCController* controller = new MUCController(jid_, muc, password, nick, stanzaChannel_, iqRouter_, chatWindowFactory_, presenceOracle_, avatarManager_, uiEventStream_, false, timerFactory_, eventController_, entityCapsProvider_, roster_);
 		mucControllers_[mucJID] = controller;
 		controller->setAvailableServerFeatures(serverDiscoInfo_);
 		controller->onUserLeft.connect(boost::bind(&ChatsManager::handleUserLeftMUC, this, controller));
