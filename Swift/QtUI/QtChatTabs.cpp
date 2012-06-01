@@ -25,6 +25,8 @@ namespace Swift {
 QtChatTabs::QtChatTabs() : QWidget() {
 #ifndef Q_WS_MAC
 	setWindowIcon(QIcon(":/logo-chat-16.png"));
+#else
+	setAttribute(Qt::WA_ShowWithoutActivating);
 #endif
 
 	tabs_ = new QtTabWidget(this);
@@ -270,7 +272,20 @@ void QtChatTabs::moveEvent(QMoveEvent*) {
 
 void QtChatTabs::checkForFirstShow() {
 	if (!isVisible()) {
+#ifndef Q_WS_MAC
 		showMinimized();
+#else
+		/* https://bugreports.qt-project.org/browse/QTBUG-19194 
+		 * ^ When the above is fixed we can swap the below for just show();
+		 *  WA_ShowWithoutActivating seems to helpfully not work, so... */
+
+		QWidget* currentWindow = QApplication::activeWindow(); /* Remember who had focus if we're the current application*/
+		show();
+		QCoreApplication::processEvents(); /* Run through the eventloop to clear the show() */
+		if (currentWindow) {
+			currentWindow->activateWindow(); /* Set focus back */
+		}
+#endif
 	}
 }
 
