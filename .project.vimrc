@@ -13,3 +13,5 @@ set errorformat+=%E%.%#\ test:\ %.%#line:\ %l\ %f,%Z%m
 
 " SCons support
 set makeprg=python\ 3rdParty/SCons/scons.py\ check=1
+
+set noexpandtab
