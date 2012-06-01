@@ -32,18 +32,18 @@ QtInviteToChatWindow::QtInviteToChatWindow(QWidget* parent) : QDialog(parent) {
 	layout->addWidget(reasonLabel);
 	reason_ = new QLineEdit(this);
 	layout->addWidget(reason_);
-	addJIDLine();
 
 	connect(this, SIGNAL(accepted()), this, SLOT(handleAccepting()));
 	connect(this, SIGNAL(rejected()), this, SLOT(handleRejecting()));
 
 
-	QDialogButtonBox* buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
+	buttonBox_ = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
 
-	connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
-	connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+	connect(buttonBox_, SIGNAL(accepted()), this, SLOT(accept()));
+	connect(buttonBox_, SIGNAL(rejected()), this, SLOT(reject()));
 
-	layout->addWidget(buttonBox);
+	layout->addWidget(buttonBox_);
+	addJIDLine();
 
 	jids_[0]->setFocus();
 
@@ -86,9 +86,15 @@ void QtInviteToChatWindow::addJIDLine() {
 	QCompleter* completer = new QCompleter(&completions_, this);
 	completer->setCaseSensitivity(Qt::CaseInsensitive);
 	jid->setCompleter(completer);
-	jids_.push_back(jid);
 	jidsLayout_->addWidget(jid);
 	connect(jid, SIGNAL(textChanged(const QString&)), this, SLOT(handleJIDTextChanged()));
+	if (!jids_.empty()) {
+		setTabOrder(jids_.back(), jid);
+	}
+	jids_.push_back(jid);
+	setTabOrder(jid, reason_);
+	setTabOrder(reason_, buttonBox_);
+	//setTabOrder(buttonBox_, jids_[0]);
 }
 
 void QtInviteToChatWindow::handleJIDTextChanged() {

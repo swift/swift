@@ -13,6 +13,7 @@
 
 class QLineEdit;
 class QBoxLayout;
+class QDialogButtonBox;
 
 namespace Swift {
 	class QtInviteToChatWindow : public QDialog, public InviteToChatWindow {
@@ -36,6 +37,7 @@ namespace Swift {
 			QLineEdit* reason_;
 			QBoxLayout* jidsLayout_;
 			std::vector<QLineEdit*> jids_;
+			QDialogButtonBox* buttonBox_;
 	};
 }
 
