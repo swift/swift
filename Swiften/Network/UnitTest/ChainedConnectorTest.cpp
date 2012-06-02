@@ -126,7 +126,7 @@ class ChainedConnectorTest : public CppUnit::TestFixture {
 			std::vector<ConnectionFactory*> factories;
 			factories.push_back(connectionFactory1);
 			factories.push_back(connectionFactory2);
-			boost::shared_ptr<ChainedConnector> connector = boost::make_shared<ChainedConnector>("foo.com", resolver, factories, timerFactory);
+			boost::shared_ptr<ChainedConnector> connector = boost::make_shared<ChainedConnector>("foo.com", -1, true, resolver, factories, timerFactory);
 			connector->onConnectFinished.connect(boost::bind(&ChainedConnectorTest::handleConnectorFinished, this, _1, _2));
 			return connector;
 		}

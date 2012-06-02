@@ -24,6 +24,8 @@ using namespace Swift;
 class ConnectorTest : public CppUnit::TestFixture {
 		CPPUNIT_TEST_SUITE(ConnectorTest);
 		CPPUNIT_TEST(testConnect);
+		CPPUNIT_TEST(testConnect_NoServiceLookups);
+		CPPUNIT_TEST(testConnect_NoServiceLookups_DefaultPort);
 		CPPUNIT_TEST(testConnect_FirstAddressHostFails);
 		CPPUNIT_TEST(testConnect_NoSRVHost);
 		CPPUNIT_TEST(testConnect_NoHosts);
@@ -68,6 +70,38 @@ class ConnectorTest : public CppUnit::TestFixture {
 			CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(connections.size()));
 			CPPUNIT_ASSERT(connections[0]);
 			CPPUNIT_ASSERT(host1 == *(connections[0]->hostAddressPort));
+			CPPUNIT_ASSERT(!boost::dynamic_pointer_cast<DomainNameResolveError>(error));
+		}
+
+		void testConnect_NoServiceLookups() {
+			Connector::ref testling(createConnector(4321, false));
+			resolver->addXMPPClientService("foo.com", host1);
+			resolver->addXMPPClientService("foo.com", host2);
+			resolver->addAddress("foo.com", host3.getAddress());
+
+			testling->start();
+			eventLoop->processEvents();
+
+			CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(connections.size()));
+			CPPUNIT_ASSERT(connections[0]);
+			CPPUNIT_ASSERT(host3.getAddress() == (*(connections[0]->hostAddressPort)).getAddress());
+			CPPUNIT_ASSERT(4321 == (*(connections[0]->hostAddressPort)).getPort());
+			CPPUNIT_ASSERT(!boost::dynamic_pointer_cast<DomainNameResolveError>(error));
+		}
+
+		void testConnect_NoServiceLookups_DefaultPort() {
+			Connector::ref testling(createConnector(-1, false));
+			resolver->addXMPPClientService("foo.com", host1);
+			resolver->addXMPPClientService("foo.com", host2);
+			resolver->addAddress("foo.com", host3.getAddress());
+
+			testling->start();
+			eventLoop->processEvents();
+
+			CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(connections.size()));
+			CPPUNIT_ASSERT(connections[0]);
+			CPPUNIT_ASSERT(host3.getAddress() == (*(connections[0]->hostAddressPort)).getAddress());
+			CPPUNIT_ASSERT_EQUAL(5222, (*(connections[0]->hostAddressPort)).getPort());
 			CPPUNIT_ASSERT(!boost::dynamic_pointer_cast<DomainNameResolveError>(error));
 		}
 
@@ -253,8 +287,8 @@ class ConnectorTest : public CppUnit::TestFixture {
 
 
 	private:
-		Connector::ref createConnector() {
-			Connector::ref connector = Connector::create("foo.com", resolver, connectionFactory, timerFactory);
+		Connector::ref createConnector(int port = -1, bool doServiceLookups = true) {
+			Connector::ref connector = Connector::create("foo.com", port, doServiceLookups, resolver, connectionFactory, timerFactory);
 			connector->onConnectFinished.connect(boost::bind(&ConnectorTest::handleConnectorFinished, this, _1, _2));
 			return connector;
 		}

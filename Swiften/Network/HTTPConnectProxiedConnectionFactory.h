@@ -22,8 +22,8 @@ namespace Swift {
 	class EventLoop;
 	class HTTPConnectProxiedConnectionFactory : public ConnectionFactory {
 		public:
-			HTTPConnectProxiedConnectionFactory(DomainNameResolver* resolver, ConnectionFactory* connectionFactory, TimerFactory* timerFactory, EventLoop* eventLoop, const std::string& proxyHost, int proxyPort);
-			HTTPConnectProxiedConnectionFactory(DomainNameResolver* resolver, ConnectionFactory* connectionFactory, TimerFactory* timerFactory, EventLoop* eventLoop, const std::string& proxyHost, int proxyPort, const SafeString& authID, const SafeString& authPassword);
+			HTTPConnectProxiedConnectionFactory(DomainNameResolver* resolver, ConnectionFactory* connectionFactory, TimerFactory* timerFactory, const std::string& proxyHost, int proxyPort);
+			HTTPConnectProxiedConnectionFactory(DomainNameResolver* resolver, ConnectionFactory* connectionFactory, TimerFactory* timerFactory, const std::string& proxyHost, int proxyPort, const SafeString& authID, const SafeString& authPassword);
 
 			virtual boost::shared_ptr<Connection> createConnection();
 
@@ -31,7 +31,6 @@ namespace Swift {
 			DomainNameResolver* resolver_;
 			ConnectionFactory* connectionFactory_;
 			TimerFactory* timerFactory_;
-			EventLoop* eventLoop_;
 			std::string proxyHost_;
 			int proxyPort_;
 			SafeString authID_;

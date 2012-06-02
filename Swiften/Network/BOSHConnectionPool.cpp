@@ -35,7 +35,7 @@ BOSHConnectionPool::BOSHConnectionPool(const URL& boshURL, DomainNameResolver* r
 			connectionFactory = new TLSConnectionFactory(tlsFactory, connectionFactory);
 			myConnectionFactories.push_back(connectionFactory);
 		}
-		connectionFactory = new HTTPConnectProxiedConnectionFactory(realResolver, connectionFactory, timerFactory, eventLoop, boshHTTPConnectProxyURL.getHost(), boshHTTPConnectProxyURL.getPort(), boshHTTPConnectProxyAuthID, boshHTTPConnectProxyAuthPassword);
+		connectionFactory = new HTTPConnectProxiedConnectionFactory(realResolver, connectionFactory, timerFactory, boshHTTPConnectProxyURL.getHost(), boshHTTPConnectProxyURL.getPort(), boshHTTPConnectProxyAuthID, boshHTTPConnectProxyAuthPassword);
 	}
 	if (boshURL.getScheme() == "https") {
 		connectionFactory = new TLSConnectionFactory(tlsFactory, connectionFactory);
@@ -211,7 +211,7 @@ void BOSHConnectionPool::handleConnectionDisconnected(bool error, BOSHConnection
 }
 
 boost::shared_ptr<BOSHConnection> BOSHConnectionPool::createConnection() {
-	Connector::ref connector = Connector::create(boshURL.getHost(), resolver, connectionFactory, timerFactory, boshURL.getPort());
+	Connector::ref connector = Connector::create(boshURL.getHost(), boshURL.getPort(), false, resolver, connectionFactory, timerFactory);
 	BOSHConnection::ref connection = BOSHConnection::create(boshURL, connector, xmlParserFactory);
 	connection->onXMPPDataRead.connect(boost::bind(&BOSHConnectionPool::handleDataRead, this, _1));
 	connection->onSessionStarted.connect(boost::bind(&BOSHConnectionPool::handleSessionStarted, this, _1, _2));

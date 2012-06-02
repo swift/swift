@@ -74,8 +74,6 @@ namespace Swift {
 			 */
 			void disconnect();
 
-			void connect(const std::string& host);
-			
 			/**
 			 * Sends a message.
 			 */

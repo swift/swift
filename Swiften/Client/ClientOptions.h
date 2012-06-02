@@ -17,7 +17,27 @@ namespace Swift {
 			RequireTLS
 		};
 
-		ClientOptions() : useStreamCompression(true), useTLS(UseTLSWhenAvailable), allowPLAINWithoutTLS(false), useStreamResumption(false), forgetPassword(false), useAcks(true), boshHTTPConnectProxyAuthID(""), boshHTTPConnectProxyAuthPassword("") {
+		enum ProxyType {
+			NoProxy,
+			SystemConfiguredProxy,
+			SOCKS5Proxy,
+			HTTPConnectProxy
+		};
+
+		ClientOptions() : 
+				useStreamCompression(true), 
+				useTLS(UseTLSWhenAvailable), 
+				allowPLAINWithoutTLS(false), 
+				useStreamResumption(false), 
+				forgetPassword(false), 
+				useAcks(true), 
+				manualHostname(""),
+				manualPort(-1),
+				proxyType(SystemConfiguredProxy),
+				manualProxyHostname(""),
+				manualProxyPort(-1),
+				boshHTTPConnectProxyAuthID(""), 
+				boshHTTPConnectProxyAuthPassword("") {
 		}
 
 		/**
@@ -64,6 +84,35 @@ namespace Swift {
 		 * Default: true
 		 */
 		bool useAcks;
+
+		/**
+		 * The hostname to connect to.
+		 * Leave this empty for standard XMPP connection, based on the JID domain.
+		 */
+		std::string manualHostname;
+
+		/**
+		 * The port to connect to.
+		 * Leave this to -1 to use the port discovered by SRV lookups, and 5222 as a
+		 * fallback.
+		 */
+		int manualPort;
+
+		/**
+		 * The type of proxy to use for connecting to the XMPP
+		 * server.
+		 */
+		ProxyType proxyType;
+
+		/**
+		 * Override the system-configured proxy hostname.
+		 */
+		std::string manualProxyHostname;
+
+		/**
+		 * Override the system-configured proxy port.
+		 */
+		int manualProxyPort;
 
 		/**
 		 * If non-empty, use BOSH instead of direct TCP, with the given URL.

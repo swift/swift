@@ -73,7 +73,8 @@ class SluiftClient {
 
 		void connect(const std::string& host) {
 			rosterReceived = false;
-			client->connect(host);
+			options.manualHostname = host;
+			client->connect(options);
 		}
 
 		void waitConnected() {

@@ -8,16 +8,23 @@
 
 #include <Swiften/Network/ConnectionFactory.h>
 #include <Swiften/Network/HostAddressPort.h>
+#include <Swiften/Network/HostNameOrAddress.h>
 
 namespace Swift {
+	class DomainNameResolver;
+	class TimerFactory;
+
 	class SOCKS5ProxiedConnectionFactory : public ConnectionFactory {
 		public:
-			SOCKS5ProxiedConnectionFactory(ConnectionFactory* connectionFactory, const HostAddressPort& proxy);
+			SOCKS5ProxiedConnectionFactory(DomainNameResolver* resolver, ConnectionFactory* connectionFactory, TimerFactory* timerFactory, const std::string& proxyHost, int proxyPort);
 
 			virtual boost::shared_ptr<Connection> createConnection();
 
 		private:
+			DomainNameResolver* resolver_;
 			ConnectionFactory* connectionFactory_;
-			HostAddressPort proxy_;
+			TimerFactory* timerFactory_;
+			std::string proxyHost_;
+			int proxyPort_;
 	};
 }

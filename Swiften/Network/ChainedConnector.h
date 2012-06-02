@@ -23,7 +23,7 @@ namespace Swift {
 
 	class ChainedConnector {
 		public:
-			ChainedConnector(const std::string& hostname, DomainNameResolver*, const std::vector<ConnectionFactory*>&, TimerFactory*);
+			ChainedConnector(const std::string& hostname, int port, bool doServiceLookups, DomainNameResolver*, const std::vector<ConnectionFactory*>&, TimerFactory*);
 
 			void setTimeoutMilliseconds(int milliseconds);
 			void start();
@@ -38,6 +38,8 @@ namespace Swift {
 
 		private:
 			std::string hostname;
+			int port;
+			bool doServiceLookups;
 			DomainNameResolver* resolver;
 			std::vector<ConnectionFactory*> connectionFactories;
 			TimerFactory* timerFactory;

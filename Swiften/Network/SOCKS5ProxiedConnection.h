@@ -6,54 +6,31 @@
 
 #pragma once
 
-#include <boost/enable_shared_from_this.hpp>
-
-#include <Swiften/Network/Connection.h>
-#include <Swiften/Network/HostAddressPort.h>
-
-namespace boost {
-	class thread;
-	namespace system {
-		class error_code;
-	}
-}
+#include <Swiften/Network/ProxiedConnection.h>
 
 namespace Swift {
 	class ConnectionFactory;
+	class DomainNameResolver;
+	class TimerFactory;
 
-	class SOCKS5ProxiedConnection : public Connection, public boost::enable_shared_from_this<SOCKS5ProxiedConnection> {
+	class SOCKS5ProxiedConnection : public ProxiedConnection {
 		public:
 			typedef boost::shared_ptr<SOCKS5ProxiedConnection> ref;
 
-			~SOCKS5ProxiedConnection();
-
-			static ref create(ConnectionFactory* connectionFactory, const HostAddressPort& proxy) {
-				return ref(new SOCKS5ProxiedConnection(connectionFactory, proxy));
+			static ref create(DomainNameResolver* resolver, ConnectionFactory* connectionFactory, TimerFactory* timerFactory, const std::string& proxyHost, int proxyPort) {
+				return ref(new SOCKS5ProxiedConnection(resolver, connectionFactory, timerFactory, proxyHost, proxyPort));
 			}
 
-			virtual void listen();
-			virtual void connect(const HostAddressPort& address);
-			virtual void disconnect();
-			virtual void write(const SafeByteArray& data);
-
-			virtual HostAddressPort getLocalAddress() const;
-
 		private:
-			SOCKS5ProxiedConnection(ConnectionFactory* connectionFactory, const HostAddressPort& proxy);
+			SOCKS5ProxiedConnection(DomainNameResolver* resolver, ConnectionFactory* connectionFactory, TimerFactory* timerFactory, const std::string& proxyHost, int proxyPort);
 
-			void handleConnectionConnectFinished(bool error);
-			void handleDataRead(boost::shared_ptr<SafeByteArray> data);
-			void handleDisconnected(const boost::optional<Error>& error);
+			virtual void initializeProxy();
+			virtual void handleProxyInitializeData(boost::shared_ptr<SafeByteArray> data);
 
 		private:
 			enum {
 				ProxyAuthenticating = 0,
 				ProxyConnecting,
 			} proxyState_;
-			bool connected_;
-			ConnectionFactory* connectionFactory_;	
-			HostAddressPort proxy_;
-			HostAddressPort server_;
-			boost::shared_ptr<Connection> connection_;
 	};
 }

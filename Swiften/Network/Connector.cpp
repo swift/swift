@@ -17,7 +17,7 @@
 
 namespace Swift {
 
-Connector::Connector(const std::string& hostname, DomainNameResolver* resolver, ConnectionFactory* connectionFactory, TimerFactory* timerFactory, int defaultPort) : hostname(hostname), resolver(resolver), connectionFactory(connectionFactory), timerFactory(timerFactory), defaultPort(defaultPort), timeoutMilliseconds(0), queriedAllServices(true), foundSomeDNS(false) {
+Connector::Connector(const std::string& hostname, int port, bool doServiceLookups, DomainNameResolver* resolver, ConnectionFactory* connectionFactory, TimerFactory* timerFactory) : hostname(hostname), port(port), doServiceLookups(doServiceLookups), resolver(resolver), connectionFactory(connectionFactory), timerFactory(timerFactory), timeoutMilliseconds(0), queriedAllServices(true), foundSomeDNS(false) {
 }
 
 void Connector::setTimeoutMilliseconds(int milliseconds) {
@@ -31,14 +31,19 @@ void Connector::start() {
 	assert(!serviceQuery);
 	assert(!timer);
 	queriedAllServices = false;
-	serviceQuery = resolver->createServiceQuery("_xmpp-client._tcp." + hostname);
-	serviceQuery->onResult.connect(boost::bind(&Connector::handleServiceQueryResult, shared_from_this(), _1));
-	if (timeoutMilliseconds > 0) {
-		timer = timerFactory->createTimer(timeoutMilliseconds);
-		timer->onTick.connect(boost::bind(&Connector::handleTimeout, shared_from_this()));
-		timer->start();
+	if (doServiceLookups) {
+		serviceQuery = resolver->createServiceQuery("_xmpp-client._tcp." + hostname);
+		serviceQuery->onResult.connect(boost::bind(&Connector::handleServiceQueryResult, shared_from_this(), _1));
+		if (timeoutMilliseconds > 0) {
+			timer = timerFactory->createTimer(timeoutMilliseconds);
+			timer->onTick.connect(boost::bind(&Connector::handleTimeout, shared_from_this()));
+			timer->start();
+		}
+		serviceQuery->run();
 	}
-	serviceQuery->run();
+	else {
+		queryAddress(hostname);
+	}
 }
 
 void Connector::stop() {
@@ -109,12 +114,12 @@ void Connector::tryNextAddress() {
 		HostAddress address = addressQueryResults.front();
 		addressQueryResults.pop_front();
 
-		int port = defaultPort;
+		int connectPort = (port == -1 ? 5222 : port);
 		if (!serviceQueryResults.empty()) {
-			port = serviceQueryResults.front().port;
+			connectPort = serviceQueryResults.front().port;
 		}
 
-		tryConnect(HostAddressPort(address, port));
+		tryConnect(HostAddressPort(address, connectPort));
 	}
 }
 

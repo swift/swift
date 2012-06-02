@@ -18,10 +18,14 @@ using namespace Swift;
 
 ChainedConnector::ChainedConnector(
 		const std::string& hostname, 
+		int port,
+		bool doServiceLookups,
 		DomainNameResolver* resolver, 
 		const std::vector<ConnectionFactory*>& connectionFactories, 
 		TimerFactory* timerFactory) : 
 			hostname(hostname), 
+			port(port),
+			doServiceLookups(doServiceLookups),
 			resolver(resolver), 
 			connectionFactories(connectionFactories), 
 			timerFactory(timerFactory), 
@@ -58,7 +62,7 @@ void ChainedConnector::tryNextConnectionFactory() {
 		ConnectionFactory* connectionFactory = connectionFactoryQueue.front();
 		SWIFT_LOG(debug) << "Trying next connection factory: " << typeid(*connectionFactory).name() << std::endl;
 		connectionFactoryQueue.pop_front();
-		currentConnector = Connector::create(hostname, resolver, connectionFactory, timerFactory);
+		currentConnector = Connector::create(hostname, port, doServiceLookups, resolver, connectionFactory, timerFactory);
 		currentConnector->setTimeoutMilliseconds(timeoutMilliseconds);
 		currentConnector->onConnectFinished.connect(boost::bind(&ChainedConnector::handleConnectorFinished, this, _1, _2));
 		currentConnector->start();

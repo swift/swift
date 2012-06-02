@@ -54,27 +54,55 @@ CoreClient::~CoreClient() {
 
 void CoreClient::connect(const ClientOptions& o) {
 	SWIFT_LOG(debug) << "Connecting" << std::endl;
-	options = o;
-	connect(jid_.getDomain());
-}
 
-void CoreClient::connect(const std::string& host) {
 	forceReset();
-
-	SWIFT_LOG(debug) << "Connecting to host " << host << std::endl;
 	disconnectRequested_ = false;
-	assert(!connector_);
+
+	options = o;
+
+
+	// Determine connection types to use
 	assert(proxyConnectionFactories.empty());
-	if (networkFactories->getProxyProvider()->getSOCKS5Proxy().isValid()) {
-		proxyConnectionFactories.push_back(new SOCKS5ProxiedConnectionFactory(networkFactories->getConnectionFactory(), networkFactories->getProxyProvider()->getSOCKS5Proxy()));
-	}
-	if(networkFactories->getProxyProvider()->getHTTPConnectProxy().isValid()) {
-		proxyConnectionFactories.push_back(new HTTPConnectProxiedConnectionFactory(networkFactories->getDomainNameResolver(), networkFactories->getConnectionFactory(), networkFactories->getTimerFactory(), networkFactories->getEventLoop(), networkFactories->getProxyProvider()->getHTTPConnectProxy().getAddress().toString(), networkFactories->getProxyProvider()->getHTTPConnectProxy().getPort()));
+	bool useDirectConnection = true;
+	HostAddressPort systemSOCKS5Proxy = networkFactories->getProxyProvider()->getSOCKS5Proxy();
+	HostAddressPort systemHTTPConnectProxy = networkFactories->getProxyProvider()->getHTTPConnectProxy();
+	switch (o.proxyType) {
+		case ClientOptions::NoProxy:
+			break;
+		case ClientOptions::SystemConfiguredProxy:
+			if (systemSOCKS5Proxy.isValid()) {
+				proxyConnectionFactories.push_back(new SOCKS5ProxiedConnectionFactory(networkFactories->getDomainNameResolver(), networkFactories->getConnectionFactory(), networkFactories->getTimerFactory(), systemSOCKS5Proxy.getAddress().toString(), systemHTTPConnectProxy.getPort()));
+			}
+			if (systemHTTPConnectProxy.isValid()) {
+				proxyConnectionFactories.push_back(new HTTPConnectProxiedConnectionFactory(networkFactories->getDomainNameResolver(), networkFactories->getConnectionFactory(), networkFactories->getTimerFactory(), systemHTTPConnectProxy.getAddress().toString(), systemHTTPConnectProxy.getPort()));
+			}
+			break;
+		case ClientOptions::SOCKS5Proxy: {
+			std::string proxyHostname = o.manualProxyHostname.empty() ? systemSOCKS5Proxy.getAddress().toString() : o.manualProxyHostname;
+			int proxyPort = o.manualProxyPort == -1 ? systemSOCKS5Proxy.getPort() : o.manualProxyPort;
+			proxyConnectionFactories.push_back(new SOCKS5ProxiedConnectionFactory(networkFactories->getDomainNameResolver(), networkFactories->getConnectionFactory(), networkFactories->getTimerFactory(), proxyHostname, proxyPort));
+			useDirectConnection = false;
+			break;
+		}
+		case ClientOptions::HTTPConnectProxy: {
+			std::string proxyHostname = o.manualProxyHostname.empty() ? systemSOCKS5Proxy.getAddress().toString() : o.manualProxyHostname;
+			int proxyPort = o.manualProxyPort == -1 ? systemSOCKS5Proxy.getPort() : o.manualProxyPort;
+			proxyConnectionFactories.push_back(new HTTPConnectProxiedConnectionFactory(networkFactories->getDomainNameResolver(), networkFactories->getConnectionFactory(), networkFactories->getTimerFactory(), proxyHostname, proxyPort));
+			useDirectConnection = false;
+			break;
+		}
 	}
 	std::vector<ConnectionFactory*> connectionFactories(proxyConnectionFactories);
-	if (options.boshURL.empty()) {
+	if (useDirectConnection) {
 		connectionFactories.push_back(networkFactories->getConnectionFactory());
-		connector_ = boost::make_shared<ChainedConnector>(host, networkFactories->getDomainNameResolver(), connectionFactories, networkFactories->getTimerFactory());
+	}
+
+	// Create connector
+	std::string host = o.manualHostname.empty() ?  jid_.getDomain() : o.manualHostname;
+	int port = o.manualPort;
+	assert(!connector_);
+	if (options.boshURL.empty()) {
+		connector_ = boost::make_shared<ChainedConnector>(host, port, o.manualHostname.empty(), networkFactories->getDomainNameResolver(), connectionFactories, networkFactories->getTimerFactory());
 		connector_->onConnectFinished.connect(boost::bind(&CoreClient::handleConnectorFinished, this, _1, _2));
 		connector_->setTimeoutMilliseconds(60*1000);
 		connector_->start();

@@ -27,8 +27,8 @@ namespace Swift {
 		public:
 			typedef boost::shared_ptr<Connector> ref;
 
-			static Connector::ref create(const std::string& hostname, DomainNameResolver* resolver, ConnectionFactory* connectionFactory, TimerFactory* timerFactory, int defaultPort = 5222) {
-				return ref(new Connector(hostname, resolver, connectionFactory, timerFactory, defaultPort));
+			static Connector::ref create(const std::string& hostname, int port, bool doServiceLookups, DomainNameResolver* resolver, ConnectionFactory* connectionFactory, TimerFactory* timerFactory) {
+				return ref(new Connector(hostname, port, doServiceLookups, resolver, connectionFactory, timerFactory));
 			}
 
 			void setTimeoutMilliseconds(int milliseconds);
@@ -38,7 +38,7 @@ namespace Swift {
 			boost::signal<void (boost::shared_ptr<Connection>, boost::shared_ptr<Error>)> onConnectFinished;
 
 		private:
-			Connector(const std::string& hostname, DomainNameResolver*, ConnectionFactory*, TimerFactory*, int defaultPort);
+			Connector(const std::string& hostname, int port, bool doServiceLookups, DomainNameResolver*, ConnectionFactory*, TimerFactory*);
 
 			void handleServiceQueryResult(const std::vector<DomainNameServiceQuery::Result>& result);
 			void handleAddressQueryResult(const std::vector<HostAddress>& address, boost::optional<DomainNameResolveError> error);
@@ -55,10 +55,11 @@ namespace Swift {
 
 		private:
 			std::string hostname;
+			int port;
+			bool doServiceLookups;
 			DomainNameResolver* resolver;
 			ConnectionFactory* connectionFactory;
 			TimerFactory* timerFactory;
-			int defaultPort;
 			int timeoutMilliseconds;
 			boost::shared_ptr<Timer> timer;
 			boost::shared_ptr<DomainNameServiceQuery> serviceQuery;

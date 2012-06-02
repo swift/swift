@@ -79,7 +79,9 @@ int main(int argc, char* argv[]) {
 	std::cout << "Connecting to JID " << jid << " with timeout " << timeout << "ms on host: "; ;
 	if (!connectHost.empty()) {
 		std::cout << connectHost << std::endl;
-		client->connect(connectHost);
+		ClientOptions options;
+		options.manualHostname = connectHost;
+		client->connect(options);
 	} else {
 		std::cout << " Default" << std::endl;
 		client->connect();

@@ -3,6 +3,7 @@ Import("swiften_env")
 myenv = swiften_env.Clone()
 
 sourceList = [
+			"ProxiedConnection.cpp",
 			"HTTPConnectProxiedConnection.cpp",
 			"HTTPConnectProxiedConnectionFactory.cpp",
 			"SOCKS5ProxiedConnection.cpp",
@@ -35,6 +36,7 @@ sourceList = [
 			"StaticDomainNameResolver.cpp",
 			"HostAddress.cpp",
 			"HostAddressPort.cpp",
+			"HostNameOrAddress.cpp",
 			"NetworkFactories.cpp",
 			"BoostNetworkFactories.cpp",
 			"NetworkEnvironment.cpp",

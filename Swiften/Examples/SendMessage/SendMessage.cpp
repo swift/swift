@@ -69,7 +69,9 @@ int main(int argc, char* argv[]) {
 	client->onConnected.connect(&handleConnected);
 	errorConnection = client->onDisconnected.connect(&handleDisconnected);
 	if (!connectHost.empty()) {
-		client->connect(connectHost);
+		ClientOptions options;
+		options.manualHostname = connectHost;
+		client->connect(options);
 	} else {
 		client->connect();
 	}
