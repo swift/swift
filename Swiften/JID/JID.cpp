@@ -19,7 +19,6 @@
 #include <boost/algorithm/string/find_format.hpp>
 #include <boost/algorithm/string/finder.hpp>
 #include <sstream>
-#include <stringprep.h>
 
 #include <Swiften/Base/String.h>
 #include <Swiften/JID/JID.h>

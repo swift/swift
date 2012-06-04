@@ -22,12 +22,7 @@ elif env["SCONS_STAGE"] == "build" :
 	myenv.BuildVersion("BuildVersion.h", project = "limber")
 	myenv.UseFlags(env["LIMBER_FLAGS"])
 	myenv.UseFlags(env["SWIFTEN_FLAGS"])
-	myenv.UseFlags(env["LIBIDN_FLAGS"])
-	myenv.UseFlags(env.get("LIBXML_FLAGS", ""))
-	myenv.UseFlags(env.get("EXPAT_FLAGS", ""))
-	myenv.UseFlags(env["OPENSSL_FLAGS"])
-	myenv.UseFlags(env["BOOST_FLAGS"])
-	myenv.UseFlags(myenv["PLATFORM_FLAGS"])
+	myenv.UseFlags(env["SWIFTEN_DEP_FLAGS"])
 	myenv.Program("limber", ["main.cpp"])
 
 	env.Append(UNITTEST_SOURCES = [

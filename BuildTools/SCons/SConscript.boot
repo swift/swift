@@ -41,6 +41,7 @@ vars.Add(PathVariable("boost_libdir", "Boost library location", None, PathVariab
 vars.Add(PathVariable("expat_includedir", "Expat headers location", None, PathVariable.PathAccept))
 vars.Add(PathVariable("expat_libdir", "Expat library location", None, PathVariable.PathAccept))
 vars.Add("expat_libname", "Expat library name", "libexpat" if os.name == "nt" else "expat")
+vars.Add(PackageVariable("icu", "ICU library location", "no"))
 vars.Add(PathVariable("libidn_includedir", "LibIDN headers location", None, PathVariable.PathAccept))
 vars.Add(PathVariable("libidn_libdir", "LibIDN library location", None, PathVariable.PathAccept))
 vars.Add("libidn_libname", "LibIDN library name", "libidn" if os.name == "nt" else "idn")

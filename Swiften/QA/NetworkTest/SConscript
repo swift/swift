@@ -8,10 +8,8 @@ if env["TEST"] :
 		myenv.Append(CPPDEFINES = ["TEST_IPV6"])
 	myenv.MergeFlags(myenv["CHECKER_FLAGS"])
 	myenv.MergeFlags(myenv["SWIFTEN_FLAGS"])
+	myenv.MergeFlags(myenv["SWIFTEN_DEP_FLAGS"])
 	myenv.MergeFlags(myenv["CPPUNIT_FLAGS"])
-	myenv.MergeFlags(myenv["BOOST_FLAGS"])
-	myenv.MergeFlags(myenv["LIBIDN_FLAGS"])
-	myenv.MergeFlags(env["PLATFORM_FLAGS"])
 
 	tester = myenv.Program("NetworkTest", [
 			"BoostConnectionServerTest.cpp",

@@ -15,14 +15,7 @@ if env["TEST"] :
 		myenv.UseFlags(env.get("LIMBER_FLAGS",""))
 		myenv.UseFlags(env.get("SWIFTEN_FLAGS",""))
 		myenv.UseFlags(env.get("CPPUNIT_FLAGS",""))
-		myenv.UseFlags(env.get("LIBIDN_FLAGS", ""))
-		myenv.UseFlags(env.get("BOOST_FLAGS", ""))
-		myenv.UseFlags(env.get("SQLITE_FLAGS", ""))
-		myenv.UseFlags(env.get("LIBXML_FLAGS", ""))
-		myenv.UseFlags(env.get("EXPAT_FLAGS", ""))
-		myenv.UseFlags(env.get("ZLIB_FLAGS", ""))
-		myenv.UseFlags(env.get("OPENSSL_FLAGS", ""))
-		myenv.UseFlags(env["PLATFORM_FLAGS"])
+		myenv.UseFlags(env.get("SWIFTEN_DEP_FLAGS", ""))
 		if env.get("HAVE_LIBXML") :
 			myenv.Append(CPPDEFINES = ["HAVE_LIBXML"])
 		if env.get("HAVE_EXPAT") :
@@ -35,4 +28,6 @@ if env["TEST"] :
 			for i in ["HOME", "USERPROFILE", "APPDATA"]:
 				if os.environ.get(i, "") :
 					myenv["ENV"][i] = os.environ[i]
+			if myenv["PLATFORM"] == "darwin" :
+				myenv["ENV"]["DYLD_LIBRARY_PATH"] = ":".join(map(lambda x : str(x), myenv.get("LIBPATH", [])))
 			myenv.Test(checker, is_checker = True)

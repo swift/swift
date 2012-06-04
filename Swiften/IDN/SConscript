@@ -1,7 +1,12 @@
 Import("swiften_env", "env")
 
 myenv = swiften_env.Clone()
-myenv.MergeFlags(swiften_env["LIBIDN_FLAGS"])
+if myenv.get("HAVE_ICU") :
+	myenv.MergeFlags(swiften_env["ICU_FLAGS"])
+	myenv.Append(CPPDEFINES = ["HAVE_ICU"])
+elif myenv.get("HAVE_LIBIDN") :
+	myenv.MergeFlags(swiften_env["LIBIDN_FLAGS"])
+	myenv.Append(CPPDEFINES = ["HAVE_LIBIDN"])
 
 objects = myenv.SwiftenObject([
 			"StringPrep.cpp",
@@ -11,4 +16,5 @@ swiften_env.Append(SWIFTEN_OBJECTS = [objects])
 
 env.Append(UNITTEST_SOURCES = [
 			File("UnitTest/StringPrepTest.cpp"),
+			File("UnitTest/IDNATest.cpp"),
 	])

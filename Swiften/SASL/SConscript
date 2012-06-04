@@ -1,7 +1,6 @@
 Import("swiften_env", "env")
 
 myenv = swiften_env.Clone()
-myenv.MergeFlags(swiften_env["LIBIDN_FLAGS"])
 
 objects = myenv.SwiftenObject([
 		"ClientAuthenticator.cpp",

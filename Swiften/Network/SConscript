@@ -1,7 +1,6 @@
 Import("swiften_env")
 
 myenv = swiften_env.Clone()
-myenv.MergeFlags(myenv["LIBIDN_FLAGS"])
 
 sourceList = [
 			"HTTPConnectProxiedConnection.cpp",

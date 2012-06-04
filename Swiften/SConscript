@@ -6,7 +6,7 @@ Import("env")
 # Flags
 ################################################################################
 
-swiften_dep_modules = ["BOOST", "GCONF", "LIBIDN", "ZLIB", "OPENSSL", "LIBXML", "EXPAT", "AVAHI", "LIBMINIUPNPC", "LIBNATPMP"]
+swiften_dep_modules = ["BOOST", "GCONF", "ICU", "LIBIDN", "ZLIB", "OPENSSL", "LIBXML", "EXPAT", "AVAHI", "LIBMINIUPNPC", "LIBNATPMP"]
 
 if env["SCONS_STAGE"] == "flags" :
 	env["SWIFTEN_VERSION"] = Version.getBuildVersion(env.Dir("#").abspath, "swift")

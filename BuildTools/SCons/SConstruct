@@ -294,6 +294,27 @@ if not env.get("HAVE_EXPAT", 0) and not env.get("HAVE_LIBXML", 0) :
 	env["HAVE_EXPAT"] = 1
 	env["EXPAT_BUNDLED"] = True
 
+################################################################################
+# IDN library
+################################################################################
+
+# ICU
+icu_env = conf_env.Clone()
+use_icu = bool(env["icu"])
+icu_prefix = env["icu"] if isinstance(env["icu"], str) else ""
+icu_flags = {}
+if icu_prefix :
+	icu_flags = { "CPPPATH": [os.path.join(icu_prefix, "include")] }
+	icu_flags["LIBPATH"] = [os.path.join(icu_prefix, "lib")]
+	icu_env.MergeFlags(icu_flags)
+
+icu_conf = Configure(icu_env)
+if use_icu and icu_conf.CheckCHeader("unicode/usprep.h") :
+	env["HAVE_ICU"] = 1
+	env["ICU_FLAGS"] = icu_flags
+	env["ICU_FLAGS"]["LIBS"] = ["icuuc"]
+icu_conf.Finish()
+
 # LibIDN
 libidn_conf_env = conf_env.Clone()
 libidn_flags = {}
@@ -303,13 +324,15 @@ if env.get("libidn_includedir", None) :
 	libidn_flags["CPPPATH"] = [env["libidn_includedir"]]
 libidn_conf_env.MergeFlags(libidn_flags)
 conf = Configure(libidn_conf_env)
-if conf.CheckCHeader("idna.h") and conf.CheckLib(env["libidn_libname"]) :
+if not env.get("HAVE_ICU") and conf.CheckCHeader("idna.h") and conf.CheckLib(env["libidn_libname"]) :
 	env["HAVE_LIBIDN"] = 1
 	env["LIBIDN_FLAGS"] = { "LIBS": [env["libidn_libname"]] }
 	env["LIBIDN_FLAGS"].update(libidn_flags)
-else :
-	env["LIBIDN_BUNDLED"] = 1
 conf.Finish()
+
+# Fallback to bundled LibIDN
+if not env.get("HAVE_ICU", False) and not env.get("HAVE_LIBIDN", False) :
+	env["LIBIDN_BUNDLED"] = 1
 
 # LibMiniUPnPc
 if env["experimental"] :

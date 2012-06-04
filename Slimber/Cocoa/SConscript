@@ -5,13 +5,7 @@ myenv.UseFlags(env["LIMBER_FLAGS"])
 myenv.MergeFlags(env["SLIMBER_FLAGS"])
 myenv.MergeFlags(env["SWIFTOOLS_FLAGS"])
 myenv.MergeFlags(env["SWIFTEN_FLAGS"])
-myenv.MergeFlags(env["LIBIDN_FLAGS"])
-myenv.MergeFlags(env["BOOST_FLAGS"])
-myenv.MergeFlags(env.get("LIBXML_FLAGS", ""))
-myenv.MergeFlags(env.get("EXPAT_FLAGS", ""))
-myenv.Append(CXXFLAGS = myenv["OBJCCFLAGS"])
-myenv.Append(FRAMEWORKS = "Cocoa")
-myenv.MergeFlags(myenv["PLATFORM_FLAGS"])
+myenv.MergeFlags(env["SWIFTEN_DEP_FLAGS"])
 
 myenv.Program("Slimber", [
 		"main.mm",
