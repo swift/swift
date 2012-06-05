@@ -332,6 +332,7 @@ conf.Finish()
 
 # Fallback to bundled LibIDN
 if not env.get("HAVE_ICU", False) and not env.get("HAVE_LIBIDN", False) :
+	env["HAVE_LIBIDN"] = 1
 	env["LIBIDN_BUNDLED"] = 1
 
 # LibMiniUPnPc
