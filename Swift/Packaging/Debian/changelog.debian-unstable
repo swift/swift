@@ -1,3 +1,10 @@
+swift-im (2.0~beta1+dev45-1) unstable; urgency=low
+
+  * Update from upstream.
+  * Rename /usr/bin/swift binary to not conflict with other package. Closes: #674504
+
+ -- Kevin Smith <kevin@kismith.co.uk>  Wed, 25 Apr 2012 09:55:52 -0000
+
 swift-im (2.0~beta1+dev26-1) unstable; urgency=low
 
   * Initial release. Closes: #631002
