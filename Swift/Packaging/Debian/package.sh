@@ -86,7 +86,7 @@ fi
 cat $DIRNAME/debian/control.in | sed -e "s/%SWIFTEN_SOVERSION%/$SWIFTEN_SOVERSION/g" | sed -e "s/%WEBKIT_DEPENDENCY%/$WEBKIT_DEPENDENCY/g" > $DIRNAME/debian/control
 rm $DIRNAME/debian/control.in
 mv $DIRNAME/debian/libswiften.install $DIRNAME/debian/libswiften$SWIFTEN_SOVERSION.install
-cat ../../../COPYING | awk '/--- END OF OpenSSL/,EOF' | tail -n +3 >> $DIRNAME/debian/copyright
+cat ../../../COPYING.thirdparty | tail -n +3 >> $DIRNAME/debian/copyright
 
 # Build
 cd $DIRNAME
