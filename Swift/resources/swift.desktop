@@ -8,7 +8,7 @@ Name=Swift
 GenericName=Jabber/XMPP Messenger
 Comment=Communicate over the Jabber/XMPP network
 Icon=swift
-Exec=swift
+Exec=swift-im
 Terminal=false
 Categories=Network;InstantMessaging;Qt;
 
