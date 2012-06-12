@@ -19,6 +19,6 @@
 		<file alias="icons/tray-standard.png">../resources/icons/tray-standard.png</file>
 		<file alias="icons/new-chat.png">../resources/icons/new-chat.png</file>
 		<file alias="icons/actions.png">../resources/icons/actions.png</file>
-		<file alias="COPYING">../../COPYING</file>
+		<file alias="COPYING">COPYING</file>
 	</qresource>
 </RCC>

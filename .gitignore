@@ -37,6 +37,7 @@ config.log
 .sconsign.dblite
 Swiften/Examples/TuneBot/TuneBot
 Swift/QtUI/swift
+Swift/QtUI/COPYING
 Swift/QtUI/DefaultTheme.qrc
 checker-report.xml
 VERSION.*

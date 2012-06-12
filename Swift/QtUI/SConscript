@@ -46,6 +46,7 @@ myenv.UseFlags(myenv["PLATFORM_FLAGS"])
 myenv.Tool("qt4", toolpath = ["#/BuildTools/SCons/Tools"])
 myenv.Tool("nsis", toolpath = ["#/BuildTools/SCons/Tools"])
 myenv.Tool("wix", toolpath = ["#/BuildTools/SCons/Tools"])
+myenv.Tool("textfile", toolpath = ["#/BuildTools/SCons/Tools"])
 qt4modules = ['QtCore', 'QtGui', 'QtWebKit']
 if env["PLATFORM"] == "posix" :
 	qt4modules += ["QtDBus"]
@@ -204,6 +205,9 @@ commonResources = {
 	"": ["#/Swift/resources/sounds"]
 }
 
+myenv["TEXTFILESUFFIX"] = ""
+myenv.MyTextfile(target = "COPYING", source = [myenv.File("../../COPYING.gpl"), myenv.File("../../COPYING.thirdparty")], LINESEPARATOR = "\n\n========\n\n\n")
+
 ################################################################################
 # Translation
 ################################################################################
@@ -309,7 +313,7 @@ if env["PLATFORM"] == "win32" :
         outfile.write('}')
         outfile.close()
         infile.close()
-      env.Command(["Swift/COPYING.rtf"], ["../../COPYING"], convertToRTF)
+      env.Command(["Swift/COPYING.rtf"], ["COPYING"], convertToRTF)
 
       wixvariables = {
         'VCCRTFile': env.get("vcredist", "c:\\Program Files\\Common Files\\Merge Modules") + "\\Microsoft_VC90_CRT_x86.msm",
