@@ -36,7 +36,7 @@ namespace Swift {
 	class QtMainWindow : public QWidget, public MainWindow {
 		Q_OBJECT
 		public:
-			QtMainWindow(SettingsProvider*, UIEventStream* eventStream, QtLoginWindow::QtMenus loginMenus);
+			QtMainWindow(SettingsProvider*, UIEventStream* eventStream, QtLoginWindow::QtMenus loginMenus, bool emoticonsExist);
 			virtual ~QtMainWindow();
 			std::vector<QMenu*> getMenus() {return menus_;}
 			void setMyNick(const std::string& name);
@@ -56,6 +56,7 @@ namespace Swift {
 			void handleStatusChanged(StatusShow::Type showType, const QString &statusMessage);
 			void handleSettingChanged(const std::string& settingPath);
 			void handleShowOfflineToggled(bool);
+			void handleShowEmoticonsToggled(bool);
 			void handleJoinMUCAction();
 			void handleSignOutAction();
 			void handleEditProfileAction();
@@ -79,6 +80,7 @@ namespace Swift {
 			QAction* editUserAction_;
 			QAction* chatUserAction_;
 			QAction* showOfflineAction_;
+			QAction* showEmoticonsAction_;
 			QAction* toggleRequestDeliveryReceipts_;
 			QMenu* serverAdHocMenu_;
 			QtTabWidget* tabs_;

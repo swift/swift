@@ -17,6 +17,7 @@
 #include <map>
 #include <QPointer>
 #include <QTextCursor>
+#include <QMap>
 
 class QTextEdit;
 class QLineEdit;
@@ -46,7 +47,7 @@ namespace Swift {
 			static const QString ButtonMUCInvite;
 
 		public:
-			QtChatWindow(const QString &contact, QtChatTheme* theme, UIEventStream* eventStream, SettingsProvider* settings);
+			QtChatWindow(const QString &contact, QtChatTheme* theme, UIEventStream* eventStream, SettingsProvider* settings, QMap<QString, QString> emoticons);
 			~QtChatWindow();
 			std::string addMessage(const std::string &message, const std::string &senderName, bool senderIsSelf, boost::shared_ptr<SecurityLabel> label, const std::string& avatarPath, const boost::posix_time::ptime& time);
 			std::string addAction(const std::string &message, const std::string &senderName, bool senderIsSelf, boost::shared_ptr<SecurityLabel> label, const std::string& avatarPath, const boost::posix_time::ptime& time);
@@ -147,6 +148,7 @@ namespace Swift {
 			void tabComplete();
 			void beginCorrection();
 			void cancelCorrection();
+			void handleSettingChanged(const std::string& setting);
 			std::string addMessage(const std::string &message, const std::string &senderName, bool senderIsSelf, boost::shared_ptr<SecurityLabel> label, const std::string& avatarPath, const QString& style, const boost::posix_time::ptime& time);
 			void replaceMessage(const std::string& message, const std::string& id, const boost::posix_time::ptime& time, const QString& style);
 			void handleOccupantSelectionChanged(RosterItem* item);
@@ -189,5 +191,7 @@ namespace Swift {
 			int idCounter_;
 			SettingsProvider* settings_;
 			std::vector<ChatWindow::RoomAction> availableRoomActions_;
+			QMap<QString, QString> emoticons_;
+			bool showEmoticons_;
 	};
 }

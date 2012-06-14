@@ -30,7 +30,7 @@
 
 namespace Swift {
 
-QtUIFactory::QtUIFactory(SettingsProviderHierachy* settings, QtSettingsProvider* qtOnlySettings, QtChatTabs* tabs, QSplitter* netbookSplitter, QtSystemTray* systemTray, QtChatWindowFactory* chatWindowFactory, TimerFactory* timerFactory, bool startMinimized) : settings(settings), qtOnlySettings(qtOnlySettings), tabs(tabs), netbookSplitter(netbookSplitter), systemTray(systemTray), chatWindowFactory(chatWindowFactory), timerFactory_(timerFactory), lastMainWindow(NULL), loginWindow(NULL), startMinimized(startMinimized) {
+QtUIFactory::QtUIFactory(SettingsProviderHierachy* settings, QtSettingsProvider* qtOnlySettings, QtChatTabs* tabs, QSplitter* netbookSplitter, QtSystemTray* systemTray, QtChatWindowFactory* chatWindowFactory, TimerFactory* timerFactory, bool startMinimized, bool emoticonsExist) : settings(settings), qtOnlySettings(qtOnlySettings), tabs(tabs), netbookSplitter(netbookSplitter), systemTray(systemTray), chatWindowFactory(chatWindowFactory), timerFactory_(timerFactory), lastMainWindow(NULL), loginWindow(NULL), startMinimized(startMinimized), emoticonsExist_(emoticonsExist) {
 	chatFontSize = settings->getSetting(QtUISettingConstants::CHATWINDOW_FONT_SIZE);
 }
 
@@ -55,7 +55,7 @@ FileTransferListWidget* QtUIFactory::createFileTransferListWidget() {
 }
 
 MainWindow* QtUIFactory::createMainWindow(UIEventStream* eventStream) {
-	lastMainWindow  = new QtMainWindow(settings, eventStream, loginWindow->getMenus());
+	lastMainWindow  = new QtMainWindow(settings, eventStream, loginWindow->getMenus(), emoticonsExist_);
 	return lastMainWindow;
 }
 

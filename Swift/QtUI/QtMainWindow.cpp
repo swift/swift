@@ -44,7 +44,7 @@
 
 namespace Swift {
 
-QtMainWindow::QtMainWindow(SettingsProvider* settings, UIEventStream* uiEventStream, QtLoginWindow::QtMenus loginMenus) : QWidget(), MainWindow(false), loginMenus_(loginMenus) {
+QtMainWindow::QtMainWindow(SettingsProvider* settings, UIEventStream* uiEventStream, QtLoginWindow::QtMenus loginMenus, bool emoticonsExist) : QWidget(), MainWindow(false), loginMenus_(loginMenus) {
 	uiEventStream_ = uiEventStream;
 	settings_ = settings;
 	setSizePolicy(QSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding));
@@ -98,6 +98,15 @@ QtMainWindow::QtMainWindow(SettingsProvider* settings, UIEventStream* uiEventStr
 	connect(showOfflineAction_, SIGNAL(toggled(bool)), SLOT(handleShowOfflineToggled(bool)));
 	viewMenu->addAction(showOfflineAction_);
 	handleShowOfflineToggled(settings_->getSetting(SettingConstants::SHOW_OFFLINE));
+
+	if (emoticonsExist) {
+		showEmoticonsAction_ = new QAction(tr("&Show Emoticons"), this);
+		showEmoticonsAction_->setCheckable(true);
+		showEmoticonsAction_->setChecked(false);
+		connect(showEmoticonsAction_, SIGNAL(toggled(bool)), SLOT(handleShowEmoticonsToggled(bool)));
+		viewMenu->addAction(showEmoticonsAction_);
+		handleShowEmoticonsToggled(settings_->getSetting(QtUISettingConstants::SHOW_EMOTICONS));
+	}
 
 	//QAction* compactRosterAction_ = new QAction(tr("&Compact Roster"), this);
 	//compactRosterAction_->setCheckable(true);
@@ -234,6 +243,9 @@ void QtMainWindow::handleSettingChanged(const std::string& settingPath) {
 	if (settingPath == SettingConstants::SHOW_OFFLINE.getKey()) {
 		handleShowOfflineToggled(settings_->getSetting(SettingConstants::SHOW_OFFLINE));
 	}
+	if (settingPath == QtUISettingConstants::SHOW_EMOTICONS.getKey()) {
+		handleShowEmoticonsToggled(settings_->getSetting(QtUISettingConstants::SHOW_EMOTICONS));
+	}
 	if (settingPath == SettingConstants::REQUEST_DELIVERYRECEIPTS.getKey()) {
 		toggleRequestDeliveryReceipts_->setChecked(settings_->getSetting(SettingConstants::REQUEST_DELIVERYRECEIPTS));
 	}
@@ -242,6 +254,11 @@ void QtMainWindow::handleSettingChanged(const std::string& settingPath) {
 void QtMainWindow::handleShowOfflineToggled(bool state) {
 	settings_->storeSetting(SettingConstants::SHOW_OFFLINE, state);
 	showOfflineAction_->setChecked(settings_->getSetting(SettingConstants::SHOW_OFFLINE));
+}
+
+void QtMainWindow::handleShowEmoticonsToggled(bool state) {
+	settings_->storeSetting(QtUISettingConstants::SHOW_EMOTICONS, state);
+	showEmoticonsAction_->setChecked(settings_->getSetting(QtUISettingConstants::SHOW_EMOTICONS));
 }
 
 void QtMainWindow::setMyNick(const std::string& nick) {

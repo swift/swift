@@ -12,6 +12,8 @@
 #include <boost/bind.hpp>
 #include <QMessageBox>
 #include <QApplication>
+#include <QMap>
+#include <qdebug.h>
 
 #include <QtLoginWindow.h>
 #include <QtChatTabs.h>
@@ -97,6 +99,26 @@ XMLSettingsProvider* QtSwift::loadSettingsFile(const QString& fileName) {
 	return new XMLSettingsProvider("");
 }
 
+QMap<QString, QString> QtSwift::loadEmoticonsFile(const QString& fileName) {
+	QMap<QString, QString> emoticons;
+	QFile file(fileName);
+	if (file.exists() && file.open(QIODevice::ReadOnly)) {
+		while (!file.atEnd()) {
+			QString line = file.readLine();
+			line.replace("\n", "");
+			line.replace("\r", "");
+			qDebug() << "Parsing line : " << line;
+			QStringList tokens = line.split(" ");
+			if (tokens.size() == 2) {
+				emoticons[tokens[0]] = "file://" + tokens[1];
+				qDebug() << "Adding mapping from " << tokens[0] << " to " << tokens[1];
+			}
+		}
+	}
+
+	return emoticons;
+}
+
 QtSwift::QtSwift(const po::variables_map& options) : networkFactories_(&clientMainThreadCaller_), autoUpdater_(NULL), idleDetector_(&idleQuerier_, networkFactories_.getTimerFactory(), 1000) {
 	if (options.count("netbook-mode")) {
 		splitter_ = new QSplitter();
@@ -113,6 +135,8 @@ QtSwift::QtSwift(const po::variables_map& options) : networkFactories_(&clientMa
 	settingsHierachy_ = new SettingsProviderHierachy();
 	settingsHierachy_->addProviderToTopOfStack(xmlSettings_);
 	settingsHierachy_->addProviderToTopOfStack(qtSettings_);
+
+	QMap<QString, QString> emoticons = loadEmoticonsFile(P2QSTRING((Paths::getExecutablePath() / "emoticons.txt").string()));
 
 	int numberOfAccounts = 1;
 	try {
@@ -131,7 +155,7 @@ QtSwift::QtSwift(const po::variables_map& options) : networkFactories_(&clientMa
 	applicationPathProvider_ = new PlatformApplicationPathProvider(SWIFT_APPLICATION_NAME);
 	storagesFactory_ = new FileStoragesFactory(applicationPathProvider_->getDataDir());
 	certificateStorageFactory_ = new CertificateFileStorageFactory(applicationPathProvider_->getDataDir(), tlsFactories_.getCertificateFactory());
-	chatWindowFactory_ = new QtChatWindowFactory(splitter_, settingsHierachy_, qtSettings_, tabs_, "");
+	chatWindowFactory_ = new QtChatWindowFactory(splitter_, settingsHierachy_, qtSettings_, tabs_, "", emoticons);
 	soundPlayer_ = new QtSoundPlayer(applicationPathProvider_);
 
 	// Ugly, because the dock depends on the tray, but the temporary
@@ -172,7 +196,7 @@ QtSwift::QtSwift(const po::variables_map& options) : networkFactories_(&clientMa
 			// Don't add the first tray (see note above)
 			systemTrays_.push_back(new QtSystemTray());
 		}
-		QtUIFactory* uiFactory = new QtUIFactory(settingsHierachy_, qtSettings_, tabs_, splitter_, systemTrays_[i], chatWindowFactory_, networkFactories_.getTimerFactory(), startMinimized);
+		QtUIFactory* uiFactory = new QtUIFactory(settingsHierachy_, qtSettings_, tabs_, splitter_, systemTrays_[i], chatWindowFactory_, networkFactories_.getTimerFactory(), startMinimized, !emoticons.empty());
 		uiFactories_.push_back(uiFactory);
 		MainController* mainController = new MainController(
 				&clientMainThreadCaller_,

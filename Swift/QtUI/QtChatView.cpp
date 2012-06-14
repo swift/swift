@@ -183,6 +183,21 @@ void QtChatView::replaceMessage(const QString& newMessage, const QString& id, co
 	}
 }
 
+void QtChatView::showEmoticons(bool show) {
+	{
+		const QWebElementCollection spans = document_.findAll("span.swift_emoticon_image");
+		foreach (QWebElement span, spans) {
+			span.setStyleProperty("display", show ? "inline" : "none");
+		}
+	}
+	{
+		const QWebElementCollection spans = document_.findAll("span.swift_emoticon_text");
+		foreach (QWebElement span, spans) {
+			span.setStyleProperty("display", show ? "none" : "inline");
+		}
+	}
+}
+
 void QtChatView::copySelectionToClipboard() {
 	if (!webPage_->selectedText().isEmpty()) {
 		webPage_->triggerAction(QWebPage::Copy);

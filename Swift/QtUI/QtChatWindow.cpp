@@ -18,6 +18,7 @@
 #include "QtSettingsProvider.h"
 #include "QtScaledAvatarCache.h"
 #include "QtInviteToChatWindow.h"
+#include <Swift/QtUI/QtUISettingConstants.h>
 
 #include <Swiften/StringCodecs/Base64.h>
 #include "SwifTools/TabComplete.h"
@@ -59,7 +60,7 @@ const QString QtChatWindow::ButtonFileTransferSendRequest = QString("filetransfe
 const QString QtChatWindow::ButtonFileTransferAcceptRequest = QString("filetransfer-acceptrequest");
 const QString QtChatWindow::ButtonMUCInvite = QString("mucinvite");
 
-QtChatWindow::QtChatWindow(const QString &contact, QtChatTheme* theme, UIEventStream* eventStream, SettingsProvider* settings) : QtTabbable(), contact_(contact), previousMessageWasSelf_(false), previousMessageKind_(PreviosuMessageWasNone), eventStream_(eventStream) {
+QtChatWindow::QtChatWindow(const QString &contact, QtChatTheme* theme, UIEventStream* eventStream, SettingsProvider* settings, QMap<QString, QString> emoticons) : QtTabbable(), contact_(contact), previousMessageWasSelf_(false), previousMessageKind_(PreviosuMessageWasNone), eventStream_(eventStream), emoticons_(emoticons) {
 	settings_ = settings;
 	unreadCount_ = 0;
 	idCounter_ = 0;
@@ -69,6 +70,7 @@ QtChatWindow::QtChatWindow(const QString &contact, QtChatTheme* theme, UIEventSt
 	theme_ = theme;
 	isCorrection_ = false;
 	correctionEnabled_ = Maybe;
+	showEmoticons_ = true;
 	updateTitleWithUnreadCount();
 
 #ifdef SWIFT_EXPERIMENTAL_FT
@@ -173,12 +175,23 @@ QtChatWindow::QtChatWindow(const QString &contact, QtChatTheme* theme, UIEventSt
 	jsBridge = new QtChatWindowJSBridge();
 	messageLog_->addToJSEnvironment("chatwindow", jsBridge);
 	connect(jsBridge, SIGNAL(buttonClicked(QString,QString,QString,QString)), this, SLOT(handleHTMLButtonClicked(QString,QString,QString,QString)));
+
+	settings_->onSettingChanged.connect(boost::bind(&QtChatWindow::handleSettingChanged, this, _1));
+	showEmoticons_ = settings_->getSetting(QtUISettingConstants::SHOW_EMOTICONS);
+
 }
 
 QtChatWindow::~QtChatWindow() {
 	delete jsBridge;
 	if (mucConfigurationWindow_) {
 		delete mucConfigurationWindow_.data();
+	}
+}
+
+void QtChatWindow::handleSettingChanged(const std::string& setting) {
+	if (setting == QtUISettingConstants::SHOW_EMOTICONS.getKey()) {
+		showEmoticons_ = settings_->getSetting(QtUISettingConstants::SHOW_EMOTICONS);
+		messageLog_->showEmoticons(showEmoticons_);
 	}
 }
 
@@ -453,8 +466,18 @@ std::string QtChatWindow::addMessage(const std::string &message, const std::stri
 		htmlString = QString("<span style=\"border: thin dashed grey; padding-left: .5em; padding-right: .5em; color: %1; background-color: %2; font-size: 90%; margin-right: .5em; \">").arg(Qt::escape(P2QSTRING(label->getForegroundColor()))).arg(Qt::escape(P2QSTRING(label->getBackgroundColor())));
 		htmlString += QString("%3</span> ").arg(Qt::escape(P2QSTRING(label->getDisplayMarking())));
 	}
-	QString messageHTML(Qt::escape(P2QSTRING(message)));
-	messageHTML = P2QSTRING(Linkify::linkify(Q2PSTRING(messageHTML)));
+	QString messageHTML(P2QSTRING(message));
+	messageHTML = Qt::escape(messageHTML);
+	QMapIterator<QString, QString> it(emoticons_);
+	QString textStyle = showEmoticons_ ? "style='display:none'" : "";
+	QString imageStyle = showEmoticons_ ? "" : "style='display:none'";
+	if (messageHTML.length() < 500) {
+		while (it.hasNext()) {
+			it.next();
+			messageHTML.replace(it.key(), "<span class='swift_emoticon_image' " + imageStyle + "><img src='" + it.value() + "'/></span><span class='swift_emoticon_text' " + textStyle + ">"+it.key() + "</span>");
+		}
+		messageHTML = P2QSTRING(Linkify::linkify(Q2PSTRING(messageHTML)));
+	}
 	messageHTML.replace("\n","<br/>");
 	QString styleSpanStart = style == "" ? "" : "<span style=\"" + style + "\">";
 	QString styleSpanEnd = style == "" ? "" : "</span>";

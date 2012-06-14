@@ -43,7 +43,7 @@ namespace Swift {
 			void setFileTransferProgress(QString id, const int percentageDone);
 			void setFileTransferStatus(QString id, const ChatWindow::FileTransferState state, const QString& msg);
 			void setMUCInvitationJoined(QString id);
-
+			void showEmoticons(bool show);
 		signals:
 			void gotFocus();
 			void fontResized(int);
