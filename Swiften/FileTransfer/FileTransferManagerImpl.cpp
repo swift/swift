@@ -31,7 +31,7 @@
 
 namespace Swift {
 
-FileTransferManagerImpl::FileTransferManagerImpl(const JID& ownFullJID, JingleSessionManager* jingleSessionManager, IQRouter* router, EntityCapsProvider* capsProvider, PresenceOracle* presOracle, ConnectionFactory* connectionFactory, ConnectionServerFactory* connectionServerFactory, TimerFactory* timerFactory, NATTraverser* natTraverser) : ownJID(ownFullJID), jingleSM(jingleSessionManager), iqRouter(router), capsProvider(capsProvider), presenceOracle(presOracle), timerFactory(timerFactory), connectionFactory(connectionFactory), connectionServerFactory(connectionServerFactory), natTraverser(natTraverser), bytestreamServer(NULL), s5bProxyFinder(NULL) {
+FileTransferManagerImpl::FileTransferManagerImpl(const JID& ownFullJID, JingleSessionManager* jingleSessionManager, IQRouter* router, EntityCapsProvider* capsProvider, PresenceOracle* presOracle, ConnectionFactory* connectionFactory, ConnectionServerFactory* connectionServerFactory, TimerFactory* timerFactory, NATTraverser* natTraverser) : ownJID(ownFullJID), jingleSM(jingleSessionManager), iqRouter(router), capsProvider(capsProvider), presenceOracle(presOracle), connectionServerFactory(connectionServerFactory), bytestreamServer(NULL), s5bProxyFinder(NULL) {
 	assert(!ownFullJID.isBare());
 
 	connectivityManager = new ConnectivityManager(natTraverser);

@@ -85,9 +85,7 @@ private:
 private:
 	JingleSession::ref session;
 	RemoteJingleTransportCandidateSelector* remoteCandidateSelector;
-	RemoteJingleTransportCandidateSelectorFactory* remoteFactory;
 	LocalJingleTransportCandidateGenerator* localCandidateGenerator;
-	LocalJingleTransportCandidateGeneratorFactory* localFactory;
 
 	IQRouter* router;
 	IDGenerator* idGenerator;

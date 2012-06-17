@@ -45,7 +45,7 @@ OutgoingJingleFileTransfer::OutgoingJingleFileTransfer(JingleSession::ref sessio
 					const StreamInitiationFileInfo &fileInfo,
 					SOCKS5BytestreamRegistry* bytestreamRegistry,
 					SOCKS5BytestreamProxy* bytestreamProxy) :
-	session(session), remoteFactory(remoteFactory), localFactory(localFactory), router(router), idGenerator(idGenerator), fromJID(fromJID), toJID(toJID), readStream(readStream), fileInfo(fileInfo), s5bRegistry(bytestreamRegistry), s5bProxy(bytestreamProxy), serverSession(NULL), contentID(JingleContentID(idGenerator->generateID(), JingleContentPayload::InitiatorCreator)), canceled(false) {
+	session(session), router(router), idGenerator(idGenerator), fromJID(fromJID), toJID(toJID), readStream(readStream), fileInfo(fileInfo), s5bRegistry(bytestreamRegistry), s5bProxy(bytestreamProxy), serverSession(NULL), contentID(JingleContentID(idGenerator->generateID(), JingleContentPayload::InitiatorCreator)), canceled(false) {
 	session->onSessionAcceptReceived.connect(boost::bind(&OutgoingJingleFileTransfer::handleSessionAcceptReceived, this, _1, _2, _3));
 	session->onSessionTerminateReceived.connect(boost::bind(&OutgoingJingleFileTransfer::handleSessionTerminateReceived, this, _1));
 	session->onTransportInfoReceived.connect(boost::bind(&OutgoingJingleFileTransfer::handleTransportInfoReceived, this, _1, _2));

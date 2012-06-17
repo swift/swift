@@ -21,7 +21,6 @@ BOSHConnectionPool::BOSHConnectionPool(const URL& boshURL, DomainNameResolver* r
 		boshURL(boshURL),
 		connectionFactory(connectionFactoryParameter),
 		xmlParserFactory(parserFactory),
-		tlsFactory(tlsFactory),
 		timerFactory(timerFactory),
 		rid(initialRID),
 		pendingTerminate(false),

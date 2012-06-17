@@ -53,7 +53,6 @@ namespace Swift {
 			URL boshURL;
 			ConnectionFactory* connectionFactory;
 			XMLParserFactory* xmlParserFactory;
-			TLSContextFactory* tlsFactory;
 			TimerFactory* timerFactory;
 			std::vector<BOSHConnection::ref> connections;
 			std::string sid;

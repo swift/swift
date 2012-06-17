@@ -30,11 +30,8 @@ BasicSessionStream::BasicSessionStream(
 		XMLParserFactory* xmlParserFactory) :
 			available(false), 
 			connection(connection), 
-			payloadParserFactories(payloadParserFactories), 
-			payloadSerializers(payloadSerializers), 
 			tlsContextFactory(tlsContextFactory), 
 			timerFactory(timerFactory), 
-			streamType(streamType),
 			compressionLayer(NULL),
 			tlsLayer(NULL),
 			whitespacePingLayer(NULL) {

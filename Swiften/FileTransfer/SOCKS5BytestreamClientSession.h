@@ -79,7 +79,6 @@ private:
 	std::string destination; // hexify(SHA1(sessionID + requester + target))
 
 	State state;
-	int destinationPort;
 
 	ByteArray unprocessedData;
 	ByteArray authenticateAddress;

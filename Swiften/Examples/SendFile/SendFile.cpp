@@ -125,8 +125,6 @@ class FileSender {
 	
 	private:
 		BoostConnectionServer::ref connectionServer;
-		SOCKS5BytestreamServer* socksBytestreamServer;
-		SOCKS5BytestreamRegistry* registry;
 		OutgoingFileTransfer::ref outgoingFileTransfer;
 		JID jid;
 		std::string password;

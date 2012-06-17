@@ -77,11 +77,8 @@ namespace Swift {
 		private:
 			bool available;
 			boost::shared_ptr<Connection> connection;
-			PayloadParserFactoryCollection* payloadParserFactories;
-			PayloadSerializerCollection* payloadSerializers;
 			TLSContextFactory* tlsContextFactory;
 			TimerFactory* timerFactory;
-			StreamType streamType;
 			XMPPLayer* xmppLayer;
 			ConnectionLayer* connectionLayer;
 			CompressionLayer* compressionLayer;

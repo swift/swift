@@ -118,9 +118,6 @@ class FileReceiver {
 		JingleSessionManager* jingleSessionManager;
 		IncomingFileTransferManager* incomingFileTransferManager;
 		std::vector<IncomingFileTransfer::ref> incomingFileTransfers;
-		DefaultLocalJingleTransportCandidateGeneratorFactory *localFactory;
-		DefaultRemoteJingleTransportCandidateSelectorFactory *remoteFactory;
-		SOCKS5BytestreamRegistry* bytestreamRegistry;
 };
 
 

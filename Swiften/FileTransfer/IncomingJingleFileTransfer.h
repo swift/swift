@@ -101,7 +101,6 @@ namespace Swift {
 			JID ourJID;
 			JingleSession::ref session;
 			IQRouter* router;
-			TimerFactory* timerFactory;
 			JingleContentPayload::ref initialContent;
 			State state;
 			JingleFileTransferDescription::ref description;

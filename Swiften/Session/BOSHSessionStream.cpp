@@ -41,11 +41,6 @@ BOSHSessionStream::BOSHSessionStream(
 		const SafeString& boshHTTPConnectProxyAuthID,
 		const SafeString& boshHTTPConnectProxyAuthPassword) :
 			available(false), 
-			payloadParserFactories(payloadParserFactories), 
-			payloadSerializers(payloadSerializers), 
-			tlsContextFactory(tlsContextFactory), 
-			timerFactory(timerFactory),
-			xmlParserFactory(xmlParserFactory),
 			eventLoop(eventLoop),
 			firstHeader(true) {
 

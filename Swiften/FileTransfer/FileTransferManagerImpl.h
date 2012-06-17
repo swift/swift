@@ -67,10 +67,7 @@ namespace Swift {
 			EntityCapsProvider* capsProvider;
 			PresenceOracle* presenceOracle;
 
-			TimerFactory* timerFactory;
-			ConnectionFactory* connectionFactory;
 			ConnectionServerFactory* connectionServerFactory;
-			NATTraverser* natTraverser;
 			SOCKS5BytestreamRegistry* bytestreamRegistry;
 			SOCKS5BytestreamServer* bytestreamServer;
 			SOCKS5BytestreamProxy* bytestreamProxy;

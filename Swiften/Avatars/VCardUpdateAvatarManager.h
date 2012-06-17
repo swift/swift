@@ -36,7 +36,6 @@ namespace Swift {
 
 		private:
 			VCardManager* vcardManager_;
-			StanzaChannel* stanzaChannel_;
 			AvatarStorage* avatarStorage_;
 			MUCRegistry* mucRegistry_;
 			std::map<JID, std::string> avatarHashes_;

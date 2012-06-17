@@ -37,7 +37,6 @@ class MainController {
 		void stop();
 
 	private:
-		Menulet* menulet;
 		boost::shared_ptr<Swift::DNSSDQuerier> dnsSDQuerier;
 		Swift::LinkLocalServiceBrowser* linkLocalServiceBrowser;
 		Swift::VCardCollection* vCardCollection;

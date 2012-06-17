@@ -87,11 +87,6 @@ namespace Swift {
 		private:
 			BOSHConnectionPool* connectionPool;
 			bool available;
-			PayloadParserFactoryCollection* payloadParserFactories;
-			PayloadSerializerCollection* payloadSerializers;
-			TLSContextFactory* tlsContextFactory;
-			TimerFactory* timerFactory;
-			XMLParserFactory* xmlParserFactory;
 			XMPPLayer* xmppLayer;
 			ProtocolHeader streamHeader;
 			EventLoop* eventLoop;

@@ -41,7 +41,6 @@ IncomingJingleFileTransfer::IncomingJingleFileTransfer(
 			ourJID(ourJID),
 			session(session),
 			router(router),
-			timerFactory(timerFactory),
 			initialContent(content),
 			state(Initial),
 			receivedBytes(0),

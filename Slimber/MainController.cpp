@@ -22,7 +22,7 @@
 
 using namespace Swift;
 
-MainController::MainController(Menulet* menulet, EventLoop* eventLoop) : menulet(menulet) {
+MainController::MainController(Menulet* menulet, EventLoop* eventLoop) {
 	dnsSDQuerier = PlatformDNSSDQuerierFactory(eventLoop).createQuerier();
 	assert(dnsSDQuerier);
 
