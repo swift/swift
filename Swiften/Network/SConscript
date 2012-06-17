@@ -15,7 +15,7 @@ sourceList = [
 			"BoostIOServiceThread.cpp",
 			"BOSHConnection.cpp",
 			"BOSHConnectionPool.cpp",
-			"CachingNameOnlyDomainNameResolver.cpp",
+			"CachingDomainNameResolver.cpp",
 			"ConnectionFactory.cpp",
 			"ConnectionServer.cpp",
 			"ConnectionServerFactory.cpp",

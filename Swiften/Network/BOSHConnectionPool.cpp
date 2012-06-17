@@ -14,7 +14,7 @@
 #include <Swiften/Base/SafeString.h>
 #include <Swiften/Network/TLSConnectionFactory.h>
 #include <Swiften/Network/HTTPConnectProxiedConnectionFactory.h>
-#include <Swiften/Network/CachingNameOnlyDomainNameResolver.h>
+#include <Swiften/Network/CachingDomainNameResolver.h>
 
 namespace Swift {
 BOSHConnectionPool::BOSHConnectionPool(const URL& boshURL, DomainNameResolver* realResolver, ConnectionFactory* connectionFactoryParameter, XMLParserFactory* parserFactory, TLSContextFactory* tlsFactory, TimerFactory* timerFactory, EventLoop* eventLoop, const std::string& to, unsigned long long initialRID, const URL& boshHTTPConnectProxyURL, const SafeString& boshHTTPConnectProxyAuthID, const SafeString& boshHTTPConnectProxyAuthPassword) :
@@ -40,7 +40,7 @@ BOSHConnectionPool::BOSHConnectionPool(const URL& boshURL, DomainNameResolver* r
 		connectionFactory = new TLSConnectionFactory(tlsFactory, connectionFactory);
 		myConnectionFactories.push_back(connectionFactory);
 	}
-	resolver = new CachingNameOnlyDomainNameResolver(realResolver, eventLoop);
+	resolver = new CachingDomainNameResolver(realResolver, eventLoop);
 	createConnection();
 }
 

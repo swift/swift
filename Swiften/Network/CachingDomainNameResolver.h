@@ -17,10 +17,10 @@
 namespace Swift {
 	class EventLoop;
 
-	class CachingNameOnlyDomainNameResolver : public DomainNameResolver {
+	class CachingDomainNameResolver : public DomainNameResolver {
 		public:
-			CachingNameOnlyDomainNameResolver(DomainNameResolver* realResolver, EventLoop* eventLoop);
-			~CachingNameOnlyDomainNameResolver();
+			CachingDomainNameResolver(DomainNameResolver* realResolver, EventLoop* eventLoop);
+			~CachingDomainNameResolver();
 
 			virtual DomainNameServiceQuery::ref createServiceQuery(const std::string& name);
 			virtual DomainNameAddressQuery::ref createAddressQuery(const std::string& name);

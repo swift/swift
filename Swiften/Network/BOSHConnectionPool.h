@@ -15,7 +15,7 @@
 namespace Swift {
 	class HTTPConnectProxiedConnectionFactory;
 	class TLSConnectionFactory;
-	class CachingNameOnlyDomainNameResolver;
+	class CachingDomainNameResolver;
 	class EventLoop;
 
 	class BOSHConnectionPool : public boost::bsignals::trackable {
@@ -64,6 +64,6 @@ namespace Swift {
 			int restartCount;
 			bool pendingRestart;
 			std::vector<ConnectionFactory*> myConnectionFactories;
-			CachingNameOnlyDomainNameResolver* resolver;
+			CachingDomainNameResolver* resolver;
 	};
 }
