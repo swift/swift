@@ -56,7 +56,7 @@ QtRosterHeader::QtRosterHeader(SettingsProvider* settings, QWidget* parent) : QW
 
 	securityInfoButton_->setStyleSheet("border: none; hover: {border: 1px} pressed {border: 1px}");
 	// TODO: replace with a more appropriate icon
-	securityInfoButton_->setIcon(QIcon(":/icons/certificate.png"));
+	securityInfoButton_->setIcon(QIcon(":/icons/lock.png"));
 	connect(securityInfoButton_, SIGNAL(clicked()), this, SIGNAL(onShowCertificateInfo()));
 	nameAndSecurityLayout->addWidget(securityInfoButton_);
 

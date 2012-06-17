@@ -10,6 +10,7 @@
 		<file alias="icons/dnd.png">../resources/icons/dnd.png</file>
 		<file alias="icons/offline.png">../resources/icons/offline.png</file>
 		<file alias="icons/certificate.png">../resources/icons/certificate.png</file>
+		<file alias="icons/lock.png">../resources/icons/lock.png</file>
 		<file alias="icons/error.png">../resources/icons/error.png</file>
 		<file alias="icons/warn.png">../resources/icons/warn.png</file>
 		<file alias="icons/check.png">../resources/icons/check.png</file>
