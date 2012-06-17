@@ -10,7 +10,6 @@
 #include <QLabel>
 #include <QPixmap>
 #include <QSize>
-#include <QToolBar>
 #include <QToolButton>
 
 #include <string>
@@ -51,7 +50,6 @@ namespace Swift {
 		QtClickableLabel* avatarLabel_;
 		QtNameWidget* nameWidget_;
 		QtTextEdit* statusEdit_;
-		QToolBar* toolBar_;
 		QtStatusWidget* statusWidget_;
 		QToolButton* securityInfoButton_;
 		static const int avatarSize_;

@@ -53,10 +53,10 @@ QtRosterHeader::QtRosterHeader(SettingsProvider* settings, QWidget* parent) : QW
 	nameAndSecurityLayout->addWidget(nameWidget_);
 
 	securityInfoButton_ = new QToolButton(this);
-
-	securityInfoButton_->setStyleSheet("border: none; hover: {border: 1px} pressed {border: 1px}");
-	// TODO: replace with a more appropriate icon
+	securityInfoButton_->setStyleSheet("QToolButton { border: none; } QToolButton:hover { border: 1px solid #bebebe; } QToolButton:pressed { border: 1px solid #757575; background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #777777, stop: 1 #d4d4d4);}");
+	//securityInfoButton_->setAutoRaise(true);
 	securityInfoButton_->setIcon(QIcon(":/icons/lock.png"));
+	securityInfoButton_->setToolTip(tr("Connection is secured"));
 	connect(securityInfoButton_, SIGNAL(clicked()), this, SIGNAL(onShowCertificateInfo()));
 	nameAndSecurityLayout->addWidget(securityInfoButton_);
 
