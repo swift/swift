@@ -9,8 +9,8 @@
 #include <boost/smart_ptr/make_shared.hpp>
 
 namespace Swift {
-CachingNameOnlyDomainNameResolver::CachingNameOnlyDomainNameResolver(DomainNameResolver* realResolver, EventLoop* eventLoop) : realResolver(realResolver) {
-	staticResolver = boost::make_shared<StaticDomainNameResolver>(eventLoop);
+
+CachingNameOnlyDomainNameResolver::CachingNameOnlyDomainNameResolver(DomainNameResolver* realResolver, EventLoop*) : realResolver(realResolver) {
 }
 
 CachingNameOnlyDomainNameResolver::~CachingNameOnlyDomainNameResolver() {
@@ -18,15 +18,13 @@ CachingNameOnlyDomainNameResolver::~CachingNameOnlyDomainNameResolver() {
 }
 
 DomainNameServiceQuery::ref CachingNameOnlyDomainNameResolver::createServiceQuery(const std::string& name) {
-	return staticResolver->createServiceQuery(name);
+	//FIXME: Cache
+	return realResolver->createServiceQuery(name);
 }
 
 DomainNameAddressQuery::ref CachingNameOnlyDomainNameResolver::createAddressQuery(const std::string& name) {
-	return realResolver->createAddressQuery(name);
-}
-
-void CachingNameOnlyDomainNameResolver::handleAddressQueryResult(const std::string hostname, const std::vector<HostAddress>& address, boost::optional<DomainNameResolveError> error) {
 	//FIXME: Cache
+	return realResolver->createAddressQuery(name);
 }
 
 }

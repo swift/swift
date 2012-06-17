@@ -11,9 +11,12 @@
 #include <Swiften/Network/DomainNameResolver.h>
 #include <Swiften/Network/StaticDomainNameResolver.h>
 
-
+/*
+ * FIXME: Does not do any caching yet.
+ */
 namespace Swift {
 	class EventLoop;
+
 	class CachingNameOnlyDomainNameResolver : public DomainNameResolver {
 		public:
 			CachingNameOnlyDomainNameResolver(DomainNameResolver* realResolver, EventLoop* eventLoop);
@@ -23,10 +26,6 @@ namespace Swift {
 			virtual DomainNameAddressQuery::ref createAddressQuery(const std::string& name);
 
 		private:
-			void handleAddressQueryResult(const std::string hostname, const std::vector<HostAddress>& address, boost::optional<DomainNameResolveError> error);
-
-		private:
 			DomainNameResolver* realResolver;
-			boost::shared_ptr<StaticDomainNameResolver> staticResolver;
 	};
 }
