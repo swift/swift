@@ -61,14 +61,24 @@ void HTTPConnectProxiedConnection::initializeProxy() {
 void HTTPConnectProxiedConnection::handleProxyInitializeData(boost::shared_ptr<SafeByteArray> data) {
 	SWIFT_LOG(debug) << byteArrayToString(ByteArray(data->begin(), data->end())) << std::endl;
 	std::vector<std::string> tmp = String::split(byteArrayToString(ByteArray(data->begin(), data->end())), ' ');
-	if(tmp.size() > 1) {
-		int status = boost::lexical_cast<int> (tmp[1].c_str()); 
-		SWIFT_LOG(debug) << "Proxy Status: " << status << std::endl;
-		if (status / 100 == 2) { // all 2XX states are OK
-			setProxyInitializeFinished(true);
-			return;
+	if (tmp.size() > 1) {
+		try {
+			int status = boost::lexical_cast<int>(tmp[1]);
+			SWIFT_LOG(debug) << "Proxy Status: " << status << std::endl;
+			if (status / 100 == 2) { // all 2XX states are OK
+				setProxyInitializeFinished(true);
+			}
+			else {
+				SWIFT_LOG(debug) << "HTTP Proxy returned an error: " << byteArrayToString(ByteArray(data->begin(), data->end())) << std::endl;
+				setProxyInitializeFinished(false);
+			}
 		}
-		SWIFT_LOG(debug) << "HTTP Proxy returned an error: " << byteArrayToString(ByteArray(data->begin(), data->end())) << std::endl;
+		catch (boost::bad_lexical_cast&) {
+			SWIFT_LOG(warning) << "Unexpected response: " << tmp[1] << std::endl;
+			setProxyInitializeFinished(false);
+		}
 	}
-	setProxyInitializeFinished(false);
+	else {
+		setProxyInitializeFinished(false);
+	}
 }
