@@ -37,6 +37,7 @@
 #include <Swiften/Elements/IQ.h>
 #include <Swiften/Elements/ResourceBind.h>
 #include <Swiften/SASL/PLAINClientAuthenticator.h>
+#include <Swiften/SASL/EXTERNALClientAuthenticator.h>
 #include <Swiften/SASL/SCRAMSHA1ClientAuthenticator.h>
 #include <Swiften/SASL/DIGESTMD5ClientAuthenticator.h>
 #include <Swiften/Session/SessionStream.h>
@@ -47,6 +48,9 @@
 #ifdef SWIFTEN_PLATFORM_WIN32
 #include <Swiften/Base/WindowsRegistry.h>
 #endif
+
+#define CHECK_STATE_OR_RETURN(a) \
+	if (!checkState(a)) { return; }
 
 namespace Swift {
 
@@ -101,7 +105,7 @@ void ClientSession::sendStanza(boost::shared_ptr<Stanza> stanza) {
 }
 
 void ClientSession::handleStreamStart(const ProtocolHeader&) {
-	checkState(WaitingForStreamStart);
+	CHECK_STATE_OR_RETURN(WaitingForStreamStart);
 	state = Negotiating;
 }
 
@@ -182,9 +186,7 @@ void ClientSession::handleElement(boost::shared_ptr<Element> element) {
 		}
 	}
 	else if (StreamFeatures* streamFeatures = dynamic_cast<StreamFeatures*>(element.get())) {
-		if (!checkState(Negotiating)) {
-			return;
-		}
+		CHECK_STATE_OR_RETURN(Negotiating);
 
 		if (streamFeatures->hasStartTLS() && stream->supportsTLSEncryption() && useTLS != NeverUseTLS) {
 			state = WaitingForEncrypt;
@@ -200,6 +202,7 @@ void ClientSession::handleElement(boost::shared_ptr<Element> element) {
 		else if (streamFeatures->hasAuthenticationMechanisms()) {
 			if (stream->hasTLSCertificate()) {
 				if (streamFeatures->hasAuthenticationMechanism("EXTERNAL")) {
+					authenticator = new EXTERNALClientAuthenticator();
 					state = Authenticating;
 					stream->writeElement(boost::make_shared<AuthRequest>("EXTERNAL", createSafeByteArray("")));
 				}
@@ -208,6 +211,7 @@ void ClientSession::handleElement(boost::shared_ptr<Element> element) {
 				}
 			}
 			else if (streamFeatures->hasAuthenticationMechanism("EXTERNAL")) {
+				authenticator = new EXTERNALClientAuthenticator();
 				state = Authenticating;
 				stream->writeElement(boost::make_shared<AuthRequest>("EXTERNAL", createSafeByteArray("")));
 			}
@@ -262,7 +266,7 @@ void ClientSession::handleElement(boost::shared_ptr<Element> element) {
 		}
 	}
 	else if (boost::dynamic_pointer_cast<Compressed>(element)) {
-		checkState(Compressing);
+		CHECK_STATE_OR_RETURN(Compressing);
 		state = WaitingForStreamStart;
 		stream->addZLibCompression();
 		stream->resetXMPPParser();
@@ -285,7 +289,7 @@ void ClientSession::handleElement(boost::shared_ptr<Element> element) {
 		continueSessionInitialization();
 	}
 	else if (AuthChallenge* challenge = dynamic_cast<AuthChallenge*>(element.get())) {
-		checkState(Authenticating);
+		CHECK_STATE_OR_RETURN(Authenticating);
 		assert(authenticator);
 		if (authenticator->setChallenge(challenge->getValue())) {
 			stream->writeElement(boost::make_shared<AuthResponse>(authenticator->getResponse()));
@@ -295,10 +299,9 @@ void ClientSession::handleElement(boost::shared_ptr<Element> element) {
 		}
 	}
 	else if (AuthSuccess* authSuccess = dynamic_cast<AuthSuccess*>(element.get())) {
-		checkState(Authenticating);
-		if (authenticator && !authenticator->setChallenge(authSuccess->getValue())) {
-			delete authenticator;
-			authenticator = NULL;
+		CHECK_STATE_OR_RETURN(Authenticating);
+		assert(authenticator);
+		if (!authenticator->setChallenge(authSuccess->getValue())) {
 			finishSession(Error::ServerVerificationFailedError);
 		}
 		else {
@@ -310,12 +313,10 @@ void ClientSession::handleElement(boost::shared_ptr<Element> element) {
 		}
 	}
 	else if (dynamic_cast<AuthFailure*>(element.get())) {
-		delete authenticator;
-		authenticator = NULL;
 		finishSession(Error::AuthenticationFailedError);
 	}
 	else if (dynamic_cast<TLSProceed*>(element.get())) {
-		checkState(WaitingForEncrypt);
+		CHECK_STATE_OR_RETURN(WaitingForEncrypt);
 		state = Encrypting;
 		stream->addTLSEncryption();
 	}
@@ -362,13 +363,14 @@ bool ClientSession::checkState(State state) {
 
 void ClientSession::sendCredentials(const SafeByteArray& password) {
 	assert(WaitingForCredentials);
+	assert(authenticator);
 	state = Authenticating;
 	authenticator->setCredentials(localJID.getNode(), password);
 	stream->writeElement(boost::make_shared<AuthRequest>(authenticator->getName(), authenticator->getResponse()));
 }
 
 void ClientSession::handleTLSEncrypted() {
-	checkState(Encrypting);
+	CHECK_STATE_OR_RETURN(Encrypting);
 
 	std::vector<Certificate::ref> certificateChain = stream->getPeerCertificateChain();
 	boost::shared_ptr<CertificateVerificationError> verificationError = stream->getPeerCertificateVerificationError();
@@ -447,6 +449,10 @@ void ClientSession::finishSession(boost::shared_ptr<Swift::Error> error) {
 	assert(stream->isOpen());
 	if (stanzaAckResponder_) {
 		stanzaAckResponder_->handleAckRequestReceived();
+	}
+	if (authenticator) {
+		delete authenticator;
+		authenticator = NULL;
 	}
 	stream->writeFooter();
 	stream->close();

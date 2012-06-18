@@ -4,6 +4,7 @@ myenv = swiften_env.Clone()
 
 objects = myenv.SwiftenObject([
 		"ClientAuthenticator.cpp",
+		"EXTERNALClientAuthenticator.cpp",
 		"PLAINClientAuthenticator.cpp",
 		"PLAINMessage.cpp",
 		"SCRAMSHA1ClientAuthenticator.cpp",

@@ -14,6 +14,7 @@
 #include <Swiften/Session/SessionStream.h>
 #include <Swiften/Client/ClientSession.h>
 #include <Swiften/Elements/Message.h>
+#include <Swiften/Elements/AuthChallenge.h>
 #include <Swiften/Elements/StartTLSRequest.h>
 #include <Swiften/Elements/StreamFeatures.h>
 #include <Swiften/Elements/StreamError.h>
@@ -47,8 +48,10 @@ class ClientSessionTest : public CppUnit::TestFixture {
 		CPPUNIT_TEST(testAuthenticate_NoValidAuthMechanisms);
 		CPPUNIT_TEST(testAuthenticate_PLAINOverNonTLS);
 		CPPUNIT_TEST(testAuthenticate_RequireTLS);
+		CPPUNIT_TEST(testAuthenticate_EXTERNAL);
 		CPPUNIT_TEST(testStreamManagement);
 		CPPUNIT_TEST(testStreamManagement_Failed);
+		CPPUNIT_TEST(testUnexpectedChallenge);
 		CPPUNIT_TEST(testFinishAcksStanzas);
 		/*
 		CPPUNIT_TEST(testResourceBind);
@@ -241,6 +244,34 @@ class ClientSessionTest : public CppUnit::TestFixture {
 			server->receiveStreamStart();
 			server->sendStreamStart();
 			server->sendStreamFeaturesWithUnknownAuthentication();
+
+			CPPUNIT_ASSERT_EQUAL(ClientSession::Finished, session->getState());
+			CPPUNIT_ASSERT(sessionFinishedReceived);
+			CPPUNIT_ASSERT(sessionFinishedError);
+		}
+
+		void testAuthenticate_EXTERNAL() {
+			boost::shared_ptr<ClientSession> session(createSession());
+			session->start();
+			server->receiveStreamStart();
+			server->sendStreamStart();
+			server->sendStreamFeaturesWithEXTERNALAuthentication();
+			server->receiveAuthRequest("EXTERNAL");
+			server->sendAuthSuccess();
+			server->receiveStreamStart();
+
+			session->finish();
+		}
+
+		void testUnexpectedChallenge() {
+			boost::shared_ptr<ClientSession> session(createSession());
+			session->start();
+			server->receiveStreamStart();
+			server->sendStreamStart();
+			server->sendStreamFeaturesWithEXTERNALAuthentication();
+			server->receiveAuthRequest("EXTERNAL");
+			server->sendChallenge();
+			server->sendChallenge();
 
 			CPPUNIT_ASSERT_EQUAL(ClientSession::Finished, session->getState());
 			CPPUNIT_ASSERT(sessionFinishedReceived);
@@ -444,6 +475,10 @@ class ClientSessionTest : public CppUnit::TestFixture {
 					onElementReceived(streamFeatures);
 				}
 
+				void sendChallenge() {
+					onElementReceived(boost::make_shared<AuthChallenge>());
+				}
+
 				void sendStreamError() {
 					onElementReceived(boost::make_shared<StreamError>());
 				}
@@ -467,6 +502,12 @@ class ClientSessionTest : public CppUnit::TestFixture {
 				void sendStreamFeaturesWithPLAINAuthentication() {
 					boost::shared_ptr<StreamFeatures> streamFeatures(new StreamFeatures());
 					streamFeatures->addAuthenticationMechanism("PLAIN");
+					onElementReceived(streamFeatures);
+				}
+
+				void sendStreamFeaturesWithEXTERNALAuthentication() {
+					boost::shared_ptr<StreamFeatures> streamFeatures(new StreamFeatures());
+					streamFeatures->addAuthenticationMechanism("EXTERNAL");
 					onElementReceived(streamFeatures);
 				}
 
