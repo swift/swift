@@ -53,7 +53,7 @@ CoreClient::~CoreClient() {
 }
 
 void CoreClient::connect(const ClientOptions& o) {
-	SWIFT_LOG(debug) << "Connecting" << std::endl;
+	SWIFT_LOG(debug) << "Connecting ";
 
 	forceReset();
 	disconnectRequested_ = false;
@@ -68,25 +68,33 @@ void CoreClient::connect(const ClientOptions& o) {
 	HostAddressPort systemHTTPConnectProxy = networkFactories->getProxyProvider()->getHTTPConnectProxy();
 	switch (o.proxyType) {
 		case ClientOptions::NoProxy:
+			SWIFT_LOG(debug) << " without a proxy" << std::endl;
 			break;
 		case ClientOptions::SystemConfiguredProxy:
+			SWIFT_LOG(debug) << " with a system configured proxy" << std::endl;
 			if (systemSOCKS5Proxy.isValid()) {
-				proxyConnectionFactories.push_back(new SOCKS5ProxiedConnectionFactory(networkFactories->getDomainNameResolver(), networkFactories->getConnectionFactory(), networkFactories->getTimerFactory(), systemSOCKS5Proxy.getAddress().toString(), systemHTTPConnectProxy.getPort()));
+				SWIFT_LOG(debug) << "Found SOCK5 Proxy: " << systemSOCKS5Proxy.getAddress().toString() << ":" << systemHTTPConnectProxy.getPort() << std::endl;
+				proxyConnectionFactories.push_back(new SOCKS5ProxiedConnectionFactory(networkFactories->getDomainNameResolver(), networkFactories->getConnectionFactory(), networkFactories->getTimerFactory(), systemSOCKS5Proxy.getAddress().toString(), systemSOCKS5Proxy.getPort()));
 			}
 			if (systemHTTPConnectProxy.isValid()) {
+				SWIFT_LOG(debug) << "Found HTTPConnect Proxy: " << systemHTTPConnectProxy.getAddress().toString() << ":" << systemHTTPConnectProxy.getPort() << std::endl;
 				proxyConnectionFactories.push_back(new HTTPConnectProxiedConnectionFactory(networkFactories->getDomainNameResolver(), networkFactories->getConnectionFactory(), networkFactories->getTimerFactory(), systemHTTPConnectProxy.getAddress().toString(), systemHTTPConnectProxy.getPort()));
 			}
 			break;
 		case ClientOptions::SOCKS5Proxy: {
+			SWIFT_LOG(debug) << " with manual configured SOCKS5 proxy" << std::endl;
 			std::string proxyHostname = o.manualProxyHostname.empty() ? systemSOCKS5Proxy.getAddress().toString() : o.manualProxyHostname;
 			int proxyPort = o.manualProxyPort == -1 ? systemSOCKS5Proxy.getPort() : o.manualProxyPort;
+			SWIFT_LOG(debug) << "Proxy: " << proxyHostname << ":" << proxyPort << std::endl;
 			proxyConnectionFactories.push_back(new SOCKS5ProxiedConnectionFactory(networkFactories->getDomainNameResolver(), networkFactories->getConnectionFactory(), networkFactories->getTimerFactory(), proxyHostname, proxyPort));
 			useDirectConnection = false;
 			break;
 		}
 		case ClientOptions::HTTPConnectProxy: {
-			std::string proxyHostname = o.manualProxyHostname.empty() ? systemSOCKS5Proxy.getAddress().toString() : o.manualProxyHostname;
-			int proxyPort = o.manualProxyPort == -1 ? systemSOCKS5Proxy.getPort() : o.manualProxyPort;
+			SWIFT_LOG(debug) << " with manual configured HTTPConnect proxy" << std::endl;
+			std::string proxyHostname = o.manualProxyHostname.empty() ? systemHTTPConnectProxy.getAddress().toString() : o.manualProxyHostname;
+			int proxyPort = o.manualProxyPort == -1 ? systemHTTPConnectProxy.getPort() : o.manualProxyPort;
+			SWIFT_LOG(debug) << "Proxy: " << proxyHostname << ":" << proxyPort << std::endl;
 			proxyConnectionFactories.push_back(new HTTPConnectProxiedConnectionFactory(networkFactories->getDomainNameResolver(), networkFactories->getConnectionFactory(), networkFactories->getTimerFactory(), proxyHostname, proxyPort));
 			useDirectConnection = false;
 			break;
