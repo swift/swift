@@ -17,6 +17,11 @@ void DiscoItemsParser::handleStartElement(const std::string& element, const std:
 			getPayloadInternal()->addItem(DiscoItems::Item(attributes.getAttribute("name"), JID(attributes.getAttribute("jid")), attributes.getAttribute("node")));
 		}
 	}
+	else if (level_ == TopLevel) {
+		if (element == "query") {
+			getPayloadInternal()->setNode(attributes.getAttribute("node"));
+		}
+	}
 	++level_;
 }
 
