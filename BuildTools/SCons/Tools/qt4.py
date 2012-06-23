@@ -55,7 +55,7 @@ class QtdirNotFound(ToolQtWarning):
 
 SCons.Warnings.enableWarningClass(ToolQtWarning)
 
-qrcinclude_re = re.compile(r'<file>([^<]*)</file>', re.M)
+qrcinclude_re = re.compile(r'<file (alias=\"[^\"]*\")?>([^<]*)</file>', re.M)
 
 def transformToWinePath(path) :
 	return os.popen('winepath -w "%s"'%path).read().strip().replace('\\','/')
@@ -328,7 +328,7 @@ def generate(env):
 					result.append(itemPath)
 			return result
 		contents = node.get_contents()
-		includes = qrcinclude_re.findall(contents)
+		includes = [included[1] for included in qrcinclude_re.findall(contents)]
 		qrcpath = os.path.dirname(node.path)
 		dirs = [included for included in includes if os.path.isdir(os.path.join(qrcpath,included))]
 		# dirs need to include files recursively
