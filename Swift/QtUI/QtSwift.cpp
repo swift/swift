@@ -150,7 +150,7 @@ QtSwift::QtSwift(const po::variables_map& options) : networkFactories_(&clientMa
 		Swift::logging = true;
 	}
 
-	tabs_ = options.count("no-tabs") && !(splitter_ > 0) ? NULL : new QtChatTabs();
+	tabs_ = options.count("no-tabs") && !splitter_ ? NULL : new QtChatTabs();
 	bool startMinimized = options.count("start-minimized") > 0;
 	applicationPathProvider_ = new PlatformApplicationPathProvider(SWIFT_APPLICATION_NAME);
 	storagesFactory_ = new FileStoragesFactory(applicationPathProvider_->getDataDir());
