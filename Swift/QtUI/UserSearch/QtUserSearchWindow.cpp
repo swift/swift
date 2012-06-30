@@ -78,6 +78,7 @@ QtUserSearchWindow::~QtUserSearchWindow() {
 }
 
 void QtUserSearchWindow::handleCurrentChanged(int page) {
+	resultsPage_->emitCompletenessCheck();
 	if (page == 2 && lastPage_ == 1) {
 		setError("");
 		/* next won't be called if JID is selected */
@@ -254,6 +255,7 @@ void QtUserSearchWindow::setResults(const std::vector<UserSearchResult>& results
 	delete model_;
 	model_ = newModel;
 	resultsPage_->setNoResults(model_->rowCount() == 0);
+	resultsPage_->emitCompletenessCheck();
 }
 
 void QtUserSearchWindow::setResultsForm(Form::ref results) {
@@ -266,6 +268,7 @@ void QtUserSearchWindow::setResultsForm(Form::ref results) {
 	delete model_;
 	model_ = newModel;
 	resultsPage_->setNoResults(model_->rowCount() == 0);
+	resultsPage_->emitCompletenessCheck();
 }
 
 void QtUserSearchWindow::setSelectedService(const JID& jid) {
