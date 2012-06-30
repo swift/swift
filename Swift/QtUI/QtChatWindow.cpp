@@ -360,7 +360,6 @@ void QtChatWindow::handleCurrentLabelChanged(int index) {
 	}
 	const SecurityLabelsCatalog::Item& label = labelModel_->availableLabels_[index];
 	if (label.getLabel()) {
-		qDebug() << "Displaying label colours";
 		QPalette palette = labelsWidget_->palette();
 		//palette.setColor(QPalette::Base, P2QSTRING(label.getLabel()->getBackgroundColor()));
 		palette.setColor(labelsWidget_->backgroundRole(), P2QSTRING(label.getLabel()->getBackgroundColor()));
