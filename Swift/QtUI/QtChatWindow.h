@@ -197,6 +197,7 @@ namespace Swift {
 			QtChatView* messageLog_;
 			QtChatTheme* theme_;
 			QtTextEdit* input_;
+			QWidget* midBar_; 
 			QComboBox* labelsWidget_;
 			QtOccupantListWidget* treeWidget_;
 			QLabel* correctingLabel_;

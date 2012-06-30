@@ -128,10 +128,10 @@ QtChatWindow::QtChatWindow(const QString &contact, QtChatTheme* theme, UIEventSt
 	logRosterSplitter_->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 	connect(logRosterSplitter_, SIGNAL(splitterMoved(int, int)), this, SLOT(handleSplitterMoved(int, int)));
 
-	QWidget* midBar = new QWidget(this);
+	midBar_ = new QWidget(this);
 	//layout->addWidget(midBar);
-	midBar->setAutoFillBackground(true);
-	QHBoxLayout *midBarLayout = new QHBoxLayout(midBar);
+	midBar_->setAutoFillBackground(true);
+	QHBoxLayout *midBarLayout = new QHBoxLayout(midBar_);
 	midBarLayout->setContentsMargins(0,0,0,0);
 	midBarLayout->setSpacing(2);
 	//midBarLayout->addStretch();
@@ -149,7 +149,7 @@ QtChatWindow::QtChatWindow(const QString &contact, QtChatTheme* theme, UIEventSt
 	inputBarLayout->setSpacing(2);
 	input_ = new QtTextEdit(this);
 	input_->setAcceptRichText(false);
-	inputBarLayout->addWidget(midBar);
+	inputBarLayout->addWidget(midBar_);
 	inputBarLayout->addWidget(input_);
 	correctingLabel_ = new QLabel(tr("Correcting"), this);
 	inputBarLayout->addWidget(correctingLabel_);
@@ -166,7 +166,7 @@ QtChatWindow::QtChatWindow(const QString &contact, QtChatTheme* theme, UIEventSt
 	connect(input_, SIGNAL(cursorPositionChanged()), this, SLOT(handleCursorPositionChanged()));
 	setFocusProxy(input_);
 	logRosterSplitter_->setFocusProxy(input_);
-	midBar->setFocusProxy(input_);
+	midBar_->setFocusProxy(input_);
 	messageLog_->setFocusProxy(input_);
 	connect(qApp, SIGNAL(focusChanged(QWidget*, QWidget*)), this, SLOT(qAppFocusChanged(QWidget*, QWidget*)));
 	connect(messageLog_, SIGNAL(gotFocus()), input_, SLOT(setFocus()));
@@ -366,11 +366,13 @@ void QtChatWindow::handleCurrentLabelChanged(int index) {
 		palette.setColor(labelsWidget_->backgroundRole(), P2QSTRING(label.getLabel()->getBackgroundColor()));
 		palette.setColor(labelsWidget_->foregroundRole(), P2QSTRING(label.getLabel()->getForegroundColor()));
 		labelsWidget_->setPalette(palette);
+		midBar_->setPalette(palette);
 		labelsWidget_->setAutoFillBackground(true);
 	}
 	else {
 		labelsWidget_->setAutoFillBackground(false);
 		labelsWidget_->setPalette(defaultLabelsPalette_);
+		midBar_->setPalette(defaultLabelsPalette_);
 	}
 }
 
