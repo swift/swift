@@ -5,7 +5,6 @@
  */
 
 #include "QtChatWindow.h"
-#include "QtSwiftUtil.h"
 #include "Swift/Controllers/Roster/Roster.h"
 #include "Swift/Controllers/Roster/RosterItem.h"
 #include "Swift/Controllers/Roster/ContactRosterItem.h"
@@ -32,6 +31,7 @@
 #include <boost/lexical_cast.hpp>
 
 #include <QLabel>
+#include <qdebug.h>
 #include <QMessageBox>
 #include <QInputDialog>
 #include <QApplication>
@@ -60,6 +60,7 @@ const QString QtChatWindow::ButtonFileTransferSendRequest = QString("filetransfe
 const QString QtChatWindow::ButtonFileTransferAcceptRequest = QString("filetransfer-acceptrequest");
 const QString QtChatWindow::ButtonMUCInvite = QString("mucinvite");
 
+
 QtChatWindow::QtChatWindow(const QString &contact, QtChatTheme* theme, UIEventStream* eventStream, SettingsProvider* settings, QMap<QString, QString> emoticons) : QtTabbable(), contact_(contact), previousMessageWasSelf_(false), previousMessageKind_(PreviosuMessageWasNone), eventStream_(eventStream), emoticons_(emoticons) {
 	settings_ = settings;
 	unreadCount_ = 0;
@@ -69,6 +70,7 @@ QtChatWindow::QtChatWindow(const QString &contact, QtChatTheme* theme, UIEventSt
 	affiliationEditor_ = NULL;
 	theme_ = theme;
 	isCorrection_ = false;
+	labelModel_ = NULL;
 	correctionEnabled_ = Maybe;
 	showEmoticons_ = true;
 	updateTitleWithUnreadCount();
@@ -127,24 +129,27 @@ QtChatWindow::QtChatWindow(const QString &contact, QtChatTheme* theme, UIEventSt
 	connect(logRosterSplitter_, SIGNAL(splitterMoved(int, int)), this, SLOT(handleSplitterMoved(int, int)));
 
 	QWidget* midBar = new QWidget(this);
-	layout->addWidget(midBar);
+	//layout->addWidget(midBar);
 	midBar->setAutoFillBackground(true);
 	QHBoxLayout *midBarLayout = new QHBoxLayout(midBar);
 	midBarLayout->setContentsMargins(0,0,0,0);
 	midBarLayout->setSpacing(2);
-	midBarLayout->addStretch();
+	//midBarLayout->addStretch();
 
 	labelsWidget_ = new QComboBox(this);
 	labelsWidget_->setFocusPolicy(Qt::NoFocus);
 	labelsWidget_->hide();
 	labelsWidget_->setSizeAdjustPolicy(QComboBox::AdjustToContents);
 	midBarLayout->addWidget(labelsWidget_,0);
+	connect(labelsWidget_, SIGNAL(currentIndexChanged(int)), this, SLOT(handleCurrentLabelChanged(int)));
+	defaultLabelsPalette_ = labelsWidget_->palette();
 
 	QHBoxLayout* inputBarLayout = new QHBoxLayout();
 	inputBarLayout->setContentsMargins(0,0,0,0);
 	inputBarLayout->setSpacing(2);
 	input_ = new QtTextEdit(this);
 	input_->setAcceptRichText(false);
+	inputBarLayout->addWidget(midBar);
 	inputBarLayout->addWidget(input_);
 	correctingLabel_ = new QLabel(tr("Correcting"), this);
 	inputBarLayout->addWidget(correctingLabel_);
@@ -332,23 +337,42 @@ void QtChatWindow::setRosterModel(Roster* roster) {
 }
 
 void QtChatWindow::setAvailableSecurityLabels(const std::vector<SecurityLabelsCatalog::Item>& labels) {
-	availableLabels_ = labels;
-	labelsWidget_->clear();
+	delete labelModel_;
+	labelModel_ = new LabelModel();
+	labelModel_->availableLabels_ = labels;
 	int i = 0;
 	int defaultIndex = 0;
+	labelsWidget_->setModel(labelModel_);
 	foreach (SecurityLabelsCatalog::Item label, labels) {
-		std::string selector = label.getSelector();
-		std::string displayMarking = label.getLabel() ? label.getLabel()->getDisplayMarking() : "";
-		QString labelName = selector.empty() ? displayMarking.c_str() : selector.c_str();
-		labelsWidget_->addItem(labelName, QVariant(i));
 		if (label.getIsDefault()) {
 			defaultIndex = i;
+			break;
 		}
 		i++;
 	}
 	labelsWidget_->setCurrentIndex(defaultIndex);
 }
 
+void QtChatWindow::handleCurrentLabelChanged(int index) {
+	if (static_cast<size_t>(index) >= labelModel_->availableLabels_.size()) {
+		qDebug() << "User selected a label that doesn't exist";
+		return;
+	}
+	const SecurityLabelsCatalog::Item& label = labelModel_->availableLabels_[index];
+	if (label.getLabel()) {
+		qDebug() << "Displaying label colours";
+		QPalette palette = labelsWidget_->palette();
+		//palette.setColor(QPalette::Base, P2QSTRING(label.getLabel()->getBackgroundColor()));
+		palette.setColor(labelsWidget_->backgroundRole(), P2QSTRING(label.getLabel()->getBackgroundColor()));
+		palette.setColor(labelsWidget_->foregroundRole(), P2QSTRING(label.getLabel()->getForegroundColor()));
+		labelsWidget_->setPalette(palette);
+		labelsWidget_->setAutoFillBackground(true);
+	}
+	else {
+		labelsWidget_->setAutoFillBackground(false);
+		labelsWidget_->setPalette(defaultLabelsPalette_);
+	}
+}
 
 void QtChatWindow::setSecurityLabelsError() {
 	labelsWidget_->setEnabled(false);
@@ -369,8 +393,8 @@ void QtChatWindow::setCorrectionEnabled(Tristate enabled) {
 
 SecurityLabelsCatalog::Item QtChatWindow::getSelectedSecurityLabel() {
 	assert(labelsWidget_->isEnabled());
-	assert(labelsWidget_->currentIndex() >= 0 && static_cast<size_t>(labelsWidget_->currentIndex()) < availableLabels_.size());
-	return availableLabels_[labelsWidget_->currentIndex()];
+	assert(labelsWidget_->currentIndex() >= 0 && static_cast<size_t>(labelsWidget_->currentIndex()) < labelModel_->availableLabels_.size());
+	return labelModel_->availableLabels_[labelsWidget_->currentIndex()];
 }
 
 void QtChatWindow::closeEvent(QCloseEvent* event) {

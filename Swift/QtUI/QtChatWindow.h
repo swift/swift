@@ -9,6 +9,7 @@
 #include <Swift/Controllers/UIInterfaces/ChatWindow.h>
 #include <Swift/QtUI/QtMUCConfigurationWindow.h>
 #include <Swift/QtUI/QtAffiliationEditor.h>
+#include <Swift/QtUI/QtSwiftUtil.h>
 
 #include <QtTabbable.h>
 
@@ -35,6 +36,38 @@ namespace Swift {
 	class UIEventStream;
 	class QtChatWindowJSBridge;
 	class SettingsProvider;
+
+	class LabelModel : public QAbstractListModel {
+		Q_OBJECT
+		public:
+			LabelModel(QObject* parent = NULL) : QAbstractListModel(parent) {}
+
+			virtual int rowCount(const QModelIndex& /*index*/) const {
+				return static_cast<int>(availableLabels_.size());
+			}
+
+			virtual QVariant data(const QModelIndex& index, int role) const {
+				if (!index.isValid()) {
+					return QVariant();
+				}
+				SecurityLabel::ref label = availableLabels_[index.row()].getLabel();
+				if (label && role == Qt::TextColorRole) {
+					return P2QSTRING(label->getForegroundColor());
+				}
+				if (label && role == Qt::TextColorRole) {
+					return P2QSTRING(label->getBackgroundColor());
+				}
+				if (role == Qt::DisplayRole) {
+					std::string selector = availableLabels_[index.row()].getSelector();
+					std::string displayMarking = label ? label->getDisplayMarking() : "";
+					QString labelName = selector.empty() ? displayMarking.c_str() : selector.c_str();
+					return labelName;
+				}
+				return QVariant();
+			}
+
+			std::vector<SecurityLabelsCatalog::Item> availableLabels_;
+	};
 
 	class QtChatWindow : public QtTabbable, public ChatWindow {
 		Q_OBJECT
@@ -132,6 +165,7 @@ namespace Swift {
 
 			void handleHTMLButtonClicked(QString id, QString arg1, QString arg2, QString arg3);
 			void handleAffiliationEditorAccepted();
+			void handleCurrentLabelChanged(int);
 
 		private:
 			enum PreviousMessageKind {
@@ -172,7 +206,6 @@ namespace Swift {
 			TabComplete* completer_;
 			QLineEdit* subject_;
 			QPushButton* actionButton_;
-			std::vector<SecurityLabelsCatalog::Item> availableLabels_;
 			bool isCorrection_;
 			bool previousMessageWasSelf_;
 			PreviousMessageKind previousMessageKind_;
@@ -193,5 +226,7 @@ namespace Swift {
 			std::vector<ChatWindow::RoomAction> availableRoomActions_;
 			QMap<QString, QString> emoticons_;
 			bool showEmoticons_;
+			QPalette defaultLabelsPalette_;
+			LabelModel* labelModel_;
 	};
 }
