@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string></string>
+   <string/>
   </property>
   <property name="title">
    <string>Add a user</string>
@@ -23,7 +23,7 @@
    <item>
     <widget class="QLabel" name="howLabel_">
      <property name="text">
-      <string></string>
+      <string/>
      </property>
     </widget>
    </item>
@@ -42,11 +42,28 @@
     </layout>
    </item>
    <item>
-    <widget class="QRadioButton" name="byLocalSearch_">
-     <property name="text">
-      <string>I'd like to search my server</string>
-     </property>
-    </widget>
+    <layout class="QHBoxLayout" name="horizontalLayout_3">
+     <item>
+      <widget class="QRadioButton" name="byLocalSearch_">
+       <property name="text">
+        <string>I'd like to search my server</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <spacer name="horizontalSpacer">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+    </layout>
    </item>
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout">
@@ -88,7 +105,7 @@
    <item>
     <widget class="QLabel" name="errorLabel_">
      <property name="text">
-      <string></string>
+      <string/>
      </property>
      <property name="alignment">
       <set>Qt::AlignCenter</set>
