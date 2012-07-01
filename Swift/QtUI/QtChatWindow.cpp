@@ -275,6 +275,7 @@ void QtChatWindow::beginCorrection() {
 	isCorrection_ = true;
 	correctingLabel_->show();
 	input_->setStyleSheet(alertStyleSheet_);
+	labelsWidget_->setEnabled(false);
 }
 
 void QtChatWindow::cancelCorrection() {
@@ -285,6 +286,7 @@ void QtChatWindow::cancelCorrection() {
 	isCorrection_ = false;
 	correctingLabel_->hide();
 	input_->setStyleSheet(qApp->styleSheet());
+	labelsWidget_->setEnabled(true);
 }
 
 QByteArray QtChatWindow::getSplitterState() {
@@ -488,8 +490,8 @@ std::string QtChatWindow::addMessage(const std::string &message, const std::stri
 
 	QString htmlString;
 	if (label) {
-		htmlString = QString("<span style=\"border: thin dashed grey; padding-left: .5em; padding-right: .5em; color: %1; background-color: %2; font-size: 90%; margin-right: .5em; \">").arg(Qt::escape(P2QSTRING(label->getForegroundColor()))).arg(Qt::escape(P2QSTRING(label->getBackgroundColor())));
-		htmlString += QString("%3</span> ").arg(Qt::escape(P2QSTRING(label->getDisplayMarking())));
+		htmlString = QString("<span style=\"border: thin dashed grey; padding-left: .5em; padding-right: .5em; color: %1; background-color: %2; font-size: 90%; margin-right: .5em; \" class='swift_label'>").arg(Qt::escape(P2QSTRING(label->getForegroundColor()))).arg(Qt::escape(P2QSTRING(label->getBackgroundColor())));
+		htmlString += QString("%1</span> ").arg(Qt::escape(P2QSTRING(label->getDisplayMarking())));
 	}
 	QString messageHTML(P2QSTRING(message));
 	messageHTML = Qt::escape(messageHTML);
@@ -506,7 +508,7 @@ std::string QtChatWindow::addMessage(const std::string &message, const std::stri
 	messageHTML.replace("\n","<br/>");
 	QString styleSpanStart = style == "" ? "" : "<span style=\"" + style + "\">";
 	QString styleSpanEnd = style == "" ? "" : "</span>";
-	htmlString += styleSpanStart + messageHTML + styleSpanEnd;
+	htmlString += "<span class='swift_inner_message'>" + styleSpanStart + messageHTML + styleSpanEnd + "</span>" ;
 
 	bool appendToPrevious = appendToPreviousCheck(PreviousMessageWasMessage, senderName, senderIsSelf);
 	if (lastLineTracker_.getShouldMoveLastLine()) {

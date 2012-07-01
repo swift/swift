@@ -169,7 +169,7 @@ void QtChatView::replaceMessage(const QString& newMessage, const QString& id, co
 	rememberScrolledToBottom();
 	QWebElement message = document_.findFirst("#" + id);
 	if (!message.isNull()) {
-		QWebElement replaceContent = message.findFirst("span.swift_message");
+		QWebElement replaceContent = message.findFirst("span.swift_inner_message");
 		assert(!replaceContent.isNull());
 		QString old = replaceContent.toOuterXml();
 		replaceContent.setInnerXml(ChatSnippet::escape(newMessage));
