@@ -29,5 +29,5 @@ if env["TEST"] :
 				if os.environ.get(i, "") :
 					myenv["ENV"][i] = os.environ[i]
 			if myenv["PLATFORM"] == "darwin" :
-				myenv["ENV"]["DYLD_LIBRARY_PATH"] = ":".join(map(lambda x : str(x), myenv.get("LIBPATH", [])))
+				myenv["ENV"]["DYLD_FALLBACK_LIBRARY_PATH"] = ":".join(map(lambda x : str(x), myenv.get("LIBPATH", [])))
 			myenv.Test(checker, is_checker = True)
