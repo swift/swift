@@ -127,10 +127,11 @@ else :
 # This isn't a real flag (yet) AFAIK. Be sure to append it to the CXXFLAGS
 # where you need it
 env["OBJCCFLAGS"] = []
+
 if env["optimize"] :
 	if env["PLATFORM"] == "win32" :
 		env.Append(CCFLAGS = ["/O2", "/GL"])
-		env.Append(LINKFLAGS = ["/INCREMENTAL:NO", "/LTCG"])
+		env.Append(LINKFLAGS = ["/LTCG"])
 	else :
 		env.Append(CCFLAGS = ["-O2"])
 
@@ -210,7 +211,7 @@ if env.get("coverage", 0) :
 if env["PLATFORM"] == "win32" :
 	env.Append(LIBS = ["user32", "crypt32", "dnsapi", "iphlpapi", "ws2_32", "wsock32", "Advapi32"])
 	env.Append(CCFLAGS = ["/EHsc", "/nologo"])
-	# FIXME: We should find a decent solution for MSVS 10
+	env.Append(LINKFLAGS = ["/INCREMENTAL:no"])
 	if int(env["MSVS_VERSION"].split(".")[0]) < 10 :
 		env["LINKCOM"] = [env["LINKCOM"], 'mt.exe -nologo -manifest ${TARGET}.manifest -outputresource:$TARGET;1']
 		env["SHLINKCOM"] = [env["SHLINKCOM"], 'mt.exe -nologo -manifest ${TARGET}.manifest -outputresource:$TARGET;2']
