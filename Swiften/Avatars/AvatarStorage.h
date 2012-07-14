@@ -8,12 +8,14 @@
 
 #include <boost/filesystem/path.hpp>
 #include <string>
+
+#include <Swiften/Base/API.h>
 #include <Swiften/Base/ByteArray.h>
 
 namespace Swift {
 	class JID;
 
-	class AvatarStorage {
+	class SWIFTEN_API AvatarStorage {
 		public:
 			virtual ~AvatarStorage();
 

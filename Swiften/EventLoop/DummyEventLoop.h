@@ -8,10 +8,11 @@
 
 #include <deque>
 
+#include <Swiften/Base/API.h>
 #include <Swiften/EventLoop/EventLoop.h>
 
 namespace Swift {
-	class DummyEventLoop : public EventLoop {
+	class SWIFTEN_API DummyEventLoop : public EventLoop {
 		public:
 			DummyEventLoop();
 			~DummyEventLoop();

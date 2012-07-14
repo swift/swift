@@ -9,10 +9,12 @@
 #pragma once
 
 #include <string>
+
+#include <Swiften/Base/API.h>
 #include <Swiften/Base/SafeByteArray.h>
 
 namespace Swift {
-	class PLAINMessage {
+	class SWIFTEN_API PLAINMessage {
 		public:
 			PLAINMessage(const std::string& authcid, const SafeByteArray& password, const std::string& authzid = "");
 			PLAINMessage(const SafeByteArray& value);

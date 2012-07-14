@@ -9,6 +9,7 @@
 #include <vector>
 #include <string>
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Elements/Payload.h>
 #include <Swiften/Elements/Form.h>
 
@@ -16,7 +17,7 @@ namespace Swift {
 	/**
 	 * disco#info from XEP-0030
 	 */
-	class DiscoInfo : public Payload {
+	class SWIFTEN_API DiscoInfo : public Payload {
 		public:
 			typedef boost::shared_ptr<DiscoInfo> ref;
 

@@ -8,10 +8,11 @@
 
 #include <vector>
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Serializer/PayloadSerializerCollection.h>
 
 namespace Swift {
-	class FullPayloadSerializerCollection : public PayloadSerializerCollection {
+	class SWIFTEN_API FullPayloadSerializerCollection : public PayloadSerializerCollection {
 		public:
 			FullPayloadSerializerCollection();
 			~FullPayloadSerializerCollection();

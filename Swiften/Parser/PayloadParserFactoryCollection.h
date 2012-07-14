@@ -9,11 +9,12 @@
 #include <vector>
 
 #include <Swiften/Parser/AttributeMap.h>
+#include <Swiften/Base/API.h>
 
 namespace Swift {
 	class PayloadParserFactory;
 
-	class PayloadParserFactoryCollection {
+	class SWIFTEN_API PayloadParserFactoryCollection {
 		public:
 			PayloadParserFactoryCollection();
 

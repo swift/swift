@@ -7,6 +7,7 @@
 #pragma once
 
 #include <Swiften/JID/JID.h>
+#include <Swiften/Base/API.h>
 #include <string>
 #include <Swiften/Elements/Message.h>
 #include <Swiften/Elements/Presence.h>
@@ -27,7 +28,7 @@ namespace Swift {
 	class IQRouter;
 	class DirectedPresenceSender;
 
-	class MUC {
+	class SWIFTEN_API MUC {
 		public:
 			typedef boost::shared_ptr<MUC> ref;
 

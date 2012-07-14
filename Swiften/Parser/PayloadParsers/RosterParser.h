@@ -6,13 +6,14 @@
 
 #pragma once
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Elements/RosterPayload.h>
 #include <Swiften/Parser/GenericPayloadParser.h>
 
 namespace Swift {
 	class SerializingParser;
 
-	class RosterParser : public GenericPayloadParser<RosterPayload> {
+	class SWIFTEN_API RosterParser : public GenericPayloadParser<RosterPayload> {
 		public:
 			RosterParser();
 

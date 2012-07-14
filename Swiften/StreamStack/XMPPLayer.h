@@ -10,6 +10,7 @@
 #include <Swiften/Base/boost_bsignals.h>
 #include <boost/noncopyable.hpp>
 
+#include <Swiften/Base/API.h>
 #include <Swiften/StreamStack/HighLayer.h>
 #include <Swiften/Base/SafeByteArray.h>
 #include <Swiften/Elements/Element.h>
@@ -25,7 +26,7 @@ namespace Swift {
 	class XMLParserFactory;
 	class BOSHSessionStream;
 
-	class XMPPLayer : public XMPPParserClient, public HighLayer, boost::noncopyable {
+	class SWIFTEN_API XMPPLayer : public XMPPParserClient, public HighLayer, boost::noncopyable {
 		friend class BOSHSessionStream;
 		public:
 			XMPPLayer(

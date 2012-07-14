@@ -8,10 +8,11 @@
 
 #include <boost/asio/ip/tcp.hpp>
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Network/HostAddress.h>
 
 namespace Swift {
-	class HostAddressPort {
+	class SWIFTEN_API HostAddressPort {
 		public:
 			HostAddressPort(const HostAddress& address = HostAddress(), int port = -1);
 			HostAddressPort(const boost::asio::ip::tcp::endpoint& endpoint);

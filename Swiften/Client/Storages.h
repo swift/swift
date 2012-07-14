@@ -6,6 +6,8 @@
 
 #pragma once
 
+#include <Swiften/Base/API.h>
+
 namespace Swift {
 	class VCardStorage;
 	class AvatarStorage;
@@ -16,7 +18,7 @@ namespace Swift {
 	 * An interface to hold storage classes for different
 	 * controllers.
 	 */
-	class Storages {
+	class SWIFTEN_API Storages {
 		public:
 			virtual ~Storages();
 

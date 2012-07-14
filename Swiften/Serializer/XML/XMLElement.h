@@ -12,10 +12,11 @@
 
 #include <string>
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Serializer/XML/XMLNode.h>
 
 namespace Swift {
-	class XMLElement : public XMLNode {
+	class SWIFTEN_API XMLElement : public XMLNode {
 		public:
 			typedef boost::shared_ptr<XMLElement> ref;
 

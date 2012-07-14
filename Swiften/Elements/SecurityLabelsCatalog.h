@@ -10,12 +10,13 @@
 #include <string>
 #include <boost/shared_ptr.hpp>
 
+#include <Swiften/Base/API.h>
 #include <Swiften/JID/JID.h>
 #include <Swiften/Elements/Payload.h>
 #include <Swiften/Elements/SecurityLabel.h>
 
 namespace Swift {
-	class SecurityLabelsCatalog : public Payload {
+	class SWIFTEN_API SecurityLabelsCatalog : public Payload {
 		public:
 			typedef boost::shared_ptr<SecurityLabelsCatalog> ref;
 			class Item {

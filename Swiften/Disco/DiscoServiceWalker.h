@@ -9,6 +9,7 @@
 #include <vector>
 #include <set>
 
+#include <Swiften/Base/API.h>
 #include <boost/shared_ptr.hpp>
 #include <Swiften/Base/boost_bsignals.h>
 #include <string>
@@ -25,7 +26,7 @@ namespace Swift {
 	 * Recursively walk service discovery trees to find all services offered.
 	 * This stops on any disco item that's not reporting itself as a server.
 	 */
-	class DiscoServiceWalker {
+	class SWIFTEN_API DiscoServiceWalker {
 		public:
 			DiscoServiceWalker(const JID& service, IQRouter* iqRouter, size_t maxSteps = 200);
 

@@ -12,11 +12,11 @@
 #include <security.h>
 #include <Wincrypt.h>
 
-
+#include <Swiften/Base/API.h>
 #include <Swiften/Base/SafeByteArray.h>
 
 namespace Swift {
-	class SHA1 {
+	class SWIFTEN_API SHA1 {
 		public:
 			SHA1();
 			~SHA1();

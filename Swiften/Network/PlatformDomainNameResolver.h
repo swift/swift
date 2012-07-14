@@ -11,6 +11,7 @@
 #include <boost/thread/mutex.hpp>
 #include <boost/thread/condition_variable.hpp>
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Network/DomainNameResolver.h>
 #include <Swiften/Network/PlatformDomainNameQuery.h>
 #include <Swiften/Network/DomainNameServiceQuery.h>
@@ -20,7 +21,7 @@ namespace Swift {
 	
 	class EventLoop;
 
-	class PlatformDomainNameResolver : public DomainNameResolver {
+	class SWIFTEN_API PlatformDomainNameResolver : public DomainNameResolver {
 		public:
 			PlatformDomainNameResolver(EventLoop* eventLoop);
 			~PlatformDomainNameResolver();

@@ -9,10 +9,11 @@
 #include <boost/filesystem/path.hpp>
 #include <boost/filesystem/fstream.hpp>
 
+#include <Swiften/Base/API.h>
 #include <Swiften/FileTransfer/WriteBytestream.h>
 
 namespace Swift {
-	class FileWriteBytestream : public WriteBytestream {
+	class SWIFTEN_API FileWriteBytestream : public WriteBytestream {
 		public:
 			FileWriteBytestream(const boost::filesystem::path& file);
 			~FileWriteBytestream();

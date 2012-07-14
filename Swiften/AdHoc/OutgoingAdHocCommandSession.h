@@ -10,6 +10,7 @@
 #include <string>
 #include <map>
 
+#include <Swiften/Base/API.h>
 #include <Swiften/JID/JID.h>
 #include <Swiften/Base/boost_bsignals.h>
 #include <Swiften/Elements/Command.h>
@@ -21,7 +22,7 @@ namespace Swift {
 	class MainWindow;
 	class UIEventStream;
 
-	class OutgoingAdHocCommandSession {
+	class SWIFTEN_API OutgoingAdHocCommandSession {
 		public:
 
 			/**

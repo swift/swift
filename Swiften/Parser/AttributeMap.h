@@ -11,10 +11,11 @@
 #include <map>
 #include <boost/optional/optional_fwd.hpp>
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Parser/Attribute.h>
 
 namespace Swift {
-	class AttributeMap {
+	class SWIFTEN_API AttributeMap {
 		public:
 			class Entry {
 				public:

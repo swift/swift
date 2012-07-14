@@ -6,12 +6,13 @@
 
 #pragma once
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Client/CoreClient.h>
 #include <Swiften/Client/XMLBeautifier.h>
 #include <Swiften/Base/SafeByteArray.h>
 
 namespace Swift {
-	class ClientXMLTracer {
+	class SWIFTEN_API ClientXMLTracer {
 		public:
 			ClientXMLTracer(CoreClient* client, bool bosh = false);
 			~ClientXMLTracer();

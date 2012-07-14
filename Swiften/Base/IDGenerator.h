@@ -8,8 +8,10 @@
 
 #include <string>
 
+#include <Swiften/Base/API.h>
+
 namespace Swift {
-	class IDGenerator {
+	class SWIFTEN_API IDGenerator {
 		public:
 			IDGenerator();
 

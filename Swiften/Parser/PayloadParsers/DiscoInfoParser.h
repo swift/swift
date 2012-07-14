@@ -6,11 +6,12 @@
 
 #pragma once
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Elements/DiscoInfo.h>
 #include <Swiften/Parser/GenericPayloadParser.h>
 
 namespace Swift {
-	class DiscoInfoParser : public GenericPayloadParser<DiscoInfo> {
+	class SWIFTEN_API DiscoInfoParser : public GenericPayloadParser<DiscoInfo> {
 		public:
 			DiscoInfoParser();
 

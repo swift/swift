@@ -6,6 +6,7 @@
 
 #pragma once
 
+#include <Swiften/Base/API.h>
 #include <Swiften/MUC/MUC.h>
 
 namespace Swift {
@@ -14,7 +15,7 @@ namespace Swift {
 	class DirectedPresenceSender;
 	class MUCRegistry;
 
-	class MUCManager {
+	class SWIFTEN_API MUCManager {
 		public:
 			MUCManager(StanzaChannel* stanzaChannel, IQRouter* iqRouter, DirectedPresenceSender* presenceSender, MUCRegistry* mucRegistry);
 

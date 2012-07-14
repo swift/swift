@@ -6,13 +6,14 @@
 
 #pragma once
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Serializer/GenericPayloadSerializer.h>
 #include <Swiften/Elements/ErrorPayload.h>
 
 namespace Swift {
 	class PayloadSerializerCollection;
 
-	class ErrorSerializer : public GenericPayloadSerializer<ErrorPayload> {
+	class SWIFTEN_API ErrorSerializer : public GenericPayloadSerializer<ErrorPayload> {
 		public:
 			ErrorSerializer(PayloadSerializerCollection* serializers);
 

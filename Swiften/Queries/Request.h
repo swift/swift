@@ -9,8 +9,9 @@
 #include <boost/shared_ptr.hpp>
 #include <boost/optional.hpp>
 #include <boost/enable_shared_from_this.hpp>
-
 #include <string>
+
+#include <Swiften/Base/API.h>
 #include <Swiften/Queries/IQHandler.h>
 #include <Swiften/Elements/IQ.h>
 #include <Swiften/Elements/Payload.h>
@@ -21,7 +22,7 @@ namespace Swift {
 	/**
 	 * An IQ get/set request query.
 	 */
-	class Request : public IQHandler, public boost::enable_shared_from_this<Request> {
+	class SWIFTEN_API Request : public IQHandler, public boost::enable_shared_from_this<Request> {
 		public:
 			void send();
 

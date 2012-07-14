@@ -6,10 +6,11 @@
 
 #pragma once
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Component/Component.h>
 
 namespace Swift {
-	class ComponentXMLTracer {
+	class SWIFTEN_API ComponentXMLTracer {
 		public:
 			ComponentXMLTracer(CoreComponent* component);
 

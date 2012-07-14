@@ -8,11 +8,12 @@
 
 #include <string>
 
+#include <Swiften/Base/API.h>
+
 namespace Swift {
-	
 	class XMLParserClient;
 
-	class XMLParser {
+	class SWIFTEN_API XMLParser {
 		public:
 			XMLParser(XMLParserClient* client);
 			virtual ~XMLParser();

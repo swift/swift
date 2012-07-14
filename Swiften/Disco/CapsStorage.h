@@ -9,11 +9,10 @@
 #include <boost/shared_ptr.hpp>
 
 #include <Swiften/Elements/DiscoInfo.h>
+#include <Swiften/Base/API.h>
 
 namespace Swift {
-	
-
-	class CapsStorage {
+	class SWIFTEN_API CapsStorage {
 		public:
 			virtual ~CapsStorage();
 

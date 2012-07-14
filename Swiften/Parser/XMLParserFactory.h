@@ -6,11 +6,13 @@
 
 #pragma once
 
+#include <Swiften/Base/API.h>
+
 namespace Swift {
 	class XMLParser;
 	class XMLParserClient;
 
-	class XMLParserFactory {
+	class SWIFTEN_API XMLParserFactory {
 		public:
 			virtual ~XMLParserFactory();
 

@@ -9,10 +9,11 @@
 #include <boost/filesystem/path.hpp>
 #include <boost/filesystem/fstream.hpp>
 
+#include <Swiften/Base/API.h>
 #include <Swiften/FileTransfer/ReadBytestream.h>
 
 namespace Swift {
-	class FileReadBytestream : public ReadBytestream {
+	class SWIFTEN_API FileReadBytestream : public ReadBytestream {
 		public:
 			FileReadBytestream(const boost::filesystem::path& file);
 			~FileReadBytestream();

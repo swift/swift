@@ -282,6 +282,8 @@ if env["PLATFORM"] == "win32" :
         #os.path.join(env["OPENSSL_DIR"], "bin", "libeay32.dll"),
         "#/Swift/resources/images",  
       ]
+    if env["SWIFTEN_DLL"] :
+      commonResources[""] = commonResources.get("", []) + ["#/Swiften/Swiften.dll"]
     qtimageformats = ["gif", "ico", "jpeg", "mng", "svg", "tiff"]
     qtlibs = ["QtCore4", "QtGui4", "QtNetwork4", "QtWebKit4", "QtXMLPatterns4", "phonon4"]
     myenv.WindowsBundle("Swift", 

@@ -6,8 +6,8 @@
 
 #pragma once
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Client/CoreClient.h>
-
 #include <Swiften/Base/SafeString.h>
 
 namespace Swift {
@@ -43,7 +43,7 @@ namespace Swift {
 	 * Besides connecting to an XMPP server, this class also provides interfaces for
 	 * performing most tasks on the XMPP network.
 	 */
-	class Client : public CoreClient {
+	class SWIFTEN_API Client : public CoreClient {
 		public:
 			/**
 			 * Constructs a client for the given JID with the given password.

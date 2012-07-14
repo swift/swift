@@ -9,13 +9,14 @@
 #include <vector>
 #include <boost/shared_ptr.hpp>
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Elements/Payload.h>
 
 namespace Swift {
 	class PayloadSerializer;
 	
 
-	class PayloadSerializerCollection {
+	class SWIFTEN_API PayloadSerializerCollection {
 		public:
 			PayloadSerializerCollection();
 

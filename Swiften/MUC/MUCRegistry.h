@@ -8,12 +8,13 @@
 
 #include <vector>
 
+#include <Swiften/Base/API.h>
 #include <Swiften/JID/JID.h>
 
 namespace Swift {
 	class JID;
 
-	class MUCRegistry {
+	class SWIFTEN_API MUCRegistry {
 		public:
 			~MUCRegistry();
 

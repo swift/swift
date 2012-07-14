@@ -6,6 +6,7 @@
 
 #pragma once
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Component/CoreComponent.h>
 
 namespace Swift {
@@ -17,7 +18,7 @@ namespace Swift {
 	 * Besides connecting to an XMPP server, this class also provides interfaces for
 	 * performing most component tasks on the XMPP network.
 	 */
-	class Component : public CoreComponent {
+	class SWIFTEN_API Component : public CoreComponent {
 		public:
 			Component(EventLoop* eventLoop, NetworkFactories* networkFactories, const JID& jid, const std::string& secret);
 			~Component();

@@ -8,8 +8,10 @@
 #include <string>
 #include <boost/asio/ip/address.hpp>
 
+#include <Swiften/Base/API.h>
+
 namespace Swift {
-	class HostAddress {
+	class SWIFTEN_API HostAddress {
 		public:
 			HostAddress();
 			HostAddress(const std::string&);

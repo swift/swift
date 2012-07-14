@@ -6,11 +6,12 @@
 
 #pragma once
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Serializer/GenericPayloadSerializer.h>
 #include <Swiften/Elements/DiscoInfo.h>
 
 namespace Swift {
-	class DiscoInfoSerializer : public GenericPayloadSerializer<DiscoInfo> {
+	class SWIFTEN_API DiscoInfoSerializer : public GenericPayloadSerializer<DiscoInfo> {
 		public:
 			DiscoInfoSerializer();
 

@@ -8,10 +8,11 @@
 
 #include <boost/shared_ptr.hpp>
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Elements/RosterPayload.h>
 
 namespace Swift {
-	class RosterStorage {
+	class SWIFTEN_API RosterStorage {
 		public:
 			virtual ~RosterStorage();
 

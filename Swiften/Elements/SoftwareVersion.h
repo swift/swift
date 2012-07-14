@@ -9,10 +9,11 @@
 #include <string>
 #include <boost/shared_ptr.hpp>
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Elements/Payload.h>
 
 namespace Swift {
-	class SoftwareVersion : public Payload {
+	class SWIFTEN_API SoftwareVersion : public Payload {
 		public:
 			typedef boost::shared_ptr<SoftwareVersion> ref;
 

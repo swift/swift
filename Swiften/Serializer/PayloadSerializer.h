@@ -9,10 +9,12 @@
 #include <string>
 #include <boost/shared_ptr.hpp>
 
+#include <Swiften/Base/API.h>
+
 namespace Swift {
 	class Payload;
 
-	class PayloadSerializer {
+	class SWIFTEN_API PayloadSerializer {
 		public:
 			virtual ~PayloadSerializer();
 

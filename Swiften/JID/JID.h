@@ -10,6 +10,8 @@
 //#include <iosfwd>
 #include <iostream>
 
+#include <Swiften/Base/API.h>
+
 namespace Swift {
 	/**
 	 * This represents the JID used in XMPP
@@ -22,7 +24,7 @@ namespace Swift {
 	 * A JID can be invalid (when isValid() returns false). No member methods are 
 	 * guaranteed to work correctly if they do.
 	 */
-	class JID {
+	class SWIFTEN_API JID {
 		public:
 			enum CompareType {
 				WithResource, WithoutResource

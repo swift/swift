@@ -6,6 +6,8 @@
 
 #pragma once
 
+#include <Swiften/Base/API.h>
+
 namespace Swift {
 	class PayloadParserFactory;
 	class PayloadSerializer;
@@ -17,7 +19,7 @@ namespace Swift {
 	/** 
 	 * The base class for XMPP entities (Clients, Components).
 	 */
-	class Entity  {
+	class SWIFTEN_API Entity  {
 		public: 
 			Entity();
 			virtual ~Entity();

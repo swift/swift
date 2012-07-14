@@ -7,13 +7,14 @@
 #pragma once
 
 #include <vector>
-
 #include <string>
+
+#include <Swiften/Base/API.h>
 #include <Swiften/Base/ByteArray.h>
 #include <Swiften/Base/SafeByteArray.h>
 
 namespace Swift {
-	class Base64 {
+	class SWIFTEN_API Base64 {
 		public:
 			static std::string encode(const ByteArray& s);
 			static SafeByteArray encode(const SafeByteArray& s);

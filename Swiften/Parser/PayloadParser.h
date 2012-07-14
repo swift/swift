@@ -7,8 +7,10 @@
 #pragma once
 
 #include <boost/shared_ptr.hpp>
-#include <Swiften/Parser/AttributeMap.h>
 
+
+#include <Swiften/Base/API.h>
+#include <Swiften/Parser/AttributeMap.h>
 #include <Swiften/Elements/Payload.h>
 
 namespace Swift {
@@ -22,7 +24,7 @@ namespace Swift {
 	 * After the data for the given top-level element is processed, getPayload() will be called to retrieve the
 	 * payload.
 	 */
-	class PayloadParser {
+	class SWIFTEN_API PayloadParser {
 		public:
 			virtual ~PayloadParser();
 

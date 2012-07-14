@@ -8,8 +8,10 @@
 
 #include <string>
 
+#include <Swiften/Base/API.h>
+
 namespace Swift {
-	class XMLNode {
+	class SWIFTEN_API XMLNode {
 		public:
 			virtual ~XMLNode();
 

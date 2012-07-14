@@ -9,6 +9,7 @@
 #include <boost/shared_ptr.hpp>
 #include <boost/noncopyable.hpp>
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Parser/XMLParserClient.h>
 #include <Swiften/Parser/AttributeMap.h>
 
@@ -19,7 +20,7 @@ namespace Swift {
 	class ElementParser;
 	class PayloadParserFactoryCollection;
 
-	class XMPPParser : public XMLParserClient, boost::noncopyable {
+	class SWIFTEN_API XMPPParser : public XMLParserClient, boost::noncopyable {
 		public:
 			XMPPParser(
 					XMPPParserClient* parserClient, 

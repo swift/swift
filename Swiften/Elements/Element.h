@@ -6,8 +6,10 @@
 
 #pragma once
 
+#include <Swiften/Base/API.h>
+
 namespace Swift {
-	class Element {
+	class SWIFTEN_API Element {
 		public:
 			virtual ~Element();
 	};

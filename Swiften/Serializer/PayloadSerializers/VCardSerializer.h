@@ -9,8 +9,10 @@
 #include <Swiften/Serializer/GenericPayloadSerializer.h>
 #include <Swiften/Elements/VCard.h>
 
+#include <Swiften/Base/API.h>
+
 namespace Swift {
-	class VCardSerializer : public GenericPayloadSerializer<VCard> {
+	class SWIFTEN_API VCardSerializer : public GenericPayloadSerializer<VCard> {
 		public:
 			VCardSerializer();
 

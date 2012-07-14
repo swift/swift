@@ -6,8 +6,10 @@
 
 #pragma once
 
+#include <Swiften/Base/API.h>
+
 namespace Swift {
-	class Error {
+	class SWIFTEN_API Error {
 		public:
 			virtual ~Error();
 	};

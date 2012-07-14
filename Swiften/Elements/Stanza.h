@@ -12,13 +12,14 @@
 #include <boost/optional/optional_fwd.hpp>
 #include <boost/date_time/posix_time/ptime.hpp>
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Elements/Element.h>
 #include <Swiften/JID/JID.h>
 
 namespace Swift {
 	class Payload;
 
-	class Stanza : public Element {
+	class SWIFTEN_API Stanza : public Element {
 		public:
 			typedef boost::shared_ptr<Stanza> ref;
 

@@ -8,6 +8,7 @@
 
 #include <vector>
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Base/SafeAllocator.h>
 #include <Swiften/Base/ByteArray.h>
 #include <boost/smart_ptr/make_shared.hpp>
@@ -19,7 +20,7 @@ namespace Swift {
 		return SafeByteArray(a.begin(), a.end());
 	}
 
-	SafeByteArray createSafeByteArray(const char* c);
+	SWIFTEN_API SafeByteArray createSafeByteArray(const char* c);
 
 	inline SafeByteArray createSafeByteArray(const std::string& s) {
 		return SafeByteArray(s.begin(), s.end());

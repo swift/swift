@@ -12,11 +12,12 @@
 #include <Swiften/JID/JID.h>
 #include <Swiften/Base/boost_bsignals.h>
 #include <Swiften/Elements/Presence.h>
+#include <Swiften/Base/API.h>
 
 namespace Swift {
 	class StanzaChannel;
 
-	class SubscriptionManager {
+	class SWIFTEN_API SubscriptionManager {
 		public:
 			SubscriptionManager(StanzaChannel* stanzaChannel);
 			~SubscriptionManager();

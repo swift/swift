@@ -9,10 +9,12 @@
 #include <Swiften/Elements/VCard.h>
 #include <Swiften/Parser/GenericPayloadParser.h>
 
+#include <Swiften/Base/API.h>
+
 namespace Swift {
 	class SerializingParser;
 
-	class VCardParser : public GenericPayloadParser<VCard> {
+	class SWIFTEN_API VCardParser : public GenericPayloadParser<VCard> {
 		public:
 			VCardParser();
 

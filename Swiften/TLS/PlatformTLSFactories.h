@@ -6,11 +6,13 @@
 
 #pragma once
 
+#include <Swiften/Base/API.h>
+
 namespace Swift {
 	class TLSContextFactory;
 	class CertificateFactory;
 
-	class PlatformTLSFactories {
+	class SWIFTEN_API PlatformTLSFactories {
 		public:
 			PlatformTLSFactories();
 			~PlatformTLSFactories();

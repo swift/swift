@@ -9,6 +9,7 @@
 #include <vector>
 #include <string>
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Elements/Payload.h>
 #include <Swiften/Elements/FormField.h>
 #include <Swiften/JID/JID.h>
@@ -19,7 +20,7 @@ namespace Swift {
 	 * For the relevant Fields, the parsers and serialisers protect the API user against
 	 * the strange multi-value instead of newline thing by transforming them.
 	 */
-	class Form : public Payload {
+	class SWIFTEN_API Form : public Payload {
 		public:
 			typedef boost::shared_ptr<Form> ref;
 			typedef std::vector<FormField::ref> FormItem;

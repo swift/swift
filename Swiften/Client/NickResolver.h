@@ -6,9 +6,10 @@
 
 #include <map>
 #include <boost/shared_ptr.hpp>
-
-#include <Swiften/Base/boost_bsignals.h>
 #include <string>
+
+#include <Swiften/Base/API.h>
+#include <Swiften/Base/boost_bsignals.h>
 #include <Swiften/JID/JID.h>
 #include <Swiften/Elements/VCard.h>
 
@@ -16,7 +17,8 @@ namespace Swift {
 	class XMPPRoster;
 	class MUCRegistry;
 	class VCardManager;
-	class NickResolver {
+
+	class SWIFTEN_API NickResolver {
 		public:
 			NickResolver(const JID& ownJID, XMPPRoster* xmppRoster, VCardManager* vcardManager, MUCRegistry* mucRegistry);
 

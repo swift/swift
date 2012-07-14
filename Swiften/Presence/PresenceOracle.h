@@ -11,11 +11,13 @@
 #include <string>
 #include <Swiften/Elements/Presence.h>
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Base/boost_bsignals.h>
 
 namespace Swift {
-class StanzaChannel;
-	class PresenceOracle {
+	class StanzaChannel;
+
+	class SWIFTEN_API PresenceOracle {
 		public:
 			PresenceOracle(StanzaChannel* stanzaChannel);
 			~PresenceOracle();

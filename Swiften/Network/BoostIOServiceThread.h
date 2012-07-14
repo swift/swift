@@ -10,8 +10,10 @@
 #include <boost/thread/thread.hpp>
 #include <boost/shared_ptr.hpp>
 
+#include <Swiften/Base/API.h>
+
 namespace Swift {
-	class BoostIOServiceThread {
+	class SWIFTEN_API BoostIOServiceThread {
 		public:
 			BoostIOServiceThread();
 			~BoostIOServiceThread();

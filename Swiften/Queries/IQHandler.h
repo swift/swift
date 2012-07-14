@@ -8,12 +8,13 @@
 
 #include <boost/shared_ptr.hpp>
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Elements/IQ.h>
 
 namespace Swift {
 	class IQRouter;
 
-	class IQHandler {
+	class SWIFTEN_API IQHandler {
 		public:
 			virtual ~IQHandler();
 

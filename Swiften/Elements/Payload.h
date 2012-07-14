@@ -8,8 +8,10 @@
 
 #include <boost/shared_ptr.hpp>
 
+#include <Swiften/Base/API.h>
+
 namespace Swift {
-	class Payload {
+	class SWIFTEN_API Payload {
 		public:
 			typedef boost::shared_ptr<Payload> ref;
 		public:

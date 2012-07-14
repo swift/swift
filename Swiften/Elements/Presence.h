@@ -8,11 +8,12 @@
 
 #include <boost/smart_ptr/make_shared.hpp>
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Elements/Stanza.h>
 #include <Swiften/Elements/StatusShow.h>
 
 namespace Swift {
-	class Presence : public Stanza {
+	class SWIFTEN_API Presence : public Stanza {
 		public:
 			typedef boost::shared_ptr<Presence> ref;
 

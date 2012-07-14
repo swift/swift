@@ -8,8 +8,10 @@
 
 #include <iostream>
 
+#include <Swiften/Base/API.h>
+
 namespace Swift {
-	extern bool logging;
+	extern SWIFTEN_API bool logging;
 	namespace LogDetail {
 		// Only here to be able to statically check the correctness of the severity levers
 		namespace Severity {

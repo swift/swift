@@ -7,9 +7,10 @@
 #pragma once
 
 #include <Swiften/Parser/XMLParserFactory.h>
+#include <Swiften/Base/API.h>
 
 namespace Swift {
-	class PlatformXMLParserFactory : public XMLParserFactory {
+	class SWIFTEN_API PlatformXMLParserFactory : public XMLParserFactory {
 		public:
 			PlatformXMLParserFactory();
 

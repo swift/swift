@@ -6,8 +6,10 @@
 
 #pragma once
 
+#include <Swiften/Base/API.h>
+
 namespace Swift {
-	class EventOwner {
+	class SWIFTEN_API EventOwner {
 		public:
 			virtual ~EventOwner();
 	};

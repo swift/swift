@@ -12,6 +12,7 @@
 #include <Swiften/Base/boost_bsignals.h>
 #include <boost/optional.hpp>
 
+#include <Swiften/Base/API.h>
 #include <Swiften/MUC/MUCBookmark.h>
 #include <Swiften/Elements/Storage.h>
 #include <Swiften/Elements/ErrorPayload.h>
@@ -19,7 +20,7 @@
 namespace Swift {
 	class IQRouter;
 
-	class MUCBookmarkManager {
+	class SWIFTEN_API MUCBookmarkManager {
 		public:
 			MUCBookmarkManager(IQRouter* iqRouter);
 

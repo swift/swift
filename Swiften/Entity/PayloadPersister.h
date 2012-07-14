@@ -9,12 +9,14 @@
 #include <boost/shared_ptr.hpp>
 #include <boost/filesystem/path.hpp>
 
+#include <Swiften/Base/API.h>
+
 namespace Swift {
 	class Payload;
 	class PayloadSerializer;
 	class PayloadParser;
 
-	class PayloadPersister {
+	class SWIFTEN_API PayloadPersister {
 		public: 
 			PayloadPersister();
 			virtual ~PayloadPersister();

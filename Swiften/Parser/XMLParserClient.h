@@ -4,15 +4,13 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#ifndef XMLPARSERCLIENT_H
-#define XMLPARSERCLIENT_H
+#pragma once
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Parser/AttributeMap.h>
 
 namespace Swift {
-	
-
-	class XMLParserClient {
+	class SWIFTEN_API XMLParserClient {
 		public:
 			virtual ~XMLParserClient();
 
@@ -21,5 +19,3 @@ namespace Swift {
 			virtual void handleCharacterData(const std::string& data) = 0;
 	};
 }
-
-#endif

@@ -8,11 +8,13 @@
 
 #include <boost/shared_ptr.hpp>
 
+#include <Swiften/Base/API.h>
+
 namespace Swift {
 	class DNSSDQuerier;
 	class EventLoop;
 
-	class PlatformDNSSDQuerierFactory {
+	class SWIFTEN_API PlatformDNSSDQuerierFactory {
 		public:
 			PlatformDNSSDQuerierFactory(EventLoop* eventLoop);
 

@@ -11,6 +11,7 @@
 #include <boost/enable_shared_from_this.hpp>
 #include <boost/thread/mutex.hpp>
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Network/Connection.h>
 #include <Swiften/EventLoop/EventOwner.h>
 #include <Swiften/Base/SafeByteArray.h>
@@ -25,7 +26,7 @@ namespace boost {
 namespace Swift {
 	class EventLoop;
 
-	class BoostConnection : public Connection, public EventOwner, public boost::enable_shared_from_this<BoostConnection> {
+	class SWIFTEN_API BoostConnection : public Connection, public EventOwner, public boost::enable_shared_from_this<BoostConnection> {
 		public:
 			typedef boost::shared_ptr<BoostConnection> ref;
 

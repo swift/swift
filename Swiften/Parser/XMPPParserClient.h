@@ -8,13 +8,14 @@
 
 #include <boost/shared_ptr.hpp>
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Elements/Element.h>
 
 namespace Swift {
 	
 	class ProtocolHeader;
 
-	class XMPPParserClient {
+	class SWIFTEN_API XMPPParserClient {
 		public:
 			virtual ~XMPPParserClient();
 

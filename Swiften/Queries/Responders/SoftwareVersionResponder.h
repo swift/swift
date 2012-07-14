@@ -6,13 +6,14 @@
 
 #pragma once
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Queries/GetResponder.h>
 #include <Swiften/Elements/SoftwareVersion.h>
 
 namespace Swift {
 	class IQRouter;
 
-	class SoftwareVersionResponder : public GetResponder<SoftwareVersion> {
+	class SWIFTEN_API SoftwareVersionResponder : public GetResponder<SoftwareVersion> {
 		public:
 			SoftwareVersionResponder(IQRouter* router);
 

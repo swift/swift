@@ -8,15 +8,16 @@
 
 #include <boost/shared_ptr.hpp>
 #include <vector>
-
 #include <string>
+
+#include <Swiften/Base/API.h>
 #include <Swiften/Elements/IQ.h>
 
 namespace Swift {
 	class IQChannel;
 	class IQHandler;
 
-	class IQRouter {
+	class SWIFTEN_API IQRouter {
 		public:
 			IQRouter(IQChannel* channel);
 			~IQRouter();

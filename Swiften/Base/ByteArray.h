@@ -9,11 +9,13 @@
 #include <vector>
 #include <string>
 
+#include <Swiften/Base/API.h>
+
 namespace Swift {
 	typedef std::vector<unsigned char> ByteArray;
 
-	ByteArray createByteArray(const std::string& s);
-	ByteArray createByteArray(const char* c);
+	SWIFTEN_API ByteArray createByteArray(const std::string& s);
+	SWIFTEN_API ByteArray createByteArray(const char* c);
 
 	inline ByteArray createByteArray(const unsigned char* c, size_t n) {
 		return ByteArray(c, c  + n);
@@ -37,8 +39,8 @@ namespace Swift {
 		return v.empty() ? NULL : &v[0];
 	}
 			
-	std::string byteArrayToString(const ByteArray& b);
+	SWIFTEN_API std::string byteArrayToString(const ByteArray& b);
 
-	void readByteArrayFromFile(ByteArray&, const std::string& file);
+	SWIFTEN_API void readByteArrayFromFile(ByteArray&, const std::string& file);
 }
 

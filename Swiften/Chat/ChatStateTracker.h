@@ -8,13 +8,14 @@
 
 #include <Swiften/Base/boost_bsignals.h>
 #include <boost/shared_ptr.hpp>
+#include <Swiften/Base/API.h>
 
 #include <Swiften/Elements/Message.h>
 #include <Swiften/Elements/Presence.h>
 #include <Swiften/Elements/ChatState.h>
 
 namespace Swift {
-	class ChatStateTracker {
+	class SWIFTEN_API ChatStateTracker {
 		public:
 			ChatStateTracker();
 			void handleMessageReceived(boost::shared_ptr<Message> message);

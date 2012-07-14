@@ -6,6 +6,7 @@
 
 #pragma once
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Elements/CapsInfo.h>
 #include <Swiften/Elements/DiscoInfo.h>
 #include <Swiften/Presence/PayloadAddingPresenceSender.h>
@@ -26,7 +27,7 @@ namespace Swift {
 	 * call setDiscoInfo() with the capabilities for the client. This can be
 	 * called whenever the capabilities change.
 	 */
-	class ClientDiscoManager {
+	class SWIFTEN_API ClientDiscoManager {
 		public:
 			/**
 			 * Constructs the manager

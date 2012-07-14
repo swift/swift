@@ -9,6 +9,7 @@
 #include <Swiften/Base/boost_bsignals.h>
 #include <boost/shared_ptr.hpp>
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Elements/Message.h>
 #include <Swiften/Elements/ChatState.h>
 #include <Swiften/JID/JID.h>
@@ -17,7 +18,7 @@ namespace Swift {
 	class StanzaChannel;
 	class EntityCapsProvider;
 
-	class ChatStateNotifier {
+	class SWIFTEN_API ChatStateNotifier {
 		public:
 			ChatStateNotifier(StanzaChannel* stanzaChannel, const JID& contact, EntityCapsProvider* entityCapsManager);
 			~ChatStateNotifier();

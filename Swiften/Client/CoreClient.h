@@ -8,8 +8,9 @@
 
 #include <string>
 #include <boost/shared_ptr.hpp>
-#include <Swiften/Base/boost_bsignals.h>
 
+#include <Swiften/Base/API.h>
+#include <Swiften/Base/boost_bsignals.h>
 #include <Swiften/Entity/Entity.h>
 #include <Swiften/JID/JID.h>
 #include <Swiften/Client/ClientError.h>
@@ -45,7 +46,7 @@ namespace Swift {
 	 * subclass provides more functionality and interfaces, and is better suited
 	 * for most needs.
 	 */
-	class CoreClient : public Entity {
+	class SWIFTEN_API CoreClient : public Entity {
 		public: 
 			/**
 			 * Constructs a client for the given JID with the given password.

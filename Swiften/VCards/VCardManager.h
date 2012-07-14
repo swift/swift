@@ -8,6 +8,7 @@
 
 #include <set>
 
+#include <Swiften/Base/API.h>
 #include <Swiften/JID/JID.h>
 #include <Swiften/Elements/VCard.h>
 #include <Swiften/Elements/ErrorPayload.h>
@@ -19,7 +20,7 @@ namespace Swift {
 	class VCardStorage;
 	class IQRouter;
 
-	class VCardManager : public boost::bsignals::trackable {
+	class SWIFTEN_API VCardManager : public boost::bsignals::trackable {
 		public:
 			VCardManager(const JID& ownJID, IQRouter* iqRouter, VCardStorage* vcardStorage);
 			~VCardManager();

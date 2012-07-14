@@ -6,6 +6,7 @@
 
 #pragma once
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Parser/AttributeMap.h>
 
 namespace Swift {
@@ -15,7 +16,7 @@ namespace Swift {
 	/**
 	 * A factory for PayloadParsers.
 	 */
-	class PayloadParserFactory {
+	class SWIFTEN_API PayloadParserFactory {
 		public:
 			virtual ~PayloadParserFactory();
 

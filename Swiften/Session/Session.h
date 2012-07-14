@@ -11,6 +11,7 @@
 #include <boost/optional.hpp>
 #include <boost/enable_shared_from_this.hpp>
 
+#include <Swiften/Base/API.h>
 #include <Swiften/JID/JID.h>
 #include <Swiften/Elements/Element.h>
 #include <Swiften/Network/Connection.h>
@@ -27,7 +28,7 @@ namespace Swift {
 	class XMPPLayer;
 	class XMLParserFactory;
 
-	class Session : public boost::enable_shared_from_this<Session> {
+	class SWIFTEN_API Session : public boost::enable_shared_from_this<Session> {
 		public:
 			enum SessionError {
 				ConnectionReadError,

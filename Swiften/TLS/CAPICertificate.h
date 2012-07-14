@@ -6,6 +6,7 @@
 
 #pragma once
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Base/boost_bsignals.h>
 #include <Swiften/Base/SafeByteArray.h>
 #include <Swiften/TLS/CertificateWithKey.h>
@@ -21,7 +22,7 @@
 namespace Swift {
 	class TimerFactory;
 
-	class CAPICertificate : public Swift::CertificateWithKey {
+	class SWIFTEN_API CAPICertificate : public Swift::CertificateWithKey {
 		public:
 			CAPICertificate(const std::string& capiUri, TimerFactory* timerFactory);
 

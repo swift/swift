@@ -6,6 +6,7 @@
 
 #pragma once
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Network/NetworkFactories.h>
 #include <Swiften/Network/BoostIOServiceThread.h>
 
@@ -14,7 +15,7 @@ namespace Swift {
 	class NATTraverser;
 	class PlatformTLSFactories;
 
-	class BoostNetworkFactories : public NetworkFactories {
+	class SWIFTEN_API BoostNetworkFactories : public NetworkFactories {
 		public:
 			BoostNetworkFactories(EventLoop* eventLoop);
 			~BoostNetworkFactories();

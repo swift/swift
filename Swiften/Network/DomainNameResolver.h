@@ -7,15 +7,16 @@
 #pragma once
 
 #include <boost/shared_ptr.hpp>
-
 #include <string>
+
+#include <Swiften/Base/API.h>
 
 namespace Swift {
 	class DomainNameServiceQuery;
 	class DomainNameAddressQuery;
 	
 
-	class DomainNameResolver {
+	class SWIFTEN_API DomainNameResolver {
 		public:
 			virtual ~DomainNameResolver();
 

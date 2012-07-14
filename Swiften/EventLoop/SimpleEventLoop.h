@@ -11,10 +11,11 @@
 #include <boost/thread/mutex.hpp>
 #include <boost/thread/condition_variable.hpp>
 
+#include <Swiften/Base/API.h>
 #include <Swiften/EventLoop/EventLoop.h>
 
 namespace Swift {
-	class SimpleEventLoop : public EventLoop {
+	class SWIFTEN_API SimpleEventLoop : public EventLoop {
 		public:
 			SimpleEventLoop();
 			~SimpleEventLoop();

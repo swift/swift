@@ -11,11 +11,13 @@
 #include <list>
 #include <deque>
 
+#include <Swiften/Base/API.h>
 #include <Swiften/EventLoop/Event.h>
 
 namespace Swift {
 	class EventOwner;
-	class EventLoop {
+
+	class SWIFTEN_API EventLoop {
 		public:
 			EventLoop();
 			virtual ~EventLoop();

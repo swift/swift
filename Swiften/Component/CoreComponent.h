@@ -8,6 +8,7 @@
 
 #include <boost/shared_ptr.hpp>
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Base/boost_bsignals.h>
 #include <Swiften/Base/Error.h>
 #include <Swiften/Network/PlatformDomainNameResolver.h>
@@ -40,7 +41,7 @@ namespace Swift {
 	 * subclass provides more functionality and interfaces, and is better suited 
 	 * for most needs.
 	 */
-	class CoreComponent : public Entity {
+	class SWIFTEN_API CoreComponent : public Entity {
 		public:
 			CoreComponent(EventLoop* eventLoop, NetworkFactories* networkFactories, const JID& jid, const std::string& secret);
 			~CoreComponent();

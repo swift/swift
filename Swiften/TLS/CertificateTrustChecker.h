@@ -7,16 +7,17 @@
 #pragma once
 
 #include <boost/shared_ptr.hpp>
-
 #include <string>
-#include <Swiften/TLS/Certificate.h>
 #include <vector>
+
+#include <Swiften/Base/API.h>
+#include <Swiften/TLS/Certificate.h>
 
 namespace Swift {
 	/**
 	 * A class to implement a check for certificate trust.
 	 */
-	class CertificateTrustChecker {
+	class SWIFTEN_API CertificateTrustChecker {
 		public:
 			virtual ~CertificateTrustChecker();
 
