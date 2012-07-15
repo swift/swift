@@ -7,7 +7,7 @@
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/extensions/TestFactoryRegistry.h>
 #include <boost/algorithm/string.hpp>
-#include "3rdParty/hippomocks.h"
+#include <hippomocks.h>
 
 #include "Swift/Controllers/XMPPEvents/EventController.h"
 #include "Swiften/Presence/DirectedPresenceSender.h"

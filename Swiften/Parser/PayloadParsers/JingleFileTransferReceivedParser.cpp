@@ -4,10 +4,10 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
-#include "JingleFileTransferReceivedParser.h"
-#include "StreamInitiationFileInfoParser.h"
+#include <Swiften/Parser/PayloadParsers/JingleFileTransferReceivedParser.h>
 
 #include <boost/shared_ptr.hpp>
+#include <Swiften/Parser/PayloadParsers/StreamInitiationFileInfoParser.h>
 #include <Swiften/Parser/PayloadParsers/StreamInitiationFileInfoParser.h>
 #include <Swiften/Parser/GenericPayloadParserFactory.h>
 #include <Swiften/Parser/PayloadParserFactory.h>

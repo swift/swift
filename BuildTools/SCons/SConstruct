@@ -71,8 +71,6 @@ def checkObjCHeader(context, header) :
 # Platform configuration
 ################################################################################
 
-env.Append(CPPPATH = [root])
-
 if ARGUMENTS.get("force-configure", 0) :
   SCons.SConf.SetCacheMode("force")
 
@@ -493,6 +491,31 @@ if env.Dir("#/.git").exists() :
 	if not env.GetOption("clean") :
 		env.Install("#/.git/hooks", Glob("#/BuildTools/Git/Hooks/*"))
 
+
+################################################################################
+# Replace #pragma once with proper guards on platforms that require it
+################################################################################
+
+if ARGUMENTS.get("replace_pragma_once", False) :
+	env.Tool("ReplacePragmaOnce", toolpath = ["#/BuildTools/SCons/Tools"])
+
+	def relpath(path, start) :
+		i = len(os.path.commonprefix([path, start]))
+		return path[i+1:]
+
+	for actual_root, dirs, files in os.walk(root) :
+		if "3rdParty" in actual_root :
+			continue
+		for file in files :
+			if not file.endswith(".h") :
+				continue
+			include = relpath(os.path.join(actual_root, file), root)
+			env.ReplacePragmaOnce("#/include/" + include, "#/" + include)
+	env.Append(CPPPATH = ["#/include"])
+else :
+	env.Append(CPPPATH = [root])
+
+
 ################################################################################
 # Project files
 ################################################################################
@@ -527,6 +550,7 @@ for stage in ["flags", "build", "test"] :
 if ARGUMENTS.get("sloccount", False) :
   for project in env["PROJECTS"] :
     env.SLOCCount("#/" + project)
+
 
 ################################################################################
 # Print summary

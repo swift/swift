@@ -44,6 +44,7 @@ VERSION.*
 cppcheck.log
 /build
 /.settings/
+/include/
 /nbproject/private/
 3rdParty/LibMiniUPnPc/src/miniupnpc/miniupnpcstrings.h
 *.sublime-workspace
