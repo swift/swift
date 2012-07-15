@@ -7,20 +7,14 @@
 #pragma once
 
 #include <Swiften/Compress/ZLibCodecompressor.h>
-#include <Swiften/Base/ByteArray.h>
 
 namespace Swift {
 	class ZLibCompressor : public ZLibCodecompressor {
 		public:
 			ZLibCompressor();
+			~ZLibCompressor();
 
-			~ZLibCompressor() {
-				deflateEnd(&stream_);
-			}
-
-			virtual int processZStream() {
-				return deflate(&stream_, Z_SYNC_FLUSH);
-			}
+			virtual int processZStream();
 
 		private:
 			static const int COMPRESSION_LEVEL = 9;

@@ -6,8 +6,6 @@
 
 #pragma once
 
-#include <zlib.h>
-
 #include <Swiften/Base/SafeByteArray.h>
 
 namespace Swift {
@@ -20,6 +18,7 @@ namespace Swift {
 			virtual int processZStream() = 0;
 
 		protected:
-			z_stream stream_;
+			class Private;
+			boost::shared_ptr<Private> p;
 	};
 }

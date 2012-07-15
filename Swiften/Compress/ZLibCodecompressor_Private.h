@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Remko Tronçon
+ * Copyright (c) 2012 Remko Tronçon
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -8,12 +8,10 @@
 
 #include <Swiften/Compress/ZLibCodecompressor.h>
 
-namespace Swift {
-	class ZLibDecompressor : public ZLibCodecompressor {
-		public:
-			ZLibDecompressor();
-			~ZLibDecompressor();
+#include <zlib.h>
 
-			virtual int processZStream();
+namespace Swift {
+	struct ZLibCodecompressor::Private {
+		z_stream stream;
 	};
 }
