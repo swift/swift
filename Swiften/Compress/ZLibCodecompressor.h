@@ -18,7 +18,7 @@ namespace Swift {
 			virtual int processZStream() = 0;
 
 		protected:
-			class Private;
+			struct Private;
 			boost::shared_ptr<Private> p;
 	};
 }

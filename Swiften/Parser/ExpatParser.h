@@ -22,7 +22,7 @@ namespace Swift {
 			void stopParser();
 
 		private:
-			class Private;
+			struct Private;
 			boost::shared_ptr<Private> p;
 	};
 }
