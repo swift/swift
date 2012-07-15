@@ -7,12 +7,13 @@
 #pragma once
 
 #include <vector>
-#include <Swiften/Base/boost_bsignals.h>
 
+#include <Swiften/Base/API.h>
+#include <Swiften/Base/boost_bsignals.h>
 #include <Swiften/Network/NetworkEnvironment.h>
 
 namespace Swift {
-	class WindowsNetworkEnvironment : public NetworkEnvironment {
+	class SWIFTEN_API WindowsNetworkEnvironment : public NetworkEnvironment {
 		public:
 			std::vector<NetworkInterface> getNetworkInterfaces() const;
 	};

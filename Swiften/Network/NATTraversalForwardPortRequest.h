@@ -8,10 +8,11 @@
 
 #include <Swiften/Base/boost_bsignals.h>
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Network/NATPortMapping.h>
 
 namespace Swift {
-	class NATTraversalForwardPortRequest {
+	class SWIFTEN_API NATTraversalForwardPortRequest {
 		public:
 			virtual ~NATTraversalForwardPortRequest();
 

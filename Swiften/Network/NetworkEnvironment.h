@@ -8,11 +8,12 @@
 
 #include <vector>
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Base/boost_bsignals.h>
 #include <Swiften/Network/NetworkInterface.h>
 
 namespace Swift {
-	class NetworkEnvironment {
+	class SWIFTEN_API NetworkEnvironment {
 	public:
 		virtual ~NetworkEnvironment();
 

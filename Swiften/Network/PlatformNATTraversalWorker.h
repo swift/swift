@@ -13,6 +13,7 @@
 #include <boost/thread/condition_variable.hpp>
 #include <boost/logic/tribool.hpp>
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Network/NATTraverser.h>
 #include <Swiften/Network/HostAddressPort.h>
 #include <Swiften/Network/NullNATTraversalInterface.h>
@@ -28,7 +29,7 @@ namespace Swift {
 	class NATTraversalInterface;
 	class NATPortMapping;
 
-	class PlatformNATTraversalWorker : public NATTraverser {
+	class SWIFTEN_API PlatformNATTraversalWorker : public NATTraverser {
 			friend class PlatformNATTraversalRequest;
 
 		public:
