@@ -9,11 +9,17 @@
 #include <iostream>
 #include <cassert>
 #include <cstring>
-
+#include <libxml/parser.h>
 #include <string>
+
 #include <Swiften/Parser/XMLParserClient.h>
 
 namespace Swift {
+
+struct LibXMLParser::Private {
+	xmlSAXHandler handler_;
+	xmlParserCtxtPtr context_;
+};
 
 static void handleStartElement(void* parser, const xmlChar* name, const xmlChar*, const xmlChar* xmlns, int, const xmlChar**, int nbAttributes, int nbDefaulted, const xmlChar ** attributes) {
 	AttributeMap attributeValues;
@@ -53,40 +59,40 @@ static void handleWarning(void*, const char*, ... ) {
 
 bool LibXMLParser::initialized = false;
 
-LibXMLParser::LibXMLParser(XMLParserClient* client) : XMLParser(client) {
+LibXMLParser::LibXMLParser(XMLParserClient* client) : XMLParser(client), p(new Private()) {
 	// Initialize libXML for multithreaded applications
 	if (!initialized) {
 		xmlInitParser();
 		initialized = true;
 	}
 
-	memset(&handler_, 0, sizeof(handler_) );
-	handler_.initialized = XML_SAX2_MAGIC;
-	handler_.startElementNs = &handleStartElement;
-	handler_.endElementNs = &handleEndElement;
-	handler_.characters = &handleCharacterData;
-	handler_.warning = &handleWarning;
-	handler_.error = &handleError;
+	memset(&p->handler_, 0, sizeof(p->handler_) );
+	p->handler_.initialized = XML_SAX2_MAGIC;
+	p->handler_.startElementNs = &handleStartElement;
+	p->handler_.endElementNs = &handleEndElement;
+	p->handler_.characters = &handleCharacterData;
+	p->handler_.warning = &handleWarning;
+	p->handler_.error = &handleError;
 
-	context_ = xmlCreatePushParserCtxt(&handler_, this, 0, 0, 0);
-	xmlCtxtUseOptions(context_, XML_PARSE_NOENT);
-	assert(context_);
+	p->context_ = xmlCreatePushParserCtxt(&p->handler_, this, 0, 0, 0);
+	xmlCtxtUseOptions(p->context_, XML_PARSE_NOENT);
+	assert(p->context_);
 }
 
 LibXMLParser::~LibXMLParser() {
-	if (context_) {
-		xmlFreeParserCtxt(context_);
+	if (p->context_) {
+		xmlFreeParserCtxt(p->context_);
 	}
 }
 
 bool LibXMLParser::parse(const std::string& data) {
-	if (xmlParseChunk(context_, data.c_str(), data.size(), false) == XML_ERR_OK) {
+	if (xmlParseChunk(p->context_, data.c_str(), data.size(), false) == XML_ERR_OK) {
 		return true;
 	}
-	xmlError* error = xmlCtxtGetLastError(context_);
+	xmlError* error = xmlCtxtGetLastError(p->context_);
 	if (error->code == XML_WAR_NS_URI || error->code == XML_WAR_NS_URI_RELATIVE) {
-		xmlCtxtResetLastError(context_);
-		context_->errNo = XML_ERR_OK;
+		xmlCtxtResetLastError(p->context_);
+		p->context_->errNo = XML_ERR_OK;
 		return true;
 	}
 	return false;

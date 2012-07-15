@@ -6,8 +6,8 @@
 
 #pragma once
 
-#include <libxml/parser.h>
 #include <boost/noncopyable.hpp>
+#include <boost/shared_ptr.hpp>
 
 #include <Swiften/Parser/XMLParser.h>
 
@@ -25,7 +25,8 @@ namespace Swift {
 
 		private:
 			static bool initialized;
-			xmlSAXHandler handler_;
-			xmlParserCtxtPtr context_;
+
+			class Private;
+			boost::shared_ptr<Private> p;
 	};
 }

@@ -6,8 +6,8 @@
 
 #pragma once
 
-#include <expat.h>
 #include <boost/noncopyable.hpp>
+#include <boost/shared_ptr.hpp>
 
 #include <Swiften/Parser/XMLParser.h>
 
@@ -19,11 +19,10 @@ namespace Swift {
 
 			bool parse(const std::string& data);
 
-			XML_Parser getParser() {
-				return parser_;
-			}
+			void stopParser();
 
 		private:
-			XML_Parser parser_;
+			class Private;
+			boost::shared_ptr<Private> p;
 	};
 }

@@ -8,6 +8,7 @@
 
 #include <iostream>
 #include <string>
+#include <expat.h>
 
 #include <Swiften/Base/String.h>
 #include <Swiften/Parser/XMLParserClient.h>
@@ -15,6 +16,10 @@
 namespace Swift {
 
 static const char NAMESPACE_SEPARATOR = '\x01';
+
+struct ExpatParser::Private {
+	XML_Parser parser_;
+};
 
 static void handleStartElement(void* parser, const XML_Char* name, const XML_Char** attributes) {
 	std::pair<std::string,std::string> nsTagPair = String::getSplittedAtFirst(name, NAMESPACE_SEPARATOR);
@@ -54,29 +59,33 @@ static void handleXMLDeclaration(void*, const XML_Char*, const XML_Char*, int) {
 }
 
 static void handleEntityDeclaration(void* parser, const XML_Char*, int, const XML_Char*, int, const XML_Char*, const XML_Char*, const XML_Char*, const XML_Char*) {
-	XML_StopParser(static_cast<ExpatParser*>(parser)->getParser(), static_cast<XML_Bool>(0));
+	static_cast<ExpatParser*>(parser)->stopParser();
 }
 
 
 ExpatParser::ExpatParser(XMLParserClient* client) : XMLParser(client) {
-	parser_ = XML_ParserCreateNS("UTF-8", NAMESPACE_SEPARATOR);
-	XML_SetUserData(parser_, this);
-	XML_SetElementHandler(parser_, handleStartElement, handleEndElement);
-	XML_SetCharacterDataHandler(parser_, handleCharacterData);
-	XML_SetXmlDeclHandler(parser_, handleXMLDeclaration);
-	XML_SetEntityDeclHandler(parser_, handleEntityDeclaration);
+	p->parser_ = XML_ParserCreateNS("UTF-8", NAMESPACE_SEPARATOR);
+	XML_SetUserData(p->parser_, this);
+	XML_SetElementHandler(p->parser_, handleStartElement, handleEndElement);
+	XML_SetCharacterDataHandler(p->parser_, handleCharacterData);
+	XML_SetXmlDeclHandler(p->parser_, handleXMLDeclaration);
+	XML_SetEntityDeclHandler(p->parser_, handleEntityDeclaration);
 }
 
 ExpatParser::~ExpatParser() {
-	XML_ParserFree(parser_);
+	XML_ParserFree(p->parser_);
 }
 
 bool ExpatParser::parse(const std::string& data) {
-	bool success = XML_Parse(parser_, data.c_str(), data.size(), false) == XML_STATUS_OK;
+	bool success = XML_Parse(p->parser_, data.c_str(), data.size(), false) == XML_STATUS_OK;
 	/*if (!success) {
-		std::cout << "ERROR: " << XML_ErrorString(XML_GetErrorCode(parser_)) << " while parsing " << data << std::endl;
+		std::cout << "ERROR: " << XML_ErrorString(XML_GetErrorCode(p->parser_)) << " while parsing " << data << std::endl;
 	}*/
 	return success;
+}
+
+void ExpatParser::stopParser() {
+	XML_StopParser(p->parser_, static_cast<XML_Bool>(0));
 }
 
 }
