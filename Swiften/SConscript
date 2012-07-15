@@ -419,19 +419,19 @@ if env["SCONS_STAGE"] == "build" :
 				include = include.replace("\\", "/")
 			swiften_includes.append(include)
 			# Private modules
-			if root.endswith("Config") or root.endswith("Compress") :
+			if root.endswith("Config") :
 				continue
 
 			# Library-specfifc private modules
-			if root.endswith("OpenSSL") or root.endswith("Cocoa") or root.endswith("Qt") or root.endswith("IDN") or root.endswith("Avahi") or root.endswith("Bonjour") :
+			if root.endswith("OpenSSL") or root.endswith("Cocoa") or root.endswith("Qt") or root.endswith("Avahi") or root.endswith("Bonjour") :
 				continue
 
 			# Library-specific files
-			if file.startswith("Schannel") or file.startswith("CAPI") or file.startswith("LibXML") or file.startswith("Expat") or file.startswith("GConf") or file.startswith("MacOSX") or file.startswith("Windows") or file.endswith("_Windows.h") or file.startswith("SQLite") or file.startswith("NATPMP") or file.startswith("MiniUPnP") :
+			if file.endswith("_Private.h") or file.startswith("Schannel") or file.startswith("CAPI") or file.startswith("MacOSX") or file.startswith("Windows") or file.endswith("_Windows.h") or file.startswith("SQLite") or file == "ICUConverter.h" :
 				continue
 
 			# Specific headers we don't want to globally include
-			if file == "Swiften.h" or file == "foreach.h" or file == "Log.h" or file == "format.h" or file == "CompressionLayer.h":
+			if file == "Swiften.h" or file == "foreach.h" or file == "Log.h" or file == "format.h" :
 				continue
 			swiften_header += "#include <" + include + ">\n"
 			swiften_includes.append(include)
