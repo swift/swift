@@ -8,6 +8,7 @@
 
 #include <boost/optional.hpp>
 #include <boost/noncopyable.hpp>
+#include <boost/shared_ptr.hpp>
 
 #include <Swiften/Network/NATPortMapping.h>
 #include <Swiften/Network/NATTraversalInterface.h>

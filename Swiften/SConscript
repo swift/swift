@@ -37,7 +37,7 @@ if env["SCONS_STAGE"] == "flags" :
 	swiften_env["LIBPATH"] = [Dir(".")]
 	swiften_env["LIBS"] = [swiften_env["SWIFTEN_LIBRARY"]]
 	if not env["SWIFTEN_DLL"] :
-		swiften_env["CPPDEFINES"] = ["SWIFTEN_STATIC"]
+		swiften_env.Append(CPPDEFINES = ["SWIFTEN_STATIC"])
 	dep_env = env.Clone()
 	for module in swiften_dep_modules :
 		if env.get(module + "_BUNDLED", False) :
@@ -75,6 +75,7 @@ if env["SCONS_STAGE"] == "build" :
 		swiften_env.AddMethod(lambda e,s : e.SharedObject(s), "SwiftenObject")
 		swiften_env.AddMethod(lambda e,l,o : e.SharedLibrary(l,o), "SwiftenLibrary")
 	else :
+		swiften_env.Append(CPPDEFINES = ["SWIFTEN_STATIC"])
 		swiften_env.AddMethod(lambda e,s : e.StaticObject(s), "SwiftenObject")
 		swiften_env.AddMethod(lambda e,l,o  : e.StaticLibrary(l,o), "SwiftenLibrary")
 	Export("swiften_env")
