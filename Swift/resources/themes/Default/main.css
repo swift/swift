@@ -50,8 +50,7 @@
 	position:relative;
 	left:60px;
 	margin:5px 0 0 0;
-	font-weight: bold;
-	font-size: 16px;
+	font: bold 16px "DejaVu Sans", "Myriad Pro", Myriad, "Lucida Grande", "Trebuchet MS", Arial, "Droid Sans", sans-serif;
 	overflow:hide;
 }
 
@@ -59,8 +58,7 @@
 	position:relative;
 	left:60px;
 	color:#6d6d6d;
-	font-weight: bold;
-	font-size: 10px;
+	font: bold 10px "DejaVu Sans", "Myriad Pro", Myriad, "Lucida Grande", "Trebuchet MS", Arial, "Droid Sans", sans-serif;
 }
 
 body {
@@ -70,13 +68,12 @@ body {
 }
 
 .status_container {
-	font-weight: bold;
-	font-size: 10px;
+	font: bold 10px "DejaVu Sans", "Myriad Pro", Myriad, "Lucida Grande", "Trebuchet MS", Arial, "Droid Sans", sans-serif;
 }
 
 
 body {
-	font-family: "DejaVu Sans", "Myriad Pro", Myriad, "Lucida Grande", "Trebuchet MS", Arial, "Droid Sans", sans-serif;
+/*	font-family: "DejaVu Sans", "Myriad Pro", Myriad, "Lucida Grande", "Trebuchet MS", Arial, "Droid Sans", sans-serif;*/
 }
 
 .followUp {
