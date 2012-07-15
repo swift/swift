@@ -7,15 +7,13 @@
 #pragma once
 
 #include <boost/optional.hpp>
+#include <boost/shared_ptr.hpp>
+#include <boost/noncopyable.hpp>
 #include <Swiften/Network/NATPortMapping.h>
 #include <Swiften/Network/NATTraversalInterface.h>
 
-// This has to be included after the previous headers, because of WIN32 macro
-// being defined somewhere.
-#include <natpmp.h>
-
 namespace Swift {
-	class NATPMPInterface : public NATTraversalInterface {
+	class NATPMPInterface : public NATTraversalInterface, boost::noncopyable {
 		public:
 			NATPMPInterface();
 			~NATPMPInterface();
@@ -27,6 +25,7 @@ namespace Swift {
 			virtual bool removePortForward(const NATPortMapping&);
 
 		private:
-			natpmp_t natpmp;
+			class Private;
+			boost::shared_ptr<Private> p;
 	};
 }

@@ -6,42 +6,53 @@
 
 #include <Swiften/Network/MiniUPnPInterface.h>
 
+#include <miniupnpc.h>
 #include <upnpcommands.h>
 #include <upnperrors.h>
+#include <boost/smart_ptr/make_shared.hpp>
 #include <boost/lexical_cast.hpp>
 
 #include <Swiften/Base/Log.h>
 
 namespace Swift {
 
-MiniUPnPInterface::MiniUPnPInterface() : isValid(false) {
+struct MiniUPnPInterface::Private {
+	bool isValid;
+	std::string localAddress;
+	UPNPDev* deviceList;
+	UPNPUrls urls;
+	IGDdatas data;
+};
+
+MiniUPnPInterface::MiniUPnPInterface() : p(boost::make_shared<Private>()) {
+	p->isValid = false;
 	int error = 0;
-	deviceList = upnpDiscover(1500 /* timeout in ms */, 0, 0, 0, 0 /* do IPv6? */, &error);
-	if (!deviceList) {
+	p->deviceList = upnpDiscover(1500 /* timeout in ms */, 0, 0, 0, 0 /* do IPv6? */, &error);
+	if (!p->deviceList) {
 		return;
 	}
 
 	char lanAddress[64];
-	if (!UPNP_GetValidIGD(deviceList, &urls, &data, lanAddress, sizeof(lanAddress))) {
+	if (!UPNP_GetValidIGD(p->deviceList, &p->urls, &p->data, lanAddress, sizeof(lanAddress))) {
 		return;
 	}
-	localAddress = std::string(lanAddress);
-	isValid = true;
+	p->localAddress = std::string(lanAddress);
+	p->isValid = true;
 }
 
 MiniUPnPInterface::~MiniUPnPInterface() {
-	if (isValid) {
-		FreeUPNPUrls(&urls);
+	if (p->isValid) {
+		FreeUPNPUrls(&p->urls);
 	}
-	freeUPNPDevlist(deviceList);
+	freeUPNPDevlist(p->deviceList);
 }
 
 boost::optional<HostAddress> MiniUPnPInterface::getPublicIP() {
-	if (!isValid) {
+	if (!p->isValid) {
 		return boost::optional<HostAddress>();
 	}
 	char externalIPAddress[40];
-	int ret = UPNP_GetExternalIPAddress(urls.controlURL, data.first.servicetype, externalIPAddress);
+	int ret = UPNP_GetExternalIPAddress(p->urls.controlURL, p->data.first.servicetype, externalIPAddress);
 	if (ret != UPNPCOMMAND_SUCCESS) {
 		return boost::optional<HostAddress>();
 	}
@@ -51,7 +62,7 @@ boost::optional<HostAddress> MiniUPnPInterface::getPublicIP() {
 }
 
 boost::optional<NATPortMapping> MiniUPnPInterface::addPortForward(int actualLocalPort, int actualPublicPort) {
-	if (!isValid) {
+	if (!p->isValid) {
 		return boost::optional<NATPortMapping>();
 	}
 
@@ -61,7 +72,7 @@ boost::optional<NATPortMapping> MiniUPnPInterface::addPortForward(int actualLoca
 	std::string localPort = boost::lexical_cast<std::string>(mapping.getLocalPort());
 	std::string leaseSeconds = boost::lexical_cast<std::string>(mapping.getLeaseInSeconds());
 
-	int ret = UPNP_AddPortMapping(urls.controlURL, data.first.servicetype, publicPort.c_str(), localPort.c_str(), localAddress.c_str(), 0, mapping.getPublicPort() == NATPortMapping::TCP ? "TCP" : "UDP", 0, leaseSeconds.c_str());
+	int ret = UPNP_AddPortMapping(p->urls.controlURL, p->data.first.servicetype, publicPort.c_str(), localPort.c_str(), p->localAddress.c_str(), 0, mapping.getPublicPort() == NATPortMapping::TCP ? "TCP" : "UDP", 0, leaseSeconds.c_str());
 	if (ret == UPNPCOMMAND_SUCCESS) {
 		return mapping;
 	}
@@ -71,7 +82,7 @@ boost::optional<NATPortMapping> MiniUPnPInterface::addPortForward(int actualLoca
 }
 
 bool MiniUPnPInterface::removePortForward(const NATPortMapping& mapping) {
-	if (!isValid) {
+	if (!p->isValid) {
 		return false;
 	}
 
@@ -79,8 +90,12 @@ bool MiniUPnPInterface::removePortForward(const NATPortMapping& mapping) {
 	std::string localPort = boost::lexical_cast<std::string>(mapping.getLocalPort());
 	std::string leaseSeconds = boost::lexical_cast<std::string>(mapping.getLeaseInSeconds());
 
-	int ret = UPNP_DeletePortMapping(urls.controlURL, data.first.servicetype, publicPort.c_str(), mapping.getProtocol() == NATPortMapping::TCP ? "TCP" : "UDP", 0);
+	int ret = UPNP_DeletePortMapping(p->urls.controlURL, p->data.first.servicetype, publicPort.c_str(), mapping.getProtocol() == NATPortMapping::TCP ? "TCP" : "UDP", 0);
 	return ret == UPNPCOMMAND_SUCCESS;
+}
+
+bool MiniUPnPInterface::isAvailable() {
+	return p->isValid;
 }
 
 }

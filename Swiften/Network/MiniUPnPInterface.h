@@ -7,30 +7,25 @@
 #pragma once
 
 #include <boost/optional.hpp>
-#include <miniupnpc.h>
+#include <boost/noncopyable.hpp>
 
 #include <Swiften/Network/NATPortMapping.h>
 #include <Swiften/Network/NATTraversalInterface.h>
 
 namespace Swift {
-	class MiniUPnPInterface : public NATTraversalInterface {
+	class MiniUPnPInterface : public NATTraversalInterface, boost::noncopyable {
 		public:
 			MiniUPnPInterface();
 			~MiniUPnPInterface();
 
-			virtual bool isAvailable() {
-				return isValid;
-			}
+			virtual bool isAvailable();
 
 			boost::optional<HostAddress> getPublicIP();
 			boost::optional<NATPortMapping> addPortForward(int localPort, int publicPort);
 			bool removePortForward(const NATPortMapping&);
 
 		private:
-			bool isValid;
-			std::string localAddress;
-			UPNPDev* deviceList;
-			UPNPUrls urls;
-			IGDdatas data;
+			class Private;
+			boost::shared_ptr<Private> p;
 	};
 }
