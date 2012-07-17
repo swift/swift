@@ -39,7 +39,6 @@ namespace Swift {
 			SHA1& update(const unsigned char* data, size_t dataSize);
 
 		private:
-			HCRYPTPROV hCryptProv;
-			HCRYPTHASH hHash;
+			HCRYPTHASH hash;
 	};
 }

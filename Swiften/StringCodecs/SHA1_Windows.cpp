@@ -9,32 +9,42 @@
 
 #include <Swiften/StringCodecs/SHA1_Windows.h>
 
+namespace {
+	HCRYPTPROV context = 0;
+
+	struct ContextDeleter {
+		~ContextDeleter() {
+			if (context) {
+				CryptReleaseContext(context, 0);
+				context = 0;
+			}
+		}
+	} contextDeleter;
+}
+
 namespace Swift {
 
-SHA1::SHA1() : hCryptProv(NULL), hHash(NULL) {
-	bool hasContext = CryptAcquireContext(&hCryptProv, NULL, NULL, PROV_RSA_FULL, CRYPT_VERIFYCONTEXT);
-	if (!hasContext) {
+SHA1::SHA1() : hash(NULL) {
+	if (!context) {
+		if (!CryptAcquireContext(&context, NULL, NULL, PROV_RSA_FULL, CRYPT_VERIFYCONTEXT)) {
 //		DWORD error = GetLastError();
 //		switch (error) {
 //			std::cerr << (long)error << std::endl;
 //		}
 //		assert(false);
-		hCryptProv = NULL;
+			context = 0;
+		}
 	}
 
-	if (!CryptCreateHash(hCryptProv, CALG_SHA1, 0, 0, &hHash)) {
-		hHash = NULL;
+	if (!CryptCreateHash(context, CALG_SHA1, 0, 0, &hash)) {
+		hash = NULL;
 	}
 }
 
 SHA1::~SHA1() {
-	if(hHash) {
-	   CryptDestroyHash(hHash);
+	if (hash) {
+	   CryptDestroyHash(hash);
 	}
-	if(hCryptProv) {
-	   CryptReleaseContext(hCryptProv,0);
-	}
-
 }
 
 SHA1& SHA1::update(const std::vector<unsigned char>& data) {
@@ -43,33 +53,30 @@ SHA1& SHA1::update(const std::vector<unsigned char>& data) {
 
 
 SHA1& SHA1::update(const unsigned char* data, size_t dataSize) {
-	if (!hHash || !hCryptProv) {
+	if (!hash || !context) {
 		return *this;
 	}
-	BYTE* byteData = (BYTE *)data;
-	DWORD dataLength = dataSize;
-	bool hasHashed = CryptHashData(hHash, byteData, dataLength, 0);
-//	if (!hasHashed) {
+	if (!CryptHashData(hash, const_cast<BYTE*>(data), dataSize, 0)) {
 //		DWORD error = GetLastError();
 //		switch (error) {
 //			std::cerr << (long)error << std::endl;
 //		}
 //		assert(false);
 //	}
+	}
 	return *this;
 }
 
 std::vector<unsigned char> SHA1::getHash() const {
-	if (!hHash || !hCryptProv) {
+	if (!hash || !context) {
 		return std::vector<unsigned char>();
 	}
 	std::vector<unsigned char> result;
 	DWORD hashLength = sizeof(DWORD);
 	DWORD hashSize;
-	CryptGetHashParam(hHash, HP_HASHSIZE, (BYTE*)&hashSize, &hashLength, 0);
+	CryptGetHashParam(hash, HP_HASHSIZE, reinterpret_cast<BYTE*>(&hashSize), &hashLength, 0);
 	result.resize(static_cast<size_t>(hashSize));
-	bool hasHashed = CryptGetHashParam(hHash, HP_HASHVAL, (BYTE*)vecptr(result), &hashSize, 0);
-	if (!hasHashed) {
+	if (!CryptGetHashParam(hash, HP_HASHVAL, vecptr(result), &hashSize, 0)) {
 //		DWORD error = GetLastError();
 //		switch (error) {
 //			std::cerr << (long)error << std::endl;
