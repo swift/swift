@@ -16,6 +16,7 @@ if env["SCONS_STAGE"] == "flags" :
 
 if env["SCONS_STAGE"] == "build" :
 	swiftools_env = env.Clone()
+	swiftools_env.MergeFlags(swiftools_env["SWIFTEN_FLAGS"])
 	swiftools_env.MergeFlags(swiftools_env["BOOST_FLAGS"])
 
 	sources = [

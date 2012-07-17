@@ -31,7 +31,7 @@ moc_*
 qrc_*
 ui_*
 config.py
-checker
+/QA/Checker/checker
 config.log
 .sconf_temp
 .sconsign.dblite
