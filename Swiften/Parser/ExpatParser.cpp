@@ -63,7 +63,7 @@ static void handleEntityDeclaration(void* parser, const XML_Char*, int, const XM
 }
 
 
-ExpatParser::ExpatParser(XMLParserClient* client) : XMLParser(client) {
+ExpatParser::ExpatParser(XMLParserClient* client) : XMLParser(client), p(new Private()) {
 	p->parser_ = XML_ParserCreateNS("UTF-8", NAMESPACE_SEPARATOR);
 	XML_SetUserData(p->parser_, this);
 	XML_SetElementHandler(p->parser_, handleStartElement, handleEndElement);
