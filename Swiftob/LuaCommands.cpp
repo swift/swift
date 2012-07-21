@@ -42,6 +42,21 @@ void LuaCommands::registerCommands() {
 	}
 }
 
+static int l_register_listener(lua_State *L) {
+	LuaCommands* commands = NULL;
+	lua_getfield(L, LUA_REGISTRYINDEX, LUA_COMMANDS);
+	commands = static_cast<LuaCommands*>(lua_touserdata(L, -1));
+	lua_pop(L, 1);
+	if (!lua_isfunction(L, 1)) {
+		return luaL_error(L, "register_listener parameter must be a callback function");
+	}
+	lua_pushvalue(L, 1);
+	int callbackIndex = luaL_ref(L, LUA_REGISTRYINDEX);
+	lua_pop(L, 1);
+	commands->getCommands()->registerListener(boost::bind(&LuaCommands::handleLuaListener, commands, callbackIndex, L, _1));
+	return 0;
+}
+
 static int l_register_command(lua_State *L) {
 	LuaCommands* commands = NULL;
 	lua_getfield(L, LUA_REGISTRYINDEX, LUA_COMMANDS);
@@ -313,6 +328,21 @@ int LuaCommands::get_setting(lua_State *L) {
 
 }
 
+void LuaCommands::handleLuaListener(int callbackIndex, lua_State* L, Swift::Message::ref message) {
+	lua_rawgeti(L, LUA_REGISTRYINDEX, callbackIndex);
+	lua_pushstring(L, message->getBody().c_str());
+	lua_pushstring(L, message->getFrom().toBare().toString().c_str());
+	lua_pushstring(L, message->getFrom().getResource().c_str());
+	messageOntoStack(message, L);
+	int result = lua_pcall(L, 4, 0, 0);
+	if (result != 0) {
+		std::string error(lua_tostring(L, -1));
+		lua_pop(L, 1);
+		error = "Listener failed: " + error;
+		std::cout << error << std::endl;
+	}
+}
+
 void LuaCommands::handleLuaCommand(int callbackIndex, lua_State* L, const std::string& command, const std::string& params, Swift::Message::ref message) {
 	lua_rawgeti(L, LUA_REGISTRYINDEX, callbackIndex);
 	lua_pushstring(L, command.c_str());
@@ -363,6 +393,7 @@ void LuaCommands::loadScript(boost::filesystem::path filePath) {
 	lua_pushlightuserdata(lua, storage);
 	lua_setfield(lua, LUA_REGISTRYINDEX, STORAGE);
 	lua_register(lua, "swiftob_register_command", &l_register_command);
+	lua_register(lua, "swiftob_register_listener", &l_register_listener);
 	lua_register(lua, "swiftob_reply_to", &l_reply_to);
 	lua_register(lua, "swiftob_get_software_version", &l_get_software_version);
 	lua_register(lua, "swiftob_muc_input_to_jid", &l_muc_input_to_jid);

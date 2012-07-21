@@ -64,8 +64,9 @@ class LuaCommands {
 		};
 
 		LuaCommands(Commands* commands, const std::string& path, Client* client, TimerFactory* timerFactory, MUCs* mucs);
-		/* Public but isn't really part of the API */
+		/* Public but aren't really part of the API */
 		void handleLuaCommand(int callbackIndex, lua_State* L, const std::string& command, const std::string& params, Message::ref message);
+		void handleLuaListener(int callbackIndex, lua_State* L, Message::ref message);
 		Commands* getCommands() {return commands_;}
 		int get_software_version(lua_State *L);
 		int muc_input_to_jid(lua_State *L);

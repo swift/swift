@@ -41,6 +41,10 @@ void Commands::registerCommand(const std::string& name, RoleList roles, const st
 	command->onReceived.connect(callback);
 }
 
+void Commands::registerListener(ListenerCallback listener) {
+	listeners_.push_back(listener);
+}
+
 bool Commands::hasCommand(const std::string& name) {
 	return commands_.find(name) != commands_.end();
 }
@@ -55,6 +59,12 @@ bool Commands::runCommand(const std::string& name, const std::string& params, Sw
 		replyTo(message, "You may not run this command", true);
 	}
 	return false;
+}
+
+void Commands::runListeners(Swift::Message::ref message) {
+	foreach (ListenerCallback listener, listeners_) {
+		listener(message);
+	}
 }
 
 bool Commands::roleIn(const Users::User::Role userRole, RoleList roleList) {
@@ -84,6 +94,7 @@ void Commands::handleRehashCommand(const std::string& /*command*/, const std::st
 	replyTo(message, "Rehashing now.");
 	std::cout << "Rehashing at the behest of " << message->getFrom().toString() << std::endl;
 	resetCommands();
+	listeners_.clear();
 	if (rehashError_.empty()) {
 		replyTo(message, "Rehash complete");
 	} else {

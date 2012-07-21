@@ -87,6 +87,10 @@ void Swiftob::handleMessageReceived(Swift::Message::ref message) {
 		std::cout << "Not handling empty body" << std::endl;
 		return;
 	}
+
+	/* Run through any full-message listeners */
+	commands_->runListeners(message);
+
 	/*Convert body into !command if it's not a MUC, and it misses the bang*/
 	std::string bangBody(body);
 	if (type != Swift::Message::Groupchat && body[0] != '!') {

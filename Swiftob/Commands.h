@@ -21,6 +21,7 @@ namespace Swift {
 
 class Storage;
 class Commands {
+	typedef boost::function<void(Swift::Message::ref)> ListenerCallback;
 	public:
 		enum RoleList {Anyone, Owner};
 	public:
@@ -43,8 +44,10 @@ class Commands {
 		Commands(Users* users, Swift::Client* client, Storage* storage, MUCs* mucs);
 		bool hasCommand(const std::string&);
 		bool runCommand(const std::string& command, const std::string& params, Swift::Message::ref message);
+		void runListeners(Swift::Message::ref message);
 		void replyTo(Swift::Message::ref source, std::string replyBody, bool outOfMUC = false);
 		void registerCommand(const std::string& name, RoleList roles, const std::string& description, boost::function<void(const std::string& /*command*/, const std::string& /*params*/, Swift::Message::ref)> callback);
+		void registerListener(ListenerCallback);
 		void resetCommands();
 		void setRehashError(const std::string& error);
 
@@ -61,6 +64,7 @@ class Commands {
 		void handleRehashCommand(const std::string& command, const std::string& params, Swift::Message::ref message);
 	private:
 		std::map<std::string, Command*> commands_;
+		std::vector<ListenerCallback> listeners_;
 		Users* users_;
 		Swift::Client* client_;
 		Storage* storage_;
