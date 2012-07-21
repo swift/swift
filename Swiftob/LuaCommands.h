@@ -72,6 +72,7 @@ class LuaCommands {
 		int muc_input_to_jid(lua_State *L);
 		int store_setting(lua_State *L);
 		int get_setting(lua_State *L);
+		int muc_kick(lua_State *L);
 		static LuaCommands* commandsFromLua(lua_State *L);
 		static Storage* storageFromLua(lua_State *L);
 	private:

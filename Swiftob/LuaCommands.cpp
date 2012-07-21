@@ -298,6 +298,25 @@ int LuaCommands::get_software_version(lua_State *L) {
 	return 1;
 }
 
+int LuaCommands::muc_kick(lua_State *L) {
+	if (!lua_isstring(L, 2)) {
+		return luaL_error(L, "muc_kick requires a nick to kick");
+	}
+	std::string nick = lua_tostring(L, 2);
+	if (!lua_isstring(L, 1)) {
+		return luaL_error(L, "muc_kick requires a muc to kick from");
+	}
+	JID mucJID(lua_tostring(L, 1));
+	MUC::ref muc = mucs_->getMUC(mucJID);
+	muc->kickOccupant(JID(mucJID.getNode(), mucJID.getDomain(), nick));
+	return 0;
+}
+
+static int l_muc_kick(lua_State *L) {
+	LuaCommands* commands = LuaCommands::commandsFromLua(L);
+	return commands->muc_kick(L);
+}
+
 static int l_store_setting(lua_State *L) {
 	return LuaCommands::commandsFromLua(L)->store_setting(L);
 }
@@ -399,6 +418,7 @@ void LuaCommands::loadScript(boost::filesystem::path filePath) {
 	lua_register(lua, "swiftob_muc_input_to_jid", &l_muc_input_to_jid);
 	lua_register(lua, "swiftob_store_setting", &l_store_setting);
 	lua_register(lua, "swiftob_get_setting", &l_get_setting);
+	lua_register(lua, "swiftob_muc_kick", &l_muc_kick);
 	int fileLoaded = luaL_dofile(lua, filePath.string().c_str());
 	if (fileLoaded == 0 ) {
 		std::cout << "Loaded" << std::endl;
