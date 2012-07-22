@@ -30,6 +30,8 @@ class MUCs {
 		void part(const JID& room);
 		bool contains(const JID& room);
 		MUC::ref getMUC(const JID& room);
+		const std::string& getDefaultNick() const {return defaultNick_;}
+		bool setDefaultNick(const std::string& nick);
 	private:
 		void handleConnected();
 		void handleJoinFailed(const JID& room, ErrorPayload::ref error, boost::function<void(const std::string& /*reason*/)> failureCallback);

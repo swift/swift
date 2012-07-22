@@ -42,6 +42,7 @@ class Commands {
 
 	public:
 		Commands(Users* users, Swift::Client* client, Storage* storage, MUCs* mucs);
+		~Commands();
 		bool hasCommand(const std::string&);
 		bool runCommand(const std::string& command, const std::string& params, Swift::Message::ref message);
 		void runListeners(Swift::Message::ref message);
@@ -53,7 +54,9 @@ class Commands {
 
 	public:
 		boost::signal<void ()> onReset;
+		boost::signal<void ()> onRestartRequested;
 	private:
+		void clearCommands();
 		bool roleIn(const Users::User::Role userRole, RoleList roles);
 		void handleQuitCommand(const std::string& command, const std::string& params, Swift::Message::ref message);
 		void handleHelpCommand(const std::string& command, const std::string& params, Swift::Message::ref message);
@@ -62,6 +65,9 @@ class Commands {
 		void handleJoinCommandFailure(const Swift::JID& room, const std::string& error, Swift::Message::ref message);
 		void handlePartCommand(const std::string& /*command*/, const std::string& params, Swift::Message::ref message);
 		void handleRehashCommand(const std::string& command, const std::string& params, Swift::Message::ref message);
+		void handleRestartCommand(const std::string& command, const std::string& params, Swift::Message::ref message);
+		void handleChangeNick(const std::string& command, const std::string& params, Swift::Message::ref message);
+		void handleChangeOwner(const std::string& command, const std::string& params, Swift::Message::ref message);
 	private:
 		std::map<std::string, Command*> commands_;
 		std::vector<ListenerCallback> listeners_;

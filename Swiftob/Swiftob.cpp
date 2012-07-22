@@ -32,14 +32,14 @@ po::options_description Swiftob::getOptionsDescription() {
 }
 
 Swiftob::Swiftob(const po::variables_map& options) : options_(options), networkFactories_(&eventLoop_), quitting_(false) {
-	std::string path;
-	path = options["path"].as<std::string>();
+	path_ = options["path"].as<std::string>();
 	client_ = new Swift::Client(Swift::JID(options["jid"].as<std::string>()), options["password"].as<std::string>(), &networkFactories_);
-	storage_ = new Storage(boost::filesystem::path(path) / "settings.txt");
-	mucs_ = new MUCs(client_, storage_);
-	users_ = new Users(client_, mucs_);
-	commands_ = new Commands(users_, client_, storage_, mucs_);
-	lua_ = new LuaCommands(commands_, path, client_, networkFactories_.getTimerFactory(), mucs_);
+	storage_ = new Storage(boost::filesystem::path(path_) / "settings.txt");
+	mucs_ = NULL;
+	users_ = NULL;
+	commands_ = NULL;
+	lua_ = NULL;
+	init();
 	client_->onConnected.connect(boost::bind(&Swiftob::handleConnected, this));
 	client_->onDisconnected.connect(boost::bind(&Swiftob::handleDisconnected, this, _1));
 	client_->onMessageReceived.connect(boost::bind(&Swiftob::handleMessageReceived, this, _1));
@@ -52,6 +52,23 @@ Swiftob::Swiftob(const po::variables_map& options) : options_(options), networkF
 	client_->setSoftwareVersion("Swiftob", "pregit", "");
 	client_->connect();
 	eventLoop_.run();
+}
+
+void Swiftob::init() {
+	delete mucs_;
+	mucs_ = new MUCs(client_, storage_);
+	delete users_;
+	users_ = new Users(client_, mucs_);
+	delete commands_;
+	commands_ = new Commands(users_, client_, storage_, mucs_);
+	commands_->onRestartRequested.connect(boost::bind(&Swiftob::handleRestartRequested, this));
+	delete lua_;
+	lua_ = new LuaCommands(commands_, path_, client_, networkFactories_.getTimerFactory(), mucs_);
+}
+
+void Swiftob::handleRestartRequested() {
+	client_->disconnect();
+	init();
 }
 
 void Swiftob::handleConnected() {

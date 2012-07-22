@@ -18,12 +18,17 @@
 #include <Swiftob/Storage.h>
 
 #define MUC_LIST_SETTING "muc_list"
+#define NICK "default_nick"
 
 typedef std::pair<JID, MUC::ref> JIDMUCPair;
 
 MUCs::MUCs(Client* client, Storage* storage) : defaultNick_("Kanchil+") {
 	client_ = client;
 	storage_ = storage;
+	std::string storedNick = storage_->getSetting(NICK);
+	if (!storedNick.empty()) {
+		defaultNick_ = storedNick;
+	}
 	client_->onConnected.connect(boost::bind(&MUCs::handleConnected, this));
 }
 
@@ -117,4 +122,14 @@ void MUCs::save() {
 
 MUC::ref MUCs::getMUC(const JID& room) {
 	return (mucs_.find(room) != mucs_.end()) ? mucs_[room] : MUC::ref();
+}
+
+bool MUCs::setDefaultNick(const std::string& nick) {
+	JID testJID("alice", "wonderland.lit", nick);
+	if (testJID.isValid()) {
+		defaultNick_ = testJID.getResource();
+		storage_->saveSetting(NICK, defaultNick_);
+		return true;
+	}
+	return false;
 }

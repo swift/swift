@@ -32,6 +32,8 @@ class Swiftob {
 		int exec();
 		~Swiftob();
 	private:
+		void init();
+		void handleRestartRequested();
 		void handleConnected();
 		void handleDisconnected(const boost::optional<Swift::ClientError>&);
 		void handleMessageReceived(Swift::Message::ref);
@@ -45,5 +47,6 @@ class Swiftob {
 		MUCs* mucs_;
 		bool quitting_;
 		Users* users_;
+		std::string path_;
 		Swift::Client* client_;
 };

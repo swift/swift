@@ -9,6 +9,7 @@
 #include <Swiften/Base/foreach.h>
 #include <iostream>
 #include <boost/bind.hpp>
+#include <boost/algorithm/string.hpp>
 
 #include <Swiften/Client/Client.h>
 
@@ -22,16 +23,28 @@ Commands::Commands(Users* users, Swift::Client* client, Storage* storage, MUCs* 
 	resetCommands();
 }
 
-void Commands::resetCommands() {
+Commands::~Commands() {
+	clearCommands();
+}
+
+void Commands::clearCommands() {
 	foreach (NamedCommand command, commands_) {
 		delete command.second;
 	}
 	commands_.clear();
+
+}
+
+void Commands::resetCommands() {
+	clearCommands();
 	registerCommand("quit", Owner, "Quit the bot", boost::bind(&Commands::handleQuitCommand, this, _1, _2, _3));
 	registerCommand("help", Anyone, "Get help", boost::bind(&Commands::handleHelpCommand, this, _1, _2, _3));
 	registerCommand("join", Owner, "Join a MUC", boost::bind(&Commands::handleJoinCommand, this, _1, _2, _3));
 	registerCommand("part", Owner, "Leave a MUC", boost::bind(&Commands::handlePartCommand, this, _1, _2, _3));
 	registerCommand("rehash", Owner, "Reload scripts", boost::bind(&Commands::handleRehashCommand, this, _1, _2, _3));
+	registerCommand("restart", Owner, "Restart bot", boost::bind(&Commands::handleRestartCommand, this, _1, _2, _3));
+	registerCommand("nick", Owner, "Change nick (requires restart)", boost::bind(&Commands::handleChangeNick, this, _1, _2, _3));
+	//registerCommand("owner", Owner, "Change owner settinsg", boost::bind(&Commands::handleChangeOwner, this, _1, _2, _3));
 	onReset();
 }
 
@@ -76,6 +89,27 @@ bool Commands::roleIn(const Users::User::Role userRole, RoleList roleList) {
 	return false;
 }
 
+void Commands::handleChangeNick(const std::string& /*command*/, const std::string& params, Swift::Message::ref message) {
+	std::string nick(params);
+	boost::algorithm::trim(nick);
+	if (nick.empty()) {
+		replyTo(message, "Current nick is '" + mucs_->getDefaultNick() + "'. Run the command with a new nick to change it.");
+	}
+	else {
+		if (mucs_->setDefaultNick(params)) {
+			replyTo(message, "Default nick now set to '" + nick + "' - restart the bot for this to take effect.");
+		}
+		else {
+			replyTo(message, "Can't set invalid nick '" + nick + "'.");
+		}
+	}
+}
+
+void Commands::handleChangeOwner(const std::string& /*command*/, const std::string& /*params*/, Swift::Message::ref /*message*/) {
+	/* Oh, right. I don't have user persistence coded yet.
+	 * Probably not worth doing this until I have.*/
+}
+
 void Commands::handleQuitCommand(const std::string& /*command*/, const std::string& /*params*/, Swift::Message::ref message) {
 	replyTo(message, "Shutting down");
 	std::cout << "Quitting at the behest of " << message->getFrom().toString() << std::endl;
@@ -100,6 +134,13 @@ void Commands::handleRehashCommand(const std::string& /*command*/, const std::st
 	} else {
 		replyTo(message, "I have suffered a tremendous failure: " + rehashError_);
 	}
+}
+
+void Commands::handleRestartCommand(const std::string& /*command*/, const std::string& /*params*/, Swift::Message::ref message) {
+	rehashError_ = "";
+	replyTo(message, "Restarting now.");
+	std::cout << "Restarting at the behest of " << message->getFrom().toString() << std::endl;
+	onRestartRequested();
 }
 
 void Commands::handleJoinCommand(const std::string& /*command*/, const std::string& params, Swift::Message::ref message) {
