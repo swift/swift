@@ -124,7 +124,10 @@ void ChatControllerBase::handleSendMessageRequest(const std::string &body, bool 
 	message->setType(Swift::Message::Chat);
 	message->setBody(body);
 	if (labelsEnabled_) {
-		SecurityLabelsCatalog::Item labelItem = chatWindow_->getSelectedSecurityLabel();
+		if (!isCorrectionMessage) {
+			lastLabel_ = chatWindow_->getSelectedSecurityLabel();
+		}
+		SecurityLabelsCatalog::Item labelItem = lastLabel_;
 		if (labelItem.getLabel()) {
 			message->addPayload(labelItem.getLabel());
 		}

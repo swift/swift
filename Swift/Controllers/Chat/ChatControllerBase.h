@@ -110,5 +110,6 @@ namespace Swift {
 			boost::shared_ptr<Timer> dateChangeTimer_;
 			TimerFactory* timerFactory_;
 			EntityCapsProvider* entityCapsProvider_;
+			SecurityLabelsCatalog::Item lastLabel_; 
 	};
 }

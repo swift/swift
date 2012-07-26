@@ -39,6 +39,7 @@ class MUCControllerTest : public CppUnit::TestFixture {
 	CPPUNIT_TEST(testAddressedToSelfBySelf);
 	CPPUNIT_TEST(testMessageWithEmptyLabelItem);
 	CPPUNIT_TEST(testMessageWithLabelItem);
+	CPPUNIT_TEST(testCorrectMessageWithLabelItem);
 	CPPUNIT_TEST_SUITE_END();
 
 public:
@@ -206,6 +207,44 @@ public:
 		CPPUNIT_ASSERT(window_->labelsEnabled_);
 		CPPUNIT_ASSERT(stanzaChannel_->isAvailable()); /* Otherwise will prevent sends. */
 		CPPUNIT_ASSERT(message);
+		CPPUNIT_ASSERT_EQUAL(messageBody, message->getBody());
+		CPPUNIT_ASSERT_EQUAL(label, message->getPayload<SecurityLabel>());
+	}
+
+	void testCorrectMessageWithLabelItem() {
+		SecurityLabel::ref label = boost::make_shared<SecurityLabel>();
+		label->setLabel("a");
+		SecurityLabelsCatalog::Item labelItem;
+		labelItem.setSelector("Bob");
+		labelItem.setLabel(label);
+		SecurityLabel::ref label2 = boost::make_shared<SecurityLabel>();
+		label->setLabel("b");
+		SecurityLabelsCatalog::Item labelItem2;
+		labelItem2.setSelector("Charlie");
+		labelItem2.setLabel(label2);
+		window_->label_ = labelItem;
+		boost::shared_ptr<DiscoInfo> features = boost::make_shared<DiscoInfo>();
+		features->addFeature(DiscoInfo::SecurityLabelsCatalogFeature);
+		controller_->setAvailableServerFeatures(features);
+		IQ::ref iq = iqChannel_->iqs_[iqChannel_->iqs_.size() - 1];
+		SecurityLabelsCatalog::ref labelPayload = boost::make_shared<SecurityLabelsCatalog>();
+		labelPayload->addItem(labelItem);
+		IQ::ref result = IQ::createResult(self_, iq->getID(), labelPayload);
+		iqChannel_->onIQReceived(result);
+		std::string messageBody("agamemnon");
+		window_->onSendMessageRequest(messageBody, false);
+		boost::shared_ptr<Stanza> rawStanza = stanzaChannel_->sentStanzas[stanzaChannel_->sentStanzas.size() - 1];
+		Message::ref message = boost::dynamic_pointer_cast<Message>(rawStanza);
+		CPPUNIT_ASSERT_EQUAL(iq->getTo(), result->getFrom());
+		CPPUNIT_ASSERT(window_->labelsEnabled_);
+		CPPUNIT_ASSERT(stanzaChannel_->isAvailable()); /* Otherwise will prevent sends. */
+		CPPUNIT_ASSERT(message);
+		CPPUNIT_ASSERT_EQUAL(messageBody, message->getBody());
+		CPPUNIT_ASSERT_EQUAL(label, message->getPayload<SecurityLabel>());
+		window_->label_ = labelItem2;
+		window_->onSendMessageRequest(messageBody, true);
+		rawStanza = stanzaChannel_->sentStanzas[stanzaChannel_->sentStanzas.size() - 1];
+		message = boost::dynamic_pointer_cast<Message>(rawStanza);
 		CPPUNIT_ASSERT_EQUAL(messageBody, message->getBody());
 		CPPUNIT_ASSERT_EQUAL(label, message->getPayload<SecurityLabel>());
 	}
