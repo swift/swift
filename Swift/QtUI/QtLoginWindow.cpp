@@ -454,6 +454,7 @@ void QtLoginWindow::setInitialMenus() {
 }
 
 void QtLoginWindow::morphInto(MainWindow *mainWindow) {
+	setEnabled(false);
 	QtMainWindow *qtMainWindow = dynamic_cast<QtMainWindow*>(mainWindow);
 	assert(qtMainWindow);
 	stack_->removeWidget(loginWidgetWrapper_);
