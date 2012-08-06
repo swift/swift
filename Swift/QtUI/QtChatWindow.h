@@ -183,10 +183,11 @@ namespace Swift {
 			void beginCorrection();
 			void cancelCorrection();
 			void handleSettingChanged(const std::string& setting);
-			std::string addMessage(const std::string &message, const std::string &senderName, bool senderIsSelf, boost::shared_ptr<SecurityLabel> label, const std::string& avatarPath, const QString& style, const boost::posix_time::ptime& time);
-			void replaceMessage(const std::string& message, const std::string& id, const boost::posix_time::ptime& time, const QString& style);
+			std::string addMessage(const QString& message, const std::string& senderName, bool senderIsSelf, boost::shared_ptr<SecurityLabel> label, const std::string& avatarPath, const QString& style, const boost::posix_time::ptime& time);
+			void replaceMessage(const QString& message, const std::string& id, const boost::posix_time::ptime& time, const QString& style);
 			void handleOccupantSelectionChanged(RosterItem* item);
 			bool appendToPreviousCheck(PreviousMessageKind messageKind, const std::string& senderName, bool senderIsSelf) const;
+			QString linkimoticonify(const QString& message) const;
 
 			int unreadCount_;
 			bool contactIsTyping_;
