@@ -36,6 +36,7 @@ config.log
 .sconf_temp
 .sconsign.dblite
 Swiften/Examples/TuneBot/TuneBot
+Swift/QtUI/swift-im
 Swift/QtUI/swift
 Swift/QtUI/COPYING
 Swift/QtUI/DefaultTheme.qrc
