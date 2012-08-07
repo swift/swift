@@ -19,8 +19,8 @@ if env["SCONS_STAGE"] == "flags" :
 if env["SCONS_STAGE"] == "build" :
 	myenv = env.Clone()
 	myenv.BuildVersion("BuildVersion.h", project = "swift")
-	myenv.MergeFlags(env["SWIFTEN_FLAGS"])
-	myenv.MergeFlags(env["BOOST_FLAGS"])
+	myenv.UseFlags(env["SWIFTEN_FLAGS"])
+	myenv.UseFlags(env["SWIFTEN_DEP_FLAGS"])
 	myenv.StaticLibrary("SwiftControllers", [
 			"Chat/ChatController.cpp",
 			"Chat/ChatControllerBase.cpp",
