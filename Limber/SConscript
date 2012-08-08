@@ -8,8 +8,8 @@ if env["SCONS_STAGE"] == "flags" :
 
 elif env["SCONS_STAGE"] == "build" :
 	libenv = env.Clone()
-	libenv.MergeFlags(env["BOOST_FLAGS"])
-	libenv.MergeFlags(env["SWIFTEN_FLAGS"])
+	libenv.UseFlags(env["SWIFTEN_FLAGS"])
+	libenv.UseFlags(env["SWIFTEN_DEP_FLAGS"])
 	libenv.StaticLibrary("Limber", [
 			"Server/ServerFromClientSession.cpp",
 			"Server/ServerSession.cpp",
