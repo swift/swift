@@ -18,6 +18,8 @@ fi
 	cast.hpp \
 	date_time/posix_time/posix_time.hpp \
 	date_time/local_time/local_time.hpp \
+	date_time/c_local_time_adjustor.hpp \
+	date_time/gregorian/gregorian_types.hpp \
 	foreach.hpp \
 	filesystem.hpp \
 	filesystem/fstream.hpp \
