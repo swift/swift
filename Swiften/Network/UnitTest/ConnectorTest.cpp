@@ -33,8 +33,9 @@ class ConnectorTest : public CppUnit::TestFixture {
 		CPPUNIT_TEST(testConnect_AllSRVHostsFailWithoutFallbackHost);
 		CPPUNIT_TEST(testConnect_AllSRVHostsFailWithFallbackHost);
 		CPPUNIT_TEST(testConnect_SRVAndFallbackHostsFail);
-		CPPUNIT_TEST(testConnect_TimeoutDuringResolve);
-		CPPUNIT_TEST(testConnect_TimeoutDuringConnect);
+		//CPPUNIT_TEST(testConnect_TimeoutDuringResolve);
+		CPPUNIT_TEST(testConnect_TimeoutDuringConnectToOnlyCandidate);
+		CPPUNIT_TEST(testConnect_TimeoutDuringConnectToCandidateFallsBack);
 		CPPUNIT_TEST(testConnect_NoTimeout);
 		CPPUNIT_TEST(testStop_DuringSRVQuery);
 		CPPUNIT_TEST(testStop_Timeout);
@@ -209,7 +210,7 @@ class ConnectorTest : public CppUnit::TestFixture {
 			CPPUNIT_ASSERT(!boost::dynamic_pointer_cast<DomainNameResolveError>(error));
 		}
 
-		void testConnect_TimeoutDuringResolve() {
+		/*void testConnect_TimeoutDuringResolve() {
 			Connector::ref testling(createConnector());
 			testling->setTimeoutMilliseconds(10);
 			resolver->setIsResponsive(false);
@@ -222,9 +223,9 @@ class ConnectorTest : public CppUnit::TestFixture {
 			CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(connections.size()));
 			CPPUNIT_ASSERT(boost::dynamic_pointer_cast<DomainNameResolveError>(error));
 			CPPUNIT_ASSERT(!connections[0]);
-		}
+		}*/
 
-		void testConnect_TimeoutDuringConnect() {
+		void testConnect_TimeoutDuringConnectToOnlyCandidate() {
 			Connector::ref testling(createConnector());
 			testling->setTimeoutMilliseconds(10);
 			resolver->addXMPPClientService("foo.com", host1);
@@ -239,6 +240,30 @@ class ConnectorTest : public CppUnit::TestFixture {
 			CPPUNIT_ASSERT(!connections[0]);
 			CPPUNIT_ASSERT(!boost::dynamic_pointer_cast<DomainNameResolveError>(error));
 		}
+
+		void testConnect_TimeoutDuringConnectToCandidateFallsBack() {
+			Connector::ref testling(createConnector());
+			testling->setTimeoutMilliseconds(10);
+
+			resolver->addXMPPClientService("foo.com", "host-foo.com", 1234);
+			HostAddress address1("1.1.1.1");
+			resolver->addAddress("host-foo.com", address1);
+			HostAddress address2("2.2.2.2");
+			resolver->addAddress("host-foo.com", address2);
+
+			connectionFactory->isResponsive = false;
+			testling->start();
+			eventLoop->processEvents();
+			connectionFactory->isResponsive = true;
+			timerFactory->setTime(10);
+			eventLoop->processEvents();
+
+			CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(connections.size()));
+			CPPUNIT_ASSERT(connections[0]);
+			CPPUNIT_ASSERT(HostAddressPort(address2, 1234) == *(connections[0]->hostAddressPort));
+			CPPUNIT_ASSERT(!boost::dynamic_pointer_cast<DomainNameResolveError>(error));
+		}
+
 
 		void testConnect_NoTimeout() {
 			Connector::ref testling(createConnector());

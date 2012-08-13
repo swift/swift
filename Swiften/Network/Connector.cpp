@@ -37,7 +37,6 @@ void Connector::start() {
 		if (timeoutMilliseconds > 0) {
 			timer = timerFactory->createTimer(timeoutMilliseconds);
 			timer->onTick.connect(boost::bind(&Connector::handleTimeout, shared_from_this()));
-			timer->start();
 		}
 		serviceQuery->run();
 	}
@@ -129,10 +128,17 @@ void Connector::tryConnect(const HostAddressPort& target) {
 	currentConnection = connectionFactory->createConnection();
 	currentConnection->onConnectFinished.connect(boost::bind(&Connector::handleConnectionConnectFinished, shared_from_this(), _1));
 	currentConnection->connect(target);
+	if (timer) {
+		timer->start();
+	}
 }
 
 void Connector::handleConnectionConnectFinished(bool error) {
 	SWIFT_LOG(debug) << "ConnectFinished: " << (error ? "error" : "success") << std::endl;
+	if (timer) {
+			timer->stop();
+			timer.reset();
+	}
 	currentConnection->onConnectFinished.disconnect(boost::bind(&Connector::handleConnectionConnectFinished, shared_from_this(), _1));
 	if (error) {
 		currentConnection.reset();
@@ -174,7 +180,7 @@ void Connector::finish(boost::shared_ptr<Connection> connection) {
 
 void Connector::handleTimeout() {
 	SWIFT_LOG(debug) << "Timeout" << std::endl;
-	finish(boost::shared_ptr<Connection>());
+	handleConnectionConnectFinished(true);
 }
 
 };

@@ -112,7 +112,7 @@ void CoreClient::connect(const ClientOptions& o) {
 	if (options.boshURL.empty()) {
 		connector_ = boost::make_shared<ChainedConnector>(host, port, o.manualHostname.empty(), networkFactories->getDomainNameResolver(), connectionFactories, networkFactories->getTimerFactory());
 		connector_->onConnectFinished.connect(boost::bind(&CoreClient::handleConnectorFinished, this, _1, _2));
-		connector_->setTimeoutMilliseconds(60*1000);
+		connector_->setTimeoutMilliseconds(2*60*1000);
 		connector_->start();
 	}
 	else {
