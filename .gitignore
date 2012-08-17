@@ -15,6 +15,7 @@
 *.swp
 *.nib
 *.exe
+*.syms
 *.dll
 *.lib
 *.exp

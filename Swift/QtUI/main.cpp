@@ -19,6 +19,7 @@
 #include <Swift/Controllers/ApplicationInfo.h>
 #include <Swift/Controllers/BuildVersion.h>
 #include <SwifTools/Application/PlatformApplicationPathProvider.h>
+#include <SwifTools/CrashReporter.h>
 
 #include "QtSwift.h"
 #include "QtTranslator.h"
@@ -27,11 +28,16 @@
 int main(int argc, char* argv[]) {
 	QApplication app(argc, argv);
 
+	Swift::PlatformApplicationPathProvider applicationPathProvider(SWIFT_APPLICATION_NAME);
+
+	Swift::CrashReporter crashReporter(applicationPathProvider.getDataDir() / "crashes");
+
 	QTextCodec::setCodecForCStrings(QTextCodec::codecForName("UTF-8"));
 
 	// Translation
 	QTextCodec::setCodecForTr(QTextCodec::codecForName("UTF-8"));
-	boost::filesystem::path someTranslationPath = Swift::PlatformApplicationPathProvider(SWIFT_APPLICATION_NAME).getResourcePath("/translations/swift_en.qm");
+	boost::filesystem::path someTranslationPath = applicationPathProvider.getResourcePath("/translations/swift_en.qm");
+
 	QTranslator qtTranslator;
 	if (!someTranslationPath.empty()) {
 #if QT_VERSION >= 0x040800

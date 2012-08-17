@@ -130,8 +130,7 @@ env["OBJCCFLAGS"] = []
 
 if env["optimize"] :
 	if env["PLATFORM"] == "win32" :
-		env.Append(CCFLAGS = ["/O2", "/GL"])
-		env.Append(LINKFLAGS = ["/LTCG"])
+		env.Append(CCFLAGS = ["/O2"])
 	else :
 		env.Append(CCFLAGS = ["-O2"])
 
@@ -140,10 +139,15 @@ if env["target"] == "xcode" and os.environ["CONFIGURATION"] == "Release" :
 
 if env["debug"] :
 	if env["PLATFORM"] == "win32" :
-		env.Append(CCFLAGS = ["/Zi", "/MDd"])
+		env.Append(CCFLAGS = ["/Z7"])
 		env.Append(LINKFLAGS = ["/DEBUG"])
 		if env["set_iterator_debug_level"] :
 			env.Append(CPPDEFINES = ["_ITERATOR_DEBUG_LEVEL=0"])
+		if env["optimize"] :
+			env.Append(LINKFLAGS = ["/OPT:NOREF"])
+			env.Append(CCFLAGS = ["/MD"])
+		else :
+			env.Append(CCFLAGS = ["/MDd"])
 	else :
 		env.Append(CCFLAGS = ["-g"])
 elif env["PLATFORM"] == "win32" :

@@ -16,8 +16,8 @@ if env["SCONS_STAGE"] == "flags" :
 
 if env["SCONS_STAGE"] == "build" :
 	swiftools_env = env.Clone()
-	swiftools_env.MergeFlags(swiftools_env["SWIFTEN_FLAGS"])
-	swiftools_env.MergeFlags(swiftools_env["BOOST_FLAGS"])
+	swiftools_env.UseFlags(swiftools_env["SWIFTEN_FLAGS"])
+	swiftools_env.UseFlags(swiftools_env["BOOST_FLAGS"])
 
 	sources = [
 			"Idle/IdleDetector.cpp",
@@ -44,6 +44,9 @@ if env["SCONS_STAGE"] == "build" :
 	elif swiftools_env["HAVE_XSS"] :
 		swiftools_env.Append(CPPDEFINES = ["HAVE_XSS"])
 		sources += ["Idle/XSSIdleQuerier.cpp"]
+
+	swiftools_env.UseFlags(swiftools_env["BREAKPAD_FLAGS"])
+	sources += ["CrashReporter.cpp"]
 	
 	swiftools_env["SWIFTOOLS_OBJECTS"] = []
 	Export("swiftools_env")

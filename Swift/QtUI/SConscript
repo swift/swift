@@ -31,6 +31,7 @@ if myenv["HAVE_SPARKLE"] :
   myenv.UseFlags(env["SPARKLE_FLAGS"])
 myenv.UseFlags(env["SWIFTEN_FLAGS"])
 myenv.UseFlags(env["SWIFTEN_DEP_FLAGS"])
+myenv.UseFlags(env["BREAKPAD_FLAGS"])
 if myenv.get("HAVE_GROWL", False) :
 	myenv.UseFlags(myenv["GROWL_FLAGS"])
 	myenv.Append(CPPDEFINES = ["HAVE_GROWL"])
