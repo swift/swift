@@ -6,6 +6,8 @@
 
 #include <Swiftob/Storage.h>
 
+#include <boost/filesystem/operations.hpp>
+
 #include <Swiften/Base/String.h>
 #include <Swiften/Base/ByteArray.h>
 #include <Swiften/Base/foreach.h>

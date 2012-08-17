@@ -14,6 +14,7 @@
 #include <Swiften/Base/foreach.h>
 #include <Swiften/Client/Client.h>
 #include <Swiften/Network/TimerFactory.h>
+#include <boost/filesystem/operations.hpp>
 
 #include <Swiftob/Commands.h>
 
@@ -405,7 +406,11 @@ void LuaCommands::loadScript(boost::filesystem::path filePath) {
 	luaL_openlibs(lua);
 	lua_pushlightuserdata(lua, this);
 	lua_setfield(lua, LUA_REGISTRYINDEX, LUA_COMMANDS);
-	std::string filename(filePath.filename());
+#if BOOST_FILESYSTEM_VERSION == 2 // TODO: Delete this when boost 1.44 becomes a minimum requirement, and we no longer need v2
+	std::string filename = filePath.filename();
+#else
+	std::string filename = filePath.filename().string();
+#endif
 	filename += ".storage";
 	boost::filesystem::path storagePath(boost::filesystem::path(path_) / filename);
 	Storage* storage = new Storage(storagePath);

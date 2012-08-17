@@ -103,7 +103,12 @@ boost::optional<JID> FileTransferManagerImpl::highestPriorityJIDSupportingFileTr
 }
 
 OutgoingFileTransfer::ref FileTransferManagerImpl::createOutgoingFileTransfer(const JID& to, const boost::filesystem::path& filepath, const std::string& description, boost::shared_ptr<ReadBytestream> bytestream) {
+#if BOOST_FILESYSTEM_VERSION == 2 // TODO: Delete this when boost 1.44 becomes a minimum requirement, and we no longer need v2
 	std::string filename = filepath.filename();
+#else
+	std::string filename = filepath.filename().string();
+#endif
+
 	boost::uintmax_t sizeInBytes = boost::filesystem::file_size(filepath);
 	boost::posix_time::ptime lastModified = boost::posix_time::from_time_t(boost::filesystem::last_write_time(filepath));
 	return createOutgoingFileTransfer(to, filename, description, sizeInBytes, lastModified, bytestream);
