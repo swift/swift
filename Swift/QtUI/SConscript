@@ -94,6 +94,7 @@ sources = [
     "QtTabWidget.cpp",
     "QtTextEdit.cpp",
     "QtXMLConsoleWidget.cpp",
+    "QtHistoryWindow.cpp",
     "QtFileTransferListWidget.cpp",
     "QtFileTransferListItemModel.cpp",
     "QtAdHocCommandWindow.cpp",
@@ -198,6 +199,7 @@ myenv.Uic4("UserSearch/QtUserSearchResultsPage.ui")
 myenv.Uic4("QtBookmarkDetailWindow.ui")
 myenv.Uic4("QtAffiliationEditor.ui")
 myenv.Uic4("QtJoinMUCWindow.ui")
+myenv.Uic4("QtHistoryWindow.ui")
 myenv.Qrc("DefaultTheme.qrc")
 myenv.Qrc("Swift.qrc")
 

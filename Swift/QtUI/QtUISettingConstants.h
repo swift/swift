@@ -16,6 +16,7 @@ namespace Swift {
 			static const SettingsProvider::Setting<int> CURRENT_ROSTER_TAB;
 			static const SettingsProvider::Setting<bool> SHOW_NICK_IN_ROSTER_HEADER;
 			static const SettingsProvider::Setting<int> CHATWINDOW_FONT_SIZE;
+			static const SettingsProvider::Setting<int> HISTORYWINDOW_FONT_SIZE;
 			static const SettingsProvider::Setting<bool> SHOW_EMOTICONS;
 	};
 }

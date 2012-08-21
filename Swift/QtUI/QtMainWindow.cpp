@@ -27,6 +27,7 @@
 #include <Swift/QtUI/QtLoginWindow.h>
 #include <Roster/QtRosterWidget.h>
 #include <Swift/Controllers/UIEvents/RequestJoinMUCUIEvent.h>
+#include <Swift/Controllers/UIEvents/RequestHistoryUIEvent.h>
 #include <Swift/Controllers/UIEvents/RequestAddUserDialogUIEvent.h>
 #include <Swift/Controllers/UIEvents/RequestChatWithUserDialogUIEvent.h>
 #include <Swift/Controllers/UIEvents/RequestProfileEditorUIEvent.h>
@@ -122,6 +123,11 @@ QtMainWindow::QtMainWindow(SettingsProvider* settings, UIEventStream* uiEventStr
 	QAction* joinMUCAction = new QAction(tr("Enter &Room…"), this);
 	connect(joinMUCAction, SIGNAL(triggered()), SLOT(handleJoinMUCAction()));
 	actionsMenu->addAction(joinMUCAction);
+#ifdef SWIFT_EXPERIMENTAL_HISTORY
+	QAction* viewLogsAction = new QAction(tr("&View History…"), this);
+	connect(viewLogsAction, SIGNAL(triggered()), SLOT(handleViewLogsAction()));
+	actionsMenu->addAction(viewLogsAction);
+#endif
 	addUserAction_ = new QAction(tr("&Add Contact…"), this);
 	connect(addUserAction_, SIGNAL(triggered(bool)), this, SLOT(handleAddUserActionTriggered(bool)));
 	actionsMenu->addAction(addUserAction_);
@@ -233,6 +239,10 @@ void QtMainWindow::handleEditProfileAction() {
 
 void QtMainWindow::handleJoinMUCAction() {
 	uiEventStream_->send(boost::make_shared<RequestJoinMUCUIEvent>());
+}
+
+void QtMainWindow::handleViewLogsAction() {
+	uiEventStream_->send(boost::make_shared<RequestHistoryUIEvent>());
 }
 
 void QtMainWindow::handleStatusChanged(StatusShow::Type showType, const QString &statusMessage) {

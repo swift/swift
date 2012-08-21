@@ -24,6 +24,7 @@ namespace Swift {
 	class QtChatWindowFactory;
 	class QtChatWindow;
 	class TimerFactory;
+	class historyWindow_;
 
 	class QtUIFactory : public QObject, public UIFactory {
 			Q_OBJECT
@@ -31,6 +32,7 @@ namespace Swift {
 			QtUIFactory(SettingsProviderHierachy* settings, QtSettingsProvider* qtOnlySettings, QtChatTabs* tabs, QSplitter* netbookSplitter, QtSystemTray* systemTray, QtChatWindowFactory* chatWindowFactory, TimerFactory* timerFactory, bool startMinimized, bool emoticonsExist);
 
 			virtual XMLConsoleWidget* createXMLConsoleWidget();
+			virtual HistoryWindow* createHistoryWindow(UIEventStream*);
 			virtual MainWindow* createMainWindow(UIEventStream* eventStream);
 			virtual LoginWindow* createLoginWindow(UIEventStream* eventStream);
 			virtual EventWindow* createEventWindow();
@@ -47,6 +49,7 @@ namespace Swift {
 		private slots:
 			void handleLoginWindowGeometryChanged();
 			void handleChatWindowFontResized(int);
+			void handleHistoryWindowFontResized(int);
 
 		private:
 			SettingsProviderHierachy* settings;
@@ -61,6 +64,7 @@ namespace Swift {
 			std::vector<QPointer<QtChatWindow> > chatWindows;
 			bool startMinimized;
 			int chatFontSize;
+			int historyFontSize_;
 			bool emoticonsExist_;
 	};
 }

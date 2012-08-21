@@ -9,6 +9,7 @@
 #include "Swift/Controllers/Storages/AvatarFileStorage.h"
 #include "Swift/Controllers/Storages/CapsFileStorage.h"
 #include "Swift/Controllers/Storages/RosterFileStorage.h"
+#include <Swiften/History/SQLiteHistoryStorage.h>
 
 namespace Swift {
 
@@ -18,6 +19,9 @@ FileStorages::FileStorages(const boost::filesystem::path& baseDir, const JID& ji
 	capsStorage = new CapsFileStorage(baseDir / "caps");
 	avatarStorage = new AvatarFileStorage(baseDir / "avatars", baseDir / profile / "avatars");
 	rosterStorage = new RosterFileStorage(baseDir / profile / "roster.xml");
+#ifdef SWIFT_EXPERIMENTAL_HISTORY
+	historyStorage = new SQLiteHistoryStorage((baseDir / "history.db").string());
+#endif
 }
 
 FileStorages::~FileStorages() {
@@ -25,6 +29,9 @@ FileStorages::~FileStorages() {
 	delete avatarStorage;
 	delete capsStorage;
 	delete vcardStorage;
+#ifdef SWIFT_EXPERIMENTAL_HISTORY
+	delete historyStorage;
+#endif
 }
 
 VCardStorage* FileStorages::getVCardStorage() const {
@@ -41,6 +48,14 @@ AvatarStorage* FileStorages::getAvatarStorage() const {
 
 RosterStorage* FileStorages::getRosterStorage() const {
 	return rosterStorage;
+}
+
+HistoryStorage* FileStorages::getHistoryStorage() const {
+#ifdef SWIFT_EXPERIMENTAL_HISTORY
+	return historyStorage;
+#else
+	return NULL;
+#endif
 }
 
 }

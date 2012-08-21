@@ -28,7 +28,7 @@
 
 namespace Swift {
 
-QtChatView::QtChatView(QtChatTheme* theme, QWidget* parent) : QWidget(parent), fontSizeSteps_(0) {
+QtChatView::QtChatView(QtChatTheme* theme, QWidget* parent, bool disableAutoScroll) : QWidget(parent), fontSizeSteps_(0), disableAutoScroll_(disableAutoScroll) {
 	theme_ = theme;
 
 	QVBoxLayout* mainLayout = new QVBoxLayout(this);
@@ -61,6 +61,7 @@ QtChatView::QtChatView(QtChatTheme* theme, QWidget* parent) : QWidget(parent), f
 	//webPage_->settings()->setAttribute(QWebSettings::DeveloperExtrasEnabled, true);
 	webView_->setPage(webPage_);
 	connect(webPage_, SIGNAL(selectionChanged()), SLOT(copySelectionToClipboard()));
+	connect(webPage_, SIGNAL(scrollRequested(int, int, const QRect&)), SLOT(handleScrollRequested(int, int, const QRect&)));
 
 	viewReady_ = false;
 	isAtBottom_ = true;
@@ -85,12 +86,51 @@ void QtChatView::handleKeyPressEvent(QKeyEvent* event) {
 	webView_->keyPressEvent(event);
 }
 
-void QtChatView::addMessage(boost::shared_ptr<ChatSnippet> snippet) {
+void QtChatView::addMessageBottom(boost::shared_ptr<ChatSnippet> snippet) {
 	if (viewReady_) {
 		addToDOM(snippet);
 	} else {
 		/* If this asserts, the previous queuing code was necessary and should be reinstated */
 		assert(false);
+	}
+}
+
+void QtChatView::addMessageTop(boost::shared_ptr<ChatSnippet> snippet) {
+	// save scrollbar maximum value
+	if (!topMessageAdded_) {
+		scrollBarMaximum_ = webPage_->mainFrame()->scrollBarMaximum(Qt::Vertical);
+	}
+	topMessageAdded_ = true;
+
+	QWebElement continuationElement = firstElement_.findFirst("#insert");
+
+	bool insert = snippet->getAppendToPrevious();
+	bool fallback = continuationElement.isNull();
+
+	boost::shared_ptr<ChatSnippet> newSnippet = (insert && fallback) ? snippet->getContinuationFallbackSnippet() : snippet;
+	QWebElement newElement = snippetToDOM(newSnippet);
+
+	if (insert && !fallback) {
+		Q_ASSERT(!continuationElement.isNull());
+		continuationElement.replace(newElement);
+	} else {
+		continuationElement.removeFromDocument();
+		topInsertPoint_.prependOutside(newElement);
+	}
+
+	firstElement_ = newElement;
+
+	if (lastElement_.isNull()) {
+		lastElement_ = firstElement_;
+	}
+
+	if (fontSizeSteps_ != 0) {
+		double size = 1.0 + 0.2 * fontSizeSteps_;
+		QString sizeString(QString().setNum(size, 'g', 3) + "em");
+		const QWebElementCollection spans = firstElement_.findAll("span.swift_resizable");
+		foreach (QWebElement span, spans) {
+			span.setStyleProperty("font-size", sizeString);
+		}
 	}
 }
 
@@ -230,7 +270,7 @@ void QtChatView::displayReceiptInfo(const QString& id, bool showIt) {
 }
 
 void QtChatView::rememberScrolledToBottom() {
-	isAtBottom_ = webPage_->mainFrame()->scrollBarValue(Qt::Vertical) == webPage_->mainFrame()->scrollBarMaximum(Qt::Vertical);
+	isAtBottom_ = webPage_->mainFrame()->scrollBarValue(Qt::Vertical) >= (webPage_->mainFrame()->scrollBarMaximum(Qt::Vertical) - 1);
 }
 
 void QtChatView::scrollToBottom() {
@@ -240,7 +280,14 @@ void QtChatView::scrollToBottom() {
 }
 
 void QtChatView::handleFrameSizeChanged() {
-	if (isAtBottom_) {
+	if (topMessageAdded_) {
+		// adjust new scrollbar position
+		int newMaximum = webPage_->mainFrame()->scrollBarMaximum(Qt::Vertical);
+		webPage_->mainFrame()->setScrollBarValue(Qt::Vertical, newMaximum - scrollBarMaximum_);
+		topMessageAdded_ = false;
+	}
+
+	if (isAtBottom_ && !disableAutoScroll_) {
 		scrollToBottom();
 	}
 }
@@ -282,6 +329,9 @@ void QtChatView::resizeFont(int fontSizeSteps) {
 
 void QtChatView::resetView() {
 	lastElement_ = QWebElement();
+	firstElement_ = lastElement_;
+	topMessageAdded_ = false;
+	scrollBarMaximum_ = 0;
 	QString pageHTML = theme_->getTemplate();
 	pageHTML.replace("==bodyBackground==", "background-color:#e3e3e3");
 	pageHTML.replace(pageHTML.indexOf("%@"), 2, theme_->getBase());
@@ -302,11 +352,15 @@ void QtChatView::resetView() {
 		syncLoop.exec();
 	}
 	document_ = webPage_->mainFrame()->documentElement();
+
+	resetTopInsertPoint();
 	QWebElement chatElement = document_.findFirst("#Chat");
 	newInsertPoint_ = chatElement.clone();
 	newInsertPoint_.setOuterXml("<div id='swift_insert'/>");
 	chatElement.appendInside(newInsertPoint_);
 	Q_ASSERT(!newInsertPoint_.isNull());
+
+	scrollToBottom();
 
 	connect(webPage_->mainFrame(), SIGNAL(contentsSizeChanged(const QSize&)), this, SLOT(handleFrameSizeChanged()), Qt::UniqueConnection);
 }
@@ -382,6 +436,38 @@ void QtChatView::setMUCInvitationJoined(QString id) {
 	if (!buttonElement.isNull()) {
 		buttonElement.setAttribute("value", tr("Return to room"));
 	}
+}
+
+void QtChatView::handleScrollRequested(int, int dy, const QRect&) {
+	rememberScrolledToBottom();
+
+	int pos = webPage_->mainFrame()->scrollBarValue(Qt::Vertical) - dy;
+	emit scrollRequested(pos);
+
+	if (pos == 0) {
+		emit scrollReachedTop();
+	}
+	else if (pos == webPage_->mainFrame()->scrollBarMaximum(Qt::Vertical)) {
+		emit scrollReachedBottom();
+	}
+}
+
+int QtChatView::getSnippetPositionByDate(const QDate& date) {
+	QWebElement message = webPage_->mainFrame()->documentElement().findFirst(".date" + date.toString(Qt::ISODate));
+
+	return message.geometry().top();
+}
+
+void QtChatView::resetTopInsertPoint() {
+	QWebElement continuationElement = firstElement_.findFirst("#insert");
+	continuationElement.removeFromDocument();
+	firstElement_ = QWebElement();
+
+	topInsertPoint_.removeFromDocument();
+	QWebElement chatElement = document_.findFirst("#Chat");
+	topInsertPoint_ = chatElement.clone();
+	topInsertPoint_.setOuterXml("<div id='swift_insert'/>");
+	chatElement.prependInside(topInsertPoint_);
 }
 
 }

@@ -27,11 +27,13 @@
 #include "QtFileTransferListWidget.h"
 #include <Swift/Controllers/Settings/SettingsProviderHierachy.h>
 #include <Swift/QtUI/QtUISettingConstants.h>
+#include <QtHistoryWindow.h>
 
 namespace Swift {
 
 QtUIFactory::QtUIFactory(SettingsProviderHierachy* settings, QtSettingsProvider* qtOnlySettings, QtChatTabs* tabs, QSplitter* netbookSplitter, QtSystemTray* systemTray, QtChatWindowFactory* chatWindowFactory, TimerFactory* timerFactory, bool startMinimized, bool emoticonsExist) : settings(settings), qtOnlySettings(qtOnlySettings), tabs(tabs), netbookSplitter(netbookSplitter), systemTray(systemTray), chatWindowFactory(chatWindowFactory), timerFactory_(timerFactory), lastMainWindow(NULL), loginWindow(NULL), startMinimized(startMinimized), emoticonsExist_(emoticonsExist) {
 	chatFontSize = settings->getSetting(QtUISettingConstants::CHATWINDOW_FONT_SIZE);
+	historyFontSize_ = settings->getSetting(QtUISettingConstants::HISTORYWINDOW_FONT_SIZE);
 }
 
 XMLConsoleWidget* QtUIFactory::createXMLConsoleWidget() {
@@ -42,6 +44,25 @@ XMLConsoleWidget* QtUIFactory::createXMLConsoleWidget() {
 	}
 	widget->show();
 	return widget;
+}
+
+HistoryWindow* QtUIFactory::createHistoryWindow(UIEventStream* uiEventStream) {
+	QtHistoryWindow* window = new QtHistoryWindow(settings, uiEventStream);
+	tabs->addTab(window);
+	if (!tabs->isVisible()) {
+		tabs->show();
+	}
+
+	connect(window, SIGNAL(fontResized(int)), this, SLOT(handleHistoryWindowFontResized(int)));
+
+	window->handleFontResized(historyFontSize_);
+	window->show();
+	return window;
+}
+
+void QtUIFactory::handleHistoryWindowFontResized(int size) {
+	historyFontSize_ = size;
+	settings->storeSetting(QtUISettingConstants::HISTORYWINDOW_FONT_SIZE, size);
 }
 
 FileTransferListWidget* QtUIFactory::createFileTransferListWidget() {

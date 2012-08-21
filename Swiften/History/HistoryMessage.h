@@ -12,33 +12,61 @@
 namespace Swift {
 	class HistoryMessage {
 		public:
-			HistoryMessage(const std::string& message, const JID& from, const JID& to, const boost::posix_time::ptime time) : message_(message), from_(from), to_(to), time_(time) {
+			enum Type {
+				Chat = 0,
+				Groupchat = 1,
+				PrivateMessage = 2
+			};
+
+			HistoryMessage(
+				const std::string& message,
+				const JID& fromJID,
+				const JID& toJID,
+				Type type,
+				const boost::posix_time::ptime& time,
+				int utcOffset = 0) :
+					message_(message),
+					fromJID_(fromJID),
+					toJID_(toJID),
+					type_(type),
+					time_(time),
+					utcOffset_(utcOffset) {
 			}
 
 			const std::string& getMessage() const {
 				return message_;
 			}
 
-			const JID& getFrom() const {
-				return from_;
+			const JID& getFromJID() const {
+				return fromJID_;
 			}
 
-			const JID& getTo() const {
-				return to_;
+			const JID& getToJID() const {
+				return toJID_;
+			}
+
+			Type getType() const {
+				return type_;
 			}
 
 			boost::posix_time::ptime getTime() const {
 				return time_;
 			}
 
+			int getOffset() const {
+				return utcOffset_;
+			}
+
 			bool operator==(const HistoryMessage& o) const {
-				return message_ == o.message_ && from_ == o.from_ && to_ == o.to_ && time_ == o.time_;
+				return message_ == o.message_ && fromJID_ == o.fromJID_ && toJID_ == o.toJID_ && type_ == o.type_ && time_ == o.time_;
 			}
 
 		private:
 			std::string message_;
-			JID from_;
-			JID to_;
+			JID fromJID_;
+			JID toJID_;
+			Type type_;
 			boost::posix_time::ptime time_;
+			int utcOffset_;
 	};
 }

@@ -44,7 +44,7 @@ namespace Swift {
 
 	class MUCController : public ChatControllerBase {
 		public:
-			MUCController(const JID& self, MUC::ref muc, const boost::optional<std::string>& password, const std::string &nick, StanzaChannel* stanzaChannel, IQRouter* iqRouter, ChatWindowFactory* chatWindowFactory, PresenceOracle* presenceOracle, AvatarManager* avatarManager, UIEventStream* events, bool useDelayForLatency, TimerFactory* timerFactory, EventController* eventController, EntityCapsProvider* entityCapsProvider, XMPPRoster* roster);
+			MUCController(const JID& self, MUC::ref muc, const boost::optional<std::string>& password, const std::string &nick, StanzaChannel* stanzaChannel, IQRouter* iqRouter, ChatWindowFactory* chatWindowFactory, PresenceOracle* presenceOracle, AvatarManager* avatarManager, UIEventStream* events, bool useDelayForLatency, TimerFactory* timerFactory, EventController* eventController, EntityCapsProvider* entityCapsProvider, XMPPRoster* roster, HistoryController* historyController, MUCRegistry* mucRegistry);
 			~MUCController();
 			boost::signal<void ()> onUserLeft;
 			boost::signal<void ()> onUserJoined;
@@ -64,6 +64,7 @@ namespace Swift {
 			void preHandleIncomingMessage(boost::shared_ptr<MessageEvent>);
 			void postHandleIncomingMessage(boost::shared_ptr<MessageEvent>);
 			void cancelReplaces();
+			void logMessage(const std::string& message, const JID& fromJID, const JID& toJID, const boost::posix_time::ptime& timeStamp, bool isIncoming);
 
 		private:
 			void setAvailableRoomActions(const MUCOccupant::Affiliation& affiliation, const MUCOccupant::Role& role);
@@ -105,6 +106,8 @@ namespace Swift {
 			void handleChangeAffiliationsRequest(const std::vector<std::pair<MUCOccupant::Affiliation, JID> >& changes);
 			void handleInviteToMUCWindowDismissed();
 			void handleInviteToMUCWindowCompleted();
+			void addRecentLogs();
+			void checkDuplicates(boost::shared_ptr<Message> newMessage);
 
 		private:
 			MUC::ref muc_;
@@ -126,6 +129,7 @@ namespace Swift {
 			boost::optional<std::string> password_;
 			InviteToChatWindow* inviteWindow_;
 			XMPPRoster* xmppRoster_;
+			std::vector<HistoryMessage> joinContext_;
 	};
 }
 

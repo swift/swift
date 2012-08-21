@@ -52,6 +52,8 @@ namespace Swift {
 	class SoundEventController;
 	class SoundPlayer;
 	class XMLConsoleController;
+	class HistoryViewController;
+	class HistoryController;
 	class FileTransferListController;
 	class UIEventStream;
 	class EventWindowFactory;
@@ -143,6 +145,8 @@ namespace Swift {
 			LoginWindow* loginWindow_;
 			UIEventStream* uiEventStream_;
 			XMLConsoleController* xmlConsoleController_;
+			HistoryViewController* historyViewController_;
+			HistoryController* historyController_;
 			FileTransferListController* fileTransferListController_;
 			ChatsManager* chatsManager_;
 			ProfileController* profileController_;

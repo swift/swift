@@ -37,6 +37,8 @@
 #include "Swift/Controllers/SystemTray.h"
 #include "Swift/Controllers/SystemTrayController.h"
 #include "Swift/Controllers/XMLConsoleController.h"
+#include <Swift/Controllers/HistoryController.h>
+#include <Swift/Controllers/HistoryViewController.h>
 #include "Swift/Controllers/FileTransferListController.h"
 #include "Swift/Controllers/UIEvents/UIEventStream.h"
 #include "Swift/Controllers/PresenceNotifier.h"
@@ -112,6 +114,7 @@ MainController::MainController(
 	eventNotifier_ = NULL;
 	rosterController_ = NULL;
 	chatsManager_ = NULL;
+	historyViewController_ = NULL;
 	eventWindowController_ = NULL;
 	profileController_ = NULL;
 	contactEditController_ = NULL;
@@ -218,6 +221,12 @@ void MainController::resetClient() {
 	eventWindowController_ = NULL;
 	delete chatsManager_;
 	chatsManager_ = NULL;
+#ifdef SWIFT_EXPERIMENTAL_HISTORY
+	delete historyController_;
+	historyController_ = NULL;
+	delete historyViewController_;
+	historyViewController_ = NULL;
+#endif
 	delete ftOverview_;
 	ftOverview_ = NULL;
 	delete rosterController_;
@@ -295,7 +304,13 @@ void MainController::handleConnected() {
 		 * be before they receive stanzas that need it (e.g. bookmarks).*/
 		client_->getVCardManager()->requestOwnVCard();
 
-		chatsManager_ = new ChatsManager(jid_, client_->getStanzaChannel(), client_->getIQRouter(), eventController_, uiFactory_, uiFactory_, client_->getNickResolver(), client_->getPresenceOracle(), client_->getPresenceSender(), uiEventStream_, uiFactory_, useDelayForLatency_, networkFactories_->getTimerFactory(), client_->getMUCRegistry(), client_->getEntityCapsProvider(), client_->getMUCManager(), uiFactory_, profileSettings_, ftOverview_, client_->getRoster(), !settings_->getSetting(SettingConstants::REMEMBER_RECENT_CHATS), settings_);
+#ifdef SWIFT_EXPERIMENTAL_HISTORY
+		historyController_ = new HistoryController(storages_->getHistoryStorage());
+		historyViewController_ = new HistoryViewController(jid_, uiEventStream_, historyController_, client_->getNickResolver(), client_->getAvatarManager(), client_->getPresenceOracle(), uiFactory_);
+		chatsManager_ = new ChatsManager(jid_, client_->getStanzaChannel(), client_->getIQRouter(), eventController_, uiFactory_, uiFactory_, client_->getNickResolver(), client_->getPresenceOracle(), client_->getPresenceSender(), uiEventStream_, uiFactory_, useDelayForLatency_, networkFactories_->getTimerFactory(), client_->getMUCRegistry(), client_->getEntityCapsProvider(), client_->getMUCManager(), uiFactory_, profileSettings_, ftOverview_, client_->getRoster(), !settings_->getSetting(SettingConstants::REMEMBER_RECENT_CHATS), settings_, historyController_);
+#else
+		chatsManager_ = new ChatsManager(jid_, client_->getStanzaChannel(), client_->getIQRouter(), eventController_, uiFactory_, uiFactory_, client_->getNickResolver(), client_->getPresenceOracle(), client_->getPresenceSender(), uiEventStream_, uiFactory_, useDelayForLatency_, networkFactories_->getTimerFactory(), client_->getMUCRegistry(), client_->getEntityCapsProvider(), client_->getMUCManager(), uiFactory_, profileSettings_, ftOverview_, client_->getRoster(), !settings_->getSetting(SettingConstants::REMEMBER_RECENT_CHATS), settings_, NULL);
+#endif
 		
 		client_->onMessageReceived.connect(boost::bind(&ChatsManager::handleIncomingMessage, chatsManager_, _1));
 		chatsManager_->setAvatarManager(client_->getAvatarManager());

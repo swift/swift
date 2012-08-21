@@ -59,8 +59,10 @@ MUCController::MUCController (
 		TimerFactory* timerFactory,
 		EventController* eventController,
 		EntityCapsProvider* entityCapsProvider,
-		XMPPRoster* roster) :
-			ChatControllerBase(self, stanzaChannel, iqRouter, chatWindowFactory, muc->getJID(), presenceOracle, avatarManager, useDelayForLatency, uiEventStream, eventController, timerFactory, entityCapsProvider), muc_(muc), nick_(nick), desiredNick_(nick), password_(password) {
+		XMPPRoster* roster,
+		HistoryController* historyController,
+		MUCRegistry* mucRegistry) :
+			ChatControllerBase(self, stanzaChannel, iqRouter, chatWindowFactory, muc->getJID(), presenceOracle, avatarManager, useDelayForLatency, uiEventStream, eventController, timerFactory, entityCapsProvider, historyController, mucRegistry), muc_(muc), nick_(nick), desiredNick_(nick), password_(password) {
 	parting_ = true;
 	joined_ = false;
 	lastWasPresence_ = false;
@@ -193,11 +195,14 @@ void MUCController::rejoin() {
 			muc_->setPassword(*password_);
 		}
 		//FIXME: check for received activity
-		if (lastActivity_ == boost::posix_time::not_a_date_time) {
-			muc_->joinAs(nick_);
-		} else {
-			muc_->joinWithContextSince(nick_, lastActivity_);
+#ifdef SWIFT_EXPERIMENTAL_HISTORY
+		if (lastActivity_ == boost::posix_time::not_a_date_time && historyController_) {
+			lastActivity_ = historyController_->getLastTimeStampFromMUC(selfJID_, toJID_);
 		}
+		muc_->joinWithContextSince(nick_, lastActivity_);
+#else
+		muc_->joinAs(nick_);
+#endif
 	}
 }
 
@@ -273,6 +278,11 @@ void MUCController::handleJoinComplete(const std::string& nick) {
 	std::string joinMessage = str(format(QT_TRANSLATE_NOOP("", "You have entered room %1% as %2%.")) % toJID_.toString() % nick);
 	nick_ = nick;
 	chatWindow_->addSystemMessage(joinMessage);
+
+#ifdef SWIFT_EXPERIMENTAL_HISTORY
+	addRecentLogs();
+#endif
+
 	clearPresenceQueue();
 	shouldJoinOnReconnect_ = true;
 	setEnabled(true);
@@ -430,6 +440,7 @@ void MUCController::preHandleIncomingMessage(boost::shared_ptr<MessageEvent> mes
 	}
 
 	if (!doneGettingHistory_) {
+		checkDuplicates(message);
 		messageEvent->conclude();
 	}
 }
@@ -777,6 +788,53 @@ void MUCController::handleChangeAffiliationsRequest(const std::vector<std::pair<
 
 void MUCController::handleAffiliationListReceived(MUCOccupant::Affiliation affiliation, const std::vector<JID>& jids) {
 	chatWindow_->setAffiliations(affiliation, jids);
+}
+
+void MUCController::logMessage(const std::string& message, const JID& fromJID, const JID& toJID, const boost::posix_time::ptime& timeStamp, bool isIncoming) {
+	// log only incoming messages
+	if (isIncoming && historyController_) {
+		historyController_->addMessage(message, fromJID, toJID, HistoryMessage::Groupchat, timeStamp);
+	}
+}
+
+void MUCController::addRecentLogs() {
+	if (!historyController_) {
+		return;
+	}
+
+	joinContext_ = historyController_->getMUCContext(selfJID_, toJID_, lastActivity_);
+
+	foreach (const HistoryMessage& message, joinContext_) {
+		bool senderIsSelf = nick_ == message.getFromJID().getResource();
+
+		// the chatWindow uses utc timestamps
+		addMessage(message.getMessage(), senderDisplayNameFromMessage(message.getFromJID()), senderIsSelf, boost::shared_ptr<SecurityLabel>(new SecurityLabel()), std::string(avatarManager_->getAvatarPath(message.getFromJID()).string()), message.getTime() - boost::posix_time::hours(message.getOffset()));
+	}
+}
+
+void MUCController::checkDuplicates(boost::shared_ptr<Message> newMessage) {
+	std::string body = newMessage->getBody();
+	JID jid = newMessage->getFrom();
+	boost::optional<boost::posix_time::ptime> time = newMessage->getTimestamp();
+
+	reverse_foreach (const HistoryMessage& message, joinContext_) {
+		boost::posix_time::ptime messageTime = message.getTime() - boost::posix_time::hours(message.getOffset());
+		if (time && time < messageTime) {
+			break;
+		}
+		if (time && time != messageTime) {
+			continue;
+		}
+		if (message.getFromJID() != jid) {
+			continue;
+		}
+		if (message.getMessage() != body) {
+			continue;
+		}
+
+		// Mark the message as unreadable
+		newMessage->setBody("");
+	}
 }
 
 }

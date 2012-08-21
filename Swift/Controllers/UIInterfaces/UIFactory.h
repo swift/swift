@@ -8,6 +8,7 @@
 
 #include <Swift/Controllers/UIInterfaces/ChatListWindowFactory.h>
 #include <Swift/Controllers/UIInterfaces/ChatWindowFactory.h>
+#include <Swift/Controllers/UIInterfaces/HistoryWindowFactory.h>
 #include <Swift/Controllers/UIInterfaces/EventWindowFactory.h>
 #include <Swift/Controllers/UIInterfaces/LoginWindowFactory.h>
 #include <Swift/Controllers/UIInterfaces/MainWindowFactory.h>
@@ -24,6 +25,7 @@ namespace Swift {
 	class UIFactory : 
 			public ChatListWindowFactory, 
 			public ChatWindowFactory, 
+			public HistoryWindowFactory,
 			public EventWindowFactory, 
 			public LoginWindowFactory, 
 			public MainWindowFactory, 

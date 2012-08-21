@@ -37,6 +37,7 @@ MessageSnippet::MessageSnippet(const QString& message, const QString& sender, co
 	content_.replace("%time%", wrapResizable("<span class='swift_time'>" + timeToEscapedString(time) + "</span>"));
 	content_.replace("%userIconPath%", escape(iconURI));
 	content_ = "<div id='" + id + "'>" + content_ + "</div>";
+	content_ = "<span class='date" + time.date().toString(Qt::ISODate) + "'>" + content_ + "</span>";
 }
 
 MessageSnippet::~MessageSnippet() {

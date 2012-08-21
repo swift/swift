@@ -13,5 +13,6 @@ const SettingsProvider::Setting<std::string> QtUISettingConstants::CLICKTHROUGH_
 const SettingsProvider::Setting<int> QtUISettingConstants::CURRENT_ROSTER_TAB("currentRosterTab", 0);
 const SettingsProvider::Setting<bool> QtUISettingConstants::SHOW_NICK_IN_ROSTER_HEADER("showNickInRosterHeader", true);
 const SettingsProvider::Setting<int> QtUISettingConstants::CHATWINDOW_FONT_SIZE("chatWindowFontSize", 0);
+const SettingsProvider::Setting<int> QtUISettingConstants::HISTORYWINDOW_FONT_SIZE("historyWindowFontSize", 0);
 const SettingsProvider::Setting<bool> QtUISettingConstants::SHOW_EMOTICONS("showEmoticons", true);
 }

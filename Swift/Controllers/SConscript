@@ -45,6 +45,8 @@ if env["SCONS_STAGE"] == "build" :
 			"SoundEventController.cpp",
 			"SystemTrayController.cpp",
 			"XMLConsoleController.cpp",
+			"HistoryViewController.cpp",
+			"HistoryController.cpp",
 			"FileTransferListController.cpp",
 			"StatusTracker.cpp",
 			"PresenceNotifier.cpp",

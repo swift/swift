@@ -291,3 +291,7 @@ body {
 .outgoingItem .timeStamp {
 	color:#9ecf35;
 }
+
+html {
+	height: 101%;
+}

@@ -9,6 +9,7 @@
 #include <Swiften/Avatars/AvatarMemoryStorage.h>
 #include <Swiften/Disco/CapsMemoryStorage.h>
 #include <Swiften/Roster/RosterMemoryStorage.h>
+#include <Swiften/History/SQLiteHistoryStorage.h>
 
 namespace Swift {
 
@@ -17,6 +18,9 @@ MemoryStorages::MemoryStorages() {
 	capsStorage = new CapsMemoryStorage();
 	avatarStorage = new AvatarMemoryStorage();
 	rosterStorage = new RosterMemoryStorage();
+#ifdef SWIFT_EXPERIMENTAL_HISTORY
+	historyStorage = new SQLiteHistoryStorage(":memory:");
+#endif
 }
 
 MemoryStorages::~MemoryStorages() {
@@ -24,6 +28,9 @@ MemoryStorages::~MemoryStorages() {
 	delete avatarStorage;
 	delete capsStorage;
 	delete vcardStorage;
+#ifdef SWIFT_EXPERIMENTAL_HISTORY
+	delete historyStorage;
+#endif
 }
 
 VCardStorage* MemoryStorages::getVCardStorage() const {
@@ -40,6 +47,14 @@ AvatarStorage* MemoryStorages::getAvatarStorage() const {
 
 RosterStorage* MemoryStorages::getRosterStorage() const {
 	return rosterStorage;
+}
+
+HistoryStorage* MemoryStorages::getHistoryStorage() const {
+#ifdef SWIFT_EXPERIMENTAL_HISTORY
+	return historyStorage;
+#else
+	return NULL;
+#endif
 }
 
 

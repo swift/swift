@@ -27,6 +27,8 @@
 #include "Swiften/Presence/PresenceOracle.h"
 #include "Swiften/Queries/IQRouter.h"
 #include "Swiften/Base/IDGenerator.h"
+#include <Swift/Controllers/HistoryController.h>
+#include <Swiften/MUC/MUCRegistry.h>
 
 namespace Swift {
 	class IQRouter;
@@ -58,7 +60,7 @@ namespace Swift {
 			void handleCapsChanged(const JID& jid);
 
 		protected:
-			ChatControllerBase(const JID& self, StanzaChannel* stanzaChannel, IQRouter* iqRouter, ChatWindowFactory* chatWindowFactory, const JID &toJID, PresenceOracle* presenceOracle, AvatarManager* avatarManager, bool useDelayForLatency, UIEventStream* eventStream, EventController* eventController, TimerFactory* timerFactory, EntityCapsProvider* entityCapsProvider);
+			ChatControllerBase(const JID& self, StanzaChannel* stanzaChannel, IQRouter* iqRouter, ChatWindowFactory* chatWindowFactory, const JID &toJID, PresenceOracle* presenceOracle, AvatarManager* avatarManager, bool useDelayForLatency, UIEventStream* eventStream, EventController* eventController, TimerFactory* timerFactory, EntityCapsProvider* entityCapsProvider, HistoryController* historyController, MUCRegistry* mucRegistry);
 
 			/**
 			 * Pass the Message appended, and the stanza used to send it.
@@ -78,6 +80,7 @@ namespace Swift {
 			virtual void cancelReplaces() = 0;
 			/** JID any iq for account should go to - bare except for PMs */
 			virtual JID getBaseJID();
+			virtual void logMessage(const std::string& message, const JID& fromJID, const JID& toJID, const boost::posix_time::ptime& timeStamp, bool isIncoming) = 0;
 
 		private:
 			IDGenerator idGenerator_;
@@ -111,5 +114,7 @@ namespace Swift {
 			TimerFactory* timerFactory_;
 			EntityCapsProvider* entityCapsProvider_;
 			SecurityLabelsCatalog::Item lastLabel_; 
+			HistoryController* historyController_;
+			MUCRegistry* mucRegistry_;
 	};
 }

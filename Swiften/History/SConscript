@@ -1,11 +1,10 @@
 Import("swiften_env")
 
-#myenv = swiften_env.Clone()
-#if myenv["target"] == "native":
-#   myenv.MergeFlags(swiften_env.get("SQLITE_FLAGS", {}))
-#
-#objects = myenv.SwiftenObject([
-#			"HistoryManager.cpp",
-#			"SQLiteHistoryManager.cpp",
-#		])
-#swiften_env.Append(SWIFTEN_OBJECTS = [objects])
+myenv = swiften_env.Clone()
+if myenv["target"] == "native":
+   myenv.MergeFlags(swiften_env.get("SQLITE_FLAGS", {}))
+
+objects = myenv.SwiftenObject([
+			"SQLiteHistoryStorage.cpp",
+		])
+swiften_env.Append(SWIFTEN_OBJECTS = [objects])

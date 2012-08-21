@@ -58,6 +58,7 @@ namespace Swift {
 			void handleShowOfflineToggled(bool);
 			void handleShowEmoticonsToggled(bool);
 			void handleJoinMUCAction();
+			void handleViewLogsAction();
 			void handleSignOutAction();
 			void handleEditProfileAction();
 			void handleAddUserActionTriggered(bool checked);

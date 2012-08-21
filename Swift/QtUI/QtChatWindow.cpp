@@ -524,7 +524,7 @@ std::string QtChatWindow::addMessage(const QString &message, const std::string &
 	}
 	QString qAvatarPath =  scaledAvatarPath.isEmpty() ? "qrc:/icons/avatar.png" : QUrl::fromLocalFile(scaledAvatarPath).toEncoded();
 	std::string id = "id" + boost::lexical_cast<std::string>(idCounter_++);
-	messageLog_->addMessage(boost::shared_ptr<ChatSnippet>(new MessageSnippet(htmlString, Qt::escape(P2QSTRING(senderName)), B2QDATE(time), qAvatarPath, senderIsSelf, appendToPrevious, theme_, P2QSTRING(id))));
+	messageLog_->addMessageBottom(boost::shared_ptr<ChatSnippet>(new MessageSnippet(htmlString, Qt::escape(P2QSTRING(senderName)), B2QDATE(time), qAvatarPath, senderIsSelf, appendToPrevious, theme_, P2QSTRING(id))));
 
 	previousMessageWasSelf_ = senderIsSelf;
 	previousSenderName_ = P2QSTRING(senderName);
@@ -633,7 +633,7 @@ std::string QtChatWindow::addFileTransfer(const std::string& senderName, bool se
 	}
 	QString qAvatarPath = "qrc:/icons/avatar.png";
 	std::string id = "ftmessage" + boost::lexical_cast<std::string>(idCounter_++);
-	messageLog_->addMessage(boost::shared_ptr<ChatSnippet>(new MessageSnippet(htmlString, Qt::escape(P2QSTRING(senderName)), B2QDATE(boost::posix_time::second_clock::local_time()), qAvatarPath, senderIsSelf, appendToPrevious, theme_, P2QSTRING(id))));
+	messageLog_->addMessageBottom(boost::shared_ptr<ChatSnippet>(new MessageSnippet(htmlString, Qt::escape(P2QSTRING(senderName)), B2QDATE(boost::posix_time::second_clock::local_time()), qAvatarPath, senderIsSelf, appendToPrevious, theme_, P2QSTRING(id))));
 
 	previousMessageWasSelf_ = senderIsSelf;
 	previousSenderName_ = P2QSTRING(senderName);
@@ -701,7 +701,7 @@ void QtChatWindow::addErrorMessage(const std::string& errorMessage) {
 
 	QString errorMessageHTML(Qt::escape(P2QSTRING(errorMessage)));
 	errorMessageHTML.replace("\n","<br/>");
-	messageLog_->addMessage(boost::shared_ptr<ChatSnippet>(new SystemMessageSnippet("<span class=\"error\">" + errorMessageHTML + "</span>", QDateTime::currentDateTime(), false, theme_)));
+	messageLog_->addMessageBottom(boost::shared_ptr<ChatSnippet>(new SystemMessageSnippet("<span class=\"error\">" + errorMessageHTML + "</span>", QDateTime::currentDateTime(), false, theme_)));
 
 	previousMessageWasSelf_ = false;
 	previousMessageKind_ = PreviousMessageWasSystem;
@@ -714,7 +714,7 @@ void QtChatWindow::addSystemMessage(const std::string& message) {
 
 	QString messageHTML(P2QSTRING(message));
 	messageHTML = linkimoticonify(messageHTML);
-	messageLog_->addMessage(boost::shared_ptr<ChatSnippet>(new SystemMessageSnippet(messageHTML, QDateTime::currentDateTime(), false, theme_)));
+	messageLog_->addMessageBottom(boost::shared_ptr<ChatSnippet>(new SystemMessageSnippet(messageHTML, QDateTime::currentDateTime(), false, theme_)));
 
 	previousMessageKind_ = PreviousMessageWasSystem;
 }
@@ -753,7 +753,7 @@ void QtChatWindow::addPresenceMessage(const std::string& message) {
 
 	QString messageHTML(P2QSTRING(message));
 	messageHTML = linkimoticonify(messageHTML);
-	messageLog_->addMessage(boost::shared_ptr<ChatSnippet>(new SystemMessageSnippet(messageHTML, QDateTime::currentDateTime(), false, theme_)));
+	messageLog_->addMessageBottom(boost::shared_ptr<ChatSnippet>(new SystemMessageSnippet(messageHTML, QDateTime::currentDateTime(), false, theme_)));
 
 	previousMessageKind_ = PreviousMessageWasPresence;
 }
@@ -950,7 +950,7 @@ void QtChatWindow::addMUCInvitation(const std::string& senderName, const JID& ji
 	}
 	QString qAvatarPath = "qrc:/icons/avatar.png";
 
-	messageLog_->addMessage(boost::shared_ptr<ChatSnippet>(new MessageSnippet(htmlString, Qt::escape(P2QSTRING(senderName)), B2QDATE(boost::posix_time::second_clock::local_time()), qAvatarPath, false, appendToPrevious, theme_, id)));
+	messageLog_->addMessageBottom(boost::shared_ptr<ChatSnippet>(new MessageSnippet(htmlString, Qt::escape(P2QSTRING(senderName)), B2QDATE(boost::posix_time::second_clock::local_time()), qAvatarPath, false, appendToPrevious, theme_, id)));
 	previousMessageWasSelf_ = false;
 	previousSenderName_ = P2QSTRING(senderName);
 	previousMessageKind_ = PreviousMessageWasMUCInvite;

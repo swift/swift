@@ -20,6 +20,7 @@
 
 class QWebPage;
 class QUrl;
+class QDate;
 
 namespace Swift {
 	class QtWebView;
@@ -27,8 +28,9 @@ namespace Swift {
 	class QtChatView : public QWidget {
 			Q_OBJECT
 		public:
-			QtChatView(QtChatTheme* theme, QWidget* parent);
-			void addMessage(boost::shared_ptr<ChatSnippet> snippet);
+			QtChatView(QtChatTheme* theme, QWidget* parent, bool disableAutoScroll = false);
+			void addMessageTop(boost::shared_ptr<ChatSnippet> snippet);
+			void addMessageBottom(boost::shared_ptr<ChatSnippet> snippet);
 			void addLastSeenLine();
 			void replaceLastMessage(const QString& newMessage);
 			void replaceLastMessage(const QString& newMessage, const QString& note);
@@ -44,10 +46,15 @@ namespace Swift {
 			void setFileTransferStatus(QString id, const ChatWindow::FileTransferState state, const QString& msg);
 			void setMUCInvitationJoined(QString id);
 			void showEmoticons(bool show);
+			int getSnippetPositionByDate(const QDate& date);
+
 		signals:
 			void gotFocus();
 			void fontResized(int);
 			void logCleared();
+			void scrollRequested(int pos);
+			void scrollReachedTop();
+			void scrollReachedBottom();
 
 		public slots:
 			void copySelectionToClipboard();
@@ -55,6 +62,7 @@ namespace Swift {
 			void handleLinkClicked(const QUrl&);
 			void handleKeyPressEvent(QKeyEvent* event);
 			void resetView();
+			void resetTopInsertPoint();
 			void increaseFontSize(int numSteps = 1);
 			void decreaseFontSize();
 			void resizeFont(int fontSizeSteps);
@@ -63,6 +71,7 @@ namespace Swift {
 			void handleViewLoadFinished(bool);
 			void handleFrameSizeChanged();
 			void handleClearRequested();
+			void handleScrollRequested(int dx, int dy, const QRect& rectToScroll);
 
 		private:
 			void headerEncode();
@@ -72,14 +81,19 @@ namespace Swift {
 
 			bool viewReady_;
 			bool isAtBottom_;
+			bool topMessageAdded_;
+			int scrollBarMaximum_;
 			QtWebView* webView_;
 			QWebPage* webPage_;
 			int fontSizeSteps_;
 			QtChatTheme* theme_;
 			QWebElement newInsertPoint_;
+			QWebElement topInsertPoint_;
 			QWebElement lineSeparator_;
 			QWebElement lastElement_;
+			QWebElement firstElement_;
 			QWebElement document_;
+			bool disableAutoScroll_;
 	};
 }
 
