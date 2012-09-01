@@ -8,7 +8,7 @@
 #include <boost/lexical_cast.hpp>
 
 #include <sqlite3.h>
-#include <3rdParty/SQLite/sqlite3async.h>
+#include <3rdParty/SQLiteAsync/sqlite3async.h>
 #include <Swiften/History/SQLiteHistoryStorage.h>
 #include <boost/date_time/gregorian/gregorian.hpp>
 

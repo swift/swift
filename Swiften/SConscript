@@ -6,7 +6,7 @@ Import("env")
 # Flags
 ################################################################################
 
-swiften_dep_modules = ["BOOST", "GCONF", "ICU", "LIBIDN", "ZLIB", "OPENSSL", "LIBXML", "EXPAT", "AVAHI", "LIBMINIUPNPC", "LIBNATPMP", "SQLITE"]
+swiften_dep_modules = ["BOOST", "GCONF", "ICU", "LIBIDN", "ZLIB", "OPENSSL", "LIBXML", "EXPAT", "AVAHI", "LIBMINIUPNPC", "LIBNATPMP", "SQLITE", "SQLITE_ASYNC"]
 
 if env["SCONS_STAGE"] == "flags" :
 	env["SWIFTEN_DLL"] = ARGUMENTS.get("swiften_dll")

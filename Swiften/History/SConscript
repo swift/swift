@@ -3,6 +3,7 @@ Import("swiften_env")
 myenv = swiften_env.Clone()
 if myenv["target"] == "native":
    myenv.MergeFlags(swiften_env.get("SQLITE_FLAGS", {}))
+   myenv.MergeFlags(swiften_env.get("SQLITE_FLAGS_ASYNC", {}))
 
 if myenv["experimental"]:
 	objects = myenv.SwiftenObject([
