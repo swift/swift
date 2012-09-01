@@ -48,6 +48,7 @@ vars.Add("libidn_libname", "LibIDN library name", "libidn" if os.name == "nt" el
 vars.Add(PathVariable("sqlite_includedir", "SQLite headers location", None, PathVariable.PathAccept))
 vars.Add(PathVariable("sqlite_libdir", "SQLite library location", None, PathVariable.PathAccept))
 vars.Add("sqlite_libname", "SQLite library name", "libsqlite3" if os.name == "nt" else "sqlite3")
+vars.Add("sqlite_force_bundled", "Force use of the bundled SQLite", None)
 vars.Add(PathVariable("avahi_includedir", "Avahi headers location", None, PathVariable.PathAccept))
 vars.Add(PathVariable("avahi_libdir", "Avahi library location", None, PathVariable.PathAccept))
 vars.Add(PathVariable("qt", "Qt location", "", PathVariable.PathAccept))

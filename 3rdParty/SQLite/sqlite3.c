@@ -288,7 +288,7 @@
  * requires the #include of specific headers which differs between
  * platforms.
  */
-#define SQLITE_INT_TO_PTR(X)   ((void*)&((char*)0)[X])
+#define SQLITE_INT_TO_PTR(X)   ((void*)(X))
 #define SQLITE_PTR_TO_INT(X)   ((int)(((char*)X)-(char*)0))
 
 /*

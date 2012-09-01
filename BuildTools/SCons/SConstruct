@@ -366,7 +366,7 @@ if env.get("sqlite_includedir", None) :
 	sqlite_flags["CPPPATH"] = [env["sqlite_includedir"]]
 sqlite_conf_env.MergeFlags(sqlite_flags)
 conf = Configure(sqlite_conf_env)
-if conf.CheckCHeader("sqlite3.h") and conf.CheckLib(env["sqlite_libname"]) :
+if conf.CheckCHeader("sqlite3.h") and conf.CheckLib(env["sqlite_libname"]) and not env.get("sqlite_force_bundled", False):
 	env["HAVE_SQLITE"] = 1
 	env["SQLITE_FLAGS"] = { "LIBS": [env["sqlite_libname"]] }
 	env["SQLITE_FLAGS"].update(sqlite_flags)
