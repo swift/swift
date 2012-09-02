@@ -51,6 +51,9 @@ myenv.Tool("textfile", toolpath = ["#/BuildTools/SCons/Tools"])
 qt4modules = ['QtCore', 'QtGui', 'QtWebKit']
 if env["PLATFORM"] == "posix" :
 	qt4modules += ["QtDBus"]
+if env["PLATFORM"] != "win32" and env["PLATFORM"] != "darwin" :
+	qt4modules += ["QtNetwork"]
+
 myenv.EnableQt4Modules(qt4modules, debug = False)
 
 myenv.Append(CPPPATH = ["."])
@@ -185,6 +188,8 @@ if env["PLATFORM"] == "darwin" or env["PLATFORM"] == "win32" :
   swiftProgram = myenv.Program("Swift", sources)
 else :
   swiftProgram = myenv.Program("swift-im", sources)
+  sources += ["QtCertificateViewerDialog.cpp"];
+  myenv.Uic4("QtCertificateViewerDialog.ui");
 
 if env["PLATFORM"] != "darwin" and env["PLATFORM"] != "win32" :
 	openURIProgram = myenv.Program("swift-open-uri", "swift-open-uri.cpp")

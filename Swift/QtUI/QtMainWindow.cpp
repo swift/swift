@@ -41,6 +41,8 @@
 #include <Swift/QtUI/CocoaUIHelpers.h>
 #elif defined(SWIFTEN_PLATFORM_WINDOWS)
 #include <Swift/QtUI/WinUIHelpers.h>
+#else
+#include <Swift/QtUI/QtCertificateViewerDialog.h>
 #endif
 
 namespace Swift {
@@ -309,7 +311,7 @@ void QtMainWindow::openCertificateDialog(const std::vector<Certificate::ref>& ch
 #elif defined(SWIFTEN_PLATFORM_WINDOWS)
 	WinUIHelpers::displayCertificateChainAsSheet(parent, chain);
 #else
-#pragma message ("No certificate dialog available on this platform.")
+	QtCertificateViewerDialog::displayCertificateChainAsSheet(parent, chain);
 #endif
 }
 
