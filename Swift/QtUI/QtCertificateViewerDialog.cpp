@@ -15,7 +15,7 @@
 
 namespace Swift {
 
-QtCertificateViewerDialog::QtCertificateViewerDialog(QWidget *parent) : QDialog(parent), ui(new Ui::QtCertificateViewerDialog) {
+QtCertificateViewerDialog::QtCertificateViewerDialog(QWidget* parent) : QDialog(parent), ui(new Ui::QtCertificateViewerDialog) {
 	ui->setupUi(this);
 	connect(ui->certChainTreeWidget, SIGNAL(currentItemChanged(QTreeWidgetItem*,QTreeWidgetItem*)), SLOT(currentItemChanged(QTreeWidgetItem*,QTreeWidgetItem*)));
 
@@ -26,7 +26,7 @@ QtCertificateViewerDialog::~QtCertificateViewerDialog() {
 	delete ui;
 }
 
-void QtCertificateViewerDialog::setCertificateChain(const std::vector<Certificate::ref> &chain) {
+void QtCertificateViewerDialog::setCertificateChain(const std::vector<Certificate::ref>& chain) {
 	// clean widgets
 	ui->certChainTreeWidget->clear();
 
@@ -59,7 +59,7 @@ void QtCertificateViewerDialog::setCertificateChain(const std::vector<Certificat
 	}
 }
 
-void QtCertificateViewerDialog::displayCertificateChainAsSheet(QWidget *parent, const std::vector<Certificate::ref> &chain) {
+void QtCertificateViewerDialog::displayCertificateChainAsSheet(QWidget* parent, const std::vector<Certificate::ref>& chain) {
 	QtCertificateViewerDialog* dialog = new QtCertificateViewerDialog(parent);
 	dialog->setCertificateChain(chain);
 	dialog->show();
@@ -75,10 +75,11 @@ void QtCertificateViewerDialog::currentItemChanged(QTreeWidgetItem* current, QTr
 #define ADD_FIELD( TITLE, VALUE) \
 	ui->certGridLayout->addWidget(new QLabel(TITLE), rowCount, 0, 1, 1, Qt::AlignRight); \
 	valueLabel = new QLabel(VALUE); \
+	valueLabel->setTextFormat(Qt::PlainText); \
 	valueLabel->setTextInteractionFlags(Qt::TextSelectableByMouse | Qt::TextSelectableByKeyboard); \
 	ui->certGridLayout->addWidget(valueLabel, rowCount++, 1, 1, 1, Qt::AlignLeft);
 
-void QtCertificateViewerDialog::setCertificateDetails(const QSslCertificate &cert) {
+void QtCertificateViewerDialog::setCertificateDetails(const QSslCertificate& cert) {
 	QLayoutItem* item;
 	while ((item = ui->certGridLayout->takeAt(0)) != NULL ) {
 		delete item->widget();
