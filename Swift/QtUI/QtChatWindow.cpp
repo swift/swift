@@ -311,7 +311,7 @@ void QtChatWindow::tabComplete() {
 		cursor = tabCompleteCursor_;
 	} else {
 		cursor = input_->textCursor();
-		cursor.select(QTextCursor::WordUnderCursor);
+		while(cursor.movePosition(QTextCursor::Left, QTextCursor::KeepAnchor) && cursor.document()->characterAt(cursor.position() - 1) != ' ') { }
 	}
 	QString root = cursor.selectedText();
 	if (root.isEmpty()) {
