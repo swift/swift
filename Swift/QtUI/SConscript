@@ -187,9 +187,9 @@ if env["PLATFORM"] == "darwin" :
 if env["PLATFORM"] == "darwin" or env["PLATFORM"] == "win32" :
   swiftProgram = myenv.Program("Swift", sources)
 else :
-  swiftProgram = myenv.Program("swift-im", sources)
   sources += ["QtCertificateViewerDialog.cpp"];
   myenv.Uic4("QtCertificateViewerDialog.ui");
+  swiftProgram = myenv.Program("swift-im", sources)
 
 if env["PLATFORM"] != "darwin" and env["PLATFORM"] != "win32" :
 	openURIProgram = myenv.Program("swift-open-uri", "swift-open-uri.cpp")
