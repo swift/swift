@@ -22,7 +22,12 @@
 #include <ws2tcpip.h>
 #include <io.h>
 #include <winsock.h>
+#if _MSC_VER >= 1600
 #include <stdint.h>
+#else
+typedef __int16 int16_t;
+typedef unsigned __int16 uint16_t;
+#endif
 #endif
 #if defined(__amigaos__) || defined(__amigaos4__)
 #include <sys/socket.h>
