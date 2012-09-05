@@ -4,7 +4,6 @@
 - Generate crash dumps on Windows
 - Connection timeouts are now on each connection separately, instead of on the complete connection process
 - Don't allow pressing `<Enter>` in the roster to trigger logins
-- Fixed font issues on Mac OS X
 - Don't lose security labels when correcting a message
 - Don't crash when completing user search without selection
 - Always auto join MUC with a consistent nickname
