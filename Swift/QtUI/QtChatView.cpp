@@ -365,18 +365,18 @@ void QtChatView::resetView() {
 	connect(webPage_->mainFrame(), SIGNAL(contentsSizeChanged(const QSize&)), this, SLOT(handleFrameSizeChanged()), Qt::UniqueConnection);
 }
 
-QWebElement findDivElementWithID(QWebElement document, QString id) {
-	QWebElementCollection divs = document.findAll("div");
-	foreach(QWebElement div, divs) {
-		if (div.attribute("id") == id) {
-			return div;
+QWebElement findElementWithID(QWebElement document, QString elementName, QString id) {
+	QWebElementCollection elements = document.findAll(elementName);
+	foreach(QWebElement element, elements) {
+		if (element.attribute("id") == id) {
+			return element;
 		}
 	}
 	return QWebElement();
 }
 
 void QtChatView::setFileTransferProgress(QString id, const int percentageDone) {
-	QWebElement ftElement = findDivElementWithID(document_, id);
+	QWebElement ftElement = findElementWithID(document_, "div", id);
 	if (ftElement.isNull()) {
 		SWIFT_LOG(debug) << "Tried to access FT UI via invalid id!" << std::endl;
 		return;
@@ -389,7 +389,7 @@ void QtChatView::setFileTransferProgress(QString id, const int percentageDone) {
 }
 
 void QtChatView::setFileTransferStatus(QString id, const ChatWindow::FileTransferState state, const QString& /* msg */) {
-	QWebElement ftElement = findDivElementWithID(document_, id);
+	QWebElement ftElement = findElementWithID(document_, "div", id);
 	if (ftElement.isNull()) {
 		SWIFT_LOG(debug) << "Tried to access FT UI via invalid id! id = " << Q2PSTRING(id) << std::endl;
 		return;
@@ -445,8 +445,8 @@ void QtChatView::setWhiteboardSessionStatus(QString id, const ChatWindow::Whiteb
 }
 
 void QtChatView::setMUCInvitationJoined(QString id) {
-	QWebElement divElement = findDivElementWithID(document_, id);
-	QWebElement buttonElement = divElement.findFirst("input#mucinvite");
+	QWebElement divElement = findElementWithID(document_, "div", id);
+	QWebElement buttonElement = findElementWithID(divElement, "input", "mucinvite");
 	if (!buttonElement.isNull()) {
 		buttonElement.setAttribute("value", tr("Return to room"));
 	}
