@@ -674,7 +674,7 @@ std::string QtChatWindow::addWhiteboardRequest(bool senderIsSelf) {
 	}
 	QString qAvatarPath = "qrc:/icons/avatar.png";
 	std::string id = "wbmessage" + boost::lexical_cast<std::string>(idCounter_++);
-	messageLog_->addMessage(boost::shared_ptr<ChatSnippet>(new MessageSnippet(htmlString, Qt::escape(contact_), B2QDATE(boost::posix_time::second_clock::local_time()), qAvatarPath, false, false, theme_, P2QSTRING(id))));
+	messageLog_->addMessageBottom(boost::shared_ptr<ChatSnippet>(new MessageSnippet(htmlString, Qt::escape(contact_), B2QDATE(boost::posix_time::second_clock::local_time()), qAvatarPath, false, false, theme_, P2QSTRING(id))));
 
 	previousMessageWasSelf_ = false;
 	previousSenderName_ = contact_;
