@@ -10,10 +10,10 @@
 
 #include <boost/smart_ptr/make_shared.hpp>
 #include <Swiften/Whiteboard/WhiteboardServer.h>
-#include <Swiften/Whiteboard/Operations/WhiteboardInsertOperation.h>
-#include <Swiften/Whiteboard/Operations/WhiteboardDeleteOperation.h>
-#include <Swiften/Whiteboard/Operations/WhiteboardUpdateOperation.h>
-#include <Swiften/Whiteboard/Elements/WhiteboardEllipseElement.h>
+#include <Swiften/Elements/Whiteboard/WhiteboardInsertOperation.h>
+#include <Swiften/Elements/Whiteboard/WhiteboardUpdateOperation.h>
+#include <Swiften/Elements/Whiteboard/WhiteboardDeleteOperation.h>
+#include <Swiften/Elements/Whiteboard/WhiteboardEllipseElement.h>
 
 using namespace Swift;
 
