@@ -43,6 +43,7 @@ fi
 	uuid/uuid_generators.hpp \
 	variant.hpp \
 	$TARGET_DIR
+cp $1/LICENSE_1_0.txt $TARGET_DIR
 
 rm -rf $TARGET_DIR/libs/config
 rm -rf $TARGET_DIR/libs/smart_ptr
