@@ -747,7 +747,7 @@ void MUCController::handleInvitePersonToThisMUCRequest() {
 		jidName.first = item.getJID();
 		jidName.second = item.getName();
 		autoCompletes.push_back(jidName);
-		std::cerr << "MUCController adding " << item.getJID().toString() << std::endl;
+		//std::cerr << "MUCController adding " << item.getJID().toString() << std::endl;
 	}
 	inviteWindow_->setAutoCompletions(autoCompletes);
 }
