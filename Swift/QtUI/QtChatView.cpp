@@ -431,7 +431,7 @@ void QtChatView::setFileTransferStatus(QString id, const ChatWindow::FileTransfe
 }
 
 void QtChatView::setWhiteboardSessionStatus(QString id, const ChatWindow::WhiteboardSessionState state) {
-	QWebElement divElement = findDivElementWithID(document_, id);
+	QWebElement divElement = findElementWithID(document_, "div", id);
 	QString newInnerHTML;
 	if (state == ChatWindow::WhiteboardAccepted) {
 		newInnerHTML =	tr("Started whiteboard chat") + "<br/>" +
