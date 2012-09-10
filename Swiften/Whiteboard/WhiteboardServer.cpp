@@ -6,6 +6,7 @@
 
 #include <Swiften/Whiteboard/WhiteboardServer.h>
 #include <Swiften/Whiteboard/WhiteboardTransformer.h>
+#include <iostream>
 
 namespace Swift {
 	void WhiteboardServer::handleLocalOperationReceived(WhiteboardOperation::ref operation) {

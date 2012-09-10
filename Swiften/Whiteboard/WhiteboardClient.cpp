@@ -7,6 +7,7 @@
 #include <Swiften/Whiteboard/WhiteboardClient.h>
 #include <Swiften/Whiteboard/WhiteboardTransformer.h>
 #include <boost/smart_ptr/make_shared.hpp>
+#include <iostream>
 
 namespace Swift {
 	WhiteboardOperation::ref WhiteboardClient::handleLocalOperationReceived(WhiteboardOperation::ref operation) {
