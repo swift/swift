@@ -49,8 +49,21 @@ QtConnectionSettingsWindow::QtConnectionSettingsWindow(const ClientOptions& opti
 
 	ClientOptions defaults;
 	if (options.boshURL.empty()) {
-		bool isDefault = options.useStreamCompression == defaults.useStreamCompression && options.useTLS == defaults.useTLS && options.allowPLAINWithoutTLS == defaults.allowPLAINWithoutTLS && options.useStreamCompression == defaults.useStreamCompression && options.useAcks == defaults.useAcks && options.manualHostname == defaults.manualHostname && options.manualPort == defaults.manualPort && options.proxyType == defaults.proxyType && options.manualProxyHostname == defaults.manualProxyHostname && options.manualProxyPort == defaults.manualProxyPort;
-		if (!isDefault) {
+		int i = 0;
+		bool isDefault = options.useStreamCompression == defaults.useStreamCompression;
+		isDefault &= options.useTLS == defaults.useTLS;
+		isDefault &= options.allowPLAINWithoutTLS == defaults.allowPLAINWithoutTLS;
+		isDefault &= options.useStreamCompression == defaults.useStreamCompression;
+		isDefault &= options.useAcks == defaults.useAcks;
+		isDefault &= options.manualHostname == defaults.manualHostname;
+		isDefault &= options.manualPort == defaults.manualPort;
+		isDefault &= options.proxyType == defaults.proxyType;
+		isDefault &= options.manualProxyHostname == defaults.manualProxyHostname;
+		isDefault &= options.manualProxyPort == defaults.manualProxyPort;
+		if (isDefault) {
+		    ui.connectionMethod->setCurrentIndex(0);
+		}
+		else {
 			ui.connectionMethod->setCurrentIndex(1);
 			ui.manual_useTLS->setCurrentIndex(options.useTLS);
 			ui.manual_allowPLAINWithoutTLS->setChecked(options.allowPLAINWithoutTLS);

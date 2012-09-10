@@ -783,14 +783,14 @@ std::string MainController::serializeClientOptions(const ClientOptions& options)
 }
 
 #define CHECK_PARSE_LENGTH if (i >= segments.size()) {return result;} 
-#define PARSE_INT_RAW CHECK_PARSE_LENGTH intVal = 0; try {intVal = boost::lexical_cast<int>(segments[i]);} catch(const boost::bad_lexical_cast&) {};i++;
+#define PARSE_INT_RAW(defaultValue) CHECK_PARSE_LENGTH intVal = defaultValue; try {intVal = boost::lexical_cast<int>(segments[i]);} catch(const boost::bad_lexical_cast&) {};i++;
 #define PARSE_STRING_RAW CHECK_PARSE_LENGTH stringVal = byteArrayToString(Base64::decode(segments[i]));i++;
 
-#define PARSE_BOOL(option) PARSE_INT_RAW; result.option = (intVal == 1);
-#define PARSE_INT(option) PARSE_INT_RAW; result.option = intVal;
+#define PARSE_BOOL(option, defaultValue) PARSE_INT_RAW(defaultValue); result.option = (intVal == 1);
+#define PARSE_INT(option, defaultValue) PARSE_INT_RAW(defaultValue); result.option = intVal;
 #define PARSE_STRING(option) PARSE_STRING_RAW; result.option = stringVal;
 #define PARSE_SAFE_STRING(option) PARSE_STRING_RAW; result.option = SafeString(createSafeByteArray(stringVal));
-#define PARSE_URL(option) {PARSE_STRING_RAW; std::string scheme = stringVal; PARSE_STRING_RAW; std::string host = stringVal; PARSE_INT_RAW; int port = intVal; PARSE_STRING_RAW; std::string path = stringVal; result.option = !scheme.empty() && !host.empty() ? URL(scheme, host, port, path) : URL();}
+#define PARSE_URL(option) {PARSE_STRING_RAW; std::string scheme = stringVal; PARSE_STRING_RAW; std::string host = stringVal; PARSE_INT_RAW(0); int port = intVal; PARSE_STRING_RAW; std::string path = stringVal; result.option = !scheme.empty() && !host.empty() ? URL(scheme, host, port, path) : URL();}
 
 
 ClientOptions MainController::parseClientOptions(const std::string& optionString) {
@@ -800,20 +800,20 @@ ClientOptions MainController::parseClientOptions(const std::string& optionString
 	std::string stringVal;
 	std::vector<std::string> segments = String::split(optionString, ',');
 
-	PARSE_BOOL(useStreamCompression);
-	PARSE_INT_RAW;
+	PARSE_BOOL(useStreamCompression, 1);
+	PARSE_INT_RAW(-1);
 	switch (intVal) {
 		case 1: result.useTLS = ClientOptions::NeverUseTLS;break;
 		case 2: result.useTLS = ClientOptions::UseTLSWhenAvailable;break;
 		case 3: result.useTLS = ClientOptions::RequireTLS;break;
 		default:;
 	}
-	PARSE_BOOL(allowPLAINWithoutTLS);
-	PARSE_BOOL(useStreamResumption);
-	PARSE_BOOL(useAcks);
+	PARSE_BOOL(allowPLAINWithoutTLS, 0);
+	PARSE_BOOL(useStreamResumption, 0);
+	PARSE_BOOL(useAcks, 1);
 	PARSE_STRING(manualHostname);
-	PARSE_INT(manualPort);
-	PARSE_INT_RAW;
+	PARSE_INT(manualPort, -1);
+	PARSE_INT_RAW(-1);
 	switch (intVal) {
 		case 1: result.proxyType = ClientOptions::NoProxy;break;
 		case 2: result.proxyType = ClientOptions::SystemConfiguredProxy;break;
@@ -821,7 +821,7 @@ ClientOptions MainController::parseClientOptions(const std::string& optionString
 		case 4: result.proxyType = ClientOptions::HTTPConnectProxy;break;
 	}
 	PARSE_STRING(manualProxyHostname);
-	PARSE_INT(manualProxyPort);
+	PARSE_INT(manualProxyPort, -1);
 	PARSE_URL(boshURL);
 	PARSE_URL(boshHTTPConnectProxyURL);
 	PARSE_SAFE_STRING(boshHTTPConnectProxyAuthID);
