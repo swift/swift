@@ -12,14 +12,17 @@
 
 namespace Swift {
 
-ChatListModel::ChatListModel() {
+ChatListModel::ChatListModel() : whiteboards_(NULL) {
 	root_ = new ChatListGroupItem("", NULL, false);
 	mucBookmarks_ = new ChatListGroupItem(tr("Bookmarked Rooms"), root_);
 	recents_ = new ChatListGroupItem(tr("Recent Chats"), root_, false);
+#ifdef SWIFT_EXPERIMENTAL_WB
 	whiteboards_ = new ChatListGroupItem(tr("Opened Whiteboards"), root_, false);
+	root_->addItem(whiteboards_);
+#endif
+
 	root_->addItem(recents_);
 	root_->addItem(mucBookmarks_);
-	root_->addItem(whiteboards_);
 }
 
 void ChatListModel::clearBookmarks() {
