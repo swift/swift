@@ -6,6 +6,7 @@
 
 #include <Swiften/Serializer/PayloadSerializers/WhiteboardSerializer.h>
 
+#include <iostream>
 #include <boost/smart_ptr/make_shared.hpp>
 #include <boost/lexical_cast.hpp>
 #include <Swiften/Serializer/XML/XMLTextNode.h>
@@ -196,7 +197,7 @@ namespace Swift {
 			case WhiteboardPayload::SessionTerminate:
 				return "session-terminate";
 			case WhiteboardPayload::UnknownType:
-				std::cerr << "Serializing unknown action value." << std::endl;
+				std::cerr << "Warning: Serializing unknown action value." << std::endl;
 				return "";
 		}
 		assert(false);
