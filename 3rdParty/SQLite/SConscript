@@ -10,10 +10,10 @@ if env.get("SQLITE_BUNDLED", False) :
 		env["SQLITE_FLAGS"] = {
 				"CPPPATH": [Dir(".")],
 				"LIBPATH": [Dir(".")],
-				"LIBS": ["SQLite"],
+				"LIBS": ["Swiften_SQLite"],
 			}
 
 	if env["SCONS_STAGE"] == "build" :
 		myenv = env.Clone()
 		myenv.Replace(CCFLAGS = [flag for flag in env["CCFLAGS"] if flag not in ["-W", "-Wall"]])
-		myenv.StaticLibrary("SQLite", ["sqlite3.c"], CPPPATH = ["."])
+		myenv.StaticLibrary("Swiften_SQLite", ["sqlite3.c"], CPPPATH = ["."])
