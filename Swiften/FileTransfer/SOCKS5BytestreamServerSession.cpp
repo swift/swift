@@ -19,7 +19,7 @@
 
 namespace Swift {
 
-SOCKS5BytestreamServerSession::SOCKS5BytestreamServerSession(boost::shared_ptr<Connection> connection, SOCKS5BytestreamRegistry* bytestreams) : connection(connection), bytestreams(bytestreams), state(Initial), chunkSize(131072) {
+SOCKS5BytestreamServerSession::SOCKS5BytestreamServerSession(boost::shared_ptr<Connection> connection, SOCKS5BytestreamRegistry* bytestreams) : connection(connection), bytestreams(bytestreams), state(Initial), chunkSize(131072), waitingForData(false) {
 	connection->onDisconnected.connect(boost::bind(&SOCKS5BytestreamServerSession::handleDisconnected, this, _1));
 }
 
@@ -40,6 +40,9 @@ void SOCKS5BytestreamServerSession::stop() {
 	connection->onDataWritten.disconnect(boost::bind(&SOCKS5BytestreamServerSession::sendData, this));
 	connection->onDataRead.disconnect(boost::bind(&SOCKS5BytestreamServerSession::handleDataRead, this, _1));
 	connection->disconnect();
+	if (readBytestream) {
+			readBytestream->onDataAvailable.disconnect(boost::bind(&SOCKS5BytestreamServerSession::handleDataAvailable, this));
+	}
 	state = Finished;
 }
 
@@ -72,6 +75,12 @@ void SOCKS5BytestreamServerSession::handleDataRead(boost::shared_ptr<SafeByteArr
 	} else {
 		writeBytestream->write(createByteArray(vecptr(*data), data->size()));
 		onBytesReceived(data->size());
+	}
+}
+
+void SOCKS5BytestreamServerSession::handleDataAvailable() {
+	if (waitingForData) {
+		sendData();
 	}
 }
 
@@ -136,6 +145,11 @@ void SOCKS5BytestreamServerSession::process() {
 					connection->write(result);
 					bytestreams->serverSessions[streamID] = this;
 					state = ReadyForTransfer;
+
+					if (readBytestream) {
+							readBytestream->onDataAvailable.connect(boost::bind(&SOCKS5BytestreamServerSession::handleDataAvailable, this));
+					}
+
 				}
 			}
 		}
@@ -146,8 +160,14 @@ void SOCKS5BytestreamServerSession::sendData() {
 	if (!readBytestream->isFinished()) {
 		try {
 			SafeByteArray dataToSend = createSafeByteArray(*readBytestream->read(chunkSize));
-			connection->write(dataToSend);
-			onBytesSent(dataToSend.size());
+			if (!dataToSend.empty()) {
+				connection->write(dataToSend);
+				onBytesSent(dataToSend.size());
+				waitingForData = false;
+			}
+			else {
+				waitingForData = true;
+			}
 		}
 		catch (const BytestreamException&) {
 			finish(true);

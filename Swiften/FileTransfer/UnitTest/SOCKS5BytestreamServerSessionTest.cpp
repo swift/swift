@@ -28,6 +28,8 @@ class SOCKS5BytestreamServerSessionTest : public CppUnit::TestFixture {
 		CPPUNIT_TEST(testRequest_UnknownBytestream);
 		CPPUNIT_TEST(testReceiveData);
 		CPPUNIT_TEST(testReceiveData_Chunked);
+		CPPUNIT_TEST(testDataStreamPauseStopsSendingData);
+		CPPUNIT_TEST(testDataStreamResumeAfterPauseSendsData);
 		CPPUNIT_TEST_SUITE_END();
 
 	public:
@@ -38,6 +40,7 @@ class SOCKS5BytestreamServerSessionTest : public CppUnit::TestFixture {
 			connection = boost::make_shared<DummyConnection>(eventLoop);
 			connection->onDataSent.connect(boost::bind(&SOCKS5BytestreamServerSessionTest::handleDataWritten, this, _1));
 			stream1 = boost::make_shared<ByteArrayReadBytestream>(createByteArray("abcdefg"));
+			finished = false;
 		}
 
 		void tearDown() {
@@ -117,6 +120,46 @@ class SOCKS5BytestreamServerSessionTest : public CppUnit::TestFixture {
 			CPPUNIT_ASSERT_EQUAL(4, receivedDataChunks);
 		}
 
+		void testDataStreamPauseStopsSendingData() {
+			boost::shared_ptr<SOCKS5BytestreamServerSession> testling(createSession());
+			testling->setChunkSize(3);
+			stream1->setDataComplete(false);
+			StartStopper<SOCKS5BytestreamServerSession> stopper(testling.get());
+			bytestreams->addReadBytestream("abcdef", stream1);
+			authenticate();
+			request("abcdef");
+			eventLoop->processEvents();
+			testling->startTransfer();
+			eventLoop->processEvents();
+			skipHeader("abcdef");
+			CPPUNIT_ASSERT(createByteArray("abcdefg") == receivedData);
+			CPPUNIT_ASSERT_EQUAL(4, receivedDataChunks);
+
+			CPPUNIT_ASSERT(!finished);
+			CPPUNIT_ASSERT(!error);
+		}
+
+		void testDataStreamResumeAfterPauseSendsData() {
+			boost::shared_ptr<SOCKS5BytestreamServerSession> testling(createSession());
+			testling->setChunkSize(3);
+			stream1->setDataComplete(false);
+			StartStopper<SOCKS5BytestreamServerSession> stopper(testling.get());
+			bytestreams->addReadBytestream("abcdef", stream1);
+			authenticate();
+			request("abcdef");
+			eventLoop->processEvents();
+			testling->startTransfer();
+			eventLoop->processEvents();
+			skipHeader("abcdef");
+
+			stream1->addData(createByteArray("xyz"));
+			eventLoop->processEvents();
+
+			CPPUNIT_ASSERT(createByteArray("abcdefgxyz") == receivedData);
+			CPPUNIT_ASSERT(!finished);
+			CPPUNIT_ASSERT(!error);
+		}
+
 	private:
 		void receive(const SafeByteArray& data) {
 			connection->receive(data);
@@ -147,7 +190,13 @@ class SOCKS5BytestreamServerSessionTest : public CppUnit::TestFixture {
 	private:
 		SOCKS5BytestreamServerSession* createSession() {
 			SOCKS5BytestreamServerSession* session = new SOCKS5BytestreamServerSession(connection, bytestreams);
+			session->onFinished.connect(boost::bind(&SOCKS5BytestreamServerSessionTest::handleFinished, this, _1));
 			return session;
+		}
+
+		void handleFinished(boost::optional<FileTransferError> error) {
+			finished = true;
+			this->error = error;
 		}
 
 	private:
@@ -157,6 +206,8 @@ class SOCKS5BytestreamServerSessionTest : public CppUnit::TestFixture {
 		std::vector<unsigned char> receivedData;
 		int receivedDataChunks;
 		boost::shared_ptr<ByteArrayReadBytestream> stream1;
+		bool finished;
+		boost::optional<FileTransferError> error;
 };
 
 CPPUNIT_TEST_SUITE_REGISTRATION(SOCKS5BytestreamServerSessionTest);

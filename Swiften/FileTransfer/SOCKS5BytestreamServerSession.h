@@ -54,6 +54,7 @@ namespace Swift {
 			void process();
 			void handleDataRead(boost::shared_ptr<SafeByteArray>);
 			void handleDisconnected(const boost::optional<Connection::Error>&);
+			void handleDataAvailable();
 			void sendData();
 
 		private:
@@ -64,5 +65,6 @@ namespace Swift {
 			int chunkSize;
 			boost::shared_ptr<ReadBytestream> readBytestream;
 			boost::shared_ptr<WriteBytestream> writeBytestream;
+			bool waitingForData;
 	};
 }
