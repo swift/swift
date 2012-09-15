@@ -476,6 +476,7 @@ void QtLoginWindow::morphInto(MainWindow *mainWindow) {
 	foreach (QMenu* menu, qtMainWindow->getMenus()) {
 		menuBar_->addMenu(menu);
 	}
+	setFocus();
 }
 
 void QtLoginWindow::setMessage(const std::string& message) {
