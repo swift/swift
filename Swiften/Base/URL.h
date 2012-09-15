@@ -8,32 +8,27 @@
 
 #include <string>
 #include <boost/lexical_cast.hpp>
+#include <boost/optional.hpp>
 
 namespace Swift {
 
 class URL {
 	public:
 
-		URL() : scheme(""), user(""), password(""), host(""), port(-1), path(""), isEmpty(true) {
+		URL() : scheme(""), user(""), password(""), host(""), path(""), empty(true) {
 		}
 
-		URL(const std::string& urlString) {
-			host = urlString;
-			port = 80;
-			scheme = "http";
-			isEmpty = false;
-			//FIXME
-		}
+		URL(const std::string& scheme, const std::string& host, int port, const std::string& path) : scheme(scheme), user(), password(), host(host), port(port), path(path), empty(false) {
+		}	
 
-		URL(const std::string& scheme, const std::string& host, int port, const std::string& path) : scheme(scheme), user(), password(), host(host), port(port), path(path), isEmpty(false) {
-
+		URL(const std::string& scheme, const std::string& host, const std::string& path) : scheme(scheme), user(), password(), host(host), path(path), empty(false) {
 		}	
 
 		/**
 		 * Whether the URL is empty.
 		 */
-		bool empty() const {
-			return isEmpty;
+		bool isEmpty() const {
+			return empty;
 		}
 
 		/**
@@ -53,7 +48,7 @@ class URL {
 		/**
 		 * Port number
 		 */
-		int getPort() const {
+		boost::optional<int> getPort() const {
 			return port;
 		}
 
@@ -65,7 +60,7 @@ class URL {
 		}
 
 		const std::string toString() const {
-			if (isEmpty) {
+			if (empty) {
 				return "";
 			}
 			std::string result = scheme + "://";
@@ -86,13 +81,18 @@ class URL {
 			return result;
 		}
 
+		static int getPortOrDefaultPort(const URL& url);
+		static URL fromString(const std::string&);
+		static std::string unescape(const std::string&);
+
+
 	private:
 		std::string scheme;
 		std::string user;
 		std::string password;
 		std::string host;
-		int port;
+		boost::optional<int> port;
 		std::string path;
-		bool isEmpty;
+		bool empty;
 	};
 }

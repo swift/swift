@@ -6,6 +6,7 @@
 
 #include <SwifTools/URIHandler/XMPPURI.h>
 
+#include <Swiften/Base/URL.h>
 #include <boost/algorithm/string/predicate.hpp>
 #include <boost/algorithm/string/find_format.hpp>
 #include <boost/algorithm/string/formatter.hpp>
@@ -18,83 +19,6 @@
 
 using namespace Swift;
 
-// Disabling this code for now, since GCC4.5+boost1.42 (on ubuntu) seems to
-// result in a bug. Replacing it with naive code.
-#if 0
-// Should be in anonymous namespace, but older GCCs complain if we do that
-struct PercentEncodedCharacterFinder {
-	template<typename Iterator>
-	boost::iterator_range<Iterator> operator()(Iterator begin, Iterator end) {
-		boost::iterator_range<Iterator> r = boost::first_finder("%")(begin, end);
-		if (r.end() == end) {
-			return r;
-		}
-		else {
-			if (r.end() + 1 == end || r.end() + 2 == end) {
-				throw std::runtime_error("Incomplete escape character");
-			}
-			else {
-				r.advance_end(2);
-				return r;
-			}
-		}
-	}
-};
-
-struct PercentUnencodeFormatter {
-	template<typename FindResult>
-	std::string operator()(const FindResult& match) const {
-		std::stringstream s;
-		s << std::hex << std::string(match.begin() + 1, match.end());
-		unsigned int value;
-		s >> value;
-		if (s.fail() || s.bad()) {
-			throw std::runtime_error("Invalid escape character");
-		}
-		unsigned char charValue = static_cast<unsigned char>(value);
-		return std::string(reinterpret_cast<const char*>(&charValue), 1);
-	}
-};
-
-namespace {
-	std::string unescape(const std::string& s) {
-		try {
-			return boost::find_format_all_copy(s, PercentEncodedCharacterFinder(), PercentUnencodeFormatter());
-		}
-		catch (const std::exception&) {
-			return "";
-		}
-	}
-}
-#endif
-namespace {
-	std::string unescape(const std::string& str) {
-		std::string result;
-		for (size_t i = 0; i < str.size(); ++i) {
-			if (str[i] == '%') {
-				if (i + 3 < str.size()) {
-					std::stringstream s;
-					s << std::hex << str.substr(i+1, 2);
-					unsigned int value;
-					s >> value;
-					if (s.fail() || s.bad()) {
-						return "";
-					}
-					unsigned char charValue = static_cast<unsigned char>(value);
-					result += std::string(reinterpret_cast<const char*>(&charValue), 1);
-					i += 2;
-				}
-				else {
-					return "";
-				}
-			}
-			else {
-				result += str[i];
-			}
-		}
-		return result;
-	}
-}
 
 XMPPURI::XMPPURI() {
 }
@@ -110,7 +34,7 @@ XMPPURI XMPPURI::fromString(const std::string& s) {
 		// Parse authority
 		if (boost::starts_with(uri, "//")) {
 			size_t i = uri.find_first_of("/#?", 2);
-			result.setAuthority(JID(unescape(uri.substr(2, i - 2))));
+			result.setAuthority(JID(URL::unescape(uri.substr(2, i - 2))));
 			if (i == uri.npos) {
 				uri = "";
 				parsePath = parseQuery = parseFragment = false;
@@ -129,7 +53,7 @@ XMPPURI XMPPURI::fromString(const std::string& s) {
 		// Parse path
 		if (parsePath) {
 			size_t i = uri.find_first_of("#?");
-			result.setPath(JID(unescape(uri.substr(0, i))));
+			result.setPath(JID(URL::unescape(uri.substr(0, i))));
 			if (i == uri.npos) {
 				uri = "";
 				parseQuery = parseFragment = false;
@@ -153,14 +77,14 @@ XMPPURI XMPPURI::fromString(const std::string& s) {
 	    		std::vector<std::string> keyValue;
 	    		boost::split(keyValue, *it, boost::is_any_of("="));
 	    		if (keyValue.size() == 1) {
-	    			result.addQueryParameter(unescape(keyValue[0]), "");
+	    			result.addQueryParameter(URL::unescape(keyValue[0]), "");
 	    		}
 	    		else if (keyValue.size() >= 2) {
-	    			result.addQueryParameter(unescape(keyValue[0]), unescape(keyValue[1]));
+	    			result.addQueryParameter(URL::unescape(keyValue[0]), URL::unescape(keyValue[1]));
 	    		}
 	    	}
 	    	else {
-	    		result.setQueryType(unescape(boost::copy_range<std::string>(*it)));
+	    		result.setQueryType(URL::unescape(boost::copy_range<std::string>(*it)));
 	    		haveType = true;
 	    	}
 	    }
@@ -169,7 +93,7 @@ XMPPURI XMPPURI::fromString(const std::string& s) {
 
 		// Parse fragment
 		if (parseFragment) {
-			result.setFragment(unescape(uri));
+			result.setFragment(URL::unescape(uri));
 		}
 	}
 	return result;

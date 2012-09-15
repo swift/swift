@@ -12,6 +12,7 @@
 #include <Swiften/JID/JID.h>
 
 namespace Swift {
+	// TODO: Implement using Base/URI
 	class XMPPURI {
 		public:
 			XMPPURI();

@@ -13,5 +13,6 @@ objects = swiften_env.SwiftenObject([
 			"RandomGenerator.cpp",
 			"BoostRandomGenerator.cpp",
 			"sleep.cpp",
+			"URL.cpp",
 		])
 swiften_env.Append(SWIFTEN_OBJECTS = [objects])

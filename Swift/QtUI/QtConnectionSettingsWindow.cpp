@@ -48,8 +48,7 @@ QtConnectionSettingsWindow::QtConnectionSettingsWindow(const ClientOptions& opti
 	ui.manual_proxyType->setCurrentIndex(0);
 
 	ClientOptions defaults;
-	if (options.boshURL.empty()) {
-		int i = 0;
+	if (options.boshURL.isEmpty()) {
 		bool isDefault = options.useStreamCompression == defaults.useStreamCompression;
 		isDefault &= options.useTLS == defaults.useTLS;
 		isDefault &= options.allowPLAINWithoutTLS == defaults.allowPLAINWithoutTLS;
@@ -83,7 +82,7 @@ QtConnectionSettingsWindow::QtConnectionSettingsWindow(const ClientOptions& opti
 	} else {
 		ui.connectionMethod->setCurrentIndex(2);
 		ui.bosh_uri->setText(P2QSTRING(options.boshURL.toString()));
-		if (!options.boshHTTPConnectProxyURL.empty()) {
+		if (!options.boshHTTPConnectProxyURL.isEmpty()) {
 			ui.bosh_manualProxy->setChecked(true);
 			ui.bosh_manualProxyHost->setText(P2QSTRING(options.boshHTTPConnectProxyURL.getHost()));
 			ui.bosh_manualProxyPort->setText(P2QSTRING(boost::lexical_cast<std::string>(options.boshHTTPConnectProxyURL.getPort())));
@@ -125,7 +124,7 @@ ClientOptions QtConnectionSettingsWindow::getOptions() {
 		}
 		else {
 			/* BOSH */
-			options.boshURL = URL(Q2PSTRING(ui.bosh_uri->text()));
+			options.boshURL = URL::fromString(Q2PSTRING(ui.bosh_uri->text()));
 			if (ui.bosh_manualProxy->isChecked()) {
 				std::string host = Q2PSTRING(ui.bosh_manualProxyHost->text());
 				int port = 80;
