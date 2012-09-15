@@ -199,10 +199,13 @@ void MUCController::rejoin() {
 		if (lastActivity_ == boost::posix_time::not_a_date_time && historyController_) {
 			lastActivity_ = historyController_->getLastTimeStampFromMUC(selfJID_, toJID_);
 		}
-		muc_->joinWithContextSince(nick_, lastActivity_);
-#else
-		muc_->joinAs(nick_);
 #endif
+		if (lastActivity_ == boost::posix_time::not_a_date_time) {
+			muc_->joinAs(nick_);
+		}
+		else {
+			muc_->joinWithContextSince(nick_, lastActivity_);
+		}
 	}
 }
 
