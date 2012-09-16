@@ -10,8 +10,6 @@ if env.get("LIBIDN_BUNDLED", False) :
 		env["LIBIDN_FLAGS"] = {
 				"CPPDEFINES": ["IDNA_STATIC"],
 				"CPPPATH": [Dir("src")],
-				"LIBPATH": [Dir(".")],
-				"LIBS": ["Swiften_IDN"],
 			}
 		if env["PLATFORM"] == "win32" :
 			env["LIBIDN_FLAGS"]["CPPPATH"] += [Dir("stubs/win32")]
@@ -51,7 +49,7 @@ if env.get("LIBIDN_BUNDLED", False) :
 			if myenv["MSVC_VERSION"][:3] == "9.0" :
 				myenv.Append(CPPPATH = "stubs/win32/VC2008")
 
-		myenv.StaticLibrary("Swiften_IDN", [
+		env["LIBIDN_OBJECTS"] = myenv.StaticObject([
 				"src/stringprep.c",
 				"src/profiles.c",
 				"src/rfc3454.c",

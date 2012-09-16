@@ -19,7 +19,7 @@ if env.get("EXPAT_BUNDLED", False) :
 			myenv.Append(CPPDEFINES = ["HAVE_MEMMOVE"])
 		conf.Finish()
 
-		myenv.StaticLibrary("Swiften_Expat", [
+		env["EXPAT_OBJECTS"] = myenv.StaticObject([
 				"src/xmltok.c",
 				"src/xmlparse.c",
 				"src/xmlrole.c"

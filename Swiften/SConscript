@@ -69,6 +69,8 @@ if env["SCONS_STAGE"] == "build" :
 	swiften_env.Append(CPPDEFINES = ["SWIFTEN_BUILDING"])
 	for module in swiften_dep_modules :
 		swiften_env.UseFlags(swiften_env.get(module + "_FLAGS", {}))
+		if env.get(module + "_BUNDLED", False) :
+			swiften_env.Append(SWIFTEN_OBJECTS = env.get(module + "_OBJECTS", []))
 	swiften_env.UseFlags(swiften_env["PLATFORM_FLAGS"])
 	
 	if swiften_env["SWIFTEN_DLL"] :
