@@ -77,7 +77,7 @@ int main(int, char**) {
 	}
 
 	client = new Swift::Client(JID(jid), std::string(pass), &networkFactories);
-	ClientXMLTracer* tracer = new ClientXMLTracer(client, !options.boshURL.empty());
+	ClientXMLTracer* tracer = new ClientXMLTracer(client, !options.boshURL.isEmpty());
 	client->onConnected.connect(&handleConnected);
 	client->onDisconnected.connect(boost::bind(&handleDisconnected, _1));
 	client->setAlwaysTrustCertificates();
