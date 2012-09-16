@@ -10,11 +10,10 @@ if env.get("SQLITE_ASYNC_BUNDLED", False) :
 		env["SQLITE_ASYNC_FLAGS"] = {
 				"CPPPATH": [Dir(".")],
 				"LIBPATH": [Dir(".")],
-				"LIBS": ["Swiften_SQLiteAsync"],
 			}
 
 	if env["SCONS_STAGE"] == "build" :
 		myenv = env.Clone()
 		myenv.Replace(CCFLAGS = [flag for flag in env["CCFLAGS"] if flag not in ["-W", "-Wall"]])
 		myenv.UseFlags(env.get("SQLITE_FLAGS", {}))
-		myenv.StaticLibrary("Swiften_SQLiteAsync", ["sqlite3async.c"])
+		env["SQLITE_ASYNC_OBJECTS"] = myenv.StaticObject(["sqlite3async.c"])

@@ -10,7 +10,6 @@ if env.get("LIBNATPMP_BUNDLED", False) :
 		env["LIBNATPMP_FLAGS"] = {
 				"CPPPATH": [Dir("src/libnatpmp")],
 				"LIBPATH": [Dir(".")],
-				"LIBS": ["Swiften_NATPMP"],
 				"INTERNAL_CPPDEFINES": ["STATICLIB"],
 			}
 		#if env["PLATFORM"] == "win32" :
@@ -48,4 +47,4 @@ if env.get("LIBNATPMP_BUNDLED", False) :
 		if myenv["PLATFORM"] == "win32":
 			src_files += ["src/libnatpmp/wingettimeofday.c"]
 		
-		myenv.StaticLibrary("Swiften_NATPMP", src_files)
+		env["LIBNATPMP_OBJECTS"] = myenv.StaticObject(src_files)

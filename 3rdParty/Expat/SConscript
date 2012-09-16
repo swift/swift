@@ -6,7 +6,6 @@ if env.get("EXPAT_BUNDLED", False) :
 				"CPPDEFINES": ["XML_STATIC"],
 				"CPPPATH": [Dir("src")],
 				"LIBPATH": [Dir(".")],
-				"LIBS": ["Swiften_Expat"],
 			}
 
 	if env["SCONS_STAGE"] == "build" :

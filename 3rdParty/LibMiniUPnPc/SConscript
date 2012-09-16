@@ -10,7 +10,6 @@ if env.get("LIBMINIUPNPC_BUNDLED", False) :
 		env["LIBMINIUPNPC_FLAGS"] = {
 				"CPPPATH": [Dir("src/miniupnpc")],
 				"LIBPATH": [Dir(".")],
-				"LIBS": ["Swiften_MiniUPnPc"],
 				"INTERNAL_CPPDEFINES": ["STATICLIB"],
 			}
 		#if env["PLATFORM"] == "win32" :
@@ -50,7 +49,7 @@ if env.get("LIBMINIUPNPC_BUNDLED", False) :
 #endif
 """.replace("$OS_STRING", myenv["PLATFORM"])))
 
-		myenv.StaticLibrary("Swiften_MiniUPnPc", [
+		env["LIBMINIUPNPC_OBJECTS"] = myenv.StaticObject([
 			"src/miniupnpc/igd_desc_parse.c",
 			"src/miniupnpc/miniupnpc.c",
 			"src/miniupnpc/minixml.c",
