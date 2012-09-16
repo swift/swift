@@ -7,6 +7,7 @@ Import("env")
 ################################################################################
 
 swiften_dep_modules = ["BOOST", "GCONF", "ICU", "LIBIDN", "ZLIB", "OPENSSL", "LIBXML", "EXPAT", "AVAHI", "LIBMINIUPNPC", "LIBNATPMP", "SQLITE", "SQLITE_ASYNC"]
+external_swiften_dep_modules = ["BOOST"]
 
 if env["SCONS_STAGE"] == "flags" :
 	env["SWIFTEN_DLL"] = ARGUMENTS.get("swiften_dll")
@@ -40,10 +41,18 @@ if env["SCONS_STAGE"] == "flags" :
 		swiften_env.Append(CPPDEFINES = ["SWIFTEN_STATIC"])
 	dep_env = env.Clone()
 	for module in swiften_dep_modules :
+		module_flags = env.get(module + "_FLAGS", {})
 		if env.get(module + "_BUNDLED", False) :
-			swiften_env.UseFlags(env.get(module + "_FLAGS", {}))
+			if module in external_swiften_dep_modules :
+				swiften_env.UseFlags(module_flags)
 		else :
-			dep_env.UseFlags(env.get(module + "_FLAGS", {}))
+			if module in external_swiften_dep_modules :
+				dep_env.UseFlags(module_flags)
+			else :
+				# Expose only libraries
+				dep_env.Append(LIBPATH = module_flags.get("LIBPATH", []))
+				dep_env.Append(LIBS = module_flags.get("LIBS", []))
+				dep_env.Append(FRAMEWORKS = module_flags.get("FRAMEWORKS", []))
 	dep_env.UseFlags(dep_env["PLATFORM_FLAGS"])
 
 	if env.get("HAVE_SCHANNEL", 0) :
