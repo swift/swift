@@ -10,11 +10,12 @@
 #include <string>
 #include <vector>
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Base/SafeByteArray.h>
 #include <Swiften/Base/ByteArray.h>
 
 namespace Swift {
-	class ClientAuthenticator {
+	class SWIFTEN_API ClientAuthenticator {
 		public:
 			ClientAuthenticator(const std::string& name);
 			virtual ~ClientAuthenticator();

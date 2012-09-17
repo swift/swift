@@ -11,6 +11,7 @@
 #include <vector>
 #include <boost/variant.hpp>
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Base/boost_bsignals.h>
 #include <Swiften/JID/JID.h>
 #include <Swiften/Elements/JinglePayload.h>
@@ -20,7 +21,7 @@
 namespace Swift {
 	class JingleContentID;
 
-	class FakeJingleSession : public JingleSession {
+	class SWIFTEN_API FakeJingleSession : public JingleSession {
 		public:
 		struct InitiateCall {
 			InitiateCall(JingleContentID contentId, JingleDescription::ref desc, JingleTransportPayload::ref payL) : id(contentId), description(desc), payload(payL) {}

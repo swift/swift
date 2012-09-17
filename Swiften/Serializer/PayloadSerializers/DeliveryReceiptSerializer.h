@@ -6,11 +6,12 @@
 
 #pragma once
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Serializer/GenericPayloadSerializer.h>
 #include <Swiften/Elements/DeliveryReceipt.h>
 
 namespace Swift {
-	class DeliveryReceiptSerializer : public GenericPayloadSerializer<DeliveryReceipt> {
+	class SWIFTEN_API DeliveryReceiptSerializer : public GenericPayloadSerializer<DeliveryReceipt> {
 		public:
 			DeliveryReceiptSerializer();
 

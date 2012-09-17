@@ -12,12 +12,13 @@
 #include <boost/shared_ptr.hpp>
 
 #include <string>
+#include <Swiften/Base/API.h>
 #include <Swiften/Network/DomainNameResolveError.h>
 
 namespace Swift {
 	class RandomGenerator;
 
-	class DomainNameServiceQuery {
+	class SWIFTEN_API DomainNameServiceQuery {
 		public:
 			typedef boost::shared_ptr<DomainNameServiceQuery> ref;
 

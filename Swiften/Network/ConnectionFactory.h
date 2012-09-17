@@ -8,10 +8,12 @@
 
 #include <boost/shared_ptr.hpp>
 
+#include <Swiften/Base/API.h>
+
 namespace Swift {
 	class Connection;
 
-	class ConnectionFactory {
+	class SWIFTEN_API ConnectionFactory {
 		public:
 			virtual ~ConnectionFactory();
 

@@ -8,13 +8,14 @@
 
 #include <map>
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Queries/GetResponder.h>
 #include <Swiften/Elements/DiscoInfo.h>
 
 namespace Swift {
 	class IQRouter;
 
-	class DiscoInfoResponder : public GetResponder<DiscoInfo> {
+	class SWIFTEN_API DiscoInfoResponder : public GetResponder<DiscoInfo> {
 		public:
 			DiscoInfoResponder(IQRouter* router);
 

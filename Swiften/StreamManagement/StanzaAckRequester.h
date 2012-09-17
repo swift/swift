@@ -9,11 +9,12 @@
 #include <boost/shared_ptr.hpp>
 #include <deque>
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Elements/Stanza.h>
 #include <Swiften/Base/boost_bsignals.h>
 
 namespace Swift {
-	class StanzaAckRequester {
+	class SWIFTEN_API StanzaAckRequester {
 		public:
 			StanzaAckRequester();
 

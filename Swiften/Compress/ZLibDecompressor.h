@@ -7,9 +7,10 @@
 #pragma once
 
 #include <Swiften/Compress/ZLibCodecompressor.h>
+#include <Swiften/Base/API.h>
 
 namespace Swift {
-	class ZLibDecompressor : public ZLibCodecompressor {
+	class SWIFTEN_API ZLibDecompressor : public ZLibCodecompressor {
 		public:
 			ZLibDecompressor();
 			~ZLibDecompressor();

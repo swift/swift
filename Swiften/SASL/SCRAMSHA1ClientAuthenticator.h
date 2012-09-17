@@ -12,9 +12,10 @@
 #include <string>
 #include <Swiften/Base/ByteArray.h>
 #include <Swiften/SASL/ClientAuthenticator.h>
+#include <Swiften/Base/API.h>
 
 namespace Swift {
-	class SCRAMSHA1ClientAuthenticator : public ClientAuthenticator {
+	class SWIFTEN_API SCRAMSHA1ClientAuthenticator : public ClientAuthenticator {
 		public:
 			SCRAMSHA1ClientAuthenticator(const std::string& nonce, bool useChannelBinding = false);
 

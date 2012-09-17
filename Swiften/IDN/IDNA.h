@@ -8,8 +8,10 @@
 
 #include <string>
 
+#include <Swiften/Base/API.h>
+
 namespace Swift {
-	class IDNA {
+	class SWIFTEN_API IDNA {
 		public:
 			static std::string getEncoded(const std::string& s);
 	};

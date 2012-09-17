@@ -8,10 +8,11 @@
 
 #include <string>
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Elements/Element.h>
 
 namespace Swift {
-	class StreamManagementEnabled : public Element {
+	class SWIFTEN_API StreamManagementEnabled : public Element {
 		public:
 			StreamManagementEnabled();
 			~StreamManagementEnabled();

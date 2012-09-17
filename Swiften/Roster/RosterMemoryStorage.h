@@ -6,10 +6,11 @@
 
 #pragma once
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Roster/RosterStorage.h>
 
 namespace Swift {
-	class RosterMemoryStorage : public RosterStorage {
+	class SWIFTEN_API RosterMemoryStorage : public RosterStorage {
 		public:
 			RosterMemoryStorage();
 

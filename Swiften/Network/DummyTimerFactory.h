@@ -8,10 +8,11 @@
 
 #include <list>
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Network/TimerFactory.h>
 
 namespace Swift {
-	class DummyTimerFactory : public TimerFactory {
+	class SWIFTEN_API DummyTimerFactory : public TimerFactory {
 		public:
 			class DummyTimer;
 

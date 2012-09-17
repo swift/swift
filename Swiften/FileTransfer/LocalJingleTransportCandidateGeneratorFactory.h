@@ -6,10 +6,12 @@
 
 #pragma once
 
+#include <Swiften/Base/API.h>
+
 namespace Swift {
 	class LocalJingleTransportCandidateGenerator;
 
-	class LocalJingleTransportCandidateGeneratorFactory {
+	class SWIFTEN_API LocalJingleTransportCandidateGeneratorFactory {
 		public:
 			virtual ~LocalJingleTransportCandidateGeneratorFactory();
 

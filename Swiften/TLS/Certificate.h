@@ -9,10 +9,11 @@
 #include <boost/shared_ptr.hpp>
 
 #include <string>
+#include <Swiften/Base/API.h>
 #include <Swiften/Base/ByteArray.h>
 
 namespace Swift {
-	class Certificate {
+	class SWIFTEN_API Certificate {
 		public:
 			typedef boost::shared_ptr<Certificate> ref;
 

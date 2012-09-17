@@ -8,12 +8,13 @@
 
 #include <string>
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Base/boost_bsignals.h>
 
 namespace Swift {
 	class JID;
 
-	class AvatarProvider {
+	class SWIFTEN_API AvatarProvider {
 		public:
 			virtual ~AvatarProvider();
 

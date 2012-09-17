@@ -10,6 +10,7 @@
 #include <boost/shared_ptr.hpp>
 #include <boost/optional.hpp>
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Elements/ProtocolHeader.h>
 #include <Swiften/Elements/Element.h>
 #include <Swiften/Base/Error.h>
@@ -19,7 +20,7 @@
 #include <Swiften/TLS/CertificateVerificationError.h>
 
 namespace Swift {
-	class SessionStream {
+	class SWIFTEN_API SessionStream {
 		public:
 			class SessionStreamError : public Swift::Error {
 				public:

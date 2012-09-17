@@ -9,10 +9,11 @@
 #include <boost/noncopyable.hpp>
 #include <boost/shared_ptr.hpp>
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Parser/XMLParser.h>
 
 namespace Swift {
-	class ExpatParser : public XMLParser, public boost::noncopyable {
+	class SWIFTEN_API ExpatParser : public XMLParser, public boost::noncopyable {
 		public:
 			ExpatParser(XMLParserClient* client);
 			~ExpatParser();

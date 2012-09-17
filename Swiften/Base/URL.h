@@ -9,10 +9,11 @@
 #include <string>
 #include <boost/lexical_cast.hpp>
 #include <boost/optional.hpp>
+#include <Swiften/Base/API.h>
 
 namespace Swift {
 
-class URL {
+class SWIFTEN_API URL {
 	public:
 
 		URL() : scheme(""), user(""), password(""), host(""), path(""), empty(true) {

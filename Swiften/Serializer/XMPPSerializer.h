@@ -9,6 +9,7 @@
 #include <boost/shared_ptr.hpp>
 #include <vector>
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Elements/Element.h>
 #include <Swiften/Elements/StreamType.h>
 #include <string>
@@ -19,7 +20,7 @@ namespace Swift {
 	class CompressRequestSerializer;
 	class ProtocolHeader;
 
-	class XMPPSerializer {
+	class SWIFTEN_API XMPPSerializer {
 		public:
 			XMPPSerializer(PayloadSerializerCollection*, StreamType type);
 

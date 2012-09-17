@@ -6,11 +6,12 @@
 
 #pragma once
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Serializer/GenericPayloadSerializer.h>
 #include <Swiften/Elements/SoftwareVersion.h>
 
 namespace Swift {
-	class SoftwareVersionSerializer : public GenericPayloadSerializer<SoftwareVersion> {
+	class SWIFTEN_API SoftwareVersionSerializer : public GenericPayloadSerializer<SoftwareVersion> {
 		public:
 			SoftwareVersionSerializer();
 

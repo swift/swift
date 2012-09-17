@@ -6,12 +6,13 @@
 
 #pragma once
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Base/SafeByteArray.h>
 
 namespace Swift {
 	class HighLayer;
 
-	class LowLayer {
+	class SWIFTEN_API LowLayer {
 			friend class StreamStack;
 
 		public:

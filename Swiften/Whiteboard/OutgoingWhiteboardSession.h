@@ -10,9 +10,10 @@
 #include <Swiften/Whiteboard/WhiteboardServer.h>
 #include <boost/shared_ptr.hpp>
 #include <Swiften/Queries/GenericRequest.h>
+#include <Swiften/Base/API.h>
 
 namespace Swift {
-	class OutgoingWhiteboardSession : public WhiteboardSession {
+	class SWIFTEN_API OutgoingWhiteboardSession : public WhiteboardSession {
 	public:
 		typedef boost::shared_ptr<OutgoingWhiteboardSession> ref;
 

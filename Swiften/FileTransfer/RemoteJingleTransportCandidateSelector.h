@@ -8,13 +8,14 @@
 
 #include <Swiften/Base/boost_bsignals.h>
 
+#include <Swiften/Base/API.h>
 #include <Swiften/JID/JID.h>
 #include <Swiften/Elements/JingleTransportPayload.h>
 #include <Swiften/FileTransfer/JingleTransport.h>
 #include <Swiften/FileTransfer/SOCKS5BytestreamClientSession.h>
 
 namespace Swift {
-	class RemoteJingleTransportCandidateSelector {
+	class SWIFTEN_API RemoteJingleTransportCandidateSelector {
 		public:
 			virtual ~RemoteJingleTransportCandidateSelector();
 

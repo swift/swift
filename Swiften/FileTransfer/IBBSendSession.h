@@ -9,6 +9,7 @@
 #include <boost/shared_ptr.hpp>
 #include <boost/optional.hpp>
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Base/boost_bsignals.h>
 #include <Swiften/FileTransfer/ReadBytestream.h>
 #include <Swiften/JID/JID.h>
@@ -19,7 +20,7 @@
 namespace Swift {
 	class IQRouter;
 
-	class IBBSendSession {
+	class SWIFTEN_API IBBSendSession {
 		public:
 			IBBSendSession(const std::string& id, const JID& from, const JID& to, boost::shared_ptr<ReadBytestream> bytestream, IQRouter* router);
 			~IBBSendSession();

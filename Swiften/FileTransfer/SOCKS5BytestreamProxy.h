@@ -9,6 +9,7 @@
 #include <string>
 #include <vector>
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Elements/S5BProxyRequest.h>
 #include <Swiften/FileTransfer/SOCKS5BytestreamClientSession.h>
 #include <Swiften/JID/JID.h>
@@ -21,7 +22,7 @@ namespace Swift {
  *	- manages list of working S5B proxies
  *	- creates initial connections (for the candidates you provide)
  */
-class SOCKS5BytestreamProxy {
+class SWIFTEN_API SOCKS5BytestreamProxy {
 public:
 	SOCKS5BytestreamProxy(ConnectionFactory*, TimerFactory*);
 

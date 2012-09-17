@@ -6,12 +6,13 @@
 
 #pragma once
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Whiteboard/WhiteboardSession.h>
 #include <Swiften/Whiteboard/WhiteboardClient.h>
 #include <boost/shared_ptr.hpp>
 
 namespace Swift {
-	class IncomingWhiteboardSession : public WhiteboardSession {
+	class SWIFTEN_API IncomingWhiteboardSession : public WhiteboardSession {
 	public:
 		typedef boost::shared_ptr<IncomingWhiteboardSession> ref;
 

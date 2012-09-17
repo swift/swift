@@ -6,11 +6,12 @@
 
 #pragma once
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Parser/GenericStanzaParser.h>
 #include <Swiften/Elements/Message.h>
 
 namespace Swift {
-	class MessageParser : public GenericStanzaParser<Message> {
+	class SWIFTEN_API MessageParser : public GenericStanzaParser<Message> {
 		public:
 			MessageParser(PayloadParserFactoryCollection* factories);
 

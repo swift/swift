@@ -6,10 +6,11 @@
 
 #pragma once
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Base/SafeByteArray.h>
 
 namespace Swift {
-	class ZLibCodecompressor {
+	class SWIFTEN_API ZLibCodecompressor {
 		public:
 			ZLibCodecompressor();
 			virtual ~ZLibCodecompressor();

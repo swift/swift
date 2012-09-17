@@ -10,12 +10,13 @@
 
 #include <string>
 #include <vector>
+#include <Swiften/Base/API.h>
 #include <Swiften/SASL/ClientAuthenticator.h>
 #include <Swiften/SASL/DIGESTMD5Properties.h>
 #include <Swiften/Base/SafeByteArray.h>
 
 namespace Swift {
-	class DIGESTMD5ClientAuthenticator : public ClientAuthenticator {
+	class SWIFTEN_API DIGESTMD5ClientAuthenticator : public ClientAuthenticator {
 		public:
 			DIGESTMD5ClientAuthenticator(const std::string& host, const std::string& nonce);
 			

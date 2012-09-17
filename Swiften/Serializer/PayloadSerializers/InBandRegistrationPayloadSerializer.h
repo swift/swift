@@ -7,11 +7,12 @@
 
 #pragma once
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Serializer/GenericPayloadSerializer.h>
 #include <Swiften/Elements/InBandRegistrationPayload.h>
 
 namespace Swift {
-	class InBandRegistrationPayloadSerializer : public GenericPayloadSerializer<InBandRegistrationPayload> {
+	class SWIFTEN_API InBandRegistrationPayloadSerializer : public GenericPayloadSerializer<InBandRegistrationPayload> {
 		public:
 			InBandRegistrationPayloadSerializer();
 

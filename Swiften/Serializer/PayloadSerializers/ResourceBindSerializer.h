@@ -6,11 +6,12 @@
 
 #pragma once
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Serializer/GenericPayloadSerializer.h>
 #include <Swiften/Elements/ResourceBind.h>
 
 namespace Swift {
-	class ResourceBindSerializer : public GenericPayloadSerializer<ResourceBind> {
+	class SWIFTEN_API ResourceBindSerializer : public GenericPayloadSerializer<ResourceBind> {
 		public:
 			ResourceBindSerializer();
 

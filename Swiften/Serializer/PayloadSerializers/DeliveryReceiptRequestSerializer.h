@@ -8,9 +8,10 @@
 
 #include <Swiften/Serializer/GenericPayloadSerializer.h>
 #include <Swiften/Elements/DeliveryReceiptRequest.h>
+#include <Swiften/Base/API.h>
 
 namespace Swift {
-	class DeliveryReceiptRequestSerializer : public GenericPayloadSerializer<DeliveryReceiptRequest> {
+	class SWIFTEN_API DeliveryReceiptRequestSerializer : public GenericPayloadSerializer<DeliveryReceiptRequest> {
 		public:
 			DeliveryReceiptRequestSerializer();
 

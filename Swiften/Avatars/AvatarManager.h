@@ -8,13 +8,14 @@
 
 #include <boost/filesystem/path.hpp>
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Base/boost_bsignals.h>
 #include <Swiften/Base/ByteArray.h>
 
 namespace Swift {
 	class JID;
 
-	class AvatarManager {
+	class SWIFTEN_API AvatarManager {
 		public:
 			virtual ~AvatarManager();
 

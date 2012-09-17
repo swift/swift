@@ -10,6 +10,7 @@
 #include <Swiften/Base/boost_bsignals.h>
 #include <boost/shared_ptr.hpp>
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Network/DomainNameServiceQuery.h>
 #include <Swiften/Network/Connection.h>
 #include <Swiften/Network/Timer.h>
@@ -23,7 +24,7 @@ namespace Swift {
 	class ConnectionFactory;
 	class TimerFactory;
 
-	class Connector : public boost::bsignals::trackable, public boost::enable_shared_from_this<Connector> {
+	class SWIFTEN_API Connector : public boost::bsignals::trackable, public boost::enable_shared_from_this<Connector> {
 		public:
 			typedef boost::shared_ptr<Connector> ref;
 

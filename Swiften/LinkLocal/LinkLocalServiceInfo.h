@@ -8,13 +8,14 @@
 
 #include <boost/optional.hpp>
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Base/ByteArray.h>
 #include <string>
 #include <Swiften/JID/JID.h>
 
 namespace Swift {
 
-	class LinkLocalServiceInfo {
+	class SWIFTEN_API LinkLocalServiceInfo {
 		public:
 			enum Status { Available, Away, DND };
 

@@ -6,6 +6,7 @@
 
 #pragma once
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Base/boost_bsignals.h>
 #include <Swiften/JID/JID.h>
 #include <Swiften/Elements/DiscoInfo.h>
@@ -16,7 +17,7 @@ namespace Swift {
 	 * This information is provided in the form of service discovery
 	 * information.
 	 */
-	class EntityCapsProvider {
+	class SWIFTEN_API EntityCapsProvider {
 		public:
 			virtual ~EntityCapsProvider();
 

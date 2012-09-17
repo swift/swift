@@ -11,6 +11,7 @@
 #include <boost/enable_shared_from_this.hpp>
 #include <vector>
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Network/Connection.h>
 #include <Swiften/LinkLocal/LinkLocalService.h>
 
@@ -23,7 +24,7 @@ namespace Swift {
 	class DNSSDQuerier;
 	class DNSSDResolveHostnameQuery;
 
-	class LinkLocalConnector : public boost::enable_shared_from_this<LinkLocalConnector> {
+	class SWIFTEN_API LinkLocalConnector : public boost::enable_shared_from_this<LinkLocalConnector> {
 		public:
 			LinkLocalConnector(
 					const LinkLocalService& service, 

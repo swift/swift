@@ -9,6 +9,7 @@
 #include <boost/shared_ptr.hpp>
 #include <boost/optional/optional_fwd.hpp>
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Base/boost_bsignals.h>
 #include <Swiften/FileTransfer/WriteBytestream.h>
 #include <Swiften/JID/JID.h>
@@ -18,7 +19,7 @@
 namespace Swift {
 	class IQRouter;
 
-	class IBBReceiveSession {
+	class SWIFTEN_API IBBReceiveSession {
 		public:
 			IBBReceiveSession(
 					const std::string& id, 

@@ -9,10 +9,11 @@
 #include <boost/shared_ptr.hpp>
 #include <vector>
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Base/boost_bsignals.h>
 
 namespace Swift {
-	class WriteBytestream {
+	class SWIFTEN_API WriteBytestream {
 		public:
 			typedef boost::shared_ptr<WriteBytestream> ref;
 

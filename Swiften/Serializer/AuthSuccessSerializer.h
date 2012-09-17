@@ -8,11 +8,12 @@
 
 #include <boost/shared_ptr.hpp>
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Elements/AuthSuccess.h>
 #include <Swiften/Serializer/GenericElementSerializer.h>
 
 namespace Swift {
-	class AuthSuccessSerializer : public GenericElementSerializer<AuthSuccess> {
+	class SWIFTEN_API AuthSuccessSerializer : public GenericElementSerializer<AuthSuccess> {
 		public:
 			AuthSuccessSerializer();
 

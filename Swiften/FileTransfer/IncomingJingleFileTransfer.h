@@ -9,6 +9,7 @@
 #include <boost/shared_ptr.hpp>
 #include <boost/cstdint.hpp>
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Base/IDGenerator.h>
 #include <Swiften/Network/Timer.h>
 #include <Swiften/Jingle/JingleSession.h>
@@ -35,7 +36,7 @@ namespace Swift {
 	class SOCKS5BytestreamProxy;
 	class IncrementalBytestreamHashCalculator;
 
-	class IncomingJingleFileTransfer : public IncomingFileTransfer {
+	class SWIFTEN_API IncomingJingleFileTransfer : public IncomingFileTransfer {
 		public:
 			typedef boost::shared_ptr<IncomingJingleFileTransfer> ref;
 			enum State {

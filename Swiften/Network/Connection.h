@@ -9,12 +9,13 @@
 #include <boost/shared_ptr.hpp>
 #include <Swiften/Base/boost_bsignals.h>
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Base/SafeByteArray.h>
 
 namespace Swift {
 	class HostAddressPort;
 
-	class Connection {
+	class SWIFTEN_API Connection {
 		public:
 			typedef boost::shared_ptr<Connection> ref;
 

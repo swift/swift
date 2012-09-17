@@ -13,6 +13,7 @@
 #include <vector>
 #include <set>
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Base/IDGenerator.h>
 #include <Swiften/JID/JID.h>
 #include <Swiften/Elements/S5BProxyRequest.h>
@@ -23,7 +24,7 @@
 #include <Swiften/Network/HostAddressPort.h>
 
 namespace Swift {
-	class SOCKS5BytestreamRegistry {
+	class SWIFTEN_API SOCKS5BytestreamRegistry {
 		public:
 			SOCKS5BytestreamRegistry();
 

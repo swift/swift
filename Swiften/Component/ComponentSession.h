@@ -9,6 +9,7 @@
 #include <boost/shared_ptr.hpp>
 #include <boost/enable_shared_from_this.hpp>
 
+#include <Swiften/Base/API.h>
 #include <Swiften/JID/JID.h>
 #include <Swiften/Base/boost_bsignals.h>
 #include <Swiften/Base/Error.h>
@@ -20,7 +21,7 @@
 namespace Swift {
 	class ComponentAuthenticator;
 
-	class ComponentSession : public boost::enable_shared_from_this<ComponentSession> {
+	class SWIFTEN_API ComponentSession : public boost::enable_shared_from_this<ComponentSession> {
 		public:
 			enum State {
 				Initial,

@@ -10,13 +10,14 @@
 #include <boost/enable_shared_from_this.hpp>
 #include <vector>
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Network/Connection.h>
 #include <Swiften/Network/HostAddressPort.h>
 #include <Swiften/EventLoop/EventOwner.h>
 #include <Swiften/EventLoop/EventLoop.h>
 
 namespace Swift {
-	class FakeConnection : 
+	class SWIFTEN_API FakeConnection : 
 			public Connection, 
 			public EventOwner,
 			public boost::enable_shared_from_this<FakeConnection> {

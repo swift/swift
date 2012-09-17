@@ -9,6 +9,7 @@
 #include <boost/noncopyable.hpp>
 #include <boost/shared_ptr.hpp>
 
+#include <Swiften/Base/API.h>
 #include <string>
 #include <Swiften/Elements/Stanza.h>
 #include <Swiften/Parser/ElementParser.h>
@@ -18,7 +19,7 @@ namespace Swift {
 	class PayloadParser;
 	class PayloadParserFactoryCollection;
 
-	class StanzaParser : public ElementParser, public boost::noncopyable {
+	class SWIFTEN_API StanzaParser : public ElementParser, public boost::noncopyable {
 		public:
 			StanzaParser(PayloadParserFactoryCollection* factories);
 			~StanzaParser();

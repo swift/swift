@@ -7,6 +7,7 @@
 
 #pragma once
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Serializer/GenericPayloadSerializer.h>
 #include <Swiften/Elements/StreamInitiationFileInfo.h>
 
@@ -15,7 +16,7 @@
 namespace Swift {
 	class PayloadSerializerCollection;
 
-	class StreamInitiationFileInfoSerializer : public GenericPayloadSerializer<StreamInitiationFileInfo> {
+	class SWIFTEN_API StreamInitiationFileInfoSerializer : public GenericPayloadSerializer<StreamInitiationFileInfo> {
 		public:
 			StreamInitiationFileInfoSerializer();
 

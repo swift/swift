@@ -10,6 +10,7 @@
 #include <Swiften/Base/boost_bsignals.h>
 #include <vector>
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Elements/Stanza.h>
 
 namespace Swift {
@@ -17,7 +18,7 @@ namespace Swift {
 	class LowLayer;
 	class StreamLayer;
 
-	class StreamStack {
+	class SWIFTEN_API StreamStack {
 		public:
 			StreamStack(XMPPLayer* xmppLayer, LowLayer* physicalLayer);
 			~StreamStack();

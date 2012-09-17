@@ -7,13 +7,14 @@
 
 #pragma once
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Serializer/GenericPayloadSerializer.h>
 #include <Swiften/Elements/SearchPayload.h>
 
 namespace Swift {
 	class PayloadSerializerCollection;
 
-	class SearchPayloadSerializer : public GenericPayloadSerializer<SearchPayload> {
+	class SWIFTEN_API SearchPayloadSerializer : public GenericPayloadSerializer<SearchPayload> {
 		public:
 			SearchPayloadSerializer();
 

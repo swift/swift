@@ -6,11 +6,12 @@
 
 #pragma once
 
+#include <Swiften/Base/API.h>
 #include <Swiften/SASL/ClientAuthenticator.h>
 #include <Swiften/Base/ByteArray.h>
 
 namespace Swift {
-	class PLAINClientAuthenticator : public ClientAuthenticator {
+	class SWIFTEN_API PLAINClientAuthenticator : public ClientAuthenticator {
 		public:
 			PLAINClientAuthenticator();
 

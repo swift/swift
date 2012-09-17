@@ -10,16 +10,16 @@
 #include <string>
 #include <boost/shared_ptr.hpp>
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Elements/Payload.h>
 #include <Swiften/JID/JID.h>
 
-
 namespace Swift {
-	class RosterItemExchangePayload : public Payload {
+	class SWIFTEN_API RosterItemExchangePayload : public Payload {
 		public:
 			typedef boost::shared_ptr<RosterItemExchangePayload> ref;
 
-			class Item {
+			class SWIFTEN_API Item {
 				public:
 					enum Action { Add, Modify, Delete };
 

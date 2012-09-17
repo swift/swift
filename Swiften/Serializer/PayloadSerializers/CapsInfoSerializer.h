@@ -6,11 +6,12 @@
 
 #pragma once
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Serializer/GenericPayloadSerializer.h>
 #include <Swiften/Elements/CapsInfo.h>
 
 namespace Swift {
-	class CapsInfoSerializer : public GenericPayloadSerializer<CapsInfo> {
+	class SWIFTEN_API CapsInfoSerializer : public GenericPayloadSerializer<CapsInfo> {
 		public:
 			CapsInfoSerializer();
 

@@ -6,10 +6,11 @@
 
 #pragma once
 
+#include <Swiften/Base/API.h>
 #include <vector>
 
 namespace Swift {
-	class RandomGenerator {
+	class SWIFTEN_API RandomGenerator {
 		public:
 			virtual ~RandomGenerator();
 

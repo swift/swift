@@ -10,10 +10,11 @@
 #include <boost/shared_ptr.hpp>
 
 #include <string>
+#include <Swiften/Base/API.h>
 #include <Swiften/Elements/IQ.h>
 
 namespace Swift {
-	class IQChannel {
+	class SWIFTEN_API IQChannel {
 		public:
 			virtual ~IQChannel();
 

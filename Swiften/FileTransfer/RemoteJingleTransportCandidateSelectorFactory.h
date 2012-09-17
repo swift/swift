@@ -6,10 +6,12 @@
 
 #pragma once
 
+#include <Swiften/Base/API.h>
+
 namespace Swift {
 	class RemoteJingleTransportCandidateSelector;
 
-	class RemoteJingleTransportCandidateSelectorFactory {
+	class SWIFTEN_API RemoteJingleTransportCandidateSelectorFactory {
 		public:
 			virtual ~RemoteJingleTransportCandidateSelectorFactory();
 

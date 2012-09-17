@@ -10,10 +10,11 @@
 #include <boost/optional.hpp>
 
 #include <string>
+#include <Swiften/Base/API.h>
 #include <Swiften/Base/ByteArray.h>
 
 namespace Swift {
-	class DIGESTMD5Properties {
+	class SWIFTEN_API DIGESTMD5Properties {
 		public:
 			DIGESTMD5Properties();
 			

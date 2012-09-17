@@ -11,6 +11,7 @@
 #include <deque>
 #include <boost/shared_ptr.hpp>
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Base/boost_bsignals.h>
 #include <Swiften/Base/Error.h>
 
@@ -21,7 +22,7 @@ namespace Swift {
 	class TimerFactory;
 	class DomainNameResolver;
 
-	class ChainedConnector {
+	class SWIFTEN_API ChainedConnector {
 		public:
 			ChainedConnector(const std::string& hostname, int port, bool doServiceLookups, DomainNameResolver*, const std::vector<ConnectionFactory*>&, TimerFactory*);
 

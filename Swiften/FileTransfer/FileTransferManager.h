@@ -10,6 +10,7 @@
 #include <boost/filesystem.hpp>
 #include <boost/date_time/posix_time/posix_time.hpp>
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Base/boost_bsignals.h>
 #include <Swiften/JID/JID.h>
 #include <Swiften/FileTransfer/OutgoingFileTransfer.h>
@@ -19,7 +20,7 @@ namespace Swift {
 	class ReadBytestream;
 	class S5BProxyRequest;
 
-	class FileTransferManager {
+	class SWIFTEN_API FileTransferManager {
 		public:
 			virtual ~FileTransferManager();
 			

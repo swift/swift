@@ -6,11 +6,12 @@
 
 #pragma once
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Serializer/GenericPayloadSerializer.h>
 #include <Swiften/Elements/SecurityLabel.h>
 
 namespace Swift {
-	class SecurityLabelSerializer : public GenericPayloadSerializer<SecurityLabel> {
+	class SWIFTEN_API SecurityLabelSerializer : public GenericPayloadSerializer<SecurityLabel> {
 		public:
 			SecurityLabelSerializer();
 

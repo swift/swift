@@ -6,11 +6,12 @@
 
 #pragma once
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Parser/GenericElementParser.h>
 #include <Swiften/Elements/StanzaAck.h>
 
 namespace Swift {
-	class StanzaAckParser : public GenericElementParser<StanzaAck> {
+	class SWIFTEN_API StanzaAckParser : public GenericElementParser<StanzaAck> {
 		public:
 			StanzaAckParser();
 

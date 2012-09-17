@@ -13,6 +13,7 @@
 #include <vector>
 
 #include <string>
+#include <Swiften/Base/API.h>
 #include <Swiften/LinkLocal/DNSSD/DNSSDQuerier.h>
 #include <Swiften/LinkLocal/DNSSD/DNSSDResolveServiceQuery.h>
 #include <Swiften/LinkLocal/DNSSD/DNSSDRegisterQuery.h>
@@ -21,7 +22,7 @@
 #include <Swiften/LinkLocal/LinkLocalServiceInfo.h>
 
 namespace Swift {
-	class LinkLocalServiceBrowser {
+	class SWIFTEN_API LinkLocalServiceBrowser {
 		public:
 			LinkLocalServiceBrowser(boost::shared_ptr<DNSSDQuerier> querier);
 			~LinkLocalServiceBrowser();

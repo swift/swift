@@ -10,9 +10,10 @@
 
 #include <Swiften/Elements/Presence.h>
 #include <Swiften/Presence/PresenceSender.h>
+#include <Swiften/Base/API.h>
 
 namespace Swift {
-	class DirectedPresenceSender : public PresenceSender {
+	class SWIFTEN_API DirectedPresenceSender : public PresenceSender {
 		public:
 			enum SendPresence {AndSendPresence, DontSendPresence};
 			DirectedPresenceSender(PresenceSender*);

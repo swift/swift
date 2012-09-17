@@ -7,11 +7,19 @@
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/extensions/TestFactoryRegistry.h>
 
+#include <Swiften/Base/Platform.h>
 #include <Swiften/Parser/GenericPayloadTreeParser.h>
 #include <Swiften/Parser/PayloadParsers/UnitTest/PayloadParserTester.h>
 #include <Swiften/Elements/RawXMLPayload.h>
 
 using namespace Swift;
+
+
+#if !SWIFTEN_STATIC && defined(SWIFTEN_PLATFORM_WINDOWS)
+// This base class of a class used in this file is already exported, so need to
+// explicitly import it.
+template class __declspec(dllimport) Swift::GenericPayloadParser<RawXMLPayload>;
+#endif
 
 class GenericPayloadTreeParserTest : public CppUnit::TestFixture {
 		CPPUNIT_TEST_SUITE(GenericPayloadTreeParserTest);

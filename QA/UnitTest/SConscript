@@ -25,9 +25,5 @@ if env["TEST"] :
 			myenv.Program("checker", lib)
 		else :
 			checker = myenv.Program("checker", env["UNITTEST_SOURCES"] + env["UNITTEST_OBJECTS"])
-			for i in ["HOME", "USERPROFILE", "APPDATA"]:
-				if os.environ.get(i, "") :
-					myenv["ENV"][i] = os.environ[i]
-			if myenv["PLATFORM"] == "darwin" :
-				myenv["ENV"]["DYLD_FALLBACK_LIBRARY_PATH"] = ":".join(map(lambda x : str(x), myenv.get("LIBPATH", [])))
 			myenv.Test(checker, is_checker = True)
+

@@ -7,12 +7,13 @@
 #pragma once
 
 #include <string>
+#include <Swiften/Base/API.h>
 #include <Swiften/Elements/CapsInfo.h>
 
 namespace Swift {
 	class DiscoInfo;
 
-	class CapsInfoGenerator {
+	class SWIFTEN_API CapsInfoGenerator {
 		public:
 			CapsInfoGenerator(const std::string& node);
 

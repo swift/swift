@@ -8,8 +8,10 @@
 
 #include <string>
 
+#include <Swiften/Base/API.h>
+
 namespace Swift {
-	class ComponentHandshakeGenerator {
+	class SWIFTEN_API ComponentHandshakeGenerator {
 		public:
 			static std::string getHandshake(const std::string& streamID, const std::string& secret);
 	};

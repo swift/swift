@@ -8,11 +8,12 @@
 
 #include <Swiften/Base/boost_bsignals.h>
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Elements/JingleTransportPayload.h>
 #include <Swiften/FileTransfer/JingleTransport.h>
 
 namespace Swift {
-	class LocalJingleTransportCandidateGenerator {
+	class SWIFTEN_API LocalJingleTransportCandidateGenerator {
 		public:
 			virtual ~LocalJingleTransportCandidateGenerator();
 			/**

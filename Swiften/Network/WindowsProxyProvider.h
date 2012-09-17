@@ -5,10 +5,12 @@
  */
 
 #pragma once
+
+#include <Swiften/Base/API.h>
 #include <Swiften/Network/ProxyProvider.h>
 
 namespace Swift {
-	class WindowsProxyProvider : public ProxyProvider {
+	class SWIFTEN_API WindowsProxyProvider : public ProxyProvider {
 		public:
 			WindowsProxyProvider();
 			virtual HostAddressPort getHTTPConnectProxy() const;

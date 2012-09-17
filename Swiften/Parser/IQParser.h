@@ -6,11 +6,12 @@
 
 #pragma once
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Parser/GenericStanzaParser.h>
 #include <Swiften/Elements/IQ.h>
 
 namespace Swift {
-	class IQParser : public GenericStanzaParser<IQ> {
+	class SWIFTEN_API IQParser : public GenericStanzaParser<IQ> {
 		public:
 			IQParser(PayloadParserFactoryCollection* factories);
 

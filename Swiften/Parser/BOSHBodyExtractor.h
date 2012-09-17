@@ -8,13 +8,14 @@
 
 #include <boost/optional.hpp>
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Base/ByteArray.h>
 #include <Swiften/Parser/XMLParserClient.h>
 
 namespace Swift {
 	class XMLParserFactory;
 
-	class BOSHBodyExtractor {
+	class SWIFTEN_API BOSHBodyExtractor {
 			friend class BOSHBodyParserClient;
 		public:
 			struct BOSHBody {

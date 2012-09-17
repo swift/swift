@@ -9,6 +9,7 @@
 #include <boost/shared_ptr.hpp>
 #include <map>
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Base/boost_bsignals.h>
 #include <Swiften/Jingle/JingleSessionImpl.h>
 
@@ -17,7 +18,7 @@ namespace Swift {
 	class JingleResponder;
 	class IncomingJingleSessionHandler;
 
-	class JingleSessionManager {
+	class SWIFTEN_API JingleSessionManager {
 			friend class JingleResponder;
 		public:
 			JingleSessionManager(IQRouter* router);

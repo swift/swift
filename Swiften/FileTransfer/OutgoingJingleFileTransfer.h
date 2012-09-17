@@ -8,6 +8,7 @@
 
 #include <boost/shared_ptr.hpp>
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Elements/JingleContentPayload.h>
 #include <Swiften/Elements/JingleS5BTransportPayload.h>
 #include <Swiften/Elements/StreamInitiationFileInfo.h>
@@ -34,7 +35,7 @@ class IncrementalBytestreamHashCalculator;
 class SOCKS5BytestreamRegistry;
 class SOCKS5BytestreamProxy;
 
-class OutgoingJingleFileTransfer : public OutgoingFileTransfer {
+class SWIFTEN_API OutgoingJingleFileTransfer : public OutgoingFileTransfer {
 public:
 	OutgoingJingleFileTransfer(JingleSession::ref,
 					RemoteJingleTransportCandidateSelectorFactory*,

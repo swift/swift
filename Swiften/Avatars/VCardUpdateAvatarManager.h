@@ -9,6 +9,7 @@
 #include <boost/shared_ptr.hpp>
 #include <map>
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Avatars/AvatarProvider.h>
 #include <Swiften/JID/JID.h>
 #include <Swiften/Elements/Presence.h>
@@ -21,7 +22,7 @@ namespace Swift {
 	class StanzaChannel;
 	class VCardManager;
 
-	class VCardUpdateAvatarManager : public AvatarProvider, public boost::bsignals::trackable {
+	class SWIFTEN_API VCardUpdateAvatarManager : public AvatarProvider, public boost::bsignals::trackable {
 		public:
 			VCardUpdateAvatarManager(VCardManager*, StanzaChannel*, AvatarStorage*, MUCRegistry* = NULL);
 

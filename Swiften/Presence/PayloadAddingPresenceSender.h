@@ -6,6 +6,7 @@
 
 #pragma once
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Presence/PresenceSender.h>
 #include <Swiften/Elements/Payload.h>
 
@@ -17,7 +18,7 @@ namespace Swift {
 	 *
 	 * This class isn't meant to be used with directed presence.
 	 */
-	class PayloadAddingPresenceSender : public PresenceSender {
+	class SWIFTEN_API PayloadAddingPresenceSender : public PresenceSender {
 		public:
 			PayloadAddingPresenceSender(PresenceSender*);
 

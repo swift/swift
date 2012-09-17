@@ -1,4 +1,4 @@
-import os, shutil, datetime, re
+import os, shutil, datetime, re, time
 import Version
 
 def generateDefaultTheme(dir) :
@@ -170,11 +170,17 @@ myenv["SWIFT_VERSION_MAJOR"] = int(version_match.group(1)) if version_match else
 myenv["SWIFT_VERSION_MINOR"] = int(version_match.group(2)) if version_match else 0
 
 if env["PLATFORM"] == "win32" :
-  res = myenv.RES("#/Swift/resources/Windows/Swift.rc")
+	res_env = myenv.Clone()
+	res_env.Append(CPPDEFINES = [
+			("SWIFT_COPYRIGHT_YEAR", "\"\\\"2010-%s\\\"\"" % str(time.localtime()[0])),
+			("SWIFT_VERSION_MAJOR", "${SWIFT_VERSION_MAJOR}"),
+			("SWIFT_VERSION_MINOR", "${SWIFT_VERSION_MINOR}"),
+		])
+	res = res_env.RES("#/Swift/resources/Windows/Swift.rc")
   # For some reason, SCons isn't picking up the dependency correctly
 	# Adding it explicitly until i figure out why
-  myenv.Depends(res, "../Controllers/BuildVersion.h")
-  sources += [
+	myenv.Depends(res, "../Controllers/BuildVersion.h")
+	sources += [
 			"WinUIHelpers.cpp",
 			"CAPICertificateSelector.cpp",
 			"WindowsNotifier.cpp",
@@ -299,7 +305,7 @@ if env["PLATFORM"] == "win32" :
         "#/Swift/resources/images",  
       ]
     if env["SWIFTEN_DLL"] :
-      commonResources[""] = commonResources.get("", []) + ["#/Swiften/Swiften.dll"]
+      commonResources[""] = commonResources.get("", []) + ["#/Swiften/${SWIFTEN_LIBRARY_FILE}"]
     qtimageformats = ["gif", "ico", "jpeg", "mng", "svg", "tiff"]
     qtlibs = ["QtCore4", "QtGui4", "QtNetwork4", "QtWebKit4", "QtXMLPatterns4", "phonon4"]
     myenv.WindowsBundle("Swift", 

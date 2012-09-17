@@ -8,10 +8,11 @@
 
 #include <boost/shared_ptr.hpp>
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Network/Timer.h>
 
 namespace Swift {
-	class TimerFactory {
+	class SWIFTEN_API TimerFactory {
 		public:
 			virtual ~TimerFactory();
 

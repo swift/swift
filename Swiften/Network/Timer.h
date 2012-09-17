@@ -7,12 +7,13 @@
 #pragma once
 
 #include <Swiften/Base/boost_bsignals.h>
+#include <Swiften/Base/API.h>
 
 namespace Swift {
 	/**
 	 * A class for triggering an event after a given period.
 	 */
-	class Timer {
+	class SWIFTEN_API Timer {
 		public:
 			typedef boost::shared_ptr<Timer> ref;
 

@@ -13,6 +13,7 @@
 
 #pragma once
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Network/ProxiedConnection.h>
 
 namespace Swift {
@@ -21,7 +22,7 @@ namespace Swift {
 	class EventLoop;
 	class TimerFactory;
 
-	class HTTPConnectProxiedConnection : public ProxiedConnection {
+	class SWIFTEN_API HTTPConnectProxiedConnection : public ProxiedConnection {
 		public:
 			typedef boost::shared_ptr<HTTPConnectProxiedConnection> ref;
 

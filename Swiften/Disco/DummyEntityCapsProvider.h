@@ -8,10 +8,11 @@
 
 #include <map>
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Disco/EntityCapsProvider.h>
 
 namespace Swift {
-	class DummyEntityCapsProvider : public EntityCapsProvider {
+	class SWIFTEN_API DummyEntityCapsProvider : public EntityCapsProvider {
 		public:
 			DummyEntityCapsProvider() {
 			}

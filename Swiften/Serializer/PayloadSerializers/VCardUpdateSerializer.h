@@ -6,11 +6,12 @@
 
 #pragma once
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Serializer/GenericPayloadSerializer.h>
 #include <Swiften/Elements/VCardUpdate.h>
 
 namespace Swift {
-	class VCardUpdateSerializer : public GenericPayloadSerializer<VCardUpdate> {
+	class SWIFTEN_API VCardUpdateSerializer : public GenericPayloadSerializer<VCardUpdate> {
 		public:
 			VCardUpdateSerializer();
 

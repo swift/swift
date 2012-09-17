@@ -6,12 +6,13 @@
 
 #pragma once
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Presence/PresenceSender.h>
 
 namespace Swift {
 	class StanzaChannel;
 
-	class StanzaChannelPresenceSender : public PresenceSender {
+	class SWIFTEN_API StanzaChannelPresenceSender : public PresenceSender {
 		public:
 			StanzaChannelPresenceSender(StanzaChannel*);
 

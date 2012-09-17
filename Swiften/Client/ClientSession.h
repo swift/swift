@@ -10,6 +10,7 @@
 #include <boost/shared_ptr.hpp>
 #include <boost/enable_shared_from_this.hpp>
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Base/Error.h>
 #include <Swiften/Session/SessionStream.h>
 #include <string>
@@ -22,7 +23,7 @@ namespace Swift {
 	class ClientAuthenticator;
 	class CertificateTrustChecker;
 
-	class ClientSession : public boost::enable_shared_from_this<ClientSession> {
+	class SWIFTEN_API ClientSession : public boost::enable_shared_from_this<ClientSession> {
 		public:
 			enum State {
 				Initial,

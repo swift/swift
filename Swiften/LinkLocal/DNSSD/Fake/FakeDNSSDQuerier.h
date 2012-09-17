@@ -12,6 +12,7 @@
 #include <set>
 
 #include <string>
+#include <Swiften/Base/API.h>
 #include <Swiften/Base/ByteArray.h>
 #include <Swiften/EventLoop/EventOwner.h>
 #include <Swiften/LinkLocal/DNSSD/DNSSDQuerier.h>
@@ -23,7 +24,7 @@ namespace Swift {
 	class FakeDNSSDBrowseQuery;
 	class EventLoop;
 
-	class FakeDNSSDQuerier : 
+	class SWIFTEN_API FakeDNSSDQuerier : 
 			public DNSSDQuerier, 
 			public EventOwner,
 			public boost::enable_shared_from_this<FakeDNSSDQuerier> {

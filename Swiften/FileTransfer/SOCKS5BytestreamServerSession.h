@@ -8,6 +8,7 @@
 
 #include <boost/shared_ptr.hpp>
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Base/boost_bsignals.h>
 #include <Swiften/Network/Connection.h>
 #include <Swiften/FileTransfer/ReadBytestream.h>
@@ -17,7 +18,7 @@
 namespace Swift {
 	class SOCKS5BytestreamRegistry;
 
-	class SOCKS5BytestreamServerSession {
+	class SWIFTEN_API SOCKS5BytestreamServerSession {
 		public:
 		typedef boost::shared_ptr<SOCKS5BytestreamServerSession> ref;
 

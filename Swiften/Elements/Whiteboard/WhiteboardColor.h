@@ -8,8 +8,10 @@
 
 #include <string>
 
+#include <Swiften/Base/API.h>
+
 namespace Swift {
-	class WhiteboardColor {
+	class SWIFTEN_API WhiteboardColor {
 	public:
 		WhiteboardColor();
 		WhiteboardColor(int red, int green, int blue, int alpha = 255);

@@ -6,11 +6,12 @@
 
 #pragma once
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Serializer/GenericPayloadSerializer.h>
 #include <Swiften/Elements/MUCAdminPayload.h>
 
 namespace Swift {
-	class MUCAdminPayloadSerializer : public GenericPayloadSerializer<MUCAdminPayload> {
+	class SWIFTEN_API MUCAdminPayloadSerializer : public GenericPayloadSerializer<MUCAdminPayload> {
 		public:
 			MUCAdminPayloadSerializer();
 			std::string affiliationToString(MUCOccupant::Affiliation affiliation) const;

@@ -6,11 +6,12 @@
 
 #pragma once
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Serializer/GenericPayloadSerializer.h>
 #include <Swiften/Elements/StreamInitiation.h>
 
 namespace Swift {
-	class StreamInitiationSerializer : public GenericPayloadSerializer<StreamInitiation> {
+	class SWIFTEN_API StreamInitiationSerializer : public GenericPayloadSerializer<StreamInitiation> {
 		public:
 			StreamInitiationSerializer();
 

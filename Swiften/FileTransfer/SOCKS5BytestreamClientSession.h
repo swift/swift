@@ -9,6 +9,7 @@
 #include <boost/shared_ptr.hpp>
 #include <boost/optional.hpp>
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Base/ByteArray.h>
 #include <Swiften/FileTransfer/FileTransferError.h>
 #include <Swiften/FileTransfer/WriteBytestream.h>
@@ -28,7 +29,7 @@ class TimerFactory;
  * A session which has been connected to a SOCKS5 server (requester).
  *
  */
-class SOCKS5BytestreamClientSession {
+class SWIFTEN_API SOCKS5BytestreamClientSession {
 public:
 	enum State {
 		Initial,

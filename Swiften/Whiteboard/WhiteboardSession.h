@@ -8,6 +8,7 @@
 
 #include <boost/shared_ptr.hpp>
 
+#include <Swiften/Base/API.h>
 #include <Swiften/JID/JID.h>
 #include <Swiften/Base/boost_bsignals.h>
 #include <Swiften/Base/IDGenerator.h>
@@ -20,7 +21,7 @@ namespace Swift {
 	class ErrorPayload;
 	class WhiteboardPayload;
 
-	class WhiteboardSession {
+	class SWIFTEN_API WhiteboardSession {
 	public:
 		typedef boost::shared_ptr<WhiteboardSession> ref;
 

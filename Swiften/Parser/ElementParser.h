@@ -9,11 +9,12 @@
 #include <boost/shared_ptr.hpp>
 
 #include <string>
+#include <Swiften/Base/API.h>
 #include <Swiften/Elements/Element.h>
 #include <Swiften/Parser/AttributeMap.h>
 
 namespace Swift {
-	class ElementParser {
+	class SWIFTEN_API ElementParser {
 		public:
 			virtual ~ElementParser();
 

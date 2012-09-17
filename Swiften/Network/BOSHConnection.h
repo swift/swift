@@ -15,6 +15,7 @@
 
 #include <boost/enable_shared_from_this.hpp>
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Network/Connection.h>
 #include <Swiften/Network/Connector.h>
 #include <Swiften/Network/HostAddressPort.h>
@@ -36,7 +37,7 @@ namespace Swift {
 	class XMLParserFactory;
 	class TLSContextFactory;
 
-		class BOSHError : public SessionStream::SessionStreamError {
+		class SWIFTEN_API BOSHError : public SessionStream::SessionStreamError {
 				public:
 					enum Type {BadRequest, HostGone, HostUnknown, ImproperAddressing, 
 						  InternalServerError, ItemNotFound, OtherRequest, PolicyViolation, 
@@ -51,7 +52,7 @@ namespace Swift {
 			};
 
 
-	class BOSHConnection : public boost::enable_shared_from_this<BOSHConnection> {
+	class SWIFTEN_API BOSHConnection : public boost::enable_shared_from_this<BOSHConnection> {
 		public:
 			typedef boost::shared_ptr<BOSHConnection> ref;
 			static ref create(const URL& boshURL, Connector::ref connector, XMLParserFactory* parserFactory) {

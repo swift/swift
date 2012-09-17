@@ -6,6 +6,7 @@
 
 #pragma once
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Elements/RawXMLPayload.h>
 #include <Swiften/Parser/GenericPayloadParser.h>
 #include <Swiften/Parser/SerializingParser.h>
@@ -13,7 +14,7 @@
 namespace Swift {
 	class SerializingParser;
 
-	class RawXMLPayloadParser : public GenericPayloadParser<RawXMLPayload> {
+	class SWIFTEN_API RawXMLPayloadParser : public GenericPayloadParser<RawXMLPayload> {
 		public:
 			RawXMLPayloadParser();
 

@@ -8,6 +8,7 @@
 
 #include <boost/shared_ptr.hpp>
 
+#include <Swiften/Base/API.h>
 #include <Swiften/JID/JID.h>
 #include <string>
 #include <Swiften/Elements/IQ.h>
@@ -20,7 +21,7 @@ namespace Swift {
 	class XMPPRosterImpl;
 	class RosterStorage;
 
-	class XMPPRosterController {
+	class SWIFTEN_API XMPPRosterController {
 		public:
 			XMPPRosterController(IQRouter *iqRouter, XMPPRosterImpl* xmppRoster, RosterStorage* storage);
 			~XMPPRosterController();

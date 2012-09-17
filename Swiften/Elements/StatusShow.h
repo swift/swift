@@ -6,10 +6,11 @@
 
 #pragma once
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Elements/Payload.h>
 
 namespace Swift {
-	class StatusShow : public Payload {
+	class SWIFTEN_API StatusShow : public Payload {
 		public:
 			enum Type { Online, Away, FFC, XA, DND, None };
 

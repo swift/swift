@@ -7,6 +7,7 @@
 
 #pragma once
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Serializer/GenericPayloadSerializer.h>
 #include <Swiften/Elements/JinglePayload.h>
 
@@ -14,7 +15,7 @@ namespace Swift {
 	class PayloadSerializerCollection;
 	class XMLElement;
 	
-	class JinglePayloadSerializer : public GenericPayloadSerializer<JinglePayload> {
+	class SWIFTEN_API JinglePayloadSerializer : public GenericPayloadSerializer<JinglePayload> {
 		public:
 			JinglePayloadSerializer(PayloadSerializerCollection*);
 			

@@ -10,10 +10,11 @@
 #include <string>
 #include <boost/shared_ptr.hpp>
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Elements/Element.h>
 
 namespace Swift {
-	class StreamFeatures : public Element	{
+	class SWIFTEN_API StreamFeatures : public Element	{
 		public:
 			typedef boost::shared_ptr<StreamFeatures> ref;
 

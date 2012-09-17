@@ -6,6 +6,7 @@
 
 #pragma once
 
+#include <Swiften/Base/API.h>
 #include <boost/date_time/posix_time/ptime.hpp>
 
 namespace Swift {
@@ -13,10 +14,10 @@ namespace Swift {
 	 * Converts a date formatted according to XEP-0082 into a ptime
 	 * object (in UTC).
 	 */
-	boost::posix_time::ptime stringToDateTime(const std::string& string);
+	SWIFTEN_API boost::posix_time::ptime stringToDateTime(const std::string& string);
 
 	/**
 	 * Converts a UTC ptime object to a XEP-0082 formatted string.
 	 */
-	std::string dateTimeToString(const boost::posix_time::ptime& time);
+	SWIFTEN_API std::string dateTimeToString(const boost::posix_time::ptime& time);
 }

@@ -9,6 +9,7 @@
 
 #include <vector>
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Base/SafeString.h>
 #include <Swiften/Network/BOSHConnection.h>
 
@@ -18,7 +19,7 @@ namespace Swift {
 	class CachingDomainNameResolver;
 	class EventLoop;
 
-	class BOSHConnectionPool : public boost::bsignals::trackable {
+	class SWIFTEN_API BOSHConnectionPool : public boost::bsignals::trackable {
 		public:
 			BOSHConnectionPool(const URL& boshURL, DomainNameResolver* resolver, ConnectionFactory* connectionFactory, XMLParserFactory* parserFactory, TLSContextFactory* tlsFactory, TimerFactory* timerFactory, EventLoop* eventLoop, const std::string& to, unsigned long long initialRID, const URL& boshHTTPConnectProxyURL, const SafeString& boshHTTPConnectProxyAuthID, const SafeString& boshHTTPConnectProxyAuthPassword);
 			~BOSHConnectionPool();

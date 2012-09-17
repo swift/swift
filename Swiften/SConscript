@@ -1,4 +1,4 @@
-import os, re, Version, os.path
+import os, re, Version, os.path, time
 
 Import("env")
 
@@ -10,7 +10,7 @@ swiften_dep_modules = ["BOOST", "GCONF", "ICU", "LIBIDN", "ZLIB", "OPENSSL", "LI
 external_swiften_dep_modules = ["BOOST"]
 
 if env["SCONS_STAGE"] == "flags" :
-	env["SWIFTEN_DLL"] = ARGUMENTS.get("swiften_dll")
+	env["SWIFTEN_DLL"] = env["swiften_dll"]
 	env["SWIFTEN_VERSION"] = Version.getBuildVersion(env.Dir("#").abspath, "swift")
 	version_match = re.match("(\d+)\.(\d+).*", env["SWIFTEN_VERSION"])
 	if version_match :
@@ -26,7 +26,8 @@ if env["SCONS_STAGE"] == "flags" :
 	
 	if env["SWIFTEN_DLL"] :
 		if env["PLATFORM"] == "win32" :
-			env["SWIFTEN_LIBRARY_FILE"] = "Swiften.dll"
+			env["SWIFTEN_LIBRARY"] = env.subst("Swiften${SWIFTEN_VERSION_MAJOR}")
+			env["SWIFTEN_LIBRARY_FILE"] = env.subst("${SWIFTEN_LIBRARY}.dll")
 		elif env["PLATFORM"] == "darwin" :
 			env["SWIFTEN_LIBRARY_FILE"] = env.subst("Swiften.${SWIFTEN_VERSION_MAJOR}.${SWIFTEN_VERSION_MINOR}")
 			env["SWIFTEN_LIBRARY_ALIASES"] = ["libSwiften.dylib", env.subst("libSwiften.${SWIFTEN_VERSION_MAJOR}.dylib")]
@@ -36,6 +37,7 @@ if env["SCONS_STAGE"] == "flags" :
 
 	swiften_env = env.Clone()
 	swiften_env["LIBPATH"] = [Dir(".")]
+	swiften_env["LIBRUNPATH"] = [Dir(".")]
 	swiften_env["LIBS"] = [swiften_env["SWIFTEN_LIBRARY"]]
 	if not env["SWIFTEN_DLL"] :
 		swiften_env.Append(CPPDEFINES = ["SWIFTEN_STATIC"])
@@ -65,6 +67,7 @@ if env["SCONS_STAGE"] == "flags" :
 				"CPPPATH": e.get("CPPPATH", []),
 				"CPPFLAGS": e.get("CPPFLAGS", []),
 				"LIBPATH": e.get("LIBPATH", []),
+				"LIBRUNPATH": e.get("LIBRUNPATH", []),
 				"LIBS": e.get("LIBS", []),
 				"FRAMEWORKS": e.get("FRAMEWORKS", []),
 			}
@@ -267,12 +270,28 @@ if env["SCONS_STAGE"] == "build" :
 
 	if myenv["PLATFORM"] != "darwin" and myenv["PLATFORM"] != "win32" and myenv.get("HAVE_GCONF", 0) :
 		env.MergeFlags(env["GCONF_FLAGS"])
+
 	if myenv["SWIFTEN_DLL"] :
 		if myenv["PLATFORM"] == "posix" :
 			myenv.Append(LINKFLAGS = ["-Wl,-soname,libSwiften.so.$SWIFTEN_VERSION_MAJOR"])
 			myenv["SHLIBSUFFIX"] = ""
 		elif myenv["PLATFORM"] == "darwin" :
 			myenv.Append(LINKFLAGS = ["-Wl,-install_name,libSwiften.so.$SWIFTEN_VERSION_MAJOR", "-Wl,-compatibility_version,${SWIFTEN_VERSION_MAJOR}.${SWIFTEN_VERSION_MINOR}", "-Wl,-current_version,${SWIFTEN_VERSION_MAJOR}.${SWIFTEN_VERSION_MINOR}"])
+		elif myenv["PLATFORM"] == "win32" :
+			res_env = myenv.Clone()
+			res_env.Append(CPPDEFINES = [
+					("SWIFTEN_LIBRARY_FILE", "\"\\\"${SWIFTEN_LIBRARY_FILE}\\\"\""),
+					("SWIFTEN_COPYRIGHT_YEAR", "\"\\\"2010-%s\\\"\"" % str(time.localtime()[0])),
+					("SWIFTEN_VERSION_MAJOR", "${SWIFTEN_VERSION_MAJOR}"),
+					("SWIFTEN_VERSION_MINOR", "${SWIFTEN_VERSION_MINOR}"),
+					("SWIFTEN_VERSION_PATCH", "${SWIFTEN_VERSION_PATCH}"),
+				])
+			res = res_env.RES("Swiften.rc")
+			# For some reason, SCons isn't picking up the dependency correctly
+			# Adding it explicitly until i figure out why
+			res_env.Depends(res, "Version.h")
+			sources += res
+
 	swiften_lib = myenv.SwiftenLibrary(swiften_env["SWIFTEN_LIBRARY_FILE"], sources + swiften_env["SWIFTEN_OBJECTS"])
 	def symlink(env, target, source) :
 		if os.path.exists(str(target[0])) :

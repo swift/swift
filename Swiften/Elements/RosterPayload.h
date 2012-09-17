@@ -10,12 +10,13 @@
 #include <boost/optional.hpp>
 #include <boost/shared_ptr.hpp>
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Elements/RosterItemPayload.h>
 #include <Swiften/Elements/Payload.h>
 
 
 namespace Swift {
-	class RosterPayload : public Payload {
+	class SWIFTEN_API RosterPayload : public Payload {
 		public:
 			typedef boost::shared_ptr<RosterPayload> ref;
 			typedef std::vector<RosterItemPayload> RosterItemPayloads;

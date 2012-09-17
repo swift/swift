@@ -7,10 +7,11 @@
 #pragma once
 
 #include <string>
+#include <Swiften/Base/API.h>
 #include <Swiften/Base/SafeByteArray.h>
 
 namespace Swift {
-	class StringPrep {
+	class SWIFTEN_API StringPrep {
 		public:
 			enum Profile {
 				NamePrep,

@@ -8,9 +8,10 @@
 
 #include <Swiften/Parser/GenericElementParser.h>
 #include <Swiften/Elements/StreamManagementEnabled.h>
+#include <Swiften/Base/API.h>
 
 namespace Swift {
-	class StreamManagementEnabledParser : public GenericElementParser<StreamManagementEnabled> {
+	class SWIFTEN_API StreamManagementEnabledParser : public GenericElementParser<StreamManagementEnabled> {
 		public:
 			StreamManagementEnabledParser();
 			~StreamManagementEnabledParser();

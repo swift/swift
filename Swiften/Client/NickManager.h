@@ -6,11 +6,12 @@
 
 #pragma once
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Base/boost_bsignals.h>
 #include <string>
 
 namespace Swift {
-	class NickManager {
+	class SWIFTEN_API NickManager {
 		public:
 			virtual ~NickManager();
 

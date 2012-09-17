@@ -6,12 +6,13 @@
 
 #pragma once
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Elements/Whiteboard/WhiteboardOperation.h>
 #include <list>
 #include <utility>
 
 namespace Swift {
-	class WhiteboardClient {
+	class SWIFTEN_API WhiteboardClient {
 	public:
 		struct Result {
 			WhiteboardOperation::ref client;

@@ -9,6 +9,7 @@
 #include <vector>
 #include <map>
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Network/HostAddress.h>
 #include <Swiften/Network/HostAddressPort.h>
 #include <Swiften/Network/DomainNameResolver.h>
@@ -17,7 +18,7 @@
 #include <Swiften/EventLoop/EventLoop.h>
 
 namespace Swift {
-	class StaticDomainNameResolver : public DomainNameResolver {
+	class SWIFTEN_API StaticDomainNameResolver : public DomainNameResolver {
 		public:
 			typedef std::map<std::string, std::vector<HostAddress> > AddressesMap;
 			typedef std::vector< std::pair<std::string, DomainNameServiceQuery::Result> > ServicesCollection;

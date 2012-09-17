@@ -6,13 +6,14 @@
 
 #pragma once
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Serializer/GenericPayloadSerializer.h>
 #include <Swiften/Elements/Form.h>
 #include <Swiften/Elements/FormField.h>
 #include <Swiften/Serializer/XML/XMLElement.h>
 
 namespace Swift {
-	class FormSerializer : public GenericPayloadSerializer<Form> {
+	class SWIFTEN_API FormSerializer : public GenericPayloadSerializer<Form> {
 		public:
 			FormSerializer();
 

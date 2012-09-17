@@ -6,12 +6,13 @@
 
 #pragma once
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Elements/Whiteboard/WhiteboardInsertOperation.h>
 
 #include <list>
 
 namespace Swift {
-	class WhiteboardServer {
+	class SWIFTEN_API WhiteboardServer {
 	public:
 		void handleLocalOperationReceived(WhiteboardOperation::ref operation);
 		WhiteboardOperation::ref handleClientOperationReceived(WhiteboardOperation::ref operation);

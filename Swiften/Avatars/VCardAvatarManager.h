@@ -6,6 +6,7 @@
 
 #pragma once
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Avatars/AvatarProvider.h>
 #include <Swiften/JID/JID.h>
 
@@ -14,7 +15,7 @@ namespace Swift {
 	class AvatarStorage;
 	class VCardManager;
 
-	class VCardAvatarManager : public AvatarProvider {
+	class SWIFTEN_API VCardAvatarManager : public AvatarProvider {
 		public:
 			VCardAvatarManager(VCardManager*, AvatarStorage*, MUCRegistry* = NULL);
 

@@ -9,11 +9,12 @@
 #include <vector>
 #include <map>
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Avatars/AvatarProvider.h>
 #include <Swiften/JID/JID.h>
 
 namespace Swift {
-	class CombinedAvatarProvider : public AvatarProvider {
+	class SWIFTEN_API CombinedAvatarProvider : public AvatarProvider {
 		public:
 			virtual std::string getAvatarHash(const JID&) const;
 

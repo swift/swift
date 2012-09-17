@@ -6,13 +6,14 @@
 
 #pragma once
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Base/ByteArray.h>
 #include <Swiften/Base/SafeByteArray.h>
 
 namespace Swift {
 	struct md5_state_s;
 
-	class MD5 {
+	class SWIFTEN_API MD5 {
 		public:
 			MD5();
 			~MD5();

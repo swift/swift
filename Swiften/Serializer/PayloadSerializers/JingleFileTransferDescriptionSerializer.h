@@ -7,16 +7,15 @@
 
 #pragma once
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Serializer/GenericPayloadSerializer.h>
 #include <Swiften/Elements/JingleFileTransferDescription.h>
-
-
 
 namespace Swift {
 	class PayloadSerializerCollection;
 	class XMLElement;
 	
-	class JingleFileTransferDescriptionSerializer : public GenericPayloadSerializer<JingleFileTransferDescription> {
+	class SWIFTEN_API JingleFileTransferDescriptionSerializer : public GenericPayloadSerializer<JingleFileTransferDescription> {
 		public:
 			JingleFileTransferDescriptionSerializer();
 			

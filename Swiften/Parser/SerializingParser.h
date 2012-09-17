@@ -7,11 +7,12 @@
 #pragma once
 
 #include <string>
+#include <Swiften/Base/API.h>
 #include <Swiften/Parser/AttributeMap.h>
 #include <Swiften/Serializer/XML/XMLElement.h>
 
 namespace Swift {
-	class SerializingParser {
+	class SWIFTEN_API SerializingParser {
 		public:
 			SerializingParser();
 

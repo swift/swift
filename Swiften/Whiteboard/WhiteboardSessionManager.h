@@ -8,6 +8,7 @@
 
 #include <map>
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Queries/IQRouter.h>
 #include <Swiften/JID/JID.h>
 #include <Swiften/Client/StanzaChannel.h>
@@ -22,7 +23,7 @@ namespace Swift {
 	class PresenceOracle;
 	class EntityCapsProvider;
 
-	class WhiteboardSessionManager {
+	class SWIFTEN_API WhiteboardSessionManager {
 		friend class WhiteboardResponder;
 	public:
 		WhiteboardSessionManager(IQRouter* router, StanzaChannel* stanzaChannel, PresenceOracle* presenceOracle, EntityCapsProvider* capsProvider);

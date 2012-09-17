@@ -6,11 +6,12 @@
 
 #pragma once
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Parser/GenericStanzaParser.h>
 #include <Swiften/Elements/Presence.h>
 
 namespace Swift {
-	class PresenceParser : public GenericStanzaParser<Presence> {
+	class SWIFTEN_API PresenceParser : public GenericStanzaParser<Presence> {
 		public:
 			PresenceParser(PayloadParserFactoryCollection* factories);
 

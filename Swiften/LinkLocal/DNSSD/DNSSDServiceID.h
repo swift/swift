@@ -6,10 +6,11 @@
 
 #pragma once
 
+#include <Swiften/Base/API.h>
 #include <string>
 
 namespace Swift {
-	class DNSSDServiceID {
+	class SWIFTEN_API DNSSDServiceID {
 		public:
 			static const char* PresenceServiceType;
 

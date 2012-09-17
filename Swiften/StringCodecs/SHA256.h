@@ -9,11 +9,12 @@
 #include <vector>
 #include <boost/cstdint.hpp>
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Base/ByteArray.h>
 #include <Swiften/Base/SafeByteArray.h>
 
 namespace Swift {
-	class SHA256 {
+	class SWIFTEN_API SHA256 {
 		public:
 			SHA256();
 

@@ -22,6 +22,7 @@ vars.Add(BoolVariable("assertions", "Compile with assertions", "yes"))
 vars.Add(BoolVariable("max_jobs", "Build with maximum number of parallel jobs", "no"))
 vars.Add(EnumVariable("target", "Choose a target platform for compilation", "native", ["native", "iphone-simulator", "iphone-device", "xcode"]))
 vars.Add(BoolVariable("swift_mobile", "Build mobile Swift", "no"))
+vars.Add(BoolVariable("swiften_dll", "Build Swiften as dynamically linked library", "no"))
 if os.name != "nt" :
 	vars.Add(BoolVariable("coverage", "Compile with coverage information", "no"))
 if os.name == "posix" :

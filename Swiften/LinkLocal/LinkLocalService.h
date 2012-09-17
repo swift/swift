@@ -7,13 +7,14 @@
 #pragma once
 
 #include <string>
+#include <Swiften/Base/API.h>
 #include <Swiften/JID/JID.h>
 #include <Swiften/LinkLocal/DNSSD/DNSSDServiceID.h>
 #include <Swiften/LinkLocal/DNSSD/DNSSDResolveServiceQuery.h>
 #include <Swiften/LinkLocal/LinkLocalServiceInfo.h>
 
 namespace Swift {
-	class LinkLocalService {
+	class SWIFTEN_API LinkLocalService {
 		public:
 			LinkLocalService(
 					const DNSSDServiceID& id,
