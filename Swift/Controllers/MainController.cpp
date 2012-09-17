@@ -123,6 +123,7 @@ MainController::MainController(
 	contactEditController_ = NULL;
 	userSearchControllerChat_ = NULL;
 	userSearchControllerAdd_ = NULL;
+	whiteboardManager_ = NULL;
 	adHocManager_ = NULL;
 	quitRequested_ = false;
 	clientInitialized_ = false;
