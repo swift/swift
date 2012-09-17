@@ -87,6 +87,28 @@ URL URL::fromString(const std::string& urlString) {
 	}
 }
 
+// FIXME: Escape non-ascii characters
+std::string URL::toString() const {
+	if (empty) {
+		return "";
+	}
+	std::string result = scheme + "://";
+	if (!user.empty()) {
+		result += user;
+		if (!password.empty()) {
+			result += ":" + password;
+		}
+		result += "@";
+	}
+	result += host;
+	if (port) {
+		result += ":";
+		result += boost::lexical_cast<std::string>(*port);
+	}
+	result += path;
+	return result;
+}
+
 // Disabling this code for now, since GCC4.5+boost1.42 (on ubuntu) seems to
 // result in a bug. Replacing it with naive code.
 #if 0

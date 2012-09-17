@@ -21,6 +21,8 @@ class URLTest : public CppUnit::TestFixture {
 		CPPUNIT_TEST(testFromString_WithUserInfo);
 		CPPUNIT_TEST(testFromString_NonASCIIHost);
 		CPPUNIT_TEST(testFromString_NonASCIIPath);
+		CPPUNIT_TEST(testToString);
+		CPPUNIT_TEST(testToString_WithPort);
 		CPPUNIT_TEST_SUITE_END();
 
 	public:
@@ -78,6 +80,14 @@ class URLTest : public CppUnit::TestFixture {
 			URL url = URL::fromString("http://foo.bar/baz/tron%C3%A7on/bam");
 			
 			CPPUNIT_ASSERT_EQUAL(std::string("/baz/tron\xc3\xa7on/bam"), url.getPath());
+		}
+
+		void testToString() {
+			CPPUNIT_ASSERT_EQUAL(std::string("http://foo.bar/baz/bam"), URL("http", "foo.bar", "/baz/bam").toString());
+		}
+
+		void testToString_WithPort() {
+			CPPUNIT_ASSERT_EQUAL(std::string("http://foo.bar:1234/baz/bam"), URL("http", "foo.bar", 1234, "/baz/bam").toString());
 		}
 };
 

@@ -127,11 +127,12 @@ ClientOptions QtConnectionSettingsWindow::getOptions() {
 			options.boshURL = URL::fromString(Q2PSTRING(ui.bosh_uri->text()));
 			if (ui.bosh_manualProxy->isChecked()) {
 				std::string host = Q2PSTRING(ui.bosh_manualProxyHost->text());
-				int port = 80;
 				try {
-					port = boost::lexical_cast<int>(Q2PSTRING(ui.bosh_manualProxyPort->text()));
-				} catch (const boost::bad_lexical_cast&) {}
-				options.boshHTTPConnectProxyURL = URL("http", host, port, "");
+					int port = boost::lexical_cast<int>(Q2PSTRING(ui.bosh_manualProxyPort->text()));
+					options.boshHTTPConnectProxyURL = URL("http", host, port, "");
+				} catch (const boost::bad_lexical_cast&) {
+					options.boshHTTPConnectProxyURL = URL("http", host, "");
+				}
 			}
 		}
 	}

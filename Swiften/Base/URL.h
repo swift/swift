@@ -60,27 +60,7 @@ class SWIFTEN_API URL {
 			return path;
 		}
 
-		const std::string toString() const {
-			if (empty) {
-				return "";
-			}
-			std::string result = scheme + "://";
-			if (!user.empty()) {
-				result += user;
-				if (!password.empty()) {
-					result += ":" + password;
-				}
-				result += "@";
-			}
-			result += host;
-			if (port > 0) {
-				result += ":";
-				result += boost::lexical_cast<std::string>(port);
-			}
-			result += "/";
-			result += path;
-			return result;
-		}
+		std::string toString() const;
 
 		static int getPortOrDefaultPort(const URL& url);
 		static URL fromString(const std::string&);

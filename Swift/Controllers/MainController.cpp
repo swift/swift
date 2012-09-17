@@ -751,7 +751,7 @@ void MainController::handleQuitRequest() {
 #define SERIALIZE_INT(option) result += boost::lexical_cast<std::string>(options.option); result += ",";
 #define SERIALIZE_STRING(option) result += Base64::encode(createByteArray(options.option)); result += ",";
 #define SERIALIZE_SAFE_STRING(option) result += safeByteArrayToString(Base64::encode(options.option)); result += ",";
-#define SERIALIZE_URL(option) SERIALIZE_STRING(option.getScheme()) SERIALIZE_STRING(option.getHost()) SERIALIZE_INT(option.getPort()) SERIALIZE_STRING(option.getPath())
+#define SERIALIZE_URL(option) SERIALIZE_STRING(option.toString())
 
 std::string MainController::serializeClientOptions(const ClientOptions& options) {
 	std::string result;
@@ -791,7 +791,7 @@ std::string MainController::serializeClientOptions(const ClientOptions& options)
 #define PARSE_INT(option, defaultValue) PARSE_INT_RAW(defaultValue); result.option = intVal;
 #define PARSE_STRING(option) PARSE_STRING_RAW; result.option = stringVal;
 #define PARSE_SAFE_STRING(option) PARSE_STRING_RAW; result.option = SafeString(createSafeByteArray(stringVal));
-#define PARSE_URL(option) {PARSE_STRING_RAW; std::string scheme = stringVal; PARSE_STRING_RAW; std::string host = stringVal; PARSE_INT_RAW(0); int port = intVal; PARSE_STRING_RAW; std::string path = stringVal; result.option = !scheme.empty() && !host.empty() ? URL(scheme, host, port, path) : URL();}
+#define PARSE_URL(option) {PARSE_STRING_RAW; result.option = URL::fromString(stringVal);}
 
 
 ClientOptions MainController::parseClientOptions(const std::string& optionString) {
