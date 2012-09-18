@@ -6,6 +6,8 @@
 
 #include <Swiften/Base/URL.h>
 
+#include <iostream>
+
 namespace Swift {
 
 int URL::getPortOrDefaultPort(const URL& url) {
