@@ -33,7 +33,8 @@ MessageSnippet::MessageSnippet(const QString& message, const QString& sender, co
 	}
 
 	content_.replace("%message%", wrapResizable("<span class='swift_message'>" + escape(message) + "</span><span class='swift_ack'></span><span class='swift_receipt'></span>"));
-	content_.replace("%sender%", wrapResizable(escape(sender)));
+	content_.replace("%wrapped_sender%", wrapResizable(escape(sender)));
+	content_.replace("%sender%", escape(sender));
 	content_.replace("%time%", wrapResizable("<span class='swift_time'>" + timeToEscapedString(time) + "</span>"));
 	content_.replace("%userIconPath%", escape(iconURI));
 	content_ = "<div id='" + id + "'>" + content_ + "</div>";
