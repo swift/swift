@@ -117,6 +117,7 @@ MainController::MainController(
 	eventNotifier_ = NULL;
 	rosterController_ = NULL;
 	chatsManager_ = NULL;
+	historyController_ = NULL;
 	historyViewController_ = NULL;
 	eventWindowController_ = NULL;
 	profileController_ = NULL;
