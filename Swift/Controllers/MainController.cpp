@@ -230,10 +230,10 @@ void MainController::resetClient() {
 	delete chatsManager_;
 	chatsManager_ = NULL;
 #ifdef SWIFT_EXPERIMENTAL_HISTORY
-	delete historyController_;
-	historyController_ = NULL;
 	delete historyViewController_;
 	historyViewController_ = NULL;
+	delete historyController_;
+	historyController_ = NULL;
 #endif
 	delete ftOverview_;
 	ftOverview_ = NULL;
