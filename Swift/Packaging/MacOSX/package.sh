@@ -20,7 +20,7 @@ rm -rf $WC_DIR
 mkdir -p $WC_DIR
 hdiutil attach "$WC_DMG" -noautoopen -quiet -mountpoint "$WC_DIR"
 ditto -rsrc "$APP" "$WC_DIR"/`basename $APP`
-$QTDIR/bin/macdeployqt -no-strip "$WC_DIR"/`basename $APP`
+$QTDIR/bin/macdeployqt "$WC_DIR"/`basename $APP` -no-strip 
 hdiutil detach "$WC_DIR" -quiet -force
 rm -f $TARGET
 hdiutil convert "$WC_DMG" -quiet -format UDZO -imagekey zlib-level=9 -o "$TARGET"
