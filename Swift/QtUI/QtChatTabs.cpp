@@ -110,18 +110,16 @@ void QtChatTabs::handleWantsToActivate() {
 
 void QtChatTabs::handleTabClosing() {
 	QWidget* widget = qobject_cast<QWidget*>(sender());
-	if (!widget) {
-		return;
+	int index;
+	if (widget && ((index = tabs_->indexOf(widget)) >= 0)) {
+		tabs_->removeTab(index);
+		if (tabs_->count() == 0) {
+			hide();
+		}
+		else {
+			handleTabTitleUpdated(tabs_->currentWidget());
+		}
 	}
-	int index = tabs_->indexOf(widget);
-	if (index < 0) {
-		return;
-	}
-	tabs_->removeTab(index);
-	if (tabs_->count() == 0) {
-		hide();
-	}
-	handleTabTitleUpdated(tabs_->currentWidget());
 }
 
 void QtChatTabs::handleRequestedPreviousTab() {
