@@ -6,6 +6,7 @@
 
 #pragma once
 
+#include <Swiften/Base/SafeByteArray.h>
 #include <Swiften/Base/ByteArray.h>
 #include <Swiften/Base/Algorithm.h>
 #include <cassert>
