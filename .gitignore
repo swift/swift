@@ -23,6 +23,7 @@
 *.res
 *.moc
 *.patch
+*.dSYM
 .gdb_history
 .clang_complete
 *~
@@ -57,3 +58,4 @@ cppcheck.log
 /Swift/Packaging/WiX/*.wixobj
 /Swift/Packaging/WiX/gen_files.wxs
 /Swift/Packaging/WiX/variables.wxs
+/Packages
