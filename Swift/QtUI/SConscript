@@ -371,6 +371,6 @@ if env["PLATFORM"] == "win32" :
       myenv.WiX_Candle('..\\Packaging\\WiX\\gen_files.wixobj', '..\\Packaging\\WiX\\gen_files.wxs')
       myenv.WiX_Light('..\\Packaging\\WiX\\Swift-' + myenv["SWIFT_VERSION"] + '.msi', ['..\\Packaging\\WiX\\gen_files.wixobj','..\\Packaging\\WiX\\Swift.wixobj'])
       if myenv["debug"] :
-				myenv.InstallAs('..\\Packaging\\WiX\\Swift-' + myenv["SWIFT_VERSION"] + '.pdb', "Swift.pdb")
+				myenv.InstallAs('../Packaging/WiX/Swift-' + myenv["SWIFT_VERSION"] + '.pdb', "Swift.pdb")
 
 
