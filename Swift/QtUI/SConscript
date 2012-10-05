@@ -284,6 +284,7 @@ if env["PLATFORM"] == "darwin" :
   app = myenv.AppBundle("Swift", version = myenv["SWIFT_VERSION"], resources = commonResources, frameworks = frameworks, handlesXMPPURIs = True)
   if env["DIST"] :
     myenv.Command(["Swift-${SWIFT_VERSION}.dmg"], [app], ["Swift/Packaging/MacOSX/package.sh " + app.path + " Swift/Packaging/MacOSX/Swift.dmg.gz $TARGET $QTDIR"])
+    myenv.Command(["Swift-${SWIFT_VERSION}.dsym"], ["Swift"], ["dsymutil -o ${TARGET} ${SOURCE}"])
     
 if env.get("SWIFT_INSTALLDIR", "") :
   env.Install(os.path.join(env["SWIFT_INSTALLDIR"], "bin"), swiftProgram + openURIProgram)
