@@ -370,10 +370,11 @@ if env["PLATFORM"] == "win32" :
         heatDependencies.append("Swift/translations/swift_" + lang + ".qm")
       myenv.WiX_Heat('..\\Packaging\\WiX\\gen_files.wxs', heatDependencies)
       myenv.WiX_Light('..\\..\\..\\Packages\\Swift-' + myenv["SWIFT_VERSION"] + '.msi', [
-					myenv.WiX_Candle('..\\Packaging\\WiX\\Swift.wixobj', '..\\Packaging\\WiX\\Swift.wxs') +
-					myenv.WiX_Candle('..\\Packaging\\WiX\\gen_files.wixobj', '..\\Packaging\\WiX\\gen_files.wxs')
-				)
+                    myenv.WiX_Candle('..\\Packaging\\WiX\\Swift.wixobj', '..\\Packaging\\WiX\\Swift.wxs') +
+                    myenv.WiX_Candle('..\\Packaging\\WiX\\gen_files.wixobj', '..\\Packaging\\WiX\\gen_files.wxs')
+                    ]
+                )
       if myenv["debug"] :
-				myenv.InstallAs('#/Packages/Swift-' + myenv["SWIFT_VERSION"] + '.pdb', "Swift.pdb")
+            myenv.InstallAs('#/Packages/Swift-' + myenv["SWIFT_VERSION"] + '.pdb', "Swift.pdb")
 
 
