@@ -283,9 +283,9 @@ if env["PLATFORM"] == "darwin" :
   commonResources[""] = commonResources.get("", []) + ["#/Swift/resources/MacOSX/Swift.icns"]
   app = myenv.AppBundle("Swift", version = myenv["SWIFT_VERSION"], resources = commonResources, frameworks = frameworks, handlesXMPPURIs = True)
   if env["DIST"] :
-    myenv.Command(["#/Packages/Swift-${SWIFT_VERSION}.dmg"], [app], ["Swift/Packaging/MacOSX/package.sh " + app.path + " Swift/Packaging/MacOSX/Swift.dmg.gz $TARGET $QTDIR"])
+    myenv.Command(["#/Packages/Swift/Swift-${SWIFT_VERSION}.dmg"], [app], ["Swift/Packaging/MacOSX/package.sh " + app.path + " Swift/Packaging/MacOSX/Swift.dmg.gz $TARGET $QTDIR"])
     dsym = myenv.Command(["Swift-${SWIFT_VERSION}.dSYM"], ["Swift"], ["dsymutil -o ${TARGET} ${SOURCE}"])
-    myenv.Command(["#/Packages/Swift-${SWIFT_VERSION}.dSYM.zip"], dsym, ["zip -r ${TARGET} ${SOURCE}"])
+    myenv.Command(["#/Packages/Swift/Swift-${SWIFT_VERSION}.dSYM.zip"], dsym, ["zip -r ${TARGET} ${SOURCE}"])
     
 if env.get("SWIFT_INSTALLDIR", "") :
   env.Install(os.path.join(env["SWIFT_INSTALLDIR"], "bin"), swiftProgram + openURIProgram)
@@ -369,12 +369,12 @@ if env["PLATFORM"] == "win32" :
       for lang in translation_languages:
         heatDependencies.append("Swift/translations/swift_" + lang + ".qm")
       myenv.WiX_Heat('..\\Packaging\\WiX\\gen_files.wxs', heatDependencies)
-      myenv.WiX_Light('..\\..\\..\\Packages\\Swift-' + myenv["SWIFT_VERSION"] + '.msi', [
+      myenv.WiX_Light('..\\..\\..\\Packages\\Swift\\Swift-' + myenv["SWIFT_VERSION"] + '.msi', [
                     myenv.WiX_Candle('..\\Packaging\\WiX\\Swift.wixobj', '..\\Packaging\\WiX\\Swift.wxs') +
                     myenv.WiX_Candle('..\\Packaging\\WiX\\gen_files.wixobj', '..\\Packaging\\WiX\\gen_files.wxs')
                     ]
                 )
       if myenv["debug"] :
-            myenv.InstallAs('#/Packages/Swift-' + myenv["SWIFT_VERSION"] + '.pdb', "Swift.pdb")
+            myenv.InstallAs('#/Packages/Swift/Swift-' + myenv["SWIFT_VERSION"] + '.pdb', "Swift.pdb")
 
 
