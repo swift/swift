@@ -55,6 +55,7 @@ namespace Swift {
 		private slots:
 			void handleStatusChanged(StatusShow::Type showType, const QString &statusMessage);
 			void handleSettingChanged(const std::string& settingPath);
+			void handleCompactRosterToggled(bool);
 			void handleShowOfflineToggled(bool);
 			void handleShowEmoticonsToggled(bool);
 			void handleJoinMUCAction();
@@ -81,6 +82,7 @@ namespace Swift {
 			QAction* editUserAction_;
 			QAction* chatUserAction_;
 			QAction* showOfflineAction_;
+			QAction* compactRosterAction_;
 			QAction* showEmoticonsAction_;
 			QAction* toggleRequestDeliveryReceipts_;
 			QMenu* serverAdHocMenu_;

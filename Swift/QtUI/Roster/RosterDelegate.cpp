@@ -35,6 +35,7 @@ RosterDelegate::~RosterDelegate() {
 
 void RosterDelegate::setCompact(bool compact) {
 	compact_ = compact;
+	emit sizeHintChanged(QModelIndex());
 }
 	
 QSize RosterDelegate::sizeHint(const QStyleOptionViewItem& option, const QModelIndex& index ) const {

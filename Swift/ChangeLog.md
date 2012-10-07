@@ -1,3 +1,7 @@
+3.0-beta1
+---------
+- Allow toggling of a more compact roster display.
+
 2.0-beta2
 ---------
 - Enable auto-completion of nicknames that don't start with a letter.

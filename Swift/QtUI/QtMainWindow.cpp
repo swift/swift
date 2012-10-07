@@ -95,6 +95,14 @@ QtMainWindow::QtMainWindow(SettingsProvider* settings, UIEventStream* uiEventStr
 
 	QMenu* viewMenu = new QMenu(tr("&View"), this);
 	menus_.push_back(viewMenu);
+
+	compactRosterAction_ = new QAction(tr("&Compact Roster"), this);
+	compactRosterAction_->setCheckable(true);
+	compactRosterAction_->setChecked(false);
+	connect(compactRosterAction_, SIGNAL(toggled(bool)), SLOT(handleCompactRosterToggled(bool)));
+	viewMenu->addAction(compactRosterAction_);
+	handleCompactRosterToggled(settings_->getSetting(QtUISettingConstants::COMPACT_ROSTER));
+
 	showOfflineAction_ = new QAction(tr("&Show offline contacts"), this);
 	showOfflineAction_->setCheckable(true);
 	showOfflineAction_->setChecked(false);
@@ -261,6 +269,14 @@ void QtMainWindow::handleSettingChanged(const std::string& settingPath) {
 	if (settingPath == SettingConstants::REQUEST_DELIVERYRECEIPTS.getKey()) {
 		toggleRequestDeliveryReceipts_->setChecked(settings_->getSetting(SettingConstants::REQUEST_DELIVERYRECEIPTS));
 	}
+	if (settingPath == QtUISettingConstants::COMPACT_ROSTER.getKey()) {
+		handleCompactRosterToggled(settings_->getSetting(QtUISettingConstants::COMPACT_ROSTER));
+	}
+}
+
+void QtMainWindow::handleCompactRosterToggled(bool state) {
+	settings_->storeSetting(QtUISettingConstants::COMPACT_ROSTER, state);
+	compactRosterAction_->setChecked(settings_->getSetting(QtUISettingConstants::COMPACT_ROSTER));
 }
 
 void QtMainWindow::handleShowOfflineToggled(bool state) {
