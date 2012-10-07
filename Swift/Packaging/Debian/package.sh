@@ -49,7 +49,11 @@ else
 	# Remove development files & 3rdParty files
 	rm -rf $DIRNAME/.git
 	find $DIRNAME -name .gitignore | xargs rm -f
-	find $DIRNAME/3rdParty -type f | grep -v SConscript | xargs rm -f
+	if [ -z "$SWIFT_COPY_UUID" ]; then
+		find $DIRNAME/3rdParty -type f | grep -v SConscript | xargs rm -f
+	else
+		find $DIRNAME/3rdParty -type f | grep -v uuid | grep -v SConscript | xargs rm -f
+	fi
 	find $DIRNAME/3rdParty -depth -empty -type d -exec rmdir {} \;
 	rm -rf $DIRNAME/3rdParty/SCons
 	rm -rf $DIRNAME/Swift/Packaging/Debian
