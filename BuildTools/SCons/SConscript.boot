@@ -64,10 +64,14 @@ vars.Add(BoolVariable("set_iterator_debug_level", "Set _ITERATOR_DEBUG_LEVEL=0",
 # Set up default build & configure environment
 ################################################################################
 
-env = Environment(ENV = {
-		'PATH' : os.environ['PATH'], 
-		'LD_LIBRARY_PATH' : os.environ.get("LD_LIBRARY_PATH", ""),
-	}, variables = vars)
+env_ENV = {
+  'PATH' : os.environ['PATH'], 
+  'LD_LIBRARY_PATH' : os.environ.get("LD_LIBRARY_PATH", ""),
+}
+if "MSVC_VERSION" in ARGUMENTS :
+  env = Environment(ENV = env_ENV, variables = vars, MSVC_VERSION = ARGUMENTS["MSVC_VERSION"])
+else :
+  env = Environment(ENV = env_ENV, variables = vars)
 
 Help(vars.GenerateHelpText(env))
 
