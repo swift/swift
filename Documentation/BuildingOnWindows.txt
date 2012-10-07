@@ -1,14 +1,16 @@
 Prerequisites
 ------------
 - Microsoft Visual C++ Express Edition
-- Python
+- Python (2.5 <= version < 3)
 - OpenSSL
+  * OpenSSL is optional - without it the Windows platform crypto will be used
   * Download and extract the Windows binary version of OpenSSL from
     http://www.slproweb.com/products/Win32OpenSSL.html
 - Qt Open Source Edition (optional; not needed for Swiften)
 
 Building Qt for Microsoft Visual C++
 ------------------------------------
+- These steps are optional - the pre-packaged Qt is fine
 - From the 'Visual C++' 'Programs' group, launch the Visual C++ command prompt
 - Go to the dir where you installed Qt
 - Configure Qt:
@@ -22,7 +24,7 @@ Building Swift
 - Go to the Swift source dir
 - Create a file 'config.py' with the following contents, reflecting your local
   setup:
-		openssl = "path\to\openssl"
+		openssl = "path\to\openssl" #optional
 		qt = "path\to\qt"
 - Run 'scons'
 - To build only a subdir, add the path as a target to scons. E.g., for Swift:
@@ -35,3 +37,18 @@ Running tests
 	for running the unit tests, or
 		scons test=all
 	for running all tests.
+
+Packaging Swift
+---------------
+For packaging use:
+- Microsoft Visual C++ Express 2008
+- No OpenSSL
+- WiX
+- config.py should contain:
+		qt = "c:\\qt\\4.7.4"
+		vcredist = "c:\\Program Files\\Common Files\\Merge Modules"
+		debug = 1
+		optimize = 1
+		wix_bindir = "c:\\program files\\Windows Installer XML v3.5\\bin"
+- run 
+		scons dist=1

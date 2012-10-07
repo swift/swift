@@ -59,8 +59,10 @@ else
 
 	# Fork local Boost UUID copy
 	# FIXME: This shouldn't be necessary, but SCons isn't picking up the generated headers for compilation
-	#mkdir -p $DIRNAME/3rdParty/Boost/uuid/boost
-	#cp -r $DIRNAME/3rdParty/Boost/src/boost/uuid $DIRNAME/3rdParty/Boost/uuid/boost
+	if [ ! -z "$SWIFT_COPY_UUID" ]; then
+		mkdir -p $DIRNAME/3rdParty/Boost/uuid/boost
+		cp -r $DIRNAME/3rdParty/Boost/src/boost/uuid $DIRNAME/3rdParty/Boost/uuid/boost
+	fi
 
 	# Create orig tarball
 	tar czf $TARBALLBARE $DIRNAME
