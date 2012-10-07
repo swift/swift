@@ -310,7 +310,7 @@ if env["PLATFORM"] == "win32" :
       commonResources[""] = commonResources.get("", []) + ["#/Swiften/${SWIFTEN_LIBRARY_FILE}"]
     qtimageformats = ["gif", "ico", "jpeg", "mng", "svg", "tiff"]
     qtlibs = ["QtCore4", "QtGui4", "QtNetwork4", "QtWebKit4", "QtXMLPatterns4", "phonon4"]
-    myenv.WindowsBundle("Swift", 
+    windowsBundleFiles = myenv.WindowsBundle("Swift", 
       resources = commonResources,
       qtimageformats = qtimageformats,
       qtlibs = qtlibs)
@@ -320,7 +320,6 @@ if env["PLATFORM"] == "win32" :
     #    "/DbuildVersion=" + myenv["SWIFT_VERSION"]
     #  ])
     #myenv.Nsis("../Packaging/nsis/swift.nsi")
-    #myenv.WiX("../Packaging/wix/swift.msi", ["../Packaging/WiX/Swift.wxs"])
     if env["SCONS_STAGE"] == "build" and env.get("wix_bindir", None):
       def convertToRTF(env, target, source) :
         infile = open(source[0].abspath, 'r')
@@ -352,28 +351,11 @@ if env["PLATFORM"] == "win32" :
         wixincludecontent += "<?define %s = \"%s\" ?>" % (key, wixvariables[key])
       wixincludecontent += "</Include>"
       myenv.WriteVal("..\\Packaging\\Wix\\variables.wxs", env.Value(wixincludecontent))
-      heatDependencies = ['Swift/COPYING.rtf', 'Swift/Swift.exe']
-      for dir, resourceFiles in commonResources.items():
-        for resource in resourceFiles:
-          e = env.Entry(resource)
-          if e.isdir():
-            for subresource in env.Glob(str(e) + "/*") :
-              heatDependencies.append("Swift/" + e.name + "/" + subresource.name)
-          else:
-            if resource[-3:] != ".qm":
-              heatDependencies.append("Swift/" + resource)
-      for resource in qtlibs:
-        heatDependencies.append("Swift/" + resource + ".dll")
-      for resource in qtimageformats:
-        heatDependencies.append("Swift/imageformats/q" + resource + "4.dll")
-      for lang in translation_languages:
-        heatDependencies.append("Swift/translations/swift_" + lang + ".qm")
-      myenv.WiX_Heat('..\\Packaging\\WiX\\gen_files.wxs', heatDependencies)
-      myenv.WiX_Light('..\\..\\..\\Packages\\Swift\\Swift-' + myenv["SWIFT_VERSION"] + '.msi', [
-                    myenv.WiX_Candle('..\\Packaging\\WiX\\Swift.wixobj', '..\\Packaging\\WiX\\Swift.wxs') +
-                    myenv.WiX_Candle('..\\Packaging\\WiX\\gen_files.wixobj', '..\\Packaging\\WiX\\gen_files.wxs')
-                    ]
-                )
+      myenv.WiX_Heat('..\\Packaging\\WiX\\gen_files.wxs', windowsBundleFiles)
+      myenv.WiX_Candle('..\\Packaging\\WiX\\Swift.wixobj', '..\\Packaging\\WiX\\Swift.wxs')
+      myenv.WiX_Candle('..\\Packaging\\WiX\\gen_files.wixobj', '..\\Packaging\\WiX\\gen_files.wxs')
+      myenv.WiX_Light('#/Packages/Swift-' + myenv["SWIFT_VERSION"] + '.msi', ['..\\Packaging\\WiX\\gen_files.wixobj','..\\Packaging\\WiX\\Swift.wixobj'])
+        
       if myenv["debug"] :
             myenv.InstallAs('#/Packages/Swift/Swift-' + myenv["SWIFT_VERSION"] + '.pdb', "Swift.pdb")
 
