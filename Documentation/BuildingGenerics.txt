@@ -1,0 +1,2 @@
+To cause scons to search for dependencies instead of using cached results, add force-configure=1 to the commandline:
+scons force-configure=1
