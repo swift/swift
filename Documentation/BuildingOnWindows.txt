@@ -1,6 +1,7 @@
 Prerequisites
 ------------
 - Microsoft Visual C++ Express Edition
+- Windows SDK
 - Python (2.5 <= version < 3)
 - OpenSSL
   * OpenSSL is optional - without it the Windows platform crypto will be used
