@@ -15,7 +15,7 @@
 #include <openssl/pkcs12.h>
 #include <boost/smart_ptr/make_shared.hpp>
 
-#if defined(SWIFTEN_PLATFORM_MACOSX) && OPENSSL_VERSION_NUMBER < 0x00908000
+#if defined(SWIFTEN_PLATFORM_MACOSX)
 #include <Security/Security.h>
 #endif
 
@@ -64,7 +64,8 @@ OpenSSLContext::OpenSSLContext() : state_(Start), context_(0), handle_(0), readB
 	}
 #elif !defined(SWIFTEN_PLATFORM_MACOSX)
 	SSL_CTX_load_verify_locations(context_, NULL, "/etc/ssl/certs");
-#elif defined(SWIFTEN_PLATFORM_MACOSX) && OPENSSL_VERSION_NUMBER < 0x00908000
+#elif defined(SWIFTEN_PLATFORM_MACOSX)
+	// On Mac OS X 10.8 (OpenSSL 0.9.8r), OpenSSL does not automatically look in the system store.
 	// On Mac OS X 10.5 (OpenSSL < 0.9.8), OpenSSL does not automatically look in the system store.
 	// We therefore add all certs from the system store ourselves.
 	X509_STORE* store = SSL_CTX_get_cert_store(context_);
