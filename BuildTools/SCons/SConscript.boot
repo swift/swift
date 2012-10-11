@@ -30,6 +30,7 @@ if os.name == "posix" :
 if os.name == "mac" or (os.name == "posix" and os.uname()[0] == "Darwin"):
 	vars.Add(BoolVariable("universal", "Create universal binaries", "no"))
 	vars.Add(BoolVariable("mac105", "Link against the 10.5 frameworks", "no"))
+	vars.Add(BoolVariable("mac106", "Link against the 10.6 frameworks", "no"))
 if os.name == "nt" :
 	vars.Add(PathVariable("vcredist", "MSVC redistributable dir", None, PathVariable.PathAccept))
 if os.name == "nt" :
@@ -171,6 +172,9 @@ if env.get("universal", 0) :
 			"-arch", "i386", 
 			"-arch", "ppc"])
 
+
+# Link against other versions of the OS X SDKs.
+# FIXME: This method does not work anymore, we need to set deployment targets.
 if env.get("mac105", 0) :
 	assert(env["PLATFORM"] == "darwin")
 	env.Append(CCFLAGS = [
@@ -179,6 +183,16 @@ if env.get("mac105", 0) :
 	env.Append(LINKFLAGS = [
 			"-mmacosx-version-min=10.5", 
 			"-isysroot", "/Developer/SDKs/MacOSX10.5.sdk", 
+			"-arch", "i386"])
+	env.Append(FRAMEWORKS = ["Security"])
+if env.get("mac106", 0) :
+	assert(env["PLATFORM"] == "darwin")
+	env.Append(CCFLAGS = [
+			"-isysroot", "/Developer/SDKs/MacOSX10.6.sdk", 
+			"-arch", "i386"])
+	env.Append(LINKFLAGS = [
+			"-mmacosx-version-min=10.6", 
+			"-isysroot", "/Developer/SDKs/MacOSX10.6.sdk", 
 			"-arch", "i386"])
 	env.Append(FRAMEWORKS = ["Security"])
 
