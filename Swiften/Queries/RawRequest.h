@@ -9,6 +9,7 @@
 #include <boost/smart_ptr/make_shared.hpp>
 #include <typeinfo>
 
+#include <Swiften/Base/boost_bsignals.h>
 #include <Swiften/Queries/Request.h>
 #include <Swiften/Elements/RawXMLPayload.h>
 #include <Swiften/Elements/ErrorPayload.h>
