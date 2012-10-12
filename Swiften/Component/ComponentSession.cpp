@@ -10,6 +10,7 @@
 #include <boost/smart_ptr/make_shared.hpp>
 
 #include <Swiften/Elements/ProtocolHeader.h>
+#include <Swiften/Elements/StreamFeatures.h>
 #include <Swiften/Elements/ComponentHandshake.h>
 #include <Swiften/Session/SessionStream.h>
 #include <Swiften/Component/ComponentHandshakeGenerator.h>
@@ -66,8 +67,13 @@ void ComponentSession::handleElement(boost::shared_ptr<Element> element) {
 		onInitialized();
 	}
 	else if (getState() == Authenticating) {
-		// FIXME: We should actually check the element received
-		finishSession(Error::AuthenticationFailedError);
+		if (boost::dynamic_pointer_cast<StreamFeatures>(element)) {
+			// M-Link sends stream features, so swallow that.
+		}
+		else {
+			// FIXME: We should actually check the element received
+			finishSession(Error::AuthenticationFailedError);
+		}
 	}
 	else {
 		finishSession(Error::UnexpectedElementError);
