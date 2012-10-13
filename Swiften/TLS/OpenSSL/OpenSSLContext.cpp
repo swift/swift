@@ -65,9 +65,12 @@ OpenSSLContext::OpenSSLContext() : state_(Start), context_(0), handle_(0), readB
 #elif !defined(SWIFTEN_PLATFORM_MACOSX)
 	SSL_CTX_load_verify_locations(context_, NULL, "/etc/ssl/certs");
 #elif defined(SWIFTEN_PLATFORM_MACOSX)
-	// On Mac OS X 10.8 (OpenSSL 0.9.8r), OpenSSL does not automatically look in the system store.
 	// On Mac OS X 10.5 (OpenSSL < 0.9.8), OpenSSL does not automatically look in the system store.
-	// We therefore add all certs from the system store ourselves.
+	// On Mac OS X 10.6 (OpenSSL >= 0.9.8), OpenSSL *does* look in the system store to determine trust.
+	// However, if there is a certificate error, it will always emit the "Invalid CA" error if we didn't add
+	// the certificates first. See 
+	//		http://opensource.apple.com/source/OpenSSL098/OpenSSL098-27/src/crypto/x509/x509_vfy_apple.c
+	// to understand why. We therefore add all certs from the system store ourselves.
 	X509_STORE* store = SSL_CTX_get_cert_store(context_);
 	CFArrayRef anchorCertificates;
 	if (SecTrustCopyAnchorCertificates(&anchorCertificates) == 0) {
