@@ -131,7 +131,6 @@ conf.Finish()
 # Boost
 boost_conf_env = conf_env.Clone()
 boost_flags = {}
-boost_flags["CPPDEFINES"] = [("BOOST_FILESYSTEM_VERSION", "2")]
 if env.get("boost_libdir", None) :
 	boost_flags["LIBPATH"] = [env["boost_libdir"]]
 if env.get("boost_includedir", None) :
