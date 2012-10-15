@@ -164,7 +164,7 @@ public:
 		clientSession->startReceiving(output);
 
 		ByteArray transferData = generateRandomByteArray(1024);
-		connection->onDataRead(createSafeByteArrayRef(transferData.data(), transferData.size()));
+		connection->onDataRead(createSafeByteArrayRef(vecptr(transferData), transferData.size()));
 		CPPUNIT_ASSERT_EQUAL(transferData, output->getData());
 	}
 
@@ -194,7 +194,7 @@ public:
 		clientSession->startSending(input);
 		eventLoop->processEvents();
 
-		CPPUNIT_ASSERT_EQUAL(createByteArray(transferData.data(), transferData.size()), helper.unprocessedInput);
+		CPPUNIT_ASSERT_EQUAL(createByteArray(vecptr(transferData), transferData.size()), helper.unprocessedInput);
 	}
 
 
@@ -239,7 +239,7 @@ private:
 		//SWIFT_LOG(debug) << "hexed: " << Hexify::hexify(failingData) << std::endl;
 		do {
 			ByteArray rndArray = generateRandomByteArray(correctData->size());
-			dataToSend = createSafeByteArrayRef(rndArray.data(), rndArray.size());
+			dataToSend = createSafeByteArrayRef(vecptr(rndArray), rndArray.size());
 		} while (*dataToSend == *correctData);
 		connection->onDataRead(dataToSend);
 	}
