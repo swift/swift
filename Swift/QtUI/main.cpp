@@ -20,6 +20,7 @@
 #include <Swift/Controllers/BuildVersion.h>
 #include <SwifTools/Application/PlatformApplicationPathProvider.h>
 #include <SwifTools/CrashReporter.h>
+#include <stdlib.h>
 
 #include "QtSwift.h"
 #include "QtTranslator.h"
@@ -33,23 +34,6 @@ int main(int argc, char* argv[]) {
 	Swift::CrashReporter crashReporter(applicationPathProvider.getDataDir() / "crashes");
 
 	QTextCodec::setCodecForCStrings(QTextCodec::codecForName("UTF-8"));
-
-	// Translation
-	QTextCodec::setCodecForTr(QTextCodec::codecForName("UTF-8"));
-	boost::filesystem::path someTranslationPath = applicationPathProvider.getResourcePath("/translations/swift_en.qm");
-
-	QTranslator qtTranslator;
-	if (!someTranslationPath.empty()) {
-#if QT_VERSION >= 0x040800
-		qtTranslator.load(QLocale::system(), QString(SWIFT_APPLICATION_NAME).toLower(), "_", someTranslationPath.parent_path().string().c_str());
-#else
-		//std::cout << "Loading " << std::string(QLocale::system().name().toUtf8()) << std::endl;
-		qtTranslator.load(QString(SWIFT_APPLICATION_NAME).toLower() + "_" + QLocale::system().name(), someTranslationPath.parent_path().string().c_str());
-#endif
-	}
-	app.installTranslator(&qtTranslator);
-	QtTranslator swiftTranslator;
-	Swift::Translator::setInstance(&swiftTranslator);
 
 	// Parse program options
 	boost::program_options::options_description desc = Swift::QtSwift::getOptionsDescription();
@@ -76,6 +60,29 @@ int main(int argc, char* argv[]) {
 		std::cout << SWIFT_APPLICATION_NAME << " " << buildVersion << std::endl;
 		return 0;
 	}
+
+	// Translation
+	QTextCodec::setCodecForTr(QTextCodec::codecForName("UTF-8"));
+	boost::filesystem::path someTranslationPath = applicationPathProvider.getResourcePath("/translations/swift_en.qm");
+
+	QTranslator qtTranslator;
+	if (!someTranslationPath.empty()) {
+#if QT_VERSION >= 0x040800
+		if (vm.count("language") > 0) {
+			qtTranslator.load(QString(SWIFT_APPLICATION_NAME).toLower() + "_" + P2QSTRING(vm["language"].as<std::string>()), someTranslationPath.parent_path().string().c_str());
+		}
+		else {
+			qtTranslator.load(QLocale::system(), QString(SWIFT_APPLICATION_NAME).toLower(), "_", someTranslationPath.parent_path().string().c_str());
+		}
+#else
+		//std::cout << "Loading " << std::string(QLocale::system().name().toUtf8()) << std::endl;
+		qtTranslator.load(QString(SWIFT_APPLICATION_NAME).toLower() + "_" + QLocale::system().name(), someTranslationPath.parent_path().string().c_str());
+#endif
+	}
+	app.installTranslator(&qtTranslator);
+	QtTranslator swiftTranslator;
+	Swift::Translator::setInstance(&swiftTranslator);
+
 
 	Swift::QtSwift swift(vm);
 	int result = app.exec();
