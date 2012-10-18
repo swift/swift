@@ -138,7 +138,7 @@
     </message>
     <message>
         <source>A password needed</source>
-        <translation>Wachtwoord vereist</translation>
+        <translation type="obsolete">Wachtwoord vereist</translation>
     </message>
     <message>
         <source>You are banned from the room</source>
@@ -432,6 +432,86 @@
         <source>User address invalid. User address should be of the form &apos;alice@wonderland.lit&apos;</source>
         <translation>Gebruikersadres ongeldig. Gebruikersadres moet van de vorm &apos;alice@wonderland.lit&apos; zijn</translation>
     </message>
+    <message>
+        <source>This chat doesn&apos;t support delivery receipts.</source>
+        <translation>Deze conversatie ondersteunt geen ontvangstbevestigingen.</translation>
+    </message>
+    <message>
+        <source>This chat may not support delivery receipts. You might not receive delivery receipts for the messages you sent.</source>
+        <translation>Deze conversatie ondersteunt mogelijks geen ontvangstbevestigingen.</translation>
+    </message>
+    <message>
+        <source>Couldn&apos;t send message: %1%</source>
+        <translation>Kon boodschap niet verzenden: %1%</translation>
+    </message>
+    <message>
+        <source>The correct room password is needed</source>
+        <translation>Het correcte wachtwoord voor de kamer is vereist</translation>
+    </message>
+    <message>
+        <source>Couldn&apos;t join room: %1%.</source>
+        <translation>Kon kamer niet betreden: %1%.</translation>
+    </message>
+    <message>
+        <source>%1% has left the room%2%</source>
+        <translation>%1% heeft de kamer %2% verlaten</translation>
+    </message>
+    <message>
+        <source>You have been kicked out of the room</source>
+        <translation>U bent uit de kamer geschopt</translation>
+    </message>
+    <message>
+        <source>You have been banned from the room</source>
+        <translation>U bent uit de kamer verbannen</translation>
+    </message>
+    <message>
+        <source>You are no longer a member of the room and have been removed</source>
+        <translation>U bent niet langer een lid van de kamer, en werd uit de kamer verwijderd</translation>
+    </message>
+    <message>
+        <source>The room has been destroyed</source>
+        <translation>De kamer werd vernietigd</translation>
+    </message>
+    <message>
+        <source>Room configuration failed: %1%.</source>
+        <translation>Configuratie van kamer gefaald: %1%.</translation>
+    </message>
+    <message>
+        <source>Occupant role change failed: %1%.</source>
+        <translation>Deelnemersrol veranderd: %1%.</translation>
+    </message>
+    <message>
+        <source>%1% has invited you to enter the %2% room</source>
+        <translation>%1% heeft U uitgenodigd om de kamer %2% te betreden</translation>
+    </message>
+    <message>
+        <source>Certificate card removed</source>
+        <translation>Certificaatskaart verwijderd</translation>
+    </message>
+    <message>
+        <source>Certificate has been revoked</source>
+        <translation>Certificaat werd ingetrokken</translation>
+    </message>
+    <message>
+        <source>Unable to determine certificate revocation state</source>
+        <translation>Kan ingetrokken toestand van certificaat niet conttroleren  </translation>
+    </message>
+    <message>
+        <source>Re-enter credentials and retry</source>
+        <translation>Voer gebruikersinformatie terug in en probeer opnieuw</translation>
+    </message>
+    <message>
+        <source>Disconnected from %1%: %2%. To reconnect, Sign Out and provide your password again.</source>
+        <translation>Verbinding met %1% verbroken: %2%. Om opnieuw te verbinden, meld terug af en voer het wachtwoord opnieuw in.</translation>
+    </message>
+    <message>
+        <source>TLS Client Certificate Selection</source>
+        <translation>Keuze TLS Klantcertificaat </translation>
+    </message>
+    <message>
+        <source>Select a certificate to use for authentication</source>
+        <translation>Kies een certificaat om te gebruiken voor authenticatie</translation>
+    </message>
 </context>
 <context>
     <name>CloseButton</name>
@@ -561,6 +641,82 @@
     <message>
         <source>%1 would like to add you to their contact list, saying &apos;%2&apos;</source>
         <translation>%1 wil u aan zijn contactenlijst toevoegen, met als boodschap &apos;%2&apos;</translation>
+    </message>
+    <message>
+        <source>%1 has invited you to enter the %2 room.</source>
+        <translation>%1 heeft U uitgenodigd om de kamer %2 te betreden.</translation>
+    </message>
+    <message>
+        <source>You&apos;ve been invited to enter the %1 room.</source>
+        <translation>U bent uitgenodigd om de kamer %1 te betreden.</translation>
+    </message>
+    <message>
+        <source>Reason: %1</source>
+        <translation>Reden: %1</translation>
+    </message>
+    <message>
+        <source>This person may not have really sent this invitation!</source>
+        <translation>Deze persoon heeft mogelijks deze uitnodiging niet echt verstuurd!</translation>
+    </message>
+    <message>
+        <source>Direction</source>
+        <translation>Richting</translation>
+    </message>
+    <message>
+        <source>Other Party</source>
+        <translation>Andere Partij</translation>
+    </message>
+    <message>
+        <source>State</source>
+        <translation>Toestand</translation>
+    </message>
+    <message>
+        <source>Progress</source>
+        <translation>Voortgang</translation>
+    </message>
+    <message>
+        <source>Size</source>
+        <translation>Grootte</translation>
+    </message>
+    <message>
+        <source>Incoming</source>
+        <translation>Inkomend</translation>
+    </message>
+    <message>
+        <source>Outgoing</source>
+        <translation>Uitgaand</translation>
+    </message>
+    <message>
+        <source>Waiting for start</source>
+        <translation>Aan het wachten om te starten</translation>
+    </message>
+    <message>
+        <source>Waiting for other side to accept</source>
+        <translation>Aan het wachten op de andere kant om te aanvaarden</translation>
+    </message>
+    <message>
+        <source>Negotiating</source>
+        <translation>Aan het onderhandelen</translation>
+    </message>
+    <message>
+        <source>Transferring</source>
+        <translation>Aan het overbrengen</translation>
+    </message>
+    <message>
+        <source>Finished</source>
+        <translation>Voltooid</translation>
+    </message>
+    <message>
+        <source>Failed</source>
+        <translation>Gefaald</translation>
+    </message>
+    <message>
+        <source>Canceled</source>
+        <translation>Geannuleerd</translation>
+    </message>
+    <message>
+        <source>Connection Options</source>
+        <translation>Verbindingsopties</translation>
     </message>
 </context>
 <context>
@@ -720,6 +876,41 @@
     </message>
 </context>
 <context>
+    <name>QtAffiliationEditor</name>
+    <message>
+        <source>Affiliation:</source>
+        <translation>Lidmaatschap:</translation>
+    </message>
+    <message>
+        <source>Owner</source>
+        <translation>Eigenaar</translation>
+    </message>
+    <message>
+        <source>Administrator</source>
+        <translation>Beheerder</translation>
+    </message>
+    <message>
+        <source>Member</source>
+        <translation>Lid</translation>
+    </message>
+    <message>
+        <source>Outcast (Banned)</source>
+        <translation>Verstoteling</translation>
+    </message>
+    <message>
+        <source>Add User</source>
+        <translation>Voeg gebruiker toe</translation>
+    </message>
+    <message>
+        <source>Remove User</source>
+        <translation>Verwijder gebruiker</translation>
+    </message>
+    <message>
+        <source>Edit Affiliations</source>
+        <translation>Editeer Lidmaatschappen</translation>
+    </message>
+</context>
+<context>
     <name>QtBookmarkDetailWindow</name>
     <message>
         <source>Edit Bookmark Details</source>
@@ -739,18 +930,143 @@
     </message>
     <message>
         <source>Join automatically</source>
-        <translation>Automatisch betreden</translation>
+        <translation type="obsolete">Automatisch betreden</translation>
     </message>
     <message>
         <source>Room Address:</source>
         <translation>Adres kamer:</translation>
+    </message>
+    <message>
+        <source>Enter automatically</source>
+        <translation>Automatisch betreden</translation>
+    </message>
+</context>
+<context>
+    <name>QtCertificateViewerDialog</name>
+    <message>
+        <source>Certificate Viewer</source>
+        <translation>Certificaat</translation>
+    </message>
+</context>
+<context>
+    <name>QtConnectionSettings</name>
+    <message>
+        <source>Connection Method:</source>
+        <translation>Verbindingsmethode:</translation>
+    </message>
+    <message>
+        <source>Automatic</source>
+        <translation>Automatisch</translation>
+    </message>
+    <message>
+        <source>Manual</source>
+        <translation>Manueel</translation>
+    </message>
+    <message>
+        <source>BOSH</source>
+        <translation>BOSH</translation>
+    </message>
+    <message>
+        <source>Secure connection:</source>
+        <translation>Beveilig verbinding:</translation>
+    </message>
+    <message>
+        <source>Never</source>
+        <translation>Nooit</translation>
+    </message>
+    <message>
+        <source>Encrypt when possible</source>
+        <translation>Beveilig wanneer mogelijk</translation>
+    </message>
+    <message>
+        <source>Always encrypt</source>
+        <translation>Altijd beveiligen</translation>
+    </message>
+    <message>
+        <source>Allow Compression</source>
+        <translation>Comprimeer wanneer mogelijk</translation>
+    </message>
+    <message>
+        <source>Allow sending password over insecure connection</source>
+        <translation>Sta toe om  paswoord over onbeveiligde verbinding te sturen</translation>
+    </message>
+    <message>
+        <source>Manually select server</source>
+        <translation>Manuele serverselectie</translation>
+    </message>
+    <message>
+        <source>Hostname:</source>
+        <translation>Hostnaam:</translation>
+    </message>
+    <message>
+        <source>Port:</source>
+        <translation>Poort:</translation>
+    </message>
+    <message>
+        <source>Connection Proxy</source>
+        <translation>Verbindingsproxy</translation>
+    </message>
+    <message>
+        <source>Proxy type:</source>
+        <translation>Proxy type:</translation>
+    </message>
+    <message>
+        <source>None</source>
+        <translation>Geen</translation>
+    </message>
+    <message>
+        <source>Use system-configured proxy</source>
+        <translation>Gebruik systeemgeconfigureerde proxy</translation>
+    </message>
+    <message>
+        <source>SOCKS5</source>
+        <translation>SOCKS5</translation>
+    </message>
+    <message>
+        <source>HTTP Connect</source>
+        <translation>HTTP Connect</translation>
+    </message>
+    <message>
+        <source>Override system-configured proxy</source>
+        <translation>Override systemgeconfigureerde proxy</translation>
+    </message>
+    <message>
+        <source>BOSH URI:</source>
+        <translation>BOSH URI:</translation>
+    </message>
+    <message>
+        <source>Manually select HTTP proxy</source>
+        <translation>Selecteer HTTP proxy manueel</translation>
+    </message>
+    <message>
+        <source>Connection Options</source>
+        <translation>Verbindingsopties</translation>
+    </message>
+</context>
+<context>
+    <name>QtHistoryWindow</name>
+    <message>
+        <source>Search:</source>
+        <translation>Zoek:</translation>
+    </message>
+    <message>
+        <source>Next</source>
+        <translation>Volgende</translation>
+    </message>
+    <message>
+        <source>Previous</source>
+        <translation>Vorige</translation>
+    </message>
+    <message>
+        <source>History</source>
+        <translation>Geschiedenis</translation>
     </message>
 </context>
 <context>
     <name>QtJoinMUCWindow</name>
     <message>
         <source>Room:</source>
-        <translation>Kamer:</translation>
+        <translation type="obsolete">Kamer:</translation>
     </message>
     <message>
         <source>Search ...</source>
@@ -758,7 +1074,7 @@
     </message>
     <message>
         <source>Nickname:</source>
-        <translation>Roepnaam:</translation>
+        <translation type="obsolete">Roepnaam:</translation>
     </message>
     <message>
         <source>Enter Room</source>
@@ -767,6 +1083,22 @@
     <message>
         <source>Enter automatically in future</source>
         <translation>Automatisch betreden</translation>
+    </message>
+    <message>
+        <source>Room Address:</source>
+        <translation>Adres kamer:</translation>
+    </message>
+    <message>
+        <source>Your Nickname:</source>
+        <translation>Uw roepnaam:</translation>
+    </message>
+    <message>
+        <source>Room Password:</source>
+        <translation>Wachtwoord kamer:</translation>
+    </message>
+    <message>
+        <source>Automatically configure newly created rooms</source>
+        <translation>Configureer niewe kamer automatisch</translation>
     </message>
 </context>
 <context>
@@ -790,6 +1122,17 @@
     <message>
         <source>OK</source>
         <translation>OK</translation>
+    </message>
+</context>
+<context>
+    <name>QtProfileWindow</name>
+    <message>
+        <source>Edit Profile</source>
+        <translation>Bewerk profiel</translation>
+    </message>
+    <message>
+        <source>Save</source>
+        <translation>Bewaar</translation>
     </message>
 </context>
 <context>
@@ -839,10 +1182,63 @@
     </message>
 </context>
 <context>
+    <name>QtUserSearchResultsPage</name>
+    <message>
+        <source>No results.</source>
+        <translation>Geen resultaten.</translation>
+    </message>
+</context>
+<context>
     <name>QtUserSearchWizard</name>
     <message>
         <source>Find User</source>
         <translation>Zoek gebruiker</translation>
+    </message>
+</context>
+<context>
+    <name>QtVCardPhotoAndNameFields</name>
+    <message>
+        <source>Form</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Formatted Name</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Nickname</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Prefix</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Given Name</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Middle Name</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Last Name</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Suffix</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QtVCardWidget</name>
+    <message>
+        <source>Form</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Add Field</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -854,6 +1250,10 @@
     <message>
         <source>Recent Chats</source>
         <translation>Recente conversaties</translation>
+    </message>
+    <message>
+        <source>Opened Whiteboards</source>
+        <translation>Geopenede tekentafels</translation>
     </message>
 </context>
 <context>
@@ -917,6 +1317,17 @@
     </message>
 </context>
 <context>
+    <name>Swift::QtAffiliationEditor</name>
+    <message>
+        <source>Add User</source>
+        <translation>Voeg gebruiker toe</translation>
+    </message>
+    <message>
+        <source>Added User&apos;s Address:</source>
+        <translation>Adres toegevoegde gebruiker:</translation>
+    </message>
+</context>
+<context>
     <name>Swift::QtAvatarWidget</name>
     <message>
         <source>No picture</source>
@@ -937,7 +1348,7 @@ afbeelding</translation>
     </message>
     <message>
         <source>Image Files (*.png *.jpg *.gif)</source>
-        <translation>Afbeeldingen (*.png *.jpg *.gif)</translation>
+        <translation type="obsolete">Afbeeldingen (*.png *.jpg *.gif)</translation>
     </message>
     <message>
         <source>Error</source>
@@ -946,6 +1357,10 @@ afbeelding</translation>
     <message>
         <source>The selected picture is in an unrecognized format</source>
         <translation>Het formaat van de geselecteerde afbeelding werd niet herkend</translation>
+    </message>
+    <message>
+        <source>Image Files (*.png *.jpg *.jpeg *.gif)</source>
+        <translation>Beeldbestanden (*.png *.jpg *.jpeg *.gif)</translation>
     </message>
 </context>
 <context>
@@ -957,6 +1372,73 @@ afbeelding</translation>
     <message>
         <source>You must specify a valid room address (e.g. someroom@rooms.example.com).</source>
         <translation>Specifieer een geldige kamer (bv. eenkamer@kamers.voorbeeld.com).</translation>
+    </message>
+</context>
+<context>
+    <name>Swift::QtCertificateViewerDialog</name>
+    <message>
+        <source>General</source>
+        <translation>Algemeen</translation>
+    </message>
+    <message>
+        <source>Valid From</source>
+        <translation>Geldig van</translation>
+    </message>
+    <message>
+        <source>Valid To</source>
+        <translation>Geldig tot</translation>
+    </message>
+    <message>
+        <source>Serial Number</source>
+        <translation>Serienummer</translation>
+    </message>
+    <message>
+        <source>Version</source>
+        <translation>Versie</translation>
+    </message>
+    <message>
+        <source>Subject</source>
+        <translation>Onderwerp</translation>
+    </message>
+    <message>
+        <source>Organization</source>
+        <translation>Organisatie</translation>
+    </message>
+    <message>
+        <source>Common Name</source>
+        <translation>Naam</translation>
+    </message>
+    <message>
+        <source>Locality</source>
+        <translation>Localiteit</translation>
+    </message>
+    <message>
+        <source>Organizational Unit</source>
+        <translation>Organisatie-eenheid</translation>
+    </message>
+    <message>
+        <source>Country</source>
+        <translation>Land</translation>
+    </message>
+    <message>
+        <source>State</source>
+        <translation>Staat</translation>
+    </message>
+    <message>
+        <source>Alternate Subject Names</source>
+        <translation>Alternatieve onderwerpsnaam</translation>
+    </message>
+    <message>
+        <source>E-mail Address</source>
+        <translation>E-mail adres</translation>
+    </message>
+    <message>
+        <source>DNS Name</source>
+        <translation>DNS naam</translation>
+    </message>
+    <message>
+        <source>Issuer</source>
+        <translation>Verstrekker</translation>
     </message>
 </context>
 <context>
@@ -973,6 +1455,10 @@ afbeelding</translation>
         <source>Remove Bookmark</source>
         <translation>Verwijder bladwijzer</translation>
     </message>
+    <message>
+        <source>Clear recents</source>
+        <translation>Wis recente conversaties</translation>
+    </message>
 </context>
 <context>
     <name>Swift::QtChatView</name>
@@ -988,6 +1474,54 @@ afbeelding</translation>
         <source>Are you sure?</source>
         <translation>Bent u zeker?</translation>
     </message>
+    <message>
+        <source>%1 edited</source>
+        <translation>%1 geëditeerd</translation>
+    </message>
+    <message>
+        <source>Waiting for other side to accept the transfer.</source>
+        <translation>Aan het wachten op de andere kant om te aanvaarden.</translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation>Annuleren</translation>
+    </message>
+    <message>
+        <source>Negotiating...</source>
+        <translation>Aan het onderhandelen...</translation>
+    </message>
+    <message>
+        <source>Transfer has been canceled!</source>
+        <translation>Overdracht geannuleerd!</translation>
+    </message>
+    <message>
+        <source>Transfer completed successfully.</source>
+        <translation>Overdracht succesvol beëindigd.</translation>
+    </message>
+    <message>
+        <source>Transfer failed.</source>
+        <translation>Overdracht gefaald.</translation>
+    </message>
+    <message>
+        <source>Started whiteboard chat</source>
+        <translation>Tekentafel gestart</translation>
+    </message>
+    <message>
+        <source>Show whiteboard</source>
+        <translation>Toon tekentafel</translation>
+    </message>
+    <message>
+        <source>Whiteboard chat has been canceled</source>
+        <translation>Tekentafel werd geannuleerd</translation>
+    </message>
+    <message>
+        <source>Whiteboard chat request has been rejected</source>
+        <translation>Tekentafeverzoekl werd verworpen</translation>
+    </message>
+    <message>
+        <source>Return to room</source>
+        <translation>Keer terug naar kamer</translation>
+    </message>
 </context>
 <context>
     <name>Swift::QtChatWindow</name>
@@ -1001,7 +1535,115 @@ afbeelding</translation>
     </message>
     <message>
         <source>Couldn&apos;t send message: %1</source>
-        <translation>Kon boodschap niet verzenden: %1</translation>
+        <translation type="obsolete">Kon boodschap niet verzenden: %1</translation>
+    </message>
+    <message>
+        <source>Correcting</source>
+        <translation>Corrigeren</translation>
+    </message>
+    <message>
+        <source>This chat may not support message correction. If you send a correction anyway, it may appear as a duplicate message</source>
+        <translation>Deze conversatie ondersteunt mogelijks geen verbeteringen. Verbeteringen kunnen als duplicate boodschappen aankomen</translation>
+    </message>
+    <message>
+        <source>This chat does not support message correction.  If you send a correction anyway, it will appear as a duplicate message</source>
+        <translation>Deze conversatie ondersteunt geen verbeteringen. Verbeteringen zullen als duplicate boodschappen aankomen</translation>
+    </message>
+    <message>
+        <source>The receipt for this message has been received.</source>
+        <translation>Bevestiging ontvangen.</translation>
+    </message>
+    <message>
+        <source>The receipt for this message has not yet been received. The recipient(s) might not have received this message.</source>
+        <translation>Bevestiging nog niet ontvangen. De ontvanger kan mogelijks dit bericht nog niet ontvangen hebben.</translation>
+    </message>
+    <message>
+        <source>Send file</source>
+        <translation>Verzend bestand</translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation>Annuleren</translation>
+    </message>
+    <message>
+        <source>Set Description</source>
+        <translation>Verander beschrijving</translation>
+    </message>
+    <message>
+        <source>Send</source>
+        <translation>Verzenden</translation>
+    </message>
+    <message>
+        <source>Receiving file</source>
+        <translation>Bestand aan het ontvangen</translation>
+    </message>
+    <message>
+        <source>Accept</source>
+        <translation>Accepteren</translation>
+    </message>
+    <message>
+        <source>Starting whiteboard chat</source>
+        <translation>Tekentafel aan het starten</translation>
+    </message>
+    <message>
+        <source>File transfer description</source>
+        <translation>Beschrijving bestand</translation>
+    </message>
+    <message>
+        <source>Description:</source>
+        <translation>Beschrijving:</translation>
+    </message>
+    <message>
+        <source>Save File</source>
+        <translation>Bestand opslaan</translation>
+    </message>
+    <message>
+        <source>Change subject…</source>
+        <translation>Verander onderwerp...</translation>
+    </message>
+    <message>
+        <source>Configure room…</source>
+        <translation>Configureer kamer...</translation>
+    </message>
+    <message>
+        <source>Edit affiliations…</source>
+        <translation>Verander lidmaatschap...</translation>
+    </message>
+    <message>
+        <source>Destroy room</source>
+        <translation>Vernietig kamer</translation>
+    </message>
+    <message>
+        <source>Invite person to this room…</source>
+        <translation>Nodig persoon uit voor deze kamer...</translation>
+    </message>
+    <message>
+        <source>Change room subject</source>
+        <translation>Verander onderwerp</translation>
+    </message>
+    <message>
+        <source>New subject:</source>
+        <translation>Niew onderwerp:</translation>
+    </message>
+    <message>
+        <source>Confirm room destruction</source>
+        <translation>Bevestig vernietiging kamer</translation>
+    </message>
+    <message>
+        <source>Are you sure you want to destroy the room?</source>
+        <translation>Bent U zeker dat U deze kamer wil vernietigen?</translation>
+    </message>
+    <message>
+        <source>This will destroy the room.</source>
+        <translation>Dit zal de kamer vernietigeng.</translation>
+    </message>
+    <message>
+        <source>Accept Invite</source>
+        <translation>Accepteer uitnodiging</translation>
+    </message>
+    <message>
+        <source>%1 would like to start a whiteboard chat</source>
+        <translation>%1 wil een tekentafel starten</translation>
     </message>
 </context>
 <context>
@@ -1051,6 +1693,35 @@ afbeelding</translation>
     <message>
         <source>Display Notice</source>
         <translation>Toon bericht</translation>
+    </message>
+</context>
+<context>
+    <name>Swift::QtFileTransferListWidget</name>
+    <message>
+        <source>Clear Finished Transfers</source>
+        <translation>Wis voltooide overdrachten</translation>
+    </message>
+    <message>
+        <source>File Transfer List</source>
+        <translation>Lijst Bestandsoverdrachten</translation>
+    </message>
+</context>
+<context>
+    <name>Swift::QtHistoryWindow</name>
+    <message>
+        <source>History</source>
+        <translation>Geschiedenis</translation>
+    </message>
+</context>
+<context>
+    <name>Swift::QtInviteToChatWindow</name>
+    <message>
+        <source>Users to invite to this chat (one per line):</source>
+        <translation>Uit te nodigen gebruikers (één per lijn):</translation>
+    </message>
+    <message>
+        <source>If you want to provide a reason for the invitation, enter it here</source>
+        <translation>Uitnodigingsreden (Optioneel)</translation>
     </message>
 </context>
 <context>
@@ -1148,11 +1819,30 @@ afbeelding</translation>
     </message>
     <message>
         <source>Subject: %1</source>
-        <translation>Onderwerp: %1</translation>
+        <translation type="obsolete">Onderwerp: %1</translation>
     </message>
     <message>
         <source>SHA-1 Fingerprint: %1</source>
-        <translation>SHA-1 vingerafdruk: %1</translation>
+        <translation type="obsolete">SHA-1 vingerafdruk: %1</translation>
+    </message>
+    <message>
+        <source>Show &amp;File Transfer Overview</source>
+        <translation>Toon overzicht &amp;Bestandsoverdrachten</translation>
+    </message>
+    <message>
+        <source>Confirm terms of use</source>
+        <translation>Bevestig gebruikersovereenkomst</translation>
+    </message>
+</context>
+<context>
+    <name>Swift::QtMUCConfigurationWindow</name>
+    <message>
+        <source>Cancel</source>
+        <translation>Annuleren</translation>
+    </message>
+    <message>
+        <source>OK</source>
+        <translation>OK</translation>
     </message>
 </context>
 <context>
@@ -1198,7 +1888,7 @@ afbeelding</translation>
     </message>
     <message>
         <source>Start &amp;Chat…</source>
-        <translation>&amp;Conversatie starten</translation>
+        <translation>&amp;Conversatie starten...</translation>
     </message>
     <message>
         <source>&amp;Sign Out</source>
@@ -1224,6 +1914,22 @@ afbeelding</translation>
         <source>No Available Commands</source>
         <translation>Geen beschikbare opdrachten</translation>
     </message>
+    <message>
+        <source>&amp;Show Emoticons</source>
+        <translation>&amp;Toon emoticons</translation>
+    </message>
+    <message>
+        <source>&amp;View History…</source>
+        <translation>Toon &amp;Geschiedenis...</translation>
+    </message>
+    <message>
+        <source>&amp;Request Delivery Receipts</source>
+        <translation>Vraag &amp;ontvangstbevestigingen</translation>
+    </message>
+    <message>
+        <source>&amp;Chats</source>
+        <translation>&amp;Conversaties</translation>
+    </message>
 </context>
 <context>
     <name>Swift::QtNameWidget</name>
@@ -1245,6 +1951,37 @@ afbeelding</translation>
     </message>
 </context>
 <context>
+    <name>Swift::QtOccupantListWidget</name>
+    <message>
+        <source>No actions for this user</source>
+        <translation>Geen acties voor deze gebruiker</translation>
+    </message>
+    <message>
+        <source>Kick user</source>
+        <translation>Schop gebruiker</translation>
+    </message>
+    <message>
+        <source>Kick and ban user</source>
+        <translation>Schop en verban gebruiker</translation>
+    </message>
+    <message>
+        <source>Make moderator</source>
+        <translation>Maak moderator</translation>
+    </message>
+    <message>
+        <source>Make participant</source>
+        <translation>Maak deelnemer</translation>
+    </message>
+    <message>
+        <source>Remove voice</source>
+        <translation>Verwijder stem</translation>
+    </message>
+    <message>
+        <source>Add to contacts</source>
+        <translation>Voeg toe aan contacten</translation>
+    </message>
+</context>
+<context>
     <name>Swift::QtProfileWindow</name>
     <message>
         <source>Edit Profile</source>
@@ -1257,6 +1994,48 @@ afbeelding</translation>
     <message>
         <source>Save</source>
         <translation>Bewaar</translation>
+    </message>
+</context>
+<context>
+    <name>Swift::QtRosterHeader</name>
+    <message>
+        <source>Connection is secured</source>
+        <translation>Verbinding is beveiligd</translation>
+    </message>
+</context>
+<context>
+    <name>Swift::QtRosterWidget</name>
+    <message>
+        <source>Edit…</source>
+        <translation>Bewerk...</translation>
+    </message>
+    <message>
+        <source>Remove</source>
+        <translation>Verwijder</translation>
+    </message>
+    <message>
+        <source>Send File</source>
+        <translation>Verzend bestand</translation>
+    </message>
+    <message>
+        <source>Start Whiteboard Chat</source>
+        <translation>Start tekentafel</translation>
+    </message>
+    <message>
+        <source>All Files (*);;</source>
+        <translation>Alle bestanden (*);;</translation>
+    </message>
+    <message>
+        <source>Rename</source>
+        <translation>Naam wijzigen</translation>
+    </message>
+    <message>
+        <source>Rename group</source>
+        <translation>Groepsnaam wijzigen</translation>
+    </message>
+    <message>
+        <source>Enter a new name for group &apos;%1&apos;:</source>
+        <translation>Geef een niewe naam voor groep &apos;%1&apos;:</translation>
     </message>
 </context>
 <context>
@@ -1307,23 +2086,23 @@ Als u deze keuze uitstelt, zal deze vraag opnieuw gesteld worden wanneer u zich 
     <name>Swift::QtTreeWidget</name>
     <message>
         <source>Edit</source>
-        <translation>Bewerk</translation>
+        <translation type="obsolete">Bewerk</translation>
     </message>
     <message>
         <source>Remove</source>
-        <translation>Verwijder</translation>
+        <translation type="obsolete">Verwijder</translation>
     </message>
     <message>
         <source>Rename</source>
-        <translation>Naam wijzigen</translation>
+        <translation type="obsolete">Naam wijzigen</translation>
     </message>
     <message>
         <source>Rename group</source>
-        <translation>Groepsnaam wijzigen</translation>
+        <translation type="obsolete">Groepsnaam wijzigen</translation>
     </message>
     <message>
         <source>Enter a new name for group &apos;%1&apos;:</source>
-        <translation>Geef een niewe naam voor groep &apos;%1&apos;:</translation>
+        <translation type="obsolete">Geef een niewe naam voor groep &apos;%1&apos;:</translation>
     </message>
 </context>
 <context>
@@ -1380,10 +2159,330 @@ Als u deze keuze uitstelt, zal deze vraag opnieuw gesteld worden wanneer u zich 
     </message>
 </context>
 <context>
+    <name>Swift::QtVCardAddressField</name>
+    <message>
+        <source>Form</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Street</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Region</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Country</source>
+        <translation type="unfinished">Land</translation>
+    </message>
+    <message>
+        <source>Postal Code</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>City</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Address Extension</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>PO Box</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Preferred</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Home</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Work</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Postal</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Parcel</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Domestic Delivery</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>International Delivery</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Delivery Type</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>Swift::QtVCardAddressLabelField</name>
+    <message>
+        <source>Form</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Address Label</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Preferred</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Home</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Work</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Postal</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Parcel</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Domestic Delivery</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>International Delivery</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Delivery Type</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>Swift::QtVCardBirthdayField</name>
+    <message>
+        <source>Form</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Birthday</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>dd.MM.yyyy</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>X</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>Swift::QtVCardDescriptionField</name>
+    <message>
+        <source>Form</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Description</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>Swift::QtVCardEMailField</name>
+    <message>
+        <source>Form</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Type:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Internet</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>X.400</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>E-Mail</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Preferred</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Home</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Work</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>Swift::QtVCardJIDField</name>
+    <message>
+        <source>Form</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>JID</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>Swift::QtVCardOrganisationField</name>
+    <message>
+        <source>Form</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Organisation Name</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Remove Unit</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Add Unit</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Organisation Units</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>Swift::QtVCardRoleField</name>
+    <message>
+        <source>Form</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Role</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>Swift::QtVCardTelephoneField</name>
+    <message>
+        <source>Form</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Telephone</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Preferred</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Home</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Work</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Voice</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cell</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Pager</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>ISDN</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Video</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Voice Messaging Service</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Fax</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Modem</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Personal Communication Service</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Bulletin Board System</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>Swift::QtVCardTitleField</name>
+    <message>
+        <source>Form</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Title</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>Swift::QtVCardURLField</name>
+    <message>
+        <source>Form</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>URL</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>Swift::QtWebView</name>
     <message>
         <source>Clear</source>
         <translation>Wissen</translation>
+    </message>
+    <message>
+        <source>Increase font size</source>
+        <translation>Vergroot lettertype</translation>
+    </message>
+    <message>
+        <source>Decrease font size</source>
+        <translation>Verklein lettertype</translation>
+    </message>
+</context>
+<context>
+    <name>Swift::QtWhiteboardWindow</name>
+    <message>
+        <source>Closing window is equivalent closing the session. Are you sure you want to do this?</source>
+        <translation>Het venster sluiten zal deze sessie beëindigen. Bent U zeker dat U dit wil doen?</translation>
     </message>
 </context>
 <context>

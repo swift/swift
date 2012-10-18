@@ -139,7 +139,7 @@ QtLoginWindow::QtLoginWindow(UIEventStream* uiEventStream, SettingsProvider* set
 	layout->addWidget(loginButton_);
 
 	QLabel* connectionOptionsLabel = new QLabel(this);
-	connectionOptionsLabel->setText("<a href=\"#\"><font size='-1'>Connection Options</font></a>");
+	connectionOptionsLabel->setText("<a href=\"#\"><font size='-1'>" + QObject::tr("Connection Options") + "</font></a>");
 	connectionOptionsLabel->setTextFormat(Qt::RichText);
 	connectionOptionsLabel->setAlignment(Qt::AlignRight|Qt::AlignVCenter);
 	layout->addWidget(connectionOptionsLabel);

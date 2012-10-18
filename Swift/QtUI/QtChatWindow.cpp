@@ -660,7 +660,7 @@ std::string QtChatWindow::addWhiteboardRequest(bool senderIsSelf) {
 				buildChatWindowButton(tr("Cancel"), ButtonWhiteboardSessionCancel, wb_id) +
 			"</div>";
 	} else {
-		htmlString = "<div id='" + wb_id + "'>" + Qt::escape(contact_) + tr(" would like to start whiteboard chat") + ": <br/>" +
+		htmlString = "<div id='" + wb_id + "'>" + tr("%1 would like to start a whiteboard chat").arg(Qt::escape(contact_)) + ": <br/>" +
 				buildChatWindowButton(tr("Cancel"), ButtonWhiteboardSessionCancel, wb_id) +
 				buildChatWindowButton(tr("Accept"), ButtonWhiteboardSessionAcceptRequest, wb_id) +
 			"</div>";
