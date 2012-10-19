@@ -6,8 +6,13 @@ have Qt (with Qt Linguist installed).
 
 Starting a new translation
 --------------------------
-- Run the following command to generate a clean translation template 'swift.ts':
+- If you have a source tree checkout, run the following command to generate a clean 
+  translation template 'swift.ts':
+
     scons update_translations=1 Swift/Translations/swift.ts
+
+  If you don't have a source tree checkout, download swift_ts from 
+    http://swift.im/translations/master
 - Rename the new 'swift.ts' file to swift_<LANGUAGE-CODE>.ts, e.g. "swift_nl.ts"
   for Dutch
 - Open the file in Qt Linguist, and translate the phrases. 
@@ -15,19 +20,14 @@ Starting a new translation
 - Translate the Swift/resources/swift.desktop entry.
 - Submit your finished translation file to the Swift development team.
 
-If you have trouble generating the translation file yourself, you can ask the 
-Swift development team to provide you with a new translation template for your 
-language.
-
 
 Updating an existing translation
 --------------------------------
-- Run the following command to update an existing translation template:
+- If you have a source tree checkout, run the following command to update an existing 
+  translation template:
     scons update_translations=1 Swift/Translations/<your-translation-file>
-
-If you have trouble updating the translation file yourself, you can ask the 
-Swift development team to provide you with a new translation template for your 
-language.
+- If you don't have a source tree checkout, get the latest version of your translation
+  from http://swift.im/translations/master
 
 
 Testing your translation
@@ -42,15 +42,21 @@ development environment for Swift), or automatically:
       - On Mac OS X, use "Show Package Contents" on Swift.app, and put the
         translation file in Contents/Resources/translations
       - On Linux, in /usr/share/swift/translations
-- Automatically:
+- Automatically (with source tree checkout):
   - Ensure your translation file is in Swift/Translations/swift_<YOURLANGUAGE>.ts
   - Build Swift (for more details, see the building documentation):
       scons Swift
     This will build translation modules (.qm) for your translation sources, and 
     put them in the right place.
 
-Finally, run Swift. If your system isn't set up to use your language, set the 
-LANG environment variable to the name of your language before running Swift.
-For example:
-  set LANG=nl (on Windows)
-  export LANG=nl (on Linux or Mac OS X, in Bash)
+Finally, run Swift. If your system isn't set up to use your language, you can
+override the language:
+- For Swift compiled with Qt < 4.8: Set the LANG environment variable to the name of your language 
+  before running Swift. For example:
+    set LANG=nl (on Windows, or, alternatively, edit the User Environment Variables in Control Panel)
+    export LANG=nl (on Linux or Mac OS X, in Bash)
+- For Swift compiled with Qt >= 4.8: Use the '--language' parameter for Swift:
+  For example:
+    Swift.exe --language nl (on Windows, from cmd or by editing the shortcut)
+    open Swift.app --args --language nl (on Mac OS X, from Terminal)
+    swift-im --language nl (on Linux)
