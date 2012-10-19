@@ -285,7 +285,7 @@ if env["PLATFORM"] == "darwin" :
   if env["DIST"] :
     myenv.Command(["#/Packages/Swift/Swift-${SWIFT_VERSION}.dmg"], [app], ["Swift/Packaging/MacOSX/package.sh " + app.path + " Swift/Packaging/MacOSX/Swift.dmg.gz $TARGET $QTDIR"])
     dsym = myenv.Command(["Swift-${SWIFT_VERSION}.dSYM"], ["Swift"], ["dsymutil -o ${TARGET} ${SOURCE}"])
-    myenv.Command(["#/Packages/Swift/Swift-${SWIFT_VERSION}.dSYM.zip"], dsym, ["zip -r ${TARGET} ${SOURCE}"])
+    myenv.Command(["#/Packages/Swift/Swift-${SWIFT_VERSION}.dSYM.zip"], dsym, ["cd ${SOURCE.dir} && zip -r ${TARGET.abspath} ${SOURCE.name}"])
     
 if env.get("SWIFT_INSTALLDIR", "") :
   env.Install(os.path.join(env["SWIFT_INSTALLDIR"], "bin"), swiftProgram + openURIProgram)
