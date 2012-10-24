@@ -1,13 +1,16 @@
 #!/bin/sh
 
-echo "Checking tabs ..."
-if ! BuildTools/CheckTabs.py; then
-	echo "Expanded tabs found. Aborting commit."
-	exit -1
-fi
+IFS='
+'
 
-echo "Checking copyrights ..."
-if ! BuildTools/Copyrighter.py check-all-copyrights; then
-	echo "Copyright error found. Aborting commit."
-	exit -1
-fi
+echo "Checking tabs & copyrights ..."
+for file in $(git diff --cached --name-only); do
+	if ! BuildTools/CheckTabs.py $file; then
+		echo "ERROR: '$file' contains expanded tabs. Aborting commit."
+		exit -1
+	fi
+	if ! BuildTools/Copyrighter.py check-copyright $file; then
+		echo "ERROR: '$file' has a copyright error. Aborting commit."
+		exit -1
+	fi
+done

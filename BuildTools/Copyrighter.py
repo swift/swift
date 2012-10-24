@@ -129,29 +129,14 @@ def set_copyright(filename, copyright) :
   file.close()
 
 if sys.argv[1] == "check-copyright" :
-  if not check_copyright(sys.argv[2]) :
-    sys.exit(-1)
-elif sys.argv[1] == "check-all-copyrights" :
-  ok = True
-  for (path, dirs, files) in os.walk(".") :
-    if "3rdParty" in path or ".sconf" in path or "Swift.app" in path or path.startswith("build") or "xmppbench" in path :
-      continue
-    for filename in [os.path.join(path, file) for file in files if (file.endswith(".cpp") or file.endswith(".h")) and not "ui_" in file and not "moc_" in file and not "qrc_" in file and not "BuildVersion.h" in file and not "Swiften.h" in file and not "Version.h" in file and not "swiften-config.h" in file and not "linit.cpp" in file ] :
-      ok &= check_copyright(filename) 
-  if not ok :
-    sys.exit(-1)
+  file = sys.argv[2]
+  if (file.endswith(".cpp") or file.endswith(".h")) and not "3rdParty" in file :
+    if not check_copyright(file) :
+      sys.exit(-1)
 elif sys.argv[1] == "set-copyright" :
   (username, email) = get_userinfo()
   copyright = get_copyright(username, email)
   set_copyright(sys.argv[2], copyright)
-elif sys.argv[1] == "set-all-copyrights" :
-  (username, email) = get_userinfo()
-  copyright = get_copyright(username, email)
-  for (path, dirs, files) in os.walk(".") :
-    if "3rdParty" in path or ".sconf" in path or "Swift.app" in path :
-      continue
-    for filename in [os.path.join(path, file) for file in files if (file.endswith(".cpp") or file.endswith(".h")) and not "ui_" in file and not "moc_" in file and not "qrc_" in file and not "BuildVersion.h" in file and not "swiften-config.h" in file] :
-      set_copyright(filename, copyright) 
 else :
   print "Unknown command: " + sys.argv[1]
   sys.exit(-1)
