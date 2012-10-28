@@ -409,7 +409,7 @@ void QtLoginWindow::handleCertficateChecked(bool checked) {
 			certificateButton_->setChecked(false);
 		}
 #else
-		certificateFile_ = QFileDialog::getOpenFileName(this, tr("Select an authentication certificate"), QString(), QString("P12 files (*.cert *.p12 *.pfx);;All files (*.*)"));
+		certificateFile_ = QFileDialog::getOpenFileName(this, tr("Select an authentication certificate"), QString(), tr("P12 files (*.cert *.p12 *.pfx);;All files (*.*)"));
 		if (certificateFile_.isEmpty()) {
 			certificateButton_->setChecked(false);
 		}
