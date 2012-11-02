@@ -15,3 +15,5 @@ set errorformat+=%E%.%#\ test:\ %.%#line:\ %l\ %f,%Z%m
 set makeprg=python\ 3rdParty/SCons/scons.py\ check=1
 
 set noexpandtab
+
+let g:syntastic_c_include_dirs = [ '.', 'Swift/QtUI', '3rdParty/Boost/src' ]

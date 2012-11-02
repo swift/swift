@@ -1,6 +1,7 @@
 3.0-beta1
 ---------
 - Allow toggling of a more compact roster display.
+- Remember status settings and provide quick access to them with searching of recent selections in the status setter.
 
 2.0-beta2
 ---------

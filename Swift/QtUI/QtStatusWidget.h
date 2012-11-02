@@ -22,10 +22,12 @@ class QMovie;
 namespace Swift {
 	class QtLineEdit;
 	class QtElidingLabel;
+	class StatusCache;
+
 	class QtStatusWidget : public QWidget {
 		Q_OBJECT
 		public:
-			QtStatusWidget(QWidget *parent);
+			QtStatusWidget(StatusCache* statusCache, QWidget *parent);
 			~QtStatusWidget();
 			StatusShow::Type getSelectedStatusShow();
 			void setStatusType(StatusShow::Type type);
@@ -45,9 +47,11 @@ namespace Swift {
 			void handleItemClicked(QListWidgetItem* item);
 			static QString getNoMessage();
 		private:
+			void resizeMenu();
 			void viewMode();
 			void setNewToolTip();
 			//QComboBox *types_;
+			StatusCache* statusCache_;
 			QStackedWidget* stack_;
 			QLabel* statusIcon_;
 			QtElidingLabel* statusTextLabel_;

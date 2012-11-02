@@ -24,11 +24,12 @@ namespace Swift {
 	class QtStatusWidget;
 	class QtNameWidget;
 	class SettingsProvider;
+	class StatusCache;
 	
 	class QtRosterHeader : public QWidget {
 		Q_OBJECT
 	public:
-		QtRosterHeader(SettingsProvider* settings, QWidget* parent = NULL);
+		QtRosterHeader(SettingsProvider* settings, StatusCache* statusCache, QWidget* parent = NULL);
 		void setAvatar(const QString& path);
 
 		void setJID(const QString& jid);

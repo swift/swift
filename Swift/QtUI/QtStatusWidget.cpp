@@ -23,10 +23,11 @@
 #include "Swift/QtUI/QtLineEdit.h"
 #include "Swift/QtUI/QtSwiftUtil.h"
 #include <Swift/Controllers/StatusUtil.h>
+#include <Swift/Controllers/StatusCache.h>
 
 namespace Swift {
 
-QtStatusWidget::QtStatusWidget(QWidget *parent) : QWidget(parent), editCursor_(Qt::IBeamCursor), viewCursor_(Qt::PointingHandCursor) {
+QtStatusWidget::QtStatusWidget(StatusCache* statusCache, QWidget *parent) : QWidget(parent), statusCache_(statusCache), editCursor_(Qt::IBeamCursor), viewCursor_(Qt::PointingHandCursor) {
 	isClicking_ = false;
 	connecting_ = false;
 	setMaximumHeight(24);
@@ -134,6 +135,14 @@ void QtStatusWidget::generateList() {
 		item->setStatusTip(item->toolTip());
 		item->setData(Qt::UserRole, QVariant(type));
 	}
+	std::vector<StatusCache::PreviousStatus> previousStatuses = statusCache_->getMatches(Q2PSTRING(text), 8);
+	foreach (StatusCache::PreviousStatus savedStatus, previousStatuses) {
+		QListWidgetItem* item = new QListWidgetItem(P2QSTRING(savedStatus.first), menu_);
+		item->setIcon(icons_[savedStatus.second]);
+		item->setToolTip(item->text());
+		item->setStatusTip(item->toolTip());
+		item->setData(Qt::UserRole, QVariant(savedStatus.second));
+	}
 	foreach (StatusShow::Type type, icons_.keys()) {
 		QListWidgetItem* item = new QListWidgetItem(P2QSTRING(statusShowTypeToFriendlyName(type)), menu_);
 		item->setIcon(icons_[type]);
@@ -141,8 +150,20 @@ void QtStatusWidget::generateList() {
 		item->setStatusTip(item->toolTip());
 		item->setData(Qt::UserRole, QVariant(type));
 	}
+	resizeMenu();
 }
 
+void QtStatusWidget::resizeMenu() {
+	int height = menu_->sizeHintForRow(0) * menu_->count();
+	int marginLeft;
+	int marginTop;
+	int marginRight;
+	int marginBottom;
+	menu_->getContentsMargins(&marginLeft, &marginTop, &marginRight, &marginBottom);
+	height += marginTop + marginBottom;
+
+	menu_->setGeometry(menu_->x(), menu_->y(), menu_->width(), height);
+}
 
 void QtStatusWidget::handleClicked() {
 	editing_ = true;
@@ -197,7 +218,7 @@ void QtStatusWidget::viewMode() {
 	disconnect(qApp, SIGNAL(focusChanged(QWidget*, QWidget*)), this, SLOT(handleApplicationFocusChanged(QWidget*, QWidget*)));
 	editing_ = false;
 	menu_->hide();
-	stack_->setCurrentIndex(0);	
+	stack_->setCurrentIndex(0);
 }
 
 void QtStatusWidget::handleEditComplete() {
@@ -205,6 +226,7 @@ void QtStatusWidget::handleEditComplete() {
 	statusText_ = newStatusText_;
 	viewMode();
 	emit onChangeStatusRequest(selectedStatusType_, statusText_);
+	statusCache_->addRecent(Q2PSTRING(statusText_), selectedStatusType_);
 }
 
 void QtStatusWidget::handleEditCancelled() {

@@ -26,11 +26,12 @@ namespace Swift {
 	class TimerFactory;
 	class historyWindow_;
 	class WhiteboardSession;
+	class StatusCache;
 
 	class QtUIFactory : public QObject, public UIFactory {
 			Q_OBJECT
 		public:
-			QtUIFactory(SettingsProviderHierachy* settings, QtSettingsProvider* qtOnlySettings, QtChatTabs* tabs, QSplitter* netbookSplitter, QtSystemTray* systemTray, QtChatWindowFactory* chatWindowFactory, TimerFactory* timerFactory, bool startMinimized, bool emoticonsExist);
+			QtUIFactory(SettingsProviderHierachy* settings, QtSettingsProvider* qtOnlySettings, QtChatTabs* tabs, QSplitter* netbookSplitter, QtSystemTray* systemTray, QtChatWindowFactory* chatWindowFactory, TimerFactory* timerFactory, StatusCache* statusCache, bool startMinimized, bool emoticonsExist);
 
 			virtual XMLConsoleWidget* createXMLConsoleWidget();
 			virtual HistoryWindow* createHistoryWindow(UIEventStream*);
@@ -63,6 +64,7 @@ namespace Swift {
 			TimerFactory* timerFactory_;
 			QtMainWindow* lastMainWindow;
 			QtLoginWindow* loginWindow;
+			StatusCache* statusCache;
 			std::vector<QPointer<QtChatWindow> > chatWindows;
 			bool startMinimized;
 			int chatFontSize;

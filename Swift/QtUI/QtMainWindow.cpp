@@ -47,14 +47,14 @@
 
 namespace Swift {
 
-QtMainWindow::QtMainWindow(SettingsProvider* settings, UIEventStream* uiEventStream, QtLoginWindow::QtMenus loginMenus, bool emoticonsExist) : QWidget(), MainWindow(false), loginMenus_(loginMenus) {
+QtMainWindow::QtMainWindow(SettingsProvider* settings, UIEventStream* uiEventStream, QtLoginWindow::QtMenus loginMenus, StatusCache* statusCache, bool emoticonsExist) : QWidget(), MainWindow(false), loginMenus_(loginMenus) {
 	uiEventStream_ = uiEventStream;
 	settings_ = settings;
 	setSizePolicy(QSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding));
 	QBoxLayout *mainLayout = new QBoxLayout(QBoxLayout::TopToBottom, this);
 	mainLayout->setContentsMargins(0,0,0,0);
 	mainLayout->setSpacing(0);
-	meView_ = new QtRosterHeader(settings, this);
+	meView_ = new QtRosterHeader(settings, statusCache, this);
 	mainLayout->addWidget(meView_);
 	connect(meView_, SIGNAL(onChangeStatusRequest(StatusShow::Type, const QString&)), this, SLOT(handleStatusChanged(StatusShow::Type, const QString&)));
 	connect(meView_, SIGNAL(onEditProfileRequest()), this, SLOT(handleEditProfileRequest()));

@@ -50,6 +50,7 @@ namespace Swift {
 	class URIHandler;
 	class SettingsProviderHierachy;
 	class XMLSettingsProvider;
+	class StatusCache;
 		
 	class QtSwift : public QObject {
 		Q_OBJECT
@@ -81,6 +82,7 @@ namespace Swift {
 			CertificateStorageFactory* certificateStorageFactory_;
 			AutoUpdater* autoUpdater_;
 			Notifier* notifier_;
+			StatusCache* statusCache_;
 			PlatformIdleQuerier idleQuerier_;
 			ActualIdleDetector idleDetector_;
 #if defined(SWIFTEN_PLATFORM_MACOSX)

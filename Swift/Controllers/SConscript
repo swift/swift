@@ -74,7 +74,8 @@ if env["SCONS_STAGE"] == "build" :
 			"XMPPURIController.cpp",
 			"ChatMessageSummarizer.cpp",
 			"SettingConstants.cpp",
-			"WhiteboardManager.cpp"
+			"WhiteboardManager.cpp",
+			"StatusCache.cpp"
 		])
 
 	env.Append(UNITTEST_SOURCES = [

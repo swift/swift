@@ -32,11 +32,12 @@ namespace Swift {
 	class QtTabWidget;
 	class SettingsProvider;
 	class QtUIPreferences;
+	class StatusCache;
 
 	class QtMainWindow : public QWidget, public MainWindow {
 		Q_OBJECT
 		public:
-			QtMainWindow(SettingsProvider*, UIEventStream* eventStream, QtLoginWindow::QtMenus loginMenus, bool emoticonsExist);
+			QtMainWindow(SettingsProvider*, UIEventStream* eventStream, QtLoginWindow::QtMenus loginMenus, StatusCache* statusCache, bool emoticonsExist);
 			virtual ~QtMainWindow();
 			std::vector<QMenu*> getMenus() {return menus_;}
 			void setMyNick(const std::string& name);

@@ -38,6 +38,7 @@
 #include <SwifTools/AutoUpdater/AutoUpdater.h>
 #include <SwifTools/AutoUpdater/PlatformAutoUpdaterFactory.h>
 #include "Swiften/Base/Paths.h"
+#include <Swift/Controllers/StatusCache.h>
 
 #if defined(SWIFTEN_PLATFORM_WINDOWS)
 #include "WindowsNotifier.h"
@@ -190,6 +191,8 @@ QtSwift::QtSwift(const po::variables_map& options) : networkFactories_(&clientMa
 	uriHandler_ = new QtDBUSURIHandler();
 #endif
 
+	statusCache_ = new StatusCache(applicationPathProvider_);
+
 	if (splitter_) {
 		splitter_->show();
 	}
@@ -199,7 +202,7 @@ QtSwift::QtSwift(const po::variables_map& options) : networkFactories_(&clientMa
 			// Don't add the first tray (see note above)
 			systemTrays_.push_back(new QtSystemTray());
 		}
-		QtUIFactory* uiFactory = new QtUIFactory(settingsHierachy_, qtSettings_, tabs_, splitter_, systemTrays_[i], chatWindowFactory_, networkFactories_.getTimerFactory(), startMinimized, !emoticons.empty());
+		QtUIFactory* uiFactory = new QtUIFactory(settingsHierachy_, qtSettings_, tabs_, splitter_, systemTrays_[i], chatWindowFactory_, networkFactories_.getTimerFactory(), statusCache_, startMinimized, !emoticons.empty());
 		uiFactories_.push_back(uiFactory);
 		MainController* mainController = new MainController(
 				&clientMainThreadCaller_,
@@ -243,6 +246,7 @@ QtSwift::~QtSwift() {
 	}
 	delete tabs_;
 	delete splitter_;
+	delete statusCache_;
 	delete uriHandler_;
 	delete dock_;
 	delete soundPlayer_;
