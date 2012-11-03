@@ -44,7 +44,7 @@ for filename in os.listdir("Swift/Translations") :
         print "[Error] " + filename + ": Placeholder mismatch in translation '" + sourceText + "'"
     if not finished :
         print "[Warning] " + filename + ": Unfinished"
-    if language not in desktop_generic_names :
+    if language not in desktop_generic_names and language != "en" :
         print "[Warning] GenericName field missing in desktop entry for " + language
-    if language not in desktop_comments :
+    if language not in desktop_comments and language != "en" :
         print "[Warning] Comment field missing in desktop entry for " + language
