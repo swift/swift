@@ -15,4 +15,5 @@ if env.get("SQLITE_BUNDLED", False) :
 	if env["SCONS_STAGE"] == "build" :
 		myenv = env.Clone()
 		myenv.Replace(CCFLAGS = [flag for flag in env["CCFLAGS"] if flag not in ["-W", "-Wall"]])
-		env["SQLITE_OBJECTS"] = myenv.StaticObject(["sqlite3.c"], CPPPATH = ["."])
+		myenv.Append(CPPPATH = ["."])
+		env["SQLITE_OBJECTS"] = myenv.SwiftenObject(["sqlite3.c"])

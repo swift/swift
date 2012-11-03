@@ -47,4 +47,4 @@ if env.get("LIBNATPMP_BUNDLED", False) :
 		if myenv["PLATFORM"] == "win32":
 			src_files += ["src/libnatpmp/wingettimeofday.c"]
 		
-		env["LIBNATPMP_OBJECTS"] = myenv.StaticObject(src_files)
+		env["LIBNATPMP_OBJECTS"] = myenv.SwiftenObject(src_files)

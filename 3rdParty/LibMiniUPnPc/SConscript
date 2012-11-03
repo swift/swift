@@ -49,7 +49,7 @@ if env.get("LIBMINIUPNPC_BUNDLED", False) :
 #endif
 """.replace("$OS_STRING", myenv["PLATFORM"])))
 
-		env["LIBMINIUPNPC_OBJECTS"] = myenv.StaticObject([
+		env["LIBMINIUPNPC_OBJECTS"] = myenv.SwiftenObject([
 			"src/miniupnpc/igd_desc_parse.c",
 			"src/miniupnpc/miniupnpc.c",
 			"src/miniupnpc/minixml.c",

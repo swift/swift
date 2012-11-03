@@ -16,4 +16,4 @@ if env.get("SQLITE_ASYNC_BUNDLED", False) :
 		myenv = env.Clone()
 		myenv.Replace(CCFLAGS = [flag for flag in env["CCFLAGS"] if flag not in ["-W", "-Wall"]])
 		myenv.UseFlags(env.get("SQLITE_FLAGS", {}))
-		env["SQLITE_ASYNC_OBJECTS"] = myenv.StaticObject(["sqlite3async.c"])
+		env["SQLITE_ASYNC_OBJECTS"] = myenv.SwiftenObject(["sqlite3async.c"])

@@ -8,7 +8,7 @@ if env.get("ZLIB_BUNDLED", False) :
 			}
 
 	if env["SCONS_STAGE"] == "build" :
-		env["ZLIB_OBJECTS"] = env.StaticObject([
+		env["ZLIB_OBJECTS"] = env.SwiftenObject([
 				"src/adler32.c",
 				"src/compress.c",
 				"src/crc32.c",
