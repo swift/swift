@@ -42,9 +42,20 @@ std::vector<StatusCache::PreviousStatus> StatusCache::getMatches(const std::stri
 }
 
 void StatusCache::addRecent(const std::string& text, StatusShow::Type type) {
-	previousStatuses_.push_back(PreviousStatus(text, type));
+	if (text.empty()) {
+		return;
+	}
+	for (std::list<PreviousStatus>::iterator i = previousStatuses_.begin(); i != previousStatuses_.end(); ) {
+		if ((*i).first == text && (*i).second == type) {
+			previousStatuses_.erase(i++);
+		}
+		else {
+			++i;
+		}
+	}
+	previousStatuses_.push_front(PreviousStatus(text, type));
 	for (size_t i = previousStatuses_.size(); i > MAX_ENTRIES; i--) {
-		previousStatuses_.pop_front();
+		previousStatuses_.pop_back();
 	}
 	saveRecents();
 }
