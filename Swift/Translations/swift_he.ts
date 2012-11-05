@@ -353,7 +353,7 @@
     <message>
         <location filename="../Controllers/Chat/MUCController.cpp" line="659"/>
         <source>%1% has entered the room</source>
-        <translation>‫%1% נכנסה אל החדר</translation>
+        <translation>‫%1% נכנס/ה אל החדר</translation>
     </message>
     <message>
         <location filename="../Controllers/Chat/MUCController.cpp" line="664"/>
@@ -819,7 +819,7 @@
     <message>
         <location filename="../QtUI/QtChatWindow.cpp" line="985"/>
         <source>This person may not have really sent this invitation!</source>
-        <translation type="unfinished"></translation>
+        <translation>אפשרי שמשתמש זה לא באמת שלח את הזמנה זו!</translation>
     </message>
     <message>
         <location filename="../QtUI/QtFileTransferListItemModel.cpp" line="46"/>
@@ -1570,7 +1570,7 @@
     <message>
         <location filename="../QtUI/QtAffiliationEditor.cpp" line="48"/>
         <source>Added User&apos;s Address:</source>
-        <translation type="unfinished"></translation>
+        <translation>הוספת כתובת משתמש:</translation>
     </message>
 </context>
 <context>
@@ -2187,6 +2187,11 @@
         <location filename="../QtUI/QtLoginWindow.cpp" line="412"/>
         <source>Select an authentication certificate</source>
         <translation>נא לבחור תעודת אימות</translation>
+    </message>
+    <message>
+        <location filename="../QtUI/QtLoginWindow.cpp" line="412"/>
+        <source>P12 files (*.cert *.p12 *.pfx);;All files (*.*)</source>
+        <translation>קבצי P12 ‫(‪*.cert *.p12 *.pfx‬);;כל הקבצים (*.*)</translation>
     </message>
     <message>
         <location filename="../QtUI/QtLoginWindow.cpp" line="525"/>
