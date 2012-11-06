@@ -889,6 +889,8 @@ void QtChatWindow::setAvailableOccupantActions(const std::vector<OccupantAction>
 void QtChatWindow::setSubject(const std::string& subject) {
 	//subject_->setVisible(!subject.empty());
 	subject_->setText(P2QSTRING(subject));
+	subject_->setToolTip(P2QSTRING(subject));
+	subject_->setCursorPosition(0);
 }
 
 void QtChatWindow::handleActionButtonClicked() {
