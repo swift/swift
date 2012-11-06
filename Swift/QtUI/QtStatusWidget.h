@@ -68,6 +68,7 @@ namespace Swift {
 			QMovie* connectingMovie_;
 			bool connecting_;
 			static const QString NO_MESSAGE;
+			std::vector<StatusShow::Type> allTypes_;
 	};
 }
 

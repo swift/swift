@@ -31,7 +31,7 @@ StatusCache::~StatusCache() {
 std::vector<StatusCache::PreviousStatus> StatusCache::getMatches(const std::string& substring, size_t maxCount) const {
 	std::vector<PreviousStatus> matches;
 	foreach (const PreviousStatus& status, previousStatuses_) {
-		if (substring.empty() || boost::algorithm::ifind_first(status.first, substring)) {
+		if (substring.empty() || (boost::algorithm::ifind_first(status.first, substring) && substring != status.first)) {
 			matches.push_back(status);
 			if (matches.size() == maxCount) {
 				break;

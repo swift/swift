@@ -28,6 +28,13 @@
 namespace Swift {
 
 QtStatusWidget::QtStatusWidget(StatusCache* statusCache, QWidget *parent) : QWidget(parent), statusCache_(statusCache), editCursor_(Qt::IBeamCursor), viewCursor_(Qt::PointingHandCursor) {
+	allTypes_.push_back(StatusShow::Online);
+	allTypes_.push_back(StatusShow::FFC);
+	allTypes_.push_back(StatusShow::Away);
+	allTypes_.push_back(StatusShow::XA);
+	allTypes_.push_back(StatusShow::DND);
+	allTypes_.push_back(StatusShow::None);
+	
 	isClicking_ = false;
 	connecting_ = false;
 	setMaximumHeight(24);
@@ -137,6 +144,15 @@ void QtStatusWidget::generateList() {
 	}
 	std::vector<StatusCache::PreviousStatus> previousStatuses = statusCache_->getMatches(Q2PSTRING(text), 8);
 	foreach (StatusCache::PreviousStatus savedStatus, previousStatuses) {
+		bool breakEarly = false;
+		foreach (StatusShow::Type type, allTypes_) {
+			if (savedStatus.first.empty() || (savedStatus.second == type && savedStatus.first == statusShowTypeToFriendlyName(type))) {
+				breakEarly = true;
+			}
+		}
+		if (breakEarly) {
+			continue;
+		}
 		QListWidgetItem* item = new QListWidgetItem(P2QSTRING(savedStatus.first), menu_);
 		item->setIcon(icons_[savedStatus.second]);
 		item->setToolTip(item->text());
@@ -144,6 +160,9 @@ void QtStatusWidget::generateList() {
 		item->setData(Qt::UserRole, QVariant(savedStatus.second));
 	}
 	foreach (StatusShow::Type type, icons_.keys()) {
+		if (Q2PSTRING(text) == statusShowTypeToFriendlyName(type)) {
+			continue;
+		}
 		QListWidgetItem* item = new QListWidgetItem(P2QSTRING(statusShowTypeToFriendlyName(type)), menu_);
 		item->setIcon(icons_[type]);
 		item->setToolTip(item->text());
@@ -180,14 +199,7 @@ void QtStatusWidget::handleClicked() {
 	if (x + width > screenWidth) {
 		x = screenWidth - width;
 	}
-	std::vector<StatusShow::Type> types;
-	types.push_back(StatusShow::Online);
-	types.push_back(StatusShow::FFC);
-	types.push_back(StatusShow::Away);
-	types.push_back(StatusShow::XA);
-	types.push_back(StatusShow::DND);
-	types.push_back(StatusShow::None);
-	foreach (StatusShow::Type type, types) {
+	foreach (StatusShow::Type type, allTypes_) {
 		if (statusEdit_->text() == P2QSTRING(statusShowTypeToFriendlyName(type))) {
 			statusEdit_->setText("");
 		}
