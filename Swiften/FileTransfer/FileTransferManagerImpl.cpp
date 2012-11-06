@@ -29,6 +29,8 @@
 #include <Swiften/Network/HostAddress.h>
 #include <Swiften/Network/NATTraverser.h>
 
+#include <Swiften/Base/BoostFilesystemVersion.h>
+
 namespace Swift {
 
 FileTransferManagerImpl::FileTransferManagerImpl(const JID& ownFullJID, JingleSessionManager* jingleSessionManager, IQRouter* router, EntityCapsProvider* capsProvider, PresenceOracle* presOracle, ConnectionFactory* connectionFactory, ConnectionServerFactory* connectionServerFactory, TimerFactory* timerFactory, NATTraverser* natTraverser) : ownJID(ownFullJID), jingleSM(jingleSessionManager), iqRouter(router), capsProvider(capsProvider), presenceOracle(presOracle), connectionServerFactory(connectionServerFactory), bytestreamServer(NULL), s5bProxyFinder(NULL) {

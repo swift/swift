@@ -18,6 +18,8 @@
 
 #include <Swiftob/Commands.h>
 
+#include <Swiften/Base/BoostFilesystemVersion.h>
+
 #define LUA_COMMANDS "__Lua_Commands"
 #define STORAGE "__Storage"
 
