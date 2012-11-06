@@ -336,9 +336,7 @@ void QtLoginWindow::handleUsernameTextChanged() {
 			currentOptions_ = options_[i];
 		}
 	}
-	if (!certificateFile_.isEmpty()) {
-		certificateButton_->setChecked(true);
-	}
+	certificateButton_->setChecked(!certificateFile_.isEmpty());
 }
 
 void QtLoginWindow::loggedOut() {
