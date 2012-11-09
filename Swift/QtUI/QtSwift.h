@@ -51,6 +51,7 @@ namespace Swift {
 	class SettingsProviderHierachy;
 	class XMLSettingsProvider;
 	class StatusCache;
+	class QtSingleWindow;
 		
 	class QtSwift : public QObject {
 		Q_OBJECT
@@ -72,7 +73,7 @@ namespace Swift {
 			QtSettingsProvider* qtSettings_;
 			XMLSettingsProvider* xmlSettings_;
 			SettingsProviderHierachy* settingsHierachy_;
-			QSplitter* splitter_;
+			QtSingleWindow* splitter_;
 			QtSoundPlayer* soundPlayer_;
 			Dock* dock_;
 			URIHandler* uriHandler_;

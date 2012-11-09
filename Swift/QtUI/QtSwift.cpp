@@ -7,7 +7,6 @@
 #include "QtSwift.h"
 
 #include <string>
-#include <QSplitter>
 #include <QFile>
 #include <boost/bind.hpp>
 #include <QMessageBox>
@@ -22,6 +21,7 @@
 #include <QtSwiftUtil.h>
 #include <QtUIFactory.h>
 #include <QtChatWindowFactory.h>
+#include <QtSingleWindow.h>
 #include <Swiften/Base/Log.h>
 #include <Swift/Controllers/Storages/CertificateFileStorageFactory.h>
 #include <Swift/Controllers/Storages/FileStoragesFactory.h>
@@ -125,7 +125,7 @@ QMap<QString, QString> QtSwift::loadEmoticonsFile(const QString& fileName) {
 
 QtSwift::QtSwift(const po::variables_map& options) : networkFactories_(&clientMainThreadCaller_), autoUpdater_(NULL), idleDetector_(&idleQuerier_, networkFactories_.getTimerFactory(), 1000) {
 	if (options.count("netbook-mode")) {
-		splitter_ = new QSplitter();
+		splitter_ = new QtSingleWindow();
 	} else {
 		splitter_ = NULL;
 	}

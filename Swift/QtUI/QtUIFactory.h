@@ -27,11 +27,12 @@ namespace Swift {
 	class historyWindow_;
 	class WhiteboardSession;
 	class StatusCache;
+	class QtSingleWindow;
 
 	class QtUIFactory : public QObject, public UIFactory {
 			Q_OBJECT
 		public:
-			QtUIFactory(SettingsProviderHierachy* settings, QtSettingsProvider* qtOnlySettings, QtChatTabs* tabs, QSplitter* netbookSplitter, QtSystemTray* systemTray, QtChatWindowFactory* chatWindowFactory, TimerFactory* timerFactory, StatusCache* statusCache, bool startMinimized, bool emoticonsExist);
+			QtUIFactory(SettingsProviderHierachy* settings, QtSettingsProvider* qtOnlySettings, QtChatTabs* tabs, QtSingleWindow* netbookSplitter, QtSystemTray* systemTray, QtChatWindowFactory* chatWindowFactory, TimerFactory* timerFactory, StatusCache* statusCache, bool startMinimized, bool emoticonsExist);
 
 			virtual XMLConsoleWidget* createXMLConsoleWidget();
 			virtual HistoryWindow* createHistoryWindow(UIEventStream*);
@@ -58,7 +59,7 @@ namespace Swift {
 			SettingsProviderHierachy* settings;
 			QtSettingsProvider* qtOnlySettings;
 			QtChatTabs* tabs;
-			QSplitter* netbookSplitter;
+			QtSingleWindow* netbookSplitter;
 			QtSystemTray* systemTray;
 			QtChatWindowFactory* chatWindowFactory;
 			TimerFactory* timerFactory_;

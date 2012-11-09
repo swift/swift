@@ -30,10 +30,11 @@
 #include <Swift/QtUI/QtUISettingConstants.h>
 #include <QtHistoryWindow.h>
 #include <Swiften/Whiteboard/WhiteboardSession.h>
+#include <QtSingleWindow.h>
 
 namespace Swift {
 
-QtUIFactory::QtUIFactory(SettingsProviderHierachy* settings, QtSettingsProvider* qtOnlySettings, QtChatTabs* tabs, QSplitter* netbookSplitter, QtSystemTray* systemTray, QtChatWindowFactory* chatWindowFactory, TimerFactory* timerFactory, StatusCache* statusCache, bool startMinimized, bool emoticonsExist) : settings(settings), qtOnlySettings(qtOnlySettings), tabs(tabs), netbookSplitter(netbookSplitter), systemTray(systemTray), chatWindowFactory(chatWindowFactory), timerFactory_(timerFactory), lastMainWindow(NULL), loginWindow(NULL), statusCache(statusCache), startMinimized(startMinimized), emoticonsExist_(emoticonsExist) {
+QtUIFactory::QtUIFactory(SettingsProviderHierachy* settings, QtSettingsProvider* qtOnlySettings, QtChatTabs* tabs, QtSingleWindow* netbookSplitter, QtSystemTray* systemTray, QtChatWindowFactory* chatWindowFactory, TimerFactory* timerFactory, StatusCache* statusCache, bool startMinimized, bool emoticonsExist) : settings(settings), qtOnlySettings(qtOnlySettings), tabs(tabs), netbookSplitter(netbookSplitter), systemTray(systemTray), chatWindowFactory(chatWindowFactory), timerFactory_(timerFactory), lastMainWindow(NULL), loginWindow(NULL), statusCache(statusCache), startMinimized(startMinimized), emoticonsExist_(emoticonsExist) {
 	chatFontSize = settings->getSetting(QtUISettingConstants::CHATWINDOW_FONT_SIZE);
 	historyFontSize_ = settings->getSetting(QtUISettingConstants::HISTORYWINDOW_FONT_SIZE);
 }
