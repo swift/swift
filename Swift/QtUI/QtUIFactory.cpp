@@ -86,7 +86,7 @@ MainWindow* QtUIFactory::createMainWindow(UIEventStream* eventStream) {
 LoginWindow* QtUIFactory::createLoginWindow(UIEventStream* eventStream) {
 	loginWindow = new QtLoginWindow(eventStream, settings, timerFactory_);
 	if (netbookSplitter) {
-		netbookSplitter->insertWidget(0, loginWindow);
+		netbookSplitter->insertAtFront(loginWindow);
 	}
 	connect(systemTray, SIGNAL(clicked()), loginWindow, SLOT(toggleBringToFront()));
 

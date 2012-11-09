@@ -12,14 +12,19 @@ namespace Swift {
 	class QtSettingsProvider;
 
 	class QtSingleWindow : public QSplitter {
+		Q_OBJECT
 		public:
 			QtSingleWindow(QtSettingsProvider* settings);
 			virtual ~QtSingleWindow();
+			void insertAtFront(QWidget* widget);
 		protected:
 			void resizeEvent(QResizeEvent*);
 			void moveEvent(QMoveEvent*);
+		private slots:
+			void handleSplitterMoved(int, int);
 		private:
 			void handleGeometryChanged();
+			void restoreSplitters();
 
 		private:
 
