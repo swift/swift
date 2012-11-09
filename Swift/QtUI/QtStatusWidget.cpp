@@ -199,11 +199,11 @@ void QtStatusWidget::handleClicked() {
 	if (x + width > screenWidth) {
 		x = screenWidth - width;
 	}
-	foreach (StatusShow::Type type, allTypes_) {
-		if (statusEdit_->text() == P2QSTRING(statusShowTypeToFriendlyName(type))) {
+	//foreach (StatusShow::Type type, allTypes_) {
+	//	if (statusEdit_->text() == P2QSTRING(statusShowTypeToFriendlyName(type))) {
 			statusEdit_->setText("");
-		}
-	}
+	//	}
+	//}
 	generateList();
 	
 	height = menu_->sizeHintForRow(0) * menu_->count();
