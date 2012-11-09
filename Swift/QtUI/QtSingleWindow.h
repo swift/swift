@@ -9,12 +9,21 @@
 #include <QSplitter>
 
 namespace Swift {
+	class QtSettingsProvider;
 
 	class QtSingleWindow : public QSplitter {
 		public:
-			QtSingleWindow();
+			QtSingleWindow(QtSettingsProvider* settings);
 			virtual ~QtSingleWindow();
+		protected:
+			void resizeEvent(QResizeEvent*);
+			void moveEvent(QMoveEvent*);
+		private:
+			void handleGeometryChanged();
 
+		private:
+
+			QtSettingsProvider* settings_;
 	};
 
 }

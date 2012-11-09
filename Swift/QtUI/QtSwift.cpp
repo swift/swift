@@ -124,11 +124,6 @@ QMap<QString, QString> QtSwift::loadEmoticonsFile(const QString& fileName) {
 }
 
 QtSwift::QtSwift(const po::variables_map& options) : networkFactories_(&clientMainThreadCaller_), autoUpdater_(NULL), idleDetector_(&idleQuerier_, networkFactories_.getTimerFactory(), 1000) {
-	if (options.count("netbook-mode")) {
-		splitter_ = new QtSingleWindow();
-	} else {
-		splitter_ = NULL;
-	}
 	QCoreApplication::setApplicationName(SWIFT_APPLICATION_NAME);
 	QCoreApplication::setOrganizationName(SWIFT_ORGANIZATION_NAME);
 	QCoreApplication::setOrganizationDomain(SWIFT_ORGANIZATION_DOMAIN);
@@ -141,6 +136,12 @@ QtSwift::QtSwift(const po::variables_map& options) : networkFactories_(&clientMa
 	settingsHierachy_->addProviderToTopOfStack(qtSettings_);
 
 	QMap<QString, QString> emoticons = loadEmoticonsFile(P2QSTRING((Paths::getExecutablePath() / "emoticons.txt").string()));
+
+	if (options.count("netbook-mode")) {
+		splitter_ = new QtSingleWindow(qtSettings_);
+	} else {
+		splitter_ = NULL;
+	}
 
 	int numberOfAccounts = 1;
 	try {
