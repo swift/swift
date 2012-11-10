@@ -61,7 +61,7 @@ namespace Swift {
 			~QtSwift();
 		private:
 			XMLSettingsProvider* loadSettingsFile(const QString& fileName);
-			QMap<QString, QString> loadEmoticonsFile(const QString& fileName);
+			void loadEmoticonsFile(const QString& fileName, QMap<QString, QString>& emoticons);
 		private:
 			QtEventLoop clientMainThreadCaller_;
 			PlatformTLSFactories tlsFactories_;

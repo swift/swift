@@ -29,5 +29,14 @@
 		<file alias="icons/polygon.png">../resources/icons/polygon.png</file>
 		<file alias="icons/cursor.png">../resources/icons/cursor.png</file>
 		<file alias="icons/eraser.png">../resources/icons/eraser.png</file>
+		<file alias="emoticons/emoticons.txt">../resources/emoticons/emoticons.txt</file>
+		<file alias="emoticons/evilgrin.png">../resources/emoticons/evilgrin.png</file>
+		<file alias="emoticons/grin.png">../resources/emoticons/grin.png</file>
+		<file alias="emoticons/happy.png">../resources/emoticons/happy.png</file>
+		<file alias="emoticons/smile.png">../resources/emoticons/smile.png</file>
+		<file alias="emoticons/surprised.png">../resources/emoticons/surprised.png</file>
+		<file alias="emoticons/tongue.png">../resources/emoticons/tongue.png</file>
+		<file alias="emoticons/unhappy.png">../resources/emoticons/unhappy.png</file>
+		<file alias="emoticons/wink.png">../resources/emoticons/wink.png</file>
 	</qresource>
 </RCC>

@@ -103,10 +103,11 @@ XMLSettingsProvider* QtSwift::loadSettingsFile(const QString& fileName) {
 	return new XMLSettingsProvider("");
 }
 
-QMap<QString, QString> QtSwift::loadEmoticonsFile(const QString& fileName) {
-	QMap<QString, QString> emoticons;
+void QtSwift::loadEmoticonsFile(const QString& fileName, QMap<QString, QString>& emoticons)  {
+	qDebug() << "Trying to load " << fileName;
 	QFile file(fileName);
 	if (file.exists() && file.open(QIODevice::ReadOnly)) {
+		qDebug() << "Success";
 		while (!file.atEnd()) {
 			QString line = file.readLine();
 			line.replace("\n", "");
@@ -114,13 +115,16 @@ QMap<QString, QString> QtSwift::loadEmoticonsFile(const QString& fileName) {
 			qDebug() << "Parsing line : " << line;
 			QStringList tokens = line.split(" ");
 			if (tokens.size() == 2) {
-				emoticons[tokens[0]] = "file://" + tokens[1];
-				qDebug() << "Adding mapping from " << tokens[0] << " to " << tokens[1];
+				QString emoticonFile = tokens[1];
+				if (!emoticonFile.startsWith(":/") && !emoticonFile.startsWith("qrc:/")) {
+					emoticonFile = "file://" + emoticonFile;
+				}
+				emoticons[tokens[0]] = emoticonFile;
+				qDebug() << "Adding mapping from " << tokens[0] << " to " << emoticonFile;
 			}
 		}
 	}
-
-	return emoticons;
+	qDebug() << "Done";
 }
 
 QtSwift::QtSwift(const po::variables_map& options) : networkFactories_(&clientMainThreadCaller_), autoUpdater_(NULL), idleDetector_(&idleQuerier_, networkFactories_.getTimerFactory(), 1000) {
@@ -135,7 +139,9 @@ QtSwift::QtSwift(const po::variables_map& options) : networkFactories_(&clientMa
 	settingsHierachy_->addProviderToTopOfStack(xmlSettings_);
 	settingsHierachy_->addProviderToTopOfStack(qtSettings_);
 
-	QMap<QString, QString> emoticons = loadEmoticonsFile(P2QSTRING((Paths::getExecutablePath() / "emoticons.txt").string()));
+	QMap<QString, QString> emoticons;
+	loadEmoticonsFile(":/emoticons/emoticons.txt", emoticons);
+	loadEmoticonsFile(P2QSTRING((Paths::getExecutablePath() / "emoticons.txt").string()), emoticons);
 
 	if (options.count("netbook-mode")) {
 		splitter_ = new QtSingleWindow(qtSettings_);

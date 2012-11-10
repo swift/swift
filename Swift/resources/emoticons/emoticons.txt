@@ -1,0 +1,18 @@
+ignore >:) qrc:/emoticons/evilgrin.png
+ignore >:-) qrc:/emoticons/evilgrin.png
+:) qrc:/emoticons/smile.png
+:-) qrc:/emoticons/smile.png
+(: qrc:/emoticons/smile.png
+(-: qrc:/emoticons/smile.png
+:D qrc:/emoticons/happy.png
+:-D qrc:/emoticons/happy.png
+:o qrc:/emoticons/surprised.png
+:-o qrc:/emoticons/surprised.png
+:-O qrc:/emoticons/surprised.png
+:O qrc:/emoticons/surprised.png
+:p qrc:/emoticons/tongue.png
+:-p qrc:/emoticons/tongue.png
+:( qrc:/emoticons/unhappy.png
+:-( qrc:/emoticons/unhappy.png
+;) qrc:/emoticons/wink.png
+;-) qrc:/emoticons/wink.png
