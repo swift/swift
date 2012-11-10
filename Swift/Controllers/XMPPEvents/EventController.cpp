@@ -34,7 +34,8 @@ void EventController::handleIncomingEvent(boost::shared_ptr<StanzaEvent> sourceE
 
 	/* If it's a duplicate subscription request, remove the previous request first */
 	if (subscriptionEvent) {
-		foreach(boost::shared_ptr<StanzaEvent> existingEvent, events_) {
+		EventList existingEvents(events_);
+		foreach(boost::shared_ptr<StanzaEvent> existingEvent, existingEvents) {
 			boost::shared_ptr<SubscriptionRequestEvent> existingSubscriptionEvent = boost::dynamic_pointer_cast<SubscriptionRequestEvent>(existingEvent);
 			if (existingSubscriptionEvent) {
 				if (existingSubscriptionEvent->getJID() == subscriptionEvent->getJID()) {
