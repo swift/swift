@@ -272,28 +272,28 @@ std::string ChatControllerBase::getErrorMessage(boost::shared_ptr<ErrorPayload> 
 	}
 	else {
 		switch (error->getCondition()) {
-			case ErrorPayload::BadRequest: return QT_TRANSLATE_NOOP("", "Bad request"); break;
-			case ErrorPayload::Conflict: return QT_TRANSLATE_NOOP("", "Conflict"); break;
-			case ErrorPayload::FeatureNotImplemented: return QT_TRANSLATE_NOOP("", "This feature is not implemented"); break;
-			case ErrorPayload::Forbidden: return QT_TRANSLATE_NOOP("", "Forbidden"); break;
-			case ErrorPayload::Gone: return QT_TRANSLATE_NOOP("", "Recipient can no longer be contacted"); break;
-			case ErrorPayload::InternalServerError: return QT_TRANSLATE_NOOP("", "Internal server error"); break;
-			case ErrorPayload::ItemNotFound: return QT_TRANSLATE_NOOP("", "Item not found"); break;
-			case ErrorPayload::JIDMalformed: return QT_TRANSLATE_NOOP("", "JID Malformed"); break;
-			case ErrorPayload::NotAcceptable: return QT_TRANSLATE_NOOP("", "Message was rejected"); break;
-			case ErrorPayload::NotAllowed: return QT_TRANSLATE_NOOP("", "Not allowed"); break;
-			case ErrorPayload::NotAuthorized: return QT_TRANSLATE_NOOP("", "Not authorized"); break;
-			case ErrorPayload::PaymentRequired: return QT_TRANSLATE_NOOP("", "Payment is required"); break;
-			case ErrorPayload::RecipientUnavailable: return QT_TRANSLATE_NOOP("", "Recipient is unavailable"); break;
-			case ErrorPayload::Redirect: return QT_TRANSLATE_NOOP("", "Redirect"); break;
-			case ErrorPayload::RegistrationRequired: return QT_TRANSLATE_NOOP("", "Registration required"); break;
-			case ErrorPayload::RemoteServerNotFound: return QT_TRANSLATE_NOOP("", "Recipient's server not found"); break;
-			case ErrorPayload::RemoteServerTimeout: return QT_TRANSLATE_NOOP("", "Remote server timeout"); break;
-			case ErrorPayload::ResourceConstraint: return QT_TRANSLATE_NOOP("", "The server is low on resources"); break;
-			case ErrorPayload::ServiceUnavailable: return QT_TRANSLATE_NOOP("", "The service is unavailable"); break;
-			case ErrorPayload::SubscriptionRequired: return QT_TRANSLATE_NOOP("", "A subscription is required"); break;
-			case ErrorPayload::UndefinedCondition: return QT_TRANSLATE_NOOP("", "Undefined condition"); break;
-			case ErrorPayload::UnexpectedRequest: return QT_TRANSLATE_NOOP("", "Unexpected request"); break;
+			case ErrorPayload::BadRequest: return QT_TRANSLATE_NOOP("", "Bad request");
+			case ErrorPayload::Conflict: return QT_TRANSLATE_NOOP("", "Conflict");
+			case ErrorPayload::FeatureNotImplemented: return QT_TRANSLATE_NOOP("", "This feature is not implemented");
+			case ErrorPayload::Forbidden: return QT_TRANSLATE_NOOP("", "Forbidden");
+			case ErrorPayload::Gone: return QT_TRANSLATE_NOOP("", "Recipient can no longer be contacted");
+			case ErrorPayload::InternalServerError: return QT_TRANSLATE_NOOP("", "Internal server error");
+			case ErrorPayload::ItemNotFound: return QT_TRANSLATE_NOOP("", "Item not found");
+			case ErrorPayload::JIDMalformed: return QT_TRANSLATE_NOOP("", "JID Malformed");
+			case ErrorPayload::NotAcceptable: return QT_TRANSLATE_NOOP("", "Message was rejected");
+			case ErrorPayload::NotAllowed: return QT_TRANSLATE_NOOP("", "Not allowed");
+			case ErrorPayload::NotAuthorized: return QT_TRANSLATE_NOOP("", "Not authorized");
+			case ErrorPayload::PaymentRequired: return QT_TRANSLATE_NOOP("", "Payment is required");
+			case ErrorPayload::RecipientUnavailable: return QT_TRANSLATE_NOOP("", "Recipient is unavailable");
+			case ErrorPayload::Redirect: return QT_TRANSLATE_NOOP("", "Redirect");
+			case ErrorPayload::RegistrationRequired: return QT_TRANSLATE_NOOP("", "Registration required");
+			case ErrorPayload::RemoteServerNotFound: return QT_TRANSLATE_NOOP("", "Recipient's server not found");
+			case ErrorPayload::RemoteServerTimeout: return QT_TRANSLATE_NOOP("", "Remote server timeout");
+			case ErrorPayload::ResourceConstraint: return QT_TRANSLATE_NOOP("", "The server is low on resources");
+			case ErrorPayload::ServiceUnavailable: return QT_TRANSLATE_NOOP("", "The service is unavailable");
+			case ErrorPayload::SubscriptionRequired: return QT_TRANSLATE_NOOP("", "A subscription is required");
+			case ErrorPayload::UndefinedCondition: return QT_TRANSLATE_NOOP("", "Undefined condition");
+			case ErrorPayload::UnexpectedRequest: return QT_TRANSLATE_NOOP("", "Unexpected request");
 		}
 	}
 	return defaultMessage;
