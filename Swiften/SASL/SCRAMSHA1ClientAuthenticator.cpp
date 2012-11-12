@@ -94,11 +94,6 @@ bool SCRAMSHA1ClientAuthenticator::setChallenge(const boost::optional<ByteArray>
 			return false;
 		}
 
-		ByteArray channelBindData;
-		if (useChannelBinding && tlsChannelBindingData) {
-			channelBindData = *tlsChannelBindingData;
-		}
-
 		// Compute all the values needed for the server signature
 		try {
 			saltedPassword = PBKDF2::encode<HMAC_SHA1>(StringPrep::getPrepared(getPassword(), StringPrep::SASLPrep), salt, iterations);
