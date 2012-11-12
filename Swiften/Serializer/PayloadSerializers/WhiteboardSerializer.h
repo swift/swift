@@ -29,7 +29,6 @@ namespace Swift {
 		XMLElement::ref getResult() const;
 
 	private:
-		std::string intToStr(const int t) const;
 		std::string alphaToOpacity(int alpha) const;
 		
 		XMLElement::ref element;

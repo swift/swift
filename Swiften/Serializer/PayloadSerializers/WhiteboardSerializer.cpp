@@ -117,12 +117,6 @@ namespace Swift {
 		}
 	}
 
-	std::string WhiteboardElementSerializingVisitor::intToStr(const int t) const {
-		std::stringstream ss;
-		ss << t;
-		return ss.str();
-	}
-
 	XMLElement::ref WhiteboardElementSerializingVisitor::getResult() const {
 		return element;
 	}
