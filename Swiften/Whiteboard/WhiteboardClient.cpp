@@ -27,7 +27,7 @@ namespace Swift {
 			op = boost::make_shared<WhiteboardDeleteOperation>(*deleteOp);
 		}
 
-		if (bridge_.size() > 0) {
+		if (!bridge_.empty()) {
 			op->setParentID(bridge_.back()->getID());
 		}
 		bridge_.push_back(op);
@@ -48,7 +48,7 @@ namespace Swift {
 			}
 
 
-			if (serverOperations_.size() > 0) {
+			if (!serverOperations_.empty()) {
 				op->setParentID(serverOperations_.back()->getID());
 			}
 			lastSentOperationID_ = operation->getID();
@@ -69,11 +69,11 @@ namespace Swift {
 			result.client = operation;
 		} else if (lastSentOperationID_ == operation->getID()) {
 			//Client received confirmation about own operation and it sends next operation to server
-			if (bridge_.size() > 0 && lastSentOperationID_ == bridge_.front()->getID()) {
+			if (!bridge_.empty() && lastSentOperationID_ == bridge_.front()->getID()) {
 				bridge_.erase(bridge_.begin());
 			}
 
-			if (bridge_.size() > 0 && (bridge_.front())->getParentID() == lastSentOperationID_) {
+			if (!bridge_.empty() && (bridge_.front())->getParentID() == lastSentOperationID_) {
 				lastSentOperationID_ = (bridge_.front())->getID();
 				result.server = bridge_.front();
 			}

@@ -15,7 +15,7 @@ namespace Swift {
 
 	WhiteboardOperation::ref WhiteboardServer::handleClientOperationReceived(WhiteboardOperation::ref newOperation) {
 		std::list<WhiteboardOperation::ref>::reverse_iterator it;
-		if (operations_.size() == 0 || newOperation->getParentID() == operations_.back()->getID()) {
+		if (operations_.empty() || newOperation->getParentID() == operations_.back()->getID()) {
 			operations_.push_back(newOperation);
 			return newOperation;
 		}

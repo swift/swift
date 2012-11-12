@@ -27,7 +27,7 @@ SingleThreadedEventLoop::~SingleThreadedEventLoop() {
 
 void SingleThreadedEventLoop::waitForEvents() {
 	boost::unique_lock<boost::mutex> lock(eventsMutex_);
-	while (events_.size() == 0 && !shouldShutDown_) {
+	while (events_.empty() && !shouldShutDown_) {
 		eventsAvailable_.wait(lock);
 	}
 
