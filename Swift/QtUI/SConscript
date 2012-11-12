@@ -341,7 +341,7 @@ if env["PLATFORM"] == "win32" :
       env.Command(["Swift/COPYING.rtf"], ["COPYING"], convertToRTF)
 
       wixvariables = {
-        'VCCRTFile': env.get("vcredist", "c:\\Program Files\\Common Files\\Merge Modules") + "\\Microsoft_VC90_CRT_x86.msm",
+        'VCCRTFile': env["vcredist"],
         # FIXME: Not including patch version, but that shouldn't be 
         # a problem. It just allows downgrading between development versions
         'Version': str(myenv["SWIFT_VERSION_MAJOR"]) + "." + str(myenv["SWIFT_VERSION_MINOR"]) + ".0"	

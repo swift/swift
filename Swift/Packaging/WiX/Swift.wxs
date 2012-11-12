@@ -13,44 +13,66 @@
 		<MajorUpgrade DowngradeErrorMessage="A newer version is already installed. Remove this version if you wish to downgrade." />
 
 		<Directory Id='TARGETDIR' Name='SourceDir'>
-	      <Directory Id='ProgramFilesFolder' Name='PFiles'>
-	          <!--<Directory Id='INSTALLDIR' Name='Swift'>
-	          	
-	          </Directory>-->
-	      </Directory>
+			<!-- Disabling CRT merge module, because it's not working
+				<Merge Id="CRT" DiskId="1" Language="0" SourceFile="$(var.VCCRTFile)"/>
+			-->
 
-	      <Directory Id="ProgramMenuFolder" Name="Programs">
-	        <Directory Id="ProgramMenuDir" Name="Swift">
-	          <Component Id="Shortcuts" Guid="D3BB9B0A-5D14-4920-B127-7CCD2D57BFB0">
-	        	<RemoveFolder Id='ProgramMenuDir' On='uninstall' />
-	            <RegistryValue Root='HKCU' Key='Software\Swift\Swift' Type='string' Value='' KeyPath='yes' />
-		    <Shortcut Id='SwiftShortcut' Directory='ProgramMenuDir' Name='Swift' Target="[INSTALLDIR]\Swift.exe" Icon='Swift.exe'/>
-	          </Component>
-	        </Directory>
-	      </Directory>
+			<Directory Id='ProgramFilesFolder' Name='PFiles'>
+					<!--<Directory Id='INSTALLDIR' Name='Swift'>
+					</Directory>-->
+			</Directory>
 
-	      <Directory Id="DesktopFolder" Name="Desktop" />
+			<Directory Id="ProgramMenuFolder" Name="Programs">
+				<Directory Id="ProgramMenuDir" Name="Swift">
+					<Component Id="Shortcuts" Guid="D3BB9B0A-5D14-4920-B127-7CCD2D57BFB0">
+						<RemoveFolder Id='ProgramMenuDir' On='uninstall' />
+						<RegistryValue Root='HKCU' Key='Software\Swift\Swift' Type='string' Value='' KeyPath='yes' />
+						<Shortcut Id='SwiftShortcut' Directory='ProgramMenuDir' Name='Swift' Target="[INSTALLDIR]\Swift.exe" Icon='Swift.exe'/>
+					</Component>
+				</Directory>
+			</Directory>
 
-	      <Merge Id="CRT" DiskId="1" Language="1033" SourceFile="$(var.VCCRTFile)"/>
-	    </Directory>
+			<Directory Id="DesktopFolder" Name="Desktop" />
+		</Directory>
 
-	    <Feature Id='Core' Level='1' Title='Swift' Description='All necessary Swift files' Display='expand' ConfigurableDirectory='INSTALLDIR' AllowAdvertise='no' Absent='disallow'>
-	      <ComponentGroupRef Id='Files' />
-	      
-	      <!--<ComponentRef Id='Manual' />-->
-	      <MergeRef Id="CRT"/>
-	    </Feature>
+		<Feature Id='Core' Level='1' Title='Swift' Description='All necessary Swift files' Display='expand' ConfigurableDirectory='INSTALLDIR' AllowAdvertise='no' Absent='disallow'>
+			<ComponentGroupRef Id='Files' />
+			<!--<ComponentRef Id='Manual' />-->
+		</Feature>
 
-	    <Feature Id='Shortcut' Level='1' Title='Shortcut' Description='Start Menu Shortcut' Display='expand' ConfigurableDirectory='INSTALLDIR' AllowAdvertise='no'>
-	      <ComponentRef Id='Shortcuts' />
-	    </Feature>
+		<Feature Id='Shortcut' Level='1' Title='Shortcut' Description='Start Menu Shortcut' Display='expand' ConfigurableDirectory='INSTALLDIR' AllowAdvertise='no'>
+			<ComponentRef Id='Shortcuts' />
+		</Feature>
 
-	    <!--<UIRef Id='WixUI_Advanced'/>-->
-	    <!--<UIRef Id="WixUI_Minimal"/>-->
-	    <UIRef Id="WixUI_Mondo"/>
-	    <WixVariable Id='WixUILicenseRtf' Value='COPYING.rtf'/>
+		<!--<UIRef Id='WixUI_Advanced'/>-->
+		<!--<UIRef Id="WixUI_Minimal"/>-->
+		<UIRef Id="WixUI_Mondo"/>
+		<WixVariable Id='WixUILicenseRtf' Value='COPYING.rtf'/>
 
-	    <Icon Id="Swift.exe" SourceFile="Swift.exe" />
-			<Property Id="ARPPRODUCTICON" Value="Swift.exe"/> <!-- The icon in the "Programs" dialog -->
+		<Icon Id="Swift.exe" SourceFile="Swift.exe" />
+		<Property Id="ARPPRODUCTICON" Value="Swift.exe"/> <!-- The icon in the "Programs" dialog -->
+
+		<!-- 
+				 VC Redistributable 
+		-->
+		<!-- Disabling CRT merge module, because it's not working
+			<Feature Id='CRT' Title='Visual C++ Runtime' AllowAdvertise='no' Display='hidden' Level='1'>
+				<MergeRef Id="CRT"/>
+			</Feature>
+		-->
+		<Binary Id="CRT.exe" SourceFile="$(var.VCCRTFile)"/>
+		<CustomAction Id="InstallCRT" Impersonate="yes" Return="ignore" Execute="immediate" BinaryKey="CRT.exe" ExeCommand="/qb"/>
+		<Property Id="CRT_INSTALLED" Secure="yes"> 
+			<RegistrySearch Id="VC2008SP1REDIST_X86Value" Root="HKLM" Key="SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{9A25302D-30C0-39D9-BD6F-21E6EC160475}" Name="Publisher" Type="raw" Win64="no" /> 
+		</Property> 
+		<!-- The following snippet should work for VC 2010
+			<Upgrade Id='{1F4F1D2A-D9DA-32CF-9909-48485DA06DD5}'> 
+				<UpgradeVersion OnlyDetect='yes' Property='CRT_INSTALLED' Minimum='10.0.40219' IncludeMinimum='yes'/> 
+			</Upgrade> 
+		-->
+		<InstallUISequence>
+			<Custom Action="InstallCRT" After="ProgressDlg">Not Installed And Not CRT_INSTALLED</Custom>
+		</InstallUISequence>
+
 	</Product>
 </Wix>
