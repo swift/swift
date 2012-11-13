@@ -70,7 +70,9 @@ QtConnectionSettingsWindow::QtConnectionSettingsWindow(const ClientOptions& opti
 			if (!options.manualHostname.empty()) {
 				ui.manual_manualHost->setChecked(true);
 				ui.manual_manualHostName->setText(P2QSTRING(options.manualHostname));
-				ui.manual_manualHostPort->setText(P2QSTRING(boost::lexical_cast<std::string>(options.manualPort)));
+				if (options.manualPort >=0) {
+					ui.manual_manualHostPort->setText(P2QSTRING(boost::lexical_cast<std::string>(options.manualPort)));
+				}
 			}
 			ui.manual_proxyType->setCurrentIndex(options.proxyType);
 			if (!options.manualProxyHostname.empty()) {
@@ -112,7 +114,9 @@ ClientOptions QtConnectionSettingsWindow::getOptions() {
 				options.manualHostname = Q2PSTRING(ui.manual_manualHostName->text());
 				try {
 					options.manualPort = boost::lexical_cast<int>(Q2PSTRING(ui.manual_manualHostPort->text()));
-				} catch (const boost::bad_lexical_cast&) {}
+				} catch (const boost::bad_lexical_cast&) {
+					options.manualPort = -1;
+				}
 			}
 			options.proxyType = static_cast<ClientOptions::ProxyType>(ui.manual_proxyType->currentIndex());
 			if (ui.manual_manualProxy->isChecked()) {
