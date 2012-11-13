@@ -76,7 +76,7 @@ void StatusCache::loadRecents() {
 				}
 				StatusShow::Type type;
 				type = static_cast<StatusShow::Type>(boost::lexical_cast<size_t>(bits[0]));
-				previousStatuses_.push_back(PreviousStatus(bits[1], type));
+				previousStatuses_.push_back(PreviousStatus(boost::trim(bits[1]), type));
 			}
 		}
 	}
