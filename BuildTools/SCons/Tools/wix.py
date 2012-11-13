@@ -7,11 +7,11 @@ def generate(env) :
 	if len(wixPath) > 0 and wixPath[-1] != "\\":
 		wixPath += "\\"
 	env['WIX_HEAT'] = wixPath + 'heat.exe'
-	env['WIX_HEAT_OPTIONS'] = '-gg -sfrag -suid -template fragment -dr ProgramFilesFolder'
+	env['WIX_HEAT_OPTIONS'] = '-nologo -gg -sfrag -suid -template fragment -dr ProgramFilesFolder'
 	env['WIX_CANDLE'] = wixPath + 'candle.exe'
-	env['WIX_CANDLE_OPTIONS'] = ''
+	env['WIX_CANDLE_OPTIONS'] = '-nologo'
 	env['WIX_LIGHT'] = wixPath + 'light.exe'
-	env['WIX_LIGHT_OPTIONS'] = '-ext WixUIExtension'
+	env['WIX_LIGHT_OPTIONS'] = '-nologo -ext WixUIExtension'
 
 	def WiX_IncludeScanner(source, env, path, arg):
 		wixIncludeRegexp = re.compile(r'^\s*\<\?include (\S+.wxs)\s*\?\>\S*', re.M)
