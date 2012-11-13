@@ -193,7 +193,7 @@ class BOSHConnectionTest : public CppUnit::TestFixture {
 		BOSHConnection::ref createTestling() {
 			resolver->addAddress("wonderland.lit", HostAddress("127.0.0.1"));
 			Connector::ref connector = Connector::create("wonderland.lit", 5280, false, resolver, connectionFactory, timerFactory);
-			BOSHConnection::ref c = BOSHConnection::create(URL("http", "wonderland.lit", 5280, "http-bind"), connector, &parserFactory);
+			BOSHConnection::ref c = BOSHConnection::create(URL("http", "wonderland.lit", 5280, "/http-bind"), connector, &parserFactory);
 			c->onConnectFinished.connect(boost::bind(&BOSHConnectionTest::handleConnectFinished, this, _1));
 			c->onDisconnected.connect(boost::bind(&BOSHConnectionTest::handleDisconnected, this, _1));
 			c->onXMPPDataRead.connect(boost::bind(&BOSHConnectionTest::handleDataRead, this, _1));

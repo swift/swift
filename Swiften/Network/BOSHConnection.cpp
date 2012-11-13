@@ -101,8 +101,12 @@ std::pair<SafeByteArray, size_t> BOSHConnection::createHTTPRequest(const SafeByt
 
 	size = safeContent.size();
 
-	header	<< "POST /" << boshURL.getPath() << " HTTP/1.1\r\n"
-			<< "Host: " << boshURL.getHost() << ":" << boshURL.getPort() << "\r\n"
+	header	<< "POST " << boshURL.getPath() << " HTTP/1.1\r\n"
+			<< "Host: " << boshURL.getHost();
+	if (boshURL.getPort()) {
+			header << ":" << *boshURL.getPort();
+	}
+	header	<< "\r\n"
 		/*<< "Accept-Encoding: deflate\r\n"*/
 			<< "Content-Type: text/xml; charset=utf-8\r\n"
 			<< "Content-Length: " << size << "\r\n\r\n";

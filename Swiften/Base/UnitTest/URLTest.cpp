@@ -18,6 +18,7 @@ class URLTest : public CppUnit::TestFixture {
 		CPPUNIT_TEST(testFromString_WithoutPath);
 		CPPUNIT_TEST(testFromString_WithRootPath);
 		CPPUNIT_TEST(testFromString_WithPort);
+		CPPUNIT_TEST(testFromString_WithPortOnePartPath);
 		CPPUNIT_TEST(testFromString_WithPortWithoutPath);
 		CPPUNIT_TEST(testFromString_WithUserInfo);
 		CPPUNIT_TEST(testFromString_NonASCIIHost);
@@ -33,7 +34,7 @@ class URLTest : public CppUnit::TestFixture {
 			CPPUNIT_ASSERT_EQUAL(std::string("http"), url.getScheme());
 			CPPUNIT_ASSERT_EQUAL(std::string("foo.bar"), url.getHost());
 			CPPUNIT_ASSERT(!url.getPort());
-			CPPUNIT_ASSERT_EQUAL(std::string("baz/bam"), url.getPath());
+			CPPUNIT_ASSERT_EQUAL(std::string("/baz/bam"), url.getPath());
 		}
 
 		void testFromString_WithoutPath() {
@@ -51,7 +52,7 @@ class URLTest : public CppUnit::TestFixture {
 			CPPUNIT_ASSERT_EQUAL(std::string("http"), url.getScheme());
 			CPPUNIT_ASSERT_EQUAL(std::string("foo.bar"), url.getHost());
 			CPPUNIT_ASSERT(!url.getPort());
-			CPPUNIT_ASSERT_EQUAL(std::string(""), url.getPath());
+			CPPUNIT_ASSERT_EQUAL(std::string("/"), url.getPath());
 		}
 
 		void testFromString_WithPort() {
@@ -60,7 +61,16 @@ class URLTest : public CppUnit::TestFixture {
 			CPPUNIT_ASSERT_EQUAL(std::string("http"), url.getScheme());
 			CPPUNIT_ASSERT_EQUAL(std::string("foo.bar"), url.getHost());
 			CPPUNIT_ASSERT_EQUAL(1234, *url.getPort());
-			CPPUNIT_ASSERT_EQUAL(std::string("baz/bam"), url.getPath());
+			CPPUNIT_ASSERT_EQUAL(std::string("/baz/bam"), url.getPath());
+		}
+
+		void testFromString_WithPortOnePartPath() {
+			URL url = URL::fromString("http://foo.bar:11440/http-bind/");
+			
+			CPPUNIT_ASSERT_EQUAL(std::string("http"), url.getScheme());
+			CPPUNIT_ASSERT_EQUAL(std::string("foo.bar"), url.getHost());
+			CPPUNIT_ASSERT_EQUAL(11440, *url.getPort());
+			CPPUNIT_ASSERT_EQUAL(std::string("/http-bind/"), url.getPath());
 		}
 
 		void testFromString_WithPortWithoutPath() {
@@ -77,7 +87,7 @@ class URLTest : public CppUnit::TestFixture {
 			
 			CPPUNIT_ASSERT_EQUAL(std::string("http"), url.getScheme());
 			CPPUNIT_ASSERT_EQUAL(std::string("foo.bar"), url.getHost());
-			CPPUNIT_ASSERT_EQUAL(std::string("baz/bam"), url.getPath());
+			CPPUNIT_ASSERT_EQUAL(std::string("/baz/bam"), url.getPath());
 		}
 
 		void testFromString_NonASCIIHost() {
@@ -89,7 +99,7 @@ class URLTest : public CppUnit::TestFixture {
 		void testFromString_NonASCIIPath() {
 			URL url = URL::fromString("http://foo.bar/baz/tron%C3%A7on/bam");
 			
-			CPPUNIT_ASSERT_EQUAL(std::string("baz/tron\xc3\xa7on/bam"), url.getPath());
+			CPPUNIT_ASSERT_EQUAL(std::string("/baz/tron\xc3\xa7on/bam"), url.getPath());
 		}
 
 		void testToString() {

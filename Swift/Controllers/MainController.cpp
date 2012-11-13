@@ -473,7 +473,8 @@ void MainController::handleLoginRequest(const std::string &username, const std::
 			profileSettings_->storeString("jid", username);
 			profileSettings_->storeString("certificate", certificatePath);
 			profileSettings_->storeString("pass", (remember || loginAutomatically) ? password : "");
-			profileSettings_->storeString("options", serializeClientOptions(options));
+			std::string optionString = serializeClientOptions(options);
+			profileSettings_->storeString("options", optionString);
 			settings_->storeSetting(SettingConstants::LAST_LOGIN_JID, username);
 			settings_->storeSetting(SettingConstants::LOGIN_AUTOMATICALLY, loginAutomatically);
 			loginWindow_->addAvailableAccount(profileSettings_->getStringSetting("jid"), profileSettings_->getStringSetting("pass"), profileSettings_->getStringSetting("certificate"), options);

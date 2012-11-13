@@ -47,7 +47,7 @@ class BOSHConnectionPoolTest : public CppUnit::TestFixture {
 	public:
 		void setUp() {
 			to = "wonderland.lit";
-			path = "http-bind";
+			path = "/http-bind";
 			port = "5280";
 			sid = "MyShinySID";
 			initial = "<body wait='60' "
@@ -236,7 +236,7 @@ class BOSHConnectionPoolTest : public CppUnit::TestFixture {
 		void testSession() {
 			to = "prosody.doomsong.co.uk";
 			resolver->addAddress("prosody.doomsong.co.uk", HostAddress("127.0.0.1"));
-			path = "http-bind/";
+			path = "/http-bind/";
 			boshURL = URL("http", to, 5280, path);
 
 			PoolRef testling = createTestling();

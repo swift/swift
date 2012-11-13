@@ -45,7 +45,7 @@ URL URL::fromString(const std::string& urlString) {
 		}
 		else {
 			authority = urlString.substr(authorityIndex, slashIndex - authorityIndex);
-			path = unescape(urlString.substr(slashIndex + 1));
+			path = unescape(urlString.substr(slashIndex));
 		}
 
 		size_t atIndex = authority.find('@');
