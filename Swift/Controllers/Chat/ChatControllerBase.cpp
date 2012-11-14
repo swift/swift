@@ -152,7 +152,7 @@ void ChatControllerBase::handleSendMessageRequest(const std::string &body, bool 
 }
 
 void ChatControllerBase::handleSecurityLabelsCatalogResponse(boost::shared_ptr<SecurityLabelsCatalog> catalog, ErrorPayload::ref error) {
-	if (!error) {
+	if (catalog && !error) {
 		if (catalog->getItems().size() == 0) {
 			chatWindow_->setSecurityLabelsEnabled(false);
 			labelsEnabled_ = false;
