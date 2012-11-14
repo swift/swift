@@ -44,14 +44,15 @@ def convertToWindowsVersion(version) :
       patch = 1000*int(match.group(1))
       build_string = match.group(2)
     else :
-      match = re.match("^rc(\d+)(.*)", version_match.group(3))
-      if match :
+      rc_match = re.match("^rc(\d+)(.*)", version_match.group(3))
+      if rc_match :
         patch = 10000*int(rc_match.group(1))
-        build_string = match.group(2)
+        build_string = rc_match.group(2)
       else :
-        match = re.match("^alpha(.*)", version_match.group(3))
-        if match :
-          build_string = match.group(1)
+        patch = 0
+        alpha_match = re.match("^alpha(.*)", version_match.group(3))
+        if alpha_match :
+          build_string = alpha_match.group(1)
 
     if len(build_string) > 0 :
       build_match = re.match("^-dev(\d+)", build_string) 
