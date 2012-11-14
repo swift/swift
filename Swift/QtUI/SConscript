@@ -164,10 +164,14 @@ sources = [
     "QtUISettingConstants.cpp"
   ]
 
+# Determine the version
 myenv["SWIFT_VERSION"] = Version.getBuildVersion(env.Dir("#").abspath, "swift")
-version_match = re.match("(\d+)\.(\d+).*", myenv["SWIFT_VERSION"])
-myenv["SWIFT_VERSION_MAJOR"] = int(version_match.group(1)) if version_match else 0
-myenv["SWIFT_VERSION_MINOR"] = int(version_match.group(2)) if version_match else 0
+if env["PLATFORM"] == "win32" :
+	swift_windows_version = Version.convertToWindowsVersion(myenv["SWIFT_VERSION"])
+	myenv["SWIFT_VERSION_MAJOR"] = swift_windows_version[0]
+	myenv["SWIFT_VERSION_MINOR"] = swift_windows_version[1]
+	myenv["SWIFT_VERSION_PATCH"] = swift_windows_version[2]
+
 
 if env["PLATFORM"] == "win32" :
 	res_env = myenv.Clone()
@@ -175,6 +179,7 @@ if env["PLATFORM"] == "win32" :
 			("SWIFT_COPYRIGHT_YEAR", "\"\\\"2010-%s\\\"\"" % str(time.localtime()[0])),
 			("SWIFT_VERSION_MAJOR", "${SWIFT_VERSION_MAJOR}"),
 			("SWIFT_VERSION_MINOR", "${SWIFT_VERSION_MINOR}"),
+			("SWIFT_VERSION_PATCH", "${SWIFT_VERSION_PATCH}"),
 		])
 	res = res_env.RES("#/Swift/resources/Windows/Swift.rc")
   # For some reason, SCons isn't picking up the dependency correctly
@@ -342,9 +347,7 @@ if env["PLATFORM"] == "win32" :
 
       wixvariables = {
         'VCCRTFile': env["vcredist"],
-        # FIXME: Not including patch version, but that shouldn't be 
-        # a problem. It just allows downgrading between development versions
-        'Version': str(myenv["SWIFT_VERSION_MAJOR"]) + "." + str(myenv["SWIFT_VERSION_MINOR"]) + ".0"	
+        'Version': str(myenv["SWIFT_VERSION_MAJOR"]) + "." + str(myenv["SWIFT_VERSION_MINOR"]) + "." + str(myenv["SWIFT_VERSION_PATCH"])	
       }
       wixincludecontent = "<Include>"
       for key in wixvariables:
