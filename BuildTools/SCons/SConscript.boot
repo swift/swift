@@ -59,7 +59,7 @@ vars.Add(PathVariable("docbook_xml", "DocBook XML", None, PathVariable.PathAccep
 vars.Add(PathVariable("docbook_xsl", "DocBook XSL", None, PathVariable.PathAccept))
 vars.Add(BoolVariable("build_examples", "Build example programs", "yes"))
 vars.Add(BoolVariable("enable_variants", "Build in a separate dir under build/, depending on compile flags", "no"))
-vars.Add(BoolVariable("experimental", "Build experimental features", "no"))
+vars.Add(BoolVariable("experimental", "Build experimental features", "yes"))
 vars.Add(BoolVariable("set_iterator_debug_level", "Set _ITERATOR_DEBUG_LEVEL=0", "yes"))
 
 ################################################################################
