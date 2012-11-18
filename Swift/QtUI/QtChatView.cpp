@@ -142,6 +142,7 @@ QWebElement QtChatView::snippetToDOM(boost::shared_ptr<ChatSnippet> snippet) {
 }
 
 void QtChatView::addToDOM(boost::shared_ptr<ChatSnippet> snippet) {
+	//qDebug() << snippet->getContent();
 	rememberScrolledToBottom();
 	bool insert = snippet->getAppendToPrevious();
 	QWebElement continuationElement = lastElement_.findFirst("#insert");
@@ -164,6 +165,8 @@ void QtChatView::addToDOM(boost::shared_ptr<ChatSnippet> snippet) {
 			span.setStyleProperty("font-size", sizeString);
 		}
 	}
+	//qDebug() << "-----------------";
+	//qDebug() << webPage_->mainFrame()->toHtml();
 }
 
 void QtChatView::addLastSeenLine() {

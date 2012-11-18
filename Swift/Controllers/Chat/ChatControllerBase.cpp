@@ -75,7 +75,7 @@ void ChatControllerBase::createDayChangeTimer() {
 void ChatControllerBase::handleDayChangeTick() {
 	dateChangeTimer_->stop();
 	boost::posix_time::ptime now = boost::posix_time::second_clock::local_time();
-	chatWindow_->addSystemMessage(str(format(QT_TRANSLATE_NOOP("", "The day is now %1%")) % std::string(boost::posix_time::to_iso_extended_string(now)).substr(0,10)));
+	chatWindow_->addSystemMessage(str(format(QT_TRANSLATE_NOOP("", "The day is now %1%")) % std::string(boost::posix_time::to_iso_extended_string(now)).substr(0,10)), ChatWindow::DefaultDirection);
 	dayTicked();
 	createDayChangeTimer();
 }
@@ -238,7 +238,7 @@ void ChatControllerBase::handleIncomingMessage(boost::shared_ptr<MessageEvent> m
 			boost::posix_time::ptime now = boost::posix_time::microsec_clock::universal_time();
 			std::ostringstream s;
 			s << "The following message took " << (now - delayPayloads[i]->getStamp()).total_milliseconds() / 1000.0 <<  " seconds to be delivered from " << delayPayloads[i]->getFrom()->toString() << ".";
-			chatWindow_->addSystemMessage(std::string(s.str()));
+			chatWindow_->addSystemMessage(std::string(s.str()), ChatWindow::DefaultDirection);
 		}
 		boost::shared_ptr<SecurityLabel> label = message->getPayload<SecurityLabel>();
 

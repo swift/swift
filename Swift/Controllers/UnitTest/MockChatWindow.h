@@ -16,9 +16,9 @@ namespace Swift {
 
 			virtual std::string addMessage(const std::string& message, const std::string& /*senderName*/, bool /*senderIsSelf*/, boost::shared_ptr<SecurityLabel> /*label*/, const std::string& /*avatarPath*/, const boost::posix_time::ptime&, const HighlightAction&) {lastMessageBody_ = message; return "";}
 			virtual std::string addAction(const std::string& message, const std::string& /*senderName*/, bool /*senderIsSelf*/, boost::shared_ptr<SecurityLabel> /*label*/, const std::string& /*avatarPath*/, const boost::posix_time::ptime&, const HighlightAction&) {lastMessageBody_ = message; return "";}
-			virtual void addSystemMessage(const std::string& /*message*/) {}
+			virtual void addSystemMessage(const std::string& /*message*/, Direction) {}
 			virtual void addErrorMessage(const std::string& /*message*/) {}
-			virtual void addPresenceMessage(const std::string& /*message*/) {}
+			virtual void addPresenceMessage(const std::string& /*message*/, Direction) {}
 
 			// File transfer related stuff
 			virtual std::string addFileTransfer(const std::string& /*senderName*/, bool /*senderIsSelf*/,const std::string& /*filename*/, const boost::uintmax_t /*sizeInBytes*/) { return 0; }

@@ -77,7 +77,7 @@ ChatController::ChatController(const JID& self, StanzaChannel* stanzaChannel, IQ
 	lastShownStatus_ = theirPresence ? theirPresence->getShow() : StatusShow::None;
 	chatStateNotifier_->setContactIsOnline(theirPresence && theirPresence->getType() == Presence::Available);
 	startMessage += ".";
-	chatWindow_->addSystemMessage(startMessage);
+	chatWindow_->addSystemMessage(startMessage, ChatWindow::DefaultDirection);
 	chatWindow_->onUserTyping.connect(boost::bind(&ChatStateNotifier::setUserIsTyping, chatStateNotifier_));
 	chatWindow_->onUserCancelsTyping.connect(boost::bind(&ChatStateNotifier::userCancelledNewMessage, chatStateNotifier_));
 	chatWindow_->onFileTransferStart.connect(boost::bind(&ChatController::handleFileTransferStart, this, _1, _2));
@@ -445,7 +445,7 @@ void ChatController::handlePresenceChange(boost::shared_ptr<Presence> newPresenc
 		if (lastWasPresence_) {
 			chatWindow_->replaceLastMessage(newStatusChangeString);
 		} else {
-			chatWindow_->addPresenceMessage(newStatusChangeString);
+			chatWindow_->addPresenceMessage(newStatusChangeString, ChatWindow::DefaultDirection);
 		}
 		lastStatusChangeString_ = newStatusChangeString;
 		lastWasPresence_ = true;

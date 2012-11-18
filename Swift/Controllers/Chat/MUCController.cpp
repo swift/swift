@@ -226,7 +226,7 @@ const std::string& MUCController::getNick() {
 
 void MUCController::handleJoinTimeoutTick() {
 	receivedActivity();
-	chatWindow_->addSystemMessage(str(format(QT_TRANSLATE_NOOP("", "Room %1% is not responding. This operation may never complete.")) % toJID_.toString()));
+	chatWindow_->addSystemMessage(str(format(QT_TRANSLATE_NOOP("", "Room %1% is not responding. This operation may never complete.")) % toJID_.toString()), ChatWindow::DefaultDirection);
 }
 
 void MUCController::receivedActivity() {
@@ -294,7 +294,7 @@ void MUCController::handleJoinComplete(const std::string& nick) {
 	joined_ = true;
 	std::string joinMessage = str(format(QT_TRANSLATE_NOOP("", "You have entered room %1% as %2%.")) % toJID_.toString() % nick);
 	setNick(nick);
-	chatWindow_->addSystemMessage(joinMessage);
+	chatWindow_->addSystemMessage(joinMessage, ChatWindow::DefaultDirection);
 
 #ifdef SWIFT_EXPERIMENTAL_HISTORY
 	addRecentLogs();
@@ -352,7 +352,6 @@ void MUCController::handleOccupantJoined(const MUCOccupant& occupant) {
 			updateJoinParts();
 		} else {
 			addPresenceMessage(joinString);
-
 		}
 	}
 	if (avatarManager_ != NULL) {
@@ -362,7 +361,7 @@ void MUCController::handleOccupantJoined(const MUCOccupant& occupant) {
 
 void MUCController::addPresenceMessage(const std::string& message) {
 	lastWasPresence_ = true;
-	chatWindow_->addPresenceMessage(message);
+	chatWindow_->addPresenceMessage(message, ChatWindow::DefaultDirection);
 }
 
 
@@ -449,7 +448,7 @@ void MUCController::preHandleIncomingMessage(boost::shared_ptr<MessageEvent> mes
 	joined_ = true;
 
 	if (message->hasSubject() && message->getBody().empty()) {
-		chatWindow_->addSystemMessage(str(format(QT_TRANSLATE_NOOP("", "The room subject is now: %1%")) % message->getSubject()));;
+		chatWindow_->addSystemMessage(str(format(QT_TRANSLATE_NOOP("", "The room subject is now: %1%")) % message->getSubject()), ChatWindow::DefaultDirection);;
 		chatWindow_->setSubject(message->getSubject());
 		doneGettingHistory_ = true;
 	}
@@ -486,7 +485,7 @@ void MUCController::handleOccupantRoleChanged(const std::string& nick, const MUC
 	std::string group(roleToGroupName(occupant.getRole()));
 	roster_->addContact(jid, realJID, nick, group, avatarManager_->getAvatarPath(jid).string());
 	roster_->getGroup(group)->setManualSort(roleToSortName(occupant.getRole()));
-	chatWindow_->addSystemMessage(str(format(QT_TRANSLATE_NOOP("", "%1% is now a %2%")) % nick % roleToFriendlyName(occupant.getRole())));
+	chatWindow_->addSystemMessage(str(format(QT_TRANSLATE_NOOP("", "%1% is now a %2%")) % nick % roleToFriendlyName(occupant.getRole())), ChatWindow::DefaultDirection);
 	if (nick == nick_) {
 		setAvailableRoomActions(occupant.getAffiliation(), occupant.getRole());
 	}
@@ -519,7 +518,7 @@ void MUCController::setOnline(bool online) {
 	} else {
 		if (shouldJoinOnReconnect_) {
 			renameCounter_ = 0;
-			chatWindow_->addSystemMessage(str(format(QT_TRANSLATE_NOOP("", "Trying to enter room %1%")) % toJID_.toString()));
+			chatWindow_->addSystemMessage(str(format(QT_TRANSLATE_NOOP("", "Trying to enter room %1%")) % toJID_.toString()), ChatWindow::DefaultDirection);
 			if (loginCheckTimer_) {
 				loginCheckTimer_->start();
 			}

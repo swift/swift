@@ -40,6 +40,8 @@ namespace Swift {
 			enum FileTransferState {WaitingForAccept, Negotiating, Transferring, Canceled, Finished, FTFailed};
 			enum WhiteboardSessionState {WhiteboardAccepted, WhiteboardTerminated, WhiteboardRejected};
 			enum BlockingState {BlockingUnsupported, IsBlocked, IsUnblocked};
+			enum Direction { UnknownDirection, DefaultDirection };
+
 			ChatWindow() {}
 			virtual ~ChatWindow() {}
 
@@ -51,8 +53,10 @@ namespace Swift {
 			 * @return id of added message (for acks);
 			 */
 			virtual std::string addAction(const std::string& message, const std::string& senderName, bool senderIsSelf, boost::shared_ptr<SecurityLabel> label, const std::string& avatarPath, const boost::posix_time::ptime& time, const HighlightAction& highlight) = 0;
-			virtual void addSystemMessage(const std::string& message) = 0;
-			virtual void addPresenceMessage(const std::string& message) = 0;
+
+			virtual void addSystemMessage(const std::string& message, Direction direction) = 0;
+			virtual void addPresenceMessage(const std::string& message, Direction direction) = 0;
+
 			virtual void addErrorMessage(const std::string& message) = 0;
 			virtual void replaceMessage(const std::string& message, const std::string& id, const boost::posix_time::ptime& time, const HighlightAction& highlight) = 0;
 			virtual void replaceWithAction(const std::string& message, const std::string& id, const boost::posix_time::ptime& time, const HighlightAction& highlight) = 0;

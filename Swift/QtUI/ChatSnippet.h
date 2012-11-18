@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Kevin Smith
+ * Copyright (c) 2010-2013 Kevin Smith
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -15,6 +15,11 @@
 namespace Swift {
 	class ChatSnippet {
 		public:
+			enum Direction {
+				RTL,
+				LTR
+			};
+
 			ChatSnippet(bool appendToPrevious);
 			virtual ~ChatSnippet();
 
@@ -42,7 +47,12 @@ namespace Swift {
 
 			static QString timeToEscapedString(const QDateTime& time);
 
+			static Direction getDirection(const std::string& message);
+			static Direction getDirection(const QString& message);
+
 		protected:
+			static QString directionToCSS(Direction direction);
+
 			QString wrapResizable(const QString& text);
 			void setContinuationFallbackSnippet(boost::shared_ptr<ChatSnippet> continuationFallback) {
 				continuationFallback_ = continuationFallback;

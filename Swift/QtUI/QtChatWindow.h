@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2012 Kevin Smith
+ * Copyright (c) 2010-2013 Kevin Smith
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -10,6 +10,7 @@
 #include <Swift/QtUI/QtMUCConfigurationWindow.h>
 #include <Swift/QtUI/QtAffiliationEditor.h>
 #include <Swift/QtUI/QtSwiftUtil.h>
+#include <Swift/QtUI/ChatSnippet.h>
 
 #include <QtTabbable.h>
 
@@ -90,9 +91,11 @@ namespace Swift {
 			~QtChatWindow();
 			std::string addMessage(const std::string &message, const std::string &senderName, bool senderIsSelf, boost::shared_ptr<SecurityLabel> label, const std::string& avatarPath, const boost::posix_time::ptime& time, const HighlightAction& highlight);
 			std::string addAction(const std::string &message, const std::string &senderName, bool senderIsSelf, boost::shared_ptr<SecurityLabel> label, const std::string& avatarPath, const boost::posix_time::ptime& time, const HighlightAction& highlight);
-			void addSystemMessage(const std::string& message);
-			void addPresenceMessage(const std::string& message);
+
+			void addSystemMessage(const std::string& message, Direction direction);
+			void addPresenceMessage(const std::string& message, Direction direction);
 			void addErrorMessage(const std::string& errorMessage);
+
 			void replaceMessage(const std::string& message, const std::string& id, const boost::posix_time::ptime& time, const HighlightAction& highlight);
 			void replaceWithAction(const std::string& message, const std::string& id, const boost::posix_time::ptime& time, const HighlightAction& highlight);
 			// File transfer related stuff
@@ -193,10 +196,26 @@ namespace Swift {
 			void beginCorrection();
 			void cancelCorrection();
 			void handleSettingChanged(const std::string& setting);
-			std::string addMessage(const QString& message, const std::string& senderName, bool senderIsSelf, boost::shared_ptr<SecurityLabel> label, const std::string& avatarPath, const QString& style, const boost::posix_time::ptime& time, const HighlightAction& highlight);
-			void replaceMessage(const QString& message, const std::string& id, const boost::posix_time::ptime& time, const QString& style, const HighlightAction& highlight);
+			std::string addMessage(
+					const QString& message, 
+					const std::string& senderName, 
+					bool senderIsSelf, 
+					boost::shared_ptr<SecurityLabel> label, 
+					const std::string& avatarPath, 
+					const QString& style, 
+					const boost::posix_time::ptime& time, 
+					const HighlightAction& highlight,
+					ChatSnippet::Direction direction);
+			void replaceMessage(
+					const QString& message, 
+					const std::string& id, 
+					const boost::posix_time::ptime& time, 
+					const QString& style, 
+					const HighlightAction& highlight);
 			void handleOccupantSelectionChanged(RosterItem* item);
 			bool appendToPreviousCheck(PreviousMessageKind messageKind, const std::string& senderName, bool senderIsSelf) const;
+			static ChatSnippet::Direction getActualDirection(const std::string& message, Direction direction);
+			QString linkimoticonify(const std::string& message) const;
 			QString linkimoticonify(const QString& message) const;
 			QString getHighlightSpanStart(const HighlightAction& highlight);
 

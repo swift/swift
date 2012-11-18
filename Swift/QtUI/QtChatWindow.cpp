@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2012 Kevin Smith
+ * Copyright (c) 2010-2013 Kevin Smith
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -29,6 +29,7 @@
 
 #include <boost/cstdint.hpp>
 #include <boost/format.hpp>
+#include <boost/smart_ptr/make_shared.hpp>
 #include <boost/lexical_cast.hpp>
 
 #include <QLabel>
@@ -219,6 +220,15 @@ void QtChatWindow::handleOccupantSelectionChanged(RosterItem* item) {
 
 bool QtChatWindow::appendToPreviousCheck(QtChatWindow::PreviousMessageKind messageKind, const std::string& senderName, bool senderIsSelf) const {
 	return previousMessageKind_ == messageKind && ((senderIsSelf && previousMessageWasSelf_) || (!senderIsSelf && !previousMessageWasSelf_&& previousSenderName_ == P2QSTRING(senderName)));
+}
+
+ChatSnippet::Direction QtChatWindow::getActualDirection(const std::string& message, Direction direction) {
+	if (direction == DefaultDirection) {
+		return QCoreApplication::translate("QApplication", "QT_LAYOUT_DIRECTION") == "RTL" ? ChatSnippet::RTL : ChatSnippet::LTR;
+	}
+	else {
+		return ChatSnippet::getDirection(message);
+	}
 }
 
 void QtChatWindow::handleFontResized(int fontSizeSteps) {
@@ -486,8 +496,19 @@ void QtChatWindow::updateTitleWithUnreadCount() {
 	emit titleUpdated();
 }
 
-std::string QtChatWindow::addMessage(const std::string &message, const std::string &senderName, bool senderIsSelf, boost::shared_ptr<SecurityLabel> label, const std::string& avatarPath, const boost::posix_time::ptime& time, const HighlightAction& highlight) {
-	return addMessage(linkimoticonify(P2QSTRING(message)), senderName, senderIsSelf, label, avatarPath, "", time, highlight);
+std::string QtChatWindow::addMessage(
+		const std::string& message, 
+		const std::string& senderName, 
+		bool senderIsSelf, 
+		boost::shared_ptr<SecurityLabel> label, 
+		const std::string& avatarPath, 
+		const boost::posix_time::ptime& time, 
+		const HighlightAction& highlight) {
+	return addMessage(linkimoticonify(message), senderName, senderIsSelf, label, avatarPath, "", time, highlight, ChatSnippet::getDirection(message));
+}
+
+QString QtChatWindow::linkimoticonify(const std::string& message) const {
+	return linkimoticonify(P2QSTRING(message));
 }
 
 QString QtChatWindow::linkimoticonify(const QString& message) const {
@@ -520,7 +541,17 @@ QString QtChatWindow::getHighlightSpanStart(const HighlightAction& highlight) {
 	return QString("<span style=\"color: %1; background: %2\">").arg(color).arg(background);
 }
 
-std::string QtChatWindow::addMessage(const QString &message, const std::string &senderName, bool senderIsSelf, boost::shared_ptr<SecurityLabel> label, const std::string& avatarPath, const QString& style, const boost::posix_time::ptime& time, const HighlightAction& highlight) {
+std::string QtChatWindow::addMessage(
+		const QString& message, 
+		const std::string& senderName, 
+		bool senderIsSelf, 
+		boost::shared_ptr<SecurityLabel> label, 
+		const std::string& avatarPath, 
+		const QString& style, 
+		const boost::posix_time::ptime& time, 
+		const HighlightAction& highlight,
+		ChatSnippet::Direction direction) {
+
 	if (isWidgetSelected()) {
 		onAllMessagesRead();
 	}
@@ -547,7 +578,7 @@ std::string QtChatWindow::addMessage(const QString &message, const std::string &
 	}
 	QString qAvatarPath =  scaledAvatarPath.isEmpty() ? "qrc:/icons/avatar.png" : QUrl::fromLocalFile(scaledAvatarPath).toEncoded();
 	std::string id = "id" + boost::lexical_cast<std::string>(idCounter_++);
-	messageLog_->addMessageBottom(boost::shared_ptr<ChatSnippet>(new MessageSnippet(htmlString, QtUtilities::htmlEscape(P2QSTRING(senderName)), B2QDATE(time), qAvatarPath, senderIsSelf, appendToPrevious, theme_, P2QSTRING(id))));
+	messageLog_->addMessageBottom(boost::make_shared<MessageSnippet>(htmlString, QtUtilities::htmlEscape(P2QSTRING(senderName)), B2QDATE(time), qAvatarPath, senderIsSelf, appendToPrevious, theme_, P2QSTRING(id), direction));
 
 	previousMessageWasSelf_ = senderIsSelf;
 	previousSenderName_ = P2QSTRING(senderName);
@@ -593,7 +624,7 @@ int QtChatWindow::getCount() {
 }
 
 std::string QtChatWindow::addAction(const std::string &message, const std::string &senderName, bool senderIsSelf, boost::shared_ptr<SecurityLabel> label, const std::string& avatarPath, const boost::posix_time::ptime& time, const HighlightAction& highlight) {
-	return addMessage(" *" + linkimoticonify(P2QSTRING(message)) + "*", senderName, senderIsSelf, label, avatarPath, "font-style:italic ", time, highlight);
+	return addMessage(" *" + linkimoticonify(message) + "*", senderName, senderIsSelf, label, avatarPath, "font-style:italic ", time, highlight, ChatSnippet::getDirection(message));
 }
 
 // FIXME: Move this to a different file
@@ -627,11 +658,13 @@ std::string QtChatWindow::addFileTransfer(const std::string& senderName, bool se
 	SWIFT_LOG(debug) << "addFileTransfer" << std::endl;
 	QString ft_id = QString("ft%1").arg(P2QSTRING(boost::lexical_cast<std::string>(idCounter_++)));
 	
+	QString actionText;
 	QString htmlString;
 	QString formattedFileSize = P2QSTRING(formatSize(sizeInBytes));
 	if (senderIsSelf) {
 		// outgoing
-		htmlString = tr("Send file") + ": " + P2QSTRING(filename) + " ( " + formattedFileSize + ") <br/>" +
+		actionText = tr("Send file");
+		htmlString = actionText + ": " + P2QSTRING(filename) + " ( " + formattedFileSize + ") <br/>" +
 			"<div id='" + ft_id + "'>" +
 				buildChatWindowButton(tr("Cancel"), ButtonFileTransferCancel, ft_id) +
 				buildChatWindowButton(tr("Set Description"), ButtonFileTransferSetDescription, ft_id) +
@@ -639,7 +672,8 @@ std::string QtChatWindow::addFileTransfer(const std::string& senderName, bool se
 			"</div>";
 	} else {
 		// incoming
-		htmlString = tr("Receiving file") + ": " + P2QSTRING(filename) + " ( " + formattedFileSize  + ") <br/>" +
+		actionText = tr("Receiving file");
+		htmlString = actionText + ": " + P2QSTRING(filename) + " ( " + formattedFileSize  + ") <br/>" +
 			"<div id='" + ft_id + "'>" +
 				buildChatWindowButton(tr("Cancel"), ButtonFileTransferCancel, ft_id) +
 				buildChatWindowButton(tr("Accept"), ButtonFileTransferAcceptRequest, ft_id, P2QSTRING(filename)) +
@@ -657,7 +691,7 @@ std::string QtChatWindow::addFileTransfer(const std::string& senderName, bool se
 	}
 	QString qAvatarPath = "qrc:/icons/avatar.png";
 	std::string id = "ftmessage" + boost::lexical_cast<std::string>(idCounter_++);
-	messageLog_->addMessageBottom(boost::shared_ptr<ChatSnippet>(new MessageSnippet(htmlString, QtUtilities::htmlEscape(P2QSTRING(senderName)), B2QDATE(boost::posix_time::second_clock::local_time()), qAvatarPath, senderIsSelf, appendToPrevious, theme_, P2QSTRING(id))));
+	messageLog_->addMessageBottom(boost::make_shared<MessageSnippet>(htmlString, QtUtilities::htmlEscape(P2QSTRING(senderName)), B2QDATE(boost::posix_time::second_clock::local_time()), qAvatarPath, senderIsSelf, appendToPrevious, theme_, P2QSTRING(id), ChatSnippet::getDirection(actionText)));
 
 	previousMessageWasSelf_ = senderIsSelf;
 	previousSenderName_ = P2QSTRING(senderName);
@@ -676,12 +710,15 @@ void QtChatWindow::setFileTransferStatus(std::string id, const FileTransferState
 std::string QtChatWindow::addWhiteboardRequest(bool senderIsSelf) {
 	QString wb_id = QString("wb%1").arg(P2QSTRING(boost::lexical_cast<std::string>(idCounter_++)));
 	QString htmlString;
+	QString actionText;
 	if (senderIsSelf) {
-		htmlString = "<div id='" + wb_id + "'>" + tr("Starting whiteboard chat") + "<br />"+
+		actionText = tr("Starting whiteboard chat");
+		htmlString = "<div id='" + wb_id + "'>" + actionText + "<br />"+
 				buildChatWindowButton(tr("Cancel"), ButtonWhiteboardSessionCancel, wb_id) +
 			"</div>";
 	} else {
-		htmlString = "<div id='" + wb_id + "'>" + tr("%1 would like to start a whiteboard chat").arg(QtUtilities::htmlEscape(contact_)) + ": <br/>" +
+		actionText = tr("%1 would like to start a whiteboard chat");
+		htmlString = "<div id='" + wb_id + "'>" + actionText.arg(QtUtilities::htmlEscape(contact_)) + ": <br/>" +
 				buildChatWindowButton(tr("Cancel"), ButtonWhiteboardSessionCancel, wb_id) +
 				buildChatWindowButton(tr("Accept"), ButtonWhiteboardSessionAcceptRequest, wb_id) +
 			"</div>";
@@ -695,7 +732,7 @@ std::string QtChatWindow::addWhiteboardRequest(bool senderIsSelf) {
 	}
 	QString qAvatarPath = "qrc:/icons/avatar.png";
 	std::string id = "wbmessage" + boost::lexical_cast<std::string>(idCounter_++);
-	messageLog_->addMessageBottom(boost::shared_ptr<ChatSnippet>(new MessageSnippet(htmlString, QtUtilities::htmlEscape(contact_), B2QDATE(boost::posix_time::second_clock::local_time()), qAvatarPath, false, false, theme_, P2QSTRING(id))));
+	messageLog_->addMessageBottom(boost::make_shared<MessageSnippet>(htmlString, QtUtilities::htmlEscape(contact_), B2QDATE(boost::posix_time::second_clock::local_time()), qAvatarPath, false, false, theme_, P2QSTRING(id), ChatSnippet::getDirection(actionText)));
 
 	previousMessageWasSelf_ = false;
 	previousSenderName_ = contact_;
@@ -770,32 +807,31 @@ void QtChatWindow::addErrorMessage(const std::string& errorMessage) {
 		onAllMessagesRead();
 	}
 
-	QString errorMessageHTML(QtUtilities::htmlEscape(P2QSTRING(errorMessage)));
+	QString errorMessageHTML(linkimoticonify(errorMessage));
 	errorMessageHTML.replace("\n","<br/>");
-	messageLog_->addMessageBottom(boost::shared_ptr<ChatSnippet>(new SystemMessageSnippet("<span class=\"error\">" + errorMessageHTML + "</span>", QDateTime::currentDateTime(), false, theme_)));
+	messageLog_->addMessageBottom(boost::make_shared<SystemMessageSnippet>("<span class=\"error\">" + errorMessageHTML + "</span>", QDateTime::currentDateTime(), false, theme_, ChatSnippet::getDirection(errorMessage)));
 
 	previousMessageWasSelf_ = false;
 	previousMessageKind_ = PreviousMessageWasSystem;
 }
 
-void QtChatWindow::addSystemMessage(const std::string& message) {
+void QtChatWindow::addSystemMessage(const std::string& message, Direction direction) {
 	if (isWidgetSelected()) {
 		onAllMessagesRead();
 	}
 
-	QString messageHTML(P2QSTRING(message));
-	messageHTML = linkimoticonify(messageHTML);
-	messageLog_->addMessageBottom(boost::shared_ptr<ChatSnippet>(new SystemMessageSnippet(messageHTML, QDateTime::currentDateTime(), false, theme_)));
+	QString messageHTML = linkimoticonify(message);
+	messageLog_->addMessageBottom(boost::make_shared<SystemMessageSnippet>(messageHTML, QDateTime::currentDateTime(), false, theme_, getActualDirection(message, direction)));
 
 	previousMessageKind_ = PreviousMessageWasSystem;
 }
 
 void QtChatWindow::replaceWithAction(const std::string& message, const std::string& id, const boost::posix_time::ptime& time, const HighlightAction& highlight) {
-	replaceMessage(" *" + linkimoticonify(P2QSTRING(message)) + "*", id, time, "font-style:italic ", highlight);
+	replaceMessage(" *" + linkimoticonify(message) + "*", id, time, "font-style:italic ", highlight);
 }
 
 void QtChatWindow::replaceMessage(const std::string& message, const std::string& id, const boost::posix_time::ptime& time, const HighlightAction& highlight) {
-	replaceMessage(linkimoticonify(P2QSTRING(message)), id, time, "", highlight);
+	replaceMessage(linkimoticonify(message), id, time, "", highlight);
 }
 
 void QtChatWindow::replaceMessage(const QString& message, const std::string& id, const boost::posix_time::ptime& time, const QString& style, const HighlightAction& highlight) {
@@ -819,14 +855,13 @@ void QtChatWindow::replaceMessage(const QString& message, const std::string& id,
 	}
 }
 
-void QtChatWindow::addPresenceMessage(const std::string& message) {
+void QtChatWindow::addPresenceMessage(const std::string& message, Direction direction) {
 	if (isWidgetSelected()) {
 		onAllMessagesRead();
 	}
 
-	QString messageHTML(P2QSTRING(message));
-	messageHTML = linkimoticonify(messageHTML);
-	messageLog_->addMessageBottom(boost::shared_ptr<ChatSnippet>(new SystemMessageSnippet(messageHTML, QDateTime::currentDateTime(), false, theme_)));
+	QString messageHTML = linkimoticonify(message);
+	messageLog_->addMessageBottom(boost::make_shared<SystemMessageSnippet>(messageHTML, QDateTime::currentDateTime(), false, theme_, getActualDirection(message, direction)));
 
 	previousMessageKind_ = PreviousMessageWasPresence;
 }
@@ -897,12 +932,13 @@ void QtChatWindow::dropEvent(QDropEvent *event) {
 	if (event->mimeData()->urls().size() == 1) {
 		onSendFileRequest(Q2PSTRING(event->mimeData()->urls().at(0).toLocalFile()));
 	} else {
-		addSystemMessage("Sending of multiple files at once isn't supported at this time.");
+		std::string message(Q2PSTRING(tr("Sending of multiple files at once isn't supported at this time.")));
+		addSystemMessage(message, DefaultDirection);
 	}
 }
 
 void QtChatWindow::replaceLastMessage(const std::string& message) {
-	messageLog_->replaceLastMessage(linkimoticonify(P2QSTRING(message)));
+	messageLog_->replaceLastMessage(linkimoticonify(message));
 }
 
 void QtChatWindow::setAvailableOccupantActions(const std::vector<OccupantAction>& actions) {
@@ -1022,18 +1058,20 @@ void QtChatWindow::addMUCInvitation(const std::string& senderName, const JID& ji
 		onAllMessagesRead();
 	}
 
-	QString htmlString = QObject::tr("You've been invited to enter the %1 room.").arg(P2QSTRING(jid.toString())) + " <br/>";
+	QString message = QObject::tr("You've been invited to enter the %1 room.").arg(P2QSTRING(jid.toString())) + "\n";
+	QString htmlString = message;
 	if (!reason.empty()) {
-		htmlString += QObject::tr("Reason: %1").arg(P2QSTRING(reason)) + "<br/>";
+		htmlString += QObject::tr("Reason: %1").arg(P2QSTRING(reason)) + "\n";
 	}
 	if (!direct) {
-		htmlString += QObject::tr("This person may not have really sent this invitation!") + "<br/>";
+		htmlString += QObject::tr("This person may not have really sent this invitation!") + "\n";
 	}
+	htmlString = linkimoticonify(htmlString);
+
 
 	QString id = QString(ButtonMUCInvite + "%1").arg(P2QSTRING(boost::lexical_cast<std::string>(idCounter_++)));
-
 	htmlString += "<div id='" + id + "'>" +
-			buildChatWindowButton(tr("Accept Invite"), ButtonMUCInvite, QtUtilities::htmlEscape(P2QSTRING(jid.toString())), QtUtilities::htmlEscape(P2QSTRING(password)), id) +
+			buildChatWindowButton(linkimoticonify(tr("Accept Invite")), ButtonMUCInvite, QtUtilities::htmlEscape(P2QSTRING(jid.toString())), QtUtilities::htmlEscape(P2QSTRING(password)), id) +
 		"</div>";
 
 	bool appendToPrevious = appendToPreviousCheck(PreviousMessageWasMUCInvite, senderName, false);
@@ -1045,7 +1083,7 @@ void QtChatWindow::addMUCInvitation(const std::string& senderName, const JID& ji
 	}
 	QString qAvatarPath = "qrc:/icons/avatar.png";
 
-	messageLog_->addMessageBottom(boost::shared_ptr<ChatSnippet>(new MessageSnippet(htmlString, QtUtilities::htmlEscape(P2QSTRING(senderName)), B2QDATE(boost::posix_time::second_clock::local_time()), qAvatarPath, false, appendToPrevious, theme_, id)));
+	messageLog_->addMessageBottom(boost::make_shared<MessageSnippet>(htmlString, QtUtilities::htmlEscape(P2QSTRING(senderName)), B2QDATE(boost::posix_time::second_clock::local_time()), qAvatarPath, false, appendToPrevious, theme_, id, ChatSnippet::getDirection(message)));
 	previousMessageWasSelf_ = false;
 	previousSenderName_ = P2QSTRING(senderName);
 	previousMessageKind_ = PreviousMessageWasMUCInvite;

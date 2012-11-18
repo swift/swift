@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012 Catalin Badea
+ * Copyright (c) 2012-2013 Catalin Badea
  * Licensed under the simplified BSD license.
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
@@ -13,6 +13,7 @@
 #include <string>
 
 #include <boost/shared_ptr.hpp>
+#include <boost/smart_ptr/make_shared.hpp>
 
 #include <QTime>
 #include <QUrl>
@@ -20,6 +21,7 @@
 #include <QTextDocument>
 #include <QDateTime>
 #include <Swift/QtUI/QtScaledAvatarCache.h>
+#include <Swift/QtUI/ChatSnippet.h>
 #include <QLineEdit>
 #include "QtUtilities.h"
 
@@ -126,14 +128,14 @@ void QtHistoryWindow::addMessage(const std::string &message, const std::string &
 
 	if (addAtTheTop) {
 		bool appendToPrevious = ((senderIsSelf && previousTopMessageWasSelf_) || (!senderIsSelf && !previousTopMessageWasSelf_&& previousTopSenderName_ == P2QSTRING(senderName)));
-		conversation_->addMessageTop(boost::shared_ptr<ChatSnippet>(new MessageSnippet(messageHTML, QtUtilities::htmlEscape(P2QSTRING(senderName)), qTime, qAvatarPath, senderIsSelf, appendToPrevious, theme_, P2QSTRING(id))));
+		conversation_->addMessageTop(boost::shared_ptr<ChatSnippet>(new MessageSnippet(messageHTML, QtUtilities::htmlEscape(P2QSTRING(senderName)), qTime, qAvatarPath, senderIsSelf, appendToPrevious, theme_, P2QSTRING(id), ChatSnippet::getDirection(message))));
 
 		previousTopMessageWasSelf_ = senderIsSelf;
 		previousTopSenderName_ = P2QSTRING(senderName);
 	}
 	else {
 		bool appendToPrevious = ((senderIsSelf && previousBottomMessageWasSelf_) || (!senderIsSelf && !previousBottomMessageWasSelf_&& previousBottomSenderName_ == P2QSTRING(senderName)));
-		conversation_->addMessageBottom(boost::shared_ptr<ChatSnippet>(new MessageSnippet(messageHTML, QtUtilities::htmlEscape(P2QSTRING(senderName)), qTime, qAvatarPath, senderIsSelf, appendToPrevious, theme_, P2QSTRING(id))));
+		conversation_->addMessageBottom(boost::make_shared<MessageSnippet>(messageHTML, QtUtilities::htmlEscape(P2QSTRING(senderName)), qTime, qAvatarPath, senderIsSelf, appendToPrevious, theme_, P2QSTRING(id), ChatSnippet::getDirection(message)));
 		previousBottomMessageWasSelf_ = senderIsSelf;
 		previousBottomSenderName_ = P2QSTRING(senderName);
 	}
