@@ -666,11 +666,11 @@ std::string QtChatWindow::addFileTransfer(const std::string& senderName, bool se
 }
 
 void QtChatWindow::setFileTransferProgress(std::string id, const int percentageDone) {
-	messageLog_->setFileTransferProgress(QString::fromStdString(id), percentageDone);
+	messageLog_->setFileTransferProgress(P2QSTRING(id), percentageDone);
 }
 
 void QtChatWindow::setFileTransferStatus(std::string id, const FileTransferState state, const std::string& msg) {
-	messageLog_->setFileTransferStatus(QString::fromStdString(id), state, QString::fromStdString(msg));
+	messageLog_->setFileTransferStatus(P2QSTRING(id), state, P2QSTRING(msg));
 }
 
 std::string QtChatWindow::addWhiteboardRequest(bool senderIsSelf) {
@@ -703,7 +703,7 @@ std::string QtChatWindow::addWhiteboardRequest(bool senderIsSelf) {
 }
 
 void QtChatWindow::setWhiteboardSessionStatus(std::string id, const ChatWindow::WhiteboardSessionState state) {
-	messageLog_->setWhiteboardSessionStatus(QString::fromStdString(id), state);
+	messageLog_->setWhiteboardSessionStatus(P2QSTRING(id), state);
 }
 
 void QtChatWindow::handleHTMLButtonClicked(QString id, QString encodedArgument1, QString encodedArgument2, QString encodedArgument3) {
@@ -740,12 +740,12 @@ void QtChatWindow::handleHTMLButtonClicked(QString id, QString encodedArgument1,
 	}
 	else if (id.startsWith(ButtonWhiteboardSessionAcceptRequest)) {
 		QString id = arg1;
-		messageLog_->setWhiteboardSessionStatus(QString::fromStdString(Q2PSTRING(id)), ChatWindow::WhiteboardAccepted);
+		messageLog_->setWhiteboardSessionStatus(id, ChatWindow::WhiteboardAccepted);
 		onWhiteboardSessionAccept();
 	}
 	else if (id.startsWith(ButtonWhiteboardSessionCancel)) {
 		QString id = arg1;
-		messageLog_->setWhiteboardSessionStatus(QString::fromStdString(Q2PSTRING(id)), ChatWindow::WhiteboardTerminated);
+		messageLog_->setWhiteboardSessionStatus(id, ChatWindow::WhiteboardTerminated);
 		onWhiteboardSessionCancel();
 	}
 	else if (id.startsWith(ButtonWhiteboardShowWindow)) {

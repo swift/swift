@@ -35,7 +35,7 @@ QVariant QtFormResultItemModel::headerData(int section, Qt::Orientation /*orient
 	if (!formResult_) return QVariant();
 	if (role != Qt::DisplayRole) return QVariant();
 	if (static_cast<size_t>(section) >= formResult_->getReportedFields().size()) return QVariant();
-	return QVariant(QString::fromStdString(formResult_->getReportedFields().at(section)->getLabel()));
+	return QVariant(P2QSTRING(formResult_->getReportedFields().at(section)->getLabel()));
 }
 
 int QtFormResultItemModel::rowCount(const QModelIndex &/*parent*/) const {

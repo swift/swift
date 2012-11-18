@@ -14,6 +14,7 @@
 #include <Swiften/Base/boost_bsignals.h>
 #include <Swift/Controllers/FileTransfer/FileTransferController.h>
 #include <Swift/Controllers/FileTransfer/FileTransferOverview.h>
+#include "QtSwiftUtil.h"
 
 namespace Swift {
 
@@ -65,7 +66,7 @@ QVariant QtFileTransferListItemModel::data(const QModelIndex &index, int role) c
 		return controller->isIncoming() ? QVariant(QObject::tr("Incoming")) : QVariant(QObject::tr("Outgoing"));
 	}
 	if (index.column() == OtherParty) {
-		return QVariant(QString::fromStdString(controller->getOtherParty().toString()));
+		return QVariant(P2QSTRING(controller->getOtherParty().toString()));
 	}
 	if (index.column() == State) {
 		FileTransfer::State state = controller->getState();
@@ -91,7 +92,7 @@ QVariant QtFileTransferListItemModel::data(const QModelIndex &index, int role) c
 		return QVariant(QString::number(controller->getProgress()));
 	}
 	if (index.column() == OverallSize) {
-		return QVariant(QString::fromStdString(formatSize((controller->getSize()))));
+		return QVariant(P2QSTRING(formatSize((controller->getSize()))));
 	}
 	return QVariant();
 }
