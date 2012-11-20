@@ -404,184 +404,184 @@
         <translation>Dirección de usuario no válida. La dirección de usuario ha de ser de la forma &apos;alicia@paismaravillas.lit&apos;</translation>
     </message>
     <message>
-        <location filename="../Controllers/MainController.cpp" line="567"/>
+        <location filename="../Controllers/MainController.cpp" line="568"/>
         <source>Unknown Error</source>
         <translation>Error Desconocido</translation>
     </message>
     <message>
-        <location filename="../Controllers/MainController.cpp" line="568"/>
+        <location filename="../Controllers/MainController.cpp" line="569"/>
         <source>Unable to find server</source>
         <translation>No se puede encontrar el servidor</translation>
     </message>
     <message>
-        <location filename="../Controllers/MainController.cpp" line="569"/>
+        <location filename="../Controllers/MainController.cpp" line="570"/>
         <source>Error connecting to server</source>
         <translation>Error conectando al servidor</translation>
     </message>
     <message>
-        <location filename="../Controllers/MainController.cpp" line="570"/>
+        <location filename="../Controllers/MainController.cpp" line="571"/>
         <source>Error while receiving server data</source>
         <translation>Error al recibir datos del servidor</translation>
     </message>
     <message>
-        <location filename="../Controllers/MainController.cpp" line="571"/>
+        <location filename="../Controllers/MainController.cpp" line="572"/>
         <source>Error while sending data to the server</source>
         <translation>Error al enviar datos al servidor</translation>
     </message>
     <message>
-        <location filename="../Controllers/MainController.cpp" line="572"/>
+        <location filename="../Controllers/MainController.cpp" line="573"/>
         <source>Error parsing server data</source>
         <translation>Error analizando datos del servidor</translation>
     </message>
     <message>
-        <location filename="../Controllers/MainController.cpp" line="573"/>
+        <location filename="../Controllers/MainController.cpp" line="574"/>
         <source>Login/password invalid</source>
         <translation>Usuario/contraseña no válidos</translation>
     </message>
     <message>
-        <location filename="../Controllers/MainController.cpp" line="574"/>
+        <location filename="../Controllers/MainController.cpp" line="575"/>
         <source>Error while compressing stream</source>
         <translation>Error comprimiendo flujo de datos</translation>
     </message>
     <message>
-        <location filename="../Controllers/MainController.cpp" line="575"/>
+        <location filename="../Controllers/MainController.cpp" line="576"/>
         <source>Server verification failed</source>
         <translation>La verificación del servidor ha fallado</translation>
     </message>
     <message>
-        <location filename="../Controllers/MainController.cpp" line="576"/>
+        <location filename="../Controllers/MainController.cpp" line="577"/>
         <source>Authentication mechanisms not supported</source>
         <translation>Mecanismo de autenticación no soportado</translation>
     </message>
     <message>
-        <location filename="../Controllers/MainController.cpp" line="577"/>
+        <location filename="../Controllers/MainController.cpp" line="578"/>
         <source>Unexpected response</source>
         <translation>Respuesta inesperada</translation>
     </message>
     <message>
-        <location filename="../Controllers/MainController.cpp" line="578"/>
+        <location filename="../Controllers/MainController.cpp" line="579"/>
         <source>Error binding resource</source>
         <translation>Error vinculando recurso</translation>
     </message>
     <message>
-        <location filename="../Controllers/MainController.cpp" line="579"/>
+        <location filename="../Controllers/MainController.cpp" line="580"/>
         <source>Error starting session</source>
         <translation>Error iniciando sesión</translation>
     </message>
     <message>
-        <location filename="../Controllers/MainController.cpp" line="580"/>
+        <location filename="../Controllers/MainController.cpp" line="581"/>
         <source>Stream error</source>
         <translation>Error de flujo de datos</translation>
     </message>
     <message>
-        <location filename="../Controllers/MainController.cpp" line="581"/>
+        <location filename="../Controllers/MainController.cpp" line="582"/>
         <source>Encryption error</source>
         <translation>Error de cifrado</translation>
     </message>
     <message>
-        <location filename="../Controllers/MainController.cpp" line="582"/>
+        <location filename="../Controllers/MainController.cpp" line="583"/>
         <source>Error loading certificate (Invalid password?)</source>
         <translation>Error cargando certificado (¿Contraseña no válida?)</translation>
     </message>
     <message>
-        <location filename="../Controllers/MainController.cpp" line="583"/>
+        <location filename="../Controllers/MainController.cpp" line="584"/>
         <source>Certificate not authorized</source>
         <translation>Certificado no autorizado</translation>
     </message>
     <message>
-        <location filename="../Controllers/MainController.cpp" line="584"/>
+        <location filename="../Controllers/MainController.cpp" line="585"/>
         <source>Certificate card removed</source>
         <translation>Tarjeta de certificado eliminada</translation>
     </message>
     <message>
-        <location filename="../Controllers/MainController.cpp" line="586"/>
+        <location filename="../Controllers/MainController.cpp" line="587"/>
         <source>Unknown certificate</source>
         <translation>Certificado desconocido</translation>
     </message>
     <message>
-        <location filename="../Controllers/MainController.cpp" line="587"/>
+        <location filename="../Controllers/MainController.cpp" line="588"/>
         <source>Certificate has expired</source>
         <translation>El certificado ha caducado</translation>
     </message>
     <message>
-        <location filename="../Controllers/MainController.cpp" line="588"/>
+        <location filename="../Controllers/MainController.cpp" line="589"/>
         <source>Certificate is not yet valid</source>
         <translation>El certificado aún no es válido</translation>
     </message>
     <message>
-        <location filename="../Controllers/MainController.cpp" line="589"/>
+        <location filename="../Controllers/MainController.cpp" line="590"/>
         <source>Certificate is self-signed</source>
         <translatorcomment>TMPFIX, firma personal?</translatorcomment>
         <translation>El certificado es auto-firmado</translation>
     </message>
     <message>
-        <location filename="../Controllers/MainController.cpp" line="590"/>
+        <location filename="../Controllers/MainController.cpp" line="591"/>
         <source>Certificate has been rejected</source>
         <translation>El certificado ha sido rechazado</translation>
     </message>
     <message>
-        <location filename="../Controllers/MainController.cpp" line="591"/>
+        <location filename="../Controllers/MainController.cpp" line="592"/>
         <source>Certificate is not trusted</source>
         <translation>El certificado no es de confianza</translation>
     </message>
     <message>
-        <location filename="../Controllers/MainController.cpp" line="592"/>
+        <location filename="../Controllers/MainController.cpp" line="593"/>
         <source>Certificate cannot be used for encrypting your connection</source>
         <translation>El certificado no puede usarse para cifrar tu conexión</translation>
     </message>
     <message>
-        <location filename="../Controllers/MainController.cpp" line="593"/>
+        <location filename="../Controllers/MainController.cpp" line="594"/>
         <source>Certificate path length constraint exceeded</source>
         <translatorcomment>TMPFIX</translatorcomment>
         <translation>Se ha excedido la restricción de longitud de ruta del certificado</translation>
     </message>
     <message>
-        <location filename="../Controllers/MainController.cpp" line="594"/>
+        <location filename="../Controllers/MainController.cpp" line="595"/>
         <source>Invalid certificate signature</source>
         <translation>Firma de certificado no válida</translation>
     </message>
     <message>
-        <location filename="../Controllers/MainController.cpp" line="595"/>
+        <location filename="../Controllers/MainController.cpp" line="596"/>
         <source>Invalid Certificate Authority</source>
         <translation>Entidad Certificadora no Válida</translation>
     </message>
     <message>
-        <location filename="../Controllers/MainController.cpp" line="596"/>
+        <location filename="../Controllers/MainController.cpp" line="597"/>
         <source>Certificate does not match the host identity</source>
         <translation>El certificado no coincide con la identidad del servidor</translation>
     </message>
     <message>
-        <location filename="../Controllers/MainController.cpp" line="597"/>
+        <location filename="../Controllers/MainController.cpp" line="598"/>
         <source>Certificate has been revoked</source>
         <translation>El certificado ha sido revocado</translation>
     </message>
     <message>
-        <location filename="../Controllers/MainController.cpp" line="598"/>
+        <location filename="../Controllers/MainController.cpp" line="599"/>
         <source>Unable to determine certificate revocation state</source>
         <translation>No se puede determinar el estado de revocación del certificado</translation>
     </message>
     <message>
-        <location filename="../Controllers/MainController.cpp" line="608"/>
+        <location filename="../Controllers/MainController.cpp" line="609"/>
         <source>Certificate error</source>
         <translation>Error de certificado</translation>
     </message>
     <message>
-        <location filename="../Controllers/MainController.cpp" line="615"/>
+        <location filename="../Controllers/MainController.cpp" line="616"/>
         <source>Re-enter credentials and retry</source>
         <translation>Vuelve a introducir las credenciales y prueba de nuevo</translation>
     </message>
     <message>
-        <location filename="../Controllers/MainController.cpp" line="628"/>
+        <location filename="../Controllers/MainController.cpp" line="629"/>
         <source>Disconnected from %1%: %2%. To reconnect, Sign Out and provide your password again.</source>
         <translation>Desconectado de %1%: %2%. Para reconectar, desconéctate y proporciona tu contraseña de nuevo.</translation>
     </message>
     <message>
-        <location filename="../Controllers/MainController.cpp" line="634"/>
+        <location filename="../Controllers/MainController.cpp" line="635"/>
         <source>Reconnect to %1% failed: %2%. Will retry in %3% seconds.</source>
         <translation>La reconexión a %1% ha fallado: %2%. Se intentará de nuevo en %3% segundos.</translation>
     </message>
     <message>
-        <location filename="../Controllers/MainController.cpp" line="637"/>
+        <location filename="../Controllers/MainController.cpp" line="638"/>
         <source>Disconnected from %1%: %2%.</source>
         <translation>Desconectado de %1%: %2%.</translation>
     </message>
@@ -819,17 +819,17 @@
         <translation>%1 te ha invitado a entrar a la sala %2.</translation>
     </message>
     <message>
-        <location filename="../QtUI/QtChatWindow.cpp" line="980"/>
+        <location filename="../QtUI/QtChatWindow.cpp" line="982"/>
         <source>You&apos;ve been invited to enter the %1 room.</source>
         <translation>Te han invitado a entrar a la sala %1.</translation>
     </message>
     <message>
-        <location filename="../QtUI/QtChatWindow.cpp" line="982"/>
+        <location filename="../QtUI/QtChatWindow.cpp" line="984"/>
         <source>Reason: %1</source>
         <translation>Motivo: %1</translation>
     </message>
     <message>
-        <location filename="../QtUI/QtChatWindow.cpp" line="985"/>
+        <location filename="../QtUI/QtChatWindow.cpp" line="987"/>
         <source>This person may not have really sent this invitation!</source>
         <translation>¡Es posible que esta persona no haya enviado realmente esta invitación!</translation>
     </message>
@@ -2077,57 +2077,57 @@ Si escoges posponer esta elección, se te preguntará de nuevo la próxima vez q
         <translation>Guardar archivo</translation>
     </message>
     <message>
-        <location filename="../QtUI/QtChatWindow.cpp" line="906"/>
+        <location filename="../QtUI/QtChatWindow.cpp" line="908"/>
         <source>Change subject…</source>
         <translation>Cambiar el tema...</translation>
     </message>
     <message>
-        <location filename="../QtUI/QtChatWindow.cpp" line="907"/>
+        <location filename="../QtUI/QtChatWindow.cpp" line="909"/>
         <source>Configure room…</source>
         <translation>Configurar sala...</translation>
     </message>
     <message>
-        <location filename="../QtUI/QtChatWindow.cpp" line="908"/>
+        <location filename="../QtUI/QtChatWindow.cpp" line="910"/>
         <source>Edit affiliations…</source>
         <translation>Editar afiliaciones...</translation>
     </message>
     <message>
-        <location filename="../QtUI/QtChatWindow.cpp" line="909"/>
+        <location filename="../QtUI/QtChatWindow.cpp" line="911"/>
         <source>Destroy room</source>
         <translation>Destruir la sala</translation>
     </message>
     <message>
-        <location filename="../QtUI/QtChatWindow.cpp" line="910"/>
+        <location filename="../QtUI/QtChatWindow.cpp" line="912"/>
         <source>Invite person to this room…</source>
         <translation>Invitar a una persona a esta sala...</translation>
     </message>
     <message>
-        <location filename="../QtUI/QtChatWindow.cpp" line="920"/>
+        <location filename="../QtUI/QtChatWindow.cpp" line="922"/>
         <source>Change room subject</source>
         <translation>Cambiar el tema de la sala</translation>
     </message>
     <message>
-        <location filename="../QtUI/QtChatWindow.cpp" line="920"/>
+        <location filename="../QtUI/QtChatWindow.cpp" line="922"/>
         <source>New subject:</source>
         <translation>Nuevo tema:</translation>
     </message>
     <message>
-        <location filename="../QtUI/QtChatWindow.cpp" line="938"/>
+        <location filename="../QtUI/QtChatWindow.cpp" line="940"/>
         <source>Confirm room destruction</source>
         <translation>Confirmar destrucción de la sala</translation>
     </message>
     <message>
-        <location filename="../QtUI/QtChatWindow.cpp" line="939"/>
+        <location filename="../QtUI/QtChatWindow.cpp" line="941"/>
         <source>Are you sure you want to destroy the room?</source>
         <translation>¿Estás seguro de que quieres destruir la sala?</translation>
     </message>
     <message>
-        <location filename="../QtUI/QtChatWindow.cpp" line="940"/>
+        <location filename="../QtUI/QtChatWindow.cpp" line="942"/>
         <source>This will destroy the room.</source>
         <translation>Esto destruirá la sala.</translation>
     </message>
     <message>
-        <location filename="../QtUI/QtChatWindow.cpp" line="991"/>
+        <location filename="../QtUI/QtChatWindow.cpp" line="993"/>
         <source>Accept Invite</source>
         <translation>Aceptar invitación</translation>
     </message>
@@ -2269,7 +2269,7 @@ Si escoges posponer esta elección, se te preguntará de nuevo la próxima vez q
     </message>
     <message>
         <location filename="../QtUI/QtLoginWindow.cpp" line="136"/>
-        <location filename="../QtUI/QtLoginWindow.cpp" line="355"/>
+        <location filename="../QtUI/QtLoginWindow.cpp" line="353"/>
         <source>Connect</source>
         <translation>Conectar</translation>
     </message>
@@ -2336,27 +2336,32 @@ Si escoges posponer esta elección, se te preguntará de nuevo la próxima vez q
         <translation>¿Eliminar el perfil &apos;%1&apos;?</translation>
     </message>
     <message>
-        <location filename="../QtUI/QtLoginWindow.cpp" line="355"/>
+        <location filename="../QtUI/QtLoginWindow.cpp" line="353"/>
         <source>Cancel</source>
         <translation>Cancelar</translation>
     </message>
     <message>
-        <location filename="../QtUI/QtLoginWindow.cpp" line="369"/>
+        <location filename="../QtUI/QtLoginWindow.cpp" line="367"/>
         <source>Confirm terms of use</source>
         <translation>Confirmar condiciones de uso</translation>
     </message>
     <message>
-        <location filename="../QtUI/QtLoginWindow.cpp" line="412"/>
+        <location filename="../QtUI/QtLoginWindow.cpp" line="410"/>
         <source>Select an authentication certificate</source>
         <translation>Selecciona un certificado de autenticación</translation>
     </message>
     <message>
-        <location filename="../QtUI/QtLoginWindow.cpp" line="525"/>
+        <location filename="../QtUI/QtLoginWindow.cpp" line="410"/>
+        <source>P12 files (*.cert *.p12 *.pfx);;All files (*.*)</source>
+        <translation>Archivos P12 (*.cert *.p12 *.pfx);;Todos los archivos (*.*)</translation>
+    </message>
+    <message>
+        <location filename="../QtUI/QtLoginWindow.cpp" line="523"/>
         <source>The certificate presented by the server is not valid.</source>
         <translation>El certificado presentado por el servidor no es válido.</translation>
     </message>
     <message>
-        <location filename="../QtUI/QtLoginWindow.cpp" line="526"/>
+        <location filename="../QtUI/QtLoginWindow.cpp" line="524"/>
         <source>Would you like to permanently trust this certificate? This must only be done if you know it is correct.</source>
         <translation>¿Quieres confiar en este certificado de forma permanente? Esto solo debe hacerse si sabes que es correcto.</translation>
     </message>

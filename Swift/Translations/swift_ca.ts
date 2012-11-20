@@ -404,184 +404,184 @@
         <translation>Adreça d&apos;usuari no vàlida. L&apos;adreça d&apos;usuari ha de ser de la forma &apos;alicia@paismeravelles.lit&apos;</translation>
     </message>
     <message>
-        <location filename="../Controllers/MainController.cpp" line="567"/>
+        <location filename="../Controllers/MainController.cpp" line="568"/>
         <source>Unknown Error</source>
         <translation>Error Desconegut</translation>
     </message>
     <message>
-        <location filename="../Controllers/MainController.cpp" line="568"/>
+        <location filename="../Controllers/MainController.cpp" line="569"/>
         <source>Unable to find server</source>
         <translation>No es pot trobar el servidor</translation>
     </message>
     <message>
-        <location filename="../Controllers/MainController.cpp" line="569"/>
+        <location filename="../Controllers/MainController.cpp" line="570"/>
         <source>Error connecting to server</source>
         <translation>Error connectant al servidor</translation>
     </message>
     <message>
-        <location filename="../Controllers/MainController.cpp" line="570"/>
+        <location filename="../Controllers/MainController.cpp" line="571"/>
         <source>Error while receiving server data</source>
         <translation>Error al rebre dades del servidor</translation>
     </message>
     <message>
-        <location filename="../Controllers/MainController.cpp" line="571"/>
+        <location filename="../Controllers/MainController.cpp" line="572"/>
         <source>Error while sending data to the server</source>
         <translation>Error enviant dades al servidor</translation>
     </message>
     <message>
-        <location filename="../Controllers/MainController.cpp" line="572"/>
+        <location filename="../Controllers/MainController.cpp" line="573"/>
         <source>Error parsing server data</source>
         <translation>Error analitzant dades del servidor</translation>
     </message>
     <message>
-        <location filename="../Controllers/MainController.cpp" line="573"/>
+        <location filename="../Controllers/MainController.cpp" line="574"/>
         <source>Login/password invalid</source>
         <translation>Usuari/contrasenya no vàlids</translation>
     </message>
     <message>
-        <location filename="../Controllers/MainController.cpp" line="574"/>
+        <location filename="../Controllers/MainController.cpp" line="575"/>
         <source>Error while compressing stream</source>
         <translation>Error comprimint flux de dades</translation>
     </message>
     <message>
-        <location filename="../Controllers/MainController.cpp" line="575"/>
+        <location filename="../Controllers/MainController.cpp" line="576"/>
         <source>Server verification failed</source>
         <translation>La verificació del servidor ha fallat</translation>
     </message>
     <message>
-        <location filename="../Controllers/MainController.cpp" line="576"/>
+        <location filename="../Controllers/MainController.cpp" line="577"/>
         <source>Authentication mechanisms not supported</source>
         <translation>Mecanisme d&apos;autenticació no soportat</translation>
     </message>
     <message>
-        <location filename="../Controllers/MainController.cpp" line="577"/>
+        <location filename="../Controllers/MainController.cpp" line="578"/>
         <source>Unexpected response</source>
         <translation>Resposta inesperada</translation>
     </message>
     <message>
-        <location filename="../Controllers/MainController.cpp" line="578"/>
+        <location filename="../Controllers/MainController.cpp" line="579"/>
         <source>Error binding resource</source>
         <translation>Error vinculant recurs</translation>
     </message>
     <message>
-        <location filename="../Controllers/MainController.cpp" line="579"/>
+        <location filename="../Controllers/MainController.cpp" line="580"/>
         <source>Error starting session</source>
         <translation>Error iniciant sessió</translation>
     </message>
     <message>
-        <location filename="../Controllers/MainController.cpp" line="580"/>
+        <location filename="../Controllers/MainController.cpp" line="581"/>
         <source>Stream error</source>
         <translation>Error de flux de dades</translation>
     </message>
     <message>
-        <location filename="../Controllers/MainController.cpp" line="581"/>
+        <location filename="../Controllers/MainController.cpp" line="582"/>
         <source>Encryption error</source>
         <translation>Error d&apos;encriptatge</translation>
     </message>
     <message>
-        <location filename="../Controllers/MainController.cpp" line="582"/>
+        <location filename="../Controllers/MainController.cpp" line="583"/>
         <source>Error loading certificate (Invalid password?)</source>
         <translation>Error carregant certificat (Contrasenya no vàlida?)</translation>
     </message>
     <message>
-        <location filename="../Controllers/MainController.cpp" line="583"/>
+        <location filename="../Controllers/MainController.cpp" line="584"/>
         <source>Certificate not authorized</source>
         <translation>Certificat no autoritzat</translation>
     </message>
     <message>
-        <location filename="../Controllers/MainController.cpp" line="584"/>
+        <location filename="../Controllers/MainController.cpp" line="585"/>
         <source>Certificate card removed</source>
         <translation>Targeta de certificat eliminada</translation>
     </message>
     <message>
-        <location filename="../Controllers/MainController.cpp" line="586"/>
+        <location filename="../Controllers/MainController.cpp" line="587"/>
         <source>Unknown certificate</source>
         <translation>Certificat desconegut</translation>
     </message>
     <message>
-        <location filename="../Controllers/MainController.cpp" line="587"/>
+        <location filename="../Controllers/MainController.cpp" line="588"/>
         <source>Certificate has expired</source>
         <translation>El certificat ha caducat</translation>
     </message>
     <message>
-        <location filename="../Controllers/MainController.cpp" line="588"/>
+        <location filename="../Controllers/MainController.cpp" line="589"/>
         <source>Certificate is not yet valid</source>
         <translation>El certificat encara no es vàlid</translation>
     </message>
     <message>
-        <location filename="../Controllers/MainController.cpp" line="589"/>
+        <location filename="../Controllers/MainController.cpp" line="590"/>
         <source>Certificate is self-signed</source>
         <translatorcomment>TMPFIX, signatura personal??</translatorcomment>
         <translation>El certificat es auto-signat</translation>
     </message>
     <message>
-        <location filename="../Controllers/MainController.cpp" line="590"/>
+        <location filename="../Controllers/MainController.cpp" line="591"/>
         <source>Certificate has been rejected</source>
         <translation>El certificat ha sigut rebutjat</translation>
     </message>
     <message>
-        <location filename="../Controllers/MainController.cpp" line="591"/>
+        <location filename="../Controllers/MainController.cpp" line="592"/>
         <source>Certificate is not trusted</source>
         <translation>El certificat no es de confiança</translation>
     </message>
     <message>
-        <location filename="../Controllers/MainController.cpp" line="592"/>
+        <location filename="../Controllers/MainController.cpp" line="593"/>
         <source>Certificate cannot be used for encrypting your connection</source>
         <translation>El certificat no put set utilitzat per encriptar la teva connexió</translation>
     </message>
     <message>
-        <location filename="../Controllers/MainController.cpp" line="593"/>
+        <location filename="../Controllers/MainController.cpp" line="594"/>
         <source>Certificate path length constraint exceeded</source>
         <translatorcomment>TMPFIX</translatorcomment>
         <translation>S&apos;ha excedit la restricció de la longitud de camí del certificat</translation>
     </message>
     <message>
-        <location filename="../Controllers/MainController.cpp" line="594"/>
+        <location filename="../Controllers/MainController.cpp" line="595"/>
         <source>Invalid certificate signature</source>
         <translation>Signatura de certificat no vàlida</translation>
     </message>
     <message>
-        <location filename="../Controllers/MainController.cpp" line="595"/>
+        <location filename="../Controllers/MainController.cpp" line="596"/>
         <source>Invalid Certificate Authority</source>
         <translation>Entitat Certificadora no Vàlida</translation>
     </message>
     <message>
-        <location filename="../Controllers/MainController.cpp" line="596"/>
+        <location filename="../Controllers/MainController.cpp" line="597"/>
         <source>Certificate does not match the host identity</source>
         <translation>El certificat no coincideix amb la identitat del servidor</translation>
     </message>
     <message>
-        <location filename="../Controllers/MainController.cpp" line="597"/>
+        <location filename="../Controllers/MainController.cpp" line="598"/>
         <source>Certificate has been revoked</source>
         <translation>El certificat ha estat revocat</translation>
     </message>
     <message>
-        <location filename="../Controllers/MainController.cpp" line="598"/>
+        <location filename="../Controllers/MainController.cpp" line="599"/>
         <source>Unable to determine certificate revocation state</source>
         <translation>No es pot determinar l&apos;estat de revocació del certificat</translation>
     </message>
     <message>
-        <location filename="../Controllers/MainController.cpp" line="608"/>
+        <location filename="../Controllers/MainController.cpp" line="609"/>
         <source>Certificate error</source>
         <translation>Error de certificat</translation>
     </message>
     <message>
-        <location filename="../Controllers/MainController.cpp" line="615"/>
+        <location filename="../Controllers/MainController.cpp" line="616"/>
         <source>Re-enter credentials and retry</source>
         <translation>Torna a introduir les credencials i prova de nou</translation>
     </message>
     <message>
-        <location filename="../Controllers/MainController.cpp" line="628"/>
+        <location filename="../Controllers/MainController.cpp" line="629"/>
         <source>Disconnected from %1%: %2%. To reconnect, Sign Out and provide your password again.</source>
         <translation>Desconnectat de %1%: %2%. Per tornar a connectar, desconnecta&apos;t i proporciona la teva contrasenya de nou.</translation>
     </message>
     <message>
-        <location filename="../Controllers/MainController.cpp" line="634"/>
+        <location filename="../Controllers/MainController.cpp" line="635"/>
         <source>Reconnect to %1% failed: %2%. Will retry in %3% seconds.</source>
         <translation>La reconnexió a %1% ha fallat: %2%. S&apos;intentarà de nou d&apos;aquí a %3% segons.</translation>
     </message>
     <message>
-        <location filename="../Controllers/MainController.cpp" line="637"/>
+        <location filename="../Controllers/MainController.cpp" line="638"/>
         <source>Disconnected from %1%: %2%.</source>
         <translation>Desconnectat de %1%: %2%.</translation>
     </message>
@@ -819,17 +819,17 @@
         <translation>%1 t&apos;ha convidat a entrar a la sala %2.</translation>
     </message>
     <message>
-        <location filename="../QtUI/QtChatWindow.cpp" line="980"/>
+        <location filename="../QtUI/QtChatWindow.cpp" line="982"/>
         <source>You&apos;ve been invited to enter the %1 room.</source>
         <translation>T&apos;han convidat a entrar a la sala %1.</translation>
     </message>
     <message>
-        <location filename="../QtUI/QtChatWindow.cpp" line="982"/>
+        <location filename="../QtUI/QtChatWindow.cpp" line="984"/>
         <source>Reason: %1</source>
         <translation>Motiu: %1</translation>
     </message>
     <message>
-        <location filename="../QtUI/QtChatWindow.cpp" line="985"/>
+        <location filename="../QtUI/QtChatWindow.cpp" line="987"/>
         <source>This person may not have really sent this invitation!</source>
         <translation>És possible que aquesta persona no hagi enviat realment aquesta invitació!</translation>
     </message>
@@ -2077,57 +2077,57 @@ Si esculls ajornar aquesta elecció, se&apos;t preguntarà de nou la propera veg
         <translation>Guardar fitxer</translation>
     </message>
     <message>
-        <location filename="../QtUI/QtChatWindow.cpp" line="906"/>
+        <location filename="../QtUI/QtChatWindow.cpp" line="908"/>
         <source>Change subject…</source>
         <translation>Canviar el tema...</translation>
     </message>
     <message>
-        <location filename="../QtUI/QtChatWindow.cpp" line="907"/>
+        <location filename="../QtUI/QtChatWindow.cpp" line="909"/>
         <source>Configure room…</source>
         <translation>Configurar sala...</translation>
     </message>
     <message>
-        <location filename="../QtUI/QtChatWindow.cpp" line="908"/>
+        <location filename="../QtUI/QtChatWindow.cpp" line="910"/>
         <source>Edit affiliations…</source>
         <translation>Editar afiliacions...</translation>
     </message>
     <message>
-        <location filename="../QtUI/QtChatWindow.cpp" line="909"/>
+        <location filename="../QtUI/QtChatWindow.cpp" line="911"/>
         <source>Destroy room</source>
         <translation>Destruir la sala</translation>
     </message>
     <message>
-        <location filename="../QtUI/QtChatWindow.cpp" line="910"/>
+        <location filename="../QtUI/QtChatWindow.cpp" line="912"/>
         <source>Invite person to this room…</source>
         <translation>Convidar a una persona a aquesta sala...</translation>
     </message>
     <message>
-        <location filename="../QtUI/QtChatWindow.cpp" line="920"/>
+        <location filename="../QtUI/QtChatWindow.cpp" line="922"/>
         <source>Change room subject</source>
         <translation>Canviar el tema de la sala</translation>
     </message>
     <message>
-        <location filename="../QtUI/QtChatWindow.cpp" line="920"/>
+        <location filename="../QtUI/QtChatWindow.cpp" line="922"/>
         <source>New subject:</source>
         <translation>Nou tema:</translation>
     </message>
     <message>
-        <location filename="../QtUI/QtChatWindow.cpp" line="938"/>
+        <location filename="../QtUI/QtChatWindow.cpp" line="940"/>
         <source>Confirm room destruction</source>
         <translation>Confirmar destrucció de la sala</translation>
     </message>
     <message>
-        <location filename="../QtUI/QtChatWindow.cpp" line="939"/>
+        <location filename="../QtUI/QtChatWindow.cpp" line="941"/>
         <source>Are you sure you want to destroy the room?</source>
         <translation>Estàs segur de que vols destruir la sala?</translation>
     </message>
     <message>
-        <location filename="../QtUI/QtChatWindow.cpp" line="940"/>
+        <location filename="../QtUI/QtChatWindow.cpp" line="942"/>
         <source>This will destroy the room.</source>
         <translation>Això destruirà la sala.</translation>
     </message>
     <message>
-        <location filename="../QtUI/QtChatWindow.cpp" line="991"/>
+        <location filename="../QtUI/QtChatWindow.cpp" line="993"/>
         <source>Accept Invite</source>
         <translation>Acceptar invitació</translation>
     </message>
@@ -2269,7 +2269,7 @@ Si esculls ajornar aquesta elecció, se&apos;t preguntarà de nou la propera veg
     </message>
     <message>
         <location filename="../QtUI/QtLoginWindow.cpp" line="136"/>
-        <location filename="../QtUI/QtLoginWindow.cpp" line="355"/>
+        <location filename="../QtUI/QtLoginWindow.cpp" line="353"/>
         <source>Connect</source>
         <translation>Connectar</translation>
     </message>
@@ -2336,27 +2336,32 @@ Si esculls ajornar aquesta elecció, se&apos;t preguntarà de nou la propera veg
         <translation>Eliminar el perfil &apos;%1&apos;?</translation>
     </message>
     <message>
-        <location filename="../QtUI/QtLoginWindow.cpp" line="355"/>
+        <location filename="../QtUI/QtLoginWindow.cpp" line="353"/>
         <source>Cancel</source>
         <translation>Cancel·lar</translation>
     </message>
     <message>
-        <location filename="../QtUI/QtLoginWindow.cpp" line="369"/>
+        <location filename="../QtUI/QtLoginWindow.cpp" line="367"/>
         <source>Confirm terms of use</source>
         <translation>Confirmar condicions d&apos;ús</translation>
     </message>
     <message>
-        <location filename="../QtUI/QtLoginWindow.cpp" line="412"/>
+        <location filename="../QtUI/QtLoginWindow.cpp" line="410"/>
         <source>Select an authentication certificate</source>
         <translation>Selecciona un certificat d&apos;autenticació</translation>
     </message>
     <message>
-        <location filename="../QtUI/QtLoginWindow.cpp" line="525"/>
+        <location filename="../QtUI/QtLoginWindow.cpp" line="410"/>
+        <source>P12 files (*.cert *.p12 *.pfx);;All files (*.*)</source>
+        <translation>Fitxers P12 (*.cert *.p12 *.pfx);;Tots els fitxers (*.*)</translation>
+    </message>
+    <message>
+        <location filename="../QtUI/QtLoginWindow.cpp" line="523"/>
         <source>The certificate presented by the server is not valid.</source>
         <translation>El certificat presentat pel servidor no es vàlid.</translation>
     </message>
     <message>
-        <location filename="../QtUI/QtLoginWindow.cpp" line="526"/>
+        <location filename="../QtUI/QtLoginWindow.cpp" line="524"/>
         <source>Would you like to permanently trust this certificate? This must only be done if you know it is correct.</source>
         <translation>Vols confiar en aquest certificat de forma permanent? Això s&apos;ha de fer només si saps que es correcte.</translation>
     </message>
