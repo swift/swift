@@ -78,7 +78,7 @@ QtConnectionSettingsWindow::QtConnectionSettingsWindow(const ClientOptions& opti
 			if (!options.manualProxyHostname.empty()) {
 				ui.manual_manualProxy->setChecked(true);
 				ui.manual_manualProxyHost->setText(P2QSTRING(options.manualProxyHostname));
-				ui.manual_manualHostPort->setText(P2QSTRING(boost::lexical_cast<std::string>(options.manualProxyPort)));
+				ui.manual_manualProxyPort->setText(P2QSTRING(boost::lexical_cast<std::string>(options.manualProxyPort)));
 			}
 		}
 	} else {
