@@ -523,7 +523,7 @@ bool QtLoginWindow::askUserToTrustCertificatePermanently(const std::string& mess
 	dialog.setText(tr("The certificate presented by the server is not valid."));
 	dialog.setInformativeText(P2QSTRING(message) + "\n\n" + tr("Would you like to permanently trust this certificate? This must only be done if you know it is correct."));
 
-	dialog.addButton("Show Certificate", QMessageBox::HelpRole);
+	dialog.addButton(tr("Show Certificate"), QMessageBox::HelpRole);
 	dialog.addButton(QMessageBox::Yes);
 	dialog.addButton(QMessageBox::No);
 	dialog.setDefaultButton(QMessageBox::No);
