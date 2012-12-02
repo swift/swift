@@ -5,6 +5,9 @@ IFS='
 
 echo "Checking tabs & copyrights ..."
 for file in $(git diff --cached --name-only); do
+	if [ ! -f $file ]; then
+		continue
+	fi
 	if ! BuildTools/CheckTabs.py $file; then
 		echo "ERROR: '$file' contains expanded tabs. Aborting commit."
 		exit -1
