@@ -45,7 +45,14 @@ BOSHConnectionPool::BOSHConnectionPool(const URL& boshURL, DomainNameResolver* r
 }
 
 BOSHConnectionPool::~BOSHConnectionPool() {
-	close();
+	/* Don't do a normal close here. Instead kill things forcibly, as close() or writeFooter() will already have been called */
+	std::vector<BOSHConnection::ref> connectionCopies = connections;
+	foreach (BOSHConnection::ref connection, connectionCopies) {
+		if (connection) {
+			destroyConnection(connection);
+			connection->disconnect();
+		}
+	}
 	foreach (ConnectionFactory* factory, myConnectionFactories) {
 		delete factory;
 	}
@@ -82,12 +89,16 @@ void BOSHConnectionPool::writeFooter() {
 }
 
 void BOSHConnectionPool::close() {
-	/* TODO: Send a terminate here. */
-	std::vector<BOSHConnection::ref> connectionCopies = connections;
-	foreach (BOSHConnection::ref connection, connectionCopies) {
-		if (connection) {
-			connection->disconnect();
-			destroyConnection(connection);
+	if (!sid.empty()) {
+		writeFooter();
+	}
+	else {
+		pendingTerminate = true;
+		std::vector<BOSHConnection::ref> connectionCopies = connections;
+		foreach (BOSHConnection::ref connection, connectionCopies) {
+			if (connection) {
+				connection->disconnect();
+			}
 		}
 	}
 }
@@ -158,7 +169,8 @@ void BOSHConnectionPool::tryToSendQueuedData() {
 			rid++;
 			suitableConnection->setRID(rid);
 			suitableConnection->terminateStream();
-			onSessionTerminated(boost::shared_ptr<BOSHError>());
+			sid = "";
+			close();
 		}
 	}
 	if (!pendingTerminate) {
@@ -200,7 +212,10 @@ void BOSHConnectionPool::handleHTTPError(const std::string& /*errorCode*/) {
 
 void BOSHConnectionPool::handleConnectionDisconnected(bool error, BOSHConnection::ref connection) {
 	destroyConnection(connection);
-	if (false && error) {
+	if (pendingTerminate && sid.empty() && connections.empty()) {
+		handleSessionTerminated(BOSHError::ref());
+	}
+	else if (false && error) {
 		handleSessionTerminated(boost::make_shared<BOSHError>(BOSHError::UndefinedCondition));
 	}
 	else {

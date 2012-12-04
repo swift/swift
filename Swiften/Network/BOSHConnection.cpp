@@ -60,10 +60,13 @@ void BOSHConnection::cancelConnector() {
 }
 
 void BOSHConnection::disconnect() {
-	cancelConnector();
-	if(connection_) {
+	if (connection_) {
 		connection_->disconnect();
 		sid_ = "";
+	}
+	else {
+		/* handleDisconnected takes care of the connector_ as well */
+		handleDisconnected(boost::optional<Connection::Error>());
 	}
 }
 
