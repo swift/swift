@@ -5,6 +5,8 @@
  */
 
 #include <Swiften/Parser/PayloadParsers/DiscoInfoParser.h>
+
+#include <boost/optional.hpp>
 #include <Swiften/Parser/PayloadParsers/FormParser.h>
 
 namespace Swift {
@@ -13,7 +15,12 @@ DiscoInfoParser::DiscoInfoParser() : level_(TopLevel), formParser_(NULL) {
 }
 
 void DiscoInfoParser::handleStartElement(const std::string& element, const std::string& ns, const AttributeMap& attributes) {
-	if (level_ == PayloadLevel) {
+	if (level_ == TopLevel) {
+		if (attributes.getAttributeValue("node")) {
+			getPayloadInternal()->setNode(*attributes.getAttributeValue("node"));
+		}
+	}
+	else if (level_ == PayloadLevel) {
 		if (element == "identity") {
 			getPayloadInternal()->addIdentity(DiscoInfo::Identity(attributes.getAttribute("name"), attributes.getAttribute("category"), attributes.getAttribute("type"), attributes.getAttribute("lang", "http://www.w3.org/XML/1998/namespace")));
 		}
