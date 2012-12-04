@@ -161,8 +161,12 @@ void BOSHConnection::startStream(const std::string& to, unsigned long long rid) 
 
 	std::string contentString = content.str();
 
-	header	<< "POST /" << boshURL_.getPath() << " HTTP/1.1\r\n"
-			<< "Host: " << boshURL_.getHost() << ":" << boshURL_.getPort() << "\r\n"
+	header	<< "POST " << boshURL_.getPath() << " HTTP/1.1\r\n"
+			<< "Host: " << boshURL_.getHost();
+	if (boshURL_.getPort()) {
+		header << ":" << *boshURL_.getPort();
+	}
+	header << "\r\n"
 		/*<< "Accept-Encoding: deflate\r\n"*/
 			<< "Content-Type: text/xml; charset=utf-8\r\n"
 			<< "Content-Length: " << contentString.size() << "\r\n\r\n"
