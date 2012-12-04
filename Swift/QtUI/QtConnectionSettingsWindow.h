@@ -23,6 +23,7 @@ namespace Swift {
 
 		private slots:
 			void handleProxyTypeChanged(int);
+			void handleAcceptRequested();
 
 		private:
 			enum {

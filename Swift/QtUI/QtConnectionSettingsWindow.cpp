@@ -17,7 +17,10 @@
 #include <QTextEdit>
 #include <QFile>
 #include <QTextStream>
+#include <QMessageBox>
+
 #include <Swift/QtUI/QtSwiftUtil.h>
+#include <Swift/QtUI/QtURLValidator.h>
 
 namespace Swift {
 
@@ -42,6 +45,11 @@ QtConnectionSettingsWindow::QtConnectionSettingsWindow(const ClientOptions& opti
 	connect(ui.bosh_manualProxy, SIGNAL(toggled(bool)), ui.bosh_manualProxyPort, SLOT(setEnabled(bool)));
 
 	connect(ui.manual_proxyType, SIGNAL(currentIndexChanged(int)), SLOT(handleProxyTypeChanged(int)));
+
+	connect(ui.buttonBox, SIGNAL(accepted()), this, SLOT(handleAcceptRequested()));
+
+	QtURLValidator* urlValidator = new QtURLValidator(this);
+	ui.bosh_uri->setValidator(urlValidator);
 
 	ui.manual_useTLS->setCurrentIndex(2);
 
@@ -99,6 +107,15 @@ void QtConnectionSettingsWindow::handleProxyTypeChanged(int index) {
 	ui.manual_manualProxyHost->setVisible(proxySettingsVisible);
 	ui.manual_manualProxyPortLabel->setVisible(proxySettingsVisible);
 	ui.manual_manualProxyPort->setVisible(proxySettingsVisible);
+}
+
+void QtConnectionSettingsWindow::handleAcceptRequested() {
+	if (ui.connectionMethod->currentIndex() != 2 || ui.bosh_uri->hasAcceptableInput()) {
+		accept();
+	}
+	else {
+		QMessageBox::critical(this, tr("Configuration invalid"), tr("The provided BOSH URL is not valid."));
+	}
 }
 
 ClientOptions QtConnectionSettingsWindow::getOptions() {

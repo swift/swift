@@ -161,7 +161,8 @@ sources = [
     "QtChatWindowJSBridge.cpp",
     "QtMUCConfigurationWindow.cpp",
     "QtAffiliationEditor.cpp",
-    "QtUISettingConstants.cpp"
+    "QtUISettingConstants.cpp",
+    "QtURLValidator.cpp"
   ]
 
 # Determine the version
