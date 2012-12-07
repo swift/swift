@@ -274,6 +274,24 @@ class BOSHConnectionPoolTest : public CppUnit::TestFixture {
 			eventLoop->processEvents();
 			CPPUNIT_ASSERT_EQUAL(st(3), boshDataWritten.size());
 			CPPUNIT_ASSERT_EQUAL(st(1), connectionFactory->connections.size());
+
+			testling->restartStream();
+			eventLoop->processEvents();
+			CPPUNIT_ASSERT_EQUAL(st(4), boshDataWritten.size());
+			CPPUNIT_ASSERT_EQUAL(st(1), connectionFactory->connections.size());
+
+			response = "<body xmpp:version='1.0' xmlns:stream='http://etherx.jabber.org/streams' xmlns:xmpp='urn:xmpp:xbosh' inactivity='60' wait='60' polling='5' secure='true' hold='1' from='prosody.doomsong.co.uk' ver='1.6' sid='743da605-4c2e-4de1-afac-ac040dd4a940' requests='2' xmlns='http://jabber.org/protocol/httpbind'><stream:features><bind xmlns='urn:ietf:params:xml:ns:xmpp-bind'><required/></bind><session xmlns='urn:ietf:params:xml:ns:xmpp-session'><optional/></session><sm xmlns='urn:xmpp:sm:2'><optional/></sm></stream:features></body>";
+			readResponse(response, connectionFactory->connections[0]);
+			eventLoop->processEvents();
+			CPPUNIT_ASSERT_EQUAL(st(5), boshDataWritten.size()); /* Now we've authed (restarted) we should be keeping one query in flight so the server can reply to us at any time it wants. */
+			CPPUNIT_ASSERT_EQUAL(st(1), connectionFactory->connections.size());
+
+			send = "<body rid='2821988967416214' sid='cf663f6b94279d4f' xmlns='http://jabber.org/protocol/httpbind'><iq id='session-bind' type='set'><bind xmlns='urn:ietf:params:xml:ns:xmpp-bind'><resource>d5a9744036cd20a0</resource></bind></iq></body>";
+			testling->write(createSafeByteArray(send));
+			eventLoop->processEvents();
+			CPPUNIT_ASSERT_EQUAL(st(6), boshDataWritten.size());
+			CPPUNIT_ASSERT_EQUAL(st(2), connectionFactory->connections.size()); /* and as it keeps one in flight, it's needed to open a second to send these data */
+
 		}
 
 		void testWrite_Empty() {
