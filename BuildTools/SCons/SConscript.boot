@@ -8,7 +8,8 @@ sys.path.append(Dir("#/BuildTools/SCons").abspath)
 vars = Variables(os.path.join(Dir("#").abspath, "config.py"))
 vars.Add('cc', "C compiler")
 vars.Add('cxx', "C++ compiler")
-vars.Add('ccflags', "Extra C(++) compiler flags")
+vars.Add('ccflags', "Extra C/C++/ObjC compiler flags")
+vars.Add('cxxflags', "Extra C++ compiler flags")
 vars.Add('link', "Linker")
 vars.Add('linkflags', "Extra linker flags")
 vars.Add(BoolVariable("ccache", "Use CCache", "no"))
@@ -123,6 +124,7 @@ if isinstance(ccflags, str) :
 	env["CCFLAGS"] = ccflags.split(" ")
 else :
 	env["CCFLAGS"] = ccflags
+env["CXXFLAGS"] = env.get("cxxflags", [])
 if "link" in env :
 	env["SHLINK"] = env["link"]
 	env["LINK"] = env["link"]
