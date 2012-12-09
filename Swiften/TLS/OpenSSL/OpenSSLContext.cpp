@@ -25,6 +25,7 @@
 #include <Swiften/TLS/PKCS12Certificate.h>
 
 #pragma GCC diagnostic ignored "-Wold-style-cast"
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
 
 namespace Swift {
 
