@@ -17,8 +17,8 @@ def cStringVariable(env, cVar, sconsVar) :
 config_flags = ""
 
 swiften_env = env.Clone()
-swiften_env.MergeFlags(swiften_env["SWIFTEN_FLAGS"])
-swiften_env.MergeFlags(swiften_env["SWIFTEN_DEP_FLAGS"])
+swiften_env.UseFlags(swiften_env["SWIFTEN_FLAGS"])
+swiften_env.UseFlags(swiften_env["SWIFTEN_DEP_FLAGS"])
 
 cppflags = replaceSwiftenPath(" ".join([swiften_env.subst("$_CPPDEFFLAGS"), swiften_env.subst("$_CPPINCFLAGS")]))
 config_flags += cStringVariable(swiften_env, "CPPFLAGS", cppflags)
@@ -29,8 +29,8 @@ config_flags += cStringVariable(swiften_env, "LIBFLAGS", libflags)
 config_env = env.Clone()
 # Create a local copy of Paths.cpp to avoid a Swiften dependency
 config_env.Install(".", "#/Swiften/Base/Paths.cpp")
-config_env.MergeFlags(config_env["BOOST_FLAGS"])
-config_env.MergeFlags(config_env["PLATFORM_FLAGS"])
+config_env.UseFlags(config_env["BOOST_FLAGS"])
+config_env.UseFlags(config_env["PLATFORM_FLAGS"])
 config_env.WriteVal("swiften-config.h", config_env.Value(config_flags))
 swiften_config = config_env.Program("swiften-config", [
 		"Paths.cpp",

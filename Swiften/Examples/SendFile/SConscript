@@ -1,8 +1,8 @@
 Import("env")
 
 myenv = env.Clone()
-myenv.MergeFlags(myenv["SWIFTEN_FLAGS"])
-myenv.MergeFlags(myenv["SWIFTEN_DEP_FLAGS"])
+myenv.UseFlags(myenv["SWIFTEN_FLAGS"])
+myenv.UseFlags(myenv["SWIFTEN_DEP_FLAGS"])
 
 myenv.Program("SendFile", ["SendFile.cpp"])
 myenv.Program("ReceiveFile", ["ReceiveFile.cpp"])

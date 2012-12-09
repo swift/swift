@@ -3,9 +3,9 @@ Import("env")
 
 if env["SCONS_STAGE"] == "build":
 	myenv = env.Clone()
-	myenv.MergeFlags(myenv.get("LUA_FLAGS", {}))
-	myenv.MergeFlags(myenv["SWIFTEN_FLAGS"])
-	myenv.MergeFlags(myenv["SWIFTEN_DEP_FLAGS"])
+	myenv.UseFlags(myenv.get("LUA_FLAGS", {}))
+	myenv.UseFlags(myenv["SWIFTEN_FLAGS"])
+	myenv.UseFlags(myenv["SWIFTEN_DEP_FLAGS"])
 	sources = [
 		"linit.cpp",
 		"Swiftob.cpp",
