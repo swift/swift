@@ -7,6 +7,7 @@
 #pragma once
 
 #include <Swiften/Base/RandomGenerator.h>
+#include <Swiften/Base/Override.h>
 
 #include <boost/random/mersenne_twister.hpp>
 
@@ -15,7 +16,7 @@ namespace Swift {
 		public:
 			BoostRandomGenerator();
 
-			int generateRandomInteger(int max);
+			int generateRandomInteger(int max) SWIFTEN_OVERRIDE;
 
 		private:
 			boost::mt19937 generator;
