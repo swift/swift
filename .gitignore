@@ -13,6 +13,7 @@
 *.so
 *.pdb
 *.swp
+*.pch
 *.nib
 *.exe
 *.syms

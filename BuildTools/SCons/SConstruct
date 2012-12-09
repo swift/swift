@@ -42,6 +42,7 @@ if int(ARGUMENTS.get("V", 0)) == 0:
 	env["SHLINKCOMSTR"] = colorize("LINK", "$TARGET", "red")
 	env["ARCOMSTR"] = colorize("AR", "$TARGET", "red")
 	env["RANLIBCOMSTR"] = colorize("RANLIB", "$TARGET", "red")
+	env["PCHCOMSTR"] = colorize("PCH", "$TARGET", "blue")
 	env["QT4_RCCCOMSTR"] = colorize("RCC", "$TARGET", "blue")
 	env["QT4_UICCOMSTR"] = colorize("UIC", "$TARGET", "blue")
 	env["QT4_MOCFROMHCOMSTR"] = colorize("MOC", "$TARGET", "blue")

@@ -2,3 +2,4 @@ EchoBot?
 *.cpp.xml
 *.h.xml
 EchoComponent
+Swiften.cpp

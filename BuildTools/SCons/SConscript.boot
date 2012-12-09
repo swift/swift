@@ -238,7 +238,7 @@ if env.get("coverage", 0) :
 
 if env["PLATFORM"] == "win32" :
 	env.Append(LIBS = ["user32", "crypt32", "dnsapi", "iphlpapi", "ws2_32", "wsock32", "Advapi32"])
-	env.Append(CCFLAGS = ["/EHsc", "/nologo"])
+	env.Append(CCFLAGS = ["/EHsc", "/nologo", "/Zm256"])
 	env.Append(LINKFLAGS = ["/INCREMENTAL:no", "/NOLOGO"])
 	if int(env["MSVS_VERSION"].split(".")[0]) < 10 :
 		env["LINKCOM"] = [env["LINKCOM"], 'mt.exe -nologo -manifest ${TARGET}.manifest -outputresource:$TARGET;1']
