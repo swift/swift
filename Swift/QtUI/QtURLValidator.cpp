@@ -10,11 +10,11 @@
 #include <Swift/QtUI/QtSwiftUtil.h>
 
 namespace Swift {
-QtURLValidator::QtURLValidator(QObject* parent) {
+QtURLValidator::QtURLValidator(QObject* parent) : QValidator(parent) {
 
 }
 
-QValidator::State QtURLValidator::validate(QString& input, int& pos) const {
+QValidator::State QtURLValidator::validate(QString& input, int&) const {
 	URL url = URL::fromString(Q2PSTRING(input));
 	bool valid = !url.isEmpty();
 	valid &= (url.getScheme() == "http" || url.getScheme() == "https");
