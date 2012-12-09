@@ -68,6 +68,7 @@ vars.Add(BoolVariable("set_iterator_debug_level", "Set _ITERATOR_DEBUG_LEVEL=0",
 env_ENV = {
   'PATH' : os.environ['PATH'], 
   'LD_LIBRARY_PATH' : os.environ.get("LD_LIBRARY_PATH", ""),
+  'TERM' : os.environ.get("TERM", ""),
 }
 if "MSVC_VERSION" in ARGUMENTS :
   env = Environment(ENV = env_ENV, variables = vars, MSVC_VERSION = ARGUMENTS["MSVC_VERSION"])
