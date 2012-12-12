@@ -95,7 +95,9 @@ QtConnectionSettingsWindow::QtConnectionSettingsWindow(const ClientOptions& opti
 		if (!options.boshHTTPConnectProxyURL.isEmpty()) {
 			ui.bosh_manualProxy->setChecked(true);
 			ui.bosh_manualProxyHost->setText(P2QSTRING(options.boshHTTPConnectProxyURL.getHost()));
-			ui.bosh_manualProxyPort->setText(P2QSTRING(boost::lexical_cast<std::string>(options.boshHTTPConnectProxyURL.getPort())));
+			if (options.boshHTTPConnectProxyURL.getPort()) {
+				ui.bosh_manualProxyPort->setText(P2QSTRING(boost::lexical_cast<std::string>(*options.boshHTTPConnectProxyURL.getPort())));
+			}
 		}
 	}
 }
