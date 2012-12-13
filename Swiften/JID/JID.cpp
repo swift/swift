@@ -23,7 +23,11 @@
 
 #include <Swiften/Base/String.h>
 #include <Swiften/JID/JID.h>
-#include <Swiften/IDN/StringPrep.h>
+#include <Swiften/IDN/IDNConverter.h>
+#ifndef SWIFTEN_JID_NO_DEFAULT_IDN_CONVERTER
+#include <boost/shared_ptr.hpp>
+#include <Swiften/IDN/PlatformIDNConverter.h>
+#endif
 
 using namespace Swift;
 
@@ -37,6 +41,19 @@ static PrepCache resourcePrepCache;
 #endif
 
 static const std::list<char> escapedChars = boost::assign::list_of(' ')('"')('&')('\'')('/')('<')('>')('@')(':');
+
+static IDNConverter* idnConverter = NULL;
+
+#ifndef SWIFTEN_JID_NO_DEFAULT_IDN_CONVERTER
+namespace {
+	struct IDNInitializer {
+		IDNInitializer() : defaultIDNConverter(PlatformIDNConverter::create()) {
+			idnConverter = defaultIDNConverter.get();
+		}
+		boost::shared_ptr<IDNConverter> defaultIDNConverter;
+	} initializer;
+}
+#endif
 
 static std::string getEscaped(char c) {
 	return makeString() << '\\' << std::hex << static_cast<int>(c);
@@ -164,9 +181,9 @@ void JID::nameprepAndSetComponents(const std::string& node, const std::string& d
 	}
 	try {
 #ifndef SWIFTEN_CACHE_JID_PREP
-		node_ = StringPrep::getPrepared(node, StringPrep::NamePrep);
-		domain_ = StringPrep::getPrepared(domain, StringPrep::XMPPNodePrep);
-		resource_ = StringPrep::getPrepared(resource, StringPrep::XMPPResourcePrep);
+		node_ = idnConverter->getStringPrepared(node, IDNConverter::NamePrep);
+		domain_ = idnConverter->getStringPrepared(domain, IDNConverter::XMPPNodePrep);
+		resource_ = idnConverter->getStringPrepared(resource, IDNConverter::XMPPResourcePrep);
 #else
 		boost::mutex::scoped_lock lock(namePrepCacheMutex);
 
@@ -174,19 +191,19 @@ void JID::nameprepAndSetComponents(const std::string& node, const std::string& d
 
 		r = nodePrepCache.insert(std::make_pair(node, std::string()));
 		if (r.second) {
-			r.first->second = StringPrep::getPrepared(node, StringPrep::NamePrep);
+			r.first->second = idnConverter->getStringPrepared(node, IDNConverter::NamePrep);
 		}
 		node_ = r.first->second;
 
 		r = domainPrepCache.insert(std::make_pair(domain, std::string()));
 		if (r.second) {
-			r.first->second = StringPrep::getPrepared(domain, StringPrep::XMPPNodePrep);
+			r.first->second = idnConverter->getStringPrepared(domain, IDNConverter::XMPPNodePrep);
 		}
 		domain_ = r.first->second;
 
 		r = resourcePrepCache.insert(std::make_pair(resource, std::string()));
 		if (r.second) {
-			r.first->second = StringPrep::getPrepared(resource, StringPrep::XMPPResourcePrep);
+			r.first->second = idnConverter->getStringPrepared(resource, IDNConverter::XMPPResourcePrep);
 		}
 		resource_ = r.first->second;
 #endif
@@ -272,6 +289,10 @@ std::string JID::getUnescapedNode() const {
 	}
 	return result;
 	//return boost::find_format_all_copy(node_, EscapedCharacterFinder(), EscapedCharacterFormatter());
+}
+
+void JID::setIDNConverter(IDNConverter* converter) {
+	idnConverter = converter;
 }
 
 std::ostream& operator<<(std::ostream& os, const JID& j) {

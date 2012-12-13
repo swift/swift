@@ -17,6 +17,8 @@
 #include <Swiften/Network/DomainNameAddressQuery.h>
 #include <Swiften/Network/DomainNameServiceQuery.h>
 #include <Swiften/EventLoop/DummyEventLoop.h>
+#include <Swiften/IDN/IDNConverter.h>
+#include <Swiften/IDN/PlatformIDNConverter.h>
 
 using namespace Swift;
 
@@ -42,7 +44,8 @@ class DomainNameResolverTest : public CppUnit::TestFixture {
 	public:
 		void setUp() {
 			eventLoop = new DummyEventLoop();
-			resolver = new PlatformDomainNameResolver(eventLoop);
+			idnConverter = boost::shared_ptr<IDNConverter>(PlatformIDNConverter::create());
+			resolver = new PlatformDomainNameResolver(idnConverter.get(), eventLoop);
 			resultsAvailable = false;
 		}
 
@@ -209,6 +212,7 @@ class DomainNameResolverTest : public CppUnit::TestFixture {
 
 	private:
 		DummyEventLoop* eventLoop;
+		boost::shared_ptr<IDNConverter> idnConverter;
 		bool resultsAvailable;
 		std::vector<HostAddress> addressQueryResult;
 		std::vector<HostAddress> allAddressQueryResults;

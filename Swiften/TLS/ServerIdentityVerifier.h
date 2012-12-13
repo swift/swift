@@ -14,9 +14,11 @@
 #include <Swiften/TLS/Certificate.h>
 
 namespace Swift {
+	class IDNConverter;
+
 	class SWIFTEN_API ServerIdentityVerifier {
 		public:
-			ServerIdentityVerifier(const JID& jid);
+			ServerIdentityVerifier(const JID& jid, IDNConverter* idnConverter);
 
 			bool certificateVerifies(Certificate::ref);
 

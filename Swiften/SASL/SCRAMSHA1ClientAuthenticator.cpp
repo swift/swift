@@ -14,7 +14,7 @@
 #include <Swiften/StringCodecs/Base64.h>
 #include <Swiften/StringCodecs/HMAC_SHA1.h>
 #include <Swiften/StringCodecs/PBKDF2.h>
-#include <Swiften/IDN/StringPrep.h>
+#include <Swiften/IDN/IDNConverter.h>
 #include <Swiften/Base/Concat.h>
 
 namespace Swift {
@@ -36,7 +36,7 @@ static std::string escape(const std::string& s) {
 }
 
 
-SCRAMSHA1ClientAuthenticator::SCRAMSHA1ClientAuthenticator(const std::string& nonce, bool useChannelBinding) : ClientAuthenticator(useChannelBinding ? "SCRAM-SHA-1-PLUS" : "SCRAM-SHA-1"), step(Initial), clientnonce(nonce), useChannelBinding(useChannelBinding) {
+SCRAMSHA1ClientAuthenticator::SCRAMSHA1ClientAuthenticator(const std::string& nonce, bool useChannelBinding, IDNConverter* idnConverter) : ClientAuthenticator(useChannelBinding ? "SCRAM-SHA-1-PLUS" : "SCRAM-SHA-1"), step(Initial), clientnonce(nonce), useChannelBinding(useChannelBinding), idnConverter(idnConverter) {
 }
 
 boost::optional<SafeByteArray> SCRAMSHA1ClientAuthenticator::getResponse() const {
@@ -96,7 +96,7 @@ bool SCRAMSHA1ClientAuthenticator::setChallenge(const boost::optional<ByteArray>
 
 		// Compute all the values needed for the server signature
 		try {
-			saltedPassword = PBKDF2::encode<HMAC_SHA1>(StringPrep::getPrepared(getPassword(), StringPrep::SASLPrep), salt, iterations);
+			saltedPassword = PBKDF2::encode<HMAC_SHA1>(idnConverter->getStringPrepared(getPassword(), IDNConverter::SASLPrep), salt, iterations);
 		}
 		catch (const std::exception&) {
 		}
@@ -148,7 +148,7 @@ std::map<char, std::string> SCRAMSHA1ClientAuthenticator::parseMap(const std::st
 ByteArray SCRAMSHA1ClientAuthenticator::getInitialBareClientMessage() const {
 	std::string authenticationID;
 	try {
-		authenticationID = StringPrep::getPrepared(getAuthenticationID(), StringPrep::SASLPrep);
+		authenticationID = idnConverter->getStringPrepared(getAuthenticationID(), IDNConverter::SASLPrep);
 	}
 	catch (const std::exception&) {
 	}

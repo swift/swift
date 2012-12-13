@@ -11,6 +11,8 @@
 #include <boost/optional.hpp>
 #include <boost/smart_ptr/make_shared.hpp>
 
+#include <Swiften/IDN/IDNConverter.h>
+#include <Swiften/IDN/PlatformIDNConverter.h>
 #include <Swiften/Session/SessionStream.h>
 #include <Swiften/Client/ClientSession.h>
 #include <Swiften/Elements/Message.h>
@@ -69,6 +71,7 @@ class ClientSessionTest : public CppUnit::TestFixture {
 
 	public:
 		void setUp() {
+			idnConverter = boost::shared_ptr<IDNConverter>(PlatformIDNConverter::create());
 			server = boost::make_shared<MockSessionStream>();
 			sessionFinishedReceived = false;
 			needCredentials = false;
@@ -339,7 +342,7 @@ class ClientSessionTest : public CppUnit::TestFixture {
 
 	private:
 		boost::shared_ptr<ClientSession> createSession() {
-			boost::shared_ptr<ClientSession> session = ClientSession::create(JID("me@foo.com"), server);
+			boost::shared_ptr<ClientSession> session = ClientSession::create(JID("me@foo.com"), server, idnConverter.get());
 			session->onFinished.connect(boost::bind(&ClientSessionTest::handleSessionFinished, this, _1));
 			session->onNeedCredentials.connect(boost::bind(&ClientSessionTest::handleSessionNeedCredentials, this));
 			session->setAllowPLAINOverNonTLS(true);
@@ -616,6 +619,7 @@ class ClientSessionTest : public CppUnit::TestFixture {
 				std::deque<Event> receivedEvents;
 		};
 
+		boost::shared_ptr<IDNConverter> idnConverter;
 		boost::shared_ptr<MockSessionStream> server;
 		bool sessionFinishedReceived;
 		bool needCredentials;

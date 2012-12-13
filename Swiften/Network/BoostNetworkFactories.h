@@ -7,6 +7,7 @@
 #pragma once
 
 #include <Swiften/Base/API.h>
+#include <Swiften/Base/Override.h>
 #include <Swiften/Network/NetworkFactories.h>
 #include <Swiften/Network/BoostIOServiceThread.h>
 
@@ -20,11 +21,11 @@ namespace Swift {
 			BoostNetworkFactories(EventLoop* eventLoop);
 			~BoostNetworkFactories();
 
-			virtual TimerFactory* getTimerFactory() const {
+			virtual TimerFactory* getTimerFactory() const SWIFTEN_OVERRIDE {
 				return timerFactory;
 			}
 
-			virtual ConnectionFactory* getConnectionFactory() const {
+			virtual ConnectionFactory* getConnectionFactory() const SWIFTEN_OVERRIDE {
 				return connectionFactory;
 			}
 
@@ -32,30 +33,34 @@ namespace Swift {
 				return &ioServiceThread;
 			}
 
-			DomainNameResolver* getDomainNameResolver() const {
+			DomainNameResolver* getDomainNameResolver() const SWIFTEN_OVERRIDE {
 				return domainNameResolver;
 			}
 
-			ConnectionServerFactory* getConnectionServerFactory() const {
+			ConnectionServerFactory* getConnectionServerFactory() const SWIFTEN_OVERRIDE {
 				return connectionServerFactory;
 			}
 
-			NATTraverser* getNATTraverser() const {
+			NATTraverser* getNATTraverser() const SWIFTEN_OVERRIDE {
 				return natTraverser;
 			}
 
-			virtual XMLParserFactory* getXMLParserFactory() const {
+			virtual XMLParserFactory* getXMLParserFactory() const SWIFTEN_OVERRIDE {
 				return xmlParserFactory;
 			}
 
-			virtual TLSContextFactory* getTLSContextFactory() const;
+			virtual TLSContextFactory* getTLSContextFactory() const SWIFTEN_OVERRIDE;
 
-			virtual ProxyProvider* getProxyProvider() const {
+			virtual ProxyProvider* getProxyProvider() const SWIFTEN_OVERRIDE {
 				return proxyProvider;
 			}
 
-			virtual EventLoop* getEventLoop() const {
+			virtual EventLoop* getEventLoop() const SWIFTEN_OVERRIDE {
 				return eventLoop;
+			}
+
+			virtual IDNConverter* getIDNConverter() const SWIFTEN_OVERRIDE {
+				return idnConverter;
 			}
 
 		private:
@@ -69,5 +74,6 @@ namespace Swift {
 			PlatformTLSFactories* tlsFactories;
 			ProxyProvider* proxyProvider;
 			EventLoop* eventLoop;
+			IDNConverter* idnConverter;
 	};
 }

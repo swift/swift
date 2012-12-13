@@ -13,6 +13,8 @@
 
 
 namespace Swift {
+	class IDNConverter;
+
 	/**
 	 * This represents the JID used in XMPP
 	 * (RFC6120 - http://tools.ietf.org/html/rfc6120 ).
@@ -155,6 +157,14 @@ namespace Swift {
 			friend bool operator!=(const Swift::JID& a, const Swift::JID& b) {
 				return a.compare(b, Swift::JID::WithResource) != 0;
 			}
+
+
+			/**
+			 * If Swiften was compiled with SWIFTEN_JID_NO_DEFAULT_IDN_CONVERTER (not default), use this method at 
+			 * the beginning of the program to set an IDN converter to use for JID IDN conversions.
+			 * By default, this method shouldn't be used.
+			 */
+			static void setIDNConverter(IDNConverter*);
 
 		private:
 			void nameprepAndSetComponents(const std::string& node, const std::string& domain, const std::string& resource);

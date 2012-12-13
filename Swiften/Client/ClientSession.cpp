@@ -56,10 +56,12 @@ namespace Swift {
 
 ClientSession::ClientSession(
 		const JID& jid, 
-		boost::shared_ptr<SessionStream> stream) :
+		boost::shared_ptr<SessionStream> stream,
+		IDNConverter* idnConverter) :
 			localJID(jid),	
 			state(Initial), 
 			stream(stream),
+			idnConverter(idnConverter),
 			allowPLAINOverNonTLS(false),
 			useStreamCompression(true),
 			useTLS(UseTLSWhenAvailable),
@@ -224,7 +226,7 @@ void ClientSession::handleElement(boost::shared_ptr<Element> element) {
 					plus &= !finishMessage.empty();
 				}
 				s << boost::uuids::random_generator()();
-				SCRAMSHA1ClientAuthenticator* scramAuthenticator = new SCRAMSHA1ClientAuthenticator(s.str(), plus);
+				SCRAMSHA1ClientAuthenticator* scramAuthenticator = new SCRAMSHA1ClientAuthenticator(s.str(), plus, idnConverter);
 				if (plus) {
 					scramAuthenticator->setTLSChannelBindingData(finishMessage);
 				}
@@ -378,7 +380,7 @@ void ClientSession::handleTLSEncrypted() {
 		checkTrustOrFinish(certificateChain, verificationError);
 	}
 	else {
-		ServerIdentityVerifier identityVerifier(localJID);
+		ServerIdentityVerifier identityVerifier(localJID, idnConverter);
 		if (!certificateChain.empty() && identityVerifier.certificateVerifies(certificateChain[0])) {
 			continueAfterTLSEncrypted();
 		}

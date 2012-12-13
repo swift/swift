@@ -14,13 +14,14 @@
 #include <Swiften/Network/NullNATTraverser.h>
 #include <Swiften/TLS/PlatformTLSFactories.h>
 #include <Swiften/Network/PlatformProxyProvider.h>
+#include <Swiften/IDN/PlatformIDNConverter.h>
+#include <Swiften/IDN/IDNConverter.h>
 
 namespace Swift {
 
 BoostNetworkFactories::BoostNetworkFactories(EventLoop* eventLoop) : eventLoop(eventLoop){
 	timerFactory = new BoostTimerFactory(ioServiceThread.getIOService(), eventLoop);
 	connectionFactory = new BoostConnectionFactory(ioServiceThread.getIOService(), eventLoop);
-	domainNameResolver = new PlatformDomainNameResolver(eventLoop);
 	connectionServerFactory = new BoostConnectionServerFactory(ioServiceThread.getIOService(), eventLoop);
 #ifdef SWIFT_EXPERIMENTAL_FT
 	natTraverser = new PlatformNATTraversalWorker(eventLoop);
@@ -30,15 +31,18 @@ BoostNetworkFactories::BoostNetworkFactories(EventLoop* eventLoop) : eventLoop(e
 	xmlParserFactory = new PlatformXMLParserFactory();
 	tlsFactories = new PlatformTLSFactories();
 	proxyProvider = new PlatformProxyProvider();
+	idnConverter = PlatformIDNConverter::create();
+	domainNameResolver = new PlatformDomainNameResolver(idnConverter, eventLoop);
 }
 
 BoostNetworkFactories::~BoostNetworkFactories() {
+	delete domainNameResolver;
+	delete idnConverter;
 	delete proxyProvider;
 	delete tlsFactories;
 	delete xmlParserFactory;
 	delete natTraverser;
 	delete connectionServerFactory;
-	delete domainNameResolver;
 	delete connectionFactory;
 	delete timerFactory;
 }

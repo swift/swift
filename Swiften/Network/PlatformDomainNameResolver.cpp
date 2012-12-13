@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Remko Tronçon
+ * Copyright (c) 2010-2013 Remko Tronçon
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -16,7 +16,7 @@
 #include <algorithm>
 
 #include <string>
-#include <Swiften/IDN/IDNA.h>
+#include <Swiften/IDN/IDNConverter.h>
 #include <Swiften/Network/HostAddress.h>
 #include <Swiften/EventLoop/EventLoop.h>
 #include <Swiften/Network/HostAddressPort.h>
@@ -27,7 +27,7 @@ using namespace Swift;
 
 namespace Swift {
 
-PlatformDomainNameResolver::PlatformDomainNameResolver(EventLoop* eventLoop) : eventLoop(eventLoop), stopRequested(false) {
+PlatformDomainNameResolver::PlatformDomainNameResolver(IDNConverter* idnConverter, EventLoop* eventLoop) : idnConverter(idnConverter), eventLoop(eventLoop), stopRequested(false) {
 	thread = new boost::thread(boost::bind(&PlatformDomainNameResolver::run, this));
 }
 
@@ -39,11 +39,11 @@ PlatformDomainNameResolver::~PlatformDomainNameResolver() {
 }
 
 boost::shared_ptr<DomainNameServiceQuery> PlatformDomainNameResolver::createServiceQuery(const std::string& name) {
-	return boost::shared_ptr<DomainNameServiceQuery>(new PlatformDomainNameServiceQuery(IDNA::getEncoded(name), eventLoop, this));
+	return boost::shared_ptr<DomainNameServiceQuery>(new PlatformDomainNameServiceQuery(idnConverter->getIDNAEncoded(name), eventLoop, this));
 }
 
 boost::shared_ptr<DomainNameAddressQuery> PlatformDomainNameResolver::createAddressQuery(const std::string& name) {
-	return boost::shared_ptr<DomainNameAddressQuery>(new PlatformDomainNameAddressQuery(IDNA::getEncoded(name), eventLoop, this));
+	return boost::shared_ptr<DomainNameAddressQuery>(new PlatformDomainNameAddressQuery(idnConverter->getIDNAEncoded(name), eventLoop, this));
 }
 
 void PlatformDomainNameResolver::run() {

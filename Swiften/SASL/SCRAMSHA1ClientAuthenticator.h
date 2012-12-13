@@ -15,9 +15,11 @@
 #include <Swiften/Base/API.h>
 
 namespace Swift {
+	class IDNConverter;
+
 	class SWIFTEN_API SCRAMSHA1ClientAuthenticator : public ClientAuthenticator {
 		public:
-			SCRAMSHA1ClientAuthenticator(const std::string& nonce, bool useChannelBinding = false);
+			SCRAMSHA1ClientAuthenticator(const std::string& nonce, bool useChannelBinding, IDNConverter*);
 
 			void setTLSChannelBindingData(const ByteArray& channelBindingData);
 			
@@ -44,6 +46,7 @@ namespace Swift {
 			ByteArray saltedPassword;
 			ByteArray serverSignature;
 			bool useChannelBinding;
+			IDNConverter* idnConverter;
 			boost::optional<ByteArray> tlsChannelBindingData;
 	};
 }

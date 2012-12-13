@@ -9,13 +9,13 @@
 #include <boost/algorithm/string.hpp>
 
 #include <Swiften/Base/foreach.h>
-#include <Swiften/IDN/IDNA.h>
+#include <Swiften/IDN/IDNConverter.h>
 
 namespace Swift {
 
-ServerIdentityVerifier::ServerIdentityVerifier(const JID& jid) {
+ServerIdentityVerifier::ServerIdentityVerifier(const JID& jid, IDNConverter* idnConverter) {
 	domain = jid.getDomain();
-	encodedDomain = IDNA::getEncoded(domain);
+	encodedDomain = idnConverter->getIDNAEncoded(domain);
 }
 
 bool ServerIdentityVerifier::certificateVerifies(Certificate::ref certificate) {
