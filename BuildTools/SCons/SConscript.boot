@@ -149,7 +149,7 @@ if env["target"] == "xcode" and os.environ["CONFIGURATION"] == "Release" :
 
 if env["debug"] :
 	if env["PLATFORM"] == "win32" :
-		env.Append(CCFLAGS = ["/Z7"])
+		env.Append(CCFLAGS = ["/Zi"])
 		env.Append(LINKFLAGS = ["/DEBUG"])
 		if env["set_iterator_debug_level"] :
 			env.Append(CPPDEFINES = ["_ITERATOR_DEBUG_LEVEL=0"])
