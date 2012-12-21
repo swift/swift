@@ -36,7 +36,7 @@ def convertToWindowsVersion(version) :
   major = int(version_match.group(1)) if version_match else 0
   minor = int(version_match.group(2)) if version_match else 0
   if version_match and len(version_match.group(3)) == 0 :
-    patch = 99999
+    patch = 60000
   else :
     match = re.match("^beta(\d+)(.*)", version_match.group(3))
     build_string = ""
