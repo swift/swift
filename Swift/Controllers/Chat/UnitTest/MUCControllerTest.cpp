@@ -26,6 +26,7 @@
 #include "Swiften/Network/TimerFactory.h"
 #include "Swiften/Elements/MUCUserPayload.h"
 #include "Swiften/Disco/DummyEntityCapsProvider.h"
+#include <Swift/Controllers/Settings/DummySettingsProvider.h>
 
 using namespace Swift;
 
@@ -62,12 +63,16 @@ public:
 		window_ = new MockChatWindow();
 		mucRegistry_ = new MUCRegistry();
 		entityCapsProvider_ = new DummyEntityCapsProvider();
+		settings_ = new DummySettingsProvider();
+		highlightManager_ = new HighlightManager(settings_);
 		muc_ = boost::make_shared<MUC>(stanzaChannel_, iqRouter_, directedPresenceSender_, mucJID_, mucRegistry_);
 		mocks_->ExpectCall(chatWindowFactory_, ChatWindowFactory::createChatWindow).With(muc_->getJID(), uiEventStream_).Return(window_);
-		controller_ = new MUCController (self_, muc_, boost::optional<std::string>(), nick_, stanzaChannel_, iqRouter_, chatWindowFactory_, presenceOracle_, avatarManager_, uiEventStream_, false, timerFactory, eventController_, entityCapsProvider_, NULL, NULL, mucRegistry_);
+		controller_ = new MUCController (self_, muc_, boost::optional<std::string>(), nick_, stanzaChannel_, iqRouter_, chatWindowFactory_, presenceOracle_, avatarManager_, uiEventStream_, false, timerFactory, eventController_, entityCapsProvider_, NULL, NULL, mucRegistry_, highlightManager_);
 	}
 
 	void tearDown() {
+		delete highlightManager_;
+		delete settings_;
 		delete entityCapsProvider_;
 		delete controller_;
 		delete eventController_;
@@ -338,6 +343,8 @@ private:
 	MockChatWindow* window_;
 	MUCRegistry* mucRegistry_;
 	DummyEntityCapsProvider* entityCapsProvider_;
+	DummySettingsProvider* settings_;
+	HighlightManager* highlightManager_;
 };
 
 CPPUNIT_TEST_SUITE_REGISTRATION(MUCControllerTest);

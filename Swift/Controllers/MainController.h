@@ -71,6 +71,8 @@ namespace Swift {
 	class AdHocCommandWindowFactory;
 	class FileTransferOverview;
 	class WhiteboardManager;
+	class HighlightManager;
+	class HighlightEditorController;
 
 	class MainController {
 		public:
@@ -176,5 +178,7 @@ namespace Swift {
 			static const int SecondsToWaitBeforeForceQuitting;
 			FileTransferOverview* ftOverview_;
 			WhiteboardManager* whiteboardManager_;
+			HighlightManager* highlightManager_;
+			HighlightEditorController* highlightEditorController_;
 	};
 }

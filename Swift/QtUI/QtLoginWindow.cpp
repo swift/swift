@@ -30,6 +30,7 @@
 #include <Swift/Controllers/UIEvents/UIEventStream.h>
 #include <Swift/Controllers/UIEvents/RequestXMLConsoleUIEvent.h>
 #include <Swift/Controllers/UIEvents/RequestFileTransferListUIEvent.h>
+#include <Swift/Controllers/UIEvents/RequestHighlightEditorUIEvent.h>
 #include <Swift/Controllers/Settings/SettingsProvider.h>
 #include <Swift/Controllers/SettingConstants.h>
 #include <Swift/QtUI/QtUISettingConstants.h>
@@ -189,6 +190,10 @@ QtLoginWindow::QtLoginWindow(UIEventStream* uiEventStream, SettingsProvider* set
 	connect(fileTransferOverviewAction_, SIGNAL(triggered()), SLOT(handleShowFileTransferOverview()));
 	generalMenu_->addAction(fileTransferOverviewAction_);
 #endif
+
+	highlightEditorAction_ = new QAction(tr("&Edit Highlight Rules"), this);
+	connect(highlightEditorAction_, SIGNAL(triggered()), SLOT(handleShowHighlightEditor()));
+	generalMenu_->addAction(highlightEditorAction_);
 
 	toggleSoundsAction_ = new QAction(tr("&Play Sounds"), this);
 	toggleSoundsAction_->setCheckable(true);
@@ -436,6 +441,10 @@ void QtLoginWindow::handleShowXMLConsole() {
 
 void QtLoginWindow::handleShowFileTransferOverview() {
 	uiEventStream_->send(boost::make_shared<RequestFileTransferListUIEvent>());
+}
+
+void QtLoginWindow::handleShowHighlightEditor() {
+	uiEventStream_->send(boost::make_shared<RequestHighlightEditorUIEvent>());
 }
 
 void QtLoginWindow::handleToggleSounds(bool enabled) {

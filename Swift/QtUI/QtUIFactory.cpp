@@ -25,6 +25,7 @@
 #include "QtContactEditWindow.h"
 #include "QtAdHocCommandWindow.h"
 #include "QtFileTransferListWidget.h"
+#include <QtHighlightEditorWidget.h>
 #include "Whiteboard/QtWhiteboardWindow.h"
 #include <Swift/Controllers/Settings/SettingsProviderHierachy.h>
 #include <Swift/QtUI/QtUISettingConstants.h>
@@ -160,6 +161,10 @@ ContactEditWindow* QtUIFactory::createContactEditWindow() {
 
 WhiteboardWindow* QtUIFactory::createWhiteboardWindow(boost::shared_ptr<WhiteboardSession> whiteboardSession) {
 	return new QtWhiteboardWindow(whiteboardSession);
+}
+
+HighlightEditorWidget* QtUIFactory::createHighlightEditorWidget() {
+	return new QtHighlightEditorWidget();
 }
 
 void QtUIFactory::createAdHocCommandWindow(boost::shared_ptr<OutgoingAdHocCommandSession> command) {

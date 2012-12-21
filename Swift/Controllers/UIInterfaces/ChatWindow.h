@@ -17,6 +17,7 @@
 #include <Swiften/Elements/ChatState.h>
 #include <Swiften/Elements/Form.h>
 #include <Swiften/Elements/MUCOccupant.h>
+#include <Swift/Controllers/HighlightManager.h>
 
 
 namespace Swift {
@@ -44,16 +45,16 @@ namespace Swift {
 			/** Add message to window.
 			 * @return id of added message (for acks).
 			 */
-			virtual std::string addMessage(const std::string& message, const std::string& senderName, bool senderIsSelf, boost::shared_ptr<SecurityLabel> label, const std::string& avatarPath, const boost::posix_time::ptime& time) = 0;
+			virtual std::string addMessage(const std::string& message, const std::string& senderName, bool senderIsSelf, boost::shared_ptr<SecurityLabel> label, const std::string& avatarPath, const boost::posix_time::ptime& time, const HighlightAction& highlight) = 0;
 			/** Adds action to window.
 			 * @return id of added message (for acks);
 			 */
-			virtual std::string addAction(const std::string& message, const std::string& senderName, bool senderIsSelf, boost::shared_ptr<SecurityLabel> label, const std::string& avatarPath, const boost::posix_time::ptime& time) = 0;
+			virtual std::string addAction(const std::string& message, const std::string& senderName, bool senderIsSelf, boost::shared_ptr<SecurityLabel> label, const std::string& avatarPath, const boost::posix_time::ptime& time, const HighlightAction& highlight) = 0;
 			virtual void addSystemMessage(const std::string& message) = 0;
 			virtual void addPresenceMessage(const std::string& message) = 0;
 			virtual void addErrorMessage(const std::string& message) = 0;
-			virtual void replaceMessage(const std::string& message, const std::string& id, const boost::posix_time::ptime& time) = 0;
-			virtual void replaceWithAction(const std::string& message, const std::string& id, const boost::posix_time::ptime& time) = 0;
+			virtual void replaceMessage(const std::string& message, const std::string& id, const boost::posix_time::ptime& time, const HighlightAction& highlight) = 0;
+			virtual void replaceWithAction(const std::string& message, const std::string& id, const boost::posix_time::ptime& time, const HighlightAction& highlight) = 0;
 			
 			// File transfer related stuff
 			virtual std::string addFileTransfer(const std::string& senderName, bool senderIsSelf, const std::string& filename, const boost::uintmax_t sizeInBytes) = 0;

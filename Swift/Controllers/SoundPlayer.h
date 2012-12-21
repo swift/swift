@@ -6,11 +6,13 @@
 
 #pragma once
 
+#include <string>
+
 namespace Swift {
 	class SoundPlayer {
 		public:
 			virtual ~SoundPlayer() {}
 			enum SoundEffect{MessageReceived};
-			virtual void playSound(SoundEffect sound) = 0;
+			virtual void playSound(SoundEffect sound, const std::string& soundResource) = 0;
 	};
 }

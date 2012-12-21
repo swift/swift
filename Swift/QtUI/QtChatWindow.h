@@ -88,13 +88,13 @@ namespace Swift {
 		public:
 			QtChatWindow(const QString &contact, QtChatTheme* theme, UIEventStream* eventStream, SettingsProvider* settings, QMap<QString, QString> emoticons);
 			~QtChatWindow();
-			std::string addMessage(const std::string &message, const std::string &senderName, bool senderIsSelf, boost::shared_ptr<SecurityLabel> label, const std::string& avatarPath, const boost::posix_time::ptime& time);
-			std::string addAction(const std::string &message, const std::string &senderName, bool senderIsSelf, boost::shared_ptr<SecurityLabel> label, const std::string& avatarPath, const boost::posix_time::ptime& time);
+			std::string addMessage(const std::string &message, const std::string &senderName, bool senderIsSelf, boost::shared_ptr<SecurityLabel> label, const std::string& avatarPath, const boost::posix_time::ptime& time, const HighlightAction& highlight);
+			std::string addAction(const std::string &message, const std::string &senderName, bool senderIsSelf, boost::shared_ptr<SecurityLabel> label, const std::string& avatarPath, const boost::posix_time::ptime& time, const HighlightAction& highlight);
 			void addSystemMessage(const std::string& message);
 			void addPresenceMessage(const std::string& message);
 			void addErrorMessage(const std::string& errorMessage);
-			void replaceMessage(const std::string& message, const std::string& id, const boost::posix_time::ptime& time);
-			void replaceWithAction(const std::string& message, const std::string& id, const boost::posix_time::ptime& time);
+			void replaceMessage(const std::string& message, const std::string& id, const boost::posix_time::ptime& time, const HighlightAction& highlight);
+			void replaceWithAction(const std::string& message, const std::string& id, const boost::posix_time::ptime& time, const HighlightAction& highlight);
 			// File transfer related stuff
 			std::string addFileTransfer(const std::string& senderName, bool senderIsSelf, const std::string& filename, const boost::uintmax_t sizeInBytes);
 			void setFileTransferProgress(std::string id, const int percentageDone);
@@ -192,11 +192,12 @@ namespace Swift {
 			void beginCorrection();
 			void cancelCorrection();
 			void handleSettingChanged(const std::string& setting);
-			std::string addMessage(const QString& message, const std::string& senderName, bool senderIsSelf, boost::shared_ptr<SecurityLabel> label, const std::string& avatarPath, const QString& style, const boost::posix_time::ptime& time);
-			void replaceMessage(const QString& message, const std::string& id, const boost::posix_time::ptime& time, const QString& style);
+			std::string addMessage(const QString& message, const std::string& senderName, bool senderIsSelf, boost::shared_ptr<SecurityLabel> label, const std::string& avatarPath, const QString& style, const boost::posix_time::ptime& time, const HighlightAction& highlight);
+			void replaceMessage(const QString& message, const std::string& id, const boost::posix_time::ptime& time, const QString& style, const HighlightAction& highlight);
 			void handleOccupantSelectionChanged(RosterItem* item);
 			bool appendToPreviousCheck(PreviousMessageKind messageKind, const std::string& senderName, bool senderIsSelf) const;
 			QString linkimoticonify(const QString& message) const;
+			QString getHighlightSpanStart(const HighlightAction& highlight);
 
 			int unreadCount_;
 			bool contactIsTyping_;

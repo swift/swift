@@ -106,14 +106,16 @@ public:
 		avatarManager_ = new NullAvatarManager();
 		wbSessionManager_ = new WhiteboardSessionManager(iqRouter_, stanzaChannel_, presenceOracle_, entityCapsManager_);
 		wbManager_ = new WhiteboardManager(whiteboardWindowFactory_, uiEventStream_, nickResolver_, wbSessionManager_);
+		highlightManager_ = new HighlightManager(settings_);
 
 		mocks_->ExpectCall(chatListWindowFactory_, ChatListWindowFactory::createChatListWindow).With(uiEventStream_).Return(chatListWindow_);
-		manager_ = new ChatsManager(jid_, stanzaChannel_, iqRouter_, eventController_, chatWindowFactory_, joinMUCWindowFactory_, nickResolver_, presenceOracle_, directedPresenceSender_, uiEventStream_, chatListWindowFactory_, true, NULL, mucRegistry_, entityCapsManager_, mucManager_, mucSearchWindowFactory_, profileSettings_, ftOverview_, xmppRoster_, false, settings_, NULL, wbManager_);
+		manager_ = new ChatsManager(jid_, stanzaChannel_, iqRouter_, eventController_, chatWindowFactory_, joinMUCWindowFactory_, nickResolver_, presenceOracle_, directedPresenceSender_, uiEventStream_, chatListWindowFactory_, true, NULL, mucRegistry_, entityCapsManager_, mucManager_, mucSearchWindowFactory_, profileSettings_, ftOverview_, xmppRoster_, false, settings_, NULL, wbManager_, highlightManager_);
 
 		manager_->setAvatarManager(avatarManager_);
 	}
 	
 	void tearDown() {
+		delete highlightManager_;
 		//delete chatListWindowFactory
 		delete profileSettings_;
 		delete avatarManager_;
@@ -481,6 +483,7 @@ private:
 	FileTransferManager* ftManager_;
 	WhiteboardSessionManager* wbSessionManager_;
 	WhiteboardManager* wbManager_;
+	HighlightManager* highlightManager_;
 };
 
 CPPUNIT_TEST_SUITE_REGISTRATION(ChatsManagerTest);

@@ -33,6 +33,7 @@ namespace Swift {
 	class TabComplete;
 	class InviteToChatWindow;
 	class XMPPRoster;
+	class HighlightManager;
 
 	enum JoinPart {Join, Part, JoinThenPart, PartThenJoin};
 
@@ -44,7 +45,7 @@ namespace Swift {
 
 	class MUCController : public ChatControllerBase {
 		public:
-			MUCController(const JID& self, MUC::ref muc, const boost::optional<std::string>& password, const std::string &nick, StanzaChannel* stanzaChannel, IQRouter* iqRouter, ChatWindowFactory* chatWindowFactory, PresenceOracle* presenceOracle, AvatarManager* avatarManager, UIEventStream* events, bool useDelayForLatency, TimerFactory* timerFactory, EventController* eventController, EntityCapsProvider* entityCapsProvider, XMPPRoster* roster, HistoryController* historyController, MUCRegistry* mucRegistry);
+			MUCController(const JID& self, MUC::ref muc, const boost::optional<std::string>& password, const std::string &nick, StanzaChannel* stanzaChannel, IQRouter* iqRouter, ChatWindowFactory* chatWindowFactory, PresenceOracle* presenceOracle, AvatarManager* avatarManager, UIEventStream* events, bool useDelayForLatency, TimerFactory* timerFactory, EventController* eventController, EntityCapsProvider* entityCapsProvider, XMPPRoster* roster, HistoryController* historyController, MUCRegistry* mucRegistry, HighlightManager* highlightManager);
 			~MUCController();
 			boost::signal<void ()> onUserLeft;
 			boost::signal<void ()> onUserJoined;
@@ -62,7 +63,7 @@ namespace Swift {
 			std::string senderDisplayNameFromMessage(const JID& from);
 			boost::optional<boost::posix_time::ptime> getMessageTimestamp(boost::shared_ptr<Message> message) const;
 			void preHandleIncomingMessage(boost::shared_ptr<MessageEvent>);
-			void postHandleIncomingMessage(boost::shared_ptr<MessageEvent>);
+			void postHandleIncomingMessage(boost::shared_ptr<MessageEvent>, const HighlightAction&);
 			void cancelReplaces();
 			void logMessage(const std::string& message, const JID& fromJID, const JID& toJID, const boost::posix_time::ptime& timeStamp, bool isIncoming);
 
@@ -108,6 +109,7 @@ namespace Swift {
 			void handleInviteToMUCWindowCompleted();
 			void addRecentLogs();
 			void checkDuplicates(boost::shared_ptr<Message> newMessage);
+			void setNick(const std::string& nick);
 
 		private:
 			MUC::ref muc_;

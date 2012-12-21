@@ -481,8 +481,8 @@ void QtChatWindow::updateTitleWithUnreadCount() {
 	emit titleUpdated();
 }
 
-std::string QtChatWindow::addMessage(const std::string &message, const std::string &senderName, bool senderIsSelf, boost::shared_ptr<SecurityLabel> label, const std::string& avatarPath, const boost::posix_time::ptime& time) {
-	return addMessage(linkimoticonify(P2QSTRING(message)), senderName, senderIsSelf, label, avatarPath, "", time);
+std::string QtChatWindow::addMessage(const std::string &message, const std::string &senderName, bool senderIsSelf, boost::shared_ptr<SecurityLabel> label, const std::string& avatarPath, const boost::posix_time::ptime& time, const HighlightAction& highlight) {
+	return addMessage(linkimoticonify(P2QSTRING(message)), senderName, senderIsSelf, label, avatarPath, "", time, highlight);
 }
 
 QString QtChatWindow::linkimoticonify(const QString& message) const {
@@ -502,7 +502,21 @@ QString QtChatWindow::linkimoticonify(const QString& message) const {
 	return messageHTML;
 }
 
-std::string QtChatWindow::addMessage(const QString &message, const std::string &senderName, bool senderIsSelf, boost::shared_ptr<SecurityLabel> label, const std::string& avatarPath, const QString& style, const boost::posix_time::ptime& time) {
+QString QtChatWindow::getHighlightSpanStart(const HighlightAction& highlight)
+{
+	QString color = Qt::escape(P2QSTRING(highlight.getTextColor()));
+	QString background = Qt::escape(P2QSTRING(highlight.getTextBackground()));
+	if (color.isEmpty()) {
+		color = "black";
+	}
+	if (background.isEmpty()) {
+		background = "yellow";
+	}
+
+	return QString("<span style=\"color: %1; background: %2\">").arg(color).arg(background);
+}
+
+std::string QtChatWindow::addMessage(const QString &message, const std::string &senderName, bool senderIsSelf, boost::shared_ptr<SecurityLabel> label, const std::string& avatarPath, const QString& style, const boost::posix_time::ptime& time, const HighlightAction& highlight) {
 	if (isWidgetSelected()) {
 		onAllMessagesRead();
 	}
@@ -516,7 +530,9 @@ std::string QtChatWindow::addMessage(const QString &message, const std::string &
 	QString messageHTML(message);
 	QString styleSpanStart = style == "" ? "" : "<span style=\"" + style + "\">";
 	QString styleSpanEnd = style == "" ? "" : "</span>";
-	htmlString += "<span class='swift_inner_message'>" + styleSpanStart + messageHTML + styleSpanEnd + "</span>" ;
+	QString highlightSpanStart = highlight.highlightText() ? getHighlightSpanStart(highlight) : "";
+	QString highlightSpanEnd = highlight.highlightText() ? "</span>" : "";
+	htmlString += "<span class='swift_inner_message'>" + styleSpanStart + highlightSpanStart + messageHTML + highlightSpanEnd + styleSpanEnd + "</span>" ;
 
 	bool appendToPrevious = appendToPreviousCheck(PreviousMessageWasMessage, senderName, senderIsSelf);
 	if (lastLineTracker_.getShouldMoveLastLine()) {
@@ -572,8 +588,8 @@ int QtChatWindow::getCount() {
 	return unreadCount_;
 }
 
-std::string QtChatWindow::addAction(const std::string &message, const std::string &senderName, bool senderIsSelf, boost::shared_ptr<SecurityLabel> label, const std::string& avatarPath, const boost::posix_time::ptime& time) {
-	return addMessage(" *" + linkimoticonify(P2QSTRING(message)) + "*", senderName, senderIsSelf, label, avatarPath, "font-style:italic ", time);
+std::string QtChatWindow::addAction(const std::string &message, const std::string &senderName, bool senderIsSelf, boost::shared_ptr<SecurityLabel> label, const std::string& avatarPath, const boost::posix_time::ptime& time, const HighlightAction& highlight) {
+	return addMessage(" *" + linkimoticonify(P2QSTRING(message)) + "*", senderName, senderIsSelf, label, avatarPath, "font-style:italic ", time, highlight);
 }
 
 // FIXME: Move this to a different file
@@ -770,15 +786,15 @@ void QtChatWindow::addSystemMessage(const std::string& message) {
 	previousMessageKind_ = PreviousMessageWasSystem;
 }
 
-void QtChatWindow::replaceWithAction(const std::string& message, const std::string& id, const boost::posix_time::ptime& time) {
-	replaceMessage(" *" + linkimoticonify(P2QSTRING(message)) + "*", id, time, "font-style:italic ");
+void QtChatWindow::replaceWithAction(const std::string& message, const std::string& id, const boost::posix_time::ptime& time, const HighlightAction& highlight) {
+	replaceMessage(" *" + linkimoticonify(P2QSTRING(message)) + "*", id, time, "font-style:italic ", highlight);
 }
 
-void QtChatWindow::replaceMessage(const std::string& message, const std::string& id, const boost::posix_time::ptime& time) {
-	replaceMessage(linkimoticonify(P2QSTRING(message)), id, time, "");
+void QtChatWindow::replaceMessage(const std::string& message, const std::string& id, const boost::posix_time::ptime& time, const HighlightAction& highlight) {
+	replaceMessage(linkimoticonify(P2QSTRING(message)), id, time, "", highlight);
 }
 
-void QtChatWindow::replaceMessage(const QString& message, const std::string& id, const boost::posix_time::ptime& time, const QString& style) {
+void QtChatWindow::replaceMessage(const QString& message, const std::string& id, const boost::posix_time::ptime& time, const QString& style, const HighlightAction& highlight) {
 	if (!id.empty()) {
 		if (isWidgetSelected()) {
 			onAllMessagesRead();
@@ -788,7 +804,9 @@ void QtChatWindow::replaceMessage(const QString& message, const std::string& id,
 
 		QString styleSpanStart = style == "" ? "" : "<span style=\"" + style + "\">";
 		QString styleSpanEnd = style == "" ? "" : "</span>";
-		messageHTML = styleSpanStart + messageHTML + styleSpanEnd;
+		QString highlightSpanStart = highlight.highlightText() ? getHighlightSpanStart(highlight) : "";
+		QString highlightSpanEnd = highlight.highlightText() ? "</span>" : "";
+		messageHTML = styleSpanStart + highlightSpanStart + messageHTML + highlightSpanEnd + styleSpanEnd;
 
 		messageLog_->replaceMessage(messageHTML, P2QSTRING(id), B2QDATE(time));
 	}

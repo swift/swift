@@ -35,6 +35,7 @@
 #include <Swift/Controllers/Roster/SetPresence.h>
 #include <Swiften/Disco/EntityCapsProvider.h>
 #include <Swiften/Roster/XMPPRoster.h>
+#include <Swift/Controllers/Highlighter.h>
 
 
 #define MUC_JOIN_WARNING_TIMEOUT_MILLISECONDS 60000
@@ -61,8 +62,9 @@ MUCController::MUCController (
 		EntityCapsProvider* entityCapsProvider,
 		XMPPRoster* roster,
 		HistoryController* historyController,
-		MUCRegistry* mucRegistry) :
-			ChatControllerBase(self, stanzaChannel, iqRouter, chatWindowFactory, muc->getJID(), presenceOracle, avatarManager, useDelayForLatency, uiEventStream, eventController, timerFactory, entityCapsProvider, historyController, mucRegistry), muc_(muc), nick_(nick), desiredNick_(nick), password_(password) {
+		MUCRegistry* mucRegistry,
+		HighlightManager* highlightManager) :
+			ChatControllerBase(self, stanzaChannel, iqRouter, chatWindowFactory, muc->getJID(), presenceOracle, avatarManager, useDelayForLatency, uiEventStream, eventController, timerFactory, entityCapsProvider, historyController, mucRegistry, highlightManager), muc_(muc), nick_(nick), desiredNick_(nick), password_(password) {
 	parting_ = true;
 	joined_ = false;
 	lastWasPresence_ = false;
@@ -98,6 +100,8 @@ MUCController::MUCController (
 	muc_->onConfigurationFormReceived.connect(boost::bind(&MUCController::handleConfigurationFormReceived, this, _1));
 	muc_->onRoleChangeFailed.connect(boost::bind(&MUCController::handleOccupantRoleChangeFailed, this, _1, _2, _3));
 	muc_->onAffiliationListReceived.connect(boost::bind(&MUCController::handleAffiliationListReceived, this, _1, _2));
+	highlighter_->setMode(Highlighter::MUCMode);
+	highlighter_->setNick(nick_);
 	if (timerFactory) {
 		loginCheckTimer_ = boost::shared_ptr<Timer>(timerFactory->createTimer(MUC_JOIN_WARNING_TIMEOUT_MILLISECONDS));
 		loginCheckTimer_->onTick.connect(boost::bind(&MUCController::handleJoinTimeoutTick, this));
@@ -273,7 +277,7 @@ void MUCController::handleJoinFailed(boost::shared_ptr<ErrorPayload> error) {
 	chatWindow_->addErrorMessage(errorMessage);
 	parting_ = true;
 	if (!rejoinNick.empty()) {
-		nick_ = rejoinNick;
+		setNick(rejoinNick);
 		rejoin();
 	}
 }
@@ -284,7 +288,7 @@ void MUCController::handleJoinComplete(const std::string& nick) {
 	receivedActivity();
 	joined_ = true;
 	std::string joinMessage = str(format(QT_TRANSLATE_NOOP("", "You have entered room %1% as %2%.")) % toJID_.toString() % nick);
-	nick_ = nick;
+	setNick(nick);
 	chatWindow_->addSystemMessage(joinMessage);
 
 #ifdef SWIFT_EXPERIMENTAL_HISTORY
@@ -455,10 +459,13 @@ void MUCController::preHandleIncomingMessage(boost::shared_ptr<MessageEvent> mes
 	}
 }
 
-void MUCController::postHandleIncomingMessage(boost::shared_ptr<MessageEvent> messageEvent) {
+void MUCController::postHandleIncomingMessage(boost::shared_ptr<MessageEvent> messageEvent, const HighlightAction& highlight) {
 	boost::shared_ptr<Message> message = messageEvent->getStanza();
 	if (joined_ && messageEvent->getStanza()->getFrom().getResource() != nick_ && messageTargetsMe(message) && !message->getPayload<Delay>()) {
 		eventController_->handleIncomingEvent(messageEvent);
+		if (!messageEvent->getConcluded()) {
+			highlighter_->handleHighlightAction(highlight);
+		}
 	}
 }
 
@@ -510,7 +517,7 @@ void MUCController::setOnline(bool online) {
 			if (loginCheckTimer_) {
 				loginCheckTimer_->start();
 			}
-			nick_ = desiredNick_;
+			setNick(desiredNick_);
 			rejoin();
 		}
 	}
@@ -818,7 +825,7 @@ void MUCController::addRecentLogs() {
 		bool senderIsSelf = nick_ == message.getFromJID().getResource();
 
 		// the chatWindow uses utc timestamps
-		addMessage(message.getMessage(), senderDisplayNameFromMessage(message.getFromJID()), senderIsSelf, boost::shared_ptr<SecurityLabel>(new SecurityLabel()), std::string(avatarManager_->getAvatarPath(message.getFromJID()).string()), message.getTime() - boost::posix_time::hours(message.getOffset()));
+		addMessage(message.getMessage(), senderDisplayNameFromMessage(message.getFromJID()), senderIsSelf, boost::shared_ptr<SecurityLabel>(new SecurityLabel()), std::string(avatarManager_->getAvatarPath(message.getFromJID()).string()), message.getTime() - boost::posix_time::hours(message.getOffset()), HighlightAction());
 	}
 }
 
@@ -845,6 +852,12 @@ void MUCController::checkDuplicates(boost::shared_ptr<Message> newMessage) {
 		// Mark the message as unreadable
 		newMessage->setBody("");
 	}
+}
+
+void MUCController::setNick(const std::string& nick)
+{
+	nick_ = nick;
+	highlighter_->setNick(nick_);
 }
 
 }

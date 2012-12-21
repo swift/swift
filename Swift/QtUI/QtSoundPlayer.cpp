@@ -16,10 +16,11 @@ namespace Swift {
 QtSoundPlayer::QtSoundPlayer(ApplicationPathProvider* applicationPathProvider) : applicationPathProvider(applicationPathProvider) {
 }
 
-void QtSoundPlayer::playSound(SoundEffect sound) {
+void QtSoundPlayer::playSound(SoundEffect sound, const std::string& soundResource) {
+
 	switch (sound) {
 		case MessageReceived:
-			playSound("/sounds/message-received.wav");
+			playSound(soundResource.empty() ? "/sounds/message-received.wav" : soundResource);
 			break;
 	}
 }
@@ -28,6 +29,9 @@ void QtSoundPlayer::playSound(const std::string& soundResource) {
 	boost::filesystem::path resourcePath = applicationPathProvider->getResourcePath(soundResource);
 	if (boost::filesystem::exists(resourcePath)) {
 		QSound::play(resourcePath.string().c_str());
+	}
+	else if (boost::filesystem::exists(soundResource)) {
+		QSound::play(soundResource.c_str());
 	}
 	else {
 		std::cerr << "Unable to find sound: " << soundResource << std::endl;

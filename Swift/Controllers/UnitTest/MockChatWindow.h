@@ -14,8 +14,8 @@ namespace Swift {
 			MockChatWindow() : labelsEnabled_(false) {}
 			virtual ~MockChatWindow();
 
-			virtual std::string addMessage(const std::string& message, const std::string& /*senderName*/, bool /*senderIsSelf*/, boost::shared_ptr<SecurityLabel> /*label*/, const std::string& /*avatarPath*/, const boost::posix_time::ptime&) {lastMessageBody_ = message; return "";}
-			virtual std::string addAction(const std::string& message, const std::string& /*senderName*/, bool /*senderIsSelf*/, boost::shared_ptr<SecurityLabel> /*label*/, const std::string& /*avatarPath*/, const boost::posix_time::ptime&) {lastMessageBody_ = message; return "";}
+			virtual std::string addMessage(const std::string& message, const std::string& /*senderName*/, bool /*senderIsSelf*/, boost::shared_ptr<SecurityLabel> /*label*/, const std::string& /*avatarPath*/, const boost::posix_time::ptime&, const HighlightAction&) {lastMessageBody_ = message; return "";}
+			virtual std::string addAction(const std::string& message, const std::string& /*senderName*/, bool /*senderIsSelf*/, boost::shared_ptr<SecurityLabel> /*label*/, const std::string& /*avatarPath*/, const boost::posix_time::ptime&, const HighlightAction&) {lastMessageBody_ = message; return "";}
 			virtual void addSystemMessage(const std::string& /*message*/) {}
 			virtual void addErrorMessage(const std::string& /*message*/) {}
 			virtual void addPresenceMessage(const std::string& /*message*/) {}
@@ -41,8 +41,8 @@ namespace Swift {
 			virtual void setRosterModel(Roster* /*roster*/) {}
 			virtual void setTabComplete(TabComplete*) {}
 			virtual void replaceLastMessage(const std::string&) {}
-			virtual void replaceMessage(const std::string&, const std::string&, const boost::posix_time::ptime&) {}
-			virtual void replaceWithAction(const std::string& /*message*/, const std::string& /*id*/, const boost::posix_time::ptime& /*time*/) {}
+			virtual void replaceMessage(const std::string&, const std::string&, const boost::posix_time::ptime&, const HighlightAction&) {}
+			virtual void replaceWithAction(const std::string& /*message*/, const std::string& /*id*/, const boost::posix_time::ptime& /*time*/, const HighlightAction&) {}
 			void setAckState(const std::string& /*id*/, AckState /*state*/) {}
 			virtual void flash() {}
 			virtual void setAlert(const std::string& /*alertText*/, const std::string& /*buttonText*/) {}

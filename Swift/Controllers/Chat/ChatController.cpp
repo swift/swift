@@ -32,7 +32,7 @@
 #include <Swiften/Elements/DeliveryReceipt.h>
 #include <Swiften/Elements/DeliveryReceiptRequest.h>
 #include <Swift/Controllers/SettingConstants.h>
-
+#include <Swift/Controllers/Highlighter.h>
 #include <Swiften/Base/Log.h>
 
 namespace Swift {
@@ -40,8 +40,8 @@ namespace Swift {
 /**
  * The controller does not gain ownership of the stanzaChannel, nor the factory.
  */
-ChatController::ChatController(const JID& self, StanzaChannel* stanzaChannel, IQRouter* iqRouter, ChatWindowFactory* chatWindowFactory, const JID &contact, NickResolver* nickResolver, PresenceOracle* presenceOracle, AvatarManager* avatarManager, bool isInMUC, bool useDelayForLatency, UIEventStream* eventStream, EventController* eventController, TimerFactory* timerFactory, EntityCapsProvider* entityCapsProvider, bool userWantsReceipts, SettingsProvider* settings, HistoryController* historyController, MUCRegistry* mucRegistry)
-	: ChatControllerBase(self, stanzaChannel, iqRouter, chatWindowFactory, contact, presenceOracle, avatarManager, useDelayForLatency, eventStream, eventController, timerFactory, entityCapsProvider, historyController, mucRegistry), eventStream_(eventStream), userWantsReceipts_(userWantsReceipts), settings_(settings) {
+ChatController::ChatController(const JID& self, StanzaChannel* stanzaChannel, IQRouter* iqRouter, ChatWindowFactory* chatWindowFactory, const JID &contact, NickResolver* nickResolver, PresenceOracle* presenceOracle, AvatarManager* avatarManager, bool isInMUC, bool useDelayForLatency, UIEventStream* eventStream, EventController* eventController, TimerFactory* timerFactory, EntityCapsProvider* entityCapsProvider, bool userWantsReceipts, SettingsProvider* settings, HistoryController* historyController, MUCRegistry* mucRegistry, HighlightManager* highlightManager)
+	: ChatControllerBase(self, stanzaChannel, iqRouter, chatWindowFactory, contact, presenceOracle, avatarManager, useDelayForLatency, eventStream, eventController, timerFactory, entityCapsProvider, historyController, mucRegistry, highlightManager), eventStream_(eventStream), userWantsReceipts_(userWantsReceipts), settings_(settings) {
 	isInMUC_ = isInMUC;
 	lastWasPresence_ = false;
 	chatStateNotifier_ = new ChatStateNotifier(stanzaChannel, contact, entityCapsProvider);
@@ -174,8 +174,11 @@ void ChatController::preHandleIncomingMessage(boost::shared_ptr<MessageEvent> me
 	}
 }
 
-void ChatController::postHandleIncomingMessage(boost::shared_ptr<MessageEvent> messageEvent) {
+void ChatController::postHandleIncomingMessage(boost::shared_ptr<MessageEvent> messageEvent, const HighlightAction& highlight) {
 	eventController_->handleIncomingEvent(messageEvent);
+	if (!messageEvent->getConcluded()) {
+		highlighter_->handleHighlightAction(highlight);
+	}
 }
 
 
@@ -211,9 +214,9 @@ void ChatController::postSendMessage(const std::string& body, boost::shared_ptr<
 	boost::shared_ptr<Replace> replace = sentStanza->getPayload<Replace>();
 	if (replace) {
 		eraseIf(unackedStanzas_, PairSecondEquals<boost::shared_ptr<Stanza>, std::string>(myLastMessageUIID_));
-		replaceMessage(body, myLastMessageUIID_, boost::posix_time::microsec_clock::universal_time());
+		replaceMessage(body, myLastMessageUIID_, boost::posix_time::microsec_clock::universal_time(), HighlightAction());
 	} else {
-		myLastMessageUIID_ = addMessage(body, QT_TRANSLATE_NOOP("", "me"), true, labelsEnabled_ ? chatWindow_->getSelectedSecurityLabel().getLabel() : boost::shared_ptr<SecurityLabel>(), std::string(avatarManager_->getAvatarPath(selfJID_).string()), boost::posix_time::microsec_clock::universal_time());
+		myLastMessageUIID_ = addMessage(body, QT_TRANSLATE_NOOP("", "me"), true, labelsEnabled_ ? chatWindow_->getSelectedSecurityLabel().getLabel() : boost::shared_ptr<SecurityLabel>(), std::string(avatarManager_->getAvatarPath(selfJID_).string()), boost::posix_time::microsec_clock::universal_time(), HighlightAction());
 	}
 
 	if (stanzaChannel_->getStreamManagementEnabled() && !myLastMessageUIID_.empty() ) {

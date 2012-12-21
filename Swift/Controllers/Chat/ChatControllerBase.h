@@ -29,6 +29,7 @@
 #include "Swiften/Base/IDGenerator.h"
 #include <Swift/Controllers/HistoryController.h>
 #include <Swiften/MUC/MUCRegistry.h>
+#include <Swift/Controllers/HighlightManager.h>
 
 namespace Swift {
 	class IQRouter;
@@ -39,6 +40,8 @@ namespace Swift {
 	class UIEventStream;
 	class EventController;
 	class EntityCapsProvider;
+	class HighlightManager;
+	class Highlighter;
 
 	class ChatControllerBase : public boost::bsignals::trackable {
 		public:
@@ -47,8 +50,8 @@ namespace Swift {
 			void activateChatWindow();
 			void setAvailableServerFeatures(boost::shared_ptr<DiscoInfo> info);
 			void handleIncomingMessage(boost::shared_ptr<MessageEvent> message);
-			std::string addMessage(const std::string& message, const std::string& senderName, bool senderIsSelf, boost::shared_ptr<SecurityLabel> label, const std::string& avatarPath, const boost::posix_time::ptime& time);
-			void replaceMessage(const std::string& message, const std::string& id, const boost::posix_time::ptime& time);
+			std::string addMessage(const std::string& message, const std::string& senderName, bool senderIsSelf, boost::shared_ptr<SecurityLabel> label, const std::string& avatarPath, const boost::posix_time::ptime& time, const HighlightAction& highlight);
+			void replaceMessage(const std::string& message, const std::string& id, const boost::posix_time::ptime& time, const HighlightAction& highlight);
 			virtual void setOnline(bool online);
 			virtual void setEnabled(bool enabled);
 			virtual void setToJID(const JID& jid) {toJID_ = jid;}
@@ -60,7 +63,7 @@ namespace Swift {
 			void handleCapsChanged(const JID& jid);
 
 		protected:
-			ChatControllerBase(const JID& self, StanzaChannel* stanzaChannel, IQRouter* iqRouter, ChatWindowFactory* chatWindowFactory, const JID &toJID, PresenceOracle* presenceOracle, AvatarManager* avatarManager, bool useDelayForLatency, UIEventStream* eventStream, EventController* eventController, TimerFactory* timerFactory, EntityCapsProvider* entityCapsProvider, HistoryController* historyController, MUCRegistry* mucRegistry);
+			ChatControllerBase(const JID& self, StanzaChannel* stanzaChannel, IQRouter* iqRouter, ChatWindowFactory* chatWindowFactory, const JID &toJID, PresenceOracle* presenceOracle, AvatarManager* avatarManager, bool useDelayForLatency, UIEventStream* eventStream, EventController* eventController, TimerFactory* timerFactory, EntityCapsProvider* entityCapsProvider, HistoryController* historyController, MUCRegistry* mucRegistry, HighlightManager* highlightManager);
 
 			/**
 			 * Pass the Message appended, and the stanza used to send it.
@@ -69,7 +72,7 @@ namespace Swift {
 			virtual std::string senderDisplayNameFromMessage(const JID& from) = 0;
 			virtual bool isIncomingMessageFromMe(boost::shared_ptr<Message>) = 0;
 			virtual void preHandleIncomingMessage(boost::shared_ptr<MessageEvent>) {}
-			virtual void postHandleIncomingMessage(boost::shared_ptr<MessageEvent>) {}
+			virtual void postHandleIncomingMessage(boost::shared_ptr<MessageEvent>, const HighlightAction&) {}
 			virtual void preSendMessageRequest(boost::shared_ptr<Message>) {}
 			virtual bool isFromContact(const JID& from);
 			virtual boost::optional<boost::posix_time::ptime> getMessageTimestamp(boost::shared_ptr<Message>) const = 0;
@@ -116,5 +119,6 @@ namespace Swift {
 			SecurityLabelsCatalog::Item lastLabel_; 
 			HistoryController* historyController_;
 			MUCRegistry* mucRegistry_;
+			Highlighter* highlighter_;
 	};
 }

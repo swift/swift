@@ -62,6 +62,7 @@ namespace Swift {
 			void handleQuit();
 			void handleShowXMLConsole();
 			void handleShowFileTransferOverview();
+			void handleShowHighlightEditor();
 			void handleToggleSounds(bool enabled);
 			void handleToggleNotifications(bool enabled);
 			void handleAbout();
@@ -103,6 +104,7 @@ namespace Swift {
 			SettingsProvider* settings_;
 			QAction* xmlConsoleAction_;
 			QAction* fileTransferOverviewAction_;
+			QAction* highlightEditorAction_;
 			TimerFactory* timerFactory_;
 			ClientOptions currentOptions_;
 	};

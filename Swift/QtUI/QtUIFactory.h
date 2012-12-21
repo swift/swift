@@ -48,6 +48,7 @@ namespace Swift {
 			virtual ContactEditWindow* createContactEditWindow();
 			virtual FileTransferListWidget* createFileTransferListWidget();
 			virtual WhiteboardWindow* createWhiteboardWindow(boost::shared_ptr<WhiteboardSession> whiteboardSession);
+			virtual HighlightEditorWidget* createHighlightEditorWidget();
 			virtual void createAdHocCommandWindow(boost::shared_ptr<OutgoingAdHocCommandSession> command);
 
 		private slots:

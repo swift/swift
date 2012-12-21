@@ -75,7 +75,12 @@ if env["SCONS_STAGE"] == "build" :
 			"ChatMessageSummarizer.cpp",
 			"SettingConstants.cpp",
 			"WhiteboardManager.cpp",
-			"StatusCache.cpp"
+			"StatusCache.cpp",
+			"HighlightAction.cpp",
+			"HighlightEditorController.cpp",
+			"HighlightManager.cpp",
+			"HighlightRule.cpp",
+			"Highlighter.cpp"
 		])
 
 	env.Append(UNITTEST_SOURCES = [
@@ -90,4 +95,5 @@ if env["SCONS_STAGE"] == "build" :
 			File("UnitTest/MockChatWindow.cpp"),
 			File("UnitTest/ChatMessageSummarizerTest.cpp"),
 			File("Settings/UnitTest/SettingsProviderHierachyTest.cpp"),
+			File("UnitTest/HighlightRuleTest.cpp"),
 		])

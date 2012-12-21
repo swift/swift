@@ -22,5 +22,6 @@ namespace Swift {
 			static const SettingsProvider::Setting<bool> SHOW_OFFLINE;
 			static const SettingsProvider::Setting<std::string> EXPANDED_ROSTER_GROUPS;
 			static const SettingsProvider::Setting<bool> PLAY_SOUNDS;
+			static const SettingsProvider::Setting<std::string> HIGHLIGHT_RULES;
 	};
 }

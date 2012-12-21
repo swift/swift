@@ -31,15 +31,18 @@
 #include <Swiften/Queries/Requests/GetSecurityLabelsCatalogRequest.h>
 #include <Swiften/Avatars/AvatarManager.h>
 #include <Swift/Controllers/XMPPEvents/MUCInviteEvent.h>
+#include <Swift/Controllers/HighlightManager.h>
+#include <Swift/Controllers/Highlighter.h>
 
 namespace Swift {
 
-ChatControllerBase::ChatControllerBase(const JID& self, StanzaChannel* stanzaChannel, IQRouter* iqRouter, ChatWindowFactory* chatWindowFactory, const JID &toJID, PresenceOracle* presenceOracle, AvatarManager* avatarManager, bool useDelayForLatency, UIEventStream* eventStream, EventController* eventController, TimerFactory* timerFactory, EntityCapsProvider* entityCapsProvider, HistoryController* historyController, MUCRegistry* mucRegistry) : selfJID_(self), stanzaChannel_(stanzaChannel), iqRouter_(iqRouter), chatWindowFactory_(chatWindowFactory), toJID_(toJID), labelsEnabled_(false), presenceOracle_(presenceOracle), avatarManager_(avatarManager), useDelayForLatency_(useDelayForLatency), eventController_(eventController), timerFactory_(timerFactory), entityCapsProvider_(entityCapsProvider), historyController_(historyController), mucRegistry_(mucRegistry) {
+ChatControllerBase::ChatControllerBase(const JID& self, StanzaChannel* stanzaChannel, IQRouter* iqRouter, ChatWindowFactory* chatWindowFactory, const JID &toJID, PresenceOracle* presenceOracle, AvatarManager* avatarManager, bool useDelayForLatency, UIEventStream* eventStream, EventController* eventController, TimerFactory* timerFactory, EntityCapsProvider* entityCapsProvider, HistoryController* historyController, MUCRegistry* mucRegistry, HighlightManager* highlightManager) : selfJID_(self), stanzaChannel_(stanzaChannel), iqRouter_(iqRouter), chatWindowFactory_(chatWindowFactory), toJID_(toJID), labelsEnabled_(false), presenceOracle_(presenceOracle), avatarManager_(avatarManager), useDelayForLatency_(useDelayForLatency), eventController_(eventController), timerFactory_(timerFactory), entityCapsProvider_(entityCapsProvider), historyController_(historyController), mucRegistry_(mucRegistry) {
 	chatWindow_ = chatWindowFactory_->createChatWindow(toJID, eventStream);
 	chatWindow_->onAllMessagesRead.connect(boost::bind(&ChatControllerBase::handleAllMessagesRead, this));
 	chatWindow_->onSendMessageRequest.connect(boost::bind(&ChatControllerBase::handleSendMessageRequest, this, _1, _2));
 	chatWindow_->onLogCleared.connect(boost::bind(&ChatControllerBase::handleLogCleared, this));
 	entityCapsProvider_->onCapsChanged.connect(boost::bind(&ChatControllerBase::handleCapsChanged, this, _1));
+	highlighter_ = highlightManager->createHighlighter();
 	setOnline(stanzaChannel->isAvailable() && iqRouter->isAvailable());
 	createDayChangeTimer();
 }
@@ -176,19 +179,19 @@ void ChatControllerBase::activateChatWindow() {
 	chatWindow_->activate();
 }
 
-std::string ChatControllerBase::addMessage(const std::string& message, const std::string& senderName, bool senderIsSelf, const boost::shared_ptr<SecurityLabel> label, const std::string& avatarPath, const boost::posix_time::ptime& time) {
+std::string ChatControllerBase::addMessage(const std::string& message, const std::string& senderName, bool senderIsSelf, const boost::shared_ptr<SecurityLabel> label, const std::string& avatarPath, const boost::posix_time::ptime& time, const HighlightAction& highlight) {
 	if (boost::starts_with(message, "/me ")) {
-		return chatWindow_->addAction(String::getSplittedAtFirst(message, ' ').second, senderName, senderIsSelf, label, avatarPath, time);
+		return chatWindow_->addAction(String::getSplittedAtFirst(message, ' ').second, senderName, senderIsSelf, label, avatarPath, time, highlight);
 	} else {
-		return chatWindow_->addMessage(message, senderName, senderIsSelf, label, avatarPath, time);
+		return chatWindow_->addMessage(message, senderName, senderIsSelf, label, avatarPath, time, highlight);
 	}
 }
 
-void ChatControllerBase::replaceMessage(const std::string& message, const std::string& id, const boost::posix_time::ptime& time) {
+void ChatControllerBase::replaceMessage(const std::string& message, const std::string& id, const boost::posix_time::ptime& time, const HighlightAction& highlight) {
 	if (boost::starts_with(message, "/me ")) {
-		chatWindow_->replaceWithAction(String::getSplittedAtFirst(message, ' ').second, id, time);
+		chatWindow_->replaceWithAction(String::getSplittedAtFirst(message, ' ').second, id, time, highlight);
 	} else {
-		chatWindow_->replaceMessage(message, id, time);
+		chatWindow_->replaceMessage(message, id, time, highlight);
 	}
 }
 
@@ -206,6 +209,7 @@ void ChatControllerBase::handleIncomingMessage(boost::shared_ptr<MessageEvent> m
 	}
 	boost::shared_ptr<Message> message = messageEvent->getStanza();
 	std::string body = message->getBody();
+	HighlightAction highlight;
 	if (message->isError()) {
 		std::string errorMessage = str(format(QT_TRANSLATE_NOOP("", "Couldn't send message: %1%")) % getErrorMessage(message->getPayload<ErrorPayload>()));
 		chatWindow_->addErrorMessage(errorMessage);
@@ -244,6 +248,11 @@ void ChatControllerBase::handleIncomingMessage(boost::shared_ptr<MessageEvent> m
 		}
 		onActivity(body);
 
+		// Highlight
+		if (!isIncomingMessageFromMe(message)) {
+			 highlight = highlighter_->findAction(body, senderDisplayNameFromMessage(from));
+		}
+
  		boost::shared_ptr<Replace> replace = message->getPayload<Replace>();
 		if (replace) {
 			std::string body = message->getBody();
@@ -251,11 +260,11 @@ void ChatControllerBase::handleIncomingMessage(boost::shared_ptr<MessageEvent> m
 			std::map<JID, std::string>::iterator lastMessage;
 			lastMessage = lastMessagesUIID_.find(from);
 			if (lastMessage != lastMessagesUIID_.end()) {
-				replaceMessage(body, lastMessagesUIID_[from], timeStamp);
+				replaceMessage(body, lastMessagesUIID_[from], timeStamp, highlight);
 			}
 		}
 		else {
-			lastMessagesUIID_[from] = addMessage(body, senderDisplayNameFromMessage(from), isIncomingMessageFromMe(message), label, std::string(avatarManager_->getAvatarPath(from).string()), timeStamp);
+			lastMessagesUIID_[from] = addMessage(body, senderDisplayNameFromMessage(from), isIncomingMessageFromMe(message), label, std::string(avatarManager_->getAvatarPath(from).string()), timeStamp, highlight);
 		}
 
 		logMessage(body, from, selfJID_, timeStamp, true);
@@ -263,7 +272,7 @@ void ChatControllerBase::handleIncomingMessage(boost::shared_ptr<MessageEvent> m
 	chatWindow_->show();
 	chatWindow_->setUnreadMessageCount(boost::numeric_cast<int>(unreadMessages_.size()));
 	onUnreadCountChanged();
-	postHandleIncomingMessage(messageEvent);
+	postHandleIncomingMessage(messageEvent, highlight);
 }
 
 std::string ChatControllerBase::getErrorMessage(boost::shared_ptr<ErrorPayload> error) {
