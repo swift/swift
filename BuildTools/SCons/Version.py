@@ -59,5 +59,5 @@ def convertToWindowsVersion(version) :
       if build_match :
         patch += int(build_match.group(1))
 
-    return (major, minor, patch)
+  return (major, minor, patch)
 
