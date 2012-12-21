@@ -2277,6 +2277,11 @@
         <translation>Хотели бы Вы доверять этому сертификату?</translation>
     </message>
     <message>
+        <location filename="../QtUI/QtLoginWindow.cpp" line="526"/>
+        <source>Show Certificate</source>
+        <translation>Просмотр сертификата</translation>
+    </message>
+    <message>
         <source>Subject: %1</source>
         <translation type="obsolete">Тема: %1</translation>
     </message>
