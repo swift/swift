@@ -104,15 +104,12 @@ XMLSettingsProvider* QtSwift::loadSettingsFile(const QString& fileName) {
 }
 
 void QtSwift::loadEmoticonsFile(const QString& fileName, QMap<QString, QString>& emoticons)  {
-	qDebug() << "Trying to load " << fileName;
 	QFile file(fileName);
 	if (file.exists() && file.open(QIODevice::ReadOnly)) {
-		qDebug() << "Success";
 		while (!file.atEnd()) {
 			QString line = file.readLine();
 			line.replace("\n", "");
 			line.replace("\r", "");
-			qDebug() << "Parsing line : " << line;
 			QStringList tokens = line.split(" ");
 			if (tokens.size() == 2) {
 				QString emoticonFile = tokens[1];
@@ -120,11 +117,9 @@ void QtSwift::loadEmoticonsFile(const QString& fileName, QMap<QString, QString>&
 					emoticonFile = "file://" + emoticonFile;
 				}
 				emoticons[tokens[0]] = emoticonFile;
-				qDebug() << "Adding mapping from " << tokens[0] << " to " << emoticonFile;
 			}
 		}
 	}
-	qDebug() << "Done";
 }
 
 QtSwift::QtSwift(const po::variables_map& options) : networkFactories_(&clientMainThreadCaller_), autoUpdater_(NULL), idleDetector_(&idleQuerier_, networkFactories_.getTimerFactory(), 1000) {
