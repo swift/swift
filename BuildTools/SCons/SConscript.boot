@@ -13,8 +13,6 @@ vars.Add('cxxflags', "Extra C++ compiler flags")
 vars.Add('link', "Linker")
 vars.Add('linkflags', "Extra linker flags")
 vars.Add(BoolVariable("ccache", "Use CCache", "no"))
-vars.Add(BoolVariable("distcc", "Use DistCC", "no"))
-vars.Add('distcc_hosts', "DistCC hosts (overrides DISTCC_HOSTS)")
 vars.Add(EnumVariable("test", "Compile and run tests", "none", ["none", "all", "unit", "system"]))
 vars.Add(BoolVariable("optimize", "Compile with optimizations turned on", "no"))
 vars.Add(BoolVariable("debug", "Compile with debug information", "yes"))
@@ -120,14 +118,7 @@ if env["PLATFORM"] == "darwin" :
 		if platform.machine() == "x86_64" :
 			env.Append(LINKFLAGS = ["-arch", "x86_64"])
 
-# Default compiler flags
-if env.get("distcc", False) :
-	env["ENV"]["HOME"] = os.environ["HOME"]
-	env["ENV"]["DISTCC_HOSTS"] = os.environ.get("DISTCC_HOSTS", "")
-	if "distcc_hosts" in env :
-		env["ENV"]["DISTCC_HOSTS"] = env["distcc_hosts"]
-	env["CC"] = "distcc gcc"
-	env["CXX"] = "distcc g++"
+# Override the compiler with custom variables set at config time
 if "cc" in env :
 	env["CC"] = env["cc"]
 if "cxx" in env :
