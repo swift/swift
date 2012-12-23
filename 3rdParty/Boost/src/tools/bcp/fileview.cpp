@@ -38,7 +38,7 @@ fileview::~fileview()
 {
 }
 
-fileview::fileview(const fileview& that)
+fileview::fileview(const fileview& )
 {
 }
 
@@ -57,7 +57,7 @@ void fileview::close()
 void fileview::open(const boost::filesystem::path& p)
 {
    cow();
-   std::ifstream is(p.string().c_str());
+   std::ifstream is(p.c_str());
    if(!is)
    {
       std::string msg("Bad file name: ");

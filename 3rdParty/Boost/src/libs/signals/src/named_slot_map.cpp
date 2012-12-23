@@ -24,7 +24,7 @@ typedef slot_container_type::iterator group_iterator;
 typedef slot_container_type::const_iterator const_group_iterator;
 
 
-#if BOOST_WORKAROUND(_MSC_VER, <= 1600)
+#if BOOST_WORKAROUND(_MSC_VER, <= 1700)
 void named_slot_map_iterator::decrement() { assert(false); }
 void named_slot_map_iterator::advance(difference_type) { assert(false); }
 #endif
@@ -102,7 +102,7 @@ void named_slot_map::disconnect(const stored_group& name)
       i->first.disconnect();
       i = next;
     }
-    groups.erase(group);
+    groups.erase((const_group_iterator) group);
   }
 }
 
@@ -125,7 +125,7 @@ void named_slot_map::remove_disconnected_slots()
     }
 
     // Clear out empty groups
-    if (empty(g)) groups.erase(g++);
+    if (empty(g)) groups.erase((const_group_iterator) g++);
     else ++g;
   }
 }

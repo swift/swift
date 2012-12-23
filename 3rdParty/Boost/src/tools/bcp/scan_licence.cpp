@@ -27,8 +27,8 @@ context_before_license(const fileview& v, fileview::const_iterator start,
 {
   char last_char = '\0';
   while (start != v.begin() && context_lines >= 0) {
-    if (*start == '\r' || *start == '\n'
-        && (last_char == *start || (last_char != '\r' && last_char != '\n')))
+    if ((*start == '\r') || (*start == '\n')
+        && ((last_char == *start) || ((last_char != '\r') && (last_char != '\n'))))
         --context_lines;
 
     last_char = *start;

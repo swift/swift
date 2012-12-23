@@ -1,0 +1,13 @@
+diff --git a/3rdParty/Boost/src/libs/thread/src/pthread/thread.cpp b/3rdParty/Boost/src/libs/thread/src/pthread/thread.cpp
+index 4321a26..c83eac1 100644
+--- a/3rdParty/Boost/src/libs/thread/src/pthread/thread.cpp
++++ b/3rdParty/Boost/src/libs/thread/src/pthread/thread.cpp
+@@ -27,6 +27,8 @@
+ 
+ #include "./timeconv.inl"
+ 
++#pragma GCC diagnostic ignored "-Wreturn-type"
++
+ namespace boost
+ {
+     namespace detail

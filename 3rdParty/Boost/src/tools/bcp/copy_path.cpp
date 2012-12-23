@@ -63,7 +63,7 @@ void bcp_implementation::copy_path(const fs::path& p)
       static std::vector<char> v1, v2;
       v1.clear();
       v2.clear();
-      std::ifstream is((m_boost_path / p).string().c_str());
+      std::ifstream is((m_boost_path / p).c_str());
       std::copy(std::istreambuf_iterator<char>(is), std::istreambuf_iterator<char>(), std::back_inserter(v1));
 
       static boost::regex libname_matcher;
@@ -78,9 +78,9 @@ void bcp_implementation::copy_path(const fs::path& p)
 
       std::ofstream os;
       if(m_unix_lines)
-         os.open((m_dest_path / p).string().c_str(), std::ios_base::binary | std::ios_base::out);
+         os.open((m_dest_path / p).c_str(), std::ios_base::binary | std::ios_base::out);
       else
-         os.open((m_dest_path / p).string().c_str(), std::ios_base::out);
+         os.open((m_dest_path / p).c_str(), std::ios_base::out);
       os.write(&*v1.begin(), v1.size());
       os.close();
    }
@@ -89,7 +89,7 @@ void bcp_implementation::copy_path(const fs::path& p)
       static std::vector<char> v1, v2;
       v1.clear();
       v2.clear();
-      std::ifstream is((m_boost_path / p).string().c_str());
+      std::ifstream is((m_boost_path / p).c_str());
       std::copy(std::istreambuf_iterator<char>(is), std::istreambuf_iterator<char>(), std::back_inserter(v1));
 
       static boost::regex libname_matcher;
@@ -111,9 +111,9 @@ void bcp_implementation::copy_path(const fs::path& p)
 
       std::ofstream os;
       if(m_unix_lines)
-         os.open((m_dest_path / p).string().c_str(), std::ios_base::binary | std::ios_base::out);
+         os.open((m_dest_path / p).c_str(), std::ios_base::binary | std::ios_base::out);
       else
-         os.open((m_dest_path / p).string().c_str(), std::ios_base::out);
+         os.open((m_dest_path / p).c_str(), std::ios_base::out);
       os.write(&*v1.begin(), v1.size());
       os.close();
    }
@@ -127,14 +127,14 @@ void bcp_implementation::copy_path(const fs::path& p)
       static std::vector<char> v1, v2;
       v1.clear();
       v2.clear();
-      std::ifstream is((m_boost_path / p).string().c_str());
+      std::ifstream is((m_boost_path / p).c_str());
       std::copy(std::istreambuf_iterator<char>(is), std::istreambuf_iterator<char>(), std::back_inserter(v1));
 
       static const boost::regex namespace_matcher(
          "(?|"
             "(namespace\\s+)boost(_\\w+)?(?:(\\s*::\\s*)phoenix)?"
          "|"
-            "(namespace\\s+)(adstl|phoenix|rapidxml)\\>"
+            "(namespace\\s+(?:detail::)?)(adstl|phoenix|rapidxml)\\>"
          "|"
             "()\\<boost((?:_(?!intrusive_tags)\\w+)?\\s*(?:::))(?:(\\s*)phoenix)?"
          "|"
@@ -154,11 +154,15 @@ void bcp_implementation::copy_path(const fs::path& p)
          "|"
             "(BOOST_CLASS_REQUIRE4?[^;]*)boost((?:_\\w+)?\\s*,)"
          "|"
+            "(::tr1::|TR1_DECL\\s+)boost(_\\w+\\s*)" // math tr1
+         "|"
+            "(\\(\\s*)boost(\\s*\\))\\s*(\\(\\s*)phoenix(\\s*\\))"
+         "|"
             "(\\(\\s*)boost(\\s*\\))"
          ")"
       );
 
-      regex_replace(std::back_inserter(v2), v1.begin(), v1.end(), namespace_matcher, "$1" + m_namespace_name + "$2(?3$3" + m_namespace_name + "phoenix)", boost::regex_constants::format_all);
+      regex_replace(std::back_inserter(v2), v1.begin(), v1.end(), namespace_matcher, "$1" + m_namespace_name + "$2(?3$3" + m_namespace_name + "phoenix?4$4)", boost::regex_constants::format_all);
       std::swap(v1, v2);
       v2.clear();
 
@@ -191,31 +195,31 @@ void bcp_implementation::copy_path(const fs::path& p)
             "\\s*\\{.*"
             "\\})([^\\{\\};]*)\\z"
             */
-            "namespace\\s+" + m_namespace_name + 
-            "\\s*\\{"
+            "(namespace)(\\s+)(" + m_namespace_name + ")"
+            "(adstl|phoenix|rapidxml)?(\\s*\\{)"
             );
          regex_replace(std::back_inserter(v2), v1.begin(), v1.end(), namespace_alias, 
-            "namespace " + m_namespace_name + "{} namespace boost = " + m_namespace_name + "; namespace " + m_namespace_name + "{");
+            "$1 $3$4 {} $1 (?4$4:boost) = $3$4; $1$2$3$4$5", boost::regex_constants::format_all);
          std::swap(v1, v2);
          v2.clear();
       }
 
       std::ofstream os;
       if(m_unix_lines)
-         os.open((m_dest_path / p).string().c_str(), std::ios_base::binary | std::ios_base::out);
+         os.open((m_dest_path / p).c_str(), std::ios_base::binary | std::ios_base::out);
       else
-         os.open((m_dest_path / p).string().c_str(), std::ios_base::out);
+         os.open((m_dest_path / p).c_str(), std::ios_base::out);
       if(v1.size())
          os.write(&*v1.begin(), v1.size());
       os.close();
    }
    else if(m_unix_lines && !is_binary_file(p))
    {
-      std::ifstream is((m_boost_path / p).string().c_str());
+      std::ifstream is((m_boost_path / p).c_str());
       std::istreambuf_iterator<char> isi(is);
       std::istreambuf_iterator<char> end;
 
-      std::ofstream os((m_dest_path / p).string().c_str(), std::ios_base::binary | std::ios_base::out);
+      std::ofstream os((m_dest_path / p).c_str(), std::ios_base::binary | std::ios_base::out);
       std::ostreambuf_iterator<char> osi(os);
 
       std::copy(isi, end, osi);
