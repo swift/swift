@@ -106,6 +106,20 @@ if env["max_jobs"] :
 	except ImportError :
 		pass
 
+# Set the default compiler to CLang on OS X, and set the necessary flags
+if env["PLATFORM"] == "darwin" :
+	if "cc" not in env :
+		env["CC"] = "clang"
+		if platform.machine() == "x86_64" :
+			env["CCFLAGS"] = ["-arch", "x86_64"]
+	if "cxx" not in env :
+		env["CXX"] = "clang++"
+		env["CXXFLAGS"] = ["-std=c++11"]
+	if "link" not in env :
+		env["LINK"] = "clang"
+		if platform.machine() == "x86_64" :
+			env.Append(LINKFLAGS = ["-arch", "x86_64"])
+
 # Default compiler flags
 if env.get("distcc", False) :
 	env["ENV"]["HOME"] = os.environ["HOME"]
@@ -118,22 +132,16 @@ if "cc" in env :
 	env["CC"] = env["cc"]
 if "cxx" in env :
 	env["CXX"] = env["cxx"]
-ccflags = env.get("ccflags", [])
-if isinstance(ccflags, str) :
-	# FIXME: Make the splitting more robust
-	env["CCFLAGS"] = ccflags.split(" ")
-else :
-	env["CCFLAGS"] = ccflags
-env["CXXFLAGS"] = env.get("cxxflags", [])
 if "link" in env :
 	env["SHLINK"] = env["link"]
 	env["LINK"] = env["link"]
-linkflags = env.get("linkflags", [])
-if isinstance(linkflags, str) :
-	# FIXME: Make the splitting more robust
-	env["LINKFLAGS"] = linkflags.split(" ")
-else :
-	env["LINKFLAGS"] = linkflags
+for flags_type in ["ccflags", "cxxflags", "linkflags"] :
+	if flags_type in env :
+		if isinstance(env[flags_type], str) :
+			# FIXME: Make the splitting more robust
+			env[flags_type.upper()] = env[flags_type].split(" ")
+		else :
+			env[flags_type.upper()] = env[flags_type]
 # This isn't a real flag (yet) AFAIK. Be sure to append it to the CXXFLAGS
 # where you need it
 env["OBJCCFLAGS"] = []
