@@ -35,11 +35,6 @@ namespace Swift {
 			void handleEvent(const Event& event);
 
 		private:
-			struct HasOwner {
-				HasOwner(boost::shared_ptr<EventOwner> owner) : owner(owner) {}
-				bool operator()(const Event& event) const { return event.owner == owner; }
-				boost::shared_ptr<EventOwner> owner;
-			};
 			boost::mutex eventsMutex_;
 			unsigned int nextEventID_;
 			std::list<Event> events_;

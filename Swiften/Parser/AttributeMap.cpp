@@ -8,27 +8,18 @@
 
 #include <algorithm>
 #include <boost/optional.hpp>
+#include <boost/lambda/lambda.hpp>
+#include <boost/lambda/bind.hpp>
 
 using namespace Swift;
-
-namespace {
-	struct AttributeIs {
-		AttributeIs(const Attribute& attribute) : attribute(attribute) {
-		}
-
-		bool operator()(const AttributeMap::Entry& o) const {
-			return o.getAttribute() == attribute;
-		}
-
-		Attribute attribute;
-	};
-}
+namespace lambda = boost::lambda;
 
 AttributeMap::AttributeMap() {
 }
 
 std::string AttributeMap::getAttribute(const std::string& attribute, const std::string& ns) const {
-	AttributeValueMap::const_iterator i = std::find_if(attributes.begin(), attributes.end(), AttributeIs(Attribute(attribute, ns)));
+	AttributeValueMap::const_iterator i = std::find_if(attributes.begin(), attributes.end(), 
+			lambda::bind(&AttributeMap::Entry::getAttribute, lambda::_1) == Attribute(attribute, ns));
 	if (i == attributes.end()) {
 		return "";
 	}
@@ -38,7 +29,8 @@ std::string AttributeMap::getAttribute(const std::string& attribute, const std::
 }
 
 bool AttributeMap::getBoolAttribute(const std::string& attribute, bool defaultValue) const {
-	AttributeValueMap::const_iterator i = std::find_if(attributes.begin(), attributes.end(), AttributeIs(Attribute(attribute, "")));
+	AttributeValueMap::const_iterator i = std::find_if(attributes.begin(), attributes.end(), 
+			lambda::bind(&AttributeMap::Entry::getAttribute, lambda::_1) == Attribute(attribute, ""));
 	if (i == attributes.end()) {
 		return defaultValue;
 	}
@@ -48,7 +40,8 @@ bool AttributeMap::getBoolAttribute(const std::string& attribute, bool defaultVa
 }
 
 boost::optional<std::string> AttributeMap::getAttributeValue(const std::string& attribute) const {
-	AttributeValueMap::const_iterator i = std::find_if(attributes.begin(), attributes.end(), AttributeIs(Attribute(attribute, "")));
+	AttributeValueMap::const_iterator i = std::find_if(attributes.begin(), attributes.end(), 
+			lambda::bind(&AttributeMap::Entry::getAttribute, lambda::_1) == Attribute(attribute, ""));
 	if (i == attributes.end()) {
 		return boost::optional<std::string>();
 	}

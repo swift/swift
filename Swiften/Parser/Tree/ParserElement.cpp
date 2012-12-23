@@ -9,8 +9,12 @@
 #include <Swiften/Parser/Tree/NullParserElement.h>
 
 #include <iostream>
+#include <boost/lambda/lambda.hpp>
+#include <boost/lambda/bind.hpp>
 
-namespace Swift{
+namespace lambda = boost::lambda;
+
+namespace Swift {
 
 ParserElement::ParserElement(const std::string& name, const std::string& xmlns, const AttributeMap& attributes) : name_(name), xmlns_(xmlns), attributes_(attributes) {
 }
@@ -28,19 +32,10 @@ void ParserElement::appendCharacterData(const std::string& data) {
 	text_ += data;
 }
 
-struct DoesntMatch {
-	public:
-		DoesntMatch(const std::string& tagName, const std::string& ns) : tagName(tagName), ns(ns) {}
-		bool operator()(ParserElement::ref element) { return element->getName() != tagName || element->getNamespace() != ns; }
-	private:
-		std::string tagName;
-		std::string ns;
-};
-
-
 std::vector<ParserElement::ref> ParserElement::getChildren(const std::string& name, const std::string& xmlns) const {
 	std::vector<ParserElement::ref> result;
-	std::remove_copy_if(children_.begin(), children_.end(), std::back_inserter(result), DoesntMatch(name, xmlns));
+	std::remove_copy_if(children_.begin(), children_.end(), std::back_inserter(result), 
+		lambda::bind(&ParserElement::getName, *lambda::_1) != name || lambda::bind(&ParserElement::getNamespace, *lambda::_1) != xmlns);
 	return result;
 }
 

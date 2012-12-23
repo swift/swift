@@ -6,6 +6,10 @@
 
 #include "QtStatusWidget.h"
 
+#include <algorithm>
+#include <boost/lambda/lambda.hpp>
+#include <boost/lambda/bind.hpp>
+
 #include <QBoxLayout>
 #include <QComboBox>
 #include <QLabel>
@@ -24,6 +28,8 @@
 #include "Swift/QtUI/QtSwiftUtil.h"
 #include <Swift/Controllers/StatusUtil.h>
 #include <Swift/Controllers/StatusCache.h>
+
+namespace lambda = boost::lambda;
 
 namespace Swift {
 
@@ -144,13 +150,8 @@ void QtStatusWidget::generateList() {
 	}
 	std::vector<StatusCache::PreviousStatus> previousStatuses = statusCache_->getMatches(Q2PSTRING(text), 8);
 	foreach (StatusCache::PreviousStatus savedStatus, previousStatuses) {
-		bool breakEarly = false;
-		foreach (StatusShow::Type type, allTypes_) {
-			if (savedStatus.first.empty() || (savedStatus.second == type && savedStatus.first == statusShowTypeToFriendlyName(type))) {
-				breakEarly = true;
-			}
-		}
-		if (breakEarly) {
+		if (savedStatus.first.empty() || std::find_if(allTypes_.begin(), allTypes_.end(), 
+					savedStatus.second == lambda::_1 && savedStatus.first == lambda::bind(&statusShowTypeToFriendlyName, lambda::_1)) != allTypes_.end()) {
 			continue;
 		}
 		QListWidgetItem* item = new QListWidgetItem(P2QSTRING(savedStatus.first), menu_);

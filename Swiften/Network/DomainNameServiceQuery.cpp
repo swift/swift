@@ -13,22 +13,17 @@
 
 #include <Swiften/Base/RandomGenerator.h>
 #include <boost/numeric/conversion/cast.hpp>
+#include <boost/lambda/lambda.hpp>
+#include <boost/lambda/bind.hpp>
 
 using namespace Swift;
+namespace lambda = boost::lambda;
 
 namespace {
 	struct ResultPriorityComparator {
 		bool operator()(const DomainNameServiceQuery::Result& a, const DomainNameServiceQuery::Result& b) const {
 			return a.priority < b.priority;
 		}
-	};
-
-	struct GetWeight {
-			GetWeight() {}
-
-			int operator()(const DomainNameServiceQuery::Result& result) {
-				return result.weight + 1 /* easy hack to account for '0' weights getting at least some weight */;
-			}
 	};
 }
 
@@ -46,7 +41,9 @@ void DomainNameServiceQuery::sortResults(std::vector<DomainNameServiceQuery::Res
 		std::vector<DomainNameServiceQuery::Result>::iterator next = std::upper_bound(i, queries.end(), *i, comparator);
 		if (std::distance(i, next) > 1) {
 			std::vector<int> weights;
-			std::transform(i, next, std::back_inserter(weights), GetWeight());
+			std::transform(i, next, std::back_inserter(weights), 
+					/* easy hack to account for '0' weights getting at least some weight */
+					lambda::bind(&Result::weight, lambda::_1) + 1);
 			for (size_t j = 0; j < weights.size() - 1; ++j) {
 				std::vector<int> cumulativeWeights;
 				std::partial_sum(weights.begin() + j, weights.end(), std::back_inserter(cumulativeWeights));

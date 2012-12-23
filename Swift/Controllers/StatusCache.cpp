@@ -9,10 +9,14 @@
 #include <boost/algorithm/string.hpp>
 #include <boost/lexical_cast.hpp>
 #include <boost/filesystem/fstream.hpp>
+#include <boost/lambda/lambda.hpp>
+#include <boost/lambda/bind.hpp>
 
 #include <Swiften/Base/foreach.h>
 #include <Swiften/Base/ByteArray.h>
 #include <SwifTools/Application/ApplicationPathProvider.h>
+
+namespace lambda = boost::lambda;
 
 namespace Swift {
 
@@ -45,14 +49,7 @@ void StatusCache::addRecent(const std::string& text, StatusShow::Type type) {
 	if (text.empty()) {
 		return;
 	}
-	for (std::list<PreviousStatus>::iterator i = previousStatuses_.begin(); i != previousStatuses_.end(); ) {
-		if ((*i).first == text && (*i).second == type) {
-			previousStatuses_.erase(i++);
-		}
-		else {
-			++i;
-		}
-	}
+	previousStatuses_.remove_if(lambda::bind(&PreviousStatus::first, lambda::_1) == text && lambda::bind(&PreviousStatus::second, lambda::_1) == type);
 	previousStatuses_.push_front(PreviousStatus(text, type));
 	for (size_t i = previousStatuses_.size(); i > MAX_ENTRIES; i--) {
 		previousStatuses_.pop_back();

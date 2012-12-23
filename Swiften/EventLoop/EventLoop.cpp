@@ -12,7 +12,10 @@
 #include <cassert>
 
 #include <Swiften/Base/Log.h>
+#include <boost/lambda/lambda.hpp>
+#include <boost/lambda/bind.hpp>
 
+namespace lambda = boost::lambda;
 
 namespace Swift {
 
@@ -83,7 +86,7 @@ void EventLoop::postEvent(boost::function<void ()> callback, boost::shared_ptr<E
 
 void EventLoop::removeEventsFromOwner(boost::shared_ptr<EventOwner> owner) {
 		boost::lock_guard<boost::mutex> lock(eventsMutex_);
-		events_.remove_if(HasOwner(owner));
+		events_.remove_if(lambda::bind(&Event::owner, lambda::_1) == owner);
 }
 
 }
