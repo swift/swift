@@ -13,19 +13,8 @@ namespace Swift {
 		public:
 			WindowsApplicationPathProvider(const std::string& name);
 
-			boost::filesystem::path getDataDir() const {
-				char* appDirRaw = getenv("APPDATA");
-				boost::filesystem::path result(boost::filesystem::path(appDirRaw) / getApplicationName());
-				boost::filesystem::create_directory(result);
-				return result;
-			}
-
-			boost::filesystem::path getHomeDir() const {
-				//FIXME: This should be My Documents 
-				
-				char* homeDirRaw = getenv("USERPROFILE");
-				return boost::filesystem::path(homeDirRaw);
-			}
+			boost::filesystem::path getDataDir() const;
+			boost::filesystem::path getHomeDir() const;
 
 			virtual std::vector<boost::filesystem::path> getResourceDirs() const {
 				return resourceDirs;

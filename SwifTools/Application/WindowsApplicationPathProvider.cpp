@@ -7,6 +7,7 @@
 #include <SwifTools/Application/WindowsApplicationPathProvider.h>
 
 #include <windows.h>
+#include <cassert>
 
 namespace Swift {
 
@@ -14,5 +15,21 @@ WindowsApplicationPathProvider::WindowsApplicationPathProvider(const std::string
 	resourceDirs.push_back(getExecutableDir());
 	resourceDirs.push_back(getExecutableDir() / "../resources"); // Development
 }
+
+boost::filesystem::path WindowsApplicationPathProvider::getDataDir() const {
+	char* appDirRaw = getenv("APPDATA");
+	assert(appDirRaw);
+	boost::filesystem::path result(boost::filesystem::path(appDirRaw) / getApplicationName());
+	boost::filesystem::create_directory(result);
+	return result;
+}
+
+boost::filesystem::path WindowsApplicationPathProvider::getHomeDir() const {
+	//FIXME: This should be My Documents 
+	char* homeDirRaw = getenv("USERPROFILE");
+	assert(homeDirRaw);
+	return boost::filesystem::path(homeDirRaw);
+}
+
 
 }
