@@ -119,7 +119,7 @@ void OutgoingJingleFileTransfer::handleSessionAcceptReceived(const JingleContent
 	}
 	else if ((s5bPayload = boost::dynamic_pointer_cast<JingleS5BTransportPayload>(transportPayload))) {
 		fillCandidateMap(theirCandidates, s5bPayload);
-		remoteCandidateSelector->setRequesterTargtet(toJID, session->getInitiator());
+		remoteCandidateSelector->setRequesterTarget(toJID, session->getInitiator());
 		remoteCandidateSelector->addRemoteTransportCandidates(s5bPayload);
 		remoteCandidateSelector->selectCandidate();
 	}

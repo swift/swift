@@ -22,7 +22,7 @@ namespace Swift {
 			virtual void addRemoteTransportCandidates(JingleTransportPayload::ref) = 0;
 			virtual void selectCandidate() = 0;
 			virtual void setMinimumPriority(int) = 0;
-			virtual void setRequesterTargtet(const JID&, const JID&) {}
+			virtual void setRequesterTarget(const JID&, const JID&) {}
 			virtual SOCKS5BytestreamClientSession::ref getS5BSession() { return SOCKS5BytestreamClientSession::ref(); }
 
 			virtual bool isActualCandidate(JingleTransportPayload::ref) = 0;

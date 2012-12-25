@@ -11,6 +11,7 @@
 
 #include <boost/shared_ptr.hpp>
 
+#include <Swiften/Base/Override.h>
 #include <Swiften/JID/JID.h>
 #include <Swiften/Network/Connection.h>
 #include <Swiften/FileTransfer/SOCKS5BytestreamClientSession.h>
@@ -28,15 +29,15 @@ public:
 	DefaultRemoteJingleTransportCandidateSelector(ConnectionFactory*, TimerFactory*);
 	virtual ~DefaultRemoteJingleTransportCandidateSelector();
 
-	virtual void addRemoteTransportCandidates(JingleTransportPayload::ref);
-	virtual void selectCandidate();
-	virtual void setMinimumPriority(int);
-	void setRequesterTargtet(const JID& requester, const JID& target);
-	virtual SOCKS5BytestreamClientSession::ref getS5BSession();
+	virtual void addRemoteTransportCandidates(JingleTransportPayload::ref) SWIFTEN_OVERRIDE;
+	virtual void selectCandidate() SWIFTEN_OVERRIDE;
+	virtual void setMinimumPriority(int) SWIFTEN_OVERRIDE;
+	virtual void setRequesterTarget(const JID& requester, const JID& target) SWIFTEN_OVERRIDE;
+	virtual SOCKS5BytestreamClientSession::ref getS5BSession() SWIFTEN_OVERRIDE;
 
-	virtual bool isActualCandidate(JingleTransportPayload::ref);
-	virtual int getPriority(JingleTransportPayload::ref);
-	virtual JingleTransport::ref selectTransport(JingleTransportPayload::ref);
+	virtual bool isActualCandidate(JingleTransportPayload::ref) SWIFTEN_OVERRIDE;
+	virtual int getPriority(JingleTransportPayload::ref) SWIFTEN_OVERRIDE;
+	virtual JingleTransport::ref selectTransport(JingleTransportPayload::ref) SWIFTEN_OVERRIDE;
 
 private:
 	void tryNextCandidate(bool error);

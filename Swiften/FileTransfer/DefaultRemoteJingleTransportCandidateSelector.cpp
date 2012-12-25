@@ -4,7 +4,7 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
-#include "DefaultRemoteJingleTransportCandidateSelector.h"
+#include <Swiften/FileTransfer/DefaultRemoteJingleTransportCandidateSelector.h>
 
 #include <boost/smart_ptr/make_shared.hpp>
 #include <boost/bind.hpp>
@@ -97,7 +97,7 @@ void DefaultRemoteJingleTransportCandidateSelector::setMinimumPriority(int prior
 	SWIFT_LOG(debug) << "priority: " << priority << std::endl;
 }
 
-void DefaultRemoteJingleTransportCandidateSelector::setRequesterTargtet(const JID& requester, const JID& target) {
+void DefaultRemoteJingleTransportCandidateSelector::setRequesterTarget(const JID& requester, const JID& target) {
 	this->requester = requester;
 	this->target = target;
 }
