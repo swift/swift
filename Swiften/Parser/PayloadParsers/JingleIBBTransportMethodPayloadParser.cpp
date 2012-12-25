@@ -4,6 +4,12 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
+/*
+ * Copyright (c) 2013 Remko Tronçon
+ * Licensed under the GNU General Public License.
+ * See the COPYING file for more information.
+ */
+
 #include <boost/lexical_cast.hpp>
 #include <boost/optional.hpp>
 
@@ -18,9 +24,12 @@ namespace Swift {
 	
 	void JingleIBBTransportMethodPayloadParser::handleStartElement(const std::string&, const std::string&, const AttributeMap& attributes) {
 		try {
-			getPayloadInternal()->setBlockSize(boost::lexical_cast<unsigned int>(attributes.getAttributeValue("block-size").get_value_or("0")));
-		} catch (boost::bad_lexical_cast &) {
-			getPayloadInternal()->setBlockSize(0);
+			boost::optional<std::string> blockSize = attributes.getAttributeValue("block-size");
+			if (blockSize) {
+				getPayloadInternal()->setBlockSize(boost::lexical_cast<unsigned int>(*blockSize));
+			}
+		} 
+		catch (boost::bad_lexical_cast &) {
 		}
 		getPayloadInternal()->setSessionID(attributes.getAttributeValue("sid").get_value_or(""));
 		++level;

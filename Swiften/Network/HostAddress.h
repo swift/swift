@@ -26,6 +26,7 @@ namespace Swift {
 			}
 
 			bool isValid() const;
+			bool isLocalhost() const;
 
 		private:
 			boost::asio::ip::address address_;

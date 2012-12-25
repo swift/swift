@@ -13,6 +13,7 @@
 
 #include <Swiften/Base/ByteArray.h>
 #include <Swiften/FileTransfer/IBBReceiveSession.h>
+#include <Swiften/FileTransfer/ByteArrayWriteBytestream.h>
 #include <Swiften/Queries/IQRouter.h>
 #include <Swiften/Client/DummyStanzaChannel.h>
 
@@ -35,6 +36,7 @@ class IBBReceiveSessionTest : public CppUnit::TestFixture {
 			stanzaChannel = new DummyStanzaChannel();
 			iqRouter = new IQRouter(stanzaChannel);
 			finished = false;
+			bytestream = boost::make_shared<ByteArrayWriteBytestream>();
 		}
 
 		void tearDown() {
@@ -61,7 +63,7 @@ class IBBReceiveSessionTest : public CppUnit::TestFixture {
 			stanzaChannel->onIQReceived(createIBBRequest(IBB::createIBBData("mysession", 0, createByteArray("abc")), "foo@bar.com/baz", "id-a"));
 
 			CPPUNIT_ASSERT(stanzaChannel->isResultAtIndex(1, "id-a"));
-			CPPUNIT_ASSERT(createByteArray("abc") == receivedData);
+			CPPUNIT_ASSERT(createByteArray("abc") == bytestream->getData());
 			CPPUNIT_ASSERT(!finished);
 
 			testling->stop();
@@ -76,7 +78,7 @@ class IBBReceiveSessionTest : public CppUnit::TestFixture {
 			stanzaChannel->onIQReceived(createIBBRequest(IBB::createIBBData("mysession", 1, createByteArray("def")), "foo@bar.com/baz", "id-b"));
 
 			CPPUNIT_ASSERT(stanzaChannel->isResultAtIndex(2, "id-b"));
-			CPPUNIT_ASSERT(createByteArray("abcdef") == receivedData);
+			CPPUNIT_ASSERT(createByteArray("abcdef") == bytestream->getData());
 			CPPUNIT_ASSERT(!finished);
 
 			testling->stop();
@@ -118,7 +120,7 @@ class IBBReceiveSessionTest : public CppUnit::TestFixture {
 			stanzaChannel->onIQReceived(createIBBRequest(IBB::createIBBData("mysession", 1, createByteArray("def")), "foo@bar.com/baz", "id-b"));
 
 			CPPUNIT_ASSERT(stanzaChannel->isResultAtIndex(2, "id-b"));
-			CPPUNIT_ASSERT(createByteArray("abcdef") == receivedData);
+			CPPUNIT_ASSERT(createByteArray("abcdef") == bytestream->getData());
 			CPPUNIT_ASSERT(finished);
 			CPPUNIT_ASSERT(!error);
 
@@ -161,8 +163,7 @@ class IBBReceiveSessionTest : public CppUnit::TestFixture {
 		}
 
 		IBBReceiveSession* createSession(const std::string& from, const std::string& id, size_t size = 0x1000) {
-			IBBReceiveSession* session = new IBBReceiveSession(id, JID(from), JID(), size, iqRouter);
-			session->onDataReceived.connect(boost::bind(&IBBReceiveSessionTest::handleDataReceived, this, _1));
+			IBBReceiveSession* session = new IBBReceiveSession(id, JID(from), JID(), size, bytestream, iqRouter);
 			session->onFinished.connect(boost::bind(&IBBReceiveSessionTest::handleFinished, this, _1));
 			return session;
 		}
@@ -173,16 +174,12 @@ class IBBReceiveSessionTest : public CppUnit::TestFixture {
 			this->error = error;
 		}
 
-		void handleDataReceived(const std::vector<unsigned char>& data) {
-			receivedData.insert(receivedData.end(), data.begin(), data.end());
-		}
-
 	private:
 		DummyStanzaChannel* stanzaChannel;
 		IQRouter* iqRouter;
 		bool finished;
 		boost::optional<FileTransferError> error;
-		std::vector<unsigned char> receivedData;
+		boost::shared_ptr<ByteArrayWriteBytestream> bytestream;
 };
 
 CPPUNIT_TEST_SUITE_REGISTRATION(IBBReceiveSessionTest);

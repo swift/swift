@@ -1,0 +1,52 @@
+/*
+ * Copyright (c) 2013 Remko Tronçon
+ * Licensed under the GNU General Public License.
+ * See the COPYING file for more information.
+ */
+
+#pragma once
+
+#include <Swiften/Base/API.h>
+#include <boost/bind.hpp>
+#include <algorithm>
+
+namespace Swift {
+	template<typename T>
+	class SWIFTEN_API Listenable {
+		public:
+			void addListener(T* listener) {
+				listeners.push_back(listener);
+			}
+
+			void removeListener(T* listener) {
+				listeners.erase(std::remove(listeners.begin(), listeners.end(), listener), listeners.end());
+			}
+
+		protected:
+			template<typename F>
+			void notifyListeners(F event) {
+				for (typename std::vector<T*>::iterator i = listeners.begin(); i != listeners.end(); ++i) {
+					event(*i);
+				}
+			}
+
+			template<typename F, typename A1>
+			void notifyListeners(F f, const A1& a1) {
+				notifyListeners(boost::bind(f, _1, a1));
+			}
+
+			template<typename F, typename A1, typename A2>
+			void notifyListeners(F f, const A1& a1, const A2& a2) {
+				notifyListeners(boost::bind(f, _1, a1, a2));
+			}
+
+			template<typename F, typename A1, typename A2, typename A3>
+			void notifyListeners(F f, const A1& a1, const A2& a2, const A3& a3) {
+				notifyListeners(boost::bind(f, _1, a1, a2, a3));
+			}
+
+		private:
+			std::vector<T*> listeners;
+	};
+}
+

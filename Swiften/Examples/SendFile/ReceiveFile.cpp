@@ -21,8 +21,6 @@
 #include <Swiften/FileTransfer/IncomingFileTransferManager.h>
 #include <Swiften/FileTransfer/FileWriteBytestream.h>
 #include <Swiften/Jingle/JingleSessionManager.h>
-#include <Swiften/FileTransfer/DefaultLocalJingleTransportCandidateGeneratorFactory.h>
-#include <Swiften/FileTransfer/DefaultRemoteJingleTransportCandidateSelectorFactory.h>
 #include <Swiften/FileTransfer/SOCKS5BytestreamRegistry.h>
 #include <Swiften/FileTransfer/FileTransferManager.h>
 
@@ -38,7 +36,7 @@ static const std::string CLIENT_NODE = "http://swift.im";
 
 class FileReceiver {
 	public:
-		FileReceiver(const JID& jid, const std::string& password) : jid(jid), password(password), jingleSessionManager(NULL), incomingFileTransferManager(NULL) {
+		FileReceiver(const JID& jid, const std::string& password) : jid(jid), password(password) {
 			client = new Swift::Client(jid, password, &networkFactories);
 			client->onConnected.connect(boost::bind(&FileReceiver::handleConnected, this));
 			client->onDisconnected.connect(boost::bind(&FileReceiver::handleDisconnected, this, _1));
@@ -66,7 +64,6 @@ class FileReceiver {
 	private:
 		void handleConnected() {
 			Log::setLogLevel(Log::debug);
-			client->getFileTransferManager()->startListeningOnPort(9999);
 			client->getFileTransferManager()->onIncomingFileTransfer.connect(boost::bind(&FileReceiver::handleIncomingFileTransfer, this, _1));
 			
 			DiscoInfo discoInfo;
@@ -84,9 +81,9 @@ class FileReceiver {
 		void handleIncomingFileTransfer(IncomingFileTransfer::ref transfer) {
 			SWIFT_LOG(debug) << "foo" << std::endl;
 			incomingFileTransfers.push_back(transfer);
-			transfer->accept(boost::make_shared<FileWriteBytestream>("out"));
-			//transfer->onFinished.connect(boost::bind(&FileReceiver::handleFileTransferFinished, this, _1));
-			//transfer->start();
+			boost::shared_ptr<FileWriteBytestream> out = boost::make_shared<FileWriteBytestream>("out");
+			transfer->onFinished.connect(boost::bind(&FileReceiver::handleFileTransferFinished, this, _1, out));
+			transfer->accept(out);
 		}
 
 		void handleDisconnected(const boost::optional<ClientError>&) {
@@ -94,16 +91,18 @@ class FileReceiver {
 			exit(-1);
 		}
 
-		/*
-		void handleFileTransferFinished(const boost::optional<FileTransferError>& error) {
+		void handleFileTransferFinished(
+				const boost::optional<FileTransferError>& error, 
+				boost::shared_ptr<FileWriteBytestream> out) {
 			std::cout << "File transfer finished" << std::endl;
+			out->close();
 			if (error) {
 				exit(-1);
 			}
 			else {
 				exit(0);
 			}
-		}*/
+		}
 
 		void exit(int code) {
 			exitCode = code;
@@ -116,8 +115,6 @@ class FileReceiver {
 		std::string password;
 		Client* client;
 		ClientXMLTracer* tracer;
-		JingleSessionManager* jingleSessionManager;
-		IncomingFileTransferManager* incomingFileTransferManager;
 		std::vector<IncomingFileTransfer::ref> incomingFileTransfers;
 };
 

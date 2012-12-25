@@ -20,8 +20,6 @@
 #include <Swiften/Serializer/PayloadSerializers/JingleIBBTransportPayloadSerializer.h>
 #include <Swiften/Serializer/PayloadSerializers/JingleS5BTransportPayloadSerializer.h>
 
-#include "Swiften/FileTransfer/JingleTransport.h"
-
 namespace Swift {
 
 JingleContentPayloadSerializer::JingleContentPayloadSerializer() {

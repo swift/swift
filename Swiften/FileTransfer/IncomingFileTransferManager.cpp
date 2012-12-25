@@ -18,9 +18,17 @@
 
 namespace Swift {
 
-IncomingFileTransferManager::IncomingFileTransferManager(JingleSessionManager* jingleSessionManager, IQRouter* router,
-							RemoteJingleTransportCandidateSelectorFactory* remoteFactory,
-														 LocalJingleTransportCandidateGeneratorFactory* localFactory, SOCKS5BytestreamRegistry* bytestreamRegistry, SOCKS5BytestreamProxy* bytestreamProxy, TimerFactory* timerFactory, CryptoProvider* crypto) : jingleSessionManager(jingleSessionManager), router(router), remoteFactory(remoteFactory), localFactory(localFactory), bytestreamRegistry(bytestreamRegistry), bytestreamProxy(bytestreamProxy), timerFactory(timerFactory), crypto(crypto) {
+IncomingFileTransferManager::IncomingFileTransferManager(
+		JingleSessionManager* jingleSessionManager,
+		IQRouter* router,
+		FileTransferTransporterFactory* transporterFactory,
+		TimerFactory* timerFactory, 
+		CryptoProvider* crypto) : 
+			jingleSessionManager(jingleSessionManager), 
+			router(router), 
+			transporterFactory(transporterFactory),
+			timerFactory(timerFactory), 
+			crypto(crypto) {
 	jingleSessionManager->addIncomingSessionHandler(this);
 }
 
@@ -28,16 +36,19 @@ IncomingFileTransferManager::~IncomingFileTransferManager() {
 	jingleSessionManager->removeIncomingSessionHandler(this);
 }
 
-bool IncomingFileTransferManager::handleIncomingJingleSession(JingleSession::ref session, const std::vector<JingleContentPayload::ref>& contents, const JID& recipient) {
+bool IncomingFileTransferManager::handleIncomingJingleSession(
+		JingleSession::ref session, 
+		const std::vector<JingleContentPayload::ref>& contents, 
+		const JID& recipient) {
 	if (JingleContentPayload::ref content = Jingle::getContentWithDescription<JingleFileTransferDescription>(contents)) {
-		if (content->getTransport<JingleIBBTransportPayload>() || content->getTransport<JingleS5BTransportPayload>()) {
-
+		if (content->getTransport<JingleS5BTransportPayload>()) {
 			JingleFileTransferDescription::ref description = content->getDescription<JingleFileTransferDescription>();
-
 			if (description && description->getOffers().size() == 1) {
-				IncomingJingleFileTransfer::ref transfer = boost::shared_ptr<IncomingJingleFileTransfer>(new IncomingJingleFileTransfer(recipient, session, content, remoteFactory, localFactory, router, bytestreamRegistry, bytestreamProxy, timerFactory, crypto));
+				IncomingJingleFileTransfer::ref transfer = boost::make_shared<IncomingJingleFileTransfer>(
+						recipient, session, content, transporterFactory, timerFactory, crypto);
 				onIncomingFileTransfer(transfer);
-			} else {
+			} 
+			else {
 				std::cerr << "Received a file-transfer request with no description or more than one file!" << std::endl;
 				session->sendTerminate(JinglePayload::Reason::FailedApplication);
 			}

@@ -25,7 +25,7 @@ FileTransferController::FileTransferController(const JID& receipient, const std:
 }
 
 FileTransferController::FileTransferController(IncomingFileTransfer::ref transfer) :
-	sending(false), otherParty(transfer->getSender()), filename(transfer->filename), transfer(transfer), ftManager(0), ftProgressInfo(0), chatWindow(0), currentState(FileTransfer::State::WaitingForStart) {
+	sending(false), otherParty(transfer->getSender()), filename(transfer->getFileName()), transfer(transfer), ftManager(0), ftProgressInfo(0), chatWindow(0), currentState(FileTransfer::State::WaitingForStart) {
 
 }
 
@@ -42,7 +42,7 @@ std::string FileTransferController::setChatWindow(ChatWindow* wnd, std::string n
 	if (sending) {
 		uiID = wnd->addFileTransfer(QT_TRANSLATE_NOOP("", "me"), true, filename, boost::filesystem::file_size(boost::filesystem::path(filename)));
 	} else {
-		uiID = wnd->addFileTransfer(nickname, false, filename, transfer->fileSizeInBytes);
+		uiID = wnd->addFileTransfer(nickname, false, filename, transfer->getFileSizeInBytes());
 	}
 	return uiID;
 }
@@ -65,7 +65,7 @@ int FileTransferController::getProgress() const {
 
 boost::uintmax_t FileTransferController::getSize() const {
 	if (transfer) {
-		return transfer->fileSizeInBytes;
+		return transfer->getFileSizeInBytes();
 	} else {
 		return 0;
 	}
@@ -76,9 +76,9 @@ void FileTransferController::start(std::string& description) {
 	fileReadStream = boost::make_shared<FileReadBytestream>(boost::filesystem::path(filename));
 	OutgoingFileTransfer::ref outgoingTransfer = ftManager->createOutgoingFileTransfer(otherParty, boost::filesystem::path(filename), description, fileReadStream);
 	if (outgoingTransfer) {
-		ftProgressInfo = new FileTransferProgressInfo(outgoingTransfer->fileSizeInBytes);
+		ftProgressInfo = new FileTransferProgressInfo(outgoingTransfer->getFileSizeInBytes());
 		ftProgressInfo->onProgressPercentage.connect(boost::bind(&FileTransferController::handleProgressPercentageChange, this, _1));
-		outgoingTransfer->onStateChange.connect(boost::bind(&FileTransferController::handleFileTransferStateChange, this, _1));
+		outgoingTransfer->onStateChanged.connect(boost::bind(&FileTransferController::handleFileTransferStateChange, this, _1));
 		outgoingTransfer->onProcessedBytes.connect(boost::bind(&FileTransferProgressInfo::setBytesProcessed, ftProgressInfo, _1));
 		outgoingTransfer->start();
 		transfer = outgoingTransfer;
@@ -93,9 +93,9 @@ void FileTransferController::accept(std::string& file) {
 	if (incomingTransfer) {
 		fileWriteStream = boost::make_shared<FileWriteBytestream>(boost::filesystem::path(file));
 
-		ftProgressInfo = new FileTransferProgressInfo(transfer->fileSizeInBytes);
+		ftProgressInfo = new FileTransferProgressInfo(transfer->getFileSizeInBytes());
 		ftProgressInfo->onProgressPercentage.connect(boost::bind(&FileTransferController::handleProgressPercentageChange, this, _1));
-		transfer->onStateChange.connect(boost::bind(&FileTransferController::handleFileTransferStateChange, this, _1));
+		transfer->onStateChanged.connect(boost::bind(&FileTransferController::handleFileTransferStateChange, this, _1));
 		transfer->onProcessedBytes.connect(boost::bind(&FileTransferProgressInfo::setBytesProcessed, ftProgressInfo, _1));
 		incomingTransfer->accept(fileWriteStream);
 	} else {
@@ -114,7 +114,10 @@ void FileTransferController::cancel() {
 void FileTransferController::handleFileTransferStateChange(FileTransfer::State state) {
 	currentState = state;
 	onStateChage();
-	switch(state.state) {
+	switch(state.type) {
+		case FileTransfer::State::Initial:
+			assert(false);
+			return;
 		case FileTransfer::State::Negotiating:
 			chatWindow->setFileTransferStatus(uiID, ChatWindow::Negotiating);
 			return;

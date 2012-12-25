@@ -7,6 +7,7 @@
 #pragma once
 
 #include <boost/shared_ptr.hpp>
+#include <boost/optional.hpp>
 #include <string>
 
 #include <Swiften/Elements/JingleTransportPayload.h>
@@ -29,7 +30,7 @@ namespace Swift {
 				return stanzaType;
 			}
 
-			unsigned int getBlockSize() const {
+			boost::optional<unsigned int> getBlockSize() const {
 				return blockSize;
 			}
 
@@ -38,7 +39,7 @@ namespace Swift {
 			}
 
 		private:
-			unsigned int blockSize;
+			boost::optional<unsigned int> blockSize;
 			StanzaType stanzaType;
 	};
 }

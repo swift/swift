@@ -43,12 +43,18 @@ namespace Swift {
 			void start();
 			void stop();
 
-			void startTransfer();
+			void startSending(boost::shared_ptr<ReadBytestream>);
+			void startReceiving(boost::shared_ptr<WriteBytestream>);
+
 			HostAddressPort getAddressPort() const;
 
 			boost::signal<void (boost::optional<FileTransferError>)> onFinished;
 			boost::signal<void (unsigned long long)> onBytesSent;
 			boost::signal<void (unsigned long long)> onBytesReceived;
+
+			const std::string& getStreamID() const {
+				return streamID;
+			}
 
 		private:
 			void finish(bool error);
@@ -64,8 +70,15 @@ namespace Swift {
 			ByteArray unprocessedData;
 			State state;
 			int chunkSize;
+			std::string streamID;
 			boost::shared_ptr<ReadBytestream> readBytestream;
 			boost::shared_ptr<WriteBytestream> writeBytestream;
 			bool waitingForData;
+
+			boost::bsignals::connection disconnectedConnection;
+			boost::bsignals::connection dataReadConnection;
+			boost::bsignals::connection dataWrittenConnection;
+			boost::bsignals::connection dataAvailableConnection;
+
 	};
 }

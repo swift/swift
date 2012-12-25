@@ -2,6 +2,8 @@ Import("swiften_env")
 
 sources = [
 		"JingleSession.cpp",
+		"JingleSessionListener.cpp",
+		"AbstractJingleSessionListener.cpp",
 		"JingleSessionImpl.cpp",	
 		"IncomingJingleSessionHandler.cpp",
 		"JingleSessionManager.cpp",	

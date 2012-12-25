@@ -16,7 +16,21 @@
 
 namespace Swift {
 
-IBBSendSession::IBBSendSession(const std::string& id, const JID& from, const JID& to, boost::shared_ptr<ReadBytestream> bytestream, IQRouter* router) : id(id), from(from), to(to), bytestream(bytestream), router(router), blockSize(4096), sequenceNumber(0), active(false), waitingForData(false) {
+IBBSendSession::IBBSendSession(
+		const std::string& id, 
+		const JID& from, 
+		const JID& to, 
+		boost::shared_ptr<ReadBytestream> bytestream, 
+		IQRouter* router) : 
+			id(id), 
+			from(from), 
+			to(to), 
+			bytestream(bytestream), 
+			router(router), 
+			blockSize(4096), 
+			sequenceNumber(0), 
+			active(false), 
+			waitingForData(false) {
 	bytestream->onDataAvailable.connect(boost::bind(&IBBSendSession::handleDataAvailable, this));
 }
 
@@ -25,7 +39,8 @@ IBBSendSession::~IBBSendSession() {
 }
 
 void IBBSendSession::start() {
-	IBBRequest::ref request = IBBRequest::create(from, to, IBB::createIBBOpen(id, boost::numeric_cast<int>(blockSize)), router);
+	IBBRequest::ref request = IBBRequest::create(
+			from, to, IBB::createIBBOpen(id, boost::numeric_cast<int>(blockSize)), router);
 	request->onResponse.connect(boost::bind(&IBBSendSession::handleIBBResponse, this, _1, _2));
 	active = true;
 	request->send();

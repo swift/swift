@@ -26,8 +26,6 @@
 #include <Swiften/FileTransfer/OutgoingFileTransfer.h>
 #include <Swiften/Jingle/JingleSessionManager.h>
 #include <Swiften/Disco/EntityCapsManager.h>
-#include <Swiften/FileTransfer/DefaultLocalJingleTransportCandidateGeneratorFactory.h>
-#include <Swiften/FileTransfer/DefaultRemoteJingleTransportCandidateSelectorFactory.h>
 #include <Swiften/Base/ByteArray.h>
 #include <Swiften/StringCodecs/Hexify.h>
 #include <Swiften/FileTransfer/FileTransferManager.h>
@@ -65,7 +63,6 @@ class FileSender {
 		void handleConnected() {
 			client->sendPresence(Presence::create());
 
-			client->getFileTransferManager()->startListeningOnPort(19999);
 			//ByteArray fileData;
 			//readByteArrayFromFile(fileData, file.string());
 			

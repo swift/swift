@@ -70,7 +70,10 @@ QVariant QtFileTransferListItemModel::data(const QModelIndex &index, int role) c
 	}
 	if (index.column() == State) {
 		FileTransfer::State state = controller->getState();
-		switch(state.state) {
+		switch(state.type) {
+			case FileTransfer::State::Initial:
+				assert(false);
+				return QVariant("");
 			case FileTransfer::State::WaitingForStart:
 				return QVariant(QObject::tr("Waiting for start"));
 			case FileTransfer::State::WaitingForAccept:

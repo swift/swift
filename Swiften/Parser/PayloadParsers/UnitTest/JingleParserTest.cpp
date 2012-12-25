@@ -121,7 +121,7 @@ class JingleParserTest : public CppUnit::TestFixture {
 			
 			JingleIBBTransportPayload::ref transportPaylod = payload->getTransport<JingleIBBTransportPayload>();
 			CPPUNIT_ASSERT(transportPaylod);
-			CPPUNIT_ASSERT_EQUAL(4096U, transportPaylod->getBlockSize());
+			CPPUNIT_ASSERT_EQUAL(4096U, *transportPaylod->getBlockSize());
 			CPPUNIT_ASSERT_EQUAL(std::string("ch3d9s71"), transportPaylod->getSessionID());
 		}
 		
@@ -158,7 +158,7 @@ class JingleParserTest : public CppUnit::TestFixture {
 			
 			JingleIBBTransportPayload::ref transportPaylod = payload->getTransport<JingleIBBTransportPayload>();
 			CPPUNIT_ASSERT(transportPaylod);
-			CPPUNIT_ASSERT_EQUAL(2048U, transportPaylod->getBlockSize());
+			CPPUNIT_ASSERT_EQUAL(2048U, *transportPaylod->getBlockSize());
 			CPPUNIT_ASSERT_EQUAL(std::string("ch3d9s71"), transportPaylod->getSessionID());
 		}
 		
@@ -191,7 +191,7 @@ class JingleParserTest : public CppUnit::TestFixture {
 			
 			JingleIBBTransportPayload::ref transportPaylod = payload->getTransport<JingleIBBTransportPayload>();
 			CPPUNIT_ASSERT(transportPaylod);
-			CPPUNIT_ASSERT_EQUAL(2048U, transportPaylod->getBlockSize());
+			CPPUNIT_ASSERT_EQUAL(2048U, *transportPaylod->getBlockSize());
 			CPPUNIT_ASSERT_EQUAL(std::string("bt8a71h6"), transportPaylod->getSessionID());	
 		}
 		

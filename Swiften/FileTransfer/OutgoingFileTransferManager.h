@@ -14,41 +14,39 @@
 
 #include <boost/shared_ptr.hpp>
 
-#include <Swiften/JID/JID.h>
-
 namespace Swift {
+	class JingleSessionManager;
+	class IQRouter;
+	class FileTransferTransporterFactory;
+	class OutgoingFileTransfer;
+	class JID;
+	class IDGenerator;
+	class ReadBytestream;
+	class StreamInitiationFileInfo;
+	class CryptoProvider;
+	class FileTransferOptions;
 
-class JingleSessionManager;
-class IQRouter;
-class EntityCapsProvider;
-class RemoteJingleTransportCandidateSelectorFactory;
-class LocalJingleTransportCandidateGeneratorFactory;
-class OutgoingFileTransfer;
-class JID;
-class IDGenerator;
-class ReadBytestream;
-class StreamInitiationFileInfo;
-class SOCKS5BytestreamRegistry;
-class SOCKS5BytestreamProxy;
-class CryptoProvider;
+	class OutgoingFileTransferManager {
+		public:
+			OutgoingFileTransferManager(
+					JingleSessionManager* jingleSessionManager, 
+					IQRouter* router, 
+					FileTransferTransporterFactory* transporterFactory,
+					CryptoProvider* crypto);
+			~OutgoingFileTransferManager();
+			
+			boost::shared_ptr<OutgoingFileTransfer> createOutgoingFileTransfer(
+					const JID& from, 
+					const JID& to, 
+					boost::shared_ptr<ReadBytestream>, 
+					const StreamInitiationFileInfo&,
+					const FileTransferOptions&);
 
-class OutgoingFileTransferManager {
-public:
-	OutgoingFileTransferManager(JingleSessionManager* jingleSessionManager, IQRouter* router, EntityCapsProvider* capsProvider, RemoteJingleTransportCandidateSelectorFactory* remoteFactory, LocalJingleTransportCandidateGeneratorFactory* localFactory, SOCKS5BytestreamRegistry* bytestreamRegistry, SOCKS5BytestreamProxy* bytestreamProxy, CryptoProvider* crypto);
-	~OutgoingFileTransferManager();
-	
-	boost::shared_ptr<OutgoingFileTransfer> createOutgoingFileTransfer(const JID& from, const JID& to, boost::shared_ptr<ReadBytestream>, const StreamInitiationFileInfo&);
-
-private:
-	JingleSessionManager* jsManager;
-	IQRouter* iqRouter;
-	EntityCapsProvider* capsProvider;
-	RemoteJingleTransportCandidateSelectorFactory* remoteFactory;
-	LocalJingleTransportCandidateGeneratorFactory* localFactory;
-	IDGenerator *idGenerator;
-	SOCKS5BytestreamRegistry* bytestreamRegistry;
-	SOCKS5BytestreamProxy* bytestreamProxy;
-	CryptoProvider* crypto;
-};
-
+		private:
+			JingleSessionManager* jingleSessionManager;
+			IQRouter* iqRouter;
+			FileTransferTransporterFactory* transporterFactory;
+			IDGenerator* idGenerator;
+			CryptoProvider* crypto;
+	};
 }

@@ -42,7 +42,7 @@ std::vector<NetworkInterface> UnixNetworkEnvironment::getNetworkInterfaces() con
 			sockaddr_in6* sa = reinterpret_cast<sockaddr_in6*>(a->ifa_addr);
 			address = HostAddress(reinterpret_cast<const unsigned char*>(&(sa->sin6_addr)), 16);
 		}
-		if (address) {
+		if (address && !address->isLocalhost()) {
 			std::map<std::string, NetworkInterface>::iterator i = interfaces.insert(std::make_pair(name, NetworkInterface(name, a->ifa_flags & IFF_LOOPBACK))).first;
 			i->second.addAddress(*address);
 		}

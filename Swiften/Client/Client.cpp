@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Remko Tronçon
+ * Copyright (c) 2010-2012 Remko Tronçon
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -122,7 +122,18 @@ void Client::setSoftwareVersion(const std::string& name, const std::string& vers
 
 void Client::handleConnected() {
 #ifdef SWIFT_EXPERIMENTAL_FT
-	fileTransferManager = new FileTransferManagerImpl(getJID(), jingleSessionManager, getIQRouter(), getEntityCapsProvider(), presenceOracle, getNetworkFactories()->getConnectionFactory(), getNetworkFactories()->getConnectionServerFactory(), getNetworkFactories()->getTimerFactory(), getNetworkFactories()->getNATTraverser(), getNetworkFactories()->getCryptoProvider());
+	fileTransferManager = new FileTransferManagerImpl(
+			getJID(), 
+			jingleSessionManager, 
+			getIQRouter(), 
+			getEntityCapsProvider(), 
+			presenceOracle, 
+			getNetworkFactories()->getConnectionFactory(), 
+			getNetworkFactories()->getConnectionServerFactory(), 
+			getNetworkFactories()->getTimerFactory(), 
+			getNetworkFactories()->getNetworkEnvironment(),
+			getNetworkFactories()->getNATTraverser(),
+			getNetworkFactories()->getCryptoProvider());
 #else
 	fileTransferManager = new DummyFileTransferManager();
 #endif

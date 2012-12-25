@@ -72,7 +72,16 @@ boost::optional<NATPortMapping> MiniUPnPInterface::addPortForward(int actualLoca
 	std::string localPort = boost::lexical_cast<std::string>(mapping.getLocalPort());
 	std::string leaseSeconds = boost::lexical_cast<std::string>(mapping.getLeaseInSeconds());
 
-	int ret = UPNP_AddPortMapping(p->urls.controlURL, p->data.first.servicetype, publicPort.c_str(), localPort.c_str(), p->localAddress.c_str(), 0, mapping.getPublicPort() == NATPortMapping::TCP ? "TCP" : "UDP", 0, leaseSeconds.c_str());
+	int ret = UPNP_AddPortMapping(
+			p->urls.controlURL, 
+			p->data.first.servicetype, 
+			publicPort.c_str(), 
+			localPort.c_str(), 
+			p->localAddress.c_str(), 
+			0, 
+			mapping.getProtocol() == NATPortMapping::TCP ? "TCP" : "UDP", 
+			0, 
+			leaseSeconds.c_str());
 	if (ret == UPNPCOMMAND_SUCCESS) {
 		return mapping;
 	}

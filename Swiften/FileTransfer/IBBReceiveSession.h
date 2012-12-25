@@ -25,7 +25,8 @@ namespace Swift {
 					const std::string& id, 
 					const JID& from, 
 					const JID& to,
-					size_t size, 
+					unsigned long long size, 
+					boost::shared_ptr<WriteBytestream> bytestream, 
 					IQRouter* router);
 			~IBBReceiveSession();
 
@@ -40,7 +41,6 @@ namespace Swift {
 				return to;
 			}
 
-			boost::signal<void (const std::vector<unsigned char>&)> onDataReceived;
 			boost::signal<void (boost::optional<FileTransferError>)> onFinished;
 
 		private:
@@ -54,7 +54,8 @@ namespace Swift {
 			std::string id;
 			JID from;
 			JID to;
-			size_t size;
+			unsigned long long size;
+			boost::shared_ptr<WriteBytestream> bytestream;
 			IQRouter* router;
 			IBBResponder* responder;
 			bool active;

@@ -20,6 +20,7 @@ OutgoingSIFileTransfer::OutgoingSIFileTransfer(const std::string& id, const JID&
 }
 
 void OutgoingSIFileTransfer::start() {
+	/*
 	StreamInitiation::ref streamInitiation(new StreamInitiation());
 	streamInitiation->setID(id);
 	streamInitiation->setFileInfo(StreamInitiationFileInfo(name, description, size));
@@ -28,12 +29,14 @@ void OutgoingSIFileTransfer::start() {
 	StreamInitiationRequest::ref request = StreamInitiationRequest::create(to, streamInitiation, iqRouter);
 	request->onResponse.connect(boost::bind(&OutgoingSIFileTransfer::handleStreamInitiationRequestResponse, this, _1, _2));
 	request->send();
+	*/
 }
 
 void OutgoingSIFileTransfer::stop() {
 }
 
-void OutgoingSIFileTransfer::handleStreamInitiationRequestResponse(StreamInitiation::ref response, ErrorPayload::ref error) {
+void OutgoingSIFileTransfer::handleStreamInitiationRequestResponse(StreamInitiation::ref, ErrorPayload::ref) {
+	/*
 	if (error) {
 		finish(FileTransferError());
 	}
@@ -54,26 +57,31 @@ void OutgoingSIFileTransfer::handleStreamInitiationRequestResponse(StreamInitiat
 			ibbSession->start();
 		}
 	}
+	*/
 }
 
-void OutgoingSIFileTransfer::handleBytestreamsRequestResponse(Bytestreams::ref, ErrorPayload::ref error) {
+void OutgoingSIFileTransfer::handleBytestreamsRequestResponse(Bytestreams::ref, ErrorPayload::ref) {
+	/*
 	if (error) {
 		finish(FileTransferError());
 	}
+	*/
 	//socksServer->onTransferFinished.connect();
 }
 
-void OutgoingSIFileTransfer::finish(boost::optional<FileTransferError> error) {
+void OutgoingSIFileTransfer::finish(boost::optional<FileTransferError>) {
+	/*
 	if (ibbSession) {
 		ibbSession->onFinished.disconnect(boost::bind(&OutgoingSIFileTransfer::handleIBBSessionFinished, this, _1));
 		ibbSession.reset();
 	}
 	socksServer->removeReadBytestream(id, from, to);
 	onFinished(error);
+	*/
 }
 
-void OutgoingSIFileTransfer::handleIBBSessionFinished(boost::optional<FileTransferError> error) {
-	finish(error);
+void OutgoingSIFileTransfer::handleIBBSessionFinished(boost::optional<FileTransferError>) {
+	//finish(error);
 }
 
 }

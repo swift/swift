@@ -4,401 +4,340 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
-#include "OutgoingJingleFileTransfer.h"
+/*
+ * Copyright (C) 2013 Remko Tronçon
+ * Licensed under the GNU General Public License.
+ * See the COPYING file for more information.
+ */
+
+// TODO: 
+// - We should handle incoming terminates after we have terminated, so the other
+//   side can warn that he didn't receive all bytes correctly.
+// - Should the proby stuff also wait for candidate used acknowledgement?
+
+#include <Swiften/FileTransfer/OutgoingJingleFileTransfer.h>
 
 #include <boost/bind.hpp>
 #include <boost/smart_ptr/make_shared.hpp>
+#include <boost/typeof/typeof.hpp>
 
-#include <Swiften/Base/boost_bsignals.h>
 #include <Swiften/Base/foreach.h>
 #include <Swiften/Base/IDGenerator.h>
 #include <Swiften/Jingle/JingleContentID.h>
+#include <Swiften/Jingle/JingleSession.h>
 #include <Swiften/Elements/JingleFileTransferDescription.h>
 #include <Swiften/Elements/JingleFileTransferHash.h>
 #include <Swiften/Elements/JingleTransportPayload.h>
 #include <Swiften/Elements/JingleIBBTransportPayload.h>
 #include <Swiften/Elements/JingleS5BTransportPayload.h>
-#include <Swiften/Queries/GenericRequest.h>
-#include <Swiften/FileTransfer/IBBSendSession.h>
 #include <Swiften/FileTransfer/IncrementalBytestreamHashCalculator.h>
-#include <Swiften/FileTransfer/LocalJingleTransportCandidateGenerator.h>
-#include <Swiften/FileTransfer/LocalJingleTransportCandidateGeneratorFactory.h>
-#include <Swiften/FileTransfer/RemoteJingleTransportCandidateSelector.h>
-#include <Swiften/FileTransfer/RemoteJingleTransportCandidateSelectorFactory.h>
-#include <Swiften/FileTransfer/SOCKS5BytestreamRegistry.h>
-#include <Swiften/FileTransfer/SOCKS5BytestreamProxy.h>
-#include <Swiften/StringCodecs/Hexify.h>
+#include <Swiften/FileTransfer/FileTransferTransporter.h>
+#include <Swiften/FileTransfer/FileTransferTransporterFactory.h>
+#include <Swiften/FileTransfer/ReadBytestream.h>
+#include <Swiften/FileTransfer/TransportSession.h>
 #include <Swiften/Crypto/CryptoProvider.h>
 
 #include <Swiften/Base/Log.h>
 
-namespace Swift {
+using namespace Swift;
 
-OutgoingJingleFileTransfer::OutgoingJingleFileTransfer(JingleSession::ref session,
-					RemoteJingleTransportCandidateSelectorFactory* remoteFactory,
-					LocalJingleTransportCandidateGeneratorFactory* localFactory,
-					IQRouter* router,
-					IDGenerator *idGenerator,
-					const JID& fromJID,
-					const JID& toJID,
-					boost::shared_ptr<ReadBytestream> readStream,
-					const StreamInitiationFileInfo &fileInfo,
-					SOCKS5BytestreamRegistry* bytestreamRegistry,
-					SOCKS5BytestreamProxy* bytestreamProxy,
-					CryptoProvider* crypto) :
-	session(session), router(router), idGenerator(idGenerator), fromJID(fromJID), toJID(toJID), readStream(readStream), fileInfo(fileInfo), s5bRegistry(bytestreamRegistry), s5bProxy(bytestreamProxy), crypto(crypto), serverSession(NULL), contentID(JingleContentID(idGenerator->generateID(), JingleContentPayload::InitiatorCreator)), canceled(false) {
-	session->onSessionAcceptReceived.connect(boost::bind(&OutgoingJingleFileTransfer::handleSessionAcceptReceived, this, _1, _2, _3));
-	session->onSessionTerminateReceived.connect(boost::bind(&OutgoingJingleFileTransfer::handleSessionTerminateReceived, this, _1));
-	session->onTransportInfoReceived.connect(boost::bind(&OutgoingJingleFileTransfer::handleTransportInfoReceived, this, _1, _2));
-	session->onTransportAcceptReceived.connect(boost::bind(&OutgoingJingleFileTransfer::handleTransportAcceptReceived, this, _1, _2));
-	fileSizeInBytes = fileInfo.getSize();
-	filename = fileInfo.getName();
+static const int DEFAULT_BLOCK_SIZE = 4096;
 
-	localCandidateGenerator = localFactory->createCandidateGenerator();
-	localCandidateGenerator->onLocalTransportCandidatesGenerated.connect(
-			boost::bind(&OutgoingJingleFileTransfer::handleLocalTransportCandidatesGenerated, this, _1));
+OutgoingJingleFileTransfer::OutgoingJingleFileTransfer(
+		const JID& toJID,
+		JingleSession::ref session,
+		boost::shared_ptr<ReadBytestream> stream,
+		FileTransferTransporterFactory* transporterFactory,
+		IDGenerator* idGenerator,
+		const StreamInitiationFileInfo& fileInfo,
+		const FileTransferOptions& options,
+		CryptoProvider* crypto) :
+			JingleFileTransfer(session, toJID, transporterFactory),
+			idGenerator(idGenerator),
+			stream(stream),
+			fileInfo(fileInfo),
+			options(options),
+			contentID(idGenerator->generateID(), JingleContentPayload::InitiatorCreator),
+			state(Initial),
+			candidateAcknowledged(false) {
 
-	remoteCandidateSelector = remoteFactory->createCandidateSelector();
-	remoteCandidateSelector->onRemoteTransportCandidateSelectFinished.connect(boost::bind(&OutgoingJingleFileTransfer::handleRemoteTransportCandidateSelectFinished, this, _1));
+	setFileInfo(fileInfo.getName(), fileInfo.getSize());
+
 	// calculate both, MD5 and SHA-1 since we don't know which one the other side supports
 	hashCalculator = new IncrementalBytestreamHashCalculator(true, true, crypto);
-	this->readStream->onRead.connect(boost::bind(&IncrementalBytestreamHashCalculator::feedData, hashCalculator, _1));
+	stream->onRead.connect(
+			boost::bind(&IncrementalBytestreamHashCalculator::feedData, hashCalculator, _1));
 }
 
 OutgoingJingleFileTransfer::~OutgoingJingleFileTransfer() {
-	readStream->onRead.disconnect(boost::bind(&IncrementalBytestreamHashCalculator::feedData, hashCalculator, _1));
+	stream->onRead.disconnect(
+			boost::bind(&IncrementalBytestreamHashCalculator::feedData, hashCalculator, _1));
 	delete hashCalculator;
 }
 	
 void OutgoingJingleFileTransfer::start() {
-	onStateChange(FileTransfer::State(FileTransfer::State::WaitingForStart));
+	SWIFT_LOG(debug) << std::endl;
+	if (state != Initial) { SWIFT_LOG(warning) << "Incorrect state" << std::endl; return; }
 
-	s5bSessionID = s5bRegistry->generateSessionID();
-	SWIFT_LOG(debug) << "S5B SessionID: " << s5bSessionID << std::endl;
-
-	//s5bProxy->connectToProxies(s5bSessionID);
-
-	JingleS5BTransportPayload::ref transport = boost::make_shared<JingleS5BTransportPayload>();
-	localCandidateGenerator->start(transport);
-}
-
-void OutgoingJingleFileTransfer::stop() {
-
+	setTransporter(transporterFactory->createInitiatorTransporter(getInitiator(), getResponder()));
+	setState(GeneratingInitialLocalCandidates);
+	transporter->startGeneratingLocalCandidates();
 }
 
 void OutgoingJingleFileTransfer::cancel() {
-	canceled = true;
-	session->sendTerminate(JinglePayload::Reason::Cancel);
-
-	if (ibbSession) {
-		ibbSession->stop();
-	}
-	SOCKS5BytestreamServerSession *serverSession = s5bRegistry->getConnectedSession(SOCKS5BytestreamRegistry::getHostname(s5bSessionID, session->getInitiator(), toJID, crypto));
-	if (serverSession) {
-		serverSession->stop();
-	}
-	if (clientSession) {
-		clientSession->stop();
-	}
-	onStateChange(FileTransfer::State(FileTransfer::State::Canceled));
+	terminate(JinglePayload::Reason::Cancel);
 }
 
-void OutgoingJingleFileTransfer::handleSessionAcceptReceived(const JingleContentID& id, JingleDescription::ref /* decription */, JingleTransportPayload::ref transportPayload) {
-	if (canceled) {
-		return;
-	}
-	onStateChange(FileTransfer::State(FileTransfer::State::Negotiating));
+void OutgoingJingleFileTransfer::terminate(JinglePayload::Reason::Type reason) {
+	SWIFT_LOG(debug) << reason << std::endl;
 
-	JingleIBBTransportPayload::ref ibbPayload;
-	JingleS5BTransportPayload::ref s5bPayload;
-	if ((ibbPayload = boost::dynamic_pointer_cast<JingleIBBTransportPayload>(transportPayload))) {
-		ibbSession = boost::make_shared<IBBSendSession>(ibbPayload->getSessionID(), fromJID, toJID, readStream, router);
-		ibbSession->setBlockSize(ibbPayload->getBlockSize());
-		ibbSession->onBytesSent.connect(boost::bind(boost::ref(onProcessedBytes), _1));
-		ibbSession->onFinished.connect(boost::bind(&OutgoingJingleFileTransfer::handleTransferFinished, this, _1));
-		ibbSession->start();
-		onStateChange(FileTransfer::State(FileTransfer::State::Transferring));
+	if (state != Initial && state != GeneratingInitialLocalCandidates && state != Finished) {
+		session->sendTerminate(reason);
 	}
-	else if ((s5bPayload = boost::dynamic_pointer_cast<JingleS5BTransportPayload>(transportPayload))) {
-		fillCandidateMap(theirCandidates, s5bPayload);
-		remoteCandidateSelector->setRequesterTarget(toJID, session->getInitiator());
-		remoteCandidateSelector->addRemoteTransportCandidates(s5bPayload);
-		remoteCandidateSelector->selectCandidate();
+	stopAll();
+	setFinishedState(getExternalFinishedState(reason), getFileTransferError(reason));
+}
+
+void OutgoingJingleFileTransfer::handleSessionAcceptReceived(
+		const JingleContentID&, 
+		JingleDescription::ref, 
+		JingleTransportPayload::ref transportPayload) {
+	SWIFT_LOG(debug) << std::endl;
+	if (state != WaitingForAccept) { SWIFT_LOG(warning) << "Incorrect state" << std::endl; return; }
+
+	if (JingleS5BTransportPayload::ref s5bPayload = boost::dynamic_pointer_cast<JingleS5BTransportPayload>(transportPayload)) {
+		transporter->addRemoteCandidates(s5bPayload->getCandidates());
+		setState(TryingCandidates);
+		transporter->startTryingRemoteCandidates();
 	}
 	else {
-		// TODO: error handling
-		SWIFT_LOG(debug) << "Unknown transport payload! Try replaceing with IBB." << std::endl;
-		replaceTransportWithIBB(id);
+		SWIFT_LOG(debug) << "Unknown transport payload. Falling back." << std::endl;
+		fallback();
 	}
 }
 
 void OutgoingJingleFileTransfer::handleSessionTerminateReceived(boost::optional<JinglePayload::Reason> reason) {
-	if (canceled) {
-		return;
-	}
+	SWIFT_LOG(debug) << std::endl;
+	if (state == Finished) { SWIFT_LOG(warning) << "Incorrect state" << std::endl; return; }
 
-	if (ibbSession) {
-		ibbSession->stop();
+	stopAll();
+	if (reason && reason->type == JinglePayload::Reason::Cancel) {
+		setFinishedState(FileTransfer::State::Canceled, FileTransferError(FileTransferError::PeerError));
 	}
-	if (clientSession) {
-		clientSession->stop();
+	else if (reason && reason->type == JinglePayload::Reason::Success) {
+		setFinishedState(FileTransfer::State::Finished, boost::optional<FileTransferError>());
+	} 
+	else {
+		setFinishedState(FileTransfer::State::Failed, FileTransferError(FileTransferError::PeerError));
 	}
-	if (serverSession) {
-		serverSession->stop();
-	}
-
-	if (reason.is_initialized() && reason.get().type == JinglePayload::Reason::Cancel) {
-		onStateChange(FileTransfer::State(FileTransfer::State::Canceled));
-		onFinished(FileTransferError(FileTransferError::PeerError));
-	} else if (reason.is_initialized() && reason.get().type == JinglePayload::Reason::Success) {
-		onStateChange(FileTransfer::State(FileTransfer::State::Finished));
-		onFinished(boost::optional<FileTransferError>());
-	} else {
-		onStateChange(FileTransfer::State(FileTransfer::State::Failed));
-		onFinished(FileTransferError(FileTransferError::PeerError));
-	}
-	canceled = true;
 }
 
-void OutgoingJingleFileTransfer::handleTransportAcceptReceived(const JingleContentID& /* contentID */, JingleTransportPayload::ref transport) {
-	if (canceled) {
-		return;
-	}
+void OutgoingJingleFileTransfer::handleTransportAcceptReceived(const JingleContentID&, JingleTransportPayload::ref transport) {
+	SWIFT_LOG(debug) << std::endl;
+	if (state != FallbackRequested) { SWIFT_LOG(warning) << "Incorrect state" << std::endl; return; }
 
 	if (JingleIBBTransportPayload::ref ibbPayload = boost::dynamic_pointer_cast<JingleIBBTransportPayload>(transport)) {
-		ibbSession = boost::make_shared<IBBSendSession>(ibbPayload->getSessionID(), fromJID, toJID, readStream, router);
-		ibbSession->setBlockSize(ibbPayload->getBlockSize());
-		ibbSession->onBytesSent.connect(boost::bind(boost::ref(onProcessedBytes), _1));
-		ibbSession->onFinished.connect(boost::bind(&OutgoingJingleFileTransfer::handleTransferFinished, this, _1));
-		ibbSession->start();
-		onStateChange(FileTransfer::State(FileTransfer::State::Transferring));
-	} else {
-		// error handling
-		SWIFT_LOG(debug) << "Replacing with anything other than IBB isn't supported yet." << std::endl;
-		session->sendTerminate(JinglePayload::Reason::FailedTransport);
-		onStateChange(FileTransfer::State(FileTransfer::State::Failed));
-	}
-}
-
-void OutgoingJingleFileTransfer::startTransferViaOurCandidateChoice(JingleS5BTransportPayload::Candidate candidate) {
-	SWIFT_LOG(debug) << "Transferring data using our candidate." << std::endl;
-	if (candidate.type == JingleS5BTransportPayload::Candidate::ProxyType) {
-		// get proxy client session from remoteCandidateSelector
-		clientSession = remoteCandidateSelector->getS5BSession();
-
-		// wait on <activated/> transport-info
-	} else {
-		clientSession = remoteCandidateSelector->getS5BSession();
-		clientSession->onBytesSent.connect(boost::bind(boost::ref(onProcessedBytes), _1));
-		clientSession->onFinished.connect(boost::bind(&OutgoingJingleFileTransfer::handleTransferFinished, this, _1));
-		clientSession->startSending(readStream);
-		onStateChange(FileTransfer::State(FileTransfer::State::Transferring));
-	}
-	assert(clientSession);
-}
-
-void OutgoingJingleFileTransfer::startTransferViaTheirCandidateChoice(JingleS5BTransportPayload::Candidate candidate) {
-	SWIFT_LOG(debug) << "Transferring data using their candidate." << std::endl;
-	if (candidate.type == JingleS5BTransportPayload::Candidate::ProxyType) {
-		// connect to proxy
-		clientSession = s5bProxy->createSOCKS5BytestreamClientSession(candidate.hostPort, SOCKS5BytestreamRegistry::getHostname(s5bSessionID, session->getInitiator(), toJID, crypto));
-		clientSession->onSessionReady.connect(boost::bind(&OutgoingJingleFileTransfer::proxySessionReady, this, candidate.jid, _1));
-		clientSession->start();
-
-		// on reply send activate
-
-	} else {
-		serverSession = s5bRegistry->getConnectedSession(SOCKS5BytestreamRegistry::getHostname(s5bSessionID, session->getInitiator(), toJID, crypto));
-		serverSession->onBytesSent.connect(boost::bind(boost::ref(onProcessedBytes), _1));
-		serverSession->onFinished.connect(boost::bind(&OutgoingJingleFileTransfer::handleTransferFinished, this, _1));
-		serverSession->startTransfer();
-	}
-	onStateChange(FileTransfer::State(FileTransfer::State::Transferring));
-}
-
-// decide on candidates according to http://xmpp.org/extensions/xep-0260.html#complete
-void OutgoingJingleFileTransfer::decideOnCandidates() {
-	if (ourCandidateChoice && theirCandidateChoice) {
-		std::string our_cid = ourCandidateChoice->getCandidateUsed();
-		std::string their_cid = theirCandidateChoice->getCandidateUsed();
-		if (ourCandidateChoice->hasCandidateError() && theirCandidateChoice->hasCandidateError()) {
-			replaceTransportWithIBB(contentID);
-		}
-		else if (!our_cid.empty() && theirCandidateChoice->hasCandidateError()) {
-			// use our candidate
-			startTransferViaOurCandidateChoice(theirCandidates[our_cid]);
-		}
-		else if (!their_cid.empty() && ourCandidateChoice->hasCandidateError()) {
-			// use their candidate
-			startTransferViaTheirCandidateChoice(ourCandidates[their_cid]);
-		}
-		else if (!our_cid.empty() && !their_cid.empty()) {
-			// compare priorites, if same we win
-			if (ourCandidates.find(their_cid) == ourCandidates.end() || theirCandidates.find(our_cid) == theirCandidates.end()) {
-				SWIFT_LOG(debug) << "Didn't recognize candidate IDs!" << std::endl;
-				session->sendTerminate(JinglePayload::Reason::FailedTransport);
-				onStateChange(FileTransfer::State(FileTransfer::State::Failed));
-				onFinished(FileTransferError(FileTransferError::PeerError));
-				return;
-			}
-
-			JingleS5BTransportPayload::Candidate ourCandidate = theirCandidates[our_cid];
-			JingleS5BTransportPayload::Candidate theirCandidate = ourCandidates[their_cid];
-			if (ourCandidate.priority > theirCandidate.priority) {
-				startTransferViaOurCandidateChoice(ourCandidate);
-			}
-			else if (ourCandidate.priority < theirCandidate.priority) {
-				startTransferViaTheirCandidateChoice(theirCandidate);
-			}
-			else {
-				startTransferViaOurCandidateChoice(ourCandidate);
-			}
-		}
-	} else {
-		SWIFT_LOG(debug) << "Can't make a decision yet!" << std::endl;
-	}
-}
-
-void OutgoingJingleFileTransfer::fillCandidateMap(CandidateMap& map, JingleS5BTransportPayload::ref s5bPayload) {
-	map.clear();
-	foreach (JingleS5BTransportPayload::Candidate candidate, s5bPayload->getCandidates()) {
-		map[candidate.cid] = candidate;
-	}
-}
-
-void OutgoingJingleFileTransfer::proxySessionReady(const JID& proxy, bool error) {
-	if (error) {
-		// indicate proxy error
-	} else {
-		// activate proxy
-		activateProxySession(proxy);
-	}
-}
-
-void OutgoingJingleFileTransfer::activateProxySession(const JID& proxy) {
-	S5BProxyRequest::ref proxyRequest = boost::make_shared<S5BProxyRequest>();
-	proxyRequest->setSID(s5bSessionID);
-	proxyRequest->setActivate(toJID);
-
-	boost::shared_ptr<GenericRequest<S5BProxyRequest> > request = boost::make_shared<GenericRequest<S5BProxyRequest> >(IQ::Set, proxy, proxyRequest, router);
-	request->onResponse.connect(boost::bind(&OutgoingJingleFileTransfer::handleActivateProxySessionResult, this, _1, _2));
-	request->send();
-}
-
-void OutgoingJingleFileTransfer::handleActivateProxySessionResult(boost::shared_ptr<S5BProxyRequest> /*request*/, ErrorPayload::ref error) {
-	if (error) {
-		SWIFT_LOG(debug) << "ERROR" << std::endl;
-	} else {
-		// send activated to other jingle party
-		JingleS5BTransportPayload::ref proxyActivate = boost::make_shared<JingleS5BTransportPayload>();
-		proxyActivate->setActivated(theirCandidateChoice->getCandidateUsed());
-		session->sendTransportInfo(contentID, proxyActivate);
-
-		// start transferring
-		clientSession->onBytesSent.connect(boost::bind(boost::ref(onProcessedBytes), _1));
-		clientSession->onFinished.connect(boost::bind(&OutgoingJingleFileTransfer::handleTransferFinished, this, _1));
-		clientSession->startSending(readStream);
-		onStateChange(FileTransfer::State(FileTransfer::State::Transferring));
+		startTransferring(transporter->createIBBSendSession(ibbPayload->getSessionID(), ibbPayload->getBlockSize().get_value_or(DEFAULT_BLOCK_SIZE), stream));
+	} 
+	else {
+		SWIFT_LOG(debug) << "Unknown transport replacement" << std::endl;
+		terminate(JinglePayload::Reason::FailedTransport);
 	}
 }
 
 void OutgoingJingleFileTransfer::sendSessionInfoHash() {
 	SWIFT_LOG(debug) << std::endl;
+
 	JingleFileTransferHash::ref hashElement = boost::make_shared<JingleFileTransferHash>();
 	hashElement->setHash("sha-1", hashCalculator->getSHA1String());
 	hashElement->setHash("md5", hashCalculator->getMD5String());
 	session->sendInfo(hashElement);
 }
 
-void OutgoingJingleFileTransfer::handleTransportInfoReceived(const JingleContentID& /* contentID */, JingleTransportPayload::ref transport) {
-	if (canceled) {
-		return;
-	}
-	if (JingleS5BTransportPayload::ref s5bPayload = boost::dynamic_pointer_cast<JingleS5BTransportPayload>(transport)) {
-		if (s5bPayload->hasCandidateError() || !s5bPayload->getCandidateUsed().empty()) {
-			theirCandidateChoice = s5bPayload;
-			decideOnCandidates();
-		} else if(!s5bPayload->getActivated().empty()) {
-			if (ourCandidateChoice->getCandidateUsed() == s5bPayload->getActivated()) {
-				clientSession->onBytesSent.connect(boost::bind(boost::ref(onProcessedBytes), _1));
-				clientSession->onFinished.connect(boost::bind(&OutgoingJingleFileTransfer::handleTransferFinished, this, _1));
-				clientSession->startSending(readStream);
-				onStateChange(FileTransfer::State(FileTransfer::State::Transferring));
-			} else {
-				SWIFT_LOG(debug) << "ourCandidateChoice doesn't match activated proxy candidate!" << std::endl;
-				JingleS5BTransportPayload::ref proxyError = boost::make_shared<JingleS5BTransportPayload>();
-				proxyError->setProxyError(true);
-				proxyError->setSessionID(s5bSessionID);
-				session->sendTransportInfo(contentID, proxyError);
-			}
-		}
-	}
-}
+void OutgoingJingleFileTransfer::handleLocalTransportCandidatesGenerated(
+		const std::string& s5bSessionID, const std::vector<JingleS5BTransportPayload::Candidate>& candidates) {
+	SWIFT_LOG(debug) << std::endl;
+	if (state != GeneratingInitialLocalCandidates) { SWIFT_LOG(warning) << "Incorrect state" << std::endl; return; }
 
-void OutgoingJingleFileTransfer::handleLocalTransportCandidatesGenerated(JingleTransportPayload::ref payload) {
-	if (canceled) {
-		return;
-	}
+	fillCandidateMap(localCandidates, candidates);
+
 	JingleFileTransferDescription::ref description = boost::make_shared<JingleFileTransferDescription>();
 	description->addOffer(fileInfo);
 
-	JingleTransportPayload::ref transport;
-	if (JingleIBBTransportPayload::ref ibbTransport = boost::dynamic_pointer_cast<JingleIBBTransportPayload>(payload)) {
-		ibbTransport->setBlockSize(4096);
-		ibbTransport->setSessionID(idGenerator->generateID());
-		transport = ibbTransport;
+	JingleS5BTransportPayload::ref transport = boost::make_shared<JingleS5BTransportPayload>();
+	transport->setSessionID(s5bSessionID);
+	transport->setMode(JingleS5BTransportPayload::TCPMode);
+	foreach(JingleS5BTransportPayload::Candidate candidate, candidates) {
+		transport->addCandidate(candidate);	
 	}
-	else if (JingleS5BTransportPayload::ref s5bTransport = boost::dynamic_pointer_cast<JingleS5BTransportPayload>(payload)) {
-		//fillCandidateMap(ourCandidates, s5bTransport);
-		//s5bTransport->setSessionID(s5bSessionID);
+	setState(WaitingForAccept);
+	session->sendInitiate(contentID, description, transport);
+}
 
-		JingleS5BTransportPayload::ref emptyCandidates = boost::make_shared<JingleS5BTransportPayload>();
-		emptyCandidates->setSessionID(s5bTransport->getSessionID());
-		fillCandidateMap(ourCandidates, emptyCandidates);
-
-		transport = emptyCandidates;
-		s5bRegistry->addReadBytestream(SOCKS5BytestreamRegistry::getHostname(s5bSessionID, session->getInitiator(), toJID, crypto), readStream);
+void OutgoingJingleFileTransfer::fallback() {
+	SWIFT_LOG(debug) << std::endl;
+	if (options.isInBandAllowed()) {
+		JingleIBBTransportPayload::ref ibbTransport = boost::make_shared<JingleIBBTransportPayload>();
+		ibbTransport->setBlockSize(DEFAULT_BLOCK_SIZE);
+		ibbTransport->setSessionID(idGenerator->generateID());
+		setState(FallbackRequested);
+		session->sendTransportReplace(contentID, ibbTransport);
 	}
 	else {
-		SWIFT_LOG(debug) << "Unknown tranport payload: " << typeid(*payload).name() << std::endl;
-		return;
+		terminate(JinglePayload::Reason::ConnectivityError);
 	}
-	session->sendInitiate(contentID, description, transport);
-	onStateChange(FileTransfer::State(FileTransfer::State::WaitingForAccept));
-}
-
-void OutgoingJingleFileTransfer::handleRemoteTransportCandidateSelectFinished(JingleTransportPayload::ref payload) {
-	if (canceled) {
-		return;
-	}
-	if (JingleS5BTransportPayload::ref s5bPayload = boost::dynamic_pointer_cast<JingleS5BTransportPayload>(payload)) {
-		ourCandidateChoice = s5bPayload;
-		session->sendTransportInfo(contentID, s5bPayload);
-		decideOnCandidates();
-	}
-}
-
-void OutgoingJingleFileTransfer::replaceTransportWithIBB(const JingleContentID& id) {
-	SWIFT_LOG(debug) << "Both parties failed. Replace transport with IBB." << std::endl;
-	JingleIBBTransportPayload::ref ibbTransport = boost::make_shared<JingleIBBTransportPayload>();
-	ibbTransport->setBlockSize(4096);
-	ibbTransport->setSessionID(idGenerator->generateID());
-	session->sendTransportReplace(id, ibbTransport);
 }
 
 void OutgoingJingleFileTransfer::handleTransferFinished(boost::optional<FileTransferError> error) {
+	SWIFT_LOG(debug) << std::endl;
+	if (state != Transferring) { SWIFT_LOG(warning) << "Incorrect state" << std::endl; return; }
+
 	if (error) {
-		session->sendTerminate(JinglePayload::Reason::ConnectivityError);
-		onStateChange(FileTransfer::State(FileTransfer::State::Failed));
-		onFinished(error);
-	} else {
+		terminate(JinglePayload::Reason::ConnectivityError);
+	} 
+	else {
 		sendSessionInfoHash();
-		/*
-		session->terminate(JinglePayload::Reason::Success);
-		onStateChange(FileTransfer::State(FileTransfer::State::Finished));
-		*/
+		terminate(JinglePayload::Reason::Success);
 	}
-	//
 }
 
+void OutgoingJingleFileTransfer::startTransferring(boost::shared_ptr<TransportSession> transportSession) {
+	SWIFT_LOG(debug) << std::endl;
+
+	this->transportSession = transportSession;
+	processedBytesConnection = transportSession->onBytesSent.connect(
+			boost::bind(boost::ref(onProcessedBytes), _1));
+	transferFinishedConnection = transportSession->onFinished.connect(
+			boost::bind(&OutgoingJingleFileTransfer::handleTransferFinished, this, _1));
+	setState(Transferring);
+	transportSession->start();
 }
+
+
+void OutgoingJingleFileTransfer::setState(State state) {
+	SWIFT_LOG(debug) <<  state << std::endl;
+	this->state = state;
+	onStateChanged(FileTransfer::State(getExternalState(state)));
+}
+
+void OutgoingJingleFileTransfer::setFinishedState(
+		FileTransfer::State::Type type, const boost::optional<FileTransferError>& error) {
+	SWIFT_LOG(debug) << std::endl;
+	this->state = Finished;
+	onStateChanged(type);
+	onFinished(error);
+}
+
+FileTransfer::State::Type OutgoingJingleFileTransfer::getExternalState(State state) {
+	switch (state) {
+		case Initial: return FileTransfer::State::Initial;
+		case GeneratingInitialLocalCandidates: return FileTransfer::State::WaitingForStart;
+		case WaitingForAccept: return FileTransfer::State::WaitingForAccept;
+		case TryingCandidates: return FileTransfer::State::Negotiating;
+		case WaitingForPeerProxyActivate: return FileTransfer::State::Negotiating;
+		case WaitingForLocalProxyActivate: return FileTransfer::State::Negotiating;
+		case WaitingForCandidateAcknowledge: return FileTransfer::State::Negotiating;
+		case FallbackRequested: return FileTransfer::State::Negotiating;
+		case Transferring: return FileTransfer::State::Transferring;
+		case Finished: return FileTransfer::State::Finished;
+	}
+	assert(false);
+	return FileTransfer::State::Initial;
+}
+
+void OutgoingJingleFileTransfer::stopAll() {
+	SWIFT_LOG(debug) << state << std::endl;
+	switch (state) {
+		case Initial: SWIFT_LOG(warning) << "Not yet started" << std::endl; break;
+		case GeneratingInitialLocalCandidates: transporter->stopGeneratingLocalCandidates(); break;
+		case WaitingForAccept: break;
+		case TryingCandidates: transporter->stopTryingRemoteCandidates(); break;
+		case FallbackRequested: break;
+		case WaitingForPeerProxyActivate: break;
+		case WaitingForLocalProxyActivate: transporter->stopActivatingProxy(); break;
+		case WaitingForCandidateAcknowledge: // Fallthrough
+		case Transferring:
+			assert(transportSession);
+			processedBytesConnection.disconnect();
+			transferFinishedConnection.disconnect();
+			transportSession->stop();
+			transportSession.reset();
+			break;
+		case Finished: SWIFT_LOG(warning) << "Already finished" << std::endl; break;
+	}
+	if (state != Initial) {
+		delete transporter;
+	}
+}
+
+void OutgoingJingleFileTransfer::startTransferViaRemoteCandidate() {
+	SWIFT_LOG(debug) << std::endl;
+
+	if (ourCandidateChoice->type == JingleS5BTransportPayload::Candidate::ProxyType) {
+		setState(WaitingForPeerProxyActivate);
+	} 
+	else {
+		transportSession = createRemoteCandidateSession();
+		startTransferringIfCandidateAcknowledged();
+	}
+}
+
+void OutgoingJingleFileTransfer::startTransferViaLocalCandidate() {
+	SWIFT_LOG(debug) << std::endl;
+
+	if (theirCandidateChoice->type == JingleS5BTransportPayload::Candidate::ProxyType) {
+		setState(WaitingForLocalProxyActivate);
+		transporter->startActivatingProxy(theirCandidateChoice->jid);
+	} 
+	else {
+		transportSession = createLocalCandidateSession();
+		startTransferringIfCandidateAcknowledged();
+	}
+}
+
+void OutgoingJingleFileTransfer::startTransferringIfCandidateAcknowledged() {
+	if (candidateAcknowledged) {
+		startTransferring(transportSession);
+	}
+	else {
+		setState(WaitingForCandidateAcknowledge);
+	}
+}
+
+void OutgoingJingleFileTransfer::handleTransportInfoAcknowledged(const std::string& id) {
+	if (id == candidateSelectRequestID) {
+		candidateAcknowledged = true;
+	}
+	if (state == WaitingForCandidateAcknowledge) {
+		startTransferring(transportSession);
+	}
+}
+
+JingleContentID OutgoingJingleFileTransfer::getContentID() const {
+	return contentID;
+}
+
+bool OutgoingJingleFileTransfer::hasPriorityOnCandidateTie() const {
+	return true;
+}
+
+bool OutgoingJingleFileTransfer::isWaitingForPeerProxyActivate() const {
+	return state == WaitingForPeerProxyActivate;
+}
+
+bool OutgoingJingleFileTransfer::isWaitingForLocalProxyActivate() const {
+	return state == WaitingForLocalProxyActivate;
+}
+
+bool OutgoingJingleFileTransfer::isTryingCandidates() const {
+	return state == TryingCandidates;
+}
+
+boost::shared_ptr<TransportSession> OutgoingJingleFileTransfer::createLocalCandidateSession() {
+	return transporter->createLocalCandidateSession(stream);
+}
+
+boost::shared_ptr<TransportSession> OutgoingJingleFileTransfer::createRemoteCandidateSession() {
+	return transporter->createRemoteCandidateSession(stream);
+}
+

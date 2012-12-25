@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Remko Tronçon
+ * Copyright (c) 2010-2013 Remko Tronçon
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -7,17 +7,19 @@
 #include <Swiften/Jingle/JingleSessionImpl.h>
 
 #include <boost/smart_ptr/make_shared.hpp>
+#include <boost/bind.hpp>
+#include <algorithm>
 
 #include <Swiften/Parser/PayloadParsers/JingleParser.h>
 #include <Swiften/Jingle/JingleContentID.h>
+#include <Swiften/Jingle/JingleSessionListener.h>
 #include <Swiften/Elements/JingleContentPayload.h>
 #include <Swiften/Queries/Request.h>
 #include <Swiften/Queries/GenericRequest.h>
 
 #include <Swiften/Base/Log.h>
 
-#include "Swiften/Serializer/PayloadSerializers/JinglePayloadSerializer.h"
-#include "Swiften/FileTransfer/JingleTransport.h"
+#include <Swiften/Serializer/PayloadSerializers/JinglePayloadSerializer.h>
 
 namespace Swift {
 
@@ -27,11 +29,11 @@ JingleSessionImpl::JingleSessionImpl(const JID& initiator, const JID& peerJID, c
 
 void JingleSessionImpl::handleIncomingAction(JinglePayload::ref action) {
 	if (action->getAction() == JinglePayload::SessionTerminate) {
-		onSessionTerminateReceived(action->getReason());
+		notifyListeners(&JingleSessionListener::handleSessionTerminateReceived, action->getReason());
 		return;
 	}
 	if (action->getAction() == JinglePayload::SessionInfo) {
-		onSessionInfoReceived(action);
+		notifyListeners(&JingleSessionListener::handleSessionInfoReceived, action);
 		return;
 	}
 
@@ -45,19 +47,19 @@ void JingleSessionImpl::handleIncomingAction(JinglePayload::ref action) {
 	JingleTransportPayload::ref transport = content->getTransports().empty() ? JingleTransportPayload::ref() : content->getTransports()[0];
 	switch(action->getAction()) {
 		case JinglePayload::SessionAccept:
-			onSessionAcceptReceived(contentID, description, transport);
+			notifyListeners(&JingleSessionListener::handleSessionAcceptReceived, contentID, description, transport);
 			return;
 		case JinglePayload::TransportAccept:
-			onTransportAcceptReceived(contentID, transport);
+			notifyListeners(&JingleSessionListener::handleTransportAcceptReceived, contentID, transport);
 			return;
 		case JinglePayload::TransportInfo:
-			onTransportInfoReceived(contentID, transport);
+			notifyListeners(&JingleSessionListener::handleTransportInfoReceived, contentID, transport);
 			return;
 		case JinglePayload::TransportReject:
-			onTransportRejectReceived(contentID, transport);
+			notifyListeners(&JingleSessionListener::handleTransportRejectReceived, contentID, transport);
 			return;
 		case JinglePayload::TransportReplace:
-			onTransportReplaceReceived(contentID, transport);
+			notifyListeners(&JingleSessionListener::handleTransportReplaceReceived, contentID, transport);
 			return;
 		// following unused Jingle actions
 		case JinglePayload::ContentAccept:
@@ -136,7 +138,7 @@ void JingleSessionImpl::sendTransportAccept(const JingleContentID& id, JingleTra
 	sendSetRequest(payload);
 }
 
-void JingleSessionImpl::sendTransportInfo(const JingleContentID& id, JingleTransportPayload::ref transPayload) {
+std::string JingleSessionImpl::sendTransportInfo(const JingleContentID& id, JingleTransportPayload::ref transPayload) {
 	JinglePayload::ref payload = createPayload();
 
 	JingleContentPayload::ref content = boost::make_shared<JingleContentPayload>();
@@ -146,7 +148,7 @@ void JingleSessionImpl::sendTransportInfo(const JingleContentID& id, JingleTrans
 	payload->setAction(JinglePayload::TransportInfo);
 	payload->addPayload(content);
 
-	sendSetRequest(payload);
+	return sendSetRequest(payload);
 }
 
 void JingleSessionImpl::sendTransportReject(const JingleContentID& /* id */, JingleTransportPayload::ref /* transPayload */) {
@@ -167,9 +169,13 @@ void JingleSessionImpl::sendTransportReplace(const JingleContentID& id, JingleTr
 }
 
 
-void JingleSessionImpl::sendSetRequest(JinglePayload::ref payload) {
-	boost::shared_ptr<GenericRequest<JinglePayload> > request = boost::make_shared<GenericRequest<JinglePayload> >(IQ::Set, peerJID, payload, iqRouter);
-	request->send();
+std::string JingleSessionImpl::sendSetRequest(JinglePayload::ref payload) {
+	boost::shared_ptr<GenericRequest<JinglePayload> > request = boost::make_shared<GenericRequest<JinglePayload> >(
+			IQ::Set, peerJID, payload, iqRouter);
+	pendingRequests.insert(std::make_pair(
+		request,
+		request->onResponse.connect(boost::bind(&JingleSessionImpl::handleRequestResponse, this, request))));
+	return request->send();
 }
 
 
@@ -180,6 +186,15 @@ JinglePayload::ref JingleSessionImpl::createPayload() const {
 	return payload;
 }
 
+void JingleSessionImpl::handleRequestResponse(RequestRef request) {
+	RequestsMap::iterator i = pendingRequests.find(request);
+	assert(i != pendingRequests.end());
+	if (i->first->getPayloadGeneric()->getAction() == JinglePayload::TransportInfo) {
+		notifyListeners(&JingleSessionListener::handleTransportInfoAcknowledged, i->first->getID());
+	}
+	i->second.disconnect();
+	pendingRequests.erase(i);
+}
 
 
 }

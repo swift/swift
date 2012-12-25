@@ -9,18 +9,22 @@
 #include <boost/shared_ptr.hpp>
 
 #include <Swiften/Base/boost_bsignals.h>
-#include <Swiften/JID/JID.h>
 #include <Swiften/FileTransfer/FileTransfer.h>
-#include <Swiften/FileTransfer/WriteBytestream.h>
+#include <Swiften/FileTransfer/FileTransferOptions.h>
 
 namespace Swift {
+	class WriteBytestream;
+	class JID;
+
 	class IncomingFileTransfer : public FileTransfer {
 		public:
 			typedef boost::shared_ptr<IncomingFileTransfer> ref;
 
 			virtual ~IncomingFileTransfer();
 			
-			virtual void accept(WriteBytestream::ref) = 0;
+			virtual void accept(
+					boost::shared_ptr<WriteBytestream>, 
+					const FileTransferOptions& = FileTransferOptions()) = 0;
 
 			virtual const JID& getSender() const = 0;
 			virtual const JID& getRecipient() const = 0;

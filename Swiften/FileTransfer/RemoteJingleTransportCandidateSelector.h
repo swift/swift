@@ -1,34 +1,61 @@
 /*
- * Copyright (c) 2011 Remko Tronçon
- * Licensed under the GNU General Public License v3.
- * See Documentation/Licenses/GPLv3.txt for more information.
+ * Copyright (c) 2011 Tobias Markmann
+ * Licensed under the simplified BSD license.
+ * See Documentation/Licenses/BSD-simplified.txt for more information.
+ */
+
+/*
+ * Copyright (c) 2013 Remko Tronçon
+ * Licensed under the GNU General Public License.
+ * See the COPYING file for more information.
  */
 
 #pragma once
 
-#include <Swiften/Base/boost_bsignals.h>
+#include <queue>
+#include <vector>
 
-#include <Swiften/Base/API.h>
+#include <boost/shared_ptr.hpp>
+
+#include <Swiften/Base/Override.h>
 #include <Swiften/JID/JID.h>
-#include <Swiften/Elements/JingleTransportPayload.h>
-#include <Swiften/FileTransfer/JingleTransport.h>
+#include <Swiften/Network/Connection.h>
 #include <Swiften/FileTransfer/SOCKS5BytestreamClientSession.h>
+#include <Swiften/FileTransfer/RemoteJingleTransportCandidateSelector.h>
+#include <Swiften/Elements/JingleS5BTransportPayload.h>
+
 
 namespace Swift {
-	class SWIFTEN_API RemoteJingleTransportCandidateSelector {
+	class ConnectionFactory;
+	class TimerFactory;
+
+	class RemoteJingleTransportCandidateSelector {
 		public:
+			RemoteJingleTransportCandidateSelector(ConnectionFactory*, TimerFactory*);
 			virtual ~RemoteJingleTransportCandidateSelector();
 
-			virtual void addRemoteTransportCandidates(JingleTransportPayload::ref) = 0;
-			virtual void selectCandidate() = 0;
-			virtual void setMinimumPriority(int) = 0;
-			virtual void setRequesterTarget(const JID&, const JID&) {}
-			virtual SOCKS5BytestreamClientSession::ref getS5BSession() { return SOCKS5BytestreamClientSession::ref(); }
+			virtual void addCandidates(const std::vector<JingleS5BTransportPayload::Candidate>&);
+			virtual void setSOCKS5DstAddr(const std::string&);
+			virtual void startSelectingCandidate();
+			virtual void stopSelectingCandidate();
 
-			virtual bool isActualCandidate(JingleTransportPayload::ref) = 0;
-			virtual int getPriority(JingleTransportPayload::ref) = 0;
-			virtual JingleTransport::ref selectTransport(JingleTransportPayload::ref) = 0;
+			boost::signal<void (const boost::optional<JingleS5BTransportPayload::Candidate>&, boost::shared_ptr<SOCKS5BytestreamClientSession>)> onCandidateSelectFinished;
 
-			boost::signal<void (JingleTransportPayload::ref)> onRemoteTransportCandidateSelectFinished;
-	};
+		private:
+			void tryNextCandidate();
+			void handleSessionReady(bool error);
+
+		private:
+			ConnectionFactory* connectionFactory;
+			TimerFactory* timerFactory;
+
+			std::priority_queue<
+				JingleS5BTransportPayload::Candidate, 
+				std::vector<JingleS5BTransportPayload::Candidate>, 
+				JingleS5BTransportPayload::CompareCandidate> candidates;
+			boost::shared_ptr<SOCKS5BytestreamClientSession> s5bSession;
+			boost::bsignals::connection sessionReadyConnection;
+			JingleS5BTransportPayload::Candidate lastCandidate;
+			std::string socks5DstAddr;
+		};
 }

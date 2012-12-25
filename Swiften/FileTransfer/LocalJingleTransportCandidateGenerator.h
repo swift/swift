@@ -1,32 +1,54 @@
 /*
- * Copyright (c) 2011 Remko Tronçon
- * Licensed under the GNU General Public License v3.
- * See Documentation/Licenses/GPLv3.txt for more information.
+ * Copyright (c) 2011 Tobias Markmann
+ * Licensed under the simplified BSD license.
+ * See Documentation/Licenses/BSD-simplified.txt for more information.
+ */
+
+/*
+ * Copyright (c) 2013 Remko Tronçon
+ * Licensed under the GNU General Public License.
+ * See the COPYING file for more information.
  */
 
 #pragma once
 
 #include <Swiften/Base/boost_bsignals.h>
+#include <Swiften/FileTransfer/LocalJingleTransportCandidateGenerator.h>
 
-#include <Swiften/Base/API.h>
-#include <Swiften/Elements/JingleTransportPayload.h>
-#include <Swiften/FileTransfer/JingleTransport.h>
+#include <Swiften/Base/IDGenerator.h>
+#include <Swiften/Base/Override.h>
+#include <Swiften/JID/JID.h>
+#include <Swiften/Elements/JingleS5BTransportPayload.h>
 
 namespace Swift {
-	class SWIFTEN_API LocalJingleTransportCandidateGenerator {
+	class SOCKS5BytestreamServerManager;
+	class SOCKS5BytestreamProxiesManager;
+	class SOCKS5BytestreamServerInitializeRequest;
+	class JingleS5BTransportPayload;
+
+	class LocalJingleTransportCandidateGenerator {
 		public:
+			LocalJingleTransportCandidateGenerator(
+					SOCKS5BytestreamServerManager* s5bServerManager,
+					SOCKS5BytestreamProxiesManager* s5bProxy, 
+					const JID& ownJID,
+					IDGenerator* idGenerator);
 			virtual ~LocalJingleTransportCandidateGenerator();
 
-			/**
-			* Should call onLocalTransportCandidatesGenerated if it has finished discovering local candidates.
-			*/
-			virtual void start(JingleTransportPayload::ref) = 0;
-			virtual void stop() = 0;
+			virtual void start();
+			virtual void stop();
 
-			virtual bool isActualCandidate(JingleTransportPayload::ref) = 0;
-			virtual int getPriority(JingleTransportPayload::ref) = 0;
-			virtual JingleTransport::ref selectTransport(JingleTransportPayload::ref) = 0;
+			boost::signal<void (const std::vector<JingleS5BTransportPayload::Candidate>&)> onLocalTransportCandidatesGenerated;
 
-			boost::signal<void (JingleTransportPayload::ref)> onLocalTransportCandidatesGenerated;
+		private:
+			void handleS5BServerInitialized(bool success);
+			void checkS5BCandidatesReady();
+
+		private:
+			SOCKS5BytestreamServerManager* s5bServerManager;
+			SOCKS5BytestreamProxiesManager* s5bProxy;
+			JID ownJID;
+			IDGenerator* idGenerator;
+			boost::shared_ptr<SOCKS5BytestreamServerInitializeRequest> s5bServerInitializeRequest;
 	};
 }

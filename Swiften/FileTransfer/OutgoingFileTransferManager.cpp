@@ -10,7 +10,7 @@
  * See the COPYING file for more information.
  */
 
-#include "OutgoingFileTransferManager.h"
+#include <Swiften/FileTransfer/OutgoingFileTransferManager.h>
 
 #include <boost/smart_ptr/make_shared.hpp>
 
@@ -23,7 +23,15 @@
 
 namespace Swift {
 
-OutgoingFileTransferManager::OutgoingFileTransferManager(JingleSessionManager* jingleSessionManager, IQRouter* router, EntityCapsProvider* capsProvider, RemoteJingleTransportCandidateSelectorFactory* remoteFactory, LocalJingleTransportCandidateGeneratorFactory* localFactory, SOCKS5BytestreamRegistry* bytestreamRegistry, SOCKS5BytestreamProxy* bytestreamProxy, CryptoProvider* crypto) : jsManager(jingleSessionManager), iqRouter(router), capsProvider(capsProvider), remoteFactory(remoteFactory), localFactory(localFactory), bytestreamRegistry(bytestreamRegistry), bytestreamProxy(bytestreamProxy), crypto(crypto) {
+OutgoingFileTransferManager::OutgoingFileTransferManager(
+		JingleSessionManager* jingleSessionManager, 
+		IQRouter* router, 
+		FileTransferTransporterFactory* transporterFactory,
+		CryptoProvider* crypto) : 
+			jingleSessionManager(jingleSessionManager), 
+			iqRouter(router), 
+			transporterFactory(transporterFactory),
+			crypto(crypto) {
 	idGenerator = new IDGenerator();
 }
 
@@ -31,22 +39,24 @@ OutgoingFileTransferManager::~OutgoingFileTransferManager() {
 	delete idGenerator;
 }
 
-boost::shared_ptr<OutgoingFileTransfer> OutgoingFileTransferManager::createOutgoingFileTransfer(const JID& from, const JID& receipient, boost::shared_ptr<ReadBytestream> readBytestream, const StreamInitiationFileInfo& fileInfo) {
-	// check if receipient support Jingle FT
-	
-	
-	JingleSessionImpl::ref jingleSession = boost::make_shared<JingleSessionImpl>(from, receipient, idGenerator->generateID(), iqRouter);
-	
-	//jsManager->getSession(receipient, idGenerator->generateID());
-	assert(jingleSession);
-	jsManager->registerOutgoingSession(from, jingleSession);
-	boost::shared_ptr<OutgoingJingleFileTransfer> jingleFT =  boost::shared_ptr<OutgoingJingleFileTransfer>(new OutgoingJingleFileTransfer(jingleSession, remoteFactory, localFactory, iqRouter, idGenerator, from, receipient, readBytestream, fileInfo, bytestreamRegistry, bytestreamProxy, crypto));
-	
-	// otherwise try SI
-	
-	// else fail
-	
-	return jingleFT;
+boost::shared_ptr<OutgoingFileTransfer> OutgoingFileTransferManager::createOutgoingFileTransfer(
+		const JID& from, 
+		const JID& recipient, 
+		boost::shared_ptr<ReadBytestream> readBytestream, 
+		const StreamInitiationFileInfo& fileInfo,
+		const FileTransferOptions& config) {
+	JingleSessionImpl::ref jingleSession = boost::make_shared<JingleSessionImpl>(
+			from, recipient, idGenerator->generateID(), iqRouter);
+	jingleSessionManager->registerOutgoingSession(from, jingleSession);
+	return boost::shared_ptr<OutgoingJingleFileTransfer>(new OutgoingJingleFileTransfer(
+				recipient, 
+				jingleSession, 
+				readBytestream, 
+				transporterFactory,
+				idGenerator, 
+				fileInfo, 
+				config,
+				crypto));
 }
 
 }

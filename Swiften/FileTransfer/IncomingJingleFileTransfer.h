@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Remko Tronçon
+ * Copyright (c) 2010-2013 Remko Tronçon
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -8,130 +8,112 @@
 
 #include <boost/shared_ptr.hpp>
 #include <boost/cstdint.hpp>
+#include <string>
 
 #include <Swiften/Base/API.h>
-#include <Swiften/Base/IDGenerator.h>
-#include <Swiften/Network/Timer.h>
-#include <Swiften/Jingle/JingleSession.h>
+#include <Swiften/Base/Override.h>
 #include <Swiften/Jingle/JingleContentID.h>
 #include <Swiften/FileTransfer/IncomingFileTransfer.h>
-#include <Swiften/FileTransfer/JingleTransport.h>
-#include <Swiften/FileTransfer/JingleIncomingIBBTransport.h>
-#include <Swiften/FileTransfer/SOCKS5BytestreamClientSession.h>
-#include <Swiften/FileTransfer/SOCKS5BytestreamServerSession.h>
-#include <Swiften/Elements/JingleContentPayload.h>
-#include <Swiften/Elements/JingleFileTransferDescription.h>
-#include <Swiften/Elements/JingleIBBTransportPayload.h>
+#include <Swiften/FileTransfer/JingleFileTransfer.h>
 #include <Swiften/Elements/JingleS5BTransportPayload.h>
-#include <Swiften/Elements/S5BProxyRequest.h>
-#include <Swiften/Elements/ErrorPayload.h>
+#include <Swiften/FileTransfer/FileTransferOptions.h>
 
 namespace Swift {
-	class IQRouter;
-	class RemoteJingleTransportCandidateSelectorFactory;
-	class LocalJingleTransportCandidateGeneratorFactory;
-	class RemoteJingleTransportCandidateSelector;
-	class LocalJingleTransportCandidateGenerator;
-	class SOCKS5BytestreamRegistry;
-	class SOCKS5BytestreamProxy;
-	class IncrementalBytestreamHashCalculator;
+	class JID;
+	class JingleSession;
+	class JingleContentPayload;
+	class FileTransferTransporter;
+	class FileTransferTransporterFactory;
+	class TimerFactory;
+	class Timer;
 	class CryptoProvider;
+	class IncrementalBytestreamHashCalculator;
+	class JingleFileTransferDescription;
 
-	class SWIFTEN_API IncomingJingleFileTransfer : public IncomingFileTransfer {
+	class SWIFTEN_API IncomingJingleFileTransfer : public IncomingFileTransfer, public JingleFileTransfer {
 		public:
 			typedef boost::shared_ptr<IncomingJingleFileTransfer> ref;
-			enum State {
-				Initial,
-				CreatingInitialTransports,
-				NegotiatingTransport,
-				Transferring,
-				WaitingForFallbackOrTerminate,
-				Terminated
-			};
 
 			IncomingJingleFileTransfer(
-					const JID& recipient,
-					JingleSession::ref,
-					JingleContentPayload::ref content,
-					RemoteJingleTransportCandidateSelectorFactory*,
-					LocalJingleTransportCandidateGeneratorFactory*,
-					IQRouter* router,
-					SOCKS5BytestreamRegistry* bytestreamRegistry,
-					SOCKS5BytestreamProxy* bytestreamProxy,
-					TimerFactory*,
-					CryptoProvider*);
+				const JID& recipient,
+				boost::shared_ptr<JingleSession>,
+				boost::shared_ptr<JingleContentPayload> content,
+				FileTransferTransporterFactory*,
+				TimerFactory*,
+				CryptoProvider*);
 			~IncomingJingleFileTransfer();
 
-			virtual void accept(WriteBytestream::ref);
-			virtual const JID& getSender() const;
-			virtual const JID& getRecipient() const;
+			virtual void accept(boost::shared_ptr<WriteBytestream>, const FileTransferOptions&) SWIFTEN_OVERRIDE;
 			void cancel();
 
 		private:
-			void handleSessionTerminateReceived(boost::optional<JinglePayload::Reason>);
-			void handleSessionInfoReceived(JinglePayload::ref);
-			void handleTransportReplaceReceived(const JingleContentID&, JingleTransportPayload::ref);
-			void handleTransportInfoReceived(const JingleContentID&, JingleTransportPayload::ref);
-			void handleLocalTransportCandidatesGenerated(JingleTransportPayload::ref candidates);
-			void handleRemoteTransportCandidateSelectFinished(JingleTransportPayload::ref candidate);
-			void setActiveTransport(JingleTransport::ref transport);
-			void handleTransportDataReceived(const std::vector<unsigned char>& data);
+			enum State {
+				Initial,
+				GeneratingInitialLocalCandidates,	
+				TryingCandidates,
+				WaitingForPeerProxyActivate,
+				WaitingForLocalProxyActivate,
+				WaitingForFallbackOrTerminate,
+				Transferring,
+				WaitingForHash,
+				Finished
+			};
+
+			virtual void handleSessionTerminateReceived(
+					boost::optional<JinglePayload::Reason> reason) SWIFTEN_OVERRIDE;
+			virtual void handleSessionInfoReceived(boost::shared_ptr<JinglePayload>) SWIFTEN_OVERRIDE;
+			virtual void handleTransportReplaceReceived(
+					const JingleContentID&, boost::shared_ptr<JingleTransportPayload>) SWIFTEN_OVERRIDE;
+
+			virtual void handleLocalTransportCandidatesGenerated(
+					const std::string& s5bSessionID, 
+					const std::vector<JingleS5BTransportPayload::Candidate>&) SWIFTEN_OVERRIDE;
+
 			void handleWriteStreamDataReceived(const std::vector<unsigned char>& data);
 			void stopActiveTransport();
 			void checkCandidateSelected();
-			JingleIncomingIBBTransport::ref createIBBTransport(JingleIBBTransportPayload::ref ibbTransport);
-			JingleContentID getContentID() const;
+			virtual JingleContentID getContentID() const SWIFTEN_OVERRIDE;
 			void checkIfAllDataReceived();
-			bool verifyReceviedData();
-			void finishOffTransfer();
+			bool verifyData();
+			void handleWaitOnHashTimerTicked();
 			void handleTransferFinished(boost::optional<FileTransferError>);
 
 		private:
-			typedef std::map<std::string, JingleS5BTransportPayload::Candidate> CandidateMap;
+			void startTransferViaRemoteCandidate();
+			void startTransferViaLocalCandidate();
+			void checkHashAndTerminate();
+			void stopAll();
+			void setState(State state);
+			void setFinishedState(FileTransfer::State::Type, const boost::optional<FileTransferError>& error);
+			const JID& getSender() const SWIFTEN_OVERRIDE;
+			const JID& getRecipient() const SWIFTEN_OVERRIDE;
+			static FileTransfer::State::Type getExternalState(State state);
+			virtual bool hasPriorityOnCandidateTie() const SWIFTEN_OVERRIDE;
+			virtual void fallback() SWIFTEN_OVERRIDE;
+			virtual void startTransferring(boost::shared_ptr<TransportSession>) SWIFTEN_OVERRIDE;
+			virtual bool isWaitingForPeerProxyActivate() const SWIFTEN_OVERRIDE;
+			virtual bool isWaitingForLocalProxyActivate() const SWIFTEN_OVERRIDE;
+			virtual bool isTryingCandidates() const SWIFTEN_OVERRIDE;
+			virtual boost::shared_ptr<TransportSession> createLocalCandidateSession() SWIFTEN_OVERRIDE;
+			virtual boost::shared_ptr<TransportSession> createRemoteCandidateSession() SWIFTEN_OVERRIDE;
+			virtual void terminate(JinglePayload::Reason::Type reason) SWIFTEN_OVERRIDE;
+
 
 		private:
-			void activateProxySession(const JID &proxy);
-			void handleActivateProxySessionResult(boost::shared_ptr<S5BProxyRequest> request, ErrorPayload::ref error);
-			void proxySessionReady(const JID& proxy, bool error);
-
-		private:
-			void useOurCandidateChoiceForTransfer(JingleS5BTransportPayload::Candidate candidate);
-			void useTheirCandidateChoiceForTransfer(JingleS5BTransportPayload::Candidate candidate);
-			void decideOnUsedTransport();
-			void fillCandidateMap(CandidateMap& map, JingleS5BTransportPayload::ref s5bPayload);
-
-		private:
-			JID ourJID;
-			JingleSession::ref session;
-			IQRouter* router;
-			JingleContentPayload::ref initialContent;
+			boost::shared_ptr<JingleContentPayload> initialContent;
 			CryptoProvider* crypto;
 			State state;
-			JingleFileTransferDescription::ref description;
-			WriteBytestream::ref stream;
+			boost::shared_ptr<JingleFileTransferDescription> description;
+			boost::shared_ptr<WriteBytestream> stream;
 			boost::uintmax_t receivedBytes;
 			IncrementalBytestreamHashCalculator* hashCalculator;
-			Timer::ref waitOnHashTimer;
-			IDGenerator idGenerator;
+			boost::shared_ptr<Timer> waitOnHashTimer;
+			std::string hashAlgorithm;
+			std::string hash;
+			FileTransferOptions options;
 
-			RemoteJingleTransportCandidateSelector* candidateSelector;
-			LocalJingleTransportCandidateGenerator* candidateGenerator;
-			SOCKS5BytestreamRegistry* s5bRegistry;
-			SOCKS5BytestreamProxy* s5bProxy;
-			bool remoteTransportCandidateSelectFinished;
-			JingleTransportPayload::ref selectedRemoteTransportCandidate;
-			bool localTransportCandidateSelectFinished;
-			JingleTransportPayload::ref selectedLocalTransportCandidate;
-
-			JingleS5BTransportPayload::ref ourCandidate;
-			JingleS5BTransportPayload::ref theirCandidate;
-			CandidateMap ourCandidates;
-			CandidateMap theirCandidates;
-			SOCKS5BytestreamClientSession::ref clientSession;
-			std::string s5bDestination;
-			std::string s5bSessionID;
-			SOCKS5BytestreamServerSession* serverSession;
-
-			JingleTransport::ref activeTransport;
+			boost::bsignals::scoped_connection writeStreamDataReceivedConnection;
+			boost::bsignals::scoped_connection waitOnHashTimerTickedConnection;
+			boost::bsignals::connection transferFinishedConnection;
 	};
 }

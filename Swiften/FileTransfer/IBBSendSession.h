@@ -22,7 +22,12 @@ namespace Swift {
 
 	class SWIFTEN_API IBBSendSession {
 		public:
-			IBBSendSession(const std::string& id, const JID& from, const JID& to, boost::shared_ptr<ReadBytestream> bytestream, IQRouter* router);
+			IBBSendSession(
+					const std::string& id, 
+					const JID& from, 
+					const JID& to, 
+					boost::shared_ptr<ReadBytestream> bytestream, 
+					IQRouter* router);
 			~IBBSendSession();
 
 			void start();
@@ -41,7 +46,7 @@ namespace Swift {
 			}
 
 			boost::signal<void (boost::optional<FileTransferError>)> onFinished;
-			boost::signal<void (unsigned long long)> onBytesSent;
+			boost::signal<void (size_t)> onBytesSent;
 
 		private:
 			void handleIBBResponse(IBB::ref, ErrorPayload::ref);

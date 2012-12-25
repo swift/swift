@@ -27,7 +27,7 @@ class IBBReceiveSession::IBBResponder : public SetResponder<IBB> {
 			if (from == session->from && ibb->getStreamID() == session->id) {
 				if (ibb->getAction() == IBB::Data) {
 					if (sequenceNumber == ibb->getSequenceNumber()) {
-						session->onDataReceived(ibb->getData());
+						session->bytestream->write(ibb->getData());
 						receivedSize += ibb->getData().size();
 						sequenceNumber++;
 						sendResponse(from, id, IBB::ref());
@@ -62,7 +62,7 @@ class IBBReceiveSession::IBBResponder : public SetResponder<IBB> {
 	private:
 		IBBReceiveSession* session;
 		int sequenceNumber;
-		size_t receivedSize;
+		unsigned long long receivedSize;
 };
 
 
@@ -70,12 +70,14 @@ IBBReceiveSession::IBBReceiveSession(
 		const std::string& id, 
 		const JID& from, 
 		const JID& to, 
-		size_t size, 
+		unsigned long long size, 
+		boost::shared_ptr<WriteBytestream> bytestream,
 		IQRouter* router) : 
 			id(id), 
 			from(from), 
 			to(to), 
 			size(size), 
+			bytestream(bytestream),
 			router(router), 
 			active(false) {
 	assert(!id.empty());

@@ -47,21 +47,19 @@ void IncrementalBytestreamHashCalculator::feedData(const SafeByteArray& data) {
 }*/
 
 std::string IncrementalBytestreamHashCalculator::getSHA1String() {
-	if (sha1Hasher) {
-		ByteArray result = sha1Hasher->getHash();
-		return Hexify::hexify(result);
-	} else {
-		return std::string();
+	assert(sha1Hasher);
+	if (!sha1Hash) {
+		sha1Hash = Hexify::hexify(sha1Hasher->getHash());
 	}
+	return *sha1Hash;
 }
 
 std::string IncrementalBytestreamHashCalculator::getMD5String() {
-	if (md5Hasher) {
-		ByteArray result = md5Hasher->getHash();
-		return Hexify::hexify(result);
-	} else {
-		return std::string();
+	assert(md5Hasher);
+	if (!md5Hash) {
+		md5Hash = Hexify::hexify(md5Hasher->getHash());
 	}
+	return *md5Hash;
 }
 
 }

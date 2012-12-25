@@ -4,6 +4,12 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
+/*
+ * Copyright (c) 2013 Remko Tronçon
+ * Licensed under the GNU General Public License.
+ * See the COPYING file for more information.
+ */
+
 #pragma once
 
 #include <boost/cstdint.hpp>
@@ -14,46 +20,51 @@
 #include <Swiften/FileTransfer/FileTransferError.h>
 
 namespace Swift {
+	class FileTransfer {
+		public:
+			struct State {
+				enum Type {
+					Initial,
+					WaitingForStart,
+					Negotiating,
+					WaitingForAccept,
+					Transferring,
+					Canceled,
+					Failed,
+					Finished
+				};
 
-class FileTransfer {
-public:
-	struct State {
-		enum FTState {
-			Canceled,
-			Failed,
-			Finished,
-			Negotiating,
-			Transferring,
-			WaitingForStart,
-			WaitingForAccept
-		};
+				State(Type type, const std::string& message = "") : type(type), message(message) {}
 
-		FTState state;
-		std::string message;
+				Type type;
+				std::string message;
+			};
+			typedef boost::shared_ptr<FileTransfer> ref;
 
-		State(FTState state) : state(state), message("") {}
-		State(FTState state, std::string message) : state(state), message(message) {}
+		public:
+			FileTransfer();
+			virtual ~FileTransfer();
+
+			virtual void cancel() = 0;
+
+			const std::string& getFileName() const {
+				return filename;
+			}
+
+			boost::uintmax_t getFileSizeInBytes() const {
+				return fileSizeInBytes;
+			}
+
+		public:
+			boost::signal<void (size_t /* proccessedBytes */)> onProcessedBytes;
+			boost::signal<void (const State&)> onStateChanged;
+			boost::signal<void (boost::optional<FileTransferError>)> onFinished;
+
+		protected:
+			void setFileInfo(const std::string& name, boost::uintmax_t size);
+
+		private:
+			boost::uintmax_t fileSizeInBytes;
+			std::string filename;
 	};
-
-public:
-	typedef boost::shared_ptr<FileTransfer> ref;
-
-public:
-	boost::uintmax_t fileSizeInBytes;
-	std::string filename;
-	std::string algo;
-	std::string hash;
-
-public:
-	virtual void cancel() = 0;
-
-public:
-	boost::signal<void (size_t /* proccessedBytes */)> onProcessedBytes;
-	boost::signal<void (State)> onStateChange;
-	boost::signal<void (boost::optional<FileTransferError>)> onFinished;
-
-public:
-	virtual ~FileTransfer() {}
-};
-
 }

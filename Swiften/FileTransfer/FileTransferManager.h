@@ -4,6 +4,12 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
+/*
+ * Copyright (c) 2013 Remko Tronçon
+ * Licensed under the GNU General Public License.
+ * See the COPYING file for more information.
+ */
+
 #pragma once
 
 #include <string>
@@ -13,21 +19,31 @@
 #include <Swiften/Base/API.h>
 #include <Swiften/Base/boost_bsignals.h>
 #include <Swiften/JID/JID.h>
+#include <Swiften/FileTransfer/FileTransferOptions.h>
 #include <Swiften/FileTransfer/OutgoingFileTransfer.h>
 #include <Swiften/FileTransfer/IncomingFileTransfer.h>
 
 namespace Swift {
 	class ReadBytestream;
-	class S5BProxyRequest;
 
 	class SWIFTEN_API FileTransferManager {
 		public:
 			virtual ~FileTransferManager();
 			
-			virtual void startListeningOnPort(int port) = 0;
-
-			virtual OutgoingFileTransfer::ref createOutgoingFileTransfer(const JID& to, const boost::filesystem::path& filepath, const std::string& description, boost::shared_ptr<ReadBytestream> bytestream) = 0;
-			virtual OutgoingFileTransfer::ref createOutgoingFileTransfer(const JID& to, const std::string& filename, const std::string& description, const boost::uintmax_t sizeInBytes, const boost::posix_time::ptime& lastModified, boost::shared_ptr<ReadBytestream> bytestream) = 0;
+			virtual OutgoingFileTransfer::ref createOutgoingFileTransfer(
+					const JID& to, 
+					const boost::filesystem::path& filepath, 
+					const std::string& description, 
+					boost::shared_ptr<ReadBytestream> bytestream,
+					const FileTransferOptions& = FileTransferOptions()) = 0;
+			virtual OutgoingFileTransfer::ref createOutgoingFileTransfer(
+					const JID& to, 
+					const std::string& filename, 
+					const std::string& description, 
+					const boost::uintmax_t sizeInBytes, 
+					const boost::posix_time::ptime& lastModified, 
+					boost::shared_ptr<ReadBytestream> bytestream,
+					const FileTransferOptions& = FileTransferOptions()) = 0;
 			
 			boost::signal<void (IncomingFileTransfer::ref)> onIncomingFileTransfer;
 	};

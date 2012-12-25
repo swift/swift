@@ -23,7 +23,7 @@ Request::Request(IQ::Type type, const JID& sender, const JID& receiver, boost::s
 Request::Request(IQ::Type type, const JID& sender, const JID& receiver, IQRouter* router) : router_(router), type_(type), sender_(sender), receiver_(receiver), sent_(false) {
 }
 
-void Request::send() {
+std::string Request::send() {
 	assert(payload_);
 	assert(!sent_);
 	sent_ = true;
@@ -43,6 +43,7 @@ void Request::send() {
 	}
 
 	router_->sendIQ(iq);
+	return id_;
 }
 
 bool Request::handleIQ(boost::shared_ptr<IQ> iq) {

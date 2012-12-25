@@ -4,6 +4,12 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
+/*
+ * Copyright (c) 2013 Remko Tronçon
+ * Licensed under the GNU General Public License.
+ * See the COPYING file for more information.
+ */
+
 #include "SOCKS5BytestreamClientSession.h"
 
 #include <boost/bind.hpp>
@@ -20,25 +26,39 @@
 
 namespace Swift {
 
-SOCKS5BytestreamClientSession::SOCKS5BytestreamClientSession(boost::shared_ptr<Connection> connection, const HostAddressPort& addressPort, const std::string& destination, TimerFactory* timerFactory) :
-	connection(connection), addressPort(addressPort), destination(destination), state(Initial), chunkSize(131072) {
-	connection->onConnectFinished.connect(boost::bind(&SOCKS5BytestreamClientSession::handleConnectFinished, this, _1));
-	connection->onDisconnected.connect(boost::bind(&SOCKS5BytestreamClientSession::handleDisconnected, this, _1));
+SOCKS5BytestreamClientSession::SOCKS5BytestreamClientSession(
+		boost::shared_ptr<Connection> connection, 
+		const HostAddressPort& addressPort, 
+		const std::string& destination, 
+		TimerFactory* timerFactory) :
+			connection(connection), 
+			addressPort(addressPort), 
+			destination(destination), 
+			state(Initial), 
+			chunkSize(131072) {
 	weFailedTimeout = timerFactory->createTimer(2000);
-	weFailedTimeout->onTick.connect(boost::bind(&SOCKS5BytestreamClientSession::handleWeFailedTimeout, this));
+	weFailedTimeout->onTick.connect(
+			boost::bind(&SOCKS5BytestreamClientSession::handleWeFailedTimeout, this));
+}
+
+SOCKS5BytestreamClientSession::~SOCKS5BytestreamClientSession() {
 }
 
 void SOCKS5BytestreamClientSession::start() {
 	assert(state == Initial);
 	SWIFT_LOG(debug) << "Trying to connect via TCP to " << addressPort.toString() << "." << std::endl;
 	weFailedTimeout->start();
+	connectFinishedConnection = connection->onConnectFinished.connect(
+			boost::bind(&SOCKS5BytestreamClientSession::handleConnectFinished, this, _1));
 	connection->connect(addressPort);
 }
 
 void SOCKS5BytestreamClientSession::stop() {
-	connection->disconnect();
-	connection->onDataWritten.disconnect(boost::bind(&SOCKS5BytestreamClientSession::sendData, this));
-	connection->onDataRead.disconnect(boost::bind(&SOCKS5BytestreamClientSession::handleDataRead, this, _1));
+	SWIFT_LOG(debug) << std::endl;
+	if (state == Finished) {
+		return;
+	}
+	closeConnection();
 	readBytestream.reset();
 	state = Finished;
 }
@@ -151,7 +171,8 @@ void SOCKS5BytestreamClientSession::startSending(boost::shared_ptr<ReadBytestrea
 	if (state == Ready) {
 		state = Writing;
 		readBytestream = readStream;
-		connection->onDataWritten.connect(boost::bind(&SOCKS5BytestreamClientSession::sendData, this));
+		dataWrittenConnection = connection->onDataWritten.connect(
+				boost::bind(&SOCKS5BytestreamClientSession::sendData, this));
 		sendData();
 	} else {
 		SWIFT_LOG(debug) << "Session isn't ready for transfer yet!" << std::endl;
@@ -179,10 +200,9 @@ void SOCKS5BytestreamClientSession::sendData() {
 }
 
 void SOCKS5BytestreamClientSession::finish(bool error) {
+	SWIFT_LOG(debug) << std::endl;
 	weFailedTimeout->stop();
-	connection->disconnect();
-	connection->onDataWritten.disconnect(boost::bind(&SOCKS5BytestreamClientSession::sendData, this));
-	connection->onDataRead.disconnect(boost::bind(&SOCKS5BytestreamClientSession::handleDataRead, this, _1));
+	closeConnection();
 	readBytestream.reset();
 	if (state == Initial || state == Hello || state == Authenticating) {
 		onSessionReady(true);
@@ -198,13 +218,17 @@ void SOCKS5BytestreamClientSession::finish(bool error) {
 }
 
 void SOCKS5BytestreamClientSession::handleConnectFinished(bool error) {
+	connectFinishedConnection.disconnect();
 	if (error) {
 		SWIFT_LOG(debug) << "Failed to connect via TCP to " << addressPort.toString() << "." << std::endl;
 		finish(true);
 	} else {
 		SWIFT_LOG(debug) << "Successfully connected via TCP" << addressPort.toString() << "." << std::endl;
+		disconnectedConnection = connection->onDisconnected.connect(
+				boost::bind(&SOCKS5BytestreamClientSession::handleDisconnected, this, _1));
+		dataReadConnection = connection->onDataRead.connect(
+				boost::bind(&SOCKS5BytestreamClientSession::handleDataRead, this, _1));
 		weFailedTimeout->start();
-		connection->onDataRead.connect(boost::bind(&SOCKS5BytestreamClientSession::handleDataRead, this, _1));
 		process();
 	}
 }
@@ -231,6 +255,14 @@ void SOCKS5BytestreamClientSession::handleDisconnected(const boost::optional<Con
 void SOCKS5BytestreamClientSession::handleWeFailedTimeout() {
 	SWIFT_LOG(debug) << "Failed due to timeout!" << std::endl;
 	finish(true);
+}
+
+void SOCKS5BytestreamClientSession::closeConnection() {
+	connectFinishedConnection.disconnect();
+	dataWrittenConnection.disconnect();
+	dataReadConnection.disconnect();
+	disconnectedConnection.disconnect();
+	connection->disconnect();
 }
 
 }

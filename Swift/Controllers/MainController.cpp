@@ -319,9 +319,6 @@ void MainController::handleConnected() {
 	if (freshLogin) {
 		profileController_ = new ProfileController(client_->getVCardManager(), uiFactory_, uiEventStream_);
 		showProfileController_ = new ShowProfileController(client_->getVCardManager(), uiFactory_, uiEventStream_);
-		srand(static_cast<unsigned int>(time(NULL)));
-		int randomPort = 10000 + rand() % 10000;
-		client_->getFileTransferManager()->startListeningOnPort(randomPort);
 		ftOverview_ = new FileTransferOverview(client_->getFileTransferManager());
 		fileTransferListController_->setFileTransferOverview(ftOverview_);
 		rosterController_ = new RosterController(jid_, client_->getRoster(), client_->getAvatarManager(), uiFactory_, client_->getNickManager(), client_->getNickResolver(), client_->getPresenceOracle(), client_->getSubscriptionManager(), eventController_, uiEventStream_, client_->getIQRouter(), settings_, client_->getEntityCapsProvider(), ftOverview_, client_->getClientBlockListManager());

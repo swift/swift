@@ -33,8 +33,9 @@ void FakeJingleSession::sendAccept(const JingleContentID& id, JingleDescription:
 	calledCommands.push_back(AcceptCall(id, desc, payload));
 }
 
-void FakeJingleSession::sendTransportInfo(const JingleContentID& id, JingleTransportPayload::ref payload) {
+std::string FakeJingleSession::sendTransportInfo(const JingleContentID& id, JingleTransportPayload::ref payload) {
 	calledCommands.push_back(InfoTransportCall(id, payload));
+	return idGenerator.generateID();
 }
 
 void FakeJingleSession::sendTransportAccept(const JingleContentID& id, JingleTransportPayload::ref payload) {

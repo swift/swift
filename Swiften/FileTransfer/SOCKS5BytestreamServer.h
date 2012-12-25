@@ -21,30 +21,26 @@ namespace Swift {
 
 	class SOCKS5BytestreamServer {
 		public:
-			SOCKS5BytestreamServer(boost::shared_ptr<ConnectionServer> connectionServer, SOCKS5BytestreamRegistry* registry, CryptoProvider* crypto);
+			SOCKS5BytestreamServer(
+					boost::shared_ptr<ConnectionServer> connectionServer, 
+					SOCKS5BytestreamRegistry* registry);
 
 			HostAddressPort getAddressPort() const;
 
 			void start();
 			void stop();
 
-			void addReadBytestream(const std::string& id, const JID& from, const JID& to, boost::shared_ptr<ReadBytestream> byteStream);
-			void removeReadBytestream(const std::string& id, const JID& from, const JID& to);
-
-		/*protected:
-			boost::shared_ptr<ReadBytestream> getBytestream(const std::string& dest);*/
+			std::vector< boost::shared_ptr<SOCKS5BytestreamServerSession> > getSessions(const std::string& id) const;
 
 		private:
 			void handleNewConnection(boost::shared_ptr<Connection> connection);
-
-			std::string getSOCKSDestinationAddress(const std::string& id, const JID& from, const JID& to);
+			void handleSessionFinished(boost::shared_ptr<SOCKS5BytestreamServerSession>);
 
 		private:
 			friend class SOCKS5BytestreamServerSession;
 
 			boost::shared_ptr<ConnectionServer> connectionServer;
 			SOCKS5BytestreamRegistry* registry;
-			CryptoProvider* crypto;
 			std::vector<boost::shared_ptr<SOCKS5BytestreamServerSession> > sessions;
 	};
 }

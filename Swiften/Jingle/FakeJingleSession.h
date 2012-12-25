@@ -4,6 +4,12 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
+/*
+ * Copyright (c) 2013 Remko Tronçon
+ * Licensed under the GNU General Public License.
+ * See the COPYING file for more information.
+ */
+
 #pragma once
 
 #include <boost/shared_ptr.hpp>
@@ -12,7 +18,9 @@
 #include <boost/variant.hpp>
 
 #include <Swiften/Base/API.h>
+#include <Swiften/Base/SimpleIDGenerator.h>
 #include <Swiften/Base/boost_bsignals.h>
+#include <Swiften/Base/Override.h>
 #include <Swiften/JID/JID.h>
 #include <Swiften/Elements/JinglePayload.h>
 #include <Swiften/Jingle/JingleSession.h>
@@ -79,16 +87,17 @@ namespace Swift {
 			FakeJingleSession(const JID& initiator, const std::string& id);
 			virtual ~FakeJingleSession();
 
-			virtual void sendInitiate(const JingleContentID&, JingleDescription::ref, JingleTransportPayload::ref);
-			virtual void sendTerminate(JinglePayload::Reason::Type reason);
-			virtual void sendInfo(boost::shared_ptr<Payload>);
-			virtual void sendAccept(const JingleContentID&, JingleDescription::ref, JingleTransportPayload::ref = JingleTransportPayload::ref());
-			virtual void sendTransportInfo(const JingleContentID&, JingleTransportPayload::ref);
-			virtual void sendTransportAccept(const JingleContentID&, JingleTransportPayload::ref);
-			virtual void sendTransportReject(const JingleContentID&, JingleTransportPayload::ref);
-			virtual void sendTransportReplace(const JingleContentID&, JingleTransportPayload::ref);
+			virtual void sendInitiate(const JingleContentID&, JingleDescription::ref, JingleTransportPayload::ref) SWIFTEN_OVERRIDE;
+			virtual void sendTerminate(JinglePayload::Reason::Type reason) SWIFTEN_OVERRIDE;
+			virtual void sendInfo(boost::shared_ptr<Payload>) SWIFTEN_OVERRIDE;
+			virtual void sendAccept(const JingleContentID&, JingleDescription::ref, JingleTransportPayload::ref = JingleTransportPayload::ref()) SWIFTEN_OVERRIDE;
+			virtual std::string sendTransportInfo(const JingleContentID&, JingleTransportPayload::ref) SWIFTEN_OVERRIDE;
+			virtual void sendTransportAccept(const JingleContentID&, JingleTransportPayload::ref) SWIFTEN_OVERRIDE;
+			virtual void sendTransportReject(const JingleContentID&, JingleTransportPayload::ref) SWIFTEN_OVERRIDE;
+			virtual void sendTransportReplace(const JingleContentID&, JingleTransportPayload::ref) SWIFTEN_OVERRIDE;
 
 		public:
 			std::vector<Command> calledCommands;
+			SimpleIDGenerator idGenerator;
 	};
 }

@@ -24,11 +24,20 @@ namespace Swift {
 	 */
 	class SWIFTEN_API Request : public IQHandler, public boost::enable_shared_from_this<Request> {
 		public:
-			void send();
+			std::string send();
 
 			const JID& getReceiver() const {
 				return receiver_;
 			}
+
+			/**
+			 * Returns the ID of this request.
+			 * This will only be set after send() is called.
+			 */
+			const std::string& getID() const {
+				return id_;
+			}
+
 
 		protected:
 			/**

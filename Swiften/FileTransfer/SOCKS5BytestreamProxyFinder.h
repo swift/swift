@@ -18,25 +18,25 @@ class JID;
 class IQRouter;
 
 class SOCKS5BytestreamProxyFinder {
-public:
-	SOCKS5BytestreamProxyFinder(const JID& service, IQRouter *iqRouter);
-	~SOCKS5BytestreamProxyFinder();
+	public:
+		SOCKS5BytestreamProxyFinder(const JID& service, IQRouter *iqRouter);
+		~SOCKS5BytestreamProxyFinder();
 
-	void start();
-	void stop();
+		void start();
+		void stop();
 
-	boost::signal<void(boost::shared_ptr<S5BProxyRequest>)> onProxyFound;
+		boost::signal<void(boost::shared_ptr<S5BProxyRequest>)> onProxyFound;
 
-private:
-	void sendBytestreamQuery(const JID&);
+	private:
+		void sendBytestreamQuery(const JID&);
 
-	void handleServiceFound(const JID&, boost::shared_ptr<DiscoInfo>);
-	void handleProxyResponse(boost::shared_ptr<S5BProxyRequest>, ErrorPayload::ref);
-private:
-	JID service;
-	IQRouter* iqRouter;
-	boost::shared_ptr<DiscoServiceWalker> serviceWalker;
-	std::vector<boost::shared_ptr<GenericRequest<S5BProxyRequest> > > requests;
-};
+		void handleServiceFound(const JID&, boost::shared_ptr<DiscoInfo>);
+		void handleProxyResponse(boost::shared_ptr<S5BProxyRequest>, ErrorPayload::ref);
+	private:
+		JID service;
+		IQRouter* iqRouter;
+		boost::shared_ptr<DiscoServiceWalker> serviceWalker;
+		std::vector<boost::shared_ptr<GenericRequest<S5BProxyRequest> > > requests;
+	};
 
 }

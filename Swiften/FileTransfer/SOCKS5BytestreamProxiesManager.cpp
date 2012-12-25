@@ -4,7 +4,7 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
-#include "SOCKS5BytestreamProxy.h"
+#include <Swiften/FileTransfer/SOCKS5BytestreamProxiesManager.h>
 
 #include <boost/smart_ptr/make_shared.hpp>
 
@@ -14,19 +14,19 @@
 
 namespace Swift {
 
-SOCKS5BytestreamProxy::SOCKS5BytestreamProxy(ConnectionFactory *connFactory, TimerFactory *timeFactory) : connectionFactory(connFactory), timerFactory(timeFactory) {
+SOCKS5BytestreamProxiesManager::SOCKS5BytestreamProxiesManager(ConnectionFactory *connFactory, TimerFactory *timeFactory) : connectionFactory(connFactory), timerFactory(timeFactory) {
 
 }
 
-void SOCKS5BytestreamProxy::addS5BProxy(S5BProxyRequest::ref proxy) {
+void SOCKS5BytestreamProxiesManager::addS5BProxy(S5BProxyRequest::ref proxy) {
 	localS5BProxies.push_back(proxy);
 }
 
-const std::vector<S5BProxyRequest::ref>& SOCKS5BytestreamProxy::getS5BProxies() const {
+const std::vector<S5BProxyRequest::ref>& SOCKS5BytestreamProxiesManager::getS5BProxies() const {
 	return localS5BProxies;
 }
 
-void SOCKS5BytestreamProxy::connectToProxies(const std::string& sessionID) {
+void SOCKS5BytestreamProxiesManager::connectToProxies(const std::string& sessionID) {
 	SWIFT_LOG(debug) << "session ID: " << sessionID << std::endl;
 	ProxyJIDClientSessionMap clientSessions;
 
@@ -41,7 +41,7 @@ void SOCKS5BytestreamProxy::connectToProxies(const std::string& sessionID) {
 	proxySessions[sessionID] = clientSessions;
 }
 
-boost::shared_ptr<SOCKS5BytestreamClientSession> SOCKS5BytestreamProxy::getProxySessionAndCloseOthers(const JID& proxyJID, const std::string& sessionID) {
+boost::shared_ptr<SOCKS5BytestreamClientSession> SOCKS5BytestreamProxiesManager::getProxySessionAndCloseOthers(const JID& proxyJID, const std::string& sessionID) {
 	// checking parameters
 	if (proxySessions.find(sessionID) == proxySessions.end()) {
 		return boost::shared_ptr<SOCKS5BytestreamClientSession>();
@@ -64,7 +64,7 @@ boost::shared_ptr<SOCKS5BytestreamClientSession> SOCKS5BytestreamProxy::getProxy
 	return activeSession;
 }
 
-boost::shared_ptr<SOCKS5BytestreamClientSession> SOCKS5BytestreamProxy::createSOCKS5BytestreamClientSession(HostAddressPort addressPort, const std::string& destAddr) {
+boost::shared_ptr<SOCKS5BytestreamClientSession> SOCKS5BytestreamProxiesManager::createSOCKS5BytestreamClientSession(HostAddressPort addressPort, const std::string& destAddr) {
 	SOCKS5BytestreamClientSession::ref connection = boost::make_shared<SOCKS5BytestreamClientSession>(connectionFactory->createConnection(), addressPort, destAddr, timerFactory);
 	return connection;
 }

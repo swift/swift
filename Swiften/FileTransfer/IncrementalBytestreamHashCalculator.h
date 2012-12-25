@@ -12,8 +12,11 @@
 
 #pragma once
 
+#include <string>
+
 #include <Swiften/Base/ByteArray.h>
 #include <Swiften/Base/SafeByteArray.h>
+#include <boost/optional.hpp>
 
 namespace Swift {
 	class Hash;
@@ -33,6 +36,8 @@ namespace Swift {
 	private:
 		Hash* md5Hasher;
 		Hash* sha1Hasher;
+		boost::optional<std::string> md5Hash;
+		boost::optional<std::string> sha1Hash;
 	};
 
 }

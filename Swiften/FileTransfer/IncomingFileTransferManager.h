@@ -15,30 +15,32 @@
 namespace Swift {
 	class IQRouter;
 	class JingleSessionManager;
-	class RemoteJingleTransportCandidateSelectorFactory;
-	class LocalJingleTransportCandidateGeneratorFactory;
-	class SOCKS5BytestreamRegistry;
-	class SOCKS5BytestreamProxy;
+	class FileTransferTransporterFactory;
 	class TimerFactory;
 	class CryptoProvider;
 
 	class IncomingFileTransferManager : public IncomingJingleSessionHandler {
 		public:
-			IncomingFileTransferManager(JingleSessionManager* jingleSessionManager, IQRouter* router, RemoteJingleTransportCandidateSelectorFactory* remoteFactory, LocalJingleTransportCandidateGeneratorFactory* localFactory, SOCKS5BytestreamRegistry* bytestreamRegistry, SOCKS5BytestreamProxy* bytestreamProxy, TimerFactory* timerFactory, CryptoProvider* crypto);
+			IncomingFileTransferManager(
+					JingleSessionManager* jingleSessionManager, 
+					IQRouter* router, 
+					FileTransferTransporterFactory* transporterFactory,
+					TimerFactory* timerFactory, 
+					CryptoProvider* crypto);
 			~IncomingFileTransferManager();
 
 			boost::signal<void (IncomingFileTransfer::ref)> onIncomingFileTransfer;
 
 		private:
-			bool handleIncomingJingleSession(JingleSession::ref session, const std::vector<JingleContentPayload::ref>& contents, const JID& recipient);
+			bool handleIncomingJingleSession(
+					JingleSession::ref session, 
+					const std::vector<JingleContentPayload::ref>& contents, 
+					const JID& recipient);
 
 		private:
 			JingleSessionManager* jingleSessionManager;
 			IQRouter* router;
-			RemoteJingleTransportCandidateSelectorFactory* remoteFactory;
-			LocalJingleTransportCandidateGeneratorFactory* localFactory;
-			SOCKS5BytestreamRegistry* bytestreamRegistry;
-			SOCKS5BytestreamProxy* bytestreamProxy;
+			FileTransferTransporterFactory* transporterFactory;
 			TimerFactory* timerFactory;
 			CryptoProvider* crypto;
 	};

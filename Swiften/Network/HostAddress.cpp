@@ -15,6 +15,9 @@
 #include <Swiften/Base/foreach.h>
 #include <string>
 
+static boost::asio::ip::address localhost4 = boost::asio::ip::address(boost::asio::ip::address_v4::loopback());
+static boost::asio::ip::address localhost6 = boost::asio::ip::address(boost::asio::ip::address_v6::loopback());
+
 namespace Swift {
 
 HostAddress::HostAddress() {
@@ -59,6 +62,10 @@ bool HostAddress::isValid() const {
 
 boost::asio::ip::address HostAddress::getRawAddress() const {
 	return address_;
+}
+
+bool HostAddress::isLocalhost() const {
+	return address_ == localhost4 || address_ == localhost6;
 }
 
 }

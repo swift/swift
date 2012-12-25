@@ -45,7 +45,12 @@ public:
 	typedef boost::shared_ptr<SOCKS5BytestreamClientSession> ref;
 
 public:
-	SOCKS5BytestreamClientSession(boost::shared_ptr<Connection> connection, const HostAddressPort&, const std::string&, TimerFactory*);
+	SOCKS5BytestreamClientSession(
+			boost::shared_ptr<Connection> connection, 
+			const HostAddressPort&, 
+			const std::string&, 
+			TimerFactory*);
+	~SOCKS5BytestreamClientSession();
 
 	void start();
 	void stop();
@@ -73,6 +78,7 @@ private:
 
 	void finish(bool error);
 	void sendData();
+	void closeConnection();
 
 private:
 	boost::shared_ptr<Connection> connection;
@@ -89,6 +95,11 @@ private:
 	boost::shared_ptr<ReadBytestream> readBytestream;
 
 	Timer::ref weFailedTimeout;
+
+	boost::bsignals::connection connectFinishedConnection;
+	boost::bsignals::connection dataWrittenConnection;
+	boost::bsignals::connection dataReadConnection;
+	boost::bsignals::connection disconnectedConnection;
 };
 
 }

@@ -50,7 +50,7 @@ std::vector<NetworkInterface> WindowsNetworkEnvironment::getNetworkInterfaces() 
 				sockaddr_in6* sa = reinterpret_cast<sockaddr_in6*>(address->Address.lpSockaddr);
 				hostAddress = HostAddress(reinterpret_cast<const unsigned char*>(&(sa->sin6_addr)), 16);
 			}
-			if (hostAddress) {
+			if (hostAddress && !hostAddress->isLocalhost()) {
 				std::map<std::string, NetworkInterface>::iterator i = interfaces.insert(std::make_pair(name, NetworkInterface(name, false))).first;
 				i->second.addAddress(*hostAddress);
 			}

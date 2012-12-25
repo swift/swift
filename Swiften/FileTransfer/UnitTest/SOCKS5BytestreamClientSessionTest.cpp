@@ -51,7 +51,7 @@ public:
 
 	void setUp() {
 		crypto = boost::shared_ptr<CryptoProvider>(PlatformCryptoProvider::create());
-		destination = SOCKS5BytestreamRegistry::getHostname("foo", JID("requester@example.com/test"), JID("target@example.com/test"), crypto.get());
+		destination = "092a44d859d19c9eed676b551ee80025903351c2";
 		randomGen.seed(static_cast<unsigned int>(time(NULL)));
 		eventLoop = new DummyEventLoop();
 		timerFactory = new DummyTimerFactory();
