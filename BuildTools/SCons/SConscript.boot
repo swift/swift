@@ -215,13 +215,7 @@ if env["PLATFORM"] == "win32" :
 	#env.Append(CCFLAGS = ["/Wall"])
 	pass
 else :
-	env.Append(CXXFLAGS = ["-Wextra", "-Wall", "-Wnon-virtual-dtor", "-Wundef", "-Wold-style-cast", "-Wno-long-long", "-Woverloaded-virtual", "-Wfloat-equal", "-Wredundant-decls"])
-	if not env.get("allow_warnings", False) :
-		env.Append(CXXFLAGS = ["-Werror"])
-	gccVersion = env.get("CCVERSION", "0.0.0").split(".")
-	if gccVersion >= ["4", "5", "0"] and not "clang" in env["CC"] :
-		env.Append(CXXFLAGS = ["-Wlogical-op"])
-	if "clang" in env["CC"] :
+	if "clang" in env["CXX"] :
 		env.Append(CXXFLAGS = [
 			"-Weverything",
 			"-Wno-sign-conversion", # We have this a lot. Not sure if we should allow this or not.
@@ -232,6 +226,13 @@ else :
 			"-Wno-global-constructors",
 			"-Wno-padded",
 			])
+	else :
+		env.Append(CXXFLAGS = ["-Wextra", "-Wall", "-Wnon-virtual-dtor", "-Wundef", "-Wold-style-cast", "-Wno-long-long", "-Woverloaded-virtual", "-Wfloat-equal", "-Wredundant-decls", "-Wno-unknown-pragmas"])
+		gccVersion = env.get("CCVERSION", "0.0.0").split(".")
+		if gccVersion >= ["4", "5", "0"] and not "clang" in env["CC"] :
+			env.Append(CXXFLAGS = ["-Wlogical-op"])
+	if not env.get("allow_warnings", False) :
+		env.Append(CXXFLAGS = ["-Werror"])
 
 if env.get("coverage", 0) :
 	assert(env["PLATFORM"] != "win32")
