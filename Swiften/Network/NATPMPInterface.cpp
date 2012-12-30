@@ -64,9 +64,14 @@ boost::optional<HostAddress> NATPMPInterface::getPublicIP() {
 
 boost::optional<NATPortMapping> NATPMPInterface::addPortForward(int localPort, int publicPort) {
 	NATPortMapping mapping(localPort, publicPort, NATPortMapping::TCP);
-	if (sendnewportmappingrequest(&p->natpmp, mapping.getProtocol() == NATPortMapping::TCP ? NATPMP_PROTOCOL_TCP : NATPMP_PROTOCOL_UDP, boost::numeric_cast<uint16_t>(mapping.getLeaseInSeconds()), boost::numeric_cast<uint16_t>(mapping.getPublicPort()), mapping.getLocalPort()) < 0) {
-			SWIFT_LOG(debug) << "Failed to send NAT-PMP port forwarding request!" << std::endl;
-			return boost::optional<NATPortMapping>();
+	if (sendnewportmappingrequest(
+				&p->natpmp,
+				mapping.getProtocol() == NATPortMapping::TCP ? NATPMP_PROTOCOL_TCP : NATPMP_PROTOCOL_UDP, 
+				boost::numeric_cast<uint16_t>(mapping.getLocalPort()), 
+				boost::numeric_cast<uint16_t>(mapping.getPublicPort()), 
+				mapping.getLeaseInSeconds()) < 0) {
+		SWIFT_LOG(debug) << "Failed to send NAT-PMP port forwarding request!" << std::endl;
+		return boost::optional<NATPortMapping>();
 	}
 
 	int r = 0;
