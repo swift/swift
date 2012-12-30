@@ -28,6 +28,7 @@
 #include <Swiften/Elements/JingleFileTransferDescription.h>
 #include <Swiften/Elements/IBB.h>
 #include <Swiften/Base/ByteArray.h>
+#include <Swiften/Base/Override.h>
 #include <Swiften/Base/IDGenerator.h>
 #include <Swiften/EventLoop/DummyEventLoop.h>
 #include <Swiften/Network/PlatformNATTraversalWorker.h>
@@ -87,14 +88,6 @@ public:
 
 class OFakeLocalJingleTransportCandidateGenerator : public LocalJingleTransportCandidateGenerator {
 public:
-	virtual void generateLocalTransportCandidates(JingleTransportPayload::ref /* payload */) {
-		//JingleTransportPayload::ref payL = make_shared<JingleTransportPayload>();
-		//payL->setSessionID(payload->getSessionID());
-		JingleS5BTransportPayload::ref payL = boost::make_shared<JingleS5BTransportPayload>();
-
-		onLocalTransportCandidatesGenerated(payL);
-	}
-
 	void emitonLocalTransportCandidatesGenerated(JingleTransportPayload::ref payload) {
 		onLocalTransportCandidatesGenerated(payload);
 	}
@@ -110,6 +103,16 @@ public:
 	virtual JingleTransport::ref selectTransport(JingleTransportPayload::ref) {
 		return JingleTransport::ref();
 	}
+
+	virtual void start(JingleTransportPayload::ref /* payload */) SWIFTEN_OVERRIDE {
+		//JingleTransportPayload::ref payL = make_shared<JingleTransportPayload>();
+		//payL->setSessionID(payload->getSessionID());
+		JingleS5BTransportPayload::ref payL = boost::make_shared<JingleS5BTransportPayload>();
+
+		onLocalTransportCandidatesGenerated(payL);
+	}
+
+	virtual void stop() SWIFTEN_OVERRIDE {}
 };
 
 class OFakeLocalJingleTransportCandidateGeneratorFactory : public LocalJingleTransportCandidateGeneratorFactory {

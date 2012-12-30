@@ -27,7 +27,7 @@ DefaultLocalJingleTransportCandidateGenerator::DefaultLocalJingleTransportCandid
 DefaultLocalJingleTransportCandidateGenerator::~DefaultLocalJingleTransportCandidateGenerator() {
 }
 
-void DefaultLocalJingleTransportCandidateGenerator::generateLocalTransportCandidates(JingleTransportPayload::ref transportPayload) {
+void DefaultLocalJingleTransportCandidateGenerator::start(JingleTransportPayload::ref transportPayload) {
 	if (boost::dynamic_pointer_cast<JingleIBBTransportPayload>(transportPayload)) {
 		JingleTransportPayload::ref payL = boost::make_shared<JingleTransportPayload>();
 		payL->setSessionID(transportPayload->getSessionID());
@@ -81,6 +81,9 @@ void DefaultLocalJingleTransportCandidateGenerator::generateLocalTransportCandid
 		onLocalTransportCandidatesGenerated(payL);
 	}
 	
+}
+
+void DefaultLocalJingleTransportCandidateGenerator::stop() {
 }
 
 bool DefaultLocalJingleTransportCandidateGenerator::isActualCandidate(JingleTransportPayload::ref transportPayload) {

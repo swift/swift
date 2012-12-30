@@ -22,7 +22,8 @@ public:
 	DefaultLocalJingleTransportCandidateGenerator(ConnectivityManager* connectivityManager, SOCKS5BytestreamRegistry* s5bRegistry, SOCKS5BytestreamProxy* s5bProxy, JID& ownJID);
 	virtual ~DefaultLocalJingleTransportCandidateGenerator();
 
-	virtual void generateLocalTransportCandidates(JingleTransportPayload::ref);
+	virtual void start(JingleTransportPayload::ref);
+	virtual void stop();
 
 	virtual bool isActualCandidate(JingleTransportPayload::ref);
 	virtual int getPriority(JingleTransportPayload::ref);

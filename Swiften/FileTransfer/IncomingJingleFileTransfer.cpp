@@ -112,7 +112,7 @@ void IncomingJingleFileTransfer::accept(WriteBytestream::ref stream) {
 		candidateSelector->addRemoteTransportCandidates(s5bTransport);
 		candidateSelector->setRequesterTarget(session->getInitiator(), ourJID);
 		s5bTransport->setSessionID(s5bSessionID);
-		candidateGenerator->generateLocalTransportCandidates(s5bTransport);
+		candidateGenerator->start(s5bTransport);
 	}
 	else {
 		assert(false);

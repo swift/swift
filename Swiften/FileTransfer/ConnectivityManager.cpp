@@ -34,13 +34,13 @@ void ConnectivityManager::addListeningPort(int port) {
 	boost::shared_ptr<NATTraversalGetPublicIPRequest> getIPRequest = natTraversalWorker->createGetPublicIPRequest();
 	if (getIPRequest) {
 		getIPRequest->onResult.connect(boost::bind(&ConnectivityManager::natTraversalGetPublicIPResult, this, _1));
-		getIPRequest->run();
+		getIPRequest->start();
 	}
 
 	boost::shared_ptr<NATTraversalForwardPortRequest> forwardPortRequest = natTraversalWorker->createForwardPortRequest(port, port);
 	if (forwardPortRequest) {
 		forwardPortRequest->onResult.connect(boost::bind(&ConnectivityManager::natTraversalForwardPortResult, this, _1));
-		forwardPortRequest->run();
+		forwardPortRequest->start();
 	}
 }
 
@@ -49,7 +49,7 @@ void ConnectivityManager::removeListeningPort(int port) {
 	ports.erase(port);
 	boost::shared_ptr<NATTraversalRemovePortForwardingRequest> removePortForwardingRequest = natTraversalWorker->createRemovePortForwardingRequest(port, port);
 	if (removePortForwardingRequest) {
-		removePortForwardingRequest->run();
+		removePortForwardingRequest->start();
 	}
 }
 

@@ -50,8 +50,12 @@ class PlatformNATTraversalGetPublicIPRequest : public NATTraversalGetPublicIPReq
 		PlatformNATTraversalGetPublicIPRequest(PlatformNATTraversalWorker* worker) : PlatformNATTraversalRequest(worker) {
 		}
 
-		virtual void run() {
+		virtual void start() {
 			doRun();
+		}
+
+		virtual void stop() {
+			// TODO
 		}
 
 		virtual void runBlocking() {
@@ -64,8 +68,12 @@ class PlatformNATTraversalForwardPortRequest : public NATTraversalForwardPortReq
 		PlatformNATTraversalForwardPortRequest(PlatformNATTraversalWorker* worker, unsigned int localIP, unsigned int publicIP) : PlatformNATTraversalRequest(worker), localIP(localIP), publicIP(publicIP) {
 		}
 
-		virtual void run() {
+		virtual void start() {
 			doRun();
+		}
+
+		virtual void stop() {
+			// TODO
 		}
 
 		virtual void runBlocking() {
@@ -82,8 +90,12 @@ class PlatformNATTraversalRemovePortForwardingRequest : public NATTraversalRemov
 		PlatformNATTraversalRemovePortForwardingRequest(PlatformNATTraversalWorker* worker, const NATPortMapping& mapping) : PlatformNATTraversalRequest(worker), mapping(mapping) {
 		}
 
-		virtual void run() {
+		virtual void start() {
 			doRun();
+		}
+
+		virtual void stop() {
+			// TODO
 		}
 
 		virtual void runBlocking() {
@@ -96,7 +108,8 @@ class PlatformNATTraversalRemovePortForwardingRequest : public NATTraversalRemov
 
 PlatformNATTraversalWorker::PlatformNATTraversalWorker(EventLoop* eventLoop) : eventLoop(eventLoop), stopRequested(false), natPMPSupported(boost::logic::indeterminate), natPMPInterface(NULL), miniUPnPSupported(boost::logic::indeterminate), miniUPnPInterface(NULL) {
 	nullNATTraversalInterface = new NullNATTraversalInterface();
-	thread = new boost::thread(boost::bind(&PlatformNATTraversalWorker::run, this));
+	// FIXME: This should be done from start(), and the current start() should be an internal method
+	thread = new boost::thread(boost::bind(&PlatformNATTraversalWorker::start, this));
 }
 
 PlatformNATTraversalWorker::~PlatformNATTraversalWorker() {
@@ -143,7 +156,7 @@ boost::shared_ptr<NATTraversalRemovePortForwardingRequest> PlatformNATTraversalW
 	return boost::make_shared<PlatformNATTraversalRemovePortForwardingRequest>(this, mapping);
 }
 
-void PlatformNATTraversalWorker::run() {
+void PlatformNATTraversalWorker::start() {
 	while (!stopRequested) {
 		PlatformNATTraversalRequest::ref request;
 		{
@@ -160,6 +173,10 @@ void PlatformNATTraversalWorker::run() {
 			request->runBlocking();
 		}
 	}
+}
+
+void PlatformNATTraversalWorker::stop() {
+	// TODO
 }
 
 void PlatformNATTraversalWorker::addRequestToQueue(PlatformNATTraversalRequest::ref request) {

@@ -58,7 +58,7 @@ int main(int argc, char* argv[]) {
 	if (std::string(argv[1]) == "get-public-ip") {
 		boost::shared_ptr<NATTraversalGetPublicIPRequest> query = natTraverser.createGetPublicIPRequest();
 		query->onResult.connect(boost::bind(&handleGetPublicIPRequestResponse, _1));
-		query->run();
+		query->start();
 		eventLoop.run();
 	}
 	else if (std::string(argv[1]) == "add-port-forward") {
@@ -67,7 +67,7 @@ int main(int argc, char* argv[]) {
 		}
 		boost::shared_ptr<NATTraversalForwardPortRequest> query = natTraverser.createForwardPortRequest(boost::lexical_cast<int>(argv[2]), boost::lexical_cast<int>(argv[3]));
 		query->onResult.connect(boost::bind(&handleGetForwardPortRequestResponse, _1));
-		query->run();
+		query->start();
 		eventLoop.run();
 	}
 	else if (std::string(argv[1]) == "remove-port-forward") {
@@ -76,7 +76,7 @@ int main(int argc, char* argv[]) {
 		}
 		boost::shared_ptr<NATTraversalRemovePortForwardingRequest> query = natTraverser.createRemovePortForwardingRequest(boost::lexical_cast<int>(argv[2]), boost::lexical_cast<int>(argv[3]));
 		query->onResult.connect(boost::bind(&handleRemovePortForwardingRequestResponse, _1));
-		query->run();
+		query->start();
 		eventLoop.run();
 	}
 	else if (std::string(argv[1]) == "get-local-ip") {

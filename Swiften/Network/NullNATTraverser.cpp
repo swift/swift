@@ -21,8 +21,11 @@ class NullNATTraversalGetPublicIPRequest : public NATTraversalGetPublicIPRequest
 		NullNATTraversalGetPublicIPRequest(EventLoop* eventLoop) : eventLoop(eventLoop) {
 		}
 
-		virtual void run() {
+		virtual void start() {
 			eventLoop->postEvent(boost::bind(boost::ref(onResult), boost::optional<HostAddress>()));
+		}
+
+		virtual void stop() {
 		}
 
 	private:
@@ -34,8 +37,11 @@ class NullNATTraversalForwardPortRequest : public NATTraversalForwardPortRequest
 		NullNATTraversalForwardPortRequest(EventLoop* eventLoop) : eventLoop(eventLoop) {
 		}
 
-		virtual void run() {
+		virtual void start() {
 			eventLoop->postEvent(boost::bind(boost::ref(onResult), boost::optional<NATPortMapping>()));
+		}
+
+		virtual void stop() {
 		}
 
 	private:
@@ -47,8 +53,11 @@ class NullNATTraversalRemovePortForwardingRequest : public NATTraversalRemovePor
 		NullNATTraversalRemovePortForwardingRequest(EventLoop* eventLoop) : eventLoop(eventLoop) {
 		}
 
-		virtual void run() {
+		virtual void start() {
 			eventLoop->postEvent(boost::bind(boost::ref(onResult), boost::optional<bool>(true)));
+		}
+
+		virtual void stop() {
 		}
 
 	private:

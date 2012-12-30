@@ -54,7 +54,8 @@ OutgoingJingleFileTransfer::OutgoingJingleFileTransfer(JingleSession::ref sessio
 	filename = fileInfo.getName();
 
 	localCandidateGenerator = localFactory->createCandidateGenerator();
-	localCandidateGenerator->onLocalTransportCandidatesGenerated.connect(boost::bind(&OutgoingJingleFileTransfer::handleLocalTransportCandidatesGenerated, this, _1));
+	localCandidateGenerator->onLocalTransportCandidatesGenerated.connect(
+			boost::bind(&OutgoingJingleFileTransfer::handleLocalTransportCandidatesGenerated, this, _1));
 
 	remoteCandidateSelector = remoteFactory->createCandidateSelector();
 	remoteCandidateSelector->onRemoteTransportCandidateSelectFinished.connect(boost::bind(&OutgoingJingleFileTransfer::handleRemoteTransportCandidateSelectFinished, this, _1));
@@ -77,7 +78,7 @@ void OutgoingJingleFileTransfer::start() {
 	//s5bProxy->connectToProxies(s5bSessionID);
 
 	JingleS5BTransportPayload::ref transport = boost::make_shared<JingleS5BTransportPayload>();
-	localCandidateGenerator->generateLocalTransportCandidates(transport);
+	localCandidateGenerator->start(transport);
 }
 
 void OutgoingJingleFileTransfer::stop() {

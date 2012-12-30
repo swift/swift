@@ -43,7 +43,8 @@ namespace Swift {
 		private:
 			NATTraversalInterface* getNATTraversalInterface() const;
 			void addRequestToQueue(boost::shared_ptr<PlatformNATTraversalRequest>);
-			void run();
+			void start();
+			void stop();
 
 		private:
 			EventLoop* eventLoop;

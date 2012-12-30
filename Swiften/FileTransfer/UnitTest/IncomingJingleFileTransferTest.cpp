@@ -10,6 +10,7 @@
 #include <boost/smart_ptr/make_shared.hpp>
 
 #include <Swiften/Base/ByteArray.h>
+#include <Swiften/Base/Override.h>
 #include <Swiften/Base/Log.h>
 #include <Swiften/Client/DummyStanzaChannel.h>
 #include <Swiften/Elements/IBB.h>
@@ -80,12 +81,6 @@ public:
 
 class FakeLocalJingleTransportCandidateGenerator : public LocalJingleTransportCandidateGenerator {
 public:
-	virtual void generateLocalTransportCandidates(JingleTransportPayload::ref payload) {
-		JingleS5BTransportPayload::ref payL = make_shared<JingleS5BTransportPayload>();
-		payL->setSessionID(payload->getSessionID());
-		onLocalTransportCandidatesGenerated(payL);
-	}
-
 	void emitonLocalTransportCandidatesGenerated(JingleTransportPayload::ref payload) {
 		onLocalTransportCandidatesGenerated(payload);
 	}
@@ -101,6 +96,14 @@ public:
 	virtual JingleTransport::ref selectTransport(JingleTransportPayload::ref) {
 		return JingleTransport::ref();
 	}
+
+	virtual void start(JingleTransportPayload::ref payload) SWIFTEN_OVERRIDE {
+		JingleS5BTransportPayload::ref payL = make_shared<JingleS5BTransportPayload>();
+		payL->setSessionID(payload->getSessionID());
+		onLocalTransportCandidatesGenerated(payL);
+	}
+
+	virtual void stop() SWIFTEN_OVERRIDE {}
 };
 
 class FakeLocalJingleTransportCandidateGeneratorFactory : public LocalJingleTransportCandidateGeneratorFactory {

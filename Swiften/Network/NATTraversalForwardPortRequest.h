@@ -16,7 +16,8 @@ namespace Swift {
 		public:
 			virtual ~NATTraversalForwardPortRequest();
 
-			virtual void run() = 0;
+			virtual void start() = 0;
+			virtual void stop() = 0;
 
 			boost::signal<void (boost::optional<NATPortMapping>)> onResult;
 	};

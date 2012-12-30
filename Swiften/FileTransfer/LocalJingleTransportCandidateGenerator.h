@@ -16,10 +16,12 @@ namespace Swift {
 	class SWIFTEN_API LocalJingleTransportCandidateGenerator {
 		public:
 			virtual ~LocalJingleTransportCandidateGenerator();
+
 			/**
 			* Should call onLocalTransportCandidatesGenerated if it has finished discovering local candidates.
 			*/
-			virtual void generateLocalTransportCandidates(JingleTransportPayload::ref) = 0;
+			virtual void start(JingleTransportPayload::ref) = 0;
+			virtual void stop() = 0;
 
 			virtual bool isActualCandidate(JingleTransportPayload::ref) = 0;
 			virtual int getPriority(JingleTransportPayload::ref) = 0;
