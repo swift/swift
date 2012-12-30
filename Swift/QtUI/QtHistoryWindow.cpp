@@ -23,6 +23,7 @@
 #include <QLineEdit>
 
 #include <boost/smart_ptr/make_shared.hpp>
+#include <boost/numeric/conversion/cast.hpp>
 #include <boost/date_time/gregorian/gregorian.hpp>
 
 namespace Swift {
@@ -183,7 +184,7 @@ void QtHistoryWindow::handleScrollReachedTop() {
 	int year, month, day;
 	QDate firstDate = *dates_.begin();
 	firstDate.getDate(&year, &month, &day);
-	onScrollReachedTop(boost::gregorian::date(year, month, day));
+	onScrollReachedTop(boost::gregorian::date(boost::numeric_cast<unsigned short>(year), boost::numeric_cast<unsigned short>(month), boost::numeric_cast<unsigned short>(day)));
 }
 
 void QtHistoryWindow::handleScrollReachedBottom() {
@@ -194,7 +195,7 @@ void QtHistoryWindow::handleScrollReachedBottom() {
 	int year, month, day;
 	QDate lastDate = *dates_.rbegin();
 	lastDate.getDate(&year, &month, &day);
-	onScrollReachedBottom(boost::gregorian::date(year, month, day));
+	onScrollReachedBottom(boost::gregorian::date(boost::numeric_cast<unsigned short>(year), boost::numeric_cast<unsigned short>(month), boost::numeric_cast<unsigned short>(day)));
 }
 
 void QtHistoryWindow::handleReturnPressed() {
@@ -205,7 +206,7 @@ void QtHistoryWindow::handleCalendarClicked(const QDate& date) {
 	int year, month, day;
 	QDate tempDate = date; // getDate discards const qualifier
 	tempDate.getDate(&year, &month, &day);
-	onCalendarClicked(boost::gregorian::date(year, month, day));
+	onCalendarClicked(boost::gregorian::date(boost::numeric_cast<unsigned short>(year), boost::numeric_cast<unsigned short>(month), boost::numeric_cast<unsigned short>(day)));
 }
 
 void QtHistoryWindow::setDate(const boost::gregorian::date& date) {
@@ -242,7 +243,7 @@ boost::gregorian::date QtHistoryWindow::getLastVisibleDate() {
 		int year, month, day;
 		lastDate.getDate(&year, &month, &day);
 
-		return boost::gregorian::date(year, month, day);
+		return boost::gregorian::date(boost::numeric_cast<unsigned short>(year), boost::numeric_cast<unsigned short>(month), boost::numeric_cast<unsigned short>(day));
 	}
 	return boost::gregorian::date(boost::gregorian::not_a_date_time);
 }

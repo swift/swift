@@ -10,6 +10,7 @@
 #include <Swiften/LinkLocal/DNSSD/DNSSDRegisterQuery.h>
 #include <Swiften/Base/ByteArray.h>
 #include <Swiften/EventLoop/EventLoop.h>
+#include <boost/numeric/conversion/cast.hpp>
 
 namespace Swift {
 	class BonjourQuerier;
@@ -18,8 +19,8 @@ namespace Swift {
 		public:	
 			BonjourRegisterQuery(const std::string& name, int port, const ByteArray& txtRecord, boost::shared_ptr<BonjourQuerier> querier, EventLoop* eventLoop) : BonjourQuery(querier, eventLoop) {
 				DNSServiceErrorType result = DNSServiceRegister(
-						&sdRef, 0, 0, name.c_str(), "_presence._tcp", NULL, NULL, port, 
-						txtRecord.size(), vecptr(txtRecord), 
+						&sdRef, 0, 0, name.c_str(), "_presence._tcp", NULL, NULL, boost::numeric_cast<unsigned short>(port), 
+						boost::numeric_cast<unsigned short>(txtRecord.size()), vecptr(txtRecord), 
 						&BonjourRegisterQuery::handleServiceRegisteredStatic, this);
 				if (result != kDNSServiceErr_NoError) {
 					sdRef = NULL;
@@ -41,7 +42,7 @@ namespace Swift {
 
 			void updateServiceInfo(const ByteArray& txtRecord) {
 				boost::lock_guard<boost::mutex> lock(sdRefMutex);
-				DNSServiceUpdateRecord(sdRef, NULL, 0, txtRecord.size(), vecptr(txtRecord), 0);
+				DNSServiceUpdateRecord(sdRef, NULL, 0, boost::numeric_cast<unsigned short>(txtRecord.size()), vecptr(txtRecord), 0);
 			}
 
 		private:

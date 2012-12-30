@@ -208,7 +208,7 @@ void BOSHConnection::handleDataRead(boost::shared_ptr<SafeByteArray> data) {
 			waitingForStartResponse_ = false;
 			sid_ = parser.getBody()->attributes.getAttribute("sid");
 			std::string requestsString = parser.getBody()->attributes.getAttribute("requests");
-			int requests = 2;
+			size_t requests = 2;
 			if (!requestsString.empty()) {
 				try {
 					requests = boost::lexical_cast<size_t>(requestsString);

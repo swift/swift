@@ -3,6 +3,8 @@
 
 #pragma GCC diagnostic ignored "-Wold-style-cast"
 #pragma GCC diagnostic ignored "-Wnon-virtual-dtor"
+#pragma clang diagnostic ignored "-Wshorten-64-to-32"
+#pragma clang diagnostic ignored "-Wunreachable-code"
 
 #ifndef EXCEPTION_BUFFER_SIZE
 #define EXCEPTION_BUFFER_SIZE 65536

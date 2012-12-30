@@ -18,7 +18,7 @@ using namespace Swift;
 
 SimpleEventLoop eventLoop;
 
-void handleGetPublicIPRequestResponse(const boost::optional<HostAddress>& result) {
+static void handleGetPublicIPRequestResponse(const boost::optional<HostAddress>& result) {
 	if (result) {
 		std::cerr << "Result: " << result->toString() << std::endl;;
 	}
@@ -28,7 +28,7 @@ void handleGetPublicIPRequestResponse(const boost::optional<HostAddress>& result
 	eventLoop.stop();
 }
 
-void handleGetForwardPortRequestResponse(const boost::optional<NATPortMapping>& result) {
+static void handleGetForwardPortRequestResponse(const boost::optional<NATPortMapping>& result) {
 	if (result) {
 		std::cerr << "Result: " << result->getPublicPort() << " -> " << result->getLocalPort() << std::endl;;
 	}
@@ -38,7 +38,7 @@ void handleGetForwardPortRequestResponse(const boost::optional<NATPortMapping>& 
 	eventLoop.stop();
 }
 
-void handleRemovePortForwardingRequestResponse(bool result) {
+static void handleRemovePortForwardingRequestResponse(bool result) {
 	if (result) {
 		std::cerr << "Result: OK" << std::endl;
 	}

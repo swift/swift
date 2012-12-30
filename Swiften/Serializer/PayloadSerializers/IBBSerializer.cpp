@@ -8,6 +8,7 @@
 
 #include <boost/shared_ptr.hpp>
 #include <boost/smart_ptr/make_shared.hpp>
+#include <cassert>
 #include <boost/lexical_cast.hpp>
 
 #include <Swiften/Base/foreach.h>
@@ -48,6 +49,7 @@ std::string IBBSerializer::serializePayload(boost::shared_ptr<IBB> ibb) const {
 			return ibbElement.serialize();
 		}
 	}
+	assert(false);
 	return "";
 }
 

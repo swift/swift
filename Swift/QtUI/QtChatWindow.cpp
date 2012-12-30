@@ -576,6 +576,7 @@ std::string QtChatWindow::addAction(const std::string &message, const std::strin
 	return addMessage(" *" + linkimoticonify(P2QSTRING(message)) + "*", senderName, senderIsSelf, label, avatarPath, "font-style:italic ", time);
 }
 
+// FIXME: Move this to a different file
 std::string formatSize(const boost::uintmax_t bytes) {
 	static const char *siPrefix[] = {"k", "M", "G", "T", "P", "E", "Z", "Y", NULL};
 	int power = 0;
@@ -587,11 +588,11 @@ std::string formatSize(const boost::uintmax_t bytes) {
 	return str( boost::format("%.1lf %sB") % engBytes % (power > 0 ? siPrefix[power-1] : "") );
 }
 
-QString encodeButtonArgument(const QString& str) {
+static QString encodeButtonArgument(const QString& str) {
 	return Qt::escape(P2QSTRING(Base64::encode(createByteArray(Q2PSTRING(str)))));
 }
 
-QString decodeButtonArgument(const QString& str) {
+static QString decodeButtonArgument(const QString& str) {
 	return P2QSTRING(byteArrayToString(Base64::decode(Q2PSTRING(str))));
 }
 

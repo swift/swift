@@ -8,6 +8,7 @@
 
 #include <Swiften/Base/API.h>
 #include <Swiften/Elements/Payload.h>
+#include <cassert>
 
 namespace Swift {
 	class SWIFTEN_API StatusShow : public Payload {
@@ -37,6 +38,7 @@ namespace Swift {
 					case DND: return 3;
 					case None: return 0;
 				}
+				assert(false);
 				return 0;
 			}
 

@@ -29,7 +29,7 @@ JID recipient;
 int exitCode = CANNOT_CONNECT;
 boost::bsignals::connection errorConnection;
 
-void handleServerDiscoInfoResponse(boost::shared_ptr<DiscoInfo> /*info*/, ErrorPayload::ref error) {
+static void handleServerDiscoInfoResponse(boost::shared_ptr<DiscoInfo> /*info*/, ErrorPayload::ref error) {
 	if (!error) {
 		errorConnection.disconnect();
 		client->disconnect();
@@ -41,14 +41,14 @@ void handleServerDiscoInfoResponse(boost::shared_ptr<DiscoInfo> /*info*/, ErrorP
 	}
 }
 
-void handleConnected() {
+static void handleConnected() {
 	exitCode = NO_RESPONSE;
 	GetDiscoInfoRequest::ref discoInfoRequest = GetDiscoInfoRequest::create(JID(), client->getIQRouter());
 	discoInfoRequest->onResponse.connect(&handleServerDiscoInfoResponse);
 	discoInfoRequest->send();
 }
 
-void handleDisconnected(const boost::optional<ClientError>&) {
+static void handleDisconnected(const boost::optional<ClientError>&) {
 	exitCode = CANNOT_AUTH;
 	eventLoop.stop();
 }

@@ -29,10 +29,10 @@ using namespace Swift;
 namespace {
 	static UStringPrepProfileType getICUProfileType(StringPrep::Profile profile) {
 		switch(profile) {
-			case StringPrep::NamePrep: return USPREP_RFC3491_NAMEPREP; break;
-			case StringPrep::XMPPNodePrep: return USPREP_RFC3920_NODEPREP; break;
-			case StringPrep::XMPPResourcePrep: return USPREP_RFC3920_RESOURCEPREP; break;
-			case StringPrep::SASLPrep: return USPREP_RFC4013_SASLPREP; break;
+			case StringPrep::NamePrep: return USPREP_RFC3491_NAMEPREP;
+			case StringPrep::XMPPNodePrep: return USPREP_RFC3920_NODEPREP;
+			case StringPrep::XMPPResourcePrep: return USPREP_RFC3920_RESOURCEPREP;
+			case StringPrep::SASLPrep: return USPREP_RFC4013_SASLPREP;
 		}
 		assert(false);
 		return USPREP_RFC3491_NAMEPREP;
@@ -100,10 +100,10 @@ namespace {
 
 	const Stringprep_profile* getLibIDNProfile(StringPrep::Profile profile) {
 		switch(profile) {
-			case StringPrep::NamePrep: return stringprep_nameprep; break;
-			case StringPrep::XMPPNodePrep: return stringprep_xmpp_nodeprep; break;
-			case StringPrep::XMPPResourcePrep: return stringprep_xmpp_resourceprep; break;
-			case StringPrep::SASLPrep: return stringprep_saslprep; break;
+			case StringPrep::NamePrep: return stringprep_nameprep;
+			case StringPrep::XMPPNodePrep: return stringprep_xmpp_nodeprep;
+			case StringPrep::XMPPResourcePrep: return stringprep_xmpp_resourceprep;
+			case StringPrep::SASLPrep: return stringprep_saslprep;
 		}
 		assert(false);
 		return 0;

@@ -47,8 +47,8 @@ namespace Swift {
 			HostAddressPort getAddressPort() const;
 
 			boost::signal<void (boost::optional<FileTransferError>)> onFinished;
-			boost::signal<void (int)> onBytesSent;
-			boost::signal<void (int)> onBytesReceived;
+			boost::signal<void (unsigned long long)> onBytesSent;
+			boost::signal<void (unsigned long long)> onBytesReceived;
 
 		private:
 			void finish(bool error);

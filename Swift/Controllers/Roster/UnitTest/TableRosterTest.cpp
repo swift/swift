@@ -6,6 +6,8 @@
 
 #include <Swift/Controllers/Roster/TableRoster.h>
 
+std::ostream& operator<<(std::ostream& os, const Swift::TableRoster::Index& i);
+
 std::ostream& operator<<(std::ostream& os, const Swift::TableRoster::Index& i) {
 	os << "(" << i.section << ", " << i.row << ")";
 	return os;

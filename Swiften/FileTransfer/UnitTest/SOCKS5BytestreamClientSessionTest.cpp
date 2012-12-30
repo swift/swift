@@ -52,7 +52,7 @@ public:
 		destination(SOCKS5BytestreamRegistry::getHostname("foo", JID("requester@example.com/test"), JID("target@example.com/test"))), eventLoop(NULL), timerFactory(NULL) { }
 
 	void setUp() {
-		randomGen.seed(time(NULL));
+		randomGen.seed(static_cast<unsigned int>(time(NULL)));
 		eventLoop = new DummyEventLoop();
 		timerFactory = new DummyTimerFactory();
 		connection = boost::make_shared<MockeryConnection>(failingPorts, true, eventLoop);
@@ -82,7 +82,7 @@ public:
 		serverRespondHelloOK();
 		eventLoop->processEvents();
 		CPPUNIT_ASSERT_EQUAL(createByteArray("\x05\x01\x00\x03", 4), createByteArray(&helper.unprocessedInput[0], 4));
-		CPPUNIT_ASSERT_EQUAL(createByteArray(destination.size()), createByteArray(helper.unprocessedInput[4]));
+		CPPUNIT_ASSERT_EQUAL(createByteArray(static_cast<char>(destination.size())), createByteArray(static_cast<char>(helper.unprocessedInput[4])));
 		CPPUNIT_ASSERT_EQUAL(createByteArray(destination), createByteArray(&helper.unprocessedInput[5], destination.size()));
 		CPPUNIT_ASSERT_EQUAL(createByteArray("\x00", 1), createByteArray(&helper.unprocessedInput[5 + destination.size()], 1));
 
@@ -128,7 +128,7 @@ public:
 		serverRespondHelloOK();
 		eventLoop->processEvents();
 		CPPUNIT_ASSERT_EQUAL(createByteArray("\x05\x01\x00\x03", 4), createByteArray(&helper.unprocessedInput[0], 4));
-		CPPUNIT_ASSERT_EQUAL(createByteArray(destination.size()), createByteArray(helper.unprocessedInput[4]));
+		CPPUNIT_ASSERT_EQUAL(createByteArray(static_cast<char>(destination.size())), createByteArray(static_cast<char>(helper.unprocessedInput[4])));
 		CPPUNIT_ASSERT_EQUAL(createByteArray(destination), createByteArray(&helper.unprocessedInput[5], destination.size()));
 		CPPUNIT_ASSERT_EQUAL(createByteArray("\x00", 1), createByteArray(&helper.unprocessedInput[5 + destination.size()], 1));
 
@@ -205,7 +205,7 @@ private:
 		boost::variate_generator<boost::mt19937&, boost::uniform_int<> > randomByte(randomGen, dist);
 		ByteArray result(len);
 		for (size_t i=0; i < len; ++i ) {
-			result[i] = randomByte();
+			result[i] = static_cast<char>(randomByte());
 		}
 		return result;
 	}
@@ -221,7 +221,7 @@ private:
 
 	void serverRespondRequestOK() {
 		boost::shared_ptr<SafeByteArray> dataToSend = createSafeByteArrayRef("\x05\x00\x00\x03", 4);
-		append(*dataToSend, createSafeByteArray(destination.size()));
+		append(*dataToSend, createSafeByteArray(static_cast<char>(destination.size())));
 		append(*dataToSend, createSafeByteArray(destination));
 		append(*dataToSend, createSafeByteArray("\x00", 1));
 		connection->onDataRead(dataToSend);
@@ -229,7 +229,7 @@ private:
 
 	void serverRespondRequestFail() {
 		boost::shared_ptr<SafeByteArray> correctData = createSafeByteArrayRef("\x05\x00\x00\x03", 4);
-		append(*correctData, createSafeByteArray(destination.size()));
+		append(*correctData, createSafeByteArray(static_cast<char>(destination.size())));
 		append(*correctData, createSafeByteArray(destination));
 		append(*correctData, createSafeByteArray("\x00", 1));
 

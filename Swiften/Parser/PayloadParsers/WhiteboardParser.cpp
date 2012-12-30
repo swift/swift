@@ -83,8 +83,8 @@ namespace Swift {
 				std::string pathData = attributes.getAttributeValue("d").get_value_or("");
 				std::vector<std::pair<int, int> > points;
 				if (pathData[0] == 'M') {
-					unsigned int pos = 1;
-					unsigned int npos;
+					size_t pos = 1;
+					size_t npos;
 					int x, y;
 					if (pathData[pos] == ' ') {
 						pos++;
@@ -163,8 +163,8 @@ namespace Swift {
 
 				std::string pointsData = attributes.getAttributeValue("points").get_value_or("");
 				std::vector<std::pair<int, int> > points;
-				unsigned int pos = 0;
-				unsigned int npos;
+				size_t pos = 0;
+				size_t npos;
 				int x, y;
 				try {
 					while (pos < pointsData.size()) {

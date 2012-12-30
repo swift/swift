@@ -14,8 +14,6 @@
 
 namespace Swift {
 
-void nop() {}
-
 SimpleEventLoop::SimpleEventLoop() : isRunning_(true) {
 }
 

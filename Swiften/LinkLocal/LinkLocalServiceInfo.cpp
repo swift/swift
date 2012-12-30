@@ -7,6 +7,7 @@
 #include <Swiften/LinkLocal/LinkLocalServiceInfo.h>
 
 #include <boost/lexical_cast.hpp>
+#include <boost/numeric/conversion/cast.hpp>
 
 #include <Swiften/Base/Algorithm.h>
 #include <Swiften/Base/Concat.h>
@@ -49,7 +50,7 @@ ByteArray LinkLocalServiceInfo::toTXTRecord() const {
 ByteArray LinkLocalServiceInfo::getEncoded(const std::string& s) {
 	ByteArray sizeByte;
 	sizeByte.resize(1);
-	sizeByte[0] = s.size();
+	sizeByte[0] = boost::numeric_cast<unsigned char>(s.size());
 	return concat(sizeByte, createByteArray(s));
 }
 

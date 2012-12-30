@@ -23,7 +23,6 @@ namespace Swift {
 				case MUCOccupant::Member: result = "member"; break;
 				case MUCOccupant::Outcast: result = "outcast"; break;
 				case MUCOccupant::NoAffiliation: result = "none"; break;
-				default: assert(false);
 				}
 				return result;
 			}
@@ -35,7 +34,6 @@ namespace Swift {
 				case MUCOccupant::NoRole: result = "none"; break;
 				case MUCOccupant::Participant: result = "participant"; break;
 				case MUCOccupant::Visitor: result = "visitor"; break;
-				default: assert(false);
 				}
 				return result;
 

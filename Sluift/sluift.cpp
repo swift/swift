@@ -11,6 +11,7 @@
 #include <string>
 #include <deque>
 #include <boost/assign/list_of.hpp>
+#include <boost/numeric/conversion/cast.hpp>
 
 #include <Swiften/Base/foreach.h>
 #include <Swiften/Swiften.h>
@@ -317,7 +318,7 @@ static int sluift_client_get_version(lua_State *L) {
 		SluiftClient* client = getClient(L);
 		int timeout = -1;
 		if (lua_type(L, 3) != LUA_TNONE) {
-			timeout = luaL_checknumber(L, 3);
+			timeout = boost::numeric_cast<int>(luaL_checknumber(L, 3));
 		}
 
 		ResponseSink<SoftwareVersion> sink;
@@ -398,13 +399,13 @@ static int sluift_client_get(lua_State *L) {
 			jid = JID(std::string(luaL_checkstring(L, 2)));
 			data = std::string(luaL_checkstring(L, 3));
 			if (lua_type(L, 4) != LUA_TNONE) {
-				timeout = luaL_checknumber(L, 4);
+				timeout = boost::numeric_cast<int>(luaL_checknumber(L, 4));
 			}
 		}
 		else {
 			data = std::string(luaL_checkstring(L, 2));
 			if (lua_type(L, 3) != LUA_TNONE) {
-				timeout = luaL_checknumber(L, 3);
+				timeout = boost::numeric_cast<int>(luaL_checknumber(L, 3));
 			}
 		}
 		boost::optional<std::string> result = client->sendQuery(jid, IQ::Get, data, timeout);
@@ -431,13 +432,13 @@ static int sluift_client_set(lua_State *L) {
 			jid = JID(std::string(luaL_checkstring(L, 2)));
 			data = std::string(luaL_checkstring(L, 3));
 			if (lua_type(L, 4) != LUA_TNONE) {
-				timeout = luaL_checknumber(L, 4);
+				timeout = boost::numeric_cast<int>(luaL_checknumber(L, 4));
 			}
 		}
 		else {
 			data = std::string(luaL_checkstring(L, 2));
 			if (lua_type(L, 3) != LUA_TNONE) {
-				timeout = luaL_checknumber(L, 3);
+				timeout = boost::numeric_cast<int>(luaL_checknumber(L, 3));
 			}
 		}
 		boost::optional<std::string> result = client->sendQuery(jid, IQ::Set, data, timeout);
@@ -515,7 +516,7 @@ static int sluift_client_for_event(lua_State *L) {
 		luaL_checktype(L, 2, LUA_TFUNCTION);
 		int timeout = -1;
 		if (lua_type(L, 3) != LUA_TNONE) {
-			timeout = lua_tonumber(L, 3);
+			timeout = boost::numeric_cast<int>(lua_tonumber(L, 3));
 		}
 
 		while (true) {
@@ -551,7 +552,7 @@ static int sluift_client_get_next_event(lua_State *L) {
 		SluiftClient* client = getClient(L);
 		int timeout = -1;
 		if (lua_type(L, 2) != LUA_TNONE) {
-			timeout = lua_tonumber(L, 2);
+			timeout = boost::numeric_cast<int>(lua_tonumber(L, 2));
 		}
 		pushEvent(L, client->getNextEvent(timeout));
 		return 1;
@@ -582,7 +583,7 @@ static int sluift_client_add_contact(lua_State* L) {
 			if (!lua_isnil(L, -1)) {
 				if (lua_type(L, -1) == LUA_TTABLE) {
 					for (size_t i = 1; i <= lua_objlen(L, -1); ++i) {
-						lua_rawgeti(L, -1, i);
+						lua_rawgeti(L, -1, boost::numeric_cast<int>(i));
 						const char* rawGroup = lua_tostring(L, -1);
 						if (rawGroup) {
 							item.addGroup(rawGroup);
@@ -754,7 +755,7 @@ static int sluift_sleep(lua_State *L) {
 	try {
 		eventLoop.runOnce();
 
-		int timeout = luaL_checknumber(L, 1);
+		int timeout = boost::numeric_cast<int>(luaL_checknumber(L, 1));
 		Watchdog watchdog(timeout, networkFactories.getTimerFactory());
 		while (!watchdog.getTimedOut()) {
 			Swift::sleep(std::min(100, timeout));
@@ -789,7 +790,7 @@ static int sluift_newindex(lua_State *L) {
 		return 0;
 	}
 	else if (key == "timeout") {
-		globalTimeout = luaL_checknumber(L, 3);
+		globalTimeout = boost::numeric_cast<int>(luaL_checknumber(L, 3));
 		return 0;
 	}
 	else {

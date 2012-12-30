@@ -76,7 +76,7 @@ class SOCKS5BytestreamServerSessionTest : public CppUnit::TestFixture {
 			authenticate();
 
 			ByteArray hostname(createByteArray("abcdef"));
-			receive(concat(createSafeByteArray("\x05\x01\x00\x03", 4), createSafeByteArray(hostname.size()), createSafeByteArray(hostname), createSafeByteArray("\x00\x00", 2)));
+			receive(concat(createSafeByteArray("\x05\x01\x00\x03", 4), createSafeByteArray(static_cast<char>(hostname.size())), createSafeByteArray(hostname), createSafeByteArray("\x00\x00", 2)));
 			CPPUNIT_ASSERT(createByteArray("\x05\x00\x00\x03\x06\x61\x62\x63\x64\x65\x66\x00\x00", 13) == createByteArray(&receivedData[0], 13));
 		}
 
@@ -86,7 +86,7 @@ class SOCKS5BytestreamServerSessionTest : public CppUnit::TestFixture {
 			authenticate();
 
 			ByteArray hostname(createByteArray("abcdef"));
-			receive(concat(createSafeByteArray("\x05\x01\x00\x03", 4), createSafeByteArray(hostname.size()), createSafeByteArray(hostname), createSafeByteArray("\x00\x00", 2)));
+			receive(concat(createSafeByteArray("\x05\x01\x00\x03", 4), createSafeByteArray(static_cast<char>(hostname.size())), createSafeByteArray(hostname), createSafeByteArray("\x00\x00", 2)));
 			CPPUNIT_ASSERT(createByteArray("\x05\x04\x00\x03\x06\x61\x62\x63\x64\x65\x66\x00\x00", 13) == receivedData);
 		}
 
@@ -173,11 +173,11 @@ class SOCKS5BytestreamServerSessionTest : public CppUnit::TestFixture {
 		}
 
 		void request(const std::string& hostname) {
-			receive(concat(createSafeByteArray("\x05\x01\x00\x03", 4), createSafeByteArray(hostname.size()), createSafeByteArray(hostname), createSafeByteArray("\x00\x00", 2)));
+			receive(concat(createSafeByteArray("\x05\x01\x00\x03", 4), createSafeByteArray(static_cast<char>(hostname.size())), createSafeByteArray(hostname), createSafeByteArray("\x00\x00", 2)));
 		}
 
 		void skipHeader(const std::string& hostname) {
-			int headerSize = 7 + hostname.size();
+			size_t headerSize = 7 + hostname.size();
 			receivedData = createByteArray(&receivedData[headerSize], receivedData.size() - headerSize);
 		}
 

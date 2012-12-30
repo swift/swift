@@ -16,12 +16,10 @@
 
 #include <iostream>
 
-using namespace std;
-
 namespace Swift {
 	class TextDialog : public QDialog
 	{
-		Q_OBJECT;
+		Q_OBJECT
 	public:
 		TextDialog(QGraphicsTextItem* item, QWidget* parent = 0);
 

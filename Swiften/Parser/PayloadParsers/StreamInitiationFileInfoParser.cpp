@@ -35,7 +35,7 @@ void StreamInitiationFileInfoParser::handleStartElement(const std::string& eleme
 		} else {
 			parseDescription = false;
 			if (element == "range") {
-				int offset = 0;
+				boost::uintmax_t offset = 0;
 				try {
 					offset = boost::lexical_cast<boost::uintmax_t>(attributes.getAttributeValue("offset").get_value_or("0"));
 				} catch (boost::bad_lexical_cast &) {

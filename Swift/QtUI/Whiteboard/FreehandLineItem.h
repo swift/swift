@@ -10,8 +10,6 @@
 #include <QPainter>
 #include <iostream>
 
-using namespace std;
-
 namespace Swift {
 	class FreehandLineItem : public QGraphicsItem {
 	public:

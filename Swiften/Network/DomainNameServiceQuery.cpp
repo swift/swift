@@ -48,7 +48,7 @@ void DomainNameServiceQuery::sortResults(std::vector<DomainNameServiceQuery::Res
 				std::vector<int> cumulativeWeights;
 				std::partial_sum(weights.begin() + j, weights.end(), std::back_inserter(cumulativeWeights));
 				int randomNumber = generator.generateRandomInteger(cumulativeWeights.back());
-				int selectedIndex = std::lower_bound(cumulativeWeights.begin(), cumulativeWeights.end(), randomNumber) - cumulativeWeights.begin();
+				size_t selectedIndex = std::lower_bound(cumulativeWeights.begin(), cumulativeWeights.end(), randomNumber) - cumulativeWeights.begin();
 				std::swap(i[j], i[j + selectedIndex]);
 				std::swap(weights.begin()[j], weights.begin()[j + selectedIndex]);
 			}

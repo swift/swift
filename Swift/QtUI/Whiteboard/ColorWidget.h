@@ -10,7 +10,7 @@
 
 namespace Swift {
 	class ColorWidget : public QWidget {
-		Q_OBJECT;
+		Q_OBJECT
 	public:
 		ColorWidget(QWidget* parent = 0);
 		QSize sizeHint() const;

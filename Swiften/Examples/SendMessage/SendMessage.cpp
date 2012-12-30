@@ -28,7 +28,7 @@ int exitCode = 2;
 boost::bsignals::connection errorConnection;
 
 
-void handleConnected() {
+static void handleConnected() {
 	boost::shared_ptr<Message> message(new Message());
 	message->setBody(messageBody);
 	message->setTo(recipient);
@@ -39,7 +39,7 @@ void handleConnected() {
 	eventLoop.stop();
 }
 
-void handleDisconnected(const boost::optional<ClientError>&) {
+static void handleDisconnected(const boost::optional<ClientError>&) {
 	std::cerr << "Error!" << std::endl;
 	exitCode = 1;
 	eventLoop.stop();

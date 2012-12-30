@@ -237,7 +237,7 @@ void QtChatTabs::handleTabTitleUpdated(QWidget* widget) {
 	switch (tabbable->getWidgetAlertState()) {
 	case QtTabbable::WaitingActivity : tabTextColor = QColor(217, 20, 43); break;
 	case QtTabbable::ImpendingActivity : tabTextColor = QColor(27, 171, 32); break;
-	default : tabTextColor = QColor();
+	case QtTabbable::NoActivity : tabTextColor = QColor(); break;
 	}
 	tabs_->tabBar()->setTabTextColor(index, tabTextColor);
 

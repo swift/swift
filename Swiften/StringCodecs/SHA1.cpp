@@ -185,7 +185,7 @@ SHA1::SHA1() {
 
 SHA1& SHA1::update(const std::vector<unsigned char>& input) {
 	std::vector<unsigned char> inputCopy(input);
-	Update(&context, (boost::uint8_t*) vecptr(inputCopy), inputCopy.size());
+	Update(&context, (boost::uint8_t*) vecptr(inputCopy), static_cast<unsigned int>(inputCopy.size()));
 	return *this;
 }
 
@@ -203,7 +203,7 @@ ByteArray SHA1::getHashInternal(const Container& input) {
 	Init(&context);
 
 	Container inputCopy(input);
-	Update(&context, (boost::uint8_t*) vecptr(inputCopy), inputCopy.size());
+	Update(&context, (boost::uint8_t*) vecptr(inputCopy), static_cast<unsigned int>(inputCopy.size()));
 
 	ByteArray digest;
 	digest.resize(20);

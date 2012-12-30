@@ -79,8 +79,8 @@ public:
 		return supportsRangeRequests;
 	}
 	
-	void setRangeOffset(const int offset) {
-		supportsRangeRequests = offset >= 0 ? true : false;
+	void setRangeOffset(boost::uintmax_t offset) {
+		supportsRangeRequests = true;
 		rangeOffset = offset;
 	}
 	

@@ -9,6 +9,7 @@
 #include <boost/bind.hpp>
 #include <boost/system/system_error.hpp>
 #include <boost/asio/placeholders.hpp>
+#include <boost/numeric/conversion/cast.hpp>
 
 #include <Swiften/EventLoop/EventLoop.h>
 
@@ -26,12 +27,12 @@ void BoostConnectionServer::start() {
 		if (address_.isValid()) {
 			acceptor_ = new boost::asio::ip::tcp::acceptor(
 				*ioService_, 
-				boost::asio::ip::tcp::endpoint(address_.getRawAddress(), port_));
+				boost::asio::ip::tcp::endpoint(address_.getRawAddress(), boost::numeric_cast<unsigned short>(port_)));
 		}
 		else {
 			acceptor_ = new boost::asio::ip::tcp::acceptor(
 				*ioService_, 
-				boost::asio::ip::tcp::endpoint(boost::asio::ip::tcp::v4(), port_));
+				boost::asio::ip::tcp::endpoint(boost::asio::ip::tcp::v4(), boost::numeric_cast<unsigned short>(port_)));
 		}
 		acceptNextConnection();
 	}

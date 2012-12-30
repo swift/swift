@@ -14,6 +14,7 @@
 #include <boost/asio/placeholders.hpp>
 #include <boost/asio/write.hpp>
 #include <boost/smart_ptr/make_shared.hpp>
+#include <boost/numeric/conversion/cast.hpp>
 
 #include <Swiften/Base/Log.h>
 #include <Swiften/Base/Algorithm.h>
@@ -63,7 +64,7 @@ void BoostConnection::listen() {
 
 void BoostConnection::connect(const HostAddressPort& addressPort) {
 	boost::asio::ip::tcp::endpoint endpoint(	
-			boost::asio::ip::address::from_string(addressPort.getAddress().toString()), addressPort.getPort());
+			boost::asio::ip::address::from_string(addressPort.getAddress().toString()), boost::numeric_cast<unsigned short>(addressPort.getPort()));
 	socket_.async_connect(
 			endpoint,
 			boost::bind(&BoostConnection::handleConnectFinished, shared_from_this(), boost::asio::placeholders::error));

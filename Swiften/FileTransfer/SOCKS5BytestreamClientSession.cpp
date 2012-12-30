@@ -7,6 +7,7 @@
 #include "SOCKS5BytestreamClientSession.h"
 
 #include <boost/bind.hpp>
+#include <boost/numeric/conversion/cast.hpp>
 
 #include <Swiften/Base/Algorithm.h>
 #include <Swiften/Base/SafeByteArray.h>
@@ -127,7 +128,7 @@ void SOCKS5BytestreamClientSession::authenticate() {
 	SWIFT_LOG(debug) << std::endl;
 	SafeByteArray header = createSafeByteArray("\x05\x01\x00\x03", 4);
 	SafeByteArray message = header;
-	append(message, createSafeByteArray(destination.size()));
+	append(message, createSafeByteArray(boost::numeric_cast<char>(destination.size())));
 	authenticateAddress = createByteArray(destination);
 	append(message, authenticateAddress);
 	append(message, createSafeByteArray("\x00\x00", 2)); // 2 byte for port

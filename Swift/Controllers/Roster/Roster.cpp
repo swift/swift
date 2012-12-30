@@ -198,13 +198,13 @@ void Roster::removeFilter(RosterFilter *filter) {
 }
 
 void Roster::filterContact(ContactRosterItem* contact, GroupRosterItem* group) {
-	int oldDisplayedSize = group->getDisplayedChildren().size();
+	size_t oldDisplayedSize = group->getDisplayedChildren().size();
 	bool hide = true;
 	foreach (RosterFilter *filter, filters_) {
 		hide &= (*filter)(contact);
 	}
 	group->setDisplayed(contact, filters_.empty() || !hide);
-	int newDisplayedSize = group->getDisplayedChildren().size();
+	size_t newDisplayedSize = group->getDisplayedChildren().size();
 	if (oldDisplayedSize == 0 && newDisplayedSize > 0) {
 		onGroupAdded(group);
 	}

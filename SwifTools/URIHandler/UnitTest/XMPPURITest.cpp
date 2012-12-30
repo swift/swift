@@ -65,9 +65,9 @@ class XMPPURITest : public CppUnit::TestFixture {
 		}
 
 		void testFromString_AuthorityWithIntlChars() {
-			XMPPURI testling = XMPPURI::fromString("xmpp://nasty!%23$%25()*+,-.;=\%3F\%5B\%5C\%5D\%5E_\%60\%7B\%7C\%7D~node@example.com");
+			XMPPURI testling = XMPPURI::fromString("xmpp://nasty!%23$%25()*+,-.;=%3F%5B%5C%5D%5E_%60%7B%7C%7D~node@example.com");
 
-			CPPUNIT_ASSERT_EQUAL(JID("nasty!#$\%()*+,-.;=?[\\]^_`{|}~node@example.com"), testling.getAuthority());
+			CPPUNIT_ASSERT_EQUAL(JID("nasty!#$%()*+,-.;=?[\\]^_`{|}~node@example.com"), testling.getAuthority());
 		}
 
 		void testFromString_AuthorityWithQueryWithoutParameters() {
@@ -118,9 +118,9 @@ class XMPPURITest : public CppUnit::TestFixture {
 		}
 
 		void testFromString_PathWithIntlChars() {
-			XMPPURI testling = XMPPURI::fromString("xmpp:nasty!%23$%25()*+,-.;=\%3F\%5B\%5C\%5D\%5E_\%60\%7B\%7C\%7D~node@example.com");
+			XMPPURI testling = XMPPURI::fromString("xmpp:nasty!%23$%25()*+,-.;=%3F%5B%5C%5D%5E_%60%7B%7C%7D~node@example.com");
 
-			CPPUNIT_ASSERT_EQUAL(JID("nasty!#$\%()*+,-.;=?[\\]^_`{|}~node@example.com"), testling.getPath());
+			CPPUNIT_ASSERT_EQUAL(JID("nasty!#$%()*+,-.;=?[\\]^_`{|}~node@example.com"), testling.getPath());
 		}
 
 		void testFromString_PathWithInvalidEscapedChar() {

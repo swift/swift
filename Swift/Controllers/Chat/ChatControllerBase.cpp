@@ -13,6 +13,7 @@
 #include <boost/shared_ptr.hpp>
 #include <boost/smart_ptr/make_shared.hpp>
 #include <boost/date_time/posix_time/posix_time.hpp>
+#include <boost/numeric/conversion/cast.hpp>
 #include <boost/algorithm/string.hpp>
 
 #include <Swift/Controllers/Intl.h>
@@ -62,7 +63,7 @@ void ChatControllerBase::createDayChangeTimer() {
 		boost::posix_time::ptime now = boost::posix_time::second_clock::local_time();
 		boost::posix_time::ptime midnight(now.date() + boost::gregorian::days(1));
 		long millisecondsUntilMidnight = (midnight - now).total_milliseconds();
-		dateChangeTimer_ = boost::shared_ptr<Timer>(timerFactory_->createTimer(millisecondsUntilMidnight));
+		dateChangeTimer_ = boost::shared_ptr<Timer>(timerFactory_->createTimer(boost::numeric_cast<int>(millisecondsUntilMidnight)));
 		dateChangeTimer_->onTick.connect(boost::bind(&ChatControllerBase::handleDayChangeTick, this));
 		dateChangeTimer_->start();
 	}
@@ -112,7 +113,7 @@ void ChatControllerBase::handleAllMessagesRead() {
 }
 
 int ChatControllerBase::getUnreadCount() {
-	return targetedUnreadMessages_.size();
+	return boost::numeric_cast<int>(targetedUnreadMessages_.size());
 }
 
 void ChatControllerBase::handleSendMessageRequest(const std::string &body, bool isCorrectionMessage) {
@@ -260,7 +261,7 @@ void ChatControllerBase::handleIncomingMessage(boost::shared_ptr<MessageEvent> m
 		logMessage(body, from, selfJID_, timeStamp, true);
 	}
 	chatWindow_->show();
-	chatWindow_->setUnreadMessageCount(unreadMessages_.size());
+	chatWindow_->setUnreadMessageCount(boost::numeric_cast<int>(unreadMessages_.size()));
 	onUnreadCountChanged();
 	postHandleIncomingMessage(messageEvent);
 }
@@ -296,13 +297,14 @@ std::string ChatControllerBase::getErrorMessage(boost::shared_ptr<ErrorPayload> 
 			case ErrorPayload::UnexpectedRequest: return QT_TRANSLATE_NOOP("", "Unexpected request");
 		}
 	}
+	assert(false);
 	return defaultMessage;
 }
 
 void ChatControllerBase::handleGeneralMUCInvitation(MUCInviteEvent::ref event) {
 	unreadMessages_.push_back(event);
 	chatWindow_->show();
-	chatWindow_->setUnreadMessageCount(unreadMessages_.size());
+	chatWindow_->setUnreadMessageCount(boost::numeric_cast<int>(unreadMessages_.size()));
 	onUnreadCountChanged();
 	chatWindow_->addMUCInvitation(senderDisplayNameFromMessage(event->getInviter()), event->getRoomJID(), event->getReason(), event->getPassword(), event->getDirect());
 	eventController_->handleIncomingEvent(event);

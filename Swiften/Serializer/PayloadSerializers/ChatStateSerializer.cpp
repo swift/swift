@@ -19,7 +19,6 @@ std::string ChatStateSerializer::serializePayload(boost::shared_ptr<ChatState> c
 		case ChatState::Paused: result += "paused"; break;
 		case ChatState::Inactive: result += "inactive"; break;
 		case ChatState::Gone: result += "gone"; break;
-		default: result += "gone"; break;
 	}
 	result += " xmlns=\"http://jabber.org/protocol/chatstates\"/>";
 	return result;

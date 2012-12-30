@@ -10,6 +10,7 @@
 
 #include <boost/bind.hpp>
 #include <boost/smart_ptr/make_shared.hpp>
+#include <boost/numeric/conversion/cast.hpp>
 
 #include <Swiften/Whiteboard/WhiteboardSession.h>
 #include <Swiften/Elements/WhiteboardPayload.h>
@@ -264,7 +265,9 @@ namespace Swift {
 			std::vector<std::pair<int, int> > points;
 			QVector<QPointF>::const_iterator it = freehandLineItem->points().constBegin();
 			for ( ; it != freehandLineItem->points().constEnd(); ++it) {
-				points.push_back(std::pair<int, int>(it->x()+item->pos().x(), it->y()+item->pos().y()));
+				points.push_back(std::pair<int, int>(
+							boost::numeric_cast<int>(it->x()+item->pos().x()), 
+							boost::numeric_cast<int>(it->y()+item->pos().y())));
 			}
 
 			element->setColor(WhiteboardColor(color.red(), color.green(), color.blue(), color.alpha()));
@@ -310,7 +313,9 @@ namespace Swift {
 			std::vector<std::pair<int, int> > points;
 			QVector<QPointF>::const_iterator it = polygon.begin();
 			for (; it != polygon.end(); ++it) {
-				points.push_back(std::pair<int, int>(it->x()+item->pos().x(), it->y()+item->pos().y()));
+				points.push_back(std::pair<int, int>(
+							boost::numeric_cast<int>(it->x()+item->pos().x()),
+							boost::numeric_cast<int>(it->y()+item->pos().y())));
 			}
 
 			element->setPoints(points);
@@ -328,10 +333,10 @@ namespace Swift {
 		QGraphicsEllipseItem* ellipseItem = qgraphicsitem_cast<QGraphicsEllipseItem*>(item);
 		if (ellipseItem) {
 			QRectF rect = ellipseItem->rect();
-			int cx = rect.x()+rect.width()/2 + item->pos().x();
-			int cy = rect.y()+rect.height()/2 + item->pos().y();
-			int rx = rect.width()/2;
-			int ry = rect.height()/2;
+			int cx = boost::numeric_cast<int>(rect.x()+rect.width()/2 + item->pos().x());
+			int cy = boost::numeric_cast<int>(rect.y()+rect.height()/2 + item->pos().y());
+			int rx = boost::numeric_cast<int>(rect.width()/2);
+			int ry = boost::numeric_cast<int>(rect.height()/2);
 			WhiteboardEllipseElement::ref element = boost::make_shared<WhiteboardEllipseElement>(cx, cy, rx, ry);
 
 			QColor penColor = ellipseItem->pen().color();

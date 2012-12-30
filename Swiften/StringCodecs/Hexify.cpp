@@ -13,6 +13,8 @@
 #include <string>
 #include <Swiften/Base/ByteArray.h>
 
+#pragma clang diagnostic ignored "-Wconversion"
+
 namespace Swift {
 
 std::string Hexify::hexify(unsigned char byte) {

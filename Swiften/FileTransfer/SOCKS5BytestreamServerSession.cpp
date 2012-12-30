@@ -7,6 +7,7 @@
 #include <Swiften/FileTransfer/SOCKS5BytestreamServerSession.h>
 
 #include <boost/bind.hpp>
+#include <boost/numeric/conversion/cast.hpp>
 #include <iostream>
 
 #include <Swiften/Base/ByteArray.h>

@@ -18,7 +18,7 @@
 
 namespace Swift {
 	class GView : public QGraphicsView {
-		Q_OBJECT;
+		Q_OBJECT
 	public:
 		enum Mode {	Rubber, Line, Rect, Circle, HandLine, Text, Polygon, Select };
 		enum Type { New, Update, MoveUp, MoveDown };

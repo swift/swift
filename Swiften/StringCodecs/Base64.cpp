@@ -14,6 +14,7 @@
 namespace Swift {
 
 #pragma GCC diagnostic ignored "-Wold-style-cast"
+#pragma clang diagnostic ignored "-Wconversion"
 
 namespace {
 	template<typename TargetType, typename SourceType>

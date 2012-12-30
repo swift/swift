@@ -85,7 +85,7 @@ namespace Swift {
 			name##FormFieldParseHelper() : baseParser##FieldParseHelper() { \
 				field = name##FormField::create(); \
 			} \
-	};
+	}
 
 			SWIFTEN_DECLARE_FORM_FIELD_PARSE_HELPER(Boolean, Bool);
 			SWIFTEN_DECLARE_FORM_FIELD_PARSE_HELPER(Fixed, String);

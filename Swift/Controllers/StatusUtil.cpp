@@ -6,6 +6,7 @@
 
 #include <Swift/Controllers/StatusUtil.h>
 
+#include <cassert>
 #include <Swift/Controllers/Intl.h>
 
 namespace Swift {
@@ -19,6 +20,7 @@ std::string statusShowTypeToFriendlyName(StatusShow::Type type) {
 		case StatusShow::DND: return QT_TRANSLATE_NOOP("", "Busy");
 		case StatusShow::None: return QT_TRANSLATE_NOOP("", "Offline");
 	}
+	assert(false);
 	return "";
 }
 

@@ -11,6 +11,9 @@
 #include <string.h>
 
 #pragma GCC diagnostic ignored "-Wold-style-cast"
+#pragma clang diagnostic ignored "-Wconversion"
+#pragma clang diagnostic ignored "-Wunused-macros"
+#pragma clang diagnostic ignored "-Wdisabled-macro-expansion"
 
 using namespace Swift;
 

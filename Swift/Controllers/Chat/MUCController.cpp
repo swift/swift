@@ -228,6 +228,9 @@ void MUCController::receivedActivity() {
 	}
 }
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wswitch-enum"
+
 void MUCController::handleJoinFailed(boost::shared_ptr<ErrorPayload> error) {
 	receivedActivity();
 	std::string errorMessage = QT_TRANSLATE_NOOP("", "Unable to enter this room");
@@ -274,6 +277,8 @@ void MUCController::handleJoinFailed(boost::shared_ptr<ErrorPayload> error) {
 		rejoin();
 	}
 }
+
+#pragma clang diagnostic pop
 
 void MUCController::handleJoinComplete(const std::string& nick) {
 	receivedActivity();
@@ -386,6 +391,7 @@ std::string MUCController::roleToFriendlyName(MUCOccupant::Role role) {
 	case MUCOccupant::Visitor: return QT_TRANSLATE_NOOP("", "visitor");
 	case MUCOccupant::NoRole: return "";
 	}
+	assert(false);
 	return "";
 }
 
@@ -396,6 +402,7 @@ std::string MUCController::roleToSortName(MUCOccupant::Role role) {
 	case MUCOccupant::Visitor: return "3";
 	case MUCOccupant::NoRole: return "4";
 	}
+	assert(false);
 	return "5";
 }
 
@@ -487,7 +494,6 @@ std::string MUCController::roleToGroupName(MUCOccupant::Role role) {
 	case MUCOccupant::Participant: result = QT_TRANSLATE_NOOP("", "Participants"); break;
 	case MUCOccupant::Visitor: result = QT_TRANSLATE_NOOP("", "Visitors"); break;
 	case MUCOccupant::NoRole: result = QT_TRANSLATE_NOOP("", "Occupants"); break;
-	default: assert(false);
 	}
 	return result;
 }
@@ -611,7 +617,8 @@ void MUCController::appendToJoinParts(std::vector<NickJoinPart>& joinParts, cons
 			switch (newEvent.type) {
 				case Join: type = (type == Part) ? PartThenJoin : Join; break;
 				case Part: type = (type == Join) ? JoinThenPart : Part; break;
-				default: /*Nothing to see here */;break;
+				case PartThenJoin: break;
+				case JoinThenPart: break;
 			}
 			(*it).type = type;
 			break;

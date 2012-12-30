@@ -7,6 +7,7 @@
 #include <Swiften/Network/NATPMPInterface.h>
 
 #include <boost/smart_ptr/make_shared.hpp>
+#include <boost/numeric/conversion/cast.hpp>
 
 #include <Swiften/Base/Log.h>
 
@@ -63,7 +64,7 @@ boost::optional<HostAddress> NATPMPInterface::getPublicIP() {
 
 boost::optional<NATPortMapping> NATPMPInterface::addPortForward(int localPort, int publicPort) {
 	NATPortMapping mapping(localPort, publicPort, NATPortMapping::TCP);
-	if (sendnewportmappingrequest(&p->natpmp, mapping.getProtocol() == NATPortMapping::TCP ? NATPMP_PROTOCOL_TCP : NATPMP_PROTOCOL_UDP, mapping.getLeaseInSeconds(), mapping.getPublicPort(), mapping.getLocalPort()) < 0) {
+	if (sendnewportmappingrequest(&p->natpmp, mapping.getProtocol() == NATPortMapping::TCP ? NATPMP_PROTOCOL_TCP : NATPMP_PROTOCOL_UDP, boost::numeric_cast<uint16_t>(mapping.getLeaseInSeconds()), boost::numeric_cast<uint16_t>(mapping.getPublicPort()), mapping.getLocalPort()) < 0) {
 			SWIFT_LOG(debug) << "Failed to send NAT-PMP port forwarding request!" << std::endl;
 			return boost::optional<NATPortMapping>();
 	}

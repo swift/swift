@@ -16,6 +16,8 @@
 #include <SystemConfiguration/SystemConfiguration.h>
 #endif
 
+#pragma clang diagnostic ignored "-Wdisabled-macro-expansion"
+
 using namespace Swift;
 
 #ifndef SWIFTEN_PLATFORM_IPHONE

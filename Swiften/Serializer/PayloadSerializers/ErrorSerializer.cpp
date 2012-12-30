@@ -20,7 +20,7 @@ std::string ErrorSerializer::serializePayload(boost::shared_ptr<ErrorPayload> er
 		case ErrorPayload::Modify: result += "modify"; break;
 		case ErrorPayload::Auth: result += "auth"; break;
 		case ErrorPayload::Wait: result += "wait"; break;
-		default: result += "cancel"; break;
+		case ErrorPayload::Cancel: result += "cancel"; break;
 	}
 	result += "\">";
 
@@ -47,7 +47,7 @@ std::string ErrorSerializer::serializePayload(boost::shared_ptr<ErrorPayload> er
 		case ErrorPayload::ServiceUnavailable: conditionElement = "service-unavailable"; break;
 		case ErrorPayload::SubscriptionRequired: conditionElement = "subscription-required"; break;
 		case ErrorPayload::UnexpectedRequest: conditionElement = "unexpected-request"; break;
-		default: conditionElement = "undefined-condition"; break;
+		case ErrorPayload::UndefinedCondition: conditionElement = "undefined-condition"; break;
 	}
 	result += "<" + conditionElement + " xmlns=\"urn:ietf:params:xml:ns:xmpp-stanzas\"/>";
 

@@ -67,9 +67,9 @@
 namespace Swift{
 
 #if defined(SWIFTEN_PLATFORM_MACOSX)
-#define SWIFT_APPCAST_URL "http://swift.im/appcast/swift-mac-dev.xml"
+//#define SWIFT_APPCAST_URL "http://swift.im/appcast/swift-mac-dev.xml"
 #else 
-#define SWIFT_APPCAST_URL ""
+//#define SWIFT_APPCAST_URL ""
 #endif
 
 po::options_description QtSwift::getOptionsDescription() {

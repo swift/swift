@@ -48,7 +48,7 @@ public:
 	virtual void cancel() = 0;
 
 public:
-	boost::signal<void (int /* proccessedBytes */)> onProcessedBytes;
+	boost::signal<void (size_t /* proccessedBytes */)> onProcessedBytes;
 	boost::signal<void (State)> onStateChange;
 	boost::signal<void (boost::optional<FileTransferError>)> onFinished;
 

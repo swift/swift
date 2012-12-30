@@ -26,7 +26,7 @@ int numberOfConnectedClients = 0;
 int numberOfInstances = 100;
 
 
-void handleConnected() {
+static void handleConnected() {
 	numberOfConnectedClients++;
 	std::cout << "Connected " << numberOfConnectedClients << std::endl;
 }

@@ -30,7 +30,7 @@ enum TestStage {
 TestStage stage;
 ClientOptions options;
 
-void handleDisconnected(boost::optional<ClientError> e) {
+static void handleDisconnected(boost::optional<ClientError> e) {
 	std::cout << "Disconnected: " << e << std::endl;
 	if (stage == FirstConnect) {
 		stage = Reconnect;
@@ -41,13 +41,13 @@ void handleDisconnected(boost::optional<ClientError> e) {
 	}
 }
 
-void handleRosterReceived(boost::shared_ptr<Payload>) {
+static void handleRosterReceived(boost::shared_ptr<Payload>) {
 	rosterReceived = true;
 	std::cout << "Disconnecting" << std::endl;
 	client->disconnect();
 }
 
-void handleConnected() {
+static void handleConnected() {
 	std::cout << "Connected" << std::endl;
 	rosterReceived = false;
 	GetRosterRequest::ref rosterRequest = GetRosterRequest::create(client->getIQRouter());

@@ -210,14 +210,14 @@ void BOSHConnectionPool::handleHTTPError(const std::string& /*errorCode*/) {
 	handleSessionTerminated(boost::make_shared<BOSHError>(BOSHError::UndefinedCondition));
 }
 
-void BOSHConnectionPool::handleConnectionDisconnected(bool error, BOSHConnection::ref connection) {
+void BOSHConnectionPool::handleConnectionDisconnected(bool/* error*/, BOSHConnection::ref connection) {
 	destroyConnection(connection);
 	if (pendingTerminate && sid.empty() && connections.empty()) {
 		handleSessionTerminated(BOSHError::ref());
 	}
-	else if (false && error) {
-		handleSessionTerminated(boost::make_shared<BOSHError>(BOSHError::UndefinedCondition));
-	}
+	//else if (error) {
+	//	handleSessionTerminated(boost::make_shared<BOSHError>(BOSHError::UndefinedCondition));
+	//}
 	else {
 		/* We might have just freed up a connection slot to send with */
 		tryToSendQueuedData();

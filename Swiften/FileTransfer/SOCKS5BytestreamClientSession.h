@@ -58,8 +58,8 @@ public:
 	boost::signal<void (bool /*error*/)> onSessionReady;
 
 	boost::signal<void (boost::optional<FileTransferError>)> onFinished;
-	boost::signal<void (int)> onBytesSent;
-	boost::signal<void (int)> onBytesReceived;
+	boost::signal<void (size_t)> onBytesSent;
+	boost::signal<void (size_t)> onBytesReceived;
 
 private:
 	void process();

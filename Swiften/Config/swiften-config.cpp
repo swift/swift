@@ -22,7 +22,7 @@
 
 using namespace Swift;
 
-void printFlags(const std::vector<std::string>& flags) {
+static void printFlags(const std::vector<std::string>& flags) {
 	for (size_t i = 0; i < flags.size(); ++i) {
 		if (i > 0) {
 			std::cout << " ";

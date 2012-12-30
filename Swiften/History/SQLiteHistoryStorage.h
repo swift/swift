@@ -29,11 +29,11 @@ namespace Swift {
 		private:
 			void run();
 			boost::gregorian::date getNextDateWithLogs(const JID& selfJID, const JID& contactJID, HistoryMessage::Type type, const boost::gregorian::date& date, bool reverseOrder) const;
-			int getIDForJID(const JID&);
-			int addJID(const JID&);
+			long long getIDForJID(const JID&);
+			long long addJID(const JID&);
 
-			boost::optional<JID> getJIDFromID(int id) const;
-			boost::optional<int> getIDFromJID(const JID& jid) const;
+			boost::optional<JID> getJIDFromID(long long id) const;
+			boost::optional<long long> getIDFromJID(const JID& jid) const;
 
 			sqlite3* db_;
 			boost::thread* thread_;

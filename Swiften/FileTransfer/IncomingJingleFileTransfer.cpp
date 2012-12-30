@@ -173,8 +173,9 @@ void IncomingJingleFileTransfer::handleRemoteTransportCandidateSelectFinished(Ji
 	}
 }
 
+// TODO: Why was assert(false) there? Is this method no longer used perhaps? Delete it if not
 void IncomingJingleFileTransfer::checkCandidateSelected() {
-	assert(false);
+	//assert(false);
 	if (localTransportCandidateSelectFinished && remoteTransportCandidateSelectFinished) {
 		if (candidateGenerator->isActualCandidate(selectedLocalTransportCandidate) && candidateSelector->isActualCandidate(selectedRemoteTransportCandidate)) {
 			if (candidateGenerator->getPriority(selectedLocalTransportCandidate) > candidateSelector->getPriority(selectedRemoteTransportCandidate)) {

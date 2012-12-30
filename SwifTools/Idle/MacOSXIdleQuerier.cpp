@@ -10,6 +10,7 @@
 
 #include <cassert>
 #include <iostream>
+#include <boost/numeric/conversion/cast.hpp>
 #include <CoreFoundation/CoreFoundation.h>
 
 namespace Swift {
@@ -28,7 +29,7 @@ int MacOSXIdleQuerier::getIdleTimeSeconds() {
 	assert(result);
 	(void) result;
 	CFRelease(property);
-	return idle / 1000000000;
+	return boost::numeric_cast<int>(idle / 1000000000);
 }
 
 }

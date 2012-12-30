@@ -32,6 +32,9 @@
  */
 
 #pragma GCC diagnostic ignored "-Wold-style-cast"
+#pragma clang diagnostic ignored "-Wconversion"
+#pragma clang diagnostic ignored "-Wcast-align"
+#pragma clang diagnostic ignored "-Wmissing-prototypes"
 
 #include <Swiften/StringCodecs/MD5.h>
 

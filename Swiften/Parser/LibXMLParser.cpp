@@ -7,6 +7,7 @@
 #include <Swiften/Parser/LibXMLParser.h>
 
 #include <iostream>
+#include <boost/numeric/conversion/cast.hpp>
 #include <cassert>
 #include <cstring>
 #include <libxml/parser.h>
@@ -86,7 +87,7 @@ LibXMLParser::~LibXMLParser() {
 }
 
 bool LibXMLParser::parse(const std::string& data) {
-	if (xmlParseChunk(p->context_, data.c_str(), data.size(), false) == XML_ERR_OK) {
+	if (xmlParseChunk(p->context_, data.c_str(), boost::numeric_cast<unsigned int>(data.size()), false) == XML_ERR_OK) {
 		return true;
 	}
 	xmlError* error = xmlCtxtGetLastError(p->context_);

@@ -7,6 +7,7 @@
 #include <Swift/Controllers/XMPPEvents/EventController.h>
 
 #include <boost/bind.hpp>
+#include <boost/numeric/conversion/cast.hpp>
 #include <algorithm>
 
 #include <Swiften/Base/foreach.h>
@@ -48,7 +49,7 @@ void EventController::handleIncomingEvent(boost::shared_ptr<StanzaEvent> sourceE
 	if ((messageEvent && messageEvent->isReadable()) || subscriptionEvent || errorEvent || mucInviteEvent) {
 		events_.push_back(sourceEvent);
 		sourceEvent->onConclusion.connect(boost::bind(&EventController::handleEventConcluded, this, sourceEvent));
-		onEventQueueLengthChange(events_.size());
+		onEventQueueLengthChange(boost::numeric_cast<int>(events_.size()));
 		onEventQueueEventAdded(sourceEvent);
 		if (sourceEvent->getConcluded()) {
 			handleEventConcluded(sourceEvent);
@@ -59,7 +60,7 @@ void EventController::handleIncomingEvent(boost::shared_ptr<StanzaEvent> sourceE
 void EventController::handleEventConcluded(boost::shared_ptr<StanzaEvent> event) {
 	event->onConclusion.disconnect(boost::bind(&EventController::handleEventConcluded, this, event));
 	events_.erase(std::remove(events_.begin(), events_.end(), event), events_.end());
-	onEventQueueLengthChange(events_.size());
+	onEventQueueLengthChange(boost::numeric_cast<int>(events_.size()));
 }
 
 void EventController::disconnectAll() {

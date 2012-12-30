@@ -67,8 +67,8 @@ bool ServerIdentityVerifier::matchesDomain(const std::string& s) const {
 	if (boost::starts_with(s, "*.")) {
 		std::string matchString(s.substr(2, s.npos));
 		std::string matchDomain = encodedDomain;
-		int dotIndex = matchDomain.find('.');
-		if (dotIndex >= 0) {
+		size_t dotIndex = matchDomain.find('.');
+		if (dotIndex != matchDomain.npos) {
 			matchDomain = matchDomain.substr(dotIndex + 1, matchDomain.npos);
 		}
 		return matchString == matchDomain;

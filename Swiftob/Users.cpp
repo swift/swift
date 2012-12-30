@@ -13,6 +13,8 @@
 
 #include <Swiftob/MUCs.h>
 
+using namespace Swift;
+
 Users::Users(Client* client, MUCs* mucs) {
 	client_ = client;
 	mucs_ = mucs;

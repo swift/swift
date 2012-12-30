@@ -14,6 +14,7 @@
 
 #pragma GCC diagnostic ignored "-Wold-style-cast"
 #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+#pragma clang diagnostic ignored "-Wcast-align"
 
 namespace Swift {
 
@@ -56,7 +57,7 @@ void OpenSSLCertificate::parse() {
 		// Subject name
 		ByteArray subjectNameData;
 		subjectNameData.resize(256);
-		X509_NAME_oneline(X509_get_subject_name(cert.get()), reinterpret_cast<char*>(vecptr(subjectNameData)), subjectNameData.size());
+		X509_NAME_oneline(X509_get_subject_name(cert.get()), reinterpret_cast<char*>(vecptr(subjectNameData)), static_cast<unsigned int>(subjectNameData.size()));
 		this->subjectName = byteArrayToString(subjectNameData);
 
 		// Common name

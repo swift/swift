@@ -29,7 +29,6 @@ QSize EventDelegate::sizeHint(const QStyleOptionViewItem& option, const QModelIn
 	case SubscriptionEventType: return subscriptionDelegate_.sizeHint(option, item);
 	case ErrorEventType: return errorDelegate_.sizeHint(option, item);
 	case MUCInviteEventType: return mucInviteDelegate_.sizeHint(option, item);
-	default: return QStyledItemDelegate::sizeHint(option, index);
 	}
 }
 
@@ -44,7 +43,6 @@ void EventDelegate::paint(QPainter* painter, const QStyleOptionViewItem& option,
 	case SubscriptionEventType: subscriptionDelegate_.paint(painter, option, item);break;
 	case ErrorEventType: errorDelegate_.paint(painter, option, item);break;
 	case MUCInviteEventType: mucInviteDelegate_.paint(painter, option, item);break;
-	default: QStyledItemDelegate::paint(painter, option, index);
 	}
 }
 

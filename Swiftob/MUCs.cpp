@@ -17,6 +17,8 @@
 
 #include <Swiftob/Storage.h>
 
+using namespace Swift;
+
 #define MUC_LIST_SETTING "muc_list"
 #define NICK "default_nick"
 

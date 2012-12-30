@@ -365,7 +365,7 @@ void QtChatView::resetView() {
 	connect(webPage_->mainFrame(), SIGNAL(contentsSizeChanged(const QSize&)), this, SLOT(handleFrameSizeChanged()), Qt::UniqueConnection);
 }
 
-QWebElement findElementWithID(QWebElement document, QString elementName, QString id) {
+static QWebElement findElementWithID(QWebElement document, QString elementName, QString id) {
 	QWebElementCollection elements = document.findAll(elementName);
 	foreach(QWebElement element, elements) {
 		if (element.attribute("id") == id) {

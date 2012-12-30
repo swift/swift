@@ -138,7 +138,7 @@ void FileTransferController::handleFileTransferStateChange(FileTransfer::State s
 		case FileTransfer::State::WaitingForStart:
 			return;
 	}
-	std::cerr << "Unhandled FileTransfer::State!" << std::endl;
+	assert(false);
 }
 
 void FileTransferController::handleProgressPercentageChange(int percentage) {

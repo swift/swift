@@ -30,7 +30,7 @@
 namespace Swift {
 	class QtWhiteboardWindow : public QWidget, public WhiteboardWindow
 	{
-		Q_OBJECT;
+		Q_OBJECT
 	public:
 		QtWhiteboardWindow(WhiteboardSession::ref whiteboardSession);
 		void show();

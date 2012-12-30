@@ -30,7 +30,7 @@ ZLibCodecompressor::~ZLibCodecompressor() {
 
 SafeByteArray ZLibCodecompressor::process(const SafeByteArray& input) {
 	SafeByteArray output;
-	p->stream.avail_in = input.size();
+	p->stream.avail_in = static_cast<unsigned int>(input.size());
 	p->stream.next_in = reinterpret_cast<Bytef*>(const_cast<unsigned char*>(vecptr(input)));
 	int outputPosition = 0;
 	do {

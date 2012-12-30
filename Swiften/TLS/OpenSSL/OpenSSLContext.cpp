@@ -26,13 +26,15 @@
 
 #pragma GCC diagnostic ignored "-Wold-style-cast"
 #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+#pragma clang diagnostic ignored "-Wshorten-64-to-32"
+#pragma clang diagnostic ignored "-Wcast-align"
 
 namespace Swift {
 
 static const int MAX_FINISHED_SIZE = 4096;
 static const int SSL_READ_BUFFERSIZE = 8192;
 
-void freeX509Stack(STACK_OF(X509)* stack) {
+static void freeX509Stack(STACK_OF(X509)* stack) {
 	sk_X509_free(stack);
 }
 

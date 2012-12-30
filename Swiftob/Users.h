@@ -18,15 +18,13 @@ class Client;
 
 class MUCs;
 
-using namespace Swift;
-
 class Users {
 	public:
 		class User {
 			public:
 				/* If you add a role here, edit the role lists in Commands.cpp*/
 				enum Role {Unknown, Owner};
-				User(const JID& jid, Role role) : jid_(jid), role_(role) {}
+				User(const Swift::JID& jid, Role role) : jid_(jid), role_(role) {}
 				Role getRole() {return role_;}
 				Swift::JID getJID() {return jid_;}
 			private:
@@ -35,14 +33,14 @@ class Users {
 		};
 
 	public:
-		Users(Client* client, MUCs* mucs);
+		Users(Swift::Client* client, MUCs* mucs);
 		void clearAll();
 		void addUser(const User& user);
-		User::Role getRoleForSender(Message::ref message);
+		User::Role getRoleForSender(Swift::Message::ref message);
 
 	private:
 		std::vector<User> users_;
-		Client* client_;
+		Swift::Client* client_;
 		MUCs* mucs_;
 };
 

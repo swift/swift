@@ -76,7 +76,7 @@ void JingleSessionImpl::handleIncomingAction(JinglePayload::ref action) {
 		case JinglePayload::UnknownAction:
 			return;
 	}
-	std::cerr << "Unhandled Jingle action!!! ACTION: " << action->getAction() << std::endl;
+	assert(false);
 }
 
 void JingleSessionImpl::sendInitiate(const JingleContentID& id, JingleDescription::ref description, JingleTransportPayload::ref transport) {

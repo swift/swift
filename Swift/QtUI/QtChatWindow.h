@@ -37,6 +37,9 @@ namespace Swift {
 	class QtChatWindowJSBridge;
 	class SettingsProvider;
 
+	// FIXME: Move this to a different file
+	std::string formatSize(const boost::uintmax_t bytes);
+
 	class LabelModel : public QAbstractListModel {
 		Q_OBJECT
 		public:

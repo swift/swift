@@ -8,6 +8,7 @@
 
 #include <lualib.h>
 #include <boost/variant/apply_visitor.hpp>
+#include <boost/numeric/conversion/cast.hpp>
 #include <Swiften/Base/foreach.h>
 
 using namespace Swift;
@@ -35,15 +36,15 @@ namespace {
 		}
 
 		void operator()(const std::vector<Value>& values) const {
-			lua_createtable(state, values.size(), 0);
+			lua_createtable(state, boost::numeric_cast<int>(values.size()), 0);
 			for(size_t i = 0; i < values.size(); ++i) {
 				boost::apply_visitor(PushVisitor(state), values[i]);
-				lua_rawseti(state, -2, i + 1);
+				lua_rawseti(state, -2, boost::numeric_cast<int>(i + 1));
 			}
 		}
 
 		void operator()(const std::map<std::string, boost::shared_ptr<Value> >& table) const {
-			lua_createtable(state, 0, table.size());
+			lua_createtable(state, 0, boost::numeric_cast<int>(table.size()));
 			for(std::map<std::string, boost::shared_ptr<Value> >::const_iterator i = table.begin(); i != table.end(); ++i) {
 				boost::apply_visitor(PushVisitor(state), *i->second);
 				lua_setfield(state, -2, i->first.c_str());

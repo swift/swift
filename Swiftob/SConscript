@@ -3,6 +3,8 @@ Import("env")
 
 if env["SCONS_STAGE"] == "build":
 	myenv = env.Clone()
+	# Too many compile warnings here at the moment
+	myenv.Replace(CXXFLAGS = [flag for flag in env["CXXFLAGS"] if flag != "-Weverything"])
 	myenv.UseFlags(myenv.get("LUA_FLAGS", {}))
 	myenv.UseFlags(myenv["SWIFTEN_FLAGS"])
 	myenv.UseFlags(myenv["SWIFTEN_DEP_FLAGS"])

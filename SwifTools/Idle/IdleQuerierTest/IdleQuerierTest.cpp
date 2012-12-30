@@ -5,6 +5,7 @@
  */
 
 #include <iostream>
+#include <cassert>
 
 #include <SwifTools/Idle/PlatformIdleQuerier.h>
 #include <Swiften/Base/sleep.h>
@@ -17,6 +18,6 @@ int main() {
 		std::cout << "Idle time: " << querier.getIdleTimeSeconds() << std::endl;
 		Swift::sleep(1000);
 	}
-
+	assert(false);
 	return 0;
 }

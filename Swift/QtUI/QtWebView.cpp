@@ -9,6 +9,7 @@
 
 #include <QKeyEvent>
 #include <QFocusEvent>
+#include <boost/numeric/conversion/cast.hpp>
 #include <QMenu>
 
 namespace Swift {
@@ -30,7 +31,7 @@ void QtWebView::keyPressEvent(QKeyEvent* event) {
 							   modifiers,
 							   event->text(),
 							   event->isAutoRepeat(),
-							   event->count());
+							   boost::numeric_cast<unsigned short>(event->count()));
 	QWebView::keyPressEvent(translatedEvent);
 	delete translatedEvent;
 }

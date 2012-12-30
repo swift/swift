@@ -297,7 +297,7 @@ void MainController::handleConnected() {
 	myStatusLooksOnline_ = true;
 	if (freshLogin) {
 		profileController_ = new ProfileController(client_->getVCardManager(), uiFactory_, uiEventStream_);
-		srand(time(NULL));
+		srand(static_cast<unsigned int>(time(NULL)));
 		int randomPort = 10000 + rand() % 10000;
 		client_->getFileTransferManager()->startListeningOnPort(randomPort);
 		ftOverview_ = new FileTransferOverview(client_->getFileTransferManager());

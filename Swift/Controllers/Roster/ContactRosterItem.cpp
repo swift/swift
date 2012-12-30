@@ -24,12 +24,12 @@ StatusShow::Type ContactRosterItem::getStatusShow() const {
 
 StatusShow::Type ContactRosterItem::getSimplifiedStatusShow() const {
 	switch (shownPresence_ ? shownPresence_->getShow() : StatusShow::None) {
-		case StatusShow::Online: return StatusShow::Online; break;
-		case StatusShow::Away: return StatusShow::Away; break;
-	 	case StatusShow::XA: return StatusShow::Away; break;
-		case StatusShow::FFC: return StatusShow::Online; break;
-		case StatusShow::DND: return StatusShow::DND; break;
-		case StatusShow::None: return StatusShow::None; break;
+		case StatusShow::Online: return StatusShow::Online;
+		case StatusShow::Away: return StatusShow::Away;
+	 	case StatusShow::XA: return StatusShow::Away;
+		case StatusShow::FFC: return StatusShow::Online;
+		case StatusShow::DND: return StatusShow::DND;
+		case StatusShow::None: return StatusShow::None;
 	}
 	assert(false);
 	return StatusShow::None;

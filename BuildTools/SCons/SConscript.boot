@@ -222,13 +222,16 @@ else :
 	if gccVersion >= ["4", "5", "0"] and not "clang" in env["CC"] :
 		env.Append(CXXFLAGS = ["-Wlogical-op"])
 	if "clang" in env["CC"] :
-		env.Append(CXXFLAGS = ["-W#warnings", "-Wc++0x-compat", "-Waddress-of-temporary", "-Wambiguous-member-template", "-Warray-bounds", "-Watomic-properties", "-Wbind-to-temporary-copy", "-Wbuiltin-macro-redefined", "-Wc++-compat", "-Wc++0x-extensions", "-Wcomments", "-Wconditional-uninitialized", "-Wconstant-logical-operand", "-Wdeclaration-after-statement", "-Wdeprecated", "-Wdeprecated-implementations", "-Wdeprecated-writable-strings", "-Wduplicate-method-arg", "-Wempty-body", "-Wendif-labels", "-Wenum-compare", "-Wformat=2", "-Wfour-char-constants", "-Wgnu", "-Wincomplete-implementation", "-Winvalid-noreturn", "-Winvalid-offsetof", "-Winvalid-token-paste", "-Wlocal-type-template-args", "-Wmethod-signatures", "-Wmicrosoft", "-Wmissing-declarations", "-Wnon-pod-varargs", "-Wnull-dereference", "-Wout-of-line-declaration", "-Woverlength-strings", "-Wpacked", "-Wpointer-arith", "-Wpointer-sign", "-Wprotocol", "-Wreadonly-setter-attrs", "-Wselector", "-Wshift-overflow", "-Wshift-sign-overflow", "-Wstrict-selector-match", "-Wsuper-class-method-mismatch", "-Wtautological-compare", "-Wtypedef-redefinition", "-Wundeclared-selector", "-Wunknown-warning-option", "-Wunnamed-type-template-args", "-Wunused-exception-parameter", "-Wunused-member-function", "-Wused-but-marked-unused", "-Wvariadic-macros", "-Wno-c++11-extensions"])
-# To enable: 
-# "-Wnonfragile-abi2" -> deprecated, is now -Warc-abi i think
-# "-Wheader-hygiene"
-#	"-Wnon-gcc",
-# "-Wweak-vtables",
-# "-Wlarge-by-value-copy",
+		env.Append(CXXFLAGS = [
+			"-Weverything",
+			"-Wno-sign-conversion", # We have this a lot. Not sure if we should allow this or not.
+			"-Wno-weak-vtables", # Virtually none of our elements have outlined methods
+			"-Wno-shadow", # Also warns for shadowing on constructor arguments, which we do a lot
+			"-Wno-exit-time-destructors", # Used a lot in e.g. CPPUnit
+			"-Wno-c++98-compat-pedantic", # We do different things that violate this, but they could be fixed
+			"-Wno-global-constructors",
+			"-Wno-padded",
+			])
 
 if env.get("coverage", 0) :
 	assert(env["PLATFORM"] != "win32")

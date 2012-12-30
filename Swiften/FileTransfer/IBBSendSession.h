@@ -41,7 +41,7 @@ namespace Swift {
 			}
 
 			boost::signal<void (boost::optional<FileTransferError>)> onFinished;
-			boost::signal<void (int)> onBytesSent;
+			boost::signal<void (unsigned long long)> onBytesSent;
 
 		private:
 			void handleIBBResponse(IBB::ref, ErrorPayload::ref);
