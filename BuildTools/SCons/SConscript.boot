@@ -118,6 +118,14 @@ if env["PLATFORM"] == "darwin" :
 		if platform.machine() == "x86_64" :
 			env.Append(LINKFLAGS = ["-arch", "x86_64"])
 
+# Check whether we are running inside scan-build, and override compiler if so
+if "CCC_ANALYZER_HTML" in os.environ :
+	for key, value in os.environ.items() :
+		if key.startswith("CCC_") or key.startswith("CLANG") :
+			env["ENV"][key] = value
+	env["CC"] = os.environ["CC"]
+	env["CXX"] = os.environ["CXX"]
+
 # Override the compiler with custom variables set at config time
 if "cc" in env :
 	env["CC"] = env["cc"]
