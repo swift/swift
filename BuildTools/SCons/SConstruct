@@ -525,9 +525,6 @@ else :
 # Project files
 ################################################################################
 
-# Build tools
-env.SConscript(dirs = ["#/BuildTools/CLang"])
-
 # Modules
 modules = []
 for dir in os.listdir(Dir("#/3rdParty").abspath) :
