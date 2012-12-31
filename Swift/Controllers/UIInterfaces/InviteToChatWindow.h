@@ -15,7 +15,7 @@
 namespace Swift {
 	class InviteToChatWindow {
 		public:
-			virtual ~InviteToChatWindow() {};
+			virtual ~InviteToChatWindow() {}
 
 			virtual void setAutoCompletions(std::vector<std::pair<JID, std::string> > completions) = 0;
 

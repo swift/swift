@@ -21,7 +21,7 @@ namespace Swift {
 		 * Messages are stored using localtime timestamps.
 		 */
 		public:
-			virtual ~HistoryStorage() {};
+			virtual ~HistoryStorage() {}
 
 			virtual void addMessage(const HistoryMessage& message) = 0;
 			virtual std::vector<HistoryMessage> getMessagesFromDate(const JID& selfJID, const JID& contactJID, HistoryMessage::Type type, const boost::gregorian::date& date) const = 0;

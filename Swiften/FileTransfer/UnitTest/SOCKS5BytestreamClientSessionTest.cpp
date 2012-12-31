@@ -33,7 +33,7 @@
 
 using namespace Swift;
 
-boost::mt19937 randomGen;
+static boost::mt19937 randomGen;
 
 class SOCKS5BytestreamClientSessionTest : public CppUnit::TestFixture {
 	CPPUNIT_TEST_SUITE(SOCKS5BytestreamClientSessionTest);

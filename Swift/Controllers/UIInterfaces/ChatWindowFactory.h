@@ -14,7 +14,7 @@ namespace Swift {
 	class UIEventStream;
 	class ChatWindowFactory {
 		public:
-			virtual ~ChatWindowFactory() {};
+			virtual ~ChatWindowFactory() {}
 			/**
 			 * Transfers ownership of result.
 			 */

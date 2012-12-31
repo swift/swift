@@ -16,7 +16,7 @@
 
 using namespace Swift;
 
-SimpleEventLoop eventLoop;
+static SimpleEventLoop eventLoop;
 
 static void handleGetPublicIPRequestResponse(const boost::optional<HostAddress>& result) {
 	if (result) {

@@ -110,7 +110,7 @@ std::pair<SafeByteArray, size_t> BOSHConnection::createHTTPRequest(const SafeByt
 			header << ":" << *boshURL.getPort();
 	}
 	header	<< "\r\n"
-		/*<< "Accept-Encoding: deflate\r\n"*/
+		// << "Accept-Encoding: deflate\r\n"
 			<< "Content-Type: text/xml; charset=utf-8\r\n"
 			<< "Content-Length: " << size << "\r\n\r\n";
 
@@ -156,7 +156,7 @@ void BOSHConnection::startStream(const std::string& to, unsigned long long rid) 
 			<< " rid='" << rid << "'"
 			<< " ver='1.6'"
 			<< " wait='60'" /* FIXME: we probably want this configurable*/
-			/*<< " ack='0'" FIXME: support acks */
+			// << " ack='0'" FIXME: support acks 
 			<< " xml:lang='en'"
 			<< " xmlns:xmpp='urn:xmpp:bosh'"
 			<< " xmpp:version='1.0'"
@@ -170,7 +170,7 @@ void BOSHConnection::startStream(const std::string& to, unsigned long long rid) 
 		header << ":" << *boshURL_.getPort();
 	}
 	header << "\r\n"
-		/*<< "Accept-Encoding: deflate\r\n"*/
+		 // << "Accept-Encoding: deflate\r\n"
 			<< "Content-Type: text/xml; charset=utf-8\r\n"
 			<< "Content-Length: " << contentString.size() << "\r\n\r\n"
 			<< contentString;

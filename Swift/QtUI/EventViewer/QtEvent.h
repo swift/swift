@@ -17,7 +17,7 @@ namespace Swift {
 		public:
 			QtEvent(boost::shared_ptr<StanzaEvent> event, bool active);
 			QVariant data(int role);
-			boost::shared_ptr<StanzaEvent> getEvent() { return event_; };
+			boost::shared_ptr<StanzaEvent> getEvent() { return event_; }
 			enum EventRoles {
 				SenderRole = Qt::UserRole
 

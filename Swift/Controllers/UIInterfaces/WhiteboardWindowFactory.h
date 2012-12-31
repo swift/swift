@@ -12,7 +12,7 @@ namespace Swift {
 
 	class WhiteboardWindowFactory {
 	public :
-		virtual ~WhiteboardWindowFactory() {};
+		virtual ~WhiteboardWindowFactory() {}
 
 		virtual WhiteboardWindow* createWhiteboardWindow(boost::shared_ptr<WhiteboardSession> whiteboardSession) = 0;
 	};

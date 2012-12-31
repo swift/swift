@@ -16,7 +16,7 @@ namespace Swift {
 		
 	class LoginWindowFactory {
 		public:
-			virtual ~LoginWindowFactory() {};
+			virtual ~LoginWindowFactory() {}
 
 			/**
 			 * Transfers ownership of result.

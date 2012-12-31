@@ -15,7 +15,7 @@ namespace Swift {
 	class Replace : public Payload {
 		public:
 			typedef boost::shared_ptr<Replace> ref;
-			Replace(const std::string& id = std::string()) : replaceID_(id) {};
+			Replace(const std::string& id = std::string()) : replaceID_(id) {}
 			const std::string& getID() const {
 				return replaceID_;
 			}

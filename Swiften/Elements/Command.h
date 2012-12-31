@@ -26,7 +26,7 @@ namespace Swift {
 			struct Note {
 				enum Type {Info, Warn, Error};
 
-				Note(std::string note, Type type) : note(note), type(type) {};
+				Note(std::string note, Type type) : note(note), type(type) {}
 
 				std::string note;
 				Type type;

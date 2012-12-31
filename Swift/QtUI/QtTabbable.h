@@ -17,10 +17,10 @@ namespace Swift {
 			enum AlertType {NoActivity, WaitingActivity, ImpendingActivity};
 			~QtTabbable();
 			bool isWidgetSelected();
-			virtual AlertType getWidgetAlertState() {return NoActivity;};
+			virtual AlertType getWidgetAlertState() {return NoActivity;}
 			virtual int getCount() {return 0;}
 		protected:
-			QtTabbable() : QWidget() {};
+			QtTabbable() : QWidget() {}
 			void keyPressEvent(QKeyEvent* event);
 
 		protected slots:

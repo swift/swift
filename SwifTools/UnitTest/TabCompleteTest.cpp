@@ -24,7 +24,7 @@ class TabCompleteTest : public CppUnit::TestFixture {
 	CPPUNIT_TEST_SUITE_END();
 	
 public:
-	TabCompleteTest() {};
+	TabCompleteTest() {}
 	
 	void setUp() {
 		completer_ = TabComplete();

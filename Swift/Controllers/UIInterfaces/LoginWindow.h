@@ -18,7 +18,7 @@ namespace Swift {
 	class MainWindow;
 	class LoginWindow {
 		public:
-			virtual ~LoginWindow() {};
+			virtual ~LoginWindow() {}
 			virtual void selectUser(const std::string&) = 0;
 			virtual void morphInto(MainWindow *mainWindow) = 0;
 			virtual void loggedOut() = 0;

@@ -11,6 +11,6 @@
 namespace Swift {
 	class DummySoundPlayer : public SoundPlayer {
 		public:
-			void playSound(SoundEffect sound) {};
+			void playSound(SoundEffect sound) {}
 	};
 }

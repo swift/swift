@@ -226,6 +226,7 @@ else :
 	if "clang" in env["CXX"] :
 		env.Append(CXXFLAGS = [
 			"-Weverything",
+			"-Wno-unknown-warning-option", # To stay compatible between CLang versions
 			"-Wno-sign-conversion", # We have this a lot. Not sure if we should allow this or not.
 			"-Wno-weak-vtables", # Virtually none of our elements have outlined methods
 			"-Wno-shadow", # Also warns for shadowing on constructor arguments, which we do a lot

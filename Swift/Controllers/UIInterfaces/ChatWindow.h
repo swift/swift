@@ -39,7 +39,7 @@ namespace Swift {
 			enum FileTransferState {WaitingForAccept, Negotiating, Transferring, Canceled, Finished, FTFailed};
 			enum WhiteboardSessionState {WhiteboardAccepted, WhiteboardTerminated, WhiteboardRejected};
 			ChatWindow() {}
-			virtual ~ChatWindow() {};
+			virtual ~ChatWindow() {}
 
 			/** Add message to window.
 			 * @return id of added message (for acks).

@@ -9,6 +9,6 @@
 namespace Swift {
 	class AdHocCommandWindow {
 		public:
-			virtual ~AdHocCommandWindow() {};
+			virtual ~AdHocCommandWindow() {}
 	};
 }

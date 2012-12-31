@@ -12,7 +12,7 @@ namespace Swift {
 	class UIEventStream;
 	class XMLConsoleWidgetFactory {
 		public:
-			virtual ~XMLConsoleWidgetFactory() {};
+			virtual ~XMLConsoleWidgetFactory() {}
 
 			virtual XMLConsoleWidget* createXMLConsoleWidget() = 0;
 	};

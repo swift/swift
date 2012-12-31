@@ -18,7 +18,7 @@
 #include <Swiften/Network/BoostIOServiceThread.h>
 #include <Swiften/EventLoop/DummyEventLoop.h>
 
-const unsigned char* address = reinterpret_cast<const unsigned char*>("\x41\x63\xde\x89");
+static const unsigned char* address = reinterpret_cast<const unsigned char*>("\x41\x63\xde\x89");
 
 using namespace Swift;
 

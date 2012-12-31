@@ -23,7 +23,7 @@ namespace Swift {
 
 			QString getContinuationElementID() const {
 				return "insert";
-			};
+			}
 
 		private:
 			QString content_;

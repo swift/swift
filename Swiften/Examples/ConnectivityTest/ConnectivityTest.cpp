@@ -21,13 +21,13 @@ using namespace Swift;
 
 enum ExitCodes {OK = 0, CANNOT_CONNECT, CANNOT_AUTH, NO_RESPONSE, DISCO_ERROR};
 
-SimpleEventLoop eventLoop;
-BoostNetworkFactories networkFactories(&eventLoop);
+static SimpleEventLoop eventLoop;
+static BoostNetworkFactories networkFactories(&eventLoop);
 
-Client* client = 0;
-JID recipient;
-int exitCode = CANNOT_CONNECT;
-boost::bsignals::connection errorConnection;
+static Client* client = 0;
+static JID recipient;
+static int exitCode = CANNOT_CONNECT;
+static boost::bsignals::connection errorConnection;
 
 static void handleServerDiscoInfoResponse(boost::shared_ptr<DiscoInfo> /*info*/, ErrorPayload::ref error) {
 	if (!error) {

@@ -14,7 +14,7 @@ namespace Swift {
 	class UIEventStream;
 	class UserSearchWindowFactory {
 		public:
-			virtual ~UserSearchWindowFactory() {};
+			virtual ~UserSearchWindowFactory() {}
 
 			virtual UserSearchWindow* createUserSearchWindow(UserSearchWindow::Type type, UIEventStream* eventStream, const std::set<std::string>& groups) = 0;
 	};

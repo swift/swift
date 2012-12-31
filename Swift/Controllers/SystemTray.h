@@ -11,7 +11,7 @@
 namespace Swift {
 	class SystemTray {
 		public:
-			virtual ~SystemTray(){};
+			virtual ~SystemTray(){}
 			virtual void setUnreadMessages(bool some) = 0;
 			virtual void setStatusType(StatusShow::Type type) = 0;
 			virtual void setConnecting() = 0;

@@ -26,7 +26,7 @@ class SettingsProviderHierachyTest : public CppUnit::TestFixture {
 	CPPUNIT_TEST_SUITE_END();
 
 public:
-	SettingsProviderHierachyTest() : setting1("somekey", 42) {};
+	SettingsProviderHierachyTest() : setting1("somekey", 42) {}
 
 	void setUp() {
 		bottom = new DummySettingsProvider();

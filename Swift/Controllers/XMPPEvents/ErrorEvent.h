@@ -18,10 +18,10 @@
 namespace Swift {
 	class ErrorEvent : public StanzaEvent {
 		public:
-			ErrorEvent(const JID& jid, const std::string& text) : jid_(jid), text_(text){};
-			virtual ~ErrorEvent(){};
-			const JID& getJID() const {return jid_;};
-			const std::string& getText() const {return text_;};
+			ErrorEvent(const JID& jid, const std::string& text) : jid_(jid), text_(text){}
+			virtual ~ErrorEvent(){}
+			const JID& getJID() const {return jid_;}
+			const std::string& getText() const {return text_;}
 
 		private:
 			JID jid_;

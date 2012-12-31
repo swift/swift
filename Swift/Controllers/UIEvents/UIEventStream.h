@@ -18,6 +18,6 @@ namespace Swift {
 
 			void send(boost::shared_ptr<UIEvent> event) {
 				onUIEvent(event);
-			};
+			}
 	};
 }

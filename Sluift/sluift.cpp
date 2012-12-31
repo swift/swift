@@ -36,8 +36,8 @@ static int globalTimeout = 30000;
  * Helper classes
  ******************************************************************************/
 
-SimpleEventLoop eventLoop;
-BoostNetworkFactories networkFactories(&eventLoop);
+static SimpleEventLoop eventLoop;
+static BoostNetworkFactories networkFactories(&eventLoop);
 
 
 class SluiftClient {

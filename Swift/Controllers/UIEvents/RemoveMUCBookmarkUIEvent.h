@@ -14,7 +14,7 @@
 namespace Swift {
 	class RemoveMUCBookmarkUIEvent : public UIEvent {
 		public:
-			RemoveMUCBookmarkUIEvent(const MUCBookmark& bookmark) : bookmark(bookmark) {};
+			RemoveMUCBookmarkUIEvent(const MUCBookmark& bookmark) : bookmark(bookmark) {}
 			const MUCBookmark& getBookmark() { return bookmark; }
 
 		private:

@@ -37,7 +37,7 @@ namespace Swift {
 	enum JoinPart {Join, Part, JoinThenPart, PartThenJoin};
 
 	struct NickJoinPart {
-			NickJoinPart(const std::string& nick, JoinPart type) : nick(nick), type(type) {};
+			NickJoinPart(const std::string& nick, JoinPart type) : nick(nick), type(type) {}
 			std::string nick;
 			JoinPart type;
 	};

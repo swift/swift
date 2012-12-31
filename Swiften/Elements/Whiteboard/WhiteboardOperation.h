@@ -14,7 +14,7 @@ namespace Swift {
 	public:
 		typedef boost::shared_ptr<WhiteboardOperation> ref;
 	public:
-		virtual ~WhiteboardOperation(){};
+		virtual ~WhiteboardOperation(){}
 
 		std::string getID() const {
 			return id_;

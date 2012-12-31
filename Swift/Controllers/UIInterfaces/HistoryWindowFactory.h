@@ -12,7 +12,7 @@ namespace Swift {
 	class UIEventStream;
 	class HistoryWindowFactory {
 		public:
-			virtual ~HistoryWindowFactory() {};
+			virtual ~HistoryWindowFactory() {}
 			virtual HistoryWindow* createHistoryWindow(UIEventStream* eventStream) = 0;
 	};
 }

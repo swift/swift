@@ -12,7 +12,7 @@
 using namespace Swift;
 using namespace boost;
 
-Client* client;
+static Client* client;
 
 void handleConnected();
 void handleMessageReceived(Message::ref message);

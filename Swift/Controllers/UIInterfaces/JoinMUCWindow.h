@@ -15,7 +15,7 @@
 namespace Swift {
 	class JoinMUCWindow {
 		public:
-			virtual ~JoinMUCWindow() {};
+			virtual ~JoinMUCWindow() {}
 
 			virtual void setNick(const std::string& nick) = 0;
 			virtual void setMUC(const std::string& nick) = 0;

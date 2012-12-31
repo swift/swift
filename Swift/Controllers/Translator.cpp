@@ -10,7 +10,7 @@
 
 namespace Swift {
 
-struct DefaultTranslator : public Translator {
+static struct DefaultTranslator : public Translator {
 	virtual std::string translate(const std::string& text, const std::string&) {
 		return text;
 	}

@@ -17,7 +17,7 @@ namespace Swift {
 		public:
 			typedef boost::shared_ptr<MessageEvent> ref;
 
-			MessageEvent(boost::shared_ptr<Message> stanza) : stanza_(stanza), targetsMe_(true) {};
+			MessageEvent(boost::shared_ptr<Message> stanza) : stanza_(stanza), targetsMe_(true) {}
 
 			boost::shared_ptr<Message> getStanza() {return stanza_;}
 

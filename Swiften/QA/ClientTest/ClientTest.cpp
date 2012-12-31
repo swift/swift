@@ -18,17 +18,17 @@
 
 using namespace Swift;
 
-SimpleEventLoop eventLoop;
-BoostNetworkFactories networkFactories(&eventLoop);
+static SimpleEventLoop eventLoop;
+static BoostNetworkFactories networkFactories(&eventLoop);
 
-Client* client = 0;
-bool rosterReceived = false;
+static Client* client = 0;
+static bool rosterReceived = false;
 enum TestStage {
 	FirstConnect,
 	Reconnect
 };
-TestStage stage;
-ClientOptions options;
+static TestStage stage;
+static ClientOptions options;
 
 static void handleDisconnected(boost::optional<ClientError> e) {
 	std::cout << "Disconnected: " << e << std::endl;

@@ -204,7 +204,7 @@ namespace Swift {
 			/**
 			 * Called before onConnected signal is emmitted.
 			 */
-			virtual void handleConnected() {};
+			virtual void handleConnected() {}
 
 		private:
 			void handleConnectorFinished(boost::shared_ptr<Connection>, boost::shared_ptr<Error> error);

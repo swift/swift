@@ -24,7 +24,7 @@ namespace Swift {
 			TLSConnection(Connection::ref connection, TLSContextFactory* tlsFactory);
 			virtual ~TLSConnection();
 
-			virtual void listen() {assert(false);};
+			virtual void listen() {assert(false);}
 			virtual void connect(const HostAddressPort& address);
 			virtual void disconnect();
 			virtual void write(const SafeByteArray& data);

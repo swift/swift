@@ -35,10 +35,10 @@
 
 using namespace Swift;
 
-SimpleEventLoop eventLoop;
-BoostNetworkFactories networkFactories(&eventLoop);
+static SimpleEventLoop eventLoop;
+static BoostNetworkFactories networkFactories(&eventLoop);
 
-int exitCode = 2;
+static int exitCode = 2;
 
 class FileSender {
 	public:

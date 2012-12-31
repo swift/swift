@@ -19,7 +19,7 @@ namespace Swift {
 
 	class MUCSearchWindow {
 		public:
-			virtual ~MUCSearchWindow() {};
+			virtual ~MUCSearchWindow() {}
 
 			virtual void clearList() = 0;
 			virtual void addService(const MUCService& service) = 0;

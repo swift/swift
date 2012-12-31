@@ -45,7 +45,7 @@ namespace Swift {
 			RosterController(const JID& jid, XMPPRoster* xmppRoster, AvatarManager* avatarManager, MainWindowFactory* mainWindowFactory, NickManager* nickManager, NickResolver* nickResolver, PresenceOracle* presenceOracle, SubscriptionManager* subscriptionManager, EventController* eventController, UIEventStream* uiEventStream, IQRouter* iqRouter_, SettingsProvider* settings, EntityCapsProvider* entityCapsProvider, FileTransferOverview* fileTransferOverview);
 			~RosterController();
 			void showRosterWindow();
-			MainWindow* getWindow() {return mainWindow_;};
+			MainWindow* getWindow() {return mainWindow_;}
 			boost::signal<void (StatusShow::Type, const std::string&)> onChangeStatusRequest;
 			boost::signal<void ()> onSignOutRequest;
 			void handleAvatarChanged(const JID& jid);

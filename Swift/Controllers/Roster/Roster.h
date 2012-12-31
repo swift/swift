@@ -36,10 +36,10 @@ class Roster {
 		void applyOnItems(const RosterItemOperation& operation);
 		void applyOnAllItems(const RosterItemOperation& operation);
 		void applyOnItem(const RosterItemOperation& operation, const JID& jid);
-		void addFilter(RosterFilter *filter) {filters_.push_back(filter);filterAll();};
+		void addFilter(RosterFilter *filter) {filters_.push_back(filter);filterAll();}
 		void removeFilter(RosterFilter *filter);
 		GroupRosterItem* getRoot();
-		std::vector<RosterFilter*> getFilters() {return filters_;};
+		std::vector<RosterFilter*> getFilters() {return filters_;}
 		boost::signal<void (GroupRosterItem*)> onChildrenChanged;
 		boost::signal<void (GroupRosterItem*)> onGroupAdded;
 		boost::signal<void (RosterItem*)> onDataChanged;

@@ -18,14 +18,14 @@
 
 using namespace Swift;
 
-SimpleEventLoop eventLoop;
-BoostNetworkFactories networkFactories(&eventLoop);
+static SimpleEventLoop eventLoop;
+static BoostNetworkFactories networkFactories(&eventLoop);
 
-Client* client = 0;
-JID recipient;
-std::string messageBody;
-int exitCode = 2;
-boost::bsignals::connection errorConnection;
+static Client* client = 0;
+static JID recipient;
+static std::string messageBody;
+static int exitCode = 2;
+static boost::bsignals::connection errorConnection;
 
 
 static void handleConnected() {

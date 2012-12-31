@@ -15,7 +15,7 @@ namespace Swift {
 
 	class MainWindowFactory {
 		public:
-			virtual ~MainWindowFactory() {};
+			virtual ~MainWindowFactory() {}
 			/**
 			 * Transfers ownership of result.
 			 */

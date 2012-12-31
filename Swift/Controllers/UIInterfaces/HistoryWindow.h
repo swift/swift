@@ -11,7 +11,7 @@
 namespace Swift {
 	class HistoryWindow {
 		public:
-			virtual ~HistoryWindow() {};
+			virtual ~HistoryWindow() {}
 
 			virtual void activate() = 0;
 			virtual void setRosterModel(Roster*) = 0;

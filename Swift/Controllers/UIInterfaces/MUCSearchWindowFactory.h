@@ -12,7 +12,7 @@ namespace Swift {
 	class UIEventStream;
 	class MUCSearchWindowFactory {
 		public:
-			virtual ~MUCSearchWindowFactory() {};
+			virtual ~MUCSearchWindowFactory() {}
 
 			virtual MUCSearchWindow* createMUCSearchWindow() = 0;
 	};

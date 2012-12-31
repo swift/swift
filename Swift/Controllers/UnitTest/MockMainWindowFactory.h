@@ -13,14 +13,14 @@ namespace Swift {
 
 	class MockMainWindowFactory : public MainWindowFactory {
 		public:
-			MockMainWindowFactory() : last(NULL) {};
+			MockMainWindowFactory() : last(NULL) {}
 
-			virtual ~MockMainWindowFactory() {};
+			virtual ~MockMainWindowFactory() {}
 
 			/**
 			 * Transfers ownership of result.
 			 */
-			virtual MainWindow* createMainWindow(UIEventStream*) {last = new MockMainWindow();return last;};
+			virtual MainWindow* createMainWindow(UIEventStream*) {last = new MockMainWindow();return last;}
 			MockMainWindow* last;
 	};
 }

@@ -14,15 +14,15 @@
 namespace Swift {
 	class AddContactUIEvent : public UIEvent {
 		public:
-			AddContactUIEvent(const JID& jid, const std::string& name, const std::set<std::string>& groups) : jid_(jid), name_(name), groups_(groups) {};
+			AddContactUIEvent(const JID& jid, const std::string& name, const std::set<std::string>& groups) : jid_(jid), name_(name), groups_(groups) {}
 
 			const std::string& getName() const {
 				return name_;
-			};
+			}
 
 			const JID& getJID() const {
 				return jid_;
-			};
+			}
 
 			const std::set<std::string>& getGroups() const {
 				return groups_;

@@ -84,7 +84,7 @@ class RosterControllerTest : public CppUnit::TestFixture {
 			ftOverview_ = new FileTransferOverview(ftManager_);
 			rosterController_ = new RosterController(jid_, xmppRoster_, avatarManager_, mainWindowFactory_, nickManager_, nickResolver_, presenceOracle_, subscriptionManager_, eventController_, uiEventStream_, router_, settings_, entityCapsManager_, ftOverview_);
 			mainWindow_ = mainWindowFactory_->last;
-		};
+		}
 
 		void tearDown() {
 			delete rosterController_;
@@ -105,7 +105,7 @@ class RosterControllerTest : public CppUnit::TestFixture {
 			delete uiEventStream_;
 			delete settings_;
 			delete xmppRoster_;
-		};
+		}
 
 	GroupRosterItem* groupChild(size_t i) {
 		return dynamic_cast<GroupRosterItem*>(CHILDREN[i]);
@@ -133,7 +133,7 @@ class RosterControllerTest : public CppUnit::TestFixture {
 		CPPUNIT_ASSERT(item2);
 		CPPUNIT_ASSERT_EQUAL(presence->getStatus(), item2->getStatusText());
 
-	};
+	}
 
 	void testHighestPresence() {
 		std::vector<std::string> groups;
@@ -153,7 +153,7 @@ class RosterControllerTest : public CppUnit::TestFixture {
 		ContactRosterItem* item = dynamic_cast<ContactRosterItem*>(dynamic_cast<GroupRosterItem*>(CHILDREN[0])->getChildren()[0]);
 		CPPUNIT_ASSERT(item);
 		CPPUNIT_ASSERT_EQUAL(highPresence->getStatus(), item->getStatusText());
-	};
+	}
 
 	void testNotHighestPresence() {
 		std::vector<std::string> groups;
@@ -173,7 +173,7 @@ class RosterControllerTest : public CppUnit::TestFixture {
 		ContactRosterItem* item = dynamic_cast<ContactRosterItem*>(dynamic_cast<GroupRosterItem*>(CHILDREN[0])->getChildren()[0]);
 		CPPUNIT_ASSERT(item);
 		CPPUNIT_ASSERT_EQUAL(highPresence->getStatus(), item->getStatusText());
-	};
+	}
 
 	void testUnavailablePresence() {
 		std::vector<std::string> groups;
@@ -215,7 +215,7 @@ class RosterControllerTest : public CppUnit::TestFixture {
 		CPPUNIT_ASSERT_EQUAL(lowPresenceOffline->getStatus(), high->getStatus());
 		CPPUNIT_ASSERT_EQUAL(StatusShow::None, item->getStatusShow());
 		CPPUNIT_ASSERT_EQUAL(lowPresenceOffline->getStatus(), item->getStatusText());
-	};
+	}
 
 		void testAdd() {
 			std::vector<std::string> groups;
@@ -225,7 +225,7 @@ class RosterControllerTest : public CppUnit::TestFixture {
 			
 			CPPUNIT_ASSERT_EQUAL(2, static_cast<int>(CHILDREN.size()));
 			//CPPUNIT_ASSERT_EQUAL(std::string("Bob"), xmppRoster_->getNameForJID(JID("foo@bar.com")));
-		};
+		}
 
  		void testAddSubscription() {
 			std::vector<std::string> groups;
@@ -242,7 +242,7 @@ class RosterControllerTest : public CppUnit::TestFixture {
 			CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(CHILDREN.size()));
 			CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(groupChild(0)->getChildren().size()));
 
-		};
+		}
 
 		void testReceiveRename() {
 			std::vector<std::string> groups;
@@ -256,7 +256,7 @@ class RosterControllerTest : public CppUnit::TestFixture {
 			CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(CHILDREN.size()));
 			CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(groupChild(0)->getChildren().size()));
 			CPPUNIT_ASSERT_EQUAL(std::string("NewName"), groupChild(0)->getChildren()[0]->getDisplayName());
-		};
+		}
 
 	void testReceiveRegroup() {
 		std::vector<std::string> oldGroups;
@@ -282,7 +282,7 @@ class RosterControllerTest : public CppUnit::TestFixture {
 		CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(groupChild(0)->getChildren().size()));
 		CPPUNIT_ASSERT_EQUAL(std::string("new name"), groupChild(0)->getChildren()[0]->getDisplayName());
 		CPPUNIT_ASSERT_EQUAL(std::string("Best Group"), groupChild(0)->getDisplayName());
-	};
+	}
 
 		void testSendRename() {
 			JID jid("testling@wonderland.lit");

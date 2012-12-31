@@ -26,7 +26,7 @@ class ChatMessageSummarizerTest : public CppUnit::TestFixture {
 	CPPUNIT_TEST_SUITE_END();
 
 public:
-	ChatMessageSummarizerTest() {};
+	ChatMessageSummarizerTest() {}
 
 	void setUp() {
 

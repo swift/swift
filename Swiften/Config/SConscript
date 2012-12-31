@@ -6,7 +6,7 @@ def replaceSwiftenPath(input) :
 	return input.replace(env.Dir("#").abspath, "#")
 
 def cStringVariable(env, cVar, sconsVar) :
-	result = "const char* " + cVar + "[] = {\n"
+	result = "static const char* " + cVar + "[] = {\n"
 	# FIXME: Probably not very robust
 	for var in sconsVar.split(" ") :
 		result += "\t\"" + env.subst(var).replace("\\", "\\\\") + "\",\n"

@@ -18,7 +18,7 @@ namespace Swift {
 		public:
 			SoundEventController(EventController* eventController, SoundPlayer* soundPlayer, SettingsProvider* settings);
 			void setPlaySounds(bool playSounds);
-			bool getSoundEnabled() {return playSounds_;};
+			bool getSoundEnabled() {return playSounds_;}
 		private:
 			void handleSettingChanged(const std::string& settingPath);
 			void handleEventQueueEventAdded(boost::shared_ptr<StanzaEvent> event);

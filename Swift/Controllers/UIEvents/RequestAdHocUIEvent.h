@@ -13,7 +13,7 @@
 namespace Swift {
 	class RequestAdHocUIEvent : public UIEvent {
 		public:
-			RequestAdHocUIEvent(const DiscoItems::Item& command) : command_(command) {};
+			RequestAdHocUIEvent(const DiscoItems::Item& command) : command_(command) {}
 			const DiscoItems::Item& getCommand() const {return command_;}
 		private:
 			DiscoItems::Item command_;

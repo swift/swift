@@ -11,7 +11,7 @@
 namespace Swift {
 	class ProfileWindowFactory {
 		public:
-			virtual ~ProfileWindowFactory() {};
+			virtual ~ProfileWindowFactory() {}
 
 			virtual ProfileWindow* createProfileWindow() = 0;
 	};

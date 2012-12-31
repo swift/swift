@@ -14,7 +14,7 @@
 namespace Swift {
 	class ProfileWindow {
 		public:
-			virtual ~ProfileWindow() {};
+			virtual ~ProfileWindow() {}
 
 			virtual void setVCard(VCard::ref vcard) = 0;
 

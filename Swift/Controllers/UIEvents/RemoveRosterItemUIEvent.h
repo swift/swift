@@ -13,9 +13,9 @@ namespace Swift {
 
 class RemoveRosterItemUIEvent : public UIEvent {
 	public:
-		RemoveRosterItemUIEvent(const JID& jid) : jid_(jid) {};
-		virtual ~RemoveRosterItemUIEvent() {};
-		JID getJID() {return jid_;};
+		RemoveRosterItemUIEvent(const JID& jid) : jid_(jid) {}
+		virtual ~RemoveRosterItemUIEvent() {}
+		JID getJID() {return jid_;}
 	private:
 		JID jid_;
 

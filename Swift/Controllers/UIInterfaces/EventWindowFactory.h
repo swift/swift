@@ -11,7 +11,7 @@ namespace Swift {
 
 	class EventWindowFactory {
 		public:
-			virtual ~EventWindowFactory() {};
+			virtual ~EventWindowFactory() {}
 			/**
 			 * Transfers ownership of result.
 			 */

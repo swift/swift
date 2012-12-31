@@ -11,7 +11,7 @@
 namespace Swift {
 	class ContactEditWindowFactory {
 		public:
-			virtual ~ContactEditWindowFactory() {};
+			virtual ~ContactEditWindowFactory() {}
 
 			virtual ContactEditWindow* createContactEditWindow() = 0;
 	};

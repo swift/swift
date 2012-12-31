@@ -20,7 +20,7 @@ namespace Swift {
 	class MainWindow {
 		public:
 			MainWindow(bool candelete = true) : canDelete_(candelete) {}
-			virtual ~MainWindow() {};
+			virtual ~MainWindow() {}
 
 			bool canDelete() const {
 				return canDelete_;

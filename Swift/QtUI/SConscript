@@ -24,7 +24,7 @@ myenv = env.Clone()
 # Disable warnings that affect Qt
 myenv["CXXFLAGS"] = filter(lambda x : x != "-Wfloat-equal", myenv["CXXFLAGS"])
 if "clang" in env["CC"] :
-	myenv.Append(CXXFLAGS = ["-Wno-float-equal", "-Wno-shorten-64-to-32", "-Wno-missing-prototypes", "-Wno-unreachable-code", "-Wno-disabled-macro-expansion"])
+	myenv.Append(CXXFLAGS = ["-Wno-float-equal", "-Wno-shorten-64-to-32", "-Wno-missing-prototypes", "-Wno-unreachable-code", "-Wno-disabled-macro-expansion", "-Wno-unused-private-field", "-Wno-extra-semi", "-Wno-duplicate-enum", "-Wno-missing-variable-declarations"])
 
 myenv.UseFlags(env["SWIFT_CONTROLLERS_FLAGS"])
 myenv.UseFlags(env["SWIFTOOLS_FLAGS"])

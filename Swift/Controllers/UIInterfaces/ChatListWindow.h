@@ -25,7 +25,7 @@ namespace Swift {
 					bool operator==(const Chat& other) const {
 						return jid.toBare() == other.jid.toBare()
 								&& isMUC == other.isMUC;
-					};
+					}
 					void setUnreadCount(int unread) {
 						unreadCount = unread;
 					}

@@ -12,10 +12,10 @@ namespace Swift {
 
 class RosterItemOperation {
 	public:
-		RosterItemOperation(bool requiresLookup = false, const JID& lookupJID = JID()) : requiresLookup_(requiresLookup), lookupJID_(lookupJID) {};
-		virtual ~RosterItemOperation() {};
-		bool requiresLookup() const {return requiresLookup_;};
-		const JID& lookupJID() const {return lookupJID_;}; 
+		RosterItemOperation(bool requiresLookup = false, const JID& lookupJID = JID()) : requiresLookup_(requiresLookup), lookupJID_(lookupJID) {}
+		virtual ~RosterItemOperation() {}
+		bool requiresLookup() const {return requiresLookup_;}
+		const JID& lookupJID() const {return lookupJID_;} 
 		/**
 		 * This is called when iterating over possible subjects, so must check it's
 		 * applying to the right items - even if requiresLookup() is true an item

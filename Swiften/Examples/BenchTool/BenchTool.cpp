@@ -20,10 +20,10 @@
 
 using namespace Swift;
 
-SimpleEventLoop eventLoop;
-BoostNetworkFactories networkFactories(&eventLoop);
-int numberOfConnectedClients = 0;
-int numberOfInstances = 100;
+static SimpleEventLoop eventLoop;
+static BoostNetworkFactories networkFactories(&eventLoop);
+static int numberOfConnectedClients = 0;
+static int numberOfInstances = 100;
 
 
 static void handleConnected() {

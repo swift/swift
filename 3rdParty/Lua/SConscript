@@ -36,7 +36,10 @@ if env.get("LUA_BUNDLED", False) :
 			myenv.Append(CFLAGS = ["-x", "c++"])
 
 		# Remove warn flags
-		myenv.Replace(CCFLAGS = [flag for flag in env["CCFLAGS"] if flag not in ["-W", "-Wall"]])
+		myenv.Replace(CCFLAGS = [flag for flag in env["CCFLAGS"] if not flag.startswith("-W")])
+		if "clang" in env["CC"] :
+			myenv.Append(CCFLAGS = ["-Wno-unknown-warning-option", "-Wno-empty-body"])
+
 		myenv.MergeFlags(myenv["LUA_FLAGS"])
 		myenv.StaticLibrary("Swiften_Lua", [
 			"src/lapi.c",

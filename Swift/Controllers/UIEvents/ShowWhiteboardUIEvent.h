@@ -13,7 +13,7 @@
 namespace Swift {
 	class ShowWhiteboardUIEvent : public UIEvent {
 	public:
-		ShowWhiteboardUIEvent(const JID& contact) : contact_(contact) {};
+		ShowWhiteboardUIEvent(const JID& contact) : contact_(contact) {}
 		const JID& getContact() const {return contact_;}
 	private:
 		JID contact_;

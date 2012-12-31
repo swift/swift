@@ -13,7 +13,7 @@
 namespace Swift {
 	class RequestChatUIEvent : public UIEvent {
 		public:
-			RequestChatUIEvent(const JID& contact) : contact_(contact) {};
+			RequestChatUIEvent(const JID& contact) : contact_(contact) {}
 			JID getContact() {return contact_;}
 		private:
 			JID contact_;

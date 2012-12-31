@@ -13,10 +13,10 @@ namespace Swift {
 	class ChatListGroupItem;
 	class ChatListItem {
 		public:
-			ChatListItem(ChatListGroupItem* parent) {parent_ = parent;};
+			ChatListItem(ChatListGroupItem* parent) {parent_ = parent;}
 			virtual ~ChatListItem() {}
 
-			ChatListGroupItem* parent() {return parent_;};
+			ChatListGroupItem* parent() {return parent_;}
 			virtual QVariant data(int role) const = 0;
 
 		private:

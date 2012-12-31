@@ -51,7 +51,7 @@ namespace Swift {
 			void replaceMessage(const std::string& message, const std::string& id, const boost::posix_time::ptime& time);
 			virtual void setOnline(bool online);
 			virtual void setEnabled(bool enabled);
-			virtual void setToJID(const JID& jid) {toJID_ = jid;};
+			virtual void setToJID(const JID& jid) {toJID_ = jid;}
 			/** Used for determining when something is recent.*/
 			boost::signal<void (const std::string& /*activity*/)> onActivity;
 			boost::signal<void ()> onUnreadCountChanged;
@@ -65,15 +65,15 @@ namespace Swift {
 			/**
 			 * Pass the Message appended, and the stanza used to send it.
 			 */
-			virtual void postSendMessage(const std::string&, boost::shared_ptr<Stanza>) {};
+			virtual void postSendMessage(const std::string&, boost::shared_ptr<Stanza>) {}
 			virtual std::string senderDisplayNameFromMessage(const JID& from) = 0;
 			virtual bool isIncomingMessageFromMe(boost::shared_ptr<Message>) = 0;
-			virtual void preHandleIncomingMessage(boost::shared_ptr<MessageEvent>) {};
-			virtual void postHandleIncomingMessage(boost::shared_ptr<MessageEvent>) {};
-			virtual void preSendMessageRequest(boost::shared_ptr<Message>) {};
+			virtual void preHandleIncomingMessage(boost::shared_ptr<MessageEvent>) {}
+			virtual void postHandleIncomingMessage(boost::shared_ptr<MessageEvent>) {}
+			virtual void preSendMessageRequest(boost::shared_ptr<Message>) {}
 			virtual bool isFromContact(const JID& from);
 			virtual boost::optional<boost::posix_time::ptime> getMessageTimestamp(boost::shared_ptr<Message>) const = 0;
-			virtual void dayTicked() {};
+			virtual void dayTicked() {}
 			virtual void handleBareJIDCapsChanged(const JID& jid) = 0;
 			std::string getErrorMessage(boost::shared_ptr<ErrorPayload>);
 			virtual void setContactIsReceivingPresence(bool /* isReceivingPresence */) {}

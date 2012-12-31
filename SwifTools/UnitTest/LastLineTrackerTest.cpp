@@ -21,7 +21,7 @@ class LastLineTrackerTest : public CppUnit::TestFixture {
 	CPPUNIT_TEST_SUITE_END();
 	public:
 	LastLineTrackerTest () {
-	};
+	}
 	void testFocusNormal() {
 		LastLineTracker testling;
 		testling.setHasFocus(true);

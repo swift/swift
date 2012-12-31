@@ -9,9 +9,12 @@
 #include <iostream>
 #include <string>
 #include <expat.h>
+#include <boost/numeric/conversion/cast.hpp>
 
 #include <Swiften/Base/String.h>
 #include <Swiften/Parser/XMLParserClient.h>
+
+#pragma clang diagnostic ignored "-Wdisabled-macro-expansion"
 
 namespace Swift {
 
@@ -77,7 +80,7 @@ ExpatParser::~ExpatParser() {
 }
 
 bool ExpatParser::parse(const std::string& data) {
-	bool success = XML_Parse(p->parser_, data.c_str(), data.size(), false) == XML_STATUS_OK;
+	bool success = XML_Parse(p->parser_, data.c_str(), boost::numeric_cast<int>(data.size()), false) == XML_STATUS_OK;
 	/*if (!success) {
 		std::cout << "ERROR: " << XML_ErrorString(XML_GetErrorCode(p->parser_)) << " while parsing " << data << std::endl;
 	}*/
