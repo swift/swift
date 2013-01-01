@@ -87,6 +87,7 @@ HostAddressPort MacOSXProxyProvider::getHTTPConnectProxy() const {
 	CFDictionaryRef proxies = SCDynamicStoreCopyProxies(NULL);
 	if(proxies != NULL) {
 		result = getFromDictionary(proxies, kSCPropNetProxiesHTTPEnable, kSCPropNetProxiesHTTPProxy, kSCPropNetProxiesHTTPPort);
+		CFRelease(proxies);
 	}
 #endif
 	return result;
@@ -98,8 +99,8 @@ HostAddressPort MacOSXProxyProvider::getSOCKS5Proxy() const {
 	CFDictionaryRef proxies = SCDynamicStoreCopyProxies(NULL);
 	if(proxies != NULL) {
 		result = getFromDictionary(proxies, kSCPropNetProxiesSOCKSEnable, kSCPropNetProxiesSOCKSProxy, kSCPropNetProxiesSOCKSPort);
+		CFRelease(proxies);
 	}
-	CFRelease(proxies);
 #endif
 	return result;
 }
