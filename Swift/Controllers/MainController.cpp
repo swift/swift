@@ -4,6 +4,12 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
+/*
+ * Copyright (c) 2013 Remko Tronçon
+ * Licensed under the GNU General Public License v3.
+ * See Documentation/Licenses/GPLv3.txt for more information.
+ */
+
 #include <Swift/Controllers/MainController.h>
 
 #include <boost/bind.hpp>
@@ -369,7 +375,9 @@ void MainController::handleConnected() {
 	contactEditController_->setAvailable(true);
 	/* Send presence later to catch all the incoming presences. */
 	sendPresence(statusTracker_->getNextPresence());
+
 	/* Enable chats last of all, so rejoining MUCs has the right sent presence */
+	assert(chatsManager_);
 	chatsManager_->setOnline(true);
 
 }
