@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011 Remko Tronçon
+ * Copyright (c) 2011-2013 Remko Tronçon
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -20,7 +20,7 @@ using namespace Swift;
 @end
 @implementation MacOSXURIEventHandler
 	- (id) initWithHandler: (URIHandler*) h {
-		if ([super init]) {
+		if ((self = [super init])) {
 			handler = h;
 		}
 		return self;

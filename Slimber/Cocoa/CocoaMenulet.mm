@@ -1,3 +1,9 @@
+/*
+ * Copyright (c) 2012-2013 Remko Tronçon
+ * Licensed under the GNU General Public License v3.
+ * See Documentation/Licenses/GPLv3.txt for more information.
+ */
+
 #include "Slimber/Cocoa/CocoaMenulet.h"
 
 #pragma GCC diagnostic ignored "-Wold-style-cast"
@@ -45,7 +51,7 @@ void CocoaMenulet::addItem(const std::string& name, const std::string& icon) {
 		NSString* path = [[NSBundle mainBundle] pathForResource: 
 				[NSString stringWithUTF8String: icon.c_str()] ofType:@"png"];
 		NSImage* image = [[NSImage alloc] initWithContentsOfFile: path];
-		[item setImage: [[NSImage alloc] initWithContentsOfFile: path]];
+		[item setImage: image];
 		[image release];
 	}
 	[menu addItem: item];

@@ -4,6 +4,12 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
+/*
+ * Copyright (c) 2013 Remko Tronçon
+ * Licensed under the GNU General Public License v3.
+ * See Documentation/Licenses/GPLv3.txt for more information.
+ */
+
 #include <Swiften/Base/Platform.h>
 #include <Swiften/Network/MacOSXProxyProvider.h>
 
@@ -30,6 +36,7 @@ static HostAddressPort getFromDictionary(CFDictionaryRef dict, CFStringRef enabl
 		CFNumberRef zero = CFNumberCreate(kCFAllocatorDefault, kCFNumberIntType, &i);
 		CFComparisonResult result = CFNumberCompare(numberValue, zero, NULL);
 		CFRelease(numberValue);
+		CFRelease(zero);
 
 		if(result != kCFCompareEqualTo) {
 			int port = 0;
@@ -92,6 +99,7 @@ HostAddressPort MacOSXProxyProvider::getSOCKS5Proxy() const {
 	if(proxies != NULL) {
 		result = getFromDictionary(proxies, kSCPropNetProxiesSOCKSEnable, kSCPropNetProxiesSOCKSProxy, kSCPropNetProxiesSOCKSPort);
 	}
+	CFRelease(proxies);
 #endif
 	return result;
 }
