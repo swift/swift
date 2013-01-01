@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Remko Tronçon
+ * Copyright (c) 2010-2013 Remko Tronçon
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -96,7 +96,11 @@ void QtXMLConsoleWidget::appendTextIfEnabled(const std::string& data, const QCol
 		cursor.insertText(P2QSTRING(data));
 		cursor.endEditBlock();
 
-		if (scrollToBottom) {
+		// Checking for the scrollbar again, because it could have appeared after inserting text.
+		// In practice, I suspect that the scrollbar is always there, but hidden, but since we were
+		// explicitly testing for this already above, I'm leaving the code in.
+		scrollBar = textEdit->verticalScrollBar();
+		if (scrollToBottom && scrollBar) {
 			scrollBar->setValue(scrollBar->maximum());
 		}
 	}
