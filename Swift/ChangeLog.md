@@ -1,3 +1,7 @@
+2.1
+---
+- Fixed potential crash when using proxies on Mac OS X.
+
 2.0-beta2
 ---------
 - Enable auto-completion of nicknames that don't start with a letter.
