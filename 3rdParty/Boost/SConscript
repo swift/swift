@@ -99,7 +99,46 @@ elif env.get("BOOST_BUNDLED", False) :
 				"src/libs/program_options/src/program_options_utf8_codecvt_facet.cpp",
 				"src/libs/program_options/src/value_semantic.cpp",
 				"src/libs/program_options/src/variables_map.cpp",
-				"src/libs/program_options/src/winmain.cpp"]
+				"src/libs/program_options/src/winmain.cpp",
+				"src/libs/serialization/src/archive_exception.cpp",
+				"src/libs/serialization/src/basic_archive.cpp",
+				"src/libs/serialization/src/basic_iarchive.cpp",
+				"src/libs/serialization/src/basic_iserializer.cpp",
+				"src/libs/serialization/src/basic_oarchive.cpp",
+				"src/libs/serialization/src/basic_oserializer.cpp",
+				"src/libs/serialization/src/basic_pointer_iserializer.cpp",
+				"src/libs/serialization/src/basic_pointer_oserializer.cpp",
+				"src/libs/serialization/src/basic_serializer_map.cpp",
+				"src/libs/serialization/src/basic_text_iprimitive.cpp",
+				"src/libs/serialization/src/basic_text_oprimitive.cpp",
+				"src/libs/serialization/src/basic_text_wiprimitive.cpp",
+				"src/libs/serialization/src/basic_text_woprimitive.cpp",
+				"src/libs/serialization/src/basic_xml_archive.cpp",
+				"src/libs/serialization/src/binary_iarchive.cpp",
+				"src/libs/serialization/src/binary_oarchive.cpp",
+				"src/libs/serialization/src/binary_wiarchive.cpp",
+				"src/libs/serialization/src/binary_woarchive.cpp",
+				"src/libs/serialization/src/codecvt_null.cpp",
+				"src/libs/serialization/src/extended_type_info.cpp",
+				"src/libs/serialization/src/extended_type_info_no_rtti.cpp",
+				"src/libs/serialization/src/extended_type_info_typeid.cpp",
+				"src/libs/serialization/src/polymorphic_iarchive.cpp",
+				"src/libs/serialization/src/polymorphic_oarchive.cpp",
+				"src/libs/serialization/src/shared_ptr_helper.cpp",
+				"src/libs/serialization/src/stl_port.cpp",
+				"src/libs/serialization/src/text_iarchive.cpp",
+				"src/libs/serialization/src/text_oarchive.cpp",
+				"src/libs/serialization/src/text_wiarchive.cpp",
+				"src/libs/serialization/src/text_woarchive.cpp",
+				"src/libs/serialization/src/utf8_codecvt_facet.cpp",
+				"src/libs/serialization/src/void_cast.cpp",
+				"src/libs/serialization/src/xml_archive_exception.cpp",
+				"src/libs/serialization/src/xml_grammar.cpp",
+				"src/libs/serialization/src/xml_iarchive.cpp",
+				"src/libs/serialization/src/xml_oarchive.cpp",
+				"src/libs/serialization/src/xml_wgrammar.cpp",
+				"src/libs/serialization/src/xml_wiarchive.cpp",
+				"src/libs/serialization/src/xml_woarchive.cpp"]
 
 		if env["PLATFORM"] != "darwin" or env["target"] == "native" :
 			sources += [
@@ -125,6 +164,7 @@ elif env.get("BOOST_BUNDLED", False) :
 			bcp_env.MergeFlags(bcp_env["BOOST_FLAGS"])
 			bcp_env.Append(CPPPATH = ["src/tools/bcp"])
 			bcp_env.Replace(CPPDEFINES = [flag for flag in bcp_env["CPPDEFINES"] if flag[0] != "BOOST_FILESYSTEM_VERSION"])
+			bcp_env.UseFlags(bcp_env["PLATFORM_FLAGS"])
 			bcp_env.Program("bcp", [
 					"src/tools/bcp/add_path.cpp",
 					"src/tools/bcp/add_dependent_lib.cpp",

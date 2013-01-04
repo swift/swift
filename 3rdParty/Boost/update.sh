@@ -12,6 +12,8 @@ fi
 ./bcp --boost="$1" \
 	tools/bcp \
 	algorithm/string.hpp \
+	archive/text_iarchive.hpp \
+	archive/text_oarchive.hpp \
 	asio.hpp \
 	assign/list_of.hpp \
 	bind.hpp \
@@ -37,6 +39,13 @@ fi
 	regex.hpp \
 	shared_ptr.hpp \
 	smart_ptr/make_shared.hpp \
+	serialization/serialization.hpp \
+	serialization/vector.hpp \
+	serialization/list.hpp \
+	serialization/shared_ptr.hpp \
+	serialization/string.hpp \
+	serialization/version.hpp \
+	serialization/split_member.hpp \
 	signals.hpp \
 	thread.hpp \
 	unordered_map.hpp \
@@ -51,7 +60,7 @@ cp $1/LICENSE_1_0.txt $TARGET_DIR
 rm -rf $TARGET_DIR/libs/config
 rm -rf $TARGET_DIR/libs/smart_ptr
 
-LIBS="date_time regex system thread signals filesystem program_options"
+LIBS="date_time regex system thread signals filesystem program_options serialization archive"
 for lib in $LIBS; do
 	rm -rf $TARGET_DIR/libs/$lib/build $TARGET_DIR/libs/$lib/*.doc $TARGET_DIR/libs/$lib/src/*.doc $TARGET_DIR/libs/$lib/src/CMakeLists.txt $TARGET_DIR/libs/$lib/test
 done
