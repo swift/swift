@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Remko Tronçon
+ * Copyright (c) 2010-2013 Remko Tronçon
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -7,6 +7,7 @@
 #include <Swiften/FileTransfer/IBBSendSession.h>
 
 #include <boost/bind.hpp>
+#include <boost/numeric/conversion/cast.hpp>
 
 #include <Swiften/Base/ByteArray.h>
 #include <Swiften/Queries/IQRouter.h>
@@ -24,7 +25,7 @@ IBBSendSession::~IBBSendSession() {
 }
 
 void IBBSendSession::start() {
-	IBBRequest::ref request = IBBRequest::create(from, to, IBB::createIBBOpen(id, blockSize), router);
+	IBBRequest::ref request = IBBRequest::create(from, to, IBB::createIBBOpen(id, boost::numeric_cast<int>(blockSize)), router);
 	request->onResponse.connect(boost::bind(&IBBSendSession::handleIBBResponse, this, _1, _2));
 	active = true;
 	request->send();

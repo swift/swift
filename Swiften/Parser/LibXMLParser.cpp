@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Remko Tronçon
+ * Copyright (c) 2010-2013 Remko Tronçon
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -33,7 +33,11 @@ static void handleStartElement(void* parser, const xmlChar* name, const xmlChar*
 		if (attributes[i+2]) {
 			attributeNS = std::string(reinterpret_cast<const char*>(attributes[i+2]));
 		}
-		attributeValues.addAttribute(std::string(reinterpret_cast<const char*>(attributes[i])), attributeNS, std::string(reinterpret_cast<const char*>(attributes[i+3]), attributes[i+4]-attributes[i+3]));
+		attributeValues.addAttribute(
+				std::string(reinterpret_cast<const char*>(attributes[i])), 
+				attributeNS, 
+				std::string(reinterpret_cast<const char*>(attributes[i+3]),
+					boost::numeric_cast<size_t>(attributes[i+4]-attributes[i+3])));
 	}
 	static_cast<XMLParser*>(parser)->getClient()->handleStartElement(reinterpret_cast<const char*>(name), (xmlns ? reinterpret_cast<const char*>(xmlns) : std::string()), attributeValues);
 }
@@ -43,7 +47,7 @@ static void handleEndElement(void *parser, const xmlChar* name, const xmlChar*, 
 }
 
 static void handleCharacterData(void* parser, const xmlChar* data, int len) {
-	static_cast<XMLParser*>(parser)->getClient()->handleCharacterData(std::string(reinterpret_cast<const char*>(data), len));
+	static_cast<XMLParser*>(parser)->getClient()->handleCharacterData(std::string(reinterpret_cast<const char*>(data), boost::numeric_cast<size_t>(len)));
 }
 
 static void handleError(void*, const char* /*m*/, ... ) {
@@ -87,7 +91,7 @@ LibXMLParser::~LibXMLParser() {
 }
 
 bool LibXMLParser::parse(const std::string& data) {
-	if (xmlParseChunk(p->context_, data.c_str(), boost::numeric_cast<unsigned int>(data.size()), false) == XML_ERR_OK) {
+	if (xmlParseChunk(p->context_, data.c_str(), boost::numeric_cast<int>(data.size()), false) == XML_ERR_OK) {
 		return true;
 	}
 	xmlError* error = xmlCtxtGetLastError(p->context_);

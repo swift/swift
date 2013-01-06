@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Remko Tronçon
+ * Copyright (c) 2010-2013 Remko Tronçon
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -19,7 +19,7 @@ namespace Swift {
 		public:	
 			BonjourResolveServiceQuery(const DNSSDServiceID& service, boost::shared_ptr<BonjourQuerier> querier, EventLoop* eventLoop) : BonjourQuery(querier, eventLoop) {
 				DNSServiceErrorType result = DNSServiceResolve(
-						&sdRef, 0, service.getNetworkInterfaceID(), 
+						&sdRef, 0, boost::numeric_cast<unsigned int>(service.getNetworkInterfaceID()), 
 						service.getName().c_str(), service.getType().c_str(), 
 						service.getDomain().c_str(), 
 						&BonjourResolveServiceQuery::handleServiceResolvedStatic, this);

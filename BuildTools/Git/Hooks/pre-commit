@@ -16,4 +16,8 @@ for file in $(git diff --cached --name-only); do
 		echo "ERROR: '$file' has a copyright error. Aborting commit."
 		exit -1
 	fi
+	if ! BuildTools/CheckHeaders.py $file; then
+		echo "ERROR: '$file' failed header sanity test. Aborting commit."
+		exit -1
+	fi
 done

@@ -106,14 +106,14 @@ void HighlightManager::storeSettings()
 
 HighlightRule HighlightManager::getRule(int index) const
 {
-	assert(index >= 0 && boost::numeric_cast<std::vector<std::string>::size_type>(index) < rules_.size());
-	return rules_[index];
+	assert(index >= 0 && static_cast<size_t>(index) < rules_.size());
+	return rules_[static_cast<size_t>(index)];
 }
 
 void HighlightManager::setRule(int index, const HighlightRule& rule)
 {
-	assert(index >= 0 && boost::numeric_cast<std::vector<std::string>::size_type>(index) < rules_.size());
-	rules_[index] = rule;
+	assert(index >= 0 && static_cast<size_t>(index) < rules_.size());
+	rules_[static_cast<size_t>(index)] = rule;
 	storeSettings();
 }
 

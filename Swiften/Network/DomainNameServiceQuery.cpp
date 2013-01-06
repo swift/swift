@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Remko Tronçon
+ * Copyright (c) 2010-2013 Remko Tronçon
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -15,6 +15,7 @@
 #include <boost/numeric/conversion/cast.hpp>
 #include <boost/lambda/lambda.hpp>
 #include <boost/lambda/bind.hpp>
+#include <boost/typeof/typeof.hpp>
 
 using namespace Swift;
 namespace lambda = boost::lambda;
@@ -44,11 +45,14 @@ void DomainNameServiceQuery::sortResults(std::vector<DomainNameServiceQuery::Res
 			std::transform(i, next, std::back_inserter(weights), 
 					/* easy hack to account for '0' weights getting at least some weight */
 					lambda::bind(&Result::weight, lambda::_1) + 1);
-			for (size_t j = 0; j < weights.size() - 1; ++j) {
+			for (int j = 0; j < boost::numeric_cast<int>(weights.size() - 1); ++j) {
 				std::vector<int> cumulativeWeights;
-				std::partial_sum(weights.begin() + j, weights.end(), std::back_inserter(cumulativeWeights));
+				std::partial_sum(
+						weights.begin() + j,
+						weights.end(), 
+						std::back_inserter(cumulativeWeights));
 				int randomNumber = generator.generateRandomInteger(cumulativeWeights.back());
-				size_t selectedIndex = std::lower_bound(cumulativeWeights.begin(), cumulativeWeights.end(), randomNumber) - cumulativeWeights.begin();
+				BOOST_AUTO(selectedIndex, std::lower_bound(cumulativeWeights.begin(), cumulativeWeights.end(), randomNumber) - cumulativeWeights.begin());
 				std::swap(i[j], i[j + selectedIndex]);
 				std::swap(weights.begin()[j], weights.begin()[j + selectedIndex]);
 			}

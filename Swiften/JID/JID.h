@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Remko Tronçon
+ * Copyright (c) 2010-2013 Remko Tronçon
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -7,10 +7,10 @@
 #pragma once
 
 #include <string>
-//#include <iosfwd>
-#include <iostream>
+#include <iosfwd>
 
 #include <Swiften/Base/API.h>
+
 
 namespace Swift {
 	/**
@@ -146,10 +146,7 @@ namespace Swift {
 				return compare(b, Swift::JID::WithResource) < 0;
 			}
 
-			friend std::ostream& operator<<(std::ostream& os, const Swift::JID& j) {
-				os << j.toString();
-				return os;
-			}
+			friend std::ostream& operator<<(std::ostream& os, const Swift::JID& j);
 
 			friend bool operator==(const Swift::JID& a, const Swift::JID& b) {
 				return a.compare(b, Swift::JID::WithResource) == 0;
@@ -170,4 +167,7 @@ namespace Swift {
 			bool hasResource_;
 			std::string resource_;
 	};
+	
+	std::ostream& operator<<(std::ostream& os, const Swift::JID& j);
 }
+

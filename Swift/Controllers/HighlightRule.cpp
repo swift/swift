@@ -88,7 +88,7 @@ HighlightRule HighlightRule::fromString(const std::string& s)
 	boost::split(v, s, boost::is_any_of("\n"));
 
 	HighlightRule r;
-	int i = 0;
+	size_t i = 0;
 	try {
 		boost::split(r.senders_, v.at(i++), boost::is_any_of("\t"));
 		r.senders_.erase(std::remove_if(r.senders_.begin(), r.senders_.end(), boost::lambda::_1 == ""), r.senders_.end());

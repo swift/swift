@@ -8,6 +8,7 @@
 
 #include <boost/smart_ptr/make_shared.hpp>
 #include <boost/enable_shared_from_this.hpp>
+#include <boost/numeric/conversion/cast.hpp>
 
 #include <Swiften/Base/Log.h>
 #include <Swiften/Network/NATTraversalGetPublicIPRequest.h>
@@ -68,7 +69,7 @@ class PlatformNATTraversalForwardPortRequest : public NATTraversalForwardPortReq
 		}
 
 		virtual void runBlocking() {
-			onResult(getNATTraversalInterface()->addPortForward(localIP, publicIP));
+			onResult(getNATTraversalInterface()->addPortForward(boost::numeric_cast<int>(localIP), boost::numeric_cast<int>(publicIP)));
 		}
 
 	private:

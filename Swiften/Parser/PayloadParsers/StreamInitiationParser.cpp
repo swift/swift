@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Remko Tronçon
+ * Copyright (c) 2010-2013 Remko Tronçon
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -40,7 +40,7 @@ void StreamInitiationParser::handleStartElement(const std::string& element, cons
 			currentFile = StreamInitiationFileInfo();
 			currentFile.setName(attributes.getAttribute("name"));
 			try {
-				currentFile.setSize(boost::lexical_cast<int>(attributes.getAttribute("size")));
+				currentFile.setSize(boost::lexical_cast<unsigned long long>(attributes.getAttribute("size")));
 			}
 			catch (boost::bad_lexical_cast&) {
 			}

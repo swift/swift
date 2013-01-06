@@ -33,7 +33,7 @@ class MenuletControllerTest : public CppUnit::TestFixture {
 			MenuletController testling(menulet);
 
 			CPPUNIT_ASSERT_EQUAL(8, static_cast<int>(menulet->items.size()));
-			int i = 0;
+			size_t i = 0;
 			CPPUNIT_ASSERT_EQUAL(std::string("No online users"), menulet->items[i++]);
 			CPPUNIT_ASSERT_EQUAL(std::string("-"), menulet->items[i++]);
 			CPPUNIT_ASSERT_EQUAL(std::string("[Offline] "), menulet->items[i++]);
@@ -50,7 +50,7 @@ class MenuletControllerTest : public CppUnit::TestFixture {
 			testling.setXMPPStatus("You are connected", MenuletController::Online);
 
 			CPPUNIT_ASSERT_EQUAL(8, static_cast<int>(menulet->items.size()));
-			int i = 0;
+			size_t i = 0;
 			CPPUNIT_ASSERT_EQUAL(std::string("No online users"), menulet->items[i++]);
 			CPPUNIT_ASSERT_EQUAL(std::string("-"), menulet->items[i++]);
 			CPPUNIT_ASSERT_EQUAL(std::string("[Online] You are connected"), menulet->items[i++]);
@@ -66,7 +66,7 @@ class MenuletControllerTest : public CppUnit::TestFixture {
 
 			testling.setXMPPStatus("You are connected", MenuletController::Online);
 
-			int i = 0;
+			size_t i = 0;
 			CPPUNIT_ASSERT_EQUAL(std::string("No online users"), menulet->items[i++]);
 			CPPUNIT_ASSERT_EQUAL(std::string("-"), menulet->items[i++]);
 			CPPUNIT_ASSERT_EQUAL(std::string("[Online] You are connected"), menulet->items[i++]);
@@ -78,7 +78,7 @@ class MenuletControllerTest : public CppUnit::TestFixture {
 
 			testling.setXMPPStatus("You are not connected", MenuletController::Offline);
 
-			int i = 0;
+			size_t i = 0;
 			CPPUNIT_ASSERT_EQUAL(std::string("No online users"), menulet->items[i++]);
 			CPPUNIT_ASSERT_EQUAL(std::string("-"), menulet->items[i++]);
 			CPPUNIT_ASSERT_EQUAL(std::string("[Offline] You are not connected"), menulet->items[i++]);
@@ -92,7 +92,7 @@ class MenuletControllerTest : public CppUnit::TestFixture {
 			users.push_back("The Mad Hatter");
 			testling.setUserNames(users);
 
-			int i = 0;
+			size_t i = 0;
 			CPPUNIT_ASSERT_EQUAL(std::string("Online users:"), menulet->items[i++]);
 			CPPUNIT_ASSERT_EQUAL(std::string("  Alice In Wonderland"), menulet->items[i++]);
 			CPPUNIT_ASSERT_EQUAL(std::string("  The Mad Hatter"), menulet->items[i++]);
@@ -105,7 +105,7 @@ class MenuletControllerTest : public CppUnit::TestFixture {
 			std::vector<std::string> users;
 			testling.setUserNames(users);
 
-			int i = 0;
+			size_t i = 0;
 			CPPUNIT_ASSERT_EQUAL(std::string("No online users"), menulet->items[i++]);
 			CPPUNIT_ASSERT_EQUAL(std::string("-"), menulet->items[i++]);
 		}

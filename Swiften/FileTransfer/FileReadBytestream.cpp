@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Remko Tronçon
+ * Copyright (c) 2010-2013 Remko Tronçon
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -7,6 +7,7 @@
 #include <boost/filesystem/fstream.hpp>
 #include <cassert>
 #include <boost/smart_ptr/make_shared.hpp>
+#include <boost/numeric/conversion/cast.hpp>
 
 #include <Swiften/FileTransfer/FileReadBytestream.h>
 #include <Swiften/Base/ByteArray.h>
@@ -30,8 +31,8 @@ boost::shared_ptr<ByteArray> FileReadBytestream::read(size_t size)  {
 	boost::shared_ptr<ByteArray> result = boost::make_shared<ByteArray>();
 	result->resize(size);
 	assert(stream->good());
-	stream->read(reinterpret_cast<char*>(vecptr(*result)), size);
-	result->resize(stream->gcount());
+	stream->read(reinterpret_cast<char*>(vecptr(*result)), boost::numeric_cast<std::streamsize>(size));
+	result->resize(boost::numeric_cast<size_t>(stream->gcount()));
 	onRead(*result);
 	return result;
 }

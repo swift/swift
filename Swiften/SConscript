@@ -128,6 +128,7 @@ if env["SCONS_STAGE"] == "build" :
 			"Elements/RosterItemExchangePayload.cpp",
 			"Elements/RosterPayload.cpp",
 			"Elements/Stanza.cpp",
+			"Elements/StanzaAck.cpp",
 			"Elements/StatusShow.cpp",
 			"Elements/StreamManagementEnabled.cpp",
 			"Elements/StreamResume.cpp",

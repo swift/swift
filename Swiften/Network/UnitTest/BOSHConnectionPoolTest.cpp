@@ -170,7 +170,7 @@ class BOSHConnectionPoolTest : public CppUnit::TestFixture {
 		void testConnectionCount_ThreeWritesTwoReads() {
 			boost::shared_ptr<MockConnection> c0;
 			boost::shared_ptr<MockConnection> c1;
-			long rid = initialRID;
+			unsigned long long rid = initialRID;
 
 			PoolRef testling = createTestling();
 			CPPUNIT_ASSERT_EQUAL(st(1), connectionFactory->connections.size());
@@ -461,7 +461,7 @@ class BOSHConnectionPoolTest : public CppUnit::TestFixture {
 		std::string port;
 		std::string sid;
 		std::string initial;
-		long initialRID;
+		unsigned long long initialRID;
 		int sessionStarted;
 		int sessionTerminated;
 

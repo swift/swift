@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011 Remko Tronçon
+ * Copyright (c) 2011-2013 Remko Tronçon
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -7,6 +7,7 @@
 #pragma once
 
 #include <vector>
+#include <boost/numeric/conversion/cast.hpp>
 
 namespace Swift {
 	using std::equal_to;
@@ -14,8 +15,8 @@ namespace Swift {
 	namespace Detail {
 		template<typename XIt, typename YIt, typename Length, typename Predicate>
 		void computeLeastCommonSubsequenceMatrix(XIt xBegin, XIt xEnd, YIt yBegin, YIt yEnd, std::vector<Length>& result) {
-			size_t width = std::distance(xBegin, xEnd) + 1;
-			size_t height = std::distance(yBegin, yEnd)  + 1;
+			size_t width = static_cast<size_t>(std::distance(xBegin, xEnd) + 1);
+			size_t height = static_cast<size_t>(std::distance(yBegin, yEnd)  + 1);
 			result.resize(width * height);
 
 			// Initialize first row & column
@@ -30,7 +31,7 @@ namespace Swift {
 			Predicate predicate;
 			for (size_t i = 1; i < width; ++i) {
 				for (size_t j = 1; j < height; ++j) {
-					result[i + j*width] = (predicate(*(xBegin + i-1), *(yBegin + j-1)) ? result[(i-1) + (j-1)*width] + 1 : std::max(result[i + (j-1)*width], result[i-1 + (j*width)]));
+					result[i + j*width] = predicate(*(xBegin + boost::numeric_cast<long long>(i)-1), *(yBegin + boost::numeric_cast<long long >(j)-1)) ? result[(i-1) + (j-1)*width] + 1 : std::max(result[i + (j-1)*width], result[i-1 + (j*width)]);
 				}
 			}
 		}
@@ -46,29 +47,29 @@ namespace Swift {
 		typename std::vector<X>::const_iterator yBegin = y.begin();
 		while (xBegin < x.end() && yBegin < y.end() && insertRemovePredicate(*xBegin, *yBegin)) {
 			if (updatePredicate(*xBegin, *yBegin)) {
-				updates.push_back(std::distance(x.begin(), xBegin));
-				postUpdates.push_back(std::distance(y.begin(), yBegin));
+				updates.push_back(static_cast<size_t>(std::distance(x.begin(), xBegin)));
+				postUpdates.push_back(static_cast<size_t>(std::distance(y.begin(), yBegin)));
 			}
 			++xBegin;
 			++yBegin;
 		}
-		size_t prefixLength = std::distance(x.begin(), xBegin);
+		size_t prefixLength = static_cast<size_t>(std::distance(x.begin(), xBegin));
 
 		// Find & handle common suffix (Optimization to reduce LCS matrix size)
 		typename std::vector<X>::const_reverse_iterator xEnd = x.rbegin();
 		typename std::vector<X>::const_reverse_iterator yEnd = y.rbegin();
 		while (xEnd.base() > xBegin && yEnd.base() > yBegin && insertRemovePredicate(*xEnd, *yEnd)) {
 			if (updatePredicate(*xEnd, *yEnd)) {
-				updates.push_back(std::distance(x.begin(), xEnd.base()) - 1);
-				postUpdates.push_back(std::distance(y.begin(), yEnd.base()) - 1);
+				updates.push_back(static_cast<size_t>(std::distance(x.begin(), xEnd.base()) - 1));
+				postUpdates.push_back(static_cast<size_t>(std::distance(y.begin(), yEnd.base()) - 1));
 			}
 			++xEnd;
 			++yEnd;
 		}
 
 		// Compute lengths
-		size_t xLength = std::distance(xBegin, xEnd.base());
-		size_t yLength = std::distance(yBegin, yEnd.base());
+		size_t xLength = static_cast<size_t>(std::distance(xBegin, xEnd.base()));
+		size_t yLength = static_cast<size_t>(std::distance(yBegin, yEnd.base()));
 
 		// Compute LCS matrix
 		std::vector<unsigned int> lcs;
@@ -77,7 +78,7 @@ namespace Swift {
 		// Process LCS matrix
 		size_t i = xLength;
 		size_t j = yLength;
-		const size_t width = xLength + 1;
+		size_t width = xLength + 1;
 		while (true) {
 			if (i > 0 && j > 0 && insertRemovePredicate(x[prefixLength + i-1], y[prefixLength + j-1])) {
 				// x[i-1] same

@@ -16,6 +16,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <iostream>
+#include <boost/numeric/conversion/cast.hpp>
 #include <utility>
 
 #ifndef SWIFTEN_PLATFORM_IPHONE
@@ -55,7 +56,7 @@ static HostAddressPort getFromDictionary(CFDictionaryRef dict, CFStringRef enabl
  					// length must be +1 for the ending zero; and the Docu of CFStringGetCString tells it like
 					// if the string is toby the length must be at least 5.
 					CFIndex length = CFStringGetLength(stringValue) + 1;
-					buffer.resize(length);
+					buffer.resize(boost::numeric_cast<size_t>(length));
 					if(CFStringGetCString(stringValue, &buffer[0], length, kCFStringEncodingMacRoman)) {
 						for(std::vector<char>::iterator iter = buffer.begin(); iter != buffer.end(); ++iter) {
 							host += *iter;

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Remko Tronçon
+ * Copyright (c) 2010-2013 Remko Tronçon
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -110,11 +110,11 @@ std::pair<std::string,std::string> LinkLocalServiceInfo::readEntry(const ByteArr
 				inKey = false;
 			}
 			else {
-				key += record[i];
+				key += static_cast<char>(record[i]);
 			}
 		}
 		else {
-			value += record[i];
+			value += static_cast<char>(record[i]);
 		}
 		++i;
 	}

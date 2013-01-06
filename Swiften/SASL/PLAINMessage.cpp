@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Remko Tronçon
+ * Copyright (c) 2010-2013 Remko Tronçon
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -15,7 +15,7 @@ PLAINMessage::PLAINMessage(const std::string& authcid, const SafeByteArray& pass
 PLAINMessage::PLAINMessage(const SafeByteArray& value) {
 	size_t i = 0;
 	while (i < value.size() && value[i] != '\0') {
-		authzid += value[i];
+		authzid += static_cast<char>(value[i]);
 		++i;
 	}
 	if (i == value.size()) {
@@ -23,7 +23,7 @@ PLAINMessage::PLAINMessage(const SafeByteArray& value) {
 	}
 	++i;
 	while (i < value.size() && value[i] != '\0') {
-		authcid += value[i];
+		authcid += static_cast<char>(value[i]);
 		++i;
 	}
 	if (i == value.size()) {

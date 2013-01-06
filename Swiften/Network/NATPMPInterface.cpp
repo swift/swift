@@ -69,7 +69,7 @@ boost::optional<NATPortMapping> NATPMPInterface::addPortForward(int localPort, i
 				mapping.getProtocol() == NATPortMapping::TCP ? NATPMP_PROTOCOL_TCP : NATPMP_PROTOCOL_UDP, 
 				boost::numeric_cast<uint16_t>(mapping.getLocalPort()), 
 				boost::numeric_cast<uint16_t>(mapping.getPublicPort()), 
-				mapping.getLeaseInSeconds()) < 0) {
+				boost::numeric_cast<uint32_t>(mapping.getLeaseInSeconds())) < 0) {
 		SWIFT_LOG(debug) << "Failed to send NAT-PMP port forwarding request!" << std::endl;
 		return boost::optional<NATPortMapping>();
 	}
@@ -87,7 +87,7 @@ boost::optional<NATPortMapping> NATPMPInterface::addPortForward(int localPort, i
 	} while(r == NATPMP_TRYAGAIN);
 
 	if (r == 0) {
-		NATPortMapping result(response.pnu.newportmapping.privateport, response.pnu.newportmapping.mappedpublicport, NATPortMapping::TCP, response.pnu.newportmapping.lifetime);
+		NATPortMapping result(response.pnu.newportmapping.privateport, response.pnu.newportmapping.mappedpublicport, NATPortMapping::TCP, boost::numeric_cast<int>(response.pnu.newportmapping.lifetime));
 		return result;
 	}
 	else {
@@ -97,7 +97,7 @@ boost::optional<NATPortMapping> NATPMPInterface::addPortForward(int localPort, i
 }
 
 bool NATPMPInterface::removePortForward(const NATPortMapping& mapping) {
-	if (sendnewportmappingrequest(&p->natpmp, mapping.getProtocol() == NATPortMapping::TCP ? NATPMP_PROTOCOL_TCP : NATPMP_PROTOCOL_UDP, 0, 0, mapping.getLocalPort()) < 0) {
+	if (sendnewportmappingrequest(&p->natpmp, mapping.getProtocol() == NATPortMapping::TCP ? NATPMP_PROTOCOL_TCP : NATPMP_PROTOCOL_UDP, 0, 0, boost::numeric_cast<uint32_t>(mapping.getLocalPort())) < 0) {
 		SWIFT_LOG(debug) << "Failed to send NAT-PMP remove forwarding request!" << std::endl;
 		return false;
 	}

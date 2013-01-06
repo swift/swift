@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011 Remko Tronçon
+ * Copyright (c) 2011-2013 Remko Tronçon
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -31,7 +31,7 @@ namespace Swift {
 	}
 
 	inline SafeByteArray createSafeByteArray(char c) {
-		return SafeByteArray(1, c);
+		return SafeByteArray(1, static_cast<unsigned char>(c));
 	}
 
 	inline SafeByteArray createSafeByteArray(const char* c, size_t n) {

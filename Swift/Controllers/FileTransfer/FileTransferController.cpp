@@ -10,6 +10,7 @@
 #include <Swiften/FileTransfer/FileReadBytestream.h>
 #include <Swiften/Base/boost_bsignals.h>
 #include <boost/bind.hpp>
+#include <boost/filesystem.hpp>
 #include "Swift/Controllers/UIInterfaces/ChatWindow.h"
 #include <Swiften/Base/Log.h>
 #include <Swift/Controllers/Intl.h>

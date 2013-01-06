@@ -7,7 +7,7 @@
 #pragma once
 
 #include <string>
-#include <boost/filesystem.hpp>
+#include <boost/filesystem/path.hpp>
 #include <boost/date_time/posix_time/posix_time.hpp>
 
 #include <Swiften/Base/API.h>

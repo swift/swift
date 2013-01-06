@@ -205,7 +205,7 @@ private:
 		boost::variate_generator<boost::mt19937&, boost::uniform_int<> > randomByte(randomGen, dist);
 		ByteArray result(len);
 		for (size_t i=0; i < len; ++i ) {
-			result[i] = static_cast<char>(randomByte());
+			result[i] = static_cast<unsigned char>(randomByte());
 		}
 		return result;
 	}

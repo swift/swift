@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Remko Tronçon
+ * Copyright (c) 2010-2013 Remko Tronçon
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -36,7 +36,7 @@ namespace Swift {
 				return to;
 			}
 
-			void setBlockSize(int blockSize) {
+			void setBlockSize(unsigned int blockSize) {
 				this->blockSize = blockSize;
 			}
 
@@ -55,7 +55,7 @@ namespace Swift {
 			JID to;
 			boost::shared_ptr<ReadBytestream> bytestream;
 			IQRouter* router;
-			int blockSize;
+			unsigned int blockSize;
 			int sequenceNumber;
 			bool active;
 			bool waitingForData;

@@ -9,6 +9,7 @@
 #include <boost/cast.hpp>
 #include <cassert>
 #include <algorithm>
+#include <boost/numeric/conversion/cast.hpp>
 #include <Swiften/Base/foreach.h>
 
 #include <Swiften/Network/TimerFactory.h>
@@ -132,13 +133,13 @@ void TableRoster::handleUpdateTimerTick() {
 		computeIndexDiff<Item, ItemEquals, ItemNeedsUpdate >(sections[sectionUpdates[i]].items, newSections[sectionPostUpdates[i]].items, itemUpdates, itemPostUpdates, itemRemoves, itemInserts);
 		size_t end = update.insertedRows.size();
 		update.insertedRows.resize(update.insertedRows.size() + itemInserts.size());
-		std::transform(itemInserts.begin(), itemInserts.end(), update.insertedRows.begin() + end, CreateIndexForSection(sectionPostUpdates[i]));
+		std::transform(itemInserts.begin(), itemInserts.end(), update.insertedRows.begin() + boost::numeric_cast<long long>(end), CreateIndexForSection(sectionPostUpdates[i]));
 		end = update.deletedRows.size();
 		update.deletedRows.resize(update.deletedRows.size() + itemRemoves.size());
-		std::transform(itemRemoves.begin(), itemRemoves.end(), update.deletedRows.begin() + end, CreateIndexForSection(sectionUpdates[i]));
+		std::transform(itemRemoves.begin(), itemRemoves.end(), update.deletedRows.begin() + boost::numeric_cast<long long>(end), CreateIndexForSection(sectionUpdates[i]));
 		end = update.updatedRows.size();
 		update.updatedRows.resize(update.updatedRows.size() + itemUpdates.size());
-		std::transform(itemUpdates.begin(), itemUpdates.end(), update.updatedRows.begin() + end, CreateIndexForSection(sectionPostUpdates[i]));
+		std::transform(itemUpdates.begin(), itemUpdates.end(), update.updatedRows.begin() + boost::numeric_cast<long long>(end), CreateIndexForSection(sectionPostUpdates[i]));
 	}
 	
 	// Switch the old model with the new

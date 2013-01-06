@@ -18,7 +18,7 @@ namespace Swift {
 	
 	void JingleIBBTransportMethodPayloadParser::handleStartElement(const std::string&, const std::string&, const AttributeMap& attributes) {
 		try {
-			getPayloadInternal()->setBlockSize(boost::lexical_cast<int>(attributes.getAttributeValue("block-size").get_value_or("0")));
+			getPayloadInternal()->setBlockSize(boost::lexical_cast<unsigned int>(attributes.getAttributeValue("block-size").get_value_or("0")));
 		} catch (boost::bad_lexical_cast &) {
 			getPayloadInternal()->setBlockSize(0);
 		}

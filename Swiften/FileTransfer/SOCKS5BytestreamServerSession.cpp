@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Remko Tronçon
+ * Copyright (c) 2010-2013 Remko Tronçon
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -134,7 +134,7 @@ void SOCKS5BytestreamServerSession::process() {
 				SafeByteArray result = createSafeByteArray("\x05", 1);
 				result.push_back((readBytestream || writeBytestream) ? 0x0 : 0x4);
 				append(result, createByteArray("\x00\x03", 2));
-				result.push_back(static_cast<char>(requestID.size()));
+				result.push_back(boost::numeric_cast<unsigned char>(requestID.size()));
 				append(result, concat(requestID, createByteArray("\x00\x00", 2)));
 				if (!readBytestream && !writeBytestream) {
 					SWIFT_LOG(debug) << "Readstream or Wrtiestream with ID " << streamID << " not found!" << std::endl;
@@ -160,7 +160,7 @@ void SOCKS5BytestreamServerSession::process() {
 void SOCKS5BytestreamServerSession::sendData() {
 	if (!readBytestream->isFinished()) {
 		try {
-			SafeByteArray dataToSend = createSafeByteArray(*readBytestream->read(chunkSize));
+			SafeByteArray dataToSend = createSafeByteArray(*readBytestream->read(boost::numeric_cast<size_t>(chunkSize)));
 			if (!dataToSend.empty()) {
 				connection->write(dataToSend);
 				onBytesSent(dataToSend.size());

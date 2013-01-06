@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011 Remko Tronçon
+ * Copyright (c) 2011-2013 Remko Tronçon
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -7,6 +7,7 @@
 #include <Swiften/Parser/BOSHBodyExtractor.h>
 
 #include <boost/shared_ptr.hpp>
+#include <boost/numeric/conversion/cast.hpp>
 
 #include <Swiften/Parser/XMLParserClient.h>
 #include <Swiften/Parser/XMLParser.h>
@@ -33,7 +34,7 @@ class BOSHBodyParserClient : public XMLParserClient {
 		BOSHBodyExtractor* bodyExtractor;
 };
 
-inline bool isWhitespace(char c) {
+inline bool isWhitespace(unsigned char c) {
 	return c == ' ' || c == '\n' || c == '\t' || c == '\r';
 }
 
@@ -117,13 +118,17 @@ BOSHBodyExtractor::BOSHBodyExtractor(XMLParserFactory* parserFactory, const Byte
 
 	body = BOSHBody();
 	if (!endElementSeen) {
-		body->content = std::string(reinterpret_cast<const char*>(vecptr(data) + std::distance(data.begin(), i)), std::distance(i, j.base()));
+		body->content = std::string(
+				reinterpret_cast<const char*>(vecptr(data) + std::distance(data.begin(), i)), 
+				boost::numeric_cast<size_t>(std::distance(i, j.base())));
 	}
 
 	// Parse the body element
 	BOSHBodyParserClient parserClient(this);
 	boost::shared_ptr<XMLParser> parser(parserFactory->createXMLParser(&parserClient));
-	if (!parser->parse(std::string(reinterpret_cast<const char*>(vecptr(data)), std::distance(data.begin(), i)))) {
+	if (!parser->parse(std::string(
+			reinterpret_cast<const char*>(vecptr(data)), 
+			boost::numeric_cast<size_t>(std::distance(data.begin(), i))))) {
 		/* TODO: This needs to be only validating the BOSH <body> element, so that XMPP parsing errors are caught at
 		   the correct higher layer */
 		body = boost::optional<BOSHBody>();

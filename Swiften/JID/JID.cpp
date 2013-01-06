@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Remko Tronçon
+ * Copyright (c) 2010-2013 Remko Tronçon
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -18,6 +18,7 @@
 #include <boost/assign/list_of.hpp>
 #include <boost/algorithm/string/find_format.hpp>
 #include <boost/algorithm/string/finder.hpp>
+#include <iostream>
 #include <sstream>
 
 #include <Swiften/Base/String.h>
@@ -110,6 +111,8 @@ struct EscapedCharacterFormatter {
 	}
 };
 #endif
+
+namespace Swift {
 
 JID::JID(const char* jid) : valid_(true) {
 	initializeFromString(std::string(jid));
@@ -269,4 +272,11 @@ std::string JID::getUnescapedNode() const {
 	}
 	return result;
 	//return boost::find_format_all_copy(node_, EscapedCharacterFinder(), EscapedCharacterFormatter());
+}
+
+std::ostream& operator<<(std::ostream& os, const JID& j) {
+	os << j.toString();
+	return os;
+}
+
 }

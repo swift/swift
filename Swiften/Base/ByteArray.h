@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Remko Tronçon
+ * Copyright (c) 2010-2013 Remko Tronçon
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -26,7 +26,7 @@ namespace Swift {
 	}
 
 	inline ByteArray createByteArray(char c) {
-		return std::vector<unsigned char>(1, c);
+		return std::vector<unsigned char>(1, static_cast<unsigned char>(c));
 	}
 
 	template<typename T, typename A>

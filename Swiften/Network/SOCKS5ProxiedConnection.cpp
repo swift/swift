@@ -65,7 +65,7 @@ void SOCKS5ProxiedConnection::handleProxyInitializeData(boost::shared_ptr<SafeBy
 							else {
 								uc = rawAddress.to_v6().to_bytes()[s]; // the address.
 							}
-							socksConnect.push_back(static_cast<char>(uc));
+							socksConnect.push_back(uc);
 					
 						}
 						socksConnect.push_back(static_cast<unsigned char> ((getServer().getPort() >> 8) & 0xFF)); // highbyte of the port.

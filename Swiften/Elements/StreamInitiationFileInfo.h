@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011 Remko Tronçon
+ * Copyright (c) 2011-2013 Remko Tronçon
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -19,7 +19,7 @@ public:
 	typedef boost::shared_ptr<StreamInitiationFileInfo> ref;
 	
 public:
-	StreamInitiationFileInfo(const std::string& name = "", const std::string& description = "", int size = 0,
+	StreamInitiationFileInfo(const std::string& name = "", const std::string& description = "", unsigned long long size = 0,
 				 const std::string& hash = "", const boost::posix_time::ptime &date = boost::posix_time::ptime(), const std::string& algo="md5") : 
 		name(name), description(description), size(size), hash(hash), date(date), algo(algo), supportsRangeRequests(false), rangeOffset(0) {}
 	
@@ -39,11 +39,11 @@ public:
 		return this->description;
 	}
 	
-	void setSize(const boost::uintmax_t size) {
+	void setSize(const unsigned long long size) {
 		this->size = size;
 	}
 	
-	boost::uintmax_t getSize() const {
+	unsigned long long getSize() const {
 		return this->size;
 	}
 	
@@ -79,24 +79,24 @@ public:
 		return supportsRangeRequests;
 	}
 	
-	void setRangeOffset(boost::uintmax_t offset) {
+	void setRangeOffset(unsigned long long offset) {
 		supportsRangeRequests = true;
 		rangeOffset = offset;
 	}
 	
-	boost::uintmax_t getRangeOffset() const {
+	unsigned long long getRangeOffset() const {
 		return rangeOffset;
 	}
 
 private:
 	std::string name;
 	std::string description;
-	boost::uintmax_t size;
+	unsigned long long size;
 	std::string hash;
 	boost::posix_time::ptime date;
 	std::string algo;
 	bool supportsRangeRequests;
-	boost::uintmax_t rangeOffset;
+	unsigned long long rangeOffset;
 };
 
 }

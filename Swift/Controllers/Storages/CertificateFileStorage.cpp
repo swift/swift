@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Remko Tronçon
+ * Copyright (c) 2010-2013 Remko Tronçon
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -8,6 +8,7 @@
 
 #include <iostream>
 #include <boost/filesystem/fstream.hpp>
+#include <boost/numeric/conversion/cast.hpp>
 
 #include <Swiften/StringCodecs/SHA1.h>
 #include <Swiften/StringCodecs/Hexify.h>
@@ -50,7 +51,7 @@ void CertificateFileStorage::addCertificate(Certificate::ref certificate) {
 	}
 	boost::filesystem::ofstream file(certificatePath, boost::filesystem::ofstream::binary|boost::filesystem::ofstream::out);
 	ByteArray data = certificate->toDER();
-	file.write(reinterpret_cast<const char*>(vecptr(data)), data.size());
+	file.write(reinterpret_cast<const char*>(vecptr(data)), boost::numeric_cast<std::streamsize>(data.size()));
 	file.close();
 }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Remko Tronçon
+ * Copyright (c) 2010-2013 Remko Tronçon
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -28,18 +28,18 @@ HostAddress::HostAddress(const std::string& address) {
 	}
 }
 
-HostAddress::HostAddress(const unsigned char* address, int length) {
+HostAddress::HostAddress(const unsigned char* address, size_t length) {
 	assert(length == 4 || length == 16);
 	if (length == 4) {
 		boost::asio::ip::address_v4::bytes_type data;
-		for (int i = 0; i < length; ++i) {
+		for (size_t i = 0; i < length; ++i) {
 			data[i] = address[i];
 		}
 		address_ = boost::asio::ip::address(boost::asio::ip::address_v4(data));
 	}
 	else {
 		boost::asio::ip::address_v6::bytes_type data;
-		for (int i = 0; i < length; ++i) {
+		for (size_t i = 0; i < length; ++i) {
 			data[i] = address[i];
 		}
 		address_ = boost::asio::ip::address(boost::asio::ip::address_v6(data));

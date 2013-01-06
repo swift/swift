@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011 Remko Tronçon
+ * Copyright (c) 2011-2013 Remko Tronçon
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -29,16 +29,16 @@ namespace Swift {
 				return stanzaType;
 			}
 
-			int getBlockSize() const {
+			unsigned int getBlockSize() const {
 				return blockSize;
 			}
 
-			void setBlockSize(int blockSize) {
+			void setBlockSize(unsigned int blockSize) {
 				this->blockSize = blockSize;
 			}
 
 		private:
-			int blockSize;
+			unsigned int blockSize;
 			StanzaType stanzaType;
 	};
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Remko Tronçon
+ * Copyright (c) 2010-2013 Remko Tronçon
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -25,7 +25,7 @@ namespace Swift {
 
 	class OutgoingSIFileTransfer : public OutgoingFileTransfer {
 		public:
-			OutgoingSIFileTransfer(const std::string& id, const JID& from, const JID& to, const std::string& name, int size, const std::string& description, boost::shared_ptr<ReadBytestream> bytestream, IQRouter* iqRouter, SOCKS5BytestreamServer* socksServer);
+			OutgoingSIFileTransfer(const std::string& id, const JID& from, const JID& to, const std::string& name, unsigned long long size, const std::string& description, boost::shared_ptr<ReadBytestream> bytestream, IQRouter* iqRouter, SOCKS5BytestreamServer* socksServer);
 
 			virtual void start();
 			virtual void stop();
@@ -43,7 +43,7 @@ namespace Swift {
 			JID from;
 			JID to;
 			std::string name;
-			int size;
+			unsigned long long size;
 			std::string description;
 			boost::shared_ptr<ReadBytestream> bytestream;
 			IQRouter* iqRouter;

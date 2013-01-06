@@ -6,6 +6,8 @@
 
 #include "FileTransferProgressInfo.h"
 
+#include <boost/numeric/conversion/cast.hpp>
+
 #include <Swiften/Base/Log.h>
 
 namespace Swift {
@@ -16,7 +18,7 @@ FileTransferProgressInfo::FileTransferProgressInfo(boost::uintmax_t completeByte
 
 void FileTransferProgressInfo::setBytesProcessed(int processedBytes) {
 	int oldPercentage = int(double(completedBytes) / double(completeBytes) * 100.0);
-	completedBytes += processedBytes;
+	completedBytes += boost::numeric_cast<boost::uintmax_t>(processedBytes);
 	int newPercentage = int(double(completedBytes) / double(completeBytes) * 100.0);
 	if (oldPercentage != newPercentage) {
 		onProgressPercentage(newPercentage);

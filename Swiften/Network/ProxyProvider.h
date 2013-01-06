@@ -7,7 +7,6 @@
 #pragma once
 #include <map>
 
-#include <Swiften/Base/Log.h>
 #include <Swiften/Network/HostAddressPort.h>
 #include <Swiften/Base/String.h>
 

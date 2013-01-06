@@ -166,7 +166,7 @@ HostAddressPort SOCKS5BytestreamClientSession::getAddressPort() const {
 void SOCKS5BytestreamClientSession::sendData() {
 	if (!readBytestream->isFinished()) {
 		try {
-			boost::shared_ptr<ByteArray> dataToSend = readBytestream->read(chunkSize);
+			boost::shared_ptr<ByteArray> dataToSend = readBytestream->read(boost::numeric_cast<size_t>(chunkSize));
 			connection->write(createSafeByteArray(*dataToSend));
 			onBytesSent(dataToSend->size());
 		}

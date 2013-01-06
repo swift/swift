@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Remko Tronçon
+ * Copyright (c) 2010-2013 Remko Tronçon
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -48,13 +48,13 @@ DIGESTMD5Properties DIGESTMD5Properties::parse(const ByteArray& data) {
 	ByteArray currentKey;
 	ByteArray currentValue;
 	for (size_t i = 0; i < data.size(); ++i) {
-		char c = data[i];
+		char c = static_cast<char>(data[i]);
 		if (inKey) {
 			if (c == '=') {
 				inKey = false;
 			}
 			else {
-				currentKey.push_back(c);
+				currentKey.push_back(static_cast<unsigned char>(c));
 			}
 		}
 		else {
@@ -71,7 +71,7 @@ DIGESTMD5Properties DIGESTMD5Properties::parse(const ByteArray& data) {
 				currentValue = ByteArray();
 			}
 			else {
-				currentValue.push_back(c);
+				currentValue.push_back(static_cast<unsigned char>(c));
 			}
 		}
 	}

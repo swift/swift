@@ -7,9 +7,11 @@
 #include <Swiften/FileTransfer/FileTransferManagerImpl.h>
 
 #include <boost/bind.hpp>
+#include <boost/filesystem.hpp>
 #include <boost/cstdint.hpp>
 
 #include <Swiften/Base/foreach.h>
+#include <Swiften/Base/Log.h>
 #include "Swiften/Disco/EntityCapsProvider.h"
 #include <Swiften/JID/JID.h>
 #include <Swiften/Elements/StreamInitiationFileInfo.h>

@@ -758,7 +758,7 @@ static int sluift_sleep(lua_State *L) {
 		int timeout = boost::numeric_cast<int>(luaL_checknumber(L, 1));
 		Watchdog watchdog(timeout, networkFactories.getTimerFactory());
 		while (!watchdog.getTimedOut()) {
-			Swift::sleep(std::min(100, timeout));
+			Swift::sleep(boost::numeric_cast<unsigned int>(std::min(100, timeout)));
 			eventLoop.runOnce();
 		}
 		return 0;

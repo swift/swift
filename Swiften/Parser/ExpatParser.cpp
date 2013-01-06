@@ -55,7 +55,8 @@ static void handleEndElement(void* parser, const XML_Char* name) {
 }
 
 static void handleCharacterData(void* parser, const XML_Char* data, int len) {
-	static_cast<XMLParser*>(parser)->getClient()->handleCharacterData(std::string(data, len));
+	assert(len >= 0);
+	static_cast<XMLParser*>(parser)->getClient()->handleCharacterData(std::string(data, static_cast<size_t>(len)));
 }
 
 static void handleXMLDeclaration(void*, const XML_Char*, const XML_Char*, int) {

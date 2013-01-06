@@ -12,6 +12,7 @@
 
 #include <Swiften/Base/Platform.h>
 #include <stdlib.h>
+#include <boost/numeric/conversion/cast.hpp>
 #ifdef SWIFTEN_PLATFORM_WINDOWS
 #undef UNICODE
 #include <windows.h>
@@ -121,7 +122,7 @@ void PlatformDomainNameServiceQuery::runBlocking() {
 			emitError();
 			return;
 		}
-		record.priority = ns_get16(currentEntry);
+		record.priority = boost::numeric_cast<int>(ns_get16(currentEntry));
 		currentEntry += 2;
 
 		// Weight
@@ -129,7 +130,7 @@ void PlatformDomainNameServiceQuery::runBlocking() {
 			emitError();
 			return;
 		}
-		record.weight = ns_get16(currentEntry);
+		record.weight = boost::numeric_cast<int>(ns_get16(currentEntry));
 		currentEntry += 2;
 
 		// Port
@@ -137,7 +138,7 @@ void PlatformDomainNameServiceQuery::runBlocking() {
 			emitError();
 			return;
 		}
-		record.port = ns_get16(currentEntry);
+		record.port = boost::numeric_cast<int>(ns_get16(currentEntry));
 		currentEntry += 2; 
 
 		// Hostname

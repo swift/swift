@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Remko Tronçon
+ * Copyright (c) 2010-2013 Remko Tronçon
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -9,13 +9,14 @@
 #include <cassert>
 #include <string.h>
 #include <zlib.h>
+#include <boost/numeric/conversion/cast.hpp>
 
 #include <Swiften/Compress/ZLibException.h>
 #include <Swiften/Compress/ZLibCodecompressor_Private.h>
 
 namespace Swift {
 
-static const int CHUNK_SIZE = 1024; // If you change this, also change the unittest
+static const size_t CHUNK_SIZE = 1024; // If you change this, also change the unittest
 
 
 ZLibCodecompressor::ZLibCodecompressor() : p(boost::make_shared<Private>()) {
@@ -32,7 +33,7 @@ SafeByteArray ZLibCodecompressor::process(const SafeByteArray& input) {
 	SafeByteArray output;
 	p->stream.avail_in = static_cast<unsigned int>(input.size());
 	p->stream.next_in = reinterpret_cast<Bytef*>(const_cast<unsigned char*>(vecptr(input)));
-	int outputPosition = 0;
+	size_t outputPosition = 0;
 	do {
 		output.resize(outputPosition + CHUNK_SIZE);
 		p->stream.avail_out = CHUNK_SIZE;

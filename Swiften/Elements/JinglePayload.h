@@ -15,8 +15,6 @@
 #include <Swiften/Elements/Payload.h>
 #include <Swiften/Elements/JingleContentPayload.h>
 
-#include <Swiften/Base/Log.h>
-
 namespace Swift {
 	class JinglePayload : public Payload {
 		public:

@@ -121,7 +121,7 @@ class JingleParserTest : public CppUnit::TestFixture {
 			
 			JingleIBBTransportPayload::ref transportPaylod = payload->getTransport<JingleIBBTransportPayload>();
 			CPPUNIT_ASSERT(transportPaylod);
-			CPPUNIT_ASSERT_EQUAL(4096, transportPaylod->getBlockSize());
+			CPPUNIT_ASSERT_EQUAL(4096U, transportPaylod->getBlockSize());
 			CPPUNIT_ASSERT_EQUAL(std::string("ch3d9s71"), transportPaylod->getSessionID());
 		}
 		
@@ -158,7 +158,7 @@ class JingleParserTest : public CppUnit::TestFixture {
 			
 			JingleIBBTransportPayload::ref transportPaylod = payload->getTransport<JingleIBBTransportPayload>();
 			CPPUNIT_ASSERT(transportPaylod);
-			CPPUNIT_ASSERT_EQUAL(2048, transportPaylod->getBlockSize());
+			CPPUNIT_ASSERT_EQUAL(2048U, transportPaylod->getBlockSize());
 			CPPUNIT_ASSERT_EQUAL(std::string("ch3d9s71"), transportPaylod->getSessionID());
 		}
 		
@@ -191,7 +191,7 @@ class JingleParserTest : public CppUnit::TestFixture {
 			
 			JingleIBBTransportPayload::ref transportPaylod = payload->getTransport<JingleIBBTransportPayload>();
 			CPPUNIT_ASSERT(transportPaylod);
-			CPPUNIT_ASSERT_EQUAL(2048, transportPaylod->getBlockSize());
+			CPPUNIT_ASSERT_EQUAL(2048U, transportPaylod->getBlockSize());
 			CPPUNIT_ASSERT_EQUAL(std::string("bt8a71h6"), transportPaylod->getSessionID());	
 		}
 		
@@ -468,7 +468,7 @@ class JingleParserTest : public CppUnit::TestFixture {
 			
 			StreamInitiationFileInfo file = content->getDescription<JingleFileTransferDescription>()->getRequests()[0];
 			CPPUNIT_ASSERT_EQUAL(std::string("552da749930852c69ae5d2141d3766b1"), file.getHash());
-			CPPUNIT_ASSERT_EQUAL(static_cast<boost::uintmax_t>(270336), file.getRangeOffset());
+			CPPUNIT_ASSERT_EQUAL(static_cast<unsigned long long>(270336), file.getRangeOffset());
 			CPPUNIT_ASSERT_EQUAL(true, file.getSupportsRangeRequests());
 		}
 		
