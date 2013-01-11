@@ -44,6 +44,7 @@ fi
 	uuid/uuid_io.hpp \
 	uuid/uuid_generators.hpp \
 	variant.hpp \
+	spirit/include/lex_lexertl.hpp \
 	$TARGET_DIR
 cp $1/LICENSE_1_0.txt $TARGET_DIR
 
