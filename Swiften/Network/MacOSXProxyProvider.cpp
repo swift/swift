@@ -36,7 +36,6 @@ static HostAddressPort getFromDictionary(CFDictionaryRef dict, CFStringRef enabl
 		const int i = 0;
 		CFNumberRef zero = CFNumberCreate(kCFAllocatorDefault, kCFNumberIntType, &i);
 		CFComparisonResult result = CFNumberCompare(numberValue, zero, NULL);
-		CFRelease(numberValue);
 		CFRelease(zero);
 
 		if(result != kCFCompareEqualTo) {
@@ -47,7 +46,6 @@ static HostAddressPort getFromDictionary(CFDictionaryRef dict, CFStringRef enabl
 				CFNumberRef numberValue = reinterpret_cast<CFNumberRef> (CFDictionaryGetValue(dict, portKey));
 				if(numberValue != NULL) {
 					CFNumberGetValue(numberValue, kCFNumberIntType, &port);
-					CFRelease(numberValue);
 				}
 
 				CFStringRef stringValue = reinterpret_cast<CFStringRef> (CFDictionaryGetValue(dict, hostKey));
@@ -62,7 +60,6 @@ static HostAddressPort getFromDictionary(CFDictionaryRef dict, CFStringRef enabl
 							host += *iter;
 						}
 					}
-					CFRelease(stringValue);
 				}
 			}
 			catch(...) {
