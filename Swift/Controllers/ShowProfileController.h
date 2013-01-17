@@ -25,7 +25,7 @@ namespace Swift {
 		private:
 			void handleUIEvent(UIEvent::ref event);
 			void handleVCardChanged(const JID&, VCard::ref);
-			void handleProfileWindowClosed(const JID& profileJid);
+			void handleProfileWindowAboutToBeClosed(const JID& profileJid);
 
 		private:
 			VCardManager* vcardManager;

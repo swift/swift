@@ -29,6 +29,7 @@ namespace Swift {
 			void handleVCardChangeRequest(VCard::ref vcard);
 			void handleSetVCardResponse(ErrorPayload::ref);
 			void handleOwnVCardChanged(VCard::ref vcard);
+			void handleProfileWindowAboutToBeClosed(const JID&);
 			void updateDialogStatus();
 
 		private:

@@ -22,14 +22,15 @@
 
 namespace Swift {
 
-QtProfileWindow::QtProfileWindow(QWidget* parent) :
-	QWidget(parent),
+QtProfileWindow::QtProfileWindow() :
+	QWidget(),
 	ui(new Ui::QtProfileWindow) {
 	ui->setupUi(this);
 	new QShortcut(QKeySequence::Close, this, SLOT(close()));
 	ui->throbberLabel->setMovie(new QMovie(":/icons/throbber.gif", QByteArray(), this));
 	connect(ui->savePushButton, SIGNAL(clicked()), SLOT(handleSave()));
 	setEditable(false);
+	setAttribute(Qt::WA_DeleteOnClose);
 }
 
 QtProfileWindow::~QtProfileWindow() {
@@ -104,8 +105,8 @@ void QtProfileWindow::updateTitle() {
 }
 
 void QtProfileWindow::closeEvent(QCloseEvent* event) {
-	onWindowClosed(jid);
 	event->accept();
+	onWindowAboutToBeClosed(jid);
 }
 
 void QtProfileWindow::handleSave() {

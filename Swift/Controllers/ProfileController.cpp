@@ -25,7 +25,7 @@ ProfileController::~ProfileController() {
 	if (profileWindow) {
 		vcardManager->onOwnVCardChanged.disconnect(boost::bind(&ProfileController::handleOwnVCardChanged, this, _1));
 		profileWindow->onVCardChangeRequest.disconnect(boost::bind(&ProfileController::handleVCardChangeRequest, this, _1));
-		delete profileWindow;
+		profileWindow->onWindowAboutToBeClosed.disconnect(boost::bind(&ProfileController::handleProfileWindowAboutToBeClosed, this, _1));
 	}
 	uiEventStream->onUIEvent.disconnect(boost::bind(&ProfileController::handleUIEvent, this, _1));
 }
@@ -39,6 +39,7 @@ void ProfileController::handleUIEvent(UIEvent::ref event) {
 		profileWindow = profileWindowFactory->createProfileWindow();
 		profileWindow->setEditable(true);
 		profileWindow->onVCardChangeRequest.connect(boost::bind(&ProfileController::handleVCardChangeRequest, this, _1));
+		profileWindow->onWindowAboutToBeClosed.connect(boost::bind(&ProfileController::handleProfileWindowAboutToBeClosed, this, _1));
 		vcardManager->onOwnVCardChanged.connect(boost::bind(&ProfileController::handleOwnVCardChanged, this, _1));
 	}
 	gettingVCard = true;
@@ -74,6 +75,10 @@ void ProfileController::handleOwnVCardChanged(VCard::ref vcard) {
 		gettingVCard = false;
 		updateDialogStatus();
 	}
+}
+
+void ProfileController::handleProfileWindowAboutToBeClosed(const JID&) {
+	profileWindow = NULL;
 }
 
 void ProfileController::setAvailable(bool b) {

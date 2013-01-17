@@ -28,7 +28,7 @@ class QtProfileWindow : public QWidget, public ProfileWindow {
 	Q_OBJECT
 
 	public:
-		explicit QtProfileWindow(QWidget* parent = 0);
+		QtProfileWindow();
 		virtual ~QtProfileWindow();
 
 		virtual void setJID(const JID& jid);

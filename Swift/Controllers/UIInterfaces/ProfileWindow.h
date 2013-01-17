@@ -30,6 +30,6 @@ namespace Swift {
 			virtual void hide() = 0;
 
 			boost::signal<void (VCard::ref)> onVCardChangeRequest;
-			boost::signal<void (const JID&)> onWindowClosed;
+			boost::signal<void (const JID&)> onWindowAboutToBeClosed;
 	};
 }

@@ -25,7 +25,7 @@ ShowProfileController::ShowProfileController(VCardManager* vcardManager, Profile
 ShowProfileController::~ShowProfileController() {
 	typedef std::pair<JID, ProfileWindow*> JIDProfileWindowPair;
 	foreach(const JIDProfileWindowPair& jidWndPair, openedProfileWindows) {
-		jidWndPair.second->onWindowClosed.disconnect(boost::bind(&ShowProfileController::handleProfileWindowClosed, this, _1));
+		jidWndPair.second->onWindowAboutToBeClosed.disconnect(boost::bind(&ShowProfileController::handleProfileWindowAboutToBeClosed, this, _1));
 		delete jidWndPair.second;
 	}
 
@@ -42,7 +42,7 @@ void ShowProfileController::handleUIEvent(UIEvent::ref event) {
 	if (openedProfileWindows.find(showProfileEvent->getJID()) == openedProfileWindows.end()) {
 		ProfileWindow* newProfileWindow = profileWindowFactory->createProfileWindow();
 		newProfileWindow->setJID(showProfileEvent->getJID());
-		newProfileWindow->onWindowClosed.connect(boost::bind(&ShowProfileController::handleProfileWindowClosed, this, _1));
+		newProfileWindow->onWindowAboutToBeClosed.connect(boost::bind(&ShowProfileController::handleProfileWindowAboutToBeClosed, this, _1));
 		openedProfileWindows[showProfileEvent->getJID()] = newProfileWindow;
 		VCard::ref vcard = vcardManager->getVCardAndRequestWhenNeeded(showProfileEvent->getJID());
 		if (vcard) {
@@ -67,10 +67,8 @@ void ShowProfileController::handleVCardChanged(const JID& jid, VCard::ref vcard)
 	profileWindow->show();
 }
 
-void ShowProfileController::handleProfileWindowClosed(const JID& profileJid) {
-	ProfileWindow* profileWindow = openedProfileWindows[profileJid];
+void ShowProfileController::handleProfileWindowAboutToBeClosed(const JID& profileJid) {
 	openedProfileWindows.erase(profileJid);
-	delete profileWindow;
 }
 
 }
