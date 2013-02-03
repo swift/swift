@@ -291,7 +291,7 @@ void ChatController::handleFileTransferStart(std::string id, std::string descrip
 }
 
 void ChatController::handleFileTransferAccept(std::string id, std::string filename) {
-	SWIFT_LOG(debug) "handleFileTransferAccept(" << id << ", " << filename << ")" << std::endl;
+	SWIFT_LOG(debug) << "handleFileTransferAccept(" << id << ", " << filename << ")" << std::endl;
 	if (ftControllers.find(id) != ftControllers.end()) {
 		ftControllers[id]->accept(filename);
 	} else {

@@ -153,7 +153,7 @@ QtSwift::QtSwift(const po::variables_map& options) : networkFactories_(&clientMa
 	}
 
 	if (options.count("debug")) {
-		Swift::logging = true;
+		Log::setLogLevel(Swift::Log::debug);
 	}
 
 	tabs_ = options.count("no-tabs") && !splitter_ ? NULL : new QtChatTabs();

@@ -19,6 +19,8 @@ int main(int argc, char* argv[]) {
 	bool verbose = false;
 	bool outputXML = false;
 
+	Swift::Log::setLogLevel(Swift::Log::error);
+
 	// Parse parameters
 	std::vector<std::string> testsToRun;
 	for (int i = 1; i < argc; ++i) {
@@ -30,7 +32,7 @@ int main(int argc, char* argv[]) {
 			outputXML = true;
 		}
 		else if (param == "--debug") {
-			Swift::logging = true;
+			Swift::Log::setLogLevel(Swift::Log::debug);
 		}
 		else {
 			testsToRun.push_back(param);

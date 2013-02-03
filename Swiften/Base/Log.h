@@ -1,26 +1,40 @@
 /*
- * Copyright (c) 2010-2012 Remko Tronçon
+ * Copyright (c) 2010-2013 Remko Tronçon
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
 #pragma once
 
-#include <iostream>
+#include <sstream>
 
 #include <Swiften/Base/API.h>
 
 namespace Swift {
-	extern SWIFTEN_API bool logging;
-	namespace LogDetail {
-		// Only here to be able to statically check the correctness of the severity levers
-		namespace Severity {
-			enum {
-				debug, info, warning, error
+	class SWIFTEN_API Log {
+		public:
+			enum Severity {
+				error, warning, info, debug
 			};
-		}
-	}
+
+			Log();
+			~Log();
+
+			std::ostringstream& getStream(
+					Severity severity, 
+					const std::string& severityString, 
+					const std::string& file, 
+					int line,
+					const std::string& function);
+
+			static Severity getLogLevel();
+			static void setLogLevel(Severity level);
+
+		private:
+			std::ostringstream stream;
+	};
 }
 
 #define SWIFT_LOG(severity) \
-	if (!Swift::logging) {} else (void) LogDetail::Severity::severity, std::cerr << "[" << #severity << "] " << __FILE__ << ":" << __LINE__ << " " << __FUNCTION__ << ": "
+	if (Log::severity > Log::getLogLevel()) ; \
+	else Log().getStream(Log::severity, #severity, __FILE__, __LINE__, __FUNCTION__)

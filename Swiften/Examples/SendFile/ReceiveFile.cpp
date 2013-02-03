@@ -65,7 +65,7 @@ class FileReceiver {
 
 	private:
 		void handleConnected() {
-			Swift::logging = true;
+			Log::setLogLevel(Log::debug);
 			client->getFileTransferManager()->startListeningOnPort(9999);
 			client->getFileTransferManager()->onIncomingFileTransfer.connect(boost::bind(&FileReceiver::handleIncomingFileTransfer, this, _1));
 			

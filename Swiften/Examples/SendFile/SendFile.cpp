@@ -144,7 +144,7 @@ int main(int argc, char* argv[]) {
 
 	JID sender(argv[1]);
 	JID recipient(argv[3]);
-	Swift::logging = true;
+	Log::setLogLevel(Log::debug);
 	FileSender fileSender(sender, std::string(argv[2]), recipient, boost::filesystem::path(argv[4]));
 	fileSender.start();
 	{
