@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Remko Tronçon
+ * Copyright (c) 2010-2013 Remko Tronçon
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -11,7 +11,6 @@
 #include <Swiften/Base/API.h>
 #include <Swiften/Base/boost_bsignals.h>
 #include <Swiften/Base/Error.h>
-#include <Swiften/Network/PlatformDomainNameResolver.h>
 #include <Swiften/Component/ComponentConnector.h>
 #include <Swiften/Component/ComponentSession.h>
 #include <Swiften/Component/ComponentError.h>
@@ -26,6 +25,7 @@
 #include <Swiften/Base/SafeByteArray.h>
 
 namespace Swift {
+	class EventLoop;
 	class IQRouter;
 	class NetworkFactories;
 	class ComponentSession;
@@ -90,7 +90,6 @@ namespace Swift {
 		private:
 			EventLoop* eventLoop;
 			NetworkFactories* networkFactories;
-			PlatformDomainNameResolver resolver_;
 			JID jid_;
 			std::string secret_;
 			ComponentSessionStanzaChannel* stanzaChannel_;

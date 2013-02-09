@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Remko Tronçon
+ * Copyright (c) 2010-2013 Remko Tronçon
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -20,7 +20,7 @@
 
 namespace Swift {
 
-CoreComponent::CoreComponent(EventLoop* eventLoop, NetworkFactories* networkFactories, const JID& jid, const std::string& secret) : eventLoop(eventLoop), networkFactories(networkFactories), resolver_(eventLoop), jid_(jid), secret_(secret), disconnectRequested_(false) {
+CoreComponent::CoreComponent(EventLoop* eventLoop, NetworkFactories* networkFactories, const JID& jid, const std::string& secret) : eventLoop(eventLoop), networkFactories(networkFactories), jid_(jid), secret_(secret), disconnectRequested_(false) {
 	stanzaChannel_ = new ComponentSessionStanzaChannel();
 	stanzaChannel_->onMessageReceived.connect(boost::ref(onMessageReceived));
 	stanzaChannel_->onPresenceReceived.connect(boost::ref(onPresenceReceived));
@@ -44,7 +44,7 @@ CoreComponent::~CoreComponent() {
 
 void CoreComponent::connect(const std::string& host, int port) {
 	assert(!connector_);
-	connector_ = ComponentConnector::create(host, port, &resolver_, networkFactories->getConnectionFactory(), networkFactories->getTimerFactory());
+	connector_ = ComponentConnector::create(host, port, networkFactories->getDomainNameResolver(), networkFactories->getConnectionFactory(), networkFactories->getTimerFactory());
 	connector_->onConnectFinished.connect(boost::bind(&CoreComponent::handleConnectorFinished, this, _1));
 	connector_->setTimeoutMilliseconds(60*1000);
 	connector_->start();
