@@ -14,7 +14,7 @@
 # endif
 
 #elif defined(__GNUC__)
-# if (__GNUC__ > 4) || ((__GNUC__ == 4) && (__GNUC_MINOR__ >= 7))
+# if ((__GNUC__ > 4) || ((__GNUC__ == 4) && (__GNUC_MINOR__ >= 7))) && defined(__GXX_EXPERIMENTAL_CXX0X__)
 #  define SWIFTEN_OVERRIDE override
 # else
 #  define SWIFTEN_OVERRIDE
