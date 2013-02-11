@@ -410,40 +410,41 @@ if env["qt"] :
 
 # OpenSSL
 openssl_env = conf_env.Clone()
-use_openssl = bool(env["openssl"])
-openssl_prefix = env["openssl"] if isinstance(env["openssl"], str) else ""
-openssl_flags = {}
-if openssl_prefix :
-	openssl_flags = { "CPPPATH": [os.path.join(openssl_prefix, "include")] }
-	if env["PLATFORM"] == "win32" : 
-		openssl_flags["LIBPATH"] = [os.path.join(openssl_prefix, "lib", "VC")]
-		env["OPENSSL_DIR"] = openssl_prefix
-	else :
-		openssl_flags["LIBPATH"] = [os.path.join(openssl_prefix, "lib")]
-	openssl_env.MergeFlags(openssl_flags)
-
-openssl_conf = Configure(openssl_env)
-if use_openssl and openssl_conf.CheckCHeader("openssl/ssl.h") :
-	env["HAVE_OPENSSL"] = 1
-	env["OPENSSL_FLAGS"] = openssl_flags
-	if env["PLATFORM"] == "win32" : 
-		env["OPENSSL_FLAGS"]["LIBS"] = ["libeay32MD", "ssleay32MD"]
-	else:
-		env["OPENSSL_FLAGS"]["LIBS"] = ["ssl", "crypto"]
-		if env["PLATFORM"] == "darwin" :
-			if platform.mac_ver()[0].startswith("10.5") :
-				env["OPENSSL_FLAGS"]["FRAMEWORKS"] = ["Security"]
-elif env["target"] in ("iphone-device", "iphone-simulator", "xcode") :
+if env.get("openssl_force_bundled", False) or env["target"] in ("iphone-device", "iphone-simulator", "xcode") :
 	env["OPENSSL_BUNDLED"] = True
 	env["HAVE_OPENSSL"] = True
 else :
-	env["OPENSSL_FLAGS"] = {}
-	if env["PLATFORM"] == "win32" : 
-		env["HAVE_SCHANNEL"] = True
-		# If we're compiling for Windows and OpenSSL isn't being used, use Schannel
-		env.Append(LIBS = ["secur32"])
+	use_openssl = bool(env["openssl"])
+	openssl_prefix = env["openssl"] if isinstance(env["openssl"], str) else ""
+	openssl_flags = {}
+	if openssl_prefix :
+		openssl_flags = { "CPPPATH": [os.path.join(openssl_prefix, "include")] }
+		if env["PLATFORM"] == "win32" : 
+			openssl_flags["LIBPATH"] = [os.path.join(openssl_prefix, "lib", "VC")]
+			env["OPENSSL_DIR"] = openssl_prefix
+		else :
+			openssl_flags["LIBPATH"] = [os.path.join(openssl_prefix, "lib")]
+		openssl_env.MergeFlags(openssl_flags)
 
-openssl_conf.Finish()
+	openssl_conf = Configure(openssl_env)
+	if use_openssl and openssl_conf.CheckCHeader("openssl/ssl.h") :
+		env["HAVE_OPENSSL"] = 1
+		env["OPENSSL_FLAGS"] = openssl_flags
+		if env["PLATFORM"] == "win32" : 
+			env["OPENSSL_FLAGS"]["LIBS"] = ["libeay32MD", "ssleay32MD"]
+		else:
+			env["OPENSSL_FLAGS"]["LIBS"] = ["ssl", "crypto"]
+			if env["PLATFORM"] == "darwin" :
+				if platform.mac_ver()[0].startswith("10.5") :
+					env["OPENSSL_FLAGS"]["FRAMEWORKS"] = ["Security"]
+	else :
+		env["OPENSSL_FLAGS"] = {}
+		if env["PLATFORM"] == "win32" : 
+			env["HAVE_SCHANNEL"] = True
+			# If we're compiling for Windows and OpenSSL isn't being used, use Schannel
+			env.Append(LIBS = ["secur32"])
+
+	openssl_conf.Finish()
 
 # Bonjour
 if env["PLATFORM"] == "darwin" :

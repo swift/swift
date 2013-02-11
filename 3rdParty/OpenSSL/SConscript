@@ -1,4 +1,4 @@
-Import("env")
+Import("env", "conf_env")
 
 openssl_bundle_dir = "openssl"
 
@@ -13,16 +13,26 @@ if env.get("OPENSSL_BUNDLED", False) :
 	if env["SCONS_STAGE"] == "build" :
 		openssl_env = env.Clone()
 		openssl_env["OPENSSL_BUNDLE_DIR"] = openssl_bundle_dir
+		openssl_env.Replace(CCFLAGS = [flag for flag in env["CCFLAGS"] if flag not in ["-W", "-Wall"]])
 		openssl_env.Append(CPPPATH = [
 				"$OPENSSL_BUNDLE_DIR", 
 				"$OPENSSL_BUNDLE_DIR/crypto", 
 				"$OPENSSL_BUNDLE_DIR/crypto/asn1", 
 				"$OPENSSL_BUNDLE_DIR/crypto/evp", 
+				"$OPENSSL_BUNDLE_DIR/crypto/modes", 
 				"$OPENSSL_BUNDLE_DIR/include"
 			])
 		openssl_env.Append(CPPDEFINES = ["OPENSSL_THREADS", "_REENTRANT", "DSO_DLFCN", "HAVE_DLFCN_H", "L_ENDIAN"])
 
-		openssl_env.StaticLibrary("crypto", [
+		# Detect 32/64 bit
+		conf = Configure(conf_env)
+		if conf.CheckDeclaration("__LP64__") :
+			openssl_env.Append(CPPDEFINES = [("DES_LONG", "unsigned int"), ("MD32_REG_T", "int")])
+		else :
+			openssl_env.Append(CPPDEFINES = [("DES_LONG", "unsigned long")])
+		conf.Finish()
+
+		env["OPENSSL_OBJECTS"] = openssl_env.SwiftenObject([
 				"$OPENSSL_BUNDLE_DIR/crypto/cryptlib.c",
 				"$OPENSSL_BUNDLE_DIR/crypto/mem.c",
 				"$OPENSSL_BUNDLE_DIR/crypto/mem_dbg.c",
@@ -576,8 +586,6 @@ if env.get("OPENSSL_BUNDLED", False) :
 				"$OPENSSL_BUNDLE_DIR/crypto/ts/ts_lib.c",
 				"$OPENSSL_BUNDLE_DIR/crypto/ts/ts_conf.c",
 				"$OPENSSL_BUNDLE_DIR/crypto/ts/ts_asn1.c",
-			])
-		openssl_env.StaticLibrary("ssl", [
 				"$OPENSSL_BUNDLE_DIR/ssl/s2_meth.c",
 				"$OPENSSL_BUNDLE_DIR/ssl/s2_srvr.c",
 				"$OPENSSL_BUNDLE_DIR/ssl/s2_clnt.c",

@@ -37,6 +37,7 @@ if os.name == "nt" :
 if os.name == "nt" :
 	vars.Add(PackageVariable("bonjour", "Bonjour SDK location", "yes"))
 vars.Add(PackageVariable("openssl", "OpenSSL location", "yes"))
+vars.Add(BoolVariable("openssl_force_bundled", "Force use of the bundled OpenSSL", "no"))
 vars.Add(PathVariable("boost_includedir", "Boost headers location", None, PathVariable.PathAccept))
 vars.Add(PathVariable("boost_libdir", "Boost library location", None, PathVariable.PathAccept))
 vars.Add(PathVariable("expat_includedir", "Expat headers location", None, PathVariable.PathAccept))
@@ -277,6 +278,7 @@ for path in ["SWIFT_INSTALLDIR", "SWIFTEN_INSTALLDIR"] :
 			env[path] = Dir(ARGUMENTS[path]).abspath
 		else :
 			env[path] = Dir("#/" + ARGUMENTS[path]).abspath
+
 
 ################################################################################
 # XCode / iPhone / ...
