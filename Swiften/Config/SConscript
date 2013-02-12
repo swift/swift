@@ -23,7 +23,13 @@ swiften_env.UseFlags(swiften_env["SWIFTEN_DEP_FLAGS"])
 cppflags = replaceSwiftenPath(" ".join([swiften_env.subst("$_CPPDEFFLAGS"), swiften_env.subst("$_CPPINCFLAGS")]))
 config_flags += cStringVariable(swiften_env, "CPPFLAGS", cppflags)
 
-libflags = replaceSwiftenPath(" ".join([swiften_env.subst("$_LIBDIRFLAGS"), swiften_env.subst("$_LIBFLAGS")]))
+libflags = replaceSwiftenPath(" ".join([
+		swiften_env.subst("$_LIBDIRFLAGS"), 
+		swiften_env.subst("$_LIBFLAGS"), 
+		swiften_env.subst("$_FRAMEWORKPATH"), 
+		swiften_env.subst("$_FRAMEWORKS"), 
+		swiften_env.subst("$_FRAMEWORKSFLAGS")
+	]))
 config_flags += cStringVariable(swiften_env, "LIBFLAGS", libflags)
 
 config_env = env.Clone()

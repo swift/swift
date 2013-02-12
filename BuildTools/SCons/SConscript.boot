@@ -78,7 +78,11 @@ else :
 Help(vars.GenerateHelpText(env))
 
 # Default environment variables
-env["PLATFORM_FLAGS"] = {}
+env["PLATFORM_FLAGS"] = {
+		"LIBPATH": [],
+		"LIBS": [],
+		"FRAMEWORKS": [],
+}
 
 # Default custom tools
 env.Tool("Test", toolpath = ["#/BuildTools/SCons/Tools"])
@@ -195,7 +199,6 @@ if env.get("mac105", 0) :
 			"-mmacosx-version-min=10.5", 
 			"-isysroot", "/Developer/SDKs/MacOSX10.5.sdk", 
 			"-arch", "i386"])
-	env.Append(FRAMEWORKS = ["Security"])
 if env.get("mac106", 0) :
 	assert(env["PLATFORM"] == "darwin")
 	env.Append(CCFLAGS = [
@@ -205,7 +208,6 @@ if env.get("mac106", 0) :
 			"-mmacosx-version-min=10.6", 
 			"-isysroot", "/Developer/SDKs/MacOSX10.6.sdk", 
 			"-arch", "i386"])
-	env.Append(FRAMEWORKS = ["Security"])
 
 if not env["assertions"] :
 	env.Append(CPPDEFINES = ["NDEBUG"])
@@ -257,7 +259,7 @@ if env["PLATFORM"] == "win32" :
 		env["SHLINKCOM"] = [env["SHLINKCOM"], 'mt.exe -nologo -manifest ${TARGET}.manifest -outputresource:$TARGET;2']
 
 if env["PLATFORM"] == "darwin" and not env["target"] in ["iphone-device", "iphone-simulator", "xcode"] :
-	env.Append(FRAMEWORKS = ["IOKit", "AppKit", "SystemConfiguration", "Security", "SecurityInterface"])
+	env["PLATFORM_FLAGS"]["FRAMEWORKS"] += ["IOKit", "AppKit", "SystemConfiguration", "Security", "SecurityInterface"]
 
 # Testing
 env["TEST_TYPE"] = env["test"]
