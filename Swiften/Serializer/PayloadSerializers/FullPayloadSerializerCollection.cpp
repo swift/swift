@@ -51,6 +51,7 @@
 #include <Swiften/Serializer/PayloadSerializers/ReplaceSerializer.h>
 #include <Swiften/Serializer/PayloadSerializers/LastSerializer.h>
 #include <Swiften/Serializer/PayloadSerializers/WhiteboardSerializer.h>
+#include <Swiften/Serializer/PayloadSerializers/IdleSerializer.h>
 
 #include <Swiften/Serializer/PayloadSerializers/StreamInitiationFileInfoSerializer.h>
 #include <Swiften/Serializer/PayloadSerializers/JingleContentPayloadSerializer.h>
@@ -110,6 +111,7 @@ FullPayloadSerializerCollection::FullPayloadSerializerCollection() {
 	serializers_.push_back(new ReplaceSerializer());
 	serializers_.push_back(new LastSerializer());
 	serializers_.push_back(new WhiteboardSerializer());
+	serializers_.push_back(new IdleSerializer());
 	
 	serializers_.push_back(new StreamInitiationFileInfoSerializer());
 	serializers_.push_back(new JingleContentPayloadSerializer());

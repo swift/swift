@@ -84,13 +84,19 @@ QVariant RosterModel::data(const QModelIndex& index, int role) const {
 		case AvatarRole: return getAvatar(item);
 		case PresenceIconRole: return getPresenceIcon(item);
 		case ChildCountRole: return getChildCount(item);
-	 	default: return QVariant();
+		case IdleRole: return getIsIdle(item);
+		default: return QVariant();
 	}
 }
 
 int RosterModel::getChildCount(RosterItem* item) const {
 	GroupRosterItem* group = dynamic_cast<GroupRosterItem*>(item);
 	return group ? group->getDisplayedChildren().size() : 0; 
+}
+
+bool RosterModel::getIsIdle(RosterItem* item) const {
+	ContactRosterItem* contact = dynamic_cast<ContactRosterItem*>(item);
+	return contact ? !contact->getIdleText().empty() : false;
 }
 
 QColor RosterModel::intToColor(int color) const {
@@ -130,6 +136,9 @@ QString RosterModel::getToolTip(RosterItem* item) const {
 		tip += "\n " + P2QSTRING(statusShowTypeToFriendlyName(contact->getStatusShow()));
 		if (!getStatusText(item).isEmpty()) {
 			tip += ": " + getStatusText(item);
+		}
+		if (!contact->getIdleText().empty()) {
+			tip += "\n " + tr("Idle since ") + P2QSTRING(contact->getIdleText());
 		}
 	}
 	return tip;

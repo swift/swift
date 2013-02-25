@@ -17,8 +17,8 @@ void DelegateCommons::drawElidedText(QPainter* painter, const QRect& region, con
 	painter->drawText(region, flags, adjustedText.simplified());
 }
 
-void DelegateCommons::paintContact(QPainter* painter, const QStyleOptionViewItem& option, const QColor& nameColor, const QString& avatarPath, const QIcon& presenceIcon, const QString& name, const QString& statusText, int unreadCount, bool compact) const {
-	painter->save();
+void DelegateCommons::paintContact(QPainter* painter, const QStyleOptionViewItem& option, const QColor& nameColor, const QString& avatarPath, const QIcon& presenceIcon, const QString& name, const QString& statusText, bool isIdle, int unreadCount, bool compact) const {
+		painter->save();
 	QRect fullRegion(option.rect);
 	if ( option.state & QStyle::State_Selected ) {
 		painter->fillRect(fullRegion, option.palette.highlight());
@@ -29,6 +29,7 @@ void DelegateCommons::paintContact(QPainter* painter, const QStyleOptionViewItem
 
 	QRect presenceIconRegion(QPoint(farLeftMargin, fullRegion.top()), QSize(presenceIconWidth, fullRegion.height() - verticalMargin));
 
+	QRect idleIconRegion(QPoint(farLeftMargin, fullRegion.top()), QSize(presenceIconWidth*2, fullRegion.height() - verticalMargin));
 	int calculatedAvatarSize = presenceIconRegion.height();
 	//This overlaps the presenceIcon, so must be painted first
 	QRect avatarRegion(QPoint(presenceIconRegion.right() - presenceIconWidth / 2, presenceIconRegion.top()), QSize(calculatedAvatarSize, calculatedAvatarSize));
@@ -50,6 +51,10 @@ void DelegateCommons::paintContact(QPainter* painter, const QStyleOptionViewItem
 
 	//Paint the presence icon over the top of the avatar
 	presenceIcon.paint(painter, presenceIconRegion, Qt::AlignBottom | Qt::AlignHCenter);
+
+	if (isIdle) {
+		idleIcon.paint(painter, idleIconRegion, Qt::AlignBottom | Qt::AlignHCenter);
+	}
 
 	QFontMetrics nameMetrics(nameFont);
 	painter->setFont(nameFont);

@@ -67,6 +67,7 @@
 #include <Swiften/Parser/PayloadParsers/DeliveryReceiptParserFactory.h>
 #include <Swiften/Parser/PayloadParsers/DeliveryReceiptRequestParserFactory.h>
 #include <Swiften/Parser/PayloadParsers/WhiteboardParser.h>
+#include <Swiften/Parser/PayloadParsers/IdleParser.h>
 
 using namespace boost;
 
@@ -128,6 +129,7 @@ FullPayloadParserFactoryCollection::FullPayloadParserFactoryCollection() {
 	factories_.push_back(boost::make_shared<GenericPayloadParserFactory<WhiteboardParser> >("wb", "http://swift.im/whiteboard"));
 	factories_.push_back(boost::make_shared<DeliveryReceiptParserFactory>());
 	factories_.push_back(boost::make_shared<DeliveryReceiptRequestParserFactory>());
+	factories_.push_back(boost::make_shared<GenericPayloadParserFactory<IdleParser> >("idle", "urn:xmpp:idle:1"));
 
 	foreach(shared_ptr<PayloadParserFactory> factory, factories_) {
 		addFactory(factory.get());

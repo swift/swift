@@ -31,6 +31,7 @@
 #include <Swift/Controllers/UIEvents/ShowWhiteboardUIEvent.h>
 #include <Swiften/Elements/DeliveryReceipt.h>
 #include <Swiften/Elements/DeliveryReceiptRequest.h>
+#include <Swiften/Elements/Idle.h>
 #include <Swift/Controllers/SettingConstants.h>
 #include <Swift/Controllers/Highlighter.h>
 #include <Swiften/Base/Log.h>
@@ -61,6 +62,10 @@ ChatController::ChatController(const JID& self, StanzaChannel* stanzaChannel, IQ
 	} else {
 		startMessage = str(format(QT_TRANSLATE_NOOP("", "Starting chat with %1% - %2%")) % nick % contact.toBare().toString());
 		theirPresence = contact.isBare() ? presenceOracle->getHighestPriorityPresence(contact.toBare()) : presenceOracle->getLastPresence(contact);
+	}
+	Idle::ref idle;
+	if (theirPresence && (idle = theirPresence->getPayload<Idle>())) {
+		startMessage += QT_TRANSLATE_NOOP("", ", who has been idle since ") + boost::posix_time::to_simple_string(idle->getSince());
 	}
 	startMessage += ": " + statusShowTypeToFriendlyName(theirPresence ? theirPresence->getShow() : StatusShow::None);
 	if (theirPresence && !theirPresence->getStatus().empty()) {
@@ -335,6 +340,11 @@ std::string ChatController::getStatusChangeString(boost::shared_ptr<Presence> pr
 			response = QT_TRANSLATE_NOOP("", "%1% is now busy");
 		} 
 	}
+	Idle::ref idle;
+	if ((idle = presence->getPayload<Idle>())) {
+		response += QT_TRANSLATE_NOOP("", " and has been idle since ") + boost::posix_time::to_simple_string(idle->getSince());
+	}
+
 	if (!response.empty()) {
 		response = str(format(response) % nick);
 	}

@@ -17,6 +17,7 @@
 #include <boost/bind.hpp>
 #include "Swiften/Base/boost_bsignals.h"
 #include <boost/shared_ptr.hpp>
+#include <boost/date_time/posix_time/ptime.hpp>
 
 namespace Swift {
 
@@ -35,6 +36,7 @@ class ContactRosterItem : public RosterItem {
 		StatusShow::Type getStatusShow() const;
 		StatusShow::Type getSimplifiedStatusShow() const;
 		std::string getStatusText() const;
+		std::string getIdleText() const;
 		void setAvatarPath(const std::string& path);
 		const std::string& getAvatarPath() const;
 		const JID& getJID() const;
@@ -50,9 +52,11 @@ class ContactRosterItem : public RosterItem {
 		
 		void setSupportedFeatures(const std::set<Feature>& features);
 		bool supportsFeature(Feature feature) const;
+
 	private:
 		JID jid_;
 		JID displayJID_;
+		boost::posix_time::ptime lastAvailableTime_;
 		std::string avatarPath_;
 		std::map<std::string, boost::shared_ptr<Presence> > presences_;
 		boost::shared_ptr<Presence> offlinePresence_;

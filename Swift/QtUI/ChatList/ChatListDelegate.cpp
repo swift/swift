@@ -120,7 +120,7 @@ void ChatListDelegate::paintRecent(QPainter* painter, const QStyleOptionViewItem
 	QString name = item->data(Qt::DisplayRole).toString();
 	//qDebug() << "Avatar for " << name << " = " << avatarPath;
 	QString statusText = item->data(ChatListRecentItem::DetailTextRole).toString();
-	common_.paintContact(painter, option, nameColor, avatarPath, presenceIcon, name, statusText, item->getChat().unreadCount, compact_);
+	common_.paintContact(painter, option, nameColor, avatarPath, presenceIcon, name, statusText, false, item->getChat().unreadCount, compact_);
 }
 
 void ChatListDelegate::paintWhiteboard(QPainter* painter, const QStyleOptionViewItem& option, ChatListWhiteboardItem* item) const {
@@ -135,7 +135,8 @@ void ChatListDelegate::paintWhiteboard(QPainter* painter, const QStyleOptionView
 	QString name = item->data(Qt::DisplayRole).toString();
 	//qDebug() << "Avatar for " << name << " = " << avatarPath;
 	QString statusText = item->data(ChatListWhiteboardItem::DetailTextRole).toString();
-	common_.paintContact(painter, option, nameColor, avatarPath, presenceIcon, name, statusText, item->getChat().unreadCount, compact_);
+	common_.paintContact(painter, option, nameColor, avatarPath, presenceIcon, name, statusText, false, item->getChat().unreadCount, compact_);
+
 }
 
 }

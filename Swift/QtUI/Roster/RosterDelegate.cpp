@@ -74,9 +74,10 @@ void RosterDelegate::paintContact(QPainter* painter, const QStyleOptionViewItem&
 	QIcon presenceIcon = index.data(PresenceIconRole).isValid() && !index.data(PresenceIconRole).value<QIcon>().isNull()
 			? index.data(PresenceIconRole).value<QIcon>()
 			: QIcon(":/icons/offline.png");
+	bool isIdle = index.data(IdleRole).isValid() ? index.data(IdleRole).toBool() : false;
 	QString name = index.data(Qt::DisplayRole).toString();
 	QString statusText = index.data(StatusTextRole).toString();
-	common_.paintContact(painter, option, nameColor, avatarPath, presenceIcon, name, statusText, 0, compact_);
+	common_.paintContact(painter, option, nameColor, avatarPath, presenceIcon, name, statusText, isIdle, 0, compact_);
 }
 
 }

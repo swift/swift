@@ -10,6 +10,8 @@
 
 #include "Swiften/Elements/Presence.h"
 
+#include <boost/date_time/posix_time/posix_time_types.hpp>
+
 namespace Swift {
 
 	class StatusTracker {
@@ -17,10 +19,11 @@ namespace Swift {
 			StatusTracker();
 			boost::shared_ptr<Presence> getNextPresence();
 			void setRequestedPresence(boost::shared_ptr<Presence> presence);
-			bool goAutoAway();
+			bool goAutoAway(const int& seconds);
 			bool goAutoUnAway();
 		private:
 			boost::shared_ptr<Presence> queuedPresence_;
 			bool isAutoAway_;
+			boost::posix_time::ptime isAutoAwaySince_;
 	};
 }

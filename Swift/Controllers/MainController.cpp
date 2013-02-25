@@ -461,7 +461,7 @@ void MainController::handleInputIdleChanged(bool idle) {
 	}
 	else {
 		if (idle) {
-			if (statusTracker_->goAutoAway()) {
+			if (statusTracker_->goAutoAway(idleDetector_->getIdleTimeSeconds())) {
 				if (client_ && client_->isAvailable()) {
 					sendPresence(statusTracker_->getNextPresence());
 				}

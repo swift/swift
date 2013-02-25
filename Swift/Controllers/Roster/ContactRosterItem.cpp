@@ -8,6 +8,9 @@
 #include "Swift/Controllers/Roster/GroupRosterItem.h"
 
 #include <Swiften/Base/foreach.h>
+#include <Swiften/Elements/Idle.h>
+
+#include <boost/date_time/posix_time/posix_time.hpp>
 
 namespace Swift {
 
@@ -37,6 +40,15 @@ StatusShow::Type ContactRosterItem::getSimplifiedStatusShow() const {
 
 std::string ContactRosterItem::getStatusText() const {
 	return shownPresence_ ? shownPresence_->getStatus() : "";
+}
+
+std::string ContactRosterItem::getIdleText() const {
+	Idle::ref idle = shownPresence_ ? shownPresence_->getPayload<Idle>() : Idle::ref();
+	if (!idle || idle->getSince().is_not_a_date_time()) {
+		return "";
+	} else {
+		return boost::posix_time::to_simple_string(idle->getSince());
+	}
 }
 
 void ContactRosterItem::setAvatarPath(const std::string& path) {

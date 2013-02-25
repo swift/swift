@@ -23,7 +23,8 @@ namespace Swift {
 				DetailTextRole = Qt::UserRole,
 				AvatarRole = Qt::UserRole + 1,
 				PresenceIconRole = Qt::UserRole + 2/*,
-				StatusShowTypeRole = Qt::UserRole + 3*/
+				StatusShowTypeRole = Qt::UserRole + 3,
+				IdleRole = Qt::UserRole + 4*/
 			};
 			ChatListRecentItem(const ChatListWindow::Chat& chat, ChatListGroupItem* parent);
 			const ChatListWindow::Chat& getChat() const;

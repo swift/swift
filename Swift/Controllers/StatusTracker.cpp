@@ -8,6 +8,8 @@
 
 #include <boost/smart_ptr/make_shared.hpp>
 
+#include <Swiften/Elements/Idle.h>
+
 namespace Swift {
 
 StatusTracker::StatusTracker() {
@@ -21,6 +23,7 @@ boost::shared_ptr<Presence> StatusTracker::getNextPresence() {
 		presence = boost::make_shared<Presence>();
 		presence->setShow(StatusShow::Away);
 		presence->setStatus(queuedPresence_->getStatus());
+		presence->addPayload(boost::make_shared<Idle>(isAutoAwaySince_));
 	} else {
 		presence = queuedPresence_;
 	}
@@ -35,11 +38,12 @@ void StatusTracker::setRequestedPresence(boost::shared_ptr<Presence> presence) {
 //	}
 }
 
-bool StatusTracker::goAutoAway() {
+bool StatusTracker::goAutoAway(const int& seconds) {
 	if (queuedPresence_->getShow() != StatusShow::Online) {
 		return false;
 	}
 	isAutoAway_ = true;
+	isAutoAwaySince_ = boost::posix_time::second_clock::universal_time() - boost::posix_time::seconds(seconds);
 	return true;
 }
 
