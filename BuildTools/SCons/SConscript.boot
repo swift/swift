@@ -235,6 +235,9 @@ else :
 			"-Wno-exit-time-destructors", # Used a lot in e.g. CPPUnit
 			"-Wno-c++98-compat-pedantic", # We do different things that violate this, but they could be fixed
 			"-Wno-global-constructors", # We depend on this for e.g. string constants
+			"-Wno-disabled-macro-expansion", # Caused due to system headers
+			"-Wno-c++11-extensions", # We use C++11; turn this off when we use -std=c++11
+			"-Wno-pedantic", # Fix these when we have time
 			"-Wno-padded",
 			])
 	else :
