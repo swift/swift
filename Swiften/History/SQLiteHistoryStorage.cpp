@@ -9,7 +9,6 @@
 #include <boost/numeric/conversion/cast.hpp>
 
 #include <sqlite3.h>
-#include <3rdParty/SQLiteAsync/sqlite3async.h>
 #include <Swiften/History/SQLiteHistoryStorage.h>
 #include <boost/date_time/gregorian/gregorian.hpp>
 
@@ -27,11 +26,9 @@ inline std::string getEscapedString(const std::string& s) {
 namespace Swift {
 
 SQLiteHistoryStorage::SQLiteHistoryStorage(const std::string& file) : db_(0) {
-	sqlite3async_initialize(NULL, false);
-
 	thread_ = new boost::thread(boost::bind(&SQLiteHistoryStorage::run, this));
 
-	sqlite3_open_v2(file.c_str(), &db_, SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE, "sqlite3async");
+	sqlite3_open(file.c_str(), &db_);
 	if (!db_) {
 		std::cerr << "Error opening database " << file << std::endl;
 	}
@@ -51,7 +48,6 @@ SQLiteHistoryStorage::SQLiteHistoryStorage(const std::string& file) : db_(0) {
 }
 
 SQLiteHistoryStorage::~SQLiteHistoryStorage() {
-	sqlite3async_shutdown();
 	sqlite3_close(db_);
 	delete thread_;
 }
@@ -380,7 +376,6 @@ boost::posix_time::ptime SQLiteHistoryStorage::getLastTimeStampFromMUC(const JID
 }
 
 void SQLiteHistoryStorage::run() {
-	sqlite3async_run();
 }
 
 }

@@ -373,7 +373,6 @@ if env["experimental"] :
 		env["SQLITE_FLAGS"].update(sqlite_flags)
 	else :
 		env["SQLITE_BUNDLED"] = 1
-	env["SQLITE_ASYNC_BUNDLED"] = 1
 	conf.Finish()
 else :
 	env["SQLITE_FLAGS"] = {}

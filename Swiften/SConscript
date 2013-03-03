@@ -6,7 +6,7 @@ Import("env")
 # Flags
 ################################################################################
 
-swiften_dep_modules = ["BOOST", "GCONF", "ICU", "LIBIDN", "ZLIB", "OPENSSL", "LIBXML", "EXPAT", "AVAHI", "LIBMINIUPNPC", "LIBNATPMP", "SQLITE", "SQLITE_ASYNC"]
+swiften_dep_modules = ["BOOST", "GCONF", "ICU", "LIBIDN", "ZLIB", "OPENSSL", "LIBXML", "EXPAT", "AVAHI", "LIBMINIUPNPC", "LIBNATPMP", "SQLITE"]
 external_swiften_dep_modules = ["BOOST"]
 
 if env["SCONS_STAGE"] == "flags" :
